@@ -2,11 +2,6 @@
  * \file
  *
  * \brief SAM Control Area Network (CAN) Low Level Driver
- * 
- * \note Since "The Control Area Network (CAN) performs communication according
- * to ISO 11898-1 (Bosch CAN specification 2.0 part A,B) and to Bosch CAN FD
- * specification V1.0", the driver is focus on the MAC layer and try to offer
- * the APIs which can be used by upper application layer.
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -45,7 +40,7 @@
  * \asf_license_stop
  *
  */
-/**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -57,7 +52,7 @@
 #include <conf_can.h>
 
 /**
- * \name Message RAM 
+ * \name Message RAM
  * @{
  */
 
@@ -65,11 +60,11 @@
 typedef union {
   struct {
     uint32_t ID:29;            /*!< bit:  0..28  Identifier */
-    uint32_t RTR:1;            /*!< bit:  29  Remote Transmission Request */
-    uint32_t XTD:1;            /*!< bit:  30  Extended Identifier */
-    uint32_t ESI:1;            /*!< bit:  31  Error State Indicator */
-  } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+    uint32_t RTR:1;            /*!< bit:  29     Remote Transmission Request */
+    uint32_t XTD:1;            /*!< bit:  30     Extended Identifier */
+    uint32_t ESI:1;            /*!< bit:  31     Error State Indicator */
+  } bit;                       /*!< Structure used for bit access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_RX_ELEMENT_R0_Type;
 
 #define CAN_RX_ELEMENT_R0_ID_Pos          0
@@ -85,15 +80,15 @@ typedef union {
 /* -------- CAN_RX_ELEMENT_R1 : (CAN RX element: 0x01) (R/W 32) Rx Element R1 Configuration -------- */
 typedef union {
   struct {
-    uint32_t RXTS:16;          /*!< bit:  0..15  Rx Timestamp */
-    uint32_t DLC:4;            /*!< bit:  16..19  Data Length Code */
-    uint32_t BRS:1;            /*!< bit:  20  Bit Rate Switch */
-    uint32_t FDF:1;            /*!< bit:  21  FD Format */
+    uint32_t RXTS:16;          /*!< bit: 0..15   Rx Timestamp */
+    uint32_t DLC:4;            /*!< bit: 16..19  Data Length Code */
+    uint32_t BRS:1;            /*!< bit: 20      Bit Rate Switch */
+    uint32_t FDF:1;            /*!< bit: 21      FD Format */
     uint32_t :2;               /*!< bit: 22..23  Reserved */
-    uint32_t FIDX:7;           /*!< bit:  24..30  Filter Index */
-    uint32_t ANMF:1;           /*!< bit:  31  Accepted Non-matching Frame */
+    uint32_t FIDX:7;           /*!< bit: 24..30  Filter Index */
+    uint32_t ANMF:1;           /*!< bit: 31      Accepted Non-matching Frame */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_RX_ELEMENT_R1_Type;
 
 #define CAN_RX_ELEMENT_R1_RXTS_Pos        0
@@ -118,7 +113,7 @@ typedef union {
 struct can_rx_element_buffer {
 	__IO CAN_RX_ELEMENT_R0_Type R0;
 	__IO CAN_RX_ELEMENT_R1_Type R1;
-	uint8_t data[CONF_CAN_RX_ELEMENT_DATA_SIZE_BUFFER];
+	uint8_t data[CONF_CAN_ELEMENT_DATA_SIZE];
 };
 
 /**
@@ -127,7 +122,7 @@ struct can_rx_element_buffer {
 struct can_rx_element_fifo_0 {
 	__IO CAN_RX_ELEMENT_R0_Type R0;
 	__IO CAN_RX_ELEMENT_R1_Type R1;
-	uint8_t data[CONF_CAN_RX_ELEMENT_DATA_SIZE_FIFO_0];
+	uint8_t data[CONF_CAN_ELEMENT_DATA_SIZE];
 };
 
 /**
@@ -136,23 +131,26 @@ struct can_rx_element_fifo_0 {
 struct can_rx_element_fifo_1 {
 	__IO CAN_RX_ELEMENT_R0_Type R0;
 	__IO CAN_RX_ELEMENT_R1_Type R1;
-	uint8_t data[CONF_CAN_RX_ELEMENT_DATA_SIZE_FIFO_1];
+	uint8_t data[CONF_CAN_ELEMENT_DATA_SIZE];
 };
 
 /* -------- CAN_TX_ELEMENT_T0 : (CAN TX element: 0x00) (R/W 32) Tx Element T0 Configuration -------- */
 typedef union {
   struct {
     uint32_t ID:29;            /*!< bit:  0..28  Identifier */
-    uint32_t RTR:1;            /*!< bit:  29  Remote Transmission Request */
-    uint32_t XTD:1;            /*!< bit:  30  Extended Identifier */
-    uint32_t ESI:1;            /*!< bit:  31  Error State Indicator */
+    uint32_t RTR:1;            /*!< bit:  29     Remote Transmission Request */
+    uint32_t XTD:1;            /*!< bit:  30     Extended Identifier */
+    uint32_t ESI:1;            /*!< bit:  31     Error State Indicator */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_TX_ELEMENT_T0_Type;
 
-#define CAN_TX_ELEMENT_T0_ID_Pos          0
-#define CAN_TX_ELEMENT_T0_ID_Msk          (0x1FFFFFFFul << CAN_TX_ELEMENT_T0_ID_Pos)
-#define CAN_TX_ELEMENT_T0_ID(value)       ((CAN_TX_ELEMENT_T0_ID_Msk & ((value) << CAN_TX_ELEMENT_T0_ID_Pos)))
+#define CAN_TX_ELEMENT_T0_EXTENDED_ID_Pos          0
+#define CAN_TX_ELEMENT_T0_EXTENDED_ID_Msk          (0x1FFFFFFFul << CAN_TX_ELEMENT_T0_EXTENDED_ID_Pos)
+#define CAN_TX_ELEMENT_T0_EXTENDED_ID(value)       ((CAN_TX_ELEMENT_T0_EXTENDED_ID_Msk & ((value) << CAN_TX_ELEMENT_T0_EXTENDED_ID_Pos)))
+#define CAN_TX_ELEMENT_T0_STANDARD_ID_Pos          18
+#define CAN_TX_ELEMENT_T0_STANDARD_ID_Msk          (0x7FFul << CAN_TX_ELEMENT_T0_STANDARD_ID_Pos)
+#define CAN_TX_ELEMENT_T0_STANDARD_ID(value)       ((CAN_TX_ELEMENT_T0_STANDARD_ID_Msk & ((value) << CAN_TX_ELEMENT_T0_STANDARD_ID_Pos)))
 #define CAN_TX_ELEMENT_T0_RTR_Pos         29
 #define CAN_TX_ELEMENT_T0_RTR             (0x1ul << CAN_TX_ELEMENT_T0_RTR_Pos)
 #define CAN_TX_ELEMENT_T0_XTD_Pos         30
@@ -163,20 +161,28 @@ typedef union {
 /* -------- CAN_TX_ELEMENT_T1 : (CAN TX element: 0x01) (R/W 32) Tx Element T1 Configuration -------- */
 typedef union {
   struct {
-    uint32_t :16;              /*!< bit:  0..15  Reserved */
-    uint32_t DLC:4;            /*!< bit:  16..19  Data Length Code */
-    uint32_t BRS:1;            /*!< bit:  20  Bit Rate Switch */
-    uint32_t FDF:1;            /*!< bit:  21  FD Format */
-    uint32_t :1;               /*!< bit: 22  Reserved */
-    uint32_t EFC:1;            /*!< bit:  23  Event FIFO Control */
-    uint32_t MM:8;             /*!< bit:  24..31  Message Marker */
+    uint32_t :16;              /*!< bit: 0..15   Reserved */
+    uint32_t DLC:4;            /*!< bit: 16..19  Data Length Code */
+    uint32_t BRS:1;            /*!< bit: 20      Bit Rate Switch */
+    uint32_t FDF:1;            /*!< bit: 21      FD Format */
+    uint32_t :1;               /*!< bit: 22      Reserved */
+    uint32_t EFC:1;            /*!< bit: 23      Event FIFO Control */
+    uint32_t MM:8;             /*!< bit: 24..31  Message Marker */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_TX_ELEMENT_T1_Type;
 
 #define CAN_TX_ELEMENT_T1_DLC_Pos         16
 #define CAN_TX_ELEMENT_T1_DLC_Msk         (0xFul << CAN_TX_ELEMENT_T1_DLC_Pos)
 #define CAN_TX_ELEMENT_T1_DLC(value)      ((CAN_TX_ELEMENT_T1_DLC_Msk & ((value) << CAN_TX_ELEMENT_T1_DLC_Pos)))
+#define   CAN_TX_ELEMENT_T1_DLC_DATA8_Val        0x8ul  /**< \brief (CAN_RXESC) 8 byte data field */
+#define   CAN_TX_ELEMENT_T1_DLC_DATA12_Val       0x9ul  /**< \brief (CAN_RXESC) 12 byte data field */
+#define   CAN_TX_ELEMENT_T1_DLC_DATA16_Val       0xAul  /**< \brief (CAN_RXESC) 16 byte data field */
+#define   CAN_TX_ELEMENT_T1_DLC_DATA20_Val       0xBul  /**< \brief (CAN_RXESC) 20 byte data field */
+#define   CAN_TX_ELEMENT_T1_DLC_DATA24_Val       0xCul  /**< \brief (CAN_RXESC) 24 byte data field */
+#define   CAN_TX_ELEMENT_T1_DLC_DATA32_Val       0xDul  /**< \brief (CAN_RXESC) 32 byte data field */
+#define   CAN_TX_ELEMENT_T1_DLC_DATA48_Val       0xEul  /**< \brief (CAN_RXESC) 48 byte data field */
+#define   CAN_TX_ELEMENT_T1_DLC_DATA64_Val       0xFul  /**< \brief (CAN_RXESC) 64 byte data field */
 #define CAN_TX_ELEMENT_T1_BRS_Pos         20
 #define CAN_TX_ELEMENT_T1_BRS             (0x1ul << CAN_TX_ELEMENT_T1_BRS_Pos)
 #define CAN_TX_ELEMENT_T1_FDF_Pos         21
@@ -195,18 +201,18 @@ typedef union {
 struct can_tx_element {
 	__IO CAN_TX_ELEMENT_T0_Type T0;
 	__IO CAN_TX_ELEMENT_T1_Type T1;
-	uint8_t data[CONF_CAN_TX_ELEMENT_DATA_SIZE];
+	uint8_t data[CONF_CAN_ELEMENT_DATA_SIZE];
 };
 
 /* -------- CAN_TX_EVENT_ELEMENT_E0 : (CAN TX event element: 0x00) (R/W 32) Tx Event Element E0 Configuration -------- */
 typedef union {
   struct {
-    uint32_t ID:29;            /*!< bit:  0..28  Identifier */
-    uint32_t RTR:1;            /*!< bit:  29  Remote Transmission Request */
-    uint32_t XTD:1;            /*!< bit:  30  Extended Identifier */
-    uint32_t ESI:1;            /*!< bit:  31  Error State Indicator */
+    uint32_t ID:29;            /*!< bit: 0..28  Identifier */
+    uint32_t RTR:1;            /*!< bit: 29     Remote Transmission Request */
+    uint32_t XTD:1;            /*!< bit: 30     Extended Identifier */
+    uint32_t ESI:1;            /*!< bit: 31     Error State Indicator */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_TX_EVENT_ELEMENT_E0_Type;
 
 #define CAN_TX_EVENT_ELEMENT_E0_ID_Pos          0
@@ -222,14 +228,14 @@ typedef union {
 /* -------- CAN_TX_EVENT_ELEMENT_E1 : (CAN TX event element: 0x01) (R/W 32) Tx Event Element E1 Configuration -------- */
 typedef union {
   struct {
-    uint32_t TXTS:16;          /*!< bit:  0..15  Tx Timestamp */
-    uint32_t DLC:4;            /*!< bit:  16..19  Data Length Code */
-    uint32_t BRS:1;            /*!< bit:  20  Bit Rate Switch */
-    uint32_t FDF:1;            /*!< bit:  21  FD Format */
-    uint32_t ET:2;             /*!< bit:  22..23  Event Type */
-    uint32_t MM:8;             /*!< bit:  24..31  Message Marker */
+    uint32_t TXTS:16;          /*!< bit: 0..15   Tx Timestamp */
+    uint32_t DLC:4;            /*!< bit: 16..19  Data Length Code */
+    uint32_t BRS:1;            /*!< bit: 20      Bit Rate Switch */
+    uint32_t FDF:1;            /*!< bit: 21      FD Format */
+    uint32_t ET:2;             /*!< bit: 22..23  Event Type */
+    uint32_t MM:8;             /*!< bit: 24..31  Message Marker */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_TX_EVENT_ELEMENT_E1_Type;
 
 #define CAN_TX_EVENT_ELEMENT_E1_TXTS_Pos        0
@@ -262,13 +268,13 @@ struct can_tx_event_element {
 /* -------- CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0 : (CAN standard message ID filter element: 0x00) (R/W 32) Standard Message ID Filter Element S0 Configuration -------- */
 typedef union {
   struct {
-    uint32_t SFID2:11;         /*!< bit:  0..10  Standard Filter ID 2 */
+    uint32_t SFID2:11;         /*!< bit: 0..10   Standard Filter ID 2 */
     uint32_t :5;               /*!< bit: 11..15  Reserved */
-    uint32_t SFID1:11;         /*!< bit:  16..26  Standard Filter ID 1 */
-    uint32_t SFEC:3;           /*!< bit:  27..29  Standard Filter Element Configuration */
-    uint32_t SFT:2;            /*!< bit:  30..31  Standard Filter Type */
+    uint32_t SFID1:11;         /*!< bit: 16..26  Standard Filter ID 1 */
+    uint32_t SFEC:3;           /*!< bit: 27..29  Standard Filter Element Configuration */
+    uint32_t SFT:2;            /*!< bit: 30..31  Standard Filter Type */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_Type;
 
 #define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Pos          0
@@ -280,14 +286,14 @@ typedef union {
 #define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Pos           27
 #define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Msk           (0x7ul << CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Pos)
 #define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(value)        ((CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Msk & ((value) << CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Pos)))
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_DISABLE     CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(0)
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF0M       CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(1)
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF1M       CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(2)
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_REJECT      CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(3)
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIORITY    CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(4)
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIF0M      CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(5)
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIF1M      CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(6)
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STRXBUF     CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(7)
+#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_DISABLE_Val     0
+#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF0M_Val       1
+#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF1M_Val       2
+#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_REJECT_Val      3
+#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIORITY_Val    4
+#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIF0M_Val      5
+#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIF1M_Val      6
+#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STRXBUF_Val     7
 #define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Pos            30
 #define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Msk            (0x3ul << CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Pos)
 #define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT(value)         ((CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Msk & ((value) << CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Pos)))
@@ -307,10 +313,10 @@ struct can_standard_message_filter_element {
 /* -------- CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0 : (CAN extended message ID filter element: 0x00) (R/W 32) Extended Message ID Filter Element F0 Configuration -------- */
 typedef union {
   struct {
-    uint32_t EFID1:29;         /*!< bit:  0..28  Extended Filter ID 1 */
-    uint32_t EFEC:3;           /*!< bit:  29..31  Extended Filter Element Configuration */
+    uint32_t EFID1:29;         /*!< bit: 0..28   Extended Filter ID 1 */
+    uint32_t EFEC:3;           /*!< bit: 29..31  Extended Filter Element Configuration */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_Type;
 
 #define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1_Pos          0
@@ -319,23 +325,23 @@ typedef union {
 #define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Pos           29
 #define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Msk           (0x7ul << CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Pos)
 #define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(value)        ((CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Msk & ((value) << CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Pos)))
-#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_DISABLE       CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(0)
-#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF0M         CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(1)
-#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF1M         CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(2)
-#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_REJECT        CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(3)
-#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIORITY      CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(4)
-#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIF0M        CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(5)
-#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIF1M        CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(6)
-#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STRXBUF       CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(7)
+#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_DISABLE_Val       0
+#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF0M_Val         1
+#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF1M_Val         2
+#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_REJECT_Val        3
+#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIORITY_Val      4
+#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIF0M_Val        5
+#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIF1M_Val        6
+#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STRXBUF_Val       7
 
 /* -------- CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1 : (CAN extended message ID filter element: 0x01) (R/W 32) Extended Message ID Filter Element F1 Configuration -------- */
 typedef union {
   struct {
-    uint32_t EFID2:29;         /*!< bit:  0..28  Extended Filter ID 2 */
-    uint32_t :1;               /*!< bit: 29  Reserved */
-    uint32_t EFT:2;            /*!< bit:  30..31  Extended Filter Type */
+    uint32_t EFID2:29;         /*!< bit: 0..28  Extended Filter ID 2 */
+    uint32_t :1;               /*!< bit: 29     Reserved */
+    uint32_t EFT:2;            /*!< bit: 30..31 Extended Filter Type */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_Type;
 
 #define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Pos          0
@@ -361,14 +367,21 @@ struct can_extended_message_filter_element {
 /** @} */
 
 /**
- * \defgroup asfdoc_sam0_can_group SAM0 Control Area Network (CAN) Low Level Driver
+ * \defgroup asfdoc_sam0_can_group SAM Control Area Network (CAN) Low Level Driver
  *
- * This driver for SAM0 devices provides an low level interface for the configuration
- * and management of the device's Control Area Network functionality.
- * Since "The Control Area Network (CAN) performs communication according
+ * This driver for Atmel® | SMART SAM devices provides an low level
+ * interface for the configuration and management of the device's
+ * Control Area Network functionality.
+ *
+ * \note  Since "The Control Area Network (CAN) performs communication according
  * to ISO 11898-1 (Bosch CAN specification 2.0 part A,B) and to Bosch CAN FD
  * specification V1.0", the driver is focus on the MAC layer and try to offer
- * the APIs which can be used by upper application layer. 
+ * the APIs which can be used by upper application layer.
+ *
+ * For storage of Rx/Tx messages and for storage of the filter configuration,
+ * a message RAM is needed to the CAN module. In this driver, the message RAM
+ * is static allocated, the related setting is defined and can be changed in
+ * the module configuration file "conf_can.h".
  *
  * The following peripherals are used by this module:
  *  - CAN (Control Area Network)
@@ -425,36 +438,15 @@ extern "C" {
 #endif
 
 /**
- * \name Module setting 
+ * \name Module Setting
  * @{
  */
-
-/**
- * \brief Can module operation modes.
- *
- */
-enum can_module_operation_mode {
-	/** Software Initialization Mode. */
-	CAN_OPERATION_MODE_SOFTWARE_INITIALIZATION,
-	/** Normal Operation Mode. */
-	CAN_OPERATION_MODE_NORMAL_OPERATION,
-	/** CAN FD Operation Mode. */
-	CAN_OPERATION_MODE_FD_OPERATION,
-	/** Restricted Operation Mode. */
-	CAN_OPERATION_MODE_RESTRICTED_OPERATION,
-	/** Bus Monitoring Mode. */
-	CAN_OPERATION_MODE_BUS_MONITOR,
-	/** Sleep Mode. */
-	CAN_OPERATION_MODE_SLEEP,
-	/** Test Mode. */
-	CAN_OPERATION_MODE_TEST,
-};
 
 /**
  * \brief Can time out modes.
  */
 enum can_timeout_mode {
-	/** Continuout operation. */
+	/** Continuous operation. */
 	CAN_TIMEOUT_CONTINUES = CAN_TOCC_TOS_CONT,
 	/** Timeout controlled by TX Event FIFO. */
 	CAN_TIMEOUT_TX_EVEN_FIFO = CAN_TOCC_TOS_TXEF,
@@ -565,7 +557,7 @@ struct can_config {
  * The default configuration is as follows:
  *  \li GCLK generator 8 (GCLK main) clock source
  *  \li Not run in standby mode
- *  \li Watchdog value with 0xFF
+ *  \li Disable Watchdog
  *  \li Transmit pause enabled
  *  \li Edge filtering during bus integration enabled
  *  \li Protocol exception handling enabled
@@ -574,7 +566,7 @@ struct can_config {
  *  \li Clock stop acknowledge disabled
  *  \li Timestamp Counter Prescaler 1
  *  \li Timeout Period with 0xFFFF
- *  \li Timeout Mode: Continuout operation
+ *  \li Timeout Mode: Continuous operation
  *  \li Disable Timeout
  *  \li Transmitter Delay Compensation Offset is 0
  *  \li Transmitter Delay Compensation Filter Window Length is 0
@@ -602,7 +594,7 @@ static inline void can_get_config_defaults(
 	/* Default configuration values */
 	config->clock_source = GCLK_GENERATOR_8;
 	config->run_in_standby = false;
-	config->watchdog_configuration = 0xFF;
+	config->watchdog_configuration = 0x00;
 	config->transmit_pause = true;
 	config->edge_filtering = true;
 	config->protocol_exception_handling = true;
@@ -640,15 +632,102 @@ void can_init(struct can_module *const module_inst, Can *hw,
 		struct can_config *config);
 
 /**
- * \brief Can operation mode switch.
- *
- * \note can_init() function should be called before use this function.
+ * \brief Start CAN module communication.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] mode      Can operation mode type
  */
-void can_switch_operation_mode(struct can_module *const module_inst,
-		const enum can_module_operation_mode mode);
+void can_start(struct can_module *const module_inst);
+
+/**
+ * \brief Stop CAN module communication.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_stop(struct can_module *const module_inst);
+
+/**
+ * \brief Enable CAN FD mode.
+ *
+ * \note This function will set the CCCR.INIT bit, can_start() is needed to
+ * restart the communication.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_enable_fd_mode(struct can_module *const module_inst);
+
+/**
+ * \brief Disable CAN FD mode.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_disable_fd_mode(struct can_module *const module_inst);
+
+/**
+ * \brief Enable CAN restricted operation mode.
+ *
+ * \note This function will set the CCCR.INIT bit, can_start() is needed to
+ * restart the communication.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_enable_restricted_operation_mode(
+		struct can_module *const module_inst);
+
+/**
+ * \brief Disable CAN restricted operation mode.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_disable_restricted_operation_mode(
+		struct can_module *const module_inst);
+
+/**
+ * \brief Enable CAN bus monitor mode.
+ *
+ * \note This function will set the CCCR.INIT bit, can_start() is needed to
+ * restart the communication.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_enable_bus_monitor_mode(struct can_module *const module_inst);
+
+/**
+ * \brief Disable CAN bus monitor mode.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_disable_bus_monitor_mode(struct can_module *const module_inst);
+
+/**
+ * \brief Enable CAN sleep mode.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_enable_sleep_mode(struct can_module *const module_inst);
+
+/**
+ * \brief Disable CAN sleep mode.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_disable_sleep_mode(struct can_module *const module_inst);
+
+/**
+ * \brief Enable CAN test mode.
+ *
+ * \note This function will set the CCCR.INIT bit, can_start() is needed to
+ * restart the communication.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_enable_test_mode(struct can_module *const module_inst);
+
+/**
+ * \brief Disable CAN test mode.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_disable_test_mode(struct can_module *const module_inst);
 
 /**
  * \brief Can read timestamp count value.
@@ -690,11 +769,11 @@ static inline uint32_t can_read_error_count(
 }
 
 /**
- * \brief Can read protocal status.
+ * \brief Can read protocol status.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
  *
- * \return Protocal status value.
+ * \return protocol status value.
  */
 static inline uint32_t can_read_protocal_status(
 		struct can_module *const module_inst)
@@ -705,7 +784,7 @@ static inline uint32_t can_read_protocal_status(
 /** @} */
 
 /**
- * \name Rx Handling 
+ * \name Rx Handling
  * @{
  */
 
@@ -763,10 +842,10 @@ static inline void can_rx_clear_buffer_status(
 		struct can_module *const module_inst, uint32_t index)
 {
 	if (index < 32) {
-		module_inst->hw->NDAT1.reg &= ~(1 << index);
+		module_inst->hw->NDAT1.reg |= (1 << index);
 	} else {
 		index -= 32;
-		module_inst->hw->NDAT2.reg &= ~(1 << index);
+		module_inst->hw->NDAT2.reg |= (1 << index);
 	}
 }
 
@@ -808,6 +887,12 @@ static inline void can_rx_fifo_acknowledge(
 /**
  * \brief Get the standard message filter default value.
  *
+ * The default configuration is as follows:
+ *  \li Classic filter: SFID1 = filter, SFID2 = mask
+ *  \li Store in Rx FIFO 0 if filter matches
+ *  \li SFID2 = 0x7FFul
+ *  \li SFID1 = 0x0ul
+ *
  * \param[out] sd_filter  Pointer to standard filter element struct to initialize to default values
  */
 static inline void can_get_standard_message_filter_element_default(
@@ -815,8 +900,9 @@ static inline void can_get_standard_message_filter_element_default(
 {
 	sd_filter->S0.reg = CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Msk |
 			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1(0) |
-			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF0M |
-			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_CLASSIC;			
+			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(
+			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF0M_Val) |
+			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_CLASSIC;
 }
 
 /**
@@ -838,13 +924,20 @@ enum status_code can_set_rx_standand_filter(
 /**
  * \brief Get the extended message filter default value.
  *
+ * The default configuration is as follows:
+ *  \li Classic filter: SFID1 = filter, SFID2 = mask
+ *  \li Store in Rx FIFO 1 if filter matches
+ *  \li SFID2 = 0x1FFFFFFFul
+ *  \li SFID1 = 0x0ul
+ *
  * \param[out] et_filter  Pointer to extended filter element struct to initialize to default values
  */
 static inline void can_get_extended_message_filter_element_default(
 		struct can_extended_message_filter_element *et_filter)
 {
 	et_filter->F0.reg = CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1(0) |
-			CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF1M;			
+			CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(
+			CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF1M_Val);
 	et_filter->F1.reg = CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Msk |
 			CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_CLASSIC;
 }
@@ -869,7 +962,7 @@ enum status_code can_set_rx_extended_filter(
  * \brief Get the pointer to the receive buffer element.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] rx_element  Pointer of pointer to receive buffer element
+ * \param[in] rx_element  Pointer to receive buffer element
  * \param[in] index  Index offset in receive buffer
  *
  *  \return Status of the result.
@@ -879,13 +972,13 @@ enum status_code can_set_rx_extended_filter(
  */
 enum status_code can_get_rx_buffer_element(
 		struct can_module *const module_inst,
-		struct can_rx_element_buffer **rx_element, uint32_t index);
+		struct can_rx_element_buffer *rx_element, uint32_t index);
 
 /**
  * \brief Get the pointer to the receive FIFO 0 element.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] rx_element  Pointer of pointer to receive FIFO 0
+ * \param[in] rx_element  Pointer to receive FIFO 0
  * \param[in] index  Index offset in receive FIFO 0
  *
  *  \return Status of the result.
@@ -895,13 +988,13 @@ enum status_code can_get_rx_buffer_element(
  */
 enum status_code can_get_rx_fifo_0_element(
 		struct can_module *const module_inst,
-		struct can_rx_element_fifo_0 **rx_element, uint32_t index);
+		struct can_rx_element_fifo_0 *rx_element, uint32_t index);
 
 /**
  * \brief Get the pointer to the receive FIFO 1 element.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] rx_element  Pointer of pointer to receive FIFO 1
+ * \param[in] rx_element  Pointer to receive FIFO 1
  * \param[in] index  Index offset in receive FIFO 1
  *
  *  \return Status of the result.
@@ -911,12 +1004,12 @@ enum status_code can_get_rx_fifo_0_element(
  */
 enum status_code can_get_rx_fifo_1_element(
 		struct can_module *const module_inst,
-		struct can_rx_element_fifo_1 **rx_element, uint32_t index);
+		struct can_rx_element_fifo_1 *rx_element, uint32_t index);
 
 /** @} */
 
 /**
- * \name Tx Handling 
+ * \name Tx Handling
  * @{
  */
 
@@ -950,24 +1043,42 @@ static inline uint32_t can_tx_get_pending_status(
  * \brief Tx buffer add transfer request.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] trig_mask  The mask value to trigger tansfer buffer 
+ * \param[in] trig_mask  The mask value to trigger transfer buffer
+ *
+ *  \return Status of the result.
+ *
+ *  \retval STATUS_OK   Set the transfer request.
+ *  \retval STATUS_BUSY The module is in configuration.
  */
-static inline void can_tx_transfer_request(struct can_module *const module_inst,
-		uint32_t trig_mask)
+static inline enum status_code can_tx_transfer_request(
+		struct can_module *const module_inst, uint32_t trig_mask)
 {
+	if (module_inst->hw->CCCR.reg & CAN_CCCR_CCE) {
+		return STATUS_BUSY;
+	}
 	module_inst->hw->TXBAR.reg = trig_mask;
+	return STATUS_OK;
 }
 
 /**
  * \brief Set Tx Queue operation.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] trig_mask  The mask value to cancel tansfer buffer 
+ * \param[in] trig_mask  The mask value to cancel transfer buffer
+ *
+ *  \return Status of the result.
+ *
+ *  \retval STATUS_OK   Set the transfer request.
+ *  \retval STATUS_BUSY The module is in configuration.
  */
-static inline void can_tx_cancel_request(struct can_module *const module_inst,
-		uint32_t trig_mask)
+static inline enum status_code can_tx_cancel_request(
+		struct can_module *const module_inst, uint32_t trig_mask)
 {
+	if (module_inst->hw->CCCR.reg & CAN_CCCR_CCE) {
+		return STATUS_BUSY;
+	}
 	module_inst->hw->TXBCR.reg = trig_mask;
+	return STATUS_OK;
 }
 
 /**
@@ -984,13 +1095,13 @@ static inline uint32_t can_tx_get_transmission_status(
 }
 
 /**
- * \brief Get Tx cancellationion status.
+ * \brief Get Tx cancellation status.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
  *
- * \return Bit mask of Tx cancellationion status value.
+ * \return Bit mask of Tx cancellation status value.
  */
-static inline uint32_t can_tx_get_cancellationion_status(
+static inline uint32_t can_tx_get_cancellation_status(
 		struct can_module *const module_inst)
 {
 	return module_inst->hw->TXBCF.reg;
@@ -1024,13 +1135,22 @@ static inline void can_tx_event_fifo_acknowledge(
 /**
  * \brief Get the default transfer buffer element.
  *
+ * The default configuration is as follows:
+ *  \li 11-bit standard identifier
+ *  \li Transmit data frame
+ *  \li ID = 0x0ul
+ *  \li Store Tx events
+ *  \li Frame transmitted in Classic CAN format
+ *  \li Data Length Code is 8
+ *
  * \param[out] tx_element  Pointer to transfer element struct to initialize to default values
  */
 static inline void can_get_tx_buffer_element_defaults(
 		struct can_tx_element *tx_element)
 {
 	tx_element->T0.reg = 0;
-	tx_element->T1.reg = CAN_TX_ELEMENT_T1_EFC | CAN_TX_ELEMENT_T1_DLC(8);
+	tx_element->T1.reg = CAN_TX_ELEMENT_T1_EFC |
+			CAN_TX_ELEMENT_T1_DLC(CAN_TX_ELEMENT_T1_DLC_DATA8_Val);
 }
 
 /**
@@ -1068,7 +1188,7 @@ enum status_code can_get_tx_event_fifo_element(
 /** @} */
 
 /**
- * \name Interrupt Handling 
+ * \name Interrupt Handling
  * @{
  */
 
@@ -1214,7 +1334,11 @@ static inline void can_clear_interrupt_status(
  *	</tr>
  *  <tr>
  *		<td>CAN</td>
- *		<td>Operational Amplifier Controller</td>
+ *		<td>Control Area Network (CAN) Controller</td>
+ *	</tr>
+ *  <tr>
+ *		<td>CAN FD</td>
+ *		<td>CAN with Flexible Data-Rate</td>
  *	</tr>
  * </table>
  *
@@ -1254,6 +1378,8 @@ static inline void can_clear_interrupt_status(
  *
  *  - \subpage asfdoc_sam0_can_basic_use_case
  *
+ *  - \subpage asfdoc_sam0_can_fd_use_case
+ *
  * \page asfdoc_sam0_can_document_revision_history Document Revision History
  *
  * <table>
@@ -1264,7 +1390,7 @@ static inline void can_clear_interrupt_status(
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>01/2015</td>
+ *		<td>03/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

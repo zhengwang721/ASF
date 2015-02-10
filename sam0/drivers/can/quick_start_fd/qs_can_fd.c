@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM CAN basic Quick Start
+ * \brief SAM CAN Quick Start for FD modue
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -126,6 +126,7 @@ static void configure_can(void)
 	can_get_config_defaults(&config_can);
 	can_init(&can_instance, CAN_MODULE, &config_can);
 
+	can_enable_fd_mode(&can_instance);
 	can_start(&can_instance);
 
 	/* Enable interrupts for this CAN module */
@@ -191,16 +192,15 @@ static void can_set_extended_filter_1(void)
 //! [can_receive_filter_setup]
 
 //! [can_transfer_message_setup]
-static void can_send_standard_message(uint32_t id_value, uint8_t *data,
-		uint32_t data_length)
+static void can_send_standard_message(uint32_t id_value, uint8_t *data)
 {
 	uint32_t i;
 	struct can_tx_element tx_element;
 
 	can_get_tx_buffer_element_defaults(&tx_element);
 	tx_element.T0.reg |= CAN_TX_ELEMENT_T0_STANDARD_ID(id_value);
-	tx_element.T1.bit.DLC = data_length;
-	for (i = 0; i < data_length; i++) {
+	tx_element.T1.bit.DLC = 8;
+	for (i = 0; i < 8; i++) {
 		tx_element.data[i] = *data;
 		data++;
 	}
@@ -210,8 +210,26 @@ static void can_send_standard_message(uint32_t id_value, uint8_t *data,
 	can_tx_transfer_request(&can_instance, 1 << CAN_TX_BUFFER_INDEX);
 }
 
-static void can_send_extended_message(uint32_t id_value, uint8_t *data,
-		uint32_t data_length)
+static void can_fd_send_standard_message(uint32_t id_value, uint8_t *data)
+{
+	uint32_t i;
+	struct can_tx_element tx_element;
+
+	can_get_tx_buffer_element_defaults(&tx_element);
+	tx_element.T0.reg |= CAN_TX_ELEMENT_T0_STANDARD_ID(id_value);
+	tx_element.T1.reg = CAN_TX_ELEMENT_T1_FDF | CAN_TX_ELEMENT_T1_BRS |
+			CAN_TX_ELEMENT_T1_DLC(CAN_TX_ELEMENT_T1_DLC_DATA64_Val);
+	for (i = 0; i < CONF_CAN_ELEMENT_DATA_SIZE; i++) {
+		tx_element.data[i] = *data;
+		data++;
+	}
+
+	can_set_tx_buffer_element(&can_instance, &tx_element,
+			CAN_TX_BUFFER_INDEX);
+	can_tx_transfer_request(&can_instance, 1 << CAN_TX_BUFFER_INDEX);
+}
+
+static void can_fd_send_extended_message(uint32_t id_value, uint8_t *data)
 {
 	uint32_t i;
 	struct can_tx_element tx_element;
@@ -219,8 +237,10 @@ static void can_send_extended_message(uint32_t id_value, uint8_t *data,
 	can_get_tx_buffer_element_defaults(&tx_element);
 	tx_element.T0.reg |= CAN_TX_ELEMENT_T0_EXTENDED_ID(id_value) |
 			CAN_TX_ELEMENT_T0_XTD;
-	tx_element.T1.bit.DLC = data_length;
-	for (i = 0; i < data_length; i++) {
+	tx_element.T1.reg = CAN_TX_ELEMENT_T1_EFC | CAN_TX_ELEMENT_T1_FDF |
+			CAN_TX_ELEMENT_T1_BRS |
+			CAN_TX_ELEMENT_T1_DLC(CAN_TX_ELEMENT_T1_DLC_DATA64_Val);
+	for (i = 0; i < CONF_CAN_ELEMENT_DATA_SIZE; i++) {
 		tx_element.data[i] = *data;
 		data++;
 	}
@@ -247,11 +267,11 @@ void CAN0_Handler(void)
 				can_get_rx_buffer_element(&can_instance, &rx_element_buffer,
 				rx_buffer_index);
 				if (rx_element_buffer.R0.bit.XTD) {
-					printf("\n\r Extended message received in Rx buffer. The received data is: \r\n");
+					printf("\n\r Extended FD message received in Rx buffer. The received data is: \r\n");
 				} else {
-					printf("\n\r Standard message received in Rx buffer. The received data is: \r\n");
+					printf("\n\r Standard FD message received in Rx buffer. The received data is: \r\n");
 				}
-				for (i = 0; i < rx_element_buffer.R1.bit.DLC; i++) {
+				for (i = 0; i < CONF_CAN_ELEMENT_DATA_SIZE; i++) {
 					printf("  %d",rx_element_buffer.data[i]);
 				}
 				printf("\r\n\r\n");
@@ -269,10 +289,16 @@ void CAN0_Handler(void)
 		if (standard_receive_index == CONF_CAN0_RX_FIFO_0_NUM) {
 			standard_receive_index = 0;
 		}
-
-		printf("\n\r Standard message received in FIFO 0. The received data is: \r\n");
-		for (i = 0; i < rx_element_fifo_0.R1.bit.DLC; i++) {
-			printf("  %d",rx_element_fifo_0.data[i]);
+		if (rx_element_fifo_0.R1.bit.FDF) {
+			printf("\n\r Standard FD message received in FIFO 0. The received data is: \r\n");
+			for (i = 0; i < CONF_CAN_ELEMENT_DATA_SIZE; i++) {
+				printf("  %d",rx_element_fifo_0.data[i]);
+			}
+		} else {
+			printf("\n\r Standard normal message received in FIFO 0. The received data is: \r\n");
+			for (i = 0; i < rx_element_fifo_0.R1.bit.DLC; i++) {
+				printf("  %d",rx_element_fifo_0.data[i]);
+			}
 		}
 		printf("\r\n\r\n");
 	}
@@ -288,8 +314,8 @@ void CAN0_Handler(void)
 			extended_receive_index = 0;
 		}
 
-		printf("\n\r Extended message received in FIFO 1. The received data is: \r\n");
-		for (i = 0; i < rx_element_fifo_1.R1.bit.DLC; i++) {
+		printf("\n\r Extended FD message received in FIFO 1. The received data is: \r\n");
+		for (i = 0; i < CONF_CAN_ELEMENT_DATA_SIZE; i++) {
 			printf("  %d",rx_element_fifo_1.data[i]);
 		}
 		printf("\r\n\r\n");
@@ -305,12 +331,13 @@ static void display_menu(void)
 			"  -- Select the action:\r\n"
 			"  0: Set standard filter ID 0: 0x45A, store into Rx buffer. \r\n"
 			"  1: Set standard filter ID 1: 0x469, store into Rx FIFO 0. \r\n"
-			"  2: Send standard message with ID: 0x45A and 4 byte data 0 to 3. \r\n"
-			"  3: Send standard message with ID: 0x469 and 4 byte data 128 to 131. \r\n"
+			"  2: Send FD standard message with ID: 0x45A and 64 byte data 0 to 63. \r\n"
+			"  3: Send FD standard message with ID: 0x469 and 64 byte data 128 to 191. \r\n"
 			"  4: Set extended filter ID 0: 0x100000A5, store into Rx buffer. \r\n"
 			"  5: Set extended filter ID 1: 0x10000096, store into Rx FIFO 1. \r\n"
-			"  6: Send extended message with ID: 0x100000A5 and 8 byte data 0 to 7. \r\n"
-			"  7: Send extended message with ID: 0x10000096 and 8 byte data 128 to 135. \r\n"
+			"  6: Send FD extended message with ID: 0x100000A5 and 64 byte data 0 to 63. \r\n"
+			"  7: Send FD extended message with ID: 0x10000096 and 64 byte data 128 to 191. \r\n"
+			"  a: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7. \r\n"
 			"  h: Display menu \r\n\r\n");
 }
 //! [user_menu]
@@ -356,15 +383,13 @@ int main(void)
 			break;
 
 		case '2':
-			printf("  2: Send standard message with ID: 0x45A and 4 byte data 0 to 3. \r\n");
-			can_send_standard_message(CAN_RX_STANDARD_FILTER_ID_0, tx_message_0,
-					CONF_CAN_ELEMENT_DATA_SIZE / 2);
+			printf("  2: Send standard message with ID: 0x45A and 64 byte data 0 to 63. \r\n");
+			can_fd_send_standard_message(CAN_RX_STANDARD_FILTER_ID_0, tx_message_0);
 			break;
 
 		case '3':
-			printf("  3: Send standard message with ID: 0x469 and 4 byte data 128 to 131. \r\n");
-			can_send_standard_message(CAN_RX_STANDARD_FILTER_ID_1, tx_message_1,
-					CONF_CAN_ELEMENT_DATA_SIZE / 2);
+			printf("  3: Send standard message with ID: 0x469 and 64 byte data 128 to 191. \r\n");
+			can_fd_send_standard_message(CAN_RX_STANDARD_FILTER_ID_1, tx_message_1);
 			break;
 
 		case '4':
@@ -378,15 +403,18 @@ int main(void)
 			break;
 
 		case '6':
-			printf("  6: Send extended message with ID: 0x100000A5 and 8 byte data 0 to 7. \r\n");
-			can_send_extended_message(CAN_RX_EXTENDED_FILTER_ID_0, tx_message_0,
-					CONF_CAN_ELEMENT_DATA_SIZE);
+			printf("  6: Send extended message with ID: 0x100000A5 and 64 byte data 0 to 63. \r\n");
+			can_fd_send_extended_message(CAN_RX_EXTENDED_FILTER_ID_0, tx_message_0);
 			break;
 
 		case '7':
-			printf("  7: Send extended message with ID: 0x10000096 and 8 byte data 128 to 135. \r\n");
-			can_send_extended_message(CAN_RX_EXTENDED_FILTER_ID_1, tx_message_1,
-					CONF_CAN_ELEMENT_DATA_SIZE);
+			printf("  7: Send extended message with ID: 0x10000096 and 64 byte data 128 to 191. \r\n");
+			can_fd_send_extended_message(CAN_RX_EXTENDED_FILTER_ID_1, tx_message_1);
+			break;
+
+		case 'a':
+			printf("  a: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7. \r\n");
+			can_send_standard_message(CAN_RX_STANDARD_FILTER_ID_1, tx_message_0);
 			break;
 
 		default:

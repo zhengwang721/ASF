@@ -40,11 +40,12 @@
  * \asf_license_stop
  *
  */
-/**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include "can.h"
+#include <string.h>
 
 /* Instance for GCLK setting. */
 struct system_gclk_chan_config gclk_chan_conf;
@@ -116,10 +117,23 @@ static void _can_message_memory_init(Can *hw)
 				CAN_TXEFC_EFS(CONF_CAN1_TX_EVENT_FIFO);
 	}
 
-	hw->RXESC.reg = CAN_RXESC_RBDS((CONF_CAN_RX_ELEMENT_DATA_SIZE_BUFFER - 8) / 4) |
-			CAN_RXESC_F0DS((CONF_CAN_RX_ELEMENT_DATA_SIZE_FIFO_0 - 8) / 4) |
-			CAN_RXESC_F1DS((CONF_CAN_RX_ELEMENT_DATA_SIZE_FIFO_1 - 8) / 4);
-	hw->TXESC.reg = CAN_TXESC_TBDS((CONF_CAN_TX_ELEMENT_DATA_SIZE - 8) / 4);
+	/**
+	 * The data size in conf_can.h should be 8/12/16/20/24/32/48/64,
+	 * The corresponding setting value in register is 0/1//2/3/4/5/6/7.
+	 * To simplify the calculation, seperate to two group 8/12/16/20/24 which
+	 * increased with 4 and 32/48/64 which increased with 16.
+	 */
+	if (CONF_CAN_ELEMENT_DATA_SIZE <= 24) {
+		hw->RXESC.reg = CAN_RXESC_RBDS((CONF_CAN_ELEMENT_DATA_SIZE - 8) / 4) |
+				CAN_RXESC_F0DS((CONF_CAN_ELEMENT_DATA_SIZE - 8) / 4) |
+				CAN_RXESC_F1DS((CONF_CAN_ELEMENT_DATA_SIZE - 8) / 4);
+		hw->TXESC.reg = CAN_TXESC_TBDS((CONF_CAN_ELEMENT_DATA_SIZE - 8) / 4);
+	} else {
+		hw->RXESC.reg = CAN_RXESC_RBDS((CONF_CAN_ELEMENT_DATA_SIZE - 32) / 16 + 5) |
+				CAN_RXESC_F0DS((CONF_CAN_ELEMENT_DATA_SIZE - 32) / 16 + 5) |
+				CAN_RXESC_F1DS((CONF_CAN_ELEMENT_DATA_SIZE - 32) / 16 + 5);
+		hw->TXESC.reg = CAN_TXESC_TBDS((CONF_CAN_ELEMENT_DATA_SIZE - 32) / 16 + 5);
+	}
 }
 
 static void _can_set_configuration(Can *hw, struct can_config *config)
@@ -254,78 +268,108 @@ void can_init(struct can_module *const module_inst, Can *hw,
 	hw->TXBCIE.reg = CAN_TXBCIE_MASK;
 }
 
-void can_switch_operation_mode(struct can_module *const module_inst,
-		const enum can_module_operation_mode mode)
+void can_start(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
+	/* Wait for the sync. */
+	while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
+}
+
+void can_stop(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+	/* Wait for the sync. */
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+}
+
+void can_enable_fd_mode(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+	/* Wait for the sync. */
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
+
+	module_inst->hw->CCCR.reg |= CAN_CCCR_FDOE;
+	module_inst->hw->CCCR.reg |= CAN_CCCR_BRSE;
+}
+
+void can_disable_fd_mode(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg &= ~CAN_CCCR_FDOE;
+}
+
+void can_enable_restricted_operation_mode(
+		struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+	/* Wait for the sync. */
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
+
+	module_inst->hw->CCCR.reg |= CAN_CCCR_ASM;
+}
+
+void can_disable_restricted_operation_mode(
+		struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg &= ~CAN_CCCR_ASM;
+}
+
+void can_enable_bus_monitor_mode(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+	/* Wait for the sync. */
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
+
+	module_inst->hw->CCCR.reg |= CAN_CCCR_MON;
+}
+
+void can_disable_bus_monitor_mode(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg &= ~CAN_CCCR_MON;
+}
+
+void can_enable_sleep_mode(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg |= CAN_CCCR_CSR;
+	/* Wait for the sync. */
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_CSA));
+}
+
+void can_disable_sleep_mode(struct can_module *const module_inst)
 {
 	/* Enable peripheral clock */
 	_can_enable_peripheral_clock(module_inst);
-
-	if (mode == CAN_OPERATION_MODE_SLEEP) {
-		module_inst->hw->CCCR.reg |= CAN_CCCR_CSR;
-		/* Wait for the sync. */
-		while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-
-		while (!(module_inst->hw->CCCR.reg & CAN_CCCR_CSA));
-	} else {
-		/* Check if in sleep mode and exit it. */
-		if ((module_inst->hw->CCCR.reg & CAN_CCCR_CSA)){
-			if (module_inst->hw == CAN0) {
-				system_gclk_chan_set_config(CAN0_GCLK_ID, &gclk_chan_conf);
-				system_gclk_chan_enable(CAN0_GCLK_ID);
-			}
-
-			if (module_inst->hw == CAN1) {
-				system_gclk_chan_set_config(CAN1_GCLK_ID, &gclk_chan_conf);
-				system_gclk_chan_enable(CAN1_GCLK_ID);
-			}
-			module_inst->hw->CCCR.reg &= CAN_CCCR_CSR;
-			while ((module_inst->hw->CCCR.reg & CAN_CCCR_CSA));
-		}
-
-		if (mode == CAN_OPERATION_MODE_SOFTWARE_INITIALIZATION) {
-			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-		} else if (mode == CAN_OPERATION_MODE_NORMAL_OPERATION) {
-			module_inst->hw->CCCR.reg = 0;
-			/* Wait for the sync. */
-			while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
-		} else if (mode == CAN_OPERATION_MODE_RESTRICTED_OPERATION) {
-			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-
-			module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-			module_inst->hw->CCCR.reg |= CAN_CCCR_ASM;
-
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
-		} else if (mode == CAN_OPERATION_MODE_BUS_MONITOR) {
-			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-
-			module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-			module_inst->hw->CCCR.reg |= CAN_CCCR_MON;
-
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
-		} else if (mode == CAN_OPERATION_MODE_TEST) {
-			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-
-			module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-			module_inst->hw->CCCR.reg |= CAN_CCCR_TEST;
-			module_inst->hw->TEST.reg |= CAN_TEST_LBCK;;
-
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
-		}
+	if (module_inst->hw == CAN0) {
+		system_gclk_chan_set_config(CAN0_GCLK_ID, &gclk_chan_conf);
+		system_gclk_chan_enable(CAN0_GCLK_ID);
 	}
+
+	if (module_inst->hw == CAN1) {
+		system_gclk_chan_set_config(CAN1_GCLK_ID, &gclk_chan_conf);
+		system_gclk_chan_enable(CAN1_GCLK_ID);
+	}
+	module_inst->hw->CCCR.reg &= CAN_CCCR_CSR;
+	while ((module_inst->hw->CCCR.reg & CAN_CCCR_CSA));
+}
+
+void can_enable_test_mode(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+	/* Wait for the sync. */
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
+
+	module_inst->hw->CCCR.reg |= CAN_CCCR_TEST;
+	module_inst->hw->TEST.reg |= CAN_TEST_LBCK;
+}
+
+void can_disable_test_mode(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg &= ~CAN_CCCR_TEST;
 }
 
 enum status_code can_set_rx_standand_filter(
@@ -360,13 +404,13 @@ enum status_code can_set_rx_extended_filter(
 
 enum status_code can_get_rx_buffer_element(
 		struct can_module *const module_inst,
-		struct can_rx_element_buffer **rx_element, uint32_t index)
+		struct can_rx_element_buffer *rx_element, uint32_t index)
 {
 	if (module_inst->hw == CAN0) {
-		*rx_element = &can0_rx_buffer[index];
+		memcpy(rx_element, &can0_rx_buffer[index], sizeof(struct can_rx_element_buffer));
 		return STATUS_OK;
 	} else if (module_inst->hw == CAN1) {
-		*rx_element = &can1_rx_buffer[index];
+		memcpy(rx_element, &can1_rx_buffer[index], sizeof(struct can_rx_element_buffer));
 		return STATUS_OK;
 	}
 	return STATUS_ERR_INVALID_ARG;
@@ -374,13 +418,13 @@ enum status_code can_get_rx_buffer_element(
 
 enum status_code can_get_rx_fifo_0_element(
 		struct can_module *const module_inst,
-		struct can_rx_element_fifo_0 **rx_element, uint32_t index)
+		struct can_rx_element_fifo_0 *rx_element, uint32_t index)
 {
 	if (module_inst->hw == CAN0) {
-		*rx_element = &can0_rx_fifo_0[index];
+		memcpy(rx_element, &can0_rx_fifo_0[index], sizeof(struct can_rx_element_buffer));
 		return STATUS_OK;
 	} else if (module_inst->hw == CAN1) {
-		*rx_element = &can1_rx_fifo_0[index];
+		memcpy(rx_element, &can1_rx_fifo_0[index], sizeof(struct can_rx_element_buffer));
 		return STATUS_OK;
 	}
 	return STATUS_ERR_INVALID_ARG;
@@ -388,13 +432,13 @@ enum status_code can_get_rx_fifo_0_element(
 
 enum status_code can_get_rx_fifo_1_element(
 		struct can_module *const module_inst,
-		struct can_rx_element_fifo_1 **rx_element, uint32_t index)
+		struct can_rx_element_fifo_1 *rx_element, uint32_t index)
 {
 	if (module_inst->hw == CAN0) {
-		*rx_element = &can0_rx_fifo_1[index];
+		memcpy(rx_element, &can0_rx_fifo_1[index], sizeof(struct can_rx_element_buffer));
 		return STATUS_OK;
 	} else if (module_inst->hw == CAN1) {
-		*rx_element = &can1_rx_fifo_1[index];
+		memcpy(rx_element, &can1_rx_fifo_1[index], sizeof(struct can_rx_element_buffer));
 		return STATUS_OK;
 	}
 	return STATUS_ERR_INVALID_ARG;
@@ -408,14 +452,14 @@ enum status_code can_set_tx_buffer_element(
 	if (module_inst->hw == CAN0) {
 		can0_tx_buffer[index].T0.reg = tx_element->T0.reg;
 		can0_tx_buffer[index].T1.reg = tx_element->T1.reg;
-		for (i = 0; i < 8; i++) {
+		for (i = 0; i < CONF_CAN_ELEMENT_DATA_SIZE; i++) {
 			can0_tx_buffer[index].data[i] = tx_element->data[i];
 		}
 		return STATUS_OK;
 	} else if (module_inst->hw == CAN1) {
 		can1_tx_buffer[index].T0.reg = tx_element->T0.reg;
 		can1_tx_buffer[index].T1.reg = tx_element->T1.reg;
-		for (i = 0; i < 8; i++) {
+		for (i = 0; i < CONF_CAN_ELEMENT_DATA_SIZE; i++) {
 			can1_tx_buffer[index].data[i] = tx_element->data[i];
 		}
 		return STATUS_OK;
@@ -428,10 +472,12 @@ enum status_code can_get_tx_event_fifo_element(
 		struct can_tx_event_element *tx_event_element, uint32_t index)
 {
 	if (module_inst->hw == CAN0) {
-		tx_event_element = &can0_tx_event_fifo[index];
+		tx_event_element->E0.reg = can0_tx_event_fifo[index].E0.reg;
+		tx_event_element->E1.reg = can0_tx_event_fifo[index].E1.reg;
 		return STATUS_OK;
 	} else if (module_inst->hw == CAN1) {
-		tx_event_element = &can1_tx_event_fifo[index];
+		tx_event_element->E0.reg = can1_tx_event_fifo[index].E0.reg;
+		tx_event_element->E1.reg = can1_tx_event_fifo[index].E1.reg;
 		return STATUS_OK;
 	}
 	return STATUS_ERR_INVALID_ARG;
