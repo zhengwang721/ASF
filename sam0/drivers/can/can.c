@@ -295,13 +295,7 @@ void can_enable_fd_mode(struct can_module *const module_inst)
 
 void can_disable_fd_mode(struct can_module *const module_inst)
 {
-	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
-	/* Wait for the sync. */
-	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-	
 	module_inst->hw->CCCR.reg &= ~CAN_CCCR_FDOE;
-	module_inst->hw->CCCR.reg &= ~CAN_CCCR_BRSE;
 }
 
 void can_enable_restricted_operation_mode(
@@ -318,11 +312,6 @@ void can_enable_restricted_operation_mode(
 void can_disable_restricted_operation_mode(
 		struct can_module *const module_inst)
 {
-	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
-	/* Wait for the sync. */
-	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-	
 	module_inst->hw->CCCR.reg &= ~CAN_CCCR_ASM;
 }
 
@@ -338,11 +327,6 @@ void can_enable_bus_monitor_mode(struct can_module *const module_inst)
 
 void can_disable_bus_monitor_mode(struct can_module *const module_inst)
 {
-	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
-	/* Wait for the sync. */
-	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-	
 	module_inst->hw->CCCR.reg &= ~CAN_CCCR_MON;
 }
 
@@ -385,13 +369,7 @@ void can_enable_test_mode(struct can_module *const module_inst)
 
 void can_disable_test_mode(struct can_module *const module_inst)
 {
-	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
-	/* Wait for the sync. */
-	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-	
 	module_inst->hw->CCCR.reg &= ~CAN_CCCR_TEST;
-	module_inst->hw->TEST.reg &= ~CAN_TEST_LBCK;
 }
 
 enum status_code can_set_rx_standand_filter(

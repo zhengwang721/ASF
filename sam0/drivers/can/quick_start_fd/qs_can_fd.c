@@ -413,7 +413,7 @@ int main(void)
 			break;
 
 		case 'a':
-			printf("  3: Send standard message with ID: 0x469 and 64 byte data 128 to 191. \r\n");
+			printf("  a: Send standard message with ID: 0x469 and 64 byte data 128 to 191. \r\n");
 			can_send_standard_message(CAN_RX_STANDARD_FILTER_ID_1, tx_message_0);
 			break;
 

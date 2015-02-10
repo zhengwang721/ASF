@@ -629,14 +629,14 @@ void can_init(struct can_module *const module_inst, Can *hw,
 		struct can_config *config);
 
 /**
- * \brief Start CAN module transcation.
+ * \brief Start CAN module communication.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
  */
 void can_start(struct can_module *const module_inst);
 
 /**
- * \brief Stop CAN module transcation.
+ * \brief Stop CAN module communication.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
  */
@@ -644,6 +644,9 @@ void can_stop(struct can_module *const module_inst);
 
 /**
  * \brief Enable CAN FD mode.
+ *
+ * \note This function will set the CCCR.INIT bit, can_start() is needed to 
+ * restart the communication.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
  */
@@ -658,6 +661,9 @@ void can_disable_fd_mode(struct can_module *const module_inst);
 
 /**
  * \brief Enable CAN restricted operation mode.
+ *
+ * \note This function will set the CCCR.INIT bit, can_start() is needed to 
+ * restart the communication.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
  */
@@ -674,6 +680,9 @@ void can_disable_restricted_operation_mode(
 
 /**
  * \brief Enable CAN bus monitor mode.
+ *
+ * \note This function will set the CCCR.INIT bit, can_start() is needed to 
+ * restart the communication.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
  */
@@ -702,6 +711,9 @@ void can_disable_sleep_mode(struct can_module *const module_inst);
 
 /**
  * \brief Enable CAN test mode.
+ *
+ * \note This function will set the CCCR.INIT bit, can_start() is needed to 
+ * restart the communication.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
  */
@@ -1300,6 +1312,10 @@ static inline void can_clear_interrupt_status(
  *  <tr>
  *		<td>CAN</td>
  *		<td>Control Area Network (CAN) Controller</td>
+ *	</tr>
+ *  <tr>
+ *		<td>CAN FD</td>
+ *		<td>CAN with Flexible Data-Rate</td>
  *	</tr>
  * </table>
  *
