@@ -70,7 +70,7 @@ void configure_spi_slave_callbacks(void);
 void configure_spi_slave(void);
 
 //! [callback]
-static void spi_slave_callback(const struct spi_module *const module)
+static void spi_slave_callback(struct spi_module *const module)
 {
 //! [callback_var]
 	transfer_complete_spi_slave = true;

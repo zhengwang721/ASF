@@ -634,7 +634,7 @@ struct usart_module;
  *
  * Type of the callback functions.
  */
-typedef void (*usart_callback_t)(const struct usart_module *const module);
+typedef void (*usart_callback_t)(struct usart_module *const module);
 #endif
 
 /**
