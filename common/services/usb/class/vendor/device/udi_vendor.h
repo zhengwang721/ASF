@@ -3,7 +3,7 @@
  *
  * \brief USB Vendor class interface definitions.
  *
- * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -92,7 +92,6 @@ extern UDC_DESC_STORAGE udi_api_t udi_api_vendor;
 
 /**
  * \ingroup udi_vendor_group
- * \defgroup udi_vendor_group_desc USB interface descriptors
  *
  * The following structures provide predefined USB interface descriptors.
  * It must be used to define the final USB descriptors.
