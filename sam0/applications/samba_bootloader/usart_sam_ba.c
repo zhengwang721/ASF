@@ -39,7 +39,7 @@
  *
  * \asf_license_stop
  */
-/**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -373,7 +373,6 @@ uint32_t usart_getdata_xmd(void* data, uint32_t length) {
 	uint8_t * ptr_data = (uint8_t *) data;
 	uint32_t b_run, nbr_of_timeout = 100;
 	uint8_t sno = 0x01;
-	uint32_t data_transfered = 0;
 
 	//Copied from legacy source code ... might need some tweaking
 	uint32_t loops_per_second = system_clock_source_get_hz(CONF_CLOCK_GCLK_0_CLOCK_SOURCE) / 10;
@@ -418,7 +417,6 @@ uint32_t usart_getdata_xmd(void* data, uint32_t length) {
 			if (b_run == true) {
 				++sno;
 				ptr_data += PKTLEN_128;
-				data_transfered += PKTLEN_128;
 			}
 			break;
 		case EOT:
