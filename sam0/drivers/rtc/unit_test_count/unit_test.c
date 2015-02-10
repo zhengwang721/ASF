@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM Analog to Digital Converter (RTC) Unit test
+ * \brief SAM RTC Count Unit test
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -70,6 +70,7 @@
  *
  * The following kit is required for carrying out the test:
  *  - SAM D21 Xplained Pro board
+ *  - SAM DA1 Xplained Pro board
  *
  * \section asfdoc_sam0_rtc_unit_test_setup Setup
  *
