@@ -3,7 +3,7 @@
  *
  * \brief SAM Non Volatile Memory Driver Quick Start
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -109,7 +109,7 @@
  * -# Read back the written page of page from the NVM into the buffer.
  *    \snippet qs_nvm_basic.c main_6
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
