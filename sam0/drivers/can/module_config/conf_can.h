@@ -47,29 +47,28 @@
 #define CONF_CAN_H_INCLUDED
 
 /*
- * Below is the message ram setting, it will store in the system ram.
- * If the ram usage is too large for your application, please reduce the
- * number setting here.
+ * Below is the message RAM setting, it will be stored in the system RAM.
+ * Please adjust the message size according to your application.
  */
-#define CONF_CAN0_RX_FIFO_0_NUM         16
-#define CONF_CAN0_RX_FIFO_1_NUM         16
-#define CONF_CAN0_RX_BUFFER_NUM         16
-#define CONF_CAN0_TX_BUFFER_NUM         4
-#define CONF_CAN0_TX_FIFO_QUEUE_NUM     4
-#define CONF_CAN0_TX_EVENT_FIFO         8
+#define CONF_CAN0_RX_FIFO_0_NUM         16            /* Range: 1..64 */ 
+#define CONF_CAN0_RX_FIFO_1_NUM         16            /* Range: 1..64 */ 
+#define CONF_CAN0_RX_BUFFER_NUM         16            /* Range: 1..64 */ 
+#define CONF_CAN0_TX_BUFFER_NUM         4             /* Range: 1..16 */ 
+#define CONF_CAN0_TX_FIFO_QUEUE_NUM     4             /* Range: 1..16 */ 
+#define CONF_CAN0_TX_EVENT_FIFO         8             /* Range: 1..32 */ 
 
-#define CONF_CAN0_RX_STANDARD_ID_FILTER_NUM     32
-#define CONF_CAN0_RX_EXTENDED_ID_FILTER_NUM     16
+#define CONF_CAN0_RX_STANDARD_ID_FILTER_NUM     32    /* Range: 1..128 */ 
+#define CONF_CAN0_RX_EXTENDED_ID_FILTER_NUM     16    /* Range: 1..64 */ 
 
-#define CONF_CAN1_RX_FIFO_0_NUM         16
-#define CONF_CAN1_RX_FIFO_1_NUM         16
-#define CONF_CAN1_RX_BUFFER_NUM         16
-#define CONF_CAN1_TX_BUFFER_NUM         4
-#define CONF_CAN1_TX_FIFO_QUEUE_NUM     4
-#define CONF_CAN1_TX_EVENT_FIFO         8
+#define CONF_CAN1_RX_FIFO_0_NUM         16            /* Range: 1..64 */ 
+#define CONF_CAN1_RX_FIFO_1_NUM         16            /* Range: 1..64 */ 
+#define CONF_CAN1_RX_BUFFER_NUM         16            /* Range: 1..64 */ 
+#define CONF_CAN1_TX_BUFFER_NUM         4             /* Range: 1..16 */ 
+#define CONF_CAN1_TX_FIFO_QUEUE_NUM     4             /* Range: 1..16 */ 
+#define CONF_CAN1_TX_EVENT_FIFO         8             /* Range: 1..32 */ 
 
-#define CONF_CAN1_RX_STANDARD_ID_FILTER_NUM     32
-#define CONF_CAN1_RX_EXTENDED_ID_FILTER_NUM     16
+#define CONF_CAN1_RX_STANDARD_ID_FILTER_NUM     32    /* Range: 1..128 */ 
+#define CONF_CAN1_RX_EXTENDED_ID_FILTER_NUM     16    /* Range: 1..64 */ 
 
 /* The value should be 8/12/16/20/24/32/48/64. */
 #define CONF_CAN_ELEMENT_DATA_SIZE         8
@@ -77,8 +76,8 @@
 /*
  * The setting of the nominal bit rate is based on the GCLK_CAN is 48M which you can
  * change in the conf_clock.h. Below is the default configuration. The
- * time quanta is 48MHz/(5 + 1) =  8MHz. And each bit is (3+10+3)=16 time
- * quanta which means the bit rate is 8MHz/16=500KHz.
+ * time quanta is 48MHz / (5+1) =  8MHz. And each bit is (3+10+3) = 16 time
+ * quanta which means the bit rate is 8MHz / 16 = 500KHz.
  */
 /* Nominal bit Baud Rate Prescaler */
 #define CONF_CAN_NBTP_NBRP_VALUE    5
@@ -92,8 +91,8 @@
 /*
  * The setting of the data bit rate is based on the GCLK_CAN is 48M which you can
  * change in the conf_clock.h. Below is the default configuration. The
- * time quanta is 48MHz/(5 + 1) =  8MHz. And each bit is (3+10+3)=16 time
- * quanta which means the bit rate is 8MHz/16=500KHz.
+ * time quanta is 48MHz / (5+1) =  8MHz. And each bit is (3+10+3) = 16 time
+ * quanta which means the bit rate is 8MHz / 16 = 500KHz.
  */
 /* Data bit Baud Rate Prescaler */
 #define CONF_CAN_DBTP_DBRP_VALUE    5

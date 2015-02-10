@@ -63,8 +63,8 @@ typedef union {
     uint32_t RTR:1;            /*!< bit:  29     Remote Transmission Request */
     uint32_t XTD:1;            /*!< bit:  30     Extended Identifier */
     uint32_t ESI:1;            /*!< bit:  31     Error State Indicator */
-  } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type    used for register access */
+  } bit;                       /*!< Structure used for bit access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_RX_ELEMENT_R0_Type;
 
 #define CAN_RX_ELEMENT_R0_ID_Pos          0
@@ -88,7 +88,7 @@ typedef union {
     uint32_t FIDX:7;           /*!< bit: 24..30  Filter Index */
     uint32_t ANMF:1;           /*!< bit: 31      Accepted Non-matching Frame */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type    used for register access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_RX_ELEMENT_R1_Type;
 
 #define CAN_RX_ELEMENT_R1_RXTS_Pos        0
@@ -142,12 +142,15 @@ typedef union {
     uint32_t XTD:1;            /*!< bit:  30     Extended Identifier */
     uint32_t ESI:1;            /*!< bit:  31     Error State Indicator */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type    used for register access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_TX_ELEMENT_T0_Type;
 
-#define CAN_TX_ELEMENT_T0_ID_Pos          0
-#define CAN_TX_ELEMENT_T0_ID_Msk          (0x1FFFFFFFul << CAN_TX_ELEMENT_T0_ID_Pos)
-#define CAN_TX_ELEMENT_T0_ID(value)       ((CAN_TX_ELEMENT_T0_ID_Msk & ((value) << CAN_TX_ELEMENT_T0_ID_Pos)))
+#define CAN_TX_ELEMENT_T0_EXTENDED_ID_Pos          0
+#define CAN_TX_ELEMENT_T0_EXTENDED_ID_Msk          (0x1FFFFFFFul << CAN_TX_ELEMENT_T0_EXTENDED_ID_Pos)
+#define CAN_TX_ELEMENT_T0_EXTENDED_ID(value)       ((CAN_TX_ELEMENT_T0_EXTENDED_ID_Msk & ((value) << CAN_TX_ELEMENT_T0_EXTENDED_ID_Pos)))
+#define CAN_TX_ELEMENT_T0_STANDARD_ID_Pos          18
+#define CAN_TX_ELEMENT_T0_STANDARD_ID_Msk          (0x7FFul << CAN_TX_ELEMENT_T0_STANDARD_ID_Pos)
+#define CAN_TX_ELEMENT_T0_STANDARD_ID(value)       ((CAN_TX_ELEMENT_T0_STANDARD_ID_Msk & ((value) << CAN_TX_ELEMENT_T0_STANDARD_ID_Pos)))
 #define CAN_TX_ELEMENT_T0_RTR_Pos         29
 #define CAN_TX_ELEMENT_T0_RTR             (0x1ul << CAN_TX_ELEMENT_T0_RTR_Pos)
 #define CAN_TX_ELEMENT_T0_XTD_Pos         30
@@ -166,7 +169,7 @@ typedef union {
     uint32_t EFC:1;            /*!< bit: 23      Event FIFO Control */
     uint32_t MM:8;             /*!< bit: 24..31  Message Marker */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type    used for register access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_TX_ELEMENT_T1_Type;
 
 #define CAN_TX_ELEMENT_T1_DLC_Pos         16
@@ -209,7 +212,7 @@ typedef union {
     uint32_t XTD:1;            /*!< bit: 30     Extended Identifier */
     uint32_t ESI:1;            /*!< bit: 31     Error State Indicator */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type    used for register access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_TX_EVENT_ELEMENT_E0_Type;
 
 #define CAN_TX_EVENT_ELEMENT_E0_ID_Pos          0
@@ -232,7 +235,7 @@ typedef union {
     uint32_t ET:2;             /*!< bit: 22..23  Event Type */
     uint32_t MM:8;             /*!< bit: 24..31  Message Marker */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type    used for register access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_TX_EVENT_ELEMENT_E1_Type;
 
 #define CAN_TX_EVENT_ELEMENT_E1_TXTS_Pos        0
@@ -271,7 +274,7 @@ typedef union {
     uint32_t SFEC:3;           /*!< bit: 27..29  Standard Filter Element Configuration */
     uint32_t SFT:2;            /*!< bit: 30..31  Standard Filter Type */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type    used for register access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_Type;
 
 #define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Pos          0
@@ -313,7 +316,7 @@ typedef union {
     uint32_t EFID1:29;         /*!< bit: 0..28   Extended Filter ID 1 */
     uint32_t EFEC:3;           /*!< bit: 29..31  Extended Filter Element Configuration */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type    used for register access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_Type;
 
 #define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1_Pos          0
@@ -338,7 +341,7 @@ typedef union {
     uint32_t :1;               /*!< bit: 29     Reserved */
     uint32_t EFT:2;            /*!< bit: 30..31 Extended Filter Type */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type    used for register access */
+  uint32_t reg;                /*!< Type used for register access */
 } CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_Type;
 
 #define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Pos          0
@@ -435,7 +438,7 @@ extern "C" {
 #endif
 
 /**
- * \name Module setting
+ * \name Module Setting
  * @{
  */
 
@@ -645,7 +648,7 @@ void can_stop(struct can_module *const module_inst);
 /**
  * \brief Enable CAN FD mode.
  *
- * \note This function will set the CCCR.INIT bit, can_start() is needed to 
+ * \note This function will set the CCCR.INIT bit, can_start() is needed to
  * restart the communication.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
@@ -662,7 +665,7 @@ void can_disable_fd_mode(struct can_module *const module_inst);
 /**
  * \brief Enable CAN restricted operation mode.
  *
- * \note This function will set the CCCR.INIT bit, can_start() is needed to 
+ * \note This function will set the CCCR.INIT bit, can_start() is needed to
  * restart the communication.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
@@ -681,7 +684,7 @@ void can_disable_restricted_operation_mode(
 /**
  * \brief Enable CAN bus monitor mode.
  *
- * \note This function will set the CCCR.INIT bit, can_start() is needed to 
+ * \note This function will set the CCCR.INIT bit, can_start() is needed to
  * restart the communication.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
@@ -712,7 +715,7 @@ void can_disable_sleep_mode(struct can_module *const module_inst);
 /**
  * \brief Enable CAN test mode.
  *
- * \note This function will set the CCCR.INIT bit, can_start() is needed to 
+ * \note This function will set the CCCR.INIT bit, can_start() is needed to
  * restart the communication.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
@@ -766,11 +769,11 @@ static inline uint32_t can_read_error_count(
 }
 
 /**
- * \brief Can read protocal status.
+ * \brief Can read protocol status.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
  *
- * \return Protocal status value.
+ * \return protocol status value.
  */
 static inline uint32_t can_read_protocal_status(
 		struct can_module *const module_inst)
@@ -884,6 +887,12 @@ static inline void can_rx_fifo_acknowledge(
 /**
  * \brief Get the standard message filter default value.
  *
+ * The default configuration is as follows:
+ *  \li Classic filter: SFID1 = filter, SFID2 = mask
+ *  \li Store in Rx FIFO 0 if filter matches
+ *  \li SFID2 = 0x7FFul
+ *  \li SFID1 = 0x0ul
+ *
  * \param[out] sd_filter  Pointer to standard filter element struct to initialize to default values
  */
 static inline void can_get_standard_message_filter_element_default(
@@ -914,6 +923,12 @@ enum status_code can_set_rx_standand_filter(
 
 /**
  * \brief Get the extended message filter default value.
+ *
+ * The default configuration is as follows:
+ *  \li Classic filter: SFID1 = filter, SFID2 = mask
+ *  \li Store in Rx FIFO 1 if filter matches
+ *  \li SFID2 = 0x1FFFFFFFul
+ *  \li SFID1 = 0x0ul
  *
  * \param[out] et_filter  Pointer to extended filter element struct to initialize to default values
  */
@@ -1028,7 +1043,7 @@ static inline uint32_t can_tx_get_pending_status(
  * \brief Tx buffer add transfer request.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] trig_mask  The mask value to trigger tansfer buffer
+ * \param[in] trig_mask  The mask value to trigger transfer buffer
  *
  *  \return Status of the result.
  *
@@ -1049,7 +1064,7 @@ static inline enum status_code can_tx_transfer_request(
  * \brief Set Tx Queue operation.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] trig_mask  The mask value to cancel tansfer buffer
+ * \param[in] trig_mask  The mask value to cancel transfer buffer
  *
  *  \return Status of the result.
  *
@@ -1080,13 +1095,13 @@ static inline uint32_t can_tx_get_transmission_status(
 }
 
 /**
- * \brief Get Tx cancellationion status.
+ * \brief Get Tx cancellation status.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
  *
- * \return Bit mask of Tx cancellationion status value.
+ * \return Bit mask of Tx cancellation status value.
  */
-static inline uint32_t can_tx_get_cancellationion_status(
+static inline uint32_t can_tx_get_cancellation_status(
 		struct can_module *const module_inst)
 {
 	return module_inst->hw->TXBCF.reg;
@@ -1119,6 +1134,14 @@ static inline void can_tx_event_fifo_acknowledge(
 
 /**
  * \brief Get the default transfer buffer element.
+ *
+ * The default configuration is as follows:
+ *  \li 11-bit standard identifier
+ *  \li Transmit data frame
+ *  \li ID = 0x0ul
+ *  \li Store Tx events
+ *  \li Frame transmitted in Classic CAN format
+ *  \li Data Length Code is 8
  *
  * \param[out] tx_element  Pointer to transfer element struct to initialize to default values
  */

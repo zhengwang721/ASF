@@ -198,7 +198,7 @@ static void can_send_standard_message(uint32_t id_value, uint8_t *data,
 	struct can_tx_element tx_element;
 
 	can_get_tx_buffer_element_defaults(&tx_element);
-	tx_element.T0.reg |= CAN_TX_ELEMENT_T0_ID(id_value << 18);
+	tx_element.T0.reg |= CAN_TX_ELEMENT_T0_STANDARD_ID(id_value);
 	tx_element.T1.bit.DLC = data_length;
 	for (i = 0; i < data_length; i++) {
 		tx_element.data[i] = *data;
@@ -217,7 +217,7 @@ static void can_send_extended_message(uint32_t id_value, uint8_t *data,
 	struct can_tx_element tx_element;
 
 	can_get_tx_buffer_element_defaults(&tx_element);
-	tx_element.T0.reg |= CAN_TX_ELEMENT_T0_ID(id_value) |
+	tx_element.T0.reg |= CAN_TX_ELEMENT_T0_EXTENDED_ID(id_value) |
 			CAN_TX_ELEMENT_T0_XTD;
 	tx_element.T1.bit.DLC = data_length;
 	for (i = 0; i < data_length; i++) {

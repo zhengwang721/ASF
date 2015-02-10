@@ -118,10 +118,10 @@ static void _can_message_memory_init(Can *hw)
 	}
 
 	/**
-	 * The data size in conf_can should be 8/12/16/20/24/32/48/64,
+	 * The data size in conf_can.h should be 8/12/16/20/24/32/48/64,
 	 * The corresponding setting value in register is 0/1//2/3/4/5/6/7.
 	 * To simplify the calculation, seperate to two group 8/12/16/20/24 which
-	 * incresed with 4 and 32/48/64 which increased with 16.
+	 * increased with 4 and 32/48/64 which increased with 16.
 	 */
 	if (CONF_CAN_ELEMENT_DATA_SIZE <= 24) {
 		hw->RXESC.reg = CAN_RXESC_RBDS((CONF_CAN_ELEMENT_DATA_SIZE - 8) / 4) |
@@ -288,7 +288,7 @@ void can_enable_fd_mode(struct can_module *const module_inst)
 	/* Wait for the sync. */
 	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
 	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-	
+
 	module_inst->hw->CCCR.reg |= CAN_CCCR_FDOE;
 	module_inst->hw->CCCR.reg |= CAN_CCCR_BRSE;
 }
@@ -305,7 +305,7 @@ void can_enable_restricted_operation_mode(
 	/* Wait for the sync. */
 	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
 	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-	
+
 	module_inst->hw->CCCR.reg |= CAN_CCCR_ASM;
 }
 
@@ -321,7 +321,7 @@ void can_enable_bus_monitor_mode(struct can_module *const module_inst)
 	/* Wait for the sync. */
 	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
 	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-	
+
 	module_inst->hw->CCCR.reg |= CAN_CCCR_MON;
 }
 
@@ -335,7 +335,7 @@ void can_enable_sleep_mode(struct can_module *const module_inst)
 	module_inst->hw->CCCR.reg |= CAN_CCCR_CSR;
 	/* Wait for the sync. */
 	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-	
+
 	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_CSA));
 }
 
@@ -347,7 +347,7 @@ void can_disable_sleep_mode(struct can_module *const module_inst)
 		system_gclk_chan_set_config(CAN0_GCLK_ID, &gclk_chan_conf);
 		system_gclk_chan_enable(CAN0_GCLK_ID);
 	}
-	
+
 	if (module_inst->hw == CAN1) {
 		system_gclk_chan_set_config(CAN1_GCLK_ID, &gclk_chan_conf);
 		system_gclk_chan_enable(CAN1_GCLK_ID);
@@ -362,7 +362,7 @@ void can_enable_test_mode(struct can_module *const module_inst)
 	/* Wait for the sync. */
 	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
 	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-	
+
 	module_inst->hw->CCCR.reg |= CAN_CCCR_TEST;
 	module_inst->hw->TEST.reg |= CAN_TEST_LBCK;
 }

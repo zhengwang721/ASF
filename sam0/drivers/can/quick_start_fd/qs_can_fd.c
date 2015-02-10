@@ -198,7 +198,7 @@ static void can_send_standard_message(uint32_t id_value, uint8_t *data)
 	struct can_tx_element tx_element;
 
 	can_get_tx_buffer_element_defaults(&tx_element);
-	tx_element.T0.reg |= CAN_TX_ELEMENT_T0_ID(id_value << 18);
+	tx_element.T0.reg |= CAN_TX_ELEMENT_T0_STANDARD_ID(id_value);
 	tx_element.T1.bit.DLC = 8;
 	for (i = 0; i < 8; i++) {
 		tx_element.data[i] = *data;
@@ -216,7 +216,7 @@ static void can_fd_send_standard_message(uint32_t id_value, uint8_t *data)
 	struct can_tx_element tx_element;
 
 	can_get_tx_buffer_element_defaults(&tx_element);
-	tx_element.T0.reg |= CAN_TX_ELEMENT_T0_ID(id_value << 18);
+	tx_element.T0.reg |= CAN_TX_ELEMENT_T0_STANDARD_ID(id_value);
 	tx_element.T1.reg = CAN_TX_ELEMENT_T1_FDF | CAN_TX_ELEMENT_T1_BRS |
 			CAN_TX_ELEMENT_T1_DLC(CAN_TX_ELEMENT_T1_DLC_DATA64_Val);
 	for (i = 0; i < CONF_CAN_ELEMENT_DATA_SIZE; i++) {
@@ -235,7 +235,7 @@ static void can_fd_send_extended_message(uint32_t id_value, uint8_t *data)
 	struct can_tx_element tx_element;
 
 	can_get_tx_buffer_element_defaults(&tx_element);
-	tx_element.T0.reg |= CAN_TX_ELEMENT_T0_ID(id_value) |
+	tx_element.T0.reg |= CAN_TX_ELEMENT_T0_EXTENDED_ID(id_value) |
 			CAN_TX_ELEMENT_T0_XTD;
 	tx_element.T1.reg = CAN_TX_ELEMENT_T1_EFC | CAN_TX_ELEMENT_T1_FDF |
 			CAN_TX_ELEMENT_T1_BRS |
@@ -413,7 +413,7 @@ int main(void)
 			break;
 
 		case 'a':
-			printf("  a: Send standard message with ID: 0x469 and 64 byte data 128 to 191. \r\n");
+			printf("  a: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7. \r\n");
 			can_send_standard_message(CAN_RX_STANDARD_FILTER_ID_1, tx_message_0);
 			break;
 
