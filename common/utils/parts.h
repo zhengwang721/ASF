@@ -1280,20 +1280,20 @@
 /** SAMD11 Family */
 #define SAMD11 (SAMD11C || SAMD11DS || SAMD11DM)
 
+/** SAMDA0 Family */
+#define SAMDA0 (SAMDA0J || SAMDA0G || SAMDA0E)
+
+/** SAMDA1 Family */
+#define SAMDA1 (SAMDA1J || SAMDA1G || SAMDA1E)
+
 /** SAMD Family */
-#define SAMD   (SAMD20 || SAMD21 || SAMD10 || SAMD11)
+#define SAMD   (SAMD20 || SAMD21 || SAMD10 || SAMD11 || SAMDA0 || SAMDA1)
 
 /** SAMR21 Family */
 #define SAMR21 (SAMR21G || SAMR21E)
 
 /** SAML21 Family */
 #define SAML21 (SAML21J || SAML21G || SAML21E)
-
-/** SAMDA0 Family */
-#define SAMDA0 (SAMDA0J || SAMDA0G || SAMDA0E)
-
-/** SAMDA1 Family */
-#define SAMDA1 (SAMDA1J || SAMDA1G || SAMDA1E)
 
 /** SAM4E Family */
 #define SAM4E (SAM4E8 || SAM4E16)
