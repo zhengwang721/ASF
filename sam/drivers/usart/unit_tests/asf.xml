@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.usart.unit_test" caption="Unit Tests for the SAM USART Driver">
+	<module type="application" id="sam.drivers.usart.unit_tests" caption="Unit Tests for the SAM USART Driver">
 		<info type="description" value="summary">
 			Unit test application for the USART driver.
 			</info>

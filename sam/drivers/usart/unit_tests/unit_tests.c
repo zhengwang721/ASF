@@ -40,8 +40,8 @@
  * \asf_license_stop
  *
  */
-
-
+#include <string.h>
+#include <unit_test/suite.h>
 #include <stdio_serial.h>
 #include <conf_test.h>
 #include "asf.h"
@@ -86,7 +86,7 @@
  * may or may not work.
  *
  * \section contactinfo Contact Information
- /* For further information, visit
+ * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
  /**
