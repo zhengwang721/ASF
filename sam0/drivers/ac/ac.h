@@ -119,7 +119,7 @@
  *    </tr>
  *    <tr>
  *      <td>FEATURE_AC_RUN_IN_STANDY_PAIR_COMPARATOR</td>
- *      <td>SAMD20/D21/D10/D11/DA0/DA1/R21</td>
+ *      <td>SAMD20/D21/D10/D11/R21/DA0/DA1</td>
  *    </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -490,7 +490,7 @@ enum ac_chan_neg_mux {
 	 *  reference. */
 	AC_CHAN_NEG_MUX_BANDGAP    = AC_COMPCTRL_MUXNEG_BANDGAP,
 	/**
-	 * For SAMD20/D21/D10/D11/DA0/DA1/R21:
+	 * For SAMD20/D21/D10/D11/R21/DA0/DA1:
 	 *     Negative comparator input is connected to the channel's internal DAC
 	 *     channel 0 output.
 	 * For SAML21:
