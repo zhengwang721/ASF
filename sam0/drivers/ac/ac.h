@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef AC_H_INCLUDED
@@ -645,7 +645,12 @@ struct ac_config {
 	bool run_in_standby[AC_PAIRS];
 #endif
 	/** Source generator for AC GCLK. */
+#if (SAMD) || (SAMR21)
+	enum gclk_generator dig_source_generator;
+	enum gclk_generator ana_source_generator;
+#else
 	enum gclk_generator source_generator;
+#endif
 };
 
 /**
@@ -806,7 +811,12 @@ static inline void ac_get_config_defaults(
 		config->run_in_standby[i] = false;
 	}
 #endif
+#if (SAMD) || (SAMR21)
+	config->dig_source_generator = GCLK_GENERATOR_0;
+	config->ana_source_generator = GCLK_GENERATOR_3;
+#else
 	config->source_generator = GCLK_GENERATOR_0;
+#endif
 }
 
 /**
