@@ -92,6 +92,7 @@ extern UDC_DESC_STORAGE udi_api_t udi_api_vendor;
 
 /**
  * \ingroup udi_vendor_group
+ * \defgroup udi_vendor_group_desc USB interface descriptors
  *
  * The following structures provide predefined USB interface descriptors.
  * It must be used to define the final USB descriptors.
