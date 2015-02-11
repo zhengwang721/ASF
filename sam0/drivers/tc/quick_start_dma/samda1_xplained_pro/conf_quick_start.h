@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief TC Quick Start configuration for SAM D21 Xplained Pro
+ * \brief TC Quick Start configuration for SAM DA1 Xplained Pro
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
