@@ -69,6 +69,7 @@
  *
  * The following kit is required for carrying out the test:
  *  - SAM D21 Xplained Pro board
+ *  - SAM DA1 Xplained Pro board
  *
  * \section asfdoc_sam0_dac_unit_test_setup Setup
  *
@@ -93,7 +94,7 @@
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
-/**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>

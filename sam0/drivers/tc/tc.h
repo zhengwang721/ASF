@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_tc_group SAM Timer/Counter Driver (TC)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the timer modules within the device, for waveform
  * generation and timing operations. The following driver API modes are covered
  * by this manual:
@@ -69,6 +69,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_tc_prerequisites
@@ -476,7 +477,7 @@
 #if SAMD20 || SAML21
 #  define TC_INSTANCE_OFFSET 0
 #endif
-#if SAMD21 || SAMR21
+#if SAMD21 || SAMR21 || SAMDA0 || SAMDA1
 #  define TC_INSTANCE_OFFSET 3
 #endif
 #if SAMD10 || SAMD11
