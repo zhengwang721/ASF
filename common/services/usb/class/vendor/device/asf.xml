@@ -21,9 +21,12 @@
 			<device-support value="uc3b"/>
 			<device-support value="uc3c"/>
 			<device-support value="uc3d"/>
+			<device-support value="uc3l3"/>
+			<device-support value="uc3l4"/>	
 			<device-support value="xmegaa3u"/>
 			<device-support value="xmegaa3bu"/>
 			<device-support value="xmegaa4u"/>
+			<device-support value="xmegab"/>
 			<device-support value="xmegac"/>
 			<device-support value="sam3s"/>
 			<device-support value="sam3sd"/>
@@ -69,9 +72,12 @@
 		<device-support value="uc3b"/>
 		<device-support value="uc3c"/>
 		<device-support value="uc3d"/>
+		<device-support value="uc3l3"/>
+		<device-support value="uc3l4"/>
 		<device-support value="xmegaa3u"/>
 		<device-support value="xmegaa3bu"/>
 		<device-support value="xmegaa4u"/>
+		<device-support value="xmegab"/>
 		<device-support value="xmegac"/>
 		<device-support value="sam3s"/>
 		<device-support value="sam3sd"/>
