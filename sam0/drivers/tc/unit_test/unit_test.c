@@ -3,7 +3,7 @@
  *
  * \brief SAM TC Unit test
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,7 +71,7 @@
  * \copydetails appdoc_preface
  *
  * The following kit is required for carrying out the test:
- *  - SAM D20/D21/R21/L21 Xplained Pro board
+ *  - SAM D20/D21/R21/L21/DA1 Xplained Pro board
  *
  * \section appdoc_sam0_tc_unit_test_setup Setup
  * The following connections has to be made using wires:
@@ -79,6 +79,7 @@
  *  - \b SAM D21 Xplained Pro:EXTINT 0 (PA16, EXT2 pin 17) <-----> TC4 WO1 (PB09, EXT1 pin 13)
  *  - \b SAM R21 Xplained Pro:EXTINT 0 (PA16, EXT1 pin 11) <-----> TC4 WO1 (PA23, EXT1 pin 10)
  *  - \b SAM L21 Xplained Pro:EXTINT 0 (PA16, EXT3 pin 9) <-----> TC0 WO1 (PB12, EXT2 pin 7)
+ *  - \b SAM DA1 Xplained Pro:EXTINT 0 (PA16, EXT2 pin 17) <-----> TC4 WO1 (PB09, EXT1 pin 13)
  *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a
