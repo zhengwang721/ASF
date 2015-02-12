@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_nvm_group SAM Non-Volatile Memory Driver (NVM)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of non-volatile memories within the device, for partitioning,
  * erasing, reading, and writing of data.
  *
@@ -61,6 +61,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_nvm_prerequisites
@@ -90,7 +91,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_NVM_RWWEE</td>
- *    <td>SAML21, SAMD21-64K</td>
+ *    <td>SAML21, SAMD21-64K, SAMDA0, SAMDA1</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -281,7 +282,7 @@ extern "C" {
  * Define NVM features set according to different device family
  * @{
 */
-#if (SAML21) || defined(SAMD21_64K) || defined(__DOXYGEN__)
+#if (SAML21) || defined(SAMD21_64K) || defined(SAMDA0) || defined(SAMDA1) || defined(__DOXYGEN__)
 /** Read while write EEPROM emulation feature*/
 #  define FEATURE_NVM_RWWEE
 #endif
