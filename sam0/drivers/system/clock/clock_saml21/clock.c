@@ -818,8 +818,6 @@ void system_clock_init(void)
 	/* OSCK32K */
 #if CONF_CLOCK_OSC32K_ENABLE == true
 
-	//OSC32KCTRL->OSC32K.bit.CALIB = OSC32KCTRL_OSC32K_CALIB(16);
-
 	struct system_clock_source_osc32k_config osc32k_conf;
 	system_clock_source_osc32k_get_config_defaults(&osc32k_conf);
 
@@ -841,8 +839,9 @@ void system_clock_init(void)
 		_system_clock_source_osc16m_freq_sel();
 	}
 
-	OSC32KCTRL->OSCULP32K.reg = (CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN1K_Pos)
-									|(CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN32K_Pos);
+	uint32_t mask = OSC32KCTRL->OSCULP32K.reg & (~(OSC32KCTRL_OSCULP32K_EN32K | OSC32KCTRL_OSCULP32K_EN1K));
+	OSC32KCTRL->OSCULP32K.reg = mask | (CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN1K_Pos)
+									 | (CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN32K_Pos);
 
 	/* DFLL Config (Open and Closed Loop) */
 #if CONF_CLOCK_DFLL_ENABLE == true
