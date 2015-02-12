@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -49,9 +49,9 @@
 /* Test usart baudrate */
 #define BOARD_USART_BAUDRATE 38400
 
-/* set usart0 as BOARD_USART1 and usart6 as BOARD_USART2*/
-#define BOARD_USART1 USART0
-#define BOARD_USART2 USART6
-#define BOARD_FLEXCOM1 FLEXCOM0
-#define BOARD_FLEXCOM2 FLEXCOM6
+/* set usart0 as BOARD_USART_PAIR_1 and usart6 as BOARD_USART_PAIR_2*/
+#define BOARD_USART_PAIR_1	USART0
+#define BOARD_USART_PAIR_2	USART6
+#define BOARD_FLEXCOM_PAIR_1	FLEXCOM0
+#define BOARD_FLEXCOM_PAIR_2	FLEXCOM6
 #endif /* CONF_TEST_H_INCLUDED */

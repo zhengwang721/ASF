@@ -40,17 +40,17 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/** Enable Com Port. */
+/* Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
-/** Configure usart1 and usart2 pins */
+/* Configure usart1 and usart2 pins */
 #define CONF_BOARD_USART0
 #define CONF_BOARD_USART6
 
