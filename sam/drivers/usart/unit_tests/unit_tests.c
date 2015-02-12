@@ -93,25 +93,43 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-/* structures for transmit and receive*/
+/* structures for transmit and receive */
 static uint32_t tx_data, rx_data;
+/* structures for cpu frequency */
+static uint32_t cpu_hz;
 
 /**
  *  \brief transfer data between 2 usarts.
  */
 static void data_transfer(void)
 {
+	uint32_t timeout_cycles = cpu_hz/2;
+
 	/* Enable transmit*/
 	usart_enable_tx(BOARD_USART_PAIR_1);
 	/* Enable receive*/
 	usart_enable_rx(BOARD_USART_PAIR_2);
-	/* Send out data*/
-	while(!(usart_is_tx_ready(BOARD_USART_PAIR_1))){
-	};
-	usart_write(BOARD_USART_PAIR_1, tx_data);
-	/* receive data*/
-	while(!(usart_is_rx_ready(BOARD_USART_PAIR_2))){};
-	usart_read(BOARD_USART_PAIR_2, &rx_data);
+	/* Reset rx_data */
+	rx_data = 0;
+
+	/* Send out data */
+	do {
+		timeout_cycles--;
+		if (usart_is_tx_ready(BOARD_USART_PAIR_1)) {
+			usart_write(BOARD_USART_PAIR_1, tx_data);
+			break;
+		}
+	} while (timeout_cycles > 0);
+
+	/* Receive data */
+	timeout_cycles = cpu_hz/2;
+	do {
+		timeout_cycles--;
+		if (usart_is_rx_ready(BOARD_USART_PAIR_2)) {
+			usart_read(BOARD_USART_PAIR_2, &rx_data);
+			break;
+		}
+	} while (timeout_cycles > 0); 
 }
 
 /**
@@ -120,11 +138,13 @@ static void data_transfer(void)
  * include 8 bits transfer test, 9 bits transfer test,
  * parity error detect and hardware handshaking test.
  *
- * \param test Current test case.
+ * \param test Current test case
  */
 static void run_usart_async_test(const struct test_case *test)
 {
 	uint32_t status;
+	/* Sanity check argument. */
+	Assert(test);
 
 #if (SAMG55)
 	/* Enable the peripheral and set USART mode. */
@@ -138,60 +158,59 @@ static void run_usart_async_test(const struct test_case *test)
 	sysclk_enable_peripheral_clock(BOARD_USART_PAIR_2);
 #endif
 
-	/*usart async mode 8 bits transfer test */
+	/* Usart async mode 8 bits transfer test */
 	sam_usart_opt_t usart_asynchronous_settings = {
-		BOARD_USART_BAUDRATE,
-		US_MR_CHRL_8_BIT,
-		US_MR_PAR_NO,
-		US_MR_NBSTOP_1_BIT,
-		US_MR_CHMODE_NORMAL,
+		.baudrate     = BOARD_USART_BAUDRATE,
+		.char_length  = US_MR_CHRL_8_BIT,
+		.parity_type  = US_MR_PAR_NO,
+		.stop_bits    = US_MR_NBSTOP_1_BIT,
+		.channel_mode = US_MR_CHMODE_NORMAL,
 		/* This field is only used in IrDA mode. */
-		0
+		.irda_filter  = 0
 	};
 
 	/* Configure USART in async mode, 8 bits data, no parity, 1 stop bit */
-	usart_init_rs232(BOARD_USART_PAIR_1, &usart_asynchronous_settings, sysclk_get_cpu_hz());
-	usart_init_rs232(BOARD_USART_PAIR_2, &usart_asynchronous_settings, sysclk_get_cpu_hz());
+	usart_init_rs232(BOARD_USART_PAIR_1, &usart_asynchronous_settings, cpu_hz);
+	usart_init_rs232(BOARD_USART_PAIR_2, &usart_asynchronous_settings, cpu_hz);
 	tx_data = 0x3A;
 	/* Transfer data between 2 usarts */
 	data_transfer();
 	test_assert_true(test, tx_data == rx_data,
 		"usart async 8 bits transfer test failed");
 
-	/* Usart async mode 9 bits transfer test*/
+	/* Usart async mode 9 bits transfer test */
 	/* Configure USART in async mode, 9 bits data, no parity, 1 stop bit */
 	usart_asynchronous_settings.char_length = US_MR_MODE9;
-	usart_init_rs232(BOARD_USART_PAIR_1, &usart_asynchronous_settings, sysclk_get_cpu_hz());
-	usart_init_rs232(BOARD_USART_PAIR_2, &usart_asynchronous_settings, sysclk_get_cpu_hz());
+	usart_init_rs232(BOARD_USART_PAIR_1, &usart_asynchronous_settings, cpu_hz);
+	usart_init_rs232(BOARD_USART_PAIR_2, &usart_asynchronous_settings, cpu_hz);
 	tx_data = 0x1A3;
 	/* Transfer data between 2 usarts */
 	data_transfer();
 	test_assert_true(test, tx_data == rx_data,
 		"usart async 9 bits transfer test failed");
 
-	/* Async mode parity error dected test*/
+	/* Async mode parity error dected test */
 	/* Configure transmiter parity bit as 0 but receiver parity bit as 1 */
 	usart_asynchronous_settings.parity_type = US_MR_PAR_SPACE;
-	usart_init_rs232(BOARD_USART_PAIR_1, &usart_asynchronous_settings, sysclk_get_cpu_hz());
+	usart_init_rs232(BOARD_USART_PAIR_1, &usart_asynchronous_settings, cpu_hz);
 	usart_asynchronous_settings.parity_type = US_MR_PAR_MARK;
-	usart_init_rs232(BOARD_USART_PAIR_2, &usart_asynchronous_settings, sysclk_get_cpu_hz());
+	usart_init_rs232(BOARD_USART_PAIR_2, &usart_asynchronous_settings, cpu_hz);
 	/* Transfer data between 2 usarts */
 	data_transfer();
 	status = usart_get_status(BOARD_USART_PAIR_2);
 	test_assert_true(test, (status & US_CSR_PARE) ,
 		"usart async parity error detected test failed");
 
-	/* hardware handshaking test*/
+	/* Hardware handshaking test */
 	/* Enable transmiter and receiver hardware handshaking feature */
-	usart_init_hw_handshaking(BOARD_USART_PAIR_1, &usart_asynchronous_settings, sysclk_get_cpu_hz());
-	usart_init_hw_handshaking(BOARD_USART_PAIR_2, &usart_asynchronous_settings, sysclk_get_cpu_hz());
-	/* enable USART1 transmit, USART2 receive doesn't enable, so USART2 will produce high RTS signal */
+	usart_init_hw_handshaking(BOARD_USART_PAIR_1, &usart_asynchronous_settings, cpu_hz);
+	usart_init_hw_handshaking(BOARD_USART_PAIR_2, &usart_asynchronous_settings, cpu_hz);
+	/* Enable USART1 transmit, USART2 receive doesn't enable, so USART2 will produce high RTS signal */
 	usart_enable_tx(BOARD_USART_PAIR_1);
 	/* USART1 should get high CTS siganl */
 	status = usart_get_status(BOARD_USART_PAIR_1);
 	test_assert_true(test, status & US_CSR_CTS,
 		"usart async handshaking test failed");
-
 }
 
 /**
@@ -200,24 +219,26 @@ static void run_usart_async_test(const struct test_case *test)
  * include 8 bits transfer test, 9 bits transfer test and
  * parity error detect test.
  * 
- * \param test Current test case.
+ * \param test Current test case
  */
 static void run_usart_sync_test(const struct test_case *test)
 {
 	uint32_t status;
+	/* Sanity check argument. */
+	Assert(test);
 
-	/*usart sync mode 8 bits transfer test*/
+	/* Usart sync mode 8 bits transfer test */
 	sam_usart_opt_t usart_synchronous_settings = {
-		BOARD_USART_BAUDRATE,
-		US_MR_CHRL_8_BIT,
-		US_MR_PAR_NO,
-		US_MR_NBSTOP_1_BIT,
-		US_MR_CHMODE_NORMAL,
+		.baudrate     = BOARD_USART_BAUDRATE,
+		.char_length  = US_MR_CHRL_8_BIT,
+		.parity_type  = US_MR_PAR_NO,
+		.stop_bits    = US_MR_NBSTOP_1_BIT,
+		.channel_mode = US_MR_CHMODE_NORMAL,
 		/* This field is only used in IrDA mode. */
-		0
+		.irda_filter  = 0
 	};
 	/* Configure USART in sync mode, 8 bits data, no parity, 1 stop bit */
-	usart_init_sync_master(BOARD_USART_PAIR_1, &usart_synchronous_settings, sysclk_get_cpu_hz());
+	usart_init_sync_master(BOARD_USART_PAIR_1, &usart_synchronous_settings, cpu_hz);
 	usart_init_sync_slave(BOARD_USART_PAIR_2, &usart_synchronous_settings);
 	tx_data = 0x0A3;
 	/* Transfer data between 2 usarts */
@@ -225,10 +246,10 @@ static void run_usart_sync_test(const struct test_case *test)
 	test_assert_true(test, tx_data == rx_data,
 		"usart sync 8 bits transfer test failed");
 
-	/*usart async mode 9 bits transfer test*/
+	/* Usart async mode 9 bits transfer test */
 	/* Configure USART in sync mode, 9 bits data, no parity, 1 stop bit */
 	usart_synchronous_settings.char_length = US_MR_MODE9;
-	usart_init_sync_master(BOARD_USART_PAIR_1, &usart_synchronous_settings, sysclk_get_cpu_hz());
+	usart_init_sync_master(BOARD_USART_PAIR_1, &usart_synchronous_settings, cpu_hz);
 	usart_init_sync_slave(BOARD_USART_PAIR_2, &usart_synchronous_settings);
 	tx_data = 0x13A;
 	/* Transfer data between 2 usarts */
@@ -236,10 +257,10 @@ static void run_usart_sync_test(const struct test_case *test)
 	test_assert_true(test, tx_data == rx_data,
 		"usart sync 9 bits transfer test failed");
 
-	/* Parity error dected test*/
+	/* Parity error dected test */
 	/* Configure transmiter parity bit as 0 but receiver parity bit as 1 */
 	usart_synchronous_settings.parity_type = US_MR_PAR_SPACE;
-	usart_init_sync_master(BOARD_USART_PAIR_1, &usart_synchronous_settings, sysclk_get_cpu_hz());
+	usart_init_sync_master(BOARD_USART_PAIR_1, &usart_synchronous_settings, cpu_hz);
 	usart_synchronous_settings.parity_type = US_MR_PAR_MARK;
 	usart_init_sync_slave(BOARD_USART_PAIR_2, &usart_synchronous_settings);
 	/* Transfer data between 2 usarts */
@@ -251,17 +272,19 @@ static void run_usart_sync_test(const struct test_case *test)
 
 /**
  * \brief Test USART write protection.
- * \param test Current test case.
+ * \param test Current test case
  */
 static void run_usart_writeprotect_test(const struct test_case *test)
 {
 	uint32_t wp_status;
 	uint32_t reg_backup;
+	/* Sanity check argument. */
+	Assert(test);
 
 	/* Enable write protect */
 	usart_enable_writeprotect(BOARD_USART_PAIR_1);
 
-	/* Access _MR to generate violation */
+	/* Access US_MR to generate violation */
 	reg_backup = BOARD_USART_PAIR_1->US_MR;
 	BOARD_USART_PAIR_1->US_MR = 0xFF;
 	
@@ -269,15 +292,15 @@ static void run_usart_writeprotect_test(const struct test_case *test)
 
 	/* If status is 0, no write violation detected */
 	test_assert_true(test, wp_status != 0,
-		"WriteProtection on _MR not detected");
+		"WriteProtection on US_MR not detected");
 
-	/* Write violation source should be _MR */
+	/* Write violation source should be US_MR */
 	test_assert_true(test, wp_status == 0x4,
-		"WriteProtection on _MR src error");
+		"WriteProtection on US_MR src error");
 
 	/* Write violation should be blocked */
 	test_assert_true(test, reg_backup == BOARD_USART_PAIR_1->US_MR,
-		"_MR write not blocked");
+		"US_MR write not blocked");
 
 	/* Disable write protect */
 	usart_disable_writeprotect(BOARD_USART_PAIR_1);
@@ -301,6 +324,7 @@ int main(void)
 	board_init();
 
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
+	cpu_hz = sysclk_get_cpu_hz();
 
 	/* Define all the test cases */
 	DEFINE_TEST_CASE(usart_async_test, NULL, run_usart_async_test, NULL,
@@ -308,7 +332,7 @@ int main(void)
 	DEFINE_TEST_CASE(usart_sync_test, NULL, run_usart_sync_test, NULL,
 		"USART sync mode transfer test");
 	DEFINE_TEST_CASE(usart_writeprotect_test, NULL, run_usart_writeprotect_test, NULL,
-		"USART write protection");
+		"USART write protection test");
 
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(usart_tests) = {
