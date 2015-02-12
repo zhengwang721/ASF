@@ -3,7 +3,7 @@
  *
  * \brief ADCIFE Window Monitor example for SAM4L.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -99,7 +99,7 @@
  * -# Input the command according to the menu.
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
