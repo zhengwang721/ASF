@@ -39,7 +39,7 @@
 void sleep_callback(struct rtimer *t, void *ptr);
 void rtimer_adjust_ticks(uint32_t howlong);
 
-extern uint32_t sleep_count;
+uint32_t sleep_count;
 static struct tc_module tc_instance;
 //static struct rtimer sleep_tmr;
 #define TC45_WAIT_BUSY() while(REG_TC4_STATUS & TC_STATUS_SYNCBUSY)
