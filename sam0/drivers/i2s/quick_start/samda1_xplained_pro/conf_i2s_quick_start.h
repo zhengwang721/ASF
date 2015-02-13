@@ -3,7 +3,7 @@
  *
  * \brief I2S Quick Start configuration for SAM DA1 Xplained Pro
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
