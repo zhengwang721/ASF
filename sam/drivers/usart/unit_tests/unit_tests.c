@@ -93,9 +93,9 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-/* structures for transmit and receive */
+/* variables for transmit and receive */
 static uint32_t tx_data, rx_data;
-/* structures for cpu frequency */
+/* variable for cpu frequency */
 static uint32_t cpu_hz;
 
 /**
@@ -105,9 +105,9 @@ static void data_transfer(void)
 {
 	uint32_t timeout_cycles = cpu_hz/2;
 
-	/* Enable transmit*/
+	/* Enable transmit */
 	usart_enable_tx(BOARD_USART_PAIR_1);
-	/* Enable receive*/
+	/* Enable receive */
 	usart_enable_rx(BOARD_USART_PAIR_2);
 	/* Reset rx_data */
 	rx_data = 0;
