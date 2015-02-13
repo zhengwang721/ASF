@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -542,6 +542,21 @@ void system_board_init(void);
 #define USB_ID_EIC_LINE              3
 #define USB_ID_EIC_MUX               MUX_PA03A_EIC_EXTINT3
 #define USB_ID_EIC_PINMUX            PINMUX_PA03A_EIC_EXTINT3
+/** @} */
+
+/** \name LIN definitions
+ *  @{
+ */
+#define LIN_TX_PIN              PIN_PB10
+#define LIN_RX_PIN              PIN_PB11
+#define LIN_EN_PIN              PIN_PB16
+
+#define LIN_USART_MODULE              SERCOM4
+#define LIN_USART_SERCOM_MUX_SETTING  USART_RX_3_TX_2_XCK_3
+#define LIN_USART_SERCOM_PINMUX_PAD0  PINMUX_UNUSED
+#define LIN_USART_SERCOM_PINMUX_PAD1  PINMUX_UNUSED
+#define LIN_USART_SERCOM_PINMUX_PAD2  PINMUX_PB10D_SERCOM4_PAD2
+#define LIN_USART_SERCOM_PINMUX_PAD3  PINMUX_PB11D_SERCOM4_PAD3
 /** @} */
 
 /** \name Embedded debugger GPIO interface definitions

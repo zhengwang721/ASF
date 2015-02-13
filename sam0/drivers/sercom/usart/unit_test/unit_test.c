@@ -3,7 +3,7 @@
  *
  * \brief SAM USART Unit test
  *
- * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -75,10 +75,11 @@
  *  - SAM D21 Xplained Pro board
  *  - SAM R21 Xplained Pro board
  *  - SAM L21 Xplained Pro board
+ *  - SAM DA1 Xplained Pro board
  *
  * \section appdoc_sam0_usart_unit_test_setup Setup
  * The following connections has to be made using wires:
- * - SAM D20/D21/R21 Xplained Pro board
+ * - SAM D20/D21/R21/DA1 Xplained Pro board
  *  - \b TX/RX: EXT1 PIN17 (PA04) <--> EXT1 PIN13 (PB09)
  * - SAM R21 Xplained Pro board
  *  - \b TX/RX: EXT1 PIN9  (PA22) <--> EXT1 PIN15 (PB03)
@@ -109,7 +110,7 @@
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

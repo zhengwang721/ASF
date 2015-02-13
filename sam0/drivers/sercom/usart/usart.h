@@ -41,7 +41,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef USART_H_INCLUDED
@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_sercom_usart_group SAM Serial USART Driver (SERCOM USART)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the SERCOM module in its USART mode to transfer or receive
  * USART data frames. The following driver API modes are covered by this
  * manual:
@@ -68,6 +68,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_sercom_usart_prerequisites
@@ -97,35 +98,35 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_SYNC_SCHEME_V2</td>
- *    <td>SAM D21/R21/D10/D11/L21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_OVER_SAMPLE</td>
- *    <td>SAM D21/R21/D10/D11/L21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_HARDWARE_FLOW_CONTROL</td>
- *    <td>SAM D21/R21/D10/D11/L21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IRDA</td>
- *    <td>SAM D21/R21/D10/D11/L21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_LIN_SLAVE</td>
- *    <td>SAM D21/R21/D10/D11/L21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_COLLISION_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_START_FRAME_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION</td>
- *    <td>SAM D21/R21/D10/D11/L21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -269,7 +270,8 @@ extern "C" {
  * Define SERCOM USART features set according to different device family.
  * @{
  */
-#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || defined(__DOXYGEN__)
+#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAMDA0) || \
+	(SAMDA1) || defined(__DOXYGEN__)
 /** Usart sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2
 /** Usart over sampling. */
