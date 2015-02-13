@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_i2s_group SAM Inter-IC Sound Controller Driver (I2S)
  *
- * This driver for SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's Inter-IC Sound Controller functionality.
  *
  * The following driver API modes are covered by this manual:
@@ -63,7 +63,8 @@
  *  - I2S (Inter-IC Sound Controller)
  *
  * The following devices can use this module:
- *  - SAM D21
+ *  - Atmel | SMART SAM D21
+ *  - Atmel | SMART SAM DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_i2s_prerequisites
