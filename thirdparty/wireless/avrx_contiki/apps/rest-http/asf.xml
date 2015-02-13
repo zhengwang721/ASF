@@ -8,7 +8,7 @@
 			<build type="c-source"      value="http-server.c"/>
 			<build type="header-file"      value="http-common.h"/>					
 			<build type="header-file"      value="http-server.h"/>		
-			<require idref="thirdparty.wireless.avrx_contiki.rest-common"/>	
+			<require idref="thirdparty.wireless.avrx_contiki.apps.rest-common"/>	
             <require idref="thirdparty.wireless.avrx_contiki.core"/>			
 			<device-support-alias value="avr2025_mac_pal_support"/>			
 			<build type="include-path" value="."/>		

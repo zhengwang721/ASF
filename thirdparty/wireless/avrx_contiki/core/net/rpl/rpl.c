@@ -234,11 +234,11 @@ rpl_add_route(rpl_dag_t *dag, uip_ipaddr_t *prefix, int prefix_len,
   rep->state.lifetime = RPL_LIFETIME(dag->instance, dag->instance->default_lifetime);
   rep->state.learned_from = RPL_ROUTE_FROM_INTERNAL;
 
-  printf("RPL: Added a route to ");
-  PRINT6ADDR(prefix);
-  PRINTF("/%d via ", prefix_len);
-  PRINT6ADDR(next_hop);
-  PRINTF("\n");
+  printf("\r\nRPL: Added a route to ");
+  uip_debug_ipaddr_print(prefix);
+  printf("/%d via ", prefix_len);
+  uip_debug_ipaddr_print(next_hop);
+  printf("\n");
 
   return rep;
 }

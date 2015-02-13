@@ -15,7 +15,6 @@
 			<build type="c-source"      value="voltage-sensor.c"/>
 			<build type="header-file"   value="button-sensor.h"/>			
 			<build type="header-file"   value="flash.h"/>			
-			<build type="header-file"   value="leds-arch.h"/>			
 			<build type="header-file"   value="samr21-sensors.h"/>			
 			<build type="header-file"   value="node-id.h"/>			
 			<build type="header-file"   value="temp-sensor.h"/>			
