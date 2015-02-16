@@ -63,7 +63,6 @@
 #include "sio2host.h"
 #include "conf_sio2host.h"
 #include "stdio_serial.h"
-#include "samr21_xplained_pro.h"
 #include "rtc_count.h" //rtc
 #include "rtc_count_interrupt.h"
 
