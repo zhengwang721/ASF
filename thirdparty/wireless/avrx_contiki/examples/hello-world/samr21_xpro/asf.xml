@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Contiki Hello World Application" id="thirdparty.wireless.avrx_contiki.examples.hello-world.samr21xpro" force-caption="true" force-description="true">
+	<project caption="Hello World Application" id="thirdparty.wireless.avrx_contiki.examples.hello-world.samr21xpro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
 		</info>
 		
@@ -29,7 +29,7 @@
 		<require idref="thirdparty.wireless.avrx_contiki.services.sam0"/>
 		<require idref="thirdparty.wireless.avrx_contiki.services.timer.sam0"/>
 		<require idref="thirdparty.wireless.avrx_contiki.examples.hello-world"/>
-	
+	    <build type="doxygen-entry-point" value="group_contiki"/>
 		<config name="config.compiler.armgcc.optimization" value="high" />
 		<generator value="as5_arm" />
 		<generator value="doxygen"/>

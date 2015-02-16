@@ -71,13 +71,14 @@ static void
 create_dag_callback(void *ptr)
 {
   const uip_ipaddr_t *root, *ipaddr;
-
+  printf("\r\nCtimer timer callback for dag root");
   root = simple_rpl_root();
   ipaddr = simple_rpl_global_address();
 
   if(root == NULL || uip_ipaddr_cmp(root, ipaddr)) {
     /* The RPL network we are joining is one that we created, so we
        become root. */
+	printf("\r\n No root available, we'll make ourself as root ");
     if(to_become_root) {
       simple_rpl_init_dag_immediately();
       to_become_root = 0;
@@ -86,8 +87,8 @@ create_dag_callback(void *ptr)
     rpl_dag_t *dag;
 
     dag = rpl_get_any_dag();
-#if DEBUG
-    printf("Found a network we did not create\n");
+#if 1
+    printf("\r\nFound a network we did not create, ");
     printf("version %d grounded %d preference %d used %d joined %d rank %d\n",
            dag->version, dag->grounded,
            dag->preference, dag->used,
@@ -101,6 +102,7 @@ create_dag_callback(void *ptr)
 
     if(dag->rank == INFINITE_RANK) {
       if(to_become_root) {
+		printf("\r\n The dag rank is infinite, so we'll become the root");
         simple_rpl_init_dag_immediately();
         to_become_root = 0;
       }
@@ -119,6 +121,7 @@ route_callback(int event, uip_ipaddr_t *route, uip_ipaddr_t *ipaddr,
     if(route != NULL && ipaddr != NULL &&
        !uip_is_addr_unspecified(route) &&
        !uip_is_addr_unspecified(ipaddr)) {
+		 printf("\r\nMesh root init, got route callback");
       if(to_become_root) {
         ctimer_set(&c, 0, create_dag_callback, NULL);
       }
@@ -205,14 +208,14 @@ simple_rpl_init_dag_immediately(void)
       uip_ip6addr(&prefix, 0xfc00, 0, 0, 0, 0, 0, 0, 0);
 #endif /* CONTIKI_TARGET_TRXEB1120 */
       rpl_set_prefix(dag, &prefix, 64);
-      PRINTF("simple_rpl_init_dag: created a new RPL dag\n");
+      printf("\r\nsimple_rpl_init_dag: created a new RPL dag\n");
       return 0;
     } else {
-      PRINTF("simple_rpl_init_dag: failed to create a new RPL DAG\n");
+      printf("\r\nsimple_rpl_init_dag: failed to create a new RPL DAG\n");
       return -1;
     }
   } else {
-    PRINTF("simple_rpl_init_dag: failed to create a new RPL DAG, no preferred IP address found\n");
+    printf("\r\nsimple_rpl_init_dag: failed to create a new RPL DAG, no preferred IP address found\n");
     return -2;
   }
 }
@@ -236,9 +239,9 @@ void
 simple_rpl_global_repair(void)
 {
   if(rpl_repair_root(RPL_DEFAULT_INSTANCE)) {
-    PRINTF("simple_rpl_global_repair: started global repair\n");
+    printf("\r\nsimple_rpl_global_repair: started global repair\n");
   } else {
-    PRINTF("simple_rpl_global_repair: failed to start global repair\n");
+    printf("\r\nsimple_rpl_global_repair: failed to start global repair\n");
   }
 }
 /*---------------------------------------------------------------------------*/

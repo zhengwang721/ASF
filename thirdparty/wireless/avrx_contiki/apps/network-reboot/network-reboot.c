@@ -40,6 +40,7 @@
 
 #include "dev/watchdog.h"
 
+
 #include <string.h>
 #include <stdio.h>
 
@@ -125,7 +126,7 @@ PROCESS_THREAD(network_reboot_process, ev, data)
 	seconds_until_reboot--;
 	if(seconds_until_reboot == 0) {
 	  printf("Rebooting\n");
-	  watchdog_reboot();
+	  //watchdog_init();
 	}
       }
     }
