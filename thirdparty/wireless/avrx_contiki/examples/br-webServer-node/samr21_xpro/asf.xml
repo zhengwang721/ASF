@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="border-router-node Application" id="thirdparty.wireless.avrx_contiki.examples.border-router-node.samr21xpro" force-caption="true" force-description="true">
+	<project caption="br-webserver-node Application" id="thirdparty.wireless.avrx_contiki.examples.br-webserver-node.samr21xpro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
 		</info>
 		
@@ -32,7 +32,7 @@
 		<require idref="thirdparty.wireless.avrx_contiki.dev.at86rf233"/>
 		<require idref="thirdparty.wireless.avrx_contiki.services.sam0"/>
 		<require idref="thirdparty.wireless.avrx_contiki.services.timer.sam0"/>
-		<require idref="thirdparty.wireless.avrx_contiki.examples.border-router-node"/>
+		<require idref="thirdparty.wireless.avrx_contiki.examples.br-webserver-node"/>
 	    <build type="doxygen-entry-point" value="group_contiki"/>
 		<config name="config.compiler.armgcc.optimization" value="high" />
 		<generator value="as5_arm" />

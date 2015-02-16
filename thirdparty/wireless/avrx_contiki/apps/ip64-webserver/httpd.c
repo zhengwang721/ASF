@@ -42,7 +42,7 @@
 #include "httpd-cgi.h"
 #include "lib/petsciiconv.h"
 #include "ip64-webserver-http-strings.h"
-
+#include "simple-udp-ping.h"
 #include "httpd.h"
 
 #define LED_UDP_PORT 8840

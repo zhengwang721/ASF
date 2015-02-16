@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
 	<!-- **************************************************************************************************** -->
-	<module type="application" id="thirdparty.wireless.avrx_contiki.examples.border-router-node" caption="TBA">
+	<module type="application" id="thirdparty.wireless.avrx_contiki.examples.br-node" caption="TBA">
 		<info type="description" value="summary">
 		</info>
 		<build type="c-source"      value="router-node.c"/>
@@ -28,6 +28,7 @@
 		<require idref="thirdparty.wireless.avrx_contiki.apps.simple-rpl"/>
 		<require idref="thirdparty.wireless.avrx_contiki.apps.multichan"/>
 		<require idref="thirdparty.wireless.avrx_contiki.apps.ip64"/>
+		<require idref="thirdparty.wireless.avrx_contiki.apps.ip64-addr"/>
 		<require idref="thirdparty.wireless.avrx_contiki.services.ksz8851snl"/>
 		<require idref="sam0.components.ethernet_phy.ksz8851snl"/>
 		<device-support-alias value="avr2025_mac_pal_support"/>		

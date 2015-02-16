@@ -41,11 +41,11 @@ int snprintf(char *str, size_t size, const char *format, ...);
 
 #include "contiki-net.h"
 
-#include "webserver.h"
+#include "ip64-webserver.h"
 #include "cfs/cfs.h"
 #include "lib/petsciiconv.h"
 #include "ip64-webserver-http-strings.h"
-#include "urlconv.h"
+//#include "urlconv.h"
 
 #include "httpd-cfs.h"
 
@@ -56,7 +56,7 @@ int snprintf(char *str, size_t size, const char *format, ...);
 #endif /* WEBSERVER_CONF_CFS_CONNS */
 
 #ifndef WEBSERVER_CONF_CFS_URLCONV
-#define URLCONV 1
+#define URLCONV 0
 #else /* WEBSERVER_CONF_CFS_URLCONV */
 #define URLCONV WEBSERVER_CONF_CFS_URLCONV
 #endif /* WEBSERVER_CONF_CFS_URLCONV */
