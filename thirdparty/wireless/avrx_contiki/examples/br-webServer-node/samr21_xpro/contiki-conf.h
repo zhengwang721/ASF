@@ -34,7 +34,7 @@
 #define __CONTIKI_CONF_H__
 
 #include "thsq-conf-const.h"
-#define INCLUDE_SUBPLATFORM_CONF 1
+
 #ifndef THSQ_CONF_NETSTACK
 #if ((ENABLE_DROWSIE) && !(ENABLE_AES))
 #define THSQ_CONF_NETSTACK      THSQ_CONF_DROWSIE
@@ -126,7 +126,7 @@
 //#define SICSLOWPAN_CONF_MAXAGE                4
 
 
-#define AUTOSTART_ENABLE                     1
+
 
 #define SICSLOWPAN_CONF_MAX_MAC_TRANSMISSIONS 5
 

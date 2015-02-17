@@ -1,7 +1,7 @@
 /**
- * \file conf_sio2host.h
+ * \file
  *
- * \brief Serial Input & Output configuration
+ * \brief Board configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,18 +38,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
 
-#ifndef CONF_SIO2HOST_H_INCLUDED
-#define CONF_SIO2HOST_H_INCLUDED
-#define SERIAL_RX_BUF_SIZE_HOST    156
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#define USART_HOST                 EDBG_CDC_MODULE
 
-/** Baudrate setting */
-#define USART_HOST_BAUDRATE        115200
+#define CONF_BOARD_AT86RFX
+#define IC_TYPE             (0x00)
 
-#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(0, USART_HOST_ISR_VECT); \
-USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC; \
-system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM0);
-#endif /* CONF_SIO2HOST_H_INCLUDED */
+#define MCU_SOC_NAME        "ATSAMR21G18A"
+
+#define AT86RFX_SPI_BAUDRATE		 4000000UL
+
+
+
+#endif /* CONF_BOARD_H_INCLUDED */

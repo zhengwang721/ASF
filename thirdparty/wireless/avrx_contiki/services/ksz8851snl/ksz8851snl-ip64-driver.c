@@ -75,22 +75,27 @@ init(void)
   printf("Ethernet Address %02x:%02x:%02x:%02x:%02x:%02x\n", 
          macaddr[0], macaddr[1], macaddr[2],
          macaddr[3], macaddr[4], macaddr[5]);
-  ksz8851snl_init();
+  ksz8851snl_init(macaddr);
   /* Write MAc address in ksz8851snl registers */
-  
-  ksz8851_reg_write(REG_MAC_ADDR_0, (macaddr[4] << 8) | macaddr[5]);
-  ksz8851_reg_write(REG_MAC_ADDR_2, (macaddr[2] << 8) | macaddr[3]);
-  ksz8851_reg_write(REG_MAC_ADDR_4, (macaddr[1] << 8) | macaddr[0]);
+  //
+  //ksz8851_reg_write(REG_MAC_ADDR_0, (macaddr[4] << 8) | macaddr[5]);
+  //ksz8851_reg_write(REG_MAC_ADDR_2, (macaddr[2] << 8) | macaddr[3]);
+  //ksz8851_reg_write(REG_MAC_ADDR_4, (macaddr[1] << 8) | macaddr[0]);
    
   process_start(&ksz8851snl_ip64_driver_process, NULL);
 }
-
+#if 0
 int
 ksz8851snl_send(const uint8_t *data, uint16_t datalen)
 {
   int txmir;
-
-  /*  printf("ksz8851snl_send %p %d\n", data, datalen);*/
+  int i = 0;
+  printf("ksz8851snl_send %p %d\n", data, datalen);
+  for(i = 0; i < datalen-1 && data[i] != NULL; i++)
+  {
+	  printf("%x",data[i]);
+  }
+  //printf("ksz8851snl_send %p %d\n", data, datalen);
   /* TX step1: check if TXQ memory size is available for transmit. */
   txmir = ksz8851_reg_read(REG_TX_MEM_INFO) & TX_MEM_AVAILABLE_MASK;
   if (txmir < datalen + 8) {
@@ -175,8 +180,7 @@ ksz8851snl_read(uint8_t *buffer, uint16_t bufsize)
         pending_frame -= 1;
         printf("ksz8851snl_update: RX bad len!\n");
       } else {
-        /*        printf("ksz8851snl_update: RX start packet receive len=%d\n",
-                  len);*/
+           //printf("ksz8851snl_update: RX start packet receive len=%d\n",len);
 
         /* RX step9: reset RX frame pointer. */
         ksz8851_reg_clrbits(REG_RX_ADDR_PTR, ADDR_PTR_MASK);
@@ -212,7 +216,7 @@ ksz8851snl_read(uint8_t *buffer, uint16_t bufsize)
   }
   return 0;
 }
-
+#endif
 /*---------------------------------------------------------------------------*/
 static int
 output(uint8_t *packet, uint16_t len)

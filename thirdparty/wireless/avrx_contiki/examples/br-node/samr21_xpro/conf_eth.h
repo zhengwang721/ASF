@@ -106,7 +106,7 @@
 #define KSZ8851SNL_SPI_PINMUX_PAD3                    EXT1_SPI_SERCOM_PINMUX_PAD3
 // Minimum clock period is 50ns@3.3V -> max frequency is 20MHz
 // Warning SAMD20 revision D (and below) has a limitation on pad speed -> max frequency is 10MHz
-#define KSZ8851SNL_CLOCK_SPEED                        10000000UL
+#define KSZ8851SNL_CLOCK_SPEED                        4000000//10000000UL
 
 /* Interrupt priorities. (lowest value = highest priority) */
 /* ISRs using FreeRTOS *FromISR APIs must have priorities below or equal to */

@@ -88,9 +88,9 @@ PROCESS_THREAD(router_node_process, ev, data)
 #if (ENABLE_WEBSERVER == 1)
 	/* Initialize the IP64 webserver */
 	ip64_webserver_init();
-
-	NETSTACK_RDC.off(1);
 #endif
+	NETSTACK_RDC.off(1);
+
 	/* ... and do nothing more. */
 	while(1) {
 		PROCESS_WAIT_EVENT();

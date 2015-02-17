@@ -1,9 +1,9 @@
 /**
- * \file conf_sio2host.h
+ * \file
  *
- * \brief Serial Input & Output configuration
+ * \brief SAM D20 External Interrupt Driver Configuration Header
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,18 +38,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
-#ifndef CONF_SIO2HOST_H_INCLUDED
-#define CONF_SIO2HOST_H_INCLUDED
-#define SERIAL_RX_BUF_SIZE_HOST    156
+#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
+#  define EXTINT_CALLBACKS_MAX     10
 
-#define USART_HOST                 EDBG_CDC_MODULE
-
-/** Baudrate setting */
-#define USART_HOST_BAUDRATE        115200
-
-#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(0, USART_HOST_ISR_VECT); \
-USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC; \
-system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM0);
-#endif /* CONF_SIO2HOST_H_INCLUDED */
+#endif
