@@ -37,7 +37,7 @@
 #include "sys/timer.h"
 #include "asf.h"
 #include "extint.h"
-#include "samr21_xplained_pro.h"
+//#include "samr21_xplained_pro.h"
 // #include ""
 
 static struct timer debouncetimer;

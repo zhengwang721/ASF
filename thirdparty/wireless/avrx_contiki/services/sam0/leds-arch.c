@@ -37,7 +37,7 @@
 #include "board.h"
 #include "conf_board.h"
 #include "port.h"
-#include "samr21_xplained_pro.h"
+//#include "samr21_xplained_pro.h"
 /*---------------------------------------------------------------------------*/
 void
 leds_arch_init(void)
