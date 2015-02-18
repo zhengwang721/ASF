@@ -109,7 +109,7 @@ static uip_ipaddr_t google_ipv4_dns_server = {
 
 
 /* MQTT Configuration details */
-#define HOST          "m2m.eclipse.org"
+#define HOST          "198.41.30.241"
 #define VERSION	      "v1"
 #define PRIORITY      "p0"
 #define UUID	      "atmeld"

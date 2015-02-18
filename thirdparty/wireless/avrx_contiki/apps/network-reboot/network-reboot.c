@@ -64,7 +64,7 @@ static const char magic_bytes[6] = "Reboot";
 
 /*---------------------------------------------------------------------------*/
 PROCESS(network_reboot_process, "Unicast sender example process");
-AUTOSTART_PROCESSES(&network_reboot_process);
+//AUTOSTART_PROCESSES(&network_reboot_process);
 /*---------------------------------------------------------------------------*/
 static void
 receiver(struct simple_udp_connection *c,

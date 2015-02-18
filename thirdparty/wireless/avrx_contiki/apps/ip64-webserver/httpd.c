@@ -42,12 +42,8 @@
 #include "httpd-cgi.h"
 #include "lib/petsciiconv.h"
 #include "ip64-webserver-http-strings.h"
-#include "simple-udp-ping.h"
+
 #include "httpd.h"
-
-#define LED_UDP_PORT 8840
-
-uint8_t nbr_id,nbr_action;
 
 #ifndef WEBSERVER_CONF_CGI_CONNS
 #define CONNS UIP_CONNS
@@ -65,13 +61,10 @@ MEMB(conns, struct httpd_state, CONNS);
 #define ISO_space   0x20
 #define ISO_bang    0x21
 #define ISO_percent 0x25
-#define ISO_ampersand 0x26
-#define ISO_question 0x3F
 #define ISO_period  0x2e
 #define ISO_slash   0x2f
 #define ISO_colon   0x3a
 
-extern struct udp_socket led_socket;
 /*---------------------------------------------------------------------------*/
 static unsigned short
 generate(void *state)
@@ -240,7 +233,6 @@ PT_THREAD(handle_output(struct httpd_state *s))
     PT_WAIT_THREAD(&s->outputpt,
 		   send_file(s));
   } else {
-	  
     PT_WAIT_THREAD(&s->outputpt,
 		   send_headers(s,
 		   ip64_webserver_http_header_200));
@@ -260,7 +252,6 @@ PT_THREAD(handle_output(struct httpd_state *s))
 static
 PT_THREAD(handle_input(struct httpd_state *s))
 {
-  char *ptr ,*ptr2;
   PSOCK_BEGIN(&s->sin);
 
   PSOCK_READTO(&s->sin, ISO_space);
@@ -280,72 +271,10 @@ PT_THREAD(handle_input(struct httpd_state *s))
     s->inputbuf[PSOCK_DATALEN(&s->sin) - 1] = 0;
     strncpy(s->filename, s->inputbuf, sizeof(s->filename));
   }
-   ptr = strrchr(s->filename, ISO_question);
-   if(ptr != NULL)
-   {
-	   
-	   uint8_t j,k;
-	   char nbrid_s[3];
-	   
-	   if(!(strncmp(ptr+1,"nbraction",9)))
-	   {
-		   ptr2 = strchr(ptr+1,ISO_ampersand);
-		   k=ptr2-ptr-11; //k=4 Ping ,k=6 On,k=7Off
-		   //if(k)
-		   strncpy(nbrid_s,ptr2+7,2);
-		    //j=ptr2-(ptr+7)-1;
-/*
-		   if(j==0)
-		   
-		   {
-			   nbrid_s[1]='\0';
-		   }*/
-		   nbr_id = atoi(nbrid_s);
-		   
-			//printf("nbr id is : %d\r\n",nbr_id);  
-			// todoo for nbr count more than 9
-			void *uptr;
-			const uip_ipaddr_t *addr;
-			uptr = nbr_table_head(ds6_neighbors);
-			for(uint8_t i=1;i<nbr_id;i++)
-			{
-				uptr = nbr_table_next(ds6_neighbors,uptr);
-			}
-			if(uptr!=NULL)
-			{				
-				uip_ds6_nbr_t *nbr= uptr;
-				addr = uip_ds6_nbr_get_ipaddr(nbr);				
-			}		
-			
-			if(addr != NULL) {
-				
-			if(k==6) 
-			{			
-				nbr_action = 0;			
-				udp_socket_sendto(&led_socket, "LED On", 6,addr, LED_UDP_PORT);
-			}
-			else if(k==7)
-			{
-				udp_socket_sendto(&led_socket, "LED Off", 7,addr, LED_UDP_PORT);
-				nbr_action = 1;
-			}
-			else 
-			{
-				nbr_action = 2;				
-				simple_udp_ping_send_ping(addr);
-				
 
-			}			
-		}
-			//printf("nbr action is : %d\r\n",nbr_action);  
-	   }
-	      }
-   
-   
   petsciiconv_topetscii(s->filename, sizeof(s->filename));
   /*  webserver_log_file(&uip_conn->ripaddr, s->filename);*/
   petsciiconv_toascii(s->filename, sizeof(s->filename));
-  
   s->state = STATE_OUTPUT;
 
   while(1) {

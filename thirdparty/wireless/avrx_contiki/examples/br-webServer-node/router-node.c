@@ -29,17 +29,16 @@
 
 #include "thsq.h"
 #include "ip64.h"
-#if (ENABLE_WEBSERVER == 1)
 #include "ip64-webserver.h"
-#endif
+extern struct process network_reboot_process;
 /*---------------------------------------------------------------------------*/
+PROCESS(blinker_process, "blinker_process");
 PROCESS(router_node_process, "Router node");
 AUTOSTART_PROCESSES(&router_node_process
-#if (ENABLE_WEBSERVER == 1)
 ,&blinker_process
-#endif
+,&network_reboot_process
 );
-#if (ENABLE_WEBSERVER == 1)
+
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(blinker_process, ev, data)
 {
@@ -74,7 +73,7 @@ PROCESS_THREAD(blinker_process, ev, data)
 	}
 	PROCESS_END();
 }
-#endif
+
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(router_node_process, ev, data)
 {
@@ -85,12 +84,12 @@ PROCESS_THREAD(router_node_process, ev, data)
 
 	/* Initialize the IP64 module so we'll start translating packets */
 	ip64_init();
-#if (ENABLE_WEBSERVER == 1)
+//#if (ENABLE_WEBSERVER == 1)
 	/* Initialize the IP64 webserver */
 	ip64_webserver_init();
 
 	NETSTACK_RDC.off(1);
-#endif
+//#endif
 	/* ... and do nothing more. */
 	while(1) {
 		PROCESS_WAIT_EVENT();
