@@ -30,7 +30,7 @@
 		<require idref="sam0.drivers.nvm"/>
 		<require idref="thirdparty.wireless.common_services.trx_access"/>
 		<require idref="thirdparty.wireless.avrx_contiki.dev.at86rf233"/>
-		<require idref="thirdparty.wireless.avrx_contiki.services.sam0"/>
+		<require idref="config.thirdparty.wireless.avrx_contiki.services.sam0"/>
 		<require idref="thirdparty.wireless.avrx_contiki.services.timer.sam0"/>
 		<require idref="thirdparty.wireless.avrx_contiki.examples.br-node"/>
 	    <build type="doxygen-entry-point" value="group_contiki"/>
