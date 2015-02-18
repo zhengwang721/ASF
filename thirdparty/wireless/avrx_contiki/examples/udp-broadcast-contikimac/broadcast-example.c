@@ -78,6 +78,9 @@
 #define SEND_TIME		(random_rand() % (SEND_INTERVAL))
 
 static struct simple_udp_connection broadcast_connection;
+static uint16_t mynodeid;
+static uip_ds6_addr_t *lladdr;
+
 #ifdef LOW_POWER_MODE
 extern uint8_t ready_to_sleep;
 extern uint8_t sent_packets;
@@ -96,7 +99,8 @@ receiver(struct simple_udp_connection *c,
          const uint8_t *data,
          uint16_t datalen)
 {
-  printf("Data received on port %d from port %d with length %d,Payload %lu\n\r",receiver_port, sender_port, datalen, *(uint32_t *)data);
+  // printf("Data received on port %d from port %d with length %d,Payload %lu\n\r",receiver_port, sender_port, datalen, *(uint32_t *)data);
+  printf("\rData received is, %s \n", data);
 
   //printf("Data received on port %d from port %d with length %d\n\r ",receiver_port, sender_port, datalen);
 #ifdef LOW_POWER_MODE  
@@ -111,6 +115,7 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
   //static struct etimer send_timer;
   uip_ipaddr_t addr;
   static uint16_t count = 0;
+  char strdata[30] = {0};
   
   /* Power measurements : variables Start */
   
@@ -125,7 +130,12 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
   /* Power measurements : variables  End */ 
   
   PROCESS_BEGIN();
-
+  lladdr = uip_ds6_get_link_local(-1);
+  mynodeid = lladdr->ipaddr.u8[14];
+  mynodeid <<= 8;
+  mynodeid |= lladdr->ipaddr.u8[15];
+  printf("Using NodeId: %X\n\r", mynodeid);
+  
   simple_udp_register(&broadcast_connection, UDP_PORT,
                       NULL, UDP_PORT,
                       receiver);
@@ -137,9 +147,11 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
    // etimer_set(&send_timer, SEND_TIME);
 
     //PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&send_timer));
-    printf("Sending broadcast %d\n",count);
     uip_create_linklocal_allnodes_mcast(&addr);
-    simple_udp_sendto(&broadcast_connection,&count, 4, &addr);
+    sprintf(strdata, "%s%x%s%x", "NodeId: 0x", mynodeid, " Count: 0x", count);/* Node id: 0x1234 Count: 2bytes*/
+    printf("\rSending data: %s \n", strdata);
+    simple_udp_sendto(&broadcast_connection, strdata, sizeof(strdata), &addr);
+   
 	count++;
 	/* Every 10 packets sent, print power measurements */
 	if(count % 10 == 0)
