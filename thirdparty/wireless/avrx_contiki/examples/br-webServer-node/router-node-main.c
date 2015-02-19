@@ -258,7 +258,7 @@ main(int argc, char *argv[])
    
   autostart_start(autostart_processes);
   //watchdog_start();
-  watchdog_init();
+  //watchdog_init();
 
   while(1){
     int r = 0;
@@ -269,7 +269,7 @@ main(int argc, char *argv[])
       //printf(".");
      
      r = process_run();
-	wdt_reset_count();
+	//wdt_reset_count();
 	 // if(r <= 0) printf("\n PRVN No process to run\n");
     } while(r > 0);
     /* sleep*/
