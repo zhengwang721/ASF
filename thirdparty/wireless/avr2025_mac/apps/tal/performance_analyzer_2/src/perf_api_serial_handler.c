@@ -51,7 +51,7 @@
 #include "return_val.h"
 #include "ieee_const.h"
 #include "app_init.h"
-#include "tal_helper.h"
+#include "tal_helper_2.h"
 #include "perf_msg_const.h"
 #include "sio2host.h"
 #include "sio2ncp.h"
@@ -417,7 +417,7 @@ switch (sio_rx_buf[trx][MESSAGE_ID_POS])  /* message id */
                                             NULL,
                                             NULL,
                                             NULL,
-                                            (uint64_t)NUL_VAL);
+                                            (uint64_t)NUL_VAL,NUL_VAL,NUL_VAL);
                 }
             }
             else
@@ -433,7 +433,7 @@ switch (sio_rx_buf[trx][MESSAGE_ID_POS])  /* message id */
                                         NULL,
                                         NULL,
                                         NULL,
-                                        (uint64_t)NUL_VAL);
+                                        (uint64_t)NUL_VAL,NUL_VAL,NUL_VAL);
             }
         }
         break;
@@ -857,7 +857,7 @@ switch (sio_rx_buf[trx][MESSAGE_ID_POS])  /* message id */
 				rcvd_channel_mask[trx] = TRX_SUPPORTED_CHANNELS_LEG(trx);
 			}
 
-			start_ed_scan(trx,sio_rx_buf[trx][SCAN_DURATION_POS],
+			 start_ed_scan(trx,sio_rx_buf[trx][SCAN_DURATION_POS],
 					rcvd_channel_mask[trx]);
 		} else {
 			/* Send the confirmation with status as INVALID_CMD
@@ -1094,7 +1094,8 @@ uint8_t peer_ic_type,
 char *peer_soc_mcu_name,
 char *peer_trx_name,
 char *peer_board_name,
-uint64_t peer_mac_address)
+uint64_t peer_mac_address,
+float peer_fw_version,uint32_t peer_feature_mask)
 {
 	uint8_t byte_cnt;
 	uint8_t *msg_buf;
@@ -1176,6 +1177,10 @@ uint64_t peer_mac_address)
 		memcpy(msg_buf, &peer_mac_address, EXT_ADDR_LEN);
 		*ptr_to_msg_size += EXT_ADDR_LEN;
 		msg_buf += EXT_ADDR_LEN;
+		memcpy(msg_buf, &peer_fw_version, sizeof(float));
+		msg_buf += sizeof(float);
+		memcpy(msg_buf, &peer_feature_mask, sizeof(uint32_t));
+		msg_buf += sizeof(uint32_t);
 
 	}
 	else
@@ -1197,6 +1202,10 @@ uint64_t peer_mac_address)
 			*msg_buf++ = FIELD_DOES_NOT_EXIST;
 		}
 		*ptr_to_msg_size += EXT_ADDR_LEN;
+		memset(msg_buf, 0X00, sizeof(float));
+		msg_buf += sizeof(float);
+		memset(msg_buf, 0X00, sizeof(uint32_t));
+		msg_buf += sizeof(uint32_t);
 	}
 
 	*msg_buf = EOT;
@@ -1450,11 +1459,15 @@ void usr_perf_set_confirm(trx_id_t trx, uint8_t status, uint8_t param_type, para
 		}
 		else if((uint8_t)((param_value->param_value_32bit)>>16) == OQPSK)
 		{
-			*msg_buf++ = param_len = 4;
+			*msg_buf++ = param_len = 5;
 		}
 		else if((uint8_t)((param_value->param_value_32bit)>>16) == FSK)
 		{
-			*msg_buf++ = param_len = 3;
+			*msg_buf++ = param_len = 9;
+		}
+		else if((uint8_t)((param_value->param_value_32bit)>>16) == LEG_OQPSK)
+		{
+			*msg_buf++ = param_len = 5;
 		}
 	}
 	else
@@ -1519,7 +1532,15 @@ void usr_perf_get_confirm(trx_id_t trx, uint8_t status, uint8_t param_type, para
 		}
 		else if((uint8_t)((param_value->param_value_32bit)>>16) == OQPSK)
 		{
-			*msg_buf++ = param_len = 4;
+			*msg_buf++ = param_len = 5;
+		}
+		else if((uint8_t)((param_value->param_value_32bit)>>16) == FSK)
+		{
+			*msg_buf++ = param_len = 9;
+		}
+		else if((uint8_t)((param_value->param_value_32bit)>>16) == LEG_OQPSK)
+		{
+			*msg_buf++ = param_len = 5;
 		}
 	}
 	else
@@ -2206,8 +2227,10 @@ void usr_get_current_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
 		}
 		else if(curr_trx_config_params->sun_phy_page.modulation == OQPSK)
 		{
-			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_oqpsk_rate_mode;
-			*ptr_to_msg_size += 1;
+			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_oqpsk.rate_mode;
+			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_oqpsk.chip_rate;
+			
+			*ptr_to_msg_size += 2;
 		}
 		else if(curr_trx_config_params->sun_phy_page.modulation == FSK)
 		{
@@ -2215,7 +2238,17 @@ void usr_get_current_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
 			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_fsk.mod_idx;
 			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_fsk.data_rate;
 			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_fsk.op_mode;
-			*ptr_to_msg_size += 4;
+			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_fsk.bt;
+			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_fsk.fec_enabled;
+			
+			*ptr_to_msg_size += 6;
+		}
+		else if(curr_trx_config_params->sun_phy_page.modulation == LEG_OQPSK)
+		{
+			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.leg_oqpsk.data_rate;
+			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.leg_oqpsk.chip_rate;
+			
+			*ptr_to_msg_size += 2;
 		}
 	}
 	else

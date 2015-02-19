@@ -244,14 +244,14 @@
 /** Legacy O-QPSK constants */
 #define LEG_780_F0                  780000000
 #define LEG_868_F0                  868300000
-#define LEG_915_F0                  904000000 //vk it was 9060...
+#define LEG_915_F0                  906000000 //vk it was 9060... - 904000000
 #define LEG_915_CH_SPAC               2000000
 #define LEG_2450_F0                2405000000
 #define LEG_2450_CH_SPAC              5000000
 
 /** OFDM constants */
-#define OFDM_470_OPT4_F0            470400000
-#define OFDM_470_OPT4_CH_SPAC          400000
+#define OFDM_470_OPT4_F0            470200000 //needs clarification
+#define OFDM_470_OPT4_CH_SPAC          200000 //,,
 #define OFDM_780_OPT1_F0            780200000
 #define OFDM_780_OPT1_CH_SPAC         1200000
 #define OFDM_780_OPT2_F0            779800000
@@ -460,6 +460,13 @@ typedef enum oqpsk_chip_rate_tag
     CHIP_RATE_2000
 } oqpsk_chip_rate_t;
 
+typedef enum oqsk_data_rate_tag
+{
+	OQPSK_DATA_RATE_250,
+	OQPSK_DATA_RATE_500,
+	OQPSK_DATA_RATE_1000
+} oqpsk_data_rate_t;
+
 typedef struct oqpsk_tag
 {
     oqpsk_chip_rate_t chip_rate;
@@ -478,6 +485,7 @@ typedef struct ofdm_tag
 typedef struct leg_oqpsk_tag
 {
     oqpsk_chip_rate_t chip_rate;
+	oqpsk_data_rate_t data_rate;
 } leg_oqpsk_t;
 
 typedef enum fsk_op_mode_tag
@@ -516,12 +524,22 @@ typedef enum fsk_data_rate_tag
     FSK_DATA_RATE_400
 } SHORTENUM fsk_data_rate_t;
 
+typedef enum fsk_bt_tag
+{
+	FSK_BT_0_5, 
+	FSK_BT_1_0,
+	FSK_BT_1_5,
+	FSK_BT_2_0
+}SHORTENUM fsk_bt_t;
+
 typedef struct fsk_tag
 {
     fsk_mod_type_t mod_type;
     mod_idx_t mod_idx;
     fsk_data_rate_t data_rate;
     fsk_op_mode_t op_mode;
+	fsk_bt_t bt;
+	bool fec_enabled;
 } fsk_t;
 
 /**
@@ -572,7 +590,8 @@ typedef union sun_phy_mode_tag
 {
 	fsk_t mr_fsk;
 	ofdm_t mr_ofdm;
-	oqpsk_rate_mode_t mr_oqpsk_rate_mode;
+	oqpsk_t mr_oqpsk;
+	leg_oqpsk_t leg_oqpsk;
 
 } sun_phy_mode_t;
 

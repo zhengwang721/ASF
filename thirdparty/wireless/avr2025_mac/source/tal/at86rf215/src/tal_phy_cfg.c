@@ -71,12 +71,12 @@ retval_t conf_trx_modulation(trx_id_t trx_id)
 
     /* Change PHY only in TRXOFF or TXPREP. Since TXPREP is not possible here, check for TRXOFF */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    rf_cmd_state_t previous_trx_state = (rf_cmd_state_t)pal_trx_reg_read(reg_offset + RG_RF09_STATE);
+    rf_cmd_state_t previous_trx_state = (rf_cmd_state_t)trx_reg_read(reg_offset + RG_RF09_STATE);
     if (previous_trx_state != RF_TRXOFF)
     {
-        pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
+        trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #ifdef IQ_RADIO
-        pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
         trx_state[trx_id] = RF_TRXOFF;
     }
@@ -152,8 +152,8 @@ static retval_t conf_ofdm(trx_id_t trx_id)
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
         /* Configure BB */
-        pal_trx_bit_write(reg_offset + SR_BBC0_PC_PT, BB_MROFDM);
-        pal_trx_bit_write(reg_offset + SR_BBC0_OFDMC_OPT, tal_pib[trx_id].phy.phy_mode.ofdm.option);
+        trx_bit_write(reg_offset + SR_BBC0_PC_PT, BB_MROFDM);
+        trx_bit_write(reg_offset + SR_BBC0_OFDMC_OPT, tal_pib[trx_id].phy.phy_mode.ofdm.option);
     }
 
     return status;
@@ -178,11 +178,11 @@ static retval_t conf_oqpsk(trx_id_t trx_id)
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
         /* Configure BB */
-        pal_trx_bit_write(reg_offset + SR_BBC0_PC_PT, BB_MROQPSK);
-        pal_trx_bit_write(reg_offset + SR_BBC0_OQPSKC0_FCHIP,
+        trx_bit_write(reg_offset + SR_BBC0_PC_PT, BB_MROQPSK);
+        trx_bit_write(reg_offset + SR_BBC0_OQPSKC0_FCHIP,
                           tal_pib[trx_id].phy.phy_mode.oqpsk.chip_rate);
-        pal_trx_bit_write(reg_offset + SR_BBC0_OQPSKPHRTX_LEG, 0);
-        pal_trx_bit_write(reg_offset + SR_BBC0_OQPSKC2_RXM, 0); // MR mode only
+        trx_bit_write(reg_offset + SR_BBC0_OQPSKPHRTX_LEG, 0);
+        trx_bit_write(reg_offset + SR_BBC0_OQPSKC2_RXM, 0); // MR mode only
     }
 
     return status;
@@ -207,11 +207,11 @@ static retval_t conf_leg_oqpsk(trx_id_t trx_id)
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
         /* set bb_core0 baseband mode to OQPSK */
-        pal_trx_bit_write(reg_offset + SR_BBC0_PC_PT, BB_MROQPSK);
-        pal_trx_bit_write(reg_offset + SR_BBC0_OQPSKC0_FCHIP,
+        trx_bit_write(reg_offset + SR_BBC0_PC_PT, BB_MROQPSK);
+        trx_bit_write(reg_offset + SR_BBC0_OQPSKC0_FCHIP,
                           tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate);
-        pal_trx_bit_write(reg_offset + SR_BBC0_OQPSKC2_RXM, 1); // legacy mode only
-        pal_trx_bit_write(reg_offset + SR_BBC0_OQPSKPHRTX_LEG, 1); // configure legacy transmit
+        trx_bit_write(reg_offset + SR_BBC0_OQPSKC2_RXM, 1); // legacy mode only
+        trx_bit_write(reg_offset + SR_BBC0_OQPSKPHRTX_LEG, 1); // configure legacy transmit
     }
 
     return status;
@@ -232,22 +232,38 @@ static retval_t conf_fsk(trx_id_t trx_id)
 #endif
 {
     retval_t status;
+	
+	/* Configure RF */
+	fsk_data_rate_t sym_rate;
+	if (tal_pib[trx_id].phy.phy_mode.fsk.mod_type == F2FSK)
+	{
+		sym_rate = tal_pib[trx_id].phy.phy_mode.fsk.data_rate;
+	}
+	else // F4FSK
+	{
+		sym_rate = (fsk_data_rate_t)(tal_pib[trx_id].phy.phy_mode.fsk.data_rate / 2);
+	}
 
     /* Configure RF */
-    status = fsk_rfcfg(tal_pib[trx_id].phy.phy_mode.fsk.data_rate, tal_pib[trx_id].phy.phy_mode.fsk.mod_idx, trx_id);
+    status = fsk_rfcfg(sym_rate, tal_pib[trx_id].phy.phy_mode.fsk.mod_idx, trx_id);
     if (status == MAC_SUCCESS)
     {
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
-        pal_trx_bit_write(reg_offset + SR_BBC0_PC_PT, BB_MRFSK);
+        trx_bit_write(reg_offset + SR_BBC0_PC_PT, BB_MRFSK);
         // FSKC0
-        pal_trx_bit_write(reg_offset + SR_BBC0_FSKC0_MORD,
+        trx_bit_write(reg_offset + SR_BBC0_FSKC0_MORD,
                           tal_pib[trx_id].phy.phy_mode.fsk.mod_type);
-        pal_trx_bit_write(reg_offset + SR_BBC0_FSKC0_MIDX,
+        trx_bit_write(reg_offset + SR_BBC0_FSKC0_MIDX,
                           tal_pib[trx_id].phy.phy_mode.fsk.mod_idx);
+        trx_bit_write(reg_offset +SR_BBC0_FSKC0_BT,
+		                   tal_pib[trx_id].phy.phy_mode.fsk.bt);
         // FSKC1
-        pal_trx_bit_write(reg_offset + SR_BBC0_FSKC1_SRATE,
-                          tal_pib[trx_id].phy.phy_mode.fsk.data_rate);
+        trx_bit_write(reg_offset + SR_BBC0_FSKC1_SRATE, sym_rate);
+                          
+		//FSKPHRTX
+	    trx_bit_write(reg_offset+SR_BBC0_FSKPHRTX_SFD,
+		                  tal_pib[trx_id].phy.phy_mode.fsk.fec_enabled);
         /* Configure SFD */
         set_sfd(trx_id);
     }
@@ -276,7 +292,7 @@ void set_sfd(trx_id_t trx_id)
     {
         sfd = (uint32_t)F2FSK_SFD_1_UNCODED | ((uint32_t)F2FSK_SFD_1_CODED << 16);
     }
-    pal_trx_write(reg_offset + RG_BBC0_FSKSFD0L, (uint8_t *)&sfd, 4);
+    trx_write(reg_offset + RG_BBC0_FSKSFD0L, (uint8_t *)&sfd, 4);
 }
 #endif /* #ifdef SUPPORT_FSK */
 

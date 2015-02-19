@@ -861,8 +861,9 @@ extern tal_pib_t tal_pib;
 extern "C" {
 #endif
 
-retval_t trx_reset(trx_id_t trx_id); //vk
-    /**
+#if (TAL_TYPE == AT86RF215)
+   retval_t trx_reset(trx_id_t trx_id); //vk
+#endif   /**
      * @brief TAL task handling
      *
      * This function

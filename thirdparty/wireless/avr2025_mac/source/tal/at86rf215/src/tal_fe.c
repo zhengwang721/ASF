@@ -61,12 +61,12 @@
 #    define bb_reg_read(reg)                pal_dev_reg_read(RF215_BB, reg)
 #    define bb_bit_write(reg, val)          pal_dev_bit_write(RF215_BB, reg, val)
 #else
-#    define rf_blk_write(reg, addr, len)    pal_trx_write(reg, addr, len)
-#    define rf_bit_write(reg, val)          pal_trx_bit_write(reg, val)
-#    define rf_reg_write(reg, val)          pal_trx_reg_write(reg, val)
-#    define bb_bit_read(reg)                pal_trx_bit_read(reg)
-#    define bb_reg_read(reg)                pal_trx_reg_read(reg)
-#    define bb_bit_write(reg, val)          pal_trx_bit_write(reg, val)
+#    define rf_blk_write(reg, addr, len)    trx_write(reg, addr, len)
+#    define rf_bit_write(reg, val)          trx_bit_write(reg, val)
+#    define rf_reg_write(reg, val)          trx_reg_write(reg, val)
+#    define bb_bit_read(reg)                trx_bit_read(reg)
+#    define bb_reg_read(reg)                trx_reg_read(reg)
+#    define bb_bit_write(reg, val)          trx_bit_write(reg, val)
 #endif
 
 /* === GLOBALS ============================================================= */
@@ -109,15 +109,15 @@ retval_t ofdm_rfcfg(ofdm_option_t ofdm_opt, trx_id_t trx_id)
     switch (ofdm_opt)
     {
         case OFDM_OPT_1: /*OFDM Option 1: BW nom.: 1094 kHz */
-            sr=3; txrcut=4; txfc=10; rxrcut09=4; rxrcut24=4; bw09= 9; bw24=10; ifs09=0; ifs24=0; agci=0; pdt=5; break;
+            sr=3; txrcut=4; txfc=10; rxrcut09=4; rxrcut24=4; bw09= 9; bw24=10; ifs09=0; ifs24=0; agci=0; pdt=5; break; 
         case OFDM_OPT_2: /*OFDM Option 2: BW nom.: 552 kHz */
             sr=3; txrcut=3; txfc= 8; rxrcut09=2; rxrcut24=2; bw09= 7; bw24= 7; ifs09=0; ifs24=0; agci=0; pdt=5; break;
         case OFDM_OPT_3: /*OFDM Option 3: BW nom.: 281 kHz */
-            sr=6; txrcut=3; txfc= 5; rxrcut09=2; rxrcut24=3; bw09= 4; bw24= 4; ifs09=0; ifs24=0; agci=1; pdt=4; break;
+            sr=6; txrcut=3; txfc= 5; rxrcut09=2; rxrcut24=3; bw09= 4; bw24= 4; ifs09=0; ifs24=0; agci=0; pdt=4; break;
         case OFDM_OPT_4: /*OFDM Option 4: BW nom.: 156 kHz */
-            sr=6; txrcut=2; txfc= 3; rxrcut09=1; rxrcut24=1; bw09= 2; bw24= 3; ifs09=1; ifs24=0; agci=1; pdt=3; break;
+            sr=6; txrcut=2; txfc= 3; rxrcut09=1; rxrcut24=1; bw09= 2; bw24= 3; ifs09=1; ifs24=0; agci=0; pdt=3; break;
         default:
-            debug_text_val_finish(PSTR("ERROR: OFDM option musst be in [1..4], is:"), ofdm_opt, DEBUG_ERROR);
+            debug_text_val_finish(PSTR("ERROR: OFDM option must be in [1..4], is:"), ofdm_opt, DEBUG_ERROR);
             status = FAILURE;
             return status;
             break;
@@ -310,7 +310,7 @@ retval_t fsk_rfcfg(fsk_data_rate_t srate, mod_idx_t mod_idx, trx_id_t trx_id)
     pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_PAC,
                       ((3 << PAC_PACUR_SHIFT) | (DEFAULT_TX_PWR_REG << PAC_TXPWR_SHIFT)));
 #else
-    pal_trx_reg_write(reg_offset + RG_RF09_PAC,
+    trx_reg_write(reg_offset + RG_RF09_PAC,
                       ((3 << PAC_PACUR_SHIFT) | (DEFAULT_TX_PWR_REG << PAC_TXPWR_SHIFT)));
 #endif
 

@@ -173,7 +173,7 @@ void start_ack_wait_timer(trx_id_t trx_id)
     {
         debug_text_val(PSTR("ACK timer could not be started, "), status);
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-        pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
+        trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
         trx_state[trx_id] = RF_TRXOFF;
         tx_done_handling(trx_id, status);
     }
@@ -197,9 +197,9 @@ void ack_timout_cb(void *parameter)
     /* Re-store frame filter to pass "normal" frames */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 #ifdef SUPPORT_FRAME_FILTER_CONFIGURATION
-    pal_trx_reg_write(reg_offset + RG_BBC0_AFFTM, tal_pib[trx_id].frame_types);
+    trx_reg_write(reg_offset + RG_BBC0_AFFTM, tal_pib[trx_id].frame_types);
 #else
-    pal_trx_reg_write(reg_offset + RG_BBC0_AFFTM, DEFAULT_FRAME_TYPES);
+    trx_reg_write(reg_offset + RG_BBC0_AFFTM, DEFAULT_FRAME_TYPES);
 #endif
 
     stop_tal_timer(trx_id);

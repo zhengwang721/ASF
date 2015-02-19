@@ -52,6 +52,7 @@
 #ifndef IEEE_CONST_H
 #define IEEE_CONST_H
 
+#include "tal.h"
 /**
  *
  * \defgroup group_inc Common WL Definitions

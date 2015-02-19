@@ -344,7 +344,7 @@ void switch_to_rx(trx_id_t trx_id)
     if (tal_rx_buffer[trx_id] != NULL)
     {
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-        pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_RX);
+        trx_reg_write(reg_offset + RG_RF09_CMD, RF_RX);
         trx_state[trx_id] = RF_RX;
     }
     else
@@ -370,12 +370,12 @@ void switch_to_txprep(trx_id_t trx_id)
 
     debug_text_val(PSTR("switch_to_txprep(), trx_id ="), trx_id);
 
-    pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TXPREP);
+    trx_reg_write(reg_offset + RG_RF09_CMD, RF_TXPREP);
 
     wait_for_txprep(trx_id);
 
     /* Workaround for errata reference #4807 */
-    pal_trx_write(reg_offset + 0x125, (uint8_t *)&txc[trx_id][0], 2);
+    trx_write(reg_offset + 0x125, (uint8_t *)&txc[trx_id][0], 2);
 }
 
 
@@ -394,7 +394,7 @@ void wait_for_txprep(trx_id_t trx_id)
 
     do
     {
-        state = (rf_cmd_state_t)pal_trx_reg_read(reg_offset + RG_RF09_STATE);
+        state = (rf_cmd_state_t)trx_reg_read(reg_offset + RG_RF09_STATE);
 
         if (state != RF_TXPREP)
         {
@@ -406,12 +406,12 @@ void wait_for_txprep(trx_id_t trx_id)
             pal_get_current_time(&now);
             if (abs(now - start_time) > MAX_PLL_LOCK_DURATION)
             {
-                pal_trx_reg_write(reg_offset + RG_RF09_PLL, 9);
+                trx_reg_write(reg_offset + RG_RF09_PLL, 9);
                 pal_timer_delay(PLL_FRZ_SETTLING_DURATION);
-                pal_trx_reg_write(reg_offset + RG_RF09_PLL, 8);
+                trx_reg_write(reg_offset + RG_RF09_PLL, 8);
                 do
                 {
-                    state = (rf_cmd_state_t)pal_trx_reg_read(reg_offset + RG_RF09_STATE);
+                    state = (rf_cmd_state_t)trx_reg_read(reg_offset + RG_RF09_STATE);
                 }
                 while (state != RF_TXPREP);
                 break;
@@ -438,7 +438,7 @@ static void handle_trxerr(trx_id_t trx_id)
 
     /* Set device to TRXOFF */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
+    trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
     trx_state[trx_id] = RF_TRXOFF;
     tx_state[trx_id] = TX_IDLE;
     stop_tal_timer(trx_id);

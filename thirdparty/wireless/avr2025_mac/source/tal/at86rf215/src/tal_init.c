@@ -97,8 +97,8 @@ retval_t tal_init(void)
     }
 	
     /* Check if RF215 is connected */
-    if ((pal_trx_reg_read(RG_RF_PN) != 0x34) ||
-        (pal_trx_reg_read(RG_RF_VN) != 0x01))
+    if ((trx_reg_read(RG_RF_PN) != 0x34) ||
+        (trx_reg_read(RG_RF_VN) != 0x01))
     {
         return FAILURE;
     }
@@ -192,12 +192,12 @@ retval_t tal_init(void)
 #ifdef IQ_RADIO
     /* Init BB IRQ handler */
     pal_trx_irq_flag_clr(RF215_BB);
-    pal_trx_irq_init(RF215_BB, bb_irq_handler_cb);
+    trx_irq_init(RF215_BB, bb_irq_handler_cb);
     pal_trx_irq_en(RF215_BB);
 
     /* Init RF IRQ handler */
     pal_trx_irq_flag_clr(RF215_RF);
-    pal_trx_irq_init(RF215_RF, rf_irq_handler_cb);
+    trx_irq_init(RF215_RF, rf_irq_handler_cb);
     pal_trx_irq_en(RF215_RF);
 #else
     /*
@@ -205,7 +205,7 @@ retval_t tal_init(void)
      * Install a handler for the radio and the baseband interrupt.
      */
     pal_trx_irq_flag_clr();
-    pal_trx_irq_init(trx_irq_handler_cb);
+    trx_irq_init(trx_irq_handler_cb);
     pal_trx_irq_en();   /* Enable transceiver main interrupt. */
 #endif
 
@@ -234,84 +234,84 @@ void trx_config(trx_id_t trx_id)
 #ifdef IQ_RADIO
     /* LVDS interface */
     // RF part: RF enable, BB disabled, IQIF enabled
-    pal_trx_bit_write(RF215_RF, SR_RF_IQIFC1_CHPM, 0x01);
+    trx_bit_write(RF215_RF, SR_RF_IQIFC1_CHPM, 0x01);
     // BB part: RF disable, BB enabled, IQIF enabled
-    pal_trx_bit_write(RF215_BB, SR_RF_IQIFC1_CHPM, 0x03);
+    trx_bit_write(RF215_BB, SR_RF_IQIFC1_CHPM, 0x03);
     // Clock Phase I/Q IF Driver at BB
-    pal_trx_bit_write(RF215_BB, SR_RF_IQIFC2_CPHADRV, 0);
+    trx_bit_write(RF215_BB, SR_RF_IQIFC2_CPHADRV, 0);
     // Clock Phase I/Q IF Receiver at BB
-    pal_trx_bit_write(RF215_BB, SR_RF_IQIFC2_CPHAREC, 1);
+    trx_bit_write(RF215_BB, SR_RF_IQIFC2_CPHAREC, 1);
     // Enable embedded control at RF
-    pal_trx_bit_write(RF215_RF, SR_RF_IQIFC0_EEC, 1);
+    trx_bit_write(RF215_RF, SR_RF_IQIFC0_EEC, 1);
 #if (BOARD_TYPE == EVAL215_FPGA)
-    pal_trx_bit_write(RF215_RF, SR_RF_IQIFC0_CMV1V2, 1);
-    uint8_t temp = pal_trx_reg_read(RF215_BB, RG_RF_IQIFC1);
+    trx_bit_write(RF215_RF, SR_RF_IQIFC0_CMV1V2, 1);
+    uint8_t temp = trx_reg_read(RF215_BB, RG_RF_IQIFC1);
     temp = (temp & 0xF3) | (1 << 2); // SKEWREC = 0ns
-    pal_trx_reg_write(RF215_BB, RG_RF_IQIFC1, temp);
+    trx_reg_write(RF215_BB, RG_RF_IQIFC1, temp);
 #endif
     /* Configure BB */
     /* Setup IRQ mask: in chip mode, the baseband controls the RF's AGC */
-    pal_trx_reg_write(RF215_BB, reg_offset + RG_BBC0_IRQM, BB_IRQ_ALL_IRQ);
-    pal_trx_reg_write(RF215_BB, reg_offset + RG_RF09_IRQM, RF_IRQ_ALL_IRQ);
+    trx_reg_write(RF215_BB, reg_offset + RG_BBC0_IRQM, BB_IRQ_ALL_IRQ);
+    trx_reg_write(RF215_BB, reg_offset + RG_RF09_IRQM, RF_IRQ_ALL_IRQ);
     /* Configure RF */
-    pal_trx_reg_write(RF215_RF, reg_offset + RG_BBC0_IRQM, BB_IRQ_ALL_IRQ);
-    pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_IRQM, RF_IRQ_ALL_IRQ);
+    trx_reg_write(RF215_RF, reg_offset + RG_BBC0_IRQM, BB_IRQ_ALL_IRQ);
+    trx_reg_write(RF215_RF, reg_offset + RG_RF09_IRQM, RF_IRQ_ALL_IRQ);
 #else
     /* Configure BB */
     /* Setup IRQ mask */
-    pal_trx_reg_write(reg_offset + RG_BBC0_IRQM, TAL_DEFAULT_BB_IRQ_MASK);
+    trx_reg_write(reg_offset + RG_BBC0_IRQM, TAL_DEFAULT_BB_IRQ_MASK);
     /* Configure RF */
-    pal_trx_reg_write(reg_offset + RG_RF09_IRQM, TAL_DEFAULT_RF_IRQ_MASK);
+    trx_reg_write(reg_offset + RG_RF09_IRQM, TAL_DEFAULT_RF_IRQ_MASK);
 #endif
 
 #if (defined IQ_RADIO) && (BOARD_TYPE == EVAL215_FPGA)
     /* Set clip detector OFF */
-    uint8_t agcc = pal_trx_reg_read(RF215_RF, reg_offset + RG_RF09_AGCC);
+    uint8_t agcc = trx_reg_read(RF215_RF, reg_offset + RG_RF09_AGCC);
     agcc |= 0x80;
-    pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_AGCC, agcc);
+    trx_reg_write(RF215_RF, reg_offset + RG_RF09_AGCC, agcc);
 #endif
 
     /* Enable frame filter */
-    pal_trx_bit_write(reg_offset + SR_BBC0_AFC0_AFEN0, 1);
+    trx_bit_write(reg_offset + SR_BBC0_AFC0_AFEN0, 1);
 
 #ifndef BASIC_MODE
 #if (defined MEASURE_TIME_OF_FLIGHT) && (!defined IQ_RADIO)
     /* Enable automatic time of flight measurement */
     /* bit 3 CAPRXS, bit 2 RSTTXS, bit 0 EN */
     uint8_t cnt_cfg = 1 << 0 | 1 << 2 | 1 << 3;
-    pal_trx_reg_write(reg_offset + RG_BBC0_CNTC, cnt_cfg);
+    trx_reg_write(reg_offset + RG_BBC0_CNTC, cnt_cfg);
 #endif /* #if (defined MEASURE_TIME_OF_FLIGHT) && (!defined IQ_RADIO) */
 #else // BASIC_MODE
     /* Enable counter for ACK timing: EN | RSTRXS */
     uint8_t cntc = 0x01 | 0x02;
-    pal_trx_reg_write(reg_offset + RG_BBC0_CNTC, cntc);
+    trx_reg_write(reg_offset + RG_BBC0_CNTC, cntc);
 #endif
 
 #ifndef USE_TXPREP_DURING_BACKOFF
     /* Keep analog voltage regulator on during TRXOFF */
 #ifdef IQ_RADIO
-    pal_trx_bit_write(RF215_RF, reg_offset + SR_RF09_AUXS_AVEN, 1);
+    trx_bit_write(RF215_RF, reg_offset + SR_RF09_AUXS_AVEN, 1);
 #else
-    pal_trx_bit_write(reg_offset + SR_RF09_AUXS_AVEN, 1);
+    trx_bit_write(reg_offset + SR_RF09_AUXS_AVEN, 1);
 #endif /* #ifdef IQ_RADIO */
 #endif
 
 #ifndef BASIC_MODE
     /* Enable AACK */
-    pal_trx_reg_write(reg_offset + RG_BBC0_AMCS, AMCS_AACK_MASK);
+    trx_reg_write(reg_offset + RG_BBC0_AMCS, AMCS_AACK_MASK);
     /* Set data pending for ACK frames to 1 for all address units */
-    pal_trx_reg_write(reg_offset + RG_BBC0_AMAACKPD, 0x0F);
+    trx_reg_write(reg_offset + RG_BBC0_AMAACKPD, 0x0F);
 #endif
 
 #ifdef SUPPORT_MODE_SWITCH
     /* Use raw mode for mode switch PPDU in the not-inverted manner */
-    pal_trx_bit_write(reg_offset + SR_BBC0_FSKC4_RAWRBIT, 0);
+    trx_bit_write(reg_offset + SR_BBC0_FSKC4_RAWRBIT, 0);
 #endif
 
     /* Workaround for errata reference #4623 */
     if (trx_id == RF09)
     {
-        pal_trx_reg_write(0x129, 0x04);
+        trx_reg_write(0x129, 0x04);
     }
 }
 
@@ -333,14 +333,14 @@ static void trx_init(void)
      */
 #ifdef TRX_IRQ_POLARITY
 #if (TRX_IRQ_POLARITY == 0)
-    pal_trx_bit_write(SR_RF_CFG_IRQP, 0);
+    trx_bit_write(SR_RF_CFG_IRQP, 0);
 #endif
 #endif
 #if (TRX_CLOCK_OUTPUT_SELECTION != 1)
 #ifdef IQ_RADIO
-    pal_trx_bit_write(RF215_RF, SR_RF_CLKO_OS, TRX_CLOCK_OUTPUT_SELECTION);
+    trx_bit_write(RF215_RF, SR_RF_CLKO_OS, TRX_CLOCK_OUTPUT_SELECTION);
 #else
-    pal_trx_bit_write(SR_RF_CLKO_OS, TRX_CLOCK_OUTPUT_SELECTION);
+    trx_bit_write(SR_RF_CLKO_OS, TRX_CLOCK_OUTPUT_SELECTION);
 #endif
 #endif
 }
@@ -430,10 +430,10 @@ retval_t tal_reset(trx_id_t trx_id, bool set_default_pib)
             /* Switch other trx back to sleep again */
             uint16_t reg_offset = RF_BASE_ADDR_OFFSET * other_trx_id;
 #ifdef IQ_RADIO
-            pal_trx_reg_write(RF215_BB, reg_offset + RG_RF09_CMD, RF_SLEEP);
-            pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_SLEEP);
+            trx_reg_write(RF215_BB, reg_offset + RG_RF09_CMD, RF_SLEEP);
+            trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_SLEEP);
 #else
-            pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_SLEEP);
+            trx_reg_write(reg_offset + RG_RF09_CMD, RF_SLEEP);
 #endif
             TAL_RF_IRQ_CLR_ALL(trx_id);
         }
@@ -471,12 +471,12 @@ retval_t tal_reset(trx_id_t trx_id, bool set_default_pib)
      * Install a handler for the transceiver interrupt.
      */
 #ifdef IQ_RADIO
-    pal_trx_irq_init(RF215_BB, bb_irq_handler_cb);
-    pal_trx_irq_init(RF215_RF, rf_irq_handler_cb);
+    trx_irq_init(RF215_BB, bb_irq_handler_cb);
+    trx_irq_init(RF215_RF, rf_irq_handler_cb);
     pal_trx_irq_en(RF215_BB);   /* Enable transceiver main interrupt. */
     pal_trx_irq_en(RF215_RF);   /* Enable transceiver main interrupt. */
 #else
-    pal_trx_irq_init(trx_irq_handler_cb);
+    trx_irq_init(trx_irq_handler_cb);
     pal_trx_irq_en();   /* Enable transceiver main interrupt. */
 #endif
 
@@ -542,7 +542,7 @@ retval_t trx_reset(trx_id_t trx_id)
                 break;
             }
 #else
-            if (PAL_TRX_IRQ_GET() == HIGH)
+            if (TRX_IRQ_GET() == HIGH)
             {
                 break;
             }
@@ -562,18 +562,18 @@ retval_t trx_reset(trx_id_t trx_id)
             }
         }
 #ifdef IQ_RADIO
-        trx_state[RF09] = (rf_cmd_state_t)pal_trx_reg_read(RF215_RF, RG_RF09_STATE);
-        trx_state[RF24] = (rf_cmd_state_t)pal_trx_reg_read(RF215_RF, RG_RF24_STATE);
+        trx_state[RF09] = (rf_cmd_state_t)trx_reg_read(RF215_RF, RG_RF09_STATE);
+        trx_state[RF24] = (rf_cmd_state_t)trx_reg_read(RF215_RF, RG_RF24_STATE);
         rf_cmd_state_t bb_trx_state[2];
-        bb_trx_state[RF09] = (rf_cmd_state_t)pal_trx_reg_read(RF215_BB, RG_RF09_STATE);
-        bb_trx_state[RF24] = (rf_cmd_state_t)pal_trx_reg_read(RF215_BB, RG_RF24_STATE);
+        bb_trx_state[RF09] = (rf_cmd_state_t)trx_reg_read(RF215_BB, RG_RF09_STATE);
+        bb_trx_state[RF24] = (rf_cmd_state_t)trx_reg_read(RF215_BB, RG_RF24_STATE);
         if ((bb_trx_state[RF09] != RF_TRXOFF) || (bb_trx_state[RF24] != RF_TRXOFF))
         {
             return FAILURE;
         }
 #else
-        trx_state[RF09] = (rf_cmd_state_t)pal_trx_reg_read(RG_RF09_STATE);
-        trx_state[RF24] = (rf_cmd_state_t)pal_trx_reg_read(RG_RF24_STATE);
+        trx_state[RF09] = (rf_cmd_state_t)trx_reg_read(RG_RF09_STATE);
+        trx_state[RF24] = (rf_cmd_state_t)trx_reg_read(RG_RF24_STATE);
 #endif
         if ((trx_state[RF09] != RF_TRXOFF) || (trx_state[RF24] != RF_TRXOFF))
         {
@@ -598,10 +598,10 @@ retval_t trx_reset(trx_id_t trx_id)
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
         debug_text(PSTR("Trigger trx reset"));
 #ifdef IQ_RADIO
-        pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_RESET);
-        pal_trx_reg_write(RF215_BB, reg_offset + RG_RF09_CMD, RF_RESET);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_RESET);
+        trx_reg_write(RF215_BB, reg_offset + RG_RF09_CMD, RF_RESET);
 #else
-        pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_RESET);
+        trx_reg_write(reg_offset + RG_RF09_CMD, RF_RESET);
 #endif
 
         /* Wait for IRQ line */
@@ -615,7 +615,7 @@ retval_t trx_reset(trx_id_t trx_id)
                 break;
             }
 #else
-            if (PAL_TRX_IRQ_GET() == HIGH)
+            if (TRX_IRQ_GET() == HIGH)
             {
                 break;
             }

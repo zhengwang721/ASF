@@ -55,12 +55,13 @@
 #include "app_init.h"
 # include "sio2host.h"
 #include "tal_pib.h"
-#include "tal_helper.h"
+#include "tal_helper_2.h"
 #include "ieee_const.h"
 #include "app_frame_format.h"
 #include "app_per_mode.h"
 #include "conf_board.h"
 #include "led.h"
+#include "perf_api.h"
 
 /**
  * \addtogroup group_per_mode_receptor
@@ -251,6 +252,7 @@ void per_mode_receptor_tx_done_cb(trx_id_t trx, retval_t status, frame_info_t *f
 	status = status;
 	frame = frame;
 	/* Allow the next transmission to happen */
+
 	node_info[trx].transmitting = false;
 }
 
@@ -322,6 +324,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 			
         case SET_SUN_PAGE:
         {
+			uint8_t hrleg;
 			phy_t *phy_temp = &msg->payload;
 	        /* Calculate the expected frame size in case of SET_PARAM cmd */
 	        expected_frame_size = (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
@@ -373,6 +376,32 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 						printf("\r\nFsk data rate = %d", (phy_temp->phy_mode).fsk.data_rate);
 						printf("\r\nFsk op mode = %d", (phy_temp->phy_mode).fsk.op_mode);
 					}
+					if(phy_temp->modulation == LEG_OQPSK)
+					{
+						if((phy_temp ->phy_mode).leg_oqpsk.data_rate > OQPSK_DATA_RATE_250)
+						{
+							hrleg = 0x01;
+							if(tal_pib_set(trx, phyHighRateEnabled, (pib_value_t *)&hrleg) != MAC_SUCCESS)
+							{
+								printf("\r\nSetting LEG_OQPSK High Data Rate mode failed");
+							}
+							
+						}
+						 else
+						{
+							 hrleg = 0x00;
+							 if(tal_pib_set(trx, phyHighRateEnabled, (pib_value_t *)&hrleg) != MAC_SUCCESS)
+							 {
+								 printf("\r\nSetting LEG_OQPSK mode failed");
+							 }
+						 }
+						
+						
+							printf("\r\nOQPSK chip_rate = %d", (phy_temp->phy_mode).leg_oqpsk.chip_rate);
+							printf("\r\nOQPSK data_rate = %d", (phy_temp->phy_mode).leg_oqpsk.data_rate);
+						
+				       }
+					
 				}
 	        }
 	    break;
@@ -1097,6 +1126,9 @@ static void get_node_info(trx_id_t trx, peer_info_rsp_t *data)
     strcpy(data->board_name, BOARD_NAME);
     /* Get the MAC address of the node */
     data->mac_address = tal_pib[trx].IeeeAddress;
+	data->fw_version = reverse_float(FIRMWARE_VERSION);
+	data->feature_mask = CCPU_ENDIAN_TO_LE32((MULTI_CHANNEL_SELECT)|(PER_RANGE_TEST_MODE));
+	
 }
 
 
@@ -1233,7 +1265,7 @@ if (reg > 0X3FFE)
                     return;
                 }
 
-                reg_val = pal_trx_reg_read(reg);
+                reg_val = trx_reg_read(reg);
 
                 printf("\r\n Value of Reg 0x%x is 0x%x", reg, reg_val);
 
@@ -1264,7 +1296,7 @@ if (reg > 0X3FFE)
                     return;
                 }
 
-                pal_trx_reg_write(reg, reg_val);
+                trx_reg_write(reg, reg_val);
 
                 printf("\r\n Value written in Reg 0x%x is 0x%x", reg, reg_val);
             }
@@ -1318,7 +1350,7 @@ if (reg > 0X3FFE)
 
                 for (i = 0 ; i < num_of_reg_to_read ; i++)
                 {
-                    reg_val = pal_trx_reg_read(reg + i);
+                    reg_val = trx_reg_read(reg + i);
                     printf("\r\n Value of Reg 0x%x is 0x%x", (reg + i), reg_val);
                 }
 				printf("\n\r Returning Back as Receptor... \n\r");

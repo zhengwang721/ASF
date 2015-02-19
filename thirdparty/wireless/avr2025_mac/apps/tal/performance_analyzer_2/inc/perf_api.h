@@ -220,7 +220,8 @@ void usr_perf_start_confirm(trx_id_t trx,
                             char *peer_soc_mcu_name,
                             char *peer_trx_name,
                             char *peer_board_name,
-                            uint64_t peer_mac_address );
+                            uint64_t peer_mac_address, 
+							float peer_fw_version,uint32_t peer_feature_mask);
 
 /**
  * Function to generate Per Test Start confirmation frame that must be sent to
@@ -506,6 +507,13 @@ void usr_range_test_stop_confirm(trx_id_t trx,uint8_t status);
  * \param frame Pointer to the actual frame transmitted
  */
 void usr_range_test_beacon_tx(trx_id_t trx,frame_info_t *frame);
+
+/**
+ * \brief The reverse_float is used for reversing a float variable for
+ * supporting BIG ENDIAN systems
+ * \param float_val Float variable to be reversed
+ */
+float reverse_float( const float float_val );
 
 
 /* ! \} */

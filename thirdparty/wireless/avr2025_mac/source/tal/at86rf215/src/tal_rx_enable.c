@@ -83,9 +83,9 @@ uint8_t tal_rx_enable(trx_id_t trx_id, uint8_t state)
             * we are not interested in a frame that is currently being received.
             */
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-        pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
+        trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #ifdef IQ_RADIO
-        pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
         trx_state[trx_id] = RF_TRXOFF;
         tal_buf_shortage[trx_id] = false;

@@ -72,13 +72,13 @@ retval_t tal_trx_sleep(trx_id_t trx_id)
     tal_state[trx_id] = TAL_SLEEP;
 
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
+    trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #ifdef IQ_RADIO
-    pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
+    trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
-    pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_SLEEP);
+    trx_reg_write(reg_offset + RG_RF09_CMD, RF_SLEEP);
 #ifdef IQ_RADIO
-    pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_SLEEP);
+    trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_SLEEP);
 #endif
     TAL_BB_IRQ_CLR_ALL(trx_id);
     TAL_RF_IRQ_CLR_ALL(trx_id);
@@ -142,9 +142,9 @@ retval_t tal_trx_wakeup(trx_id_t trx_id)
 
     /* Write command to wake device up */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
+    trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #ifdef IQ_RADIO
-    pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
+    trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
     trx_state[trx_id] = RF_TRXOFF;
 
@@ -205,9 +205,9 @@ retval_t tal_trx_wakeup(trx_id_t trx_id)
         uint16_t other_reg_offset = RF_BASE_ADDR_OFFSET * other_trx_id;
         debug_text_val(PSTR("Set other trx back to sleep, other_trx_id ="),
                        other_trx_id);
-        pal_trx_reg_write(other_reg_offset + RG_RF09_CMD, RF_SLEEP);
+        trx_reg_write(other_reg_offset + RG_RF09_CMD, RF_SLEEP);
 #ifdef IQ_RADIO
-        pal_trx_reg_write(RF215_RF, other_reg_offset + RG_RF09_CMD, RF_SLEEP);
+        trx_reg_write(RF215_RF, other_reg_offset + RG_RF09_CMD, RF_SLEEP);
 #endif
         tal_state[other_trx_id] = TAL_SLEEP;
         TAL_RF_IRQ_CLR_ALL(other_trx_id);

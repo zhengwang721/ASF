@@ -181,8 +181,8 @@
 		<build type="doxygen-entry-point" value="group_tal"/>
         <device-support-alias value="avr2025_mac_pal_support"/>
 	</module>
-
-	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.tal.generic" caption="TAL Generic Files">
+    <select-by-config id="thirdparty.wireless.avr2025_mac.source.tal.generic" name="config.thirdparty.wireless.common_services.trx_access" caption="TAL generic Files" default="1">
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.tal.generic#1" caption="TAL Generic Files">
 		<build type="header-file"   value="inc/tal.h"/>
 		<build type="c-source"   value="src/tal_helper.c"/>
 		<build type="header-file"   value="inc/tal_helper.h"/>
@@ -192,7 +192,19 @@
 		<require idref="thirdparty.wireless.avr2025_mac.source.tal.inc"/>
 		<build type="include-path"  value="inc/"/>
 	</module>
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.tal.generic#2" caption="TAL Generic Files">
+		<build type="header-file"   value="inc/tal.h"/>
+		<build type="c-source"   value="src/tal_helper_2.c"/>
+		<build type="header-file"   value="inc/tal_helper_2.h"/>
+		<build type="header-file"   value="inc/tal_multi_trx.h"/>
+		<build type="header-file"   value="inc/tal_types.h"/>
+		<build type="header-file"   value="inc/tal_timer_config.h"/>
+		<require idref="thirdparty.wireless.avr2025_mac.source.tal.inc"/>
+		<build type="include-path"  value="inc/"/>
+	</module>
 
+	
+	</select-by-config>
 	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.tal.inc" caption="TAL Includes">
 		<build type="header-file"   value="inc/tal_generic.h"/>
 		<build type="include-path"  value="inc/"/>

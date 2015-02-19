@@ -49,7 +49,7 @@
 /* === INCLUDES ============================================================ */
 #include <stdlib.h>
 #include "tal.h"
-#include "tal_helper.h"
+#include "tal_helper_2.h"
 #include "ieee_const.h"
 #include "app_init.h"
 #include "perf_api.h"
@@ -374,7 +374,8 @@ int main(void)
 	sio2ncp_init();
 	
     /* INIT was a success - so change to WAIT_FOR_EVENT state */
-    set_main_state(RF09,WAIT_FOR_EVENT, NULL);
+    
+	set_main_state(RF09,WAIT_FOR_EVENT, NULL);
 	set_main_state(RF24,WAIT_FOR_EVENT, NULL);
 	
 	  

@@ -75,7 +75,7 @@ void trx_irq_handler_cb(void)
     /* Get all IRQS values */
     uint8_t irqs_array[4];
 
-    pal_trx_read(RG_RF09_IRQS, irqs_array, 4);
+    trx_read(RG_RF09_IRQS, irqs_array, 4);
 
     /* Handle BB IRQS */
     for (uint8_t trx_id = 0; trx_id < NO_TRX; trx_id++)
@@ -116,8 +116,8 @@ void trx_irq_handler_cb(void)
                 {
                     debug_text(PSTR("Apply workaround for #4830"));
                     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-                    pal_trx_bit_write(reg_offset + SR_BBC0_AMCS_AACK, 0);
-                    pal_trx_bit_write(reg_offset + SR_BBC0_AMCS_AACK, 1);
+                    trx_bit_write(reg_offset + SR_BBC0_AMCS_AACK, 0);
+                    trx_bit_write(reg_offset + SR_BBC0_AMCS_AACK, 1);
                 }
 #endif
             }
@@ -226,7 +226,7 @@ void bb_irq_handler_cb(void)
     /* Get all IRQS values */
     uint8_t irqs_array[4];
 
-    pal_trx_read(RF215_BB, RG_RF09_IRQS, irqs_array, 4);
+    trx_read(RF215_BB, RG_RF09_IRQS, irqs_array, 4);
 
     /* Handle BB IRQS */
     for (uint8_t trx_id = 0; trx_id < NO_TRX; trx_id++)
@@ -264,7 +264,7 @@ void bb_irq_handler_cb(void)
                 uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
                 /* Release AGC */
                 //debug_text(PSTR("Release AGC"));
-                pal_trx_bit_write(RF215_RF, reg_offset + SR_RF09_AGCC_FRZC, 0);
+                trx_bit_write(RF215_RF, reg_offset + SR_RF09_AGCC_FRZC, 0);
 #ifdef IRQ_DEBUGGING
                 per[trx_id].agcr++;
                 printf("AGCR %"PRIu32"\n", now);
@@ -275,8 +275,8 @@ void bb_irq_handler_cb(void)
                 {
                     debug_text(PSTR("Apply workaround for #4830"));
                     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-                    pal_trx_bit_write(reg_offset + SR_BBC0_AMCS_AACK, 0);
-                    pal_trx_bit_write(reg_offset + SR_BBC0_AMCS_AACK, 1);
+                    trx_bit_write(reg_offset + SR_BBC0_AMCS_AACK, 0);
+                    trx_bit_write(reg_offset + SR_BBC0_AMCS_AACK, 1);
                 }
 #endif
             }
@@ -287,7 +287,7 @@ void bb_irq_handler_cb(void)
                 /* Hold AGC */
                 uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
                 //debug_text(PSTR("Hold AGC"));
-                pal_trx_bit_write(RF215_RF, reg_offset + SR_RF09_AGCC_FRZC, 1);
+                trx_bit_write(RF215_RF, reg_offset + SR_RF09_AGCC_FRZC, 1);
 #ifdef IRQ_DEBUGGING
                 per[trx_id].agch++;
                 printf("AGCH %"PRIu32"\n", now);
@@ -411,7 +411,7 @@ void rf_irq_handler_cb(void)
     /* Get all IRQS values */
     uint8_t irqs_array[4];
 
-    pal_trx_read(RF215_RF, RG_RF09_IRQS, irqs_array, 4);
+    trx_read(RF215_RF, RG_RF09_IRQS, irqs_array, 4);
 
     /* Handle BB IRQS */
     for (uint8_t trx_id = 0; trx_id < NO_TRX; trx_id++)
@@ -544,17 +544,17 @@ static void switch_rf_to_txprep(trx_id_t trx_id)
     debug_text(PSTR("switch_rf_to_txprep()"));
 
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TXPREP);
+    trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TXPREP);
     /* Wait for TXPREP */
     rf_cmd_state_t state;
     do
     {
-        state = (rf_cmd_state_t)pal_trx_reg_read(RF215_RF, reg_offset + RG_RF09_STATE);
+        state = (rf_cmd_state_t)trx_reg_read(RF215_RF, reg_offset + RG_RF09_STATE);
         //debug_text_val(PSTR("state"), state);
     }
     while (state != RF_TXPREP);
     /* Clear TRXRDY interrupt */
-    uint8_t irqs = pal_trx_reg_read(RF215_RF, trx_id + RG_RF09_IRQS);
+    uint8_t irqs = trx_reg_read(RF215_RF, trx_id + RG_RF09_IRQS);
     tal_rf_irqs[trx_id] |= irqs & ((uint8_t)(~((uint32_t)RF_IRQ_TRXRDY))); // avoid Pa091
     pal_trx_irq_flag_clr(RF215_RF);
 }

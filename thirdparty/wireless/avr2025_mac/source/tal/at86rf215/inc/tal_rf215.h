@@ -102,6 +102,7 @@ typedef enum trx_id_tag
 /* === PROTOTYPES ========================================================== */
 void get_ofdm_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,ofdm_option_t option,uint32_t *freq, uint32_t *spacing);
 void get_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *freq, uint32_t *spacing);
+void get_leg_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *freq, uint32_t *spacing);
 void get_fsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band,fsk_op_mode_t option,uint32_t *freq, uint32_t *spacing);
 oqpsk_chip_rate_t get_oqpsk_chip_rate(trx_id_t trx_id,sun_freq_band_t freq_band);
 uint16_t get_sun_max_ch_no(trx_id_t trx_id);

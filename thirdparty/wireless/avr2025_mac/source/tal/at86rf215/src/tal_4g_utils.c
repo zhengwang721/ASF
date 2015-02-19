@@ -311,6 +311,28 @@
 #define OQPSK_SHR_DURATION_TABLE_SIZE  4
 #define OQPSK_SHR_DURATION_TABLE_DATA_TYPE  uint8_t
 
+#define LEG_OQPSK_CH_CENTER_FREQ0_MAP  \
+/* frequency band, channel center freq0, channel spacing */ \
+/* EU_169 */ \
+/* US_450 */ \
+/* CHINA_470 */\
+{ CHINA_780, 780000000, 2000000 }, \
+/*EU_863*/\
+/* US_896 */  \
+/* US_901 */  \
+{ US_915, 906000000, 2000000 }, \
+/*KOREA_917*/\
+/* JAPAN_920*/\
+/* US_928 */   \
+/*  JAPAN_950 */\
+/* US_1427 */  \
+{ WORLD_2450, 2405000000, 5000000 }
+
+#define LEG_OQPSK_CH_CENTER_FREQ0_MAP_ROW_SIZE    3
+#define LEG_OQPSK_CH_CENTER_FREQ0_MAP_COL_SIZE    3
+
+
+
 #define FSK_CH_CENTER_FREQ0_MAP  \
 /* EU_169 */ \
 /* US_450 */ \
@@ -326,6 +348,7 @@
 /* { JAPAN_950, 0, 951300000, 951100000, 951000000 }, */\
 /* US_1427 */  \
 { WORLD_2450, 2400200000, 2400400000, 2400400000, 0 }
+	
 
 #define FSK_CH_CENTER_FREQ0_MAP_ROW_SIZE    7
 #define FSK_CH_CENTER_FREQ0_MAP_COL_SIZE    5
@@ -374,9 +397,11 @@ FLASH_DECLARE(OQPSK_ACK_TIMING_OFFSET_TABLE_DATA_TYPE
               oqpsk_ack_timing_offset_table[OQPSK_ACK_TIMING_OFFSET_TABLE_SIZE]) = OQPSK_ACK_TIMING_OFFSET_TABLE;
 
 FLASH_DECLARE(uint32_t oqpsk_freq0_map[OQPSK_CH_CENTER_FREQ0_MAP_ROW_SIZE][OQPSK_CH_CENTER_FREQ0_MAP_COL_SIZE]) = { OQPSK_CH_CENTER_FREQ0_MAP };
+	
+FLASH_DECLARE(uint32_t leg_oqpsk_freq0_map[LEG_OQPSK_CH_CENTER_FREQ0_MAP_ROW_SIZE][LEG_OQPSK_CH_CENTER_FREQ0_MAP_COL_SIZE]) = { LEG_OQPSK_CH_CENTER_FREQ0_MAP };
 
 FLASH_DECLARE(OQPSK_CH_SPAC_TABLE_DATA_TYPE oqpsk_ch_spac_table[OQPSK_CH_SPAC_TABLE_ROW_SIZE][OQPSK_CH_SPAC_TABLE_COL_SIZE]) = { OQPSK_CH_SPAC_TABLE };
-	
+		
 FLASH_DECLARE(uint32_t oqpsk_max_ch_map[OQPSK_TOTAL_CHANNELS_MAP_ROW_SIZE][OQPSK_TOTAL_CHANNELS_MAP_COL_SIZE]) = { OQPSK_TOTAL_CHANNELS_MAP };	//vk
 	
 FLASH_DECLARE(OQPSK_CHIP_RATE_FREQ_TABLE_DATA_TYPE oqpsk_chip_rate_freq_table[OQPSK_CHIP_RATE_FREQ_TABLE_ROW_SIZE][OQPSK_CHIP_RATE_FREQ_TABLE_COL_SIZE]) = {OQPSK_CHIP_RATE_FREQ_TABLE};
@@ -599,7 +624,7 @@ uint16_t get_AckWaitDuration_us(trx_id_t trx_id)
 #if ((defined SUPPORT_OFDM) || (defined SUPPORT_FSK))
     uint8_t ack_len = 3 + tal_pib[trx_id].FCSLen;
 #endif
-
+ 
 #ifdef SUPPORT_LEGACY_OQPSK
     if (tal_pib[trx_id].phy.modulation == LEG_OQPSK)
     {
@@ -1197,6 +1222,24 @@ void get_ofdm_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band,ofdm_option_t op
 
 
 }
+
+void get_leg_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *freq, uint32_t *spacing)
+{
+
+	for (uint8_t i = 0; i < LEG_OQPSK_CH_CENTER_FREQ0_MAP_ROW_SIZE; i++)
+	{
+		if (freq_band == (uint32_t)PGM_READ_DWORD(&leg_oqpsk_freq0_map[i][0]))
+		{
+			*freq = (uint32_t)PGM_READ_DWORD(&leg_oqpsk_freq0_map[i][1]);
+			
+			*spacing = (uint32_t)PGM_READ_DWORD(&leg_oqpsk_freq0_map[i][2]);
+			break; 
+		}
+			
+		
+	}
+}
+
 
 void get_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *freq, uint32_t *spacing)
 {

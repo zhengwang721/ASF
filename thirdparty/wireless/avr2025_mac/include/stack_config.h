@@ -52,6 +52,11 @@
 #define STACK_CONFIG_H
 
 #include "compiler.h"
+#include "tal_types.h"
+#if (TAL_TYPE == AT86RF215)
+#include "ieee_154g.h"
+#endif
+
 
 /**
  * \ingroup group_inc

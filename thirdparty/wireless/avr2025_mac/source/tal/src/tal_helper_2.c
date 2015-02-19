@@ -3,7 +3,7 @@
  *
  * @brief This file implements helper functions to configure transceiver
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,26 +41,26 @@
  */
 
 /*
- * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* === INCLUDES ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
+//#if (TAL_TYPE != AT86RF215)
 #include "pal.h"
 #include "return_val.h"
 #include "tal.h"
 #include "tal_internal.h"
 #include "ieee_const.h"
-#include "tal_helper.h"
+#include "tal_helper_2.h"
 
 /* === TYPES =============================================================== */
 
 /* === MACROS ============================================================== */
+
+
 
 /* === GLOBALS ============================================================= */
 #if (TAL_TYPE != AT86RF212 && TAL_TYPE != AT86RF212B)
@@ -82,7 +82,7 @@ extern uint8_t convert_phyTransmitPower_to_reg_value(
  * \return MAC_SUCCESS  if PA_EXT_EN bit is configured correctly
  *         FAILURE      otherwise
  */
-#if ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF232))
+#if ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF232)   && (TAL_TYPE != AT86RF215))
 
 retval_t  tal_ext_pa_ctrl(bool pa_ext_sw_ctrl)
 {
@@ -92,7 +92,7 @@ retval_t  tal_ext_pa_ctrl(bool pa_ext_sw_ctrl)
 	CONF_REG_WRITE();
 #endif /* TAL_TYPE == ATMEGA128RFA1 */
 	/* Read the PA_EXT_EN bit to check the configuration */
-	temp = /*(bool)*/ trx_bit_read(SR_PA_EXT_EN);
+	temp = (bool)trx_bit_read(SR_PA_EXT_EN);
 	if (pa_ext_sw_ctrl == temp) {
 		/* return success if the configuration is done correctly */
 		return MAC_SUCCESS;
@@ -115,9 +115,10 @@ retval_t  tal_ext_pa_ctrl(bool pa_ext_sw_ctrl)
  */
 
 #if (TAL_TYPE != AT86RF212 && TAL_TYPE != AT86RF212B)
-retval_t tal_set_tx_pwr(bool type, int8_t pwr_value)
+retval_t tal_set_tx_pwr(trx_id_t trx,bool type, int8_t pwr_value)
 {
-	uint64_t temp_var;
+	return MAC_SUCCESS;
+	int8_t temp_var;
 	int8_t tx_pwr_dbm = 0;
 	/* modify the register for tx_pwr and set the tal_pib accordingly */
 	if (true == type) {
@@ -125,14 +126,14 @@ retval_t tal_set_tx_pwr(bool type, int8_t pwr_value)
 				tal_convert_reg_value_to_dBm(pwr_value,
 				&tx_pwr_dbm)) {
 			temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
-			tal_pib_set(phyTransmitPower, (pib_value_t *)&temp_var);
+			tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_var);
 
 			/* To make sure that TX_PWR register is updated with the
 			 * value whatever user povided.Otherwise lowest dBm
-			 * power
+			 *power
 			 * (highest reg value will be taken)
 			 */
-			trx_bit_write(SR_TX_PWR, pwr_value);
+			//trx_bit_write(0X00, pwr_value);
 #if (TAL_TYPE == ATMEGARFA1)
 			CONF_REG_WRITE();
 #endif /* TAL_TYPE == ATMEGA128RFA1 */
@@ -143,13 +144,13 @@ retval_t tal_set_tx_pwr(bool type, int8_t pwr_value)
 		}
 	} else {
 		temp_var = CONV_DBM_TO_phyTransmitPower(pwr_value);
-		tal_pib_set(phyTransmitPower, (pib_value_t *)&temp_var);
+		tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_var);
 	}
 
 	uint8_t reg_value = convert_phyTransmitPower_to_reg_value(
-			tal_pib.TransmitPower);
+			tal_pib[trx].TransmitPower);
 	/* check the value written in the transceiver register */
-	uint8_t temp = trx_bit_read(SR_TX_PWR);
+	uint8_t temp = 0X00;//trx_bit_read(0X00);
 	if (temp == reg_value) {
 		return MAC_SUCCESS;
 	} else {
@@ -167,7 +168,7 @@ retval_t tal_set_tx_pwr(bool type, int8_t pwr_value)
  *                  1 or 2 to select antenna 1 or antenna 2
  * \return The value set in the TX_PWR bits
  */
-#if ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF212))
+#if ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF215))
 retval_t  tal_ant_div_config(bool div_ctrl, uint8_t ant_ctrl)
 {
 	retval_t return_var = FAILURE;
@@ -250,7 +251,7 @@ retval_t  tal_ant_div_config(bool div_ctrl, uint8_t ant_ctrl)
  * \param frequency  frequency value to be set
  * \return MAC_SUCCESS if frequency is configured correctly
  *                 MAC_INVALID_PARAMETER if out of range or incorrect values are
- * given
+ *given
  *                 FAILURE if frequency registers are not configured properly
  */
 #if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2) || \
@@ -258,13 +259,11 @@ retval_t  tal_ant_div_config(bool div_ctrl, uint8_t ant_ctrl)
 
 retval_t tal_set_frequency(float frequency)
 {
-	float epsilon = 0.000000001;
-	double dummy = 0.0;
 	uint8_t cc_number = 0;
 	uint8_t cc_band = 0;
 	tal_trx_status_t previous_trx_status = TRX_OFF;
 	/* frequency has to selected by CHANNEL register bits in PHY_CC_CCA*/
-	if (abs(frequency - dummy) < epsilon) {
+	if (frequency == 0) {
 		cc_band = 0;
 		cc_number = 0;
 	}
@@ -320,7 +319,7 @@ retval_t tal_set_frequency(float frequency)
 #endif /* End of ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2)) */
 	if (tal_trx_status != TRX_OFF) {
 		previous_trx_status = RX_AACK_ON; /* any other than TRX_OFF
-		                                   * state */
+		                                   *state */
 		do {
 			/* set TRX_OFF until it could be set;
 			 * trx might be busy */
@@ -337,7 +336,7 @@ retval_t tal_set_frequency(float frequency)
 	/* Re-store previous trx state */
 	if (previous_trx_status != TRX_OFF) {
 		/* Set to default state */
-		set_trx_state(CMD_RX_AACK_ON);
+		//set_trx_state(trx,CMD_RX_AACK_ON); //vk
 	}
 
 	/* check the values written in transceiver registers */
@@ -359,7 +358,7 @@ retval_t tal_set_frequency(float frequency)
  * \param cc_number offset frequency to be selected in cc_number register bits
  * \return MAC_SUCCESS if frequency is configured correctly
  *                 MAC_INVALID_PARAMETER if out of range or incorrect values are
- * given
+ *given
  *                 FAILURE if frequency registers are not configured properly
  */
 #if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2) || \
@@ -399,7 +398,7 @@ retval_t tal_set_frequency_regs(uint8_t cc_band, uint8_t cc_number)
 	 */
 	if (tal_trx_status != TRX_OFF) {
 		previous_trx_status = RX_AACK_ON; /* any other than TRX_OFF
-		                                   * state */
+		                                   *state */
 		do {
 			/* set TRX_OFF until it could be set;
 			 * trx might be busy */
@@ -416,7 +415,7 @@ retval_t tal_set_frequency_regs(uint8_t cc_band, uint8_t cc_number)
 	/* Re-store previous trx state */
 	if (previous_trx_status != TRX_OFF) {
 		/* Set to default state */
-		set_trx_state(CMD_RX_AACK_ON);
+		//set_trx_state(CMD_RX_AACK_ON); //vk
 	}
 
 	/* check the values written in transceiver registers */
@@ -541,10 +540,10 @@ retval_t tal_calculate_frequency(uint8_t cc_band, uint8_t cc_number,
  * \param pdt_level  0 to 15 levels of rx sensitivity
  * \param MAC_SUCCESS if sensitivity level is configured correctly
  *        MAC_INVALID_PARAMETER pdt_level is out of range
- *        FAILURE otherwise
+ *        FAILURE otheriwse
  */
 #if (TAL_TYPE != AT86RF230B)
-retval_t tal_set_rx_sensitivity_level(uint8_t pdt_level)
+retval_t tal_set_rx_sensitivity_level(trx_id_t trx,uint8_t pdt_level)
 {
 	uint8_t temp;
 	/* return invalid parameter if sensitivity level is out of range*/
@@ -553,11 +552,11 @@ retval_t tal_set_rx_sensitivity_level(uint8_t pdt_level)
 	}
 
 	/* configure sensitivity level*/
-	trx_bit_write(SR_RX_PDT_LEVEL, pdt_level);
+	trx_bit_write(SR_BBC1_OQPSKC1_PDT0, pdt_level);
 #if (TAL_TYPE == ATMEGARFA1)
 	CONF_REG_WRITE();
 #endif /* TAL_TYPE == ATMEGA128RFA1 */
-	temp = trx_bit_read(SR_RX_PDT_LEVEL);
+	temp = trx_bit_read(SR_BBC1_OQPSKC1_PDT0);
 	if (temp == pdt_level) {
 		return MAC_SUCCESS;
 	} else {
@@ -567,24 +566,45 @@ retval_t tal_set_rx_sensitivity_level(uint8_t pdt_level)
 
 #endif /* End of TAL_TYPE != AT86RF230B */
 
+/**
+ * \brief Calculates CRC manually and compares with the received
+ * and returns true if both are same,false otherwise.
+ */
+bool crc_check_ok(trx_id_t trx)
+{
+	uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
+	return (trx_bit_read(rf_reg_offset+SR_BBC0_PC_FCSOK));//check
+
+}
+
 /*
  * \brief Configures promiscous mode in rx_aack_on mode
  *
  * \param prom_ctrl  true/false to enable/disable prom mode
  *
  * \param MAC_SUCCESS if rxaack_prom_mode is configured correctly
- *        FAILURE otherwise
+ *        FAILURE otheriwse
  */
 #if (TAL_TYPE != AT86RF230B)
-retval_t tal_rxaack_prom_mode_ctrl(bool prom_ctrl)
+retval_t tal_rxaack_prom_mode_ctrl(trx_id_t trx,bool prom_ctrl)
 {
+	uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
 	bool temp;
+	if(prom_ctrl)
+	{
+
 	/* configure promiscuous mode */
-	trx_bit_write(SR_AACK_PROM_MODE, prom_ctrl);
-#if (TAL_TYPE == ATMEGARFA1)
-	CONF_REG_WRITE();
-#endif /* TAL_TYPE == ATMEGA128RFA1 */
-	temp = trx_bit_read(SR_AACK_PROM_MODE);
+	trx_bit_write(rf_reg_offset+SR_BBC0_AFC0_PM, prom_ctrl);
+	trx_bit_write(rf_reg_offset+SR_BBC0_PC_FCSFE,0X00); //Disable FCSFE
+	}
+	else
+	{
+
+		/* configure promiscuous mode */
+		trx_bit_write(rf_reg_offset+SR_BBC0_AFC0_PM, prom_ctrl);
+		trx_bit_write(rf_reg_offset+SR_BBC0_PC_FCSFE,0X01); //Enable FCSFE
+	}
+	temp = trx_bit_read(SR_BBC0_AFC0_PM);
 	if (temp == prom_ctrl) {
 		return MAC_SUCCESS;
 	} else {
@@ -599,24 +619,56 @@ retval_t tal_rxaack_prom_mode_ctrl(bool prom_ctrl)
  *
  * \return status of the transceiver
  */
-tal_trx_status_t tal_get_trx_status(void)
+tal_trx_status_t tal_get_trx_status(trx_id_t trx)
 {
-	tal_trx_status_t trx_status;
+	uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
+	rf_cmd_status_t trx_status;
+	if(tal_state[trx] == TAL_SLEEP)
+	return TRX_SLEEP;
 	/* Read the status from trx_status bits */
-	trx_status = /* (tal_trx_status_t) */ trx_bit_read(SR_TRX_STATUS);
-	return trx_status;
+	trx_status = (rf_cmd_status_t)trx_bit_read(rf_reg_offset + SR_RF09_STATE_STATE);
+	switch (trx_status)
+	{
+		case STATUS_RF_RESET:
+		{
+			return P_ON;
+		}
+		break;
+		case STATUS_RF_TRXOFF:
+		{
+			return TRX_OFF;
+		}
+		break;
+		case STATUS_RF_TXPREP:
+		{
+			return PLL_ON;
+		}
+		break;
+		case STATUS_RF_RX:
+		{
+			return RX_ON;
+		}
+		break;
+		default:
+		return trx_status;
+		
+		
+		
+	}
+	
+	
 }
 
 /*
  * \brief to read a particular transceiver register
- * \param reg_addr address of the transceiver register to be read
+ * \param reg_addr address of the transveiver register to be read
  * \param *data pointer to the location where the register value need to be
  *              stored
  * \return MAC_SUCCESS if the register is read correctly
  *         MAC_INVALID_PARAMETER if the reg_addr is out of range
  */
 
-retval_t tal_trx_reg_read(uint16_t reg_addr, uint8_t *data)
+retval_t tal_trx_reg_read(trx_id_t trx,uint16_t reg_addr, uint8_t *data)
 {
 	/*check if register address is out of range*/
 #if ((TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == ATMEGARFR2))
@@ -630,9 +682,8 @@ retval_t tal_trx_reg_read(uint16_t reg_addr, uint8_t *data)
 	}
 
 #endif /* End of (TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == ATMEGA256RFR2)*/
-
 	/* Read the corresponding transceiver register and return through data
-	 * pointer */
+	 *pointer */
 	*data = trx_reg_read(reg_addr);
 
 	return MAC_SUCCESS;
@@ -647,7 +698,7 @@ retval_t tal_trx_reg_read(uint16_t reg_addr, uint8_t *data)
  * \return MAC_SUCCESS if the register is written correctly
  *         MAC_INVALID_PARAMETER if the reg_addr is out of range
  */
-retval_t  tal_trx_reg_write(uint16_t reg_addr, uint8_t value)
+retval_t  tal_trx_reg_write(trx_id_t trx,uint16_t reg_addr, uint8_t value)
 {
 #if ((TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == ATMEGARFR2))
 	if (reg_addr > MAX_REG_ADDR_VALUE) {
@@ -677,48 +728,24 @@ retval_t  tal_trx_reg_write(uint16_t reg_addr, uint8_t value)
  * \brief to read a current setting particular transceiver parameter
  * \param parameter type of the parameter to be read
  * \param *param_value pointer to the location where the current parameter value
- * need to be
+ *need to be
  *              stored
  * \return MAC_INVALID_PARAMETER if the parameter is invalid
  *         MAC_SUCCESS otherwise
  */
 
-retval_t tal_get_curr_trx_config(param_type parameter, uint8_t *param_value)
+retval_t tal_get_curr_trx_config(trx_id_t trx,param_type parameter, uint8_t *param_value)
 {
+uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
+
 	switch (parameter) {
-#if ((TAL_TYPE != AT86RF230B) && (TAL_TYPE != AT86RF212))
-	case ANT_DIVERSITY:
-		*param_value = trx_bit_read(SR_ANT_DIV_EN);
-		break;
-
-	case ANT_SELECT:
-		*param_value = trx_bit_read(SR_ANT_SEL);
-		break;
-
-#endif
-#if (TAL_TYPE != AT86RF230B)
-	case ANT_CTRL:
-		*param_value = trx_bit_read(SR_ANT_CTRL);
-		break;
 
 	case AACK_PROMSCS_MODE:
-		*param_value = trx_bit_read(SR_AACK_PROM_MODE);
-		break;
-#endif
-
-#if ((TAL_TYPE == AT86RF233 || TAL_TYPE == ATMEGARFR2 \
-		|| TAL_TYPE == AT86RF212 || TAL_TYPE == AT86RF212B))
-	case CC_BAND:
-		*param_value = trx_bit_read(SR_CC_BAND);
+		*param_value = trx_bit_read(rf_reg_offset+SR_BBC0_AFC0_PM);
 		break;
 
-	case CC_NUMBER:
-		*param_value = trx_reg_read(RG_CC_CTRL_0);
-		break;
-
-#endif
 	case TX_PWR:
-		*param_value = trx_bit_read(SR_TX_PWR);
+		*param_value = trx_bit_read(rf_reg_offset+SR_RF09_PAC_TXPWR);
 		break;
 
 	default:
@@ -737,14 +764,13 @@ retval_t tal_get_curr_trx_config(param_type parameter, uint8_t *param_value)
  *         MAC_INVALID_PARAMETER if the reg_addr is out of range
  */
 
-retval_t tal_dump_registers(uint16_t start_addr, uint16_t end_addr,
+retval_t tal_dump_registers(trx_id_t trx,uint16_t start_addr, uint16_t end_addr,
 		uint8_t *value)
 {
 	uint16_t i;
-	int8_t length;
-
+	int16_t length;
 	/*check start and end address, return invalid parameter if out of range
-	**/
+	 **/
 #if ((TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == ATMEGARFR2))
 	if (start_addr > MAX_REG_ADDR_VALUE || end_addr > MAX_REG_ADDR_VALUE) {
 		return MAC_INVALID_PARAMETER;
@@ -759,7 +785,7 @@ retval_t tal_dump_registers(uint16_t start_addr, uint16_t end_addr,
 	length = end_addr - start_addr;
 	if (length < 0) {
 		/* return invalid parameter if start and end addresses are not
-		 * in order*/
+		 *in order*/
 		return MAC_INVALID_PARAMETER;
 	} else {
 		/* Read and store the values in input address*/
@@ -806,24 +832,23 @@ retval_t tal_rpc_mode_config(uint8_t rpc_mode_sel)
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 retval_t tal_convert_reg_value_to_dBm(uint8_t reg_value, int8_t *dbm_value)
 {
-	if (reg_value < sizeof(tx_pwr_table)) {
-		*dbm_value = (int8_t)PGM_READ_BYTE(&tx_pwr_table[reg_value]);
-		return MAC_SUCCESS;
-	} else {
-		return FAILURE;
-	}
+	
+*dbm_value = reg_value-17;	
+return MAC_SUCCESS;
+
 }
 
 #endif /* End of ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B)) */
 
 /*
- * \brief This function is called to get the base RSSI value for respective
- * radios
+ * \brief This function is called to get the base RSSI value for repective
+ *radios
  *
  * \return value of the base RSSI value
  */
-int8_t tal_get_rssi_base_val(void)
+int8_t tal_get_rssi_base_val(trx_id_t trx)
 {
+	return (-91); //check
 #if (TAL_TYPE == AT86RF212B)
 	switch (tal_pib.CurrentPage) {
 	case 0: /* BPSK */
@@ -864,14 +889,13 @@ int8_t tal_get_rssi_base_val(void)
 	default:    /* High data rate modes */
 		return(RSSI_BASE_VAL_OQPSK_RC_250_DBM);
 	}
-#elif ((TAL_TYPE == AT86RF230B) || (TAL_TYPE == AT86RF231) || \
-	(TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == AT86RF232) || (TAL_TYPE == \
-	AT86RF233) || \
-	(TAL_TYPE == ATMEGARFR2))
-	return (RSSI_BASE_VAL_DBM);
+#elif ((TAL_TYPE == AT86RF230B) || (TAL_TYPE == AT86RF231) ||\
+      (TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == AT86RF232) || (TAL_TYPE == AT86RF233)||\
+      (TAL_TYPE == ATMEGARFR2))
+    return (RSSI_BASE_VAL_DBM);
 
 #else
-#error "Missing RSSI_BASE_VAL define"
+//#error "Missing RSSI_BASE_VAL define"
 #endif
 }
 
@@ -887,18 +911,17 @@ int8_t tal_get_rssi_base_val(void)
 retval_t tal_rxsafe_mode_ctrl(bool safe_mode_ctrl)
 {
 	/*configure rx_safe_mode */
-	trx_bit_write(SR_RX_SAFE_MODE, safe_mode_ctrl); /* configure buffer
-	                                                * protection mode */
+	//trx_bit_write(0X00, safe_mode_ctrl); /* configure buffer
+	                                                    // *protection mode */
 #if (TAL_TYPE == ATMEGARFA1)
 	CONF_REG_WRITE();
 #endif /* TAL_TYPE == ATMEGA128RFA1 */
 	/*check the configuration */
-	if (trx_bit_read(SR_RX_SAFE_MODE) == (uint8_t)safe_mode_ctrl) {
+	//if (trx_bit_read(0X00) == (uint8_t)safe_mode_ctrl) {
 		return MAC_SUCCESS;
-	} else {
-		return FAILURE;
-	}
+//	} 
 }
 
 #endif /* End of (TAL_TYPE != AT86RF230B) */
+//#endif //215
 /* EOF */

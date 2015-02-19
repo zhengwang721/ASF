@@ -75,7 +75,7 @@
 #define OCTET_STR_LEN_BYTE_LEN          (1)
 
 #define IDENTIFY_BOARD_CONFIRM_LEN      (19)
-#define PERF_START_CONFIRM_LEN          (23) //check 
+#define PERF_START_CONFIRM_LEN          (31) //check 
 #define PERF_SET_CONFIRM_LEN            (3)
 #define PERF_GET_CONFIRM_LEN            (3)
 #define IDENTIFY_PEER_NODE_CONFIRM_LEN  (2)

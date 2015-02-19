@@ -262,11 +262,11 @@ retval_t config_phy(trx_id_t trx_id)
             uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 #endif
 #ifdef SUPPORT_LEGACY_OQPSK
-            pal_trx_bit_write(reg_offset + SR_BBC0_PC_FCST, tal_pib[trx_id].FCSType);
+            trx_bit_write(reg_offset + SR_BBC0_PC_FCST, tal_pib[trx_id].FCSType);
 #endif
 #ifndef BASIC_MODE
-            pal_trx_reg_write(reg_offset + RG_BBC0_AMEDT, tal_pib[trx_id].CCAThreshold);
-            pal_trx_write(reg_offset + RG_BBC0_AMAACKTL,
+            trx_reg_write(reg_offset + RG_BBC0_AMEDT, tal_pib[trx_id].CCAThreshold);
+            trx_write(reg_offset + RG_BBC0_AMAACKTL,
                           (uint8_t *)&tal_pib[trx_id].ACKTiming, 2);
 #endif
         }
@@ -353,55 +353,55 @@ void write_all_tal_pib_to_trx(trx_id_t trx_id)
 
     if (tal_pib[trx_id].FCSType != FCS_TYPE_4_OCTETS) // Compared against reset value
     {
-        pal_trx_bit_write(reg_offset + SR_BBC0_PC_FCST, tal_pib[trx_id].FCSType);
+        trx_bit_write(reg_offset + SR_BBC0_PC_FCST, tal_pib[trx_id].FCSType);
     }
 
     /* Setup frame filter registers */
-    pal_trx_write(reg_offset + RG_BBC0_MACPID0F0,
+    trx_write(reg_offset + RG_BBC0_MACPID0F0,
                   (uint8_t *)&tal_pib[trx_id].PANId, 2);
-    pal_trx_write(reg_offset + RG_BBC0_MACSHA0F0,
+    trx_write(reg_offset + RG_BBC0_MACSHA0F0,
                   (uint8_t *)&tal_pib[trx_id].ShortAddress, 2);
-    pal_trx_write(reg_offset + RG_BBC0_MACEA0,
+    trx_write(reg_offset + RG_BBC0_MACEA0,
                   (uint8_t *)&tal_pib[trx_id].IeeeAddress, 8);
     if (tal_pib[trx_id].PrivatePanCoordinator)
     {
-        pal_trx_bit_write(reg_offset + SR_BBC0_AFC1_PANC0,
+        trx_bit_write(reg_offset + SR_BBC0_AFC1_PANC0,
                           tal_pib[trx_id].PrivatePanCoordinator);
     }
 #ifdef SUPPORT_FRAME_FILTER_CONFIGURATION
     uint8_t temp[2];
     temp[0] = tal_pib[trx_id].frame_types;
     temp[1] = tal_pib[trx_id].frame_versions;
-    pal_trx_write(reg_offset + RG_BBC0_AFFTM, temp, 2);
+    trx_write(reg_offset + RG_BBC0_AFFTM, temp, 2);
 #endif
 #ifdef SUPPORT_ACK_RATE_MODE_ADAPTION
-    pal_trx_bit_write(reg_offset + SR_BBC0_AMCS_AACKDR,
+    trx_bit_write(reg_offset + SR_BBC0_AMCS_AACKDR,
                       tal_pib[trx_id].AdaptDataRateForACK);
 #endif
 #ifdef PROMISCUOUS_MODE
     if (tal_pib[trx_id].PromiscuousMode)
     {
         debug_text(PSTR("Promiscuous mode enabled"));
-        pal_trx_bit_write(reg_offset + SR_BBC0_AFC0_PM, 1);
+        trx_bit_write(reg_offset + SR_BBC0_AFC0_PM, 1);
         tal_rx_enable(trx_id, PHY_RX_ON);
     }
 #endif
 #ifdef SUPPORT_OQPSK
-    pal_trx_bit_write(reg_offset + SR_BBC0_OQPSKPHRTX_MOD,
+    trx_bit_write(reg_offset + SR_BBC0_OQPSKPHRTX_MOD,
                       tal_pib[trx_id].OQPSKRateMode);
 #endif
 #ifdef SUPPORT_FSK
     set_fsk_pibs(trx_id);
 #ifdef SUPPORT_FSK_RAW_MODE
     configure_raw_mode(trx_id, tal_pib[trx_id].FSKRawModeEnabled);
-    pal_trx_write(reg_offset + RG_BBC0_FSKRRXFLL,
+    trx_write(reg_offset + RG_BBC0_FSKRRXFLL,
                   (uint8_t *)&tal_pib[trx_id].FSKRawModeRxLength, 2);
 #endif
 #endif /* #ifdef SUPPORT_FSK */
 #ifdef SUPPORT_OFDM
-    pal_trx_bit_write(reg_offset + SR_BBC0_OFDMPHRTX_MCS,
-                      tal_pib[trx_id].OFDMMCS);
-    pal_trx_bit_write(reg_offset + SR_BBC0_OFDMC_POI,
+    trx_bit_write(reg_offset + SR_BBC0_OFDMPHRTX_MCS,
+                     tal_pib[trx_id].OFDMMCS);
+    trx_bit_write(reg_offset + SR_BBC0_OFDMC_POI,
                       tal_pib[trx_id].OFDMInterleaving);
 #endif /* #ifdef SUPPORT_OFDM */
 }
@@ -417,22 +417,22 @@ void set_fsk_pibs(trx_id_t trx_id)
 {
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
-    pal_trx_bit_write(reg_offset + SR_BBC0_FSKPHRTX_SFD,
+    trx_bit_write(reg_offset + SR_BBC0_FSKPHRTX_SFD,
                       tal_pib[trx_id].FSKFECEnabled);
-    pal_trx_bit_write(reg_offset + SR_BBC0_FSKC2_FECIE,
+    trx_bit_write(reg_offset + SR_BBC0_FSKC2_FECIE,
                       tal_pib[trx_id].FSKFECInterleavingRSC);
-    pal_trx_bit_write(reg_offset + SR_BBC0_FSKC2_FECS,
+    trx_bit_write(reg_offset + SR_BBC0_FSKC2_FECS,
                       tal_pib[trx_id].FSKFECScheme);
 #ifdef SUPPORT_MODE_SWITCH
-    pal_trx_bit_write(reg_offset + SR_BBC0_FSKC2_MSE,
+    trx_bit_write(reg_offset + SR_BBC0_FSKC2_MSE,
                       tal_pib[trx_id].ModeSwitchEnabled);
 #endif
-    pal_trx_reg_write(reg_offset + RG_BBC0_FSKPLL,
+    trx_reg_write(reg_offset + RG_BBC0_FSKPLL,
                       (uint8_t)(tal_pib[trx_id].FSKPreambleLength & 0xFF));
-    pal_trx_bit_write(reg_offset + SR_BBC0_FSKC1_FSKPLH,
+    trx_bit_write(reg_offset + SR_BBC0_FSKC1_FSKPLH,
                       (uint8_t)(tal_pib[trx_id].FSKPreambleLength >> 8));
     set_sfd(trx_id);
-    pal_trx_bit_write(reg_offset + SR_BBC0_FSKPHRTX_DW,
+    trx_bit_write(reg_offset + SR_BBC0_FSKPHRTX_DW,
                       tal_pib[trx_id].FSKScramblePSDU);
 }
 #endif
@@ -451,20 +451,20 @@ void configure_raw_mode(trx_id_t trx_id, bool enable)
 
     /* Assuming SFD0 is used for uncoded and SFD1 is used for coded SFD */
 
-    uint8_t fskc4 = pal_trx_reg_read(reg_offset + RG_BBC0_FSKC4);
+    uint8_t fskc4 = trx_reg_read(reg_offset + RG_BBC0_FSKC4);
     fskc4 &= 0xF0;
 
     if (enable) // Raw mode
     {
         fskc4 |= (1 << 0) | (3 << 2); /* Uncoded raw mode and coded raw mode */
-        pal_trx_bit_write(reg_offset + SR_BBC0_PC_TXAFCS, 0);
+        trx_bit_write(reg_offset + SR_BBC0_PC_TXAFCS, 0);
     }
     else // IEEE mode
     {
         fskc4 |= (0 << 0) | (2 << 2); /* Uncoded IEEE mode and coded IEEE mode */
-        pal_trx_bit_write(reg_offset + SR_BBC0_PC_TXAFCS, 1);
+        trx_bit_write(reg_offset + SR_BBC0_PC_TXAFCS, 1);
     }
-    pal_trx_reg_write(reg_offset + RG_BBC0_FSKC4, fskc4);
+    trx_reg_write(reg_offset + RG_BBC0_FSKC4, fskc4);
 }
 #endif
 
@@ -493,9 +493,9 @@ static void set_tx_pwr(trx_id_t trx_id, int8_t tx_pwr)
     uint8_t val = (uint8_t)(tal_pib[trx_id].TransmitPower + 17);
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 #ifdef IQ_RADIO
-    pal_trx_bit_write(RF215_RF, reg_offset + SR_RF09_PAC_TXPWR, val);
+    trx_bit_write(RF215_RF, reg_offset + SR_RF09_PAC_TXPWR, val);
 #else
-    pal_trx_bit_write(reg_offset + SR_RF09_PAC_TXPWR, val);
+    trx_bit_write(reg_offset + SR_RF09_PAC_TXPWR, val);
 #endif
 }
 
@@ -570,11 +570,11 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
 			freq -= 1500000000;
 		}
 		reg_val = (uint16_t)(freq / 25000);
-		pal_trx_write(rf_reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
+		trx_write(rf_reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
 
 		/* Set channel spacing */
 		spacing /= 25000; // adjust to register scaling
-		pal_trx_reg_write(rf_reg_offset + RG_RF09_CS, (uint8_t)spacing);
+		trx_reg_write(rf_reg_offset + RG_RF09_CS, (uint8_t)spacing);
 
 		/*
 		* Set channel and channel mode.
@@ -621,7 +621,7 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
 				}
 			}
 	
-			pal_trx_write(rf_reg_offset + RG_RF09_CNL, (uint8_t *)&value, 2);
+			trx_write(rf_reg_offset + RG_RF09_CNL, (uint8_t *)&value, 2);
 		}
 		else
 		{
@@ -646,13 +646,13 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
 				}	
 				temp_val = 0;
 				reg_val = (uint16_t)(freq / 25000);					
-				pal_trx_write(rf_reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
-				pal_trx_write(rf_reg_offset + RG_RF09_CNL,
+				trx_write(rf_reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
+				trx_write(rf_reg_offset + RG_RF09_CNL,
 				(uint8_t *)&temp_val, 2); // write cnl as 0 to get the same freq as freq			
 			}
 			else
 			{
-			pal_trx_write(rf_reg_offset + RG_RF09_CNL,
+			trx_write(rf_reg_offset + RG_RF09_CNL,
 			(uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
 			}
 		}					  
@@ -692,26 +692,26 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
         }
         reg_val = (uint16_t)(freq / 25000);
 #ifdef IQ_RADIO
-        pal_trx_write(RF215_RF, reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
+        trx_write(RF215_RF, reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
 #endif
-        pal_trx_write(reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
+        trx_write(reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
 
         / * Set channel spacing * /
         spacing /= 25000; // adjust to register scaling
 #ifdef IQ_RADIO
-        pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CS, (uint8_t)spacing);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CS, (uint8_t)spacing);
 #endif
-        pal_trx_reg_write(reg_offset + RG_RF09_CS, (uint8_t)spacing);
+        trx_reg_write(reg_offset + RG_RF09_CS, (uint8_t)spacing);
 
         / *
          * Set channel and channel mode.
          * Touching the CNM register forces the calculation of the actual frequency.
          * /
 #ifdef IQ_RADIO
-        pal_trx_write(RF215_RF, reg_offset + RG_RF09_CNL,
+        trx_write(RF215_RF, reg_offset + RG_RF09_CNL,
                       (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
 #endif
-        pal_trx_write(reg_offset + RG_RF09_CNL,
+        trx_write(reg_offset + RG_RF09_CNL,
                       (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
 
         / * Wait until channel set is completed * /
@@ -1084,20 +1084,20 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
         case phyCCAThreshold:
             tal_pib[trx_id].CCAThreshold = value->pib_value_8bit;
 #ifndef BASIC_MODE
-            pal_trx_reg_write(reg_offset + RG_BBC0_AMEDT, tal_pib[trx_id].CCAThreshold);
+            trx_reg_write(reg_offset + RG_BBC0_AMEDT, tal_pib[trx_id].CCAThreshold);
 #endif
             break;
 
 #ifdef SUPPORT_OQPSK
         case phyOQPSKRateMode:
             tal_pib[trx_id].OQPSKRateMode = (oqpsk_rate_mode_t)value->pib_value_8bit;
-            pal_trx_bit_write(reg_offset + SR_BBC0_OQPSKPHRTX_MOD,
+            trx_bit_write(reg_offset + SR_BBC0_OQPSKPHRTX_MOD,
                               tal_pib[trx_id].OQPSKRateMode);
             if (tal_pib[trx_id].phy.modulation == OQPSK)
             {
                 calculate_pib_values(trx_id);
 #ifndef BASIC_MODE
-                pal_trx_reg_write(reg_offset + RG_BBC0_AMEDT, tal_pib[trx_id].CCAThreshold);
+                trx_reg_write(reg_offset + RG_BBC0_AMEDT, tal_pib[trx_id].CCAThreshold);
 #endif
             }
             break;
@@ -1107,27 +1107,27 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
         case phyFSKFECEnabled:
             tal_pib[trx_id].FSKFECEnabled = value->pib_value_bool;
             /* Assuming reset values of FSKC4_CSFD0 and FSKC4_CSFD1 */
-            pal_trx_bit_write(reg_offset + SR_BBC0_FSKPHRTX_SFD,
+            trx_bit_write(reg_offset + SR_BBC0_FSKPHRTX_SFD,
                               tal_pib[trx_id].FSKFECEnabled);
             break;
 
         case phyFSKFECInterleavingRSC:
             tal_pib[trx_id].FSKFECInterleavingRSC = value->pib_value_bool;
-            pal_trx_bit_write(reg_offset + SR_BBC0_FSKC2_FECIE,
+            trx_bit_write(reg_offset + SR_BBC0_FSKC2_FECIE,
                               tal_pib[trx_id].FSKFECInterleavingRSC);
             break;
 
         case phyFSKFECScheme:
             tal_pib[trx_id].FSKFECScheme = value->pib_value_bool;
-            pal_trx_bit_write(reg_offset + SR_BBC0_FSKC2_FECS,
+            trx_bit_write(reg_offset + SR_BBC0_FSKC2_FECS,
                               tal_pib[trx_id].FSKFECScheme);
             break;
 
         case phyFSKPreambleLength:
             tal_pib[trx_id].FSKPreambleLength = value->pib_value_16bit;
-            pal_trx_reg_write(reg_offset + RG_BBC0_FSKPLL,
+            trx_reg_write(reg_offset + RG_BBC0_FSKPLL,
                               (uint8_t)(tal_pib[trx_id].FSKPreambleLength & 0xFF));
-            pal_trx_bit_write(reg_offset + SR_BBC0_FSKC1_FSKPLH,
+            trx_bit_write(reg_offset + SR_BBC0_FSKC1_FSKPLH,
                               (uint8_t)(tal_pib[trx_id].FSKPreambleLength >> 8));
             break;
 
@@ -1138,14 +1138,14 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 
         case phyFSKScramblePSDU:
             tal_pib[trx_id].FSKScramblePSDU = value->pib_value_bool;
-            pal_trx_bit_write(reg_offset + SR_BBC0_FSKPHRTX_DW,
+            trx_bit_write(reg_offset + SR_BBC0_FSKPHRTX_DW,
                               tal_pib[trx_id].FSKScramblePSDU);
             break;
 
 #ifdef SUPPORT_MODE_SWITCH
         case phyFSKModeSwitchEnabled:
             tal_pib[trx_id].ModeSwitchEnabled = value->pib_value_bool;
-            pal_trx_bit_write(reg_offset + SR_BBC0_FSKC2_MSE,
+            trx_bit_write(reg_offset + SR_BBC0_FSKC2_MSE,
                               tal_pib[trx_id].ModeSwitchEnabled);
             break;
 
@@ -1169,7 +1169,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 
         case phyFSKRawModeRxLength:
             tal_pib[trx_id].FSKRawModeRxLength = value->pib_value_16bit;
-            pal_trx_write(reg_offset + RG_BBC0_FSKRRXFLL,
+            trx_write(reg_offset + RG_BBC0_FSKRRXFLL,
                           (uint8_t *)&tal_pib[trx_id].FSKRawModeRxLength, 2);
             break;
 #endif /* #ifdef SUPPORT_FSK_RAW_MODE */
@@ -1179,7 +1179,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 #ifdef SUPPORT_OFDM
         case phyOFDMMCS:
             tal_pib[trx_id].OFDMMCS = (ofdm_mcs_t)value->pib_value_8bit;
-            pal_trx_bit_write(reg_offset + SR_BBC0_OFDMPHRTX_MCS,
+            trx_bit_write(reg_offset + SR_BBC0_OFDMPHRTX_MCS,
                               tal_pib[trx_id].OFDMMCS);
             if (tal_pib[trx_id].phy.modulation == OFDM)
             {
@@ -1189,7 +1189,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                 /* Restore previous power setting */
                 set_tx_pwr(trx_id, previous_tx_pwr);
 #ifndef BASIC_MODE
-                pal_trx_reg_write(reg_offset + RG_BBC0_AMEDT,
+                trx_reg_write(reg_offset + RG_BBC0_AMEDT,
                                   tal_pib[trx_id].CCAThreshold);
 #endif
             }
@@ -1197,7 +1197,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 
         case phyOFDMInterleaving:
             tal_pib[trx_id].OFDMInterleaving = value->pib_value_bool;
-            pal_trx_bit_write(reg_offset + SR_BBC0_OFDMC_POI,
+            trx_bit_write(reg_offset + SR_BBC0_OFDMC_POI,
                               tal_pib[trx_id].OFDMInterleaving);
             if (tal_pib[trx_id].phy.modulation == OFDM)
             {
@@ -1249,7 +1249,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 
         case macFCSType:
             tal_pib[trx_id].FCSType = value->pib_value_bool;
-            pal_trx_bit_write(reg_offset + SR_BBC0_PC_FCST, tal_pib[trx_id].FCSType);
+            trx_bit_write(reg_offset + SR_BBC0_PC_FCST, tal_pib[trx_id].FCSType);
             if (tal_pib[trx_id].FCSType == FCS_TYPE_4_OCTETS)
             {
                 tal_pib[trx_id].FCSLen = 4;
@@ -1277,7 +1277,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
             if (tal_state[trx_id] == TAL_IDLE)
             {
                 tal_pib[trx_id].PromiscuousMode = value->pib_value_bool;
-                pal_trx_bit_write(reg_offset + SR_BBC0_AFC0_PM,
+                trx_bit_write(reg_offset + SR_BBC0_AFC0_PM,
                                   tal_pib[trx_id].PromiscuousMode);
                 if (tal_pib[trx_id].PromiscuousMode)
                 {
@@ -1299,25 +1299,26 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 
         case macPANId:
             tal_pib[trx_id].PANId = value->pib_value_16bit;
-            pal_trx_write(reg_offset + RG_BBC0_MACPID0F0,
+            trx_write(reg_offset + RG_BBC0_MACPID0F0,
                           (uint8_t *)&tal_pib[trx_id].PANId, 2);
             break;
 
         case macShortAddress:
             tal_pib[trx_id].ShortAddress = value->pib_value_16bit;
-            pal_trx_write(reg_offset + RG_BBC0_MACSHA0F0,
+            trx_write(reg_offset + RG_BBC0_MACSHA0F0,
                           (uint8_t *)&tal_pib[trx_id].ShortAddress, 2);
             break;
 
         case macIeeeAddress:
-            tal_pib[trx_id].IeeeAddress = value->pib_value_64bit;
-            pal_trx_write(reg_offset + RG_BBC0_MACEA0,
+			memcpy(&tal_pib[trx_id].IeeeAddress, &(value->pib_value_64bit), 8);
+            //tal_pib[trx_id].IeeeAddress = value->pib_value_64bit;
+            trx_write(reg_offset + RG_BBC0_MACEA0,
                           (uint8_t *)&tal_pib[trx_id].IeeeAddress, 8);
             break;
 
         case mac_i_pan_coordinator:
             tal_pib[trx_id].PrivatePanCoordinator = value->pib_value_bool;
-            pal_trx_bit_write(reg_offset + SR_BBC0_AFC1_PANC0,
+            trx_bit_write(reg_offset + SR_BBC0_AFC1_PANC0,
                               (uint8_t)tal_pib[trx_id].PrivatePanCoordinator);
             break;
 
@@ -1330,7 +1331,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 #ifdef SUPPORT_ACK_RATE_MODE_ADAPTION
         case macAdaptDataRateForACK:
             tal_pib[trx_id].AdaptDataRateForACK = value->pib_value_bool;
-            pal_trx_bit_write(reg_offset + SR_BBC0_AMCS_AACKDR,
+            trx_bit_write(reg_offset + SR_BBC0_AMCS_AACKDR,
                               tal_pib[trx_id].AdaptDataRateForACK);
             break;
 #endif
@@ -1338,19 +1339,19 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 #ifdef SUPPORT_FRAME_FILTER_CONFIGURATION
         case macFrameFilterFrameTypes:
             tal_pib[trx_id].frame_types = value->pib_value_8bit;
-            pal_trx_reg_write(reg_offset + RG_BBC0_AFFTM, tal_pib[trx_id].frame_types);
+            trx_reg_write(reg_offset + RG_BBC0_AFFTM, tal_pib[trx_id].frame_types);
             break;
 
         case macFrameFilterFrameVersions:
             tal_pib[trx_id].frame_versions = value->pib_value_8bit;
-            pal_trx_bit_write(reg_offset + SR_BBC0_AFFVM_AFFVM, tal_pib[trx_id].frame_versions);
+            trx_bit_write(reg_offset + SR_BBC0_AFFVM_AFFVM, tal_pib[trx_id].frame_versions);
             break;
 #endif
 
 #ifdef SUPPORT_LEGACY_OQPSK
         case phyHighRateEnabled:
             tal_pib[trx_id].HighRateEnabled = value->pib_value_bool;
-            pal_trx_bit_write(reg_offset + SR_BBC0_OQPSKC3_HRLEG,
+            trx_bit_write(reg_offset + SR_BBC0_OQPSKC3_HRLEG,
                               tal_pib[trx_id].HighRateEnabled);
             if (tal_pib[trx_id].phy.modulation == LEG_OQPSK)
             {
@@ -1444,10 +1445,10 @@ static retval_t set_channel(trx_id_t trx_id, uint16_t ch)
 
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 #ifdef IQ_RADIO
-        pal_trx_write(RF215_RF, reg_offset + RG_RF09_CNL,
+        trx_write(RF215_RF, reg_offset + RG_RF09_CNL,
                       (uint8_t *)&ch, 2);
 #endif
-        pal_trx_write(reg_offset + RG_RF09_CNL,
+        trx_write(reg_offset + RG_RF09_CNL,
                       (uint8_t *)&ch, 2);
 
         if (trx_state[trx_id] == RF_TXPREP)
@@ -1478,7 +1479,7 @@ static retval_t set_channel(trx_id_t trx_id, uint16_t ch)
 static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
 {
     retval_t ret = MAC_SUCCESS;
-
+    uint8_t hrleg;
     switch (pg)
     {
 #ifdef SUPPORT_LEGACY_OQPSK
@@ -1489,11 +1490,13 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
             }
             else
             {
+				hrleg = 0X00;
                 tal_pib[trx_id].phy.ch_spacing = LEG_2450_CH_SPAC;
                 tal_pib[trx_id].phy.freq_band = WORLD_2450;
                 tal_pib[trx_id].phy.freq_f0 = LEG_2450_F0 ;//- (11 * LEG_2450_CH_SPAC);
                 tal_pib[trx_id].phy.modulation = LEG_OQPSK;
                 tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_2000;
+				tal_pib_set(trx_id, phyHighRateEnabled, (pib_value_t*)&hrleg);
             }
             break;
 
@@ -1504,11 +1507,13 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
             }
             else
             {
+				hrleg = 0X00;
                 tal_pib[trx_id].phy.ch_spacing = LEG_915_CH_SPAC;
                 tal_pib[trx_id].phy.freq_band = US_915;
                 tal_pib[trx_id].phy.freq_f0 = LEG_915_F0/* - LEG_915_CH_SPAC*/; //vk
                 tal_pib[trx_id].phy.modulation = LEG_OQPSK;
                 tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_1000;
+				tal_pib_set(trx_id, phyHighRateEnabled, (pib_value_t*)&hrleg);
             }
             break;
         case CH_PG_CHINA:
@@ -1517,14 +1522,54 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
 	        ret = MAC_INVALID_PARAMETER;
         }
         else
-        {
+        { 
+			hrleg = 0X00;
 	        tal_pib[trx_id].phy.ch_spacing = LEG_915_CH_SPAC;
 	        tal_pib[trx_id].phy.freq_band = CHINA_780;
 	        tal_pib[trx_id].phy.freq_f0 = LEG_780_F0/* - LEG_915_CH_SPAC*/; //vk
 	        tal_pib[trx_id].phy.modulation = LEG_OQPSK;
 	        tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_1000;
+			tal_pib_set(trx_id, phyHighRateEnabled, (pib_value_t*)&hrleg);
         }
         break;
+		case 16:
+		if (trx_id == RF09)
+		{
+			hrleg = 0X01;
+			tal_pib[trx_id].phy.ch_spacing = LEG_915_CH_SPAC;
+			tal_pib[trx_id].phy.freq_band = US_915;
+			tal_pib[trx_id].phy.freq_f0 = LEG_915_F0/* - LEG_915_CH_SPAC*/; //vk
+			tal_pib[trx_id].phy.modulation = LEG_OQPSK;
+			tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_1000;
+			tal_pib_set(trx_id, phyHighRateEnabled, (pib_value_t*)&hrleg);
+		}
+		else
+		{
+			hrleg = 0X01;
+			tal_pib[trx_id].phy.ch_spacing = LEG_2450_CH_SPAC;
+			tal_pib[trx_id].phy.freq_band = WORLD_2450;
+			tal_pib[trx_id].phy.freq_f0 = LEG_2450_F0 ;//- (11 * LEG_2450_CH_SPAC);
+			tal_pib[trx_id].phy.modulation = LEG_OQPSK;
+			tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_2000;
+			tal_pib_set(trx_id, phyHighRateEnabled, (pib_value_t*)&hrleg);
+		}
+		break;
+		case 18:
+		if (trx_id == RF24)
+		{
+			ret = MAC_INVALID_PARAMETER;
+		}
+		else
+		{
+			hrleg = 0X01;
+			tal_pib[trx_id].phy.ch_spacing = LEG_915_CH_SPAC;
+			tal_pib[trx_id].phy.freq_band = CHINA_780;
+			tal_pib[trx_id].phy.freq_f0 = LEG_780_F0/* - LEG_915_CH_SPAC*/; //vk
+			tal_pib[trx_id].phy.modulation = LEG_OQPSK;
+			tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_1000;
+			tal_pib_set(trx_id, phyHighRateEnabled, (pib_value_t*)&hrleg);
+		}
+		break;
 #endif
 
         default:

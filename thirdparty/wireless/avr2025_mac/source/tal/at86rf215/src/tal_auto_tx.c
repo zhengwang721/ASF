@@ -203,22 +203,22 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
         /* Enable Tx2RX */
         amcs |= AMCS_TX2RX_MASK;
         /* Configure frame filter to receive only ACK frames */
-        pal_trx_reg_write(reg_offset + RG_BBC0_AFFTM, ACK_FRAME_TYPE_ONLY);
+        trx_reg_write(reg_offset + RG_BBC0_AFFTM, ACK_FRAME_TYPE_ONLY);
     }
     /* Other auto mode settings can be set to 0 */
-    pal_trx_reg_write(reg_offset + RG_BBC0_AMCS, amcs);
+    trx_reg_write(reg_offset + RG_BBC0_AMCS, amcs);
 
     if (frame_buf_filled[trx_id] == false)
     {
         /* fill length field */
         uint16_t len = mac_frame_ptr[trx_id]->len_no_crc + tal_pib[trx_id].FCSLen;
-        pal_trx_write(reg_offset + RG_BBC0_TXFLL, (uint8_t *)&len, 2);
+        trx_write(reg_offset + RG_BBC0_TXFLL, (uint8_t *)&len, 2);
 
         /* Store tx frame length to handle IFS next time */
         last_txframe_length[trx_id] = mac_frame_ptr[trx_id]->len_no_crc;
 
         /* Disable automatic FCS appending */
-        pal_trx_bit_write(reg_offset + SR_BBC0_PC_TXAFCS, 0);
+        trx_bit_write(reg_offset + SR_BBC0_PC_TXAFCS, 0);
     }
 
     if (cca == WITH_CCA)
@@ -227,7 +227,7 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
         debug_text(PSTR("transmit with CCA"));
 
         /* Disable BB; it will enabled for transmission automatically again */
-        pal_trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 0);
+        trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 0);
 
         /* Ensure to reach the correct trx state */
         if (trx_state[trx_id] == RF_TRXOFF)
@@ -242,11 +242,11 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
         }
 
         /* Disable TRXRDY during CCA */
-        pal_trx_bit_write(reg_offset + SR_RF09_IRQM_TRXRDY, 0);
+        trx_bit_write(reg_offset + SR_RF09_IRQM_TRXRDY, 0);
 
         /* Start single ED measurement; use reg_write - it's the only sub-register */
         debug_text(PSTR("Start ED measurement"));
-        pal_trx_reg_write(reg_offset + RG_RF09_EDC, RF_EDSINGLE);
+        trx_reg_write(reg_offset + RG_RF09_EDC, RF_EDSINGLE);
         tx_state[trx_id] = TX_CCATX;
     }
     else // no CCA
@@ -257,7 +257,7 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
         }
 
         debug_text(PSTR("switch to Tx"));
-        pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TX);
+        trx_reg_write(reg_offset + RG_RF09_CMD, RF_TX);
         trx_state[trx_id] = RF_TX;
         tx_state[trx_id] = TX_TX;
     }
@@ -271,7 +271,7 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
     {
         /* fill frame buffer; do not provide FCS values */
         uint16_t tx_frm_buf_offset = BB_TX_FRM_BUF_OFFSET * trx_id;
-        pal_trx_write(tx_frm_buf_offset + RG_BBC0_FBTXS,
+        trx_write(tx_frm_buf_offset + RG_BBC0_FBTXS,
                       (uint8_t *)mac_frame_ptr[trx_id]->mpdu,
                       mac_frame_ptr[trx_id]->len_no_crc);
 
@@ -283,18 +283,18 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
 #endif
 
         /* Check if under-run has occurred */
-        bool underrun = pal_trx_bit_read(reg_offset + SR_BBC0_PS_TXUR);
+        bool underrun = trx_bit_read(reg_offset + SR_BBC0_PS_TXUR);
         if (underrun)
         {
             debug_text(PSTR("Tx underrun occured"));
             /* Abort ongoing transmission */
-            pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
+            trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
             trx_state[trx_id] = RF_TRXOFF;
 
             /* Enable BB again and TXAFCS */
-            uint8_t pc = pal_trx_reg_read(reg_offset + RG_BBC0_PC);
+            uint8_t pc = trx_reg_read(reg_offset + RG_BBC0_PC);
             pc |= PC_TXAFCS_MASK | PC_BBEN_MASK;
-            pal_trx_reg_write(reg_offset + RG_BBC0_PC, pc);
+            trx_reg_write(reg_offset + RG_BBC0_PC, pc);
 
             TAL_BB_IRQ_CLR(trx_id, BB_IRQ_TXFE);
             TAL_RF_IRQ_CLR(trx_id, RF_IRQ_TRXERR | RF_IRQ_TRXRDY | RF_IRQ_EDC);
@@ -304,16 +304,16 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
         {
             /* Enable automatic FCS appending for remaining frame or later ACK transmission */
             uint16_t reg_pc = reg_offset + RG_BBC0_PC;
-            uint8_t pc = pal_trx_reg_read(reg_pc);
+            uint8_t pc = trx_reg_read(reg_pc);
             pc |= PC_TXAFCS_MASK;
-            pal_trx_reg_write(reg_pc, pc);
+            trx_reg_write(reg_pc, pc);
             if (cca == WITH_CCA)
             {
-                rf_cmd_state_t state = (rf_cmd_state_t)pal_trx_reg_read(reg_offset + RG_RF09_STATE);
+                rf_cmd_state_t state = (rf_cmd_state_t)trx_reg_read(reg_offset + RG_RF09_STATE);
                 if (state != RF_RX)
                 {
                     pc |= PC_BBEN_MASK;
-                    pal_trx_reg_write(reg_pc, pc);
+                    trx_reg_write(reg_pc, pc);
                 }
             }
 
@@ -338,7 +338,7 @@ void handle_tx_end_irq(trx_id_t trx_id)
             {
                 /* Check channel */
                 uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-                uint8_t ccaed = pal_trx_bit_read(reg_offset + SR_BBC0_AMCS_CCAED);
+                uint8_t ccaed = trx_bit_read(reg_offset + SR_BBC0_AMCS_CCAED);
                 if (ccaed == BB_CH_CLEAR)
                 {
                     debug_text(PSTR("Channel idle and frame has been sent"));
@@ -353,7 +353,7 @@ void handle_tx_end_irq(trx_id_t trx_id)
                 else
                 {
                     /* Switch BB on again */
-                    pal_trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 1);
+                    trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 1);
                     trx_state[trx_id] = RF_RX;
                     debug_text(PSTR("Channel busy"));
                     csma_continue(trx_id);
@@ -498,12 +498,12 @@ void tx_done_handling(trx_id_t trx_id, retval_t status)
     {
         if (status == MAC_SUCCESS)
         {
-            pal_trx_read(reg_offset + RG_BBC0_CNT0, (uint8_t *)&tal_pib[trx_id].TimeOfFlight, 4);
+            trx_read(reg_offset + RG_BBC0_CNT0, (uint8_t *)&tal_pib[trx_id].TimeOfFlight, 4);
         }
     }
 #endif
     /* Enable AACK again and disable CCA / TX procedure */
-    pal_trx_reg_write(reg_offset + RG_BBC0_AMCS, AMCS_AACK_MASK);
+    trx_reg_write(reg_offset + RG_BBC0_AMCS, AMCS_AACK_MASK);
 
     /* Set trx state for leaving TX transaction */
     if (trx_default_state[trx_id] == RF_RX)
@@ -512,7 +512,7 @@ void tx_done_handling(trx_id_t trx_id, retval_t status)
     }
     else
     {
-        pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
+        trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
         trx_state[trx_id] = RF_TRXOFF;
     }
 

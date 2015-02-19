@@ -49,6 +49,7 @@
 #ifndef USER_INTERFACE_H
 #define USER_INTERFACE_H
 
+#include "tal_rf215.h"
 /**
  * \ingroup group_perf_analyzer
  * \defgroup group_user_interface  User Interface
@@ -62,7 +63,7 @@
 /* === Macros =============================================================== */
 
 /* === Types ================================================================ */
-#include "tal_rf215.h"
+
 /**
  * \name LED EVENTS
  *  \{

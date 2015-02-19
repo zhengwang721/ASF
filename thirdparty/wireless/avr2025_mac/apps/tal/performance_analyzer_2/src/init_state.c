@@ -52,7 +52,7 @@
 #include <stdint.h>
 #include "tal.h"
 #include "tal_internal.h"
-#include "tal_helper.h"
+#include "tal_helper_2.h"
 #include "app_init.h"
 #include "perf_api.h"
 #include "perf_api_serial_handler.h"
@@ -169,7 +169,7 @@ void init_after_disconnect(trx_id_t trx)
      * Install a handler for the radio and the baseband interrupt.
      * /
     pal_trx_irq_flag_clr();
-    pal_trx_irq_init(trx_irq_handler_cb);
+    trx_irq_init(trx_irq_handler_cb);
     pal_trx_irq_en();   / * Enable transceiver main interrupt. * /*/
 
 

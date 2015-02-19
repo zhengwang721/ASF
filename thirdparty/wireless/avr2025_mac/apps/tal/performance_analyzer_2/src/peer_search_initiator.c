@@ -50,7 +50,7 @@
 #include <stdlib.h>
 #include "tal.h"
 #include "tal_pib.h"
-#include "tal_helper.h"
+#include "tal_helper_2.h"
 #include "ieee_const.h"
 #include "sio2host.h"
 #include "sio2ncp.h"
@@ -500,7 +500,7 @@ static void peer_rsp_rcvd_init(trx_id_t trx,void *arg)
                                    NULL,
                                    NULL,
                                    NULL,
-                                   NUL_VAL);
+                                   NUL_VAL,NUL_VAL,NUL_VAL);
         }
         /* PEER CONF send failed - so change to WAIT_FOR_EVENT state*/
         set_main_state(trx,WAIT_FOR_EVENT, NULL);
@@ -572,7 +572,7 @@ static void peer_rsp_rcvd_tx_cb(trx_id_t trx,retval_t status, frame_info_t *fram
                                    NULL,
                                    NULL,
                                    NULL,
-                                   NUL_VAL);
+                                   NUL_VAL,NUL_VAL,NUL_VAL);
         }
         /* PEER CONF send failed so change to WAIT_FOR_EVENT state*/
         set_main_state(trx,WAIT_FOR_EVENT, NULL);

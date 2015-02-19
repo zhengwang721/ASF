@@ -157,7 +157,7 @@ static void start_backoff(trx_id_t trx_id)
             if (trx_state[trx_id] != RF_TRXOFF)
             {
                 uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-                pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
+                trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
                 trx_state[trx_id] = RF_TRXOFF;
             }
 #endif
@@ -186,7 +186,7 @@ static void cca_start(void *parameter)
     if (trx_state[trx_id] == RF_RX)
     {
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-        uint8_t agc_freeze = pal_trx_bit_read(reg_offset + SR_RF09_AGCC_FRZS);
+        uint8_t agc_freeze = trx_bit_read(reg_offset + SR_RF09_AGCC_FRZS);
         if (agc_freeze)
         {
             debug_text(PSTR("AGC is freezed"));
@@ -242,24 +242,24 @@ static void trigger_cca_meaurement(trx_id_t trx_id)
     }
 
     /* Disable BB */
-    pal_trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 0);
+    trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 0);
 
     /* Enable IRQ EDC */
-    pal_trx_bit_write(reg_offset + SR_RF09_IRQM_EDC, 1);
+    trx_bit_write(reg_offset + SR_RF09_IRQM_EDC, 1);
 
     /* CCA duration is already set by default; see apply_phy_settings() */
     /* Setup and start energy detection */
-    pal_trx_bit_write(reg_offset + SR_RF09_AGCC_FRZC, 0); // Ensure AGC is not hold
+    trx_bit_write(reg_offset + SR_RF09_AGCC_FRZC, 0); // Ensure AGC is not hold
     if (trx_state[trx_id] != RF_RX)
     {
         debug_text(PSTR("Switch to Rx"));
-        pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_RX);
+        trx_reg_write(reg_offset + RG_RF09_CMD, RF_RX);
         pal_timer_delay(tal_pib[trx_id].agc_settle_dur); // allow filters to settle
         trx_state[trx_id] = RF_RX;
     }
     tx_state[trx_id] = TX_CCA;
     /* Start single ED measurement; use reg_write - it's the only subregister */
-    pal_trx_reg_write(reg_offset + RG_RF09_EDC, RF_EDSINGLE);
+    trx_reg_write(reg_offset + RG_RF09_EDC, RF_EDSINGLE);
 
     /* Wait for EDC IRQ and handle it within cca_done_handling() */
 }
@@ -280,7 +280,7 @@ void cca_done_handling(trx_id_t trx_id)
 
     /* Switch BB on again */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    pal_trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 1);
+    trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 1);
 
     /* Determine if channel is idle */
     if (tal_current_ed_val[trx_id] < tal_pib[trx_id].CCAThreshold)

@@ -88,7 +88,7 @@ void handle_rx_end_irq(trx_id_t trx_id)
         {
             debug_text(PSTR("Check for mode switch"));
             uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-            if (pal_trx_bit_read(reg_offset + SR_BBC0_FSKPHRRX_MS) == 0x01)
+            if (trx_bit_read(reg_offset + SR_BBC0_FSKPHRRX_MS) == 0x01)
             {
                 handle_rx_ms_packet(trx_id);
                 return;
@@ -141,9 +141,9 @@ static void handle_incoming_frame(trx_id_t trx_id)
                 /* Re-store frame filter to pass "normal" frames */
                 /* Configure frame filter to receive all allowed frame types */
 #ifdef SUPPORT_FRAME_FILTER_CONFIGURATION
-                pal_trx_reg_write(reg_offset + RG_BBC0_AFFTM, tal_pib[trx_id].frame_types);
+                trx_reg_write(reg_offset + RG_BBC0_AFFTM, tal_pib[trx_id].frame_types);
 #else
-                pal_trx_reg_write(reg_offset + RG_BBC0_AFFTM, DEFAULT_FRAME_TYPES);
+                trx_reg_write(reg_offset + RG_BBC0_AFFTM, DEFAULT_FRAME_TYPES);
 #endif
                 tx_done_handling(trx_id, MAC_SUCCESS);
             }
@@ -163,7 +163,7 @@ static void handle_incoming_frame(trx_id_t trx_id)
     }
 
     /* Check if ACK transmission is done by transceiver */
-    bool ack_transmitting = pal_trx_bit_read(reg_offset + SR_BBC0_AMCS_AACKFT);
+    bool ack_transmitting = trx_bit_read(reg_offset + SR_BBC0_AMCS_AACKFT);
     if (ack_transmitting)
     {
 	    debug_text(PSTR("ACK transmitting"));
@@ -205,7 +205,7 @@ static bool upload_frame(trx_id_t trx_id)
     /* Get Rx frame length */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     uint16_t phy_frame_len;
-    pal_trx_read(reg_offset + RG_BBC0_RXFLL, (uint8_t *)&phy_frame_len, 2);
+    trx_read(reg_offset + RG_BBC0_RXFLL, (uint8_t *)&phy_frame_len, 2);
     debug_text_val(PSTR("Frm len = "), phy_frame_len);
     rx_frm_info[trx_id]->len_no_crc = phy_frame_len - tal_pib[trx_id].FCSLen;
 
@@ -225,7 +225,7 @@ static bool upload_frame(trx_id_t trx_id)
     uint16_t len = rx_frm_info[trx_id]->len_no_crc;
 #endif
     uint16_t rx_frm_buf_offset = BB_RX_FRM_BUF_OFFSET * trx_id;
-    pal_trx_read(rx_frm_buf_offset + RG_BBC0_FBRXS, rx_frm_info[trx_id]->mpdu, len);
+    trx_read(rx_frm_buf_offset + RG_BBC0_FBRXS, rx_frm_info[trx_id]->mpdu, len);
 
     return true;
 }
@@ -242,7 +242,7 @@ void complete_rx_transaction(trx_id_t trx_id)
 
     /* Get energy of received frame */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    uint8_t ed = pal_trx_reg_read(reg_offset + RG_RF09_EDV);
+    uint8_t ed = trx_reg_read(reg_offset + RG_RF09_EDV);
     debug_text_val(PSTR("Energy of received frame = "), ed);
     uint16_t ed_pos = rx_frm_info[trx_id]->len_no_crc + 1 + tal_pib[trx_id].FCSLen;
     rx_frm_info[trx_id]->mpdu[ed_pos] = ed; // PSDU, LQI, ED

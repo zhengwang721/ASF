@@ -227,12 +227,12 @@ static inline void download_ms_ppdu(trx_id_t trx_id)
     /* fill length field */
     uint16_t len = 2; /* fixed size - no CRC */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    pal_trx_write(reg_offset + RG_BBC0_TXFLL, (uint8_t *)&len, 2);
+    trx_write(reg_offset + RG_BBC0_TXFLL, (uint8_t *)&len, 2);
 
     /* fill frame buffer */
     uint16_t phr = create_mode_switch_phr(trx_id);
     uint16_t tx_frm_buf_offset = BB_TX_FRM_BUF_OFFSET * trx_id;
-    pal_trx_write(tx_frm_buf_offset + RG_BBC0_FBTXS, (uint8_t *)&phr, 2);
+    trx_write(tx_frm_buf_offset + RG_BBC0_FBTXS, (uint8_t *)&phr, 2);
 }
 
 
@@ -253,7 +253,7 @@ void tx_ms_ppdu(trx_id_t trx_id)
     /* Configure auto modes: Disable CCATX, AACK and TX2RX */
     /* Other auto mode settings can be set to 0 */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    pal_trx_reg_write(reg_offset + RG_BBC0_AMCS, 0);
+    trx_reg_write(reg_offset + RG_BBC0_AMCS, 0);
 
     /* Enable raw mode */
     configure_raw_mode(trx_id, true);
@@ -281,7 +281,7 @@ void tx_ms_ppdu(trx_id_t trx_id)
 #endif
 
     debug_text(PSTR("switch to Tx"));
-    pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TX);
+    trx_reg_write(reg_offset + RG_RF09_CMD, RF_TX);
     trx_state[trx_id] = RF_TX;
 
     tx_state[trx_id] = TX_MS_PPDU;
@@ -415,7 +415,7 @@ static void configure_new_tx_mode(trx_id_t trx_id)
     if (*mac_frame_ptr[trx_id]->mpdu & FCF_ACK_REQUEST)
     {
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-        pal_trx_bit_write(reg_offset + SR_BBC0_AMCS_TX2RX, 1);
+        trx_bit_write(reg_offset + SR_BBC0_AMCS_TX2RX, 1);
     }
 
     tal_pib[trx_id].phy.modulation = tal_pib[trx_id].ModeSwitchNewMode.modulation;
@@ -589,7 +589,7 @@ void handle_rx_ms_packet(trx_id_t trx_id)
     /* Upload mode switch PHR */
     uint16_t phr;
     uint16_t rx_frm_buf_offset = BB_RX_FRM_BUF_OFFSET * trx_id;
-    pal_trx_read(rx_frm_buf_offset + RG_BBC0_FBRXS, (uint8_t *)&phr, 2);
+    trx_read(rx_frm_buf_offset + RG_BBC0_FBRXS, (uint8_t *)&phr, 2);
     debug_text_val(PSTR("MS PHR = "), phr);
 
     /* BCH calculation */

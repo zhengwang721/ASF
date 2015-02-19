@@ -50,7 +50,7 @@
 #include <stdio.h>
 #include "tal.h"
 #include "tal_internal.h"
-#include "tal_helper.h"
+#include "tal_helper_2.h"
 #include "ieee_const.h"
 #include "app_per_mode.h"
 #include "app_init.h"
@@ -83,6 +83,30 @@ int8_t scale_reg_value_to_ed(uint8_t reg_val)
 uint8_t scale_ed_to_reg_val(int8_t ed_val)
 {	
 	return ((((MAX_ED_REG_VAL-MIN_ED_REG_VAL)*(ed_val - MIN_ED_VAL))/(MAX_ED_VAL-MIN_ED_VAL))+MIN_ED_REG_VAL);		
+}
+/**
+ * \brief The reverse_float is used for reversing a float variable for
+ * supporting BIG ENDIAN systems
+ * \param float_val Float variable to be reversed
+ */
+float reverse_float( const float float_val )
+{
+	float retuVal;
+	char *floatToConvert = (char *)&float_val;
+	char *returnFloat = (char *)&retuVal;
+#if UC3
+	/* swap the bytes into a temporary buffer */
+	returnFloat[0] = floatToConvert[3];
+	returnFloat[1] = floatToConvert[2];
+	returnFloat[2] = floatToConvert[1];
+	returnFloat[3] = floatToConvert[0];
+#else
+	returnFloat[0] = floatToConvert[0];
+	returnFloat[1] = floatToConvert[1];
+	returnFloat[2] = floatToConvert[2];
+	returnFloat[3] = floatToConvert[3];
+#endif
+	return retuVal;
 }
 
 

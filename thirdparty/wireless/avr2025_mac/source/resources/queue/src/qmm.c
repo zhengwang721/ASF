@@ -128,12 +128,11 @@ void qmm_queue_append(queue_t *q, buffer_t *buf)
         /* Update size */
         q->size++;
 
-#if (_DEBUG_ > 1)
-		if (q->head == NULL) {
-			Assert(
-					"Corrupted queue: Null pointer has been queued" ==
-					0);
-		}
+#if (DEBUG > 1)
+        if (q->head == NULL)
+        {
+            ABORT("Corrupted queue: Null pointer has been queued");
+        }
 #endif
 
 #ifdef ENABLE_QUEUE_CAPACITY
@@ -144,7 +143,7 @@ void qmm_queue_append(queue_t *q, buffer_t *buf)
     LEAVE_CRITICAL_REGION();
 
 #ifdef ENABLE_QUEUE_CAPACITY
-	return (status);
+    return (status);
 #endif
 }/* qmm_queue_append */
 
@@ -159,8 +158,7 @@ void qmm_queue_append(queue_t *q, buffer_t *buf)
  * @param q Queue from which buffer is to be read or removed.
  *
  * @param mode Mode of operations. If this parameter has value REMOVE_MODE,
- *             buffer will be removed from queue and returned. If this parameter
- * is
+ *             buffer will be removed from queue and returned. If this parameter is
  *             READ_MODE, buffer pointer will be returned without
  *             removing from queue.
  *
@@ -200,20 +198,9 @@ static buffer_t *queue_read_or_remove(queue_t *q,
                     break;
                 }
 
-		/* Buffer matching with search criteria found */
-		if (NULL != buffer_current) {
-			/* Remove buffer from the queue */
-			if (REMOVE_MODE == mode) {
-				/* Update head if buffer removed is first node
-				**/
-				if (buffer_current == q->head) {
-					q->head = buffer_current->next;
-				} else {
-					/* Update the link by removing the
-					 * buffer */
-					buffer_previous->next
-						= buffer_current->next;
-				}
+                buffer_previous = buffer_current;
+                buffer_current = buffer_current->next;
+            }
 
         }
 
@@ -234,25 +221,27 @@ static buffer_t *queue_read_or_remove(queue_t *q,
                     buffer_previous->next = buffer_current->next;
                 }
 
-				if (NULL == q->head) {
-					q->tail = NULL;
-				}
-			}
-			/* Read buffer from the queue */
-			else {
-				/* Nothing needs done if the mode is READ_MODE
-				**/
-			}
-		}
-	} /* q->size != 0 */
+                /* Update tail if buffer removed is last node */
+                if (buffer_current == q->tail)
+                {
+                    q->tail = buffer_previous;
+                }
 
                 /* Update size */
                 q->size--;
 
-	/* Return the buffer. note that pointer to header of buffer is returned
-	**/
-	return (buffer_current);
-} /* queue_read_or_remove */
+                if (NULL == q->head)
+                {
+                    q->tail = NULL;
+                }
+            }
+            /* Read buffer from the queue */
+            else
+            {
+                /* Nothing needs done if the mode is READ_MODE */
+            }
+        }
+    } /* q->size != 0 */
 
     LEAVE_CRITICAL_REGION();
 

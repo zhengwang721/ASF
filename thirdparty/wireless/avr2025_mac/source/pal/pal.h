@@ -69,11 +69,13 @@
 #include "common_sw_timer.h"
 #include "board.h"
 #include "asf.h"
-#ifdef SAM4L
-#include "gpio.h"
-#endif
+
 #if (PAL_USE_SPI_TRX == 1)
+#if (TAL_TYPE == AT86RF215)
+#include "trx_access_2.h"
+#else
 #include "trx_access.h"
+#endif
 #else
 #include "sysclk.h"
 #endif /* #if (PAL_USE_SPI_TRX = 1) */
