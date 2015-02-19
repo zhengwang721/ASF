@@ -27,6 +27,7 @@
 		<require idref="thirdparty.wireless.avrx_contiki.apps.http-socket"/>
 		<require idref="thirdparty.wireless.avrx_contiki.apps.simple-rpl"/>
 		<require idref="thirdparty.wireless.avrx_contiki.apps.multichan"/>
+                <require idref="thirdparty.wireless.avrx_contiki.apps.servreg-hack"/>
 		<device-support-alias value="avr2025_mac_pal_support"/>		
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
