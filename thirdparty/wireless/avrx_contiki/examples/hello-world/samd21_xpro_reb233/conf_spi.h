@@ -1,9 +1,9 @@
 /**
- * \file conf_sio2host.h
+ * \file
  *
- * \brief Serial Input & Output configuration
+ * \brief SAM D2x SPI configuration
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,18 +38,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
 
-#ifndef CONF_SIO2HOST_H_INCLUDED
-#define CONF_SIO2HOST_H_INCLUDED
-#define SERIAL_RX_BUF_SIZE_HOST    156
 
-#define USART_HOST                 EDBG_CDC_MODULE
+#ifndef CONF_SPI_H_INCLUDED
+#  define CONF_SPI_H_INCLUDED
 
-/** Baudrate setting */
-#define USART_HOST_BAUDRATE        115200
+#  define CONF_SPI_MASTER_ENABLE     true
+#  define CONF_SPI_SLAVE_ENABLE      false
+#  define CONF_SPI_TIMEOUT           10000
 
-#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(0, USART_HOST_ISR_VECT); \
-USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC; \
-system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM0);
-#endif /* CONF_SIO2HOST_H_INCLUDED */
+
+
+
+
+#endif /* CONF_SPI_H_INCLUDED */
+

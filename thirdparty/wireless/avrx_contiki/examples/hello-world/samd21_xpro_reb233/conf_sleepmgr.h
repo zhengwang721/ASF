@@ -1,9 +1,9 @@
 /**
- * \file conf_sio2host.h
+ * \file
  *
- * \brief Serial Input & Output configuration
+ * \brief Sleep manager configuration
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,18 +38,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-#ifndef CONF_SIO2HOST_H_INCLUDED
-#define CONF_SIO2HOST_H_INCLUDED
-#define SERIAL_RX_BUF_SIZE_HOST    156
+#define CONFIG_SLEEPMGR_ENABLE
 
-#define USART_HOST                 EDBG_CDC_MODULE
-
-/** Baudrate setting */
-#define USART_HOST_BAUDRATE        115200
-
-#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(0, USART_HOST_ISR_VECT); \
-USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC; \
-system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM0);
-#endif /* CONF_SIO2HOST_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_H */

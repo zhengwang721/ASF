@@ -1,7 +1,9 @@
 <asf xmlversion="1.0">
-	<project caption="udp-unicast-receiver Application" id="thirdparty.wireless.avrx_contiki.examples.udp-unicast-receiver.samr21xpro" force-caption="true" force-description="true">
+	<project caption="Contiki Hello World Application" id="thirdparty.wireless.avrx_contiki.examples.hello-world.samd21_xpro_reb233" force-caption="true" force-description="true">
 		<info type="description" value="summary">
 		</info>
+		
+
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
@@ -15,7 +17,7 @@
 		<build type="header-file" value="platform-conf.h"/>
 		<config name="config.sam0.drivers.sercom.spi" value="polled"/>
 		<config name="config.sam0.drivers.sercom.usart" value="callback"/>
-		<require idref="board.samr21_xplained_pro"/>
+		<require idref="board.samd21_xplained_pro"/>
 		<require idref="common2.services.delay"/>
 		<require idref="sam0.drivers.wdt"/>
 		<require idref="sam0.drivers.rtc"/>
@@ -24,13 +26,14 @@
 		<require idref="sam0.drivers.nvm"/>
 		<require idref="thirdparty.wireless.common_services.trx_access"/>
 		<require idref="thirdparty.wireless.avrx_contiki.dev.at86rf233"/>
+		<require idref="thirdparty.wireless.avrx_contiki.services.at24mac602"/>
 		<require idref="config.thirdparty.wireless.avrx_contiki.services.sam0"/>
 		<require idref="thirdparty.wireless.avrx_contiki.services.timer.sam0"/>
-		<require idref="thirdparty.wireless.avrx_contiki.examples.udp-unicast-receiver"/>
-	    <build type="doxygen-entry-point" value="group_contiki"/>
+		<require idref="thirdparty.wireless.avrx_contiki.examples.hello-world"/>
+	
 		<config name="config.compiler.armgcc.optimization" value="high" />
 		<generator value="as5_arm" />
 		<generator value="doxygen"/>
-		<device-support value="atsamr21g18a"/>
+		<device-support value="atsamd21j18a"/>
 	</project>
 </asf>
