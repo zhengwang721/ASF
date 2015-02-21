@@ -369,7 +369,8 @@ cbcmac_verify(const unsigned char *key, const unsigned char *nonce,
       CBCMAC_PRINTF("CBC-MAC: Auth. block prepared\n");
       cbcmac_append(key, BUF);
 
-      watchdog_periodic();
+      //watchdog_periodic();
+	  wdt_reset_count();
       /* Auth data + padding with zeroes */
       memset(BUF, 0, sizeof(BUF));
       memcpy(&BUF[0], &adata[idx], (left > BLOCK_SIZE ? BLOCK_SIZE : left));

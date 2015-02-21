@@ -450,14 +450,16 @@ send_packet(mac_callback_t mac_callback, void *mac_callback_ptr,
   }
 #endif
 
-  watchdog_periodic();
+  //watchdog_periodic();
+  wdt_reset_count();
   t0 = RTIMER_NOW();
   seqno = packetbuf_attr(PACKETBUF_ATTR_MAC_SEQNO);
   for(strobes = 0, collisions = 0;
       got_strobe_ack == 0 && collisions == 0 &&
       RTIMER_CLOCK_LT(RTIMER_NOW(), t0 + STROBE_TIME); strobes++) {
 
-    watchdog_periodic();
+    //watchdog_periodic();
+	wdt_reset_count();
 
     len = 0;
 

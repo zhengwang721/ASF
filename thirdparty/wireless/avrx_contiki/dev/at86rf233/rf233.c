@@ -46,6 +46,8 @@
 #include "rf233.h"
 #include "delay.h"
 #include "system_interrupt.h"
+
+#define RF233_STATUS()                    rf233_status()
 /*---------------------------------------------------------------------------*/
 PROCESS(rf233_radio_process, "RF233 radio driver");
 static int  on(void);
@@ -88,7 +90,7 @@ const struct radio_driver rf233_radio_driver =
 
 /*---------------------------------------------------------------------------*/
 /* convenience macros */
-#define RF233_STATUS()                    rf233_arch_status()
+//#define RF233_STATUS()                    rf233_arch_status()
 #define RF233_COMMAND(c)                  trx_reg_write(RF233_REG_TRX_STATE, c)
 
 /* each frame has a footer consisting of LQI, ED, RX_STATUS added by the radio */
@@ -199,7 +201,7 @@ rf233_init(void)
   /* before enabling interrupts, make sure we have cleared IRQ status */
   regtemp = trx_reg_read(RF233_REG_IRQ_STATUS);
   printf("After wake from sleep\n");
-  radio_state = trx_reg_read(RF233_REG_TRX_STATUS) & TRX_STATUS;
+  radio_state = rf233_status();
   printf("After arch read reg: state 0x%04x\n", radio_state);
 
   if(radio_state == STATE_P_ON) {
@@ -284,7 +286,7 @@ memcpy(&data[1],payload,templen);
   }
 
   /* check that the FIFO is clear to access */
-  radio_status=trx_reg_read(RF233_REG_TRX_STATUS);
+  radio_status=rf233_status();
   if(radio_status == STATE_BUSY_RX || radio_status == STATE_BUSY_TX) {
     PRINTF("RF233: TRX buffer unavailable: prep when %s\n", radio_status == STATE_BUSY_RX ? "rx" : "tx");
     return RADIO_TX_ERR;
@@ -309,10 +311,10 @@ rf233_transmit(unsigned short payload_len)
 
   /* prepare for TX */
   
-  status_now = trx_reg_read(RF233_REG_TRX_STATUS);
-   status_now = trx_reg_read(RF233_REG_TRX_RPC);
+  status_now = rf233_status();
+   //status_now = trx_reg_read(RF233_REG_TRX_RPC);
   if(status_now == STATE_BUSY_RX || status_now == STATE_BUSY_TX) {
-    PRINTF("RF233: collision, was receiving\n");
+    PRINTF("RF233: collision, was receiving 0x%02X\n",status_now);
     /* NOTE: to avoid loops */
     return RADIO_TX_ERR;;
     // return RADIO_TX_COLLISION;
@@ -330,15 +332,15 @@ rf233_transmit(unsigned short payload_len)
    } while (status_now == 0x1f);
   }
 
-  if(trx_reg_read(RF233_REG_TRX_STATUS) != STATE_PLL_ON) {
+  if(rf233_status() != STATE_PLL_ON) {
     /* failed moving into PLL_ON state, gracefully try to recover */
     PRINTF("RF233: failed going to PLLON\n");
     RF233_COMMAND(TRXCMD_PLL_ON);   /* try again */
 	static uint8_t state;
-	state = trx_reg_read(RF233_REG_TRX_STATUS);
+	state = rf233_status();
     if(state != STATE_PLL_ON) {
       /* give up and signal big fail (should perhaps reset radio core instead?) */
-      PRINTF("RF233: graceful recovery (in tx) failed, giving up. State: 0x%02X\n", trx_reg_read(RF233_REG_TRX_STATUS));
+      PRINTF("RF233: graceful recovery (in tx) failed, giving up. State: 0x%02X\n", rf233_status());
       return RADIO_TX_ERR;
     }
   }
@@ -348,11 +350,12 @@ rf233_transmit(unsigned short payload_len)
   ENERGEST_ON(ENERGEST_TYPE_TRANSMIT);
   RF233_COMMAND(TRXCMD_TX_START);
    flag_transmit=1;
-  BUSYWAIT_UNTIL(trx_reg_read(RF233_REG_TRX_STATUS) == STATE_BUSY_TX, RTIMER_SECOND/2000);
-  BUSYWAIT_UNTIL(trx_reg_read(RF233_REG_TRX_STATUS) != STATE_BUSY_TX, 10 * RTIMER_SECOND/1000);
+  BUSYWAIT_UNTIL(rf233_status() == STATE_BUSY_TX, RTIMER_SECOND/2000);
+  //printf("\r\nSTATE_BUSY_TX");
+  BUSYWAIT_UNTIL(rf233_status() != STATE_BUSY_TX, 10 * RTIMER_SECOND/1000);
   ENERGEST_OFF(ENERGEST_TYPE_TRANSMIT);
   ENERGEST_ON(ENERGEST_TYPE_LISTEN);
-   if(trx_reg_read(RF233_REG_TRX_STATUS) != STATE_PLL_ON) {
+   if(rf233_status() != STATE_PLL_ON) {
     /* something has failed */
     PRINTF("RF233: radio fatal err after tx\n");
     radiocore_hard_recovery();
@@ -375,7 +378,7 @@ rf233_send(const void *payload, unsigned short payload_len)
 {
   PRINTF("RF233: send %u\n", payload_len);
   if(rf233_prepare(payload, payload_len) == RADIO_TX_ERR) {
-    return RADIO_TX_ERR;
+  return RADIO_TX_ERR;
   } 
   return rf233_transmit(payload_len);
 }
@@ -504,7 +507,7 @@ rf233_channel_clear(void)
   uint8_t regsave;
   int was_off = 0;
   
-  if(trx_reg_read(RF233_REG_TRX_STATUS) != STATE_RX_ON) {
+  if(rf233_status() != STATE_RX_ON) {
     /* CCA can only be performed in RX state */
     was_off = 1;
     RF233_COMMAND(TRXCMD_RX_ON);
@@ -517,8 +520,8 @@ rf233_channel_clear(void)
   
   BUSYWAIT_UNTIL(trx_reg_read(RF233_REG_TRX_STATUS) & TRX_CCA_DONE,
       RTIMER_SECOND / 1000);
+  //regsave = rf233_status();
   regsave = trx_reg_read(RF233_REG_TRX_STATUS);
-
   /* return to previous state */
   if(was_off) {
     RF233_COMMAND(TRXCMD_TRX_OFF);
@@ -542,7 +545,7 @@ int
 rf233_receiving_packet(void)
 { 
   uint8_t trx_state;
-  trx_state=trx_reg_read(RF233_REG_TRX_STATUS);
+  trx_state=rf233_status();
   if(trx_state == STATE_BUSY_RX) {
     PRINTF("RF233: Receiving frame\n");
     return 1;
@@ -598,7 +601,7 @@ on(void)
   	 wake_from_sleep();
 	 sleep_on = 0;
   }
-  uint8_t state_now = trx_reg_read(RF233_REG_TRX_STATUS);
+  uint8_t state_now = rf233_status();
   if(state_now != STATE_PLL_ON && state_now != STATE_TRX_OFF) {
     /* fail, we need the radio transceiver to be in either of those states */
     return -1;
@@ -615,7 +618,7 @@ on(void)
 int
 off(void)
 {
-  if(trx_reg_read(RF233_REG_TRX_STATUS) != STATE_RX_ON) {
+  if(rf233_status() != STATE_RX_ON) {
     /* fail, we need the radio transceiver to be in this state */
     return -1;
   }
@@ -798,5 +801,10 @@ wake_from_sleep(void)
    * state DEEP_SLEEP!
    */
   port_pin_set_output_level(AT86RFX_SLP_PIN, false);
+}
+
+uint8_t rf233_status()
+{
+	return (trx_reg_read(RF233_REG_TRX_STATUS) & TRX_STATUS);
 }
 /*---------------------------------------------------------------------------*/

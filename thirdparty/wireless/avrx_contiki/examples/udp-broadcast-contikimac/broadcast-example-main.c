@@ -297,7 +297,8 @@ void watchdog_early_warning_callback(void)
 {
 	port_pin_toggle_output_level(LED_0_PIN);
 	//watchdog_periodic();
-	printf("warning_callback\n\r");
+	wdt_reset_count();
+	printf("watchdog warning_callback\n\r");
 		
 }
 

@@ -715,7 +715,7 @@ send_packet(mac_callback_t mac_callback, void *mac_callback_ptr,
       while(RTIMER_CLOCK_LT(RTIMER_NOW(), t0 + CCA_CHECK_TIME)) { }
 #endif
       if(NETSTACK_RADIO.channel_clear() == 0) {
-        collisions++;
+		collisions++;
         off();
         break;
       }
@@ -743,14 +743,16 @@ send_packet(mac_callback_t mac_callback, void *mac_callback_ptr,
   }
 #endif
 
-  watchdog_periodic();
+  //watchdog_periodic();
+  wdt_reset_count();
   t0 = RTIMER_NOW();
   seqno = packetbuf_attr(PACKETBUF_ATTR_MAC_SEQNO);
   for(strobes = 0, collisions = 0;
       got_strobe_ack == 0 && collisions == 0 &&
       RTIMER_CLOCK_LT(RTIMER_NOW(), t0 + STROBE_TIME); strobes++) {
 
-    watchdog_periodic();
+    //watchdog_periodic();
+	wdt_reset_count();
 
     if(!is_broadcast && (is_receiver_awake || is_known_receiver) &&
        !RTIMER_CLOCK_LT(RTIMER_NOW(), t0 + MAX_PHASE_STROBE_TIME)) {
@@ -842,7 +844,7 @@ send_packet(mac_callback_t mac_callback, void *mac_callback_ptr,
      function. We must pass this value to the phase module before we
      return from the function.  */
   if(collisions > 0) {
-    ret = MAC_TX_COLLISION;
+	ret = MAC_TX_COLLISION;
   } else if(!is_broadcast && !got_strobe_ack) {
     ret = MAC_TX_NOACK;
   } else {

@@ -159,7 +159,7 @@ send_one_packet(mac_callback_t sent, void *ptr)
 
           /* Check for ack */
           wt = RTIMER_NOW();
-          watchdog_periodic();
+          wdt_reset_count();//watchdog_periodic();
           while(RTIMER_CLOCK_LT(RTIMER_NOW(), wt + ACK_WAIT_TIME)) {
 #if CONTIKI_TARGET_COOJA
             simProcessRunValue = 1;
@@ -177,6 +177,7 @@ send_one_packet(mac_callback_t sent, void *ptr)
             if(AFTER_ACK_DETECTED_WAIT_TIME > 0) {
               wt = RTIMER_NOW();
               //watchdog_periodic();
+			  wdt_reset_count();
               while(RTIMER_CLOCK_LT(RTIMER_NOW(),
                                     wt + AFTER_ACK_DETECTED_WAIT_TIME)) {
       #if CONTIKI_TARGET_COOJA

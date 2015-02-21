@@ -31,7 +31,7 @@
  */
 #ifndef WATCHDOG_H_
 #define WATCHDOG_H_
-
+#include "wdt.h"
 void watchdog_init(void);
 void watchdog_start(void);
 void watchdog_periodic(void);

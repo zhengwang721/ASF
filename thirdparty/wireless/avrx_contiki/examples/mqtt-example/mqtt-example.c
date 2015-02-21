@@ -109,7 +109,7 @@ static uip_ipaddr_t google_ipv4_dns_server = {
 
 
 /* MQTT Configuration details */
-#define HOST          "198.41.30.241"
+#define HOST          "m2m.eclipse.org"
 #define VERSION	      "v1"
 #define PRIORITY      "p0"
 #define UUID	      "atmeld"
@@ -235,7 +235,7 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
   printf("\r\n%s\n",str_topic_sensor);
   sprintf(str_topic_led, "/%s/%s/%s%s",VERSION,PRIORITY,UUID,"/led");
 
-  //timestmp = clock_time();
+  timestmp = clock_time();
 
   //configure_adc();
   //light = measure_light();
@@ -361,16 +361,16 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
 		
 		// measure light intensity
 		//light = measure_light();
-		//sprintf(light_str,"%d",light);
+		sprintf(light_str,"%s","4095");
 		
 		// create payload for mqtt message
-		//sprintf(app_buffer,"%s%lu%s%s%s%s%s%s%s","{\x22timestamp\x22: \x22",timestmp,
-			//"\x22,\x22SENS_TEMPERATURE\x22: \x22",
-			//temp_str,"\x22,\x22SENS_LIGHT_LEVEL\x22: \x22",
-			//light_str,"\x22,\x22sender_id\x22: \x22",
-		//mac_adr_str,"\x22}");        
-        sprintf(app_buffer,"%s%s%s%s","temp: ",temp_str);
-		//printf("\r\nAPP - Sending Light sensor value %s Temp sensor value %s app buffer size %d\n",light_str,temp_str,strlen(app_buffer));
+		sprintf(app_buffer,"%s%lu%s%s%s%s%s%s%s","{\x22timestamp\x22: \x22",timestmp,
+			"\x22,\x22SENS_TEMPERATURE\x22: \x22",
+			temp_str,"\x22,\x22SENS_LIGHT_LEVEL\x22: \x22",
+			light_str,"\x22,\x22sender_id\x22: \x22",
+		mac_adr_str,"\x22}");        
+        //sprintf(app_buffer,"%s%s%s%s","temp: ",temp_str);
+		printf("\r\nAPP - Sending Light sensor value %s Temp sensor value %s app buffer size %d\n",light_str,temp_str,strlen(app_buffer));
 
         mqtt_publish(&conn,
                NULL,

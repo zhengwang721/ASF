@@ -394,7 +394,8 @@ send_packet_chan(int is_broadcast)
 
         /* Check for ack */
         wt = RTIMER_NOW();
-        watchdog_periodic();
+        //watchdog_periodic();
+		wdt_reset_count();
         while(RTIMER_CLOCK_LT(RTIMER_NOW(), wt + ACK_WAIT_TIME));
 
         ret = MAC_TX_NOACK;
@@ -405,7 +406,8 @@ send_packet_chan(int is_broadcast)
           uint8_t ackbuf[ACK_LEN];
 
           wt = RTIMER_NOW();
-          watchdog_periodic();
+          //watchdog_periodic();
+		  wdt_reset_count();
           while(RTIMER_CLOCK_LT(RTIMER_NOW(), wt + AFTER_ACK_DETECTED_WAIT_TIME));
 
           if(NETSTACK_RADIO.pending_packet()) {

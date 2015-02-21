@@ -217,7 +217,7 @@ PROCESS_THREAD(simple_udp_process, ev, data)
              buffer to avoid the uIP buffer being messed with by the
              callee. */
           memcpy(databuffer, uip_appdata, uip_datalen());
-
+          //printf("\rNew UDP data received IP:%d",(UIP_IP_BUF->srcipaddr.u16[7]));
           /* Call the client process. We use the PROCESS_CONTEXT
              mechanism to temporarily switch process context to the
              client process. */

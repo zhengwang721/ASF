@@ -1355,6 +1355,7 @@ send_packet(linkaddr_t *dest)
   /* If we are sending multiple packets in a row, we need to let the
      watchdog know that we are still alive. */
   //watchdog_periodic();
+  wdt_reset_count();
 }
 /*--------------------------------------------------------------------*/
 /** \brief Take an IP packet and format it to be sent on an 802.15.4
