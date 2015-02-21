@@ -137,9 +137,9 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
 
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
     etimer_reset(&periodic_timer);
-    etimer_set(&send_timer, SEND_TIME);
+    //etimer_set(&send_timer, SEND_TIME);
 
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&send_timer));
+    //PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&send_timer));
     addr = servreg_hack_lookup(SERVICE_ID);
     if(addr != NULL) {
       static unsigned int message_number;
@@ -149,6 +149,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
       uip_debug_ipaddr_print(addr);
       printf("\n");
       sprintf(buf, "Message %d", message_number);
+      printf("\n\rWith data, %s ", buf);
       message_number++;
       simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
     } else {

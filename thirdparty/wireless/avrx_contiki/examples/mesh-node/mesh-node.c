@@ -29,7 +29,7 @@
  */
 
 #include "net/ip/uip-debug.h"
-#if (MESH_NODE == 0)
+#if (MESH_NODE == 1)
 /*---------------------------------------------------------------------------*/
 PROCESS(mesh_node_process, "Mesh node");
 AUTOSTART_PROCESSES(&mesh_node_process);

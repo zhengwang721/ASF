@@ -100,7 +100,7 @@ receiver(struct simple_udp_connection *c,
          uint16_t datalen)
 {
   // printf("Data received on port %d from port %d with length %d,Payload %lu\n\r",receiver_port, sender_port, datalen, *(uint32_t *)data);
-  printf("\rData received is, %s \n", data);
+  printf("\rData received from %X%X to %X%X is, %s \n", sender_addr->u8[14], sender_addr->u8[15], receiver_addr->u8[14], receiver_addr->u8[15], data);
 
   //printf("Data received on port %d from port %d with length %d\n\r ",receiver_port, sender_port, datalen);
 #ifdef LOW_POWER_MODE  
