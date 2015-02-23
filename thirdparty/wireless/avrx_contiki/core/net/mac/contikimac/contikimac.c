@@ -51,8 +51,7 @@
 #include "sys/compower.h"
 #include "sys/pt.h"
 #include "sys/rtimer.h"
-
-
+#include "rtimer-arch.h"
 #include <string.h>
 
 #define WITH_DEEP_SLEEP              0
@@ -385,7 +384,7 @@ powercycle(struct rtimer *t, void *ptr)
        of CHANNEL_CHECK_RATE */
     if(sync_cycle_phase++ == NETSTACK_RDC_CHANNEL_CHECK_RATE) {
       sync_cycle_phase = 0;
-      sync_cycle_start += RTIMER_ARCH_SECOND;
+      sync_cycle_start += RTIMER_ARCH_SECOND + CYCLE_TIME;
       cycle_start = sync_cycle_start;
     } else {
 #if (RTIMER_ARCH_SECOND * NETSTACK_RDC_CHANNEL_CHECK_RATE) > 65535
@@ -491,14 +490,14 @@ powercycle(struct rtimer *t, void *ptr)
 	 be blocked until a packet is detected */
 
 #if RDC_CONF_MCU_SLEEP
-      static uint8_t sleepcycle;
+      //static uint8_t sleepcycle;
 
-      if((sleepcycle++ < 16) && !we_are_sending && !radio_is_on) {
+      if(/*(sleepcycle++ < 16) &&*/ !we_are_sending && !radio_is_on) {
 		NETSTACK_RADIO.sleep();
         rtimer_arch_sleep(CYCLE_TIME - (RTIMER_NOW() - cycle_start));
 		NETSTACK_RADIO.on();
       } else {
-        sleepcycle = 0;
+        //sleepcycle = 0;
         schedule_powercycle_fixed(t, CYCLE_TIME + cycle_start);
         PT_YIELD(&pt);
       }
@@ -814,7 +813,7 @@ send_packet(mac_callback_t mac_callback, void *mac_callback_ptr,
 
   off();
 #if WITH_DEEP_SLEEP
-  NETSTACK_RADIO.sleep();
+  //NETSTACK_RADIO.sleep();
 #endif /* WITH_DEEP_SLEEP */
 
   PRINTF("contikimac: send (strobes=%u, len=%u, %s, %s), done\n", strobes,

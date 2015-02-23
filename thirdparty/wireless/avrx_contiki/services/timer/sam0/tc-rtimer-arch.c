@@ -37,8 +37,8 @@
 #include "system_interrupt_features.h"
 #include "tc_interrupt.h"
 void sleep_callback(struct rtimer *t, void *ptr);
-void rtimer_adjust_ticks(uint32_t howlong);
-
+void rtimer_adjust_ticks(uint32_t );
+void rtimer_arch_sleep(rtimer_clock_t );
 uint32_t sleep_count;
 static struct tc_module tc_instance;
 //static struct rtimer sleep_tmr;
@@ -49,7 +49,7 @@ static struct tc_module tc_instance;
 #define TC_INT_MC0 (1 << 4)
 #define TC_INT_MC1 (1 << 5)
 #define TC_INT_ALL (TC_INT_OVF | TC_INT_ERR | TC_INT_MC0 | TC_INT_MC1)
-#define RTIMER_SYNC_VALUE 337
+#define RTIMER_SYNC_VALUE 10
 #if RTIMER_SECOND == 32768
 #define RTIMER_COMPENSATION_TICKS       6
 #else /* RTIMER_SECOND == 32768 */
@@ -133,7 +133,7 @@ void _TC4_Handler(void)
 	REG_TC4_INTENCLR = TC_INT_ALL;
 
 	/* check for, and run, any pending rtimers */
-	rtimer_run_next();
+	//rtimer_run_next();
 
 	ENERGEST_OFF(ENERGEST_TYPE_IRQ);
 }
@@ -178,7 +178,8 @@ rtimer_arch_schedule(rtimer_clock_t t)
 	
 	if(RTIMER_CLOCK_LT(expiry, rtimer_arch_now())) {
 		/* too soon, run now instead */
-		printf("rtimer: schedule too soon, executing now! %lu%u\n",(unsigned long)expiry,(unsigned short)rtimer_arch_now());
+		printf("rtimer: schedule too soon, executing now! %lu %lu\n",expiry,(uint32_t)rtimer_arch_now());
+		rtimer_run_next();
 		return;
 	}
 

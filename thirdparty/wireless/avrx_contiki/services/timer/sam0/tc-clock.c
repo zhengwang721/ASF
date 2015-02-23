@@ -47,7 +47,7 @@ clock_irq_callback( struct tc_module *const module_inst)
  // ENERGEST_ON(ENERGEST_TYPE_IRQ);
 
   ticks++;
-  port_pin_toggle_output_level(PIN_PA23);
+  //port_pin_toggle_output_level(PIN_PA23);
   if((ticks % CLOCK_SECOND) == 0) {
     seconds++;
    //energest_flush();

@@ -124,7 +124,7 @@ rf233_get_channel(void)
 {
 	uint8_t channel;
   channel=trx_reg_read(RF233_REG_PHY_CC_CCA) & PHY_CC_CCA_CHANNEL;
-  printf("rf233 channel%d\n",channel);
+  //printf("rf233 channel%d\n",channel);
   return (int)channel;
 }
 /*---------------------------------------------------------------------------*/
@@ -350,9 +350,13 @@ rf233_transmit(unsigned short payload_len)
   ENERGEST_ON(ENERGEST_TYPE_TRANSMIT);
   RF233_COMMAND(TRXCMD_TX_START);
    flag_transmit=1;
+   //delay_ms(5);
+  //printf("RTIMER value %d",RTIMER_NOW());
   BUSYWAIT_UNTIL(rf233_status() == STATE_BUSY_TX, RTIMER_SECOND/2000);
+  //printf("RTIMER value1 %d",RTIMER_NOW());
   //printf("\r\nSTATE_BUSY_TX");
   BUSYWAIT_UNTIL(rf233_status() != STATE_BUSY_TX, 10 * RTIMER_SECOND/1000);
+  //printf("RTIMER value2 %d",RTIMER_NOW());
   ENERGEST_OFF(ENERGEST_TYPE_TRANSMIT);
   ENERGEST_ON(ENERGEST_TYPE_LISTEN);
    if(rf233_status() != STATE_PLL_ON) {
@@ -598,7 +602,10 @@ on(void)
   if(sleep_on)
   {
      /* Wake the radio. It'll move to TRX_OFF state */
+	
   	 wake_from_sleep();
+	 delay_ms(1);
+	 //printf("\r\nWake from sleep %d",rf233_get_channel());
 	 sleep_on = 0;
   }
   uint8_t state_now = rf233_status();
@@ -638,6 +645,8 @@ rf233_sleep(void)
 	int status;
 	/* Check whether we're already sleeping */
 	if (!sleep_on) {
+	//printf("\r\n goto sleep %d",rf233_get_channel());
+	//delay_ms(1);
 	sleep_on = 1;
 	/* Turn off the Radio */
 	status = rf233_off();
