@@ -10,12 +10,12 @@
 			<build type="c-source"      value="leds-arch.c"/>
 			<build type="c-source"      value="node-id.c"/>
 			<build type="c-source"      value="edbg-eui.c"/>
-			<build type="c-source"      value="samr21-sensors.c"/>
+			<build type="c-source"      value="sam0-sensors.c"/>
 			<build type="c-source"      value="temp-sensor.c"/>
 			<build type="c-source"      value="voltage-sensor.c"/>
 			<build type="header-file"   value="button-sensor.h"/>			
-			<build type="header-file"   value="flash.h"/>			
-			<build type="header-file"   value="samr21-sensors.h"/>			
+			<build type="header-file"   value="flash.h"/>				
+			<build type="header-file"   value="sam0-sensors.h"/>
 			<build type="header-file"   value="node-id.h"/>			
 			<build type="header-file"   value="temp-sensor.h"/>			
 			<build type="header-file"   value="voltage-sensor.h"/>			
@@ -37,12 +37,12 @@
 			<build type="c-source"      value="leds-arch.c"/>
 			<build type="c-source"      value="node-id-samd21.c"/>
 			<build type="c-source"      value="edbg-eui.c"/>
-			<build type="c-source"      value="samr21-sensors.c"/>
+			<build type="c-source"      value="sam0-sensors.c"/>
 			<build type="c-source"      value="temp-sensor.c"/>
 			<build type="c-source"      value="voltage-sensor.c"/>
 			<build type="header-file"   value="button-sensor.h"/>			
-			<build type="header-file"   value="flash.h"/>			
-			<build type="header-file"   value="samr21-sensors.h"/>			
+			<build type="header-file"   value="flash.h"/>		
+			<build type="header-file"   value="sam0-sensors.h"/>
 			<build type="header-file"   value="node-id-samd21.h"/>			
 			<build type="header-file"   value="temp-sensor.h"/>			
 			<build type="header-file"   value="voltage-sensor.h"/>			
