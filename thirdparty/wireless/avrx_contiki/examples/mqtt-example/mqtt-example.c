@@ -77,6 +77,7 @@ static struct mqtt_message* msg_ptr = 0;
 static struct etimer light_sense_timer;
 static struct etimer reconnect_timer;
 //static uint16_t random_topic;
+static char clientid[16];
 static char str_topic_state[30];
 static char str_topic_sensor[30];
 static char str_topic_led[30];
@@ -86,6 +87,7 @@ static char app_buffer[128];
 static char temp_str[8];
 static char light_str[8];
 static char mac_adr_str[18];
+static uint16_t nodeid;
 
 char str[48];
 volatile float temp_C;
@@ -112,7 +114,7 @@ static uip_ipaddr_t google_ipv4_dns_server = {
 #define HOST          "m2m.eclipse.org"
 #define VERSION	      "v1"
 #define PRIORITY      "p0"
-#define UUID	      "atmeld"
+#define UUID	        "atmeld"
 
 
 
@@ -230,10 +232,7 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
 	volatile uip_ds6_addr_t *lladdr;
   // ("%s%x%s%x","Node id: ",ipaddr," Count: ",count)
 
-  sprintf(str_topic_state, "/%s/%s/%s%s",VERSION,PRIORITY,UUID,"/status");
-  sprintf(str_topic_sensor, "/%s/%s/%s%s",VERSION,PRIORITY,UUID,"/sensor");
-  printf("\r\n%s\n",str_topic_sensor);
-  sprintf(str_topic_led, "/%s/%s/%s%s",VERSION,PRIORITY,UUID,"/led");
+  
 
   timestmp = clock_time();
 
@@ -243,6 +242,16 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
   lladdr = uip_ds6_get_link_local(-1);
   sprintf(mac_adr_str,"%02x%02x%02x%02x%02x%02x%02x%02x",lladdr->ipaddr.u8[8],lladdr->ipaddr.u8[9],lladdr->ipaddr.u8[10],lladdr->ipaddr.u8[11],lladdr->ipaddr.u8[12],lladdr->ipaddr.u8[13],lladdr->ipaddr.u8[14],lladdr->ipaddr.u8[15]);
 
+  nodeid = lladdr->ipaddr.u8[14];
+  nodeid <<= 8;
+  nodeid |= lladdr->ipaddr.u8[15];
+  printf("Using NodeId: %X\n\r", nodeid);
+  
+  sprintf(str_topic_state, "/%s/%s/%s/%x%s",VERSION,PRIORITY,UUID,nodeid,"/status");
+  sprintf(str_topic_sensor, "/%s/%s/%s/%x%s",VERSION,PRIORITY,UUID,nodeid,"/sensor");
+  printf("\r\n%s\n",str_topic_sensor);
+  sprintf(str_topic_led, "/%s/%s/%s/%x%s",VERSION,PRIORITY,UUID,nodeid,"/led");
+  
   mdns_init();
   mdns_conf(&google_ipv4_dns_server);
 
@@ -256,8 +265,9 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
    * output buffer.
    */
   etimer_set(&light_sense_timer, CLOCK_SECOND*5);
-  printf("\r\nMQTT Client ID : %s%d",UUID,strlen(str_topic_sensor));
-  mqtt_register(&conn, &mqtt_example_process, UUID, mqtt_event);
+  sprintf(clientid, "/%s/%x",UUID,nodeid);
+  printf("\r\nMQTT Client ID : %s",clientid);
+  mqtt_register(&conn, &mqtt_example_process, clientid, mqtt_event);
 
   mqtt_set_last_will(&conn, str_topic_state, "offline", MQTT_QOS_LEVEL_0);
   

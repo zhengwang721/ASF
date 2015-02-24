@@ -55,7 +55,11 @@
 #include "net/mac/frame802154.h"
 #include "net/linkaddr.h"
 #include "net/rime/rime.h"
+#if SAMD
+#include "node-id-samd21.h"
+#else
 #include "node-id.h"
+#endif
 #include "cycle_counter.h"
 #include "rf233-const.h"
 #include "asf.h"
@@ -63,7 +67,6 @@
 #include "sio2host.h"
 #include "conf_sio2host.h"
 #include "stdio_serial.h"
-#include "samr21_xplained_pro.h"
 #include "rtc_count.h" //rtc
 #include "rtc_count_interrupt.h"
 
@@ -177,12 +180,11 @@ main(int argc, char *argv[])
 #endif /* NODE_ID */
 
   node_id_restore();
- 
-  printf("\n\nStarting ");
-  printf(CONTIKI_VERSION_STRING);
-  printf(" on the Thingsquare firmware, platform Atmel SAM R21\n");
+  printf("\r\n\n\n\n Starting the SmartConnect-6LoWPAN \r\n Platform : Atmel IoT device \r\n");
   print_reset_causes();
+#if SAMR21 
   eui64 = edbg_eui_read_eui64();
+#endif
   set_link_addr(eui64);
   random_init(node_id);
 
@@ -198,22 +200,27 @@ main(int argc, char *argv[])
 
   ENERGEST_ON(ENERGEST_TYPE_CPU);
   if(node_id > 0) {
-    printf("Node id %u.\n", node_id);
+    printf(" Node id %u.\r\n", node_id);
   } else {
-    printf("Node id not set.\n");
+    printf(" Node id not set.\r\n");
   }
 
   /* Setup nullmac-like MAC for 802.15.4 */
+  #if SAMD
+  memcpy(&uip_lladdr.addr, node_mac, sizeof(uip_lladdr.addr));
+  #else 
   memcpy(&uip_lladdr.addr, eui64, sizeof(uip_lladdr.addr));
+  #endif
+   
   queuebuf_init();
-  printf("%s %lu %d\n",
+  printf(" %s %lu %d\r\n",
          NETSTACK_RDC.name,
          (uint32_t) (CLOCK_SECOND / (NETSTACK_RDC.channel_check_interval() == 0 ? 1:
                          NETSTACK_RDC.channel_check_interval())),
          RF_CHANNEL);
 
   process_start(&tcpip_process, NULL);
-  printf("IPv6 ");
+  printf(" IPv6 Address: ");
   {
     uip_ds6_addr_t *lladdr;
     int i;
@@ -222,7 +229,7 @@ main(int argc, char *argv[])
       printf("%02x%02x:", lladdr->ipaddr.u8[i * 2],
              lladdr->ipaddr.u8[i * 2 + 1]);
     }
-    printf("%02x%02x\n", lladdr->ipaddr.u8[14], lladdr->ipaddr.u8[15]);
+    printf("%02x%02x\r\n", lladdr->ipaddr.u8[14], lladdr->ipaddr.u8[15]);
   }
 
   {
@@ -236,7 +243,7 @@ main(int argc, char *argv[])
       printf("%02x%02x:",
              ipaddr.u8[i * 2], ipaddr.u8[i * 2 + 1]);
     }
-    printf("%02x%02x\n",
+    printf("%02x%02x\r\n",
            ipaddr.u8[7 * 2], ipaddr.u8[7 * 2 + 1]);
   }
  // printf("\r\n Before print process");
@@ -253,7 +260,7 @@ main(int argc, char *argv[])
   }
   printf("AES encryption is enabled\n");
 #else /* ((THSQ_CONF_NETSTACK) & THSQ_CONF_AES) */
-  printf("Warning: AES encryption is disabled\n");
+  printf("\r\n Warning: AES encryption is disabled\n");
 #endif /* ((THSQ_CONF_NETSTACK) & THSQ_CONF_AES) */
    
   autostart_start(autostart_processes);
@@ -297,7 +304,8 @@ void watchdog_early_warning_callback(void)
 {
 	port_pin_toggle_output_level(LED_0_PIN);
 	//watchdog_periodic();
-	printf("warning_callback\n\r");
+	// wdt_reset_count();
+	// printf("watchdog warning_callback\n\r");
 		
 }
 
@@ -373,11 +381,19 @@ set_link_addr(uint8_t *eui64)
 
   memset(&addr, 0, sizeof(linkaddr_t));
 #if UIP_CONF_IPV6
+  #if SAMD
+  memcpy(addr.u8, node_mac, sizeof(addr.u8));
+  #else 
   memcpy(addr.u8, eui64, sizeof(addr.u8));
+  #endif
 #else   /* UIP_CONF_IPV6 */
   if(node_id == 0) {
     for(i = 0; i < sizeof(linkaddr_t); ++i) {
-      addr.u8[i] = eui64[7 - i];
+	  #if SAMD
+      addr.u8[i] = node_mac[7 - i];
+	  #else
+	    addr.u8[i] = eui64[7 - i];
+	  #endif
     }
   } else {
     addr.u8[0] = node_id & 0xff;

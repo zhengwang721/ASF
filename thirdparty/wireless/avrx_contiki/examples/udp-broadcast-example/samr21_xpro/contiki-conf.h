@@ -34,6 +34,7 @@
 #define __CONTIKI_CONF_H__
 
 #include "thsq-conf-const.h"
+#include "samr21_xplained_pro.h"
 
 #ifndef THSQ_CONF_NETSTACK
 #if ((ENABLE_DROWSIE) && !(ENABLE_AES))
