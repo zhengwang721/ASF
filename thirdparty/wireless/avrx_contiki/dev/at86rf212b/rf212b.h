@@ -41,9 +41,10 @@
 extern const struct radio_driver rf212_radio_driver;
 
 int rf212_interrupt_poll(void);
-int rf212_get_channel(void);
-int rf212_set_channel(uint8_t ch);
+int rf_get_channel(void);
+int rf_set_channel(uint8_t ch);
 int rf212_get_txp(void);
 int rf212_set_txp(uint8_t txp);
+uint8_t rf212_status(void);
 /*---------------------------------------------------------------------------*/
 #endif  /* _RF212_H_ */

@@ -68,7 +68,7 @@
 // #define RF212_REG_SFD_VALUE_CONF       ()
 #define RF212_REG_TRX_CTRL_2_CONF      (TRX_CTRL_2_RX_SAFE_MODE | DATA_RATE)  /* disallow overwriting rxfifo until prev has been read */
 // #define RF212_REG_ANT_DIV_CONF         ()
-#define RF212_REG_IRQ_MASK_CONF        (IRQ_TRXBUF_ACCESS_VIOLATION | IRQ_RX_START) // IRQ_TRX_DONE
+#define RF212_REG_IRQ_MASK_CONF        (IRQ_TRXBUF_ACCESS_VIOLATION | IRQ_TRX_DONE) // IRQ_TRX_DONE
 // #define RF212_REG_VREG_CTRL_CONF       ()
 // #define RF212_REG_BATMON_CONF          ()
 // #define RF212_REG_XOSC_CTRL_CONF       ()
