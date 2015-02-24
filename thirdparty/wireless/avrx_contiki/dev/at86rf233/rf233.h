@@ -40,8 +40,8 @@
 /*---------------------------------------------------------------------------*/
 
 int rf233_interrupt_poll(void);
-int rf233_get_channel(void);
-int rf233_set_channel(uint8_t ch);
+int rf_get_channel(void);
+int rf_set_channel(uint8_t ch);
 int rf233_get_txp(void);
 int rf233_set_txp(uint8_t txp);
 uint8_t rf233_status(void);

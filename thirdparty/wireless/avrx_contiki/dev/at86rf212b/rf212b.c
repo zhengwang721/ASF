@@ -43,6 +43,9 @@
 #include "rf212b-config.h"
 #include "rf212b-arch.h"
 #include "rf212b.h"
+#include "trx_access.h"
+#include "delay.h"
+#include "system_interrupt.h"
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
 
@@ -53,7 +56,7 @@ static int  on(void);
 static int  off(void);
 static void radiocore_hard_recovery(void);
 static void flush_buffer(void);
-
+static uint8_t flag_transmit = 0;
 static volatile int radio_is_on = 0;
 static volatile int pending_frame = 0;
 /*---------------------------------------------------------------------------*/
@@ -83,9 +86,10 @@ const struct radio_driver rf212_radio_driver =
 };
 /*---------------------------------------------------------------------------*/
 /* convenience macros */
-#define RF212_STATUS()                    rf212_arch_status()
-#define RF212_COMMAND(c)                  rf212_arch_write_reg(RF212_REG_TRX_STATE, c)
-
+//#define RF212_STATUS()                    rf233_status()
+#define RF212_STATUS()                      rf212_status()
+//#define RF212_COMMAND(c)                  rf212_arch_write_reg(RF212_REG_TRX_STATE, c)
+#define RF212_COMMAND(c)                  trx_reg_write(RF212_REG_TRX_STATE, c)
 /* each frame has a footer consisting of LQI, ED, RX_STATUS added by the radio */
 #define FOOTER_LEN                        3   /* bytes */
 #define MAX_PACKET_LEN                    127 /* bytes, excluding the length (first) byte */
@@ -93,7 +97,7 @@ const struct radio_driver rf212_radio_driver =
 /* when transmitting, time to allow previous transmission to end before drop */
 #define PREV_TX_TIMEOUT                   (10 * RTIMER_SECOND/1000)
 /*---------------------------------------------------------------------------*/
-#define DEBUG                 0
+#define DEBUG                 1
 #define DEBUG_PRINTDATA       0     /* print frames to/from the radio; requires DEBUG == 1 */
 #if DEBUG
 #define PRINTF(...)       printf(__VA_ARGS__)
@@ -113,9 +117,13 @@ const struct radio_driver rf212_radio_driver =
  * \return     The radio channel
  */
 int
-rf212_get_channel(void)
+rf_get_channel(void)
 {
-  return (int) (rf212_arch_read_reg(RF212_REG_TRX_STATUS) & PHY_CC_CCA_CHANNEL);
+  //return (int) (rf212_arch_read_reg(RF212_REG_TRX_STATUS) & PHY_CC_CCA_CHANNEL);
+  uint8_t channel;
+  channel=trx_reg_read(RF212_REG_PHY_CC_CCA) & PHY_CC_CCA_CHANNEL;
+  //printf("rf233 channel%d\n",channel);
+  return (int)channel;
 }
 /*---------------------------------------------------------------------------*/
 /**
@@ -125,23 +133,23 @@ rf212_get_channel(void)
  * \retval 0   Success
  */
 int
-rf212_set_channel(uint8_t ch)
+rf_set_channel(uint8_t ch)
 {
   uint8_t temp;
   PRINTF("RF212: setting channel %u\n", ch);
   /*if(ch > 10 || ch < 1) {
     return -1;
   }*/
-  temp = rf212_arch_read_reg(RF212_REG_TRX_CTRL_2);
+  temp = trx_reg_read(RF212_REG_TRX_CTRL_2);
 //  temp &=~ 0x3f;//channel page
   temp |=0x0c;
   //rf212_arch_write_reg(RF212_REG_TRX_CTRL_2, temp);
  // rf212_arch_write_reg(RF212_REG_CC_CTRL_1, 0x00);
   /* read-modify-write to conserve other settings */
-  temp = rf212_arch_read_reg(RF212_REG_PHY_CC_CCA);
+  temp = trx_reg_read(RF212_REG_PHY_CC_CCA);
   //temp &=~ PHY_CC_CCA_CHANNEL;
   temp |= ch;
-  rf212_arch_write_reg(RF212_REG_PHY_CC_CCA, temp);
+  trx_reg_write(RF212_REG_PHY_CC_CCA, temp);
     return 0;
 }
 /*---------------------------------------------------------------------------*/
@@ -153,7 +161,7 @@ int
 rf212_get_txp(void)
 {
   PRINTF("RF212: get txp\n");
-  return rf212_arch_read_reg(RF212_REG_PHY_TX_PWR_CONF) & PHY_TX_PWR_TXP;
+  return trx_reg_read(RF212_REG_PHY_TX_PWR_CONF) & PHY_TX_PWR_TXP;
 }
 /*---------------------------------------------------------------------------*/
 /**
@@ -171,7 +179,7 @@ rf212_set_txp(uint8_t txp)
     return -1;
   }
 
-  rf212_arch_write_reg(RF212_REG_PHY_TX_PWR_CONF, txp);
+  trx_reg_write(RF212_REG_PHY_TX_PWR_CONF, txp);
   return 0;
 }
 /*---------------------------------------------------------------------------*/
@@ -183,26 +191,44 @@ rf212_set_txp(uint8_t txp)
 static int
 rf212_init(void)
 {
-  volatile uint8_t regtemp;  /* don't optimize this away, it's important */
+  volatile uint8_t regtemp;
+   uint8_t radio_state;  /* don't optimize this away, it's important */
   //uint8_t temp;
   PRINTF("RF212: init.\n");
 
   /* init SPI and GPIOs, wake up from sleep/power up. */
-  rf212_arch_init();
+  //rf212_arch_init();
+  trx_spi_init();
+  port_pin_set_output_level(AT86RFX_SLP_PIN, false); /*wakeup from sleep*/
 
   /* before enabling interrupts, make sure we have cleared IRQ status */
-  regtemp = rf212_arch_read_reg(RF212_REG_IRQ_STATUS);
-
+  regtemp = trx_reg_read(RF212_REG_IRQ_STATUS);
+  printf("After wake from sleep\n");
+  radio_state = rf212_status();
+  printf("After arch read reg: state 0x%04x\n", radio_state);
+ 
   /* Assign regtemp to regtemp to avoid compiler warnings */
   regtemp = regtemp;
-
+if(radio_state == STATE_P_ON) {
+	trx_reg_write(RF212_REG_TRX_STATE, TRXCMD_TRX_OFF);
+	} else {
+	/* reset will put us into TRX_OFF state */
+	/* reset the radio core */
+	port_pin_set_output_level(AT86RFX_RST_PIN, false);
+	delay_cycles_ms(10);
+	port_pin_set_output_level(AT86RFX_RST_PIN, true);
+	delay_cycles_ms(2);  /* datasheet: max 1 ms */
+	/* Radio is now in state TRX_OFF */
+}
+trx_irq_init((FUNC_PTR)rf212_interrupt_poll);
+system_interrupt_enable_global();
   /* Configure the radio using the default values except these. */
-  rf212_arch_write_reg(RF212_REG_TRX_CTRL_1,      RF212_REG_TRX_CTRL_1_CONF);
-  rf212_arch_write_reg(RF212_REG_PHY_CC_CCA,      RF212_REG_PHY_CC_CCA_CONF);
-  rf212_arch_write_reg(RF212_REG_PHY_TX_PWR_CONF, RF212_REG_PHY_TX_PWR_CONF);
+  trx_reg_write(RF212_REG_TRX_CTRL_1,      RF212_REG_TRX_CTRL_1_CONF);
+  trx_reg_write(RF212_REG_PHY_CC_CCA,      RF212_REG_PHY_CC_CCA_CONF);
+  trx_reg_write(RF212_REG_PHY_TX_PWR_CONF, RF212_REG_PHY_TX_PWR_CONF);
   //temp = rf212_arch_read_reg(RF212_REG_TRX_CTRL_2);
-  rf212_arch_write_reg(RF212_REG_TRX_CTRL_2, RF212_REG_TRX_CTRL_2_CONF);
-  rf212_arch_write_reg(RF212_REG_IRQ_MASK,        RF212_REG_IRQ_MASK_CONF);
+  trx_reg_write(RF212_REG_TRX_CTRL_2, RF212_REG_TRX_CTRL_2_CONF);
+  trx_reg_write(RF212_REG_IRQ_MASK,        RF212_REG_IRQ_MASK_CONF);
   
   /* start the radio process */
   process_start(&rf212_radio_process, NULL);
@@ -223,6 +249,7 @@ rf212_prepare(const void *payload, unsigned short payload_len)
 #endif  /* DEBUG_PRINTDATA */
   uint8_t templen;
   uint8_t radio_status;
+  uint8_t data[130];
 
 #if USE_HW_FCS_CHECK
   /* Add length of the FCS (2 bytes) */
@@ -231,7 +258,8 @@ rf212_prepare(const void *payload, unsigned short payload_len)
   /* FCS is assumed to already be included in the payload */
   templen = payload_len;
 #endif  /* USE_HW_FCS_CHECK */
-
+data[0] = templen;
+memcpy(&data[1],payload,templen);
 #if DEBUG_PRINTDATA
   PRINTF("RF212 prepare (%u/%u): 0x", payload_len, templen);
   for(i = 0; i < templen; i++) {
@@ -247,7 +275,7 @@ rf212_prepare(const void *payload, unsigned short payload_len)
   }
 
   /* check that the FIFO is clear to access */
-  radio_status = RF212_STATUS();
+  radio_status = rf212_status();
   if(radio_status == STATE_BUSY_RX || radio_status == STATE_BUSY_TX) {
     PRINTF("RF212: TRX buffer unavailable: prep when %s\n", radio_status == STATE_BUSY_RX ? "rx" : "tx");
     return RADIO_TX_ERR;
@@ -255,7 +283,7 @@ rf212_prepare(const void *payload, unsigned short payload_len)
 
   /* Write packet to TX FIFO. */
   PRINTF("RF212 len = %u\n", payload_len);
-  rf212_arch_write_frame((uint8_t *) payload, templen);
+  trx_frame_write((uint8_t *)data, templen+1);
   return RADIO_TX_OK;
 }
 /*---------------------------------------------------------------------------*/
@@ -271,7 +299,7 @@ rf212_transmit(unsigned short payload_len)
   PRINTF("RF212: tx %u\n", payload_len);
 
   /* prepare for TX */
-  status_now = RF212_STATUS();
+  status_now = rf212_status();
   if(status_now == STATE_BUSY_RX || status_now == STATE_BUSY_TX) {
     PRINTF("RF212: collision, was receiving\n");
     /* NOTE: to avoid loops */
@@ -280,15 +308,20 @@ rf212_transmit(unsigned short payload_len)
   }
   if(status_now != STATE_PLL_ON) {
     /* prepare for going to state TX, should take max 80 us */
-    RF212_COMMAND(TRXCMD_PLL_ON);
-    BUSYWAIT_UNTIL(RF212_STATUS() == STATE_PLL_ON, 1 * RTIMER_SECOND/1000);
+    //RF212_COMMAND(TRXCMD_PLL_ON);
+	trx_reg_write(RF212_REG_TRX_STATE,0x09);
+	do 
+   {
+	   status_now = trx_bit_read(0x01, 0x1F, 0);
+   } while (status_now == 0x1f);
+    //BUSYWAIT_UNTIL(RF212_STATUS() == STATE_PLL_ON, 1 * RTIMER_SECOND/1000);
   }
 
-  if(RF212_STATUS() != STATE_PLL_ON) {
+  if(rf212_status() != STATE_PLL_ON) {
     /* failed moving into PLL_ON state, gracefully try to recover */
     PRINTF("RF212: failed going to PLLON\n");
     RF212_COMMAND(TRXCMD_PLL_ON);   /* try again */
-    if(RF212_STATUS() != STATE_PLL_ON) {
+    if(rf212_status() != STATE_PLL_ON) {
       /* give up and signal big fail (should perhaps reset radio core instead?) */
       PRINTF("RF212: graceful recovery (in tx) failed, giving up. State: 0x%02X\n", RF212_STATUS());
       return RADIO_TX_ERR;
@@ -299,6 +332,7 @@ rf212_transmit(unsigned short payload_len)
   ENERGEST_OFF(ENERGEST_TYPE_LISTEN);
   ENERGEST_ON(ENERGEST_TYPE_TRANSMIT);
   RF212_COMMAND(TRXCMD_TX_START);
+  flag_transmit=1;
   BUSYWAIT_UNTIL(RF212_STATUS() == STATE_BUSY_TX, RTIMER_SECOND/2000);
   BUSYWAIT_UNTIL(RF212_STATUS() != STATE_BUSY_TX, 10 * RTIMER_SECOND/1000);
   #if (DATA_RATE==BPSK_20||BPSK_40||OQPSK_SIN_RC_100)
@@ -315,6 +349,7 @@ rf212_transmit(unsigned short payload_len)
 	return RADIO_TX_ERR;
   }
  // printf("#RTIMER_SECOND");
+ PRINTF("RF212: tx ok\n");
   RF212_COMMAND(TRXCMD_RX_ON);
   return RADIO_TX_OK;
 }
@@ -362,31 +397,31 @@ rf212_read(void *buf, unsigned short bufsize)
   }
   pending_frame = 0;
 
-  /* check that data in FIFO is valid */
-  radio_state = RF212_STATUS();
-  if(radio_state == STATE_BUSY_TX) {
-    /* data is invalid, bail out */
-    PRINTF("RF212: read while in BUSY_TX ie invalid, dropping.\n");
-    return -1;
-  }
-  if(radio_state == STATE_BUSY_RX) {
-    /* still receiving - data is invalid, wait for it to finish */
-    PRINTF("RF212: read while BUSY_RX, waiting.\n");
-    BUSYWAIT_UNTIL(RF212_STATUS() != STATE_BUSY_RX, 10 * RTIMER_SECOND/1000);
-	#if (DATA_RATE==BPSK_20||BPSK_40||OQPSK_SIN_RC_100)
-	BUSYWAIT_UNTIL(RF212_STATUS() != STATE_BUSY_RX, 10 * RTIMER_SECOND/1000);
-	BUSYWAIT_UNTIL(RF212_STATUS() != STATE_BUSY_RX, 10 * RTIMER_SECOND/1000);
-	BUSYWAIT_UNTIL(RF212_STATUS() != STATE_BUSY_RX, 10 * RTIMER_SECOND/1000);
-	BUSYWAIT_UNTIL(RF212_STATUS() != STATE_BUSY_RX, 10 * RTIMER_SECOND/1000);
-	#endif
-    if(RF212_STATUS() == STATE_BUSY_RX) {
-      PRINTF("RF212: timed out, still BUSY_RX, dropping.\n");
-      return -2;
-    }
-  }
+ /* check that data in FIFO is valid */
+ //radio_state = RF212_STATUS();
+  //if(radio_state == STATE_BUSY_TX) {
+    ///* data is invalid, bail out */
+    //PRINTF("RF212: read while in BUSY_TX ie invalid, dropping.\n");
+    //return -1;
+  //}
+  //if(radio_state == STATE_BUSY_RX) {
+    ///* still receiving - data is invalid, wait for it to finish */
+    //PRINTF("RF212: read while BUSY_RX, waiting.\n");
+    //BUSYWAIT_UNTIL(RF212_STATUS() != STATE_BUSY_RX, 10 * RTIMER_SECOND/1000);
+	//#if (DATA_RATE==BPSK_20||BPSK_40||OQPSK_SIN_RC_100)
+	//BUSYWAIT_UNTIL(RF212_STATUS() != STATE_BUSY_RX, 10 * RTIMER_SECOND/1000);
+	//BUSYWAIT_UNTIL(RF212_STATUS() != STATE_BUSY_RX, 10 * RTIMER_SECOND/1000);
+	//BUSYWAIT_UNTIL(RF212_STATUS() != STATE_BUSY_RX, 10 * RTIMER_SECOND/1000);
+	//BUSYWAIT_UNTIL(RF212_STATUS() != STATE_BUSY_RX, 10 * RTIMER_SECOND/1000);
+	//#endif
+    //if(RF212_STATUS() == STATE_BUSY_RX) {
+      //PRINTF("RF212: timed out, still BUSY_RX, dropping.\n");
+      //return -2;
+    //}
+  //} 
 
   /* get length of data in FIFO */
-  rf212_arch_read_frame(&frame_len, 1);
+  trx_frame_read(&frame_len, 1);
 #if DEBUG_PRINTDATA
   tempreadlen = frame_len;
 #endif  /* DEBUG_PRINTDATA */
@@ -412,7 +447,7 @@ rf212_read(void *buf, unsigned short bufsize)
   PRINTF("RF212 read %u B\n", frame_len);
 
   /* read out the data into the buffer, disregarding the length and metadata bytes */
-  rf212_arch_burstread_sram((uint8_t *)buf, 1, len);
+    trx_sram_read(1,(uint8_t *)buf, len);
 #if DEBUG_PRINTDATA
   {
     int k;
@@ -431,23 +466,23 @@ rf212_read(void *buf, unsigned short bufsize)
    * Ergo, real RSSI is (ed-91) dBm or less.
    */
   #define RSSI_OFFSET       (91)
-  ed = rf212_arch_read_reg(RF212_REG_PHY_ED_LEVEL);
+  ed = trx_reg_read(RF212_REG_PHY_ED_LEVEL);
   rssi = (int) ed - RSSI_OFFSET;
   packetbuf_set_attr(PACKETBUF_ATTR_RSSI, rssi);
   flush_buffer();
 
-#if USE_HW_FCS_CHECK
-  {
-    uint8_t crc_ok;   /* frame metadata */
-    crc_ok = rf212_arch_read_reg(RF212_REG_PHY_RSSI) & PHY_RSSI_CRC_VALID;
-    if(crc_ok == 0) {
-      /* CRC/FCS fail, drop */
-      PRINTF("RF212: CRC/FCS fail, dropping.\n");
-      flush_buffer();
-      return -4;
-    }
-  }
-#endif  /* USE_HW_FCS_CHECK */
+//#if USE_HW_FCS_CHECK
+  //{
+    //uint8_t crc_ok;   /* frame metadata */
+    //crc_ok = rf212_arch_read_reg(RF212_REG_PHY_RSSI) & PHY_RSSI_CRC_VALID;
+    //if(crc_ok == 0) {
+      ///* CRC/FCS fail, drop */
+      //PRINTF("RF212: CRC/FCS fail, dropping.\n");
+      //flush_buffer();
+      //return -4;
+    //}
+  //}
+//#endif  /* USE_HW_FCS_CHECK */ 
 
   return len;
 }
@@ -470,13 +505,13 @@ rf212_channel_clear(void)
   }
 
   /* request a CCA, storing the channel number (set with the same reg) */
-  regsave = rf212_arch_read_reg(RF212_REG_PHY_CC_CCA);
+  regsave = trx_reg_read(RF212_REG_PHY_CC_CCA);
   regsave |= PHY_CC_CCA_DO_CCA | PHY_CC_CCA_MODE_CS_OR_ED;
-  rf212_arch_write_reg(RF212_REG_PHY_CC_CCA, regsave);
+  trx_reg_write(RF212_REG_PHY_CC_CCA, regsave);
   
-  BUSYWAIT_UNTIL(rf212_arch_read_reg(RF212_REG_TRX_STATUS) & TRX_CCA_DONE,
+  BUSYWAIT_UNTIL(trx_reg_read(RF212_REG_TRX_STATUS) & TRX_CCA_DONE,
       RTIMER_SECOND / 1000);
-  regsave = rf212_arch_read_reg(RF212_REG_TRX_STATUS);
+  regsave = trx_reg_read(RF212_REG_TRX_STATUS);
 
   /* return to previous state */
   if(was_off) {
@@ -500,7 +535,7 @@ rf212_channel_clear(void)
 static int
 rf212_receiving_packet(void)
 {
-  if(rf212_arch_status() == STATE_BUSY_RX) {
+  if(rf212_status() == STATE_BUSY_RX) {
     PRINTF("RF212: Receiving frame\n");
     return 1;
   }
@@ -622,7 +657,16 @@ int
 rf212_interrupt_poll(void)
 {
   volatile uint8_t irq_source;
-  if(rf212_arch_spi_busy() || interrupt_callback_in_progress) {
+  irq_source = trx_reg_read(RF212_REG_IRQ_STATUS);
+	 if(irq_source & IRQ_TRX_DONE) {
+		 
+		 if(flag_transmit==1)
+		 {
+			 flag_transmit=0;
+			 interrupt_callback_in_progress = 0;
+			 return 0;
+		 }
+  if(interrupt_callback_in_progress) {
     /* we cannot read out info from radio now, return here later (through a poll) */
     interrupt_callback_wants_poll = 1;
     process_poll(&rf212_radio_process);
@@ -633,9 +677,7 @@ rf212_interrupt_poll(void)
   interrupt_callback_wants_poll = 0;
   interrupt_callback_in_progress = 1;
 
-  /* handle IRQ source (for what IRQs are enabled, see rf212-config.h) */
-  irq_source = rf212_arch_read_reg(RF212_REG_IRQ_STATUS);
-  if(irq_source & IRQ_FRAME_RX_START) {
+  
     /* we have started receiving a frame, len can be read */
     pending_frame = 1;
     process_poll(&rf212_radio_process);
@@ -700,6 +742,10 @@ flush_buffer(void)
 {
   /* NB: tentative untested implementation */
   uint8_t temp = 0;
-  rf212_arch_write_frame(&temp, 1);
+  trx_frame_write(&temp, 1);
+}
+uint8_t rf212_status()
+{
+	return (trx_reg_read(RF212_REG_TRX_STATUS) & TRX_STATUS);
 }
 /*---------------------------------------------------------------------------*/
