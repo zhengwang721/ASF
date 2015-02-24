@@ -179,14 +179,11 @@ main(int argc, char *argv[])
 #endif /* NODE_ID */
 
   node_id_restore();
- 
-  printf("\n\nStarting ");
-  printf(CONTIKI_VERSION_STRING);
-  printf(" on the Thingsquare firmware, platform Atmel SAM R21\n");
+  printf("\r\n\n\n\n Starting the SmartConnect-6LoWPAN \r\n Platform : Atmel IoT device \r\n");
   print_reset_causes();
-  #if SAMR21 
+#if SAMR21 
   eui64 = edbg_eui_read_eui64();
-  #endif
+#endif
   set_link_addr(eui64);
   random_init(node_id);
 

@@ -36,7 +36,7 @@
 
 #include "contiki.h"
 
-#include "lib/sensors.h"
+#include "sensors.h"
 
 const extern struct sensors_sensor *sensors[];
 extern unsigned char sensors_flags[];
@@ -108,6 +108,7 @@ PROCESS_THREAD(sensors_process, ev, data)
 
   sensors_event = process_alloc_event();
 
+  
   for(i = 0; sensors[i] != NULL; ++i) {
     sensors_flags[i] = 0;
     sensors[i]->configure(SENSORS_HW_INIT, 0);

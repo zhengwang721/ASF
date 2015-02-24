@@ -52,6 +52,7 @@
 #include "thsq-default-conf.h"
 
 #include "rf233.h"
+#include "samr21_xplained_pro.h"
 
 #ifndef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
 #define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8
@@ -92,7 +93,7 @@
 #define  PACKETBUF_CONF_ATTRS_INLINE          1
 
 #define RIMESTATS_CONF_ENABLED 1
-#define RF_CHANNEL                            20
+#define RF_CHANNEL                            14
 
 #define IEEE802154_CONF_PANID                 0xABCD
 
