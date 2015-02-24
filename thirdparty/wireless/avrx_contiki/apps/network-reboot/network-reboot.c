@@ -63,7 +63,7 @@ static int seconds_until_reboot;
 static const char magic_bytes[6] = "Reboot";
 
 /*---------------------------------------------------------------------------*/
-PROCESS(network_reboot_process, "Unicast sender example process");
+PROCESS(network_reboot_process, "network_reboot process");
 //AUTOSTART_PROCESSES(&network_reboot_process);
 /*---------------------------------------------------------------------------*/
 static void
