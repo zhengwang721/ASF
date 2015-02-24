@@ -215,7 +215,6 @@ rf233_init(void)
 	  delay_cycles_ms(2);  /* datasheet: max 1 ms */
 	  /* Radio is now in state TRX_OFF */
   }
-
   system_interrupt_enable_global();
   printf("REB233 radio configured to use EXT%u\n", REB233XPRO_HEADER);
   /* Assign regtemp to regtemp to avoid compiler warnings */
