@@ -82,10 +82,14 @@
   #include "samd21j18a.h"
 #elif defined(__SAMD21E15B__) || defined(__ATSAMD21E15B__)
   #include "samd21e15b.h"
+#elif defined(__SAMD21E15BU__) || defined(__ATSAMD21E15BU__)
+  #include "samd21e15bu.h"
 #elif defined(__SAMD21E15L__) || defined(__ATSAMD21E15L__)
   #include "samd21e15l.h"
 #elif defined(__SAMD21E16B__) || defined(__ATSAMD21E16B__)
   #include "samd21e16b.h"
+#elif defined(__SAMD21E16BU__) || defined(__ATSAMD21E16BU__)
+  #include "samd21e16bu.h"
 #elif defined(__SAMD21E16L__) || defined(__ATSAMD21E16L__)
   #include "samd21e16l.h"
 #elif defined(__SAMD21G15B__) || defined(__ATSAMD21G15B__)
