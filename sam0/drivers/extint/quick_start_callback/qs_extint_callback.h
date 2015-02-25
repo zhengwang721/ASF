@@ -116,6 +116,6 @@
  * -# External interrupt events from the driver are detected asynchronously; no
  *    special application \c main() code is required.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

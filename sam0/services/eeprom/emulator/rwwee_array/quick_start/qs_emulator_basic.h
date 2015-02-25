@@ -99,6 +99,6 @@
  *    when detecting a BOD early warning.
  *    \snippet qs_emulator_basic.c write_page_not_commit
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

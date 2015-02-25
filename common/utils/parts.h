@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -924,7 +924,9 @@
 		SAM_PART_IS_DEFINED(SAMD21G15A) || \
 		SAM_PART_IS_DEFINED(SAMD21G16A) || \
 		SAM_PART_IS_DEFINED(SAMD21G17A) || \
+		SAM_PART_IS_DEFINED(SAMD21G17AU) || \
 		SAM_PART_IS_DEFINED(SAMD21G18A) || \
+		SAM_PART_IS_DEFINED(SAMD21G18AU) || \
 		SAM_PART_IS_DEFINED(SAMD21G15B) || \
 		SAM_PART_IS_DEFINED(SAMD21G16B) \
 	)
