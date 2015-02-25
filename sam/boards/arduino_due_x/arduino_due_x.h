@@ -492,7 +492,7 @@
 /* ------------------------------------------------------------------------ */
 /*! UART pins (UTXD0 and URXD0) definitions, PA8,9. (labeled RX0->0 and TX0->1)*/
 #define PINS_UART        (PIO_PA8A_URXD | PIO_PA9A_UTXD)
-#define PINS_UART_FLAGS  (PIO_PERIPH_A | PIO_DEFAULT)
+#define PINS_UART_FLAGS  (PIO_PERIPH_A | PIO_DEFAULT | PIO_PULLUP)
 
 #define PINS_UART_MASK (PIO_PA8A_URXD | PIO_PA9A_UTXD)
 #define PINS_UART_PIO  PIOA
