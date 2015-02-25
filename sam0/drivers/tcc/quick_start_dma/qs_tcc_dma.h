@@ -3,7 +3,7 @@
  *
  * \brief SAM TCC Driver Quick Start with DMA
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,12 +40,15 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
  * \page asfdoc_sam0_tcc_dma_use_case Quick Start Guide for Using DMA with TCC
  *
  * The supported board list:
- *    - SAM D21/R21/L21 Xplained Pro
+ *    - SAM D21/R21/L21/DA1 Xplained Pro
  *
  * In this use case, the TCC will be used to generate a PWM signal. Here
  * the pulse width varies through following values with the help of DMA
@@ -62,6 +65,7 @@
  *  <tr><td> SAMD21 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
  *  <tr><td> SAMR21 Xpro  </td><td> PA19 </td><td> LED0       </td></tr>
  *  <tr><td> SAML21 Xpro  </td><td> PB10 </td><td> LED0       </td></tr>
+ *  <tr><td> SAMDA1 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
  * </table>
  *
  * The TCC module will be setup as follows:
@@ -130,6 +134,11 @@
  * \snippet saml21_xplained_pro/conf_quick_start_dma.h definition_pwm
  * \snippet saml21_xplained_pro/conf_quick_start_dma.h definition_feedback
  * \snippet saml21_xplained_pro/conf_quick_start_dma.h definition_dma_compare_trigger
+ * - SAM DA1 Xplained Pro.
+ * \snippet samda1_xplained_pro/conf_quick_start_dma.h definition_pwm
+ * \snippet samda1_xplained_pro/conf_quick_start_dma.h definition_feedback
+ * \snippet samda1_xplained_pro/conf_quick_start_dma.h definition_dma_compare_trigger
+ * \snippet samda1_xplained_pro/conf_quick_start_dma.h definition_dma_capture_trigger
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tcc_dma.c module_inst
@@ -260,7 +269,4 @@
  * \subsection asfdoc_sam0_tcc_dma_use_case_main_flow Workflow
  * -# Enter an infinite loop while the PWM wave is generated via the TCC module.
  *  \snippet qs_tcc_dma.c main_loop
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

@@ -3,7 +3,7 @@
  *
  * \brief SAM TCC Driver Quick Start
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,12 +40,15 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
  * \page asfdoc_sam0_tcc_basic_use_case Quick Start Guide for TCC - Basic
  *
  * The supported board list:
- *    - SAM D21/R21/L21 Xplained Pro
+ *    - SAM D21/R21/L21/DA1 Xplained Pro
  *
  * In this use case, the TCC will be used to generate a PWM signal. Here
  * the pulse width is set to one quarter of the period.
@@ -58,6 +61,7 @@
  *  <tr><td> SAMD21 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
  *  <tr><td> SAMR21 Xpro  </td><td> PA19 </td><td> LED0       </td></tr>
  *  <tr><td> SAML21 Xpro  </td><td> PB10 </td><td> LED0       </td></tr>
+ *  <tr><td> SAMDA1 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
  * </table>
  *
  * The TCC module will be set up as follows:
@@ -137,6 +141,4 @@
  * \subsection asfdoc_sam0_tcc_basic_use_case_main_flow Workflow
  * -# Enter an infinite loop while the PWM wave is generated via the TCC module.
  *  \snippet qs_tcc_basic.c main_loop
- */ /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
