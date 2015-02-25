@@ -72,7 +72,7 @@ void
 clock_adjust_ticks(clock_time_t howmany);
 
 
-#include "rf212.h"
+#include "rf212b.h"
 #define MULTICHAN_CONF_SET_CHANNEL(x)     rf_set_channel(x)
 #define MULTICHAN_CONF_READ_RSSI(x)       0
 
