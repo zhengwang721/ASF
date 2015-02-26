@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
 	<!-- **************************************************************************************************** -->
-	<module type="application" id="thirdparty.wireless.SmartConnect_6LoWPAN.examples.udp-unicast-receiver" caption="TBA">
+	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.udp-unicast-receiver" caption="TBA">
 		<info type="description" value="summary">
 		</info>
 		<build type="c-source"      value="udp-unicast-receiver.c"/>
@@ -13,20 +13,20 @@
 		<build type="include-path" value="."/>
 		<build type="define" name="UIP_CONF_IPV6" value="1"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.src"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.ip"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.ipv6"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.thsq-conf"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.aes"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.drowsie"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.ip64-addr"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.mdns"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.websocket"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.http-socket"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.simple-rpl"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.multichan"/>
-                <require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.servreg-hack"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.src"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ip"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ipv6"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.thsq-conf"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.aes"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.drowsie"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64-addr"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.mdns"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.websocket"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.http-socket"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.simple-rpl"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.multichan"/>
+                <require idref="thirdparty.wireless.smartconnect_6lowpan.apps.servreg-hack"/>
 		<device-support value="sam0"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>

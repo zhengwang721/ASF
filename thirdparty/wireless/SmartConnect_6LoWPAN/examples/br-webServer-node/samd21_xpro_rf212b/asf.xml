@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Smart Connect 6LoWPAN - Border router Webserver" id="thirdparty.wireless.SmartConnect_6LoWPAN.examples.br-webserver-node.samd21_xpro_rf212b" force-caption="true" force-description="true">
+	<project caption="Smart Connect 6LoWPAN - Border router Webserver" id="thirdparty.wireless.smartconnect_6lowpan.examples.br-webserver-node.samd21_xpro_rf212b" force-caption="true" force-description="true">
 		<info type="description" value="summary">
 		</info>
 		
@@ -29,11 +29,11 @@
 		<require idref="sam0.drivers.sercom.i2c.master"/>
 		<require idref="sam0.drivers.nvm"/>
 		<require idref="thirdparty.wireless.common_services.trx_access"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.dev.at86rf212b"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.services.at24mac602"/>
-		<require idref="config.thirdparty.wireless.SmartConnect_6LoWPAN.services.sam0"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.services.timer.sam0"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.examples.br-webserver-node"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.dev.at86rf212b"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.services.at24mac602"/>
+		<require idref="config.thirdparty.wireless.smartconnect_6lowpan.services.sam0"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.services.timer.sam0"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.examples.br-webserver-node"/>
 	
 		<config name="config.compiler.armgcc.optimization" value="high" />
 		<generator value="as5_arm" />

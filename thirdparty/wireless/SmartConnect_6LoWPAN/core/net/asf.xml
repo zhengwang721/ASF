@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 
 		
-        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.src" caption="TBA">
+        <module type="component" id="thirdparty.wireless.smartconnect_6lowpan.core.net.src" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
@@ -17,11 +17,11 @@
 			<build type="header-file"   value="packetbuf.h"/>
 			<build type="header-file"   value="packetqueue.h"/>
 			<build type="header-file"   value="queuebuf.h"/>
-			<!--  <require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.ip"/>
-			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.ipv6"/>
-			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.mac"/>
-			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.rime"/>
-			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.rpl"/> -->
+			<!--  <require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ip"/>
+			<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ipv6"/>
+			<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.mac"/>
+			<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.rime"/>
+			<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.rpl"/> -->
 			<build type="include-path" value="."/>	
             <device-support value="sam0"/>		
 			<build type="doxygen-entry-point" value="group_contiki_core"/>	

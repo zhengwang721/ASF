@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 
 		
-        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.rpl" caption="TBA">
+        <module type="component" id="thirdparty.wireless.smartconnect_6lowpan.core.net.rpl" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
@@ -16,7 +16,7 @@
 			<build type="header-file"   value="rpl.h"/>
 			<build type="header-file"   value="rpl-conf.h"/>
 			<build type="header-file"   value="rpl-private.h"/>
-			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.mac.generic"/>
+			<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.mac.generic"/>
            	<build type="include-path" value="."/>		
 			<build type="doxygen-entry-point" value="group_contiki_core"/>	
 			<device-support value="sam0"/>

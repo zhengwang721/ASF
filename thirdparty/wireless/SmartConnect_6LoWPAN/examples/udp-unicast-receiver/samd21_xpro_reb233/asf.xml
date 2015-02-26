@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Contiki Hello World Application" id="thirdparty.wireless.SmartConnect_6LoWPAN.examples.udp-unicast-receiver.samd21_xpro_reb233" force-caption="true" force-description="true">
+	<project caption="Contiki Hello World Application" id="thirdparty.wireless.smartconnect_6lowpan.examples.udp-unicast-receiver.samd21_xpro_reb233" force-caption="true" force-description="true">
 		<info type="description" value="summary">
 		</info>
 		
@@ -25,11 +25,11 @@
 		<require idref="sam0.drivers.sercom.i2c.master"/>
 		<require idref="sam0.drivers.nvm"/>
 		<require idref="thirdparty.wireless.common_services.trx_access"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.dev.at86rf233"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.services.at24mac602"/>
-		<require idref="config.thirdparty.wireless.SmartConnect_6LoWPAN.services.sam0"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.services.timer.sam0"/>
-		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.examples.udp-unicast-receiver"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.dev.at86rf233"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.services.at24mac602"/>
+		<require idref="config.thirdparty.wireless.smartconnect_6lowpan.services.sam0"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.services.timer.sam0"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.examples.udp-unicast-receiver"/>
 	
 		<config name="config.compiler.armgcc.optimization" value="high" />
 		<generator value="as5_arm" />

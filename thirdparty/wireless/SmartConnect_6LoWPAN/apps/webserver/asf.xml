@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 
-        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.apps.webserver" caption="TBA">
+        <module type="component" id="thirdparty.wireless.smartconnect_6lowpan.apps.webserver" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
@@ -25,7 +25,7 @@
             <build type="header-file"      value="webserver-dsc.h"/>
             <build type="header-file"      value="webserver-nogui.h"/>			
 			<build type="include-path" value="."/>	
-            <require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core"/>			
+            <require idref="thirdparty.wireless.smartconnect_6lowpan.core"/>			
 			<device-support value="sam0"/>		
 			<build type="doxygen-entry-point" value="group_contiki_apps"/>	
             <info type="keyword" value="technology">

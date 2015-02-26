@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
-  <select-by-device id="config.thirdparty.wireless.SmartConnect_6LoWPAN.services.sam0" caption="Config_select by device">
-        <module type="component" id="config.thirdparty.wireless.SmartConnect_6LoWPAN.services.sam0#1" caption="TBA">
+  <select-by-device id="config.thirdparty.wireless.smartconnect_6lowpan.services.sam0" caption="Config_select by device">
+        <module type="component" id="config.thirdparty.wireless.smartconnect_6lowpan.services.sam0#1" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
@@ -27,7 +27,7 @@
                 <keyword value="Communication"/>
             </info>
         </module>
-        <module type="component" id="config.thirdparty.wireless.SmartConnect_6LoWPAN.services.sam0#2" caption="TBA">
+        <module type="component" id="config.thirdparty.wireless.smartconnect_6lowpan.services.sam0#2" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
