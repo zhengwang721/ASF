@@ -25,7 +25,7 @@
 			<build type="header-file"   value="phase.h"/>
 			<build type="header-file"   value="rdc.h"/>
 			<build type="include-path" value="."/>	
-			<device-support-alias value="avr2025_mac_pal_support"/>			
+			<device-support value="sam0"/>		
 			<build type="doxygen-entry-point" value="group_contiki_core"/>	
             <info type="keyword" value="technology">
                 <keyword value="Wireless"/>
@@ -45,7 +45,7 @@
             <build type="header-file"   value="nullmac.h"/>
 			<build type="define" name="ENABLE_CONTIKIMAC" value="0"/>
 			<build type="define" name="ENABLE_DROWSIE" value="0"/>
-            <device-support-alias value="avr2025_mac_pal_support"/>		
+            <device-support value="sam0"/>	
 			<build type="doxygen-entry-point" value="group_contiki_core"/>
 		</module>
 
@@ -60,7 +60,7 @@
 			<build type="include-path"  value="contikimac/"/>
 			<build type="define" name="ENABLE_CONTIKIMAC" value="1"/>
 			<build type="define" name="ENABLE_DROWSIE" value="0"/>
-			<device-support-alias value="avr2025_mac_pal_support"/>		
+			<device-support value="sam0"/>	
 			<build type="doxygen-entry-point" value="group_contiki_core"/>
 		</module>		
         		

@@ -86,8 +86,7 @@ AT86RFX_ISR()
 {
 	/*Clearing the RF interrupt*/
 	trx_irq_flag_clr();
-    rf233_interrupt_poll();
-	/*Calling the interrupt routines*/
+  	/*Calling the interrupt routines*/
 	if (irq_hdl_trx) {
 		irq_hdl_trx();
 	}

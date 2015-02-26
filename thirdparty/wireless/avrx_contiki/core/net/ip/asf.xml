@@ -35,7 +35,7 @@
 			<build type="header-file"   value="uip-udp-packet.h"/>
 			<build type="header-file"   value="uipopt.h"/>
 			<build type="include-path" value="."/>	
-            <device-support-alias value="avr2025_mac_pal_support"/>	
+            <device-support value="sam0"/>
             <require idref="thirdparty.wireless.avrx_contiki.core.net.mac.generic"/>
             <require idref="thirdparty.wireless.avrx_contiki.core.net.rpl"/>
     		<require idref="thirdparty.wireless.avrx_contiki.core.net.rime"/>	

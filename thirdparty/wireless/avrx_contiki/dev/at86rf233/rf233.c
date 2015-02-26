@@ -120,7 +120,7 @@ const struct radio_driver rf233_radio_driver =
  * \return     The radio channel
  */
 int
-rf233_get_channel(void)
+rf_get_channel(void)
 {
 	uint8_t channel;
   channel=trx_reg_read(RF233_REG_PHY_CC_CCA) & PHY_CC_CCA_CHANNEL;
@@ -135,7 +135,7 @@ rf233_get_channel(void)
  * \retval 0   Success
  */
 int
-rf233_set_channel(uint8_t ch)
+rf_set_channel(uint8_t ch)
 {
   uint8_t temp;
   PRINTF("RF233: setting channel %u\n", ch);
@@ -215,12 +215,11 @@ rf233_init(void)
 	  delay_cycles_ms(2);  /* datasheet: max 1 ms */
 	  /* Radio is now in state TRX_OFF */
   }
-
   system_interrupt_enable_global();
   printf("REB233 radio configured to use EXT%u\n", REB233XPRO_HEADER);
   /* Assign regtemp to regtemp to avoid compiler warnings */
   regtemp = regtemp;
-
+  trx_irq_init((FUNC_PTR)rf233_interrupt_poll);
   /* Configure the radio using the default values except these. */
   trx_reg_write(RF233_REG_TRX_CTRL_1,      RF233_REG_TRX_CTRL_1_CONF);
   trx_reg_write(RF233_REG_PHY_CC_CCA,      RF233_REG_PHY_CC_CCA_CONF);
