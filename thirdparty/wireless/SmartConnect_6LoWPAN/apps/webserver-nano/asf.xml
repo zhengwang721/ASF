@@ -1,0 +1,36 @@
+<asf xmlversion="1.0">
+
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.apps.webserver-nano" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="httpd.c"/>
+			<build type="c-source"      value="httpd-cfs.c"/>
+			<build type="c-source"      value="httpd-cgi.c"/>
+			<build type="c-source"      value="httpd-fs.c"/>
+			<build type="c-source"      value="httpd-fsdata.c"/>
+			<build type="c-source"      value="http-strings.c"/>
+			<build type="c-source"      value="urlconv.c"/>
+			<build type="c-source"      value="webserver.c"/>
+			<build type="c-source"      value="webserver-dsc.c"/>
+			<build type="c-source"      value="webserver-nogui.c"/>
+			<build type="header-file"      value="httpd.h"/>
+            <build type="header-file"      value="httpd-cfs.h"/>	
+            <build type="header-file"      value="httpd-cgi.h"/>		
+            <build type="header-file"      value="httpd-fs.h"/>					
+			<build type="header-file"      value="httpd-fsdata.h"/>
+            <build type="header-file"      value="http-strings.h"/>		
+            <build type="header-file"      value="urlconv.h"/>		
+            <build type="header-file"      value="webserver.h"/>
+            <build type="header-file"      value="webserver-dsc.h"/>
+            <build type="header-file"      value="webserver-nogui.h"/>			
+			<build type="include-path" value="."/>	
+            <require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core"/>			
+			<device-support value="sam0"/>		
+			<build type="doxygen-entry-point" value="group_contiki_apps"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>       
+</asf>

@@ -1,0 +1,21 @@
+<asf xmlversion="1.0">
+
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.apps.json" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="jsonparse.c"/>
+			<build type="c-source"      value="jsontree.c"/>
+			<build type="header-file"      value="json.h"/>
+			<build type="header-file"      value="jsonparse.h"/>
+			<build type="header-file"      value="jsontree.h"/>						
+			<build type="include-path" value="."/>
+            <require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core"/>			
+			<device-support value="sam0"/>		
+			<build type="doxygen-entry-point" value="group_contiki_apps"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>       
+</asf>

@@ -1,0 +1,22 @@
+<asf xmlversion="1.0">
+
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.dev.at86rf212b" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="rf212b.c"/>
+			<build type="header-file"   value="rf212b.h"/>
+			<build type="header-file"   value="rf212b-arch.h"/>
+			<build type="header-file"   value="rf212b-config.h"/>
+			<build type="header-file"   value="rf212b-const.h"/>
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki_dev"/>	
+			<device-support value="sam0"/>
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>
+       
+</asf>

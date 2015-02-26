@@ -1,0 +1,41 @@
+<asf xmlversion="1.0">
+
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.apps.ip64" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="dhcpv4.c"/>
+			<build type="c-source"      value="ip64.c"/>
+			<build type="c-source"      value="ip64-addrmap.c"/>
+			<build type="c-source"      value="ip64-arp.c"/>
+			<build type="c-source"      value="ip64-eth.c"/>
+			<build type="c-source"      value="ip64-eth-interface.c"/>
+			<build type="c-source"      value="ip64-ipv4-dhcp.c"/>
+			<build type="c-source"      value="ip64-null-driver.c"/>
+			<build type="c-source"      value="ip64-slip-interface.c"/>
+			<build type="c-source"      value="ip64-special-ports.c"/>
+			<build type="c-source"      value="ip64-tap-driver.c"/>			
+			<build type="header-file"   value="ip64.h"/>
+			<build type="header-file"   value="ip64-addrmap.h"/>
+			<build type="header-file"   value="ip64-arp.h"/>
+			<build type="header-file"   value="ip64-conf-example.h"/>
+			<build type="header-file"   value="ip64-eth.h"/>
+			<build type="header-file"   value="ip64-eth-interface.h"/>
+			<build type="header-file"   value="ip64-interface.h"/>
+			<build type="header-file"   value="ip64-ipv4-dhcp.h"/>
+			<build type="header-file"   value="ip64-null-driver.h"/>
+			<build type="header-file"   value="ip64-slip-interface.h"/>
+			<build type="header-file"   value="ip64-special-ports.h"/>
+			<build type="header-file"   value="ip64-driver.h"/>
+			<build type="header-file"   value="ip64-tap-driver.h"/>			
+			<build type="include-path" value="."/>	
+            <require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core"/>			
+			<device-support value="sam0"/>		
+			<build type="doxygen-entry-point" value="group_contiki_apps"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>
+       
+</asf>

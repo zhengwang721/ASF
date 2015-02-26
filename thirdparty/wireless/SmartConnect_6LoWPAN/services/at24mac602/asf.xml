@@ -1,0 +1,20 @@
+<asf xmlversion="1.0">
+
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.services.at24mac602" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="at24mac602.c"/>
+			<build type="c-source"   value="at24mac602-arch.c"/>
+			<build type="header-file"  value="at24mac602.h"/>
+			<build type="header-file"  value="at24mac602-arch.h"/>
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki"/>	
+			<device-support value="sam0"/>
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>
+       
+</asf>

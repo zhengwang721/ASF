@@ -1,0 +1,34 @@
+<asf xmlversion="1.0">
+	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
+	<!-- **************************************************************************************************** -->
+	<module type="application" id="thirdparty.wireless.SmartConnect_6LoWPAN.examples.udp-unicast-receiver" caption="TBA">
+		<info type="description" value="summary">
+		</info>
+		<build type="c-source"      value="udp-unicast-receiver.c"/>
+		<build type="c-source"      value="udp-unicast-receiver-main.c"/>
+		<build type="c-source"      value="symbols.c"/>
+		<build type="include-path" value="inc/"/>
+		<build type="header-file" value="conf_common_sw_timer.h"/>
+		<build type="header-file"      value="symbols.h"/>
+		<build type="include-path" value="."/>
+		<build type="define" name="UIP_CONF_IPV6" value="1"/>
+		<require idref="thirdparty.wireless.addons.sio2host"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.src"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.ip"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.ipv6"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.thsq-conf"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.aes"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.drowsie"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.ip64-addr"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.mdns"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.websocket"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.http-socket"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.simple-rpl"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.multichan"/>
+                <require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.servreg-hack"/>
+		<device-support value="sam0"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+
+</asf>

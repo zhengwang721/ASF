@@ -1,0 +1,25 @@
+<asf xmlversion="1.0">
+
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.apps.email" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="email.c"/>
+			<build type="c-source"      value="email-dsc.c"/>
+			<build type="c-source"      value="smtp-socket.c"/>
+			<build type="c-source"      value="smtp-strings.c"/>
+			<build type="header-file"   value="email.h"/>
+			<build type="header-file"   value="email-dsc.h"/>
+			<build type="header-file"   value="smtp-strings.h"/>
+			<build type="header-file"   value="smtp.h"/>
+			<build type="include-path" value="."/>	
+            <require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core"/>			
+			<device-support value="sam0"/>		
+			<build type="doxygen-entry-point" value="group_contiki_apps"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>
+       
+</asf>

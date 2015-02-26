@@ -1,0 +1,39 @@
+<asf xmlversion="1.0">
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.apps.antelope" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="antelope.c"/>
+			<build type="c-source"      value="aql_adt.c"/>
+			<build type="c-source"      value="aql_exec.c"/>
+			<build type="c-source"      value="aql_lexer.c"/>
+			<build type="c-source"      value="aql_parser.c"/>
+			<build type="c-source"      value="index.c"/>
+			<build type="c-source"      value="index-inline.c"/>
+			<build type="c-source"      value="index-maxheap.c"/>
+			<build type="c-source"      value="index-memhash.c"/>
+			<build type="c-source"      value="lvm.c"/>
+			<build type="c-source"      value="relation.c"/>
+			<build type="c-source"      value="result.c"/>
+			<build type="c-source"      value="storage-cfs.c"/>
+			<build type="header-file"   value="antelope.h"/>
+			<build type="header-file"   value="aql.h"/>
+			<build type="header-file"   value="attribute.h"/>
+			<build type="header-file"   value="db-options.h"/>
+			<build type="header-file"   value="debug.h"/>
+			<build type="header-file"   value="index.h"/>
+			<build type="header-file"   value="lvm.h"/>
+			<build type="header-file"   value="relation.h"/>
+			<build type="header-file"   value="result.h"/>
+			<build type="header-file"   value="storage.h"/>
+			<build type="include-path" value="."/>	
+			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core"/>			
+			<device-support value="sam0"/>	
+			<build type="doxygen-entry-point" value="group_contiki_apps"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>
+       
+</asf>

@@ -1,0 +1,28 @@
+<asf xmlversion="1.0">
+
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.apps.ip64-webserver" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="httpd.c"/>
+			<build type="c-source"      value="httpd-cgi.c"/>
+			<build type="c-source"      value="httpd-fs.c"/>
+			<build type="c-source"      value="ip64-webserver.c"/>
+			<build type="c-source"      value="ip64-webserver-http-strings.c"/>
+			<build type="header-file"      value="httpd.h"/>
+			<build type="header-file"      value="httpd-cgi.h"/>
+			<build type="header-file"      value="httpd-fs.h"/>
+			<build type="header-file"      value="ip64-webserver.h"/>
+            <build type="header-file"      value="ip64-webserver-http-strings.h"/>
+            <build type="include-path" value="."/>	
+			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.network-reboot"/>
+			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.simple-udp-ping"/>
+			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core"/>			
+			<device-support value="sam0"/>		
+			<build type="doxygen-entry-point" value="group_contiki_apps"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>       
+</asf>

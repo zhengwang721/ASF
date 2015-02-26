@@ -1,0 +1,47 @@
+<asf xmlversion="1.0">
+
+		
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.core.lib.all" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="assert.c"/>
+			<build type="c-source"      value="crc16.c"/>
+			<build type="c-source"      value="gcr.c"/>
+			<build type="c-source"      value="ifft.c"/>
+			<build type="c-source"      value="list.c"/>
+			<build type="c-source"      value="me.c"/>
+			<build type="c-source"      value="me_tabs.c"/>
+			<build type="c-source"      value="memb.c"/>
+			<build type="c-source"      value="mmem.c"/>
+			<build type="c-source"      value="petsciiconv.c"/>
+			<build type="c-source"      value="print-stats.c"/>
+			<build type="c-source"      value="random.c"/>
+			<build type="c-source"      value="ringbuf.c"/>
+			<build type="c-source"      value="sensors.c"/>
+			<build type="c-source"      value="settings.c"/>
+			<build type="c-source"      value="trickle-timer.c"/>
+			<build type="header-file"   value="assert.h"/>
+			<build type="header-file"   value="crc16.h"/>
+			<build type="header-file"   value="gcr.h"/>
+			<build type="header-file"   value="ifft.h"/>
+			<build type="header-file"   value="me.h"/>
+			<build type="header-file"   value="me_tabs.h"/>
+			<build type="header-file"   value="memb.h"/>
+			<build type="header-file"   value="mmem.h"/>
+			<build type="header-file"   value="petsciiconv.h"/>
+			<build type="header-file"   value="print-stats.h"/>
+			<build type="header-file"   value="random.h"/>
+			<build type="header-file"   value="ringbuf.h"/>
+			<build type="header-file"   value="sensors.h"/>
+			<build type="header-file"   value="settings.h"/>
+			<build type="header-file"   value="trickle-timer.h"/>
+			<build type="include-path" value="."/>
+            <device-support value="sam0"/>		
+			<build type="doxygen-entry-point" value="group_contiki_core"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>		
+</asf>

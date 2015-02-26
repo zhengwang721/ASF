@@ -1,0 +1,58 @@
+<asf xmlversion="1.0">
+  <select-by-device id="config.thirdparty.wireless.SmartConnect_6LoWPAN.services.sam0" caption="Config_select by device">
+        <module type="component" id="config.thirdparty.wireless.SmartConnect_6LoWPAN.services.sam0#1" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="button-sensor.c"/>
+			<build type="c-source"      value="watchdog.c"/>
+			<build type="c-source"      value="flash.c"/>
+			<build type="c-source"      value="leds-arch.c"/>
+			<build type="c-source"      value="node-id.c"/>
+			<build type="c-source"      value="edbg-eui.c"/>
+			<build type="c-source"      value="sam0-sensors.c"/>
+			<build type="c-source"      value="temp-sensor.c"/>
+			<build type="c-source"      value="voltage-sensor.c"/>
+			<build type="header-file"   value="button-sensor.h"/>			
+			<build type="header-file"   value="flash.h"/>				
+			<build type="header-file"   value="sam0-sensors.h"/>
+			<build type="header-file"   value="node-id.h"/>			
+			<build type="header-file"   value="temp-sensor.h"/>			
+			<build type="header-file"   value="voltage-sensor.h"/>			
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki"/>	
+			<device-support value="samr21"/>
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>
+        <module type="component" id="config.thirdparty.wireless.SmartConnect_6LoWPAN.services.sam0#2" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="button-sensor.c"/>
+			<build type="c-source"      value="watchdog.c"/>
+			<build type="c-source"      value="flash.c"/>
+			<build type="c-source"      value="leds-arch.c"/>
+			<build type="c-source"      value="node-id-samd21.c"/>
+			<build type="c-source"      value="edbg-eui.c"/>
+			<build type="c-source"      value="sam0-sensors.c"/>
+			<build type="c-source"      value="temp-sensor.c"/>
+			<build type="c-source"      value="voltage-sensor.c"/>
+			<build type="header-file"   value="button-sensor.h"/>			
+			<build type="header-file"   value="flash.h"/>		
+			<build type="header-file"   value="sam0-sensors.h"/>
+			<build type="header-file"   value="node-id-samd21.h"/>			
+			<build type="header-file"   value="temp-sensor.h"/>			
+			<build type="header-file"   value="voltage-sensor.h"/>			
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki"/>	
+			<device-support value="samd21"/>
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>
+		</select-by-device>
+</asf>
