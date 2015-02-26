@@ -71,6 +71,7 @@
  *
  * The following kit is required for carrying out the test:
  *  - SAM D21 Xplained Pro board
+ *  - SAM DA1 Xplained Pro board
  *
  * \section asfdoc_sam0_i2c_unit_test_setup Setup
  * This unit_test is for master,
