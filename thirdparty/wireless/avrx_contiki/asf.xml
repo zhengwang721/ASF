@@ -6,7 +6,7 @@
 			</info>
 			<build type="include-path" value="."/>		
 			<build type="doxygen-entry-point" value="group_contiki"/>	
-			<device-support-alias value="avr2025_mac_pal_support"/>
+			<device-support value="sam0"/>
             <info type="keyword" value="technology">
 			    <keyword value="Wireless"/>
                 <keyword value="Communication"/>

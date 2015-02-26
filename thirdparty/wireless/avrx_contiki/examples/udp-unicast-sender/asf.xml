@@ -12,7 +12,6 @@
 		<build type="header-file"      value="symbols.h"/>
 		<build type="include-path" value="."/>
 		<build type="define" name="UIP_CONF_IPV6" value="1"/>		
-		<require idref="thirdparty.wireless.avr2025_mac.includes"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
 		<require idref="thirdparty.wireless.avrx_contiki.core"/>
 		<require idref="thirdparty.wireless.avrx_contiki.core.net.src"/>
@@ -28,7 +27,7 @@
 		<require idref="thirdparty.wireless.avrx_contiki.apps.simple-rpl"/>
 		<require idref="thirdparty.wireless.avrx_contiki.apps.multichan"/>
                 <require idref="thirdparty.wireless.avrx_contiki.apps.servreg-hack"/>
-		<device-support-alias value="avr2025_mac_pal_support"/>		
+		<device-support value="sam0"/>	
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
 
