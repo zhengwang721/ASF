@@ -110,6 +110,6 @@
  *    is ready to detect a future falling edge.
  *    \snippet qs_extint_basic.c main_3
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -66,8 +66,12 @@
   #include "samd21g16a.h"
 #elif defined(__SAMD21G17A__) || defined(__ATSAMD21G17A__)
   #include "samd21g17a.h"
+#elif defined(__SAMD21G17AU__) || defined(__ATSAMD21G17AU__)
+  #include "samd21g17au.h"
 #elif defined(__SAMD21G18A__) || defined(__ATSAMD21G18A__)
   #include "samd21g18a.h"
+#elif defined (__SAMD21G18AU__) || defined(__ATSAMD21G18AU__)
+	#include "samd21g18au.h"
 #elif defined(__SAMD21J15A__) || defined(__ATSAMD21J15A__)
   #include "samd21j15a.h"
 #elif defined(__SAMD21J16A__) || defined(__ATSAMD21J16A__)
