@@ -32,29 +32,10 @@
  /**
  * \mainpage
  * \section preface Preface
- * This is the reference manual for the WSN Demo Application Application
- * The WSNDemo application implements a typical wireless sensor network
- *scenario,
- * in which one central node collects the data from a network of sensors and
- *passes this data over a serial connection for further processing.
- * In the case of the WSNDemo this processing is performed by the WSNMonitor PC
- *application. The BitCloud® Quick Start Guide  provides a detailed description
- *of the WSNDemo application scenario, and instructions on how to use
- *WSNMonitor.
- *  However since BitCloud is a ZigBee® PRO stack, there are a few differences
- *in the protocol:
- * • Device types (Coordinator, Router and End Device) are simulated on the
- *application level; there is no such separation in Lightweight Mesh on the
- *stack level
- * • The value of the extended address field is set equal to the value of the
- *short address field
- * • For all frames, the LQI and RSSI fields are filled in by the coordinator
- *with the values of LQI and RSSI from the received frame. This means that nodes
- *that are not connected to the coordinator directly will have the same values
- *as the last node on the route to the coordinator
- * • Sensor data values are generated randomly on all platforms
- * • Sending data to the nodes on the network is not implemented and not
- *supported in this demo application
+ * This example application uses Simple udp module and servreg-hack module to 
+ * register a UDP socket and send UDP uni-cast data to UDP receiver device.
+ * This example demonstrates the ability of stack to establish UDP connection 
+ * and send UDP uni-cast data to a device.
  */
 #include "contiki.h"
 #include "lib/random.h"

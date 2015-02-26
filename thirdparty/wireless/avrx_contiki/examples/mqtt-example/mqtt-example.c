@@ -35,29 +35,16 @@
 /**
  * \mainpage
  * \section preface Preface
- * This is the reference manual for the WSN Demo Application Application
- * The WSNDemo application implements a typical wireless sensor network
- *scenario,
- * in which one central node collects the data from a network of sensors and
- *passes this data over a serial connection for further processing.
- * In the case of the WSNDemo this processing is performed by the WSNMonitor PC
- *application. The BitCloud® Quick Start Guide  provides a detailed description
- *of the WSNDemo application scenario, and instructions on how to use
- *WSNMonitor.
- *  However since BitCloud is a ZigBee® PRO stack, there are a few differences
- *in the protocol:
- * • Device types (Coordinator, Router and End Device) are simulated on the
- *application level; there is no such separation in Lightweight Mesh on the
- *stack level
- * • The value of the extended address field is set equal to the value of the
- *short address field
- * • For all frames, the LQI and RSSI fields are filled in by the coordinator
- *with the values of LQI and RSSI from the received frame. This means that nodes
- *that are not connected to the coordinator directly will have the same values
- *as the last node on the route to the coordinator
- * • Sensor data values are generated randomly on all platforms
- * • Sending data to the nodes on the network is not implemented and not
- *supported in this demo application
+ * MQTT example application uses MQTT and MDNS modules to communicate to MQTT host configured 
+ * and establish a MQTT connection.
+ * This example,
+ * 1.	Will publish data to the MQTT host broker configured with configured topic. 
+ * 2.	Uses IO1_xpro board, to get Temperature and Light sensor details of the current 
+ *      environment and send them to MQTT broker in JSON format.
+ * 3.	Uses Border router to connect outside the 6LoWPAN network.
+ * 4.	Uses MDNS module, to get IP address of MQTT host broker configured. 
+ *      MDNS server used here, is Google DNS server (::ffff:8.8.8.8).
+
  */
 #include <string.h>
 #include "thsq.h"
