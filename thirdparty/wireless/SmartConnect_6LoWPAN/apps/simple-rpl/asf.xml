@@ -1,13 +1,13 @@
 <asf xmlversion="1.0">
 
-        <module type="component" id="thirdparty.wireless.avrx_contiki.apps.simple-rpl" caption="TBA">
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.apps.simple-rpl" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
 			<build type="c-source"      value="simple-rpl.c"/>
 			<build type="header-file"      value="simple-rpl.h"/>					
 			<build type="include-path" value="."/>		
-			<require idref="thirdparty.wireless.avrx_contiki.core"/>			
+			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core"/>			
 			<device-support value="sam0"/>
 			<build type="doxygen-entry-point" value="group_contiki_apps"/>	
             <info type="keyword" value="technology">

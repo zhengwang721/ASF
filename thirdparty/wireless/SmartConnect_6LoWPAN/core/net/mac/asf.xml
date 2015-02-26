@@ -1,11 +1,11 @@
 <asf xmlversion="1.0">
 
 		
-        <module type="component" id="thirdparty.wireless.avrx_contiki.core.net.mac.generic" caption="TBA">
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.mac.generic" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
-			<require idref="config.thirdparty.wireless.avrx_contiki.core.net.mac"/>
+			<require idref="config.thirdparty.wireless.SmartConnect_6LoWPAN.core.net.mac"/>
 			<build type="c-source"      value="csma.c"/>
 			<build type="c-source"      value="frame802154.c"/>
 			<build type="c-source"      value="framer-802154.c"/>
@@ -33,8 +33,8 @@
             </info>
         </module>		
 		
-		<select-by-config id="config.thirdparty.wireless.avrx_contiki.core.net.mac" name="config.thirdparty.wireless.avrx_contiki.core.net.mac" caption="Contiki MAC Configuration" default="nullmac">
-		<module type="driver" id="config.thirdparty.wireless.avrx_contiki.core.net.mac#nullmac"     caption="nullmac enabled">
+		<select-by-config id="config.thirdparty.wireless.SmartConnect_6LoWPAN.core.net.mac" name="config.thirdparty.wireless.SmartConnect_6LoWPAN.core.net.mac" caption="Contiki MAC Configuration" default="nullmac">
+		<module type="driver" id="config.thirdparty.wireless.SmartConnect_6LoWPAN.core.net.mac#nullmac"     caption="nullmac enabled">
 			<info type="description" value="summary">
 			NULLMAC layer added
 			</info>
@@ -50,7 +50,7 @@
 		</module>
 
 		
-		<module type="driver" id="config.thirdparty.wireless.avrx_contiki.core.net.mac#contikimac"  caption="contikimac enabled">
+		<module type="driver" id="config.thirdparty.wireless.SmartConnect_6LoWPAN.core.net.mac#contikimac"  caption="contikimac enabled">
 			<info type="description" value="summary">
 			Contiki MAC layer added
 			</info>

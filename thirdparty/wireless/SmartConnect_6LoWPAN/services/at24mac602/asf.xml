@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 
-        <module type="component" id="thirdparty.wireless.avrx_contiki.services.at24mac602" caption="TBA">
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.services.at24mac602" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>

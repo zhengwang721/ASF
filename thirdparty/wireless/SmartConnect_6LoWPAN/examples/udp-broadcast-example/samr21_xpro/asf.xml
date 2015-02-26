@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="udp-broadcast-example Application" id="thirdparty.wireless.avrx_contiki.examples.udp-broadcast-example.samr21xpro" force-caption="true" force-description="true">
+	<project caption="udp-broadcast-example Application" id="thirdparty.wireless.SmartConnect_6LoWPAN.examples.udp-broadcast-example.samr21xpro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
 		</info>
 		
@@ -25,10 +25,10 @@
 		<require idref="sam0.drivers.sercom.i2c.master"/>
 		<require idref="sam0.drivers.nvm"/>
 		<require idref="thirdparty.wireless.common_services.trx_access"/>
-		<require idref="thirdparty.wireless.avrx_contiki.dev.at86rf233"/>
-		<require idref="config.thirdparty.wireless.avrx_contiki.services.sam0"/>
-		<require idref="thirdparty.wireless.avrx_contiki.services.timer.sam0"/>
-		<require idref="thirdparty.wireless.avrx_contiki.examples.udp-broadcast-example"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.dev.at86rf233"/>
+		<require idref="config.thirdparty.wireless.SmartConnect_6LoWPAN.services.sam0"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.services.timer.sam0"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.examples.udp-broadcast-example"/>
 	    <build type="doxygen-entry-point" value="group_contiki"/>
 		<config name="config.compiler.armgcc.optimization" value="high" />
 		<generator value="as5_arm" />

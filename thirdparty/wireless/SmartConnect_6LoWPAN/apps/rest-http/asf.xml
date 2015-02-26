@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 
-        <module type="component" id="thirdparty.wireless.avrx_contiki.apps.rest-http" caption="TBA">
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.apps.rest-http" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
@@ -8,8 +8,8 @@
 			<build type="c-source"      value="http-server.c"/>
 			<build type="header-file"      value="http-common.h"/>					
 			<build type="header-file"      value="http-server.h"/>		
-			<require idref="thirdparty.wireless.avrx_contiki.apps.rest-common"/>	
-            <require idref="thirdparty.wireless.avrx_contiki.core"/>			
+			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.rest-common"/>	
+            <require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core"/>			
 			<device-support value="sam0"/>		
 			<build type="include-path" value="."/>		
 			<build type="doxygen-entry-point" value="group_contiki_apps"/>	

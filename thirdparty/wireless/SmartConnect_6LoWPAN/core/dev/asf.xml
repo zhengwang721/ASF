@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 
-        <module type="component" id="thirdparty.wireless.avrx_contiki.core.dev.leds" caption="TBA">
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.core.dev.leds" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
@@ -15,7 +15,7 @@
             </info>
         </module>
        
-        <module type="component" id="thirdparty.wireless.avrx_contiki.core.dev.nullradio" caption="TBA">
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.core.dev.nullradio" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
@@ -30,7 +30,7 @@
             </info>
         </module>
 		
-        <module type="component" id="thirdparty.wireless.avrx_contiki.core.dev.serial-line" caption="TBA">
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.core.dev.serial-line" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
@@ -45,7 +45,7 @@
             </info>
         </module>
 		
-        <module type="component" id="thirdparty.wireless.avrx_contiki.core.dev.slip" caption="TBA">
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.core.dev.slip" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
@@ -60,14 +60,14 @@
             </info>
         </module>		
 		
-        <module type="component" id="thirdparty.wireless.avrx_contiki.core.dev.all" caption="TBA">
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.core.dev.all" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
-			<require idref="thirdparty.wireless.avrx_contiki.core.dev.slip"/>
-			<require idref="thirdparty.wireless.avrx_contiki.core.dev.serial-line"/>
-			<require idref="thirdparty.wireless.avrx_contiki.core.dev.leds"/>
-			<require idref="thirdparty.wireless.avrx_contiki.core.dev.nullradio"/>
+			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.dev.slip"/>
+			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.dev.serial-line"/>
+			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.dev.leds"/>
+			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.dev.nullradio"/>
 			<build type="header-file"   value="spi.h"/>
 			<build type="header-file"   value="button-sensor.h"/>
 			<build type="header-file"   value="battery-sensor.h"/>

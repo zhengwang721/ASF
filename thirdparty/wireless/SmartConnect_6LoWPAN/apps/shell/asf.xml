@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 
-        <module type="component" id="thirdparty.wireless.avrx_contiki.apps.shell" caption="TBA">
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.apps.shell" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
@@ -85,13 +85,13 @@
 			<build type="header-file"      value="shell-vars.h"/>
 			<build type="header-file"      value="shell-wget.h"/>
 			<build type="include-path" value="."/>
-			<require idref="thirdparty.wireless.avrx_contiki.apps.webserver"/>
-			<require idref="thirdparty.wireless.avrx_contiki.apps.webbrowser"/>
-			<require idref="thirdparty.wireless.avrx_contiki.apps.irc"/>
-			<require idref="thirdparty.wireless.avrx_contiki.apps.telnet"/>
-			<require idref="thirdparty.wireless.avrx_contiki.apps.powertrace"/>
-			<require idref="thirdparty.wireless.avrx_contiki.apps.collect-view"/>
-            <require idref="thirdparty.wireless.avrx_contiki.core"/>
+			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.webserver"/>
+			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.webbrowser"/>
+			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.irc"/>
+			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.telnet"/>
+			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.powertrace"/>
+			<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.collect-view"/>
+            <require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core"/>
             <device-support value="sam0"/>		
 			<build type="doxygen-entry-point" value="group_contiki_apps"/>	
             <info type="keyword" value="technology">

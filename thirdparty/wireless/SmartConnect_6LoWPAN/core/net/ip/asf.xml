@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 
 		
-        <module type="component" id="thirdparty.wireless.avrx_contiki.core.net.ip" caption="TBA">
+        <module type="component" id="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.ip" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
@@ -36,9 +36,9 @@
 			<build type="header-file"   value="uipopt.h"/>
 			<build type="include-path" value="."/>	
             <device-support value="sam0"/>
-            <require idref="thirdparty.wireless.avrx_contiki.core.net.mac.generic"/>
-            <require idref="thirdparty.wireless.avrx_contiki.core.net.rpl"/>
-    		<require idref="thirdparty.wireless.avrx_contiki.core.net.rime"/>	
+            <require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.mac.generic"/>
+            <require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.rpl"/>
+    		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.rime"/>	
 			<build type="doxygen-entry-point" value="group_contiki_core"/>	
             <info type="keyword" value="technology">
                 <keyword value="Wireless"/>

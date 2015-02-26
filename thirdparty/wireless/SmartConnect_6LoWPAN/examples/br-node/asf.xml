@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
 	<!-- **************************************************************************************************** -->
-	<module type="application" id="thirdparty.wireless.avrx_contiki.examples.br-node" caption="TBA">
+	<module type="application" id="thirdparty.wireless.SmartConnect_6LoWPAN.examples.br-node" caption="TBA">
 		<info type="description" value="summary">
 		</info>
 		<build type="c-source"      value="router-node.c"/>
@@ -14,21 +14,21 @@
 		<build type="define" name="UIP_CONF_IPV6" value="1"/>
         <build type="define" name="ENABLE_WEBSERVER" value="0"/>		
 		<require idref="thirdparty.wireless.addons.sio2host"/>
-		<require idref="thirdparty.wireless.avrx_contiki.core"/>
-		<require idref="thirdparty.wireless.avrx_contiki.core.net.src"/>
-		<require idref="thirdparty.wireless.avrx_contiki.core.net.ip"/>
-		<require idref="thirdparty.wireless.avrx_contiki.core.net.ipv6"/>
-		<require idref="thirdparty.wireless.avrx_contiki.apps.thsq-conf"/>
-		<require idref="thirdparty.wireless.avrx_contiki.apps.aes"/>
-		<require idref="thirdparty.wireless.avrx_contiki.apps.ip64-addr"/>
-		<require idref="thirdparty.wireless.avrx_contiki.apps.mdns"/>
-		<require idref="thirdparty.wireless.avrx_contiki.apps.websocket"/>
-		<require idref="thirdparty.wireless.avrx_contiki.apps.http-socket"/>
-		<require idref="thirdparty.wireless.avrx_contiki.apps.simple-rpl"/>
-		<require idref="thirdparty.wireless.avrx_contiki.apps.multichan"/>
-		<require idref="thirdparty.wireless.avrx_contiki.apps.ip64"/>
-		<require idref="thirdparty.wireless.avrx_contiki.apps.ip64-addr"/>
-		<require idref="thirdparty.wireless.avrx_contiki.services.ksz8851snl"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.src"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.ip"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.core.net.ipv6"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.thsq-conf"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.aes"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.ip64-addr"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.mdns"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.websocket"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.http-socket"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.simple-rpl"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.multichan"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.ip64"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.apps.ip64-addr"/>
+		<require idref="thirdparty.wireless.SmartConnect_6LoWPAN.services.ksz8851snl"/>
 		<require idref="sam0.components.ethernet_phy.ksz8851snl"/>
 		<device-support value="sam0"/>	
 		<info type="gui-flag" value="move-to-root"/>
