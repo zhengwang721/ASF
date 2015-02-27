@@ -209,13 +209,16 @@ sint8 nm_drv_init(void * arg)
 
 	chip_apply_conf();
 
-	if(M2M_ERR_FW_VER_MISMATCH == nm_get_firmware_info(&strtmp))
+	nm_get_firmware_info(&strtmp);
+	M2M_INFO("Firmware ver   : %u.%u.%u\n", strtmp.u8FirmwareMajor, strtmp.u8FirmwareMinor, strtmp.u8FirmwarePatch);
+	M2M_INFO("Min driver ver : %u.%u.%u\n", strtmp.u8DriverMajor, strtmp.u8DriverMinor, strtmp.u8DriverPatch);
+	M2M_INFO("Curr driver ver: %u.%u.%u\n", M2M_DRIVER_VERSION_MAJOR_NO, M2M_DRIVER_VERSION_MINOR_NO, M2M_DRIVER_VERSION_PATCH_NO);
+
+	if(strtmp.u8FirmwareMajor != M2M_DRIVER_VERSION_MAJOR_NO
+			|| strtmp.u8FirmwareMinor != M2M_DRIVER_VERSION_MINOR_NO)
 	{
 		ret = M2M_ERR_FW_VER_MISMATCH;
-		M2M_ERR("Mismatch Firmawre Version\n");
-		M2M_INFO("Firmware ver   : %u.%u.%u\n", strtmp.u8FirmwareMajor, strtmp.u8FirmwareMinor, strtmp.u8DriverPatch);
-		M2M_INFO("Min driver ver : %u.%u.%u\n", strtmp.u8DriverMajor, strtmp.u8DriverMinor, strtmp.u8DriverPatch);
-		M2M_INFO("Curr driver ver: %u.%u.%u\n", M2M_DRIVER_VERSION_MAJOR_NO, M2M_DRIVER_VERSION_MINOR_NO, M2M_DRIVER_VERSION_PATCH_NO);
+		M2M_ERR("Mismatch Firmware Version\n");
 	}
 	return ret;
 ERR2:
