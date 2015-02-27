@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for FatFS service.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -112,9 +112,6 @@
  * may or may not work.
  *
  * \section contactinfo Contact Information
- * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
- * Support and FAQ: http://www.atmel.com/design-support/
- */
 
 /* ! \name Unit test configuration */
 /* @{ */

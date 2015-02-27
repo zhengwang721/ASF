@@ -3,7 +3,7 @@
  *
  * \brief SAM RTC Count Quick Start
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -114,4 +114,7 @@
  *    \snippet qs_rtc_count_basic.c compare_match_action
  * -# Clear the compare match, so that future matches may occur.
  *    \snippet qs_rtc_count_basic.c clear_compare_match
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

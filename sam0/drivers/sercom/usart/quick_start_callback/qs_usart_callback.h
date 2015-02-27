@@ -3,7 +3,7 @@
  *
  * \brief SAM USART Quick Start
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -120,6 +120,9 @@
  * -# Perform an asynchronous read of the USART, which will fire the registered
  *    callback when characters are received.
  *    \snippet qs_usart_callback.c main_read
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include <asf.h>

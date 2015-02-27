@@ -3,7 +3,7 @@
  *
  * \brief SAM NVM Unit test
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -74,6 +74,7 @@
  *  - SAM D20 Xplained Pro board
  *  - SAM D21 Xplained Pro board
  *  - SAM R21 Xplained Pro board
+ *  - SAM L21 Xplained Pro board
  *
  * \section appdoc_sam0_nvm_unit_test_setup Setup
  * The following connections has to be made using wires:
@@ -99,6 +100,9 @@
  * \section appdoc_sam0_nvm_unit_test_contactinfo Contact Information
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include <asf.h>

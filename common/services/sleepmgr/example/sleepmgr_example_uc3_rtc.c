@@ -3,7 +3,7 @@
  *
  * \brief Sleep manager example for AVR UC3 A0/A1/A3/A4 & AVR UC3 B series
  *
- * Copyright (C) 2010-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2010-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <board.h>
 #include <compiler.h>

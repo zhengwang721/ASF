@@ -3,7 +3,7 @@
  *
  * \brief WSNDemo application implementation
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -55,22 +55,22 @@
  * in which one central node collects the data from a network of sensors and
  *passes this data over a serial connection for further processing.
  * In the case of the WSNDemo this processing is performed by the WSNMonitor PC
- *application. The BitCloud® Quick Start Guide  provides a detailed description
+ *application. The BitCloud庐 Quick Start Guide  provides a detailed description
  *of the WSNDemo application scenario, and instructions on how to use
  *WSNMonitor.
- *  However since BitCloud is a ZigBee® PRO stack, there are a few differences
+ *  However since BitCloud is a ZigBee庐 PRO stack, there are a few differences
  *in the protocol:
- * • Device types (Coordinator, Router and End Device) are simulated on the
+ * 鈥Device types (Coordinator, Router and End Device) are simulated on the
  *application level; there is no such separation in Lightweight Mesh on the
  *stack level
- * • The value of the extended address field is set equal to the value of the
+ * 鈥The value of the extended address field is set equal to the value of the
  *short address field
- * • For all frames, the LQI and RSSI fields are filled in by the coordinator
+ * 鈥For all frames, the LQI and RSSI fields are filled in by the coordinator
  *with the values of LQI and RSSI from the received frame. This means that nodes
  *that are not connected to the coordinator directly will have the same values
  *as the last node on the route to the coordinator
- * • Sensor data values are generated randomly on all platforms
- * • Sending data to the nodes on the network is not implemented and not
+ * 鈥Sensor data values are generated randomly on all platforms
+ * 鈥Sending data to the nodes on the network is not implemented and not
  *supported in this demo application
  */
 
@@ -479,7 +479,11 @@ static void APP_TaskHandler(void)
 
 /*****************************************************************************
 *****************************************************************************/
-int wsndemo_main(void)
+
+/**
+ * Init function of the WSNDemo application
+ */
+void wsndemo_init(void)
 {
 	SYS_Init();
 #if APP_ENDDEVICE
@@ -488,9 +492,15 @@ int wsndemo_main(void)
 #if APP_COORDINATOR
 	sio2host_init();
 #endif
-	cpu_irq_enable();
-	while (1) {
-		SYS_TaskHandler();
-		APP_TaskHandler();
-	}
+	
+}
+
+/**
+ * Task of the WSNDemo application
+ * This task should be called in a while(1)
+ */
+void wsndemo_task(void)
+{
+	SYS_TaskHandler();
+	APP_TaskHandler();
 }

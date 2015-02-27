@@ -3,7 +3,7 @@
  *
  * \brief Atmel part identification macros
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef ATMEL_PARTS_H
@@ -912,21 +915,33 @@
 		SAM_PART_IS_DEFINED(SAMD21J15A) || \
 		SAM_PART_IS_DEFINED(SAMD21J16A) || \
 		SAM_PART_IS_DEFINED(SAMD21J17A) || \
-		SAM_PART_IS_DEFINED(SAMD21J18A) \
+		SAM_PART_IS_DEFINED(SAMD21J18A) || \
+		SAM_PART_IS_DEFINED(SAMD21J15B) || \
+		SAM_PART_IS_DEFINED(SAMD21J16B) \
 	)
 
 #define SAMD21G ( \
 		SAM_PART_IS_DEFINED(SAMD21G15A) || \
 		SAM_PART_IS_DEFINED(SAMD21G16A) || \
 		SAM_PART_IS_DEFINED(SAMD21G17A) || \
-		SAM_PART_IS_DEFINED(SAMD21G18A) \
+		SAM_PART_IS_DEFINED(SAMD21G17AU) || \
+		SAM_PART_IS_DEFINED(SAMD21G18A) || \
+		SAM_PART_IS_DEFINED(SAMD21G18AU) || \
+		SAM_PART_IS_DEFINED(SAMD21G15B) || \
+		SAM_PART_IS_DEFINED(SAMD21G16B) \
 	)
 
 #define SAMD21E ( \
 		SAM_PART_IS_DEFINED(SAMD21E15A) || \
 		SAM_PART_IS_DEFINED(SAMD21E16A) || \
 		SAM_PART_IS_DEFINED(SAMD21E17A) || \
-		SAM_PART_IS_DEFINED(SAMD21E18A) \
+		SAM_PART_IS_DEFINED(SAMD21E18A) || \
+		SAM_PART_IS_DEFINED(SAMD21E15B) || \
+		SAM_PART_IS_DEFINED(SAMD21E15BU) || \
+		SAM_PART_IS_DEFINED(SAMD21E16B) || \
+		SAM_PART_IS_DEFINED(SAMD21E16BU) || \
+		SAM_PART_IS_DEFINED(SAMD21E15L) || \
+		SAM_PART_IS_DEFINED(SAMD21E16L) \
 	)
 /** @} */
 
@@ -984,6 +999,30 @@
 
 #define SAMD11DM ( \
 		SAM_PART_IS_DEFINED(SAMD11D14AM) \
+	)
+/** @} */
+
+/**
+ * \name SAML21 series
+ * @{
+ */
+#define SAML21E ( \
+		SAM_PART_IS_DEFINED(SAML21E15A) || \
+		SAM_PART_IS_DEFINED(SAML21E16A) || \
+		SAM_PART_IS_DEFINED(SAML21E17A) || \
+		SAM_PART_IS_DEFINED(SAML21E18A) \
+	)
+
+#define SAML21G ( \
+		SAM_PART_IS_DEFINED(SAML21G16A) || \
+		SAM_PART_IS_DEFINED(SAML21G17A) || \
+		SAM_PART_IS_DEFINED(SAML21G18A) \
+	)
+
+#define SAML21J ( \
+		SAM_PART_IS_DEFINED(SAML21J16A) || \
+		SAM_PART_IS_DEFINED(SAML21J17A) || \
+		SAM_PART_IS_DEFINED(SAML21J18A) \
 	)
 /** @} */
 
@@ -1205,6 +1244,9 @@
 /** SAMR21 Family */
 #define SAMR21 (SAMR21G || SAMR21E)
 
+/** SAML21 Family */
+#define SAML21 (SAML21J || SAML21G || SAML21E)
+
 /** SAM4E Family */
 #define SAM4E (SAM4E8 || SAM4E16)
 
@@ -1233,7 +1275,7 @@
 #define SAMG (SAMG51 || SAMG53 || SAMG54 || SAMG55)
 
 /** SAM0 product line (cortex-m0+) */
-#define SAM0 (SAMD20 || SAMD21 || SAMR21 || SAMD10 || SAMD11)
+#define SAM0 (SAMD20 || SAMD21 || SAMR21 || SAMD10 || SAMD11 || SAML21)
 
 /** @} */
 

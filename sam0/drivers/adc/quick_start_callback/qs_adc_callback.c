@@ -3,7 +3,7 @@
  *
  * \brief SAM ADC Quick Start
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,12 +40,15 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #include <asf.h>
 
 void configure_adc(void);
 void configure_adc_callbacks(void);
 void adc_complete_callback(
-		const struct adc_module *const module);
+		struct adc_module *const module);
 
 //! [result_buffer]
 #define ADC_SAMPLES 128
@@ -60,7 +63,7 @@ struct adc_module adc_instance;
 volatile bool adc_read_done = false;
 
 void adc_complete_callback(
-		const struct adc_module *const module)
+		struct adc_module *const module)
 {
 	adc_read_done = true;
 }
@@ -77,9 +80,11 @@ void configure_adc(void)
 //! [setup_config_defaults]
 
 //! [setup_modify_conf]
+#if (!SAML21)
 	config_adc.gain_factor     = ADC_GAIN_FACTOR_DIV2;
+#endif
 	config_adc.clock_prescaler = ADC_CLOCK_PRESCALER_DIV8;
-	config_adc.reference       = ADC_REFERENCE_INTVCC1;	
+	config_adc.reference       = ADC_REFERENCE_INTVCC1;
 	config_adc.positive_input  = ADC_POSITIVE_INPUT_PIN6;
 	config_adc.resolution      = ADC_RESOLUTION_12BIT;
 //! [setup_modify_conf]

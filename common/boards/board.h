@@ -6,7 +6,7 @@
  * This file includes the appropriate board header file according to the
  * defined board (parameter BOARD).
  *
- * Copyright (c) 2009-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,6 +42,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef _BOARD_H_
@@ -138,8 +141,7 @@ extern "C" {
 #define ATPL230AMB                 73  //!< ATPL230AMB board.
 #define SAMD11_XPLAINED_PRO        74  //!< SAM D11 Xplained Pro board.
 #define SAMG55_XPLAINED_PRO        75  //!< SAMG55 Xplained Pro board.
-#define SAMW25_XPLAINED_PRO        76  //!< SAMW25 Xplained Pro board.
-#define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
+#define SAML21_XPLAINED_PRO        76  //!< SAM L21 Xplained Pro board.#define SAMW25_XPLAINED_PRO        79  //!< SAMW25 Xplained Pro board.#define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< Simulator for the AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
 #define DUMMY_BOARD               100  //!< Dummy board to support board-independent applications (e.g. bootloader)
@@ -267,6 +269,8 @@ extern "C" {
 #  include "samr21_xplained_pro/samr21_xplained_pro.h"
 #elif BOARD == SAMD11_XPLAINED_PRO
 #  include "samd11_xplained_pro/samd11_xplained_pro.h"
+#elif BOARD == SAML21_XPLAINED_PRO
+#  include "saml21_xplained_pro/saml21_xplained_pro.h"
 #elif BOARD == SAM4N_XPLAINED_PRO
 #  include "sam4n_xplained_pro/sam4n_xplained_pro.h"
 #elif BOARD == SAMW25_XPLAINED_PRO

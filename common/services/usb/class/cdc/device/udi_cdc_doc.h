@@ -3,7 +3,7 @@
  *
  * \brief USB Device Communication Device Class (CDC) interface documentation.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,7 @@
  * - \ref asfdoc_udi_cdc_exqsg
  * - \ref asfdoc_udi_cdc_config_examples
  *
- * For more details for Atmel® Software Framework (ASF) USB Device Stack and
+ * For more details for Atmel庐 Software Framework (ASF) USB Device Stack and
  * USB Device CDC, refer to following application notes:
  * - <a href="http://www.atmel.com/dyn/resources/prod_documents/doc8360.pdf">
  *   AVR4900: ASF - USB Device Stack</a>
@@ -104,6 +104,9 @@ typedef struct {
 } udi_cdc_data_desc_t;
 
 /** CDC communication endpoints size for all speeds. */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #define UDI_CDC_COMM_EP_SIZE        64
 /** CDC data endpoints size for FS speed (8B, 16B, 32B, 64B). */
 #define UDI_CDC_DATA_EPS_FS_SIZE    64

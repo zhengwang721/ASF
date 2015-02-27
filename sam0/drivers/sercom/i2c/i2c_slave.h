@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Slave Driver
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef I2C_SLAVE_H_INCLUDED
@@ -357,10 +360,10 @@ struct i2c_slave_config {
  * that, e.g., transactions by different services will not interfere with each
  * other.
  *
- * \param[in,out] module Pointer to the driver instance to lock.
+ * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked.
- * \retval STATUS_BUSY if the module was already locked.
+ * \retval STATUS_OK If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 static inline enum status_code i2c_slave_lock(
 		struct i2c_slave_module *const module)
@@ -387,10 +390,10 @@ static inline enum status_code i2c_slave_lock(
  * This function clears the instance lock, indicating that it is available for
  * use.
  *
- * \param[in,out] module Pointer to the driver instance to lock.
+ * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked.
- * \retval STATUS_BUSY if the module was already locked.
+ * \retval STATUS_OK If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 static inline void i2c_slave_unlock(struct i2c_slave_module *const module)
 {
@@ -450,6 +453,94 @@ static void _i2c_slave_wait_for_sync(
 		/* Wait for I2C module to sync */
 	}
 }
+#endif
+
+#if (SAMD20)
+/**
+ * \internal Workaround for SAMD20 Revision D, Errata 13574
+ *
+ *
+ * \param[in,out] module  Pointer to software module structure
+ * \param[in] send_ack True send ACK, false send NACK
+ */
+static inline void _i2c_slave_set_ctrlb_ackact(
+		struct i2c_slave_module *const module,
+		bool send_ack)
+{
+	Assert(module);
+	Assert(module->hw->I2CS);
+
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+	uint32_t ctrlb_val = i2c_hw->CTRLB.reg;
+
+	/* Get MCU revision */
+	uint32_t rev = system_get_device_id();
+
+	rev &= DSU_DID_REVISION_Msk;
+	rev = rev >> DSU_DID_REVISION_Pos;
+
+	/* Errata 13574 exist at Revision D (3)*/
+	if (rev != 3) {
+		if (send_ack == true) {
+			i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
+		}
+		else {
+			i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
+		}
+		return;
+	}
+
+	system_interrupt_enter_critical_section();
+	i2c_hw->STATUS.reg = 0;
+	i2c_hw->CTRLB.reg = 0;
+
+	if (send_ack == true) {
+		ctrlb_val &= ~SERCOM_I2CS_CTRLB_ACKACT;
+	}
+	else {
+		ctrlb_val |= SERCOM_I2CS_CTRLB_ACKACT;
+	}
+
+	i2c_hw->CTRLB.reg = ctrlb_val;
+	system_interrupt_leave_critical_section();
+
+	return;
+}
+
+/**
+ * \internal Workaround for SAMD20 Revision D, Errata 13574
+ *
+ *
+ * \param[in,out] module  Pointer to software module structure
+ */
+static inline void _i2c_slave_set_ctrlb_cmd3(
+		struct i2c_slave_module *const module)
+{
+	Assert(module);
+	Assert(module->hw->I2CS);
+
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+
+	/* Get MCU revision */
+	uint32_t rev = system_get_device_id();
+
+	rev &= DSU_DID_REVISION_Msk;
+	rev = rev >> DSU_DID_REVISION_Pos;
+
+	/* Errata 13574 exist at Revision D (3)*/
+	if (rev != 3) {
+		i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_CMD(0x3);
+		return;
+	}
+
+	if (i2c_hw->INTFLAG.bit.PREC) {
+		i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PREC;
+	}
+	i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_AMATCH;
+
+	return;
+}
+
 #endif
 
 /**
@@ -625,7 +716,7 @@ void i2c_slave_clear_status(
  *
  * Read I<SUP>2</SUP>C interrupt status for DMA transfer.
  *
- * \param[in,out] module Pointer to the driver instance to lock.
+ * \param[in,out] module Pointer to the driver instance to lock
  *
  */
 static inline uint8_t i2c_slave_dma_read_interrupt_status(struct i2c_slave_module *const module)
@@ -638,8 +729,8 @@ static inline uint8_t i2c_slave_dma_read_interrupt_status(struct i2c_slave_modul
  *
  * Write I<SUP>2</SUP>C interrupt status for DMA transfer.
  *
- * \param[in,out] module Pointer to the driver instance to lock.
- * \param[in] flag Interrupt flag status.
+ * \param[in,out] module Pointer to the driver instance to lock
+ * \param[in] flag Interrupt flag status
  *
  */
 static inline void i2c_slave_dma_write_interrupt_status(struct i2c_slave_module *const module,

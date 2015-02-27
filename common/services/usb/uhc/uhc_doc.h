@@ -84,6 +84,9 @@ typedef struct{
 	uhd_speed_t speed;
 
 	/** USB current configuration descriptor */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 	usb_conf_desc_t *conf_desc;
 
 #ifdef USB_HOST_LPM_SUPPORT
@@ -359,7 +362,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * Common prerequisites for all USB hosts.
  *
  * This module is based on USB host stack full interrupt driven and supporting
- * \ref sleepmgr_group "sleepmgr". For AVR® and Atmel® | SMART SAM3/4 devices the
+ * \ref sleepmgr_group "sleepmgr". For AVR庐 and Atmel庐 | SMART SAM3/4 devices the
  * \ref clk_group "clock services" is supported. For SAMD21 devices the
  * \ref asfdoc_sam0_system_clock_group "clock driver" is supported.
  *

@@ -3,7 +3,7 @@
  *
  * \brief ASF USB Programmers Manual Preface
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,7 +47,7 @@
 /**
  * \page appdoc_preface Preface
  *
- * The Atmel® Software Framework (ASF) is a collection of free embedded software
+ * The Atmel庐 Software Framework (ASF) is a collection of free embedded software
  * for Atmel microcontroller devices. It simplifies the usage of Atmel products,
  * providing an abstraction to the hardware and high-value middleware.
  *
@@ -66,4 +66,7 @@
  * documentation at following link:
  * - <a href="http://asf.atmel.com/docs/latest/asf_usb.html">ASF-USB</a>
  * - <a href="www.atmel.com/asf">ASF(www.atmel.com/asf)</a>.
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

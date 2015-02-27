@@ -3,7 +3,7 @@
  *
  * \brief SAM I2S - Inter-IC Sound Controller
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef I2S_H_INCLUDED
@@ -789,8 +792,8 @@ struct i2s_module {
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true if the module has completed synchronization
- * \retval false if the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
+ * \retval true If the module synchronization is ongoing
  */
 static inline bool i2s_is_syncing(
 		const struct i2s_module *const module_inst)
