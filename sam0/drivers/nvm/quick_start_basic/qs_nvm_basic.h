@@ -82,7 +82,7 @@
  *    \note If automatic page write mode is disabled, the data will not write to NVM
  *    		until the nvm write command was been invoked. For safe use NVM module,
  *    		disable automatic page write mode and use write command to commit data is
- *    		recommanded.
+ *    		recommended.
  *
  * -# Configure NVM controller with the created configuration struct settings.
  *    \snippet qs_nvm_basic.c setup_4
