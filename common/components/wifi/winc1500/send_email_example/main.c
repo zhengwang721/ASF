@@ -107,6 +107,7 @@
 
 #include "asf.h"
 #include "main.h"
+#include <string.h>
 #include "bsp/include/nm_bsp.h"
 #include "driver/include/m2m_wifi.h"
 #include "socket/include/socket.h"

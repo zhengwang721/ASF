@@ -112,6 +112,7 @@
 
 #include "asf.h"
 #include "stdio_serial.h"
+#include <string.h>
 #include "driver/include/m2m_wifi.h"
 #include "socket/include/socket.h"
 

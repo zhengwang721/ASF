@@ -92,6 +92,7 @@
 
 #include "asf.h"
 #include "main.h"
+#include <string.h>
 #include "bsp/include/nm_bsp.h"
 #include "driver/include/m2m_wifi.h"
 #include "socket/include/socket.h"
@@ -109,6 +110,9 @@ static uint8_t gau8SocketBuffer[MAIN_WIFI_M2M_BUFFER_SIZE];
 
 /** Wi-Fi status variable. */
 static bool gbConnectedWifi = false;
+
+/** Host name placeholder. */
+static char dns_server_address[HOSTNAME_MAX_SIZE];
 
 /**
  * \brief Configure UART console.
@@ -267,9 +271,9 @@ static void wifi_cb(uint8_t u8MsgType, void *pvMsg)
 		printf("wifi_cb: M2M_WIFI_REQ_DHCP_CONF: IP is %u.%u.%u.%u\r\n",
 				pu8IPAddress[0], pu8IPAddress[1], pu8IPAddress[2], pu8IPAddress[3]);
 		gbConnectedWifi = true;
-
+		memcpy(dns_server_address, (uint8_t *)MAIN_WORLDWIDE_NTP_POOL_HOSTNAME, strlen(MAIN_WORLDWIDE_NTP_POOL_HOSTNAME));
 		/* Obtain the IP Address by network name */
-		gethostbyname((uint8_t *)MAIN_WORLDWIDE_NTP_POOL_HOSTNAME);
+		gethostbyname((uint8_t *)dns_server_address);
 		break;
 	}
 

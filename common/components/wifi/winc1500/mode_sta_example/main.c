@@ -91,6 +91,7 @@
 
 #include "asf.h"
 #include "main.h"
+#include <string.h>
 #include "driver/include/m2m_wifi.h"
 #include "driver/source/nmasic.h"
 

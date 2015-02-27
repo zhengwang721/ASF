@@ -89,6 +89,7 @@
  */
 
 #include "asf.h"
+#include <string.h>
 #include "common/include/nm_common.h"
 #include "driver/include/m2m_wifi.h"
 #include "main.h"

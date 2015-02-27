@@ -127,6 +127,9 @@ static bool gbContinueReceive = false;
 /** TCP Connection status variable. */
 static bool gbTcpConnection = false;
 
+/** Server host name. */
+static char server_host_name[] = MAIN_WEATHER_SERVER_NAME; 
+
 /**
  * \brief Configure UART console.
  */
@@ -340,7 +343,7 @@ static void wifi_cb(uint8_t u8MsgType, void *pvMsg)
 				pu8IPAddress[0], pu8IPAddress[1], pu8IPAddress[2], pu8IPAddress[3]);
 		gbConnectedWifi = true;
 		/* Obtain the IP Address by network name */
-		gethostbyname((uint8_t *)MAIN_WEATHER_SERVER_NAME);
+		gethostbyname((uint8_t *)server_host_name);
 		break;
 	}
 
