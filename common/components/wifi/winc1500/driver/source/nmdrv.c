@@ -218,7 +218,7 @@ sint8 nm_drv_init(void * arg)
 			|| strtmp.u8FirmwareMinor != M2M_DRIVER_VERSION_MINOR_NO)
 	{
 		ret = M2M_ERR_FW_VER_MISMATCH;
-		M2M_ERR("Mismatch Firmware Version\n");
+		M2M_ERR("Firmware version mismatch!\n");
 	}
 	return ret;
 ERR2:
