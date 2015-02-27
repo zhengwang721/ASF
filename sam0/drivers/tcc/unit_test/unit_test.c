@@ -71,11 +71,11 @@
  * \copydetails appdoc_preface
  *
  * The following kit is required for carrying out the test:
- *  - SAM D21/R21/L21 Xplained Pro board
+ *  - SAM D21/R21/L21/DA1 Xplained Pro board
  *
  * \section appdoc_sam0_tcc_unit_test_setup Setup
  * The following connections has to be made using wires:
- * - SAM D21 Xplained Pro:
+ * - SAM D21/DA1 Xplained Pro:
  *  - \b EXTINT 4 (PB04, EXT1 pin 9 ) <-----> TCC0 WO0 (PA08, EXT2 pin 11)
  * - SAM R21 Xplained Pro:
  *  - \b EXTINT 7 (PA22, EXT1 pin 9 ) <-----> TCC0 WO0 (PA08, EXT3 pin 10)
