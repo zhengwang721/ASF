@@ -208,7 +208,8 @@ static enum status_code _rtc_count_set_config(
 
 	Rtc *const rtc_module = module->hw;
 
-	rtc_module->MODE0.CTRLA.reg = RTC_MODE0_CTRLA_MODE(0) | config->prescaler;
+	rtc_module->MODE0.CTRLA.reg = RTC_MODE0_CTRLA_MODE(0) | config->prescaler
+								  | (config->enable_read_sync << RTC_MODE0_CTRLA_SYNCDIS_Pos);
 
 	/* Set mode and clear on match if applicable. */
 	switch (config->mode) {
