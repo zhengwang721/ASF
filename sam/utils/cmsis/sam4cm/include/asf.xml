@@ -8,6 +8,8 @@
 		<build type="header-file" value="sam4cmp8c_1.h"/>
 		<build type="header-file" value="sam4cmp16c_0.h"/>
 		<build type="header-file" value="sam4cmp16c_1.h"/>
+		<build type="header-file" value="sam4cms4c_0.h"/>
+		<build type="header-file" value="sam4cms4c_1.h"/>
 		<build type="header-file" value="sam4cms8c_0.h"/>
 		<build type="header-file" value="sam4cms8c_1.h"/>
 		<build type="header-file" value="sam4cms16c_0.h"/>
