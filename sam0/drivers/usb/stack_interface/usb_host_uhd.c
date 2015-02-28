@@ -109,7 +109,7 @@ static void _uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
 #  error The High speed mode is not supported on this part, please remove USB_HOST_HS_SUPPORT in conf_usb_host.h
 #endif
 
-#if (!(SAMD21) && !(SAMR21) && !(SAML21))
+#if (!(SAMD21) && !(SAMR21) && !(SAML21)) && !(SAMDA1)
 # error The current USB Host Driver supports only SAMD21/R21/L21
 #endif
 

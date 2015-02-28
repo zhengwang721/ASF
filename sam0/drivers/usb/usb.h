@@ -69,6 +69,7 @@ extern "C" {
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DA1
  *
  * The USB module covers following mode:
  * \if USB_DEVICE_MODE
