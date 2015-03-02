@@ -1025,11 +1025,9 @@ void system_clock_init(void)
 	_CONF_CLOCK_GCLK_CONFIG(0, ~);
 #endif
 
-	/* Set performance level according to CPU frequency */
+	/* If CPU frequency is less than 12.5MHz, scale down performance level to PL0 */
 	uint32_t cpu_freq = system_cpu_clock_get_hz();
-	if (cpu_freq < SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ) {
+	if (cpu_freq < 12500000) {
 		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_0);
-	} else if (cpu_freq < SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ) {
-		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_1);
 	}
 }
