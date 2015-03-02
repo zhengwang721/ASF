@@ -160,7 +160,7 @@
  * - \b Packet \b Error \b Rate \b Measurement \b(PER) is to evaluate
  * the packet transmission and reception capabilities of the wireless nodes.
  * The Transmitter node shall be connected to the Performance Analyzer.
- * If 慖nitiate Peer searchcommand is received from the analyzer after the
+ * If 'Initiate Peer search' command is received from the analyzer after the
  * board
  * is connected, then the node (Transmitter) tries to find its peer node (i.e.
  * Reflector).
