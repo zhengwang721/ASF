@@ -20,7 +20,14 @@
 			<build type="header-file"   value="uip-icmp6.h"/>
 			<build type="header-file"   value="uip-nd6.h"/>
 			<build type="header-file"   value="uip-mcast6.h"/>
+			<build type="header-file"   value="multicast/roll-tm.h"/>
+			<build type="header-file"   value="multicast/smrf.h"/>
+			<build type="header-file"   value="multicast/uip-mcast6-engines.h"/>
+			<build type="header-file"   value="multicast/uip-mcast6-route.h"/>
+			<build type="header-file"   value="multicast/uip-mcast6-stats.h"/>
 			<build type="include-path" value="."/>	
+			<build type="include-path" value="multicast/"/>	
+			
             <device-support value="sam0"/>
             <build type="doxygen-entry-point" value="group_contiki_core"/>	
             <info type="keyword" value="technology">

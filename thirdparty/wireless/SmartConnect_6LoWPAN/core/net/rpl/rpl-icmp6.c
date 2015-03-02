@@ -50,7 +50,7 @@
 #include "net/ipv6/uip-icmp6.h"
 #include "net/rpl/rpl-private.h"
 #include "net/packetbuf.h"
-#include "net/ipv6/multicast/uip-mcast6.h"
+#include "uip-mcast6.h"
 
 #include <limits.h>
 #include <string.h>

@@ -18,6 +18,9 @@
 			<build type="header-file"      value="uaodv-def.h"/>
 			<build type="header-file"      value="uip_arp.h"/>
 			<build type="header-file"      value="uip-fw.h"/>
+			<build type="header-file"  value="uip-fw-drv.h"/>
+			<build type="header-file"      value="uip-neighbor.h"/>
+			<build type="header-file"      value="uip-over-mesh.h"/>
 			<build type="include-path" value="."/>	
             <device-support value="sam0"/>
             <require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.mac.generic"/>

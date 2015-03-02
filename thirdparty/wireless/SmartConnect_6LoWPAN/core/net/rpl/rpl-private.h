@@ -44,7 +44,7 @@
 #include "sys/clock.h"
 #include "sys/ctimer.h"
 #include "net/ipv6/uip-ds6.h"
-#include "net/ipv6/multicast/uip-mcast6.h"
+#include "uip-mcast6.h"
 
 /*---------------------------------------------------------------------------*/
 /** \brief Is IPv6 address addr the link-local, all-RPL-nodes

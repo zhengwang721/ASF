@@ -8,10 +8,12 @@
 			<build type="c-source"      value="httpd-cgi.c"/>
 			<build type="c-source"      value="httpd-fs.c"/>
 			<build type="c-source"      value="ip64-webserver.c"/>
+			<build type="c-source"      value="httpd-fsdata.c"/>
 			<build type="c-source"      value="ip64-webserver-http-strings.c"/>
 			<build type="header-file"      value="httpd.h"/>
 			<build type="header-file"      value="httpd-cgi.h"/>
 			<build type="header-file"      value="httpd-fs.h"/>
+			<build type="header-file"      value="httpd-fsdata.h"/>
 			<build type="header-file"      value="ip64-webserver.h"/>
             <build type="header-file"      value="ip64-webserver-http-strings.h"/>
             <build type="include-path" value="."/>	

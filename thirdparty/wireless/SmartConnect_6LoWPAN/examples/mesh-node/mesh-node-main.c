@@ -63,8 +63,8 @@
 #else
 #include "node-id.h"
 #endif
-#include "cycle_counter.h"
-#include "asf.h"
+#include <asf.h>
+#include "delay.h"
 #include "usart.h"
 #include "sio2host.h"
 #include "conf_sio2host.h"

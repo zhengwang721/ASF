@@ -62,7 +62,6 @@
 #else
 #include "node-id.h"
 #endif
-#include "cycle_counter.h"
 #include "rf233-const.h"
 #include "asf.h"
 #include "usart.h"
@@ -192,7 +191,7 @@ main(int argc, char *argv[])
 
   netstack_init();
   rf_set_channel(RF_CHANNEL);
-  printf("rf233 channel: %d\n", rf233_get_channel());
+  printf("rf channel: %d\n", rf_get_channel());
   leds_off(LEDS_ALL);
   /*  temp_sensor_init();
       voltage_sensor_init();*/

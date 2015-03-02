@@ -41,7 +41,6 @@
 #include "port.h"
 #include "spi.h"
 #include "delay.h"
-#include "cycle_counter.h"
 #include "ip64.h"
 #include "ip64-eth.h"
 

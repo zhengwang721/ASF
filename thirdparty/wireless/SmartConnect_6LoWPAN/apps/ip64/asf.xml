@@ -27,7 +27,8 @@
 			<build type="header-file"   value="ip64-slip-interface.h"/>
 			<build type="header-file"   value="ip64-special-ports.h"/>
 			<build type="header-file"   value="ip64-driver.h"/>
-			<build type="header-file"   value="ip64-tap-driver.h"/>			
+			<build type="header-file"   value="ip64-tap-driver.h"/>	
+            <build type="header-file"      value="ip64-dhcpc.h"/>			
 			<build type="include-path" value="."/>	
             <require idref="thirdparty.wireless.smartconnect_6lowpan.core"/>			
 			<device-support value="sam0"/>		

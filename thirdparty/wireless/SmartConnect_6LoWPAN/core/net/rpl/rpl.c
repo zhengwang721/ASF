@@ -40,12 +40,12 @@
  * \author Joakim Eriksson <joakime@sics.se>, Nicolas Tsiftes <nvt@sics.se>
  */
 
-#include "net/ip/uip.h"
-#include "net/ip/tcpip.h"
-#include "net/ipv6/uip-ds6.h"
-#include "net/ipv6/uip-icmp6.h"
-#include "net/rpl/rpl-private.h"
-#include "net/ipv6/multicast/uip-mcast6.h"
+#include "uip.h"
+#include "tcpip.h"
+#include "uip-ds6.h"
+#include "uip-icmp6.h"
+#include "rpl-private.h"
+#include "uip-mcast6.h"
 
 #define DEBUG DEBUG_NONE
 #include "net/ip/uip-debug.h"

@@ -40,7 +40,8 @@
 			<build type="c-source"      value="trickle.c"/>
 			<build type="c-source"      value="unicast.c"/> -->
 			<build type="header-file"      value="rimestats.h"/>
-			<!-- <build type="header-file"      value="abc.h"/>
+			<build type="header-file"      value="rime.h"/>
+			<build type="header-file"      value="abc.h"/>
 			<build type="header-file"      value="announcement.h"/>
 			<build type="header-file"      value="broadcast.h"/>
 			<build type="header-file"      value="broadcast-announcement.h"/>
@@ -72,8 +73,7 @@
 			<build type="header-file"      value="stunicast.h"/>
 			<build type="header-file"      value="timesynch.h"/>
 			<build type="header-file"      value="trickle.h"/>
-			<build type="header-file"      value="unicast.h"/> -->
-			
+			<build type="header-file"      value="unicast.h"/> 
 			<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.mac.generic"/>
           	<build type="include-path" value="."/>	
             <device-support value="sam0"/>		

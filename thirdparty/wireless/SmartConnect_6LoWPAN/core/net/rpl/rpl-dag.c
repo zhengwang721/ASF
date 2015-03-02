@@ -47,9 +47,9 @@
 #include "net/ip/uip.h"
 #include "net/ipv6/uip-nd6.h"
 #include "net/nbr-table.h"
-#include "net/ipv6/multicast/uip-mcast6.h"
-#include "lib/list.h"
-#include "lib/memb.h"
+#include "uip-mcast6.h"
+#include "list.h"
+#include "memb.h"
 #include "sys/ctimer.h"
 
 #include <limits.h>

@@ -42,7 +42,7 @@
 extern uint16_t uip_slen;
 
 #include "net/ip/uip-udp-packet.h"
-#include "net/ipv6/multicast/uip-mcast6.h"
+#include "uip-mcast6.h"
 
 #include <string.h>
 

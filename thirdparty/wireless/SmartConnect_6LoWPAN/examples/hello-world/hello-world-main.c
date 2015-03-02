@@ -35,7 +35,12 @@
 
 #include <stdio.h>
 #include <string.h>
-
+#include "conf_board.h"
+#include "delay.h"
+#include <asf.h>
+#include "usart.h"
+#include "sio2host.h"
+#include "conf_sio2host.h"
 #include "contiki.h"
 #include "contiki-net.h"
 #include "sys/autostart.h"
@@ -63,11 +68,8 @@
 #else
 #include "node-id.h"
 #endif
-#include "cycle_counter.h"
-#include "asf.h"
-#include "usart.h"
-#include "sio2host.h"
-#include "conf_sio2host.h"
+//#include "cycle_counter.h"
+
 #include "stdio_serial.h"
 #include "rtc_count.h" //rtc
 #include "rtc_count_interrupt.h"
