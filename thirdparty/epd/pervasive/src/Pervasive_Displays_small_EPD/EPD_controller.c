@@ -48,7 +48,7 @@ void EPD_display_init(void) {
  * \param new_image_ptr The pointer of memory that stores new image
  */
 void EPD_display_from_pointer(uint8_t EPD_type_index,uint8_t *previous_image_ptr,
-	uint8_t *new_image_ptr) {
+		uint8_t *new_image_ptr) {
 	/* Initialize EPD hardware */
 	EPD_init();
 	

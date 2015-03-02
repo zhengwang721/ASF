@@ -3,32 +3,37 @@
 *
 * \brief The definition of COG driving data and process
 *
-* Copyright (c) 2012-2013 Pervasive Displays Inc. All rights reserved.
+* Copyright (c) 2012-2014 Pervasive Displays Inc. All rights reserved.
 *
-*  Authors: Pervasive Displays Inc.
+* \page License
 *
-*  Redistribution and use in source and binary forms, with or without
-*  modification, are permitted provided that the following conditions
-*  are met:
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
 *
-*  1. Redistributions of source code must retain the above copyright
-*     notice, this list of conditions and the following disclaimer.
-*  2. Redistributions in binary form must reproduce the above copyright
-*     notice, this list of conditions and the following disclaimer in
-*     the documentation and/or other materials provided with the
-*     distribution.
+* 1. Redistributions of source code must retain the above copyright notice,
+*    this list of conditions and the following disclaimer.
 *
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-*  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-*  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-*  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-*  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-*  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-*  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-*  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-*  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-*  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-*  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+* 2. Redistributions in binary form must reproduce the above copyright notice,
+*    this list of conditions and the following disclaimer in the documentation
+*    and/or other materials provided with the distribution.
+*
+* 3. The name of Atmel may not be used to endorse or promote products derived
+*    from this software without specific prior written permission.
+*
+* 4. This software may only be redistributed and used in connection with an
+*    Atmel microcontroller product.
+*
+* THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+* EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+* POSSIBILITY OF SUCH DAMAGE.
 */
 
 #ifndef DISPLAY_COG_PROCESS__H_INCLUDED
@@ -49,7 +54,7 @@
 #define NOTHING1 (uint8_t)(0x04) /**< getting bit3 or bit2 as nothing input(01) */
 #define NOTHING2 (uint8_t)(0x10) /**< getting bit5 or bit4 as nothing input(01) */
 #define NOTHING3 (uint8_t)(0x40) /**< getting bit7 or bit6 as nothing input(01) */
-#define NOTHING  (uint8_t)(0x55) /**< sending Nothing frame, 01=Nothing, 0101=0x5 */
+#define NOTHING  (uint8_t)(0x00) /**< sending Nothing frame, 01=Nothing, 0101=0x5 */
 
 
 #define ALL_BLACK	 	 (uint8_t)(0xFF)
@@ -66,7 +71,7 @@
 /**
  * \brief The COG Driver uses a buffer to update the EPD line by line.
    \note Use the 2.7" maximum data(66)+scan(44)+dummy(1) bytes as line buffer size=111.*/
-#define LINE_BUFFER_DATA_SIZE 111  // 111 
+#define LINE_BUFFER_DATA_SIZE 111
 
 /**
  * \brief Support 1.44", 2" and 2.7" three type EPD currently */
@@ -81,7 +86,7 @@ enum Stage {
 	Stage4  /**< New image */
 };
 
-#if (defined COG_V110)
+#if (defined COG_V110_G1)
 /** 
  * \brief Line data structure of 1.44 inch EPD
  * \note 
@@ -162,7 +167,7 @@ struct COG_270_line_data_t {
 	uint8_t odd [33]; /**< 2.7" odd byte array */
 } ;
 
-#elif (defined COG_V230)
+#elif (defined COG_V230_G2)
 /** 
  * \brief Line data structure of 1.44 inch V230 EPD with G2 COG
  * \note 
@@ -202,41 +207,33 @@ struct COG_270_line_data_t {
 	uint8_t odd [33]; /**< 2.7" odd byte array */
 } ;
 
-enum Temperature_Range
+struct EPD_WaveformTable_Struct
 {
-	TR0,
-	TR1,
-	TR2,
-	TR3,
-	TR4,
-	TR5,
-	TR6
-};
-enum Frame_mode
-{
-	FRAME_A,
-	FRAME_B,
-	FRAME_C,
-	FRAME_D,
-	FRAME_E
-};
-struct Stage_Parameters_t
-{
-	uint16_t     Stage1_T1;
-	uint16_t     Stage1_T2;
-	uint16_t     Stage1_Cycle;
+	uint8_t stage1_frame1;
+	uint8_t stage1_block1;
+	uint8_t stage1_step1;
 	
-	uint16_t     Stage2_T3;
-	uint16_t     Stage2_T4;
-	uint16_t     Stage2_T5;
-	uint16_t     Stage2_Cycle;
-	uint16_t     Stage2_T6;
-	uint16_t     Stage2_T7;
+	uint16_t stage2_t1;
+	uint16_t stage2_t2;
+	uint8_t stage2_cycle;
 	
-	uint16_t     Stage3_T8;
-	uint16_t     Stage3_T9;
-	uint16_t     Stage3_Cycle;
-} ;
+	uint8_t stage3_frame3;
+	uint8_t stage3_block3;
+	uint8_t stage3_step3;
+};
+struct EPD_V230_G2_Struct
+{
+	 int16_t frame_y0;
+	 int16_t frame_y1;
+	 int16_t block_y0;
+	 int16_t block_y1;
+	 int16_t block_size;
+	 int16_t step_size;
+	 int16_t frame_cycle;
+	 int16_t step_y0;
+	 int16_t step_y1;
+	 int16_t number_of_steps;
+};
 #else
 #error "ERROR: The EPD's COG type is not defined."
 #endif
@@ -272,9 +269,17 @@ uint8_t EPD_initialize_driver (uint8_t EPD_type_index);
 void EPD_display_from_array_prt (uint8_t EPD_type_index, uint8_t *previous_image_ptr,
 uint8_t *new_image_ptr);
 void EPD_display_from_flash_prt (uint8_t EPD_type_index, long previous_image_flash_address,
-long new_image_flash_address,EPD_read_flash_handler On_EPD_read_flash);
+	long new_image_flash_address,EPD_read_flash_handler On_EPD_read_flash);
 uint8_t EPD_power_off (uint8_t EPD_type_index);
 void COG_driver_EPDtype_select(uint8_t EPD_type_index);
 
-#endif 	//DISPLAY_COG_PROCESS__H_INCLUDED
+void stage_init (uint8_t EPD_type_index,struct EPD_V230_G2_Struct *S_epd_v230, 
+	uint8_t block_size,uint8_t step_size, uint8_t frame_cycle);
+	
+void nothing_line(uint8_t EPD_type_index);
 
+void read_line_data_handle(uint8_t EPD_type_index,uint8_t *image_prt,uint8_t stage_no); 
+
+void EPD_timer_handler(void);	
+
+#endif 	//DISPLAY_COG_PROCESS__H_INCLUDED

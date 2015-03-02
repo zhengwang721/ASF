@@ -1,30 +1,82 @@
 /**
- * \file
- *
- * \brief Empty user application template
- *
- */
+* \file
+*
+* \brief Example for demonstrating Pervasive Displays Inc. 1.44", 2" or 2.7" EPD
+*
+* Copyright (c) 2012-2014 Pervasive Displays Inc. All rights reserved.
+*
+* \page License
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright notice,
+*    this list of conditions and the following disclaimer.
+*
+* 2. Redistributions in binary form must reproduce the above copyright notice,
+*    this list of conditions and the following disclaimer in the documentation
+*    and/or other materials provided with the distribution.
+*
+* 3. The name of Atmel may not be used to endorse or promote products derived
+*    from this software without specific prior written permission.
+*
+* 4. This software may only be redistributed and used in connection with an
+*    Atmel microcontroller product.
+*
+* THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+* EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+* POSSIBILITY OF SUCH DAMAGE.
+*
+**/
 
 /**
- * \mainpage User Application template doxygen documentation
- *
- * \par Empty user application template
- *
- * Bare minimum empty user application template
- *
- * \par Content
+* \brief Demonstration for showing the images alternatively on EPD of
+* EPD Xplained Pro extension board
+*
+* \par Content
 * -# Include the ASF header files (through asf.h)
 * -# Include Pervasive_Displays_small_EPD.h: EPD definitions
-* -# Include if defined EPD_KIT_TOOL_FUNCTIONS, include EPD_Kit_Tool_Process.h
-*            for working with EPD Kit Tool, or include image_data.h to load image
-*            data array
+* -# Include image_data.h: image data array
 */
 								
 #include "EPD_demo.h"
+		
+		
+//test
+ #define DEBUG_TEST_PIN				IOPORT_CREATE_PIN (PORTG,5)	/**EXT3 4 */
+ #define DEBUG_TEST_PIN_MUX			IOPORT_INIT_HIGH \
+ | IOPORT_DIR_OUTPUT
+// test
+
+// test
+void debug_tgl_pin(void);
+// test
+
+
+// test
+void debug_tgl_pin(){
+	
+	//set_gpio_low(DEBUG_TEST_PIN);
+	////delay_ms(10);
+	//set_gpio_high(DEBUG_TEST_PIN);
+	
+	set_gpio_invert(DEBUG_TEST_PIN);
+	
+}
+// test		
+		
 				
 /**
-* \brief The main function will start showing two images alternatively on
-* corresponding EPD depends on specified EPD size or work with EPD Kit Tool
+* \brief The main function will toggle between two images on
+* corresponding EPD depends on specified EPD size
 *
 * \note
 * EPD size: EPD_144 = 1.44 inch, EPD_200 = 2 inch, EPD_270 = 2.7 inch
@@ -47,12 +99,19 @@ int main(void){
 	}
 #else /** if showing two images alternatively ***************************************/
 
-//tc_stop(EPD_TC_TIMER_ID);
-
+	
+	// test
+	config_gpio_dir_o(DEBUG_TEST_PIN);
+	gpio_configure_pin(DEBUG_TEST_PIN, DEBUG_TEST_PIN_MUX);
+	set_gpio_high(DEBUG_TEST_PIN);
+	//test
+	
+	delay_ms(1000);
+		
 for(;;) {
-		//* User selects which EPD size to run demonstration by changing the
-		//* USE_EPD_Type in image_data.h
-		//* The Image data arrays for each EPD size are defined at image_data.c */
+			/* User selects which EPD size to run demonstration by changing the
+		 * USE_EPD_Type in image_data.h
+		 * The Image data arrays for each EPD size are defined at image_data.c */
 		#if(USE_EPD_Type==USE_EPD144)
 				EPD_display_from_pointer(EPD_144,(uint8_t *)&image_array_144_2,(uint8_t *)&image_array_144_1);
 		#elif(USE_EPD_Type==USE_EPD200)
@@ -83,76 +142,50 @@ for(;;) {
 	
 }
 
-
 /**
- * \page src/ASF/sam/components/display/Pervasive_Displays_small_EPD Quick Start Guide
+ * \page - Quick Start Guide
  *
- * This is the quick start guide for the EPD Extension board made by Pervasive Displays Inc. 
- * with its small size EPDs on how to setup the kit to Atmel Xplained Pro. 
- * The code example in main.c shows two ways for EPD updates, images change 
- * alternately from image array and work with PDi's EPD Kit Tool by graphic 
- * user interface. It also instructs how to use the display functions.
- * Please open the index.html in Doxygen html folder to better read this guide.
+ * This is the quick start guide for the EPD Xplained Pro extension board with
+ * Pervasive Displays Inc.'s small size EPDs on how to setup the kit to Atmel Xplained Pro. 
+ * The code example in main.c shows two images alternatively change and instructs 
+ * how to use the display function.
  *
  * \note
- * - PDi = Pervasive Displays Inc. http://www.pervasivedisplays.com
+ * - Released Date: 10 Mar, 2014.  Version: 1.11
+ * - PDi = Pervasive Displays Inc.(PDi) http://www.pervasivedisplays.com
  * - EPD = Electronic Paper Display (Electrophoretic Display)
- * - EPD Extension Board/Kit = The driving board to EPD features 20 pin out bridges to 
- *   your product or development kit
- * - EPD Kit Tool = The application(user graphic interface) to work with EPD 
- *   Extension kit. You can download the installer and source code at here: 
- *   http://www.pervasivedisplays.com/kits/ext_kit
  * - COG = Chip on Glass, the driver IC on EPD module
+ * - COG G1 or G2: G is for generation. PDi offers V110 with G1 COG and V230 with G2 COG
+ *   EPD to the market.(~2014)
  * - For driving PDi's small size EPDs, please read the "COG Driver Interface
  *   Timing" document(hereinafter COG Document) first. It explains the interface
  *   to the COG driver of EPD for a MCU based solution.
- * - Document number: 4P008-00
+ * - COG G1 Document number: 4P008-00
  *   Download URL: http://www.pervasivedisplays.com/LiteratureRetrieve.aspx?ID=138408
+ * - COG G2 Document number: 4P015-00
+ *   Download URL: http://www.pervasivedisplays.com/LiteratureRetrieve.aspx?ID=198794
  * - This project code supports EPD size: 1.44 inch, 2 inch and 2.7 inch
- * - Supports Atmel Xplained PRO: SAM4L Xplained PRO
- * - For optical performance and the best contrast ratio quality, PDi recommends
- *   following the standard stage time and running four stages to complete an EPD
- *   update.
- * - Every EPD update, have to do EPD initialization first. After updating EPD,
- *   have to do the power off stage.
+ * - Supports Atmel Xplained PRO: SAM 4L Xplained PRO
  *
- * \section file_explanation File explanation
+ * \section File_Explanation
  * - <b>image_data:</b>\n
- *   It defines the image arrays of each EPD size. User can use the array without 
+ *   It defines the image arrays of each EPD size. User can use the array without
  *   application input.
- * - <b>EPD_Kit_Tool</b> folder:\n
- *   If you will work with PDi's EPD Extension Kit, the commands and definitions 
- *   are located in this folder.
- *     -# <b>Mem_Flash:</b>\n
- *        The functions of working with flash memory including saving image, easing 
- *        images and get/set parameters.
- *     -# <b>Uart_Controller:</b>\n
- *        The functions to control and return system packets with EPD Kit Tool.
- *     -# <b>Char:</b>\n
- *        The definition of ASCII characters.
- *     -# <b>EPD_Kit_Tool_Process:</b>\n
- *        All of the functions that are provided on EPD Kit Tool.
- *     -# <b>Drivers folder:</b>\n
- *        The driver of UART and LED.
  * - <b>Config</b> folder:\n
- *     -# <b>conf_EPD:</b> The EPD configurations.\n 
- *        - EPD_KIT_TOOL_FUNCTIONS: define it if you will work with EPD Kit Tool
- *          or comment out this define if just load two images
- *        - COG_VXXX: define which COG driving waveform you will use
+ *     -# <b>conf_EPD:</b> The EPD configurations.\n
+ *        - COG_Vxxx_Gx: define which COG driving waveform you will use
  *        - COG_SPI_baudrate: SPI speed
- *        - EPD_KIT_TOOL_VERSION: the firmware version of this project code
- *        - EPD_KIT_TOOL_KIT_ID: define this kit ID, 0x0501: Atmel=05, Atmel SAM4L Xplained PRO=01
  * - <b>Pervasive_Displays_small_EPD</b> folder:\n
- *   All of the COG driving waveforms are located in this folder. Logically developer 
- *   doesn't need to change the codes in this folder in order to keep correct driving 
+ *   All of the COG driving waveforms are located in this folder. Logically developer
+ *   doesn't need to change the codes in this folder in order to keep correct driving
  *   the EPDs.\n\n
  *   <b><em>Software architecture:</em></b>\n
- *   [Application (ex. EPD Kit Tool)] <-- [COG Interface (<em>EPD_controller</em>)] <--
- *   [COG Process (<em>EPD_COG_process</em>)] <-- [Hardware Driver (<em>EPD_hardware_driver 
+ *   [Application] <-- [COG Interface (<em>EPD_controller</em>)] <-- [COG Process
+ *   (<em>EPD_COG_process</em>)] <-- [Hardware Driver (<em>EPD_hardware_driver
  *   & EPD_hardware_gpio</em>)]\n\n
  *    -# <b>EPD_hardware_driver:</b>\n
- *       Most of the COG hardware initialization and configuration. User can implement 
- *       the driver layer of EPD if some variables need to be adjusted. The provided 
+ *       Most of the COG hardware initialization and configuration. User can implement
+ *       the driver layer of EPD if some variables need to be adjusted. The provided
  *       settings and functions are Timer, SPI, PWM, temperature and EPD hardware initialization.
  *    -# <b>EPD_hardware_gpio:</b>\n
  *       GPIO pins configuration.
@@ -163,79 +196,71 @@ for(;;) {
  *    -# <b>EPD_COG:</b>\n
  *       The link source of different COG and EPD switching to be used.
  *    -# <b>COG</b> folder:\n
- *       Each COG driving file presents the different waveform driving processes of COG 
+ *       Each COG driving file presents the different waveform driving processes of COG
  *       and updating stages.
  *       The parameters of driving different EPD is defined at COG_parameters_t structure
  *       which is easy for developer adjusting initial parameters, resolution, frame time
  *       of MCU and the size of data line.
- *       - <b>EPD_COG_process_Vxxx:</b>\n
+ *       - <b>EPD_COG_process_Vxxx_Gx:</b>\n
  *         The waveform driving processes and updating stages of COG v? with VXXX EPD.
  *       - <b>EPD_COG_partial_update_Vxxx:</b>\n
- *         The partial update waveform of driving processes and updating stages 
+ *         The partial update waveform of driving processes and updating stages
  *         of COG v? with VXXX EPD.
  *
  *
- * \section  use_case Use Case
+ * \section Use_Case
  * -# <b>EPD_display_from_pointer</b>: Load two image data arrays from image_data.c
  *   according to predefined EPD size.
  * -# <b>EPD_display_from_flash</b>:
- *   Load image data from flash memory according to the command by EPD Kit Tool.
+ *   Load stored image data from flash memory according to predefined EPD size. User
+ *   must convert 1 bit bitmap image file to hex data in advance and store in flash
+ *   memory.
  *
  * \section Steps
- * -# Ensure the EPD is connected correctly on the EPD Extension board
- * -# Connect the EPD Extension board to Atmel SAM4L Xplained Pro header marked as EXT3
- *    via the 20 pins cable. The pin assigment is listed below
- * -# Connect the Atmel SAM4L Xplained Pro to computer's USB ports via 2 USB cables
- *    One is for programming code to MCU, the other is for EPD Kit Tool
- *    - <b>Run two images only:</b>\n
- *         -# Ensure what the EPD size you are connecting. Open image_data.h file and find
- *            "#define USE_EPD_Type USE_EPD200". Change the USE_EPDXXX to the correct size.
- *         -# Find "conf_EPD.h" file in config folder. Comment out "#define EPD_KIT_TOOL_FUNCTIONS"
- *         -# Start debugging to program the driving code to Atmel MCU. The EPD will show 
- *            two images change alternately every 10 seconds (default).
- *    - <b>Work with EPD Kit Tool:</b>\n
- *         -# Find "conf_EPD.h" file in config folder. Ensure "#define EPD_KIT_TOOL_FUNCTIONS".
- *         -# Start debugging to program the driving code to Atmel MCU.
- *         -# Install EPD Kit Tool and then execute it. On the EPD Kit Tool, click [Scan]
- *            button to search "Atmel Xplained PRO" kit. If found, click [Connect].
- *         -# Refer to EPD Extension Kit_User manual which can be downloaded in PDi website.
+ * -# Ensure the EPD is connected correctly on the EPD Xplained Pro extension board
+ * -# Connect the EPD Xplained Pro to the SAM4L Xplained Pro header marked EXT3
+ * -# Connect the SAM4L Xplained Pro to computer's USB port via USB cable
+ * -# Ensure what the EPD size you are connecting. Open image_data.h file and find
+ *   "#define USE_EPD_Type USE_EPD200". Change the USE_EPDXXX to the correct size.
+ * -# Close the J2 jumper if the connected EPD is 1.44" V110, 1.44" V230 or 2" V230.
+ *    For the other types, please keep the J2 is opened.
+ * -# Start debugging to program the driving code to MCU. The EPD will show two images
+ *   alternatively change every 10 seconds (default).
  *
  *
- * \section Pin_Assignment The pin assignment of EPD Extension board to Atmel Xplained Pro
- * - The table below give the pin connections of the 20-pin male connector on Extension board.
- * - Looking at the board oriented display side up (as front view above) and connector 
- *   on the left. Pin 1 is the top left pin (the left column are all odd numbered pins) 
- *   and pin 2 is immediately to its right (right hand column is all the even pins).\n
- *
- * ===============================================================================================
- * |Pin| Function       | SAM4L pin | Kit pin | Color  | Description                             |
- * |---|----------------|-----------|---------|--------|-----------------------------------------|
- * | 1 | VCC            | VCC       | EXT3_20 | Red    | Target supply voltage                   |
- * | 2 | -              | -         | -       | White  |                                         |
- * | 3 | -              | -         | -       | Grey   |                                         |
- * | 4 | -              | -         | -       | Purple |                                         |
- * | 5 | -              | -         | -       | Blue   |                                         |
- * | 6 | Temperature    | PB03      | EXT3_3  | Green  | On board temperature sensor output (ADC)|
- * | 7 | SPI_CLK        | PA18	    | EXT3_18 |	Yellow | Clock for SPI                           |
- * | 8 | BUSY           | PA06      | EXT3_9  | Orange | COG busy pin (GPIO)                     |
- * | 9 | PWM            | PA08      | EXT3_7  | Brown  | Square wave when EPD power on (PWM)     |
- * |10 | /RESET         | PC16      | EXT3_6  | Black  | Reset signal. Low enable (GPIO)         |
- * |11 | PANEL_ON       | PA09      | EXT3_8  | Red    | COG driver power control pin (GPIO)     |
- * |12 | DISCHARGE      | PC15      | EXT3_5  | White  | EPD discharge when EPD power off (GPIO) |
- * |13 | BORDER_CONTROL | PB04      | EXT3_4  | Grey   | Border control pin (GPIO)               |
- * |14 | SPI_MISO       | PA19      | EXT3_17 | Purple | Serial output from EPD to host MCU      |
- * |15 | SPI_MOSI       | PA20      | EXT3_16 | Blue   | Serial input from host MCU to EPD       |
- * |16 | -              | -         | -       | Green  |                                         |
- * |17 | -              | -         | -       | Yellow |                                         |
- * |18 | FLASH_CS       | PA10      | EXT3_10 | Orange | On board flash chip select (GPIO)       |
- * |19 | /EPD_CS        | PA17      | EXT3_15 | Brown  | Chip Select. Low enable (GPIO)          |
- * |20 | GND            | GND       | EXT3_19 | Black  |                                         |
+ * \section EPD Xplained Pro extension header pins
+ * ================================================================
+ * |Pin| Function       | Description                             |
+ * |---|----------------|-----------------------------------------|
+ * | 1 | ID             | Communication line to ID chip           |
+ * | 2 | GND            | Ground                                  |
+ * | 3 | Temperature    | On board temperature sensor output (ADC)|
+ * | 4 | BORDER_CONTROL | Border control pin (GPIO)               |
+ * | 5 | DISCHARGE      | EPD discharge when EPD power off (GPIO) |
+ * | 6 | /RESET         | Reset signal. Low enable (GPIO)         |
+ * | 7 | PWM            | Square wave when EPD power on (PWM)     |
+ * | 8 | PANEL_ON       | COG driver power control pin (GPIO)     |
+ * | 9 | BUSY           | COG busy pin (GPIO)                     |
+ * |10 | FLASH_CS       | On board flash chip select (GPIO)       |
+ * |11 |                |                                         |
+ * |12 |                |                                         |
+ * |13 |                |                                         |
+ * |14 |                |                                         |
+ * |15 | /EPD_CS        | Chip Select. Low enable (GPIO)          |
+ * |16 | SPI_MOSI       | Serial input from host MCU to EPD       |
+ * |17 | SPI_MISO       | Serial output from EPD to host MCU      |
+ * |18 | SPI_CLK        | Clock for SPI                           |
+ * |19 | GND            | Ground                                  |
+ * |20 | VCC            | Target supply voltage                   |
  *
  * \section PDi EPD displays
- * =====================
- * | Size | PDi Model  |
- * |------|------------|
- * | 1.44 | EK014AS014 |
- * | 2.0  | EG020AS012 |
- * | 2.7  | EM027AS012 |
+ * ========================================
+ * | Size | PDi Model              | FPL  |
+ * |------|------------------------|------|
+ * | 1.44 | EK014AS014, EK014AS015 | V110 |
+ * | 2.0  | EG020AS012, EG020AS013 | V110 |
+ * | 2.7  | EM027AS012, EM027AS013 | V110 |
+ * | 1.44 | TBD (Q2'14)            | V230 |
+ * | 2.0  | EG020BS011, EG020BS012 | V230 |
+ * | 2.7  | EM027BS013, EM027BS014 | V230 |
  */

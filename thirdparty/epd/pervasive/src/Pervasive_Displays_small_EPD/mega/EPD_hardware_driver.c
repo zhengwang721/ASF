@@ -3,32 +3,37 @@
 *
 * \brief The initialization and configuration of COG hardware driver
 *
-* Copyright (c) 2012-2013 Pervasive Displays Inc. All rights reserved.
+* Copyright (c) 2012-2014 Pervasive Displays Inc. All rights reserved.
 *
-*  Authors: Pervasive Displays Inc.
+* \page License
 *
-*  Redistribution and use in source and binary forms, with or without
-*  modification, are permitted provided that the following conditions
-*  are met:
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
 *
-*  1. Redistributions of source code must retain the above copyright
-*     notice, this list of conditions and the following disclaimer.
-*  2. Redistributions in binary form must reproduce the above copyright
-*     notice, this list of conditions and the following disclaimer in
-*     the documentation and/or other materials provided with the
-*     distribution.
+* 1. Redistributions of source code must retain the above copyright notice,
+*    this list of conditions and the following disclaimer.
 *
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-*  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-*  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-*  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-*  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-*  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-*  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-*  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-*  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-*  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-*  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+* 2. Redistributions in binary form must reproduce the above copyright notice,
+*    this list of conditions and the following disclaimer in the documentation
+*    and/or other materials provided with the distribution.
+*
+* 3. The name of Atmel may not be used to endorse or promote products derived
+*    from this software without specific prior written permission.
+*
+* 4. This software may only be redistributed and used in connection with an
+*    Atmel microcontroller product.
+*
+* THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+* EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+* POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include <math.h>
@@ -37,7 +42,6 @@
 // From module: TC - MEGARF implementation
 #include "EPD_hw_timer.h"
 //#include "common_EPD_hw_timer.h"
-
 
 static volatile uint32_t EPD_Counter;
 //static uint8_t spi_flag=FALSE;
@@ -54,15 +58,6 @@ static const uint32_t divisors[5] = { 2, 8, 32, 128, 0};
 
 /**
 * \brief Set up EPD Timer interrupts handler
-*
-* \note
-* desired value: 1mSec
-* actual value:  1.000mSec
-*/
-
-
-/**
-* \brief Set up EPD Timer for 1 mSec interrupts
 *
 * \note
 * desired value: 1mSec
@@ -93,20 +88,15 @@ void EPD_timer_handler(void){
 		EPD_Counter++;
 	//}
 	
-	
 }
 
 /**
- * \internal
- * \brief Interrupt handler for Timer Counter  overflow
- */
-//ISR(TIMER1_OVF_vect)
-//{
-	//if ( tc_is_overflow(EPD_TC_TIMER_ID) == true) {
-		//EPD_Counter++;
-	//}
-//}
-
+* \brief Set up EPD Timer for 1 mSec interrupts
+*
+* \note
+* desired value: 1mSec
+* actual value:  1.000mSec
+*/
 
 static void initialize_EPD_timer(void) {
 		
@@ -214,7 +204,7 @@ void SysTick_Handler(void) {
 * \param ms The number of mini-seconds
 */
 void sys_delay_ms(unsigned int ms) {
-	uint16_t curTicks;
+	uint32_t curTicks;
 	start_EPD_timer();
 	curTicks = EPD_Counter;
 	while ((EPD_Counter - curTicks) < ms);
@@ -359,7 +349,7 @@ struct spi_device epd_device_conf = {
 /**
 * \brief Configure SPI
 */
-void spi_init(void) {
+void epd_spi_init(void) {
 	//if(spi_flag) return;
 	//spi_flag=TRUE;
 	//if((PRR0 & PRSPI_bm) == 0)return;
@@ -380,17 +370,17 @@ void spi_init(void) {
 /**
 * \brief Initialize SPI
 */
-void spi_attach (void) {
+void epd_spi_attach (void) {
 	
 	EPD_flash_cs_high();
 	EPD_cs_high();
-	spi_init();
+	epd_spi_init();
 }
 
 /**
 * \brief Disable SPI and change to GPIO
 */
-void spi_detach (void) {
+void epd_spi_detach (void) {
 	spi_disable(EPD_SPI_ID);
 	ioport_enable_pin(EPD_SPI_CLK_PIN);
 	ioport_enable_pin(EPD_SPI_MOSI_PIN);
@@ -411,7 +401,7 @@ void spi_detach (void) {
  *
  * \param data The data to be sent out
  */
-void SPI_write (unsigned char Data) {
+void epd_spi_write (unsigned char Data) {
 	//// test	//
 	//volatile uint8_t b;
 	//spi_write_single(EPD_SPI_ID, Data);
@@ -426,51 +416,38 @@ void SPI_write (unsigned char Data) {
 
 /**
  * \brief SPI synchronous read
- */
-uint8_t SPI_read(unsigned char RDATA) {
-	spi_read_single(EPD_SPI_ID, &RDATA);
-	return RDATA;
-}
-
-/**
- * \brief Send data to SPI with time out feature
  *
- * \param data The data to be sent out
+ * \param RDATA The data to be read
  */
-uint8_t SPI_write_ex (unsigned char Data) {
-	//uint8_t cnt=200;
-	uint8_t flag=1;
-	//while (!(EPD_SPI_ID->US_CSR & US_CSR_TXRDY)) {
-		//if((cnt--)==0) {
-			//flag=0;
-			//break;
-		//}
-	//}
-	//EPD_SPI_ID->US_THR = US_THR_TXCHR(Data);
-	//while (!usart_spi_is_tx_empty(EPD_SPI_ID));
-	return flag;
+uint8_t epd_spi_read(unsigned char RDATA) {
+	spi_write_single(EPD_SPI_ID, RDATA); /* Dummy write */
+	while (!spi_is_rx_full(EPD_SPI_ID)) {
+	}
+
+	return SPDR;
 }
 
-#if (defined COG_V110_G2) || (defined COG_V230)
+
+#if (defined COG_V110_G2) || (defined COG_V230_G2)
 /**
 * \brief SPI command
 *
-* \param register_index The Register Index as SPI Data to COG
-* \param register_data The Register Data for sending command data to COG
+* \param Register The Register Index as SPI Data to COG
+* \param Data The Register Data for sending command data to COG
 * \return the SPI read value
 */
 uint8_t SPI_R(uint8_t Register, uint8_t Data) {
 	uint8_t result;
 	EPD_cs_low ();
-	SPI_write (0x70); // header of Register Index
-	SPI_write (Register);
+	epd_spi_write (0x70); // header of Register Index
+	epd_spi_write (Register);
 
 	EPD_cs_high ();
 	Wait_10us ();
 	EPD_cs_low ();
 
-	SPI_write (0x73); // header of Register Data of read command
-	result=SPI_read (Data);
+	epd_spi_write (0x73); // header of Register Data of read command
+	result=epd_spi_read (Data);
 
 	EPD_cs_high ();
 
@@ -486,19 +463,19 @@ uint8_t SPI_R(uint8_t Register, uint8_t Data) {
 * \param length The number of bytes of Register Data which depends on which
 * Register Index is selected.
 */
-void SPI_send (unsigned char register_index, unsigned char *register_data,
+void epd_spi_send (unsigned char register_index, unsigned char *register_data,
                unsigned length) {
 	EPD_cs_low ();
-	SPI_write (0x70); // header of Register Index
-	SPI_write (register_index);
+	epd_spi_write (0x70); // header of Register Index
+	epd_spi_write (register_index);
 
 	EPD_cs_high ();
 	Wait_10us ();
 	EPD_cs_low ();
 
-	SPI_write (0x72); // header of Register Data of write command
+	epd_spi_write (0x72); // header of Register Data of write command
 	while(length--) {
-		SPI_write (*register_data++);
+		epd_spi_write (*register_data++);
 	}
 	EPD_cs_high ();
 }
@@ -509,16 +486,16 @@ void SPI_send (unsigned char register_index, unsigned char *register_data,
 * \param register_index The Register Index as SPI command to COG
 * \param register_data The Register Data for sending command data to COG
 */
-void SPI_send_byte (uint8_t register_index, uint8_t register_data) {
+void epd_spi_send_byte (uint8_t register_index, uint8_t register_data) {
 	EPD_cs_low ();
-	SPI_write (0x70); // header of Register Index
-	SPI_write (register_index);
+	epd_spi_write (0x70); // header of Register Index
+	epd_spi_write (register_index);
 
 	EPD_cs_high ();
 	Wait_10us ();
 	EPD_cs_low ();
-	SPI_write (0x72); // header of Register Data
-	SPI_write (register_data);
+	epd_spi_write (0x72); // header of Register Data
+	epd_spi_write (register_data);
 	EPD_cs_high ();
 }
 
@@ -787,7 +764,7 @@ void initialize_temperature(void) {
 void EPD_display_hardware_init (void) {
 	EPD_initialize_gpio();
 	EPD_Vcc_turn_off();
-	spi_init();
+	epd_spi_init();
 	initialize_temperature();
 	EPD_cs_low();
 	EPD_pwm_low();
