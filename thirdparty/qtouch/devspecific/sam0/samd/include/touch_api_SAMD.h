@@ -1241,4 +1241,7 @@ void touch_selfcap_rs_table_init(void);
 }
 #endif
 
+/**
+ * \}
+ */
 #endif                          /* TOUCH_API_SAMD_H */

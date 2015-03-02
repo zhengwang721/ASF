@@ -345,3 +345,7 @@ uint8_t at30tse_read_temperature(double *temperature)
 
 	return error_code;
 }
+
+/**
+ * \}
+ */

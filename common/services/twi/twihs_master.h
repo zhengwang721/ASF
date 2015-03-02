@@ -119,7 +119,7 @@
  *
  * \section twihs_basic_use_case_setup Setup steps
  * \subsection twihs_basic_use_case_setup_code Example code
- * Add to your application C-file:
+ * Add to your application C-file, for example in SAM series chip:
  * \code
 	  void twihs_init(void)
 	  {
@@ -138,7 +138,7 @@
  *   - \note This file is only for the driver and should not be included by the
  * user.
  * -# Define and initialize config structs for TWIHS module in your TWIHS initialization
- * function:
+ * function, for example in SAM series chip:
  *   - \code
 	twihs_master_options_t opt = {
 	  .speed = 400000,
@@ -152,7 +152,7 @@
  *
  * \section twihs_basic_use_case_usage Usage steps
  * \subsection twihs_basic_use_case_usage_code_writing Example code : Writing to a slave device
- * Use in application C-file:
+ * Use in application C-file, for example in SAM series chip:
  * \code
 	  const uint8_t test_pattern[] = {0x55,0xA5,0x5A,0x77,0x99};
 
@@ -182,7 +182,7 @@
  * -# Finally, call twihs_master_write \code twihs_master_write(&TWIM0, &packet_write); \endcode
  * and optionally check its return value for TWI_SUCCESS.
  * \subsection twihs_basic_use_case_usage_code_reading Example code : Reading from a slave device
- * Use in application C-file:
+ * Use in application C-file, for example in SAM series chip:
  * \code
 	   uint8_t data_received[10];
 
