@@ -645,7 +645,7 @@
 		<generator value="doxygen"/>
 		<device-support value="atsam4cms4c_0"/>
 	</project>
-		<project id="common.applications.user_application.user_board.sam4cms8c_1" caption="User board project template for SAM4CMS4C Core 1" type="template">
+	<project id="common.applications.user_application.user_board.sam4cms4c_1" caption="User board project template for SAM4CMS4C Core 1" type="template">
 		<info type="description" value="summary">
 		User board project template for SAM4CMS4C Core 1 devices.
 		</info>
