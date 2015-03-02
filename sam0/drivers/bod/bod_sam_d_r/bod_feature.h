@@ -337,7 +337,7 @@ static inline void bod_clear_detected(
 {
 	switch (bod_id) {
 		case BOD_BOD33:
-			SYSCTRL->INTFLAG.bit.BOD33DET = true;
+			SYSCTRL->INTFLAG.reg |= SYSCTRL_INTFLAG_BOD33DET;
 			return;
 		default:
 			Assert(false);
