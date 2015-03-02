@@ -59,8 +59,12 @@ void configure_nvm(void)
 //! [setup_2]
 
 //! [setup_3]
-	nvm_set_config(&config_nvm);
+	config_nvm.manual_page_write = false;
 //! [setup_3]
+
+//! [setup_4]
+	nvm_set_config(&config_nvm);
+//! [setup_4]
 }
 //! [setup]
 
