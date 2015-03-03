@@ -38,7 +38,7 @@
 #include "httpd-fs.h"
 #include "httpd-fsdata.h"
 
-#include "httpd-fsdata.c"
+//#include "httpd-fsdata.c"
 
 #if HTTPD_FS_STATISTICS
 static uint16_t count[HTTPD_FS_NUMFILES];
