@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project id="common2.applications.user_application.xplained_mini.samd10_xplained_mini" caption="SAM D10 Xplained Mini template project" type="template">
+	<project id="common.applications.user_application.xplained_mini2.samd10_xplained_mini" caption="SAM D10 Xplained Mini template project" type="template">
 		<device-support value="atsamd10d14am"/>
-		<require idref="common2.applications.user_application.xplained_mini"/>
+		<require idref="common.applications.user_application.xplained_mini2"/>
 		<require idref="board.samd10_xplained_mini"/>
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="config"/>

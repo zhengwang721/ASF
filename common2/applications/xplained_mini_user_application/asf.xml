@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common2.applications.user_application.xplained_mini" caption="User application template for Xplained Mini">
+	<module type="application" id="common.applications.user_application.xplained_mini2" caption="User application template for Xplained Mini">
 		<device-support value="sam0"/>
 		<build type="c-source" value="main.c"/>
 		<require idref="common.boards"/>
