@@ -42,7 +42,7 @@
 #define __NETSYNCH_H__
 
 #include "net/mac/mac.h"
-#include "sys/clock.h"
+#include "sys/contiki-clock.h"
 
 /**
  * \brief      Initialize the netsynch module

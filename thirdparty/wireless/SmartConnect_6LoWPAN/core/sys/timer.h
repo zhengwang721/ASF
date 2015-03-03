@@ -73,7 +73,7 @@
 #ifndef TIMER_H_
 #define TIMER_H_
 
-#include "sys/clock.h"
+#include "sys/contiki-clock.h"
 
 /**
  * A timer.

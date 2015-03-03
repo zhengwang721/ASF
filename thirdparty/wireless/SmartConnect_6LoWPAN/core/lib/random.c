@@ -32,7 +32,7 @@
 
 
 #include "lib/random.h"
-#include "sys/clock.h"
+#include "sys/contiki-clock.h"
 
 #include <stdlib.h>
 

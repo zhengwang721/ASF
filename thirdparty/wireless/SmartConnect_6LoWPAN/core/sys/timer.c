@@ -45,7 +45,7 @@
  */
 
 #include "contiki-conf.h"
-#include "sys/clock.h"
+#include "sys/contiki-clock.h"
 #include "sys/timer.h"
 
 /*---------------------------------------------------------------------------*/

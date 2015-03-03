@@ -40,7 +40,7 @@
 #ifndef POWERTRACE_H
 #define POWERTRACE_H
 
-#include "sys/clock.h"
+#include "sys/contiki-clock.h"
 
 void powertrace_start(clock_time_t perioc);
 void powertrace_stop(void);

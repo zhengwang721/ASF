@@ -36,7 +36,7 @@
 #define __RTIMER_ARCH_H__
 
 #include "contiki-conf.h"
-#include "sys/clock.h"
+#include "contiki-clock.h"
 
 rtimer_clock_t rtimer_arch_now(void);
 void rtimer_arch_disable_irq(void);

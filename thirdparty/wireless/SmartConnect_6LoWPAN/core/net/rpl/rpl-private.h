@@ -41,7 +41,7 @@
 
 #include "lib/list.h"
 #include "net/ip/uip.h"
-#include "sys/clock.h"
+#include "sys/contiki-clock.h"
 #include "sys/ctimer.h"
 #include "net/ipv6/uip-ds6.h"
 #include "uip-mcast6.h"

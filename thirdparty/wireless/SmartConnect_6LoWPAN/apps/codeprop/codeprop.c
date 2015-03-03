@@ -68,7 +68,7 @@
  */
 
 #include "contiki.h"
-#include "sys/clock.h"
+#include "contiki-clock.h"
 
 #include "loader/elfloader.h"
 #include "net/ip/tcpip.h"

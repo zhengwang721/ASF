@@ -51,7 +51,7 @@
 #include "sys/procinit.h"
 
 #include "sys/loader.h"
-#include "sys/clock.h"
+#include "sys/contiki-clock.h"
 
 #include "sys/energest.h"
 

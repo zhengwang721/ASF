@@ -42,7 +42,7 @@
 #include "net/queuebuf.h"
 
 #include "sys/ctimer.h"
-#include "sys/clock.h"
+#include "sys/contiki-clock.h"
 
 #include "lib/random.h"
 

@@ -21,7 +21,7 @@
 			<build type="header-file"   value="arg.h"/>
 			<build type="header-file"   value="autostart.h"/>
 			<build type="header-file"   value="cc.h"/>
-			<build type="header-file"   value="clock.h"/>
+			<build type="header-file"   value="contiki-clock.h"/>
 			<build type="header-file"   value="compower.h"/>
 			<build type="header-file"   value="ctimer.h"/>
 			<build type="header-file"   value="dsc.h"/>

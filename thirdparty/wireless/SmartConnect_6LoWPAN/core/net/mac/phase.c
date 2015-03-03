@@ -39,7 +39,7 @@
 
 #include "net/mac/phase.h"
 #include "net/packetbuf.h"
-#include "sys/clock.h"
+#include "sys/contiki-clock.h"
 #include "sys/ctimer.h"
 #include "net/queuebuf.h"
 #include "net/nbr-table.h"

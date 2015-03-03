@@ -40,7 +40,7 @@
 #include "contiki.h"
 #include "shell-time.h"
 
-#include "sys/clock.h"
+#include "sys/contiki-clock.h"
 #include "net/rime/timesynch.h"
 
 #include "lib/random.h"
