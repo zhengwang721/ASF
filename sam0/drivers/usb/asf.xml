@@ -2,7 +2,7 @@
 	<select-by-device id="sam0.drivers.usb" caption="USB - Universal Serial Bus">
 		<module type="driver" id="sam0.drivers.usb#0" caption="USB - Universal Serial Bus">
 			<info type="description" value="summary">
-				Driver for the SAM D21/R21 Universal Serial Bus module. Provides a
+				Driver for the SAM D21/R21/DA1 Universal Serial Bus module. Provides a
 				low level interface for the configuration and management of the
 				module.
 			</info>
@@ -21,6 +21,7 @@
 
 			<device-support value="samd21"/>
 			<device-support value="samr21" />
+			<device-support value="samda1"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
