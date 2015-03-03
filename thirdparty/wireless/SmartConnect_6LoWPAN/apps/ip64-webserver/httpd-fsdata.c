@@ -1648,7 +1648,7 @@ const struct httpd_fsdata_file  file_rplreset_shtml[] ={{file_routesping_shtml, 
 const struct httpd_fsdata_file   file_rplroot_shtml[] ={{ file_rplreset_shtml, data_rplroot_shtml , data_rplroot_shtml  +15, sizeof(data_rplroot_shtml)   -15}};
 const struct httpd_fsdata_file    file_status_shtml[] ={{  file_rplroot_shtml, data_status_shtml  , data_status_shtml   +14, sizeof(data_status_shtml)    -14}};
 const struct httpd_fsdata_file       file_tcp_shtml[] ={{   file_status_shtml, data_tcp_shtml     , data_tcp_shtml      +11, sizeof(data_tcp_shtml)       -11}};
-
-#define HTTPD_FS_ROOT  file_tcp_shtml
-#define HTTPD_FS_NUMFILES  17
-#define HTTPD_FS_SIZE 16003
+/* These definitions are moved to httpd-fs.h */
+//#define HTTPD_FS_ROOT  file_tcp_shtml
+//#define HTTPD_FS_NUMFILES  17
+//#define HTTPD_FS_SIZE 16003
