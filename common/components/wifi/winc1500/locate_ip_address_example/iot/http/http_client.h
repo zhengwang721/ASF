@@ -3,7 +3,7 @@
  *
  * \brief HTTP client service
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  */
 
