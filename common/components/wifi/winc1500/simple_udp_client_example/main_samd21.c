@@ -97,7 +97,6 @@
  */
 
 #include "asf.h"
-#include "conf_uart_serial.h"
 #include "main.h"
 #include "common/include/nm_common.h"
 #include "driver/include/m2m_wifi.h"

@@ -99,14 +99,12 @@
 	"-- "BOARD_NAME " --"STRING_EOL	\
 	"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
 
-/** UART module for debug. */
-static struct usart_module cdc_uart_module;
-
 /**
  * \brief Configure UART console.
  */
 static void configure_console(void)
 {
+	struct usart_module cdc_uart_module;
 	struct usart_config usart_conf;
 
 	usart_get_config_defaults(&usart_conf);

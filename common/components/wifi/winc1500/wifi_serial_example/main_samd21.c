@@ -628,7 +628,7 @@ static void configure_console(void)
 
 	stdio_serial_init(&cdc_uart_module, EDBG_CDC_MODULE, &usart_conf);
 	/* Register USART callback for receiving user input. */
-	usart_register_callback(&cdc_uart_module, uart_callback, USART_CALLBACK_BUFFER_RECEIVED);
+	usart_register_callback(&cdc_uart_module, (usart_callback_t)uart_callback, USART_CALLBACK_BUFFER_RECEIVED);
 	usart_enable_callback(&cdc_uart_module, USART_CALLBACK_BUFFER_RECEIVED);
 	usart_enable(&cdc_uart_module);
 }
