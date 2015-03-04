@@ -389,11 +389,9 @@ sint8 chip_reset(void)
 
 void rom_test()
 {
-	uint8	*pu8DataSec;
 	uint8	*pu8TextSec;
 	FILE	*fp;
 	uint32	u32CodeSize = 0;
-	uint32	u32DataSize = 0;
 
 	nm_bsp_sleep(1000);
 
@@ -419,6 +417,8 @@ void rom_test()
 		}
 	}
 #if 0
+	uint8	*pu8DataSec;
+	uint32	u32DataSize = 0;
 	/* Read data section.
 	*/
 	fp = fopen(ROM_DATA_FILE,"rb");

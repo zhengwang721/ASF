@@ -368,7 +368,6 @@ sint8 hif_send(uint8 u8Gid,uint8 u8Opcode,uint8 *pu8CtrlBuf,uint16 u16CtrlBufSiz
 				u32CurrAddr += (u16DataOffset - u16CtrlBufSize);
 				ret = nm_write_block(u32CurrAddr, pu8DataBuf, u16DataSize);
 				if(M2M_SUCCESS != ret) goto ERR1;
-				u32CurrAddr += u16DataSize;
 			}
 
 			reg = dma_addr << 2;

@@ -216,7 +216,6 @@ sint8 nm_uart_write_reg(uint32 u32Addr, uint32 u32Val)
 	tstrNmUartDefault strUart;
 	sint8 s8Ret = M2M_SUCCESS;
 	uint8 b[HDR_SZ+1];
-	uint8 rsz;
 
 	/*write reg*/
 	b[0] = 0xa5;
@@ -235,7 +234,7 @@ sint8 nm_uart_write_reg(uint32 u32Addr, uint32 u32Val)
 
 	b[2] = get_cs(&b[1],HDR_SZ);
 
-	rsz = get_cs(&b[1],HDR_SZ);
+	get_cs(&b[1],HDR_SZ);
 
 	strUart.pu8Buf = b;
 	strUart.u16Sz = sizeof(b);
@@ -378,7 +377,6 @@ sint8 nm_uart_write_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 	tstrNmUartDefault strUart;
 	sint8 s8Ret = M2M_SUCCESS;
 	static uint8 au8Buf[HDR_SZ+1];
-	uint16 i = 0;
 
 	au8Buf[0] = 0xa5;
 	au8Buf[1] = 3;
@@ -481,7 +479,6 @@ sint8 nm_uart_reconfigure(void *ptr)
 	tstrNmUartDefault strUart;
 	sint8 s8Ret = M2M_SUCCESS;
 	uint8 b[HDR_SZ+1];
-	uint8 rsz;
 
 	/*write reg*/
 	b[0] = 0xa5;
@@ -500,7 +497,7 @@ sint8 nm_uart_reconfigure(void *ptr)
 
 	b[2] = get_cs(&b[1],HDR_SZ);
 
-	rsz = get_cs(&b[1],HDR_SZ);
+	get_cs(&b[1],HDR_SZ);
 
 	strUart.pu8Buf = b;
 	strUart.u16Sz = sizeof(b);

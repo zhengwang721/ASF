@@ -136,7 +136,7 @@ static void configure_console(void)
  */
 static int8_t enable_disable_ap_mode(void)
 {
-	int8_t ret = M2M_SUCCESS;
+	int8_t ret;
 	tstrM2MAPConfig strM2MAPConfig;
 
 	printf("AP mode, start\r\n");
@@ -174,7 +174,7 @@ static int8_t enable_disable_ap_mode(void)
  */
 static int8_t enable_disable_p2p_mode(void)
 {
-	int8_t ret = M2M_SUCCESS;
+	int8_t ret;
 
 	printf("P2P mode, start\r\n");
 

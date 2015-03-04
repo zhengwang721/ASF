@@ -437,7 +437,7 @@ int main(void)
 
 	/* Setup user name first */
 	printf("Enter the user name (Max %d characters)\r\n", MAIN_CHAT_USER_NAME_SIZE);
-	scanf("%s", mqtt_user);
+	scanf("%64s", mqtt_user);
 	printf("User : %s\r\n", mqtt_user);
 	sprintf(topic, "%s%s", MAIN_CHAT_TOPIC, mqtt_user);
 
