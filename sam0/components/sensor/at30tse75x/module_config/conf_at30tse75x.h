@@ -48,8 +48,16 @@
 
 #include <board.h>
 
-#define AT30TSE_SERCOM      EXT1_I2C_MODULE
-#define AT30TSE_PINMUX_PAD0 EXT1_I2C_SERCOM_PINMUX_PAD0
-#define AT30TSE_PINMUX_PAD1 EXT1_I2C_SERCOM_PINMUX_PAD1
+#ifdef EXT1_I2C_MODULE
+/* Default Interface configuration for Xplained Pro kit */
+#  define AT30TSE_SERCOM      EXT1_I2C_MODULE
+#  define AT30TSE_PINMUX_PAD0 EXT1_I2C_SERCOM_PINMUX_PAD0
+#  define AT30TSE_PINMUX_PAD1 EXT1_I2C_SERCOM_PINMUX_PAD1
+#else
+/* Dummy configuration */
+#  define AT30TSE_SERCOM      0
+#  define AT30TSE_PINMUX_PAD0 0
+#  define AT30TSE_PINMUX_PAD1 0
+#endif
 
 #endif /* CONF_AT30TSE75X_H_INCLUDED */

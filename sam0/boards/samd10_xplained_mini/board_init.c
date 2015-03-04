@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SD/MMC stack configuration file.
+ * \brief SAM D10 Xplained Mini board initialization
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,53 +44,30 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_SD_MMC_H_INCLUDED
-#define CONF_SD_MMC_H_INCLUDED
+#include <compiler.h>
+#include <board.h>
+#include <conf_board.h>
+#include <port.h>
 
-/* Define to enable the SPI mode instead of Multimedia Card interface mode */
-#define SD_MMC_SPI_MODE
-
-/* Define to enable the SDIO support */
-//#define SDIO_SUPPORT_ENABLE
-
-/* Define to enable the debug trace to the current standard output (stdio) */
-//#define SD_MMC_DEBUG
-
-/* Define to memory count */
-#define SD_MMC_SPI_MEM_CNT          1
-
-/* Select the SPI module SD/MMC is connected to */
-#ifdef EXT1_SPI_MODULE /* Default configuration for Xplained Pro kit */
-#  define SD_MMC_SPI                 EXT1_SPI_MODULE
-#  define SD_MMC_SPI_PINMUX_SETTING  EXT1_SPI_SERCOM_MUX_SETTING
-#  define SD_MMC_SPI_PINMUX_PAD0     EXT1_SPI_SERCOM_PINMUX_PAD0
-#  define SD_MMC_SPI_PINMUX_PAD1     EXT1_SPI_SERCOM_PINMUX_PAD1
-#  define SD_MMC_SPI_PINMUX_PAD2     EXT1_SPI_SERCOM_PINMUX_PAD2
-#  define SD_MMC_SPI_PINMUX_PAD3     EXT1_SPI_SERCOM_PINMUX_PAD3
-
-#  define SD_MMC_CS                  EXT1_PIN_15
-
-#  define SD_MMC_0_CD_GPIO           (EXT1_PIN_10)
-#  define SD_MMC_0_CD_DETECT_VALUE   0
-#else /* Dummy configuration */
-#  define SD_MMC_SPI                 0
-#  define SD_MMC_SPI_PINMUX_SETTING  0
-#  define SD_MMC_SPI_PINMUX_PAD0     0
-#  define SD_MMC_SPI_PINMUX_PAD1     0
-#  define SD_MMC_SPI_PINMUX_PAD2     0
-#  define SD_MMC_SPI_PINMUX_PAD3     0
-
-#  define SD_MMC_CS                  0
-
-#  define SD_MMC_0_CD_GPIO           0
-#  define SD_MMC_0_CD_DETECT_VALUE   0
+#if defined(__GNUC__)
+void board_init(void) WEAK __attribute__((alias("system_board_init")));
+#elif defined(__ICCARM__)
+void board_init(void);
+#  pragma weak board_init=system_board_init
 #endif
 
-/* Define the SPI clock source */
-#define SD_MMC_SPI_SOURCE_CLOCK    GCLK_GENERATOR_0
+void system_board_init(void)
+{
+	struct port_config pin_conf;
+	port_get_config_defaults(&pin_conf);
 
-/* Define the SPI max clock */
-#define SD_MMC_SPI_MAX_CLOCK       4000000
+	/* Configure LEDs as outputs, turn them off */
+	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(LED_0_PIN, &pin_conf);
+	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
 
-#endif /* CONF_SD_MMC_H_INCLUDED */
-
+	/* Set buttons as inputs */
+	pin_conf.direction  = PORT_PIN_DIR_INPUT;
+	pin_conf.input_pull = PORT_PIN_PULL_UP;
+	port_pin_set_config(BUTTON_0_PIN, &pin_conf);
+}
