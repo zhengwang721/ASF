@@ -93,6 +93,7 @@
 #include "main.h"
 #include "driver/include/m2m_wifi.h"
 #include "driver/source/nmasic.h"
+#include <string.h>
 
 #define STRING_EOL    "\r\n"
 #define STRING_HEADER "-- WINC1500 AP mode example --"STRING_EOL \
@@ -201,9 +202,11 @@ int main(void)
 	strM2MAPConfig.au8DHCPServerIP[2] = 1;
 	strM2MAPConfig.au8DHCPServerIP[3] = 1;
 
+#if USE_WEP
 	strcpy((char *)&strM2MAPConfig.au8WepKey, MAIN_WLAN_WEP_KEY);
 	strM2MAPConfig.u8KeySz = strlen(MAIN_WLAN_WEP_KEY);
 	strM2MAPConfig.u8KeyIndx = MAIN_WLAN_WEP_KEY_INDEX;
+#endif
 
 	/* Bring up AP mode with parameters structure. */
 	ret = m2m_wifi_enable_ap(&strM2MAPConfig);

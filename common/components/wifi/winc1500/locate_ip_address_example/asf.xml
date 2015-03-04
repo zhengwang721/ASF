@@ -28,6 +28,7 @@
 
 			<!-- Required modules -->
 			<require idref="common.components.wifi.winc1500"/>
+			<require idref="sam0.drivers.tcc"/>
 			<require idref="sam0.utils"/>
 			<require idref="sam0.utils.stdio"/>
 			<require idref="sam0.utils.stdio.stdio_serial"/>

@@ -100,9 +100,6 @@
 	"-- "BOARD_NAME " --"STRING_EOL	\
 	"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
 
-/** UART module for debug. */
-static struct usart_module cdc_uart_module;
-
 /**
  * \brief Configure UART console.
  */

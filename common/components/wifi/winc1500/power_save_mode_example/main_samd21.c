@@ -96,8 +96,8 @@
 
 #include "asf.h"
 #include "main.h"
-#include "driver/include/m2m_wifi.h"
 #include "driver/include/m2m_periph.h"
+#include "driver/include/m2m_wifi.h"
 #include "driver/source/nmasic.h"
 
 #define STRING_EOL    "\r\n"
@@ -218,14 +218,14 @@ static void wifi_cb(uint8_t u8MsgType, void *pvMsg)
 static void disable_pullups(void)
 {
 	uint32 pinmask;
-	
+
 	pinmask = (
 	M2M_PERIPH_PULLUP_HOST_WAKEUP|
 	M2M_PERIPH_PULLUP_GPIO_3|
 	M2M_PERIPH_PULLUP_GPIO_5|
 	M2M_PERIPH_PULLUP_SD_DAT0_SPI_TXD|
 	M2M_PERIPH_PULLUP_GPIO_6);
-	
+
 	m2m_periph_pullup_ctrl(pinmask, 0);
 }
 
@@ -268,7 +268,7 @@ int main(void)
 
 	/* Disable pullups */
 	disable_pullups();
-	
+
 	/* Set defined sleep mode */
 	if (MAIN_PS_SLEEP_MODE == M2M_PS_MANUAL) {
 		printf("M2M_PS_MANUAL\r\n");

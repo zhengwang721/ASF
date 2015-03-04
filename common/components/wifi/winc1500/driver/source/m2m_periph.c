@@ -48,8 +48,6 @@ INCLUDES
 #include "driver\source\nmasic.h"
 #include "m2m_hif.h"
 
-#ifdef CONF_PERIPH
-
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 MACROS
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
@@ -154,4 +152,3 @@ sint8 m2m_periph_pullup_ctrl(uint32 pinmask, uint8 enable)
 {
 	return pullup_ctrl(pinmask, enable);
 }
-#endif /* CONF_PERIPH */
