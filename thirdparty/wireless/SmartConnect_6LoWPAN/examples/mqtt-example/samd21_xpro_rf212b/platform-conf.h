@@ -35,7 +35,7 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include <string.h>
-
+#include "rf212b.h"
 /* 
  * This is the platform configuration file for Atmel SAM R21 platform.
  */
@@ -72,7 +72,7 @@ void
 clock_adjust_ticks(clock_time_t howmany);
 
 
-#include "rf212.h"
+#define SET_CHANNEL(x)    rf_set_channel(x)       
 #define MULTICHAN_CONF_SET_CHANNEL(x)     rf_set_channel(x)
 #define MULTICHAN_CONF_READ_RSSI(x)       0
 

@@ -51,7 +51,7 @@
 
 #include "thsq-default-conf.h"
 
-#include "rf233.h"
+#include "rf212b.h"
 
 #ifndef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
 #define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8
@@ -135,7 +135,7 @@
 #define UART1_CONF_TX_WITH_INTERRUPT        0
 
 #ifndef NETSTACK_CONF_RADIO
-#define NETSTACK_CONF_RADIO rf233_radio_driver
+#define NETSTACK_CONF_RADIO rf212_radio_driver
 #endif
 
 #define UIP_CONF_BUFFER_SIZE            400

@@ -62,7 +62,7 @@
 #else
 #include "node-id.h"
 #endif
-#include "rf233-const.h"
+
 #include "asf.h"
 #include "usart.h"
 #include "sio2host.h"

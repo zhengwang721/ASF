@@ -63,7 +63,7 @@
 #else
 #include "node-id.h"
 #endif
-#include "rf233-const.h"
+
 #include "delay.h"
 #include <asf.h>
 #include "usart.h"
