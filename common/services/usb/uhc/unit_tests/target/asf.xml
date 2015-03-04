@@ -35,6 +35,7 @@
 			<build type="include-path" value="."/>
 			<device-support value="samd21"/>
 			<device-support value="saml21"/>
+			<device-support value="samda1"/>
 			<require idref="common.utils.unit_test"/>
 			<require idref="common2.services.delay"/>
 			<require idref="common.services.usb.class.host"/>
