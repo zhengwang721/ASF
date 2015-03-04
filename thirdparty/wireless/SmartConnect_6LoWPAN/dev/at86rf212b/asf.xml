@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 
-        <module type="component" id="thirdparty.wireless.smartconnect_6lowpan.dev.at86rf212b" caption="TBA">
+        <module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.dev.at86rf212b" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>

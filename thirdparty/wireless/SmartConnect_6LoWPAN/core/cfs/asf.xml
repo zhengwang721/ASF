@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 
 		
-        <module type="component" id="thirdparty.wireless.smartconnect_6lowpan.cfs" caption="TBA">
+        <module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.cfs" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
