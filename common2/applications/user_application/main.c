@@ -33,5 +33,5 @@ int main (void)
 {
 	system_init();
 
-	// Insert application code here, after the board has been initialized.
+	/* Insert application code here, after the board has been initialized. */
 }

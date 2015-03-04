@@ -84,8 +84,6 @@ enum system_sleepmode {
 enum system_performance_level {
 	/** Performance level 0. */
 	SYSTEM_PERFORMANCE_LEVEL_0  = PM_PLCFG_PLSEL_PL0,
-	/** Performance level 1. */
-	SYSTEM_PERFORMANCE_LEVEL_1  = PM_PLCFG_PLSEL_PL1,
 	/** Performance level 2. */
 	SYSTEM_PERFORMANCE_LEVEL_2  = PM_PLCFG_PLSEL_PL2,
 };
@@ -309,13 +307,6 @@ struct system_battery_backup_power_switch_config {
 	/** Battery backup power switch configuration. */
 	enum system_battery_power_switch battery_power_switch;
 };
-
-/** Performance level 0 maximum frequency */
-#define	SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ    15000000UL
-/** Performance level 1 maximum frequency */
-#define	SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ    30000000UL
-/** Performance level 2 maximum frequency */
-#define	SYSTEM_PERFORMANCE_LEVEL_2_MAX_FREQ    48000000UL
 
 /**
  * \name Voltage Regulator
@@ -750,20 +741,9 @@ static inline void system_sleep(void)
 static inline enum status_code system_switch_performance_level(
 					const enum system_performance_level performance_level)
 {
-	/* Check the maximum frequency */
-	uint32_t system_performance_level_max_freq[3] = {
-		SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ,
-		SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ,
-		SYSTEM_PERFORMANCE_LEVEL_2_MAX_FREQ
-	};
 
 	if (performance_level == (enum system_performance_level)PM->PLCFG.reg) {
 		return STATUS_OK;
-	}
-
-	if (system_cpu_clock_get_hz() >
-			system_performance_level_max_freq[performance_level]) {
-		return STATUS_ERR_INVALID_ARG;
 	}
 
 	/* Clear performance level status */

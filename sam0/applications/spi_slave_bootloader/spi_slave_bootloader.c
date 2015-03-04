@@ -381,6 +381,7 @@ int main(void)
 
 	/* Get NVM default configuration and load the same */
 	nvm_get_config_defaults(&config);
+	config.manual_page_write = false;
 	nvm_set_config(&config);
 
 	/* Turn on LED */
