@@ -1,9 +1,43 @@
 /**
  * \file
  *
- * \brief MQTT service
+ * \brief MQTT service.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  *
  */
 
@@ -66,7 +100,7 @@
 /**
  * \defgroup sam0_mqtt_group MQTT service
  *
- * This module provides implementation of MQTT 3.1 for WINC1500 board. 
+ * This module provides implementation of MQTT 3.1 for WINC1500 board.
  *
  * MQ Telemetry Transport (MQTT) is a lightweight broker-based publish/subscribe
  * messaging protocol designed to be open, simple, lightweight and easy to implement.
@@ -100,9 +134,9 @@ extern "C" {
  * \brief A type of MQTT callback.
  */
 enum mqtt_callback_type {
-	/** 
-	 * Socket was connected. 
-	 * After received this event, try connect to broker server using mqtt_connect_broker. 
+	/**
+	 * Socket was connected.
+	 * After received this event, try connect to broker server using mqtt_connect_broker.
 	 */
 	MQTT_CALLBACK_SOCK_CONNECTED,
 	/** MQTT connection was connected to broker server. */
@@ -144,8 +178,8 @@ enum mqtt_conn_result {
  * \brief Structure of the MQTT_CALLBACK_SOCK_CONNECTED callback.
  */
 struct mqtt_data_sock_connected {
-	/** 
-	 * Result of operation. 
+	/**
+	 * Result of operation.
 	 *
 	 * \return     -ENOENT         No such address.
 	 * \return     -EINVAL         Invalid argument.
@@ -256,40 +290,40 @@ typedef void (*mqtt_callback_t)(struct mqtt_module *module_inst, int type, union
  * modified by the user application.
  */
 struct mqtt_config {
-	/** 
-	 * TCP port of MQTT. 
+	/**
+	 * TCP port of MQTT.
 	 * Default value is 1883.
 	 */
 	uint16_t port;
 	/**
-	 * A flag for the whether using the TLS socket or not. 
+	 * A flag for the whether using the TLS socket or not.
 	 * Default value is 0.
 	 */
 	uint8_t tls;
-	/** 
-	 * Timer module for the MQTT Ping timer out. 
+	/**
+	 * Timer module for the MQTT Ping timer out.
 	 * Default value is NULL.
 	 */
 	struct sw_timer_module *timer_inst;
-	/** 
-	 * Time value for the keep alive time out. 
+	/**
+	 * Time value for the keep alive time out.
 	 * Unit is seconds.
 	 * Default value is 600. (10minutes)
 	 */
 	uint16_t keep_alive;
-	/** 
-	 * Rx buffer. 
+	/**
+	 * Rx buffer.
 	 * Default value is NULL.
 	 */
 	char *recv_buffer;
-	/** 
-	 * Maximum size of the receive buffer. 
-	 * If receiving data over this value, Connection is to be disconnected. 
+	/**
+	 * Maximum size of the receive buffer.
+	 * If receiving data over this value, Connection is to be disconnected.
 	 * Default value is 0.
 	 */
 	uint32_t recv_buffer_size;
-	/** 
-	 * Send buffer size in the MQTT service. 
+	/**
+	 * Send buffer size in the MQTT service.
 	 * This buffer is located in the stack.
 	 * Therefore, the size of the buffer increases the speed will increase, but it may cause a stack overflow.
 	 * It MUST bigger than 5.
@@ -317,7 +351,7 @@ struct mqtt_module {
 	SOCKET sock;
 	/** Host address of MQTT broker. */
 	char host[HOSTNAME_MAX_SIZE];
-	
+
 	/* status */
 	/** A flag for the socket is connected. */
 	uint8_t sock_connected  : 1;
@@ -340,10 +374,10 @@ struct mqtt_module {
 	uint8_t pend_type;
 	/** Message ID of pended acknowledge. */
 	uint16_t pend_msg_id;
-	
+
 	/** Last error code of MQTT service. */
 	int last_err;
-	
+
 	/** SW Timer ID. */
 	int timer_id;
 	/** Callback interface entry. */
@@ -431,7 +465,7 @@ int mqtt_deinit(struct mqtt_module *const module);
  * \return     -EBADMSG        Not a data message.
  */
 int mqtt_register_callback(struct mqtt_module *const module, mqtt_callback_t callback);
-	
+
 /**
  * \brief Unregister callback.
  *
@@ -531,7 +565,7 @@ int mqtt_connect(struct mqtt_module *const module, const char *host);
 int mqtt_connect_broker(struct mqtt_module *const module, uint8_t clean_session,
 	const char *id, const char *password, const char *client_id, const char *will_topic, const char *will_msg,
 	uint32_t will_msg_len, uint8_t will_qos, uint8_t will_retain);
-	
+
 /**
  * \brief Send disconnect message to MQTT broker server and closing socket.
  * If operation of this function is complete, MQTT_CALLBACK_DISCONNECTED event will be sent through MQTT callback.

@@ -1,16 +1,50 @@
 ﻿/**
  * \file
  *
- * \brief HTTP client service
+ * \brief HTTP client service.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  *
  */
 
 /**
  * \defgroup sam0_httpc_group HTTP client service
  *
- * This module provides implementation of HTTP client 1.1 for WINC1500 board. 
+ * This module provides implementation of HTTP client 1.1 for WINC1500 board.
  *
  * Detailed description of HTTP, please refer to the following documents.<br>
  * http://tools.ietf.org/html/rfc2616
@@ -21,8 +55,8 @@
  * @{
  */
 
-#ifndef HTTP_CLEINT_H_INCLUDED
-#define HTTP_CLEINT_H_INCLUDED
+#ifndef HTTP_CLIENT_H_INCLUDED
+#define HTTP_CLIENT_H_INCLUDED
 
 #include "socket/include/socket.h"
 #include "common/include/nm_common.h"
@@ -61,9 +95,9 @@ enum http_method {
  * \brief A type of HTTP client callback.
  */
 enum http_client_callback_type {
-	/** 
-	 * Socket was connected. 
-	 * After received this event, try send request message to the server. 
+	/**
+	 * Socket was connected.
+	 * After received this event, try send request message to the server.
 	 */
 	HTTP_CLIENT_CALLBACK_SOCK_CONNECTED,
 	/** The request operation is completed. */
@@ -80,8 +114,8 @@ enum http_client_callback_type {
  * \brief Structure of the HTTP_CLIENT_CALLBACK_SOCK_CONNECTED callback.
  */
 struct http_client_data_sock_connected {
-	/** 
-	 * Result of operation. 
+	/**
+	 * Result of operation.
 	 *
 	 * \return     -ENOENT         No such address.
 	 * \return     -EINVAL         Invalid argument.
@@ -112,8 +146,8 @@ struct http_client_data_requested {
  * \brief Structure of the HTTP_CLIENT_CALLBACK_RECV_RESPONSE callback.
  */
 struct http_client_data_recv_response {
-	/** 
-	 * Response code of HTTP request. 
+	/**
+	 * Response code of HTTP request.
 	 * Refer to following link.
 	 * http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
 	 */
@@ -122,8 +156,8 @@ struct http_client_data_recv_response {
 	uint8_t is_chunked;
 	/** Length of entity. */
 	uint32_t content_length;
-	/** 
-	 * Content buffer. 
+	/**
+	 * Content buffer.
 	 * If this value is equal to zero, it means This data is too big compared with the receive buffer.
 	 * In this situation, Data will be transmitted through HTTP_CLIENT_CALLBACK_RECV_CHUNKED_DATA callback.
 	 */
@@ -146,7 +180,7 @@ struct http_client_data_recv_chunked_data {
  * \brief Structure of the HTTP_CLIENT_CALLBACK_DISCONNECTED callback.
  */
 struct http_client_data_disconnected {
-	/** 
+	/**
 	 * Reason of disconnecting.
 	 *
 	 * \return     -ENOENT         No such address.
@@ -198,39 +232,39 @@ typedef void (*http_client_callback_t)(struct http_client_module *module_inst, i
  * modified by the user application.
  */
 struct http_client_config {
-	/** 
-	 * TCP port number of HTTP. 
+	/**
+	 * TCP port number of HTTP.
 	 * Default value is 80.
 	 */
 	uint16_t port;
 	/**
-	 * A flag for the whether using the TLS socket or not. 
+	 * A flag for the whether using the TLS socket or not.
 	 * Default value is 0.
 	 */
 	uint8_t tls;
-	/** 
+	/**
 	 * Timer module for the request timeout
 	 * Default value is NULL.
 	 */
 	struct sw_timer_module *timer_inst;
-	/** 
-	 * Time value for the request time out. 
+	/**
+	 * Time value for the request time out.
 	 * Unit is milliseconds.
 	 * Default value is 20000. (20 seconds)
 	 */
 	uint16_t timeout;
-	/** 
-	 * Rx buffer. 
+	/**
+	 * Rx buffer.
 	 * Default value is NULL.
 	 */
 	char *recv_buffer;
-	/** 
-	 * Maximum size of the receive buffer. 
+	/**
+	 * Maximum size of the receive buffer.
 	 * Default value is 256.
 	 */
 	uint32_t recv_buffer_size;
-	/** 
-	 * Send buffer size in the HTTP client service. 
+	/**
+	 * Send buffer size in the HTTP client service.
 	 * This buffer is located in the stack.
 	 * Therefore, The size of the buffer increases the speed will increase, but it may cause a stack overflow.
 	 * Apache server is not supported that packet header is divided in the multiple packets.
@@ -238,8 +272,8 @@ struct http_client_config {
 	 * Default value is 192.
 	 */
 	uint32_t send_buffer_size;
-	/** 
-	 * User agent of this client. 
+	/**
+	 * User agent of this client.
 	 * This value is must located in the Heap or code region.
 	 * Default value is Atmel/{version}
 	 */
@@ -287,7 +321,7 @@ struct http_client_module {
 	SOCKET sock;
 	/** Destination host address of the session. */
 	char host[HOSTNAME_MAX_SIZE];
-	
+
 	/** A flag for the socket is sending. */
 	uint8_t sending	        : 1;
 	/** A flag that whether using the permanent connection or not. */
@@ -300,16 +334,16 @@ struct http_client_module {
 
 	/** SW Timer ID for the request time out. */
 	int timer_id;
-	
+
 	/** Callback interface entry. */
 	http_client_callback_t cb;
-	
+
 	/** Configuration instance of HTTP client module. That was registered from the \ref http_client_init*/
 	struct http_client_config config;
-	
+
 	/** Data relating the request. */
 	struct http_client_req req;
-	
+
 	/** Data relating the response. */
 	struct http_client_resp resp;
 };
@@ -396,7 +430,7 @@ int http_client_deinit(struct http_client_module *const module);
  * \return     -ENOTSUP        Unsupported operation.
  */
 int http_client_register_callback(struct http_client_module *const module, http_client_callback_t callback);
-	
+
 /**
  * \brief Unregister callback.
  *
@@ -476,4 +510,4 @@ int http_client_send_request(struct http_client_module *const module, const char
  * @}
  */
 
-#endif /* HTTP_CLEINT_H_INCLUDED */
+#endif /* HTTP_CLIENT_H_INCLUDED */
