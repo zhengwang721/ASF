@@ -40,6 +40,15 @@
  * \asf_license_stop
  *
  */
+
+ /**
+ * \defgroup common_components_memory_eeprom_at30tse75x_group EEPROM AT30TSE75X Series
+ *
+ * Low-level driver for the AT30TSE75X Series EEPROM controller. This driver provides access to the main
+ * features of the AT30TSE75X Series EEPROM.
+ *
+ * \{
+ */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -336,3 +345,7 @@ uint8_t at30tse_read_temperature(double *temperature)
 
 	return error_code;
 }
+
+/**
+ * \}
+ */
