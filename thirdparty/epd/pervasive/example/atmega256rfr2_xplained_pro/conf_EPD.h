@@ -45,7 +45,7 @@
  * \note
  * - place the value here to assign which COG driving waveform will be used.
  * - Options are COG_V110_G1, COG_V230_G2 */
-#define COG_V230_G2
+#define COG_V110_G1
 
 /** The SPI frequency of this kit (12MHz) */
 #define COG_SPI_baudrate	12000000

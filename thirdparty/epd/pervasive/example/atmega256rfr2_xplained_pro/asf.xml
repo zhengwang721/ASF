@@ -9,7 +9,6 @@
 		<config name="config.thirdparty.epd.epd_type" value="144"/>
 		<require idref="thirdparty.epd.pervasive.example"/>
 		<require idref="board.atmega256rfr2_xplained_pro"/>
-		<generator value="iarew"/>
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>

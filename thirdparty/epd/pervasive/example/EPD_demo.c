@@ -48,31 +48,6 @@
 */
 								
 #include "EPD_demo.h"
-		
-		
-//test
- #define DEBUG_TEST_PIN				IOPORT_CREATE_PIN (PORTG,5)	/**EXT3 4 */
- #define DEBUG_TEST_PIN_MUX			IOPORT_INIT_HIGH \
- | IOPORT_DIR_OUTPUT
-// test
-
-// test
-void debug_tgl_pin(void);
-// test
-
-
-// test
-void debug_tgl_pin(){
-	
-	//set_gpio_low(DEBUG_TEST_PIN);
-	////delay_ms(10);
-	//set_gpio_high(DEBUG_TEST_PIN);
-	
-	set_gpio_invert(DEBUG_TEST_PIN);
-	
-}
-// test		
-		
 				
 /**
 * \brief The main function will toggle between two images on
@@ -91,23 +66,6 @@ int main(void){
 	/* Initialize EPD hardware */
 	EPD_display_init();
 	
-#if (defined EPD_KIT_TOOL_FUNCTIONS) /** if working with EPD Kit Tool (default)***************/
-	LED_init();
-	EPD_Kit_Tool_process_init();
-	for(;;) {
-		EPD_Kit_tool_process_task();
-	}
-#else /** if showing two images alternatively ***************************************/
-
-	
-	// test
-	config_gpio_dir_o(DEBUG_TEST_PIN);
-	gpio_configure_pin(DEBUG_TEST_PIN, DEBUG_TEST_PIN_MUX);
-	set_gpio_high(DEBUG_TEST_PIN);
-	//test
-	
-	delay_ms(1000);
-		
 for(;;) {
 			/* User selects which EPD size to run demonstration by changing the
 		 * USE_EPD_Type in image_data.h
@@ -138,8 +96,6 @@ for(;;) {
 		
 	}
 
-#endif
-	
 }
 
 /**

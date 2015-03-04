@@ -42,7 +42,7 @@
 
 //**************************************************************************************************************//
 //#include "COG/V110_G1/EPD_COG_process_V110_G1.c"
-//#include "COG/V110_G1/EPD_COG_partial_update_V110_G1.c"
+//#include "COG/V110/EPD_COG_partial_update_V110_G1.c"
 //**************************************************************************************************************//
 
 /**
@@ -1198,10 +1198,10 @@ const struct COG_parameters_t COG_parameters[COUNT_OF_EPD_TYPE]  = {
 
 const uint8_t   SCAN_TABLE[4] = {0xC0,0x30,0x0C,0x03};
 	
-static const struct EPD_WaveformTable_Struct *action__Waveform_param;
+static struct EPD_WaveformTable_Struct *action__Waveform_param;
 static COG_line_data_packet_type COG_Line;
 static EPD_read_flash_handler _On_EPD_read_flash=NULL;
-//static uint16_t current_frame_time;
+static uint16_t current_frame_time;
 static uint8_t  *data_line_even;
 static uint8_t  *data_line_odd;
 static uint8_t  *data_line_scan;
@@ -1267,6 +1267,7 @@ void COG_driver_EPDtype_select(uint8_t EPD_type_index) {
 * \note For detailed flow and description, please refer to the COG G2 document Section 3.
 */
 void EPD_power_on (void) {	
+	//epd_spi_init_2M();
 	/* Initial state */
 	EPD_Vcc_turn_on(); //Vcc and Vdd >= 2.7V	
 	EPD_cs_high();
@@ -1470,7 +1471,7 @@ void nothing_line(uint8_t EPD_type_index) {
 */
 void read_line_data_handle(uint8_t EPD_type_index,uint8_t *image_prt,uint8_t stage_no)
 {
-	int16_t x,k;
+	int16_t x,y,k;
 	uint8_t	temp_byte; // Temporary storage for image data check
 	k=COG_parameters[EPD_type_index].horizontal_size-1;	
 	for (x =0 ; x < COG_parameters[EPD_type_index].horizontal_size ; x++) {
@@ -1546,13 +1547,13 @@ void stage_handle_Base(uint8_t EPD_type_index,uint8_t *image_prt,long image_data
 {	
 	struct EPD_V230_G2_Struct S_epd_v230;
 	uint16_t cycle,m,i; //m=number of steps
-	uint8_t isLastframe = 0;
+	uint8_t isLastframe = 0;	//If it is the last frame to send Nothing at the fist scan line
 	uint8_t isLastBlock=0;		//If the beginning line of block is in active range of EPD
 	//uint8_t isScanOn=0;
 	int16_t scanline_no=0;
 	uint8_t *action_block_prt;
 	long action_block_address;
-	
+	uint32_t line_time=8;
 	uint8_t byte_array[LINE_BUFFER_DATA_SIZE];
 	
 	/** Stage 2: BLACK/WHITE image, Frame type */
@@ -1687,11 +1688,9 @@ static void stage_handle_ex(uint8_t EPD_type_index,long image_data_address,uint8
 */
 void EPD_display_from_array_prt (uint8_t EPD_type_index, uint8_t *previous_image_ptr,
 		uint8_t *new_image_ptr) {	
-	_On_EPD_read_flash=NULL;	
+	_On_EPD_read_flash=NULL;		
 	stage_handle(EPD_type_index,new_image_ptr,Stage1,COG_parameters[EPD_type_index].horizontal_size);	
-
 	stage_handle(EPD_type_index,new_image_ptr,Stage2,COG_parameters[EPD_type_index].horizontal_size);	
-
 	stage_handle(EPD_type_index,new_image_ptr,Stage3,COG_parameters[EPD_type_index].horizontal_size);	
 }
 
