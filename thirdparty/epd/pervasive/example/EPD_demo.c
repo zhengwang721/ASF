@@ -84,11 +84,11 @@ for(;;) {
 
 
 		#if(USE_EPD_Type==USE_EPD144)
-		EPD_display_from_pointer(EPD_144,(uint8_t *)&image_array_144_1,(uint8_t *)&image_array_144_2);
+			EPD_display_from_pointer(EPD_144,(uint8_t *)&image_array_144_1,(uint8_t *)&image_array_144_2);
 		#elif(USE_EPD_Type==USE_EPD200)
-		EPD_display_from_pointer(EPD_200,(uint8_t *)&image_array_200_1,(uint8_t *)&image_array_200_2);
+			EPD_display_from_pointer(EPD_200,(uint8_t *)&image_array_200_1,(uint8_t *)&image_array_200_2);
 		#elif(USE_EPD_Type==USE_EPD270)
-		EPD_display_from_pointer(EPD_270,(uint8_t *)&image_array_270_1,(uint8_t *)&image_array_270_2);
+			EPD_display_from_pointer(EPD_270,(uint8_t *)&image_array_270_1,(uint8_t *)&image_array_270_2);
 		#endif
 
 		/* The interval of two images alternatively change is 10 seconds */

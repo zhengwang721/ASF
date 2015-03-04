@@ -64,30 +64,9 @@ static const uint32_t divisors[5] = { 2, 8, 32, 128, 0};
 * actual value:  1.000mSec
 */
 
-void EPD_timer_handler(void){
-	
-	////if ( tc_is_overflow(EPD_TC_TIMER_ID) == true) {
-		//EPD_Counter++;	
-		//
-		//// test //	
-		////debug_tgl_pin();
-		//// test //
-		//
-		//
-		//// test //
-		////uint32_t rc =0;
-		////rc = (sysclk_get_peripheral_bus_hz(EPD_TC_TIMER_ID) / divisors[EPD_TC_ClockSignalSel] );
-		////rc = (rc/10000);
-		////rc = 65536 - rc;
-		//// test//
-	////}
-	
-	//volatile uint32_t status;
-	//status = REG_TC0_SR0 ;
-	//if ( (status & TC_SR_CPCS) == TC_SR_CPCS ) {
-		EPD_Counter++;
-	//}
-	
+void EPD_timer_handler(void){	
+		
+		EPD_Counter++;	
 }
 
 /**
@@ -100,27 +79,6 @@ void EPD_timer_handler(void){
 
 static void initialize_EPD_timer(void) {
 		
-	//***********************SAM4L ***********************************//
-	//uint32_t rc;
-//
-	///* Configure the PMC to enable the Timer/Counter (TC) module. */
-	//sysclk_enable_peripheral_clock(EPD_TC_TIMER_ID);
-//
-	//tc_init(EPD_TC_TIMER_ID, EPD_TC_TIMER_CHANNEL,  EPD_TC_ClockSignalSel | TC_CMR_CPCTRG );
-	//rc = (sysclk_get_peripheral_bus_hz(EPD_TC_TIMER_ID) /
-	//divisors[EPD_TC_ClockSignalSel]) /
-	//1000;
-//
-	//tc_write_rc(EPD_TC_TIMER_ID, EPD_TC_TIMER_CHANNEL, rc);
-//
-	//// Configure and enable interrupt on RC compare
-	//NVIC_EnableIRQ(EPD_TC_TIMER_IRQn);
-	//tc_enable_interrupt(EPD_TC_TIMER_ID,EPD_TC_TIMER_CHANNEL, TC_IER_CPCS);
-	//tc_start(EPD_TC_TIMER_ID, EPD_TC_TIMER_CHANNEL);
-	//EPD_Counter=0;
-	
-	
-	//************* MEGARF *********************//
 	uint32_t rc;
 	/* Configure the PMC to enable the Timer/Counter (TC) module. */
 	sysclk_enable_peripheral_clock(EPD_TC_TIMER_ID);
@@ -147,12 +105,6 @@ static void initialize_EPD_timer(void) {
 		 divisors[EPD_TC_ClockSignalSel] ) /
 	     1000 ;
 	
-	//tc_write_count(EPD_TC_TIMER_ID,rc);
-	//
-	////// Configure and enable interrupt on EPD_TC_TIMER_ID Over flow
-	//tc_set_overflow_interrupt_callback(EPD_TC_TIMER_ID, EPD_timer_handler);
-	//tc_enable_ovf_int(EPD_TC_TIMER_ID);
-		
 	tc_write_cc(EPD_TC_TIMER_ID, EPD_TC_TIMER_CHANNEL, rc);
 	
 	// Configure and enable interrupt on TC CTC compare match
@@ -181,8 +133,6 @@ void start_EPD_timer(void) {
 */
 void stop_EPD_timer(void) {
 	tc_stop(EPD_TC_TIMER_ID);
-	//tc_disable_ovf_int(EPD_TC_TIMER_ID);
-	//NVIC_DisableIRQ(EPD_TC_TIMER_IRQn);
 }
 
 /**
@@ -211,18 +161,6 @@ void sys_delay_ms(unsigned int ms) {
 	stop_EPD_timer();
 }
 
-/**
-* \brief Interrupt Service Routine for TC0 tick counter
-*/
-//void TC00_Handler(void) {
-	////uint32_t status ;
-	////status = REG_TC0_SR0 ;
-	////if ( (status & TC_SR_CPCS) == TC_SR_CPCS ) {
-		////EPD_Counter++;
-	////}
-//}
-//
-
 static void Wait_10us(void) {
 	delay_us(10);
 }
@@ -239,14 +177,8 @@ void PWM_start_toggle(void) {
 	/* Configure the PMC to enable the Timer/Counter (TC) module. */
 	sysclk_enable_peripheral_clock(EPD_TC_WAVEFORM_ID);
 
-	/* Configure PIO Pins for TC */
-	#if (SAM4L || SAM4E)
-		ioport_set_pin_mode(EPD_TC_WAVEFORM_PIN, EPD_TC_WAVEFORM_PIN_FLAGS);
-		ioport_disable_pin(EPD_TC_WAVEFORM_PIN); // Disable IO (but enable peripheral mode)
-	#else
-		gpio_configure_pin(EPD_TC_WAVEFORM_PIN, EPD_TC_WAVEFORM_PIN_FLAGS);
-	#endif
-	
+	gpio_configure_pin(EPD_TC_WAVEFORM_PIN, EPD_TC_WAVEFORM_PIN_FLAGS);
+		
 	/** TC  Configuration structure. */
 	struct tc_control_reg tc_control_par = {
 		/** TC Compare Output Mode  */
@@ -262,15 +194,10 @@ void PWM_start_toggle(void) {
 	tc_initc(EPD_TC_WAVEFORM_ID, EPD_TC_WAVEFORM_CHANNEL, &tc_control_par);
 	       
 	/* Configure waveform frequency and duty cycle. */
-#if (SAM4L)
-	rc = (sysclk_get_peripheral_bus_hz(EPD_TC_TIMER_ID) /
-	      divisors[EPD_TC_ClockSignalSel]) /
-	     EPD_TC_WAVEFORM_PWM_FREQUENCY;
-#else
 	rc = (sysclk_get_peripheral_bus_hz(EPD_TC_TIMER_ID) /			//sysclk_get_peripheral_hz
 	     EPD_TC_ClockSignalSel) /
 		 EPD_TC_WAVEFORM_PWM_FREQUENCY;
-#endif
+
 	tc_clear_ic(EPD_TC_WAVEFORM_ID, EPD_TC_WAVEFORM_CHANNEL, 0);
 	tc_write_ic(EPD_TC_WAVEFORM_ID, EPD_TC_WAVEFORM_CHANNEL, rc);
 	ra = (100 - EPD_TC_WAVEFORM_PWM_DUTY_CYCLE) * rc / 100;
@@ -279,7 +206,6 @@ void PWM_start_toggle(void) {
 
 	/* Enable TC EPD_TC_WAVEFORM_CHANNEL. */
 	tc_start(EPD_TC_WAVEFORM_ID, &tc_control_par);
-	
 		
 }
 
@@ -301,49 +227,15 @@ void PWM_run(uint16_t ms) {
 	PWM_stop_toggle();
 }
 
-////******************************************************************
-////* SPI  Configuration
-////******************************************************************
-#if (SAM4L)
-///**
- //* \brief The usart device struct that should be initialized */
-//struct usart_spi_device epd_device_conf = {
-	//.id =0,
-//};
-#else
+//******************************************************************
+//* SPI  Configuration
+//******************************************************************
+
 //* \brief The SPI device struct that should be initialized */
 struct spi_device epd_device_conf = {
 	//.id = IOPORT_CREATE_PIN(PORTB, 0)
 	.id = 0
 };
-
-
-#endif
-
-
-
-////******************************************************************
-////* SPI  Configuration
-////******************************************************************
-///**
-//
-//// taken direct declaration 
- //* \brief The usart device struct that should be initialized */
-////! \brief Polled SPI device definition.
-//
-	////struct spi_device epd_device_conf = {
-		////.id = IOPORT_CREATE_PIN(PORTB, 0)
-	////};
-	//
-	//struct usart_spi_device epd_device_conf = {
-		//.id = 0
-	//};
-
-// taken direct declaration 
-
-//struct usart_spi_device epd_device_conf = {
-	//.id =0,
-//};
 
 
 /**
@@ -402,13 +294,6 @@ void epd_spi_detach (void) {
  * \param data The data to be sent out
  */
 void epd_spi_write (unsigned char Data) {
-	//// test	//
-	//volatile uint8_t b;
-	//spi_write_single(EPD_SPI_ID, Data);
-	//b=spi_is_tx_empty(EPD_SPI_ID);
-	//while (!b);
-	//// test	//
-	
 	spi_write_single(EPD_SPI_ID, Data);
 	while (!spi_is_tx_empty(EPD_SPI_ID));
 	
