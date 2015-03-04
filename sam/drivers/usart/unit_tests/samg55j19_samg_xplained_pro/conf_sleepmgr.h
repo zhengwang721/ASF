@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TCC Quick Start configuration for SAM L21 Xplained Pro
+ * \brief Sleep manager configuration
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,35 +43,9 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-#ifndef CONF_QUICK_START_H_INCLUDED
-#define CONF_QUICK_START_H_INCLUDED
+#undef CONFIG_SLEEPMGR_ENABLE
 
-//[definition_pwm]
-/** PWM module to use */
-#define CONF_PWM_MODULE      LED_0_PWM4CTRL_MODULE
-/** PWM channel */
-#define CONF_PWM_CHANNEL     LED_0_PWM4CTRL_CHANNEL
-/** PWM output */
-#define CONF_PWM_OUTPUT      LED_0_PWM4CTRL_OUTPUT
-/** PWM output pin */
-#define CONF_PWM_OUT_PIN     LED_0_PWM4CTRL_PIN
-/** PWM output pin mux */
-#define CONF_PWM_OUT_MUX     LED_0_PWM4CTRL_MUX
-//[definition_pwm]
-
-//[definition_fault]
-/** FAULT EIC pin */
-#define CONF_FAULT_EIC_PIN       SW0_EIC_PIN
-/** FAULT EIC pin mux */
-#define CONF_FAULT_EIC_PIN_MUX   SW0_EIC_PINMUX
-/** FAULT EIC line */
-#define CONF_FAULT_EIC_LINE      SW0_EIC_LINE
-
-/** FAULT event generator */
-#define CONF_FAULT_EVENT_GENERATOR EVSYS_ID_GEN_EIC_EXTINT_2
-/** FAULT event user for recoverable fault */
-#define CONF_FAULT_EVENT_USER      EVSYS_ID_USER_TCC0_MC_0
-//[definition_fault]
-
-#endif /* CONF_QUICK_START_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_H */

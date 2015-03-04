@@ -468,6 +468,7 @@ static void bootloader_system_init(void)
 
 	/* Initialize the NVM */
 	nvm_get_config_defaults(&nvm_cfg);
+	nvm_cfg.manual_page_write = false;
 	nvm_set_config(&nvm_cfg);
 
 	/* Initialize the sleep manager */

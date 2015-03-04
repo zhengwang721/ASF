@@ -177,6 +177,9 @@ static void run_nvm_init_test(const struct test_case *test)
 	/* Set wait state to 1 */
 	config.wait_states = 1;
 
+	/* Enable automatic page write mode */
+	config.manual_page_write = false;
+
 	/* Set the NVM configuration */
 	status = nvm_set_config(&config);
 

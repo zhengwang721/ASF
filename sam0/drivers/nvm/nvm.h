@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_nvm_group SAM Non-Volatile Memory Driver (NVM)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of non-volatile memories within the device, for partitioning,
  * erasing, reading, and writing of data.
  *
@@ -211,8 +211,7 @@
  *
  * Writing to the NVM memory must be performed by the \ref nvm_write_buffer()
  * function - additionally, a manual page program command must be issued if
- * the NVM controller is configured in manual page writing mode, or a buffer of
- * data less than a full page is passed to the buffer write function.
+ * the NVM controller is configured in manual page writing mode.
  *
  * Before a page can be updated, the associated NVM memory row must be erased
  * first via the \ref nvm_erase_row() function. Writing to a non-erased page
@@ -645,7 +644,7 @@ struct nvm_fusebits {
  *
  * The default configuration is as follows:
  *  \li Power reduction mode enabled after sleep until first NVM access
- *  \li Automatic page commit when full pages are written to
+ *  \li Automatic page write mode disabled
  *  \li Number of FLASH wait states left unchanged
  *
  * \param[out] config  Configuration structure to initialize to default values
@@ -659,7 +658,7 @@ static inline void nvm_get_config_defaults(
 
 	/* Write the default configuration for the NVM configuration */
 	config->sleep_power_mode  = NVM_SLEEP_POWER_MODE_WAKEONACCESS;
-	config->manual_page_write = false;
+	config->manual_page_write = true;
 	config->wait_states       = NVMCTRL->CTRLB.bit.RWS;
 	config->disable_cache     = false;
 	config->cache_readmode    = NVM_CACHE_READMODE_NO_MISS_PENALTY;
