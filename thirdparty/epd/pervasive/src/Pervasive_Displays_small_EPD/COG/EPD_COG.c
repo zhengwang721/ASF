@@ -83,7 +83,7 @@
 * POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "EPD_COG_Process.h"
+#include "EPD_COG_process.h"
 /** 
  * \brief The COG parameters of different EPD size 
  */
@@ -1080,7 +1080,7 @@ void EPD_display_partialupdate (uint8_t EPD_type_index, long previous_image_addr
 * \asf_license_stop
 **/
 
-#include "EPD_COG_Process.h"
+#include "EPD_COG_process.h"
 #ifdef COG_V230_G2
 
 #define ADDRESS_NULL		0xffffffff
