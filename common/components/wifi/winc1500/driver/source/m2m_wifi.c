@@ -40,8 +40,8 @@
  */
 
 
-#include "driver\include\m2m_wifi.h"
-#include "driver\source\nmdrv.h"
+#include "driver/include/m2m_wifi.h"
+#include "driver/source/nmdrv.h"
 #include "m2m_hif.h"
 #include "nmasic.h"
 

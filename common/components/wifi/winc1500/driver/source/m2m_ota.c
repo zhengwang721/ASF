@@ -45,10 +45,10 @@
 INCLUDES
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
 
-#include "common\include\nm_common.h"
-#include "driver\include\m2m_types.h"
-#include "driver\include\m2m_ota.h"
-#include "driver\source\m2m_hif.h"
+#include "common/include/nm_common.h"
+#include "driver/include/m2m_types.h"
+#include "driver/include/m2m_ota.h"
+#include "driver/source/m2m_hif.h"
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 MACROS
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/

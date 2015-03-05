@@ -42,8 +42,8 @@
 #ifndef _NMBUS_H_
 #define _NMBUS_H_
 
-#include "common\include\nm_common.h"
-#include "bus_wrapper\include\nm_bus_wrapper.h"
+#include "common/include/nm_common.h"
+#include "bus_wrapper/include/nm_bus_wrapper.h"
 
 
 

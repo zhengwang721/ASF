@@ -138,11 +138,11 @@ void nm_bsp_interrupt_ctrl(uint8 u8Enable);
 #endif
 
 #ifdef _FREESCALE_MCF51CN128_
-#include "bsp\include\nm_bsp_mcf51cn128.h"
+#include "bsp/include/nm_bsp_mcf51cn128.h"
 #endif
 
 #ifdef __MCF964548__
-#include "bsp\include\nm_bsp_mc96f4548.h"
+#include "bsp/include/nm_bsp_mc96f4548.h"
 #endif
 
 #ifdef __APP_APS3_CORTUS__
