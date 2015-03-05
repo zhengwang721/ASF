@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 
-        <module type="component" id="thirdparty.wireless.smartconnect_6lowpan.core.dev.leds" caption="TBA">
+        <module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.core.dev.leds" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
@@ -15,7 +15,7 @@
             </info>
         </module>
        
-        <module type="component" id="thirdparty.wireless.smartconnect_6lowpan.core.dev.nullradio" caption="TBA">
+        <module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.core.dev.nullradio" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
@@ -30,7 +30,7 @@
             </info>
         </module>
 		
-        <module type="component" id="thirdparty.wireless.smartconnect_6lowpan.core.dev.serial-line" caption="TBA">
+        <module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.core.dev.serial-line" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
@@ -45,7 +45,7 @@
             </info>
         </module>
 		
-        <module type="component" id="thirdparty.wireless.smartconnect_6lowpan.core.dev.slip" caption="TBA">
+        <module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.core.dev.slip" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
@@ -60,7 +60,7 @@
             </info>
         </module>		
 		
-        <module type="component" id="thirdparty.wireless.smartconnect_6lowpan.core.dev.all" caption="TBA">
+        <module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.core.dev.all" caption="TBA">
 			<info type="description" value="summary">
 			
 			</info>
