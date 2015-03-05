@@ -39,12 +39,12 @@
  *
  */
 
-#include "common\include\nm_common.h"
+#include "common/include/nm_common.h"
 
 #ifdef CONF_WINC_USE_UART
 
-#include "driver\source\nmuart.h"
-#include "bus_wrapper\include\nm_bus_wrapper.h"
+#include "driver/source/nmuart.h"
+#include "bus_wrapper/include/nm_bus_wrapper.h"
 #define HDR_SZ  12
 
 static uint8 get_cs(uint8* b, uint8 sz){

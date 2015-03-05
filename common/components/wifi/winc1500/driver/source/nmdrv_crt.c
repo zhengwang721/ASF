@@ -40,8 +40,8 @@
  */
 
 #ifdef CORTUS_APP
-#include "common\include\nm_common.h"
-#include "driver\source\nmdrv.h"
+#include "common/include/nm_common.h"
+#include "driver/source/nmdrv.h"
 
 
 

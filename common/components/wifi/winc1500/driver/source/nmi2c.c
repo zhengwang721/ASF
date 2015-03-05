@@ -39,12 +39,12 @@
  *
  */
 
-#include "common\include\nm_common.h"
+#include "common/include/nm_common.h"
 
 #ifdef CONF_WINC_USE_I2C
 
 #include "nmi2c.h"
-#include "bus_wrapper\include\nm_bus_wrapper.h"
+#include "bus_wrapper/include/nm_bus_wrapper.h"
 
 
 /*

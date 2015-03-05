@@ -264,6 +264,7 @@ void system_board_init(void);
 #define EXT3_PIN_7                PIN_PA22
 #define EXT3_PIN_8                PIN_PA23
 #define EXT3_PIN_9                PIN_PA06
+#define EXT3_PIN_10               0
 #define EXT3_PIN_11               PIN_PA08
 #define EXT3_PIN_12               PIN_PA09
 #define EXT3_PIN_13               PIN_PA01
