@@ -527,9 +527,9 @@ enum spi_frame_format {
 /**
  * \brief SPI signal MUX settings
  *
- * Set the functionality of the SERCOM pins. It's a combination of DOPO and DIPO 
- * in CTRLA. As not all combinations can be used in different modes of operation, 
- * proper combinations must be chosen according to the rest of the configuration.
+ * Set the functionality of the SERCOM pins. As not all combinations can be used 
+ * in different modes of operation, proper combinations must be chosen according 
+ * to the rest of the configuration.
  *
  * \note In master operation: DI is MISO, DO is MOSI.
  *       In slave operation: DI is MOSI, DO is MISO.
@@ -1461,8 +1461,9 @@ enum status_code spi_select_slave(
   *
   * The following lists the possible internal SERCOM module pad function
   * assignments, for the four SERCOM pads in both SPI Master, and SPI Slave
-  * modes. Note that this is in addition to the physical GPIO pin MUX of the
-  * device, and can be used in conjunction to optimize the serial data pin-out.
+  * modes. They are combinations of DOPO and DIPO in CTRLA. 
+  * Note that this is in addition to the physical GPIO pin MUX of the device,
+  * and can be used in conjunction to optimize the serial data pin-out.
   *
   * \section asfdoc_sam0_sercom_spi_mux_settings_master Master Mode Settings
   * The following table describes the SERCOM pin functionalities for the various
