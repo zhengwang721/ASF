@@ -52,43 +52,6 @@
 #define	set_gpio_invert(Pin)    ioport_toggle_pin_level(Pin) /**< toggle the value of an IOPORT pin */
 #define	input_get(Pin)          ioport_get_pin_level(Pin)    /**< get current value of an IOPORT pin */
 
-///******************************************************************************
-//* GPIO Defines
-//*****************************************************************************/
-////#define Temper_PIN          IOPORT_CREATE_PIN (PORTB,1); /**< MEGA256RFR2 EXT1.pin3.  PB03, ADC04 */
-//#define EPD_SPI_CLK_PIN          IOPORT_CREATE_PIN (PORTB,1) /**< MEGA256RFR2 EXT1.pin18. PA18, UART2_SPI */
-//#define EPD_BUSY_PIN        IOPORT_CREATE_PIN (PORTE,2) /**< MEGA256RFR2 EXT1.pin9.  PA06 */
-//#define EPD_PWM_PIN             IOPORT_CREATE_PIN (PORTE,3) /**< MEGA256RFR2 EXT1.pin7.  PA08, TC0_A0 */
-//#define EPD_RST_PIN         IOPORT_CREATE_PIN (PORTD,1) /**< MEGA256RFR2 EXT1.pin6.  P1C6 */
-//#define EPD_PANELON_PIN     IOPORT_CREATE_PIN (PORTD,0) /**< MEGA256RFR2 EXT1.pin8.  PA09 */
-//#define EPD_DISCHARGE_PIN   IOPORT_CREATE_PIN (PORTE,0) /**< MEGA256RFR2 EXT1.pin5.  PC15 */
-//#define EPD_BORDER_PIN      IOPORT_CREATE_PIN (PORTE,1) /**< MEGA256RFR2 EXT1.pin4.  PB4 */
-//#define EPD_SPI_MISO_PIN         IOPORT_CREATE_PIN (PORTB,3) /**< MEGA256RFR2 EXT1.pin17. PA19 */
-//#define EPD_SPI_MOSI_PIN         IOPORT_CREATE_PIN (PORTB,2) /**< MEGA256RFR2 EXT1.pin16. PA20 */
-////#define Flash_CS_PIN        IOPORT_CREATE_PIN (PORTB,1) /**< MEGA256RFR2 EXT1.pin10. PA10 */
-//#define EPD_SPI_CS_PIN          IOPORT_CREATE_PIN (PORTG,0) /**< MEGA256RFR2 EXT1.pin15. PA17 */
-//#define SPISS_PIN			IOPORT_CREATE_PIN (PORTB,0) /**< MEGA256RFR2 EXT1.pin15. PA17 */
-//
-
-///******************************************************************************
-//* GPIO Defines
-//*****************************************************************************/
-////#define Temper_PIN          IOPORT_CREATE_PIN (PORTF,0); /**< MEGA256RFR2 EXT1.pin3.  PF0, ADC0 */
-//#define EPD_BORDER_PIN      IOPORT_CREATE_PIN (PORTF,1) /**< MEGA256RFR2 EXT1.pin4.  PF1 ADC1*/
-//#define EPD_DISCHARGE_PIN   IOPORT_CREATE_PIN (PORTE,2) /**< MEGA256RFR2 EXT1.pin5.  PB7 */
-//#define EPD_RST_PIN         IOPORT_CREATE_PIN (PORTE,3) /**< MEGA256RFR2 EXT1.pin6.  dummy */
-//#define EPD_PWM_PIN             IOPORT_CREATE_PIN (PORTB,5) /**< MEGA256RFR2 EXT1.pin7.  PB5, OC1A */
-//#define EPD_PANELON_PIN     IOPORT_CREATE_PIN (PORTB,6) /**< MEGA256RFR2 EXT1.pin8.  PA09 */
-//#define EPD_BUSY_PIN        IOPORT_CREATE_PIN (PORTE,5) /**< MEGA256RFR2 EXT1.pin9.  PE5 */
-////#define Flash_CS_PIN        IOPORT_CREATE_PIN (PORTD,5) /**< MEGA256RFR2 EXT1.pin10. PD5 */
-//#define EPD_SPI_CS_PIN          IOPORT_CREATE_PIN (PORTG,0) /**< MEGA256RFR2 EXT1.pin15. PG0 */
-//#define SPISS_PIN			IOPORT_CREATE_PIN (PORTG,0) /**< MEGA256RFR2 EXT1.pin15. PG0 */
-//#define EPD_SPI_MOSI_PIN         IOPORT_CREATE_PIN (PORTB,2) /**< MEGA256RFR2 EXT1.pin16. PB2 */
-//#define EPD_SPI_MISO_PIN         IOPORT_CREATE_PIN (PORTB,3) /**< MEGA256RFR2 EXT1.pin17. PB3 */
-//#define EPD_SPI_CLK_PIN          IOPORT_CREATE_PIN (PORTB,1) /**< MEGA256RFR2 EXT1.pin18. PB1, UART2_SPI */
-
-
-
 bool EPD_IsBusy(void);
 void EPD_cs_high (void);
 void EPD_cs_low (void);
