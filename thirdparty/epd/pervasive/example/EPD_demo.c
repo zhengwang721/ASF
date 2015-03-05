@@ -38,6 +38,34 @@
 **/
 
 /**
+ * \mainpage Example for demonstrating Pervasive Displays Inc. 1.44", 2" or 2.7" EPD
+ *
+ * \section Purpose
+ *
+ * Demo for Pervasive E-Paper display using Mega-RFR2 XPRO.
+ *
+ * \section Requirements
+ *
+ * This package can be used with ATMEGA256RFR2 Xplained pro evaluation kit.
+ *
+ * \section Description
+ *
+ * This example first configure Pervasive Displays Inc. 1.44", 2" or 2.7" EPD 
+ * for access the COG controller, then initialize the EPD, finally it displays 
+ * the pre stored images from the image_data.c file on Pervasive Displays EPD.
+ *
+ * \section Usage
+ *
+ * -# Build the program and download it inside the evaluation board.
+ * -# displays the pre stored images from the image_data.c file on Pervasive Displays EPD.
+ *
+ */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+
+
+/**
 * \brief Demonstration for showing the images alternatively on EPD of
 * EPD Xplained Pro extension board
 *
@@ -121,7 +149,7 @@ for(;;) {
  * - COG G2 Document number: 4P015-00
  *   Download URL: http://www.pervasivedisplays.com/LiteratureRetrieve.aspx?ID=198794
  * - This project code supports EPD size: 1.44 inch, 2 inch and 2.7 inch
- * - Supports Atmel Xplained PRO: SAM 4L Xplained PRO
+ * - Supports Atmel Xplained PRO: ATMEGA256RFR2 Xplained PRO
  *
  * \section File_Explanation
  * - <b>image_data:</b>\n
@@ -174,8 +202,8 @@ for(;;) {
  *
  * \section Steps
  * -# Ensure the EPD is connected correctly on the EPD Xplained Pro extension board
- * -# Connect the EPD Xplained Pro to the SAM4L Xplained Pro header marked EXT3
- * -# Connect the SAM4L Xplained Pro to computer's USB port via USB cable
+ * -# Connect the EPD Xplained Pro to the ATMEGA256RFR2 Xplained Pro header marked EXT3
+ * -# Connect the ATMEGA256RFR2 Xplained Pro to computer's USB port via USB cable
  * -# Ensure what the EPD size you are connecting. Open image_data.h file and find
  *   "#define USE_EPD_Type USE_EPD200". Change the USE_EPDXXX to the correct size.
  * -# Close the J2 jumper if the connected EPD is 1.44" V110, 1.44" V230 or 2" V230.
