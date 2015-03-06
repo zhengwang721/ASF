@@ -299,10 +299,12 @@ void rpl_process_dio(uip_ipaddr_t *, rpl_dio_t *);
 int rpl_process_parent_event(rpl_instance_t *, rpl_parent_t *);
 
 /* DAG object management. */
+void rpl_add_dag(uip_ipaddr_t *from, rpl_dio_t *dio);
 rpl_dag_t *rpl_alloc_dag(uint8_t, uip_ipaddr_t *);
 rpl_instance_t *rpl_alloc_instance(uint8_t);
 void rpl_free_dag(rpl_dag_t *);
 void rpl_free_instance(rpl_instance_t *);
+void rpl_set_default_instance(rpl_instance_t *instance);
 
 /* DAG parent management function. */
 rpl_parent_t *rpl_add_parent(rpl_dag_t *, rpl_dio_t *dio, uip_ipaddr_t *);
@@ -338,5 +340,9 @@ void rpl_reset_periodic_timer(void);
 
 /* Route poisoning. */
 void rpl_poison_routes(rpl_dag_t *, rpl_parent_t *);
+
+/* Call back functions */
+void rpl_link_neighbor_callback(const linkaddr_t *addr, int status, int numtx);
+void rpl_ipv6_neighbor_callback(uip_ds6_nbr_t *nbr);
 
 #endif /* RPL_PRIVATE_H */

@@ -46,5 +46,6 @@
 int at24mac602_arch_init(void);
 int at24mac602_arch_read_eui64(eui64_t *eui);
 int at24mac602_arch_read_serial128(at24mac602_serialnumber_t *serial);
+void reset_i2c(void);
 
 #endif  /* _AT24MAC602_ARCH_H_ */

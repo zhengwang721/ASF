@@ -740,7 +740,7 @@ channel_check_interval(void)
   return 0;
 }
 /*---------------------------------------------------------------------------*/
-void
+static void
 multichan_force_auth(int become_auth)
 {
   forced_auth = become_auth;

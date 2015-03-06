@@ -38,7 +38,7 @@
 #include <stdio.h>
 #include "radio.h"
 /*---------------------------------------------------------------------------*/
-extern const struct radio_driver rf212_radio_driver;
+//extern const struct radio_driver rf212_radio_driver;
 
 int rf212_interrupt_poll(void);
 int rf_get_channel(void);

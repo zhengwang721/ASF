@@ -190,7 +190,7 @@ start_get(struct websocket *s)
   return WEBSOCKET_ERR;
 }
 /*---------------------------------------------------------------------------*/
-void
+static void
 call(struct websocket *s, websocket_result r,
      uint8_t *data, uint16_t datalen)
 {

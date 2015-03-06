@@ -59,5 +59,6 @@ struct uaodv_rt_entry *uaodv_rt_lookup(uip_ipaddr_t *dest);
 void uaodv_rt_remove(struct uaodv_rt_entry *e);
 void uaodv_rt_lru(struct uaodv_rt_entry *e);
 void uaodv_rt_flush_all(void);
+void uaodv_rt_init(void);//no pre prototype
 
 #endif /* UAODV_RT_H_ */

@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
 	<!-- **************************************************************************************************** -->
-	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.mesh-node" caption="Smartconnect-Meshnode Example">
+	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.mesh-node" caption="Smart Connect 6LoWPAN - Mesh node">
 		<info type="description" value="summary">
 		</info>
 		<build type="c-source"      value="mesh-node.c"/>

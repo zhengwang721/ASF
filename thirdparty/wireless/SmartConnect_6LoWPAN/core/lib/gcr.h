@@ -38,14 +38,14 @@
 #ifndef GCR_H_
 #define GCR_H_
 
-void gcr_init();
-unsigned char gcr_finished();
+void gcr_init(void);
+unsigned char gcr_finished(void);
 
 void gcr_encode(unsigned char raw_data);
 
 void gcr_decode(unsigned char gcr_data);
 unsigned char gcr_get_encoded(unsigned char *raw_data);
 unsigned char gcr_get_decoded(unsigned char *raw_data);
-unsigned char gcr_valid();
+unsigned char gcr_valid(void);
 
 #endif /* GCR_H_ */

@@ -39,7 +39,7 @@
  * \author
  * Adam Dunkels <adam@sics.se>
  */
-
+#include "me.h"
 #include "me_tabs.h"
 
 /*---------------------------------------------------------------------------*/

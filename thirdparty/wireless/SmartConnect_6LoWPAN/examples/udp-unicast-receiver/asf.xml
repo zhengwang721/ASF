@@ -1,8 +1,9 @@
 <asf xmlversion="1.0">
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
 	<!-- **************************************************************************************************** -->
-	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.udp-unicast-receiver" caption="Smartconnect -UDP Unicast Receiver">
+	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.udp-unicast-receiver" caption="Smart Connect 6LoWPAN - UDP Unicast Receiver">
 		<info type="description" value="summary">
+		      UDP Unicast Receiver example demonstrates the ability of stack to establish UDP connection with multiple devices and successfully receive data from network.
 		</info>
 		<build type="c-source"      value="udp-unicast-receiver.c"/>
 		<build type="c-source"      value="udp-unicast-receiver-main.c"/>

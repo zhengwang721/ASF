@@ -1,8 +1,9 @@
 <asf xmlversion="1.0">
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
 	<!-- **************************************************************************************************** -->
-	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.udp-unicast-sender" caption="Smartconnect-UDP Unicast Sender">
+	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.udp-unicast-sender" caption="Smart Connect 6LoWPAN - UDP Unicast Sender">
 		<info type="description" value="summary">
+		      UDP Unicast Sender example demonstrates the ability of stack to establish UDP connection and send UDP uni-cast data to a device.
 		</info>
 		<build type="c-source"      value="udp-unicast-sender.c"/>
 		<build type="c-source"      value="udp-unicast-sender-main.c"/>

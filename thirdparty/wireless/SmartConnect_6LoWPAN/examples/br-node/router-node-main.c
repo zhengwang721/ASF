@@ -130,7 +130,7 @@ static uint8_t data_length = 0;
 static uint8_t rx_index = 0;
 void serial_data_handler(void);
 #endif
-uint8_t *edbg_eui_read_eui64(void);
+extern uint8_t *edbg_eui_read_eui64(void);
 
 /*---------------------------------------------------------------------------*/
 
@@ -192,7 +192,7 @@ main(int argc, char *argv[])
 
   netstack_init();
   rf_set_channel(RF_CHANNEL);
-  printf("rf233 channel: %d\n", rf_get_channel());
+  printf(" Channel: %d\n", rf_get_channel());
   leds_off(LEDS_ALL);
   /*  temp_sensor_init();
       voltage_sensor_init();*/

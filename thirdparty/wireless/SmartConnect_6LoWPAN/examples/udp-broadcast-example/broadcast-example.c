@@ -33,7 +33,9 @@
  /**
  * \mainpage
  * \section preface Preface
- * UDP Broadcast exmaple
+ * UDP Broadcast example uses Simple UDP module to send broadcast data using UDP socket.
+ * This example demonstrates the stack ability to create a UDP socket and successfully send
+ * and receive UDP broadcast data over the network.
  */
  
 #include "contiki.h"

@@ -1,9 +1,8 @@
 <asf xmlversion="1.0">
-	<project caption="Smart Connect 6LoWPAN - Mesh node" id="thirdparty.wireless.smartconnect_6lowpan.examples.mesh-node.samd21_xpro_rf212b" force-caption="true" force-description="true">
+	<project caption="Smart Connect 6LoWPAN - Mesh node AT86RF212B - SAM D21 Xplained Pro" id="thirdparty.wireless.smartconnect_6lowpan.examples.mesh-node.samd21_xpro_rf212b" force-caption="true" force-description="true">
 		<info type="description" value="summary">
+		      Mesh node demonstrates the ability of the stack to create DAG network, join the existing network and get notification from UIP module.
 		</info>
-		
-
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
