@@ -39,14 +39,14 @@
  *
  */
 
-#include "common\include\nm_common.h"
-#include "driver\source\nmbus.h"
-#include "bsp\include\nm_bsp.h"
-#include "driver\source\nmdrv.h"
-#include "driver\source\nmasic.h"
+#include "common/include/nm_common.h"
+#include "driver/source/nmbus.h"
+#include "bsp/include/nm_bsp.h"
+#include "driver/source/nmdrv.h"
+#include "driver/source/nmasic.h"
 
 #ifdef CONF_WINC_USE_SPI
-#include "driver\source\nmspi.h"
+#include "driver/source/nmspi.h"
 #endif
 
 #define rNMI_GP_REG_1          (0x14a0)

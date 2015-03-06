@@ -39,10 +39,10 @@
  *
  */
 
-#include "common\include\nm_common.h"
-#include "driver\source\nmbus.h"
-#include "bsp\include\nm_bsp.h"
-#include "driver\source\nmasic.h"
+#include "common/include/nm_common.h"
+#include "driver/source/nmbus.h"
+#include "bsp/include/nm_bsp.h"
+#include "driver/source/nmasic.h"
 
 #define NMI_GLB_RESET_0 (NMI_PERIPH_REG_BASE + 0x400)
 #define NMI_INTR_REG_BASE (NMI_PERIPH_REG_BASE+0xa00)

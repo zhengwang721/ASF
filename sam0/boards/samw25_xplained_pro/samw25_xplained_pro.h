@@ -110,6 +110,8 @@ void system_board_init(void);
 #define LED_0_PIN                 LED0_PIN
 #define LED_0_ACTIVE              LED0_ACTIVE
 #define LED_0_INACTIVE            LED0_INACTIVE
+#define LED0_GPIO                 LED0_PIN
+#define LED0                      LED0_PIN
 
 #define LED_0_PWM_MODULE          TCC0
 #define LED_0_PWM_CHANNEL         0
@@ -191,7 +193,7 @@ void system_board_init(void);
 #define EXT1_ADC_MODULE           ADC
 #define EXT1_ADC_0_CHANNEL        0
 #define EXT1_ADC_0_PIN            PIN_PA02B_ADC_AIN0
-#define EXT1_ADC_0_MUX            MUX_PA02B_ADC_AIN0 
+#define EXT1_ADC_0_MUX            MUX_PA02B_ADC_AIN0
 #define EXT1_ADC_0_PINMUX         PINMUX_PA02B_ADC_AIN0
 #define EXT1_ADC_1_CHANNEL        1
 #define EXT1_ADC_1_PIN            PIN_PA03B_ADC_AIN1
@@ -262,6 +264,7 @@ void system_board_init(void);
 #define EXT3_PIN_7                PIN_PA22
 #define EXT3_PIN_8                PIN_PA23
 #define EXT3_PIN_9                PIN_PA06
+#define EXT3_PIN_10               0
 #define EXT3_PIN_11               PIN_PA08
 #define EXT3_PIN_12               PIN_PA09
 #define EXT3_PIN_13               PIN_PA01
@@ -446,7 +449,79 @@ void system_board_init(void);
 
 /** @} */
 
+/** \name 802.15.4 TRX Interface definitions
+ * @{
+ */
+
+#define AT86RFX_SPI                  EXT1_SPI_MODULE
+#define AT86RFX_RST_PIN              EXT1_PIN_7
+#define AT86RFX_MISC_PIN             EXT1_PIN_12
+#define AT86RFX_IRQ_PIN              EXT1_PIN_9
+#define AT86RFX_SLP_PIN              EXT1_PIN_10
+#define AT86RFX_SPI_CS               EXT1_PIN_15
+#define AT86RFX_SPI_MOSI             EXT1_PIN_16
+#define AT86RFX_SPI_MISO             EXT1_PIN_17
+#define AT86RFX_SPI_SCK              EXT1_PIN_18
+#define AT86RFX_CSD                  EXT1_PIN_5
+#define AT86RFX_CPS                  EXT1_PIN_8
+
+#define AT86RFX_SPI_SERCOM_MUX_SETTING   EXT1_SPI_SERCOM_MUX_SETTING
+#define AT86RFX_SPI_SERCOM_PINMUX_PAD0   EXT1_SPI_SERCOM_PINMUX_PAD0
+#define AT86RFX_SPI_SERCOM_PINMUX_PAD1   PINMUX_UNUSED
+#define AT86RFX_SPI_SERCOM_PINMUX_PAD2   EXT1_SPI_SERCOM_PINMUX_PAD2
+#define AT86RFX_SPI_SERCOM_PINMUX_PAD3   EXT1_SPI_SERCOM_PINMUX_PAD3
+
+#define AT86RFX_IRQ_CHAN       EXT1_IRQ_INPUT
+#define AT86RFX_IRQ_PINMUX     EXT1_IRQ_PINMUX
+
+
+/** Enables the transceiver main interrupt. */
+#define ENABLE_TRX_IRQ()
+
+/** Disables the transceiver main interrupt. */
+#define DISABLE_TRX_IRQ()
+
+/** Clears the transceiver main interrupt. */
+#define CLEAR_TRX_IRQ()
+
+/*
+ * This macro saves the trx interrupt status and disables the trx interrupt.
+ */
+#define ENTER_TRX_REGION()
+
+/*
+ *  This macro restores the transceiver interrupt status
+ */
+#define LEAVE_TRX_REGION()
+
 /** @} */
+
+/**
+ * \brief Turns off the specified LEDs.
+ *
+ * \param led_gpio LED to turn off (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Off(led_gpio)     port_pin_set_output_level(led_gpio,true)
+
+/**
+ * \brief Turns on the specified LEDs.
+ *
+ * \param led_gpio LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_On(led_gpio)      port_pin_set_output_level(led_gpio,false)
+
+/**
+ * \brief Toggles the specified LEDs.
+ *
+ * \param led_gpio LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Toggle(led_gpio)  port_pin_toggle_output_level(led_gpio)
 
 #ifdef __cplusplus
 }

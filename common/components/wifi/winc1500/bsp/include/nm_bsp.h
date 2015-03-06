@@ -138,11 +138,11 @@ void nm_bsp_interrupt_ctrl(uint8 u8Enable);
 #endif
 
 #ifdef _FREESCALE_MCF51CN128_
-#include "bsp\include\nm_bsp_mcf51cn128.h"
+#include "bsp/include/nm_bsp_mcf51cn128.h"
 #endif
 
 #ifdef __MCF964548__
-#include "bsp\include\nm_bsp_mc96f4548.h"
+#include "bsp/include/nm_bsp_mc96f4548.h"
 #endif
 
 #ifdef __APP_APS3_CORTUS__
@@ -150,20 +150,20 @@ void nm_bsp_interrupt_ctrl(uint8 u8Enable);
 #endif
 
 #if (defined __SAMD21J18A__) || (defined __SAMD21G18A__)
-#include "nm_bsp_samd21.h"
+#include "bsp/include/nm_bsp_samd21.h"
 #endif
 
 
 #ifdef __SAM4S16C__
-#include "nm_bsp_sam4s.h"
+#include "bsp/include/nm_bsp_sam4s.h"
 #endif
 
 #ifdef __SAM4SD32C__
-#include "nm_bsp_sam4s.h"
+#include "bsp/include/nm_bsp_sam4s.h"
 #endif
 
 #ifdef __SAMG53N19__
-#include "nm_bsp_samg53.h"
+#include "bsp/include/nm_bsp_samg53.h"
 #endif
 
 #ifdef CORTUS_APP

@@ -38,7 +38,7 @@
  * \asf_license_stop
  *
  */
-#include "common\include\nm_common.h"
+#include "common/include/nm_common.h"
 
 void m2m_memcpy(uint8* pDst,uint8* pSrc,uint32 sz)
 {
