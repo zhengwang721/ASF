@@ -37,5 +37,6 @@
 
 #include "ip64-driver.h"
 extern const struct ip64_driver ksz8851snl_ip64_driver;
-
+int ksz8851snl_read(uint8_t *, uint16_t);
+int ksz8851snl_send(const uint8_t *, uint16_t);
 #endif /* KSZ8851SNL_IP64_DRIVER_H */

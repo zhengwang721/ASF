@@ -223,11 +223,11 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
 
   timestmp = clock_time();
 
-  //configure_adc();
-  //light = measure_light();
+  configure_adc();
+  light = measure_light();
 
   lladdr = uip_ds6_get_link_local(-1);
-  sprintf(mac_adr_str,"%02x%02x%02x%02x%02x%02x%02x%02x",lladdr->ipaddr.u8[8],lladdr->ipaddr.u8[9],lladdr->ipaddr.u8[10],lladdr->ipaddr.u8[11],lladdr->ipaddr.u8[12],lladdr->ipaddr.u8[13],lladdr->ipaddr.u8[14],lladdr->ipaddr.u8[15]);
+  sprintf(mac_adr_str,"%02x%02x%02x%02x%02x%02x%02x%02x",lladdr ->ipaddr.u8[8],lladdr->ipaddr.u8[9],lladdr->ipaddr.u8[10],lladdr->ipaddr.u8[11],lladdr->ipaddr.u8[12],lladdr->ipaddr.u8[13],lladdr->ipaddr.u8[14],lladdr->ipaddr.u8[15]);
 
   nodeid = lladdr->ipaddr.u8[14];
   nodeid <<= 8;
@@ -274,6 +274,7 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
    /* To keep compiler happy */
    thigh = thigh;
    tlow = tlow;
+   temp_C = at30tse_read_temperature();
   
   /* Reconnect from here */
 
@@ -357,7 +358,7 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
 		//printf("%s\r\n",str);
 		
 		// measure light intensity
-		//light = measure_light();
+		light = measure_light();
 		sprintf(light_str,"%s","4095");
 		
 		// create payload for mqtt message

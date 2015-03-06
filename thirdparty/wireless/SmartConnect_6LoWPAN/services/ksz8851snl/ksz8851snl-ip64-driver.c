@@ -77,12 +77,12 @@ init(void)
   printf("Ethernet Address %02x:%02x:%02x:%02x:%02x:%02x\n", 
          macaddr[0], macaddr[1], macaddr[2],
          macaddr[3], macaddr[4], macaddr[5]);
-  ksz8851snl_init(macaddr);
+  ksz8851snl_init();
   /* Write MAc address in ksz8851snl registers */
   //
-  //ksz8851_reg_write(REG_MAC_ADDR_0, (macaddr[4] << 8) | macaddr[5]);
-  //ksz8851_reg_write(REG_MAC_ADDR_2, (macaddr[2] << 8) | macaddr[3]);
-  //ksz8851_reg_write(REG_MAC_ADDR_4, (macaddr[1] << 8) | macaddr[0]);
+  ksz8851_reg_write(REG_MAC_ADDR_0, (macaddr[4] << 8) | macaddr[5]);
+  ksz8851_reg_write(REG_MAC_ADDR_2, (macaddr[2] << 8) | macaddr[3]);
+  ksz8851_reg_write(REG_MAC_ADDR_4, (macaddr[1] << 8) | macaddr[0]);
    
   process_start(&ksz8851snl_ip64_driver_process, NULL);
 }
@@ -226,6 +226,132 @@ output(uint8_t *packet, uint16_t len)
   ksz8851snl_send(packet, len);
   return len;
 }
+int
+ksz8851snl_send(const uint8_t *data, uint16_t datalen)
+{
+  int txmir;
+
+  //printf("ksz8851snl_send %p %d\n", data, datalen);
+  /* TX step1: check if TXQ memory size is available for transmit. */
+  txmir = ksz8851_reg_read(REG_TX_MEM_INFO) & TX_MEM_AVAILABLE_MASK;
+  if (txmir < datalen + 8) {
+    printf("ksz8851snl_update: TX not enough memory in queue: %d required %d\n",
+           txmir, datalen + 8);
+    return -1;
+  }
+
+  /* TX step2: disable all interrupts. */
+  ksz8851_reg_write(REG_INT_MASK, 0);
+
+  /*  printf("ksz8851snl_update: TX start packet transmit len %d\n",
+      datalen);*/
+
+  /* TX step3: enable TXQ write access. */
+  ksz8851_reg_setbits(REG_RXQ_CMD, RXQ_START);
+
+  /* TX step4-8: perform FIFO write operation. */
+  ksz8851_fifo_write_begin(datalen);
+  ksz8851_fifo_write((uint8_t*)data, datalen);
+
+  /* TX step9-10: pad with dummy data to keep dword alignment. */
+  ksz8851_fifo_write_end(datalen & 3);
+
+  /* TX step12: disable TXQ write access. */
+  ksz8851_reg_clrbits(REG_RXQ_CMD, RXQ_START);
+
+  /* TX step12.1: enqueue frame in TXQ. */
+  ksz8851_reg_setbits(REG_TXQ_CMD, TXQ_ENQUEUE);
+
+  /* RX step13: enable INT_RX flag. */
+  ksz8851_reg_write(REG_INT_MASK, INT_RX);
+
+  return datalen;
+}
+
+static int pending_frame = 0;
+
+int
+ksz8851snl_read(uint8_t *buffer, uint16_t bufsize)
+{
+  int len, status;
+
+  if (0 == pending_frame) {
+    /* RX step1: read interrupt status for INT_RX flag. */
+    status = ksz8851_reg_read(REG_INT_STATUS);
+    if (!(status & INT_RX)) {
+      return 0;
+    }
+
+    /* RX step2: disable all interrupts. */
+    ksz8851_reg_write(REG_INT_MASK, 0);
+
+    /* RX step3: clear INT_RX flag. */
+    ksz8851_reg_setbits(REG_INT_STATUS, INT_RX);
+
+    /* RX step4-5: check for received frames. */
+    pending_frame = ksz8851_reg_read(REG_RX_FRAME_CNT_THRES) >> 8;
+    if (0 == pending_frame) {
+      /* RX step24: enable INT_RX flag. */
+      ksz8851_reg_write(REG_INT_MASK, INT_RX);
+      return 0;
+    }
+  }
+
+  /*  printf("pending_frame %d\n", pending_frame);*/
+  if(pending_frame > 0) {
+
+    /* RX step6: get RX packet status. */
+    status = ksz8851_reg_read(REG_RX_FHR_STATUS);
+    if (((status & RX_VALID) == 0) || (status & RX_ERRORS)) {
+      ksz8851_reg_setbits(REG_RXQ_CMD, RXQ_CMD_FREE_PACKET);
+      pending_frame -= 1;
+      printf("ksz8851snl_update: RX packet error!\n");
+    } else {
+      /* RX step7: read frame length. */
+      len = ksz8851_reg_read(REG_RX_FHR_BYTE_CNT) & RX_BYTE_CNT_MASK;
+
+      /* RX step8: Drop packet if len is invalid or no descriptor available. */
+      if (0 == len) {
+        ksz8851_reg_setbits(REG_RXQ_CMD, RXQ_CMD_FREE_PACKET);
+        pending_frame -= 1;
+        printf("ksz8851snl_update: RX bad len!\n");
+      } else {
+        //printf("ksz8851snl_update: RX start packet receive len=%d\n",len);
+        /* RX step9: reset RX frame pointer. */
+        ksz8851_reg_clrbits(REG_RX_ADDR_PTR, ADDR_PTR_MASK);
+
+        /* RX step10: start RXQ read access. */
+        ksz8851_reg_setbits(REG_RXQ_CMD, RXQ_START);
+
+        /* Remove CRC and update pbuf length. */
+        len -= 4;
+
+        if(len > bufsize) {
+          len = bufsize;
+        }
+
+        /* RX step11-17: start FIFO read operation. */
+        ksz8851_fifo_read(buffer, len);
+
+
+        /* RX step21: end RXQ read access. */
+        ksz8851_reg_clrbits(REG_RXQ_CMD, RXQ_START);
+
+        /* RX step22-23: update frame count to be read. */
+        pending_frame -= 1;
+
+        /* RX step24: enable INT_RX flag if transfer complete. */
+        if (0 == pending_frame) {
+          ksz8851_reg_write(REG_INT_MASK, INT_RX);
+        }
+
+        return len;
+      }
+    }
+  }
+  return 0;
+}
+
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(ksz8851snl_ip64_driver_process, ev, data)
 {
