@@ -143,7 +143,9 @@ edbg_eui_read_eui64(void)
   /*  for(i = 0; i < LEN_EUI; i++) {
     printf("0x%02x ", readbuf[i]);
   }
+  
   printf("\n");*/
+  i2c_master_reset(&i2c_master_instance);
   return readbuf;
 }
 /*---------------------------------------------------------------------------*/
