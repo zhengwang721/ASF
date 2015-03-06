@@ -153,12 +153,7 @@ void nm_bsp_interrupt_ctrl(uint8 u8Enable);
 #include "bsp/include/nm_bsp_samd21.h"
 #endif
 
-
-#ifdef __SAM4S16C__
-#include "bsp/include/nm_bsp_sam4s.h"
-#endif
-
-#ifdef __SAM4SD32C__
+#if (defined __SAM4S16C__) || (defined __SAM4SD32C__)
 #include "bsp/include/nm_bsp_sam4s.h"
 #endif
 
@@ -175,9 +170,8 @@ void nm_bsp_interrupt_ctrl(uint8 u8Enable);
 #endif
 
 #ifdef _ARDUINO_UNO_
-#include <bsp/include/nm_bsp_arduino_uno.h>
+#include "bsp/include/nm_bsp_arduino_uno.h"
 #endif
-
 
 #ifdef _NM_BSP_BIG_END
 #define NM_BSP_B_L_32(x) \

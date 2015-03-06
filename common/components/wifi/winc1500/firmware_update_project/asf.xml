@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<select-by-device id="common.components.wifi.winc1500.firmware_update_project">
-		<module type="application" id="common.components.wifi.winc1500.firmware_update_project#0" caption="WINC1500 Firmware Update Project (v18.0.2)">
+		<module type="application" id="common.components.wifi.winc1500.firmware_update_project#0" caption="WINC1500 Firmware Update Project (v18.0.3)">
 			<!-- Summary Description -->
 			<info type="description" value="summary">
 				This project contains necessary tools and documentation to perform a firmware udpate and root certificate update of the WINC1500 Wi-Fi module.
