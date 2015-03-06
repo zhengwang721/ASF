@@ -91,7 +91,7 @@ typedef enum IRQn
   RTT_IRQn             =  3, /**<  3 SAM4C4C Real Time Timer (RTT) */
   WDT_IRQn             =  4, /**<  4 SAM4C4C Watchdog Timer (WDT) */
   PMC_IRQn             =  5, /**<  5 SAM4C4C Power Management Controller (PMC) */
-  EFC0_IRQn            =  6, /**<  6 SAM4C4C Enhanced Embedded Flash Controller 0 (EFC0) */
+  EFC_IRQn             =  6, /**<  6 SAM4C4C Enhanced Embedded Flash Controller 0 (EFC0) */
   UART0_IRQn           =  8, /**<  8 SAM4C4C UART 0 (UART0) */
   PIOA_IRQn            = 11, /**< 11 SAM4C4C Parallel I/O Controller A (PIOA) */
   PIOB_IRQn            = 12, /**< 12 SAM4C4C Parallel I/O Controller B (PIOB) */
@@ -155,7 +155,7 @@ typedef struct _DeviceVectors
   void* pfnRTT_Handler;    /*  3 Real Time Timer */
   void* pfnWDT_Handler;    /*  4 Watchdog Timer */
   void* pfnPMC_Handler;    /*  5 Power Management Controller */
-  void* pfnEFC0_Handler;   /*  6 Enhanced Embedded Flash Controller 0 */
+  void* pfnEFC_Handler;    /*  6 Enhanced Embedded Flash Controller 0 */
   void* pvReserved7;
   void* pfnUART0_Handler;  /*  8 UART 0 */
   void* pvReserved9;
@@ -210,7 +210,7 @@ void ADC_Handler        ( void );
 void AES_Handler        ( void );
 void ARM1_Handler       ( void );
 void CPKCC_Handler      ( void );
-void EFC0_Handler        ( void );
+void EFC_Handler        ( void );
 void ICM_Handler        ( void );
 void IPC0_Handler       ( void );
 void IPC1_Handler       ( void );
@@ -271,33 +271,33 @@ void WDT_Handler        ( void );
 /** \addtogroup SAM4C4C_api Peripheral Software API */
 /*@{*/
 
-#include "component/adc.h"
-#include "component/aes.h"
-#include "component/chipid.h"
-#include "component/cmcc.h"
-#include "component/efc.h"
-#include "component/gpbr.h"
-#include "component/icm.h"
-#include "component/ipc.h"
-#include "component/matrix.h"
-#include "component/pdc.h"
-#include "component/pio.h"
-#include "component/pmc.h"
-#include "component/pwm.h"
-#include "component/rstc.h"
-#include "component/rswdt.h"
-#include "component/rtc.h"
-#include "component/rtt.h"
-#include "component/slcdc.h"
-#include "component/smc.h"
-#include "component/spi.h"
-#include "component/supc.h"
-#include "component/tc.h"
-#include "component/trng.h"
-#include "component/twi.h"
-#include "component/uart.h"
-#include "component/usart.h"
-#include "component/wdt.h"
+#include "component/component_adc.h"
+#include "component/component_aes.h"
+#include "component/component_chipid.h"
+#include "component/component_cmcc.h"
+#include "component/component_efc.h"
+#include "component/component_gpbr.h"
+#include "component/component_icm.h"
+#include "component/component_ipc.h"
+#include "component/component_matrix.h"
+#include "component/component_pdc.h"
+#include "component/component_pio.h"
+#include "component/component_pmc.h"
+#include "component/component_pwm.h"
+#include "component/component_rstc.h"
+#include "component/component_rswdt.h"
+#include "component/component_rtc.h"
+#include "component/component_rtt.h"
+#include "component/component_slcdc.h"
+#include "component/component_smc.h"
+#include "component/component_spi.h"
+#include "component/component_supc.h"
+#include "component/component_tc.h"
+#include "component/component_trng.h"
+#include "component/component_twi.h"
+#include "component/component_uart.h"
+#include "component/component_usart.h"
+#include "component/component_wdt.h"
 /*@}*/
 
 /* ************************************************************************** */
@@ -306,46 +306,46 @@ void WDT_Handler        ( void );
 /** \addtogroup SAM4C4C_reg Registers Access Definitions */
 /*@{*/
 
-#include "instance/aes.h"
-#include "instance/spi0.h"
-#include "instance/tc0.h"
-#include "instance/tc1.h"
-#include "instance/twi0.h"
-#include "instance/twi1.h"
-#include "instance/usart0.h"
-#include "instance/usart1.h"
-#include "instance/usart2.h"
-#include "instance/usart3.h"
-#include "instance/usart4.h"
-#include "instance/adc.h"
-#include "instance/slcdc.h"
-#include "instance/icm.h"
-#include "instance/trng.h"
-#include "instance/ipc0.h"
-#include "instance/cmcc0.h"
-#include "instance/smc0.h"
-#include "instance/matrix0.h"
-#include "instance/pmc.h"
-#include "instance/uart0.h"
-#include "instance/chipid.h"
-#include "instance/efc0.h"
-#include "instance/pioa.h"
-#include "instance/piob.h"
-#include "instance/rstc.h"
-#include "instance/supc.h"
-#include "instance/rtt.h"
-#include "instance/wdt.h"
-#include "instance/rtc.h"
-#include "instance/gpbr.h"
-#include "instance/rswdt.h"
-#include "instance/spi1.h"
-#include "instance/uart1.h"
-#include "instance/pwm.h"
-#include "instance/pioc.h"
-#include "instance/matrix1.h"
-#include "instance/ipc1.h"
-#include "instance/cmcc1.h"
-#include "instance/smc1.h"
+#include "instance/instance_aes.h"
+#include "instance/instance_spi0.h"
+#include "instance/instance_tc0.h"
+#include "instance/instance_tc1.h"
+#include "instance/instance_twi0.h"
+#include "instance/instance_twi1.h"
+#include "instance/instance_usart0.h"
+#include "instance/instance_usart1.h"
+#include "instance/instance_usart2.h"
+#include "instance/instance_usart3.h"
+#include "instance/instance_usart4.h"
+#include "instance/instance_adc.h"
+#include "instance/instance_slcdc.h"
+#include "instance/instance_icm.h"
+#include "instance/instance_trng.h"
+#include "instance/instance_ipc0.h"
+#include "instance/instance_cmcc0.h"
+#include "instance/instance_smc0.h"
+#include "instance/instance_matrix0.h"
+#include "instance/instance_pmc.h"
+#include "instance/instance_uart0.h"
+#include "instance/instance_chipid.h"
+#include "instance/instance_efc.h"
+#include "instance/instance_pioa.h"
+#include "instance/instance_piob.h"
+#include "instance/instance_rstc.h"
+#include "instance/instance_supc.h"
+#include "instance/instance_rtt.h"
+#include "instance/instance_wdt.h"
+#include "instance/instance_rtc.h"
+#include "instance/instance_gpbr.h"
+#include "instance/instance_rswdt.h"
+#include "instance/instance_spi1.h"
+#include "instance/instance_uart1.h"
+#include "instance/instance_pwm.h"
+#include "instance/instance_pioc.h"
+#include "instance/instance_matrix1.h"
+#include "instance/instance_ipc1.h"
+#include "instance/instance_cmcc1.h"
+#include "instance/instance_smc1.h"
 /*@}*/
 
 /* ************************************************************************** */
@@ -360,7 +360,7 @@ void WDT_Handler        ( void );
 #define ID_RTT    ( 3) /**< \brief Real Time Timer (RTT) */
 #define ID_WDT    ( 4) /**< \brief Watchdog Timer (WDT) */
 #define ID_PMC    ( 5) /**< \brief Power Management Controller (PMC) */
-#define ID_EFC0   ( 6) /**< \brief Enhanced Embedded Flash Controller 0 (EFC0) */
+#define ID_EFC    ( 6) /**< \brief Enhanced Embedded Flash Controller 0 (EFC0) */
 #define ID_UART0  ( 8) /**< \brief UART 0 (UART0) */
 #define ID_SMC0   (10) /**< \brief Static Memory Controller 0 (SMC0) */
 #define ID_PIOA   (11) /**< \brief Parallel I/O Controller A (PIOA) */
@@ -437,7 +437,7 @@ void WDT_Handler        ( void );
 #define UART0      (0x400E0600U) /**< \brief (UART0     ) Base Address */
 #define PDC_UART0  (0x400E0700U) /**< \brief (PDC_UART0 ) Base Address */
 #define CHIPID     (0x400E0740U) /**< \brief (CHIPID    ) Base Address */
-#define EFC0       (0x400E0A00U) /**< \brief (EFC0      ) Base Address */
+#define EFC        (0x400E0A00U) /**< \brief (EFC0      ) Base Address */
 #define PIOA       (0x400E0E00U) /**< \brief (PIOA      ) Base Address */
 #define PIOB       (0x400E1000U) /**< \brief (PIOB      ) Base Address */
 #define RSTC       (0x400E1400U) /**< \brief (RSTC      ) Base Address */
@@ -490,7 +490,7 @@ void WDT_Handler        ( void );
 #define UART0      ((Uart    *)0x400E0600U) /**< \brief (UART0     ) Base Address */
 #define PDC_UART0  ((Pdc     *)0x400E0700U) /**< \brief (PDC_UART0 ) Base Address */
 #define CHIPID     ((Chipid  *)0x400E0740U) /**< \brief (CHIPID    ) Base Address */
-#define EFC0       ((Efc     *)0x400E0A00U) /**< \brief (EFC0      ) Base Address */
+#define EFC        ((Efc     *)0x400E0A00U) /**< \brief (EFC0      ) Base Address */
 #define PIOA       ((Pio     *)0x400E0E00U) /**< \brief (PIOA      ) Base Address */
 #define PIOB       ((Pio     *)0x400E1000U) /**< \brief (PIOB      ) Base Address */
 #define RSTC       ((Rstc    *)0x400E1400U) /**< \brief (RSTC      ) Base Address */
@@ -519,27 +519,26 @@ void WDT_Handler        ( void );
 /** \addtogroup SAM4C4C_pio Peripheral Pio Definitions */
 /*@{*/
 
-#include "pio/sam4c4c.h"
+#include "pio/pio_sam4c4c.h"
 /*@}*/
 
 /* ************************************************************************** */
 /*   MEMORY MAPPING DEFINITIONS FOR SAM4C4C */
 /* ************************************************************************** */
 
-#define IFLASH0_SIZE             (0x40000u)
-#define IFLASH0_PAGE_SIZE        (512u)
-#define IFLASH0_LOCK_REGION_SIZE (8192u)
-#define IFLASH0_NB_OF_PAGES      (512u)
-#define IFLASH0_NB_OF_LOCK_BITS  (32u)
+#define IFLASH_SIZE              (0x40000u)
+#define IFLASH_PAGE_SIZE         (512u)
+#define IFLASH_LOCK_REGION_SIZE  (8192u)
+#define IFLASH_NB_OF_PAGES       (512u)
+#define IFLASH_NB_OF_LOCK_BITS   (32u)
 #define IRAM0_SIZE               (0x20000u)
 #define IRAM1_SIZE               (0x4000u)
 #define IRAM2_SIZE               (0x2000u)
-#define IFLASH_SIZE              (IFLASH0_SIZE)
 #define IRAM_SIZE                (IRAM0_SIZE+IRAM1_SIZE+IRAM2_SIZE)
 
-#define IFLASH0_CNC_ADDR (0x01000000u) /**< Internal Flash (Code - Non Cached) base address */
+#define IFLASH_CNC_ADDR  (0x01000000u) /**< Internal Flash (Code - Non Cached) base address */
 #define IROM_ADDR        (0x02000000u) /**< Internal ROM base address */
-#define IFLASH0_CC_ADDR  (0x11000000u) /**< Internal Flash (Code - Cached) base address */
+#define IFLASH_CC_ADDR   (0x11000000u) /**< Internal Flash (Code - Cached) base address */
 #define IRAM0_ADDR       (0x20000000u) /**< Internal RAM 0 base address */
 #define IRAM1_ADDR       (0x20080000u) /**< Internal RAM 1 base address */
 #define IRAM2_ADDR       (0x20100000u) /**< Internal RAM 2 base address */

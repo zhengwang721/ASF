@@ -89,7 +89,7 @@ typedef enum IRQn
   RTT_IRQn             =  3, /**<  3 SAM4CMS4C Real Time Timer (RTT) */
   WDT_IRQn             =  4, /**<  4 SAM4CMS4C Watchdog Timer (WDT) */
   PMC_IRQn             =  5, /**<  5 SAM4CMS4C Power Management Controller (PMC) */
-  EFC0_IRQn            =  6, /**<  6 SAM4CMS4C Enhanced Embedded Flash Controller 0 (EFC0) */
+  EFC_IRQn             =  6, /**<  6 SAM4CMS4C Enhanced Embedded Flash Controller 0 (EFC0) */
   UART0_IRQn           =  8, /**<  8 SAM4CMS4C UART 0 (UART0) */
   PIOA_IRQn            = 11, /**< 11 SAM4CMS4C Parallel I/O Controller A (PIOA) */
   PIOB_IRQn            = 12, /**< 12 SAM4CMS4C Parallel I/O Controller B (PIOB) */
@@ -152,7 +152,7 @@ typedef struct _DeviceVectors
   void* pfnRTT_Handler;    /*  3 Real Time Timer */
   void* pfnWDT_Handler;    /*  4 Watchdog Timer */
   void* pfnPMC_Handler;    /*  5 Power Management Controller */
-  void* pfnEFC0_Handler;   /*  6 Enhanced Embedded Flash Controller 0 */
+  void* pfnEFC_Handler;    /*  6 Enhanced Embedded Flash Controller 0 */
   void* pvReserved7;
   void* pfnUART0_Handler;  /*  8 UART 0 */
   void* pvReserved9;
@@ -207,7 +207,7 @@ void ADC_Handler        ( void );
 void AES_Handler        ( void );
 void ARM1_Handler       ( void );
 void CPKCC_Handler      ( void );
-void EFC0_Handler       ( void );
+void EFC_Handler        ( void );
 void ICM_Handler        ( void );
 void IPC0_Handler       ( void );
 void IPC1_Handler       ( void );
@@ -323,7 +323,7 @@ void WDT_Handler        ( void );
 #include "instance/pmc.h"
 #include "instance/uart0.h"
 #include "instance/chipid.h"
-#include "instance/efc0.h"
+#include "instance/efc.h"
 #include "instance/pioa.h"
 #include "instance/piob.h"
 #include "instance/rstc.h"
@@ -355,7 +355,7 @@ void WDT_Handler        ( void );
 #define ID_RTT    ( 3) /**< \brief Real Time Timer (RTT) */
 #define ID_WDT    ( 4) /**< \brief Watchdog Timer (WDT) */
 #define ID_PMC    ( 5) /**< \brief Power Management Controller (PMC) */
-#define ID_EFC0   ( 6) /**< \brief Enhanced Embedded Flash Controller 0 (EFC0) */
+#define ID_EFC    ( 6) /**< \brief Enhanced Embedded Flash Controller 0 (EFC0) */
 #define ID_UART0  ( 8) /**< \brief UART 0 (UART0) */
 #define ID_SMC0   (10) /**< \brief Static Memory Controller 0 (SMC0) */
 #define ID_PIOA   (11) /**< \brief Parallel I/O Controller A (PIOA) */
@@ -429,7 +429,7 @@ void WDT_Handler        ( void );
 #define UART0      (0x400E0600U) /**< \brief (UART0     ) Base Address */
 #define PDC_UART0  (0x400E0700U) /**< \brief (PDC_UART0 ) Base Address */
 #define CHIPID     (0x400E0740U) /**< \brief (CHIPID    ) Base Address */
-#define EFC0       (0x400E0A00U) /**< \brief (EFC0      ) Base Address */
+#define EFC        (0x400E0A00U) /**< \brief (EFC0      ) Base Address */
 #define PIOA       (0x400E0E00U) /**< \brief (PIOA      ) Base Address */
 #define PIOB       (0x400E1000U) /**< \brief (PIOB      ) Base Address */
 #define RSTC       (0x400E1400U) /**< \brief (RSTC      ) Base Address */
@@ -480,7 +480,7 @@ void WDT_Handler        ( void );
 #define UART0      ((Uart    *)0x400E0600U) /**< \brief (UART0     ) Base Address */
 #define PDC_UART0  ((Pdc     *)0x400E0700U) /**< \brief (PDC_UART0 ) Base Address */
 #define CHIPID     ((Chipid  *)0x400E0740U) /**< \brief (CHIPID    ) Base Address */
-#define EFC0       ((Efc     *)0x400E0A00U) /**< \brief (EFC0      ) Base Address */
+#define EFC        ((Efc     *)0x400E0A00U) /**< \brief (EFC0      ) Base Address */
 #define PIOA       ((Pio     *)0x400E0E00U) /**< \brief (PIOA      ) Base Address */
 #define PIOB       ((Pio     *)0x400E1000U) /**< \brief (PIOB      ) Base Address */
 #define RSTC       ((Rstc    *)0x400E1400U) /**< \brief (RSTC      ) Base Address */
@@ -516,20 +516,19 @@ void WDT_Handler        ( void );
 /*   MEMORY MAPPING DEFINITIONS FOR SAM4CMS4C */
 /* ************************************************************************** */
 
-#define IFLASH0_SIZE             (0x40000u)
-#define IFLASH0_PAGE_SIZE        (512u)
-#define IFLASH0_LOCK_REGION_SIZE (8192u)
-#define IFLASH0_NB_OF_PAGES      (512u)
-#define IFLASH0_NB_OF_LOCK_BITS  (32u)
+#define IFLASH_SIZE              (0x40000u)
+#define IFLASH_PAGE_SIZE         (512u)
+#define IFLASH_LOCK_REGION_SIZE  (8192u)
+#define IFLASH_NB_OF_PAGES       (512u)
+#define IFLASH_NB_OF_LOCK_BITS   (32u)
 #define IRAM0_SIZE               (0x20000u)
 #define IRAM1_SIZE               (0x4000u)
 #define IRAM2_SIZE               (0x2000u)
-#define IFLASH_SIZE              (IFLASH0_SIZE)
 #define IRAM_SIZE                (IRAM0_SIZE+IRAM1_SIZE+IRAM2_SIZE)
 
-#define IFLASH0_CNC_ADDR (0x01000000u) /**< Internal Flash (Code - Non Cached) base address */
+#define IFLASH_CNC_ADDR  (0x01000000u) /**< Internal Flash (Code - Non Cached) base address */
 #define IROM_ADDR        (0x02000000u) /**< Internal ROM base address */
-#define IFLASH0_CC_ADDR  (0x11000000u) /**< Internal Flash (Code - Cached) base address */
+#define IFLASH_CC_ADDR   (0x11000000u) /**< Internal Flash (Code - Cached) base address */
 #define IRAM0_ADDR       (0x20000000u) /**< Internal RAM 0 base address */
 #define IRAM1_ADDR       (0x20080000u) /**< Internal RAM 1 base address */
 #define IRAM2_ADDR       (0x20100000u) /**< Internal RAM 2 base address */
