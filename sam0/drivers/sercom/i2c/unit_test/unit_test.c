@@ -113,17 +113,17 @@
 /* Structure for UART module connected to EDBG (used for unit test output) */
 struct usart_module cdc_uart_module;
 
-//! [packet_data]
+/* [packet_data] */
 #define DATA_LENGTH 10
 #define SLAVE_ADDRESS 0x12
-static uint8_t write_buffer[DATA_LENGTH] = {
+static uint8_t master_write_buffer[DATA_LENGTH] = {
 		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
 };
+static uint8_t master_read_buffer[DATA_LENGTH] = {0};
+static uint8_t slave_buffer[DATA_LENGTH];
 
-
-//! [packet_data]
-
-struct i2c_master_module i2c_master_instance;
+static struct i2c_master_module i2c_master_instance;
+static struct i2c_slave_module i2c_slave_instance
 
 /**
  * \brief Initialize the USART for unit test
@@ -150,9 +150,9 @@ static void cdc_uart_init(void)
 
 /**
  * \internal
- * \brief Test for I2C master initialization.
+ * \brief Test for I2C master and slave initialization.
  *
- * This test initializes the i2c master module and checks whether the
+ * This test initializes the i2c master and module and checks whether the
  * initialization is successful or not.
  *
  * \param test Current test case.
@@ -161,14 +161,31 @@ static void run_i2c_init_test(const struct test_case *test)
 {
 	enum status_code status;
 	struct i2c_master_config config_i2c_master;
+	struct i2c_slave_config config_i2c_slave;
 
+	/* master init testing */
 	i2c_master_get_config_defaults(&config_i2c_master);
 	config_i2c_master.buffer_timeout = 10000;
-	status = i2c_master_init(&i2c_master_instance, SERCOM2, &config_i2c_master);
+	config_i2c_master.pinmux_pad0    = CONF_MASTER_SDA_PINMUX;
+	config_i2c_master.pinmux_pad1    = CONF_MASTER_SCK_PINMUX;
+	status = i2c_master_init(&i2c_master_instance, CONF_I2C_MASTER_MODULE, &config_i2c_master);
 		/* Check for successful initialization */
 	test_assert_true(test, status == STATUS_OK,
 			"I2C master initialization failed");
 	i2c_master_enable(&i2c_master_instance);
+
+	/* slave init testing */	
+	i2c_slave_get_config_defaults(&config_i2c_slave);
+	config_i2c_slave.address        = SLAVE_ADDRESS;
+	config_i2c_slave.address_mode   = I2C_SLAVE_ADDRESS_MODE_MASK;
+	config_i2c_slave.buffer_timeout = 10000;
+	config_i2c_slave.pinmux_pad0    = CONF_SLAVE_SDA_PINMUX;
+	config_i2c_slave.pinmux_pad1    = CONF_SLAVE_SCK_PINMUX;
+	status = i2c_slave_init(&i2c_slave_instance, CONF_I2C_SLAVE_MODULE, &config_i2c_slave);
+		/* Check for successful initialization */
+	test_assert_true(test, status == STATUS_OK,
+			"I2C master initialization failed");
+	i2c_slave_enable(&i2c_slave_instance);
 }
 
 /**
@@ -192,11 +209,10 @@ static void run_i2c_master_transfer_test(const struct test_case *test)
 	uint32_t timeout_cycles = 1000;
 	uint32_t i;
 	bool status = true;
-	uint8_t read_buffer[DATA_LENGTH] = {0};
 	struct i2c_master_packet packet = {
 		.address     = SLAVE_ADDRESS,
 		.data_length = DATA_LENGTH,
-		.data        = write_buffer,
+		.data        = master_write_buffer,
 		.ten_bit_address = false,
 		.high_speed      = false,
 		.hs_master_code  = 0x0,
@@ -214,7 +230,7 @@ static void run_i2c_master_transfer_test(const struct test_case *test)
 			"i2c master write failed");
 	
 	/* wait the master read to complete */
-	packet.data = read_buffer;
+	packet.data = master_read_buffer;
 	timeout_cycles = 1000;
 	do {
 		timeout_cycles--;
@@ -228,7 +244,7 @@ static void run_i2c_master_transfer_test(const struct test_case *test)
 	
 		/* Compare the sent and the received */
 	for (i = 0; i < DATA_LENGTH; i++) {
-		if (read_buffer[i] != write_buffer[i]) {
+		if (master_read_buffer[i] != master_write_buffer[i]) {
 			status = false;
 			break;
 		}
@@ -239,7 +255,7 @@ static void run_i2c_master_transfer_test(const struct test_case *test)
 	
 	/* without stop function: master transfer test*/
 	/* wait the master write to finish */
-	packet.data = write_buffer;
+	packet.data = master_write_buffer;
 	timeout_cycles = 1000;
 	do {
 
@@ -256,7 +272,7 @@ static void run_i2c_master_transfer_test(const struct test_case *test)
 	i2c_master_send_stop(&i2c_master_instance);
 	
 	/* wait the master read to finish */
-	packet.data = read_buffer;
+	packet.data = master_read_buffer;
 	timeout_cycles = 1000;
 	do {
 		timeout_cycles--;
@@ -270,7 +286,7 @@ static void run_i2c_master_transfer_test(const struct test_case *test)
 	
 	/* Compare the sent and the received */
 	for (i = 0; i < DATA_LENGTH; i++) {
-		if (read_buffer[i] != write_buffer[i]) {
+		if (master_read_buffer[i] != master_write_buffer[i]) {
 			status = false;
 			break;
 		}
@@ -279,7 +295,7 @@ static void run_i2c_master_transfer_test(const struct test_case *test)
 	"i2c master transfer without stop comparsion failed");
 	
 	/* use i2c_master_write_packet_wait to complete the transfer */
-	packet.data = write_buffer;
+	packet.data = master_write_buffer;
 	do {
 		timeout_cycles--;
 		if (i2c_master_write_packet_wait(&i2c_master_instance, &packet) ==
@@ -310,7 +326,7 @@ static void run_i2c_full_speed_test(const struct test_case *test)
 	config_i2c_master.buffer_timeout = 10000;
 	config_i2c_master.baud_rate = I2C_MASTER_BAUD_RATE_400KHZ;
 	i2c_master_disable(&i2c_master_instance);
-	status = i2c_master_init(&i2c_master_instance, SERCOM2, &config_i2c_master);
+	status = i2c_master_init(&i2c_master_instance, CONF_I2C_MASTER_MODULE, &config_i2c_master);
 		/* Check for successful initialization */
 	test_assert_true(test, status == STATUS_OK,
 			"I2C master fast-mode initialization failed");
@@ -322,13 +338,11 @@ static void run_i2c_full_speed_test(const struct test_case *test)
 	struct i2c_master_packet packet = {
 		.address     = SLAVE_ADDRESS,
 		.data_length = DATA_LENGTH,
-		.data        = write_buffer,
+		.data        = master_write_buffer,
 		.ten_bit_address = false,
 		.high_speed      = false,
 		.hs_master_code  = 0x0,
 	};
-	
-	 uint8_t read_buffer[DATA_LENGTH] = {0};
 	
 	/* wait master write complete */	 
 	do {
@@ -342,7 +356,7 @@ static void run_i2c_full_speed_test(const struct test_case *test)
 			"i2c master write failed");
 	
 	/* wait master read complete */
-	packet.data = read_buffer;
+	packet.data = master_read_buffer;
 	timeout_cycles = 1000;
 	do {
 		timeout_cycles--;
@@ -356,7 +370,7 @@ static void run_i2c_full_speed_test(const struct test_case *test)
 	
 		/* Compare the sent and the received */
 	for (i = 0; i < DATA_LENGTH; i++) {
-		if (read_buffer[i] != write_buffer[i]) {
+		if (master_read_buffer[i] != master_write_buffer[i]) {
 			status1 = false;
 			break;
 		}
