@@ -38,14 +38,9 @@
 
 #include <math.h>
 #include "EPD_hardware_driver.h"
-
-// From module: TC - MEGARF implementation
 #include "EPD_hw_timer.h"
-//#include "common_EPD_hw_timer.h"
 
 static volatile uint32_t EPD_Counter;
-//static uint8_t spi_flag=FALSE;
-
 static const uint32_t divisors[7] = { 0, 1, 8, 64, 256, 1024};
 
 /**
@@ -80,26 +75,23 @@ static void initialize_EPD_timer(void) {
 	/** TC Compare Output Mode  */
 	.co_mode = CO_NORMAL,
 	/** TC Waveform Generation Mode */	
-	//.wg_mode = NORMAL,
 	.wg_mode = CTC_Mode1,
 	
-	///** Prescalar Rate selection */
-	//uint8_t prescal;
-	///** TC Clock Selection, Prescalar select */
+	/** TC Clock Selection, Prescalar select */
 	.cs_select = EPD_TC_ClockSignalSel
 	};
 	
-	/* Init TC to timer ctc mode. */	
+	/** Init TC to timer ctc mode. */	
 	tc_initc(EPD_TC_TIMER_ID, EPD_TC_TIMER_CHANNEL, &tc_control_par);
 
-	///* Configure OVF value */
+	/** Configure OVF value */
 	rc = (sysclk_get_peripheral_bus_hz(EPD_TC_TIMER_ID) / 
 		 divisors[EPD_TC_ClockSignalSel] ) /
 	     1000 ;
 	
 	tc_write_cc(EPD_TC_TIMER_ID, EPD_TC_TIMER_CHANNEL, rc);
 	
-	// Configure and enable interrupt on TC CTC compare match
+	/** Configure and enable interrupt on TC CTC compare match */
 	tc_set_compa_interrupt_callback(EPD_TC_TIMER_ID, EPD_timer_handler);
 	tc_enable_compa_int(EPD_TC_TIMER_ID);
 	
@@ -107,10 +99,9 @@ static void initialize_EPD_timer(void) {
 	tc_start(EPD_TC_TIMER_ID, &tc_control_par);
 	EPD_Counter=0;
 	
-	/* Configure the PMC to enable the Timer/Counter (TC) module. */
+	/** Configure the PMC to enable the Timer/Counter (TC) module. */
 	sysclk_enable_peripheral_clock(EPD_TC_TIMER_ID);
-	
-	
+		
 }
 
 /**
@@ -166,7 +157,7 @@ static void Wait_10us(void) {
 */
 void PWM_start_toggle(void) {
 	uint16_t ra, rc;
-	/* Configure the PMC to enable the Timer/Counter (TC) module. */
+	/** Configure the PMC to enable the Timer/Counter (TC) module. */
 	sysclk_enable_peripheral_clock(EPD_TC_WAVEFORM_ID);
 
 	gpio_configure_pin(EPD_TC_WAVEFORM_PIN, EPD_TC_WAVEFORM_PIN_FLAGS);
@@ -177,16 +168,14 @@ void PWM_start_toggle(void) {
 		.co_mode = CO_SET,
 		/** TC Waveform Generation Mode */
 		.wg_mode = PWM_Mode11,
-		///** Prescalar Rate selection */
-		//uint8_t prescal;
-		///** TC Clock Selection, Prescalar select */
+		/** TC Clock Selection, Prescalar select */
 		.cs_select = EPD_TC_ClockSignalSel
 	};
-	/* Init TC to waveform mode. */
+	/** Init TC to waveform mode. */
 	tc_initc(EPD_TC_WAVEFORM_ID, EPD_TC_WAVEFORM_CHANNEL, &tc_control_par);
 	       
-	/* Configure waveform frequency and duty cycle. */
-	rc = (sysclk_get_peripheral_bus_hz(EPD_TC_TIMER_ID) /			//sysclk_get_peripheral_hz
+	/** Configure waveform frequency and duty cycle. */
+	rc = (sysclk_get_peripheral_bus_hz(EPD_TC_TIMER_ID) /			
 	     EPD_TC_ClockSignalSel) /
 		 EPD_TC_WAVEFORM_PWM_FREQUENCY;
 
@@ -196,7 +185,7 @@ void PWM_start_toggle(void) {
 	tc_clear_cc(EPD_TC_WAVEFORM_ID, EPD_TC_WAVEFORM_CHANNEL, 0);
 	tc_write_cc(EPD_TC_WAVEFORM_ID, EPD_TC_WAVEFORM_CHANNEL, ra);
 
-	/* Enable TC EPD_TC_WAVEFORM_CHANNEL. */
+	/** Enable TC EPD_TC_WAVEFORM_CHANNEL. */
 	tc_start(EPD_TC_WAVEFORM_ID, &tc_control_par);
 		
 }
@@ -223,20 +212,17 @@ void PWM_run(uint16_t ms) {
 //* SPI  Configuration
 //******************************************************************
 
-//* \brief The SPI device struct that should be initialized */
+/**
+* \brief The SPI device struct that should be initialized 
+*/
 struct spi_device epd_device_conf = {
-	//.id = IOPORT_CREATE_PIN(PORTB, 0)
 	.id = 0
 };
-
 
 /**
 * \brief Configure SPI
 */
-void epd_spi_init(void) {
-	//if(spi_flag) return;
-	//spi_flag=TRUE;
-	//if((PRR0 & PRSPI_bm) == 0)return;
+void epd_spi_init(void) {	
 	sysclk_enable_peripheral_clock(EPD_SPI_ID);
 	gpio_configure_pin(EPD_SPI_MISO_PIN, EPD_SPI_MISO_MUX);
 	ioport_disable_pin(EPD_SPI_MISO_PIN); // Disable IO (but enable peripheral mode)
@@ -254,8 +240,7 @@ void epd_spi_init(void) {
 /**
 * \brief Initialize SPI
 */
-void epd_spi_attach (void) {
-	
+void epd_spi_attach (void) {	
 	EPD_flash_cs_high();
 	EPD_cs_high();
 	epd_spi_init();
@@ -277,7 +262,7 @@ void epd_spi_detach (void) {
 	set_gpio_low(EPD_SPI_CLK_PIN);
 	set_gpio_low(EPD_SPI_MOSI_PIN);
 	set_gpio_low(EPD_SPI_MISO_PIN);
-	//spi_flag=FALSE;
+	
 }
 
 /**
@@ -300,7 +285,6 @@ uint8_t epd_spi_read(unsigned char RDATA) {
 	spi_write_single(EPD_SPI_ID, RDATA); /* Dummy write */
 	while (!spi_is_rx_full(EPD_SPI_ID)) {
 	}
-
 	return SPDR;
 }
 
@@ -402,11 +386,13 @@ uint16_t g_adc_sample_data;
 * \brief Callback function for ADCIFE interrupt.
 */
 static void adcife_read_conv_result(void) {
-	//if ((adc_get_status(&g_adc_inst) & ADCIFE_SR_SEOC) == ADCIFE_SR_SEOC) {
-		//g_adc_sample_data=adc_get_last_conv_value(&g_adc_inst);
-		//g_uc_condone_flag = 1;
-		//adc_clear_status(&g_adc_inst, ADCIFE_SCR_SEOC);
-	//}
+	/** not used at present 
+	if ((adc_get_status(&g_adc_inst) & ADCIFE_SR_SEOC) == ADCIFE_SR_SEOC) {
+		g_adc_sample_data=adc_get_last_conv_value(&g_adc_inst);
+		g_uc_condone_flag = 1;
+		adc_clear_status(&g_adc_inst, ADCIFE_SCR_SEOC);
+	}
+	*/
 }
 
 /**
@@ -415,9 +401,11 @@ static void adcife_read_conv_result(void) {
 * \return the ADC conversion value
 */
 static uint16_t get_ADC_value(void) {
-	//adc_start_software_conversion(&g_adc_inst);
-	//g_uc_condone_flag=0;
-	//while(!g_uc_condone_flag);
+	/** not used at present 
+	adc_start_software_conversion(&g_adc_inst);
+	g_uc_condone_flag=0;
+	while(!g_uc_condone_flag);
+	*/
 	return g_adc_sample_data;
 }
 
@@ -427,24 +415,26 @@ static uint16_t get_ADC_value(void) {
 * \return the Celsius temperature
 */
 int16_t get_temperature(void) {
-	//uint8_t	i;
-	//long ADC_value;
-	//float Vadc=0.0;
-	//float degC=0.0;
-	//adc_enable(&g_adc_inst);
-	//for(i=0; i<10; i++)get_ADC_value();
-	//ADC_value=0;
-	//for(i=0; i<EPD_ADCSampleCount; i++) {
-		//ADC_value+=get_ADC_value();
-	//}
-	//ADC_value=ADC_value/EPD_ADCSampleCount;
-	//adc_disable(&g_adc_inst);
-	//Vadc=(EPD_ADCRefVcc/EPD_ADCres)*ADC_value*EPD_TempeScaled;
-	//degC=(100.0f+EPD_DegCOffset)-(float)(((Vadc-1.199f)*1000.0f)/10.77f);
-	//return   (int16_t)degC;
+
+/** not used at present   */
+#if 0		
+	uint8_t	i;
+	long ADC_value;
+	float Vadc=0.0;
+	float degC=0.0;
+	adc_enable(&g_adc_inst);
+	for(i=0; i<10; i++)get_ADC_value();
+	ADC_value=0;
+	for(i=0; i<EPD_ADCSampleCount; i++) {
+		ADC_value+=get_ADC_value();
+	}
+	ADC_value=ADC_value/EPD_ADCSampleCount;
+	adc_disable(&g_adc_inst);
+	Vadc=(EPD_ADCRefVcc/EPD_ADCres)*ADC_value*EPD_TempeScaled;
+	degC=(100.0f+EPD_DegCOffset)-(float)(((Vadc-1.199f)*1000.0f)/10.77f);
+	return   (int16_t)degC;
 	
-#if 0	
-	/* Configure the PMC to enable the Timer/Counter (TC) module. */
+	/** Configure the PMC to enable the Timer/Counter (TC) module. */
 	sysclk_enable_peripheral_clock(&ADC);
 	
 
@@ -465,9 +455,9 @@ int16_t get_temperature(void) {
        uint32_t temp_result32 = 0;
        int32_t offset32 = 0;
 
-       ADCSRA = (1 << ADEN); /* Enable ADC */
+       ADCSRA = (1 << ADEN); /** Enable ADC */
 
-       /*
+       /**
        * Analog channel and gain selection
        * The MUX5 bit has to written first followed by a
        * write access to the MUX4:0 bits which triggers the update of the
@@ -475,13 +465,13 @@ int16_t get_temperature(void) {
        */
        ADCSRB = (1 << MUX5);
 
-       /*
+       /**
        * Select internal 1.6V reference voltage
        * Select temperature sensor
        */
        ADMUX = (1 << REFS1) | (1 << REFS0) | (1 << MUX3) | (1 << MUX0);
 
-       /* Dummy conversion to clear PGA */
+       /** Dummy conversion to clear PGA */
        if ((F_CPU_VAL == 16000000UL) || (F_CPU_VAL == 15384600UL)) {
              ADCSRA
                     = (1 <<
@@ -501,15 +491,15 @@ int16_t get_temperature(void) {
        } else {
        }
 
-       /* Wait for conversion to be completed */
+       /** Wait for conversion to be completed */
        do {
        } while ((ADCSRA & (1 << ADIF)) == 0x00);
 
-       /* Sample */
+       /** Sample */
        for (i = 0; i < NUM_SAMPLES; i++) {
              ADCSRA |= (1 << ADEN) | (1 << ADSC) | (1 << ADIF);
 
-             /*
+             /**
              * ADC Control and Status Register A:
              * ADC Enable
              * ADC Start Conversion
@@ -517,34 +507,33 @@ int16_t get_temperature(void) {
              * Prescaler = 32 (500kHz) for 16 MHz main clock
              */
 
-             /* Wait for conversion to be completed */
+             /** Wait for conversion to be completed */
              do {
              } while ((ADCSRA & (1 << ADIF)) == 0x00);
 
              adc_value = ADC;
 
-             /* Averaging */
+             /** Averaging */
              temp_result32 += adc_value;
        }
        temp_result = (float)temp_result32 / NUM_SAMPLES;
 
-       ADCSRA ^= (1 << ADEN); /* Disable ADC for channel change */
+       ADCSRA ^= (1 << ADEN); /** Disable ADC for channel change */
 
-       /* Get offset value */
+       /** Get offset value */
        ADCSRB = 0x00;
-       //ADMUX = (1 << REFS1) | (1 << REFS0) | (1 << MUX3);
        ADMUX = (1 << REFS1) | (1 << REFS0) | (1 << MUX4) | (1 << MUX0);
 
        for (i = 0; i < NUM_SAMPLES; i++) {
              ADCSRA |= (1 << ADEN) | (1 << ADSC) | (1 << ADIF);
 
-             /* Wait for conversion to be completed */
+             /** Wait for conversion to be completed */
              do {
              } while ((ADCSRA & (1 << ADIF)) == 0x00);
 
              adc_value = ADC;
 
-             /* Averaging */
+             /** Averaging */
              if (adc_value > 0x1FF) {
                     offset32 -= 0x400 - adc_value;
              } else {
@@ -553,26 +542,14 @@ int16_t get_temperature(void) {
        }
        offset = (float)offset32 / NUM_SAMPLES;
 
-       ADCSRA &= ~(1 << ADEN); /* Disable ADC */
+       ADCSRA &= ~(1 << ADEN); /** Disable ADC */
        
-       temp_result -= offset;
-      //ADCSRB = (1<<MUX5);
-      //ADMUX = 0xC9;
-      //ADCSRA |= (1<<ADEN);
-       //for(i = 0; i < 16; i++){
-      //ADCSRA |= (1<<ADSC);
-      //do {
-            //} while ((ADCSRA & (1 << ADIF)) == 0x00);
-      //temp_result = ADC;
-       //}
+       temp_result -= offset;	     
        result = ((double)temp_result * 1.13) - 272.8;
-       //printf ("ADC value = %2.1f \r\n",temp_result);
-       //temp_result_cal = (temp_result - 5.2781)/0.8732 - 273;
-       //result_cal = ((double)temp_result_cal * 1.13) - 272.8;
-       //printf ("temperature value after calibration = %2.1f \r\n",temp_result_cal);    
-       F_CPU_VAL = F_CPU_VAL; /* Ignore Warnings */
+       
+       F_CPU_VAL = F_CPU_VAL; /** Ignore Warnings */
 	   
-	   /* Configure the PMC to enable the Timer/Counter (TC) module. */
+	   /** Configure the PMC to enable the Timer/Counter (TC) module. */
 	   sysclk_disable_peripheral_clock(&ADC);
        return (int16_t)result;
 	   
@@ -585,53 +562,58 @@ int16_t get_temperature(void) {
 * \brief Initialize the temperature sensor
 */
 void initialize_temperature(void) {
-	//struct adc_config adc_cfg = {
-		///* System clock division factor is 16 */
-		//.prescal = ADC_PRESCAL_DIV16,
-		///* The APB clock is used */
-		//.clksel = ADC_CLKSEL_APBCLK,
-		///* Max speed is 150K */
-		//.speed = ADC_SPEED_150K,
-		///* ADC Reference voltage is VCC/2 */
-		//.refsel =ADC_REFSEL_4,
-		///* Enables the Startup time */
-		//.start_up = CONFIG_ADC_STARTUP
-	//};
-	//struct adc_seq_config adc_seq_cfg = {
-		///* Select Vref for shift cycle */
-		//.zoomrange = ADC_ZOOMRANGE_0,
-		///* Pad Ground */
-		//.muxneg = ADC_MUXNEG_1,
-		///* Temperature sensor */
-		//.muxpos = EPD_Temperature_Sensor_ADC,
-		///* Enables the internal voltage sources */
-		//.internal =ADC_INTERNAL_2,
-		///* Disables the ADC gain error reduction */
-		//.gcomp = ADC_GCOMP_DIS,
-		///* Disables the HWLA mode */
-		//.hwla = ADC_HWLA_DIS,
-		//.gain=ADC_GAIN_1X,
-		///* 12-bits resolution */
-		//.res = ADC_RES_12_BIT,
-		///* Enables the single-ended mode */
-		//.bipolar = ADC_BIPOLAR_SINGLEENDED
-	//};
-	//struct adc_ch_config adc_ch_cfg = {
-		//.seq_cfg = &adc_seq_cfg,
-		///* Internal Timer Max Counter */
-		//.internal_timer_max_count = 60,
-		///* Window monitor mode is off */
-		//.window_mode = 0,
-		//.low_threshold = 0,
-		//.high_threshold = 0,
-	//};
-//
-	//adc_init(&g_adc_inst, ADCIFE, &adc_cfg);
-	//adc_enable(&g_adc_inst);
-	//adc_ch_set_config(&g_adc_inst, &adc_ch_cfg);
-	//adc_set_callback(&g_adc_inst, ADC_SEQ_SEOC, adcife_read_conv_result, ADCIFE_IRQn, 1);
-	//adc_configure_trigger(&g_adc_inst,ADC_TRIG_SW);
-	//adc_configure_gain(&g_adc_inst, ADC_GAIN_1X);
+
+/** not used at present   */
+#if 0
+	struct adc_config adc_cfg = {
+		/* System clock division factor is 16 */
+		.prescal = ADC_PRESCAL_DIV16,
+		/* The APB clock is used */
+		.clksel = ADC_CLKSEL_APBCLK,
+		/* Max speed is 150K */
+		.speed = ADC_SPEED_150K,
+		/* ADC Reference voltage is VCC/2 */
+		.refsel =ADC_REFSEL_4,
+		/* Enables the Startup time */
+		.start_up = CONFIG_ADC_STARTUP
+	};
+	struct adc_seq_config adc_seq_cfg = {
+		/* Select Vref for shift cycle */
+		.zoomrange = ADC_ZOOMRANGE_0,
+		/* Pad Ground */
+		.muxneg = ADC_MUXNEG_1,
+		/* Temperature sensor */
+		.muxpos = EPD_Temperature_Sensor_ADC,
+		/* Enables the internal voltage sources */
+		.internal =ADC_INTERNAL_2,
+		/* Disables the ADC gain error reduction */
+		.gcomp = ADC_GCOMP_DIS,
+		/* Disables the HWLA mode */
+		.hwla = ADC_HWLA_DIS,
+		.gain=ADC_GAIN_1X,
+		/* 12-bits resolution */
+		.res = ADC_RES_12_BIT,
+		/* Enables the single-ended mode */
+		.bipolar = ADC_BIPOLAR_SINGLEENDED
+	};
+	struct adc_ch_config adc_ch_cfg = {
+		.seq_cfg = &adc_seq_cfg,
+		/* Internal Timer Max Counter */
+		.internal_timer_max_count = 60,
+		/* Window monitor mode is off */
+		.window_mode = 0,
+		.low_threshold = 0,
+		.high_threshold = 0,
+	};
+
+	adc_init(&g_adc_inst, ADCIFE, &adc_cfg);
+	adc_enable(&g_adc_inst);
+	adc_ch_set_config(&g_adc_inst, &adc_ch_cfg);
+	adc_set_callback(&g_adc_inst, ADC_SEQ_SEOC, adcife_read_conv_result, ADCIFE_IRQn, 1);
+	adc_configure_trigger(&g_adc_inst,ADC_TRIG_SW);
+	adc_configure_gain(&g_adc_inst, ADC_GAIN_1X);
+#endif
+	
 }
 
 

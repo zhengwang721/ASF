@@ -85,19 +85,20 @@
 * EPD size: EPD_144 = 1.44 inch, EPD_200 = 2 inch, EPD_270 = 2.7 inch
 */
 int main(void){
-	/* Initialize system clock and Xplained pro board */
+	/** Initialize system clock and Xplained pro board */
 	sysclk_init();
 	irq_initialize_vectors();
 	cpu_irq_enable();
 	//sleepmgr_init(); // Optional
 	board_init();
-	/* Initialize EPD hardware */
+	/** Initialize EPD hardware */
 	EPD_display_init();
 	
 for(;;) {
-			/* User selects which EPD size to run demonstration by changing the
-		 * USE_EPD_Type in image_data.h
-		 * The Image data arrays for each EPD size are defined at image_data.c */
+		/** User selects which EPD size to run demonstration by changing the
+		* 	USE_EPD_Type in Atmel Studio Project properties under Symbols 
+		* 	The Image data arrays for each EPD size are defined at image_data.c 
+		*/
 		#if(USE_EPD_Type==USE_EPD144)
 				EPD_display_from_pointer(EPD_144,(uint8_t *)&image_array_144_2,(uint8_t *)&image_array_144_1);
 		#elif(USE_EPD_Type==USE_EPD200)
@@ -204,8 +205,9 @@ for(;;) {
  * -# Ensure the EPD is connected correctly on the EPD Xplained Pro extension board
  * -# Connect the EPD Xplained Pro to the ATMEGA256RFR2 Xplained Pro header marked EXT3
  * -# Connect the ATMEGA256RFR2 Xplained Pro to computer's USB port via USB cable
- * -# Ensure what the EPD size you are connecting. Open image_data.h file and find
- *   "#define USE_EPD_Type USE_EPD200". Change the USE_EPDXXX to the correct size.
+ * -# Ensure what the EPD size you are connecting. Open Atmel Studio Project properties 
+ *    under Symbols and find "USE_EPD_Type=USE_EPD200". Change the USE_EPDXXX 
+ *    to the correct size.
  * -# Close the J2 jumper if the connected EPD is 1.44" V110, 1.44" V230 or 2" V230.
  *    For the other types, please keep the J2 is opened.
  * -# Start debugging to program the driving code to MCU. The EPD will show two images

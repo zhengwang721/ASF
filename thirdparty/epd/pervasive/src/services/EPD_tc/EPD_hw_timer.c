@@ -1,5 +1,5 @@
 /**
- * @file hw_timer.c
+ * @file epd_hw_timer.c
  *
  * @brief
  *
@@ -39,159 +39,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-///* Prevent double inclusion */
-//#ifndef HW_TIMER_H
-//#define HW_TIMER_H
-//
 #include <compiler.h>
 #include <parts.h>
 #include "sysclk.h"
 #include "tc_megarf.h"
 
-//#endif /* HW_TIMER_H */
-///* EOF */
-
 #include "EPD_hw_timer.h"
 #include "conf_EPD_hw_timer.h"
 
-
-///* Prevent double inclusion */
-//#ifndef HW_TIMER_H
-//#define HW_TIMER_H
-//
-//
-//#define TIMER_PERIOD  UINT16_MAX
-//
-///* === Prototypes =========================================================== */
-//void tc_ovf_callback(void);
-//void tc_cca_callback(void);
-//static void configure_tc_callback(volatile void *timer);
-//
-///*! \brief  read the actual timer count from register
- //*/
-//uint16_t tmr_read_count(void)
-//{
-	//return tc_read_count(TIMER);
-//}
-//
-///*! \brief  to disable compare interrupt
- //*/
-//void tmr_disable_cc_interrupt(void)
-//{
-	//tc_disable_compa_int(TIMER);
-	//clear_compa_flag(TIMER);
-//}
-//
-///*! \brief  to enable compare interrupt
- //*/
-//void tmr_enable_cc_interrupt(void)
-//{
-	//clear_compa_flag(TIMER);
-	//tc_enable_compa_int(TIMER);
-//}
-//
-///*! \brief  to disable overflow interrupt
- //*/
-//void tmr_disable_ovf_interrupt(void)
-//{
-	//tc_enable_ovf_int(TIMER);
-	//clear_ovf_flag(TIMER);
-//}
-//
-///*! \brief  to stop the running timer
- //*/
-//void tmr_stop(void)
-//{
-	//tc_disable(TIMER);
-//}
-//
-///*! \brief  to load compare value in channel compare register
- //*/
-//void tmr_write_cmpreg(uint16_t compare_value)
-//{
-	//tc_write_cc(TIMER, TC_COMPA, compare_value);
-//}
-//
-///*! \brief  to save current interrupts status
- //*/
-//uint8_t save_cpu_interrupt(void)
-//{
-	//return cpu_irq_save();
-//}
-//
-///*! \brief  to restore saved interrupts status
- //*  \param  saved interrupt status
- //*/
-//void restore_cpu_interrupt(uint8_t flags)
-//{
-	//cpu_irq_restore(flags);
-//}
-//
-///*! \brief  to initialiaze hw timer
- //*/
-//uint8_t tmr_init(void)
-//{
-	//uint8_t timer_multiplier;
-//
-	//tc_enable(TIMER);
-//
-	//tc_set_overflow_interrupt_callback(TIMER, tc_ovf_callback);
-//
-	//tc_set_mode(TIMER, NORMAL);
-//
-	//tc_enable_ovf_int(TIMER);
-//
-	//configure_tc_callback(TIMER);
-//
-	//tc_disable_compa_int(TIMER);
-//
-	//tc_write_clock_source(TIMER, TC_CLKSEL_DIV1_gc);
-//
-	//timer_multiplier = sysclk_get_peripheral_bus_hz(TIMER) / DEF_1MHZ;
-//
-	//return timer_multiplier;
-//}
-//
-///*! \brief to set compare interrupt callback according to the timer channel
- //* input
- //*  \param timer - hw timer channel
- //*/
-//static void configure_tc_callback(volatile void *timer)
-//{
-	//if ((&TCCR1A == timer) || (&TCCR3A == timer) ||
-			//(&TCCR4A == timer) || (&TCCR5A == timer)) {
-		//tc_set_compa_interrupt_callback(TIMER, tc_cca_callback);
-	//} else if ((&TCCR1B == timer) || (&TCCR3B == timer) ||
-			//(&TCCR4B == timer) || (&TCCR5B == timer)) {
-		//tc_set_compb_interrupt_callback(TIMER, tc_cca_callback);
-	//} else if ((&TCCR1C == timer) || (&TCCR3C == timer) ||
-			//(&TCCR4C == timer) || (&TCCR5C == timer)) {
-		//tc_set_compc_interrupt_callback(TIMER, tc_cca_callback);
-	//}
-//}
-//
-///*! \brief  hw timer overflow callback
- //*/
-//void tc_ovf_callback(void)
-//{
-	//tmr_ovf_callback();
-//}
-//
-///*! \brief  hw timer compare callback
- //*/
-//void tc_cca_callback(void)
-//{
-	//tmr_cca_callback();
-//}
-////
-//
-//#endif /* HW_TIMER_H */
-///* EOF */
-
-/* additional macros  */
-
+/**
+ * @brief Disable Compare Interrupt in channel C
+ * @param tc Timer Address
+ */
 void tc_disable_compare_int(volatile void *p_tc, enum tc_cc_channel_t channel_index)
-//void tc_disable_compare_int(volatile void *p_tc)
 {
 	switch (channel_index){
 	case TC_COMPA:
@@ -209,26 +69,14 @@ void tc_disable_compare_int(volatile void *p_tc, enum tc_cc_channel_t channel_in
 	default: 
 		break;
 	}
-	
-	
-	//if ((&TCCR1A == p_tc) || (&TCCR3A == p_tc) ||
-	//(&TCCR4A == p_tc) || (&TCCR5A == p_tc)) {
-		//tc_disable_compa_int(p_tc);		/*  Disable interrupts. */
-		//clear_compa_flag(p_tc);			/*  Clear status register. */
-	//} else if ((&TCCR1B == p_tc) || (&TCCR3B == p_tc) ||
-	//(&TCCR4B == p_tc) || (&TCCR5B == p_tc)) {
-		//tc_disable_compb_int(p_tc);
-		//clear_compb_flag(p_tc);
-	//} else if ((&TCCR1C == p_tc) || (&TCCR3C == p_tc) ||
-	//(&TCCR4C == p_tc) || (&TCCR5C == p_tc)) {
-		//tc_disable_compc_int(p_tc);
-		//clear_compc_flag(p_tc);
-	//}
 		
 }
 
+/**
+ * @brief Disable Overflow Interrupt
+ * @param tc Timer Address
+ */
 void tc_disable_overflow_int(volatile void *p_tc, enum tc_cc_channel_t channel_index)
-//void tc_disable_compare_int(volatile void *p_tc)
 {
 	switch (channel_index){
 	case TC_COMPA:
@@ -246,24 +94,8 @@ void tc_disable_overflow_int(volatile void *p_tc, enum tc_cc_channel_t channel_i
 	default: 
 		break;
 	}
-	
-	
-	//if ((&TCCR1A == p_tc) || (&TCCR3A == p_tc) ||
-	//(&TCCR4A == p_tc) || (&TCCR5A == p_tc)) {
-		//tc_disable_compa_int(p_tc);		/*  Disable interrupts. */
-		//clear_compa_flag(p_tc);			/*  Clear status register. */
-	//} else if ((&TCCR1B == p_tc) || (&TCCR3B == p_tc) ||
-	//(&TCCR4B == p_tc) || (&TCCR5B == p_tc)) {
-		//tc_disable_compb_int(p_tc);
-		//clear_compb_flag(p_tc);
-	//} else if ((&TCCR1C == p_tc) || (&TCCR3C == p_tc) ||
-	//(&TCCR4C == p_tc) || (&TCCR5C == p_tc)) {
-		//tc_disable_compc_int(p_tc);
-		//clear_compc_flag(p_tc);
-	//}
 		
 }
-
 
 /**
 * \brief Configure TC for timer, waveform generation or capture.
@@ -271,24 +103,14 @@ void tc_disable_overflow_int(volatile void *p_tc, enum tc_cc_channel_t channel_i
 * \param p_tc Pointer to a TC instance.
 * \param ul_channel Channel to configure.
 * \param ul_mode Control mode register value to set.
-*
-* \attention If the TC is configured for waveform generation, the external
-* event selection (EEVT) should only be set to \c TC_CMR_EEVT_TIOB or the
-* equivalent value \c 0 if it really is the intention to use TIOB as an
-* external event trigger.\n
-* This is because the setting forces TIOB to be an input even if the
-* external event trigger has not been enabled with \c TC_CMR_ENETRG, and
-* thus prevents normal operation of TIOB.
+* 
 */
-
-//void tc_initc(volatile void *p_tc, enum tc_cc_channel_t channel_index, uint32_t ul_mode)
 
 void tc_initc(volatile void *p_tc, TC_CC_CHANNEL_t channel_index, struct tc_control_reg *p_control_reg)
 {
 //enum tc_cc_channel_t *tc_channel;
 
-///*  Disable TC clock. */
-//tc_disable(p_tc);
+/*  Disable TC clock. */
 tc_disable_overflow_int(p_tc,channel_index);
 
 /*  Disable interrupts. */
@@ -300,10 +122,6 @@ tc_set_co_mode(p_tc,channel_index, p_control_reg->co_mode);
 /*  Set WG mode. */
 tc_set_wg_mode(p_tc, channel_index, p_control_reg->wg_mode);
 
-///*  Set clock. */
-//tc_write_clock_source(TIMER, p_control_reg->cs_select);
-////tc_channel->TC_CMR = ul_mode;
-
 }
 
 
@@ -312,10 +130,8 @@ tc_set_wg_mode(p_tc, channel_index, p_control_reg->wg_mode);
 void tc_start(volatile void *p_tc, struct tc_control_reg *p_control_reg)
 {
 	/*  Set clock. */
-	//tc_write_clock_source(p_tc, p_control_reg->cs_select);
 	tc_set_clk_source(p_tc, 0, p_control_reg->cs_select);
-	//tc_channel->TC_CMR = ul_mode;
-	
+
 }
 
 /*! \brief  to stop the running timer
@@ -332,15 +148,7 @@ void tc_stop(volatile void *p_tc)
 	
 	/*  Set clock. */
 	tc_disable(p_tc);
-	//tc_channel->TC_CMR = ul_mode;
-	
-	//tc_write_clock_source(p_tc, TC_CLKSEL_OFF_gc);
-	
-	
+		
 }
 
-/* additional macros  */
 
-//#endif /* HW_TIMER_H */
-///* EOF */
-///*EOF*/

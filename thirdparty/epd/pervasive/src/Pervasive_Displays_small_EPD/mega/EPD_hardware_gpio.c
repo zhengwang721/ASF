@@ -57,14 +57,18 @@ void EPD_cs_low (void) {
 * \brief Set Flash_CS pin to high
 */
 void EPD_flash_cs_high(void) {
-	//set_gpio_high(Flash_CS_PIN);
+	/** not used at present 
+	set_gpio_high(Flash_CS_PIN);
+	*/
 }
 
 /**
 * \brief Set Flash_CS pin to low
 */
 void EPD_flash_cs_low (void) {
-	//set_gpio_low(Flash_CS_PIN);
+	/** not used at present 
+	set_gpio_low(Flash_CS_PIN);
+	*/
 }
 
 /**
@@ -170,19 +174,20 @@ bool EPD_IsBusy(void) {
 * \brief Configure GPIO
 */
 void EPD_initialize_gpio(void) {
-	//MCUCR |= (1<<JTD);
-	//MCUCR |= (1<<JTD);
-	
+		
 	config_gpio_dir_i( EPD_BUSY_PIN);			
 	config_gpio_dir_o( EPD_SPI_CS_PIN);				
 	config_gpio_dir_o( EPD_RST_PIN);			
 	config_gpio_dir_o( EPD_PANELON_PIN);
 	config_gpio_dir_o( EPD_DISCHARGE_PIN);
 	config_gpio_dir_o( EPD_BORDER_PIN);
-//	config_gpio_dir_o( Flash_CS_PIN);
-//	config_gpio_dir_i( Temper_PIN);
 	EPD_flash_cs_high();					// dumy
 	EPD_border_low();
+	
+	/** not used at present 
+	config_gpio_dir_o( Flash_CS_PIN);
+	config_gpio_dir_i( Temper_PIN);	
+	*/
 }
 
 

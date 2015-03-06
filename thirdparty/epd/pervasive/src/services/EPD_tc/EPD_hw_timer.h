@@ -1,5 +1,5 @@
 /**
- * @file hw_timer.h
+ * @file epd_hw_timer.h
  *
  * @brief
  *
@@ -38,28 +38,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* Prevent double inclusion */
 #ifndef EPD_HW_TIMER_H
 #define EPD_HW_TIMER_H
 
-
 #include <stdint.h>
-
-/* additional macros  */
 
 /** TC  Configuration structure. */
 struct tc_control_reg {
 	/** TC Compare Output Mode  */
 	uint8_t co_mode;
 	/** TC Waveform Generation Mode */
-	uint8_t wg_mode;
-	///** Prescalar Rate selection */
-	//uint8_t prescal;
-	///** TC Clock Selection, Prescalar select */
+	uint8_t wg_mode;	
+	/** TC Clock Selection, Prescalar select */
 	uint8_t cs_select;
 };
 
-/* Timer Modes of operation */
+/** Timer Modes of operation */
 enum tc_co_mode_enum {
 	CO_NORMAL		= 0X00,
 	CO_TOGGLE		= 0X01,
@@ -67,74 +61,16 @@ enum tc_co_mode_enum {
 	CO_SET			= 0X03,
 };
 
-///* Timer Modes of operation */
-//typedef enum TC_WG_MODE_enum {
-	//NORMAL     = 0X00,
-	//PWM_Mode1  = 0X01,
-	//PWM_Mode2  = 0X02,
-	//PWM_Mode3   = 0X03,
-	//CTC_Mode1   = 0X04,
-	//PWM_Mode4   = 0X05,
-	//PWM_Mode5   = 0X06,
-	//PWM_Mode6   = 0X07,
-	//PWM_Mode7   = 0X08,
-	//PWM_Mode8   = 0X09,
-	//PWM_Mode9   = 0X0A,
-	//PWM_Mode10   = 0X0B,
-	//CTC_Mode2   = 0X0C,     /* 0X0D is reserved */
-	//PWM_Mode11   = 0X0E,	// FAST PWM top ICRn
-	//PWM_Mode12   = 0X0F		// FAST PWM top OCRnA
-//} TC_WG_MODE_t;
-
-//TC_WG_MODE_enum TC_WG_MODE_t;
-//
-///* ! Timer Counter Capture Compare Channel index */
-//typedef enum tc_cc_channel_enum {
-	///* ! Channel A */
-	//TC_COMPA = 0X08,
-	///* ! Channel B */
-	//TC_COMPB = 0X0A,
-	///* ! Channel C */
-	//TC_COMPC = 0X0C,
-//}TC_CC_CHANNEL_t;
-//
-
-
 typedef enum tc_cc_channel_t TC_CC_CHANNEL_t;
 typedef enum tc_co_mode_enum TC_CO_MODE_t;
 typedef enum TC_MODE_enum TC_WG_MODE_t;
 typedef enum TC_CLKSEL_enum TC_CLKSEL_t;
 
-/* additional macros  */
-
-//typedef void (*tmr_callback_t)(void);
-
-
-//uint16_t tmr_read_count(void);
-//void tmr_disable_cc_interrupt(void);
-//void tmr_enable_cc_interrupt(void);
-//void tmr_disable_ovf_interrupt(void);
-//void tmr_stop(void);
-//void tmr_write_cmpreg(uint16_t compare_value);
-//uint8_t save_cpu_interrupt(void);
-//void restore_cpu_interrupt(uint8_t flags);
-//uint8_t tmr_init(void);
-//void tc_ovf_callback(void);
-//void tc_cca_callback(void);
-////void tmr_write_cmpreg(uint16_t compare_value);
-
-
-/* additional macros  */
-
 void tc_disable_compare_int(volatile void *p_tc, enum tc_cc_channel_t channel_index);
 void tc_disable_overflow_int(volatile void *p_tc, enum tc_cc_channel_t channel_index);
-//void tc_disable_compare_int(volatile void *p_tc);
-//void tc_init(volatile void *p_tc, enum tc_cc_channel_t channel_index, uint32_t ul_mode);
 void tc_initc(volatile void *p_tc, TC_CC_CHANNEL_t channel_index, struct tc_control_reg *p_control_reg);
 void tc_start(volatile void *p_tc, struct tc_control_reg *p_control_reg);
 void tc_stop(volatile void *p_tc);
-
-
 
 /**
  * @brief Sets a timer in a particular mode of operation
@@ -196,11 +132,7 @@ static inline void tc_set_co_mode(volatile void *tc, TC_CC_CHANNEL_t channel_ind
 		default:
 			break;
 	}
-	//if (mode == NORMAL) {
-		//*(reg) |=  ((0 << WGM10) || ((0 << WGM11)));
-	//} else if (mode == CTC_Mode1) {
-		//*(reg + TCCRB_OFFSET) |= (1 << WGM12);
-	//}
+	
 }
 
 /**
@@ -305,11 +237,7 @@ static inline void tc_set_wg_mode(volatile void *tc, TC_CC_CHANNEL_t channel_ind
 		default:
 			break;	
 	}
-	//if (mode == NORMAL) {
-		//*(reg) |=  ((0 << WGM10) || ((0 << WGM11)));
-	//} else if (mode == CTC_Mode1) {
-		//*(reg + TCCRB_OFFSET) |= (1 << WGM12);
-	//}
+	
 }
 
 /**
@@ -383,11 +311,7 @@ static inline void tc_clear_cc(volatile void *tc,
 	*(reg + channel_index) =  value;
 }
 
-
-/* additional macros  */
-
-
-#endif /* HW_TIMER_H */
-/* EOF */
+#endif /* EPD_HW_TIMER_H */
+/** EOF */
 
 

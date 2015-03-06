@@ -40,10 +40,6 @@
 #define USE_EPD200 1 /**< 2 inch PDi EPD */
 #define USE_EPD270 2 /**< 2.7 inch PDi EPD */
 
-// /* Using which EPD size for demonstration. 
-// * Change to USE_EPD270 if you are connecting with 2.7 inch EPD. USE_EPD144 for 1.44 inch. */
-// #define USE_EPD_Type USE_EPD200 /**< default is connecting with 2 inch EPD */
-
 #if(USE_EPD_Type==USE_EPD144) // array size=96*16, (128/8=16)
 	extern unsigned char const image_array_144_1[]; /**< use 1.44" image array #1 */
 	extern unsigned char const image_array_144_2[]; /**< use 1.44" image array #2 */

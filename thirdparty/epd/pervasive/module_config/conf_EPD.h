@@ -51,20 +51,21 @@
 #define COG_SPI_baudrate	12000000
 
 /** GPIO Defines */
-//#define EPD_Temper_PIN      IOPORT_CREATE_PIN (PORTF,0); /**< MEGA256RFR2 EXT1.pin3.  PF0, ADC0 */
 #define EPD_BORDER_PIN      IOPORT_CREATE_PIN (PORTF,1) /**< MEGA256RFR2 EXT1.pin4.  PF1 ADC1 */
 #define EPD_DISCHARGE_PIN   IOPORT_CREATE_PIN (PORTE,2) /**< MEGA256RFR2 EXT1.pin5.  PE2 GPIO */
 #define EPD_RST_PIN         IOPORT_CREATE_PIN (PORTE,3) /**< MEGA256RFR2 EXT1.pin6.  PE3 GPIO */
 #define EPD_PWM_PIN         IOPORT_CREATE_PIN (PORTB,5) /**< MEGA256RFR2 EXT1.pin7.  PB5 OC1A */
 #define EPD_PANELON_PIN     IOPORT_CREATE_PIN (PORTB,6) /**< MEGA256RFR2 EXT1.pin8.  PB5 OC1B */
 #define EPD_BUSY_PIN        IOPORT_CREATE_PIN (PORTE,5) /**< MEGA256RFR2 EXT1.pin9.  PE5 GPIO */
-//#define Flash_CS_PIN        IOPORT_CREATE_PIN (PORTD,5) /**< MEGA256RFR2 EXT1.pin10. PD5 GPIO */
 #define EPD_SPI_CS_PIN      IOPORT_CREATE_PIN (PORTG,0) /**< MEGA256RFR2 EXT1.pin15. PG0 SPI chip select A */
 #define EPD_SPI_SS_PIN		IOPORT_CREATE_PIN (PORTG,0) /**< MEGA256RFR2 EXT1.pin15. PG0 SPI chip select A */
 #define EPD_SPI_MOSI_PIN    IOPORT_CREATE_PIN (PORTB,2) /**< MEGA256RFR2 EXT1.pin16. PB2 SPI MOSI */
 #define EPD_SPI_MISO_PIN    IOPORT_CREATE_PIN (PORTB,3) /**< MEGA256RFR2 EXT1.pin17. PB3 SPI MISO */
 #define EPD_SPI_CLK_PIN     IOPORT_CREATE_PIN (PORTB,1) /**< MEGA256RFR2 EXT1.pin18. PB1, SPI SCK */
 
+/** unused pins */
+//#define EPD_Temper_PIN      IOPORT_CREATE_PIN (PORTF,0); /**< MEGA256RFR2 EXT1.pin3.  PF0, ADC0 */
+//#define Flash_CS_PIN        IOPORT_CREATE_PIN (PORTD,5) /**< MEGA256RFR2 EXT1.pin10. PD5 GPIO */
 
 /** EPD Hardware module Defines */
 /** PWM Define */
@@ -85,12 +86,6 @@
 /** SPI Defines */
 #define EPD_SPI_ID					&SPCR	                    /**< SPI */
 #define EPD_SPI_baudrate            COG_SPI_baudrate			/**< the baud rate of SPI */
-//#define EPD_SPI_CLK_PIN			EPD_SPI_CLK_PIN				/**< SPI signal: SCK on PB1 */
-//#define EPD_SPI_MOSI_PIN			EPD_SPI_MOSI_PIN			/**< SPI signal: MOSI on PB2 */
-//#define EPD_SPI_MISO_PIN			EPD_SPI_MOSI_PIN			/**< SPI signal: MISO on PB3 */
-//#define EPD_SPI_SS_PIN			EPD_SPI_SS_PIN				/**< SPI signal: SS on PG0 */
-
-
 #define EPD_SPI_CLK_MUX             IOPORT_INIT_HIGH \
 									| IOPORT_DIR_OUTPUT			/**< SPI Pin config: SCK on PB1 */
 #define EPD_SPI_MOSI_MUX            IOPORT_INIT_HIGH \
@@ -99,7 +94,7 @@
 #define EPD_SPI_SS_MUX				IOPORT_INIT_HIGH \
 									| IOPORT_DIR_OUTPUT			/**< SPI Pin config: SS on PG0 */
 /** Temperature ADC Defines */
-#define EPD_Temperature_Sensor_ADC  0 //ADC_MUXPOS_4 			/**< MUX selection on Positive ADC input channel 4 */
+#define EPD_Temperature_Sensor_ADC  0 				 			/**< MUX selection on Positive ADC input channel 4 */
 #define EPD_TempeScaled            2.5f  						/**< the scale of temperature circuit */
 #define EPD_ADCRefVcc              1.65f 						/**< ADC ref voltage = VCC/2 = 3.3/2 */
 #define EPD_ADCres                 (float)pow(2,12) 			/**< 2 ^12 */

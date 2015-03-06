@@ -38,12 +38,29 @@
 
 #include "Pervasive_Displays_small_EPD.h"
 
+/** 
+* To maintain the Pervasive Displays COG file structure compatibility with ASF 
+* the different COG versions files are copied in this single file.
+* To avoid confusions the copied 'c' file contents maintained as such including  
+* licence header.
+*
+* In case in future Pervasive Displays developed new COG versions that c file can 
+* be copied here and respective #elif (defined COG_Vxxx_Gx) should be updated. 
+* 
+* Files copied in this "EPD_COG.C" file
+* 1, COG/V110_G1/EPD_COG_process_V110_G1.c
+* 2, COG/V110/EPD_COG_partial_update_V110_G1.c
+* 3, COG/V230_G2/EPD_COG_process_V230_G2.c
+* 4, < future version >
+
+*/
+
 #if (defined COG_V110_G1)
 
-//**************************************************************************************************************//
+//************************************************************************************//
 //#include "COG/V110_G1/EPD_COG_process_V110_G1.c"
 //#include "COG/V110/EPD_COG_partial_update_V110_G1.c"
-//**************************************************************************************************************//
+//************************************************************************************//
 
 /**
 * \file
@@ -745,9 +762,9 @@ uint8_t EPD_power_off (uint8_t EPD_type_index) {
 	return RES_OK;
 }
 
-//**************************************************************************************************************//
+//************************************************************************************//
 //#include "COG/V110/EPD_COG_partial_update_V110.c"
-//**************************************************************************************************************//
+//************************************************************************************//
 
 /**
 * \file
@@ -1034,9 +1051,9 @@ void EPD_display_partialupdate (uint8_t EPD_type_index, long previous_image_addr
 
 #elif (defined COG_V230_G2)
 
-//**************************************************************************************************************//
+//************************************************************************************//
 //#include "COG/V230_G2/EPD_COG_process_V230_G2.c"
-//**************************************************************************************************************//
+//************************************************************************************//
 
 /**
 * \file
