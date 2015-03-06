@@ -244,6 +244,9 @@ void Reset_Handler(void)
         DMAC->QOSCTRL.bit.FQOS = 2;
         DMAC->QOSCTRL.bit.WRBQOS = 2;
 
+        /* Overwriting the default value of the NVMCTRL.CTRLB.MANW bit (errata reference 13134) */
+        NVMCTRL->CTRLB.bit.MANW = 1;
+
         __iar_program_start();
 }
 

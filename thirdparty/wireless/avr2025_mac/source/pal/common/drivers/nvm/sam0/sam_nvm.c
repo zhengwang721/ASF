@@ -224,6 +224,9 @@ status_code_t nvm_init(mem_type_t mem)
 		/* Get the default configuration */
 		nvm_get_config_defaults(&config);
 
+		/* Enable automatic page write mode */
+		config.manual_page_write = false;
+
 		/* Set wait state to 1 */
 		config.wait_states = 2;
 
