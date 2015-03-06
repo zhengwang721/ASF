@@ -47,8 +47,9 @@
 #define CONF_SSD1306_H_INCLUDED
 
 #include <board.h>
+
 #ifdef EXT3_SPI_MODULE
-// Interface configuration for SAM Xplained Pro
+/* Interface configuration for SAM Xplained Pro */
 #  define SSD1306_SPI                 EXT3_SPI_MODULE
 #  define CONFIG_SSD1306_FRAMEBUFFER
 
@@ -62,21 +63,22 @@
 #  define SSD1306_SPI_PINMUX_PAD2     EXT3_SPI_SERCOM_PINMUX_PAD2
 #  define SSD1306_SPI_PINMUX_PAD3     EXT3_SPI_SERCOM_PINMUX_PAD3
 #else
-//dummy configurations
-#  define SSD1306_SPI
+/* Dummy Interface configuration */
+#  define SSD1306_SPI                 0
 #  define CONFIG_SSD1306_FRAMEBUFFER
 
-#  define SSD1306_DC_PIN
-#  define SSD1306_RES_PIN
-#  define SSD1306_CS_PIN
+#  define SSD1306_DC_PIN              0
+#  define SSD1306_RES_PIN             0
+#  define SSD1306_CS_PIN              0
 
-#  define SSD1306_SPI_PINMUX_SETTING
-#  define SSD1306_SPI_PINMUX_PAD0
-#  define SSD1306_SPI_PINMUX_PAD1
-#  define SSD1306_SPI_PINMUX_PAD2
-#  define SSD1306_SPI_PINMUX_PAD3
+#  define SSD1306_SPI_PINMUX_SETTING  0
+#  define SSD1306_SPI_PINMUX_PAD0     0
+#  define SSD1306_SPI_PINMUX_PAD1     0
+#  define SSD1306_SPI_PINMUX_PAD2     0
+#  define SSD1306_SPI_PINMUX_PAD3     0
 #endif
-// Minimum clock period is 50ns@3.3V -> max frequency is 20MHz
+
+/* Minimum clock period is 50ns@3.3V -> max frequency is 20MHz */
 #define SSD1306_CLOCK_SPEED           1000000UL
 #define SSD1306_DISPLAY_CONTRAST_MAX  40
 #define SSD1306_DISPLAY_CONTRAST_MIN  30
