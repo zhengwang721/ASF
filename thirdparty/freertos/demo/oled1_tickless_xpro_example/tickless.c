@@ -170,7 +170,7 @@ void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime )
 	tc_set_top_value(&tc, (xExpectedIdleTime - 1) * TIMER_RELOAD_VALUE_ONE_TICK);
 
 	// Clear overflow interrupt flag
-	tc.hw->COUNT32.INTFLAG.bit.OVF = 1;
+	tc.hw->COUNT32.INTFLAG.reg |= TC_INTFLAG_OVF;
 
 	// Check if we still should sleep
 	if (eTaskConfirmSleepModeStatus() == eAbortSleep)
