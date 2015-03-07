@@ -1,8 +1,10 @@
 <asf xmlversion="1.0">
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
 	<!-- **************************************************************************************************** -->
-	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.br-webserver-node" caption="Smartconnect-Border Webserver Node">
+	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.br-webserver-node" caption="Smart Connect 6LoWPAN - Border router Webserver">
 		<info type="description" value="summary">
+		    Border router example demonstrates the ability of stack to create a DAG root and act as a Border gateway to the nodes which wants to communicate outside the network. This example uses Webserver module to create HTML pages views of configured 
+            information which can be viewed from a browser outside the network. 
 		</info>
 		<build type="c-source"      value="router-node.c"/>
 		<build type="c-source"      value="router-node-main.c"/>

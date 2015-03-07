@@ -76,6 +76,7 @@
 #include "uip-nd6.h"
 #include "uip-ds6.h"
 #include "uip-mcast6.h"
+#include "uip_arch.h"
 
 #include <string.h>
 
@@ -264,6 +265,7 @@ struct uip_udp_conn uip_udp_conns[UIP_UDP_CONNS];
 struct uip_icmp6_conn uip_icmp6_conns;
 #endif /*UIP_CONF_ICMP6*/
 /** @} */
+
 
 /*---------------------------------------------------------------------------*/
 /* Functions                                                                 */

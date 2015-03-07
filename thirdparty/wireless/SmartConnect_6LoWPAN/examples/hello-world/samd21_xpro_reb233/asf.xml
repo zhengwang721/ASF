@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Contiki Hello World Application" id="thirdparty.wireless.smartconnect_6lowpan.examples.hello-world.samd21_xpro_reb233" force-caption="true" force-description="true">
+	<project caption="Smart Connect 6LoWPAN - Hello World Application AT86RF233 - SAM D21 Xplained Pro" id="thirdparty.wireless.smartconnect_6lowpan.examples.hello-world.samd21_xpro_reb233" force-caption="true" force-description="true">
 		<info type="description" value="summary">
 		</info>
 		

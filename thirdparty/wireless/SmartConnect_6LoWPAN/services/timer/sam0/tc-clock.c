@@ -42,6 +42,7 @@ static volatile uint32_t seconds;
 /* sleepseconds is the number of seconds sleeping since startup, available globally */
 long sleepseconds;
 static struct tc_module tc_instance;
+void configure_tc3(void);
 #define TC3_WAIT_BUSY() while(REG_TC3_STATUS & TC_STATUS_SYNCBUSY)//rtc
 /*---------------------------------------------------------------------------*/
 static void
@@ -154,7 +155,7 @@ void _TC3_Handler(void)//void TCC0_Handler(void)
 }
 /*---------------------------------------------------------------------------*/
 
-void configure_tc3_callbacks(void)
+static void configure_tc3_callbacks(void)
 {
 	//! [setup_register_callback]
 	tc_register_callback(&tc3_instance,(tc_callback_t)_TC3_Handler,TC_CALLBACK_CC_CHANNEL0);

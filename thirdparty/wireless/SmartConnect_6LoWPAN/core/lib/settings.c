@@ -84,7 +84,7 @@ typedef struct {
 
 /*---------------------------------------------------------------------------*/
 settings_iter_t
-settings_iter_begin()
+settings_iter_begin(void)
 {
   return settings_iter_is_valid(SETTINGS_TOP_ADDR) ? SETTINGS_TOP_ADDR : 0;
 }

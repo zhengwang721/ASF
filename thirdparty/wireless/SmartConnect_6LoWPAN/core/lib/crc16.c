@@ -43,6 +43,8 @@
 
 /* CITT CRC16 polynomial ^16 + ^12 + ^5 + 1 */
 /*---------------------------------------------------------------------------*/
+#include "crc16.h"
+
 unsigned short
 crc16_add(unsigned char b, unsigned short acc)
 {

@@ -1,8 +1,9 @@
 <asf xmlversion="1.0">
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
 	<!-- **************************************************************************************************** -->
-	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.mqtt-example" caption="Smartconnect-MqttExample">
+	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.mqtt-example" caption="Smart Connect 6LoWPAN - MQTT Example">
 		<info type="description" value="summary">
+		      MQTT example demonstrates the stack ability to communicate to the MQTT host configured and establish the MQTT connection.
 		</info>
 		<build type="c-source"      value="mqtt-example.c"/>
 		<build type="c-source"      value="mqtt-example-main.c"/>

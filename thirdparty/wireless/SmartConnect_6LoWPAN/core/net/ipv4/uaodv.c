@@ -43,6 +43,8 @@
 #include "contiki.h"
 #include "net/ipv4/uaodv-def.h"
 #include "net/ipv4/uaodv-rt.h"
+#include "net/ipv4/uaodv.h"
+
 
 #define NDEBUG
 #include "lib/assert.h"

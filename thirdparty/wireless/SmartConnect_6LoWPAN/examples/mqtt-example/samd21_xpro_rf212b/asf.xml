@@ -1,9 +1,8 @@
 <asf xmlversion="1.0">
-	<project caption="Contiki Hello World Application" id="thirdparty.wireless.smartconnect_6lowpan.examples.mqtt-example.samd21_xpro_rf212b" force-caption="true" force-description="true">
+	<project caption="Smart Connect 6LoWPAN - MQTT Example AT86RF212B - SAM D21 Xplained Pro" id="thirdparty.wireless.smartconnect_6lowpan.examples.mqtt-example.samd21_xpro_rf212b" force-caption="true" force-description="true">
 		<info type="description" value="summary">
+		     MQTT example demonstrates the stack ability to communicate to the MQTT host configured and establish the MQTT connection.
 		</info>
-		
-
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>

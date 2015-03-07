@@ -33,7 +33,7 @@
 #include <stdint.h>
 #include <string.h>
 #include "contiki.h"
-#include "dev/button-sensor.h"
+#include "button-sensor.h"
 #include "sys/timer.h"
 #include "asf.h"
 #include "extint.h"

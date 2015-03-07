@@ -198,7 +198,7 @@ set_sda_output(void)
 }
 /*---------------------------------------------------------------------------*/
 /* Reset the I2C endpoint on the EEPROM (see datasheet) */
-static void
+void
 reset_i2c(void)
 {
   int i;

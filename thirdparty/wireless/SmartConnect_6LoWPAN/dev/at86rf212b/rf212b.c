@@ -383,7 +383,7 @@ rf212_send(const void *payload, unsigned short payload_len)
 static int
 rf212_read(void *buf, unsigned short bufsize)
 {
-  uint8_t radio_state;
+  
   uint8_t ed;       /* frame metadata */
   uint8_t frame_len = 0;
   uint8_t len = 0;
