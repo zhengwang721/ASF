@@ -41,6 +41,7 @@
 
 #define printf(...)
 
+COMPILER_PACK_SET(1)
 struct arp_hdr {
   struct ip64_eth_hdr ethhdr;
   uint16_t hwtype;
@@ -53,7 +54,9 @@ struct arp_hdr {
   struct uip_eth_addr dhwaddr;
   uip_ip4addr_t dipaddr;
 };
+COMPILER_PACK_RESET()
 
+COMPILER_PACK_SET(1)
 struct ethip_hdr {
   struct ip64_eth_hdr ethhdr;
   /* IP header. */
@@ -67,7 +70,9 @@ struct ethip_hdr {
   uint16_t ipchksum;
   uip_ip4addr_t srcipaddr, destipaddr;
 };
+COMPILER_PACK_RESET()
 
+COMPILER_PACK_SET(1)
 struct ipv4_hdr {
   /* IP header. */
   uint8_t vhl,
@@ -80,17 +85,21 @@ struct ipv4_hdr {
   uint16_t ipchksum;
   uip_ip4addr_t srcipaddr, destipaddr;
 };
+COMPILER_PACK_RESET()
+
+COMPILER_PACK_SET(1)
+struct  arp_entry {
+  uip_ip4addr_t ipaddr;
+  struct uip_eth_addr ethaddr;
+  uint8_t time;
+};
+COMPILER_PACK_RESET()
+
 
 #define ARP_REQUEST 1
 #define ARP_REPLY   2
 
 #define ARP_HWTYPE_ETH 1
-
-struct arp_entry {
-  uip_ip4addr_t ipaddr;
-  struct uip_eth_addr ethaddr;
-  uint8_t time;
-};
 
 static const struct ip64_eth_addr broadcast_ethaddr =
   {{0xff,0xff,0xff,0xff,0xff,0xff}};
@@ -219,7 +228,7 @@ arp_update(uip_ip4addr_t *ipaddr, struct uip_eth_addr *ethaddr)
 uint16_t
 ip64_arp_arp_input(const uint8_t *packet, uint16_t packet_len)
 {
-  struct arp_hdr *arphdr = (struct arp_hdr *)packet;
+  struct arp_hdr *arphdr = ( struct arp_hdr *)packet;
 
   if(packet_len < sizeof(struct arp_hdr)) {
     printf("ip64_arp_arp_input: len too small %d\n", packet_len);
@@ -319,7 +328,7 @@ int
 ip64_arp_create_ethhdr(uint8_t *llhdr, const uint8_t *nlhdr)
 {
   struct arp_entry *tabptr = arp_table;
-  struct ipv4_hdr *ipv4_hdr = (struct ipv4_hdr *)nlhdr;
+  struct ipv4_hdr *ipv4_hdr = (struct ipv4_hdr *)nlhdr; 
   struct ip64_eth_hdr *ethhdr = (struct ip64_eth_hdr *)llhdr;
   uip_ip4addr_t broadcast_addr;
   

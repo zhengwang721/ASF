@@ -62,6 +62,7 @@
 
 #include <string.h>
 
+COMPILER_PACK_SET(1)
 struct arp_hdr {
   struct uip_eth_hdr ethhdr;
   uint16_t hwtype;
@@ -74,8 +75,10 @@ struct arp_hdr {
   struct uip_eth_addr dhwaddr;
   uip_ipaddr_t dipaddr;
 };
+COMPILER_PACK_RESET()
 
-struct ethip_hdr {
+COMPILER_PACK_SET(1)
+struct  ethip_hdr {
   struct uip_eth_hdr ethhdr;
   /* IP header. */
   uint8_t vhl,
@@ -88,6 +91,7 @@ struct ethip_hdr {
   uint16_t ipchksum;
   uip_ipaddr_t srcipaddr, destipaddr;
 };
+COMPILER_PACK_RESET()
 
 #define ARP_REQUEST 1
 #define ARP_REPLY   2

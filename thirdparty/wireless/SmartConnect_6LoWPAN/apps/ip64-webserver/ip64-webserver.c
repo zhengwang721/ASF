@@ -39,6 +39,7 @@
 #include "sys/log.h"
 
 #include "httpd.h"
+#include "ip64-webserver.h"
 
 PROCESS(ip64_webserver_process, "Web server");
 /*---------------------------------------------------------------------------*/

@@ -80,5 +80,7 @@ int ip64_arp_create_arp_request(uint8_t *link_header,
 
 int ip64_arp_check_cache(const uint8_t *nlhdr);
 
+void ip64_arp_timer(void);
+
 
 #endif /* IP64_ARP_H */

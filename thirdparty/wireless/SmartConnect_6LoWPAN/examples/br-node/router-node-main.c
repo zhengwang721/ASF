@@ -403,11 +403,11 @@ set_link_addr(uint8_t *eui64)
 #endif  /* UIP_CONF_IPV6 */
   linkaddr_set_node_addr(&addr);
   printf("Link layer addr ");
-  for(i = 0; i < sizeof(addr.u8) - 1; i++) {
+  for( i = 0; i < sizeof(addr.u8) - 1; i++) {
     printf("%u:", addr.u8[i]);
   }
   printf("%u, ", addr.u8[i]);
-  for(i = 0; i < sizeof(addr.u8) - 1; i++) {
+  for( i = 0; i < sizeof(addr.u8) - 1; i++) {
     printf("%02x:", addr.u8[i]);
   }
   printf("%02x\n", addr.u8[i]);

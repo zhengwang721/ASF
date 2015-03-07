@@ -42,6 +42,7 @@
 
 #define DEBUG DEBUG_NONE
 #include "net/ip/uip-debug.h"
+#include "ip64-slip-interface.h"
 
 static uip_ipaddr_t last_sender;
 

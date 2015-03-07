@@ -57,7 +57,7 @@
 //#include "button-sensor.h"
 #include "voltage-sensor.h"
 
-#include "netstack-aes.h"
+//#include "netstack-aes.h"
 #include "net/netstack.h"
 #include "net/ip/uip.h"
 #include "net/mac/frame802154.h"

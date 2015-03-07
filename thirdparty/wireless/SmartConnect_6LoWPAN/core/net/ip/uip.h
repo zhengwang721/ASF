@@ -1644,7 +1644,9 @@ struct uip_tcpip_hdr {
   uint8_t urgp[2];
   uint8_t optdata[4];
 };
+COMPILER_PACK_RESET()
 
+COMPILER_PACK_SET(1)
 /* The ICMP and IP headers. */
 struct uip_icmpip_hdr {
 #if UIP_CONF_IPV6
@@ -1676,8 +1678,10 @@ struct uip_icmpip_hdr {
   uint8_t payload[1];
 #endif /* !UIP_CONF_IPV6 */
 };
+COMPILER_PACK_RESET()
 
 
+COMPILER_PACK_SET(1)
 /* The UDP and IP headers. */
 struct uip_udpip_hdr {
 #if UIP_CONF_IPV6
@@ -1707,14 +1711,14 @@ struct uip_udpip_hdr {
   uint16_t udplen;
   uint16_t udpchksum;
 };
-
+COMPILER_PACK_RESET()
 /*
  * In IPv6 the length of the L3 headers before the transport header is
  * not fixed, due to the possibility to include extension option headers
  * after the IP header. hence we split here L3 and L4 headers
  */
 /* The IP header */
-
+COMPILER_PACK_SET(1)
 struct uip_ip_hdr {
 #if UIP_CONF_IPV6
   /* IPV6 header */
@@ -1737,7 +1741,7 @@ struct uip_ip_hdr {
   uip_ipaddr_t srcipaddr, destipaddr;
 #endif /* UIP_CONF_IPV6 */
 };
-
+COMPILER_PACK_RESET()
 /*
  * IPv6 extension option headers: we are able to process
  * the 4 extension headers defined in RFC2460 (IPv6):
@@ -1759,7 +1763,7 @@ struct uip_ip_hdr {
  * used in IPSec and defined in RFC4302,4303,4305,4385
  */
 /* common header part */
-
+COMPILER_PACK_SET(1)
 typedef struct uip_ext_hdr {
   uint8_t next;
   uint8_t len;

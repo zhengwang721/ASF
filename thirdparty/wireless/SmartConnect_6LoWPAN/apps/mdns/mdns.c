@@ -67,6 +67,7 @@
 
 #include "ip64-addr.h"
 #include "compiler.h"
+#include "mdns.h"
 #define VERBOSE_DEBUG 0
 
 #define WITH_EDNS_LIMIT_UDP_RES_PAYLOAD 1
@@ -160,17 +161,17 @@ struct dns_answer {
   uint8_t ipaddr[4];
 #endif
 };
-
+COMPILER_PACK_RESET()
 #if MDNS_CONF_MDNS_RESPONDER
 /** \internal The DNS question message structure. */
-
-struct dns_question {
+COMPILER_PACK_SET(1)
+struct  dns_question {
   uint16_t type;
   uint16_t class;
 };
-COMPILER_PACK_RESET()
-#endif
 
+#endif
+COMPILER_PACK_RESET()
 static uip_ipaddr_t dns_server;
 static uint8_t dns_server_configured = 0;
 

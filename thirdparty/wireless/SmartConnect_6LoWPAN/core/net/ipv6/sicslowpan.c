@@ -1794,7 +1794,7 @@ input(void)
 
   /* Sanity-check size of incoming packet to avoid buffer overflow */
   {
-    int req_size = UIP_LLH_LEN + uncomp_hdr_len + (uint16_t)(frag_offset << 3)
+    uint8_t req_size = UIP_LLH_LEN + uncomp_hdr_len + (uint16_t)(frag_offset << 3)
         + packetbuf_payload_len;
     if(req_size > sizeof(sicslowpan_buf)) {
       PRINTF(

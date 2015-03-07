@@ -159,7 +159,8 @@
 #endif /* PROJECT_CONF_H */
 
 #ifndef NETSTACK_AES_KEY
-#define NETSTACK_AES_CONF_MASTER_KEY 0
+aass
+#define NETSTACK_AES_CONF_MASTER_KEY        0
 #define NETSTACK_AES_KEY                    "thingsquare mist" /* 16 bytes */
 #define NETSTACK_AES_KEY_DEFAULT            1
 #endif /* NETSTACK_AES_KEY */

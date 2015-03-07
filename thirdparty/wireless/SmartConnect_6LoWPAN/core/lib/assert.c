@@ -29,6 +29,7 @@
  */
 
 #include <stdio.h>
+#include "assert.h"
 
 void
 _xassert(const char *file, int lineno)

@@ -142,12 +142,20 @@ struct uip_mcast6_driver {
 #elif UIP_MCAST6_ENGINE == UIP_MCAST6_ENGINE_SMRF
 #define RPL_CONF_MULTICAST     1
 
+
 #define UIP_MCAST6             smrf_driver
 #else
 #error "Multicast Enabled with an Unknown Engine."
 #error "Check the value of UIP_MCAST6_CONF_ENGINE in conf files."
 #endif
 #endif /* UIP_MCAST6_ENGINE */
+/* If MULTICATS_ENGINE is not defined, make the MCAST definitions to zero. */
+#ifndef RPL_CONF_MULTICAST
+#define RPL_CONF_MULTICAST 0
+#endif
+#ifndef UIP_CONF_IPV6_MULTICAST
+#define UIP_CONF_IPV6_MULTICAST 0
+#endif
 
 extern const struct uip_mcast6_driver UIP_MCAST6;
 /*---------------------------------------------------------------------------*/

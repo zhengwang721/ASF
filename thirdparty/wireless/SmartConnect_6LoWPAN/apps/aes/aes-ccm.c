@@ -87,7 +87,7 @@ void aes_ccm_memcpy(const unsigned char *dest, const unsigned char *from,
 
 /*---------------------------------------------------------------------------*/
 static void
-cbcmac_clear()
+cbcmac_clear(void)
 {
 #if PRINT_CBCMAC_BLOCKS
   cbcmac_blockcount = 0;
@@ -218,7 +218,7 @@ cbcmac_calc(const unsigned char *key, const unsigned char *nonce,
 
   /* B_1..n: auth. blocks */
   if(adata_len > 0) {
-    unsigned long left, idx;
+    signed long left, idx;
     int len;
 
     CBCMAC_PRINTF("CBC-MAC: Have auth. data\n");
@@ -599,11 +599,12 @@ aes_ccm_encrypt(const unsigned char *key, const unsigned char *nonce,
 long
 aes_ccm_decrypt(const unsigned char *key, const unsigned char *nonce,
                     const unsigned char *adata, unsigned long adata_len,
-                    const unsigned char *ciphermic, unsigned long ciphermic_len,
+                    const unsigned char *ciphermic, signed long ciphermic_len,
                     int mic_len, unsigned char *outbuf)
 {
   int cbcmac_len, cbcmac_len2;
-  unsigned long i, ctr_len;
+  signed long i; 
+  unsigned long ctr_len;
 
   /* MIC length: 4, 6, 8, 10, 12, 14, or 16 bytes */
   unsigned char cbcmac[16];

@@ -6,6 +6,7 @@ Author:   Uli Kretzschmar
 AES software support for encryption and decryption
 ECCN 5D002 TSU - Technology / Software Unrestricted
 **************************************************************/
+#include "aes.h"
 
 // foreward sbox
 static const unsigned char sbox[256] = {

@@ -43,7 +43,7 @@ aes_ccm_encrypt(const unsigned char *key, const unsigned char *nonce,
 long
 aes_ccm_decrypt(const unsigned char *key, const unsigned char *nonce,
                     const unsigned char *adata, unsigned long adata_len,
-                    const unsigned char *ciphermic, unsigned long ciphermic_len,
+                    const unsigned char *ciphermic, signed long ciphermic_len,
                     int mic_len, unsigned char *outbuf);
 int
 aes_ccm_verify(const unsigned char *key, const unsigned char *nonce,

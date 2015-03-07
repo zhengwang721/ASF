@@ -55,26 +55,6 @@ uint16_t httpd_fs_count(char *name);
 #endif /* HTTPD_FS_STATISTICS */
 
 void httpd_fs_init(void);
-extern const struct httpd_fsdata_file;
-extern const struct httpd_fsdata_file;
-extern const struct httpd_fsdata_file;
-extern const struct httpd_fsdata_file;
-extern const struct httpd_fsdata_file;
-extern const struct httpd_fsdata_file;
-extern const struct httpd_fsdata_file;
-extern const struct httpd_fsdata_file;
-extern  const struct httpd_fsdata_file;
-extern const struct httpd_fsdata_file;
-extern const struct httpd_fsdata_file;
-extern const struct httpd_fsdata_file;
-extern const struct httpd_fsdata_file;
-extern const struct httpd_fsdata_file;
-extern const struct httpd_fsdata_file;
-extern const struct httpd_fsdata_file;
-extern const struct httpd_fsdata_file;
-extern const struct file_tcp_shtml;
-#define HTTPD_FS_ROOT  file_tcp_shtml
-#define HTTPD_FS_NUMFILES  17
-#define HTTPD_FS_SIZE 16003
+
 
 #endif /* __HTTPD_FS_H__ */

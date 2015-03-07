@@ -34,25 +34,29 @@
 
 #include "contiki-conf.h"
 
-/**
- * The Ethernet address.
- */
-struct ip64_eth_addr {
-  uint8_t addr[6];
-};
 
 extern struct ip64_eth_addr ip64_eth_addr;
 
 void ip64_eth_addr_set(struct ip64_eth_addr *addr);
 
 /**
+ * The Ethernet address.
+ */
+
+struct  ip64_eth_addr {
+  uint8_t addr[6];
+};
+
+/**
  * The Ethernet header.
  */
+
 struct ip64_eth_hdr {
   struct ip64_eth_addr dest;
   struct ip64_eth_addr src;
   uint16_t type;
 };
+
 
 #define IP64_ETH_TYPE_ARP  0x0806
 #define IP64_ETH_TYPE_IP   0x0800

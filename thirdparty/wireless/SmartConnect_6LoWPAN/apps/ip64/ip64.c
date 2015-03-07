@@ -78,6 +78,8 @@
 #define PRINTF(...)
 #endif /* DEBUG */
 
+
+COMPILER_PACK_SET(1)
 struct ipv6_hdr {
   uint8_t vtc;
   uint8_t tcflow;
@@ -86,7 +88,9 @@ struct ipv6_hdr {
   uint8_t nxthdr, hoplim;
   uip_ip6addr_t srcipaddr, destipaddr;
 };
+COMPILER_PACK_RESET()
 
+COMPILER_PACK_SET(1)
 struct ipv4_hdr {
   uint8_t vhl,
     tos,
@@ -98,6 +102,7 @@ struct ipv4_hdr {
   uint16_t ipchksum;
   uip_ip4addr_t srcipaddr, destipaddr;
 };
+COMPILER_PACK_RESET()
 
 #define EPHEMERAL_PORTRANGE 1024
 
@@ -113,7 +118,7 @@ struct ipv4_hdr {
 #define ICMP_ECHO        8
 #define ICMP6_ECHO_REPLY 129
 #define ICMP6_ECHO       128
-
+COMPILER_PACK_SET(1)
 struct tcp_hdr {
   uint16_t srcport;
   uint16_t destport;
@@ -126,24 +131,31 @@ struct tcp_hdr {
   uint8_t urgp[2];
   uint8_t optdata[4];
 };
+COMPILER_PACK_RESET()
 
+COMPILER_PACK_SET(1)
 struct udp_hdr {
   uint16_t srcport;
   uint16_t destport;
   uint16_t udplen;
   uint16_t udpchksum;
 };
+COMPILER_PACK_RESET()
 
+COMPILER_PACK_SET(1)
 struct icmpv4_hdr {
   uint8_t type, icode;
   uint16_t icmpchksum;
 };
+COMPILER_PACK_RESET()
 
+COMPILER_PACK_SET(1)
 struct icmpv6_hdr {
   uint8_t type, icode;
   uint16_t icmpchksum;
   uint16_t id, seqno;
 };
+COMPILER_PACK_RESET()
 
 #define BUFSIZE UIP_BUFSIZE
 

@@ -73,6 +73,7 @@ static struct uip_fw_netif *netifs = NULL;
  */
 static struct uip_fw_netif *defaultnetif = NULL;
 
+COMPILER_PACK_SET(1)
 struct tcpip_hdr {
   /* IP header. */
   uint8_t vhl,
@@ -97,7 +98,10 @@ struct tcpip_hdr {
   uint8_t urgp[2];
   uint8_t optdata[4];
 };
+COMPILER_PACK_RESET()
 
+
+COMPILER_PACK_SET(1)
 struct icmpip_hdr {
   /* IP header. */
   uint8_t vhl,
@@ -115,6 +119,7 @@ struct icmpip_hdr {
   uint16_t id, seqno;
   uint8_t payload[1];
 };
+COMPILER_PACK_RESET()
 
 /* ICMP ECHO. */
 #define ICMP_ECHO 8
@@ -136,6 +141,7 @@ struct icmpip_hdr {
  * Certain fields of an IP packet that are used for identifying
  * duplicate packets.
  */
+COMPILER_PACK_SET(1)
 struct fwcache_entry {
   uint16_t timer;
   
@@ -153,7 +159,7 @@ struct fwcache_entry {
   uint16_t len, offset;
 #endif
 };
-
+COMPILER_PACK_RESET()
 /*
  * The number of packets to remember when looking for duplicates.
  */
