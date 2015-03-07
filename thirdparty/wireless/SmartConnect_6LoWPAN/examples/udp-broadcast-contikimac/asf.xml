@@ -27,7 +27,6 @@
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.websocket"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.http-socket"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.simple-rpl"/>
-		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.multichan"/>
 		<device-support value="sam0"/>	
 		<info type="gui-flag" value="move-to-root"/>
 	</module>

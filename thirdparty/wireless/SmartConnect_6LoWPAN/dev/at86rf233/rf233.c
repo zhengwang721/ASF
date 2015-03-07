@@ -515,7 +515,7 @@ rf233_channel_clear(void)
     was_off = 1;
     RF233_COMMAND(TRXCMD_RX_ON);
   }
-
+   delay_us(200);
   /* request a CCA, storing the channel number (set with the same reg) */
   regsave = trx_reg_read(RF233_REG_PHY_CC_CCA);
   regsave |= PHY_CC_CCA_DO_CCA | PHY_CC_CCA_MODE_CS_OR_ED;
