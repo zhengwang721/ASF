@@ -28,7 +28,6 @@
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.websocket"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.http-socket"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.simple-rpl"/>
-		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.multichan"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64-addr"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64-webserver"/>

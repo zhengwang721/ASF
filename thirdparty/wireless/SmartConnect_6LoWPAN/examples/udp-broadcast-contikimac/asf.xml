@@ -21,11 +21,8 @@
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ipv6"/>		
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.thsq-conf"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.aes"/>
-		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.drowsie"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64-addr"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.mdns"/>
-		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.websocket"/>
-		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.http-socket"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.simple-rpl"/>
 		<device-support value="sam0"/>	
 		<info type="gui-flag" value="move-to-root"/>
