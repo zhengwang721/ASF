@@ -31,6 +31,7 @@
 	        <build type="doxygen-entry-point" value="group_contiki"/>
 		<config name="config.compiler.armgcc.optimization" value="high" />
 		<generator value="as5_arm" />
+		<generator value="armgcc" />
 		<generator value="doxygen"/>
 		<device-support value="atsamr21g18a"/>
 	</project>
