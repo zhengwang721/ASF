@@ -50,7 +50,7 @@
 
 struct packetbuf_attr packetbuf_attrs[PACKETBUF_NUM_ATTRS];
 struct packetbuf_addr packetbuf_addrs[PACKETBUF_NUM_ADDRS];
-
+#define DEBUG_LEVEL 0
 
 static uint16_t buflen, bufptr;
 static uint8_t hdrptr;

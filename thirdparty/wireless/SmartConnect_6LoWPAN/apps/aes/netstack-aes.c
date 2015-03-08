@@ -92,7 +92,7 @@ netstack_aes_encrypt(void)
 
   uint8_t *payload;
   uint16_t payload_len;
-  int i;
+  uint8_t i;
   long ret;
   uint8_t nonce[NONCE_LEN];
 

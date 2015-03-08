@@ -39,7 +39,7 @@
 
 #ifndef RIMESTATS_H_
 #define RIMESTATS_H_
-
+#include "contiki-conf.h"
 struct rimestats {
   unsigned long tx, rx;
 

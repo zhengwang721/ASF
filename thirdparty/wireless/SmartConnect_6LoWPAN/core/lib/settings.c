@@ -39,7 +39,7 @@
 #include "contiki.h"
 #include "settings.h"
 #include "dev/eeprom.h"
-
+#define CONTIKI_CONF_SETTINGS_MANAGER  0
 #if CONTIKI_CONF_SETTINGS_MANAGER
 
 #if !EEPROM_CONF_SIZE

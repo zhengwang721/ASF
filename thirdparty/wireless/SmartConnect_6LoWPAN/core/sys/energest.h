@@ -69,9 +69,8 @@ enum energest_type {
 
 void energest_init(void);
 unsigned long energest_type_time(int type);
-#ifdef ENERGEST_CONF_LEVELDEVICE_LEVELS
 unsigned long energest_leveldevice_leveltime(int powerlevel);
-#endif
+
 void energest_type_set(int type, unsigned long value);
 void energest_flush(void);
 

@@ -43,6 +43,7 @@ static volatile uint32_t seconds;
 long sleepseconds;
 static struct tc_module tc_instance;
 void configure_tc3(void);
+void _TC3_Handler(void);
 #define TC3_WAIT_BUSY() while(REG_TC3_STATUS & TC_STATUS_SYNCBUSY)//rtc
 /*---------------------------------------------------------------------------*/
 static void

@@ -360,9 +360,9 @@ cbcmac_verify(const unsigned char *key, const unsigned char *nonce,
     left = adata_len;
     idx = 0;
     memcpy(&BUF[len], &adata[idx],
-           (left > (BLOCK_SIZE - len) ? (BLOCK_SIZE - len) : left));
-    idx += (left > (BLOCK_SIZE - len) ? (BLOCK_SIZE - len) : left);
-    left -= (left > (BLOCK_SIZE - len) ? (BLOCK_SIZE - len) : left);
+           ((int)left > (BLOCK_SIZE - len) ? (BLOCK_SIZE - len) : left));
+    idx += ((int)left > (BLOCK_SIZE - len) ? (BLOCK_SIZE - len) : left);
+    left -= ((int)left > (BLOCK_SIZE - len) ? (BLOCK_SIZE - len) : left);
 
     /* 16 bytes data in subsequent auth. blocks */
     while(left > 0) {
@@ -603,7 +603,7 @@ aes_ccm_decrypt(const unsigned char *key, const unsigned char *nonce,
                     int mic_len, unsigned char *outbuf)
 {
   int cbcmac_len, cbcmac_len2;
-  signed long i; 
+  unsigned long i; 
   unsigned long ctr_len;
 
   /* MIC length: 4, 6, 8, 10, 12, 14, or 16 bytes */

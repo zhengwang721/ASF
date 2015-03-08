@@ -67,7 +67,7 @@
  * The list of registered network interfaces.
  */
 static struct uip_fw_netif *netifs = NULL;
-
+#define notdef 0
 /*
  * A pointer to the default network interface.
  */

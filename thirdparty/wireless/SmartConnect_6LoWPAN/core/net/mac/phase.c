@@ -43,7 +43,7 @@
 #include "sys/ctimer.h"
 #include "net/queuebuf.h"
 #include "net/nbr-table.h"
-
+#define PHASE_DRIFT_CORRECT 0
 #if PHASE_CONF_DRIFT_CORRECT
 #define PHASE_DRIFT_CORRECT PHASE_CONF_DRIFT_CORRECT
 #else

@@ -41,7 +41,7 @@
 /*---------------------------------------------------------------------------*/
 //static int first_init = 0;
 //static struct adc_module adc_instance;
-
+void samd20_sensors_init(void);
 /* This defines the set of sensors used in the SAM D20 X-plained board. */
 //SENSORS(&temp_sensor, &button_sensor, &voltage_sensor);
 SENSORS(&button_sensor);

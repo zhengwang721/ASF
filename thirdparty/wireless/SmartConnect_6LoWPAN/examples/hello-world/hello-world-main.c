@@ -380,7 +380,7 @@ static void
 set_link_addr(uint8_t *eui64)
 {
   linkaddr_t addr;
-  int i;
+  uint8_t i;
 
   memset(&addr, 0, sizeof(linkaddr_t));
 #if UIP_CONF_IPV6

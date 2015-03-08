@@ -96,7 +96,11 @@
 #define  PACKETBUF_CONF_ATTRS_INLINE          1
 
 #define RIMESTATS_CONF_ENABLED 1
+
+#define  UIP_CONF_IP_FORWARD  0
 #define RF_CHANNEL                            14
+#define NETSTACK_CONF_BRIDGE_MODE    0
+#define WITH_PETSCII  1
 
 #define IEEE802154_CONF_PANID                 0xABCD
 

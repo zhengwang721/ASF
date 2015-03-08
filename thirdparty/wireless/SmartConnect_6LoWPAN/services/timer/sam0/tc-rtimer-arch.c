@@ -59,7 +59,7 @@ static struct tc_module tc_instance;
 #define RTIMER_COMPENSATION_TICKS       0
 #endif /* RTIMER_SECOND == 32768 */
 /*---------------------------------------------------------------------------*/
-
+void _TC4_Handler(void);
 /* RTC test */
 void rtc_overflow_callback(void);
 void configure_rtc_count(void);

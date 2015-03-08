@@ -70,7 +70,7 @@
 #ifndef DEBUG
 #define DEBUG CONTIKI_TARGET_COOJA
 #endif
-
+#define VERBOSE_DEBUG 0
 #if UIP_UDP
 
 #include <string.h>
