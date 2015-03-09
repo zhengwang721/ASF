@@ -818,8 +818,6 @@ void system_clock_init(void)
 	/* OSCK32K */
 #if CONF_CLOCK_OSC32K_ENABLE == true
 
-	//OSC32KCTRL->OSC32K.bit.CALIB = OSC32KCTRL_OSC32K_CALIB(16);
-
 	struct system_clock_source_osc32k_config osc32k_conf;
 	system_clock_source_osc32k_get_config_defaults(&osc32k_conf);
 
@@ -835,14 +833,15 @@ void system_clock_init(void)
 
 	/* OSC16M */
 	if (CONF_CLOCK_OSC16M_FREQ_SEL == SYSTEM_OSC16M_4M){
-		OSCCTRL->OSC16MCTRL.reg |= (CONF_CLOCK_OSC16M_ON_DEMAND << OSCCTRL_OSC16MCTRL_ONDEMAND_Pos)
-								|(CONF_CLOCK_OSC16M_RUN_IN_STANDBY << OSCCTRL_OSC16MCTRL_RUNSTDBY_Pos);
+		OSCCTRL->OSC16MCTRL.bit.ONDEMAND = CONF_CLOCK_OSC16M_ON_DEMAND ;
+		OSCCTRL->OSC16MCTRL.bit.RUNSTDBY = CONF_CLOCK_OSC16M_RUN_IN_STANDBY;
 	} else {
 		_system_clock_source_osc16m_freq_sel();
 	}
 
-	OSC32KCTRL->OSCULP32K.reg = (CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN1K_Pos)
-									|(CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN32K_Pos);
+	uint32_t mask = OSC32KCTRL->OSCULP32K.reg & (~(OSC32KCTRL_OSCULP32K_EN32K | OSC32KCTRL_OSCULP32K_EN1K));
+	OSC32KCTRL->OSCULP32K.reg = mask | (CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN1K_Pos)
+									 | (CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN32K_Pos);
 
 	/* DFLL Config (Open and Closed Loop) */
 #if CONF_CLOCK_DFLL_ENABLE == true
@@ -1026,11 +1025,9 @@ void system_clock_init(void)
 	_CONF_CLOCK_GCLK_CONFIG(0, ~);
 #endif
 
-	/* Set performance level according to CPU frequency */
+	/* If CPU frequency is less than 12MHz, scale down performance level to PL0 */
 	uint32_t cpu_freq = system_cpu_clock_get_hz();
-	if (cpu_freq < SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ) {
+	if (cpu_freq <= 12000000) {
 		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_0);
-	} else if (cpu_freq < SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ) {
-		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_1);
 	}
 }

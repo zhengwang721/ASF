@@ -267,6 +267,9 @@ enum status_code nvm_execute_command(
  * Writes from a buffer to a given page in the NVM memory, retaining any
  * unmodified data already stored in the page.
  *
+ * \note If manual write mode is enable, write command must be executed after
+ * this function, otherwise the data will not write to NVM from page buffer. 
+ *
  * \warning This routine is unsafe if data integrity is critical; a system reset
  *          during the update process will result in up to one row of data being
  *          lost. If corruption must be avoided in all circumstances (including
@@ -380,6 +383,9 @@ enum status_code nvm_update_buffer(
  * must be executed before any other commands after writing a page,
  * refer to errata 13588.
  *
+ * \note If manual write mode is enable, write command must be executed after
+ * this function, otherwise the data will not write to NVM from page buffer. 
+ *
  * \return Status of the attempt to write a page.
  *
  * \retval STATUS_OK               Requested NVM memory page was successfully
@@ -463,9 +469,10 @@ enum status_code nvm_write_buffer(
 		NVM_MEMORY[nvm_address++] = data;
 	}
 
-	/* Perform a manual NVM write when the length of data to be programmed is
-	 * less than page size */
-	if (length < NVMCTRL_PAGE_SIZE) {
+	/* If automatic page write mode is enable, then perform a manual NVM
+	 * write when the length of data to be programmed is less than page size
+	 */
+	if ((_nvm_dev.manual_page_write == false) && (length < NVMCTRL_PAGE_SIZE)) {
 #ifdef FEATURE_NVM_RWWEE
 	 return ((is_rww_eeprom) ? 
 				(nvm_execute_command(NVM_COMMAND_RWWEE_WRITE_PAGE,destination_address, 0)):
@@ -773,7 +780,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod33_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & FUSES_BOD33_ACTION_Msk)
 			>> FUSES_BOD33_ACTION_Pos);
-#elif (SAMD20) || (SAMD21) || (SAMDA0) || (SAMDA1)
+#elif (SAMD20) || (SAMD21) || (SAMR21) || (SAMDA0) || (SAMDA1)
 	fusebits->bod33_level = (uint8_t)
 			((raw_user_row[0] & FUSES_BOD33USERLEVEL_Msk)
 			>> FUSES_BOD33USERLEVEL_Pos);
