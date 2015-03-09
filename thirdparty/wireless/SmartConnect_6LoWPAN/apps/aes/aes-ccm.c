@@ -360,9 +360,9 @@ cbcmac_verify(const unsigned char *key, const unsigned char *nonce,
     left = adata_len;
     idx = 0;
     memcpy(&BUF[len], &adata[idx],
-           ((int)left > (BLOCK_SIZE - len) ? (BLOCK_SIZE - len) : left));
-    idx += ((int)left > (BLOCK_SIZE - len) ? (BLOCK_SIZE - len) : left);
-    left -= ((int)left > (BLOCK_SIZE - len) ? (BLOCK_SIZE - len) : left);
+           ((unsigned long)left > (BLOCK_SIZE - len) ? (BLOCK_SIZE - len) : left));
+    idx += ((unsigned long)left > (BLOCK_SIZE - len) ? (BLOCK_SIZE - len) : left);
+    left -= ((unsigned long)left > (BLOCK_SIZE - len) ? (BLOCK_SIZE - len) : left);
 
     /* 16 bytes data in subsequent auth. blocks */
     while(left > 0) {
