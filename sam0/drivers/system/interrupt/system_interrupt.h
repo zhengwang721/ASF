@@ -289,7 +289,7 @@ static inline enum system_interrupt_vector system_interrupt_get_active(void)
 {
 	uint32_t IPSR = __get_IPSR();
 
-	return (enum system_interrupt_vector)(IPSR & _SYSTEM_INTERRUPT_IPSR_MASK);
+	return (enum system_interrupt_vector)((IPSR & _SYSTEM_INTERRUPT_IPSR_MASK) - 16);
 }
 
 bool system_interrupt_is_pending(
