@@ -288,7 +288,7 @@ static inline void system_interrupt_disable(
 static inline enum system_interrupt_vector system_interrupt_get_active(void)
 {
 	uint32_t IPSR = __get_IPSR();
-
+	/* The IPSR returns the Exception number, which with an offset 16 to IRQ number. */
 	return (enum system_interrupt_vector)((IPSR & _SYSTEM_INTERRUPT_IPSR_MASK) - 16);
 }
 
