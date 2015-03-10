@@ -125,6 +125,9 @@ static volatile bool b_wait = false, b_com_port_opened = false;
 struct usart_module usart_instance;
 struct i2c_master_module i2c_master_instance;
 
+/**
+ *  Configure UART console.
+ */
 static void configure_usart(void)
 {
 
@@ -140,6 +143,9 @@ static void configure_usart(void)
 	usart_enable(&usart_instance);
 }
 
+/**
+ *  Configure I2C master.
+ */
 static void configure_i2c_master(void)
 {
 
@@ -317,11 +323,9 @@ void cdc_rx_notify(uint8_t port)
 void main_cdc_set_dtr(uint8_t port, bool b_enable)
 {
 	if (b_enable) {
-		// Host terminal has open COM
 		ui_com_open(port);
 		b_com_port_opened = true;
 	}else{
-		// Host terminal has close COM
 		ui_com_close(port);
 		b_com_port_opened = false;
 	}

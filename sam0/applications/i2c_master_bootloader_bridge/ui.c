@@ -162,13 +162,3 @@ void ui_process(uint16_t framenumber)
 		LED_Off(LED_0_PIN);
 	}
 }
-
-/**
- * \defgroup UI User Interface
- *
- * Human interface on SAMD21-XPlain:
- * - SAMD21 USART used USART connected through EDBG CDC USART Port
- * - Led 0 blinks when USB is connected and active
- * - Push SW0 button will generate a wakeup to USB Host in remote wakeup mode.
- *
- */
