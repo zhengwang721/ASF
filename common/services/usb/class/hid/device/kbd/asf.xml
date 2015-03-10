@@ -40,6 +40,8 @@
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
 			<device-support value="sam4c32e"/>
+			<device-support value="saml21"/>
+			<device-support value="samg55"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.hid.device.keyboard.composite#disable" caption="USB Device HID Keyboard disabled">
@@ -93,6 +95,8 @@
 		<device-support value="samr21"/>
 		<device-support value="sam4c32e"/>
 		<device-support value="samd11"/>
+		<device-support value="saml21"/>
+		<device-support value="samg55"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>
 	<module type="meta" id="common.services.usb.class.hid.device.kbd.appnote" caption="USB Device HID Keyboard (Application Note)">
@@ -117,7 +121,8 @@
 		<build type="header-file" value="udi_hid_kbd_doc.h"/>
 
 		<build type="doxygen-example-path" value="."/>
-		<build type="doxygen-example-path" value="..\..\"/>
+		<build type="doxygen-example-path" value="../../"/>
+		<build type="doxygen-example-path" value="../../../"/>
 		<build type="doxygen-entry-point" value="asfdoc_udi_hid_keyboard_group"/>
 
 		<require idref="common.services.usb.udc.appnote"/>

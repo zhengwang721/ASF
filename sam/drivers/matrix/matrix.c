@@ -3,7 +3,7 @@
  *
  * \brief Matrix driver for SAM.
  *
- * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include  "matrix.h"
@@ -443,6 +446,35 @@ uint32_t matrix_get_writeprotect_status(void)
 	return (p_matrix->MATRIX_WPSR);
 }
 #endif
+
+#if SAMG55
+/**
+ * \brief Set USB device mode.
+ *
+ */
+void matrix_set_usb_device(void)
+{
+	Matrix *p_matrix = MATRIX;
+
+	p_matrix->CCFG_SYSIO &= ~(CCFG_SYSIO_SYSIO10 | CCFG_SYSIO_SYSIO11);
+
+	p_matrix->CCFG_USBMR |= CCFG_USBMR_DEVICE;
+}
+
+/**
+ * \brief Set USB device mode.
+ *
+ */
+void matrix_set_usb_host(void)
+{
+	Matrix *p_matrix = MATRIX;
+
+	p_matrix->CCFG_SYSIO &= ~(CCFG_SYSIO_SYSIO10 | CCFG_SYSIO_SYSIO11);
+
+	p_matrix->CCFG_USBMR &= ~CCFG_USBMR_DEVICE;
+}
+#endif
+
 
 /* @} */
 

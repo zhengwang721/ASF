@@ -3,7 +3,7 @@
  *
  * \brief SAM ADC Quick Start
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,13 +49,13 @@
  * application that conversion is compete.
  *
  * The ADC will be set up as follows:
- * - VCC / 2 as reference
+ * - V<SUB>CC</SUB> / 2 as reference
  * - Div 8 clock prescaler
- * - 12 bit resolution
+ * - 12-bit resolution
  * - Window monitor disabled
  * - 1/2 gain
  * - Positive input on ADC PIN 0
- * - Negative input to GND (Single ended)
+ * - Negative input to GND (single ended)
  * - Averaging disabled
  * - Oversampling disabled
  * - Right adjust data
@@ -112,11 +112,11 @@
  *
  *  -# Change the ADC module configuration to suit the application.
  *     \snippet qs_adc_callback.c setup_modify_conf
- *  -# Set ADC configurations
+ *  -# Set ADC configurations.
  *     \snippet qs_adc_callback.c setup_set_config
  *  -# Enable the ADC module so that conversions can be made.
  *     \snippet qs_adc_callback.c setup_enable
- * -# Register and enable the ADC Read Buffer Complete callback handler
+ * -# Register and enable the ADC Read Buffer Complete callback handler.
  *  -# Register the user-provided Read Buffer Complete callback function with
  *     the driver, so that it will be run when an asynchronous buffer read job
  *     completes.
@@ -142,4 +142,7 @@
  *     \snippet qs_adc_callback.c job_complete_poll
  *  -# Enter an infinite loop once the conversion is complete.
  *     \snippet qs_adc_callback.c inf_loop
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

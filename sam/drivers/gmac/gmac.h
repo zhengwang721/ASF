@@ -3,7 +3,7 @@
  *
  * \brief GMAC (Ethernet MAC) driver for SAM.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef GMAC_H_INCLUDED
@@ -365,16 +368,6 @@ static inline void gmac_tx_pause_frame(Gmac* p_gmac)
 static inline void gmac_tx_pause_zero_quantum_frame(Gmac* p_gmac)
 {
 	p_gmac->GMAC_NCR |= GMAC_NCR_TXZQPF;
-}
-
-/**
- * \brief Read snapshot.
- *
- * \param p_gmac   Pointer to the GMAC instance.
- */
-static inline void gmac_read_snapshot(Gmac* p_gmac)
-{
-	p_gmac->GMAC_NCR |= GMAC_NCR_RDS;
 }
 
 /**
@@ -997,11 +990,11 @@ static inline void gmac_select_mii_mode(Gmac* p_gmac, gmac_mii_mode_t mode)
 	switch (mode) {
 		case GMAC_PHY_MII:
 		case GMAC_PHY_RMII:
-			p_gmac->GMAC_UR |= GMAC_UR_RMIIMII;
+			p_gmac->GMAC_UR |= GMAC_UR_MII;
 		break;
 
 		default:
-			p_gmac->GMAC_UR &= ~GMAC_UR_RMIIMII;
+			p_gmac->GMAC_UR &= ~GMAC_UR_MII;
 		break;
 	}
 }

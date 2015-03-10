@@ -3,7 +3,7 @@
  *
  * \brief SAM DAC Callback Quick Start
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,7 +49,7 @@
  * application that conversion is compete.
  *
  * The DAC will be set up as follows:
- * - Analog VCC as reference
+ * - Analog V<SUB>CC</SUB> as reference
  * - Internal output disabled
  * - Drive the DAC output to the V<sub>OUT</sub> pin
  * - Right adjust data
@@ -78,7 +78,7 @@
  * \snippet qs_dac_callback.c setup_dac
  * \snippet qs_dac_callback.c setup_dac_channel
  *
- * define a  data length variables and add to user application (typically the start of \c main()):
+ * Define a  data length variables and add to user application (typically the start of \c main()):
  * \snippet qs_dac_callback.c data_length_var
  *
  * Add to user application initialization (typically the start of \c main()):
@@ -119,8 +119,6 @@
  *     \snippet qs_dac_callback.c setup_dac_on_event_start_conversion
  *  -# Enable DAC event.
  *     \snippet qs_dac_callback.c enable_dac_event
- *  -# Enable DAC module.
- *     \snippet qs_dac_callback.c enable_dac
  *
  * -# Configure the DAC channel.
  *  -# Create a DAC channel configuration struct, which can be filled out to
@@ -137,6 +135,9 @@
  *     \snippet qs_dac_callback.c set_dac_chan_config
  *  -# Enable the DAC channel so that it can output a voltage.
  *     \snippet qs_dac_callback.c enable_dac_channel
+ *
+ * -# Enable DAC module.
+ *    \snippet qs_dac_callback.c enable_dac
  *
  * -# Configure the RTC module.
  *  -# Create a RTC module event struct, which can be filled out to
@@ -155,6 +156,7 @@
  *     \snippet qs_dac_callback.c setup_rtc_modify_conf
  *  -# Initialize the RTC module.
  *     \snippet qs_dac_callback.c init_rtc_count
+ *
  *  -# Configure the RTC module with overflow event.
  *     \snippet qs_dac_callback.c setup_rtc_overflow_event
  *  -# Enable RTC module overflow event.
@@ -176,10 +178,10 @@
  *     \snippet qs_dac_callback.c set_event_modify_conf
  *  -# Allocate the event resource.
  *     \snippet qs_dac_callback.c allocate_event_resource
- *  -# Attach the event resource with user DAC start
+ *  -# Attach the event resource with user DAC start.
  *     \snippet qs_dac_callback.c attach_event_to_dac
  *
- * -# Register and enable the DAC Write Buffer Complete callback handler
+ * -# Register and enable the DAC Write Buffer Complete callback handler.
  *  -# Register the user-provided Write Buffer Complete callback function with
  *     the driver, so that it will be run when an asynchronous buffer write job
  *     completes.
@@ -201,5 +203,8 @@
  *  \snippet qs_dac_callback.c main_check_transfer_done
  *  -# Enter an infinite loop once the conversion is complete.
  *  \snippet qs_dac_callback.c main_loop
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

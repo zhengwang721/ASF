@@ -3,7 +3,7 @@
  *
  * \brief SAM D1x Clock Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +40,16 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #include <clock.h>
 #include <conf_clocks.h>
 #include <system.h>
 
 /**
  * \internal
- * \brief DFLL-specific data container
+ * \brief DFLL-specific data container.
  */
 struct _system_clock_dfll_config {
 	uint32_t control;
@@ -56,7 +59,7 @@ struct _system_clock_dfll_config {
 
 /**
  * \internal
- * \brief DPLL-specific data container
+ * \brief DPLL-specific data container.
  */
 struct _system_clock_dpll_config {
 	uint32_t frequency;
@@ -65,7 +68,7 @@ struct _system_clock_dpll_config {
 
 /**
  * \internal
- * \brief XOSC-specific data container
+ * \brief XOSC-specific data container.
  */
 struct _system_clock_xosc_config {
 	uint32_t frequency;
@@ -73,7 +76,7 @@ struct _system_clock_xosc_config {
 
 /**
  * \internal
- * \brief System clock module data container
+ * \brief System clock module data container.
  */
 struct _system_clock_module {
 	volatile struct _system_clock_dfll_config dfll;
@@ -88,7 +91,7 @@ struct _system_clock_module {
 
 /**
  * \internal
- * \brief Internal module instance to cache configuration values
+ * \brief Internal module instance to cache configuration values.
  */
 static struct _system_clock_module _system_clock_inst = {
 		.dfll = {
@@ -112,7 +115,7 @@ static struct _system_clock_module _system_clock_inst = {
 
 /**
  * \internal
- * \brief Wait for sync to the DFLL control registers
+ * \brief Wait for sync to the DFLL control registers.
  */
 static inline void _system_dfll_wait_for_sync(void)
 {
@@ -123,7 +126,7 @@ static inline void _system_dfll_wait_for_sync(void)
 
 /**
  * \internal
- * \brief Wait for sync to the OSC32K control registers
+ * \brief Wait for sync to the OSC32K control registers.
  */
 static inline void _system_osc32k_wait_for_sync(void)
 {
@@ -147,13 +150,13 @@ static inline void _system_clock_source_dfll_set_config_errata_9905(void)
 }
 
 /**
- * \brief Retrieve the frequency of a clock source
+ * \brief Retrieve the frequency of a clock source.
  *
  * Determines the current operating frequency of a given clock source.
  *
- * \param[in] clock_source  Clock source to get the frequency of
+ * \param[in] clock_source  Clock source to get the frequency
  *
- * \returns Frequency of the given clock source, in Hz
+ * \returns Frequency of the given clock source, in Hz.
  */
 uint32_t system_clock_source_get_hz(
 		const enum system_clock_source clock_source)
@@ -206,7 +209,7 @@ uint32_t system_clock_source_get_hz(
 }
 
 /**
- * \brief Configure the internal OSC8M oscillator clock source
+ * \brief Configure the internal OSC8M oscillator clock source.
  *
  * Configures the 8MHz (nominal) internal RC oscillator with the given
  * configuration settings.
@@ -227,7 +230,7 @@ void system_clock_source_osc8m_set_config(
 }
 
 /**
- * \brief Configure the internal OSC32K oscillator clock source
+ * \brief Configure the internal OSC32K oscillator clock source.
  *
  * Configures the 32KHz (nominal) internal RC oscillator with the given
  * configuration settings.
@@ -251,7 +254,7 @@ void system_clock_source_osc32k_set_config(
 }
 
 /**
- * \brief Configure the external oscillator clock source
+ * \brief Configure the external oscillator clock source.
  *
  * Configures the external oscillator clock source with the given configuration
  * settings.
@@ -300,7 +303,7 @@ void system_clock_source_xosc_set_config(
 }
 
 /**
- * \brief Configure the XOSC32K external 32KHz oscillator clock source
+ * \brief Configure the XOSC32K external 32KHz oscillator clock source.
  *
  * Configures the external 32KHz oscillator clock source with the given
  * configuration settings.
@@ -336,7 +339,7 @@ void system_clock_source_xosc32k_set_config(
 }
 
 /**
- * \brief Configure the DFLL clock source
+ * \brief Configure the DFLL clock source.
  *
  * Configures the Digital Frequency Locked Loop clock source with the given
  * configuration settings.
@@ -383,7 +386,7 @@ void system_clock_source_dfll_set_config(
 
 #ifdef FEATURE_SYSTEM_CLOCK_DPLL
 /**
- * \brief Configure the DPLL clock source
+ * \brief Configure the DPLL clock source.
  *
  * Configures the Digital Phase-Locked Loop clock source with the given
  * configuration settings.
@@ -404,7 +407,7 @@ void system_clock_source_dpll_set_config(
 	refclk = config->reference_frequency;
 
 	/* Only reference clock REF1 can be divided */
-	if (config->reference_clock == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF1) {
+	if (config->reference_clock == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC) {
 		refclk = refclk / config->reference_divider;
 	}
 
@@ -441,17 +444,17 @@ void system_clock_source_dpll_set_config(
 #endif
 
 /**
- * \brief Writes the calibration values for a given oscillator clock source
+ * \brief Writes the calibration values for a given oscillator clock source.
  *
  * Writes an oscillator calibration value to the given oscillator control
  * registers. The acceptable ranges are:
  *
  * For OSC32K:
- *  - 7 bits (max value 128)
+ *  - 7 bits (maximum value 128)
  * For OSC8MHZ:
- *  - 8 bits (Max value 255)
+ *  - 8 bits (maximum value 255)
  * For OSCULP:
- *  - 5 bits (Max value 32)
+ *  - 5 bits (maximum value 32)
  *
  * \note The frequency range parameter applies only when configuring the 8MHz
  *       oscillator and will be ignored for the other oscillators.
@@ -510,7 +513,7 @@ enum status_code system_clock_source_write_calibration(
 }
 
 /**
- * \brief Enables a clock source
+ * \brief Enables a clock source.
  *
  * Enables a clock source which has been previously configured.
  *
@@ -565,7 +568,7 @@ enum status_code system_clock_source_enable(
 }
 
 /**
- * \brief Disables a clock source
+ * \brief Disables a clock source.
  *
  * Disables a clock source that was previously enabled.
  *
@@ -619,7 +622,7 @@ enum status_code system_clock_source_disable(
 }
 
 /**
- * \brief Checks if a clock source is ready
+ * \brief Checks if a clock source is ready.
  *
  * Checks if a given clock source is ready to be used.
  *
@@ -708,12 +711,45 @@ bool system_clock_source_is_ready(
 		if (n > 0) { _CONF_CLOCK_GCLK_CONFIG(n, unused); }
 #endif
 
+/** \internal
+ *
+ * Switch all peripheral clock to a not enabled general clock
+ * to save power.
+ */
+static void _switch_peripheral_gclk(void)
+{
+	uint32_t gclk_id;
+	struct system_gclk_chan_config gclk_conf;
+
+#if CONF_CLOCK_GCLK_1_ENABLE == false
+	gclk_conf.source_generator = GCLK_GENERATOR_1;
+#elif CONF_CLOCK_GCLK_2_ENABLE == false
+	gclk_conf.source_generator = GCLK_GENERATOR_2;
+#elif CONF_CLOCK_GCLK_3_ENABLE == false
+	gclk_conf.source_generator = GCLK_GENERATOR_3;
+#elif CONF_CLOCK_GCLK_4_ENABLE == false
+	gclk_conf.source_generator = GCLK_GENERATOR_4;
+#elif CONF_CLOCK_GCLK_5_ENABLE == false
+	gclk_conf.source_generator = GCLK_GENERATOR_5;
+#else
+	gclk_conf.source_generator = GCLK_GENERATOR_5;
+#endif
+
+	for (gclk_id = 0; gclk_id < GCLK_NUM; gclk_id++) {
+		system_gclk_chan_set_config(gclk_id, &gclk_conf);
+	}
+}
+
 /**
- * \brief Initialize clock system based on the configuration in conf_clocks.h
+ * \brief Initialize clock system based on the configuration in conf_clocks.h.
  *
  * This function will apply the settings in conf_clocks.h when run from the user
  * application. All clock sources and GCLK generators are running when this function
  * returns.
+ *
+ * \note OSC8M is always enabled and if user selects other clocks for GCLK generators,
+ * the OSC8M default enable can be disabled after system_clock_init. Make sure the
+ * clock switch successfully before disabling OSC8M.
  */
 void system_clock_init(void)
 {
@@ -723,6 +759,9 @@ void system_clock_init(void)
 			SYSCTRL_INTFLAG_DFLLRDY;
 
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
+
+	/* Switch all peripheral clock to a not enabled general clock to save power. */
+	_switch_peripheral_gclk();
 
 	/* XOSC */
 #if CONF_CLOCK_XOSC_ENABLE == true
@@ -879,7 +918,7 @@ void system_clock_init(void)
 
 	/* Configure all GCLK generators except for the main generator, which
 	 * is configured later after all other clock systems are set up */
-	MREPEAT(5, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
+	MREPEAT(GCLK_GEN_NUM, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
 
 #  if CONF_CLOCK_DFLL_ENABLE == true
 	/* Enable DFLL reference clock if in closed loop mode */
@@ -890,6 +929,23 @@ void system_clock_init(void)
 		dfll_gclk_chan_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
 		system_gclk_chan_set_config(SYSCTRL_GCLK_ID_DFLL48, &dfll_gclk_chan_conf);
 		system_gclk_chan_enable(SYSCTRL_GCLK_ID_DFLL48);
+	}
+#  endif
+
+#  if CONF_CLOCK_DPLL_ENABLE == true
+	/* Enable DPLL internal lock timer and reference clock */
+	struct system_gclk_chan_config dpll_gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&dpll_gclk_chan_conf);
+	if (CONF_CLOCK_DPLL_LOCK_TIME != SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT) {
+		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_LOCK_GCLK_GENERATOR;
+		system_gclk_chan_set_config(SYSCTRL_GCLK_ID_FDPLL32K, &dpll_gclk_chan_conf);
+		system_gclk_chan_enable(SYSCTRL_GCLK_ID_FDPLL32K);
+	}
+
+	if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK) {
+		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR;
+		system_gclk_chan_set_config(SYSCTRL_GCLK_ID_FDPLL, &dpll_gclk_chan_conf);
+		system_gclk_chan_enable(SYSCTRL_GCLK_ID_FDPLL);
 	}
 #  endif
 #endif
@@ -909,9 +965,19 @@ void system_clock_init(void)
 #  if (CONF_CLOCK_DPLL_ENABLE == true)
 
 	/* Enable DPLL reference clock */
-	if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0) {
+	if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC32K) {
 		/* XOSC32K should have been enabled for DPLL_REF0 */
 		Assert(CONF_CLOCK_XOSC32K_ENABLE);
+	} else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC) {
+		/* XOSC should have been enabled for DPLL_REF1 */
+		Assert(CONF_CLOCK_XOSC_ENABLE);
+	}
+	else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK) {
+		/* GCLK should have been enabled */
+		Assert(CONF_CLOCK_CONFIGURE_GCLK);
+	}
+	else {
+		Assert(false);
 	}
 
 	struct system_clock_source_dpll_config dpll_config;
@@ -924,10 +990,11 @@ void system_clock_init(void)
 	dpll_config.low_power_enable = CONF_CLOCK_DPLL_LOW_POWER_ENABLE;
 
 	dpll_config.filter           = CONF_CLOCK_DPLL_FILTER;
+	dpll_config.lock_time        = CONF_CLOCK_DPLL_LOCK_TIME;
 
 	dpll_config.reference_clock     = CONF_CLOCK_DPLL_REFERENCE_CLOCK;
 	dpll_config.reference_frequency = CONF_CLOCK_DPLL_REFERENCE_FREQUENCY;
-	dpll_config.reference_divider   = CONF_CLOCK_DPLL_REFEREMCE_DIVIDER;
+	dpll_config.reference_divider   = CONF_CLOCK_DPLL_REFERENCE_DIVIDER;
 	dpll_config.output_frequency    = CONF_CLOCK_DPLL_OUTPUT_FREQUENCY;
 
 	system_clock_source_dpll_set_config(&dpll_config);
@@ -942,10 +1009,6 @@ void system_clock_init(void)
 
 	/* CPU and BUS clocks */
 	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
-
-#ifdef FEATURE_SYSTEM_CLOCK_FAILURE_DETECT
-	system_main_clock_set_failure_detect(CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT);
-#endif
 
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);

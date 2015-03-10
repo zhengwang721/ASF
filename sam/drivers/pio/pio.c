@@ -3,7 +3,7 @@
  *
  * \brief Parallel Input/Output (PIO) Controller driver for SAM.
  *
- * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include "pio.h"
@@ -678,7 +681,7 @@ void pio_set_additional_interrupt_mode(Pio *p_pio,
  */
 void pio_set_writeprotect(Pio *p_pio, const uint32_t ul_enable)
 {
-	p_pio->PIO_WPMR = PIO_WPMR_WPKEY_PASSWD | ul_enable;
+	p_pio->PIO_WPMR = PIO_WPMR_WPKEY_PASSWD | (ul_enable & PIO_WPMR_WPEN);
 }
 
 /**

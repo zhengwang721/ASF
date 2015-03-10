@@ -6,7 +6,7 @@
  *
  * This file defines a useful set of functions for the AES on SAM devices.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,6 +42,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include <aes.h>
@@ -187,11 +190,7 @@ void aes_set_config(
 
 	ul_mode |= AES_MR_PROCDLY(p_cfg->processing_delay);
 
-	#if SAM4C || SAM4CP || SAM4CM
 	ul_mode |= AES_MR_CKEY_PASSWD;
-	#else
-	ul_mode |= AES_MR_CKEY(0xE);
-	#endif /* !(SAM4C || SAM4CP || SAM4CM) */
 
 	p_aes->AES_MR = ul_mode;
 }

@@ -3,7 +3,7 @@
  *
  * \brief SAM TC Driver Quick Start
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,7 +49,7 @@
  * set up as follows:
  *
  * - GCLK generator 0 (GCLK main) clock source
- * - 16 bit resolution on the counter
+ * - 16-bit resolution on the counter
  * - No prescaler
  * - Normal PWM wave generation
  * - GCLK reload action
@@ -71,7 +71,16 @@
  *
  * \subsection asfdoc_sam0_tc_basic_use_case_setup_code Code
  * Add to the main application source file, before any functions:
- * \snippet conf_quick_start.h definition_pwm
+ * - SAM D21 Xplained Pro.
+ *   \snippet quick_start/samd21_xplained_pro/conf_quick_start.h definition_pwm
+ * - SAM D20 Xplained Pro.
+ *   \snippet quick_start/samd20_xplained_pro/conf_quick_start.h definition_pwm
+ * - SAM R21 Xplained Pro.
+ *   \snippet quick_start/samr21_xplained_pro/conf_quick_start.h definition_pwm
+ * - SAM D11 Xplained Pro.
+ *   \snippet quick_start/samd11_xplained_pro/conf_quick_start.h definition_pwm
+ * - SAM L21 Xplained Pro.
+ *   \snippet quick_start/saml21_xplained_pro/conf_quick_start.h definition_pwm
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_basic.c module_inst
@@ -100,7 +109,7 @@
  *           settings.
  *
  *  -# Alter the TC settings to configure the counter width, wave generation
- *     mode and the compare channel 0 value.
+ *     mode, and the compare channel 0 value.
  *     \snippet qs_tc_basic.c setup_change_config
  *  -# Alter the TC settings to configure the PWM output on a physical device
  *     pin.
@@ -120,4 +129,7 @@
  * \subsection asfdoc_sam0_tc_basic_use_case_main_flow Workflow
  * -# Enter an infinite loop while the PWM wave is generated via the TC module.
  *    \snippet qs_tc_basic.c main_loop
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

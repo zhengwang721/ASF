@@ -3,7 +3,7 @@
  *
  * \brief Real-time Timer (RTT) driver for SAM.
  *
- * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include "rtt.h"
@@ -130,7 +133,7 @@ void rtt_disable(Rtt *p_rtt)
 	g_wobits_in_rtt_mr |= RTT_MR_RTTDIS;
 	p_rtt->RTT_MR |= g_wobits_in_rtt_mr;
 }
-#elif (SAMG53 || SAMG54)
+#elif (SAMG53 || SAMG54 || SAMG55)
 void rtt_sel_source(Rtt *p_rtt, bool is_rtc_sel)
 {
 	if(is_rtc_sel) {

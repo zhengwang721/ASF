@@ -3,7 +3,7 @@
  *
  * \brief Peer2Peer application and stack configuration
  *
- * Copyright (C) 2012-2014, Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,7 +46,7 @@
 /*- Definitions ------------------------------------------------------------*/
 
 /* Address must be set to 0 for the first device, and to 1 for the second one. */
-#define APP_ADDR                  0
+#define APP_ADDR                  1
 #define APP_PANID                 0x4567
 #define APP_ENDPOINT              1
 #define APP_SECURITY_KEY          "TestSecurityKey0"

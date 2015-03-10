@@ -3,7 +3,7 @@
  *
  * \brief SAM Serial Peripheral Interface Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef SERCOM_INTERRUPT_H_INCLUDED
 #define SERCOM_INTERRUPT_H_INCLUDED
 
@@ -54,9 +57,6 @@ extern "C" {
 extern void *_sercom_instances[SERCOM_INST_NUM];
 
 typedef void (*sercom_handler_t)(uint8_t instance);
-
-uint8_t _sercom_get_sercom_inst_index(
-		Sercom *const sercom_instance);
 
 enum system_interrupt_vector _sercom_get_interrupt_vector(
 		Sercom *const sercom_instance);

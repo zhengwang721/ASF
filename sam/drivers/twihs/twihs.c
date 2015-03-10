@@ -3,7 +3,7 @@
  *
  * \brief Two-Wire Interface (TWIHS) driver for SAM.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include "twihs.h"
@@ -512,9 +515,8 @@ uint32_t twihs_slave_read(Twihs *p_twihs, uint8_t *p_data)
 	do {
 		status = p_twihs->TWIHS_SR;
 		if (status & TWIHS_SR_SVACC) {
-			if (!(status & TWIHS_SR_GACC) &&
-				((status & (TWIHS_SR_SVREAD | TWIHS_SR_RXRDY))
-				 == (TWIHS_SR_SVREAD | TWIHS_SR_RXRDY))) {
+			if (!(status & (TWIHS_SR_GACC | TWIHS_SR_SVREAD)) &&
+			(status & TWIHS_SR_RXRDY)) {
 				*p_data++ = (uint8_t) p_twihs->TWIHS_RHR;
 				cnt++;
 			}
@@ -544,8 +546,9 @@ uint32_t twihs_slave_write(Twihs *p_twihs, uint8_t *p_data)
 	do {
 		status = p_twihs->TWIHS_SR;
 		if (status & TWIHS_SR_SVACC) {
-			if (!(status & (TWIHS_SR_GACC | TWIHS_SR_SVREAD)) &&
-				(status & TWIHS_SR_TXRDY)) {
+			if (!(status & (TWIHS_SR_GACC | TWIHS_SR_NACK)) &&
+			((status & (TWIHS_SR_SVREAD | TWIHS_SR_TXRDY))
+			== (TWIHS_SR_SVREAD | TWIHS_SR_TXRDY))) {
 				p_twihs->TWIHS_THR = *p_data++;
 				cnt++;
 			}

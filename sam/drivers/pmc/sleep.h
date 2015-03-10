@@ -3,7 +3,7 @@
  *
  * \brief Sleep mode access
  *
- * Copyright (c) 2012 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef SLEEP_H
@@ -76,7 +79,7 @@ extern "C" {
 		SAM4CM || SAM4CP || SAMG)
 
 #if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E || SAM4N || SAM4C || \
-		SAM4CM || SAM4CP)
+		SAM4CM || SAM4CP || SAMG55)
 # define  SAM_PM_SMODE_ACTIVE     0 /**< Active */
 # define  SAM_PM_SMODE_SLEEP_WFE  1 /**< Wait for Events */
 # define  SAM_PM_SMODE_SLEEP_WFI  2 /**< Wait for Interrupts */

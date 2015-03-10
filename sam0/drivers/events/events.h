@@ -3,7 +3,7 @@
  *
  * \brief SAM Event System Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef EVENTS_H_INCLUDED
 #define EVENTS_H_INCLUDED
 
@@ -50,7 +53,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_events_group SAM Event System Driver (EVENTS)
  *
- * This driver for SAM devices provides an interface for the configuration
+ * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
  * and management of the device's peripheral event resources and users within
  * the device, including enabling and disabling of peripheral source selection
  * and synchronization of clock domains between various modules. The following API
@@ -64,9 +67,10 @@ extern "C" {
  * - EVSYS (Event System Management)
  *
  * The following devices can use this module:
- *  - SAM D20/D21
- *  - SAM R21
- *  - SAM D10/D11
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_events_prerequisites
@@ -85,13 +89,13 @@ extern "C" {
  * \section asfdoc_sam0_events_module_overview Module Overview
  *
  * Peripherals within the SAM devices are capable of generating two types of
- * actions in response to given stimulus: set a register flag for later
+ * actions in response to given stimulus; set a register flag for later
  * intervention by the CPU (using interrupt or polling methods), or generate
  * event signals which can be internally routed directly to other
  * peripherals within the device. The use of events allows for direct actions
  * to be performed in one peripheral in response to a stimulus in another
  * without CPU intervention. This can lower the overall power consumption of the
- * system if the CPU is able to remain in sleep modes for longer periods (SleepWalking&trade;), and
+ * system if the CPU is able to remain in sleep modes for longer periods (SleepWalking), and
  * lowers the latency of the system response.
  *
  * The event system is comprised of a number of freely configurable Event
@@ -144,7 +148,7 @@ extern "C" {
  * \subsection asfdoc_sam0_events_module_overview_event_users Event Users
  * Event Users are able to subscribe to an Event Channel, once it has been
  * configured. Each Event User consists of a fixed connection to one of the
- * peripherals within the device (for example, an ADC module or Timer module)
+ * peripherals within the device (for example, an ADC module, or Timer module)
  * and is capable of being connected to a single Event Channel.
  *
  * \subsection asfdoc_sam0_events_module_overview_edge_detection Edge Detection
@@ -152,12 +156,12 @@ extern "C" {
  * and the event signal must be passed directly between the event generator and
  * event user. For synchronous and re-synchronous events, the input signal from
  * the event generator must pass through an edge detection unit, so that only
- * the rising, falling or both edges of the event signal triggers an action in
+ * the rising, falling, or both edges of the event signal triggers an action in
  * the event user.
  *
  * \subsection asfdoc_sam0_events_module_overview_path_selection Path Selection
  * The event system in the SAM devices supports three signal path types from
- * the event generator to event users: asynchronous, synchronous and
+ * the event generator to event users: asynchronous, synchronous, and
  * re-synchronous events.
  *
  * \subsubsection asfdoc_sam0_events_module_overview_path_selection_async Asynchronous Paths
@@ -218,7 +222,7 @@ extern "C" {
  * the re-synchronization process. The re-synchronous event chain is shown in
  * \ref asfdoc_sam0_events_module_resync_path_fig "the figure below".
  *
- * Not all peripherals support Re-synchronous event paths; refer to the device datasheet.
+ * Not all peripherals support re-synchronous event paths; refer to the device datasheet.
  * \anchor asfdoc_sam0_events_module_resync_path_fig
  * \dot
  * digraph overview {
@@ -289,7 +293,7 @@ extern "C" {
  *
  * \section asfdoc_sam0_events_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_events_extra. This includes:
+ * For extra information, see \ref asfdoc_sam0_events_extra. This includes:
  * - \ref asfdoc_sam0_events_extra_acronyms
  * - \ref asfdoc_sam0_events_extra_dependencies
  * - \ref asfdoc_sam0_events_extra_errata
@@ -309,60 +313,65 @@ extern "C" {
 #include <compiler.h>
 #include "events_common.h"
 
-
 /**
- * \brief Edge detect enum
+ * \brief Edge detect enum.
  *
- * Event channel edge detect setting
+ * Event channel edge detect setting.
  *
  */
 enum events_edge_detect {
-	/** No event output */
+	/** No event output. */
 	EVENTS_EDGE_DETECT_NONE,
-	/** Event on rising edge */
+	/** Event on rising edge. */
 	EVENTS_EDGE_DETECT_RISING,
-	/** Event on falling edge */
+	/** Event on falling edge. */
 	EVENTS_EDGE_DETECT_FALLING,
-	/** Event on both edges */
+	/** Event on both edges. */
 	EVENTS_EDGE_DETECT_BOTH,
 };
 
 /**
- * \brief Path selection enum
+ * \brief Path selection enum.
  *
- * Event channel path selection
+ * Event channel path selection.
  *
  */
 enum events_path_selection {
-	/** Select the synchronous path for this event channel */
+	/** Select the synchronous path for this event channel. */
 	EVENTS_PATH_SYNCHRONOUS,
-	/** Select the resynchronizer path for this event channel */
+	/** Select the resynchronizer path for this event channel. */
 	EVENTS_PATH_RESYNCHRONIZED,
-	/** Select the asynchronous path for this event channel */
+	/** Select the asynchronous path for this event channel. */
 	EVENTS_PATH_ASYNCHRONOUS,
 };
 
 /**
- * \brief Events configuration struct
+ * \brief Events configuration struct.
  *
- * This events configuration struct is used to configure each of the channels
+ * This events configuration struct is used to configure each of the channels.
  *
  */
 struct events_config {
-	/** Select edge detection mode */
+	/** Select edge detection mode. */
 	enum events_edge_detect    edge_detect;
-	/** Select events channel path */
+	/** Select events channel path. */
 	enum events_path_selection path;
-	/** Set event generator for the channel */
+	/** Set event generator for the channel. */
 	uint8_t                    generator;
-	/** Clock source for the event channel */
+	/** Clock source for the event channel. */
 	uint8_t                    clock_source;
+#if (SAML21)
+	/** Run in standby mode for the channel. */
+	bool                       run_in_standby;
+	/** Run On Demand. */
+	bool                       on_demand;
+#endif
 };
 
 /**
- * \brief No event generator definition
+ * \brief No event generator definition.
  *
- * Use this to disable any peripheral event input to a channel. This can be usefull
+ * Use this to disable any peripheral event input to a channel. This can be useful
  * if you only want to use a channel for software generated events.
  *
  */
@@ -374,19 +383,27 @@ struct events_config {
  *
  * @{
  */
-#define _EVENTS_START_OFFSET_BUSY_BITS           8
-#define _EVENTS_START_OFFSET_USER_READY_BIT      0
-#define _EVENTS_START_OFFSET_DETECTION_BIT       8
-#define _EVENTS_START_OFFSET_OVERRUN_BIT         0
+#if (SAML21)
+#  define _EVENTS_START_OFFSET_BUSY_BITS           16
+#  define _EVENTS_START_OFFSET_USER_READY_BIT      0
+#  define _EVENTS_START_OFFSET_DETECTION_BIT       16
+#  define _EVENTS_START_OFFSET_OVERRUN_BIT         0
+#else /* SAM D/R */
+#  define _EVENTS_START_OFFSET_BUSY_BITS           8
+#  define _EVENTS_START_OFFSET_USER_READY_BIT      0
+#  define _EVENTS_START_OFFSET_DETECTION_BIT       8
+#  define _EVENTS_START_OFFSET_OVERRUN_BIT         0
+#endif
 /** @} */
 ///@endcond
 
-/** Definition for no generator selection */
-#define EVSYS_ID_GEN_NONE   0
-/** Definition for no user selection */
-#define EVSYS_ID_USER_NONE  0
 /**
- * \brief Event channel resource
+*  Definition for no generator selection.
+*/
+#define EVSYS_ID_GEN_NONE   0
+
+/**
+ * \brief Event channel resource.
  *
  * Event resource structure.
  *
@@ -395,15 +412,15 @@ struct events_config {
  */
 struct events_resource {
 #if !defined(__DOXYGEN__)
-	/* Channel allocated for the event resource */
+	/* Channel allocated for the event resource. */
 	uint8_t channel;
+	/** Channel setting in CHANNEL register. */
+	uint32_t channel_reg;
 #endif
 };
 
 #if EVENTS_INTERRUPT_HOOKS_MODE == true
 typedef void (*events_interrupt_hook)(struct events_resource *resource);
-
-//struct events_hook;
 
 struct events_hook {
 	struct events_resource *resource;
@@ -413,7 +430,7 @@ struct events_hook {
 #endif
 
 /**
- * \brief Initializes an event configurations struct to defaults
+ * \brief Initializes an event configurations struct to defaults.
  *
  * Initailizes an event configuration struct to predefined safe default settings.
  *
@@ -423,7 +440,7 @@ struct events_hook {
 void events_get_config_defaults(struct events_config *config);
 
 /**
- * \brief Allocate an event channel and set configuration
+ * \brief Allocate an event channel and set configuration.
  *
  * Allocates an event channel from the event channel pool and sets
  * the channel configuration.
@@ -431,7 +448,7 @@ void events_get_config_defaults(struct events_config *config);
  * \param[out] resource Pointer to a \ref events_resource struct instance
  * \param[in]  config   Pointer to a \ref events_config struct
  *
- * \return Status of the configuration procedure
+ * \return Status of the configuration procedure.
  * \retval STATUS_OK            Allocation and configuration went successful
  * \retval STATUS_ERR_NOT_FOUND No free event channel found
  *
@@ -439,53 +456,53 @@ void events_get_config_defaults(struct events_config *config);
 enum status_code events_allocate(struct events_resource *resource, struct events_config *config);
 
 /**
- * \brief Attach user to the event channel
+ * \brief Attach user to the event channel.
  *
  * Attach a user peripheral to the event channel to receive events.
  *
  * \param[in] resource Pointer to an \ref events_resource struct instance
  * \param[in] user_id  A number identifying the user peripheral found in the device header file.
  *
- * \return Status of the user attach procedure
+ * \return Status of the user attach procedure.
  * \retval STATUS_OK No errors detected when attaching the event user
  */
 enum status_code events_attach_user(struct events_resource *resource, uint8_t user_id);
 
 /**
- * \brief Detach an user peripheral from the event channel
+ * \brief Detach an user peripheral from the event channel.
  *
  * Deattach an user peripheral from the event channels so it does not receive any more events.
  *
  * \param[in] resource Pointer to an \ref event_resource struct instance
  * \param[in] user_id  A number identifying the user peripheral found in the device header file.
  *
- * \return Status of the user detach procedure
+ * \return Status of the user detach procedure.
  * \retval STATUS_OK No errors detected when detaching the event user
  */
 enum status_code events_detach_user(struct events_resource *resource, uint8_t user_id);
 
 /**
- * \brief Check if a channel is busy
+ * \brief Check if a channel is busy.
  *
  * Check if a channel is busy, a channels stays busy until all users connected to the channel
- * has handled an event
+ * has handled an event.
  *
  * \param[in] resource Pointer to a \ref events_resource struct instance
  *
- * \return Status of the channels busy state
+ * \return Status of the channels busy state.
  * \retval true   One or more users connected to the channel has not handled the last event
  * \retval false  All users are ready handle new events
  */
 bool events_is_busy(struct events_resource *resource);
 
 /**
- * \brief Trigger software event
+ * \brief Trigger software event.
  *
- * Trigger an event by software
+ * Trigger an event by software.
  *
  * \param[in] resource Pointer to an \ref events_resource struct
  *
- * \return Status of the event software procedure
+ * \return Status of the event software procedure.
  * \retval STATUS_OK No error was detected when software tigger signal was issued
  * \retval STATUS_ERR_UNSUPPORTED_DEV If the channel path is asynchronous and/or the
  *                                    edge detection is not set to RISING
@@ -493,56 +510,56 @@ bool events_is_busy(struct events_resource *resource);
 enum status_code events_trigger(struct events_resource *resource);
 
 /**
- * \brief Check if all users connected to the channel is ready
+ * \brief Check if all users connected to the channel is ready.
  *
- * Check if all users connected to the channel is ready to handle incomming events
+ * Check if all users connected to the channel is ready to handle incomming events.
  *
  * \param[in] resource Pointer to an \ref events_resource struct
  *
- * \return The ready status of users connected to an event channel
+ * \return The ready status of users connected to an event channel.
  * \retval true  All users connect to event channel is ready handle incomming events
  * \retval false One or more users connect to event channel is not ready to handle incomming events
  */
 bool events_is_users_ready(struct events_resource *resource);
 
 /**
- * \brief Check if event is detected on event channel
+ * \brief Check if event is detected on event channel.
  *
- * Check if an event has been detected on the channel
+ * Check if an event has been detected on the channel.
  *
- * \note This function will clear the event detected interrupt flag
+ * \note This function will clear the event detected interrupt flag.
  *
  * \param[in] resource Pointer to an \ref events_resource struct
  *
- * \return Status of the event detection interrupt flag
+ * \return Status of the event detection interrupt flag.
  * \retval true  Event has been detected
  * \retval false Event has not been detected
  */
 bool events_is_detected(struct events_resource *resource);
 
 /**
- * \brief Check if there has been an overrun situation on this channel
+ * \brief Check if there has been an overrun situation on this channel.
  *
- * Check if there has been an overrun situation on this channel
+ * Check if there has been an overrun situation on this channel.
  *
- * \note This function will clear the event overrun detected interrupt flag
+ * \note This function will clear the event overrun detected interrupt flag.
  *
  * \param[in] resource Pointer to an \ref events_resource struct
  *
- * \return Status of the event overrun interrupt flag
+ * \return Status of the event overrun interrupt flag.
  * \retval true  Event overrun has been detected
  * \retval false Event overrun has not been detected
  */
 bool events_is_overrun(struct events_resource *resource);
 
 /**
- * \brief Release allocated channel back the the resource pool
+ * \brief Release allocated channel back the the resource pool.
  *
  * Release an allocated channel back to the resource pool to make it available for other purposes.
  *
  * \param[in] resource Pointer to an \ref events_resource struct
  *
- * \return Status of channel release procedure
+ * \return Status of channel release procedure.
  * \retval STATUS_OK                  No error was detected when channel was released
  * \retval STATUS_BUSY                One or more event users have not processed the last event
  * \retval STATUS_ERR_NOT_INITIALIZED Channel not allocated, and can derfor not be released
@@ -550,11 +567,11 @@ bool events_is_overrun(struct events_resource *resource);
 enum status_code events_release(struct events_resource *resource);
 
 /**
- * \brief Get number of free channels
+ * \brief Get number of free channels.
  *
- * Get number of allocatable channels in the events system resource pool
+ * Get number of allocatable channels in the events system resource pool.
  *
- * \return The number of free channels in the event system
+ * \return The number of free channels in the event system.
  *
  */
 uint8_t events_get_free_channels(void);
@@ -563,11 +580,12 @@ uint8_t events_get_free_channels(void);
 ///@cond INTERNAL
 /**
  * \internal
- * Function to find bit positons in the CHSTATUS and INTFLAG register
+ * Function to find bit position in the CHSTATUS and INTFLAG register,
+ * and return bit mask of this position.
  *
  * @{
  */
-uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset);
+uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset);
 /** @} */
 ///@endcond
 
@@ -618,7 +636,10 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset);
  *     <th>Changelog</th>
  *   </tr>
  *   <tr>
- *     <td>Rewrite of events driver.</td>
+ *     <td>Fix a bug in internal function _events_find_bit_position()</td>
+ *   </tr>
+ *   <tr>
+ *     <td>Rewrite of events driver</td>
  *   </tr>
  *   <tr>
  *     <td>Initial Release</td>
@@ -643,38 +664,44 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset);
  * \page asfdoc_sam0_events_document_revision_history Document Revision History
  *
  * <table>
- *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
- *	</tr>
  *  <tr>
- *		<td>E</td>
- *		<td>05/2014</td>
- *		<td>Added support for interrupt hook mode.
- *		    Added support for SAMR21 and SAMD10/D11</td>
+ *      <th>Doc. Rev.</td>
+ *      <th>Date</td>
+ *      <th>Comments</td>
  *  </tr>
- *	<tr>
- *		<td>D</td>
- *		<td>01/2014</td>
- *		<td>Update to support SAMD21 and corrected documentation typos.</td>
- *	</tr>
- *	<tr>
- *		<td>C</td>
- *		<td>11/2013</td>
- *		<td>Fixed incorrect documentation for the event signal paths. Added
+ *  <tr>
+ *      <td>F</td>
+ *      <td>12/2014</td>
+ *      <td>Added support for SAML21 and fix a bug in internal function
+ *          _events_find_bit_position(). </td>
+ *  </tr>
+ *  <tr>
+ *      <td>E</td>
+ *      <td>12/2014</td>
+ *      <td>Added support for interrupt hook mode.
+ *         Added support for SAMR21 and SAMD10/D11</td>
+ *  </tr>
+ *  <tr>
+ *      <td>D</td>
+ *      <td>01/2014</td>
+ *      <td>Update to support SAMD21 and corrected documentation typos.</td>
+ *  </tr>
+ *  <tr>
+ *      <td>C</td>
+ *      <td>11/2013</td>
+ *      <td>Fixed incorrect documentation for the event signal paths. Added
  *          configuration steps overview to the documentation.</td>
- *	</tr>
- *	<tr>
- *		<td>B</td>
- *		<td>06/2013</td>
- *		<td>Corrected documentation typos.</td>
- *	</tr>
- *	<tr>
- *		<td>A</td>
- *		<td>06/2013</td>
- *		<td>Initial release</td>
- *	</tr>
+ *  </tr>
+ *  <tr>
+ *      <td>B</td>
+ *      <td>06/2013</td>
+ *      <td>Corrected documentation typos.</td>
+ *  </tr>
+ *  <tr>
+ *      <td>A</td>
+ *      <td>06/2013</td>
+ *      <td>Initial release</td>
+ *  </tr>
  * </table>
  */
 

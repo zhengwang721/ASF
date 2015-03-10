@@ -3,7 +3,7 @@
  *
  * \brief SAM TCC - Timer Counter for Control Applications Driver Quick Start
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,7 +45,7 @@
  * \page asfdoc_sam0_tcc_timer_use_case Quick Start Guide for TCC - Timer
  *
  * The supported board list:
- *    - SAM D21/R21 Xplained Pro
+ *    - SAM D21/R21/L21 Xplained Pro
  *    - SAM D11 Xplained Pro
  *
  * In this use case, the TCC will be used as a timer, to generate overflow and
@@ -53,7 +53,7 @@
  *
  * The TCC module will be set up as follows:
  * - GCLK generator 1 (GCLK 32K) clock source
- * - Use double buffering write when set top, compare or pattern through API
+ * - Use double buffering write when set top, compare, or pattern through API
  * - No dithering on the counter or compare
  * - Prescaler is divided by 64
  * - GCLK reload action
@@ -137,6 +137,9 @@
  * \subsection asfdoc_sam0_tcc_timer_use_case_main_flow Workflow
  * -# Enter an infinite loop while the timer is running.
  *  \snippet qs_tcc_timer.c main_loop
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 

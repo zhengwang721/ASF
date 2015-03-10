@@ -3,7 +3,7 @@
  *
  * \brief SAM Reset Controller (RSTC) Driver Example
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -147,7 +147,7 @@
  * displayed and the menu shown again.
  *    - Press '7': The following message is displayed:
  * \verbatim NRST asserted. \endverbatim
- * The evaluation kit will assert the NRST signal for 60μs.
+ * The evaluation kit will assert the NRST signal for 60渭s.
   * \note The "NRST assert" menu option requires an oscilloscope connected to the
  * evaluation kit's NRST signal. To avoid a hardware conflict during the test do not
  * use the evaluation kit's manual RESET button.
@@ -155,3 +155,6 @@
  */
  
  #endif /* RSTC_EXAMPLE1_H_INCLUDED */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */

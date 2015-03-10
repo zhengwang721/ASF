@@ -11,6 +11,7 @@
 		<build type="header-file" value="eic.h"/>
 		<build type="header-file" value="evsys.h"/>
 		<build type="header-file" value="gclk.h"/>
+		<build type="header-file" value="hmatrixb.h"/>
 		<build type="header-file" value="i2s.h"/>
 		<build type="header-file" value="mtb.h"/>
 		<build type="header-file" value="nvmctrl.h"/>
@@ -21,6 +22,7 @@
 		<build type="header-file" value="sercom.h"/>
 		<build type="header-file" value="sysctrl.h"/>
 		<build type="header-file" value="tcc.h"/>
+		<build type="header-file" value="tcc_lighting.h"/>
 		<build type="header-file" value="tc.h"/>
 		<build type="header-file" value="usb.h"/>
 		<build type="header-file" value="wdt.h"/>

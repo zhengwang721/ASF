@@ -3,7 +3,7 @@
  *
  * \brief SAM USART Unit test
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -74,13 +74,16 @@
  *  - SAM D20 Xplained Pro board
  *  - SAM D21 Xplained Pro board
  *  - SAM R21 Xplained Pro board
+ *  - SAM L21 Xplained Pro board
  *
  * \section appdoc_sam0_usart_unit_test_setup Setup
  * The following connections has to be made using wires:
- * - SAM D20/D21 Xplained Pro board
+ * - SAM D20/D21/R21 Xplained Pro board
  *  - \b TX/RX: EXT1 PIN17 (PA04) <--> EXT1 PIN13 (PB09)
  * - SAM R21 Xplained Pro board
  *  - \b TX/RX: EXT1 PIN9  (PA22) <--> EXT1 PIN15 (PB03)
+ * - SAM L21 Xplained Pro board
+ *  - \b TX/RX: EXT2 PIN14 (PA18) <--> EXT1 PIN13 (PB09)
  *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a
@@ -105,6 +108,9 @@
  * \section appdoc_sam0_usart_unit_test_contactinfo Contact Information
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include <asf.h>
@@ -139,7 +145,7 @@ volatile bool transfer_complete;
  *
  * * \param module USART module causing the interrupt (not used)
  */
-static void usart_callback(const struct usart_module *const module)
+static void usart_callback(struct usart_module *const module)
 {
 	transfer_complete = true;
 }

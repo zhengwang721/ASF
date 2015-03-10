@@ -3,7 +3,7 @@
  *
  * \brief SAM ADC Quick Start
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,11 +47,11 @@
  * In this use case, the ADC will be configured with the following settings:
  * - 1V from internal bandgap reference
  * - Div 4 clock prescaler
- * - 12 bit resolution
+ * - 12-bit resolution
  * - Window monitor disabled
  * - No gain
- * - Positive input on ADC PIN 0
- * - Negative input on ADC PIN 1
+ * - Positive input on ADC PIN x (depend on default configuration)
+ * - Negative input to GND (single ended)
  * - Averaging disabled
  * - Oversampling disabled
  * - Right adjust data
@@ -96,7 +96,7 @@
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *  -# Set ADC configurations
+ *  -# Set ADC configurations.
  *     \snippet qs_adc_basic.c setup_set_config
  *  -# Enable the ADC module so that conversions can be made.
  *     \snippet qs_adc_basic.c setup_enable
@@ -114,4 +114,7 @@
  *  \snippet qs_adc_basic.c get_res
  *  -# Enter an infinite loop once the conversion is complete.
  *  \snippet qs_adc_basic.c inf_loop
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

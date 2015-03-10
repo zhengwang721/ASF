@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Slave with DMA Quick Start Guide
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,10 +47,11 @@
  * The supported board list:
  *    - SAMD21 Xplained Pro
  *    - SAMR21 Xplained Pro
+ *    - SAML21 Xplained Pro
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Slave mode
- *  - 100kHz operation speed
+ *  - 100KHz operation speed
  *  - Not operational in standby
  *  - 65535 unknown bus state timeout value
  *
@@ -115,7 +116,7 @@
  *          settings.
  *
  * -# Set extra configurations for the DMA resource. It is using peripheral
- *    trigger, SERCOM RX trigger and trigger causes a beat transfer in this
+ *    trigger. SERCOM RX trigger causes a beat transfer in this
  *    example.
  *    \snippet qs_i2c_slave_dma.c dma_setup_3
  *
@@ -134,7 +135,7 @@
  *          settings.
  *
  * -# Set the specific parameters for a DMA transfer with transfer size, source
- *    address, destination address.
+ *    address, and destination address.
  *    \snippet qs_i2c_slave_dma.c dma_setup_7
  *
  * -# Create the DMA transfer descriptor.
@@ -152,4 +153,7 @@
  * -# Once data ready, clear the address match status.
  *    \snippet qs_i2c_slave_dma.c clear_status
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
