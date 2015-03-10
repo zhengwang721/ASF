@@ -2,6 +2,7 @@
  * \file
  *
  * \brief AVR XMEGA Analog to Digital Converter Driver Example 9
+ *
  * Example which shows two-point calibration of the internal temperature sensor
  * of AVR XMEGA E.
  *
@@ -53,7 +54,7 @@
  * Two-point calibration of the AVR XMEGA E internal temperature sensor helps
  * to keep the error in temperature readings to the lowest levels.
  *
- * The production signature row of XmegaE device contains calibration data
+ * The production signature row of AVR XMEGA E device contains calibration data
  * for the internal temperature sensor, stored during device manufacturing.
  * These two calibration points can be used for two-point calibration
  *

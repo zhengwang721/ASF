@@ -238,7 +238,6 @@ enum adc_calibration_data {
 	 * storing the temperature at which the internal temperature sensor
 	 * is measured and two bytes for the corresponding ADC reading.
 	 */
-	/** ADC reading at HOTTEMP. */
 	ADC_CAL_TEMPSENSE,
 	/** Normally one calibration point is taken at 85 Deg C,
 	 * but the exact value in Deg C is given in the HOTTEMP signature row.
