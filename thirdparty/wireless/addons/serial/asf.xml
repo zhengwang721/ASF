@@ -1,0 +1,25 @@
+<asf xmlversion="1.0">
+	<select-by-config id="thirdparty.wireless.addons.serial" name="config.thirdparty.wireless.addons.serial" caption="Serial I/O Driver" default="uart">
+	<info type="description" value="summary">
+		The Serial I/O - driver is used by the MCU for  enabling serial io communication  between two devices.
+		</info>
+		<select-by-device id="thirdparty.wireless.addons.serial#uart">
+			<module type="component" id="thirdparty.wireless.addons.serial#uart#0"     caption="Serial I/O - Using UART">
+				<info type="description" value="summary">
+				Enables Support for  UART communication
+				</info>
+				<build type="c-source"      value="uart/serial_drv.c"/>
+				<build type="header-file"   value="uart/serial_drv.h"/>
+				<build type="include-path"  value="uart/"/>
+    
+    <require idref="sam0.drivers.sercom.usart"/>
+    
+				<build type="module-config" subtype="required-header-file" value="conf_serialdrv.h"/>
+				<build type="module-config" subtype="path" value="module_config"/>
+				<device-support value="samd20"/>
+				<device-support value="samd21"/>
+				<device-support value="samr21"/>
+			</module>
+		</select-by-device>
+	</select-by-config>
+</asf>
