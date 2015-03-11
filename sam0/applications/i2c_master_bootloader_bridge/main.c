@@ -115,7 +115,6 @@
 #include "ui.h"
 #include "conf_app.h"
 
-
 #define PATTERN_TEST_LENGTH (5 * UDI_CDC_DATA_EPS_FS_SIZE)
 uint8_t cdc_data[PATTERN_TEST_LENGTH];
 
@@ -207,6 +206,7 @@ int main(void)
 			continue;
 		}
 		if (b_cdc_data_rx == true) {
+			b_cdc_data_rx = false;
 			cdc_rx_size = udi_cdc_get_nb_received_data();
 			udi_cdc_read_buf((void *)cdc_data, cdc_rx_size);
 			if (file_size == 0 && cdc_rx_size == 4) {
@@ -255,7 +255,6 @@ int main(void)
 					}
 				}
 			}
-			b_cdc_data_rx = false;
 		}
 		if (i2c_master_read_packet_wait(&i2c_master_instance, &rx_buf) == STATUS_OK) {
 			udi_cdc_write_buf((const void *)(rx_buf.data),(iram_size_t)read_data[0]);
