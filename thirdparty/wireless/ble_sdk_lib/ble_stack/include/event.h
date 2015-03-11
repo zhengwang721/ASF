@@ -15,7 +15,5 @@ void event_post(uint16_t msg_id, uint16_t src_id, void * data);
 
 uint32_t special_events_handler(uint16_t msg_id, uint16_t src_id, uint8_t* data);
 
-at_ble_status_t event_get(uint16_t* msg_id, uint16_t* src_id, uint8_t** data);
-
 
 #endif

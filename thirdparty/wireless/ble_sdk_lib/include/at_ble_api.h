@@ -872,6 +872,8 @@ at_ble_status_t at_ble_set_privacy_key(at_ble_gap_irk_t* irk , uint16_t interval
   */
 at_ble_status_t at_ble_addr_set(at_ble_addr_t* address);
 
+void at_fw_patch_download(uint32_t* patch, uint32_t patch_size);
+
  /**@brief get the local device BT Address
   *
   * @param[out] address the current BT address

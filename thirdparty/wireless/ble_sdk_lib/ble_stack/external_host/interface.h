@@ -16,7 +16,6 @@ extern uint8_t interface_send_msg[INTERFACE_SEND_BUF_MAX];
 do{\
 	uint16_t __idx = INTERFACE_HDR_LENGTH;\
 	uint8_t* __ptr = NULL;\
-	__ptr = __ptr;\
 	interface_send_msg[0] = (INTERFACE_API_PKT_ID);\
 	interface_send_msg[1] = ((msg_id) & 0x00FF );\
 	interface_send_msg[2] = (((msg_id)>>8) & 0x00FF );\

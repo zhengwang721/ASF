@@ -79,6 +79,31 @@ uint8_t dbg_wr_mem_req_handler(uint32_t memAddr,uint8_t* data,uint8_t size)
 	
 	return u8Status;
 }
+void dbg_wr_mem_req_handler32_reset(uint32_t memAddr,uint32_t * data,uint8_t size)
+{
+	INTERFACE_MSG_INIT(DBG_WR_MEM_REQ, TASK_DBG);
+	INTERFACE_PACK_ARG_UINT32(memAddr);
+	INTERFACE_PACK_ARG_UINT8(32);
+	INTERFACE_PACK_ARG_UINT8(size);
+	INTERFACE_PACK_ARG_BLOCK(data,size);
+	INTERFACE_SEND_NO_WAIT();
+	INTERFACE_DONE();	
+}
+uint8_t dbg_wr_mem_req_handler32(uint32_t memAddr,uint32_t* data,uint8_t size)
+{
+	uint8_t u8Status;
+	
+	INTERFACE_MSG_INIT(DBG_WR_MEM_REQ, TASK_DBG);
+	INTERFACE_PACK_ARG_UINT32(memAddr);
+	INTERFACE_PACK_ARG_UINT8(32);
+	INTERFACE_PACK_ARG_UINT8(size);
+	INTERFACE_PACK_ARG_BLOCK(data,size);
+	INTERFACE_SEND_WAIT(DBG_WR_MEM_CMP_EVT, TASK_DBG);
+	INTERFACE_UNPACK_UINT8(&u8Status);
+	INTERFACE_DONE();
+	
+	return u8Status;
+}
 
 uint8_t dbg_rd_mem_req_handler(uint32_t memAddr,uint8_t* data ,uint8_t size)
 {
