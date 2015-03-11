@@ -115,7 +115,7 @@ uint8_t serial_read_data(uint8_t* data, uint16_t max_len)
 uint8_t serial_read_byte(uint8_t* data)
 {
 #if SAMD || SAMR21
-	return usart_read_job(&usart_instance, data);
+    usart_read_job(&usart_instance, (uint16_t *)data);
 #endif
 }
 

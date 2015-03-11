@@ -19,6 +19,7 @@
 		<device-support value="atmega256rfr2"/>
 		<device-support value="atmega2564rfr2"/>
 		<device-support value="atmega128rfa1"/>
+		<device-support value="atsamg55j19"/>
 	</device-alias-map>
  
 </asf>

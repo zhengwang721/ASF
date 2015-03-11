@@ -34,16 +34,19 @@
 #include "serial_drv.h"
 
 static uint16_t rx_data;
+volatile uint32_t ntext, txdtext;
 
 void serial_rx_callback(void)
 {
-	platform_interface_callback((uint8_t*)&rx_data, 1);
-	serial_read_byte((uint8_t*)&rx_data);
+	platform_interface_callback((uint8_t *)&rx_data, 1);
+	serial_read_byte((uint8_t *)&rx_data);
+	ntext++;
 }
 
 void serial_tx_callback(void)
 {
 	port_pin_set_output_level(PIN_PB07, false);
+	txdtext++;
 }
 
 
@@ -52,7 +55,7 @@ at_ble_status_t platform_init(void* platform_params)
 	struct port_config pin_conf;
 	
 	configure_serial_drv();
-	serial_read_byte((uint8_t*)&rx_data);
+	serial_read_byte((uint8_t *)&rx_data);
 	
 	port_get_config_defaults(&pin_conf);
 
