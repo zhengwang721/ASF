@@ -18,9 +18,7 @@ and reduces time-to-market for new embedded applications.
 			<build type="header-file" value="Include/arm_const_structs.h" toolchain="armgcc"/>
 			<build type="header-file" value="Include/arm_common_tables.h" toolchain="armgcc"/>
 			<device-support value="sam3"/>
-			<build type="distribute" subtype="file" value="CMSIS_END_USER_LICENCE_AGREEMENT.pdf"/>
-			<build type="distribute" subtype="file" value="README.txt"/>
-			<build type="distribute" subtype="license" value="license.txt"/>
+			<require idref="thirdparty.cmsis.license"/>
 			<info type="gui-flag" value="hidden"/>
 		</module>
 		<module type="library" id="thirdparty.cmsis#1" caption="CMSIS thirdparty sources">
@@ -104,7 +102,7 @@ and reduces time-to-market for new embedded applications.
 			<build type="include-path" value="Include/" toolchain="armgcc"/>
 			<build type="include-path" value="Lib/GCC/" toolchain="armgcc"/>
 			<build type="library" subtype="user" value="Lib/GCC/libarm_cortexM0l_math.a" toolchain="armgcc"/>
-			<build type="define" name="ARM_MATH_CM0" value="true"/>
+			<build type="define" name="ARM_MATH_CM0PLUS" value="true"/>
 			<build type="header-file" value="Include/core_cm0plus.h" toolchain="armgcc"/>
 			<build type="header-file" value="Include/arm_math.h" toolchain="armgcc"/>
 			<build type="header-file" value="Include/core_cmFunc.h" toolchain="armgcc"/>
@@ -130,6 +128,7 @@ and reduces time-to-market for new embedded applications.
 	<module type="meta" id="thirdparty.cmsis.license" caption="CMSIS license">
 		<build type="distribute" subtype="file" value="CMSIS_END_USER_LICENCE_AGREEMENT.pdf"/>
 		<build type="distribute" subtype="file" value="README.txt"/>
+		<build type="distribute" subtype="file" value="Lib/license.txt"/>
 		<build type="distribute" subtype="license" value="license.txt"/>
 		<build type="distribute" subtype="file" value="ATMEL-disclaimer.txt"/>
 	</module>
