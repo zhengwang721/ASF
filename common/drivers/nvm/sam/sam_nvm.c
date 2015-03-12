@@ -196,13 +196,25 @@ status_code_t nvm_read(mem_type_t mem, uint32_t address, void *buffer,
 #if defined(USE_EXTMEM) && defined(CONF_BOARD_AT45DBX)
 	case AT45DBX:
 	{
-		uint32_t sector = address / AT45DBX_SECTOR_SIZE;
-		if (!at45dbx_read_sector_open(sector)) {
-			return ERR_BAD_ADDRESS;
-		}
+		if (len == AT45DBX_SECTOR_SIZE) {
+			uint32_t sector = address / AT45DBX_SECTOR_SIZE;
+			if (!at45dbx_read_sector_open(sector)) {
+				return ERR_BAD_ADDRESS;
+			}
 
-		at45dbx_read_sector_to_ram(buffer);
-		at45dbx_read_close();
+			at45dbx_read_sector_to_ram(buffer);
+			at45dbx_read_close();
+		} else {
+			if (!at45dbx_read_byte_open(address)) {
+				return ERR_BAD_ADDRESS;
+			}
+			uint8_t *buf = (uint8_t *)buffer;
+			while (len--) {
+				*buf++ = at45dbx_read_byte();
+			}
+			at45dbx_read_close();
+		}
+		
 	}
 	break;
 #endif
@@ -248,13 +260,24 @@ status_code_t nvm_write(mem_type_t mem, uint32_t address, void *buffer,
 #if defined(USE_EXTMEM) && defined(CONF_BOARD_AT45DBX)
 	case AT45DBX:
 	{
-		uint32_t sector = address / AT45DBX_SECTOR_SIZE;
-		if (!at45dbx_write_sector_open(sector)) {
-			return ERR_BAD_ADDRESS;
-		}
+		if (len == AT45DBX_SECTOR_SIZE) {
+			uint32_t sector = address / AT45DBX_SECTOR_SIZE;
+			if (!at45dbx_write_sector_open(sector)) {
+				return ERR_BAD_ADDRESS;
+			}
 
-		at45dbx_write_sector_from_ram((const void *)buffer);
-		at45dbx_write_close();
+			at45dbx_write_sector_from_ram((const void *)buffer);
+			at45dbx_write_close();
+		} else {
+			if (!at45dbx_write_byte_open(address)) {
+				return ERR_BAD_ADDRESS;
+			}
+			uint8_t *buf = (uint8_t *)buffer;
+			while (len--) {
+				at45dbx_write_byte(*buf++);
+			}
+			at45dbx_write_close();
+		}	
 	}
 	break;
 #endif
