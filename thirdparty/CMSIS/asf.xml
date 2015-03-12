@@ -118,10 +118,11 @@ and reduces time-to-market for new embedded applications.
 			<build type="library" subtype="user" value="Lib/GCC/libarm_cortexM4l_math.a" toolchain="armgcc"/>
 		</module>
 		<module type="meta" id="sam.utils.fpu_used#yes" caption="SAM with FPU used">
-			<build type="library" subtype="user" value="Lib/GCC/libarm_cortexM4lf_math.a" toolchain="armgcc"/>
+			<build type="library" subtype="user" value="Lib/GCC/libarm_cortexM4lf_math_softfp.a" toolchain="armgcc"/>
 			<build type="build-config" subtype="assembler-flags" value="-mfloat-abi=softfp" toolchain="armgcc"/>
 			<build type="build-config" subtype="c-compiler-flags" value="-mfloat-abi=softfp" toolchain="armgcc"/>
 			<build type="build-config" subtype="c++-compiler-flags" value="-mfloat-abi=softfp" toolchain="armgcc"/>
+			<build type="distribute" subtype="file" value="Lib/GCC/libarm_cortexM4lf_math.a"/>
 		</module>
 	</select-by-config>
 
