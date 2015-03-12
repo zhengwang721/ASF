@@ -58,8 +58,7 @@
 /* RX USART to test
  * For unit_test connection uniformity, SERCOM for USART should be
  * the same as SPI, SERCOM for USART in the EXT headers of the
- * rev. 2 is not suitable. I don't want to change USART SERCOM 
- * SETTING in header files, so I just define them directly here.
+ * rev. 2 is not suitable, just define them directly here.
  */
 #define CONF_RX_USART              SERCOM1
 #define CONF_RX_USART_SERCOM_MUX   USART_RX_0_TX_2_XCK_3
