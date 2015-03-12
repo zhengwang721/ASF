@@ -830,7 +830,7 @@ void system_clock_init(void)
 	dfll_conf.loop_mode      = CONF_CLOCK_DFLL_LOOP_MODE;
 	dfll_conf.on_demand      = false;
 
-	/* Using "DFLL48M COARSE and FINE CAL" value from ¡°NVM User Row Mapping¡± 
+	/* Using DFLL48M COARSE and FINE CAL value from NVM User Row Mapping
 	   in DFLL.COARSE and DFLL.FINE helps to output a frequency close to 48 MHz.*/
 #define NVM_DFLL_COARSE_POS    58
 #define NVM_DFLL_COARSE_SIZE   6

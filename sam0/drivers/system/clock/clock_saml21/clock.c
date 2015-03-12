@@ -852,12 +852,10 @@ void system_clock_init(void)
 	dfll_conf.on_demand      = false;
 	dfll_conf.run_in_stanby  = CONF_CLOCK_DFLL_RUN_IN_STANDBY;
 
-	/* Using "DFLL48M COARSE and FINE CAL" value from ¡°NVM User Row Mapping¡± 
+	/* Using DFLL48M COARSE and FINE CAL value from NVM User Row Mapping 
 	   in DFLL.COARSE and DFLL.FINE helps to output a frequency close to 48 MHz.*/
 #define NVM_DFLL_COARSE_POS    26
 #define NVM_DFLL_COARSE_SIZE   6
-#define NVM_DFLL_FINE_POS      32
-#define NVM_DFLL_FINE_SIZE     10
 
 	uint32_t coarse =( *((uint32_t *)(NVMCTRL_OTP5)
 			+ (NVM_DFLL_COARSE_POS / 32))
@@ -866,15 +864,9 @@ void system_clock_init(void)
 	if (coarse == 0x3f) {
 		coarse = 0x1f;
 	}
-	uint32_t fine =( *((uint32_t *)(NVMCTRL_OTP4)
-			+ (NVM_DFLL_FINE_POS / 32))
-		>> (NVM_DFLL_FINE_POS % 32))
-		& ((1 << NVM_DFLL_FINE_SIZE) - 1);
-	if (fine == 0x3ff) {
-		fine = 0x1ff;
-	}
+
 	dfll_conf.coarse_value = coarse;
-	dfll_conf.fine_value   = fine;
+	dfll_conf.fine_value   = 0x1ff;
 
 #  if CONF_CLOCK_DFLL_QUICK_LOCK == true
 	dfll_conf.quick_lock = SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE;
