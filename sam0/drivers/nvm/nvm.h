@@ -282,7 +282,7 @@ extern "C" {
  * Define NVM features set according to different device family
  * @{
 */
-#if (SAML21) || defined(SAMD21_64K) || defined(SAMDA0) || defined(SAMDA1) || defined(__DOXYGEN__)
+#if (SAML21) || (SAMDA0) || (SAMDA1) || defined(SAMD21_64K) || defined(__DOXYGEN__)
 /** Read while write EEPROM emulation feature*/
 #  define FEATURE_NVM_RWWEE
 #endif
