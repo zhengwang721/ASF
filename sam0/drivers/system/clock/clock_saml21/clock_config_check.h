@@ -183,14 +183,6 @@
 #  error CONF_CLOCK_DFLL_RUN_IN_STANDBY not defined in conf_clocks.h
 #endif
 
-#if !defined(CONF_CLOCK_DFLL_COARSE_VALUE)
-#  error CONF_CLOCK_DFLL_COARSE_VALUE not defined in conf_clocks.h
-#endif
-
-#if !defined(CONF_CLOCK_DFLL_FINE_VALUE)
-#  error CONF_CLOCK_DFLL_FINE_VALUE not defined in conf_clocks.h
-#endif
-
 #if !defined(CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR)
 #  error CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR not defined in conf_clocks.h
 #endif
