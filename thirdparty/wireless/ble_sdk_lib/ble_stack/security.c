@@ -10,6 +10,9 @@
 
 #include "device.h"
 
+at_ble_status_t at_ble_pair_rsp(at_ble_handle_t conn_handle, at_ble_pair_features_t* features,
+	at_ble_LTK_t* ltk, at_ble_CSRK_t* csrk, at_ble_IRK_t* irk);
+
 at_ble_status_t at_ble_authenticate(at_ble_handle_t conn_handle, at_ble_pair_features_t* features,
 	at_ble_LTK_t* ltk, at_ble_CSRK_t* csrk, at_ble_IRK_t* irk)
 {

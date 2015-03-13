@@ -38,40 +38,67 @@ volatile uint32_t ntext, txdtext;
 
 void serial_rx_callback(void)
 {
-	platform_interface_callback((uint8_t *)&rx_data, 1);
+#if SAMG55
 	serial_read_byte((uint8_t *)&rx_data);
+#endif
+	platform_interface_callback((uint8_t *)&rx_data, 1);	
+#if SAMD || SAMR21 
+	serial_read_byte((uint8_t *)&rx_data);
+#endif
 	ntext++;
 }
 
 void serial_tx_callback(void)
 {
+#if SAMG55
+	ioport_set_pin_level(EXT1_PIN_5, IOPORT_PIN_LEVEL_LOW);
+#endif
+#if SAMD || SAMR21 
 	port_pin_set_output_level(PIN_PB07, false);
-	txdtext++;
+#endif
 }
 
 
 at_ble_status_t platform_init(void* platform_params)
 {
+#if SAMD || SAMR21 	
 	struct port_config pin_conf;
-	
+#endif
 	configure_serial_drv();
 	serial_read_byte((uint8_t *)&rx_data);
-	
+
+#if SAMD || SAMR21 	
 	port_get_config_defaults(&pin_conf);
 
 	/* Configure LEDs as outputs, turn them off */
 	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
 	port_pin_set_config(PIN_PB07, &pin_conf);
-	port_pin_set_output_level(PIN_PB07, false);	
+	port_pin_set_output_level(PIN_PB07, false);
+#endif
+	
+#if SAMG55
+	ioport_init();
+
+	ioport_set_pin_dir(EXT1_PIN_5, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(EXT1_PIN_5, IOPORT_PIN_LEVEL_LOW);
+#endif	
 	
 	return AT_BLE_SUCCESS;
 }
 
 void platform_interface_send(uint8_t* data, uint32_t len)
 {
+#if SAMD || SAMR21
 	port_pin_set_output_level(PIN_PB07, true);
-	serial_drv_send(data, len);
-	
+#endif
+#if SAMG55
+	ioport_set_pin_level(EXT1_PIN_5, IOPORT_PIN_LEVEL_HIGH);
+#endif
+	serial_drv_send(data, len);	
+#if SAMG55
+	ioport_set_pin_level(EXT1_PIN_5, IOPORT_PIN_LEVEL_LOW);
+#endif
+	txdtext += len;
 }
 
 static volatile uint32_t cmd_cmpl_flag = 0;

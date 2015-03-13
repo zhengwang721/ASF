@@ -20,6 +20,20 @@
 				<device-support value="samd21"/>
 				<device-support value="samr21"/>
 			</module>
+   <module type="component" id="thirdparty.wireless.addons.serial#uart#1"     caption="Serial I/O - Using UART">
+				<info type="description" value="summary">
+				Enables Support for  UART communication
+				</info>
+				<build type="c-source"      value="uart/serial_drv.c"/>
+				<build type="header-file"   value="uart/serial_drv.h"/>
+				<build type="include-path"  value="uart/"/>
+    
+    <require idref="sam.drivers.usart"/>
+    
+				<build type="module-config" subtype="required-header-file" value="conf_serialdrv.h"/>
+				<build type="module-config" subtype="path" value="module_config"/>
+				<device-support value="samg55"/>
+			</module>
 		</select-by-device>
 	</select-by-config>
 </asf>

@@ -106,7 +106,13 @@ int main (void)
 
 	uint16_t handle;
 
+#if SAMG55
+	/* Initialize the SAM system. */
+	sysclk_init();
+	board_init();
+#elif SAM0
 	system_init();
+#endif
 	
 	//platform_init(NULL);
 	

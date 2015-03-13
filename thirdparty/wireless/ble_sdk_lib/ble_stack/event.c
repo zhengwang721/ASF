@@ -29,6 +29,9 @@ static struct event* event_pending_list = NULL;
 
 struct str_watched_event watched_event;
 
+void event_free(struct event* event);
+at_ble_status_t event_get(uint16_t* msg_id, uint16_t* src_id, uint8_t** data);
+
 void event_free(struct event* event)
 {
 	event->next = event_free_list;
