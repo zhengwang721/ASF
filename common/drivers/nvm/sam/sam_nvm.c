@@ -122,10 +122,8 @@ status_code_t nvm_write_char(mem_type_t mem, uint32_t address, uint8_t data)
 	switch (mem) {
 	case INT_FLASH:
 #if SAM4S
-		/*! This erases 8 pages of flash before writing */
-		if (flash_erase_page(address, IFLASH_ERASE_PAGES_8)) {
-			return ERR_INVALID_ARG;
-		} else if (flash_write(address, (const void *)&data, 1,
+
+		if (flash_write(address, (const void *)&data, 1,
 				false)) {
 			return ERR_INVALID_ARG;
 		}
@@ -232,10 +230,6 @@ status_code_t nvm_write(mem_type_t mem, uint32_t address, void *buffer,
 	switch (mem) {
 	case INT_FLASH:
 #if SAM4S
-		/*! This erases 8 pages of flash before writing */
-		if (flash_erase_page(address, IFLASH_ERASE_PAGES_8)) {
-			return ERR_INVALID_ARG;
-		}
 
 		if (flash_write(address, (const void *)buffer, len, false)) {
 			return ERR_INVALID_ARG;

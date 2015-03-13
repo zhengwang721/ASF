@@ -105,6 +105,10 @@ static status_code_t test_mem(mem_type_t mem, uint32_t test_address)
 		return ERR_INVALID_ARG;
 	}
 
+#if SAM4S
+		nvm_page_erase(mem, test_address / IFLASH_PAGE_SIZE);
+#endif
+
 	/* Write test pattern to the specified address */
 	nvm_write(mem, test_address, (void *)write_buf, sizeof(write_buf));
 
