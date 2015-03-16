@@ -437,7 +437,7 @@ void system_clock_source_dpll_set_config(
 	 * Fck = Fckrx * (LDR + 1 + LDRFRAC / 16)
 	 */
 	_system_clock_inst.dpll.frequency =
-			(config->reference_frequency * (((tmpldr + 1) << 4) + tmpldrfrac)) >> 4;
+			(refclk * (((tmpldr + 1) << 4) + tmpldrfrac)) >> 4;
 }
 #endif
 
