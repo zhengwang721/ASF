@@ -53,7 +53,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_events_group SAM Event System Driver (EVENTS)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's peripheral event resources and users within
  * the device, including enabling and disabling of peripheral source selection
  * and synchronization of clock domains between various modules. The following API

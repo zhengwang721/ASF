@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_nvm_group SAM Non-Volatile Memory Driver (NVM)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of non-volatile memories within the device, for partitioning,
  * erasing, reading, and writing of data.
  *

@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_tcc_group SAM Timer Counter for Control Applications Driver (TCC)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the TCC module within the device, for waveform
  * generation and timing operations. It also provides extended options for
  * control applications.
