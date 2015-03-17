@@ -79,13 +79,17 @@
  * \section appdoc_sam0_low_power_imp Implementation Details
  *
  * The application covers the following case:
- * Case 1: ACTIVE mode: Performance Level 0 at 15MHz
+ * Case 1: ACTIVE mode: Performance Level 0 at 12MHz
  * Case 2: ACTIVE mode: Performance Level 2 at 48MHz
- * Case 3: IDLE mode: Performance Level 0 at 15MHz
- * Case 4: STANDBY mode:static power sleepwalking
+ * Case 3: IDLE mode: Performance Level 0 at 12MHz
+ * Case 4: STANDBY mode:PD0,PD1 and PD2 in retention state
  * Case 5: BACKUP mode
  * Case 6: OFF mode
  * Case 7: STANDBY mode:dynamic power sleepwalking
+ *
+ * When in active Performance Level 2 mode, DFLL48M using XOSC32K as reference and running at 48MHz.
+ * When in active Performance Level 0 mode, internal Multi RC Oscillator running at 12MHz.
+ * In active mode, EDBG can be used to input command to select different modes.
  *
  * IDLE,BACKUP and STANDBY modes can be waked up by BUTTON0.
  * OFF mode can only exit if the RESET pin is activated.
@@ -94,7 +98,6 @@
  * RTC generates compare value matched EVENT at a fixed interval and route it
  * to ADC, ADC start to sample based on the EVENT, when one conversion is completed,
  * DMA make peripheral-to-memory transfer from the ADC to the HMCRAMLP memory.
- * When 
  *
  * RTC is clocked by the internal ULP 32kHz oscillator divided by 64, giving a 512Hz input,
  * and the compare value is 1000. ADC is clocked by the 4MHz from OSC16M divided by 64,
@@ -317,6 +320,9 @@ static void led_toggle_indication(uint32_t count)
 	port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
 }
 
+/**
+ * \brief Setect OSC16M as main clock source.
+ */
 static void main_clock_select_osc16m(void)
 {
 	struct system_gclk_gen_config gclk_conf;
@@ -341,6 +347,9 @@ static void main_clock_select_osc16m(void)
 
 }
 
+/**
+ * \brief Setect DFLL as main clock source.
+ */
 static void main_clock_select_dfll(void)
 {
 	struct system_gclk_gen_config gclk_conf;
@@ -348,21 +357,21 @@ static void main_clock_select_dfll(void)
 	/* Select OSCULP32K as new clock source for mainclock temporarily */
 	system_gclk_gen_get_config_defaults(&gclk_conf);
 	gclk_conf.source_clock = SYSTEM_CLOCK_SOURCE_XOSC32K;
-	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclk_conf);	
+	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclk_conf);
 
 	/* Select XOSC32K for GCLK1. */
 	system_gclk_gen_get_config_defaults(&gclk_conf);
 	gclk_conf.source_clock = SYSTEM_CLOCK_SOURCE_XOSC32K;
 	system_gclk_gen_set_config(GCLK_GENERATOR_1, &gclk_conf);
 	system_gclk_gen_enable(GCLK_GENERATOR_1);
-	
+
 	struct system_gclk_chan_config dfll_gclk_chan_conf;
-	
+
 	system_gclk_chan_get_config_defaults(&dfll_gclk_chan_conf);
 	dfll_gclk_chan_conf.source_generator = GCLK_GENERATOR_1;
 	system_gclk_chan_set_config(OSCCTRL_GCLK_ID_DFLL48, &dfll_gclk_chan_conf);
 	system_gclk_chan_enable(OSCCTRL_GCLK_ID_DFLL48);
-	
+
 	struct system_clock_source_dfll_config dfll_conf;
 	system_clock_source_dfll_get_config_defaults(&dfll_conf);
 
@@ -404,14 +413,14 @@ static void main_clock_select(const enum system_clock_source clock_source)
  */
 static void test_active_mode(const enum system_performance_level performance_level)
 {
-	
+
 	enum system_performance_level curr_pl = system_get_performance_level();
 
 	printf("System will switch to PL:%d \r\n",performance_level);
 	if (curr_pl == performance_level) {
 		return ;
 	}
-	
+
 	if ( curr_pl  < performance_level) {
 
 		/* Scaling up the performance level first and then increase clock frequency */
@@ -450,6 +459,7 @@ static void test_standby_mode_dynamic_power_sleepwalking(void)
 {
 
 	printf("System will enter STANDBY mode:Dynamic Power SleepWalking\r\n");
+
 	/* When entering standby mode, the FDPLL is still running even if not
 	 *	requested by any module causing extra consumption. Errata reference:12244
 	 */
@@ -466,6 +476,7 @@ static void test_standby_mode_dynamic_power_sleepwalking(void)
 	config.enable_dpgpd0 = true;
 	config.enable_dpgpd1 = true;
 	config.power_domain = SYSTEM_POWER_DOMAIN_DEFAULT;
+
 	/* Errata 13599:
 	 * In Standby mode, when Power Domain 1 is power gated,
 	 * devices can show higher consumption than expected.
@@ -509,7 +520,6 @@ static void test_standby_mode_dynamic_power_sleepwalking(void)
 	if (system_get_performance_level() == SYSTEM_PERFORMANCE_LEVEL_0) {
 		uint32_t *const tmp = (void *)(0x4000141C);
 		*tmp &= ~(1 << 8);
-
 	}
 
 }
@@ -521,6 +531,7 @@ static void test_standby_mode_static_power_sleepwalking(void)
 {
 
 	printf("System will enter STANDBY mode:static power sleepwalking.\r\n");
+
 	/* When entering standby mode, the FDPLL is still running even if not
 	 *	requested by any module causing extra consumption. Errata reference:12244
 	 */
@@ -534,7 +545,7 @@ static void test_standby_mode_static_power_sleepwalking(void)
 		VCORERDY status is stuck at 0. Errata reference: 13551
 	*/
 	SUPC->VREG.bit.SEL = SUPC_VREG_SEL_LDO_Val;
-	
+
 	struct system_standby_config config;
 	system_standby_get_config_defaults(&config);
 	config.enable_dpgpd0 = false;
@@ -580,7 +591,6 @@ static void test_standby_mode_static_power_sleepwalking(void)
 	if (system_get_performance_level() == SYSTEM_PERFORMANCE_LEVEL_0) {
 		uint32_t *const tmp = (void *)(0x4000141C);
 		*tmp &= ~(1 << 8);
-
 	}
 
 	SUPC->VREG.bit.SEL = SUPC_VREG_SEL_BUCK_Val;
@@ -592,8 +602,6 @@ static void test_standby_mode_static_power_sleepwalking(void)
 static void test_backup_mode(void)
 {
 
-
-		
 	system_apb_clock_clear_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_SERCOM3);
 	system_gclk_chan_disable(SERCOM0_GCLK_ID_CORE+3);
 
@@ -603,7 +611,6 @@ static void test_backup_mode(void)
 	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
 	port_pin_set_config(CONF_STDIO_PAD0_PIN, &pin_conf);
 	port_pin_set_config(CONF_STDIO_PAD1_PIN, &pin_conf);
-	
 
 	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
 
@@ -613,7 +620,6 @@ static void test_backup_mode(void)
 	/* Set external wakeup detector */
 	system_enable_pin_wakeup(1<<CONF_EXT_WAKEUP_PIN);
 	system_set_pin_wakeup_debounce_counter(SYSTEM_WAKEUP_DEBOUNCE_2CK32);
-
 	system_set_sleepmode(SYSTEM_SLEEPMODE_BACKUP);
 	system_sleep();
 }
@@ -662,11 +668,7 @@ int main(void)
 	/* BOD33 disabled */
 	SUPC->BOD33.reg &= ~SUPC_BOD33_ENABLE;
 
-	/* Low power cache enabled */
-	NVMCTRL->CTRLB.bit.READMODE = NVMCTRL_CTRLB_READMODE_LOW_POWER_Val;
-	NVMCTRL->CTRLB.bit.CACHEDIS = false;
-
-	/* VDDCORE is supplied BUCK converter */ 
+	/* VDDCORE is supplied BUCK converter */
 	SUPC->VREG.bit.SEL = SUPC_VREG_SEL_BUCK_Val;
 
 	delay_init();
@@ -684,7 +686,7 @@ int main(void)
 		/* Toggles LED0 once wake up from BACKUP sleep mode */
 		led_toggle_indication(LED0_TOGGLE_8);
 	}
-	
+
 	while (true) {
 		display_menu();
 		while (usart_read_wait(&usart_instance, &key)) {
@@ -721,7 +723,7 @@ int main(void)
 
 	test_standby_mode_dynamic_power_sleepwalking();
 
-	while(1) ;
-	
+	while(1) {
+		;
+	}
 }
-
