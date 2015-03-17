@@ -56,8 +56,8 @@
 #define CONF_STDIO_BAUDRATE       38400
 #define CONF_TEST_TC0             TC4
 #define CONF_TEST_TC1             TC5
-#define CONF_EIC_PIN              PIN_PA16A_EIC_EXTINT0
-#define CONF_EIC_MUX              MUX_PA16A_EIC_EXTINT0
+#define CONF_EIC_PIN              PIN_PB00A_EIC_EXTINT0
+#define CONF_EIC_MUX              MUX_PB00A_EIC_EXTINT0
 #define CONF_TEST_PIN_OUT         PIN_PB09E_TC4_WO1
 #define CONF_TEST_PIN_MUX         MUX_PB09E_TC4_WO1
 #define CONF_EVENT_GENERATOR_ID   EVSYS_ID_GEN_EIC_EXTINT_0
