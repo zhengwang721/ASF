@@ -1,20 +1,56 @@
-/**
+/*
  * @file tfa.c
  *
  * @brief Implementation of Transceiver Feature Access (TFA) functionality.
  *
- * $Id: tfa.c 36425 2014-08-29 16:38:42Z uwalter $
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ *
  */
+
 /*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
-#if (defined ENABLE_TFA) || (defined CW_SUPPORTED)
+
+#include "tal_config.h"
+
+#if (defined SUPPORT_TFA) || (defined TFA_CW) || (defined TFA_CCA)
 
 /* === INCLUDES ============================================================ */
 
@@ -44,7 +80,7 @@
 /* === IMPLEMENTATION ====================================================== */
 
 
-#if (defined ENABLE_TFA) || (defined TFA_CCA)
+#if (defined SUPPORT_TFA) || (defined TFA_CCA)
 /**
  * @brief Perform a CCA
  *
@@ -91,8 +127,8 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
         tal_state[trx_id] = TAL_TFA_CCA;
 #ifdef IQ_RADIO
         /* Enable EDC interrupt */
-        trx_bit_write(RF215_RF, reg_offset + SR_RF09_IRQM_EDC, 1);
-        trx_reg_write(RF215_RF, reg_offset + RG_RF09_EDC, RF_EDSINGLE);
+        pal_dev_bit_write(RF215_RF, reg_offset + SR_RF09_IRQM_EDC, 1);
+        pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_EDC, RF_EDSINGLE);
 #else
         trx_reg_write(reg_offset + RG_RF09_EDC, RF_EDSINGLE);
 #endif
@@ -106,7 +142,7 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
         trx_bit_write(reg_offset + SR_RF09_IRQM_EDC, 0);
 #endif
 #ifdef IQ_RADIO
-        trx_bit_write(RF215_RF, reg_offset + SR_RF09_IRQM_EDC, 0);
+        pal_dev_bit_write(RF215_RF, reg_offset + SR_RF09_IRQM_EDC, 0);
 #endif
         /* Since it is a blocking function, restore TAL state */
         tal_state[trx_id] = TAL_IDLE;
@@ -118,7 +154,7 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
 
         /* Capture ED value for current frame / ED scan */
 #ifdef IQ_RADIO
-        tal_current_ed_val[trx_id] = trx_reg_read(RF215_RF, reg_offset + RG_RF09_EDV);
+        tal_current_ed_val[trx_id] = pal_dev_reg_read(RF215_RF, reg_offset + RG_RF09_EDV);
 #else
         tal_current_ed_val[trx_id] = trx_reg_read(reg_offset + RG_RF09_EDV);
 #endif
@@ -153,7 +189,7 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
             /* Switch to TRXOFF */
             trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #ifdef IQ_RADIO
-            trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
+            pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
             trx_state[trx_id] = RF_TRXOFF;
         }
@@ -164,7 +200,7 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
 #endif
 
 
-#if (defined ENABLE_TFA) || (defined CW_SUPPORTED)
+#if (defined SUPPORT_TFA) || (defined TFA_CW)
 /**
  * @brief Starts continuous transmission on current channel
  *
@@ -195,7 +231,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
         else
         {
             /* Select corresponding baseband core */
-            trx_bit_write(RF215_BB, SR_RF_IQIFC2_CSELTX, RF09); // RF09 is selected
+            pal_dev_bit_write(RF215_BB, SR_RF_IQIFC2_CSELTX, RF09); // RF09 is selected
         }
     }
     else
@@ -209,7 +245,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
         else
         {
             /* Select corresponding baseband core */
-            trx_bit_write(RF215_BB, SR_RF_IQIFC2_CSELTX, RF24); // RF24 is selected
+            pal_dev_bit_write(RF215_BB, SR_RF_IQIFC2_CSELTX, RF24); // RF24 is selected
         }
     }
 #endif
@@ -234,7 +270,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
 
 #ifdef IQ_RADIO
         /* Disable embedded TX control */
-        trx_bit_write(RF215_RF, SR_RF_IQIFC0_EEC, 0);
+        pal_dev_bit_write(RF215_RF, SR_RF_IQIFC0_EEC, 0);
 #else
         /* Enable baseband bypass */
         trx_bit_write(SR_RF_IQIFC1_CHPM, 1);
@@ -243,7 +279,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
         /* Configure DAC to generate carrier signal */
         uint8_t dac_config[2] = {(0x7E | 0x80), (0x3F | 0x80)};
 #ifdef IQ_RADIO
-        trx_write(RF215_RF, reg_offset + RG_RF09_TXDACI, dac_config, 2);
+        pal_dev_write(RF215_RF, reg_offset + RG_RF09_TXDACI, dac_config, 2);
 #else
         trx_write(reg_offset + RG_RF09_TXDACI, dac_config, 2);
 #endif
@@ -251,7 +287,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
         /* Trigger Tx start */
         //debug_text(PSTR("Start transmission"));
 #ifdef IQ_RADIO
-       trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TX);
+       pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TX);
 #else
         trx_reg_write(reg_offset + RG_RF09_CMD, RF_TX);
 #endif
@@ -304,7 +340,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
 #endif
 
 
-#if (defined ENABLE_TFA) || (defined CW_SUPPORTED)
+#if (defined SUPPORT_TFA) || (defined TFA_CW)
 /**
  * @brief Stops CW transmission
  *
@@ -319,7 +355,7 @@ void tfa_continuous_tx_stop(trx_id_t trx_id)
     trx_bit_write(reg_offset + SR_BBC0_PC_CTX, 0);
 #ifdef IQ_RADIO
     /* Allow command via SPI */
-    trx_bit_write(RF215_RF, SR_RF_IQIFC0_EEC, 0);
+    pal_dev_bit_write(RF215_RF, SR_RF_IQIFC0_EEC, 0);
 #endif
     switch_to_txprep(trx_id);
 
@@ -327,9 +363,9 @@ void tfa_continuous_tx_stop(trx_id_t trx_id)
     uint8_t dac_config[2] = {0x00, 0x00};
     uint16_t rft_reg_offset = RFT_TST_ADDR_OFFSET * trx_id;
 #ifdef IQ_RADIO
-    trx_write(RF215_RF, rft_reg_offset + RG_RF09_TXDACI, dac_config, 2);
+    pal_dev_write(RF215_RF, rft_reg_offset + RG_RF09_TXDACI, dac_config, 2);
     /* Enable embedded TX control again */
-    trx_bit_write(RF215_RF, SR_RF_IQIFC0_EEC, 1);
+    pal_dev_bit_write(RF215_RF, SR_RF_IQIFC0_EEC, 1);
 #else
     trx_write(rft_reg_offset + RG_RF09_TXDACI, dac_config, 2);
     /* Disable baseband bypass */
@@ -348,8 +384,8 @@ void tfa_continuous_tx_stop(trx_id_t trx_id)
         //debug_text(PSTR("Switch back to TRXOFF"));
         /* Switch to TRXOFF */
 #ifdef IQ_RADIO
-        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
-        trx_reg_write(RF215_BB, reg_offset + RG_RF09_CMD, RF_TRXOFF);
+        pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
+        pal_dev_reg_write(RF215_BB, reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #else
         trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
@@ -359,7 +395,7 @@ void tfa_continuous_tx_stop(trx_id_t trx_id)
 #endif
 
 
-#endif /* #if (defined ENABLE_TFA) || (defined TFA_BAT_MON) */
+#endif /* #if (defined SUPPORT_TFA) || (defined TFA_CW) || (defined TFA_CCA) */
 
 
 /* EOF */

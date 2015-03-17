@@ -51,7 +51,7 @@
 #define APP_INIT_H
 
 # include "tal.h"
-#include "string.h"
+# include "string.h"
 # include "app_config.h"
 
 /**
@@ -219,7 +219,7 @@ extern uint8_t APP_TIMER_TO_RX_LED_OFF;
 
 /* === Externals ============================================================ */
 
-extern volatile node_ib_t node_info[NO_TRX];
+extern volatile node_ib_t node_info[NUM_TRX];
 
 /**
  * \brief Function to transmit frames as per 802.15.4 std.

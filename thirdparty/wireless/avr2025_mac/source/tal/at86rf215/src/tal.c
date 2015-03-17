@@ -2,15 +2,47 @@
  * @file tal.c
  *
  * @brief This file implements the TAL state machine and provides general
- * functionality used by the TAL.
+ *        functionality used by the TAL.
  *
- * $Id: tal.c 36382 2014-08-26 11:56:01Z uwalter $
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  */
+
 /*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -37,18 +69,6 @@
 
 /* === MACROS ============================================================== */
 
-/*
- * Time gap between each poll access in microseconds.
- * If the value is equal to zero, no time gap is applied.
- */
-#define POLL_TIME_GAP               10
-
-/* Maximum PLL lock duration in us */
-#define MAX_PLL_LOCK_DURATION       200
-
-/* Maximum settling duration after PLL has been freezed */
-#define PLL_FRZ_SETTLING_DURATION   20
-
 /* === GLOBALS ============================================================= */
 
 /*
@@ -59,71 +79,83 @@
 /**
  * TAL PIBs
  */
-tal_pib_t tal_pib[NO_TRX];
+tal_pib_t tal_pib[NUM_TRX];
 
 /**
  * Current state of the TAL state machine.
  */
-tal_state_t tal_state[NO_TRX];
+tal_state_t tal_state[NUM_TRX];
 
 /**
  * Current state of the TX state machine.
  */
-tx_state_t tx_state[NO_TRX];
+tx_state_t tx_state[NUM_TRX];
 
 /**
  * Indicates if a buffer shortage issue needs to handled by tal_task().
  */
-bool tal_buf_shortage[NO_TRX];
+bool tal_buf_shortage[NUM_TRX];
 
 /**
  * Pointer to the 15.4 frame created by the TAL to be handed over
  * to the transceiver.
  */
-uint8_t *tal_frame_to_tx[NO_TRX];
+uint8_t *tal_frame_to_tx[NUM_TRX];
 
 /**
  * Pointer to receive buffer that can be used to upload a frame from the trx.
  */
-buffer_t *tal_rx_buffer[NO_TRX] = {NULL, NULL};
+buffer_t *tal_rx_buffer[NUM_TRX];
 
 /**
  * Queue that contains all frames that are uploaded from the trx, but have not
  * be processed by the MCL yet.
  */
-queue_t tal_incoming_frame_queue[NO_TRX];
+queue_t tal_incoming_frame_queue[NUM_TRX];
 
 /**
  * Frame pointer for the frame structure provided by the MCL.
  */
-frame_info_t *mac_frame_ptr[NO_TRX];
+frame_info_t *mac_frame_ptr[NUM_TRX];
 
 /**
  * Shadow variable for BB IRQS; variable is filled during TRX ISR,
  * see trx_irq_handler_cb() in tal_irq_handler.c
  */
-volatile bb_irq_t tal_bb_irqs[NO_TRX] = {BB_IRQ_NO_IRQ, BB_IRQ_NO_IRQ};
+#if (NUM_TRX == 1)
+volatile bb_irq_t tal_bb_irqs[NUM_TRX] = {BB_IRQ_NO_IRQ};
+#else
+volatile bb_irq_t tal_bb_irqs[NUM_TRX] = {BB_IRQ_NO_IRQ, BB_IRQ_NO_IRQ};
+#endif
 
 /**
  * Shadow variable for RF IRQS; variable is filled during TRX ISR,
  * see trx_irq_handler_cb() in tal_irq_handler.c
  */
-volatile rf_irq_t tal_rf_irqs[NO_TRX] = {RF_IRQ_NO_IRQ, RF_IRQ_NO_IRQ};
+#if (NUM_TRX == 1)
+volatile rf_irq_t tal_rf_irqs[NUM_TRX] = {RF_IRQ_NO_IRQ};
+#else
+volatile rf_irq_t tal_rf_irqs[NUM_TRX] = {RF_IRQ_NO_IRQ, RF_IRQ_NO_IRQ};
+#endif
 
 /**
  * Last retrieved energy value;
  * variable is filled by handle_ed_end_irq() in tal_ed.c
  */
-int8_t tal_current_ed_val[NO_TRX];
+int8_t tal_current_ed_val[NUM_TRX];
 
 /** Parameter to handle timer callback functions */
-const uint8_t timer_cb_parameter[NO_TRX] = {RF09, RF24};
+#if (NUM_TRX == 1)
+const uint8_t timer_cb_parameter[NUM_TRX] = {ACTIVE_TRX};
+#else
+const uint8_t timer_cb_parameter[NUM_TRX] = {RF09, RF24};
+#endif
 
 /** Current trx state */
-rf_cmd_state_t trx_state[NO_TRX];
+rf_cmd_state_t trx_state[NUM_TRX];
 
 /** Default/Previous trx state while entering a transaction */
-rf_cmd_state_t trx_default_state[NO_TRX];
+rf_cmd_state_t trx_default_state[NUM_TRX];
 
 
 #if (defined ENABLE_TSTAMP) || (defined MEASURE_ON_AIR_DURATION)
@@ -134,7 +166,7 @@ rf_cmd_state_t trx_default_state[NO_TRX];
  * During Rx transaction it stores the time when the frame is actually received,
  * i.e. frame end - RXFE.
  */
-uint32_t fs_tstamp[NO_TRX];
+uint32_t fs_tstamp[NUM_TRX];
 #endif  /* #ifdef ENABLE_TSTAMP */
 
 /**
@@ -144,16 +176,17 @@ uint32_t fs_tstamp[NO_TRX];
  * used during Tx transaction to calculate ACK timeout.
  * Both scenarios use the same variable
  */
-uint32_t rxe_txe_tstamp[NO_TRX];
+uint32_t rxe_txe_tstamp[NUM_TRX];
 
 /**
  * TX calibration values
  */
-uint8_t txc[NO_TRX][2];
+uint8_t txc[NUM_TRX][2];
 
 /* === PROTOTYPES ========================================================== */
 
 static void handle_trxerr(trx_id_t trx_id);
+
 
 /* === IMPLEMENTATION ====================================================== */
 
@@ -168,7 +201,7 @@ static void handle_trxerr(trx_id_t trx_id);
  */
 void tal_task(void)
 {
-    for (uint8_t trx_id = 0; trx_id < NO_TRX; trx_id++)
+    for (uint8_t trx_id = 0; trx_id < NUM_TRX; trx_id++)
     {
         if (tal_state[trx_id] == TAL_SLEEP)
         {
@@ -195,7 +228,7 @@ void tal_task(void)
             {
                 debug_text(PSTR("tal_task() - Buffer shortage resolved"));
                 tal_buf_shortage[trx_id] = false;
-                if (tal_state[trx_id] == TAL_IDLE)
+                if ((tal_state[trx_id] == TAL_IDLE) )//&& (trx_default_state[trx_id] == RF_RX)
                 {
                     switch_to_rx((trx_id_t)trx_id);
                 }
@@ -300,7 +333,7 @@ void tal_task(void)
             {
                 debug_text(PSTR("tal_task - RF_IRQ_BATLOW"));
                 TAL_RF_IRQ_CLR(trx_id, RF_IRQ_BATLOW);
-#if (defined ENABLE_TFA) || (defined TFA_BAT_MON_IRQ)
+#if (defined SUPPORT_TFA) || (defined TFA_BAT_MON_IRQ)
                 handle_batmon_irq(); // see tfa_batmon.c
 #endif
             }
@@ -345,6 +378,9 @@ void switch_to_rx(trx_id_t trx_id)
     {
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
         trx_reg_write(reg_offset + RG_RF09_CMD, RF_RX);
+#ifdef IQ_RADIO
+        pal_dev_reg_write(RF215_RF,reg_offset + RG_RF09_CMD, RF_RX);
+#endif
         trx_state[trx_id] = RF_RX;
     }
     else
@@ -371,11 +407,20 @@ void switch_to_txprep(trx_id_t trx_id)
     debug_text_val(PSTR("switch_to_txprep(), trx_id ="), trx_id);
 
     trx_reg_write(reg_offset + RG_RF09_CMD, RF_TXPREP);
+#ifdef IQ_RADIO
+    pal_dev_reg_write(RF215_RF,reg_offset + RG_RF09_CMD, RF_TXPREP);
+#endif
 
     wait_for_txprep(trx_id);
 
+#ifdef RF215v1
     /* Workaround for errata reference #4807 */
-    trx_write(reg_offset + 0x125, (uint8_t *)&txc[trx_id][0], 2);
+#ifdef IQ_RADIO
+    pal_dev_write(RF215_RF, reg_offset + 0x125, (uint8_t *)&txc[trx_id][0], 2);
+#else
+    trx_write( reg_offset + 0x125, (uint8_t *)&txc[trx_id][0], 2);
+#endif
+#endif
 }
 
 
@@ -388,13 +433,20 @@ void wait_for_txprep(trx_id_t trx_id)
 {
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     rf_cmd_state_t state;
+
+#ifdef RF215v1
+
     uint32_t start_time = 0;
 
     pal_get_current_time(&start_time);
 
     do
     {
+#ifdef IQ_RADIO
+        state = (rf_cmd_state_t)pal_dev_reg_read(RF215_RF, GET_REG_ADDR(RG_RF09_STATE));
+#else
         state = (rf_cmd_state_t)trx_reg_read(reg_offset + RG_RF09_STATE);
+#endif       
 
         if (state != RF_TXPREP)
         {
@@ -409,8 +461,10 @@ void wait_for_txprep(trx_id_t trx_id)
                 trx_reg_write(reg_offset + RG_RF09_PLL, 9);
                 pal_timer_delay(PLL_FRZ_SETTLING_DURATION);
                 trx_reg_write(reg_offset + RG_RF09_PLL, 8);
+				
                 do
                 {
+                    
                     state = (rf_cmd_state_t)trx_reg_read(reg_offset + RG_RF09_STATE);
                 }
                 while (state != RF_TXPREP);
@@ -419,6 +473,26 @@ void wait_for_txprep(trx_id_t trx_id)
         }
     }
     while (state != RF_TXPREP);
+
+#else /* #if RF215v1 */
+
+    do
+    {
+#ifdef IQ_RADIO
+        state = (rf_cmd_state_t)pal_dev_reg_read(RF215_RF, reg_offset + RG_RF09_STATE);
+#else
+        state = (rf_cmd_state_t)trx_reg_read( reg_offset + RG_RF09_STATE);
+#endif
+        if (state != RF_TXPREP)
+        {
+#if (POLL_TIME_GAP > 0)
+            pal_timer_delay(POLL_TIME_GAP); /* Delay to reduce SPI storm */
+#endif
+        }
+    }
+    while (state != RF_TXPREP);
+
+#endif /* #if RF215v1 */
 
     trx_state[trx_id] = RF_TXPREP;
 }
@@ -491,5 +565,35 @@ void stop_tal_timer(trx_id_t trx_id)
     pal_timer_stop(timer_id);
 #endif
 }
+
+
+#if (defined RF215v1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
+/**
+ * @brief Stops RPC; SW workaround for errata reference 4841
+ *
+ * @param trx_id Transceiver identifier
+ */
+/* SW workaround for errata reference 4841 */
+void stop_rpc(trx_id_t trx_id)
+{
+    if (tal_pib[trx_id].RPCEnabled &&
+        ((tal_pib[trx_id].phy.modulation == OQPSK) ||
+         (tal_pib[trx_id].phy.modulation == FSK)))
+    {
+         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+        
+#   ifdef IQ_RADIO
+        pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_PLL, 8);
+#   else
+       trx_reg_write( reg_offset + RG_RF09_PLL, 8);
+#   endif
+    }
+
+
+}
+
+#endif /* #if (defined SUPPORT_FSK) || (defined SUPPORT_OQPSK) */
+
+
 
 /* EOF */

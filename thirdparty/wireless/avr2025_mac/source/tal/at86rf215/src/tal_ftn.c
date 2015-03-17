@@ -1,18 +1,51 @@
 /**
  * @file tal_ftn.c
  *
- * @brief This file implements the filter periodic tuning.
+ * @brief This file implements the filter periodic tuning
+ *        
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
- * $Id: tal_ftn.c 36442 2014-09-01 14:38:06Z uwalter $
+ * \asf_license_start
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  */
+
 /*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+
 
 /* === INCLUDES ============================================================= */
 
@@ -79,8 +112,10 @@
 static void ftn_timer_cb(void *parameter);
 static void postpone_tuning(trx_id_t trx_id);
 #endif
+#ifdef RF215v1
 static inline uint8_t get_median(int *temp_array, uint8_t len_of_array);
 static inline int compare_uin32_t(const void *f1, const void *f2);
+#endif
 
 /* === Implementation ======================================================= */
 
@@ -155,7 +190,7 @@ static void ftn_timer_cb(void *parameter)
 {
     trx_id_t trx_id = *(trx_id_t *)parameter;
 
-    debug_text(PSTR("ftn_timer_cb()"));
+    //debug_text(PSTR("ftn_timer_cb()"));
 
     if (tal_state[trx_id] == TAL_IDLE)
     {
@@ -167,14 +202,16 @@ static void ftn_timer_cb(void *parameter)
 #ifdef IQ_RADIO
             if (pal_dev_bit_read(RF215_RF, reg_offset + SR_RF09_AGCC_FRZS) == 1)
 #else
-            if (pal_dev_bit_read(reg_offset + SR_RF09_AGCC_FRZS) == 1)
+            if (trx_bit_read(reg_offset + SR_RF09_AGCC_FRZS) == 1)
 #endif
             {
                 postpone_tuning(trx_id);
             }
             else
             {
+#ifdef RF215_v1
                 calibrate_LO(trx_id);
+#endif
                 switch_to_rx(trx_id);
             }
         }
@@ -218,6 +255,7 @@ static void postpone_tuning(trx_id_t trx_id)
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
 
 
+#ifdef RF215v1
 /**
  * @brief Calibrate the LO value; workaround for errata reference #4807
  *
@@ -317,8 +355,10 @@ void calibrate_LO(trx_id_t trx_id)
         }
     }
 }
+#endif /* #ifdef RF215v1 */
 
 
+#ifdef RF215v1
 /**
  * @brief Implements required compare function for qsort().
  */
@@ -326,8 +366,10 @@ static inline int compare_uin32_t(const void *f1, const void *f2)
 {
     return (*(int *)f1 - *(int *)f2);
 }
+#endif /* #ifdef RF215v1 */
 
 
+#ifdef RF215v1
 /**
  * @brief Gets a median value
  */
@@ -356,6 +398,7 @@ static inline uint8_t get_median(int *temp_array, uint8_t len_of_array)
         return (temp / 2);
     }
 }
+#endif /* #ifdef RF215v1 */
 
 
 /* EOF */

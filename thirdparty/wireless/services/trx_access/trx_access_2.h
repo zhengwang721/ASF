@@ -3,9 +3,11 @@
  *
  * @brief HAL related APIs for externally plugged transceivers
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,7 +43,7 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -149,6 +151,9 @@
 #define U16_TO_TARGET(x) (x)
 #endif
 
+/**
+ * @brief Transceiver ISR handler
+ */
 typedef void (*irq_handler_t)(void);
 /* === Types =============================================================== */
 

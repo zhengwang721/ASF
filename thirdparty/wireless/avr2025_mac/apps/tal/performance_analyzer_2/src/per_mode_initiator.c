@@ -203,32 +203,32 @@ static bool send_range_test_stop_cmd(trx_id_t trx);
 
 /* === GLOBALS ============================================================= */
 
-static bool range_test_in_progress[NO_TRX] = {false,false};
-static bool scanning[NO_TRX] = {false,false};
-static bool trx_sleep_status[NO_TRX] = {false, false};
-static bool peer_found[NO_TRX] = {false,false};
-static uint8_t scan_duration[NO_TRX];
-static uint8_t seq_num_initiator[NO_TRX];
-static uint16_t channel_before_scan[NO_TRX];
-static uint8_t op_mode[NO_TRX] = {TX_OP_MODE,TX_OP_MODE};
-static uint16_t no_of_roll_overs[NO_TRX];
-static uint32_t start_time[NO_TRX];
-static uint32_t end_time[NO_TRX];
-static uint32_t restart_time[NO_TRX];
-static uint32_t scan_channel_mask[NO_TRX];
-static uint32_t frame_no_ack[NO_TRX];
-static uint32_t frame_access_failure[NO_TRX];
-static uint32_t frame_failure[NO_TRX];
-static uint32_t frames_to_transmit[NO_TRX];
-static set_param_cb_t set_param_cb[NO_TRX];
-static uint8_t num_channels[NO_TRX];
-static uint8_t last_tx_power_format_set[NO_TRX];
+static bool range_test_in_progress[NUM_TRX] = {false,false};
+static bool scanning[NUM_TRX] = {false,false};
+static bool trx_sleep_status[NUM_TRX] = {false, false};
+static bool peer_found[NUM_TRX] = {false,false};
+static uint8_t scan_duration[NUM_TRX];
+static uint8_t seq_num_initiator[NUM_TRX];
+static uint16_t channel_before_scan[NUM_TRX];
+static uint8_t op_mode[NUM_TRX] = {TX_OP_MODE,TX_OP_MODE};
+static uint16_t no_of_roll_overs[NUM_TRX];
+static uint32_t start_time[NUM_TRX];
+static uint32_t end_time[NUM_TRX];
+static uint32_t restart_time[NUM_TRX];
+static uint32_t scan_channel_mask[NUM_TRX];
+static uint32_t frame_no_ack[NUM_TRX];
+static uint32_t frame_access_failure[NUM_TRX];
+static uint32_t frame_failure[NUM_TRX];
+static uint32_t frames_to_transmit[NUM_TRX];
+static set_param_cb_t set_param_cb[NUM_TRX];
+static uint8_t num_channels[NUM_TRX];
+static uint8_t last_tx_power_format_set[NUM_TRX];
 static void configure_range_test_frame_sending(trx_id_t trx);
 static bool send_range_test_marker_rsp(trx_id_t trx);
 static void send_sun_page_changed(trx_id_t trx);
-phy_t sun_phy_page_set[NO_TRX];
-sun_phy_t sun_page[NO_TRX];
-static uint8_t *sun_page_param_val[NO_TRX];
+phy_t sun_phy_page_set[NUM_TRX];
+sun_phy_t sun_page[NUM_TRX];
+static uint8_t *sun_page_param_val[NUM_TRX];
 
 /**
  * This is variable is to keep track of the specific features supported
@@ -236,12 +236,11 @@ static uint8_t *sun_page_param_val[NO_TRX];
 static uint32_t fw_feature_mask = 0;
 
 #if (ANTENNA_DIVERSITY == 1)
-static uint8_t ant_sel_before_ct[NO_TRX];
-static uint8_t ant_div_before_ct[NO_TRX];
+static uint8_t ant_sel_before_ct[NUM_TRX];
+static uint8_t ant_div_before_ct[NUM_TRX];
 #endif /* End of #if (ANTENNA_DIVERSITY == 1) */
 
-static uint32_t range_test_frame_cnt[NO_TRX] = {0,0};
-
+static uint32_t range_test_frame_cnt[NUM_TRX] = {0,0};
 
 
 /* Size constants for PERformance configuration parameters */
@@ -265,11 +264,11 @@ FLASH_DECLARE(uint8_t perf_config_param_size[]) = {
 };
 
 /* Database to maintain the default settings of the configurable parameter */
-trx_config_params_t default_trx_config_params[NO_TRX];
+trx_config_params_t default_trx_config_params[NUM_TRX];
 
 /* Database to maintain the updated/latest settings of the configurable
  * parameters */
-trx_config_params_t curr_trx_config_params[NO_TRX];
+trx_config_params_t curr_trx_config_params[NUM_TRX];
 
 /* ! \} */
 /* === IMPLEMENTATION ====================================================== */
@@ -282,7 +281,7 @@ void per_mode_initiator_init(trx_id_t trx,void *parameter)
 {
   
 #ifdef EXT_RF_FRONT_END_CTRL
-    uint8_t config_tx_pwr[NO_TRX];
+    uint8_t config_tx_pwr[NUM_TRX];
 #endif
     
 	/* PER TEST Initiator sequence number */
@@ -358,7 +357,7 @@ void per_mode_initiator_task(trx_id_t trx)
 			/*	tal_tx_frame(trx,node_info[trx].tx_frame_info,
 				NO_CSMA_NO_IFS,
 				true );*/
-			delay_ms(3);
+			delay_ms(1);
 			if (curr_trx_config_params[trx].csma_enabled) {
 
 			if(tal_pib[trx].phy.modulation == OFDM) 
@@ -625,28 +624,33 @@ void per_mode_initiator_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *f
 							usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)sun_page_param_val[trx]);
 						}
 					}
-					
-					if (sun_phy_page_set[trx].modulation == LEG_OQPSK)
-					
-				    {
+					if(sun_phy_page_set[trx].modulation == LEG_OQPSK)
+					{
 						if(sun_phy_page_set[trx].phy_mode.leg_oqpsk.data_rate > OQPSK_DATA_RATE_250)
 						{
-							hrleg = 0X01;
-							if(tal_pib_set(trx,phyHighRateEnabled,(pib_value_t *)&hrleg) != MAC_SUCCESS)
+							hrleg = 1;
+							if(tal_pib_set(trx, phyHighRateEnabled, (pib_value_t *)&hrleg)!= MAC_SUCCESS)
 							{
 								usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)sun_page_param_val[trx]);
 							}
 						}
 						else
 						{
-							hrleg = 0X00;
-							if(tal_pib_set(trx,phyHighRateEnabled,(pib_value_t *)&hrleg) != MAC_SUCCESS)
+							hrleg = 0;
+							if(tal_pib_set(trx, phyHighRateEnabled, (pib_value_t *)&hrleg)!= MAC_SUCCESS)
 							{
 								usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)sun_page_param_val[trx]);
 							}
+							
 						}
 					}
-						
+					if(sun_phy_page_set[trx].modulation == FSK)
+					{
+						if(tal_pib_set(trx, phyFSKFECEnabled, (pib_value_t *)&sun_phy_page_set[trx].phy_mode.fsk.fec_enabled)!= MAC_SUCCESS )
+						{
+						  usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)sun_page_param_val[trx]);	
+						}
+					}
 					tal_pib[trx].CurrentPage = 9; //check -> to be revisited
 					curr_trx_config_params[trx].channel_page = 9;
 					tal_pib_get(trx,phyCurrentChannel, (uint8_t *)&channel);
@@ -1116,7 +1120,7 @@ if((curr_trx_config_params[trx].phy_frame_length > aMaxPHYPacketSize) && (curr_t
  */
 void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 {
-	static uint8_t range_test_seq_num[NO_TRX];
+	static uint8_t range_test_seq_num[NUM_TRX];
     app_payload_t *msg;
 	
 	/* To keep compiler happy */
@@ -1301,7 +1305,7 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 			 * and
 			 * also derrive the LQI and ED values sent by the
 			 * receptor from the received payload */
-			uint8_t phy_frame_len = (uint8_t)mac_frame_info->len_no_crc; //check - > range test pklt length not more than 127
+			//uint8_t phy_frame_len = (uint8_t)mac_frame_info->len_no_crc; //check - > range test pklt length not more than 127
 
 			app_led_event(LED_EVENT_RX_FRAME);
 
@@ -1687,14 +1691,14 @@ tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&curr_trx_config_params[trx].tx
 /*
  * \brief Send an energy pulse on current channel page
  */
-#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED)))
+#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined TFA_CW)))
 void pulse_cw_transmission(trx_id_t trx)
 {
     uint16_t channel;
 	
     op_mode[trx] = CONTINUOUS_TX_MODE;
 
-		tal_pib_get(trx,phyCurrentChannel, &channel);
+		tal_pib_get(trx,phyCurrentChannel,(uint8_t *)&channel);
 
     /* Save all user settings before continuous tx */
     save_all_settings(trx);
@@ -1719,7 +1723,7 @@ void pulse_cw_transmission(trx_id_t trx)
  * \brief Stop sending a CW signal on current channel page
  * \param callback_parameter Pointer to callback, not used here
  */
-#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED)))
+#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined TFA_CW)))
 static void stop_pulse_cb(void *callback_parameter)
 {
 	trx_id_t trx = ((trx_id_t) callback_parameter);
@@ -1740,7 +1744,7 @@ static void stop_pulse_cb(void *callback_parameter)
  * \brief Start CW transmission on current channel page
  * \param tx_mode  Continuous transmission mode
  */
-#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED)))
+#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined TFA_CW)))
 void start_cw_transmission(trx_id_t trx, uint8_t tx_mode)
 {
 
@@ -1909,11 +1913,11 @@ void per_mode_initiator_ed_end_cb(trx_id_t trx, uint8_t energy_level)
 	uint8_t min_ch;
 	uint8_t max_ch;
     uint16_t channel;
-    static uint8_t p_in_index[NO_TRX];
+    static uint8_t p_in_index[NUM_TRX];
 	int8_t p_in;
 
     uint8_t page;
-    static ed_scan_result_t ed_scan_result[NO_TRX][16];
+    static ed_scan_result_t ed_scan_result[NUM_TRX][16];
 
     /* Print result */
 
@@ -2091,10 +2095,36 @@ void perf_set_sun_page(trx_id_t trx,uint8_t *param_val)
 					return;
 				}
 			}
-			
+			if(sun_phy_page_set[trx].modulation == LEG_OQPSK)
+			{
+				if(sun_phy_page_set[trx].phy_mode.leg_oqpsk.data_rate > OQPSK_DATA_RATE_250)
+				{
+					hrleg = 1;
+					if(tal_pib_set(trx, phyHighRateEnabled, (pib_value_t *)&hrleg)!= MAC_SUCCESS)
+					{
+						usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
+					}
+				}
+				else
+				{
+					hrleg = 0;
+					if(tal_pib_set(trx, phyHighRateEnabled, (pib_value_t *)&hrleg)!= MAC_SUCCESS)
+					{
+						usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
+					}
+					
+				}
+			}
+			if(sun_phy_page_set[trx].modulation == FSK)
+			{
+				if(tal_pib_set(trx, phyFSKFECEnabled, (pib_value_t *)&sun_phy_page_set[trx].phy_mode.fsk.fec_enabled)!= MAC_SUCCESS )
+				{
+					usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
+				}
+			}
 			tal_pib[trx].CurrentPage = 9; //check -> needs to be revisited
 			curr_trx_config_params[trx].channel_page = 9;
-			tal_pib_get(trx,phyCurrentChannel, &channel);
+			tal_pib_get(trx,phyCurrentChannel,(uint8_t *) &channel);
 
 			curr_trx_config_params[trx].channel = channel;				
 			memcpy(&(curr_trx_config_params[trx].sun_phy_page), &sun_page[trx], sizeof(sun_phy_t));
@@ -2146,10 +2176,10 @@ static void send_sun_page_changed(trx_id_t trx)
  *\param param_value  Pointer to the value to be set
  */
 
-void perf_set_req(trx_id_t trx, uint8_t param_type, param_value_t *param_value)
+void perf_set_req(trx_id_t trx, uint8_t set_param_type, param_value_t *param_value)
 {
 
-    switch (param_type) /* parameter type */
+    switch (set_param_type) /* parameter type */
     {
         case PARAM_CHANNEL: /* Channel Set request */
             {
@@ -2264,7 +2294,7 @@ void perf_set_req(trx_id_t trx, uint8_t param_type, param_value_t *param_value)
         default:
             {
                 /* Send Set confirmation with status INVALID ARGUMENT */
-                usr_perf_set_confirm(trx,INVALID_ARGUMENT, param_type, param_value);
+                usr_perf_set_confirm(trx,INVALID_ARGUMENT, set_param_type, param_value);
             }
             break;
 
@@ -2277,15 +2307,15 @@ void perf_set_req(trx_id_t trx, uint8_t param_type, param_value_t *param_value)
  *
  *\param param_type Parameter type to be read
  */
-void perf_get_req(trx_id_t trx, uint8_t param_type)
+void perf_get_req(trx_id_t trx, uint8_t param_type_data)
 {
-    switch (param_type) /* parameter type */
+    switch (param_type_data) /* parameter type */
     {
         case PARAM_CHANNEL: /* Channel Get request */
             {
                 uint16_t current_channel = 0;
 
-					tal_pib_get(trx,phyCurrentChannel, &current_channel);
+					tal_pib_get(trx,phyCurrentChannel,(uint8_t *) &current_channel);
 
 
                 /* Send Get confirmation with status SUCCESS */
@@ -2303,7 +2333,7 @@ void perf_get_req(trx_id_t trx, uint8_t param_type)
 				uint8_t param_val[10];
 				phy_t phy_param;
 				
-				tal_pib_get(trx,phySetting, &phy_param);
+				tal_pib_get(trx,phySetting, (unsigned char *)&phy_param);
 				param_val[0] = ch_page;
 				param_val[1] = phy_param.freq_band;
 				param_val[2] = phy_param.modulation;
@@ -2319,7 +2349,7 @@ void perf_get_req(trx_id_t trx, uint8_t param_type)
 					param_val[4] = phy_param.phy_mode.oqpsk.chip_rate;
 
 				}
-				else if(phy_param.modulation = FSK)
+				else if(phy_param.modulation == FSK)
 				{
 					
 					param_val[3] = phy_param.phy_mode.fsk.mod_type;
@@ -2330,7 +2360,7 @@ void perf_get_req(trx_id_t trx, uint8_t param_type)
 					param_val[8] = phy_param.phy_mode.fsk.fec_enabled; 
 					
 				}
-				else if(phy_param.modulation = LEG_OQPSK)
+				else if(phy_param.modulation == LEG_OQPSK)
 				{
 					param_val[3] = phy_param.phy_mode.leg_oqpsk.data_rate;
 					param_val[4] = phy_param.phy_mode.leg_oqpsk.chip_rate;
@@ -2360,10 +2390,10 @@ void perf_get_req(trx_id_t trx, uint8_t param_type)
             break;
         case PARAM_TX_POWER_DBM: /* TX power in dBm value Set request  */
             {
-                uint8_t tx_pwr = 0;
+                
                 int8_t  tx_pwr_dbm = 0;
 
-				tal_pib_get(trx,phyTransmitPower, &tx_pwr_dbm);
+				tal_pib_get(trx,phyTransmitPower,(uint8_t *)&tx_pwr_dbm);
 
                // tx_pwr_dbm = CONV_phyTransmitPower_TO_DBM(tx_pwr);check
 
@@ -2466,7 +2496,7 @@ void perf_get_req(trx_id_t trx, uint8_t param_type)
 
 					uint8_t dummy_val = 0;
 					/* Send Get confirmation with status INVALID ARGUMENT */
-					usr_perf_get_confirm(trx,INVALID_ARGUMENT, param_type, (param_value_t *)&dummy_val);	
+					usr_perf_get_confirm(trx,INVALID_ARGUMENT, param_type_data, (param_value_t *)&dummy_val);	
 					break;
 
             }
@@ -2476,7 +2506,7 @@ void perf_get_req(trx_id_t trx, uint8_t param_type)
 
 					uint8_t dummy_val = 0;
 					/* Send Get confirmation with status INVALID ARGUMENT */
-					usr_perf_get_confirm(trx, INVALID_ARGUMENT, param_type, (param_value_t *)&dummy_val);
+					usr_perf_get_confirm(trx, INVALID_ARGUMENT, param_type_data, (param_value_t *)&dummy_val);
 					break;
 
             }
@@ -2486,7 +2516,7 @@ void perf_get_req(trx_id_t trx, uint8_t param_type)
             {
                 uint8_t dummy_val = 0;
                 /* Send Get confirmation with status INVALID ARGUMENT */
-                usr_perf_get_confirm(trx, INVALID_ARGUMENT, param_type, (param_value_t *)&dummy_val);
+                usr_perf_get_confirm(trx, INVALID_ARGUMENT, param_type_data, (param_value_t *)&dummy_val);
             }
             break;
     }
@@ -2571,13 +2601,13 @@ if(tal_pib[trx].phy.modulation == LEG_OQPSK) //check cleanup required
         {
 
 				int8_t dbm_val =0;
-				uint8_t tx_pwr =0;
+			
 				tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&channel);
 
 				/* Update the database */
 				curr_trx_config_params[trx].channel = channel;
 				
-				tal_pib_get(trx,phyTransmitPower, &dbm_val);
+				tal_pib_get(trx,phyTransmitPower,(uint8_t *)&dbm_val);
 				//dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
 				curr_trx_config_params[trx].tx_power_dbm = dbm_val;
 			
@@ -2617,13 +2647,13 @@ else
 	 {
 
 		 int8_t dbm_val =0;
-		 uint8_t tx_pwr =0;
+		
 		 tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&channel);
 
 		 /* Update the database */
 		 curr_trx_config_params[trx].channel = channel;
 		 
-		 tal_pib_get(trx,phyTransmitPower, &dbm_val);
+		 tal_pib_get(trx,phyTransmitPower, (uint8_t *)&dbm_val);
 		 //dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
 		 curr_trx_config_params[trx].tx_power_dbm = dbm_val;	 
 
@@ -2702,7 +2732,7 @@ static void set_channel_page(trx_id_t trx, uint8_t channel_page)
 static void set_tx_power(trx_id_t trx, uint8_t tx_power_format, int8_t power_value)
 {
     int8_t tx_pwr_dbm;
-    uint8_t temp_var;
+   
 
     switch (tx_power_format)
     {
@@ -2873,7 +2903,7 @@ void start_ed_scan(trx_id_t trx,uint8_t ed_scan_duration, uint32_t channel_sel_m
 				reverse_float(scan_time));
 	}
 
-	tal_pib_get(trx,phyCurrentChannel, &channel_before_scan[trx]);
+	tal_pib_get(trx,phyCurrentChannel,(uint8_t *) &channel_before_scan[trx]);
 
 	/* Identify first channel */
 	for (ch_cnt = min_ch; ch_cnt <= max_ch; ch_cnt++) {
@@ -2884,7 +2914,7 @@ void start_ed_scan(trx_id_t trx,uint8_t ed_scan_duration, uint32_t channel_sel_m
 		}
 	}
 	tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&first_channel);
-	tal_ed_start(trx,scan_duration);
+	tal_ed_start(trx,scan_duration[trx]);
 }
 
 /**
@@ -2950,11 +2980,12 @@ void set_default_configuration(trx_id_t trx)
 void get_current_configuration(trx_id_t trx)
 {
 
-    uint8_t temp;
+
+	uint8_t hrleg;
     /* Make sure the Register values are in sync with database values
      * as there are chances of the same because of the User register writes
      */
-	uint16_t temp_channel = curr_trx_config_params[trx].channel;
+	//uint16_t temp_channel = curr_trx_config_params[trx].channel;
 		/* If the transceiver currently not set in ism frequencies, set the IEEE channel */
 	//	if (temp_channel != INVALID_VALUE)
 		//{
@@ -3024,6 +3055,35 @@ void get_current_configuration(trx_id_t trx)
 				{
 					//usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
 					//return;
+				}
+			}
+			else if(phy_to_set.modulation == FSK)
+			{
+				if(tal_pib_set(trx, phyFSKFECEnabled, (pib_value_t *)&phy_to_set.phy_mode.fsk.fec_enabled) != MAC_SUCCESS)
+				{
+				   //usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
+				   //return;	
+				}
+			}
+			else if(phy_to_set.modulation == LEG_OQPSK)
+			{
+				if(phy_to_set.phy_mode.leg_oqpsk.data_rate > OQPSK_DATA_RATE_250)
+				{
+					hrleg = 1;
+					if(tal_pib_set(trx, phyHighRateEnabled, (pib_value_t *)&hrleg) != MAC_SUCCESS)
+					{
+						//usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
+						//return;
+					}
+				}
+				else
+				{
+					hrleg = 0;
+					if(tal_pib_set(trx, phyHighRateEnabled, (pib_value_t *)&hrleg) != MAC_SUCCESS)
+					{
+						//usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
+						//return;
+					}
 				}
 			}
 
@@ -3500,7 +3560,7 @@ static void start_test(trx_id_t trx)
  */
 static void configure_frame_sending(trx_id_t trx)
 {
-    uint8_t index;
+    
     uint16_t app_frame_length;
     uint8_t *frame_ptr;
     uint8_t *temp_frame_ptr;
@@ -4051,7 +4111,8 @@ static float calculate_time_duration(trx_id_t trx)
 
     uint32_t duration;
     float duration_s;
-
+    uint64_t ll_temp = 1;
+	
     if (0 == no_of_roll_overs[trx])
     {
       duration = (SUB_TIME(end_time[trx], start_time[trx]));
@@ -4062,7 +4123,7 @@ static float calculate_time_duration(trx_id_t trx)
     {
         if (end_time[trx] >= start_time[trx])
         {
-            uint64_t total_duration = ((( no_of_roll_overs[trx] ) * ((1LL) << 32)) +
+            uint64_t total_duration = ((( no_of_roll_overs[trx] ) * ((ll_temp) << 32)) +
                                        ((end_time[trx]) - (start_time[trx])) +
                                        (no_of_roll_overs[trx] * (1000000)));
 
@@ -4071,8 +4132,8 @@ static float calculate_time_duration(trx_id_t trx)
         }
         else
         {
-            uint64_t total_duration = ((( no_of_roll_overs[trx] ) * ((1LL) << 32))  +
-                                       ((((1LL) <<  32) - start_time[trx]) + (end_time[trx]))
+            uint64_t total_duration = ((( no_of_roll_overs[trx] ) * ((ll_temp) << 32))  +
+                                       ((((ll_temp) <<  32) - start_time[trx]) + (end_time[trx]))
                                        + (no_of_roll_overs[trx] * (1000000)));
 
             duration_s  = (float)total_duration * MICRO_SEC_MULTIPLIER;
@@ -4150,9 +4211,9 @@ uint8_t check_error_conditions(trx_id_t trx)
  *
  * \param param_type    parameter type
  */
-uint8_t get_param_length(uint8_t param_type)
+uint8_t get_param_length(uint8_t parameter_type)
 {
-    return (uint8_t)PGM_READ_BYTE(&perf_config_param_size[param_type]);
+    return (uint8_t)PGM_READ_BYTE(&perf_config_param_size[parameter_type]);
 }
 
 /**
@@ -4563,7 +4624,7 @@ static bool send_range_test_stop_cmd(trx_id_t trx)
  */
 static bool send_range_test_marker_rsp(trx_id_t trx)
 {
-	static uint8_t marker_seq_num[NO_TRX];
+	static uint8_t marker_seq_num[NUM_TRX];
 	uint16_t payload_length;
 	app_payload_t msg;
 	result_req_t *data;

@@ -3,13 +3,45 @@
  *
  * @brief This file contains TAL API function declarations
  *
- * Copyright (c) 2013-2014-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  */
+
 /*
- * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -34,17 +66,8 @@
 #include "tal_rf215.h"
 #endif
 
-/**
- * \defgroup group_tal  Transceiver Abstraction Layer
- * The Transceiver Abstraction Layer (TAL) implements the transceiver specific
- * functionalities and
- * provides interfaces to the upper layers (like IEEE 802.15.4 MAC )and  uses
- * the services of PAL.
- *
- */
+/* === TYPES =============================================================== */
 
-/* === EXTERNALS =========================================================== */
-__PACK__DATA__
 /* Structure implementing the PIB values stored in TAL */
 typedef struct tal_pib_tag
 {
@@ -193,6 +216,13 @@ typedef struct tal_pib_tag
      * PHY mode
      */
     phy_t phy;
+
+#if (defined SUPPORT_FSK) || (defined SUPPORT_OQPSK)
+    /**
+     * Reduce power consumption mode; effective for FSK and MR-OQPSK
+     */
+    bool RPCEnabled;
+#endif
 
     /**
      * The maximum number of symbols in a frame:
@@ -620,24 +650,6 @@ typedef enum csma_mode_tag
     CSMA_SLOTTED
 } csma_mode_t;
 __PACK__RST_DATA__
-
-/**
- * PIB attribute value type
- */
-typedef union
-{
-    /** PIB Attribute Bool */
-    bool pib_value_bool;
-    /** PIB Attribute 8-bit */
-    uint8_t pib_value_8bit;
-    /** PIB Attribute 16-bit */
-    uint16_t pib_value_16bit;
-    /** PIB Attribute 32-bit */
-    uint32_t pib_value_32bit;
-    /** PIB Attribute 64-bit */
-    uint64_t pib_value_64bit;
-} pib_value_t;
-
 /* === EXTERNALS =========================================================== */
 
 #if (defined SW_CONTROLLED_CSMA) && (defined TX_OCTET_COUNTER)
@@ -648,13 +660,18 @@ extern uint32_t tal_tx_octet_cnt;
 #endif
 
 #if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
-#   define NO_TRX                           2
+#   ifdef AT86RF215M
+#       define NUM_TRX                      1
+#       define ACTIVE_TRX                   RF09
+#   else
+#       define NUM_TRX                      2
+#   endif
 #else
-#   define NO_TRX                           1
+#   define NUM_TRX                          1
 #endif
 
 #ifdef MULTI_TRX_SUPPORT
-extern tal_pib_t tal_pib[NO_TRX];
+extern tal_pib_t tal_pib[NUM_TRX];
 #else
 extern tal_pib_t tal_pib;
 #endif
@@ -680,7 +697,7 @@ extern tal_pib_t tal_pib;
 
 #if (TAL_TYPE == AT86RF231) ||\
     (TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == AT86RF233) ||\
-    (TAL_TYPE == ATMEGARFR2)
+    (TAL_TYPE == ATMEGARFR2) || (TAL_TYPE == AT86RF234)
 /** RF band */
 #define RF_BAND                             BAND_2400
 #elif (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B)

@@ -206,7 +206,7 @@ void wait_for_event_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 static void configure_pibs(trx_id_t trx)
 {
     uint16_t temp_word;
-    uint8_t temp_byte;
+    
 
     /* Set Default address. */
     temp_word = CCPU_ENDIAN_TO_LE16(DEFAULT_ADDR);

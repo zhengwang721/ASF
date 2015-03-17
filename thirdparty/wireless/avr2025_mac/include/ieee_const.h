@@ -52,7 +52,6 @@
 #ifndef IEEE_CONST_H
 #define IEEE_CONST_H
 
-#include "tal.h"
 /**
  *
  * \defgroup group_inc Common WL Definitions
@@ -61,12 +60,15 @@
  *
  */
 
-#if !defined(RF_BAND)
-#error "Please define RF_BAND to BAND_2400 or BAND_900."
-#endif /* !defined(RF_BAND) */
+/**
+ * \ingroup group_inc
+ * \defgroup group_ieee IEEE Constants
+ * Includes IEEE Constant Definitions
+ * @{
+ *
+ */
 
 /* === Includes ============================================================= */
-
 
 /* === Macros =============================================================== */
 
@@ -286,32 +288,6 @@
  */
 #define macAckWaitDuration              (0x40)
 
-#if (RF_BAND == BAND_2400)
-/**
- * Default value for MIB macAckWaitDuration
- */
-#define macAckWaitDuration_def          (54)
-#elif (RF_BAND == BAND_900)
-/**
- * Default value for MIB macAckWaitDuration
- */
-
-/**
- * The default value for this PIB attribute depends on the current channel page
- * (i.e. the modulation scheme: BPSK or O-QPSK).
- */
-#define macAckWaitDuration_def          \
-    (tal_pib.CurrentPage == 0 ? 120 : 54)
-
-#elif (RF_BAND == BAND_MULTIPLE)
-/**
- * There are no defines for multiple band support.
- * These values are handled by variables instead of defines.
- */
-
-#else   /* Can't happen because RF_BAND is checked above. */
-#error "You have got no license for that RF band."
-#endif /* RF_BAND */
 
 /**
  * Indication of whether a coordinator is currently allowing association.
@@ -664,30 +640,6 @@
  */
 #define macMaxFrameTotalWaitTime        (0x58)
 
-/**
- * Default value for PIB macMaxBE (see equation 14 in section 7.4.2)
- * The default value is valid for:
- * macMinBE = 3
- * macMaxBE = 5
- * macMaxCSMABackoffs = 4
- */
-#if (RF_BAND == BAND_2400)
-/* O-QPSK 2.4 GHz */
-#define macMaxFrameTotalWaitTime_def    (1986)
-
-#elif (RF_BAND == BAND_900)
-/* BPSK 900 MHz */
-#define macMaxFrameTotalWaitTime_def    (2784)
-
-#elif (RF_BAND == BAND_MULTIPLE)
-/**
- * There are no defines for multiple band support.
- * These values are handled by variables instead of defines.
- */
-
-#else   /* Can't happen because RF_BAND is checked above. */
-#error "You have got no license for that RF band."
-#endif /* RF_BAND */
 
 /**
  * The maximum number of retries allowed after a transmission failure.
@@ -1057,23 +1009,6 @@ typedef enum phy_enum_tag
  */
 #define WPAN_TXOPT_GTS_ACK              (0x03)
 
-/* Various constants */
-
-/*
- * Channel numbers and channel masks for scanning.
- */
-#if (RF_BAND == BAND_2400) || defined(DOXYGEN)
-/** Minimum channel */
-#define MIN_CHANNEL                 (11)
-/** Maximum channel */
-#define MAX_CHANNEL                 (26)
-/** Valid channel masks for scanning */
-#define VALID_CHANNEL_MASK          (0x07FFF800UL)
-#else   /* 900 MHz */
-#define MIN_CHANNEL                 (0)
-#define MAX_CHANNEL                 (10)
-#define VALID_CHANNEL_MASK          (0x000007FFUL)
-#endif
 
 /**
  * Inverse channel masks for scanning.

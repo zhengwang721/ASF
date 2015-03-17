@@ -2,14 +2,46 @@
  * @file tal_pib.c
  *
  * @brief This file handles the TAL PIB attributes, set/get and initialization
+ *        
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
- * $Id: tal_pib.c 36439 2014-09-01 14:13:56Z uwalter $
+ * \asf_license_start
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  */
+
 /*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -107,6 +139,9 @@ void init_tal_pib(trx_id_t trx_id)
         tal_pib[RF09].phy.phy_mode.oqpsk.chip_rate = TAL_RF09_LEG_OQPSK_RATE;
         tal_pib[RF09].CurrentChannel = TAL_RF09_LEG_OQPSK_CURRENT_CHANNEL_DEF;
 #endif
+#if (defined SUPPORT_FSK) || (defined SUPPORT_OQPSK)
+        tal_pib[RF09].RPCEnabled = TAL_RF09_RPC_DEF;
+#endif
 #ifdef SUPPORT_ACK_RATE_MODE_ADAPTION
         tal_pib[RF09].AdaptDataRateForACK = TAL_RF09_ADAPT_DATA_RATE_FOR_ACK;
 #endif
@@ -184,6 +219,9 @@ void init_tal_pib(trx_id_t trx_id)
         tal_pib[RF24].phy.modulation = LEG_OQPSK;
         tal_pib[RF24].phy.phy_mode.oqpsk.chip_rate = TAL_RF24_LEG_OQPSK_RATE;
         tal_pib[RF24].CurrentChannel = TAL_RF24_LEG_OQPSK_CURRENT_CHANNEL_DEF;
+#endif
+#if (defined SUPPORT_FSK) || (defined SUPPORT_OQPSK)
+        tal_pib[RF24].RPCEnabled = TAL_RF24_RPC_DEF;
 #endif
 #ifdef SUPPORT_ACK_RATE_MODE_ADAPTION
         tal_pib[RF24].AdaptDataRateForACK = TAL_RF24_ADAPT_DATA_RATE_FOR_ACK;
@@ -493,7 +531,7 @@ static void set_tx_pwr(trx_id_t trx_id, int8_t tx_pwr)
     uint8_t val = (uint8_t)(tal_pib[trx_id].TransmitPower + 17);
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 #ifdef IQ_RADIO
-    trx_bit_write(RF215_RF, reg_offset + SR_RF09_PAC_TXPWR, val);
+    pal_trx_bit_write(RF215_RF, reg_offset + SR_RF09_PAC_TXPWR, val);
 #else
     trx_bit_write(reg_offset + SR_RF09_PAC_TXPWR, val);
 #endif
@@ -692,14 +730,14 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
         }
         reg_val = (uint16_t)(freq / 25000);
 #ifdef IQ_RADIO
-        trx_write(RF215_RF, reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
+        pal_trx_write(RF215_RF, reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
 #endif
         trx_write(reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
 
         / * Set channel spacing * /
         spacing /= 25000; // adjust to register scaling
 #ifdef IQ_RADIO
-        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CS, (uint8_t)spacing);
+        pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CS, (uint8_t)spacing);
 #endif
         trx_reg_write(reg_offset + RG_RF09_CS, (uint8_t)spacing);
 
@@ -708,7 +746,7 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
          * Touching the CNM register forces the calculation of the actual frequency.
          * /
 #ifdef IQ_RADIO
-        trx_write(RF215_RF, reg_offset + RG_RF09_CNL,
+        pal_trx_write(RF215_RF, reg_offset + RG_RF09_CNL,
                       (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
 #endif
         trx_write(reg_offset + RG_RF09_CNL,
@@ -964,6 +1002,11 @@ retval_t tal_pib_get(trx_id_t trx_id, uint8_t attribute, uint8_t *value)
             break;
 #endif
 
+#if (defined SUPPORT_FSK) || (defined SUPPORT_OQPSK)
+        case phyRPCEnabled:
+            *(bool *)value = tal_pib[trx_id].RPCEnabled;
+            break;
+#endif
         default:
             /* Invalid attribute id */
             status = MAC_UNSUPPORTED_ATTRIBUTE;
@@ -1030,7 +1073,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                 uint32_t ch;
                 if (get_supported_channels_tuple(trx_id, &ch) == MAC_SUCCESS)
                 {
-                   // tal_pib[trx_id].CurrentChannel = (uint16_t)(ch & 0xFFFF);
+                    //tal_pib[trx_id].CurrentChannel = (uint16_t)(ch & 0xFFFF);
                 }
                 else
                 {
@@ -1129,6 +1172,31 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                               (uint8_t)(tal_pib[trx_id].FSKPreambleLength & 0xFF));
             trx_bit_write(reg_offset + SR_BBC0_FSKC1_FSKPLH,
                               (uint8_t)(tal_pib[trx_id].FSKPreambleLength >> 8));
+            /* FSKC2 */
+            {
+                uint8_t pdtm;
+                if (tal_pib[trx_id].FSKPreambleLength < 8)
+                {
+                    pdtm = 1;
+                }
+                else
+                {
+                    pdtm = 0;
+                }
+                trx_bit_write( reg_offset +SR_BBC0_FSKC2_PDTM, pdtm);
+            }
+            {
+                fsk_data_rate_t sym_rate;
+                if (tal_pib[trx_id].phy.phy_mode.fsk.mod_type == F2FSK)
+                {
+                    sym_rate = tal_pib[trx_id].phy.phy_mode.fsk.data_rate;
+                }
+                else // F4FSK
+                {
+                    sym_rate = (fsk_data_rate_t)(tal_pib[trx_id].phy.phy_mode.fsk.data_rate / 2);
+                }
+                config_fsk_rpc(trx_id, sym_rate);
+            }
             break;
 
         case phyMRFSKSFD:
@@ -1310,8 +1378,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
             break;
 
         case macIeeeAddress:
-			memcpy(&tal_pib[trx_id].IeeeAddress, &(value->pib_value_64bit), 8);
-            //tal_pib[trx_id].IeeeAddress = value->pib_value_64bit;
+            tal_pib[trx_id].IeeeAddress = value->pib_value_64bit;
             trx_write(reg_offset + RG_BBC0_MACEA0,
                           (uint8_t *)&tal_pib[trx_id].IeeeAddress, 8);
             break;
@@ -1357,6 +1424,20 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
             {
                 calculate_pib_values(trx_id);
             }
+            break;
+#endif
+
+#if (defined SUPPORT_FSK) || (defined SUPPORT_OQPSK)
+        case phyRPCEnabled:
+            tal_pib[trx_id].RPCEnabled = value->pib_value_bool;
+#ifdef SUPPORT_OQPSK
+            trx_bit_write( reg_offset + SR_BBC0_OQPSKC2_RPC,
+                              tal_pib[trx_id].RPCEnabled);
+#endif
+#ifdef SUPPORT_FSK
+            trx_bit_write( reg_offset + SR_BBC0_FSKRPC_EN,
+                              tal_pib[trx_id].RPCEnabled);
+#endif
             break;
 #endif
 
@@ -1441,11 +1522,14 @@ static retval_t set_channel(trx_id_t trx_id, uint16_t ch)
         {
             /* Set TXPREP and wait until it is reached. */
             switch_to_txprep(trx_id);
+  #if (defined RF215v1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
+              stop_rpc(trx_id);
+  #endif
         }
 
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 #ifdef IQ_RADIO
-        trx_write(RF215_RF, reg_offset + RG_RF09_CNL,
+        pal_dev_write(RF215_RF, reg_offset + RG_RF09_CNL,
                       (uint8_t *)&ch, 2);
 #endif
         trx_write(reg_offset + RG_RF09_CNL,
@@ -1479,7 +1563,8 @@ static retval_t set_channel(trx_id_t trx_id, uint16_t ch)
 static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
 {
     retval_t ret = MAC_SUCCESS;
-    uint8_t hrleg;
+	uint8_t hrleg;
+
     switch (pg)
     {
 #ifdef SUPPORT_LEGACY_OQPSK
@@ -1490,7 +1575,7 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
             }
             else
             {
-				hrleg = 0X00;
+				hrleg = 0;
                 tal_pib[trx_id].phy.ch_spacing = LEG_2450_CH_SPAC;
                 tal_pib[trx_id].phy.freq_band = WORLD_2450;
                 tal_pib[trx_id].phy.freq_f0 = LEG_2450_F0 ;//- (11 * LEG_2450_CH_SPAC);
@@ -1507,7 +1592,7 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
             }
             else
             {
-				hrleg = 0X00;
+				hrleg = 0;
                 tal_pib[trx_id].phy.ch_spacing = LEG_915_CH_SPAC;
                 tal_pib[trx_id].phy.freq_band = US_915;
                 tal_pib[trx_id].phy.freq_f0 = LEG_915_F0/* - LEG_915_CH_SPAC*/; //vk
@@ -1522,8 +1607,9 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
 	        ret = MAC_INVALID_PARAMETER;
         }
         else
-        { 
-			hrleg = 0X00;
+        {
+			
+			hrleg = 0;
 	        tal_pib[trx_id].phy.ch_spacing = LEG_915_CH_SPAC;
 	        tal_pib[trx_id].phy.freq_band = CHINA_780;
 	        tal_pib[trx_id].phy.freq_f0 = LEG_780_F0/* - LEG_915_CH_SPAC*/; //vk
@@ -1535,23 +1621,25 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
 		case 16:
 		if (trx_id == RF09)
 		{
-			hrleg = 0X01;
+			hrleg = 1;
 			tal_pib[trx_id].phy.ch_spacing = LEG_915_CH_SPAC;
 			tal_pib[trx_id].phy.freq_band = US_915;
 			tal_pib[trx_id].phy.freq_f0 = LEG_915_F0/* - LEG_915_CH_SPAC*/; //vk
 			tal_pib[trx_id].phy.modulation = LEG_OQPSK;
 			tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_1000;
 			tal_pib_set(trx_id, phyHighRateEnabled, (pib_value_t*)&hrleg);
+			
 		}
 		else
 		{
-			hrleg = 0X01;
+			hrleg = 1;
 			tal_pib[trx_id].phy.ch_spacing = LEG_2450_CH_SPAC;
 			tal_pib[trx_id].phy.freq_band = WORLD_2450;
 			tal_pib[trx_id].phy.freq_f0 = LEG_2450_F0 ;//- (11 * LEG_2450_CH_SPAC);
 			tal_pib[trx_id].phy.modulation = LEG_OQPSK;
 			tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_2000;
 			tal_pib_set(trx_id, phyHighRateEnabled, (pib_value_t*)&hrleg);
+			
 		}
 		break;
 		case 18:
@@ -1561,13 +1649,14 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
 		}
 		else
 		{
-			hrleg = 0X01;
+			hrleg = 1;
 			tal_pib[trx_id].phy.ch_spacing = LEG_915_CH_SPAC;
 			tal_pib[trx_id].phy.freq_band = CHINA_780;
 			tal_pib[trx_id].phy.freq_f0 = LEG_780_F0/* - LEG_915_CH_SPAC*/; //vk
 			tal_pib[trx_id].phy.modulation = LEG_OQPSK;
 			tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_1000;
 			tal_pib_set(trx_id, phyHighRateEnabled, (pib_value_t*)&hrleg);
+			
 		}
 		break;
 #endif

@@ -54,6 +54,8 @@
 #include "ieee_const.h"
 #include "app_per_mode.h"
 #include "app_init.h"
+#include "perf_api.h"
+
 /* === TYPES =============================================================== */
 
 /* === GLOBALS============================================================== */

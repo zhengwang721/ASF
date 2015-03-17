@@ -2,14 +2,46 @@
  * @file tal_mode_switch.c
  *
  * @brief This file handles the mode switch feature
+ *        
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
- * $Id: tal_mode_switch.c 36442 2014-09-01 14:38:06Z uwalter $
+ * \asf_license_start
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  */
+
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -96,9 +128,9 @@ typedef struct ms_phr_tag
 
 /* === GLOBALS ============================================================= */
 
-static temp_phy_t previous_phy[NO_TRX];
+static temp_phy_t previous_phy[NUM_TRX];
 static phy_t csm_phy;
-bool csm_active[NO_TRX] = {false, false};
+bool csm_active[NUM_TRX] = {false, false};
 #ifdef SUPPORT_OQPSK
 FLASH_DECLARE(OQPSK_CHIP_RATE_REGION_TABLE_DATA_TYPE
               oqpsk_chip_rate_region_table[OQPSK_CHIP_RATE_REGION_TABLE_ROW_SIZE][OQPSK_CHIP_RATE_REGION_TABLE_COL_SIZE]) =

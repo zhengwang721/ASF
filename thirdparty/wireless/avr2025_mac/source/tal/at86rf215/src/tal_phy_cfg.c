@@ -2,17 +2,50 @@
  * @file tal_phy_cfg.c
  *
  * @brief This file handles the PHY configuration
+ *        
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
- * $Id: tal_phy_cfg.c 36384 2014-08-27 07:19:39Z uwalter $
+ * \asf_license_start
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  */
+
 /*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+
 
 /* === INCLUDES ============================================================ */
 
@@ -76,9 +109,12 @@ retval_t conf_trx_modulation(trx_id_t trx_id)
     {
         trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #ifdef IQ_RADIO
-        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
+        pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
         trx_state[trx_id] = RF_TRXOFF;
+  #if (defined RF215v1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
+          stop_rpc(trx_id);
+  #endif
     }
 
     switch (tal_pib[trx_id].phy.modulation)
@@ -181,8 +217,10 @@ static retval_t conf_oqpsk(trx_id_t trx_id)
         trx_bit_write(reg_offset + SR_BBC0_PC_PT, BB_MROQPSK);
         trx_bit_write(reg_offset + SR_BBC0_OQPSKC0_FCHIP,
                           tal_pib[trx_id].phy.phy_mode.oqpsk.chip_rate);
-        trx_bit_write(reg_offset + SR_BBC0_OQPSKPHRTX_LEG, 0);
-        trx_bit_write(reg_offset + SR_BBC0_OQPSKC2_RXM, 0); // MR mode only
+        trx_bit_write( reg_offset +SR_BBC0_OQPSKPHRTX_LEG, 0);
+        trx_bit_write( reg_offset +SR_BBC0_OQPSKC2_RXM, 0); // MR mode only
+        trx_bit_write( reg_offset +SR_BBC0_OQPSKC2_RPC,
+                          tal_pib[trx_id].RPCEnabled); // RPC
     }
 
     return status;
@@ -232,20 +270,19 @@ static retval_t conf_fsk(trx_id_t trx_id)
 #endif
 {
     retval_t status;
-	
-	/* Configure RF */
-	fsk_data_rate_t sym_rate;
-	if (tal_pib[trx_id].phy.phy_mode.fsk.mod_type == F2FSK)
-	{
-		sym_rate = tal_pib[trx_id].phy.phy_mode.fsk.data_rate;
-	}
-	else // F4FSK
-	{
-		sym_rate = (fsk_data_rate_t)(tal_pib[trx_id].phy.phy_mode.fsk.data_rate / 2);
-	}
 
     /* Configure RF */
-    status = fsk_rfcfg(sym_rate, tal_pib[trx_id].phy.phy_mode.fsk.mod_idx, trx_id);
+    fsk_data_rate_t sym_rate;
+    if (tal_pib[trx_id].phy.phy_mode.fsk.mod_type == F2FSK)
+    {
+        sym_rate = tal_pib[trx_id].phy.phy_mode.fsk.data_rate;
+    }
+    else // F4FSK
+    {
+        sym_rate = (fsk_data_rate_t)(tal_pib[trx_id].phy.phy_mode.fsk.data_rate / 2);
+    }
+    status = fsk_rfcfg(tal_pib[trx_id].phy.phy_mode.fsk.mod_type, sym_rate,
+                       tal_pib[trx_id].phy.phy_mode.fsk.mod_idx, trx_id);
     if (status == MAC_SUCCESS)
     {
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
@@ -259,11 +296,20 @@ static retval_t conf_fsk(trx_id_t trx_id)
         trx_bit_write(reg_offset +SR_BBC0_FSKC0_BT,
 		                   tal_pib[trx_id].phy.phy_mode.fsk.bt);
         // FSKC1
-        trx_bit_write(reg_offset + SR_BBC0_FSKC1_SRATE, sym_rate);
-                          
-		//FSKPHRTX
-	    trx_bit_write(reg_offset+SR_BBC0_FSKPHRTX_SFD,
-		                  tal_pib[trx_id].phy.phy_mode.fsk.fec_enabled);
+        trx_bit_write( reg_offset +SR_BBC0_FSKC1_SRATE, sym_rate);
+        /* FSKC2 */
+        uint8_t pdtm;
+        if (tal_pib[trx_id].FSKPreambleLength < 8)
+        {
+            pdtm = 1;
+        }
+        else
+        {
+            pdtm = 0;
+        }
+        trx_bit_write( reg_offset + SR_BBC0_FSKC2_PDTM, pdtm);
+        /* Configure RPC */
+        config_fsk_rpc(trx_id, sym_rate);
         /* Configure SFD */
         set_sfd(trx_id);
     }
@@ -271,6 +317,81 @@ static retval_t conf_fsk(trx_id_t trx_id)
     return status;
 }
 #endif /* #ifdef SUPPORT_FSK */
+
+
+#ifdef SUPPORT_FSK
+/**
+ * @brief Configures reduced power consumption for FSK
+ *
+ * @param trx_id Transceiver identifier
+ */
+void config_fsk_rpc(trx_id_t trx_id, fsk_data_rate_t sym_rate)
+{
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+
+    if (!tal_pib[trx_id].RPCEnabled)
+    {
+        /* FSKRPC */
+        trx_bit_write( reg_offset+ SR_BBC0_FSKRPC_EN, 0);
+        return;
+    }
+
+    /* Minimum preamble length depends on symbol rate */
+    uint8_t min_pream_len;
+    uint8_t div_reg;
+    switch (sym_rate)
+    {
+        default:
+        case FSK_DATA_RATE_50:
+            min_pream_len = 2;
+            div_reg = 6;
+            break;
+
+        case FSK_DATA_RATE_100:
+            min_pream_len = 3;
+            div_reg = 5;
+            break;
+
+        case FSK_DATA_RATE_150: /* fall through */
+        case FSK_DATA_RATE_200: /* fall through */
+        case FSK_DATA_RATE_300:
+            min_pream_len = 8;
+            div_reg = 4;
+            break;
+
+        case FSK_DATA_RATE_400:
+            min_pream_len = 10;
+            div_reg = 3;
+            break;
+    }
+    uint8_t div = 1 << (div_reg - 1);
+
+    if (tal_pib[trx_id].FSKPreambleLength > (2 * min_pream_len))
+    {
+        /* Configure ton */
+        uint16_t ton = tal_pib[trx_id].OctetDuration_us * min_pream_len;
+        uint8_t reg = ton / div;
+        if ((reg % div) > 0)
+        {
+            reg++;
+        }
+        trx_bit_write( reg_offset + SR_BBC0_FSKRPC_BASET, div_reg);
+        trx_reg_write( reg_offset+ RG_BBC0_FSKRPCONT, reg);
+
+        /* Configure toff */
+        uint16_t toff = tal_pib[trx_id].FSKPreambleLength - (2 * min_pream_len);
+        toff *= tal_pib[trx_id].OctetDuration_us;
+        reg = toff / div;
+        trx_reg_write( reg_offset + RG_BBC0_FSKRPCOFFT, reg);
+    }
+    else
+    {
+        /* Disable RPC */
+        /* FSKRPC */
+        trx_bit_write( reg_offset + SR_BBC0_FSKRPC_EN, 0);
+    }
+}
+#endif
 
 
 #ifdef SUPPORT_FSK

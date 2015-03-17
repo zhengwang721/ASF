@@ -97,7 +97,7 @@ typedef enum
 /* Sub state PEER_REQ_SEND functions */
 static void peer_req_send_task(trx_id_t trx);
 static void peer_req_send_rx_cb(trx_id_t trx, frame_info_t *frame);
-static void peer_req_send_exit(void);
+static void peer_req_send_exit(trx_id_t trx);
 
 /* Sub state PEER_RSP_RCVD functions */
 static void peer_rsp_rcvd_init(trx_id_t trx,void *arg);
@@ -111,7 +111,7 @@ static retval_t send_peer_conf(trx_id_t trx);
 
 /* === GLOBALS ============================================================= */
 /* Peer search process seq number */
-static uint8_t seq_num[NO_TRX];
+static uint8_t seq_num[NUM_TRX];
 
 static peer_state_function_t const peer_search_initiator_state_table[NUM_PEER_SEARCH_INITIATOR_STATES] =
 {
@@ -398,7 +398,7 @@ static void app_peer_req_tmr_handler_cb(void *parameter)
 /**
  * \brief function to exit peer req send state
  */
-static void peer_req_send_exit()
+static void peer_req_send_exit(trx_id_t trx)
 {
     /* Off timer as node leaves this sub state */
     sw_timer_stop(APP_TIMER_TO_TX);

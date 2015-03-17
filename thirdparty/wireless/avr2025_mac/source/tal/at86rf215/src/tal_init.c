@@ -1,18 +1,51 @@
 /**
  * @file tal_init.c
  *
- * @brief This file implements functions for initializing TAL and reset.
+ * @brief This file implements functions for initializing TAL and reset
+ *        
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
- * $Id: tal_init.c 36436 2014-09-01 13:49:57Z uwalter $
+ * \asf_license_start
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  */
+
 /*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+
 
 /* === INCLUDES ============================================================ */
 
@@ -32,11 +65,17 @@
 #include "tal.h"
 #include "tal_internal.h"
 #include "tal_config.h"
-#ifdef ENABLE_TFA
+#ifdef SUPPORT_TFA
 #include "tfa.h"
 #endif
 #include "mac_build_config.h"
+#ifdef IQ_RADIO
+#include "pal_internal.h"
+#endif
 
+#if (BOARD_TYPE == EVAL215_FPGA)
+#include <stdio.h>
+#endif
 
 /* === MACROS ============================================================== */
 
@@ -97,9 +136,10 @@ retval_t tal_init(void)
     }
 	
     /* Check if RF215 is connected */
-    if ((trx_reg_read(RG_RF_PN) != 0x34) ||
-        (trx_reg_read(RG_RF_VN) != 0x01))
+    if ((trx_reg_read( RG_RF_PN) != 0x34) ||
+        (trx_reg_read( RG_RF_VN) != 0x01))
     {
+        debug_text(PSTR("Wrong PN or VN"));
         return FAILURE;
     }
 
@@ -114,13 +154,14 @@ retval_t tal_init(void)
     bmm_buffer_init();
 
     /* Configure both trx and set default PIB values */
-    for (uint8_t trx_id = 0; trx_id < NO_TRX; trx_id++)
+    for (uint8_t trx_id = 0; trx_id < NUM_TRX; trx_id++)
     {
         /* Configure transceiver */
         trx_config((trx_id_t)trx_id);
-
+#ifdef RF215v1
         /* Calibrate LO */
         calibrate_LO((trx_id_t)trx_id);
+#endif
 
         /* Set the default PIB values */
         init_tal_pib((trx_id_t)trx_id); /* see 'tal_pib.c' */
@@ -234,28 +275,28 @@ void trx_config(trx_id_t trx_id)
 #ifdef IQ_RADIO
     /* LVDS interface */
     // RF part: RF enable, BB disabled, IQIF enabled
-    trx_bit_write(RF215_RF, SR_RF_IQIFC1_CHPM, 0x01);
+    pal_dev_bit_write(RF215_RF, SR_RF_IQIFC1_CHPM, 0x01);
     // BB part: RF disable, BB enabled, IQIF enabled
-    trx_bit_write(RF215_BB, SR_RF_IQIFC1_CHPM, 0x03);
+    pal_dev_bit_write(RF215_BB, SR_RF_IQIFC1_CHPM, 0x03);
     // Clock Phase I/Q IF Driver at BB
-    trx_bit_write(RF215_BB, SR_RF_IQIFC2_CPHADRV, 0);
+    pal_dev_bit_write(RF215_BB, SR_RF_IQIFC2_CPHADRV, 0);
     // Clock Phase I/Q IF Receiver at BB
-    trx_bit_write(RF215_BB, SR_RF_IQIFC2_CPHAREC, 1);
+    pal_dev_bit_write(RF215_BB, SR_RF_IQIFC2_CPHAREC, 1);
     // Enable embedded control at RF
-    trx_bit_write(RF215_RF, SR_RF_IQIFC0_EEC, 1);
+    pal_dev_bit_write(RF215_RF, SR_RF_IQIFC0_EEC, 1);
 #if (BOARD_TYPE == EVAL215_FPGA)
-    trx_bit_write(RF215_RF, SR_RF_IQIFC0_CMV1V2, 1);
-    uint8_t temp = trx_reg_read(RF215_BB, RG_RF_IQIFC1);
+    pal_dev_bit_write(RF215_RF, SR_RF_IQIFC0_CMV1V2, 1);
+    uint8_t temp = pal_dev_bit_write(RF215_BB, RG_RF_IQIFC1);
     temp = (temp & 0xF3) | (1 << 2); // SKEWREC = 0ns
-    trx_reg_write(RF215_BB, RG_RF_IQIFC1, temp);
+    pal_dev_reg_write(RF215_BB, RG_RF_IQIFC1, temp);
 #endif
     /* Configure BB */
     /* Setup IRQ mask: in chip mode, the baseband controls the RF's AGC */
-    trx_reg_write(RF215_BB, reg_offset + RG_BBC0_IRQM, BB_IRQ_ALL_IRQ);
-    trx_reg_write(RF215_BB, reg_offset + RG_RF09_IRQM, RF_IRQ_ALL_IRQ);
+    pal_dev_reg_write(RF215_BB, reg_offset + RG_BBC0_IRQM, BB_IRQ_ALL_IRQ);
+    pal_dev_reg_write(RF215_BB, reg_offset + RG_RF09_IRQM, RF_IRQ_ALL_IRQ);
     /* Configure RF */
-    trx_reg_write(RF215_RF, reg_offset + RG_BBC0_IRQM, BB_IRQ_ALL_IRQ);
-    trx_reg_write(RF215_RF, reg_offset + RG_RF09_IRQM, RF_IRQ_ALL_IRQ);
+    pal_dev_reg_write(RF215_RF, reg_offset + RG_BBC0_IRQM, BB_IRQ_ALL_IRQ);
+    pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_IRQM, RF_IRQ_ALL_IRQ);
 #else
     /* Configure BB */
     /* Setup IRQ mask */
@@ -266,9 +307,9 @@ void trx_config(trx_id_t trx_id)
 
 #if (defined IQ_RADIO) && (BOARD_TYPE == EVAL215_FPGA)
     /* Set clip detector OFF */
-    uint8_t agcc = trx_reg_read(RF215_RF, reg_offset + RG_RF09_AGCC);
+    uint8_t agcc = pal_dev_reg_read(RF215_RF, reg_offset + RG_RF09_AGCC);
     agcc |= 0x80;
-    trx_reg_write(RF215_RF, reg_offset + RG_RF09_AGCC, agcc);
+    pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_AGCC, agcc);
 #endif
 
     /* Enable frame filter */
@@ -290,7 +331,7 @@ void trx_config(trx_id_t trx_id)
 #ifndef USE_TXPREP_DURING_BACKOFF
     /* Keep analog voltage regulator on during TRXOFF */
 #ifdef IQ_RADIO
-    trx_bit_write(RF215_RF, reg_offset + SR_RF09_AUXS_AVEN, 1);
+    pal_dev_bit_write(RF215_RF, reg_offset + SR_RF09_AUXS_AVEN, 1);
 #else
     trx_bit_write(reg_offset + SR_RF09_AUXS_AVEN, 1);
 #endif /* #ifdef IQ_RADIO */
@@ -311,7 +352,11 @@ void trx_config(trx_id_t trx_id)
     /* Workaround for errata reference #4623 */
     if (trx_id == RF09)
     {
+#ifdef IQ_MODE
+        pal_dev_reg_write(RF215_RF, 0x129, 0x04);
+#else
         trx_reg_write(0x129, 0x04);
+#endif
     }
 }
 
@@ -325,10 +370,10 @@ void trx_config(trx_id_t trx_id)
 static void trx_init(void)
 {
     debug_text(PSTR("trx_init()"));
-
+   
     /*
      * Configure generic trx functionality
-     * Configure Trx registers that are reset during sleep/reset
+     * Configure Trx registers that are reset during DEEP_SLEEP and IC reset
      * I.e.: RF_CFG, RF_BMDVC, RF_XOC, RF_IQIFC0, RF_IQIFC1, RF_IQIFC2
      */
 #ifdef TRX_IRQ_POLARITY
@@ -338,11 +383,15 @@ static void trx_init(void)
 #endif
 #if (TRX_CLOCK_OUTPUT_SELECTION != 1)
 #ifdef IQ_RADIO
-    trx_bit_write(RF215_RF, SR_RF_CLKO_OS, TRX_CLOCK_OUTPUT_SELECTION);
+    pal_dev_bit_write(RF215_RF, SR_RF_CLKO_OS, TRX_CLOCK_OUTPUT_SELECTION);
 #else
     trx_bit_write(SR_RF_CLKO_OS, TRX_CLOCK_OUTPUT_SELECTION);
 #endif
 #endif
+// #if (BOARD_TYPE == EVAL215_FPGA)
+//     pal_dev_bit_write(RF215_RF, SR_RF_BMDVC_BMVTH, 0);
+//     pal_dev_bit_write(RF215_BB, SR_RF_CLKO_OS, 0);
+// #endif
 }
 
 
@@ -360,7 +409,7 @@ static void trx_init(void)
  */
 retval_t tal_reset(trx_id_t trx_id, bool set_default_pib)
 {
-    rf_cmd_state_t previous_trx_state[NO_TRX];
+    rf_cmd_state_t previous_trx_state[NUM_TRX];
 
     debug_text_val(PSTR("tal_reset(), trx_id ="), trx_id);
 
@@ -383,7 +432,7 @@ retval_t tal_reset(trx_id_t trx_id, bool set_default_pib)
 
     if (trx_id == RFBOTH)
     {
-        for (uint8_t i = 0; i < NO_TRX; i++)
+        for (uint8_t i = 0; i < NUM_TRX; i++)
         {
             /* Clean TAL and removed any pending tasks */
             cleanup_tal((trx_id_t)i);
@@ -430,8 +479,8 @@ retval_t tal_reset(trx_id_t trx_id, bool set_default_pib)
             /* Switch other trx back to sleep again */
             uint16_t reg_offset = RF_BASE_ADDR_OFFSET * other_trx_id;
 #ifdef IQ_RADIO
-            trx_reg_write(RF215_BB, reg_offset + RG_RF09_CMD, RF_SLEEP);
-            trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_SLEEP);
+            pal_dev_reg_write(RF215_BB, reg_offset + RG_RF09_CMD, RF_SLEEP);
+            pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_SLEEP);
 #else
             trx_reg_write(reg_offset + RG_RF09_CMD, RF_SLEEP);
 #endif
@@ -562,11 +611,11 @@ retval_t trx_reset(trx_id_t trx_id)
             }
         }
 #ifdef IQ_RADIO
-        trx_state[RF09] = (rf_cmd_state_t)trx_reg_read(RF215_RF, RG_RF09_STATE);
-        trx_state[RF24] = (rf_cmd_state_t)trx_reg_read(RF215_RF, RG_RF24_STATE);
-        rf_cmd_state_t bb_trx_state[2];
-        bb_trx_state[RF09] = (rf_cmd_state_t)trx_reg_read(RF215_BB, RG_RF09_STATE);
-        bb_trx_state[RF24] = (rf_cmd_state_t)trx_reg_read(RF215_BB, RG_RF24_STATE);
+        trx_state[RF09] = (rf_cmd_state_t)pal_dev_reg_read(RF215_RF, RG_RF09_STATE);
+        trx_state[RF24] = (rf_cmd_state_t)pal_dev_reg_read(RF215_RF, RG_RF24_STATE);
+        rf_cmd_state_t bb_trx_state[NUM_TRX];
+        bb_trx_state[RF09] = (rf_cmd_state_t)pal_dev_reg_read(RF215_BB, RG_RF09_STATE);
+        bb_trx_state[RF24] = (rf_cmd_state_t)pal_dev_reg_read(RF215_BB, RG_RF24_STATE);
         if ((bb_trx_state[RF09] != RF_TRXOFF) || (bb_trx_state[RF24] != RF_TRXOFF))
         {
             return FAILURE;
@@ -598,8 +647,8 @@ retval_t trx_reset(trx_id_t trx_id)
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
         debug_text(PSTR("Trigger trx reset"));
 #ifdef IQ_RADIO
-        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_RESET);
-        trx_reg_write(RF215_BB, reg_offset + RG_RF09_CMD, RF_RESET);
+        pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_RESET);
+        pal_trx_reg_write(RF215_BB, reg_offset + RG_RF09_CMD, RF_RESET);
 #else
         trx_reg_write(reg_offset + RG_RF09_CMD, RF_RESET);
 #endif

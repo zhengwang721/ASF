@@ -2,15 +2,47 @@
  * @file tal_internal.h
  *
  * @brief This header file contains types and variable definition that are used
- * within the TAL only.
+ *        within the TAL only.
  *
- * $Id: tal_internal.h 36440 2014-09-01 14:20:37Z uwalter $
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  */
+
 /*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -27,7 +59,7 @@
 #include "mac_build_config.h"
 #include "tal.h"
 #include "tal_rf215.h"
-#ifdef IQ_RADIO
+#if (defined IQ_RADIO) || (defined INCLUDE_INTERN_REGS)
 #    include "at86rf215_internal.h"
 #endif
 
@@ -44,7 +76,7 @@ typedef enum tal_state_tag
     TAL_WAKING_UP,
     TAL_TX,
     TAL_ED_SCAN
-#if (defined ENABLE_TFA) || (defined TFA_CCA) || (defined TFA_CW)
+#if (defined SUPPORT_TFA) || (defined TFA_CCA) || (defined TFA_CW)
     ,
     TAL_TFA_CW_RX,
     TAL_TFA_CW,
@@ -95,39 +127,55 @@ typedef enum cca_use_tag
 /* === EXTERNALS =========================================================== */
 
 /* Global TAL variables */
-extern tal_state_t tal_state[NO_TRX];
-extern tx_state_t tx_state[NO_TRX];
-extern const uint8_t timer_cb_parameter[NO_TRX];
-extern int8_t tal_current_ed_val[NO_TRX];
-extern frame_info_t *mac_frame_ptr[NO_TRX];
-extern queue_t tal_incoming_frame_queue[NO_TRX];
-extern uint8_t *tal_frame_to_tx[NO_TRX];
-extern buffer_t *tal_rx_buffer[NO_TRX];
-extern bool tal_buf_shortage[NO_TRX];
-extern rf_cmd_state_t trx_state[NO_TRX];
-extern rf_cmd_state_t trx_default_state[NO_TRX];
-extern uint32_t rxe_txe_tstamp[NO_TRX];
-extern uint8_t txc[NO_TRX][2];
-extern bool frame_buf_filled[NO_TRX];
+extern tal_state_t tal_state[NUM_TRX];
+extern tx_state_t tx_state[NUM_TRX];
+extern const uint8_t timer_cb_parameter[NUM_TRX];
+extern int8_t tal_current_ed_val[NUM_TRX];
+extern frame_info_t *mac_frame_ptr[NUM_TRX];
+extern queue_t tal_incoming_frame_queue[NUM_TRX];
+extern uint8_t *tal_frame_to_tx[NUM_TRX];
+extern buffer_t *tal_rx_buffer[NUM_TRX];
+extern bool tal_buf_shortage[NUM_TRX];
+extern rf_cmd_state_t trx_state[NUM_TRX];
+extern rf_cmd_state_t trx_default_state[NUM_TRX];
+extern uint32_t rxe_txe_tstamp[NUM_TRX];
+extern uint8_t txc[NUM_TRX][2];
+extern bool frame_buf_filled[NUM_TRX];
 #if (defined ENABLE_TSTAMP) || (defined MEASURE_ON_AIR_DURATION)
-extern uint32_t fs_tstamp[NO_TRX];
+extern uint32_t fs_tstamp[NUM_TRX];
 #endif
-extern frame_info_t *rx_frm_info[NO_TRX];
+extern frame_info_t *rx_frm_info[NUM_TRX];
 #ifdef BASIC_MODE
-extern uint8_t *rx_frm_ptr[NO_TRX];
-extern uint16_t last_txframe_length[NO_TRX];
+extern uint8_t *rx_frm_ptr[NUM_TRX];
+extern uint16_t last_txframe_length[NUM_TRX];
 #endif
 #ifdef SUPPORT_MODE_SWITCH
-extern bool csm_active[NO_TRX];
+extern bool csm_active[NUM_TRX];
 #endif
-extern volatile bb_irq_t tal_bb_irqs[NO_TRX];
-extern volatile rf_irq_t tal_rf_irqs[NO_TRX];
+extern volatile bb_irq_t tal_bb_irqs[NUM_TRX];
+extern volatile rf_irq_t tal_rf_irqs[NUM_TRX];
 
 /* === MACROS ============================================================== */
 
 #ifdef ENABLE_QUEUE_CAPACITY
 #define TAL_INCOMING_FRAME_QUEUE_CAPACITY   (255)
 #endif  /* ENABLE_QUEUE_CAPACITY */
+
+/** Defines to handle register offset */
+#define CALC_REG_OFFSET()                   uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id
+#define GET_REG_ADDR(reg)                   reg_offset + reg
+
+/*
+ * Time gap between each poll access in microseconds.
+ * If the value is equal to zero, no time gap is applied.
+ */
+#define POLL_TIME_GAP                       10
+
+/* Maximum PLL lock duration in us */
+#define MAX_PLL_LOCK_DURATION               200
+
+/* Maximum settling duration after PLL has been freezed */
+#define PLL_FRZ_SETTLING_DURATION           20
 
 /* Setup IRQ mask: Using auto modes, AGCR IRQ is used to handle #4830 */
 #ifdef ENABLE_TSTAMP
@@ -170,6 +218,9 @@ void switch_to_rx(trx_id_t trx_id);
 void switch_to_txprep(trx_id_t trx_id);
 void wait_for_txprep(trx_id_t trx_id);
 void stop_tal_timer(trx_id_t trx_id);
+#if (defined RF215v1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
+void stop_rpc(trx_id_t trx_id);
+#endif
 
 /*
  * Prototypes from tal_ftn.c
@@ -178,7 +229,9 @@ void stop_tal_timer(trx_id_t trx_id);
 void start_ftn_timer(trx_id_t trx_id);
 void stop_ftn_timer(trx_id_t trx_id);
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
+#ifdef RF215v1
 void calibrate_LO(trx_id_t trx_id);
+#endif
 
 /*
  * Prototypes from tal_init.c
@@ -230,6 +283,7 @@ retval_t conf_trx_modulation(trx_id_t trx_id);
 void set_sfd(trx_id_t trx_id);
 void set_fsk_pibs(trx_id_t trx_id);
 retval_t conf_fsk_data_rate(trx_id_t trx_id, fsk_data_rate_t rate);
+void config_fsk_rpc(trx_id_t trx_id, fsk_data_rate_t sym_rate);
 #ifdef SUPPORT_MODE_SWITCH
 retval_t conf_fsk(trx_id_t trx_id);
 #endif
@@ -239,7 +293,7 @@ retval_t conf_fsk(trx_id_t trx_id);
  * Prototypes from tal_fe.c
  */
 #ifdef SUPPORT_FSK
-retval_t fsk_rfcfg(fsk_data_rate_t srate, mod_idx_t mod_idx, trx_id_t trx_id);
+retval_t fsk_rfcfg(fsk_mod_type_t mod_type, fsk_data_rate_t srate, mod_idx_t mod_idx, trx_id_t trx_id);
 #endif
 #ifdef SUPPORT_OFDM
 retval_t ofdm_rfcfg(ofdm_option_t ofdm_opt, trx_id_t trx_id);
@@ -353,7 +407,7 @@ void trx_irq_timestamp_handler_cb(void);
 /*
  * Prototypes from tfa_batmon.c
  */
-#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined TFA_BAT_MON_IRQ)
+#if (defined SUPPORT_TFA) || (defined TFA_BAT_MON) || (defined TFA_BAT_MON_IRQ)
 void handle_batmon_irq(void);
 #endif
 

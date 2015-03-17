@@ -67,26 +67,26 @@
  *
  * \param arg arguments to init RANGE_TX_ON state
  */
-void range_test_tx_on_init(void *arg);
+void range_test_tx_on_init(trx_id_t trx ,void *arg);
 
 /**
  * \brief Application task handling Range Measurement when the node is in
  * RANGE_TEST_TX_ON state, where both TX and RX is enabled
  */
-void range_test_tx_on_task(void);
+void range_test_tx_on_task(trx_id_t trx);
 
 /**
  * \brief Callback that is called if data has been received by trx when the
  *  node is in Range Measurement mode i.e RANGE_TEST_TX_ON or RANGE_TEST_TX_OFF
  * \param frame Pointer to received frame
  */
-void range_test_rx_cb(frame_info_t *frame);
+void range_test_rx_cb(trx_id_t trx,frame_info_t *frame);
 
 /**
  * \brief To exit the Application task from RANGE_TEST_TX_ON state,
  *  where both TX and RX is enabled
  */
-void range_test_tx_on_exit(void);
+void range_test_tx_on_exit(trx_id_t trx);
 
 /* RANGE_TEST_TX_OFF state functions */
 
@@ -94,7 +94,7 @@ void range_test_tx_on_exit(void);
  * \brief Application task handling Range Measurement when the node is in
  *  RANGE_TEST_TX_OFF state, where no TX is enabled and only RX is ON.
  */
-void range_test_tx_off_task(void);
+void range_test_tx_off_task(trx_id_t trx);
 
 #ifdef __cplusplus
 extern "C" {

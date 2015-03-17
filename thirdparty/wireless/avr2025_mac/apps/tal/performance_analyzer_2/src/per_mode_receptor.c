@@ -108,17 +108,17 @@ static uint8_t read_int_value_in_hex(uint16_t *value);
 static uint8_t read_value_in_hex(uint8_t *value);
 static void read_write_reg(void);
 /* === GLOBALS ============================================================= */
-static bool range_test_in_progress[NO_TRX] = {false,false};
-static uint32_t number_rx_frames[NO_TRX];
-static uint32_t aver_lqi[NO_TRX];
-static uint32_t aver_rssi[NO_TRX];
-static uint8_t seq_num_receptor[NO_TRX];
+static bool range_test_in_progress[NUM_TRX] = {false,false};
+static uint32_t number_rx_frames[NUM_TRX];
+static uint32_t aver_lqi[NUM_TRX];
+static uint32_t aver_rssi[NUM_TRX];
+static uint8_t seq_num_receptor[NUM_TRX];
 #ifdef CRC_SETTING_ON_REMOTE_NODE
-uint32_t frames_with_wrong_crc[NO_TRX];
-bool manual_crc[NO_TRX]= {false,false};
+uint32_t frames_with_wrong_crc[NUM_TRX];
+bool manual_crc[NUM_TRX]= {false,false};
 int char_received;
 #endif
-static uint8_t marker_seq_num[NO_TRX] = {0,0};
+static uint8_t marker_seq_num[NUM_TRX] = {0,0};
 
 /* ! \} */
 
@@ -267,7 +267,8 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 {
     app_payload_t *msg;
     static uint8_t rx_count;
-    uint8_t expected_frame_size;	
+    uint8_t expected_frame_size;
+		
 	
 	uint16_t lqi_pos = mac_frame_info->len_no_crc + tal_pib[trx].FCSLen;
 	uint16_t ed_pos = lqi_pos+1;
@@ -325,7 +326,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
         case SET_SUN_PAGE:
         {
 			uint8_t hrleg;
-			phy_t *phy_temp = &msg->payload;
+			phy_t *phy_temp = (phy_t *)&msg->payload;
 	        /* Calculate the expected frame size in case of SET_PARAM cmd */
 	        expected_frame_size = (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
 	        sizeof(general_pkt_t)) +
@@ -348,7 +349,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 					if(phy_temp->modulation == OFDM)
 					{
 						printf("\r\nOFDM Option = %d", (phy_temp->phy_mode).ofdm.option);
-						if(tal_pib_set(trx, phyOFDMMCS, (pib_value_t *)&(phy_temp->phy_mode).ofdm.mcs_val) == MAC_SUCCESS)
+						if(tal_pib_set(trx, phyOFDMMCS, (pib_value_t *)&((phy_temp->phy_mode).ofdm.mcs_val)) == MAC_SUCCESS)
 						{
 							printf("\r\nOFDM MCS = %d", (phy_temp->phy_mode).ofdm.mcs_val);
 						}
@@ -360,7 +361,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 				
 					if(phy_temp->modulation == OQPSK)
 					{
-						if(tal_pib_set(trx, phyOQPSKRateMode, (pib_value_t *)&(phy_temp->phy_mode).oqpsk.rate_mode) == MAC_SUCCESS)
+						if(tal_pib_set(trx, phyOQPSKRateMode, (pib_value_t *)&((phy_temp->phy_mode).oqpsk.rate_mode)) == MAC_SUCCESS)
 						{
 							printf("\r\nOQPSK Rate mode = %d", (phy_temp->phy_mode).oqpsk.rate_mode);
 						}
@@ -375,32 +376,36 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 						printf("\r\nFsk mode idx = %d", (phy_temp->phy_mode).fsk.mod_idx);
 						printf("\r\nFsk data rate = %d", (phy_temp->phy_mode).fsk.data_rate);
 						printf("\r\nFsk op mode = %d", (phy_temp->phy_mode).fsk.op_mode);
+						if(tal_pib_set(trx, phyFSKFECEnabled, (pib_value_t *)&((phy_temp->phy_mode).fsk.fec_enabled)) == MAC_SUCCESS)
+						{
+							printf("\r\nFSK FEC = %d", (phy_temp->phy_mode).fsk.fec_enabled);
+						}
+						else
+						{
+							printf("\r\nSetting FSK FEC failed");
+						}
 					}
 					if(phy_temp->modulation == LEG_OQPSK)
 					{
-						if((phy_temp ->phy_mode).leg_oqpsk.data_rate > OQPSK_DATA_RATE_250)
+						if(((phy_temp->phy_mode).leg_oqpsk.data_rate) > OQPSK_DATA_RATE_250)
 						{
-							hrleg = 0x01;
-							if(tal_pib_set(trx, phyHighRateEnabled, (pib_value_t *)&hrleg) != MAC_SUCCESS)
+							hrleg = 1;
+							if(tal_pib_set(trx, phyHighRateEnabled, (pib_value_t *)&hrleg) == MAC_SUCCESS)
 							{
-								printf("\r\nSetting LEG_OQPSK High Data Rate mode failed");
+								printf("\r\n Legacy with High Data rate mode selected");
 							}
+						}
+						else
+						{
+						
+						     hrleg = 0;
+						     if(tal_pib_set(trx, phyHighRateEnabled, (pib_value_t *)&hrleg) == MAC_SUCCESS)
+							 {
+									printf("\r\n Legacy mode selected");
+							 }
 							
 						}
-						 else
-						{
-							 hrleg = 0x00;
-							 if(tal_pib_set(trx, phyHighRateEnabled, (pib_value_t *)&hrleg) != MAC_SUCCESS)
-							 {
-								 printf("\r\nSetting LEG_OQPSK mode failed");
-							 }
-						 }
-						
-						
-							printf("\r\nOQPSK chip_rate = %d", (phy_temp->phy_mode).leg_oqpsk.chip_rate);
-							printf("\r\nOQPSK data_rate = %d", (phy_temp->phy_mode).leg_oqpsk.data_rate);
-						
-				       }
+					}
 					
 				}
 	        }
@@ -409,7 +414,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 
         case PER_TEST_PKT:
             {
-                static uint8_t cur_seq_no[NO_TRX], prev_seq_no[NO_TRX];
+                static uint8_t cur_seq_no[NUM_TRX], prev_seq_no[NUM_TRX];
                 /* if PER test frames received then increment number_rx_frames */
                 if (number_rx_frames[trx] == 0)
                 {
@@ -669,7 +674,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 		 * lqi values of
 		 * the received pkt and add it as the payload of the response
 		 * frame*/
-		uint8_t phy_frame_len = mac_frame_info->len_no_crc;
+		//uint8_t phy_frame_len = mac_frame_info->len_no_crc;
 		uint32_t frame_count;
 		/* Get the frame count in correct format */
 		frame_count
@@ -696,7 +701,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 		/* On reception of the Response frame to the Marker cmd sent ,
 		 * get the lqi and ed values and print it on the terminal */
 
-		uint8_t phy_frame_len = mac_frame_info->len_no_crc;
+		//uint8_t phy_frame_len = mac_frame_info->len_no_crc;
 		printf("\r\nMarker Response Received... LQI : %d\t ED %d \n",
 									mac_frame_info->mpdu[lqi_pos],
 									(int8_t)mac_frame_info->mpdu[ed_pos]);

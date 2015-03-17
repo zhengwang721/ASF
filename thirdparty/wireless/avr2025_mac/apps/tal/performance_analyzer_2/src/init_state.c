@@ -53,11 +53,12 @@
 #include "tal.h"
 #include "tal_internal.h"
 #include "tal_helper_2.h"
+#include "ieee_const.h"
 #include "app_init.h"
 #include "perf_api.h"
 #include "perf_api_serial_handler.h"
 #include "common_sw_timer.h"
-#include "ieee_const.h"
+#include "tal_generic.h"
 
 /* === TYPES =============================================================== */
 

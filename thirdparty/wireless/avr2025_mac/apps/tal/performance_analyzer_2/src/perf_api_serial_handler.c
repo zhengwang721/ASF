@@ -106,25 +106,25 @@
 /**
  * This is the receive buffer of the UART.
  */
-static uint8_t sio_rx_buf[NO_TRX][SIO_RX_BUF_SIZE];
+static uint8_t sio_rx_buf[NUM_TRX][SIO_RX_BUF_SIZE];
 
 /**
  * This is the transmit buffer of the UART.
  */
-static uint8_t sio_tx_buf[NO_TRX][SIO_BUF_COUNT][SIO_TX_BUF_SIZE];
+static uint8_t sio_tx_buf[NUM_TRX][SIO_BUF_COUNT][SIO_TX_BUF_SIZE];
 
 /**
  * This pointer points to the next free element inside the
  * receive buffer of the UART.
  */
-static uint8_t *sio_rx_ptr[NO_TRX];
+static uint8_t *sio_rx_ptr[NUM_TRX];
 
 /**
  * This is the receiver state of the UART. (\ref UART_RX_STATE_SOT,
  *   \ref UART_RX_STATE_LENGTH, \ref UART_RX_STATE_DATA, or
  *   \ref UART_RX_STATE_EOT)
  */
-static uint8_t sio_rx_state[NO_TRX];
+static uint8_t sio_rx_state[NUM_TRX];
 
 /**
  * This is the transmit state of the UART. (\ref UART_TX_STATE_SOT,
@@ -135,40 +135,40 @@ static uint8_t sio_rx_state[NO_TRX];
 /**
  * This is the length of the message should be received.
  */
-static uint8_t sio_rx_length[NO_TRX];
+static uint8_t sio_rx_length[NUM_TRX];
 
 /**
  * This is the buffer to hold the frame received through serial interface
  */
-static uint8_t data[NO_TRX][SIO_RX_BUF_SIZE];
+static uint8_t data[NUM_TRX][SIO_RX_BUF_SIZE];
 /**
  * This is length variable to keep track of no of received bytes
  */
-static uint8_t data_length[NO_TRX] = {0,0};
+static uint8_t data_length[NUM_TRX] = {0,0};
 /**
  * This is index used to validate the received bytes based on their position
  */
-static uint8_t rx_index[NO_TRX] = {0,0};
+static uint8_t rx_index[NUM_TRX] = {0,0};
 /**
  * This is head of the queue of buffers to be transmitted
  */
-static uint8_t head[NO_TRX] ={0,0};
+static uint8_t head[NUM_TRX] ={0,0};
 /**
  * This is buffer count to keep track of the available bufer for transmission
  */
-static uint8_t buf_count[NO_TRX] = {0,0};
+static uint8_t buf_count[NUM_TRX] = {0,0};
 
 /* This variable is to save the selected channels mask,
 * which is a 4byte value received through serial interface
 */
-		uint32_t rcvd_channel_mask[NO_TRX] = {0,0};
+		uint32_t rcvd_channel_mask[NUM_TRX] = {0,0};
 			
 /* === Prototypes ========================================================== */
 
 static inline void process_incoming_sio_data(trx_id_t trx);
 static uint8_t *get_next_tx_buffer(trx_id_t trx);
 static inline void handle_incoming_msg(trx_id_t trx);
-static uint8_t curr_tx_buffer_index[NO_TRX] = {0,0};
+static uint8_t curr_tx_buffer_index[NUM_TRX] = {0,0};
 
 //! \}
 /* === Implementation ====================================================== */
@@ -1423,7 +1423,7 @@ void usr_range_test_stop_confirm(trx_id_t trx,uint8_t status)
  * \param param_value   Pointer to the value of the parameter that has been set
  * \return void
  */
-void usr_perf_set_confirm(trx_id_t trx, uint8_t status, uint8_t param_type, param_value_t *param_value)
+void usr_perf_set_confirm(trx_id_t trx, uint8_t status, uint8_t parameter_type, param_value_t *param_value)
 {
 
 	uint8_t *msg_buf;
@@ -1450,8 +1450,8 @@ void usr_perf_set_confirm(trx_id_t trx, uint8_t status, uint8_t param_type, para
 	/* Copy the payload of the Set confirmation */
 	*msg_buf++ = status;
 	/* Copy Parameter type */
-	*msg_buf++ = param_type;
-	if((param_type == PARAM_CHANNEL_PAGE) && ((param_value ->param_value_8bit) == SUN_PAGE_NO))
+	*msg_buf++ = parameter_type;
+	if((parameter_type == PARAM_CHANNEL_PAGE) && ((param_value ->param_value_8bit) == SUN_PAGE_NO))
 	{ //check -> cleaning required
 		if((uint8_t)((param_value->param_value_32bit)>>16) == OFDM)
 		{
@@ -1472,7 +1472,7 @@ void usr_perf_set_confirm(trx_id_t trx, uint8_t status, uint8_t param_type, para
 	}
 	else
 	{
-		*msg_buf++ = param_len = get_param_length(param_type);		
+		*msg_buf++ = param_len = get_param_length(parameter_type);		
 	}
 	/* Update the Length field */
 	*ptr_to_msg_size += OCTET_STR_LEN_BYTE_LEN;
@@ -1496,7 +1496,7 @@ void usr_perf_set_confirm(trx_id_t trx, uint8_t status, uint8_t param_type, para
  * \param param_value   Pointer to the value of the parameter that has been read
  * \return void
  */
-void usr_perf_get_confirm(trx_id_t trx, uint8_t status, uint8_t param_type, param_value_t *param_value)
+void usr_perf_get_confirm(trx_id_t trx, uint8_t status, uint8_t parameter_type, param_value_t *param_value)
 {
 
 	uint8_t *msg_buf;
@@ -1523,8 +1523,8 @@ void usr_perf_get_confirm(trx_id_t trx, uint8_t status, uint8_t param_type, para
 	/* Copy the payload of the Get confirmation */
 	*msg_buf++ = status;
 	/* Copy Parameter type */
-	*msg_buf++ = param_type;
-	if((param_type == PARAM_CHANNEL_PAGE) && ((param_value ->param_value_8bit) == SUN_PAGE_NO))
+	*msg_buf++ = parameter_type;
+	if((parameter_type == PARAM_CHANNEL_PAGE) && ((param_value ->param_value_8bit) == SUN_PAGE_NO))
 	{ //check -> cleaning required
 		if((uint8_t)((param_value->param_value_32bit)>>16) == OFDM)
 		{
@@ -1545,7 +1545,7 @@ void usr_perf_get_confirm(trx_id_t trx, uint8_t status, uint8_t param_type, para
 	}
 	else
 	{
-		*msg_buf++ = param_len = get_param_length(param_type);
+		*msg_buf++ = param_len = get_param_length(parameter_type);
 	}	
 	/* Update the Length field */
 	*ptr_to_msg_size += OCTET_STR_LEN_BYTE_LEN;
@@ -2092,9 +2092,9 @@ void usr_set_default_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
  */
 void usr_identify_board_confirm(trx_id_t trx,uint8_t status,
 uint8_t ic_type,
-char *mcu_soc_name,
-char *trx_name,
-char *board_name,
+const char *mcu_soc_name,
+const char *trx_name,
+const char *board_name,
 uint64_t mac_address,
 float fw_version,
 uint32_t fw_feature_mask)
@@ -2185,7 +2185,7 @@ uint32_t fw_feature_mask)
  *                                current values
  * \return void
  */
-void usr_get_current_config_confirm(trx_id_t trx, uint8_t status, trx_config_params_t *curr_trx_config_params)
+void usr_get_current_config_confirm(trx_id_t trx, uint8_t status, trx_config_params_t *curr_trx_conf_params)
 {
 
     uint8_t *msg_buf;
@@ -2210,62 +2210,62 @@ void usr_get_current_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
     /* Copy confirmation payload */
     *msg_buf++ = status;
     /* configuration parameters */
-    *msg_buf++ = (uint8_t)curr_trx_config_params->channel;
-    *msg_buf++ = (uint8_t)(curr_trx_config_params->channel >> 8);	
-	if(curr_trx_config_params->channel_page == 9) //check
+    *msg_buf++ = (uint8_t)curr_trx_conf_params->channel;
+    *msg_buf++ = (uint8_t)(curr_trx_conf_params->channel >> 8);	
+	if(curr_trx_conf_params->channel_page == 9) //check
 	{
-		*msg_buf++ = curr_trx_config_params->sun_phy_page.page_no;
-		*msg_buf++ = curr_trx_config_params->sun_phy_page.freq_band;
-		*msg_buf++ = curr_trx_config_params->sun_phy_page.modulation;
+		*msg_buf++ = curr_trx_conf_params->sun_phy_page.page_no;
+		*msg_buf++ = curr_trx_conf_params->sun_phy_page.freq_band;
+		*msg_buf++ = curr_trx_conf_params->sun_phy_page.modulation;
 		*ptr_to_msg_size += 3;
-		if(curr_trx_config_params->sun_phy_page.modulation == OFDM)
+		if(curr_trx_conf_params->sun_phy_page.modulation == OFDM)
 		{
-			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_ofdm.option;
-			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_ofdm.mcs_val;
-			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_ofdm.interl;
+			*msg_buf++ = curr_trx_conf_params->sun_phy_page.sun_phy_mode.mr_ofdm.option;
+			*msg_buf++ = curr_trx_conf_params->sun_phy_page.sun_phy_mode.mr_ofdm.mcs_val;
+			*msg_buf++ = curr_trx_conf_params->sun_phy_page.sun_phy_mode.mr_ofdm.interl;
 			*ptr_to_msg_size += 3;
 		}
-		else if(curr_trx_config_params->sun_phy_page.modulation == OQPSK)
+		else if(curr_trx_conf_params->sun_phy_page.modulation == OQPSK)
 		{
-			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_oqpsk.rate_mode;
-			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_oqpsk.chip_rate;
+			*msg_buf++ = curr_trx_conf_params->sun_phy_page.sun_phy_mode.mr_oqpsk.rate_mode;
+			*msg_buf++ = curr_trx_conf_params->sun_phy_page.sun_phy_mode.mr_oqpsk.chip_rate;
 			
 			*ptr_to_msg_size += 2;
 		}
-		else if(curr_trx_config_params->sun_phy_page.modulation == FSK)
+		else if(curr_trx_conf_params->sun_phy_page.modulation == FSK)
 		{
-			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_fsk.mod_type;
-			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_fsk.mod_idx;
-			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_fsk.data_rate;
-			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_fsk.op_mode;
-			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_fsk.bt;
-			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_fsk.fec_enabled;
+			*msg_buf++ = curr_trx_conf_params->sun_phy_page.sun_phy_mode.mr_fsk.mod_type;
+			*msg_buf++ = curr_trx_conf_params->sun_phy_page.sun_phy_mode.mr_fsk.mod_idx;
+			*msg_buf++ = curr_trx_conf_params->sun_phy_page.sun_phy_mode.mr_fsk.data_rate;
+			*msg_buf++ = curr_trx_conf_params->sun_phy_page.sun_phy_mode.mr_fsk.op_mode;
+			*msg_buf++ = curr_trx_conf_params->sun_phy_page.sun_phy_mode.mr_fsk.bt;
+			*msg_buf++ = curr_trx_conf_params->sun_phy_page.sun_phy_mode.mr_fsk.fec_enabled;
 			
 			*ptr_to_msg_size += 6;
 		}
-		else if(curr_trx_config_params->sun_phy_page.modulation == LEG_OQPSK)
+		else if(curr_trx_conf_params->sun_phy_page.modulation == LEG_OQPSK)
 		{
-			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.leg_oqpsk.data_rate;
-			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.leg_oqpsk.chip_rate;
+			*msg_buf++ = curr_trx_conf_params->sun_phy_page.sun_phy_mode.leg_oqpsk.data_rate;
+			*msg_buf++ = curr_trx_conf_params->sun_phy_page.sun_phy_mode.leg_oqpsk.chip_rate;
 			
 			*ptr_to_msg_size += 2;
 		}
 	}
 	else
 	{
-		*msg_buf++ = curr_trx_config_params->channel_page;		
+		*msg_buf++ = curr_trx_conf_params->channel_page;		
 		*ptr_to_msg_size += 1;
 	}
 	
-    *msg_buf++ = curr_trx_config_params->tx_power_dbm;
+    *msg_buf++ = curr_trx_conf_params->tx_power_dbm;
 
-	*msg_buf++ = curr_trx_config_params->tx_power_reg;
+	*msg_buf++ = curr_trx_conf_params->tx_power_reg;
 
-    *msg_buf++ = (uint8_t)curr_trx_config_params->csma_enabled;
-    *msg_buf++ = (uint8_t)curr_trx_config_params->retry_enabled;
-    *msg_buf++ = (uint8_t)curr_trx_config_params->ack_request;
+    *msg_buf++ = (uint8_t)curr_trx_conf_params->csma_enabled;
+    *msg_buf++ = (uint8_t)curr_trx_conf_params->retry_enabled;
+    *msg_buf++ = (uint8_t)curr_trx_conf_params->ack_request;
 #if(TAL_TYPE != AT86RF230B)
-    *msg_buf++ = (uint8_t)curr_trx_config_params->rx_desensitize;
+    *msg_buf++ = (uint8_t)curr_trx_conf_params->rx_desensitize;
 #else
     *msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver */
 #endif
@@ -2273,28 +2273,28 @@ void usr_get_current_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
 		*msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver */
 
 #if (ANTENNA_DIVERSITY == 1)
-    *msg_buf++ = curr_trx_config_params->antenna_selected;
+    *msg_buf++ = curr_trx_conf_params->antenna_selected;
 #else
     *msg_buf++ = FIELD_DOES_NOT_EXIST;
 #endif
 
-    *msg_buf++ = curr_trx_config_params->trx_state;
-    *msg_buf++ = (uint8_t)curr_trx_config_params->number_test_frames;
-    *msg_buf++ = (uint8_t)(curr_trx_config_params->number_test_frames >> 8);
-    *msg_buf++ = (uint8_t)(curr_trx_config_params->number_test_frames >> 16);
-    *msg_buf++ = (uint8_t)(curr_trx_config_params->number_test_frames >> 24);
-    *msg_buf++ = (uint8_t)(curr_trx_config_params->phy_frame_length);
-	 *msg_buf++ = (uint8_t)(curr_trx_config_params->phy_frame_length >> 8);
+    *msg_buf++ = curr_trx_conf_params->trx_state;
+    *msg_buf++ = (uint8_t)curr_trx_conf_params->number_test_frames;
+    *msg_buf++ = (uint8_t)(curr_trx_conf_params->number_test_frames >> 8);
+    *msg_buf++ = (uint8_t)(curr_trx_conf_params->number_test_frames >> 16);
+    *msg_buf++ = (uint8_t)(curr_trx_conf_params->number_test_frames >> 24);
+    *msg_buf++ = (uint8_t)(curr_trx_conf_params->phy_frame_length);
+	 *msg_buf++ = (uint8_t)(curr_trx_conf_params->phy_frame_length >> 8);
 
     /*peer node settings need to be added */
     /*Peer settings for parameters like CRC and ant diversity */
 #if (ANTENNA_DIVERSITY == 1)
-    *msg_buf++ = curr_trx_config_params->antenna_selected_on_peer;
+    *msg_buf++ = curr_trx_conf_params->antenna_selected_on_peer;
 #else
     *msg_buf++ = FIELD_DOES_NOT_EXIST;
 #endif
 
-    *msg_buf++ = curr_trx_config_params->crc_settings_on_peer;
+    *msg_buf++ = curr_trx_conf_params->crc_settings_on_peer;
 
 
 		float temp = 0.0;

@@ -1,15 +1,47 @@
 /**
  * @file tal_ed.c
  *
- * @brief This file implements ED Scan
+ * @brief This file implements ED scan
+ *        
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
- * $Id: tal_ed.c 36425 2014-08-29 16:38:42Z uwalter $
+ * \asf_license_start
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  */
+
 /*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -44,8 +76,8 @@
  * the specified Scan Duration.
  */
 #if (MAC_SCAN_ED_REQUEST_CONFIRM == 1)
-static int8_t max_ed_level[NO_TRX];
-static uint32_t sampler_counter[NO_TRX];
+static int8_t max_ed_level[NUM_TRX];
+static uint32_t sampler_counter[NUM_TRX];
 #endif
 
 /* === PROTOTYPES ========================================================== */
@@ -126,7 +158,7 @@ retval_t tal_ed_start(trx_id_t trx_id, uint8_t scan_duration)
 
     /* Set RF to Rx */
 #ifdef IQ_RADIO
-    trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_RX);
+    pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_RX);
 #else
     trx_reg_write(reg_offset + RG_RF09_CMD, RF_RX);
 #endif
@@ -159,7 +191,7 @@ void handle_ed_end_irq(trx_id_t trx_id)
     /* Capture ED value for current frame / ED scan */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 #ifdef IQ_RADIO
-    tal_current_ed_val[trx_id] = trx_reg_read(RF215_RF, reg_offset + RG_RF09_EDV);
+    tal_current_ed_val[trx_id] = pal_trx_reg_read(RF215_RF, reg_offset + RG_RF09_EDV);
 #else
     tal_current_ed_val[trx_id] = trx_reg_read(reg_offset + RG_RF09_EDV);
 #endif
@@ -191,12 +223,13 @@ void handle_ed_end_irq(trx_id_t trx_id)
         sampler_counter[trx_id]--;
         debug_text_val(PSTR("remaining sampler_counter = "),
                        (uint16_t)sampler_counter[trx_id]);
+					   printf("SAMPLER_COUNTER = %d",sampler_counter[trx_id]);
         if (sampler_counter[trx_id] == 0)
         {
             /* Keep RF in Rx state */
             /* Stop continuous energy detection */
 #ifdef IQ_RADIO
-            trx_bit_write(RF215_RF, reg_offset + SR_RF09_EDC_EDM, RF_EDAUTO);
+            pal_trx_bit_write(RF215_RF, reg_offset + SR_RF09_EDC_EDM, RF_EDAUTO);
 #else
             trx_bit_write(reg_offset + SR_RF09_EDC_EDM, RF_EDAUTO);
 #endif
@@ -213,7 +246,7 @@ void handle_ed_end_irq(trx_id_t trx_id)
             else
             {
 #ifdef IQ_RADIO
-                trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
+                pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #else
                 trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
@@ -269,7 +302,7 @@ void set_ed_sample_duration(trx_id_t trx_id, uint16_t sample_duration_us)
 
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 #ifdef IQ_RADIO
-    trx_reg_write(RF215_RF, reg_offset + RG_RF09_EDD, ((df << 2) | dtb));
+    pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_EDD, ((df << 2) | dtb));
 #else
     trx_reg_write(reg_offset + RG_RF09_EDD, ((df << 2) | dtb));
 #endif
@@ -325,7 +358,7 @@ void stop_ed_scan(trx_id_t trx_id)
     /* Stop continuous energy detection */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 #ifdef IQ_RADIO
-    trx_bit_write(RF215_RF, reg_offset + SR_RF09_EDC_EDM, RF_EDAUTO);
+    pal_trx_bit_write(RF215_RF, reg_offset + SR_RF09_EDC_EDM, RF_EDAUTO);
 #else
     trx_bit_write(reg_offset + SR_RF09_EDC_EDM, RF_EDAUTO);
 #endif

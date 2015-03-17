@@ -235,10 +235,10 @@ typedef struct
 /* === MACROS ============================================================== */
 
 /* === LOCALS ============================================================== */
-static uint8_t storage_buffer[NO_TRX][LARGE_BUFFER_SIZE];
+static uint8_t storage_buffer[NUM_TRX][LARGE_BUFFER_SIZE];
 
 /* === PROTOTYPES ========================================================== */
-static void app_task();
+static void app_task(void);
 
 /* === GLOBALS ============================================================= */
 static state_function_t const state_table[NUM_MAIN_STATES] =
@@ -342,7 +342,7 @@ static state_function_t const state_table[NUM_MAIN_STATES] =
     }
 };
 
-volatile node_ib_t node_info[NO_TRX];
+volatile node_ib_t node_info[NUM_TRX];
 
 //! \}
 /* === IMPLEMENTATION ====================================================== */
@@ -360,7 +360,7 @@ int main(void)
 	 */
 	board_init();
 	sysclk_init();
-		
+	 
     /*
      * Power ON - so set the board to INIT state. All hardware, PAL, TAL and
      * stack level initialization must be done using this function
@@ -395,7 +395,7 @@ int main(void)
 /**
  * \brief Application task
  */
-static void app_task()
+static void app_task(void)
 {
 	
     for (uint8_t trx_id = 0; trx_id < 2; trx_id++)
@@ -639,17 +639,16 @@ retval_t transmit_frame1(trx_id_t trx,
     if (FCF_SHORT_ADDR == dst_addr_mode)
     {
         frame_ptr -= SHORT_ADDR_LEN;
-        convert_16_bit_to_byte_array(*((uint16_t *)dst_addr), frame_ptr);
-
+        /*convert_16_bit_to_byte_array(*((uint16_t *)dst_addr), frame_ptr);*/
+        memcpy(frame_ptr, (uint8_t *)dst_addr, sizeof(uint16_t));
         fcf |= FCF_SET_DEST_ADDR_MODE(FCF_SHORT_ADDR);
     }
     else
     {
         frame_ptr -= EXT_ADDR_LEN;
         frame_length += PL_POS_DST_ADDR_START;
-
-        convert_64_bit_to_byte_array(*((uint64_t *)dst_addr), frame_ptr);
-
+        //convert_64_bit_to_byte_array(*((uint64_t *)dst_addr), frame_ptr);
+        memcpy(frame_ptr, (uint8_t *)dst_addr, sizeof(uint64_t));
         fcf |= FCF_SET_DEST_ADDR_MODE(FCF_LONG_ADDR);
     }
 

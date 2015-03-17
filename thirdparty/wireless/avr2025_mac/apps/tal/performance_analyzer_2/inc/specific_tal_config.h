@@ -130,6 +130,11 @@
  */
 #define SUPPORT_OFDM
 
+
+#define SUPPORT_TFA
+
+#define RF215v1
+
 /**
  * Enable support of FSK modulation
  * To include the FSK support to the build,

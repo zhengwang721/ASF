@@ -95,7 +95,7 @@ static uint32_t num_of_frames_rec;
  *
  * \param arg arguments to init RANGE_TX_ON state
  */
-void range_test_tx_on_init(void *arg)
+void range_test_tx_on_init(trx_id_t trx,void *arg)
 {
     print_event(RF24,PRINT_RANGE_MEASURE_TX_START);
 
@@ -117,7 +117,7 @@ void range_test_tx_on_init(void *arg)
  *
  * RANGE_TEST_TX_ON state, where both TX and RX is enabled
  */
-void range_test_tx_on_task(void)
+void range_test_tx_on_task(trx_id_t trx)
 {
     int char_received;
     uint8_t key_press;
@@ -145,7 +145,7 @@ void range_test_tx_on_task(void)
  * states
  * \param frame Pointer to received frame
  */
-void range_test_rx_cb(frame_info_t *mac_frame_info)
+void range_test_rx_cb(trx_id_t trx,frame_info_t *mac_frame_info)
 {
     app_payload_t *msg;
     if ((mac_frame_info->len_no_crc) == (FRAME_OVERHEAD +
@@ -170,7 +170,7 @@ void range_test_rx_cb(frame_info_t *mac_frame_info)
  *
  * where both TX and RX is enabled
  */
-void range_test_tx_on_exit(void)
+void range_test_tx_on_exit(trx_id_t trx)
 {
     print_event(RF24,PRINT_RANGE_MEASURE_TX_STOP);
     /* Off timer as node leaves this sub state */
@@ -182,7 +182,7 @@ void range_test_tx_on_exit(void)
  *
  * RANGE_TEST_TX_OFF state, where no TX is enabled and only RX is ON
  */
-void range_test_tx_off_task(void)
+void range_test_tx_off_task(trx_id_t trx)
 {
     int char_received;
     uint8_t key_press;
@@ -270,7 +270,7 @@ static int range_test_frame_tx(void)
 /*
  * \brief Print the statistics for Range Measurement on the UART Terminal.
  */
-void app_print_statistics(void)
+void app_print_statistics(int trx)
 {
     /* Print number of frames Transmitted */
     printf("\r\nNo. of Frames TX: %" PRIu32, num_of_frames_send);

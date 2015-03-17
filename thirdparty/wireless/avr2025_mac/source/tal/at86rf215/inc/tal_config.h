@@ -1,15 +1,47 @@
 /**
  * @file tal_config.h
  *
- * @brief File contains TAL configuration parameters.
+ * @brief File contains TAL configuration parameters.       
  *
- * $Id: tal_config.h 36369 2014-08-25 09:12:51Z uwalter $
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  */
+
 /*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -47,10 +79,10 @@
 
 /**
  * To change the transceiver's interrupt polarity,
- * uncomment the following define TRX_IRQ_POLARITY to the required value.
+ * set the following define TRX_IRQ_POLARITY to the required value.
  * Value - meaning
- * 1 = HIGH (default/reset)
- * 0 = LOW
+ * 0 = Active HIGH (default/reset)
+ * 1 = Active LOW
  */
 #ifndef TRX_IRQ_POLARITY
 #define TRX_IRQ_POLARITY          0
@@ -181,6 +213,11 @@
 #       define SUPPORT_FSK
 #   endif
 
+
+#   ifndef RF215v1
+#      define RF215v1
+#   endif
+
 /**
  * Enable FSK mode switch support
  * To include the mode switch support to the build,
@@ -213,17 +250,17 @@
 /**
  * Support all TFA features
  * To include all TFA features to the build,
- * uncomment the following define ENABLE_TFA.
+ * uncomment the following define SUPPORT_TFA.
  */
-#   ifndef ENABLE_TFA
-#       define ENABLE_TFA
+#   ifndef SUPPORT_TFA
+#       define SUPPORT_TFA
 #   endif
 
 /**
  * Support all battery monitor features
  * To include all battery monitor features to the build,
  * uncomment the following define TFA_BAT_MON.
- * It is a subset of the configuration ENABLE_TFA.
+ * It is a subset of the configuration SUPPORT_TFA.
  */
 #   ifndef TFA_BAT_MON
 #       define TFA_BAT_MON
@@ -253,7 +290,7 @@
  * Support the continuous transmission feature
  * To include the continuous transmission feature to the build,
  * uncomment the following define TFA_CW.
- * It is a subset of the configuration ENABLE_TFA.
+ * It is a subset of the configuration SUPPORT_TFA.
  */
 #   ifndef TFA_CW
 #       define TFA_CW
@@ -263,7 +300,7 @@
  * Support the TFA CCA feature
  * To include the TFA CCA to the build,
  * uncomment the following define TFA_CCA.
- * It is a subset of the configuration ENABLE_TFA.
+ * It is a subset of the configuration SUPPORT_TFA.
  */
 #   ifndef TFA_CCA
 #       define TFA_CCA

@@ -85,11 +85,11 @@ static int send_peer_rsp(trx_id_t trx, uint64_t *addr);
 
 static void wait_for_conf_init(trx_id_t trx, void *arg);
 static void wait_for_conf_rx_cb(trx_id_t trx, frame_info_t *frame);
-static void wait_for_conf_exit(void);
+static void wait_for_conf_exit(trx_id_t trx);
 
 /* === GLOBALS ============================================================= */
 /* Peer process seq number */
-static uint8_t seq_num[NO_TRX];
+static uint8_t seq_num[NUM_TRX];
 
 static peer_state_function_t const peer_search_receptor_state_table[NUM_PEER_SEARCH_RECEPTOR_STATES] =
 {
@@ -390,7 +390,7 @@ static void wait_for_conf_rx_cb(trx_id_t trx,frame_info_t *mac_frame_info)
  * This function
  * - Implements the peer search state machine.
  */
-static void wait_for_conf_exit(void)
+static void wait_for_conf_exit(trx_id_t trx)
 {
     /* stop the timer as node leaves this sub state */
     sw_timer_stop(APP_TIMER_TO_TX);

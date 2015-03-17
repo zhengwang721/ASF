@@ -228,6 +228,12 @@
  */
 #define phyHighRateEnabled              (0x35)
 
+
+/**
+ * Enable reduce power consumption for FSK and MR-OQPSK
+ */
+#define phyRPCEnabled                   (0x36)
+
 /**
  * The type of the FCS. A value of zero indicates a 4-octet FCS. A value of
  * one indicates a 2-octet FCS. This attribute is only valid for SUN PHYs.
@@ -244,14 +250,14 @@
 /** Legacy O-QPSK constants */
 #define LEG_780_F0                  780000000
 #define LEG_868_F0                  868300000
-#define LEG_915_F0                  906000000 //vk it was 9060... - 904000000
+#define LEG_915_F0                  906000000 
 #define LEG_915_CH_SPAC               2000000
 #define LEG_2450_F0                2405000000
 #define LEG_2450_CH_SPAC              5000000
 
 /** OFDM constants */
-#define OFDM_470_OPT4_F0            470200000 //needs clarification
-#define OFDM_470_OPT4_CH_SPAC          200000 //,,
+#define OFDM_470_OPT4_F0            470400000
+#define OFDM_470_OPT4_CH_SPAC          400000
 #define OFDM_780_OPT1_F0            780200000
 #define OFDM_780_OPT1_CH_SPAC         1200000
 #define OFDM_780_OPT2_F0            779800000
@@ -394,6 +400,7 @@
 /**
  * Modulation schemes
  */
+
 typedef enum modulation_tag
 {
     FSK,
@@ -458,14 +465,61 @@ typedef enum oqpsk_chip_rate_tag
     CHIP_RATE_200,
     CHIP_RATE_1000,
     CHIP_RATE_2000
-} oqpsk_chip_rate_t;
+}SHORTENUM oqpsk_chip_rate_t;
 
 typedef enum oqsk_data_rate_tag
 {
 	OQPSK_DATA_RATE_250,
 	OQPSK_DATA_RATE_500,
 	OQPSK_DATA_RATE_1000
-} oqpsk_data_rate_t;
+} SHORTENUM oqpsk_data_rate_t;
+
+typedef enum fsk_op_mode_tag
+{
+	FSK_OP_MOD_1 = 1,
+	FSK_OP_MOD_2,
+	FSK_OP_MOD_3,
+	FSK_OP_MOD_4
+} SHORTENUM fsk_op_mode_t;
+
+typedef enum fsk_mod_type_tag
+{
+	F2FSK,
+	F4FSK
+} SHORTENUM fsk_mod_type_t;
+
+typedef enum mod_idx_tag
+{
+	MOD_IDX_0_375 = 0,
+	MOD_IDX_0_5 = 1,
+	MOD_IDX_0_75 = 2,
+	MOD_IDX_1_0 = 3,
+	MOD_IDX_1_25 = 4,
+	MOD_IDX_1_5 = 5,
+	MOD_IDX_1_75 = 6,
+	MOD_IDX_2_0 = 7
+} SHORTENUM mod_idx_t;
+
+typedef enum fsk_data_rate_tag
+{
+	FSK_DATA_RATE_50,
+	FSK_DATA_RATE_100,
+	FSK_DATA_RATE_150,
+	FSK_DATA_RATE_200,
+	FSK_DATA_RATE_300,
+	FSK_DATA_RATE_400
+} SHORTENUM fsk_data_rate_t;
+
+typedef enum fsk_bt_tag
+{
+	FSK_BT_0_5,
+	FSK_BT_1_0,
+	FSK_BT_1_5,
+	FSK_BT_2_0
+}SHORTENUM fsk_bt_t;
+
+
+
 
 typedef struct oqpsk_tag
 {
@@ -488,49 +542,7 @@ typedef struct leg_oqpsk_tag
 	oqpsk_data_rate_t data_rate;
 } leg_oqpsk_t;
 
-typedef enum fsk_op_mode_tag
-{
-    FSK_OP_MOD_1 = 1,
-    FSK_OP_MOD_2,
-    FSK_OP_MOD_3,
-    FSK_OP_MOD_4
-} SHORTENUM fsk_op_mode_t;
 
-typedef enum fsk_mod_type_tag
-{
-    F2FSK,
-    F4FSK
-} SHORTENUM fsk_mod_type_t;
-
-typedef enum mod_idx_tag
-{
-    MOD_IDX_0_375 = 0,
-    MOD_IDX_0_5 = 1,
-    MOD_IDX_0_75 = 2,
-    MOD_IDX_1_0 = 3,
-    MOD_IDX_1_25 = 4,
-    MOD_IDX_1_5 = 5,
-    MOD_IDX_1_75 = 6,
-    MOD_IDX_2_0 = 7
-} SHORTENUM mod_idx_t;
-
-typedef enum fsk_data_rate_tag
-{
-    FSK_DATA_RATE_50,
-    FSK_DATA_RATE_100,
-    FSK_DATA_RATE_150,
-    FSK_DATA_RATE_200,
-    FSK_DATA_RATE_300,
-    FSK_DATA_RATE_400
-} SHORTENUM fsk_data_rate_t;
-
-typedef enum fsk_bt_tag
-{
-	FSK_BT_0_5, 
-	FSK_BT_1_0,
-	FSK_BT_1_5,
-	FSK_BT_2_0
-}SHORTENUM fsk_bt_t;
 
 typedef struct fsk_tag
 {

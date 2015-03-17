@@ -1,18 +1,51 @@
 /**
- * @file tal_tx.c
+ * @file tal_auto_tx.c
  *
- * @brief This file handles the frame transmission within the TAL.
+ * @brief This file handles the frame transmission within the TAL
+ *        
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
- * $Id: tal_auto_tx.c 36436 2014-09-01 13:49:57Z uwalter $
+ * \asf_license_start
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  */
+
 /*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+
 
 #include "tal_config.h"
 
@@ -46,12 +79,12 @@
 
 /* === GLOBALS ============================================================= */
 
-static uint8_t number_of_tx_retries[NO_TRX];
-static csma_mode_t global_csma_mode[NO_TRX];
-static bool ack_requested[NO_TRX];
+static uint8_t number_of_tx_retries[NUM_TRX];
+static csma_mode_t global_csma_mode[NUM_TRX];
+static bool ack_requested[NUM_TRX];
 /* Last frame length for IFS handling. */
-uint16_t last_txframe_length[NO_TRX];
-bool frame_buf_filled[NO_TRX];
+uint16_t last_txframe_length[NUM_TRX];
+bool frame_buf_filled[NUM_TRX];
 
 /* === PROTOTYPES ========================================================== */
 
@@ -190,7 +223,7 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
 {
     debug_text(PSTR("transmit_frame()"));
 
-    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+ uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
     /* Configure auto modes */
     uint8_t amcs = 0;
@@ -503,7 +536,11 @@ void tx_done_handling(trx_id_t trx_id, retval_t status)
     }
 #endif
     /* Enable AACK again and disable CCA / TX procedure */
-    trx_reg_write(reg_offset + RG_BBC0_AMCS, AMCS_AACK_MASK);
+    trx_reg_write( reg_offset+ RG_BBC0_AMCS, AMCS_AACK_MASK);
+
+#if (defined RF215v1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
+    stop_rpc(trx_id);
+#endif
 
     /* Set trx state for leaving TX transaction */
     if (trx_default_state[trx_id] == RF_RX)

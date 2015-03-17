@@ -115,7 +115,7 @@ typedef enum {
  *
  */
 typedef struct {
-	char *item_desc;
+	const char *item_desc;
 	void (*additional_print_func)(int trx);
 } print_event_msg_t;
 
@@ -159,7 +159,7 @@ bool button_pressed(void);
 /**
  * \brief Print the statistics for Range Measurement on the UART Terminal.
  */
-void app_print_statistics(void);
+void app_print_statistics(int trx);
 
 #ifdef __cplusplus
 extern "C" {

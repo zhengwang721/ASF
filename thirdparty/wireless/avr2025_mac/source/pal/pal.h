@@ -169,6 +169,8 @@ typedef enum pwr_mode_tag {
 	SYSTEM_SLEEP
 } pwr_mode_t;
 
+
+
 #ifdef TEST_HARNESS
 #if (_DEBUG_ > 0)
 
@@ -288,6 +290,16 @@ static inline void pal_global_irq_disable(void)
 {
 	DISABLE_GLOBAL_IRQ();
 }
+
+/**
+ * \brief Initializes the transceiver main interrupt
+ *
+ * This function sets the microcontroller specific registers
+ * responsible for handling the transceiver main interrupt
+ *
+ * \param trx_irq_cb Callback function for the transceiver main interrupt
+ */
+void pal_trx_irq_init(FUNC_PTR trx_irq_cb);
 
 /**
  * @brief Provides timestamp of the last received frame

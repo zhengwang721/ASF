@@ -1,14 +1,14 @@
-
 /*
- * @file trx_access.c
+ * @file trx_access_2.c
  *
  * @brief Performs interface functionalities between the PHY layer and ASF
  *drivers
- *  Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,7 +44,7 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -164,16 +164,17 @@ void PhyReset(void)
 									   
 void trx_read(uint16_t addr,uint8_t *data, uint16_t length)
 {
-	uint8_t register_value = 0;
+	
 
 	/*Saving the current interrupt status & disabling the global interrupt
 	 **/
-	//ENTER_CRITICAL_REGION();
-	//ENTER_TRX_REGION();
-    DISABLE_TRX_INTERRUPT();
-
+   
+   ENTER_CRITICAL_REGION();
+   //DISABLE_TRX_INTERRUPT();
+   //ENTER_TRX_REGION();
+   //DISABLE_TRX_IRQ();
 	/* Prepare the command byte */
-	addr |= 0X00; //Read Command
+	addr |= 0X0000; //Read Command
 	
 	
 	uint8_t reg_addr;
@@ -246,8 +247,10 @@ void trx_read(uint16_t addr,uint8_t *data, uint16_t length)
 #endif
 	/*Restoring the interrupt status which was stored & enabling the global
 	 *interrupt */
-	//LEAVE_CRITICAL_REGION();
-    ENABLE_TRX_INTERRUPT();
+	LEAVE_CRITICAL_REGION();
+    //ENABLE_TRX_INTERRUPT();
+	//LEAVE_TRX_REGION();
+	//ENABLE_TRX_IRQ();
 
 }
 
@@ -255,10 +258,11 @@ void trx_write(uint16_t addr, uint8_t *data,uint16_t length)
 {
 	/*Saving the current interrupt status & disabling the global interrupt
 	 **/
-	//ENTER_TRX_REGION();
-
-	DISABLE_TRX_INTERRUPT();
-
+	
+      ENTER_CRITICAL_REGION();
+	//DISABLE_TRX_INTERRUPT();
+    //ENTER_TRX_REGION();
+	//DISABLE_TRX_IRQ();
 	/* Prepare the command byte */
 	addr |= 0X8000; //Write Command
 	
@@ -338,8 +342,12 @@ void trx_write(uint16_t addr, uint8_t *data,uint16_t length)
 #endif
 	/*Restoring the interrupt status which was stored & enabling the global
 	 *interrupt */ 
-	 ENABLE_TRX_INTERRUPT();
+	 
+	 
+     //ENABLE_TRX_INTERRUPT();
 	//LEAVE_TRX_REGION();
+	LEAVE_CRITICAL_REGION();
+	//ENABLE_TRX_IRQ();
 }
 
 uint8_t trx_reg_read(uint16_t addr)
@@ -355,7 +363,7 @@ uint8_t trx_reg_read(uint16_t addr)
 	ENTER_CRITICAL_REGION();
 
 	/* Prepare the command byte */
-	addr |= 0X00; //Read Command
+	addr |= 0X0000; //Read Command
 	
 	
 	uint8_t reg_addr;
@@ -976,7 +984,6 @@ void trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length)
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
 	LEAVE_TRX_REGION();
+
+
 }
-
-
-

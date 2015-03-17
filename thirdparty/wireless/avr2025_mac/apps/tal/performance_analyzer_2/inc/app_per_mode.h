@@ -222,7 +222,7 @@ typedef struct {
 FLASH_EXTERN(int8_t tx_pwr_table[16]);
 #endif
 
-extern trx_config_params_t curr_trx_config_params[NO_TRX];
+extern trx_config_params_t curr_trx_config_params[NUM_TRX];
 
 /* ! \} */
 /* === Prototypes =========================================================== */

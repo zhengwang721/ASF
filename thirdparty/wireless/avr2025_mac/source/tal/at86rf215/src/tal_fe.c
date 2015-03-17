@@ -2,17 +2,50 @@
  * @file tal_fe.c
  *
  * @brief This file handles the front-end configuration
+ *        
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
- * $Id: tal_fe.c 36463 2014-09-05 06:53:20Z thanusch $
+ * \asf_license_start
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  */
+
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+
 
 /* === INCLUDES ============================================================ */
 
@@ -60,6 +93,7 @@
 #    define bb_bit_read(reg)                pal_dev_bit_read(RF215_BB, reg)
 #    define bb_reg_read(reg)                pal_dev_reg_read(RF215_BB, reg)
 #    define bb_bit_write(reg, val)          pal_dev_bit_write(RF215_BB, reg, val)
+#    define bb_blk_write(reg, addr, len)    pal_dev_write(RF215_BB, reg, addr, len)
 #else
 #    define rf_blk_write(reg, addr, len)    trx_write(reg, addr, len)
 #    define rf_bit_write(reg, val)          trx_bit_write(reg, val)
@@ -67,6 +101,7 @@
 #    define bb_bit_read(reg)                trx_bit_read(reg)
 #    define bb_reg_read(reg)                trx_reg_read(reg)
 #    define bb_bit_write(reg, val)          trx_bit_write(reg, val)
+#    define bb_blk_write(reg, addr, len)    trx_write(reg, addr, len)
 #endif
 
 /* === GLOBALS ============================================================= */
@@ -109,9 +144,9 @@ retval_t ofdm_rfcfg(ofdm_option_t ofdm_opt, trx_id_t trx_id)
     switch (ofdm_opt)
     {
         case OFDM_OPT_1: /*OFDM Option 1: BW nom.: 1094 kHz */
-            sr=3; txrcut=4; txfc=10; rxrcut09=4; rxrcut24=4; bw09= 9; bw24=10; ifs09=0; ifs24=0; agci=0; pdt=5; break; 
+            sr=3; txrcut=4; txfc=10; rxrcut09=4; rxrcut24=4; bw09= 9; bw24=10; ifs09=1; ifs24=1; agci=0; pdt=5; break;
         case OFDM_OPT_2: /*OFDM Option 2: BW nom.: 552 kHz */
-            sr=3; txrcut=3; txfc= 8; rxrcut09=2; rxrcut24=2; bw09= 7; bw24= 7; ifs09=0; ifs24=0; agci=0; pdt=5; break;
+            sr=3; txrcut=3; txfc= 8; rxrcut09=2; rxrcut24=2; bw09= 7; bw24= 7; ifs09=1; ifs24=1; agci=0; pdt=5; break;
         case OFDM_OPT_3: /*OFDM Option 3: BW nom.: 281 kHz */
             sr=6; txrcut=3; txfc= 5; rxrcut09=2; rxrcut24=3; bw09= 4; bw24= 4; ifs09=0; ifs24=0; agci=0; pdt=4; break;
         case OFDM_OPT_4: /*OFDM Option 4: BW nom.: 156 kHz */
@@ -256,6 +291,7 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
     /* PAC */
     tx[2] = (3 << PAC_PACUR_SHIFT) | (DEFAULT_TX_PWR_REG << PAC_TXPWR_SHIFT);
     rf_blk_write(reg_offset + RG_RF09_TXCUTC, tx, 3);
+    
 
     /* Rx settings: RXBWC, RXDFE, AGCC, AGCS */
     uint8_t rx[4];
@@ -286,11 +322,12 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
 /**
  * @brief Configures RF according FSK
  *
+ * @param mod_type Modulation order / type; i.e. F2FSK or F4FSK
  * @param srate Data rate
  * @param mod_idx Modulation index
  * @param trx_id Transceiver identifier
  */
-retval_t fsk_rfcfg(fsk_data_rate_t srate, mod_idx_t mod_idx, trx_id_t trx_id)
+retval_t fsk_rfcfg(fsk_mod_type_t mod_type, fsk_data_rate_t srate, mod_idx_t mod_idx, trx_id_t trx_id)
 {
     retval_t status = MAC_SUCCESS;
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
@@ -352,6 +389,11 @@ retval_t fsk_rfcfg(fsk_data_rate_t srate, mod_idx_t mod_idx, trx_id_t trx_id)
     }
     uint8_t sr = rxdfe & RXDFE_SR_MASK;
     tal_pib[trx_id].agc_settle_dur = get_agc_settling_period(sr, avgs, agci);
+#endif
+
+#if (!defined RF215v2)
+    /* Keep compiler happy */
+    mod_type = mod_type;
 #endif
 
     return status;

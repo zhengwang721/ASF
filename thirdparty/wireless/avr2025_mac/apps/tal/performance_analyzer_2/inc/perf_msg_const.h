@@ -265,7 +265,7 @@ enum msg_code {
 SHORTENUM;
 
 /* ! \} */
-
+__PACK__DATA__
 /**
  * Paramter value types
  */
@@ -283,6 +283,6 @@ typedef union {
 	/** Parameter float*/
 	float param_value_float;
 } param_value_t;
-
+__PACK__RST_DATA__
 /* ! \} */
 #endif

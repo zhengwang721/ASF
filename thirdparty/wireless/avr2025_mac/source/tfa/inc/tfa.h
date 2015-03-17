@@ -1,16 +1,48 @@
-/**
+/*
  * @file tfa.h
  *
- * @brief This file is the interface for Transceiver Feature Access (TFA)
+ * @brief This file is the interface for Transceiver Feature Access (TFA) 
  * functionality.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \asf_license_start
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ *
  */
+
 /*
- * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -19,8 +51,9 @@
 #ifndef TFA_H
 #define TFA_H
 
-#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN) || \
-    (defined TFA_BAT_MON_READ) || (defined TFA_BAT_MON_IRQ)
+#if (defined SUPPORT_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN) || \
+    (defined TFA_BAT_MON_READ) || (defined TFA_BAT_MON_IRQ) || \
+    (defined TFA_CW) || (defined TFA_CCA)
 
 /**
  * \defgroup group_tfa           Transceiver Feature Access
@@ -91,7 +124,7 @@ typedef enum continuous_tx_mode_tag
 extern "C" {
 #endif
 
-#if (defined ENABLE_TFA) || (defined DOXYGEN)
+#if (defined SUPPORT_TFA) || (defined DOXYGEN)
     /**
      * @brief Initializes the TFA
      *
@@ -105,7 +138,7 @@ extern "C" {
     retval_t tfa_init(void);
 #endif
 
-#if (defined ENABLE_TFA) || (defined DOXYGEN)
+#if (defined SUPPORT_TFA) || (defined DOXYGEN)
     /**
      * @brief Reset the TFA
      *
@@ -119,7 +152,7 @@ extern "C" {
     void tfa_reset(bool set_default_pib);
 #endif
 
-#if (defined ENABLE_TFA) || (defined DOXYGEN)
+#if (defined SUPPORT_TFA) || (defined DOXYGEN)
     /**
      * @brief Gets a TFA PIB attribute
      *
@@ -137,7 +170,7 @@ extern "C" {
     retval_t tfa_pib_get(tfa_pib_t tfa_pib_attribute, void *value);
 #endif
 
-#if (defined ENABLE_TFA) || (defined DOXYGEN)
+#if (defined SUPPORT_TFA) || (defined DOXYGEN)
     /**
      * @brief Sets a TFA PIB attribute
      *
@@ -156,7 +189,7 @@ extern "C" {
     retval_t tfa_pib_set(tfa_pib_t tfa_pib_attribute, void *value);
 #endif
 
-#if (defined ENABLE_TFA) || (defined TFA_CCA) || (defined DOXYGEN)
+#if (defined SUPPORT_TFA) || (defined TFA_CCA) || (defined DOXYGEN)
 #ifdef MULTI_TRX_SUPPORT
     /**
      * @brief Perform a CCA
@@ -184,7 +217,7 @@ extern "C" {
 #endif /* #ifdef MULTI_TRX_SUPPORT */
 #endif
 
-#if (defined ENABLE_TFA) || (defined TFA_ED_SAMPLE) || (defined DOXYGEN)
+#if (defined SUPPORT_TFA) || (defined TFA_CCA) || (defined DOXYGEN)
 #ifdef MULTI_TRX_SUPPORT
     /**
      * @brief Perform a single ED measurement
@@ -212,7 +245,7 @@ extern "C" {
 #endif /* #ifdef MULTI_TRX_SUPPORT */
 #endif
 
-#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN) || \
+#if (defined SUPPORT_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN) || \
     (defined TFA_BAT_MON_READ)
     /**
      * @brief Gets the transceiver's supply voltage
@@ -224,7 +257,7 @@ extern "C" {
     uint16_t tfa_get_batmon_voltage(void);
 #endif
 
-#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN) || \
+#if (defined SUPPORT_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN) || \
     (defined TFA_BAT_MON_IRQ)
     /**
      * @brief Setups the battery monitor interrupt
@@ -240,7 +273,7 @@ extern "C" {
     retval_t tfa_batmon_irq_init(FUNC_PTR(batmon_irq_cb), uint16_t vth);
 #endif
 
-#if (defined ENABLE_TFA) || (PAL_GENERIC_TYPE == MEGA_RF) || (defined DOXYGEN)
+#if (defined SUPPORT_TFA) || (PAL_GENERIC_TYPE == MEGA_RF) || (defined DOXYGEN)
     /**
      * @brief Get the temperature value from the integrated sensor
      *
@@ -251,7 +284,7 @@ extern "C" {
     double tfa_get_temperature(void);
 #endif
 
-#if ((defined ENABLE_TFA) || defined(DOXYGEN))
+#if ((defined SUPPORT_TFA) || (defined TFA_CW) || defined(DOXYGEN))
 #ifdef MULTI_TRX_SUPPORT
     /**
      * @brief Starts continuous transmission on current channel
@@ -273,7 +306,7 @@ extern "C" {
 #endif /* #ifdef MULTI_TRX_SUPPORT */
 #endif
 
-#if ((defined ENABLE_TFA) || defined(DOXYGEN))
+#if ((defined SUPPORT_TFA) || (defined TFA_CW) || defined(DOXYGEN))
 #ifdef MULTI_TRX_SUPPORT
     /**
      * @brief Stops CW transmission
@@ -295,7 +328,7 @@ extern "C" {
 #endif
 
 
-#endif /* #ifdef ENABLE_TFA */
+#endif /* #ifdef SUPPORT_TFA */
 
 #endif /* TFA_H */
 /* EOF */

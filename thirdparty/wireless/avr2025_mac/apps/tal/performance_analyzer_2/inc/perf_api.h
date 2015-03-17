@@ -79,7 +79,7 @@
  * \param param_type    Parameter type to be set
  * \param param_value   Pointer to the parameter value to be set
  */
-void perf_set_req(trx_id_t trx, uint8_t param_type, param_value_t *param_value);
+void perf_set_req(trx_id_t trx, uint8_t set_param_type, param_value_t *param_value);
 void perf_set_sun_page(trx_id_t trx,uint8_t *sun_page);
 
 /**
@@ -117,7 +117,7 @@ void get_board_details(trx_id_t trx);
  */
 void identify_peer_node(trx_id_t trx);
 
-#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED)))
+#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && ( defined TFA_CW)))
 /**
  * \brief Send an energy pulse on current channel page
  */
@@ -135,7 +135,7 @@ void start_cw_transmission(trx_id_t trx, uint8_t tx_mode);
  */
 void stop_cw_transmission(trx_id_t trx, uint8_t tx_mode);
 
-#endif /*#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED))) */
+#endif /*#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined TFA_CW))) */
 /**
  * \brief Read transceiver register
  * \param reg_addr  The address of the register to be read
@@ -189,7 +189,7 @@ uint8_t check_error_conditions(trx_id_t trx);
  *
  * \param param_type Paramter type
  */
-uint8_t get_param_length(uint8_t param_type);
+uint8_t get_param_length(uint8_t parameter_type);
 
 //! \}
 /**
@@ -317,9 +317,9 @@ void usr_sensor_data_get_confirm(trx_id_t trx, uint8_t status, float bat_voltage
  */
 void usr_identify_board_confirm(trx_id_t trx,uint8_t status,
 uint8_t ic_type,
-char *mcu_soc_name,
-char *trx_name,
-char *board_name,
+const char *mcu_soc_name,
+const char *trx_name,
+const char *board_name,
 uint64_t mac_address,
 float fw_version,
 uint32_t fw_feature_mask);
@@ -346,7 +346,7 @@ void usr_perf_set_confirm(trx_id_t trx, uint8_t status, uint8_t param_type, para
  *
  * \return void
  */
-void usr_perf_get_confirm(trx_id_t trx,uint8_t status, uint8_t param_type, param_value_t *parame_value);
+void usr_perf_get_confirm(trx_id_t trx,uint8_t status, uint8_t parameter_type, param_value_t *parame_value);
 
 /**
  * Function to generate Identify_peer_cnode_confirm that must be sent to
@@ -446,7 +446,7 @@ void usr_set_default_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
  *                                     paramters with current values
  * \return void
  */
-void usr_get_current_config_confirm(trx_id_t trx,uint8_t status, trx_config_params_t *curr_trx_config_params);
+void usr_get_current_config_confirm(trx_id_t trx,uint8_t status, trx_config_params_t *curr_trx_conf_params);
 
 /**
  * \brief Initiates the Range test procedure

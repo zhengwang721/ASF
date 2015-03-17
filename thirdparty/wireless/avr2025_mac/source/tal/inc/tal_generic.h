@@ -3,7 +3,7 @@
  *
  * @brief This file contains defines for TAL types.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /*
- * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -75,6 +75,7 @@ typedef union {
 	uint64_t pib_value_64bit;
 } pib_value_t;
 __PACK__RST_DATA__
+
 /* === MACROS ============================================================== */
 
 /* RF bands: */
@@ -111,7 +112,7 @@ extern "C" {
  * - Implements the TAL state machine.
  * @ingroup apiTalApi
  */
-void tal_task(void);
+//void tal_task(void);
 
 uint32_t tal_convert_symbols_to_us_def(uint32_t symbols);
 
@@ -132,7 +133,7 @@ uint32_t tal_convert_us_to_symbols_def(uint32_t us);
  *
  * @ingroup apiTalApi
  */
-void tal_generate_rand_seed(void);
+//void tal_generate_rand_seed(void);
 
 #ifdef __cplusplus
 } /* extern "C" */

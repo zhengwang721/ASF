@@ -3,17 +3,49 @@
  *
  * @brief This file supports the TAL PIB attributes by providing 4g specific
  *        information.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
- * $Id: tal_4g_utils.c 36442 2014-09-01 14:38:06Z uwalter $
+ * \asf_license_start
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  */
+
 /*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
+ * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+
 
 /* === INCLUDES ============================================================ */
 
@@ -456,6 +488,7 @@ FLASH_DECLARE(FSK_PROCESSING_DELAY_ACK_TABLE_DATA_TYPE
 #ifdef SUPPORT_OQPSK
 static uint16_t oqpsk_ack_psdu_duration_sym(trx_id_t trx_id);
 static uint8_t oqpsk_spreading(oqpsk_chip_rate_t chip_rate, oqpsk_rate_mode_t rate_mode);
+static uint16_t oqpsk_get_chip_rate(trx_id_t trx_id);
 #endif
 
 /* === IMPLEMENTATION ====================================================== */
@@ -619,52 +652,60 @@ int8_t get_cca_thres(trx_id_t trx_id)
 // see section 6.4.3, pg. 30
 uint16_t get_AckWaitDuration_us(trx_id_t trx_id)
 {
-    uint16_t AckWaitDuration = 6000; // ?
+    uint16_t AckWaitDuration;
 
-#if ((defined SUPPORT_OFDM) || (defined SUPPORT_FSK))
-    uint8_t ack_len = 3 + tal_pib[trx_id].FCSLen;
-#endif
- 
 #ifdef SUPPORT_LEGACY_OQPSK
     if (tal_pib[trx_id].phy.modulation == LEG_OQPSK)
     {
         AckWaitDuration = 54; // symbols
     }
+    else
 #endif
     {
+#if ((defined SUPPORT_OFDM) || (defined SUPPORT_FSK))
+        uint8_t ack_len = 3 + tal_pib[trx_id].FCSLen;
+#endif
         /* aUnitBackoffPeriod + aTurnaroundTime */
         AckWaitDuration = (2 * ceiling_sym(trx_id, aMinTurnaroundTimeSUNPHY)) +
                           tal_pib[trx_id].CCADuration_sym;
         /* phySHRDuration */
         AckWaitDuration += shr_duration_sym(trx_id);
-        /* phyPHRDuration */
-        AckWaitDuration += phr_duration_sym(trx_id);
 
         switch (tal_pib[trx_id].phy.modulation)
         {
 #ifdef SUPPORT_FSK
             case FSK:
-                /* PSDU duration, len = 3 + FCS = 5 or 7 */
+                /* PHR uses same data rate as PSDU */
+                ack_len += 2;
                 if (tal_pib[trx_id].phy.phy_mode.fsk.mod_type == F4FSK)
                 {
                     ack_len /= 2;
+                }
+                if (tal_pib[trx_id].FSKFECEnabled)
+                {
+                    ack_len *= 2;
                 }
                 AckWaitDuration += ack_len * 8;
                 break;
 #endif
 #ifdef SUPPORT_OFDM
             case OFDM:
+                /* phyPHRDuration */
+                AckWaitDuration += phr_duration_sym(trx_id);
                 /* PSDU len = 3 + FCS = 5 or 7; add TAIL and PAD; */
                 AckWaitDuration += ceiling_sym(trx_id, ack_len * tal_pib[trx_id].OctetDuration_us);
                 break;
 #endif
 #ifdef SUPPORT_OQPSK
             case OQPSK:
+                /* phyPHRDuration */
+                AckWaitDuration += phr_duration_sym(trx_id);
                 /* PSDU duration */
                 AckWaitDuration += oqpsk_ack_psdu_duration_sym(trx_id);
                 break;
 #endif
             default:
+                AckWaitDuration = 0;
                 break;
         }
     }
@@ -852,7 +893,7 @@ uint8_t shr_duration_sym(trx_id_t trx_id)
     {
 #ifdef SUPPORT_FSK
         case FSK:
-            /* Preamble + SFD=2*/
+            /* Preamble + SFD; SFD=2 */
             shr = (tal_pib[trx_id].FSKPreambleLength + 2) * 8;
             break;
 #endif
@@ -924,7 +965,7 @@ static uint16_t oqpsk_ack_psdu_duration_sym(trx_id_t trx_id)
  * @return Chip rate
  */
 #ifdef SUPPORT_OQPSK
-uint16_t oqpsk_get_chip_rate(trx_id_t trx_id)
+static uint16_t oqpsk_get_chip_rate(trx_id_t trx_id)
 {
     uint16_t rate = 10 * (uint16_t)PGM_READ_BYTE(&oqpsk_chip_rate_table[tal_pib[trx_id].phy.phy_mode.oqpsk.chip_rate]);
 
@@ -992,6 +1033,10 @@ float get_data_rate(trx_id_t trx_id)
             if (tal_pib[trx_id].phy.phy_mode.fsk.mod_type == F4FSK)
             {
                 rate *= 2;
+            }
+            if (tal_pib[trx_id].FSKFECEnabled)
+            {
+                rate /= 2;
             }
             break;
 #endif
