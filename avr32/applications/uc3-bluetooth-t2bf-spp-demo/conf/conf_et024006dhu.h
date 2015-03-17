@@ -51,7 +51,7 @@
 #ifndef _CONF_ET024006DHU_H_
 #define _CONF_ET024006DHU_H_
 
-// The following list of required defines is already set in 揺vk1105.h
+// The following list of required defines is already set in evk1105.h
 // ET024006_IFACE_MODE
 // ET024006_CMD_ADDR
 // ET024006_PARAM_ADDR

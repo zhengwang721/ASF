@@ -52,7 +52,7 @@
  * - \ref asfdoc_udi_msc_exqsg
  * - \ref asfdoc_udi_msc_config_examples
  *
- * For more details for Atmel庐 Software Framework (ASF) USB Device Stack,
+ * For more details for Atmel&reg; Software Framework (ASF) USB Device Stack,
  * refer to following application notes:
  * - <a href="http://www.atmel.com/dyn/resources/prod_documents/doc8360.pdf">
  *   AVR4900: ASF - USB Device Stack</a>
