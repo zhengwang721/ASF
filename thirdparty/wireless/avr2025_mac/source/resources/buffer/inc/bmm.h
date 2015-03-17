@@ -3,7 +3,7 @@
  *
  * @brief This file contains the Buffer Management Module definitions.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com

@@ -3,7 +3,7 @@
  *
  * \brief Getting Started with CHIP_NAME
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -525,7 +525,7 @@ is chosen here.
 </tr>
 <tr>
 <td>A</td>
-<td>08/2013</td>
+<td>08/2013 - 2015</td>
 <td>Initial release</td>
 </tr>
 </table>

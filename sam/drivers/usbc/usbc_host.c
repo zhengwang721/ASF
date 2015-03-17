@@ -4,7 +4,7 @@
  * \brief USBC host driver
  * Compliance with common driver UHD
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

@@ -4,7 +4,7 @@
  *
  * \brief megaRF example for twi as slave
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

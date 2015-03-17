@@ -250,17 +250,17 @@
 /**
  * Support all TFA features
  * To include all TFA features to the build,
- * uncomment the following define SUPPORT_TFA.
+ * uncomment the following define ENABLE_TFA.
  */
-#   ifndef SUPPORT_TFA
-#       define SUPPORT_TFA
+#   ifndef ENABLE_TFA
+#       define ENABLE_TFA
 #   endif
 
 /**
  * Support all battery monitor features
  * To include all battery monitor features to the build,
  * uncomment the following define TFA_BAT_MON.
- * It is a subset of the configuration SUPPORT_TFA.
+ * It is a subset of the configuration ENABLE_TFA.
  */
 #   ifndef TFA_BAT_MON
 #       define TFA_BAT_MON
@@ -290,7 +290,7 @@
  * Support the continuous transmission feature
  * To include the continuous transmission feature to the build,
  * uncomment the following define TFA_CW.
- * It is a subset of the configuration SUPPORT_TFA.
+ * It is a subset of the configuration ENABLE_TFA.
  */
 #   ifndef TFA_CW
 #       define TFA_CW
@@ -300,7 +300,7 @@
  * Support the TFA CCA feature
  * To include the TFA CCA to the build,
  * uncomment the following define TFA_CCA.
- * It is a subset of the configuration SUPPORT_TFA.
+ * It is a subset of the configuration ENABLE_TFA.
  */
 #   ifndef TFA_CCA
 #       define TFA_CCA

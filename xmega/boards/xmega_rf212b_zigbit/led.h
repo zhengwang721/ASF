@@ -6,7 +6,7 @@
  * This file contains definitions and services related to the LED features of
  * the XMEGA-AT86RF212B Zigbit board.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

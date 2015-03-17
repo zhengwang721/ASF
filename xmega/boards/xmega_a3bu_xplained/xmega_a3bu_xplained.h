@@ -8,7 +8,7 @@
  *
  * To use this board define BOARD=XMEGA_A3BU_XPLAINED.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

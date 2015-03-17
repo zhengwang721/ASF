@@ -11,7 +11,7 @@
  * - Userguide:          QTouch Library Peripheral Touch Controller User Guide.
  * - Support: http://www.atmel.com/design-support/
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

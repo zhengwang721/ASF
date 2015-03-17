@@ -76,7 +76,7 @@ typedef enum tal_state_tag
     TAL_WAKING_UP,
     TAL_TX,
     TAL_ED_SCAN
-#if (defined SUPPORT_TFA) || (defined TFA_CCA) || (defined TFA_CW)
+#if (defined ENABLE_TFA) || (defined TFA_CCA) || (defined TFA_CW)
     ,
     TAL_TFA_CW_RX,
     TAL_TFA_CW,
@@ -407,7 +407,7 @@ void trx_irq_timestamp_handler_cb(void);
 /*
  * Prototypes from tfa_batmon.c
  */
-#if (defined SUPPORT_TFA) || (defined TFA_BAT_MON) || (defined TFA_BAT_MON_IRQ)
+#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined TFA_BAT_MON_IRQ)
 void handle_batmon_irq(void);
 #endif
 

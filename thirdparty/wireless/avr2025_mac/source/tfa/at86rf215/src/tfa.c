@@ -50,7 +50,7 @@
 
 #include "tal_config.h"
 
-#if (defined SUPPORT_TFA) || (defined TFA_CW) || (defined TFA_CCA)
+#if (defined ENABLE_TFA) || (defined TFA_CW) || (defined TFA_CCA)
 
 /* === INCLUDES ============================================================ */
 
@@ -80,7 +80,7 @@
 /* === IMPLEMENTATION ====================================================== */
 
 
-#if (defined SUPPORT_TFA) || (defined TFA_CCA)
+#if (defined ENABLE_TFA) || (defined TFA_CCA)
 /**
  * @brief Perform a CCA
  *
@@ -92,11 +92,11 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
 {
     phy_enum_t ret;
 
-    //debug_text(PSTR("tfa_cca_perform()"));
+    debug_text(PSTR("tfa_cca_perform()"));
 
     if (tal_state[trx_id] != TAL_IDLE)
     {
-        //debug_text(PSTR("TAL busy"));
+        debug_text(PSTR("TAL busy"));
         ret = PHY_BUSY;
     }
     else
@@ -113,7 +113,7 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
             pal_timer_delay(tal_pib[trx_id].agc_settle_dur); // allow filters to settle
         }
 
-        //debug_text_val(PSTR("CCA dur"), tal_pib[trx_id].CCADuration_us);
+        debug_text_val(PSTR("CCA dur"), tal_pib[trx_id].CCADuration_us);
 
         /* Disable BB */
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
@@ -136,7 +136,7 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
         /* Wait until measurement is completed */
         while (TAL_RF_IS_IRQ_SET(trx_id, RF_IRQ_EDC) == false);
         TAL_RF_IRQ_CLR(trx_id, RF_IRQ_EDC);
-        //debug_text(PSTR("Measurement completed"));
+        debug_text(PSTR("Measurement completed"));
 #ifndef BASIC_MODE
         /* Disable EDC interrupt again */
         trx_bit_write(reg_offset + SR_RF09_IRQM_EDC, 0);
@@ -158,23 +158,23 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
 #else
         tal_current_ed_val[trx_id] = trx_reg_read(reg_offset + RG_RF09_EDV);
 #endif
-        //debug_text_val(PSTR("tal_current_ed_val = "), (uint8_t)tal_current_ed_val[trx_id]);
+        debug_text_val(PSTR("tal_current_ed_val = "), (uint8_t)tal_current_ed_val[trx_id]);
 #if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
         uint16_t dbm = 256 - tal_current_ed_val[trx_id];
 #endif
-        //debug_text_val(PSTR("Energy (dBm) = -"), dbm);
-        //debug_text_val(PSTR("tal_pib[trx_id].CCAThreshold = "), (uint8_t)tal_pib[trx_id].CCAThreshold);
-        //debug_text_val(PSTR("CCAThreshold dBm = -"), (uint8_t)(~(uint8_t)tal_pib[trx_id].CCAThreshold) + 1);
+        debug_text_val(PSTR("Energy (dBm) = -"), dbm);
+        debug_text_val(PSTR("tal_pib[trx_id].CCAThreshold = "), (uint8_t)tal_pib[trx_id].CCAThreshold);
+        debug_text_val(PSTR("CCAThreshold dBm = -"), (uint8_t)(~(uint8_t)tal_pib[trx_id].CCAThreshold) + 1);
         if (tal_current_ed_val[trx_id] < tal_pib[trx_id].CCAThreshold)
         {
             /* Idle */
-            //debug_text(PSTR("channel idle"));
+            debug_text(PSTR("channel idle"));
             ret = PHY_IDLE;
         }
         else
         {
             /* Busy */
-            //debug_text(PSTR("channel busy"));
+            debug_text(PSTR("channel busy"));
             ret = PHY_BUSY;
         }
 
@@ -185,7 +185,7 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
         }
         else
         {
-            //debug_text(PSTR("Switch back to TRXOFF"));
+            debug_text(PSTR("Switch back to TRXOFF"));
             /* Switch to TRXOFF */
             trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #ifdef IQ_RADIO
@@ -200,7 +200,7 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
 #endif
 
 
-#if (defined SUPPORT_TFA) || (defined TFA_CW)
+#if (defined ENABLE_TFA) || (defined TFA_CW)
 /**
  * @brief Starts continuous transmission on current channel
  *
@@ -211,11 +211,11 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
 {
     uint16_t len;
 
-    //debug_text(PSTR("tfa_continuous_tx_start()"));
+    debug_text(PSTR("tfa_continuous_tx_start()"));
 
     if (tal_state[trx_id] != TAL_IDLE)
     {
-        //debug_text(PSTR("TAL not IDLE"));
+        debug_text(PSTR("TAL not IDLE"));
         return;
     }
 
@@ -266,7 +266,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
 
     if (tx_mode == CW_MODE)
     {
-        //debug_text(PSTR("CW mode"));
+        debug_text(PSTR("CW mode"));
 
 #ifdef IQ_RADIO
         /* Disable embedded TX control */
@@ -285,7 +285,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
 #endif
 
         /* Trigger Tx start */
-        //debug_text(PSTR("Start transmission"));
+        debug_text(PSTR("Start transmission"));
 #ifdef IQ_RADIO
        pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TX);
 #else
@@ -295,7 +295,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
     }
     else // PRBS mode
     {
-        //debug_text(PSTR("PRBS mode"));
+        debug_text(PSTR("PRBS mode"));
 
         /* Enable continuous transmission mode */
         trx_bit_write(reg_offset + SR_BBC0_PC_CTX, 1);
@@ -313,7 +313,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
         }
         trx_write(reg_offset + RG_BBC0_TXFLL, (uint8_t *)&len, 2);
 
-        //debug_text(PSTR("Start transmission"));
+        debug_text(PSTR("Start transmission"));
         trx_reg_write(reg_offset + RG_RF09_CMD, RF_TX);
         trx_state[trx_id] = RF_TX;
 
@@ -340,7 +340,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
 #endif
 
 
-#if (defined SUPPORT_TFA) || (defined TFA_CW)
+#if (defined ENABLE_TFA) || (defined TFA_CW)
 /**
  * @brief Stops CW transmission
  *
@@ -348,7 +348,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
  */
 void tfa_continuous_tx_stop(trx_id_t trx_id)
 {
-    //debug_text(PSTR("tfa_continuous_tx_stop()"));
+    debug_text(PSTR("tfa_continuous_tx_stop()"));
 
     uint16_t reg_offset = BB_BASE_ADDR_OFFSET * trx_id;
     /* Stop continuous transmission */
@@ -381,7 +381,7 @@ void tfa_continuous_tx_stop(trx_id_t trx_id)
     else
     {
         tal_state[trx_id] = TAL_IDLE;
-        //debug_text(PSTR("Switch back to TRXOFF"));
+        debug_text(PSTR("Switch back to TRXOFF"));
         /* Switch to TRXOFF */
 #ifdef IQ_RADIO
         pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
@@ -395,7 +395,7 @@ void tfa_continuous_tx_stop(trx_id_t trx_id)
 #endif
 
 
-#endif /* #if (defined SUPPORT_TFA) || (defined TFA_CW) || (defined TFA_CCA) */
+#endif /* #if (defined ENABLE_TFA) || (defined TFA_CW) || (defined TFA_CCA) */
 
 
 /* EOF */

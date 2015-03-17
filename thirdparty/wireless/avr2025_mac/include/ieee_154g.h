@@ -3,7 +3,7 @@
  *
  * @brief This header holds all IEEE 802.15.4g-2012 constants and attribute identifiers
  *
- * $Id: ieee_154g.h 36182 2014-07-17 12:46:33Z uwalter $
+ * $Id: ieee_154g.h 36182 2015-07-17 12:46:33Z uwalter $
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com

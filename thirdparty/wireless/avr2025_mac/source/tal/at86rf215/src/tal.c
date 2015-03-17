@@ -333,7 +333,7 @@ void tal_task(void)
             {
                 debug_text(PSTR("tal_task - RF_IRQ_BATLOW"));
                 TAL_RF_IRQ_CLR(trx_id, RF_IRQ_BATLOW);
-#if (defined SUPPORT_TFA) || (defined TFA_BAT_MON_IRQ)
+#if (defined ENABLE_TFA) || (defined TFA_BAT_MON_IRQ)
                 handle_batmon_irq(); // see tfa_batmon.c
 #endif
             }
@@ -443,9 +443,9 @@ void wait_for_txprep(trx_id_t trx_id)
     do
     {
 #ifdef IQ_RADIO
-        state = (rf_cmd_state_t)pal_dev_reg_read(RF215_RF, GET_REG_ADDR(RG_RF09_STATE));
+        state = pal_dev_reg_read(RF215_RF, GET_REG_ADDR(RG_RF09_STATE));
 #else
-        state = (rf_cmd_state_t)trx_reg_read(reg_offset + RG_RF09_STATE);
+        state = trx_reg_read(reg_offset + RG_RF09_STATE);
 #endif       
 
         if (state != RF_TXPREP)
@@ -465,7 +465,7 @@ void wait_for_txprep(trx_id_t trx_id)
                 do
                 {
                     
-                    state = (rf_cmd_state_t)trx_reg_read(reg_offset + RG_RF09_STATE);
+                    state = trx_reg_read(reg_offset + RG_RF09_STATE);
                 }
                 while (state != RF_TXPREP);
                 break;
@@ -481,7 +481,7 @@ void wait_for_txprep(trx_id_t trx_id)
 #ifdef IQ_RADIO
         state = (rf_cmd_state_t)pal_dev_reg_read(RF215_RF, reg_offset + RG_RF09_STATE);
 #else
-        state = (rf_cmd_state_t)trx_reg_read( reg_offset + RG_RF09_STATE);
+        state = trx_reg_read( reg_offset + RG_RF09_STATE);
 #endif
         if (state != RF_TXPREP)
         {

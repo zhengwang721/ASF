@@ -4,7 +4,7 @@
  * @brief This header holds all IEEE 802.15.4-2006 constants and attribute
  * identifiers
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,7 +43,7 @@
  */
 
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013 - 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -1431,6 +1431,7 @@ typedef enum ch_pg_tag
 	CH_PG_LRP_UWB = 8,
 	CH_PG_SUN = 9,
 	CH_PG_GENERIC_PHY = 10,
+	
 	CH_PG_INVALID = 0xFF
 } SHORTENUM ch_pg_t;
 

@@ -223,7 +223,7 @@ void handle_ed_end_irq(trx_id_t trx_id)
         sampler_counter[trx_id]--;
         debug_text_val(PSTR("remaining sampler_counter = "),
                        (uint16_t)sampler_counter[trx_id]);
-					   printf("SAMPLER_COUNTER = %d",sampler_counter[trx_id]);
+			
         if (sampler_counter[trx_id] == 0)
         {
             /* Keep RF in Rx state */

@@ -3,7 +3,7 @@
  *
  * \brief Board configuration for flashcalw unit test.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

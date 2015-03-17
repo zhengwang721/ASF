@@ -65,7 +65,7 @@
 #include "tal.h"
 #include "tal_internal.h"
 #include "tal_config.h"
-#ifdef SUPPORT_TFA
+#ifdef ENABLE_TFA
 #include "tfa.h"
 #endif
 #include "mac_build_config.h"
@@ -621,8 +621,8 @@ retval_t trx_reset(trx_id_t trx_id)
             return FAILURE;
         }
 #else
-        trx_state[RF09] = (rf_cmd_state_t)trx_reg_read(RG_RF09_STATE);
-        trx_state[RF24] = (rf_cmd_state_t)trx_reg_read(RG_RF24_STATE);
+        trx_state[RF09] = trx_reg_read(RG_RF09_STATE);
+        trx_state[RF24] = trx_reg_read(RG_RF24_STATE);
 #endif
         if ((trx_state[RF09] != RF_TRXOFF) || (trx_state[RF24] != RF_TRXOFF))
         {

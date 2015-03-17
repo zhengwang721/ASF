@@ -3,7 +3,7 @@
  *
  * \brief SAM D21/R21/D10/D11 Quick Start Guide for Using Usart driver with DMA
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

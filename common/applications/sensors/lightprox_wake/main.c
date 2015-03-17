@@ -3,7 +3,7 @@
  *
  * \brief Common Sensor Service Light/Proximity Sensor Wake Event Example
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

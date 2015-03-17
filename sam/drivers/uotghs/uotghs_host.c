@@ -4,7 +4,7 @@
  * \brief USB host driver
  * Compliance with common driver UHD
  *
- * Copyright (C) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

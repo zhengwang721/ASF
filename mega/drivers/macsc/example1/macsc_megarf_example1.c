@@ -3,7 +3,7 @@
  *
  * \brief AVR MEGARF MAC Symbol Counter Driver Example 1
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

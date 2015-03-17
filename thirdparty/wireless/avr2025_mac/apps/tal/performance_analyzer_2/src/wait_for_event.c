@@ -4,7 +4,7 @@
  * \brief Event handling functionalities to start Peer Search - Performance
  * Analyzer application
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

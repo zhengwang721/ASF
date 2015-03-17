@@ -7,7 +7,7 @@
  * libraries for sensor devices on systems built around UC3, XMEGA, and SAM
  * microcontrollers.
  *
- * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

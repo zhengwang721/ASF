@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  */
 
 /*
-    FreeRTOS V7.3.0 - Copyright (C) 2013 Real Time Engineers Ltd.
+    FreeRTOS V7.3.0 - Copyright (C) 2013 - 2015 Real Time Engineers Ltd.
 
     FEATURES AND PORTS ARE ADDED TO FREERTOS ALL THE TIME.  PLEASE VISIT 
     http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.

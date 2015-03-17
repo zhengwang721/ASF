@@ -3,7 +3,7 @@
  *
  * \brief QTouch Sensor example with I2C interface configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

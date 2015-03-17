@@ -3,7 +3,7 @@
  *
  * \brief SIO service implementation - Performance Analyzer application
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1500,7 +1500,7 @@ void usr_perf_get_confirm(trx_id_t trx, uint8_t status, uint8_t parameter_type, 
 {
 
 	uint8_t *msg_buf;
-	uint8_t param_len;
+	uint8_t param_len = 0;
 
 	/* Pointer to size element - the content is written later. */
 	uint8_t *ptr_to_msg_size;

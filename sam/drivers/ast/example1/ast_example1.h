@@ -3,7 +3,7 @@
  *
  * \brief SAM Asynchronous Timer (AST) Example 1 Calendar Mode
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

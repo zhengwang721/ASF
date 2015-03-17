@@ -5,7 +5,7 @@
  * ADC calibration and averaging with the DAC voltage supply as reference
  * voltage.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

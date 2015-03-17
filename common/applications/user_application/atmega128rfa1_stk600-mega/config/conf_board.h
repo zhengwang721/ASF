@@ -4,7 +4,7 @@
  * \brief ATmega128RFA1 on STK600 board configuration template
  *
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

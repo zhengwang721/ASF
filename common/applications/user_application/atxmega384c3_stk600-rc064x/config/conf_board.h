@@ -3,7 +3,7 @@
  *
  * \brief ATxmega384C3 on STK600 board configuration template
  *
- * Copyright (C) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011- 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

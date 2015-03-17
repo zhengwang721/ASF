@@ -3,7 +3,7 @@
  *
  * \brief Common Sensor Service Proximity Sensor Calibration Example
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

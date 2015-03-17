@@ -3,7 +3,7 @@
  *
  * \brief USB peripheral host wrapper for ASF Stack USB Host Driver (UHD)
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
