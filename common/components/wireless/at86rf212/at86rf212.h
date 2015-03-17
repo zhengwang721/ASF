@@ -84,7 +84,7 @@
 #define CCA_PROCESS_TIME_SYM   (1)	/* TRX Parameter: CCA processing time in symbols */
 #define CCA_PREPARATION_DURATION_US   (50)	/* TRX Parameter: Preparation time for CCA */
 #define CCA_DURATION_SYM   (CCA_DETECTION_TIME_SYMBOL + CCA_PROCESS_TIME_SYM)	/* TRX Parameter: Complete CCA Duration in symbols */
-#define RST_PULSE_WIDTH_US   ((RST_PULSE_WIDTH_NS + 999) / 1000)	/* TRX Parameter: Round up RST_PULSE_WIDTH_NS value to 祍 */
+#define RST_PULSE_WIDTH_US   ((RST_PULSE_WIDTH_NS + 999) / 1000)	/* TRX Parameter: Round up RST_PULSE_WIDTH_NS value to µs */
 
 /** Register addresses */
 

@@ -620,7 +620,7 @@ static inline uint32_t parc_get_version(
  * </tr>
  *  <tr>
  *      <td>CMOS</td>
- *      <td>Complementary Metal鈥揙xide鈥揝emiconductor</td>
+ *      <td>Complementary Metal-Oxide-Semiconductor</td>
  * </tr>
  *  <tr>
  *      <td>DMA</td>

@@ -300,7 +300,7 @@ static bool app_microsd_install(void)
 
 	/* Fill header file */
 	app_microsd_write_file("--Data logs--\r\n");
-	app_microsd_write_file("timestamp - seconds - 癈\r\n");
+	app_microsd_write_file("timestamp - seconds - °C\r\n");
 
 	/* Notify install successfull */
 	app_microsd_ready = true;

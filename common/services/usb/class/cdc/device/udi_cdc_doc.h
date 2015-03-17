@@ -52,7 +52,7 @@
  * - \ref asfdoc_udi_cdc_exqsg
  * - \ref asfdoc_udi_cdc_config_examples
  *
- * For more details for Atmel庐 Software Framework (ASF) USB Device Stack and
+ * For more details for Atmel&reg; Software Framework (ASF) USB Device Stack and
  * USB Device CDC, refer to following application notes:
  * - <a href="http://www.atmel.com/dyn/resources/prod_documents/doc8360.pdf">
  *   AVR4900: ASF - USB Device Stack</a>

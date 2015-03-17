@@ -67,9 +67,9 @@ static uint16_t light, temperature, potentiometer, ext_voltage;
  *
  * This table gives the correspondence between the ADC code and the temperature.
  * Each elements of the table corresponds to an ADC code value.
- * The index in the table give the corresponding temperature (in癈) with
+ * The index in the table give the corresponding temperature (in°C) with
  * the following formula : Tempeature=index-5.
- * table[O] corresponds to -5癈 temperature code
+ * table[O] corresponds to -5°C temperature code
  * The following table gives the ADC code for VCC=3.3V
  */
 uint16_t temperature_code[]={
