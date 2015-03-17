@@ -21,8 +21,9 @@
 #define NMI_CHAR_MAX_LEN		(2)
 
 #define KEY_LEN             0x10
+
 enum {
-	DISABLE,
+	DISABLE = 0,
 	ENABLE
 };
 
@@ -281,23 +282,5 @@ struct att_info_data
     uint8_t data[1];
 };
 
-/// Message structure used to inform APP that an error has occurred in the profile server role task
-struct prf_server_error_ind
-{
-    /// Connection Handle
-	uint16_t conhdl;
-    /// Message ID
-	uint16_t msg_id;
-    /// Status
-	uint8_t status;
-};
 
-/// Connection type
-enum prf_con_type
-{
-    ///Discovery type connection
-    PRF_CON_DISCOVERY = 0x00,
-    /// Normal type connection
-    PRF_CON_NORMAL    = 0x01
-};
 #endif /* CMN_DEFS_H_ */

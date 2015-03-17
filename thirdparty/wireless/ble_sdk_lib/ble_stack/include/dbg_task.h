@@ -83,5 +83,7 @@ uint8_t dbg_wr_mem_req_handler32(uint32_t memAddr,uint32_t * data,uint8_t size);
 void dbg_wr_mem_req_handler32_reset(uint32_t memAddr,uint32_t * data,uint8_t size);
 uint8_t dbg_rd_mem_req_handler(uint32_t memAddr,uint8_t* data ,uint8_t size);
 
+void at_fw_patch_download(uint32_t* patch, uint32_t patch_size);
+
 #endif
 

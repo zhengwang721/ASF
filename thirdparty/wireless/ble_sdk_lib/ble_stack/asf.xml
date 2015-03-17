@@ -13,6 +13,8 @@
   <build type="c-source"      value="external_host/gattc_task.c"/>
   <build type="c-source"      value="external_host/gattm_task.c"/>
   <build type="c-source"      value="external_host/interface.c"/>
+  <build type="c-source"      value="external_host/htpt_task.c"/>
+  <build type="c-source"      value="profiles/htpt.c"/>
   
 		<build type="include-path"  value="include/"/>
 		<build type="include-path"  value="external_host/"/>  
@@ -28,7 +30,10 @@
   <build type="header-file"   value="include/gattm_task.h"/>
   <build type="header-file"   value="include/ll_if.h"/>
   <build type="header-file"   value="include/smpc_task.h"/>
-  <build type="include-path"  value="external_host/interface.h"/>
+  <build type="header-file"   value="external_host/interface.h"/>
+  <build type="header-file"   value="include/htpt.h"/>
+  <build type="header-file"   value="include/htpt_task.h"/>
+  <build type="header-file"   value="include/profiles.h"/>
 		
 		<build type="doxygen-entry-point" value="ble_stack_group"/>
 		<device-support-alias value="ble_stack_lib_support"/>

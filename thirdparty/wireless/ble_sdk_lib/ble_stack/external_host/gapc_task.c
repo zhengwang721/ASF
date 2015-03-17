@@ -86,7 +86,7 @@ void gapc_encrypt_cfm_handler(uint16_t conn_handle, uint8_t auth ,uint8_t key_fo
 	INTERFACE_SEND_NO_WAIT();
 	INTERFACE_DONE();
 	gapc_connection_cfm_handler(dummy_key, 0, dummy_key, 0, auth,
-					GAP_AUTHZ_NOT_SET, conn_handle);
+		GAP_AUTHZ_ACCEPT, conn_handle);
 }
 
 void gapc_get_tx_pwr_req_handler(uint16_t u16ConHdl)

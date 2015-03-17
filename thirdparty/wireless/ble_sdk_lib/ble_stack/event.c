@@ -7,7 +7,7 @@
 #include "gapc_task.h"
 #include "gattc_task.h"
 #include "gattm_task.h"
-
+#include "htpt_task.h"
 #include "device.h"
 
 #include "interface.h"
@@ -231,6 +231,43 @@ static at_ble_events_t handle_ble_event(uint16_t msg_id, uint16_t src_id, uint8_
 		gapc_sec_req_ind(src_id,data,(at_ble_slave_sec_request_t*)params);
 	}
 	break;
+	case HTPT_CREATE_DB_CFM:
+	{
+		evt_num = AT_BLE_HTPT_CREATE_DB_CFM;
+		htpt_create_db_cfm_handler(src_id,data, (at_ble_htpt_create_db_cfm_t*)params);
+	}
+	break;
+	case HTPT_DISABLE_IND:
+	{
+		evt_num = AT_BLE_HTPT_DISABLE_IND;
+		htpt_disable_ind_handler(src_id,data, (at_ble_htpt_disable_ind_t*)params);
+	}
+	break;
+	case HTPT_ERROR_IND:
+	{
+		evt_num = AT_BLE_HTPT_ERROR_IND;
+		htpt_error_ind_handler(src_id,data, (struct prf_server_error_ind*)params);
+	}
+	break;
+	case HTPT_TEMP_SEND_CFM:
+	{
+		evt_num = AT_BLE_HTPT_TEMP_SEND_CFM;
+		htpt_temp_send_cfm_handler(src_id,data, (at_ble_htpt_temp_send_cfm_t*)params);
+	}
+	break;
+	case HTPT_MEAS_INTV_CHG_IND:
+	{
+		evt_num = AT_BLE_HTPT_MEAS_INTV_CHG_IND;
+		htpt_meas_intv_chg_ind_handler(src_id,data,(at_ble_htpt_meas_intv_chg_ind_t*)params);
+	}
+	break;
+	case HTPT_CFG_INDNTF_IND:
+	{
+		evt_num = AT_BLE_HTPT_CFG_INDNTF_IND;
+		htpt_cfg_indntf_ind_handler(src_id,data,(at_ble_htpt_cfg_indntf_ind_t*)params);
+	}
+	break;
+
 	default:
 		break;
 	}
