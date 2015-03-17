@@ -1,0 +1,20 @@
+<asf xmlversion="1.0">
+	<module type="component" id="thirdparty.wireless.ble_sdk.components.sensor.at30tse75x" caption="AT30TSE75X Temperature Sensor">
+		<info type="description" value="summary">
+		Driver for the AT30TSE75X Series Temperature Sensor.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Sensors" />
+		</info>
+
+		<build type="include-path" value="."/>
+		<build type="header-file" subtype="api" value="at30tse75x.h"/>
+		<build type="c-source" value="at30tse75x.c"/>
+  
+  <require idref="sam.drivers.twi"/>
+
+		<build type="module-config" subtype="path" value="module_config"/>
+		<build type="module-config" subtype="required-header-file" value="conf_at30tse75x.h"/>
+		<device-support value="sam"/>
+	</module>
+</asf>

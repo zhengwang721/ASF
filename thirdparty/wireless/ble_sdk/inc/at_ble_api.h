@@ -41,7 +41,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
+#include "profiles.h"
 /****************************************************************************************
 *							        Macros	                                     							*
 ****************************************************************************************/
@@ -242,6 +242,19 @@ typedef enum{
 	/* L2CAP events */
 	/** An L2CAP packet recieved from a registered custom CID */
 	AT_BLE_L2CAP_RX, 
+	/* HTPT Health Thermometer Profile events */
+	/** Inform APP of database creation status */
+	AT_BLE_HTPT_CREATE_DB_CFM, 
+	/** Error indication to APP*/
+	AT_BLE_HTPT_ERROR_IND,
+	/** Automatically sent to the APP after a disconnection with the peer device to confirm disabled profile*/
+	AT_BLE_HTPT_DISABLE_IND,
+	/** Temperature value confirm to APP*/
+	AT_BLE_HTPT_TEMP_SEND_CFM,
+	/** Inform APP of new measurement interval value */
+	AT_BLE_HTPT_MEAS_INTV_CHG_IND,
+	/** Inform APP of new configuration value*/
+	AT_BLE_HTPT_CFG_INDNTF_IND,
 	/* Custom user defined events */
 	/** A user-defined event is delivered to the system */
 	AT_BLE_CUSTOM_EVENT, 
@@ -447,6 +460,126 @@ typedef enum
 	 /** A passkey needs to be generated and displayed as part of pairing procedure */
 	AT_BLE_PAIR_PASSKEY_DISPLAY
 }at_ble_passkey_type_t;
+
+
+
+/**@brief HTPT Database Configuration Flags
+*/
+typedef enum 
+{
+    ///Indicate if Temperature Type Char. is supported
+    HTPT_TEMP_TYPE_CHAR_SUP        = 0x01,
+    ///Indicate if Intermediate Temperature Char. is supported
+    HTPT_INTERM_TEMP_CHAR_SUP      = 0x02,
+    ///Indicate if Measurement Interval Char. is supported
+    HTPT_MEAS_INTV_CHAR_SUP        = 0x04,
+    ///Indicate if Measurement Interval Char. supports indications
+    HTPT_MEAS_INTV_IND_SUP         = 0x08,
+    ///Indicate if Measurement Interval Char. is writable
+    HTPT_MEAS_INTV_WR_SUP          = 0x10,
+
+    /// All Features supported
+    HTPT_ALL_FEAT_SUP              = 0x1F,
+}at_ble_htpt_db_config_flag;
+
+/**@brief Service Security Level
+*/
+
+typedef enum
+{
+	//Service can be browsed but attributes cannot be accessed
+	HTPT_DISABLE = 0x00,
+	//Service can be browsed and attributes can be accessed according to attribute permission
+	HTPT_ENABLE = 0x01,
+	//Service can be used with minimum Unauthenticated Link (Just Work Pairing)
+	HTPT_UNAUTH = 0x02,
+	//Service can be used with Authenticated Link (Pin code Pairing)
+	HTPT_AUTH = 0x03
+}at_ble_htpt_sec_level;
+
+/**@brief Attribute Table Indexes
+*/
+typedef enum
+{
+    HTPT_TEMP_MEAS_CHAR,
+    HTPT_TEMP_TYPE_CHAR,
+    HTPT_INTERM_TEMP_CHAR,
+    HTPT_MEAS_INTV_CHAR,
+
+    HTPT_CHAR_MAX
+}at_ble_htpt_attr_index;
+
+/**@brief Temperature Measurement Flags field bit values
+*/
+typedef enum
+{
+    /// Temperature Units Flag - Celsius
+    HTPT_FLAG_CELSIUS             = 0x00,
+    /// Temperature Units Flag - Fahrenheit
+    HTPT_FLAG_FAHRENHEIT,
+    /// Time Stamp Flag
+    HTPT_FLAG_TIME,
+   /// Temperature Type Flag
+    HTPT_FLAG_TYPE                 = 0x04
+}at_ble_htpt_temp_flags;
+
+
+/**@brief Temperature Type Description 
+*/
+typedef enum 
+{
+    /// Armpit
+    HTP_TYPE_ARMPIT                   = 0x01,
+    /// Body (general)
+    HTP_TYPE_BODY                     = 0x02,
+    /// Ear (usually ear lobe)
+    HTP_TYPE_EAR                      = 0x03,
+    /// Finger
+    HTP_TYPE_FINGER                   = 0x04,
+    /// Gastro-intestinal Tract
+    HTP_TYPE_GASTRO_INTESTINAL_TRACT  = 0x05,
+    /// Mouth
+    HTP_TYPE_MOUTH                    = 0x06,
+    /// Rectum
+    HTP_TYPE_RECTUM                   = 0x07,
+    /// Toe
+    HTP_TYPE_TOE                      = 0x08,
+    /// Tympanum (ear drum)
+    HTP_TYPE_TYMPANUM                 = 0x09
+}at_ble_htpt_temp_type;
+
+/**@brief Connection Type 
+*/
+typedef enum 
+{
+	HTPT_CONFIG_CONN= 0,
+	HTPT_NORMAL_CONN=1
+}at_ble_htpt_conn_type;
+
+/**@brief Enable/Disable Notification/Indication 
+*/
+typedef enum 
+{
+    /// Stop notification/indication
+    HTPT_STOP_NTFIND = 0x0000,
+    /// Start notification
+    HTPT_START_NTF,
+    /// Start indication
+    HTPT_START_IND,
+}at_ble_htpt_ntfind;
+
+
+/**@brief Enable Notification/Indication for HTPT characteristics
+*/
+typedef enum 
+{
+    /// Stable measurement interval indication enabled
+    HTPT_CFG_STABLE_MEAS_IND    = (1 << 0),
+    /// Intermediate measurement notification enabled
+    HTPT_CFG_INTERM_MEAS_NTF    = (1 << 1),
+    /// Measurement interval indication
+    HTPT_CFG_MEAS_INTV_IND      = (1 << 2),
+}at_ble_htpt_ntf_ind_cfg;
 
 /****************************************************************************************
 *							        Structures                                     							*
@@ -824,7 +957,68 @@ typedef struct
 	uint8_t* data;
 
 }at_ble_l2cap_rx_t;
-	
+
+
+/** @brief Parameters of the @ref HTPT_CREATE_DB_CFM message
+*/
+
+typedef struct 
+{
+    ///Status
+    uint8_t status;
+}at_ble_htpt_create_db_cfm_t;
+
+/** @brief Parameters of the @ref HTPT_DISABLE_IND message
+*/
+typedef struct 
+{
+    ///Connection handle
+    uint16_t conhdl;
+
+    ///Temperature measurement indication configuration
+    uint16_t temp_meas_ind_en;
+    ///Intermediate temperature notification configuration
+    uint16_t interm_temp_ntf_en;
+    ///Measurement interval indication configuration
+    uint16_t meas_intv_ind_en;
+    ///Measurement interval
+    uint16_t meas_intv;
+}at_ble_htpt_disable_ind_t;
+
+/** @brief Parameters of the @ref HTPT_TEMP_UPD_CFM message
+*/
+
+typedef struct 
+{
+    ///Connection handle
+    uint16_t conhdl;
+    ///Status
+    uint8_t status;
+    ///Confirmation Type
+    uint8_t cfm_type;
+}at_ble_htpt_temp_send_cfm_t;
+
+/** @brief Parameters of the @ref HTPT_MEAS_INTV_CHG_IND message
+*/
+
+typedef struct 
+{
+    uint16_t intv;
+}at_ble_htpt_meas_intv_chg_ind_t;
+
+/** @brief Parameters of the @ref HTPT_CFG_INDNTF_IND message
+*/
+
+typedef struct
+{
+    ///Connection handle
+    uint16_t conhdl;
+    ///Stop/notify/indicate value to configure into the peer characteristic
+    uint16_t cfg_val;
+    ///Own code for differentiating between Temperature Measurement, Intermediate Temperature and Measurement Interval chars
+    at_ble_htpt_attr_index char_code;
+}at_ble_htpt_cfg_indntf_ind_t;
+
 /****************************************************************************************
 *                                       Functions                                       *
 ****************************************************************************************/
@@ -1664,6 +1858,83 @@ at_ble_status_t at_ble_l2cap_tx(at_ble_handle_t conn_handle, uint16_t cid, uint8
 
 /** @}*/
 
+
+/**
+@defgroup htpt HTPT API
+
+@{
+*/
+
+ /**@brief This API message shall be used to add an instance of the Health Thermometer service into the database.
+  * This should be done during the initialization phase of the device , after the function is called you should wait for 
+  * @ref AT_BLE_HTPT_CREATE_DB_CFM event
+  *
+  * @param[in] features Indicate if optional features are supported or not, see @ref at_ble_htpt_db_config_flag
+  * @param[in] temp_type type of temprature as defined in org.bluetooth.characteristic.temperature_type
+  * @param[in] valid_range_min Minimal measurement interval value
+  * @param[in] valid_range_max Maximal measurement interval value
+  * @param[in] meas_intv Latest known value for measurement interval  ()
+  * @param[in] sec_lvl can be : Disable(0) , Enable(1), Unauth(2), Auth(3) see @ref at_ble_svc_sec_level
+  *
+  * @return @ref AT_BLE_SUCCESS operation completed successfully
+  * @return @ref AT_BLE_FAILURE Generic error.
+  */
+at_ble_status_t at_ble_htpt_create_db(at_ble_htpt_db_config_flag features,
+									  at_ble_htpt_temp_type  temp_type,
+									  uint16_t valid_range_min,
+									  uint16_t valid_range_max,
+									  uint16_t meas_intv,
+									  at_ble_htpt_sec_level sec_lvl
+									  );
+
+
+ /**@brief This API message is used for enabling the Thermometer role of the Health Thermometer profile.
+  * This should be called after the database creation
+  *
+  * @param[in] conn_handle handle of the connection
+  * @param[in] ntf_ind_cfg Enable notifications or indications for profile characteristics see @ref at_ble_htpt_ntf_ind_cfg
+  *
+  * @return @ref AT_BLE_SUCCESS operation completed successfully
+  * @return @ref AT_BLE_FAILURE Generic error.
+  */
+at_ble_status_t at_ble_htpt_enable(     at_ble_handle_t conn_handle,
+										at_ble_htpt_ntf_ind_cfg ntf_ind_cfg
+										);
+
+
+ /**@brief This message is used by the application (which handles the temperature device driver and
+  * measurements) to send a temperature measurement through the Thermometer role.
+  *
+  * @param[in] temp temperature value
+  * @param[in] time_stamp The time of reading according to the format defined in struct prf_date_time
+  * @param[in] flags temp flag see @ref at_ble_htpt_temp_flags
+  * @param[in] type temp type see @ref at_ble_htpt_temp_type
+  * @param[in] flag_stable_meas Stable or intermediary type of temperature  (True stable meas, else false)
+  *
+  * @return @ref AT_BLE_SUCCESS operation completed successfully
+  * @return @ref AT_BLE_FAILURE Generic error.
+  */
+at_ble_status_t at_ble_htpt_temp_send(	uint32_t temp,
+										struct prf_date_time* time_stamp,
+										at_ble_htpt_temp_flags  flags,
+										at_ble_htpt_temp_type  type,
+										bool flag_stable_meas);
+
+
+ /**@brief This message is used by the application to order the HTPT profile to generate an indication (if enabled)
+  * of the Measurement Interval Char. This can be done as the application desires, at each connection, or if the
+  * measurement interval value has been modified locally (interface for this is not provided since a normal thermometer
+  * would have very few configurable UI elements and configuration should be done through Collector)
+  *
+  * @param[in] meas_intv Measurement Interval value
+  *
+  * @return @ref AT_BLE_SUCCESS operation completed successfully
+  * @return @ref AT_BLE_FAILURE Generic error.
+  */
+at_ble_status_t at_ble_htpt_meas_intv_update(uint16_t meas_intv);
+
+
+/** @}*/
 
 /* utility functions, might be removed lated */
 static uint8_t at_ble_uuid_type2len(at_ble_uuid_type_t type)
