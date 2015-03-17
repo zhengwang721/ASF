@@ -143,10 +143,6 @@ COMPILER_ALIGNED(16)
 DmacDescriptor example_descriptor SECTION_DMAC_DESCRIPTOR;
 static uint16_t adc_rslt[BUFFER_LEN] SECTION_DMAC_DESCRIPTOR;
 
-/* Flag to indicate if a low-voltage situation has occurred */
-static volatile bool low_voltage = false;
-
-
 /**
  * \brief LED0 toggles times.
  */
@@ -168,7 +164,6 @@ enum led_toggle_times {
  */
 static void configure_usart(void)
 {
-
 	struct usart_config config_usart;
 	usart_get_config_defaults(&config_usart);
 	config_usart.baudrate    = CONF_STDIO_BAUDRATE;
@@ -284,37 +279,6 @@ static void configure_dma(void)
 	dma_start_transfer_job(&example_resource);
 }
 
-/**
- * \brief Config MCLK.
- */
-static void configure_mclk(void)
-{
-	uint32_t mask=0;
-
-	mask = MCLK_APBAMASK_WDT | MCLK_APBAMASK_RTC | MCLK_APBAMASK_TAL;
-	system_apb_clock_clear_mask(SYSTEM_CLOCK_APB_APBA,mask);
-
-	mask = MCLK_APBBMASK_USB;
-	system_apb_clock_clear_mask(SYSTEM_CLOCK_APB_APBB,mask);
-
-	mask = MCLK_APBCMASK_TRNG | MCLK_APBCMASK_AES | MCLK_APBCMASK_DAC |
-		 MCLK_APBCMASK_TC0 | MCLK_APBCMASK_TC1 | MCLK_APBCMASK_TC2 | MCLK_APBCMASK_TC3 |
-		 MCLK_APBCMASK_TCC2 | MCLK_APBCMASK_TCC1 | MCLK_APBCMASK_TCC0 |
-		 MCLK_APBCMASK_SERCOM4 | MCLK_APBCMASK_SERCOM2 | MCLK_APBCMASK_SERCOM1 | MCLK_APBCMASK_SERCOM0;
-
-	system_apb_clock_clear_mask(SYSTEM_CLOCK_APB_APBC,mask);
-
-	mask = MCLK_APBDMASK_CCL | MCLK_APBDMASK_OPAMP| MCLK_APBDMASK_PTC |
-		MCLK_APBDMASK_AC | MCLK_APBDMASK_TC4 | MCLK_APBDMASK_SERCOM5 | MCLK_APBDMASK_ADC | MCLK_APBDMASK_EVSYS;
-	system_apb_clock_clear_mask(SYSTEM_CLOCK_APB_APBD,mask);
-
-	mask = MCLK_APBEMASK_PAC;
-	system_apb_clock_clear_mask(SYSTEM_CLOCK_APB_APBE,mask);
-
-	mask = MCLK_AHBMASK_PAC | MCLK_AHBMASK_USB | MCLK_AHBMASK_PICOPRAM;
-	system_ahb_clock_clear_mask(mask);
-}
-
 static void extint_callback(void)
 {
 
@@ -370,7 +334,6 @@ static void main_clock_select_osc16m(void)
 	/* Select OSC16M as mainclock */
 	system_gclk_gen_get_config_defaults(&gclk_conf);
 	gclk_conf.source_clock = SYSTEM_CLOCK_SOURCE_OSC16M;
-	//gclk_conf.output_enable = true;
 	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclk_conf);
 	if (CONF_CLOCK_OSC16M_ON_DEMAND){
 		OSCCTRL->OSC16MCTRL.reg |= OSCCTRL_OSC16MCTRL_ONDEMAND;
@@ -417,7 +380,6 @@ static void main_clock_select_dfll(void)
 	/* Select DFLL for mainclock. */
 	system_gclk_gen_get_config_defaults(&gclk_conf);
 	gclk_conf.source_clock = SYSTEM_CLOCK_SOURCE_DFLL;
-	//gclk_conf.output_enable = true;
 	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclk_conf);
 
 }
@@ -473,13 +435,10 @@ static void test_idle_mode(void)
 {
 	printf("Warning:System will enter IDLE mode,please wait until LED0 becomes OFF \r\n");
 	test_active_mode(SYSTEM_PERFORMANCE_LEVEL_0);
-
-	//system_apb_clock_clear_mask(SYSTEM_CLOCK_APB_APBC,MCLK_APBCMASK_SERCOM3);
-
 	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
 	system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE);
 	system_sleep();
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC,MCLK_APBCMASK_SERCOM3);
+
     /* Toggles LED0 once wake up from IDLE sleep mode */
 	led_toggle_indication(LED0_TOGGLE_4);
 }
@@ -491,6 +450,9 @@ static void test_standby_mode_dynamic_power_sleepwalking(void)
 {
 
 	printf("System will enter STANDBY mode:Dynamic Power SleepWalking\r\n");
+	/* When entering standby mode, the FDPLL is still running even if not
+	 *	requested by any module causing extra consumption. Errata reference:12244
+	 */
 	test_active_mode(SYSTEM_PERFORMANCE_LEVEL_0);
 
 	memset(adc_rslt,0,sizeof(adc_rslt));
@@ -528,7 +490,6 @@ static void test_standby_mode_dynamic_power_sleepwalking(void)
 	system_sleep();
 
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC,MCLK_APBCMASK_SERCOM3);
 	usart_reset(&usart_instance);
 	configure_usart();
 
@@ -560,7 +521,12 @@ static void test_standby_mode_static_power_sleepwalking(void)
 {
 
 	printf("System will enter STANDBY mode:static power sleepwalking.\r\n");
+	/* When entering standby mode, the FDPLL is still running even if not
+	 *	requested by any module causing extra consumption. Errata reference:12244
+	 */
 	test_active_mode(SYSTEM_PERFORMANCE_LEVEL_0);
+
+	system_clock_source_disable(SYSTEM_CLOCK_SOURCE_XOSC32K);
 
 	/*
 		When VDDCORE is supplied by the BUCK converter in performance
@@ -597,7 +563,7 @@ static void test_standby_mode_static_power_sleepwalking(void)
 	system_sleep();
 
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC,MCLK_APBCMASK_SERCOM3);
+
 	usart_reset(&usart_instance);
 	configure_usart();
 
@@ -626,7 +592,18 @@ static void test_standby_mode_static_power_sleepwalking(void)
 static void test_backup_mode(void)
 {
 
-	test_active_mode(SYSTEM_PERFORMANCE_LEVEL_0);
+
+		
+	system_apb_clock_clear_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_SERCOM3);
+	system_gclk_chan_disable(SERCOM0_GCLK_ID_CORE+3);
+
+	struct port_config pin_conf;
+	port_get_config_defaults(&pin_conf);
+
+	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(CONF_STDIO_PAD0_PIN, &pin_conf);
+	port_pin_set_config(CONF_STDIO_PAD1_PIN, &pin_conf);
+	
 
 	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
 
@@ -650,21 +627,7 @@ static void test_off_mode(void)
 	system_set_sleepmode(SYSTEM_SLEEPMODE_OFF);
 	system_sleep();
 }
-#if 0
-static void config_clock_output_and_extwake_pin(void)
-{
-	struct system_pinmux_config pin_conf;
-	system_pinmux_get_config_defaults(&pin_conf);
 
-	pin_conf.mux_position = CONF_GCLK0_OUTPUT_PINMUX;
-	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-	system_pinmux_pin_set_config(CONF_GCLK0_OUTPUT_PIN, &pin_conf);
-	//pin_conf.mux_position = CONF_GCLK1_OUTPUT_PINMUX;
-	//system_pinmux_pin_set_config(CONF_GCLK1_OUTPUT_PIN, &pin_conf);
-
-}
-
-#endif
 /**
  * \brief Display menu.
  */
@@ -678,7 +641,7 @@ static void display_menu(void)
 	printf("  a : ACTIVE mode: Performance Level 0 at 12MHz\n\r");
 	printf("  b : ACTIVE mode: Performance Level 2 at 48MHz\n\r");
 	printf("  c : IDLE mode: Performance Level 0 at 12MHz\n\r");
-	printf("  d : STANDBY mode:Static Power SleepWalking\n\r");
+	printf("  d : STANDBY mode:PD0,PD1 and PD2 in retention state\n\r");
 	printf("  e : BACKUP mode\n\r");
 	printf("  f : OFF mode\n\r");
 	printf("  q : Enter dynamic power gating example\n\r");
@@ -696,23 +659,19 @@ int main(void)
 	/* Initialize clock system */
 	system_init();
 
-	//BOD33 disabled
+	/* BOD33 disabled */
 	SUPC->BOD33.reg &= ~SUPC_BOD33_ENABLE;
 
-	//Low power cache enabled
+	/* Low power cache enabled */
 	NVMCTRL->CTRLB.bit.READMODE = NVMCTRL_CTRLB_READMODE_LOW_POWER_Val;
 	NVMCTRL->CTRLB.bit.CACHEDIS = false;
 
-	// VDDCORE is supplied BUCK converter 
+	/* VDDCORE is supplied BUCK converter */ 
 	SUPC->VREG.bit.SEL = SUPC_VREG_SEL_BUCK_Val;
-
-	
-	configure_mclk();
 
 	delay_init();
 	configure_usart();
 	configure_extint_channel();
-	//config_clock_output_and_extwake_pin();
 
 	/* Turn LED0 ON */
 	port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
@@ -725,7 +684,7 @@ int main(void)
 		/* Toggles LED0 once wake up from BACKUP sleep mode */
 		led_toggle_indication(LED0_TOGGLE_8);
 	}
-
+	
 	while (true) {
 		display_menu();
 		while (usart_read_wait(&usart_instance, &key)) {
