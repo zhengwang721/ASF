@@ -784,9 +784,9 @@ void system_clock_init(void)
 	dfll_conf.loop_mode      = CONF_CLOCK_DFLL_LOOP_MODE;
 	dfll_conf.on_demand      = false;
 
-	/* Using DFLL48M COARSE and FINE CAL value from NVM User Row Mapping
-	     in DFLL.COARSE and DFLL.FINE helps to output a frequency close to 48 MHz.
-	     Not applicable for silicon rev C and previous*/
+	/* Using DFLL48M COARSE and FINE CAL value from NVM Software Calibration Area Mapping
+     in DFLL.COARSE and DFLL.FINE helps to output a frequency close to 48 MHz.
+	   Not applicable for silicon rev C and previous*/
 
 	/* Get MCU revision */
 	uint32_t rev = system_get_device_id();
@@ -795,10 +795,11 @@ void system_clock_init(void)
 	rev = rev >> DSU_DID_REVISION_Pos;
 
 	if (rev >= _SYSTEM_MCU_REVISION_D) {
-#define NVM_DFLL_COARSE_POS    58 //DFLL48M Coarse calibration value bit position
-#define NVM_DFLL_COARSE_SIZE   6  //DFLL48M Coarse calibration value bit size
-#define NVM_DFLL_FINE_POS      64 //DFLL48M Fine calibration value bit position
-#define NVM_DFLL_FINE_SIZE     10 //DFLL48M Fine calibration value bit size
+#define NVM_DFLL_COARSE_POS    58 /* DFLL48M Coarse calibration value bit position.*/
+#define NVM_DFLL_COARSE_SIZE   6  /* DFLL48M Coarse calibration value bit size.*/
+#define NVM_DFLL_FINE_POS      64 /* DFLL48M Fine calibration value bit position.*/
+#define NVM_DFLL_FINE_SIZE     10 /* DFLL48M Fine calibration value bit size.*/
+
 		uint32_t coarse =( *((uint32_t *)(NVMCTRL_OTP4)
 				+ (NVM_DFLL_COARSE_POS / 32))
 			>> (NVM_DFLL_COARSE_POS % 32))

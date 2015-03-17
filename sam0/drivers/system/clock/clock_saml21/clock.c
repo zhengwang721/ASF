@@ -852,10 +852,10 @@ void system_clock_init(void)
 	dfll_conf.on_demand      = false;
 	dfll_conf.run_in_stanby  = CONF_CLOCK_DFLL_RUN_IN_STANDBY;
 
-	/* Using DFLL48M COARSE CAL value from NVM User Row Mapping 
+	/* Using DFLL48M COARSE CAL value from NVM Software Calibration Area Mapping 
 	   in DFLL.COARSE helps to output a frequency close to 48 MHz.*/
-#define NVM_DFLL_COARSE_POS    26 //DFLL48M Coarse calibration value bit position
-#define NVM_DFLL_COARSE_SIZE   6  //DFLL48M Coarse calibration value bit size
+#define NVM_DFLL_COARSE_POS    26 /* DFLL48M Coarse calibration value bit position.*/
+#define NVM_DFLL_COARSE_SIZE   6  /* DFLL48M Coarse calibration value bit size.*/
 
 	uint32_t coarse =( *((uint32_t *)(NVMCTRL_OTP5)
 			+ (NVM_DFLL_COARSE_POS / 32))
