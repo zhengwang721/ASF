@@ -1287,7 +1287,7 @@ static void uhd_sof_interrupt(void)
 			// It is a micro SOF
 			if (!uhd_suspend_start && !uhd_resume_start) {
 				// If no resume and no suspend on going
-				// then send Micro start of frame event (each 125祍)
+				// then send Micro start of frame event (each 125 µs)
 				uhc_notify_sof(true);
 			}
 			return;
