@@ -626,12 +626,6 @@ static inline void extint_nmi_clear_detected(
  *      <th>Changelog</th>
  *  </tr>
  *  <tr>
- *      <td>Add SAML21 support</td>
- *  </tr>
- *  <tr>
- *      <td>Add SAMR21 support</td>
- *  </tr>
- *  <tr>
  *      <td>
  *      \li Driver updated to follow driver type convention.
  *      \li Removed \c %extint_reset(), \c %extint_disable() and
