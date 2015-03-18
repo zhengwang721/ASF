@@ -762,8 +762,8 @@ static inline enum status_code port_input_event_set_config(
  *	</tr>
   *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Added input event feature and support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Added input event feature and support for SAML21 and SAMDA0/A1.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
