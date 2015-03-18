@@ -615,7 +615,6 @@ enum status_code dac_chan_write(
  * \return Status of the operation.
  * \retval STATUS_OK           If the data was written or no data conversion required
  * \retval STATUS_ERR_UNSUPPORTED_DEV  The DAC is not configured as using event trigger
- *                                         
  * \retval STATUS_BUSY                 The DAC is busy to convert
  */
 enum status_code dac_chan_write_buffer_wait(
