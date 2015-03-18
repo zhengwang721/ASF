@@ -3,7 +3,7 @@
  *
  * \brief QTouch component task for the FreeRTOS Web/DSP Demo.
  *
- * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

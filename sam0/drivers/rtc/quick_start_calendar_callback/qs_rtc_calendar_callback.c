@@ -3,7 +3,7 @@
  *
  * \brief SAM RTC Calendar Callback Quick Start
  *
- * Copyright (C) 2013 - 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -97,7 +97,7 @@ void configure_rtc_calendar(void)
 //! [init_conf]
 
 //! [time_struct]
-	alarm.time.year      = 2015;
+	alarm.time.year      = 2013;
 	alarm.time.month     = 1;
 	alarm.time.day       = 1;
 	alarm.time.hour      = 0;

@@ -3,7 +3,7 @@
  *
  * \brief SAM Analog Comparator Driver
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1391,13 +1391,13 @@ static inline void ac_win_clear_status(
  *    </tr>
  *    <tr>
  *      <td>B</td>
- *      <td>06/2013 - 2015</td>
+ *      <td>06/2013</td>
  *      <td>Added additional documentation on the event system. Corrected
  *          documentation typos.</td>
  *    </tr>
  *    <tr>
  *      <td>A</td>
- *      <td>06/2013 - 2015</td>
+ *      <td>06/2013</td>
  *      <td>Initial release</td>
  *    </tr>
  * </table>

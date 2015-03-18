@@ -190,7 +190,7 @@ static void ftn_timer_cb(void *parameter)
 {
     trx_id_t trx_id = *(trx_id_t *)parameter;
 
-    debug_text(PSTR("ftn_timer_cb()"));
+    //debug_text(PSTR("ftn_timer_cb()"));
 
     if (tal_state[trx_id] == TAL_IDLE)
     {

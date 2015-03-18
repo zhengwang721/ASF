@@ -3,7 +3,7 @@
  *
  * \brief XMEGA A3BU Class B demonstration
  *
- * Copyright (C) 2012- 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

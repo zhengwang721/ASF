@@ -6,7 +6,7 @@
  * \par Application note:
  *      AVR1610: Guide to IEC60730 Class B compliance with XMEGA
  *
- * Copyright (C) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

@@ -3,7 +3,7 @@
  *
  * \brief SAM RTC Basic Usage Example
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -62,7 +62,7 @@ void configure_rtc_calendar(void)
 //! [time_struct]
 	struct rtc_calendar_time alarm;
 	rtc_calendar_get_time_defaults(&alarm);
-	alarm.year   = 2013 - 2015;
+	alarm.year   = 2013;
 	alarm.month  = 1;
 	alarm.day    = 1;
 	alarm.hour   = 0;

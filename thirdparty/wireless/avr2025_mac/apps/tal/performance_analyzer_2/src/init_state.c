@@ -4,7 +4,7 @@
  * \brief Initilization functions and utilities -
  * Performance Analyzer application
  *
- * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -130,7 +130,7 @@ void init_state_init(trx_id_t trx, void *arg)
 		phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_2000;
 		phy.freq_band = WORLD_2450;
 		phy.ch_spacing = LEG_2450_CH_SPAC;
-		phy.freq_f0 =  LEG_2450_F0;
+		phy.freq_f0 = LEG_2450_F0;
 		if (tal_pib_set(RF24, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
 		{
 			app_alert();

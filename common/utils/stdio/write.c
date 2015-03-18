@@ -4,7 +4,7 @@
  * \brief System-specific implementation of the \ref _write function used by
  *         the standard library.
  *
- * Copyright (c) 2009- 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

@@ -3,13 +3,13 @@
  *
  * @brief File contains TAL configuration parameters.
  *
- * $Id: specific_tal_config.h 35117 2013 - 2015-09-18 09:04:56Z uwalter $
+ * $Id: specific_tal_config.h 35117 2013-09-18 09:04:56Z uwalter $
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
  */
 /*
- * Copyright (c) 2013 - 2015, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -131,7 +131,7 @@
 #define SUPPORT_OFDM
 
 
-#define ENABLE_TFA
+#define SUPPORT_TFA
 
 #define RF215v1
 

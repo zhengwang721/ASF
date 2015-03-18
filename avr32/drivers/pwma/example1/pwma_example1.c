@@ -4,7 +4,7 @@
  * \brief Example to illustrate the basic PWMA Function 
  * of generating waveform to two different PWMA channels.
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

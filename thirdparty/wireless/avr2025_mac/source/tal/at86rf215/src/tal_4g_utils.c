@@ -1326,7 +1326,7 @@ void get_fsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band,fsk_op_mode_t opt
 oqpsk_chip_rate_t get_oqpsk_chip_rate(trx_id_t trx_id,sun_freq_band_t freq_band)
 {
 	uint16_t rate = 0;
-	uint8_t rate_mode = 0;
+	uint8_t rate_mode;
 
 	for (uint8_t i = 0; i < OQPSK_CHIP_RATE_FREQ_TABLE_ROW_SIZE; i++)
 	{

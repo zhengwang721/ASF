@@ -5,7 +5,7 @@
  *        Refer following application note for details.
  *        AT7694 - USB Mass Storage Device
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

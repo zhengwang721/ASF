@@ -3,7 +3,7 @@
  *
  * \brief QMatrix Example for ATMega128RFA1 on STK600 board.
  *
- * Copyright (C) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \page License
  *

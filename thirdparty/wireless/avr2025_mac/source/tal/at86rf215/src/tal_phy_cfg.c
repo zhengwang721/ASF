@@ -104,7 +104,7 @@ retval_t conf_trx_modulation(trx_id_t trx_id)
 
     /* Change PHY only in TRXOFF or TXPREP. Since TXPREP is not possible here, check for TRXOFF */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    rf_cmd_state_t previous_trx_state = trx_reg_read(reg_offset + RG_RF09_STATE);
+    rf_cmd_state_t previous_trx_state = (rf_cmd_state_t)trx_reg_read(reg_offset + RG_RF09_STATE);
     if (previous_trx_state != RF_TRXOFF)
     {
         trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);

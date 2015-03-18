@@ -3,7 +3,7 @@
  *
  * \brief SAM D21/D11/L21 Quick Start Guide for Using ADC/DAC driver with DMA
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

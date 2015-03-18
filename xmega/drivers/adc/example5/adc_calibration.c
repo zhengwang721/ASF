@@ -4,7 +4,7 @@
  * \brief AVR XMEGA Analog to Digital Converter Driver Example 5
  * ADC calibration with the DAC voltage supply for reference voltage.
  *
- * Copyright (C) 2013 - 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

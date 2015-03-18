@@ -3,7 +3,7 @@
  *
  * \brief ATPL230 Physical layer - Version
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -53,7 +53,7 @@
 
 /* \name Version information for ATPL230 */
 /* @{ */
-#define ATPL230_COPYMSG            "Copyright (c) 2015 Atmel Corporation. All rights reserved."
+#define ATPL230_COPYMSG            "Copyright (c) 2014 Atmel Corporation. All rights reserved."
 #define ATPL230_VERSION_STR        "23.00.01.02"
 #define ATPL230_VERSION_NUM        0x23000102
 

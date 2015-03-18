@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Slave Quick Start Guide with Callbacks
  *
- * Copyright (C) 2013 - 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

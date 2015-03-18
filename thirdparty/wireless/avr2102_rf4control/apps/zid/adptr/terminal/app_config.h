@@ -11,7 +11,7 @@
  */
 
 /*
- * Copyright (c) 2015, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */

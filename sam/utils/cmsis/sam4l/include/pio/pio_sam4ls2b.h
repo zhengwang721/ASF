@@ -3,7 +3,7 @@
  *
  * \brief Peripheral I/O description for SAM4LS2B
  *
- * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

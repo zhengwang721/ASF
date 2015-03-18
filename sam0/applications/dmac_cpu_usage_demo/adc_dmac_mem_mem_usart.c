@@ -3,7 +3,7 @@
  *
  * \brief SAMD10/SAMD11 DMAC Application Note Example for the case 'ADC_DMAC_MEM_MEM_USART'
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

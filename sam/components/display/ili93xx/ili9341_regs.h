@@ -3,7 +3,7 @@
  *
  * \brief registers definition for ili9341 TFT display component.
  *
- * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

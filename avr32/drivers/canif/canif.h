@@ -7,7 +7,7 @@
  * This file contains basic functions for the AVR32 CAN, with support for all
  * modes, settings and clock speeds.
  *
- * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

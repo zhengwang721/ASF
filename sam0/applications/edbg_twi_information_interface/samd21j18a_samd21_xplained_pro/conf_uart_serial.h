@@ -3,7 +3,7 @@
  *
  * \brief SAMD21 USART configuration.
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

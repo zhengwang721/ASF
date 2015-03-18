@@ -4,7 +4,7 @@
  * \brief This file defines a useful set of functions for the Serial interface on 
  * AVR MEGARF devices.
  *
- * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

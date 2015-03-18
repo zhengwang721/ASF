@@ -51,7 +51,7 @@
 #ifndef TFA_H
 #define TFA_H
 
-#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN) || \
+#if (defined SUPPORT_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN) || \
     (defined TFA_BAT_MON_READ) || (defined TFA_BAT_MON_IRQ) || \
     (defined TFA_CW) || (defined TFA_CCA)
 
@@ -124,7 +124,7 @@ typedef enum continuous_tx_mode_tag
 extern "C" {
 #endif
 
-#if (defined ENABLE_TFA) || (defined DOXYGEN)
+#if (defined SUPPORT_TFA) || (defined DOXYGEN)
     /**
      * @brief Initializes the TFA
      *
@@ -138,7 +138,7 @@ extern "C" {
     retval_t tfa_init(void);
 #endif
 
-#if (defined ENABLE_TFA) || (defined DOXYGEN)
+#if (defined SUPPORT_TFA) || (defined DOXYGEN)
     /**
      * @brief Reset the TFA
      *
@@ -152,7 +152,7 @@ extern "C" {
     void tfa_reset(bool set_default_pib);
 #endif
 
-#if (defined ENABLE_TFA) || (defined DOXYGEN)
+#if (defined SUPPORT_TFA) || (defined DOXYGEN)
     /**
      * @brief Gets a TFA PIB attribute
      *
@@ -170,7 +170,7 @@ extern "C" {
     retval_t tfa_pib_get(tfa_pib_t tfa_pib_attribute, void *value);
 #endif
 
-#if (defined ENABLE_TFA) || (defined DOXYGEN)
+#if (defined SUPPORT_TFA) || (defined DOXYGEN)
     /**
      * @brief Sets a TFA PIB attribute
      *
@@ -189,7 +189,7 @@ extern "C" {
     retval_t tfa_pib_set(tfa_pib_t tfa_pib_attribute, void *value);
 #endif
 
-#if (defined ENABLE_TFA) || (defined TFA_CCA) || (defined DOXYGEN)
+#if (defined SUPPORT_TFA) || (defined TFA_CCA) || (defined DOXYGEN)
 #ifdef MULTI_TRX_SUPPORT
     /**
      * @brief Perform a CCA
@@ -217,7 +217,7 @@ extern "C" {
 #endif /* #ifdef MULTI_TRX_SUPPORT */
 #endif
 
-#if (defined ENABLE_TFA) || (defined TFA_CCA) || (defined DOXYGEN)
+#if (defined SUPPORT_TFA) || (defined TFA_CCA) || (defined DOXYGEN)
 #ifdef MULTI_TRX_SUPPORT
     /**
      * @brief Perform a single ED measurement
@@ -245,7 +245,7 @@ extern "C" {
 #endif /* #ifdef MULTI_TRX_SUPPORT */
 #endif
 
-#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN) || \
+#if (defined SUPPORT_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN) || \
     (defined TFA_BAT_MON_READ)
     /**
      * @brief Gets the transceiver's supply voltage
@@ -257,7 +257,7 @@ extern "C" {
     uint16_t tfa_get_batmon_voltage(void);
 #endif
 
-#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN) || \
+#if (defined SUPPORT_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN) || \
     (defined TFA_BAT_MON_IRQ)
     /**
      * @brief Setups the battery monitor interrupt
@@ -273,7 +273,7 @@ extern "C" {
     retval_t tfa_batmon_irq_init(FUNC_PTR(batmon_irq_cb), uint16_t vth);
 #endif
 
-#if (defined ENABLE_TFA) || (PAL_GENERIC_TYPE == MEGA_RF) || (defined DOXYGEN)
+#if (defined SUPPORT_TFA) || (PAL_GENERIC_TYPE == MEGA_RF) || (defined DOXYGEN)
     /**
      * @brief Get the temperature value from the integrated sensor
      *
@@ -284,7 +284,7 @@ extern "C" {
     double tfa_get_temperature(void);
 #endif
 
-#if ((defined ENABLE_TFA) || (defined TFA_CW) || defined(DOXYGEN))
+#if ((defined SUPPORT_TFA) || (defined TFA_CW) || defined(DOXYGEN))
 #ifdef MULTI_TRX_SUPPORT
     /**
      * @brief Starts continuous transmission on current channel
@@ -306,7 +306,7 @@ extern "C" {
 #endif /* #ifdef MULTI_TRX_SUPPORT */
 #endif
 
-#if ((defined ENABLE_TFA) || (defined TFA_CW) || defined(DOXYGEN))
+#if ((defined SUPPORT_TFA) || (defined TFA_CW) || defined(DOXYGEN))
 #ifdef MULTI_TRX_SUPPORT
     /**
      * @brief Stops CW transmission
@@ -328,7 +328,7 @@ extern "C" {
 #endif
 
 
-#endif /* #ifdef ENABLE_TFA */
+#endif /* #ifdef SUPPORT_TFA */
 
 #endif /* TFA_H */
 /* EOF */

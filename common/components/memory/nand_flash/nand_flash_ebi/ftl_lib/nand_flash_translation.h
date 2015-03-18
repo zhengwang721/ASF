@@ -6,7 +6,7 @@
  * This file contains definitions and functions for NAND Flash translation
  * operation.
  *
- * Copyright (c) 2012- 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

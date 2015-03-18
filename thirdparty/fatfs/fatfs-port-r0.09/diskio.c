@@ -3,7 +3,7 @@
  *
  * \brief Implementation of low level disk I/O module skeleton for FatFS.
  *
- * Copyright (c) 2012 - 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -73,7 +73,7 @@ static void configure_rtc_calendar(void)
 
 	struct rtc_calendar_time init_time;
 	rtc_calendar_get_time_defaults(&init_time);
-	init_time.year   = 2015;
+	init_time.year   = 2014;
 	init_time.month  = 1;
 	init_time.day    = 1;
 	init_time.hour   = 0;

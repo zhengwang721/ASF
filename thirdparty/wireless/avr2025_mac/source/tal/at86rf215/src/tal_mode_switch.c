@@ -647,9 +647,9 @@ void handle_rx_ms_packet(trx_id_t trx_id)
 
     /* Parse new mode */
     modulation_t modulation = (modulation_t)(MOD0(phr) | (MOD1(phr) << 1));
-    debug_text_val(PSTR("New mode modulation"), modulation);
+    //debug_text_val(PSTR("New mode modulation"), modulation);
     uint8_t mode = MD0(phr) | (MD1(phr) << 1) | (MD2(phr) << 2);
-    debug_text_val(PSTR("New mode mode"), mode);
+    //debug_text_val(PSTR("New mode mode"), mode);
 
     phy_t temp_phy;
     memcpy(&temp_phy, &tal_pib[trx_id].phy, sizeof(phy_t));

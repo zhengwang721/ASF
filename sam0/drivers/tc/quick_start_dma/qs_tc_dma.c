@@ -3,7 +3,7 @@
  *
  * \brief SAM D21/R21/D11/L21 Timer/Counter Driver with DMA Quickstart
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

@@ -626,7 +626,7 @@ tal_trx_status_t tal_get_trx_status(trx_id_t trx)
 	if(tal_state[trx] == TAL_SLEEP)
 	return TRX_SLEEP;
 	/* Read the status from trx_status bits */
-	trx_status = trx_bit_read(rf_reg_offset + SR_RF09_STATE_STATE);
+	trx_status = (rf_cmd_status_t)trx_bit_read(rf_reg_offset + SR_RF09_STATE_STATE);
 	switch (trx_status)
 	{
 		case STATUS_RF_RESET:

@@ -342,7 +342,7 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
             trx_reg_write(reg_pc, pc);
             if (cca == WITH_CCA)
             {
-                rf_cmd_state_t state = trx_reg_read(reg_offset + RG_RF09_STATE);
+                rf_cmd_state_t state = (rf_cmd_state_t)trx_reg_read(reg_offset + RG_RF09_STATE);
                 if (state != RF_RX)
                 {
                     pc |= PC_BBEN_MASK;

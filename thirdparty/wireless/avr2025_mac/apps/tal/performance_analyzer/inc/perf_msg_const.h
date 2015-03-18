@@ -3,7 +3,7 @@
  *
  * \brief This file defines all Req, confirm, Indication message constants.
  * - Performance Analyzer application
- * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /*
- * Copyright (c) 2013 - 2015, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -360,7 +360,6 @@ SHORTENUM;
 /**
  * Parameter value types
  */
-__PACK__DATA__
 typedef union {
 	/** Parameter Bool */
 	bool param_value_bool;
@@ -375,7 +374,6 @@ typedef union {
 	/** Parameter float*/
 	float param_value_float;
 } param_value_t;
-__PACK__RST_DATA__
 
 /* ! \} */
 #endif

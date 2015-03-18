@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific generic clock management.
  *
- * Copyright (c) 2011 - 2015 Atmel Corporation. All rights reserved.s
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.s
  *
  * \asf_license_start
  *

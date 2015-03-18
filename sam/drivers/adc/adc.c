@@ -3,7 +3,7 @@
  *
  * \brief Analog-to-Digital Converter (ADC/ADC12B) driver for SAM.
  *
- * Copyright (c) 2011 - 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

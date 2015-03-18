@@ -4,7 +4,7 @@
  *
  * \brief SAM SERCOM USART Driver
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1249,7 +1249,7 @@ static inline void usart_disable_transceiver(
  *	</tr>
  *	<tr>
  *		<td>B</td>
- *		<td>06/2013/td>
+ *		<td>06/2013</td>
  *		<td>Corrected documentation typos.</td>
  *	</tr>
  *	<tr>

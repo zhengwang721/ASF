@@ -4,7 +4,7 @@
  *
  * \brief SAM4SD32C toolkit demo configurations.
  *
- * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

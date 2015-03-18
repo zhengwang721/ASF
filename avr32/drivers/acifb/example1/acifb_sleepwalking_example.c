@@ -4,7 +4,7 @@
  * \brief Example to illustrate the Sleepwalking feature with the ACIFB module
  *        in AT32UC3L series
  *
- * Copyright (C) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

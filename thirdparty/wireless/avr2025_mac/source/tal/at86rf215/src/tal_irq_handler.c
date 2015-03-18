@@ -281,13 +281,13 @@ void bb_irq_handler_cb(void)
             {
                 debug_text(PSTR("BB IRQ - RXEM"));
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXEM)); // avoid Pa091
-                debug_text(PSTR("No further processing BB_IRQ_RXEM"));
+                //debug_text(PSTR("No further processing BB_IRQ_RXEM"));
             }
             if (irqs & BB_IRQ_RXAM)
             {
                 debug_text(PSTR("BB IRQ - RXAM"));
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXAM)); // avoid Pa091
-                debug_text(PSTR("No further processing BB_IRQ_RXAM"));
+                //debug_text(PSTR("No further processing BB_IRQ_RXAM"));
             }
             if (irqs & BB_IRQ_AGCR)
             {
@@ -295,7 +295,7 @@ void bb_irq_handler_cb(void)
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCR)); // avoid Pa091
                 uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
                 /* Release AGC */
-                debug_text(PSTR("Release AGC"));
+                //debug_text(PSTR("Release AGC"));
                 pal_trx_bit_write(RF215_RF, reg_offset + SR_RF09_AGCC_FRZC, 0);
 #ifdef IRQ_DEBUGGING
                 per[trx_id].agcr++;
@@ -318,7 +318,7 @@ void bb_irq_handler_cb(void)
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCH)); // avoid Pa091
                 /* Hold AGC */
                 uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-                debug_text(PSTR("Hold AGC"));
+                //debug_text(PSTR("Hold AGC"));
                 pal_trx_bit_write(RF215_RF, reg_offset + SR_RF09_AGCC_FRZC, 1);
 #ifdef IRQ_DEBUGGING
                 per[trx_id].agch++;
@@ -438,7 +438,7 @@ void bb_irq_handler_cb(void)
 void rf_irq_handler_cb(void)
 {
     debug_text(PSTR("rf_irq_handler_cb()"));
-    debug_text_val(PSTR("chip_mode ="), chip_mode);
+    //debug_text_val(PSTR("chip_mode ="), chip_mode);
 
     /* Get all IRQS values */
     uint8_t irqs_array[4];
@@ -582,7 +582,7 @@ static void switch_rf_to_txprep(trx_id_t trx_id)
     do
     {
         state = (rf_cmd_state_t)pal_trx_reg_read(RF215_RF, reg_offset + RG_RF09_STATE);
-        debug_text_val(PSTR("state"), state);
+        //debug_text_val(PSTR("state"), state);
     }
     while (state != RF_TXPREP);
     /* Clear TRXRDY interrupt */
