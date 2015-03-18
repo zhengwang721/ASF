@@ -56,6 +56,7 @@
 #include <stdbool.h>
 #include "pal.h"
 #include "tal_config.h"
+#include "tal_generic.h"
 #include "bmm.h"
 #include "stack_config.h"
 #include "return_val.h"
@@ -67,7 +68,7 @@
 #endif
 
 /* === TYPES =============================================================== */
-
+__PACK__DATA__
 /* Structure implementing the PIB values stored in TAL */
 typedef struct tal_pib_tag
 {
@@ -695,7 +696,7 @@ extern tal_pib_t tal_pib;
  */
 #define BAND_MULTIPLE                       (2)
 
-#if (TAL_TYPE == AT86RF231) ||\
+#if (TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF232)||\
     (TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == AT86RF233) ||\
     (TAL_TYPE == ATMEGARFR2) || (TAL_TYPE == AT86RF234)
 /** RF band */
@@ -707,6 +708,23 @@ extern tal_pib_t tal_pib;
 #else
 #error "Missing RF_BAND define"
 #endif
+
+/*
+ * Channel numbers and channel masks for scanning.
+ */
+#if (RF_BAND == BAND_2400) || defined(__DOXYGEN__)
+/** Minimum channel */
+#define MIN_CHANNEL                 (11)
+/** Maximum channel */
+#define MAX_CHANNEL                 (26)
+/** Valid channel masks for scanning */
+#define VALID_CHANNEL_MASK          (0x07FFF800UL)
+#else   /* 900 MHz */
+#define MIN_CHANNEL                 (0)
+#define MAX_CHANNEL                 (10)
+#define VALID_CHANNEL_MASK          (0x000007FFUL)
+#endif
+
 
 #if (RF_BAND == BAND_2400)
 /*
@@ -1054,28 +1072,8 @@ extern "C" {
      * @ingroup apiTalApi
      */
     void tal_tx_frame_done_cb(retval_t status, frame_info_t *frame);
-
-/**
- * \brief Requests to TAL to transmit frame
- *
- * This function is called by the MAC to deliver a frame to the TAL
- * to be transmitted by the transceiver.
- *
- * \param tx_frame Pointer to the frame_info_t structure or
- *                 to frame array to be transmitted
- * \param csma_mode Indicates mode of csma-ca to be performed for this frame
- * \param perform_frame_retry Indicates whether to retries are to be performed
- * for
- *                            this frame
- *
- * \return MAC_SUCCESS  if the TAL has accepted the data from the MAC for frame
- *                 transmission
- *         TAL_BUSY if the TAL is busy servicing the previous MAC request
- * \ingroup group_tal_tx
- */
-retval_t tal_tx_frame(frame_info_t *tx_frame, csma_mode_t csma_mode,
-		bool perform_frame_retry);
-    /**
+	
+   /**
      * @brief Sets the transceiver to sleep
      *
      * This function sets the transceiver to sleep state.

@@ -3,7 +3,6 @@
  *
  * @brief Performs interface functionalities between the PHY layer and ASF
  *drivers
- *  Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *

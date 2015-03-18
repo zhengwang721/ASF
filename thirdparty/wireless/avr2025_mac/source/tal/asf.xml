@@ -181,7 +181,7 @@
 		<build type="doxygen-entry-point" value="group_tal"/>
         <device-support-alias value="avr2025_mac_pal_support"/>
 	</module>
-    <select-by-config id="thirdparty.wireless.avr2025_mac.source.tal.generic" name="config.thirdparty.wireless.common_services.trx_access" caption="TAL generic Files" default="1">
+    <select-by-config id="thirdparty.wireless.avr2025_mac.source.tal.generic" name="config.thirdparty.wireless.common_services.trx_access.device_type" caption="TAL generic Files" default="1">
 	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.tal.generic#1" caption="TAL Generic Files">
 		<build type="header-file"   value="inc/tal.h"/>
 		<build type="c-source"   value="src/tal_helper.c"/>

@@ -1,9 +1,9 @@
 /**
  * \file *********************************************************************
  *
- * \brief USART Serial configuration
+ * \brief SW Timer Configuration
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

@@ -351,7 +351,7 @@ void calculate_pib_values(trx_id_t trx_id)
         tal_pib[trx_id].SupportedChannels = 0;
     }
     //float rate = get_data_rate(trx_id);
-    //debug_text_val(PSTR("rate"), (uint16_t)rate);
+    debug_text_val(PSTR("rate"), (uint16_t)rate);
     tal_pib[trx_id].OctetDuration_us = (uint16_t)(((float)1000 * 8) / get_data_rate(trx_id));
     debug_text_val(PSTR("OctetDuration_us"), tal_pib[trx_id].OctetDuration_us);
     tal_pib[trx_id].CCADuration_us = get_cca_duration_us(trx_id);
@@ -702,7 +702,7 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
 			/* Wait until new channel is set */
 			}
 			TAL_RF_IRQ_CLR(trx_id, RF_IRQ_TRXRDY);
-			//debug_text(PSTR("RF_IRQ_TRXRDY: channel change completed"));
+			debug_text(PSTR("RF_IRQ_TRXRDY: channel change completed"));
 			}
 		}
 

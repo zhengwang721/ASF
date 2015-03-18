@@ -1493,13 +1493,13 @@ void get_board_details(trx_id_t trx)
  * \brief Set Transceiver state as per the state given
  * \param trx_state Transceiver state to be set
  */
-static void set_transceiver_state(trx_id_t trx, uint8_t trx_state)
+static void set_transceiver_state(trx_id_t trx, uint8_t transceiver_state)
 {
 	retval_t retval;
     /* Check whether transceiver is in sleep state */
     if (true == trx_sleep_status[trx])
     {
-        switch (trx_state)
+        switch (transceiver_state)
         {
                 /* Wake up the transceiver as Toggle sleep cmd is received */
             case TRX_SLEEP:
@@ -1512,22 +1512,22 @@ static void set_transceiver_state(trx_id_t trx, uint8_t trx_state)
             default:
                 {
                     /* Send confirmation with status Failure because the transceiver is in sleep */
-                    usr_perf_set_confirm(trx, TRANSCEIVER_IN_SLEEP, PARAM_TRX_STATE, (param_value_t *)&trx_state);
+                    usr_perf_set_confirm(trx, TRANSCEIVER_IN_SLEEP, PARAM_TRX_STATE, (param_value_t *)&transceiver_state);
                     return;
                 }
                 break;
         }
 
         /* Send Set confirmation with status SUCCESS */
-        trx_state = tal_get_trx_status(trx) ; 
-        curr_trx_config_params[trx].trx_state = trx_state;
+        transceiver_state = tal_get_trx_status(trx) ; 
+        curr_trx_config_params[trx].trx_state = transceiver_state;
         usr_perf_set_confirm(trx, MAC_SUCCESS,
                              PARAM_TRX_STATE,
-                             (param_value_t *)&trx_state);
+                             (param_value_t *)&transceiver_state);
         return;
     }
 
-    switch (trx_state)
+    switch (transceiver_state)
     {
         case TRX_RESET:  /* RESET */
             {
@@ -2463,13 +2463,13 @@ void perf_get_req(trx_id_t trx, uint8_t param_type_data)
 #endif 
         case PARAM_TRX_STATE: /* Set Transceiver state request */
             {
-                uint8_t trx_state;
-                trx_state = tal_get_trx_status(trx) ; 
+                uint8_t transceiver_state;
+                transceiver_state = tal_get_trx_status(trx) ; 
 
                 /* Send Get confirmation with status SUCCESS */
                 usr_perf_get_confirm(trx, MAC_SUCCESS,
                                      PARAM_TRX_STATE,
-                                     (param_value_t *)&trx_state);
+                                     (param_value_t *)&transceiver_state);
             }
             break;
         case PARAM_NO_OF_TEST_FRAMES: /* Set No.Of test Frames for PER test request */

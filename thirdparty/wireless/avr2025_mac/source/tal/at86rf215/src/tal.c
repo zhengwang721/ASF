@@ -445,7 +445,7 @@ void wait_for_txprep(trx_id_t trx_id)
 #ifdef IQ_RADIO
         state = (rf_cmd_state_t)pal_dev_reg_read(RF215_RF, GET_REG_ADDR(RG_RF09_STATE));
 #else
-        state = (rf_cmd_state_t)trx_reg_read(reg_offset + RG_RF09_STATE);
+        state = trx_reg_read(reg_offset + RG_RF09_STATE);
 #endif       
 
         if (state != RF_TXPREP)
@@ -465,7 +465,7 @@ void wait_for_txprep(trx_id_t trx_id)
                 do
                 {
                     
-                    state = (rf_cmd_state_t)trx_reg_read(reg_offset + RG_RF09_STATE);
+                    state = trx_reg_read(reg_offset + RG_RF09_STATE);
                 }
                 while (state != RF_TXPREP);
                 break;
@@ -479,9 +479,9 @@ void wait_for_txprep(trx_id_t trx_id)
     do
     {
 #ifdef IQ_RADIO
-        state = (rf_cmd_state_t)pal_dev_reg_read(RF215_RF, reg_offset + RG_RF09_STATE);
+        state = pal_dev_reg_read(RF215_RF, reg_offset + RG_RF09_STATE);
 #else
-        state = (rf_cmd_state_t)trx_reg_read( reg_offset + RG_RF09_STATE);
+        state = trx_reg_read( reg_offset + RG_RF09_STATE);
 #endif
         if (state != RF_TXPREP)
         {
