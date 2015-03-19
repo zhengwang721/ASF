@@ -380,7 +380,7 @@ struct events_config {
 ///@cond INTERNAL
 /**
  * \internal
- * Status bit offsets in the status register/interrupt register
+ * Status bit offsets in the status register/interrupt register.
  *
  * @{
  */
@@ -462,7 +462,7 @@ enum status_code events_allocate(struct events_resource *resource, struct events
  * Attach a user peripheral to the event channel to receive events.
  *
  * \param[in] resource Pointer to an \ref events_resource struct instance
- * \param[in] user_id  A number identifying the user peripheral found in the device header file.
+ * \param[in] user_id  A number identifying the user peripheral found in the device header file
  *
  * \return Status of the user attach procedure.
  * \retval STATUS_OK No errors detected when attaching the event user
@@ -475,7 +475,7 @@ enum status_code events_attach_user(struct events_resource *resource, uint8_t us
  * Deattach an user peripheral from the event channels so it does not receive any more events.
  *
  * \param[in] resource Pointer to an \ref event_resource struct instance
- * \param[in] user_id  A number identifying the user peripheral found in the device header file.
+ * \param[in] user_id  A number identifying the user peripheral found in the device header file
  *
  * \return Status of the user detach procedure.
  * \retval STATUS_OK No errors detected when detaching the event user
@@ -672,9 +672,9 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset);
  *  </tr>
  *  <tr>
  *      <td>F</td>
- *      <td>12/2014</td>
- *      <td>Added support for SAML21 and fix a bug in internal function
- *          _events_find_bit_position(). </td>
+ *      <td>04/2015</td>
+ *      <td>Added support for SAML21 and SAMDA0/DA1.
+ *          Fix a bug in internal function _events_find_bit_position(). </td>
  *  </tr>
  *  <tr>
  *      <td>E</td>
