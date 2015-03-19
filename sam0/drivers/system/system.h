@@ -180,7 +180,7 @@ extern "C" {
  *  completed,check the performance level status.
  *
  * \anchor asfdoc_sam0_system_performance_level_transition_figure
- * \image html performance_level_transition.gif "The performance level  transition"
+ * \image html performance_level_transition.svg "The performance level  transition"
  *
  * \subsection asfdoc_sam0_system_module_overview_power_domain Power Domain Gating
  * Power domain gating  can  turn on or off power domain voltage to save power
