@@ -1486,13 +1486,8 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
- *		<td>11/2014</td>
- *		<td>Corrected documentation typos</td>
- *	</tr>
- *	<tr>
  *		<td>A</td>
- *		<td>12/2014</td>
+ *		<td>04/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

@@ -527,9 +527,9 @@ enum system_clock_source {
 	SYSTEM_CLOCK_SOURCE_DFLL     = GCLK_SOURCE_DFLL48M,
 	/** Internal Ultra Low Power 32KHz oscillator. */
 	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
-	/** Generator input pad */
+	/** Generator input pad. */
 	SYSTEM_CLOCK_SOURCE_GCLKIN     = GCLK_SOURCE_GCLKIN,
-	/** Generic clock generator one output */
+	/** Generic clock generator one output. */
 	SYSTEM_CLOCK_SOURCE_GCLKGEN1   = GCLK_SOURCE_GCLKGEN1,
 #ifdef FEATURE_SYSTEM_CLOCK_DPLL
 	/** Digital Phase Locked Loop (DPLL).
@@ -1460,6 +1460,11 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAMDA0/DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
