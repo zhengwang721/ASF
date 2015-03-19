@@ -127,7 +127,7 @@ void configure_spi_master(void)
 //! [di]
 	/* Configure pad 1 as unused */
 //! [ss]
-	config_spi_master.pinmux_pad1 = EXT1_SPI_SERCOM_PINMUX_PAD1;
+	config_spi_master.pinmux_pad1 = PINMUX_UNUSED;
 //! [ss]
 	/* Configure pad 2 for data out */
 //! [do]
@@ -169,6 +169,9 @@ int main(void)
 	while (true) {
 		/* Infinite loop */
 		if (!port_pin_get_input_level(BUTTON_0_PIN)) {
+			//! [select_slave]
+			spi_select_slave(&spi_master_instance, &slave, true);
+			//! [select_slave]
 			//! [write and read]
 			spi_transceive_buffer_job(&spi_master_instance, wr_buffer,rd_buffer,BUF_LENGTH);
 			//! [write and read]
@@ -178,6 +181,9 @@ int main(void)
 			}
 			transrev_complete_spi_master = false;
 			//! [wait]
+			//! [deselect_slave]
+			spi_select_slave(&spi_master_instance, &slave, false);
+			//! [deselect_slave]
 		}
 	}
 //! [inf_loop]
