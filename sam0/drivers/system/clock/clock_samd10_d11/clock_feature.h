@@ -1364,11 +1364,6 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *
  * \section asfdoc_sam0_system_clock_extra_errata Errata
  *
- *	- This driver implements workaround for errata 10558
- *
- *	  "Several reset values of SYSCTRL.INTFLAG are wrong (BOD and DFLL)"
- *	  When system_init is called it will reset these interrupts flags before they are used.
-
  *	- This driver implements experimental workaround for errata 9905
  *
  *	  "The DFLL clock must be requested before being configured otherwise a
@@ -1417,7 +1412,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *			\li Updated dfll configuration function to implement workaround for
  *			    errata 9905 in the DFLL module
  *			\li Updated \c system_clock_init() to reset interrupt flags before
- *			    they are used, errata 10558
+ *			    they are used
  *			\li Fixed \c system_clock_source_get_hz() to return correcy DFLL
  *			    frequency number
  *		</td>
