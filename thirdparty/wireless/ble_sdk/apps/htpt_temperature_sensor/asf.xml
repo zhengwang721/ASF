@@ -3,6 +3,8 @@
 		<info type="description" value="summary">
 		HTPT Temperature Sensor application for BLE stack
 		</info>
+  <build type="include-path" value="."/>
+  <build type="header-file" value="htpt_app.h"/>
 		<build type="c-source" value="main.c"/>
 		<require idref="thirdparty.wireless.ble_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_sdk.inc"/>

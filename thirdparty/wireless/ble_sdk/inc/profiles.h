@@ -5,11 +5,11 @@
  *      Author: aabdelfattah
  */
 
-#ifndef PRF_DEFS_H_
-#define PRF_DEFS_H_
+#ifndef __PROFILES_H__
+#define __PROFILES_H__
 
 /// Message structure used to inform APP that an error has occurred in the profile server role task
-struct prf_server_error_ind
+typedef struct
 {
     /// Connection Handle
 	uint16_t conhdl;
@@ -17,7 +17,8 @@ struct prf_server_error_ind
 	uint16_t msg_id;
     /// Status
 	uint8_t status;
-};
+}prf_server_error_ind_t;
+
 /// Time profile information
 struct prf_date_time
 {
@@ -43,4 +44,4 @@ enum prf_con_type
     PRF_CON_NORMAL    = 0x01
 };
 
-#endif /* PRF_DEFS_H_ */
+#endif /* __PROFILES_H__ */
