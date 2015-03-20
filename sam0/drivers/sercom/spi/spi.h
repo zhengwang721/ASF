@@ -1417,10 +1417,7 @@ enum status_code spi_select_slave(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Add SAML21 support</td>
- *	</tr>  
- *	<tr>
- *		<td>Add SAMD21 support and added new features as below:
+ *		<td>Added new features as below:
  *             \li Slave select low detect
  *             \li Hardware slave select
  *             \li DMA support </td>
@@ -1771,8 +1768,8 @@ enum status_code spi_select_slave(
   *	</tr>
   *	<tr>
   *		<td>E</td>
-  *		<td>11/2014</td>
-  *		<td>Add SAM L21 support.</td>
+  *		<td>04/2015</td>
+  *		<td>Add SAM L21 and SAMDA0/DA1 support.</td>
   *	</tr>
   *	<tr>
   *		<td>D</td>
