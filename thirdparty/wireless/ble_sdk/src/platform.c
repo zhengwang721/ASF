@@ -34,18 +34,21 @@
 #include "serial_drv.h"
 
 static uint16_t rx_data;
-volatile uint32_t ntext, txdtext;
 
 void serial_rx_callback(void)
 {
 #if SAMG55
 	serial_read_byte((uint8_t *)&rx_data);
+	platform_interface_callback((uint8_t *)&rx_data, 1);
 #endif
-	platform_interface_callback((uint8_t *)&rx_data, 1);	
+		
 #if SAMD || SAMR21 
-	serial_read_byte((uint8_t *)&rx_data);
+	do 
+	{
+	  platform_interface_callback((uint8_t *)&rx_data, 1);
+	} while (serial_read_byte((uint8_t *)&rx_data) == STATUS_BUSY);
+	
 #endif
-	ntext++;
 }
 
 void serial_tx_callback(void)
@@ -98,7 +101,6 @@ void platform_interface_send(uint8_t* data, uint32_t len)
 #if SAMG55
 	ioport_set_pin_level(EXT1_PIN_5, IOPORT_PIN_LEVEL_LOW);
 #endif
-	txdtext += len;
 }
 
 static volatile uint32_t cmd_cmpl_flag = 0;

@@ -1,10 +1,3 @@
-/*
- * profiles.h
- *
- *  Created on: Mar 12, 2015
- *      Author: aabdelfattah
- */
-
 #ifndef __PROFILES_H__
 #define __PROFILES_H__
 

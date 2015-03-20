@@ -33,6 +33,7 @@
 #include "at_ble_api.h"
 #include "htpt_app.h"
 #include "profiles.h"
+#include "arm_math.h"
 
 #define DBG_LOG printf
 #define DBG_LOG_1LVL printf
@@ -84,6 +85,8 @@ void init_timer(void);
 void tc_start_timer(void);
 void tc_stop_timer(void);
 static void configure_console(void);
+static void button_cb(void);
+static void button_init(void);
 
 void app_init(void)
 {
@@ -144,6 +147,7 @@ int main (void)
 	system_init();
 #endif
 	 
+	button_init();
 	configure_console();
 	
 	DBG_LOG_1LVL("\r\n Initializing HTPT Application");
@@ -470,7 +474,7 @@ int main (void)
 void htpt_init(htpt_app_t *htpt_temp)
 {
 	/* Initialize to default temperature value  and htpt parameters*/
-	htpt_temp->measurement_interval = 1; 
+	htpt_temp->measurement_interval = 2; 
 	htpt_temp->temperature = 3700;
 	htpt_temp->temperature_type = HTP_TYPE_BODY;
 	htpt_temp->max_meaurement_intv = 30;
@@ -481,18 +485,19 @@ void htpt_init(htpt_app_t *htpt_temp)
 
 void htpt_temperature_send(htpt_app_t *htpt_temp)
 {
-	static uint32_t temperature;
+	//static uint32_t temperature;
 	struct prf_date_time timestamp; 
+	float32_t temperature;
 	/* Read Temperature Value from IO1 Xplained Pro */
-	temp_res = at30tse_read_temperature();
+	temperature = (float32_t)at30tse_read_temperature();
 	timestamp.day = 1;
 	timestamp.hour = 9;
 	timestamp.min = 2;
 	timestamp.month = 8;
 	timestamp.sec = 36;
 	timestamp.year = 15;	
-	temperature += 10;
-	temperature |= 0xFE000000;
+	//temperature += 10;
+	//temperature |= 0xFE000000;
 	at_ble_htpt_temp_send(temperature,
 	                     &timestamp,
 						 HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE,
@@ -579,4 +584,29 @@ static void configure_console(void)
 
 	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART_MODULE, &usart_conf);
 	usart_enable(&cdc_uart_module);
+}
+
+
+static void button_init(void)
+{
+	struct extint_chan_conf eint_chan_conf;
+	extint_chan_get_config_defaults(&eint_chan_conf);
+
+	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
+	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_MUX;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
+	eint_chan_conf.filter_input_signal = true;
+	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
+	
+	extint_register_callback(button_cb,
+	BUTTON_0_EIC_LINE,
+	EXTINT_CALLBACK_TYPE_DETECT);
+	
+	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
+	EXTINT_CALLBACK_TYPE_DETECT);
+}
+
+static void button_cb(void)
+{
+	htpt_data.temperature_type = ((htpt_data.temperature_type+1) % 9);
 }
