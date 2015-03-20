@@ -524,7 +524,7 @@ struct adc_config {
 	 * prescaled clock cycles (depends of \c ADC_PRESCALER value), thus
 	 * controlling the ADC input impedance. Sampling time is set according to
 	 * the formula:
-	 * Sample time = (sample_length+1) * (ADCclk / 2)
+	 * Sample time = (sample_length+1) * (ADCclk / 2).
 	 */
 	uint8_t sample_length;
 	/** Window monitor configuration structure. */
