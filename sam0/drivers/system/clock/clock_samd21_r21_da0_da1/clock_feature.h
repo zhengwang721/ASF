@@ -608,7 +608,7 @@ struct system_clock_source_xosc32k_config {
  * Internal 8MHz (nominal) oscillator configuration structure.
  */
 struct system_clock_source_osc8m_config {
-	/* Internal 8MHz RC oscillator prescaler. */
+	/** Internal 8MHz RC oscillator prescaler. */
 	enum system_osc8m_div prescaler;
 	/** Keep the OSC8M enabled in standby sleep mode. */
 	bool run_in_standby;
