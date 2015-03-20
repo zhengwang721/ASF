@@ -1,9 +1,10 @@
 /**
  * \file
  *
- * \brief USB Device Human Interface Device (HID) interface definitions.
+ * \brief Default HID multi-touch configuration for a USB Device
+ * with a single interface HID
  *
- * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,42 +45,47 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef _UDI_HID_H_
-#define _UDI_HID_H_
-
-#include "conf_usb.h"
-#include "usb_protocol.h"
-#include "usb_protocol_hid.h"
-#include "udd.h"
+#ifndef _UDI_HID_MULTI_TOUCH_CONF_H_
+#define _UDI_HID_MULTI_TOUCH_CONF_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
- * \ingroup udi_group
- * \defgroup udi_hid_group USB Device Interface (UDI) for Human Interface Device (HID)
- *
- * Common library for all Human Interface Device (HID) implementation.
- *
+ * \addtogroup udi_hid_generic_group_single_desc
  * @{
  */
 
+//! Control endpoint size
+#ifdef USB_DEVICE_HS_SUPPORT
+#  define  USB_DEVICE_EP_CTRL_SIZE       64
+#else
+#  define  USB_DEVICE_EP_CTRL_SIZE       8
+#endif
+
+//! Endpoint number used by HID multi-touch interface
+#define  UDI_HID_MULTI_TOUCH_EP_OUT   (1 | USB_EP_DIR_OUT)
+#define  UDI_HID_MULTI_TOUCH_EP_IN    (1 | USB_EP_DIR_IN)
+
+//! Interface number
+#define  UDI_HID_MULTI_TOUCH_IFACE_NUMBER     0
+
+
 /**
- * \brief Decode HID setup request
- *
- * \param rate         Pointer on rate of current HID interface
- * \param protocol     Pointer on protocol of current HID interface
- * \param report_desc  Pointer on report descriptor of current HID interface
- * \param set_report   Pointer on set_report callback of current HID interface
- *
- * \return \c 1 if function was successfully done, otherwise \c 0.
+ * \name UDD Configuration
  */
-bool udi_hid_setup( uint8_t *rate, uint8_t *protocol, uint8_t *report_desc, bool (*setup_report)(void) );
+//@{
+//! 2 endpoints used by HID multi-touch standard interface
+#define  USB_DEVICE_MAX_EP    2
+//@}
 
 //@}
 
 #ifdef __cplusplus
 }
 #endif
-#endif // _UDI_HID_H_
+
+#include "udi_hid_multitouch.h"
+
+#endif // _UDI_HID_MULTI_TOUCH_CONF_H_
