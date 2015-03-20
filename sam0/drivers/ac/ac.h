@@ -404,15 +404,15 @@ enum ac_callback {
 };
 
 #ifdef FEATURE_AC_HYSTERESIS_LEVEL
-/** Enum for possible hysteresis level types for AC module */
+/** Enum for possible hysteresis level types for AC module. */
 enum ac_hysteresis_level {
-	/** Hysteresis level of 50mV */
+	/** Hysteresis level of 50mV. */
 	AC_HYSTERESIS_LEVEL_50 = 0,
-	/** Hysteresis level of 70mV */
+	/** Hysteresis level of 70mV. */
 	AC_HYSTERESIS_LEVEL_70,
-	/** Hysteresis level of 90mV */
+	/** Hysteresis level of 90mV. */
 	AC_HYSTERESIS_LEVEL_90,
-	/** Hysteresis level of 110mV */
+	/** Hysteresis level of 110mV. */
 	AC_HYSTERESIS_LEVEL_110
 };
 #endif
