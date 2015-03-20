@@ -283,7 +283,7 @@ extern "C" {
  * @{
 */
 #if (SAML21) || (SAMDA0) || (SAMDA1) || defined(SAMD21_64K) || defined(__DOXYGEN__)
-/** Read while write EEPROM emulation feature*/
+/** Read while write EEPROM emulation feature. */
 #  define FEATURE_NVM_RWWEE
 #endif
 /*@}*/
@@ -855,8 +855,8 @@ static inline enum nvm_error nvm_get_error(void)
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>08/2014</td>
- *		<td>Added support for SAML21.</td>
+ *		<td>05/2015</td>
+ *		<td>Added support for SAML21 and SAMDA0/DA1.</td>
  *	</tr> 
  *	<tr>
  *		<td>D</td>
