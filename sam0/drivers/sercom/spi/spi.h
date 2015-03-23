@@ -1085,8 +1085,8 @@ enum status_code spi_set_baudrate(
  *
  * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked
- * \retval STATUS_BUSY if the module was already locked
+ * \retval STATUS_OK If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 static inline enum status_code spi_lock(struct spi_module *const module)
 {
@@ -1114,8 +1114,8 @@ static inline enum status_code spi_lock(struct spi_module *const module)
  *
  * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked
- * \retval STATUS_BUSY if the module was already locked
+ * \retval STATUS_OK If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 static inline void spi_unlock(struct spi_module *const module)
 {
