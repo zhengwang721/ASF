@@ -62,7 +62,7 @@
  *  \li GCLK generator 0 (GCLK main) clock source
  *  \li 1V from internal bandgap reference
  *  \li Div 4 clock prescaler
- *  \li 12 bit resolution
+ *  \li 12-bit resolution
  *  \li Window monitor disabled
  *  \li No gain
  *  \li Positive input on ADC PIN 0

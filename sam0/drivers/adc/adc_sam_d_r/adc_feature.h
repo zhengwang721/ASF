@@ -332,7 +332,7 @@ enum adc_accumulate_samples {
 	ADC_ACCUMULATE_SAMPLES_64   = ADC_AVGCTRL_SAMPLENUM_64,
 	/** Average 128 samples. */
 	ADC_ACCUMULATE_SAMPLES_128  = ADC_AVGCTRL_SAMPLENUM_128,
-	/** Average 265 samples. */
+	/** Average 256 samples. */
 	ADC_ACCUMULATE_SAMPLES_256  = ADC_AVGCTRL_SAMPLENUM_256,
 	/** Average 512 samples. */
 	ADC_ACCUMULATE_SAMPLES_512  = ADC_AVGCTRL_SAMPLENUM_512,
@@ -524,7 +524,7 @@ struct adc_config {
 	 * prescaled clock cycles (depends of \c ADC_PRESCALER value), thus
 	 * controlling the ADC input impedance. Sampling time is set according to
 	 * the formula:
-	 * Sample time = (sample_length+1) * (ADCclk / 2)
+	 * Sample time = (sample_length+1) * (ADCclk / 2).
 	 */
 	uint8_t sample_length;
 	/** Window monitor configuration structure. */
