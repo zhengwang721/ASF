@@ -563,7 +563,9 @@ void system_init(void);
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
+ * \if DEVICE_SAML21_SUPPORT
  *  - \subpage asfdoc_sam0_power_basic_use_case
+ * \endif
  *
  * \page asfdoc_sam0_system_extra Extra Information for SYSTEM Driver
  *
@@ -653,10 +655,15 @@ void system_init(void);
  * \if DEVICE_SAML21_SUPPORT
  *  <tr>
  *      <td>A</td>
- *      <td>12/2014</td>
+ *      <td>04/2015</td>
  *      <td>Initial release.</td>
  * </tr>
  * \else
+ *  <tr>
+ *      <td>E</td>
+ *      <td>04/2015</td>
+ *      <td>Added support for SAMDA0/DA1.</td>
+ * </tr>
  *  <tr>
  *      <td>D</td>
  *      <td>12/2014</td>
