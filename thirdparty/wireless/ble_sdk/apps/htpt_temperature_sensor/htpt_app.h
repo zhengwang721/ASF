@@ -3,6 +3,30 @@
 
 #include "at_ble_api.h"
 
+#define DBG_LOG printf
+#define DBG_LOG_1LVL printf
+
+#define APP_HT_FAST_ADV 100 //100 ms
+
+#define APP_HT_ADV_TIMEOUT 1000 // 100 Secs
+
+#define SCAN_RESP_LEN 10
+#define ADV_DATA_LEN 18
+
+#define ADV_TYPE_LEN (0x01)
+
+#define HT_ADV_DATA_UUID_LEN	 (2)
+#define HT_ADV_DATA_UUID_TYPE	 (0x03)
+#define HT_ADV_DATA_UUID_DATA	 "\x09\x18"
+
+#define HT_ADV_DATA_APPEARANCE_LEN	 (2)
+#define HT_ADV_DATA_APPEARANCE_TYPE	 (0x19)
+#define HT_ADV_DATA_APPEARANCE_DATA	 "\x00\x03"
+
+#define HT_ADV_DATA_NAME_LEN	 (9)
+#define HT_ADV_DATA_NAME_TYPE	 (0x09)
+#define HT_ADV_DATA_NAME_DATA	 "ATMEL-BLE"
+
 /* Typedef for health thermometer profile -  application */
 typedef struct htpt_app{	
 	

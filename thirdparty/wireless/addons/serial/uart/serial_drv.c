@@ -166,7 +166,8 @@ void BLE_UART_Handler(void)
 uint16_t serial_drv_send(uint8_t* data, uint16_t len)
 {
 #if SAMD || SAMR21
- return usart_write_buffer_job(&usart_instance, data, len);
+  while(STATUS_OK != usart_write_buffer_job(&usart_instance, data, len));
+  return STATUS_OK;
 #elif SAMG55
  uint32_t temp, i;
  for (int i =0; i < len; i++)
@@ -201,11 +202,12 @@ uint8_t serial_read_data(uint8_t* data, uint16_t max_len)
 uint8_t serial_read_byte(uint8_t* data)
 {
 #if SAMD || SAMR21
-    usart_read_job(&usart_instance, (uint16_t *)data);
+    return usart_read_job(&usart_instance, (uint16_t *)data);
 #elif SAMG55
    uint32_t temp;
    usart_read(BLE_UART, &temp);
    *data = (uint8_t)temp;
+   return STATUS_OK;
 #endif
 }
 

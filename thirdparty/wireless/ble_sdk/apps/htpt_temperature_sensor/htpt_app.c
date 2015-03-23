@@ -1,29 +1,3 @@
-/**
- * \file
- *
- * \brief Empty user application template
- *
- */
-
-/**
- * \mainpage User Application template doxygen documentation
- *
- * \par Empty user application template
- *
- * This is a bare minimum user application template.
- *
- * For documentation of the board, go \ref group_common_boards "here" for a link
- * to the board-specific documentation.
- *
- * \par Content
- *
- * -# Include the ASF header files (through asf.h)
- * -# Minimal main function that starts with a call to system_init()
- * -# Basic usage of on-board LED and button
- * -# "Insert application code here" comment
- *
- */
-
 /*
  * Include header files for all drivers that have been imported from
  * Atmel Software Framework (ASF).
@@ -34,41 +8,10 @@
 #include "htpt_app.h"
 #include "profiles.h"
 #include "arm_math.h"
+#include "console_serial.h"
+#include "timer_hw.h"
 
-#define DBG_LOG printf
-#define DBG_LOG_1LVL printf
-
-#define APP_HT_FAST_ADV 100 //100 ms
-
-#define APP_HT_ADV_TIMEOUT 1000 // 100 Secs
-
-
-
-#if 0
-static uint8_t adv_data[] = {0x1a, 0xff, 0x4c, 0x00, 0x02, 0x15, 0x21, 0x8A,
-	                         0xF6, 0x52, 0x73, 0xE3, 0x40, 0xB3, 0xB4, 0x1C,
-	                         0x19, 0x53, 0x24, 0x2C, 0x72, 0xf4, 0x00, 0xbb,
-                             0x00, 0x44, 0xc5};
-
-static uint8_t scan_rsp_data[] = {0x11, 0x07, 0x1b, 0xc5, 0xd5, 0xa5, 0x02, 0x00,
-	                              0x37, 0xaa, 0xe3, 0x11, 0x2a, 0xdc, 0x00, 0xcd,
-                                  0x30, 0x57};
-
-#else
-
-#define SCAN_RESP_LEN 10
-#define ADV_DATA_LEN 18
-								  
-static uint8_t adv_data[ADV_DATA_LEN] = {0x03, 0x03, 0x09, 0x18, 0x03, 0x19, 0x00, 0x03, 0x09, 0x09, 
-							'A', 'T', 'M', 'E', 'L', 'B', 'L', 'E'};
-
-//static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF,0x00,0x60,0x52,0x57,0x2D,0x42,0x4C,0x45};
 static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 0x25, 0x75, 0x11, 0x6a, 0x7f, 0x7f};
-	
-
-								  
-#endif
-
 
 at_ble_LTK_t app_bond_info;
 bool app_device_bond = false;
@@ -76,15 +19,13 @@ uint8_t auth_info = 0;
 
 htpt_app_t htpt_data;
 volatile uint16_t gtc_count = false;
+double temp_res;
 
 void app_init(void);
 void htpt_init(htpt_app_t *htpt_temp);
 void htpt_temperature_send(htpt_app_t *htpt_temp);
+void timer_callback_handler(void);
 
-void init_timer(void);
-void tc_start_timer(void);
-void tc_stop_timer(void);
-static void configure_console(void);
 static void button_cb(void);
 static void button_init(void);
 
@@ -99,38 +40,23 @@ void app_init(void)
 
 	at_ble_addr_set(&addr);
 
-#if 0
-	// establish prephiral database
-	at_ble_primary_service_define(&service_uuid, &service,
-		NULL, 0, chars, 2);
-		
-	at_ble_adv_data_set(adv_data, sizeof(adv_data), scan_rsp_data, sizeof(scan_rsp_data));
-	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 100, 1000, 0) != AT_BLE_SUCCESS)
-	{
-		while(1);
-	}
-#endif
-		
 	/* Initialize the htpt to default value */
 	htpt_init(&htpt_data);
 
-#if 1	
 	/* Register the Initialized value into htpt profile */
 	if(at_ble_htpt_create_db(
-				htpt_data.optional,
-				htpt_data.temperature_type,
-				htpt_data.min_measurement_intv,
-				htpt_data.max_meaurement_intv,
-				htpt_data.measurement_interval,
-				htpt_data.security_lvl
-				) == AT_BLE_FAILURE)
+							htpt_data.optional,
+							htpt_data.temperature_type,
+							htpt_data.min_measurement_intv,
+							htpt_data.max_meaurement_intv,
+							htpt_data.measurement_interval,
+							htpt_data.security_lvl
+							) == AT_BLE_FAILURE)
 				{
 					while(1);
 				}
-#endif
 }
 
-double temp_res;
 
 int main (void)
 {
@@ -148,7 +74,7 @@ int main (void)
 #endif
 	 
 	button_init();
-	configure_console();
+	serial_console_init();
 	
 	DBG_LOG_1LVL("\r\n Initializing HTPT Application");
 
@@ -157,9 +83,8 @@ int main (void)
 	at30tse_write_config_register(
 			AT30TSE_CONFIG_RES(AT30TSE_CONFIG_RES_12_bit));
 
-	
-	//platform_init(NULL);
-	init_timer();
+	hw_timer_init();
+	hw_timer_register_callback(timer_callback_handler);
 	app_init();
 	
 	DBG_LOG_1LVL("\r\nHTPT Initialization completed. Waiting for Event");
@@ -187,18 +112,14 @@ int main (void)
 				if(at_ble_htpt_enable(handle, HTPT_CFG_STABLE_MEAS_IND) == AT_BLE_FAILURE)
 				{
 					DBG_LOG("\r\nFailure in HTPT Profile Enable");
-				}
-				else
-				{
-					//tc_start_timer();
-				}							
+				}						
 			}
 			break;
 
 			case AT_BLE_DISCONNECTED:
 			{
 				at_ble_disconnected_t *disconnect = (at_ble_disconnected_t *)params;
-				tc_stop_timer();
+				hw_timer_stop();
 				LED_Off(LED0);	
 				DBG_LOG("\r\nDevice disconnected Reason:0x%02, handle=0x%x", disconnect->reason, disconnect->handle);
 				
@@ -233,11 +154,33 @@ int main (void)
 			
 			/** Inform APP of database creation status */
 			case AT_BLE_HTPT_CREATE_DB_CFM:	
-			{	
+			{
+				uint8_t idx = 0;
+				uint8_t adv_data[HT_ADV_DATA_NAME_LEN + HT_ADV_DATA_APPEARANCE_LEN + HT_ADV_DATA_UUID_LEN + 3*2];
+				
 				at_ble_htpt_create_db_cfm_t *create_db_params = (at_ble_htpt_create_db_cfm_t *)params;				
 				// start advertising
 				DBG_LOG("\r\nCreating HTPT DB: SUCCESS: Status=0x%x", create_db_params->status);
-				at_ble_adv_data_set(adv_data, ADV_DATA_LEN, scan_rsp_data, SCAN_RESP_LEN);
+				
+				/* Prepare ADV Data */
+				adv_data[idx++] = HT_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
+				adv_data[idx++] = HT_ADV_DATA_UUID_TYPE;
+				memcpy(&adv_data[idx], HT_ADV_DATA_UUID_DATA, HT_ADV_DATA_UUID_LEN);				
+				idx += HT_ADV_DATA_UUID_LEN;
+				
+				adv_data[idx++] = HT_ADV_DATA_APPEARANCE_LEN + ADV_TYPE_LEN;
+				adv_data[idx++] = HT_ADV_DATA_APPEARANCE_TYPE;
+				memcpy(&adv_data[idx], HT_ADV_DATA_APPEARANCE_DATA, HT_ADV_DATA_APPEARANCE_LEN);
+				idx += HT_ADV_DATA_APPEARANCE_LEN;
+				
+				adv_data[idx++] = HT_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
+				adv_data[idx++] = HT_ADV_DATA_NAME_TYPE;
+				memcpy(&adv_data[idx], HT_ADV_DATA_NAME_DATA, HT_ADV_DATA_NAME_LEN);
+				idx += HT_ADV_DATA_NAME_LEN;			
+				
+				
+				at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN);
+				
 				if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 
 				                   APP_HT_FAST_ADV, APP_HT_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
 				{
@@ -281,10 +224,7 @@ int main (void)
 					htpt_send_temp_cfm_params->cfm_type, htpt_send_temp_cfm_params->conhdl,
 					htpt_send_temp_cfm_params->status);	
 				gtc_count = false;	
-				tc_start_timer();	
-				while(gtc_count == false);
-				htpt_temperature_send(&htpt_data);
-				tc_stop_timer();
+				hw_timer_start(htpt_data.measurement_interval);			
 			}
 			break;
 			
@@ -352,7 +292,7 @@ int main (void)
 					features.bond = true;
 					features.mitm_protection = true;
 					features.oob_avaiable = false;
-					/* Device cababilities is display only , key will be generated 
+					/* Device capabilities is display only , key will be generated 
 					and displayed */
 					features.io_cababilities = AT_BLE_IO_CAP_DISPLAY_ONLY;
 					/* Distribution of LTK is required */
@@ -496,8 +436,6 @@ void htpt_temperature_send(htpt_app_t *htpt_temp)
 	timestamp.month = 8;
 	timestamp.sec = 36;
 	timestamp.year = 15;	
-	//temperature += 10;
-	//temperature |= 0xFE000000;
 	at_ble_htpt_temp_send(temperature,
 	                     &timestamp,
 						 HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE,
@@ -506,89 +444,10 @@ void htpt_temperature_send(htpt_app_t *htpt_temp)
 						 );
 }
 
-#define CONF_TC_MODULE TC3
-#define TC_COUNT_1SEC  (8000000ul/1024ul)
-struct tc_module tc_instance;
-void tc_cc0_cb(struct tc_module *const module_inst);
-
-void init_timer(void)
-{
-	struct tc_config config_tc;
-
-	tc_get_config_defaults(&config_tc);
-
-	config_tc.counter_size = TC_COUNTER_SIZE_16BIT;
-	config_tc.clock_source = GCLK_GENERATOR_0;
-	config_tc.clock_prescaler = TC_CLOCK_PRESCALER_DIV1024;
-	config_tc.counter_8_bit.period = 0;
-	config_tc.counter_16_bit.compare_capture_channel[0] = TC_COUNT_1SEC;
-	config_tc.counter_16_bit.compare_capture_channel[1] = 0xFFFF;
-
-	tc_init(&tc_instance, CONF_TC_MODULE, &config_tc);
-
-	tc_enable(&tc_instance);
-	
-	tc_register_callback(&tc_instance, tc_cc0_cb,
-		TC_CALLBACK_CC_CHANNEL0);
-}
-
-void tc_cc0_cb(struct tc_module *const module_inst)
-{
-	static uint16_t tc_count;
-	tc_set_count_value(&tc_instance, 0);
-	tc_count += 1;
-	if (tc_count >= htpt_data.measurement_interval)
-	{		
-		gtc_count = true;
-		tc_count = 0;
-	}	
-	LED_Toggle(LED0);	
-}
-
-void tc_start_timer(void)
-{
-	tc_set_count_value(&tc_instance, 0);
-	tc_enable_callback(&tc_instance, TC_CALLBACK_CC_CHANNEL0);
-}
-
-void tc_stop_timer(void)
-{	
-	tc_disable_callback(&tc_instance, TC_CALLBACK_CC_CHANNEL0);	
-}
-
-
-
-#define CONF_STDIO_USART_MODULE  EDBG_CDC_MODULE
-#define CONF_STDIO_MUX_SETTING   EDBG_CDC_SERCOM_MUX_SETTING
-#define CONF_STDIO_PINMUX_PAD0   EDBG_CDC_SERCOM_PINMUX_PAD0
-#define CONF_STDIO_PINMUX_PAD1   EDBG_CDC_SERCOM_PINMUX_PAD1
-#define CONF_STDIO_PINMUX_PAD2   EDBG_CDC_SERCOM_PINMUX_PAD2
-#define CONF_STDIO_PINMUX_PAD3   EDBG_CDC_SERCOM_PINMUX_PAD3
-#define CONF_STDIO_BAUDRATE      115200
-static struct usart_module cdc_uart_module;
-
-/**
- *  Configure UART console.
- */
-static void configure_console(void)
-{
-	struct usart_config usart_conf;
-
-	usart_get_config_defaults(&usart_conf);
-	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
-	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
-	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
-	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
-	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
-	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
-
-	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART_MODULE, &usart_conf);
-	usart_enable(&cdc_uart_module);
-}
-
 
 static void button_init(void)
 {
+#if SAMD21
 	struct extint_chan_conf eint_chan_conf;
 	extint_chan_get_config_defaults(&eint_chan_conf);
 
@@ -604,9 +463,16 @@ static void button_init(void)
 	
 	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
 	EXTINT_CALLBACK_TYPE_DETECT);
+#endif
 }
 
 static void button_cb(void)
 {
 	htpt_data.temperature_type = ((htpt_data.temperature_type+1) % 9);
+}
+
+void timer_callback_handler(void)
+{
+	hw_timer_stop();
+	htpt_temperature_send(&htpt_data);	
 }
