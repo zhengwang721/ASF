@@ -464,17 +464,17 @@
  * @{
 */
 #if (SAML21) || defined(__DOXYGEN__)
-/** TC double buffered */
+/** TC double buffered. */
 #  define FEATURE_TC_DOUBLE_BUFFERED
-/** SYNCBUSY scheme version 2 */
+/** SYNCBUSY scheme version 2. */
 #  define FEATURE_TC_SYNCBUSY_SCHEME_VERSION_2
-/** TC time stamp capture and pulse width capture */
+/** TC time stamp capture and pulse width capture. */
 #  define FEATURE_TC_STAMP_PW_CAPTURE
-/** Read synchronization of COUNT*/
+/** Read synchronization of COUNT. */
 #  define FEATURE_TC_READ_SYNC
-/** IO pin edge capture*/
+/** IO pin edge capture. */
 #  define FEATURE_TC_IO_CAPTURE
-/** Generate DMA triggers*/
+/** Generate DMA triggers. */
 #  define FEATURE_TC_GENERATE_DMA_TRIGGER
 #endif
 /*@}*/
@@ -1678,15 +1678,6 @@ static inline void tc_clear_status(
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
- *  <tr>
- *    <td>Added support for SAML21</td>
- *  </tr>
- *  <tr>
- *    <td>Added support for SAMD10/D11</td>
- *  </tr>
- *  <tr>
- *    <td>Added support for SAMR21</td>
- *  </tr>
  *	<tr>
  *    <td>Added support for SAMD21 and do some modifications as below:
  *          \li Clean up in the configuration structure, the counter size
@@ -1730,8 +1721,8 @@ static inline void tc_clear_status(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Added support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAML21 and SAMDA0/DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
