@@ -413,7 +413,7 @@ struct events_config {
  */
 struct events_resource {
 #if !defined(__DOXYGEN__)
-	/* Channel allocated for the event resource. */
+	/** Channel allocated for the event resource. */
 	uint8_t channel;
 	/** Channel setting in CHANNEL register. */
 	uint32_t channel_reg;
@@ -423,9 +423,18 @@ struct events_resource {
 #if EVENTS_INTERRUPT_HOOKS_MODE == true
 typedef void (*events_interrupt_hook)(struct events_resource *resource);
 
+/**
+ * \brief Event hook.
+ *
+ * Event hook structure.
+ *
+ */
 struct events_hook {
+	/** Event resource. */
 	struct events_resource *resource;
+	/** Event hook function. */
 	events_interrupt_hook hook_func;
+	/** Next event hook. */
 	struct events_hook *next;
 };
 #endif
@@ -673,8 +682,7 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset);
  *  <tr>
  *      <td>F</td>
  *      <td>04/2015</td>
- *      <td>Added support for SAML21 and SAMDA0/DA1.
- *          Fix a bug in internal function _events_find_bit_position(). </td>
+ *      <td>Added support for SAML21 and SAMDA0/DA1.</td>
  *  </tr>
  *  <tr>
  *      <td>E</td>
