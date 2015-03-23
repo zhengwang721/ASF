@@ -543,7 +543,7 @@ enum status_code rww_eeprom_emulator_read_buffer(
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>11/2014</td>
+ *		<td>04/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
