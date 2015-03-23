@@ -438,10 +438,7 @@ void wdt_reset_count(void);
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Add support for SAML21</td>
- *	</tr>
- *	<tr>
- *		<td>Add SAMD21 support and driver updated to follow driver type convention:
+ *		<td>Driver updated to follow driver type convention:
  *             \li wdt_init, wdt_enable, wdt_disable functions removed
  *             \li wdt_set_config function added
  *             \li WDT module enable state moved inside the configuration struct </td>
@@ -476,8 +473,8 @@ void wdt_reset_count(void);
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>09/2014</td>
- *		<td>Added SAML21 support.</td>
+ *		<td>04/2015</td>
+ *		<td>Added SAML21 and SAMDA0/A1 support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
