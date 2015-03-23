@@ -756,7 +756,7 @@ static inline void rtc_calendar_get_time_defaults(
  *  - Alarm will match on second, minute, hour, day, month, and year
  *
  *  \param[out] config  Configuration structure to be initialized to default
- *                      values.
+ *                      values
  */
 static inline void rtc_calendar_get_config_defaults(
 		struct rtc_calendar_config *const config)
