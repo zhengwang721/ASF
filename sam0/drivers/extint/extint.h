@@ -357,7 +357,7 @@ struct _extint_module
 	/** Asynchronous channel callback table, for user-registered handlers. */
 	extint_callback_t callbacks[EIC_NUMBER_OF_INTERRUPTS];
 #  else
-	/** Dummy value to ensure the struct has at least one member */
+	/** Dummy value to ensure the struct has at least one member. */
 	uint8_t _dummy;
 #  endif
 };
@@ -626,12 +626,6 @@ static inline void extint_nmi_clear_detected(
  *      <th>Changelog</th>
  *  </tr>
  *  <tr>
- *      <td>Add SAML21 support</td>
- *  </tr>
- *  <tr>
- *      <td>Add SAMR21 support</td>
- *  </tr>
- *  <tr>
  *      <td>
  *      \li Driver updated to follow driver type convention.
  *      \li Removed \c %extint_reset(), \c %extint_disable() and
@@ -681,8 +675,8 @@ static inline void extint_nmi_clear_detected(
  *  </tr>
  *  <tr>
  *      <td>E</td>
- *      <td>12/2014</td>
- *      <td>Added support for SAML21.</td>
+ *      <td>04/2015</td>
+ *      <td>Added support for SAML21 and SAMDA0/DA1.</td>
  *  </tr>
  *  <tr>
  *      <td>D</td>
