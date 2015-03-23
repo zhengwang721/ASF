@@ -79,7 +79,10 @@
  *
  * \section asfdoc_sam0_adc_unit_test_setup Setup
  * The following connections has to be made using wires:
+ * -SAM D21 Xplained Pro
  *  - \b DAC VOUT (PA02) <-----> ADC4 (PA04)
+ * - SAM D20/L21 Xplained Pro
+ *  - \b DAC VOUT (PA02) <-----> ADC2 (PB08)
  *
  * To run the test:
  *  - Connect the supported Xplained Pro board to the computer using a
@@ -230,7 +233,7 @@ static void run_adc_init_test(const struct test_case *test)
 	/* Structure for ADC configuration */
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-	config.positive_input = ADC_POSITIVE_INPUT_PIN4;
+	config.positive_input = ADC_POSITIVE_INPUT;
 	config.negative_input = ADC_NEGATIVE_INPUT_GND;
 #if (SAML21)
 	config.reference      = ADC_REFERENCE_INTREF;
@@ -443,7 +446,7 @@ static void setup_adc_average_mode_test(const struct test_case *test)
 	adc_disable(&adc_inst);
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-	config.positive_input     = ADC_POSITIVE_INPUT_PIN4;
+	config.positive_input     = ADC_POSITIVE_INPUT;
 	config.negative_input     = ADC_NEGATIVE_INPUT_GND;
 #if (SAML21)
 	config.reference          = ADC_REFERENCE_INTREF;
@@ -522,7 +525,7 @@ static void setup_adc_window_mode_test(const struct test_case *test)
 	adc_disable(&adc_inst);
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-	config.positive_input = ADC_POSITIVE_INPUT_PIN4;
+	config.positive_input = ADC_POSITIVE_INPUT;
 	config.negative_input = ADC_NEGATIVE_INPUT_GND;
 #if (SAML21)
 	config.reference      = ADC_REFERENCE_INTREF;
