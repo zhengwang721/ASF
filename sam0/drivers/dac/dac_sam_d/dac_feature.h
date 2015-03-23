@@ -588,6 +588,11 @@ void dac_chan_disable_output_buffer(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>E</td>
+ *		<td>04/2015</td>
+ *		<td>Add SAMDA0/DA1 support.</td>
+ *	</tr>
+ *	<tr>
  *		<td>D</td>
  *		<td>12/2014</td>
  *		<td>Add SAMD10/D11 support.</td>
