@@ -163,8 +163,7 @@ void i2c_slave_write_request_callback(
 
 	/* Read buffer from master */
 	//! [read_packet]
-	if (i2c_slave_read_packet_job(module, &slave_packet) != STATUS_OK) {
-	}
+	i2c_slave_read_packet_job(module, &slave_packet);
 	//! [read_packet]
 }
 //! [write_request]
@@ -246,7 +245,7 @@ static void run_i2c_init_test(const struct test_case *test)
 	status = i2c_slave_init(&i2c_slave_instance, CONF_I2C_SLAVE_MODULE, &config_i2c_slave);
 		/* Check for successful initialization */
 	test_assert_true(test, status == STATUS_OK,
-			"I2C master initialization failed");
+			"I2C slave initialization failed");
 	i2c_slave_enable(&i2c_slave_instance);
 	configure_i2c_slave_callbacks();
 }
