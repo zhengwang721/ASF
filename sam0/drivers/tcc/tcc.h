@@ -759,7 +759,7 @@
  * @{
 */
 #if (SAML21) || defined(__DOXYGEN__)
-/** Generate DMA triggers*/
+/** Generate DMA triggers. */
 #  define FEATURE_TCC_GENERATE_DMA_TRIGGER
 #endif
 /*@}*/
@@ -1125,9 +1125,9 @@ enum tcc_event_action {
 	/** Decrement the counter on event, irrespective of count direction. */
 	TCC_EVENT_ACTION_DECREMENT,
 	/** Count during active state of asynchronous event. In this case,
-	* depending	on the count direction, the  count will be incremented
-    * or decremented on each
-	* prescaled GCLK_TCCx, as long as the input event remains active. */
+	* depending	on the count direction, the  count will be incremented 
+	* or decremented on each prescaled GCLK_TCCx, as long as the input
+	* event remains active. */
 	TCC_EVENT_ACTION_COUNT_DURING_ACTIVE,
 
 	/** Store period in capture register 0, pulse width in capture
@@ -2422,8 +2422,8 @@ enum status_code tcc_set_double_buffer_compare_values(
  *  </tr>
  *  <tr>
  *      <td>C</td>
- *      <td>11/2014</td>
- *      <td>Added support for SAML21</td>
+ *      <td>04/2015</td>
+ *      <td>Added support for SAML21 and SAMDA0/DA1</td>
  *  </tr>
  *  <tr>
  *      <td>B</td>
