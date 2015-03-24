@@ -693,13 +693,8 @@ static inline void aes_gcm_set_gf_multiplication(struct aes_module *const module
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *      <td>B</td>
- *		<td>11/2014</td>
- *		<td>Corrected documentation typos.</td>
- *	</tr>
- *	<tr>
  *      <td>A</td>
- *		<td>09/2014</td>
+ *		<td>04/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
