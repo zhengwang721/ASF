@@ -647,18 +647,18 @@ void system_pinmux_group_set_output_drive(
  *	</tr>
  *	<tr>
  *		<td>F</td>
- *		<td>11/2014</td>
- *		<td>Add support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Add support for SAML21 and SAMDA0/DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>E</td>
  *		<td>12/2014</td>
- *		<td>Add support for SAMR21 and SAMD10/D11</td>
+ *		<td>Add support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
  *		<td>01/2014</td>
- *		<td>Add support for SAMD21</td>
+ *		<td>Add support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>

@@ -406,8 +406,8 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Add support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Add support for SAML21 and SAMDA0/DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
