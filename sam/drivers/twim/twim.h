@@ -247,7 +247,7 @@ void twim_pdca_transfer_prepare(Twim *twim, twi_package_t *package,
  * \subsection twim_basic_prereq Prerequisites
  *
  * This module requires the following service
- * - \ref clk_group
+ * - \ref clk_group "Clock Management (Sysclock)"
  *
  * \subsection twim_basic_setup_workflow
  *
