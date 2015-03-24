@@ -50,6 +50,8 @@ typedef struct htpt_app{
 	
 	/* Optional Features */
 	at_ble_htpt_db_config_flag optional;
+	
+	at_ble_htpt_temp_flags flags;
 }htpt_app_t;
 
 /**@brief Temperature measurement stability type
@@ -59,5 +61,10 @@ typedef enum
 	UNSTABLE_TEMPERATURE_VAL= 0,
 	STABLE_TEMPERATURE_VAL=1
 }stable_temp_reading;
+
+void app_init(void);
+void htpt_init(htpt_app_t *htpt_temp);
+void htpt_temperature_send(htpt_app_t *htpt_temp);
+void timer_callback_handler(void);
 
 #endif /* __HTPT_APP_H__ */

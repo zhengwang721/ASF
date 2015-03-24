@@ -206,9 +206,9 @@ uint8_t serial_read_byte(uint8_t* data)
 #elif SAMG55
    uint32_t temp;
    usart_read(BLE_UART, &temp);
-   *data = (uint8_t)temp;
-   return STATUS_OK;
+   *data = (uint8_t)temp;  
 #endif
+ return STATUS_OK;
 }
 
 #if SAMD || SAMR21 

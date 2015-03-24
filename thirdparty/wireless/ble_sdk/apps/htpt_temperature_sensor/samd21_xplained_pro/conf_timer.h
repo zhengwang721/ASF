@@ -46,6 +46,5 @@
 #define CONF_TC_MODULE TC3
 #define TC_COUNT_1SEC  (8000000ul/1024ul)
 struct tc_module tc_instance;
-void tc_cc0_cb(struct tc_module *const module_inst);
 
 #endif

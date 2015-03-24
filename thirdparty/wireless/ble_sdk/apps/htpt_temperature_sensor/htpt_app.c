@@ -7,9 +7,10 @@
 #include "at_ble_api.h"
 #include "htpt_app.h"
 #include "profiles.h"
-#include "arm_math.h"
 #include "console_serial.h"
 #include "timer_hw.h"
+#include "conf_extint.h"
+#include <arm_math.h>
 
 static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 0x25, 0x75, 0x11, 0x6a, 0x7f, 0x7f};
 
@@ -18,24 +19,14 @@ bool app_device_bond = false;
 uint8_t auth_info = 0;
 
 htpt_app_t htpt_data;
-volatile uint16_t gtc_count = false;
-double temp_res;
-
-void app_init(void);
-void htpt_init(htpt_app_t *htpt_temp);
-void htpt_temperature_send(htpt_app_t *htpt_temp);
-void timer_callback_handler(void);
-
-static void button_cb(void);
-static void button_init(void);
 
 void app_init(void)
 {
 	uint8_t port = 74;
 	at_ble_addr_t addr = {AT_BLE_ADDRESS_PUBLIC,
 		{0x25, 0x75, 0x11, 0x6a, 0x7f, 0x7f} };
-
-	// init device
+	
+    // init device
 	at_ble_init(&port);
 
 	at_ble_addr_set(&addr);
@@ -52,9 +43,10 @@ void app_init(void)
 							htpt_data.measurement_interval,
 							htpt_data.security_lvl
 							) == AT_BLE_FAILURE)
-				{
-					while(1);
-				}
+	{
+		DBG_LOG("\r\nHTPT Data Base creation failed");
+		while(1);
+	}
 }
 
 
@@ -63,7 +55,7 @@ int main (void)
 	at_ble_events_t event;
 	uint8_t params[512];
 
-	at_ble_handle_t handle;
+	at_ble_handle_t handle = 0;
 
 #if SAMG55
 	/* Initialize the SAM system. */
@@ -76,7 +68,7 @@ int main (void)
 	button_init();
 	serial_console_init();
 	
-	DBG_LOG_1LVL("\r\n Initializing HTPT Application");
+	DBG_LOG_1LVL("\r\nInitializing HTPT Application");
 
 	at30tse_init();
 	
@@ -95,17 +87,18 @@ int main (void)
 		{
 			case AT_BLE_CONNECTED:
 			{
-				at_ble_connected_t* conn_params = (at_ble_connected_t*)params;
+				at_ble_connected_t conn_params;
+				memcpy((uint8_t *)&conn_params, params, sizeof(at_ble_connected_t));
 				
 				DBG_LOG("\r\nDevice connected to 0x%02x%02x%02x%02x%02x%02x handle=0x%x",
-					conn_params->peer_addr.addr[5],
-					conn_params->peer_addr.addr[4],
-					conn_params->peer_addr.addr[3],
-					conn_params->peer_addr.addr[2],
-					conn_params->peer_addr.addr[1],
-					conn_params->peer_addr.addr[0],
-					conn_params->handle);
-				handle = conn_params->handle;
+					conn_params.peer_addr.addr[5],
+					conn_params.peer_addr.addr[4],
+					conn_params.peer_addr.addr[3],
+					conn_params.peer_addr.addr[2],
+					conn_params.peer_addr.addr[1],
+					conn_params.peer_addr.addr[0],
+					conn_params.handle);
+				handle = conn_params.handle;
 				LED_On(LED0);
 				
 				/* Enable the HTPT Profile */
@@ -118,10 +111,13 @@ int main (void)
 
 			case AT_BLE_DISCONNECTED:
 			{
-				at_ble_disconnected_t *disconnect = (at_ble_disconnected_t *)params;
+				at_ble_disconnected_t disconnect;
+				memcpy((uint8_t *)&disconnect, params, sizeof(at_ble_disconnected_t));
+				
 				hw_timer_stop();
 				LED_Off(LED0);	
-				DBG_LOG("\r\nDevice disconnected Reason:0x%02, handle=0x%x", disconnect->reason, disconnect->handle);
+				
+				DBG_LOG("\r\nDevice disconnected Reason:0x%02x Handle=0x%x", disconnect.reason, disconnect.handle);
 				
 				if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 
 				                   APP_HT_FAST_ADV, APP_HT_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
@@ -138,14 +134,15 @@ int main (void)
 			
 			case AT_BLE_CHARACTERISTIC_CHANGED:
 			{
-				at_ble_characteristic_changed_t* change_params
-					= (at_ble_characteristic_changed_t*) params;
+				at_ble_characteristic_changed_t change_params;				 	
 				uint32_t i = 0;
+				
+				memcpy((uint8_t *)&change_params, params, sizeof(at_ble_characteristic_changed_t));
 
 				DBG_LOG("Characteristic 0x%x changed, new_value = ", 
-					change_params->char_handle);
-				for(i=0; i<change_params->char_len; i++)
-					DBG_LOG("0x%02x ", change_params->char_new_value[i]);
+					change_params.char_handle);
+				for(i=0; i<change_params.char_len; i++)
+					DBG_LOG("0x%02x ", change_params.char_new_value[i]);
 				DBG_LOG("\n");
 			}
 			break;	
@@ -158,9 +155,12 @@ int main (void)
 				uint8_t idx = 0;
 				uint8_t adv_data[HT_ADV_DATA_NAME_LEN + HT_ADV_DATA_APPEARANCE_LEN + HT_ADV_DATA_UUID_LEN + 3*2];
 				
-				at_ble_htpt_create_db_cfm_t *create_db_params = (at_ble_htpt_create_db_cfm_t *)params;				
+				at_ble_htpt_create_db_cfm_t create_db_params;
+				
+				memcpy((uint8_t *)&create_db_params, params, sizeof(at_ble_htpt_create_db_cfm_t));
+								
 				// start advertising
-				DBG_LOG("\r\nCreating HTPT DB: SUCCESS: Status=0x%x", create_db_params->status);
+				DBG_LOG("\r\nCreating HTPT DB: SUCCESS: Status=0x%x", create_db_params.status);
 				
 				/* Prepare ADV Data */
 				adv_data[idx++] = HT_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
@@ -196,34 +196,36 @@ int main (void)
 			/** Error indication to APP*/
 			case AT_BLE_HTPT_ERROR_IND:
 			{
-				prf_server_error_ind_t *prf_htpt_error_ind = (prf_server_error_ind_t *)params;
+				prf_server_error_ind_t prf_htpt_error_ind;
+				memcpy((uint8_t *)&prf_htpt_error_ind, params, sizeof(prf_server_error_ind_t));
 				
 				DBG_LOG("\r\n HTPT Error Indication received, msg_id=0x%x, handle=0x%x, status=0x%x",
-				prf_htpt_error_ind->msg_id, prf_htpt_error_ind->conhdl, prf_htpt_error_ind->status);
+				prf_htpt_error_ind.msg_id, prf_htpt_error_ind.conhdl, prf_htpt_error_ind.status);
 			}					
 			break;
 			
 			/** Automatically sent to the APP after a disconnection with the peer device to confirm disabled profile*/
 			case AT_BLE_HTPT_DISABLE_IND:
 			{
-				at_ble_htpt_disable_ind_t *htpt_disable_ind_params = (at_ble_htpt_disable_ind_t *) params;
+				at_ble_htpt_disable_ind_t htpt_disable_ind_params;
+				memcpy((uint8_t *)&htpt_disable_ind_params, params, sizeof(at_ble_htpt_disable_ind_t));
 				DBG_LOG("\r\nHTPT Disable Indication: conhdl=0x%x, interm_temp_ntf_en=0x%x, meas_intv=0x%x, meas_intv_ind_en=0x%x, handle=0x%x",
-				htpt_disable_ind_params->conhdl,
-				htpt_disable_ind_params->interm_temp_ntf_en,
-				htpt_disable_ind_params->meas_intv,
-				htpt_disable_ind_params->meas_intv_ind_en,
-				htpt_disable_ind_params->temp_meas_ind_en);
+				htpt_disable_ind_params.conhdl,
+				htpt_disable_ind_params.interm_temp_ntf_en,
+				htpt_disable_ind_params.meas_intv,
+				htpt_disable_ind_params.meas_intv_ind_en,
+				htpt_disable_ind_params.temp_meas_ind_en);
 			}
 			break;
 			
 			/** Temperature value confirm to APP*/
 			case AT_BLE_HTPT_TEMP_SEND_CFM:
 			{
-				at_ble_htpt_temp_send_cfm_t *htpt_send_temp_cfm_params = (at_ble_htpt_temp_send_cfm_t *)params;
+				at_ble_htpt_temp_send_cfm_t htpt_send_temp_cfm_params;
+				memcpy((uint8_t *)&htpt_send_temp_cfm_params, params, sizeof(at_ble_htpt_temp_send_cfm_t));
 				DBG_LOG("\r\n HTPT Temperature Send Confirm: cfm_type=0x%x, conhdl=0x%x, status=0x%x,",
-					htpt_send_temp_cfm_params->cfm_type, htpt_send_temp_cfm_params->conhdl,
-					htpt_send_temp_cfm_params->status);	
-				gtc_count = false;	
+					htpt_send_temp_cfm_params.cfm_type, htpt_send_temp_cfm_params.conhdl,
+					htpt_send_temp_cfm_params.status);	
 				hw_timer_start(htpt_data.measurement_interval);			
 			}
 			break;
@@ -231,19 +233,21 @@ int main (void)
 			/** Inform APP of new measurement interval value */
 			case AT_BLE_HTPT_MEAS_INTV_CHG_IND:
 			{
-				at_ble_htpt_meas_intv_chg_ind_t *htpt_meas_intv_chg_params = (at_ble_htpt_meas_intv_chg_ind_t *)params;	
-				DBG_LOG("\r\nHTPT measure Interval change Indication: Interval=%d", htpt_meas_intv_chg_params->intv);
-				htpt_data.measurement_interval = htpt_meas_intv_chg_params->intv;							
+				at_ble_htpt_meas_intv_chg_ind_t htpt_meas_intv_chg_params;
+				memcpy((uint8_t *)&htpt_meas_intv_chg_params, params, sizeof(at_ble_htpt_meas_intv_chg_ind_t));
+				DBG_LOG("\r\nHTPT measure Interval change Indication: Interval=%d", htpt_meas_intv_chg_params.intv);
+				htpt_data.measurement_interval = htpt_meas_intv_chg_params.intv;							
 			}
 			break;
 			
 			/** Inform APP of new configuration value*/
 			case AT_BLE_HTPT_CFG_INDNTF_IND:
 			{
-				at_ble_htpt_cfg_indntf_ind_t * htpt_cfg_indntf_ind_params = (at_ble_htpt_cfg_indntf_ind_t *)params;
-				DBG_LOG("\r\nHTPT Cfg indication notification indication cfg_val=0x%x, char code=0x%x, conhdl=0x%x", htpt_cfg_indntf_ind_params->cfg_val,
-				htpt_cfg_indntf_ind_params->char_code, htpt_cfg_indntf_ind_params->conhdl);
-				if (htpt_cfg_indntf_ind_params->char_code == HTPT_TEMP_MEAS_CHAR &&  htpt_cfg_indntf_ind_params->cfg_val == 2)
+				at_ble_htpt_cfg_indntf_ind_t htpt_cfg_indntf_ind_params;
+				memcpy((uint8_t *)&htpt_cfg_indntf_ind_params, params, sizeof(at_ble_htpt_cfg_indntf_ind_t));
+				DBG_LOG("\r\nHTPT Cfg indication notification indication cfg_val=0x%x, char code=0x%x, conhdl=0x%x", htpt_cfg_indntf_ind_params.cfg_val,
+				htpt_cfg_indntf_ind_params.char_code, htpt_cfg_indntf_ind_params.conhdl);
+				if (htpt_cfg_indntf_ind_params.char_code == HTPT_TEMP_MEAS_CHAR &&  htpt_cfg_indntf_ind_params.cfg_val == 2)
 				{
 					htpt_temperature_send(&htpt_data);
 				}				
@@ -331,9 +335,10 @@ int main (void)
 				uint8_t passkey_ascii[6];
 				uint8_t i = 0;
 	
-				at_ble_pair_key_request_t* pair_key_request = (at_ble_pair_key_request_t*)params;
+				at_ble_pair_key_request_t pair_key_request;
+				memcpy((uint8_t *)&pair_key_request, params, sizeof(at_ble_pair_key_request_t));
 				/* Display passkey */
-				if(pair_key_request->passkey_type == AT_BLE_PAIR_PASSKEY_DISPLAY)
+				if(pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_DISPLAY)
 				{
 					/* Convert passkey to ASCII format */
 					for(i=0; i<AT_BLE_PASSKEY_LEN ; i++)
@@ -346,7 +351,7 @@ int main (void)
 						DBG_LOG("%c",passkey_ascii[i]);
 					}
 					DBG_LOG("\n");	
-					at_ble_pair_key_reply(pair_key_request->handle,pair_key_request->type,passkey_ascii);
+					at_ble_pair_key_reply(pair_key_request.handle,pair_key_request.type,passkey_ascii);
 				}
 			
 			}
@@ -354,13 +359,13 @@ int main (void)
 
 			case AT_BLE_PAIR_DONE:
 			{
-				at_ble_pair_done_t* pair_params 
-					= (at_ble_pair_done_t*) params;
-				if(pair_params->status == AT_BLE_SUCCESS)
+				at_ble_pair_done_t pair_params;
+				memcpy((uint8_t *)&pair_params, params, sizeof(at_ble_pair_done_t));				
+				if(pair_params.status == AT_BLE_SUCCESS)
 				{
 					DBG_LOG("\r\nPairing procedure completed successfully \n");
 					app_device_bond = true;
-					auth_info = pair_params->auth;
+					auth_info = pair_params.auth;
 				}
 				else
 				{
@@ -373,12 +378,12 @@ int main (void)
 			{
 				bool key_found = false;
 	
-				at_ble_encryption_request_t* enc_req 
-					= (at_ble_encryption_request_t* )params;
+				at_ble_encryption_request_t enc_req;
+				memcpy((uint8_t *)&enc_req, params, sizeof(at_ble_encryption_request_t));
 			
 				/* Check if bond information is stored */
-				if((enc_req-> ediv == app_bond_info.ediv)
-					&& !memcmp(&enc_req->nb[0],&app_bond_info.nb[0],8))
+				if((enc_req.ediv == app_bond_info.ediv)
+					&& !memcmp(&enc_req.nb[0],&app_bond_info.nb[0],8))
 				{
 					key_found = true;
 				}
@@ -389,9 +394,9 @@ int main (void)
 		
 			case AT_BLE_ENCRYPTION_STATUS_CHANGED:
 			{
-				at_ble_encryption_status_changed_t* enc_status 
-					= (at_ble_encryption_status_changed_t*)params; 
-				if(enc_status->status == AT_BLE_SUCCESS)
+				at_ble_encryption_status_changed_t enc_status;
+				memcpy((uint8_t *)&enc_status, params, sizeof(at_ble_encryption_status_changed_t));
+				if(enc_status.status == AT_BLE_SUCCESS)
 				{
 					DBG_LOG("\r\nEncryption completed successfully \n");
 				}
@@ -414,61 +419,52 @@ int main (void)
 void htpt_init(htpt_app_t *htpt_temp)
 {
 	/* Initialize to default temperature value  and htpt parameters*/
-	htpt_temp->measurement_interval = 2; 
+	htpt_temp->measurement_interval = 1; 
 	htpt_temp->temperature = 3700;
 	htpt_temp->temperature_type = HTP_TYPE_BODY;
 	htpt_temp->max_meaurement_intv = 30;
 	htpt_temp->min_measurement_intv = 1;
 	htpt_temp->security_lvl = HTPT_ENABLE;
-	htpt_temp->optional = HTPT_ALL_FEAT_SUP;	
+	htpt_temp->optional = HTPT_ALL_FEAT_SUP;
+	htpt_temp->flags = HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE;
 }
+
 
 void htpt_temperature_send(htpt_app_t *htpt_temp)
 {
 	//static uint32_t temperature;
-	struct prf_date_time timestamp; 
-	float32_t temperature;
+	struct prf_date_time timestamp;
+	float temperature;
+
+	
 	/* Read Temperature Value from IO1 Xplained Pro */
-	temperature = (float32_t)at30tse_read_temperature();
+	temperature = (float)at30tse_read_temperature();
+	
 	timestamp.day = 1;
 	timestamp.hour = 9;
 	timestamp.min = 2;
 	timestamp.month = 8;
 	timestamp.sec = 36;
-	timestamp.year = 15;	
-	at_ble_htpt_temp_send(temperature,
+	timestamp.year = 15;
+	at_ble_htpt_temp_send((uint32_t)temperature,
 	                     &timestamp,
-						 HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE,
+						 htpt_temp->flags,
 						 htpt_temp->temperature_type,
 						 STABLE_TEMPERATURE_VAL
 						 );
 }
 
-
-static void button_init(void)
-{
-#if SAMD21
-	struct extint_chan_conf eint_chan_conf;
-	extint_chan_get_config_defaults(&eint_chan_conf);
-
-	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
-	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_MUX;
-	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
-	eint_chan_conf.filter_input_signal = true;
-	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
-	
-	extint_register_callback(button_cb,
-	BUTTON_0_EIC_LINE,
-	EXTINT_CALLBACK_TYPE_DETECT);
-	
-	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
-	EXTINT_CALLBACK_TYPE_DETECT);
-#endif
-}
-
-static void button_cb(void)
+void button_cb(void)
 {
 	htpt_data.temperature_type = ((htpt_data.temperature_type+1) % 9);
+	if ((htpt_data.temperature_type == HTP_TYPE_ARMPIT) && (htpt_data.flags == (HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE)))
+	{
+		htpt_data.flags = HTPT_FLAG_FAHRENHEIT | HTPT_FLAG_TYPE;
+	}
+	else if (htpt_data.temperature_type == HTP_TYPE_ARMPIT)
+	{
+		htpt_data.flags = HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE;
+	}
 }
 
 void timer_callback_handler(void)

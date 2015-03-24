@@ -1937,7 +1937,7 @@ at_ble_status_t at_ble_htpt_meas_intv_update(uint16_t meas_intv);
 /** @}*/
 
 /* utility functions, might be removed lated */
-static uint8_t at_ble_uuid_type2len(at_ble_uuid_type_t type)
+static inline uint8_t at_ble_uuid_type2len(at_ble_uuid_type_t type)
 {
 	switch(type)
 	{
@@ -1953,7 +1953,7 @@ static uint8_t at_ble_uuid_type2len(at_ble_uuid_type_t type)
 	}
 }
 
-static at_ble_uuid_type_t at_ble_uuid_len2type(uint8_t len)
+static inline at_ble_uuid_type_t at_ble_uuid_len2type(uint8_t len)
 {
 	switch(len)
 	{
