@@ -118,7 +118,7 @@ enum i2c_master_start_hold_time {
 };
 
 /**
- * \ brief Values for inactive bus time-out.
+ * \brief Values for inactive bus time-out.
  *
  * If the inactive bus time-out is enabled and the bus is inactive for
  * longer than the time-out setting, the bus state logic will be set to idle.
@@ -421,7 +421,7 @@ static void _i2c_master_wait_for_sync(
  * - Do not run in standby
  * - PINMUX_DEFAULT for SERCOM pads
  *
- * Those default configuration only availale if the device supports it:
+ * Those default configuration only available if the device supports it:
  * - High speed baudrate 3.4MHz
  * - Standard-mode and Fast-mode transfer speed
  * - SCL stretch disabled
