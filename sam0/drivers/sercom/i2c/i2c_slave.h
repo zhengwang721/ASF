@@ -561,7 +561,7 @@ static inline void _i2c_slave_set_ctrlb_cmd3(
  * - Do not run in standby
  * - PINMUX_DEFAULT for SERCOM pads
  *
- * Those default configuration only availale if the device supports it:
+ * Those default configuration only available if the device supports it:
  * - Not using 10-bit addressing
  * - Standard-mode and Fast-mode transfer speed
  * - SCL stretch disabled
