@@ -533,7 +533,7 @@ static inline uint32_t aes_gcm_read_cipher_len(struct aes_module *const module)
  * \brief  Set the AES GCM cipher length.
  *
  * \param[in] module Pointer to the AES software instance struct
- * \param[in] len cipher length
+ * \param[in] len Cipher length
  */
 static inline void aes_gcm_write_cipher_len(struct aes_module *const module,
 										uint32_t len)
