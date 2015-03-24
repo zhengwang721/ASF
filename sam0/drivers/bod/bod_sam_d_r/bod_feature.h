@@ -433,6 +433,11 @@ static inline void bod_clear_detected(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>E</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAMDA0/DA1.</td>
+ *	</tr>
+ *	<tr>
  *		<td>D</td>
  *		<td>12/2014</td>
  *		<td>Added support for SAMR21 and SAMD10/D11.</td>

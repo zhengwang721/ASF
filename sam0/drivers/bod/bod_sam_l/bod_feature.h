@@ -609,7 +609,7 @@ static inline void bod12_clear_detected(void)
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>12/2014</td>
+ *		<td>04/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
