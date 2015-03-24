@@ -48,9 +48,9 @@
 #define ACC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_acc_group SAM4 Analog Comparator Controller (ACC)
+ * \defgroup asfdoc_sam_drivers_acc_group SAM Analog Comparator Controller (ACC)
  *
- * This driver for SAM4E and SAM4S devices provides an interface for the configuration
+ * This driver for SAM3S, SAM4E and SAM4S devices provides an interface for the configuration
  * and management of the device's Analog Comparator Controller functionality.
  *
  * The Analog Comparator compares two voltages, and the result of this comparison

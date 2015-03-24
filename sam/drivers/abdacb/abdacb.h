@@ -371,7 +371,7 @@ void abdac_set_callback(struct abdac_dev_inst *const dev_inst,
  * \subsection abdac_basic_prereq Prerequisites
  *
  * This module requires the following service
- * - \ref clk_group
+ * - \ref clk_group "Clock Management (Sysclock)"
  *
  * \subsection abdac_basic_setup_code
  *

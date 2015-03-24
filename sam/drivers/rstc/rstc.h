@@ -1,4 +1,4 @@
-/**
+﻿/**
  * \file
  *
  * \brief SAM4 Reset Controller (RSTC) driver.
@@ -48,7 +48,7 @@
 #define RSTC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_rstc_group SAM4 Reset Controller (RSTC)
+ * \defgroup asfdoc_sam_drivers_rstc_group SAM Reset Controller (RSTC)
  * This driver for SAM devices provides an interface for the configuration
  * and management of the device's Reset Controller functionality.
  *
