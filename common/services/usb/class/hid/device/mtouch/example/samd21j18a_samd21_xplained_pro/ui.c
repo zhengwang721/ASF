@@ -137,59 +137,6 @@ void ui_multitouch_draw_line()
 	udi_hid_multi_touch_send_report_in(ui_hid_report);
 }
 
-void ui_multitouch_draw_line_x()
-{
-	uint8_t touchStart = 0x02;
-	uint8_t touchDown = 0x03;
-	uint8_t touchUp = 0x00;
-
-	// Report ID
-	ui_hid_report[0] = UDI_HID_REPORT_ID_MTOUCH;
- 
-	// 1st touch
-	ui_hid_report[1] = touchStart;
-	ui_hid_report[2] = 1;
-	ui_hid_report[3] = (uint8_t)(1365 & 0x00FF);
-	ui_hid_report[4] = (uint8_t)((1365 & 0xFF00) >> 8);
-	ui_hid_report[5] = (uint8_t)(1365 & 0x00FF);
-	ui_hid_report[6] = (uint8_t)((1365 & 0xFF00) >> 8);
- 
-	// 2nd touch
-	ui_hid_report[7] = touchStart;
-	ui_hid_report[8] = 2;
-	ui_hid_report[9] = (uint8_t)(1365 & 0x00FF);
-	ui_hid_report[10] = (uint8_t)((1365 & 0xFF00) >> 8);
-	ui_hid_report[11] = (uint8_t)(1365 & 0x00FF);
-	ui_hid_report[12] = (uint8_t)((1365 & 0xFF00) >> 8);
- 
-	// Number of touches   
-	ui_hid_report[13] = 2;
-
-	udi_hid_multi_touch_send_report_in(ui_hid_report);
-
-
-	ui_hid_report[1] = touchDown;
-	ui_hid_report[7] = touchDown;
-
-	udi_hid_multi_touch_send_report_in(ui_hid_report);
-
-	ui_hid_report[3] = (uint8_t)(2730 & 0x00FF);
-	ui_hid_report[4] = (uint8_t)((2730 & 0xFF00) >> 8);
-	ui_hid_report[5] = (uint8_t)(1365 & 0x00FF);
-	ui_hid_report[6] = (uint8_t)((1365 & 0xFF00) >> 8);
- 
-	ui_hid_report[9] = (uint8_t)(1365 & 0x00FF);
-	ui_hid_report[10] = (uint8_t)((1365 & 0xFF00) >> 8);
-	ui_hid_report[11] = (uint8_t)(2730 & 0x00FF);
-	ui_hid_report[12] = (uint8_t)((2730 & 0xFF00) >> 8);
-
-	udi_hid_multi_touch_send_report_in(ui_hid_report);
-
-	ui_hid_report[1] = touchUp;
-	ui_hid_report[7] = touchUp;
-
-	udi_hid_multi_touch_send_report_in(ui_hid_report);
-}
 ////////////////////////End of function//////////////////////////////
 
 /**

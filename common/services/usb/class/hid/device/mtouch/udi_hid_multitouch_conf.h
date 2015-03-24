@@ -65,7 +65,7 @@ extern "C" {
 #endif
 
 //! Endpoint number used by HID multi-touch interface
-#define  UDI_HID_MULTI_TOUCH_EP_OUT   (1 | USB_EP_DIR_OUT)
+#define  UDI_HID_MULTI_TOUCH_EP_OUT   (2 | USB_EP_DIR_OUT)
 #define  UDI_HID_MULTI_TOUCH_EP_IN    (1 | USB_EP_DIR_IN)
 
 //! Interface number

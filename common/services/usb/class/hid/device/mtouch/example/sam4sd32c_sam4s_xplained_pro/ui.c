@@ -103,7 +103,7 @@ void ui_process(uint16_t framenumber)
 	cpt_sof = 0;
 
 	// Scan buttons on switch 0 and 1
-	b_btn_state = (!gpio_pin_is_high(GPIO_PUSH_BUTTON_1)) ? true : false;
+	b_btn_state = (!gpio_pin_is_high(GPIO_PUSH_BUTTON_0)) ? true : false;
 	if (b_btn_state != btn0_last_state) {
 		ui_multitouch_draw_line();
 		ui_step++;
@@ -143,7 +143,6 @@ void ui_multitouch_draw_line()
  *
  * Human interface on SAM4S-EK:
  * - Led 0 (D2) blinks when USB host has checked and enabled HID generic interface
- * - Led 1 (D3) is linked on HID events LED1
- * - Event buttons are linked to USRPB1 (BP2) and USRPB2 (BP3)
+ * - Push button 0 (SW0) is used to draw line in paint application on Windows O.S
  *
  */
