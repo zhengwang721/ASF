@@ -108,7 +108,7 @@ extern "C" {
  * - Counter (CTR)
  *
  * Data transfers both to and from the AES module can occur using the peripheral
- * DMA controller channels ,thus minimizing processor intervention for
+ * DMA controller channels, thus minimizing processor intervention for
  * large data buffer transfers.
  *
  * As soon as the initialization vector, the input data and the key are
@@ -454,7 +454,7 @@ static inline void aes_clear_status(
  * \param[in] module Pointer to the AES software instance struct
  * \param[in] id Index into the GHASH array (range 0 to 3)
  *
- * \return The content of the GHASHRx[x = 0...3] vlaue.
+ * \return The content of the GHASHRx[x = 0...3] value.
  */
 static inline uint32_t aes_gcm_read_ghash(struct aes_module *const module, uint32_t id)
 {
@@ -469,7 +469,7 @@ static inline uint32_t aes_gcm_read_ghash(struct aes_module *const module, uint3
  *
  * \param[in] module Pointer to the AES software instance struct
  * \param[in] id Index into the GHASHx array (range 0 to 3)
- * \param[in] ghash GCM hash vlaue
+ * \param[in] ghash GCM hash value
  */
 static inline void aes_gcm_write_ghash(struct aes_module *const module,
 									uint32_t id,uint32_t ghash)
