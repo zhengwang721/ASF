@@ -87,7 +87,7 @@
  *
  * The output can be combinatorially generated from the inputs, or filtered to remove spike.
  * An optional sequential module can be enabled. The inputs of sequential module are 
- * individually controlled by two independent, adjacent LUT(LUT0/LUT1, LUT2/LUT3 etc) outputs,
+ * individually controlled by two independent, adjacent LUT(LUT0/LUT1, LUT2/LUT3 etc.) outputs,
  * enabling complex waveform generation.
  *
  * \section asfdoc_sam0_ccl_special_considerations Special Considerations
@@ -194,7 +194,7 @@ enum ccl_lut_input_src_sel {
 /**
  * \brief Select the LUT output filter options enum.
  *
- * Enum for the the LUT output filter options.
+ * Enum for the LUT output filter options.
  */
 enum ccl_lut_filter_sel {
 	/** Filter disabled. */
