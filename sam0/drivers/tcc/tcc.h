@@ -667,6 +667,10 @@
  *
  * <table>
  *  <tr>
+ *    <th>Driver Feature Macro</th>
+ *    <th>Supported devices</th>
+ *  </tr>
+ *  <tr>
  *    <td>FEATURE_TCC_GENERATE_DMA_TRIGGER</td>
  *    <td>SAML21</td>
  *  </tr>
