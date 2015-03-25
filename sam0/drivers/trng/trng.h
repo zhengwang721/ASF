@@ -437,13 +437,8 @@ static inline enum status_code trng_read(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
- *		<td>04/2015</td>
- *		<td>Corrected documentation typos.</td>
- *	</tr>
- *	<tr>
  *		<td>A</td>
- *		<td>09/2014</td>
+ *		<td>04/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
