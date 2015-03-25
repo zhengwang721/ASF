@@ -299,9 +299,19 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
     /* Connect to MQTT server */
     conn.auto_reconnect = 1;
     mqtt_connect(&conn, HOST, 1883, 20);
-    PROCESS_WAIT_UNTIL(mqtt_connected(&conn));
+    if (!mqtt_connected(&conn)) {
+      printf("\r\n Not connected to the MQTT broker yet. Retrying ...");
+      etimer_set(&et, CLOCK_SECOND / 1);
+      while (!mqtt_connected(&conn)) {
+        mqtt_connect(&conn, HOST, 1883, 20);
+        PROCESS_WAIT_UNTIL(etimer_expired(&et));
+        etimer_reset(&et);
+      }      
+    }    
+      // PROCESS_WAIT_UNTIL(mqtt_connected(&conn));
     conn.auto_reconnect = 0;
-    //printf("comes here 1********************\n");
+    printf("\r\n Connected to the MQTT broker now");
+    
 	
 	/* Publish to the online topic that we are online. */
     PROCESS_WAIT_UNTIL(mqtt_ready(&conn));
