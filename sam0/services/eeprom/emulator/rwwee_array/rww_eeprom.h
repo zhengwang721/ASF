@@ -77,7 +77,7 @@
  *
  * \section asfdoc_sam0_rww_eeprom_module_overview Module Overview
  *
- * SAM device embedds a separate read while write EEPROM emulation (RWWEE) array
+ * SAM device embeds a separate read while write EEPROM emulation (RWWEE) array
  * that can be programmed while the main array is not blocked.
  * To use RWWEE memory, data must be written as a number of physical memory pages
  * (of several bytes each) rather than being individually byte addressable, and
@@ -369,7 +369,7 @@ extern "C" {
 /**
  * \brief RWW EEPROM Logical Page in Each Row.
  *
- * Enum for the possible logical pages that are stored in each physical row .
+ * Enum for the possible logical pages that are stored in each physical row.
  *
  */
 enum rwwee_logical_page_num_in_row {
