@@ -759,7 +759,7 @@
 #endif
 
 /**
- * Define port features set according to different device family
+ * Define port features set according to different device family.
  * @{
 */
 #if (SAML21) || defined(__DOXYGEN__)
