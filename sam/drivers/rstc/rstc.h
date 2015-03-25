@@ -1,4 +1,4 @@
-﻿/**
+﻿ /**
  * \file
  *
  * \brief SAM Reset Controller (RSTC) driver.
