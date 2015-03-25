@@ -47,11 +47,10 @@
 #include <asf.h>
 #include "ui.h"
 
-static bool ui_b_led_blink = true;
-static uint8_t ui_hid_report[UDI_HID_REPORT_IN_SIZE] ={0};
+static uint8_t ui_hid_report[UDI_HID_REPORT_IN_SIZE] = {0};
 static uint8_t ui_step = 0;
 
-void ui_multitouch_draw_line(void);
+void ui_multitouch_down(void);
 
 void ui_init(void)
 {
@@ -87,13 +86,11 @@ void ui_process(uint16_t framenumber)
 	static uint8_t cpt_sof = 0;
 
 	// Blink LED
-	if (ui_b_led_blink) {
-		if ((framenumber % 1000) == 0) {
-			LED_On(LED_0_PIN);
-		}
-		if ((framenumber % 1000) == 500) {
-			LED_Off(LED_0_PIN);
-		}
+	if ((framenumber % 1000) == 0) {
+		LED_On(LED_0_PIN);
+	}
+	if ((framenumber % 1000) == 500) {
+		LED_Off(LED_0_PIN);
 	}
 
 	// Scan process running each 40ms
@@ -103,14 +100,15 @@ void ui_process(uint16_t framenumber)
 	}
 	cpt_sof = 0;
 	// Scan buttons
+
 	b_btn_state = !port_pin_get_input_level(BUTTON_0_PIN);
 	if (b_btn_state != btn0_last_state) {
-		ui_multitouch_draw_line();
+		ui_multitouch_down();
 		ui_step++;
 		btn0_last_state = b_btn_state;
 	}
 }
-void ui_multitouch_draw_line()
+void ui_multitouch_down()
 {
 	// Report ID
 	ui_hid_report[0] = UDI_HID_REPORT_ID_MTOUCH;
@@ -137,13 +135,13 @@ void ui_multitouch_draw_line()
 	udi_hid_multi_touch_send_report_in(ui_hid_report);
 }
 
-////////////////////////End of function//////////////////////////////
-
 /**
  * \defgroup UI User Interface
  *
  * Human interface on SAMD21-XPlain:
  * - LED0 blinks when USB host has checked and enabled HID multi-touch interface
  * - Push button 0 (SW0) is used to draw line in paint application on Windows O.S
+ *  - Run the application and connect usb to he PC first.
+ *  - Open paint and push button 0 continuously, then two lines painted.
  *
  */

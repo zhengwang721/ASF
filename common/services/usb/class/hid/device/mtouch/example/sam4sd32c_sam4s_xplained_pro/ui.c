@@ -47,11 +47,11 @@
 #include <asf.h>
 #include "ui.h"
 
-static uint8_t ui_hid_report[UDI_HID_REPORT_IN_SIZE];
+static uint8_t ui_hid_report[UDI_HID_REPORT_IN_SIZE] = {0};
 
 static uint8_t ui_step = 0;
 
-void ui_multitouch_draw_line(void);
+void ui_multitouch_down(void);
 
 void ui_init(void)
 {
@@ -71,10 +71,12 @@ void ui_powerdown(void)
 
 void ui_wakeup_enable(void)
 {
+
 }
 
 void ui_wakeup_disable(void)
 {
+
 }
 
 void ui_wakeup(void)
@@ -86,9 +88,9 @@ void ui_process(uint16_t framenumber)
 {
 	bool b_btn_state;
 	static bool btn0_last_state = false;
-	static bool btn1_last_state = false;
 	static uint8_t cpt_sof = 0;
 
+	// Blink LED
 	if ((framenumber % 1000) == 0) {
 		LED_On(LED0_GPIO);
 	}
@@ -105,13 +107,13 @@ void ui_process(uint16_t framenumber)
 	// Scan buttons on switch 0 and 1
 	b_btn_state = (!gpio_pin_is_high(GPIO_PUSH_BUTTON_0)) ? true : false;
 	if (b_btn_state != btn0_last_state) {
-		ui_multitouch_draw_line();
+		ui_multitouch_down();
 		ui_step++;
 		btn0_last_state = b_btn_state;
 	}
 }
 
-void ui_multitouch_draw_line()
+void ui_multitouch_down()
 {
 	// Report ID
 	ui_hid_report[0] = UDI_HID_REPORT_ID_MTOUCH;
@@ -144,5 +146,7 @@ void ui_multitouch_draw_line()
  * Human interface on SAM4S-EK:
  * - Led 0 (D2) blinks when USB host has checked and enabled HID generic interface
  * - Push button 0 (SW0) is used to draw line in paint application on Windows O.S
+ *  - Run the application and connect usb to he PC first.
+ *  - Open paint and push button 0 continuously, then two lines painted.
  *
  */

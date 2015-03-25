@@ -183,21 +183,6 @@ UDC_DESC_STORAGE udi_hid_multi_touch_report_desc_t udi_hid_multi_touch_report_de
 			0x25, 0x02,                         //    LOGICAL_MAXIMUM (2)
 			0xb1, 0x02,                         //    FEATURE (Data,Var,Abs)
 			0xc0,                               // END_COLLECTION
-
-//			0x09, 0x0E,                         // USAGE (Device Configuration)
-//			0xa1, 0x01,                         // COLLECTION (Application)
-//			0x85, UDI_HID_REPORT_ID_FEATURE,    // REPORT_ID (Configuration)
-//			0x09, 0x23,                         // USAGE (Device Settings)
-//			0xa1, 0x02,                         // COLLECTION (logical)
-//			0x09, 0x52,                         // USAGE (Device Mode)
-//			0x09, 0x53,                         // USAGE (Device Identifier)
-//			0x15, 0x00,                         // LOGICAL_MINIMUM (0)
-//			0x25, 0x0a,                         // LOGICAL_MAXIMUM (10)
-//			0x75, 0x08,                         // REPORT_SIZE (8)
-//			0x95, 0x02,                         // REPORT_COUNT (2)
-//			0xb1, 0x02,                         // FEATURE (Data,Var,Abs
-//			0xc0,                               // END_COLLECTION
-//			0xc0,                               // END_COLLECTION
 		}
 };
 
@@ -264,18 +249,15 @@ static bool udi_hid_multi_touch_setupreport(void)
 	if ((USB_HID_REPORT_TYPE_FEATURE == (udd_g_ctrlreq.req.wValue >> 8))
           && (UDI_HID_REPORT_ID_MAX_COUNT == (0xFF & udd_g_ctrlreq.req.wValue))
           && (sizeof(udi_hid_multi_touch_report_feature) == udd_g_ctrlreq.req.wLength)) {
-		// Feature type on report ID 2
-		udi_hid_multi_touch_report_feature[0] = 2;
+		// Feature type on report ID maximum contact count equals two
+		udi_hid_multi_touch_report_feature[0] = UDI_HID_REPORT_ID_MAX_COUNT;
 		udi_hid_multi_touch_report_feature[1] = 2;
 
 		udd_g_ctrlreq.payload = udi_hid_multi_touch_report_feature;
 		udd_g_ctrlreq.payload_size = 2;
 		return true;
-	} else if ((USB_HID_REPORT_TYPE_FEATURE == (udd_g_ctrlreq.req.wValue >> 8))
-          && (UDI_HID_REPORT_ID_FEATURE == (0xFF & udd_g_ctrlreq.req.wValue))
-          && (3 == udd_g_ctrlreq.req.wLength)) {
-		// Feature type on report ID 3
 	}
+
 	return false;
 }
 

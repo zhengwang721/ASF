@@ -62,7 +62,7 @@ int main(void)
 	// Initialize the sleep manager
 	sleepmgr_init();
 
-#if !SAMD21 && !SAMR21 && !SAMD11
+#if !SAMD21 && !SAMR21 && !SAMD11 && !SAML21
 	sysclk_init();
 	board_init();
 #else
@@ -83,7 +83,6 @@ int main(void)
 		// to scan multi-touch interface then use main loop
 		if (main_b_mtouch_enable) {
 			static volatile uint16_t virtual_sof_sub = 0;
-			static uint16_t virtual_sof = 0;
 			if (sysclk_get_cpu_hz()/50000 ==
 				virtual_sof_sub++) {
 				virtual_sof_sub = 0;
@@ -148,7 +147,7 @@ void main_multitouch_disable(void)
  * to simulate a standard multi-touch.
  * After loading firmware, connect the board (EVKxx,Xplain,...) to the USB Host.
  * When connected to a USB host system this application provides a HID multi-touch
- * application in the Unix/Mac/Windows operating systems.
+ * with two point application in the Windows 7 operating systems.
  * This example uses the native HID driver for these operating systems.
  *
  * \copydoc UI
