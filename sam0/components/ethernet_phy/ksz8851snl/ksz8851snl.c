@@ -323,7 +323,7 @@ void ksz8851_reg_clrbits(uint16_t reg, uint16_t bits_to_clr)
  * controller. When initialization is done the PHY is turned on and ready
  * to receive data.
  */
-uint32_t ksz8851snl_init(uint8_t *mac)
+uint32_t ksz8851snl_init(void)
 {
 	uint32_t count = 0;
 	uint16_t dev_id = 0;
@@ -345,9 +345,9 @@ uint32_t ksz8851snl_init(uint8_t *mac)
 	} while ((dev_id & 0xFFF0) != CHIP_ID_8851_16);
 
 	/* Init step2-4: write QMU MAC address (low, middle then high). */
-	ksz8851_reg_write(REG_MAC_ADDR_0, (mac[4] << 8) | mac[5]);
-	ksz8851_reg_write(REG_MAC_ADDR_2, (mac[2] << 8) | mac[3]);
-	ksz8851_reg_write(REG_MAC_ADDR_4, (mac[0] << 8) | mac[1]);
+	ksz8851_reg_write(REG_MAC_ADDR_0, (ETHERNET_CONF_ETHADDR4 << 8) | ETHERNET_CONF_ETHADDR5);
+	ksz8851_reg_write(REG_MAC_ADDR_2, (ETHERNET_CONF_ETHADDR2 << 8) | ETHERNET_CONF_ETHADDR3);
+	ksz8851_reg_write(REG_MAC_ADDR_4, (ETHERNET_CONF_ETHADDR0 << 8) | ETHERNET_CONF_ETHADDR1);
 
 	/* Init step5: enable QMU Transmit Frame Data Pointer Auto Increment. */
 	ksz8851_reg_write(REG_TX_ADDR_PTR, ADDR_PTR_AUTO_INC);
@@ -416,3 +416,5 @@ uint32_t ksz8851snl_init(uint8_t *mac)
 
 	return 0;
 }
+
+
