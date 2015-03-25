@@ -97,7 +97,7 @@ const struct radio_driver rf212_radio_driver =
 /* when transmitting, time to allow previous transmission to end before drop */
 #define PREV_TX_TIMEOUT                   (10 * RTIMER_SECOND/1000)
 /*---------------------------------------------------------------------------*/
-#define DEBUG                 1
+#define DEBUG                 0
 #define DEBUG_PRINTDATA       0     /* print frames to/from the radio; requires DEBUG == 1 */
 #if DEBUG
 #define PRINTF(...)       printf(__VA_ARGS__)
@@ -503,7 +503,7 @@ rf212_channel_clear(void)
     was_off = 1;
     RF212_COMMAND(TRXCMD_RX_ON);
   }
-
+   delay_us(200);
   /* request a CCA, storing the channel number (set with the same reg) */
   regsave = trx_reg_read(RF212_REG_PHY_CC_CCA);
   regsave |= PHY_CC_CCA_DO_CCA | PHY_CC_CCA_MODE_CS_OR_ED;
