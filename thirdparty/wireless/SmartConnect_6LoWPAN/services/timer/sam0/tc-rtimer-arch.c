@@ -39,9 +39,11 @@
 #include "rtc_count_interrupt.h"
 #include "system_interrupt_features.h"
 #include "tc_interrupt.h"
+#include "rtimer-arch.h"
+
 void sleep_callback(struct rtimer *t, void *ptr);
 void rtimer_adjust_ticks(uint32_t );
-void rtimer_arch_sleep(rtimer_clock_t );
+
 uint32_t sleep_count;
 static struct tc_module tc_instance;
 //static struct rtimer sleep_tmr;
