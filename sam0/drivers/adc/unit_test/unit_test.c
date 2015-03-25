@@ -446,8 +446,8 @@ static void setup_adc_average_mode_test(const struct test_case *test)
 	adc_disable(&adc_inst);
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-	config.positive_input     = ADC_POSITIVE_INPUT;
-	config.negative_input     = ADC_NEGATIVE_INPUT_GND;
+	config.positive_input     = CONF_ADC_POSITIVE_INPUT;
+	config.negative_input     = CONF_ADC_NEGATIVE_INPUT;
 #if (SAML21)
 	config.reference          = ADC_REFERENCE_INTREF;
 #else
@@ -525,8 +525,8 @@ static void setup_adc_window_mode_test(const struct test_case *test)
 	adc_disable(&adc_inst);
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-	config.positive_input = ADC_POSITIVE_INPUT;
-	config.negative_input = ADC_NEGATIVE_INPUT_GND;
+	config.positive_input = CONF_ADC_POSITIVE_INPUT;
+	config.negative_input = CONF_ADC_NEGATIVE_INPUT;
 #if (SAML21)
 	config.reference      = ADC_REFERENCE_INTREF;
 	config.clock_prescaler = ADC_CLOCK_PRESCALER_DIV16;
