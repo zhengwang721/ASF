@@ -1,7 +1,7 @@
-﻿/**
+/**
  * \file
  *
- * \brief SAM Reset Controller (RSTC) driver.
+ * \brief SAM4 Reset Controller (RSTC) driver.
  *
  * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
@@ -48,7 +48,7 @@
 #define RSTC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_rstc_group SAM Reset Controller (RSTC)
+ * \defgroup asfdoc_sam_drivers_rstc_group SAM4 Reset Controller (RSTC)
  * This driver for SAM devices provides an interface for the configuration
  * and management of the device's Reset Controller functionality.
  *
@@ -258,7 +258,7 @@ static inline void rstc_assert_reset_of_coprocessor(
 {
 	/* Validate parameters. */
 	Assert(p_rstc);
-
+	
 	uint32_t tmp = p_rstc->RSTC_CPMR;
 	tmp &= ~(RSTC_CPMR_CPKEY_Msk | (reset & (RSTC_CPMR_CPEREN |
 			RSTC_CPMR_CPROCEN)));
@@ -394,7 +394,7 @@ static inline void rstc_assert_reset_of_coprocessor(
  * Add to, e.g., main loop in application C-file:
  * \snippet rstc_example1.c reset_irq_has_triggered
  */
-
+ 
 /// @cond
 /**INDENT-OFF**/
 #ifdef __cplusplus
