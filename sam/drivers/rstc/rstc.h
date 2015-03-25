@@ -1,4 +1,4 @@
-﻿ /**
+﻿/**
  * \file
  *
  * \brief SAM Reset Controller (RSTC) driver.
@@ -258,7 +258,7 @@ static inline void rstc_assert_reset_of_coprocessor(
 {
 	/* Validate parameters. */
 	Assert(p_rstc);
-	
+
 	uint32_t tmp = p_rstc->RSTC_CPMR;
 	tmp &= ~(RSTC_CPMR_CPKEY_Msk | (reset & (RSTC_CPMR_CPEREN |
 			RSTC_CPMR_CPROCEN)));
@@ -394,7 +394,7 @@ static inline void rstc_assert_reset_of_coprocessor(
  * Add to, e.g., main loop in application C-file:
  * \snippet rstc_example1.c reset_irq_has_triggered
  */
- 
+
 /// @cond
 /**INDENT-OFF**/
 #ifdef __cplusplus
