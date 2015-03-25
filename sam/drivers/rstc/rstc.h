@@ -1,7 +1,7 @@
 ﻿/**
  * \file
  *
- * \brief SAM4 Reset Controller (RSTC) driver.
+ * \brief SAM Reset Controller (RSTC) driver.
  *
  * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
