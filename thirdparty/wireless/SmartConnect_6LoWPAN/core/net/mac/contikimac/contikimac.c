@@ -276,6 +276,8 @@ static int broadcast_rate_counter;
 #define HARDWARE_ACK 0
 #endif /* RDC_CONF_HARDWARE_ACK */
 
+uint16_t contikimac_debug_print(void);
+
 /*---------------------------------------------------------------------------*/
 static void
 on(void)

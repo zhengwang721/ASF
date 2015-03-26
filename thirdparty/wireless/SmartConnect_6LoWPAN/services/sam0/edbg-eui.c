@@ -85,6 +85,8 @@ static uint8_t write_buffer[2] = {
   0x51, 0xd2,
 };
 
+uint8_t*  edbg_eui_read_eui64(void);
+
 #define SLAVE_ADDRESS 0x28
 
 #define TIMEOUT 1000

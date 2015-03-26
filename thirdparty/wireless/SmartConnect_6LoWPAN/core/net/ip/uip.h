@@ -2229,6 +2229,9 @@ uint16_t uip_udpchksum(void);
  */
 uint16_t uip_icmp6chksum(void);
 
+/* Remove ext header before TCP/UDP processing. */
+void remove_ext_hdr(void);
+  
 
 #endif /* UIP_H_ */
 

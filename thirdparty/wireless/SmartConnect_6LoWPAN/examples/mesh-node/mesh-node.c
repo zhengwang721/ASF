@@ -55,11 +55,11 @@ route_callback(int event, uip_ipaddr_t *route, uip_ipaddr_t *ipaddr,
                int numroutes)
 {
     leds_off(LEDS_ALL);
-    printf("Got a RPL route event: %d; Route : ");
+   printf("Got a RPL route event: %d", event);
 	uip_debug_ipaddr_print(route);
 	printf("; Ipaddr:");
 	uip_debug_ipaddr_print(ipaddr);
-	printf("; Num of routes: %d\r\n");
+	printf("; Num of routes: %d\r\n", numroutes);
 }
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(mesh_node_process, ev, data)

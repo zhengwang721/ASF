@@ -120,6 +120,8 @@ static void
 tcp_event(struct tcp_socket *s, void *ptr, tcp_socket_event_t event);
 static void
 reset_packet(struct mqtt_in_packet* packet);
+void mqtt_init(void);
+void reset_defaults(struct mqtt_connection* conn);
 
 
 LIST(mqtt_conn_list);

@@ -103,6 +103,11 @@ static uip_ipaddr_t google_ipv4_dns_server = {
 #define PRIORITY      "p0"
 #define UUID	        "atmeld"
 
+//
+// Function prototypes
+//
+void configure_adc(void);
+uint16_t measure_light(void);
 
 
 /*---------------------------------------------------------------------------*/
@@ -224,7 +229,6 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
   timestmp = clock_time();
 
   configure_adc();
-  light = measure_light();
 
   lladdr = uip_ds6_get_link_local(-1);
   sprintf(mac_adr_str,"%02x%02x%02x%02x%02x%02x%02x%02x",lladdr ->ipaddr.u8[8],lladdr->ipaddr.u8[9],lladdr->ipaddr.u8[10],lladdr->ipaddr.u8[11],lladdr->ipaddr.u8[12],lladdr->ipaddr.u8[13],lladdr->ipaddr.u8[14],lladdr->ipaddr.u8[15]);
@@ -369,7 +373,8 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
 		
 		// measure light intensity
 		light = measure_light();
-		sprintf(light_str,"%s","4095");
+    printf("Light sensor reading = %d", light);
+		sprintf(light_str,"%d", light);
 		
 		// create payload for mqtt message
 		sprintf(app_buffer,"%s%lu%s%s%s%s%s%s%s","{\x22timestamp\x22: \x22",timestmp,
