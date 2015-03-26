@@ -165,7 +165,7 @@ SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT
 
 /* Configure GCLK generator 5 */
 #  define CONF_CLOCK_GCLK_5_ENABLE                true
-#  define CONF_CLOCK_GCLK_5_RUN_IN_STANDBY        false
+#  define CONF_CLOCK_GCLK_5_RUN_IN_STANDBY        true
 #  define CONF_CLOCK_GCLK_5_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_OSC8M
 #  define CONF_CLOCK_GCLK_5_PRESCALER             1
 #  define CONF_CLOCK_GCLK_5_OUTPUT_ENABLE         false

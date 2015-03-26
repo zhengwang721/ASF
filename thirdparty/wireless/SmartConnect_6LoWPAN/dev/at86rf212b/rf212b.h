@@ -46,5 +46,7 @@ int rf_set_channel(uint8_t ch);
 int rf212_get_txp(void);
 int rf212_set_txp(uint8_t txp);
 uint8_t rf212_status(void);
+void goto_sleep(void);
+void wake_from_sleep(void);
 /*---------------------------------------------------------------------------*/
 #endif  /* _RF212_H_ */

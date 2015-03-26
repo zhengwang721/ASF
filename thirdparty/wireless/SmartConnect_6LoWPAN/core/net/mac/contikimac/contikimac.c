@@ -84,7 +84,7 @@
 #endif
 /* MCU can sleep during radio off */
 #ifndef RDC_CONF_MCU_SLEEP
-#define RDC_CONF_MCU_SLEEP           0
+#define RDC_CONF_MCU_SLEEP           1
 #endif
 
 #if NETSTACK_RDC_CHANNEL_CHECK_RATE >= 64
