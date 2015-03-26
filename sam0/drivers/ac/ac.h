@@ -645,11 +645,14 @@ struct ac_config {
 	 *  mode when triggered. */
 	bool run_in_standby[AC_PAIRS];
 #endif
-	/** Source generator for AC GCLK. */
+
 #if (SAMD) || (SAMR21)
+	/** Digital source generator for AC GCLK. */
 	enum gclk_generator dig_source_generator;
+	/** Analog source generator for AC GCLK. */
 	enum gclk_generator ana_source_generator;
 #else
+	/** Source generator for AC GCLK. */
 	enum gclk_generator source_generator;
 #endif
 };
