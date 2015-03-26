@@ -101,7 +101,7 @@ set_global_address(void)
 PROCESS_THREAD(unicast_sender_process, ev, data)
 {
   static struct etimer periodic_timer;
-  static struct etimer send_timer;
+  // static struct etimer send_timer;
   uip_ipaddr_t *addr;
 
   PROCESS_BEGIN();
