@@ -830,12 +830,10 @@ void system_clock_init(void)
 	dfll_conf.loop_mode      = CONF_CLOCK_DFLL_LOOP_MODE;
 	dfll_conf.on_demand      = false;
 
-	/* Using DFLL48M COARSE and FINE CAL value from NVM Software Calibration Area Mapping
-	   in DFLL.COARSE and DFLL.FINE helps to output a frequency close to 48 MHz.*/
+	/* Using DFLL48M COARSE CAL value from NVM Software Calibration Area Mapping
+	   in DFLL.COARSE helps to output a frequency close to 48 MHz.*/
 #define NVM_DFLL_COARSE_POS    58 /* DFLL48M Coarse calibration value bit position.*/
 #define NVM_DFLL_COARSE_SIZE   6  /* DFLL48M Coarse calibration value bit size.*/
-#define NVM_DFLL_FINE_POS      64 /* DFLL48M Fine calibration value bit position.*/
-#define NVM_DFLL_FINE_SIZE     10 /* DFLL48M Fine calibration value bit size.*/
 
 	uint32_t coarse =( *((uint32_t *)(NVMCTRL_OTP4)
 			+ (NVM_DFLL_COARSE_POS / 32))
@@ -845,16 +843,12 @@ void system_clock_init(void)
 	if (coarse == 0x3f) {
 		coarse = 0x1f;
 	}
-	uint32_t fine =( *((uint32_t *)(NVMCTRL_OTP4)
-			+ (NVM_DFLL_FINE_POS / 32))
-		>> (NVM_DFLL_FINE_POS % 32))
-		& ((1 << NVM_DFLL_FINE_SIZE) - 1);
-	/* In some revision chip, the fine calibration value is not correct. */
-	if (fine == 0x3ff) {
-		fine = 0x1ff;
-	}
+
 	dfll_conf.coarse_value = coarse;
-	dfll_conf.fine_value   = fine;
+
+	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN) {
+		dfll_conf.fine_value   = CONF_CLOCK_DFLL_FINE_VALUE;
+	}
 
 
 #  if CONF_CLOCK_DFLL_QUICK_LOCK == true
@@ -889,6 +883,7 @@ void system_clock_init(void)
 	dfll_conf.fine_max_step   = CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE;
 
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_USB_RECOVERY) {
+		dfll_conf.fine_value   = 0x1ff;
 		dfll_conf.quick_lock = SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE;
 		dfll_conf.stable_tracking = SYSTEM_CLOCK_DFLL_STABLE_TRACKING_FIX_AFTER_LOCK;
 		dfll_conf.wakeup_lock = SYSTEM_CLOCK_DFLL_WAKEUP_LOCK_KEEP;

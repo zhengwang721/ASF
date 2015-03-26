@@ -797,8 +797,6 @@ void system_clock_init(void)
 	if (rev >= _SYSTEM_MCU_REVISION_D) {
 #define NVM_DFLL_COARSE_POS    58 /* DFLL48M Coarse calibration value bit position.*/
 #define NVM_DFLL_COARSE_SIZE   6  /* DFLL48M Coarse calibration value bit size.*/
-#define NVM_DFLL_FINE_POS      64 /* DFLL48M Fine calibration value bit position.*/
-#define NVM_DFLL_FINE_SIZE     10 /* DFLL48M Fine calibration value bit size.*/
 
 		uint32_t coarse =( *((uint32_t *)(NVMCTRL_OTP4)
 				+ (NVM_DFLL_COARSE_POS / 32))
@@ -808,16 +806,11 @@ void system_clock_init(void)
 		if (coarse == 0x3f) {
 			coarse = 0x1f;
 		}
-		uint32_t fine =( *((uint32_t *)(NVMCTRL_OTP4)
-				+ (NVM_DFLL_FINE_POS / 32))
-			>> (NVM_DFLL_FINE_POS % 32))
-			& ((1 << NVM_DFLL_FINE_SIZE) - 1);
-		/* In some revision chip, the fine calibration value is not correct. */
-		if (fine == 0x3ff) {
-			fine = 0x1ff;
-		}
+
 		dfll_conf.coarse_value = coarse;
-		dfll_conf.fine_value   = fine;
+
+	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN) {
+		dfll_conf.fine_value   = CONF_CLOCK_DFLL_FINE_VALUE;
 	}
 
 #  if CONF_CLOCK_DFLL_QUICK_LOCK == true

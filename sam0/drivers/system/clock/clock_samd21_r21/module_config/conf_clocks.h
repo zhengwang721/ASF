@@ -91,6 +91,9 @@
 #  define CONF_CLOCK_DFLL_LOOP_MODE               SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN
 #  define CONF_CLOCK_DFLL_ON_DEMAND               false
 
+/* DFLL open loop mode configuration */
+#  define CONF_CLOCK_DFLL_FINE_VALUE              (0xff / 4)
+
 /* DFLL closed loop mode configuration */
 #  define CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR   GCLK_GENERATOR_1
 #  define CONF_CLOCK_DFLL_MULTIPLY_FACTOR         1465 //(48000000 / 32768)
