@@ -49,7 +49,7 @@
 
 #include "tal_config.h"
 
-#if (defined SUPPORT_TFA) || (defined TFA_BAT_MON) || \
+#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || \
     (defined TFA_BAT_MON_READ) || (defined TFA_BAT_MON_IRQ)
 
 /* === INCLUDES ============================================================ */
@@ -75,7 +75,7 @@
 
 /* === GLOBALS ============================================================= */
 
-#if (defined SUPPORT_TFA) || (defined TFA_BAT_MON) || (defined TFA_BAT_MON_IRQ)
+#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined TFA_BAT_MON_IRQ)
 static irq_handler_t irq_hdl_batmon;
 #endif
 
@@ -84,7 +84,7 @@ static irq_handler_t irq_hdl_batmon;
 /* === IMPLEMENTATION ====================================================== */
 
 
-#if (defined SUPPORT_TFA) || (defined TFA_BAT_MON) || (defined TFA_BAT_MON_READ)
+#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined TFA_BAT_MON_READ)
 /**
  * @brief Gets the transceiver's supply voltage
  *
@@ -94,13 +94,8 @@ uint16_t tfa_get_batmon_voltage(void)
 {
     uint16_t mv;
 
-    debug_text(PSTR("tfa_get_batmon_voltage()"));
-
     if ((tal_state[RF09] == TAL_SLEEP) && (tal_state[RF24] == TAL_SLEEP))
     {
-#if DEBUG > 0
-        debug_text(PSTR("Both trx are in sleep mode"));
-#endif
         return 0;
     }
 
@@ -140,7 +135,6 @@ uint16_t tfa_get_batmon_voltage(void)
     {
         /* EVDD is above threshold */
         /* Set to high range */
-        debug_text(PSTR("high range"));
 #ifdef IQ_RADIO
         pal_dev_bit_write(RF215_RF, SR_RF_BMDVC_BMHR, 1);
 #else
@@ -151,7 +145,7 @@ uint16_t tfa_get_batmon_voltage(void)
     {
         /* EVDD is below threshold */
         /* Keep current range; i.e. low range */
-        debug_text(PSTR("low range"));
+      
     }
 
     /* Find the voltage factor */
@@ -169,7 +163,6 @@ uint16_t tfa_get_batmon_voltage(void)
 #endif
         {
             vth = i;
-            debug_text_val(PSTR("vth = "), vth);
             break;
         }
     }
@@ -229,10 +222,10 @@ uint16_t tfa_get_batmon_voltage(void)
 
     return mv;
 }
-#endif /* #if (defined SUPPORT_TFA) || (defined TFA_BAT_MON_READ) */
+#endif /* #if (defined ENABLE_TFA) || (defined TFA_BAT_MON_READ) */
 
 
-#if (defined SUPPORT_TFA) || (defined TFA_BAT_MON) || (defined TFA_BAT_MON_IRQ)
+#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined TFA_BAT_MON_IRQ)
 /*
  * @brief Setups the battery monitor interrupt
  *
@@ -247,12 +240,9 @@ uint16_t tfa_get_batmon_voltage(void)
 retval_t tfa_batmon_irq_init(FUNC_PTR(batmon_irq_cb), uint16_t vth)
 {
     retval_t ret;
-
-    debug_text(PSTR("tfa_batmon_irq_init()"));
-
     if ((vth < BATMON_MON_VTH_MIN) || (vth > BATMON_MON_VTH_MAX))
     {
-        debug_text(PSTR("Invalid range"));
+        
         ret = MAC_INVALID_PARAMETER;
     }
     else
@@ -293,10 +283,10 @@ retval_t tfa_batmon_irq_init(FUNC_PTR(batmon_irq_cb), uint16_t vth)
 
     return ret;
 }
-#endif /* #if (defined SUPPORT_TFA) || (defined TFA_BAT_MON) || (defined TFA_BAT_MON_IRQ) */
+#endif /* #if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined TFA_BAT_MON_IRQ) */
 
 
-#if (defined SUPPORT_TFA) || (defined TFA_BAT_MON) || (defined TFA_BAT_MON_IRQ)
+#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined TFA_BAT_MON_IRQ)
 void handle_batmon_irq(void)
 {
     if (irq_hdl_batmon != NULL)
@@ -304,12 +294,12 @@ void handle_batmon_irq(void)
         irq_hdl_batmon();
     }
 }
-#endif /* #if (defined SUPPORT_TFA) || (defined TFA_BAT_MON) || (defined TFA_BAT_MON_IRQ) */
+#endif /* #if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined TFA_BAT_MON_IRQ) */
 
 
 
 
-#endif /* #if (defined SUPPORT_TFA)  || . . . */
+#endif /* #if (defined ENABLE_TFA)  || . . . */
 
 
 /* EOF */

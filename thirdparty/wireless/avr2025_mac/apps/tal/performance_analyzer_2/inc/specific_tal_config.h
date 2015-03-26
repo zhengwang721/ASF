@@ -163,7 +163,7 @@
 #define SUPPORT_OFDM
 
 
-#define SUPPORT_TFA
+#define ENABLE_TFA
 
 #define RF215v1
 

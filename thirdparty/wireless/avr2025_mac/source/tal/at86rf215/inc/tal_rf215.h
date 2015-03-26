@@ -118,18 +118,6 @@ typedef enum trx_id_tag
 /** Register offset for test register area. */
 #define RFT_TST_ADDR_OFFSET             (0x280 - 0x180)
 
-//#if (PAL_GENERIC_TYPE != MEGA_RF_SIM) //vk
-/* Resolve debug output used for simulation */
-#define debug_text(x)
-#define debug_to_tb(x)
-#define debug_text_val(a, b)
-#define debug_finish(x);
-#define debug_text_finish(x, y)
-#define debug_text_val_finish(a, b, c)
-#define debug_text_2x8bit_val(a, b, c, d)
-#define debug_2text_8bit_val(a, b, c, d, e)
-//#endif
-
 /* === PROTOTYPES ========================================================== */
 void get_ofdm_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,ofdm_option_t option,uint32_t *freq, uint32_t *spacing);
 void get_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *freq, uint32_t *spacing);

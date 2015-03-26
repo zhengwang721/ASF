@@ -115,7 +115,6 @@ static void handle_ifs(trx_id_t trx_id);
 retval_t tal_tx_frame(trx_id_t trx_id, frame_info_t *tx_frame,
                       csma_mode_t csma_mode, bool perform_frame_retry)
 {
-    debug_text(PSTR("tal_tx_frame()"));
 
     if (tal_state[trx_id] == TAL_SLEEP)
     {
@@ -124,8 +123,7 @@ retval_t tal_tx_frame(trx_id_t trx_id, frame_info_t *tx_frame,
 
     if (tal_state[trx_id] != TAL_IDLE)
     {
-        debug_text_val(PSTR("TAL_BUSY, tal_state[trx_id] = "), tal_state[trx_id]);
-        return TAL_BUSY;
+                return TAL_BUSY;
     }
 
     if ((csma_mode == CSMA_SLOTTED) || (tx_frame == NULL))
@@ -139,8 +137,7 @@ retval_t tal_tx_frame(trx_id_t trx_id, frame_info_t *tx_frame,
      */
     if ((tx_frame->len_no_crc + tal_pib[trx_id].FCSLen) > tal_pib[trx_id].MaxPHYPacketSize)
     {
-        debug_text_val(PSTR("Invalid frame length = "), tx_frame->len_no_crc);
-        return MAC_INVALID_PARAMETER;
+                return MAC_INVALID_PARAMETER;
     }
 
     /*
@@ -221,8 +218,7 @@ retval_t tal_tx_frame(trx_id_t trx_id, frame_info_t *tx_frame,
  */
 void transmit_frame(trx_id_t trx_id, cca_use_t cca)
 {
-    debug_text(PSTR("transmit_frame()"));
-
+    
  uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
     /* Configure auto modes */
@@ -257,8 +253,6 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
     if (cca == WITH_CCA)
     {
         /* Trigger CCA measurement */
-        debug_text(PSTR("transmit with CCA"));
-
         /* Disable BB; it will enabled for transmission automatically again */
         trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 0);
 
@@ -269,7 +263,6 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
         }
         if (trx_state[trx_id] != RF_RX)
         {
-            debug_text(PSTR("Switch to Rx"));
             switch_to_rx(trx_id);
             pal_timer_delay(tal_pib[trx_id].agc_settle_dur); // allow filters to settle
         }
@@ -278,7 +271,6 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
         trx_bit_write(reg_offset + SR_RF09_IRQM_TRXRDY, 0);
 
         /* Start single ED measurement; use reg_write - it's the only sub-register */
-        debug_text(PSTR("Start ED measurement"));
         trx_reg_write(reg_offset + RG_RF09_EDC, RF_EDSINGLE);
         tx_state[trx_id] = TX_CCATX;
     }
@@ -289,7 +281,6 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
             switch_to_txprep(trx_id);
         }
 
-        debug_text(PSTR("switch to Tx"));
         trx_reg_write(reg_offset + RG_RF09_CMD, RF_TX);
         trx_state[trx_id] = RF_TX;
         tx_state[trx_id] = TX_TX;
@@ -308,18 +299,10 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
                       (uint8_t *)mac_frame_ptr[trx_id]->mpdu,
                       mac_frame_ptr[trx_id]->len_no_crc);
 
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-        for (uint16_t i = 0; i < mac_frame_ptr[trx_id]->len_no_crc; i++)
-        {
-            debug_text_val(PSTR("tx val = "), mac_frame_ptr[trx_id]->mpdu[i]);
-        }
-#endif
-
         /* Check if under-run has occurred */
         bool underrun = trx_bit_read(reg_offset + SR_BBC0_PS_TXUR);
         if (underrun)
         {
-            debug_text(PSTR("Tx underrun occured"));
             /* Abort ongoing transmission */
             trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
             trx_state[trx_id] = RF_TRXOFF;
@@ -363,9 +346,7 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
  */
 void handle_tx_end_irq(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("handle_tx_end_irq(), tal_state "), tal_state[trx_id]);
-
-    switch (tx_state[trx_id])
+       switch (tx_state[trx_id])
     {
         case TX_CCATX:
             {
@@ -374,7 +355,7 @@ void handle_tx_end_irq(trx_id_t trx_id)
                 uint8_t ccaed = trx_bit_read(reg_offset + SR_BBC0_AMCS_CCAED);
                 if (ccaed == BB_CH_CLEAR)
                 {
-                    debug_text(PSTR("Channel idle and frame has been sent"));
+                    
 #ifdef MEASURE_ON_AIR_DURATION
                     tal_pib[trx_id].OnAirDuration +=
                         pal_sub_time_us(rxe_txe_tstamp[trx_id], fs_tstamp[trx_id]);
@@ -388,7 +369,6 @@ void handle_tx_end_irq(trx_id_t trx_id)
                     /* Switch BB on again */
                     trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 1);
                     trx_state[trx_id] = RF_RX;
-                    debug_text(PSTR("Channel busy"));
                     csma_continue(trx_id);
                     return;
                 }
@@ -436,7 +416,7 @@ void handle_tx_end_irq(trx_id_t trx_id)
 #endif
 
         default:
-#if (DEBUG > 0) && (defined SIO_HUB)
+#if (_DEBUG_ > 0) && (defined SIO_HUB)
             printf("Unexpected tx_state 0x%02X\n", tx_state[trx_id]);
 #endif
             break;
@@ -460,7 +440,6 @@ void handle_tx_end_irq(trx_id_t trx_id)
     else // No ACK requested
     {
         trx_state[trx_id] = RF_TXPREP;
-        debug_text(PSTR("No ACK requested"));
         tx_done_handling(trx_id, MAC_SUCCESS);
     }
 }
@@ -477,8 +456,6 @@ void handle_tx_end_irq(trx_id_t trx_id)
  */
 void tx_done_handling(trx_id_t trx_id, retval_t status)
 {
-    debug_text(PSTR("tx_done_handling()"));
-
     if (status == MAC_NO_ACK)
     {
         if (number_of_tx_retries[trx_id] < tal_pib[trx_id].MaxFrameRetries)
@@ -572,8 +549,7 @@ void tx_done_handling(trx_id_t trx_id, retval_t status)
  */
 static void handle_ifs(trx_id_t trx_id)
 {
-    debug_text(PSTR("handle_ifs()"));
-
+    
     uint32_t now;
     uint32_t time_diff;
 
@@ -586,7 +562,6 @@ static void handle_ifs(trx_id_t trx_id)
         if (time_diff < required_spacing)
         {
             uint32_t delay = required_spacing - time_diff;
-            debug_text_val(PSTR("delay LIFS = "), (uint16_t)delay);
             pal_timer_delay(delay);
         }
     }
@@ -597,7 +572,6 @@ static void handle_ifs(trx_id_t trx_id)
         if (time_diff < required_spacing)
         {
             uint32_t delay = required_spacing - time_diff;
-            debug_text_val(PSTR("delay SIFS = "), (uint16_t)delay);
             pal_timer_delay(delay);
         }
     }

@@ -152,7 +152,6 @@ retval_t ofdm_rfcfg(ofdm_option_t ofdm_opt, trx_id_t trx_id)
         case OFDM_OPT_4: /*OFDM Option 4: BW nom.: 156 kHz */
             sr=6; txrcut=2; txfc= 3; rxrcut09=1; rxrcut24=1; bw09= 2; bw24= 3; ifs09=1; ifs24=0; agci=0; pdt=3; break;
         default:
-            debug_text_val_finish(PSTR("ERROR: OFDM option must be in [1..4], is:"), ofdm_opt, DEBUG_ERROR);
             status = FAILURE;
             return status;
             break;
@@ -277,7 +276,6 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
             break;
 
         default:
-            debug_text_val_finish(PSTR("ERROR: MODE_FCHIP  must be in [0..3], is:"), chip_rate, DEBUG_ERROR);
             return FAILURE;
             break;
     }

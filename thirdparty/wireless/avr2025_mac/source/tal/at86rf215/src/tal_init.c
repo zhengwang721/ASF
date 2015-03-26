@@ -65,7 +65,7 @@
 #include "tal.h"
 #include "tal_internal.h"
 #include "tal_config.h"
-#ifdef SUPPORT_TFA
+#ifdef ENABLE_TFA
 #include "tfa.h"
 #endif
 #include "mac_build_config.h"
@@ -73,9 +73,7 @@
 #include "pal_internal.h"
 #endif
 
-#if (BOARD_TYPE == EVAL215_FPGA)
-#include <stdio.h>
-#endif
+
 
 /* === MACROS ============================================================== */
 
@@ -91,7 +89,7 @@ static retval_t tal_timer_init(void);
 /**
  * \brief Stops all initialized TAL timers
  */
-static void tal_timers_stop(void);
+
 //static retval_t trx_reset(trx_id_t trx_id); //vk
 static void cleanup_tal(trx_id_t trx_id);
 static void trx_init(void);
@@ -121,7 +119,6 @@ uint8_t	TAL_T_CALIBRATION_1 ;
  */
 retval_t tal_init(void)
 {
-    debug_text(PSTR("tal_init()"));
 
     /* Init the PAL and by this means also the transceiver interface */
     if (pal_init() != MAC_SUCCESS)
@@ -139,7 +136,7 @@ retval_t tal_init(void)
     if ((trx_reg_read( RG_RF_PN) != 0x34) ||
         (trx_reg_read( RG_RF_VN) != 0x01))
     {
-        debug_text(PSTR("Wrong PN or VN"));
+       
         return FAILURE;
     }
 
@@ -200,7 +197,7 @@ retval_t tal_init(void)
 		 * generated again, we must repeat this.
 		 */
 		while ((tal_pib[trx_id].IeeeAddress == 0x0000000000000000) ||
-			   (tal_pib[trx_id].IeeeAddress == 0xFFFFFFFFFFFFFFFF))
+			   (tal_pib[trx_id].IeeeAddress == ((uint64_t) - 1)))
 		{
 			/*
 			 * In case no valid IEEE address is available, a random
@@ -268,7 +265,6 @@ retval_t tal_init(void)
  */
 void trx_config(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("trx_config(), trx_id ="), trx_id);
 
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
@@ -369,8 +365,6 @@ void trx_config(trx_id_t trx_id)
  */
 static void trx_init(void)
 {
-    debug_text(PSTR("trx_init()"));
-   
     /*
      * Configure generic trx functionality
      * Configure Trx registers that are reset during DEEP_SLEEP and IC reset
@@ -388,10 +382,6 @@ static void trx_init(void)
     trx_bit_write(SR_RF_CLKO_OS, TRX_CLOCK_OUTPUT_SELECTION);
 #endif
 #endif
-// #if (BOARD_TYPE == EVAL215_FPGA)
-//     pal_dev_bit_write(RF215_RF, SR_RF_BMDVC_BMVTH, 0);
-//     pal_dev_bit_write(RF215_BB, SR_RF_CLKO_OS, 0);
-// #endif
 }
 
 
@@ -410,16 +400,14 @@ static void trx_init(void)
 retval_t tal_reset(trx_id_t trx_id, bool set_default_pib)
 {
     rf_cmd_state_t previous_trx_state[NUM_TRX];
-
-    debug_text_val(PSTR("tal_reset(), trx_id ="), trx_id);
-
+	
     previous_trx_state[RF09] = trx_state[RF09];
     previous_trx_state[RF24] = trx_state[RF24];
 
     /* Reset the actual device or part of the device */
     if (trx_reset(trx_id) != MAC_SUCCESS)
     {
-        debug_text(PSTR("Reset FAILURE"));
+       
         return FAILURE;
     }
 
@@ -543,7 +531,7 @@ retval_t tal_reset(trx_id_t trx_id, bool set_default_pib)
  */
 retval_t trx_reset(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("trx_reset(), trx_id ="), trx_id);
+    
 
     ENTER_TRX_REGION();
 
@@ -587,7 +575,7 @@ retval_t trx_reset(trx_id_t trx_id)
             if ((PAL_DEV_IRQ_GET(RF215_BB) == HIGH) &&
                 (PAL_DEV_IRQ_GET(RF215_RF) == HIGH))
             {
-                debug_text(PSTR("BB and RF interrupts detected"));
+               
                 break;
             }
 #else
@@ -602,11 +590,7 @@ retval_t trx_reset(trx_id_t trx_id)
             // @ToDo: Remove magic number
             if (pal_sub_time_us(current_time, start_time) > 1000)
             {
-                debug_text_val(PSTR("long start up duration = "),
-                               (uint16_t)(current_time - start_time));
-#if (BOARD_TYPE == EVAL215_FPGA)
-                printf("\nReset failed - long start up duration\n");
-#endif
+                
                 return FAILURE;
             }
         }
@@ -645,7 +629,7 @@ retval_t trx_reset(trx_id_t trx_id)
 
         /* Trigger reset of device */
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-        debug_text(PSTR("Trigger trx reset"));
+        
 #ifdef IQ_RADIO
         pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_RESET);
         pal_trx_reg_write(RF215_BB, reg_offset + RG_RF09_CMD, RF_RESET);
@@ -660,7 +644,7 @@ retval_t trx_reset(trx_id_t trx_id)
             if ((PAL_DEV_IRQ_GET(RF215_BB) == HIGH) &&
                 (PAL_DEV_IRQ_GET(RF215_RF) == HIGH))
             {
-                debug_text(PSTR("BB and RF interrupts detected"));
+               
                 break;
             }
 #else
@@ -675,8 +659,7 @@ retval_t trx_reset(trx_id_t trx_id)
             // @ToDo: Remove magic number
             if (pal_sub_time_us(current_time, start_time) > 1000)
             {
-                debug_text_val(PSTR("long start up duration = "),
-                               (uint16_t)(current_time - start_time));
+               
                 return FAILURE;
             }
         }
@@ -710,7 +693,7 @@ retval_t trx_reset(trx_id_t trx_id)
  */
 static void cleanup_tal(trx_id_t trx_id)
 {
-    debug_text(PSTR("cleanup_tal()"));
+    
 
     /* Clear all running TAL timers. */
     ENTER_CRITICAL_REGION();
@@ -766,15 +749,5 @@ static retval_t tal_timer_init(void)
 	return MAC_SUCCESS;
 }
 
-static void tal_timers_stop(void)
-{
-	#if (NUMBER_OF_TAL_TIMERS > 0)
-	pal_timer_stop(TAL_T_0);
-	pal_timer_stop(TAL_T_1);
-	#ifdef ENABLE_FTN_PLL_CALIBRATION
-	pal_timer_stop(TAL_T_CALIBRATION_0);
-	pal_timer_stop(TAL_T_CALIBRATION_1);
-	#endif
-	#endif /*  (NUMBER_OF_TAL_TIMERS > 0) */
-}
+
 /* EOF */

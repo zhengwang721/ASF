@@ -190,8 +190,6 @@ static void ftn_timer_cb(void *parameter)
 {
     trx_id_t trx_id = *(trx_id_t *)parameter;
 
-    debug_text(PSTR("ftn_timer_cb()"));
-
     if (tal_state[trx_id] == TAL_IDLE)
     {
         if (trx_state[trx_id] == RF_RX)
@@ -217,7 +215,7 @@ static void ftn_timer_cb(void *parameter)
         }
         else
         {
-            debug_text(PSTR("unexpected Trx state"));
+            
         }
 
         start_ftn_timer(trx_id); // Restart timer again

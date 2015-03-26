@@ -45,6 +45,7 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+ 
 /* Prevent double inclusion */
 #ifndef USER_INTERFACE_H
 #define USER_INTERFACE_H

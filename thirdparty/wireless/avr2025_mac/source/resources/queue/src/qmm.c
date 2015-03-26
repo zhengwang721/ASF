@@ -128,7 +128,7 @@ void qmm_queue_append(queue_t *q, buffer_t *buf)
         /* Update size */
         q->size++;
 
-#if (DEBUG > 1)
+#if (_DEBUG_ > 1)
         if (q->head == NULL)
         {
             ABORT("Corrupted queue: Null pointer has been queued");
@@ -310,7 +310,7 @@ void qmm_queue_flush(queue_t *q)
         if (NULL == buf_to_free)
         {
 
-#if (DEBUG > 0)
+#if (_DEBUG_ > 0)
             ABORT("Corrupted queue");
 #endif
             q->size = 0;

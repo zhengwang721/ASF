@@ -162,7 +162,7 @@ static inline void download_ms_ppdu(trx_id_t trx_id);
  */
 void init_mode_switch(void)
 {
-    debug_text(PSTR("init_mode_switch()"));
+    
     /* Configure phy for CSM */
     csm_phy.modulation = FSK;
     csm_phy.phy_mode.fsk.mod_type = F2FSK;
@@ -181,7 +181,7 @@ void init_mode_switch(void)
  */
 void set_csm(trx_id_t trx_id)
 {
-    debug_text(PSTR("set_csm()"));
+   
 
     if (csm_active[trx_id] == false)
     {
@@ -211,7 +211,7 @@ void set_csm(trx_id_t trx_id)
     }
     else
     {
-        debug_text(PSTR("CSM is already set"));
+        
     }
 }
 
@@ -223,7 +223,7 @@ void set_csm(trx_id_t trx_id)
  */
 void save_current_phy(trx_id_t trx_id)
 {
-    debug_text(PSTR("save_current_phy()"));
+    
 
     memcpy(&previous_phy[trx_id].phy, &tal_pib[trx_id].phy, sizeof(phy_t));
 
@@ -275,7 +275,7 @@ static inline void download_ms_ppdu(trx_id_t trx_id)
  */
 void tx_ms_ppdu(trx_id_t trx_id)
 {
-    debug_text(PSTR("tx_ms_ppdu()"));
+    
 
     if (trx_state[trx_id] != RF_TXPREP)
     {
@@ -298,7 +298,7 @@ void tx_ms_ppdu(trx_id_t trx_id)
         /* Check if the other radio is currently in use */
         if (trx_state[RF24] == RF_TX)
         {
-            debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
+            
         }
     }
     else
@@ -306,13 +306,13 @@ void tx_ms_ppdu(trx_id_t trx_id)
         /* Check if the other radio is currently in use */
         if (trx_state[RF09] == RF_TX)
         {
-            debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
+            
         }
     }
     pal_dev_bit_write(RF215_BB, SR_RF_IQIFC2_CSELTX, trx_id);
 #endif
 
-    debug_text(PSTR("switch to Tx"));
+    
     trx_reg_write(reg_offset + RG_RF09_CMD, RF_TX);
     trx_state[trx_id] = RF_TX;
 
@@ -335,7 +335,7 @@ void tx_ms_ppdu(trx_id_t trx_id)
  */
 static inline uint16_t create_mode_switch_phr(trx_id_t trx_id)
 {
-    debug_text(PSTR("create_mode_switch_phr"));
+    
 
     /* Create PHR */
     uint16_t phr = 0x0001; // Mode switch bit
@@ -364,7 +364,6 @@ static inline uint16_t create_mode_switch_phr(trx_id_t trx_id)
 #ifdef SUPPORT_OFDM
         case OFDM:
             /* For over-the-air encoding see table 68i */
-            debug_text_val(PSTR("New OFDM option"), tal_pib[trx_id].ModeSwitchNewMode.phy_mode.ofdm.option);
             op = tal_pib[trx_id].ModeSwitchNewMode.phy_mode.ofdm.option - 1;
             break;
 #endif
@@ -386,8 +385,7 @@ static inline uint16_t create_mode_switch_phr(trx_id_t trx_id)
     /* Parity check */
     // @ToDo
 
-    debug_text_val(PSTR("Mode switch PHR"), phr);
-
+    
     return phr;
 }
 
@@ -399,8 +397,7 @@ static inline uint16_t create_mode_switch_phr(trx_id_t trx_id)
  */
 void prepare_actual_transmission(trx_id_t trx_id)
 {
-    debug_text(PSTR("prepare_actual_transmission()"));
-
+   
     uint8_t timer_id;
     if (trx_id == RF09)
     {
@@ -436,7 +433,7 @@ void prepare_actual_transmission(trx_id_t trx_id)
  */
 static void configure_new_tx_mode(trx_id_t trx_id)
 {
-    debug_text(PSTR("configure_new_tx_mode()"));
+    
     /* Configure new mode */
     csm_active[trx_id] = false;
 
@@ -477,7 +474,7 @@ static void configure_new_tx_mode(trx_id_t trx_id)
  */
 static void tx_actual_frame(void *parameter)
 {
-    debug_text(PSTR("tx_actual_frame()"));
+   
 
     trx_id_t trx_id = *(trx_id_t *)parameter;
 #ifndef BASIC_MODE
@@ -497,7 +494,7 @@ static void tx_actual_frame(void *parameter)
  */
 void restore_previous_phy(trx_id_t trx_id)
 {
-    debug_text(PSTR("restore_previous_phy()"));
+    
 
     memcpy(&tal_pib[trx_id].phy, &previous_phy[trx_id].phy, sizeof(phy_t));
 
@@ -616,14 +613,12 @@ static retval_t convert_fsk_op_mode_to_data_rate(fsk_op_mode_t op_mode, sun_freq
  */
 void handle_rx_ms_packet(trx_id_t trx_id)
 {
-    debug_text(PSTR("handle_rx_mode_switch_packet()"));
-
+    
     /* Upload mode switch PHR */
     uint16_t phr;
     uint16_t rx_frm_buf_offset = BB_RX_FRM_BUF_OFFSET * trx_id;
     trx_read(rx_frm_buf_offset + RG_BBC0_FBRXS, (uint8_t *)&phr, 2);
-    debug_text_val(PSTR("MS PHR = "), phr);
-
+   
     /* BCH calculation */
     // @ToDo
 
@@ -637,7 +632,6 @@ void handle_rx_ms_packet(trx_id_t trx_id)
     if (PAGE(phr) == 1)
     {
         /* No generic PHY support */
-        debug_text(PSTR("Unsupported new mode: no generic PHY"));
         switch_to_rx(trx_id);
         return;
     }
@@ -647,9 +641,8 @@ void handle_rx_ms_packet(trx_id_t trx_id)
 
     /* Parse new mode */
     modulation_t modulation = (modulation_t)(MOD0(phr) | (MOD1(phr) << 1));
-    debug_text_val(PSTR("New mode modulation"), modulation);
     uint8_t mode = MD0(phr) | (MD1(phr) << 1) | (MD2(phr) << 2);
-    debug_text_val(PSTR("New mode mode"), mode);
+    
 
     phy_t temp_phy;
     memcpy(&temp_phy, &tal_pib[trx_id].phy, sizeof(phy_t));
@@ -662,14 +655,10 @@ void handle_rx_ms_packet(trx_id_t trx_id)
                 fsk_data_rate_t rate;
                 fsk_mod_type_t type;
 
-                debug_text(PSTR("New mode FSK"));
-
                 if (convert_fsk_op_mode_to_data_rate((fsk_op_mode_t)mode,
                     tal_pib[trx_id].phy.freq_band, &rate, &type) != MAC_SUCCESS)
                 {
                     /* Unsupported feature */
-                    debug_text_val(PSTR("wrong op mode:"), mode);
-                    debug_text_val(PSTR("wrong freq_band:"), tal_pib[trx_id].phy.freq_band);
                     support_flag = false;
                     break;
                 }
@@ -683,13 +672,11 @@ void handle_rx_ms_packet(trx_id_t trx_id)
         case OFDM:
             /* For over-the-air encoding see table 68i */
             tal_pib[trx_id].phy.phy_mode.ofdm.option = (ofdm_option_t)(mode + 1);
-            debug_text_val(PSTR("New mode OFDM with option"), tal_pib[trx_id].phy.phy_mode.ofdm.option);
             break;
 #endif
 
 #ifdef SUPPORT_OQPSK
         case OQPSK:
-            debug_text(PSTR("New mode OQPSK"));
             /* Chip rate depends on current frequency band and region */
             {
                 uint16_t rate = oqpsk_get_chip_rate_region(trx_id);
@@ -701,14 +688,12 @@ void handle_rx_ms_packet(trx_id_t trx_id)
 
         default:
             /* Unsupported feature */
-            debug_text(PSTR("Unsupported new mode: unknown modulation"));
             support_flag = false;
             break;
     }
 
     if (support_flag)
     {
-        debug_text(PSTR("configure new mode"));
 
         tal_pib[trx_id].phy.modulation = modulation;
 
@@ -731,14 +716,13 @@ void handle_rx_ms_packet(trx_id_t trx_id)
         }
         else
         {
-            debug_text(PSTR("Unsupported new mode: wrong trx modulation"));
+            
             support_flag = false;
         }
     }
     if (support_flag == false)
     {
         /* Restore previous settings */
-        debug_text(PSTR("Unsupported new mode: restore previous settings"));
         memcpy(&tal_pib[trx_id].phy, &temp_phy, sizeof(phy_t));
     }
 
@@ -754,7 +738,6 @@ void handle_rx_ms_packet(trx_id_t trx_id)
  */
 static void cancel_new_mode_reception(void *parameter)
 {
-    debug_text(PSTR("cancel_new_mode_reception()"));
 
     trx_id_t trx_id = *(trx_id_t *)parameter;
 

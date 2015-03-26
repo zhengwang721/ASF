@@ -105,8 +105,6 @@ retval_t tal_ed_start(trx_id_t trx_id, uint8_t scan_duration)
     uint16_t sample_duration;
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
-    debug_text(PSTR("tal_ed_start()"));
-
     /*
      * Check if the TAL is in idle state. Only in idle state it can
      * accept and ED request from the MAC.
@@ -140,7 +138,6 @@ retval_t tal_ed_start(trx_id_t trx_id, uint8_t scan_duration)
 
     /* Setup energy measurement averaging duration */
     sample_duration = ED_SAMPLE_DURATION_SYM * tal_pib[trx_id].SymbolDuration_us;
-    debug_text_val(PSTR("sample_duration = "), sample_duration);
     set_ed_sample_duration(trx_id, sample_duration);
 #ifndef BASIC_MODE
     /* Enable EDC IRQ */
@@ -154,7 +151,6 @@ retval_t tal_ed_start(trx_id_t trx_id, uint8_t scan_duration)
     /* used for debugging purposes only */
     sampler_counter[trx_id] = REDUCED_ED_SAMPLE_COUNTER;
 #endif
-    debug_text_val(PSTR("sampler_counter = "), (uint16_t)sampler_counter[trx_id]);
 
     /* Set RF to Rx */
 #ifdef IQ_RADIO
@@ -166,8 +162,6 @@ retval_t tal_ed_start(trx_id_t trx_id, uint8_t scan_duration)
     pal_timer_delay(tal_pib[trx_id].agc_settle_dur); // allow filters to settle
 
     tal_state[trx_id] = TAL_ED_SCAN;
-
-    debug_text(PSTR("tal_ed_start: start scan"));
 
     /* Start energy measurement */
     trx_bit_write(reg_offset + SR_RF09_EDC_EDM, RF_EDCONT);
@@ -186,7 +180,6 @@ retval_t tal_ed_start(trx_id_t trx_id, uint8_t scan_duration)
  */
 void handle_ed_end_irq(trx_id_t trx_id)
 {
-    debug_text(PSTR("handle_ed_end_irq()"));
 
     /* Capture ED value for current frame / ED scan */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
@@ -195,11 +188,7 @@ void handle_ed_end_irq(trx_id_t trx_id)
 #else
     tal_current_ed_val[trx_id] = trx_reg_read(reg_offset + RG_RF09_EDV);
 #endif
-    debug_text_val(PSTR("tal_current_ed_val = "),
-                   (uint8_t)tal_current_ed_val[trx_id]);
-    debug_text_val(PSTR("tal_current_ed_val (dBm) = -"),
-                   (256 - (uint8_t)tal_current_ed_val[trx_id]));
-
+    
 #if (defined SUPPORT_MODE_SWITCH) || (defined BASIC_MODE)
     if (tx_state[trx_id] == TX_CCA)
     {
@@ -221,8 +210,6 @@ void handle_ed_end_irq(trx_id_t trx_id)
         }
 
         sampler_counter[trx_id]--;
-        debug_text_val(PSTR("remaining sampler_counter = "),
-                       (uint16_t)sampler_counter[trx_id]);
         if (sampler_counter[trx_id] == 0)
         {
             /* Keep RF in Rx state */

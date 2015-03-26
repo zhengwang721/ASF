@@ -4,7 +4,7 @@
  * \brief Receptor functionalities in PER Measurement mode - Performance
  * Analyzer
  * application
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /*
- * Copyright(c) 2012, Atmel Corporation All rights reserved.
+ * Copyright(c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -101,12 +101,14 @@ static bool send_range_test_marker_cmd(trx_id_t trx);
 
 #ifdef CRC_SETTING_ON_REMOTE_NODE
 static void send_crc_status_rsp(trx_id_t trx);
-static uint16_t crc_test(uint16_t crc, uint8_t data);
 #endif /* End of CRC_SETTING_ON_REMOTE_NODE */
 
+/*
 static uint8_t read_int_value_in_hex(uint16_t *value);
 static uint8_t read_value_in_hex(uint8_t *value);
 static void read_write_reg(void);
+*/
+
 /* === GLOBALS ============================================================= */
 static bool range_test_in_progress[NUM_TRX] = {false,false};
 static uint32_t number_rx_frames[NUM_TRX];
@@ -315,7 +317,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 expected_frame_size = (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                           sizeof(general_pkt_t)) +
                                                          sizeof(set_parm_req_t)));
-                //if ((mac_frame_info->length) == expected_frame_size)  //check removed for working with both legacy and 215 kits
+              // if (*(mac_frame_info->mpdu) == expected_frame_size)  //check removed for working with both legacy and 215 kits
                 {
                     /* Extract and process the cmd received */
                     set_paramter_on_recptor_node(trx, msg);
@@ -927,22 +929,7 @@ static void app_reset_cb(void *parameter)
 	printf("\r\nDisconnected from Transmitter node");
 }
 
-#ifdef CRC_SETTING_ON_REMOTE_NODE
 
-/**
- * \brief Calculates CRC for a given byte of data
- */
-static uint16_t crc_test(uint16_t crc, uint8_t data)
-{
-	data ^= crc & 0xFF;
-	data ^= data << 4;
-	return ((((uint16_t)data << 8) | ((crc & 0xFF00) >> 8)) ^ \
-	       ((uint8_t)(data >> 4)) ^	\
-	       ((uint16_t)data << 3));
-}
-
-
-#endif /* End of #ifdef CRC_SETTING_ON_REMOTE_NODE */
 
 /**
  * \brief Function used to send PER test result.
@@ -1223,6 +1210,7 @@ static void send_crc_status_rsp(trx_id_t trx)
 /**
  * @brief used to read - write radio transceiver registers
  */
+/*
 static void read_write_reg(void)
 {
 	
@@ -1240,7 +1228,7 @@ static void read_write_reg(void)
 	printf("\r\n Press Enter to Exit From this Menu");
     printf("\r\n >");
 
-    /* Get input from terminal program / user. */
+    / * Get input from terminal program / user. * /
     input = sio2host_getchar();
 	if(input == '\r')
 	{
@@ -1251,7 +1239,7 @@ static void read_write_reg(void)
 	
     input = toupper(input);
 
-    /* Handle input from terminal program. */
+    / * Handle input from terminal program. * /
     switch (input)
     {
         case 'R':
@@ -1364,13 +1352,13 @@ if (reg > 0X3FFE)
     }
 }
 
-/**
+/ **
  * @brief the value is input in UART term as hex
  *
  * @param value Pointer to data received in UART
  *
  * @return true if correct data received, false otherwise
- */
+ * /
 static uint8_t read_int_value_in_hex(uint16_t *value)
 {
     char input_char[4] = {0, 0, 0, 0};
@@ -1408,26 +1396,26 @@ static uint8_t read_int_value_in_hex(uint16_t *value)
 			
         }
     }
-/*
+/ *
     temp = input_char[0];
     temp = temp << 4;
     temp |= input_char[1];
     temp = temp << 4;
     temp |= input_char[2];
     temp = temp << 4;
-    temp |= input_char[3];	*/
+    temp |= input_char[3];	* /
 
     *(value) = val;
     return(true);
 }
 
-/**
+/ **
  * @brief the value is input in UART term as hex
  *
  * @param value Pointer to data received in UART
  *
  * @return true if correct data received, false otherwise
- */
+ * /
 static uint8_t read_value_in_hex(uint8_t *value)
 {
     char input_char[3] = {0, 0, 0};
@@ -1448,19 +1436,19 @@ static uint8_t read_value_in_hex(uint8_t *value)
         }
         else
         {
-            /* First key pressed is 'Enter' */
+            / * First key pressed is 'Enter' * /
             if ((i == 0) && (input == '\r'))
             {
                 printf("\r\n Wrong value..");
 				printf("\n\r Returning Back as Receptor... \n\r");
                 return(false);
             }
-            else if (input == '\r')/* Proess and don't wait for the next character */
+            else if (input == '\r')/ * Proess and don't wait for the next character * /
             {
                 *(value) = input_char[i - 1] ;
                 return(true);
             }
-            else /* Process and wait for next character until last char */
+            else / * Process and wait for next character until last char * /
             {
 				sio2host_tx(&input,1);
                 temp = input - 0x30;
@@ -1478,6 +1466,6 @@ static uint8_t read_value_in_hex(uint8_t *value)
 
     *(value) = temp;
     return(true);
-}
+}*/
 
 /*EOF */

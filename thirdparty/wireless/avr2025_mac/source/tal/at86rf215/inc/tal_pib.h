@@ -379,8 +379,8 @@
 /**
  * Default values for reduced power consumption setting
  */
-#define TAL_RF09_RPC_DEF                        true
-#define TAL_RF24_RPC_DEF                        true
+#define TAL_RF09_RPC_DEF                        false
+#define TAL_RF24_RPC_DEF                        false
 
 /**
  * Default value of frame filter settings

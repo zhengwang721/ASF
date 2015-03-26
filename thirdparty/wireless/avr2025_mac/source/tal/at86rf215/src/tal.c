@@ -214,8 +214,7 @@ void tal_task(void)
          */
         if (tal_buf_shortage[trx_id])
         {
-            debug_text_val(PSTR("tal_task() - Handle tal_buf_shortage"),
-                           trx_id);
+            
 
             /* If necessary, try to allocate a new buffer. */
             if (tal_rx_buffer[trx_id] == NULL)
@@ -226,7 +225,7 @@ void tal_task(void)
             /* Check if buffer could be allocated */
             if (tal_rx_buffer[trx_id] != NULL)
             {
-                debug_text(PSTR("tal_task() - Buffer shortage resolved"));
+                
                 tal_buf_shortage[trx_id] = false;
                 if ((tal_state[trx_id] == TAL_IDLE) )//&& (trx_default_state[trx_id] == RF_RX)
                 {
@@ -242,7 +241,7 @@ void tal_task(void)
             }
             else
             {
-                debug_text(PSTR("tal_task() - Buffer shortage pending"));
+                
             }
         }
 
@@ -277,22 +276,22 @@ void tal_task(void)
         {
             if (bb_irqs & BB_IRQ_RXEM)
             {
-                debug_text(PSTR("tal_task - BB_IRQ_RXEM"));
+                
                 TAL_BB_IRQ_CLR(trx_id, BB_IRQ_RXEM);
             }
             if (bb_irqs & BB_IRQ_RXAM)
             {
-                debug_text(PSTR("tal_task - BB_IRQ_RXAM"));
+                
                 TAL_BB_IRQ_CLR(trx_id, BB_IRQ_RXAM);
             }
             if (bb_irqs & BB_IRQ_RXFS)
             {
-                debug_text(PSTR("tal_task - BB_IRQ_RXFS"));
+                
                 TAL_BB_IRQ_CLR(trx_id, BB_IRQ_RXFS);
             }
             if (bb_irqs & BB_IRQ_TXFE)
             {
-                debug_text(PSTR("tal_task - BB_IRQ_TXFE"));
+               
                 TAL_BB_IRQ_CLR(trx_id, BB_IRQ_TXFE);
 #ifndef BASIC_MODE
                 if (tx_state[trx_id] == TX_CCATX)
@@ -308,7 +307,7 @@ void tal_task(void)
             }
             if (bb_irqs & BB_IRQ_RXFE)
             {
-                debug_text(PSTR("tal_task - BB_IRQ_RXFE"));
+                
                 TAL_BB_IRQ_CLR(trx_id, BB_IRQ_RXFE);
                 handle_rx_end_irq((trx_id_t)trx_id);
             }
@@ -319,38 +318,36 @@ void tal_task(void)
         {
             if (rf_irqs & RF_IRQ_TRXRDY)
             {
-                debug_text(PSTR("tal_task - RF_IRQ_TRXRDY"));
-                debug_text_val(PSTR("Error: unexpected IRQ, tal_state = "),
-                               tal_state[trx_id]);
+                
             }
             if (rf_irqs & RF_IRQ_TRXERR)
             {
-                debug_text(PSTR("tal_task - RF_IRQ_TRXERR"));
+                
                 TAL_RF_IRQ_CLR(trx_id, RF_IRQ_TRXERR);
                 handle_trxerr((trx_id_t)trx_id);
             }
             if (rf_irqs & RF_IRQ_BATLOW)
             {
-                debug_text(PSTR("tal_task - RF_IRQ_BATLOW"));
+                
                 TAL_RF_IRQ_CLR(trx_id, RF_IRQ_BATLOW);
-#if (defined SUPPORT_TFA) || (defined TFA_BAT_MON_IRQ)
+#if (defined ENABLE_TFA) || (defined TFA_BAT_MON_IRQ)
                 handle_batmon_irq(); // see tfa_batmon.c
 #endif
             }
             if (rf_irqs & RF_IRQ_WAKEUP)
             {
-                debug_text(PSTR("tal_task - RF_IRQ_WAKEUP"));
+                
                 TAL_RF_IRQ_CLR(trx_id, RF_IRQ_WAKEUP);
-                debug_text_val(PSTR("tal_state = "), tal_state[trx_id]);
+                
             }
             if (rf_irqs & RF_IRQ_IQIFSF)
             {
-                debug_text(PSTR("tal_task - RF_IRQ_IQIFSF"));
+                
                 TAL_RF_IRQ_CLR(trx_id, RF_IRQ_IQIFSF);
             }
             if (rf_irqs & RF_IRQ_EDC)
             {
-                debug_text(PSTR("tal_task - RF_IRQ_EDC"));
+                
                 TAL_RF_IRQ_CLR(trx_id, RF_IRQ_EDC);
                 handle_ed_end_irq((trx_id_t)trx_id);
             }
@@ -371,7 +368,7 @@ void tal_task(void)
  */
 void switch_to_rx(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("switch_to_rx(), trx_id ="), trx_id);
+    
 
     /* Check if buffer is available now. */
     if (tal_rx_buffer[trx_id] != NULL)
@@ -387,7 +384,7 @@ void switch_to_rx(trx_id_t trx_id)
     {
         switch_to_txprep(trx_id);
         tal_buf_shortage[trx_id] = true;
-        debug_text_val(PSTR("Warning: buffer shortage !!!!!!!!!"), trx_id);
+        
     }
 }
 
@@ -404,7 +401,7 @@ void switch_to_txprep(trx_id_t trx_id)
 {
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
-    debug_text_val(PSTR("switch_to_txprep(), trx_id ="), trx_id);
+   
 
     trx_reg_write(reg_offset + RG_RF09_CMD, RF_TXPREP);
 #ifdef IQ_RADIO
@@ -507,8 +504,7 @@ void wait_for_txprep(trx_id_t trx_id)
  */
 static void handle_trxerr(trx_id_t trx_id)
 {
-    debug_text(PSTR("handle_trxerr()"));
-    debug_text_val(PSTR("tal_state = "), tal_state[trx_id]);
+    
 
     /* Set device to TRXOFF */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;

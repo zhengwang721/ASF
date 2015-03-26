@@ -91,7 +91,6 @@ static ch_pg_t calc_ch_page(trx_id_t trx_id);
  */
 void init_tal_pib(trx_id_t trx_id)
 {
-    debug_text(PSTR("init_tal_pib()"));
 
     tal_pib[trx_id].PANId = TAL_PANID_BC_DEF;
     tal_pib[trx_id].ShortAddress = TAL_SHORT_ADDRESS_DEF;
@@ -321,8 +320,7 @@ retval_t config_phy(trx_id_t trx_id)
  */
 void calculate_pib_values(trx_id_t trx_id)
 {
-    debug_text(PSTR("calculate_pib_values()"));
-
+    
     /* Do not change the following order; some values are used to calculate others. */
     tal_pib[trx_id].SymbolDuration_us = tal_get_symbol_duration_us(trx_id);
 
@@ -350,17 +348,12 @@ void calculate_pib_values(trx_id_t trx_id)
     {
         tal_pib[trx_id].SupportedChannels = 0;
     }
-    //float rate = get_data_rate(trx_id);
-    debug_text_val(PSTR("rate"), (uint16_t)rate);
+    
     tal_pib[trx_id].OctetDuration_us = (uint16_t)(((float)1000 * 8) / get_data_rate(trx_id));
-    debug_text_val(PSTR("OctetDuration_us"), tal_pib[trx_id].OctetDuration_us);
     tal_pib[trx_id].CCADuration_us = get_cca_duration_us(trx_id);
-    debug_text_val(PSTR("CCADuration_us"), tal_pib[trx_id].CCADuration_us);
     tal_pib[trx_id].CCADuration_sym = tal_pib[trx_id].CCADuration_us / tal_pib[trx_id].SymbolDuration_us;
-    debug_text_val(PSTR("CCADuration_sym"), tal_pib[trx_id].CCADuration_sym);
     tal_pib[trx_id].CCAThreshold = get_cca_thres(trx_id);
     tal_pib[trx_id].ACKWaitDuration = get_AckWaitDuration_us(trx_id);
-    debug_text_val(PSTR("ACKWaitDuration"), tal_pib[trx_id].ACKWaitDuration);
 #ifdef IQ_RADIO
     /*
      * Extent ACK wait duration for chip mode, since some artificial delay
@@ -369,7 +362,6 @@ void calculate_pib_values(trx_id_t trx_id)
     tal_pib[trx_id].ACKWaitDuration += 200;
 #endif
     tal_pib[trx_id].ACKTiming = get_AckTiming_us(trx_id);
-    debug_text_val(PSTR("ACKTiming"), tal_pib[trx_id].ACKTiming);
 #ifdef MEASURE_ON_AIR_DURATION
     tal_pib[trx_id].ACKDuration_us = tal_pib[trx_id].SymbolDuration_us * get_ack_duration_sym(trx_id);
 #endif
@@ -386,7 +378,6 @@ void calculate_pib_values(trx_id_t trx_id)
  */
 void write_all_tal_pib_to_trx(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("write_all_tal_pib_to_trx trx_id = "), trx_id);
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
     if (tal_pib[trx_id].FCSType != FCS_TYPE_4_OCTETS) // Compared against reset value
@@ -419,7 +410,6 @@ void write_all_tal_pib_to_trx(trx_id_t trx_id)
 #ifdef PROMISCUOUS_MODE
     if (tal_pib[trx_id].PromiscuousMode)
     {
-        debug_text(PSTR("Promiscuous mode enabled"));
         trx_bit_write(reg_offset + SR_BBC0_AFC0_PM, 1);
         tal_rx_enable(trx_id, PHY_RX_ON);
     }
@@ -571,7 +561,7 @@ static retval_t check_valid_freq_range(trx_id_t trx_id)
         }
         else /* RF24 */
         {
-            if ((freq < 2400000000) || (freq > 2483500000))
+            if ((freq < 2400000000UL) || (freq > 2483500000UL))
             {
                 status = FAILURE;
             }
@@ -702,65 +692,10 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
 			/* Wait until new channel is set */
 			}
 			TAL_RF_IRQ_CLR(trx_id, RF_IRQ_TRXRDY);
-			debug_text(PSTR("RF_IRQ_TRXRDY: channel change completed"));
 			}
 		}
 
 	return status;
-	
- /*   debug_text_val(PSTR("apply_channel_settings(), trx_id ="), trx_id);
-
-    / * Check if spacing and frequency are within the correct range. * /
-#ifdef REDUCED_PARAM_CHECK
-    retval_t status = MAC_SUCCESS;
-#else
-    retval_t status = check_valid_freq_range(trx_id);
-#endif
-    if (status == MAC_SUCCESS)
-    {
-        uint32_t freq = tal_pib[trx_id].phy.freq_f0;
-        uint32_t spacing = tal_pib[trx_id].phy.ch_spacing;
-        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-        uint16_t reg_val;
-
-        / * Offset handling for 2.4GHz only * /
-        if (trx_id == RF24)
-        {
-            freq -= 1500000000;
-        }
-        reg_val = (uint16_t)(freq / 25000);
-#ifdef IQ_RADIO
-        pal_trx_write(RF215_RF, reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
-#endif
-        trx_write(reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
-
-        / * Set channel spacing * /
-        spacing /= 25000; // adjust to register scaling
-#ifdef IQ_RADIO
-        pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CS, (uint8_t)spacing);
-#endif
-        trx_reg_write(reg_offset + RG_RF09_CS, (uint8_t)spacing);
-
-        / *
-         * Set channel and channel mode.
-         * Touching the CNM register forces the calculation of the actual frequency.
-         * /
-#ifdef IQ_RADIO
-        pal_trx_write(RF215_RF, reg_offset + RG_RF09_CNL,
-                      (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
-#endif
-        trx_write(reg_offset + RG_RF09_CNL,
-                      (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
-
-        / * Wait until channel set is completed * /
-        if (trx_state[trx_id] == RF_TXPREP)
-        {
-            wait_for_txprep(trx_id);
-            debug_text(PSTR("RF_IRQ_TRXRDY: channel change completed"));
-        }
-    }
-
-    return status;*/
 }
 
 
@@ -1039,7 +974,6 @@ retval_t tal_pib_get(trx_id_t trx_id, uint8_t attribute, uint8_t *value)
  */
 retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 {
-    debug_text(PSTR("tal_pib_set()"));
 
     retval_t status = MAC_SUCCESS;
 
@@ -1048,13 +982,13 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
      */
     if (tal_state[trx_id] == TAL_SLEEP)
     {
-        debug_text(PSTR("TAL_TRX_ASLEEP"));
+        
         return TAL_TRX_ASLEEP;
     }
 
     if (tal_state[trx_id] != TAL_IDLE)
     {
-        debug_text_val(PSTR("TAL is busy or asleep, tal_state = "), tal_state[trx_id]);
+       
         return TAL_BUSY;
     }
 
@@ -1063,7 +997,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
     switch (attribute)
     {
         case phySetting:
-            debug_text(PSTR("PIB attribute: phySetting"));
+            
             {
                 /* Store previous settings */
                 phy_t previous_phy;
@@ -1350,12 +1284,12 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                 if (tal_pib[trx_id].PromiscuousMode)
                 {
                     tal_rx_enable(trx_id, PHY_RX_ON);
-                    debug_text(PSTR("Promiscuous mode enabled"));
+                    
                 }
                 else
                 {
                     tal_rx_enable(trx_id, PHY_TRX_OFF);
-                    debug_text(PSTR("Promiscuous mode disabled"));
+                    
                 }
             }
             else
@@ -1538,7 +1472,7 @@ static retval_t set_channel(trx_id_t trx_id, uint16_t ch)
         if (trx_state[trx_id] == RF_TXPREP)
         {
             wait_for_txprep(trx_id);
-            debug_text(PSTR("RF_IRQ_TRXRDY: channel change completed"));
+            
         }
 
         /* restore previous TRX state */
@@ -1618,7 +1552,7 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
 			tal_pib_set(trx_id, phyHighRateEnabled, (pib_value_t*)&hrleg);
         }
         break;
-		case 16:
+		case CH_PG_16:
 		if (trx_id == RF09)
 		{
 			hrleg = 1;
@@ -1642,7 +1576,7 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
 			
 		}
 		break;
-		case 18:
+		case CH_PG_18:
 		if (trx_id == RF24)
 		{
 			ret = MAC_INVALID_PARAMETER;
@@ -1700,12 +1634,18 @@ static ch_pg_t calc_ch_page(trx_id_t trx_id)
         {
             switch (tal_pib[trx_id].phy.freq_band)
             {
-                case CHINA_780: //vk
+                case CHINA_780: 
+				if(tal_pib[trx_id].HighRateEnabled == true)
+			        pg = CH_PG_18;
+			    else //vk
                     pg = CH_PG_CHINA;
-                    break;
+                break;
 
                 case US_915:
-                    pg = CH_PG_2006;
+				if(tal_pib[trx_id].HighRateEnabled == true)
+                    pg = CH_PG_16;
+				else
+				    pg = CH_PG_2006;
                     break;
 
                 default:
@@ -1714,7 +1654,10 @@ static ch_pg_t calc_ch_page(trx_id_t trx_id)
             }
         }
         else // RF24
-        {
+        {  
+			if(tal_pib[trx_id].HighRateEnabled == true)
+			pg = CH_PG_16;
+			else
             pg = CH_PG_2003;
         }
     }

@@ -1431,6 +1431,8 @@ typedef enum ch_pg_tag
 	CH_PG_LRP_UWB = 8,
 	CH_PG_SUN = 9,
 	CH_PG_GENERIC_PHY = 10,
+	CH_PG_16 = 16,
+	CH_PG_18 = 18,
 	CH_PG_INVALID = 0xFF
 } SHORTENUM ch_pg_t;
 

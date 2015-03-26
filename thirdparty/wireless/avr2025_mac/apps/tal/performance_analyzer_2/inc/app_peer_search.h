@@ -45,6 +45,7 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+ 
 /* Prevent double inclusion */
 #ifndef APP_PEER_SEARCH_H
 #define APP_PEER_SEARCH_H

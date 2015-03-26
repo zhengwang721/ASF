@@ -6,7 +6,7 @@
  * This is the source code of a Packet Error Rate Measurement mode as Initiator.
  *
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,7 +44,7 @@
  */
 
 /*
- * Copyright(c) 2012, Atmel Corporation All rights reserved.
+ * Copyright(c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -3018,7 +3018,6 @@ void get_current_configuration(trx_id_t trx)
 		{
 			phy_to_set.phy_mode.oqpsk.rate_mode =  curr_trx_config_params[trx].sun_phy_page.sun_phy_mode.mr_oqpsk.rate_mode;
 			phy_to_set.phy_mode.oqpsk.chip_rate =  curr_trx_config_params[trx].sun_phy_page.sun_phy_mode.mr_oqpsk.chip_rate;
-			//phy_to_set.phy_mode.oqpsk.chip_rate = get_oqpsk_chip_rate(trx,curr_trx_config_params[trx].sun_phy_page.freq_band);
 			get_oqpsk_freq_f0(trx,curr_trx_config_params[trx].sun_phy_page.freq_band,&phy_to_set.freq_f0,&phy_to_set.ch_spacing);
 		}
 		else if(curr_trx_config_params[trx].sun_phy_page.modulation == FSK)
@@ -3035,7 +3034,6 @@ void get_current_configuration(trx_id_t trx)
 		{
 			phy_to_set.phy_mode.leg_oqpsk.data_rate =  curr_trx_config_params[trx].sun_phy_page.sun_phy_mode.leg_oqpsk.data_rate;
 			phy_to_set.phy_mode.leg_oqpsk.chip_rate =  curr_trx_config_params[trx].sun_phy_page.sun_phy_mode.leg_oqpsk.chip_rate;
-			//phy_to_set.phy_mode.oqpsk.chip_rate = get_oqpsk_chip_rate(trx,curr_trx_config_params[trx].sun_phy_page.freq_band);
 			get_leg_oqpsk_freq_f0(trx,curr_trx_config_params[trx].sun_phy_page.freq_band,&phy_to_set.freq_f0,&phy_to_set.ch_spacing);
 		}
 
@@ -4214,137 +4212,6 @@ uint8_t check_error_conditions(trx_id_t trx)
 uint8_t get_param_length(uint8_t parameter_type)
 {
     return (uint8_t)PGM_READ_BYTE(&perf_config_param_size[parameter_type]);
-}
-
-/**
- * \brief validating the tx power input based on the current
- * channel and page configuration
- *
- * \param dbm_value   Tx power in dBm as input to be validated
- */
-static bool validate_tx_power(trx_id_t trx, int8_t dbm_value)
-{
-
-     uint8_t ch_page ;
-	 tal_pib_t tal_pib_trx;
-
-		tal_pib_trx = tal_pib[trx];
-		tal_pib_get(trx,phyCurrentPage, &ch_page);	 
-	 
-    /* Check for MIN Tx power for any case */
-    if (dbm_value < -25)
-    {
-        return(false);
-    }
-    else
-    {
-        switch (ch_page)
-        {
-
-            case 0: /* BPSK */
-                {
-                    if (0 == tal_pib_trx.CurrentChannel)
-                    {
-                        if (dbm_value > 6) /*MAX_TX_PWR_BPSK_20*/
-                        {
-                            return (false);
-                        }
-                    }
-                    else    /* channels 1-10 */
-                    {
-                        if (dbm_value > 11 )  /* MAX_TX_PWR */
-                        {
-                            return (false);
-                        }
-                    }
-                }
-                break;
-            case 2: /* O-QPSK */
-                {
-                    if (0 == tal_pib_trx.CurrentChannel)
-                    {
-                        if (dbm_value > 3 ) /* MAX_TX_PWR_OQPSK_100 */
-                        {
-                            return (false);
-                        }
-                    }
-                    else    /* channels 1-10 */
-                    {
-                        if (dbm_value > 11 ) /* MAX_TX_PWR */
-                        {
-                            return (false);
-                        }
-                    }
-                }
-                break;
-            case 5:/* China, O-QPSK: only channels 0 to 3 allowed */
-                {
-                    if (dbm_value > 10)
-                    {
-                        return(false);
-                    }
-                }
-                break;
-#ifdef HIGH_DATA_RATE_SUPPORT
-            case 18: /* Chinese O-QPSK 500 */
-                {
-                    if (dbm_value > 10)
-                    {
-                        return(false);
-                    }
-                }
-                break;
-            case 19: /* Chinese O-QPSK 1000 */
-                {
-                    if (dbm_value > 10 ) /* MAX_TX_PWR_CHINA */
-                    {
-                        return (false);
-                    }
-                }
-                break;
-            case 16: /* O-QPSK 200, 500 */
-                {
-                    if (0 == tal_pib_trx.CurrentChannel)
-                    {
-                        if (dbm_value >  3 ) /* MAX_TX_PWR_OQPSK_200 */
-                        {
-                            return (false);
-                        }
-                    }
-                    else    /* channels 1-10 */
-                    {
-                        if (dbm_value > 11 ) /* MAX_TX_PWR_OQPSK_500 */
-                        {
-                            return (false);
-                        }
-                    }
-                }
-                break;
-            case 17: /* O-QPSK 400, 1000 */
-                {
-                    if (0 == tal_pib_trx.CurrentChannel)
-                    {
-                        if (dbm_value >  3) /* MAX_TX_PWR_OQPSK_400 */
-                        {
-                            return (false);
-                        }
-                    }
-                    else    /* channels 1-10 */
-                    {
-                        if (dbm_value > 11 ) /* MAX_TX_PWR_OQPSK_1000 */
-                        {
-                            return (false);
-                        }
-                    }
-                }
-                break;
-            default: /* Do nothing */
-                break;
-#endif  /* #ifdef HIGH_DATA_RATE_SUPPORT */
-        }
-    }
-    return true;
-
 }
 
 

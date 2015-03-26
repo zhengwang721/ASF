@@ -91,7 +91,7 @@ static void ack_timout_cb(void *parameter);
  */
 void ack_transmission_done(trx_id_t trx_id)
 {
-    debug_text(PSTR("ack_transmission_done()"));
+    
 
 #ifdef MEASURE_ON_AIR_DURATION
     tal_pib[trx_id].OnAirDuration += tal_pib[trx_id].ACKDuration_us;
@@ -122,8 +122,7 @@ void ack_transmission_done(trx_id_t trx_id)
  */
 bool is_frame_an_ack(trx_id_t trx_id)
 {
-    debug_text(PSTR("is_frame_an_ack()"));
-
+    
     bool ret;
 
     /* Check frame length */
@@ -133,7 +132,7 @@ bool is_frame_an_ack(trx_id_t trx_id)
         if ((rx_frm_info[trx_id]->mpdu[0] & FCF_FRAMETYPE_ACK) &&
             (((rx_frm_info[trx_id]->mpdu[1] >> FCF1_FV_SHIFT) & 0x03) <= FCF_FRAME_VERSION_2006))
         {
-            debug_text(PSTR("Frame is an ACK"));
+            
             ret = true;
         }
         else
@@ -159,8 +158,7 @@ bool is_frame_an_ack(trx_id_t trx_id)
  */
 bool is_ack_valid(trx_id_t trx_id)
 {
-    debug_text(PSTR("is_ack_valid()"));
-
+    
     bool ret;
 
     /* Check sequence number */
@@ -184,8 +182,7 @@ bool is_ack_valid(trx_id_t trx_id)
  */
 void start_ack_wait_timer(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("ACK time out"), tal_pib[trx_id].ACKWaitDuration);
-    debug_text(PSTR("waiting for ACK"));
+    
 
     tx_state[trx_id] = TX_WAITING_FOR_ACK;
 
@@ -203,7 +200,7 @@ void start_ack_wait_timer(trx_id_t trx_id)
                         (FUNC_PTR)ack_timout_cb, (void *)&timer_cb_parameter[trx_id]);
     if (status != MAC_SUCCESS)
     {
-        debug_text_val(PSTR("ACK timer could not be started, "), status);
+        
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
         trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
         trx_state[trx_id] = RF_TRXOFF;
@@ -221,7 +218,7 @@ void start_ack_wait_timer(trx_id_t trx_id)
  */
 void ack_timout_cb(void *parameter)
 {
-    debug_text(PSTR("ack_timout_cb()"));
+    
 
     trx_id_t trx_id = *(trx_id_t *)parameter;
 

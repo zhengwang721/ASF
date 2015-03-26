@@ -89,11 +89,11 @@ uint8_t tal_rx_enable(trx_id_t trx_id, uint8_t state)
 {
     uint8_t ret_val;
 
-    debug_text_val(PSTR("tal_rx_enable, trx_id ="), trx_id);
+   
 
     if (tal_state[trx_id] == TAL_SLEEP)
     {
-        debug_text(PSTR("TAL_TRX_ASLEEP"));
+        
         return TAL_TRX_ASLEEP;
     }
 
@@ -103,13 +103,13 @@ uint8_t tal_rx_enable(trx_id_t trx_id, uint8_t state)
      */
     if (tal_state[trx_id] != TAL_IDLE)
     {
-        debug_text(PSTR("TAL is busy"));
+       
         return TAL_BUSY;
     }
 
     if (state == PHY_TRX_OFF)
     {
-        debug_text(PSTR("Switch to PHY_TRX_OFF"));
+       
         /*
             * If the rx needs to be switched off,
             * we are not interested in a frame that is currently being received.
@@ -132,7 +132,7 @@ uint8_t tal_rx_enable(trx_id_t trx_id, uint8_t state)
     }
     else
     {
-        debug_text(PSTR("Switch to PHY_RX_ON"));
+        
         switch_to_txprep(trx_id);
         switch_to_rx(trx_id);
         ret_val = PHY_RX_ON;

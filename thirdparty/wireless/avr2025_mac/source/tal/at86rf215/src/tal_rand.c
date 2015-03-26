@@ -79,12 +79,10 @@ retval_t tal_generate_rand_seed(void)
     trx_id_t trx_id;
     rf_cmd_state_t previous_trx_state = RF_NOP;
 
-    debug_text(PSTR("tal_generate_rand_seed()"));
-
     /* Check for non sleeping device */
     if ((tal_state[RF09] == TAL_SLEEP) && (tal_state[RF24] == TAL_SLEEP))
     {
-        debug_text(PSTR("no seed generated - TAL_SLEEP"));
+   
         return TAL_TRX_ASLEEP;
     }
 
@@ -101,7 +99,7 @@ retval_t tal_generate_rand_seed(void)
         }
         else
         {
-            debug_text(PSTR("no seed generated - TAL_BUSY"));
+            
             return TAL_BUSY;
         }
     }
@@ -143,7 +141,7 @@ retval_t tal_generate_rand_seed(void)
     }
     else
     {
-        debug_text(PSTR("Trx is NOT off"));
+        
     }
 
     uint16_t seed;

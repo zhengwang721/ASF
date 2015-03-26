@@ -251,7 +251,7 @@
     /* US_928 */   \
     /* { JAPAN_950, 0, 951300000, 951100000, 951000000 }, */\
     /* US_1427 */  \
-    { WORLD_2450, 2401200000, 2400800000, 2400400000, 2400200000 }
+    { WORLD_2450, 2401200000UL, 2400800000UL, 2400400000UL, 2400200000UL }
 
 #define OFDM_CH_CENTER_FREQ0_MAP_ROW_SIZE    7
 #define OFDM_CH_CENTER_FREQ0_MAP_COL_SIZE    5
@@ -327,7 +327,7 @@
     /* US_928 */   \
     /* { JAPAN_950, 951100000, 400000 }, */\
     /* US_1427 */  \
-    { WORLD_2450, 2405000000, 5000000 }
+    { WORLD_2450, 2405000000UL, 5000000 }
 
 #define OQPSK_CH_CENTER_FREQ0_MAP_ROW_SIZE    7
 #define OQPSK_CH_CENTER_FREQ0_MAP_COL_SIZE    3
@@ -358,7 +358,7 @@
 /* US_928 */   \
 /*  JAPAN_950 */\
 /* US_1427 */  \
-{ WORLD_2450, 2405000000, 5000000 }
+{ WORLD_2450, 2405000000UL, 5000000 }
 
 #define LEG_OQPSK_CH_CENTER_FREQ0_MAP_ROW_SIZE    3
 #define LEG_OQPSK_CH_CENTER_FREQ0_MAP_COL_SIZE    3
@@ -379,7 +379,7 @@
 /* US_928 */   \
 /* { JAPAN_950, 0, 951300000, 951100000, 951000000 }, */\
 /* US_1427 */  \
-{ WORLD_2450, 2400200000, 2400400000, 2400400000, 0 }
+{ WORLD_2450, 2400200000UL, 2400400000UL, 2400400000UL, 0 }
 	
 
 #define FSK_CH_CENTER_FREQ0_MAP_ROW_SIZE    7
@@ -596,11 +596,7 @@ uint16_t get_cca_duration_us(trx_id_t trx_id)
  */
 int8_t get_cca_thres(trx_id_t trx_id)
 {
-#if (BOARD_TYPE == FPGA215)
-    /* Keep compiler happy */
-    trx_id = trx_id;
-    return FPGA_CCA_THRES_VALUE;
-#else
+
 
     int8_t thres = 0; // 0: indicator for wrong parameter
 
@@ -619,7 +615,7 @@ int8_t get_cca_thres(trx_id_t trx_id)
         case OFDM:
             /* rows: MCSn; column: option n */
             thres = (int8_t)PGM_READ_BYTE(&ofdm_cca_thres[tal_pib[trx_id].OFDMMCS]\
-                                          [tal_pib[trx_id].phy.phy_mode.ofdm.option - 1]);
+                                          [tal_pib[trx_id].phy.phy_mode.ofdm.option ]); //option - 1
             break;
 #endif
 #ifdef SUPPORT_OQPSK
@@ -638,7 +634,7 @@ int8_t get_cca_thres(trx_id_t trx_id)
     }
 
     return thres;
-#endif /* #if (BOARD_TYPE == FPGA215) */
+
 }
 
 
@@ -1043,7 +1039,7 @@ float get_data_rate(trx_id_t trx_id)
 #ifdef SUPPORT_OFDM
         case OFDM:
             rate = (uint16_t)PGM_READ_WORD(&ofdm_data_rate_table[tal_pib[trx_id].OFDMMCS] \
-                                           [tal_pib[trx_id].phy.phy_mode.ofdm.option - 1]);
+                                           [tal_pib[trx_id].phy.phy_mode.ofdm.option]); //optoin - 1
             break;
 #endif
 #ifdef SUPPORT_OQPSK

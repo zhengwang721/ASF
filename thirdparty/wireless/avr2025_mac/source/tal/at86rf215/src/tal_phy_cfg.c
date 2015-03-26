@@ -98,7 +98,6 @@ static retval_t conf_fsk(trx_id_t trx_id);
  */
 retval_t conf_trx_modulation(trx_id_t trx_id)
 {
-    debug_text(PSTR("conf_trx_modulation()"));
 
     retval_t status;
 

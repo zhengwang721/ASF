@@ -47,8 +47,8 @@
  */
 
 /* Prevent double inclusion */
-#ifndef TAL_HELPER_H
-#define TAL_HELPER_H
+#ifndef TAL_HELPER_2_H
+#define TAL_HELPER_2_H
 
 /* === INCLUDES ============================================================ */
 /* === EXTERNALS =========================================================== */

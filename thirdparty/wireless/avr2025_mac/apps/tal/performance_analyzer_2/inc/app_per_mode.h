@@ -47,6 +47,7 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+ 
 /* Prevent double inclusion */
 #ifndef APP_PER_MODE_H
 #define APP_PER_MODE_H

@@ -285,7 +285,7 @@
 #define LEG_868_F0                  868300000
 #define LEG_915_F0                  906000000 
 #define LEG_915_CH_SPAC               2000000
-#define LEG_2450_F0                2405000000
+#define LEG_2450_F0                2405000000UL
 #define LEG_2450_CH_SPAC              5000000
 
 /** OFDM constants */
@@ -337,13 +337,13 @@
 #define OFDM_950_OPT3_CH_SPAC          400000
 #define OFDM_950_OPT4_F0            951000000
 #define OFDM_950_OPT4_CH_SPAC          200000
-#define OFDM_2450_OPT1_F0          2401200000
+#define OFDM_2450_OPT1_F0          2401200000UL
 #define OFDM_2450_OPT1_CH_SPAC        1200000
-#define OFDM_2450_OPT2_F0          2400800000
+#define OFDM_2450_OPT2_F0          2400800000UL
 #define OFDM_2450_OPT2_CH_SPAC         800000
-#define OFDM_2450_OPT3_F0          2400400000
+#define OFDM_2450_OPT3_F0          2400400000UL
 #define OFDM_2450_OPT3_CH_SPAC         400000
-#define OFDM_2450_OPT4_F0          2400200000
+#define OFDM_2450_OPT4_F0          2400200000UL
 #define OFDM_2450_OPT4_CH_SPAC         200000
 
 /** MR-O-QPSK constants */
@@ -359,7 +359,7 @@
 #define OQPSK_917_CH_SPAC             2000000
 #define OQPSK_920_F0                920600000
 #define OQPSK_920_CH_SPAC              200000
-#define OQPSK_2450_F0              2405000000
+#define OQPSK_2450_F0              2405000000UL
 #define OQPSK_2450_CH_SPAC            5000000
 
 /** FSK constants */
@@ -409,11 +409,11 @@
 #define FSK_950_MOD3_CH_SPAC           600000
 #define FSK_950_MOD4_F0             951200000
 #define FSK_950_MOD4_CH_SPAC           600000
-#define FSK_2450_MOD1_F0           2400200000
+#define FSK_2450_MOD1_F0           2400200000UL
 #define FSK_2450_MOD1_CH_SPAC          200000
-#define FSK_2450_MOD2_F0           2400400000
+#define FSK_2450_MOD2_F0           2400400000UL
 #define FSK_2450_MOD2_CH_SPAC          400000
-#define FSK_2450_MOD3_F0           2400400000
+#define FSK_2450_MOD3_F0           2400400000UL
 #define FSK_2450_MOD3_CH_SPAC          400000
 
 /** FSK configuration parameters */
