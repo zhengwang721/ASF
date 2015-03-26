@@ -77,15 +77,16 @@ init(void)
   printf("Ethernet Address %02x:%02x:%02x:%02x:%02x:%02x\n", 
          macaddr[0], macaddr[1], macaddr[2],
          macaddr[3], macaddr[4], macaddr[5]);
-  ksz8851snl_init(macaddr);
+  ksz8851snl_init();
   /* Write MAc address in ksz8851snl registers */
   //
-  //ksz8851_reg_write(REG_MAC_ADDR_0, (macaddr[4] << 8) | macaddr[5]);
-  //ksz8851_reg_write(REG_MAC_ADDR_2, (macaddr[2] << 8) | macaddr[3]);
-  //ksz8851_reg_write(REG_MAC_ADDR_4, (macaddr[1] << 8) | macaddr[0]);
+  ksz8851_reg_write(REG_MAC_ADDR_0, (macaddr[4] << 8) | macaddr[5]);
+  ksz8851_reg_write(REG_MAC_ADDR_2, (macaddr[2] << 8) | macaddr[3]);
+  ksz8851_reg_write(REG_MAC_ADDR_4, (macaddr[0] << 8) | macaddr[1]);
    
   process_start(&ksz8851snl_ip64_driver_process, NULL);
 }
+
 #if 0
 int
 ksz8851snl_send(const uint8_t *data, uint16_t datalen)
@@ -219,6 +220,7 @@ ksz8851snl_read(uint8_t *buffer, uint16_t bufsize)
   return 0;
 }
 #endif
+
 /*---------------------------------------------------------------------------*/
 static int
 output(uint8_t *packet, uint16_t len)
