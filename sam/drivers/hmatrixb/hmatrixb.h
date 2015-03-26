@@ -249,7 +249,7 @@ void hmatrix_get_slave_priority(enum hmatrix_slave_id slave_id,
  * \section hmatrix_qs_use_cases Use cases
  * - \ref hmatrix_basic "HMATRIX Basic Usage"
  *
- * \section hmatrix_basic HMATRIX basic usage
+ * \section hmatrix_basic HMATRIX Basic Usage
  *
  * This use case will demonstrate how to configurate the HMATRIX module to
  * set the slave with different default master type.
