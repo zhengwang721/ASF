@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4 Timer Counter (TC) driver.
+ * \brief SAM Timer Counter (TC) driver.
  *
  * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *

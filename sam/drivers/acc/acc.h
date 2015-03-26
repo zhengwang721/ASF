@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4 Analog Comparator Controller (ACC) driver.
+ * \brief SAM Analog Comparator Controller (ACC) driver.
  *
  * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *

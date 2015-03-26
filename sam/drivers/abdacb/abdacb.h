@@ -358,7 +358,7 @@ void abdac_set_callback(struct abdac_dev_inst *const dev_inst,
  * ABDAC module.
  *
  * \section abdac_qs_use_cases Use cases
- * - \ref abdac_basic
+ * - \ref abdac_basic "ABDAC Basic Usage"
  *
  * \section abdac_basic ABDAC basic usage
  *

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4 Peripheral DMA Controller (PDC) driver.
+ * \brief SAM Peripheral DMA Controller (PDC) driver.
  *
  * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
