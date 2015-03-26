@@ -159,7 +159,7 @@ extern "C" {
  * power consumption. The user can select on the fly the performance level
  * configuration which best suits its application.
  *
- * The SAM device embeds up to three performance level (PL0, PL1 and PL2).
+ * The SAM device embeds up to three performance level (PL0 and PL2).
  * Each performance level defines a maximum frequency and a corresponding
  * consumption in µA/MHz,when the application selects a new performance level,
  * the voltage applied on the full logic area moves from a value to another,
