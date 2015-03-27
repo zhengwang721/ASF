@@ -79,7 +79,7 @@
  *
  * \section asfdoc_sam0_adc_unit_test_setup Setup
  * The following connections has to be made using wires:
- * -SAM D21 Xplained Pro
+ * - SAM D21 Xplained Pro
  *  - \b DAC VOUT (PA02) <-----> ADC4 (PA04)
  * - SAM D20/L21 Xplained Pro
  *  - \b DAC VOUT (PA02) <-----> ADC2 (PB08)
