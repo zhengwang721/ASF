@@ -508,8 +508,9 @@ static void test_standby_mode_dynamic_power_sleepwalking(void)
 	configure_usart();
 
 	printf("System wake up from stanby mode, ADC result\r\n");
-	for(int i = 0; i < BUFFER_LEN; i ++)
+	for (int i = 0; i < BUFFER_LEN; i ++) {
 		printf("%d ",adc_rslt[i]);
+	}
 	printf("\r\n");
 
 	/* Toggles LED0  once wake up from STANDBY sleep mode */
