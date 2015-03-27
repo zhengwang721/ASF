@@ -784,8 +784,8 @@ void system_clock_init(void)
 	dfll_conf.loop_mode      = CONF_CLOCK_DFLL_LOOP_MODE;
 	dfll_conf.on_demand      = false;
 
-	/* Using DFLL48M COARSE and FINE CAL value from NVM Software Calibration Area Mapping
-     in DFLL.COARSE and DFLL.FINE helps to output a frequency close to 48 MHz.
+	/* Using DFLL48M COARSE CAL value from NVM Software Calibration Area Mapping
+     in DFLL.COARSE helps to output a frequency close to 48 MHz.
 	   Not applicable for silicon rev C and previous*/
 
 	/* Get MCU revision */
@@ -806,8 +806,8 @@ void system_clock_init(void)
 		if (coarse == 0x3f) {
 			coarse = 0x1f;
 		}
-
 		dfll_conf.coarse_value = coarse;
+	}
 
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN) {
 		dfll_conf.fine_value   = CONF_CLOCK_DFLL_FINE_VALUE;
