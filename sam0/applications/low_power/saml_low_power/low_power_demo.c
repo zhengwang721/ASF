@@ -151,11 +151,11 @@ static uint16_t adc_rslt[BUFFER_LEN] SECTION_DMAC_DESCRIPTOR;
  */
 enum led_toggle_times {
 	/* Indication clock frequency switch in ACTIVE mode*/
-	LED0_TOGGLE_2  = 2,
+	LED0_TOGGLE_2 = 2,
 	/* Indication system wake up from IDLE mode*/
-	LED0_TOGGLE_4  = 4,
+	LED0_TOGGLE_4 = 4,
 	/* Indication system wake up from STANDBY mode*/
-	LED0_TOGGLE_6  = 6,
+	LED0_TOGGLE_6 = 6,
 	/* Indication system wake up from BACKUP mode*/
 	LED0_TOGGLE_8 = 8,
 };
@@ -230,13 +230,13 @@ static void configure_adc(void)
 	struct adc_config config;
 
 	adc_get_config_defaults(&config);
-	config.clock_source       = GCLK_GENERATOR_0;
-	config.clock_prescaler    = ADC_CLOCK_PRESCALER_DIV4;
-	config.reference          = ADC_REFERENCE_INTREF;
-	config.event_action       = ADC_EVENT_ACTION_START_CONV;
-	config.run_in_standby     = true;
+	config.clock_source = GCLK_GENERATOR_0;
+	config.clock_prescaler = ADC_CLOCK_PRESCALER_DIV4;
+	config.reference = ADC_REFERENCE_INTREF;
+	config.event_action = ADC_EVENT_ACTION_START_CONV;
+	config.run_in_standby = true;
 	config.on_demand = true;
-	config.resolution         = ADC_RESOLUTION_12BIT;
+	config.resolution = ADC_RESOLUTION_12BIT;
 
 	adc_init(&adc_instance, ADC, &config);
 	adc_enable(&adc_instance);
@@ -247,7 +247,7 @@ static void configure_adc(void)
  */
 static void dma_callback(void)
 {
-  printf("DMA interrupt occurs\r\n");
+	printf("DMA interrupt occurs\r\n");
 }
 
 /**
@@ -330,9 +330,9 @@ static void main_clock_select_osc16m(void)
 
 	/* Switch to new frequency selection and enable OSC16M */
 	system_clock_source_osc16m_get_config_defaults(&osc16m_conf);
-	osc16m_conf.fsel      		= CONF_CLOCK_OSC16M_FREQ_SEL;
-	osc16m_conf.on_demand       = 0;
-	osc16m_conf.run_in_standby  = CONF_CLOCK_OSC16M_RUN_IN_STANDBY;
+	osc16m_conf.fsel = CONF_CLOCK_OSC16M_FREQ_SEL;
+	osc16m_conf.on_demand = 0;
+	osc16m_conf.run_in_standby = CONF_CLOCK_OSC16M_RUN_IN_STANDBY;
 	system_clock_source_osc16m_set_config(&osc16m_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC16M);
 	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_OSC16M));
@@ -341,7 +341,7 @@ static void main_clock_select_osc16m(void)
 	system_gclk_gen_get_config_defaults(&gclk_conf);
 	gclk_conf.source_clock = SYSTEM_CLOCK_SOURCE_OSC16M;
 	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclk_conf);
-	if (CONF_CLOCK_OSC16M_ON_DEMAND){
+	if (CONF_CLOCK_OSC16M_ON_DEMAND) {
 		OSCCTRL->OSC16MCTRL.reg |= OSCCTRL_OSC16MCTRL_ONDEMAND;
 	}
 
@@ -393,6 +393,9 @@ static void main_clock_select_dfll(void)
 
 }
 
+/**
+ * \brief Main clock source selection between DFLL and OSC16M.
+ */
 static void main_clock_select(const enum system_clock_source clock_source)
 {
 	if (clock_source == SYSTEM_CLOCK_SOURCE_DFLL) {
@@ -421,7 +424,7 @@ static void test_active_mode(const enum system_performance_level performance_lev
 		return ;
 	}
 
-	if ( curr_pl  < performance_level) {
+	if (curr_pl < performance_level) {
 
 		/* Scaling up the performance level first and then increase clock frequency */
 		system_switch_performance_level(performance_level);
@@ -465,7 +468,7 @@ static void test_standby_mode_dynamic_power_sleepwalking(void)
 	 */
 	test_active_mode(SYSTEM_PERFORMANCE_LEVEL_0);
 
-	memset(adc_rslt,0,sizeof(adc_rslt));
+	memset(adc_rslt, 0, sizeof(adc_rslt));
 	configure_event();
 	configure_adc();
 	configure_dma();
@@ -505,7 +508,7 @@ static void test_standby_mode_dynamic_power_sleepwalking(void)
 	configure_usart();
 
 	printf("System wake up from stanby mode, ADC result\r\n");
-	for(int i =0;i<BUFFER_LEN;i++)
+	for(int i = 0; i < BUFFER_LEN; i ++)
 		printf("%d ",adc_rslt[i]);
 	printf("\r\n");
 
@@ -603,7 +606,7 @@ static void test_backup_mode(void)
 {
 
 	system_apb_clock_clear_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_SERCOM3);
-	system_gclk_chan_disable(SERCOM0_GCLK_ID_CORE+3);
+	system_gclk_chan_disable(SERCOM0_GCLK_ID_CORE + 3);
 
 	struct port_config pin_conf;
 	port_get_config_defaults(&pin_conf);
@@ -615,10 +618,10 @@ static void test_backup_mode(void)
 	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
 
 	/* Set external wakeup pin polarity */
-	system_set_pin_wakeup_polarity_low(1<<CONF_EXT_WAKEUP_PIN);
+	system_set_pin_wakeup_polarity_low(1 << CONF_EXT_WAKEUP_PIN);
 
 	/* Set external wakeup detector */
-	system_enable_pin_wakeup(1<<CONF_EXT_WAKEUP_PIN);
+	system_enable_pin_wakeup(1 << CONF_EXT_WAKEUP_PIN);
 	system_set_pin_wakeup_debounce_counter(SYSTEM_WAKEUP_DEBOUNCE_2CK32);
 	system_set_sleepmode(SYSTEM_SLEEPMODE_BACKUP);
 	system_sleep();
