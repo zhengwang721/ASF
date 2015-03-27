@@ -373,7 +373,7 @@ static void run_i2c_full_speed_test(const struct test_case *test)
 	i2c_master_get_config_defaults(&config_i2c_master);
 	config_i2c_master.buffer_timeout = 10000;
 	config_i2c_master.baud_rate      = I2C_MASTER_BAUD_RATE_400KHZ;
-        config_i2c_master.pinmux_pad0    = CONF_MASTER_SDA_PINMUX;
+	config_i2c_master.pinmux_pad0    = CONF_MASTER_SDA_PINMUX;
 	config_i2c_master.pinmux_pad1    = CONF_MASTER_SCK_PINMUX;
 	i2c_master_disable(&i2c_master_instance);
 	status = i2c_master_init(&i2c_master_instance, CONF_I2C_MASTER_MODULE, &config_i2c_master);
