@@ -63,7 +63,7 @@ void configure_tc(void)
 	//! [setup_change_config]
 	config_tc.counter_size    = TC_COUNTER_SIZE_16BIT;
 	config_tc.wave_generation = TC_WAVE_GENERATION_MATCH_FREQ;
-	config_tc.counter_16_bit.compare_capture_channel[0] = (0xFFFF / 4);
+	config_tc.counter_16_bit.compare_capture_channel[0] = 4000;
 	//! [setup_change_config]
 
 	//! [setup_change_config_mfreq]

@@ -61,10 +61,10 @@
  * - No event action
  * - No event generation enabled
  * - Counter starts on 0
- * - Capture compare channel 0 set to 0xFFFF/4
+ * - Capture compare channel 0 set to 4000
  * 
- * When system clock is 8MHz, and the compare channel 0 is 0xFFFF/4,
- * the output frequency will be about 244KHz ( 8000000/(0xFFFF/4)*2 ).
+ * When system clock is 8MHz, and the compare channel 0 is 4000,
+ * the output frequency will be about 1KHz ( 8000000/4000/2 ).
  *
  * \section asfdoc_sam0_tc_macth_freq_use_case_setup Quick Start
  *
