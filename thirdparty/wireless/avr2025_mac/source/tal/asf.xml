@@ -186,7 +186,6 @@
 		<build type="header-file"   value="inc/tal.h"/>
 		<build type="c-source"   value="src/tal_helper.c"/>
 		<build type="header-file"   value="inc/tal_helper.h"/>
-		<build type="header-file"   value="inc/tal_multi_trx.h"/>
 		<build type="header-file"   value="inc/tal_types.h"/>
 		<build type="header-file"   value="inc/tal_timer_config.h"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.tal.inc"/>

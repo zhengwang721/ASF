@@ -167,9 +167,12 @@ void trx_read(uint16_t addr,uint8_t *data, uint16_t length)
 	
 
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/  
-     DISABLE_TRX_INTERRUPT();
+	 **/
    
+   ENTER_CRITICAL_REGION();
+   //DISABLE_TRX_INTERRUPT();
+   //ENTER_TRX_REGION();
+   //DISABLE_TRX_IRQ();
 	/* Prepare the command byte */
 	addr |= 0X0000; //Read Command
 	
@@ -244,16 +247,22 @@ void trx_read(uint16_t addr,uint8_t *data, uint16_t length)
 #endif
 	/*Restoring the interrupt status which was stored & enabling the global
 	 *interrupt */
-	ENABLE_TRX_INTERRUPT();
-	
+	LEAVE_CRITICAL_REGION();
+    //ENABLE_TRX_INTERRUPT();
+	//LEAVE_TRX_REGION();
+	//ENABLE_TRX_IRQ();
+
 }
 
 void trx_write(uint16_t addr, uint8_t *data,uint16_t length)
 {
 	/*Saving the current interrupt status & disabling the global interrupt
 	 **/
-	DISABLE_TRX_INTERRUPT();
-    
+	
+      ENTER_CRITICAL_REGION();
+	//DISABLE_TRX_INTERRUPT();
+    //ENTER_TRX_REGION();
+	//DISABLE_TRX_IRQ();
 	/* Prepare the command byte */
 	addr |= 0X8000; //Write Command
 	
@@ -332,9 +341,13 @@ void trx_write(uint16_t addr, uint8_t *data,uint16_t length)
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
-	 ENABLE_TRX_INTERRUPT();
-	
+	 *interrupt */ 
+	 
+	 
+     //ENABLE_TRX_INTERRUPT();
+	//LEAVE_TRX_REGION();
+	LEAVE_CRITICAL_REGION();
+	//ENABLE_TRX_IRQ();
 }
 
 uint8_t trx_reg_read(uint16_t addr)

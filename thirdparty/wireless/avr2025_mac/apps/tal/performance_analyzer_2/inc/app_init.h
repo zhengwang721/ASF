@@ -63,7 +63,7 @@
  * capabilities of Atmel Transceivers
  *
  */
-uint32_t tstamp;
+
 /**
  * \ingroup group_perf_analyzer
  * \defgroup group_app_init Application Initialization Process

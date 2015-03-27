@@ -95,7 +95,8 @@
 #include "common_sw_timer.h"
 #include "serial_interface.h"
 #include "app_config.h"
-
+#include "rf4ce.h"
+#include  "nwk_config.h"
 /* === Macros ============================================================== */
 
 /* === Globals ============================================================= */

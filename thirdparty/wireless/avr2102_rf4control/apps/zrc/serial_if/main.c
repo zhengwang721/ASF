@@ -96,6 +96,7 @@
 #include "serial_interface.h"
 #include "app_config.h"
 #include "pb_pairing.h"
+#include "nwk_config.h"
 
 /* === Macros ============================================================== */
 

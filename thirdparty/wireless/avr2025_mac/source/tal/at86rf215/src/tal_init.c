@@ -243,7 +243,7 @@ retval_t tal_init(void)
      * Install a handler for the radio and the baseband interrupt.
      */
     pal_trx_irq_flag_clr();
-    trx_irq_init(trx_irq_handler_cb);
+    trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
     pal_trx_irq_en();   /* Enable transceiver main interrupt. */
 #endif
 
@@ -513,7 +513,7 @@ retval_t tal_reset(trx_id_t trx_id, bool set_default_pib)
     pal_trx_irq_en(RF215_BB);   /* Enable transceiver main interrupt. */
     pal_trx_irq_en(RF215_RF);   /* Enable transceiver main interrupt. */
 #else
-    trx_irq_init(trx_irq_handler_cb);
+    trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
     pal_trx_irq_en();   /* Enable transceiver main interrupt. */
 #endif
 

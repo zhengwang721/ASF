@@ -47,7 +47,7 @@
 /** Enable Com Port. */
 #define CONF_BOARD_COM_PORT
 #define CONF_BOARD_AT86RFX
-
+#define AT86RFX_SPI_BAUDRATE             4000000UL
 #ifdef EXT_RF_FRONT_END_CTRL /*For External PA for 233FEM*/
 
 #define EXT_PA_SE2431L

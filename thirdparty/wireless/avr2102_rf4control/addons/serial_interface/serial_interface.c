@@ -68,6 +68,7 @@
 #ifdef VENDOR_DATA
 #include "vendor_data.h"
 #endif
+#include "nwk_config.h"
 
 /* === MACROS ============================================================== */
 

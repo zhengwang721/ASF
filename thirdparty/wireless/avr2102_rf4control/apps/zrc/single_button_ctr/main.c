@@ -95,6 +95,7 @@
 #include "zrc.h"
 #include "pb_pairing.h"
 #include "vendor_data.h"
+#include "nwk_config.h"
 
 #ifdef SLEEP_ENABLE
 #include "conf_interrupt.h"

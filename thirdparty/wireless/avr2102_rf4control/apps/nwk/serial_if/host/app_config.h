@@ -55,9 +55,10 @@
 
 /* === Includes ============================================================= */
 
-#include "stack_config.h"
-#include "rf4ce.h"
-#include "zrc.h"
+//#include "stack_config.h"
+//#include "rf4ce.h"
+//#include "nwk_config.h"
+//#include "zrc.h"
 
 /* === Macros =============================================================== */
 

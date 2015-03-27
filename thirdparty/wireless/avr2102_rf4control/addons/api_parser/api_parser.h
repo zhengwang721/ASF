@@ -78,7 +78,7 @@ extern "C" {
 #endif
 
 void serial_api_init(void);
-bool nwk_task(void);
+//bool nwk_task(void);
 
 #define RF4CONTROL_PID                         (2)
 

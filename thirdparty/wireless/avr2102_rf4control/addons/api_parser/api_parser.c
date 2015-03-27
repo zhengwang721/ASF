@@ -72,6 +72,7 @@
 #include "zrc.h"
 #endif
 #include "vendor_data.h"
+#include "nwk_config.h"
 
 /* === MACROS ============================================================== */
 
@@ -157,9 +158,10 @@ static nwk_indication_callback_t nwk_ind_callback;
 /* === Prototypes ========================================================== */
 
 static inline void process_incoming_data(void);
-nwk_enum_t nwk_init(void);
+//nwk_enum_t nwk_init(void);
 static uint8_t *get_next_tx_buffer(void);
 static inline void handle_incoming_msg(void);
+/*
 bool nlme_reset_request(bool SetDefaultNIB,
 		FUNC_PTR confirm_cb
 		);
@@ -249,7 +251,7 @@ bool zrc_cmd_disc_response(uint8_t PairingRef, uint8_t *SupportedCmd);
 void register_nwk_indication_callback(nwk_indication_callback_t *nwk_ind_cb);
 void register_zrc_indication_callback(
 		zrc_indication_callback_t *zrc_ind_callback);
-
+*/
 /* === Externals ==========================================================  */
 /* Network confirmation callback pointers */
 

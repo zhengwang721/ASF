@@ -1635,18 +1635,12 @@ static ch_pg_t calc_ch_page(trx_id_t trx_id)
             switch (tal_pib[trx_id].phy.freq_band)
             {
                 case CHINA_780: 
-				if(tal_pib[trx_id].HighRateEnabled == true)
-			        pg = CH_PG_18;
-			    else //vk
                     pg = CH_PG_CHINA;
                 break;
 
                 case US_915:
-				if(tal_pib[trx_id].HighRateEnabled == true)
-                    pg = CH_PG_16;
-				else
 				    pg = CH_PG_2006;
-                    break;
+                 break;
 
                 default:
                     pg = CH_PG_INVALID;
@@ -1655,9 +1649,7 @@ static ch_pg_t calc_ch_page(trx_id_t trx_id)
         }
         else // RF24
         {  
-			if(tal_pib[trx_id].HighRateEnabled == true)
-			pg = CH_PG_16;
-			else
+		
             pg = CH_PG_2003;
         }
     }
