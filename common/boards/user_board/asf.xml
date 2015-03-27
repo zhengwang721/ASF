@@ -365,6 +365,18 @@
 		<device-support value="atsam4c32e_1"/>
 	</board>
 
+	<board id="board.user_board.sam4c4c_0" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsam4c4c_0"/>
+	</board>
+
+	<board id="board.user_board.sam4c4c_1" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsam4c4c_1"/>
+	</board>
+
 	<board id="board.user_board.sam4c8c_0" caption="User Board template">
 		<require idref="common.boards.user_board.common"/>
 		<require idref="sam.utils.linker_scripts"/>
@@ -387,6 +399,18 @@
 		<require idref="common.boards.user_board.common"/>
 		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4cmp8c_1"/>
+	</board>
+
+	<board id="board.user_board.sam4cms4c_0" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsam4cms4c_0"/>
+	</board>
+
+	<board id="board.user_board.sam4cms4c_1" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsam4cms4c_1"/>
 	</board>
 
 	<board id="board.user_board.sam4cms8c_0" caption="User Board template">
