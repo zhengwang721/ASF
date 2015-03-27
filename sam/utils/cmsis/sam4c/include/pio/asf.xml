@@ -3,6 +3,7 @@
 		<info type="description" value="summary">
 		This file defines all structures and symbols for SAM4C PIO
 		</info>
+		<build type="header-file" value="pio_sam4c4c.h"/>
 		<build type="header-file" value="pio_sam4c8c.h"/>
 		<build type="header-file" value="pio_sam4c16c.h"/>
 		<build type="header-file" value="pio_sam4c32c.h"/>
