@@ -1389,6 +1389,11 @@ enum status_code i2s_serializer_read_buffer_wait(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>B</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAMDA1.</td>
+ *	</tr>
+ *	<tr>
  *		<td>A</td>
  *		<td>01/2014</td>
  *		<td>Initial release</td>
