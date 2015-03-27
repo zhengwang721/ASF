@@ -55,16 +55,13 @@
 #  define IOPORT_PORTA     0
 #endif
 #if (PORT_GROUPS > 1)
-#  define IOPORT_PORTA     1
+#  define IOPORT_PORTB     1
 #endif
 #if (PORT_GROUPS > 2)
-#  define IOPORT_PORTB     2
+#  define IOPORT_PORTC     2
 #endif
 #if (PORT_GROUPS > 3)
-#  define IOPORT_PORTC     3
-#endif
-#if (PORT_GROUPS > 4)
-#  define IOPORT_PORTD     4
+#  define IOPORT_PORTD     3
 #endif
 
 /**
