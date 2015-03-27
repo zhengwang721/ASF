@@ -54,7 +54,7 @@ extern "C" {
 /**
  * \defgroup flip_protocol Atmel FLIP Protocol definitions
  *
- * To perform firmware upgrade, Atmel has developed an application called 揊LIP
+ * To perform firmware upgrade, Atmel has developed an application called "FLIP"
  * This software is a flexible application which lets you program and
  * configure Atmel's microcontroller devices in their final environment
  * without needing any dedicated hardware.

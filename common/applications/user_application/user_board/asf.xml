@@ -615,6 +615,46 @@
 		<generator value="doxygen"/>
 		<device-support value="atsam4c8c_1"/>
 	</project>
+	<project id="common.applications.user_application.user_board.sam4c4c_0" caption="User board project template for SAM4C4C Core 0" type="template">
+		<info type="description" value="summary">
+		User board project template for SAM4C4C Core 0 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.sam4c4c_0"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsam4c4c_0"/>
+	</project>
+		<project id="common.applications.user_application.user_board.sam4c4c_1" caption="User board project template for SAM4C4C Core 1" type="template">
+		<info type="description" value="summary">
+		User board project template for SAM4C4C Core 1 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.sam4c4c_1"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsam4c4c_1"/>
+	</project>
+	<project id="common.applications.user_application.user_board.sam4cms4c_0" caption="User board project template for SAM4CMS4C Core 0" type="template">
+		<info type="description" value="summary">
+		User board project template for SAM4CMS4C Core 0 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.sam4cms4c_0"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsam4cms4c_0"/>
+	</project>
+	<project id="common.applications.user_application.user_board.sam4cms4c_1" caption="User board project template for SAM4CMS4C Core 1" type="template">
+		<info type="description" value="summary">
+		User board project template for SAM4CMS4C Core 1 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.sam4cms4c_1"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsam4cms4c_1"/>
+	</project>
 	<project id="common.applications.user_application.user_board.sam4cmp8c_0" caption="User board project template for SAM4CMP8C Core 0" type="template">
 		<info type="description" value="summary">
 		User board project template for SAM4CMP8C Core 0 devices.

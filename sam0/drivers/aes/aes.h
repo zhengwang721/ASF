@@ -55,7 +55,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_drivers_aes_group SAM Advanced Encryption Standard (AES)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Advanced Encryption Standard functionality. The following 
  * driver API modes are covered by this manual:
  *

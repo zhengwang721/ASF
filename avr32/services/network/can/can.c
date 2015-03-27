@@ -283,7 +283,7 @@ U8 can_init(U8 ch,
  * - 3x bits of interframe.
  */
 #define DELAY_HZ         (BAUDRATE_HZ/141.0)   /*Compute Maximum delay time*/
-#define DELAY            (1000000 / DELAY_HZ)  /*Compute Delay in 祍*/
+#define DELAY            (1000000 / DELAY_HZ)  /*Compute Delay in µs */
    delay_us(DELAY);
    if(!CANIF_channel_enable_status(ch)) {
             return CAN_CMD_REFUSED;

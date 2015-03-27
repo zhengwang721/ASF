@@ -44,7 +44,11 @@
 #ifndef _SAM4C_
 #define _SAM4C_
 
-#if defined (__SAM4C8C_0__)
+#if defined (__SAM4C4C_0__)
+#include "sam4c4c_0.h"
+#elif defined (__SAM4C4C_1__)
+#include "sam4c4c_1.h"
+#elif defined (__SAM4C8C_0__)
 #include "sam4c8c_0.h"
 #elif defined (__SAM4C8C_1__)
 #include "sam4c8c_1.h"
