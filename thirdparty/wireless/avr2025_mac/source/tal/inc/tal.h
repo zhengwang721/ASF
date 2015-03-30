@@ -3,7 +3,7 @@
  *
  * @brief This file contains TAL API function declarations
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /*
- * Copyright (c) 2015, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013 - 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -68,7 +68,7 @@
 #endif
 
 /* === TYPES =============================================================== */
-__PACK__DATA__
+//__PACK__DATA__
 /* Structure implementing the PIB values stored in TAL */
 typedef struct tal_pib_tag
 {
@@ -650,7 +650,7 @@ typedef enum csma_mode_tag
     CSMA_UNSLOTTED,
     CSMA_SLOTTED
 } csma_mode_t;
-__PACK__RST_DATA__
+//__PACK__RST_DATA__
 /* === EXTERNALS =========================================================== */
 
 #if (defined SW_CONTROLLED_CSMA) && (defined TX_OCTET_COUNTER)

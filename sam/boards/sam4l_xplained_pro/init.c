@@ -141,7 +141,7 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(AT86RFX_SPI_MOSI, AT86RFX_SPI_MOSI_FLAGS);
 	ioport_set_pin_peripheral_mode(AT86RFX_SPI_SCK, AT86RFX_SPI_SCK_FLAGS);
 
-	ioport_set_pin_peripheral_mode(EXT1_PIN_15,MUX_PC03A_SPI_NPCS0);
+	ioport_set_pin_peripheral_mode(AT86RFX_SPI_CS_PIN, AT86RFX_SPI_CS_FLAGS);
 
 	/* Initialize TRX_RST and SLP_TR as GPIO. */
 	ioport_set_pin_dir(AT86RFX_RST_PIN, IOPORT_DIR_OUTPUT);

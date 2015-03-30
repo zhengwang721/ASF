@@ -1,12 +1,14 @@
-/*
+/**
  * @file tfa.h
  *
- * @brief This file is the interface for Transceiver Feature Access (TFA) 
+ * @brief This file is the interface for Transceiver Feature Access (TFA)
  * functionality.
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,12 +39,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
- *
  */
 
 /*
- * Copyright (c) 2015, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013 - 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
