@@ -51,10 +51,13 @@ uint32_t timeout_count;
 hw_timer_callback_t timer_callback;
 /* === MACROS ============================================================== */
 
+#if SAMD21
 void tc_cc0_cb(struct tc_module *const module_inst);
+#endif
 
 void hw_timer_init(void)
 {
+#if SAMD21
 	struct tc_config config_tc;
 
 	tc_get_config_defaults(&config_tc);
@@ -72,6 +75,25 @@ void hw_timer_init(void)
 	
 	tc_register_callback(&tc_instance, tc_cc0_cb,
 						TC_CALLBACK_CC_CHANNEL0);
+#endif
+
+#if SAMG55
+	static uint8_t timer_multiplier;
+	sysclk_enable_peripheral_clock(ID_TC);
+
+	/* Get system clock. */
+	timer_multiplier = sysclk_get_peripheral_bus_hz(TIMER) / DEF_1MHZ;
+	timer_multiplier = timer_multiplier >> 1;	
+	
+	tc_init(TIMER, TIMER_CHANNEL_ID,						// Init timer counter  channel.
+			TC_CMR_TCCLKS_TIMER_CLOCK1 | TC_CMR_CPCTRG |
+			TC_CMR_WAVSEL_UP);				
+	
+	tc_write_rc(TIMER, TIMER_CHANNEL_ID, DEF_1MHZ);
+	tc_get_status(TIMER, TIMER_CHANNEL_ID);
+	tc_enable_interrupt(TIMER, TIMER_CHANNEL_ID, TC_IER_CPCS);		
+	NVIC_EnableIRQ(TC0_IRQn);
+#endif
 }
 
 void hw_timer_register_callback(hw_timer_callback_t cb_ptr)
@@ -79,6 +101,7 @@ void hw_timer_register_callback(hw_timer_callback_t cb_ptr)
 	timer_callback = cb_ptr;
 }
 
+#if SAMD21
 void tc_cc0_cb(struct tc_module *const module_inst)
 {
 	static uint16_t tc_count;
@@ -93,17 +116,65 @@ void tc_cc0_cb(struct tc_module *const module_inst)
 		}
 	}
 }
+#endif
+
+
+#if SAMG55
+void TC0_Handler(void)
+{
+	uint32_t ul_status;
+	static uint16_t tc_count;
+	uint8_t flags = cpu_irq_save();
+	
+	ul_status = tc_get_status(TIMER, TIMER_CHANNEL_ID);
+	ul_status &= tc_get_interrupt_mask(TIMER, TIMER_CHANNEL_ID);
+	
+	/* cca callback */
+	if (TC_SR_CPCS == (ul_status & TC_SR_CPCS)) 
+	{
+		tc_count += 1;
+		if (tc_count >= timeout_count)
+		{
+			tc_count = 0;
+			if (timer_callback != NULL)
+			{
+				timer_callback();
+			}
+		}
+	}
+	
+	cpu_irq_restore(flags);
+}
+#endif
 
 void hw_timer_start(uint32_t timer_val)
 {
+ #if SAMD21
 	timeout_count = timer_val;
 	tc_set_count_value(&tc_instance, 0);
 	tc_enable_callback(&tc_instance, TC_CALLBACK_CC_CHANNEL0);
+#endif
+
+#if SAMG55 
+uint32_t time_val;
+	timeout_count = timer_val;
+	time_val = tc_read_cv(TIMER, TIMER_CHANNEL_ID);
+	time_val += DEF_1MHZ;
+	tc_write_rc(TIMER, TIMER_CHANNEL_ID, time_val);
+	tc_start(TIMER, TIMER_CHANNEL_ID);
+#endif
+
 }
 
 void hw_timer_stop(void)
 {
+#if SAMD21
 	tc_disable_callback(&tc_instance, TC_CALLBACK_CC_CHANNEL0);
+#endif
+
+#if SAMG55
+	tc_stop(TIMER, TIMER_CHANNEL_ID);
+#endif
 }
 
 

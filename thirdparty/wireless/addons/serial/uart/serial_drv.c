@@ -133,7 +133,6 @@ uint8_t configure_serial_drv(void)
 	usart_enable_interrupt(BLE_UART, US_IER_RXRDY);
 	//usart_enable_interrupt(BLE_UART, US_IER_ENDRX);
 	//usart_enable_interrupt(BLE_UART, US_IER_RXBUFF);
-	//usart_enable_interrupt(BLE_UART, US_IER_TXEMPTY);
 
 	/* Enable UART interrupt */
 	NVIC_EnableIRQ(BLE_UART_IRQn);
@@ -145,7 +144,10 @@ uint8_t configure_serial_drv(void)
 #if SAMG55
 void BLE_UART_Handler(void)
 {
-	if ((usart_get_status(BLE_UART) & US_CSR_RXRDY))
+	uint32_t status_isr;
+	status_isr = usart_get_status(BLE_UART);
+	
+	if ((status_isr & US_CSR_RXRDY))
 	{
 		#if SERIAL_DRV_RX_CB_ENABLE == true
 			SERIAL_DRV_RX_CB();
@@ -170,12 +172,13 @@ uint16_t serial_drv_send(uint8_t* data, uint16_t len)
   return STATUS_OK;
 #elif SAMG55
  uint32_t temp, i;
- for (int i =0; i < len; i++)
+ for (i =0; i < len; i++)
  {
 	temp = *data++;
 	usart_putchar(BLE_UART, temp); 
  }
  while(usart_is_tx_ready(BLE_UART) == 0);
+ return STATUS_OK;
  //usart_enable_interrupt(BLE_UART, US_IER_TXEMPTY);
 #endif
 }
@@ -195,7 +198,7 @@ uint8_t serial_read_data(uint8_t* data, uint16_t max_len)
 #if SAMD || SAMR21
  return usart_read_buffer_job(&usart_instance, data, max_len);
 #elif SAMG55
-
+ return STATUS_OK;
 #endif
 }
 
@@ -205,10 +208,16 @@ uint8_t serial_read_byte(uint8_t* data)
     return usart_read_job(&usart_instance, (uint16_t *)data);
 #elif SAMG55
    uint32_t temp;
-   usart_read(BLE_UART, &temp);
-   *data = (uint8_t)temp;  
+   if (usart_read(BLE_UART, &temp) == 0)
+   {
+	   *data = (uint8_t)temp;
+	   return STATUS_OK;
+   }
+   else
+   {	  
+	   return STATUS_ERR_BUSY;
+   }    
 #endif
- return STATUS_OK;
 }
 
 #if SAMD || SAMR21 

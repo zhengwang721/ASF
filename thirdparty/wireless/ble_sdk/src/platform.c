@@ -38,11 +38,13 @@ static uint16_t rx_data;
 void serial_rx_callback(void)
 {
 #if SAMG55
-	serial_read_byte((uint8_t *)&rx_data);
-	platform_interface_callback((uint8_t *)&rx_data, 1);
+	while(serial_read_byte((uint8_t *)&rx_data) == STATUS_OK)
+	{
+		platform_interface_callback((uint8_t *)&rx_data, 1);
+	}		
 #endif
 		
-#if SAMD || SAMR21 
+#if SAMD || SAMR21
 	do 
 	{
 	  platform_interface_callback((uint8_t *)&rx_data, 1);

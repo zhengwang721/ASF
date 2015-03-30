@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief AT30TSE75X Temperature sensor driver configuration file.
+ * \brief USART Serial Configuration
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -43,23 +43,19 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_AT30TSE75X_H_INCLUDED
-#define CONF_AT30TSE75X_H_INCLUDED
 
-#include <board.h>
+#ifndef CONF_USART_SERIAL_H_INCLUDED
+#define CONF_USART_SERIAL_H_INCLUDED
 
-#if SAMD21 || SAMD20
-#define AT30TSE_SERCOM      EXT1_I2C_MODULE
-#define AT30TSE_PINMUX_PAD0 EXT1_I2C_SERCOM_PINMUX_PAD0
-#define AT30TSE_PINMUX_PAD1 EXT1_I2C_SERCOM_PINMUX_PAD1
-#endif
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   (115200UL)
+/** Character length setting */
+#define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
+/** Parity setting */
+#define CONF_UART_PARITY     US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
 
-#if SAMG55
-//#define BOARD_AT30TSE_TWI  		 	TWI1
-//#define BOARD_AT30TSE_TWI_ID  	 	ID_TWI1
-#define BOARD_AT30TSE_DEVICE_ADDR  	0x07
-//#define BOARD_TWI_SPEED  			10000
-#define BOARD_FLEXCOM_TWI			FLEXCOM4
-#endif
-
-#endif /* CONF_AT30TSE75X_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

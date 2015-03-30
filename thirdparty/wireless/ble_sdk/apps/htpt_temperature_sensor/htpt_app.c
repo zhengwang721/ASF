@@ -73,7 +73,7 @@ int main (void)
 	at30tse_init();
 	
 	at30tse_write_config_register(
-			AT30TSE_CONFIG_RES(AT30TSE_CONFIG_RES_12_bit));
+			AT30TSE_CONFIG_RES(AT30TSE_CONFIG_RES_12_bit));	
 
 	hw_timer_init();
 	hw_timer_register_callback(timer_callback_handler);
@@ -286,7 +286,6 @@ int main (void)
 							DBG_LOG("\r\nWrong value entered please try again : \n");
 						}
 					}while(app_device_bond);
-
 				}
 			
 				if(!app_device_bond)
@@ -434,11 +433,17 @@ void htpt_temperature_send(htpt_app_t *htpt_temp)
 {
 	//static uint32_t temperature;
 	struct prf_date_time timestamp;
+#if SAMD21
 	float temperature;
-
-	
 	/* Read Temperature Value from IO1 Xplained Pro */
-	temperature = (float)at30tse_read_temperature();
+	temperature = at30tse_read_temperature();
+#endif
+
+#if SAMG55
+	double temperature;
+	/* Read Temperature Value from IO1 Xplained Pro */
+	at30tse_read_temperature(&temperature);
+#endif	
 	
 	timestamp.day = 1;
 	timestamp.hour = 9;

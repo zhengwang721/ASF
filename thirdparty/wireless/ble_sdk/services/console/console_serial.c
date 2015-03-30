@@ -43,19 +43,29 @@
 /* === INCLUDES ============================================================ */
 
 #include "asf.h"
+
+#if SAMD21
 #include "conf_console.h"
+#endif
+
+#if SAMG55
+#include "conf_uart_serial.h"
+#endif
 
 /* === TYPES =============================================================== */
 
 /* === MACROS ============================================================== */
+#if SAMD21
 static struct usart_module cdc_uart_module;
+#endif
 
 /**
  *  Configure console.
  */
 void serial_console_init(void)
 {
- struct usart_config usart_conf;
+#if SAMD21
+ 	struct usart_config usart_conf;
 
 	usart_get_config_defaults(&usart_conf);
 	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
@@ -67,6 +77,24 @@ void serial_console_init(void)
 
 	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART_MODULE, &usart_conf);
 	usart_enable(&cdc_uart_module);
+#endif
+
+#if SAMG55
+	const usart_serial_options_t uart_serial_options = {
+			.baudrate = CONF_UART_BAUDRATE,
+	#ifdef CONF_UART_CHAR_LENGTH
+			.charlength = CONF_UART_CHAR_LENGTH,
+	#endif
+			.paritytype = CONF_UART_PARITY,
+	#ifdef CONF_UART_STOP_BITS
+			.stopbits = CONF_UART_STOP_BITS,
+	#endif
+		};
+
+	/* Configure console UART. */
+	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
+	stdio_serial_init(CONF_UART, &uart_serial_options);
+#endif
 }
 
 

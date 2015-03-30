@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief AT30TSE75X Temperature sensor driver configuration file.
+ * \brief SAM R21 External Interrupt Driver Configuration Header
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,26 +40,37 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
-#ifndef CONF_AT30TSE75X_H_INCLUDED
-#define CONF_AT30TSE75X_H_INCLUDED
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
-#include <board.h>
+#include <asf.h>
 
-#if SAMD21 || SAMD20
-#define AT30TSE_SERCOM      EXT1_I2C_MODULE
-#define AT30TSE_PINMUX_PAD0 EXT1_I2C_SERCOM_PINMUX_PAD0
-#define AT30TSE_PINMUX_PAD1 EXT1_I2C_SERCOM_PINMUX_PAD1
+#if SAMD21
+#define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
 #endif
 
-#if SAMG55
-//#define BOARD_AT30TSE_TWI  		 	TWI1
-//#define BOARD_AT30TSE_TWI_ID  	 	ID_TWI1
-#define BOARD_AT30TSE_DEVICE_ADDR  	0x07
-//#define BOARD_TWI_SPEED  			10000
-#define BOARD_FLEXCOM_TWI			FLEXCOM4
-#endif
+void button_cb(void);
 
-#endif /* CONF_AT30TSE75X_H_INCLUDED */
+/* Button Initialize */
+static inline void button_init(void)
+{
+#if SAMD21
+	struct extint_chan_conf eint_chan_conf;
+	extint_chan_get_config_defaults(&eint_chan_conf);
+
+	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
+	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_MUX;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
+	eint_chan_conf.filter_input_signal = true;
+	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
+	
+	extint_register_callback(button_cb,
+	BUTTON_0_EIC_LINE,
+	EXTINT_CALLBACK_TYPE_DETECT);
+	
+	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
+	EXTINT_CALLBACK_TYPE_DETECT);
+#endif
+}
+
+#endif

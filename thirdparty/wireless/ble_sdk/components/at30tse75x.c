@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief AT30TSE75X driver
+ * \brief AT30TSE75X driver.
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,332 +40,313 @@
  * \asf_license_stop
  *
  */
+
+ /**
+ * \defgroup common_components_memory_eeprom_at30tse75x_group EEPROM AT30TSE75X Series
+ *
+ * Low-level driver for the AT30TSE75X Series EEPROM controller. This driver provides access to the main
+ * features of the AT30TSE75X Series EEPROM.
+ *
+ * \{
+ */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#include <asf.h>
-#include <at30tse75x.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-uint8_t resolution = AT30TSE_CONFIG_RES_9_bit;
-
-/** TWI Bus Clock 400kHz */
-#define TWI_CLK     400000
-
+#include "asf.h"
+#include "at30tse75x.h"
+#include "conf_at30tse75x.h"
 #if SAMG55
-/**
- * \brief Set peripheral mode for one single IOPORT pin.
- * It will configure port mode and disable pin mode (but enable peripheral).
- * \param pin IOPORT pin to configure
- * \param mode Mode masks to configure for the specified pin (\ref ioport_modes)
- */
-#define ioport_set_pin_peripheral_mode(pin, mode) \
-	do {\
-		ioport_set_pin_mode(pin, mode);\
-		ioport_disable_pin(pin);\
-	} while (0)
-	
+#include "flexcom.h"
+#include "conf_board.h"
 #endif
 
+/* AT30TSE75x Device Type ID for Temperature Sensor: 0b1001xxx */
+#define AT30TSE75X_DEVICE_TYPE_ID_TEMP    0x48
+/* AT30TSE75x Device Type ID for EEPROM: 0b1010xxx */
+#define AT30TSE75X_DEVICE_TYPE_ID_EEPROM  0x50
+
+#ifndef BOARD_AT30TSE_DEVICE_ADDR
+/* Using the Default Device Address */
+#define BOARD_AT30TSE_DEVICE_ADDR  0x07 /* 0b111 */
+#endif
+
+#ifndef BOARD_AT30TSE_TWI
+/* Using the Default TWI Instance */
+#define BOARD_AT30TSE_TWI  TWI0
+#endif
+
+#ifndef BOARD_AT30TSE_TWI_ID
+/* Using the Default TWI Instance ID */
+#define BOARD_AT30TSE_TWI_ID  ID_TWI0
+#endif
+
+#ifndef BOARD_TWI_SPEED
+/* Using the Default TWI Bus Speed */
+#define BOARD_TWI_SPEED  10000
+#endif
+
+#if (BOARD_USING_AT30TSE != AT30TSE752) && \
+		(BOARD_USING_AT30TSE != AT30TSE754) && \
+		(BOARD_USING_AT30TSE != AT30TSE758) && \
+		(BOARD_USING_AT30TSE != AT30TS75)
+/* Using AT30TSE758 in Default */
+#define BOARD_USING_AT30TSE  AT30TSE758
+#endif
+
+/* Setting the AT30TSE75x Temperature Sensor Address */
+#define AT30TSE_TEMPERATURE_TWI_ADDR  (AT30TSE75X_DEVICE_TYPE_ID_TEMP | \
+		(BOARD_AT30TSE_DEVICE_ADDR & 0x07))
+
+#if BOARD_USING_AT30TSE == AT30TSE752
+#define AT30TSE_EEPROM_TWI_ADDR  (AT30TSE75X_DEVICE_TYPE_ID_EEPROM | \
+		(BOARD_AT30TSE_DEVICE_ADDR & 0x07))
+#elif BOARD_USING_AT30TSE == AT30TSE754
+#define AT30TSE_EEPROM_TWI_ADDR  (AT30TSE75X_DEVICE_TYPE_ID_EEPROM | \
+		(BOARD_AT30TSE_DEVICE_ADDR & 0x06))
+#elif BOARD_USING_AT30TSE == AT30TSE758
+#define AT30TSE_EEPROM_TWI_ADDR  (AT30TSE75X_DEVICE_TYPE_ID_EEPROM | \
+		(BOARD_AT30TSE_DEVICE_ADDR & 0x04))
+#elif BOARD_USING_AT30TSE != AT30TS75
+/* Using AT30TSE758 in Default */
+#define AT30TSE_EEPROM_TWI_ADDR  (AT30TSE75X_DEVICE_TYPE_ID_EEPROM | \
+		(BOARD_AT30TSE_DEVICE_ADDR & 0x04))
+#endif
+
+
+volatile uint8_t resolution = AT30TSE_CONFIG_RES_9_bit;
+
 /**
- * \brief Configures the SERCOM I2C master to be used with the AT30TSE75X device.
+ * \brief Initialize the TWI instance used for AT30TSE75x.
  */
 void at30tse_init(void)
 {
-    /* Initialize config structure and device instance. */
-	twi_options_t opt;
-	
-#if (SAMG55)
-	ioport_set_pin_peripheral_mode(TWI1_DATA_GPIO, TWI1_DATA_FLAGS);
-	ioport_set_pin_peripheral_mode(TWI1_CLK_GPIO, TWI1_CLK_FLAGS);
+	twi_options_t opts = {
+		.master_clk = sysclk_get_cpu_hz(),
+		.speed = BOARD_TWI_SPEED,
+		.smbus = 0
+	};
 
-	/* Enable the peripheral and set TWI mode. */
-	flexcom_enable(IO1_FLEXCOM_TWI);
-	flexcom_set_opmode(IO1_FLEXCOM_TWI, FLEXCOM_TWI);
+#if SAMG55
+	flexcom_enable(BOARD_FLEXCOM_TWI);
+	flexcom_set_opmode(BOARD_FLEXCOM_TWI, FLEXCOM_TWI);
 #else
-	/* Enable the peripheral clock for TWI */
-	pmc_enable_periph_clk(BOARD_ID_TWI_EEPROM);
+	sysclk_enable_peripheral_clock(BOARD_AT30TSE_TWI_ID);
 #endif
-	
-	/* Configure the options of TWI driver */
-	opt.master_clk = sysclk_get_cpu_hz();
-	opt.speed      = TWI_CLK;
+	twi_master_init(BOARD_AT30TSE_TWI, &opts);
 
-	if (twi_master_init(IO1_AT30TSE_TWI, &opt) != TWI_SUCCESS)
-	{
-		//Init Error
-		while(1);
-	}
+}
+
+#if BOARD_USING_AT30TSE != AT30TS75
+/**
+ * \brief Write EEPROM in AT30TSE75x
+ *
+ * \param data   Pointer to the data to be written
+ * \param length  Length of the data to be written
+ * \param word_addr  Start EEPROM address to be written
+ * \param page  Specify the page to be written
+ *
+ * \return TWI_SUCCESS if success, otherwise false
+ */
+uint8_t at30tse_eeprom_write(uint8_t *data, uint8_t length,
+		uint8_t word_addr, uint8_t page)
+{
+	twi_packet_t packet = {
+		/*
+		 * Internal chip addr
+		 * Byte addr in page (0-15) + 4 lower bits of page addr in EEPROM
+		 */
+		.addr[0] = (word_addr & 0x0F) | ((0x0F & page) << 4),
+		.addr_length = 1,
+		/* Data buffer */
+		.buffer = data,
+		.length = length,
+		/*
+		 * Chip addr
+		 * TWI addr + 2 upper bytes of page addr.
+		 */
+		.chip = AT30TSE_EEPROM_TWI_ADDR | ((0x30 & page) >> 4),
+	};
+
+	return twi_master_write(BOARD_AT30TSE_TWI, &packet);
+
 }
 
 /**
- * \brief Writes the EEPROM with data provided.
+ * \brief Read EEPROM in AT30TSE75x
  *
- * \param[out] *data Pointer to the data buffer.
- * \param[in]  length Number of data bytes.
- * \param[in]  word_addr Word address of the EEPROM.
- * \param[in]  page Page number of the EEPROM.
+ * \param data   Pointer to the data to be read
+ * \param length  Length of the data to be read
+ * \param word_addr  Start EEPROM address to be read
+ * \param page  Specify the page to be read
+ *
+ * \return TWI_SUCCESS if success, otherwise false
  */
-void at30tse_eeprom_write(uint8_t *data, uint8_t length, uint8_t word_addr, uint8_t page)
+uint8_t at30tse_eeprom_read(uint8_t *data, uint8_t length,
+		uint8_t word_addr, uint8_t page)
 {
-	/* ACK polling for consecutive writing not implemented! */
-	uint8_t buffer[17];
-	twi_packet_t packet_tx;
-	
-	/* Byte addr in page (0-15) */
-	buffer[0] = word_addr & 0x0F;
-	/* 4 lower bits of page addr in EEPROM	 */
-	buffer[0] |= (0x0F & page) << 4;
+	twi_packet_t packet = {
+		/*
+		 * Internal chip addr
+		 * Byte addr in page (0-15) + 4 lower bits of page addr in EEPROM
+		 */
+		.addr[0] = (word_addr & 0x0F) | ((0x0F & page) << 4),
+		.addr_length = 1,
+		/* Data buffer */
+		.buffer = data,
+		.length = length,
+		/*
+		 * Chip addr
+		 * TWI addr + 2 upper bytes of page addr.
+		 */
+		.chip = AT30TSE_EEPROM_TWI_ADDR | ((0x30 & page) >> 4),
+	};
 
-	/* Copy data to be sent */
-	for (uint8_t i=1; i<17; i++){
-		buffer[i] = data[i-1];
-	}
+	return twi_master_read(BOARD_AT30TSE_TWI, &packet);
+}
+#endif
 
-	
-	/* Configure the data packet to be transmitted */
-	packet_tx.chip        = AT30TSE758_EEPROM_TWI_ADDR | ((0x30 & page)>>4);
-	packet_tx.addr[0]     = buffer[0];
-	packet_tx.addr_length = 1;
-	if (length > 0)
-	{		
-		packet_tx.buffer      = (uint8_t *) &buffer[1];
-		packet_tx.length      = length;
-	} 
-	else
-	{
-		packet_tx.buffer      = NULL;
-		packet_tx.length      = 0;
-	}	
-	
-	if (twi_master_write(IO1_AT30TSE_TWI, &packet_tx) != TWI_SUCCESS)
-	{
-		while(1);
-	}	
+/**
+ * \brief Read register in AT30TSE75x
+ *
+ * \param reg   Register in AT30TSE75x to be read
+ * \param reg_type  Specify the type of the register, nonvolatile or not
+ * \param reg_size  Read lenght
+ * \param buffer  Pointer to the buffer where the read data will be stored
+ *
+ * \return TWI_SUCCESS if success, otherwise false
+ */
+uint8_t at30tse_read_register(uint8_t reg, uint8_t reg_type,
+		uint8_t reg_size, uint8_t* buffer)
+{
+	twi_packet_t packet = {
+		/* Internal chip addr */
+		.addr[0] = reg | reg_type,
+		.addr_length = 1,
+		/* Data buffer */
+		.buffer = buffer,
+		.length = reg_size,
+		/* Chip addr */
+		.chip = AT30TSE_TEMPERATURE_TWI_ADDR
+	};
+
+	return twi_master_read(BOARD_AT30TSE_TWI, &packet);
 }
 
 /**
- * \brief Reads data from the EEPROM.
+ * \brief Write register in AT30TSE75x
  *
- * \param[out] *data Pointer to the data buffer.
- * \param[in]  length Number of data bytes.
- * \param[in]  word_addr Word address of the EEPROM.
- * \param[in]  page Page number of the EEPROM.
+ * \param reg   Register in AT30TSE75x to be read
+ * \param reg_type  Specify the type of the register, nonvolatile or not
+ * \param reg_size  Write lenght
+ * \param reg_value  Value to be written
+ *
+ * \return TWI_SUCCESS if success, otherwise false
  */
-void at30tse_eeprom_read(uint8_t *data, uint8_t length, uint8_t word_addr, uint8_t page)
+uint8_t at30tse_write_register(uint8_t reg, uint8_t reg_type,
+		uint8_t reg_size, uint16_t reg_value)
 {
-	/* ACK polling for consecutive reading not implemented! */
-	uint8_t buffer[1];
-	twi_packet_t packet_tx, packet_rx;
-	
-	/* Byte addr in page (0-15) */
-	buffer[0] = word_addr & 0x0F;
-	/* 4 lower bits of page addr in EEPROM */
-	buffer[0] |= (0x0F & page) << 4;
+	uint8_t data[2];
+	twi_packet_t packet = {
+		/* Internal chip addr */
+		.addr[0] = reg | reg_type,
+		.addr_length = 1,
+		/* Data buffer */
+		.buffer = data,
+		.length = reg_size,
+		/* Chip addr */
+		.chip = AT30TSE_TEMPERATURE_TWI_ADDR
+	};
 
-	/* Configure the data packet to be transmitted */
-	packet_tx.chip        = AT30TSE758_EEPROM_TWI_ADDR | ( (0x30 & page) >> 4 );
-	packet_tx.addr[0]     = 0;
-	packet_tx.addr_length = 0;
-	packet_tx.buffer      = buffer;
-	packet_tx.length      = 1;
-	
-	if (twi_master_write(IO1_AT30TSE_TWI, &packet_tx) != TWI_SUCCESS)
-	{
-		while(1);
-	}
-	
-	/* Configure the data packet to be received */
-	packet_rx.chip        = AT30TSE758_EEPROM_TWI_ADDR | ( (0x30 & page) >> 4 );
-	packet_rx.addr[0]     = data[0];
-	packet_rx.addr_length = 1;
-	if (length > 1)
-	{
-		packet_rx.buffer      = &data[0];
-		packet_rx.length      = length - 1;
-	} 
-	else
-	{
-		packet_rx.buffer      = NULL;
-		packet_rx.length      = 0;
-	}
-	
-	if (twi_master_read(IO1_AT30TSE_TWI, &packet_rx) != TWI_SUCCESS)
-	{
-		while(1);
-	}
+	/* cppcheck-suppress unreadVariable */
+	data[0] = 0x00FF & (reg_value >> 8);
+	/* cppcheck-suppress unreadVariable */
+	data[1] = 0x00FF & reg_value;
+
+	return twi_master_write(BOARD_AT30TSE_TWI, &packet);
 }
 
 /**
- * \brief Sets the register pointer with specified reg value.
+ * \brief Write nonvolatile configuration register in AT30TSE75x
  *
- * \param[in] reg Register value of the pointer register.
- * \param[in] reg_type Register type being pointed by pointer register.
+ * \param value  Value to be written
+ *
+ * \return TWI_SUCCESS if success, otherwise false
  */
-void at30tse_set_register_pointer(uint8_t reg, uint8_t reg_type)
+uint8_t at30tse_write_config_register(uint16_t value)
 {
-	twi_packet_t packet_tx;
-	uint8_t buffer[] = {reg | reg_type};
-	
-	/* Configure the data packet to be transmitted */
-	packet_tx.chip        = AT30TSE_TEMPERATURE_TWI_ADDR;
-	packet_tx.addr[0]     = buffer[0];
-	packet_tx.addr_length = 1;
-	packet_tx.buffer      = NULL;
-	packet_tx.length      = 0;
-	
-	if (twi_master_write(IO1_AT30TSE_TWI, &packet_tx) != TWI_SUCCESS)
-	{
-		while(1);
+	uint8_t error_code = at30tse_write_register(AT30TSE_CONFIG_REG,
+			AT30TSE_NON_VOLATILE_REG, AT30TSE_CONFIG_REG_SIZE - 1, value);
+
+	if (error_code == TWI_SUCCESS) {
+		resolution = (value >> AT30TSE_CONFIG_RES_Pos) &
+				(AT30TSE_CONFIG_RES_Msk >> AT30TSE_CONFIG_RES_Pos);
 	}
+
+	return error_code;
 }
 
 /**
- * \brief Reads the value from the register reg.
+ * \brief Read temperature
  *
- * \param[in] reg Register to read.
- * \param[in] reg_type Type of the register (Volatile or Non-volatile).
- * \param[in] reg_size Register size.
+ * \param temperature  Pointer to the buffer where the temperature will be
+ * stored
  *
- * \return Register value.
+ * \return TWI_SUCCESS if success, otherwise false
  */
-uint16_t at30tse_read_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size)
+uint8_t at30tse_read_temperature(double *temperature)
 {
+	/* Placeholder buffer to put temperature data in. */
 	uint8_t buffer[2];
-	twi_packet_t packet_tx, packet_rx;
-	
-	buffer[0] = reg | reg_type;
+	uint8_t error_code = 0;
+	buffer[0] = 0;
 	buffer[1] = 0;
-	
-	/* Configure the data packet to be transmitted */
-	packet_tx.chip        = AT30TSE_TEMPERATURE_TWI_ADDR;
-	packet_tx.addr[0]     = buffer[0];
-	packet_tx.addr_length = 1;
-	packet_tx.buffer      = NULL;
-	packet_tx.length      = 0;
-	
-	if (twi_master_write(IO1_AT30TSE_TWI, &packet_tx) != TWI_SUCCESS)
-	{
-		while(1);
-	}
-	
-	/* Configure the data packet to be received */
-	packet_rx.chip        = AT30TSE_TEMPERATURE_TWI_ADDR;
-	packet_rx.addr[0]     = 0;
-	packet_rx.addr_length = 0;
-	if (reg_size > 1)
-	{
-		packet_rx.buffer      = buffer;
-		packet_rx.length      = reg_size;
-	}
-	else
-	{
-		packet_rx.buffer      = NULL;
-		packet_rx.length      = 0;
-	}
-	
-	if (twi_master_read(IO1_AT30TSE_TWI, &packet_rx) != TWI_SUCCESS)
-	{
-		while(1);
-	}	
 
-	return ((buffer[0] << 8) | buffer[1]);
-}
-
-/**
- * \brief Writes the specified register reg with the reg_value passed
- *
- * \param[in] reg Register to write.
- * \param[in] reg_type Type of the register (Volatile or Non-volatile).
- * \param[in] reg_size Register size.
- * \param[in] reg_value Value to be written to reg.
- */
-void at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, uint16_t reg_value)
-{
-	uint8_t data[3];
-	twi_packet_t packet_tx;
-	data[0] = reg | reg_type;
-	data[1] = 0x00FF & (reg_value >> 8);
-	data[2] = 0x00FF & reg_value;	
-	
-	/* Configure the data packet to be transmitted */
-	packet_tx.chip        = AT30TSE_TEMPERATURE_TWI_ADDR;
-	packet_tx.addr[0]     = 0;
-	packet_tx.addr_length = 0;
-	packet_tx.buffer      = data;
-	packet_tx.length      = reg_size+2;
-	
-	if (twi_master_write(IO1_AT30TSE_TWI, &packet_tx) != TWI_SUCCESS)
-	{
-		while(1);
-	}
-}
-
-/**
- * \brief Writes the configuration register reg with the value passed
- *
- * \param[in] value Register value to be written.
- */
-void at30tse_write_config_register(uint16_t value)
-{
-	at30tse_write_register(AT30TSE_CONFIG_REG,
-							AT30TSE_NON_VOLATILE_REG,
-							AT30TSE_CONFIG_REG_SIZE-1,
-							value);
-
-	resolution = ( value >> AT30TSE_CONFIG_RES_Pos ) & ( AT30TSE_CONFIG_RES_Msk >> AT30TSE_CONFIG_RES_Pos);
-
-}
-
-/**
- * \brief Reads the temperature value.
- *
- * \return Temperature data.
- */
-double at30tse_read_temperature()
-{
 	/* Read the 16-bit temperature register. */
-	uint16_t data = at30tse_read_register(AT30TSE_TEMPERATURE_REG,
-											AT30TSE_NON_VOLATILE_REG,
-											AT30TSE_TEMPERATURE_REG_SIZE);
+	error_code = at30tse_read_register(AT30TSE_TEMPERATURE_REG,
+			AT30TSE_NON_VOLATILE_REG, AT30TSE_TEMPERATURE_REG_SIZE, buffer);
 
-	double temperature = 0;
-	int8_t sign = 1;
+	/* Only convert temperature data if read success. */
+	if (error_code == TWI_SUCCESS) {
+		uint16_t data = (buffer[0] << 8) | buffer[1];
+		int8_t sign = 1;
 
-	/*Check if negative and clear sign bit. */
-	if (data & (1 << 15)){
-		sign *= -1;
-		data &= ~(1 << 15);
-	}
+		/* Check if negative and clear sign bit. */
+		if (data & (1 << 15)) {
+			sign *= -1;
+			data &= ~(1 << 15);
+		}
 
-	/* Convert to temperature  */
-	switch (resolution){
+		/* Convert to temperature. */
+		switch (resolution) {
 		case AT30TSE_CONFIG_RES_9_bit:
 			data = (data >> 7);
-			temperature = data * sign * 0.5;
+			*(temperature) = data * sign * 0.5;
 			break;
+
 		case AT30TSE_CONFIG_RES_10_bit:
 			data = (data >> 6);
-			temperature = data * sign * 0.25;
+			*(temperature) = data * sign * 0.25;
 			break;
+
 		case AT30TSE_CONFIG_RES_11_bit:
 			data = (data >> 5);
-			temperature = data * sign * 0.125;
+			*(temperature) = data * sign * 0.125;
 			break;
+
 		case AT30TSE_CONFIG_RES_12_bit:
 			data = (data >> 4);
-			temperature = data * sign * 0.0625;
+			*(temperature) = data * sign * 0.0625;
 			break;
+
 		default:
 			break;
+		}
 	}
-	return temperature;
+
+	return error_code;
 }
 
-#ifdef __cplusplus
-}
-#endif
+/**
+ * \}
+ */

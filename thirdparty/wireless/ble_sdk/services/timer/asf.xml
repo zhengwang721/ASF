@@ -21,13 +21,15 @@
 				<device-support value="samd21"/>
 				<device-support value="samr21"/>
 			</module>
-   <module type="component" id="thirdparty.wireless.ble_sdk.services.timer#timer#1"     caption="Timer">
+			<module type="component" id="thirdparty.wireless.ble_sdk.services.timer#timer#1"     caption="Timer">
 				<info type="description" value="summary">
 				Timer Driver
 				</info>
 				<build type="c-source"      value="timer_hw.c"/>
 				<build type="header-file"   value="timer_hw.h"/>
 				<build type="include-path"  value="."/>
+
+				<require idref="sam.drivers.tc"/>
     
 				<build type="module-config" subtype="required-header-file" value="conf_timer.h"/>
 				<build type="module-config" subtype="path" value="module_config"/>

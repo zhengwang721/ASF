@@ -53,6 +53,7 @@
 /* USART6 module is used in SYNC. mode. */
 #define CONF_BOARD_USART_RXD
 #define CONF_BOARD_USART_TXD
-#define CONF_BOARD_USART_SCK
+//#define CONF_BOARD_USART_SCK
+#define CONF_BOARD_TWI4
 
 #endif /* CONF_BOARD_H_INCLUDED */
