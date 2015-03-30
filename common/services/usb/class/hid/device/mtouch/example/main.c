@@ -147,7 +147,7 @@ void main_multitouch_disable(void)
  * to simulate a standard multi-touch.
  * After loading firmware, connect the board (EVKxx,Xplain,...) to the USB Host.
  * When connected to a USB host system this application provides a HID multi-touch
- * with two point application in the Windows 7 operating systems.
+ * with two points application in the Windows 7 operating systems.
  * This example uses the native HID driver for these operating systems.
  *
  * \copydoc UI

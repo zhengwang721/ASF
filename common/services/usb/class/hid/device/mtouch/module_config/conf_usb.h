@@ -49,6 +49,8 @@
 
 #include "compiler.h"
 
+#warning You must refill the following definitions with a correct values
+
 /**
  * USB Device Configuration
  * @{
@@ -68,8 +70,8 @@
 //	(USB_CONFIG_ATTR_BUS_POWERED)
 
 //! USB Device string definitions (Optional)
-#define  USB_DEVICE_MANUFACTURE_NAME      "ATMEL ASF"
-#define  USB_DEVICE_PRODUCT_NAME          "HID MULTI TOUCH"
+// #define  USB_DEVICE_MANUFACTURE_NAME      "Manufacture name"
+// #define  USB_DEVICE_PRODUCT_NAME          "Product name"
 // #define  USB_DEVICE_SERIAL_NAME           "12...EF"
 
 /**
@@ -91,13 +93,19 @@
  * USB Device Callbacks definitions (Optional)
  * @{
  */
-#define  UDC_VBUS_EVENT(b_vbus_high)
-#define  UDC_SOF_EVENT()                  main_sof_action()
-#define  UDC_SUSPEND_EVENT()              main_suspend_action()
-#define  UDC_RESUME_EVENT()               main_resume_action()
+// #define  UDC_VBUS_EVENT(b_vbus_high)      user_callback_vbus_action(b_vbus_high)
+// extern void user_callback_vbus_action(bool b_vbus_high);
+// #define  UDC_SOF_EVENT()                  user_callback_sof_action()
+// extern void user_callback_sof_action(void);
+// #define  UDC_SUSPEND_EVENT()              user_callback_suspend_action()
+// extern void user_callback_suspend_action(void);
+// #define  UDC_RESUME_EVENT()               user_callback_resume_action()
+// extern void user_callback_resume_action(void);
 //! Mandatory when USB_DEVICE_ATTR authorizes remote wakeup feature
-#define  UDC_REMOTEWAKEUP_ENABLE()        main_remotewakeup_enable()
-#define  UDC_REMOTEWAKEUP_DISABLE()       main_remotewakeup_disable()
+// #define  UDC_REMOTEWAKEUP_ENABLE()        user_callback_remotewakeup_enable()
+// extern void user_callback_remotewakeup_enable(void);
+// #define  UDC_REMOTEWAKEUP_DISABLE()       user_callback_remotewakeup_disable()
+// extern void user_callback_remotewakeup_disable(void);
 //! When a extra string descriptor must be supported
 //! other than manufacturer, product and serial string
 // #define  UDC_GET_EXTRA_STRING()
@@ -115,8 +123,8 @@
  * @{
  */
 //! Interface callback definition
-#define  UDI_HID_MTOUCH_ENABLE_EXT()        main_multitouch_enable()
-#define  UDI_HID_MTOUCH_DISABLE_EXT()       main_multitouch_disable()
+#define  UDI_HID_MTOUCH_ENABLE_EXT()        true
+#define  UDI_HID_MTOUCH_DISABLE_EXT()
 
 //! Sizes of I/O reports
 #define  UDI_HID_REPORT_IN_SIZE             14
@@ -137,7 +145,5 @@
 
 //! The includes of classes and other headers must be done at the end of this file to avoid compile error
 #include "udi_hid_multitouch_conf.h"
-#include "main.h"
-#include "ui.h"
 
 #endif // _CONF_USB_H_
