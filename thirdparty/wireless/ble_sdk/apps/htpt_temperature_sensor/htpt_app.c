@@ -320,7 +320,7 @@ int main (void)
 					/* Send pairing response */
 					DBG_LOG("\r\n Sending pairing response handle=0x%x",
 							handle);
-					at_ble_authenticate(handle, &features,&app_bond_info,NULL,NULL);
+					at_ble_authenticate(handle, &features, NULL,NULL);
 					
 				}
 			}	
@@ -447,7 +447,7 @@ void htpt_init(htpt_app_t *htpt_temp)
 void htpt_temperature_send(htpt_app_t *htpt_temp)
 {
 	//static uint32_t temperature;
-	struct prf_date_time timestamp;
+	at_ble_prf_date_time_t timestamp;
 #if SAMD21
 	float temperature;
 	/* Read Temperature Value from IO1 Xplained Pro */

@@ -1,11 +1,6 @@
 #include "at_ble_api.h"
 #include "htpt_task.h"
-
-
 #include "cmn_defs.h"
-
-
-
 
 // A set of variables to hold the state of htpt
 // Used to conform with BLE 4.1 while running BLE 4.0 underneath , this code is ugly but should be fixed in Release 4.1
@@ -71,9 +66,8 @@ at_ble_status_t at_ble_htpt_enable(     at_ble_handle_t conn_handle,
 			sec_lvl = (((PERM_RIGHT_AUTH) << (PERM_ACCESS_SVC)) & (PERM_ACCESS_MASK_SVC));
 			break;
 	}
-
+    
 	/////////////////////////////////////////
-
 	return htpt_enable_req_handler(conn_handle,
 										 sec_lvl,
 										 conn_type,
@@ -83,35 +77,22 @@ at_ble_status_t at_ble_htpt_enable(     at_ble_handle_t conn_handle,
 										 meas_intv);
 }
 
-
 at_ble_status_t at_ble_htpt_temp_send(	uint32_t temp,
-										struct prf_date_time* time_stamp,
+										at_ble_prf_date_time_t* time_stamp,
 										at_ble_htpt_temp_flags  flags,
 										at_ble_htpt_temp_type  type,
 										bool flag_stable_meas)
 {
-
-
 	return htpt_temp_send_req_handler(			temp,
 												time_stamp,
 												flags,
 												type,
 												htpt.conn_handle,
 												flag_stable_meas);
-
 }
-
-
-
 
 at_ble_status_t at_ble_htpt_meas_intv_update(uint16_t meas_intv)
 {
 	return htpt_meas_intv_upd_req_handler(	 htpt.conn_handle,
 										 meas_intv);
-}
-
-//Deprecated
-at_ble_status_t at_ble_htpt_temp_type_update(at_ble_handle_t conn_handle,uint8_t value)
-{
-	return htpt_temp_type_upd_req_handler(conn_handle,value);
 }

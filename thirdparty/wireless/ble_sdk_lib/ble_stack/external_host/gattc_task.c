@@ -155,6 +155,16 @@ void gattc_write_cmd_ind(uint16_t src, uint8_t* data, at_ble_characteristic_chan
 	INTERFACE_UNPACK_BLOCK(params->char_new_value, params->char_len);
 	INTERFACE_DONE();
 
+	INTERFACE_MSG_INIT(GATTC_WRITE_CMD_IND, TASK_GATTM);
+	INTERFACE_PACK_ARG_UINT16(params->char_handle);
+	INTERFACE_PACK_ARG_UINT16(params->char_len);
+	INTERFACE_PACK_ARG_UINT16(params->char_offset);
+	INTERFACE_PACK_ARG_UINT8(resp);
+	INTERFACE_PACK_ARG_UINT8(last);
+	INTERFACE_PACK_ARG_BLOCK(params->char_new_value, params->char_len);
+	INTERFACE_SEND_NO_WAIT();
+	INTERFACE_DONE();
+#if 0
 	gattm_att_set_value_req_handler(params->char_handle, params->char_len, params->char_new_value);
 	
 	INTERFACE_MSG_INIT(GATTC_WRITE_CMD_CFM, src);
@@ -163,6 +173,7 @@ void gattc_write_cmd_ind(uint16_t src, uint8_t* data, at_ble_characteristic_chan
 	INTERFACE_PACK_ARG_UINT8(resp);
 	INTERFACE_SEND_NO_WAIT();
 	INTERFACE_DONE();
+#endif
 
 }
 
@@ -272,5 +283,33 @@ at_ble_events_t gattc_event_ind_parser(uint16_t src, uint8_t* data, void* params
 	return evt;
 }
 
+at_ble_events_t gattc_complete_evt_handler(uint16_t src, uint8_t* data, void* params)
+{
+	uint8_t req_type, status;
+	at_ble_events_t evt = AT_BLE_UNDEFINED_EVENT;
 
+	INTERFACE_UNPACK_INIT(data);
+	INTERFACE_UNPACK_UINT8(&req_type);
+	INTERFACE_UNPACK_UINT8(&status);
+	INTERFACE_DONE();
 
+	if(	(req_type == GATTC_DISC_ALL_SVC)		|| 
+		(req_type == GATTC_DISC_BY_UUID_SVC)	||
+		(req_type == GATTC_DISC_INCLUDED_SVC)	||
+		(req_type == GATTC_DISC_ALL_CHAR)		||
+		(req_type == GATTC_DISC_BY_UUID_CHAR)	||
+		(req_type == GATTC_DISC_DESC_CHAR))
+	{
+		if((status == AT_BLE_SUCCESS) || (status == ATT_ERR_ATTRIBUTE_NOT_FOUND))
+		{
+			((at_ble_discovery_complete_t*)params)->status = AT_BLE_DISCOVERY_SUCCESS;
+		}
+		else
+		{
+			((at_ble_discovery_complete_t*)params)->status = AT_BLE_DISCOVERY_FAILURE;
+		}
+		evt = AT_BLE_DISCOVERY_COMPLETE;
+	}
+	
+	return evt;
+}

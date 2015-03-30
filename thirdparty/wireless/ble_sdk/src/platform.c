@@ -113,10 +113,11 @@ void platform_cmd_cmpl_signal()
 	cmd_cmpl_flag = 1;
 }
 
-void platform_cmd_cmpl_wait()
+void platform_cmd_cmpl_wait(bool* timeout)
 {
 	while(cmd_cmpl_flag != 1);
 	cmd_cmpl_flag = 0;
+	//*timeout = true; //Incase of timeout[default to 4000ms]
 }
 
 void platform_event_signal()
@@ -124,9 +125,12 @@ void platform_event_signal()
 	event_flag = 1;
 }
 
-void platform_event_wait()
+uint8_t platform_event_wait(uint32_t timeout)
 {
+	/* Timeout in ms */
+	uint8_t status = AT_BLE_SUCCESS;//AT_BLE_TIMEOUT in case of timeout
 	while(event_flag != 1);
 	event_flag = 0;
+	return status;
 }
 

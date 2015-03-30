@@ -9,6 +9,13 @@
 
 #include "cmn_defs.h"
 
+typedef struct
+{
+	/// RSSI value
+	uint8_t rssi;
+}gapc_con_rssi_ind;
+
+
 void gapc_connection_cfm_handler(uint8_t *pu8LocalKey,  uint32_t u32LocalSignCntr, uint8_t *pu8RemoteKey, 
 								 uint32_t u32RemoteSignCntr, uint8_t u8Auth, uint8_t u8Authorize, uint16_t u16ConHdl);
 
@@ -71,6 +78,11 @@ void gapc_encrypt_req_ind(uint16_t src, uint8_t* data,
 void gapc_encrypt_ind(uint16_t src ,uint8_t* data ,at_ble_encryption_status_changed_t* params);
 
 void gapc_sec_req_ind(uint16_t src, uint8_t* data,at_ble_slave_sec_request_t* params);
+
+void gapc_get_info_cmd_handler(uint16_t conn_handle, uint8_t operation);
+
+void gapc_con_rssi_ind_parser(uint16_t src, uint8_t* data, gapc_con_rssi_ind* params);
+
 enum gapc_msg_id
 {
     /* Default event */
@@ -320,17 +332,6 @@ enum gap_sec_req
     GAP_SEC_UNDEFINED
 };
 
-/// Authorization setting
-enum gap_authz
-{
-    /// Authorization not set, application informed when authorization requested
-    GAP_AUTHZ_NOT_SET = 0x00,
-    /// Authorization request automatically accepted
-    GAP_AUTHZ_ACCEPT  = 0x01,
-    /// Authorization request automatically rejected
-    GAP_AUTHZ_REJECT  = 0x02
-};
-
 /// IO Capability Values
 enum gap_io_cap
 {
@@ -357,6 +358,9 @@ enum gap_tk_type
     /// TK shall be entered by user using device keyboard
     GAP_TK_KEY_ENTRY
 };
+
+
+
 
 
 

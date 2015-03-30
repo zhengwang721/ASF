@@ -59,7 +59,7 @@
 #define EVENT_TYPE_ADVERTISING		0
 #define EVENT_TYPE_SCAN_RESP		4
 
-#define GAP_TMR_PRIV_ADDR_INT       0
+#define GAP_TMR_PRIV_ADDR_INT       0xEA60
 
 
 typedef struct
@@ -414,7 +414,7 @@ uint8_t gapm_set_dev_config_cmd_handler(uint8_t u8Role, uint8_t *pu8Key, uint16_
 				uint16_t u16SupervTo, uint8_t u8Flags);
 
 void gapm_start_adv_cmd_handler (uint8_t u8OpCode, uint8_t u8AddrSrc, uint16_t u16RenewDur, 
-		uint8_t *pu8BdAddr, uint16_t u16MinIntv, uint16_t u16MaxIntv, uint8_t u8ChnlMap, uint8_t u8Mode ,
+		uint8_t *pu8BdAddr,uint8_t peer_addr_type ,uint8_t *peerBdAddr, uint16_t u16MinIntv, uint16_t u16MaxIntv, uint8_t u8ChnlMap, uint8_t u8Mode ,
 	uint8_t u8AdvFiltPolicy, uint8_t u8AdvDataLen, uint8_t *pu8AdvData, uint8_t u8ScnRespLen, uint8_t *pu8ScnRespData);
 
 void gapm_start_scan_cmd_handler (uint8_t u8OpCode, uint8_t u8AddrType, uint16_t u16RenewDur, 
@@ -432,10 +432,16 @@ void gapm_connection_cfm_handler ( uint8_t *pu8PeerBdAddr, uint8_t u8PeerAddrTyp
 			uint16_t u16ConIntvMax, uint16_t u16ConLatency, uint16_t u16SupervTO, uint16_t u16CeMin, 
 			uint16_t u16CeMAx);
 
-void gapm_white_list_mgm_cmd(uint8_t operation, uint8_t addr_type, uint8_t* address);
+uint8_t  gapm_white_list_mgm_cmd(uint8_t operation, uint8_t addr_type, uint8_t* address);
 
 void gapm_adv_report_evt_handler(uint8_t* data,
 	at_ble_scan_info_t* param);
+
+void gapm_dev_bdaddr_ind_handler(uint8_t* data,at_ble_rand_addr_changed_t* param);
+
+void gapm_resolv_addr_cmd_handler(uint8_t nb_key , uint8_t* rand_addr , uint8_t* irk);
+
+void gapm_addr_solved_ind_handler(uint8_t* data , at_ble_resolv_rand_addr_status_t* params);
 
 at_ble_events_t gapm_cmp_evt(uint8_t* data, void* params);
 

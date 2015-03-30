@@ -21,7 +21,6 @@
 #define NMI_CHAR_MAX_LEN		(2)
 
 #define KEY_LEN             0x10
-
 enum {
 	DISABLE = 0,
 	ENABLE
@@ -119,7 +118,8 @@ enum
     PERM_RIGHT_MASK_AUTHZ    = 0x4
 };
 
-
+#define TRUE 1
+#define FALSE 0
 
 #define PERM(access, right) \
     (((PERM_RIGHT_ ## right) << (PERM_ACCESS_ ## access)) & (PERM_ACCESS_MASK_ ## access))
@@ -281,6 +281,5 @@ struct att_info_data
     /// data
     uint8_t data[1];
 };
-
 
 #endif /* CMN_DEFS_H_ */

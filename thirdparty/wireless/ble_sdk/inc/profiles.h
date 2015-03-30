@@ -2,7 +2,7 @@
 #define __PROFILES_H__
 
 /// Message structure used to inform APP that an error has occurred in the profile server role task
-typedef struct
+typedef struct prf_server_error_ind
 {
     /// Connection Handle
 	uint16_t conhdl;
@@ -28,13 +28,6 @@ struct prf_date_time
     /// second time element
     uint8_t sec;
 };
-/// Connection type
-enum prf_con_type
-{
-    ///Discovery type connection
-    PRF_CON_DISCOVERY = 0x00,
-    /// Normal type connection
-    PRF_CON_NORMAL    = 0x01
-};
+
 
 #endif /* __PROFILES_H__ */

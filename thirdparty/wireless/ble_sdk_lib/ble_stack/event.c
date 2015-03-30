@@ -29,10 +29,7 @@ static struct event* event_pending_list = NULL;
 
 struct str_watched_event watched_event;
 
-void event_free(struct event* event);
-at_ble_status_t event_get(uint16_t* msg_id, uint16_t* src_id, uint8_t** data);
-
-void event_free(struct event* event)
+static void event_free(struct event* event)
 {
 	event->next = event_free_list;
 	event_free_list = event;
@@ -70,13 +67,26 @@ void event_post(uint16_t msg_id, uint16_t src_id, void * data)
 	
 }
 
-at_ble_status_t event_get(uint16_t* msg_id, uint16_t* src_id, uint8_t** data)
+static at_ble_status_t event_get(uint16_t* msg_id, uint16_t* src_id, uint8_t** data, uint32_t timeout)
 {
 	struct event* event = NULL;
+	at_ble_status_t status= AT_BLE_SUCCESS;
 
-	while(event_pending_list == NULL)
-	{	
-		platform_event_wait();
+	if (timeout != 0xFFFFFFFF) 
+	{
+		//block till an event is posted or timeout
+		while(event_pending_list == NULL && status != AT_BLE_TIMEOUT )
+		{	
+			status = platform_event_wait(timeout);
+		}
+	}
+	else // user wants no timeout
+	{
+		// block till an event is posted
+		while(event_pending_list == NULL )
+		{	
+			status = platform_event_wait(timeout);
+		}
 	}
 	
 	event = event_pending_list;
@@ -87,7 +97,7 @@ at_ble_status_t event_get(uint16_t* msg_id, uint16_t* src_id, uint8_t** data)
 
 	event_free(event);
 
-	return AT_BLE_SUCCESS;
+	return status;
 	
 }
 
@@ -102,178 +112,213 @@ void event_init()
 
 static at_ble_events_t handle_ble_event(uint16_t msg_id, uint16_t src_id, uint8_t* data, void* params)
 {
-	at_ble_events_t evt_num = -1;
+	at_ble_events_t evt_num = AT_BLE_UNDEFINED_EVENT;
 
 	//printf("RW evt : 0x%x\n", msg_id);
 
 	switch(msg_id)
 	{
-	
-	case GAPM_CMP_EVT:
-	{
-		evt_num = gapm_cmp_evt(data, params);
-	}
-	break;
-
-	case GAPM_ADV_REPORT_IND:
-	{
-		evt_num = AT_BLE_SCAN_INFO;
-		gapm_adv_report_evt_handler(data, (at_ble_scan_info_t*)params);
-	}
-	break;
-
-	case GAPC_PARAM_UPDATED_IND:
-	{
-		evt_num = AT_BLE_CONN_PARAM_UPDATE_DONE;
-		gapc_param_updated_ind(src_id, data, (at_ble_conn_param_update_done_t *)params);
-	}
-	break;
-
-	case GAPC_PARAM_UPDATE_REQ_IND:
-	{
-		evt_num = AT_BLE_CONN_PARAM_UPDATE_DONE;
-		gapc_param_update_req_ind(src_id, data, (at_ble_conn_param_update_request_t *)params);
-	}
-	break;
-	
-	case GATTC_WRITE_CMD_IND:
-	{
-		evt_num = AT_BLE_CHARACTERISTIC_CHANGED;
-		gattc_write_cmd_ind(src_id, data, (at_ble_characteristic_changed_t *) params);
-	}
-	break;
-	
-	case GAPC_DISCONNECT_IND:
-	{
-		evt_num = AT_BLE_DISCONNECTED;
-		gapc_disconnect_ind(data, (at_ble_disconnected_t*)params);
-	}
-	break;
-	
-	case GAPC_BOND_IND:
-	{
-		evt_num = gapc_bond_ind(src_id, data, (at_ble_pair_done_t*)params);
-	}
-	break;
-	
-	case GAPC_BOND_REQ_IND:
-	{
-		evt_num = gapc_bond_req_ind(src_id, data, params);
-	}
-	break;
-
-	case GAPC_CMP_EVT:
-	{
-		evt_num = gapc_cmp_evt(src_id, data, (at_ble_encryption_status_changed_t*)params);
-	}
-	break;
-
-	case GAPC_ENCRYPT_IND:
-	{
-		if(device.role == ROLE_SLAVE)
+		case GAPM_CMP_EVT:
 		{
-			evt_num = AT_BLE_ENCRYPTION_STATUS_CHANGED;
-			gapc_encrypt_ind(src_id ,data,(at_ble_encryption_status_changed_t*)params);
+			evt_num = gapm_cmp_evt(data, params);
 		}
-	}
-	break;
-	case GAPC_ENCRYPT_REQ_IND:
-	{
-		evt_num = AT_BLE_ENCRYPTION_REQUEST;
-		gapc_encrypt_req_ind(src_id, data, (at_ble_encryption_request_t *)params);
-	}
-	break;
-	
-	case GATTC_DISC_SVC_IND:
-	{
-		evt_num = AT_BLE_PRIMARY_SERVICE_FOUND;
-		gattc_disc_svc_ind_parser(src_id, data, (at_ble_primary_service_found_t *)params);
-	}
-	break;
+		break;
 
-	case GATTC_DISC_SVC_INCL_IND:
-	{
-		evt_num = AT_BLE_INCLUDED_SERVICE_FOUND;
-		gattc_disc_svc_incl_ind_parser(src_id, data, (at_ble_included_service_found_t*)params);
-	}
-	break;
-	
-	case GATTC_DISC_CHAR_IND:
-	{
-		evt_num = AT_BLE_CHARACTERISTIC_FOUND;
-		gattc_disc_char_ind_parser(src_id, data, (at_ble_characteristic_found_t *)params);
-	}
-	break;
-	
-	case GATTC_DISC_CHAR_DESC_IND:
-	{
-		evt_num = AT_BLE_DESCRIPTOR_FOUND;
-		gattc_disc_char_desc_ind_parser(src_id, data, (at_ble_descriptor_found_t*)params);
-	}
-	break;
+		case GAPM_ADV_REPORT_IND:
+		{
+			evt_num = AT_BLE_SCAN_INFO;
+			gapm_adv_report_evt_handler(data, (at_ble_scan_info_t*)params);
+		}
+		break;
 
-	case GATTC_READ_IND:
-	{
-		evt_num = AT_BLE_CHARACTERISTIC_READ_RESPONSE;
-		gattc_read_ind_parser(src_id, data, (at_ble_characteristic_read_response_t*)params);
-	}
-	break;
+		case GAPC_PARAM_UPDATED_IND:
+		{
+			evt_num = AT_BLE_CONN_PARAM_UPDATE_DONE;
+			gapc_param_updated_ind(src_id, data, (at_ble_conn_param_update_done_t *)params);
+		}
+		break;
 
-	case GATTC_EVENT_IND:
-	{
-		evt_num = gattc_event_ind_parser(src_id, data, params);
-	}
-	break;
+		case GAPC_PARAM_UPDATE_REQ_IND:
+		{
+			evt_num = AT_BLE_CONN_PARAM_UPDATE_DONE;
+			gapc_param_update_req_ind(src_id, data, (at_ble_conn_param_update_request_t *)params);
+		}
+		break;
 	
-	case GAPC_SECURITY_IND:
-	{
-		evt_num = AT_BLE_SLAVE_SEC_REQUEST;
-		gapc_sec_req_ind(src_id,data,(at_ble_slave_sec_request_t*)params);
-	}
-	break;
-	case HTPT_CREATE_DB_CFM:
-	{
-		evt_num = AT_BLE_HTPT_CREATE_DB_CFM;
-		htpt_create_db_cfm_handler(src_id,data, (at_ble_htpt_create_db_cfm_t*)params);
-	}
-	break;
-	case HTPT_DISABLE_IND:
-	{
-		evt_num = AT_BLE_HTPT_DISABLE_IND;
-		htpt_disable_ind_handler(src_id,data, (at_ble_htpt_disable_ind_t*)params);
-	}
-	break;
-	case HTPT_ERROR_IND:
-	{
-		evt_num = AT_BLE_HTPT_ERROR_IND;
-		htpt_error_ind_handler(src_id,data, (struct prf_server_error_ind*)params);
-	}
-	break;
-	case HTPT_TEMP_SEND_CFM:
-	{
-		evt_num = AT_BLE_HTPT_TEMP_SEND_CFM;
-		htpt_temp_send_cfm_handler(src_id,data, (at_ble_htpt_temp_send_cfm_t*)params);
-	}
-	break;
-	case HTPT_MEAS_INTV_CHG_IND:
-	{
-		evt_num = AT_BLE_HTPT_MEAS_INTV_CHG_IND;
-		htpt_meas_intv_chg_ind_handler(src_id,data,(at_ble_htpt_meas_intv_chg_ind_t*)params);
-	}
-	break;
-	case HTPT_CFG_INDNTF_IND:
-	{
-		evt_num = AT_BLE_HTPT_CFG_INDNTF_IND;
-		htpt_cfg_indntf_ind_handler(src_id,data,(at_ble_htpt_cfg_indntf_ind_t*)params);
-	}
-	break;
+		case GATTC_WRITE_CMD_IND:
+		{
+			evt_num = AT_BLE_CHARACTERISTIC_CHANGED;
+			gattc_write_cmd_ind(src_id, data, (at_ble_characteristic_changed_t *) params);
+		}
+		break;
+	
+		case GAPC_DISCONNECT_IND:
+		{
+			evt_num = AT_BLE_DISCONNECTED;
+			gapc_disconnect_ind(data, (at_ble_disconnected_t*)params);
+		}
+		break;
+	
+		case GAPC_BOND_IND:
+		{
+			evt_num = gapc_bond_ind(src_id, data, (at_ble_pair_done_t*)params);
+		}
+		break;
+	
+		case GAPC_BOND_REQ_IND:
+		{
+			evt_num = gapc_bond_req_ind(src_id, data, params);
+		}
+		break;
 
-	default:
+		case GAPC_CMP_EVT:
+		{
+			evt_num = gapc_cmp_evt(src_id, data, (at_ble_encryption_status_changed_t*)params);
+		}
+		break;
+
+		case GAPC_ENCRYPT_IND:
+		{
+			if(device.role == ROLE_SLAVE)
+			{
+				evt_num = AT_BLE_ENCRYPTION_STATUS_CHANGED;
+				gapc_encrypt_ind(src_id ,data,(at_ble_encryption_status_changed_t*)params);
+			}
+		}
+		break;
+		
+		case GAPC_ENCRYPT_REQ_IND:
+		{
+			evt_num = AT_BLE_ENCRYPTION_REQUEST;
+			gapc_encrypt_req_ind(src_id, data, (at_ble_encryption_request_t *)params);
+		}
+		break;
+
+		case GAPC_CON_RSSI_IND:
+		{
+			evt_num = AT_BLE_RX_POWER_VALUE;
+			gapc_con_rssi_ind_parser(src_id,data,(gapc_con_rssi_ind* )params);
+		}
+		break;
+
+		case GATTC_CMP_EVT:
+		{
+			evt_num = gattc_complete_evt_handler(src_id, data, (at_ble_discovery_complete_t *)params);
+		}
+		break;
+	
+		case GATTC_DISC_SVC_IND:
+		{
+			evt_num = AT_BLE_PRIMARY_SERVICE_FOUND;
+			gattc_disc_svc_ind_parser(src_id, data, (at_ble_primary_service_found_t *)params);
+		}
+		break;
+
+		case GATTC_DISC_SVC_INCL_IND:
+		{
+			evt_num = AT_BLE_INCLUDED_SERVICE_FOUND;
+			gattc_disc_svc_incl_ind_parser(src_id, data, (at_ble_included_service_found_t*)params);
+		}
+		break;
+	
+		case GATTC_DISC_CHAR_IND:
+		{
+			evt_num = AT_BLE_CHARACTERISTIC_FOUND;
+			gattc_disc_char_ind_parser(src_id, data, (at_ble_characteristic_found_t *)params);
+		}
+		break;
+	
+		case GATTC_DISC_CHAR_DESC_IND:
+		{
+			evt_num = AT_BLE_DESCRIPTOR_FOUND;
+			gattc_disc_char_desc_ind_parser(src_id, data, (at_ble_descriptor_found_t*)params);
+		}
+		break;
+
+		case GATTC_READ_IND:
+		{
+			evt_num = AT_BLE_CHARACTERISTIC_READ_RESPONSE;
+			gattc_read_ind_parser(src_id, data, (at_ble_characteristic_read_response_t*)params);
+		}
+		break;
+
+		case GATTC_EVENT_IND:
+		{
+			evt_num = gattc_event_ind_parser(src_id, data, params);
+		}
+		break;
+	
+		case GAPC_SECURITY_IND:
+		{
+			evt_num = AT_BLE_SLAVE_SEC_REQUEST;
+			gapc_sec_req_ind(src_id,data,(at_ble_slave_sec_request_t*)params);
+		}
+		break;
+		
+		case GAPM_DEV_BDADDR_IND:
+		{
+			evt_num = AT_BLE_RAND_ADDR_CHANGED;
+			gapm_dev_bdaddr_ind_handler(data,(at_ble_rand_addr_changed_t*)params);
+		}
+		break;
+		
+		case GAPM_ADDR_SOLVED_IND:
+		{
+			evt_num = AT_BLE_RESOLV_RAND_ADDR_STATUS;
+			gapm_addr_solved_ind_handler(data,(at_ble_resolv_rand_addr_status_t*)params);
+		}
+		break;
+		
+		case HTPT_CREATE_DB_CFM:
+		{
+			evt_num = AT_BLE_HTPT_CREATE_DB_CFM;
+			htpt_create_db_cfm_handler(src_id,data, (at_ble_htpt_create_db_cfm_t*)params);
+		}
+		break;
+		
+		case HTPT_DISABLE_IND:
+		{
+			evt_num = AT_BLE_HTPT_DISABLE_IND;
+			htpt_disable_ind_handler(src_id,data, (at_ble_htpt_disable_ind_t*)params);
+		}
+		break;
+		
+		case HTPT_ERROR_IND:
+		{
+			evt_num = AT_BLE_HTPT_ERROR_IND;
+			htpt_error_ind_handler(src_id,data, (at_ble_prf_server_error_ind_t*)params);
+		}
+		break;
+		
+		case HTPT_TEMP_SEND_CFM:
+		{
+			evt_num = AT_BLE_HTPT_TEMP_SEND_CFM;
+			htpt_temp_send_cfm_handler(src_id,data, (at_ble_htpt_temp_send_cfm_t*)params);
+		}
+		break;
+		
+		case HTPT_MEAS_INTV_CHG_IND:
+		{
+			evt_num = AT_BLE_HTPT_MEAS_INTV_CHG_IND;
+			htpt_meas_intv_chg_ind_handler(src_id,data,(at_ble_htpt_meas_intv_chg_ind_t*)params);
+		}
+		break;
+		
+		case HTPT_CFG_INDNTF_IND:
+		{
+			evt_num = AT_BLE_HTPT_CFG_INDNTF_IND;
+			htpt_cfg_indntf_ind_handler(src_id,data,(at_ble_htpt_cfg_indntf_ind_t*)params);
+		}
+		break;
+		
+		default:
+		{
+			//printf("unhandled:\n\tsrc_id:0x%04x\n\tmsg_id:0x%04x\n\tdata  :0x%02X,0x%02X\n", src_id, msg_id, data[0], data[1]);	
+		}
 		break;
 	}
 
 	return evt_num;
-
 }
 
 uint32_t special_events_handler(uint16_t msg_id, uint16_t src_id, uint8_t* data)
@@ -303,19 +348,22 @@ at_ble_status_t at_ble_event_get(at_ble_events_t* event, void* params,
 {
 	uint16_t msg_id, src_id;
 	uint8_t* data;
-	event_get(&msg_id, &src_id, &data);
+	at_ble_status_t status = AT_BLE_SUCCESS;
+	status = event_get(&msg_id, &src_id, &data, timeout);
 	
-	if(msg_id == 0xFFFF && src_id == 0xFFFF)
+	if (status == AT_BLE_SUCCESS)
 	{
-		*event = AT_BLE_CUSTOM_EVENT;
-		params = data;
+		if(msg_id == 0xFFFF && src_id == 0xFFFF)
+		{
+			*event = AT_BLE_CUSTOM_EVENT;
+			params = data;
+		}
+		else
+		{
+			*event = handle_ble_event(msg_id, src_id, data, params);
+		}
 	}
-	else
-	{
-		*event = handle_ble_event(msg_id, src_id, data, params);
-	}
-
-	return AT_BLE_SUCCESS;
+	return status;
 }
 
 at_ble_status_t at_ble_event_user_defined_post(void* params)

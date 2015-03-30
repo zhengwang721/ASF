@@ -86,7 +86,7 @@ void gapc_encrypt_cfm_handler(uint16_t conn_handle, uint8_t auth ,uint8_t key_fo
 	INTERFACE_SEND_NO_WAIT();
 	INTERFACE_DONE();
 	gapc_connection_cfm_handler(dummy_key, 0, dummy_key, 0, auth,
-		GAP_AUTHZ_ACCEPT, conn_handle);
+					GAP_AUTHZ_NOT_SET, conn_handle);
 }
 
 void gapc_get_tx_pwr_req_handler(uint16_t u16ConHdl)
@@ -205,6 +205,7 @@ void gapc_con_req_ind(uint8_t* data)
 
 void gapc_disconnect_ind(uint8_t* data, at_ble_disconnected_t* param)
 {
+	device.conn_handle = 0xFFFF;
 	INTERFACE_UNPACK_INIT(data);
 	INTERFACE_UNPACK_UINT16(&(param->handle));
 	INTERFACE_UNPACK_UINT8(&(param->reason));
@@ -361,7 +362,7 @@ at_ble_events_t gapc_bond_ind(uint16_t src, uint8_t* data, at_ble_pair_done_t* p
 		{
 			INTERFACE_UNPACK_BLOCK(peer_key_info.irk.key ,KEY_LEN);
 			INTERFACE_UNPACK_BLOCK((peer_key_info.irk.addr.addr),AT_BLE_ADDR_LEN);
-			INTERFACE_UNPACK_UINT8((peer_key_info.irk.addr.type));
+			INTERFACE_UNPACK_UINT8(&(peer_key_info.irk.addr.type));
 		}
 		break;
 		case GAPC_CSRK_EXCH:
@@ -397,7 +398,7 @@ at_ble_events_t gapc_cmp_evt(uint16_t src, uint8_t* data,
 	at_ble_encryption_status_changed_t* params)
 {
 	uint8_t u8Operation,status;
-	at_ble_events_t evt_num = -1;
+	at_ble_events_t evt_num = AT_BLE_UNDEFINED_EVENT;
 	INTERFACE_UNPACK_INIT(data);
 	INTERFACE_UNPACK_UINT8(&u8Operation);
 	INTERFACE_UNPACK_UINT8(&status);
@@ -451,4 +452,22 @@ void gapc_sec_req_ind(uint16_t src, uint8_t* data,at_ble_slave_sec_request_t* pa
 	{
 		params->mitm_protection = 0;
 	}
+}
+
+
+void gapc_get_info_cmd_handler(uint16_t conn_handle, uint8_t operation)
+{
+	INTERFACE_MSG_INIT(GAPC_GET_INFO_CMD, KE_BUILD_ID(TASK_GAPC, conn_handle));
+	INTERFACE_PACK_ARG_UINT8(operation);
+	INTERFACE_SEND_NO_WAIT();
+	INTERFACE_DONE();
+
+}
+
+void gapc_con_rssi_ind_parser(uint16_t src, uint8_t* data, gapc_con_rssi_ind* params)
+{
+	INTERFACE_UNPACK_INIT(data);
+	INTERFACE_UNPACK_UINT8(&(params->rssi));
+	INTERFACE_DONE();
+
 }

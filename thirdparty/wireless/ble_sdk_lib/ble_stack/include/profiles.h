@@ -5,6 +5,7 @@
  *      Author: aabdelfattah
  */
 
+/*
 #ifndef PRF_DEFS_H_
 #define PRF_DEFS_H_
 
@@ -43,4 +44,4 @@ enum prf_con_type
     PRF_CON_NORMAL    = 0x01
 };
 
-#endif /* PRF_DEFS_H_ */
+#endif */ /* PRF_DEFS_H_ */

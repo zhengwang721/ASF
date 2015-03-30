@@ -1,5 +1,5 @@
 /*
- * gattc_task.c
+ * htpt_task.c
  *
  *  Created on: Feb 22, 2015
  *      Author: aabdelfattah
@@ -9,7 +9,7 @@
 #include "interface.h"
 
 #include "htpt_task.h"
-//#include "profiles.h"
+#include "profiles.h"
 
 /*
  * msgs from APP to HTPT
@@ -56,32 +56,10 @@ at_ble_status_t htpt_enable_req_handler(  at_ble_handle_t conn_handle,
 	return status;							   
 }
 
-//used to pack the input 
-typedef struct 
-{
-    ///Temp
-    uint32_t temp;
-    ///Time stamp
-    struct prf_date_time time_stamp;
-    ///Flag
-    uint8_t  flags;
-    ///Type
-    uint8_t  type;
-}htp_temp_meas;
-typedef struct
-{
-    ///Temperature Measurement
-    htp_temp_meas temp_meas;
-    ///Connection handle
-    uint16_t conhdl;
-    ///Stable or intermediary type of temperature
-    uint8_t flag_stable_meas;
-} htpt_temp_send_req;
-
 
 
 at_ble_status_t htpt_temp_send_req_handler(		uint32_t temp,
-												struct prf_date_time* time_stamp,
+											    at_ble_prf_date_time_t* time_stamp,
 												uint8_t  flags,
 												uint8_t  type,
 												at_ble_handle_t conn_handle,
@@ -89,21 +67,24 @@ at_ble_status_t htpt_temp_send_req_handler(		uint32_t temp,
 {
 	//TODO: check on platform error
 	at_ble_status_t status = AT_BLE_SUCCESS;
-	htpt_temp_send_req temp_send_pack = {0};
-	INTERFACE_MSG_INIT(HTPT_TEMP_SEND_REQ, TASK_HTPT);
-	temp_send_pack.conhdl=conn_handle;
-	temp_send_pack.flag_stable_meas = flag_stable_meas;
-	temp_send_pack.temp_meas.flags = flags;
-	temp_send_pack.temp_meas.temp = temp;
-	temp_send_pack.temp_meas.type = type;
+
 	
-	INTERFACE_PACK_ARG_BLOCK(&temp_send_pack,sizeof(htpt_temp_send_req));
-	/*INTERFACE_PACK_ARG_UINT32(temp);
-	INTERFACE_PACK_ARG_BLOCK(time_stamp,7);
+	
+	INTERFACE_MSG_INIT(HTPT_TEMP_SEND_REQ, TASK_HTPT);
+	INTERFACE_PACK_ARG_UINT32(temp);
+	INTERFACE_PACK_ARG_UINT16(time_stamp->year);
+	INTERFACE_PACK_ARG_UINT8(time_stamp->month);
+	INTERFACE_PACK_ARG_UINT8(time_stamp->day);
+	INTERFACE_PACK_ARG_UINT8(time_stamp->hour);
+	INTERFACE_PACK_ARG_UINT8(time_stamp->min);
+	INTERFACE_PACK_ARG_UINT8(time_stamp->sec);
+	INTERFACE_PACK_ARG_DUMMY(1);
 	INTERFACE_PACK_ARG_UINT8(flags);
 	INTERFACE_PACK_ARG_UINT8(type);
+	INTERFACE_PACK_ARG_DUMMY(2);
 	INTERFACE_PACK_ARG_UINT16(conn_handle);
-	INTERFACE_PACK_ARG_UINT8(flag_stable_meas);*/
+	INTERFACE_PACK_ARG_UINT8(flag_stable_meas);
+	INTERFACE_PACK_ARG_DUMMY(1);
 	INTERFACE_SEND_NO_WAIT();
 	INTERFACE_DONE();
 	return status;
@@ -155,7 +136,7 @@ void htpt_disable_ind_handler(uint16_t src,uint8_t *data,at_ble_htpt_disable_ind
 
 }
 
-void htpt_error_ind_handler(uint16_t src,uint8_t *data,struct prf_server_error_ind  *param)
+void htpt_error_ind_handler(uint16_t src,uint8_t *data,at_ble_prf_server_error_ind_t  *param)
 {
 	//param->conn_handle = KE_IDX_GET(src);
 

@@ -2,11 +2,16 @@
 #ifndef __PLATFORM_H__
 #define __PLATFORM_H__
 
+#include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include "at_ble_api.h"
 
+typedef struct{
+	uint8_t (*wr_api32) (uint32_t memAddr,uint32_t* data,uint8_t size);
+	uint8_t (*wr_api32_reset) (uint32_t memAddr,uint32_t* data,uint8_t size);
+}wr_apis;
 /**
 @defgroup platform Platform API
 
@@ -55,8 +60,9 @@ void platform_cmd_cmpl_signal(void);
  /** @brief blocks until the command-complete signal is fired
   *  @note more details at the platform porting guide
   *
+  * @param[out] timeout a flag that indicates if waiting timed out
   */
-void platform_cmd_cmpl_wait(void);
+void platform_cmd_cmpl_wait(bool* timeout);
 
  /** @brief fires the event signal
   *  @note more details at the platform porting guide
@@ -67,9 +73,11 @@ void platform_event_signal(void);
  /** @brief blocks until the event signal is fired
   *  @note more details at the platform porting guide
   *
+  * @param[in] timeout timeout in ms passed by user
+  *
   */
-void platform_event_wait(void);
-
+uint8_t platform_event_wait(uint32_t timeout);
+void fw_led(bool tempo);
  /** @}*/
 
 #endif // __PLATFORM_H__

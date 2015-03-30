@@ -7,9 +7,8 @@
 #ifndef HTPT_TASK_H_
 #define HTPT_TASK_H_
 
-#include "profiles.h"
 #include "cmn_defs.h"
-
+#include "profiles.h"
 /*
  * msgs from APP to HTPT
  *
@@ -31,7 +30,7 @@ at_ble_status_t htpt_enable_req_handler( at_ble_handle_t conn_handle,
 
 
 at_ble_status_t htpt_temp_send_req_handler(uint32_t temp,
-												struct prf_date_time* time_stamp,
+												at_ble_prf_date_time_t* time_stamp,
 												uint8_t  flags,
 												uint8_t  type,
 												at_ble_handle_t conn_handle,
@@ -51,7 +50,7 @@ at_ble_status_t htpt_temp_type_upd_req_handler( at_ble_handle_t conn_handle,
  */
 void htpt_create_db_cfm_handler(uint16_t src,uint8_t *data,at_ble_htpt_create_db_cfm_t *param);
 void htpt_disable_ind_handler(uint16_t src,uint8_t *data,at_ble_htpt_disable_ind_t *param);
-void htpt_error_ind_handler(uint16_t src,uint8_t *data,struct prf_server_error_ind  *param);
+void htpt_error_ind_handler(uint16_t src,uint8_t *data, at_ble_prf_server_error_ind_t  *param);
 void htpt_temp_send_cfm_handler(uint16_t src, uint8_t *data,at_ble_htpt_temp_send_cfm_t *param);
 void htpt_meas_intv_chg_ind_handler(uint16_t src,uint8_t *data,at_ble_htpt_meas_intv_chg_ind_t *param);
 void htpt_cfg_indntf_ind_handler(uint16_t src,uint8_t *data,at_ble_htpt_cfg_indntf_ind_t *param);
@@ -146,7 +145,7 @@ enum
 };*/
 
 ///Temperature Measurement Value Structure
-struct htp_temp_meas
+/*struct htp_temp_meas
 {
     ///Temp
     uint32_t temp;
@@ -156,7 +155,7 @@ struct htp_temp_meas
     uint8_t  flags;
     ///Type
     uint8_t  type;
-};
+};*/
 
 ///Parameters of the @ref HTPT_TEMP_UPD_REQ message
 /*struct htpt_temp_send_req

@@ -7,7 +7,7 @@
 
 #define INTERFACE_API_PKT_ID			0x05
 
-#define INTERFACE_SEND_BUF_MAX 	100
+#define INTERFACE_SEND_BUF_MAX 	600
 #define INTERFACE_RCV_BUFF_LEN 500
 
 extern uint8_t interface_send_msg[INTERFACE_SEND_BUF_MAX];
@@ -16,6 +16,7 @@ extern uint8_t interface_send_msg[INTERFACE_SEND_BUF_MAX];
 do{\
 	uint16_t __idx = INTERFACE_HDR_LENGTH;\
 	uint8_t* __ptr = NULL;\
+	bool timeout = false;\
 	interface_send_msg[0] = (INTERFACE_API_PKT_ID);\
 	interface_send_msg[1] = ((msg_id) & 0x00FF );\
 	interface_send_msg[2] = (((msg_id)>>8) & 0x00FF );\
@@ -55,7 +56,8 @@ do{\
 	interface_send_msg[7] = ((__idx - INTERFACE_HDR_LENGTH) & 0x00FF );\
 	interface_send_msg[8] = (((__idx - INTERFACE_HDR_LENGTH)>>8) & 0x00FF);\
 	interface_send(interface_send_msg, __idx);\
-	platform_cmd_cmpl_wait();\
+	platform_cmd_cmpl_wait(&timeout);\
+	if(timeout){return AT_BLE_FAILURE;}\
 	__idx = 0;\
 	__ptr = watched_event.params;
 

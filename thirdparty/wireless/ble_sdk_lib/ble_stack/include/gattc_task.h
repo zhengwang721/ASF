@@ -54,6 +54,8 @@ void gattc_read_ind_parser(uint16_t src, uint8_t* data, at_ble_characteristic_re
 
 at_ble_events_t gattc_event_ind_parser(uint16_t src, uint8_t* data, void* params);
 
+at_ble_events_t gattc_complete_evt_handler(uint16_t src, uint8_t* data, void* params);
+
 
 /// GATT Task messages
 enum gattc_msg_id

@@ -10,11 +10,8 @@
 
 #include "device.h"
 
-at_ble_status_t at_ble_pair_rsp(at_ble_handle_t conn_handle, at_ble_pair_features_t* features,
-	at_ble_LTK_t* ltk, at_ble_CSRK_t* csrk, at_ble_IRK_t* irk);
-
 at_ble_status_t at_ble_authenticate(at_ble_handle_t conn_handle, at_ble_pair_features_t* features,
-	at_ble_LTK_t* ltk, at_ble_CSRK_t* csrk, at_ble_IRK_t* irk)
+	at_ble_LTK_t* ltk, at_ble_CSRK_t* csrk)
 {
 	at_ble_status_t status = AT_BLE_SUCCESS;
     uint8_t auth_req;
@@ -22,7 +19,6 @@ at_ble_status_t at_ble_authenticate(at_ble_handle_t conn_handle, at_ble_pair_fea
 	do
 	{
 		if(((features->initiator_keys == AT_BLE_KEY_DIST_SIGN)&&(csrk == NULL))||
-			((features->initiator_keys == AT_BLE_KEY_DIST_ID)&&(irk == NULL))||
 			((features->initiator_keys == AT_BLE_KEY_DIST_ENC)&&(ltk == NULL)))
 		{
 			status = AT_BLE_INVALID_PARAM;
@@ -47,11 +43,6 @@ at_ble_status_t at_ble_authenticate(at_ble_handle_t conn_handle, at_ble_pair_fea
 			memcpy(&device.csrk , csrk , sizeof(at_ble_CSRK_t));
 		}
 
-
-		if(irk != NULL)
-		{
-			memcpy(&device.irk , irk , sizeof(at_ble_IRK_t));
-		}
 		// To do save local device keys
 		if(!features->mitm_protection)
 		{
@@ -136,7 +127,7 @@ at_ble_status_t at_ble_pair_key_reply(at_ble_handle_t conn_handle,
 }
 
 
-at_ble_status_t at_ble_encryption_start(at_ble_handle_t conn_handle ,at_ble_LTK_t key ,uint8_t auth)
+at_ble_status_t at_ble_encryption_start(at_ble_handle_t conn_handle ,at_ble_LTK_t key ,at_ble_auth_t auth)
 {
 	if(key.key == NULL)
 	{
@@ -149,7 +140,7 @@ at_ble_status_t at_ble_encryption_start(at_ble_handle_t conn_handle ,at_ble_LTK_
 	return AT_BLE_SUCCESS;
 }
 
-at_ble_status_t at_ble_encryption_request_reply(at_ble_handle_t conn_handle,uint8_t auth , 
+at_ble_status_t at_ble_encryption_request_reply(at_ble_handle_t conn_handle,at_ble_auth_t auth , 
 					bool key_found, at_ble_LTK_t key)
 {
 	if((key_found == 1)&& (key.key == NULL))
@@ -163,68 +154,7 @@ at_ble_status_t at_ble_encryption_request_reply(at_ble_handle_t conn_handle,uint
 	return AT_BLE_SUCCESS;
 }
 
-at_ble_status_t at_ble_pair_rsp(at_ble_handle_t conn_handle, at_ble_pair_features_t* features,
-	at_ble_LTK_t* ltk, at_ble_CSRK_t* csrk, at_ble_IRK_t* irk)
-{
-	at_ble_status_t status = AT_BLE_SUCCESS;
-    uint8_t auth_req;
-	do
-	{
-		if((features->bond))
-		{
-			if(ltk == NULL)
-			{
-				status = AT_BLE_INVALID_PARAM;
-				break;
-			}
-			else
-			{
-				memcpy(&device.ltk , ltk , sizeof(at_ble_LTK_t));
-			}
-		}
 
-		if(csrk != NULL)
-		{
-			memcpy(&device.csrk , csrk , sizeof(at_ble_CSRK_t));
-		}
-
-		if(irk != NULL)
-		{
-			memcpy(&device.irk , irk , sizeof(at_ble_IRK_t));
-		}
-		// To do save local device keys
-		if(!features->mitm_protection)
-		{
-			if(features->bond)
-			{
-				auth_req = GAP_AUTH_REQ_NO_MITM_BOND;
-			}
-			else
-			{
-				auth_req = GAP_AUTH_REQ_NO_MITM_NO_BOND;
-			}
-		}
-		else
-		{
-			if(features->bond)
-			{
-				auth_req = GAP_AUTH_REQ_MITM_BOND;
-			}
-			else
-			{
-				auth_req = GAP_AUTH_REQ_MITM_NO_BOND;
-			}
-		}
-
-		gapc_bond_cfm_handler_pair_resp(1, features->io_cababilities, 
-			features->oob_avaiable, auth_req, features->max_key_size,
-			features->initiator_keys, features->responder_keys, 
-			features->desired_auth, conn_handle);
-
-	}while(0);
-	
-	return status;
-}
 at_ble_status_t at_ble_send_slave_sec_request(at_ble_handle_t conn_handle,bool mitm_protection,bool bond)
 {
 	uint8_t auth_req;
