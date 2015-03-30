@@ -48,5 +48,7 @@
 #define ID_TC                (ID_TC0)
 
 #define DEF_1MHZ			(1000000)
+#define DEF_120MHz			(120000000)
+#define TIMER_OVF_COUNT_1SEC	(DEF_120MHz/(2*65535))
 
 #endif

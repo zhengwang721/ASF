@@ -45,32 +45,56 @@
 
 #include <asf.h>
 
-#if SAMD21
-#define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
-#endif
+/**
+ * Push button definitions for sleep mode and active mode
+ * @{
+ */
+#define PIN_PUSHBUTTON_WAKEUP_PIO    PIOA
+#define PIN_PUSHBUTTON_WAKEUP_MASK   PIO_PA2
+#define PIN_PUSHBUTTON_WAKEUP_ID     ID_PIOA
+#define PIN_PUSHBUTTON_WAKEUP_ATTR   PIO_DEFAULT
+/** @} */
+
+/** Wakeup pin for wait mode: SW0 */
+#define WAKEUP_WAIT_INPUT_ID    (1u << 2)
+/** Wakeup pin for backup mode: Touchscreen controller IRQ pin */
+#define WAKEUP_BACKUP_INPUT_ID  (1u << 2)
 
 void button_cb(void);
+static inline void button_handler(uint32_t ul_id, uint32_t ul_mask);
 
 /* Button Initialize */
 static inline void button_init(void)
 {
-#if SAMD21
-	struct extint_chan_conf eint_chan_conf;
-	extint_chan_get_config_defaults(&eint_chan_conf);
+	/* Adjust PIO debounce filter parameters, using 10 Hz filter. */
+	pio_set_debounce_filter(PIN_PUSHBUTTON_WAKEUP_PIO,
+						PIN_PUSHBUTTON_WAKEUP_MASK, 10);
 
-	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
-	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_MUX;
-	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
-	eint_chan_conf.filter_input_signal = true;
-	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
-	
-	extint_register_callback(button_cb,
-	BUTTON_0_EIC_LINE,
-	EXTINT_CALLBACK_TYPE_DETECT);
-	
-	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
-	EXTINT_CALLBACK_TYPE_DETECT);
-#endif
+	/* Initialize PIO interrupt handlers, see PIO definition in board.h. */
+	pio_handler_set(PIN_PUSHBUTTON_WAKEUP_PIO, PIN_PUSHBUTTON_WAKEUP_ID,
+					PIN_PUSHBUTTON_WAKEUP_MASK, PIN_PUSHBUTTON_WAKEUP_ATTR,
+					button_handler);
+
+	/* Enable PIO controller IRQs. */
+	NVIC_EnableIRQ((IRQn_Type)PIN_PUSHBUTTON_WAKEUP_ID);
+
+	/* Enable PIO line interrupts. */
+	pio_enable_interrupt(PIN_PUSHBUTTON_WAKEUP_PIO,
+				PIN_PUSHBUTTON_WAKEUP_MASK);
+}
+
+/**
+ * \brief Handler for button interrupt.
+ *
+ * \note This interrupt is for waking up from sleep mode or exiting from active
+ * mode.
+ */
+static inline void button_handler(uint32_t ul_id, uint32_t ul_mask)
+{
+	if (PIN_PUSHBUTTON_WAKEUP_ID == ul_id &&
+			PIN_PUSHBUTTON_WAKEUP_MASK == ul_mask) {
+		button_cb();
+	}
 }
 
 #endif

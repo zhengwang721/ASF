@@ -10,7 +10,6 @@
 #include "console_serial.h"
 #include "timer_hw.h"
 #include "conf_extint.h"
-#include <arm_math.h>
 
 static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 0x25, 0x75, 0x11, 0x6a, 0x7f, 0x7f};
 
@@ -365,6 +364,14 @@ int main (void)
 					DBG_LOG("\r\nPairing procedure completed successfully \n");
 					app_device_bond = true;
 					auth_info = pair_params.auth;
+					
+					handle = pair_params.handle;
+					
+					/* Enable the HTPT Profile */
+					if(at_ble_htpt_enable(handle, HTPT_CFG_STABLE_MEAS_IND) == AT_BLE_FAILURE)
+					{
+						DBG_LOG("\r\nFailure in HTPT Profile Enable");
+					}
 				}
 				else
 				{
@@ -398,6 +405,14 @@ int main (void)
 				if(enc_status.status == AT_BLE_SUCCESS)
 				{
 					DBG_LOG("\r\nEncryption completed successfully \n");
+					
+					handle = enc_status.handle;
+					
+					/* Enable the HTPT Profile */
+					if(at_ble_htpt_enable(handle, HTPT_CFG_STABLE_MEAS_IND) == AT_BLE_FAILURE)
+					{
+						DBG_LOG("\r\nFailure in HTPT Profile Enable");
+					}
 				}
 				else
 				{
@@ -436,7 +451,8 @@ void htpt_temperature_send(htpt_app_t *htpt_temp)
 #if SAMD21
 	float temperature;
 	/* Read Temperature Value from IO1 Xplained Pro */
-	temperature = at30tse_read_temperature();
+	temperature = at30tse_read_temperature();	 
+	
 #endif
 
 #if SAMG55
@@ -444,6 +460,11 @@ void htpt_temperature_send(htpt_app_t *htpt_temp)
 	/* Read Temperature Value from IO1 Xplained Pro */
 	at30tse_read_temperature(&temperature);
 #endif	
+
+	if (htpt_temp->flags & HTPT_FLAG_FAHRENHEIT)
+	{
+		temperature = (((temperature * 9.0)/5.0) + 32.0);
+	}
 	
 	timestamp.day = 1;
 	timestamp.hour = 9;

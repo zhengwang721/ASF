@@ -43,7 +43,7 @@
 /* === INCLUDES ============================================================ */
 
 #include "asf.h"
-
+#include "console_serial.h"
 #if SAMD21
 #include "conf_console.h"
 #endif

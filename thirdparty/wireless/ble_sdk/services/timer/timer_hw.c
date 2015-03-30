@@ -78,20 +78,15 @@ void hw_timer_init(void)
 #endif
 
 #if SAMG55
-	static uint8_t timer_multiplier;
 	sysclk_enable_peripheral_clock(ID_TC);
-
-	/* Get system clock. */
-	timer_multiplier = sysclk_get_peripheral_bus_hz(TIMER) / DEF_1MHZ;
-	timer_multiplier = timer_multiplier >> 1;	
-	
-	tc_init(TIMER, TIMER_CHANNEL_ID,						// Init timer counter  channel.
-			TC_CMR_TCCLKS_TIMER_CLOCK1 | TC_CMR_CPCTRG |
+	// Init timer counter  channel.
+	tc_init(TIMER, TIMER_CHANNEL_ID,						
+			TC_CMR_TCCLKS_TIMER_CLOCK1 | TC_CMR_WAVE |
 			TC_CMR_WAVSEL_UP);				
 	
-	tc_write_rc(TIMER, TIMER_CHANNEL_ID, DEF_1MHZ);
+	tc_write_rc(TIMER, TIMER_CHANNEL_ID, UINT16_MAX);
 	tc_get_status(TIMER, TIMER_CHANNEL_ID);
-	tc_enable_interrupt(TIMER, TIMER_CHANNEL_ID, TC_IER_CPCS);		
+	tc_enable_interrupt(TIMER, TIMER_CHANNEL_ID, TC_IER_COVFS);		
 	NVIC_EnableIRQ(TC0_IRQn);
 #endif
 }
@@ -129,10 +124,11 @@ void TC0_Handler(void)
 	ul_status = tc_get_status(TIMER, TIMER_CHANNEL_ID);
 	ul_status &= tc_get_interrupt_mask(TIMER, TIMER_CHANNEL_ID);
 	
-	/* cca callback */
-	if (TC_SR_CPCS == (ul_status & TC_SR_CPCS)) 
-	{
-		tc_count += 1;
+	/* ovf callback */
+	if (TC_SR_COVFS == (ul_status & TC_SR_COVFS)) 
+	{		
+		tc_count++;
+		
 		if (tc_count >= timeout_count)
 		{
 			tc_count = 0;
@@ -156,11 +152,9 @@ void hw_timer_start(uint32_t timer_val)
 #endif
 
 #if SAMG55 
-uint32_t time_val;
-	timeout_count = timer_val;
-	time_val = tc_read_cv(TIMER, TIMER_CHANNEL_ID);
-	time_val += DEF_1MHZ;
-	tc_write_rc(TIMER, TIMER_CHANNEL_ID, time_val);
+
+	timeout_count = (timer_val*TIMER_OVF_COUNT_1SEC);
+
 	tc_start(TIMER, TIMER_CHANNEL_ID);
 #endif
 

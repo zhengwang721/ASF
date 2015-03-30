@@ -16,6 +16,7 @@
 
 		<require idref="thirdparty.wireless.ble_sdk.components.sensor.at30tse75x"/>
 		<require idref="board.samg55_xplained_pro"/>
+  <require idref="sam.drivers.pio"/>
 
 		<generator value="iarewarm"/>
 		<generator value="armgcc" />
