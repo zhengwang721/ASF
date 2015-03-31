@@ -475,6 +475,10 @@ struct adc_pin_scan_config {
 	 * disable pin scan mode.
 	 */
 	uint8_t inputs_to_scan;
+	/**
+	 * The regular of ADC channel.
+	 */
+	uint8_t regular_channel[ADC_INPUTCTRL_INPUTSCAN_Pos];
 };
 
 /**

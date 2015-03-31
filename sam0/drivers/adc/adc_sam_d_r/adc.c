@@ -113,6 +113,24 @@ void adc_get_config_defaults(struct adc_config *const config)
 	config->sample_length                 = 0;
 	config->pin_scan.offset_start_scan    = 0;
 	config->pin_scan.inputs_to_scan       = 0;
+	for (int i=0; i<ADC_INPUTCTRL_INPUTSCAN_Pos; i++) {
+		config->pin_scan.regular_channel[i] = 0;
+	}
+}
+/**
+ * \brief Sets the ADC Regular Chennel
+ *
+ * Sets the ADC window mode to a given mode and value range.
+ *
+ * \param[out] config       Pointer to configuration struct
+ * \param[in]  adc_channel  The ADC channel. 
+ * \param[in]  rank	    The rank of ADC channel
+  */
+void adc_regular_channel(struct adc_config *const config,
+	uint8_t adc_channel, uint8_t rank)
+{
+	if (rank > 0 && rank < ADC_INPUTCTRL_INPUTSCAN_Pos)
+		config->pin_scan.regular_channel[rank-1] = adc_channel;
 }
 
 /**
@@ -320,16 +338,9 @@ static enum status_code _adc_set_config(
 
 	/* Setup pinmuxing for analog inputs */
 	if (config->pin_scan.inputs_to_scan != 0) {
-		uint8_t offset = config->pin_scan.offset_start_scan;
-		uint8_t start_pin =
-				offset +(uint8_t)config->positive_input;
-		uint8_t end_pin =
-				start_pin + config->pin_scan.inputs_to_scan;
-
-		while (start_pin < end_pin) {
-			_adc_configure_ain_pin((offset % 16)+(uint8_t)config->positive_input);
-			start_pin++;
-			offset++;
+		uint8_t num = config->pin_scan.inputs_to_scan;
+		for (int i = 0; i < num; i++) {
+			_adc_configure_ain_pin(config->pin_scan.regular_channel[i]);
 		}
 		_adc_configure_ain_pin(config->negative_input);
 	} else {
