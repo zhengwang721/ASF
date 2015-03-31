@@ -183,7 +183,7 @@ enum status_code nvm_execute_command(
 
 	/* Check that the address given is valid  */
 	if (address > ((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)
-		&& !(address >= NVMCTRL_AUX0_ADDRESS || address <= NVMCTRL_AUX1_ADDRESS )){
+		&& !(address >= NVMCTRL_AUX0_ADDRESS && address <= NVMCTRL_AUX1_ADDRESS )){
 #ifdef FEATURE_NVM_RWWEE
 		if (address >= ((uint32_t)NVMCTRL_RWW_EEPROM_SIZE + NVMCTRL_RWW_EEPROM_ADDR)
 			|| address < NVMCTRL_RWW_EEPROM_ADDR){
