@@ -311,7 +311,7 @@ int main (void)
 				if(app_device_bond)
 				{
 					DBG_LOG("\r\nBound relation exists with previously peer device");
-					DBG_LOG("\r\nTo remove exsisting bonding information and accept pairing request from peer device press y else press n : ");
+					DBG_LOG("\r\nTo remove existing bonding information and accept pairing request from peer device press y else press n : ");
 					do
 					{
 						bond = getchar();						
@@ -367,6 +367,8 @@ int main (void)
 							handle);
 					if(at_ble_authenticate(handle, &features, &app_bond_info, NULL) != AT_BLE_SUCCESS)
 					{
+						features.bond = false;
+						features.mitm_protection = false;
 						at_ble_authenticate(handle, &features, NULL, NULL);
 					}					
 				}
