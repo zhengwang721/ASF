@@ -52,6 +52,5 @@
 #define CONF_STDIO_PINMUX_PAD3   EDBG_CDC_SERCOM_PINMUX_PAD3
 #define CONF_STDIO_BAUDRATE      115200
 
-void serial_console_init(void);
 
 #endif /* CONF_CONSOLE_H_INCLUDED */

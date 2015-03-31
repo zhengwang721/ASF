@@ -1,41 +1,53 @@
 /**
- ****************************************************************************************
+ * \file
  *
- * @file at_ble_api.h
- *
- * @brief Atmel BLE API for Applications
+ * \brief Health  Atmel BLE Api for Applications
  *
  * This module contains the public API and the necessary enumerations and structures that are required for 
  * BLE Application Developers using Atmel BLE SDK
  *
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
- *  Copyright (c) 2014 Atmel Corporation. All rights reserved.
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions are met:
+ * \asf_license_start
  *
- *  1. Redistributions of source code must retain the above copyright notice, this
- *  list of conditions and the following disclaimer.
+ * \page License
  *
- *  2. Redistributions in binary form must reproduce the above copyright notice,
- *  this list of conditions and the following disclaimer in the documentation
- *  and/or other materials provided with the distribution.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- *  3. The name of Atmel may not be used to endorse or promote products derived from this software 
- *  without specific prior written permission.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  4. This software may only be redistributed and used in connection with an Atmel microcontroller product.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
-  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL 
- *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
- *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
- *  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- *  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
- *  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- ****************************************************************************************
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+
+
 #ifndef __AT_BLE_API_H__
 #define __AT_BLE_API_H__
 
@@ -2259,37 +2271,6 @@ at_ble_status_t at_ble_htpt_meas_intv_update(uint16_t meas_intv);
 
 /** @}*/
 
-/* utility functions, might be removed later*/
-static uint8_t at_ble_uuid_type2len(at_ble_uuid_type_t type)
-{
-	switch(type)
-	{
-	case AT_BLE_UUID_16 : 
-		return AT_BLE_UUID_16_LEN;
-		
-	case AT_BLE_UUID_32 : 
-		return AT_BLE_UUID_32_LEN;
-		
-	default:
-	case AT_BLE_UUID_128 : 
-		return AT_BLE_UUID_128_LEN;
-	}
-}
 
-static at_ble_uuid_type_t at_ble_uuid_len2type(uint8_t len)
-{
-	switch(len)
-	{
-	case AT_BLE_UUID_16_LEN: 
-		return AT_BLE_UUID_16;
-		
-	case AT_BLE_UUID_32_LEN : 
-		return AT_BLE_UUID_32;
-		
-	default:
-	case AT_BLE_UUID_128_LEN : 
-		return AT_BLE_UUID_128;
-	}
-}
 
 #endif //__AT_BLE_API_H__

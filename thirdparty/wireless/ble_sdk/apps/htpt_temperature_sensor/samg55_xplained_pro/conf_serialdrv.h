@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 serial driver configuration.
+ * \brief SAM G55 serial driver configuration.
  *
  * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *

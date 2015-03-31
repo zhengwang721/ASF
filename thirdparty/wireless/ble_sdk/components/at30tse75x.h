@@ -47,6 +47,7 @@
 #ifndef AT30TSE75X_H_INCLUDED
 #define AT30TSE75X_H_INCLUDED
 #include <stdint.h>
+#include "samg55_xplained_pro.h"
 
 #define AT30TSE752                      1
 #define AT30TSE754                      2
