@@ -900,7 +900,6 @@ enum status_code nvm_get_fuses (
 
 enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
 {
-    uint32_t temp = 0;
     uint32_t fusebits[2];
 	enum status_code error_code = STATUS_OK;
 
