@@ -59,6 +59,7 @@ static void flush_buffer(void);
 static uint8_t flag_transmit = 0;
 static volatile int radio_is_on = 0;
 static volatile int pending_frame = 0;
+static volatile int sleep_on = 0;
 /*---------------------------------------------------------------------------*/
 static int rf212_init(void);
 static int rf212_prepare(const void *payload, unsigned short payload_len);
@@ -70,6 +71,7 @@ static int rf212_receiving_packet(void);
 static int rf212_pending_packet(void);
 static int rf212_on(void);
 static int rf212_off(void);
+int rf212_sleep(void);
 
 const struct radio_driver rf212_radio_driver =
 {
@@ -234,6 +236,28 @@ system_interrupt_enable_global();
   process_start(&rf212_radio_process, NULL);
   return 0;
 }
+/* Put the Radio in sleep mode */
+
+int
+rf212_sleep(void)
+{
+	int status;
+	/* Check whether we're already sleeping */
+	if (!sleep_on) {
+		//printf("\r\n goto sleep %d",rf233_get_channel());
+		//delay_ms(1);
+		sleep_on = 1;
+		/* Turn off the Radio */
+		status = rf212_off();
+		/* Set the SLP_PIN to high */
+		if(status == 0) {
+			goto_sleep();
+		}
+	}
+	
+	return 0;
+	
+}
 /*---------------------------------------------------------------------------*/
 /**
  * \brief      prepare a frame and the radio for immediate transmission 
@@ -353,6 +377,24 @@ rf212_transmit(unsigned short payload_len)
   RF212_COMMAND(TRXCMD_RX_ON);
   return RADIO_TX_OK;
 }
+void
+goto_sleep(void)
+{
+	port_pin_set_output_level(AT86RFX_SLP_PIN, true);
+}
+void
+wake_from_sleep(void)
+{
+  /* 
+   * Triggers a radio state transition - assumes that the radio already is in
+   * state SLEEP or DEEP_SLEEP and SLP_TR pin is low. Refer to datasheet 6.6.
+   * 
+   * Note: this is the only thing that can get the radio from state SLEEP or 
+   * state DEEP_SLEEP!
+   */
+  port_pin_set_output_level(AT86RFX_SLP_PIN, false);
+}
+
 /*---------------------------------------------------------------------------*/
 /**
  * \brief      Send data: first prepares, then transmits

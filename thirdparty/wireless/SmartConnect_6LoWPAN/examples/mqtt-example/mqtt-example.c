@@ -101,7 +101,7 @@ static uip_ipaddr_t google_ipv4_dns_server = {
 #define HOST          "m2m.eclipse.org"
 #define VERSION	      "v1"
 #define PRIORITY      "p0"
-#define UUID	        "atmeld"
+#define UUID	        "atmeld2"
 
 
 
@@ -359,7 +359,7 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
 		
 		// measure light intensity
 		light = measure_light();
-		sprintf(light_str,"%s","4095");
+		sprintf(light_str,"%d",light);
 		
 		// create payload for mqtt message
 		sprintf(app_buffer,"%s%lu%s%s%s%s%s%s%s","{\x22timestamp\x22: \x22",timestmp,

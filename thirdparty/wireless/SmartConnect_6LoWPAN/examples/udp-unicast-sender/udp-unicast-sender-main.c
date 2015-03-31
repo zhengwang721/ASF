@@ -136,7 +136,7 @@ uint8_t *edbg_eui_read_eui64(void);
 int
 main(int argc, char *argv[])
 {
-  uint8_t *eui64;
+  
   /* init system: clocks, board etc */
 
   system_init();
@@ -438,7 +438,8 @@ puts(const char* str)
 /*
 static void
 init_serial(void)
-{
+{++
+	
   //  return;
   / * by default, SERCOM3 is used - defined in samr21_xplained_pro.h * /
   struct usart_config cdc_uart_config;
