@@ -314,7 +314,7 @@ int main (void)
 					DBG_LOG("\r\nTo remove existing bonding information and accept pairing request from peer device press y else press n : ");
 					do
 					{
-						bond = getchar();						
+						bond = 'y';//getchar();						
 						if((bond == 'Y') || (bond == 'y'))
 						{
 							app_device_bond = false;
@@ -335,13 +335,13 @@ int main (void)
 				if(!app_device_bond)
 				{
 					/* Authentication requirement is bond and MITM*/
-					features.desired_auth =  AT_BLE_MODE1_L2_AUTH_PAIR_ENC;
-					features.bond = true;
-					features.mitm_protection = true;
+					features.desired_auth =  AT_BLE_MODE1_L1_NOAUTH_PAIR_ENC;
+					features.bond = false;
+					features.mitm_protection = false;
 					features.oob_avaiable = false;
 					/* Device capabilities is display only , key will be generated 
 					and displayed */
-					features.io_cababilities = AT_BLE_IO_CAP_DISPLAY_ONLY;
+					features.io_cababilities = AT_BLE_IO_CAP_NO_INPUT_NO_OUTPUT;
 					/* Distribution of LTK is required */
 					features.initiator_keys =   AT_BLE_KEY_DIST_ENC;
 					features.responder_keys =   AT_BLE_KEY_DIST_ENC;
@@ -487,7 +487,7 @@ void htpt_init(htpt_app_t *htpt_temp)
 	htpt_temp->temperature_type = HTP_TYPE_BODY;
 	htpt_temp->max_meaurement_intv = 30;
 	htpt_temp->min_measurement_intv = 1;
-	htpt_temp->security_lvl = HTPT_ENABLE;
+	htpt_temp->security_lvl = HTPT_UNAUTH;
 	htpt_temp->optional = HTPT_ALL_FEAT_SUP;
 	htpt_temp->flags = HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE;
 }
