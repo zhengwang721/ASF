@@ -50,7 +50,7 @@
 
 #define MAX_DESTINATIONS NBR_TABLE_CONF_MAX_NEIGHBORS
 
-#define DEBUG 1
+#define UPD_PING_DEBUG 1
 
 #define DATALEN 4
 
@@ -206,7 +206,7 @@ echo_reply_callback(uip_ipaddr_t *sender,
     } else {
       pingconn->delay = RTIMER_NOW() - pingconn->echo_time;
     }
-#if DEBUG
+#if UDP_PING_DEBUG
     printf("Received echo from ");
     uip_debug_ipaddr_print(sender);
     printf(", delay ticks %lu\n", pingconn->delay);
@@ -242,7 +242,7 @@ PROCESS_THREAD(simple_udp_ping_process, ev, data)
         pingconn->waiting = 0;
 
         /* Send ping */
-#if DEBUG
+#if UDP_PING_DEBUG
         printf("Sending ping to ");
         uip_debug_ipaddr_print(&pingconn->host);
         printf("\n");

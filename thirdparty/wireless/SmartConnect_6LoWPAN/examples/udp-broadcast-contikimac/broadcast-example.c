@@ -81,7 +81,7 @@ receiver(struct simple_udp_connection *c,
          uint16_t datalen)
 {
   // printf("Data received on port %d from port %d with length %d,Payload %lu\n\r",receiver_port, sender_port, datalen, *(uint32_t *)data);
-  printf("\rData received from %X%X to %X%X is, %s \n", sender_addr->u8[14], sender_addr->u8[15], receiver_addr->u8[14], receiver_addr->u8[15], data);
+  printf("\rData received, %s \n", data);
 
   //printf("Data received on port %d from port %d with length %d\n\r ",receiver_port, sender_port, datalen);
 #ifdef LOW_POWER_MODE  
@@ -130,7 +130,7 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
     //PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&send_timer));
     uip_create_linklocal_allnodes_mcast(&addr);
     sprintf(strdata, "%s%x%s%x", "NodeId: 0x", mynodeid, " Count: 0x", count);/* Node id: 0x1234 Count: 2bytes*/
-    printf("\rSending data: %s \n", strdata);
+    printf("\rSending data, %s \n", strdata);
     simple_udp_sendto(&broadcast_connection, strdata, sizeof(strdata), &addr);
    
 	count++;

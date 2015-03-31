@@ -93,7 +93,7 @@
 
 #define RIMESTATS_CONF_ENABLED 1
 #define RF_CHANNEL                            1
-#define DATA_RATE BPSK_40
+#define DATA_RATE OQPSK_RC_250
 
 #define IEEE802154_CONF_PANID                 0xABCD
 

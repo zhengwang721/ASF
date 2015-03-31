@@ -60,8 +60,8 @@ extint_detection_callback(void)
 static int
 button_sensor_value(int type)
 {
-  int value = (int)port_pin_get_input_level(BUTTON_0_PIN);
-  return value;
+  bool PinLvl = port_pin_get_input_level(BUTTON_0_PIN);
+  return PinLvl;
 }
 /*---------------------------------------------------------------------------*/
 static int enabled = 0;

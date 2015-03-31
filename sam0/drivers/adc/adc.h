@@ -1358,6 +1358,7 @@ static inline enum status_code adc_read(
 
 	/* Get ADC result */
 	*result = adc_module->RESULT.reg;
+  printf("ADC output = %d", *result);
 
 	/* Reset ready flag */
 	adc_clear_status(module_inst, ADC_STATUS_RESULT_READY);

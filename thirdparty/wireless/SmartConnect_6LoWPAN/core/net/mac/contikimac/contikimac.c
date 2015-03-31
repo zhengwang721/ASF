@@ -84,7 +84,7 @@
 #endif
 /* MCU can sleep during radio off */
 #ifndef RDC_CONF_MCU_SLEEP
-#define RDC_CONF_MCU_SLEEP           1
+#define RDC_CONF_MCU_SLEEP           0
 #endif
 
 #if NETSTACK_RDC_CHANNEL_CHECK_RATE >= 64
@@ -275,6 +275,8 @@ static int broadcast_rate_counter;
 #else /* RDC_CONF_HARDWARE_ACK */
 #define HARDWARE_ACK 0
 #endif /* RDC_CONF_HARDWARE_ACK */
+
+uint16_t contikimac_debug_print(void);
 
 /*---------------------------------------------------------------------------*/
 static void

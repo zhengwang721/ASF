@@ -101,8 +101,13 @@ static uip_ipaddr_t google_ipv4_dns_server = {
 #define HOST          "m2m.eclipse.org"
 #define VERSION	      "v1"
 #define PRIORITY      "p0"
-#define UUID	        "atmeld2"
+#define UUID	        "atmeld"
 
+//
+// Function prototypes
+//
+void configure_adc(void);
+uint16_t measure_light(void);
 
 
 /*---------------------------------------------------------------------------*/
@@ -224,7 +229,6 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
   timestmp = clock_time();
 
   configure_adc();
-  light = measure_light();
 
   lladdr = uip_ds6_get_link_local(-1);
   sprintf(mac_adr_str,"%02x%02x%02x%02x%02x%02x%02x%02x",lladdr ->ipaddr.u8[8],lladdr->ipaddr.u8[9],lladdr->ipaddr.u8[10],lladdr->ipaddr.u8[11],lladdr->ipaddr.u8[12],lladdr->ipaddr.u8[13],lladdr->ipaddr.u8[14],lladdr->ipaddr.u8[15]);
@@ -299,9 +303,19 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
     /* Connect to MQTT server */
     conn.auto_reconnect = 1;
     mqtt_connect(&conn, HOST, 1883, 20);
-    PROCESS_WAIT_UNTIL(mqtt_connected(&conn));
+    if (!mqtt_connected(&conn)) {
+      printf("\r\n Not connected to the MQTT broker yet. Retrying ...");
+      etimer_set(&et, CLOCK_SECOND / 1);
+      while (!mqtt_connected(&conn)) {
+        mqtt_connect(&conn, HOST, 1883, 20);
+        PROCESS_WAIT_UNTIL(etimer_expired(&et));
+        etimer_reset(&et);
+      }      
+    }    
+      // PROCESS_WAIT_UNTIL(mqtt_connected(&conn));
     conn.auto_reconnect = 0;
-    //printf("comes here 1********************\n");
+    printf("\r\n Connected to the MQTT broker now");
+    
 	
 	/* Publish to the online topic that we are online. */
     PROCESS_WAIT_UNTIL(mqtt_ready(&conn));
@@ -359,7 +373,8 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
 		
 		// measure light intensity
 		light = measure_light();
-		sprintf(light_str,"%d",light);
+    printf("Light sensor reading = %d", light);
+		sprintf(light_str,"%d", light);
 		
 		// create payload for mqtt message
 		sprintf(app_buffer,"%s%lu%s%s%s%s%s%s%s","{\x22timestamp\x22: \x22",timestmp,

@@ -138,7 +138,7 @@ uint8_t *edbg_eui_read_eui64(void);
 int
 main(int argc, char *argv[])
 {
-  uint8_t *eui64;
+  uint8_t *eui64 = NULL;
   /* init system: clocks, board etc */
 
   system_init();

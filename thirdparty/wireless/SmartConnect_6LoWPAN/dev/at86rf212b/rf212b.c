@@ -85,6 +85,7 @@ const struct radio_driver rf212_radio_driver =
   rf212_pending_packet,
   rf212_on,
   rf212_off,
+  rf212_sleep,
 };
 /*---------------------------------------------------------------------------*/
 /* convenience macros */
@@ -99,7 +100,7 @@ const struct radio_driver rf212_radio_driver =
 /* when transmitting, time to allow previous transmission to end before drop */
 #define PREV_TX_TIMEOUT                   (10 * RTIMER_SECOND/1000)
 /*---------------------------------------------------------------------------*/
-#define DEBUG                 1
+#define DEBUG                 0
 #define DEBUG_PRINTDATA       0     /* print frames to/from the radio; requires DEBUG == 1 */
 #if DEBUG
 #define PRINTF(...)       printf(__VA_ARGS__)
