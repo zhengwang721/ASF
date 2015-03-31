@@ -42,8 +42,5 @@ rtimer_clock_t rtimer_arch_now(void);
 void rtimer_arch_disable_irq(void);
 void rtimer_arch_enable_irq(void);
 void rtimer_arch_sleep(rtimer_clock_t );
-<<<<<<< HEAD
-=======
 
->>>>>>> 3cea55d6374655cc4f498df385d0a6a69d48d555
 #endif /* __RTIMER_ARCH_H__ */
