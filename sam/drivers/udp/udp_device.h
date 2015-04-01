@@ -466,7 +466,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 #define  udd_byte_count(ep)                        (Rd_bitfield(UDP->UDP_CSR[ep], UDP_CSR_RXBYTECNT_Msk))
 
   //! test if both banks received
-#define  Is_udd_all_banks_received(ep)             ((UDP->UDP_CSR[ep] & (UDP_CSR_RX_DATA_BK0|UDP_CSR_RX_DATA_BK1)) == (UDP_CSR_RX_DATA_BK0|UDP_CSR_RX_DATA_BK1))
+#define  Is_udd_all_banks_received(ep)             ((UDP->UDP_CSR[ep] & UDP_CSR_RX_DATA_BK0) && (UDP->UDP_CSR[ep] & UDP_CSR_RX_DATA_BK1))
   //! test if Any of the Bank received
 #define  Is_udd_any_bank_received(ep)              (Tst_bits(UDP->UDP_CSR[ep], (UDP_CSR_RX_DATA_BK0|UDP_CSR_RX_DATA_BK1)))
   //! test if Bank 0 received
