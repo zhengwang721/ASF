@@ -102,7 +102,7 @@
  * \ref asfdoc_sam0_dac_module_block_diagram "the figure below".
  *
  * \anchor asfdoc_sam0_dac_module_block_diagram
- * \image html dac_block_diagram.gif "DAC Block Diagram"
+ * \image html dac_block_diagram.svg "DAC Block Diagram"
  *
  * \subsection asfdoc_sam0_dac_conversion_range Conversion Range
  * The conversion range is between GND and the selected voltage reference.
@@ -597,7 +597,6 @@ void dac_chan_disable_output_buffer(
  *		<td>12/2014</td>
  *		<td>Add SAMD10/D11 support.</td>
  *	</tr>
- *	<tr>
  *	<tr>
  *		<td>C</td>
  *		<td>01/2014</td>

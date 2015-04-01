@@ -475,7 +475,7 @@ static inline void _i2c_slave_set_ctrlb_ackact(
 		bool send_ack)
 {
 	Assert(module);
-	Assert(module->hw->I2CS);
+	Assert(module->hw);
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
@@ -520,7 +520,7 @@ static inline void _i2c_slave_set_ctrlb_cmd3(
 		struct i2c_slave_module *const module)
 {
 	Assert(module);
-	Assert(module->hw->I2CS);
+	Assert(module->hw);
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
