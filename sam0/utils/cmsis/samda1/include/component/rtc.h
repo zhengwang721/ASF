@@ -626,16 +626,16 @@ typedef union {
 
 /* -------- RTC_MODE0_INTFLAG : (RTC Offset: 0x08) (R/W  8) MODE0 MODE0 Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint8_t  CMP0:1;           /*!< bit:      0  Compare 0                          */
-    uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
-    uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready              */
-    uint8_t  OVF:1;            /*!< bit:      7  Overflow                           */
+    __I uint8_t  CMP0:1;           /*!< bit:      0  Compare 0                          */
+    __I uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
+    __I uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready              */
+    __I uint8_t  OVF:1;            /*!< bit:      7  Overflow                           */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
-    uint8_t  CMP:1;            /*!< bit:      0  Compare x                          */
-    uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
+    __I uint8_t  CMP:1;            /*!< bit:      0  Compare x                          */
+    __I uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
   } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } RTC_MODE0_INTFLAG_Type;
@@ -657,17 +657,17 @@ typedef union {
 
 /* -------- RTC_MODE1_INTFLAG : (RTC Offset: 0x08) (R/W  8) MODE1 MODE1 Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint8_t  CMP0:1;           /*!< bit:      0  Compare 0                          */
-    uint8_t  CMP1:1;           /*!< bit:      1  Compare 1                          */
-    uint8_t  :4;               /*!< bit:  2.. 5  Reserved                           */
-    uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready              */
-    uint8_t  OVF:1;            /*!< bit:      7  Overflow                           */
+    __I uint8_t  CMP0:1;           /*!< bit:      0  Compare 0                          */
+    __I uint8_t  CMP1:1;           /*!< bit:      1  Compare 1                          */
+    __I uint8_t  :4;               /*!< bit:  2.. 5  Reserved                           */
+    __I uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready              */
+    __I uint8_t  OVF:1;            /*!< bit:      7  Overflow                           */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
-    uint8_t  CMP:2;            /*!< bit:  0.. 1  Compare x                          */
-    uint8_t  :6;               /*!< bit:  2.. 7  Reserved                           */
+    __I uint8_t  CMP:2;            /*!< bit:  0.. 1  Compare x                          */
+    __I uint8_t  :6;               /*!< bit:  2.. 7  Reserved                           */
   } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } RTC_MODE1_INTFLAG_Type;
@@ -691,16 +691,16 @@ typedef union {
 
 /* -------- RTC_MODE2_INTFLAG : (RTC Offset: 0x08) (R/W  8) MODE2 MODE2 Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint8_t  ALARM0:1;         /*!< bit:      0  Alarm 0                            */
-    uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
-    uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready              */
-    uint8_t  OVF:1;            /*!< bit:      7  Overflow                           */
+    __I uint8_t  ALARM0:1;         /*!< bit:      0  Alarm 0                            */
+    __I uint8_t  :5;               /*!< bit:  1.. 5  Reserved                           */
+    __I uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready              */
+    __I uint8_t  OVF:1;            /*!< bit:      7  Overflow                           */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
-    uint8_t  ALARM:1;          /*!< bit:      0  Alarm x                            */
-    uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
+    __I uint8_t  ALARM:1;          /*!< bit:      0  Alarm x                            */
+    __I uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
   } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } RTC_MODE2_INTFLAG_Type;

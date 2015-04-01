@@ -249,11 +249,11 @@ typedef union {
 
 /* -------- NVMCTRL_INTFLAG : (NVMCTRL Offset: 0x14) (R/W  8) Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint8_t  READY:1;          /*!< bit:      0  NVM Ready                          */
-    uint8_t  ERROR:1;          /*!< bit:      1  Error                              */
-    uint8_t  :6;               /*!< bit:  2.. 7  Reserved                           */
+    __I uint8_t  READY:1;          /*!< bit:      0  NVM Ready                          */
+    __I uint8_t  ERROR:1;          /*!< bit:      1  Error                              */
+    __I uint8_t  :6;               /*!< bit:  2.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } NVMCTRL_INTFLAG_Type;

@@ -554,9 +554,14 @@ void I2S_Handler                 ( void );
 #define FLASH_NB_OF_PAGES     1024
 #define FLASH_USER_PAGE_SIZE  64
 #define HMCRAMC0_SIZE         0x2000UL /* 8 kB */
-#define FLASH_ADDR            (0x00000000UL) /**< FLASH base address */
-#define FLASH_USER_PAGE_ADDR  (0x00800000UL) /**< FLASH_USER_PAGE base address */
-#define HMCRAMC0_ADDR         (0x20000000UL) /**< HMCRAMC0 base address */
+
+#define FLASH_ADDR            (0x00000000u) /**< FLASH base address */
+#define FLASH_USER_PAGE_ADDR  (0x00800000u) /**< FLASH_USER_PAGE base address */
+#define HMCRAMC0_ADDR         (0x20000000u) /**< HMCRAMC0 base address */
+#define HPB0_ADDR             (0x40000000u) /**< HPB0 base address */
+#define HPB1_ADDR             (0x41000000u) /**< HPB1 base address */
+#define HPB2_ADDR             (0x42000000u) /**< HPB2 base address */
+#define PPB_ADDR              (0xE0000000u) /**< PPB base address */
 
 #define DSU_DID_RESETVALUE    0x1001142CUL
 #define EIC_EXTINT_NUM        16
