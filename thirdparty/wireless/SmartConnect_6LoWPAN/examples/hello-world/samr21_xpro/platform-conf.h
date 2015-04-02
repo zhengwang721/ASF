@@ -59,7 +59,7 @@ typedef unsigned short                  uip_stats_t;
 #define CC_CONF_INLINE                  inline
 #define CCIF
 #define CLIF
-
+uint8_t *eui64;
 /**
  * Adjust the system current clock time.
  * \param dt   How many ticks to add

@@ -1,0 +1,37 @@
+<asf xmlversion="1.0">
+	<module type="component" id="thirdparty.wireless.addons.widbg.common"   caption="widbg Common">
+		<info type="description" value="summary">
+		This widbg Client module provides API's for receiving data frames over-the-air and also handles writing/reading from flash.
+		</info>
+		<info type="gui-flag" value="hidden"/>
+		<require idref="config.thirdparty.wireless.addons.widbg.common"/>
+		<build type="header-file"   value="widbg_common.h"/>
+		<build type="include-path"  value="."/>
+		<device-support value="sam0"/>
+	</module>
+	<select-by-config id="config.thirdparty.wireless.addons.widbg.common" name="config.thirdparty.wireless.addons.widbg.common" caption="widbg Common" default="client">
+		<info type="description" value="summary">
+		This module contains both Server and Client protocol API's for over-the-air Transmission and Reception.
+		</info>
+			<module type="component" id="config.thirdparty.wireless.addons.widbg.common#server"     caption="widbg Server Module">
+				<info type="description" value="summary">
+				This widbg Server module provides API's for transmitting data frames over-the-air and also to communicate between host device.
+				</info>
+				<build type="c-source"      value="server_common.c"/>
+				<build type="header-file"   value="server_common.h"/>
+				<require idref="thirdparty.wireless.addons.widbg"/>
+				<device-support value="sam0"/>
+				<build type="doxygen-entry-point" value="group_widbg_server"/>
+			</module>
+			<module type="component" id="config.thirdparty.wireless.addons.widbg.common#client"     caption="widbg Client Module">
+				<info type="description" value="summary">
+				This widbg Client module provides API's for receiving data frames over-the-air and also handles writing/reading from flash.
+				</info>
+				<build type="c-source"      value="client_common.c"/>
+				<build type="header-file"   value="client_common.h"/>
+				<require idref="thirdparty.wireless.addons.widbg"/>
+				<device-support value="sam0"/>
+				<build type="doxygen-entry-point" value="group_widbg_client"/>
+			</module>
+	</select-by-config>
+</asf>
