@@ -310,7 +310,7 @@ static enum status_code _i2c_master_read_packet(
 				SERCOM_I2CM_INTENSET_MB | SERCOM_I2CM_INTENSET_SB;
 
 			/*
-			 * Write ADDR[7:0] register to 鈥10 address[9:8] 1鈥
+			 * Write ADDR[7:0] register to "11110 address[9:8] 1"
 			 * ADDR.TENBITEN must be cleared
 			 */
 			i2c_module->ADDR.reg = (((packet->address >> 8) | 0x78) << 1) |

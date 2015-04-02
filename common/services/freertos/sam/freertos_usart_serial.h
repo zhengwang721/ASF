@@ -413,7 +413,7 @@ uint32_t freertos_usart_serial_read_packet(freertos_usart_if p_usart,
 	     // freertos_usart_write_packet() does not return until transmission of
 	     // the string has completed (other FreeRTOS task will execute while the
 	     // transmission is in progress), meaning the function can exit even
-	     // though the buffer being transmitted is declared on the function鈥檚
+	     // though the buffer being transmitted is declared on the function's
 	     // stack because it is guaranteed that nothing is still using the data
 	     // the buffer contains.
 	     return result;

@@ -46,6 +46,9 @@
 
 #include "task_demo.h"
 #include "arm_math.h"
+#if (__CM4_CMSIS_VERSION_MAIN >= (0x04))
+#include "arm_const_structs.h"
+#endif
 #include "sound.h"
 #include "pdc.h"
 #include "afec.h"
@@ -135,8 +138,6 @@ static float32_t sin_buffer[SLIDER_SELECTOR_NB][SAMPLE_BLOCK_SIZE];
 
 float32_t wav_in_buffer[SAMPLE_BLOCK_SIZE * 2];
 
-/** cFFT configuration instance declaration */
-static arm_cfft_radix4_instance_q15 cfft_instance;
 /** q15 cFFT buffer declaration */
 static q15_t cfft_q15[SAMPLE_BLOCK_SIZE * 2];
 /** q15 Magnitude buffer declaration */
@@ -313,8 +314,14 @@ static void dsp_task(void *pvParameters)
 
 		/* Perform FFT and bin Magnitude calculation */
 		arm_float_to_q15(wav_in_buffer, cfft_q15, SAMPLE_BLOCK_SIZE * 2);
+#if (__CM4_CMSIS_VERSION_MAIN >= (0x04))
+		arm_cfft_q15(&arm_cfft_sR_q15_len256, cfft_q15, 0, 1);
+#else
+		/** cFFT configuration instance declaration */
+		arm_cfft_radix4_instance_q15 cfft_instance;
 		arm_cfft_radix4_init_q15(&cfft_instance, SAMPLE_BLOCK_SIZE, 0, 1);
 		arm_cfft_radix4_q15(&cfft_instance, cfft_q15);
+#endif
 		arm_cmplx_mag_q15(cfft_q15, mag_in_buffer_q15, SAMPLE_BLOCK_SIZE);
 		arm_q15_to_float(mag_in_buffer_q15, mag_in_buffer, 128);
 

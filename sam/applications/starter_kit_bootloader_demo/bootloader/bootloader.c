@@ -400,7 +400,7 @@ static uint32_t _app_load(struct regions_info *info, bool no_partition)
  *
  * \param code_addr Application start address (vector table address)
  */
-#if defined   (__CC_ARM)     /* Keil 礦ision 4 */
+#if defined   (__CC_ARM)     /* Keil µVision 4 */
 __asm__ void jump_to_app(void *code_addr)
 {
 	mov r1, r0

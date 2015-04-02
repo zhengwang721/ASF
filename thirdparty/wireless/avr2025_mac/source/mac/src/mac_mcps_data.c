@@ -513,7 +513,7 @@ void mac_process_data_frame(buffer_t *buf_ptr)
 			/*
 			 * Even if the Source address mode is zero, and the
 			 * source address
-			 * informationis 韘 not present, the values are cleared
+			 * informationis is not present, the values are cleared
 			 * to prevent
 			 * the providing of trash information.
 			 */
@@ -576,7 +576,7 @@ void mac_process_data_frame(buffer_t *buf_ptr)
 				/*
 				 * Even if the Destination address mode is zero,
 				 * and the destination
-				 * address information is 韘 not present, the
+				 * address information is not present, the
 				 * values are cleared to
 				 * prevent the providing of trash information.
 				 * The Desintation address was already cleared
