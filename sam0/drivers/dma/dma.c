@@ -448,8 +448,6 @@ enum status_code dma_start_transfer_job(struct dma_resource *resource)
 
 	/* Set the interrupt flag */
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
-	DMAC->CHINTENSET.reg = DMAC_CHINTENSET_TERR |
-			 DMAC_CHINTENSET_TCMPL | DMAC_CHINTENSET_SUSP;
 
 	/* Set job status */
 	resource->job_status = STATUS_BUSY;

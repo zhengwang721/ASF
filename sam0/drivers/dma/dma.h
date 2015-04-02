@@ -431,12 +431,12 @@ enum dma_transfer_trigger_action{
  * Callback types for DMA callback driver.
  */
 enum dma_callback_type {
-	/** Callback for transfer complete. */
-	DMA_CALLBACK_TRANSFER_DONE,
 	/** Callback for any of transfer errors. A transfer error is flagged
      *	if a bus error is detected during an AHB access or when the DMAC
 	 *  fetches an invalid descriptor. */
 	DMA_CALLBACK_TRANSFER_ERROR,
+	/** Callback for transfer complete. */
+	DMA_CALLBACK_TRANSFER_DONE,
 	/** Callback for channel suspend. */
 	DMA_CALLBACK_CHANNEL_SUSPEND,
 	/** Number of available callbacks. */
@@ -572,6 +572,7 @@ static inline void dma_enable_callback(struct dma_resource *resource,
 	Assert(resource);
 
 	resource->callback_enable |= 1 << type;
+	DMAC->CHINTENSET.reg = (1UL << type);
 }
 
 /**
@@ -587,6 +588,7 @@ static inline void dma_disable_callback(struct dma_resource *resource,
 	Assert(resource);
 
 	resource->callback_enable &= ~(1 << type);
+	DMAC->CHINTENCLR.reg = (1UL << type);
 }
 
 /**
