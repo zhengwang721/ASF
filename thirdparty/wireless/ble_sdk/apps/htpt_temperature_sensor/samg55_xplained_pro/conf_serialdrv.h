@@ -69,5 +69,23 @@ void serial_tx_callback(void);
 #define SERIAL_DRV_TX_CB_ENABLE  true
 #define SERIAL_DRV_RX_CB_ENABLE  true
 
+static inline void ble_enable_pin_init(void)
+{
+	ioport_init();
+
+	ioport_set_pin_dir(EXT1_PIN_5, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(EXT1_PIN_5, IOPORT_PIN_LEVEL_LOW);
+}
+
+static inline void ble_enable_pin_set_low(void)
+{
+	ioport_set_pin_level(EXT1_PIN_5, IOPORT_PIN_LEVEL_LOW);
+}
+
+static inline void ble_enable_pin_set_high(void)
+{
+	ioport_set_pin_level(EXT1_PIN_5, IOPORT_PIN_LEVEL_HIGH);
+}
+
 
 #endif /* CONF_SERIALDRV_H_INCLUDED */

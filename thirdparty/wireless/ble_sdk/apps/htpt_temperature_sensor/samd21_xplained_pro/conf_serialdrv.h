@@ -53,4 +53,26 @@ void serial_tx_callback(void);
 #define SERIAL_DRV_RX_CB_ENABLE  true
 
 
+static inline void ble_enable_pin_init(void)
+{
+	struct port_config pin_conf;
+	port_get_config_defaults(&pin_conf);
+
+	/* Configure LEDs as outputs, turn them off */
+	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(PIN_PB07, &pin_conf);
+	port_pin_set_output_level(PIN_PB07, false);
+}
+
+static inline void ble_enable_pin_set_low(void)
+{
+	port_pin_set_output_level(PIN_PB07, false);
+}
+
+static inline void ble_enable_pin_set_high(void)
+{
+	port_pin_set_output_level(PIN_PB07, true);
+}
+
+
 #endif /* CONF_SERIALDRV_H_INCLUDED */

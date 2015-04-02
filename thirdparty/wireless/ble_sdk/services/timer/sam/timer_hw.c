@@ -1,7 +1,7 @@
 /**
- * \file console_serial.c
+ * \file timer_hw.c
  *
- * \brief Serial Console functionalities
+ * \brief Handler timer functionalities
  *
  * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
@@ -43,60 +43,70 @@
 /* === INCLUDES ============================================================ */
 
 #include "asf.h"
-#include "console_serial.h"
-#if SAMD21
-#include "conf_console.h"
-#endif
-
-#if SAMG55
-#include "conf_uart_serial.h"
-#endif
+#include "timer_hw.h"
+#include "conf_timer.h"
 
 /* === TYPES =============================================================== */
-
+uint32_t timeout_count;
+hw_timer_callback_t timer_callback;
 /* === MACROS ============================================================== */
-#if SAMD21
-static struct usart_module cdc_uart_module;
-#endif
 
-/**
- *  Configure console.
- */
-void serial_console_init(void)
+void hw_timer_init(void)
 {
-#if SAMD21
- 	struct usart_config usart_conf;
-
-	usart_get_config_defaults(&usart_conf);
-	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
-	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
-	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
-	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
-	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
-	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
-
-	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART_MODULE, &usart_conf);
-	usart_enable(&cdc_uart_module);
-#endif
-
-#if SAMG55
-	const usart_serial_options_t uart_serial_options = {
-			.baudrate = CONF_UART_BAUDRATE,
-	#ifdef CONF_UART_CHAR_LENGTH
-			.charlength = CONF_UART_CHAR_LENGTH,
-	#endif
-			.paritytype = CONF_UART_PARITY,
-	#ifdef CONF_UART_STOP_BITS
-			.stopbits = CONF_UART_STOP_BITS,
-	#endif
-		};
-
-	/* Configure console UART. */
-	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
-	stdio_serial_init(CONF_UART, &uart_serial_options);
-#endif
+	sysclk_enable_peripheral_clock(ID_TC);
+	// Init timer counter  channel.
+	tc_init(TIMER, TIMER_CHANNEL_ID,						
+			TC_CMR_TCCLKS_TIMER_CLOCK1 | TC_CMR_WAVE |
+			TC_CMR_WAVSEL_UP);				
+	
+	tc_write_rc(TIMER, TIMER_CHANNEL_ID, UINT16_MAX);
+	tc_get_status(TIMER, TIMER_CHANNEL_ID);
+	tc_enable_interrupt(TIMER, TIMER_CHANNEL_ID, TC_IER_COVFS);		
+	NVIC_EnableIRQ(TC0_IRQn);
 }
 
+void hw_timer_register_callback(hw_timer_callback_t cb_ptr)
+{
+	timer_callback = cb_ptr;
+}
+
+void TC0_Handler(void)
+{
+	uint32_t ul_status;
+	static uint16_t tc_count;
+	uint8_t flags = cpu_irq_save();
+	
+	ul_status = tc_get_status(TIMER, TIMER_CHANNEL_ID);
+	ul_status &= tc_get_interrupt_mask(TIMER, TIMER_CHANNEL_ID);
+	
+	/* ovf callback */
+	if (TC_SR_COVFS == (ul_status & TC_SR_COVFS)) 
+	{		
+		tc_count++;
+		
+		if (tc_count >= timeout_count)
+		{
+			tc_count = 0;
+			if (timer_callback != NULL)
+			{
+				timer_callback();
+			}
+		}
+	}
+	
+	cpu_irq_restore(flags);
+}
+
+void hw_timer_start(uint32_t timer_val)
+{
+	timeout_count = (timer_val*TIMER_OVF_COUNT_1SEC);
+	tc_start(TIMER, TIMER_CHANNEL_ID);
+}
+
+void hw_timer_stop(void)
+{
+	tc_stop(TIMER, TIMER_CHANNEL_ID);
+}
 
 
 /* EOF */

@@ -1,9 +1,9 @@
 /**
- * \file
+ * \file console_serial.c
  *
- * \brief AT30TSE75X Temperature sensor driver configuration file.
+ * \brief Serial Console functionalities
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,28 +38,40 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+
+/* === INCLUDES ============================================================ */
+
+#include "asf.h"
+#include "console_serial.h"
+#include "conf_console.h"
+
+
+/* === TYPES =============================================================== */
+
+/* === MACROS ============================================================== */
+static struct usart_module cdc_uart_module;
+
+
+/**
+ *  Configure console.
  */
-#ifndef CONF_AT30TSE75X_H_INCLUDED
-#define CONF_AT30TSE75X_H_INCLUDED
+void serial_console_init(void)
+{
+ 	struct usart_config usart_conf;
 
-#include <board.h>
+	usart_get_config_defaults(&usart_conf);
+	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
+	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
+	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
 
-#if SAMD21 || SAMD20
-#define AT30TSE_SERCOM      EXT1_I2C_MODULE
-#define AT30TSE_PINMUX_PAD0 EXT1_I2C_SERCOM_PINMUX_PAD0
-#define AT30TSE_PINMUX_PAD1 EXT1_I2C_SERCOM_PINMUX_PAD1
-#endif
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART_MODULE, &usart_conf);
+	usart_enable(&cdc_uart_module);
+}
 
-#if SAMG55
-//#define BOARD_AT30TSE_TWI  		 	TWI1
-//#define BOARD_AT30TSE_TWI_ID  	 	ID_TWI1
-#define BOARD_AT30TSE_DEVICE_ADDR  	0x07
-//#define BOARD_TWI_SPEED  			10000
-#define BOARD_FLEXCOM_TWI			FLEXCOM4
-#endif
 
-#endif /* CONF_AT30TSE75X_H_INCLUDED */
+
+/* EOF */
