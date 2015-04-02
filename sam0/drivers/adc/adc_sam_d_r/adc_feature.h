@@ -453,7 +453,7 @@ struct adc_correction_config {
 	/**
 	 * This value defines how the ADC conversion result is compensated for
 	 * offset error before written to the result register. This is a 12-bit
-	 * value in two鈥檚 complement format.
+	 * value in two's complement format.
 	 */
 	int16_t offset_correction;
 };

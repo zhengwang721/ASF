@@ -60,7 +60,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_group SAM System Driver (SYSTEM)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's system relation functionality, necessary for
  * the basic device operation. This is not limited to a single peripheral, but
  * extends across multiple hardware peripherals.
@@ -159,9 +159,9 @@ extern "C" {
  * power consumption. The user can select on the fly the performance level
  * configuration which best suits its application.
  *
- * The SAM device embeds up to three performance level (PL0, PL1 and PL2).
+ * The SAM device embeds up to three performance level (PL0 and PL2).
  * Each performance level defines a maximum frequency and a corresponding
- * consumption in 渭A/MHz,when the application selects a new performance level,
+ * consumption in µA/MHz,when the application selects a new performance level,
  * the voltage applied on the full logic area moves from a value to another,
  * it can reduce the active consumption while decreasing the maximum frequency
  * of the device.
@@ -180,7 +180,7 @@ extern "C" {
  *  completed,check the performance level status.
  *
  * \anchor asfdoc_sam0_system_performance_level_transition_figure
- * \image html performance_level_transition.gif "The performance level  transition"
+ * \image html performance_level_transition.svg "The performance level  transition"
  *
  * \subsection asfdoc_sam0_system_module_overview_power_domain Power Domain Gating
  * Power domain gating  can  turn on or off power domain voltage to save power

@@ -341,8 +341,8 @@ uhc_enum_status_t uhi_cdc_install(uhc_device_t* dev)
 		case USB_DT_ENDPOINT:
 			//  Allocation of the endpoint
 			if (b_iface_comm) {
-				Assert ((usb_ep_desc_t*)ptr_iface->bmAttributes == USB_EP_TYPE_INTERRUPT);
-				Assert ((usb_ep_desc_t*)ptr_iface->bEndpointAddress & USB_EP_DIR_IN);
+				Assert (((usb_ep_desc_t*)ptr_iface)->bmAttributes == USB_EP_TYPE_INTERRUPT);
+				Assert (((usb_ep_desc_t*)ptr_iface)->bEndpointAddress & USB_EP_DIR_IN);
 				if (!uhd_ep_alloc(dev->address, (usb_ep_desc_t*)ptr_iface)) {
 					uhi_cdc_free_device();
 					return UHC_ENUM_HARDWARE_LIMIT; // Endpoint allocation fail

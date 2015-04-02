@@ -53,7 +53,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_interrupt_group SAM System Interrupt Driver (SYSTEM INTERRUPT)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of internal software and hardware interrupts/exceptions.
  *
  * The following peripherals are used by this module:
@@ -288,8 +288,8 @@ static inline void system_interrupt_disable(
 static inline enum system_interrupt_vector system_interrupt_get_active(void)
 {
 	uint32_t IPSR = __get_IPSR();
-
-	return (enum system_interrupt_vector)(IPSR & _SYSTEM_INTERRUPT_IPSR_MASK);
+	/* The IPSR returns the Exception number, which with an offset 16 to IRQ number. */
+	return (enum system_interrupt_vector)((IPSR & _SYSTEM_INTERRUPT_IPSR_MASK) - 16);
 }
 
 bool system_interrupt_is_pending(

@@ -255,12 +255,12 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * This module is based on USB device stack full interrupt driven, and supporting
  * \ref sleepmgr_group "sleepmgr".
- * For AVR庐 and Atmel庐 | SMART SAM3/4 devices the \ref clk_group "clock services" is supported.
+ * For AVR&reg; and Atmel&reg; | SMART SAM3/4 devices the \ref clk_group "clock services" is supported.
  * For SAMD21 devices the \ref asfdoc_sam0_system_clock_group "clock driver" is supported.
  *
  * The following procedure must be executed to set up the project correctly:
  * - Specify the clock configuration:
- *   - XMEGA庐 USB devices need 48MHz clock input.
+ *   - XMEGA&reg; USB devices need 48MHz clock input.
  *
  *     XMEGA USB devices need CPU frequency higher than 12MHz.
  *
