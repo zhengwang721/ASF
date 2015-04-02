@@ -47,7 +47,7 @@
  /**
  * \mainpage
  * \section preface Preface
- * This is the reference manual for the EDDemo  Application
+ * This is the reference manual for the Health Thermometer Profile Application
  */
 /*- Includes ---------------------------------------------------------------*/
 
