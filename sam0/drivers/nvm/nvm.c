@@ -903,6 +903,9 @@ enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
     uint32_t fusebits[2];
 	enum status_code error_code = STATUS_OK;
 
+	if (fb == NULL) {
+		return STATUS_ERR_INVALID_ARG;
+	}
     /* Read the fuse settings in the user row, 64 bit */
     fusebits[0] = *((uint32_t *)NVMCTRL_AUX0_ADDRESS);
     fusebits[1] = *(((uint32_t *)NVMCTRL_AUX0_ADDRESS) + 1);
