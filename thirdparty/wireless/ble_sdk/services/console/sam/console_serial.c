@@ -1,9 +1,9 @@
 /**
- * \file
+ * \file console_serial.c
  *
- * \brief Platform Abstraction layer for BLE applications
+ * \brief Serial Console functionalities
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,86 +38,39 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#include <asf.h>
-#include "platform.h"
-#include "conf_serialdrv.h"
-#include "serial_drv.h"
+/* === INCLUDES ============================================================ */
 
-static uint16_t rx_data;
+#include "asf.h"
+#include "console_serial.h"
+#include "conf_uart_serial.h"
 
-static volatile uint32_t cmd_cmpl_flag = 0;
-static volatile uint32_t event_flag = 0;
+/* === TYPES =============================================================== */
 
-void serial_rx_callback(void)
+/* === MACROS ============================================================== */
+
+/**
+ *  Configure console.
+ */
+void serial_console_init(void)
 {
-#if SAMG55
-	while(serial_read_byte((uint8_t *)&rx_data) == STATUS_OK)
-	{
-		platform_interface_callback((uint8_t *)&rx_data, 1);
-	}		
-#endif
-		
-#if SAMD || SAMR21
-	do 
-	{
-	  platform_interface_callback((uint8_t *)&rx_data, 1);
-	} while (serial_read_byte((uint8_t *)&rx_data) == STATUS_BUSY);	
-#endif
+	const usart_serial_options_t uart_serial_options = {
+			.baudrate = CONF_UART_BAUDRATE,
+	#ifdef CONF_UART_CHAR_LENGTH
+			.charlength = CONF_UART_CHAR_LENGTH,
+	#endif
+			.paritytype = CONF_UART_PARITY,
+	#ifdef CONF_UART_STOP_BITS
+			.stopbits = CONF_UART_STOP_BITS,
+	#endif
+		};
+
+	/* Configure console UART. */
+	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
+	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
-void serial_tx_callback(void)
-{
-	ble_enable_pin_set_low();
-}
 
 
-at_ble_status_t platform_init(void* platform_params)
-{
-	configure_serial_drv();
-	serial_read_byte((uint8_t *)&rx_data);
-
-	ble_enable_pin_init();	
-	return AT_BLE_SUCCESS;
-}
-
-void platform_interface_send(uint8_t* data, uint32_t len)
-{
-	ble_enable_pin_set_high();
-	serial_drv_send(data, len);	
-#if SAMG55
-	ble_enable_pin_set_low();
-#endif
-}
-
-void platform_cmd_cmpl_signal()
-{
-	cmd_cmpl_flag = 1;
-}
-
-void platform_cmd_cmpl_wait(bool* timeout)
-{
-	while(cmd_cmpl_flag != 1);
-	cmd_cmpl_flag = 0;
-	//*timeout = true; //Incase of timeout[default to 4000ms]
-}
-
-void platform_event_signal()
-{
-	event_flag = 1;
-}
-
-uint8_t platform_event_wait(uint32_t timeout)
-{
-	/* Timeout in ms */
-	uint8_t status = AT_BLE_SUCCESS;//AT_BLE_TIMEOUT in case of timeout
-	while(event_flag != 1);
-	event_flag = 0;
-	return status;
-}
-
+/* EOF */

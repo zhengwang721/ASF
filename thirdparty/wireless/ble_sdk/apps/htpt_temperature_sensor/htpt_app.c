@@ -44,8 +44,12 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-
-
+ /**
+ * \mainpage
+ * \section preface Preface
+ * This is the reference manual for the EDDemo  Application
+ */
+/*- Includes ---------------------------------------------------------------*/
 
 #include <asf.h>
 #include "platform.h"

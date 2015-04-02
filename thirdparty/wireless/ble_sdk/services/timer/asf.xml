@@ -8,7 +8,7 @@
 				<info type="description" value="summary">
 				Timer Driver
 				</info>
-				<build type="c-source"      value="timer_hw.c"/>
+				<build type="c-source"      value="sam0/timer_hw.c"/>
 				<build type="header-file"   value="timer_hw.h"/>
 				<build type="include-path"  value="."/>
     
@@ -25,7 +25,7 @@
 				<info type="description" value="summary">
 				Timer Driver
 				</info>
-				<build type="c-source"      value="timer_hw.c"/>
+				<build type="c-source"      value="sam/timer_hw.c"/>
 				<build type="header-file"   value="timer_hw.h"/>
 				<build type="include-path"  value="."/>
 

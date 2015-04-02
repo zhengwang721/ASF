@@ -4,7 +4,7 @@
 				<info type="description" value="summary">
 				Console Driver
 				</info>
-				<build type="c-source"      value="console_serial.c"/>
+				<build type="c-source"      value="sam0/console_serial.c"/>
 				<build type="header-file"   value="console_serial.h"/>
 				<build type="include-path"  value="."/>
 
@@ -24,7 +24,7 @@
 				<info type="description" value="summary">
 				Console Driver
 				</info>
-				<build type="c-source"      value="console_serial.c"/>
+				<build type="c-source"      value="sam/console_serial.c"/>
 				<build type="header-file"   value="console_serial.h"/>
 				<build type="include-path"  value="."/>
 
