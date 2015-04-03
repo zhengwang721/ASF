@@ -71,11 +71,16 @@
  *
  * The following kit is required for carrying out the test:
  *  - SAM D21 Xplained Pro board
+ *  - SAM L21 Xplained Pro board
  *
  * \section asfdoc_sam0_i2c_unit_test_setup Setup
  * The following connections has to be made using wires:
+ * - SAM D21 Xplained Pro board
  *  - \b PB02 (EXT1 PIN7) <-----> PA08 (EXT2 PIN11) 
  *  - \b PB03 (EXT1 PIN8) <-----> PA09 (EXT2 PIN12)
+ * - SAM L21 Xplained Pro board
+ *  - \b PB08 (EXT1 PIN14) <-----> PA08 (EXT2 PIN11) 
+ *  - \b PB09 (EXT1 PIN13) <-----> PA09 (EXT2 PIN12)
  *
  * To run the test:
  *  - Connect the supported Xplained Pro board to the computer using a
@@ -464,7 +469,11 @@ int main(void)
 	DEFINE_TEST_ARRAY(i2c_tests) = {
 		&i2c_init_test,
 		&i2c_master_transfer_test,
+/* saml21 in fast_mode, both the master and salve need to be pulled_up */
+#if	(SAML21)
+#else
 		&i2c_full_speed_test,
+#endif
 
 	};
 
