@@ -310,6 +310,9 @@ extern "C" {
 /** ExInitial description section. */
 extern DmacDescriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
 
+/* DMA channel interrup flag. */
+extern uint8_t g_chan_interrupt_flag[CONF_MAX_USED_CHANNEL_NUM];
+
 /** DMA priority level. */
 enum dma_priority_level {
 	/** Priority level 0. */
@@ -572,7 +575,7 @@ static inline void dma_enable_callback(struct dma_resource *resource,
 	Assert(resource);
 
 	resource->callback_enable |= 1 << type;
-	DMAC->CHINTENSET.reg = (1UL << type);
+	g_chan_interrupt_flag[resource->channel_id] |= (1UL << type);
 }
 
 /**
@@ -588,6 +591,7 @@ static inline void dma_disable_callback(struct dma_resource *resource,
 	Assert(resource);
 
 	resource->callback_enable &= ~(1 << type);
+	g_chan_interrupt_flag[resource->channel_id] &= (~(1UL << type) & DMAC_CHINTENSET_MASK);
 	DMAC->CHINTENCLR.reg = (1UL << type);
 }
 
