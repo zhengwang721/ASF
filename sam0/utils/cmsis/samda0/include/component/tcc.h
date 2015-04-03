@@ -969,28 +969,28 @@ typedef union {
 
 /* -------- TCC_INTFLAG : (TCC Offset: 0x2C) (R/W 32) Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint32_t OVF:1;            /*!< bit:      0  Overflow                           */
-    uint32_t TRG:1;            /*!< bit:      1  Retrigger                          */
-    uint32_t CNT:1;            /*!< bit:      2  Counter                            */
-    uint32_t ERR:1;            /*!< bit:      3  Error                              */
-    uint32_t :7;               /*!< bit:  4..10  Reserved                           */
-    uint32_t DFS:1;            /*!< bit:     11  Non-Recoverable Debug Fault        */
-    uint32_t FAULTA:1;         /*!< bit:     12  Recoverable Fault A                */
-    uint32_t FAULTB:1;         /*!< bit:     13  Recoverable Fault B                */
-    uint32_t FAULT0:1;         /*!< bit:     14  Non-Recoverable Fault 0            */
-    uint32_t FAULT1:1;         /*!< bit:     15  Non-Recoverable Fault 1            */
-    uint32_t MC0:1;            /*!< bit:     16  Match or Capture 0                 */
-    uint32_t MC1:1;            /*!< bit:     17  Match or Capture 1                 */
-    uint32_t MC2:1;            /*!< bit:     18  Match or Capture 2                 */
-    uint32_t MC3:1;            /*!< bit:     19  Match or Capture 3                 */
-    uint32_t :12;              /*!< bit: 20..31  Reserved                           */
+    __I uint32_t OVF:1;            /*!< bit:      0  Overflow                           */
+    __I uint32_t TRG:1;            /*!< bit:      1  Retrigger                          */
+    __I uint32_t CNT:1;            /*!< bit:      2  Counter                            */
+    __I uint32_t ERR:1;            /*!< bit:      3  Error                              */
+    __I uint32_t :7;               /*!< bit:  4..10  Reserved                           */
+    __I uint32_t DFS:1;            /*!< bit:     11  Non-Recoverable Debug Fault        */
+    __I uint32_t FAULTA:1;         /*!< bit:     12  Recoverable Fault A                */
+    __I uint32_t FAULTB:1;         /*!< bit:     13  Recoverable Fault B                */
+    __I uint32_t FAULT0:1;         /*!< bit:     14  Non-Recoverable Fault 0            */
+    __I uint32_t FAULT1:1;         /*!< bit:     15  Non-Recoverable Fault 1            */
+    __I uint32_t MC0:1;            /*!< bit:     16  Match or Capture 0                 */
+    __I uint32_t MC1:1;            /*!< bit:     17  Match or Capture 1                 */
+    __I uint32_t MC2:1;            /*!< bit:     18  Match or Capture 2                 */
+    __I uint32_t MC3:1;            /*!< bit:     19  Match or Capture 3                 */
+    __I uint32_t :12;              /*!< bit: 20..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
-    uint32_t :16;              /*!< bit:  0..15  Reserved                           */
-    uint32_t MC:4;             /*!< bit: 16..19  Match or Capture x                 */
-    uint32_t :12;              /*!< bit: 20..31  Reserved                           */
+    __I uint32_t :16;              /*!< bit:  0..15  Reserved                           */
+    __I uint32_t MC:4;             /*!< bit: 16..19  Match or Capture x                 */
+    __I uint32_t :12;              /*!< bit: 20..31  Reserved                           */
   } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } TCC_INTFLAG_Type;

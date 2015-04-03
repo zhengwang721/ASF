@@ -229,10 +229,10 @@ typedef union {
 
 /* -------- WDT_INTFLAG : (WDT Offset: 0x6) (R/W  8) Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint8_t  EW:1;             /*!< bit:      0  Early Warning                      */
-    uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
+    __I uint8_t  EW:1;             /*!< bit:      0  Early Warning                      */
+    __I uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } WDT_INTFLAG_Type;
