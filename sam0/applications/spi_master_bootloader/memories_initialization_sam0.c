@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Bootloader specific configuration.
+ * \brief Initialization of memories (SAM0)
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,18 +40,39 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
-#ifndef CONF_BOOTLOADER_H_INCLUDED
-#define CONF_BOOTLOADER_H_INCLUDED
+#include <asf.h>
 
-#include "conf_board.h"
+#include "conf_board.h" /* To get on-board memories configurations */
+#include "conf_access.h"
+#include "memories_initialization.h"
 
-#define APP_START_ADDRESS          0x00008000
-#define BOOT_LED                   LED0_PIN
-#define BOOT_LOAD_PIN              SW0_PIN
-#define GPIO_BOOT_PIN_MASK         (1U << (BOOT_LOAD_PIN & 0x1F))
+static void sdmmc_mem_init(uint32_t wait_loop)
+{
+	Ctrl_status status;
+	delay_init();
+	sd_mmc_init();
+	while(1) {
+		status = sd_mmc_test_unit_ready(0);
+		if (CTRL_FAIL == status) {
+			printf("Card install FAIL\n\r");
+			printf("Please unplug and re-plug the card.\n\r");
+			while (CTRL_NO_PRESENT != sd_mmc_check(0)) {
+			}
+		}
+		if (CTRL_GOOD == status) {
+			break;
+		}
+		if (wait_loop) {
+			wait_loop --;
+			if (wait_loop == 0) {
+				break;
+			}
+		}
+	}
+}
 
-#endif /* CONF_BOARD_H_INCLUDED */
+void memories_initialization(void)
+{
+	sdmmc_mem_init(0);
+}
