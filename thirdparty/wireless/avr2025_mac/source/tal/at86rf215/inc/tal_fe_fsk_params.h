@@ -50,7 +50,7 @@
 #ifndef TAL_FE_FSK_PARAMS_H
 #define TAL_FE_FSK_PARAMS_H
 
-#ifdef RF215v1
+#ifdef RF215V1
 /* columns: { txcutc,txdfe,pac04,pac09,pac24,rxbwc09,rxdfe09,rxbwc24,rxdfe24,agcc,agcs } */
 /* cow index: srate_midx = srate << 3 + midx */
 #define FSK_PARAMS \
@@ -105,7 +105,7 @@
     { 75	, 65	, 127	, 127	, 118	, 10	, 98	, 27	, 98	, 129	, 119	 }     /* srate=5, midx=7 */ \
   }
 
-#else /* #ifdef RF215v1 */
+#else /* #ifdef RF215V1 */
 
 /* columns: { txcutc,txdfe,pac04,pac09,pac24,rxbwc09,rxdfe09,rxbwc24,rxdfe24,agcc,agcs } */
 /* cow index: srate_midx = srate << 3 + midx */
@@ -161,7 +161,7 @@
     { 75	, 129	, 127	, 127	, 118	, 10	, 98	, 27	, 98	, 129	, 119	 }     /* srate=5, midx=7 */ \
   }
 
-#endif /* #ifdef RF215v1 */
+#endif /* #ifdef RF215V1 */
 
 #if (defined RF215v2)
 /* Pre-emphasis filter coefficients */

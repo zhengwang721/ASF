@@ -77,7 +77,7 @@ static void set_tx_pwr(trx_id_t trx_id, int8_t tx_pwr);
 static retval_t set_channel(trx_id_t trx_id, uint16_t ch);
 static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg);
 static ch_pg_t calc_ch_page(trx_id_t trx_id);
-
+static void wait_for_freq_settling(trx_id_t trx_id);
 /* === IMPLEMENTATION ====================================================== */
 
 
@@ -692,10 +692,86 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
 			/* Wait until new channel is set */
 			}
 			TAL_RF_IRQ_CLR(trx_id, RF_IRQ_TRXRDY);
+            //wait_for_freq_settling(trx_id);
 			}
 		}
 
 	return status;
+}
+
+
+
+/**
+ * @brief Waits for frequency settling
+ *
+ * @param trx_id Transceiver identifier
+ */
+static void wait_for_freq_settling(trx_id_t trx_id)
+{
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+    bool locked;
+
+#ifdef RF215V1
+
+    uint32_t start_time = 0;
+
+    pal_get_current_time(&start_time);
+
+    do
+    {
+#ifdef IQ_RADIO
+        locked = pal_dev_bit_read(RF215_RF, GET_REG_ADDR(SR_RF09_PLL_LS));
+#else
+        locked = trx_bit_read( reg_offset +SR_RF09_PLL_LS);
+#endif
+        if (!locked)
+        {
+#if (POLL_TIME_GAP > 0)
+            pal_timer_delay(POLL_TIME_GAP); /* Delay to reduce SPI storm */
+#endif
+            /* Workaround for errata reference #4810 */
+            uint32_t now;
+            pal_get_current_time(&now);
+            if (abs(now - start_time) > MAX_PLL_LOCK_DURATION)
+            {
+                trx_reg_write( reg_offset + RG_RF09_PLL, 9);
+                pal_timer_delay(PLL_FRZ_SETTLING_DURATION);
+                 trx_reg_write( reg_offset + RG_RF09_PLL, 8);
+				 pal_timer_delay(PLL_FRZ_SETTLING_DURATION);
+                do
+                {
+#ifdef IQ_RADIO
+                    locked = pal_dev_bit_read(RF215_RF, GET_REG_ADDR(SR_RF09_PLL_LS));
+#else
+                    locked = trx_bit_read( reg_offset + SR_RF09_PLL_LS);
+#endif
+                }
+                while (!locked);
+                break;
+            }
+        }
+    }
+    while (!locked);
+
+#else /* #if RF215v1 */
+
+    do
+    {
+#ifdef IQ_RADIO
+        locked = pal_dev_bit_read(RF215_RF, GET_REG_ADDR(SR_RF09_PLL_LS));
+#else
+        locked = trx_bit_read( reg_offset + SR_RF09_PLL_LS);
+#endif
+        if (!locked)
+        {
+#if (POLL_TIME_GAP > 0)
+            pal_timer_delay(POLL_TIME_GAP); /* Delay to reduce SPI storm */
+#endif
+        }
+    }
+    while (!locked);
+
+#endif /* #if RF215v1 */
 }
 
 
@@ -1456,7 +1532,7 @@ static retval_t set_channel(trx_id_t trx_id, uint16_t ch)
         {
             /* Set TXPREP and wait until it is reached. */
             switch_to_txprep(trx_id);
-  #if (defined RF215v1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
+  #if (defined RF215V1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
               stop_rpc(trx_id);
   #endif
         }
@@ -1471,7 +1547,8 @@ static retval_t set_channel(trx_id_t trx_id, uint16_t ch)
 
         if (trx_state[trx_id] == RF_TXPREP)
         {
-            wait_for_txprep(trx_id);
+          // wait_for_freq_settling(trx_id);
+		  wait_for_txprep(trx_id);
             
         }
 

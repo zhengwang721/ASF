@@ -165,7 +165,7 @@
 
 #define ENABLE_TFA
 
-#define RF215v1
+#define RF215V1
 
 /**
  * Enable support of FSK modulation

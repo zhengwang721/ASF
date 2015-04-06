@@ -214,8 +214,8 @@
 #   endif
 
 
-#   ifndef RF215v1
-#      define RF215v1
+#   ifndef RF215V1
+#      define RF215V1
 #   endif
 
 /**

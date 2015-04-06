@@ -112,7 +112,7 @@
 static void ftn_timer_cb(void *parameter);
 static void postpone_tuning(trx_id_t trx_id);
 #endif
-#ifdef RF215v1
+#ifdef RF215V1
 static inline uint8_t get_median(int *temp_array, uint8_t len_of_array);
 static inline int compare_uin32_t(const void *f1, const void *f2);
 #endif
@@ -207,7 +207,7 @@ static void ftn_timer_cb(void *parameter)
             }
             else
             {
-#ifdef RF215_v1
+#ifdef RF215V1
                 calibrate_LO(trx_id);
 #endif
                 switch_to_rx(trx_id);
@@ -253,7 +253,7 @@ static void postpone_tuning(trx_id_t trx_id)
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
 
 
-#ifdef RF215v1
+#ifdef RF215V1
 /**
  * @brief Calibrate the LO value; workaround for errata reference #4807
  *
@@ -292,9 +292,9 @@ void calibrate_LO(trx_id_t trx_id)
 #endif
         trx_state[trx_id] = RF_TRXOFF;
 #ifdef IQ_RADIO
-        pal_dev_read(RF215_RF, reg_offset + 0x125, (uint8_t *)&temp[i][0], 2);
+        pal_dev_read(RF215_RF, reg_offset + RG_RF09_TXCI, (uint8_t *)&temp[i][0], 2);
 #else
-        trx_read(reg_offset + 0x125, (uint8_t *)&temp[i][0], 2);
+        trx_read(reg_offset + RG_RF09_TXCI, (uint8_t *)&temp[i][0], 2);
 #endif
 
         /* Check if the short loop measurement is sufficient */
@@ -353,10 +353,10 @@ void calibrate_LO(trx_id_t trx_id)
         }
     }
 }
-#endif /* #ifdef RF215v1 */
+#endif /* #ifdef RF215V1 */
 
 
-#ifdef RF215v1
+#ifdef RF215V1
 /**
  * @brief Implements required compare function for qsort().
  */
@@ -364,10 +364,10 @@ static inline int compare_uin32_t(const void *f1, const void *f2)
 {
     return (*(int *)f1 - *(int *)f2);
 }
-#endif /* #ifdef RF215v1 */
+#endif /* #ifdef RF215V1 */
 
 
-#ifdef RF215v1
+#ifdef RF215V1
 /**
  * @brief Gets a median value
  */
@@ -396,7 +396,7 @@ static inline uint8_t get_median(int *temp_array, uint8_t len_of_array)
         return (temp / 2);
     }
 }
-#endif /* #ifdef RF215v1 */
+#endif /* #ifdef RF215V1 */
 
 
 /* EOF */

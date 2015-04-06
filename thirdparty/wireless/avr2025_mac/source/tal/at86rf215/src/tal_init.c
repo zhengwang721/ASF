@@ -155,7 +155,7 @@ retval_t tal_init(void)
     {
         /* Configure transceiver */
         trx_config((trx_id_t)trx_id);
-#ifdef RF215v1
+#ifdef RF215V1
         /* Calibrate LO */
         calibrate_LO((trx_id_t)trx_id);
 #endif

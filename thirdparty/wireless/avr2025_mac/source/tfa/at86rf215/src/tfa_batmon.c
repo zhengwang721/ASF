@@ -1,4 +1,4 @@
-/*
+/**
  * @file tfa_batmon.c
  *
  * @brief Implementation of TFA battery monitor functionality.

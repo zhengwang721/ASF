@@ -38,6 +38,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ */
+
 #include "compiler.h"
 #include "conf_common_sw_timer.h"
 #include "common_hw_timer.h"

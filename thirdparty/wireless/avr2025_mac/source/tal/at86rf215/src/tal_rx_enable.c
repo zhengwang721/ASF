@@ -119,7 +119,7 @@ uint8_t tal_rx_enable(trx_id_t trx_id, uint8_t state)
 #ifdef IQ_RADIO
         pal_dev_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
 #endif
-#if (defined RF215v1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
+#if (defined RF215V1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
         stop_rpc(trx_id);
 #endif
         trx_state[trx_id] = RF_TRXOFF;

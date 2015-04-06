@@ -37,7 +37,11 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
+/*
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ */
 /* Prevent double inclusion */
 #ifndef COMMON_SW_TIMER_H
 #define COMMON_SW_TIMER_H

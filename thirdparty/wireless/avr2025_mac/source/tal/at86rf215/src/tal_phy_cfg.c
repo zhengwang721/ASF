@@ -111,7 +111,7 @@ retval_t conf_trx_modulation(trx_id_t trx_id)
         pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
         trx_state[trx_id] = RF_TRXOFF;
-  #if (defined RF215v1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
+  #if (defined RF215V1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
           stop_rpc(trx_id);
   #endif
     }

@@ -137,7 +137,7 @@ void trx_irq_handler_cb(void)
                 per[trx_id].agcr++;
                 printf("AGCR %"PRIu32"\n", now);
 #endif
-#if (defined RF215v1) && (!defined BASIC_MODE)
+#if (defined RF215V1) && (!defined BASIC_MODE)
                 /* Workaround for errata reference #4830 */
                 if ((irqs & BB_IRQ_RXFE) == 0)
                 {
@@ -183,7 +183,7 @@ void trx_irq_handler_cb(void)
                
                 /* used for IFS and for MEASURE_ON_AIR_DURATION */
                 pal_get_current_time(&rxe_txe_tstamp[trx_id]);
-				tal_rx_enable(trx_id, PHY_RX_ON);
+				//tal_rx_enable(trx_id, PHY_RX_ON);//abi
             }
 
             /*
@@ -289,7 +289,7 @@ void bb_irq_handler_cb(void)
                 per[trx_id].agcr++;
                 printf("AGCR %"PRIu32"\n", now);
 #endif
-#if (defined RF215v1) && (!defined BASIC_MODE)
+#if (defined RF215V1) && (!defined BASIC_MODE)
                 /* Workaround for errata reference #4830 */
                 if ((irqs & BB_IRQ_RXFE) == 0)
                 {

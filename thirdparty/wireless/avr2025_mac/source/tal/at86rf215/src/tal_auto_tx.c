@@ -515,7 +515,7 @@ void tx_done_handling(trx_id_t trx_id, retval_t status)
     /* Enable AACK again and disable CCA / TX procedure */
     trx_reg_write( reg_offset+ RG_BBC0_AMCS, AMCS_AACK_MASK);
 
-#if (defined RF215v1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
+#if (defined RF215V1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
     stop_rpc(trx_id);
 #endif
 

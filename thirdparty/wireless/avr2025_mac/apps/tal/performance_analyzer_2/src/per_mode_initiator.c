@@ -357,7 +357,7 @@ void per_mode_initiator_task(trx_id_t trx)
 			/*	tal_tx_frame(trx,node_info[trx].tx_frame_info,
 				NO_CSMA_NO_IFS,
 				true );*/
-			delay_ms(1);
+			delay_ms(2);
 			if (curr_trx_config_params[trx].csma_enabled) {
 
 			if(tal_pib[trx].phy.modulation == OFDM) 

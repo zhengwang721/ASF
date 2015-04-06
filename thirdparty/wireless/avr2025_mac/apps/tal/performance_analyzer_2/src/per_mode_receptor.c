@@ -305,6 +305,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 return;
             }
             frames_with_wrong_crc[trx]++;
+			return;
         }
     }
 #endif /* #ifdef CRC_SETTING_ON_REMOTE_NODE */
@@ -436,10 +437,13 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 					
                     cur_seq_no[trx] = mac_frame_info->mpdu[PL_POS_SEQ_NUM-1];//check
                     /* Check for the duplicate packets */
-                    if (prev_seq_no[trx] != cur_seq_no[trx])
+                    if (prev_seq_no[trx] == cur_seq_no[trx])
                     {
-
-                        number_rx_frames[trx]++;
+						frames_with_wrong_crc[trx]++;
+					}
+					else
+					{
+						number_rx_frames[trx]++;
                         prev_seq_no[trx] = cur_seq_no[trx];
                         /* Extract LQI and  RSSI */
                         aver_lqi[trx] += mac_frame_info->mpdu[lqi_pos];
@@ -447,11 +451,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                         aver_rssi[trx] += (((int8_t)(mac_frame_info->mpdu[ed_pos]))+127); 
 						//printf("\r\n RSSI = %d dBm",(int8_t)mac_frame_info->mpdu[ed_pos]);
                     }
-					else
-					{
-						printf("WARNING");
-					}
-
+					
                 }
 	           /* Led is toggled indicating the test in progress at the count of
                  * LED_TOGGLE_COUNT_FOR_PER

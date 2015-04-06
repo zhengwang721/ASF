@@ -320,6 +320,12 @@ void tal_task(void)
             {
                 
             }
+			if (rf_irqs & RF_IRQ_EDC)
+			{
+				
+				TAL_RF_IRQ_CLR(trx_id, RF_IRQ_EDC);
+				handle_ed_end_irq((trx_id_t)trx_id);
+			}
             if (rf_irqs & RF_IRQ_TRXERR)
             {
                 
@@ -345,12 +351,7 @@ void tal_task(void)
                 
                 TAL_RF_IRQ_CLR(trx_id, RF_IRQ_IQIFSF);
             }
-            if (rf_irqs & RF_IRQ_EDC)
-            {
-                
-                TAL_RF_IRQ_CLR(trx_id, RF_IRQ_EDC);
-                handle_ed_end_irq((trx_id_t)trx_id);
-            }
+            
         }
     }
 } /* tal_task() */
@@ -410,12 +411,12 @@ void switch_to_txprep(trx_id_t trx_id)
 
     wait_for_txprep(trx_id);
 
-#ifdef RF215v1
+#ifdef RF215V1
     /* Workaround for errata reference #4807 */
 #ifdef IQ_RADIO
-    pal_dev_write(RF215_RF, reg_offset + 0x125, (uint8_t *)&txc[trx_id][0], 2);
+    pal_dev_write(RF215_RF, reg_offset + RG_RF09_TXCI, (uint8_t *)&txc[trx_id][0], 2);
 #else
-    trx_write( reg_offset + 0x125, (uint8_t *)&txc[trx_id][0], 2);
+    trx_write( reg_offset + RG_RF09_TXCI, (uint8_t *)&txc[trx_id][0], 2);
 #endif
 #endif
 }
@@ -431,7 +432,7 @@ void wait_for_txprep(trx_id_t trx_id)
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     rf_cmd_state_t state;
 
-#ifdef RF215v1
+#ifdef RF215V1
 
     uint32_t start_time = 0;
 
@@ -442,7 +443,7 @@ void wait_for_txprep(trx_id_t trx_id)
 #ifdef IQ_RADIO
         state = (rf_cmd_state_t)pal_dev_reg_read(RF215_RF, GET_REG_ADDR(RG_RF09_STATE));
 #else
-        state = trx_reg_read(reg_offset + RG_RF09_STATE);
+        state = (rf_cmd_state_t)trx_reg_read(reg_offset + RG_RF09_STATE);
 #endif       
 
         if (state != RF_TXPREP)
@@ -456,13 +457,13 @@ void wait_for_txprep(trx_id_t trx_id)
             if (abs(now - start_time) > MAX_PLL_LOCK_DURATION)
             {
                 trx_reg_write(reg_offset + RG_RF09_PLL, 9);
-                pal_timer_delay(PLL_FRZ_SETTLING_DURATION);
-                trx_reg_write(reg_offset + RG_RF09_PLL, 8);
+                    pal_timer_delay(PLL_FRZ_SETTLING_DURATION);
+                    trx_reg_write(reg_offset + RG_RF09_PLL, 8);
 				
                 do
                 {
                     
-                    state = trx_reg_read(reg_offset + RG_RF09_STATE);
+                    state = (rf_cmd_state_t)trx_reg_read(reg_offset + RG_RF09_STATE);
                 }
                 while (state != RF_TXPREP);
                 break;
@@ -471,7 +472,7 @@ void wait_for_txprep(trx_id_t trx_id)
     }
     while (state != RF_TXPREP);
 
-#else /* #if RF215v1 */
+#else /* #if RF215V1 */
 
     do
     {
@@ -489,7 +490,7 @@ void wait_for_txprep(trx_id_t trx_id)
     }
     while (state != RF_TXPREP);
 
-#endif /* #if RF215v1 */
+#endif /* #if RF215V1 */
 
     trx_state[trx_id] = RF_TXPREP;
 }
@@ -563,7 +564,7 @@ void stop_tal_timer(trx_id_t trx_id)
 }
 
 
-#if (defined RF215v1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
+#if (defined RF215V1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
 /**
  * @brief Stops RPC; SW workaround for errata reference 4841
  *

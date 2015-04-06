@@ -1,4 +1,4 @@
-/*
+/**
  * @file tfa.c
  *
  * @brief Implementation of Transceiver Feature Access (TFA) functionality.

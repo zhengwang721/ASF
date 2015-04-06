@@ -95,7 +95,7 @@ void handle_rx_end_irq(trx_id_t trx_id)
 {
     
     trx_state[trx_id] = RF_TXPREP;
-  #if (defined RF215v1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
+  #if (defined RF215V1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
       stop_rpc(trx_id);
   #endif
 

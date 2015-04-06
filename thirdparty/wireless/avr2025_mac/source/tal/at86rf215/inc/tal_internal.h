@@ -218,7 +218,7 @@ void switch_to_rx(trx_id_t trx_id);
 void switch_to_txprep(trx_id_t trx_id);
 void wait_for_txprep(trx_id_t trx_id);
 void stop_tal_timer(trx_id_t trx_id);
-#if (defined RF215v1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
+#if (defined RF215V1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
 void stop_rpc(trx_id_t trx_id);
 #endif
 
@@ -229,7 +229,7 @@ void stop_rpc(trx_id_t trx_id);
 void start_ftn_timer(trx_id_t trx_id);
 void stop_ftn_timer(trx_id_t trx_id);
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
-#ifdef RF215v1
+#ifdef RF215V1
 void calibrate_LO(trx_id_t trx_id);
 #endif
 
