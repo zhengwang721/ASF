@@ -57,7 +57,7 @@ static volatile uint32_t event_flag = 0;
 void serial_rx_callback(void)
 {
 #if SAMG55
-	while(serial_read_byte((uint8_t *)&rx_data) == STATUS_OK)
+	while(serial_read_byte(&rx_data) == STATUS_OK)
 	{
 		platform_interface_callback((uint8_t *)&rx_data, 1);
 	}		
@@ -67,7 +67,7 @@ void serial_rx_callback(void)
 	do 
 	{
 	  platform_interface_callback((uint8_t *)&rx_data, 1);
-	} while (serial_read_byte((uint8_t *)&rx_data) == STATUS_BUSY);	
+	} while (serial_read_byte(&rx_data) == STATUS_BUSY);	
 #endif
 }
 
@@ -80,7 +80,7 @@ void serial_tx_callback(void)
 at_ble_status_t platform_init(void* platform_params)
 {
 	configure_serial_drv();
-	serial_read_byte((uint8_t *)&rx_data);
+	serial_read_byte(&rx_data);
 
 	ble_enable_pin_init();	
 	return AT_BLE_SUCCESS;

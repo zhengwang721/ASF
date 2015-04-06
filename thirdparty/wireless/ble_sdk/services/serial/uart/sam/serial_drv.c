@@ -136,17 +136,22 @@ uint16_t serial_drv_send(uint8_t* data, uint16_t len)
 uint8_t serial_read_data(uint8_t* data, uint16_t max_len)
 {
 	uint32_t i;
+	uint16_t uart_rx_data;
 	for (i = 0; i < max_len; ++i)
 	{
-		if(serial_read_byte(&data[i]) != STATUS_OK)
+		if(serial_read_byte(&uart_rx_data) == STATUS_OK)
 		{
-			return --i;
+			data[i] = (uint8_t)uart_rx_data;
+		}
+		else
+		{
+			return i;
 		}
 	}
  return max_len;
 }
 
-uint8_t serial_read_byte(uint8_t* data)
+uint8_t serial_read_byte(uint16_t* data)
 {
    uint32_t temp;
    if (usart_read(BLE_UART, &temp) == 0)

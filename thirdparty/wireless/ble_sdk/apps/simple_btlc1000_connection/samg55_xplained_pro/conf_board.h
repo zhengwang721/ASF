@@ -53,6 +53,11 @@
 /* USART6 module is used in SYNC. mode. */
 #define CONF_BOARD_USART_RXD
 #define CONF_BOARD_USART_TXD
-#define CONF_BOARD_USART_SCK
+
+
+/** Configure AT30TSE pins */
+#define CONF_BOARD_AT30TSE
+
+#define BOARD_FLEXCOM_TWI			FLEXCOM4
 
 #endif /* CONF_BOARD_H_INCLUDED */

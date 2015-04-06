@@ -106,9 +106,9 @@ uint8_t serial_read_data(uint8_t* data, uint16_t max_len)
  return usart_read_buffer_job(&usart_instance, data, max_len);
 }
 
-uint8_t serial_read_byte(uint8_t* data)
+uint8_t serial_read_byte(uint16_t* data)
 {
-	return usart_read_job(&usart_instance, (uint16_t *)data);
+	return usart_read_job(&usart_instance, data);
 }
 
 static void serial_drv_write_cb(struct usart_module *const usart_module)
