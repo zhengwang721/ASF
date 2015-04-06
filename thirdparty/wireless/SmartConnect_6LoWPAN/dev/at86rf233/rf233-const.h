@@ -53,6 +53,7 @@
     #define STATE_TRANSITION        (0x1F)
 #define RF233_REG_TRX_STATE       (0x02)
   #define TRX_STATE_TRAC_STATUS     (0xE0)  /* result of transaction in extended mode */
+  #define SR_MAX_FRAME_RETRIES   0x2C, 0xF0, 4
     #define TRAC_SUCCESS              (0 << 5)
     #define TRAC_SUCCESS_DATA_PENDING (1 << 5)
     #define TRAC_SUCCESS_WAIT_FOR_ACK (2 << 5)
