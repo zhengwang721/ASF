@@ -55,6 +55,7 @@
 #include "platform.h"
 #include "at_ble_api.h"
 
+#define BEACON_IDENTIFIER (0x46)
 
 static uint8_t adv_data[] = {0x1a, 0xff, 0x4c, 0x00, 0x02, 0x15, 0x21, 0x8A,
 	                         0xF6, 0x52, 0x73, 0xE3, 0x40, 0xB3, 0xB4, 0x1C,
@@ -111,7 +112,9 @@ void app_init(void)
 {
 	uint8_t port = 74;
 	at_ble_addr_t addr = {AT_BLE_ADDRESS_PUBLIC,
-		{0x25, 0x75, 0x11, 0x6a, 0x7f, 0x7f} };
+		{0x45, 0x75, 0x11, 0x6a, 0x7f, 0x7f} };
+			
+	addr.addr[0] = BEACON_IDENTIFIER;
 
 	// init device
 	at_ble_init(&port);
@@ -123,6 +126,7 @@ void app_init(void)
 		NULL, 0, chars, 2);
 
 	// start advertising
+	adv_data[25] = BEACON_IDENTIFIER;
 	at_ble_adv_data_set(adv_data, sizeof(adv_data), scan_rsp_data, sizeof(scan_rsp_data));
 	at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 100, 1000, 0);
 	LED_On(LED0);

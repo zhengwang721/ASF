@@ -58,9 +58,6 @@
 *							        Macros	                                     							*
 ****************************************************************************************/
 
-#define BEGIN_PACK   _Pragma("pack(1)");
-#define END_PACK     _Pragma("pack()");
-
 /** @brief BLE address length. */
 #define AT_BLE_ADDR_LEN            6
 
@@ -965,7 +962,6 @@ typedef struct
 
  /**@brief AT_BLE_CONNECTED message format. This message is sent to the APP when the link request is complete.
  */
- BEGIN_PACK
 typedef struct
 {
 	at_ble_addr_t peer_addr;
@@ -973,7 +969,6 @@ typedef struct
 	at_ble_status_t conn_status;
 
 }at_ble_connected_t;
-END_PACK
 
 typedef struct
 {
