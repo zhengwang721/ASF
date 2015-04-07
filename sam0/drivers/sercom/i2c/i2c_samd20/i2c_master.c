@@ -540,12 +540,12 @@ enum status_code i2c_master_read_packet_wait_no_stop(
 }
 
 /**
- * \brief Reads data packet from slave without sending nack signal and a stop 
+ * \brief Reads data packet from slave without sending a nack signal and a stop 
  * condition when done
  *
  * Reads a data packet from the specified slave address on the I<SUP>2</SUP>C
- * bus without sending a stop condition when done, thus retaining ownership of
- * the bus when done. To end the transaction, a
+ * bus without sending a nack signal and a stop condition when done, 
+ * thus retaining ownership of the bus when done. To end the transaction, a
  * \ref i2c_master_read_packet_wait "read" or
  * \ref i2c_master_write_packet_wait "write" with stop condition must be
  * performed.
@@ -593,8 +593,8 @@ enum status_code i2c_master_read_packet_wait_no_nack(
  * \param[in,out] module  Pointer to software module struct.
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer.
  *
- * \return Status of reading packet.
- * \retval STATUS_OK                    The packet was read successfully
+ * \return Status of writing packet.
+ * \retval STATUS_OK                    The packet was write successfully
  * \retval STATUS_ERR_TIMEOUT           If no response was given within
  *                                      specified timeout period
  * \retval STATUS_ERR_DENIED            If error on bus
@@ -680,8 +680,8 @@ static enum status_code _i2c_master_write_packet(
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of reading packet.
- * \retval STATUS_OK                    If packet was read
+ * \return Status of writing packet.
+ * \retval STATUS_OK                    If packet was write successfully
  * \retval STATUS_BUSY                  If master module is busy with a job
  * \retval STATUS_ERR_DENIED            If error on bus
  * \retval STATUS_ERR_PACKET_COLLISION  If arbitration is lost
@@ -730,8 +730,8 @@ enum status_code i2c_master_write_packet_wait(
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of reading packet.
- * \retval STATUS_OK                    If packet was read
+ * \return Status of writing packet.
+ * \retval STATUS_OK                    If packet was write successfully
  * \retval STATUS_BUSY                  If master module is busy
  * \retval STATUS_ERR_DENIED            If error on bus
  * \retval STATUS_ERR_PACKET_COLLISION  If arbitration is lost
@@ -774,7 +774,7 @@ enum status_code i2c_master_write_packet_wait_no_stop(
  *       is to be sent after a read, the \ref i2c_master_read_packet_wait
  *       function must be used.
  *
- * \param[in] module  Pointer to the software instance struct
+ * \param[in,out] module  Pointer to the software instance struct
  */
 void i2c_master_send_stop(struct i2c_master_module *const module)
 {
@@ -794,9 +794,9 @@ void i2c_master_send_stop(struct i2c_master_module *const module)
  * Sends a nack signal on bus.
  *
  * \note This function can only be used after the
- *       \ref i2c_master_write_packet_wait_no_nack function.
- *
- * \param[in] module  Pointer to the software instance struct
+ *       \ref i2c_master_write_packet_wait_no_nack function,
+ *        or \ref i2c_master_read_byte function.
+ * \param[in,out] module  Pointer to the software instance struct
  */
 void i2c_master_send_nack(struct i2c_master_module *const module)
 {
@@ -813,11 +813,11 @@ void i2c_master_send_nack(struct i2c_master_module *const module)
 /**
  * \brief Reads one byte data from slave
  *
- * \param[in]  module  Pointer to software module struct
- * \param[in]  byte    Send one byte data to slave
+ * \param[in,out]  module  Pointer to software module struct
+ * \param[out]     byte    Read one byte data to slave
  *
- * \return Status of reading packet.
- * \retval STATUS_OK                    The packet was read successfully
+ * \return Status of reading byte.
+ * \retval STATUS_OK                    One byte was read successfully
  * \retval STATUS_ERR_TIMEOUT           If no response was given within
  *                                      specified timeout period
  * \retval STATUS_ERR_DENIED            If error on bus
@@ -845,11 +845,11 @@ enum status_code i2c_master_read_byte(
 /**
  * \brief Write one byte data to slave
  *
- * \param[in]  module  Pointer to software module struct
- * \param[in]  byte    Send one byte data to slave
+ * \param[in,out]  module  Pointer to software module struct
+ * \param[in]      byte    Send one byte data to slave
  *
- * \return Status of reading packet.
- * \retval STATUS_OK                    The packet was read successfully
+ * \return Status of writing byte.
+ * \retval STATUS_OK                    One byte was write successfully
  * \retval STATUS_ERR_TIMEOUT           If no response was given within
  *                                      specified timeout period
  * \retval STATUS_ERR_DENIED            If error on bus
