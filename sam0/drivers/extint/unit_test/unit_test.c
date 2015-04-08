@@ -74,8 +74,10 @@
  *
  * \section appdoc_sam0_extint_unit_test_setup Setup
  * The following connections has to be made using wires:
- * - SAM D20/D21/DA1 Xplained Pro
+ * - SAM D20 Xplained Pro
  *  - EXT1 \b Pin 9 (PB04) <-----> Pin 10 (PB05)
+ * - SAM D21 Xplained Pro
+ *  - EXT1 \b Pin 9 (PB04) <-----> Pin 11 (PA08)
  * - SAM R21 Xplained Pro
  *  - EXT1 \b Pin 9 (PA22) <-----> Pin 10 (PA23)
  * - SAM L21 Xplained Pro
@@ -114,13 +116,6 @@
 #include <stdio_serial.h>
 #include <string.h>
 #include "conf_test.h"
-
-/* GPIO pin used for testing the interrupts */
-#define GPIO_TEST_PIN_EXTINT  EXT1_PIN_10
-
-#define EIC_TEST_CHANNEL      EXT1_IRQ_INPUT
-#define EIC_TEST_PIN          EXT1_IRQ_PIN
-#define EIC_TEST_PIN_MUX      EXT1_IRQ_PINMUX
 
 /* Structure for UART module connected to EDBG (used for unit test output) */
 struct usart_module cdc_uart_module;

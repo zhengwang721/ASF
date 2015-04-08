@@ -54,7 +54,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_bod_group SAM Brown Out Detector Driver (BOD)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Brown Out Detector (BOD) modules, to detect
  * and respond to under-voltage events and take an appropriate action.
  *
@@ -415,7 +415,7 @@ static inline void bod_clear_detected(
  *  - \subpage asfdoc_sam0_bod_application_use_case
  *
  * \page asfdoc_sam0_bod_application_use_case Application Use Case for BOD - Application
- * The preferred method of setting BOD33 levels and settings is trough the fuses.
+ * The preferred method of setting BOD33 levels and settings is through the fuses.
  * When it is desirable to set it in software, see the below use case.
  *
  * In this use case, a new BOD33 level might be set in SW if the clock settings
@@ -431,6 +431,11 @@ static inline void bod_clear_detected(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAMDA0/DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

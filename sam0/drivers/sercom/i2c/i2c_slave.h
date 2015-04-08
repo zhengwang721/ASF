@@ -475,7 +475,7 @@ static inline void _i2c_slave_set_ctrlb_ackact(
 		bool send_ack)
 {
 	Assert(module);
-	Assert(module->hw->I2CS);
+	Assert(module->hw);
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
@@ -484,10 +484,10 @@ static inline void _i2c_slave_set_ctrlb_ackact(
 	system_interrupt_enter_critical_section();
 	i2c_hw->STATUS.reg = 0;
 
-		if (send_ack == true) {
+	if (send_ack == true) {
 		i2c_hw->CTRLB.reg = 0;
-		}
-		else {
+	}
+	else {
 		i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_ACKACT;
 	}
 	system_interrupt_leave_critical_section();
@@ -520,7 +520,7 @@ static inline void _i2c_slave_set_ctrlb_cmd3(
 		struct i2c_slave_module *const module)
 {
 	Assert(module);
-	Assert(module->hw->I2CS);
+	Assert(module->hw);
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
@@ -529,7 +529,7 @@ static inline void _i2c_slave_set_ctrlb_cmd3(
 	/*
 	 * Below code instead i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_CMD(0x3);
 	 * CMD=0x3 clears all interrupts, so to keep the result similar
-	 * PREC is cleard if it was set
+	 * PREC is cleared if it was set
 	 */
 	if (i2c_hw->INTFLAG.bit.PREC) {
 		i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PREC;
@@ -561,7 +561,7 @@ static inline void _i2c_slave_set_ctrlb_cmd3(
  * - Do not run in standby
  * - PINMUX_DEFAULT for SERCOM pads
  *
- * Those default configuration only availale if the device supports it:
+ * Those default configuration only available if the device supports it:
  * - Not using 10-bit addressing
  * - Standard-mode and Fast-mode transfer speed
  * - SCL stretch disabled

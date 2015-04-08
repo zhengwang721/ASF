@@ -53,7 +53,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_clock_group SAM System Clock Management Driver (SYSTEM CLOCK)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks, and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection, and
@@ -527,9 +527,9 @@ enum system_clock_source {
 	SYSTEM_CLOCK_SOURCE_DFLL     = GCLK_SOURCE_DFLL48M,
 	/** Internal Ultra Low Power 32KHz oscillator. */
 	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
-	/** Generator input pad */
+	/** Generator input pad. */
 	SYSTEM_CLOCK_SOURCE_GCLKIN     = GCLK_SOURCE_GCLKIN,
-	/** Generic clock generator one output */
+	/** Generic clock generator one output. */
 	SYSTEM_CLOCK_SOURCE_GCLKGEN1   = GCLK_SOURCE_GCLKGEN1,
 #ifdef FEATURE_SYSTEM_CLOCK_DPLL
 	/** Digital Phase Locked Loop (DPLL).
@@ -608,7 +608,7 @@ struct system_clock_source_xosc32k_config {
  * Internal 8MHz (nominal) oscillator configuration structure.
  */
 struct system_clock_source_osc8m_config {
-	/* Internal 8MHz RC oscillator prescaler. */
+	/** Internal 8MHz RC oscillator prescaler. */
 	enum system_osc8m_div prescaler;
 	/** Keep the OSC8M enabled in standby sleep mode. */
 	bool run_in_standby;
@@ -1365,11 +1365,6 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *
  * \section asfdoc_sam0_system_clock_extra_errata Errata
  *
- *	- This driver implements workaround for errata 10558
- *
- *	  "Several reset values of SYSCTRL.INTFLAG are wrong (BOD and DFLL)"
- *	  When system_init is called it will reset these interrupts flags before they are used.
-
  *	- This driver implements experimental workaround for errata 9905
  *
  *	  "The DFLL clock must be requested before being configured otherwise a
@@ -1418,7 +1413,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *			\li Updated dfll configuration function to implement workaround for
  *			    errata 9905 in the DFLL module
  *			\li Updated \c system_clock_init() to reset interrupt flags before
- *			    they are used, errata 10558
+ *			    they are used
  *			\li Fixed \c system_clock_source_get_hz() to return correcy DFLL
  *			    frequency number
  *		</td>
@@ -1460,6 +1455,11 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAMDA0/DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

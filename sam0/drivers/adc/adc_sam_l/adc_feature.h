@@ -325,7 +325,7 @@ enum adc_accumulate_samples {
 	ADC_ACCUMULATE_SAMPLES_64   = ADC_AVGCTRL_SAMPLENUM_64,
 	/** Average 128 samples. */
 	ADC_ACCUMULATE_SAMPLES_128  = ADC_AVGCTRL_SAMPLENUM_128,
-	/** Average 265 samples. */
+	/** Average 256 samples. */
 	ADC_ACCUMULATE_SAMPLES_256  = ADC_AVGCTRL_SAMPLENUM_256,
 	/** Average 512 samples. */
 	ADC_ACCUMULATE_SAMPLES_512  = ADC_AVGCTRL_SAMPLENUM_512,
@@ -446,7 +446,7 @@ struct adc_correction_config {
 	/**
 	 * This value defines how the ADC conversion result is compensated for
 	 * offset error before written to the result register. This is a 12-bit
-	 * value in two鈥檚 complement format.
+	 * value in two's complement format.
 	 */
 	int16_t offset_correction;
 };

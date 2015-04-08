@@ -245,7 +245,7 @@
  * The general TDM waveform generation is as follow:
  *
  * \anchor asfdoc_sam0_i2s_module_tdm_wave_diagram
- * \image html tdm_wave.png "TDM Waveform generation"
+ * \image html tdm_wave.svg "TDM Waveform generation"
  *
  * Some other settings could also be found to set up clock, data formatting and
  * pin mux.
@@ -1387,6 +1387,11 @@ enum status_code i2s_serializer_read_buffer_wait(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAMDA1.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_rtc_count_group SAM RTC Count Driver (RTC COUNT)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Real Time Clock functionality in Count
  * operating mode, for the configuration and retrieval of the current RTC
  * counter value. The following driver API modes are covered by this
@@ -129,7 +129,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
- *    <td>SAMD20,SAMD21,SAMR21,SAMD10,SAMD11</td>
+ *    <td>SAMD20, SAMD21, SAMR21, SAMD10, SAMD11, SAMDA0, SAMDA1</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -228,7 +228,7 @@
  * \section asfdoc_sam0_rtc_count_special_considerations Special Considerations
  *
  * \subsection asfdoc_sam0_rtc_count_special_considerations_clock Clock Setup
- * \subsubsection asfdoc_sam0_rtc_count_clock_samd_r SAM D20/D21/R21/D10/D11 Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_count_clock_samd_r SAM D20/D21/R21/D10/D11/DA0/DA1 Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32KHz RC-oscillator with a prescaler of 32, giving a
@@ -451,21 +451,21 @@ enum rtc_count_compare {
  * \brief Available periodic interval source.
  */
 enum rtc_count_periodic_interval{
-	/** Periodic interval 0 */
+	/** Periodic interval 0. */
 	RTC_COUNT_PERIODIC_INTERVAL_0 = 0,
-	/** Periodic interval 1 */
+	/** Periodic interval 1. */
 	RTC_COUNT_PERIODIC_INTERVAL_1 = 1,
-	/** Periodic interval 2 */
+	/** Periodic interval 2. */
 	RTC_COUNT_PERIODIC_INTERVAL_2 = 2,
-	/** Periodic interval 3 */
+	/** Periodic interval 3. */
 	RTC_COUNT_PERIODIC_INTERVAL_3 = 3,
-	/** Periodic interval 4 */
+	/** Periodic interval 4. */
 	RTC_COUNT_PERIODIC_INTERVAL_4 = 4,
-	/** Periodic interval 5 */
+	/** Periodic interval 5. */
 	RTC_COUNT_PERIODIC_INTERVAL_5 = 5,
-	/** Periodic interval 6 */
+	/** Periodic interval 6. */
 	RTC_COUNT_PERIODIC_INTERVAL_6 = 6,
-	/** Periodic interval 7 */
+	/** Periodic interval 7. */
 	RTC_COUNT_PERIODIC_INTERVAL_7 = 7,
 };
 #endif
@@ -1183,8 +1183,8 @@ static inline uint32_t rtc_read_general_purpose_reg(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Added support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAML21 and SAMDA0/DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

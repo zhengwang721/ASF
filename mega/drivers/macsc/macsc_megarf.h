@@ -448,7 +448,7 @@ static inline void macsc_enable_manual_bts(void)
  * This bit is set if a write operation to the symbol counter register is
  * pending. This bit is set after writing the counter low byte (SCCNTLL)
  * until the symbol counter is updated with the new value.
- * This update process can take up to 16 靤 and during this time,
+ * This update process can take up to 16 µs and during this time,
  * no read or write access to the 32 bit counter register should occur.
  *
  */

@@ -177,25 +177,25 @@ typedef union {
 
 /* -------- SYSCTRL_INTFLAG : (SYSCTRL Offset: 0x08) (R/W 32) Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint32_t XOSCRDY:1;        /*!< bit:      0  XOSC Ready                         */
-    uint32_t XOSC32KRDY:1;     /*!< bit:      1  XOSC32K Ready                      */
-    uint32_t OSC32KRDY:1;      /*!< bit:      2  OSC32K Ready                       */
-    uint32_t OSC8MRDY:1;       /*!< bit:      3  OSC8M Ready                        */
-    uint32_t DFLLRDY:1;        /*!< bit:      4  DFLL Ready                         */
-    uint32_t DFLLOOB:1;        /*!< bit:      5  DFLL Out Of Bounds                 */
-    uint32_t DFLLLCKF:1;       /*!< bit:      6  DFLL Lock Fine                     */
-    uint32_t DFLLLCKC:1;       /*!< bit:      7  DFLL Lock Coarse                   */
-    uint32_t DFLLRCS:1;        /*!< bit:      8  DFLL Reference Clock Stopped       */
-    uint32_t BOD33RDY:1;       /*!< bit:      9  BOD33 Ready                        */
-    uint32_t BOD33DET:1;       /*!< bit:     10  BOD33 Detection                    */
-    uint32_t B33SRDY:1;        /*!< bit:     11  BOD33 Synchronization Ready        */
-    uint32_t :3;               /*!< bit: 12..14  Reserved                           */
-    uint32_t DPLLLCKR:1;       /*!< bit:     15  DPLL Lock Rise                     */
-    uint32_t DPLLLCKF:1;       /*!< bit:     16  DPLL Lock Fall                     */
-    uint32_t DPLLLTO:1;        /*!< bit:     17  DPLL Lock Timeout                  */
-    uint32_t :14;              /*!< bit: 18..31  Reserved                           */
+    __I uint32_t XOSCRDY:1;        /*!< bit:      0  XOSC Ready                         */
+    __I uint32_t XOSC32KRDY:1;     /*!< bit:      1  XOSC32K Ready                      */
+    __I uint32_t OSC32KRDY:1;      /*!< bit:      2  OSC32K Ready                       */
+    __I uint32_t OSC8MRDY:1;       /*!< bit:      3  OSC8M Ready                        */
+    __I uint32_t DFLLRDY:1;        /*!< bit:      4  DFLL Ready                         */
+    __I uint32_t DFLLOOB:1;        /*!< bit:      5  DFLL Out Of Bounds                 */
+    __I uint32_t DFLLLCKF:1;       /*!< bit:      6  DFLL Lock Fine                     */
+    __I uint32_t DFLLLCKC:1;       /*!< bit:      7  DFLL Lock Coarse                   */
+    __I uint32_t DFLLRCS:1;        /*!< bit:      8  DFLL Reference Clock Stopped       */
+    __I uint32_t BOD33RDY:1;       /*!< bit:      9  BOD33 Ready                        */
+    __I uint32_t BOD33DET:1;       /*!< bit:     10  BOD33 Detection                    */
+    __I uint32_t B33SRDY:1;        /*!< bit:     11  BOD33 Synchronization Ready        */
+    __I uint32_t :3;               /*!< bit: 12..14  Reserved                           */
+    __I uint32_t DPLLLCKR:1;       /*!< bit:     15  DPLL Lock Rise                     */
+    __I uint32_t DPLLLCKF:1;       /*!< bit:     16  DPLL Lock Fall                     */
+    __I uint32_t DPLLLTO:1;        /*!< bit:     17  DPLL Lock Timeout                  */
+    __I uint32_t :14;              /*!< bit: 18..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } SYSCTRL_INTFLAG_Type;

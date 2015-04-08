@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_rtc_calendar_group SAM RTC Calendar Driver (RTC CAL)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Real Time Clock functionality in Calendar
  * operating mode, for the configuration and retrieval of the current time and
  * date as maintained by the RTC module. The following driver API modes are
@@ -126,7 +126,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
- *    <td>SAMD20, SAMD21, SAMR21, SAMD10, SAMD11</td>
+ *    <td>SAMD20, SAMD21, SAMR21, SAMD10, SAMD11, SAMDA0, SAMDA1</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -229,10 +229,10 @@
  * when the module is initialized. Dates outside the start to end year range
  * described below will need software adjustment:
  *
- * \f[ [YEAR_{START}, YEAR_{START}+64) \f]
+ * \f[ [YEAR_{START}, YEAR_{START}+64] \f]
  *
  * \subsection asfdoc_sam0_rtc_calendar_special_considerations_clock Clock Setup
- * \subsubsection asfdoc_sam0_rtc_calendar_clock_samd_r SAM D20/D21/R21/D10/D11 Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_calendar_clock_samd_r SAM D20/D21/R21/D10/D11/DA0/DA1 Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32KHz RC-oscillator with a prescaler of 32, giving a
@@ -756,7 +756,7 @@ static inline void rtc_calendar_get_time_defaults(
  *  - Alarm will match on second, minute, hour, day, month, and year
  *
  *  \param[out] config  Configuration structure to be initialized to default
- *                      values.
+ *                      values
  */
 static inline void rtc_calendar_get_config_defaults(
 		struct rtc_calendar_config *const config)
@@ -1224,8 +1224,8 @@ static inline uint32_t rtc_read_general_purpose_reg(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Added support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAML21 and SAMDA0/DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

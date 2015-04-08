@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_sercom_spi_group SAM Serial Peripheral Interface Driver (SERCOM SPI)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the SERCOM module in its SPI mode to transfer SPI  data
  * frames. The following driver API modes are covered by this manual:
  *
@@ -528,75 +528,78 @@ enum spi_frame_format {
 /**
  * \brief SPI signal MUX settings
  *
- * Set the functionality of the SERCOM pins.
- * As not all settings can be used in different modes of operation, proper
- * settings must be chosen according to the rest of the configuration.
+ * Set the functionality of the SERCOM pins. As not all combinations can be used 
+ * in different modes of operation, proper combinations must be chosen according 
+ * to the rest of the configuration.
+ *
+ * \note In master operation: DI is MISO, DO is MOSI.
+ *       In slave operation: DI is MOSI, DO is MISO.
  *
  * See \ref asfdoc_sam0_sercom_spi_mux_settings for a description of the
  * various MUX setting options.
  */
 enum spi_signal_mux_setting {
-	/** SPI MUX setting A. */
+	/** SPI MUX combination A. DOPO: 0x0, DIPO: 0x0. */
 	SPI_SIGNAL_MUX_SETTING_A =
 			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX setting B. */
+	/** SPI MUX combination B. DOPO: 0x0, DIPO: 0x1. */
 	SPI_SIGNAL_MUX_SETTING_B =
 			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX setting C. */
+	/** SPI MUX combination C. DOPO: 0x0, DIPO: 0x2. */
 	SPI_SIGNAL_MUX_SETTING_C =
 			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX setting D. */
+	/** SPI MUX combination D. DOPO: 0x0, DIPO: 0x3. */
 	SPI_SIGNAL_MUX_SETTING_D =
 			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX setting E. */
+	/** SPI MUX combination E. DOPO: 0x1, DIPO: 0x0. */
 	SPI_SIGNAL_MUX_SETTING_E =
 			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX setting F. */
+	/** SPI MUX combination F. DOPO: 0x1, DIPO: 0x1. */
 	SPI_SIGNAL_MUX_SETTING_F =
 			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX setting G. */
+	/** SPI MUX combination G. DOPO: 0x1, DIPO: 0x2. */
 	SPI_SIGNAL_MUX_SETTING_G =
 			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX setting H. */
+	/** SPI MUX combination H. DOPO: 0x1, DIPO: 0x3. */
 	SPI_SIGNAL_MUX_SETTING_H =
 			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX setting I. */
+	/** SPI MUX combination I. DOPO: 0x2, DIPO: 0x0. */
 	SPI_SIGNAL_MUX_SETTING_I =
 			(0x2 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX setting J. */
+	/** SPI MUX combination J. DOPO: 0x2, DIPO: 0x1. */
 	SPI_SIGNAL_MUX_SETTING_J =
 			(0x2 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX setting K. */
+	/** SPI MUX combination K. DOPO: 0x2, DIPO: 0x2. */
 	SPI_SIGNAL_MUX_SETTING_K =
 			(0x2 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX setting L. */
+	/** SPI MUX combination L. DOPO: 0x2, DIPO: 0x3. */
 	SPI_SIGNAL_MUX_SETTING_L =
 			(0x2 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX setting M. */
+	/** SPI MUX combination M. DOPO: 0x3, DIPO: 0x0. */
 	SPI_SIGNAL_MUX_SETTING_M =
 			(0x3 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX setting N. */
+	/** SPI MUX combination N. DOPO: 0x3, DIPO: 0x1. */
 	SPI_SIGNAL_MUX_SETTING_N =
 			(0x3 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX setting O. */
+	/** SPI MUX combination O. DOPO: 0x3, DIPO: 0x2. */
 	SPI_SIGNAL_MUX_SETTING_O =
 			(0x3 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX setting P. */
+	/** SPI MUX combination P. DOPO: 0x3, DIPO: 0x3.*/
 	SPI_SIGNAL_MUX_SETTING_P =
 			(0x3 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
@@ -1082,8 +1085,8 @@ enum status_code spi_set_baudrate(
  *
  * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked
- * \retval STATUS_BUSY if the module was already locked
+ * \retval STATUS_OK If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 static inline enum status_code spi_lock(struct spi_module *const module)
 {
@@ -1111,8 +1114,8 @@ static inline enum status_code spi_lock(struct spi_module *const module)
  *
  * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked
- * \retval STATUS_BUSY if the module was already locked
+ * \retval STATUS_OK If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 static inline void spi_unlock(struct spi_module *const module)
 {
@@ -1414,10 +1417,7 @@ enum status_code spi_select_slave(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Add SAML21 support</td>
- *	</tr>  
- *	<tr>
- *		<td>Add SAMD21 support and added new features as below:
+ *		<td>Added new features as below:
  *             \li Slave select low detect
  *             \li Hardware slave select
  *             \li DMA support </td>
@@ -1459,8 +1459,9 @@ enum status_code spi_select_slave(
   *
   * The following lists the possible internal SERCOM module pad function
   * assignments, for the four SERCOM pads in both SPI Master, and SPI Slave
-  * modes. Note that this is in addition to the physical GPIO pin MUX of the
-  * device, and can be used in conjunction to optimize the serial data pin-out.
+  * modes. They are combinations of DOPO and DIPO in CTRLA. 
+  * Note that this is in addition to the physical GPIO pin MUX of the device,
+  * and can be used in conjunction to optimize the serial data pin-out.
   *
   * \section asfdoc_sam0_sercom_spi_mux_settings_master Master Mode Settings
   * The following table describes the SERCOM pin functionalities for the various
@@ -1471,14 +1472,16 @@ enum status_code spi_select_slave(
   *
   * <table>
   *		<tr>
-  *			<th>MUX/Pad</th>
-  *			<th>PAD 0</th>
-  *			<th>PAD 1</th>
-  *			<th>PAD 2</th>
-  *			<th>PAD 3</th>
+  *			<th>Combination</th>
+  *			<th>DOPO / DIPO</th>
+  *			<th>SERCOM PAD[0]</th>
+  *			<th>SERCOM PAD[1]</th>
+  *			<th>SERCOM PAD[2]</th>
+  *			<th>SERCOM PAD[3]</th>
   *		</tr>
   *		<tr>
   *			<td>A</td>
+  *			<td>0x0 / 0x0</td>
   *			<td>MOSI</td>
   *			<td>SCK</td>
   *			<td>-</td>
@@ -1486,6 +1489,7 @@ enum status_code spi_select_slave(
   *		</tr>
   *		<tr>
   *			<td>B</td>
+  *			<td>0x0 / 0x1</td>
   *			<td>MOSI</td>
   *			<td>SCK</td>
   *			<td>-</td>
@@ -1493,6 +1497,7 @@ enum status_code spi_select_slave(
   *		</tr>
   *		<tr>
   *			<td>C</td>
+  *			<td>0x0 / 0x2</td>
   *			<td>MOSI</td>
   *			<td>SCK</td>
   *			<td>MISO</td>
@@ -1500,6 +1505,7 @@ enum status_code spi_select_slave(
   *		</tr>
   *		<tr>
   *			<td>D</td>
+  *			<td>0x0 / 0x3</td>
   *			<td>MOSI</td>
   *			<td>SCK</td>
   *			<td>-</td>
@@ -1507,6 +1513,7 @@ enum status_code spi_select_slave(
   *		</tr>
   *		<tr>
   *			<td>E</td>
+  *			<td>0x1 / 0x0</td>
   *			<td>MISO</td>
   *			<td>-</td>
   *			<td>MOSI</td>
@@ -1514,6 +1521,7 @@ enum status_code spi_select_slave(
   *		</tr>
   *		<tr>
   *			<td>F</td>
+  *			<td>0x1 / 0x1</td>
   *			<td>-</td>
   *			<td>MISO</td>
   *			<td>MOSI</td>
@@ -1521,6 +1529,7 @@ enum status_code spi_select_slave(
   *		</tr>
   *		<tr>
   *			<td>G</td>
+  *			<td>0x1 / 0x2</td>
   *			<td>-</td>
   *			<td>-</td>
   *			<td>MOSI</td>
@@ -1528,62 +1537,71 @@ enum status_code spi_select_slave(
   *		</tr>
   *		<tr>
   *			<td>H</td>
+  *			<td>0x1 / 0x3</td>
   *			<td>-</td>
   *			<td>-</td>
   *			<td>MOSI</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>I <sup>(1)</sup></td>
+  *			<td>I</td>
+  *			<td>0x2 / 0x0</td>
   *			<td>MISO</td>
   *			<td>SCK</td>
   *			<td>-</td>
   *			<td>MOSI</td>
   *		</tr>
   *		<tr>
-  *			<td>J <sup>(1)</sup></td>
+  *			<td>J</td>
+  *			<td>0x2 / 0x1</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *			<td>-</td>
   *			<td>MOSI</td>
   *		</tr>
   *		<tr>
-  *			<td>K <sup>(1)</sup></td>
+  *			<td>K</td>
+  *			<td>0x2 / 0x2</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *			<td>MISO</td>
   *			<td>MOSI</td>
   *		</tr>
   *		<tr>
-  *			<td>L <sup>(1)</sup></td>
+  *			<td>L</td>
+  *			<td>0x2 / 0x3</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *			<td>-</td>
   *			<td>MOSI</td>
   *		</tr>
   *		<tr>
-  *			<td>M <sup>(1)</sup></td>
+  *			<td>M</td>
+  *			<td>0x3 / 0x0</td>
   *			<td>MOSI</td>
   *			<td>-</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>N <sup>(1)</sup></td>
+  *			<td>N</td>
+  *			<td>0x3 / 0x1</td>
   *			<td>MOSI</td>
   *			<td>MISO</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>O <sup>(1)</sup></td>
+  *			<td>O</td>
+  *			<td>0x3 / 0x2</td>
   *			<td>MOSI</td>
   *			<td>-</td>
   *			<td>MISO</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>P <sup>(1)</sup></td>
+  *			<td>P</td>
+  *			<td>0x3 / 0x3</td>
   *			<td>MOSI</td>
   *			<td>-</td>
   *			<td>-</td>
@@ -1591,7 +1609,6 @@ enum status_code spi_select_slave(
   *		</tr>
   * </table>
   *
-  * (1) Not available in all silicon revisions.
   *
   * \section asfdoc_sam0_sercom_spi_mux_settings_slave Slave Mode Settings
   * The following table describes the SERCOM pin functionalities for the various
@@ -1602,14 +1619,16 @@ enum status_code spi_select_slave(
   *
   * <table>
   *		<tr>
-  *			<th>MUX/Pad</th>
-  *			<th>PAD 0</th>
-  *			<th>PAD 1</th>
-  *			<th>PAD 2</th>
-  *			<th>PAD 3</th>
+  *			<th>Combination</th>
+  *			<th>DOPO / DIPO</th>
+  *			<th>SERCOM PAD[0]</th>
+  *			<th>SERCOM PAD[1]</th>
+  *			<th>SERCOM PAD[2]</th>
+  *			<th>SERCOM PAD[3]</th>
   *		</tr>
   *		<tr>
   *			<td>A</td>
+  *			<td>0x0 / 0x0</td>
   *			<td>MISO</td>
   *			<td>SCK</td>
   *			<td>/SS</td>
@@ -1617,6 +1636,7 @@ enum status_code spi_select_slave(
   *		</tr>
   *		<tr>
   *			<td>B</td>
+  *			<td>0x0 / 0x1</td>
   *			<td>MISO</td>
   *			<td>SCK</td>
   *			<td>/SS</td>
@@ -1624,6 +1644,7 @@ enum status_code spi_select_slave(
   *		</tr>
   *		<tr>
   *			<td>C</td>
+  *			<td>0x0 / 0x2</td>
   *			<td>MISO</td>
   *			<td>SCK</td>
   *			<td>/SS</td>
@@ -1631,6 +1652,7 @@ enum status_code spi_select_slave(
   *		</tr>
   *		<tr>
   *			<td>D</td>
+  *			<td>0x0 / 0x3</td>
   *			<td>MISO</td>
   *			<td>SCK</td>
   *			<td>/SS</td>
@@ -1638,6 +1660,7 @@ enum status_code spi_select_slave(
   *		</tr>
   *		<tr>
   *			<td>E</td>
+  *			<td>0x1 / 0x0</td>
   *			<td>MOSI</td>
   *			<td>/SS</td>
   *			<td>MISO</td>
@@ -1645,6 +1668,7 @@ enum status_code spi_select_slave(
   *		</tr>
   *		<tr>
   *			<td>F</td>
+  *			<td>0x1 / 0x1</td>
   *			<td>-</td>
   *			<td>/SS</td>
   *			<td>MISO</td>
@@ -1652,6 +1676,7 @@ enum status_code spi_select_slave(
   *		</tr>
   *		<tr>
   *			<td>G</td>
+  *			<td>0x1 / 0x2</td>
   *			<td>-</td>
   *			<td>/SS</td>
   *			<td>MISO</td>
@@ -1659,62 +1684,71 @@ enum status_code spi_select_slave(
   *		</tr>
   *		<tr>
   *			<td>H</td>
+  *			<td>0x1 / 0x3</td>
   *			<td>-</td>
   *			<td>/SS</td>
   *			<td>MISO</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>I <sup>(1)</sup></td>
+  *			<td>I</td>
+  *			<td>0x2 / 0x0</td>
   *			<td>MOSI</td>
   *			<td>SCK</td>
   *			<td>/SS</td>
   *			<td>MISO</td>
   *		</tr>
   *		<tr>
-  *			<td>J <sup>(1)</sup></td>
+  *			<td>J</td>
+  *			<td>0x2 / 0x1</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *			<td>/SS</td>
   *			<td>MISO</td>
   *		</tr>
   *		<tr>
-  *			<td>K <sup>(1)</sup></td>
+  *			<td>K</td>
+  *			<td>0x2 / 0x2</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *			<td>/SS</td>
   *			<td>MISO</td>
   *		</tr>
   *		<tr>
-  *			<td>L <sup>(1)</sup></td>
+  *			<td>L</td>
+  *			<td>0x2 / 0x3</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *			<td>/SS</td>
   *			<td>MISO</td>
   *		</tr>
   *		<tr>
-  *			<td>M <sup>(1)</sup></td>
+  *			<td>M</td>
+  *			<td>0x3 / 0x0</td>
   *			<td>MISO</td>
   *			<td>/SS</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>N <sup>(1)</sup></td>
+  *			<td>N</td>
+  *			<td>0x3 / 0x1</td>
   *			<td>MISO</td>
   *			<td>/SS</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>O <sup>(1)</sup></td>
+  *			<td>O</td>
+  *			<td>0x3 / 0x2</td>
   *			<td>MISO</td>
   *			<td>/SS</td>
   *			<td>MOSI</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>P <sup>(1)</sup></td>
+  *			<td>P</td>
+  *			<td>0x3 / 0x3</td>
   *			<td>MISO</td>
   *			<td>/SS</td>
   *			<td>-</td>
@@ -1722,7 +1756,6 @@ enum status_code spi_select_slave(
   *		</tr>
   * </table>
   *
-  * (1) Not available in all silicon revisions.
   *
   *
   * \page asfdoc_sam0_sercom_spi_document_revision_history Document Revision History
@@ -1735,8 +1768,8 @@ enum status_code spi_select_slave(
   *	</tr>
   *	<tr>
   *		<td>E</td>
-  *		<td>11/2014</td>
-  *		<td>Add SAM L21 support.</td>
+  *		<td>04/2015</td>
+  *		<td>Add SAM L21 and SAMDA0/DA1 support.</td>
   *	</tr>
   *	<tr>
   *		<td>D</td>

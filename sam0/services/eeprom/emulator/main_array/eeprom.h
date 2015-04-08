@@ -498,8 +498,8 @@ enum status_code eeprom_emulator_read_buffer(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Add SAM L21 support.</td>
+ *		<td>04/2015</td>
+ *		<td>Add SAML21 and SAMDA0/DA1 support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

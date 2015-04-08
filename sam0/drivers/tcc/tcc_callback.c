@@ -211,13 +211,13 @@ void tcc_disable_callback(
 MREPEAT(TCC_INST_NUM, _TCC_INTERRUPT_HANDLER, 0)
 
 /**
- * \internal Interrupt Handler for the TCC module
+ * \internal Interrupt handler for the TCC module
  *
  * Handles interrupts as they occur, it will run the callback functions
  * that are registered and enabled.
  *
  * \param[in]  module_index  ID of the TCC instance calling the interrupt
- *                           handler.
+ *                           handler
  */
 void _tcc_interrupt_handler(
 		uint8_t module_index)

@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_sercom_usart_group SAM Serial USART Driver (SERCOM USART)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the SERCOM module in its USART mode to transfer or receive
  * USART data frames. The following driver API modes are covered by this
  * manual:
@@ -1118,7 +1118,7 @@ static inline void usart_disable_transceiver(
  *		<th>Changelog</th>
  *	</tr>
  *  <tr>
- *		<td>Add support for SAML21 (same features as SAMD21)</td>
+ *		<td>Add support for SAML21 and SAMDA0/DA1(same features as SAMD21)</td>
  *  </tr>
  *  <tr>
  *		<td>Add support for SAMD10/D11 (same features as SAMD21)</td>
@@ -1258,8 +1258,8 @@ static inline void usart_disable_transceiver(
  *	</tr>
  *	<tr>
  *		<td>F</td>
- *		<td>11/2014</td>
- *		<td>Add support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Add support for SAML21 and SAMDA0/DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>E</td>

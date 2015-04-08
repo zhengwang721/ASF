@@ -833,12 +833,12 @@ typedef union {
 
 /* -------- DMAC_CHINTFLAG : (DMAC Offset: 0x4E) (R/W  8) Channel Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint8_t  TERR:1;           /*!< bit:      0  Transfer Error                     */
-    uint8_t  TCMPL:1;          /*!< bit:      1  Transfer Complete                  */
-    uint8_t  SUSP:1;           /*!< bit:      2  Channel Suspend                    */
-    uint8_t  :5;               /*!< bit:  3.. 7  Reserved                           */
+    __I uint8_t  TERR:1;           /*!< bit:      0  Transfer Error                     */
+    __I uint8_t  TCMPL:1;          /*!< bit:      1  Transfer Complete                  */
+    __I uint8_t  SUSP:1;           /*!< bit:      2  Channel Suspend                    */
+    __I uint8_t  :5;               /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } DMAC_CHINTFLAG_Type;

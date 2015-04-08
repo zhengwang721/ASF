@@ -78,7 +78,7 @@ bool system_interrupt_is_pending(
 /**
  * \brief Set a interrupt vector as pending.
  *
- * Set the requested interrupt vector as pending (i.e issues a software
+ * Set the requested interrupt vector as pending (i.e. issues a software
  * interrupt request for the specified vector). The software handler will be
  * handled (if enabled) in a priority order based on vector number and
  * configured priority settings.
@@ -173,7 +173,7 @@ enum status_code system_interrupt_set_priority(
 		uint8_t priority_pos = ((vector % 4) * 8) + (8 - __NVIC_PRIO_BITS);
 
 		NVIC->IP[register_num] =
-				(NVIC->IP[register_num] & ~(0x3 << priority_pos)) |
+				(NVIC->IP[register_num] & ~(_SYSTEM_INTERRUPT_PRIORITY_MASK << priority_pos)) |
 				(priority_level << priority_pos);
 
 	} else if (vector == SYSTEM_INTERRUPT_SYSTICK) {

@@ -62,7 +62,7 @@ extern "C" {
  *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C Slave Mode Driver (SERCOM I2C)
  * \endif
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's SERCOM I<SUP>2</SUP>C module, for the transfer
  * of data via an I<SUP>2</SUP>C bus. The following driver API modes are covered
  * by this manual:
@@ -293,7 +293,7 @@ extern "C" {
  * \li \b UNKNOWN If the master has recently been enabled or connected to
  * the bus. Is forced to \b IDLE after given
  * \ref asfdoc_sam0_sercom_i2c_unknown_bus_timeout "timeout" when
- * the master module is enabled.
+ * the master module is enabled
  *
  * The bus state diagram can be seen in
  * \ref asfdoc_sam0_sercom_i2c_bus_states_figure "the figure below".
@@ -486,7 +486,7 @@ enum i2c_transfer_direction {
  *	<tr>
  *		<td>
  *		\li Added 10-bit addressing and high speed support in SAM D21
- *		\li Seperate structure i2c_packet into i2c_master_packet and i2c_slave packet
+ *		\li Separate structure i2c_packet into i2c_master_packet and i2c_slave packet
  *		</td>
  *	</tr>
  *	<tr>
@@ -540,8 +540,8 @@ enum i2c_transfer_direction {
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Added SAM L21 support.</td>
+ *		<td>04/2015</td>
+ *		<td>Added SAM L21 and SAMDA0/DA1 support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
