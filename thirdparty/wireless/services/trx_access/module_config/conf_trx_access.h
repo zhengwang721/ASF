@@ -158,38 +158,32 @@
 #define AT86RFX_SPI_MISO             PIN_PA08
 #define AT86RFX_SPI_SCK              PIN_PA09
 
-#define AT86RFX_INTC_INIT()         ioport_set_pin_dir(AT86RFX_IRQ_PIN,	\
-		IOPORT_DIR_INPUT); \
-	ioport_set_pin_sense_mode(AT86RFX_IRQ_PIN, IOPORT_SENSE_RISING); \
-	arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IERS \
-		= arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN); \
-	arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IMR0S \
-		= arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN); \
-	NVIC_EnableIRQ(GPIO_11_IRQn)
+void at86rfx_isr(void);
 
-#define AT86RFX_ISR()               ISR(GPIO_11_Handler)
+#define AT86RFX_INTC_INIT()         ioport_set_pin_dir(AT86RFX_IRQ_PIN, IOPORT_DIR_INPUT);\
+									ioport_set_pin_sense_mode(AT86RFX_IRQ_PIN, IOPORT_SENSE_RISING);\
+									gpio_set_pin_callback(AT86RFX_IRQ_PIN, at86rfx_isr, 1);					
+									
+
+#define AT86RFX_ISR()               void at86rfx_isr(void)
 
 /** Enables the transceiver main interrupt. */
-#define ENABLE_TRX_IRQ()            arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)-> \
-	GPIO_IERS = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN)
+#define ENABLE_TRX_IRQ()            gpio_enable_pin_interrupt(AT86RFX_IRQ_PIN)
 
 /** Disables the transceiver main interrupt. */
-#define DISABLE_TRX_IRQ()           arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)-> \
-	GPIO_IERC = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN)
+#define DISABLE_TRX_IRQ()           gpio_disable_pin_interrupt(AT86RFX_IRQ_PIN)
 
 /** Clears the transceiver main interrupt. */
-#define CLEAR_TRX_IRQ()             arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)-> \
-	GPIO_IFRC = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN)
-
+#define CLEAR_TRX_IRQ()             gpio_clear_pin_interrupt_flag(AT86RFX_IRQ_PIN) 
 /*
  * This macro saves the trx interrupt status and disables the trx interrupt.
  */
-#define ENTER_TRX_REGION()         NVIC_DisableIRQ(GPIO_11_IRQn)
+#define ENTER_TRX_REGION()          gpio_disable_pin_interrupt(AT86RFX_IRQ_PIN);
 
 /*
  *  This macro restores the transceiver interrupt status
  */
-#define LEAVE_TRX_REGION()         NVIC_EnableIRQ(GPIO_11_IRQn)
+#define LEAVE_TRX_REGION()         gpio_enable_pin_interrupt(AT86RFX_IRQ_PIN)
 
 
 #endif
