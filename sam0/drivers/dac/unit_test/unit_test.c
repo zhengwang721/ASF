@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0 DAC Callback Quick Start
+ * \brief SAM0 DAC Unit Test
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
