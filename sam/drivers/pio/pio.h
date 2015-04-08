@@ -324,7 +324,7 @@ void pio_set_io_drive(Pio *p_pio, uint32_t ul_line,
  * \subsection sam_pio_quickstart_use_case_2_example_code Example code
  * Add the following function to your application:
  * \code
-	void pin_edge_handler(void)
+	void pin_edge_handler(const uint32_t sourceid, const uint32_t mask)
 	{
 	    if (pio_get(PIOA, PIO_TYPE_PIO_INPUT, PIO_PA16))
 	        pio_clear(PIOA, PIO_PA23);
