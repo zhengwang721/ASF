@@ -74,7 +74,7 @@
 
 /* === Macros =============================================================== */
 /* Version of the software */
-#define FIRMWARE_VERSION    3.0f
+#define FIRMWARE_VERSION    1.3
 
 
 
