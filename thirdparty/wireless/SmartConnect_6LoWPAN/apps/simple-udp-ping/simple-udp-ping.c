@@ -54,6 +54,10 @@
 
 #define DATALEN 4
 
+#ifndef UDP_PING_DEBUG
+#define UDP_PING_DEBUG 1
+#endif
+
 struct pingconn_t {
   uint8_t in_use;
   uint8_t waiting;

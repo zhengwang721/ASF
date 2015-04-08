@@ -70,7 +70,9 @@
 #include "stdio_serial.h"
 #include "rtc_count.h" //rtc
 #include "rtc_count_interrupt.h"
-
+#ifdef ENABLE_LEDCTRL
+#include "ledctrl.h"
+#endif
 
 //SENSORS(&button_sensor);
 /*---------------------------------------------------------------------------*/
@@ -264,6 +266,9 @@ main(int argc, char *argv[])
   printf("\r\n Warning: AES encryption is disabled\n");
 #endif /* ((THSQ_CONF_NETSTACK) & THSQ_CONF_AES) */
    
+#ifdef ENABLE_LEDCTRL
+  ledctrl_init();
+#endif
   autostart_start(autostart_processes);
   //watchdog_start();
   //watchdog_init();

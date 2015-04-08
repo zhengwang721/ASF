@@ -55,8 +55,10 @@ src="http://www.atmel.com/Images/IoT%20Campaign%20Banner_HP_Origami_%20980%20X35
 <a name="body_0" style="text-decoration:none;">&nbsp;</a>
     <div style="Position: relative; top: -25px; width:auto;">
 
-<h1>IPv6 to IPv4 Mapping Table</h1><div id="nat"><br></div>
+<h1>IPv6 to IPv4 Mapping Table</h1>
+<div id="nat"><br></div>
 <hr>
+
 <div align = "center">
 <a href="nat.shtml" id="nat-load" class="btn">Refresh</a>
 </div>
@@ -83,6 +85,7 @@ $('#rpl-reset').click(function(){spinload('routes','rplreset.shtml','#routes');r
 $('#rpl-root').click(function(){spinload('routes','rplroot.shtml','#routes');return false;});
 $('#nbrs-load').click(function(){spinload('nbrs','nbrs.shtml','#nbrs');return false;});
 $('#nbrs-ping').click(function(){spinload('nbrs','nbrsping.shtml','#nbrs');return false;});
+$('#nbrs-led').click(function(){spinload('nbrs','nbrsled.shtml','#nbrs');return false;});
 $('#rpl-ping').click(function(){spinload('routes','routesping.shtml','#routes');return false;});
 $('#nat-load').click(function(){spinload('nat','nat.shtml','#nat');return false;});
 $(document).ready(function() {

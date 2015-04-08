@@ -133,8 +133,7 @@
 #define SICSLOWPAN_CONF_FRAG                  1
 //#define SICSLOWPAN_CONF_MAXAGE                4
 
-
-
+#define LED_UDP_PORT 8840
 
 #define SICSLOWPAN_CONF_MAX_MAC_TRANSMISSIONS 5
 

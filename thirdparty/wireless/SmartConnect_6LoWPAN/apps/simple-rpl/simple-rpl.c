@@ -93,6 +93,7 @@ create_dag_callback(void *ptr)
            dag->version, dag->grounded,
            dag->preference, dag->used,
            dag->joined, dag->rank);
+    printf("\r\n Root's nodeid = 0x%2X%2X. ", root->u8[14], root->u8[15]);
 #endif /* DEBUG */
 
     /* We found a RPL network that we did not create so we just join

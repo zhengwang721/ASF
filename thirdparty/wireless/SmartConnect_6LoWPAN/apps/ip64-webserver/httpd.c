@@ -44,6 +44,11 @@
 #include "ip64-webserver-http-strings.h"
 
 #include "httpd.h"
+#include "ledctrl.h"
+
+
+
+uint8_t nbr_id,nbr_action;
 
 #ifndef WEBSERVER_CONF_CGI_CONNS
 #define CONNS UIP_CONNS
@@ -61,9 +66,29 @@ MEMB(conns, struct httpd_state, CONNS);
 #define ISO_space   0x20
 #define ISO_bang    0x21
 #define ISO_percent 0x25
+#define ISO_ampersand 0x26
+#define ISO_question 0x3F
 #define ISO_period  0x2e
 #define ISO_slash   0x2f
 #define ISO_colon   0x3a
+
+struct udp_socket led_socket;
+void led_socket_callback(struct udp_socket *c,
+                          void *ptr,
+                          const uip_ipaddr_t *source_addr,
+                          uint16_t source_port,
+                          const uip_ipaddr_t *dest_addr,
+                          uint16_t dest_port,
+                          const uint8_t *data,
+                          uint16_t datalen)
+{
+  //
+  // place holder
+  //
+}
+
+
+int simple_udp_ping_send_ping(const uip_ipaddr_t *addr);
 
 /*---------------------------------------------------------------------------*/
 static unsigned short
@@ -252,6 +277,8 @@ PT_THREAD(handle_output(struct httpd_state *s))
 static
 PT_THREAD(handle_input(struct httpd_state *s))
 {
+  char *ptr ,*ptr2;
+  
   PSOCK_BEGIN(&s->sin);
 
   PSOCK_READTO(&s->sin, ISO_space);
@@ -271,10 +298,83 @@ PT_THREAD(handle_input(struct httpd_state *s))
     s->inputbuf[PSOCK_DATALEN(&s->sin) - 1] = 0;
     strncpy(s->filename, s->inputbuf, sizeof(s->filename));
   }
+   ptr = strrchr(s->filename, ISO_question);
+   if(ptr != NULL)
+   {
+	   
+	   uint8_t j,k;
+	   char nbrid_s[3] = {0};
+	   uint8_t	databuf[1] = {0};
+	   
+	   if(!(strncmp(ptr+1,"nbraction",9)))
+	   {
+       char* tailptr = NULL;
+		   ptr2 = strchr(ptr+1,ISO_ampersand);
+		   k=ptr2-ptr-11; //k=4 Ping ,k=6 On,k=7 Off, k=9 Blink
 
+	   	 printf("\n\r Webserver cmd, k = %d", k);
+		   strncpy(nbrid_s,ptr2+7,3);           
+		   nbr_id = strtoul(nbrid_s, &tailptr, 10);
+     
+		   if (*tailptr != '\0') {
+           nbr_id = 0;
+       }         
+       printf("\n\r nbr id is : %d\r\n",nbr_id);  
+       // todoo for nbr count more than 9
+		   void *uptr;
+		   const uip_ipaddr_t *addr;
+		   uptr = nbr_table_head(ds6_neighbors);
+		   for(uint8_t i=1;i<nbr_id;i++)
+		   {
+			   uptr = nbr_table_next(ds6_neighbors,uptr);
+		   }
+		   if(uptr!=NULL)
+		   {				
+			    uip_ds6_nbr_t *nbr= uptr;
+			    addr = uip_ds6_nbr_get_ipaddr(nbr);				
+		    }		
+			
+		  if(addr != NULL) {
+          printf("\r\n Target node addr = %2X%2X ", addr->u8[14], addr->u8[15]);
+          switch (k) {
+		      
+            case 6:	// Led On
+			        nbr_action = 0;		
+				      databuf[0] = LED_UDP_ON;	
+			        udp_socket_sendto(&led_socket, (void*)databuf, 1,addr, LED_UDP_PORT);
+              printf("\n\r Sent LED On");
+              break;
+		    
+		        case 7:	// Led Off
+			        databuf[0] = LED_UDP_OFF;	
+			        udp_socket_sendto(&led_socket, (void*)databuf, 1,addr, LED_UDP_PORT);
+			        nbr_action = 1;
+              printf("\n\r Sent LED off");
+              break;
+            
+            case 9:	// Led Blink
+              databuf[0] = LED_UDP_BLINK;	
+		          udp_socket_sendto(&led_socket, (void*)databuf, 1,addr, LED_UDP_PORT);
+              nbr_action = 1;
+              printf("\n\r Sent LED blink");
+		          break;
+        
+	        default:
+		        nbr_action = 2;				
+		        simple_udp_ping_send_ping(addr);
+        		printf("\n\r Sent udp ping");
+	      }			
+          
+	    }
+		  printf("\n\r nbr action is : %d\r\n",nbr_action);  
+    
+     }
+   }
+   
   petsciiconv_topetscii(s->filename, sizeof(s->filename));
   /*  webserver_log_file(&uip_conn->ripaddr, s->filename);*/
   petsciiconv_toascii(s->filename, sizeof(s->filename));
+  
   s->state = STATE_OUTPUT;
 
   while(1) {
@@ -289,6 +389,7 @@ PT_THREAD(handle_input(struct httpd_state *s))
   
   PSOCK_END(&s->sin);
 }
+
 /*---------------------------------------------------------------------------*/
 static void
 handle_connection(struct httpd_state *s)
@@ -337,13 +438,22 @@ httpd_appcall(void *state)
     uip_abort();
   }
 }
+
+
 /*---------------------------------------------------------------------------*/
 void
 httpd_init(void)
 {
+  udp_socket_input_callback_t reply_callback = led_socket_callback;
   tcp_listen(UIP_HTONS(80));
   memb_init(&conns);
   httpd_cgi_init();
+  udp_socket_register(&led_socket, 
+                        NULL, 
+                        reply_callback);
+                        
+  udp_socket_bind(&led_socket, LED_UDP_PORT);
+                        
 }
 /*---------------------------------------------------------------------------*/
 #if UIP_CONF_IPV6
