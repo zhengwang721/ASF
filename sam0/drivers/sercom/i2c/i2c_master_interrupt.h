@@ -124,11 +124,23 @@ static inline void i2c_master_disable_callback(
  * @{
  */
 
+enum status_code _i2c_master_read_bytes(
+		struct i2c_master_module *const module,
+		struct i2c_master_packet *const packet);
+ 
 enum status_code i2c_master_read_packet_job(
 		struct i2c_master_module *const module,
 		struct i2c_master_packet *const packet);
 
 enum status_code i2c_master_read_packet_job_no_stop(
+		struct i2c_master_module *const module,
+		struct i2c_master_packet *const packet);
+
+enum status_code i2c_master_read_packet_job_no_nack(
+		struct i2c_master_module *const module,
+		struct i2c_master_packet *const packet);
+
+enum status_code _i2c_master_write_bytes(
 		struct i2c_master_module *const module,
 		struct i2c_master_packet *const packet);
 
