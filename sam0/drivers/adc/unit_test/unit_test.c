@@ -83,6 +83,7 @@
  *  - \b DAC VOUT (PA02) <-----> ADC4 (PA04)
  * - SAM D20/L21 Xplained Pro
  *  - \b DAC VOUT (PA02) <-----> ADC2 (PB08)
+ * - SAM L21  Xplained Pro
  *
  * To run the test:
  *  - Connect the supported Xplained Pro board to the computer using a
