@@ -1,0 +1,12 @@
+<asf xmlversion="1.0">
+	<module type="component" id="thirdparty.wireless.addons.widbg"   caption="WIDBG Module">
+		<info type="description" value="summary">
+		This OTA Client module provides API's for receiving data frames over-the-air and also handles writing/reading from flash.
+		</info>
+		<info type="gui-flag" value="hidden"/>
+		<build type="c-source"      value="widbg.c"/>
+		<build type="header-file"   value="widbg.h"/>
+		<build type="include-path" value="."/>
+		<device-support value="sam0"/>
+	</module>
+</asf>

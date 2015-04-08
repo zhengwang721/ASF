@@ -95,6 +95,7 @@
 #define  PACKETBUF_CONF_ATTRS_INLINE          1
 
 #define RIMESTATS_CONF_ENABLED 1
+
 #define RF_CHANNEL                            21
 
 #define IEEE802154_CONF_PANID                 0xABCD
@@ -129,6 +130,7 @@
 //#define SICSLOWPAN_CONF_MAXAGE                4
 
 #define LED_UDP_PORT 8840
+
 
 #define SICSLOWPAN_CONF_MAX_MAC_TRANSMISSIONS 5
 

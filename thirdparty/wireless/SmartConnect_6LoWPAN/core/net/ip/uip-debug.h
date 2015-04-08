@@ -49,7 +49,8 @@ void uip_debug_lladdr_print(const uip_lladdr_t *addr);
 /*
 #ifndef DEBUG
 #define DEBUG 0
-#endif */
+#endif 
+*/
 #define DEBUG_NONE      0
 #define DEBUG_PRINT     1
 #define DEBUG_ANNOTATE  2

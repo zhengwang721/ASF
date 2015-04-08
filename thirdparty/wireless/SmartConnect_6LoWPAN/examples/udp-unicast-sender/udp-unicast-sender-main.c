@@ -443,7 +443,8 @@ puts(const char* str)
 /*
 static void
 init_serial(void)
-{
+{++
+	
   //  return;
   / * by default, SERCOM3 is used - defined in samr21_xplained_pro.h * /
   struct usart_config cdc_uart_config;
