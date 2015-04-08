@@ -104,7 +104,7 @@
  * \section appdoc_samd20_spi_master_bootloader_hw Hardware Setup
  * SAM D20 in SAM D20 Xplained Pro kit is used as the SPI master.
  * The IO1-Xplained Pro wing containing the SD/MMC card should be
- * connected to External header 3 (EXT3) of SAM D20 Xplained Pro.
+ * connected to External header 1 (EXT1) of SAM D20 Xplained Pro.
  * SW0 on this kit will be configured as BOOT_LOAD_PIN and LED0 will be used
  * to display the bootloader status. LED0 will be ON when the device is in
  * bootloader mode.
