@@ -70,8 +70,6 @@ static void _i2c_master_read(
 		/* Send nack */
 	  	if (module->send_nack)
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
-		else
-		  	i2c_module->CTRLB.reg &= ~SERCOM_I2CM_CTRLB_ACKACT;
 		if (module->send_stop) {
 			/* Send stop condition */
 			_i2c_master_wait_for_sync(module);
