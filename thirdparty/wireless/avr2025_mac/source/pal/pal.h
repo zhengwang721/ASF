@@ -71,7 +71,7 @@
 #include "asf.h"
 
 #if (PAL_USE_SPI_TRX == 1)
-#if (TAL_TYPE == AT86RF215)
+#ifdef MULTI_TRX_SUPPORT
 #include "trx_access_2.h"
 #else
 #include "trx_access.h"

@@ -687,13 +687,9 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
 		/* Wait until channel set is completed */
 		if (trx_state[trx_id] == RF_TXPREP)
 		{
-			while (TAL_RF_IS_IRQ_SET(trx_id, RF_IRQ_TRXRDY) == 0)
-			{
-			/* Wait until new channel is set */
-			}
-			TAL_RF_IRQ_CLR(trx_id, RF_IRQ_TRXRDY);
-            //wait_for_freq_settling(trx_id);
-			}
+			
+            wait_for_freq_settling(trx_id);
+     	}
 		}
 
 	return status;
@@ -1547,8 +1543,8 @@ static retval_t set_channel(trx_id_t trx_id, uint16_t ch)
 
         if (trx_state[trx_id] == RF_TXPREP)
         {
-          // wait_for_freq_settling(trx_id);
-		  wait_for_txprep(trx_id);
+          wait_for_freq_settling(trx_id);
+		  
             
         }
 

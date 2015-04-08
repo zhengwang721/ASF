@@ -147,7 +147,7 @@ retval_t tal_ed_start(trx_id_t trx_id, uint8_t scan_duration)
     sampler_counter[trx_id] = aBaseSuperframeDuration
                               * ((1UL << scan_duration) + 1);
     sampler_counter[trx_id] = sampler_counter[trx_id] / ED_SAMPLE_DURATION_SYM;
-	printf("Sampler_counter : %d",sampler_counter[trx_id]);
+	
 #ifdef REDUCED_ED_SAMPLE_COUNTER // used for testing
     /* used for debugging purposes only */
     sampler_counter[trx_id] = REDUCED_ED_SAMPLE_COUNTER;
@@ -211,7 +211,7 @@ void handle_ed_end_irq(trx_id_t trx_id)
         }
 
         sampler_counter[trx_id]--;
-		printf("Sampler_counter : %d",sampler_counter[trx_id]);
+		
         if (sampler_counter[trx_id] == 0)
         {
             /* Keep RF in Rx state */

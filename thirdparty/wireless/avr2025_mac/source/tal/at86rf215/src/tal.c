@@ -443,7 +443,7 @@ void wait_for_txprep(trx_id_t trx_id)
 #ifdef IQ_RADIO
         state = (rf_cmd_state_t)pal_dev_reg_read(RF215_RF, GET_REG_ADDR(RG_RF09_STATE));
 #else
-        state = (rf_cmd_state_t)trx_reg_read(reg_offset + RG_RF09_STATE);
+        state = trx_reg_read(reg_offset + RG_RF09_STATE);
 #endif       
 
         if (state != RF_TXPREP)
@@ -456,14 +456,14 @@ void wait_for_txprep(trx_id_t trx_id)
             pal_get_current_time(&now);
             if (abs(now - start_time) > MAX_PLL_LOCK_DURATION)
             {
-                trx_reg_write(reg_offset + RG_RF09_PLL, 9);
+                    trx_reg_write(reg_offset + RG_RF09_PLL, 9);
                     pal_timer_delay(PLL_FRZ_SETTLING_DURATION);
                     trx_reg_write(reg_offset + RG_RF09_PLL, 8);
 				
                 do
                 {
                     
-                    state = (rf_cmd_state_t)trx_reg_read(reg_offset + RG_RF09_STATE);
+                    state = trx_reg_read(reg_offset + RG_RF09_STATE);
                 }
                 while (state != RF_TXPREP);
                 break;
