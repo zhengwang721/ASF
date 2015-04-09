@@ -48,9 +48,13 @@
 #include <system.h>
 
 #ifndef SYSCTRL_FUSES_OSC32K_ADDR
-#if (SAMR21)
+#if (SAMR) || (SAMD)
 #  define SYSCTRL_FUSES_OSC32K_ADDR FUSES_OSC32K_CAL_ADDR
 #  define SYSCTRL_FUSES_OSC32K_Pos  FUSES_OSC32K_CAL_Pos
+#elif (SAML21)
+#  define SYSCTRL_FUSES_OSC32K_ADDR NVMCTRL_OTP4
+#  define SYSCTRL_FUSES_OSC32K_Pos  6
+
 #else
 #  define SYSCTRL_FUSES_OSC32K_ADDR SYSCTRL_FUSES_OSC32K_CAL_ADDR
 #  define SYSCTRL_FUSES_OSC32K_Pos  SYSCTRL_FUSES_OSC32K_CAL_Pos
@@ -820,7 +824,8 @@ void system_clock_init(void)
 	/* OSCK32K */
 #if CONF_CLOCK_OSC32K_ENABLE == true
 	SYSCTRL->OSC32K.bit.CALIB =
-			(*(uint32_t *)SYSCTRL_FUSES_OSC32K_ADDR >> SYSCTRL_FUSES_OSC32K_Pos);
+			((*(uint32_t *)SYSCTRL_FUSES_OSC32K_ADDR >> 
+			SYSCTRL_FUSES_OSC32K_Pos) & 0x7Ful);
 
 	struct system_clock_source_osc32k_config osc32k_conf;
 	system_clock_source_osc32k_get_config_defaults(&osc32k_conf);
