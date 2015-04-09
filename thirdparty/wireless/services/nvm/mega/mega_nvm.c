@@ -3,7 +3,7 @@
  *
  * \brief Non volatile memories management for XMEGA devices
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,9 +39,6 @@
  *
  * \asf_license_stop
  *
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include "common_nvm.h"
 #include "conf_nvm.h"
@@ -179,23 +176,4 @@ status_code_t nvm_get_pagenumber(mem_type_t mem, uint32_t address,
 	}
 
 	return STATUS_OK;
-}
-status_code_t nvm_page_swap (mem_type_t mem, uint32_t start_addr, uint32_t size)
-{
-	switch (mem) {
-		case INT_FLASH:
-		{
-			swap_images_req_t param;
-			param.image_size = size;
-			param.image_start_addr = start_addr;
-			flash_swap(&param);
-		}
-		break;
-
-		default:
-		/* Other memories not supported */
-		return ERR_INVALID_ARG;
-	}
-
-	return STATUS_OK;	
 }

@@ -3,7 +3,7 @@
  *
  * \brief Non volatile memories management
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,9 +39,6 @@
  *
  * \asf_license_stop
  *
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef COMMON_NVM_H_INCLUDED
@@ -111,7 +108,7 @@ typedef enum {
  *
  * \param mem Type of non volatile memory to initialize
  */
-status_code_t nvm_init(mem_type_t mem) __attribute__((section(".boot")));
+status_code_t nvm_init(mem_type_t mem);
 
 /**
  * \brief Read single byte of data.
@@ -141,7 +138,7 @@ status_code_t nvm_write_char(mem_type_t mem, uint32_t address, uint8_t data);
  * \param len Number of bytes to read
  */
 status_code_t nvm_read(mem_type_t mem, uint32_t address, void *buffer,
-		uint32_t len) __attribute__((section(".boot")));
+		uint32_t len);
 
 /**
  * \brief Write \a len number of bytes at address \a address in non volatile
@@ -153,7 +150,7 @@ status_code_t nvm_read(mem_type_t mem, uint32_t address, void *buffer,
  * \param len Number of bytes to write
  */
 status_code_t nvm_write(mem_type_t mem, uint32_t address, void *buffer,
-		uint32_t len) __attribute__((section(".boot")));
+		uint32_t len);
 
 /**
  * \brief Erase a page in the non volatile memory.
@@ -161,7 +158,7 @@ status_code_t nvm_write(mem_type_t mem, uint32_t address, void *buffer,
  * \param mem Type of non volatile memory to erase
  * \param page_number Page number to erase
  */
-status_code_t nvm_page_erase(mem_type_t mem, uint32_t page_number) __attribute__((section(".boot")));
+status_code_t nvm_page_erase(mem_type_t mem, uint32_t page_number);
 
 /**
  * \brief Get the size of whole non volatile memory specified.
@@ -169,7 +166,7 @@ status_code_t nvm_page_erase(mem_type_t mem, uint32_t page_number) __attribute__
  * \param mem Type of non volatile memory
  * \param size Pointer to where to store the size
  */
-status_code_t nvm_get_size(mem_type_t mem, uint32_t *size) __attribute__((section(".boot")));
+status_code_t nvm_get_size(mem_type_t mem, uint32_t *size);
 
 /**
  * \brief Get the size of a page in the non volatile memory specified.
@@ -177,7 +174,7 @@ status_code_t nvm_get_size(mem_type_t mem, uint32_t *size) __attribute__((sectio
  * \param mem Type of non volatile memory
  * \param size Pointer to where to store the size
  */
-status_code_t nvm_get_page_size(mem_type_t mem, uint32_t *size) __attribute__((section(".boot")));
+status_code_t nvm_get_page_size(mem_type_t mem, uint32_t *size);
 
 /**
  * \brief Get the page number from the byte address \a address.
@@ -187,23 +184,14 @@ status_code_t nvm_get_page_size(mem_type_t mem, uint32_t *size) __attribute__((s
  * \param num Pointer to where to store the page number
  */
 status_code_t nvm_get_pagenumber(mem_type_t mem, uint32_t address,
-		uint32_t *num) __attribute__((section(".boot")));
-
-/**
- * \brief swap the image from mentioned address to start of the flash memory. Also reset the MCU upon completing the swap.
- *
- * \param mem Type of non volatile memory
- * \param start_addr Pointer to start address of the non volatile memory
- * \param size size of image to swap
- */
-status_code_t nvm_page_swap (mem_type_t mem, uint32_t start_addr, uint32_t size) __attribute__((section(".boot")));
+		uint32_t *num);
 
 /**
  * \brief Enable security bit which blocks external read and write access
  * to the device.
  *
  */
-status_code_t nvm_set_security_bit(void) __attribute__((section(".boot")));
+status_code_t nvm_set_security_bit(void);
 
 /**
  * \page common_nvm_quickstart Quick Start quide for common NVM driver

@@ -87,6 +87,7 @@ uint16_t global_shortaddr;
 uint64_t global_extndaddr;
 uip_ipaddr_t global_server_addr;
 uint16_t pan_id = IEEE802154_CONF_PANID;
+uint8_t ota_recvd_data[128];
 /*---------------------------------------------------------------------------*/
 PROCESS(otau_client_process, "Over-The-Air  client process");
 AUTOSTART_PROCESSES(&otau_client_process);
@@ -373,17 +374,18 @@ const uip_ipaddr_t *receiver_addr,uint16_t receiver_port,const uint8_t *data,uin
 	
 	if((datalen > 0) && (NULL != data))
 	{
+		//memcpy(ota_recvd_data,data+1,datalen-1);
 		#if (WIDBG_COMMON_SUPPORT == 1)
 		if(COMMON == *data)
 		{
-			widbg_common_rcvd_frame(NATIVE_ADDR_MODE, (uint16_t *)(&sender_addr->u16[4]), datalen, data+1,255);
+			widbg_common_rcvd_frame(NATIVE_ADDR_MODE, (uint16_t *)(&sender_addr->u16[4]), datalen-1,data+1,255);
 		}
 		else
 		#endif
 		#if (WIDBG_UPGRADE_SUPPORT == 1)
 		if (UPGRADE == *data)
 		{
-			widbg_upgrade_rcvd_frame(NATIVE_ADDR_MODE, (uint16_t *)(&sender_addr->u16[4]), datalen, data+1,255);
+			widbg_upgrade_rcvd_frame(NATIVE_ADDR_MODE, (uint16_t *)(&sender_addr->u16[4]), datalen-1, data+1,255);
 		}
 		else
 		#endif

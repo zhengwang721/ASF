@@ -63,7 +63,7 @@
 #include "widbg_mgr.h"
 #include "widbg_mgr_client.h"
 #include "port.h"
-#define DEFAULT_IMAGE_REQ_INTERVAL  (1000)
+#define DEFAULT_IMAGE_REQ_INTERVAL  (500)
 #define DEFAULT_IMAGE_RESP_INTERVAL (5000)
 #define DEFAULT_SWITCH_REQ_INTERVAL (3000)
 #define DEFAULT_SWITCH_INTERVAL     (1000)
@@ -73,10 +73,8 @@ static uint8_t string_cmp(uint8_t *str1, uint8_t *str2, uint8_t len);
 static void send_image_req(uint32_t index);
 static void send_switch_req(void);
 
-uint32_t image_start;
-uint32_t image_size;
-uint32_t image_end;
-uint8_t image_crc;
+
+uint8_t image_total_crc;
 uint16_t block_size;
 uint32_t image_index = 0;
 
@@ -87,11 +85,13 @@ node_info_t curr_image;
 upgrade_state_t curr_upgrade_state = STATE_IDLE;
 upgrade_widbg_state_t curr_widbg_state = UPGRADE_OTA_IDLE;
 
-uint16_t block[APP_MAX_PAYLOAD_SIZE / 2];
+uint16_t block[(APP_MAX_PAYLOAD_SIZE / 2)+1];
 
 uint8_t upgrade_confirm_wait = 0;
 node_info_t upgrading_node_info;
-
+uint32_t image_start;
+uint32_t image_size;
+uint32_t image_end;
 uint8_t image_req_retry = 0;
 
 void widbg_upgrade_init(void)
@@ -132,7 +132,7 @@ void widbg_upgrade_rcvd_frame(uint8_t addr_mode, uint8_t *src_addr, uint8_t leng
 
 					memcpy(&image_start, &image_notify->image_start, sizeof(uint32_t));
 					memcpy(&image_size, &image_notify->image_size, sizeof(uint32_t));
-					image_crc = image_notify->image_crc;
+					image_total_crc = image_notify->image_crc;
 					memcpy(&image_req_interval_ms, &image_notify->req_interval, sizeof(image_req_interval_ms));
 					if (image_req_interval_ms < DEFAULT_IMAGE_REQ_INTERVAL)
 					{
@@ -150,7 +150,10 @@ void widbg_upgrade_rcvd_frame(uint8_t addr_mode, uint8_t *src_addr, uint8_t leng
 		case OTA_IMAGE_RESPONSE:
 		{
 			if(STATE_IMAGE_REQUESTED == curr_upgrade_state)
-			{
+			{   uint8_t crc_read_block[64];
+				uint32_t index;
+				 static uint8_t check_crc = 0;
+				 static uint8_t recvd_crc = 0;
 				image_response_t *image_resp = (image_response_t *)payload;
 				block_size = APP_MAX_PAYLOAD_SIZE;
 				if(image_index == image_resp->block_start)
@@ -159,6 +162,33 @@ void widbg_upgrade_rcvd_frame(uint8_t addr_mode, uint8_t *src_addr, uint8_t leng
 					memcpy(&block, &image_resp->block, image_resp->block_size);
 					printf("\r\n ImageResp 0x%x",image_resp->block_start);
 					widbg_nvm_write(MEMORY_OFFSET_ADDRESS, image_resp->block_start - image_start, image_resp->block_size, (uint8_t *)&block);
+					widbg_nvm_read(MEMORY_OFFSET_ADDRESS, image_resp->block_start - image_start,image_resp->block_size,crc_read_block);
+					if(string_cmp(block,crc_read_block,image_resp->block_size))
+					{
+						printf("Blocks are different %d\n",image_resp->block_start - image_start);
+					}
+					else
+					{
+						for(index = 0; index < image_resp->block_size; index++)
+						{
+							check_crc ^= crc_read_block[index];
+						}
+						for(index = 0; index < image_resp->block_size; index++)
+						{
+							recvd_crc ^= block[index];
+						}
+						/*if ((row_index + 64) > image_size)
+						{
+							row_index += image_size - row_index;
+							loop_index = image_size - row_index;
+						}
+						else
+						{
+							row_index += 64;
+							loop_index=64;
+						}*/
+						printf("Blocks are same%d\n",image_resp->block_start - image_start);
+					}
 					image_index += image_resp->block_size;
 					if(image_index < image_end)
 					{
@@ -168,25 +198,38 @@ void widbg_upgrade_rcvd_frame(uint8_t addr_mode, uint8_t *src_addr, uint8_t leng
 					{
 						uint8_t read_block[64];
 						uint32_t row_index = 0;
+						uint32_t loop_index=64;
 						uint32_t index;
 						uint8_t crc = 0;
 						while(row_index < image_size)
-						{
-							widbg_nvm_read(MEMORY_OFFSET_ADDRESS, row_index, 64, read_block);
-							for(index = 0; index < 64; index++)
+						{   
+							if ((row_index + 64) > image_size)
+							{
+								//row_index += image_size - row_index;
+								loop_index = image_size - row_index;
+							}
+							else
+							{
+								//row_index += 64;
+								loop_index = 64;
+							}
+							widbg_nvm_read(MEMORY_OFFSET_ADDRESS, row_index, loop_index, read_block);
+							row_index+= loop_index;
+							for(index = 0; index < loop_index; index++)
 							{
 								crc ^= read_block[index];
 							}
-							if ((row_index + 64) > image_size)
+							/*if ((row_index + 64) > image_size)
 							{
 								row_index += image_size - row_index;
 							}
 							else
 							{
 								row_index += 64;
-							}
+							}*/
 						}
-						if(crc == image_crc)
+						printf("Check CRC%d\nActual crc%d\n CRC :%d\n RCVD CRc %d\n",check_crc,image_total_crc,crc,recvd_crc);
+						if(image_total_crc == check_crc)
 						{
 							widbg_mgr_timer_stop(UPGRADE);
 							send_switch_req();

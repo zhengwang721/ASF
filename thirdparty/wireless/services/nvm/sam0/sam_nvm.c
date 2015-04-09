@@ -3,7 +3,7 @@
  *
  * \brief Non volatile memories management for SAM devices
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,38 +40,25 @@
  * \asf_license_stop
  *
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #include "nvm.h"
 #include "common_nvm.h"
 #include "conf_board.h"
 #include "system_interrupt.h"
 #include "string.h"
-#include "system.h"
-extern int main(void);
-typedef struct
-{
-	uint32_t image_start_addr;
-	uint32_t image_size;
-} swap_images_req_t;
-status_code_t nvm_sam0_read(mem_type_t mem, uint32_t address,
+
+static status_code_t nvm_sam0_read(mem_type_t mem, uint32_t address,
 		uint8_t *const buffer,
-		uint32_t len)__attribute__((section(".boot")));
-status_code_t nvm_memcpy(
+		uint32_t len);
+static enum status_code nvm_memcpy(
 		const uint32_t destination_address,
 		uint8_t *const buffer,
 		uint16_t length,
-		bool erase_flag) __attribute__((section(".boot")));
-void flash_swap(swap_images_req_t *param)__attribute__((section(".boot")));
-/* Parameters for swapping image */
+		bool erase_flag);
 
-void (*func) (void) = (void(*)(void))0x000;
 /**
  * \internal Pointer to the NVM MEMORY region start address
  */
 #define NVM_MEMORY        ((volatile uint16_t *)FLASH_ADDR)
-#define PAGE_NUMBER_SHIFT              6
 status_code_t nvm_read(mem_type_t mem, uint32_t address, void *buffer,
 		uint32_t len)
 {
@@ -127,7 +114,7 @@ status_code_t nvm_sam0_read(mem_type_t mem, uint32_t address,
 	return STATUS_OK;
 }
 
-status_code_t nvm_memcpy(
+enum status_code nvm_memcpy(
 		const uint32_t destination_address,
 		uint8_t *const buffer,
 		uint16_t length,
@@ -229,27 +216,6 @@ status_code_t nvm_write(mem_type_t mem, uint32_t address, void *buffer,
 
 	return STATUS_OK;
 }
-status_code_t nvm_page_swap (mem_type_t mem, uint32_t start_addr, uint32_t size)
-{
-	switch (mem) {
-		case INT_FLASH:
-		{
-			swap_images_req_t param;
-			param.image_size = size;
-			param.image_start_addr = start_addr;
-			flash_swap(&param);
-		}
-		break;
-
-		default:
-		/* Other memories not supported */
-		return ERR_INVALID_ARG;
-	}
-
-	return STATUS_OK;
-}
-
-
 
 status_code_t nvm_init(mem_type_t mem)
 {
@@ -271,54 +237,4 @@ status_code_t nvm_init(mem_type_t mem)
 	}
 
 	return ERR_INVALID_ARG;
-}
-void flash_swap(swap_images_req_t *param)
-{
-	uint16_t current_page_number = param->image_start_addr >> PAGE_NUMBER_SHIFT;
-	uint16_t data_page_number = current_page_number;
-	//common_boot_req_t common_boot_req;
-	uint32_t page_start_addr,page_start_addr1;
-	uint16_t saving_page_number = 0;
-	uint32_t  data_byte[16];
-
-	__ASM volatile ("cpsid i");
-
-	while (param->image_size)
-	{
-		data_page_number = param->image_start_addr >> PAGE_NUMBER_SHIFT;
-
-		//if (data_page_number != current_page_number)
-		//{
-			/* Store data from flash buffer to flash page */
-			page_start_addr = param->image_start_addr;
-			nvm_read(INT_FLASH,page_start_addr,&data_byte,64);
-			page_start_addr1 = (uint32_t)saving_page_number << PAGE_NUMBER_SHIFT;
-			nvm_memcpy(page_start_addr1,&data_byte,sizeof(data_byte),true);
-			//delay_ms(20);
-			//current_page_number = data_page_number;
-			saving_page_number++;
-		//}
-
-		
-		//nvm_read(INT_FLASH,page_start_addr+1,&data_byte[1],1);\\\\\
-		/* Fill temporary page buffer */
-
-		//flash_fill_page_buffer(page_start_addr,sizeof(data_byte),&data_byte);
-        //  nvm_memcpy(page_start_addr,data_byte,sizeof(data_byte),true);
-		param->image_start_addr += sizeof(data_byte);
-		param->image_size -= sizeof(data_byte);
-        if(param->image_size < 64)
-		{   
-			page_start_addr = param->image_start_addr;
-			nvm_read(INT_FLASH,page_start_addr,&data_byte,param->image_size);
-			page_start_addr1 = (uint32_t)saving_page_number << PAGE_NUMBER_SHIFT;
-			nvm_memcpy(page_start_addr1,data_byte,param->image_size,true);
-			param-> image_size = 0;
-		}
-	}
-	/* flush last page into flash */
-	/*page_start_addr = (uint32_t)saving_page_number << PAGE_NUMBER_SHIFT;
-	flash_program_page(page_start_addr);*/
-	system_reset();
-	//main();
 }
