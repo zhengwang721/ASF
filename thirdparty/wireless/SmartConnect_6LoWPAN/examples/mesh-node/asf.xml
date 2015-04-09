@@ -12,6 +12,7 @@
 		<build type="header-file"      value="symbols.h"/>
 		<build type="include-path" value="."/>
 		<build type="define" name="UIP_CONF_IPV6" value="1"/>
+		<build type="define" name="NULLRDC_CONF_802154_AUTOACK_HW" value="0"/>	
         <build type="define" name="MESH_NODE" value="1"/>		
 		<require idref="thirdparty.wireless.addons.sio2host"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.core"/>
