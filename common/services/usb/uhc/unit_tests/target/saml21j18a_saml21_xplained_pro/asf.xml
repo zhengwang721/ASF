@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="USB Host core tests on SAM L21 Xplained Pro" id="common.services.usb.host.tests.targets.saml21_xplained_pro_host" type="unit-test">
+	<project caption="USB Host core tests on SAM L21 Xplained Pro" id="common.services.usb.host.tests.targets.saml21_xplained_pro_host">
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
