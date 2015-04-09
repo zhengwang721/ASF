@@ -3,7 +3,7 @@
  *
  * \brief ADP service implementation
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef ADP_H_INCLUDED
@@ -432,6 +435,7 @@ static inline void adp_configure_terminal_get_defaults(struct adp_msg_conf_termi
 }
 
 bool adp_configure_terminal(struct adp_msg_conf_terminal *const config, const char* label);
+bool adp_transceive_terminal(struct adp_msg_conf_terminal *const config, const char* label, uint8_t* rx_buf);
 
 /* MSG_CONF_ADD_TO_TERMINAL */
 #define MSG_CONF_ADD_TO_TERMINAL 0x27
@@ -745,8 +749,10 @@ struct adp_msg_data_stream {
 	struct adp_msg_data_stream_data stream[ADP_MAX_OUTGOING_STREAMS];
 };
 
-void adp_send_stream(struct adp_msg_data_stream *const stream_data);
-void adp_send_single_stream(uint8_t stream_id, uint8_t* data, uint8_t data_size);
+bool adp_send_stream(struct adp_msg_data_stream *const stream_data, uint8_t* receive_buf);
+bool adp_send_single_stream(uint8_t stream_id, uint8_t* data, uint8_t data_size, uint8_t* receive_buf);
+bool adp_transceive_stream(struct adp_msg_data_stream *const stream_data, uint8_t *receive_buf);
+bool adp_transceive_single_stream(uint8_t stream_id, uint8_t* data, uint8_t data_size, uint8_t* receive_buf);
 
 /* Init SPI/USART/TWI interface used. And some other misc inits*/
 void adp_init(void);

@@ -15,8 +15,8 @@
 		<require idref="sam0.drivers.system"/>
 	</module>
 
-	<module type="meta" id="common.services.adp.sam4s" caption="ADP - Atmel Data Protocol">
-		<build type="include-path" value="sam4s/" />
+	<module type="meta" id="common.services.adp.sam" caption="ADP - Atmel Data Protocol">
+		<build type="include-path" value="sam/" />
 		<require idref="common.services.adp.common"/>
 		<require idref="common.services.basic.clock"/>
 	</module>
@@ -31,12 +31,12 @@
 				<build type="define" name="ADP_MODE_SPI" value="" />
 				<device-support value="sam0"/>
 			</module>
-			<module type="service" id="common.services.adp#spi#1" caption="ADP - Atmel Data Protocol - SAM4S SPI implementation">
-				<require idref="common.services.adp.sam4s"/>
+			<module type="service" id="common.services.adp#spi#1" caption="ADP - Atmel Data Protocol - SAM SPI implementation">
+				<require idref="common.services.adp.sam"/>
 				<require idref="common.services.basic.spi_master"/>
-				<build type="c-source" value="sam4s/adp_interface_spi.c"/>
+				<build type="c-source" value="sam/adp_interface_spi.c"/>
 				<build type="define" name="ADP_MODE_SPI" value=""/>
-				<device-support value="sam4s"/>
+				<device-support value="sam"/>
 			</module>
 		</select-by-device>
 
@@ -49,12 +49,12 @@
 				<build type="define" name="ADP_MODE_TWI" value=""/>
 				<device-support value="sam0"/>
 			</module>
-			<module type="service" id="common.services.adp#twi#1" caption="ADP - Atmel Data Protocol - SAM4S TWI implementation">
-				<require idref="common.services.adp.sam4s"/>
+			<module type="service" id="common.services.adp#twi#1" caption="ADP - Atmel Data Protocol - SAM TWI implementation">
+				<require idref="common.services.adp.sam"/>
 				<require idref="common.services.basic.twi"/>
-				<build type="c-source" value="sam4s/adp_interface_twi.c"/>
+				<build type="c-source" value="sam/adp_interface_twi.c"/>
 				<build type="define" name="ADP_MODE_TWI" value=""/>
-				<device-support value="sam4s"/>
+				<device-support value="sam"/>
 			</module>
 		</select-by-device>
 
@@ -66,7 +66,7 @@
 		<build type="include-path" value="." />
 		<build type="header-file" subtype="api" value="adp_terminal.h"/>
 		<device-support value="sam0"/>
-		<device-support value="sam4s"/>
+		<device-support value="sam"/>
 	</module>
 
 </asf>

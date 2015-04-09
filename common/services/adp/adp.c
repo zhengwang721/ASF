@@ -3,7 +3,7 @@
  *
  * \brief ADP service implementation
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include <compiler.h>
@@ -389,6 +392,35 @@ bool adp_configure_terminal(struct adp_msg_conf_terminal *const config, const ch
 	return (ack == ADP_ACK_OK);
 }
 
+bool adp_transceive_terminal(struct adp_msg_conf_terminal *const config, const char* label, uint8_t* rx_buf)
+{
+	//uint8_t ack;
+	uint16_t label_len;
+	uint8_t status = false;
+
+	/* Add 0-termination to label string length */
+	label_len = strlen(label) + 1;
+
+	/* Make sure label isn't too big */
+	Assert(MSG_CONF_TERMINAL_LEN + label_len <= ADP_MAX_PACKET_DATA_SIZE);
+
+	/* Send message header */
+	adp_interface_send_start();
+	status |= adp_packet_transceive_header(MSG_CONF_TERMINAL, MSG_CONF_TERMINAL_LEN + label_len, rx_buf);
+
+	/* Send message data */
+	status |= adp_packet_transceive_data(&config->terminal_id, 1, rx_buf);
+	status |= adp_packet_transceive_data((uint8_t*)label, label_len, rx_buf);
+	status |= adp_packet_transceive_data(&config->width, 1, rx_buf);
+	status |= adp_packet_transceive_data(&config->height, 1, rx_buf);
+	status |= adp_packet_transceive_data((uint8_t*)&config->background_color, 3, rx_buf);
+	status |= adp_packet_transceive_data((uint8_t*)&config->foreground_color, 3, rx_buf);
+	
+	adp_interface_send_stop();
+
+	return status;
+}
+
 
 /**
 * \brief Send MSG_CONF_ADD_TO_TERMINAL and wait for response
@@ -541,10 +573,11 @@ bool adp_add_cursor_to_graph(struct adp_msg_add_cursor_to_graph *const config)
 *
 * \return None
 */
-void adp_send_stream(struct adp_msg_data_stream *const stream_data)
+bool adp_send_stream(struct adp_msg_data_stream *const stream_data, uint8_t *receive_buf)
 {
 	uint8_t stream_num;
 	uint8_t packet_size = 0;
+	bool status;
 
 	/* find packet size */
 	for (stream_num = 0; stream_num < stream_data->number_of_streams; stream_num++) {
@@ -565,7 +598,47 @@ void adp_send_stream(struct adp_msg_data_stream *const stream_data)
 		adp_packet_send_data((uint8_t*)stream_data->stream[stream_num].data, stream_data->stream[stream_num].data_size);
 	}
 	
+	status = adp_packet_receive_packet_data(receive_buf);
+	
 	adp_interface_send_stop();
+	
+	return status;
+}
+
+bool adp_transceive_stream(struct adp_msg_data_stream *const stream_data, uint8_t *receive_buf)
+{
+	uint8_t stream_num;
+	uint8_t packet_size = 0;
+	bool status = false;
+
+	/* find packet size */
+	for (stream_num = 0; stream_num < stream_data->number_of_streams; stream_num++) {
+		packet_size += stream_data->stream[stream_num].data_size;
+	}
+	packet_size += (1 + (2*stream_data->number_of_streams));
+
+	adp_interface_send_start();
+
+	/* Send message header */
+	status |= adp_packet_transceive_header(MSG_DATA_STREAM, packet_size, receive_buf);
+
+	/* Send message data */
+	status |= adp_packet_transceive_data(&stream_data->number_of_streams, 1, \
+										receive_buf);
+	for (stream_num = 0; stream_num < stream_data->number_of_streams; stream_num++) {
+		status |= adp_packet_transceive_data( \
+								&stream_data->stream[stream_num].stream_id, \
+								1, receive_buf);
+		status |= adp_packet_transceive_data( \
+								&stream_data->stream[stream_num].data_size, \
+								1, receive_buf);
+		status |= adp_packet_transceive_data( \
+								(uint8_t*)stream_data->stream[stream_num].data, \
+								stream_data->stream[stream_num].data_size, receive_buf);
+	}	
+	adp_interface_send_stop();
+	
+	return status;
 }
 
 
@@ -578,17 +651,34 @@ void adp_send_stream(struct adp_msg_data_stream *const stream_data)
 *
 * \return None
 */
-void adp_send_single_stream(uint8_t stream_id, uint8_t* data, uint8_t data_size)
+bool adp_send_single_stream(uint8_t stream_id, uint8_t* data, uint8_t data_size, uint8_t* receive_buf)
 {
 	struct adp_msg_data_stream data_stream;
+	uint8_t status;
 
 	data_stream.number_of_streams = 1;
 	data_stream.stream[0].stream_id = stream_id;
 	data_stream.stream[0].data_size = data_size;
 	data_stream.stream[0].data = data;
-	adp_send_stream(&data_stream);
+	status = adp_send_stream(&data_stream, receive_buf);
+	
+	return status;
 }
 
+
+bool adp_transceive_single_stream(uint8_t stream_id, uint8_t* data, uint8_t data_size, uint8_t* receive_buf)
+{
+	struct adp_msg_data_stream data_stream;
+	uint8_t status;
+
+	data_stream.number_of_streams = 1;
+	data_stream.stream[0].stream_id = stream_id;
+	data_stream.stream[0].data_size = data_size;
+	data_stream.stream[0].data = data;
+	status = adp_transceive_stream(&data_stream, receive_buf);
+	
+	return status;
+}
 
 /**
 * \brief Add a dashboard

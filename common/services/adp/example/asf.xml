@@ -20,13 +20,13 @@
 			<device-support value="sam0"/>
 		</module>
 
-		<module type="application" id="common.services.adp.example#sam4s" caption="ADP example application">
+		<module type="application" id="common.services.adp.example#sam" caption="ADP example application">
 			<info type="description" value="summary">
 				ADP example application
 			</info>
 			<build type="c-source" value="adp_example_adc_sam4s.c"/>
 			<require idref="common.services.adp.example.common"/>
-			<device-support value="sam4s"/>
+			<device-support value="sam"/>
 		</module>
 
 	</select-by-device>

@@ -3,7 +3,7 @@
  *
  * \brief ADP service implementation
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include <compiler.h>
@@ -172,6 +175,17 @@ static bool adp_packet_add_byte(uint8_t data)
 	return false;
 }
 
+static bool adp_packet_transceive_add_byte(uint8_t* rx_byte, uint8_t* rx_buf)
+{
+	if (adp_packet_add_byte(*rx_byte) == true) {
+		/* This is a data byte */
+		rx_buf [bytes_received - 1] = *rx_byte;
+	}
+	if (adp_packet_is_received() & (adp_packet_received_get_id() == MSG_RES_DATA)) {
+		return true;
+	}
+	return false;
+}
 
 /**
 * \brief [Brief description of the function]
@@ -219,6 +233,25 @@ void adp_packet_send_header(uint8_t message_id, uint8_t message_length)
 	header[2] = message_length;
 	/* Send header */
 	adp_interface_send(header, 3);
+}
+
+bool adp_packet_transceive_header(uint8_t message_id, uint8_t message_length, uint8_t* rx_buf)
+{
+	uint8_t header[3];
+	uint8_t rx_byte;
+	bool status = false;
+
+	/* Build header */
+	header[0] = ADP_TOKEN;
+	header[1] = message_id;
+	header[2] = message_length;
+	/* Send header */
+	for(uint8_t i = 0; i < 3; i++) {
+		adp_interface_transceive_single(header[i], &rx_byte);
+		status |= adp_packet_transceive_add_byte(&rx_byte, rx_buf);
+	}
+	
+	return status;
 }
 
 
@@ -319,19 +352,14 @@ bool adp_packet_receive_packet_data(uint8_t *receive_buf)
 
 	retry = MSG_RES_PACKET_DATA_MAX_LEN;
 
-	adp_interface_send_start();
 	while ( (adp_packet_is_received() == false) & (retry-- > 0) ) {
 		/* lalala, let's wait.. lala */
 		adp_interface_read(&rx_byte, 1);
 		if (adp_packet_add_byte(rx_byte) == true) {
 			/* This is a data byte */
-			receive_buf[receive_offset] = rx_byte;
-			if (receive_offset < MSG_RES_PACKET_DATA_MAX_LEN) {
-				receive_offset++;
-			} // else: something is wrong.
+			receive_buf [bytes_received - 1] = rx_byte;
 		}
 	}
-	adp_interface_send_stop();
 
 	if (adp_packet_is_received() & (adp_packet_received_get_id() == MSG_RES_DATA)) {
 		return true;
@@ -355,4 +383,23 @@ void adp_packet_send_data(uint8_t* data, uint8_t data_length)
 		}
 		adp_interface_send_single(*data++);
 	}
+}
+
+
+bool adp_packet_transceive_data(uint8_t* data, uint8_t data_length, uint8_t* rx_buf)
+{
+	uint8_t rx_byte;
+	uint8_t status;
+	
+	while (data_length--) {
+		if (*data == ADP_TOKEN) {
+			/* Pad tokens */
+			adp_interface_transceive_single(*data, &rx_byte);
+			status |= adp_packet_transceive_add_byte(&rx_byte, rx_buf);
+		}
+		adp_interface_transceive_single(*data++, &rx_byte);
+		status |= adp_packet_transceive_add_byte(&rx_byte, rx_buf);
+	}
+	
+	return status;
 }

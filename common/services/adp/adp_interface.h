@@ -3,7 +3,7 @@
  *
  * \brief ADP service implementation
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 #ifndef ADP_INTERFACE_H_INCLUDED
 #define ADP_INTERFACE_H_INCLUDED
@@ -48,6 +51,7 @@
 enum status_code adp_interface_init        (void);
 enum status_code adp_interface_send        (uint8_t *data, uint16_t length);
 void             adp_interface_send_single (uint8_t data);
+void             adp_interface_transceive_single(uint8_t tx_data, uint8_t *rx_data);
 void             adp_interface_send_start  (void);
 void             adp_interface_send_stop   (void);
 enum status_code adp_interface_read        (uint8_t *data, uint16_t length);

@@ -3,7 +3,7 @@
  *
  * \brief ADP service implementation
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include <compiler.h>
@@ -116,8 +119,19 @@ enum status_code adp_interface_read(uint8_t *data,	uint16_t length)
 */
 void adp_interface_send_single(uint8_t data)
 {
-	//spi_write(&edbg_spi, data);
 	spi_write_buffer_wait(&edbg_spi, &data, 1);
+}
+
+/**
+* \brief Sends and reads a single data byte on SPI
+*
+* \param[in] data   Data byte to send
+* \param[in]  tx_data  SPI character to transmit
+* \param[out] rx_data  Pointer to store the received SPI character
+*/
+void adp_interface_transceive_single(uint8_t tx_data, uint8_t *rx_data)
+{
+	spi_transceive_buffer_wait(&edbg_spi, &tx_data, rx_data, 1);
 }
 
 /**
