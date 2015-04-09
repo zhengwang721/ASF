@@ -666,12 +666,12 @@ enum status_code i2c_master_read_packet_wait_no_stop(
 /**
  * \internal
  * Starts blocking read operation.
- * \brief Reads data packet from slave without sending a nack and stop condition
- * when done
+ * \brief Reads data packet from slave without sending a nack signal and a stop
+ * condition when done
  *
  * Reads a data packet from the specified slave address on the I<SUP>2</SUP>C
- * bus without sending a nack and a stop condition when done, thus retaining
- * ownership of the bus when done. To end the transaction, a
+ * bus without sending a nack signal and a stop condition when done,
+ * thus retaining ownership of the bus when done. To end the transaction, a
  * \ref i2c_master_read_packet_wait "read" or
  * \ref i2c_master_write_packet_wait "write" with stop condition must be
  * performed.
@@ -823,8 +823,6 @@ static enum status_code _i2c_master_write_packet(
  *
  * \return Status of write packet.
  * \retval STATUS_OK                    If packet was write successfully
- * \return Status of write packet.
- * \retval STATUS_OK                    If packet was write successfully
  * \retval STATUS_BUSY                  If master module is busy with a job
  * \retval STATUS_ERR_DENIED            If error on bus
  * \retval STATUS_ERR_PACKET_COLLISION  If arbitration is lost
@@ -874,7 +872,7 @@ enum status_code i2c_master_write_packet_wait(
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
  * \return Status of write packet.
- * \retval STATUS_OK                    If packet was read successfully
+ * \retval STATUS_OK                    If packet was write successfully
  * \retval STATUS_BUSY                  If master module is busy
  * \retval STATUS_ERR_DENIED            If error on bus
  * \retval STATUS_ERR_PACKET_COLLISION  If arbitration is lost
@@ -917,7 +915,7 @@ enum status_code i2c_master_write_packet_wait_no_stop(
  *       is to be sent after a read, the \ref i2c_master_read_packet_wait
  *       function must be used.
  *
- * \param[in] module  Pointer to the software instance struct
+ * \param[in,out] module  Pointer to the software instance struct
  */
 void i2c_master_send_stop(struct i2c_master_module *const module)
 {

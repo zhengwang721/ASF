@@ -258,7 +258,7 @@ void i2c_master_unregister_callback(
  * \retval STATUS_OK    If reading was started successfully
  * \retval STATUS_BUSY  If module is currently busy with another transfer
  */
-enum status_code _i2c_master_read_bytes(
+enum status_code i2c_master_read_bytes(
 		struct i2c_master_module *const module,
 		struct i2c_master_packet *const packet)
 {
@@ -397,7 +397,7 @@ enum status_code i2c_master_read_packet_job(
 
 	/* Make sure we send STOP */
 	module->send_stop = true;
-
+	module->send_nack = true;
 	/* Start reading */
 	return _i2c_master_read_packet(module, packet);
 }
@@ -436,7 +436,7 @@ enum status_code i2c_master_read_packet_job_no_stop(
 
 	/* Make sure we don't send STOP */
 	module->send_stop = false;
-
+	module->send_nack = true;
 	/* Start reading */
 	return _i2c_master_read_packet(module, packet);
 }
@@ -492,7 +492,7 @@ enum status_code i2c_master_read_packet_job_no_nack(
  * \retval STATUS_OK    If writing was started successfully
  * \retval STATUS_BUSY  If module is currently busy with another transfer
  */
-enum status_code _i2c_master_write_bytes(
+enum status_code i2c_master_write_bytes(
 		struct i2c_master_module *const module,
 		struct i2c_master_packet *const packet)
 {
@@ -513,9 +513,6 @@ enum status_code _i2c_master_write_bytes(
 	/* Enable interrupts */
 	i2c_module->INTENSET.reg =
 			SERCOM_I2CM_INTENSET_MB | SERCOM_I2CM_INTENSET_SB;
-
-	/* Set address and direction bit, will send start command on bus */
-	i2c_module->ADDR.reg = (packet->address << 1) | I2C_TRANSFER_WRITE;
 
 	return STATUS_OK;
 }
@@ -600,7 +597,7 @@ enum status_code i2c_master_write_packet_job(
 
 	/* Make sure we send STOP at end*/
 	module->send_stop = true;
-
+	module->send_nack = true;
 	/* Start write operation */
 	return _i2c_master_write_packet(module, packet);
 }
@@ -639,7 +636,7 @@ enum status_code i2c_master_write_packet_job_no_stop(
 
 	/* Do not send stop condition when done */
 	module->send_stop = false;
-
+	module->send_nack = true;
 	/* Start write operation */
 	return _i2c_master_write_packet(module, packet);
 }

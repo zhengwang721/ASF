@@ -55,8 +55,8 @@
 /**
  * \internal Sets configurations to module
  *
- * \param[out] module  Pointer to software module structure.
- * \param[in]  config  Configuration structure with configurations to set.
+ * \param[out] module  Pointer to software module structure
+ * \param[in]  config  Configuration structure with configurations to set
  *
  * \return Status of setting configuration.
  * \retval STATUS_OK                        If module was configured correctly
@@ -363,8 +363,8 @@ static enum status_code _i2c_master_wait_for_bus(
  * \internal
  * Starts blocking read operation.
  *
- * \param[in,out] module  Pointer to software module struct.
- * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer.
+ * \param[in,out] module  Pointer to software module struct
+ * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
  * \return Status of reading packet.
  * \retval STATUS_OK                    The packet was read successfully
@@ -540,6 +540,8 @@ enum status_code i2c_master_read_packet_wait_no_stop(
 }
 
 /**
+ * \internal
+ * Starts blocking read operation.
  * \brief Reads data packet from slave without sending a nack signal and a stop 
  * condition when done
  *
@@ -586,14 +588,15 @@ enum status_code i2c_master_read_packet_wait_no_nack(
 
 	return _i2c_master_read_packet(module, packet);
 }
+
 /**
  * \internal
  * Starts blocking write operation.
  *
- * \param[in,out] module  Pointer to software module struct.
- * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer.
+ * \param[in,out] module  Pointer to software module struct
+ * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of writing packet.
+ * \return Status of write packet.
  * \retval STATUS_OK                    The packet was write successfully
  * \retval STATUS_ERR_TIMEOUT           If no response was given within
  *                                      specified timeout period
@@ -680,7 +683,7 @@ static enum status_code _i2c_master_write_packet(
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of writing packet.
+ * \return Status of write packet.
  * \retval STATUS_OK                    If packet was write successfully
  * \retval STATUS_BUSY                  If master module is busy with a job
  * \retval STATUS_ERR_DENIED            If error on bus
@@ -730,7 +733,7 @@ enum status_code i2c_master_write_packet_wait(
  * \param[in,out] module  Pointer to software module struct
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
- * \return Status of writing packet.
+ * \return Status of write packet.
  * \retval STATUS_OK                    If packet was write successfully
  * \retval STATUS_BUSY                  If master module is busy
  * \retval STATUS_ERR_DENIED            If error on bus
@@ -788,6 +791,7 @@ void i2c_master_send_stop(struct i2c_master_module *const module)
 	_i2c_master_wait_for_sync(module);
 	i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 }
+
 /**
  * \brief Sends nack signal on bus
  *
@@ -810,6 +814,7 @@ void i2c_master_send_nack(struct i2c_master_module *const module)
 	_i2c_master_wait_for_sync(module);
 	i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
 }
+
 /**
  * \brief Reads one byte data from slave
  *
