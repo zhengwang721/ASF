@@ -296,8 +296,14 @@ memcpy(&data[1],payload,templen);
 
   /* check that the FIFO is clear to access */
   radio_status=rf233_status();
+  #if NULLRDC_CONF_802154_AUTOACK_HW
   if(radio_status == STATE_BUSY_RX_AACK || radio_status == STATE_BUSY_TX_ARET) {
-    PRINTF("RF233: TRX buffer unavailable: prep when %s\n", radio_status == STATE_BUSY_RX_AACK ? "rx" : "tx");
+	  PRINTF("RF233: TRX buffer unavailable: prep when %s\n", radio_status == STATE_BUSY_RX_AACK ? "rx" : "tx");
+  #else
+   if(radio_status == STATE_BUSY_RX || radio_status == STATE_BUSY_TX) {
+	   PRINTF("RF233: TRX buffer unavailable: prep when %s\n", radio_status == STATE_BUSY_RX? "rx" : "tx");
+  #endif
+    
     return RADIO_TX_ERR;
   }
 
@@ -322,7 +328,11 @@ rf233_transmit(unsigned short payload_len)
   
   status_now = rf233_status();
    //status_now = trx_reg_read(RF233_REG_TRX_RPC);
+  #if NULLRDC_CONF_802154_AUTOACK_HW
   if(status_now == STATE_BUSY_RX_AACK || status_now == STATE_BUSY_TX_ARET) {
+  #else
+  if(status_now == STATE_BUSY_RX || status_now == STATE_BUSY_TX) {
+  #endif
     PRINTF("RF233: collision, was receiving 0x%02X\n",status_now);
     /* NOTE: to avoid loops */
     return RADIO_TX_ERR;;
@@ -357,7 +367,9 @@ rf233_transmit(unsigned short payload_len)
   /* perform transmission */
   ENERGEST_OFF(ENERGEST_TYPE_LISTEN);
   ENERGEST_ON(ENERGEST_TYPE_TRANSMIT);
+  #if NULLRDC_CONF_802154_AUTOACK_HW
   RF233_COMMAND(TRXCMD_TX_ARET_ON);
+  #endif
   RF233_COMMAND(TRXCMD_TX_START);
    flag_transmit=1;
    //delay_ms(5);
@@ -541,9 +553,11 @@ rf233_channel_clear(void)
   if(was_off) {
     RF233_COMMAND(TRXCMD_TRX_OFF);
   }
+  #if NULLRDC_CONF_802154_AUTOACK_HW 
   else{
 	  RF233_COMMAND(TRXCMD_RX_AACK_ON);
   }
+  #endif
 
   /* check CCA */
   if((regsave & TRX_CCA_DONE) && (regsave & TRX_CCA_STATUS)) {
@@ -564,7 +578,12 @@ rf233_receiving_packet(void)
 { 
   uint8_t trx_state;
   trx_state=rf233_status();
+  #if NULLRDC_CONF_802154_AUTOACK_HW
   if(trx_state == STATE_BUSY_RX_AACK) {
+  #else 
+  if(trx_state == STATE_BUSY_RX) {
+  #endif
+  
     PRINTF("RF233: Receiving frame\n");
     return 1;
   }
@@ -668,7 +687,11 @@ on(void)
 
   /* go to RX_ON state */
   ENERGEST_ON(ENERGEST_TYPE_LISTEN);
+  #if NULLRDC_CONF_802154_AUTOACK_HW
   RF233_COMMAND(TRXCMD_RX_AACK_ON);
+  #else
+  RF233_COMMAND(TRXCMD_RX_ON); 
+  #endif
   radio_is_on = 1;
   return 0;
 }
@@ -676,8 +699,12 @@ on(void)
 /* switch the radio off */
 int
 off(void)
-{
-  if(rf233_status() != STATE_RX_AACK_ON) {
+{ 
+  #if NULLRDC_CONF_802154_AUTOACK_HW
+  if(rf233_status() != STATE_RX_AACK_ON ) {
+  #else
+  if(rf233_status() != STATE_RX_ON) {
+  #endif
     /* fail, we need the radio transceiver to be in this state */
     return -1;
   }
@@ -765,7 +792,9 @@ rf233_interrupt_poll(void)
 		 {
 			 flag_transmit=0;
 			 interrupt_callback_in_progress = 0;
-			RF233_COMMAND(TRXCMD_RX_AACK_ON);
+			 #if NULLRDC_CONF_802154_AUTOACK_HW
+			 RF233_COMMAND(TRXCMD_RX_AACK_ON);
+			 #endif
 			 return 0;
 		 }
   
