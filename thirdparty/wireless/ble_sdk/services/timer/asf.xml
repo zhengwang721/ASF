@@ -4,7 +4,7 @@
 		timer
 		</info>
 		<select-by-device id="thirdparty.wireless.ble_sdk.services.timer#timer">
-			<module type="component" id="thirdparty.wireless.ble_sdk.services.timer#timer#0"     caption="Timer">
+			<module type="meta" id="thirdparty.wireless.ble_sdk.services.timer#timer#0"     caption="Timer">
 				<info type="description" value="summary">
 				Timer Driver
 				</info>
@@ -17,11 +17,9 @@
 				
 				<require idref="sam0.drivers.tc"/>
   
-				<device-support value="samd20"/>
 				<device-support value="samd21"/>
-				<device-support value="samr21"/>
 			</module>
-			<module type="component" id="thirdparty.wireless.ble_sdk.services.timer#timer#1"     caption="Timer">
+			<module type="meta" id="thirdparty.wireless.ble_sdk.services.timer#timer#1"     caption="Timer">
 				<info type="description" value="summary">
 				Timer Driver
 				</info>
