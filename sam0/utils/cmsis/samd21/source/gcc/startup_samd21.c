@@ -231,16 +231,6 @@ void Reset_Handler(void)
 {
         uint32_t *pSrc, *pDest;
 
-        /* Change default QOS values to have the best performance and correct USB behavior */
-        SBMATRIX->SFR[SBMATRIX_SLAVE_HMCRAMC0].reg = 2;
-#if defined(ID_USB)
-        USB->DEVICE.QOSCTRL.bit.CQOS = 2;
-        USB->DEVICE.QOSCTRL.bit.DQOS = 2;
-#endif
-        DMAC->QOSCTRL.bit.DQOS = 2;
-        DMAC->QOSCTRL.bit.FQOS = 2;
-        DMAC->QOSCTRL.bit.WRBQOS = 2;
-
         /* Initialize the relocate segment */
         pSrc = &_etext;
         pDest = &_srelocate;
@@ -259,6 +249,16 @@ void Reset_Handler(void)
         /* Set the vector table base address */
         pSrc = (uint32_t *) & _sfixed;
         SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
+
+        /* Change default QOS values to have the best performance and correct USB behaviour */
+        SBMATRIX->SFR[SBMATRIX_SLAVE_HMCRAMC0].reg = 2;
+#if defined(ID_USB)
+        USB->DEVICE.QOSCTRL.bit.CQOS = 2;
+        USB->DEVICE.QOSCTRL.bit.DQOS = 2;
+#endif
+        DMAC->QOSCTRL.bit.DQOS = 2;
+        DMAC->QOSCTRL.bit.FQOS = 2;
+        DMAC->QOSCTRL.bit.WRBQOS = 2;
 
         /* Overwriting the default value of the NVMCTRL.CTRLB.MANW bit (errata reference 13134) */
         NVMCTRL->CTRLB.bit.MANW = 1;

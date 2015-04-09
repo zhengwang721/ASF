@@ -63,6 +63,10 @@
 #  error CONF_CLOCK_APBB_DIVIDER not defined in conf_clocks.h
 #endif
 
+#if !defined(CONF_CLOCK_APBC_DIVIDER)
+#  error CONF_CLOCK_APBC_DIVIDER not defined in conf_clocks.h
+#endif
+
 #if !defined(CONF_CLOCK_OSC8M_PRESCALER)
 #  error CONF_CLOCK_OSC8M_PRESCALER not defined in conf_clocks.h
 #endif

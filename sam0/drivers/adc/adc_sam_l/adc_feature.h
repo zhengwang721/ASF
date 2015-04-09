@@ -46,6 +46,10 @@
 #ifndef ADC_FEATURE_H_INCLUDED
 #define ADC_FEATURE_H_INCLUDED
 
+/**
+ * \addtogroup asfdoc_sam0_adc_group
+ * @{
+ */
 
 #ifdef __cplusplus
 extern "C" {
@@ -84,11 +88,6 @@ enum adc_callback {
 };
 
 #endif
-
-/**
- * \addtogroup asfdoc_sam0_adc_group
- * @{
- */
 
 /**
  * \brief ADC reference voltage enum.
@@ -659,11 +658,11 @@ static inline void adc_get_sequence_status(
 
 /** @} */
 
-/** @} */
-
 #ifdef __cplusplus
 }
 #endif
+
+/** @} */
 
 #endif /* ADC_FEATURE_H_INCLUDED */
 
