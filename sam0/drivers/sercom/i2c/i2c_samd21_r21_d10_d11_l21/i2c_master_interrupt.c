@@ -79,12 +79,12 @@ static void _i2c_master_read(
 	module->buffer_remaining--;
 
 	if (sclsm_flag) {
-		if (module->buffer_remaining == 1) {
+		if (module->nack && module->buffer_remaining == 1) {
 			/* Set action to NACK. */
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
 		}
 	} else {
-		if (module->buffer_remaining == 0) {
+		if (module->nack && module->buffer_remaining == 0) {
 			/* Set action to NACK. */
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
 		}
