@@ -470,8 +470,7 @@ int main(void)
 		&i2c_init_test,
 		&i2c_master_transfer_test,
 /* saml21 in fast_mode, many sercomes are not stable */
-#if	(SAML21)
-#else
+#if	!(SAML21)
 		&i2c_full_speed_test,
 #endif
 
