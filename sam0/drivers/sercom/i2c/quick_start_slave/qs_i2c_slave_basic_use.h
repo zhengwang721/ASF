@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Slave Quick Start Guide with Callbacks
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -99,6 +99,9 @@
  * -# Depending on transfer direction, set up buffer to read to or write from,
  *    and write or read from master.
  *    \snippet qs_i2c_slave_basic_use.c transfer
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include <asf.h>

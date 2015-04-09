@@ -5,7 +5,7 @@
  *  appending a buffer into the queue, removing a buffer from the queue and
  *  reading a buffer from the queue as per the search criteria.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,7 +43,7 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -78,8 +78,8 @@ typedef enum buffer_mode_tag
 /* === Prototypes ========================================================== */
 
 static buffer_t *queue_read_or_remove(queue_t *q,
-                                      buffer_mode_t mode,
-                                      search_t *search);
+		buffer_mode_t mode,
+		search_t *search);
 
 /* === Implementation ====================================================== */
 
@@ -130,26 +130,21 @@ void qmm_queue_append(queue_t *q, buffer_t *buf)
     ENTER_CRITICAL_REGION();
 
 #ifdef ENABLE_QUEUE_CAPACITY
-    /* Check if queue is full */
-    if (q->size == q->capacity)
-    {
-        /* Buffer cannot be appended as queue is full */
-        status = QUEUE_FULL;
-    }
-    else
+	/* Check if queue is full */
+	if (q->size == q->capacity) {
+		/* Buffer cannot be appended as queue is full */
+		status = QUEUE_FULL;
+	} else
 #endif  /* ENABLE_QUEUE_CAPACITY */
-    {
-        /* Check whether queue is empty */
-        if (q->size == 0)
-        {
-            /* Add the buffer at the head */
-            q->head = buf;
-        }
-        else
-        {
-            /* Add the buffer at the end */
-            q->tail->next = buf;
-        }
+	{
+		/* Check whether queue is empty */
+		if (q->size == 0) {
+			/* Add the buffer at the head */
+			q->head = buf;
+		} else {
+			/* Add the buffer at the end */
+			q->tail->next = buf;
+		}
 
         /* Update the list */
         q->tail = buf;
@@ -190,7 +185,8 @@ void qmm_queue_append(queue_t *q, buffer_t *buf)
  * @param q Queue from which buffer is to be read or removed.
  *
  * @param mode Mode of operations. If this parameter has value REMOVE_MODE,
- *             buffer will be removed from queue and returned. If this parameter is
+ *             buffer will be removed from queue and returned. If this parameter
+ * is
  *             READ_MODE, buffer pointer will be returned without
  *             removing from queue.
  *
@@ -198,10 +194,11 @@ void qmm_queue_append(queue_t *q, buffer_t *buf)
  *
  * @return Buffer header pointer, if the buffer is successfully
  *         removed or read, otherwise NULL is returned.
+ * \ingroup group_qmm
  */
 static buffer_t *queue_read_or_remove(queue_t *q,
-                                      buffer_mode_t mode,
-                                      search_t *search)
+		buffer_mode_t mode,
+		search_t *search)
 {
 
     buffer_t *buffer_current = NULL;

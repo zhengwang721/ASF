@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Common Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef I2C_COMMON_H_INCLUDED
 #define I2C_COMMON_H_INCLUDED
 
@@ -59,7 +62,7 @@ extern "C" {
  *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C Slave Mode Driver (SERCOM I2C)
  * \endif
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's SERCOM I<SUP>2</SUP>C module, for the transfer
  * of data via an I<SUP>2</SUP>C bus. The following driver API modes are covered
  * by this manual:

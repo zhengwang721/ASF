@@ -3,7 +3,7 @@
  *
  * @brief This file contains TAL API function declarations
  *
- * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /*
- * Copyright (c) 2013 - 2015, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -67,6 +67,16 @@
 #include "tal_rf215.h"
 #endif
 
+/**
+ * \defgroup group_tal  Transceiver Abstraction Layer
+ * The Transceiver Abstraction Layer (TAL) implements the transceiver specific
+ * functionalities and
+ * provides interfaces to the upper layers (like IEEE 802.15.4 MAC )and  uses
+ * the services of PAL.
+ *
+ */
+
+/
 /* === TYPES =============================================================== */
 //__PACK__DATA__
 /* Structure implementing the PIB values stored in TAL */
@@ -696,9 +706,11 @@ extern tal_pib_t tal_pib;
  */
 #define BAND_MULTIPLE                       (2)
 
-#if (TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF232)||\
+#if (TAL_TYPE == AT86RF230A) || (TAL_TYPE == AT86RF230B) ||\
+    (TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF232)||\
     (TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == AT86RF233) ||\
-    (TAL_TYPE == ATMEGARFR2) || (TAL_TYPE == AT86RF234)
+    (TAL_TYPE == ATMEGARFR2) || (TAL_TYPE == AT86RF234)||\
+    (TAL_TYPE == ATMEGARFA2)
 /** RF band */
 #define RF_BAND                             BAND_2400
 #elif (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B)
@@ -788,15 +800,16 @@ extern tal_pib_t tal_pib;
  * PHY.
  * This value is the base for the PHY PIB attribute phySHRDuration.
  */
-#define NO_OF_SYMBOLS_PREAMBLE_SFD          (NO_SYMBOLS_PREAMBLE + NO_SYMBOLS_SFD)
-
+#define NO_OF_SYMBOLS_PREAMBLE_SFD          (NO_SYMBOLS_PREAMBLE + \
+	NO_SYMBOLS_SFD)
 
 /**
  * Maximum number of symbols in a frame for the current PHY.
  * This value is the base for the PHY PIB attribute phyMaxFrameDuration.
  */
-#define MAX_FRAME_DURATION                  \
-    (NO_OF_SYMBOLS_PREAMBLE_SFD + (aMaxPHYPacketSize + 1) * SYMBOLS_PER_OCTET)
+#define MAX_FRAME_DURATION \
+	(NO_OF_SYMBOLS_PREAMBLE_SFD + \
+	(aMaxPHYPacketSize + 1) * SYMBOLS_PER_OCTET)
 
 /**
  * The maximum time in symbols for a 32 bit timer

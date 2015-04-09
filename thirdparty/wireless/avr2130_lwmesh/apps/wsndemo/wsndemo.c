@@ -3,7 +3,7 @@
  *
  * \brief WSNDemo application implementation
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -55,10 +55,10 @@
  * in which one central node collects the data from a network of sensors and
  *passes this data over a serial connection for further processing.
  * In the case of the WSNDemo this processing is performed by the WSNMonitor PC
- *application. The BitCloud® Quick Start Guide  provides a detailed description
+ *application. The BitCloud&reg; Quick Start Guide  provides a detailed description
  *of the WSNDemo application scenario, and instructions on how to use
  *WSNMonitor.
- *  However since BitCloud is a ZigBee® PRO stack, there are a few differences
+ *  However since BitCloud is a ZigBee&reg; PRO stack, there are a few differences
  *in the protocol:
  * • Device types (Coordinator, Router and End Device) are simulated on the
  *application level; there is no such separation in Lightweight Mesh on the

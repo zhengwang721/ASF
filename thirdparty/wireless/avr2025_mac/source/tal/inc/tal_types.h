@@ -3,7 +3,7 @@
  *
  * @brief This file contains defines for TAL types.
  *
- * Copyright (c) 2013 - 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,10 +41,11 @@
  */
 
 /*
- * Copyright (c) 2013 - 2015, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+
 /* Prevent double inclusion */
 #ifndef TAL_TYPES_H
 #define TAL_TYPES_H
@@ -64,6 +65,7 @@
 #define AT86RF234               (0x16)
 /* TAL Type for Mega RF single chips, e.g. ATMEGA128RFA1 */
 #define ATMEGARFA1              (0x51)
+#define ATMEGARFA2              (0x52)
 #define ATMEGARFR2              (0x53)
 
 /* === PROTOTYPES ========================================================== */

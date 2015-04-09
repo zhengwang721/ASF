@@ -4,7 +4,7 @@
  * \brief Provides the low-level initialization functions that called 
  * on chip startup.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,6 +40,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include "system_samg55.h"
@@ -162,14 +165,8 @@ void system_init_flash(uint32_t ul_clk)
 		EFC->EEFC_FMR = EEFC_FMR_FWS(3)|EEFC_FMR_CLOE;
 	} else if (ul_clk < CHIP_FREQ_FWS_4) {
 		EFC->EEFC_FMR = EEFC_FMR_FWS(4)|EEFC_FMR_CLOE;
-	} else if (ul_clk < CHIP_FREQ_FWS_5) {
-		EFC->EEFC_FMR = EEFC_FMR_FWS(5)|EEFC_FMR_CLOE;
-	} else if (ul_clk < CHIP_FREQ_FWS_6) {
-		EFC->EEFC_FMR = EEFC_FMR_FWS(6)|EEFC_FMR_CLOE;
-	} else if (ul_clk < CHIP_FREQ_FWS_7) {
-		EFC->EEFC_FMR = EEFC_FMR_FWS(7)|EEFC_FMR_CLOE;
 	} else {
-		EFC->EEFC_FMR = EEFC_FMR_FWS(8)|EEFC_FMR_CLOE;
+		EFC->EEFC_FMR = EEFC_FMR_FWS(5)|EEFC_FMR_CLOE;
 	}
 }
 

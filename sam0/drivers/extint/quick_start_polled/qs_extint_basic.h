@@ -3,7 +3,7 @@
  *
  * \brief SAM External Interrupt Driver Quick Start
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -108,4 +108,7 @@
  * -# Clear the detection state of the external interrupt channel so that it
  *    is ready to detect a future falling edge.
  *    \snippet qs_extint_basic.c main_3
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

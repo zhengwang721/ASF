@@ -4,7 +4,7 @@
  *
  * \brief SAM AES Driver Quick Start
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -113,4 +113,7 @@
  *    \snippet quick_start_callback.c OFB_MODE
  * -# Configure CTR mode encryption and decryption and run test.
  *    \snippet quick_start_callback.c CTR_MODE
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

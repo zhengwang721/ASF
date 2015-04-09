@@ -4,7 +4,7 @@
  *
  * \brief SAM AES Driver Quick Start with DMA.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -103,5 +103,8 @@
  * \subsection asfdoc_sam0_aes_dma_use_case_main_flow Workflow
  * -# Configure ECB mode encryption with DMA and run test.
  *    \snippet quick_start_dma.c encryption_mode
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

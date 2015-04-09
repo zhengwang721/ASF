@@ -4,7 +4,7 @@
  *
  * \brief SAM Advanced Encryption Standard driver.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,6 +41,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 #ifndef AES_H_INCLUDED
 #define AES_H_INCLUDED
@@ -52,7 +55,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_drivers_aes_group SAM Advanced Encryption Standard (AES)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Advanced Encryption Standard functionality. The following 
  * driver API modes are covered by this manual:
  *

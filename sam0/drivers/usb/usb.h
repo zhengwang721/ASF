@@ -3,7 +3,7 @@
  *
  * \brief SAM USB Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef USB_H_INCLUDED
 #define USB_H_INCLUDED
 
@@ -64,7 +67,7 @@ extern "C" {
  * The following devices can use this module:
  *  - Atmel | SMART SAM D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D11
+ *  - Atmel | SMART SAM D11 (Only USB device support on SAM D11 device)
  *  - Atmel | SMART SAM L21
  *
  * The USB module covers following mode:
@@ -267,6 +270,7 @@ struct usb_module {
 	/** Hardware module pointer of the associated USB peripheral. */
 	Usb *hw;
 
+#if !SAMD11
 	/** Array to store host related callback functions */
 	usb_host_callback_t host_callback[USB_HOST_CALLBACK_N];
 	usb_host_pipe_callback_t host_pipe_callback[USB_PIPE_NUM][USB_HOST_PIPE_CALLBACK_N];
@@ -278,6 +282,7 @@ struct usb_module {
 	uint8_t host_pipe_registered_callback_mask[USB_PIPE_NUM];
 	/** Bit mask for host pipe callbacks enabled */
 	uint8_t host_pipe_enabled_callback_mask[USB_PIPE_NUM];
+#endif
 
 	/** Array to store device related callback functions */
 	usb_device_callback_t device_callback[USB_DEVICE_CALLBACK_N];
@@ -340,6 +345,7 @@ struct usb_endpoint_callback_parameter {
 
 void usb_enable(struct usb_module *module_inst);
 void usb_disable(struct usb_module *module_inst);
+
 /**
  * \brief Get the status of USB module's state machine
  *
@@ -351,13 +357,14 @@ static inline uint8_t usb_get_state_machine_status(struct usb_module *module_ins
 	Assert(module_inst);
 	Assert(module_inst->hw);
 
-	return module_inst->hw->HOST.FSMSTATUS.reg;
+	return module_inst->hw->DEVICE.FSMSTATUS.reg;
 }
 
 void usb_get_config_defaults(struct usb_config *module_config);
 enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 		struct usb_config *module_config);
 
+#if !SAMD11
 /**
  * \brief Enable the USB host by setting the VBUS OK
  *
@@ -493,6 +500,7 @@ static inline uint16_t usb_host_get_frame_number(struct usb_module *module_inst)
 
 	return (uint16_t)(module_inst->hw->HOST.FNUM.bit.FNUM);
 }
+#endif
 
 /**
  * \brief Attach USB device to the bus
@@ -712,6 +720,7 @@ enum status_code usb_device_endpoint_setup_buffer_job(struct usb_module *module_
 void usb_device_endpoint_abort_job(struct usb_module *module_inst, uint8_t ep);
 /** @} */
 
+#if !SAMD11
 /**
  * \name USB Host Pipe Operations
  * @{
@@ -802,6 +811,7 @@ static inline void usb_host_pipe_clear_toggle(struct usb_module *module_inst, ui
 void usb_host_pipe_set_auto_zlp(struct usb_module *module_inst, uint8_t pipe_num, bool value);
 
 /** @} */
+#endif
 
 /**
  * \name USB Device Endpoint Operations

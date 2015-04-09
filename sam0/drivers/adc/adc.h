@@ -3,7 +3,7 @@
  *
  * \brief SAM Peripheral Analog-to-Digital Converter Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 #ifndef ADC_H_INCLUDED
 #define ADC_H_INCLUDED
@@ -47,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_adc_group SAM Analog to Digital Converter Driver (ADC)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Analog to Digital Converter functionality, for
  * the conversion of analog voltages into a corresponding digital form.
  * The following driver API modes are covered by this manual:
@@ -295,7 +298,7 @@
  * \subsection asfdoc_sam0_adc_module_overview_offset_corr Offset and Gain Correction
  * Inherent gain and offset errors affect the absolute accuracy of the ADC.
  *
- * The offset error is defined as the deviation of the ADC’s actual transfer
+ * The offset error is defined as the deviation of the ADC's actual transfer
  * function from ideal straight line at zero input voltage.
  *
  * The gain error is defined as the deviation of the last output step's
@@ -763,9 +766,11 @@ static inline enum status_code adc_read(
 
 	Adc *const adc_module = module_inst->hw;
 
+#if (SAMD) || (SAMR21)
 	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
+#endif
 
 	/* Get ADC result */
 	*result = adc_module->RESULT.reg;

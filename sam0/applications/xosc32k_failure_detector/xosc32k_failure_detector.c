@@ -3,7 +3,7 @@
  *
  * \brief SAM XOSC32K Runtime Failure Detector Application
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \license
  * \asf_license_start
@@ -103,6 +103,9 @@
  * \section appdoc_sam0_xosc32k_fail_detect_contactinfo Contact Information
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include <asf.h>

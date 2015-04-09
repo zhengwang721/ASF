@@ -41,7 +41,7 @@
  * \asf_license_stop
  */
 /*
- * Copyright (c) 2015, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -79,8 +79,8 @@
  * Checks whether the buffer pointer provided is of small buffer or of a large
  * buffer
  */
-#define IS_SMALL_BUF(p) ((p)->body >= \
-                         (buf_pool + LARGE_BUFFER_SIZE * TOTAL_NUMBER_OF_LARGE_BUFS))
+#define IS_SMALL_BUF(p) ((p)->body >= (buf_pool + \
+	LARGE_BUFFER_SIZE * TOTAL_NUMBER_OF_LARGE_BUFS))
 #endif
 
 /* === Globals ============================================================= */
@@ -97,7 +97,8 @@ static uint8_t buf_pool[((TOTAL_NUMBER_OF_LARGE_BUFS * LARGE_BUFFER_SIZE))];
 /*
  * Array of buffer headers
  */
-static buffer_t buf_header[TOTAL_NUMBER_OF_LARGE_BUFS + TOTAL_NUMBER_OF_SMALL_BUFS];
+static buffer_t buf_header[TOTAL_NUMBER_OF_LARGE_BUFS +
+TOTAL_NUMBER_OF_SMALL_BUFS];
 
 /*
  * Queue of free large buffers
@@ -127,58 +128,57 @@ static queue_t free_small_buffer_q;
  */
 void bmm_buffer_init(void)
 {
-    uint8_t index;
+	uint8_t index;
 
-    /* Initialize free buffer queue for large buffers */
+	/* Initialize free buffer queue for large buffers */
 #if (TOTAL_NUMBER_OF_LARGE_BUFS > 0)
-#ifdef ENABLE_QUEUE_CAPACITY
-    qmm_queue_init(&free_large_buffer_q, TOTAL_NUMBER_OF_LARGE_BUFS);
-#else
-    qmm_queue_init(&free_large_buffer_q);
-#endif  /* ENABLE_QUEUE_CAPACITY */
+    #ifdef ENABLE_QUEUE_CAPACITY
+	qmm_queue_init(&free_large_buffer_q, TOTAL_NUMBER_OF_LARGE_BUFS);
+    #else
+	qmm_queue_init(&free_large_buffer_q);
+    #endif  /* ENABLE_QUEUE_CAPACITY */
 #endif
 
-    /* Initialize free buffer queue for small buffers */
+	/* Initialize free buffer queue for small buffers */
 #if (TOTAL_NUMBER_OF_SMALL_BUFS > 0)
-#ifdef ENABLE_QUEUE_CAPACITY
-    qmm_queue_init(&free_small_buffer_q, TOTAL_NUMBER_OF_SMALL_BUFS);
-#else
-    qmm_queue_init(&free_small_buffer_q);
-#endif  /* ENABLE_QUEUE_CAPACITY */
+    #ifdef ENABLE_QUEUE_CAPACITY
+	qmm_queue_init(&free_small_buffer_q, TOTAL_NUMBER_OF_SMALL_BUFS);
+    #else
+	qmm_queue_init(&free_small_buffer_q);
+    #endif  /* ENABLE_QUEUE_CAPACITY */
 #endif
 
 #if (TOTAL_NUMBER_OF_LARGE_BUFS > 0)
-    for (index = 0; index < TOTAL_NUMBER_OF_LARGE_BUFS; index++)
-    {
-        /*
-         * Initialize the buffer body pointer with address of the
-         * buffer body
-         */
-        buf_header[index].body = buf_pool + (index * LARGE_BUFFER_SIZE);
+	for (index = 0; index < TOTAL_NUMBER_OF_LARGE_BUFS; index++) {
+		/*
+		 * Initialize the buffer body pointer with address of the
+		 * buffer body
+		 */
+		buf_header[index].body = buf_pool + (index * LARGE_BUFFER_SIZE);
 
-        /* Append the buffer to free large buffer queue */
-        qmm_queue_append(&free_large_buffer_q, &buf_header[index]);
-    }
+		/* Append the buffer to free large buffer queue */
+		qmm_queue_append(&free_large_buffer_q, &buf_header[index]);
+	}
 #endif
 
 #if (TOTAL_NUMBER_OF_SMALL_BUFS > 0)
-    for (index = 0; index < TOTAL_NUMBER_OF_SMALL_BUFS; index++)
-    {
-        /*
-         * Initialize the buffer body pointer with address of the
-         * buffer body
-         */
-        buf_header[index + TOTAL_NUMBER_OF_LARGE_BUFS].body =
-            buf_pool + (TOTAL_NUMBER_OF_LARGE_BUFS * LARGE_BUFFER_SIZE) +
-            (index * SMALL_BUFFER_SIZE);
+	for (index = 0; index < TOTAL_NUMBER_OF_SMALL_BUFS; index++) {
+		/*
+		 * Initialize the buffer body pointer with address of the
+		 * buffer body
+		 */
+		buf_header[index + TOTAL_NUMBER_OF_LARGE_BUFS].body \
+			= buf_pool +
+				(TOTAL_NUMBER_OF_LARGE_BUFS *
+				LARGE_BUFFER_SIZE) + \
+				(index * SMALL_BUFFER_SIZE);
 
-        /* Append the buffer to free small buffer queue */
-        qmm_queue_append(&free_small_buffer_q,
-                         &buf_header[index + TOTAL_NUMBER_OF_LARGE_BUFS]);
-    }
+		/* Append the buffer to free small buffer queue */
+		qmm_queue_append(&free_small_buffer_q, &buf_header[index + \
+				TOTAL_NUMBER_OF_LARGE_BUFS]);
+	}
 #endif
 }
-
 
 /**
  * @brief Allocates a buffer

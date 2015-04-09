@@ -3,7 +3,7 @@
  *
  * \brief SAM D20 Clock Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <clock.h>
 #include <conf_clocks.h>
@@ -757,7 +760,7 @@ void system_clock_init(void)
 	/* OSCK32K */
 #if CONF_CLOCK_OSC32K_ENABLE == true
 	SYSCTRL->OSC32K.bit.CALIB =
-			(*(uint32_t *)SYSCTRL_FUSES_OSC32KCAL_ADDR >> SYSCTRL_FUSES_OSC32KCAL_Pos);
+			(*(uint32_t *)FUSES_OSC32KCAL_ADDR >> FUSES_OSC32KCAL_Pos);
 
 	struct system_clock_source_osc32k_config osc32k_conf;
 	system_clock_source_osc32k_get_config_defaults(&osc32k_conf);
@@ -781,8 +784,32 @@ void system_clock_init(void)
 	dfll_conf.loop_mode      = CONF_CLOCK_DFLL_LOOP_MODE;
 	dfll_conf.on_demand      = false;
 
+	/* Using DFLL48M COARSE CAL value from NVM Software Calibration Area Mapping
+     in DFLL.COARSE helps to output a frequency close to 48 MHz.
+	   Not applicable for silicon rev C and previous*/
+
+	/* Get MCU revision */
+	uint32_t rev = system_get_device_id();
+
+	rev &= DSU_DID_REVISION_Msk;
+	rev = rev >> DSU_DID_REVISION_Pos;
+
+	if (rev >= _SYSTEM_MCU_REVISION_D) {
+#define NVM_DFLL_COARSE_POS    58 /* DFLL48M Coarse calibration value bit position.*/
+#define NVM_DFLL_COARSE_SIZE   6  /* DFLL48M Coarse calibration value bit size.*/
+
+		uint32_t coarse =( *((uint32_t *)(NVMCTRL_OTP4)
+				+ (NVM_DFLL_COARSE_POS / 32))
+			>> (NVM_DFLL_COARSE_POS % 32))
+			& ((1 << NVM_DFLL_COARSE_SIZE) - 1);
+		/* In some revision chip, the coarse calibration value is not correct. */
+		if (coarse == 0x3f) {
+			coarse = 0x1f;
+		}
+		dfll_conf.coarse_value = coarse;
+	}
+
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN) {
-		dfll_conf.coarse_value = CONF_CLOCK_DFLL_COARSE_VALUE;
 		dfll_conf.fine_value   = CONF_CLOCK_DFLL_FINE_VALUE;
 	}
 
@@ -839,7 +866,7 @@ void system_clock_init(void)
 
 	/* Configure all GCLK generators except for the main generator, which
 	 * is configured later after all other clock systems are set up */
-	MREPEAT(8, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
+	MREPEAT(GCLK_GEN_NUM, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
 
 #  if CONF_CLOCK_DFLL_ENABLE == true
 	/* Enable DFLL reference clock if in closed loop mode */

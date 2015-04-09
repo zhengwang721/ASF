@@ -3,7 +3,7 @@
  *
  * \brief SAM TC Unit test
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -76,7 +76,7 @@
  * \section appdoc_sam0_tc_unit_test_setup Setup
  * The following connections has to be made using wires:
  *  - \b SAM D20 Xplained Pro:EXTINT 0 (PA16, EXT2 pin 17) <-----> TC0 WO1 (PA05, EXT1 pin 15)
- *  - \b SAM D21 Xplained Pro:EXTINT 0 (PA16, EXT2 pin 17) <-----> TC4 WO1 (PB09, EXT1 pin 13)
+ *  - \b SAM D21 Xplained Pro:EXTINT 0 (PB00, EXT1 pin 3) <-----> TC4 WO1 (PB09, EXT1 pin 13)
  *  - \b SAM R21 Xplained Pro:EXTINT 0 (PA16, EXT1 pin 11) <-----> TC4 WO1 (PA23, EXT1 pin 10)
  *  - \b SAM L21 Xplained Pro:EXTINT 0 (PA16, EXT3 pin 9) <-----> TC0 WO1 (PB12, EXT2 pin 7)
  *
@@ -103,6 +103,9 @@
  * \section appdoc_sam0_tc_unit_test_contactinfo Contact Information
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include <asf.h>

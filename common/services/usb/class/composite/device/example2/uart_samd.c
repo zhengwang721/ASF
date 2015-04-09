@@ -3,7 +3,7 @@
  *
  * \brief UART functions
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 #include <asf.h>
 #include "conf_example.h"
@@ -66,7 +69,7 @@ static uint8_t rx_data;
  *
  * * \param module USART module causing the interrupt (not used)
  */
-static void usart_tx_callback(const struct usart_module *const module)
+static void usart_tx_callback(struct usart_module *const module)
 {
 	/* Data ready to be sent */
 	if (udi_cdc_is_rx_ready()) {
@@ -89,7 +92,7 @@ static void usart_tx_callback(const struct usart_module *const module)
  *
  * * \param module USART module causing the interrupt (not used)
  */
-static void usart_rx_callback(const struct usart_module *const module)
+static void usart_rx_callback(struct usart_module *const module)
 {
 	/* Data received */
 	ui_com_tx_start();

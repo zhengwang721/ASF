@@ -3,7 +3,7 @@
  *
  * \brief SAM Clock Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef SYSTEM_CLOCK_FEATURE_H_INCLUDED
 #define SYSTEM_CLOCK_FEATURE_H_INCLUDED
 
@@ -50,7 +53,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_clock_group SAM System Clock Management Driver (SYSTEM CLOCK)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks, and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection, and
@@ -1134,9 +1137,9 @@ static inline enum status_code system_apb_clock_clear_mask(
  */
 enum system_clock_source_dpll_reference_clock {
 	/** Select CLK_DPLL_REF0 as clock reference. */
-	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0,
+	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC32K,
 	/** Select CLK_DPLL_REF1 as clock reference. */
-	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF1,
+	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC,
 	/** Select GCLK_DPLL as clock reference. */
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK,
 };
@@ -1241,7 +1244,7 @@ static inline void system_clock_source_dpll_get_config_defaults(
 	config->output_frequency    = 48000000;
 	config->reference_frequency = 32768;
 	config->reference_divider   = 1;
-	config->reference_clock     = SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0;
+	config->reference_clock     = SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC32K;
 
 	config->lock_time           = SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT;
 	config->filter              = SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT;

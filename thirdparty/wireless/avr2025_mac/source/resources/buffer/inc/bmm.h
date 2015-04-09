@@ -40,7 +40,7 @@
  * \asf_license_stop
  */
 /*
- * Copyright (c) 2015, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -83,12 +83,9 @@
 /**
  * @brief Buffer structure holding information of each buffer.
  *
- * @ingroup apiMacTypes
  */
 __PACK__DATA__
 typedef struct
-#if !defined(DOXYGEN)
-        buffer_tag
 #endif
 {
 	/** Pointer to the buffer body */
@@ -99,7 +96,6 @@ typedef struct
 } buffer_t;
 __PACK__RST_DATA__
 /* === Externals =========================================================== */
-
 
 /* === Prototypes ========================================================== */
 

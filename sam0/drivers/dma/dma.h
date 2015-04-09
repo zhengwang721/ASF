@@ -3,7 +3,7 @@
  *
  * \brief SAM Direct Memory Access Controller Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef DMA_H_INCLUDED
 #define DMA_H_INCLUDED
 
@@ -50,7 +53,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_dma_group SAM Direct Memory Access Controller Driver (DMAC)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the Direct Memory Access Controller(DMAC) module within
  * the device. The DMAC can transfer data between memories and peripherals, and
  * thus off-load these tasks from the CPU. The module supports peripheral to
@@ -507,7 +510,7 @@ struct dma_resource_config {
 /** Forward definition of the DMA resource. */
 struct dma_resource;
 /** Type definition for a DMA resource callback function. */
-typedef void (*dma_callback_t)(const struct dma_resource *const resource);
+typedef void (*dma_callback_t)(struct dma_resource *const resource);
 
 /** Structure for DMA transfer resource. */
 struct dma_resource {

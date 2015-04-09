@@ -3,7 +3,7 @@
  *
  * \brief  Main of Performance_Analyzer application
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
 
 /**
  * \page license License
- * Copyright(c) 2012, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -160,7 +160,7 @@
  * - \b Packet \b Error \b Rate \b Measurement \b(PER) is to evaluate
  * the packet transmission and reception capabilities of the wireless nodes.
  * The Transmitter node shall be connected to the Performance Analyzer.
- * If ‘Initiate Peer search’ command is received from the analyzer after the
+ * If 'Initiate Peer search' command is received from the analyzer after the
  * board
  * is connected, then the node (Transmitter) tries to find its peer node (i.e.
  * Reflector).

@@ -3,7 +3,7 @@
  *
  * \brief SAM True Random Number Generator Driver Quick Start
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -119,4 +119,7 @@
  * -# Toggle the board LED to indicate specific size of random data were
  *     read.
  *    \snippet qs_trng_callback.c main_4
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

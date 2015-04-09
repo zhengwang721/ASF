@@ -3,7 +3,7 @@
  *
  * @brief PAL related APIs
  *
- *  Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /*
- * Copyright (c) 2015, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013 - 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -171,22 +171,20 @@ typedef enum pwr_mode_tag {
 	SYSTEM_SLEEP
 } pwr_mode_t;
 
-
-
 #ifdef TEST_HARNESS
 #if (_DEBUG_ > 0)
 
 /**
  * @brief This is the ALERT.indication message structure.
  */
-typedef struct Assert_tag {
+typedef struct assert_tag {
 	/**< The total length of this message. */
 	uint8_t size ALIGN8BIT;
 	/**< This identifies the message as ALERT_INDICATION */
-	uint8_t Assert_cmdcode ALIGN8BIT;
+	uint8_t assert_cmdcode ALIGN8BIT;
 	/**< Bytes to read to frame, data[0] gives the length */
 	uint8_t data[1]         ALIGN8BIT;
-} Assert_t;
+} assert_t;
 #endif  /* (_DEBUG_ > 0) */
 #endif  /* TEST_HARNESS */
 

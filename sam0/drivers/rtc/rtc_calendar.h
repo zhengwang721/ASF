@@ -3,7 +3,7 @@
  *
  * \brief SAM RTC Driver (Calendar Mode)
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +40,16 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef RTC_CALENDAR_H_INCLUDED
 #define RTC_CALENDAR_H_INCLUDED
 
 /**
  * \defgroup asfdoc_sam0_rtc_calendar_group SAM RTC Calendar Driver (RTC CAL)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Real Time Clock functionality in Calendar
  * operating mode, for the configuration and retrieval of the current time and
  * date as maintained by the RTC module. The following driver API modes are
@@ -129,7 +132,7 @@
  * selected device supports those features.
  *
  * \subsection asfdoc_sam0_rtc_calendar_module_overview_alarms Alarms and Overflow
- * The RTC has four independent hardware alarms that can be configured by the user
+ * The RTC has up to four independent hardware alarms that can be configured by the user
  * application. These alarms will be will triggered on match with the current
  * clock value, and can be set up to trigger an interrupt, event, or both. The
  * RTC can also be configured to clear the clock value on alarm match, resetting

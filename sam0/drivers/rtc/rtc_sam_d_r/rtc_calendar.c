@@ -3,7 +3,7 @@
  *
  * \brief SAM RTC Driver (Calendar Mode)
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #include "rtc_calendar.h"
 #include <gclk.h>
 
@@ -60,8 +63,8 @@ struct rtc_module *_rtc_instance[RTC_INST_NUM];
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true  if the module has completed synchronization
- * \retval false if the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
+ * \retval true If the module synchronization is ongoing
  */
 static inline bool rtc_calendar_is_syncing(struct rtc_module *const module)
 {

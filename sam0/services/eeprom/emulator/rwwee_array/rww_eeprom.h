@@ -3,7 +3,7 @@
  *
  * \brief SAM Read While Write EEPROM Emulator
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +40,16 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef RWW_EEPROM_H_INCLUDED
 #define RWW_EEPROM_H_INCLUDED
 
 /**
  * \defgroup asfdoc_sam0_rww_eeprom_group SAM Read While Write EEPROM (RWW EEPROM) Emulator Service
  *
- * This driver for Atmel® | SMART SAM provides a RWW emulated EEPROM
+ * This driver for Atmel&reg; | SMART SAM provides a RWW emulated EEPROM
  * memory area, for the storage and retrieval of user-application
  * configuration data into and out of non-volatile memory. The main array
  * can therefore run code while eeprom data is written.
@@ -56,6 +59,7 @@
  *
  * The following devices can use this module:
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM D21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rww_eeprom_prerequisites

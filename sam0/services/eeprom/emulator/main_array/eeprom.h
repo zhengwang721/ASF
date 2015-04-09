@@ -3,7 +3,7 @@
  *
  * \brief SAM EEPROM Emulator
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +40,16 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef EEPROM_H_INCLUDED
 #define EEPROM_H_INCLUDED
 
 /**
  * \defgroup asfdoc_sam0_eeprom_group SAM EEPROM Emulator Service (EEPROM)
  *
- * This driver for Atmel® | SMART SAM devices provides an emulated EEPROM memory space in
+ * This driver for Atmel&reg; | SMART SAM devices provides an emulated EEPROM memory space in
  * the device's FLASH memory, for the storage and retrieval of user-application
  * configuration data into and out of non-volatile memory.
  *
@@ -499,11 +502,8 @@ enum status_code eeprom_emulator_read_buffer(
  *	</tr>
  *	<tr>
  *		<td>D</td>
- *		<td>12/2014</td>
- *		<td>
- *         - Add SAM R21 support
- *         - Add SAM D10/D11 support
- *      </td>
+ *		<td>09/2014</td>
+ *		<td>Added support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>

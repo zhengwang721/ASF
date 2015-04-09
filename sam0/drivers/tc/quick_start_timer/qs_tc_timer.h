@@ -3,7 +3,7 @@
  *
  * \brief SAM TC - Timer Counter Driver Quick Start
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -144,6 +144,9 @@
  * \subsection asfdoc_sam0_tc_timer_use_case_main_flow Workflow
  * -# Enter an infinite loop while the timer is running.
  *    \snippet qs_tc_timer.c main_loop
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 

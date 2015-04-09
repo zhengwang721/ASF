@@ -3,7 +3,7 @@
  *
  * \brief SAM DAC Quick Start
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -120,4 +120,7 @@
  * -# Increment and wrap the DAC output conversion value, so that a ramp pattern
  *    will be generated.
  *    \snippet qs_dac_basic.c main_inc_val
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

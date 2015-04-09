@@ -3,7 +3,7 @@
  *
  * \brief SAM External Interrupt Driver Quick Start
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -114,4 +114,7 @@
  * \subsection asfdoc_sam0_extint_callback_main_flow Workflow
  * -# External interrupt events from the driver are detected asynchronously; no
  *    special application \c main() code is required.
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

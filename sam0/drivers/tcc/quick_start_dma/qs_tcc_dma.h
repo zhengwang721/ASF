@@ -3,7 +3,7 @@
  *
  * \brief SAM TCC Driver Quick Start with DMA
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -260,4 +260,7 @@
  * \subsection asfdoc_sam0_tcc_dma_use_case_main_flow Workflow
  * -# Enter an infinite loop while the PWM wave is generated via the TCC module.
  *  \snippet qs_tcc_dma.c main_loop
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

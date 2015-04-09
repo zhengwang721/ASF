@@ -4,7 +4,7 @@
  *
  * \brief SAM SERCOM USART Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,13 +41,16 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef USART_H_INCLUDED
 #define USART_H_INCLUDED
 
 /**
  * \defgroup asfdoc_sam0_sercom_usart_group SAM Serial USART Driver (SERCOM USART)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the SERCOM module in its USART mode to transfer or receive
  * USART data frames. The following driver API modes are covered by this
  * manual:
@@ -584,13 +587,37 @@ struct usart_config {
 	bool run_in_standby;
 	/** GCLK generator source. */
 	enum gclk_generator generator_source;
-	/** PAD0 pinmux. */
+	/** PAD0 pinmux.
+	 *
+	 * If current USARTx has several alternative multiplexing I/O pin for PAD0, then
+	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD0
+	 * function. Make sure other alternative multiplexing I/O associated current
+	 * USARTx PAD0 is not setup usart function.
+	 */
 	uint32_t pinmux_pad0;
-	/** PAD1 pinmux. */
+	/** PAD1 pinmux.
+	 *
+	 * If current USARTx has several alternative multiplexing I/O pin for PAD1, then
+	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD1
+	 * function. Make sure other alternative multiplexing I/O associated current
+	 * USARTx PAD1 is not setup usart function.
+	 */
 	uint32_t pinmux_pad1;
-	/** PAD2 pinmux. */
+	/** PAD2 pinmux.
+	 *
+	 * If current USARTx has several alternative multiplexing I/O pin for PAD2, then
+	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD2
+	 * function. Make sure other alternative multiplexing I/O associated current
+	 * USARTx PAD2 is not setup usart function.
+	 */
 	uint32_t pinmux_pad2;
-	/** PAD3 pinmux. */
+	/** PAD3 pinmux.
+	 *
+	 * If current USARTx has several alternative multiplexing I/O pin for PAD3, then
+	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD3
+	 * function. Make sure other alternative multiplexing I/O associated current
+	 * USARTx PAD3 is not setup usart function.
+	 */
 	uint32_t pinmux_pad3;
 };
 
@@ -607,7 +634,7 @@ struct usart_module;
  *
  * Type of the callback functions.
  */
-typedef void (*usart_callback_t)(const struct usart_module *const module);
+typedef void (*usart_callback_t)(struct usart_module *const module);
 #endif
 
 /**

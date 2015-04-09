@@ -3,7 +3,7 @@
  *
  * \brief Component description for HMATRIXB
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -92,7 +92,7 @@ typedef union {
 
 #define HMATRIXB_SFR_SFR_Pos        0            /**< \brief (HMATRIXB_SFR) Special Function Register */
 #define HMATRIXB_SFR_SFR_Msk        (0xFFFFFFFFul << HMATRIXB_SFR_SFR_Pos)
-#define HMATRIXB_SFR_SFR(value)     ((HMATRIXB_SFR_SFR_Msk & ((value) << HMATRIXB_SFR_SFR_Pos)))
+#define HMATRIXB_SFR_SFR(value)     (HMATRIXB_SFR_SFR_Msk & ((value) << HMATRIXB_SFR_SFR_Pos))
 #define HMATRIXB_SFR_MASK           0xFFFFFFFFul /**< \brief (HMATRIXB_SFR) MASK Register */
 
 /** \brief HmatrixbPrs hardware registers */

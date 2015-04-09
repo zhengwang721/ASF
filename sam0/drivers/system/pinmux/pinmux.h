@@ -3,7 +3,7 @@
  *
  * \brief SAM Pin Multiplexer Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +40,16 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef PINMUX_H_INCLUDED
 #define PINMUX_H_INCLUDED
 
 /**
  * \defgroup asfdoc_sam0_system_pinmux_group SAM System Pin Multiplexer Driver (SYSTEM PINMUX)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's physical I/O Pins, to alter the direction and
  * input/drive characteristics as well as to configure the pin peripheral
  * multiplexer selection.

@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Master Quick Start Guide
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -108,6 +108,9 @@
  *    \snippet qs_i2c_master_basic_use.c read_packet
  * The module will try to read the packet TIMEOUT number of times or until it is
  * successfully read.
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include <asf.h>
