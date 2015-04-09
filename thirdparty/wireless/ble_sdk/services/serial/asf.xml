@@ -16,9 +16,7 @@
 
 				<build type="module-config" subtype="required-header-file" value="conf_serialdrv.h"/>
 				<build type="module-config" subtype="path" value="module_config"/>
-				<device-support value="samd20"/>
 				<device-support value="samd21"/>
-				<device-support value="samr21"/>
 			</module>
 			<module type="component" id="thirdparty.wireless.ble_sdk.services.serial#uart#1"     caption="Serial I/O - Using UART">
 				<info type="description" value="summary">

@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 		<select-by-device id="thirdparty.wireless.ble_sdk.services.console">
-			<module type="component" id="thirdparty.wireless.ble_sdk.services.console#0"     caption="console">
+			<module type="meta" id="thirdparty.wireless.ble_sdk.services.console#0"     caption="console">
 				<info type="description" value="summary">
 				Console Driver
 				</info>
@@ -16,11 +16,9 @@
 				<require idref="sam0.utils.stdio"/>
 				<require idref="sam0.utils.stdio.stdio_serial"/>
 
-				<device-support value="samd20"/>
 				<device-support value="samd21"/>
-				<device-support value="samr21"/>
 			</module>
-   <module type="component" id="thirdparty.wireless.ble_sdk.services.console#1"     caption="console">
+   <module type="meta" id="thirdparty.wireless.ble_sdk.services.console#1"     caption="console">
 				<info type="description" value="summary">
 				Console Driver
 				</info>
