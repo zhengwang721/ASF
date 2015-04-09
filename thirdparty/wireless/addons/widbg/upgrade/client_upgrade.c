@@ -162,33 +162,6 @@ void widbg_upgrade_rcvd_frame(uint8_t addr_mode, uint8_t *src_addr, uint8_t leng
 					memcpy(&block, &image_resp->block, image_resp->block_size);
 					printf("\r\n ImageResp 0x%x",image_resp->block_start);
 					widbg_nvm_write(MEMORY_OFFSET_ADDRESS, image_resp->block_start - image_start, image_resp->block_size, (uint8_t *)&block);
-					widbg_nvm_read(MEMORY_OFFSET_ADDRESS, image_resp->block_start - image_start,image_resp->block_size,crc_read_block);
-					if(string_cmp(block,crc_read_block,image_resp->block_size))
-					{
-						printf("Blocks are different %d\n",image_resp->block_start - image_start);
-					}
-					else
-					{
-						for(index = 0; index < image_resp->block_size; index++)
-						{
-							check_crc ^= crc_read_block[index];
-						}
-						for(index = 0; index < image_resp->block_size; index++)
-						{
-							recvd_crc ^= block[index];
-						}
-						/*if ((row_index + 64) > image_size)
-						{
-							row_index += image_size - row_index;
-							loop_index = image_size - row_index;
-						}
-						else
-						{
-							row_index += 64;
-							loop_index=64;
-						}*/
-						printf("Blocks are same%d\n",image_resp->block_start - image_start);
-					}
 					image_index += image_resp->block_size;
 					if(image_index < image_end)
 					{
@@ -228,8 +201,7 @@ void widbg_upgrade_rcvd_frame(uint8_t addr_mode, uint8_t *src_addr, uint8_t leng
 								row_index += 64;
 							}*/
 						}
-						printf("Check CRC%d\nActual crc%d\n CRC :%d\n RCVD CRc %d\n",check_crc,image_total_crc,crc,recvd_crc);
-						if(image_total_crc == check_crc)
+						if(image_total_crc == crc)
 						{
 							widbg_mgr_timer_stop(UPGRADE);
 							send_switch_req();
