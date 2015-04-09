@@ -76,7 +76,7 @@
  *
  */
 
-/
+
 /* === TYPES =============================================================== */
 //__PACK__DATA__
 /* Structure implementing the PIB values stored in TAL */

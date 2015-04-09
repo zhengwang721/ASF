@@ -86,6 +86,8 @@
  */
 __PACK__DATA__
 typedef struct
+#if !defined(__DOXYGEN__)
+		buffer_tag
 #endif
 {
 	/** Pointer to the buffer body */
