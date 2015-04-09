@@ -132,38 +132,38 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
     printf("\rSending data: %s \n", strdata);
     simple_udp_sendto(&broadcast_connection, strdata, sizeof(strdata), &addr);
    
-	count++;
-	/* Every 10 packets sent, print power measurements */
-	if(count % 10 == 0)
-	{
-		/* Power measurements : Code start */
-		energest_flush();
+	  count++;
+	  /* Every 10 packets sent, print power measurements */
+	  if(count % 10 == 0)
+	  {
+		  /* Power measurements : Code start */
+		  energest_flush();
 
-		all_cpu = energest_type_time(ENERGEST_TYPE_CPU);
-		all_lpm = energest_type_time(ENERGEST_TYPE_LPM);
-		all_transmit = energest_type_time(ENERGEST_TYPE_TRANSMIT);
-		all_listen = energest_type_time(ENERGEST_TYPE_LISTEN);
-		//all_idle_transmit = compower_idle_activity.transmit;
-		//all_idle_listen = compower_idle_activity.listen;
+		  all_cpu = energest_type_time(ENERGEST_TYPE_CPU);
+		  all_lpm = energest_type_time(ENERGEST_TYPE_LPM);
+		  all_transmit = energest_type_time(ENERGEST_TYPE_TRANSMIT);
+		  all_listen = energest_type_time(ENERGEST_TYPE_LISTEN);
+		  //all_idle_transmit = compower_idle_activity.transmit;
+		  //all_idle_listen = compower_idle_activity.listen;
 
-		cpu = all_cpu - last_cpu;
-		lpm = all_lpm - last_lpm;
-		transmit = all_transmit - last_transmit;
-		listen = all_listen - last_listen;
-		idle_transmit = compower_idle_activity.transmit - last_idle_transmit;
-		idle_listen = compower_idle_activity.listen - last_idle_listen;
+		  cpu = all_cpu - last_cpu;
+		  lpm = all_lpm - last_lpm;
+		  transmit = all_transmit - last_transmit;
+		  listen = all_listen - last_listen;
+		  idle_transmit = compower_idle_activity.transmit - last_idle_transmit;
+		  idle_listen = compower_idle_activity.listen - last_idle_listen;
 
-		last_cpu = energest_type_time(ENERGEST_TYPE_CPU);
-		last_lpm = energest_type_time(ENERGEST_TYPE_LPM);
-		last_transmit = energest_type_time(ENERGEST_TYPE_TRANSMIT);
-		last_listen = energest_type_time(ENERGEST_TYPE_LISTEN);
-		last_idle_listen = compower_idle_activity.listen;
-		last_idle_transmit = compower_idle_activity.transmit;
+		  last_cpu = energest_type_time(ENERGEST_TYPE_CPU);
+		  last_lpm = energest_type_time(ENERGEST_TYPE_LPM);
+		  last_transmit = energest_type_time(ENERGEST_TYPE_TRANSMIT);
+		  last_listen = energest_type_time(ENERGEST_TYPE_LISTEN);
+		  last_idle_listen = compower_idle_activity.listen;
+		  last_idle_transmit = compower_idle_activity.transmit;
 		
-		printf("\n Power measurements : cpu %d lpm %d transmit %d listen %d idle_transmit %d idle_listen %d\n",cpu/(5 * 10),lpm/(5 * 10),transmit/(5 * 10),listen/(5 * 10),idle_transmit/(5 * 10),idle_listen/(5 * 10));
+		  printf("\n Power measurements : cpu %d lpm %d transmit %d listen %d idle_transmit %d idle_listen %d\n",cpu/(5 * 10),lpm/(5 * 10),transmit/(5 * 10),listen/(5 * 10),idle_transmit/(5 * 10),idle_listen/(5 * 10));
         
-		/* Power measurements : Code End */				
-	}
+		  /* Power measurements : Code End */				
+	  }
   }
 
   PROCESS_END();

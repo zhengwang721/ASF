@@ -329,6 +329,7 @@ PT_THREAD(addresses(struct httpd_state *s, char *ptr))
 
   PSOCK_END(&s->sout);
 }
+static uint8_t nbr_no = 1;
 /*---------------------------------------------------------------------------*/
 static unsigned short
 make_neighbor(void *p)
@@ -400,7 +401,9 @@ make_neighbor(void *p)
           return write_mss_error(8);
         }
       }
-
+		numprinted += httpd_snprintf((char *)uip_appdata + numprinted,
+                                     uip_mss() - numprinted,
+                                     "</td><td><input type=\"radio\"  name=\"nbrid\" value=\"%d\">",nbr_no++);
       numprinted +=
           httpd_snprintf((char *)uip_appdata + numprinted,
                          uip_mss() - numprinted, httpd_cgi_addrb);
@@ -417,8 +420,8 @@ static unsigned short
 make_neighbor_roomfor(void *p)
 {
   static const char httpd_cgi_room2[] HTTPD_STRING_ATTR =
-    "<tr><td colspan=3>Room for %u more</td></tr>";
-  int j = 0;
+    "<tr><td colspan=4>Room for %u more</td></tr>";
+ static int j = 0;
   uint16_t numprinted = 0;
   uip_ds6_nbr_t *nbr;
 
@@ -442,13 +445,32 @@ make_neighbor_roomfor(void *p)
 
   return numprinted;
 }
+
+/*---------------------------------------------------------------------------*/
+static unsigned short
+make_led_toggle(void *p)
+{
+  static const char httpd_cgi_room2[] HTTPD_STRING_ATTR =
+    "<tr><td colspan=4>LED Blink Command Sent to All Neighbors!!!</td></tr>";
+ static int j = 0;
+  uint16_t numprinted = 0;
+
+  numprinted += httpd_snprintf((char *)uip_appdata + numprinted,
+       uip_mss() - numprinted,
+       httpd_cgi_room2);
+  if(numprinted >= uip_mss()) {
+    return write_mss_error(10);
+  }
+
+  return numprinted;
+}
 /*---------------------------------------------------------------------------*/
 static
 PT_THREAD(neighbors(struct httpd_state *s, char *ptr))
 {
   PSOCK_BEGIN(&s->sout);
-
-  for(s->u.ptr = nbr_table_head(ds6_neighbors);
+  printf("\n\r PT_THREAD, neighbors");
+  for(s->u.ptr = nbr_table_head(ds6_neighbors),nbr_no=1;
       s->u.ptr != NULL;
       s->u.ptr = nbr_table_next(ds6_neighbors, s->u.ptr)) {
     PSOCK_GENERATOR_SEND(&s->sout, make_neighbor, s);
@@ -462,9 +484,9 @@ static
 PT_THREAD(neighborsping(struct httpd_state *s, char *ptr))
 {
   PSOCK_BEGIN(&s->sout);
-
+  printf("\n\r PT_THREAD, neighborsping");
   /* Ping nodes */
-  for(s->u.ptr = nbr_table_head(ds6_neighbors);
+  for(s->u.ptr = nbr_table_head(ds6_neighbors),nbr_no=1;
       s->u.ptr != NULL;
       s->u.ptr = nbr_table_next(ds6_neighbors, s->u.ptr)) {
     const uip_ipaddr_t *addr;
@@ -477,6 +499,34 @@ PT_THREAD(neighborsping(struct httpd_state *s, char *ptr))
   }
 
   PSOCK_END(&s->sout);
+}
+
+/*---------------------------------------------------------------------------*/
+static
+PT_THREAD(neighborsled(struct httpd_state *s, char *ptr))
+{
+    uint8_t databuf[1] = {0};
+	  PSOCK_BEGIN(&s->sout);
+    printf("\n\r PT_THREAD, neighborsled");
+	  /* Ping nodes */
+	  for(s->u.ptr = nbr_table_head(ds6_neighbors),nbr_no=1;
+	    s->u.ptr != NULL;
+	    s->u.ptr = nbr_table_next(ds6_neighbors, s->u.ptr)) {
+		  const uip_ipaddr_t *addr;
+		  uip_ds6_nbr_t *nbr= s->u.ptr;
+		  addr = uip_ds6_nbr_get_ipaddr(nbr);
+		  if(addr != NULL) { // to be modified
+        databuf[0] = 03;
+        printf("LED Blink cmd to all neighbors. Data = %d", databuf[0]);
+			  udp_socket_sendto(&led_socket, (void*) databuf, 1,addr, LED_UDP_PORT);			
+		  }
+		  PSOCK_GENERATOR_SEND(&s->sout, make_neighbor, s);
+		  
+	  }
+		PSOCK_GENERATOR_SEND(&s->sout, make_led_toggle, s);
+
+		PSOCK_END(&s->sout);
+	    
 }
 /*---------------------------------------------------------------------------*/
 static unsigned short
@@ -660,7 +710,7 @@ static
 PT_THREAD(routes(struct httpd_state *s, char *ptr))
 {
   PSOCK_BEGIN(&s->sout);
-
+  printf("\n\r PT_THREAD, routes");
   for(s->u.ptr = uip_ds6_route_head();
       s->u.ptr != NULL;
       s->u.ptr = uip_ds6_route_next(s->u.ptr)) {
@@ -675,7 +725,7 @@ static
 PT_THREAD(routesping(struct httpd_state *s, char *ptr))
 {
   PSOCK_BEGIN(&s->sout);
-
+  printf("\n\r PT_THREAD, routesping");
   for(s->u.ptr = uip_ds6_route_head();
       s->u.ptr != NULL;
       s->u.ptr = uip_ds6_route_next(s->u.ptr)) {
@@ -763,7 +813,7 @@ static
 PT_THREAD(addrmap(struct httpd_state *s, char *ptr))
 {
   PSOCK_BEGIN(&s->sout);
-
+  printf("\n\r PT_THREAD, addrmap");
   for(s->u.ptr = ip64_addrmap_list();
       s->u.ptr != NULL;
       s->u.ptr = list_item_next(s->u.ptr)) {
@@ -777,6 +827,7 @@ static
 PT_THREAD(rplreset(struct httpd_state *s, char *ptr))
 {
   PSOCK_BEGIN(&s->sout);
+  printf("\n\r PT_THREAD, rplreset");
   if(rpl_repair_root(RPL_DEFAULT_INSTANCE)) {
     PSOCK_SEND_STR(&s->sout, "Initiating global repair of RPL network...");
   } else {
@@ -790,6 +841,7 @@ PT_THREAD(rplroot(struct httpd_state *s, char *ptr))
 {
   int ret;
   PSOCK_BEGIN(&s->sout);
+  printf("\n\r PT_THREAD, rplroot");
   ret = simple_rpl_init_dag_immediately();
   if(ret == 0) {
     PSOCK_SEND_STR(&s->sout, "Becoming RPL root of the network...");
@@ -805,6 +857,7 @@ static
 PT_THREAD(reboot_function(struct httpd_state *s, char *ptr))
 {
   PSOCK_BEGIN(&s->sout);
+  printf("\n\r PT_THREAD, reboot_function");
   network_reboot_reboot(120);
   PSOCK_SEND_STR(&s->sout, "Rebooting network in 120 seconds...");
   PSOCK_END(&s->sout);
@@ -828,6 +881,7 @@ httpd_cgi_add(struct httpd_cgi_call *c)
 static const char adrs_name[] HTTPD_STRING_ATTR = "addresses";
 static const char nbrs_name[] HTTPD_STRING_ATTR = "neighbors";
 static const char nbrsping_name[] HTTPD_STRING_ATTR = "nbrsping";
+static const char nbrsled_name[] HTTPD_STRING_ATTR = "nbrsled";
 static const char rtes_name[] HTTPD_STRING_ATTR = "routes";
 static const char rtesping_name[] HTTPD_STRING_ATTR = "rtsping";
 static const char rplreset_name[] HTTPD_STRING_ATTR = "rplreset";
@@ -841,6 +895,7 @@ HTTPD_CGI_CALL(proc, proc_name, processes);
 HTTPD_CGI_CALL(adrs, adrs_name, addresses);
 HTTPD_CGI_CALL(nbrs, nbrs_name, neighbors);
 HTTPD_CGI_CALL(nbrsping, nbrsping_name, neighborsping);
+HTTPD_CGI_CALL(nbrsled, nbrsled_name, neighborsled);
 HTTPD_CGI_CALL(rtes, rtes_name, routes);
 HTTPD_CGI_CALL(rtesping, rtesping_name, routesping);
 HTTPD_CGI_CALL(rplr, rplreset_name, rplreset);
@@ -860,6 +915,7 @@ httpd_cgi_init(void)
   httpd_cgi_add(&adrs);
   httpd_cgi_add(&nbrs);
   httpd_cgi_add(&nbrsping);
+  httpd_cgi_add(&nbrsled);
   httpd_cgi_add(&rtes);
   httpd_cgi_add(&rtesping);
   httpd_cgi_add(&rplr);

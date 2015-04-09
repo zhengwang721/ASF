@@ -39,6 +39,8 @@
 #include "contiki-net.h"
 #include "httpd-fs.h"
 
+extern struct udp_socket led_socket;
+
 struct httpd_state {
   unsigned char timer;
   struct psock sin, sout;

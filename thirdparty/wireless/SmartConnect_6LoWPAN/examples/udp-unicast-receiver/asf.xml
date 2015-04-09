@@ -25,6 +25,8 @@
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.mdns"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.simple-rpl"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.servreg-hack"/>
+    <require idref="thirdparty.wireless.smartconnect_6lowpan.apps.led_control"/>
+     <build type="define" name="ENABLE_LEDCTRL" value="1"/>
 		<device-support value="sam0"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>

@@ -30,6 +30,8 @@
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64-addr"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.services.ksz8851snl"/>
+    <require idref="thirdparty.wireless.smartconnect_6lowpan.apps.led_control"/>
+    <build type="define" name="ENABLE_LEDCTRL" value="1"/>
 		<require idref="sam0.components.ethernet_phy.ksz8851snl"/>
 		<device-support value="sam0"/>	
 		<info type="gui-flag" value="move-to-root"/>
