@@ -616,13 +616,13 @@ static enum status_code _adc_set_config(
  *
  * \param[in]  pin_array   The ADC channel array
  * \param[in]  rank	   The size of ADC channel array
-  */
+ */
 void adc_regular_ain_channel(uint32_t *pin_array, uint8_t size)
 {
 	for (int i = 0; i < size; i++) {
 		_adc_configure_ain_pin(pin_array[i]);
   	}
-}
+}	
 
 /**
  * \brief Initializes the ADC
