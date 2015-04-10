@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21 Xplained Pro board configuration.
+ * \brief Unit test configuration
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,11 +40,18 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
+#ifndef CONF_TEST_H
+#define CONF_TEST_H
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+/* ! \note USART0 on PORTD (RX on PD6, TX on PD7) */
+#define CONF_TEST_USART      &USARTD0
+/* ! \note 38.4 kbaud */
+#define CONF_TEST_BAUDRATE   38400
+/* ! \note 8-bit character length */
+#define CONF_TEST_CHARLENGTH USART_CHSIZE_8BIT_gc
+/* ! \note No parity check */
+#define CONF_TEST_PARITY     USART_PMODE_DISABLED_gc
+/* ! \note No extra stopbit, i.e., use 1 */
+#define CONF_TEST_STOPBITS   false
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif
