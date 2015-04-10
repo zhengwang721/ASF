@@ -79,8 +79,8 @@
  *  - \b PB02 (EXT1 PIN7) <-----> PA08 (EXT2 PIN11) 
  *  - \b PB03 (EXT1 PIN8) <-----> PA09 (EXT2 PIN12)
  * - SAM L21 Xplained Pro board
- *  - \b PB08 (EXT1 PIN14) <-----> PA08 (EXT2 PIN11) 
- *  - \b PB09 (EXT1 PIN13) <-----> PA09 (EXT2 PIN12)
+ *  - \b PA12 (EXT1 PIN7) <-----> PA08 (EXT2 PIN11) 
+ *  - \b PA13 (EXT1 PIN8) <-----> PA09 (EXT2 PIN12)
  *
  * To run the test:
  *  - Connect the supported Xplained Pro board to the computer using a
@@ -469,11 +469,7 @@ int main(void)
 	DEFINE_TEST_ARRAY(i2c_tests) = {
 		&i2c_init_test,
 		&i2c_master_transfer_test,
-/* saml21 in fast_mode, many sercomes are not stable */
-#if	!(SAML21)
 		&i2c_full_speed_test,
-#endif
-
 	};
 
 	/* Define the test suite */
