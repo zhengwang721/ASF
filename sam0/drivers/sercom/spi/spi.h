@@ -970,7 +970,7 @@ static inline void spi_slave_inst_get_config_defaults(
  */
 static inline void spi_attach_slave(
 		struct spi_slave_inst *const slave,
-		struct spi_slave_inst_config *const config)
+		const struct spi_slave_inst_config *const config)
 {
 	Assert(slave);
 	Assert(config);
