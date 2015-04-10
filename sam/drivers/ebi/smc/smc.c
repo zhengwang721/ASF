@@ -55,16 +55,7 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-/**
- * \defgroup sam_drivers_smc_group Static Memory Controller (SMC)
- *
- * Driver for the Static Memory Controller. It provides functions for configuring
- * and using the on-chip SMC.
- *
- * @{
- */
-
-#if ((SAM3S) || (SAM3U) || (SAM3XA) || (SAM4S) || (SAM4E) || (SAM4C) || (SAM4CM))
+#if ((SAM3S) || (SAM3U) || (SAM3XA) || (SAM4S) || (SAM4E) || (SAM4C) || (SAM4CM) || (__DOXYGEN__))
 #define SMC_WPKEY_VALUE (0x534D43)
 /**
  * \brief Configure the SMC Setup timing for the specified Chip Select.
@@ -169,7 +160,7 @@ uint32_t smc_get_writeprotect_status(Smc *p_smc)
 }
 #endif
 
-#if ((SAM3U) || (SAM3XA))
+#if ((SAM3U) || (SAM3XA) || (__DOXYGEN__))
 /**
  * \brief Configure the SMC nand timing for the specified Chip Select.
  * \param p_smc Pointer to an SMC instance.
@@ -422,8 +413,6 @@ void smc_ecc_get_value(Smc *p_smc, uint32_t *p_ecc)
 	p_ecc[15] = p_smc->SMC_ECC_PR15;
 }
 #endif /* ((SAM3U) || (SAM3XA)) */
-
-//@}
 
 /// @cond 0
 /**INDENT-OFF**/

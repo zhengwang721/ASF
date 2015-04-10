@@ -416,7 +416,16 @@ void usart_set_sleepwalking(Usart *p_uart, uint8_t ul_low_value,
  *   \code
 	board_init();
 \endcode
- * \note Set the define in conf_board.h file.
+ * \note Set the following define in conf_board.h file to enable COM port,it will be used in
+ * board_init() function to set up IOPorts for the USART pins.
+ * For SAM4L:
+ *   \code
+  #define CONF_BOARD_COM_PORT
+\endcode
+ * For other SAM devices:
+ *   \code
+  #define CONF_BOARD_UART_CONSOLE
+\endcode
  * -# Create USART options struct:
  *   \code
 	const sam_usart_opt_t usart_console_settings = {
@@ -531,7 +540,16 @@ void usart_set_sleepwalking(Usart *p_uart, uint8_t ul_low_value,
  *   \code
 	board_init();
 \endcode
- * \note Set the define in conf_board.h file.
+ * \note Set the following define in conf_board.h file to enable COM port,it will be used in
+ * board_init() function to set up IOPorts for the USART pins.
+ * For SAM4L:
+ *   \code
+  #define CONF_BOARD_COM_PORT
+\endcode
+ * For other SAM devices:
+ *   \code
+  #define CONF_BOARD_UART_CONSOLE
+\endcode
  * -# Create USART options struct:
  *   \code
 	const sam_usart_opt_t usart_console_settings = {
@@ -656,7 +674,16 @@ void usart_set_sleepwalking(Usart *p_uart, uint8_t ul_low_value,
  *   \code
 	board_init();
 \endcode
- * \note Set the define in conf_board.h file.
+ * \note Set the following define in conf_board.h file to enable COM port,it will be used in
+ * board_init() function to set up IOPorts for the USART pins.
+ * For SAM4L:
+ *   \code
+  #define CONF_BOARD_COM_PORT
+\endcode
+ * For other SAM devices:
+ *   \code
+  #define CONF_BOARD_UART_CONSOLE
+\endcode
  * -# Create USART options struct:
  *   \code
 	const sam_usart_opt_t usart_console_settings = {
