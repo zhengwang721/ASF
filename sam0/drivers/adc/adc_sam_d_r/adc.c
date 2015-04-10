@@ -612,7 +612,7 @@ static enum status_code _adc_set_config(
 /**
  * \brief Sets the ADC Regular Chennel
  *
- * Sets the ADC window mode to a given mode and value range.
+ * Sets the ADC channel sequence by the sequence of pin_array.
  *
  * \param[in]  pin_array   The ADC channel array
  * \param[in]  szie        The size of ADC channel array
