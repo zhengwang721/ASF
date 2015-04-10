@@ -615,7 +615,7 @@ static enum status_code _adc_set_config(
  * Sets the ADC window mode to a given mode and value range.
  *
  * \param[in]  pin_array   The ADC channel array
- * \param[in]  rank	   The size of ADC channel array
+ * \param[in]  szie        The size of ADC channel array
  */
 void adc_regular_ain_channel(uint32_t *pin_array, uint8_t size)
 {
