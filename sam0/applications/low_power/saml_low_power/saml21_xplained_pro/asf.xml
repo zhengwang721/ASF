@@ -1,0 +1,24 @@
+<asf xmlversion="1.0">
+	<project caption="SAM L21 Low Power Example" id="sam0.applications.low_power.saml_low_power.saml21_xplained_pro">
+		<info type="gui-flag" value="move-to-root"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_rtc.h"/>
+		<build type="header-file" value="conf_extint.h"/>
+		<build type="header-file" value="conf_dma.h"/>
+		<build type="header-file" value="conf_app.h"/>
+		<require idref="board.saml21_xplained_pro"/>
+		<require idref="sam0.applications.low_power.saml_low_power"/>
+		<config name="config.sam0.drivers.adc" value="callback"/>
+		<config name="config.sam0.drivers.sercom.usart" value="polled"/>
+		<config name="config.sam0.drivers.rtc" value="count_polled"/>
+		<config name="config.common2.services.delay" value="cycle"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<generator value="doxygen-v2"/>
+		<device-support value="atsaml21j18a"/>
+		<build type="linker-config" subtype="flags" value="-lm" toolchain="armgcc"/>
+	</project>
+</asf>
