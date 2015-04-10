@@ -367,27 +367,33 @@ void config_fsk_rpc(trx_id_t trx_id, fsk_data_rate_t sym_rate)
 
     if (tal_pib[trx_id].FSKPreambleLength > (2 * min_pream_len))
     {
+        /* Configure preamble length for reception */
+        trx_reg_write( reg_offset + RG_BBC0_FSKPLL,
+                          min_pream_len & 0xFF);
+        trx_bit_write( reg_offset + SR_BBC0_FSKC1_FSKPLH,
+                          min_pream_len >> 8);
         /* Configure ton */
         uint16_t ton = tal_pib[trx_id].OctetDuration_us * min_pream_len;
-        uint8_t reg = ton / div;
-        if ((reg % div) > 0)
+        uint8_t reg_on = ton / div;
+        if ((ton % div) > 0)
         {
-            reg++;
+            reg_on++;
         }
-        trx_bit_write( reg_offset + SR_BBC0_FSKRPC_BASET, div_reg);
-        trx_reg_write( reg_offset+ RG_BBC0_FSKRPCONT, reg);
-
         /* Configure toff */
-        uint16_t toff = tal_pib[trx_id].FSKPreambleLength - (2 * min_pream_len);
-        toff *= tal_pib[trx_id].OctetDuration_us;
-        reg = toff / div;
-        trx_reg_write( reg_offset + RG_BBC0_FSKRPCOFFT, reg);
+        uint16_t toff = tal_pib[trx_id].FSKPreambleLength * tal_pib[trx_id].OctetDuration_us;
+        toff -= 2 * reg_on * div;
+        uint8_t reg_off = toff / div;
+        /* Download settings to register */
+        uint8_t reg[3];
+        reg[0] = div_reg; // FSKRPC; RPC is disabled
+        reg[1] = reg_on; // on time
+        reg[2] = reg_off; // off time
+        trx_write(reg_offset + RG_BBC0_FSKRPC, reg, 3);
     }
     else
     {
-        /* Disable RPC */
-        /* FSKRPC */
-        trx_bit_write( reg_offset + SR_BBC0_FSKRPC_EN, 0);
+        /* Disable RPC, since preamble is too short. */
+        tal_pib[trx_id].RPCEnabled = false;
     }
 }
 #endif

@@ -1,4 +1,4 @@
-/*
+/**
  * @file trx_access_2.c
  *
  * @brief Performs interface functionalities between the PHY layer and ASF
