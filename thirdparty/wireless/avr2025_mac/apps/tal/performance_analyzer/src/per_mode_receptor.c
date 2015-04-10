@@ -394,6 +394,7 @@ if(rx_on_mode)
 			}
 
 			frames_with_wrong_crc++;
+			return;
 		}
 	}
 #endif /* #ifdef CRC_SETTING_ON_REMOTE_NODE */
@@ -438,7 +439,9 @@ if(rx_on_mode)
 		} else {
 			cur_seq_no = mac_frame_info->mpdu[PL_POS_SEQ_NUM];
 			/* Check for the duplicate packets */
-			if (prev_seq_no != cur_seq_no) {
+			if (prev_seq_no == cur_seq_no) {
+				frames_with_wrong_crc++;
+			}else{
 				number_rx_frames++;
 				prev_seq_no = cur_seq_no;
 				/* Extract LQI and  RSSI */
