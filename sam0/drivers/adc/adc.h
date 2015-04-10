@@ -447,8 +447,8 @@ enum status_code adc_init(
 
 void adc_get_config_defaults(
 		struct adc_config *const config);
-void adc_regular_channel(struct adc_config *const config,
-	uint8_t adc_channel, uint8_t rank);
+void adc_regular_ain_channel(
+		uint32_t *pin_array, uint8_t size);
 /** @} */
 
 /**
