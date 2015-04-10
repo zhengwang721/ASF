@@ -610,12 +610,12 @@ static enum status_code _adc_set_config(
 }
 
 /**
- * \brief Sets the ADC Regular Chennel
+ * \brief Initializes the ADC channel sequence
  *
- * Sets the ADC channel sequence by the sequence of pin_array.
+ * Initializes the ADC channel sequence by the sequence of pin_array.
  *
  * \param[in]  pin_array   The ADC channel array
- * \param[in]  szie        The size of ADC channel array
+ * \param[in]  size        The size of ADC channel array
  */
 void adc_regular_ain_channel(uint32_t *pin_array, uint8_t size)
 {
