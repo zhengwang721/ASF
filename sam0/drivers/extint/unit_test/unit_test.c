@@ -76,7 +76,7 @@
  * The following connections has to be made using wires:
  * - SAM D20 Xplained Pro
  *  - EXT1 \b Pin 9 (PB04) <-----> Pin 10 (PB05)
- * - SAM D21 Xplained Pro
+ * - SAM D21/DA1 Xplained Pro
  *  - EXT1 \b Pin 9 (PB04) <-----> Pin 11 (PA08)
  * - SAM R21 Xplained Pro
  *  - EXT1 \b Pin 9 (PA22) <-----> Pin 10 (PA23)
