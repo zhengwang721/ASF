@@ -256,7 +256,7 @@ void ipc_disable(Ipc *p_ipc);
  *
  * Add the following to main function of the application processor program:
  * \code
- *   // Initilize the system
+ *   // Initialize the system
  *   sysclk_init();
  *   board_init();
  *
