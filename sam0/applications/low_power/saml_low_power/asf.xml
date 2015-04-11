@@ -1,0 +1,23 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.applications.low_power.saml_low_power" caption="SAM L21 Low Power Application">
+		<info type="description" value="summary">
+			This example demonstrates different sleep modes and performance level, and can be used
+			to verify power consumption.
+		</info>
+		<info type="gui-flag" value="move-to-root"/>
+		<build type="c-source" value="low_power_demo.c"/>
+		<build type="include-path" value="."/>
+		<require idref="sam0.drivers.adc"/>
+		<require idref="sam0.drivers.events"/>
+		<require idref="sam0.drivers.rtc"/>
+		<require idref="sam0.drivers.dma"/>
+		<require idref="sam0.drivers.sercom.usart"/>
+		<require idref="sam0.drivers.tc"/>
+		<require idref="sam0.drivers.extint"/>
+		<require idref="common2.services.delay"/>
+		<require idref="sam0.utils"/>
+		<require idref="sam0.utils.stdio"/>
+		<require idref="sam0.utils.stdio.stdio_serial"/>
+		<device-support value="saml21"/>
+	</module>
+</asf>

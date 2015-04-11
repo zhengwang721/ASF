@@ -132,7 +132,7 @@
  * selected device supports those features.
  *
  * \subsection asfdoc_sam0_rtc_calendar_module_overview_alarms Alarms and Overflow
- * The RTC has four independent hardware alarms that can be configured by the user
+ * The RTC has up to four independent hardware alarms that can be configured by the user
  * application. These alarms will be will triggered on match with the current
  * clock value, and can be set up to trigger an interrupt, event, or both. The
  * RTC can also be configured to clear the clock value on alarm match, resetting
