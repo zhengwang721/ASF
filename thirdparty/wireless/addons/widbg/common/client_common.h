@@ -50,7 +50,7 @@ typedef enum {
 	IDENTIFY_STATE
 }common_timer_state_t;
 
-#define CLIENT_NOTIFY_INTERVAL_MS   (45000)
+#define CLIENT_NOTIFY_INTERVAL_MS   (25000)
 
 #define LED_TOGGLE_COUNT            (6)
 #define LED_TOGGLE_INTERVAL_MS      (100)

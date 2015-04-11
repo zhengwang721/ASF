@@ -227,7 +227,7 @@ rf233_init(void)
   trx_reg_write(RF233_REG_PHY_TX_PWR, RF233_REG_PHY_TX_PWR_CONF);
   trx_reg_write(RF233_REG_TRX_CTRL_2,      RF233_REG_TRX_CTRL_2_CONF);
   trx_reg_write(RF233_REG_IRQ_MASK,        RF233_REG_IRQ_MASK_CONF);
-  //trx_reg_write(0x17, 0x02);
+  // trx_reg_write(0x17, 0x02);
   trx_bit_write(SR_MAX_FRAME_RETRIES, 0);
   SetPanId(IEEE802154_CONF_PANID);
   SetIEEEAddr(eui64);
@@ -238,7 +238,7 @@ rf233_init(void)
 
   /* 11_09_rel */
   trx_reg_write(RF233_REG_TRX_RPC,0xFF); /* Enable RPC feature by default */
- // regtemp = trx_reg_read(RF233_REG_PHY_TX_PWR);
+  // regtemp = trx_reg_read(RF233_REG_PHY_TX_PWR);
 
   /* start the radio process */
   process_start(&rf233_radio_process, NULL);
@@ -367,30 +367,36 @@ rf233_transmit(unsigned short payload_len)
   /* perform transmission */
   ENERGEST_OFF(ENERGEST_TYPE_LISTEN);
   ENERGEST_ON(ENERGEST_TYPE_TRANSMIT);
-  #if NULLRDC_CONF_802154_AUTOACK_HW
+#if NULLRDC_CONF_802154_AUTOACK_HW
   RF233_COMMAND(TRXCMD_TX_ARET_ON);
-  #endif
+#endif
   RF233_COMMAND(TRXCMD_TX_START);
    flag_transmit=1;
    //delay_ms(5);
   //printf("RTIMER value %d",RTIMER_NOW());
- /* BUSYWAIT_UNTIL(rf233_status() == STATE_BUSY_TX_ARET, RTIMER_SECOND/2000);
-  //printf("RTIMER value1 %d",RTIMER_NOW());
-  //printf("\r\nSTATE_BUSY_TX");
-  BUSYWAIT_UNTIL(rf233_status() != STATE_BUSY_TX_ARET, 10 * RTIMER_SECOND/1000);*/
-// BUSYWAIT_UNTIL(rf233_status() != STATE_BUSY_TX_ARET, 10 * RTIMER_SECOND/1000);
-  //printf("RTIMER value2 %d",RTIMER_NOW());
+
+#if !NULLRDC_CONF_802154_AUTOACK_HW
+    BUSYWAIT_UNTIL(rf233_status() == STATE_BUSY_TX, RTIMER_SECOND/2000);
+   // printf("RTIMER value1 %d",RTIMER_NOW());
+   // printf("\r\nSTATE_BUSY_TX");
+  BUSYWAIT_UNTIL(rf233_status() != STATE_BUSY_TX, 10 * RTIMER_SECOND/1000);
+  // printf("RTIMER value2 %d",RTIMER_NOW());
+#endif
+
   ENERGEST_OFF(ENERGEST_TYPE_TRANSMIT);
   ENERGEST_ON(ENERGEST_TYPE_LISTEN);
-   /*if(rf233_status() != STATE_PLL_ON) {
-    / * something has failed * /
+
+#if !NULLRDC_CONF_802154_AUTOACK_HW
+   if(rf233_status() != STATE_PLL_ON) {
+    // something has failed 
     PRINTF("RF233: radio fatal err after tx\n");
     radiocore_hard_recovery();
     return RADIO_TX_ERR;
-  }*/
+  }
+  RF233_COMMAND(TRXCMD_RX_ON);
+#endif
 
   PRINTF("RF233: tx ok\n");
-  
   return RADIO_TX_OK;
 }
 /*---------------------------------------------------------------------------*/
@@ -680,7 +686,11 @@ on(void)
 	 sleep_on = 0;
   }
   uint8_t state_now = rf233_status();
-  if(state_now != STATE_PLL_ON && state_now != STATE_TRX_OFF && state_now != STATE_TX_ARET_ON) {
+  if(state_now != STATE_PLL_ON && state_now != STATE_TRX_OFF 
+#if NULLRDC_CONF_802154_AUTOACK_HW
+  && state_now != STATE_TX_ARET_ON
+#endif
+  ) {
     /* fail, we need the radio transceiver to be in either of those states */
     return -1;
   }

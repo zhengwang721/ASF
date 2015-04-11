@@ -63,7 +63,7 @@
 #include "widbg_mgr.h"
 #include "widbg_mgr_client.h"
 #include "port.h"
-#define DEFAULT_IMAGE_REQ_INTERVAL  (500)
+#define DEFAULT_IMAGE_REQ_INTERVAL  (5000)
 #define DEFAULT_IMAGE_RESP_INTERVAL (5000)
 #define DEFAULT_SWITCH_REQ_INTERVAL (3000)
 #define DEFAULT_SWITCH_INTERVAL     (1000)
