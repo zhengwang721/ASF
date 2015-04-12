@@ -54,6 +54,7 @@
 #include "thsq-default-conf.h"
 
 #include "rf233.h"
+#include "samd21_xplained_pro.h"
 
 #ifndef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
 #define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8

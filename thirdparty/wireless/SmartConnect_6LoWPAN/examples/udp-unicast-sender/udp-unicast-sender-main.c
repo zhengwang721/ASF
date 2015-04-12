@@ -63,7 +63,7 @@
 #include "node-id.h"
 #endif
 
-#include "asf.h"
+#include <asf.h>
 #include "usart.h"
 #include "sio2host.h"
 #include "conf_sio2host.h"
@@ -112,7 +112,7 @@ PROCINIT(&etimer_process);
 
 static void print_reset_causes(void);
 static void print_processes(struct process * const processes[]);
-static void set_link_addr(uint8_t *eui64);
+static void set_link_addr();
 //static unsigned char uart_rx_buf[SERIAL_RX_BUF_SIZE_HOST];
 //static void init_serial(void);
 extern void configure_tc3(void); 
@@ -188,7 +188,9 @@ main(int argc, char *argv[])
 #if SAMR21 
   eui64 = edbg_eui_read_eui64();
 #endif
-  set_link_addr(eui64);
+
+  set_link_addr();
+
   random_init(node_id);
 
   netstack_init();
@@ -209,11 +211,12 @@ main(int argc, char *argv[])
   }
 
   /* Setup nullmac-like MAC for 802.15.4 */
-  #if SAMD
+#if SAMD
   memcpy(&uip_lladdr.addr, node_mac, sizeof(uip_lladdr.addr));
-  #else 
+#else 
   memcpy(&uip_lladdr.addr, eui64, sizeof(uip_lladdr.addr));
-  #endif
+#endif
+   
   queuebuf_init();
   printf(" %s %lu %d\r\n",
          NETSTACK_RDC.name,
@@ -264,7 +267,7 @@ main(int argc, char *argv[])
 #else /* ((THSQ_CONF_NETSTACK) & THSQ_CONF_AES) */
   printf("\r\n Warning: AES encryption is disabled\n");
 #endif /* ((THSQ_CONF_NETSTACK) & THSQ_CONF_AES) */
-   
+
 #ifdef ENABLE_LEDCTRL
   ledctrl_init();
 #endif
@@ -379,14 +382,14 @@ void rtc_overflow_callback(void)
 
 /*---------------------------------------------------------------------------*/
 static void
-set_link_addr(uint8_t *eui64)
+set_link_addr()
 {
   linkaddr_t addr;
-  int i;
+  unsigned int i;
 
   memset(&addr, 0, sizeof(linkaddr_t));
 #if UIP_CONF_IPV6
-  #if SAMD
+#if SAMD
   memcpy(addr.u8, node_mac, sizeof(addr.u8));
   #else 
   memcpy(addr.u8, eui64, sizeof(addr.u8));
@@ -394,11 +397,11 @@ set_link_addr(uint8_t *eui64)
 #else   /* UIP_CONF_IPV6 */
   if(node_id == 0) {
     for(i = 0; i < sizeof(linkaddr_t); ++i) {
-	  #if SAMD
+#if SAMD
       addr.u8[i] = node_mac[7 - i];
-	  #else
+#else
 	    addr.u8[i] = eui64[7 - i];
-	  #endif
+#endif
     }
   } else {
     addr.u8[0] = node_id & 0xff;
@@ -443,8 +446,7 @@ puts(const char* str)
 /*
 static void
 init_serial(void)
-{++
-	
+{
   //  return;
   / * by default, SERCOM3 is used - defined in samr21_xplained_pro.h * /
   struct usart_config cdc_uart_config;
