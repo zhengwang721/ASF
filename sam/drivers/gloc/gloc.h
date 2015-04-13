@@ -115,9 +115,9 @@ void gloc_lut_set_config(struct gloc_dev_inst *const dev_inst,
  * GLOC module.
  *
  * \section gloc_qs_use_cases Use cases
- * - \ref gloc_basic
+ * - \ref gloc_basic "GLOC Basic Usage"
  *
- * \section gloc_basic GLOC basic usage
+ * \section gloc_basic GLOC Basic Usage
  *
  * This use case will demonstrate how to initialize the GLOC module to
  * match the truth table for simple glue logic functions.
@@ -128,9 +128,9 @@ void gloc_lut_set_config(struct gloc_dev_inst *const dev_inst,
  * \subsection gloc_basic_prereq Prerequisites
  *
  * This module requires the following service
- * - \ref clk_group
+ * - \ref clk_group "Clock Management (Sysclock)"
  *
- * \subsection gloc_basic_setup_code
+ * \subsection gloc_basic_setup_code Code
  *
  * Add this to the main loop or a setup function:
  * \code
@@ -146,7 +146,7 @@ void gloc_lut_set_config(struct gloc_dev_inst *const dev_inst,
 	 gloc_lut_set_config(&dev_inst, 0, &lut_config);
 \endcode
  *
- * \subsection gloc_basic_setup_workflow
+ * \subsection gloc_basic_setup_workflow Workflow
  *
  * -# Initialize the GLOC module
  *  - \code gloc_init(&dev_inst, GLOC); \endcode
