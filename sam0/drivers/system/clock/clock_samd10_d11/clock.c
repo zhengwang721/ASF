@@ -408,7 +408,7 @@ void system_clock_source_dpll_set_config(
 
 	/* Only reference clock REF1 can be divided */
 	if (config->reference_clock == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC) {
-		refclk = refclk / config->reference_divider;
+		refclk = refclk / (2 * (config->reference_divider + 1));
 	}
 
 	/* Calculate LDRFRAC and LDR */
@@ -437,9 +437,7 @@ void system_clock_source_dpll_set_config(
 	 * Fck = Fckrx * (LDR + 1 + LDRFRAC / 16)
 	 */
 	_system_clock_inst.dpll.frequency =
-			(config->reference_frequency *
-			 (((tmpldr + 1) << 4) + tmpldrfrac)
-			) >> 4;
+			(refclk * (((tmpldr + 1) << 4) + tmpldrfrac)) >> 4;
 }
 #endif
 
