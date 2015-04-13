@@ -1,12 +1,8 @@
 <asf xmlversion="1.0">
-	<select-by-config id="thirdparty.wireless.ble_sdk.services.serial" name="config.thirdparty.wireless.ble_sdk.services.serial" caption="Serial I/O Driver" default="uart">
-	<info type="description" value="summary">
-		The Serial I/O - driver is used by the MCU for  enabling serial io communication  between two devices.
-		</info>
-		<select-by-device id="thirdparty.wireless.ble_sdk.services.serial#uart">
-			<module type="component" id="thirdparty.wireless.ble_sdk.services.serial#uart#0"     caption="Serial I/O - Using UART">
+		<select-by-device id="thirdparty.wireless.ble_sdk.services.serial">
+			<module type="meta" id="thirdparty.wireless.ble_sdk.services.serial#0"     caption="uart">
 				<info type="description" value="summary">
-				Enables Support for  UART communication
+				UART Driver
 				</info>
 				<build type="c-source"      value="uart/sam0/serial_drv.c"/>
 				<build type="header-file"   value="uart/serial_drv.h"/>
@@ -16,11 +12,12 @@
 
 				<build type="module-config" subtype="required-header-file" value="conf_serialdrv.h"/>
 				<build type="module-config" subtype="path" value="module_config"/>
+
 				<device-support value="samd21"/>
 			</module>
-			<module type="component" id="thirdparty.wireless.ble_sdk.services.serial#uart#1"     caption="Serial I/O - Using UART">
+   <module type="meta" id="thirdparty.wireless.ble_sdk.services.serial#1"     caption="uart">
 				<info type="description" value="summary">
-				Enables Support for  UART communication
+				UART Driver
 				</info>
 				<build type="c-source"      value="uart/sam/serial_drv.c"/>
 				<build type="header-file"   value="uart/serial_drv.h"/>
@@ -33,5 +30,4 @@
 				<device-support value="samg55"/>
 			</module>
 		</select-by-device>
-	</select-by-config>
 </asf>
