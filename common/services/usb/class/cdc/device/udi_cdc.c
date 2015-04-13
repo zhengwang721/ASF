@@ -366,7 +366,6 @@ void udi_cdc_comm_disable(void)
 void udi_cdc_data_disable(void)
 {
 	uint8_t port;
-	UNUSED(port);
 
 	Assert(udi_cdc_nb_data_enabled != 0);
 	udi_cdc_nb_data_enabled--;
@@ -963,7 +962,7 @@ iram_size_t udi_cdc_read_buf(void* buf, iram_size_t size)
 iram_size_t udi_cdc_multi_get_free_tx_buffer(uint8_t port)
 {
 	irqflags_t flags;
-	iram_size_t buf_sel_nb, buf_nosel_nb, retval;
+	iram_size_t buf_sel_nb, retval;
 	uint8_t buf_sel;
 
 #if UDI_CDC_PORT_NB == 1 // To optimize code
@@ -973,7 +972,6 @@ iram_size_t udi_cdc_multi_get_free_tx_buffer(uint8_t port)
 	flags = cpu_irq_save();
 	buf_sel = udi_cdc_tx_buf_sel[port];
 	buf_sel_nb = udi_cdc_tx_buf_nb[port][buf_sel];
-	buf_nosel_nb = udi_cdc_tx_buf_nb[port][(buf_sel == 0)? 1 : 0];
 	if (buf_sel_nb == UDI_CDC_TX_BUFFERS) {
 		if ((!udi_cdc_tx_trans_ongoing[port])
 			&& (!udi_cdc_tx_both_buf_to_send[port])) {
@@ -983,7 +981,6 @@ iram_size_t udi_cdc_multi_get_free_tx_buffer(uint8_t port)
 			udi_cdc_tx_both_buf_to_send[port] = true;
 			udi_cdc_tx_buf_sel[port] = (buf_sel == 0)? 1 : 0;
 			buf_sel_nb = 0;
-			buf_nosel_nb = UDI_CDC_TX_BUFFERS;
 		}
 	}
 	retval = UDI_CDC_TX_BUFFERS - buf_sel_nb;  
