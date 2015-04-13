@@ -48,7 +48,7 @@
 #define DMAC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_dmac_group SAM4E DMA Controller (DMAC)
+ * \defgroup asfdoc_sam_drivers_dmac_group SAM DMA Controller (DMAC)
  *
  * The DMA Controller (DMAC) is an AHB-central DMA controller core that
  * transfers data from a source peripheral to a destination peripheral

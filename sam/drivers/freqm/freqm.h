@@ -298,7 +298,7 @@ static inline uint32_t freqm_get_interrupt_mask(
  *   - \code freqm_set_configure(FREQM, 1, 0, 128); \endcode
  * -# Start Measurement.
  *   - \code freqm_start_measure(FREQM); \endcode
- * -# Get mesurement result:
+ * -# Get measurement result:
  * \code
 	cpu_clk = (freqm_get_result_blocking(FREQM) / 128) * 32768;
 \endcode
