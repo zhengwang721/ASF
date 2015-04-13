@@ -620,7 +620,7 @@ static inline void events_ch_clear_overrun_status(
  * \subsection asfdoc_sam_events_qsg_prereq Prerequisites
  *
  * This module requires the following service:
- * - \ref clk_group
+ * - \ref clk_group "Clock Management (Sysclock)"
  *
  * \subsection asfdoc_sam_events_qsg_setup_code Code Example
  *

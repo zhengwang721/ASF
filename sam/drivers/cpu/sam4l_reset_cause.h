@@ -52,7 +52,7 @@
  * \defgroup group_sam4l_drivers_cpu SAM4L reset cause
  * \ingroup reset_cause_group
  *
- * See \ref reset_cause_quickstart
+ * Driver for CPU specific features. It provides functions for MCU Reset Cause.
  *
  * @{
  */
