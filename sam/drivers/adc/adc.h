@@ -490,7 +490,7 @@ Pdc *adc12b_get_pdc_base(const Adc12b *p_adc);
  * driven
  */
 /**
- * \page adc_use_case_1 Use case #1
+ * \page adc_use_case_1 Advanced use cases
  * In this use case the ADC module and one channel are configured for:
  * - 12-bit, unsigned conversions
  * - Internal bandgap as 3.3 V reference

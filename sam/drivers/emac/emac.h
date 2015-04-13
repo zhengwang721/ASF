@@ -1090,7 +1090,7 @@ void emac_handler(emac_device_t* p_emac_dev);
 	#define ETH_PHY_MODE                                  BOARD_EMAC_MODE_RMII
 \endcode
  *
- * A specific emac device and the receive data buffer must be defined; another ul_frm_size should be defined
+ * A specific EMAC device and the receive data buffer must be defined; another ul_frm_size should be defined
  * to trace the actual size of the data received.
  * \code
 	 static emac_device_t gs_emac_dev;
