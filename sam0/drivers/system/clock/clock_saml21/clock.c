@@ -460,7 +460,7 @@ void system_clock_source_dpll_set_config(
 
 	/* Only reference clock REF1 can be divided */
 	if (config->reference_clock == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC) {
-		refclk = refclk / config->reference_divider;
+		refclk = refclk / (2 * (config->reference_divider + 1));
 	}
 
 	/* Calculate LDRFRAC and LDR */
@@ -495,9 +495,7 @@ void system_clock_source_dpll_set_config(
 	 * Fck = Fckrx * (LDR + 1 + LDRFRAC / 16)
 	 */
 	_system_clock_inst.dpll.frequency =
-			(config->reference_frequency *
-			 (((tmpldr + 1) << 4) + tmpldrfrac)
-			) >> 4;
+			(refclk * (((tmpldr + 1) << 4) + tmpldrfrac)) >> 4;
 }
 
 /**
@@ -846,8 +844,23 @@ void system_clock_init(void)
 	dfll_conf.on_demand      = false;
 	dfll_conf.run_in_stanby  = CONF_CLOCK_DFLL_RUN_IN_STANDBY;
 
+	/* Using DFLL48M COARSE CAL value from NVM Software Calibration Area Mapping 
+	   in DFLL.COARSE helps to output a frequency close to 48 MHz.*/
+#define NVM_DFLL_COARSE_POS    26 /* DFLL48M Coarse calibration value bit position.*/
+#define NVM_DFLL_COARSE_SIZE   6  /* DFLL48M Coarse calibration value bit size.*/
+
+	uint32_t coarse =( *((uint32_t *)(NVMCTRL_OTP5)
+			+ (NVM_DFLL_COARSE_POS / 32))
+		>> (NVM_DFLL_COARSE_POS % 32))
+		& ((1 << NVM_DFLL_COARSE_SIZE) - 1);
+	/* In some revision chip, the Calibration value is not correct */
+	if (coarse == 0x3f) {
+		coarse = 0x1f;
+	}
+
+	dfll_conf.coarse_value = coarse;
+
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN) {
-		dfll_conf.coarse_value = CONF_CLOCK_DFLL_COARSE_VALUE;
 		dfll_conf.fine_value   = CONF_CLOCK_DFLL_FINE_VALUE;
 	}
 
@@ -883,27 +896,7 @@ void system_clock_init(void)
 	dfll_conf.fine_max_step   = CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE;
 
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_USB_RECOVERY) {
-#define NVM_DFLL_COARSE_POS    58
-#define NVM_DFLL_COARSE_SIZE   6
-#define NVM_DFLL_FINE_POS      64
-#define NVM_DFLL_FINE_SIZE     10
-		uint32_t coarse =( *((uint32_t *)(NVMCTRL_OTP5)
-				+ (NVM_DFLL_COARSE_POS / 32))
-			>> (NVM_DFLL_COARSE_POS % 32))
-			& ((1 << NVM_DFLL_COARSE_SIZE) - 1);
-		if (coarse == 0x3f) {
-			coarse = 0x1f;
-		}
-		uint32_t fine =( *((uint32_t *)(NVMCTRL_OTP5)
-				+ (NVM_DFLL_FINE_POS / 32))
-			>> (NVM_DFLL_FINE_POS % 32))
-			& ((1 << NVM_DFLL_FINE_SIZE) - 1);
-		if (fine == 0x3ff) {
-			fine = 0x1ff;
-		}
-		dfll_conf.coarse_value = coarse;
-		dfll_conf.fine_value   = fine;
-
+		dfll_conf.fine_value   = 0x1ff;
 		dfll_conf.quick_lock = SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE;
 		dfll_conf.stable_tracking = SYSTEM_CLOCK_DFLL_STABLE_TRACKING_FIX_AFTER_LOCK;
 		dfll_conf.wakeup_lock = SYSTEM_CLOCK_DFLL_WAKEUP_LOCK_KEEP;
