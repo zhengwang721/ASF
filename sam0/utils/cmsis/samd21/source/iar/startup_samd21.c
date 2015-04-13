@@ -234,7 +234,7 @@ int __low_level_init(void)
  *------------------------------------------------------------------------------*/
 void Reset_Handler(void)
 {
-        /* Change default QOS values to have the best performance and correct USB behavior */
+        /* Change default QOS values to have the best performance and correct USB behaviour */
         SBMATRIX->SFR[SBMATRIX_SLAVE_HMCRAMC0].reg = 2;
 #if defined(ID_USB)
         USB->DEVICE.QOSCTRL.bit.CQOS = 2;

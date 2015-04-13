@@ -3,7 +3,7 @@
  *
  * \brief Instance description for DSU
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,9 +40,6 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #ifndef _SAMD11_DSU_INSTANCE_
 #define _SAMD11_DSU_INSTANCE_
@@ -52,7 +49,6 @@
 #define REG_DSU_CTRL               (0x41002000U) /**< \brief (DSU) Control */
 #define REG_DSU_STATUSA            (0x41002001U) /**< \brief (DSU) Status A */
 #define REG_DSU_STATUSB            (0x41002002U) /**< \brief (DSU) Status B */
-#define REG_DSU_STATUSC            (0x41002003U) /**< \brief (DSU) Status C */
 #define REG_DSU_ADDR               (0x41002004U) /**< \brief (DSU) Address */
 #define REG_DSU_LENGTH             (0x41002008U) /**< \brief (DSU) Length */
 #define REG_DSU_DATA               (0x4100200CU) /**< \brief (DSU) Data */
@@ -81,7 +77,6 @@
 #define REG_DSU_CTRL               (*(WoReg8 *)0x41002000U) /**< \brief (DSU) Control */
 #define REG_DSU_STATUSA            (*(RwReg8 *)0x41002001U) /**< \brief (DSU) Status A */
 #define REG_DSU_STATUSB            (*(RoReg8 *)0x41002002U) /**< \brief (DSU) Status B */
-#define REG_DSU_STATUSC            (*(RoReg8 *)0x41002003U) /**< \brief (DSU) Status C */
 #define REG_DSU_ADDR               (*(RwReg  *)0x41002004U) /**< \brief (DSU) Address */
 #define REG_DSU_LENGTH             (*(RwReg  *)0x41002008U) /**< \brief (DSU) Length */
 #define REG_DSU_DATA               (*(RwReg  *)0x4100200CU) /**< \brief (DSU) Data */

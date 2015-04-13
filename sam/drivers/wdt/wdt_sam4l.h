@@ -249,7 +249,7 @@ bool wdt_reset_mcu(void);
 	    // WDT configuration
 	    struct wdt_config   g_wdt_cfg;
 
-	    // Intialize and enable the watchdog
+	    // Initialize and enable the watchdog
 	    wdt_get_config_defaults(&g_wdt_cfg);
 	    g_wdt_cfg.timeout_period = WDT_PERIOD_65536_CLK;
 	    wdt_init(&g_wdt_inst, WDT, &g_wdt_cfg);
