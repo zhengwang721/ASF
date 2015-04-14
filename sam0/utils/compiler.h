@@ -775,7 +775,7 @@ typedef struct
  *  ARM is MCU little endian.
  *
  * @{ */
-#define  BE16(x)        Swap16(x)
+#define  BE16(x)        swap16(x)
 #define  LE16(x)        (x)
 
 #define  le16_to_cpu(x) (x)
@@ -783,10 +783,10 @@ typedef struct
 #define  LE16_TO_CPU(x) (x)
 #define  CPU_TO_LE16(x) (x)
 
-#define  be16_to_cpu(x) Swap16(x)
-#define  cpu_to_be16(x) Swap16(x)
-#define  BE16_TO_CPU(x) Swap16(x)
-#define  CPU_TO_BE16(x) Swap16(x)
+#define  be16_to_cpu(x) swap16(x)
+#define  cpu_to_be16(x) swap16(x)
+#define  BE16_TO_CPU(x) swap16(x)
+#define  CPU_TO_BE16(x) swap16(x)
 
 #define  le32_to_cpu(x) (x)
 #define  cpu_to_le32(x) (x)
@@ -864,7 +864,7 @@ typedef struct
  * \note More optimized if only used with values unknown at compile time.
  */
 #if (defined __GNUC__)
-#  define swap32(u32) ((uint32_t)__builtin_bswap32((uint32_t)(u32)))
+#  define swap32(u32) ((uint32_t)__REV((uint32_t)(u32)))
 #else
 #  define swap32(u32) Swap32(u32)
 #endif
