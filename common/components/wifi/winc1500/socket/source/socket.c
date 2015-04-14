@@ -78,7 +78,7 @@ PRIVATE DATA TYPES
 typedef struct{
 	SOCKET			sock;
 	uint8		u8Dummy;
-	uint16		u16Dummy;
+	uint16		u16SessionID;
 }tstrCloseCmd;
 
 /*!
@@ -88,7 +88,7 @@ typedef struct{
 	uint32		u32OptionValue;
 	SOCKET			sock;
 	uint8 		u8Option;
-	uint16		u16Dummy;
+	uint16		u16SessionID;
 }tstrSetSocketOptCmd;
 
 /*!
@@ -98,7 +98,7 @@ typedef struct{
 	tstrSockAddr	strAddr;
 	SOCKET			sock;
 	uint8		u8Void;
-	uint16		u16Void;
+	uint16		u16SessionID;
 }tstrBindCmd;
 
 
@@ -108,7 +108,7 @@ typedef struct{
 typedef struct{
 	SOCKET	sock;
 	uint8	u8BackLog;
-	uint16	u16Void;
+	uint16	u16SessionID;
 }tstrListenCmd;
 
 
@@ -129,7 +129,7 @@ typedef struct{
 	tstrSockAddr	strAddr;
 	SOCKET			sock;
 	uint8			u8Void;
-	uint16			u16Void;
+	uint16			u16SessionID;
 }tstrConnectCmd;
 
 
@@ -142,6 +142,8 @@ typedef struct{
 	uint8			u8Void;
 	uint16			u16DataSize;
 	tstrSockAddr	strAddr;
+	uint16		u16SessionID;
+	uint16			u16Void;
 }tstrSendCmd;
 
 
@@ -153,8 +155,8 @@ typedef struct{
 	uint32		u32Timeoutmsec;
 	SOCKET		sock;
 	uint8		u8Void;
-	uint16		u16Void;
-}tstrRecvCmd;
+	uint16		u16SessionID;
+} tstrRecvCmd;
 
 
 
@@ -168,6 +170,7 @@ typedef struct{
 	uint8				bIsUsed;
 	uint8				bIsSSLSock;
 	uint8				bIsRecvPending;
+	uint16				u16SessionID;
 }tstrSocket;
 
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
@@ -178,6 +181,7 @@ volatile sint8					gsockerrno;
 volatile tstrSocket				gastrSockets[MAX_SOCKET];
 volatile uint8					gu8OpCode;
 volatile uint16					gu16BufferSize;
+volatile uint16					gu16SessionID = 0;	
 
 volatile tpfAppSocketCb		    gpfAppSocketCb;
 volatile tpfAppResolveCb		gpfAppResolveCb;
@@ -188,7 +192,7 @@ Function
 
 Description
 		Callback function used by the NMC1500 driver to deliver messages
-		for socket layer.
+		for socket layer. 
 
 Return
 		None.
@@ -205,7 +209,7 @@ Date
 NMI_API void Socket_ReadSocketData(SOCKET sock, tstrSocketRecvMsg *pstrRecv,uint8 u8SocketMsg,
 								  uint32 u32StartAddress,uint16 u16ReadCount)
 {
-	if(u16ReadCount > 0)
+	if((u16ReadCount > 0) && (gastrSockets[sock].pu8UserBuffer != NULL) && (gastrSockets[sock].u16UserBufferSize > 0) && (gastrSockets[sock].bIsUsed == 1))
 	{
 		uint32	u32Address = u32StartAddress;
 		uint16	u16Read;
@@ -221,14 +225,14 @@ NMI_API void Socket_ReadSocketData(SOCKET sock, tstrSocketRecvMsg *pstrRecv,uint
 			if(s16Diff > 0)
 			{
 				u8SetRxDone = 0;
-
+				
 				if(s16Diff > 3)
 				{
 					u16Read		= gastrSockets[sock].u16UserBufferSize;
 				}
 				else
 				{
-					u16Read		= gastrSockets[sock].u16UserBufferSize - 4;
+					u16Read		= gastrSockets[sock].u16UserBufferSize - 4;					
 				}
 			}
 			if(hif_receive(u32Address, gastrSockets[sock].pu8UserBuffer, u16Read, u8SetRxDone) == M2M_SUCCESS)
@@ -256,8 +260,8 @@ Function
 		m2m_ip_cb
 
 Description
-		Callback function used by the NMC1000 driver to deliver messages
-		for socket layer.
+		Callback function used by the NMC1000 driver to deliver messages 
+		for socket layer. 
 
 Return
 		None.
@@ -272,7 +276,7 @@ Date
 		17 July 2012
 *********************************************************************/
 static void m2m_ip_cb(uint8 u8OpCode, uint16 u16BufferSize,uint32 u32Address)
-{
+{	
 	if(u8OpCode == SOCKET_CMD_BIND)
 	{
 		tstrBindReply		strBindReply;
@@ -306,6 +310,15 @@ static void m2m_ip_cb(uint8 u8OpCode, uint16 u16BufferSize,uint32 u32Address)
 			{
 				gastrSockets[strAcceptReply.sConnectedSock].bIsSSLSock 	= 0;
 				gastrSockets[strAcceptReply.sConnectedSock].bIsUsed 	= 1;
+
+				/* The session ID is used to distinguish different socket connections
+					by comparing the assigned session ID to the one reported by the firmware*/
+				++gu16SessionID;
+				if(gu16SessionID == 0)
+					++gu16SessionID;
+
+				gastrSockets[strAcceptReply.sConnectedSock].u16SessionID = gu16SessionID;
+				M2M_DBG("Socket %d session ID = %d\r\n",strAcceptReply.sConnectedSock , gu16SessionID );		
 			}
 			strAccept.sock = strAcceptReply.sConnectedSock;
 			strAccept.strAddr.sin_family		= AF_INET;
@@ -349,41 +362,55 @@ static void m2m_ip_cb(uint8 u8OpCode, uint16 u16BufferSize,uint32 u32Address)
 
 		if(u8OpCode == SOCKET_CMD_RECVFROM)
 			u8CallbackMsgID = SOCKET_MSG_RECVFROM;
-
-		/* Read RECV REPLY data structure.
+		
+		/* Read RECV REPLY data structure. 
 		*/
 		u16ReadSize = sizeof(tstrRecvReply);
 		if(hif_receive(u32Address, (uint8*)&strRecvReply, u16ReadSize, 0) == M2M_SUCCESS)
 		{
+			uint16 u16SessionID = 0;
+
 			sock			= strRecvReply.sock;
-
+			u16SessionID = strRecvReply.u16SessionID;
+			M2M_DBG("recv callback session ID = %d\r\n",u16SessionID);
+			
 			/* Reset the Socket RX Pending Flag.
-			*/
+			*/ 
 			gastrSockets[sock].bIsRecvPending = 0;
-
+	
 			s16RecvStatus	= NM_BSP_B_L_16(strRecvReply.s16RecvStatus);
 			u16DataOffset	= NM_BSP_B_L_16(strRecvReply.u16DataOffset);
 			strRecvMsg.strRemoteAddr.sin_port 			= strRecvReply.strRemoteAddr.u16Port;
 			strRecvMsg.strRemoteAddr.sin_addr.s_addr 	= strRecvReply.strRemoteAddr.u32IPAddr;
-			if((s16RecvStatus > 0) && (s16RecvStatus < u16BufferSize))
-			{
-				/* Skip incoming bytes until reaching the Start of Application Data.
-				*/
-				u32Address += u16DataOffset;
 
-				/* Read the Application data and deliver it to the application callback in
-				the given application buffer. If the buffer is smaller than the received data,
-				the data is passed to the application in chunks according to its buffer size.
-				*/
-				u16ReadSize = (uint16)s16RecvStatus;
-				Socket_ReadSocketData(sock, &strRecvMsg, u8CallbackMsgID, u32Address, u16ReadSize);
+			if(u16SessionID == gastrSockets[sock].u16SessionID)
+			{
+				if((s16RecvStatus > 0) && (s16RecvStatus < u16BufferSize))
+				{
+					/* Skip incoming bytes until reaching the Start of Application Data. 
+					*/
+					u32Address += u16DataOffset;
+
+					/* Read the Application data and deliver it to the application callback in
+					the given application buffer. If the buffer is smaller than the received data,
+					the data is passed to the application in chunks according to its buffer size.
+					*/
+					u16ReadSize = (uint16)s16RecvStatus;
+					Socket_ReadSocketData(sock, &strRecvMsg, u8CallbackMsgID, u32Address, u16ReadSize);
+				}
+				else
+				{
+					strRecvMsg.s16BufferSize	= s16RecvStatus;
+					strRecvMsg.pu8Buffer		= NULL;
+					if(gpfAppSocketCb)
+						gpfAppSocketCb(sock,u8CallbackMsgID, &strRecvMsg);
+				}
 			}
 			else
 			{
-				strRecvMsg.s16BufferSize	= s16RecvStatus;
-				strRecvMsg.pu8Buffer		= NULL;
-				if(gpfAppSocketCb)
-					gpfAppSocketCb(sock,u8CallbackMsgID, &strRecvMsg);
+				M2M_DBG("Discard recv callback %d %d \r\n",u16SessionID , gastrSockets[sock].u16SessionID);
+
+				hif_receive(0, NULL, 0, 1);
 			}
 		}
 	}
@@ -399,18 +426,31 @@ static void m2m_ip_cb(uint8 u8OpCode, uint16 u16BufferSize,uint32 u32Address)
 
 		if(hif_receive(u32Address, (uint8*)&strReply, sizeof(tstrSendReply), 0) == M2M_SUCCESS)
 		{
+			uint16 u16SessionID = 0;
+			
 			sock = strReply.sock;
+			u16SessionID = strReply.u16SessionID;
+			M2M_DBG("send callback session ID = %d\r\n",u16SessionID);
+			
 			s16Rcvd = NM_BSP_B_L_16(strReply.s16SentBytes);
-			if(gpfAppSocketCb)
-				gpfAppSocketCb(sock,u8CallbackMsgID, &s16Rcvd);
+
+			if(u16SessionID == gastrSockets[sock].u16SessionID)
+			{
+				if(gpfAppSocketCb)
+					gpfAppSocketCb(sock,u8CallbackMsgID, &s16Rcvd);
+			}
+			else
+			{
+				M2M_DBG("Discard send callback %d %d \r\n",u16SessionID , gastrSockets[sock].u16SessionID);
+			}
 		}
-	}
+	}	
 }
 /*********************************************************************
 Function
 		socketInit
 
-Description
+Description 
 
 Return
 		None.
@@ -418,7 +458,7 @@ Return
 Author
 		Ahmed Ezzat
 
-Versio
+Version
 		1.0
 
 Date
@@ -431,7 +471,35 @@ void socketInit(void)
 		m2m_memset((uint8*)gastrSockets, 0, MAX_SOCKET * sizeof(tstrSocket));
 		hif_register_cb(M2M_REQ_GRP_IP,m2m_ip_cb);
 		gbSocketInit=1;
+		gu16SessionID = 0;
 	}
+}
+
+/*********************************************************************
+Function
+		socketDeinit
+
+Description 
+
+Return
+		None.
+
+Author
+		Samer Sarhan
+
+Version
+		1.0
+
+Date
+		27 Feb 2015
+*********************************************************************/
+void socketDeinit(void)
+{	
+	m2m_memset((uint8*)gastrSockets, 0, MAX_SOCKET * sizeof(tstrSocket));
+	hif_register_cb(M2M_REQ_GRP_IP, NULL);
+	gpfAppSocketCb = NULL;
+	gpfAppResolveCb = NULL;
+	gbSocketInit = 0;
 }
 
 
@@ -439,7 +507,7 @@ void socketInit(void)
 Function
 		registerSocketCallback
 
-Description
+Description 
 
 Return
 		None.
@@ -506,6 +574,16 @@ SOCKET socket(uint16 u16Domain, uint8 u8Type, uint8 u8Flags)
 			if(gastrSockets[u8Count].bIsUsed == 0)
 			{
 				gastrSockets[u8Count].bIsUsed = 1;
+				
+				/* The session ID is used to distinguish different socket connections
+					by comparing the assigned session ID to the one reported by the firmware*/
+				++gu16SessionID;
+				if(gu16SessionID == 0)
+					++gu16SessionID;
+				
+				gastrSockets[u8Count].u16SessionID = gu16SessionID;
+				M2M_DBG("1 Socket %d session ID = %d\r\n",u8Count, gu16SessionID );
+
 				if(u8Flags & SOCKET_FLAGS_SSL)
 					gastrSockets[u8Count].bIsSSLSock = 1;
 				sock = (SOCKET)u8Count;
@@ -537,7 +615,7 @@ Date
 sint8 bind(SOCKET sock, struct sockaddr *pstrAddr, uint8 u8AddrLen)
 {
 	sint8	s8Ret = SOCK_ERR_INVALID_ARG;
-	if((pstrAddr != NULL) && (sock >= 0))
+	if((pstrAddr != NULL) && (sock >= 0) && (gastrSockets[sock].bIsUsed == 1) && (u8AddrLen != 0))
 	{
 		tstrBindCmd			strBind;
 
@@ -549,12 +627,14 @@ sint8 bind(SOCKET sock, struct sockaddr *pstrAddr, uint8 u8AddrLen)
 		strBind.strAddr.u16Family	= strBind.strAddr.u16Family;
 		strBind.strAddr.u16Port		= strBind.strAddr.u16Port;
 		strBind.strAddr.u32IPAddr	= strBind.strAddr.u32IPAddr;
+		strBind.u16SessionID		= gastrSockets[sock].u16SessionID;
+		
 		/* Send the request. */
 		s8Ret = SOCKET_REQUEST(SOCKET_CMD_BIND, (uint8*)&strBind,sizeof(tstrBindCmd) , NULL , 0, 0);
-		if(s8Ret != SOCK_ERR_NO_ERROR)
+		if(s8Ret != SOCK_ERR_NO_ERROR) 
 		{
 			s8Ret = SOCK_ERR_INVALID;
-		}
+		}  
 	}
 	return s8Ret;
 }
@@ -580,17 +660,20 @@ Date
 sint8 listen(SOCKET sock, uint8 backlog)
 {
 	sint8	s8Ret = SOCK_ERR_INVALID_ARG;
-	if(sock >= 0)
+	
+	if(sock >= 0 && (gastrSockets[sock].bIsUsed == 1))
 	{
 		tstrListenCmd		strListen;
 
 		strListen.sock = sock;
 		strListen.u8BackLog = backlog;
+		strListen.u16SessionID		= gastrSockets[sock].u16SessionID;
+		
 		s8Ret = SOCKET_REQUEST(SOCKET_CMD_LISTEN, (uint8*)&strListen, sizeof(tstrListenCmd), NULL, 0, 0);
-		if(s8Ret != SOCK_ERR_NO_ERROR)
+		if(s8Ret != SOCK_ERR_NO_ERROR) 
 		{
 			s8Ret = SOCK_ERR_INVALID;
-		}
+		} 
 	}
 	return s8Ret;
 }
@@ -601,7 +684,7 @@ Function
 Description
 
 Return
-
+		
 
 Author
 		Ahmed Ezzat
@@ -615,7 +698,8 @@ Date
 sint8 accept(SOCKET sock, struct sockaddr *addr, uint8 *addrlen)
 {
 	sint8	s8Ret = SOCK_ERR_INVALID_ARG;
-	if(sock >= 0)
+	
+	if(sock >= 0 && (gastrSockets[sock].bIsUsed == 1) )
 	{
 		s8Ret = SOCK_ERR_NO_ERROR;
 	}
@@ -629,7 +713,7 @@ Description
 		Connect to a remote TCP Server.
 
 Return
-
+		
 
 Author
 		Ahmed Ezzat
@@ -643,7 +727,7 @@ Date
 sint8 connect(SOCKET sock, struct sockaddr *pstrAddr, uint8 u8AddrLen)
 {
 	sint8	s8Ret = SOCK_ERR_INVALID_ARG;
-	if((sock >= 0) && (pstrAddr != NULL))
+	if((sock >= 0) && (pstrAddr != NULL) && (gastrSockets[sock].bIsUsed == 1) && (u8AddrLen != 0))
 	{
 		tstrConnectCmd	strConnect;
 		uint8			u8Cmd = SOCKET_CMD_CONNECT;
@@ -658,11 +742,13 @@ sint8 connect(SOCKET sock, struct sockaddr *pstrAddr, uint8 u8AddrLen)
 		strConnect.strAddr.u16Family	= strConnect.strAddr.u16Family;
 		strConnect.strAddr.u16Port		= strConnect.strAddr.u16Port;
 		strConnect.strAddr.u32IPAddr	= strConnect.strAddr.u32IPAddr;
+		strConnect.u16SessionID		= gastrSockets[sock].u16SessionID;
+		
 		s8Ret = SOCKET_REQUEST(u8Cmd, (uint8*)&strConnect,sizeof(tstrConnectCmd), NULL, 0, 0);
-		if(s8Ret != SOCK_ERR_NO_ERROR)
+		if(s8Ret != SOCK_ERR_NO_ERROR) 
 		{
 			s8Ret = SOCK_ERR_INVALID;
-		}
+		} 
 	}
 	return s8Ret;
 }
@@ -686,7 +772,8 @@ Date
 sint16 send(SOCKET sock, void *pvSendBuffer, uint16 u16SendLength, uint16 flags)
 {
 	sint16	s16Ret = SOCK_ERR_INVALID_ARG;
-	if((sock >= 0) && (pvSendBuffer != NULL) && (u16SendLength <= SOCKET_BUFFER_MAX_LENGTH))
+	
+	if((sock >= 0) && (pvSendBuffer != NULL) && (u16SendLength <= SOCKET_BUFFER_MAX_LENGTH) && (gastrSockets[sock].bIsUsed == 1))
 	{
 		uint16			u16DataOffset;
 		tstrSendCmd		strSend;
@@ -697,6 +784,7 @@ sint16 send(SOCKET sock, void *pvSendBuffer, uint16 u16SendLength, uint16 flags)
 
 		strSend.sock		= sock;
 		strSend.u16DataSize	= NM_BSP_B_L_16(u16SendLength);
+		strSend.u16SessionID		= gastrSockets[sock].u16SessionID;
 
 		if(sock >= TCP_SOCK_MAX)
 		{
@@ -736,7 +824,8 @@ Date
 sint16 sendto(SOCKET sock, void *pvSendBuffer, uint16 u16SendLength, uint16 flags, struct sockaddr *pstrDestAddr, uint8 u8AddrLen)
 {
 	sint16	s16Ret = SOCK_ERR_INVALID_ARG;
-	if((sock >= 0) && (pvSendBuffer != NULL) && (u16SendLength <= SOCKET_BUFFER_MAX_LENGTH))
+	
+	if((sock >= 0) && (pvSendBuffer != NULL) && (u16SendLength <= SOCKET_BUFFER_MAX_LENGTH) && (gastrSockets[sock].bIsUsed == 1))
 	{
 		if(gastrSockets[sock].bIsUsed)
 		{
@@ -746,16 +835,18 @@ sint16 sendto(SOCKET sock, void *pvSendBuffer, uint16 u16SendLength, uint16 flag
 
 			strSendTo.sock			= sock;
 			strSendTo.u16DataSize	= NM_BSP_B_L_16(u16SendLength);
+			strSendTo.u16SessionID		= gastrSockets[sock].u16SessionID;
+			
 			if(pstrDestAddr != NULL)
 			{
 				struct sockaddr_in	*pstrAddr;
 				pstrAddr = (void*)pstrDestAddr;
-
+	
 				strSendTo.strAddr.u16Family	= pstrAddr->sin_family;
 				strSendTo.strAddr.u16Port	= pstrAddr->sin_port;
 				strSendTo.strAddr.u32IPAddr	= pstrAddr->sin_addr.s_addr;
 			}
-			s16Ret = SOCKET_REQUEST(SOCKET_CMD_SENDTO|M2M_REQ_DATA_PKT, (uint8*)&strSendTo,  sizeof(tstrSendCmd),
+			s16Ret = SOCKET_REQUEST(SOCKET_CMD_SENDTO|M2M_REQ_DATA_PKT, (uint8*)&strSendTo,  sizeof(tstrSendCmd), 
 				pvSendBuffer, u16SendLength, UDP_TX_PACKET_OFFSET);
 
 			if(s16Ret != SOCK_ERR_NO_ERROR)
@@ -788,7 +879,8 @@ Date
 sint16 recv(SOCKET sock, void *pvRecvBuf, uint16 u16BufLen, uint32 u32Timeoutmsec)
 {
 	sint16	s16Ret = SOCK_ERR_INVALID_ARG;
-	if((sock >= 0) && (pvRecvBuf != NULL) && (u16BufLen != 0))
+	
+	if((sock >= 0) && (pvRecvBuf != NULL) && (u16BufLen != 0) && (gastrSockets[sock].bIsUsed == 1))
 	{
 		s16Ret = SOCK_ERR_NO_ERROR;
 		gastrSockets[sock].pu8UserBuffer 		= (uint8*)pvRecvBuf;
@@ -798,7 +890,7 @@ sint16 recv(SOCKET sock, void *pvRecvBuf, uint16 u16BufLen, uint32 u32Timeoutmse
 		{
 			tstrRecvCmd	strRecv;
 			uint8		u8Cmd = SOCKET_CMD_RECV;
-
+			
 			gastrSockets[sock].bIsRecvPending = 1;
 			if(gastrSockets[sock].bIsSSLSock)
 			{
@@ -811,7 +903,8 @@ sint16 recv(SOCKET sock, void *pvRecvBuf, uint16 u16BufLen, uint32 u32Timeoutmse
 			else
 				strRecv.u32Timeoutmsec = NM_BSP_B_L_32(u32Timeoutmsec);
 			strRecv.sock = sock;
-
+			strRecv.u16SessionID		= gastrSockets[sock].u16SessionID;
+		
 			s16Ret = SOCKET_REQUEST(u8Cmd, (uint8*)&strRecv, sizeof(tstrRecvCmd), NULL , 0, 0);
 			if(s16Ret != SOCK_ERR_NO_ERROR)
 			{
@@ -842,12 +935,16 @@ Date
 sint8 close(SOCKET sock)
 {
 	sint8	s8Ret = SOCK_ERR_INVALID_ARG;
-	if(sock >= 0)
+	if(sock >= 0 && (gastrSockets[sock].bIsUsed == 1))
 	{
 		uint8	u8Cmd = SOCKET_CMD_CLOSE;
 		tstrCloseCmd strclose;
-		strclose.sock = sock;
+		strclose.sock = sock; 
+		strclose.u16SessionID		= gastrSockets[sock].u16SessionID;
+		
 		gastrSockets[sock].bIsUsed = 0;
+		gastrSockets[sock].u16SessionID =0;
+		
 		if(gastrSockets[sock].bIsSSLSock)
 		{
 			u8Cmd = SOCKET_CMD_SSL_CLOSE;
@@ -883,7 +980,7 @@ Date
 sint16 recvfrom(SOCKET sock, void *pvRecvBuf, uint16 u16BufLen, uint32 u32Timeoutmsec)
 {
 	sint16	s16Ret = SOCK_ERR_NO_ERROR;
-	if((sock >= 0) && (pvRecvBuf != NULL) && (u16BufLen != 0))
+	if((sock >= 0) && (pvRecvBuf != NULL) && (u16BufLen != 0) && (gastrSockets[sock].bIsUsed == 1))
 	{
 		if(gastrSockets[sock].bIsUsed)
 		{
@@ -903,6 +1000,8 @@ sint16 recvfrom(SOCKET sock, void *pvRecvBuf, uint16 u16BufLen, uint32 u32Timeou
 				else
 					strRecv.u32Timeoutmsec = NM_BSP_B_L_32(u32Timeoutmsec);
 				strRecv.sock = sock;
+				strRecv.u16SessionID		= gastrSockets[sock].u16SessionID;
+				
 				s16Ret = SOCKET_REQUEST(SOCKET_CMD_RECVFROM, (uint8*)&strRecv, sizeof(tstrRecvCmd), NULL , 0, 0);
 				if(s16Ret != SOCK_ERR_NO_ERROR)
 				{
@@ -921,10 +1020,10 @@ sint16 recvfrom(SOCKET sock, void *pvRecvBuf, uint16 u16BufLen, uint32 u32Timeou
 Function
 		nmi_inet_addr
 
-Description
+Description 
 
 Return
-		Unsigned 32-bit integer representing the IP address in Network
+		Unsigned 32-bit integer representing the IP address in Network 
 		byte order.
 
 Author
@@ -946,27 +1045,27 @@ uint32 nmi_inet_addr(char *pcIpAddr)
 
 	tmp = 0;
 
-	for(i = 0; i < 4; ++i)
+	for(i = 0; i < 4; ++i) 
 	{
 		j = 0;
-		do
+		do 
 		{
 			c = *pcIpAddr;
 			++j;
-			if(j > 4)
+			if(j > 4) 
 			{
 				return 0;
 			}
-			if(c == '.' || c == 0)
+			if(c == '.' || c == 0) 
 			{
 				au8IP[i] = tmp;
 				tmp = 0;
-			}
-			else if(c >= '0' && c <= '9')
+			} 
+			else if(c >= '0' && c <= '9') 
 			{
 				tmp = (tmp * 10) + (c - '0');
-			}
-			else
+			} 
+			else 
 			{
 				return 0;
 			}
@@ -1031,13 +1130,14 @@ sint8 setsockopt(SOCKET sock, uint8  u8Level, uint8  option_name,
        const void *option_value, uint16 u16OptionLen)
 {
 	sint8	s8Ret = SOCK_ERR_INVALID_ARG;
-	if((sock >= 0)  && (option_value != NULL) )
+	if((sock >= 0)  && (option_value != NULL)  && (gastrSockets[sock].bIsUsed == 1))
 	{
 		uint8	u8Cmd = SOCKET_CMD_SET_SOCKET_OPTION;
 		tstrSetSocketOptCmd strSetSockOpt;
 		strSetSockOpt.u8Option=option_name;
-		strSetSockOpt.sock = sock;
+		strSetSockOpt.sock = sock; 
 		strSetSockOpt.u32OptionValue = *(uint32*)option_value;
+		strSetSockOpt.u16SessionID		= gastrSockets[sock].u16SessionID;
 
 		s8Ret = SOCKET_REQUEST(u8Cmd, (uint8*)&strSetSockOpt, sizeof(tstrSetSocketOptCmd), NULL,0, 0);
 		if(s8Ret != SOCK_ERR_NO_ERROR)
@@ -1047,7 +1147,7 @@ sint8 setsockopt(SOCKET sock, uint8  u8Level, uint8  option_name,
 
 	}
 	return s8Ret;
-
+	
 }
 /*********************************************************************
 Function
