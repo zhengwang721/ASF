@@ -873,6 +873,7 @@ int udi_cdc_multi_getc(uint8_t port)
 	bool b_databit_9;
 	uint16_t pos;
 	uint8_t buf_sel;
+	bool again;
 
 #if UDI_CDC_PORT_NB == 1 // To optimize code
 	port = 0;
@@ -885,8 +886,9 @@ udi_cdc_getc_process_one_byte:
 	flags = cpu_irq_save();
 	pos = udi_cdc_rx_pos[port];
 	buf_sel = udi_cdc_rx_buf_sel[port];
+	again = pos >= udi_cdc_rx_buf_nb[port][buf_sel];
 	cpu_irq_restore(flags);
-	while (pos >= udi_cdc_rx_buf_nb[port][buf_sel]) {
+	while (again) {
 		if (!udi_cdc_data_running) {
 			return 0;
 		}
@@ -920,6 +922,7 @@ iram_size_t udi_cdc_multi_read_buf(uint8_t port, void* buf, iram_size_t size)
 	iram_size_t copy_nb;
 	uint16_t pos;
 	uint8_t buf_sel;
+	bool again;
 
 #if UDI_CDC_PORT_NB == 1 // To optimize code
 	port = 0;
@@ -930,8 +933,9 @@ udi_cdc_read_buf_loop_wait:
 	flags = cpu_irq_save();
 	pos = udi_cdc_rx_pos[port];
 	buf_sel = udi_cdc_rx_buf_sel[port];
+	again = pos >= udi_cdc_rx_buf_nb[port][buf_sel];
 	cpu_irq_restore(flags);
-	while (pos >= udi_cdc_rx_buf_nb[port][buf_sel]) {
+	while (again) {
 		if (!udi_cdc_data_running) {
 			return size;
 		}
