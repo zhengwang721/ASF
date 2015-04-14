@@ -391,6 +391,7 @@ static void run_ac_callback_mode_test(const struct test_case *test)
 	test_assert_true(test, ac_init_success,
 			"Skipping test due to failed AC initialization");
 
+	delay_ms(1);
 	/* Test for rising edge detection */
 	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_ONE_VOLT);
 	delay_ms(1);
