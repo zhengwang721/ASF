@@ -63,11 +63,10 @@
 #define  USB_DEVICE_MINOR_VERSION         0
 #define  USB_DEVICE_POWER                 100 // Consumption on Vbus line (mA)
 #define  USB_DEVICE_ATTR                  \
-	(USB_CONFIG_ATTR_REMOTE_WAKEUP|USB_CONFIG_ATTR_BUS_POWERED)
+	(USB_CONFIG_ATTR_SELF_POWERED)
+// (USB_CONFIG_ATTR_BUS_POWERED)
 //	(USB_CONFIG_ATTR_REMOTE_WAKEUP|USB_CONFIG_ATTR_SELF_POWERED)
 //	(USB_CONFIG_ATTR_REMOTE_WAKEUP|USB_CONFIG_ATTR_BUS_POWERED)
-//	(USB_CONFIG_ATTR_SELF_POWERED)
-//	(USB_CONFIG_ATTR_BUS_POWERED)
 
 //! USB Device string definitions (Optional)
 // #define  USB_DEVICE_MANUFACTURE_NAME      "Manufacture name"
@@ -83,8 +82,6 @@
 
 //! To authorize the High speed
 #if (UC3A3||UC3A4)
-//#define  USB_DEVICE_HS_SUPPORT
-#elif (SAM3XA||SAM3U)
 //#define  USB_DEVICE_HS_SUPPORT
 #endif
 //@}
@@ -119,7 +116,7 @@
  * @{
  */
 /**
- * Configuration of HID Generic interface
+ * Configuration of HID Multi-touch interface
  * @{
  */
 //! Interface callback definition
