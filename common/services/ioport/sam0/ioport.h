@@ -51,17 +51,17 @@
 #define IOPORT_CREATE_PIN(port, pin) ((port) * 32 + (pin))
 
 // Aliases
-#if (PORT_GROUPS > 1)
+#if (PORT_GROUPS > 0)
 #  define IOPORT_PORTA     0
 #endif
-#if (PORT_GROUPS > 2)
+#if (PORT_GROUPS > 1)
 #  define IOPORT_PORTB     1
 #endif
-#if (PORT_GROUPS > 3)
+#if (PORT_GROUPS > 2)
 #  define IOPORT_PORTC     2
 #endif
-#if (PORT_GROUPS > 4)
-#  define IOPORT_PORTD     2
+#if (PORT_GROUPS > 3)
+#  define IOPORT_PORTD     3
 #endif
 
 /**
