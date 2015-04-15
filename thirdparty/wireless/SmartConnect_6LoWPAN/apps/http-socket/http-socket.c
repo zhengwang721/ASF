@@ -30,6 +30,8 @@
  */
 #include "thsq.h"
 #include "http-socket.h"
+#include "http-strings.h"
+
 
 #include <ctype.h>
 

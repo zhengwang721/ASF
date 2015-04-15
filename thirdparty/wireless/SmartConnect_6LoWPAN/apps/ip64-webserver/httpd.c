@@ -73,6 +73,18 @@ MEMB(conns, struct httpd_state, CONNS);
 #define ISO_colon   0x3a
 
 struct udp_socket led_socket;
+
+void led_socket_callback(struct udp_socket *c,
+                          void *ptr,
+                          const uip_ipaddr_t *source_addr,
+                          uint16_t source_port,
+                          const uip_ipaddr_t *dest_addr,
+                          uint16_t dest_port,
+                          const uint8_t *data,
+                          uint16_t datalen);
+
+
+
 void led_socket_callback(struct udp_socket *c,
                           void *ptr,
                           const uip_ipaddr_t *source_addr,
@@ -278,6 +290,8 @@ static
 PT_THREAD(handle_input(struct httpd_state *s))
 {
   char *ptr ,*ptr2;
+   void *uptr;
+   const uip_ipaddr_t *addr = NULL;
   
   PSOCK_BEGIN(&s->sin);
 
@@ -302,7 +316,7 @@ PT_THREAD(handle_input(struct httpd_state *s))
    if(ptr != NULL)
    {
 	   
-	   uint8_t j,k;
+	   uint8_t k;
 	   char nbrid_s[3] = {0};
 	   uint8_t	databuf[1] = {0};
 	   
@@ -321,8 +335,7 @@ PT_THREAD(handle_input(struct httpd_state *s))
        }         
        printf("\n\r nbr id is : %d\r\n",nbr_id);  
        // todoo for nbr count more than 9
-		   void *uptr;
-		   const uip_ipaddr_t *addr;
+		  
 		   uptr = nbr_table_head(ds6_neighbors);
 		   for(uint8_t i=1;i<nbr_id;i++)
 		   {

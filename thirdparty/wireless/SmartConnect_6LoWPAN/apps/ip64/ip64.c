@@ -71,13 +71,13 @@
 #include <stdlib.h>
 #define DEBUG 0
 
+#ifndef PRINTF
 #if DEBUG
-#undef PRINTF
 #define PRINTF(...) printf(__VA_ARGS__)
 #else /* DEBUG */
 #define PRINTF(...)
 #endif /* DEBUG */
-
+#endif
 
 COMPILER_PACK_SET(1)
 struct ipv6_hdr {

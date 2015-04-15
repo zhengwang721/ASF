@@ -452,7 +452,6 @@ make_led_toggle(void *p)
 {
   static const char httpd_cgi_room2[] HTTPD_STRING_ATTR =
     "<tr><td colspan=4>LED Blink Command Sent to All Neighbors!!!</td></tr>";
- static int j = 0;
   uint16_t numprinted = 0;
 
   numprinted += httpd_snprintf((char *)uip_appdata + numprinted,
