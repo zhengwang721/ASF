@@ -46,6 +46,9 @@
 #include "rf233.h"
 #include "delay.h"
 #include "system_interrupt.h"
+#if SAMD
+#include "node-id-samd21.h"
+#endif
 
 #define RF233_STATUS()                    rf233_status()
 /*---------------------------------------------------------------------------*/
@@ -230,7 +233,12 @@ rf233_init(void)
   // trx_reg_write(0x17, 0x02);
   trx_bit_write(SR_MAX_FRAME_RETRIES, 0);
   SetPanId(IEEE802154_CONF_PANID);
+ #if SAMD
+  SetIEEEAddr(node_mac);
+#else
   SetIEEEAddr(eui64);
+#endif
+
   for(uint8_t i=0;i<8;i++)
   {
 	  regtemp =trx_reg_read(0x24+i);
