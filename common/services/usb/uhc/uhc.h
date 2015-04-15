@@ -233,11 +233,11 @@ void uhc_resume(void);
  * \brief Suspends a USB line through LPM feature
  *
  * \param b_remotewakeup Authorize the remote wakeup features, if true
- * \param besl Best effort service latency value
+ * \param hird Host Initiated Resume Duration
  *
  * \return flase if the LPM is not supported by USB Device
  */
-bool uhc_suspend_lpm(bool b_remotewakeup, uint8_t besl);
+bool uhc_suspend_lpm(bool b_remotewakeup, uint8_t hird);
 #endif // USB_HOST_LPM_SUPPORT
 
 //@}
