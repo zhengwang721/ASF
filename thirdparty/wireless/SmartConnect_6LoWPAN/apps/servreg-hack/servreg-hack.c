@@ -71,7 +71,7 @@ MEMB(registrations, struct servreg_hack_registration, MAX_REGISTRATIONS);
 
 PROCESS(servreg_hack_process, "Service regstry hack");
 
-#define PERIOD_TIME 120 * CLOCK_SECOND
+#define PERIOD_TIME 40 * CLOCK_SECOND
 
 #define NEW_REG_TIME 10 * CLOCK_SECOND
 

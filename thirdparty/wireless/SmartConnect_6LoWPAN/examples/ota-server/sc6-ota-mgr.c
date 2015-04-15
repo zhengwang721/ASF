@@ -537,12 +537,19 @@ PROCESS_THREAD(otau_server_process, ev, data)
   uip_ipaddr_t *ipaddr;
 
   PROCESS_BEGIN();
-
-  //servreg_hack_init();
+  servreg_hack_init();
 
   ipaddr = set_global_address();
 
   create_rpl_dag(ipaddr);
+
+  servreg_hack_register(SERVICE_ID, ipaddr);
+
+  //servreg_hack_init();
+
+  //ipaddr = set_global_address();
+
+  //create_rpl_dag(ipaddr);
   ota_mgr_init();
   //servreg_hack_register(SERVICE_ID, ipaddr);
 

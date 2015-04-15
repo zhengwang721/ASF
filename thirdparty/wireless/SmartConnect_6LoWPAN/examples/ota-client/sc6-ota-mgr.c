@@ -67,7 +67,7 @@
 #define UDP_PORT 5321
 #define SERVICE_ID 190
 
-#define SEND_INTERVAL		(60 * CLOCK_SECOND)
+#define SEND_INTERVAL		(5 * CLOCK_SECOND)
 
 
 /* Currently UPGRADE and COMMON module is added for SC6LoWPAN */
@@ -148,7 +148,8 @@ void widbg_mgr_data_req(module_code_t msg_code, addr_mode_t addr_mode, uint8_t *
 			}
 			else
 			{
-				uip_create_linklocal_allnodes_mcast(&srv_addr);
+				//uip_create_linklocal_allnodes_mcast(&srv_addr);
+				widbg_data_conf(msg_code,&srv_addr,SUCCESS);
 			}
 				
 		 }
@@ -366,11 +367,11 @@ static void
 receiver(struct simple_udp_connection *c,const uip_ipaddr_t *sender_addr,uint16_t sender_port,
 const uip_ipaddr_t *receiver_addr,uint16_t receiver_port,const uint8_t *data,uint16_t datalen)
 {
-	if(server_configured == 0)
+	/*if(server_configured == 0)
 	{
 		memcpy((uint8_t *)&(global_server_addr.u16[4]),(uint8_t *)&(sender_addr->u8[8]),NATIVE_ADDR_SIZE);
 		server_configured = 1;
-	}
+	}*/
 	
 	if((datalen > 0) && (NULL != data))
 	{
@@ -419,7 +420,7 @@ PROCESS_THREAD(otau_client_process, ev, data)
   uip_ip6addr_t *srv_addr;
   
   PROCESS_BEGIN();
-
+  servreg_hack_init();
   set_global_address();
   
   ota_mgr_init();
@@ -432,11 +433,18 @@ PROCESS_THREAD(otau_client_process, ev, data)
 	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&server_timer));
 	srv_addr = servreg_hack_lookup(SERVICE_ID);
 	if(srv_addr != NULL) {
+		printf("Server address configured\n");
+		server_configured =1;
 		configure_server_details(srv_addr);
+		memcpy((uint8_t *)&(global_server_addr.u16[4]),&(srv_addr->u16[4]),NATIVE_ADDR_SIZE);
+        //uip_create_linklocal_allnodes_mcast(srv_addr);
 		etimer_stop(&server_timer);
 	}
 	else
+	{
 		etimer_reset(&server_timer);
+		printf("server not found");
+	}
   }
   PROCESS_END();
 }
