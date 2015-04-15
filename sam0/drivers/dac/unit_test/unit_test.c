@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM DAC Callback Quick Start
+ * \brief SAM DAC Unit Test
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -69,6 +69,7 @@
  *
  * The following kit is required for carrying out the test:
  *  - SAM D21 Xplained Pro board
+ *  - SAM L21 Xplained Pro board
  *  - SAM DA1 Xplained Pro board
  *
  * \section asfdoc_sam0_dac_unit_test_setup Setup
@@ -147,12 +148,16 @@ void configure_event_resource(void)
 	events_get_config_defaults(&event_config);
 
 	event_config.generator      = EVSYS_ID_GEN_RTC_OVF;
-	event_config.edge_detect    = EVENTS_EDGE_DETECT_RISING;
+	event_config.edge_detect    = EVENTS_EDGE_DETECT_NONE;
 	event_config.path           = EVENTS_PATH_ASYNCHRONOUS;
 	event_config.clock_source   = GCLK_GENERATOR_0;
 
 	events_allocate(&event_dac, &event_config);
+#if (SAML21)
+	events_attach_user(&event_dac, EVSYS_ID_USER_DAC_START_0);
+#else
 	events_attach_user(&event_dac, EVSYS_ID_USER_DAC_START);
+#endif
 }
 
 /**
@@ -162,12 +167,14 @@ void configure_event_resource(void)
  */
 void configure_rtc_count(void)
 {
-	struct rtc_count_events  rtc_event;
+	struct rtc_count_events rtc_event;
 	struct rtc_count_config config_rtc_count;
 	rtc_count_get_config_defaults(&config_rtc_count);
 	config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
 	config_rtc_count.mode                = RTC_COUNT_MODE_16BIT;
+#ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
 	config_rtc_count.continuously_update = true;
+#endif
 	rtc_count_init(&rtc_instance, RTC, &config_rtc_count);
 	rtc_event.generate_event_on_overflow = true;
 	rtc_count_enable_events(&rtc_instance, &rtc_event);
@@ -185,23 +192,32 @@ static void run_dac_init_test(const struct test_case *test)
 	struct dac_config config_dac;
 
 	dac_get_config_defaults(&config_dac);
+#if (SAML21)
+    dac_instance.start_on_event[0] = true;
+#else
 	dac_instance.start_on_event = true;
+#endif
 	status = dac_init(&dac_instance, DAC, &config_dac);
 		/* Check for successful initialization */
 	test_assert_true(test, status == STATUS_OK,
 			"DAC initialization failed");
 
 	/* set dac start conversion on events*/
+#if  (SAML21)
+	struct dac_events events =
+		{ .on_event_chan0_start_conversion = true };
+#else
 	struct dac_events events =
 		{ .on_event_start_conversion = true };
+#endif
 	dac_enable_events(&dac_instance, &events);
-	dac_enable(&dac_instance);
 	
-    	struct dac_chan_config config_dac_chan;
+	struct dac_chan_config config_dac_chan;
 	dac_chan_get_config_defaults(&config_dac_chan);
 	dac_chan_set_config(&dac_instance, DAC_CHANNEL_0,
 			&config_dac_chan);
 	dac_chan_enable(&dac_instance, DAC_CHANNEL_0);
+	dac_enable(&dac_instance);
 }
 
 /**
