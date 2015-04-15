@@ -704,7 +704,7 @@ enum status_code usb_host_pipe_write_job(struct usb_module *module_inst,
 		uint8_t pipe_num, uint8_t *buf, uint32_t buf_size);
 enum status_code usb_host_pipe_abort_job(struct usb_module *module_inst, uint8_t pipe_num);
 enum status_code usb_host_pipe_lpm_job(struct usb_module *module_inst,
-		uint8_t pipe_num, bool b_remotewakeup, uint8_t besl);
+		uint8_t pipe_num, bool b_remotewakeup, uint8_t hird);
 /** @} */
 
 /**
