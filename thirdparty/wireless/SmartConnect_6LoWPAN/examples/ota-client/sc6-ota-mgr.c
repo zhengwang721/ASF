@@ -92,6 +92,8 @@ uint8_t ota_recvd_data[128];
 PROCESS(otau_client_process, "Over-The-Air  client process");
 AUTOSTART_PROCESSES(&otau_client_process);
 
+void ota_mgr_init(void);
+void configure_server_details(uip_ipaddr_t *addr);
 static void widbg_data_conf(module_code_t msg_code,uint8_t *addr,uint8_t status);
 static struct simple_udp_connection unicast_connection;
 
@@ -149,7 +151,7 @@ void widbg_mgr_data_req(module_code_t msg_code, addr_mode_t addr_mode, uint8_t *
 			else
 			{
 				//uip_create_linklocal_allnodes_mcast(&srv_addr);
-				widbg_data_conf(msg_code,&srv_addr,SUCCESS);
+				widbg_data_conf(msg_code, (uint8_t *) &srv_addr,SUCCESS);
 			}
 				
 		 }
@@ -160,7 +162,7 @@ void widbg_mgr_data_req(module_code_t msg_code, addr_mode_t addr_mode, uint8_t *
 				memcpy(ota_common_data, &msg_code, sizeof(msg_code));
 		        memcpy(ota_common_data+1, payload, len);
 				simple_udp_sendto(&unicast_connection, ota_common_data, len + sizeof(msg_code), &srv_addr);
-				widbg_data_conf(msg_code,&srv_addr,SUCCESS);
+				widbg_data_conf(msg_code, (uint8_t *) &srv_addr,SUCCESS);
 			}
 			
 #endif		
@@ -170,7 +172,7 @@ void widbg_mgr_data_req(module_code_t msg_code, addr_mode_t addr_mode, uint8_t *
 				memcpy(ota_upgrade_data, &msg_code, sizeof(msg_code));
 		        memcpy(ota_upgrade_data+1, payload, len);
 				simple_udp_sendto(&unicast_connection, ota_upgrade_data, len + sizeof(msg_code), &srv_addr);
-				widbg_data_conf(msg_code,&srv_addr,SUCCESS);
+				widbg_data_conf(msg_code, (uint8_t *) &srv_addr,SUCCESS);
 			}
 			
 #endif
@@ -288,19 +290,19 @@ void configure_server_details(uip_ipaddr_t *addr)
 {
 	if(addr != NULL) {
 #if (WIDBG_COMMON_SUPPORT == 1)		
-		configure_common_server_details(NATIVE_ADDR_MODE,&(addr->u16[4]));
-		configure_common_server_details(EXTENDED_ADDR_MODE,&(addr->u16[4]));
+		configure_common_server_details(NATIVE_ADDR_MODE, (uint8_t *) &(addr->u16[4]));
+		configure_common_server_details(EXTENDED_ADDR_MODE, (uint8_t *) &(addr->u16[4]));
 #endif		
 #if (WIDBG_UPGRADE_SUPPORT == 1)			
-		configure_upgrade_server_details(NATIVE_ADDR_MODE,&(addr->u16[4]));
-		configure_upgrade_server_details(EXTENDED_ADDR_MODE,&(addr->u16[4]));
+		configure_upgrade_server_details(NATIVE_ADDR_MODE, (uint8_t *) &(addr->u16[4]));
+		configure_upgrade_server_details(EXTENDED_ADDR_MODE, (uint8_t *) &(addr->u16[4]));
 #endif
 	} else {
 	  printf("ERROR: Address Received is NULL");
 	}
 
 }
-uint8_t *get_pan_id(void)
+uint16_t *get_pan_id(void)
 {
 	return &pan_id;
 }
@@ -379,14 +381,14 @@ const uip_ipaddr_t *receiver_addr,uint16_t receiver_port,const uint8_t *data,uin
 		#if (WIDBG_COMMON_SUPPORT == 1)
 		if(COMMON == *data)
 		{
-			widbg_common_rcvd_frame(NATIVE_ADDR_MODE, (uint16_t *)(&sender_addr->u16[4]), datalen-1,data+1,255);
+			widbg_common_rcvd_frame(NATIVE_ADDR_MODE, (uint8_t *)(&sender_addr->u16[4]), datalen-1,data+1,255);
 		}
 		else
 		#endif
 		#if (WIDBG_UPGRADE_SUPPORT == 1)
 		if (UPGRADE == *data)
 		{
-			widbg_upgrade_rcvd_frame(NATIVE_ADDR_MODE, (uint16_t *)(&sender_addr->u16[4]), datalen-1, data+1,255);
+			widbg_upgrade_rcvd_frame(NATIVE_ADDR_MODE, (uint8_t *)(&sender_addr->u16[4]), datalen-1, data+1,255);
 		}
 		else
 		#endif

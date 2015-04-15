@@ -1,9 +1,10 @@
 <asf xmlversion="1.0">
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
 	<!-- **************************************************************************************************** -->
-	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.ota-client" caption="Smart Connect 6LoWPAN OTA Client Application">
+	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.ota-client" caption="Smart Connect 6LoWPAN OTA Client Application" >
 		<info type="description" value="summary">
-		</info>
+      Client-side (target) app to demonstrate over-the-air upgrade of stack firmware on top of an external bootloader
+    </info>
 		<build type="c-source"      value="sc6-ota-mgr.c"/>
 		<build type="c-source"      value="ota-main.c"/>
 		<build type="c-source"      value="symbols.c"/>
@@ -25,6 +26,8 @@
 		<require idref="thirdparty.wireless.addons.widbg.upgrade"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.widbg_mgr.client"/>
 		<require idref="thirdparty.wireless.services.nvm" />
+    <require idref="thirdparty.wireless.smartconnect_6lowpan.apps.led_control"/>
+     <build type="define" name="ENABLE_LEDCTRL" value="1"/>
 		<device-support value="sam0"/>	
 		<info type="gui-flag" value="move-to-root"/>
 	</module>

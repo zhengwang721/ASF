@@ -89,7 +89,6 @@ uint8_t p;
 #define PRINTPACKETBUF()
 #define PRINTUIPBUF()
 #define PRINTSICSLOWPANBUF()
-#define PRINTF(...)
 #endif /* DEBUG == 1*/
 
 #if UIP_LOGGING

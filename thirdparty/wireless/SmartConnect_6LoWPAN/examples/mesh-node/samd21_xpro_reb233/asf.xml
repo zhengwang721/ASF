@@ -1,7 +1,8 @@
 <asf xmlversion="1.0">
 	<project caption="Smart Connect 6LoWPAN - Mesh node AT86RF233 - SAM D21 Xplained Pro" id="thirdparty.wireless.smartconnect_6lowpan.examples.mesh-node.samd21_xpro_reb233" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		     Mesh node demonstrates the ability of the stack to create DAG network, join the existing network and get notification from UIP module.
+		     Mesh node demonstrates the ability of the stack to create DAG network, join the existing network and get notification from UIP module, 
+         for SAM D21 Xplained Pro with RF233 as transceiver.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

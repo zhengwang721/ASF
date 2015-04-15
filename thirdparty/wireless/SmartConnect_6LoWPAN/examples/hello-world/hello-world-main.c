@@ -115,7 +115,7 @@ PROCINIT(&etimer_process);
 
 static void print_reset_causes(void);
 static void print_processes(struct process * const processes[]);
-static void set_link_addr();
+static void set_link_addr(void);
 //static unsigned char uart_rx_buf[SERIAL_RX_BUF_SIZE_HOST];
 //static void init_serial(void);
 extern void configure_tc3(void); 
@@ -196,7 +196,7 @@ main(int argc, char *argv[])
 
   netstack_init();
   rf_set_channel(RF_CHANNEL);
-  printf("rf channel: %d\n", rf_get_channel());
+  printf("\r\n Configured RF channel: %d\r\n", rf_get_channel());
   leds_off(LEDS_ALL);
   /*  temp_sensor_init();
       voltage_sensor_init();*/
@@ -206,27 +206,27 @@ main(int argc, char *argv[])
 
   ENERGEST_ON(ENERGEST_TYPE_CPU);
   if(node_id > 0) {
-    printf("Node id %u.\n", node_id);
+    printf(" Node id %u.\r\n", node_id);
   } else {
-    printf("Node id not set.\n");
+    printf(" Node id not set.\r\n");
   }
 
   /* Setup nullmac-like MAC for 802.15.4 */
- #if SAMD
+#if SAMD
   memcpy(&uip_lladdr.addr, node_mac, sizeof(uip_lladdr.addr));
- #else 
+#else 
   memcpy(&uip_lladdr.addr, eui64, sizeof(uip_lladdr.addr));
- #endif
+#endif
    
   queuebuf_init();
-  printf("%s %lu %d\n",
+  printf(" %s %lu %d\r\n",
          NETSTACK_RDC.name,
          (uint32_t) (CLOCK_SECOND / (NETSTACK_RDC.channel_check_interval() == 0 ? 1:
                          NETSTACK_RDC.channel_check_interval())),
          RF_CHANNEL);
 
   process_start(&tcpip_process, NULL);
-  printf("IPv6 ");
+  printf(" IPv6 Address: ");
   {
     uip_ds6_addr_t *lladdr;
     int i;
@@ -235,7 +235,7 @@ main(int argc, char *argv[])
       printf("%02x%02x:", lladdr->ipaddr.u8[i * 2],
              lladdr->ipaddr.u8[i * 2 + 1]);
     }
-    printf("%02x%02x\n", lladdr->ipaddr.u8[14], lladdr->ipaddr.u8[15]);
+    printf("%02x%02x\r\n", lladdr->ipaddr.u8[14], lladdr->ipaddr.u8[15]);
   }
 
   {
@@ -382,25 +382,25 @@ void rtc_overflow_callback(void)
 
 /*---------------------------------------------------------------------------*/
 static void
-set_link_addr(uint8_t *eui64)
+set_link_addr(void)
 {
   linkaddr_t addr;
   unsigned int i;
 
   memset(&addr, 0, sizeof(linkaddr_t));
 #if UIP_CONF_IPV6
-#if SAMD
-  memcpy(addr.u8, node_mac, sizeof(addr.u8));
-#else 
+#if SAMR21
   memcpy(addr.u8, eui64, sizeof(addr.u8));
+#else 
+  memcpy(addr.u8, node_mac, sizeof(addr.u8));
 #endif
 #else   /* UIP_CONF_IPV6 */
   if(node_id == 0) {
     for(i = 0; i < sizeof(linkaddr_t); ++i) {
-#if SAMD
-      addr.u8[i] = node_mac[7 - i];
+#if SAMR21
+      addr.u8[i] = eui64 [7 - i];
 #else
-	    addr.u8[i] = eui64[7 - i];
+	    addr.u8[i] = node_mac [7 - i];
 #endif
     }
   } else {

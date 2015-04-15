@@ -112,7 +112,7 @@ PROCINIT(&etimer_process);
 
 static void print_reset_causes(void);
 static void print_processes(struct process * const processes[]);
-static void set_link_addr();
+static void set_link_addr(void);
 //static unsigned char uart_rx_buf[SERIAL_RX_BUF_SIZE_HOST];
 //static void init_serial(void);
 extern void configure_tc3(void); 
@@ -131,7 +131,7 @@ static uint8_t data_length = 0;
 static uint8_t rx_index = 0;
 void serial_data_handler(void);
 #endif
-extern uint8_t *edbg_eui_read_eui64(void);
+uint8_t *edbg_eui_read_eui64(void);
 
 /*---------------------------------------------------------------------------*/
 
@@ -380,25 +380,25 @@ void rtc_overflow_callback(void)
 
 /*---------------------------------------------------------------------------*/
 static void
-set_link_addr()
+set_link_addr(void)
 {
   linkaddr_t addr;
   unsigned int i;
 
   memset(&addr, 0, sizeof(linkaddr_t));
 #if UIP_CONF_IPV6
-#if SAMD
-  memcpy(addr.u8, node_mac, sizeof(addr.u8));
-#else 
+#if SAMR21
   memcpy(addr.u8, eui64, sizeof(addr.u8));
+#else 
+  memcpy(addr.u8, node_mac, sizeof(addr.u8));
 #endif
 #else   /* UIP_CONF_IPV6 */
   if(node_id == 0) {
     for(i = 0; i < sizeof(linkaddr_t); ++i) {
-#if SAMD
-      addr.u8[i] = node_mac[7 - i];
+#if SAMR21
+      addr.u8[i] = eui64 [7 - i];
 #else
-	    addr.u8[i] = eui64[7 - i];
+	    addr.u8[i] = node_mac [7 - i];
 #endif
     }
   } else {

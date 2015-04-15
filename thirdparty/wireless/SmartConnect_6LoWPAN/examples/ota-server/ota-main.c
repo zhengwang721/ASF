@@ -72,6 +72,9 @@
 #include "rtc_count.h" //rtc
 #include "rtc_count_interrupt.h"
 #include "widbg_parser.h"
+#ifdef ENABLE_LEDCTRL
+#include "ledctrl.h"
+#endif
 
 //SENSORS(&button_sensor);
 /*---------------------------------------------------------------------------*/
@@ -111,7 +114,7 @@ PROCINIT(&etimer_process);
 
 static void print_reset_causes(void);
 static void print_processes(struct process * const processes[]);
-static void set_link_addr();
+static void set_link_addr(void);
 //static unsigned char uart_rx_buf[SERIAL_RX_BUF_SIZE_HOST];
 //static void init_serial(void);
 extern void configure_tc3(void); 
@@ -137,7 +140,6 @@ uint8_t *edbg_eui_read_eui64(void);
 int
 main(int argc, char *argv[])
 {
-  //uint8_t *eui64;
   /* init system: clocks, board etc */
 
   system_init();
@@ -182,7 +184,7 @@ main(int argc, char *argv[])
 #endif /* NODE_ID */
 
   node_id_restore();
-  PRINTF("\r\n\n\n\n Starting the SmartConnect-6LoWPAN \r\n Platform : Atmel IoT device \r\n");
+  printf("\r\n\n\n\n Starting the SmartConnect-6LoWPAN \r\n Platform : Atmel IoT device \r\n");
   print_reset_causes();
 #if SAMR21 
   eui64 = edbg_eui_read_eui64();
@@ -192,7 +194,7 @@ main(int argc, char *argv[])
 
   netstack_init();
   rf_set_channel(RF_CHANNEL);
-  PRINTF("rf233 channel: %d\n", rf_set_channel(RF_CHANNEL));
+  printf("\r\n Configured RF channel: %d\r\n", rf_get_channel());
   leds_off(LEDS_ALL);
   /*  temp_sensor_init();
       voltage_sensor_init();*/
@@ -202,9 +204,9 @@ main(int argc, char *argv[])
 
   ENERGEST_ON(ENERGEST_TYPE_CPU);
   if(node_id > 0) {
-    PRINTF(" Node id %u.\r\n", node_id);
+    printf(" Node id %u.\r\n", node_id);
   } else {
-    PRINTF(" Node id not set.\r\n");
+    printf(" Node id not set.\r\n");
   }
 
   /* Setup nullmac-like MAC for 802.15.4 */
@@ -215,23 +217,23 @@ main(int argc, char *argv[])
 #endif
    
   queuebuf_init();
-  PRINTF(" %s %lu %d\r\n",
+  printf(" %s %lu %d\r\n",
          NETSTACK_RDC.name,
          (uint32_t) (CLOCK_SECOND / (NETSTACK_RDC.channel_check_interval() == 0 ? 1:
                          NETSTACK_RDC.channel_check_interval())),
          RF_CHANNEL);
 
   process_start(&tcpip_process, NULL);
-  PRINTF(" IPv6 Address: ");
+  printf(" IPv6 Address: ");
   {
     uip_ds6_addr_t *lladdr;
     int i;
     lladdr = uip_ds6_get_link_local(-1);
     for(i = 0; i < 7; ++i) {
-      PRINTF("%02x%02x:", lladdr->ipaddr.u8[i * 2],
+      printf("%02x%02x:", lladdr->ipaddr.u8[i * 2],
              lladdr->ipaddr.u8[i * 2 + 1]);
     }
-    PRINTF("%02x%02x\r\n", lladdr->ipaddr.u8[14], lladdr->ipaddr.u8[15]);
+    printf("%02x%02x\r\n", lladdr->ipaddr.u8[14], lladdr->ipaddr.u8[15]);
   }
 
   {
@@ -240,15 +242,15 @@ main(int argc, char *argv[])
     uip_ip6addr(&ipaddr, 0xfc00, 0, 0, 0, 0, 0, 0, 0);
     uip_ds6_set_addr_iid(&ipaddr, &uip_lladdr);
     uip_ds6_addr_add(&ipaddr, 0, ADDR_TENTATIVE);
-    PRINTF("Tentative global IPv6 address ");
+    printf("Tentative global IPv6 address ");
     for(i = 0; i < 7; ++i) {
-      PRINTF("%02x%02x:",
+      printf("%02x%02x:",
              ipaddr.u8[i * 2], ipaddr.u8[i * 2 + 1]);
     }
-    PRINTF("%02x%02x\r\n",
+    printf("%02x%02x\r\n",
            ipaddr.u8[7 * 2], ipaddr.u8[7 * 2 + 1]);
   }
- // PRINTF("\r\n Before print process");
+ // printf("\r\n Before print process");
   print_processes(autostart_processes);
   //delay_ms(100);
   /* set up AES key */
@@ -260,20 +262,27 @@ main(int argc, char *argv[])
     const uint8_t key[] = NETSTACK_AES_KEY;
     netstack_aes_set_key(key);
   }
-  PRINTF("AES encryption is enabled\n");
+  printf("AES encryption is enabled\n");
 #else /* ((THSQ_CONF_NETSTACK) & THSQ_CONF_AES) */
-  PRINTF("\r\n Warning: AES encryption is disabled\n");
+  printf("\r\n Warning: AES encryption is disabled\n");
 #endif /* ((THSQ_CONF_NETSTACK) & THSQ_CONF_AES) */
   /* OTA START */
   //process_start(&ota_process,NULL);
   /* OTA END */
+
+#ifdef ENABLE_LEDCTRL
+  ledctrl_init();
+#endif
+
   autostart_start(autostart_processes);
   //watchdog_start();
   // watchdog_init();
 
   while(1){
     int r = 0;
+
 	serial_data_handler();
+
   do {
       //printf(".");
      
@@ -325,12 +334,12 @@ void serial_data_handler(void)
 		
 		
 	} else { /* Data has been received, process the data */
-		PRINTF("Receiving file..\n");
+		printf("Receiving file..\n");
 		data_length--;
 		rx_index++;
 		if(rx_index ==99)
 		{
-			PRINTF("Received File!!!!!!!!!!\n");
+			printf("Received File!!!!!!!!!!\n");
 		}
 	}
 #endif
@@ -376,25 +385,25 @@ void rtc_overflow_callback(void)
 
 /*---------------------------------------------------------------------------*/
 static void
-set_link_addr()
+set_link_addr(void)
 {
   linkaddr_t addr;
   unsigned int i;
 
   memset(&addr, 0, sizeof(linkaddr_t));
 #if UIP_CONF_IPV6
-#if SAMD
-  memcpy(addr.u8, node_mac, sizeof(addr.u8));
-  #else 
+#if SAMR21
   memcpy(addr.u8, eui64, sizeof(addr.u8));
-  #endif
+#else 
+  memcpy(addr.u8, node_mac, sizeof(addr.u8));
+#endif
 #else   /* UIP_CONF_IPV6 */
   if(node_id == 0) {
     for(i = 0; i < sizeof(linkaddr_t); ++i) {
-#if SAMD
-      addr.u8[i] = node_mac[7 - i];
+#if SAMR21
+      addr.u8[i] = eui64 [7 - i];
 #else
-	    addr.u8[i] = eui64[7 - i];
+	    addr.u8[i] = node_mac [7 - i];
 #endif
     }
   } else {
@@ -537,7 +546,7 @@ void serial_data_handler(void)
                   {
                         for (j = 0; j < rx_index; j++)
                         {
-                              PRINTF("%c", uart_rx_buf[j]); // Print out the buffer content
+                              printf("%c", uart_rx_buf[j]); // Print out the buffer content
                               uart_rx_buf[j] = 0x00;
 							  //data[j] = 0x00;
 							 /* if (j + 1 == rx_index){
@@ -548,7 +557,7 @@ void serial_data_handler(void)
                         }
                        
 					   
-                        PRINTF("\n");
+                        printf("\n");
                         rx_index = 0;     // Reset the buffer pointer
                   }
             }

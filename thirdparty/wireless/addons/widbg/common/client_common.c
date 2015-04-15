@@ -80,7 +80,7 @@ void widbg_common_init(void)
 	widbg_mgr_timer_start(COMMON, client_notify_interval_ms, TIMER_MODE_SINGLE, widbg_common_timer_handler);
 }
 
-void widbg_common_rcvd_frame(uint8_t addr_mode, uint8_t *src_addr, uint8_t length, uint8_t *payload, uint8_t lqi)
+void widbg_common_rcvd_frame(uint8_t addr_mode, uint8_t *src_addr, uint8_t length, const uint8_t *payload, uint8_t lqi)
 {
 	uint8_t msg_code = *payload;
 	switch (msg_code)

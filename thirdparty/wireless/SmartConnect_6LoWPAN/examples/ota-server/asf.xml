@@ -3,6 +3,7 @@
 	<!-- **************************************************************************************************** -->
 	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.ota-server" caption="Smart Connect 6LoWPAN OTA Server Application">
 		<info type="description" value="summary">
+      Server-side (Host) app to demonstrate over-the-air upgrade of stack firmware on top of an external bootloader
 		</info>
 		<build type="c-source"      value="sc6-ota-mgr.c"/>
 		<build type="c-source"      value="ota-main.c"/>
@@ -21,15 +22,14 @@
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.aes"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64-addr"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.mdns"/>
-		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.websocket"/>
-		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.http-socket"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.simple-rpl"/>
-		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.multichan"/>
-        <require idref="thirdparty.wireless.smartconnect_6lowpan.apps.servreg-hack"/>
+    <require idref="thirdparty.wireless.smartconnect_6lowpan.apps.servreg-hack"/>
 		<require idref="thirdparty.wireless.addons.widbg.common"/>
 		<require idref="thirdparty.wireless.addons.widbg.upgrade"/>
 		<require idref="thirdparty.wireless.addons.widbg.debug"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.widbg_mgr.server"/>
+    <require idref="thirdparty.wireless.smartconnect_6lowpan.apps.led_control"/>
+     <build type="define" name="ENABLE_LEDCTRL" value="1"/>
 		<require idref="thirdparty.wireless.services.nvm" />
 		<device-support value="sam0"/>	
 		<info type="gui-flag" value="move-to-root"/>

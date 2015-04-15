@@ -10,6 +10,13 @@
 #define LED_UDP_BLINK__HALF_PERIOD_MS  500
 
 struct simple_udp_connection led_udp_conn;
+void ledctrl_receiver(struct simple_udp_connection *c,
+                      const uip_ipaddr_t *sender_addr,
+                      uint16_t sender_port,
+                      const uip_ipaddr_t *receiver_addr,
+                      uint16_t receiver_port,
+                      const uint8_t *data,
+                      uint16_t datalen);
 
 /* Prototypes */
 PROCESS(ledctrl_process, "LED Control process");
@@ -24,7 +31,7 @@ ledctrl_receiver(struct simple_udp_connection *c,
           uint16_t datalen)
 {
   printf("\r\n Inside led control event handler");
-  uint8_t ledevt = (uint8_t*) *data;
+  uint8_t ledevt =  *data;
   // printf("Data received on port %d from port %d with length %d,Payload %lu\n\r",receiver_port, sender_port, datalen, *(uint32_t *)data);
   printf("\r\n UDP LED event received is, %d \n", ledevt);
   

@@ -71,7 +71,9 @@
 #include "stdio_serial.h"
 #include "rtc_count.h" //rtc
 #include "rtc_count_interrupt.h"
-
+#ifdef ENABLE_LEDCTRL
+#include "ledctrl.h"
+#endif
 
 //SENSORS(&button_sensor);
 /*---------------------------------------------------------------------------*/
@@ -111,7 +113,7 @@ PROCINIT(&etimer_process);
 
 static void print_reset_causes(void);
 static void print_processes(struct process * const processes[]);
-static void set_link_addr();
+static void set_link_addr(void);
 //static unsigned char uart_rx_buf[SERIAL_RX_BUF_SIZE_HOST];
 //static void init_serial(void);
 extern void configure_tc3(void); 
@@ -138,7 +140,7 @@ int
 main(int argc, char *argv[])
 {
   SCB->VTOR = ((uint32_t) (0x2000) & SCB_VTOR_TBLOFF_Msk);
- // uint8_t *eui64;
+
   /* init system: clocks, board etc */
 
   system_init();
@@ -195,7 +197,7 @@ main(int argc, char *argv[])
 
   netstack_init();
   rf_set_channel(RF_CHANNEL);
-  printf("rf channel: %d\n", rf_get_channel());
+  printf("\r\n Configured RF channel: %d\r\n", rf_get_channel());
   leds_off(LEDS_ALL);
   /*  temp_sensor_init();
       voltage_sensor_init();*/
@@ -251,6 +253,7 @@ main(int argc, char *argv[])
     printf("%02x%02x\r\n",
            ipaddr.u8[7 * 2], ipaddr.u8[7 * 2 + 1]);
   }
+  
  // printf("\r\n Before print process");
   print_processes(autostart_processes);
   //delay_ms(100);
@@ -270,6 +273,10 @@ main(int argc, char *argv[])
   /* OTA START */
   //process_start(&ota_process,NULL);
   /* OTA END */
+
+#ifdef ENABLE_LEDCTRL
+  ledctrl_init();
+#endif
 
   autostart_start(autostart_processes);
   //watchdog_start();
@@ -382,25 +389,25 @@ void rtc_overflow_callback(void)
 
 /*---------------------------------------------------------------------------*/
 static void
-set_link_addr(uint8_t *eui64)
+set_link_addr(void)
 {
   linkaddr_t addr;
   unsigned int i;
 
   memset(&addr, 0, sizeof(linkaddr_t));
 #if UIP_CONF_IPV6
-#if SAMD
-  memcpy(addr.u8, node_mac, sizeof(addr.u8));
-#else 
+#if SAMR21
   memcpy(addr.u8, eui64, sizeof(addr.u8));
+#else 
+  memcpy(addr.u8, node_mac, sizeof(addr.u8));
 #endif
 #else   /* UIP_CONF_IPV6 */
   if(node_id == 0) {
     for(i = 0; i < sizeof(linkaddr_t); ++i) {
-#if SAMD
-      addr.u8[i] = node_mac[7 - i];
+#if SAMR21
+      addr.u8[i] = eui64 [7 - i];
 #else
-	    addr.u8[i] = eui64[7 - i];
+	    addr.u8[i] = node_mac [7 - i];
 #endif
     }
   } else {

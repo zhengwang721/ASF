@@ -1,7 +1,8 @@
 <asf xmlversion="1.0">
 	<project caption="Smart Connect 6LoWPAN - UDP Unicast Sender AT86RF212 - SAM D21 Xplained Pro" id="thirdparty.wireless.smartconnect_6lowpan.examples.udp-unicast-sender.samd21_xpro_rf212b" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		      UDP Unicast Sender example demonstrates the ability of stack to establish UDP connection and send UDP uni-cast data to a device
+		      UDP Unicast Sender example demonstrates the ability of stack to establish UDP connection and send UDP uni-cast data to a device,
+          for SAM D21 Xplained Pro with RF212 as transceiver.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

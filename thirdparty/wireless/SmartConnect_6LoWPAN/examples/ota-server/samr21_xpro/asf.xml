@@ -1,6 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="Smart Connect 6LoWPAN OTA server Application SAMR21" id="thirdparty.wireless.smartconnect_6lowpan.examples.ota-server.samr21xpro" force-caption="true" force-description="true">
+	<project caption="Smart Connect 6LoWPAN OTA Server Application SAMR21" id="thirdparty.wireless.smartconnect_6lowpan.examples.ota-server.samr21xpro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
+      Server-side (Host) app to demonstrate over-the-air upgrade of stack firmware on top of an external bootloader for SAM R21 Xplained Pro
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
@@ -33,6 +34,7 @@
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.services.timer.sam0"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.examples.ota-server"/>
 	        <build type="doxygen-entry-point" value="group_contiki"/>
+    <toolchain-config name="armgcc.compiler.miscellaneous.OtherFlags" value="-std=gnu99 -Wstrict-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal   -Wbad-function-cast -Wwrite-strings -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wnested-externs -Wlong-long -Wunreachable-code " toolchain="armgcc" />
 		<config name="config.compiler.armgcc.optimization" value="high" />
 		<generator value="as5_arm" />
 		<generator value="doxygen"/>

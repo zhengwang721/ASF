@@ -17,6 +17,10 @@
 
 #define APP_MODE             ()
 
+#ifndef WIDBG_DEBUG_SUPPORT
+#define WIDBG_DEBUG_SUPPORT 0
+#endif
+
 typedef enum{
 	ENTRY = 0,
 	EXIT

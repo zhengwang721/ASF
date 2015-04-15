@@ -60,7 +60,7 @@ void widbg_upgrade_init(void)
 
 }
 
-void widbg_upgrade_rcvd_frame(uint8_t addr_mode, uint8_t *src_addr, uint8_t length, uint8_t *payload, uint8_t lqi)
+void widbg_upgrade_rcvd_frame(uint8_t addr_mode, uint8_t *src_addr, uint8_t length, const uint8_t *payload, uint8_t lqi)
 {
 	uint8_t msg_code = *payload;
 	switch (msg_code)

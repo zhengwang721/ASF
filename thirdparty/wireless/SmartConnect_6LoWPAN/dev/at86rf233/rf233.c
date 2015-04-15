@@ -55,13 +55,16 @@
 PROCESS(rf233_radio_process, "RF233 radio driver");
 static int  on(void);
 static int  off(void);
+#if !NULLRDC_CONF_802154_AUTOACK_HW
 static void radiocore_hard_recovery(void);
+#endif
 static void flush_buffer(void);
 static uint8_t flag_transmit = 0;
 static volatile int radio_is_on = 0;
 static volatile int pending_frame = 0;
 static volatile int sleep_on = 0;
 void SetPanId(uint16_t panId);
+void SetShortAddr(uint16_t addr);
 void SetIEEEAddr(uint8_t *ieee_addr);
 /*---------------------------------------------------------------------------*/
 int rf233_init(void);
@@ -437,7 +440,7 @@ rf233_send(const void *payload, unsigned short payload_len)
 int
 rf233_read(void *buf, unsigned short bufsize)
 {
-  uint8_t radio_state;
+//  uint8_t radio_state;
   uint8_t ed;       /* frame metadata */
   uint8_t frame_len = 0;
   uint8_t len = 0;
@@ -870,6 +873,8 @@ rf233_interrupt_poll(void)
   interrupt_callback_in_progress = 0;
   return 0;
 }
+
+#if !NULLRDC_CONF_802154_AUTOACK_HW
 /*---------------------------------------------------------------------------*/
 /* 
  * Hard, brute reset of radio core and re-init due to it being in unknown,
@@ -881,6 +886,9 @@ radiocore_hard_recovery(void)
 {
   rf233_init();
 }
+#endif
+
+
 /*---------------------------------------------------------------------------*/
 /* 
  * Crude way of flushing the Tx/Rx FIFO: write the first byte as 0, indicating

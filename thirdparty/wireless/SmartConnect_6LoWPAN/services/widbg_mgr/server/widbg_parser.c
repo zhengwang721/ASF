@@ -124,7 +124,7 @@ static void process_incoming_sio_data(void)
 			}
 		}
 		else{
-			sio2host_tx("Invalid Stack ID ",sizeof("Invalid Stack ID "));
+			sio2host_tx((const uint8_t*) "Invalid Stack ID ",sizeof("Invalid Stack ID "));
 			sio_rx_state = UART_RX_STATE_SOF;
 		}
 		break;
@@ -141,7 +141,7 @@ static void process_incoming_sio_data(void)
 		}
 		else
 		{
-			sio2host_tx("Invalid Domain ",sizeof("Invalid Domain "));
+			sio2host_tx((const uint8_t*)"Invalid Domain ",sizeof("Invalid Domain "));
 			sio_rx_state = UART_RX_STATE_SOF;
 		}
 		break;
@@ -179,7 +179,7 @@ static void process_incoming_sio_data(void)
 		break;
 
 	default:
-		sio2host_tx("Default ",sizeof("Default "));
+		sio2host_tx((const uint8_t*)"Default ",sizeof("Default "));
 		sio_rx_state = UART_RX_STATE_SOF;
 		break;
 	}
@@ -208,7 +208,7 @@ void serial_data_handler(void)
 	}
 }
 
-void send_server_data(widbg_domain_t domain_id, addr_mode_t addr_mode, uint8_t *addr, uint8_t msg_id, uint8_t *msg, uint16_t len)
+void send_server_data(widbg_domain_t domain_id, addr_mode_t addr_mode, uint8_t *addr, uint8_t msg_id, const uint8_t *msg, uint16_t len)
 {
 	uint8_t fcs = 0;
 	uint8_t total_len;

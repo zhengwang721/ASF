@@ -3,6 +3,7 @@
 
 #include "widbg.h"
 #include "widbg_mgr.h"
+#include "compiler.h"
 
 typedef enum {
 	OTA_READ_MEMORY_REQUEST = 0,
@@ -15,14 +16,15 @@ typedef enum {
 	OTA_TRACE_INDICATION
 }widbg_debug_msg_code_t;
 
-typedef struct PACK {
+COMPILER_PACK_SET (1)
+typedef struct {
 	uint8_t msg_id;
 	uint8_t mem_type;
 	uint16_t mem_len;
 	uint32_t mem_addr;
 }read_memory_req_t;
 
-typedef struct PACK {
+typedef struct {
 	uint8_t msg_id;
 	uint8_t status;
 	uint8_t mem_type;
@@ -31,7 +33,7 @@ typedef struct PACK {
 	uint8_t mem_content[100];
 }read_mem_indication_t;
 
-typedef struct PACK {
+typedef struct {
 	uint8_t msg_id;
 	uint8_t mem_type;
 	uint16_t mem_len;
@@ -39,7 +41,7 @@ typedef struct PACK {
 	uint8_t mem_content[100];
 }write_memory_req_t;
 
-typedef struct PACK {
+typedef struct {
 	uint8_t msg_id;
 	uint8_t status;
 	uint8_t mem_type;
@@ -47,10 +49,11 @@ typedef struct PACK {
 	uint32_t mem_addr;
 }write_mem_indication_t;
 
-typedef struct PACK {
+typedef struct {
 	uint8_t msg_id;
 	uint8_t log_bitmap;
 }log_request_t;
+COMPILER_PACK_RESET ()
 
 void handle_debug_widbg_msg(uint16_t len, uint8_t *msg);
 void widbg_debug_timer_handler(void);

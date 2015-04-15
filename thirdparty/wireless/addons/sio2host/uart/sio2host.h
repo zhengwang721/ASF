@@ -71,7 +71,7 @@ void sio2host_init(void);
  *
  * \return Number of bytes actually transmitted
  */
-uint8_t sio2host_tx(uint8_t *data, uint8_t length);
+uint8_t sio2host_tx(const uint8_t *data, uint8_t length);
 
 /**
  * \brief Receives data from UART

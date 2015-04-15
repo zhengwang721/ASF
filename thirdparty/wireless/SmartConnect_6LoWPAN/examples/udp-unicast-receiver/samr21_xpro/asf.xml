@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="Smart Connect 6LoWPAN - UDP Unicast Receiver SAM R21 Xplained Pro" id="thirdparty.wireless.smartconnect_6lowpan.examples.udp-unicast-receiver.samr21xpro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		      UDP Unicast Receiver example demonstrates the ability of stack to establish UDP connection with multiple devices and successfully receive data from network.
+		      UDP Unicast Receiver example demonstrates the ability of stack to establish UDP connection with multiple devices and successfully receive data from network, for SAM R21 Xplained Pro.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

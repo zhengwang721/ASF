@@ -6,20 +6,11 @@
 #include "uip.h"
 #include "uip-ds6-route.h"
 
-node_address_t common_server_address = {
-	.extended_addr = 0x1122334455667788,
-	.native_addr = 0x0000
-};
+node_address_t common_server_address;
 
-node_address_t upgrade_server_address = {
-	.extended_addr = 0x1122334455667788,
-	.native_addr = 0x0000
-};
+node_address_t upgrade_server_address;
 
-node_address_t debug_server_address = {
-	.extended_addr = 0x1122334455667788,
-	.native_addr = 0x0000
-};
+node_address_t debug_server_address;
 
 //uint16_t parent_native_addr;
 
@@ -36,7 +27,7 @@ void configure_common_server_details(addr_mode_t addr_mode, uint8_t *addr)
 }
 
 
-void configure_upgrade_server_details(addr_mode_t addr_mode, uint8_t *addr)
+void configure_upgrade_server_details(addr_mode_t addr_mode, const uint8_t *addr)
 {
 	if (NATIVE_ADDR_MODE == addr_mode)
 	{
@@ -48,7 +39,7 @@ void configure_upgrade_server_details(addr_mode_t addr_mode, uint8_t *addr)
 	}
 }
 
-void configure_debug_server_details(addr_mode_t addr_mode, uint8_t *addr)
+void configure_debug_server_details(addr_mode_t addr_mode, const uint8_t *addr)
 {
 	if (NATIVE_ADDR_MODE == addr_mode)
 	{
@@ -106,5 +97,5 @@ uint8_t *get_parent_native_addr(void)
 {
 	uip_ipaddr_t *ipaddr;
 	ipaddr = uip_ds6_defrt_choose();
-	return &ipaddr->u16[4];
+	return (uint8_t*) &ipaddr->u16[4];
 }

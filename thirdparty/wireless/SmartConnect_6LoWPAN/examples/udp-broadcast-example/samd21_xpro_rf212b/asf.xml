@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="Smart Connect 6LoWPAN - UDP Broadcast AT86RF212B - SAM D21 Xplained Pro" id="thirdparty.wireless.smartconnect_6lowpan.examples.udp-broadcast-example.samd21_xpro_rf212b" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		      UDP Broadcast example demonstrates the stack ability to create a UDP socket and successfully send and receive UDP broadcast data over the network.
+		      UDP Broadcast example demonstrates the stack ability to create a UDP socket and successfully send and receive UDP broadcast data over the network, for SAM D21 Xplained Pro with RF212 as transceiver.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

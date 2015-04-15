@@ -3,6 +3,7 @@
 
 #include "widbg.h"
 #include "widbg_mgr.h"
+#include "compiler.h"
 
 typedef enum {
 	CLIENT_DISCOVERY_REQUEST = 0x00,
@@ -28,8 +29,8 @@ typedef enum {
 	CLIENT_RESET_REQUEST_SENT
 }common_widbg_state_t;
 
-
-typedef struct PACK {
+COMPILER_PACK_SET (1)
+typedef struct {
 	addr_mode_t ieee_addr_mode;
 	uint64_t ieee_addr;
 	uint16_t pan_id;
@@ -45,9 +46,10 @@ typedef struct PACK {
 }server_info_resp_t;
 
 
-typedef struct PACK {
+typedef struct {
 	uint8_t msg_id;
 	uint16_t interval;
 }client_discovery_req_t;
+COMPILER_PACK_RESET ()
 
 #endif /* SERVER_COMMON_H */

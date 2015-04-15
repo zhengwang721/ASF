@@ -104,9 +104,11 @@ void widbg_upgrade_init(void)
 	image_req_interval_ms = DEFAULT_IMAGE_REQ_INTERVAL;
 }
 
-void widbg_upgrade_rcvd_frame(uint8_t addr_mode, uint8_t *src_addr, uint8_t length, uint8_t *payload, uint8_t lqi)
+void widbg_upgrade_rcvd_frame(uint8_t addr_mode, uint8_t *src_addr, uint8_t length, const uint8_t *payload, uint8_t lqi)
 {
 	uint8_t msg_code = *payload;
+  image_response_t *image_resp = NULL;
+  
 	switch (msg_code)
 	{
 		case OTA_SERVER_NOTIFY:
@@ -150,17 +152,14 @@ void widbg_upgrade_rcvd_frame(uint8_t addr_mode, uint8_t *src_addr, uint8_t leng
 		case OTA_IMAGE_RESPONSE:
 		{
 			if(STATE_IMAGE_REQUESTED == curr_upgrade_state)
-			{   uint8_t crc_read_block[64];
-				uint32_t index;
-				 static uint8_t check_crc = 0;
-				 static uint8_t recvd_crc = 0;
-				image_response_t *image_resp = (image_response_t *)payload;
+			{   
+				image_resp = (image_response_t *)payload;
 				block_size = APP_MAX_PAYLOAD_SIZE;
 				if(image_index == image_resp->block_start)
 				{
 					image_req_retry = 0;
 					memcpy(&block, &image_resp->block, image_resp->block_size);
-					printf("\r\n ImageResp 0x%x",image_resp->block_start);
+					printf("\r\n ImageResp 0x%x", (unsigned int) image_resp->block_start);
 					widbg_nvm_write(MEMORY_OFFSET_ADDRESS, image_resp->block_start - image_start, image_resp->block_size, (uint8_t *)&block);
 					image_index += image_resp->block_size;
 					if(image_index < image_end)
@@ -333,7 +332,7 @@ static void send_image_req(uint32_t index)
 		curr_widbg_state = IMAGE_REQUEST_SENT;
 		upgrade_confirm_wait = 1;
 		curr_upgrade_state = STATE_IMAGE_REQUESTED;
-		printf("\r\n ImageRequest 0x%x",index);		
+		printf("\r\n ImageRequest 0x%x", (unsigned int) index);		
 		widbg_mgr_data_req(UPGRADE, NATIVE_ADDR_MODE, addr, &image_request.msg_id, sizeof(image_request_t));
 		image_request_start = 1;
 		widbg_mgr_timer_start(UPGRADE, DEFAULT_IMAGE_RESP_INTERVAL, TIMER_MODE_SINGLE, widbg_upgrade_timer_handler);

@@ -52,6 +52,7 @@
 
 
 #include "widbg.h"
+#include "compiler.h"
 
 /************************************************************************/
 /* Over-the-air Configuration parameters                                */
@@ -194,13 +195,13 @@
 
 #define NVM_DEVICE_INFO_LOCATION      ((FLASH_ADDR + FLASH_SIZE) - 64UL)
 
-
-typedef struct PACK{
+COMPILER_PACK_SET (1)
+typedef struct {
 	uint64_t extended_addr;
 	uint64_t native_addr;
 }node_address_t;
 
-typedef struct PACK{
+typedef struct {
 	uint32_t image_start;
 	uint32_t image_size;
 	uint8_t new_image;
@@ -210,6 +211,8 @@ typedef struct PACK{
 	uint8_t board[10];
 	uint8_t board_version[5];
 }node_info_t;
+COMPILER_PACK_RESET ()
+
 #ifdef WONDER
 dakkfsfvfnv
 #endif
@@ -224,7 +227,7 @@ uint8_t *get_node_address(addr_mode_t addr_mode);
 void widbg_mgr_set_channel(uint8_t channel);
 void widbg_mgr_led(widbg_led_t led_state);
 void widbg_mgr_reset_device(void);
-uint8_t *get_pan_id(void);
+uint16_t *get_pan_id(void);
 
 void get_node_info(node_info_t * client_info);
 #endif /* WIDBG_MGR_H */

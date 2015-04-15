@@ -46,15 +46,20 @@
 
 void uip_debug_ipaddr_print(const uip_ipaddr_t *addr);
 void uip_debug_lladdr_print(const uip_lladdr_t *addr);
+
 /*
 #ifndef DEBUG
 #define DEBUG 0
 #endif 
 */
+
+
 #define DEBUG_NONE      0
 #define DEBUG_PRINT     1
 #define DEBUG_ANNOTATE  2
 #define DEBUG_FULL      DEBUG_ANNOTATE | DEBUG_PRINT
+
+#define UIP_DEBUG DEBUG_PRINT
 
 /* PRINTA will always print if the debug routines are called directly */
 #ifdef __AVR__
@@ -64,7 +69,7 @@ void uip_debug_lladdr_print(const uip_lladdr_t *addr);
 #define PRINTA(...) printf(__VA_ARGS__)
 #endif
 
-#if (DEBUG) & DEBUG_ANNOTATE
+#if (UIP_DEBUG) & DEBUG_ANNOTATE
 #ifdef __AVR__
 #define ANNOTATE(FORMAT,args...) printf_P(PSTR(FORMAT),##args)
 #else
@@ -74,7 +79,7 @@ void uip_debug_lladdr_print(const uip_lladdr_t *addr);
 #define ANNOTATE(...)
 #endif /* (DEBUG) & DEBUG_ANNOTATE */
 
-#if (DEBUG) & DEBUG_PRINT
+#if (UIP_DEBUG) & DEBUG_PRINT
 #ifdef __AVR__
 #define PRINTF(FORMAT,args...) printf_P(PSTR(FORMAT),##args)
 #else

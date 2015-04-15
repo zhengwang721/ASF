@@ -110,7 +110,7 @@ void sio2host_init(void)
 	USART_HOST_RX_ISR_ENABLE();
 }
 
-uint8_t sio2host_tx(uint8_t *data, uint8_t length)
+uint8_t sio2host_tx(const uint8_t *data, uint8_t length)
 {
 #if SAMD || SAMR21
 	status_code_genare_t status;
@@ -122,11 +122,10 @@ uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 #if SAMD || SAMR21
 		status
 			= usart_serial_write_packet(&host_uart_module,
-				(const uint8_t *)data, length);
+				data, length);
 #else
 		status = usart_serial_write_packet(USART_HOST,
-				(const uint8_t *)data,
-				length);
+				data, length);
 #endif
 	} while (status != STATUS_OK);
 	return length;

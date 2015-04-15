@@ -1,8 +1,8 @@
 <asf xmlversion="1.0">
 	<project caption="Smart Connect 6LoWPAN - Border router AT86RF233 - SAM D21 Xplained Pro" id="thirdparty.wireless.smartconnect_6lowpan.examples.br-node.samd21_xpro_reb233" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		      Border router example demonstrates the ability of stack to create a DAG root and act as a Border gateway to the nodes which wants to communicate outside the network.
-        </info>
+		      Border router example demonstrates the ability of stack to create a DAG root and act as a Border gateway to the nodes which wants to communicate outside the network, for SAM D21 Xplained Pro with RF233 as transceiver.
+    </info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>

@@ -71,7 +71,6 @@
 
 #define SEND_INTERVAL		(60 * CLOCK_SECOND)
 
-#define PRINTF(...) 
 /* Currently UPGRADE and COMMON module is added for SC6LoWPAN */
 /* TODO: Inlcude the macro definition in project symbols */
 #define WIDBG_COMMON_SUPPORT   1
@@ -89,14 +88,15 @@ uint16_t global_shortaddr;
 uint64_t global_extndaddr;
 uint16_t pan_id = IEEE802154_CONF_PANID;
 /*---------------------------------------------------------------------------*/
-PROCESS(otau_server_process, "Over-The-Air  client process");
-PROCESS(otau_server_common_process, "Over-The-Air client common module process");
-PROCESS(otau_server_upgrade_process, "Over-The-Air client Upgrade  module process");
+PROCESS(otau_server_process, "Over-The-Air  Server process");
+PROCESS(otau_server_common_process, "Over-The-Air Server common module process");
+PROCESS(otau_server_upgrade_process, "Over-The-Air Server Upgrade  module process");
 
-//PROCESS(otau_client_debug_process, "Over-The-Air client Debug  module process");
+//PROCESS(otau_server_debug_process, "Over-The-Air Server Debug  module process");
 AUTOSTART_PROCESSES(&otau_server_process,&otau_server_common_process,
-	&otau_server_upgrade_process/*,&otau_client_debug_process*/);
+	&otau_server_upgrade_process/*,&otau_server_debug_process*/);
 
+void ota_mgr_init(void);
 static struct simple_udp_connection unicast_connection;
 static uint32_t last_received; 
 uint8_t last_received_updated;
@@ -225,7 +225,7 @@ receiver(struct simple_udp_connection *c,
 #if (WIDBG_COMMON_SUPPORT == 1)
 		if(COMMON == *data)
 		{
-			widbg_common_rcvd_frame(NATIVE_ADDR_MODE, (uint16_t *)(&sender_addr->u16[4]), datalen-1, data+1,255);
+			widbg_common_rcvd_frame(NATIVE_ADDR_MODE, (uint8_t *)(&sender_addr->u16[4]), datalen-1, data+1,255);
 		}
 		else 
 #endif		
@@ -235,7 +235,7 @@ receiver(struct simple_udp_connection *c,
 			memcpy(ota_upgrade_recv_data,data+1,datalen-1);
 			if(0x01 == ota_upgrade_recv_data[0] && 0x04 == ota_upgrade_recv_data[1])
 			{
-				if(last_received_updated && memcmp(&last_received,ota_upgrade_recv_data[3],4))
+				if(last_received_updated && memcmp(&last_received,&ota_upgrade_recv_data[3],4))
 				{
 					LED_On(LED0_PIN);
 					delay_ms(500);
@@ -245,17 +245,17 @@ receiver(struct simple_udp_connection *c,
 				{
 					last_received_updated = 1;
 				}
-				memcpy(&last_received,ota_upgrade_recv_data[3],4);
+				memcpy(&last_received,&ota_upgrade_recv_data[3],4);
 				
 			}
-			widbg_upgrade_rcvd_frame(NATIVE_ADDR_MODE, (uint16_t *)(&sender_addr->u16[4]), datalen-1, ota_upgrade_recv_data,255);
+			widbg_upgrade_rcvd_frame(NATIVE_ADDR_MODE, (uint8_t *)(&sender_addr->u16[4]), datalen-1, ota_upgrade_recv_data,255);
 		}
 		else 
 #endif
 #if (WIDBG_DEBUG_SUPPORT == 1)		
 		if (DEBUG == *data)
 		{
-			widbg_debug_rcvd_frame(NATIVE_ADDR_MODE, (uint16_t *)(&sender_addr->u16[4]), datalen-1, data+1,255);
+			widbg_debug_rcvd_frame(NATIVE_ADDR_MODE, (uint8_t *)(&sender_addr->u16[4]), datalen-1, data+1,255);
 		}
 		else
 #endif		
@@ -394,7 +394,7 @@ void widbg_mgr_timer_stop(module_code_t msg_code)
 	}
 }
 
-uint8_t *get_pan_id(void)
+uint16_t *get_pan_id(void)
 {
 	return &pan_id;
 }
