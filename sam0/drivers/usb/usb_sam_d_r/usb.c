@@ -48,10 +48,10 @@
 
 /** Fields definition from a LPM TOKEN  */
 #define  USB_LPM_ATTRIBUT_BLINKSTATE_MASK      (0xF << 0)
-#define  USB_LPM_ATTRIBUT_BESL_MASK            (0xF << 4)
+#define  USB_LPM_ATTRIBUT_HIRD_MASK            (0xF << 4)
 #define  USB_LPM_ATTRIBUT_REMOTEWAKE_MASK      (1 << 8)
 #define  USB_LPM_ATTRIBUT_BLINKSTATE(value)    ((value & 0xF) << 0)
-#define  USB_LPM_ATTRIBUT_BESL(value)          ((value & 0xF) << 4)
+#define  USB_LPM_ATTRIBUT_HIRD(value)          ((value & 0xF) << 4)
 #define  USB_LPM_ATTRIBUT_REMOTEWAKE(value)    ((value & 1) << 8)
 #define  USB_LPM_ATTRIBUT_BLINKSTATE_L1        USB_LPM_ATTRIBUT_BLINKSTATE(1)
 
@@ -778,7 +778,8 @@ enum status_code usb_host_pipe_abort_job(struct usb_module *module_inst, uint8_t
  *
  * \param[in]     module_inst   Pointer to USB software instance struct
  * \param[in]     pipe_num      Pipe to configure
- * \param[in]     buf           Pointer to data buffer
+ * \param[in]     b_remotewakeup  Remote wake up flag
+ * \param[in]     hird  Host Initiated Resume Duration
  *
  * \return Status of the setup operation.
  * \retval STATUS_OK    The setup job was set successfully.
@@ -786,7 +787,7 @@ enum status_code usb_host_pipe_abort_job(struct usb_module *module_inst, uint8_t
  * \retval STATUS_ERR_NOT_INITIALIZED    The pipe has not been configured.
  */
 enum status_code usb_host_pipe_lpm_job(struct usb_module *module_inst,
-		uint8_t pipe_num, bool b_remotewakeup, uint8_t besl)
+		uint8_t pipe_num, bool b_remotewakeup, uint8_t hird)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -812,7 +813,7 @@ enum status_code usb_host_pipe_lpm_job(struct usb_module *module_inst,
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].EXTREG.bit.SUBPID = 0x3;
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].EXTREG.bit.VARIABLE =
 			USB_LPM_ATTRIBUT_REMOTEWAKE(b_remotewakeup) |
-			USB_LPM_ATTRIBUT_BESL(besl) |
+			USB_LPM_ATTRIBUT_HIRD(hird) |
 			USB_LPM_ATTRIBUT_BLINKSTATE_L1;
 
 	module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSSET.reg = USB_HOST_PSTATUSSET_BK0RDY;
