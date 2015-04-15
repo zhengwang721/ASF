@@ -295,6 +295,9 @@ void system_clock_source_osc32k_set_config(
  * Configures the Ultra Low Power 32KHz internal RC oscillator with the given
  * configuration settings.
  *
+ * \note The OSCULP32K is enabled by default after a power-on reset (POR) and
+ *       will always run except during POR.
+ *
  * \param[in] config  OSCULP32K configuration structure containing the new config
  */
 void system_clock_source_osculp32k_set_config(
