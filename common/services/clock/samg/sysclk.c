@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include <sysclk.h>
@@ -138,8 +141,13 @@ void sysclk_enable_usb(void)
 		pll_config_defaults(&pllcfg, 0);
 		pll_enable(&pllcfg, 0);
 		pll_wait_for_lock(0);
+#ifdef UHD_ENABLE
+		pmc_switch_uhpck_to_pllack(CONFIG_USBCLK_DIV - 1);
+		pmc_enable_uhpck();
+#else
 		pmc_switch_udpck_to_pllack(CONFIG_USBCLK_DIV - 1);
 		pmc_enable_udpck();
+#endif
 		return;
 	}
 #endif
@@ -152,8 +160,13 @@ void sysclk_enable_usb(void)
 		pll_config_defaults(&pllcfg, 1);
 		pll_enable(&pllcfg, 1);
 		pll_wait_for_lock(1);
+#ifdef UHD_ENABLE
+		pmc_switch_uhpck_to_pllbck(CONFIG_USBCLK_DIV - 1);
+		pmc_enable_uhpck();
+#else
 		pmc_switch_udpck_to_pllbck(CONFIG_USBCLK_DIV - 1);
 		pmc_enable_udpck();
+#endif
 		return;
 	}
 #endif

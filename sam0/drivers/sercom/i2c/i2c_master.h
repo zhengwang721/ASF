@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Master Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef I2C_MASTER_H_INCLUDED
@@ -230,7 +233,7 @@ struct i2c_master_module {
 	volatile uint16_t buffer_length;
 	/**
 	 * Counter used for bytes left to send in write and to count number of
-	 * obtained bytes in read
+	 * obtained bytes in read.
 	 */
 	volatile uint16_t buffer_remaining;
 	/** Data buffer for packet write and read. */
@@ -308,10 +311,10 @@ struct i2c_master_config {
  * that, e.g., transactions by different services will not interfere with each
  * other.
  *
- * \param[in,out] module Pointer to the driver instance to lock.
+ * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked.
- * \retval STATUS_BUSY if the module was already locked.
+ * \retval STATUS_OK If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 static inline enum status_code i2c_master_lock(
 		struct i2c_master_module *const module)
@@ -338,10 +341,10 @@ static inline enum status_code i2c_master_lock(
  * This function clears the instance lock, indicating that it is available for
  * use.
  *
- * \param[in,out] module Pointer to the driver instance to lock.
+ * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked.
- * \retval STATUS_BUSY if the module was already locked.
+ * \retval STATUS_OK If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 static inline void i2c_master_unlock(struct i2c_master_module *const module)
 {

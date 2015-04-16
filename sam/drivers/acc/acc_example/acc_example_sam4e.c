@@ -3,7 +3,7 @@
  *
  * \brief Analog Comparator Controller (ACC) example for SAM4E.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -92,6 +92,9 @@
  * -# Input command according to the menu.
  * -# Change voltage on AD5 by adjusting VR1 to see what comparison event happen.
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include "asf.h"

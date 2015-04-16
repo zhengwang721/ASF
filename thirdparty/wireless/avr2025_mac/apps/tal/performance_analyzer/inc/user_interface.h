@@ -3,7 +3,7 @@
  *
  * \brief LED,Button,Terminal print event prototypes and defines
  * - Performance Analyzer application.
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -76,7 +76,7 @@ typedef enum {
 	LED_EVENT_PEER_SEARCH_DONE,
 	LED_EVENT_ALL_ON,
 	LED_EVENT_ALL_OFF
-} led_event_t;
+	} led_event_t;
 
 /* ! \} */
 

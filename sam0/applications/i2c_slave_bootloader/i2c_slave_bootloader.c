@@ -3,7 +3,7 @@
  *
  * \brief SAM I2C Slave Bootloader
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -155,6 +155,9 @@
  * \section appdoc_sam0_i2c_slave_bootloader_contactinfo Contact Information
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include <asf.h>
@@ -429,6 +432,7 @@ int main(void)
 
 	/* Get NVM default configuration and load the same */
 	nvm_get_config_defaults(&config);
+	config.manual_page_write = false;
 	nvm_set_config(&config);
 
 	/* Turn on LED */

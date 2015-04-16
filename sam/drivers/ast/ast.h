@@ -3,7 +3,7 @@
  *
  * \brief SAM Asynchronous Timer (AST) driver.
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef AST_H_INCLUDED
@@ -94,7 +97,7 @@
  * interrupt, event, or both. The AST can also be configured to clear the clock
  * value on alarm match which will generate an overflow interrupt.
  *
- * \note Refer to module configuration at the end of the ast section of the device
+ * \note Refer to module configuration at the end of the AST section of the device
  * datasheet for the number of alarms supported.
  *
  * Whilst in Calendar Mode and using a nominal 1Hz input clock frequency, a register

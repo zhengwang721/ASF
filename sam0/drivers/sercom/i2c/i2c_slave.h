@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Slave Driver
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef I2C_SLAVE_H_INCLUDED
@@ -357,10 +360,10 @@ struct i2c_slave_config {
  * that, e.g., transactions by different services will not interfere with each
  * other.
  *
- * \param[in,out] module Pointer to the driver instance to lock.
+ * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked.
- * \retval STATUS_BUSY if the module was already locked.
+ * \retval STATUS_OK If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 static inline enum status_code i2c_slave_lock(
 		struct i2c_slave_module *const module)
@@ -387,10 +390,10 @@ static inline enum status_code i2c_slave_lock(
  * This function clears the instance lock, indicating that it is available for
  * use.
  *
- * \param[in,out] module Pointer to the driver instance to lock.
+ * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked.
- * \retval STATUS_BUSY if the module was already locked.
+ * \retval STATUS_OK If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 static inline void i2c_slave_unlock(struct i2c_slave_module *const module)
 {
@@ -451,6 +454,94 @@ static void _i2c_slave_wait_for_sync(
 	}
 }
 #endif
+
+///@cond INTERNAL
+/**
+ * \internal Workaround for errata 13574
+ * Instead set ACK/NACK of CTRLB
+ *
+ * This errata exist in part revisions of SAMD20/D21
+ * D10/D11/L21, but workaround can be works in all
+ * revision of those device. As this function operation
+ * should be use less cpu time as possible, so caller 
+ * function can ignore to check revision number, and use
+ * this workaround in all revision of those device.
+ *
+ * \param[in,out] module  Pointer to software module structure
+ * \param[in] send_ack true send ACK, false send NACK
+ */
+static inline void _i2c_slave_set_ctrlb_ackact(
+		struct i2c_slave_module *const module,
+		bool send_ack)
+{
+	Assert(module);
+	Assert(module->hw);
+
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+
+#if (SAMD20 || SAMD21 || SAMD10 || SAMD11 || SAML21)
+	/* Workaround, Following two write are atomic */
+	system_interrupt_enter_critical_section();
+	i2c_hw->STATUS.reg = 0;
+
+	if (send_ack == true) {
+		i2c_hw->CTRLB.reg = 0;
+	}
+	else {
+		i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_ACKACT;
+	}
+	system_interrupt_leave_critical_section();
+#else
+	/* Normal operation */
+	if (send_ack == true) {
+		i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
+	}
+	else {
+		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
+	}
+#endif
+	return;
+}
+
+/**
+ * \internal Workaround for SAM0 errata 13574,
+ * instead Set CMD3 of CTRLB
+ *
+ * This errata exist in part revisions of SAMD20/D21
+ * D10/D11/L21, but workaround can be works in all
+ * revision of those device. As this function operation
+ * should be use less cpu time as possible, so caller 
+ * function can ignore to check revision number, and use
+ * this workaround in all revision of those device.
+ *
+ * \param[in,out] module  Pointer to software module structure
+ */
+static inline void _i2c_slave_set_ctrlb_cmd3(
+		struct i2c_slave_module *const module)
+{
+	Assert(module);
+	Assert(module->hw);
+
+	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+
+#if (SAMD20 || SAMD21 || SAMD10 || SAMD11 || SAML21)
+	/* Workaround */
+	/*
+	 * Below code instead i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_CMD(0x3);
+	 * CMD=0x3 clears all interrupts, so to keep the result similar
+	 * PREC is cleared if it was set
+	 */
+	if (i2c_hw->INTFLAG.bit.PREC) {
+		i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PREC;
+	}
+	i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_AMATCH;
+#else
+	/* Normal operation */
+	i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_CMD(0x3);
+#endif
+	return;
+}
+///@endcond
 
 /**
  * \brief Gets the I<SUP>2</SUP>C slave default configurations
@@ -625,7 +716,7 @@ void i2c_slave_clear_status(
  *
  * Read I<SUP>2</SUP>C interrupt status for DMA transfer.
  *
- * \param[in,out] module Pointer to the driver instance to lock.
+ * \param[in,out] module Pointer to the driver instance to lock
  *
  */
 static inline uint8_t i2c_slave_dma_read_interrupt_status(struct i2c_slave_module *const module)
@@ -638,8 +729,8 @@ static inline uint8_t i2c_slave_dma_read_interrupt_status(struct i2c_slave_modul
  *
  * Write I<SUP>2</SUP>C interrupt status for DMA transfer.
  *
- * \param[in,out] module Pointer to the driver instance to lock.
- * \param[in] flag Interrupt flag status.
+ * \param[in,out] module Pointer to the driver instance to lock
+ * \param[in] flag Interrupt flag status
  *
  */
 static inline void i2c_slave_dma_write_interrupt_status(struct i2c_slave_module *const module,

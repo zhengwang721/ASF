@@ -3,7 +3,7 @@
  *
  * \brief SAM PAC Quick Start
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -72,7 +72,9 @@
  * -# Configure some GPIO port pins for input and output.
  *    \snippet qs_pac_basic.c init
  * -# Lock peripheral access for the PORT module; attempting to update the
- *    module while it is in a protected state will cause a Hard Fault exception.
+ *    module while it is in a protected state will cause a CPU exception.
+ *    For SAM D20/D21/D10/D11/R21, it is Hard Fault exception;
+ *    For SAM l21, it is system exception, see \ref SYSTEM_Handler().
  *    \snippet qs_pac_basic.c init_lock
  * -# Enable global interrupts.
  *    \snippet qs_pac_basic.c enable_interrupts
@@ -93,6 +95,9 @@
  * -# Enter an infinite while loop once the module state has been modified
  *    successfully.
  *    \snippet qs_pac_basic.c inf_loop
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 

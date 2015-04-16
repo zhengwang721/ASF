@@ -3,7 +3,7 @@
  *
  * \brief SAM D21/R21/D10/D11 Quick Start Guide for Using Usart driver with DMA
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,9 +45,10 @@
  * \page asfdoc_sam0_sercom_usart_dma_use_case Quick Start Guide for Using DMA with SERCOM USART
  *
  * The supported board list:
+ *    - SAML21 Xplained Pro 
  *    - SAMD21 Xplained Pro
  *    - SAMR21 Xplained Pro
- *    - SAMR11 Xplained Pro
+ *    - SAMD11 Xplained Pro
  *
  * This quick start will receiving eight bytes of data from PC terminal and transmit back the string
  * to the terminal through DMA. In this use case the USART will be configured with the following
@@ -207,4 +208,7 @@
  *
  * -# Enter endless loop.
  *    \snippet qs_usart_dma_use.c endless_loop
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

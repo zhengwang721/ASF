@@ -1,0 +1,36 @@
+<asf xmlversion="1.0">
+		<select-by-device id="thirdparty.wireless.ble_sdk.services.console">
+			<module type="meta" id="thirdparty.wireless.ble_sdk.services.console#0"     caption="console">
+				<info type="description" value="summary">
+				Console Driver
+				</info>
+				<build type="c-source"      value="sam0/console_serial.c"/>
+				<build type="header-file"   value="console_serial.h"/>
+				<build type="include-path"  value="."/>
+
+				<build type="module-config" subtype="required-header-file" value="conf_console.h"/>
+				<build type="module-config" subtype="path" value="module_config"/> 
+
+				<require idref="sam0.drivers.sercom.usart"/>
+				<require idref="sam0.utils"/>
+				<require idref="sam0.utils.stdio"/>
+				<require idref="sam0.utils.stdio.stdio_serial"/>
+
+				<device-support value="samd21"/>
+			</module>
+   <module type="meta" id="thirdparty.wireless.ble_sdk.services.console#1"     caption="console">
+				<info type="description" value="summary">
+				Console Driver
+				</info>
+				<build type="c-source"      value="sam/console_serial.c"/>
+				<build type="header-file"   value="console_serial.h"/>
+				<build type="include-path"  value="."/>
+
+				<require idref="common.utils.stdio.stdio_serial"/>
+
+				<build type="module-config" subtype="required-header-file" value="conf_uart_serial.h"/>
+				<build type="module-config" subtype="path" value="module_config"/>
+				<device-support value="samg55"/>
+			</module>
+		</select-by-device>
+</asf>

@@ -4,7 +4,7 @@
  *
  * \brief SAM SERCOM USART Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,13 +41,16 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef USART_H_INCLUDED
 #define USART_H_INCLUDED
 
 /**
  * \defgroup asfdoc_sam0_sercom_usart_group SAM Serial USART Driver (SERCOM USART)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the SERCOM module in its USART mode to transfer or receive
  * USART data frames. The following driver API modes are covered by this
  * manual:
@@ -64,6 +67,7 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_sercom_usart_prerequisites
@@ -93,35 +97,35 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_SYNC_SCHEME_V2</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_OVER_SAMPLE</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_HARDWARE_FLOW_CONTROL</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IRDA</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_LIN_SLAVE</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_COLLISION_DECTION</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_START_FRAME_DECTION</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -265,7 +269,7 @@ extern "C" {
  * Define SERCOM USART features set according to different device family.
  * @{
  */
-#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || defined(__DOXYGEN__)
+#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || defined(__DOXYGEN__)
 /** Usart sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2
 /** Usart over sampling. */
@@ -539,7 +543,7 @@ struct usart_config {
 	bool immediate_buffer_overflow_notification;
 #endif
 #ifdef FEATURE_USART_IRDA
-	/** Enable IrDA encoding format */
+	/** Enable IrDA encoding format. */
 	bool encoding_format_enable;
 	/** The minimum pulse length that is required for a pulse to be accepted by the IrDA receiver. */
 	uint8_t receive_pulse_length;
@@ -583,13 +587,37 @@ struct usart_config {
 	bool run_in_standby;
 	/** GCLK generator source. */
 	enum gclk_generator generator_source;
-	/** PAD0 pinmux. */
+	/** PAD0 pinmux.
+	 *
+	 * If current USARTx has several alternative multiplexing I/O pin for PAD0, then
+	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD0
+	 * function. Make sure other alternative multiplexing I/O associated current
+	 * USARTx PAD0 is not setup usart function.
+	 */
 	uint32_t pinmux_pad0;
-	/** PAD1 pinmux. */
+	/** PAD1 pinmux.
+	 *
+	 * If current USARTx has several alternative multiplexing I/O pin for PAD1, then
+	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD1
+	 * function. Make sure other alternative multiplexing I/O associated current
+	 * USARTx PAD1 is not setup usart function.
+	 */
 	uint32_t pinmux_pad1;
-	/** PAD2 pinmux. */
+	/** PAD2 pinmux.
+	 *
+	 * If current USARTx has several alternative multiplexing I/O pin for PAD2, then
+	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD2
+	 * function. Make sure other alternative multiplexing I/O associated current
+	 * USARTx PAD2 is not setup usart function.
+	 */
 	uint32_t pinmux_pad2;
-	/** PAD3 pinmux. */
+	/** PAD3 pinmux.
+	 *
+	 * If current USARTx has several alternative multiplexing I/O pin for PAD3, then
+	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD3
+	 * function. Make sure other alternative multiplexing I/O associated current
+	 * USARTx PAD3 is not setup usart function.
+	 */
 	uint32_t pinmux_pad3;
 };
 
@@ -597,7 +625,7 @@ struct usart_config {
 /**
  * \brief USART module instance
  *
- * Forward Declaration for the device instance
+ * Forward Declaration for the device instance.
  */
 struct usart_module;
 
@@ -606,7 +634,7 @@ struct usart_module;
  *
  * Type of the callback functions.
  */
-typedef void (*usart_callback_t)(const struct usart_module *const module);
+typedef void (*usart_callback_t)(struct usart_module *const module);
 #endif
 
 /**
@@ -622,7 +650,7 @@ struct usart_module {
 #if !defined(__DOXYGEN__)
 	/** Pointer to the hardware instance. */
 	Sercom *hw;
-	/** Module lock */
+	/** Module lock. */
 	volatile bool locked;
 	/** Character size of the data being transferred. */
 	enum usart_character_size character_size;
@@ -678,10 +706,10 @@ struct usart_module {
  * that, e.g., transactions by different services will not interfere with each
  * other.
  *
- * \param[in,out] module Pointer to the driver instance to lock.
+ * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked.
- * \retval STATUS_BUSY if the module was already locked.
+ * \retval STATUS_OK If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 static inline enum status_code usart_lock(
 		struct usart_module *const module)
@@ -708,7 +736,7 @@ static inline enum status_code usart_lock(
  * This function clears the instance lock, indicating that it is available for
  * use.
  *
- * \param[in,out] module Pointer to the driver instance to lock.
+ * \param[in,out] module Pointer to the driver instance to lock
  *
  */
 static inline void usart_unlock(struct usart_module *const module)
@@ -883,7 +911,7 @@ static inline void usart_disable(
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
-#if USART_CALLBACK_MODE == true	
+#if USART_CALLBACK_MODE == true
 	/* Disable Global interrupt for module */
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 #endif
@@ -954,7 +982,7 @@ enum status_code usart_read_buffer_wait(
  * Enable the given transceiver. Either RX or TX.
  *
  * \param[in]  module            Pointer to USART software instance struct
- * \param[in]  transceiver_type  Transceiver type.
+ * \param[in]  transceiver_type  Transceiver type
  */
 static inline void usart_enable_transceiver(
 		struct usart_module *const module,
@@ -991,7 +1019,7 @@ static inline void usart_enable_transceiver(
  * Disable the given transceiver (RX or TX).
  *
  * \param[in]  module            Pointer to USART software instance struct
- * \param[in]  transceiver_type  Transceiver type.
+ * \param[in]  transceiver_type  Transceiver type
  */
 static inline void usart_disable_transceiver(
 		struct usart_module *const module,
@@ -1087,6 +1115,9 @@ static inline void usart_disable_transceiver(
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
+ *  <tr>
+ *		<td>Add support for SAML21 (same features as SAMD21)</td>
+ *  </tr>
  *  <tr>
  *		<td>Add support for SAMD10/D11 (same features as SAMD21)</td>
  *  </tr>
@@ -1222,6 +1253,11 @@ static inline void usart_disable_transceiver(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>F</td>
+ *		<td>11/2014</td>
+ *		<td>Add support for SAML21.</td>
  *	</tr>
  *	<tr>
  *		<td>E</td>

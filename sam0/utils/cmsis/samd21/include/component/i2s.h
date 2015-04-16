@@ -3,7 +3,7 @@
  *
  * \brief Component description for I2S
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 #ifndef _SAMD21_I2S_COMPONENT_
 #define _SAMD21_I2S_COMPONENT_
@@ -51,7 +54,7 @@
 /*@{*/
 
 #define I2S_U2224
-#define REV_I2S                     0x102
+#define REV_I2S                     0x110
 
 /* -------- I2S_CTRLA : (I2S Offset: 0x00) (R/W  8) Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

@@ -3,7 +3,7 @@
  *
  * \brief Getting Started Application.
  *
- * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -83,6 +83,9 @@
  * -# If the button 2 available, pressing button 2 should make the other LED
  *    stop & restart blinking.
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include "asf.h"
