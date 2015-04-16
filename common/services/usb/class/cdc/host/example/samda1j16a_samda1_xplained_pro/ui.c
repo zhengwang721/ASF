@@ -222,7 +222,7 @@ void ui_usb_sof_event(void)
 				/* Button has been pressed */
 				ui_enable_asynchronous_interrupt();
 				LED_Off(LED_0_PIN);
-				uhc_suspend_lpm(true, BESL_1000_US);
+                uhc_suspend_lpm(true, HIRD_800_US);
 				return;
 			}
 		}
