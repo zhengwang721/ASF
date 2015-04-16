@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM R21 Xplained Pro test configuration.
+ * \brief SAM R21 Xplained Pro board configuration.
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -44,36 +44,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#define CONF_STDIO_USART          EDBG_CDC_MODULE
-#define CONF_STDIO_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
-#define CONF_STDIO_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
-#define CONF_STDIO_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
-#define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
-#define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
-#define CONF_STDIO_BAUDRATE       38400
-
-#define CONF_TEST_TCC0            TCC0
-#define CONF_TEST_TCC1            TCC1
-
-#define CONF_EIC_CHAN             6
-#define CONF_EIC_PIN              PIN_PA06A_EIC_EXTINT6
-#define CONF_EIC_MUX              MUX_PA06A_EIC_EXTINT6
-
-#define CONF_TEST_PIN_OUT         PIN_PA08E_TCC0_WO0
-#define CONF_TEST_PIN_MUX         MUX_PA08E_TCC0_WO0
-
-#define CONF_EVENT_GENERATOR_ID   EVSYS_ID_GEN_EIC_EXTINT_6
-#define CONF_EVENT_USED_ID        EVSYS_ID_USER_TCC1_EV_1
-
-#define CONF_CAPTURE_CHAN_0       0
-#define CONF_CAPTURE_CHAN_1       1
-
-#define CONF_TEST_TOLERANCE       10
-
-#define CONF_EVENT_USER_ID_FAULTn EVSYS_ID_USER_TCC0_MC_0
-#define CONF_EVENT_USER_ID_FAULTx EVSYS_ID_USER_TCC0_EV_0
-
-#endif /* CONF_TEST_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
