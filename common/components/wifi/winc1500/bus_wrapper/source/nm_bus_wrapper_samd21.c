@@ -71,7 +71,7 @@ static sint8 nm_i2c_write(uint8 *b, uint16 sz)
 		.data_length = sz,
 		.data        = b,
 	};
-	
+
 	/* Write buffer to slave until success. */
 	while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) != STATUS_OK) {
 		/* Increment timeout counter and check if timed out. */
@@ -152,7 +152,7 @@ static sint8 spi_rw(uint8* pu8Mosi, uint8* pu8Miso, uint16 u16Sz)
 		while (spi_read(&master, &rxd_data) != STATUS_OK)
 			;
 		*pu8Miso = rxd_data;
-			
+
 		u16Sz--;
 		if (!u8SkipMiso)
 			pu8Miso++;
@@ -210,7 +210,7 @@ sint8 nm_bus_init(void *pvinit)
 	config.pinmux_pad2 = CONF_WINC_SPI_PINMUX_PAD2;
 	config.pinmux_pad3 = CONF_WINC_SPI_PINMUX_PAD3;
 	config.master_slave_select_enable = false;
-	
+
 	config.mode_specific.master.baudrate = CONF_WINC_SPI_CLOCK;
 	if (spi_init(&master, CONF_WINC_SPI_MODULE, &config) != STATUS_OK) {
 		return M2M_ERR_BUS_FAIL;

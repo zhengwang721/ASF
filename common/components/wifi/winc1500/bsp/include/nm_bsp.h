@@ -46,7 +46,7 @@
 #define _NM_BSP_H_
 
 #define NMI_API
-/*!< 
+/*!<
 *        Attribute used to define memory section to map Functions in host memory.
 */
 
@@ -55,7 +55,7 @@
 #else
 #define CONST const
 #endif
-/*!< 
+/*!<
 *     Used for code portability.
 */
 
@@ -72,13 +72,13 @@ typedef void (*tpfNmBspIsr)(void);
 #ifndef NULL
 #define NULL ((void*)0)
 #endif
-/*!< 
-*    Void Pointer to '0' in case of NULL is not defined. 
+/*!<
+*    Void Pointer to '0' in case of NULL is not defined.
 */
 
 
 #define BSP_MIN(x,y) ((x)>(y)?(y):(x))
-/*!< 
+/*!<
 *     Computes the minimum of \b x and \b y.
 */
 
@@ -88,7 +88,7 @@ typedef void (*tpfNmBspIsr)(void);
  * @ingroup nm_bsp
  * @{
  */
- 
+
   /*!
  * @ingroup DataTypes
  * @typedef      unsigned char	uint8;
@@ -107,7 +107,7 @@ typedef unsigned short	uint16;
  * @ingroup Data Types
  * @typedef      unsigned long	uint32;
  * @brief        Range of values between 0 to 4294967295
- */ 
+ */
 typedef unsigned long	uint32;
 
 
@@ -148,22 +148,22 @@ extern "C"{
 
 /** @defgroup NmBspInitFn nm_bsp_init
  *  @ingroup BSPAPI
- *  Initialization for BSP such as Reset and Chip Enable Pins for WINC, delays, register ISR, enable/disable IRQ for WINC, ...etc. You must use this function in the head of your application to 
- *  enable WINC and Host Driver communicate each other. 
+ *  Initialization for BSP such as Reset and Chip Enable Pins for WINC, delays, register ISR, enable/disable IRQ for WINC, ...etc. You must use this function in the head of your application to
+ *  enable WINC and Host Driver communicate each other.
  */
  /**@{*/
 /*!
  * @fn           sint8 nm_bsp_init(void);
  * @note         Implementation of this function is host dependent.
  * @warning      Missing use will lead to unavailability of host communication.\n
- *  
+ *
  * @return       The function returns @ref M2M_SUCCESS for successful operations and a negative value otherwise.
 
  */
 sint8 nm_bsp_init(void);
  /**@}*/
 
- 
+
  /** @defgroup NmBspDeinitFn nm_bsp_deinit
  *    @ingroup BSPAPI
  *   	 De-initialization for BSP (\e Board \e Support \e Package)
@@ -174,14 +174,14 @@ sint8 nm_bsp_init(void);
  * @pre          Initialize \ref nm_bsp_init first
  * @note         Implementation of this function is host dependent.
  * @warning      Missing use may lead to unknown behavior in case of soft reset.\n
- * @see          nm_bsp_init               
+ * @see          nm_bsp_init
  * @return      The function returns @ref M2M_SUCCESS for successful operations and a negative value otherwise.
 
  */
 sint8 nm_bsp_deinit(void);
  /**@}*/
 
- 
+
 /** @defgroup NmBspResetFn  nm_bsp_reset
 *     @ingroup BSPAPI
 *      Resetting NMC1500 SoC by setting CHIP_EN and RESET_N signals low, then after specific delay the function will put CHIP_EN high then RESET_N high,
@@ -189,42 +189,42 @@ sint8 nm_bsp_deinit(void);
 */
 /**@{*/
  /*!
- * @fn           void nm_bsp_reset(void);    
+ * @fn           void nm_bsp_reset(void);
  * @param [in]   None
  * @pre          Initialize \ref nm_bsp_init first
  * @note         Implementation of this function is host dependent and called by HIF layer.
- * @see          nm_bsp_init    
+ * @see          nm_bsp_init
  * @return       None
 
  */
 void nm_bsp_reset(void);
  /**@}*/
 
- 
+
 /** @defgroup NmBspSleepFn nm_bsp_sleep
 *     @ingroup BSPAPI
 *     Sleep in units of milliseconds.\n
-*    This function used by HIF Layer according to different situations. 
+*    This function used by HIF Layer according to different situations.
 */
 /**@{*/
 /*!
  * @fn           void nm_bsp_sleep(uint32);
- * @brief   
+ * @brief
  * @param [in]   u32TimeMsec
  *               Time unit in milliseconds
  * @pre          Initialize \ref nm_bsp_init first
  * @warning      Maximum value must nor exceed 4294967295 milliseconds which is equal to 4294967.295 seconds.\n
  * @note         Implementation of this function is host dependent.
- * @see           nm_bsp_init               
+ * @see           nm_bsp_init
  * @return       None
  */
 void nm_bsp_sleep(uint32 u32TimeMsec);
 /**@}*/
 
-  
+
 /** @defgroup NmBspRegisterFn nm_bsp_register_isr
 *     @ingroup BSPAPI
-*   Register ISR (Interrupt Service Routine) in the initialization of HIF (Host Interface) Layer. 
+*   Register ISR (Interrupt Service Routine) in the initialization of HIF (Host Interface) Layer.
 *   When the interrupt trigger the BSP layer should call the pfisr function once inside the interrupt.
 */
 /**@{*/
@@ -241,7 +241,7 @@ void nm_bsp_sleep(uint32 u32TimeMsec);
 void nm_bsp_register_isr(tpfNmBspIsr pfIsr);
 /**@}*/
 
-  
+
 /** @defgroup NmBspInterruptCtrl nm_bsp_interrupt_ctrl
 *     @ingroup BSPAPI
 *    Synchronous enable/disable interrupts function
@@ -251,8 +251,8 @@ void nm_bsp_register_isr(tpfNmBspIsr pfIsr);
  * @fn           void nm_bsp_interrupt_ctrl(uint8);
  * @brief        Enable/Disable interrupts
  * @param [in]   u8Enable
- *               '0' disable interrupts. '1' enable interrupts 
- * @see          tpfNmBspIsr           
+ *               '0' disable interrupts. '1' enable interrupts
+ * @see          tpfNmBspIsr
  * @note         Implementation of this function is host dependent and called by HIF layer.
  * @return       None
 

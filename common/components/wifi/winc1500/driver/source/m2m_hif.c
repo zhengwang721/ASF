@@ -202,7 +202,7 @@ sint8 hif_chip_sleep(void)
 	{
 		gu8ChipSleep--;
 	}
-	
+
 	if(gu8ChipSleep == 0)
 	{
 		if((gu8ChipMode == M2M_PS_DEEP_AUTOMATIC)||(gu8ChipMode == M2M_PS_MANUAL))
@@ -284,7 +284,7 @@ sint8 hif_deinit(void * arg)
 	pfOtaCb = NULL;
 	pfHifCb = NULL;
 
-	
+
 	return ret;
 }
 /**
@@ -597,11 +597,11 @@ sint8 hif_receive(uint32 u32Addr, uint8 *pu8Buf, uint16 u16Sz, uint8 isDone)
 		if(isDone)
 		{
 			gu8HifSizeDone = 1;
-			
+
 			/* set RX done */
 			ret = hif_set_rx_done();
 		}
-			
+
 		ret = M2M_ERR_FAIL;
 		M2M_ERR(" hif_receive: Invalid arguemtn\n");
 		goto ERR1;

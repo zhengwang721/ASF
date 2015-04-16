@@ -69,7 +69,7 @@
 /*
 Invalid argument
 */
-#define M2M_ERR_INVALID_ARG				 ((sint8)-15)	
+#define M2M_ERR_INVALID_ARG				 ((sint8)-15)
 
 /*i2c MAASTER ERR*/
 #define I2C_ERR_LARGE_ADDRESS 	  0xE1UL	/*the address exceed the max addressing mode in i2c flash*/
@@ -80,7 +80,7 @@ Invalid argument
 /**/
 #define PROGRAM_START		0x26961735UL
 #define BOOT_SUCCESS		0x10add09eUL
-#define BOOT_START		    0x12345678UL     
+#define BOOT_START		    0x12345678UL
 
 
 #define NBIT31				(0x80000000)

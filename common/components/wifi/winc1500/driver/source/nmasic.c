@@ -478,13 +478,13 @@ sint8 wait_for_bootrom(uint8 arg)
 			}
 		}
 	}
-	
+
 	if(2 == arg) {
 		nm_write_reg(NMI_REV_REG, M2M_ATE_FW_START_VALUE);
 	} else {
 		/*bypass this step*/
 	}
-	
+
 	nm_write_reg(BOOTROM_REG,M2M_START_FIRMWARE);
 
 #ifdef __ROM_TEST__
@@ -501,14 +501,14 @@ sint8 wait_for_firmware_start(uint8 arg)
 	uint32 reg = 0, cnt = 0;
 	volatile uint32 regAddress = NMI_STATE_REG;
 	volatile uint32 checkValue = M2M_FINISH_INIT_STATE;
-	
+
 	if(2 == arg) {
 		regAddress = NMI_REV_REG;
 		checkValue = M2M_ATE_FW_IS_UP_VALUE;
 	} else {
 		/*bypass this step*/
 	}
-	
+
 	while (checkValue != reg)
 	{
 		nm_bsp_sleep(2); /* TODO: Why bus error if this delay is not here. */

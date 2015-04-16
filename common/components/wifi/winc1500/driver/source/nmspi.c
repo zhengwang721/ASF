@@ -762,12 +762,12 @@ sint8 nm_spi_init(void)
 
 /*
 *	@fn		nm_spi_init
-*	@brief	DeInitialize the SPI 
+*	@brief	DeInitialize the SPI
 *	@return	M2M_SUCCESS in case of success and M2M_ERR_BUS_FAIL in case of failure
 *	@author	Samer Sarhan
 *	@date	27 Feb 2015
 *	@version	1.0
-*/ 
+*/
 sint8 nm_spi_deinit(void)
 {
 	gu8Crc_off = 0;

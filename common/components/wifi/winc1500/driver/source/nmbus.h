@@ -113,7 +113,7 @@ sint8 nm_write_reg(uint32 u32Addr, uint32 u32Val);
 *	@param [in]	u32Sz
 *				Number of bytes to read. The buffer size must be >= u32Sz
 *	@return	ZERO in case of success and M2M_ERR_BUS_FAIL in case of failure
-*/ 
+*/
 sint8 nm_read_block(uint32 u32Addr, uint8 *puBuf, uint32 u32Sz);
 
 /**
@@ -126,7 +126,7 @@ sint8 nm_read_block(uint32 u32Addr, uint8 *puBuf, uint32 u32Sz);
 *	@param [in]	u32Sz
 *				Number of bytes to write. The buffer size must be >= u32Sz
 *	@return	ZERO in case of success and M2M_ERR_BUS_FAIL in case of failure
-*/ 
+*/
 sint8 nm_write_block(uint32 u32Addr, uint8 *puBuf, uint32 u32Sz);
 
 

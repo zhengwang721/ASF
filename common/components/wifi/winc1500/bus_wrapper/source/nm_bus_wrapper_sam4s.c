@@ -113,7 +113,7 @@ static sint8 spi_rw(uint8 *pu8Mosi, uint8 *pu8Miso, uint16 u16Sz)
 		;
 	SPI_DEASSERT_CS();
 	g_p_pdc_spi->PERIPH_PTCR = PERIPH_PTCR_TXTDIS | PERIPH_PTCR_RXTDIS;
-		
+
 	return M2M_SUCCESS;
 }
 #endif
