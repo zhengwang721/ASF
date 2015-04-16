@@ -1,0 +1,8 @@
+<asf xmlversion="1.0">
+	<module type="meta" id="thirdparty.wireless.ble_sdk_lib" caption="BLE_STACK">
+		<info type="description" value="summary">
+		</info> 
+		
+	</module> 
+ 
+</asf>

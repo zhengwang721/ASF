@@ -1,0 +1,13 @@
+<asf xmlversion="1.0">
+	<module type="service" id="thirdparty.wireless.ble_sdk_lib.lib.atsamg55j19.lib" caption="COMPONENT - BLE LIB">
+		<info type="description" value="summary">
+		</info>
+		<build type="library" subtype="user" value="iar/libble-sdk.r90" toolchain="iarew"/>
+		<build type="library" subtype="user" value="gcc/libble-sdk.a" toolchain="avrgcc"/>
+
+		<build type="doxygen-entry-point" value="ble_stack_group"/>
+		
+		<device-support value="atsamg55j19"/>
+		
+	</module>
+</asf>
