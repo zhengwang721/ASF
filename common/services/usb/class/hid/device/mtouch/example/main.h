@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief USB Device Human Interface Device (HID) interface definitions.
+ * \brief Declaration of main function used by HID multi-touch example
  *
- * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,42 +44,40 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef _UDI_HID_H_
-#define _UDI_HID_H_
+#ifndef _MAIN_H_
+#define _MAIN_H_
 
-#include "conf_usb.h"
-#include "usb_protocol.h"
-#include "usb_protocol_hid.h"
-#include "udd.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * \ingroup udi_group
- * \defgroup udi_hid_group USB Device Interface (UDI) for Human Interface Device (HID)
+/*! \brief Called by HID interface
+ * Callback running when USB Host enable multi-touch interface
  *
- * Common library for all Human Interface Device (HID) implementation.
- *
- * @{
+ * \retval true if multi-touch startup is ok
  */
+bool main_multitouch_enable(void);
 
-/**
- * \brief Decode HID setup request
- *
- * \param rate         Pointer on rate of current HID interface
- * \param protocol     Pointer on protocol of current HID interface
- * \param report_desc  Pointer on report descriptor of current HID interface
- * \param set_report   Pointer on set_report callback of current HID interface
- *
- * \return \c 1 if function was successfully done, otherwise \c 0.
+/*! \brief Called by HID interface
+ * Callback running when USB Host disable multi-touch interface
  */
-bool udi_hid_setup( uint8_t *rate, uint8_t *protocol, uint8_t *report_desc, bool (*setup_report)(void) );
+void main_multitouch_disable(void);
 
-//@}
+/*! \brief Called when a start of frame is received on USB line
+ */
+void main_sof_action(void);
 
-#ifdef __cplusplus
-}
-#endif
-#endif // _UDI_HID_H_
+/*! \brief Enters the application in low power mode
+ * Callback called when USB host sets USB line in suspend state
+ */
+void main_suspend_action(void);
+
+/*! \brief Called by UDD when the USB line exit of suspend state
+ */
+void main_resume_action(void);
+
+/*! \brief Called by UDC when USB Host request to enable remote wakeup
+ */
+void main_remotewakeup_enable(void);
+
+/*! \brief Called by UDC when USB Host request to disable remote wakeup
+ */
+void main_remotewakeup_disable(void);
+
+#endif // _MAIN_H_

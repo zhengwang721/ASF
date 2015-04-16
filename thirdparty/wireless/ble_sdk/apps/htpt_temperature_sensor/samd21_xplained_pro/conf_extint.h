@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief USB Device Human Interface Device (HID) interface definitions.
+ * \brief SAM D21 External Interrupt Driver Configuration Header
  *
- * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,46 +40,34 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
-#ifndef _UDI_HID_H_
-#define _UDI_HID_H_
+#include <asf.h>
 
-#include "conf_usb.h"
-#include "usb_protocol.h"
-#include "usb_protocol_hid.h"
-#include "udd.h"
+#define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-/**
- * \ingroup udi_group
- * \defgroup udi_hid_group USB Device Interface (UDI) for Human Interface Device (HID)
- *
- * Common library for all Human Interface Device (HID) implementation.
- *
- * @{
- */
+void button_cb(void);
 
-/**
- * \brief Decode HID setup request
- *
- * \param rate         Pointer on rate of current HID interface
- * \param protocol     Pointer on protocol of current HID interface
- * \param report_desc  Pointer on report descriptor of current HID interface
- * \param set_report   Pointer on set_report callback of current HID interface
- *
- * \return \c 1 if function was successfully done, otherwise \c 0.
- */
-bool udi_hid_setup( uint8_t *rate, uint8_t *protocol, uint8_t *report_desc, bool (*setup_report)(void) );
+/* Button Initialize */
+static inline void button_init(void)
+{
+	struct extint_chan_conf eint_chan_conf;
+	extint_chan_get_config_defaults(&eint_chan_conf);
 
-//@}
-
-#ifdef __cplusplus
+	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
+	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_MUX;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
+	eint_chan_conf.filter_input_signal = true;
+	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
+	
+	extint_register_callback(button_cb,
+	BUTTON_0_EIC_LINE,
+	EXTINT_CALLBACK_TYPE_DETECT);
+	
+	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
+	EXTINT_CALLBACK_TYPE_DETECT);
 }
+
 #endif
-#endif // _UDI_HID_H_

@@ -1,9 +1,9 @@
 /**
- * \file
+ * \file console_serial.c
  *
- * \brief USB Device Human Interface Device (HID) interface definitions.
+ * \brief Serial Console functionalities
  *
- * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,48 +38,39 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef _UDI_HID_H_
-#define _UDI_HID_H_
+/* === INCLUDES ============================================================ */
 
-#include "conf_usb.h"
-#include "usb_protocol.h"
-#include "usb_protocol_hid.h"
-#include "udd.h"
+#include "asf.h"
+#include "console_serial.h"
+#include "conf_uart_serial.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/* === TYPES =============================================================== */
+
+/* === MACROS ============================================================== */
 
 /**
- * \ingroup udi_group
- * \defgroup udi_hid_group USB Device Interface (UDI) for Human Interface Device (HID)
- *
- * Common library for all Human Interface Device (HID) implementation.
- *
- * @{
+ *  Configure console.
  */
+void serial_console_init(void)
+{
+	const usart_serial_options_t uart_serial_options = {
+			.baudrate = CONF_UART_BAUDRATE,
+	#ifdef CONF_UART_CHAR_LENGTH
+			.charlength = CONF_UART_CHAR_LENGTH,
+	#endif
+			.paritytype = CONF_UART_PARITY,
+	#ifdef CONF_UART_STOP_BITS
+			.stopbits = CONF_UART_STOP_BITS,
+	#endif
+		};
 
-/**
- * \brief Decode HID setup request
- *
- * \param rate         Pointer on rate of current HID interface
- * \param protocol     Pointer on protocol of current HID interface
- * \param report_desc  Pointer on report descriptor of current HID interface
- * \param set_report   Pointer on set_report callback of current HID interface
- *
- * \return \c 1 if function was successfully done, otherwise \c 0.
- */
-bool udi_hid_setup( uint8_t *rate, uint8_t *protocol, uint8_t *report_desc, bool (*setup_report)(void) );
-
-//@}
-
-#ifdef __cplusplus
+	/* Configure console UART. */
+	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
+	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
-#endif
-#endif // _UDI_HID_H_
+
+
+
+/* EOF */

@@ -1,9 +1,9 @@
 /**
- * \file
+ * \file console_serial.c
  *
- * \brief USB Device Human Interface Device (HID) interface definitions.
+ * \brief Serial Console functionalities
  *
- * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,48 +38,40 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef _UDI_HID_H_
-#define _UDI_HID_H_
+/* === INCLUDES ============================================================ */
 
-#include "conf_usb.h"
-#include "usb_protocol.h"
-#include "usb_protocol_hid.h"
-#include "udd.h"
+#include "asf.h"
+#include "console_serial.h"
+#include "conf_console.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
+/* === TYPES =============================================================== */
+
+/* === MACROS ============================================================== */
+static struct usart_module cdc_uart_module;
+
 
 /**
- * \ingroup udi_group
- * \defgroup udi_hid_group USB Device Interface (UDI) for Human Interface Device (HID)
- *
- * Common library for all Human Interface Device (HID) implementation.
- *
- * @{
+ *  Configure console.
  */
+void serial_console_init(void)
+{
+ 	struct usart_config usart_conf;
 
-/**
- * \brief Decode HID setup request
- *
- * \param rate         Pointer on rate of current HID interface
- * \param protocol     Pointer on protocol of current HID interface
- * \param report_desc  Pointer on report descriptor of current HID interface
- * \param set_report   Pointer on set_report callback of current HID interface
- *
- * \return \c 1 if function was successfully done, otherwise \c 0.
- */
-bool udi_hid_setup( uint8_t *rate, uint8_t *protocol, uint8_t *report_desc, bool (*setup_report)(void) );
+	usart_get_config_defaults(&usart_conf);
+	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
+	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
+	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
 
-//@}
-
-#ifdef __cplusplus
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART_MODULE, &usart_conf);
+	usart_enable(&cdc_uart_module);
 }
-#endif
-#endif // _UDI_HID_H_
+
+
+
+/* EOF */

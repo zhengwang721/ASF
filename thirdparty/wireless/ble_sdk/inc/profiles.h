@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief USB Device Human Interface Device (HID) interface definitions.
+ * \brief BLE Profile related declarations
  *
- * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,42 +44,36 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef _UDI_HID_H_
-#define _UDI_HID_H_
+#ifndef __PROFILES_H__
+#define __PROFILES_H__
 
-#include "conf_usb.h"
-#include "usb_protocol.h"
-#include "usb_protocol_hid.h"
-#include "udd.h"
+/// Message structure used to inform APP that an error has occurred in the profile server role task
+typedef struct prf_server_error_ind
+{
+    /// Connection Handle
+	uint16_t conhdl;
+    /// Message ID
+	uint16_t msg_id;
+    /// Status
+	uint8_t status;
+}prf_server_error_ind_t;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/// Time profile information
+struct prf_date_time
+{
+    /// year time element
+    uint16_t year;
+    /// month time element
+    uint8_t month;
+    /// day time element
+    uint8_t day;
+    /// hour time element
+    uint8_t hour;
+    /// minute time element
+    uint8_t min;
+    /// second time element
+    uint8_t sec;
+};
 
-/**
- * \ingroup udi_group
- * \defgroup udi_hid_group USB Device Interface (UDI) for Human Interface Device (HID)
- *
- * Common library for all Human Interface Device (HID) implementation.
- *
- * @{
- */
 
-/**
- * \brief Decode HID setup request
- *
- * \param rate         Pointer on rate of current HID interface
- * \param protocol     Pointer on protocol of current HID interface
- * \param report_desc  Pointer on report descriptor of current HID interface
- * \param set_report   Pointer on set_report callback of current HID interface
- *
- * \return \c 1 if function was successfully done, otherwise \c 0.
- */
-bool udi_hid_setup( uint8_t *rate, uint8_t *protocol, uint8_t *report_desc, bool (*setup_report)(void) );
-
-//@}
-
-#ifdef __cplusplus
-}
-#endif
-#endif // _UDI_HID_H_
+#endif /* __PROFILES_H__ */

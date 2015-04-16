@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief USB Device Human Interface Device (HID) interface definitions.
+ * \brief SAM G55 serial driver configuration.
  *
- * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,46 +40,54 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
-#ifndef _UDI_HID_H_
-#define _UDI_HID_H_
+#ifndef CONF_SERIALDRV_H_INCLUDED
+#define CONF_SERIALDRV_H_INCLUDED
 
-#include "conf_usb.h"
-#include "usb_protocol.h"
-#include "usb_protocol_hid.h"
-#include "udd.h"
+/** UART Interface */
+#define BLE_UART            EXT1_UART_MODULE
+#define BLE_UART_ID		    ID_FLEXCOM0
+#define BLE_USART_FLEXCOM   FLEXCOM0
+#define BLE_UART_IRQn		FLEXCOM0_IRQn
+/* Configuration for console uart IRQ handler */
+#define BLE_UART_Handler    FLEXCOM0_Handler
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   (115200UL)
+/** Character length setting */
+#define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
+/** Parity setting */
+#define CONF_UART_PARITY     US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
 
-/**
- * \ingroup udi_group
- * \defgroup udi_hid_group USB Device Interface (UDI) for Human Interface Device (HID)
- *
- * Common library for all Human Interface Device (HID) implementation.
- *
- * @{
- */
+void serial_rx_callback(void);
+void serial_tx_callback(void);
 
-/**
- * \brief Decode HID setup request
- *
- * \param rate         Pointer on rate of current HID interface
- * \param protocol     Pointer on protocol of current HID interface
- * \param report_desc  Pointer on report descriptor of current HID interface
- * \param set_report   Pointer on set_report callback of current HID interface
- *
- * \return \c 1 if function was successfully done, otherwise \c 0.
- */
-bool udi_hid_setup( uint8_t *rate, uint8_t *protocol, uint8_t *report_desc, bool (*setup_report)(void) );
+#define SERIAL_DRV_RX_CB serial_rx_callback
+#define SERIAL_DRV_TX_CB serial_tx_callback
+#define SERIAL_DRV_TX_CB_ENABLE  true
+#define SERIAL_DRV_RX_CB_ENABLE  true
 
-//@}
+static inline void ble_enable_pin_init(void)
+{
+	ioport_init();
 
-#ifdef __cplusplus
+	ioport_set_pin_dir(EXT1_PIN_5, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(EXT1_PIN_5, IOPORT_PIN_LEVEL_HIGH);
+	ioport_set_pin_dir(EXT1_PIN_6, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(EXT1_PIN_6, IOPORT_PIN_LEVEL_HIGH);
 }
-#endif
-#endif // _UDI_HID_H_
+
+static inline void ble_enable_pin_set_low(void)
+{
+	//ioport_set_pin_level(EXT1_PIN_5, IOPORT_PIN_LEVEL_LOW);
+}
+
+static inline void ble_enable_pin_set_high(void)
+{
+	//ioport_set_pin_level(EXT1_PIN_5, IOPORT_PIN_LEVEL_HIGH);
+}
+
+
+#endif /* CONF_SERIALDRV_H_INCLUDED */

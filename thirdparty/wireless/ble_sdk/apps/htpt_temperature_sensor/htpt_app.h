@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief USB Device Human Interface Device (HID) interface definitions.
+ * \brief Health Thermometer Profile Application declarations
  *
- * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,42 +44,74 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef _UDI_HID_H_
-#define _UDI_HID_H_
 
-#include "conf_usb.h"
-#include "usb_protocol.h"
-#include "usb_protocol_hid.h"
-#include "udd.h"
+#ifndef __HTPT_APP_H__
+#define __HTPT_APP_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "at_ble_api.h"
 
-/**
- * \ingroup udi_group
- * \defgroup udi_hid_group USB Device Interface (UDI) for Human Interface Device (HID)
- *
- * Common library for all Human Interface Device (HID) implementation.
- *
- * @{
- */
+#define DBG_LOG printf
+#define DBG_LOG_1LVL printf
 
-/**
- * \brief Decode HID setup request
- *
- * \param rate         Pointer on rate of current HID interface
- * \param protocol     Pointer on protocol of current HID interface
- * \param report_desc  Pointer on report descriptor of current HID interface
- * \param set_report   Pointer on set_report callback of current HID interface
- *
- * \return \c 1 if function was successfully done, otherwise \c 0.
- */
-bool udi_hid_setup( uint8_t *rate, uint8_t *protocol, uint8_t *report_desc, bool (*setup_report)(void) );
+#define APP_HT_FAST_ADV 100 //100 ms
 
-//@}
+#define APP_HT_ADV_TIMEOUT 1000 // 100 Secs
 
-#ifdef __cplusplus
-}
-#endif
-#endif // _UDI_HID_H_
+#define SCAN_RESP_LEN 10
+#define ADV_DATA_LEN 18
+
+#define ADV_TYPE_LEN (0x01)
+
+#define HT_ADV_DATA_UUID_LEN	 (2)
+#define HT_ADV_DATA_UUID_TYPE	 (0x03)
+#define HT_ADV_DATA_UUID_DATA	 "\x09\x18"
+
+#define HT_ADV_DATA_APPEARANCE_LEN	 (2)
+#define HT_ADV_DATA_APPEARANCE_TYPE	 (0x19)
+#define HT_ADV_DATA_APPEARANCE_DATA	 "\x00\x03"
+
+#define HT_ADV_DATA_NAME_LEN	 (9)
+#define HT_ADV_DATA_NAME_TYPE	 (0x09)
+#define HT_ADV_DATA_NAME_DATA	 "ATMEL-BLE"
+
+/* Typedef for health thermometer profile -  application */
+typedef struct htpt_app{	
+	
+	/* Measured temperature value. Value may be Cecilius /Fahrenheit */
+	uint32_t temperature;	
+	
+	/* Temperature type string */
+	at_ble_htpt_temp_type temperature_type;
+	
+	/* Measurement Interval */
+	uint16_t measurement_interval;
+	
+	/* Minimum measurement interval */
+	uint16_t min_measurement_intv;
+	
+	/* Maximum measurement interval */
+	uint16_t max_meaurement_intv;
+	
+	/* Security Level */
+	at_ble_htpt_sec_level security_lvl;
+	
+	/* Optional Features */
+	at_ble_htpt_db_config_flag optional;
+	
+	at_ble_htpt_temp_flags flags;
+}htpt_app_t;
+
+/**@brief Temperature measurement stability type
+*/
+typedef enum
+{
+	UNSTABLE_TEMPERATURE_VAL= 0,
+	STABLE_TEMPERATURE_VAL=1
+}stable_temp_reading;
+
+void app_init(void);
+void htpt_init(htpt_app_t *htpt_temp);
+void htpt_temperature_send(htpt_app_t *htpt_temp);
+void timer_callback_handler(void);
+
+#endif /* __HTPT_APP_H__ */

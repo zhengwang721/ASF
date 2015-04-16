@@ -1,9 +1,9 @@
 /**
- * \file
+ * \file serial_drv.h
  *
- * \brief USB Device Human Interface Device (HID) interface definitions.
+ * \brief Handles Serial driver functionalities
  *
- * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,48 +38,50 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef _UDI_HID_H_
-#define _UDI_HID_H_
-
-#include "conf_usb.h"
-#include "usb_protocol.h"
-#include "usb_protocol_hid.h"
-#include "udd.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef SERIAL_DRV_H
+#define SERIAL_DRV_H
 
 /**
- * \ingroup udi_group
- * \defgroup udi_hid_group USB Device Interface (UDI) for Human Interface Device (HID)
- *
- * Common library for all Human Interface Device (HID) implementation.
- *
+ * This module performs serial input/output functionalities via UART
  * @{
  */
 
+/* === INCLUDES ============================================================ */
+
+#include "compiler.h"
+#include "status_codes.h"
+
+/* === PROTOTYPES ============================================================
+**/
+
 /**
- * \brief Decode HID setup request
- *
- * \param rate         Pointer on rate of current HID interface
- * \param protocol     Pointer on protocol of current HID interface
- * \param report_desc  Pointer on report descriptor of current HID interface
- * \param set_report   Pointer on set_report callback of current HID interface
- *
- * \return \c 1 if function was successfully done, otherwise \c 0.
+ * \brief Initializes the Serial IO Module
+ * \return STATUS_OK for successful initialization and FAILURE incase the IO is
+ * not initialized
  */
-bool udi_hid_setup( uint8_t *rate, uint8_t *protocol, uint8_t *report_desc, bool (*setup_report)(void) );
+uint8_t configure_serial_drv(void);
 
-//@}
+/**
+ * \brief Transmits data via UART
+ * \param data Pointer to the buffer where the data to be transmitted is present
+ * \param length Number of bytes to be transmitted
+ *
+ * \return Number of bytes actually transmitted
+ */
+uint16_t serial_drv_send(uint8_t* data, uint16_t len);
 
-#ifdef __cplusplus
-}
-#endif
-#endif // _UDI_HID_H_
+/**
+ * \brief Receives data from UART
+ *
+ * \param data pointer to the buffer where the received data is to be stored
+ * \param max_length maximum length of data to be received
+ *
+ * \return actual number of bytes received
+ */
+uint8_t serial_read_data(uint8_t* data, uint16_t max_len);
+
+uint8_t serial_read_byte(uint16_t* data);
+
+#endif /* SIO2HOST_H */

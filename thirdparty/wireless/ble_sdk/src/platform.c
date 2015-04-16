@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief USB Device Human Interface Device (HID) interface definitions.
+ * \brief Platform Abstraction layer for BLE applications
  *
- * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,42 +44,80 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef _UDI_HID_H_
-#define _UDI_HID_H_
+#include <asf.h>
+#include "platform.h"
+#include "conf_serialdrv.h"
+#include "serial_drv.h"
 
-#include "conf_usb.h"
-#include "usb_protocol.h"
-#include "usb_protocol_hid.h"
-#include "udd.h"
+static uint16_t rx_data;
 
-#ifdef __cplusplus
-extern "C" {
+static volatile uint32_t cmd_cmpl_flag = 0;
+static volatile uint32_t event_flag = 0;
+
+void serial_rx_callback(void)
+{
+#if SAMG55
+	while(serial_read_byte(&rx_data) == STATUS_OK)
+	{
+		platform_interface_callback((uint8_t *)&rx_data, 1);
+	}		
 #endif
-
-/**
- * \ingroup udi_group
- * \defgroup udi_hid_group USB Device Interface (UDI) for Human Interface Device (HID)
- *
- * Common library for all Human Interface Device (HID) implementation.
- *
- * @{
- */
-
-/**
- * \brief Decode HID setup request
- *
- * \param rate         Pointer on rate of current HID interface
- * \param protocol     Pointer on protocol of current HID interface
- * \param report_desc  Pointer on report descriptor of current HID interface
- * \param set_report   Pointer on set_report callback of current HID interface
- *
- * \return \c 1 if function was successfully done, otherwise \c 0.
- */
-bool udi_hid_setup( uint8_t *rate, uint8_t *protocol, uint8_t *report_desc, bool (*setup_report)(void) );
-
-//@}
-
-#ifdef __cplusplus
+		
+#if SAMD || SAMR21
+	do 
+	{
+	  platform_interface_callback((uint8_t *)&rx_data, 1);
+	} while (serial_read_byte(&rx_data) == STATUS_BUSY);	
+#endif
 }
+
+void serial_tx_callback(void)
+{
+	ble_enable_pin_set_low();
+}
+
+
+at_ble_status_t platform_init(void* platform_params)
+{
+	configure_serial_drv();
+	serial_read_byte(&rx_data);
+
+	ble_enable_pin_init();	
+	return AT_BLE_SUCCESS;
+}
+
+void platform_interface_send(uint8_t* data, uint32_t len)
+{
+	ble_enable_pin_set_high();
+	serial_drv_send(data, len);	
+#if SAMG55
+	ble_enable_pin_set_low();
 #endif
-#endif // _UDI_HID_H_
+}
+
+void platform_cmd_cmpl_signal()
+{
+	cmd_cmpl_flag = 1;
+}
+
+void platform_cmd_cmpl_wait(bool* timeout)
+{
+	while(cmd_cmpl_flag != 1);
+	cmd_cmpl_flag = 0;
+	//*timeout = true; //Incase of timeout[default to 4000ms]
+}
+
+void platform_event_signal()
+{
+	event_flag = 1;
+}
+
+uint8_t platform_event_wait(uint32_t timeout)
+{
+	/* Timeout in ms */
+	uint8_t status = AT_BLE_SUCCESS;//AT_BLE_TIMEOUT in case of timeout
+	while(event_flag != 1);
+	event_flag = 0;
+	return status;
+}
+
