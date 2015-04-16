@@ -3,7 +3,7 @@
  *
  * \brief SAM4L Peripheral Event Controller (PEVC) Driver.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef EVENTS_H_INCLUDED
@@ -617,7 +620,7 @@ static inline void events_ch_clear_overrun_status(
  * \subsection asfdoc_sam_events_qsg_prereq Prerequisites
  *
  * This module requires the following service:
- * - \ref clk_group
+ * - \ref clk_group "Clock Management (Sysclock)"
  *
  * \subsection asfdoc_sam_events_qsg_setup_code Code Example
  *

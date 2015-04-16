@@ -3,7 +3,7 @@
  *
  * \brief SAM Generic Clock Driver Quick Start
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -123,4 +123,7 @@
  * \subsection asfdoc_sam0_system_gclk_basic_use_case_flow Workflow
  * -# As the clock is generated asynchronously to the system core, no special
  *    extra application code is required.
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

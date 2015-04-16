@@ -3,7 +3,7 @@
  *
  * \brief Example specific board configuration file
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,7 +44,7 @@
 #define CONF_BOARD_H
 
 #define SENSOR_TERMINAL_BOARD
-/* #define CONF_BOARD_ENABLE_USARTA1 */
-/* #define BREAKOUT_BOARD */
+ //#define CONF_BOARD_ENABLE_USARTA1 
+ //#define BREAKOUT_BOARD 
 
 #endif /* CONF_BOARD_H */

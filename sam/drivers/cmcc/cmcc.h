@@ -6,7 +6,7 @@
  *
  * This file defines a useful set of functions for the CMCC on SAM devices.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,6 +42,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef CMCC_H_INCLUDED
@@ -295,7 +298,7 @@ static inline void cmcc_invalidate_all(Cmcc *const p_cmcc)
  *
  * \section cmcc_basic_setup Setup steps
  *
- * \subsection cmcc_basic_setup_code
+ * \subsection cmcc_basic_setup_code  Code
  *
  * Add this to the main loop or a setup function:
  * \code
@@ -305,7 +308,7 @@ static inline void cmcc_invalidate_all(Cmcc *const p_cmcc)
 	cmcc_enable(CMCC);
 \endcode
  *
- * \subsection cmcc_basic_setup_workflow
+ * \subsection cmcc_basic_setup_workflow Workflow
  *
  * -# Enable the CMCC module
  * \code 
@@ -321,7 +324,7 @@ static inline void cmcc_invalidate_all(Cmcc *const p_cmcc)
  *
  * \section cmcc_basic_usage Usage steps
  *
- * \subsection cmcc_basic_usage_code
+ * \subsection cmcc_basic_usage_code Code
  *
  * We can then get the count of Cache Monitor Event by
  * \code

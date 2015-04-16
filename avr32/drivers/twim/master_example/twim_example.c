@@ -17,7 +17,7 @@
  *****************************************************************************/
 
 /**
- * Copyright (c) 2010 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -88,6 +88,9 @@
    * For further information, visit
    * <A href="http://www.atmel.com/products/AVR32/">Atmel AVR32</A>.\n
    * Support and FAQ: http://www.atmel.com/design-support/
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 // Include Files

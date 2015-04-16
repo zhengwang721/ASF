@@ -3,7 +3,7 @@
  *
  * \brief Power Management Controller (PMC) driver for SAM.
  *
- * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include "pmc.h"
@@ -278,8 +281,6 @@ uint32_t pmc_switch_mck_to_upllck(uint32_t ul_pres)
 
 /**
  * \brief Switch slow clock source selection to external 32k (Xtal or Bypass).
- *
- * \note This function disables the PLLs.
  *
  * \note Switching SCLK back to 32krc is only possible by shutting down the
  *       VDDIO power supply.
@@ -1142,6 +1143,36 @@ void pmc_disable_udpck(void)
 # else
 	PMC->PMC_SCDR = PMC_SCDR_UOTGCLK;
 # endif
+}
+#endif
+
+#if SAMG55
+/**
+ * \brief Switch UHP (USB) clock source selection to PLLA clock.
+ *
+ * \param ul_usbdiv Clock divisor.
+ */
+void pmc_switch_uhpck_to_pllack(uint32_t ul_usbdiv)
+{
+	PMC->PMC_USB = PMC_USB_USBDIV(ul_usbdiv);
+}
+
+/**
+ * \brief Switch UHP (USB) clock source selection to PLLB clock.
+ *
+ * \param ul_usbdiv Clock divisor.
+ */
+void pmc_switch_uhpck_to_pllbck(uint32_t ul_usbdiv)
+{
+	PMC->PMC_USB = PMC_USB_USBDIV(ul_usbdiv) | PMC_USB_USBS;
+}
+
+/**
+ * \brief Enable UHP (USB) clock.
+ */
+void pmc_enable_uhpck(void)
+{
+	PMC->PMC_SCER = PMC_SCER_UHP;
 }
 #endif
 

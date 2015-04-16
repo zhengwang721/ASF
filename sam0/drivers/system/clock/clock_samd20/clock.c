@@ -3,7 +3,7 @@
  *
  * \brief SAM D20 Clock Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +40,16 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #include <clock.h>
 #include <conf_clocks.h>
 #include <system.h>
 
 /**
  * \internal
- * \brief DFLL-specific data container
+ * \brief DFLL-specific data container.
  */
 struct _system_clock_dfll_config {
 	uint32_t control;
@@ -56,7 +59,7 @@ struct _system_clock_dfll_config {
 
 /**
  * \internal
- * \brief XOSC-specific data container
+ * \brief XOSC-specific data container.
  */
 struct _system_clock_xosc_config {
 	uint32_t frequency;
@@ -64,7 +67,7 @@ struct _system_clock_xosc_config {
 
 /**
  * \internal
- * \brief System clock module data container
+ * \brief System clock module data container.
  */
 struct _system_clock_module {
 	volatile struct _system_clock_dfll_config dfll;
@@ -74,7 +77,7 @@ struct _system_clock_module {
 
 /**
  * \internal
- * \brief Internal module instance to cache configuration values
+ * \brief Internal module instance to cache configuration values.
  */
 static struct _system_clock_module _system_clock_inst = {
 		.dfll = {
@@ -92,7 +95,7 @@ static struct _system_clock_module _system_clock_inst = {
 
 /**
  * \internal
- * \brief Wait for sync to the DFLL control registers
+ * \brief Wait for sync to the DFLL control registers.
  */
 static inline void _system_dfll_wait_for_sync(void)
 {
@@ -103,7 +106,7 @@ static inline void _system_dfll_wait_for_sync(void)
 
 /**
  * \internal
- * \brief Wait for sync to the OSC32K control registers
+ * \brief Wait for sync to the OSC32K control registers.
  */
 static inline void _system_osc32k_wait_for_sync(void)
 {
@@ -127,7 +130,7 @@ static inline void _system_clock_source_dfll_set_config_errata_9905(void)
 }
 
 /**
- * \brief Retrieve the frequency of a clock source
+ * \brief Retrieve the frequency of a clock source.
  *
  * Determines the current operating frequency of a given clock source.
  *
@@ -177,7 +180,7 @@ uint32_t system_clock_source_get_hz(
 }
 
 /**
- * \brief Configure the internal OSC8M oscillator clock source
+ * \brief Configure the internal OSC8M oscillator clock source.
  *
  * Configures the 8MHz (nominal) internal RC oscillator with the given
  * configuration settings.
@@ -198,7 +201,7 @@ void system_clock_source_osc8m_set_config(
 }
 
 /**
- * \brief Configure the internal OSC32K oscillator clock source
+ * \brief Configure the internal OSC32K oscillator clock source.
  *
  * Configures the 32KHz (nominal) internal RC oscillator with the given
  * configuration settings.
@@ -222,7 +225,7 @@ void system_clock_source_osc32k_set_config(
 }
 
 /**
- * \brief Configure the external oscillator clock source
+ * \brief Configure the external oscillator clock source.
  *
  * Configures the external oscillator clock source with the given configuration
  * settings.
@@ -271,7 +274,7 @@ void system_clock_source_xosc_set_config(
 }
 
 /**
- * \brief Configure the XOSC32K external 32KHz oscillator clock source
+ * \brief Configure the XOSC32K external 32KHz oscillator clock source.
  *
  * Configures the external 32KHz oscillator clock source with the given
  * configuration settings.
@@ -353,7 +356,7 @@ void system_clock_source_xosc32k_set_config(
 
 
 /**
- * \brief Configure the DFLL clock source
+ * \brief Configure the DFLL clock source.
  *
  * Configures the Digital Frequency Locked Loop clock source with the given
  * configuration settings.
@@ -410,7 +413,7 @@ void system_clock_source_dfll_set_config(
 }
 
 /**
- * \brief Writes the calibration values for a given oscillator clock source
+ * \brief Writes the calibration values for a given oscillator clock source.
  *
  * Writes an oscillator calibration value to the given oscillator control
  * registers. The acceptable ranges are:
@@ -479,7 +482,7 @@ enum status_code system_clock_source_write_calibration(
 }
 
 /**
- * \brief Enables a clock source
+ * \brief Enables a clock source.
  *
  * Enables a clock source which has been previously configured.
  *
@@ -528,7 +531,7 @@ enum status_code system_clock_source_enable(
 }
 
 /**
- * \brief Disables a clock source
+ * \brief Disables a clock source.
  *
  * Disables a clock source that was previously enabled.
  *
@@ -576,7 +579,7 @@ enum status_code system_clock_source_disable(
 }
 
 /**
- * \brief Checks if a clock source is ready
+ * \brief Checks if a clock source is ready.
  *
  * Checks if a given clock source is ready to be used.
  *
@@ -692,11 +695,15 @@ static void _switch_peripheral_gclk(void)
 }
 
 /**
- * \brief Initialize clock system based on the configuration in conf_clocks.h
+ * \brief Initialize clock system based on the configuration in conf_clocks.h.
  *
  * This function will apply the settings in conf_clocks.h when run from the user
  * application. All clock sources and GCLK generators are running when this function
  * returns.
+ *
+ * \note OSC8M is always enabled and if user selects other clocks for GCLK generators,
+ * the OSC8M default enable can be disabled after system_clock_init. Make sure the
+ * clock switch successfully before disabling OSC8M.
  */
 void system_clock_init(void)
 {
@@ -753,7 +760,7 @@ void system_clock_init(void)
 	/* OSCK32K */
 #if CONF_CLOCK_OSC32K_ENABLE == true
 	SYSCTRL->OSC32K.bit.CALIB =
-			(*(uint32_t *)SYSCTRL_FUSES_OSC32KCAL_ADDR >> SYSCTRL_FUSES_OSC32KCAL_Pos);
+			(*(uint32_t *)FUSES_OSC32KCAL_ADDR >> FUSES_OSC32KCAL_Pos);
 
 	struct system_clock_source_osc32k_config osc32k_conf;
 	system_clock_source_osc32k_get_config_defaults(&osc32k_conf);
@@ -777,8 +784,32 @@ void system_clock_init(void)
 	dfll_conf.loop_mode      = CONF_CLOCK_DFLL_LOOP_MODE;
 	dfll_conf.on_demand      = false;
 
+	/* Using DFLL48M COARSE CAL value from NVM Software Calibration Area Mapping
+     in DFLL.COARSE helps to output a frequency close to 48 MHz.
+	   Not applicable for silicon rev C and previous*/
+
+	/* Get MCU revision */
+	uint32_t rev = system_get_device_id();
+
+	rev &= DSU_DID_REVISION_Msk;
+	rev = rev >> DSU_DID_REVISION_Pos;
+
+	if (rev >= _SYSTEM_MCU_REVISION_D) {
+#define NVM_DFLL_COARSE_POS    58 /* DFLL48M Coarse calibration value bit position.*/
+#define NVM_DFLL_COARSE_SIZE   6  /* DFLL48M Coarse calibration value bit size.*/
+
+		uint32_t coarse =( *((uint32_t *)(NVMCTRL_OTP4)
+				+ (NVM_DFLL_COARSE_POS / 32))
+			>> (NVM_DFLL_COARSE_POS % 32))
+			& ((1 << NVM_DFLL_COARSE_SIZE) - 1);
+		/* In some revision chip, the coarse calibration value is not correct. */
+		if (coarse == 0x3f) {
+			coarse = 0x1f;
+		}
+		dfll_conf.coarse_value = coarse;
+	}
+
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN) {
-		dfll_conf.coarse_value = CONF_CLOCK_DFLL_COARSE_VALUE;
 		dfll_conf.fine_value   = CONF_CLOCK_DFLL_FINE_VALUE;
 	}
 
@@ -835,7 +866,7 @@ void system_clock_init(void)
 
 	/* Configure all GCLK generators except for the main generator, which
 	 * is configured later after all other clock systems are set up */
-	MREPEAT(8, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
+	MREPEAT(GCLK_GEN_NUM, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
 
 #  if CONF_CLOCK_DFLL_ENABLE == true
 	/* Enable DFLL reference clock if in closed loop mode */
@@ -865,6 +896,7 @@ void system_clock_init(void)
 
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);
+	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBC, CONF_CLOCK_APBC_DIVIDER);
 
 	/* GCLK 0 */
 #if CONF_CLOCK_CONFIGURE_GCLK == true

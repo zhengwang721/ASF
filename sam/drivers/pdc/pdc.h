@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM4 Peripheral DMA Controller (PDC) driver.
+ * \brief SAM Peripheral DMA Controller (PDC) driver.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +40,16 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 #ifndef PDC_H_INCLUDED
 #define PDC_H_INCLUDED
 
 /**
  * \defgroup asfdoc_sam_drivers_pdc_group Peripheral DMA Controller (PDC)
- * This driver for SAM4 devices provides an interface for the configuration and
+ * This driver for SAM devices provides an interface for the configuration and
  * management of the the Peripheral DMA Controller (PDC) module.
  *
  * The PDC transfers data between on-chip serial peripherals and the on and/or

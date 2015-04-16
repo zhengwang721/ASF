@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM USART Asynchronous Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 #include "usart_interrupt.h"
 
@@ -52,7 +55,7 @@
  * \param[in]  length   Length of data buffer
  *
  */
-void _usart_write_buffer(
+enum status_code _usart_write_buffer(
 		struct usart_module *const module,
 		uint8_t *tx_data,
 		uint16_t length)
@@ -60,17 +63,31 @@ void _usart_write_buffer(
 	/* Sanity check arguments */
 	Assert(module);
 	Assert(module->hw);
+	Assert(tx_data);
 
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
+	system_interrupt_enter_critical_section();
+
+	/* Check if the USART transmitter is busy */
+	if (module->remaining_tx_buffer_length > 0) {
+		system_interrupt_leave_critical_section();
+		return STATUS_BUSY;
+	}
+
 	/* Write parameters to the device instance */
 	module->remaining_tx_buffer_length = length;
+
+	system_interrupt_leave_critical_section();
+
 	module->tx_buffer_ptr              = tx_data;
 	module->tx_status                  = STATUS_BUSY;
 
 	/* Enable the Data Register Empty Interrupt */
 	usart_hw->INTENSET.reg = SERCOM_USART_INTFLAG_DRE;
+
+	return STATUS_OK;
 }
 
 /**
@@ -82,7 +99,7 @@ void _usart_write_buffer(
  * \param[in]  length   Length of data buffer
  *
  */
-void _usart_read_buffer(
+enum status_code _usart_read_buffer(
 		struct usart_module *const module,
 		uint8_t *rx_data,
 		uint16_t length)
@@ -90,13 +107,25 @@ void _usart_read_buffer(
 	/* Sanity check arguments */
 	Assert(module);
 	Assert(module->hw);
+	Assert(rx_data);
 
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
+	system_interrupt_enter_critical_section();
+
+	/* Check if the USART receiver is busy */
+	if (module->remaining_rx_buffer_length > 0) {
+		system_interrupt_leave_critical_section();
+		return STATUS_BUSY;
+	}
+
 	/* Set length for the buffer and the pointer, and let
 	 * the interrupt handler do the rest */
 	module->remaining_rx_buffer_length = length;
+
+	system_interrupt_leave_critical_section();
+
 	module->rx_buffer_ptr              = rx_data;
 	module->rx_status                  = STATUS_BUSY;
 
@@ -116,6 +145,8 @@ void _usart_read_buffer(
 		usart_hw->INTENSET.reg = SERCOM_USART_INTFLAG_RXS;
 	}
 #endif
+
+	return STATUS_OK;
 }
 
 /**
@@ -188,15 +219,12 @@ void usart_unregister_callback(
  */
 enum status_code usart_write_job(
 		struct usart_module *const module,
-		const uint16_t tx_data)
+		const uint16_t *tx_data)
 {
 	/* Sanity check arguments */
 	Assert(module);
-	Assert(module->hw);
-	/* Check if the USART transmitter is busy */
-	if (module->remaining_tx_buffer_length > 0) {
-		return STATUS_BUSY;
-	}
+	Assert(tx_data);
+
 
 	/* Check that the transmitter is enabled */
 	if (!(module->transmitter_enabled)) {
@@ -204,9 +232,7 @@ enum status_code usart_write_job(
 	}
 
 	/* Call internal write buffer function with length 1 */
-	_usart_write_buffer(module, (uint8_t *)&tx_data, 1);
-
-	return STATUS_OK;
+	return _usart_write_buffer(module, (uint8_t *)tx_data, 1);
 }
 
 /**
@@ -229,16 +255,10 @@ enum status_code usart_read_job(
 {
 	/* Sanity check arguments */
 	Assert(module);
-
-	/* Check if the USART receiver is busy */
-	if (module->remaining_rx_buffer_length > 0) {
-		return STATUS_BUSY;
-	}
+	Assert(rx_data);
 
 	/* Call internal read buffer function with length 1 */
-	_usart_read_buffer(module, (uint8_t *)rx_data, 1);
-
-	return STATUS_OK;
+	return _usart_read_buffer(module, (uint8_t *)rx_data, 1);
 }
 
 /**
@@ -275,14 +295,10 @@ enum status_code usart_write_buffer_job(
 {
 	/* Sanity check arguments */
 	Assert(module);
+	Assert(tx_data);
 
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
-	}
-
-	/* Check if the USART transmitter is busy */
-	if (module->remaining_tx_buffer_length > 0) {
-		return STATUS_BUSY;
 	}
 
 	/* Check that the receiver is enabled */
@@ -291,9 +307,7 @@ enum status_code usart_write_buffer_job(
 	}
 
 	/* Issue internal asynchronous write */
-	_usart_write_buffer(module, tx_data, length);
-
-	return STATUS_OK;
+	return _usart_write_buffer(module, tx_data, length);
 }
 
 /**
@@ -341,15 +355,8 @@ enum status_code usart_read_buffer_job(
 		return STATUS_ERR_DENIED;
 	}
 
-	/* Check if the USART receiver is busy */
-	if (module->remaining_rx_buffer_length > 0) {
-		return STATUS_BUSY;
-	}
-
 	/* Issue internal asynchronous read */
-	_usart_read_buffer(module, rx_data, length);
-
-	return STATUS_OK;
+	return _usart_read_buffer(module, rx_data, length);
 }
 
 /**
@@ -409,12 +416,12 @@ void usart_abort_job(
  * \retval STATUS_BUSY             A transfer is ongoing
  * \retval STATUS_ERR_BAD_DATA     The last operation was aborted due to a
  *                                 parity error. The transfer could be affected
- *                                 by external noise.
+ *                                 by external noise
  * \retval STATUS_ERR_BAD_FORMAT   The last operation was aborted due to a
- *                                 frame error.
+ *                                 frame error
  * \retval STATUS_ERR_OVERFLOW     The last operation was aborted due to a
- *                                 buffer overflow.
- * \retval STATUS_ERR_INVALID_ARG  An invalid transceiver enum given.
+ *                                 buffer overflow
+ * \retval STATUS_ERR_INVALID_ARG  An invalid transceiver enum given
  */
 enum status_code usart_get_job_status(
 		struct usart_module *const module,
@@ -652,3 +659,4 @@ void _usart_interrupt_handler(
 	}
 #endif
 }
+

@@ -3,7 +3,7 @@
  *
  * \brief Real-Time Clock (RTC) driver for SAM.
  *
- * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef RTC_H_INCLUDED
@@ -109,6 +112,10 @@ void rtc_get_tamper_date(Rtc *p_rtc, uint32_t *pul_year, uint32_t *pul_month,
 uint32_t rtc_get_tamper_source(Rtc *p_rtc, uint8_t reg_num);
 uint32_t rtc_get_tamper_event_counter(Rtc *p_rtc);
 bool rtc_is_tamper_occur_in_backup_mode(Rtc *p_rtc, uint8_t reg_num);
+#endif
+
+#if (SAMG55)
+uint32_t rtc_get_milliseconds(Rtc *p_rtc);
 #endif
 
 /**

@@ -4,7 +4,7 @@
  * \brief These are application-specific resources which are used
  *        in the application in addition to the underlaying stack
  * - Performance Analyzer application.
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /*
- * Copyright (c) 2012, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -62,7 +62,7 @@
 
 /* === Types ================================================================ */
 
-#define NUMBER_OF_APP_TIMERS        (5)
+#define NUMBER_OF_APP_TIMERS        (6)
 
 #define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS + \
 	NUMBER_OF_TOTAL_STACK_TIMERS)

@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Slave with DMA Quick Start Guide
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,6 +47,7 @@
  * The supported board list:
  *    - SAMD21 Xplained Pro
  *    - SAMR21 Xplained Pro
+ *    - SAML21 Xplained Pro
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Slave mode
@@ -152,4 +153,7 @@
  * -# Once data ready, clear the address match status.
  *    \snippet qs_i2c_slave_dma.c clear_status
  *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

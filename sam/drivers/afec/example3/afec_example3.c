@@ -3,7 +3,7 @@
  *
  * \brief AFEC automatic comparison example for SAM.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -79,6 +79,9 @@
 	-- Compiled: xxx xx xxxx xx:xx:xx --
 \endcode
  * -# The application will output comparison result on the terminal.
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include <stdio.h>
