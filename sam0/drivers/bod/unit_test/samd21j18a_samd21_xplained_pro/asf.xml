@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Unit tests for the SAM D21 BOD Driver" id="sam0.drivers.bod.unit_test.samd21_xplained_pro" type="unit-test" >
+	<project caption="Unit tests for the SAM D21 BOD Driver" id="sam0.drivers.bod.unit_test.samd21_xplained_pro">
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_test.h"/>
