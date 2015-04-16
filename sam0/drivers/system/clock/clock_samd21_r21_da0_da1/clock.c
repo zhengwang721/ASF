@@ -48,7 +48,7 @@
 #include <system.h>
 
 #ifndef SYSCTRL_FUSES_OSC32K_ADDR
-#if (SAMR) || (SAMD)
+#if (SAMR21) || (SAMD)
 #  define SYSCTRL_FUSES_OSC32K_ADDR FUSES_OSC32K_CAL_ADDR
 #  define SYSCTRL_FUSES_OSC32K_Pos  FUSES_OSC32K_CAL_Pos
 #elif (SAML21)
