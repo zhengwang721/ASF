@@ -64,7 +64,7 @@
  */
 static bool udi_hid_reqstdifaceget_descriptor(uint8_t *report_desc);
 
-bool udi_hid_setup( uint8_t *rate, uint8_t *protocol, uint8_t *report_desc, bool (*set_report)(void) )
+bool udi_hid_setup( uint8_t *rate, uint8_t *protocol, uint8_t *report_desc, bool (*setup_report)(void) )
 {
 	if (Udd_setup_is_in()) {
 		// Requests Interface GET
@@ -81,8 +81,7 @@ bool udi_hid_setup( uint8_t *rate, uint8_t *protocol, uint8_t *report_desc, bool
 			switch (udd_g_ctrlreq.req.bRequest) {
 
 			case USB_REQ_HID_GET_REPORT:
-				// TODO
-				break;
+				return setup_report();
 
 			case USB_REQ_HID_GET_IDLE:
 				udd_g_ctrlreq.payload = rate;
@@ -103,7 +102,7 @@ bool udi_hid_setup( uint8_t *rate, uint8_t *protocol, uint8_t *report_desc, bool
 			switch (udd_g_ctrlreq.req.bRequest) {
 
 			case USB_REQ_HID_SET_REPORT:
-				return set_report();
+				return setup_report();
 
 			case USB_REQ_HID_SET_IDLE:
 				*rate = udd_g_ctrlreq.req.wValue >> 8;
