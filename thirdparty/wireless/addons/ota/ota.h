@@ -3,6 +3,7 @@
 #ifndef OTA_H
 #define OTA_H
 
+#include "compiler.h"
 
 #define MODE_MASK     0x03
 

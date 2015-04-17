@@ -20,8 +20,7 @@
 		<build type="header-file" value="platform-conf.h"/>
 		<config name="config.sam0.drivers.sercom.spi" value="polled"/>
 		<config name="config.sam0.drivers.sercom.usart" value="callback"/>
-		<config name="config.thirdparty.wireless.addons.ota.common" value="server"/>
-		<config name="config.thirdparty.wireless.addons.ota.upgrade" value="server" />
+		<config name="config.thirdparty.wireless.addons.ota" value="server"/>
 		<require idref="board.samd21_xplained_pro"/>
 		<require idref="common2.services.delay"/>
 		<require idref="sam0.drivers.wdt"/>
