@@ -43,6 +43,7 @@
 #include "at24mac602.h"
 #include "at24mac602-arch.h"
 #include "samd21_xplained_pro.h"
+#include "trx_access.h"
 /*---------------------------------------------------------------------------*/
 /* 
  * Define the I2C pins. On the REB233-XPro board, the SDA and SCL pins are
@@ -220,7 +221,7 @@ read(uint8_t address, uint8_t len, uint8_t *buf)
   #define COMMAND_WRITE     0xB0    /* Write I2C command */
   #define COMMAND_READ      0xB1    /* Read I2C command */
   int i, n;
-
+ ENTER_TRX_CRITICAL_REGION();
   /* 
    * In order to ensure we get the proper data read out, we should perform a
    * dummy write to the device so we start off at the right address. Then, we
@@ -268,6 +269,7 @@ read(uint8_t address, uint8_t len, uint8_t *buf)
 
   /* finish up */
   STOP_CONDITION();
+  LEAVE_TRX_CRITICAL_REGION();
   return 0;
  }
 /*---------------------------------------------------------------------------*/
