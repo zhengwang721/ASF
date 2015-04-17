@@ -2,7 +2,8 @@
  * \file app_peer_search.h
  *
  * \brief Function prototypes for Peera Search process -
- * Performance Analyzer application
+ * Performance Analyzer application for AT86RF215.
+ *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -51,7 +52,7 @@
 #define APP_PEER_SEARCH_H
 
 /**
- * \ingroup group_perf_analyzer
+ * \ingroup group_perf_analyzer_2
  * \defgroup group_peer_search  Peer Search Process
  * Handles the functionalities of peer searching process.
  */
@@ -237,5 +238,5 @@ extern "C" {
 } /* extern "C" */
 #endif
 
-#endif /* APP_STATE_H */
+#endif /* APP_PEER_SEARCH_H */
 /* EOF */

@@ -158,7 +158,7 @@ void qmm_queue_append(queue_t *q, buffer_t *buf)
 #if (_DEBUG_ > 1)
         if (q->head == NULL)
         {
-            ABORT("Corrupted queue: Null pointer has been queued");
+            Assert("Corrupted queue: Null pointer has been queued");
         }
 #endif
 

@@ -2,7 +2,7 @@
  * \file perf_api_serial_handler.h
  *
  * \brief This file contains macros and function prototypes for SIO handling.
- * - Performance Analyzer application.
+ * - Performance Analyzer application for AT86RF215
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -51,7 +51,7 @@
 #define PERF_API_SERIAL_HANDLER_H
 
 /**
- * \ingroup group_perf_analyzer
+ * \ingroup group_perf_analyzer_2
  * \defgroup group_serial_parser Serial Parser
  * Handles all the serial input and output commands.
  * It de-serializes the incoming Performance Analyzer Req Msg packets and calls

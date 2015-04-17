@@ -434,15 +434,15 @@ FLASH_DECLARE(uint32_t leg_oqpsk_freq0_map[LEG_OQPSK_CH_CENTER_FREQ0_MAP_ROW_SIZ
 
 FLASH_DECLARE(OQPSK_CH_SPAC_TABLE_DATA_TYPE oqpsk_ch_spac_table[OQPSK_CH_SPAC_TABLE_ROW_SIZE][OQPSK_CH_SPAC_TABLE_COL_SIZE]) = { OQPSK_CH_SPAC_TABLE };
 		
-FLASH_DECLARE(uint32_t oqpsk_max_ch_map[OQPSK_TOTAL_CHANNELS_MAP_ROW_SIZE][OQPSK_TOTAL_CHANNELS_MAP_COL_SIZE]) = { OQPSK_TOTAL_CHANNELS_MAP };	//vk
+FLASH_DECLARE(uint32_t oqpsk_max_ch_map[OQPSK_TOTAL_CHANNELS_MAP_ROW_SIZE][OQPSK_TOTAL_CHANNELS_MAP_COL_SIZE]) = { OQPSK_TOTAL_CHANNELS_MAP };	
 	
 FLASH_DECLARE(OQPSK_CHIP_RATE_FREQ_TABLE_DATA_TYPE oqpsk_chip_rate_freq_table[OQPSK_CHIP_RATE_FREQ_TABLE_ROW_SIZE][OQPSK_CHIP_RATE_FREQ_TABLE_COL_SIZE]) = {OQPSK_CHIP_RATE_FREQ_TABLE};
 #endif
 
 #ifdef SUPPORT_OFDM
-FLASH_DECLARE(uint32_t ofdm_freq0_map[OFDM_CH_CENTER_FREQ0_MAP_ROW_SIZE][OFDM_CH_CENTER_FREQ0_MAP_COL_SIZE]) = { OFDM_CH_CENTER_FREQ0_MAP }; //vk
+FLASH_DECLARE(uint32_t ofdm_freq0_map[OFDM_CH_CENTER_FREQ0_MAP_ROW_SIZE][OFDM_CH_CENTER_FREQ0_MAP_COL_SIZE]) = { OFDM_CH_CENTER_FREQ0_MAP }; 
 
-FLASH_DECLARE(uint32_t ofdm_max_ch_map[OFDM_TOTAL_CHANNELS_MAP_ROW_SIZE][OFDM_TOTAL_CHANNELS_MAP_COL_SIZE]) = { OFDM_TOTAL_CHANNELS_MAP }; //vk
+FLASH_DECLARE(uint32_t ofdm_max_ch_map[OFDM_TOTAL_CHANNELS_MAP_ROW_SIZE][OFDM_TOTAL_CHANNELS_MAP_COL_SIZE]) = { OFDM_TOTAL_CHANNELS_MAP }; 
 
 FLASH_DECLARE(uint32_t ofdm_ch_spacing_table[]) = { CH_SPAC_OFDM_TABLE };
 
@@ -460,11 +460,11 @@ FLASH_DECLARE(OFDM_PROCESSING_DELAY_ACK_TIMING_TABLE_DATA_TYPE
 #endif
 
 #ifdef SUPPORT_FSK
-FLASH_DECLARE(uint32_t fsk_freq0_map[FSK_CH_CENTER_FREQ0_MAP_ROW_SIZE][FSK_CH_CENTER_FREQ0_MAP_COL_SIZE]) = { FSK_CH_CENTER_FREQ0_MAP }; //vk
+FLASH_DECLARE(uint32_t fsk_freq0_map[FSK_CH_CENTER_FREQ0_MAP_ROW_SIZE][FSK_CH_CENTER_FREQ0_MAP_COL_SIZE]) = { FSK_CH_CENTER_FREQ0_MAP };
 
-FLASH_DECLARE(uint32_t fsk_max_ch_map[FSK_TOTAL_CHANNELS_MAP_ROW_SIZE][FSK_TOTAL_CHANNELS_MAP_COL_SIZE]) = { FSK_TOTAL_CHANNELS_MAP }; //vk
+FLASH_DECLARE(uint32_t fsk_max_ch_map[FSK_TOTAL_CHANNELS_MAP_ROW_SIZE][FSK_TOTAL_CHANNELS_MAP_COL_SIZE]) = { FSK_TOTAL_CHANNELS_MAP }; 
 
-FLASH_DECLARE(uint32_t fsk_ch_spacing_table[]) = { CH_SPAC_FSK_TABLE }; //vk
+FLASH_DECLARE(uint32_t fsk_ch_spacing_table[]) = { CH_SPAC_FSK_TABLE }; 
 
 FLASH_DECLARE(FSK_DATA_RATE_TABLE_DATA_TYPE fsk_data_rate_table[FSK_DATA_RATE_TABLE_SIZE]) =
     FSK_DATA_RATE_TABLE;
@@ -1247,7 +1247,18 @@ retval_t get_supported_channels_tuple(trx_id_t trx_id, uint32_t *value)
     return status;
 }
 
-//check
+/**
+ * @brief Gets the OFDM center frequency F0
+ *
+ *
+ * @param[in]   trx_id Transceiver identifier
+ * @param[in]   freq_band Frequency band
+ * @param[in]   option OFDM option
+ * @param[out]  freq  Pointer to frequency F0
+ * @param[out]  spacing Pointer to Channel spacing
+ *
+ * @return 
+ */
 void get_ofdm_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band,ofdm_option_t option,uint32_t *freq, uint32_t *spacing)
 {
 
@@ -1264,6 +1275,18 @@ void get_ofdm_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band,ofdm_option_t op
 
 }
 
+
+/**
+ * @brief Gets the Legacy OQPSK center frequency F0
+ *
+ *
+ * @param[in]   trx_id Transceiver identifier
+ * @param[in]   freq_band Frequency band
+ * @param[out]  freq  Pointer to frequency F0
+ * @param[out]  spacing Pointer to Channel spacing
+ *
+ * @return 
+ */
 void get_leg_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *freq, uint32_t *spacing)
 {
 
@@ -1281,7 +1304,17 @@ void get_leg_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *
 	}
 }
 
-
+/**
+ * @brief Gets the OQPSK center frequency F0
+ *
+ *
+ * @param[in]   trx_id Transceiver identifier
+ * @param[in]   freq_band Frequency band
+ * @param[out]  freq  Pointer to frequency F0
+ * @param[out]  spacing Pointer to Channel spacing
+ *
+ * @return 
+ */
 void get_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *freq, uint32_t *spacing)
 {
 
@@ -1303,6 +1336,18 @@ void get_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *freq
 	}
 }
 
+/**
+ * @brief Gets the FSK center frequency F0
+ *
+ *
+ * @param[in]   trx_id Transceiver identifier
+ * @param[in]   freq_band Frequency band
+ * @param[in]   option FSK operating mode
+ * @param[out]  freq  Pointer to frequency F0
+ * @param[out]  spacing Pointer to Channel spacing
+ *
+ * @return 
+ */
 void get_fsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band,fsk_op_mode_t option,uint32_t *freq, uint32_t *spacing)
 {
 
@@ -1319,6 +1364,15 @@ void get_fsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band,fsk_op_mode_t opt
 
 }
 
+/**
+ * @brief Gets the OQPSK Chiprate
+ *
+ *
+ * @param[in]   trx_id Transceiver identifier
+ * @param[in]   freq_band Frequency band
+ *
+ * @return     oqpsk chiprate 
+ */
 oqpsk_chip_rate_t get_oqpsk_chip_rate(trx_id_t trx_id,sun_freq_band_t freq_band)
 {
 	uint16_t rate = 0;
@@ -1326,7 +1380,7 @@ oqpsk_chip_rate_t get_oqpsk_chip_rate(trx_id_t trx_id,sun_freq_band_t freq_band)
 
 	for (uint8_t i = 0; i < OQPSK_CHIP_RATE_FREQ_TABLE_ROW_SIZE; i++)
 	{
-		if (freq_band == (uint16_t)PGM_READ_WORD(&oqpsk_chip_rate_freq_table[i][0]))//vk
+		if (freq_band == (uint16_t)PGM_READ_WORD(&oqpsk_chip_rate_freq_table[i][0]))
 		{
 			rate = (uint16_t)PGM_READ_WORD(&oqpsk_chip_rate_freq_table[i][1]);
 			break;
@@ -1355,6 +1409,14 @@ oqpsk_chip_rate_t get_oqpsk_chip_rate(trx_id_t trx_id,sun_freq_band_t freq_band)
 	return rate_mode;
 }
 
+/**
+ * @brief Gets Maximum no of channel supported by each modulation
+ *
+ *
+ * @param[in]   trx_id Transceiver identifier
+ *
+ * @return      No of channels supported
+ */
 uint16_t get_sun_max_ch_no(trx_id_t trx_id)
 {
 	

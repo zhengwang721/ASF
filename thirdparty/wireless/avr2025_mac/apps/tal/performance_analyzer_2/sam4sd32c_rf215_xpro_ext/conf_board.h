@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L-EK Board.
+ * \brief  Configuration File for SAM4S Xplained Pro Board.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -48,9 +48,6 @@
 #define CONF_BOARD_UART_CONSOLE
 #define CONF_BOARD_AT86RFX
 #define IC_TYPE             (0x00)
-// Enable USB interface (USB)
-
-//#define CONF_BOARD_USB_PORT
 #define MCU_SOC_NAME "ATSAM4SD32C" 
 
 #endif  /* CONF_BOARD_H_INCLUDED */

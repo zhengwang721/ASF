@@ -2,7 +2,7 @@
  * \file per_mode_common_utils.c
  *
  * \brief  Common utilities for both Initiator and Receptor in PER Measurement
- * mode - Performance Analyzer application
+ * mode - Performance Analyzer application for AT86RF215
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -64,18 +64,17 @@
 
 /*
  * \brief This function is called rest the application equivalent to soft reset
- * check-> modification required
+ *
  */
 void app_reset(trx_id_t trx)
 {
-	/* app reset - this is to make the node to restart applicationa as bootup */
-	//set_main_state(trx,INIT, NULL);
+	/* app reset - this is to make the node to restart application as boot up */
 	init_after_disconnect(trx);
 
 	/* INIT was a success - so change to WAIT_FOR_EVENT state */
 	set_main_state(trx,WAIT_FOR_EVENT, NULL);
 }
-//check
+
 int8_t scale_reg_value_to_ed(uint8_t reg_val)
 {
 	return ((((MAX_ED_VAL-MIN_ED_VAL)*(reg_val - MIN_ED_REG_VAL))/(MAX_ED_REG_VAL-MIN_ED_REG_VAL))+MIN_ED_VAL);	
@@ -96,18 +95,12 @@ float reverse_float( const float float_val )
 	float retuVal;
 	char *floatToConvert = (char *)&float_val;
 	char *returnFloat = (char *)&retuVal;
-#if UC3
-	/* swap the bytes into a temporary buffer */
-	returnFloat[0] = floatToConvert[3];
-	returnFloat[1] = floatToConvert[2];
-	returnFloat[2] = floatToConvert[1];
-	returnFloat[3] = floatToConvert[0];
-#else
+
 	returnFloat[0] = floatToConvert[0];
 	returnFloat[1] = floatToConvert[1];
 	returnFloat[2] = floatToConvert[2];
 	returnFloat[3] = floatToConvert[3];
-#endif
+
 	return retuVal;
 }
 

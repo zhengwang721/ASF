@@ -27,8 +27,10 @@
 		<build type="define"   name="HIGH_DATA_RATE_SUPPORT"              value=""/>
 		
 		<require idref="board.sam4l_xplained_pro"/>
-		
+		<generator value="armgcc"/>
+		<generator value="doxygen"/>
 		<generator value="as5_arm"/>
+		<generator value="iarewarm"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>

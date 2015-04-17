@@ -1,7 +1,7 @@
 /**
  * \file *********************************************************************
  *
- * \brief USART Serial configuration
+ * \brief Hardware Timer configuration
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *

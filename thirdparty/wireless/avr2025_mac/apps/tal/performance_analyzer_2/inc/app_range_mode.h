@@ -2,7 +2,8 @@
  * \file app_range_mode.h
  *
  * \brief Range Measurement mode related prototypes and defines
- * - Performance Analyzer application
+ * - Performance Analyzer application for AT86RF215
+ *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -51,7 +52,7 @@
 #define APP_RANGE_MODE_H
 
 /**
- * \ingroup group_perf_analyzer
+ * \ingroup group_perf_analyzer_2
  * \defgroup group_range_measure  Range Measurement
  * Performs the  functionalities of Range measurement mode,
  * Evaluate the Communication coverage of the transceiver.
@@ -106,5 +107,5 @@ extern "C" {
 #endif
 
 /* ! \} */
-#endif /* APP_STATE_H */
+#endif /* APP_RANGE_MODE_H */
 /* EOF */

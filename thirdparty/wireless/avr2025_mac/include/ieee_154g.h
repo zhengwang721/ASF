@@ -557,14 +557,14 @@ typedef enum fsk_bt_tag
 typedef struct oqpsk_tag
 {
     oqpsk_chip_rate_t chip_rate;
-//vk
+
     oqpsk_rate_mode_t rate_mode;
 } oqpsk_t;
 
 typedef struct ofdm_tag
 {
     ofdm_option_t option;
-//vk
+
     ofdm_mcs_t mcs_val;
     bool interl;
 } ofdm_t;

@@ -113,7 +113,7 @@ void sio2ncp_init(void)
 #endif
 
 #if (BOARD == SAM4L_XPLAINED_PRO)
-#if defined (NCP_RESET_GPIO)//added
+#if defined (NCP_RESET_GPIO)
 	ioport_set_pin_dir(NCP_RESET_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(NCP_RESET_GPIO, IOPORT_PIN_LEVEL_HIGH);
 #endif

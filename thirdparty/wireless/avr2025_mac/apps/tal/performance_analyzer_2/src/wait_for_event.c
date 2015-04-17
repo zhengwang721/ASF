@@ -2,7 +2,7 @@
  * \file wait_for_event.c
  *
  * \brief Event handling functionalities to start Peer Search - Performance
- * Analyzer application
+ * Analyzer application for AT86RF215
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -58,10 +58,9 @@
 
 /* === MACROS ============================================================== */
 /* ED threshold to accept a frame in the configuration mode  */
-#define CONFIG_ED_THRESHOLD_RF09             (0x3a) //values to be checked with data sheet
+#define CONFIG_ED_THRESHOLD_RF09             (0x3a) 
 
-#define CONFIG_ED_THRESHOLD_RF24             (0x1f) //values to be checked with data sheet
-
+#define CONFIG_ED_THRESHOLD_RF24             (0x1f) 
 /* === PROTOTYPES ========================================================== */
 static void configure_pibs(trx_id_t trx);
 
@@ -79,7 +78,7 @@ void wait_for_event_init(trx_id_t trx,void *arg)
     configure_pibs(trx);
 
     /* Leave the radio in RX mode in default channel */
-	if(trx==RF09) //vk
+	if(trx==RF09) 
 	{
     tal_rx_enable(RF09, PHY_RX_ON);
 	}
@@ -104,7 +103,7 @@ void wait_for_event_init(trx_id_t trx,void *arg)
  */
 void wait_for_event_task(trx_id_t trx)
 {
-	return;//range measure temporarily not enabled //check
+	return;
     uint8_t key_press;
 
     /* Check for any key press */
@@ -147,9 +146,9 @@ void wait_for_event_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 		ed_threshold = CONFIG_ED_THRESHOLD_RF09;
 	}
     /* Frame received on air: Processing the same */
-    if ((mac_frame_info->len_no_crc) == expected_frame_size) //check
+    if ((mac_frame_info->len_no_crc) == expected_frame_size) 
     {
-        /* Point to the message : 1 =>size is first byte and 2=>FCS*/
+        
         msg = (app_payload_t *)(mac_frame_info->mpdu + FRAME_OVERHEAD_SRC_IEEE_ADDR );
 
         /* Is this a peer request cmd */

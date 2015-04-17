@@ -1,7 +1,7 @@
 /**
  * \file perf_api_serial_handler.c
  *
- * \brief SIO service implementation - Performance Analyzer application
+ * \brief SIO service implementation - Performance Analyzer application for AT86RF215
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -1122,7 +1122,7 @@ float peer_fw_version,uint32_t peer_feature_mask)
 	*msg_buf++ = start_mode;
 	/* Copy all configuration parameters */
 	*msg_buf++ = (uint8_t)trx_config_params->channel;
-	*msg_buf++ = (uint8_t)trx_config_params->channel>>8;	 //check
+	*msg_buf++ = (uint8_t)trx_config_params->channel>>8;	 
 	*msg_buf++ = trx_config_params->channel_page;
 	*msg_buf++ = trx_config_params->tx_power_dbm;
 	*msg_buf++ = trx_config_params->tx_power_reg;
@@ -1131,27 +1131,17 @@ float peer_fw_version,uint32_t peer_feature_mask)
 	*msg_buf++ = (uint8_t)trx_config_params->ack_request;
 	*msg_buf++ = (uint8_t)trx_config_params->rx_desensitize;
 	*msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver (RPC)*/
-	#if (ANTENNA_DIVERSITY == 1)
-	*msg_buf++ = trx_config_params->antenna_selected;
-	#else
-	*msg_buf++ = FIELD_DOES_NOT_EXIST;
-	#endif
-
+	*msg_buf++ = FIELD_DOES_NOT_EXIST; /* Filled with 0xff to indicate this parameter is not available for this transceiver (ANTENNA DIVERSITY)*/
 	*msg_buf++ = trx_config_params->trx_state;
 	*msg_buf++ = (uint8_t)trx_config_params->number_test_frames;
 	*msg_buf++ = (uint8_t)(trx_config_params->number_test_frames >> 8);
 	*msg_buf++ = (uint8_t)(trx_config_params->number_test_frames >> 16);
 	*msg_buf++ = (uint8_t)(trx_config_params->number_test_frames >> 24);
 	*msg_buf++ = (uint8_t)(trx_config_params->phy_frame_length);
-	*msg_buf++ = (uint8_t)(trx_config_params->phy_frame_length >> 8); //check
+	*msg_buf++ = (uint8_t)(trx_config_params->phy_frame_length >> 8); 
 
 	/*Peer settings for parameters like CRC and ant diversity */
-	#if (ANTENNA_DIVERSITY == 1)
-	*msg_buf++ = trx_config_params->antenna_selected_on_peer;
-	#else
-	*msg_buf++ = FIELD_DOES_NOT_EXIST;
-	#endif
-
+	*msg_buf++ = FIELD_DOES_NOT_EXIST; /* Filled with 0xff to indicate this parameter is not available for this transceiver (ANTENNA DIVERSITY)*/
 	*msg_buf++ = trx_config_params->crc_settings_on_peer;
 	
 	if (START_MODE_PER == start_mode)
@@ -1284,8 +1274,10 @@ void usr_range_test_beacon_rsp(trx_id_t trx,frame_info_t *frame, uint8_t lqi_h, 
 		uint8_t lqi_r, int8_t ed_r)
 {
 	uint8_t *msg_buf;
-	uint8_t frame_len = (uint8_t)frame->len_no_crc+tal_pib[trx].FCSLen; /* First byte of mpdu is the frame length (RF215) //max length of range test pkt cannot exceed 8b hence maintaing the same variable
-	                               **/ //check -> to be changed
+    /* First byte of mpdu is the frame length (RF215)
+	//max length of range test pkt cannot exceed 8b hence maintaining the same variable**/ 
+	                               
+	uint8_t frame_len = (uint8_t)frame->len_no_crc+tal_pib[trx].FCSLen; 
 	uint8_t *frame_mpdu = frame->mpdu;
 	msg_buf = get_next_tx_buffer(trx);
 
@@ -1296,7 +1288,7 @@ void usr_range_test_beacon_rsp(trx_id_t trx,frame_info_t *frame, uint8_t lqi_h, 
 
 	/* Copy Len, Protocol Id, Msg Id parameters */
 	*msg_buf++ = PROTOCOL_ID_LEN + RANGE_TEST_RSP_PKT_LEN + LENGTH_FIELD_LEN +
-			(frame_len- tal_pib[trx].FCSLen);//check
+			(frame_len- tal_pib[trx].FCSLen);
 	*msg_buf++ = PROTOCOL_ID;
 	*msg_buf++ = RANGE_TEST_BEACON_RESPONSE;
 	*msg_buf++ = frame_len;
@@ -1323,11 +1315,10 @@ void usr_range_test_beacon_rsp(trx_id_t trx,frame_info_t *frame, uint8_t lqi_h, 
 void usr_range_test_marker_ind(trx_id_t trx,frame_info_t *frame, uint8_t lqi, int8_t ed_value)
 {
 	uint8_t *msg_buf;
-	uint8_t frame_len = (uint8_t)frame->len_no_crc+tal_pib[trx].FCSLen; /* First byte of mpdu is the frame length (RF215) //max length of range test pkt cannot exceed 8b hence maintaing the same variable
-	                            **/ //check -> to be changed
+	/* First byte of mpdu is the frame length (RF215)
+	//max length of range test pkt cannot exceed 8b hence maintaining the same variable**/ 
+	uint8_t frame_len = (uint8_t)frame->len_no_crc+tal_pib[trx].FCSLen; 
 	uint8_t *frame_mpdu = frame->mpdu;
-	
-
 	msg_buf = get_next_tx_buffer(trx);
 
 	/* Check if buffer could not be allocated */
@@ -1452,7 +1443,7 @@ void usr_perf_set_confirm(trx_id_t trx, uint8_t status, uint8_t parameter_type, 
 	/* Copy Parameter type */
 	*msg_buf++ = parameter_type;
 	if((parameter_type == PARAM_CHANNEL_PAGE) && ((param_value ->param_value_8bit) == SUN_PAGE_NO))
-	{ //check -> cleaning required
+	{
 		if((uint8_t)((param_value->param_value_32bit)>>16) == OFDM)
 		{
 			*msg_buf++ = param_len = 6;
@@ -1525,7 +1516,7 @@ void usr_perf_get_confirm(trx_id_t trx, uint8_t status, uint8_t parameter_type, 
 	/* Copy Parameter type */
 	*msg_buf++ = parameter_type;
 	if((parameter_type == PARAM_CHANNEL_PAGE) && ((param_value ->param_value_8bit) == SUN_PAGE_NO))
-	{ //check -> cleaning required
+	{ 
 		if((uint8_t)((param_value->param_value_32bit)>>16) == OFDM)
 		{
 			*msg_buf++ = param_len = 6;
@@ -2042,16 +2033,10 @@ void usr_set_default_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
     *msg_buf++ = (uint8_t)default_trx_config_params->retry_enabled;
     *msg_buf++ = (uint8_t)default_trx_config_params->ack_request;
 
-    *msg_buf++ = (uint8_t)default_trx_config_params->rx_desensitize;
+    *msg_buf++ = (uint8_t)default_trx_config_params->rx_desensitize;	 
+	*msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver RPC */		
+    *msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver ANTENNA DIVERSITY */
 
-		 *msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver */		
-
-
-#if (ANTENNA_DIVERSITY == 1)
-    *msg_buf++ = default_trx_config_params->antenna_selected;
-#else
-    *msg_buf++ = FIELD_DOES_NOT_EXIST;
-#endif
 
     *msg_buf++ = default_trx_config_params->trx_state;
     *msg_buf++ = (uint8_t)default_trx_config_params->number_test_frames;
@@ -2062,14 +2047,8 @@ void usr_set_default_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
 	*msg_buf++ = (uint8_t)(default_trx_config_params->phy_frame_length >> 8);
 
     /*Peer settings for parameters like CRC and ant diversity */
-#if (ANTENNA_DIVERSITY == 1)
-    *msg_buf++ = default_trx_config_params->antenna_selected_on_peer;
-#else
-    *msg_buf++ = FIELD_DOES_NOT_EXIST;
-#endif
-
+    *msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver ANTENNA DIVERSITY */
     *msg_buf++ = default_trx_config_params->crc_settings_on_peer;
-
     *msg_buf = EOT;
 }
 
@@ -2212,7 +2191,7 @@ void usr_get_current_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
     /* configuration parameters */
     *msg_buf++ = (uint8_t)curr_trx_conf_params->channel;
     *msg_buf++ = (uint8_t)(curr_trx_conf_params->channel >> 8);	
-	if(curr_trx_conf_params->channel_page == 9) //check
+	if(curr_trx_conf_params->channel_page == CH_PG_SUN) 
 	{
 		*msg_buf++ = curr_trx_conf_params->sun_phy_page.page_no;
 		*msg_buf++ = curr_trx_conf_params->sun_phy_page.freq_band;
@@ -2270,13 +2249,9 @@ void usr_get_current_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
     *msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver */
 #endif
 
-		*msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver */
+	*msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver RPC */
+    *msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver ANTENNA DIVERSITY */
 
-#if (ANTENNA_DIVERSITY == 1)
-    *msg_buf++ = curr_trx_conf_params->antenna_selected;
-#else
-    *msg_buf++ = FIELD_DOES_NOT_EXIST;
-#endif
 
     *msg_buf++ = curr_trx_conf_params->trx_state;
     *msg_buf++ = (uint8_t)curr_trx_conf_params->number_test_frames;
@@ -2288,17 +2263,11 @@ void usr_get_current_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
 
     /*peer node settings need to be added */
     /*Peer settings for parameters like CRC and ant diversity */
-#if (ANTENNA_DIVERSITY == 1)
-    *msg_buf++ = curr_trx_conf_params->antenna_selected_on_peer;
-#else
-    *msg_buf++ = FIELD_DOES_NOT_EXIST;
-#endif
-
+    *msg_buf++ = FIELD_DOES_NOT_EXIST; /*Filled with 0xff to indicate this parameter is not available for this transceiver ANTENNA DIVERSITY */
     *msg_buf++ = curr_trx_conf_params->crc_settings_on_peer;
 
-
-		float temp = 0.0;
-		memcpy(msg_buf, &temp, sizeof(float)); //ism freq
+	float temp = 0.0;
+	memcpy(msg_buf, &temp, sizeof(float)); //ism freq
 
     msg_buf += sizeof(float);
     *msg_buf = EOT;

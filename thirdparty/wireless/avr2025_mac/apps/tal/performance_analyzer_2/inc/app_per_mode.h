@@ -1,9 +1,8 @@
 /**
  * \file app_per_mode.h
  *
- * \brief PER Measuremnt mode prototypes and defines
- *
- * -Performance Analyzer application
+ * \brief PER Measurement mode prototypes and defines
+ * -Performance Analyzer application for AT86RF215
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -53,7 +52,7 @@
 #define APP_PER_MODE_H
 
 /**
- * \ingroup group_perf_analyzer
+ * \ingroup group_perf_analyzer_2
  * \defgroup group_per_mode  Packet error rate measurement
  *  Handles the functionalities of Packet Error Rate Measurement(PER) Mode,
  *  User can set and get various paramters of Transceiver like Channel,Antenna
@@ -93,31 +92,10 @@
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 #define  TX_POWER_REG     (3)
 #endif
-#if (TAL_TYPE == AT86RF233)
-#define  FREQ_BAND_08     (4)
-#define  FREQ_BAND_09     (5)
-#endif
-#ifdef EXT_RF_FRONT_END_CTRL
-#define CHANNEL_26                          (0x1A)
-#define MAX_TX_PWR_REG_VAL                  (0x09)
-#define MAX_TX_PWR_REG_VAL_CH26             (0x0d)
-#endif
+
 #define LED_TOGGLE_COUNT_FOR_PER            (50)
-#define MAX_TX_PWR_REG_VAL                  (0x1f)//check
+#define MAX_TX_PWR_REG_VAL                  (0x1f)
 
-#if (TAL_TYPE == AT86RF233)
-#define BASE_ISM_FREQUENCY_MHZ              (2306)
-#define MIN_ISM_FREQUENCY_MHZ               (2322)
-#define MAX_ISM_FREQUENCY_MHZ               (2527)
-#define MID_ISM_FREQUENCY_MHZ               (2434)
-
-#define ENABLE_ALL_RPC_MODES                (0xff)
-#define DISABLE_ALL_RPC_MODES               (0xC1)
-#define CC_BAND_0                           (0x00)
-#define CC_BAND_8                           (0x08)
-#define CC_BAND_9                           (0x09)
-#define CC_NUMBER_0                         (0x00)
-#endif
 
 #define  MAX_ED_REG_VAL	(0X53)
 #define  MIN_ED_REG_VAL	(0X00)
@@ -135,11 +113,7 @@
 #define SET_PARAM                           (0x01)
 #define RESULT_REQ                          (0x02)
 #define RESULT_RSP                          (0x03)
-#if (ANTENNA_DIVERSITY == 1)
-#define DIV_STAT_REQ                        (0x04)
-#define DIV_STAT_RSP                        (0x05)
-#define DIV_SET_REQ                         (0x06)
-#endif /* #if (ANTENNA_DIVERSITY == 1) */
+
 #define IDENTIFY_NODE                       (0x07)
 #ifdef  CRC_SETTING_ON_REMOTE_NODE
 #define CRC_STAT_REQ                        (0x08)
@@ -185,14 +159,7 @@ typedef struct {
 	bool rpc_enable;
 #endif
 
-#if (ANTENNA_DIVERSITY == 1)
-	bool antenna_diversity;
-	bool antenna_diversity_on_peer;
-	uint8_t antenna_selected;
-	uint8_t antenna_selected_on_peer;
-#endif
-
-	uint16_t channel; //check
+	uint16_t channel; 
 	uint8_t channel_page;
 	sun_phy_t sun_phy_page;
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
@@ -201,7 +168,7 @@ typedef struct {
 	int8_t tx_power_dbm;
 	uint8_t trx_state; 
 
-	uint16_t phy_frame_length; //check
+	uint16_t phy_frame_length;
 	uint32_t number_test_frames;
 
 #if (TAL_TYPE == AT86RF233)
@@ -341,17 +308,6 @@ void marker_tx_timer_handler_cb(void *parameter);
  */
 void marker_rsp_timer_handler_cb(void *parameter);
 
-#ifdef EXT_RF_FRONT_END_CTRL
-
-/**
- * \brief handle the tx power settings in case of External PA enabled,
- * and the channel changes from or to 26.This is to meet the FCC compliance
- *
- * \param Curr_chnl Current Channel
- * \param prev_chnl Previous Channel
- */
-void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl);
-#endif
 
 /* ! \} */
 #ifdef __cplusplus
@@ -362,5 +318,5 @@ extern "C" {
 } /* extern "C" */
 #endif
 
-#endif /* APP_STATE_H */
+#endif /* APP_PER_MODE_H */
 /* EOF */

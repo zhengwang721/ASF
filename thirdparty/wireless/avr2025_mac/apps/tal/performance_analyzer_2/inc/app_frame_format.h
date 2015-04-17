@@ -2,7 +2,7 @@
  * \file app_frame_format.h
  *
  * \brief Defines various structure definitions, used to communicate with
- * Peer node over the air - Performance Analyzer application
+ * Peer node over the air - Performance Analyzer application for AT86RF215
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *

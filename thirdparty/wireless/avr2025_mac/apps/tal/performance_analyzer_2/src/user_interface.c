@@ -2,7 +2,7 @@
  * \file user_interface.c
  *
  * \brief LED, Button and terminal print functions - Perfoamnce Analyzer
- * application
+ * application of AT86RF215
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -47,9 +47,9 @@
  */
 /* === INCLUDES ============================================================ */
 #include "tal.h"
-#include "tal_rf215.h"
 # include "asf.h"
 # include "app_init.h"
+#include "user_interface.h"
 
 /**
  * \addtogroup group_user_interface

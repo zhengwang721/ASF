@@ -2,7 +2,7 @@
  * \file init_state.c
  *
  * \brief Initilization functions and utilities -
- * Performance Analyzer application
+ * Performance Analyzer application for AT86RF215
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -59,15 +59,22 @@
 #include "perf_api_serial_handler.h"
 #include "common_sw_timer.h"
 #include "tal_generic.h"
+#include "user_interface.h"
 
 /* === TYPES =============================================================== */
 
 /* === MACROS ============================================================== */
-//extern retval_t trx_reset(trx_id_t trx_id); vk
+
 /* === PROTOTYPES ========================================================== */
 static void configuration_mode_selection(trx_id_t trx);
+static void app_timers_init(void);
 /* === GLOBALS ============================================================= */
-
+uint8_t T_APP_TIMER;
+uint8_t T_APP_TIMER_RANGE_RF09;
+uint8_t T_APP_TIMER_RANGE_RF24;
+uint8_t APP_TIMER_TO_TX;
+uint8_t APP_TIMER_TO_TX_LED_OFF;
+uint8_t APP_TIMER_TO_RX_LED_OFF;
 /* === IMPLEMENTATION ====================================================== */
 /*
  * \brief Initialization task for INIT STATE. All hardware, PAL, TAL and stack
@@ -75,17 +82,6 @@ static void configuration_mode_selection(trx_id_t trx);
  *
  * \param arg arguments for INIT state
  */
-
-
-static void app_timers_init(void);
-
-uint8_t T_APP_TIMER;
-uint8_t T_APP_TIMER_RANGE_RF09;
-uint8_t T_APP_TIMER_RANGE_RF24;
-uint8_t APP_TIMER_TO_TX;
-uint8_t APP_TIMER_TO_TX_LED_OFF;
-uint8_t APP_TIMER_TO_RX_LED_OFF;
-
 void init_state_init(trx_id_t trx, void *arg)
 {
     sw_timer_init();
@@ -143,7 +139,7 @@ void init_state_init(trx_id_t trx, void *arg)
 
 void init_after_disconnect(trx_id_t trx)
 {
-	node_info[trx].peer_found = false; //check
+	node_info[trx].peer_found = false;
     /* Reset trx */
     if (trx_reset(trx) != MAC_SUCCESS)
     {
@@ -162,24 +158,11 @@ void init_after_disconnect(trx_id_t trx)
 
     tal_state[trx] = TAL_IDLE;
 
+	 /* Initialize sio rx state */
+    init_sio(trx);
 
-
-/*
-    / *
-     * Configure interrupt handling.
-     * Install a handler for the radio and the baseband interrupt.
-     * /
-    pal_trx_irq_flag_clr();
-    trx_irq_init(trx_irq_handler_cb);
-    pal_trx_irq_en();   / * Enable transceiver main interrupt. * /*/
-
-
-
-	    /* Initialize sio rx state */
-	    init_sio(trx);
-
-	    /* select the configuration mode */
-	    configuration_mode_selection(trx);
+	/* select the configuration mode */
+	 configuration_mode_selection(trx);
 
 	    if(trx == RF09)
 	    {
@@ -212,7 +195,7 @@ void init_after_disconnect(trx_id_t trx)
 	
 }
 /**
- * \brief Checks whether Configuartion Mode is selected or not
+ * \brief Checks whether Configuration Mode is selected or not
  *
  * This will be checked during the INIT state
  * \ingroup group_config_mode

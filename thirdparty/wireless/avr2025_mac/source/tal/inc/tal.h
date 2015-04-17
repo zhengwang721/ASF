@@ -63,7 +63,7 @@
 #include "tal_types.h"
 #include "mac_build_config.h"
 #include "qmm.h"
-#if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
+#if (TAL_TYPE == AT86RF215)
 #include "tal_rf215.h"
 #endif
 
@@ -124,7 +124,7 @@ typedef struct tal_pib_tag
     /**
      * Current RF channel to be used for all transmissions and receptions.
      */
-#if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
+#if (TAL_TYPE == AT86RF215)
     uint16_t CurrentChannel;
 #else
     uint8_t CurrentChannel;
@@ -151,7 +151,7 @@ typedef struct tal_pib_tag
      * Default value of transmit power of transceiver
      * using IEEE defined format of phyTransmitPower.
      */
-#if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
+#if (TAL_TYPE == AT86RF215)
     int8_t TransmitPower;
 #else
     uint8_t TransmitPower;
@@ -207,7 +207,7 @@ typedef struct tal_pib_tag
      */
     bool PromiscuousMode;
 #endif
-#if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
+#if (TAL_TYPE == AT86RF215)
 
 #ifdef RX_WHILE_BACKOFF
     /**
@@ -512,7 +512,7 @@ typedef struct tal_pib_tag
      */
     uint8_t frame_versions;
 #endif
-#endif /* #if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215) */
+#endif /* #if (TAL_TYPE == AT86RF215) */
 #ifdef MEASURE_TIME_OF_FLIGHT
     /**
      * Time of flight
@@ -628,7 +628,7 @@ typedef struct
 	 */
 	uint32_t time_stamp;
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
-#if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
+#if (TAL_TYPE == AT86RF215)
     /** MPDU length - does not include CRC length */
     uint16_t len_no_crc;
 #endif
@@ -670,7 +670,7 @@ typedef enum csma_mode_tag
 extern uint32_t tal_tx_octet_cnt;
 #endif
 
-#if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
+#if (TAL_TYPE == AT86RF215)
 #   ifdef AT86RF215M
 #       define NUM_TRX                      1
 #       define ACTIVE_TRX                   RF09
@@ -715,7 +715,7 @@ extern tal_pib_t tal_pib;
 #define RF_BAND                             BAND_2400
 #elif (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B)
 #define RF_BAND                             BAND_900
-#elif (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
+#elif (TAL_TYPE == AT86RF215)
 #define RF_BAND                             BAND_MULTIPLE
 #else
 #error "Missing RF_BAND define"
@@ -910,7 +910,7 @@ extern "C" {
 #endif
 
 #if (TAL_TYPE == AT86RF215)
-   retval_t trx_reset(trx_id_t trx_id); //vk
+   retval_t trx_reset(trx_id_t trx_id); 
 #endif   /**
      * @brief TAL task handling
      *
@@ -1046,7 +1046,7 @@ extern "C" {
     void rtb_rx_frame_cb(frame_info_t *rx_frame);
 #endif  /* ENABLE_RTB */
 
-#if (TAL_TYPE != AT86RF215LT) && (TAL_TYPE != AT86RF215)
+#if (TAL_TYPE != AT86RF215)
 #if ((MAC_START_REQUEST_CONFIRM == 1) && (defined BEACON_SUPPORT)) || defined(DOXYGEN)
     /**
      * @brief Beacon frame transmission
@@ -1056,7 +1056,7 @@ extern "C" {
      */
     void tal_tx_beacon(frame_info_t *tx_frame);
 #endif /* ((MAC_START_REQUEST_CONFIRM == 1) && (defined BEACON_SUPPORT)) */
-#endif /* #if (TAL_TYPE != AT86RF215LT) && (TAL_TYPE != AT86RF215) */
+#endif /* #if (TAL_TYPE != AT86RF215) */
 
     /**
      * @brief Requests to TAL to transmit frame
@@ -1132,14 +1132,14 @@ extern "C" {
      *
      * @ingroup apiTalApi
      */
-#if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
+#if (TAL_TYPE == AT86RF215)
     retval_t tal_generate_rand_seed(void);
     uint16_t tal_get_symbol_duration_us(trx_id_t trx_id);
 #else
     void tal_generate_rand_seed(void);
-#endif /* #if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215) */
+#endif /* #if (TAL_TYPE == AT86RF215) */
 
-#if (TAL_TYPE != AT86RF215LT) && (TAL_TYPE != AT86RF215)
+#if (TAL_TYPE != AT86RF215)
     /**
      * @brief Adds two time values
      *
@@ -1155,9 +1155,9 @@ extern "C" {
     {
         return ((a + b) & SYMBOL_MASK);
     }
-#endif /* #if (TAL_TYPE != AT86RF215LT) && (TAL_TYPE != AT86RF215) */
+#endif /* #if (TAL_TYPE != AT86RF215) */
 
-#if (TAL_TYPE != AT86RF215LT) && (TAL_TYPE != AT86RF215)
+#if (TAL_TYPE != AT86RF215)
     /**
      * @brief Subtract two time values
      *
@@ -1181,7 +1181,7 @@ extern "C" {
             return (((MAX_SYMBOL_TIME - b) + a) & SYMBOL_MASK);
         }
     }
-#endif /* #if (TAL_TYPE != AT86RF215LT) && (TAL_TYPE != AT86RF215) */
+#endif /* #if (TAL_TYPE != AT86RF215) */
 
 #if defined(ENABLE_RP) || defined(ENABLE_RH)
     retval_t tal_rampup(void);

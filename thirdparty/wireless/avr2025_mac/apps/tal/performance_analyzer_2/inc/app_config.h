@@ -2,8 +2,9 @@
  * \file app_config.h
  *
  * \brief These are application-specific resources which are used
- *        in the application in addition to the underlaying stack
- * - Performance Analyzer application.
+ *        in the application in addition to the underlying stack
+ *        - Performance Analyzer application.
+ *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -53,10 +54,6 @@
 /* === Includes ============================================================= */
 
 #include "stack_config.h"
-#include "user_interface.h"
-#include <conf_board.h>
-#include "board.h"
-
 
 /* === Macros =============================================================== */
 
@@ -66,7 +63,7 @@
 /* === Types ================================================================ */
 
 
-#define NUMBER_OF_APP_TIMERS        (6) //check
+#define NUMBER_OF_APP_TIMERS        (6) 
 
 #define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS + NUMBER_OF_TOTAL_STACK_TIMERS)
 
@@ -84,9 +81,6 @@
 /* Offset of IEEE address storage location within EEPROM */
 #define EE_IEEE_ADDR                (0)
 
-/* Macro to enable the feature of counting wrong CRC packets */
-
-#define CRC_SETTING_ON_REMOTE_NODE
 
 
 /* === Externals ============================================================ */

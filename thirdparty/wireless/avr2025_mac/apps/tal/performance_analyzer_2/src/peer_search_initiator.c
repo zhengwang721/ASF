@@ -2,7 +2,7 @@
  * \file peer_search_initiator.c
  *
  * \brief Initiator/Transmitter functionalities in Peer Search Process -
- * Performance Analyzer application
+ * Performance Analyzer application for AT86RF215
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -88,7 +88,7 @@ typedef enum
  */
 
 
-/** Lowest power -17dBm  check ->to be changed*/
+/** Lowest power -17dBm */
 #define CONFIG_MODE_TX_PWR  (0xEF)
 
 //! \}
@@ -168,7 +168,7 @@ void peer_search_initiator_init(trx_id_t trx,void *arg)
 	{
 		/* set the tx power to lowest in configuration mode */
 
-	   uint8_t config_tx_pwr = CONFIG_MODE_TX_PWR;
+	  uint8_t config_tx_pwr = CONFIG_MODE_TX_PWR;
 	  tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&config_tx_pwr);
 
 	}
@@ -339,7 +339,7 @@ static void peer_req_send_task(trx_id_t trx)
     }
     count++;
 	
-    /* Print messge if the Peer search is in progress in Range mode  */
+    /* Print message if the Peer search is in progress in Range mode  */
     if (PEER_SEARCH_RANGE_TX == node_info[trx].main_state)
     {
         print_event(trx,PRINT_PEER_SEARCH_IN_PROGRESS);
@@ -432,7 +432,7 @@ static retval_t send_peer_req(trx_id_t trx)
         case PEER_SEARCH_PER_TX:
             data->op_mode = PER_TEST_MODE;
             break;
-            /* To keep the GCC compiler happy */
+     /* To keep the GCC compiler happy */
         case INIT:
         case WAIT_FOR_EVENT:
         case PEER_SEARCH_RANGE_RX:
@@ -460,7 +460,7 @@ static retval_t send_peer_req(trx_id_t trx)
     payload_length = ((sizeof(app_payload_t) -
                        sizeof(general_pkt_t)) +
                       sizeof(peer_req_t));
-    return( transmit_frame1(trx, FCF_SHORT_ADDR,
+    return( app_transmit_frame(trx, FCF_SHORT_ADDR,
                            (uint8_t *)(&dst_addr),/* dst_addr is braodcast */
                            FCF_LONG_ADDR,         /* src_addr_mode use IEEE addr */
                            seq_num[trx],               /* seq_num used as msdu handle */
@@ -484,7 +484,7 @@ static void peer_rsp_rcvd_init(trx_id_t trx,void *arg)
 
     if (send_peer_conf(trx))
     {
-        /* Print messge if the Peer search failed in Range mode  */
+        /* Print message if the Peer search failed in Range mode  */
         if (PEER_SEARCH_RANGE_TX == node_info[trx].main_state)
         {
             print_event(trx, PRINT_PEER_SEARCH_FAILED);
@@ -556,7 +556,7 @@ static void peer_rsp_rcvd_tx_cb(trx_id_t trx,retval_t status, frame_info_t *fram
     }
     else
     {
-        /* Print messge if the Peer search failed in Range mode  */
+        /* Print message if the Peer search failed in Range mode  */
         if (PEER_SEARCH_RANGE_TX == node_info[trx].main_state)
         {
             print_event(trx, PRINT_PEER_SEARCH_FAILED);
@@ -595,7 +595,7 @@ static void peer_rsp_rcvd_exit(trx_id_t trx)
     if (true == node_info[trx].configure_mode)
     {
         /* set the TX power to default level */
-        uint8_t config_tx_pwr = TAL_TRANSMIT_POWER_DEFAULT; //check
+        uint8_t config_tx_pwr = TAL_TRANSMIT_POWER_DEFAULT; 
         node_info[trx].configure_mode = false;
 
 		tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&config_tx_pwr);
@@ -632,7 +632,7 @@ static retval_t send_peer_conf(trx_id_t trx)
                        sizeof(general_pkt_t)) +
                       sizeof(peer_conf_t));
 
-    return( transmit_frame1(trx,FCF_SHORT_ADDR,
+    return( app_transmit_frame(trx,FCF_SHORT_ADDR,
                            (uint8_t *)(&node_info[trx].peer_short_addr),
                            FCF_SHORT_ADDR,
                            seq_num[trx],               /* seq_num used as msdu handle */

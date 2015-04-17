@@ -2,7 +2,8 @@
  * \file peer_search_receptor.c
  *
  * \brief Receptor functionalities in Peer Search Process - Performance Analyzer
- *  application
+ *  application of AT86RF215
+ *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -53,6 +54,8 @@
 #include "app_init.h"
 #include "app_frame_format.h"
 #include "app_peer_search.h"
+#include "user_interface.h"
+
 
 /**
  * \addtogroup group_peer_search_receptor
@@ -301,10 +304,10 @@ static int send_peer_rsp(trx_id_t trx,uint64_t *dst_addr)
                        sizeof(general_pkt_t)) +
                       sizeof(peer_rsp_t));
 
-    return( transmit_frame1(trx, FCF_LONG_ADDR,
+    return( app_transmit_frame(trx, FCF_LONG_ADDR,
                            (uint8_t *)(dst_addr),
                            FCF_SHORT_ADDR,
-                           seq_num[trx],              /* seq_num used as msdu handle */
+                           seq_num[trx],  /* seq_num used as msdu handle */
                            (uint8_t *)&msg,
                            payload_length,
                            1));
@@ -343,7 +346,7 @@ static void wait_for_conf_rx_cb(trx_id_t trx,frame_info_t *mac_frame_info)
     if ((mac_frame_info->len_no_crc) == (FRAME_OVERHEAD
                                     + ((sizeof(app_payload_t)
                                         - sizeof(general_pkt_t))
-                                       + sizeof(peer_conf_t)))) //check
+                                       + sizeof(peer_conf_t)))) 
     {
         /* Point to the message : 1 =>size is first byte and 2=>FCS*/
         msg = (app_payload_t *)(mac_frame_info->mpdu +  FRAME_OVERHEAD);

@@ -54,7 +54,7 @@
 #include "status_codes.h"
 #include "stdio_usb.h"
 
-#define SERIAL_RX_BUF_SIZE_HOST    156 //added
+
 /* === PROTOTYPES ============================================================
 **/
 

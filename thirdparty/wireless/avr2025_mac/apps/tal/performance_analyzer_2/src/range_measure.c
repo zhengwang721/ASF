@@ -1,8 +1,8 @@
 /**
  * \file range_measure.c
  *
- * \brief Range Measurement mode functionaities - Performance Anallyzer application
- *
+ * \brief Range Measurement mode functionalities - Performance Analyzer 
+ *  application of AT86RF215
  * This implements the range measurement mode functionality
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
@@ -257,7 +257,7 @@ static int range_test_frame_tx(void)
                        sizeof(general_pkt_t)) +
                       sizeof(data_pkt_range_test_t));
 
-    return( transmit_frame1(RF24,FCF_SHORT_ADDR,
+    return( app_transmit_frame(RF24,FCF_SHORT_ADDR,
                            (uint8_t *)(&node_info[RF24].peer_short_addr),
                            FCF_SHORT_ADDR,
                            seq_num,              /* seq_num used as msdu handle */

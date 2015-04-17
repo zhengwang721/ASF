@@ -59,7 +59,7 @@
 #include "at86rf215.h"
 
 /* === TYPES =============================================================== */
-//check
+
 /* TRX Parameter: Tolerance of the phyTransmitPower PIB attribute.
  *                This is encoded into the two MSBits of the attribute,
  *                and is effectively read-only.
@@ -76,7 +76,7 @@ typedef enum trx_id_tag
     RFBOTH  /**< Id for both device parts */
 } SHORTENUM trx_id_t;
 
-//check
+
 #define TRX_SUPPORTED_CHANNELS_LEG(trx) \
 ( \
 (trx == RF24)? \

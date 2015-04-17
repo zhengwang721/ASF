@@ -541,8 +541,7 @@ static retval_t check_valid_freq_range(trx_id_t trx_id)
 {
     retval_t status = MAC_SUCCESS;
 
-    uint32_t freq = tal_pib[trx_id].phy.freq_f0 /*//vk +
-                    (tal_pib[trx_id].phy.ch_spacing * tal_pib[trx_id].CurrentChannel)*/;
+    uint32_t freq = tal_pib[trx_id].phy.freq_f0;
     uint32_t spacing = tal_pib[trx_id].phy.ch_spacing;
 
     if ((spacing % 25000) > 0)
@@ -1602,7 +1601,7 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
 				hrleg = 0;
                 tal_pib[trx_id].phy.ch_spacing = LEG_915_CH_SPAC;
                 tal_pib[trx_id].phy.freq_band = US_915;
-                tal_pib[trx_id].phy.freq_f0 = LEG_915_F0/* - LEG_915_CH_SPAC*/; //vk
+                tal_pib[trx_id].phy.freq_f0 = LEG_915_F0; 
                 tal_pib[trx_id].phy.modulation = LEG_OQPSK;
                 tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_1000;
 				tal_pib_set(trx_id, phyHighRateEnabled, (pib_value_t*)&hrleg);
@@ -1619,7 +1618,7 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
 			hrleg = 0;
 	        tal_pib[trx_id].phy.ch_spacing = LEG_915_CH_SPAC;
 	        tal_pib[trx_id].phy.freq_band = CHINA_780;
-	        tal_pib[trx_id].phy.freq_f0 = LEG_780_F0/* - LEG_915_CH_SPAC*/; //vk
+	        tal_pib[trx_id].phy.freq_f0 = LEG_780_F0; 
 	        tal_pib[trx_id].phy.modulation = LEG_OQPSK;
 	        tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_1000;
 			tal_pib_set(trx_id, phyHighRateEnabled, (pib_value_t*)&hrleg);
@@ -1631,7 +1630,7 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
 			hrleg = 1;
 			tal_pib[trx_id].phy.ch_spacing = LEG_915_CH_SPAC;
 			tal_pib[trx_id].phy.freq_band = US_915;
-			tal_pib[trx_id].phy.freq_f0 = LEG_915_F0/* - LEG_915_CH_SPAC*/; //vk
+			tal_pib[trx_id].phy.freq_f0 = LEG_915_F0; 
 			tal_pib[trx_id].phy.modulation = LEG_OQPSK;
 			tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_1000;
 			tal_pib_set(trx_id, phyHighRateEnabled, (pib_value_t*)&hrleg);
@@ -1659,7 +1658,7 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
 			hrleg = 1;
 			tal_pib[trx_id].phy.ch_spacing = LEG_915_CH_SPAC;
 			tal_pib[trx_id].phy.freq_band = CHINA_780;
-			tal_pib[trx_id].phy.freq_f0 = LEG_780_F0/* - LEG_915_CH_SPAC*/; //vk
+			tal_pib[trx_id].phy.freq_f0 = LEG_780_F0; 
 			tal_pib[trx_id].phy.modulation = LEG_OQPSK;
 			tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_1000;
 			tal_pib_set(trx_id, phyHighRateEnabled, (pib_value_t*)&hrleg);

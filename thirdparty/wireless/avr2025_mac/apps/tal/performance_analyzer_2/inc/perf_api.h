@@ -1,7 +1,7 @@
 /**
  * \file perf_api.h
  *
- * \brief API function protypes - Performance Analyzer application
+ * \brief API function protypes - Performance Analyzer application for AT86RF215
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -74,16 +74,22 @@
 
 
 /**
- * *\brief Function to set the various configuaration paramters for PER Test
+ * *\brief Function to set the various configuration parameters for PER Test
  *
  * \param param_type    Parameter type to be set
  * \param param_value   Pointer to the parameter value to be set
  */
 void perf_set_req(trx_id_t trx, uint8_t set_param_type, param_value_t *param_value);
+
+/**
+ * *\brief Function to set the various configuration parameters in SUN PAGE for PER Test
+ *
+ * \param sun_page    Pointer to the configurable parameter value structure
+ */
 void perf_set_sun_page(trx_id_t trx,uint8_t *sun_page);
 
 /**
- * \brief Function to get the various configuaration paramters for PER Test
+ * \brief Function to get the various configuration parameters for PER Test
  *
  * \param param_type    Parameter type to be read
  */
@@ -312,7 +318,7 @@ void usr_sensor_data_get_confirm(trx_id_t trx, uint8_t status, float bat_voltage
  * \param Board Name      HW Board name as string
  * \param mac_address     MAC address of the source node
  * \param fw_version      Firmware version
- *
+ * \param fw_feature_mask Features supported by the firmware
  * \return void
  */
 void usr_identify_board_confirm(trx_id_t trx,uint8_t status,

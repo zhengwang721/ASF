@@ -2,7 +2,7 @@
  * \file perf_msg_const.h
  *
  * \brief This file defines all Req, confirm, Indication message constants.
- * - Performance Analyzer application
+ * - Performance Analyzer application for AT86RF215
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -75,7 +75,7 @@
 #define OCTET_STR_LEN_BYTE_LEN          (1)
 
 #define IDENTIFY_BOARD_CONFIRM_LEN      (19)
-#define PERF_START_CONFIRM_LEN          (31) //check 
+#define PERF_START_CONFIRM_LEN          (31) 
 #define PERF_SET_CONFIRM_LEN            (3)
 #define PERF_GET_CONFIRM_LEN            (3)
 #define IDENTIFY_PEER_NODE_CONFIRM_LEN  (2)
@@ -89,14 +89,13 @@
 #define SENSOR_DATA_CONFIRM_LEN         (10)
 #define PER_TEST_START_CONFIRM_LEN      (2)
 #define RANGE_TEST_START_CONFIRM_LEN    (2)
-//#define RANGE_TEST_PKT_LEN              (RANGE_TEST_PKT_LENGTH - FCS_LEN + LENGTH_FIELD_LEN +1 )/*check*/
 #define RANGE_TEST_RSP_PKT_LEN          (5) /*Excluding ota packet*/
 #define RANGE_TEST_MARKER_IND_LEN       (3) /*Excluding ota packet*/
 #define RANGE_TEST_STOP_CONFIRM_LEN     (2)
 #define PER_TEST_END_INDICATION_LEN     (36)
 #define PEER_DISCONNECT_CONFIRM_LEN     (2)
-#define SET_DEFAULT_CONFIG_CONFIRM_LEN  (22) //check
-#define GET_CURRENT_CONFIG_CONFIRM_LEN  (25) //check added 2 for channel and fl addition and subt one for chennl page
+#define SET_DEFAULT_CONFIG_CONFIRM_LEN  (22) 
+#define GET_CURRENT_CONFIG_CONFIRM_LEN  (25) 
 #define RANGE_MEASURE_STATS_CONFIRM     (10)
 
 /* ! \} */

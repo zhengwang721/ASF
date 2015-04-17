@@ -2,7 +2,7 @@
  * \file user_interface.h
  *
  * \brief LED,Button,Terminal print event prototypes and defines
- * - Performance Analyzer application.
+ * - Performance Analyzer application for AT86RF215
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -52,7 +52,7 @@
 
 #include "tal_rf215.h"
 /**
- * \ingroup group_perf_analyzer
+ * \ingroup group_perf_analyzer_2
  * \defgroup group_user_interface  User Interface
  * Handles all User interface related functions such as Button, Print,LED
  *events.

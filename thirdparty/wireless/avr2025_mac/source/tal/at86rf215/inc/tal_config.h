@@ -52,8 +52,6 @@
 
 /* === INCLUDES ============================================================ */
 
-//#include "pal_types.h"
-
 /* === EXTERNALS =========================================================== */
 
 /* === MACROS ============================================================== */
@@ -213,7 +211,10 @@
 #       define SUPPORT_FSK
 #   endif
 
-
+/**
+ * uncomment the following define RF215V1 
+ * if the RF215 version 1 module is used
+ */
 #   ifndef RF215V1
 #      define RF215V1
 #   endif
@@ -224,7 +225,7 @@
  * uncomment the following define SUPPORT_MODE_SWITCH.
  */
 #   ifndef SUPPORT_MODE_SWITCH
-//#       define SUPPORT_MODE_SWITCH //vk
+//#       define SUPPORT_MODE_SWITCH 
 #   endif
 
 /**
@@ -233,7 +234,7 @@
  * uncomment the following define SUPPORT_FSK_RAW_MODE
  */
 #   ifndef SUPPORT_FSK_RAW_MODE
-//#       define SUPPORT_FSK_RAW_MODE //vk
+//#       define SUPPORT_FSK_RAW_MODE 
 #   endif
 
 /**

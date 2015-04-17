@@ -90,7 +90,6 @@ static retval_t tal_timer_init(void);
  * \brief Stops all initialized TAL timers
  */
 
-//static retval_t trx_reset(trx_id_t trx_id); //vk
 static void cleanup_tal(trx_id_t trx_id);
 static void trx_init(void);
 

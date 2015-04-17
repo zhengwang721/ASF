@@ -1,9 +1,8 @@
 /**
  * \file app_init.h
  *
- * \brief Initialization prototypes and enumerations - Performance Analyzer
- * application
- *
+ * \brief Initialization prototypes and enumerations - Performance Analyzer 
+ *        application of AT86RF215
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -56,7 +55,7 @@
 # include "app_config.h"
 
 /**
- * \defgroup group_perf_analyzer Performance Analyzer Application
+ * \defgroup group_perf_analyzer_2 Performance Analyzer Application
  * This  application Performance Analyzer  is a Serial interface based
  *application,
  * which communicates with Wireless Analyzer to demonstrate various features and
@@ -65,7 +64,7 @@
  */
 
 /**
- * \ingroup group_perf_analyzer
+ * \ingroup group_perf_analyzer_2
  * \defgroup group_app_init Application Initialization Process
  * Initializes the Performance Analyzer Application
  * \{
@@ -177,7 +176,11 @@ void app_alert(void);
  */
 void init_state_init(trx_id_t trx, void *arg);
 
+/**
+ * \brief Function to perform initialization task after disconnect request
+ */
 void init_after_disconnect(trx_id_t trx);
+
 /**
  * \brief Function to init the information base for device
  */
@@ -237,7 +240,7 @@ extern volatile node_ib_t node_info[NUM_TRX];
  *transmission
  *         TAL_BUSY         if the TAL is busy servicing the previous tx request
  */
-extern retval_t transmit_frame1( trx_id_t trx,uint8_t dst_addr_mode,
+extern retval_t app_transmit_frame( trx_id_t trx,uint8_t dst_addr_mode,
 		uint8_t *dst_addr,
 		uint8_t src_addr_mode,
 		uint8_t msdu_handle,
@@ -255,5 +258,5 @@ extern "C" {
 
 /* ! \} */
 
-#endif /* APP_STATE_H */
+#endif /* APP_INIT_H */
 /* EOF */

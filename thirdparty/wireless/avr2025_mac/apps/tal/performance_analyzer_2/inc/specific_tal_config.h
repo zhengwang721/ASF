@@ -2,7 +2,8 @@
  * \file specific_tal_config.h
  *
  * \brief This file defines specific TAL configuration parameters
- * 
+ * - Performance Analyzer application for AT86RF215
+ *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -54,12 +55,7 @@
 
 /* === INCLUDES ============================================================ */
 
-
-#ifdef AT86RF215LT
-#include "at86rf215lt.h"
-#else
 #include "at86rf215.h"
-#endif
 
 /* === EXTERNALS =========================================================== */
 
@@ -162,9 +158,17 @@
  */
 #define SUPPORT_OFDM
 
-
+/**
+ * Support all TFA features
+ * To include all TFA features to the build,
+ * uncomment the following define ENABLE_TFA.
+ */
 #define ENABLE_TFA
 
+/**
+ * uncomment the following define RF215V1 
+ * if the RF215 version 1 module is used
+ */
 #define RF215V1
 
 /**
@@ -172,9 +176,8 @@
  * To include the FSK support to the build,
  * uncomment the following define SUPPORT_FSK.
  */
-#ifndef AT86RF215LT
 #define SUPPORT_FSK
-#endif
+
 
 /**
  * Check if at least one modulation is enabled.
