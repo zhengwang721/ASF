@@ -47,19 +47,18 @@
 #include "net/rpl/rpl.h"
 #include "compiler.h"
 #include "stdbool.h"
-#include "widbg.h"
-#include "widbg_mgr.h"
-#include "widbg_common.h"
-#include "widbg_upgrade.h"
-#include "widbg_debug.h"
-#ifdef WIDBG_SERVER
-#include "widbg_mgr_server.h"
-#include "widbg_parser.h"
+#include "ota.h"
+#include "ota_mgr.h"
+#include "ota_common.h"
+#include "ota_upgrade.h"
+#ifdef OTA_SERVER
+#include "ota_mgr_server.h"
+#include "ota_parser.h"
 #else
-#include "widbg_mgr_client.h"
+#include "ota_mgr_client.h"
 #endif
-#ifndef WIDBG_SERVER
-#include "widbg_nvm.h"
+#ifndef OTA_SERVER
+#include "ota_nvm.h"
 #endif
 #include <stdio.h>
 #include <string.h>
@@ -73,8 +72,8 @@
 
 /* Currently UPGRADE and COMMON module is added for SC6LoWPAN */
 /* TODO: Inlcude the macro definition in project symbols */
-#define WIDBG_COMMON_SUPPORT   1
-#define WIDBG_UPGRADE_SUPPORT  1
+#define OTA_COMMON_SUPPORT   1
+#define OTA_UPGRADE_SUPPORT  1
 
 #define EXTND_ADDR_SIZE        8
 
@@ -100,26 +99,26 @@ void ota_mgr_init(void);
 static struct simple_udp_connection unicast_connection;
 static uint32_t last_received; 
 uint8_t last_received_updated;
-#if (WIDBG_COMMON_SUPPORT == 1)
+#if (OTA_COMMON_SUPPORT == 1)
 static struct ctimer ota_common_tmr;
 uint8_t ota_common_tmr_mode;
 uint8_t ota_common_data[128];
 uint8_t ota_common_recv_data[128];
 #endif
-#if (WIDBG_UPGRADE_SUPPORT == 1)
+#if (OTA_UPGRADE_SUPPORT == 1)
 static struct ctimer ota_upgrade_tmr;
 uint8_t ota_upgrade_tmr_mode;
 uint8_t ota_upgrade_data[128];
 uint8_t ota_upgrade_recv_data[128];
 #endif
-#if (WIDBG_DEBUG_SUPPORT == 1)
+#if (OTA_DEBUG_SUPPORT == 1)
 static struct ctimer ota_debug_tmr;
 uint8_t ota_debug_tmr_mode;
 uint8_t ota_debug_data[128];
 uint8_t ota_debug_recv_data[128];
 #endif
 
-static void widbg_data_conf(module_code_t msg_code,uint8_t *addr,uint8_t status);
+static void ota_data_conf(module_code_t msg_code,uint8_t *addr,uint8_t status);
 node_info_t node_info = {
 	.image_start = 0x00002000,
 	.image_size = 0x00002D7F,
@@ -133,7 +132,7 @@ node_info_t node_info = {
 /*---------------------------------------------------------------------------*/
 
 
-void widbg_mgr_data_req(module_code_t msg_code, addr_mode_t addr_mode, uint8_t *addr, void *payload, uint8_t len)
+void ota_mgr_data_req(module_code_t msg_code, addr_mode_t addr_mode, uint8_t *addr, void *payload, uint8_t len)
 {
     uip_ipaddr_t client_addr;
 	uint64_t client_global_prefix = 0x000000000000aaaa;
@@ -149,35 +148,35 @@ void widbg_mgr_data_req(module_code_t msg_code, addr_mode_t addr_mode, uint8_t *
 		else {
 			uip_create_linklocal_allnodes_mcast(&client_addr);
 		}
-#if (WIDBG_COMMON_SUPPORT == 1)		
+#if (OTA_COMMON_SUPPORT == 1)		
 			if(COMMON == msg_code)
 			{
 				memcpy(ota_common_data, &msg_code, sizeof(msg_code));
 		        memcpy(ota_common_data+1, payload, len);
 				simple_udp_sendto(&unicast_connection, ota_common_data, len + sizeof(msg_code), &client_addr);
-				widbg_data_conf(msg_code,addr,SUCCESS);
+				ota_data_conf(msg_code,addr,SUCCESS);
 			}
 			else
 #endif		
-#if (WIDBG_UPGRADE_SUPPORT == 1)			
+#if (OTA_UPGRADE_SUPPORT == 1)			
 			if(UPGRADE == msg_code)
 			{
 				memcpy(ota_upgrade_data, &msg_code, sizeof(msg_code));
 		        memcpy(ota_upgrade_data+1, payload, len);
 				simple_udp_sendto(&unicast_connection, ota_upgrade_data, len + sizeof(msg_code), &client_addr);
 				memset(ota_upgrade_recv_data,0,128);
-				widbg_data_conf(msg_code,addr,SUCCESS);
+				ota_data_conf(msg_code,addr,SUCCESS);
 
 			}
 			else
 #endif
-#if (WIDBG_DEBUG_SUPPORT == 1)				
+#if (OTA_DEBUG_SUPPORT == 1)				
 			if(DEBUG == msg_code)
 			{
 				memcpy(ota_debug_data, &msg_code, sizeof(msg_code));
 		        memcpy(ota_debug_data+1, payload, len);
 				simple_udp_sendto(&unicast_connection, ota_debug_data, len + sizeof(msg_code), &client_addr);
-				widbg_data_conf(msg_code,addr,SUCCESS);
+				ota_data_conf(msg_code,addr,SUCCESS);
 			}
 #endif			
 			{
@@ -191,23 +190,23 @@ void widbg_mgr_data_req(module_code_t msg_code, addr_mode_t addr_mode, uint8_t *
 
 void ota_mgr_init(void)
 {
-#ifndef WIDBG_SERVER	
+#ifndef OTA_SERVER	
 	uint32_t* nvm_addr_loc = (uint32_t *)NVM_APP_SHORT_ADDR;
-	widbg_nvm_init();
+	ota_nvm_init();
 
 	nvm_addr_loc = (uint32_t *) NVM_DEVICE_INFO_LOCATION;
 	if(0xFFFFFFFF == *nvm_addr_loc)
 	{
-		widbg_nvm_write(MEMORY_ABSOLUTE_ADDRESS, (uint32_t)nvm_addr_loc, sizeof(node_info_t),(uint8_t *)&node_info);
+		ota_nvm_write(MEMORY_ABSOLUTE_ADDRESS, (uint32_t)nvm_addr_loc, sizeof(node_info_t),(uint8_t *)&node_info);
 	}
 	else
 	{
-		widbg_nvm_read(MEMORY_ABSOLUTE_ADDRESS, (uint32_t)nvm_addr_loc, sizeof(node_info_t),(uint8_t *)&node_info);
+		ota_nvm_read(MEMORY_ABSOLUTE_ADDRESS, (uint32_t)nvm_addr_loc, sizeof(node_info_t),(uint8_t *)&node_info);
 	}
 #endif	
-	widbg_common_init();
-	widbg_upgrade_init();
-	//widbg_debug_init();
+	ota_common_init();
+	ota_upgrade_init();
+	//ota_debug_init();
 }
 /**/
 /*---------------------------------------------------------------------------*/
@@ -222,14 +221,14 @@ receiver(struct simple_udp_connection *c,
 {
     if((datalen > 0) && (NULL != data))
 	{
-#if (WIDBG_COMMON_SUPPORT == 1)
+#if (OTA_COMMON_SUPPORT == 1)
 		if(COMMON == *data)
 		{
-			widbg_common_rcvd_frame(NATIVE_ADDR_MODE, (uint8_t *)(&sender_addr->u16[4]), datalen-1, data+1,255);
+			ota_common_rcvd_frame(NATIVE_ADDR_MODE, (uint8_t *)(&sender_addr->u16[4]), datalen-1, data+1,255);
 		}
 		else 
 #endif		
-#if (WIDBG_UPGRADE_SUPPORT == 1)
+#if (OTA_UPGRADE_SUPPORT == 1)
 		if (UPGRADE == *data)
 		{
 			memcpy(ota_upgrade_recv_data,data+1,datalen-1);
@@ -248,14 +247,14 @@ receiver(struct simple_udp_connection *c,
 				memcpy(&last_received,&ota_upgrade_recv_data[3],4);
 				
 			}
-			widbg_upgrade_rcvd_frame(NATIVE_ADDR_MODE, (uint8_t *)(&sender_addr->u16[4]), datalen-1, ota_upgrade_recv_data,255);
+			ota_upgrade_rcvd_frame(NATIVE_ADDR_MODE, (uint8_t *)(&sender_addr->u16[4]), datalen-1, ota_upgrade_recv_data,255);
 		}
 		else 
 #endif
-#if (WIDBG_DEBUG_SUPPORT == 1)		
+#if (OTA_DEBUG_SUPPORT == 1)		
 		if (DEBUG == *data)
 		{
-			widbg_debug_rcvd_frame(NATIVE_ADDR_MODE, (uint8_t *)(&sender_addr->u16[4]), datalen-1, data+1,255);
+			ota_debug_rcvd_frame(NATIVE_ADDR_MODE, (uint8_t *)(&sender_addr->u16[4]), datalen-1, data+1,255);
 		}
 		else
 #endif		
@@ -279,11 +278,11 @@ uint8_t *get_node_address(addr_mode_t addr_mode)
 }
 
 
-void widbg_mgr_timer_start(module_code_t msg_code, uint32_t interval, widbg_timer_mode_t mode, void *handler)
+void ota_mgr_timer_start(module_code_t msg_code, uint32_t interval, ota_timer_mode_t mode, void *handler)
 {
 	switch (msg_code)
 	{
-#if (WIDBG_COMMON_SUPPORT == 1)	
+#if (OTA_COMMON_SUPPORT == 1)	
 	case COMMON:
 	{	
 		if(ota_common_tmr_mode != TIMER_NONE)
@@ -301,7 +300,7 @@ void widbg_mgr_timer_start(module_code_t msg_code, uint32_t interval, widbg_time
 	}
 	break;
 #endif		
-#if (WIDBG_UPGRADE_SUPPORT == 1)		
+#if (OTA_UPGRADE_SUPPORT == 1)		
 	case UPGRADE:
 	{
 		if(ota_upgrade_tmr_mode != TIMER_NONE)
@@ -319,7 +318,7 @@ void widbg_mgr_timer_start(module_code_t msg_code, uint32_t interval, widbg_time
 	}
 	break;
 #endif
-#if (WIDBG_DEBUG_SUPPORT == 1)		
+#if (OTA_DEBUG_SUPPORT == 1)		
 	case DEBUG:
 		if(ota_debug_tmr_mode != TIMER_NONE)
 		{
@@ -339,26 +338,26 @@ void widbg_mgr_timer_start(module_code_t msg_code, uint32_t interval, widbg_time
 		break;
 	}
 }
-static void widbg_data_conf(module_code_t msg_code,uint8_t *addr,uint8_t status)
+static void ota_data_conf(module_code_t msg_code,uint8_t *addr,uint8_t status)
 {
-#if (WIDBG_COMMON_SUPPORT == 1)	
+#if (OTA_COMMON_SUPPORT == 1)	
     if(COMMON == msg_code)
     {
-	    widbg_common_sent_frame(NATIVE_ADDR_MODE, addr, status);
+	    ota_common_sent_frame(NATIVE_ADDR_MODE, addr, status);
     }
     else
 #endif		
-#if (WIDBG_UPGRADE_SUPPORT == 1)	
+#if (OTA_UPGRADE_SUPPORT == 1)	
 	if(UPGRADE == msg_code)
     {
-	    widbg_upgrade_sent_frame(NATIVE_ADDR_MODE, addr, status);
+	    ota_upgrade_sent_frame(NATIVE_ADDR_MODE, addr, status);
     }
     else 
 #endif
-#if (WIDBG_DEBUG_SUPPORT == 1)		
+#if (OTA_DEBUG_SUPPORT == 1)		
 	if(DEBUG == msg_code)
     {
-	    widbg_debug_sent_frame(NATIVE_ADDR_MODE, addr, status);
+	    ota_debug_sent_frame(NATIVE_ADDR_MODE, addr, status);
     }
 	else
 #endif		
@@ -367,23 +366,23 @@ static void widbg_data_conf(module_code_t msg_code,uint8_t *addr,uint8_t status)
 	}
 }
 	
-void widbg_mgr_timer_stop(module_code_t msg_code)
+void ota_mgr_timer_stop(module_code_t msg_code)
 {
 	switch (msg_code)
 	{
-#if (WIDBG_COMMON_SUPPORT == 1)	
+#if (OTA_COMMON_SUPPORT == 1)	
 		case COMMON:
 			ctimer_stop(&ota_common_tmr);
 			ota_common_tmr_mode = TIMER_NONE;
 			break;
 #endif		
-#if (WIDBG_UPGRADE_SUPPORT == 1)			
+#if (OTA_UPGRADE_SUPPORT == 1)			
 		case UPGRADE:
 			ctimer_stop(&ota_upgrade_tmr);
 			ota_upgrade_tmr_mode = TIMER_NONE;
 			break;
 #endif
-#if (WIDBG_DEBUG_SUPPORT == 1)			
+#if (OTA_DEBUG_SUPPORT == 1)			
 		case DEBUG:
 			ctimer_stop(&ota_debug_tmr);
 			ota_debug_tmr_mode = TIMER_NONE;
@@ -399,18 +398,18 @@ uint16_t *get_pan_id(void)
 	return &pan_id;
 }
 
-void widbg_mgr_set_channel(uint8_t channel)
+void ota_mgr_set_channel(uint8_t channel)
 {
 	rf_set_channel(channel);
 }
 
-void widbg_mgr_led(widbg_led_t led_state)
+void ota_mgr_led(ota_led_t led_state)
 {
-	if (WIDBG_LED_ON == led_state)
+	if (OTA_LED_ON == led_state)
 	{
 		leds_on(LED0);
 	}
-	else if (WIDBG_LED_OFF == led_state)
+	else if (OTA_LED_OFF == led_state)
 	{
 		leds_off(LED0);
 	} 
@@ -420,13 +419,13 @@ void widbg_mgr_led(widbg_led_t led_state)
 	}
 }
 
-void widbg_mgr_reset_device(void)
+void ota_mgr_reset_device(void)
 {
 	NVIC_SystemReset();
 }
 
 /*---------------------------------------------------------------------------*/
-#if (WIDBG_COMMON_SUPPORT == 1)	
+#if (OTA_COMMON_SUPPORT == 1)	
 PROCESS_THREAD(otau_server_common_process, ev, data)
 {
 
@@ -446,7 +445,7 @@ PROCESS_THREAD(otau_server_common_process, ev, data)
 }
 /*---------------------------------------------------------------------------*/
 #endif		
-#if (WIDBG_UPGRADE_SUPPORT == 1)	
+#if (OTA_UPGRADE_SUPPORT == 1)	
 PROCESS_THREAD(otau_server_upgrade_process, ev, data)
 {
 
@@ -466,7 +465,7 @@ PROCESS_THREAD(otau_server_upgrade_process, ev, data)
 }
 #endif
 /*---------------------------------------------------------------------------*/
-#if (WIDBG_DEBUG_SUPPORT == 1)	
+#if (OTA_DEBUG_SUPPORT == 1)	
 PROCESS_THREAD(otau_server_debug_process, ev, data)
 {
 

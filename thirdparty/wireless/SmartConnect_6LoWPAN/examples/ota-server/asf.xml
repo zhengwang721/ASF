@@ -23,11 +23,10 @@
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64-addr"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.mdns"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.simple-rpl"/>
-    <require idref="thirdparty.wireless.smartconnect_6lowpan.apps.servreg-hack"/>
-		<require idref="thirdparty.wireless.addons.widbg.common"/>
-		<require idref="thirdparty.wireless.addons.widbg.upgrade"/>
-		<require idref="thirdparty.wireless.addons.widbg.debug"/>
-		<require idref="thirdparty.wireless.smartconnect_6lowpan.widbg_mgr.server"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.servreg-hack"/>
+		<require idref="thirdparty.wireless.addons.ota.common"/>
+		<require idref="thirdparty.wireless.addons.ota.upgrade"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.ota_mgr.server"/>
     <require idref="thirdparty.wireless.smartconnect_6lowpan.apps.led_control"/>
      <build type="define" name="ENABLE_LEDCTRL" value="1"/>
 		<require idref="thirdparty.wireless.services.nvm" />
