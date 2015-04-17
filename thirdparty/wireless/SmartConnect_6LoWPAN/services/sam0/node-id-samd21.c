@@ -113,10 +113,10 @@ node_id_restore(void)
 FINISH_UP:
   /* set node ID */
   node_id = node_mac[7] | (node_mac[6] << 2);
-  printf(" Node MAC is %x.%x.%x.%x.%x.%x.%x.%x.\n", 
+  /*printf(" Node MAC is %x.%x.%x.%x.%x.%x.%x.%x.\n", 
     node_mac[0], node_mac[1], node_mac[2], node_mac[3], node_mac[4], node_mac[5],
     node_mac[6], node_mac[7]);
-  printf("Node ID is %x\n", node_id);
+  printf("Node ID is %x\n", node_id);*/
 }
 /*---------------------------------------------------------------------------*/
 void

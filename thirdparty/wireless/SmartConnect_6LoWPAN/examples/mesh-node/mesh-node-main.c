@@ -141,8 +141,8 @@ main(int argc, char *argv[])
   /* init system: clocks, board etc */
 
   system_init();
-
-  //init_serial();
+  node_id_restore(); 
+  //init_serial();  
   sio2host_init();
 
   leds_init();
@@ -153,7 +153,7 @@ main(int argc, char *argv[])
   flash_init();
 
   delay_init();
-
+  
   /* Initialize Contiki and our processes. */
   
   #ifdef LOW_POWER_MODE
@@ -164,7 +164,7 @@ main(int argc, char *argv[])
 
   ctimer_init();
  
-
+  
   rtimer_init();
  //printf("\r\n B4 Watchdog init");
   
@@ -174,14 +174,15 @@ main(int argc, char *argv[])
 
   /* Set MAC address and node ID */
 #ifdef NODEID
-  node_id = NODEID;
+ node_id = NODEID;
 #ifdef BURN_NODEID
   node_id_burn(node_id);
 #endif /* BURN_NODEID */
 #else/* NODE_ID */
 #endif /* NODE_ID */
 
-  node_id_restore();
+ 
+   
   printf("\r\n\n\n\n Starting the SmartConnect-6LoWPAN \r\n Platform : Atmel IoT device \r\n");
   print_reset_causes();
 #if SAMR21 

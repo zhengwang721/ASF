@@ -1,4 +1,4 @@
-/**
+﻿/**
 * Copyright (c) 2015 Atmel Corporation and 2012 – 2013, Thingsquare, http://www.thingsquare.com/. All rights reserved. 
 *  
 * Redistribution and use in source and binary forms, with or without 
@@ -142,7 +142,7 @@ main(int argc, char *argv[])
   /* init system: clocks, board etc */
 
   system_init();
-
+  node_id_restore();
   //init_serial();
   sio2host_init();
 
