@@ -71,7 +71,7 @@
 #include "stdio_serial.h"
 #include "rtc_count.h" //rtc
 #include "rtc_count_interrupt.h"
-#include "widbg_parser.h"
+#include "ota_parser.h"
 #ifdef ENABLE_LEDCTRL
 #include "ledctrl.h"
 #endif

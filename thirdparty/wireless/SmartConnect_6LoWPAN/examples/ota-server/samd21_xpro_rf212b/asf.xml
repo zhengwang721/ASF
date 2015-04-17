@@ -21,10 +21,8 @@
 		<build type="header-file" value="conf_nvm.h"/>
 		<config name="config.sam0.drivers.sercom.spi" value="polled"/>
 		<config name="config.sam0.drivers.sercom.usart" value="callback"/>
-		<require idref="config.thirdparty.wireless.addons.widbg.common"/>
-		<config name="config.thirdparty.wireless.addons.widbg.common" value="server"/>
-		<config name="config.thirdparty.wireless.addons.widbg.upgrade" value="server" />
-		<config name="config.thirdparty.wireless.addons.widbg.debug" value="server" />		
+		<config name="config.thirdparty.wireless.addons.ota.common" value="server"/>
+		<config name="config.thirdparty.wireless.addons.ota.upgrade" value="server" />
 		<require idref="board.samd21_xplained_pro"/>
 		<require idref="common2.services.delay"/>
 		<require idref="sam0.drivers.wdt"/>

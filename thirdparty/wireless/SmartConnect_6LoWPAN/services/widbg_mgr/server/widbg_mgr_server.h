@@ -1,6 +1,0 @@
-#ifndef WIDBG_MGR_SERVER_H
-#define WIDBG_MGR_SERVER_H
-
-
-
-#endif /* WIDBG_MGR_SERVER_H */
