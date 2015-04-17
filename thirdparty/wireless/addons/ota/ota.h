@@ -3,7 +3,7 @@
 #ifndef OTA_H
 #define OTA_H
 
-#include "compiler.h"
+
 #define MODE_MASK     0x03
 
 #define PHY_MODE_SUPPORTED_BIT 0x02
@@ -12,8 +12,6 @@
 #define SUPPORTED_MODE (PHY_MODE_SUPPORTED_BIT | APP_MODE_SUPPORTED_BIT)
 
 #define LOG_MASK					(0x0F)
-
-#define PACK __attribute__ ((packed))
 
 #define APP_MODE             ()
 
