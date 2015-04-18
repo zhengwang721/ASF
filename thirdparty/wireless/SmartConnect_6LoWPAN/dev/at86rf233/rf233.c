@@ -203,6 +203,7 @@ rf233_init(void)
   /* init SPI and GPIOs, wake up from sleep/power up. */
   //rf233_arch_init();
   trx_spi_init();
+  ENABLE_TRX_IRQ();
   port_pin_set_output_level(AT86RFX_SLP_PIN, false); /*wakeup from sleep*/
 
   /* before enabling interrupts, make sure we have cleared IRQ status */
