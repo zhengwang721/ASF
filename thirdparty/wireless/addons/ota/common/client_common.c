@@ -46,12 +46,6 @@
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
-/**
- * \mainpage
- * \section preface Preface
- * This is the reference manual for the Over-the-Air Client Application
- * //TODO
- */
 #include <stdio.h>
 #include "stddef.h"
 #include "string.h"

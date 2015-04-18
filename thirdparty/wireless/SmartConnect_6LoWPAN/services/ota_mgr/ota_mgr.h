@@ -52,7 +52,6 @@
 
 
 #include "ota.h"
-#include "compiler.h"
 
 /************************************************************************/
 /* Over-the-air Configuration parameters                                */
@@ -213,9 +212,8 @@ typedef struct {
 }node_info_t;
 COMPILER_PACK_RESET ()
 
-#ifdef WONDER
-dakkfsfvfnv
-#endif
+
+
 void ota_mgr_init(void);
 void ota_mgr_data_req(module_code_t msg_code, addr_mode_t addr_mode, uint8_t *addr, void *payload, uint8_t len);
 void ota_mgr_rcvd_frame(uint8_t addr_mode, uint8_t *src_addr, uint8_t length, uint8_t *payload);

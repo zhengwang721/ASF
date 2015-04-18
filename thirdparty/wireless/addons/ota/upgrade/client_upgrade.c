@@ -46,13 +46,6 @@
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
-/**
- * \mainpage
- * \section preface Preface
- * This is the reference manual for the Over-the-Air Client Application
- * //TODO
- */
- 
 #include <stdio.h>
 #include "stddef.h"
 #include "string.h"
@@ -62,7 +55,7 @@
 #include "ota_nvm.h"
 #include "ota_mgr.h"
 #include "ota_mgr_client.h"
-#include "port.h"
+
 #define DEFAULT_IMAGE_REQ_INTERVAL  (5000)
 #define DEFAULT_IMAGE_RESP_INTERVAL (5000)
 #define DEFAULT_SWITCH_REQ_INTERVAL (3000)
@@ -159,7 +152,7 @@ void ota_upgrade_rcvd_frame(uint8_t addr_mode, uint8_t *src_addr, uint8_t length
 				{
 					image_req_retry = 0;
 					memcpy(&block, &image_resp->block, image_resp->block_size);
-					printf("\r\n ImageResp 0x%x", (unsigned int) image_resp->block_start);
+					//printf("\r\n ImageResp 0x%x", (unsigned int) image_resp->block_start);
 					ota_nvm_write(MEMORY_OFFSET_ADDRESS, image_resp->block_start - image_start, image_resp->block_size, (uint8_t *)&block);
 					image_index += image_resp->block_size;
 					if(image_index < image_end)
@@ -259,7 +252,6 @@ void ota_upgrade_sent_frame(uint8_t addr_mode, uint8_t *addr, uint8_t status)
 
 void ota_upgrade_timer_handler(void)
 {
-	port_pin_toggle_output_level(PIN_PA23);
 	if (STATE_IMAGE_REQUESTED == curr_upgrade_state || STATE_START_DOWNLOAD == curr_upgrade_state || STATE_IMAGE_RESPONDED == curr_upgrade_state)
 	{
 		if (upgrade_confirm_wait)
@@ -332,7 +324,7 @@ static void send_image_req(uint32_t index)
 		curr_ota_state = IMAGE_REQUEST_SENT;
 		upgrade_confirm_wait = 1;
 		curr_upgrade_state = STATE_IMAGE_REQUESTED;
-		printf("\r\n ImageRequest 0x%x", (unsigned int) index);		
+		//printf("\r\n ImageRequest 0x%x", (unsigned int) index);		
 		ota_mgr_data_req(UPGRADE, NATIVE_ADDR_MODE, addr, &image_request.msg_id, sizeof(image_request_t));
 		image_request_start = 1;
 		ota_mgr_timer_start(UPGRADE, DEFAULT_IMAGE_RESP_INTERVAL, TIMER_MODE_SINGLE, ota_upgrade_timer_handler);

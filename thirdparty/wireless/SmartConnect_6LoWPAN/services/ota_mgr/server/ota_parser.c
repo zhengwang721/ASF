@@ -130,7 +130,7 @@ static void process_incoming_sio_data(void)
 		break;
 
 	case UART_RX_STATE_DOMAIN:
-		if (DOMAIN_OTA_COMMON == data[rx_index] || DOMAIN_OTA_UPGRADE == data[rx_index] || DOMAIN_OTA_DEBUG == data[rx_index])
+		if (DOMAIN_OTA_COMMON == data[rx_index] || DOMAIN_OTA_UPGRADE == data[rx_index])
 		{
 			sio_rx_state = UART_RX_STATE_PAYLOAD;
 			*sio_rx_ptr = data[rx_index];
