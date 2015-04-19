@@ -126,8 +126,8 @@ extern "C" {
 #define CONF_WINC_SPI_CS_PIN			EXT1_PIN_SPI_SS_0
 
 /** SPI interrupt pin. */
-#define CONF_WINC_SPI_INT_PIN			EXT1_IRQ_PIN;
-#define CONF_WINC_SPI_INT_MUX			EXT1_IRQ_MUX;
+#define CONF_WINC_SPI_INT_PIN			EXT1_IRQ_PIN
+#define CONF_WINC_SPI_INT_MUX			EXT1_IRQ_MUX
 #define CONF_WINC_SPI_INT_EIC			(4)
 
 /** SPI clock. */
