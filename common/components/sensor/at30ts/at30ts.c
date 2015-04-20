@@ -6,7 +6,7 @@
  * This file contains definitions and services related to the features of the
  * AT30TS Temperature Sensor.
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
