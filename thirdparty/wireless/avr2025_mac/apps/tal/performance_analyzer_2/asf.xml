@@ -49,6 +49,7 @@
 		<build type="doxygen-entry-point" value="group_perf_analyzer_2"/>
 		<device-support value="sam4l"/>
 		<device-support value="sam4s"/>
+		<build type="distribute" subtype="user-file" value="ProtocolSpecificationofPerformanceAnalyzerforRF215.pdf"/>
 		<!-- ++++++++++++++++++++++++++++++++++++++++++++++REQUIRE++++++++++++++++++++++++++++++++++++++++++++++. -->
 		<require idref="thirdparty.wireless.avr2025_mac.includes"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.tfa"/>
