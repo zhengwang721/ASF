@@ -222,6 +222,8 @@ struct i2c_master_module {
 	uint16_t buffer_timeout;
 	/** If true, stop condition will be sent after a read/write. */
 	bool send_stop;
+	/** If true, nack signal will be sent after a read/write. */
+	bool send_nack;
 #  if I2C_MASTER_CALLBACK_MODE == true
 	/** Pointers to callback functions. */
 	volatile i2c_master_callback_t callbacks[_I2C_MASTER_CALLBACK_N];
@@ -560,6 +562,20 @@ enum status_code i2c_master_write_packet_wait_no_stop(
 		struct i2c_master_packet *const packet);
 
 void i2c_master_send_stop(struct i2c_master_module *const module);
+
+void i2c_master_send_nack(struct i2c_master_module *const module);
+
+enum status_code i2c_master_read_byte(
+		struct i2c_master_module *const module,
+		uint8_t *byte);
+
+enum status_code i2c_master_write_byte(
+		struct i2c_master_module *const module,
+		uint8_t byte);
+
+enum status_code i2c_master_read_packet_wait_no_nack(
+		struct i2c_master_module *const module,
+		struct i2c_master_packet *const packet);
 
 /** @} */
 

@@ -723,6 +723,7 @@ enum status_code nvm_execute_command(
 		const uint32_t parameter);
 
 enum status_code nvm_get_fuses(struct nvm_fusebits *fusebits);
+enum status_code nvm_set_fuses(struct nvm_fusebits *fb);
 
 bool nvm_is_page_locked(uint16_t page_number);
 
