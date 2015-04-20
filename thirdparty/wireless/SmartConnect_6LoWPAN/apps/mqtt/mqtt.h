@@ -7,6 +7,15 @@
 #include "thsq.h"
 
 
+#include "lib/assert.h"
+#include "lib/list.h"
+#include "ip64-addr.h"
+#include "tcp-socket.h"
+
+#include "string.h"
+
+#include "sys/pt.h"
+
 /* Protocol constants */
 #define MQTT_CLIENT_ID_MAX_LEN 23
 

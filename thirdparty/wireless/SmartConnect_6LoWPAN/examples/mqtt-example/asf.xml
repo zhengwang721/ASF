@@ -27,7 +27,6 @@
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64-addr"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.mdns"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.simple-rpl"/>
-		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.mqtt"/>
     <require idref="thirdparty.wireless.smartconnect_6lowpan.apps.led_control"/>
      <build type="define" name="ENABLE_LEDCTRL" value="1"/>
 		<require idref="sam0.components.sensor.at30tse75x"/>
