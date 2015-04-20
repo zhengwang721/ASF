@@ -1,0 +1,17 @@
+<asf xmlversion="1.0">
+	<project id="common.services.adp.example.spi.samd21_xplained_pro" caption="ADP test">
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_spi.h"/>
+		<require idref="common.services.adp.example"/>
+		<require idref="board.samd21_xplained_pro"/>
+		<require idref="sam0.drivers.adc"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<config name="config.sam0.drivers.adc" value="polled"/>
+		<config name="config.sam0.drivers.sercom.spi" value="polled"/>
+		<config name="config.common.services.adp" value="spi"/>
+		<device-support value="atsamd21j18a"/>
+	</project>
+</asf>
