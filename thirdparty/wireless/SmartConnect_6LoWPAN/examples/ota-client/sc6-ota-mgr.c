@@ -358,15 +358,8 @@ static void
 receiver(struct simple_udp_connection *c,const uip_ipaddr_t *sender_addr,uint16_t sender_port,
 const uip_ipaddr_t *receiver_addr,uint16_t receiver_port,const uint8_t *data,uint16_t datalen)
 {
-	/*if(server_configured == 0)
-	{
-		memcpy((uint8_t *)&(global_server_addr.u16[4]),(uint8_t *)&(sender_addr->u8[8]),NATIVE_ADDR_SIZE);
-		server_configured = 1;
-	}*/
-	
 	if((datalen > 0) && (NULL != data))
 	{
-		//memcpy(ota_recvd_data,data+1,datalen-1);
 		#if (OTA_COMMON_SUPPORT == 1)
 		if(COMMON == *data)
 		{

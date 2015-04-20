@@ -88,12 +88,8 @@ uint64_t global_extndaddr;
 uint16_t pan_id = IEEE802154_CONF_PANID;
 /*---------------------------------------------------------------------------*/
 PROCESS(otau_server_process, "Over-The-Air  Server process");
-PROCESS(otau_server_common_process, "Over-The-Air Server common module process");
-PROCESS(otau_server_upgrade_process, "Over-The-Air Server Upgrade  module process");
 
-//PROCESS(otau_server_debug_process, "Over-The-Air Server Debug  module process");
-AUTOSTART_PROCESSES(&otau_server_process,&otau_server_common_process,
-	&otau_server_upgrade_process/*,&otau_server_debug_process*/);
+AUTOSTART_PROCESSES(&otau_server_process);
 
 void ota_mgr_init(void);
 static struct simple_udp_connection unicast_connection;
@@ -110,12 +106,6 @@ static struct ctimer ota_upgrade_tmr;
 uint8_t ota_upgrade_tmr_mode;
 uint8_t ota_upgrade_data[128];
 uint8_t ota_upgrade_recv_data[128];
-#endif
-#if (OTA_DEBUG_SUPPORT == 1)
-static struct ctimer ota_debug_tmr;
-uint8_t ota_debug_tmr_mode;
-uint8_t ota_debug_data[128];
-uint8_t ota_debug_recv_data[128];
 #endif
 
 static void ota_data_conf(module_code_t msg_code,uint8_t *addr,uint8_t status);
@@ -138,7 +128,6 @@ void ota_mgr_data_req(module_code_t msg_code, addr_mode_t addr_mode, uint8_t *ad
 	uint64_t client_global_prefix = 0x000000000000aaaa;
 	if (EXTENDED_ADDR_MODE != addr_mode)
 	{
-		//srv_addr = servreg_hack_lookup(SERVICE_ID);
 		if(addr != NULL) {
 			memcpy(&(client_addr.u16[4]),addr,PREFIX_ADDR_SIZE);
 			memcpy(&(client_addr.u16[0]),&client_global_prefix,NATIVE_ADDR_SIZE);
@@ -170,16 +159,8 @@ void ota_mgr_data_req(module_code_t msg_code, addr_mode_t addr_mode, uint8_t *ad
 			}
 			else
 #endif
-#if (OTA_DEBUG_SUPPORT == 1)				
-			if(DEBUG == msg_code)
 			{
-				memcpy(ota_debug_data, &msg_code, sizeof(msg_code));
-		        memcpy(ota_debug_data+1, payload, len);
-				simple_udp_sendto(&unicast_connection, ota_debug_data, len + sizeof(msg_code), &client_addr);
-				ota_data_conf(msg_code,addr,SUCCESS);
-			}
-#endif			
-			{
+				/* Do Nothing */
 			}
 		  
 	}
@@ -206,7 +187,6 @@ void ota_mgr_init(void)
 #endif	
 	ota_common_init();
 	ota_upgrade_init();
-	//ota_debug_init();
 }
 /**/
 /*---------------------------------------------------------------------------*/
@@ -251,13 +231,6 @@ receiver(struct simple_udp_connection *c,
 		}
 		else 
 #endif
-#if (OTA_DEBUG_SUPPORT == 1)		
-		if (DEBUG == *data)
-		{
-			ota_debug_rcvd_frame(NATIVE_ADDR_MODE, (uint8_t *)(&sender_addr->u16[4]), datalen-1, data+1,255);
-		}
-		else
-#endif		
 		{
 			PRINTF("\r\nERROR: Unknown data type");
 		}
@@ -318,22 +291,6 @@ void ota_mgr_timer_start(module_code_t msg_code, uint32_t interval, ota_timer_mo
 	}
 	break;
 #endif
-#if (OTA_DEBUG_SUPPORT == 1)		
-	case DEBUG:
-		if(ota_debug_tmr_mode != TIMER_NONE)
-		{
-			ctimer_stop(&ota_common_tmr);
-		}	
-		ctimer_set(&ota_debug_tmr,interval,handler,NULL);
-		if(TIMER_MODE_SINGLE == mode)
-			ota_debug_tmr_mode = TIMER_INTERVAL;
-		else
-		{
-			ota_debug_tmr_mode = TIMER_PERIODIC;
-			process_post(&otau_server_debug_process,TIMER_STARTED,NULL);
-		}
-		break;
-#endif		
 	default:
 		break;
 	}
@@ -354,13 +311,6 @@ static void ota_data_conf(module_code_t msg_code,uint8_t *addr,uint8_t status)
     }
     else 
 #endif
-#if (OTA_DEBUG_SUPPORT == 1)		
-	if(DEBUG == msg_code)
-    {
-	    ota_debug_sent_frame(NATIVE_ADDR_MODE, addr, status);
-    }
-	else
-#endif		
 	{
 		/* Log error */
 	}
@@ -382,12 +332,6 @@ void ota_mgr_timer_stop(module_code_t msg_code)
 			ota_upgrade_tmr_mode = TIMER_NONE;
 			break;
 #endif
-#if (OTA_DEBUG_SUPPORT == 1)			
-		case DEBUG:
-			ctimer_stop(&ota_debug_tmr);
-			ota_debug_tmr_mode = TIMER_NONE;
-			break;
-#endif			
 		default:
 			break;
 	}
@@ -425,67 +369,6 @@ void ota_mgr_reset_device(void)
 }
 
 /*---------------------------------------------------------------------------*/
-#if (OTA_COMMON_SUPPORT == 1)	
-PROCESS_THREAD(otau_server_common_process, ev, data)
-{
-
-  PROCESS_BEGIN();
-  while(1) {
-	PROCESS_WAIT_EVENT();
-	if(ev == TIMER_STARTED)
-	{	
-		while(TIMER_PERIODIC == ota_common_tmr_mode)
-		{
-			PROCESS_WAIT_EVENT_UNTIL(ctimer_expired(&ota_common_tmr));
-			ctimer_reset(&ota_common_tmr);
-		}
-	}
-  }	
-  PROCESS_END();
-}
-/*---------------------------------------------------------------------------*/
-#endif		
-#if (OTA_UPGRADE_SUPPORT == 1)	
-PROCESS_THREAD(otau_server_upgrade_process, ev, data)
-{
-
-  PROCESS_BEGIN();
-  while(1) {
-	PROCESS_WAIT_EVENT();
-	if(ev == TIMER_STARTED)
-	{	
-		while(TIMER_PERIODIC == ota_upgrade_tmr_mode)
-		{
-			PROCESS_WAIT_EVENT_UNTIL(ctimer_expired(&ota_upgrade_tmr));
-			ctimer_reset(&ota_upgrade_tmr);
-		}
-	}
-  }	
-  PROCESS_END();
-}
-#endif
-/*---------------------------------------------------------------------------*/
-#if (OTA_DEBUG_SUPPORT == 1)	
-PROCESS_THREAD(otau_server_debug_process, ev, data)
-{
-
-  PROCESS_BEGIN();
-  while(1) {
-	PROCESS_WAIT_EVENT();
-	if(ev == TIMER_STARTED)
-	{	
-		while(TIMER_PERIODIC == ota_debug_tmr_mode)
-		{
-			PROCESS_WAIT_EVENT_UNTIL(ctimer_expired(&ota_debug_tmr));
-			ctimer_reset(&ota_debug_tmr);
-		}
-	}
-  }	
-  PROCESS_END();
-}
-#endif
-
-
 /*---------------------------------------------------------------------------*/
 static uip_ipaddr_t *
 set_global_address(void)
@@ -544,13 +427,7 @@ PROCESS_THREAD(otau_server_process, ev, data)
 
   servreg_hack_register(SERVICE_ID, ipaddr);
 
-  //servreg_hack_init();
-
-  //ipaddr = set_global_address();
-
-  //create_rpl_dag(ipaddr);
   ota_mgr_init();
-  //servreg_hack_register(SERVICE_ID, ipaddr);
 
   simple_udp_register(&unicast_connection, UDP_PORT,
                       NULL, UDP_PORT, receiver);
