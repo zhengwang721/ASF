@@ -317,7 +317,7 @@ void system_board_init(void);
 /** \name Extension header #1 UART definitions
  *  @{
  */
-#define EXT1_UART_MODULE          USART
+#define EXT1_UART_MODULE          USART0
 #define EXT1_UART_RXD_MUX         IOPORT_MODE_MUX_A
 #define EXT1_UART_TXD_MUX         IOPORT_MODE_MUX_A
 /** @} */

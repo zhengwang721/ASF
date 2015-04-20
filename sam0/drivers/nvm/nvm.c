@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * \file
  *
@@ -1084,4 +1085,3 @@ enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
 
 	return error_code;
 }
-
