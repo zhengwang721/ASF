@@ -26,13 +26,6 @@ at_ble_status_t at_ble_primary_service_discover_all(at_ble_handle_t conn_handle,
 {
 	at_ble_status_t status = AT_BLE_SUCCESS;
 
-	status = gap_check_device_role();
-
-	if(status != ROLE_MASTER)
-	{
-		return AT_BLE_INVALID_STATE;
-	}
-
 	// check if end handle is not smaller than start handle
 	if((end_handle>= start_handle) && start_handle > 0)
 	{
@@ -54,13 +47,6 @@ at_ble_status_t at_ble_primary_service_discover_by_uuid(at_ble_handle_t conn_han
 	at_ble_status_t status = AT_BLE_SUCCESS;
 
 	uint32_t uuid_len = 0, valid_uuid=0;
-
-	status = gap_check_device_role();
-
-	if(status != ROLE_MASTER)
-	{
-		return AT_BLE_INVALID_STATE;
-	}
 
 	// check UUID is non zero
 	uuid_len = at_ble_uuid_type2len(uuid->type);
@@ -92,13 +78,6 @@ at_ble_status_t at_ble_included_service_discover_all(at_ble_handle_t conn_handle
 {
 	at_ble_status_t status = AT_BLE_SUCCESS;
 
-	status = gap_check_device_role();
-
-	if(status != ROLE_MASTER)
-	{
-		return AT_BLE_INVALID_STATE;
-	}
-
 	// check if end handle is not smaller than start handle
 	if(end_handle>= start_handle)
 	{
@@ -121,12 +100,6 @@ at_ble_status_t at_ble_characteristic_discover_all(at_ble_handle_t conn_handle,
 {
 	at_ble_status_t status = AT_BLE_SUCCESS;
 
-	status = gap_check_device_role();
-
-	if(status != ROLE_MASTER)
-	{
-		return AT_BLE_INVALID_STATE;
-	}
 
 	// check if end handle is not smaller than start handle
 	if((end_handle >= start_handle) && (start_handle > 0))
@@ -148,13 +121,6 @@ at_ble_status_t at_ble_characteristic_discover_by_uuid(at_ble_handle_t conn_hand
 {
 	at_ble_status_t status = AT_BLE_SUCCESS;
 	uint32_t uuid_len = 0, valid_uuid = 0;
-
-	status = gap_check_device_role();
-
-	if(status != ROLE_MASTER)
-	{
-		return AT_BLE_INVALID_STATE;
-	}
 
 	// check UUID is non zero
 	uuid_len = at_ble_uuid_type2len(uuid->type);
@@ -184,13 +150,6 @@ at_ble_status_t at_ble_descriptor_discover_all(at_ble_handle_t conn_handle,
 {
 	at_ble_status_t status = AT_BLE_SUCCESS;
 
-	status = gap_check_device_role();
-
-	if(status != ROLE_MASTER)
-	{
-		return AT_BLE_INVALID_STATE;
-	}
-
 	// check if end handle is not smaller than start handle
 	if((end_handle >= start_handle) && (start_handle > 0))
 	{
@@ -213,12 +172,6 @@ at_ble_status_t at_ble_characteristic_read_by_uuid(at_ble_handle_t conn_handle,
 {
 	at_ble_status_t  status = AT_BLE_SUCCESS; //, u8PktId, u8RequestType;
 	//uint16_t u16MsgId, u16DestId, u16SrcId;
-	status = gap_check_device_role();
-
-	if(status != ROLE_MASTER)
-	{
-		return AT_BLE_INVALID_STATE;
-	}
 
 	// check if end handle is not smaller than start handle
 	if(end_handle>= start_handle)
@@ -238,13 +191,7 @@ at_ble_status_t at_ble_characteristic_read_by_uuid(at_ble_handle_t conn_handle,
 
 at_ble_status_t at_ble_characteristic_read(at_ble_handle_t conn_handle, at_ble_handle_t char_handle, uint16_t offset, uint16_t length)
 {
-	at_ble_status_t status;
-	status = gap_check_device_role();
-
-	if(status != ROLE_MASTER)
-	{
-		return AT_BLE_INVALID_STATE;
-	}
+	at_ble_status_t status = AT_BLE_SUCCESS;
 
 	gattc_read_cmd_handler_simple_read(char_handle, offset, length, conn_handle);
 	return status;	
@@ -254,14 +201,8 @@ at_ble_status_t at_ble_characteristic_read(at_ble_handle_t conn_handle, at_ble_h
 at_ble_status_t at_ble_characteristic_read_multible(at_ble_handle_t conn_handle,  at_ble_handle_t* char_handle_list, 
 	uint16_t* char_val_lenght, uint8_t char_handle_count)
 {
-	at_ble_status_t status;
-	status = gap_check_device_role();
-
-	if(status != ROLE_MASTER)
-	{
-		return AT_BLE_INVALID_STATE;
-	}
-
+	at_ble_status_t status = AT_BLE_SUCCESS;
+	
 	gattc_read_cmd_handler_multible(char_handle_list, char_handle_count, char_val_lenght, conn_handle);
 	return status;
 }
@@ -274,12 +215,7 @@ at_ble_status_t at_ble_characteristic_write(at_ble_handle_t conn_handle, at_ble_
 {
 	uint8_t req;
 
-	at_ble_status_t status = gap_check_device_role();
-
-	if(status != ROLE_MASTER)
-	{
-		return AT_BLE_INVALID_STATE;
-	}
+	at_ble_status_t status = AT_BLE_SUCCESS;
 
 	if(signed_write)
 	{
@@ -304,12 +240,7 @@ at_ble_status_t at_ble_characteristic_reliable_write_prepare(at_ble_handle_t con
         at_ble_handle_t char_handle, 
 		uint16_t offset, uint16_t length, uint8_t* data)
 {
-	at_ble_status_t status = gap_check_device_role();
-
-	if(status != ROLE_MASTER)
-	{
-		return AT_BLE_INVALID_STATE;
-	}
+	at_ble_status_t status = AT_BLE_SUCCESS;
 
 	gattc_write_cmd_handler(GATTC_WRITE, 0, char_handle, offset, length, data, conn_handle);
 	return status;
@@ -317,24 +248,14 @@ at_ble_status_t at_ble_characteristic_reliable_write_prepare(at_ble_handle_t con
 
 at_ble_status_t at_ble_characteristic_reliable_write_execute(at_ble_handle_t conn_handle)
 {
-	at_ble_status_t status = gap_check_device_role();
-
-	if(status != ROLE_MASTER)
-	{
-		return AT_BLE_INVALID_STATE;
-	}
+	at_ble_status_t status = AT_BLE_SUCCESS;
 	gattc_execute_write_cmd_handler(1, conn_handle);
 	return status;
 }
 
 at_ble_status_t at_ble_characteristic_reliable_write_cancel(at_ble_handle_t conn_handle)
 {
-	at_ble_status_t status = gap_check_device_role();
-
-	if(status != ROLE_MASTER)
-	{
-		return AT_BLE_INVALID_STATE;
-	}
+	at_ble_status_t status = AT_BLE_SUCCESS;
 	gattc_execute_write_cmd_handler(0, conn_handle);
 	return status;
 }

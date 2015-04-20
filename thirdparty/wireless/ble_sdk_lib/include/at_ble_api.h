@@ -1779,7 +1779,6 @@ at_ble_status_t at_ble_rx_power_unsubscribe(at_ble_handle_t conn_handle);
   * @param[in] end_handle   end of the searched range
   *
   * @return @ref AT_BLE_SUCCESS Operation completed successfully
-  * @return @ref AT_BLE_INVALID_STATE Invalid mode to handle this function (Client ONLY).
   * @return @ref AT_BLE_INVALID_PARAM Invalid arguments.
   * @return @ref AT_BLE_FAILURE Generic error.
   */
@@ -1797,7 +1796,6 @@ at_ble_status_t at_ble_primary_service_discover_all(at_ble_handle_t conn_handle,
   * @param[in] uuid         UUID of the service to be found, with LSB byte First in UUID value member
   *
   * @return @ref AT_BLE_SUCCESS operation completed successfully
-  * @return @ref AT_BLE_INVALID_STATE Invalid mode to handle this function (Client ONLY)
   * @return @ref AT_BLE_INVALID_PARAM Invalid arguments.
   * @return @ref AT_BLE_FAILURE Generic error.
   */
@@ -1814,7 +1812,6 @@ at_ble_status_t at_ble_primary_service_discover_by_uuid(at_ble_handle_t conn_han
   * @param[in] end_handle   end of the searched range
   *
   * @return @ref AT_BLE_SUCCESS operation completed successfully
-  * @return @ref AT_BLE_INVALID_STATE Invalid mode to handle this function (Client ONLY)
   * @return @ref AT_BLE_INVALID_PARAM Invalid arguments.
   * @return @ref AT_BLE_FAILURE Generic error.
   */
@@ -1831,7 +1828,6 @@ at_ble_status_t at_ble_included_service_discover_all(at_ble_handle_t conn_handle
   * @param[in] end_handle   end of the searched range
   *
   * @return @ref AT_BLE_SUCCESS Operation completed successfully
-  * @return @ref AT_BLE_INVALID_STATE Invalid mode to handle this function (Client ONLY)
   * @return @ref AT_BLE_INVALID_PARAM Invalid arguments.
   * @return @ref AT_BLE_FAILURE Generic error.
   */
@@ -1849,7 +1845,6 @@ at_ble_status_t at_ble_characteristic_discover_all(at_ble_handle_t conn_handle,
   * @param[in] uuid         UUID of the characteristic to be found, with LSB byte First in UUID value member
   *
   * @return @ref AT_BLE_SUCCESS Operation completed successfully
-  * @return @ref AT_BLE_INVALID_STATE Invalid mode to handle this function (Client ONLY)
   * @return @ref AT_BLE_INVALID_PARAM Invalid arguments.
   * @return @ref AT_BLE_FAILURE Generic error.
   */
@@ -1866,7 +1861,6 @@ at_ble_status_t at_ble_characteristic_discover_by_uuid(at_ble_handle_t conn_hand
   * @param[in] end_handle   end of the searched range
   *
   * @return @ref AT_BLE_SUCCESS Operation completed successfully
-  * @return @ref AT_BLE_INVALID_STATE Invalid mode to handle this function (Client ONLY)
   * @return @ref AT_BLE_INVALID_PARAM Invalid arguments.
   * @return @ref AT_BLE_FAILURE Generic error.
   */
