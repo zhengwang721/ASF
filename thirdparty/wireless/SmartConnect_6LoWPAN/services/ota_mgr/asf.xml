@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
 	<!-- **************************************************************************************************** -->
-	<module type="component" id="thirdparty.wireless.smartconnect_6lowpan.ota_mgr.server" caption="ota Server Manager">
+	<module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.ota_mgr.server" caption="ota Server Manager">
 		<info type="description" value="summary">
 
 		</info>

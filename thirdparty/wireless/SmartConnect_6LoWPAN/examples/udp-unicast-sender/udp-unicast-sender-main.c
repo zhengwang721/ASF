@@ -182,7 +182,6 @@ main(int argc, char *argv[])
 #else/* NODE_ID */
 #endif /* NODE_ID */
 
-  node_id_restore();
   printf("\r\n\n\n\n Starting the SmartConnect-6LoWPAN \r\n Platform : Atmel IoT device \r\n");
   print_reset_causes();
 #if SAMR21 

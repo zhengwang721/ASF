@@ -373,7 +373,6 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
 		
 		// measure light intensity
 		light = measure_light();
-    printf("Light sensor reading = %d", light);
 		sprintf(light_str,"%d", light);
 		
 		// create payload for mqtt message
