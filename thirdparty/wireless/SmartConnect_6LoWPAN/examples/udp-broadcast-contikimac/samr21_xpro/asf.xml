@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="Smart Connect 6LoWPAN - UDP Broadcast ContikiMAC SAM R21 Xplained Pro" id="thirdparty.wireless.smartconnect_6lowpan.examples.udp-broadcast-contikimac.samr21xpro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		      UDP Broadcast ContikiMAC example demonstrates the stack ability to create a UDP socket and successfully send and receive UDP broadcast data over the network, for SAM R21 Xplained Pro.
+		      UDP Broadcast ContikiMAC example demonstrates the stack ability to create a UDP socket and successfully send and receive UDP broadcast data over the network, for SAM R21 Xplained Pro, in presence of radio-duty-cycling.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
