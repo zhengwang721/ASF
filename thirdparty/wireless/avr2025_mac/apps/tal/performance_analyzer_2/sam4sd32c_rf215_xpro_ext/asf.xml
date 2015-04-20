@@ -20,6 +20,7 @@
 		<config name="config.spi_master_type" value="standard_spi"/>
 		<config name="config.thirdparty.wireless.addons.sio2host" value="usb"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="at86rf215"/>
+		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf215"/>
 		<config name="config.thirdparty.wireless.common_services.trx_access.device_type" value="2"/>
 		
 
