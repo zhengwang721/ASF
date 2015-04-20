@@ -268,7 +268,7 @@ void ota_mgr_timer_start(module_code_t msg_code, uint32_t interval, ota_timer_mo
 		else
 		{
 			ota_common_tmr_mode = TIMER_PERIODIC;
-			process_post(&otau_server_common_process,TIMER_STARTED,NULL);
+			
 		}
 	}
 	break;
@@ -286,7 +286,7 @@ void ota_mgr_timer_start(module_code_t msg_code, uint32_t interval, ota_timer_mo
 		else
 		{
 			ota_upgrade_tmr_mode = TIMER_PERIODIC;		
-			process_post(&otau_server_upgrade_process,TIMER_STARTED,NULL);
+			
 		}
 	}
 	break;
