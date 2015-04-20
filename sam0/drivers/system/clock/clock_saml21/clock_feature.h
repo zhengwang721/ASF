@@ -53,7 +53,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_clock_group SAM System Clock Management Driver (SYSTEM CLOCK)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection and
@@ -118,7 +118,7 @@ extern "C" {
  * Backup Clock Domain(BUP Clock Domain).
  *
  * Each clock domain (CPU, LP, BUP) can be changed on the fly.To ensure
- * correct operation, frequencies must be selected so that BUPDIV 鈮LPDIV 鈮HSDIV.
+ * correct operation, frequencies must be selected so that BUPDIV ≥ LPDIV ≥ HSDIV.
  * Also, frequencies must never exceed the specified maximum frequency for each clock domain.
  * A module may be connected to several clock domains (for instance, AHB and APB).
  *

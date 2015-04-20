@@ -165,14 +165,8 @@ void system_init_flash(uint32_t ul_clk)
 		EFC->EEFC_FMR = EEFC_FMR_FWS(3)|EEFC_FMR_CLOE;
 	} else if (ul_clk < CHIP_FREQ_FWS_4) {
 		EFC->EEFC_FMR = EEFC_FMR_FWS(4)|EEFC_FMR_CLOE;
-	} else if (ul_clk < CHIP_FREQ_FWS_5) {
-		EFC->EEFC_FMR = EEFC_FMR_FWS(5)|EEFC_FMR_CLOE;
-	} else if (ul_clk < CHIP_FREQ_FWS_6) {
-		EFC->EEFC_FMR = EEFC_FMR_FWS(6)|EEFC_FMR_CLOE;
-	} else if (ul_clk < CHIP_FREQ_FWS_7) {
-		EFC->EEFC_FMR = EEFC_FMR_FWS(7)|EEFC_FMR_CLOE;
 	} else {
-		EFC->EEFC_FMR = EEFC_FMR_FWS(8)|EEFC_FMR_CLOE;
+		EFC->EEFC_FMR = EEFC_FMR_FWS(5)|EEFC_FMR_CLOE;
 	}
 }
 

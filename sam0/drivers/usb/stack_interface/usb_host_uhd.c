@@ -1024,7 +1024,7 @@ void uhd_resume(void)
 }
 
 #ifdef USB_HOST_LPM_SUPPORT
-bool uhd_suspend_lpm(bool b_remotewakeup, uint8_t besl)
+bool uhd_suspend_lpm(bool b_remotewakeup, uint8_t hird)
 {
 	if (uhd_ctrl_request_timeout) {
 		return false;
@@ -1033,7 +1033,7 @@ bool uhd_suspend_lpm(bool b_remotewakeup, uint8_t besl)
 	dbg_print("EXT_LPM\n");
 
 	/* Set the LPM job */
-	usb_host_pipe_lpm_job(&dev, 0, b_remotewakeup, besl);	
+	usb_host_pipe_lpm_job(&dev, 0, b_remotewakeup, hird);	
 
 	/* Wait LPM ACK through interrupt */
 	return true;
