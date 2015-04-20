@@ -35,6 +35,7 @@
     <toolchain-config name="armgcc.compiler.miscellaneous.OtherFlags" value="-std=gnu99 -Wstrict-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal   -Wbad-function-cast -Wwrite-strings -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wnested-externs -Wlong-long -Wunreachable-code " toolchain="armgcc" />
 		<config name="config.compiler.armgcc.optimization" value="high" />
 		<generator value="as5_arm" />
+		<generator value="armgcc" />
 		<generator value="doxygen"/>
 		<device-support value="atsamr21g18a"/>
 	</project>
