@@ -158,8 +158,7 @@ retval_t tal_set_rx_sensitivity_level(trx_id_t trx,uint8_t pdt_level)
 bool crc_check_ok(trx_id_t trx)
 {
 	uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
-	return (trx_bit_read(rf_reg_offset+SR_BBC0_PC_FCSOK));//check
-
+	return (trx_bit_read(rf_reg_offset+SR_BBC0_PC_FCSOK));
 }
 
 /*

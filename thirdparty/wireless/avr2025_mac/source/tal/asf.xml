@@ -56,15 +56,6 @@
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
         </module>
 		
-		 <module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal.ext#at86rf215"     caption="at86rf215 tal support enabled">
-            <info type="description" value="summary">
-            AT86RF215 Transceiver Abstraction Layer
-            </info>
-            <info type="gui-flag" value="hidden"/>
-            <require idref="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf215"/>
-            <device-support-alias value="avr2025_mac_pal_spi_support"/>
-        </module>
-		
         <module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal.ext#at86rf232"     caption="at86rf232 tal support enabled">
             <info type="description" value="summary">
             AT86RF232 Transceiver Abstraction Layer
@@ -115,17 +106,6 @@
         <require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
         <device-support-alias value="avr2025_mac_pal_spi_support"/>
     </module>
-	
-    <module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf215"     caption="at86rf215 tal support enabled">
-        <info type="description" value="summary">
-        AT86RF215 Transceiver Abstraction Layer
-        </info>
-        <info type="gui-flag" value="hidden"/>
-        <require idref="thirdparty.wireless.avr2025_mac.source.tal.at86rf215"/>
-        <require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
-        <require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
-        <device-support-alias value="avr2025_mac_pal_spi_support"/>
-    </module>	
 	
     <module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf232"     caption="at86rf232 tal support enabled">
         <info type="description" value="summary">
@@ -181,8 +161,8 @@
 		<build type="doxygen-entry-point" value="group_tal"/>
         <device-support-alias value="avr2025_mac_pal_support"/>
 	</module>
-    <select-by-config id="thirdparty.wireless.avr2025_mac.source.tal.generic" name="config.thirdparty.wireless.common_services.trx_access.device_type" caption="TAL generic Files" default="1">
-	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.tal.generic#1" caption="TAL Generic Files">
+
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.tal.generic" caption="TAL Generic Files">
 		<build type="header-file"   value="inc/tal.h"/>
 		<build type="c-source"   value="src/tal_helper.c"/>
 		<build type="header-file"   value="inc/tal_helper.h"/>
@@ -191,21 +171,31 @@
 		<require idref="thirdparty.wireless.avr2025_mac.source.tal.inc"/>
 		<build type="include-path"  value="inc/"/>
 	</module>
-	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.tal.generic#2" caption="TAL Generic Files">
-		<build type="header-file"   value="inc/tal.h"/>
-		<build type="c-source"   value="src/tal_helper_2.c"/>
-		<build type="header-file"   value="inc/tal_helper_2.h"/>
-		<build type="header-file"   value="inc/tal_multi_trx.h"/>
-		<build type="header-file"   value="inc/tal_types.h"/>
-		<build type="header-file"   value="inc/tal_timer_config.h"/>
-		<require idref="thirdparty.wireless.avr2025_mac.source.tal.inc"/>
-		<build type="include-path"  value="inc/"/>
-	</module>
 
-	
-	</select-by-config>
 	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.tal.inc" caption="TAL Includes">
 		<build type="header-file"   value="inc/tal_generic.h"/>
 		<build type="include-path"  value="inc/"/>
 	</module>
+	
+	<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf215"     caption="at86rf215 tal support enabled">
+        <info type="description" value="summary">
+        AT86RF215 Transceiver Abstraction Layer
+        </info>
+        <info type="gui-flag" value="hidden"/>
+		<build type="header-file"   value="inc/tal.h"/>
+		<build type="c-source"   value="src/tal_helper_2.c"/>
+		<build type="header-file"   value="inc/tal_helper_2.h"/>
+		<build type="header-file"   value="inc/tal_types.h"/>
+		<build type="header-file"   value="inc/tal_timer_config.h"/>
+		<build type="header-file"   value="inc/tal_multi_trx.h"/>
+		<require idref="thirdparty.wireless.avr2025_mac.source.tal.inc"/>
+		<build type="include-path"  value="inc/"/>
+        <require idref="thirdparty.wireless.avr2025_mac.source.tal.at86rf215"/>
+        <require idref="thirdparty.wireless.avr2025_mac.source.pal.rf215"/>
+        <require idref="thirdparty.wireless.avr2025_mac.source.resources"/>
+        <device-support value="sam4s"/>
+		<device-support value="sam4l"/>
+		
+    </module>	
+	
 </asf>

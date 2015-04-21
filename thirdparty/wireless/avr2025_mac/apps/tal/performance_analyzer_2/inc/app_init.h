@@ -119,6 +119,15 @@
 	(TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF233) || (TAL_TYPE == AT86RF215))
 #define CRC_SETTING_ON_REMOTE_NODE
 #endif
+
+#define IC_TYPE      0x00
+
+#ifndef BOARD_NAME
+#define BOARD_NAME "USER_BOARD"
+#endif
+#ifndef MCU_SOC_NAME
+#define MCU_SOC_NAME "USER_MCU"
+#endif
 /* === Types ================================================================ */
 /* Main states */
 typedef enum {
