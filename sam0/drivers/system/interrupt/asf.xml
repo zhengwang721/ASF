@@ -246,5 +246,29 @@
 				<require idref="sam0.utils"/>
 				<require idref="thirdparty.cmsis"/>
 			</module>
+			<module type="driver" id="sam0.drivers.system.interrupt#saml22" caption="SYSTEM - Interrupt Driver For SAML22">
+				<info type="description" value="summary">
+					Driver for the SAM L22 Interrupt System. Provides a unified
+					interface for the configuration and management interrupts within
+					the device, including the enabling, disabling and entering, leaving
+					of critical sections.
+				</info>
+
+				<info type="keyword" value="technology">
+					<keyword value="Interrupt" />
+				</info>
+				<build type="include-path" value="." />
+				<build type="include-path" value="system_interrupt_saml22"/>
+
+				<build type="c-source" value="system_interrupt.c"/>
+
+				<build type="header-file" subtype="api" value="system_interrupt.h"/>
+				<build type="header-file" value="system_interrupt_saml22/system_interrupt_features.h"/>
+
+				<device-support value="saml22"/>
+
+				<require idref="sam0.utils"/>
+				<require idref="thirdparty.cmsis"/>
+			</module>
 	</select-by-device>
 </asf>

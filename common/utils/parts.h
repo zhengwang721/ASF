@@ -1026,6 +1026,29 @@
 /** @} */
 
 /**
+ * \name SAML22 series
+ * @{
+ */
+#define SAML22N ( \
+		SAM_PART_IS_DEFINED(SAML22N16A) || \
+		SAM_PART_IS_DEFINED(SAML22N17A) || \
+		SAM_PART_IS_DEFINED(SAML22N18A) \
+	)
+
+#define SAML22G ( \
+		SAM_PART_IS_DEFINED(SAML22G16A) || \
+		SAM_PART_IS_DEFINED(SAML22G17A) || \
+		SAM_PART_IS_DEFINED(SAML22G18A) \
+	)
+
+#define SAML22J ( \
+		SAM_PART_IS_DEFINED(SAML22J16A) || \
+		SAM_PART_IS_DEFINED(SAML22J17A) || \
+		SAM_PART_IS_DEFINED(SAML22J18A) \
+	)
+/** @} */
+
+/**
  * \name SAM4E series
  * @{
  */
@@ -1266,6 +1289,9 @@
 /** SAML21 Family */
 #define SAML21 (SAML21J || SAML21G || SAML21E)
 
+/** SAML22 Family */
+#define SAML22 (SAML22J || SAML22G || SAML22N)
+
 /** SAM4E Family */
 #define SAM4E (SAM4E8 || SAM4E16)
 
@@ -1294,7 +1320,7 @@
 #define SAMG (SAMG51 || SAMG53 || SAMG54 || SAMG55)
 
 /** SAM0 product line (cortex-m0+) */
-#define SAM0 (SAMD20 || SAMD21 || SAMR21 || SAMD10 || SAMD11 || SAML21)
+#define SAM0 (SAMD20 || SAMD21 || SAMR21 || SAMD10 || SAMD11 || SAML21 || SAML22)
 
 /** @} */
 
