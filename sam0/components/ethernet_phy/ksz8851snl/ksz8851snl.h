@@ -132,6 +132,7 @@ void ksz8851_fifo_write_end(uint32_t pad);
 uint32_t ksz8851snl_init(void);
 void configure_intn(void (*p_handler) (void));
 //@}
+
 /** @} */
 
 #ifdef __cplusplus

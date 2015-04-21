@@ -344,7 +344,7 @@ uint32_t ksz8851snl_init(void)
 		/* Init step1: read chip ID. */
 		dev_id = ksz8851_reg_read(REG_CHIP_ID);
 		if (++count > 10)
-		return 1;
+			return 1;
 	} while ((dev_id & 0xFFF0) != CHIP_ID_8851_16);
 
 	/* Init step2-4: write QMU MAC address (low, middle then high). */
@@ -357,14 +357,14 @@ uint32_t ksz8851snl_init(void)
 
 	/* Init step6: configure QMU transmit control register. */
 	ksz8851_reg_write(REG_TX_CTRL,
-	TX_CTRL_ICMP_CHECKSUM |
-	TX_CTRL_UDP_CHECKSUM |
-	TX_CTRL_TCP_CHECKSUM |
-	TX_CTRL_IP_CHECKSUM |
-	TX_CTRL_FLOW_ENABLE |
-	TX_CTRL_PAD_ENABLE |
-	TX_CTRL_CRC_ENABLE
-	);
+			TX_CTRL_ICMP_CHECKSUM |
+			TX_CTRL_UDP_CHECKSUM |
+			TX_CTRL_TCP_CHECKSUM |
+			TX_CTRL_IP_CHECKSUM |
+			TX_CTRL_FLOW_ENABLE |
+			TX_CTRL_PAD_ENABLE |
+			TX_CTRL_CRC_ENABLE
+		);
 
 	/* Init step7: enable QMU Receive Frame Data Pointer Auto Increment. */
 	ksz8851_reg_write(REG_RX_ADDR_PTR, ADDR_PTR_AUTO_INC);
@@ -374,21 +374,21 @@ uint32_t ksz8851snl_init(void)
 
 	/* Init step9: configure QMU receive control register1. */
 	ksz8851_reg_write(REG_RX_CTRL1,
-	RX_CTRL_UDP_CHECKSUM |
-	RX_CTRL_TCP_CHECKSUM |
-	RX_CTRL_IP_CHECKSUM |
-	RX_CTRL_MAC_FILTER |
-	RX_CTRL_FLOW_ENABLE |
-	RX_CTRL_BROADCAST |
-	RX_CTRL_ALL_MULTICAST|
-	RX_CTRL_UNICAST);
+			RX_CTRL_UDP_CHECKSUM |
+			RX_CTRL_TCP_CHECKSUM |
+			RX_CTRL_IP_CHECKSUM |
+			RX_CTRL_MAC_FILTER |
+			RX_CTRL_FLOW_ENABLE |
+			RX_CTRL_BROADCAST |
+			RX_CTRL_ALL_MULTICAST|
+			RX_CTRL_UNICAST);
 
 	/* Init step10: configure QMU receive control register2. */
 	ksz8851_reg_write(REG_RX_CTRL2,
-	RX_CTRL_IPV6_UDP_NOCHECKSUM |
-	RX_CTRL_UDP_LITE_CHECKSUM |
-	RX_CTRL_ICMP_CHECKSUM |
-	RX_CTRL_BURST_LEN_FRAME);
+			RX_CTRL_IPV6_UDP_NOCHECKSUM |
+			RX_CTRL_UDP_LITE_CHECKSUM |
+            RX_CTRL_ICMP_CHECKSUM |
+			RX_CTRL_BURST_LEN_FRAME);
 
 	/* Init step11: configure QMU receive queue: trigger INT and auto-dequeue frame. */
 	ksz8851_reg_write(REG_RXQ_CMD, RXQ_CMD_CNTL | RXQ_TWOBYTE_OFFSET);
@@ -419,5 +419,3 @@ uint32_t ksz8851snl_init(void)
 
 	return 0;
 }
-
-
