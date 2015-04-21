@@ -46,9 +46,6 @@
 #include "rf233.h"
 #include "delay.h"
 #include "system_interrupt.h"
-#if SAMD
-#include "node-id-samd21.h"
-#endif
 
 #define RF233_STATUS()                    rf233_status()
 /*---------------------------------------------------------------------------*/

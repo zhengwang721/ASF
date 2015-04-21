@@ -17,6 +17,7 @@
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.core"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.src"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ip"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ipv4"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ipv6"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.thsq-conf"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.aes"/>

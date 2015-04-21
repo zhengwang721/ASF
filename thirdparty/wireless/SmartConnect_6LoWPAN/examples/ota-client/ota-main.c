@@ -62,7 +62,6 @@
 #else
 #include "node-id.h"
 #endif
-#include "cycle_counter.h"
 #include "rf233-const.h"
 #include "asf.h"
 #include "usart.h"
