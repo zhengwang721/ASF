@@ -56,17 +56,10 @@
 /* FOR ACK POLLING */
 #define ACK_POLLING_ITERATION  1000
 
-#ifdef  __AVR32_ABI_COMPILER__  /* AVR32 mcu Big Endian */
- #define _BIG_ENDIAN_
-#else
- #warning  Defaulting to LITTLE ENDIAN for AVR8
- #define _LITTLE_ENDIAN_
-#endif
-
-#ifndef TWI_MODULE
- #define TWI_MODULE        &TWIC
- #warning  Defaulting to TWIC for interfacing
-#endif
+//#ifndef TWI_MODULE
+#define TWI_MODULE        &TWIC
+//#warning  Defaulting to TWIC for interfacing
+//#endif
 
 /* Device type must be defined in the project options*/
 #if    (!_AT30TS75_   && \

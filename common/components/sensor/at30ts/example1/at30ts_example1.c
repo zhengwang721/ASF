@@ -226,8 +226,8 @@ int main(void)
 	 * vol t_high register -> nonvol t_high register
 	 * vol t_low  register -> nonvol t_low register
 	 */
-
-	if ((ret = ts75_copy_vol_nonvol_register()) != TWI_SUCCESS) {
+        ret = ts75_copy_vol_nonvol_register();
+	if (ret != TWI_SUCCESS) {
 		test_fail_indication();
 	}
 

@@ -67,8 +67,7 @@
 
 /* ! @} */
 
-#define TWI_MODULE          &TWIC
- /* PATTERN_TEST_LENGTH value should be less 
+/* PATTERN_TEST_LENGTH value should be less 
  * than the size of 'ibuf' in main() 
  */
 #define PATTERN_TEST_LENGTH            7

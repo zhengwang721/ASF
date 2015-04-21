@@ -1001,7 +1001,6 @@ uint8_t ts_write_memory(uint16_t address, uint16_t size, uint8_t *buf)
 	uint8_t write_size              = 0;
 	uint8_t n                       = 0;
 	uint16_t end_page_addr          = 0;
-	int status                      = 0;
 	uint8_t *buf_ptr                = 0;
 
 	buf_ptr = buf;

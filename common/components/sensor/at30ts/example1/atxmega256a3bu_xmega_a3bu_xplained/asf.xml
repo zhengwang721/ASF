@@ -5,8 +5,8 @@
 		</info>
 
 		<!-- List header and source files in this folder -->
-		<build type="header-file" value="conf_at30ts.h"/>
 		<build type="header-file" value="conf_example.h"/>
+		<build type="header-file" value="conf_at30ts.h"/>		
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_st7565r.h"/>

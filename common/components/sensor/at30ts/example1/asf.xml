@@ -18,5 +18,6 @@
 			<require idref="common.services.delay"/>
 			<require idref="common.boards"/>
 			<require idref="xmega.utils"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 </asf>

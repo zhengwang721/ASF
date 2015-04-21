@@ -13,6 +13,7 @@
 		<build type="module-config" subtype="required-header-file" value="conf_at30ts.h"/>
 		<build type="doxygen-entry-point" value="sensor_at30ts_group"/>
 		<build type="doxygen-quick-start" value="sensor_at30ts_quickstart"/>
+		<build type="define" name="_AT30TSE758_" value=""/>
 		<require idref="common.services.basic.twi"/>
 		<device-support value="xmega"/>
 		<device-support value="uc3a"/>
