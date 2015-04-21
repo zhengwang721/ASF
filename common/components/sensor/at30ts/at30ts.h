@@ -67,7 +67,7 @@ extern "C" {
 
 #include "compiler.h"
 #include "string.h"
-#include "twim.h"
+#include "twi_master.h"
 #include "conf_at30ts.h"
 
 /* Error codes */
