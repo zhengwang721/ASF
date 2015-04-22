@@ -683,37 +683,41 @@ void app_alert()
     {
      
 		#if LED_COUNT > 0
+		#ifdef LED0_ACTIVE_LEVEL
 		LED_Toggle(LED0);
+		#else
+		LED_Toggle(LED0_GPIO);
+		#endif
 		#endif
 
 		#if LED_COUNT > 1
-		LED_Toggle(LED1);
+		LED_Toggle(LED1_GPIO);
 		#endif
 
 		#if LED_COUNT > 2
-		LED_Toggle(LED2);
+		LED_Toggle(LED2_GPIO);
 		#endif
 
 		#if LED_COUNT > 3
-		LED_Toggle(LED3);
+		LED_Toggle(LED3_GPIO);
 		#endif
 
 		#if LED_COUNT > 4
-		LED_Toggle(LED4);
+		LED_Toggle(LED4_GPIO);
 		#endif
 
 		#if LED_COUNT > 5
-		LED_Toggle(LED5);
+		LED_Toggle(LED5_GPIO);
 		#endif
 
 		#if LED_COUNT > 6
-		LED_Toggle(LED6);
+		LED_Toggle(LED6_GPIO);
 		#endif
 
 		#if LED_COUNT > 7
-		LED_Toggle(LED7);
+		LED_Toggle(LED7_GPIO);
 		#endif
-                delay_us(0xFFFF);
+		delay_us(0xFFFF);
 	}
         
         

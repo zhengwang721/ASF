@@ -99,18 +99,34 @@
 
 #define OFFSET_FOR_SRC_IEEE_ADDR    (7)
 
+#ifndef LED_COUNT
+#define LED_COUNT 0
+#endif
+
 #if (LED_COUNT >= 3)
-#define STATUS_LED              LED0
-#define TX_LED                  LED1
-#define RX_LED                  LED2
+#define STATUS_LED              LED0_GPIO
+#define TX_LED                  LED1_GPIO
+#define RX_LED                  LED2_GPIO
 #elif (LED_COUNT >= 2)
-#define STATUS_LED              LED0
-#define TX_LED                  LED0
-#define RX_LED                  LED1
-#else
-#define STATUS_LED              LED0
-#define TX_LED                  LED0
-#define RX_LED                  LED0
+#define STATUS_LED              LED0_GPIO
+#define TX_LED                  LED0_GPIO
+#define RX_LED                  LED1_GPIO
+#elif (LED_COUNT == 1)
+#define STATUS_LED              LED0_GPIO
+#define TX_LED                  LED0_GPIO
+#define RX_LED                  LED0_GPIO
+#endif
+
+#ifdef LED0_ACTIVE_LEVEL
+#define STATUS_LED_GPIO       LED0_GPIO
+#define TX_LED_GPIO          LED0_GPIO
+#define RX_LED_GPIO         LED0_GPIO
+#define STATUS_LED_ACTIVE_LEVEL  LED0_ACTIVE_LEVEL
+#define STATUS_LED_INACTIVE_LEVEL  LED0_INACTIVE_LEVEL
+#define TX_LED_ACTIVE_LEVEL  LED0_ACTIVE_LEVEL
+#define TX_LED_INACTIVE_LEVEL  LED0_INACTIVE_LEVEL
+#define RX_LED_ACTIVE_LEVEL  LED0_ACTIVE_LEVEL
+#define RX_LED_INACTIVE_LEVEL  LED0_INACTIVE_LEVEL
 #endif
 
 /* Macro to enable the feature of counting wrong CRC packets */
@@ -119,8 +135,9 @@
 	(TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF233) || (TAL_TYPE == AT86RF215))
 #define CRC_SETTING_ON_REMOTE_NODE
 #endif
-
+#ifndef IC_TYPE
 #define IC_TYPE      0x00
+#endif
 
 #ifndef BOARD_NAME
 #define BOARD_NAME "USER_BOARD"

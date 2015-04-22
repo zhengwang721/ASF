@@ -68,9 +68,11 @@
 #define LED_ON_DURAION_MICRO_SEC        (100000)
 
 /* === PROTOTYPES ========================================================== */
+#if (LED_COUNT > 0)
 static void app_switch_off_tx_led_cb(void *parameter);
 static void app_switch_off_rx_led_cb(void *parameter);
 
+#endif
 /* === GLOBALS ============================================================= */
 
 /**
@@ -222,6 +224,7 @@ bool button_pressed(void)
  */
 void app_led_event(led_event_t ev) 
 {
+#if (LED_COUNT > 0)
     switch (ev)
     {
         case LED_EVENT_TX_FRAME:
@@ -274,8 +277,10 @@ void app_led_event(led_event_t ev)
                LED_Off(RX_LED);
             break;
     }
+#endif
 }
 
+#if (LED_COUNT > 0)
 /**
  * \brief Callback function switching off the TX_LED
  *
@@ -308,9 +313,9 @@ static void app_switch_off_rx_led_cb(void *parameter)
     parameter = parameter;
 }
 
+#endif
+
 /* Print related functions */
-
-
 
 /*
  * \brief Print various messages from the table as per the event notified.

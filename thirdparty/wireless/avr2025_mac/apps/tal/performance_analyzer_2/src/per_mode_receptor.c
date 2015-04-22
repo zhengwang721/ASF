@@ -749,6 +749,7 @@ static void set_paramter_on_recptor_node(trx_id_t trx, app_payload_t *msg)
  */
 static void identify_timer_handler_cb(void *parameter)
 {
+#if (LED_COUNT > 0)
 	static uint8_t led_count;
 	parameter = parameter;
 	/* LED Blinking sequence is completed */
@@ -773,7 +774,7 @@ static void identify_timer_handler_cb(void *parameter)
 				(FUNC_PTR)identify_timer_handler_cb,
 				NULL);
 	}
-
+#endif
 	return;
 }
 
@@ -786,6 +787,7 @@ static void identify_timer_handler_cb(void *parameter)
  */
 void marker_tx_timer_handler_cb(void *parameter)
 {
+#if (LED_COUNT > 0)
 	static uint8_t led_count;
 	parameter = parameter;
 	/* LED Blinking sequence is completed */
@@ -810,7 +812,7 @@ void marker_tx_timer_handler_cb(void *parameter)
 				(FUNC_PTR)marker_tx_timer_handler_cb,
 				NULL);
 	}
-
+#endif
 	return;
 }
 
@@ -822,6 +824,7 @@ void marker_tx_timer_handler_cb(void *parameter)
  */
 void marker_rsp_timer_handler_cb(void *parameter)
 {
+#if (LED_COUNT > 0)
 	static uint8_t led_count;
 	parameter = parameter;
 	/* LED Blinking sequence is completed */
@@ -846,7 +849,7 @@ void marker_rsp_timer_handler_cb(void *parameter)
 				(FUNC_PTR)marker_rsp_timer_handler_cb,
 				NULL);
 	}
-
+#endif
 	return;
 }
 
