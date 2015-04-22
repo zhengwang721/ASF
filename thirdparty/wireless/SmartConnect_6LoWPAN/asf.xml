@@ -6,7 +6,7 @@
 			</info>
 			<build type="include-path" value="."/>		
 			<build type="doxygen-entry-point" value="group_contiki"/>	
-			<build type="distribute" subtype="user-file" value="doc/SmartConnect_6LoWPAN_User_Guide_v1.0.pdf"/>	
+			<build type="distribute" subtype="user-file" value="doc/SmartConnect_6LoWPAN_User_Guide.pdf"/>	
 			<device-support value="sam0"/>
             <info type="keyword" value="technology">
 			    <keyword value="Wireless"/>
