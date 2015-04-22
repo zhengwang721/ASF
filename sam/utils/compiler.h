@@ -190,7 +190,7 @@
  */
 #if defined(_ASSERT_ENABLE_)
 #  if defined(TEST_SUITE_DEFINE_ASSERT_MACRO)
-     // Assert() is defined in unit_test/suite.h
+     // ASSERT() is defined in unit_test/suite.h
 #    include "unit_test/suite.h"
 #  else
 #undef TEST_SUITE_DEFINE_ASSERT_MACRO
@@ -1060,6 +1060,7 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
 #define FLASH_EXTERN(x) extern const x
 #define PGM_READ_BYTE(x) *(x)
 #define PGM_READ_WORD(x) *(x)
+#define PGM_READ_DWORD(x) *(x)
 #define MEMCPY_ENDIAN memcpy
 #define PGM_READ_BLOCK(dst, src, len) memcpy((dst), (src), (len))
 

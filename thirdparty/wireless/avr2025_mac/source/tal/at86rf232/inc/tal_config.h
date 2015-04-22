@@ -109,12 +109,19 @@ typedef enum tal_timer_id_tag {
 
 #if (NUMBER_OF_TAL_TIMERS > 0)
 #define TAL_LAST_TIMER_ID    (TAL_FIRST_TIMER_ID + NUMBER_OF_TAL_TIMERS - 1) /*
-	                                                                      * -1:
-	                                                                      * timer
-	                                                                      * id
-	                                                                      * starts
-	                                                                      * with
-	                                                                      * 0 */
+	                                                                      *
+	                                                                      *-1:
+	                                                                      *
+	                                                                      *timer
+	                                                                      *
+	                                                                      *id
+	                                                                      *
+	                                                                      *starts
+	                                                                      *
+	                                                                      *with
+	                                                                      *
+	                                                                      *0
+	                                                                      **/
 #else
 #define TAL_LAST_TIMER_ID    (TAL_FIRST_TIMER_ID)
 #endif
