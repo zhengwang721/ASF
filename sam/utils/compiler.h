@@ -190,7 +190,7 @@
  */
 #if defined(_ASSERT_ENABLE_)
 #  if defined(TEST_SUITE_DEFINE_ASSERT_MACRO)
-     // ASSERT() is defined in unit_test/suite.h
+     // Assert() is defined in unit_test/suite.h
 #    include "unit_test/suite.h"
 #  else
 #undef TEST_SUITE_DEFINE_ASSERT_MACRO

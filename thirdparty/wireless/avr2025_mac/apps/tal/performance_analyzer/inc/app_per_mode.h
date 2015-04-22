@@ -157,9 +157,9 @@
 #define RANGE_TEST_STOP_PKT                 (0x14)
 #define RANGE_TEST_MARKER_CMD               (0x15)
 #define RANGE_TEST_MARKER_RSP               (0x16)
-#define REMOTE_TEST_CMD                         (0x17)
+#define REMOTE_TEST_CMD		                (0x17)
 #define REMOTE_TEST_REPLY_CMD               (0x18)
-#define PKT_STREAM_PKT                                          (0x18)
+#define PKT_STREAM_PKT						(0x18)
 
 /* Range test packet length */
 #define RANGE_TEST_PKT_LENGTH               (19)
