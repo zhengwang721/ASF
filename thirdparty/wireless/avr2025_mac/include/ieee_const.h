@@ -729,7 +729,6 @@
  */
 #define macMinLIFSPeriod_def            (40)
 
-
 /**
  * The minimum number of symbols forming a SIFS period.
  *
@@ -833,6 +832,7 @@
 /**
  * Private MAC PIB attribute to control the CSMA algorithm.
  */
+
 /**
  * Maximum number of frames that are allowed to be received during CSMA
  * backoff periods for a tx transaction.
@@ -1425,17 +1425,15 @@ trx_cca_mode_t;
 /**
  * CCA mode enumeration
  */
-typedef enum cca_mode_tag
-{
-    CCA_MODE_0_CS_OR_ED = 0,
-    CCA_MODE_1_ED = 1,  /* To be conform to IEEE 15.4 and TRX register */
-    CCA_MODE_2_CS,
-    CCA_MODE_3_CS_ED,
-    CCA_MODE_4_ALOHA
+typedef enum cca_mode_tag {
+	CCA_MODE_0_CS_OR_ED = 0,
+	CCA_MODE_1_ED = 1, /* To be conform to IEEE 15.4 and TRX register */
+	CCA_MODE_2_CS,
+	CCA_MODE_3_CS_ED,
+	CCA_MODE_4_ALOHA
 } SHORTENUM cca_mode_t;
 
-typedef enum ch_pg_tag
-{
+typedef enum ch_pg_tag {
 	CH_PG_2003 = 0,
 	CH_PG_2006 = 2,
 	CH_PG_CHINA = 5,
@@ -1450,7 +1448,6 @@ typedef enum ch_pg_tag
 } SHORTENUM ch_pg_t;
 
 /* === Externals ============================================================ */
-
 
 /* === Prototypes =========================================================== */
 

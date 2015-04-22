@@ -69,23 +69,20 @@
 /**
  * Enumeration for TRX identification
  */
-typedef enum trx_id_tag
-{
-    RF09, /**< Id for sub-1 GHz device */
-    RF24, /**< Id for 2.4 GHz device */
-    RFBOTH  /**< Id for both device parts */
+typedef enum trx_id_tag {
+	RF09, /**< Id for sub-1 GHz device */
+	RF24, /**< Id for 2.4 GHz device */
+	RFBOTH /**< Id for both device parts */
 } SHORTENUM trx_id_t;
 
-
-#define TRX_SUPPORTED_CHANNELS_LEG(trx) \
-( \
-(trx == RF24)? \
-(0x07FFF800) :\
-(0x000007FF)\
-)
+#define TRX_SUPPORTED_CHANNELS_LEG(trx)	\
+	( \
+		(trx == RF24) ?	\
+		(0x07FFF800) : \
+		(0x000007FF) \
+	)
 
 /* === EXTERNALS =========================================================== */
-
 
 /* === MACROS ============================================================== */
 
@@ -94,7 +91,9 @@ typedef enum trx_id_tag
 /** Check if certain IRQ is set for provided baseband core */
 #define TAL_BB_IS_IRQ_SET(BB_CORE, IRQ) ((tal_bb_irqs[BB_CORE] & IRQ) ? 1 : 0)
 /** Clear interrupt(s) for provided baseband core, avoid Pa091 */
-#define TAL_BB_IRQ_CLR(BB_CORE, IRQ)    tal_bb_irqs[BB_CORE] &= (uint8_t)(~((uint32_t)IRQ))
+#define TAL_BB_IRQ_CLR(BB_CORE,	\
+			IRQ)    tal_bb_irqs[BB_CORE] \
+		&= (uint8_t)(~((uint32_t)IRQ))
 /** Add interrupt(s) for provided baseband core */
 #define TAL_BB_IRQ_ADD(BB_CORE, IRQ)    tal_bb_irqs[BB_CORE] |= IRQ
 
@@ -103,14 +102,18 @@ typedef enum trx_id_tag
 /** Check if certain IRQ is set for provided radio core */
 #define TAL_RF_IS_IRQ_SET(RF_CORE, IRQ) ((tal_rf_irqs[RF_CORE] & IRQ) ? 1 : 0)
 /** Clear interrupt(s) for provided radio core,  avoid Pa091 */
-#define TAL_RF_IRQ_CLR(RF_CORE, IRQ)    tal_rf_irqs[RF_CORE] &= (uint8_t)(~((uint32_t)IRQ))
+#define TAL_RF_IRQ_CLR(RF_CORE,	\
+			IRQ)    tal_rf_irqs[RF_CORE] \
+		&= (uint8_t)(~((uint32_t)IRQ))
 /** Add interrupt(s) for provided radio core */
 #define TAL_RF_IRQ_ADD(RF_CORE, IRQ)    tal_rf_irqs[RF_CORE] |= IRQ
 
 /** Register offset between RF09 and TRX24 */
-#define RF_BASE_ADDR_OFFSET             (BASE_ADDR_RF24_RF24 - BASE_ADDR_RF09_RF09)
+#define RF_BASE_ADDR_OFFSET             (BASE_ADDR_RF24_RF24 - \
+	BASE_ADDR_RF09_RF09)
 /** Register offset between the baseband cores */
-#define BB_BASE_ADDR_OFFSET             (BASE_ADDR_BBC1_CORE1 - BASE_ADDR_BBC0_CORE0)
+#define BB_BASE_ADDR_OFFSET             (BASE_ADDR_BBC1_CORE1 -	\
+	BASE_ADDR_BBC0_CORE0)
 /** Register offset between the Tx frame buffers. */
 #define BB_TX_FRM_BUF_OFFSET            (RG_BBC1_FBTXS - RG_BBC0_FBTXS)
 /** Register offset between the Rx frame buffers. */
@@ -119,10 +122,16 @@ typedef enum trx_id_tag
 #define RFT_TST_ADDR_OFFSET             (0x280 - 0x180)
 
 /* === PROTOTYPES ========================================================== */
-void get_ofdm_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,ofdm_option_t option,uint32_t *freq, uint32_t *spacing);
-void get_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *freq, uint32_t *spacing);
-void get_leg_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *freq, uint32_t *spacing);
-void get_fsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band,fsk_op_mode_t option,uint32_t *freq, uint32_t *spacing);
-oqpsk_chip_rate_t get_oqpsk_chip_rate(trx_id_t trx_id,sun_freq_band_t freq_band);
+void get_ofdm_freq_f0(trx_id_t trx_id, sun_freq_band_t freq_band,
+		ofdm_option_t option, uint32_t *freq, uint32_t *spacing);
+void get_oqpsk_freq_f0(trx_id_t trx_id, sun_freq_band_t freq_band,
+		uint32_t *freq, uint32_t *spacing);
+void get_leg_oqpsk_freq_f0(trx_id_t trx_id, sun_freq_band_t freq_band,
+		uint32_t *freq, uint32_t *spacing);
+void get_fsk_freq_f0(trx_id_t trx_id, sun_freq_band_t freq_band,
+		fsk_op_mode_t option, uint32_t *freq, uint32_t *spacing);
+oqpsk_chip_rate_t get_oqpsk_chip_rate(trx_id_t trx_id,
+		sun_freq_band_t freq_band);
 uint16_t get_sun_max_ch_no(trx_id_t trx_id);
+
 #endif /* TAL_RF215_H */

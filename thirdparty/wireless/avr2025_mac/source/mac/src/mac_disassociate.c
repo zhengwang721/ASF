@@ -188,8 +188,10 @@ void mlme_disassociate_request(uint8_t *m)
 						DISASSOC_PAYLOAD_LEN - 2; /* Add
 		                                                           * 2
 		                                                           *
+		                                                           *
 		                                                           *octets
 		                                                           * for
+		                                                           *
 		                                                           *
 		                                                           *FCS.
 		                                                           **/

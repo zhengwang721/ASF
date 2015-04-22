@@ -46,7 +46,7 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
- 
+
 /* Prevent double inclusion */
 #ifndef APP_PEER_SEARCH_H
 #define APP_PEER_SEARCH_H
@@ -101,11 +101,11 @@
  * various Peer Search Process tasks
  *
  */
-typedef struct
-{
+typedef struct {
 	void (*peer_state_init)(trx_id_t trx, void *arg);
 	void (*peer_state_task)(trx_id_t trx);
-	void (*peer_state_tx_frame_done_cb)(trx_id_t trx, retval_t status, frame_info_t *frame);
+	void (*peer_state_tx_frame_done_cb)(trx_id_t trx, retval_t status,
+			frame_info_t *frame);
 	void (*peer_state_rx_frame_cb)(trx_id_t trx, frame_info_t *frame);
 	void (*peer_state_exit)(trx_id_t trx);
 } peer_state_function_t;
@@ -160,7 +160,8 @@ void peer_search_receptor_task(trx_id_t trx);
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
  */
-void peer_search_receptor_tx_done_cb(trx_id_t trx, retval_t status, frame_info_t *frame);
+void peer_search_receptor_tx_done_cb(trx_id_t trx, retval_t status,
+		frame_info_t *frame);
 
 /**
  * \brief Callback that is called if data has been received by trx in
@@ -178,7 +179,7 @@ void peer_search_receptor_rx_cb(trx_id_t trx, frame_info_t *frame);
  */
 void peer_search_receptor_exit(trx_id_t trx);
 
-//! \}
+/* ! \} */
 
 /**
  * \addtogroup group_peer_search_initiator
@@ -193,7 +194,8 @@ void peer_search_receptor_exit(trx_id_t trx);
  * \param state     Sub state to be set
  * \param arg       arguments to be set as part of set sub state
  */
-void peer_search_initiator_set_sub_state(trx_id_t trx, uint8_t state, void *arg);
+void peer_search_initiator_set_sub_state(trx_id_t trx, uint8_t state,
+		void *arg);
 
 /**
  * \brief Application task to start peer search
@@ -208,12 +210,14 @@ void peer_search_initiator_init(trx_id_t trx, void *arg);
 void peer_search_initiator_task(trx_id_t trx);
 
 /**
- * \brief Callback that is called once tx is done in peer search initiator state.
+ * \brief Callback that is called once tx is done in peer search initiator
+ *state.
  *
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
  */
-void peer_search_initiator_tx_done_cb(trx_id_t trx, retval_t status, frame_info_t *frame);
+void peer_search_initiator_tx_done_cb(trx_id_t trx, retval_t status,
+		frame_info_t *frame);
 
 /**
  * \brief Callback that is called if data has been received by trx.
@@ -226,7 +230,6 @@ void peer_search_initiator_rx_cb(trx_id_t trx, frame_info_t *frame);
  * \brief Function to exit peer search initiator exit state
  */
 void peer_search_initiator_exit(trx_id_t trx);
-
 
 /* ! \} */
 

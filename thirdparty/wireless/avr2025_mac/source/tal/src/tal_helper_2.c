@@ -48,7 +48,7 @@
 
 /* === INCLUDES ============================================================ */
 
-//#if (TAL_TYPE != AT86RF215)
+/* #if (TAL_TYPE != AT86RF215) */
 #include "pal.h"
 #include "return_val.h"
 #include "tal.h"
@@ -60,12 +60,9 @@
 
 /* === MACROS ============================================================== */
 
-
-
 /* === GLOBALS ============================================================= */
 
 FLASH_EXTERN(int8_t tx_pwr_table[16]);
-
 
 /* === PROTOTYPES ========================================================== */
 extern uint8_t convert_phyTransmitPower_to_reg_value(
@@ -82,9 +79,10 @@ extern uint8_t convert_phyTransmitPower_to_reg_value(
  * \return MAC_SUCCESS  if PA_EXT_EN bit is configured correctly
  *         FAILURE      otherwise
  */
-retval_t tal_set_tx_pwr(trx_id_t trx,bool type, int8_t pwr_value)
+retval_t tal_set_tx_pwr(trx_id_t trx, bool type, int8_t pwr_value)
 {
 	return MAC_SUCCESS;
+
 	int8_t temp_var;
 	int8_t tx_pwr_dbm = 0;
 	/* modify the register for tx_pwr and set the tal_pib accordingly */
@@ -93,11 +91,12 @@ retval_t tal_set_tx_pwr(trx_id_t trx,bool type, int8_t pwr_value)
 				tal_convert_reg_value_to_dBm(pwr_value,
 				&tx_pwr_dbm)) {
 			temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
-			tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_var);
+			tal_pib_set(trx, phyTransmitPower,
+					(pib_value_t *)&temp_var);
 
 			/* To make sure that TX_PWR register is updated with the
 			 * value whatever user povided.Otherwise lowest dBm
-			 *power
+			 * power
 			 * (highest reg value will be taken)
 			 */
 			return MAC_SUCCESS;
@@ -107,7 +106,7 @@ retval_t tal_set_tx_pwr(trx_id_t trx,bool type, int8_t pwr_value)
 		}
 	} else {
 		temp_var = CONV_DBM_TO_phyTransmitPower(pwr_value);
-		tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_var);
+		tal_pib_set(trx, phyTransmitPower, (pib_value_t *)&temp_var);
 	}
 
 	uint8_t reg_value = convert_phyTransmitPower_to_reg_value(
@@ -129,7 +128,7 @@ retval_t tal_set_tx_pwr(trx_id_t trx,bool type, int8_t pwr_value)
  *        MAC_INVALID_PARAMETER pdt_level is out of range
  *        FAILURE otheriwse
  */
-retval_t tal_set_rx_sensitivity_level(trx_id_t trx,uint8_t pdt_level)
+retval_t tal_set_rx_sensitivity_level(trx_id_t trx, uint8_t pdt_level)
 {
 	uint8_t temp;
 	/* return invalid parameter if sensitivity level is out of range*/
@@ -150,7 +149,6 @@ retval_t tal_set_rx_sensitivity_level(trx_id_t trx,uint8_t pdt_level)
 	}
 }
 
-
 /**
  * \brief Calculates CRC manually and compares with the received
  * and returns true if both are same,false otherwise.
@@ -158,7 +156,7 @@ retval_t tal_set_rx_sensitivity_level(trx_id_t trx,uint8_t pdt_level)
 bool crc_check_ok(trx_id_t trx)
 {
 	uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
-	return (trx_bit_read(rf_reg_offset+SR_BBC0_PC_FCSOK));
+	return (trx_bit_read(rf_reg_offset + SR_BBC0_PC_FCSOK));
 }
 
 /*
@@ -170,24 +168,22 @@ bool crc_check_ok(trx_id_t trx)
  *        FAILURE otheriwse
  */
 
-retval_t tal_rxaack_prom_mode_ctrl(trx_id_t trx,bool prom_ctrl)
+retval_t tal_rxaack_prom_mode_ctrl(trx_id_t trx, bool prom_ctrl)
 {
 	uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
 	bool temp;
-	if(prom_ctrl)
-	{
-
-	/* configure promiscuous mode */
-	trx_bit_write(rf_reg_offset+SR_BBC0_AFC0_PM, prom_ctrl);
-	trx_bit_write(rf_reg_offset+SR_BBC0_PC_FCSFE,0X00); //Disable FCSFE
-	}
-	else
-	{
-
+	if (prom_ctrl) {
 		/* configure promiscuous mode */
-		trx_bit_write(rf_reg_offset+SR_BBC0_AFC0_PM, prom_ctrl);
-		trx_bit_write(rf_reg_offset+SR_BBC0_PC_FCSFE,0X01); //Enable FCSFE
+		trx_bit_write(rf_reg_offset + SR_BBC0_AFC0_PM, prom_ctrl);
+		trx_bit_write(rf_reg_offset + SR_BBC0_PC_FCSFE, 0X00); /* Disable
+		                                                        * FCSFE */
+	} else {
+		/* configure promiscuous mode */
+		trx_bit_write(rf_reg_offset + SR_BBC0_AFC0_PM, prom_ctrl);
+		trx_bit_write(rf_reg_offset + SR_BBC0_PC_FCSFE, 0X01); /* Enable
+		                                                        * FCSFE */
 	}
+
 	temp = trx_bit_read(SR_BBC0_AFC0_PM);
 	if (temp == prom_ctrl) {
 		return MAC_SUCCESS;
@@ -205,40 +201,40 @@ tal_trx_status_t tal_get_trx_status(trx_id_t trx)
 {
 	uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
 	rf_cmd_status_t trx_status;
-	if(tal_state[trx] == TAL_SLEEP)
-	return TRX_SLEEP;
+	if (tal_state[trx] == TAL_SLEEP) {
+		return TRX_SLEEP;
+	}
+
 	/* Read the status from trx_status bits */
 	trx_status = trx_bit_read(rf_reg_offset + SR_RF09_STATE_STATE);
-	switch (trx_status)
+	switch (trx_status) {
+	case STATUS_RF_RESET:
 	{
-		case STATUS_RF_RESET:
-		{
-			return P_ON;
-		}
-		break;
-		case STATUS_RF_TRXOFF:
-		{
-			return TRX_OFF;
-		}
-		break;
-		case STATUS_RF_TXPREP:
-		{
-			return PLL_ON;
-		}
-		break;
-		case STATUS_RF_RX:
-		{
-			return RX_ON;
-		}
-		break;
-		default:
-		return trx_status;
-		
-		
-		
+		return P_ON;
 	}
-	
-	
+	break;
+
+	case STATUS_RF_TRXOFF:
+	{
+		return TRX_OFF;
+	}
+	break;
+
+	case STATUS_RF_TXPREP:
+	{
+		return PLL_ON;
+	}
+	break;
+
+	case STATUS_RF_RX:
+	{
+		return RX_ON;
+	}
+	break;
+
+	default:
+		return trx_status;
+	}
 }
 
 /*
@@ -250,7 +246,7 @@ tal_trx_status_t tal_get_trx_status(trx_id_t trx)
  *         MAC_INVALID_PARAMETER if the reg_addr is out of range
  */
 
-retval_t tal_trx_reg_read(trx_id_t trx,uint16_t reg_addr, uint8_t *data)
+retval_t tal_trx_reg_read(trx_id_t trx, uint16_t reg_addr, uint8_t *data)
 {
 	/*check if register address is out of range*/
 #if ((TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == ATMEGARFR2))
@@ -264,8 +260,9 @@ retval_t tal_trx_reg_read(trx_id_t trx,uint16_t reg_addr, uint8_t *data)
 	}
 
 #endif /* End of (TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == ATMEGA256RFR2)*/
+
 	/* Read the corresponding transceiver register and return through data
-	 *pointer */
+	 * pointer */
 	*data = trx_reg_read(reg_addr);
 
 	return MAC_SUCCESS;
@@ -280,7 +277,7 @@ retval_t tal_trx_reg_read(trx_id_t trx,uint16_t reg_addr, uint8_t *data)
  * \return MAC_SUCCESS if the register is written correctly
  *         MAC_INVALID_PARAMETER if the reg_addr is out of range
  */
-retval_t  tal_trx_reg_write(trx_id_t trx,uint16_t reg_addr, uint8_t value)
+retval_t  tal_trx_reg_write(trx_id_t trx, uint16_t reg_addr, uint8_t value)
 {
 #if ((TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == ATMEGARFR2))
 	if (reg_addr > MAX_REG_ADDR_VALUE) {
@@ -310,24 +307,24 @@ retval_t  tal_trx_reg_write(trx_id_t trx,uint16_t reg_addr, uint8_t value)
  * \brief to read a current setting particular transceiver parameter
  * \param parameter type of the parameter to be read
  * \param *param_value pointer to the location where the current parameter value
- *need to be
+ * need to be
  *              stored
  * \return MAC_INVALID_PARAMETER if the parameter is invalid
  *         MAC_SUCCESS otherwise
  */
 
-retval_t tal_get_curr_trx_config(trx_id_t trx,param_type parameter, uint8_t *param_value)
+retval_t tal_get_curr_trx_config(trx_id_t trx, param_type parameter,
+		uint8_t *param_value)
 {
-uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
+	uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
 
 	switch (parameter) {
-
 	case AACK_PROMSCS_MODE:
-		*param_value = trx_bit_read(rf_reg_offset+SR_BBC0_AFC0_PM);
+		*param_value = trx_bit_read(rf_reg_offset + SR_BBC0_AFC0_PM);
 		break;
 
 	case TX_PWR:
-		*param_value = trx_bit_read(rf_reg_offset+SR_RF09_PAC_TXPWR);
+		*param_value = trx_bit_read(rf_reg_offset + SR_RF09_PAC_TXPWR);
 		break;
 
 	default:
@@ -346,13 +343,15 @@ uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
  *         MAC_INVALID_PARAMETER if the reg_addr is out of range
  */
 
-retval_t tal_dump_registers(trx_id_t trx,uint16_t start_addr, uint16_t end_addr,
+retval_t tal_dump_registers(trx_id_t trx, uint16_t start_addr,
+		uint16_t end_addr,
 		uint8_t *value)
 {
 	uint16_t i;
 	int16_t length;
+
 	/*check start and end address, return invalid parameter if out of range
-	 **/
+	**/
 #if ((TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == ATMEGARFR2))
 	if (start_addr > MAX_REG_ADDR_VALUE || end_addr > MAX_REG_ADDR_VALUE) {
 		return MAC_INVALID_PARAMETER;
@@ -367,7 +366,7 @@ retval_t tal_dump_registers(trx_id_t trx,uint16_t start_addr, uint16_t end_addr,
 	length = end_addr - start_addr;
 	if (length < 0) {
 		/* return invalid parameter if start and end addresses are not
-		 *in order*/
+		 * in order*/
 		return MAC_INVALID_PARAMETER;
 	} else {
 		/* Read and store the values in input address*/
@@ -390,10 +389,6 @@ retval_t tal_dump_registers(trx_id_t trx,uint16_t start_addr, uint16_t end_addr,
  */
 retval_t tal_convert_reg_value_to_dBm(uint8_t reg_value, int8_t *dbm_value)
 {
-	
-*dbm_value = reg_value-17;	
-return MAC_SUCCESS;
-
+	*dbm_value = reg_value - 17;
+	return MAC_SUCCESS;
 }
-
-

@@ -648,7 +648,7 @@ static void start_backoff(void)
 			tal_rx_on_required = true;
 		} else {
 			set_trx_state(CMD_RX_AACK_ON); /* receive while backoff
-			                                **/
+			                               **/
 		}
 
 #else

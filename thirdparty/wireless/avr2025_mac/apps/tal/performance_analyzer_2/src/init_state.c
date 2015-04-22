@@ -40,13 +40,13 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 /* === INCLUDES ============================================================ */
-
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -68,6 +68,7 @@
 /* === PROTOTYPES ========================================================== */
 static void configuration_mode_selection(trx_id_t trx);
 static void app_timers_init(void);
+
 /* === GLOBALS ============================================================= */
 uint8_t T_APP_TIMER;
 uint8_t T_APP_TIMER_RANGE_RF09;
@@ -76,6 +77,7 @@ uint8_t APP_TIMER_TO_TX;
 uint8_t APP_TIMER_TO_TX_LED_OFF;
 uint8_t APP_TIMER_TO_RX_LED_OFF;
 /* === IMPLEMENTATION ====================================================== */
+
 /*
  * \brief Initialization task for INIT STATE. All hardware, PAL, TAL and stack
  *        level initialization must be done in this function
@@ -84,41 +86,40 @@ uint8_t APP_TIMER_TO_RX_LED_OFF;
  */
 void init_state_init(trx_id_t trx, void *arg)
 {
-    sw_timer_init();
-     
-    /* Set the node information base */
-    config_node_ib(trx);
+	sw_timer_init();
 
-    /* Initialize the TAL layer */
-    if (tal_init() != MAC_SUCCESS)
-    {
-        /* something went wrong during initialization */
-        app_alert();
-    }
+	/* Set the node information base */
+	config_node_ib(trx);
 
-    app_timers_init();
-
-    /* Initialize sio rx state */
-    init_sio(trx);
-
-    /* select the configuration mode */
-    configuration_mode_selection(trx);
-
-	//if(trx == RF09)
-	{
-			/* Configure PHY for sub-1GHz */
-			phy_t phy;
-			phy.modulation = LEG_OQPSK;
-			phy.phy_mode.leg_oqpsk.chip_rate  = CHIP_RATE_1000;
-			phy.freq_band = US_915;
-			phy.ch_spacing = LEG_915_CH_SPAC; ;
-			phy.freq_f0 = LEG_915_F0;
-			if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
-			{
-					app_alert();
-			}
+	/* Initialize the TAL layer */
+	if (tal_init() != MAC_SUCCESS) {
+		/* something went wrong during initialization */
+		app_alert();
 	}
-	//else
+
+	app_timers_init();
+
+	/* Initialize sio rx state */
+	init_sio(trx);
+
+	/* select the configuration mode */
+	configuration_mode_selection(trx);
+
+	/* if(trx == RF09) */
+	{
+		/* Configure PHY for sub-1GHz */
+		phy_t phy;
+		phy.modulation = LEG_OQPSK;
+		phy.phy_mode.leg_oqpsk.chip_rate  = CHIP_RATE_1000;
+		phy.freq_band = US_915;
+		phy.ch_spacing = LEG_915_CH_SPAC;
+		phy.freq_f0 = LEG_915_F0;
+		if (tal_pib_set(RF09, phySetting,
+				(pib_value_t *)&phy) != MAC_SUCCESS) {
+			app_alert();
+		}
+	}
+	/* else */
 	{
 		/* Configure PHY for 2.4GHz */
 		phy_t phy;
@@ -127,12 +128,12 @@ void init_state_init(trx_id_t trx, void *arg)
 		phy.freq_band = WORLD_2450;
 		phy.ch_spacing = LEG_2450_CH_SPAC;
 		phy.freq_f0 = LEG_2450_F0;
-		if (tal_pib_set(RF24, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
-		{
+		if (tal_pib_set(RF24, phySetting,
+				(pib_value_t *)&phy) != MAC_SUCCESS) {
 			app_alert();
 		}
 	}
-			
+
 	/* Keep compiler happy */
 	arg = arg;
 }
@@ -140,60 +141,54 @@ void init_state_init(trx_id_t trx, void *arg)
 void init_after_disconnect(trx_id_t trx)
 {
 	node_info[trx].peer_found = false;
-    /* Reset trx */
-    if (trx_reset(trx) != MAC_SUCCESS)
-    {
-	    app_alert();
-    }
+	/* Reset trx */
+	if (trx_reset(trx) != MAC_SUCCESS) {
+		app_alert();
+	}
 
-    /* Configure transceiver */
-    trx_config(trx);
+	/* Configure transceiver */
+	trx_config(trx);
 
+	tal_rx_buffer[trx] = bmm_buffer_alloc(LARGE_BUFFER_SIZE);
 
+	/* Init incoming frame queue */
+	qmm_queue_init(&tal_incoming_frame_queue[trx]);
 
-    tal_rx_buffer[trx] = bmm_buffer_alloc(LARGE_BUFFER_SIZE);
+	tal_state[trx] = TAL_IDLE;
 
-    /* Init incoming frame queue */
-    qmm_queue_init(&tal_incoming_frame_queue[trx]);
-
-    tal_state[trx] = TAL_IDLE;
-
-	 /* Initialize sio rx state */
-    init_sio(trx);
+	/* Initialize sio rx state */
+	init_sio(trx);
 
 	/* select the configuration mode */
-	 configuration_mode_selection(trx);
+	configuration_mode_selection(trx);
 
-	    if(trx == RF09)
-	    {
-		    /* Configure PHY for sub-1GHz */
-		    phy_t phy;
-		    phy.modulation = LEG_OQPSK;
-		    phy.phy_mode.leg_oqpsk.chip_rate  = CHIP_RATE_1000;
-		    phy.freq_band = US_915;
-		    phy.ch_spacing = LEG_915_CH_SPAC; ;
-		    phy.freq_f0 = LEG_915_F0;
-		    if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
-		    {
-			    app_alert();
-		    }
-	    }
-	    else
-	    {
-		    /* Configure PHY for 2.4GHz */
-		    phy_t phy;
-		    phy.modulation = LEG_OQPSK;
-		    phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_2000;
-		    phy.freq_band = WORLD_2450;
-		    phy.ch_spacing = LEG_2450_CH_SPAC;
-		    phy.freq_f0 = LEG_2450_F0;
-		    if (tal_pib_set(RF24, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
-		    {
-			    app_alert();
-		    }
-	    }
-	
+	if (trx == RF09) {
+		/* Configure PHY for sub-1GHz */
+		phy_t phy;
+		phy.modulation = LEG_OQPSK;
+		phy.phy_mode.leg_oqpsk.chip_rate  = CHIP_RATE_1000;
+		phy.freq_band = US_915;
+		phy.ch_spacing = LEG_915_CH_SPAC;
+		phy.freq_f0 = LEG_915_F0;
+		if (tal_pib_set(RF09, phySetting,
+				(pib_value_t *)&phy) != MAC_SUCCESS) {
+			app_alert();
+		}
+	} else {
+		/* Configure PHY for 2.4GHz */
+		phy_t phy;
+		phy.modulation = LEG_OQPSK;
+		phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_2000;
+		phy.freq_band = WORLD_2450;
+		phy.ch_spacing = LEG_2450_CH_SPAC;
+		phy.freq_f0 = LEG_2450_F0;
+		if (tal_pib_set(RF24, phySetting,
+				(pib_value_t *)&phy) != MAC_SUCCESS) {
+			app_alert();
+		}
+	}
 }
+
 /**
  * \brief Checks whether Configuration Mode is selected or not
  *
@@ -202,50 +197,47 @@ void init_after_disconnect(trx_id_t trx)
  */
 static void configuration_mode_selection(trx_id_t trx)
 {
-    /* Is button pressed */
-    if (button_pressed())
-    {
-        /* Enable configuration mode */
-        node_info[trx].configure_mode = true;
-    }
-    else
-    {
-        node_info[trx].configure_mode = false;
-    }
-    /*
-     * Wait for the user to release the button to proceed further, otherwise
-     * button press will start Peer search in Range measurement mode which is
-     * not an intended behavior
-     */
-    while (button_pressed());
-}
+	/* Is button pressed */
+	if (button_pressed()) {
+		/* Enable configuration mode */
+		node_info[trx].configure_mode = true;
+	} else {
+		node_info[trx].configure_mode = false;
+	}
 
+	/*
+	 * Wait for the user to release the button to proceed further, otherwise
+	 * button press will start Peer search in Range measurement mode which
+	 *is
+	 * not an intended behavior
+	 */
+	while (button_pressed()) {
+	}
+}
 
 static void app_timers_init(void)
 {
+	if (STATUS_OK != sw_timer_get_id(&T_APP_TIMER)) {
+		app_alert();
+	}
 
-if(STATUS_OK != sw_timer_get_id(&T_APP_TIMER))
-{
-        app_alert();
-}
-if(STATUS_OK != sw_timer_get_id(&APP_TIMER_TO_TX))
-{
-        app_alert();
-}
-if(STATUS_OK != sw_timer_get_id(&APP_TIMER_TO_TX_LED_OFF))
-{
-        app_alert();
-}
-if(STATUS_OK != sw_timer_get_id(&APP_TIMER_TO_RX_LED_OFF))
-{
-        app_alert();
-}
-if (STATUS_OK != sw_timer_get_id(&T_APP_TIMER_RANGE_RF09)) {
-	app_alert();
-}
-if (STATUS_OK != sw_timer_get_id(&T_APP_TIMER_RANGE_RF24)) {
-	app_alert();
-}
+	if (STATUS_OK != sw_timer_get_id(&APP_TIMER_TO_TX)) {
+		app_alert();
+	}
 
-}
+	if (STATUS_OK != sw_timer_get_id(&APP_TIMER_TO_TX_LED_OFF)) {
+		app_alert();
+	}
 
+	if (STATUS_OK != sw_timer_get_id(&APP_TIMER_TO_RX_LED_OFF)) {
+		app_alert();
+	}
+
+	if (STATUS_OK != sw_timer_get_id(&T_APP_TIMER_RANGE_RF09)) {
+		app_alert();
+	}
+
+	if (STATUS_OK != sw_timer_get_id(&T_APP_TIMER_RANGE_RF24)) {
+		app_alert();
+	}
+}

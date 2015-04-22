@@ -2,7 +2,7 @@
  * @file trx_access_2.c
  *
  * @brief Performs interface functionalities between the PHY layer and ASF
- *drivers
+ * drivers
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -112,7 +112,7 @@ void trx_spi_init(void)
 	config.pinmux_pad3 = AT86RFX_SPI_SERCOM_PINMUX_PAD3;
 	spi_init(&master, AT86RFX_SPI, &config);
 	spi_enable(&master);
-	
+
 	struct extint_chan_conf eint_chan_conf;
 	extint_chan_get_config_defaults(&eint_chan_conf);
 	eint_chan_conf.gpio_pin = AT86RFX_IRQ_PIN;
@@ -122,12 +122,13 @@ void trx_spi_init(void)
 	eint_chan_conf.filter_input_signal = false;
 	eint_chan_conf.detection_criteria  = EXTINT_DETECT_RISING;
 	extint_chan_set_config(AT86RFX_IRQ_CHAN, &eint_chan_conf);
-	extint_register_callback(AT86RFX_ISR, AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT);
-	
+	extint_register_callback(AT86RFX_ISR, AT86RFX_IRQ_CHAN,
+			EXTINT_CALLBACK_TYPE_DETECT);
+
 	#else
 	spi_master_init(AT86RFX_SPI);
 	spi_master_setup_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE, SPI_MODE_0,
-	AT86RFX_SPI_BAUDRATE, 0);
+			AT86RFX_SPI_BAUDRATE, 0);
 	spi_enable(AT86RFX_SPI);
 	AT86RFX_INTC_INIT();
 	#endif
@@ -146,36 +147,37 @@ void PhyReset(void)
 	delay_us(10);
 	RST_HIGH();
 }
+
 #define TAL_DEFAULT_BB_IRQ_MASK     (BB_IRQ_TXFE | BB_IRQ_RXFE)
 #define TAL_DEFAULT_RF_IRQ_MASK     RF_IRQ_ALL_IRQ
 
 /*Temporary set of definitions to test parallel PER Test in 215*/
-//todo : Implement spi using dma to reduce cpu dependency for writing 2000bytes payload for spi
-#define DISABLE_TRX_INTERRUPT()     trx_reg_write( RG_BBC0_IRQM, 0);\
-								    trx_reg_write(BB_BASE_ADDR_OFFSET + RG_BBC0_IRQM, 0);\
-								    trx_reg_write( RG_RF09_IRQM, 0);\
-								    trx_reg_write(RF_BASE_ADDR_OFFSET + RG_RF09_IRQM, 0);
+/* todo : Implement spi using dma to reduce cpu dependency for writing 2000bytes
+ * payload for spi */
+#define DISABLE_TRX_INTERRUPT()     trx_reg_write( RG_BBC0_IRQM, 0); \
+	trx_reg_write(BB_BASE_ADDR_OFFSET + RG_BBC0_IRQM, 0); \
+	trx_reg_write( RG_RF09_IRQM, 0); \
+	trx_reg_write(RF_BASE_ADDR_OFFSET + RG_RF09_IRQM, 0);
 
+#define ENABLE_TRX_INTERRUPT()         trx_reg_write( RG_BBC0_IRQM, \
+		TAL_DEFAULT_BB_IRQ_MASK); \
+	trx_reg_write(BB_BASE_ADDR_OFFSET + RG_BBC0_IRQM, \
+		TAL_DEFAULT_BB_IRQ_MASK); \
+	trx_reg_write( RG_RF09_IRQM, TAL_DEFAULT_RF_IRQ_MASK); \
+	trx_reg_write(RF_BASE_ADDR_OFFSET + RG_RF09_IRQM, \
+		TAL_DEFAULT_RF_IRQ_MASK);
 
-#define ENABLE_TRX_INTERRUPT()         trx_reg_write( RG_BBC0_IRQM, TAL_DEFAULT_BB_IRQ_MASK);\
-									   trx_reg_write(BB_BASE_ADDR_OFFSET + RG_BBC0_IRQM, TAL_DEFAULT_BB_IRQ_MASK);\
-									   trx_reg_write ( RG_RF09_IRQM, TAL_DEFAULT_RF_IRQ_MASK);\
-									   trx_reg_write(RF_BASE_ADDR_OFFSET + RG_RF09_IRQM, TAL_DEFAULT_RF_IRQ_MASK);							  
-									   
-void trx_read(uint16_t addr,uint8_t *data, uint16_t length)
+void trx_read(uint16_t addr, uint8_t *data, uint16_t length)
 {
-	
-
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/
-   DISABLE_TRX_INTERRUPT();
-  
+	**/
+	DISABLE_TRX_INTERRUPT();
+
 	/* Prepare the command byte */
-	addr |= 0X0000; //Read Command
-	
-	
+	addr |= READ_ACCESS_COMMAND; /* Read Command */
+
 	uint8_t reg_addr;
-	
+
 #if SAMD || SAMR21
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_slave(&master, &slave, true);
@@ -220,16 +222,15 @@ void trx_read(uint16_t addr,uint8_t *data, uint16_t length)
 	}
 	/* Stop the SPI transaction by setting SEL high */
 	spi_select_slave(&master, &slave, false);
-	
+
 #else
-	
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
-	
-	reg_addr = addr>>8;
-	
+
+	reg_addr = addr >> 8;
+
 	/* Send the Read command byte */
-	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);	
+	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);
 
 	reg_addr = addr;
 
@@ -238,32 +239,29 @@ void trx_read(uint16_t addr,uint8_t *data, uint16_t length)
 
 	/* Do dummy read for initiating SPI read */
 	spi_read_packet(AT86RFX_SPI, data, length);
-	
+
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
+
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
-	
-    ENABLE_TRX_INTERRUPT();
-	
+	 * interrupt */
+
+	ENABLE_TRX_INTERRUPT();
 }
 
-void trx_write(uint16_t addr, uint8_t *data,uint16_t length)
+void trx_write(uint16_t addr, uint8_t *data, uint16_t length)
 {
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/
-	
-     
+	**/
+
 	DISABLE_TRX_INTERRUPT();
-	
-   
+
 	/* Prepare the command byte */
-	addr |= 0X8000; //Write Command
-	
-	
+	addr |= WRITE_ACCESS_COMMAND; /* Write Command */
+
 	uint8_t reg_addr;
-	
+
 #if SAMD || SAMR21
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_slave(&master, &slave, true);
@@ -308,17 +306,16 @@ void trx_write(uint16_t addr, uint8_t *data,uint16_t length)
 	/* Stop the SPI transaction by setting SEL high */
 	spi_select_slave(&master, &slave, false);
 #else
-
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 
-	reg_addr = addr>>8;
-	
+	reg_addr = addr >> 8;
+
 	/* Send the Read command byte */
 	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);
 
 	reg_addr = addr;
-	
+
 	/* Send the Read command byte */
 	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);
 
@@ -327,7 +324,8 @@ void trx_write(uint16_t addr, uint8_t *data,uint16_t length)
 
 	while (length) {
 		val = data[i];
-		while (!spi_is_tx_ready(AT86RFX_SPI));
+		while (!spi_is_tx_ready(AT86RFX_SPI)) {
+		}
 		spi_write_single(AT86RFX_SPI, val);
 		i++;
 		length--;
@@ -335,10 +333,10 @@ void trx_write(uint16_t addr, uint8_t *data,uint16_t length)
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
+
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */ 
-	 ENABLE_TRX_INTERRUPT();
-	 
+	 * interrupt */
+	ENABLE_TRX_INTERRUPT();
 }
 
 uint8_t trx_reg_read(uint16_t addr)
@@ -350,21 +348,20 @@ uint8_t trx_reg_read(uint16_t addr)
 #endif
 
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/
+	**/
 	ENTER_CRITICAL_REGION();
 
 	/* Prepare the command byte */
-	addr |= 0X0000; //Read Command
-	
-	
+	addr |= READ_ACCESS_COMMAND; /* Read Command */
+
 	uint8_t reg_addr;
-	
+
 #if SAMD || SAMR21
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_slave(&master, &slave, true);
 
-	reg_addr = addr >>8;
-	
+	reg_addr = addr >> 8;
+
 	/* Send the Read command byte */
 	while (!spi_is_ready_to_write(&master)) {
 	}
@@ -375,9 +372,9 @@ uint8_t trx_reg_read(uint16_t addr)
 	while (!spi_is_ready_to_read(&master)) {
 	}
 	spi_read(&master, &dummy_read);
-	
+
 	reg_addr = addr;
-	
+
 	while (!spi_is_ready_to_write(&master)) {
 	}
 	spi_write(&master, reg_addr);
@@ -386,7 +383,7 @@ uint8_t trx_reg_read(uint16_t addr)
 	while (!spi_is_ready_to_read(&master)) {
 	}
 	spi_read(&master, &dummy_read);
-	
+
 	while (!spi_is_ready_to_write(&master)) {
 	}
 	spi_write(&master, 0);
@@ -400,14 +397,13 @@ uint8_t trx_reg_read(uint16_t addr)
 	spi_select_slave(&master, &slave, false);
 
 #else
-	
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
-	
-	reg_addr = addr>>8;
-	
+
+	reg_addr = addr >> 8;
+
 	/* Send the Read command byte */
-	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);	
+	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);
 
 	reg_addr = addr;
 
@@ -416,12 +412,13 @@ uint8_t trx_reg_read(uint16_t addr)
 
 	/* Do dummy read for initiating SPI read */
 	spi_read_packet(AT86RFX_SPI, &register_value, 1);
-	
+
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
+
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
+	 * interrupt */
 	LEAVE_CRITICAL_REGION();
 
 	return register_value;
@@ -430,20 +427,19 @@ uint8_t trx_reg_read(uint16_t addr)
 void trx_reg_write(uint16_t addr, uint8_t data)
 {
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/
+	**/
 	ENTER_CRITICAL_REGION();
 
 	/* Prepare the command byte */
-	addr |= 0X8000; //Write Command
-	
-	
+	addr |= WRITE_ACCESS_COMMAND; /* Write Command */
+
 	uint8_t reg_addr;
-	
+
 #if SAMD || SAMR21
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_slave(&master, &slave, true);
-	
-	reg_addr = addr>>8;
+
+	reg_addr = addr >> 8;
 	/* Send the Read command byte */
 	while (!spi_is_ready_to_write(&master)) {
 	}
@@ -454,13 +450,13 @@ void trx_reg_write(uint16_t addr, uint8_t data)
 	while (!spi_is_ready_to_read(&master)) {
 	}
 	spi_read(&master, &dummy_read);
-	
+
 	reg_addr = addr;
 	/* Write the byte in the transceiver data register */
 	while (!spi_is_ready_to_write(&master)) {
 	}
 	spi_write(&master, reg_addr);
-	
+
 	while (!spi_is_write_complete(&master)) {
 	}
 	/* Dummy read since SPI RX is double buffered */
@@ -470,30 +466,28 @@ void trx_reg_write(uint16_t addr, uint8_t data)
 	/* Write the byte in the transceiver data register */
 	while (!spi_is_ready_to_write(&master)) {
 	}
-	spi_write(&master,data);
-	
+	spi_write(&master, data);
+
 	while (!spi_is_write_complete(&master)) {
 	}
 	/* Dummy read since SPI RX is double buffered */
 	while (!spi_is_ready_to_read(&master)) {
 	}
 	spi_read(&master, &dummy_read);
-
 
 	/* Stop the SPI transaction by setting SEL high */
 	spi_select_slave(&master, &slave, false);
 #else
-
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 
-	reg_addr = addr>>8;
-	
+	reg_addr = addr >> 8;
+
 	/* Send the Read command byte */
 	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);
 
 	reg_addr = addr;
-	
+
 	/* Send the Read command byte */
 	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);
 
@@ -505,7 +499,7 @@ void trx_reg_write(uint16_t addr, uint8_t data)
 #endif
 
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
+	 * interrupt */
 	LEAVE_CRITICAL_REGION();
 }
 
@@ -514,7 +508,7 @@ void trx_irq_init(FUNC_PTR trx_irq_cb)
 	/*
 	 * Set the handler function.
 	 * The handler is set before enabling the interrupt to prepare for
-	 *spurious
+	 * spurious
 	 * interrupts, that can pop up the moment they are enabled
 	 */
 	irq_hdl_trx = (irq_handler_t)trx_irq_cb;
@@ -540,4 +534,3 @@ void trx_bit_write(uint16_t reg_addr, uint8_t mask, uint8_t pos,
 	new_value |= current_reg_value;
 	trx_reg_write(reg_addr, new_value);
 }
-

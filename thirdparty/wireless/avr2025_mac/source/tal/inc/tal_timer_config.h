@@ -196,8 +196,8 @@ extern uint8_t TAL_T_1;
 
 #ifdef ENABLE_FTN_PLL_CALIBRATION
 
-extern uint8_t	TAL_T_CALIBRATION_0 ;
-extern uint8_t	TAL_T_CALIBRATION_1 ;
+extern uint8_t TAL_T_CALIBRATION_0;
+extern uint8_t TAL_T_CALIBRATION_1;
 
 #endif
 

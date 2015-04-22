@@ -60,8 +60,9 @@
 
 #define USART_NCP_IRQn            UART1_IRQn
 
-#define USART_NCP_RX_ISR_ENABLE()  usart_enable_interrupt(USART_NCP, US_IER_RXRDY);\
-								   NVIC_EnableIRQ(USART_NCP_IRQn);
+#define USART_NCP_RX_ISR_ENABLE()  usart_enable_interrupt(USART_NCP, \
+		US_IER_RXRDY); \
+	NVIC_EnableIRQ(USART_NCP_IRQn);
 
 #include "serial.h"
 #endif /* CONF_SIO2HOST_H_INCLUDED */

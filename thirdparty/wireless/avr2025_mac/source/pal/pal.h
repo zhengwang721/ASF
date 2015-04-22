@@ -56,9 +56,9 @@
 /**
  * \defgroup group_pal PAL
  * This module acts as a wrapper layer between the Wireless stack and the ASF
- *drivers
+ * drivers
  * All hardwar level acess to the ASF drivers from the stack happens through
- *this module
+ * this module
  * @{
  */
 /* === Includes ============================================================ */
@@ -329,9 +329,9 @@ bool pal_calibrate_rc_osc(void);
  *
  * @param source
  * - @ref TMR_CLK_SRC_DURING_TRX_SLEEP if clock source during sleep is to be
- *selected, and
+ * selected, and
  * - @ref TMR_CLK_SRC_DURING_TRX_AWAKE if clock source while being awake is
- *selected.
+ * selected.
  */
 void pal_timer_source_select(source_type_t source);
 

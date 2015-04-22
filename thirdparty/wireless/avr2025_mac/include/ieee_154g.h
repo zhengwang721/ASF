@@ -1,7 +1,8 @@
 /**
  * @file ieee_154g.h
  *
- * @brief This header holds all IEEE 802.15.4g-2012 constants and attribute identifiers
+ * @brief This header holds all IEEE 802.15.4g-2012 constants and attribute
+ *identifiers
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -261,7 +262,6 @@
  */
 #define phyHighRateEnabled              (0x35)
 
-
 /**
  * Enable reduce power consumption for FSK and MR-OQPSK
  */
@@ -283,7 +283,7 @@
 /** Legacy O-QPSK constants */
 #define LEG_780_F0                  780000000
 #define LEG_868_F0                  868300000
-#define LEG_915_F0                  906000000 
+#define LEG_915_F0                  906000000
 #define LEG_915_CH_SPAC               2000000
 #define LEG_2450_F0                2405000000UL
 #define LEG_2450_CH_SPAC              5000000
@@ -434,95 +434,85 @@
  * Modulation schemes
  */
 
-typedef enum modulation_tag
-{
-    FSK,
-    OFDM,
-    OQPSK,
-    LEG_OQPSK
+typedef enum modulation_tag {
+	FSK,
+	OFDM,
+	OQPSK,
+	LEG_OQPSK
 } SHORTENUM modulation_t;
 
 /**
  * SUN PHY frequency bands
  */
-typedef enum sun_freq_band_tag
-{
-    EU_169,
-    US_450,
-    CHINA_470,
-    CHINA_780,
-    EU_863,
-    US_896,
-    US_901,
-    US_915,
-    KOREA_917,
-    JAPAN_920,
-    US_928,
-    JAPAN_950,
-    US_1427,
-    WORLD_2450
+typedef enum sun_freq_band_tag {
+	EU_169,
+	US_450,
+	CHINA_470,
+	CHINA_780,
+	EU_863,
+	US_896,
+	US_901,
+	US_915,
+	KOREA_917,
+	JAPAN_920,
+	US_928,
+	JAPAN_950,
+	US_1427,
+	WORLD_2450
 } SHORTENUM sun_freq_band_t;
 
-typedef enum ofdm_option_tag
-{
-    OFDM_OPT_1,
-    OFDM_OPT_2,
-    OFDM_OPT_3,
-    OFDM_OPT_4
+typedef enum ofdm_option_tag {
+	OFDM_OPT_1,
+	OFDM_OPT_2,
+	OFDM_OPT_3,
+	OFDM_OPT_4
 } SHORTENUM ofdm_option_t;
 
-typedef enum ofdm_mcs_tag
-{
-    MCS0,
-    MCS1,
-    MCS2,
-    MCS3,
-    MCS4,
-    MCS5,
-    MCS6
+typedef enum ofdm_mcs_tag {
+	MCS0,
+	MCS1,
+	MCS2,
+	MCS3,
+	MCS4,
+	MCS5,
+	MCS6
 } SHORTENUM ofdm_mcs_t;
 
-typedef enum oqpsk_rate_mode_tag
-{
-    OQPSK_RATE_MOD_0,
-    OQPSK_RATE_MOD_1,
-    OQPSK_RATE_MOD_2,
-    OQPSK_RATE_MOD_3,
-    OQPSK_RATE_MOD_4 /* Proprietary mode */
+typedef enum oqpsk_rate_mode_tag {
+	OQPSK_RATE_MOD_0,
+	OQPSK_RATE_MOD_1,
+	OQPSK_RATE_MOD_2,
+	OQPSK_RATE_MOD_3,
+	OQPSK_RATE_MOD_4 /* Proprietary mode */
 } SHORTENUM oqpsk_rate_mode_t;
 
 /** Enumeration for O-QPSK chip rate */
-typedef enum oqpsk_chip_rate_tag
-{
-    CHIP_RATE_100,
-    CHIP_RATE_200,
-    CHIP_RATE_1000,
-    CHIP_RATE_2000
-}SHORTENUM oqpsk_chip_rate_t;
+typedef enum oqpsk_chip_rate_tag {
+	CHIP_RATE_100,
+	CHIP_RATE_200,
+	CHIP_RATE_1000,
+	CHIP_RATE_2000
+} SHORTENUM oqpsk_chip_rate_t;
 
-typedef enum oqsk_data_rate_tag
-{
+typedef enum oqsk_data_rate_tag {
 	OQPSK_DATA_RATE_250,
 	OQPSK_DATA_RATE_500,
 	OQPSK_DATA_RATE_1000
 } SHORTENUM oqpsk_data_rate_t;
 
-typedef enum fsk_op_mode_tag
-{
+typedef enum fsk_op_mode_tag {
 	FSK_OP_MOD_1 = 1,
 	FSK_OP_MOD_2,
 	FSK_OP_MOD_3,
 	FSK_OP_MOD_4
 } SHORTENUM fsk_op_mode_t;
 
-typedef enum fsk_mod_type_tag
-{
+typedef enum fsk_mod_type_tag {
 	F2FSK,
 	F4FSK
 } SHORTENUM fsk_mod_type_t;
 
-typedef enum mod_idx_tag
-{
+typedef enum mod_idx_tag {
 	MOD_IDX_0_375 = 0,
 	MOD_IDX_0_5 = 1,
 	MOD_IDX_0_75 = 2,
@@ -533,8 +523,7 @@ typedef enum mod_idx_tag
 	MOD_IDX_2_0 = 7
 } SHORTENUM mod_idx_t;
 
-typedef enum fsk_data_rate_tag
-{
+typedef enum fsk_data_rate_tag {
 	FSK_DATA_RATE_50,
 	FSK_DATA_RATE_100,
 	FSK_DATA_RATE_150,
@@ -543,46 +532,36 @@ typedef enum fsk_data_rate_tag
 	FSK_DATA_RATE_400
 } SHORTENUM fsk_data_rate_t;
 
-typedef enum fsk_bt_tag
-{
+typedef enum fsk_bt_tag {
 	FSK_BT_0_5,
 	FSK_BT_1_0,
 	FSK_BT_1_5,
 	FSK_BT_2_0
-}SHORTENUM fsk_bt_t;
+} SHORTENUM fsk_bt_t;
 
+typedef struct oqpsk_tag {
+	oqpsk_chip_rate_t chip_rate;
 
-
-
-typedef struct oqpsk_tag
-{
-    oqpsk_chip_rate_t chip_rate;
-
-    oqpsk_rate_mode_t rate_mode;
+	oqpsk_rate_mode_t rate_mode;
 } oqpsk_t;
 
-typedef struct ofdm_tag
-{
-    ofdm_option_t option;
+typedef struct ofdm_tag {
+	ofdm_option_t option;
 
-    ofdm_mcs_t mcs_val;
-    bool interl;
+	ofdm_mcs_t mcs_val;
+	bool interl;
 } ofdm_t;
 
-typedef struct leg_oqpsk_tag
-{
-    oqpsk_chip_rate_t chip_rate;
+typedef struct leg_oqpsk_tag {
+	oqpsk_chip_rate_t chip_rate;
 	oqpsk_data_rate_t data_rate;
 } leg_oqpsk_t;
 
-
-
-typedef struct fsk_tag
-{
-    fsk_mod_type_t mod_type;
-    mod_idx_t mod_idx;
-    fsk_data_rate_t data_rate;
-    fsk_op_mode_t op_mode;
+typedef struct fsk_tag {
+	fsk_mod_type_t mod_type;
+	mod_idx_t mod_idx;
+	fsk_data_rate_t data_rate;
+	fsk_op_mode_t op_mode;
 	fsk_bt_t bt;
 	bool fec_enabled;
 } fsk_t;
@@ -590,59 +569,50 @@ typedef struct fsk_tag
 /**
  * PHY mode structure
  */
-typedef union phy_mode_tag
-{
-    fsk_t fsk;
-    ofdm_t ofdm;
-    oqpsk_t oqpsk;
-    leg_oqpsk_t leg_oqpsk;
+typedef union phy_mode_tag {
+	fsk_t fsk;
+	ofdm_t ofdm;
+	oqpsk_t oqpsk;
+	leg_oqpsk_t leg_oqpsk;
 } phy_mode_t;
 
-typedef struct phy_tag
-{
-    modulation_t modulation;
-    sun_freq_band_t freq_band;
-    uint32_t freq_f0;
-    uint32_t ch_spacing;
-    phy_mode_t phy_mode;
+typedef struct phy_tag {
+	modulation_t modulation;
+	sun_freq_band_t freq_band;
+	uint32_t freq_f0;
+	uint32_t ch_spacing;
+	phy_mode_t phy_mode;
 } phy_t;
 
-typedef union rate_tag
-{
-    fsk_data_rate_t fsk_rate;
-    ofdm_mcs_t ofdm_mcs;
-    oqpsk_rate_mode_t oqpsk_rate_mod;
+typedef union rate_tag {
+	fsk_data_rate_t fsk_rate;
+	ofdm_mcs_t ofdm_mcs;
+	oqpsk_rate_mode_t oqpsk_rate_mod;
 } rate_t;
 
-typedef struct new_phy_tag
-{
-    modulation_t modulation;
-    phy_mode_t phy_mode;
-    rate_t rate;
-    bool fec_enabled;
+typedef struct new_phy_tag {
+	modulation_t modulation;
+	phy_mode_t phy_mode;
+	rate_t rate;
+	bool fec_enabled;
 } new_phy_t;
 
-/*** TO BE VERIFIED ******/ //todo
+/*** TO BE VERIFIED ******/ /* todo */
 
-
-typedef struct mr_oqpsk_tag
-{
+typedef struct mr_oqpsk_tag {
 	oqpsk_chip_rate_t chip_rate;
 	oqpsk_rate_mode_t rate_mode;
 } mr_oqpsk_t;
 
-typedef union sun_phy_mode_tag
-{
+typedef union sun_phy_mode_tag {
 	fsk_t mr_fsk;
 	ofdm_t mr_ofdm;
 	oqpsk_t mr_oqpsk;
 	leg_oqpsk_t leg_oqpsk;
-
 } sun_phy_mode_t;
 
-typedef struct sun_phy_tag
-{
-	uint8_t page_no ;
+typedef struct sun_phy_tag {
+	uint8_t page_no;
 	sun_freq_band_t freq_band;
 	modulation_t modulation;
 	sun_phy_mode_t sun_phy_mode;

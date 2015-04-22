@@ -41,6 +41,7 @@
  *
  * \asf_license_stop
  */
+
 /*
  * Copyright (c) 2015, Atmel Corporation All rights reserved.
  *
@@ -57,37 +58,31 @@
 
 /* === Macros =============================================================== */
 
-
-
-
 /* === Types ================================================================ */
 
+#define NUMBER_OF_APP_TIMERS        (6)
 
-#define NUMBER_OF_APP_TIMERS        (6) 
-
-#define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS + NUMBER_OF_TOTAL_STACK_TIMERS)
+#define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS + \
+	NUMBER_OF_TOTAL_STACK_TIMERS)
 
 /* Additional buffers used by the application */
 #define NUMBER_OF_LARGE_APP_BUFS    (5)
 #define NUMBER_OF_SMALL_APP_BUFS    (0)
 
-#define TOTAL_NUMBER_OF_LARGE_BUFS  (NUMBER_OF_LARGE_APP_BUFS + NUMBER_OF_LARGE_STACK_BUFS)
-#define TOTAL_NUMBER_OF_SMALL_BUFS  (NUMBER_OF_SMALL_APP_BUFS + NUMBER_OF_SMALL_STACK_BUFS)
+#define TOTAL_NUMBER_OF_LARGE_BUFS  (NUMBER_OF_LARGE_APP_BUFS +	\
+	NUMBER_OF_LARGE_STACK_BUFS)
+#define TOTAL_NUMBER_OF_SMALL_BUFS  (NUMBER_OF_SMALL_APP_BUFS +	\
+	NUMBER_OF_SMALL_STACK_BUFS)
 
-#define TOTAL_NUMBER_OF_BUFS        (TOTAL_NUMBER_OF_LARGE_BUFS + TOTAL_NUMBER_OF_SMALL_BUFS)
-
-
+#define TOTAL_NUMBER_OF_BUFS        (TOTAL_NUMBER_OF_LARGE_BUFS + \
+	TOTAL_NUMBER_OF_SMALL_BUFS)
 
 /* Offset of IEEE address storage location within EEPROM */
 #define EE_IEEE_ADDR                (0)
 
-
-
 /* === Externals ============================================================ */
 
 /* === Prototypes =========================================================== */
-
-
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,7 +1,7 @@
 /**
  * @file tal_config.h
  *
- * @brief File contains TAL configuration parameters.       
+ * @brief File contains TAL configuration parameters.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -93,7 +93,7 @@
  * ENABLE_FTN_PLL_CALIBRATION.
  */
 #   ifndef ENABLE_FTN_PLL_CALIBRATION
-//#       define ENABLE_FTN_PLL_CALIBRATION
+/* #       define ENABLE_FTN_PLL_CALIBRATION */
 #   endif
 
 /**
@@ -103,7 +103,7 @@
  * phyOnAirDuration.
  */
 #   ifndef MEASURE_ON_AIR_DURATION
-//#       define MEASURE_ON_AIR_DURATION
+/* #       define MEASURE_ON_AIR_DURATION */
 #   endif
 
 /**
@@ -112,7 +112,7 @@
  * RX_WHILE_BACKOFF.
  */
 #   ifndef RX_WHILE_BACKOFF
-//#       define RX_WHILE_BACKOFF
+/* #       define RX_WHILE_BACKOFF */
 #   endif
 
 /**
@@ -122,7 +122,7 @@
  * ENABLE_TSTAMP.
  */
 #   ifndef ENABLE_TSTAMP
-//#       define ENABLE_TSTAMP
+/* #       define ENABLE_TSTAMP */
 #   endif
 
 /**
@@ -140,7 +140,7 @@
  * using the PIB attribute macPromiscuousMode.
  */
 #   ifndef PROMISCUOUS_MODE
-//#       define PROMISCUOUS_MODE
+/* #       define PROMISCUOUS_MODE */
 #   endif
 
 /**
@@ -158,13 +158,13 @@
  * To use the IQ radio mode functionality,
  * uncomment the following define IQ_RADIO.
  */
-//#define IQ_RADIO
+/* #define IQ_RADIO */
 
 /**
  * To include the basic mode functionality to the build,
  * uncomment the following define BASIC_MODE.
  */
-//#define BASIC_MODE
+/* #define BASIC_MODE */
 
 /**
  * To include the legacy O-QPSK support,
@@ -212,7 +212,7 @@
 #   endif
 
 /**
- * uncomment the following define RF215V1 
+ * uncomment the following define RF215V1
  * if the RF215 version 1 module is used
  */
 #   ifndef RF215V1
@@ -225,7 +225,7 @@
  * uncomment the following define SUPPORT_MODE_SWITCH.
  */
 #   ifndef SUPPORT_MODE_SWITCH
-//#       define SUPPORT_MODE_SWITCH 
+/* #       define SUPPORT_MODE_SWITCH */
 #   endif
 
 /**
@@ -234,7 +234,7 @@
  * uncomment the following define SUPPORT_FSK_RAW_MODE
  */
 #   ifndef SUPPORT_FSK_RAW_MODE
-//#       define SUPPORT_FSK_RAW_MODE 
+/* #       define SUPPORT_FSK_RAW_MODE */
 #   endif
 
 /**
@@ -244,7 +244,7 @@
  */
 #   ifndef MEASURE_TIME_OF_FLIGHT
 #       ifndef BASIC_MODE
-//#           define MEASURE_TIME_OF_FLIGHT
+/* #           define MEASURE_TIME_OF_FLIGHT */
 #       endif
 #   endif
 
@@ -309,16 +309,16 @@
 
 #endif /* TAL_SUPPORT_ALL_FEATURES */
 
-
 /**
  * Check for unsupported build combinations.
  */
 #if ((!defined SUPPORT_LEGACY_OQPSK) && (!defined SUPPORT_OQPSK) && \
-     (!defined SUPPORT_OFDM) && (!defined SUPPORT_FSK))
+	(!defined SUPPORT_OFDM) && (!defined SUPPORT_FSK))
 #   error "Missing modulation support, enable at least one modulation support."
 #endif
 
-#if (defined SUPPORT_ACK_RATE_MODE_ADAPTION) && (!defined SUPPORT_OFDM) && (!defined SUPPORT_OQPSK)
+#if (defined SUPPORT_ACK_RATE_MODE_ADAPTION) && (!defined SUPPORT_OFDM) && \
+	(!defined SUPPORT_OQPSK)
 #   error "Invalid combination"
 #endif
 

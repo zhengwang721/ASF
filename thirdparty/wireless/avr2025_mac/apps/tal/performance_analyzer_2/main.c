@@ -64,15 +64,13 @@ int main(void)
 	 */
 	board_init();
 #endif
-	
+
 	performance_analyzer_init();
-	
+
 	cpu_irq_enable();
-	
+
 	/* Endless while loop */
-	while (1)
-	{		
-	performance_analyzer_task();
+	while (1) {
+		performance_analyzer_task();
 	}
-	
 }

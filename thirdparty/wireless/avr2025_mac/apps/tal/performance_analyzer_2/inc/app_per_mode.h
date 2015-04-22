@@ -46,7 +46,7 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
- 
+
 /* Prevent double inclusion */
 #ifndef APP_PER_MODE_H
 #define APP_PER_MODE_H
@@ -56,7 +56,7 @@
  * \defgroup group_per_mode  Packet error rate measurement
  *  Handles the functionalities of Packet Error Rate Measurement(PER) Mode,
  *  User can set and get various paramters of Transceiver like Channel,Antenna
- *Diversity,CSMA
+ * Diversity,CSMA
  *  and do the Packet Error Rate Measurement.
  */
 
@@ -78,7 +78,7 @@
  * \ingroup group_per_mode
  * \defgroup group_per_mode_utils  PER mode Common Utilities
  * This module handles the PER mode Common utilities used by Initiator and
- *Receptor.
+ * Receptor.
  *
  */
 
@@ -96,11 +96,11 @@
 #define LED_TOGGLE_COUNT_FOR_PER            (50)
 #define MAX_TX_PWR_REG_VAL                  (0x1f)
 
+#define  MAX_ED_REG_VAL (0X53)
+#define  MIN_ED_REG_VAL (0X00)
+#define  MAX_ED_VAL              4
+#define  MIN_ED_VAL             -127
 
-#define  MAX_ED_REG_VAL	(0X53)
-#define  MIN_ED_REG_VAL	(0X00)
-#define  MAX_ED_VAL		 4
-#define  MIN_ED_VAL		-127
 /**
  * \addtogroup group_per_mode
  * \{
@@ -132,7 +132,7 @@
 #define RANGE_TEST_STOP_PKT                 (0x14)
 #define RANGE_TEST_MARKER_CMD                (0x15)
 #define RANGE_TEST_MARKER_RSP                (0x16)
-#define SET_SUN_PAGE						(0X17)
+#define SET_SUN_PAGE                                            (0X17)
 #define RANGE_TEST_PAYLOAD_LENGTH                (0X08)
 #define LED_BLINK_RATE_IN_MICRO_SEC           (50000)
 /* \} */
@@ -159,14 +159,14 @@ typedef struct {
 	bool rpc_enable;
 #endif
 
-	uint16_t channel; 
+	uint16_t channel;
 	uint8_t channel_page;
 	sun_phy_t sun_phy_page;
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 	uint8_t tx_power_reg;
 #endif
 	int8_t tx_power_dbm;
-	uint8_t trx_state; 
+	uint8_t trx_state;
 
 	uint16_t phy_frame_length;
 	uint32_t number_test_frames;
@@ -208,7 +208,7 @@ uint8_t scale_ed_to_reg_val(int8_t ed_val);
  * \brief Initialize the application in PER Measurement mode as Initiator
  * \param parameter Pointer to the paramter to be carried, if any.
  */
-void per_mode_initiator_init(trx_id_t trx,void *parameter);
+void per_mode_initiator_init(trx_id_t trx, void *parameter);
 
 /**
  * \brief Application task for PER Measurement mode as initiator
@@ -227,7 +227,8 @@ void per_mode_initiator_task(trx_id_t trx);
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
  */
-void per_mode_initiator_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *frame);
+void per_mode_initiator_tx_done_cb(trx_id_t trx, retval_t status,
+		frame_info_t *frame);
 
 /**
  * \brief Callback that is called if data has been received by trx
@@ -235,13 +236,13 @@ void per_mode_initiator_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *f
  *
  * \param frame Pointer to received frame
  */
-void per_mode_initiator_rx_cb(trx_id_t trx,frame_info_t *frame);
+void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *frame);
 
 /**
  * \brief User call back function after ED Scan completion
  * \param energy level as input
  */
-void per_mode_initiator_ed_end_cb(trx_id_t trx,uint8_t energy_level);
+void per_mode_initiator_ed_end_cb(trx_id_t trx, uint8_t energy_level);
 
 /* ! \} */
 
@@ -253,9 +254,9 @@ void per_mode_initiator_ed_end_cb(trx_id_t trx,uint8_t energy_level);
 
 /**
  * \brief Initialize the application in PER Measurement mode as Receptor
- **\param parameter Pointer to the paramter to be carried, if any.
+ ***\param parameter Pointer to the paramter to be carried, if any.
  */
-void per_mode_receptor_init(trx_id_t trx,void *parameter);
+void per_mode_receptor_init(trx_id_t trx, void *parameter);
 
 /**
  * \brief The application task when the node is in PER_TEST_RECEPTOR state
@@ -272,7 +273,8 @@ void per_mode_receptor_task(trx_id_t trx);
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
  */
-void per_mode_receptor_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *frame);
+void per_mode_receptor_tx_done_cb(trx_id_t trx, retval_t status,
+		frame_info_t *frame);
 
 /**
  * \brief Callback that is called if data has been received by trx
@@ -281,7 +283,7 @@ void per_mode_receptor_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *fr
  * PER Measurement mode Receptor
  * \param frame Pointer to received frame
  */
-void per_mode_receptor_rx_cb(trx_id_t trx,frame_info_t *frame);
+void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *frame);
 
 /* ! \} */
 
@@ -293,9 +295,9 @@ void app_reset(trx_id_t trx);
 
 /**
  * \brief Timer Callback function  if marker response command is transmitted on
- *air
+ * air
  *  This is used to blink the LED and thus identify that the transmission is
- *done
+ * done
  * \param parameter pass parameters to timer handler
  */
 void marker_tx_timer_handler_cb(void *parameter);
@@ -303,11 +305,10 @@ void marker_tx_timer_handler_cb(void *parameter);
 /**
  * \brief Timer Callback function  if marker command is received on air
  * This is used to blink the LED and thus identify that the marker frame is
- *received
+ * received
  * \param parameter pass parameters to timer handler
  */
 void marker_rsp_timer_handler_cb(void *parameter);
-
 
 /* ! \} */
 #ifdef __cplusplus

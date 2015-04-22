@@ -40,8 +40,10 @@
  * \asf_license_stop
  *
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+
+/**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
+ *Support</a>
  */
 
 #ifndef CONF_CLOCK_H_INCLUDED
@@ -81,11 +83,11 @@
 /* #define CONFIG_PLL1_MUL             16 */
 /* #define CONFIG_PLL1_DIV             2 */
 
-// PLL1 (B) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
+/* PLL1 (B) Options   (Fpll = (Fclk * PLL_mul) / PLL_div) */
 #define CONFIG_PLL1_SOURCE          PLL_SRC_MAINCK_XTAL
 #define CONFIG_PLL1_MUL             16
 #define CONFIG_PLL1_DIV             2
-// USB Clock Source Options   (Fusb = FpllX / USB_div)
+/* USB Clock Source Options   (Fusb = FpllX / USB_div) */
 #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL1
 #define CONFIG_USBCLK_DIV           2
 /* ===== Target frequency (System clock) */

@@ -48,6 +48,6 @@
 #define CONF_BOARD_UART_CONSOLE
 #define CONF_BOARD_AT86RFX
 #define IC_TYPE             (0x00)
-#define MCU_SOC_NAME "ATSAM4SD32C" 
+#define MCU_SOC_NAME "ATSAM4SD32C"
 
 #endif  /* CONF_BOARD_H_INCLUDED */

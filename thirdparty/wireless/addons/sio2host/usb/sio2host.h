@@ -54,7 +54,6 @@
 #include "status_codes.h"
 #include "stdio_usb.h"
 
-
 /* === PROTOTYPES ============================================================
 **/
 

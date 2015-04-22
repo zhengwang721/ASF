@@ -114,6 +114,7 @@
 #define TAL_SHORT_ADDRESS_DEF                   (0xFFFF)
 
 #ifndef CUSTOM_DEFAULT_TX_PWR
+
 /*
  * Default value of transmit power of transceiver: Use highest tx power
  */
@@ -138,7 +139,7 @@
  */
 #ifdef DEFAULT_RF09_PHY
 #   if ((DEFAULT_RF09_PHY != OFDM_DEF) && (DEFAULT_RF09_PHY != FSK_DEF) && \
-        (DEFAULT_RF09_PHY != OQPSK_DEF) && (DEFAULT_RF09_PHY != LEG_OQPSK_DEF))
+	(DEFAULT_RF09_PHY != OQPSK_DEF) && (DEFAULT_RF09_PHY != LEG_OQPSK_DEF))
 #       error "Undefined PHY configuration"
 #   else
 #       define TAL_RF09_MODULATION_DEF          DEFAULT_RF09_PHY
@@ -159,7 +160,7 @@
 
 #ifdef DEFAULT_RF24_PHY
 #   if ((DEFAULT_RF24_PHY != OFDM_DEF) && (DEFAULT_RF24_PHY != FSK_DEF) && \
-        (DEFAULT_RF24_PHY != OQPSK_DEF) && (DEFAULT_RF24_PHY != LEG_OQPSK_DEF))
+	(DEFAULT_RF24_PHY != OQPSK_DEF) && (DEFAULT_RF24_PHY != LEG_OQPSK_DEF))
 #       error "Undefined PHY configuration"
 #   else
 #       define TAL_RF24_MODULATION_DEF          DEFAULT_RF24_PHY
@@ -313,8 +314,12 @@
 /**
  * Default value of LEG OQPSK default frequency F0
  */
-#define TAL_RF09_LEG_OQPSK_FRQ_F0_DEF           (LEG_915_F0 - (TAL_RF09_LEG_OQPSK_CURRENT_CHANNEL_DEF * LEG_915_CH_SPAC))
-#define TAL_RF24_LEG_OQPSK_FRQ_F0_DEF           (LEG_2450_F0 - (TAL_RF24_LEG_OQPSK_CURRENT_CHANNEL_DEF * LEG_2450_CH_SPAC))
+#define TAL_RF09_LEG_OQPSK_FRQ_F0_DEF           (LEG_915_F0 - \
+	(TAL_RF09_LEG_OQPSK_CURRENT_CHANNEL_DEF * \
+	LEG_915_CH_SPAC))
+#define TAL_RF24_LEG_OQPSK_FRQ_F0_DEF           (LEG_2450_F0 - \
+	(TAL_RF24_LEG_OQPSK_CURRENT_CHANNEL_DEF * \
+	LEG_2450_CH_SPAC))
 
 /**
  * Default value of LEG OQPSK default channel spacing
@@ -386,16 +391,15 @@
  * Default value of frame filter settings
  */
 #define TAL_RF09_FRAMES_TYPES       ((1 << FCF_FRAMETYPE_BEACON) | \
-                                     (1 << FCF_FRAMETYPE_DATA) | \
-                                     (1 << FCF_FRAMETYPE_MAC_CMD))
+	(1 << FCF_FRAMETYPE_DATA) | \
+	(1 << FCF_FRAMETYPE_MAC_CMD))
 #define TAL_RF09_FRAME_VERSIONS     ((1 << FCF1_FV_2003) | (1 << FCF1_FV_2006))
 #define TAL_RF24_FRAMES_TYPES       ((1 << FCF_FRAMETYPE_BEACON) | \
-                                     (1 << FCF_FRAMETYPE_DATA) | \
-                                     (1 << FCF_FRAMETYPE_MAC_CMD))
+	(1 << FCF_FRAMETYPE_DATA) | \
+	(1 << FCF_FRAMETYPE_MAC_CMD))
 #define TAL_RF24_FRAME_VERSIONS     ((1 << FCF1_FV_2003) | (1 << FCF1_FV_2006))
 
 /* === PROTOTYPES ========================================================== */
-
 
 #endif /* TAL_PIB_H */
 

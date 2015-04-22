@@ -39,6 +39,7 @@
  *
  * \asf_license_stop
  */
+
 /**
  * \page license License
  * Copyright(c) 2015, Atmel Corporation All rights reserved.
@@ -63,30 +64,33 @@
 #include "conf_board.h"
 #include "performance_main.h"
 void get_chat_input(char input);
+
 /**
-* \mainpage
-* \section preface Preface
-* This is the reference manual for the Performance Analyzer Application
-* \section toc Table of Contents
-*  - \subpage overview
-*  - \ref group_perf_analyzer_2
-*  -  \b Application \b Interface(API)
-*    - \ref group_pal
-*    - \ref group_tal
-*    - \ref group_tfa
-*    - \ref group_resources
-*  - \subpage main_files
-*  - \subpage devsup
-*  - \subpage compinfo
-*  - \subpage references
-*  - \subpage contactinfo
-*/
+ * \mainpage
+ * \section preface Preface
+ * This is the reference manual for the Performance Analyzer Application
+ * \section toc Table of Contents
+ *  - \subpage overview
+ *  - \ref group_perf_analyzer_2
+ *  -  \b Application \b Interface(API)
+ *    - \ref group_pal
+ *    - \ref group_tal
+ *    - \ref group_tfa
+ *    - \ref group_resources
+ *  - \subpage main_files
+ *  - \subpage devsup
+ *  - \subpage compinfo
+ *  - \subpage references
+ *  - \subpage contactinfo
+ */
 
 /**
  * \page overview Overview
  * \section intro Introduction
- * This  application Performance Analyzer is a serial interface based application,
- * which communicates with Performance Analyzer to demonstrate various features and
+ * This  application Performance Analyzer is a serial interface based
+ *application,
+ * which communicates with Performance Analyzer to demonstrate various features
+ *and
  * capabilities of Atmel Transceivers such as:
  * - Range of the Transceiver for peer-to-peer communication (Range Measurement)
  * - Robust Link Quality
@@ -100,104 +104,156 @@ void get_chat_input(char input);
  * - Energy Detection
  * - Cyclic Redundancy Check
  * - Battery Monitor
-
- * Based on the roles and functionalities the wireless node can be configured as:\n
+ *
+ * Based on the roles and functionalities the wireless node can be configured
+ *as:\n
  * 1) \b Transmitter which is connected to the performance analyzer,takes the
  * user events like key press to find its peer node(i.e. Reflector)
- * in Range measurement mode or 'Initiate Peer search' command from the Performance Analyzer
+ * in Range measurement mode or 'Initiate Peer search' command from the
+ *Performance Analyzer
  * to find its peer node in PER mode.\n
  * 2) \b Reflector which is not connected to the Performance Analyzer, receives
- * peer request from the transmitter and participates in the peer search process to get paired with the transmitter node.\n
- * 3) \b Single \b Node  which is connected to the performance analyzer and receives 'Continue As single node'
- * command from the user, will start as a standalone node in which only minimal set of testing can be performed.\n
-
- * Performance Analyzer mainly works in three operating modes which are
- * Range Measurement mode, Packet Error rate measurement (PER) mode and single node mode.\n
+ * peer request from the transmitter and participates in the peer search process
+ *to get paired with the transmitter node.\n
+ * 3) \b Single \b Node  which is connected to the performance analyzer and
+ *receives 'Continue As single node'
+ * command from the user, will start as a standalone node in which only minimal
+ *set of testing can be performed.\n
  *
-
- * - \b Range \b Measurement \b mode is to evaluate the communication coverage area of the transceiver.
+ * Performance Analyzer mainly works in three operating modes which are
+ * Range Measurement mode, Packet Error rate measurement (PER) mode and single
+ *node mode.\n
+ *
+ *
+ * - \b Range \b Measurement \b mode is to evaluate the communication coverage
+ *area of the transceiver.
  * During Range Measurement, on key press the Transmitter node will initiate
  * a procedure to find a peer node. Once peer node is found, packet transmission
  * is initiated by the node on which the key press was detected initially, acts
- * as Transmitter node. The other node acts as Reflector, receives the packets and
- * acknowledges each packet received. The LED on the Reflector will blink sequentially
- * and repeat at the rate at which the packets are received. The LED on the Transmitter
- * will blink sequentially and repeat at the rate at which the packets are transmitted.
- * By moving the Reflector away from Transmitter, user can find the transceiver's
- * communication coverage area by observing the LED blinking on the Reflector node.
+ * as Transmitter node. The other node acts as Reflector, receives the packets
+ *and
+ * acknowledges each packet received. The LED on the Reflector will blink
+ *sequentially
+ * and repeat at the rate at which the packets are received. The LED on the
+ *Transmitter
+ * will blink sequentially and repeat at the rate at which the packets are
+ *transmitted.
+ * By moving the Reflector away from Transmitter, user can find the
+ *transceiver's
+ * communication coverage area by observing the LED blinking on the Reflector
+ *node.
  * The LED on Reflector will stop blinking when Reflector node is out of range.
- * A key press on the Reflector node also initiates packet transmission continuously
+ * A key press on the Reflector node also initiates packet transmission
+ *continuously
  * from Reflector node. Once the transmission is initiated from a node, any time
- * it can be stopped or started by pressing the same key again. The number of frames
- * transmitted and received in a particular node can be checked by connecting the nodes
+ * it can be stopped or started by pressing the same key again. The number of
+ *frames
+ * transmitted and received in a particular node can be checked by connecting
+ *the nodes
  * to HyperTerminal anytime.\n
-
-
+ *
+ *
  * - \b Packet \b Error \b Rate \b Measurement \b(PER) is to evaluate
  * the packet transmission and reception capabilities of the wireless nodes.
  * The Transmitter node shall be connected to the Performance Analyzer.
- * If ‘Initiate Peer search’ command is received from the analyzer after the board
- * is connected, then the node (Transmitter) tries to find its peer node (i.e. Reflector).
- * The Procedure to find and get paired with the Peer node is explained in the user guide.
- * Once peer node is found and paired, a menu will appear on the Performance Analyzer including
- * the details of the Board it is paired with. Using the menu options user can configure various
- * parameters like channel, channel page, frame length, no. of frames etc. and start the PER test.
- * User also can evaluate the transceiver by enabling, disabling various features like CSMA-CA, RPC,
- * antenna diversity etc. Whenever the parameters are changed from the transmitter
+ * If ‘Initiate Peer search’ command is received from the analyzer after the
+ *board
+ * is connected, then the node (Transmitter) tries to find its peer node (i.e.
+ *Reflector).
+ * The Procedure to find and get paired with the Peer node is explained in the
+ *user guide.
+ * Once peer node is found and paired, a menu will appear on the Performance
+ *Analyzer including
+ * the details of the Board it is paired with. Using the menu options user can
+ *configure various
+ * parameters like channel, channel page, frame length, no. of frames etc. and
+ *start the PER test.
+ * User also can evaluate the transceiver by enabling, disabling various
+ *features like CSMA-CA, RPC,
+ * antenna diversity etc. Whenever the parameters are changed from the
+ *transmitter
  * side through analyzer, the same will be reflected in the reflector node also.
- * User can see the changes in reflector node if it is connected to HyperTerminal.\n
+ * User can see the changes in reflector node if it is connected to
+ *HyperTerminal.\n
  *
  *
- * - \b Single \b Node \b mode If the user wants to evaluate some of the transceiver
+ * - \b Single \b Node \b mode If the user wants to evaluate some of the
+ *transceiver
  * features with single node by giving the command 'Continue as Single Node' in
- * Performance Analyzer or If the peer search process by the transmitter is timed out
- * (No Peer Response received within the time out) the node starts as a single node.
+ * Performance Analyzer or If the peer search process by the transmitter is
+ *timed out
+ * (No Peer Response received within the time out) the node starts as a single
+ *node.
  * In this state user will be able to evaluate the transceiver features for
- * which no peer node is needed e.g. Continuous Wave transmission, Energy scan on all
+ * which no peer node is needed e.g. Continuous Wave transmission, Energy scan
+ *on all
  * channels, TX power settings,reading/writing transceiver registers,etc.\n
  *
  *
- * - \b Configuration \b mode Configuration  mode  is  the  startup  mode  in  which  two  nodes(i.e Transmitter and
- * Reflector) can connect each other if they are only within in the vicinity of one meter
- * approximately.This  is  to  restrict  the  distance  range  for  connecting  devices.
- * User  can  enter  into  configuration  mode  by  pressing  the  button  while  Power  on
- * /reset.After this the node can pair with any other node in PER or range measurement mode as usual.
- * Then the device (transmitter) shall go to the low TX level (TX_PWR = 0x0F) and
+ * - \b Configuration \b mode Configuration  mode  is  the  startup  mode  in
+ * which  two  nodes(i.e Transmitter and
+ * Reflector) can connect each other if they are only within in the vicinity of
+ *one meter
+ * approximately.This  is  to  restrict  the  distance  range  for  connecting
+ * devices.
+ * User  can  enter  into  configuration  mode  by  pressing  the  button  while
+ * Power  on
+ * /reset.After this the node can pair with any other node in PER or range
+ *measurement mode as usual.
+ * Then the device (transmitter) shall go to the low TX level (TX_PWR = 0x0F)
+ *and
  * sends the peer request with the config_mode  bit  set  to  true.  On  the
  * other  device  (reflector),  if  the  peer  request received with
  * config_mode bit true, it checks the ED level and if it is above defined
  * threshold, it will connect with the transmitter device.
  * Once the Peer Search is done successfully, the nodes
  * shall come to the normal mode where the nodes can be kept far.
-
+ *
  * \page main_files Application Files
  * - main.c\n                      Application main file.
- * - init_state.c\n                Initialization functions and utilities of Performance Analyzer application.
- * - peer_search_initiator.c\n     Handles Initiator functionalities in Peer search process.
- * - peer_search_receptor.c\n      Handles Receptor functionalities in Peer search process.
- * - per_mode_common_utils.c\n     Contains Common utilities for both Initiator and Receptor in PER Measurement mode
- * - per_mode_initiator.c\n        Initiator/Transmitter functionalities in PER Measurement mode.
- * - per_mode_receptor.c\n         Receptor functionalities in PER Measurement mode.
- * - range_measure.c\n             Performs Range Measurement mode functionalities.
- * - perf_api_serial_handler.c\n   Handles all the Serial input and output commands.
- * - user_interface.c\n            Handles all User interface related functions such as Button,Print,LED events.
- * - wait_for_event.c\n            Event handling functionalities to start Peer Search.
+ * - init_state.c\n                Initialization functions and utilities of
+ *Performance Analyzer application.
+ * - peer_search_initiator.c\n     Handles Initiator functionalities in Peer
+ *search process.
+ * - peer_search_receptor.c\n      Handles Receptor functionalities in Peer
+ *search process.
+ * - per_mode_common_utils.c\n     Contains Common utilities for both Initiator
+ *and Receptor in PER Measurement mode
+ * - per_mode_initiator.c\n        Initiator/Transmitter functionalities in PER
+ *Measurement mode.
+ * - per_mode_receptor.c\n         Receptor functionalities in PER Measurement
+ *mode.
+ * - range_measure.c\n             Performs Range Measurement mode
+ *functionalities.
+ * - perf_api_serial_handler.c\n   Handles all the Serial input and output
+ *commands.
+ * - user_interface.c\n            Handles all User interface related functions
+ *such as Button,Print,LED events.
+ * - wait_for_event.c\n            Event handling functionalities to start Peer
+ *Search.
  * \page devsup Device Support
  * - \b ATXMEGA256A3BU
- *                     - <A href="http://www.atmel.com/tools/xmega-a3buxplained.aspx"> \b   XMEGA-A3BU Xplained  </A>  <A href="http://store.atmel.com/PartDetail.aspx?q=p:10500293">\a Buy </A>\n
+ *                     - <A
+ *href="http://www.atmel.com/tools/xmega-a3buxplained.aspx"> \b   XMEGA-A3BU
+ *Xplained  </A>  <A
+ *href="http://store.atmel.com/PartDetail.aspx?q=p:10500293">\a Buy </A>\n
  * - \b ATXMEGA256A3U-Zigbit (USB and Carrier)
  * - \b Atmega256rfr2 Xplained Pro
  * - \b Atmega256rfr2 Zigbit (Carrier)
-
+ *
  * - \b UC3A3256S
- *                      - <A href="http://www.atmel.com/tools/rz600.aspx"> \b RZ600 </A> <A href="http://store.atmel.com/PartDetail.aspx?q=p:10500245;c:100118">\a Buy </A>\n
+ *                      - <A href="http://www.atmel.com/tools/rz600.aspx"> \b
+ *RZ600 </A> <A
+ *href="http://store.atmel.com/PartDetail.aspx?q=p:10500245;c:100118">\a Buy
+ *</A>\n
  * \page compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.
  * Other compilers may or may not work.
  *
  * \page references References
  * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
- *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal Area
+ *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
+ *Area
  *     Networks (WPANs).\n\n
  * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
  * \page contactinfo Contact Information
@@ -206,6 +262,7 @@ void get_chat_input(char input);
  */
 
 /* === TYPES =============================================================== */
+
 /**
  * \addtogroup group_perf_analyzer_2
  * \{
@@ -215,23 +272,25 @@ void get_chat_input(char input);
  * \brief This structure forms the jump table to address various main states in
  * this application.
  */
-typedef struct
-{
-    /* Function to initialize the main state */
-    void (*func_main_state_init)(trx_id_t trx, void *arg);
-    /* Task function of main state */
-    void (*func_task)(trx_id_t trx);
-    /* Tx done call back for main state */
-    void (*func_tx_frame_done_cb)(trx_id_t trx, retval_t status, frame_info_t *frame);
-    /* Frame received call back for main state */
-    void (*func_rx_frame_cb)(trx_id_t trx, frame_info_t *frame);
-    /* Energy scan result call back for main state */
-    void (*func_ed_end_cb)(trx_id_t trx, uint8_t energy_level);
-    /* main state exit function : all timers should be stopped and other
-     * resources used in the state must be freed which is done here */
-    void (*func_main_state_exit)(trx_id_t trx);
-    /* if main state has sub state, it can be initialized using this function */
-    void (*func_sub_state_set)(trx_id_t trx, uint8_t state, void *arg);
+typedef struct {
+	/* Function to initialize the main state */
+	void (*func_main_state_init)(trx_id_t trx, void *arg);
+	/* Task function of main state */
+	void (*func_task)(trx_id_t trx);
+	/* Tx done call back for main state */
+	void (*func_tx_frame_done_cb)(trx_id_t trx, retval_t status,
+			frame_info_t *frame);
+	/* Frame received call back for main state */
+	void (*func_rx_frame_cb)(trx_id_t trx, frame_info_t *frame);
+	/* Energy scan result call back for main state */
+	void (*func_ed_end_cb)(trx_id_t trx, uint8_t energy_level);
+
+	/* main state exit function : all timers should be stopped and other
+	 * resources used in the state must be freed which is done here */
+	void (*func_main_state_exit)(trx_id_t trx);
+	/* if main state has sub state, it can be initialized using this
+	 *function */
+	void (*func_sub_state_set)(trx_id_t trx, uint8_t state, void *arg);
 } state_function_t;
 /* === MACROS ============================================================== */
 
@@ -242,143 +301,141 @@ static uint8_t storage_buffer[NUM_TRX][LARGE_BUFFER_SIZE];
 static void app_task(void);
 
 /* === GLOBALS ============================================================= */
-static state_function_t const state_table[NUM_MAIN_STATES] =
-{
-    {/* INIT */
-        init_state_init,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-    },
-    {/* WAIT_FOR_EVENT */
-        wait_for_event_init,
-        wait_for_event_task,
-        NULL,
-        wait_for_event_rx_cb,
-        NULL,
-        NULL,
-        NULL,
-    },
-    {/* PEER_SEARCH_RANGE_TX */
-        peer_search_initiator_init,
-        peer_search_initiator_task,
-        peer_search_initiator_tx_done_cb,
-        peer_search_initiator_rx_cb,
-        NULL,
-        peer_search_initiator_exit,
-        peer_search_initiator_set_sub_state,
-    },
-    {/* PEER_SEARCH_PER_TX */
-        peer_search_initiator_init,
-        peer_search_initiator_task,
-        peer_search_initiator_tx_done_cb,
-        peer_search_initiator_rx_cb,
-        NULL,
-        peer_search_initiator_exit,
-        peer_search_initiator_set_sub_state,
-    },
-    {/* PEER_SEARCH_RANGE_RX */
-        peer_search_receptor_init,
-        peer_search_receptor_task,
-        peer_search_receptor_tx_done_cb,
-        peer_search_receptor_rx_cb,
-        NULL,
-        peer_search_receptor_exit,
-        peer_search_receptor_set_sub_state,
-    },
-    {/* PEER_SEARCH_PER_RX */
-        peer_search_receptor_init,
-        peer_search_receptor_task,
-        peer_search_receptor_tx_done_cb,
-        peer_search_receptor_rx_cb,
-        NULL,
-        peer_search_receptor_exit,
-        peer_search_receptor_set_sub_state,
-    },
-    {/* RANGE_TEST_TX_ON */
-        range_test_tx_on_init,
-        range_test_tx_on_task,
-        NULL,
-        range_test_rx_cb,
-        NULL,
-        range_test_tx_on_exit,
-        NULL
-    },
-    {/* RANGE_TEST_TX_OFF */
-        NULL,
-        range_test_tx_off_task,
-        NULL,
-        range_test_rx_cb,
-    },
-    {/* SINGLE_NODE_TESTS */
-        per_mode_initiator_init,
-        per_mode_initiator_task,
-        per_mode_initiator_tx_done_cb,
-        per_mode_initiator_rx_cb,
-        per_mode_initiator_ed_end_cb,
-        NULL,
-        NULL,
-    },
-    {/* PER_TEST_INITIATOR  */
-        per_mode_initiator_init,
-        per_mode_initiator_task,
-        per_mode_initiator_tx_done_cb,
-        per_mode_initiator_rx_cb,
-        per_mode_initiator_ed_end_cb,
-        NULL,
-        NULL,
-    },
-    {
-        /* PER_TEST_RECEPTOR */
-        per_mode_receptor_init,
-        per_mode_receptor_task,
-        per_mode_receptor_tx_done_cb,
-        per_mode_receptor_rx_cb,
-        NULL,
-        NULL,
-        NULL,
-    }
+static state_function_t const state_table[NUM_MAIN_STATES] = {
+	{ /* INIT */
+		init_state_init,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+	},
+	{ /* WAIT_FOR_EVENT */
+		wait_for_event_init,
+		wait_for_event_task,
+		NULL,
+		wait_for_event_rx_cb,
+		NULL,
+		NULL,
+		NULL,
+	},
+	{ /* PEER_SEARCH_RANGE_TX */
+		peer_search_initiator_init,
+		peer_search_initiator_task,
+		peer_search_initiator_tx_done_cb,
+		peer_search_initiator_rx_cb,
+		NULL,
+		peer_search_initiator_exit,
+		peer_search_initiator_set_sub_state,
+	},
+	{ /* PEER_SEARCH_PER_TX */
+		peer_search_initiator_init,
+		peer_search_initiator_task,
+		peer_search_initiator_tx_done_cb,
+		peer_search_initiator_rx_cb,
+		NULL,
+		peer_search_initiator_exit,
+		peer_search_initiator_set_sub_state,
+	},
+	{ /* PEER_SEARCH_RANGE_RX */
+		peer_search_receptor_init,
+		peer_search_receptor_task,
+		peer_search_receptor_tx_done_cb,
+		peer_search_receptor_rx_cb,
+		NULL,
+		peer_search_receptor_exit,
+		peer_search_receptor_set_sub_state,
+	},
+	{ /* PEER_SEARCH_PER_RX */
+		peer_search_receptor_init,
+		peer_search_receptor_task,
+		peer_search_receptor_tx_done_cb,
+		peer_search_receptor_rx_cb,
+		NULL,
+		peer_search_receptor_exit,
+		peer_search_receptor_set_sub_state,
+	},
+	{ /* RANGE_TEST_TX_ON */
+		range_test_tx_on_init,
+		range_test_tx_on_task,
+		NULL,
+		range_test_rx_cb,
+		NULL,
+		range_test_tx_on_exit,
+		NULL
+	},
+	{ /* RANGE_TEST_TX_OFF */
+		NULL,
+		range_test_tx_off_task,
+		NULL,
+		range_test_rx_cb,
+	},
+	{ /* SINGLE_NODE_TESTS */
+		per_mode_initiator_init,
+		per_mode_initiator_task,
+		per_mode_initiator_tx_done_cb,
+		per_mode_initiator_rx_cb,
+		per_mode_initiator_ed_end_cb,
+		NULL,
+		NULL,
+	},
+	{ /* PER_TEST_INITIATOR  */
+		per_mode_initiator_init,
+		per_mode_initiator_task,
+		per_mode_initiator_tx_done_cb,
+		per_mode_initiator_rx_cb,
+		per_mode_initiator_ed_end_cb,
+		NULL,
+		NULL,
+	},
+	{
+		/* PER_TEST_RECEPTOR */
+		per_mode_receptor_init,
+		per_mode_receptor_task,
+		per_mode_receptor_tx_done_cb,
+		per_mode_receptor_rx_cb,
+		NULL,
+		NULL,
+		NULL,
+	}
 };
 
 volatile node_ib_t node_info[NUM_TRX];
 
-//! \}
+/* ! \} */
 /* === IMPLEMENTATION ====================================================== */
+
 /**
  * \brief Init function of the Performance Analyzer application
  * \ingroup group_app_init
  */
 void performance_analyzer_init(void)
 {
-	 
-    /*
-     * Power ON - so set the board to INIT state. All hardware, PAL, TAL and
-     * stack level initialization must be done using this function
-     */
-    set_main_state(RF09, INIT, NULL);
+	/*
+	 * Power ON - so set the board to INIT state. All hardware, PAL, TAL and
+	 * stack level initialization must be done using this function
+	 */
+	set_main_state(RF09, INIT, NULL);
 	set_main_state(RF24, INIT, NULL);
-	
-    
+
 	sio2host_init();
 	sio2ncp_init();
-	
-    /* INIT was a success - so change to WAIT_FOR_EVENT state */
-    
-	set_main_state(RF09,WAIT_FOR_EVENT, NULL);
-	set_main_state(RF24,WAIT_FOR_EVENT, NULL);
+
+	/* INIT was a success - so change to WAIT_FOR_EVENT state */
+
+	set_main_state(RF09, WAIT_FOR_EVENT, NULL);
+	set_main_state(RF24, WAIT_FOR_EVENT, NULL);
 }
-	  
+
 /**
- * \brief This task needs to be called in a while(1) for performing 
+ * \brief This task needs to be called in a while(1) for performing
  *  Performance Analyzer tasks
  */
 void performance_analyzer_task(void)
 {
 	pal_task(); /* Handle platform specific tasks, like serial
-		            * interface */
+	             * interface */
 	tal_task(); /* Handle transceiver specific tasks */
 	app_task(); /* Application task */
 	serial_data_handler();
@@ -389,15 +446,14 @@ void performance_analyzer_task(void)
  */
 static void app_task(void)
 {
-	
-    for (uint8_t trx_id = 0; trx_id < 2; trx_id++)
-    {	
-    void (*handler_func)(trx_id_t trx) = state_table[node_info[trx_id].main_state].func_task;
+	for (uint8_t trx_id = 0; trx_id < 2; trx_id++) {
+		void (*handler_func)(trx_id_t trx)
+			= state_table[node_info[trx_id].main_state].
+				func_task;
 
-    if (handler_func)
-    {
-        handler_func(trx_id);
-    }
+		if (handler_func) {
+			handler_func(trx_id);
+		}
 	}
 }
 
@@ -408,19 +464,16 @@ static void app_task(void)
  */
 void tal_rx_frame_cb(trx_id_t trx, frame_info_t *frame)
 {
-	void (*handler_func)(trx_id_t trx, frame_info_t * frame);
+	void (*handler_func)(trx_id_t trx, frame_info_t *frame);
 
 	handler_func = state_table[node_info[trx].main_state].func_rx_frame_cb;
-	if (handler_func)
-	{
-		handler_func(trx,frame);
+	if (handler_func) {
+		handler_func(trx, frame);
 	}
-	
+
 	/* free buffer that was used for frame reception */
 	bmm_buffer_free((buffer_t *)(frame->buffer_header));
 }
-
-
 
 /*
  * \brief Callback that is called once tx is done.
@@ -430,27 +483,26 @@ void tal_rx_frame_cb(trx_id_t trx, frame_info_t *frame)
  */
 void tal_tx_frame_done_cb(trx_id_t trx, retval_t status, frame_info_t *frame)
 {
+	void (*handler_func)(trx_id_t trx, retval_t status,
+			frame_info_t *frame);
 
-    void (*handler_func)(trx_id_t trx, retval_t status, frame_info_t * frame) ;
-	
-    /* some spurious transmissions call back or app changed its state
-     * so neglect this call back */
-   if (!node_info[trx].transmitting)
-    {
-        return;
-    }
-	
-    /* After transmission is completed, allow next transmission.
-       Locking to prevent multiple transmissions simultaneously */
+	/* some spurious transmissions call back or app changed its state
+	 * so neglect this call back */
+	if (!node_info[trx].transmitting) {
+		return;
+	}
 
-    node_info[trx].transmitting = false;
+	/* After transmission is completed, allow next transmission.
+	 * Locking to prevent multiple transmissions simultaneously */
 
-    handler_func = state_table[node_info[trx].main_state].func_tx_frame_done_cb;
+	node_info[trx].transmitting = false;
 
-    if (handler_func)
-    {
-        handler_func(trx,status, frame);
-    }
+	handler_func
+		= state_table[node_info[trx].main_state].func_tx_frame_done_cb;
+
+	if (handler_func) {
+		handler_func(trx, status, frame);
+	}
 }
 
 /*
@@ -458,14 +510,13 @@ void tal_tx_frame_done_cb(trx_id_t trx, retval_t status, frame_info_t *frame)
  *
  * \param energy_level Measured energy level during ED Scan
  */
-void tal_ed_end_cb(trx_id_t trx,uint8_t energy_level)
+void tal_ed_end_cb(trx_id_t trx, uint8_t energy_level)
 {
 	void (*handler_func)(trx_id_t trx, uint8_t energy_level);
 
 	handler_func = state_table[node_info[trx].main_state].func_ed_end_cb;
 
-	if (handler_func)
-	{
+	if (handler_func) {
 		handler_func(trx, energy_level);
 	}
 }
@@ -475,23 +526,23 @@ void tal_ed_end_cb(trx_id_t trx,uint8_t energy_level)
  */
 void config_node_ib(trx_id_t trx)
 {
+	node_info[trx].transmitting = false;
 
-    node_info[trx].transmitting = false;
+	/* Init tx frame info structure value that do not change during program
+	 *execution */
+	node_info[trx].tx_frame_info = (frame_info_t *)storage_buffer[trx];
 
-    /* Init tx frame info structure value that do not change during program execution */
-    node_info[trx].tx_frame_info = (frame_info_t *)storage_buffer[trx];
+	/* random number initialized for the sequence number */
+	node_info[trx].msg_seq_num = rand();
 
-    /* random number initialized for the sequence number */
-    node_info[trx].msg_seq_num = rand();
+	/* Set peer addr to zero */
+	node_info[trx].peer_short_addr = 0;
 
-    /* Set peer addr to zero */
-    node_info[trx].peer_short_addr = 0;
+	/* Set peer_found status as false */
+	node_info[trx].peer_found = false;
 
-    /* Set peer_found status as false */
-    node_info[trx].peer_found = false;
-
-    /* Set config_mode to false */
-    node_info[trx].configure_mode = false;
+	/* Set config_mode to false */
+	node_info[trx].configure_mode = false;
 }
 
 /*
@@ -502,42 +553,44 @@ void config_node_ib(trx_id_t trx)
  */
 void set_main_state(trx_id_t trx, main_state_t state, void *arg)
 {
-    void (*handler_func_exit)(trx_id_t trx);
-    void (*handler_func_init)(trx_id_t trx,void * arg);
-    void (*handler_sub_state_set)(trx_id_t trx, uint8_t state, void * arg);
+	void (*handler_func_exit)(trx_id_t trx);
+	void (*handler_func_init)(trx_id_t trx, void *arg);
+	void (*handler_sub_state_set)(trx_id_t trx, uint8_t state, void *arg);
 
-    handler_func_exit = state_table[node_info[trx].main_state].func_main_state_exit;
-    /* Exit the old state if not init state */
-    if (handler_func_exit && state)
-    {
-        handler_func_exit(trx);
-    }
+	handler_func_exit
+		= state_table[node_info[trx].main_state].func_main_state_exit;
+	/* Exit the old state if not init state */
+	if (handler_func_exit && state) {
+		handler_func_exit(trx);
+	}
 
-    /* Nullify all the previous tx call backs. In case of change in main state
-     * TX call back prevention is taken care here. If the state has sub states
-     * TX call back during sub state change must be taken care during sub state
-     * set exclusively
-     */
-    node_info[trx].transmitting = false;
+	/* Nullify all the previous tx call backs. In case of change in main
+	 * state
+	 * TX call back prevention is taken care here. If the state has sub
+	 *states
+	 * TX call back during sub state change must be taken care during sub
+	 *state
+	 * set exclusively
+	 */
+	node_info[trx].transmitting = false;
 
-    /* Welcome to new state */
-    node_info[trx].main_state = state;
+	/* Welcome to new state */
+	node_info[trx].main_state = state;
 
-    handler_func_init = state_table[state].func_main_state_init;
+	handler_func_init = state_table[state].func_main_state_init;
 
-    /* Do init for new state and then change state */
-    if (handler_func_init)
-    {
-        handler_func_init(trx,arg);
-    }
+	/* Do init for new state and then change state */
+	if (handler_func_init) {
+		handler_func_init(trx, arg);
+	}
 
-    handler_sub_state_set = state_table[state].func_sub_state_set;
+	handler_sub_state_set = state_table[state].func_sub_state_set;
 
-    if (handler_sub_state_set)
-    {
-        handler_sub_state_set(trx,0, arg);
-    }
+	if (handler_sub_state_set) {
+		handler_sub_state_set(trx, 0, arg);
+	}
 }
+
 /*
  * \brief Function to transmit frames as per 802.15.4 std.
  *
@@ -549,139 +602,127 @@ void set_main_state(trx_id_t trx, main_state_t state, void *arg)
  * \param payload_length    data length
  * \param ack_req           specifies ack requested for frame if set to 1
  *
- * \return MAC_SUCCESS      if the TAL has accepted the data for frame transmission
+ * \return MAC_SUCCESS      if the TAL has accepted the data for frame
+ *transmission
  *         TAL_BUSY         if the TAL is busy servicing the previous tx request
  */
 
 retval_t app_transmit_frame(trx_id_t trx,
-						uint8_t dst_addr_mode,
-                        uint8_t *dst_addr,
-                        uint8_t src_addr_mode,
-                        uint8_t msdu_handle,
-                        uint8_t *payload,
-                        uint16_t payload_length,
-                        uint8_t ack_req)
+		uint8_t dst_addr_mode,
+		uint8_t *dst_addr,
+		uint8_t src_addr_mode,
+		uint8_t msdu_handle,
+		uint8_t *payload,
+		uint16_t payload_length,
+		uint8_t ack_req)
 {
-    uint16_t i;
-    uint16_t temp_value;
-    uint16_t frame_length;
-    uint8_t *frame_ptr;
-    uint8_t *temp_frame_ptr;
-    uint16_t fcf = 0;
+	uint16_t i;
+	uint16_t temp_value;
+	uint16_t frame_length;
+	uint8_t *frame_ptr;
+	uint8_t *temp_frame_ptr;
+	uint16_t fcf = 0;
 
-    /* Prevent multiple transmissions , this code is not reentrant*/
-    if (node_info[trx].transmitting)
-    {
-        return FAILURE;
-    }
-    node_info[trx].transmitting = true;
+	/* Prevent multiple transmissions , this code is not reentrant*/
+	if (node_info[trx].transmitting) {
+		return FAILURE;
+	}
 
-    /* Get length of current frame. */
-    frame_length = (9 + payload_length); //9->frame overhead
+	node_info[trx].transmitting = true;
 
-    /* Set payload pointer. */
-    frame_ptr = temp_frame_ptr = (uint8_t *)node_info[trx].tx_frame_info +
-                                 LARGE_BUFFER_SIZE -
-                                 payload_length - tal_pib[trx].FCSLen;
-    /*
-     * Payload is stored to the end of the buffer avoiding payload
-     * copying by TAL.
-     */
-    for (i = 0; i < payload_length; i++)
-    {
-        *temp_frame_ptr++ = *(payload + i);
-    }
+	/* Get length of current frame. */
+	frame_length = (9 + payload_length); /* 9->frame overhead */
 
-    /* Source address */
-    if (FCF_SHORT_ADDR == src_addr_mode)
-    {
+	/* Set payload pointer. */
+	frame_ptr = temp_frame_ptr = (uint8_t *)node_info[trx].tx_frame_info +
+					LARGE_BUFFER_SIZE -
+					payload_length - tal_pib[trx].FCSLen;
 
-        frame_ptr -= SHORT_ADDR_LEN;
-		
-		convert_16_bit_to_byte_array(tal_pib[trx].ShortAddress, frame_ptr);
+	/*
+	 * Payload is stored to the end of the buffer avoiding payload
+	 * copying by TAL.
+	 */
+	for (i = 0; i < payload_length; i++) {
+		*temp_frame_ptr++ = *(payload + i);
+	}
 
-        fcf |= FCF_SET_SOURCE_ADDR_MODE(FCF_SHORT_ADDR);
-    }
-    else
-    {
-        frame_ptr -= EXT_ADDR_LEN;
-        frame_length += FCF_2_SOURCE_ADDR_OFFSET;
+	/* Source address */
+	if (FCF_SHORT_ADDR == src_addr_mode) {
+		frame_ptr -= SHORT_ADDR_LEN;
 
-		convert_64_bit_to_byte_array(tal_pib[trx].IeeeAddress, frame_ptr);
+		convert_16_bit_to_byte_array(tal_pib[trx].ShortAddress,
+				frame_ptr);
 
+		fcf |= FCF_SET_SOURCE_ADDR_MODE(FCF_SHORT_ADDR);
+	} else {
+		frame_ptr -= EXT_ADDR_LEN;
+		frame_length += FCF_2_SOURCE_ADDR_OFFSET;
 
-        fcf |= FCF_SET_SOURCE_ADDR_MODE(FCF_LONG_ADDR);
-    }
+		convert_64_bit_to_byte_array(tal_pib[trx].IeeeAddress,
+				frame_ptr);
 
-    /* Source PAN-Id */
+		fcf |= FCF_SET_SOURCE_ADDR_MODE(FCF_LONG_ADDR);
+	}
+
+	/* Source PAN-Id */
 #if (DST_PAN_ID == SRC_PAN_ID)
-    /* No source PAN-Id included, but FCF updated. */
-    fcf |= FCF_PAN_ID_COMPRESSION;
+	/* No source PAN-Id included, but FCF updated. */
+	fcf |= FCF_PAN_ID_COMPRESSION;
 #else
-    frame_ptr -= PAN_ID_LEN;
-    temp_value = CCPU_ENDIAN_TO_LE16(SRC_PAN_ID);
-    convert_16_bit_to_byte_array(temp_value, frame_ptr);
+	frame_ptr -= PAN_ID_LEN;
+	temp_value = CCPU_ENDIAN_TO_LE16(SRC_PAN_ID);
+	convert_16_bit_to_byte_array(temp_value, frame_ptr);
 #endif
 
-    /* Destination address */
-    if (FCF_SHORT_ADDR == dst_addr_mode)
-    {
-        frame_ptr -= SHORT_ADDR_LEN;
-        memcpy(frame_ptr, (uint8_t *)dst_addr, sizeof(uint16_t));
-        fcf |= FCF_SET_DEST_ADDR_MODE(FCF_SHORT_ADDR);
-    }
-    else
-    {
-        frame_ptr -= EXT_ADDR_LEN;
-        frame_length += PL_POS_DST_ADDR_START;
-        memcpy(frame_ptr, (uint8_t *)dst_addr, sizeof(uint64_t));
-        fcf |= FCF_SET_DEST_ADDR_MODE(FCF_LONG_ADDR);
-    }
+	/* Destination address */
+	if (FCF_SHORT_ADDR == dst_addr_mode) {
+		frame_ptr -= SHORT_ADDR_LEN;
+		memcpy(frame_ptr, (uint8_t *)dst_addr, sizeof(uint16_t));
+		fcf |= FCF_SET_DEST_ADDR_MODE(FCF_SHORT_ADDR);
+	} else {
+		frame_ptr -= EXT_ADDR_LEN;
+		frame_length += PL_POS_DST_ADDR_START;
+		memcpy(frame_ptr, (uint8_t *)dst_addr, sizeof(uint64_t));
+		fcf |= FCF_SET_DEST_ADDR_MODE(FCF_LONG_ADDR);
+	}
 
-    /* Destination PAN-Id */
-    temp_value = CCPU_ENDIAN_TO_LE16(DST_PAN_ID);
-    frame_ptr -= PAN_ID_LEN;
+	/* Destination PAN-Id */
+	temp_value = CCPU_ENDIAN_TO_LE16(DST_PAN_ID);
+	frame_ptr -= PAN_ID_LEN;
 
-    convert_16_bit_to_byte_array(temp_value, frame_ptr);
+	convert_16_bit_to_byte_array(temp_value, frame_ptr);
 
-    /* Set DSN. */
-    frame_ptr--;
-    *frame_ptr = node_info[trx].msg_seq_num;
-    node_info[trx].msg_seq_num++;
+	/* Set DSN. */
+	frame_ptr--;
+	*frame_ptr = node_info[trx].msg_seq_num;
+	node_info[trx].msg_seq_num++;
 
-    /* Set the FCF. */
-    fcf |= FCF_FRAMETYPE_DATA;
-    if (ack_req)
-    {
-        fcf |= FCF_ACK_REQUEST ;
-    }
+	/* Set the FCF. */
+	fcf |= FCF_FRAMETYPE_DATA;
+	if (ack_req) {
+		fcf |= FCF_ACK_REQUEST;
+	}
 
-    frame_ptr -= FCF_LEN;
-    convert_16_bit_to_byte_array(CCPU_ENDIAN_TO_LE16(fcf), frame_ptr);
-
+	frame_ptr -= FCF_LEN;
+	convert_16_bit_to_byte_array(CCPU_ENDIAN_TO_LE16(fcf), frame_ptr);
 
 	/* Finished building of frame. */
 	node_info[trx].tx_frame_info->mpdu = frame_ptr;
 
-    node_info[trx].tx_frame_info->len_no_crc = frame_length;
+	node_info[trx].tx_frame_info->len_no_crc = frame_length;
 
-    /* Place msdu handle for tracking */
-    node_info[trx].tx_frame_info->msduHandle = msdu_handle;
+	/* Place msdu handle for tracking */
+	node_info[trx].tx_frame_info->msduHandle = msdu_handle;
 
-    /* transmit the frame */
+	/* transmit the frame */
 
-	return(tal_tx_frame(trx,node_info[trx].tx_frame_info, CSMA_UNSLOTTED, true));
-
-
+	return(tal_tx_frame(trx, node_info[trx].tx_frame_info, CSMA_UNSLOTTED,
+	       true));
 }
-
 
 void app_alert()
 {
-
-    while (1)
-    {
-     
+	while (1) {
 		#if LED_COUNT > 0
 		#ifdef LED0_ACTIVE_LEVEL
 		LED_Toggle(LED0);
@@ -719,11 +760,6 @@ void app_alert()
 		#endif
 		delay_us(0xFFFF);
 	}
-        
-        
-
-    }
-
-
+}
 
 /* EOF */

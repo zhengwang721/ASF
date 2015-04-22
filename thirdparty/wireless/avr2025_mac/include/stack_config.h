@@ -58,7 +58,6 @@
 #include "ieee_154g.h"
 #endif
 
-
 /**
  * \ingroup group_inc
  * \defgroup group_stack Common Stack Definitions
@@ -100,7 +99,7 @@
  +          +
  +   PAL    +
  +          +
- +++----------+
+ ++++----------+
  */
 /* Reduce the header file dependency by using hard-coded values */
 #define LARGE_BUFFER_SIZE               (160)
@@ -113,11 +112,11 @@
  +          +
  +   TAL    +
  +          +
- +++----------+
+ ++++----------+
  +          +
  +   PAL    +
  +          +
- +++----------+
+ ++++----------+
  */
 
 /**
@@ -134,12 +133,12 @@
  */
 #if (TAL_TYPE == AT86RF215)
 #define LARGE_BUFFER_SIZE                   (sizeof(frame_info_t) + \
-                                             aMaxPHYPacketSize_4g + \
-                                             LQI_LEN + ED_VAL_LEN)
+	aMaxPHYPacketSize_4g + \
+	LQI_LEN + ED_VAL_LEN)
 #else
 #define LARGE_BUFFER_SIZE                   (sizeof(frame_info_t) + \
-                                             aMaxPHYPacketSize + \
-                                             LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN)
+	aMaxPHYPacketSize + \
+	LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN)
 #endif
 
 /**
@@ -159,12 +158,12 @@
  */
 #if (TAL_TYPE == AT86RF215)
 #define LARGE_BUFFER_SIZE                   (sizeof(frame_info_t) + \
-                                             aMaxPHYPacketSize_4g + \
-                                             LQI_LEN + ED_VAL_LEN)
+	aMaxPHYPacketSize_4g + \
+	LQI_LEN + ED_VAL_LEN)
 #else
 #define LARGE_BUFFER_SIZE                   (((sizeof(frame_info_t) + \
-                                               aMaxPHYPacketSize + \
-                                               LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN) / 4 + 1) * 4)
+	aMaxPHYPacketSize + \
+	LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN) / 4 + 1) * 4)
 #endif
 
 /**
@@ -186,15 +185,15 @@
  +          +    +          +
  +   MAC    +    +   RTB    +
  +          +    +          +
- +++----------+    +----------+
+ ++++----------+    +----------+
  +          +    +          +
  +   TAL    + or +   TAL    +
  +          +    +          +
- +++----------+    +----------+
+ ++++----------+    +----------+
  +          +    +          +
  +   PAL    +    +   PAL    +
  +          +    +          +
- +++----------+    +----------+
+ ++++----------+    +----------+
  */
 
 /**

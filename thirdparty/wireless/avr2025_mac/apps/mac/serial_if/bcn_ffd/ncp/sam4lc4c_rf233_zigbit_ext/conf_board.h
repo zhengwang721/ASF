@@ -70,6 +70,4 @@
 #define TAL_TRANSMIT_POWER_DEFAULT      (TX_PWR_TOLERANCE | 0x14)
 #endif
 
-
-
 #endif  /* CONF_BOARD_H_INCLUDED */

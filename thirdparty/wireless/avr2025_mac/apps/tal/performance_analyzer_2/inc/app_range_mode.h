@@ -46,7 +46,7 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
- 
+
 /* Prevent double inclusion */
 #ifndef APP_RANGE_MODE_H
 #define APP_RANGE_MODE_H
@@ -69,7 +69,7 @@
  *
  * \param arg arguments to init RANGE_TX_ON state
  */
-void range_test_tx_on_init(trx_id_t trx ,void *arg);
+void range_test_tx_on_init(trx_id_t trx, void *arg);
 
 /**
  * \brief Application task handling Range Measurement when the node is in
@@ -82,7 +82,7 @@ void range_test_tx_on_task(trx_id_t trx);
  *  node is in Range Measurement mode i.e RANGE_TEST_TX_ON or RANGE_TEST_TX_OFF
  * \param frame Pointer to received frame
  */
-void range_test_rx_cb(trx_id_t trx,frame_info_t *frame);
+void range_test_rx_cb(trx_id_t trx, frame_info_t *frame);
 
 /**
  * \brief To exit the Application task from RANGE_TEST_TX_ON state,

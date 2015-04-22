@@ -200,8 +200,8 @@ void mlme_associate_request(uint8_t *m)
 				= (uint8_t *)assoc_req_frame +
 					LARGE_BUFFER_SIZE -
 					ASSOC_REQ_PAYLOAD_LEN - 2; /* Add 2
-	                                                           * octets for
-	                                                           * FCS. */
+	                                                            * octets for
+	                                                            * FCS. */
 
 	/* Update the payload field. */
 	*frame_ptr++ = ASSOCIATIONREQUEST;
@@ -423,8 +423,9 @@ void mlme_associate_response(uint8_t *m)
 				= (uint8_t *)assoc_resp_frame +
 					LARGE_BUFFER_SIZE -
 					ASSOC_RESP_PAYLOAD_LEN - 2; /* Add 2
-	                                                            * octets for
-	                                                            * FCS. */
+	                                                             * octets
+	                                                             *for
+	                                                             * FCS. */
 
 	/* Update the payload field. */
 	*frame_ptr++ = ASSOCIATIONRESPONSE;

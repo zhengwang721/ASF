@@ -48,8 +48,7 @@
 #define CONF_BOARD_COM_PORT
 #define CONF_BOARD_AT86RFX
 #define IC_TYPE             (0x00)
-// Enable USB interface (USB)
+/* Enable USB interface (USB) */
 #define CONF_BOARD_USB_PORT
-
 
 #endif  /* CONF_BOARD_H_INCLUDED */

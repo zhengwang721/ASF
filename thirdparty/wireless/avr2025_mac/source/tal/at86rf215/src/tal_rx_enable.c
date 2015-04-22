@@ -79,7 +79,8 @@
  * @param state New state of receiver
  *
  * @return
- *      - @ref TAL_BUSY if the TAL state machine cannot switch receiver on or off,
+ *      - @ref TAL_BUSY if the TAL state machine cannot switch receiver on or
+ *off,
  *      - @ref PHY_TRX_OFF if receiver has been switched off, or
  *      - @ref PHY_RX_ON otherwise.
  *
@@ -87,62 +88,53 @@
  */
 uint8_t tal_rx_enable(trx_id_t trx_id, uint8_t state)
 {
-    uint8_t ret_val;
+	uint8_t ret_val;
 
-   
+	if (tal_state[trx_id] == TAL_SLEEP) {
+		return TAL_TRX_ASLEEP;
+	}
 
-    if (tal_state[trx_id] == TAL_SLEEP)
-    {
-        
-        return TAL_TRX_ASLEEP;
-    }
+	/*
+	 * Trx can only be enabled if TAL is not busy;
+	 * i.e. if TAL is IDLE.
+	 */
+	if (tal_state[trx_id] != TAL_IDLE) {
+		return TAL_BUSY;
+	}
 
-    /*
-     * Trx can only be enabled if TAL is not busy;
-     * i.e. if TAL is IDLE.
-     */
-    if (tal_state[trx_id] != TAL_IDLE)
-    {
-       
-        return TAL_BUSY;
-    }
-
-    if (state == PHY_TRX_OFF)
-    {
-       
-        /*
-            * If the rx needs to be switched off,
-            * we are not interested in a frame that is currently being received.
-            */
-        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-        trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
+	if (state == PHY_TRX_OFF) {
+		/*
+		 * If the rx needs to be switched off,
+		 * we are not interested in a frame that is currently being
+		 *received.
+		 */
+		uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+		trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #ifdef IQ_RADIO
-        pal_dev_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+		pal_dev_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_CMD),
+				RF_TRXOFF);
 #endif
 #if (defined RF215V1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
-        stop_rpc(trx_id);
+		stop_rpc(trx_id);
 #endif
-        trx_state[trx_id] = RF_TRXOFF;
-        tal_buf_shortage[trx_id] = false;
-        ret_val = PHY_TRX_OFF;
+		trx_state[trx_id] = RF_TRXOFF;
+		tal_buf_shortage[trx_id] = false;
+		ret_val = PHY_TRX_OFF;
 #ifdef ENABLE_FTN_PLL_CALIBRATION
-        stop_ftn_timer(trx_id);
+		stop_ftn_timer(trx_id);
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
-        trx_default_state[trx_id] = RF_TRXOFF;
-    }
-    else
-    {
-        
-        switch_to_txprep(trx_id);
-        switch_to_rx(trx_id);
-        ret_val = PHY_RX_ON;
+		trx_default_state[trx_id] = RF_TRXOFF;
+	} else {
+		switch_to_txprep(trx_id);
+		switch_to_rx(trx_id);
+		ret_val = PHY_RX_ON;
 #ifdef ENABLE_FTN_PLL_CALIBRATION
-        start_ftn_timer(trx_id);
+		start_ftn_timer(trx_id);
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
-        trx_default_state[trx_id] = RF_RX;
-    }
+		trx_default_state[trx_id] = RF_RX;
+	}
 
-    return ret_val;
+	return ret_val;
 }
 
 /* EOF */

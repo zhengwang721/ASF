@@ -142,7 +142,7 @@ typedef struct {
 
 /**
  * \brief Antenna Diversity set request frame structure to change the peer
- *node's
+ * node's
  * antenna diversity settings
  *
  */
@@ -236,7 +236,7 @@ typedef union {
 	range_tx_t range_tx_data;
 	result_req_t result_req_data;
 	crc_stat_req_t crc_stat_req_data;
-	phy_t	sun_page_data;
+	phy_t sun_page_data;
 } general_pkt_t;
 
 /**

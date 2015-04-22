@@ -45,17 +45,18 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
- 
+
 /* Prevent double inclusion */
 #ifndef USER_INTERFACE_H
 #define USER_INTERFACE_H
 
 #include "tal_rf215.h"
+
 /**
  * \ingroup group_perf_analyzer_2
  * \defgroup group_user_interface  User Interface
  * Handles all User interface related functions such as Button, Print,LED
- *events.
+ * events.
  *  \{
  */
 
@@ -138,7 +139,7 @@ void app_led_event(led_event_t ev);
  * \param ev the event to be printed on the Terminal.
  *
  */
-void print_event(trx_id_t trx,print_event_t ev);
+void print_event(trx_id_t trx, print_event_t ev);
 
 /**
  * \brief Button debounce routine.

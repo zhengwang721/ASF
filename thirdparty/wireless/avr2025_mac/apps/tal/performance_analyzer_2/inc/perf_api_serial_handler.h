@@ -79,7 +79,7 @@ extern "C" {
 
 /**
  * \brief This function does the initialization of the Serial handler state
- *Machine.
+ * Machine.
  */
 void init_sio(trx_id_t trx);
 

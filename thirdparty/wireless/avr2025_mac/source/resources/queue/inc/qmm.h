@@ -75,10 +75,10 @@ typedef struct
 		search_tag
 #endif
 {
-    /** Pointer to search criteria function */
-    uint8_t (*criteria_func)(void *buf, void *handle);
-    /** Handle to callbck parameter */
-    void *handle;
+	/** Pointer to search criteria function */
+	uint8_t (*criteria_func)(void *buf, void *handle);
+	/** Handle to callbck parameter */
+	void *handle;
 } search_t;
 
 /**
@@ -92,13 +92,13 @@ typedef struct
  */
 typedef struct
 #if !defined(DOXYGEN)
-        queue_tag
+		queue_tag
 #endif
 {
-    /** Pointer to head of queue */
-    buffer_t *head;
-    /** Pointer to tail of queue */
-    buffer_t *tail;
+	/** Pointer to head of queue */
+	buffer_t *head;
+	/** Pointer to tail of queue */
+	buffer_t *tail;
 #ifdef ENABLE_QUEUE_CAPACITY
 
 	/**
@@ -109,14 +109,14 @@ typedef struct
 	 */
 	uint8_t capacity;
 #endif  /* ENABLE_QUEUE_CAPACITY */
-    /**
-     * Number of buffers present in the current queue
-     */
-    uint8_t size;
+
+	/**
+	 * Number of buffers present in the current queue
+	 */
+	uint8_t size;
 } queue_t;
 __PACK__RST_DATA__
 /* === Externals =========================================================== */
-
 
 /* === Prototypes ========================================================== */
 

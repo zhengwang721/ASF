@@ -66,14 +66,12 @@
  * Specifies whether the buffer needs to be read from the queue or to be
  * removed from the queue.
  */
-typedef enum buffer_mode_tag
-{
-    REMOVE_MODE,
-    READ_MODE
+typedef enum buffer_mode_tag {
+	REMOVE_MODE,
+	READ_MODE
 } buffer_mode_t;
 
 /* === Macros ============================================================== */
-
 
 /* === Prototypes ========================================================== */
 
@@ -97,14 +95,13 @@ void qmm_queue_init(queue_t *q, uint8_t capacity)
 void qmm_queue_init(queue_t *q)
 #endif  /* ENABLE_QUEUE_CAPACITY */
 {
-    q->head = NULL;
-    q->tail = NULL;
-    q->size = 0;
+	q->head = NULL;
+	q->tail = NULL;
+	q->size = 0;
 #ifdef ENABLE_QUEUE_CAPACITY
-    q->capacity = capacity;
+	q->capacity = capacity;
 #endif  /* ENABLE_QUEUE_CAPACITY */
 }
-
 
 /**
  * @brief Appends a buffer into the queue.
@@ -124,10 +121,10 @@ void qmm_queue_append(queue_t *q, buffer_t *buf)
 #endif  /* ENABLE_QUEUE_CAPACITY */
 {
 #ifdef ENABLE_QUEUE_CAPACITY
-    retval_t status;
+	retval_t status;
 #endif  /* ENABLE_QUEUE_CAPACITY */
 
-    ENTER_CRITICAL_REGION();
+	ENTER_CRITICAL_REGION();
 
 #ifdef ENABLE_QUEUE_CAPACITY
 	/* Check if queue is full */
@@ -146,34 +143,34 @@ void qmm_queue_append(queue_t *q, buffer_t *buf)
 			q->tail->next = buf;
 		}
 
-        /* Update the list */
-        q->tail = buf;
+		/* Update the list */
+		q->tail = buf;
 
-        /* Terminate the list */
-        buf->next = NULL;
+		/* Terminate the list */
+		buf->next = NULL;
 
-        /* Update size */
-        q->size++;
+		/* Update size */
+		q->size++;
 
 #if (_DEBUG_ > 1)
-        if (q->head == NULL)
-        {
-            Assert("Corrupted queue: Null pointer has been queued");
-        }
+		if (q->head == NULL) {
+			Assert("Corrupted queue: Null pointer has been queued");
+		}
+
 #endif
 
 #ifdef ENABLE_QUEUE_CAPACITY
-        status = MAC_SUCCESS;
+		status = MAC_SUCCESS;
 #endif  /* ENABLE_QUEUE_CAPACITY */
-    }
+	}
 
-    LEAVE_CRITICAL_REGION();
+	LEAVE_CRITICAL_REGION();
 
 #ifdef ENABLE_QUEUE_CAPACITY
-    return (status);
-#endif
-}/* qmm_queue_append */
+	return (status);
 
+#endif
+} /* qmm_queue_append */
 
 /*
  * @brief Reads or removes a buffer from queue
@@ -200,85 +197,75 @@ static buffer_t *queue_read_or_remove(queue_t *q,
 		buffer_mode_t mode,
 		search_t *search)
 {
+	buffer_t *buffer_current = NULL;
+	buffer_t *buffer_previous;
 
-    buffer_t *buffer_current = NULL;
-    buffer_t *buffer_previous;
+	ENTER_CRITICAL_REGION();
+	/* Check whether queue is empty */
+	if (q->size != 0) {
+		buffer_current = q->head;
+		buffer_previous = q->head;
 
-    ENTER_CRITICAL_REGION();
-    /* Check whether queue is empty */
-    if (q->size != 0)
-    {
-        buffer_current = q->head;
-        buffer_previous = q->head;
+		/* First get buffer matching with criteria */
+		if (NULL != search) {
+			uint8_t match;
+			/* Search for all buffers in the queue */
+			while (NULL != buffer_current) {
+				match = search->criteria_func(
+						(void *)buffer_current->body,
+						search->handle);
 
-        /* First get buffer matching with criteria */
-        if (NULL != search)
-        {
-            uint8_t match;
-            /* Search for all buffers in the queue */
-            while (NULL != buffer_current)
-            {
-                match = search->criteria_func((void *)buffer_current->body,
-                                              search->handle);
+				if (match) {
+					/* Break, if search criteria matches */
+					break;
+				}
 
-                if (match)
-                {
-                    /* Break, if search criteria matches */
-                    break;
-                }
+				buffer_previous = buffer_current;
+				buffer_current = buffer_current->next;
+			}
+		}
 
-                buffer_previous = buffer_current;
-                buffer_current = buffer_current->next;
-            }
+		/* Buffer matching with search criteria found */
+		if (NULL != buffer_current) {
+			/* Remove buffer from the queue */
+			if (REMOVE_MODE == mode) {
+				/* Update head if buffer removed is first node
+				 **/
+				if (buffer_current == q->head) {
+					q->head = buffer_current->next;
+				} else {
+					/* Update the link by removing the
+					 *buffer */
+					buffer_previous->next
+						= buffer_current->next;
+				}
 
-        }
+				/* Update tail if buffer removed is last node */
+				if (buffer_current == q->tail) {
+					q->tail = buffer_previous;
+				}
 
-        /* Buffer matching with search criteria found */
-        if (NULL != buffer_current)
-        {
-            /* Remove buffer from the queue */
-            if (REMOVE_MODE == mode)
-            {
-                /* Update head if buffer removed is first node */
-                if (buffer_current == q->head)
-                {
-                    q->head = buffer_current->next;
-                }
-                else
-                {
-                    /* Update the link by removing the buffer */
-                    buffer_previous->next = buffer_current->next;
-                }
+				/* Update size */
+				q->size--;
 
-                /* Update tail if buffer removed is last node */
-                if (buffer_current == q->tail)
-                {
-                    q->tail = buffer_previous;
-                }
+				if (NULL == q->head) {
+					q->tail = NULL;
+				}
+			}
+			/* Read buffer from the queue */
+			else {
+				/* Nothing needs done if the mode is READ_MODE
+				 **/
+			}
+		}
+	} /* q->size != 0 */
 
-                /* Update size */
-                q->size--;
+	LEAVE_CRITICAL_REGION();
 
-                if (NULL == q->head)
-                {
-                    q->tail = NULL;
-                }
-            }
-            /* Read buffer from the queue */
-            else
-            {
-                /* Nothing needs done if the mode is READ_MODE */
-            }
-        }
-    } /* q->size != 0 */
-
-    LEAVE_CRITICAL_REGION();
-
-    /* Return the buffer. note that pointer to header of buffer is returned */
-    return (buffer_current);
-
-}/* queue_read_or_remove */
-
+	/* Return the buffer. note that pointer to header of buffer is returned
+	 **/
+	return (buffer_current);
+} /* queue_read_or_remove */
 
 /**
  * @brief Removes a buffer from queue.
@@ -296,10 +283,8 @@ static buffer_t *queue_read_or_remove(queue_t *q,
  */
 buffer_t *qmm_queue_remove(queue_t *q, search_t *search)
 {
-    return (queue_read_or_remove(q, REMOVE_MODE, search));
+	return (queue_read_or_remove(q, REMOVE_MODE, search));
 }
-
-
 
 /**
  * @brief Reads a buffer from queue.
@@ -317,10 +302,8 @@ buffer_t *qmm_queue_remove(queue_t *q, search_t *search)
  */
 buffer_t *qmm_queue_read(queue_t *q, search_t *search)
 {
-    return (queue_read_or_remove(q, READ_MODE, search));
+	return (queue_read_or_remove(q, READ_MODE, search));
 }
-
-
 
 /**
  * @brief Internal function for flushing a specific queue
@@ -329,24 +312,22 @@ buffer_t *qmm_queue_read(queue_t *q, search_t *search)
  */
 void qmm_queue_flush(queue_t *q)
 {
-    buffer_t *buf_to_free;
+	buffer_t *buf_to_free;
 
-    while (q->size > 0)
-    {
-        /* Remove the buffer from the queue and free it */
-        buf_to_free = qmm_queue_remove(q, NULL);
+	while (q->size > 0) {
+		/* Remove the buffer from the queue and free it */
+		buf_to_free = qmm_queue_remove(q, NULL);
 
-        if (NULL == buf_to_free)
-        {
-
+		if (NULL == buf_to_free) {
 #if (_DEBUG_ > 0)
-            ABORT("Corrupted queue");
+			ABORT("Corrupted queue");
 #endif
-            q->size = 0;
-            return;
-        }
-        bmm_buffer_free(buf_to_free);
-    }
+			q->size = 0;
+			return;
+		}
+
+		bmm_buffer_free(buf_to_free);
+	}
 }
 
 #endif  /* (TOTAL_NUMBER_OF_BUFS > 0) */

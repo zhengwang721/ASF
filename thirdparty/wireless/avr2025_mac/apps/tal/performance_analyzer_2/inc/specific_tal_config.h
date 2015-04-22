@@ -67,7 +67,7 @@
  * To include the filter tuning functions to the build uncomment the define
  * ENABLE_FTN_PLL_CALIBRATION.
  */
-//#define ENABLE_FTN_PLL_CALIBRATION
+/* #define ENABLE_FTN_PLL_CALIBRATION */
 
 /**
  * To include the functionality of measuring the on air duration to the build,
@@ -75,7 +75,7 @@
  * The on-air-duration can be read/written using the PIB attribute
  * phyOnAirDuration.
  */
-//#define MEASURE_ON_AIR_DURATION
+/* #define MEASURE_ON_AIR_DURATION */
 
 /**
  * To include the functionality of adaption the data rate of the incoming frame
@@ -90,7 +90,7 @@
  * This feature can be enabled during compile time by uncomment the define
  * RX_WHILE_BACKOFF.
  */
-//#define RX_WHILE_BACKOFF
+/* #define RX_WHILE_BACKOFF */
 
 /**
  * For applications such as sniffer or beacon-enabled applications a time stamp
@@ -98,7 +98,7 @@
  * This feature can be enabled during compile time by uncomment the define
  * ENABLE_TSTAMP.
  */
-//#define ENABLE_TSTAMP
+/* #define ENABLE_TSTAMP */
 
 /**
  * To include the promiscuous mode functionality to the build, uncomment the
@@ -107,7 +107,7 @@
  * using the PIB attribute macPromiscuousMode.
  */
 #ifndef PROMISCUOUS_MODE
-//#define PROMISCUOUS_MODE
+/* #define PROMISCUOUS_MODE */
 #endif
 
 /**
@@ -117,11 +117,12 @@
  * using the PIB attributes macFrameFilterFrameTypes and
  * macFrameFilterFrameVersion.
  */
-//#define FRAME_FILTER_CONFIGURATION
+/* #define FRAME_FILTER_CONFIGURATION */
 
 /**
  * To include the clock output configuration to the build,
- * uncomment the following define TRX_CLOCK_OUTPUT_SELECTION to the required value.
+ * uncomment the following define TRX_CLOCK_OUTPUT_SELECTION to the required
+ *value.
  * Value - meaning
  * 0       off
  * 1       26 MHz (default/reset)
@@ -166,7 +167,7 @@
 #define ENABLE_TFA
 
 /**
- * uncomment the following define RF215V1 
+ * uncomment the following define RF215V1
  * if the RF215 version 1 module is used
  */
 #define RF215V1
@@ -178,17 +179,15 @@
  */
 #define SUPPORT_FSK
 
-
 /**
  * Check if at least one modulation is enabled.
  */
 #if ((!defined SUPPORT_LEGACY_OQPSK) && (!defined SUPPORT_OQPSK) && \
-     (!defined SUPPORT_OFDM) && (!defined SUPPORT_FSK))
+	(!defined SUPPORT_OFDM) && (!defined SUPPORT_FSK))
 #error "Missing modulation support, enable at least one modulation support."
 #endif
 
 /* === TYPES =============================================================== */
-
 
 /* === PROTOTYPES ========================================================== */
 

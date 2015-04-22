@@ -1,7 +1,7 @@
 /**
  * \file app_init.h
  *
- * \brief Initialization prototypes and enumerations - Performance Analyzer 
+ * \brief Initialization prototypes and enumerations - Performance Analyzer
  *        application of AT86RF215
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -45,7 +45,7 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
- 
+
 /* Prevent double inclusion */
 #ifndef APP_INIT_H
 #define APP_INIT_H
@@ -57,7 +57,7 @@
 /**
  * \defgroup group_perf_analyzer_2 Performance Analyzer Application
  * This  application Performance Analyzer  is a Serial interface based
- *application,
+ * application,
  * which communicates with Wireless Analyzer to demonstrate various features and
  * capabilities of Atmel Transceivers
  *
@@ -75,8 +75,6 @@
 /* Version of the software */
 #define FIRMWARE_VERSION    3.0f
 
-
-
 #define DEFAULT_CHANNEL_RF09         (1)
 #define DEFAULT_CHANNEL_RF24         (21)
 #define TAL_CURRENT_PAGE_DEFAULT_RF24            (0x00)
@@ -86,7 +84,7 @@
 #define SRC_PAN_ID              (DEFAULT_PAN_ID)
 #define DEFAULT_ADDR            (0xFFFF)
 #define DST_SHORT_ADDR          (0xFFFF)
-#define SUN_PAGE_NO				(0X09)
+#define SUN_PAGE_NO                             (0X09)
 /* Frame overhead due to selected address scheme incl. FCS */
 #if (DST_PAN_ID == SRC_PAN_ID)
 #define FRAME_OVERHEAD          (9)
@@ -132,7 +130,8 @@
 /* Macro to enable the feature of counting wrong CRC packets */
 #if ((TAL_TYPE == ATMEGARFR2) || \
 	(TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B) || \
-	(TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF233) || (TAL_TYPE == AT86RF215))
+	(TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF233) || (TAL_TYPE == \
+	AT86RF215))
 #define CRC_SETTING_ON_REMOTE_NODE
 #endif
 #ifndef IC_TYPE
@@ -230,7 +229,6 @@ void wait_for_event_init(trx_id_t trx, void *arg);
  */
 void wait_for_event_task(trx_id_t trx);
 
-
 /**
  * \brief Callback that is called if data has been received by trx
  * in WAIT_FOR_EVENT state. This allow the node to participate in
@@ -263,10 +261,10 @@ extern volatile node_ib_t node_info[NUM_TRX];
  * \param ack_req           specifies ack requested for frame if set to 1
  *
  * \return MAC_SUCCESS      if the TAL has accepted the data for frame
- *transmission
+ * transmission
  *         TAL_BUSY         if the TAL is busy servicing the previous tx request
  */
-extern retval_t app_transmit_frame( trx_id_t trx,uint8_t dst_addr_mode,
+extern retval_t app_transmit_frame( trx_id_t trx, uint8_t dst_addr_mode,
 		uint8_t *dst_addr,
 		uint8_t src_addr_mode,
 		uint8_t msdu_handle,

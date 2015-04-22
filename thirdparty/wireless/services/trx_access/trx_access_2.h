@@ -60,7 +60,7 @@
 /**
  * \defgroup group_trx_access
  *  This module includes api's and defenitions required for Devices with
- *externally plugged transceivers(Non Soc's)
+ * externally plugged transceivers(Non Soc's)
  * @{
  */
 /* === Includes ============================================================ */
@@ -77,8 +77,6 @@
 
 /* === Macros =============================================================== */
 
-
-
 /**
  * Write access command of the transceiver
  */
@@ -89,25 +87,6 @@
  */
 #define READ_ACCESS_COMMAND             (0x0000)
 
-/**
- * Frame write command of transceiver
- */
-#define TRX_CMD_FW                      (0x60)
-
-/**
- * Frame read command of transceiver
- */
-#define TRX_CMD_FR                      (0x20)
-
-/**
- * SRAM write command of transceiver
- */
-#define TRX_CMD_SW                      (0x40)
-
-/**
- * SRAM read command of transceiver
- */
-#define TRX_CMD_SR                      (0x00)
 
 #define TRX_TRIG_DELAY()  {nop(); nop(); }
 
@@ -193,10 +172,8 @@ extern "C" {
 /** Macro to get the transceiver's main IRQ status */
 #define TRX_IRQ_HIGH()                  IRQ_PINGET()
 
-#define TRX_IRQ_GET()				    IRQ_PINGET()
+#define TRX_IRQ_GET()                               IRQ_PINGET()
 
-
- 
 uint8_t trx_reg_read(uint16_t addr);
 
 /**
@@ -210,11 +187,10 @@ uint8_t trx_reg_read(uint16_t addr);
  */
 void trx_reg_write(uint16_t addr, uint8_t data);
 
-
 void trx_write(uint16_t addr, uint8_t *data, uint16_t length);
 
-
 void trx_read(uint16_t addr, uint8_t *data, uint16_t length);
+
 /**
  * @brief Subregister read
  *
@@ -226,8 +202,6 @@ void trx_read(uint16_t addr, uint8_t *data, uint16_t length);
  */
 uint8_t trx_bit_read(uint16_t addr, uint8_t mask, uint8_t pos);
 
-
-
 /**
  * @brief Subregister write
  *
@@ -238,8 +212,6 @@ uint8_t trx_bit_read(uint16_t addr, uint8_t mask, uint8_t pos);
  */
 void trx_bit_write(uint16_t reg_addr, uint8_t mask, uint8_t pos,
 		uint8_t new_value);
-
-
 
 #if defined(NON_BLOCKING_SPI) || defined(__DOXYGEN__)
 

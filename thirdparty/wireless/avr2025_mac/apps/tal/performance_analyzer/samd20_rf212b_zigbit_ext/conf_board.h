@@ -49,6 +49,4 @@
 #define CONF_BOARD_AT86RFX
 #define MCU_SOC_NAME        "ATSAMD20J18"
 
-
-
 #endif /* CONF_BOARD_H_INCLUDED */

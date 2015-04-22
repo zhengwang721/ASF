@@ -76,110 +76,98 @@
  */
 retval_t tal_generate_rand_seed(void)
 {
-    trx_id_t trx_id;
-    rf_cmd_state_t previous_trx_state = RF_NOP;
+	trx_id_t trx_id;
+	rf_cmd_state_t previous_trx_state = RF_NOP;
 
-    /* Check for non sleeping device */
-    if ((tal_state[RF09] == TAL_SLEEP) && (tal_state[RF24] == TAL_SLEEP))
-    {
-   
-        return TAL_TRX_ASLEEP;
-    }
+	/* Check for non sleeping device */
+	if ((tal_state[RF09] == TAL_SLEEP) && (tal_state[RF24] == TAL_SLEEP)) {
+		return TAL_TRX_ASLEEP;
+	}
 
-    /* Find a trx that is idle */
-    if (tal_state[RF09] == TAL_IDLE)
-    {
-        trx_id = RF09;
-    }
-    else
-    {
-        if (tal_state[RF24] == TAL_IDLE)
-        {
-            trx_id = RF24;
-        }
-        else
-        {
-            
-            return TAL_BUSY;
-        }
-    }
+	/* Find a trx that is idle */
+	if (tal_state[RF09] == TAL_IDLE) {
+		trx_id = RF09;
+	} else {
+		if (tal_state[RF24] == TAL_IDLE) {
+			trx_id = RF24;
+		} else {
+			return TAL_BUSY;
+		}
+	}
 
-    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+	uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
-    /* Set widest filter bandwidth and set IF shift */
-    uint8_t previous_bwc;
+	/* Set widest filter bandwidth and set IF shift */
+	uint8_t previous_bwc;
 #ifdef IQ_RADIO
-    previous_bwc = pal_dev_reg_read(RF215_RF, reg_offset + RG_RF09_RXBWC);
-    pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_RXBWC, 0x1B);
+	previous_bwc = pal_dev_reg_read(RF215_RF, reg_offset + RG_RF09_RXBWC);
+	pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_RXBWC, 0x1B);
 #else
-    previous_bwc = trx_reg_read(reg_offset + RG_RF09_RXBWC);
-    trx_reg_write(reg_offset + RG_RF09_RXBWC, 0x1B);
+	previous_bwc = trx_reg_read(reg_offset + RG_RF09_RXBWC);
+	trx_reg_write(reg_offset + RG_RF09_RXBWC, 0x1B);
 #endif
 
-    /* Ensure that transceiver is not in off mode */
-    if (trx_state[trx_id] == RF_TRXOFF)
-    {
-        previous_trx_state = RF_TRXOFF;
+	/* Ensure that transceiver is not in off mode */
+	if (trx_state[trx_id] == RF_TRXOFF) {
+		previous_trx_state = RF_TRXOFF;
 
-        /* Disable BB to avoid receiving any frame */
-        trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 0);
+		/* Disable BB to avoid receiving any frame */
+		trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 0);
 
-        switch_to_txprep(trx_id);
+		switch_to_txprep(trx_id);
 
-        /*
-         * Enter Rx state
-         * Use direct register access to change to Rx state, since no buffer is
-         * required.
-         */
-        trx_bit_write(reg_offset + SR_RF09_CMD_CMD, RF_RX);
+		/*
+		 * Enter Rx state
+		 * Use direct register access to change to Rx state, since no
+		 *buffer is
+		 * required.
+		 */
+		trx_bit_write(reg_offset + SR_RF09_CMD_CMD, RF_RX);
 #ifdef IQ_RADIO
-        pal_dev_bit_write(RF215_RF, reg_offset + SR_RF09_CMD_CMD, RF_RX);
+		pal_dev_bit_write(RF215_RF, reg_offset + SR_RF09_CMD_CMD,
+				RF_RX);
 #endif
-        trx_state[trx_id] = RF_RX;
+		trx_state[trx_id] = RF_RX;
 
-        pal_timer_delay(10); /* Allow frontend to settle */
-    }
-    else
-    {
-        
-    }
+		pal_timer_delay(10); /* Allow frontend to settle */
+	} else {
+	}
 
-    uint16_t seed;
-    for (uint8_t i = 0; i < 2; i++)
-    {
-        seed = trx_reg_read(reg_offset + RG_RF09_RNDV);
-        seed |= (uint16_t)trx_reg_read(reg_offset + RG_RF09_RNDV) << 8;
-    }
+	uint16_t seed;
+	for (uint8_t i = 0; i < 2; i++) {
+		seed = trx_reg_read(reg_offset + RG_RF09_RNDV);
+		seed |= (uint16_t)trx_reg_read(reg_offset + RG_RF09_RNDV) << 8;
+	}
 
-    /* Restore previous transceiver state */
-    if (previous_trx_state == RF_TRXOFF)
-    {
+	/* Restore previous transceiver state */
+	if (previous_trx_state == RF_TRXOFF) {
 #ifdef IQ_RADIO
-        pal_dev_bit_write(RF215_BB, reg_offset + SR_RF09_CMD_CMD, RF_TRXOFF);
-        pal_dev_bit_write(RF215_RF, reg_offset + SR_RF09_CMD_CMD, RF_TRXOFF);
-        trx_state[trx_id] = RF_TRXOFF;
-        /* Enable BB again */
-        pal_dev_bit_write(RF215_BB, reg_offset + SR_BBC0_PC_BBEN, 1);
+		pal_dev_bit_write(RF215_BB, reg_offset + SR_RF09_CMD_CMD,
+				RF_TRXOFF);
+		pal_dev_bit_write(RF215_RF, reg_offset + SR_RF09_CMD_CMD,
+				RF_TRXOFF);
+		trx_state[trx_id] = RF_TRXOFF;
+		/* Enable BB again */
+		pal_dev_bit_write(RF215_BB, reg_offset + SR_BBC0_PC_BBEN, 1);
 #else
-        trx_bit_write(reg_offset + SR_RF09_CMD_CMD, RF_TRXOFF);
-        trx_state[trx_id] = RF_TRXOFF;
-        /* Enable BB again */
-        trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 1);
+		trx_bit_write(reg_offset + SR_RF09_CMD_CMD, RF_TRXOFF);
+		trx_state[trx_id] = RF_TRXOFF;
+		/* Enable BB again */
+		trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 1);
 #endif
-    }
+	}
 
-    /* Restore previous filter bandwidth setting */
+	/* Restore previous filter bandwidth setting */
 #ifdef IQ_RADIO
-    pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_RXBWC, previous_bwc);
+	pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_RXBWC, previous_bwc);
 #else
-    trx_reg_write(reg_offset + RG_RF09_RXBWC, previous_bwc);
+	trx_reg_write(reg_offset + RG_RF09_RXBWC, previous_bwc);
 #endif
 
-    /* Set the seed for the random number generator. */
-    srand(seed);
+	/* Set the seed for the random number generator. */
+	srand(seed);
 
-    return MAC_SUCCESS;
+	return MAC_SUCCESS;
 }
-
 
 /* EOF */

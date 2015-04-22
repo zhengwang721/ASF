@@ -57,7 +57,8 @@
 void performance_analyzer_init(void);
 
 /**
- * \brief This task needs to be called in a while(1) for performing Performance Analyzer tasks
+ * \brief This task needs to be called in a while(1) for performing Performance
+ *Analyzer tasks
  */
 void performance_analyzer_task(void);
 
