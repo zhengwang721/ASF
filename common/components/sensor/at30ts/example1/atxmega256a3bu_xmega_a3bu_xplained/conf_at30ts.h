@@ -56,10 +56,7 @@
 /* FOR ACK POLLING */
 #define ACK_POLLING_ITERATION  1000
 
-//#ifndef TWI_MODULE
 #define TWI_MODULE        &TWIC
-//#warning  Defaulting to TWIC for interfacing
-//#endif
 
 /* Device type must be defined in the project options*/
 #if    (!_AT30TS75_   && \
