@@ -113,7 +113,7 @@ void serial_interface_init(void)
 /**
  * \brief get the new buffer for next transmission through serial
  *
- *****\return unsigned integer pointer to buf
+ * \return unsigned integer pointer to buf
  */
 static uint8_t *get_next_tx_buffer(void)
 {
