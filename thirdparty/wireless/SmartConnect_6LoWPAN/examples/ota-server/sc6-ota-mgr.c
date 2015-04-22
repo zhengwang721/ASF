@@ -199,12 +199,15 @@ receiver(struct simple_udp_connection *c,
          const uint8_t *data,
          uint16_t datalen)
 {
+	
     if((datalen > 0) && (NULL != data))
 	{
+		
 #if (OTA_COMMON_SUPPORT == 1)
 		if(COMMON == *data)
 		{
-			ota_common_rcvd_frame(NATIVE_ADDR_MODE, (uint8_t *)(&sender_addr->u16[4]), datalen-1, data+1,255);
+			memcpy(ota_common_recv_data,data+1,datalen-1);
+			ota_common_rcvd_frame(NATIVE_ADDR_MODE, (uint8_t *)(&sender_addr->u16[4]), datalen-1, ota_common_recv_data,255);
 		}
 		else 
 #endif		

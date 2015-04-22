@@ -205,7 +205,7 @@ void serial_data_handler(void)
 	}
 }
 
-void send_server_data(ota_domain_t domain_id, addr_mode_t addr_mode, uint8_t *addr, uint8_t msg_id, const uint8_t *msg, uint16_t len)
+void send_server_data(ota_domain_t domain_id, addr_mode_t addr_mode, uint8_t *addr, uint8_t msg_id, uint8_t *msg, uint16_t len)
 {
 	uint8_t fcs = 0;
 	uint8_t total_len;
