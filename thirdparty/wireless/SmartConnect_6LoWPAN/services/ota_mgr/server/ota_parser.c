@@ -124,7 +124,6 @@ static void process_incoming_sio_data(void)
 			}
 		}
 		else{
-			sio2host_tx((const uint8_t*) "Invalid Stack ID ",sizeof("Invalid Stack ID "));
 			sio_rx_state = UART_RX_STATE_SOF;
 		}
 		break;
@@ -141,7 +140,6 @@ static void process_incoming_sio_data(void)
 		}
 		else
 		{
-			sio2host_tx((const uint8_t*)"Invalid Domain ",sizeof("Invalid Domain "));
 			sio_rx_state = UART_RX_STATE_SOF;
 		}
 		break;
@@ -179,7 +177,6 @@ static void process_incoming_sio_data(void)
 		break;
 
 	default:
-		sio2host_tx((const uint8_t*)"Default ",sizeof("Default "));
 		sio_rx_state = UART_RX_STATE_SOF;
 		break;
 	}

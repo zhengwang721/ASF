@@ -92,12 +92,12 @@ void sio2host_init(void)
 	struct usart_config host_uart_config;
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&host_uart_config);
-	host_uart_config.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
+	host_uart_config.mux_setting = HOST_SERCOM_MUX_SETTING;
 
-	host_uart_config.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	host_uart_config.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	host_uart_config.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	host_uart_config.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
+	host_uart_config.pinmux_pad0 = HOST_SERCOM_PINMUX_PAD0;
+	host_uart_config.pinmux_pad1 = HOST_SERCOM_PINMUX_PAD1;
+	host_uart_config.pinmux_pad2 = HOST_SERCOM_PINMUX_PAD2;
+	host_uart_config.pinmux_pad3 = HOST_SERCOM_PINMUX_PAD3;
 	host_uart_config.baudrate    = USART_HOST_BAUDRATE;
 	stdio_serial_init(&host_uart_module, USART_HOST, &host_uart_config);
 	usart_enable(&host_uart_module);
@@ -110,7 +110,7 @@ void sio2host_init(void)
 	USART_HOST_RX_ISR_ENABLE();
 }
 
-uint8_t sio2host_tx(const uint8_t *data, uint8_t length)
+uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 {
 #if SAMD || SAMR21
 	status_code_genare_t status;
@@ -122,10 +122,11 @@ uint8_t sio2host_tx(const uint8_t *data, uint8_t length)
 #if SAMD || SAMR21
 		status
 			= usart_serial_write_packet(&host_uart_module,
-				data, length);
+				(const uint8_t *)data, length);
 #else
 		status = usart_serial_write_packet(USART_HOST,
-				data, length);
+				(const uint8_t *)data,
+				length);
 #endif
 	} while (status != STATUS_OK);
 	return length;

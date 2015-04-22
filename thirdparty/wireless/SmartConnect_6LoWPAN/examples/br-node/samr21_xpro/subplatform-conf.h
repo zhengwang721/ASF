@@ -55,7 +55,7 @@
 #undef UIP_FALLBACK_INTERFACE
 #define UIP_FALLBACK_INTERFACE ip64_uip_fallback_interface
 
-#define IP64_ADDRMAP_CONF_ENTRIES             32//32
+#define IP64_ADDRMAP_CONF_ENTRIES             160//32
 
 /*#undef IEEE_ADDR_CONF_HARDCODED
 #define IEEE_ADDR_CONF_HARDCODED             1
