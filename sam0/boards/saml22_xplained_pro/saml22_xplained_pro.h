@@ -97,6 +97,37 @@ void system_board_init(void);
 #define SW0_ACTIVE                //false
 #define SW0_INACTIVE              !SW0_ACTIVE
 #define SW0_EIC_PIN               
+/**
+ * \name LED #0 definitions
+ *
+ * Wrapper macros for LED0, to ensure common naming across all Xplained Pro
+ * boards.
+ *
+ *  @{ */
+#define LED_0_NAME                "LED0 (yellow)"
+#define LED_0_PIN                 LED0_PIN
+#define LED_0_ACTIVE              LED0_ACTIVE
+#define LED_0_INACTIVE            LED0_INACTIVE
+#define LED0_GPIO                 LED0_PIN
+#define LED0                      LED0_PIN
+/** @} */
+
+/**
+ * \name Button #0 definitions
+ *
+ * Wrapper macros for SW0, to ensure common naming across all Xplained Pro
+ * boards.
+ *
+ *  @{ */
+#define BUTTON_0_NAME             "SW0"
+#define BUTTON_0_PIN              SW0_PIN
+#define BUTTON_0_ACTIVE           SW0_ACTIVE
+#define BUTTON_0_INACTIVE         SW0_INACTIVE
+#define BUTTON_0_EIC_PIN          SW0_EIC_PIN
+#define BUTTON_0_EIC_MUX          SW0_EIC_MUX
+#define BUTTON_0_EIC_PINMUX       SW0_EIC_PINMUX
+#define BUTTON_0_EIC_LINE         SW0_EIC_LINE
+/** @} */
 #define SW0_EIC_MUX               
 #define SW0_EIC_PINMUX            
 #define SW0_EIC_LINE              //2
