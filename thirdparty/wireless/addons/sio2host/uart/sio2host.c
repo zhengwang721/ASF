@@ -191,8 +191,6 @@ uint8_t sio2host_rx(uint8_t *data, uint8_t max_length)
 	while (max_length > 0) {
 		/* Start to copy from head. */
 		*data = serial_rx_buf[serial_rx_buf_head];
-		//serial_rx_buf_head++;
-		//serial_rx_count--;
 		data++;
 		max_length--;
 		if ((SERIAL_RX_BUF_SIZE_HOST - 1) == serial_rx_buf_head) {
@@ -248,7 +246,6 @@ USART_HOST_ISR_VECT()
 
 	/* The number of data in the receive buffer is incremented and the
 	 * buffer is updated. */
-	//serial_rx_count++;
 
 	serial_rx_buf[serial_rx_buf_tail] = temp;
 
