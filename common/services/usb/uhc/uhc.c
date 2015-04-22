@@ -1116,7 +1116,7 @@ void uhc_resume(void)
 }
 
 #ifdef USB_HOST_LPM_SUPPORT
-bool uhc_suspend_lpm(bool b_remotewakeup, uint8_t besl)
+bool uhc_suspend_lpm(bool b_remotewakeup, uint8_t hird)
 {
 	if (uhc_enum_try) {
 		// enumeration on-going, the USB suspend can't be done
@@ -1130,7 +1130,7 @@ bool uhc_suspend_lpm(bool b_remotewakeup, uint8_t besl)
 	}
 
 	// Suspend all USB devices
-	return uhd_suspend_lpm(b_remotewakeup, besl);
+	return uhd_suspend_lpm(b_remotewakeup, hird);
 }
 #endif // USB_HOST_LPM_SUPPORT
 
