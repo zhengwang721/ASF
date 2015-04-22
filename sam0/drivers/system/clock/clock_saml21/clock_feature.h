@@ -595,10 +595,6 @@ struct system_clock_source_osc16m_config {
  * Internal 32KHz Ultra Low Power oscillator configuration structure.
  */
 struct system_clock_source_osculp32k_config {
-	/** Enable 1KHz output. */
-	bool enable_1khz_output;
-	/** Enable 32KHz output. */
-	bool enable_32khz_output;
 	/** Lock configuration after it has been written,
 	 *  a device reset will release the lock. */
 	bool write_once;
@@ -802,8 +798,6 @@ static inline void system_clock_source_osculp32k_get_config_defaults(
 {
 	Assert(config);
 
-	config->enable_1khz_output  = true;
-	config->enable_32khz_output = true;
 	config->write_once          = false;
 }
 
