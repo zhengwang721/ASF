@@ -86,8 +86,7 @@ AT86RFX_ISR()
 {
 	/*Clearing the RF interrupt*/
 	trx_irq_flag_clr();
-
-	/*Calling the interrupt routines*/
+  	/*Calling the interrupt routines*/
 	if (irq_hdl_trx) {
 		irq_hdl_trx();
 	}
@@ -376,7 +375,7 @@ void trx_frame_write(uint8_t *data, uint8_t length)
 	}
 	spi_write(&master, temp);
 	while (!spi_is_write_complete(&master)) {
-	}
+	} 
 	/* Dummy read since SPI RX is double buffered */
 	while (!spi_is_ready_to_read(&master)) {
 	}
