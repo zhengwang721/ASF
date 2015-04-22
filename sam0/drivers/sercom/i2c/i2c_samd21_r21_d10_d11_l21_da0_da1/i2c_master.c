@@ -541,8 +541,8 @@ static enum status_code _i2c_master_read_packet(
 				return STATUS_ERR_PACKET_COLLISION;
 			}
 
-			if (module->send_nack && ((!sclsm_flag) && (tmp_data_length == 0)) ||
-					((sclsm_flag) && (tmp_data_length == 1))) {
+			if (module->send_nack && (((!sclsm_flag) && (tmp_data_length == 0)) ||
+					((sclsm_flag) && (tmp_data_length == 1)))) {
 				/* Set action to NACK */
 				i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
 			} else {
