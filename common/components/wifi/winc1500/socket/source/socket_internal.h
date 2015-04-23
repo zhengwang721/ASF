@@ -147,7 +147,7 @@ typedef struct{
 typedef struct{
 	SOCKET		sock;
 	sint8		s8Error;
-	uint16		u16Void;
+	uint16		u16SessionID;
 }tstrConnectReply;
 
 
@@ -168,7 +168,7 @@ typedef struct{
 typedef struct{
 	SOCKET		sock;
 	sint8		s8Status;
-	uint16		u16Void;
+	uint16		u16SessionID;
 }tstrBindReply;
 
 
@@ -186,7 +186,7 @@ typedef struct{
 typedef struct{
 	SOCKET		sock;
 	sint8		s8Status;
-	uint16		u16Void;
+	uint16		u16SessionID;
 }tstrListenReply;
 
 
@@ -201,6 +201,8 @@ typedef struct{
 	SOCKET		sock;
 	uint8		u8Void;
 	sint16		s16SentBytes;
+	uint16			u16SessionID;
+	uint16			u16Void;
 }tstrSendReply;
 
 
@@ -214,7 +216,7 @@ typedef struct{
 	uint16			u16DataOffset;
 	SOCKET			sock;
 	uint8			u8Void;
-	uint16			u16Void;
+	uint16			u16SessionID;
 }tstrRecvReply;
 
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
