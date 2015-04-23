@@ -128,7 +128,7 @@ static bool gbContinueReceive = false;
 static bool gbTcpConnection = false;
 
 /** Server host name. */
-static char server_host_name[] = MAIN_WEATHER_SERVER_NAME; 
+static char server_host_name[] = MAIN_WEATHER_SERVER_NAME;
 
 /**
  * \brief Configure UART console.
