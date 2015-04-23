@@ -122,9 +122,18 @@ void configure_adc(void)
 	struct adc_config config_adc;
 	
 	adc_get_config_defaults(&config_adc);
+  
+//
+// Any update to the default settings can be done here:
+//  
 	config_adc.clock_source                  = GCLK_GENERATOR_3;
 	//config_adc.reference                     = ADC_REFERENCE_INT1V;
 	config_adc.reference                     = ADC_REFERENCE_INTVCC1;
+#if SAMR21
+  config_adc.positive_input               = ADC_POSITIVE_INPUT_PIN6 ;
+#elif SAMD
+  config_adc.positive_input               = ADC_POSITIVE_INPUT_PIN8 ;
+#endif
 	
 	adc_init(&adc_instance, ADC, &config_adc);
 	adc_enable(&adc_instance);
