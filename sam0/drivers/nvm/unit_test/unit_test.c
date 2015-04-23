@@ -153,10 +153,10 @@ static void run_nvm_parameter_test(const struct test_case *test)
 			NVMCTRL_PAGE_SIZE);
 
 	/* Validate the page count */
-	test_assert_true(test, parameters.nvm_number_of_pages == NVMCTRL_PAGES,
+	test_assert_true(test, parameters.nvm_number_of_pages == FLASH_NB_OF_PAGES,
 			"Number of Pages incorrect (read: 0x%02x,"
 			" expected: 0x%02x)", parameters.nvm_number_of_pages,
-			NVMCTRL_PAGES);
+			FLASH_NB_OF_PAGES);
 }
 
 /**

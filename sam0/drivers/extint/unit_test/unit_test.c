@@ -81,7 +81,7 @@
  * - SAM R21 Xplained Pro
  *  - EXT1 \b Pin 9 (PA22) <-----> Pin 10 (PA23)
  * - SAM L21 Xplained Pro
- *  - EXT1 \b Pin 9 (PB04) <-----> Pin 10 (PA02)
+ *  - EXT1 \b Pin 9 (PB04) <-----> EXT3 Pin 5 (PB30)
  *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a

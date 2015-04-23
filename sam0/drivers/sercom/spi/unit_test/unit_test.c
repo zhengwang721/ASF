@@ -96,10 +96,10 @@
  *  - \b DI/DO: EXT1 PIN17 (PB02) <--> EXT1 PIN7  (PA18)
  *  - \b SCK:   EXT1 PIN18 (PB23) <--> EXT1 PIN8  (PA19)
  * - SAM L21 Xplained Pro
- *  - \b SS_0:  EXT1 PIN15 (PA05) <--> EXT3 PIN15 (PB17)
- *  - \b DO/DI: EXT1 PIN16 (PA06) <--> EXT3 PIN17 (PB16)
- *  - \b DI/DO: EXT1 PIN17 (PA04) <--> EXT3 PIN16 (PB22)
- *  - \b SCK:   EXT1 PIN18 (PA07) <--> EXT3 PIN18 (PB23)
+ *  - \b DO/DI: EXT3 PIN9  (PA16) <--> EXT3 PIN17 (PB16)
+ *  - \b SS_0:  EXT2 PIN15 (PA17) <--> EXT3 PIN15 (PB17)
+ *  - \b DI/DO: EXT2 PIN14 (PA18) <--> EXT3 PIN16 (PB22)
+ *  - \b SCK:   EXT2 PIN13 (PA19) <--> EXT3 PIN18 (PB23)
  *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a
