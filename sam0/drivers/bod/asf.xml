@@ -68,6 +68,7 @@
 		<build type="header-file" value="quick_start/qs_bod_basic_use_saml.h"/>
 
 		<device-support value="saml21"/>
+		<device-support value="saml22"/>
 
 		<require idref="sam0.utils"/>
 
@@ -109,6 +110,7 @@
 			<build type="doxygen-entry-point" value="asfdoc_sam0_bod_group"/>
 
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 		</module>
 	</select-by-device>
 </asf>

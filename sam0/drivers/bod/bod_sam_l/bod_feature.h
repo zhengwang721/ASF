@@ -62,7 +62,7 @@ extern "C" {
  * - SUPC (Supply Controller)
  *
  * The following devices can use this module:
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_bod_prerequisites
@@ -429,7 +429,7 @@ static inline bool bod33_is_detected(void)
  */
 static inline void bod33_clear_detected(void)
 {
-	SUPC->INTFLAG.bit.BOD33DET = true;
+	SUPC->INTFLAG.reg |= SUPC_INTFLAG_BOD33DET;
 	return;
 }
 
@@ -520,7 +520,7 @@ static inline bool bod12_is_detected(void)
  */
 static inline void bod12_clear_detected(void)
 {
-	SUPC->INTFLAG.bit.BOD12DET = true;
+	SUPC->INTFLAG.reg |= SUPC_INTFLAG_BOD12DET;
 	return;
 }
 
@@ -606,6 +606,11 @@ static inline void bod12_clear_detected(void)
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>05/2015</td>
+ *		<td>Added support for SAML22.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>
