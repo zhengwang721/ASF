@@ -38,6 +38,7 @@
 			<require idref="sam0.utils"/>
 			
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 		</module>
 	</select-by-device>
 </asf>

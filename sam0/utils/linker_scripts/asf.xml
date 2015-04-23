@@ -680,6 +680,96 @@
 			<build type="linker-config" subtype="script" value="saml21/iar/saml21j18a_flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="saml21/iar/saml21j18a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsaml21j18a"/>
-		</module>	
+		</module>
+		<module type="build-specific" caption="Linker script for SAML22N16A" id="sam0.utils.linker_scripts#atsaml22n16a">
+			<info type="description" value="summary">
+			Linker script for the SAML22N16A device.
+			</info>
+			<build type="linker-config" subtype="script" value="saml22/gcc/saml22n16a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="saml2/gcc/saml22n16a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="saml22/iar/saml22n16a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/iar/saml22n16a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsaml22n16a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAML22N17A" id="sam0.utils.linker_scripts#atsaml22n17a">
+			<info type="description" value="summary">
+			Linker script for the SAML22N17A device.
+			</info>
+			<build type="linker-config" subtype="script" value="saml22/gcc/saml22n17a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/gcc/saml22n17a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="saml22/iar/saml22n17a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/iar/saml22n17a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsaml22n17a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAML22N18A" id="sam0.utils.linker_scripts#atsaml22n18a">
+			<info type="description" value="summary">
+			Linker script for the SAML22N18A device.
+			</info>
+			<build type="linker-config" subtype="script" value="saml22/gcc/saml22n18a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/gcc/saml22n18a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="saml22/iar/saml22n18a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/iar/saml22n18a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsaml22n18a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAML22G16A" id="sam0.utils.linker_scripts#atsaml2216a">
+			<info type="description" value="summary">
+			Linker script for the SAML2216A device.
+			</info>
+			<build type="linker-config" subtype="script" value="saml22/gcc/saml22g16a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/gcc/saml22g16a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="saml22/iar/saml22g16a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/iar/saml22g16a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsaml22g16a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAML22G17A" id="sam0.utils.linker_scripts#atsaml22g17a">
+			<info type="description" value="summary">
+			Linker script for the SAML22G17A device.
+			</info>
+			<build type="linker-config" subtype="script" value="saml22/gcc/saml22g17a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/gcc/saml22g17a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="saml22/iar/saml22g17a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/iar/saml22g17a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsaml22g17a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAML22G18A" id="sam0.utils.linker_scripts#atsaml22g18a">
+			<info type="description" value="summary">
+			Linker script for the SAML22G18A device.
+			</info>
+			<build type="linker-config" subtype="script" value="saml22/gcc/saml22g18a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/gcc/saml22g18a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="saml22/iar/saml22g18a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/iar/saml22g18a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsaml22g18a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAML22J16A" id="sam0.utils.linker_scripts#atsaml22j16a">
+			<info type="description" value="summary">
+			Linker script for the SAML22J16A device.
+			</info>
+			<build type="linker-config" subtype="script" value="saml22/gcc/saml22j16a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/gcc/saml22j16a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="saml22/iar/saml22j16a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/iar/saml22j16a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsaml22j16a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAML22J17A" id="sam0.utils.linker_scripts#atsaml22j17a">
+			<info type="description" value="summary">
+			Linker script for the SAML22J17A device.
+			</info>
+			<build type="linker-config" subtype="script" value="saml22/gcc/saml22j17a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/gcc/saml22j17a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="saml22/iar/saml22j17a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/iar/saml22j17a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsaml22j17a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAML22J18A" id="sam0.utils.linker_scripts#atsaml22j18a">
+			<info type="description" value="summary">
+			Linker script for the SAML22J18A device.
+			</info>
+			<build type="linker-config" subtype="script" value="saml22/gcc/saml22j18a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/gcc/saml22j18a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="saml22/iar/saml22j18a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="saml22/iar/saml22j18a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsaml22j18a"/>
+		</module>
 	</select-by-device>
 </asf>
