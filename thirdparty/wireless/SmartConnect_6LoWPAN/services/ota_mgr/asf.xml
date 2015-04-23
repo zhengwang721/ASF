@@ -24,7 +24,7 @@
 		</info>
 		<!-- **************************************************************************************************** -->
 	</module>
-	<module type="component" id="thirdparty.wireless.smartconnect_6lowpan.ota_mgr.client" caption="ota Client Manager">
+	<module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.ota_mgr.client" caption="ota Client Manager">
 		<info type="description" value="summary">
 
 		</info>
