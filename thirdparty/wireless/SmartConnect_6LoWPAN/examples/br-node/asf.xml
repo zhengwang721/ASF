@@ -1,0 +1,41 @@
+<asf xmlversion="1.0">
+	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
+	<!-- **************************************************************************************************** -->
+	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.br-node" caption="Smart Connect 6LoWPAN - Border router">
+		<info type="description" value="summary">
+		       Border router example demonstrates the ability of stack to create a DAG root and act as a Border gateway to the nodes which wants to communicate outside the network.
+		</info>
+		<build type="c-source"      value="router-node.c"/>
+		<build type="c-source"      value="router-node-main.c"/>
+		<build type="c-source"      value="symbols.c"/>
+		<build type="include-path" value="inc/"/>
+		<build type="header-file" value="conf_common_sw_timer.h"/>
+		<build type="header-file"      value="symbols.h"/>
+		<build type="include-path" value="."/>
+		<build type="define" name="UIP_CONF_IPV6" value="1"/>
+		<build type="define" name="NULLRDC_CONF_802154_AUTOACK_HW" value="0"/>
+        <build type="define" name="ENABLE_WEBSERVER" value="0"/>		
+		<require idref="thirdparty.wireless.addons.sio2host"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.src"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ip"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ipv6"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ipv4"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.thsq-conf"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.aes"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64-addr"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.mdns"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.websocket"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.http-socket"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.simple-rpl"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64-addr"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.services.ksz8851snl"/>
+    <require idref="thirdparty.wireless.smartconnect_6lowpan.apps.led_control"/>
+    <build type="define" name="ENABLE_LEDCTRL" value="1"/>
+		<require idref="sam0.components.ethernet_phy.ksz8851snl"/>
+		<device-support value="sam0"/>	
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+
+</asf>

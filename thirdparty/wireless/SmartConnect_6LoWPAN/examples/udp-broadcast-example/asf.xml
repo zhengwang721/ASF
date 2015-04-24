@@ -1,0 +1,34 @@
+<asf xmlversion="1.0">
+	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
+	<!-- **************************************************************************************************** -->
+	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.udp-broadcast-example" caption="Smart Connect 6LoWPAN - UDP Broadcast">
+		<info type="description" value="summary">
+		      UDP Broadcast example demonstrates the stack ability to create a UDP socket and successfully send and receive UDP broadcast data over the network.
+		</info>
+		<build type="c-source"      value="broadcast-example.c"/>
+		<build type="c-source"      value="broadcast-example-main.c"/>
+		<build type="c-source"      value="symbols.c"/>
+		<build type="include-path" value="inc/"/>
+		<build type="header-file" value="conf_common_sw_timer.h"/>
+		<build type="header-file"      value="symbols.h"/>
+		<build type="include-path" value="."/>
+		<build type="define" name="UIP_CONF_IPV6" value="1"/>	
+        <build type="define" name="NULLRDC_CONF_802154_AUTOACK_HW" value="0"/>			
+		<require idref="thirdparty.wireless.addons.sio2host"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.src"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ip"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ipv6"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ipv4"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.thsq-conf"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.aes"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64-addr"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.mdns"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.simple-rpl"/>
+    <require idref="thirdparty.wireless.smartconnect_6lowpan.apps.led_control"/>
+     <build type="define" name="ENABLE_LEDCTRL" value="1"/>
+		<device-support value="sam0"/>	
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+
+</asf>
