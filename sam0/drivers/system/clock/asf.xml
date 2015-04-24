@@ -276,6 +276,33 @@
 			<require idref="sam0.utils"/>
 
 			<device-support value="saml21"/>
+		</module>
+		<module type="driver" id="sam0.drivers.system.clock#saml22" caption="SYSTEM - Clock Management for SAML22">
+			<info type="description" value="summary">
+				Driver for the SAM L22 Clock management units. Provides a unified
+				interface for the configuration and management of the various clocks
+				in the device, including the bus and generic peripheral clocks.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Clocks" />
+			</info>
+
+			<build type="include-path" value="."/>
+			<build type="include-path" value="clock_saml22/"/>
+
+			<build type="header-file" subtype="api" value="clock.h"/>
+			<build type="header-file" subtype="api" value="gclk.h"/>
+			<build type="header-file" value="clock_saml22/clock_feature.h" />
+			<build type="header-file" value="clock_saml22/clock_config_check.h" />
+			<build type="c-source" value="clock_saml22/clock.c"/>
+			<build type="c-source" value="clock_saml22/gclk.c"/>
+			<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
+
+			<build type="module-config" subtype="path" value="clock_saml22/module_config"/>
+			<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
+			<require idref="sam0.drivers.system.interrupt"/>
+			<require idref="sam0.utils"/>
+
 			<device-support value="saml22"/>
 		</module>
 	</select-by-device>
