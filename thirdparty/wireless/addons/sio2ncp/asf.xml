@@ -17,6 +17,7 @@
 				<device-support value="xmega"/>
 				<device-support value="uc3"/>
 				<device-support value="sam4l"/>
+				<device-support value="sam4s"/>
 				<device-support value="megarf"/>
 				<build type="doxygen-entry-point" value="group_sio2ncp_uart"/>
 			</module>

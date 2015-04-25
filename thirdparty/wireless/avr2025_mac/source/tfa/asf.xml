@@ -100,4 +100,18 @@
 		<require idref="thirdparty.wireless.avr2025_mac.source.tal.generic"/>
         <build type="define"   name="ENABLE_TFA"                          value=""/>		
 	</module>
+	
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.tfa.ext.at86rf215"     caption="at86rf215 tfa  support enabled">
+			<info type="description" value="summary">
+			AT86Rf231 Transceiver Feature Access
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<build type="header-file"   value="inc/tfa.h"/>
+		    <build type="include-path"  value="inc/"/>
+			<require idref="thirdparty.wireless.avr2025_mac.source.tfa.at86rf215"/>
+			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf215"/>
+            <device-support value="sam4s"/>
+			<device-support value="sam4l"/>
+			<build type="doxygen-entry-point" value="group_tfa"/>
+	</module>		
 </asf>

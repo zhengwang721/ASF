@@ -1,0 +1,17 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="HTPT TEMPERATURE SENSOR APPLICATION" id="thirdparty.wireless.ble_sdk.apps.htpt_temperature_sensor">
+		<info type="description" value="summary">
+		HTPT Temperature Sensor application for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="htpt_app.h"/>
+		<build type="c-source" value="htpt_app.c"/>
+		<require idref="thirdparty.wireless.ble_sdk.lib"/>
+		<require idref="thirdparty.wireless.ble_sdk.inc"/>
+		<require idref="thirdparty.wireless.ble_sdk.src"/>
+		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
+		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

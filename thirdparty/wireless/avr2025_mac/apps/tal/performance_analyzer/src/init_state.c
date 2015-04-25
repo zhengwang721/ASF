@@ -108,7 +108,7 @@ void init_state_init(void *arg)
 #if (TAL_TYPE == AT86RF233) && (ANTENNA_DIVERSITY == 1)
 	/* In order to demonstrate RPC the antenna diversity is disabled. */
 	tal_ant_div_config(ANT_DIVERSITY_DISABLE, ANT_CTRL_1); /* Enable A1/X2
-	                                                        **/
+	                                                       **/
 #endif
 
 	/* Keep compiler happy */
@@ -170,10 +170,9 @@ static void app_timers_init(void)
 	{
 		app_alert();
 	}
-	
+
 	if (STATUS_OK !=
-			(status_code_genare_t)sw_timer_get_id(&CW_TX_TIMER))
-	{
+			(status_code_genare_t)sw_timer_get_id(&CW_TX_TIMER)) {
 		app_alert();
-	}	
+	}
 }

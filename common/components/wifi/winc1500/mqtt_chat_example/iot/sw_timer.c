@@ -61,7 +61,7 @@ static void sw_timer_tcc_callback(struct tcc_module *const module)
 void sw_timer_get_config_defaults(struct sw_timer_config *const config)
 {
 	Assert(config);
-	
+
 	config->accuracy = 100;
 	config->tcc_dev = 0;
 	config->tcc_callback_channel = 0;
@@ -72,14 +72,14 @@ void sw_timer_init(struct sw_timer_module *const module_inst, struct sw_timer_co
 	struct tcc_config tcc_conf;
 	struct tcc_module *tcc_module;
 	Tcc *hw[] = TCC_INSTS;
-	
+
 	Assert(module_inst);
 	Assert(config);
 	Assert(config->tcc_dev < TCC_INST_NUM);
 	Assert(config->tcc_callback_channel < TCC_NUM_CHANNELS);
-	
+
 	module_inst->accuracy = config->accuracy;
-	
+
 	/* Start the TCC module. */
 	tcc_module = &module_inst->tcc_inst;
 	tcc_get_config_defaults(&tcc_conf, hw[config->tcc_dev]);
@@ -93,20 +93,20 @@ void sw_timer_init(struct sw_timer_module *const module_inst, struct sw_timer_co
 void sw_timer_enable(struct sw_timer_module *const module_inst)
 {
 	struct tcc_module *tcc_module;
-	
+
 	Assert(module_inst);
-	
+
 	tcc_module = &module_inst->tcc_inst;
-	
+
 	tcc_enable(tcc_module);
 }
 
 void sw_timer_disable(struct sw_timer_module *const module_inst)
 {
 	struct tcc_module *tcc_module;
-	
+
 	Assert(module_inst);
-	
+
 	tcc_module = &module_inst->tcc_inst;
 	tcc_disable(tcc_module);
 }
@@ -116,9 +116,9 @@ int sw_timer_register_callback(struct sw_timer_module *const module_inst,
 {
 	int index;
 	struct sw_timer_handle *handler;
-	
+
 	Assert(module_inst);
-	
+
 	for (index = 0; index < CONF_SW_TIMER_COUNT; index++) {
 		if (module_inst->handler[index].used == 0) {
 			handler = &module_inst->handler[index];
@@ -130,7 +130,7 @@ int sw_timer_register_callback(struct sw_timer_module *const module_inst,
 			return index;
 		}
 	}
-	
+
 	return -1;
 }
 
@@ -142,19 +142,19 @@ void sw_timer_unregister_callback(struct sw_timer_module *const module_inst, int
 	Assert((timer_id >= 0 && timer_id < CONF_SW_TIMER_COUNT));
 
 	handler = &module_inst->handler[timer_id];
-	
+
 	handler->used = 0;
 }
 
 void sw_timer_enable_callback(struct sw_timer_module *const module_inst, int timer_id, uint32_t delay)
 {
 	struct sw_timer_handle *handler;
-	
+
 	Assert(module_inst);
 	Assert((timer_id >= 0 && timer_id < CONF_SW_TIMER_COUNT));
-	
+
 	handler = &module_inst->handler[timer_id];
-	
+
 	handler->callback_enable = 1;
 	handler->expire_time = sw_timer_tick + (delay / module_inst->accuracy);
 }
@@ -162,12 +162,12 @@ void sw_timer_enable_callback(struct sw_timer_module *const module_inst, int tim
 void sw_timer_disable_callback(struct sw_timer_module *const module_inst, int timer_id)
 {
 	struct sw_timer_handle *handler;
-	
+
 	Assert(module_inst);
 	Assert((timer_id >= 0 && timer_id < CONF_SW_TIMER_COUNT));
-	
+
 	handler = &module_inst->handler[timer_id];
-	
+
 	handler->callback_enable = 0;
 }
 
@@ -175,7 +175,7 @@ void sw_timer_task(struct sw_timer_module *const module_inst)
 {
 	int index;
 	struct sw_timer_handle *handler;
-	
+
 	Assert(module_inst);
 
 	for (index = 0; index < CONF_SW_TIMER_COUNT; index++) {
@@ -198,6 +198,6 @@ void sw_timer_task(struct sw_timer_module *const module_inst)
 			}
 		}
 	}
-	
+
 }
 

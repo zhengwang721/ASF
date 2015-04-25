@@ -102,6 +102,14 @@ sint8 nm_bsp_init(void)
  */
 sint8 nm_bsp_deinit(void)
 {
+	struct port_config pin_conf;
+	port_get_config_defaults(&pin_conf);
+	/* Configure control pins as input no pull up. */
+	pin_conf.direction  = PORT_PIN_DIR_INPUT;
+	pin_conf.input_pull = PORT_PIN_PULL_NONE;
+	port_pin_set_output_level(CONF_WINC_PIN_CHIP_ENABLE, false);
+	port_pin_set_output_level(CONF_WINC_PIN_RESET, false);
+	port_pin_set_config(CONF_WINC_SPI_INT_PIN, &pin_conf);
 	return M2M_SUCCESS;
 }
 

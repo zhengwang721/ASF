@@ -156,13 +156,13 @@ int main(void)
 	#else
 	sysclk_init();
 	board_init();
-	#endif	
+	#endif
 	SYS_Init();
 	sio2host_init();
 	cpu_irq_enable();
 	LED_On(LED0);
 	while (1) {
-	SYS_TaskHandler();
-	APP_TaskHandler();
+		SYS_TaskHandler();
+		APP_TaskHandler();
 	}
 }
