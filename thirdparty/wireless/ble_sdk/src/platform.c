@@ -79,10 +79,10 @@ void serial_tx_callback(void)
 
 at_ble_status_t platform_init(void* platform_params)
 {
+	ble_enable_pin_init();
 	configure_serial_drv();
 	serial_read_byte(&rx_data);
-
-	ble_enable_pin_init();	
+		
 	return AT_BLE_SUCCESS;
 }
 
