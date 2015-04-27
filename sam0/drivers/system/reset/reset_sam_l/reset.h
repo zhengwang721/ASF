@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM L21 Reset functionality
+ * \brief SAM L21/L22 Reset functionality
  *
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -72,10 +72,17 @@ enum system_reset_cause {
 	SYSTEM_RESET_CAUSE_WDT            = RSTC_RCAUSE_WDT,
 	/** The system was last reset because the external reset line was pulled low. */
 	SYSTEM_RESET_CAUSE_EXTERNAL_RESET = RSTC_RCAUSE_EXT,
+#if SAML21
 	/** The system was last reset by the BOD33. */
 	SYSTEM_RESET_CAUSE_BOD33          = RSTC_RCAUSE_BOD33,
 	/** The system was last reset by the BOD12. */
 	SYSTEM_RESET_CAUSE_BOD12          = RSTC_RCAUSE_BOD12,
+#else
+	/** The system was last reset by the BOD VDD. */
+	SYSTEM_RESET_CAUSE_BOD33          = RSTC_RCAUSE_BODVDD,
+	/** The system was last reset by the BOD CORE. */
+	SYSTEM_RESET_CAUSE_BOD12          = RSTC_RCAUSE_BODCORE,
+#endif
 	/** The system was last reset by the POR (Power on reset). */
 	SYSTEM_RESET_CAUSE_POR            = RSTC_RCAUSE_POR,
 };
@@ -94,6 +101,7 @@ enum system_reset_backup_exit_source {
 	SYSTEM_RESET_BACKKUP_EXIT_BBPS       = RSTC_BKUPEXIT_BBPS,
 };
 
+#if SAML21
 /**
  * \brief Wakeup debounce counter value.
  *
@@ -115,6 +123,7 @@ enum system_wakeup_debounce_count {
 	/** Input pin shall be active for at least 32768 32KHz clock period. */
 	SYSTEM_WAKEUP_DEBOUNCE_32768CK32   = RSTC_WKDBCONF_WKDBCNT_32768CK32,
 };
+#endif
 
 /**
  * \name Reset Control
@@ -166,6 +175,7 @@ static inline enum system_reset_backup_exit_source system_get_backup_exit_source
 	return (enum system_reset_backup_exit_source)RSTC->BKUPEXIT.reg;
 }
 
+#if SAML21
 /**
  * \brief Set wakeup debounce counter.
  *
@@ -239,7 +249,7 @@ static inline uint16_t system_get_pin_wakeup_cause(void)
 {
 	return (RSTC_WKCAUSE_MASK & (RSTC->WKCAUSE.reg >> RSTC_WKCAUSE_WKCAUSE_Pos));
 }
-
+#endif
 /**
  * @}
  */
