@@ -636,6 +636,7 @@ struct system_clock_source_dfll_config {
  *   - Frequency of 12MHz
  *   - Don't run in STANDBY sleep mode
  *   - Run only when requested by peripheral (on demand)
+ *   - Clock failure detect disabled
  *
  * \param[out] config  Configuration structure to fill with default values
  */
@@ -651,8 +652,6 @@ static inline void system_clock_source_xosc_get_config_defaults(
 	config->run_in_standby    = false;
 	config->on_demand         = true;
 	config->clock_failure_detect.cfd_enable    = false;
-	config->clock_failure_detect.cfd_presc     = 128;
-	config->clock_failure_detect.cfd_event_out = false;
 }
 
 void system_clock_source_xosc_set_config(
@@ -687,6 +686,7 @@ void system_clock_source_xosc_set_switch_back(void);
  *   - Don't run in STANDBY sleep mode
  *   - Run only when requested by peripheral (on demand)
  *   - Don't lock registers after configuration has been written
+ *   - Clock failure detect disabled
  *
  * \param[out] config  Configuration structure to fill with default values
  */
@@ -704,8 +704,6 @@ static inline void system_clock_source_xosc32k_get_config_defaults(
 	config->on_demand           = true;
 	config->write_once          = false;
 	config->clock_failure_detect.cfd_enable    = false;
-	config->clock_failure_detect.cfd_presc     = 0;
-	config->clock_failure_detect.cfd_event_out = false;
 }
 
 void system_clock_source_xosc32k_set_config(

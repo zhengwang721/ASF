@@ -49,10 +49,8 @@
 #  define CONF_CLOCKS_H_INCLUDED
 
 /* System clock bus configuration */
-#  define CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT     false
 #  define CONF_CLOCK_FLASH_WAIT_STATES            0
 #  define CONF_CLOCK_CPU_DIVIDER                  SYSTEM_MAIN_CLOCK_DIV_1
-#  define CONF_CLOCK_LOW_POWER_DIVIDER            SYSTEM_MAIN_CLOCK_DIV_1
 #  define CONF_CLOCK_BACKUP_DIVIDER               SYSTEM_MAIN_CLOCK_DIV_1
 
 /* SYSTEM_CLOCK_SOURCE_OSC16M configuration - Internal 16MHz oscillator */
@@ -68,6 +66,7 @@
 #  define CONF_CLOCK_XOSC_AUTO_GAIN_CONTROL       true
 #  define CONF_CLOCK_XOSC_ON_DEMAND               true
 #  define CONF_CLOCK_XOSC_RUN_IN_STANDBY          false
+#  define CONF_CLOCK_XOSC_CLOCK_FAILURE_DETECT    false
 
 /* SYSTEM_CLOCK_SOURCE_XOSC32K configuration - External 32KHz crystal/clock oscillator */
 #  define CONF_CLOCK_XOSC32K_ENABLE               false
@@ -77,6 +76,7 @@
 #  define CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT  true
 #  define CONF_CLOCK_XOSC32K_ON_DEMAND            true
 #  define CONF_CLOCK_XOSC32K_RUN_IN_STANDBY       false
+#  define CONF_CLOCK_XOSC32K_CLOCK_FAILURE_DETECT false
 
 /* SYSTEM_CLOCK_SOURCE_OSCULP32K configuration - Internal Ultra Low Power 32KHz oscillator */
 #  define CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT    true

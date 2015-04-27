@@ -823,6 +823,7 @@ void system_clock_init(void)
 	xosc_conf.frequency         = CONF_CLOCK_XOSC_EXTERNAL_FREQUENCY;
 	xosc_conf.on_demand         = CONF_CLOCK_XOSC_ON_DEMAND;
 	xosc_conf.run_in_standby    = CONF_CLOCK_XOSC_RUN_IN_STANDBY;
+	xosc_conf.clock_failure_detect.cfd_enable = CONF_CLOCK_XOSC_CLOCK_FAILURE_DETECT;
 
 	system_clock_source_xosc_set_config(&xosc_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC);
@@ -840,6 +841,7 @@ void system_clock_init(void)
 	xosc32k_conf.enable_32khz_output = CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT;
 	xosc32k_conf.on_demand           = false;
 	xosc32k_conf.run_in_standby      = CONF_CLOCK_XOSC32K_RUN_IN_STANDBY;
+	xosc32k_conf.clock_failure_detect.cfd_enable = CONF_CLOCK_XOSC32K_CLOCK_FAILURE_DETECT;
 
 	system_clock_source_xosc32k_set_config(&xosc32k_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
@@ -940,7 +942,7 @@ void system_clock_init(void)
 
 	/* Configure all GCLK generators except for the main generator, which
 	 * is configured later after all other clock systems are set up */
-	MREPEAT(5, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
+	MREPEAT(GCLK_GEN_NUM, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
 #  if CONF_CLOCK_DFLL_ENABLE == true
 	/* Enable DFLL reference clock if in closed loop mode */
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {

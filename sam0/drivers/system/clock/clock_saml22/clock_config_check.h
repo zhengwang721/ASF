@@ -47,20 +47,12 @@
 #ifndef CLOCK_CONFIG_CHECK_H
 #  define CLOCK_CONFIG_CHECK_H
 
-#if !defined(CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT)
-#  error CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT not defined in conf_clocks.h
-#endif
-
 #if !defined(CONF_CLOCK_FLASH_WAIT_STATES)
 #  error CONF_CLOCK_FLASH_WAIT_STATES not defined in conf_clocks.h
 #endif
 
 #if !defined(CONF_CLOCK_CPU_DIVIDER)
 #  error CONF_CLOCK_CPU_DIVIDER not defined in conf_clocks.h
-#endif
-
-#if !defined(CONF_CLOCK_LOW_POWER_DIVIDER)
-#  error CONF_CLOCK_LOW_POWER_DIVIDER not defined in conf_clocks.h
 #endif
 
 #if !defined(CONF_CLOCK_BACKUP_DIVIDER)
@@ -107,6 +99,10 @@
 #  error CONF_CLOCK_XOSC_RUN_IN_STANDBY not defined in conf_clocks.h
 #endif
 
+#if !defined(CONF_CLOCK_XOSC_CLOCK_FAILURE_DETECT)
+#  error CONF_CLOCK_XOSC_CLOCK_FAILURE_DETECT not defined in conf_clocks.h
+#endif
+
 #if !defined(CONF_CLOCK_XOSC32K_ENABLE)
 #  error CONF_CLOCK_XOSC32K_ENABLE not defined in conf_clocks.h
 #endif
@@ -133,6 +129,10 @@
 
 #if !defined(CONF_CLOCK_XOSC32K_RUN_IN_STANDBY)
 #  error CONF_CLOCK_XOSC32K_RUN_IN_STANDBY not defined in conf_clocks.h
+#endif
+
+#if !defined(CONF_CLOCK_XOSC32K_CLOCK_FAILURE_DETECT)
+#  error CONF_CLOCK_XOSC32K_CLOCK_FAILURE_DETECT not defined in conf_clocks.h
 #endif
 
 #if !defined(CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT)
