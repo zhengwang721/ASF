@@ -96,7 +96,12 @@ void system_board_init(void);
 #define SW0_PIN                   0
 #define SW0_ACTIVE                0//false
 #define SW0_INACTIVE              !SW0_ACTIVE
-#define SW0_EIC_PIN               
+#define SW0_EIC_PIN               0
+#define SW0_EIC_MUX               0
+#define SW0_EIC_PINMUX            0
+#define SW0_EIC_LINE              0
+/** @} */
+
 /**
  * \name LED #0 definitions
  *
@@ -170,7 +175,16 @@ void system_board_init(void);
 #define EXT1_PIN_SPI_SCK          EXT1_PIN_18
 /** @} */
 
-#define SW0_EIC_MUX               
+/** \name Extension header #1 IRQ/External interrupt definitions
+ *  @{
+ */
+#define EXT1_IRQ_MODULE           EIC
+#define EXT1_IRQ_INPUT            10
+#define EXT1_IRQ_PIN              PIN_PC02A_EIC_EXTINT10
+#define EXT1_IRQ_MUX              MUX_PC02A_EIC_EXTINT10
+#define EXT1_IRQ_PINMUX           PINMUX_PC02A_EIC_EXTINT10
+/** @} */
+          
 /** \name Extension header #2 pin definitions
  *  @{
  */
@@ -211,9 +225,6 @@ void system_board_init(void);
 #define EXT2_PIN_SPI_MOSI         EXT2_PIN_16
 #define EXT2_PIN_SPI_MISO         EXT2_PIN_17
 #define EXT2_PIN_SPI_SCK          EXT2_PIN_18
-/** @} */
-#define SW0_EIC_PINMUX            
-#define SW0_EIC_LINE              //2
 /** @} */
 
 /** \name Extension header #3 pin definitions
