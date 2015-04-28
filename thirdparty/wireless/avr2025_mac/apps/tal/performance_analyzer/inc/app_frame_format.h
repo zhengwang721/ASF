@@ -165,17 +165,17 @@ typedef struct {
  * node's CRC settings
  *
  */
- typedef struct {
- uint8_t status;
- } crc_stat_req_t;
- 
- /**
+typedef struct {
+	uint8_t status;
+} crc_stat_req_t;
+
+/**
  * \brief Remote Test Start Request Structure
  *
  */
- typedef struct {
- uint8_t remote_serial_data[REMOTE_MSG_BUF_SIZE];
- } remote_test_req_t;
+typedef struct {
+	uint8_t remote_serial_data[REMOTE_MSG_BUF_SIZE];
+} remote_test_req_t;
 
 /**
  * \brief CRC status response frame structure to send the peer

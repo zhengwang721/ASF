@@ -137,7 +137,8 @@
  * hence proper reset is not done.TO be reverted back once the related bug is
  * fixed */
 #define RST_PULSE_WIDTH_US                                 (10) /*
-	                                                         * ((RST_PULSE_WIDTH_NS
+	                                                         *
+	                                                         *((RST_PULSE_WIDTH_NS
 	                                                         * + 999) /
 	                                                         * 1000) */
 

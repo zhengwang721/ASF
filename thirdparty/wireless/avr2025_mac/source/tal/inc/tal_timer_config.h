@@ -189,6 +189,25 @@ extern uint8_t TAL_CALIBRATION;
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
 #endif
 #endif
+
+#if (TAL_TYPE == AT86RF215)
+extern uint8_t TAL_T_0;
+extern uint8_t TAL_T_1;
+
+#ifdef ENABLE_FTN_PLL_CALIBRATION
+
+extern uint8_t TAL_T_CALIBRATION_0;
+extern uint8_t TAL_T_CALIBRATION_1;
+
+#endif
+
+#ifdef ENABLE_FTN_PLL_CALIBRATION
+#define NUMBER_OF_TAL_TIMERS        (4)
+#else
+#define NUMBER_OF_TAL_TIMERS        (2)
+#endif
+
+#endif
 /* === PROTOTYPES ========================================================== */
 
 #endif /* TAL_TIMER_CONFIG_H */

@@ -183,7 +183,7 @@ uint8_t tmr_init(void)
 		                                       * with RC compare. */
 
 		.burst    = TC_BURST_NOT_GATED,       /* Burst signal selection.
-		                                       **/
+		                                      **/
 		.clki     = TC_CLOCK_RISING_EDGE,     /* Clock inversion. */
 		.tcclks   = TC_CLOCK_SOURCE_TC2       /* Internal source clock
 		                                       * 3, connected to fPBA /

@@ -63,7 +63,63 @@
 			<require idref="sam.drivers.pio"/>
 			<device-support value="sam4e"/>
 		</module>
+		
+		<module type="meta" id="thirdparty.wireless.common_services.trx_access#5"     caption=" SPI access for external transceivers">
+			<info type="description" value="summary">
+			The TRX Access Layer provides api's for communication between the transceiver and the ASF SPI Drivers and includes the Basic ASF Drivers Required by Wireless Stack.
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<build type="header-file"   value="trx_access.h"/>
+			<build type="c-source"      value="trx_access.c"/>
+			<build type="include-path"  value="."/>
+			<build type="module-config" subtype="required-header-file" value="conf_trx_access.h"/>
+			<build type="module-config" subtype="path" value="module_config"/>
+			<require idref="common.services.delay"/>
+			<require idref="common.services.basic.spi_master"/>
+			<require idref="common.services.ioport"/>
+			<require idref="common.utils"/>
+			<require idref="sam.drivers.gpio"/>
+			<device-support value="sam4l"/>
+		</module>
 	</select-by-device>
+	
+	<select-by-device id="thirdparty.wireless.common_services.trx_access.rf215" caption="Common TRX Access">
+	    <module type="meta" id="thirdparty.wireless.common_services.trx_access.rf215#1"     caption=" SPI access for external transceivers">
+			<info type="description" value="summary">
+			The TRX Access Layer provides api's for communication between the transceiver and the ASF SPI Drivers and includes the Basic ASF Drivers Required by Wireless Stack.
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<build type="header-file"   value="trx_access_2.h"/>
+			<build type="c-source"      value="trx_access_2.c"/>
+			<build type="include-path"  value="."/>
+			<build type="module-config" subtype="required-header-file" value="conf_trx_access.h"/>
+			<build type="module-config" subtype="path" value="module_config"/>
+			<require idref="common.services.delay"/>
+			<require idref="common.services.basic.spi_master"/>
+			<require idref="common.services.ioport"/>
+			<require idref="common.utils"/>
+			<device-support value="sam4s"/>
+		</module>
+		
+		<module type="meta" id="thirdparty.wireless.common_services.trx_access.rf215#2"     caption=" SPI access for external transceivers">
+			<info type="description" value="summary">
+			The TRX Access Layer provides api's for communication between the transceiver and the ASF SPI Drivers and includes the Basic ASF Drivers Required by Wireless Stack.
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<build type="header-file"   value="trx_access_2.h"/>
+			<build type="c-source"      value="trx_access_2.c"/>
+			<build type="include-path"  value="."/>
+			<build type="module-config" subtype="required-header-file" value="conf_trx_access.h"/>
+			<build type="module-config" subtype="path" value="module_config"/>
+			<require idref="common.services.delay"/>
+			<require idref="common.services.basic.spi_master"/>
+			<require idref="common.services.ioport"/>
+			<require idref="common.utils"/>
+			<require idref="sam.drivers.gpio"/>
+			<device-support value="sam4l"/>
+		</module>
+		
+	</select-by-device>	
 
 
 	<device-alias-map name="trx_access_spi_common_support">
@@ -71,7 +127,6 @@
 		<device-support value="atxmega256a3bu"/>
 		<device-support value="atxmega256a3"/>
 		<device-support value="uc3a3_a4"/>
-		<device-support value="sam4l"/>
 		<device-support value="sam4s"/>
 	</device-alias-map>
 	<device-alias-map name="trx_access_spi_sam0_support">
