@@ -303,7 +303,7 @@ struct system_voltage_regulator_config {
 	/** Low power efficiency. */
 	enum system_voltage_regulator_low_power_efficiency low_power_efficiency;
 #if SAML22
-	/** Run in standby in PL0. */
+	/** Run in standby in performance level 0. */
 	bool run_in_standby_pl0;
 #endif
 };

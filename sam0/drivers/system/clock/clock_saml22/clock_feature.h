@@ -496,13 +496,44 @@ enum system_clock_apb_bus {
 };
 
 /**
+ * \brief The prescaler for the clock failure detector.
+ *
+ * The XOSC failure dectect safe clock frequency is the OSC48M frequency divided
+ * by 2^prescaler. The XOSC32K failure dectect safe clock frequency is the OSCULP32K
+ * frequency divided by 2^prescaler.
+ *
+ * \note The XOSC32K failure dectect safe clock only can be divided by one and two.
+ */
+enum system_clock_failure_detect_presc {
+	/** Divide safe clock frequency by 1. */
+	SYSTEM_CFD_PRESCALER_0,
+	/** Divide safe clock frequency by 2. */
+	SYSTEM_CFD_PRESCALER_1,
+	/** Divide safe clock frequency by 4. */
+	SYSTEM_CFD_PRESCALER_2,
+	/** Divide safe clock frequency by 8. */
+	SYSTEM_CFD_PRESCALER_3,
+	/** Divide safe clock frequency by 16. */
+	SYSTEM_CFD_PRESCALER_4,
+	/** Divide safe clock frequency by 32. */
+	SYSTEM_CFD_PRESCALER_5,
+	/** Divide safe clock frequency by 64. */
+	SYSTEM_CFD_PRESCALER_6,
+	/** Divide safe clock frequency by 128. */
+	SYSTEM_CFD_PRESCALER_7,
+};
+
+/**
  * \brief Configuration structure for clock failure detect.
  *
  * Clock failure detect configuration structure.
  */
 struct system_clock_failure_detect {
+	/** Clock failure detect enable. */
 	bool cfd_enable;
-	uint8_t cfd_presc;
+	/** Clock failure detect safe clock prescaler. */
+	enum system_clock_failure_detect_presc cfd_presc;
+	/** Clock failure detect event output enable. */
 	bool cfd_event_out;
 };
 
@@ -637,6 +668,8 @@ struct system_clock_source_dfll_config {
  *   - Don't run in STANDBY sleep mode
  *   - Run only when requested by peripheral (on demand)
  *   - Clock failure detect disabled
+ *   - CFD safe clock frequency is divided by 128 
+ *   - Clock failure detect event output disabled
  *
  * \param[out] config  Configuration structure to fill with default values
  */
@@ -652,13 +685,12 @@ static inline void system_clock_source_xosc_get_config_defaults(
 	config->run_in_standby    = false;
 	config->on_demand         = true;
 	config->clock_failure_detect.cfd_enable    = false;
+	config->clock_failure_detect.cfd_presc     = SYSTEM_CFD_PRESCALER_7;
+	config->clock_failure_detect.cfd_event_out = false;
 }
 
 void system_clock_source_xosc_set_config(
 		struct system_clock_source_xosc_config *const config);
-
-void system_clock_source_xosc_set_failure_detect(
-		struct system_clock_failure_detect *const config);
 
 void system_clock_source_xosc_set_switch_back(void);
 
@@ -687,6 +719,8 @@ void system_clock_source_xosc_set_switch_back(void);
  *   - Run only when requested by peripheral (on demand)
  *   - Don't lock registers after configuration has been written
  *   - Clock failure detect disabled
+ *   - CFD safe clock frequency is not divided
+ *   - Clock failure detect event output disabled
  *
  * \param[out] config  Configuration structure to fill with default values
  */
@@ -704,13 +738,12 @@ static inline void system_clock_source_xosc32k_get_config_defaults(
 	config->on_demand           = true;
 	config->write_once          = false;
 	config->clock_failure_detect.cfd_enable    = false;
+	config->clock_failure_detect.cfd_presc     = SYSTEM_CFD_PRESCALER_0;
+	config->clock_failure_detect.cfd_event_out = false;
 }
 
 void system_clock_source_xosc32k_set_config(
 		struct system_clock_source_xosc32k_config *const config);
-
-void system_clock_source_xosc32k_set_failure_detect(
-		struct system_clock_failure_detect *const config);
 
 void system_clock_source_xosc32k_set_switch_back(void);
 

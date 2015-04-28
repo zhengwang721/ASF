@@ -67,6 +67,9 @@
 #  define CONF_CLOCK_XOSC_ON_DEMAND               true
 #  define CONF_CLOCK_XOSC_RUN_IN_STANDBY          false
 #  define CONF_CLOCK_XOSC_CLOCK_FAILURE_DETECT    false
+#  define CONF_CLOCK_XOSC_CLOCK_FAILURE_PRESC     SYSTEM_CFD_PRESCALER_7
+#  define CONF_CLOCK_XOSC_CLOCK_FAILURE_EVENT_OUT false
+
 
 /* SYSTEM_CLOCK_SOURCE_XOSC32K configuration - External 32KHz crystal/clock oscillator */
 #  define CONF_CLOCK_XOSC32K_ENABLE               false
@@ -77,6 +80,8 @@
 #  define CONF_CLOCK_XOSC32K_ON_DEMAND            true
 #  define CONF_CLOCK_XOSC32K_RUN_IN_STANDBY       false
 #  define CONF_CLOCK_XOSC32K_CLOCK_FAILURE_DETECT false
+#  define CONF_CLOCK_XOSC32K_CLOCK_FAILURE_PRESC  SYSTEM_CFD_PRESCALER_0
+#  define CONF_CLOCK_XOSC32K_CLOCK_FAILURE_EVENT_OUT false
 
 /* SYSTEM_CLOCK_SOURCE_OSCULP32K configuration - Internal Ultra Low Power 32KHz oscillator */
 #  define CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT    true

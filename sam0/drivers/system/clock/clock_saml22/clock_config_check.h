@@ -103,6 +103,14 @@
 #  error CONF_CLOCK_XOSC_CLOCK_FAILURE_DETECT not defined in conf_clocks.h
 #endif
 
+#if !defined(CONF_CLOCK_XOSC_CLOCK_FAILURE_PRESC)
+#  error CONF_CLOCK_XOSC_CLOCK_FAILURE_PRESC not defined in conf_clocks.h
+#endif
+
+#if !defined(CONF_CLOCK_XOSC_CLOCK_FAILURE_EVENT_OUT)
+#  error CONF_CLOCK_XOSC_CLOCK_FAILURE_EVENT_OUT not defined in conf_clocks.h
+#endif
+
 #if !defined(CONF_CLOCK_XOSC32K_ENABLE)
 #  error CONF_CLOCK_XOSC32K_ENABLE not defined in conf_clocks.h
 #endif
@@ -133,6 +141,14 @@
 
 #if !defined(CONF_CLOCK_XOSC32K_CLOCK_FAILURE_DETECT)
 #  error CONF_CLOCK_XOSC32K_CLOCK_FAILURE_DETECT not defined in conf_clocks.h
+#endif
+
+#if !defined(CONF_CLOCK_XOSC32K_CLOCK_FAILURE_PRESC)
+#  error CONF_CLOCK_XOSC32K_CLOCK_FAILURE_PRESC not defined in conf_clocks.h
+#endif
+
+#if !defined(CONF_CLOCK_XOSC32K_CLOCK_FAILURE_EVENT_OUT)
+#  error CONF_CLOCK_XOSC32K_CLOCK_FAILURE_EVENT_OUT not defined in conf_clocks.h
 #endif
 
 #if !defined(CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT)
