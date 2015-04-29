@@ -322,7 +322,7 @@ struct system_voltage_references_config {
 	bool run_in_standby;
 #if SAML22
 	/** Temperature Sensor Selection. */
-	uint8_t temperature_sensor_sel;
+	bool temperature_sensor_sel;
 #endif
 };
 
@@ -442,7 +442,7 @@ static inline void system_voltage_reference_get_config_defaults(
 	config->on_demand      = false;
 	config->run_in_standby = false;
 #if SAML22
-	config->temperature_sensor_sel = 0;
+	config->temperature_sensor_sel = false;
 #endif
 }
 
@@ -789,6 +789,12 @@ static inline enum status_code system_switch_performance_level(
 		return STATUS_OK;
 	}
 
+#if SAML22
+	if (PM->PLCFG.reg & PM_PLCFG_PLDIS) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+#endif
+
 	/* Clear performance level status */
 	PM->INTFLAG.reg = PM_INTFLAG_PLRDY;
 
@@ -801,6 +807,28 @@ static inline enum status_code system_switch_performance_level(
 	}
 	return STATUS_OK;
 }
+
+#if SAML22
+/**
+ * \brief Enable performance level switch.
+ *
+ * Enable performance level switch.
+ */
+static inline void system_performance_level_enable(void)
+{
+	PM->PLCFG.reg &= ~PM_PLCFG_PLDIS;
+}
+
+/**
+ * \brief Disable performance level switch.
+ *
+ * Disable performance level switch.
+ */
+static inline void system_performance_level_disable(void)
+{
+	PM->PLCFG.reg |= PM_PLCFG_PLDIS;
+}
+#endif
 
 /**
  * \brief Get performance level.

@@ -496,31 +496,31 @@ enum system_clock_apb_bus {
 };
 
 /**
- * \brief The prescaler for the clock failure detector.
+ * \brief The division for the clock failure detector.
  *
  * The XOSC failure dectect safe clock frequency is the OSC48M frequency divided
- * by 2^prescaler. The XOSC32K failure dectect safe clock frequency is the OSCULP32K
- * frequency divided by 2^prescaler.
+ * by division ratios. The XOSC32K failure dectect safe clock frequency is the
+ * OSCULP32K frequency divided by division ratios.
  *
  * \note The XOSC32K failure dectect safe clock only can be divided by one and two.
  */
-enum system_clock_failure_detect_presc {
+enum system_clock_failure_detect_div {
 	/** Divide safe clock frequency by 1. */
-	SYSTEM_CFD_PRESCALER_0,
+	SYSTEM_CFD_DIV_1,
 	/** Divide safe clock frequency by 2. */
-	SYSTEM_CFD_PRESCALER_1,
+	SYSTEM_CFD_DIV_2,
 	/** Divide safe clock frequency by 4. */
-	SYSTEM_CFD_PRESCALER_2,
+	SYSTEM_CFD_DIV_4,
 	/** Divide safe clock frequency by 8. */
-	SYSTEM_CFD_PRESCALER_3,
+	SYSTEM_CFD_DIV_8,
 	/** Divide safe clock frequency by 16. */
-	SYSTEM_CFD_PRESCALER_4,
+	SYSTEM_CFD_DIV_16,
 	/** Divide safe clock frequency by 32. */
-	SYSTEM_CFD_PRESCALER_5,
+	SYSTEM_CFD_DIV_32,
 	/** Divide safe clock frequency by 64. */
-	SYSTEM_CFD_PRESCALER_6,
+	SYSTEM_CFD_DIV_64,
 	/** Divide safe clock frequency by 128. */
-	SYSTEM_CFD_PRESCALER_7,
+	SYSTEM_CFD_DIV_128,
 };
 
 /**
@@ -532,7 +532,7 @@ struct system_clock_failure_detect {
 	/** Clock failure detect enable. */
 	bool cfd_enable;
 	/** Clock failure detect safe clock prescaler. */
-	enum system_clock_failure_detect_presc cfd_presc;
+	enum system_clock_failure_detect_div cfd_divider;
 	/** Clock failure detect event output enable. */
 	bool cfd_event_out;
 };
@@ -685,7 +685,7 @@ static inline void system_clock_source_xosc_get_config_defaults(
 	config->run_in_standby    = false;
 	config->on_demand         = true;
 	config->clock_failure_detect.cfd_enable    = false;
-	config->clock_failure_detect.cfd_presc     = SYSTEM_CFD_PRESCALER_7;
+	config->clock_failure_detect.cfd_divider   = SYSTEM_CFD_DIV_128;
 	config->clock_failure_detect.cfd_event_out = false;
 }
 
@@ -738,7 +738,7 @@ static inline void system_clock_source_xosc32k_get_config_defaults(
 	config->on_demand           = true;
 	config->write_once          = false;
 	config->clock_failure_detect.cfd_enable    = false;
-	config->clock_failure_detect.cfd_presc     = SYSTEM_CFD_PRESCALER_0;
+	config->clock_failure_detect.cfd_divider   = SYSTEM_CFD_DIV_1;
 	config->clock_failure_detect.cfd_event_out = false;
 }
 

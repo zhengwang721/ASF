@@ -282,7 +282,7 @@ static void system_clock_source_xosc_set_failure_detect(
 {
 	if (config->cfd_enable) {
 		OSCCTRL->XOSCCTRL.reg |=  OSCCTRL_XOSCCTRL_CFDEN;
-		OSCCTRL->CFDPRESC.reg = config->cfd_presc;
+		OSCCTRL->CFDPRESC.reg = config->cfd_divider;
 		OSCCTRL->EVCTRL.reg = config->cfd_event_out;
 	} else {
 		OSCCTRL->XOSCCTRL.reg &= ~OSCCTRL_XOSCCTRL_CFDEN;
@@ -364,7 +364,7 @@ static void system_clock_source_xosc32k_set_failure_detect(
 {
 	if (config->cfd_enable) {
 		OSC32KCTRL->CFDCTRL.reg |=  OSC32KCTRL_CFDCTRL_CFDEN;
-		OSC32KCTRL->CFDCTRL.bit.CFDPRESC = config->cfd_presc;
+		OSC32KCTRL->CFDCTRL.bit.CFDPRESC = config->cfd_divider;
 		OSC32KCTRL->EVCTRL.reg = OSC32KCTRL_EVCTRL_CFDEO;
 	} else {
 		OSC32KCTRL->CFDCTRL.reg &= ~OSC32KCTRL_CFDCTRL_CFDEN;
@@ -824,7 +824,7 @@ void system_clock_init(void)
 	xosc_conf.on_demand         = CONF_CLOCK_XOSC_ON_DEMAND;
 	xosc_conf.run_in_standby    = CONF_CLOCK_XOSC_RUN_IN_STANDBY;
 	xosc_conf.clock_failure_detect.cfd_enable    = CONF_CLOCK_XOSC_CLOCK_FAILURE_DETECT;
-	xosc_conf.clock_failure_detect.cfd_presc     = CONF_CLOCK_XOSC_CLOCK_FAILURE_PRESC;
+	xosc_conf.clock_failure_detect.cfd_divider   = CONF_CLOCK_XOSC_CLOCK_FAILURE_DIV;
 	xosc_conf.clock_failure_detect.cfd_event_out = CONF_CLOCK_XOSC_CLOCK_FAILURE_EVENT_OUT;
 
 	system_clock_source_xosc_set_config(&xosc_conf);
@@ -844,7 +844,7 @@ void system_clock_init(void)
 	xosc32k_conf.on_demand           = false;
 	xosc32k_conf.run_in_standby      = CONF_CLOCK_XOSC32K_RUN_IN_STANDBY;
 	xosc32k_conf.clock_failure_detect.cfd_enable    = CONF_CLOCK_XOSC32K_CLOCK_FAILURE_DETECT;
-	xosc32k_conf.clock_failure_detect.cfd_presc     = CONF_CLOCK_XOSC32K_CLOCK_FAILURE_PRESC;
+	xosc32k_conf.clock_failure_detect.cfd_divider   = CONF_CLOCK_XOSC32K_CLOCK_FAILURE_DIV;
 	xosc32k_conf.clock_failure_detect.cfd_event_out = CONF_CLOCK_XOSC32K_CLOCK_FAILURE_EVENT_OUT;
 
 	system_clock_source_xosc32k_set_config(&xosc32k_conf);
