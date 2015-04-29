@@ -94,9 +94,14 @@ void system_board_init(void);
 /** \name SW0 definitions
  *  @{ */
 #define SW0_PIN                   0
-#define SW0_ACTIVE                0//false
+#define SW0_ACTIVE                false
 #define SW0_INACTIVE              !SW0_ACTIVE
-#define SW0_EIC_PIN               
+#define SW0_EIC_PIN               PIN_PA02A_EIC_EXTINT2//TODO
+#define SW0_EIC_MUX               MUX_PA02A_EIC_EXTINT2
+#define SW0_EIC_PINMUX            PINMUX_PA02A_EIC_EXTINT2
+#define SW0_EIC_LINE              2
+/** @} */
+
 /**
  * \name LED #0 definitions
  *
@@ -170,7 +175,6 @@ void system_board_init(void);
 #define EXT1_PIN_SPI_SCK          EXT1_PIN_18
 /** @} */
 
-#define SW0_EIC_MUX               
 /** \name Extension header #2 pin definitions
  *  @{
  */
@@ -182,8 +186,8 @@ void system_board_init(void);
 #define EXT2_PIN_8                PIN_PA21
 #define EXT2_PIN_9                PIN_PB06
 #define EXT2_PIN_10               PIN_PB07
-#define EXT2_PIN_11               PIN_PB300//TODO
-#define EXT2_PIN_12               PIN_PB31//no definie TODO
+#define EXT2_PIN_11               PIN_PB30//TODO
+#define EXT2_PIN_12               PIN_PB31//no define TODO
 #define EXT2_PIN_13               PIN_PA23
 #define EXT2_PIN_14               PIN_PA22
 #define EXT2_PIN_15               PIN_PA17
@@ -212,9 +216,6 @@ void system_board_init(void);
 #define EXT2_PIN_SPI_MISO         EXT2_PIN_17
 #define EXT2_PIN_SPI_SCK          EXT2_PIN_18
 /** @} */
-#define SW0_EIC_PINMUX            
-#define SW0_EIC_LINE              //2
-/** @} */
 
 /** \name Extension header #3 pin definitions
  *  @{
@@ -227,7 +228,7 @@ void system_board_init(void);
 #define EXT3_PIN_8                PIN_PB17
 #define EXT3_PIN_9                PIN_PB18
 #define EXT3_PIN_10               PIN_PB19
-#define EXT3_PIN_11               0//TODU
+#define EXT3_PIN_11               0//TODO
 #define EXT3_PIN_12               0
 #define EXT3_PIN_13               PIN_PA15
 #define EXT3_PIN_14               PIN_PA14
