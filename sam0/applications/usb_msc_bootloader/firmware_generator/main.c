@@ -251,7 +251,7 @@ static void generate_crc(void)
 static void console_init(void)
 {
 	struct usart_config usart_conf;
-	struct usart_module cdc_uart_module;
+	static struct usart_module cdc_uart_module;
 
 	usart_get_config_defaults(&usart_conf);
 	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;

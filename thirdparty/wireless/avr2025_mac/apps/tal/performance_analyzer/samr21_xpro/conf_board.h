@@ -48,6 +48,4 @@
 
 #define MCU_SOC_NAME        "ATSAMR21G18A"
 
-
-
 #endif /* CONF_BOARD_H_INCLUDED */
