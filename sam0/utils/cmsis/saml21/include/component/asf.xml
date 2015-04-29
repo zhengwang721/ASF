@@ -33,6 +33,6 @@
 		<build type="header-file" value="usb.h"/>
 		<build type="header-file" value="wdt.h"/>
 		<info type="gui-flag" value="hidden"/>
-		<device-support value="saml21"/>
+		<device-support value="saml21xxxa"/>
 	</module>
 </asf>

@@ -13,6 +13,6 @@
 		<build type="header-file" value="saml21j17a.h"/>
 		<build type="header-file" value="saml21j18a.h"/>
 		<info type="gui-flag" value="hidden"/>
-		<device-support value="saml21"/>
+		<device-support value="saml21xxxa"/>
 	</module>
 </asf>
