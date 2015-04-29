@@ -383,14 +383,22 @@ uint32_t dacc_set_power_save(Dacc *p_dacc,
 		uint32_t ul_sleep_mode, uint32_t ul_fast_wakeup_mode)
 {
 	if (ul_sleep_mode) {
+#if (SAM3S) || (SAM3XA)
 		p_dacc->DACC_MR |= DACC_MR_SLEEP;
+#endif
 	} else {
+#if (SAM3S) || (SAM3XA)
 		p_dacc->DACC_MR &= (~DACC_MR_SLEEP);
+#endif
 	}
 	if (ul_fast_wakeup_mode) {
+#if (SAM3S) || (SAM3XA)
 		p_dacc->DACC_MR |= DACC_MR_FASTWKUP;
+#endif
 	} else {
+#if (SAM3S) || (SAM3XA)
 		p_dacc->DACC_MR &= (~DACC_MR_FASTWKUP);
+#endif
 	}
 	return DACC_RC_OK;
 }
