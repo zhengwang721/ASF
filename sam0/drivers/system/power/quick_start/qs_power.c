@@ -84,11 +84,12 @@ static void config_clock_output_and_extwake_pin(void)
 	system_pinmux_pin_set_config(CONF_GCLK0_OUTPUT_PIN, &pin_conf);
 	pin_conf.mux_position = CONF_GCLK1_OUTPUT_PINMUX;
 	system_pinmux_pin_set_config(CONF_GCLK1_OUTPUT_PIN, &pin_conf);
-
+#if SAML21
 	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
 	pin_conf.input_pull = SYSTEM_PINMUX_PIN_PULL_UP;
 	pin_conf.mux_position = CONF_EXT_WAKEUP_PINMUX;
 	system_pinmux_pin_set_config(CONF_EXT_WAKEUP_PIN, &pin_conf);
+#endif
 }
 //! [pin_mux]
 
@@ -136,7 +137,10 @@ int main(void)
 	/* Check if the RESET is caused by external wakeup pin */
 	if (system_get_reset_cause() == SYSTEM_RESET_CAUSE_BACKUP
 		&& system_get_backup_exit_source() == SYSTEM_RESET_BACKKUP_EXIT_EXTWAKE
-		&& (system_get_pin_wakeup_cause() & (1 << CONF_EXT_WAKEUP_PIN))){
+#if SAML21
+		&& (system_get_pin_wakeup_cause() & (1 << CONF_EXT_WAKEUP_PIN))
+#endif
+		) {
 		system_init();
 		delay_init();
 		config_clock_output_and_extwake_pin();
@@ -187,14 +191,14 @@ int main(void)
 		use led ON/OFF as an indication */
 	led_toggle_indication(2);
 
-
+#if SAML21
 	/* Set external wakeup pin polarity */
 	system_set_pin_wakeup_polarity_low(1<<CONF_EXT_WAKEUP_PIN);
 
 	/* Set external wakeup detector */
 	system_enable_pin_wakeup(1<<CONF_EXT_WAKEUP_PIN);
 	system_set_pin_wakeup_debounce_counter(SYSTEM_WAKEUP_DEBOUNCE_2CK32);
-
+#endif
 	/* Enter BACKUP mode */
 	system_set_sleepmode(SYSTEM_SLEEPMODE_BACKUP);
 	system_sleep();
