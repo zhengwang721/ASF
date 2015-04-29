@@ -175,6 +175,16 @@ void system_board_init(void);
 #define EXT1_PIN_SPI_SCK          EXT1_PIN_18
 /** @} */
 
+/** \name Extension header #1 IRQ/External interrupt definitions
+ *  @{
+ */
+#define EXT1_IRQ_MODULE           EIC
+#define EXT1_IRQ_INPUT            10
+#define EXT1_IRQ_PIN              PIN_PC02A_EIC_EXTINT10
+#define EXT1_IRQ_MUX              MUX_PC02A_EIC_EXTINT10
+#define EXT1_IRQ_PINMUX           PINMUX_PC02A_EIC_EXTINT10
+/** @} */
+          
 /** \name Extension header #2 pin definitions
  *  @{
  */
