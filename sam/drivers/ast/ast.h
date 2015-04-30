@@ -50,14 +50,14 @@
 /**
  * \defgroup asfdoc_sam_drivers_ast_group SAM4L Asynchronous Timer (AST) Driver
  *
- * This driver for Atmel&reg; | SMART SAM4L devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Asynchronous Timer functionality.
  *
  * The Asynchronous Timer can generate periodic interrupts and peripheral events
  * from output from the prescaler, as well as alarm interrupts and peripheral
  * events, which can trigger at any counter value.
  *
- * The devices from the following series can use this module:
+ * Devices from the following series can use this module:
  * - Atmel | SMART SAM4L
  *
  * The outline of this documentation is as follows:

@@ -61,6 +61,9 @@
  * such as bus or RAM bandwidth. This offloads the CPU and system resources
  * compared to a traditional interrupt-based software driven system.
  *
+ * Devices from the following series can use this module:
+ * - Atmel | SMART SAM4L
+ *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_events_prerequisites
  *  - \ref asfdoc_sam_drivers_events_module_overview

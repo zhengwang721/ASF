@@ -50,14 +50,14 @@
 /**
  * \defgroup asfdoc_sam_drivers_acifc_group SAM4L Analog Comparator Interface Controller (ACIFC) Driver
  *
- * This driver for Atmel&reg; | SMART SAM4L devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Analog Comparator Interface Controller functionality.
  *
  * The Analog Comparator Interface controls eight Analog Comparators (AC) with
  * identical behavior. Each Analog Comparator compares two voltages, yielding an
  * output that depends on the result of the comparison.
  *
- * The devices from the following series can use this module:
+ * Devices from the following series can use this module:
  * - Atmel | SMART SAM4L
  *
  * The outline of this documentation is as follows:

@@ -50,10 +50,10 @@
 /**
  * \defgroup asfdoc_sam_drivers_eic_group  SAM4L External Interrupt Controller (EIC) Driver
  *
- * This document describes the Atmel&reg; | SMART  SAM4 driver providing access to the
+ * This document describes the Atmel&reg; | SMART SAM driver providing access to the
  * advanced functions of the on-chip EIC controller interrupt and event support.
  *
- * The devices from the following series can use this module:
+ * Devices from the following series can use this module:
  * - Atmel | SMART SAM4L
  *
  * The outline of this documentation is as follows:

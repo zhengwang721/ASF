@@ -60,7 +60,7 @@
  * measurement, event counting, interval measurement, pulse generation,
  * delay timing, and pulse width modulation.
  *
- * The devices from the following series can use this module:
+ * Devices from the following series can use this module:
  * - Atmel | SMART SAM4L
  *
  * The outline of this documentation is as follows:

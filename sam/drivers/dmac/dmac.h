@@ -55,7 +55,7 @@
  * over one or more AMBA buses. This is a driver for the configuration,
  * enabling, disabling, and use of the DMAC peripheral.
  *
- * The devices from the following series can use this module:
+ * Devices from the following series can use this module:
  * - Atmel | SMART SAM3A
  * - Atmel | SMART SAM3U
  * - Atmel | SMART SAM3X

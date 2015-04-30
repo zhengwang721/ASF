@@ -60,7 +60,7 @@
  * - Performs transfers to/from APB communication serial peripherals
  * - Supports half-duplex and full-duplex peripherals
  *
- * The devices from the following series can use this module:
+ * Devices from the following series can use this module:
  * - Atmel | SMART SAM3A
  * - Atmel | SMART SAM3N
  * - Atmel | SMART SAM3S
