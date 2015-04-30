@@ -3,7 +3,7 @@
  *
  * \brief Component description for TRNG
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,9 +39,6 @@
  *
  * \asf_license_stop
  *
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef _SAML21_TRNG_COMPONENT_
@@ -135,10 +132,10 @@ typedef union {
 
 /* -------- TRNG_INTFLAG : (TRNG Offset: 0x0A) (R/W  8) Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint8_t  DATARDY:1;        /*!< bit:      0  Data Ready Interrupt Flag          */
-    uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
+    __I uint8_t  DATARDY:1;        /*!< bit:      0  Data Ready Interrupt Flag          */
+    __I uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } TRNG_INTFLAG_Type;
@@ -166,7 +163,7 @@ typedef union {
 
 #define TRNG_DATA_DATA_Pos          0            /**< \brief (TRNG_DATA) Output Data */
 #define TRNG_DATA_DATA_Msk          (0xFFFFFFFFul << TRNG_DATA_DATA_Pos)
-#define TRNG_DATA_DATA(value)       ((TRNG_DATA_DATA_Msk & ((value) << TRNG_DATA_DATA_Pos)))
+#define TRNG_DATA_DATA(value)       (TRNG_DATA_DATA_Msk & ((value) << TRNG_DATA_DATA_Pos))
 #define TRNG_DATA_MASK              0xFFFFFFFFul /**< \brief (TRNG_DATA) MASK Register */
 
 /** \brief TRNG hardware registers */
