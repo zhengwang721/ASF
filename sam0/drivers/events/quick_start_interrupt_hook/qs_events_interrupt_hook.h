@@ -46,11 +46,11 @@
  *
  * In this use case, the EVENT module is configured for:
  *  \li Synchronous event path with rising edge detection
- *  \li TC4 as event generator on the allocated event channel
+ *  \li TC4 as event generator on the allocated event channel(TC0 is used for SAM L22)
  *  \li One event channel user attached
  *  \li An event interrupt hook is used to execute some code when an event is detected
  *
- * In this usecase TC4 is used as event generator, generating events on overflow.
+ * In this usecase TC is used as event generator, generating events on overflow.
  * One user attached, counting events on the channel. To be able to execute
  * some code when an event is detected, an interrupt hook is used. The interrupt
  * hook will also count the number of events detected and toggle a led on the board
@@ -82,6 +82,9 @@
  * - SAM L21 Xplained Pro.
  *   \snippet saml21_xplained_pro/conf_qs_events_interrupt_hook.h definition_event
  *   \snippet saml21_xplained_pro/conf_qs_events_interrupt_hook.h definition_tc
+ * - SAM L22 Xplained Pro.
+ *   \snippet saml22_xplained_pro/conf_qs_events_interrupt_hook.h definition_event
+ *   \snippet saml22_xplained_pro/conf_qs_events_interrupt_hook.h definition_tc
  *
  * Copy-paste the following setup code to your user application:
  * \snippet qs_events_interrupt_hook.c setup
