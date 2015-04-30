@@ -165,7 +165,7 @@ uint32_t dacc_set_transfer_mode(Dacc *p_dacc, uint32_t ul_mode)
 	if (ul_mode) {
 #if (SAM3N) || (SAM4L) || (SAM4N)
 		p_dacc->DACC_MR |= DACC_MR_WORD;
-#elif (SAM3S) || (SAM3XA)
+#elif (SAM4S) || (SAM4E)
 		p_dacc->DACC_MR |= DACC_MR_ONE;
 		p_dacc->DACC_MR |= DACC_MR_WORD_WORD;
 #else
@@ -174,7 +174,7 @@ uint32_t dacc_set_transfer_mode(Dacc *p_dacc, uint32_t ul_mode)
 	} else {
 #if (SAM3N) || (SAM4L) || (SAM4N)
 		p_dacc->DACC_MR &= (~DACC_MR_WORD);
-#elif (SAM3S) || (SAM3XA)
+#elif (SAM4S) || (SAM4E)
 		p_dacc->DACC_MR |= DACC_MR_ONE;
 		p_dacc->DACC_MR &= (~DACC_MR_WORD_WORD);
 #else
