@@ -84,6 +84,7 @@
 			<build type="c-source" value="rtc_sam_l/rtc_count.c"/>
 
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 		</module>
 	</select-by-device>
 	<select-by-device id="sam0.drivers.rtc.calendar" caption="RTC - Real Time Counter">

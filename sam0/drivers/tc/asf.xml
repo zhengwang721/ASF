@@ -64,6 +64,7 @@
 			<build type="c-source" value="tc_sam_l/tc.c"/>
 
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 		</module>
 	</select-by-device>
 	<module  type="meta" caption="TC - Timer Counter" id="sam0.drivers.tc.appnote">
