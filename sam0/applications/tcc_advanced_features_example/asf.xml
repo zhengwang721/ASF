@@ -1,0 +1,30 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.applications.tcc_advanced_features_example" caption="SAM D21 TCC Advanced Features Example">
+		<info type="description" value="summary">
+		Example application for SAM D21 TCC module demonstrating TCC advanced features like RAMP2C mode, Fault Blanking Prescaler, DMA Operation with circular buffer in RAMP2 and RAMP2A modes.
+		</info>
+
+		<info type="keyword" value="technology">
+			<keyword value="Timers"/>
+		</info>
+
+		<info type="gui-flag" value="move-to-root"/>
+		<build type="c-source" value="main.c"/>
+		<build type="c-source" value="ramp2_dma.c"/>
+		<build type="c-source" value="ramp2c.c"/>
+		<build type="include-path" value="."/>
+		<require idref="sam0.drivers.ac"/>				
+		<require idref="sam0.drivers.tcc"/>
+		<require idref="sam0.drivers.port"/>
+		<require idref="sam0.drivers.dma"/>
+		<require idref="sam0.drivers.system"/>		
+		<require idref="sam0.drivers.events"/>
+		<require idref="sam0.drivers.extint"/>		
+		<require idref="common.boards"/>				
+		<require idref="common.utils"/>
+		<require idref="common2.boards"/>				
+		<require idref="common2.services"/>
+
+		<device-support value="samd21exxl"/>
+	</module>
+</asf>
