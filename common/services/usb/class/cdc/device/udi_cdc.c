@@ -346,6 +346,7 @@ bool udi_cdc_data_enable(void)
 	udi_cdc_rx_trans_ongoing[port] = false;
 	udi_cdc_rx_buf_sel[port] = 0;
 	udi_cdc_rx_buf_nb[port][0] = 0;
+	udi_cdc_rx_buf_nb[port][1] = 0;
 	udi_cdc_rx_pos[port] = 0;
 	if (!udi_cdc_rx_start(port)) {
 		return false;
