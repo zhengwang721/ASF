@@ -49,7 +49,7 @@
 
 /**
  * \defgroup asfdoc_sam_drivers_pdc_group SAM3A/3N/3S/3U/3X/4E/4N/4S/G Peripheral DMA Controller (PDC) Driver
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the 
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the
  * configuration and management of the the Peripheral DMA Controller (PDC) module.
  *
  * The PDC transfers data between on-chip serial peripherals and the on and/or

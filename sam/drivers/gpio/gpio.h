@@ -53,7 +53,7 @@
  * This is a driver for advanced GPIO functions of the on-chip GPIO controller:
  * interrupt and event support.
  *
- * The devices from the following series can use this module:
+ * Devices from the following series can use this module:
  * - Atmel | SMART SAM4L
  *
  * The outline of this documentation is as follows:

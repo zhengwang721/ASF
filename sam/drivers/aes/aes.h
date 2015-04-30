@@ -54,7 +54,7 @@
  * \defgroup asfdoc_sam_drivers_aes_group SAM4C/4E Advanced Encryption Standard (AES) Driver
  *
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for 
- * the configuration and management of the device's Advanced Encryption 
+ * the configuration and management of the device's Advanced Encryption
  * Standard functionality.
  *
  * The Advanced Encryption Standard module supports all five confidentiality
@@ -66,7 +66,7 @@
  * - Cipher Feedback (CFB)
  * - Counter (CTR)
  *
-  *
+ *
  * Devices from the following series can use this module:
  * - Atmel | SMART SAM4C
  * - Atmel | SMART SAM4E

@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam_drivers_acc_group SAM3S/4E/4S Analog Comparator Controller (ACC) Driver
  *
- * This driver for Atmel&reg; | SMART SAM3S, SAM4E and SAM4S devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Analog Comparator Controller functionality.
  *
  * The Analog Comparator compares two voltages, and the result of this comparison
@@ -58,7 +58,7 @@
  * or a low-power option as well as selecting the hysteresis level, edge detection,
  * and polarity.
  *
- * The devices from the following series can use this module:
+ * Devices from the following series can use this module:
  * - Atmel | SMART SAM3S
  * - Atmel | SMART SAM4E
  * - Atmel | SMART SAM4S
