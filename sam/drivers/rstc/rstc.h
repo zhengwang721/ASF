@@ -48,7 +48,7 @@
 #define RSTC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_rstc_group SAM4 Reset Controller (RSTC)
+ * \defgroup asfdoc_sam_drivers_rstc_group SAM3/4C/4CM/4CP/4E/4N/4S/G Reset Controller (RSTC) Driver
  * This driver for SAM devices provides an interface for the configuration
  * and management of the device's Reset Controller functionality.
  *
@@ -59,6 +59,16 @@
  * The following peripherals are used by this module:
  *
  * - RSTC (Reset Controller)
+ *
+  * The devices from the following series can use this module:
+ * - Atmel | SMART SAM3
+ * - Atmel | SMART SAM4C
+ * - Atmel | SMART SAM4CM
+ * - Atmel | SMART SAM4CP
+ * - Atmel | SMART SAM4E
+ * - Atmel | SMART SAM4N
+ * - Atmel | SMART SAM4S
+ * - Atmel | SMART SAM G
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_rstc_prerequisites

@@ -47,13 +47,16 @@
 #define GPIO_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_gpio_group SAM4 GPIO - General-Purpose Input/Output (GPIO)
+ * \defgroup asfdoc_sam_drivers_gpio_group SAM4L GPIO - General-Purpose Input/Output (GPIO) Driver
  * 
  *
  * This is a driver for advanced GPIO functions of the on-chip GPIO controller:
  * interrupt and event support.
  *
-* The outline of this documentation is as follows:
+ * The devices from the following series can use this module:
+ * - Atmel | SMART SAM4L
+ *
+ * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_gpiox_prerequisites
  *  - \ref asfdoc_sam_drivers_gpiox_module_overview
  *  - \ref asfdoc_sam_drivers_gpiox_special_considerations
