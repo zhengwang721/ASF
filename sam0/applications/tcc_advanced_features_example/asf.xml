@@ -13,17 +13,16 @@
 		<build type="c-source" value="ramp2_dma.c"/>
 		<build type="c-source" value="ramp2c.c"/>
 		<build type="include-path" value="."/>
+	
 		<require idref="sam0.drivers.ac"/>				
 		<require idref="sam0.drivers.tcc"/>
 		<require idref="sam0.drivers.port"/>
 		<require idref="sam0.drivers.dma"/>
 		<require idref="sam0.drivers.system"/>		
 		<require idref="sam0.drivers.events"/>
-		<require idref="sam0.drivers.extint"/>		
-		<require idref="common.boards"/>				
-		<require idref="common.utils"/>
-		<require idref="common2.boards"/>				
-		<require idref="common2.services"/>
+		<require idref="sam0.drivers.extint"/>				
+		<require idref="common.utils"/>				
+		<require idref="common2.services.delay"/>				
 
 		<device-support value="samd21exxl"/>
 	</module>

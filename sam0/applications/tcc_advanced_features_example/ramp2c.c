@@ -77,7 +77,8 @@ static void configure_ac(void)
 	struct ac_config config_ac;
 	
 	ac_get_config_defaults(&config_ac);
-	config_ac.source_generator = GCLK_GENERATOR_1;
+	config_ac.ana_source_generator = GCLK_GENERATOR_1;
+	config_ac.dig_source_generator = GCLK_GENERATOR_1;
 	
 	/* Initialize and enable the Analog Comparator with the user settings */
 	ac_init(&ac_instance, AC1, &config_ac);
