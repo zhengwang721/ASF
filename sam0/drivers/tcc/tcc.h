@@ -114,7 +114,12 @@
  * \image html overview.svg "Overview of the TCC Module"
  *
  * \subsection asfdoc_sam0_tcc_module_overview_features Driver Feature Macro Definition
+ * \ref asfdoc_sam0_tcc_feature_table "The table below" shows some specific features
+ * of the TCC Module.
+ *
+ * \anchor asfdoc_sam0_tcc_feature_table
  * <table>
+ *   <caption>TCC Module Specific Features</caption>
  *  <tr>
  *    <th>Driver Feature Macro</th>
  *    <th>Supported devices</th>
@@ -124,6 +129,7 @@
  *    <td>SAML21</td>
  *  </tr>
  * </table>
+ *
  * \note The specific features are only available in the driver when the
  * selected device supports those features.
  *
