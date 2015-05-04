@@ -81,6 +81,8 @@
  *   \snippet quick_start/samd11_xplained_pro/conf_quick_start.h definition_pwm
  * - SAM L21 Xplained Pro.
  *   \snippet quick_start/saml21_xplained_pro/conf_quick_start.h definition_pwm
+ * - SAM L22 Xplained Pro.
+ *   \snippet quick_start/saml22_xplained_pro/conf_quick_start.h definition_pwm
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_basic.c module_inst
