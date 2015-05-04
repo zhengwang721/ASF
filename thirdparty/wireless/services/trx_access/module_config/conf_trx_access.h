@@ -48,9 +48,9 @@
 #warning \
 	"Using default values. Edit this conf_trx_access.h file to modify define value according to the current board."
 #warning \
-    "Enable CONF_BOARD_AT86RFX Macro in conf_board.h for spi init routine in case of Atmel Board."
-	
-#ifndef AT86RFX_SPI_BAUDRATE	 
+	"Enable CONF_BOARD_AT86RFX Macro in conf_board.h for spi init routine in case of Atmel Board."
+
+#ifndef AT86RFX_SPI_BAUDRATE
 #define AT86RFX_SPI_BAUDRATE         (4000000)
 #endif
 #if (UC3)
@@ -58,7 +58,7 @@
 
 /* ! \name SPI Configuration for AT86RFX transceiver in UC3 */
 /* ! @{ */
-#ifndef AT86RFX_SPI	
+#ifndef AT86RFX_SPI
 #define AT86RFX_SPI                  (&AVR32_SPI0)
 #define AT86RFX_SPI_NPCS             0
 #define AT86RFX_SPI_SCK_PIN          AVR32_SPI0_SCK_0_0_PIN
@@ -158,39 +158,34 @@
 #define AT86RFX_SPI_MISO             PIN_PA08
 #define AT86RFX_SPI_SCK              PIN_PA09
 
+void at86rfx_isr(void);
+
 #define AT86RFX_INTC_INIT()         ioport_set_pin_dir(AT86RFX_IRQ_PIN,	\
 		IOPORT_DIR_INPUT); \
 	ioport_set_pin_sense_mode(AT86RFX_IRQ_PIN, IOPORT_SENSE_RISING); \
-	arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IERS \
-		= arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN); \
-	arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)->GPIO_IMR0S \
-		= arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN); \
-	NVIC_EnableIRQ(GPIO_11_IRQn)
+	gpio_set_pin_callback(AT86RFX_IRQ_PIN, at86rfx_isr, 1);
 
-#define AT86RFX_ISR()               ISR(GPIO_11_Handler)
+#define AT86RFX_ISR()               void at86rfx_isr(void)
 
 /** Enables the transceiver main interrupt. */
-#define ENABLE_TRX_IRQ()            arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)-> \
-	GPIO_IERS = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN)
+#define ENABLE_TRX_IRQ()            gpio_enable_pin_interrupt(AT86RFX_IRQ_PIN)
 
 /** Disables the transceiver main interrupt. */
-#define DISABLE_TRX_IRQ()           arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)-> \
-	GPIO_IERC = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN)
+#define DISABLE_TRX_IRQ()           gpio_disable_pin_interrupt(AT86RFX_IRQ_PIN)
 
 /** Clears the transceiver main interrupt. */
-#define CLEAR_TRX_IRQ()             arch_ioport_pin_to_base(AT86RFX_IRQ_PIN)-> \
-	GPIO_IFRC = arch_ioport_pin_to_mask(AT86RFX_IRQ_PIN)
+#define CLEAR_TRX_IRQ()             gpio_clear_pin_interrupt_flag( \
+		AT86RFX_IRQ_PIN)
 
 /*
  * This macro saves the trx interrupt status and disables the trx interrupt.
  */
-#define ENTER_TRX_REGION()         NVIC_DisableIRQ(GPIO_11_IRQn)
+#define ENTER_TRX_REGION()          gpio_disable_pin_interrupt(AT86RFX_IRQ_PIN);
 
 /*
  *  This macro restores the transceiver interrupt status
  */
-#define LEAVE_TRX_REGION()         NVIC_EnableIRQ(GPIO_11_IRQn)
-
+#define LEAVE_TRX_REGION()         gpio_enable_pin_interrupt(AT86RFX_IRQ_PIN)
 
 #endif
 
@@ -241,7 +236,6 @@
  *  This macro restores the transceiver interrupt status
  */
 #define LEAVE_TRX_REGION()         pio_enable_pin_interrupt(AT86RFX_IRQ_PIN)
-
 
 #endif
 #endif

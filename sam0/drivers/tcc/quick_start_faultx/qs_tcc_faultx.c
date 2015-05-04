@@ -145,7 +145,6 @@ static void eic_callback_to_clear_halt(void)
 {
 	if (port_pin_get_input_level(CONF_FAULT_EIC_PIN)) {
 		tcc_clear_status(&tcc_instance,
-				TCC_STATUS_NON_RECOVERABLE_FAULT_PRESENT(0) |
 				TCC_STATUS_NON_RECOVERABLE_FAULT_OCCUR(0));
 	}
 }

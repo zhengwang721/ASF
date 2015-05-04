@@ -62,8 +62,8 @@ static inline void ble_enable_pin_init(void)
 	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
 	port_pin_set_config(PIN_PB07, &pin_conf);
 	port_pin_set_output_level(PIN_PB07, true);
-	port_pin_set_config(PIN_PB06, &pin_conf);
-	port_pin_set_output_level(PIN_PB06, true);
+	port_pin_set_config(PIN_PB05, &pin_conf);
+	port_pin_set_output_level(PIN_PB05, true);
 }
 
 static inline void ble_enable_pin_set_low(void)
