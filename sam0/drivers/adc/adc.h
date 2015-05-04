@@ -64,7 +64,7 @@
  *
  * The following devices can use this module:
  * \if DEVICE_SAML21_SUPPORT
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  * \else
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
@@ -329,7 +329,7 @@
  * conversion is completed, the next conversion will start at the next positive
  * input channel and so on, until all requested pins to scan have been sampled
  * and converted.
- * SAM L21 has automatic sequences feature instead of pin scan mode. In automatic
+ * SAM L21/L22 has automatic sequences feature instead of pin scan mode. In automatic
  * sequence mode, all of 32 positives inputs can be included in a sequence. The
  * sequence starts from the lowest input, and go to the next enabled input
  * automatically.
