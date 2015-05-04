@@ -432,7 +432,7 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	extint_chan_config.gpio_pin            = CONF_EIC_PIN;
 	extint_chan_config.gpio_pin_mux        = CONF_EIC_MUX;
 	extint_chan_config.gpio_pin_pull       = EXTINT_PULL_UP;
-#if (!SAML21) || (!SAML22)
+#if (!SAML21) && (!SAML22)
 	extint_chan_config.wake_if_sleeping    = false;
 #endif
 	extint_chan_config.filter_input_signal = false;
