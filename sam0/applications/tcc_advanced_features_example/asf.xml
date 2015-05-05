@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="sam0.applications.tcc_advanced_features_example" caption="SAM D21 TCC Advanced Features Example">
 		<info type="description" value="summary">
-		Example application for SAM D21 TCC module demonstrating TCC advanced features like RAMP2C mode, Fault Blanking Prescaler, DMA Operation with circular buffer in RAMP2 and RAMP2A modes.
+		Example application for ATSAMD21E16L TCC module demonstrating TCC advanced features like RAMP2C mode, Fault Blanking Prescaler, DMA Operation with circular buffer in RAMP2 and RAMP2A modes.
 		</info>
 
 		<info type="keyword" value="technology">
