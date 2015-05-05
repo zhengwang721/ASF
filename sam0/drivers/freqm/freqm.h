@@ -1,0 +1,445 @@
+/**
+ * \file
+ *
+ * \brief SAM Frequency Meter (FREQM) Driver
+ *
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+
+#ifndef FREQM_H_INCLUDED
+#define FREQM_H_INCLUDED
+
+/**
+ * \defgroup asfdoc_sam0_freqm_group SAM Frequency Meter (FREQM) Driver
+ *
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
+ * and management of the device's Frequency Meter functionality.
+ *
+ * The following driver API modes are covered by this manual:
+ * - Polled APIs
+ * \if FREQM_CALLBACK_MODE
+ * - Callback APIs
+ * \endif
+ *
+ * The following peripherals are used by this module:
+ *  - FREQM (Frequency Meter)
+ *
+ * The following devices can use this module:
+ *  - Atmel | SMART SAM L22
+ *
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_sam0_freqm_prerequisites
+ *  - \ref asfdoc_sam0_freqm_module_overview
+ *  - \ref asfdoc_sam0_freqm_special_considerations
+ *  - \ref asfdoc_sam0_freqm_extra_info
+ *  - \ref asfdoc_sam0_freqm_examples
+ *  - \ref asfdoc_sam0_freqm_api_overview
+ *
+ *
+ * \section asfdoc_sam0_freqm_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_sam0_freqm_module_overview Module Overview
+ *
+ * This driver provides an interface for the FREQM functions on the device.
+ *
+ * As soon as the FREQM is enabled, the module accurately measure the frequency
+ * of a clock by comparing it to a known reference clock.
+ *
+ *
+ * \section asfdoc_sam0_freqm_special_considerations Special Considerations
+ *
+ * There are no special considerations for this module.
+ *
+ *
+ * \section asfdoc_sam0_freqm_extra_info Extra Information
+ *
+ * For extra information see \ref asfdoc_sam0_freqm_extra. This includes:
+ *  - \ref asfdoc_sam0_freqm_extra_acronyms
+ *  - \ref asfdoc_sam0_freqm_extra_dependencies
+ *  - \ref asfdoc_sam0_freqm_extra_errata
+ *  - \ref asfdoc_sam0_freqm_extra_history
+ *
+ *
+ * \section asfdoc_sam0_freqm_examples Examples
+ *
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_sam0_freqm_exqsg.
+ *
+ *
+ * \section asfdoc_sam0_freqm_api_overview API Overview
+ * @{
+ */
+
+#include <compiler.h>
+#include <system.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#if FREQM_CALLBACK_MODE == true
+/* Forward declaration of struct */
+struct freqm_module;
+
+extern struct freqm_module *_freqm_instance;
+
+/** Type definition for a FREQM module callback function. */
+typedef void (*freqm_callback_t)(void);
+
+/** Enum for possible callback types for the FREQM module. */
+enum freqm_callback {
+	/** Callback for measurement done. */
+	FREQM_CALLBACK_DONE = 0,
+	/** Number of available callbacks. */
+#if !defined(__DOXYGEN__)
+	FREQM_CALLBACK_N,
+#endif
+};
+#endif
+
+/**
+ * \brief FREQM software device instance structure.
+ *
+ * FREQM software instance structure, used to retain software state information
+ * of an associated hardware module instance.
+ *
+ * \note The fields of this structure should not be altered by the user
+ *       application; they are reserved for module-internal use only.
+ */
+struct freqm_module {
+#if !defined(__DOXYGEN__)
+	/** Hardware module pointer of the associated FREQM peripheral. */
+	Freqm *hw;
+#  if FREQM_CALLBACK_MODE == true
+	/** Array of callbacks. */
+	freqm_callback_t callback[FREQM_CALLBACK_N];
+#  endif
+#endif
+};
+
+/** FREQM measurement is ongoing or not.
+ */
+#define FREQM_MEASURE_BUSY    (1UL << 0)
+
+/** FREQM sticky count value overflow.
+ */
+#define FREQM_CNT_OVERFLOW    (1UL << 1)
+
+
+/**
+ * \brief FREQM module configuration structure.
+ *
+ *  Configuration structure for a Frequency Meter.
+ */
+struct freqm_config {
+	/**. */
+	uint16_t ref_num;
+};
+
+/**
+ * \name Driver Initialization and Configuration
+ * @{
+ */
+enum status_code freqm_init(
+		struct freqm_module *const module_inst,
+		Freqm *const hw,
+		struct freqm_config *const config);
+
+/**
+ * \brief Initializes all members of a FREQM configuration structure
+ *  to safe defaults.
+ *
+ *  Initializes all members of a given Frequency Meter configuration
+ *  structure to safe known default values. This function should be called on
+ *  all new instances of these configuration structures before being modified
+ *  by the user application.
+ *
+ *  The default configuration is as follows:
+ *   \li Frequency Meter Reference Clock Cycles 127
+ *
+ *  \param[out] config  Configuration structure to initialize to default values
+ */
+static inline void freqm_get_config_defaults(
+		struct freqm_config *const config)
+{
+	/* Sanity check arguments */
+	Assert(config);
+
+	/* Default configuration values */
+	config->ref_num = 127;
+}
+
+/**
+ * \brief Enables a FREQM that was previously configured.
+ *
+ * Enables Frequency Meter that was previously configured via a
+ * call to \ref freqm_init().
+ *
+ * \param[in] module_inst  Software instance for the Frequency Meter peripheral
+ */
+static inline void freqm_enable(
+		struct freqm_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	Freqm *const freqm_module = module_inst->hw;
+
+	/* Enable FREQM */
+	freqm_module->CTRLA.reg |= FREQM_CTRLA_ENABLE;
+}
+
+/**
+ * \brief Disables a FREQM that was previously enabled.
+ *
+ * Disables Frequency Meter that was previously started via a call
+ * to \ref freqm_enable().
+ *
+ * \param[in] module_inst  Software instance for the Frequency Meter peripheral
+ */
+static inline void freqm_disable(
+		struct freqm_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	Freqm *const freqm_module = module_inst->hw;
+
+	/* Disable FREQM */
+	freqm_module->CTRLA.reg &= ~FREQM_CTRLA_ENABLE;
+}
+
+/**
+ * \brief Start a manual measurement process.
+ *
+ * \param[in] module Pointer to the FREQM software instance struct
+ */
+static inline void freqm_start_measure(struct freqm_module *const module)
+{
+	Assert(module);
+	Assert(module->hw);
+
+	module->hw->CTRLB.reg |= FREQM_CTRLB_START;
+}
+
+/**
+ * \brief Retrieves the current module status.
+ *
+ * Retrieves the status of the module, giving overall state information.
+ *
+ * \param[in] module Pointer to the FREQM software instance struct
+ *
+ * \retval FREQM_MEASURE_BUSY
+ * \retval FREQM_CNT_OVERFLOW
+ */
+static inline uint32_t freqm_get_status(struct freqm_module *const module)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	uint32_t int_flags = module->hw->STATUS.reg;
+	uint32_t status_flags = 0;
+
+	if (int_flags & FREQM_STATUS_BUSY) {
+		status_flags |= FREQM_MEASURE_BUSY;
+	}
+
+	if (int_flags & FREQM_STATUS_OVF) {
+		status_flags |= FREQM_CNT_OVERFLOW;
+	}
+
+	return status_flags;
+}
+
+/**
+ * \brief Clears a module status flag.
+ *
+ * Clears the given status flag of the module.
+ *
+ * \param[in] module Pointer to the FREQM software instance struct
+ * \param[in] status_flags Bitmask flags to clear
+ */
+static inline void freqm_clear_status(
+		struct freqm_module *const module,
+		const uint32_t status_flags)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	uint32_t int_flags = 0;
+
+	if (status_flags & FREQM_CNT_OVERFLOW) {
+		int_flags |= FREQM_STATUS_OVF;
+	}
+
+	/* Clear interrupt flag */
+	module->hw->STATUS.reg = int_flags;
+}
+
+
+/**
+ * \name Read FREQM Result
+ * @{
+ */
+
+/**
+ * \brief Read the measurement data result
+ *
+ * Reads the measurement data result.
+ *
+ * \param[in]  module_inst  Pointer to the FREQM software instance struct
+ * \param[out] result       Pointer to store the result value in
+ *
+ * \return Status of the FREQM read request.
+ * \retval STATUS_OK           The result was retrieved successfully
+ * \retval STATUS_BUSY         Measurement result was not ready
+ */
+static inline enum status_code freqm_get_result_value(
+		struct freqm_module *const module_inst,
+		uint32_t *result)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(result);
+
+	Freqm *const freqm_hw = module_inst->hw;
+
+	if (!(freqm_hw->INTFLAG.reg & FREQM_INTFLAG_DONE)) {
+		/* Result not ready */
+		return STATUS_BUSY;
+	}
+
+	/* Get measurement output data (it will clear data done flag) */
+	*result = freqm_hw->VALUE.reg;
+
+	return STATUS_OK;
+}
+/** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
+/** @} */
+
+/**
+ * \page asfdoc_sam0_freqm_extra Extra Information for FREQM Driver
+ *
+ * \section asfdoc_sam0_freqm_extra_acronyms Acronyms
+ * Below is a table listing the acronyms used in this module, along with their
+ * intended meanings.
+ *
+ * <table>
+ *	<tr>
+ *		<th>Acronym</th>
+ *		<th>Description</th>
+ *	</tr>
+ *  <tr>
+ *		<td>FREQM</td>
+ *		<td>Frequency Meter</td>
+ *	</tr>
+ * </table>
+ *
+ *
+ * \section asfdoc_sam0_freqm_extra_dependencies Dependencies
+ * This driver has no dependencies.
+ *
+ *
+ * \section asfdoc_sam0_freqm_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_sam0_freqm_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
+ *
+ * <table>
+ *	<tr>
+ *		<th>Changelog</th>
+ *	</tr>
+  *	<tr>
+ *		<td>Initial Release</td>
+ *	</tr>
+ * </table>
+ */
+
+/**
+ * \page asfdoc_sam0_freqm_exqsg Examples for FREQM Driver
+ *
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_sam0_freqm_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
+ *
+ *  - \subpage asfdoc_sam0_freqm_basic_use_case
+ * \if FREQM_CALLBACK_MODE
+ *  - \subpage asfdoc_sam0_freqm_basic_use_case_callback
+ * \endif
+ *
+ * \page asfdoc_sam0_freqm_document_revision_history Document Revision History
+ *
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>A</td>
+ *		<td>05/2015</td>
+ *		<td>Initial release</td>
+ *	</tr>
+ * </table>
+ */
+
+#endif /* FREQM_H_INCLUDED */
+
