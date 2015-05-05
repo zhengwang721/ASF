@@ -70,7 +70,7 @@
  *  - Atmel | SMART SAM D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_tcc_prerequisites
@@ -610,10 +610,10 @@
  * used.
  *
  * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM TCC Feature List
- * For SAM D21/R21/L21, the TCC features are:
+ * For SAM D21/R21/L21/L22, the TCC features are:
  * \anchor asfdoc_sam0_tcc_features_d21
  * <table>
- *   <caption>TCC module features for SAM D21/R21/L21</caption>
+ *   <caption>TCC module features for SAM D21/R21/L21/L22</caption>
  *   <tr>
  *     <th>TCC#</th>
  *     <th>Match/Capture channels</th>
@@ -667,7 +667,7 @@
  * <table>
  *  <tr>
  *    <td>FEATURE_TCC_GENERATE_DMA_TRIGGER</td>
- *    <td>SAML21</td>
+ *    <td>SAML21/L22</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -757,7 +757,7 @@
  * Define port features set according to different device family
  * @{
 */
-#if (SAML21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAML22) || defined(__DOXYGEN__)
 /** Generate DMA triggers*/
 #  define FEATURE_TCC_GENERATE_DMA_TRIGGER
 #endif
@@ -1993,9 +1993,14 @@ static inline void tcc_dma_trigger_command(
 	while (tcc_module->SYNCBUSY.bit.CTRLB) {
 			/* Wait for sync */
 	}
-
+	
+#if (SAML22)
+	/* Write command to execute */
+	tcc_module->CTRLBSET.reg = TCC_CTRLBSET_CMD_DMAOS;
+#else
 	/* Write command to execute */
 	tcc_module->CTRLBSET.reg = TCC_CTRLBSET_CMD_DMATRG;
+#endif
 }
 /** @} */
 #endif
