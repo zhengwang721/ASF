@@ -113,26 +113,6 @@
  * \anchor asfdoc_sam0_tcc_block_diagram
  * \image html overview.svg "Overview of the TCC Module"
  *
- * \subsection asfdoc_sam0_tcc_module_overview_features Driver Feature Macro Definition
- * \ref asfdoc_sam0_tcc_feature_table "The table below" shows some specific features
- * of the TCC Module.
- *
- * \anchor asfdoc_sam0_tcc_feature_table
- * <table>
- *   <caption>TCC Module Specific Features</caption>
- *  <tr>
- *    <th>Driver Feature Macro</th>
- *    <th>Supported devices</th>
- *  </tr>
- *  <tr>
- *    <td>FEATURE_TCC_GENERATE_DMA_TRIGGER</td>
- *    <td>SAML21</td>
- *  </tr>
- * </table>
- *
- * \note The specific features are only available in the driver when the
- * selected device supports those features.
- *
  * \subsection asfdoc_sam0_tcc_module_overview_parts Functional Description
  * The TCC module consists of following sections:
  * - Base Counter
@@ -622,6 +602,26 @@
  * perform internal actions with the help of the Event System.
  *
  * \section asfdoc_sam0_tcc_special_considerations Special Considerations
+ *
+ * \subsection asfdoc_sam0_tcc_special_considerations_specific_features Driver Feature Macro Definition
+ * \ref asfdoc_sam0_tcc_feature_table "The table below" shows some specific features
+ * of the TCC Module.
+ *
+ * \anchor asfdoc_sam0_tcc_feature_table
+ * <table>
+ *   <caption>TCC Module Specific Features</caption>
+ *  <tr>
+ *    <th>Driver Feature Macro</th>
+ *    <th>Supported devices</th>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_TCC_GENERATE_DMA_TRIGGER</td>
+ *    <td>SAML21</td>
+ *  </tr>
+ * </table>
+ *
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
  *
  * \subsection asfdoc_sam0_tcc_special_considerations_tcc_feature Module Features
  *
