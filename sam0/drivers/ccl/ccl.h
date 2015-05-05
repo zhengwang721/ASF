@@ -264,7 +264,8 @@ void ccl_init(struct ccl_config *const config);
  *  by the user application.
  *
  *  The default configuration is as follows:
- *   \li Configurable Custom Logic will not be stopped in standby sleep mode
+ *   \li Configurable Custom Logic will be stopped in standby sleep mode
+ *   \li Generator 0 is the default GCLK generator
  *
  *  \param[out] config  Configuration structure to initialize to default values
  */
@@ -302,8 +303,7 @@ static inline void ccl_module_reset(void)
 /**
  * \brief Enables CCL module.
  *
- * Enable the peripheral. Each CCL must also be enabled individually
- * by the Enable bit in the corresponding CCL Control register.
+ * Enable the peripheral.
  *
  */
 static inline void ccl_module_enable(void)
@@ -326,7 +326,7 @@ static inline void ccl_module_disable(void)
 /** @} */
 
 /**
- * \name Enable and Disable CCL Module
+ * \name Enable and Disable GCLK_CCL run in standby
  * @{
  */
  
@@ -364,6 +364,8 @@ static inline void ccl_gclk_runstdby_disable(void)
  *
  *  Writes a given sequential selection configuration to the hardware module.
  *
+ *  \note This register only be written when the CCL module is disabled.
+ *
  *  \param[in] seq_selection       Enum for the sequential selection configuration
  *  \param[in] number     SEQ unit number to config
  */
@@ -378,6 +380,15 @@ void ccl_seq_config(const enum ccl_seq_id number,
  *  structure to safe defaults. This function should be called on all new
  *  instances of these configuration structures before being modified by the
  *  user application.
+ *
+ *  The default configuration is as follows:
+ *   \li The value of truth logic is 0x00
+ *   \li LUT event output is disabled
+ *   \li LUT incoming event is disabled
+ *   \li LUT incoming event is inverted
+ *   \li The input IN[2:0] source is masked
+ *   \li The edge detector is disabled
+ *   \li The LUT output filter is disabled
  *
  *  \param[out] config  LUT configuration structure to initialize to
  *                       default values
@@ -405,6 +416,8 @@ void ccl_lut_set_config(const enum ccl_lut_id number,
  *
  *  Enables an LUT that was previously configured via a call to
  *  the set configuration function.
+ *
+ * \note This register only be written when the CCL module is disabled.
  *
  *  \param[in] number      LUT number to enable
  */
