@@ -864,7 +864,7 @@ typedef struct
  * \note More optimized if only used with values unknown at compile time.
  */
 #if (defined __GNUC__)
-#  define swap32(u32) ((uint32_t)__REV((uint32_t)(u32)))
+#  define swap32(u32) ((uint32_t)__builtin_bswap32((uint32_t)(u32)))
 #else
 #  define swap32(u32) Swap32(u32)
 #endif
