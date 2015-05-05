@@ -79,7 +79,7 @@
  *
  *
  * \section asfdoc_sam_drivers_gpiox_special_considerations Special Considerations
- * None.
+ * There are no special considerations for this module.
  *
  *
  * \section asfdoc_sam_drivers_gpiox_extra_info Extra Information
