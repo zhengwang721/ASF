@@ -100,8 +100,10 @@ uint32_t dacc_set_timing(Dacc *p_dacc, uint32_t ul_startup,
 uint32_t dacc_set_channel_selection(Dacc *p_dacc, uint32_t ul_channel);
 void dacc_enable_flexible_selection(Dacc *p_dacc);
 
+#if (SAM3S) || (SAM3XA)
 uint32_t dacc_set_power_save(Dacc *p_dacc, uint32_t ul_sleep_mode,
 		uint32_t ul_fast_wakeup_mode);
+#endif
 uint32_t dacc_set_timing(Dacc *p_dacc, uint32_t ul_refresh, uint32_t ul_maxs,
 		uint32_t ul_startup);
 uint32_t dacc_enable_channel(Dacc *p_dacc, uint32_t ul_channel);
