@@ -473,6 +473,9 @@
 #  define FEATURE_TC_READ_SYNC
 /** IO pin edge capture*/
 #  define FEATURE_TC_IO_CAPTURE
+#endif
+
+#if (SAML21XXXB) || defined(__DOXYGEN__)
 /** Generate DMA triggers*/
 #  define FEATURE_TC_GENERATE_DMA_TRIGGER
 #endif
@@ -1448,7 +1451,7 @@ static inline void tc_dma_trigger_command(
 	}
 
 	/* Write command to execute */
-	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_DMATRG_Val);
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_DMAOS_Val);
 }
 /** @} */
 #endif
