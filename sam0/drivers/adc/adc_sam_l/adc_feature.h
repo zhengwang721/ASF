@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM L21 ADC functionality
+ * \brief SAM Peripheral Analog-to-Digital Converter Driver
  *
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -54,6 +54,13 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/*@{*/
+#if (SAML22) || defined(__DOXYGEN__)
+/** Output Driver Strength Selection feature support. */
+#  define FEATURE_ADC_SUPPORT_MASTER_SLAVE
+#endif
+/*@}*/
 
 #if ADC_CALLBACK_MODE == true
 #  include <system_interrupt.h>
@@ -394,6 +401,18 @@ enum adc_oversampling_and_decimation {
 	ADC_OVERSAMPLING_AND_DECIMATION_4BIT
 };
 
+#ifdef FEATURE_ADC_SUPPORT_MASTER_SLAVE
+/**
+ * Enum for the trigger selection in dual mode.
+ */
+enum adc_dual_mode_trigger_selection {
+	/** Start event or software trigger will start a conversion on both ADCs. */
+	ADC_DUAL_MODE_BOTH         = ADC_CTRLC_DUALSEL_BOTH,
+	/** START event or software trigger will alternately start a conversion on ADC0 and ADC1. */
+	ADC_DUAL_MODE_INTERLEAVE   = ADC_CTRLC_DUALSEL_INTERLEAVE,
+};
+#endif
+
 /**
  * \brief Window monitor configuration structure.
  *
@@ -657,6 +676,31 @@ static inline void adc_get_sequence_status(
 }
 
 /** @} */
+
+#ifdef FEATURE_ADC_SUPPORT_MASTER_SLAVE
+/**
+ * \brief Set ADC master and slave mode.
+ *
+ * Enable ADC module Master-Slave Operation and select dual mode trigger.
+ *
+ * \param[in] master_inst  Pointer to the master ADC software instance struct
+ * \param[in] slave_inst   Pointer to the slave ADC software instance struct
+ * \param[in] dualsel      Dual mode trigger selection
+ *                         
+ */
+static inline void adc_set_master_slave_mode(
+		struct adc_module *const master_inst,
+		struct adc_module *const slave_inst,
+		enum adc_dual_mode_trigger_selection dualsel)
+{
+	/* Sanity check arguments */
+	Assert(master_inst);
+	Assert(slave_inst);
+	
+	slave_inst->hw->CTRLA.reg |= ADC_CTRLA_SLAVEEN;
+	master_inst->hw->CTRLC.reg |= dualsel;		
+};
+#endif
 
 #ifdef __cplusplus
 }
