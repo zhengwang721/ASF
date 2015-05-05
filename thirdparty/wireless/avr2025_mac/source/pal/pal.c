@@ -2,7 +2,7 @@
  * @file pal.c
  *
  * @brief Performs interface functionalities between the TAL layer and ASF
- *drivers
+ * drivers
  * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start

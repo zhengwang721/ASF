@@ -159,7 +159,8 @@ void gdp_get_attributes_response_confirm(nwk_enum_t nwk_status,
 		uint8_t PairingRef);
 bool gdp_heartbeat_request(uint8_t PairingRef);
 
-/* void gdp_get_attribute(uint8_t attribute_id,uint8_t *length, uint8_t *value); */
+/* void gdp_get_attribute(uint8_t attribute_id,uint8_t *length, uint8_t *value);
+ **/
 void gdp_heartbeat_confirm(nwk_enum_t Status, uint8_t PairingRef);
 void gdp_heartbeat_indication(uint8_t PairingRef);
 void gdp_generic_response_indication(nwk_enum_t Status, uint8_t PairingRef,

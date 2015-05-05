@@ -297,14 +297,12 @@ static AppStatus_t appProcessDataReq(AppCommandDataReq_t *req)
 	if (req->options & NWK_OPT_ENABLE_SECURITY) {
 		size -= NWK_SECURITY_MIC_SIZE;
 	}
-
 #endif
 
 #ifdef NWK_ENABLE_MULTICAST
 	if (req->options & NWK_OPT_MULTICAST) {
 		size -= NWK_MULTICAST_HEADER_SIZE;
 	}
-
 #endif
 
 	if (req->size > size) {

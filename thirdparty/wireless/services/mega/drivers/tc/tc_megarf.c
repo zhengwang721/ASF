@@ -50,7 +50,7 @@
 #include "status_codes.h"
 
 /* ! \internal Local storage of Timer Counter TCC1  interrupt callback function
- **/
+**/
 static tc_callback_t tc_tccr1_ovf_callback;
 static tc_callback_t tc_tccr1_compa_callback;
 static tc_callback_t tc_tccr1_compb_callback;
