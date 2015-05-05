@@ -93,21 +93,9 @@
 		<device-support value="samd11dm"/>
 	</board>
 
-	<board id="board.user_board.saml21e" caption="User Board template">
+	<board id="board.user_board.saml21" caption="User Board template">
 		<require idref="common2.boards.user_board.common"/>
 		<require idref="sam0.utils.linker_scripts"/>
-		<device-support value="saml21e"/>
-	</board>
-
-	<board id="board.user_board.saml21g" caption="User Board template">
-		<require idref="common2.boards.user_board.common"/>
-		<require idref="sam0.utils.linker_scripts"/>
-		<device-support value="saml21g"/>
-	</board>
-
-	<board id="board.user_board.saml21j" caption="User Board template">
-		<require idref="common2.boards.user_board.common"/>
-		<require idref="sam0.utils.linker_scripts"/>
-		<device-support value="saml21j"/>
+		<device-support value="saml21"/>
 	</board>
 </asf>

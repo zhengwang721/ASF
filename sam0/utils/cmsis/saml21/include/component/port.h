@@ -3,7 +3,7 @@
  *
  * \brief Component description for PORT
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,9 +40,6 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #ifndef _SAML21_PORT_COMPONENT_
 #define _SAML21_PORT_COMPONENT_
@@ -54,7 +51,7 @@
 /*@{*/
 
 #define PORT_U2210
-#define REV_PORT                    0x201
+#define REV_PORT                    0x200
 
 /* -------- PORT_DIR : (PORT Offset: 0x00) (R/W 32) GROUP Data Direction -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -170,7 +167,7 @@ typedef union {
 
 #define PORT_CTRL_SAMPLING_Pos      0            /**< \brief (PORT_CTRL) Input Sampling Mode */
 #define PORT_CTRL_SAMPLING_Msk      (0xFFFFFFFFul << PORT_CTRL_SAMPLING_Pos)
-#define PORT_CTRL_SAMPLING(value)   ((PORT_CTRL_SAMPLING_Msk & ((value) << PORT_CTRL_SAMPLING_Pos)))
+#define PORT_CTRL_SAMPLING(value)   (PORT_CTRL_SAMPLING_Msk & ((value) << PORT_CTRL_SAMPLING_Pos))
 #define PORT_CTRL_MASK              0xFFFFFFFFul /**< \brief (PORT_CTRL) MASK Register */
 
 /* -------- PORT_WRCONFIG : (PORT Offset: 0x28) ( /W 32) GROUP Write Configuration -------- */
@@ -199,7 +196,7 @@ typedef union {
 
 #define PORT_WRCONFIG_PINMASK_Pos   0            /**< \brief (PORT_WRCONFIG) Pin Mask for Multiple Pin Configuration */
 #define PORT_WRCONFIG_PINMASK_Msk   (0xFFFFul << PORT_WRCONFIG_PINMASK_Pos)
-#define PORT_WRCONFIG_PINMASK(value) ((PORT_WRCONFIG_PINMASK_Msk & ((value) << PORT_WRCONFIG_PINMASK_Pos)))
+#define PORT_WRCONFIG_PINMASK(value) (PORT_WRCONFIG_PINMASK_Msk & ((value) << PORT_WRCONFIG_PINMASK_Pos))
 #define PORT_WRCONFIG_PMUXEN_Pos    16           /**< \brief (PORT_WRCONFIG) Select Peripheral Multiplexer */
 #define PORT_WRCONFIG_PMUXEN        (0x1ul << PORT_WRCONFIG_PMUXEN_Pos)
 #define PORT_WRCONFIG_INEN_Pos      17           /**< \brief (PORT_WRCONFIG) Input Enable */
@@ -210,7 +207,7 @@ typedef union {
 #define PORT_WRCONFIG_DRVSTR        (0x1ul << PORT_WRCONFIG_DRVSTR_Pos)
 #define PORT_WRCONFIG_PMUX_Pos      24           /**< \brief (PORT_WRCONFIG) Peripheral Multiplexing Template */
 #define PORT_WRCONFIG_PMUX_Msk      (0xFul << PORT_WRCONFIG_PMUX_Pos)
-#define PORT_WRCONFIG_PMUX(value)   ((PORT_WRCONFIG_PMUX_Msk & ((value) << PORT_WRCONFIG_PMUX_Pos)))
+#define PORT_WRCONFIG_PMUX(value)   (PORT_WRCONFIG_PMUX_Msk & ((value) << PORT_WRCONFIG_PMUX_Pos))
 #define PORT_WRCONFIG_WRPMUX_Pos    28           /**< \brief (PORT_WRCONFIG) Write PMUX Registers */
 #define PORT_WRCONFIG_WRPMUX        (0x1ul << PORT_WRCONFIG_WRPMUX_Pos)
 #define PORT_WRCONFIG_WRPINCFG_Pos  30           /**< \brief (PORT_WRCONFIG) Write PINCFG Registers */
@@ -245,34 +242,34 @@ typedef union {
 
 #define PORT_EVCTRL_PID0_Pos        0            /**< \brief (PORT_EVCTRL) Port Event Pin Identifier 0 */
 #define PORT_EVCTRL_PID0_Msk        (0x1Ful << PORT_EVCTRL_PID0_Pos)
-#define PORT_EVCTRL_PID0(value)     ((PORT_EVCTRL_PID0_Msk & ((value) << PORT_EVCTRL_PID0_Pos)))
+#define PORT_EVCTRL_PID0(value)     (PORT_EVCTRL_PID0_Msk & ((value) << PORT_EVCTRL_PID0_Pos))
 #define PORT_EVCTRL_EVACT0_Pos      5            /**< \brief (PORT_EVCTRL) Port Event Action 0 */
 #define PORT_EVCTRL_EVACT0_Msk      (0x3ul << PORT_EVCTRL_EVACT0_Pos)
-#define PORT_EVCTRL_EVACT0(value)   ((PORT_EVCTRL_EVACT0_Msk & ((value) << PORT_EVCTRL_EVACT0_Pos)))
+#define PORT_EVCTRL_EVACT0(value)   (PORT_EVCTRL_EVACT0_Msk & ((value) << PORT_EVCTRL_EVACT0_Pos))
 #define PORT_EVCTRL_PORTEI0_Pos     7            /**< \brief (PORT_EVCTRL) Port Event Enable Input 0 */
 #define PORT_EVCTRL_PORTEI0         (0x1ul << PORT_EVCTRL_PORTEI0_Pos)
 #define PORT_EVCTRL_PID1_Pos        8            /**< \brief (PORT_EVCTRL) Port Event Pin Identifier 1 */
 #define PORT_EVCTRL_PID1_Msk        (0x1Ful << PORT_EVCTRL_PID1_Pos)
-#define PORT_EVCTRL_PID1(value)     ((PORT_EVCTRL_PID1_Msk & ((value) << PORT_EVCTRL_PID1_Pos)))
+#define PORT_EVCTRL_PID1(value)     (PORT_EVCTRL_PID1_Msk & ((value) << PORT_EVCTRL_PID1_Pos))
 #define PORT_EVCTRL_EVACT1_Pos      13           /**< \brief (PORT_EVCTRL) Port Event Action 1 */
 #define PORT_EVCTRL_EVACT1_Msk      (0x3ul << PORT_EVCTRL_EVACT1_Pos)
-#define PORT_EVCTRL_EVACT1(value)   ((PORT_EVCTRL_EVACT1_Msk & ((value) << PORT_EVCTRL_EVACT1_Pos)))
+#define PORT_EVCTRL_EVACT1(value)   (PORT_EVCTRL_EVACT1_Msk & ((value) << PORT_EVCTRL_EVACT1_Pos))
 #define PORT_EVCTRL_PORTEI1_Pos     15           /**< \brief (PORT_EVCTRL) Port Event Enable Input 1 */
 #define PORT_EVCTRL_PORTEI1         (0x1ul << PORT_EVCTRL_PORTEI1_Pos)
 #define PORT_EVCTRL_PID2_Pos        16           /**< \brief (PORT_EVCTRL) Port Event Pin Identifier 2 */
 #define PORT_EVCTRL_PID2_Msk        (0x1Ful << PORT_EVCTRL_PID2_Pos)
-#define PORT_EVCTRL_PID2(value)     ((PORT_EVCTRL_PID2_Msk & ((value) << PORT_EVCTRL_PID2_Pos)))
+#define PORT_EVCTRL_PID2(value)     (PORT_EVCTRL_PID2_Msk & ((value) << PORT_EVCTRL_PID2_Pos))
 #define PORT_EVCTRL_EVACT2_Pos      21           /**< \brief (PORT_EVCTRL) Port Event Action 2 */
 #define PORT_EVCTRL_EVACT2_Msk      (0x3ul << PORT_EVCTRL_EVACT2_Pos)
-#define PORT_EVCTRL_EVACT2(value)   ((PORT_EVCTRL_EVACT2_Msk & ((value) << PORT_EVCTRL_EVACT2_Pos)))
+#define PORT_EVCTRL_EVACT2(value)   (PORT_EVCTRL_EVACT2_Msk & ((value) << PORT_EVCTRL_EVACT2_Pos))
 #define PORT_EVCTRL_PORTEI2_Pos     23           /**< \brief (PORT_EVCTRL) Port Event Enable Input 2 */
 #define PORT_EVCTRL_PORTEI2         (0x1ul << PORT_EVCTRL_PORTEI2_Pos)
 #define PORT_EVCTRL_PID3_Pos        24           /**< \brief (PORT_EVCTRL) Port Event Pin Identifier 3 */
 #define PORT_EVCTRL_PID3_Msk        (0x1Ful << PORT_EVCTRL_PID3_Pos)
-#define PORT_EVCTRL_PID3(value)     ((PORT_EVCTRL_PID3_Msk & ((value) << PORT_EVCTRL_PID3_Pos)))
+#define PORT_EVCTRL_PID3(value)     (PORT_EVCTRL_PID3_Msk & ((value) << PORT_EVCTRL_PID3_Pos))
 #define PORT_EVCTRL_EVACT3_Pos      29           /**< \brief (PORT_EVCTRL) Port Event Action 3 */
 #define PORT_EVCTRL_EVACT3_Msk      (0x3ul << PORT_EVCTRL_EVACT3_Pos)
-#define PORT_EVCTRL_EVACT3(value)   ((PORT_EVCTRL_EVACT3_Msk & ((value) << PORT_EVCTRL_EVACT3_Pos)))
+#define PORT_EVCTRL_EVACT3(value)   (PORT_EVCTRL_EVACT3_Msk & ((value) << PORT_EVCTRL_EVACT3_Pos))
 #define PORT_EVCTRL_PORTEI3_Pos     31           /**< \brief (PORT_EVCTRL) Port Event Enable Input 3 */
 #define PORT_EVCTRL_PORTEI3         (0x1ul << PORT_EVCTRL_PORTEI3_Pos)
 #define PORT_EVCTRL_MASK            0xFFFFFFFFul /**< \brief (PORT_EVCTRL) MASK Register */
@@ -293,10 +290,10 @@ typedef union {
 
 #define PORT_PMUX_PMUXE_Pos         0            /**< \brief (PORT_PMUX) Peripheral Multiplexing for Even-Numbered Pin */
 #define PORT_PMUX_PMUXE_Msk         (0xFul << PORT_PMUX_PMUXE_Pos)
-#define PORT_PMUX_PMUXE(value)      ((PORT_PMUX_PMUXE_Msk & ((value) << PORT_PMUX_PMUXE_Pos)))
+#define PORT_PMUX_PMUXE(value)      (PORT_PMUX_PMUXE_Msk & ((value) << PORT_PMUX_PMUXE_Pos))
 #define PORT_PMUX_PMUXO_Pos         4            /**< \brief (PORT_PMUX) Peripheral Multiplexing for Odd-Numbered Pin */
 #define PORT_PMUX_PMUXO_Msk         (0xFul << PORT_PMUX_PMUXO_Pos)
-#define PORT_PMUX_PMUXO(value)      ((PORT_PMUX_PMUXO_Msk & ((value) << PORT_PMUX_PMUXO_Pos)))
+#define PORT_PMUX_PMUXO(value)      (PORT_PMUX_PMUXO_Msk & ((value) << PORT_PMUX_PMUXO_Pos))
 #define PORT_PMUX_MASK              0xFFul       /**< \brief (PORT_PMUX) MASK Register */
 
 /* -------- PORT_PINCFG : (PORT Offset: 0x40) (R/W  8) GROUP Pin Configuration n -------- */
