@@ -1060,6 +1060,7 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
 #define FLASH_EXTERN(x) extern const x
 #define PGM_READ_BYTE(x) *(x)
 #define PGM_READ_WORD(x) *(x)
+#define PGM_READ_DWORD(x) *(x)
 #define MEMCPY_ENDIAN memcpy
 #define PGM_READ_BLOCK(dst, src, len) memcpy((dst), (src), (len))
 

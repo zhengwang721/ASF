@@ -51,27 +51,30 @@
  * \section preface Preface
  * This is the reference manual for the WSN Demo Application Application
  * The WSNDemo application implements a typical wireless sensor network
- *scenario,
+ * scenario,
  * in which one central node collects the data from a network of sensors and
- *passes this data over a serial connection for further processing.
+ * passes this data over a serial connection for further processing.
  * In the case of the WSNDemo this processing is performed by the WSNMonitor PC
- *application. The BitCloud&reg; Quick Start Guide  provides a detailed description
- *of the WSNDemo application scenario, and instructions on how to use
- *WSNMonitor.
- *  However since BitCloud is a ZigBee&reg; PRO stack, there are a few differences
- *in the protocol:
+ * application. The BitCloud&reg; Quick Start Guide  provides a detailed
+ *description
+ * of the WSNDemo application scenario, and instructions on how to use
+ * WSNMonitor.
+ *  However since BitCloud is a ZigBee&reg; PRO stack, there are a few
+ *differences
+ * in the protocol:
  * • Device types (Coordinator, Router and End Device) are simulated on the
- *application level; there is no such separation in Lightweight Mesh on the
- *stack level
+ * application level; there is no such separation in Lightweight Mesh on the
+ * stack level
  * • The value of the extended address field is set equal to the value of the
- *short address field
+ * short address field
  * • For all frames, the LQI and RSSI fields are filled in by the coordinator
- *with the values of LQI and RSSI from the received frame. This means that nodes
- *that are not connected to the coordinator directly will have the same values
- *as the last node on the route to the coordinator
+ * with the values of LQI and RSSI from the received frame. This means that
+ *nodes
+ * that are not connected to the coordinator directly will have the same values
+ * as the last node on the route to the coordinator
  * • Sensor data values are generated randomly on all platforms
  * • Sending data to the nodes on the network is not implemented and not
- *supported in this demo application
+ * supported in this demo application
  */
 
 #include <stdlib.h>
@@ -492,7 +495,6 @@ void wsndemo_init(void)
 #if APP_COORDINATOR
 	sio2host_init();
 #endif
-	
 }
 
 /**
