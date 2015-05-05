@@ -212,21 +212,27 @@ void tal_task(void)
 			trx_bit_write(SR_RX_SAFE_MODE,
 					RX_SAFE_MODE_DISABLE);         /*
 			                                                *
+			                                                *
 			                                                *Disable
 			                                                * buffer
+			                                                *
 			                                                *
 			                                                *protection
 			                                                * mode
 			                                                **/
 			pal_timer_delay(2); /* Allow pin change to get effective
-			                     **/
+			                    **/
 			trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_ENABLE); /*
+			                                                      *
 			                                                      *
 			                                                      *Enable
 			                                                      *
+			                                                      *
 			                                                      *buffer
 			                                                      *
+			                                                      *
 			                                                      *protection
+			                                                      *
 			                                                      *
 			                                                      *mode
 			                                                      **/

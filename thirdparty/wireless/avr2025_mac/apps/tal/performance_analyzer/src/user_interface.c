@@ -186,7 +186,7 @@ bool app_debounce_button(void)
 			key_cnt++;
 		}
 	} else if (!(button_pressed()) &&
-			(key_cnt == COUNT_FOR_VALID_KEY_PRESS)){ 
+			(key_cnt == COUNT_FOR_VALID_KEY_PRESS)) {
 		/* Button released */
 		ret = 1;
 		key_cnt = 0;
@@ -291,7 +291,6 @@ void app_led_event(led_event_t ev)
 		LED_Off(TX_LED);
 		LED_Off(RX_LED);
 		break;
-		
 	}
 #endif
 }

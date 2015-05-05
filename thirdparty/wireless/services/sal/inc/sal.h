@@ -111,7 +111,7 @@
 #define SR_AES_MODE   0x03, 0x70, 4
 
 /** Access parameters for sub-register AES_REQUEST in register @ref RG_AES_CTRL
- **/
+**/
 #define SR_AES_REQUEST   0x03, 0x80, 7
 
 /** Base address for Transceiver AES address space **/

@@ -1421,10 +1421,10 @@ uint32_t tcc_get_status(
 	}
 	/* Recoverable fault inputs */
 	if (status_flags & TCC_STATUS_FAULTAIN) {
-		status |= TCC_STATUS_NON_RECOVERABLE_FAULT_PRESENT(0);
+		status |= TCC_STATUS_RECOVERABLE_FAULT_PRESENT(0);
 	}
 	if (status_flags & TCC_STATUS_FAULTBIN) {
-		status |= TCC_STATUS_NON_RECOVERABLE_FAULT_PRESENT(1);
+		status |= TCC_STATUS_RECOVERABLE_FAULT_PRESENT(1);
 	}
 
 	/* Check for TCC capture overflow */

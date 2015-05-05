@@ -100,9 +100,9 @@ static int8_t temperature;
  *
  * This table gives the correspondance between the ADC code and the temperature.
  * Each elements of the table corresponds to an ADC code value.
- * The index in the table give the corresponding temperature (in癈) with
+ * The index in the table give the corresponding temperature (in°C) with
  * the following formula : Tempeature=index-5.
- * table[O] corresponds to -5癈 temperature code
+ * table[O] corresponds to -5°C temperature code
  * The following table gives the ADC code for signed single ended mode
  * with internal VCC/1.6 reference.
  */

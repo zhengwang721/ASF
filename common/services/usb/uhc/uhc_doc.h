@@ -3,7 +3,7 @@
  *
  * \brief Interface of the USB Host Controller (UHC)
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -173,11 +173,11 @@ void uhc_resume(void);
  * \brief Suspends a USB line through LPM feature(SAM D21).
  *
  * \param[in] b_remotewakeup Authorize the remote wakeup features, if true.
- * \param[in] besl Best effort service latency value.
+ * \param[in] hird Host Initiated Resume Duration.
  *
  * \return False if the LPM is not supported by USB Device.
  */
-bool uhc_suspend_lpm(bool b_remotewakeup, uint8_t besl);
+bool uhc_suspend_lpm(bool b_remotewakeup, uint8_t hird);
 
 /**@}*/
 
@@ -362,7 +362,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * Common prerequisites for all USB hosts.
  *
  * This module is based on USB host stack full interrupt driven and supporting
- * \ref sleepmgr_group "sleepmgr". For AVR庐 and Atmel庐 | SMART SAM3/4 devices the
+ * \ref sleepmgr_group "sleepmgr". For AVR&reg; and Atmel&reg; | SMART SAM3/4 devices the
  * \ref clk_group "clock services" is supported. For SAMD21 devices the
  * \ref asfdoc_sam0_system_clock_group "clock driver" is supported.
  *

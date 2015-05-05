@@ -189,7 +189,7 @@ typedef enum
 	                                     **/
 	MAC_READ_ONLY               = 0xFB, /**< SET request issued for read
 	                                     * only attribute defined by
-	                                     *802.15.4
+	                                     * 802.15.4
 	                                     **/
 	MAC_SCAN_IN_PROGRESS        = 0xFC /**< Scan operation failed because of
 	                                    * ongoing scan defined by 802.15.4

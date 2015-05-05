@@ -48,10 +48,10 @@
 
 /** Fields definition from a LPM TOKEN  */
 #define  USB_LPM_ATTRIBUT_BLINKSTATE_MASK      (0xF << 0)
-#define  USB_LPM_ATTRIBUT_BESL_MASK            (0xF << 4)
+#define  USB_LPM_ATTRIBUT_HIRD_MASK            (0xF << 4)
 #define  USB_LPM_ATTRIBUT_REMOTEWAKE_MASK      (1 << 8)
 #define  USB_LPM_ATTRIBUT_BLINKSTATE(value)    ((value & 0xF) << 0)
-#define  USB_LPM_ATTRIBUT_BESL(value)          ((value & 0xF) << 4)
+#define  USB_LPM_ATTRIBUT_HIRD(value)          ((value & 0xF) << 4)
 #define  USB_LPM_ATTRIBUT_REMOTEWAKE(value)    ((value & 1) << 8)
 #define  USB_LPM_ATTRIBUT_BLINKSTATE_L1        USB_LPM_ATTRIBUT_BLINKSTATE(1)
 
@@ -773,7 +773,8 @@ enum status_code usb_host_pipe_abort_job(struct usb_module *module_inst, uint8_t
  *
  * \param[in]     module_inst   Pointer to USB software instance struct
  * \param[in]     pipe_num      Pipe to configure
- * \param[in]     buf           Pointer to data buffer
+ * \param[in]     b_remotewakeup  Remote wake up flag
+ * \param[in]     hird  Host Initiated Resume Duration
  *
  * \return Status of the setup operation.
  * \retval STATUS_OK    The setup job was set successfully.
@@ -781,7 +782,7 @@ enum status_code usb_host_pipe_abort_job(struct usb_module *module_inst, uint8_t
  * \retval STATUS_ERR_NOT_INITIALIZED    The pipe has not been configured.
  */
 enum status_code usb_host_pipe_lpm_job(struct usb_module *module_inst,
-		uint8_t pipe_num, bool b_remotewakeup, uint8_t besl)
+		uint8_t pipe_num, bool b_remotewakeup, uint8_t hird)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -807,7 +808,7 @@ enum status_code usb_host_pipe_lpm_job(struct usb_module *module_inst,
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].EXTREG.bit.SUBPID = 0x3;
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].EXTREG.bit.VARIABLE =
 			USB_LPM_ATTRIBUT_REMOTEWAKE(b_remotewakeup) |
-			USB_LPM_ATTRIBUT_BESL(besl) |
+			USB_LPM_ATTRIBUT_HIRD(hird) |
 			USB_LPM_ATTRIBUT_BLINKSTATE_L1;
 
 	module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSSET.reg = USB_HOST_PSTATUSSET_BK0RDY;
@@ -1035,7 +1036,7 @@ void usb_host_pipe_set_auto_zlp(struct usb_module *module_inst, uint8_t pipe_num
  *
  * Registers a callback function which is implemented by the user.
  *
- * \note The callback must be enabled by \ref usb_host_enable_callback,
+ * \note The callback must be enabled by \ref usb_device_enable_callback,
  * in order for the interrupt handler to call it when the conditions for the
  * callback type is met.
  *
@@ -1094,7 +1095,7 @@ enum status_code usb_device_unregister_callback(struct usb_module *module_inst,
  * \brief Enables USB device callback generation for a given type.
  *
  * Enables asynchronous callbacks for a given logical type.
- * This must be called before USB host generate callback events.
+ * This must be called before USB device generate callback events.
  *
  * \param[in]     module_inst   Pointer to USB software instance struct
  * \param[in]     callback_type Callback type given by an enum
@@ -1216,7 +1217,7 @@ enum status_code usb_device_endpoint_unregister_callback(
  * \brief Enables USB device endpoint callback generation for a given type.
  *
  * Enables callbacks for a given logical type.
- * This must be called before USB host pipe generate callback events.
+ * This must be called before USB device pipe generate callback events.
  *
  * \param[in]     module_inst   Pointer to USB software instance struct
  * \param[in]     ep            Endpoint to configure
@@ -1373,7 +1374,7 @@ void usb_device_endpoint_get_config_defaults(struct usb_device_endpoint_config *
  * \param[in] module_inst    Pointer to USB software instance struct
  * \param[in] ep_config      Configuration settings for the endpoint
  *
- * \return Status of the device endpoint configuration operation.
+ * \return Status of the device endpoint configuration operation
  * \retval STATUS_OK         The device endpoint was configured successfully
  * \retval STATUS_ERR_DENIED The endpoint address is already configured
  */
@@ -1487,7 +1488,7 @@ enum status_code usb_device_endpoint_set_config(struct usb_module *module_inst,
  * \param module_inst   Pointer to USB software instance struct
  * \param ep            Endpoint address (direction & number)
  *
- * \return \c true if endpoint is configured and ready to use.
+ * \return \c true if endpoint is configured and ready to use
  */
 bool usb_device_endpoint_is_configured(struct usb_module *module_inst, uint8_t ep)
 {
@@ -1532,7 +1533,7 @@ void usb_device_endpoint_abort_job(struct usb_module *module_inst, uint8_t ep)
  * \param module_inst Pointer to USB software instance struct
  * \param ep          Endpoint address
  *
- * \return \c true if the endpoint is halted.
+ * \return \c true if the endpoint is halted
  */
 bool usb_device_endpoint_is_halted(struct usb_module *module_inst, uint8_t ep)
 {
@@ -1604,7 +1605,7 @@ void usb_device_endpoint_clear_halt(struct usb_module *module_inst, uint8_t ep)
  * \param pbuf        Pointer to buffer
  * \param buf_size    Size of buffer
  *
- * \return Status of procedure.
+ * \return Status of procedure
  * \retval STATUS_OK Job started successfully
  * \retval STATUS_ERR_DENIED Endpoint is not ready
  */
@@ -1639,7 +1640,7 @@ enum status_code usb_device_endpoint_write_buffer_job(struct usb_module *module_
  * \param pbuf        Pointer to buffer
  * \param buf_size    Size of buffer
  *
- * \return Status of procedure.
+ * \return Status of procedure
  * \retval STATUS_OK Job started successfully
  * \retval STATUS_ERR_DENIED Endpoint is not ready
  */
@@ -1672,7 +1673,7 @@ enum status_code usb_device_endpoint_read_buffer_job(struct usb_module *module_i
  * \param module_inst Pointer to USB device module instance
  * \param pbuf        Pointer to buffer
  *
- * \return Status of procedure.
+ * \return Status of procedure
  * \retval STATUS_OK Job started successfully
  * \retval STATUS_ERR_DENIED Endpoint is not ready
  */
@@ -1821,8 +1822,8 @@ void usb_enable(struct usb_module *module_inst)
 	Assert(module_inst);
 	Assert(module_inst->hw);
 
-	module_inst->hw->HOST.CTRLA.reg |= USB_CTRLA_ENABLE;
-	while (module_inst->hw->HOST.SYNCBUSY.reg == USB_SYNCBUSY_ENABLE);
+	module_inst->hw->DEVICE.CTRLA.reg |= USB_CTRLA_ENABLE;
+	while (module_inst->hw->DEVICE.SYNCBUSY.reg == USB_SYNCBUSY_ENABLE);
 }
 
 /**
@@ -1835,8 +1836,8 @@ void usb_disable(struct usb_module *module_inst)
 	Assert(module_inst);
 	Assert(module_inst->hw);
 
-	module_inst->hw->HOST.CTRLA.reg &= ~USB_CTRLA_ENABLE;
-	while (module_inst->hw->HOST.SYNCBUSY.reg == USB_SYNCBUSY_ENABLE);
+	module_inst->hw->DEVICE.CTRLA.reg &= ~USB_CTRLA_ENABLE;
+	while (module_inst->hw->DEVICE.SYNCBUSY.reg == USB_SYNCBUSY_ENABLE);
 }
 
 /**
@@ -1844,7 +1845,7 @@ void usb_disable(struct usb_module *module_inst)
  */
 void USB_Handler(void)
 {
-	if (_usb_instances->hw->HOST.CTRLA.bit.MODE) {
+	if (_usb_instances->hw->DEVICE.CTRLA.bit.MODE) {
 		/*host mode ISR */
 		_usb_host_interrupt_handler();
 	} else {
@@ -1929,8 +1930,8 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 	system_gclk_chan_enable(USB_GCLK_ID);
 
 	/* Reset */
-	hw->HOST.CTRLA.bit.SWRST = 1;
-	while (hw->HOST.SYNCBUSY.bit.SWRST) {
+	hw->DEVICE.CTRLA.bit.SWRST = 1;
+	while (hw->DEVICE.SYNCBUSY.bit.SWRST) {
 		/* Sync wait */
 	}
 
@@ -1944,7 +1945,7 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 		pad_transn = 5;
 	}
 
-	hw->HOST.PADCAL.bit.TRANSN = pad_transn;
+	hw->DEVICE.PADCAL.bit.TRANSN = pad_transn;
 
 	pad_transp =( *((uint32_t *)(NVMCTRL_OTP4)
 			+ (NVM_USB_PAD_TRANSP_POS / 32))
@@ -1955,7 +1956,7 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 		pad_transp = 29;
 	}
 
-	hw->HOST.PADCAL.bit.TRANSP = pad_transp;
+	hw->DEVICE.PADCAL.bit.TRANSP = pad_transp;
 
 	pad_trim =( *((uint32_t *)(NVMCTRL_OTP4)
 			+ (NVM_USB_PAD_TRIM_POS / 32))
@@ -1966,12 +1967,12 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 		pad_trim = 3;
 	}
 
-	hw->HOST.PADCAL.bit.TRIM = pad_trim;
+	hw->DEVICE.PADCAL.bit.TRIM = pad_trim;
 
 	/* Set the configuration */
-	hw->HOST.CTRLA.bit.MODE = module_config->select_host_mode;
-	hw->HOST.CTRLA.bit.RUNSTDBY = module_config->run_in_standby;
-	hw->HOST.DESCADD.reg = (uint32_t)(&usb_descriptor_table.usb_endpoint_table[0]);
+	hw->DEVICE.CTRLA.bit.MODE = module_config->select_host_mode;
+	hw->DEVICE.CTRLA.bit.RUNSTDBY = module_config->run_in_standby;
+	hw->DEVICE.DESCADD.reg = (uint32_t)(&usb_descriptor_table.usb_endpoint_table[0]);
 	if (USB_SPEED_FULL == module_config->speed_mode) {
 		module_inst->hw->DEVICE.CTRLB.bit.SPDCONF = USB_DEVICE_CTRLB_SPDCONF_FS_Val;
 	} else if(USB_SPEED_LOW == module_config->speed_mode) {

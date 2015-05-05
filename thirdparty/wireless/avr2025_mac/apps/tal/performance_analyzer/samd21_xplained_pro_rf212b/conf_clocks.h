@@ -51,6 +51,7 @@
 #  define CONF_CLOCK_CPU_DIVIDER                  SYSTEM_MAIN_CLOCK_DIV_1
 #  define CONF_CLOCK_APBA_DIVIDER                 SYSTEM_MAIN_CLOCK_DIV_1
 #  define CONF_CLOCK_APBB_DIVIDER                 SYSTEM_MAIN_CLOCK_DIV_1
+#  define CONF_CLOCK_APBC_DIVIDER                 SYSTEM_MAIN_CLOCK_DIV_1
 
 /* SYSTEM_CLOCK_SOURCE_OSC8M configuration - Internal 8MHz oscillator */
 #  define CONF_CLOCK_OSC8M_PRESCALER              SYSTEM_OSC8M_DIV_1
@@ -66,7 +67,8 @@
 #  define CONF_CLOCK_XOSC_ON_DEMAND               false
 #  define CONF_CLOCK_XOSC_RUN_IN_STANDBY          false
 
-/* SYSTEM_CLOCK_SOURCE_XOSC32K configuration - External 32KHz crystal/clock oscillator */
+/* SYSTEM_CLOCK_SOURCE_XOSC32K configuration - External 32KHz crystal/clock
+ *oscillator */
 #  define CONF_CLOCK_XOSC32K_ENABLE               false
 #  define CONF_CLOCK_XOSC32K_EXTERNAL_CRYSTAL     SYSTEM_CLOCK_EXTERNAL_CRYSTAL
 #  define CONF_CLOCK_XOSC32K_STARTUP_TIME         SYSTEM_XOSC32K_STARTUP_65536
@@ -86,11 +88,11 @@
 
 /* SYSTEM_CLOCK_SOURCE_DFLL configuration - Digital Frequency Locked Loop */
 #  define CONF_CLOCK_DFLL_ENABLE                  false
-#  define CONF_CLOCK_DFLL_LOOP_MODE               SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN
+#  define CONF_CLOCK_DFLL_LOOP_MODE \
+	SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN
 #  define CONF_CLOCK_DFLL_ON_DEMAND               false
 
 /* DFLL open loop mode configuration */
-#  define CONF_CLOCK_DFLL_COARSE_VALUE            (0x1f / 4)
 #  define CONF_CLOCK_DFLL_FINE_VALUE              (0xff / 4)
 
 /* DFLL closed loop mode configuration */
@@ -111,9 +113,12 @@
 #  define CONF_CLOCK_DPLL_WAKE_UP_FAST            false
 #  define CONF_CLOCK_DPLL_LOW_POWER_ENABLE        false
 
-#  define CONF_CLOCK_DPLL_LOCK_TIME               SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT
-#  define CONF_CLOCK_DPLL_REFERENCE_CLOCK         SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC32K
-#  define CONF_CLOCK_DPLL_FILTER                  SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT
+#  define CONF_CLOCK_DPLL_LOCK_TIME \
+	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT
+#  define CONF_CLOCK_DPLL_REFERENCE_CLOCK \
+	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC32K
+#  define CONF_CLOCK_DPLL_FILTER \
+	SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT
 
 #  define CONF_CLOCK_DPLL_REFERENCE_FREQUENCY     32768
 #  define CONF_CLOCK_DPLL_REFERENCE_DIVIDER       1
@@ -192,4 +197,3 @@
 #  define CONF_CLOCK_GCLK_8_OUTPUT_ENABLE         false
 
 #endif /* CONF_CLOCKS_H_INCLUDED */
-

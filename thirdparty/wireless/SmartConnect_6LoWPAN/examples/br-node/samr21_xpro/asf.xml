@@ -1,0 +1,43 @@
+<asf xmlversion="1.0">
+	<project caption="Smart Connect 6LoWPAN - Border router  SAM R21 Xplained Pro" id="thirdparty.wireless.smartconnect_6lowpan.examples.br-node.samr21xpro" force-caption="true" force-description="true">
+		<info type="description" value="summary">
+		      Border router example demonstrates the ability of stack to create a DAG root and act as a Border gateway to the nodes which wants to communicate outside the network, for SAM R21 Xplained Pro
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_spi.h"/>
+		<build type="header-file" value="conf_extint.h"/>
+		<build type="header-file" value="conf_hw_timer.h"/>
+		<build type="header-file" value="conf_sio2host.h"/>
+		<build type="header-file" value="conf_trx_access.h"/>
+		<build type="header-file" value="conf_eth.h"/>
+		<build type="header-file" value="project-conf.h"/>
+		<build type="header-file" value="contiki-conf.h"/>
+		<build type="header-file" value="platform-conf.h"/>
+		<build type="header-file" value="ip64-conf.h"/>
+		<build type="header-file" value="subplatform-conf.h"/>
+		<build type="define" name="INCLUDE_SUBPLATFORM_CONF" value="1"/>
+		<config name="config.sam0.drivers.sercom.spi" value="polled"/>
+		<config name="config.sam0.drivers.sercom.usart" value="callback"/>
+		<require idref="board.samr21_xplained_pro"/>
+		<require idref="common2.services.delay"/>
+		<require idref="sam0.drivers.wdt"/>
+		<require idref="sam0.drivers.rtc"/>
+		<config name="config.sam0.drivers.sercom.i2c.master" value="polled"/>
+		<require idref="sam0.drivers.sercom.i2c.master"/>
+		<require idref="sam0.drivers.nvm"/>
+		<require idref="thirdparty.wireless.common_services.trx_access"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.dev.at86rf233"/>
+		<require idref="config.thirdparty.wireless.smartconnect_6lowpan.services.sam0"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.services.timer.sam0"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.examples.br-node"/>
+	    <build type="doxygen-entry-point" value="group_contiki"/>
+		<toolchain-config name="armgcc.compiler.miscellaneous.OtherFlags" value="-std=gnu99 -Wstrict-prototypes  -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal   -Wbad-function-cast -Wwrite-strings -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wnested-externs -Wlong-long -Wunreachable-code " toolchain="armgcc" />
+		<config name="config.compiler.armgcc.optimization" value="high" />
+		<generator value="as5_arm" />
+		<generator value="armgcc" />
+		<generator value="doxygen"/>
+		<device-support value="atsamr21g18a"/>
+	</project>
+</asf>

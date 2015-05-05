@@ -159,14 +159,6 @@
 #  error CONF_CLOCK_OSC32K_RUN_IN_STANDBY not defined in conf_clocks.h
 #endif
 
-#if !defined(CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT)
-#  error CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT not defined in conf_clocks.h
-#endif
-
-#if !defined(CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT)
-#  error CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT not defined in conf_clocks.h
-#endif
-
 #if !defined(CONF_CLOCK_DFLL_ENABLE)
 #  error CONF_CLOCK_DFLL_ENABLE not defined in conf_clocks.h
 #endif
@@ -179,16 +171,12 @@
 #  error CONF_CLOCK_DFLL_ON_DEMAND not defined in conf_clocks.h
 #endif
 
-#if !defined(CONF_CLOCK_DFLL_RUN_IN_STANDBY)
-#  error CONF_CLOCK_DFLL_RUN_IN_STANDBY not defined in conf_clocks.h
-#endif
-
-#if !defined(CONF_CLOCK_DFLL_COARSE_VALUE)
-#  error CONF_CLOCK_DFLL_COARSE_VALUE not defined in conf_clocks.h
-#endif
-
 #if !defined(CONF_CLOCK_DFLL_FINE_VALUE)
 #  error CONF_CLOCK_DFLL_FINE_VALUE not defined in conf_clocks.h
+#endif
+
+#if !defined(CONF_CLOCK_DFLL_RUN_IN_STANDBY)
+#  error CONF_CLOCK_DFLL_RUN_IN_STANDBY not defined in conf_clocks.h
 #endif
 
 #if !defined(CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR)

@@ -804,7 +804,7 @@ typedef struct mlme_start_req_tag {
 
 	/**
 	 * The mode used to identify the key to be used (see Table 96 in
-	 *7.6.2.2.2).
+	 * 7.6.2.2.2).
 	 * This parameter is ignored if the CoordRealignSecurityLevel parameter
 	 * is set to 0x00.
 	 */
@@ -812,7 +812,7 @@ typedef struct mlme_start_req_tag {
 
 	/**
 	 * The originator of the key to be used (see 7.6.2.4.1). This parameter
-	 *is
+	 * is
 	 * ignored if the CoordRealignKeyIdMode parameter is ignored or set to
 	 * 0x00.
 	 */

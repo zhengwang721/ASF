@@ -72,7 +72,7 @@ void main_resume_action(void);
 void main_suspend_action(void);
 
 #define APP_USER_STRING                 "My Target      "    /* 15 characters !
-	                                                      **/
+	                                                     **/
 #define USER_STRING_AVAILABLE           true
 #define NUM_SUPPORTED_DEV_TYPES         (1)
 #define NUM_SUPPORTED_PROFILES          (1)

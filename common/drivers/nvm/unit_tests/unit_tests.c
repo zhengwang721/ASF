@@ -170,7 +170,9 @@ static void run_byte_access_test(const struct test_case *test)
 {
 	status_code_t status;
 	uint8_t read_data[4], i;
-
+#if SAM4S
+	nvm_page_erase(INT_FLASH, TEST_ADDRESS / IFLASH_PAGE_SIZE);
+#endif
 	/* Write four bytes one by one from the given address */
 	for (i = 0; i < 4; i++) {
 		status = nvm_write_char(INT_FLASH, (uint32_t)TEST_ADDRESS + i, BYTE_PATTERN1(
@@ -209,6 +211,9 @@ static void run_buffer_access_test(const struct test_case *test)
 	for (i = 0; i < 20; i++) {
 		test_buf[i] = BYTE_PATTERN2(i);
 	}
+#if SAM4S
+	nvm_page_erase(INT_FLASH, TEST_ADDRESS / IFLASH_PAGE_SIZE);
+#endif
 
 	/* Write the buffer to the non volatile memory */
 	status = nvm_write(INT_FLASH, (uint32_t)TEST_ADDRESS, (void *)test_buf,
