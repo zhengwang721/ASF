@@ -290,6 +290,12 @@ static void _rtc_calendar_set_config(
 	/* Set to calendar mode and set the prescaler. */
 	tmp_reg = RTC_MODE2_CTRLA_MODE(2) | config->prescaler;
 
+#if (SAML22)
+	if(config->enable_read_sync) {
+		tmp_reg |= RTC_MODE2_CTRLA_CLOCKSYNC;
+	}
+#endif
+
 	/* Check clock mode. */
 	if (!(config->clock_24h)) {
 		/* Set clock mode 12h. */

@@ -68,7 +68,7 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rtc_count_prerequisites
@@ -112,19 +112,19 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PERIODIC_INT</td>
- *    <td>SAML21</td>
+ *    <td>SAML21/L22</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PRESCALER_OFF</td>
- *    <td>SAML21</td>
+ *    <td>SAML21/L22</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CLOCK_SELECTION</td>
- *    <td>SAML21</td>
+ *    <td>SAML21/L22</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_GENERAL_PURPOSE_REG</td>
- *    <td>SAML21</td>
+ *    <td>SAML21/L22</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
@@ -362,7 +362,7 @@ extern "C" {
  * Define port features set according to different device family
  * @{
 */
-#if (SAML21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAML22) || defined(__DOXYGEN__)
 /** RTC periodic interval interrupt. */
 #  define FEATURE_RTC_PERIODIC_INT
 /** RTC prescaler is off. */
@@ -692,11 +692,11 @@ struct rtc_count_config {
 	 *  needed for reading. */
 	bool continuously_update;
 #endif
-#if (SAML21)
-		/** Enable count read synchronization. The COUNT value requires
-		 * synchronization when reading. Disabling the synchronization 
-		 * will prevent the COUNT value from displaying the current value. */
-		bool enable_read_sync;
+#if (SAML22)
+	/** Enable count read synchronization. The COUNT value requires
+	 * synchronization when reading. Disabling the synchronization 
+	 * will prevent the COUNT value from displaying the current value. */
+	bool enable_read_sync;
 #endif
 
 	/** Array of Compare values. Not all Compare values are available in 32-bit
@@ -723,7 +723,7 @@ struct rtc_count_config {
  *  - Continuously sync count register off
  *  - No event source on
  *  - All compare values equal 0
- *  - Count read synchronization is disabled for SAML21
+ *  - Count read synchronization is enabled for SAML22
  *
  *  \param[out] config  Configuration structure to be initialized to default
  *                      values.
@@ -742,8 +742,8 @@ static inline void rtc_count_get_config_defaults(
 #ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
 	config->continuously_update = false;
 #endif
-#if (SAML21)
-	config->enable_read_sync = false;
+#if (SAML22)
+	config->enable_read_sync    = true;
 #endif
 
 	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {

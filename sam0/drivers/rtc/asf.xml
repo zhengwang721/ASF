@@ -107,6 +107,7 @@
 			<build type="c-source" value="rtc_sam_l/rtc_calendar.c"/>
 
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 		</module>
 	</select-by-device>
 	<select-by-device id="sam0.drivers.rtc.count_interrupt" caption="RTC - Real Time Counter">
@@ -131,6 +132,7 @@
 			<build type="c-source" value="rtc_sam_l/rtc_count_interrupt.c"/>
 
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 		</module>
 	</select-by-device>
 	<select-by-device id="sam0.drivers.rtc.calendar_interrupt" caption="RTC - Real Time Counter">
@@ -155,6 +157,7 @@
 			<build type="c-source" value="rtc_sam_l/rtc_calendar_interrupt.c"/>
 
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 		</module>
 	</select-by-device>
 	<module type="meta" id="sam0.drivers.rtc.count_appnote" caption="RTC - Real Time Counter in Count Mode (Callback APIs)">
