@@ -1005,6 +1005,7 @@ void system_clock_init(void)
 
 	/* CPU and BUS clocks */
 	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
+	system_main_clock_set_failure_detect(CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT);
 	system_low_power_clock_set_divider(CONF_CLOCK_LOW_POWER_DIVIDER);
 	system_backup_clock_set_divider(CONF_CLOCK_BACKUP_DIVIDER);
 
