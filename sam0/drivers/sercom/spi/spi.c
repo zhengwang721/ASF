@@ -521,6 +521,9 @@ enum status_code spi_init(
 		pm_index     = sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
 		gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
 	}
+#elif (SAML22)
+	pm_index     = sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
+	gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
 #else
 	pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
 	gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
