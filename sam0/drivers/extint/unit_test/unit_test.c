@@ -79,7 +79,7 @@
  * - SAM D21 Xplained Pro
  *  - EXT1 \b Pin 9 (PB04) <-----> Pin 11 (PA08)
  * - SAM R21 Xplained Pro
- *  - EXT1 \b Pin 9 (PA22) <-----> Pin 10 (PA23)
+ *  - EXT1 \b Pin 3 (PA06) <-----> EXT3 Pin 10 (PA08)
  * - SAM L21 Xplained Pro
  *  - EXT1 \b Pin 9 (PB04) <-----> EXT3 Pin 5 (PB30)
  *

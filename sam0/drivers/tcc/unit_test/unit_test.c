@@ -78,7 +78,7 @@
  * - SAM D21 Xplained Pro:
  *  - \b EXTINT 4 (PB04, EXT1 pin 9 ) <-----> TCC0 WO0 (PA08, EXT2 pin 11)
  * - SAM R21 Xplained Pro:
- *  - \b EXTINT 7 (PA22, EXT1 pin 9 ) <-----> TCC0 WO0 (PA08, EXT3 pin 10)
+ *  - \b EXTINT 6 (PA06, EXT1 pin 3 ) <-----> TCC0 WO0 (PA08, EXT3 pin 10)
  * - SAM L21 Xplained Pro:
  *  - \b EXTINT 4 (PB04, EXT1 pin 9 ) <-----> TCC0 WO0 (PB30, EXT3 pin 5)
  *
