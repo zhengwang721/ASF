@@ -60,6 +60,7 @@
 			<build type="header-file" value="adc_sam_l/adc_feature.h"/>
 
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 		</module>
 	</select-by-device>
 	<select-by-device id="sam0.drivers.adc.callback" caption="ADC - Analog-to-Digital Converter">
@@ -84,6 +85,7 @@
 			<build type="header-file" value="adc_sam_l/adc_feature.h"/>
 
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 		</module>
 	</select-by-device>
 	<module type="meta" id="sam0.drivers.adc.appnote_sam_d_r" caption="ADC - Analog-to-Digital Converter">
@@ -179,6 +181,7 @@
 			<build type="doxygen-enable-section" value="DEVICE_SAML21_SUPPORT"/>
 
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
