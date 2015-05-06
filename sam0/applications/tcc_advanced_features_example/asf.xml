@@ -21,7 +21,6 @@
 		<require idref="sam0.drivers.system"/>		
 		<require idref="sam0.drivers.events"/>
 		<require idref="sam0.drivers.extint"/>				
-		<require idref="common.utils"/>				
 		<require idref="common2.services.delay"/>				
 
 		<device-support value="samd21exxl"/>
