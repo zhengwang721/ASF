@@ -114,7 +114,7 @@ struct rtc_module rtc_inst;
 volatile bool interrupt_flag = false;
 
 
-void rtc_calendar_alarm_match_callback(void)
+static void rtc_calendar_alarm_match_callback(void)
 {
 	/* Do something on RTC alarm match here */
 	interrupt_flag = true;

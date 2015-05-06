@@ -114,7 +114,7 @@ struct rtc_module rtc_inst;
 volatile bool interrupt_flag = false;
 
 
-void rtc_count_match_callback(void)
+static void rtc_count_match_callback(void)
 {
 	/* Do something on RTC compare1 match here */
 	interrupt_flag = true;
