@@ -1087,6 +1087,25 @@ enum tcc_count_direction {
 	TCC_COUNT_DIRECTION_DOWN,
 };
 
+#ifdef FEATURE_TCC_GENERATE_DMA_TRIGGER
+/**
+ * \brief TCC module counter overflow DMA request mode
+ *
+ * Used when selecting the Timer/Counter overflow DMA request mode.
+ */
+enum tcc_count_overflow_dma_trigger_mode {
+	/** TCC generates a DMA request on each cycle when an update condition 
+	 * is detected. 
+	 */
+	TCC_COUNT_OVERFLOW_DMA_TRIGGER_MODE_CONTINUE,
+	/** When an update condition is detected, the TCC generates a DMA trigger 
+	 * on the cycle following the DMA One-Shot Command written to the Control 
+	 * B register.
+	 */
+	TCC_COUNT_OVERFLOW_DMA_TRIGGER_MODE_ONE_SHOT,
+};
+#endif
+
 /**
  * \brief Action to perform when the TCC module is triggered by events
  *
@@ -1475,6 +1494,11 @@ struct tcc_counter_config {
 	 * software re-trigger event or overflow/underflow.
 	 */
 	bool oneshot;
+
+#ifdef FEATURE_TCC_GENERATE_DMA_TRIGGER	
+	/** Counter overflow trigger a DMA request mode. */
+	enum tcc_count_overflow_dma_trigger_mode dma_trigger_mode;
+#endif
 
 	/** Specifies the direction for the TCC to count. */
 	enum tcc_count_direction direction;

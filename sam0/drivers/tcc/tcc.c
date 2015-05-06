@@ -198,6 +198,10 @@ void tcc_get_config_defaults(
 	config->counter.direction              = TCC_COUNT_DIRECTION_UP;
 	config->counter.oneshot                = false;
 
+#ifdef FEATURE_TCC_GENERATE_DMA_TRIGGER
+	config->counter.dma_trigger_mode       = TCC_COUNT_OVERFLOW_DMA_TRIGGER_MODE_CONTINUE;
+#endif
+
 	/* Match/Capture defaults */
 #  define _TCC_CHANNEL_MATCH_VALUE_INIT(n, value) \
 		config->compare.match[n] = value;
