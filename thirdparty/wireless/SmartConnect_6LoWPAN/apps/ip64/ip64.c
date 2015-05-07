@@ -64,15 +64,15 @@
 #include "ip64-ipv4-dhcp.h"
 #include "contiki-net.h"
 
-#include "net/ip/uip-debug.h"
+
 
 #include <string.h> /* for memcpy() */
 #include <stdio.h> /* for printf() */
 #include <stdlib.h>
-#define DEBUG 0
-
+#define UIP_DEBUG 0
+#include "net/ip/uip-debug.h"
 #ifndef PRINTF
-#if DEBUG
+#if UIP_DEBUG
 #define PRINTF(...) printf(__VA_ARGS__)
 #else /* DEBUG */
 #define PRINTF(...)
@@ -299,7 +299,7 @@ ip64_set_ipv6_address(const uip_ip6addr_t *addr)
 {
   ip64_addr_copy6(&ipv6_local_address, (const uip_ip6addr_t *)addr);
   ipv6_local_address_configured = 1;
-#if DEBUG
+#if UIP_DEBUG
   PRINTF("ip64_set_ipv6_address: configuring address ");
   uip_debug_ipaddr_print(addr);
   PRINTF("\n");
@@ -518,7 +518,7 @@ ip64_6to4(const uint8_t *ipv6packet, const uint16_t ipv6packet_len,
      indicate failure. */
   if(ip64_addr_6to4(&v6hdr->destipaddr,
 		    &v4hdr->destipaddr) == 0) {
-#if DEBUG
+#if UIP_DEBUG
     PRINTF("ip64_6to4: Could not convert IPv6 destination address.\n");
     uip_debug_ipaddr_print(&v6hdr->destipaddr);
     PRINTF("\n");

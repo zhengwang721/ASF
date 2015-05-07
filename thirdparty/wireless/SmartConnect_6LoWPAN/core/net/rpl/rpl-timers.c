@@ -47,7 +47,7 @@
 
 #if UIP_CONF_IPV6
 
-#define DEBUG DEBUG_NONE
+#define UIP_DEBUG DEBUG_NONE
 #include "net/ip/uip-debug.h"
 
 /*---------------------------------------------------------------------------*/

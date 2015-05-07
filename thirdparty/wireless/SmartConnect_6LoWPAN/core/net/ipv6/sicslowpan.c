@@ -71,18 +71,20 @@
 
 #include <stdio.h>
 
-#define DEBUG DEBUG_NONE
+#define UIP_DEBUG DEBUG_NONE
 #include "net/ip/uip-debug.h"
-#if DEBUG
+#if UIP_DEBUG
 /* PRINTFI and PRINTFO are defined for input and output to debug one without changing the timing of the other */
 uint8_t p;
 #include <stdio.h>
+#ifndef PRINTF
 #define PRINTF(...)  printf(__VA_ARGS__)
 #define PRINTFI(...) PRINTF(__VA_ARGS__)
 #define PRINTFO(...) PRINTF(__VA_ARGS__)
 #define PRINTPACKETBUF() PRINTF("packetbuf buffer: "); for(p = 0; p < packetbuf_datalen(); p++){PRINTF("%.2X", *(packetbuf_ptr + p));} PRINTF("\n")
 #define PRINTUIPBUF() PRINTF("UIP buffer: "); for(p = 0; p < uip_len; p++){PRINTF("%.2X", uip_buf[p]);}PRINTF("\n")
 #define PRINTSICSLOWPANBUF() PRINTF("SICSLOWPAN buffer: "); for(p = 0; p < sicslowpan_len; p++){PRINTF("%.2X", sicslowpan_buf[p]);}PRINTF("\n")
+#endif	
 #else
 #define PRINTFI(...)
 #define PRINTFO(...)
@@ -499,7 +501,7 @@ static void
 compress_hdr_hc06(linkaddr_t *link_destaddr)
 {
   uint8_t tmp, iphc0, iphc1;
-#if DEBUG
+#if UIP_DEBUG
   { uint16_t ndx;
     PRINTF("before compression (%d): ", UIP_IP_BUF->len[1]);
     for(ndx = 0; ndx < UIP_IP_BUF->len[1] + 40; ndx++) {
@@ -1845,7 +1847,7 @@ input(void)
     processed_ip_in_len = 0;
 #endif /* SICSLOWPAN_CONF_FRAG */
 
-#if DEBUG
+#if UIP_DEBUG
     {
       uint16_t ndx;
       PRINTF("after decompression %u:", SICSLOWPAN_IP_BUF->len[1]);

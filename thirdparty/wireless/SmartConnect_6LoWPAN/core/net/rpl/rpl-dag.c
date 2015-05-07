@@ -55,7 +55,7 @@
 #include <limits.h>
 #include <string.h>
 
-#define DEBUG 0
+#define UIP_DEBUG 0
 #include "net/ip/uip-debug.h"
 
 #if UIP_CONF_IPV6

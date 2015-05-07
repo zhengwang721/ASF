@@ -46,6 +46,8 @@
 #include "sys/etimer.h"
 #include "net/ip/uip.h"
 #include "net/ipv6/uip-ds6.h"
+
+#define DEBUG 0
 #include "net/ip/uip-debug.h"
 
 #include "simple-udp.h"
