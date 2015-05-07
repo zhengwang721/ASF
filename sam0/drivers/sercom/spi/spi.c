@@ -534,7 +534,7 @@ enum status_code spi_init(
 	if (sercom_index == 5) {
 		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBD, 1 << pm_index);
 	} else {
-		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);	
+		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
 	}
 #else
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
