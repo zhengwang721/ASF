@@ -170,6 +170,9 @@
  * software configurable and can have its count reset and early warning state
  * checked/cleared only.
  *
+ * If the WDT counter was reset directly before putting the device to sleep, 
+ * take care to make sure the WDT reset instructions was synced.
+ *
  * \section asfdoc_sam0_wdt_extra_info Extra Information
  *
  * For extra information, see \ref asfdoc_sam0_wdt_extra. This includes:

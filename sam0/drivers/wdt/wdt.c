@@ -255,10 +255,10 @@ void wdt_reset_count(void)
 {
 	Wdt *const WDT_module = WDT;
 
+	/* Disable the Watchdog module */
+	WDT_module->CLEAR.reg = WDT_CLEAR_CLEAR_KEY;
+
 	while (wdt_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
-
-	/* Disable the Watchdog module */
-	WDT_module->CLEAR.reg = WDT_CLEAR_CLEAR_KEY;
 }
