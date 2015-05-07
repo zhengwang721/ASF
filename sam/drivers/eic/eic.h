@@ -415,7 +415,8 @@ static inline bool eic_line_interrupt_is_pending(Eic *eic,
 
  * \page sam_eic_quickstart Quickstart guide for SAM EIC driver
  *
- * This is the quickstart guide for the \ref sam_drivers_eic_group "SAM EIC driver",
+ * This is the quickstart guide for the \ref asfdoc_sam_drivers_eic_group
+ * "SAM4L External Interrupt Controller (EIC) Driver",
  * with step-by-step instructions on how to configure and use the driver in a
  * selection of use cases.
  *
