@@ -603,13 +603,33 @@
  *
  * \section asfdoc_sam0_tcc_special_considerations Special Considerations
  *
+ * \subsection asfdoc_sam0_tcc_special_considerations_specific_features Driver Feature Macro Definition
+ * \ref asfdoc_sam0_tcc_feature_table "The table below" shows some specific features
+ * of the TCC Module.
+ *
+ * \anchor asfdoc_sam0_tcc_feature_table
+ * <table>
+ *   <caption>TCC Module Specific Features</caption>
+ *  <tr>
+ *    <th>Driver Feature Macro</th>
+ *    <th>Supported devices</th>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_TCC_GENERATE_DMA_TRIGGER</td>
+ *    <td>SAML21</td>
+ *  </tr>
+ * </table>
+ *
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
+ *
  * \subsection asfdoc_sam0_tcc_special_considerations_tcc_feature Module Features
  *
  * The features of TCC, such as timer/counter size, number of compare capture
  * channels, and number of outputs, are dependent on the TCC module instance being
  * used.
  *
- * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM TCC Feature List
+ * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM D21/R21/L21 TCC Feature List
  * For SAM D21/R21/L21, the TCC features are:
  * \anchor asfdoc_sam0_tcc_features_d21
  * <table>
@@ -663,15 +683,6 @@
  *     <td></td>
  *   </tr>
  * </table>
- *
- * <table>
- *  <tr>
- *    <td>FEATURE_TCC_GENERATE_DMA_TRIGGER</td>
- *    <td>SAML21</td>
- *  </tr>
- * </table>
- * \note The specific features are only available in the driver when the
- * selected device supports those features.
  *
  * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d11 SAM D10/D11 TCC Feature List
  * For SAM D10/D11, the TCC features are:
