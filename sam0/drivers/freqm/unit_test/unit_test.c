@@ -126,9 +126,8 @@ volatile bool interrupt_flag = false;
  *
  * \param module Pointer to the FREQM module (not used)
  */
-static void freqm_complete_callback(struct freqm_module *const module_inst)
+static void freqm_complete_callback(void)
 {
-	UNUSED(module_inst);
 	interrupt_flag = true;
 }
 
@@ -165,7 +164,6 @@ static void cdc_uart_init(void)
  */
 static void run_freqm_polling_read_test(const struct test_case *test)
 {
-	uint32_t i;
 	uint32_t measure_result;
 
 	/* Structure for FREQM configuration */
@@ -178,7 +176,7 @@ static void run_freqm_polling_read_test(const struct test_case *test)
 
 	/* Read measure data */
 	freqm_start_measure(&freqm_instance);
-	while (freqm_get_result_value(&freqm_instance, &measure_result) != STATUS_OK) {
+	while (freqm_get_result_value(&freqm_instance, &measure_result) != FREQM_MEASURE_DONE) {
 	}
 
 	/* Test result */
@@ -210,7 +208,7 @@ static void run_freqm_callback_read_test(const struct test_case *test)
 	freqm_start_measure(&freqm_instance);
 	while(!interrupt_flag) {
 	}
-	freqm_get_result_value(&freqm_instance, measure_result);
+	freqm_get_result_value(&freqm_instance, &measure_result);
 
 	/* Test result */
 	test_assert_true(test,

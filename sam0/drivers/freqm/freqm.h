@@ -151,6 +151,8 @@ struct freqm_module {
 #if !defined(__DOXYGEN__)
 	/** Hardware module pointer of the associated FREQM peripheral. */
 	Freqm *hw;
+	/** The frequency of reference clock in Hz.*/
+	uint32_t ref_clock_freq;
 #  if FREQM_CALLBACK_MODE == true
 	/** Array of callbacks. */
 	freqm_callback_t callback[FREQM_CALLBACK_N];
@@ -158,14 +160,14 @@ struct freqm_module {
 #endif
 };
 
-/** FREQM measurement is ongoing or not.
- */
-#define FREQM_MEASURE_BUSY    (1UL << 0)
-
-/** FREQM sticky count value overflow.
- */
-#define FREQM_CNT_OVERFLOW    (1UL << 1)
-
+enum freqm_status {
+	/** FREQM measurement is finish. */
+	FREQM_MEASURE_DONE =  0,
+	/** FREQM measurement is ongoing or not. */
+	FREQM_MEASURE_BUSY =  1,
+	/** FREQM sticky count value overflow. */
+	FREQM_CNT_OVERFLOW =  2,
+};
 
 /**
  * \brief FREQM module configuration structure.
@@ -173,8 +175,12 @@ struct freqm_module {
  *  Configuration structure for a Frequency Meter.
  */
 struct freqm_config {
-	/**. */
-	uint16_t ref_num;
+	/** GCLK source select for measurement. */
+	enum gclk_generator msr_clock_source;
+	/** GCLK source select for reference. */
+	enum gclk_generator ref_clock_source;
+	/** Number of reference Clock Cycles. Must be a non-zero value. */
+	uint16_t ref_clock_circles;
 };
 
 /**
@@ -187,6 +193,31 @@ enum status_code freqm_init(
 		struct freqm_config *const config);
 
 /**
+ * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
+ *
+ * Checks to see if the underlying hardware peripheral module(s) are currently
+ * synchronizing across multiple clock domains to the hardware bus. This
+ * function can be used to delay further operations on a module until such time
+ * that it is ready, to prevent blocking delays for synchronization in the
+ * user application.
+ *
+ * \return Synchronization status of the underlying hardware module(s).
+ *
+ * \retval false If the module has completed synchronization
+ * \retval true If the module synchronization is ongoing
+ */
+static inline bool freqm_is_syncing(void)
+{
+	Freqm *const freqm_module = FREQM;
+
+	if (freqm_module->SYNCBUSY.reg) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
  * \brief Initializes all members of a FREQM configuration structure
  *  to safe defaults.
  *
@@ -196,9 +227,11 @@ enum status_code freqm_init(
  *  by the user application.
  *
  *  The default configuration is as follows:
+ *   \li Measurement clock source is GCLK0
+ *   \li Reference clock source is GCLK1
  *   \li Frequency Meter Reference Clock Cycles 127
  *
- *  \param[out] config  Configuration structure to initialize to default values
+ *  \param[in] config  Configuration structure to initialize to default values
  */
 static inline void freqm_get_config_defaults(
 		struct freqm_config *const config)
@@ -207,7 +240,9 @@ static inline void freqm_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
-	config->ref_num = 127;
+	config->msr_clock_source = GCLK_GENERATOR_0;
+	config->ref_clock_source = GCLK_GENERATOR_1;
+	config->ref_clock_circles = 127;
 }
 
 /**
@@ -229,6 +264,10 @@ static inline void freqm_enable(
 
 	/* Enable FREQM */
 	freqm_module->CTRLA.reg |= FREQM_CTRLA_ENABLE;
+
+	while (freqm_is_syncing()) {
+		/* Wait for all hardware modules to complete synchronization */
+	}
 }
 
 /**
@@ -250,6 +289,10 @@ static inline void freqm_disable(
 
 	/* Disable FREQM */
 	freqm_module->CTRLA.reg &= ~FREQM_CTRLA_ENABLE;
+
+	while (freqm_is_syncing()) {
+		/* Wait for all hardware modules to complete synchronization */
+	}
 }
 
 /**
@@ -266,59 +309,20 @@ static inline void freqm_start_measure(struct freqm_module *const module)
 }
 
 /**
- * \brief Retrieves the current module status.
+ * \brief Clears module overflow flag.
  *
- * Retrieves the status of the module, giving overall state information.
+ * Clears the overflow flag of the module.
  *
  * \param[in] module Pointer to the FREQM software instance struct
- *
- * \retval FREQM_MEASURE_BUSY
- * \retval FREQM_CNT_OVERFLOW
  */
-static inline uint32_t freqm_get_status(struct freqm_module *const module)
+static inline void freqm_clear_overflow(struct freqm_module *const module)
 {
 	/* Sanity check arguments */
 	Assert(module);
 	Assert(module->hw);
 
-	uint32_t int_flags = module->hw->STATUS.reg;
-	uint32_t status_flags = 0;
-
-	if (int_flags & FREQM_STATUS_BUSY) {
-		status_flags |= FREQM_MEASURE_BUSY;
-	}
-
-	if (int_flags & FREQM_STATUS_OVF) {
-		status_flags |= FREQM_CNT_OVERFLOW;
-	}
-
-	return status_flags;
-}
-
-/**
- * \brief Clears a module status flag.
- *
- * Clears the given status flag of the module.
- *
- * \param[in] module Pointer to the FREQM software instance struct
- * \param[in] status_flags Bitmask flags to clear
- */
-static inline void freqm_clear_status(
-		struct freqm_module *const module,
-		const uint32_t status_flags)
-{
-	/* Sanity check arguments */
-	Assert(module);
-	Assert(module->hw);
-
-	uint32_t int_flags = 0;
-
-	if (status_flags & FREQM_CNT_OVERFLOW) {
-		int_flags |= FREQM_STATUS_OVF;
-	}
-
-	/* Clear interrupt flag */
-	module->hw->STATUS.reg = int_flags;
+	/* Clear overflow flag */
+	module->hw->STATUS.reg |= FREQM_STATUS_OVF;
 }
 
 
@@ -336,10 +340,13 @@ static inline void freqm_clear_status(
  * \param[out] result       Pointer to store the result value in
  *
  * \return Status of the FREQM read request.
- * \retval STATUS_OK           The result was retrieved successfully
- * \retval STATUS_BUSY         Measurement result was not ready
+ * \retval FREQM_MEASURE_DONE   Measurement result was retrieved successfully
+ * \retval FREQM_MEASURE_BUSY   Measurement result was not ready
+ * \retval FREQM_CNT_OVERFLOW   Measurement result was overflow
+ *                              
+ * \note If overflow occurred, configure faster reference clock or reduce reference clock cycles.
  */
-static inline enum status_code freqm_get_result_value(
+static inline enum freqm_status freqm_get_result_value(
 		struct freqm_module *const module_inst,
 		uint32_t *result)
 {
@@ -349,16 +356,23 @@ static inline enum status_code freqm_get_result_value(
 	Assert(result);
 
 	Freqm *const freqm_hw = module_inst->hw;
+	uint32_t result_cal;
+	*result = result_cal= 0;
 
-	if (!(freqm_hw->INTFLAG.reg & FREQM_INTFLAG_DONE)) {
+	if (freqm_hw->STATUS.reg & FREQM_STATUS_BUSY) {
 		/* Result not ready */
-		return STATUS_BUSY;
+		return FREQM_MEASURE_BUSY;
+	} else {
+		if (freqm_hw->STATUS.reg & FREQM_STATUS_OVF) {
+			/* Overflow */
+			return FREQM_CNT_OVERFLOW;
+		} else {
+			/* Get measurement output data (it will clear data done flag) */
+			result_cal = freqm_hw->VALUE.reg;
+			*result = result_cal / freqm_hw->CFGA.reg * module_inst->ref_clock_freq;
+			return FREQM_MEASURE_DONE;
+		}
 	}
-
-	/* Get measurement output data (it will clear data done flag) */
-	*result = freqm_hw->VALUE.reg;
-
-	return STATUS_OK;
 }
 /** @} */
 

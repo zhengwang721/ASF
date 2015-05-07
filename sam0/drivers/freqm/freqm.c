@@ -46,7 +46,10 @@
 
 #include "freqm.h"
 #include <gclk.h>
-#include "conf_freqm.h"
+
+#ifndef FREQM_GCLK_ID_REF
+#define FREQM_GCLK_ID_REF 5
+#endif
 
 /**
  * \brief Initializes a hardware FREQM module instance.
@@ -71,6 +74,7 @@ enum status_code freqm_init(
 	Assert(module_inst);
 	Assert(hw);
 	Assert(config);
+	Assert(config->ref_clock_circles);
 
 	/* Initialize device instance */
 	module_inst->hw = hw;
@@ -78,22 +82,28 @@ enum status_code freqm_init(
 	/* Perform a software reset */
 	hw->CTRLA.reg = FREQM_CTRLA_SWRST;
 
+	while (freqm_is_syncing()) {
+		/* Wait for all hardware modules to complete synchronization */
+	}
+
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, MCLK_APBAMASK_FREQM);
 
 	/* Set up the GCLK for the module */
 	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	gclk_chan_conf.source_generator = FREQM_MSR_CLOCK_SOURCE;
+	gclk_chan_conf.source_generator = config->msr_clock_source;
 	system_gclk_chan_set_config(FREQM_GCLK_ID_MSR, &gclk_chan_conf);
 	system_gclk_chan_enable(FREQM_GCLK_ID_MSR);
 
-//	gclk_chan_conf.source_generator = FREQM_REF_CLOCK_SOURCE;
-//	system_gclk_chan_set_config(FREQM_GCLK_ID_REF, &gclk_chan_conf);
-//	system_gclk_chan_enable(FREQM_GCLK_ID_REF);
+	gclk_chan_conf.source_generator = config->ref_clock_source;
+	system_gclk_chan_set_config(FREQM_GCLK_ID_REF, &gclk_chan_conf);
+	system_gclk_chan_enable(FREQM_GCLK_ID_REF);
+	
+	module_inst->ref_clock_freq = system_gclk_gen_get_hz(config->ref_clock_source);
 
 	/* Initialize the FREQM with new configurations */
-	hw->CFGA.reg = config->ref_num;
+	hw->CFGA.reg = config->ref_clock_circles;
 
 #if FREQM_CALLBACK_MODE == true
 	/* Initialize parameters */

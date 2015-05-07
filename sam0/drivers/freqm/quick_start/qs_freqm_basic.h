@@ -95,10 +95,8 @@
  * \snippet qs_freqm_basic.c main
  *
  * \subsection asfdoc_sam0_freqm_basic_use_case_imp_flow Workflow
- * -# Make the application loop infinitely.
- *    \snippet qs_freqm_basic.c main_1
  * -# Start FREQM measurement and wait until measure done then read result data.
- *    \snippet qs_freqm_basic.c main_2
+ *    \snippet qs_freqm_basic.c main_1
  * -# Toggle the board LED to indicate a measurement data is read.
- *    \snippet qs_freqm_basic.c main_3
+ *    \snippet qs_freqm_basic.c main_2
  */

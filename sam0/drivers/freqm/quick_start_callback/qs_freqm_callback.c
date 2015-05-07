@@ -86,7 +86,7 @@ void configure_freqm(void)
 void freqm_complete_callback(void)
 {
 	//! [callback_1_1]
-	if(freqm_get_result_value(&freqm_instance, &measure_value) == STATUS_OK) {
+	if(freqm_get_result_value(&freqm_instance, &measure_value) == FREQM_MEASURE_DONE) {
 		freqm_read_done = true;
 	}
 	//! [callback_1_1]

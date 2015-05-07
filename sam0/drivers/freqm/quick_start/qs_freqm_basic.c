@@ -89,21 +89,20 @@ int main(void)
 	uint32_t measure_result;
 
 	//! [main_1]
-	while (true) {
+	freqm_start_measure(&freqm_instance);
+	while (freqm_get_result_value(&freqm_instance, &measure_result) != FREQM_MEASURE_DONE) {
+	}
 	//! [main_1]
-		//! [main_2]
-		freqm_start_measure(&freqm_instance);
-		while (freqm_get_result_value(&freqm_instance, &measure_result) != STATUS_OK) {
-		}
-		//! [main_2]
-		//! [main_3]
+
+	//! [main_2]
+	while (true) {
 		port_pin_toggle_output_level(LED_0_PIN);
 		/* Add a short delay to see LED toggle */
 		volatile uint32_t delay = 50000;
 		while(delay--) {
 		}
-		//! [main_3]
 	}
+	//! [main_2]
 	//! [main]
 }
 
