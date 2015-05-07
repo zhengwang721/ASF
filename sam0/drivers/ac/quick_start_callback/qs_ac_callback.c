@@ -113,8 +113,13 @@ void configure_ac_channel(void)
 	struct system_pinmux_config ac0_pin_conf;
 	system_pinmux_get_config_defaults(&ac0_pin_conf);
 	ac0_pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
+#if (SAML22)
+	ac0_pin_conf.mux_position = MUX_PA02B_AC_AIN0;
+	system_pinmux_pin_set_config(PIN_PA02B_AC_AIN0, &ac0_pin_conf);
+#else
 	ac0_pin_conf.mux_position = MUX_PA04B_AC_AIN0;
 	system_pinmux_pin_set_config(PIN_PA04B_AC_AIN0, &ac0_pin_conf);
+#endif
 	//! [setup_11]
 
 	/* Initialize and enable the Analog Comparator channel with the user

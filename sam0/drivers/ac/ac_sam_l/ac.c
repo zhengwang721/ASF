@@ -122,8 +122,13 @@ enum status_code ac_init(
 	/* Initialize device instance */
 	module_inst->hw = hw;
 
+#if (SAML22)
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_AC);
+#else
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBD, MCLK_APBDMASK_AC);
+#endif
 
 #if AC_CALLBACK_MODE == true
 	/* Initialize parameters */
