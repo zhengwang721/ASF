@@ -239,7 +239,7 @@ enum status_code i2c_master_init(
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
 	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
-#if (SAML21)
+#if (SAML21) || (SAML22)
 	uint32_t pm_index     = sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
 #else
 	uint32_t pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
@@ -541,7 +541,7 @@ static enum status_code _i2c_master_read_packet(
 				return STATUS_ERR_PACKET_COLLISION;
 			}
 
-			if (module->send_nack && ((!sclsm_flag) && (tmp_data_length == 0)) ||
+			if ((module->send_nack && ((!sclsm_flag) && (tmp_data_length == 0))) ||
 					((sclsm_flag) && (tmp_data_length == 1))) {
 				/* Set action to NACK */
 				i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
