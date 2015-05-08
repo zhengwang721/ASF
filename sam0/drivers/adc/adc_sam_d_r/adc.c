@@ -610,6 +610,26 @@ static enum status_code _adc_set_config(
 }
 
 /**
+ * \brief Initializes the ADC channel sequence
+ *
+ * Like SAMD and SAMR21 the INPUTOFFSET register will be incremented one 
+ * automatically after a conversion done, causing the next conversion 
+ * to be done with the positive input equal to MUXPOS + INPUTOFFSET, 
+ * it is scanning continuously one by one even ADC channels are not continuous.
+ *
+ * Initializes the ADC channel sequence by the sequence of pin_array.
+ *
+ * \param[in]  pin_array   The array of the Mux selection for the positive ADC input
+ * \param[in]  size        The size of pin_array
+ */
+void adc_regular_ain_channel(uint32_t *pin_array, uint8_t size)
+{
+	for (int i = 0; i < size; i++) {
+		_adc_configure_ain_pin(pin_array[i]);
+  	}
+}	
+
+/**
  * \brief Initializes the ADC
  *
  * Initializes the ADC device struct and the hardware module based on the
