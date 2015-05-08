@@ -99,6 +99,7 @@ typedef struct {
 #define DACC_MR_FASTWKUP (0x1u << 6) /**< \brief (DACC_MR) Fast Wake-up Mode */
 #define   DACC_MR_FASTWKUP_STAMODE (0x0u << 6) /**< \brief (DACC_MR) Normal sleep mode: the sleep mode is defined by the SLEEP bit. Voltage reference is OFF between conversions. */
 #define   DACC_MR_FASTWKUP_FASTWAKEUP (0x1u << 6) /**< \brief (DACC_MR) Fast wake-up after sleep mode: voltage reference is kept ON between conversions; DAC core is OFF */
+#define DACC_MR_ONE (0x1u << 8) /**< \brief (DACC_MR) Bit 8 must always be set to 1 when programming the DACC_MR */
 #define DACC_MR_REFRESH_Pos 8
 #define DACC_MR_REFRESH_Msk (0xffu << DACC_MR_REFRESH_Pos) /**< \brief (DACC_MR) Automatic Refresh Period */
 #define DACC_MR_REFRESH(value) ((DACC_MR_REFRESH_Msk & ((value) << DACC_MR_REFRESH_Pos)))
