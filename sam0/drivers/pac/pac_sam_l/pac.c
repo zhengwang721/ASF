@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM L21 Peripheral Access Controller Driver
+ * \brief SAM L21/L22 Peripheral Access Controller Driver
  *
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *

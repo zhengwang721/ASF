@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM PAC Quick Start
+ * \brief SAM L22 Xplained Pro board configuration.
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,79 +43,8 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include <asf.h>
 
-void config_port_pins(void);
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [pin_setup]
-void config_port_pins(void)
-{
-	struct port_config pin_conf;
-
-	port_get_config_defaults(&pin_conf);
-
-	pin_conf.direction  = PORT_PIN_DIR_INPUT;
-	pin_conf.input_pull = PORT_PIN_PULL_UP;
-	port_pin_set_config(BUTTON_0_PIN, &pin_conf);
-
-	pin_conf.direction = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(LED_0_PIN, &pin_conf);
-}
-//! [pin_setup]
-
-int main (void)
-{
-//! [main]
-	system_init();
-
-//! [init]
-	config_port_pins();
-//! [init]
-
-//! [init_lock]
-	system_peripheral_lock(SYSTEM_PERIPHERAL_ID(PORT),
-			~SYSTEM_PERIPHERAL_ID(PORT));
-//! [init_lock]
-
-//! [enable_interrupts]
-#if (SAML21) || (SAML22) || defined(__DOXYGEN__)
-	system_pac_enable_interrupt();
-#endif
-	system_interrupt_enable_global();
-//! [enable_interrupts]
-
-//! [button_press]
-	while (port_pin_get_input_level(BUTTON_0_PIN)) {
-		/* Wait for button press */
-	}
-//! [button_press]
-
-//! [disable_interrupts]
-	system_interrupt_enter_critical_section();
-//! [disable_interrupts]
-
-//! [unlock_perph]
-	system_peripheral_unlock(SYSTEM_PERIPHERAL_ID(PORT),
-			~SYSTEM_PERIPHERAL_ID(PORT));
-//! [unlock_perph]
-
-//! [alter_config]
-	port_pin_toggle_output_level(LED_0_PIN);
-//! [alter_config]
-
-//! [lock_perph]
-	system_peripheral_lock(SYSTEM_PERIPHERAL_ID(PORT),
-			~SYSTEM_PERIPHERAL_ID(PORT));
-//! [lock_perph]
-
-//! [enable_interrupts_2]
-	system_interrupt_leave_critical_section();
-//! [enable_interrupts_2]
-
-//! [inf_loop]
-	while (1) {
-		/* Do nothing */
-	}
-//! [inf_loop]
-//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */
