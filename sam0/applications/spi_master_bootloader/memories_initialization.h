@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Example specific AT45DBX configuration file
+ * \brief Declaration of memory initialization function used by FatFS example.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,34 +40,14 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+
+#ifndef MEMORIES_INITIALIZATION_SAM_H_INCLUDED
+#define MEMORIES_INITIALIZATION_SAM_H_INCLUDED
+
+#include <string.h>
+
+/** \brief Initialize the memories used by examples.
  */
+void memories_initialization(void);
 
-
-#ifndef _CONF_AT45DBX_H_
-#define _CONF_AT45DBX_H_
-
-#include "board.h"
-
-//! Select the SPI module AT45DBX is connected to
-#define AT45DBX_SPI                 EXT2_SPI_MODULE
-
-//! Size of AT45DBX data flash memories to manage.
-#define AT45DBX_MEM_SIZE            AT45DBX_500KB
-
-//! Number of AT45DBX components to manage.
-#define AT45DBX_MEM_CNT             1
-
-#define AT45DBX_SPI_PINMUX_SETTING  EXT2_SPI_SERCOM_MUX_SETTING
-#define AT45DBX_SPI_PINMUX_PAD0     EXT2_SPI_SERCOM_PINMUX_PAD0
-#define AT45DBX_SPI_PINMUX_PAD1     EXT2_SPI_SERCOM_PINMUX_PAD1
-#define AT45DBX_SPI_PINMUX_PAD2     EXT2_SPI_SERCOM_PINMUX_PAD2
-#define AT45DBX_SPI_PINMUX_PAD3     EXT2_SPI_SERCOM_PINMUX_PAD3
-
-#define AT45DBX_CS                  EXT2_PIN_15
-
-//! SPI master speed in Hz.
-#define AT45DBX_CLOCK_SPEED         9600
-
-#endif  // _CONF_AT45DBX_H_
+#endif /* MEMORIES_INITIALIZATION_SAM_H_INCLUDED */
