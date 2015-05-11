@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM Watchdog Driver Callback Quick Start
+ * \brief SAM L22 Xplained Pro test configuration.
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,80 +43,21 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include <asf.h>
 
-void watchdog_early_warning_callback(void);
-void configure_wdt(void);
-void configure_wdt_callbacks(void);
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-//! [setup]
-void watchdog_early_warning_callback(void)
-{
-	port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
-}
+#define CONF_STDIO_USART               EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING         EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0         EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1         EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2         EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3         EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE            38400
 
-void configure_wdt(void)
-{
-	/* Create a new configuration structure for the Watchdog settings and fill
-	 * with the default module settings. */
-	//! [setup_1]
-	struct wdt_conf config_wdt;
-	//! [setup_1]
-	//! [setup_2]
-	wdt_get_config_defaults(&config_wdt);
-	//! [setup_2]
+#define CONF_WDT_TIMEOUT_PERIOD        WDT_PERIOD_2048CLK
+#define CONF_WDT_EARLY_WARNING_PERIOD  WDT_PERIOD_1024CLK
+#define CONF_WDT_EARLY_WARNING_WAIT_MS 33
+#define CONF_WDT_RESET_WAIT_MS         50
 
-	/* Set the Watchdog configuration settings */
-	//! [setup_3]
-	config_wdt.always_on            = false;
-#if !(SAML21) && !(SAML22)
-	config_wdt.clock_source         = GCLK_GENERATOR_4;
-#endif
-	config_wdt.timeout_period       = WDT_PERIOD_4096CLK;
-	config_wdt.early_warning_period = WDT_PERIOD_2048CLK;
-	//! [setup_3]
-
-	/* Initialize and enable the Watchdog with the user settings */
-	//! [setup_4]
-	wdt_set_config(&config_wdt);
-	//! [setup_4]
-}
-
-void configure_wdt_callbacks(void)
-{
-	//! [setup_5]
-	wdt_register_callback(watchdog_early_warning_callback,
-		WDT_CALLBACK_EARLY_WARNING);
-	//! [setup_5]
-
-	//! [setup_6]
-	wdt_enable_callback(WDT_CALLBACK_EARLY_WARNING);
-	//! [setup_6]
-}
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-	//! [setup_init]
-	configure_wdt();
-	configure_wdt_callbacks();
-	//! [setup_init]
-
-//! [main]
-//! [main_1]
-	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
-//! [main_1]
-
-//! [main_2]
-	system_interrupt_enable_global();
-//! [main_2]
-
-	//! [main_3]
-	while (true) {
-		/* Wait for callback */
-	}
-	//! [main_3]
-//! [main]
-}
+#endif /* CONF_TEST_H_INCLUDED */
