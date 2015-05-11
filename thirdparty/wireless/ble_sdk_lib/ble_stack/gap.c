@@ -573,26 +573,38 @@ at_ble_status_t at_ble_addr_set(at_ble_addr_t* address)
 
 at_ble_status_t at_ble_addr_get(at_ble_addr_t* address)
 {
-	#define AT_BT_DEFAULT_BDADDR "\x01\x23\x45\x67\x89\xAB"
+  uint8_t addr[AT_BLE_ADDR_LEN+1];
+  uint32_t chip_id = 0;
+  uint32_t gap_dev_addr;
 
-	if(address == NULL)
-	{
-		return AT_BLE_INVALID_PARAM;
-	}
+  if(address == NULL)
+  {
+	  return AT_BLE_INVALID_PARAM;
+  }
 
-	if(device.at_addr_set == true)
-	{
-		address->type = device.at_dev_addr.type;
-		memcpy(address->addr, device.at_dev_addr.addr,AT_BLE_ADDR_LEN);
-	}
-	else
-	{
-		// To do check device default address
-		address->type = AT_BLE_ADDRESS_PUBLIC;
-		memcpy(address->addr,(uint8_t *)AT_BT_DEFAULT_BDADDR,AT_BLE_ADDR_LEN);
-	}
-	
-	return AT_BLE_SUCCESS;
+  dbg_rd_mem_req_handler(0x4000B000,(uint8_t *)&chip_id,4);
+  
+  chip_id&=0xFFFFFF00;
+  switch(chip_id)
+  {
+	  case 0x2000a000 :
+	  gap_dev_addr = 0x10000E26;
+	  break;
+	  case 0x2000a200 :
+	  gap_dev_addr = 0x10001096;
+	  break;
+	  case 0x2000a300 :
+	  gap_dev_addr = 0x10001156;
+	  break;
+	  case 0x2000a400 :
+	  gap_dev_addr = 0x1000085A;
+	  break;
+  }
+
+  dbg_rd_mem_req_handler(gap_dev_addr, addr, AT_BLE_ADDR_LEN+1);
+  address->type = AT_BLE_ADDRESS_PUBLIC;
+  memcpy(address->addr, addr+1, 6);
+  return AT_BLE_SUCCESS;
 }
 
 at_ble_status_t at_ble_adv_data_set( uint8_t const *const adv_data,

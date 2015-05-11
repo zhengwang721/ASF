@@ -4,7 +4,7 @@
 		BLE STACK LIB
 		</info>
 		<build type="include-path" value="."/>		
-  <require idref="thirdparty.wireless.ble_sdk_lib"/>
+		<require idref="thirdparty.wireless.ble_sdk_lib"/>
 		<require idref="thirdparty.wireless.ble_sdk_lib.ble_stack"/>
 		<require idref="thirdparty.wireless.ble_sdk_lib.ble_api"/>
 		<require idref="thirdparty.wireless.ble_sdk_lib.platform"/>
