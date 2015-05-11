@@ -60,7 +60,7 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_nvm_prerequisites
@@ -90,7 +90,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_NVM_RWWEE</td>
- *    <td>SAML21, SAMD21-64K</td>
+ *    <td>SAML21, SAML22, SAMD21-64K</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -281,7 +281,7 @@ extern "C" {
  * Define NVM features set according to different device family
  * @{
 */
-#if (SAML21) || defined(SAMD21_64K) || defined(__DOXYGEN__)
+#if (SAML21) || (SAML22) || defined(SAMD21_64K) || defined(__DOXYGEN__)
 /** Read while write EEPROM emulation feature*/
 #  define FEATURE_NVM_RWWEE
 #endif
