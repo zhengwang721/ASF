@@ -47,7 +47,7 @@
 #define CONF_SLCD_H_INCLUDED
 
 /** Select SLCD clock. Use 32.768KHz internal ULP oscillator(OSCULP32K)
- *  for RTC clock.
+ *  for SLCD clock.
  */
 #  define RTC_CLOCK_SOURCE    RTC_CLOCK_SELECTION_ULP1K
 
