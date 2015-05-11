@@ -38,6 +38,7 @@
 			<build type="include-path" value="pac_sam_l"/>
 			<build type="c-source" value="pac_sam_l/pac.c"/>
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 		</module>
 	</select-by-device>
 
