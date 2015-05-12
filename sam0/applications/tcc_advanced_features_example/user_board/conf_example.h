@@ -3,7 +3,7 @@
  *
  * \brief SAM D21 TCC Advanced Features example configuration
  *
- * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
