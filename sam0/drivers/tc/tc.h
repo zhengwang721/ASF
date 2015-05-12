@@ -1705,6 +1705,7 @@ static inline void tc_clear_status(
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_tc_basic_use_case
+ *  - \subpage asfdoc_sam0_tc_macth_freq_use_case
  * \if TC_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_tc_timer_use_case
  *  - \subpage asfdoc_sam0_tc_callback_use_case

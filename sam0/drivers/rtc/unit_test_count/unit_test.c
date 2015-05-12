@@ -71,8 +71,9 @@
  * The following kit is required for carrying out the test:
  *  - SAM D21 Xplained Pro board
  *  - SAM L21 Xplained Pro board
+ *  - SAM R21 Xplained Pro board
  *  - SAM DA1 Xplained Pro board
- *
+ *  
  * \section asfdoc_sam0_rtc_unit_test_setup Setup
  *
  * To run the test:

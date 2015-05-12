@@ -448,6 +448,12 @@ enum status_code adc_init(
 
 void adc_get_config_defaults(
 		struct adc_config *const config);
+
+#if (SAMD) || (SAMR21)
+void adc_regular_ain_channel(
+		uint32_t *pin_array, uint8_t size);
+#endif
+
 /** @} */
 
 /**

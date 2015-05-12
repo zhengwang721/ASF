@@ -510,6 +510,9 @@ bool events_is_busy(struct events_resource *resource);
  *
  * Trigger an event by software.
  *
+ * \note Software event works on either a synchronous path or resynchronized path, and
+ * edge detection must be configured to rising-edge detection.
+ *
  * \param[in] resource Pointer to an \ref events_resource struct
  *
  * \return Status of the event software procedure.

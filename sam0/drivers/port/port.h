@@ -658,16 +658,16 @@ static inline enum status_code port_input_event_set_config(
 						   		   | PORT_EVCTRL_PID0(pin_index);
 			break;
 		case PORT_INPUT_EVENT_1:
-			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
-						   		   | PORT_EVCTRL_PID0(pin_index);
+			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT1(config->action)
+						   		   | PORT_EVCTRL_PID1(pin_index);
 			break;
 		case PORT_INPUT_EVENT_2:
-			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
-						   		   | PORT_EVCTRL_PID0(pin_index);
+			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT2(config->action)
+						   		   | PORT_EVCTRL_PID2(pin_index);
 			break;
 		case PORT_INPUT_EVENT_3:
-			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
-						   		   | PORT_EVCTRL_PID0(pin_index);
+			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT3(config->action)
+						   		   | PORT_EVCTRL_PID3(pin_index);
 			break;
 		default:
 			Assert(false);
