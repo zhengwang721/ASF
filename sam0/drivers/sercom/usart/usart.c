@@ -71,7 +71,11 @@ static enum status_code _usart_set_config(
 	/* Cache new register values to minimize the number of register writes */
 	uint32_t ctrla = 0;
 	uint32_t ctrlb = 0;
+#ifdef FEATURE_USART_ISO7816
+	uint32_t ctrlc = 0;
+#endif
 	uint16_t baud  = 0;
+	uint32_t transfer_mode;
 
 	enum sercom_asynchronous_operation_mode mode = SERCOM_ASYNC_OPERATION_MODE_ARITHMETIC;
 	enum sercom_asynchronous_sample_num sample_num = SERCOM_ASYNC_SAMPLE_NUM_16;
@@ -115,8 +119,14 @@ static enum status_code _usart_set_config(
 
 	enum status_code status_code = STATUS_OK;
 
+	transfer_mode = (uint32_t)config->transfer_mode;
+#ifdef FEATURE_USART_ISO7816
+	if(config->iso7816_opt.enabled) {
+		transfer_mode = config->iso7816_opt.protocol_t;
+	}
+#endif
 	/* Get baud value from mode and clock */
-	switch (config->transfer_mode)
+	switch (transfer_mode)
 	{
 		case USART_TRANSFER_SYNCHRONOUSLY:
 			if (!config->use_external_clock) {
@@ -159,7 +169,7 @@ static enum status_code _usart_set_config(
 	usart_hw->BAUD.reg = baud;
 
 	/* Set sample mode */
-	ctrla |= config->transfer_mode;
+	ctrla |= transfer_mode;
 
 	if (config->use_external_clock == false) {
 		ctrla |= SERCOM_USART_CTRLA_MODE(0x1);
@@ -168,8 +178,8 @@ static enum status_code _usart_set_config(
 		ctrla |= SERCOM_USART_CTRLA_MODE(0x0);
 	}
 
-	/* Set stopbits, character size and enable transceivers */
-	ctrlb = (uint32_t)config->stopbits | (uint32_t)config->character_size |
+	/* Set stopbits and enable transceivers */
+	ctrlb =  
 		#ifdef FEATURE_USART_IRDA
 			(config->encoding_format_enable << SERCOM_USART_CTRLB_ENC_Pos) |
 		#endif
@@ -182,6 +192,27 @@ static enum status_code _usart_set_config(
 			(config->receiver_enable << SERCOM_USART_CTRLB_RXEN_Pos) |
 			(config->transmitter_enable << SERCOM_USART_CTRLB_TXEN_Pos);
 
+#ifdef FEATURE_USART_ISO7816
+	if(config->iso7816_opt.enabled) {
+		ctrla |= SERCOM_USART_CTRLA_FORM(0x07) | \
+				SERCOM_USART_CTRLA_RXINV | SERCOM_USART_CTRLA_TXINV;
+		ctrlb |=  SERCOM_USART_CTRLB_PMODE | USART_CHARACTER_SIZE_8BIT;
+		
+		switch(config->iso7816_opt.protocol_t) {
+			case ISO7816_PROTOCOL_T_0:
+				ctrlb |= (uint32_t)config->stopbits;	
+				ctrlc |= SERCOM_USART_CTRLC_GTIME(config->iso7816_opt.guard_time) | \
+						(config->iso7816_opt.inhibit_nack) << SERCOM_USART_CTRLC_INACK_Pos | \
+						(config->iso7816_opt.dis_suc_nack) << SERCOM_USART_CTRLC_MAXITER_Pos | \
+						SERCOM_USART_CTRLC_MAXITER(config->iso7816_opt.max_iterations);
+				break;	
+			case ISO7816_PROTOCOL_T_1:
+				ctrlb |= USART_STOPBITS_1;
+				break;		
+		}
+	} else {
+#endif
+	ctrlb |= (uint32_t)config->character_size;
 	/* Check parity mode bits */
 	if (config->parity != USART_PARITY_NONE) {
 #ifdef FEATURE_USART_LIN_SLAVE
@@ -205,6 +236,9 @@ static enum status_code _usart_set_config(
 		ctrla |= SERCOM_USART_CTRLA_FORM(0);
 #endif
 	}
+#ifdef FEATURE_USART_ISO7816
+	}
+#endif
 
 	/* Set whether module should run in standby. */
 	if (config->run_in_standby || system_is_debugger_present()) {
@@ -312,6 +346,9 @@ enum status_code usart_init(
 #endif
 #ifdef FEATURE_USART_START_FRAME_DECTION
 	module->start_frame_detection_enabled = config->start_frame_detection_enable;
+#endif
+#ifdef FEATURE_USART_ISO7816
+	module->iso7816_mode_enabled = config->iso7816_opt.enabled;
 #endif
 	/* Set configuration according to the config struct */
 	status_code = _usart_set_config(module, config);
