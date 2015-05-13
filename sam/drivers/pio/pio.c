@@ -198,7 +198,6 @@ void pio_set_peripheral(Pio *p_pio, const pio_type_t ul_type,
 		ul_sr = p_pio->PIO_ABCDSR[1];
 		p_pio->PIO_ABCDSR[1] &= (~ul_mask & ul_sr);
 		break;
-
 	case PIO_PERIPH_B:
 		ul_sr = p_pio->PIO_ABCDSR[0];
 		p_pio->PIO_ABCDSR[0] = (ul_mask | ul_sr);
@@ -206,7 +205,6 @@ void pio_set_peripheral(Pio *p_pio, const pio_type_t ul_type,
 		ul_sr = p_pio->PIO_ABCDSR[1];
 		p_pio->PIO_ABCDSR[1] &= (~ul_mask & ul_sr);
 		break;
-#if (!SAMG)
 	case PIO_PERIPH_C:
 		ul_sr = p_pio->PIO_ABCDSR[0];
 		p_pio->PIO_ABCDSR[0] &= (~ul_mask & ul_sr);
@@ -214,7 +212,6 @@ void pio_set_peripheral(Pio *p_pio, const pio_type_t ul_type,
 		ul_sr = p_pio->PIO_ABCDSR[1];
 		p_pio->PIO_ABCDSR[1] = (ul_mask | ul_sr);
 		break;
-
 	case PIO_PERIPH_D:
 		ul_sr = p_pio->PIO_ABCDSR[0];
 		p_pio->PIO_ABCDSR[0] = (ul_mask | ul_sr);
@@ -222,7 +219,6 @@ void pio_set_peripheral(Pio *p_pio, const pio_type_t ul_type,
 		ul_sr = p_pio->PIO_ABCDSR[1];
 		p_pio->PIO_ABCDSR[1] = (ul_mask | ul_sr);
 		break;
-#endif
 		/* Other types are invalid in this function */
 	case PIO_INPUT:
 	case PIO_OUTPUT_0:
@@ -364,7 +360,7 @@ uint32_t pio_configure(Pio *p_pio, const pio_type_t ul_type,
 	switch (ul_type) {
 	case PIO_PERIPH_A:
 	case PIO_PERIPH_B:
-#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM)
+#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 	case PIO_PERIPH_C:
 	case PIO_PERIPH_D:
 #endif
@@ -791,7 +787,7 @@ uint32_t pio_configure_pin(uint32_t ul_pin, const uint32_t ul_flags)
 		pio_pull_up(p_pio, (1 << (ul_pin & 0x1F)),
 				(ul_flags & PIO_PULLUP));
 		break;
-#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM)
+#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 	case PIO_TYPE_PIO_PERIPH_C:
 		pio_set_peripheral(p_pio, PIO_PERIPH_C, (1 << (ul_pin & 0x1F)));
 		pio_pull_up(p_pio, (1 << (ul_pin & 0x1F)),
@@ -888,7 +884,7 @@ uint32_t pio_configure_pin_group(Pio *p_pio,
 		pio_set_peripheral(p_pio, PIO_PERIPH_B, ul_mask);
 		pio_pull_up(p_pio, ul_mask, (ul_flags & PIO_PULLUP));
 		break;
-#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM)
+#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 	case PIO_TYPE_PIO_PERIPH_C:
 		pio_set_peripheral(p_pio, PIO_PERIPH_C, ul_mask);
 		pio_pull_up(p_pio, ul_mask, (ul_flags & PIO_PULLUP));
@@ -1157,7 +1153,7 @@ Pdc *pio_capture_get_pdc_base(const Pio *p_pio)
 }
 #endif
 
-#if (SAM4C || SAM4CP || SAM4CM)
+#if (SAM4C || SAM4CP || SAM4CM || SAMG55)
 /**
  * \brief Set PIO IO drive.
  *
@@ -1168,13 +1164,8 @@ Pdc *pio_capture_get_pdc_base(const Pio *p_pio)
 void pio_set_io_drive(Pio *p_pio, uint32_t ul_line,
 		enum pio_io_drive_mode mode)
 {
-	if (ul_line > 15) {
-		p_pio->PIO_DRIVER2 &= ~(3 << ((ul_line - 15) * 2));
-		p_pio->PIO_DRIVER2 |= mode << ((ul_line - 15) * 2);
-	} else {
-		p_pio->PIO_DRIVER1 &= ~(3 << (ul_line * 2));
-		p_pio->PIO_DRIVER1 |= mode << (ul_line * 2);
-	}
+	p_pio->PIO_DRIVER &= ~(1 << ul_line);
+	p_pio->PIO_DRIVER |= mode << ul_line;
 }
 #endif
 
