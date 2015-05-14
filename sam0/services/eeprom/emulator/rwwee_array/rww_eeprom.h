@@ -58,7 +58,7 @@
  *  - NVM (Non-Volatile Memory Controller)
  *
  * The following devices can use this module:
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM D21
  *
  * The outline of this documentation is as follows:

@@ -9,5 +9,6 @@
 		<require idref="sam0.services.rww_eeprom_emulator"/>
 		<require idref="sam0.drivers.bod"/>
 		<device-support value="saml21"/>
+		<device-support value="saml22"/>
 	</module>
 </asf>
