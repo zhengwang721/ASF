@@ -48,8 +48,9 @@
 //! [setup]
 
 //! [callback_2]
-bool volatile freqm_read_done = false;
+enum freqm_status measure_status;
 uint32_t measure_value;
+bool volatile freqm_read_done = false;
 //! [callback_2]
 
 void configure_freqm(void);
@@ -72,6 +73,7 @@ void configure_freqm(void)
 	//! [setup_2_1]
 	//! [setup_2_2]
 	freqm_get_config_defaults(&config_freqm);
+	config_freqm.ref_clock_circles = 255;
 	//! [setup_2_2]
 
 	/* Alter any FREQM configuration settings here if required */
@@ -86,9 +88,7 @@ void configure_freqm(void)
 void freqm_complete_callback(void)
 {
 	//! [callback_1_1]
-	if(freqm_get_result_value(&freqm_instance, &measure_value) == FREQM_MEASURE_DONE) {
-		freqm_read_done = true;
-	}
+	freqm_read_done = true;
 	//! [callback_1_1]
 }
 //! [callback_1]
@@ -120,26 +120,32 @@ int main(void)
 	//! [setup_init]
 
 	//! [main]
-
-	//! [main_1]
 	while (true) {
-	//! [main_1]
-		//! [main_2]
+		//! [main_1]
 		freqm_start_measure(&freqm_instance);
-		//! [main_2]
+		//! [main_1]
 
-		//! [main_3]
+		//! [main_2]
 		while (!freqm_read_done) {
 		}
-		freqm_read_done = false;
+		measure_status = freqm_get_result_value(&freqm_instance, &measure_value);
+		//! [main_2]
+		//! [main_3]
+		if (measure_status == FREQM_STATUS_MEASURE_DONE) {
+			freqm_read_done = false;
+			LED_On(LED_0_PIN);
+		}
 		//! [main_3]
 		//! [main_4]
-		port_pin_toggle_output_level(LED_0_PIN);
-		/* Add a short delay to see LED toggle */
-		volatile uint32_t delay = 50000;
-		while(delay--) {
+		if (measure_status == FREQM_STATUS_CNT_OVERFLOW) {
+			freqm_clear_overflow(&freqm_instance);
+			break;
 		}
 		//! [main_4]
+	}
+	LED_Toggle(LED_0_PIN);
+	volatile uint32_t delay = 50000;
+	while(delay--) {
 	}
 	//! [main]
 }

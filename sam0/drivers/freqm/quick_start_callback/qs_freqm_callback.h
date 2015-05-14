@@ -112,14 +112,13 @@
  * \snippet qs_freqm_callback.c main
  *
  * \subsection asfdoc_sam0_freqm_callback_use_case_imp_flow Workflow
- * -# Make the application loop infinitely.
- *    \snippet qs_freqm_callback.c main_1
  * -# Start an asynchronous FREQM read job, to store measurement data into the
  *     global buffer and generate a callback when complete.
- *    \snippet qs_freqm_callback.c main_2
+ *    \snippet qs_freqm_callback.c main_1
  * -# Wait until the asynchronous read job is complete.
+ *    \snippet qs_freqm_callback.c main_2
+ * -# The board LED on to indicate measurement data read.
  *    \snippet qs_freqm_callback.c main_3
- * -# Toggle the board LED to indicate specific size of measurement data were
- *     read.
+ * -# The board LED toggled to indicate measurement overflow occous.
  *    \snippet qs_freqm_callback.c main_4
  */

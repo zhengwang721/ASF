@@ -165,6 +165,7 @@ static void cdc_uart_init(void)
 static void run_freqm_polling_read_test(const struct test_case *test)
 {
 	uint32_t measure_result;
+	enum freqm_status measure_status;
 
 	/* Structure for FREQM configuration */
 	struct freqm_config config;
@@ -176,10 +177,13 @@ static void run_freqm_polling_read_test(const struct test_case *test)
 
 	/* Read measure data */
 	freqm_start_measure(&freqm_instance);
-	while (freqm_get_result_value(&freqm_instance, &measure_result) != FREQM_MEASURE_DONE) {
+	while ((measure_status = freqm_get_result_value(&freqm_instance, &measure_result))
+			== FREQM_STATUS_MEASURE_BUSY) {
 	}
-
 	/* Test result */
+	test_assert_true(test, measure_status == FREQM_STATUS_CNT_OVERFLOW, 
+			"Overflow condition occus in polling mode!");
+
 	test_assert_true(test,
 			(measure_result > (FREQM_CLK_FREQ_VAL - FREQM_OFFSET)) &&
 			(measure_result < (FREQM_CLK_FREQ_VAL + FREQM_OFFSET)),
@@ -198,6 +202,7 @@ static void run_freqm_polling_read_test(const struct test_case *test)
 static void run_freqm_callback_read_test(const struct test_case *test)
 {
 	uint32_t measure_result;
+	enum freqm_status measure_status;
 
 	/* Register and enable FREQM read callback */
 	freqm_register_callback(&freqm_instance, freqm_complete_callback,
@@ -208,9 +213,12 @@ static void run_freqm_callback_read_test(const struct test_case *test)
 	freqm_start_measure(&freqm_instance);
 	while(!interrupt_flag) {
 	}
-	freqm_get_result_value(&freqm_instance, &measure_result);
+	measure_status = freqm_get_result_value(&freqm_instance, &measure_result);
 
 	/* Test result */
+	test_assert_true(test, measure_status == FREQM_STATUS_CNT_OVERFLOW, 
+			"Overflow condition occus in callback mode!");
+
 	test_assert_true(test,
 			(measure_result > (FREQM_CLK_FREQ_VAL - FREQM_OFFSET)) &&
 			(measure_result < (FREQM_CLK_FREQ_VAL + FREQM_OFFSET)),

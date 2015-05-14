@@ -160,13 +160,14 @@ struct freqm_module {
 #endif
 };
 
+/** Enum for the possible status types for the FREQM module. */
 enum freqm_status {
 	/** FREQM measurement is finish. */
-	FREQM_MEASURE_DONE =  0,
+	FREQM_STATUS_MEASURE_DONE =  0,
 	/** FREQM measurement is ongoing or not. */
-	FREQM_MEASURE_BUSY =  1,
+	FREQM_STATUS_MEASURE_BUSY =  1,
 	/** FREQM sticky count value overflow. */
-	FREQM_CNT_OVERFLOW =  2,
+	FREQM_STATUS_CNT_OVERFLOW =  2,
 };
 
 /**
@@ -179,7 +180,7 @@ struct freqm_config {
 	enum gclk_generator msr_clock_source;
 	/** GCLK source select for reference. */
 	enum gclk_generator ref_clock_source;
-	/** Number of reference Clock Cycles. Must be a non-zero value. */
+	/** Measurement duration in number of reference clock cycles. Range 1~255. */
 	uint16_t ref_clock_circles;
 };
 
@@ -302,9 +303,11 @@ static inline void freqm_disable(
  */
 static inline void freqm_start_measure(struct freqm_module *const module)
 {
+	/* Sanity check arguments */
 	Assert(module);
 	Assert(module->hw);
 
+	/* Trigger measurement */
 	module->hw->CTRLB.reg |= FREQM_CTRLB_START;
 }
 
@@ -325,7 +328,6 @@ static inline void freqm_clear_overflow(struct freqm_module *const module)
 	module->hw->STATUS.reg |= FREQM_STATUS_OVF;
 }
 
-
 /**
  * \name Read FREQM Result
  * @{
@@ -340,9 +342,9 @@ static inline void freqm_clear_overflow(struct freqm_module *const module)
  * \param[out] result       Pointer to store the result value in
  *
  * \return Status of the FREQM read request.
- * \retval FREQM_MEASURE_DONE   Measurement result was retrieved successfully
- * \retval FREQM_MEASURE_BUSY   Measurement result was not ready
- * \retval FREQM_CNT_OVERFLOW   Measurement result was overflow
+ * \retval FREQM_STATUS_MEASURE_DONE   Measurement result was retrieved successfully
+ * \retval FREQM_STATUS_MEASURE_BUSY   Measurement result was not ready
+ * \retval FREQM_STATUS_CNT_OVERFLOW   Measurement result was overflow
  *                              
  * \note If overflow occurred, configure faster reference clock or reduce reference clock cycles.
  */
@@ -361,16 +363,16 @@ static inline enum freqm_status freqm_get_result_value(
 
 	if (freqm_hw->STATUS.reg & FREQM_STATUS_BUSY) {
 		/* Result not ready */
-		return FREQM_MEASURE_BUSY;
+		return FREQM_STATUS_MEASURE_BUSY;
 	} else {
 		if (freqm_hw->STATUS.reg & FREQM_STATUS_OVF) {
 			/* Overflow */
-			return FREQM_CNT_OVERFLOW;
+			return FREQM_STATUS_CNT_OVERFLOW;
 		} else {
 			/* Get measurement output data (it will clear data done flag) */
 			result_cal = freqm_hw->VALUE.reg;
 			*result = result_cal / freqm_hw->CFGA.reg * module_inst->ref_clock_freq;
-			return FREQM_MEASURE_DONE;
+			return FREQM_STATUS_MEASURE_DONE;
 		}
 	}
 }
