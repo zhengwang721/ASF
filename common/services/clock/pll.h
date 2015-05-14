@@ -73,6 +73,8 @@
 # include "sam4n/pll.h"
 #elif SAMG
 # include "samg/pll.h"
+#elif SAMV71
+# include "samv71/pll.h"
 #elif (UC3A0 || UC3A1)
 # include "uc3a0_a1/pll.h"
 #elif UC3A3

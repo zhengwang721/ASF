@@ -1223,6 +1223,30 @@
 		SAM_PART_IS_DEFINED(SAMG55N19) \
 		)
 /** @} */
+
+/**
+ * \name SAMV71 series
+ * @{
+ */
+#define SAMV71J ( \
+		SAM_PART_IS_DEFINED(SAMV71J19) || \
+		SAM_PART_IS_DEFINED(SAMV71J20) || \
+		SAM_PART_IS_DEFINED(SAMV71J21) \
+	)
+
+#define SAMV71N ( \
+		SAM_PART_IS_DEFINED(SAMV71N19) || \
+		SAM_PART_IS_DEFINED(SAMV71N20) || \
+		SAM_PART_IS_DEFINED(SAMV71N21) \
+	)
+
+#define SAMV71Q ( \
+		SAM_PART_IS_DEFINED(SAMV71Q19) || \
+		SAM_PART_IS_DEFINED(SAMV71Q20) || \
+		SAM_PART_IS_DEFINED(SAMV71Q21) \
+	)
+/** @} */
+
 /**
  * \name SAM families
  * @{
@@ -1293,6 +1317,9 @@
 /** SAMG Family */
 #define SAMG (SAMG51 || SAMG53 || SAMG54 || SAMG55)
 
+/** SAMV71 Family */
+#define SAMV71 (SAMV71J || SAMV71N || SAMV71Q)
+
 /** SAM0 product line (cortex-m0+) */
 #define SAM0 (SAMD20 || SAMD21 || SAMR21 || SAMD10 || SAMD11 || SAML21)
 
@@ -1300,7 +1327,7 @@
 
 /** SAM product line */
 #define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || \
-		SAM0 || SAM4N || SAM4C || SAM4CM || SAM4CP || SAMG)
+		SAM0 || SAM4N || SAM4C || SAM4CM || SAM4CP || SAMG || SAMV71)
 
 /** @} */
 
