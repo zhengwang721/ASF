@@ -439,7 +439,7 @@ settings_wipe(void)
 // MARK: - Other Functions
 /*****************************************************************************/
 
-#if SETTINGS_DEBUG
+#if _DEBUG_
 #include <stdio.h>
 /*---------------------------------------------------------------------------*/
 void
@@ -474,6 +474,6 @@ settings_debug_dump(void)
   }
   printf("}\n");
 }
-#endif /* DEBUG */
+#endif /* _DEBUG_ */
 
 #endif /* CONTIKI_CONF_SETTINGS_MANAGER */

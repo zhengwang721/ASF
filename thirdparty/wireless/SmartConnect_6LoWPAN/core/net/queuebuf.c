@@ -129,8 +129,8 @@ static struct ctimer renew_timer;
 LIST(queuebuf_list);
 #endif /* QUEUEBUF_DEBUG */
 
-#define DEBUG 0
-#if DEBUG
+#define _DEBUG_ 0
+#if _DEBUG_
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #else

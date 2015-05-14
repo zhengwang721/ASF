@@ -110,8 +110,8 @@ static struct arp_entry arp_table[UIP_ARPTAB_SIZE];
 static uint8_t arptime;
 static uint8_t tmpage;
 
-#define UIP_DEBUG 0
-#if UIP_DEBUG
+#define _DEBUG_ 0
+#if _DEBUG_
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #else

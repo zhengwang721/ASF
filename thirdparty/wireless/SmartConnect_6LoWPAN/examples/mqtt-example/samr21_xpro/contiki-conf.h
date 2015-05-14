@@ -146,7 +146,7 @@
 #define QUEUEBUF_CONF_NUM               12
 
 #define NETSTACK_RADIO_MAX_PAYLOAD_LEN  125		/* XXX: change me later */
-#undef DEBUG
+#undef _DEBUG_
 #ifdef INCLUDE_SUBPLATFORM_CONF
 #include "subplatform-conf.h"
 #else /* INCLUDE_SUBPLATFORM_CONF */

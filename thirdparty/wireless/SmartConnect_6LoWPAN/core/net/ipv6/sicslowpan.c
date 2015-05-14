@@ -71,9 +71,9 @@
 
 #include <stdio.h>
 
-#define UIP_DEBUG DEBUG_NONE
+#define _DEBUG_ DEBUG_NONE
 #include "net/ip/uip-debug.h"
-#if UIP_DEBUG
+#if _DEBUG_
 /* PRINTFI and PRINTFO are defined for input and output to debug one without changing the timing of the other */
 uint8_t p;
 #include <stdio.h>
@@ -91,7 +91,7 @@ uint8_t p;
 #define PRINTPACKETBUF()
 #define PRINTUIPBUF()
 #define PRINTSICSLOWPANBUF()
-#endif /* DEBUG == 1*/
+#endif /* _DEBUG_ == 1*/
 
 #if UIP_LOGGING
 #include <stdio.h>
@@ -501,7 +501,7 @@ static void
 compress_hdr_hc06(linkaddr_t *link_destaddr)
 {
   uint8_t tmp, iphc0, iphc1;
-#if UIP_DEBUG
+#if _DEBUG_
   { uint16_t ndx;
     PRINTF("before compression (%d): ", UIP_IP_BUF->len[1]);
     for(ndx = 0; ndx < UIP_IP_BUF->len[1] + 40; ndx++) {
@@ -1847,7 +1847,7 @@ input(void)
     processed_ip_in_len = 0;
 #endif /* SICSLOWPAN_CONF_FRAG */
 
-#if UIP_DEBUG
+#if _DEBUG_
     {
       uint16_t ndx;
       PRINTF("after decompression %u:", SICSLOWPAN_IP_BUF->len[1]);

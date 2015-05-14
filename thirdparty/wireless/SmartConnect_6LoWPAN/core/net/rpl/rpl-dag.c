@@ -55,7 +55,7 @@
 #include <limits.h>
 #include <string.h>
 
-#define UIP_DEBUG 0
+#define _DEBUG_ 0
 #include "net/ip/uip-debug.h"
 
 #if UIP_CONF_IPV6
@@ -1099,10 +1099,10 @@ rpl_process_parent_event(rpl_instance_t *instance, rpl_parent_t *p)
 {
   int return_value;
 
-#if DEBUG
+#if _DEBUG_
   rpl_rank_t old_rank;
   old_rank = instance->current_dag->rank;
-#endif /* DEBUG */
+#endif /* _DEBUG_ */
 
   return_value = 1;
 
@@ -1125,7 +1125,7 @@ rpl_process_parent_event(rpl_instance_t *instance, rpl_parent_t *p)
     return 0;
   }
 
-#if DEBUG
+#if _DEBUG_
   if(DAG_RANK(old_rank, instance) != DAG_RANK(instance->current_dag->rank, instance)) {
     PRINTF("RPL: Moving in the instance from rank %hu to %hu\n",
 	   DAG_RANK(old_rank, instance), DAG_RANK(instance->current_dag->rank, instance));
@@ -1138,7 +1138,7 @@ rpl_process_parent_event(rpl_instance_t *instance, rpl_parent_t *p)
       PRINTF("RPL: We don't have any parent");
     }
   }
-#endif /* DEBUG */
+#endif /* _DEBUG_ */
 
   return return_value;
 }
