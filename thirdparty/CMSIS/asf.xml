@@ -115,6 +115,28 @@ and reduces time-to-market for new embedded applications.
 			<require idref="thirdparty.cmsis.license"/>
 			<info type="gui-flag" value="hidden"/>
 		</module>
+		<module type="library" id="thirdparty.cmsis#4" caption="CMSIS thirdparty sources">
+			<info type="description" value="summary">
+			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all
+Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
+and reduces time-to-market for new embedded applications.
+			</info>
+			<build type="include-path" value="Include/" toolchain="armgcc"/>
+			<build type="include-path" value="Lib/GCC/" toolchain="armgcc"/>
+			<build type="library" subtype="compiler" value="libm" toolchain="armgcc"/>
+			<build type="define" name="ARM_MATH_CM7" value="true"/>
+			<build type="header-file" value="Include/core_cm7.h" toolchain="armgcc"/>
+			<build type="header-file" value="Include/core_cmSimd.h" toolchain="armgcc"/>
+			<build type="header-file" value="Include/arm_math.h" toolchain="armgcc"/>
+			<build type="header-file" value="Include/core_cmFunc.h" toolchain="armgcc"/>
+			<build type="header-file" value="Include/core_cmInstr.h" toolchain="armgcc"/>
+			<build type="header-file" value="Include/arm_const_structs.h" toolchain="armgcc"/>
+			<build type="header-file" value="Include/arm_common_tables.h" toolchain="armgcc"/>
+			<require idref="sam.utils.fpu_used"/>
+			<device-support value="samv71"/>
+			<require idref="thirdparty.cmsis.license"/>
+			<info type="gui-flag" value="hidden"/>
+		</module>
 	</select-by-device>
 
 	<select-by-config id="sam.utils.fpu_used" name="config.compiler.armgcc.fpu_used" caption="SAM FPU usage" default="yes">

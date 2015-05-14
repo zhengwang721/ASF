@@ -520,4 +520,58 @@
 		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsamg55n19"/>
 	</board>
+	
+	<board id="board.user_board.samv71j19" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsamv71j19"/>
+	</board>
+
+	<board id="board.user_board.samv71j20" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsamv71j20"/>
+	</board>
+
+	<board id="board.user_board.samv71j21" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsamv71j21"/>
+	</board>
+
+	<board id="board.user_board.samv71n19" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsamv71n19"/>
+	</board>
+
+	<board id="board.user_board.samv71n20" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsamv71n20"/>
+	</board>
+
+	<board id="board.user_board.samv71n21" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsamv71n21"/>
+	</board>
+
+	<board id="board.user_board.samv71q19" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsamv71q19"/>
+	</board>
+	
+	<board id="board.user_board.samv71q20" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsamv71q20"/>
+	</board>
+	
+	<board id="board.user_board.samv71q21" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsamv71q21"/>
+	</board>
 </asf>
