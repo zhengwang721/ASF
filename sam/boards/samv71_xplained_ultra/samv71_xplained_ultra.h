@@ -49,7 +49,6 @@
 
 #include "compiler.h"
 #include "system_samv71.h"
-#include "exceptions.h"
 
 /*----------------------------------------------------------------------------*/
 /**

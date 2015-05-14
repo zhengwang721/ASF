@@ -35,6 +35,102 @@ typedef union { intfunc __fun; void * __ptr; } intvec_elem;
 void __iar_program_start(void);
 int __low_level_init(void);
 
+/* Default empty handler */
+void Dummy_Handler(void);
+
+/* Cortex-M7 core handlers */
+#pragma weak NMI_Handler=Dummy_Handler
+#pragma weak HardFault_Handler=Dummy_Handler
+#pragma weak MemManage_Handler=Dummy_Handler
+#pragma weak BusFault_Handler=Dummy_Handler
+#pragma weak UsageFault_Handler=Dummy_Handler
+#pragma weak SVC_Handler=Dummy_Handler
+#pragma weak DebugMon_Handler=Dummy_Handler
+#pragma weak PendSV_Handler=Dummy_Handler
+#pragma weak SysTick_Handler=Dummy_Handler
+
+/* Peripherals handlers */
+#pragma weak SUPC_Handler=Dummy_Handler
+#pragma weak RSTC_Handler=Dummy_Handler
+#pragma weak RTC_Handler=Dummy_Handler
+#pragma weak RTT_Handler=Dummy_Handler
+#pragma weak WDT_Handler=Dummy_Handler
+#pragma weak PMC_Handler=Dummy_Handler
+#pragma weak EFC_Handler=Dummy_Handler
+#pragma weak UART0_Handler=Dummy_Handler
+#pragma weak UART1_Handler=Dummy_Handler
+#pragma weak PIOA_Handler=Dummy_Handler
+#pragma weak PIOB_Handler=Dummy_Handler
+#ifdef _SAMV71_PIOC_INSTANCE_
+#pragma weak PIOC_Handler=Dummy_Handler
+#endif /* _SAMV71_PIOC_INSTANCE_ */
+#pragma weak USART0_Handler=Dummy_Handler
+#pragma weak USART1_Handler=Dummy_Handler
+#pragma weak USART2_Handler=Dummy_Handler
+#pragma weak PIOD_Handler=Dummy_Handler
+#ifdef _SAMV71_PIOE_INSTANCE_
+#pragma weak PIOE_Handler=Dummy_Handler
+#endif /* _SAMV71_PIOE_INSTANCE_ */
+#pragma weak HSMCI_Handler=Dummy_Handler
+#pragma weak TWIHS0_Handler=Dummy_Handler
+#pragma weak TWIHS1_Handler=Dummy_Handler
+#pragma weak SPI0_Handler=Dummy_Handler
+#pragma weak SSC_Handler=Dummy_Handler
+#pragma weak TC0_Handler=Dummy_Handler
+#pragma weak TC1_Handler=Dummy_Handler
+#pragma weak TC2_Handler=Dummy_Handler
+#ifdef _SAMV71_TC1_INSTANCE_
+#pragma weak TC3_Handler=Dummy_Handler
+#endif /* _SAMV71_TC1_INSTANCE_ */
+#ifdef _SAMV71_TC1_INSTANCE_
+#pragma weak TC4_Handler=Dummy_Handler
+#endif /* _SAMV71_TC1_INSTANCE_ */
+#ifdef _SAMV71_TC1_INSTANCE_
+#pragma weak TC5_Handler=Dummy_Handler
+#endif /* _SAMV71_TC1_INSTANCE_ */
+#pragma weak AFEC0_Handler=Dummy_Handler
+#ifdef _SAMV71_DACC_INSTANCE_
+#pragma weak DACC_Handler=Dummy_Handler
+#endif /* _SAMV71_DACC_INSTANCE_ */
+#pragma weak PWM0_Handler=Dummy_Handler
+#pragma weak ICM_Handler=Dummy_Handler
+#pragma weak ACC_Handler=Dummy_Handler
+#pragma weak USBHS_Handler=Dummy_Handler
+#pragma weak MCAN0_Handler=Dummy_Handler
+#pragma weak MCAN1_Handler=Dummy_Handler
+#pragma weak GMAC_Handler=Dummy_Handler
+#pragma weak AFEC1_Handler=Dummy_Handler
+#ifdef _SAMV71_TWIHS2_INSTANCE_
+#pragma weak TWIHS2_Handler=Dummy_Handler
+#endif /* _SAMV71_TWIHS2_INSTANCE_ */
+#pragma weak SPI1_Handler=Dummy_Handler
+#pragma weak QSPI_Handler=Dummy_Handler
+#pragma weak UART2_Handler=Dummy_Handler
+#pragma weak UART3_Handler=Dummy_Handler
+#pragma weak UART4_Handler=Dummy_Handler
+#ifdef _SAMV71_TC2_INSTANCE_
+#pragma weak TC6_Handler=Dummy_Handler
+#endif /* _SAMV71_TC2_INSTANCE_ */
+#ifdef _SAMV71_TC2_INSTANCE_
+#pragma weak TC7_Handler=Dummy_Handler
+#endif /* _SAMV71_TC2_INSTANCE_ */
+#ifdef _SAMV71_TC2_INSTANCE_
+#pragma weak TC8_Handler=Dummy_Handler
+#endif /* _SAMV71_TC2_INSTANCE_ */
+#pragma weak TC9_Handler=Dummy_Handler
+#pragma weak TC10_Handler=Dummy_Handler
+#pragma weak TC11_Handler=Dummy_Handler
+#pragma weak MLB_Handler=Dummy_Handler
+#pragma weak AES_Handler=Dummy_Handler
+#pragma weak TRNG_Handler=Dummy_Handler
+#pragma weak XDMAC_Handler=Dummy_Handler
+#pragma weak ISI_Handler=Dummy_Handler
+#pragma weak PWM1_Handler=Dummy_Handler
+#ifdef _SAMV71_SDRAMC_INSTANCE_
+#pragma weak SDRAMC_Handler=Dummy_Handler
+#endif /* _SAMV71_SDRAMC_INSTANCE_ */
+#pragma weak RSWDT_Handler=Dummy_Handler
+
 /* Exception Table */
 #pragma language = extended
 #pragma segment = "CSTACK"
@@ -195,4 +291,13 @@ int __low_level_init(void)
 void Reset_Handler(void)
 {
         __iar_program_start();
+}
+
+/**
+ * \brief Default interrupt handler for unused IRQs.
+ */
+void Dummy_Handler(void)
+{
+	while (1) {
+	}
 }

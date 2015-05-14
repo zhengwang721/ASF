@@ -4,8 +4,8 @@
 		<module type="library" id="thirdparty.cmsis#0" caption="CMSIS thirdparty sources">
 			<info type="description" value="summary">
 			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all
-Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
-and reduces time-to-market for new embedded applications.
+			Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
+			and reduces time-to-market for new embedded applications.
 			</info>
 			<build type="include-path" value="Include/" toolchain="armgcc"/>
 			<build type="include-path" value="Lib/GCC/" toolchain="armgcc"/>
@@ -24,8 +24,8 @@ and reduces time-to-market for new embedded applications.
 		<module type="library" id="thirdparty.cmsis#1" caption="CMSIS thirdparty sources">
 			<info type="description" value="summary">
 			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all
-Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
-and reduces time-to-market for new embedded applications.
+			Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
+			and reduces time-to-market for new embedded applications.
 			</info>
 			<build type="include-path" value="Include/" toolchain="armgcc"/>
 			<build type="include-path" value="Lib/GCC/" toolchain="armgcc"/>
@@ -64,8 +64,8 @@ and reduces time-to-market for new embedded applications.
 		<module type="library" id="thirdparty.cmsis#2" caption="CMSIS thirdparty sources">
 			<info type="description" value="summary">
 			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all
-Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
-and reduces time-to-market for new embedded applications.
+			Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
+			and reduces time-to-market for new embedded applications.
 			</info>
 			<build type="include-path" value="Include/" toolchain="armgcc"/>
 			<build type="include-path" value="Lib/GCC/" toolchain="armgcc"/>
@@ -100,8 +100,8 @@ and reduces time-to-market for new embedded applications.
 		<module type="library" id="thirdparty.cmsis#3" caption="CMSIS thirdparty sources">
 			<info type="description" value="summary">
 			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all
-Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
-and reduces time-to-market for new embedded applications.
+			Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
+			and reduces time-to-market for new embedded applications.
 			</info>
 			<build type="include-path" value="Include/" toolchain="armgcc"/>
 			<build type="include-path" value="Lib/GCC/" toolchain="armgcc"/>
@@ -118,8 +118,8 @@ and reduces time-to-market for new embedded applications.
 		<module type="library" id="thirdparty.cmsis#4" caption="CMSIS thirdparty sources">
 			<info type="description" value="summary">
 			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all
-Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
-and reduces time-to-market for new embedded applications.
+			Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
+			and reduces time-to-market for new embedded applications.
 			</info>
 			<build type="include-path" value="Include/" toolchain="armgcc"/>
 			<build type="include-path" value="Lib/GCC/" toolchain="armgcc"/>
