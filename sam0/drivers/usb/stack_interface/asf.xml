@@ -1,12 +1,13 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.usb.dual" caption="SAM D21/R21 USB Dual role interface">
+	<module type="driver" id="sam0.drivers.usb.dual" caption="SAM D21/R21/D11/L21/L22 USB Dual role interface">
 		<build type="include-path" value="."/>
 		<build type="c-source" value="usb_dual.c"/>
 		<build type="header-file" subtype="api" value="usb_dual.h"/>
 		<device-support value="samd21"/>
 		<device-support value="samr21"/>
 		<device-support value="samd11"/>
-		<device-support value="saml21" />		
+		<device-support value="saml21" />
+		<device-support value="saml22" />
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system"/>
 		<require idref="sam0.drivers.extint"/>
@@ -36,13 +37,14 @@
 		</info>
 		<generator value="doxygen-module" default-mcu="unspecified-samd21"/>
 	</module>
-	<module type="driver" id="sam0.drivers.usb.udd" caption="SAM D21/R21/D11 USB UDD interface">
+	<module type="driver" id="sam0.drivers.usb.udd" caption="SAM D21/R21/D11/L21/L22 USB UDD interface">
 		<build type="include-path" value="."/>
 		<build type="c-source" value="usb_device_udd.c"/>
 		<device-support value="samd21"/>
 		<device-support value="samr21"/>
 		<device-support value="samd11"/>
 		<device-support value="saml21"/>
+		<device-support value="saml22"/>
 		<require idref="sam0.drivers.usb"/>
 		<require idref="sam0.drivers.usb.dual"/>
 		<require idref="common.services.basic.sleepmgr"/>
