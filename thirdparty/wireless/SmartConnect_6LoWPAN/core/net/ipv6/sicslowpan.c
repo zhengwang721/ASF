@@ -1656,7 +1656,7 @@ input(void)
   uint8_t rx_hdr_len;
   unsigned int rx_payload_len;
   uint8_t deliver_ip_pkt = 0;  
-  uint8_t * sics_byte_buf = sicslowpan_buf[UIP_LLH_LEN];
+  uint8_t * sics_byte_buf;
   
 #if SICSLOWPAN_CONF_FRAG
 // size of the IP packet (read from fragment) 
@@ -1828,10 +1828,14 @@ input(void)
 
   if(is_fragment)
   {
-    sics_byte_buf = sicslowpanbuf[buff_index].u8[UIP_LLH_LEN];
-    
+    sics_byte_buf = &sicslowpanbuf[buff_index].u8[UIP_LLH_LEN];
+    PRINTFI("Frag buffer #%d, sicslowpan buffer ptr = %p ", buff_index, sics_byte_buf);
+  } else
+  {
+    sics_byte_buf = &sicslowpan_buf[UIP_LLH_LEN];
+    PRINTFI("Non-fragmented, sicslowpan buffer ptr = %p ", sics_byte_buf); 
   }
-  PRINTFI("sicslowpan buffer ptr = %p ", sics_byte_buf);
+  
   
 
   /* We are currently reassembling a packet, but have just received the first
@@ -1875,7 +1879,9 @@ input(void)
 #if SICSLOWPAN_COMPRESSION == SICSLOWPAN_COMPRESSION_HC06
   if((*(packetbuf_ptr + rx_hdr_len + PACKETBUF_HC1_DISPATCH) & 0xe0) == SICSLOWPAN_DISPATCH_IPHC) {
     PRINTFI("sicslowpan input: IPHC\n");
+    PRINTFI("Before uncomp: Hdr len = %d", rx_hdr_len);
     uncompress_hdr_hc06(frag_size,sics_byte_buf, &rx_hdr_len);
+    PRINTFI("After uncomp: Hdr len = %d", rx_hdr_len);
          
   } else
 #endif /* SICSLOWPAN_COMPRESSION == SICSLOWPAN_COMPRESSION_HC06 */
@@ -1883,7 +1889,9 @@ input(void)
 #if SICSLOWPAN_COMPRESSION == SICSLOWPAN_COMPRESSION_HC1
       case SICSLOWPAN_DISPATCH_HC1:
         PRINTFI("sicslowpan input: HC1\n");
+        PRINTFI("Before uncomp: Hdr len = %d", rx_hdr_len);
         uncompress_hdr_hc1(frag_size, sics_byte_buf, &rx_hdr_len);
+        PRINTFI("After uncomp: Hdr len = %d", rx_hdr_len);        
         break;
 #endif /* SICSLOWPAN_COMPRESSION == SICSLOWPAN_COMPRESSION_HC1 */
       case SICSLOWPAN_DISPATCH_IPV6:
