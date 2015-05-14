@@ -12,6 +12,7 @@
 
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_count.h"/>
+			<build type="header-file" subtype="api" value="rtc_tamper.h"/>
 			<build type="define" name="RTC_COUNT_ASYNC" value="false"/>
 			<build type="doxygen-entry-point" value="asfdoc_sam0_rtc_count_group"/>
 			<device-support value="sam0"/>
@@ -29,6 +30,7 @@
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_count.h"/>
 			<build type="header-file" subtype="api" value="rtc_count_interrupt.h"/>
+			<build type="header-file" subtype="api" value="rtc_tamper.h"/>
 			<build type="define" name="RTC_COUNT_ASYNC" value="true"/>
 			<build type="doxygen-entry-point" value="asfdoc_sam0_rtc_count_group"/>
 			<device-support value="sam0"/>
@@ -41,6 +43,7 @@
 		<module type="driver" id="sam0.drivers.rtc#calendar_polled" caption="RTC - Real Time Counter in Calendar Mode (Polled APIs)">
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_calendar.h"/>
+			<build type="header-file" subtype="api" value="rtc_tamper.h"/>
 			<build type="define" name="RTC_CALENDAR_ASYNC" value="false"/>
 			<build type="doxygen-entry-point" value="asfdoc_sam0_rtc_calendar_group"/>
 			<device-support value="sam0"/>
@@ -54,6 +57,7 @@
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_calendar.h"/>
 			<build type="header-file" subtype="api" value="rtc_calendar_interrupt.h"/>
+			<build type="header-file" subtype="api" value="rtc_tamper.h"/>
 			<build type="define" name="RTC_CALENDAR_ASYNC" value="true"/>
 			<build type="doxygen-enable-section" value="RTC_CALENDAR_CALLBACK_MODE"/>
 			<build type="doxygen-entry-point" value="asfdoc_sam0_rtc_calendar_group"/>

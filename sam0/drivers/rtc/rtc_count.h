@@ -375,6 +375,12 @@ extern "C" {
 /** RTC continuously updated. */
 #  define FEATURE_RTC_CONTINUOUSLY_UPDATED
 #endif
+
+#if (SAML22) || defined(__DOXYGEN__)
+/** RTC tamper detection. */
+#  define FEATURE_RTC_TAMPER_DETECTION
+#endif
+
 /*@}*/
 
 #ifdef FEATURE_RTC_CLOCK_SELECTION
@@ -503,7 +509,7 @@ enum rtc_count_callback {
 	/** Callback for compare channel 2. */
 	RTC_COUNT_CALLBACK_COMPARE_2,
 #  endif
-#  if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
+#  if (RTC_NUM_OF_COMP16 > 3) || defined(__DOXYGEN__)
 	/** Callback for compare channel 3. */
 	RTC_COUNT_CALLBACK_COMPARE_3,
 #  endif
@@ -516,7 +522,12 @@ enum rtc_count_callback {
 	RTC_COUNT_CALLBACK_COMPARE_5,
 #  endif
 
-	/** Callback for  overflow. */
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Callback for tamper. */
+	RTC_COUNT_CALLBACK_TAMPER,
+#endif
+
+	/** Callback for overflow. */
 	RTC_COUNT_CALLBACK_OVERFLOW,
 #  if !defined(__DOXYGEN__)
 	/** Total number of callbacks. */
@@ -540,7 +551,7 @@ enum rtc_count_callback {
 	/** Callback for compare channel 2. */
 	RTC_COUNT_CALLBACK_COMPARE_2,
 #  endif
-#  if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
+#  if (RTC_NUM_OF_COMP16 > 3) || defined(__DOXYGEN__)
 	/** Callback for compare channel 3. */
 	RTC_COUNT_CALLBACK_COMPARE_3,
 #  endif
@@ -552,6 +563,12 @@ enum rtc_count_callback {
 	/** Callback for compare channel 5. */
 	RTC_COUNT_CALLBACK_COMPARE_5,
 #  endif
+
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Callback for tamper. */
+	RTC_COUNT_CALLBACK_TAMPER,
+#endif
+
 	/** Callback for overflow. */
 	RTC_COUNT_CALLBACK_OVERFLOW,
 #  if !defined(__DOXYGEN__)
@@ -646,6 +663,12 @@ struct rtc_count_events {
 	/** Generate an output event periodically at a binary division of the RTC
 	 *  counter frequency. */
 	bool generate_event_on_periodic[8];
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Generate an output event on every tamper input. */
+	bool generate_event_on_tamper;
+	/** Tamper input event and capture the COUNT value. */
+	bool on_event_to_tamper;
+#endif
 };
 
 #if !defined(__DOXYGEN__)
@@ -980,6 +1003,18 @@ static inline void rtc_count_enable_events(
 		}
 	}
 
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/* Check if the user has requested a tamper event output. */
+	if (events->generate_event_on_tamper) {
+		event_mask |= RTC_MODE0_EVCTRL_TAMPEREO;
+	}
+
+	/* Check if the user has requested a tamper event input. */
+	if (events->on_event_to_tamper) {
+		event_mask |= RTC_MODE0_EVCTRL_TAMPEVEI;
+	}
+#endif
+
 	/* Enable given event(s). */
 	rtc_module->MODE0.EVCTRL.reg |= event_mask;
 }
@@ -1025,6 +1060,18 @@ static inline void rtc_count_disable_events(
 			event_mask |= RTC_MODE0_EVCTRL_PEREO(1 << i);
 		}
 	}
+
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/* Check if the user has requested a tamper event output. */
+	if (events->generate_event_on_tamper) {
+		event_mask |= RTC_MODE0_EVCTRL_TAMPEREO;
+	}
+
+	/* Check if the user has requested a tamper event input. */
+	if (events->on_event_to_tamper) {
+		event_mask |= RTC_MODE0_EVCTRL_TAMPEVEI;
+	}
+#endif
 
 	/* Disable given event(s). */
 	rtc_module->MODE0.EVCTRL.reg &= ~event_mask;
@@ -1085,6 +1132,13 @@ static inline uint32_t rtc_read_general_purpose_reg(
 
 /** @} */
 #endif
+
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+#include "rtc_tamper.h"
+
+uint32_t rtc_tamper_get_stamp (struct rtc_module *const module);
+#endif
+
 
 /** @} */
 
