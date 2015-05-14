@@ -362,7 +362,7 @@ uint32_t pio_configure(Pio *p_pio, const pio_type_t ul_type,
 	switch (ul_type) {
 	case PIO_PERIPH_A:
 	case PIO_PERIPH_B:
-#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
+#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM)
 	case PIO_PERIPH_C:
 	case PIO_PERIPH_D:
 #endif
@@ -789,7 +789,7 @@ uint32_t pio_configure_pin(uint32_t ul_pin, const uint32_t ul_flags)
 		pio_pull_up(p_pio, (1 << (ul_pin & 0x1F)),
 				(ul_flags & PIO_PULLUP));
 		break;
-#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
+#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM)
 	case PIO_TYPE_PIO_PERIPH_C:
 		pio_set_peripheral(p_pio, PIO_PERIPH_C, (1 << (ul_pin & 0x1F)));
 		pio_pull_up(p_pio, (1 << (ul_pin & 0x1F)),
@@ -886,7 +886,7 @@ uint32_t pio_configure_pin_group(Pio *p_pio,
 		pio_set_peripheral(p_pio, PIO_PERIPH_B, ul_mask);
 		pio_pull_up(p_pio, ul_mask, (ul_flags & PIO_PULLUP));
 		break;
-#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
+#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM)
 	case PIO_TYPE_PIO_PERIPH_C:
 		pio_set_peripheral(p_pio, PIO_PERIPH_C, ul_mask);
 		pio_pull_up(p_pio, ul_mask, (ul_flags & PIO_PULLUP));
