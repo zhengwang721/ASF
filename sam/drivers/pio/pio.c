@@ -205,6 +205,7 @@ void pio_set_peripheral(Pio *p_pio, const pio_type_t ul_type,
 		ul_sr = p_pio->PIO_ABCDSR[1];
 		p_pio->PIO_ABCDSR[1] &= (~ul_mask & ul_sr);
 		break;
+#if (!SAMG)
 	case PIO_PERIPH_C:
 		ul_sr = p_pio->PIO_ABCDSR[0];
 		p_pio->PIO_ABCDSR[0] &= (~ul_mask & ul_sr);
@@ -219,6 +220,7 @@ void pio_set_peripheral(Pio *p_pio, const pio_type_t ul_type,
 		ul_sr = p_pio->PIO_ABCDSR[1];
 		p_pio->PIO_ABCDSR[1] = (ul_mask | ul_sr);
 		break;
+#endif
 		/* Other types are invalid in this function */
 	case PIO_INPUT:
 	case PIO_OUTPUT_0:
