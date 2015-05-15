@@ -61,6 +61,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_port_prerequisites
@@ -296,7 +297,7 @@ struct port_config {
 	/** Port pull-up/pull-down for input pins. */
 	enum port_pin_pull input_pull;
 
-	/** Enable lowest possible powerstate on the pin
+	/** Enable lowest possible powerstate on the pin.
 	 *
 	 *  \note All other configurations will be ignored, the pin will be disabled.
 	 */
@@ -729,10 +730,7 @@ static inline enum status_code port_input_event_set_config(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added input event feature and support for SAML21</td>
- *	</tr>
- *	<tr>
- *		<td>Added support for SAMD21</td>
+ *		<td>Added input event feature</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
@@ -761,8 +759,8 @@ static inline enum status_code port_input_event_set_config(
  *	</tr>
   *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Added input event feature and support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAML21 and SAMDA0/A1.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
