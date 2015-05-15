@@ -61,7 +61,7 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_pac_prerequisites
@@ -684,8 +684,8 @@ __no_inline enum status_code system_peripheral_unlock(
 		const uint32_t key);
 /** @}  */
 
-#if (SAML21) || defined(__DOXYGEN__)
-/** \name APIs available for SAM L21.
+#if (SAML21) || (SAML22) || defined(__DOXYGEN__)
+/** \name APIs available for SAM L21/L22.
  * @{
  */
 __no_inline enum status_code system_peripheral_lock_always(

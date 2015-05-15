@@ -66,7 +66,7 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_ac_prerequisites
@@ -106,15 +106,15 @@
  *    </tr>
  *    <tr>
  *      <td>FEATURE_AC_HYSTERESIS_LEVEL</td>
- *      <td>SAML21</td>
+ *      <td>SAML21/L22</td>
  *    </tr>
  *    <tr>
  *      <td>FEATURE_AC_SYNCBUSY_SCHEME_VERSION_2</td>
- *      <td>SAML21</td>
+ *      <td>SAML21/L22</td>
  *    </tr>
  *    <tr>
  *      <td>FEATURE_AC_RUN_IN_STANDY_EACH_COMPARATOR</td>
- *      <td>SAML21</td>
+ *      <td>SAML21/L22</td>
  *    </tr>
  *    <tr>
  *      <td>FEATURE_AC_RUN_IN_STANDY_PAIR_COMPARATOR</td>
@@ -305,14 +305,14 @@ extern "C" {
  * Define AC driver feature set according to different device family.
  * @{
  */
-#if (SAML21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAML22) || defined(__DOXYGEN__)
    /** Setting of hysteresis level */
 #  define FEATURE_AC_HYSTERESIS_LEVEL
    /** SYNCBUSY scheme version 2 */
 #  define FEATURE_AC_SYNCBUSY_SCHEME_VERSION_2
 #endif
 
-#if (SAML21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAML22) || defined(__DOXYGEN__)
  	/** Run in standby feature for each comparator */
 #  define FEATURE_AC_RUN_IN_STANDY_EACH_COMPARATOR
 #else
@@ -488,6 +488,7 @@ enum ac_chan_neg_mux {
 	/** Negative comparator input is connected to the internal band gap voltage
 	 *  reference. */
 	AC_CHAN_NEG_MUX_BANDGAP    = AC_COMPCTRL_MUXNEG_BANDGAP,
+#if !(SAML22)
 	/**
 	 * For SAMD20/D21/D10/D11/R21:
 	 *     Negative comparator input is connected to the channel's internal DAC
@@ -497,6 +498,7 @@ enum ac_chan_neg_mux {
 	 *     channel 0 output for Comparator 0 or OPAMP output for Comparator 1.
 	 */
 	AC_CHAN_NEG_MUX_DAC0       = AC_COMPCTRL_MUXNEG_DAC,
+#endif
 };
 
 /**

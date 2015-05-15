@@ -70,7 +70,7 @@
  *  - Atmel | SMART SAM D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_tcc_prerequisites
@@ -610,10 +610,10 @@
  * used.
  *
  * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM TCC Feature List
- * For SAM D21/R21/L21, the TCC features are:
+ * For SAM D21/R21/L21/L22, the TCC features are:
  * \anchor asfdoc_sam0_tcc_features_d21
  * <table>
- *   <caption>TCC module features for SAM D21/R21/L21</caption>
+ *   <caption>TCC module features for SAM D21/R21/L21/L22</caption>
  *   <tr>
  *     <th>TCC#</th>
  *     <th>Match/Capture channels</th>
@@ -667,7 +667,7 @@
  * <table>
  *  <tr>
  *    <td>FEATURE_TCC_GENERATE_DMA_TRIGGER</td>
- *    <td>SAML21</td>
+ *    <td>SAML21/L22</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -757,7 +757,7 @@
  * Define port features set according to different device family
  * @{
 */
-#if (SAML21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAML22) || defined(__DOXYGEN__)
 /** Generate DMA triggers*/
 #  define FEATURE_TCC_GENERATE_DMA_TRIGGER
 #endif
@@ -1086,6 +1086,25 @@ enum tcc_count_direction {
 	/** Timer should count downward. */
 	TCC_COUNT_DIRECTION_DOWN,
 };
+
+#ifdef FEATURE_TCC_GENERATE_DMA_TRIGGER
+/**
+ * \brief TCC module counter overflow DMA request mode
+ *
+ * Used when selecting the Timer/Counter overflow DMA request mode.
+ */
+enum tcc_count_overflow_dma_trigger_mode {
+	/** TCC generates a DMA request on each cycle when an update condition 
+	 * is detected. 
+	 */
+	TCC_COUNT_OVERFLOW_DMA_TRIGGER_MODE_CONTINUE,
+	/** When an update condition is detected, the TCC generates a DMA trigger 
+	 * on the cycle following the DMA One-Shot Command written to the Control 
+	 * B register.
+	 */
+	TCC_COUNT_OVERFLOW_DMA_TRIGGER_MODE_ONE_SHOT,
+};
+#endif
 
 /**
  * \brief Action to perform when the TCC module is triggered by events
@@ -1475,6 +1494,11 @@ struct tcc_counter_config {
 	 * software re-trigger event or overflow/underflow.
 	 */
 	bool oneshot;
+
+#ifdef FEATURE_TCC_GENERATE_DMA_TRIGGER	
+	/** Counter overflow trigger a DMA request mode. */
+	enum tcc_count_overflow_dma_trigger_mode dma_trigger_mode;
+#endif
 
 	/** Specifies the direction for the TCC to count. */
 	enum tcc_count_direction direction;
@@ -1993,9 +2017,14 @@ static inline void tcc_dma_trigger_command(
 	while (tcc_module->SYNCBUSY.bit.CTRLB) {
 			/* Wait for sync */
 	}
-
+	
+#if (SAML22)
+	/* Write command to execute */
+	tcc_module->CTRLBSET.reg = TCC_CTRLBSET_CMD_DMAOS;
+#else
 	/* Write command to execute */
 	tcc_module->CTRLBSET.reg = TCC_CTRLBSET_CMD_DMATRG;
+#endif
 }
 /** @} */
 #endif

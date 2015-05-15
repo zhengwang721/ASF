@@ -9,5 +9,6 @@
 		<require idref="sam0.drivers.ccl"/>
 		<require idref="sam0.drivers.system"/>
 		<device-support value="saml21"/>
+		<device-support value="saml22"/>
 	</module>
 </asf>

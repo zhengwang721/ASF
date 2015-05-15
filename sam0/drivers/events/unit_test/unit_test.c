@@ -82,6 +82,7 @@
  *      - SAM D21 Xplained Pro board
  *      - SAM R21 Xplained Pro board
  *      - SAM L21 Xplained Pro board
+ *      - SAM L22 Xplained Pro board
  *
  * \section appdoc_sam0_events_unit_test_setup Setup
  * The following connections has to be made using wires:

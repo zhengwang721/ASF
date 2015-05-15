@@ -63,7 +63,7 @@
  *  - TRNG (True Random Number Generator)
  *
  * The following devices can use this module:
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_trng_prerequisites

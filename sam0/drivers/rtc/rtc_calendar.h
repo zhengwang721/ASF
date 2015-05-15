@@ -67,7 +67,7 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rtc_calendar_prerequisites
@@ -109,19 +109,19 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PERIODIC_INT</td>
- *    <td>SAML21</td>
+ *    <td>SAML21/L22</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PRESCALER_OFF</td>
- *    <td>SAML21</td>
+ *    <td>SAML21/L22</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CLOCK_SELECTION</td>
- *    <td>SAML21</td>
+ *    <td>SAML21/L22</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_GENERAL_PURPOSE_REG</td>
- *    <td>SAML21</td>
+ *    <td>SAML21/L22</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
@@ -372,7 +372,7 @@ extern "C" {
  * Define port features set according to different device family
  * @{
 */
-#if (SAML21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAML22) || defined(__DOXYGEN__)
 /** RTC periodic interval interrupt. */
 #  define FEATURE_RTC_PERIODIC_INT
 /** RTC prescaler is off. */
@@ -709,6 +709,12 @@ struct rtc_calendar_config {
 	/** Initial year for counter value 0. */
 	uint16_t year_init_value;
 	/** Alarm values. */
+#if (SAML22)
+	/** Enable count read synchronization. The CLOCK value requires
+	 * synchronization when reading. Disabling the synchronization 
+	 * will prevent the CLOCK value from displaying the current value. */
+	bool enable_read_sync;
+#endif
 	struct rtc_calendar_alarm_time alarm[RTC_NUM_OF_ALARMS];
 };
 
@@ -753,6 +759,7 @@ static inline void rtc_calendar_get_time_defaults(
  *  - Events off
  *  - Alarms set to January 1. 2000, 00:00:00
  *  - Alarm will match on second, minute, hour, day, month, and year
+ *  - Clock read synchronization is enabled for SAML22
  *
  *  \param[out] config  Configuration structure to be initialized to default
  *                      values.
@@ -775,6 +782,9 @@ static inline void rtc_calendar_get_config_defaults(
 #endif
 	config->clock_24h           = false;
 	config->year_init_value     = 2000;
+#if (SAML22)
+	config->enable_read_sync    = true;
+#endif
 	for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
 		config->alarm[i].time = time;
 		config->alarm[i].mask = RTC_CALENDAR_ALARM_MASK_YEAR;
