@@ -47,12 +47,7 @@
 //! Extension header for the OLED1 Xplained Pro
 #define OLED1_EXT_HEADER  EXT3
 
-#if SAML22
-	//! Timer/Counter instance to use as tick timer
-	#define TICK_TC TC3
-#else
-	//! Timer/Counter instance to use as tick timer
-	#define TICK_TC TC4
-#endif
+//! Timer/Counter instance to use as tick timer
+#define TICK_TC TC3
 
 #endif // CONF_DEMO_H
