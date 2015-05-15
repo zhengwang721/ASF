@@ -43,14 +43,15 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+/**
+ * \page asfdoc_sam0_rtc_tamper_detect RTC Tamper Detect Feature
+ */
 
 #ifndef RTC_TAMPER_H_INCLUDED
 #define RTC_TAMPER_H_INCLUDED
 
 
 #ifdef FEATURE_RTC_TAMPER_DETECTION
-
-#include <string.h>
 
 /** RTC tamper ID or input event detection bitmask. */
 #define RTC_TAMPER_DETECT_ID0    (1UL << 0)
@@ -63,12 +64,12 @@
 
 
 /**
- * \brief RTC tamper active layer frequency.
+ * \brief RTC tamper active layer frequency divider.
  *
  * The available prescaler factor for the RTC clock output used during active
  * layer protection.
  */
-enum rtc_count_tamper_active_layer_freq {
+enum rtc_tamper_active_layer_freq_divider {
 	/** RTC active layer frequency is prescaled by a factor of 2. */
 	RTC_TAMPER_ACTIVE_LAYER_FREQ_DIV_2    = RTC_MODE0_CTRLB_ACTF_DIV2,
 	/** RTC active layer frequency is prescaled by a factor of 4. */
@@ -88,11 +89,11 @@ enum rtc_count_tamper_active_layer_freq {
 };
 
 /**
- * \brief RTC tamper debounce frequency.
+ * \brief RTC tamper debounce frequency divider.
  *
  * The available prescaler factor for the input debouncers.
  */
-enum rtc_count_tamper_debounce_freq {
+enum rtc_tamper_debounce_freq_divider {
 	/** RTC debounce frequency is prescaled by a factor of 2. */
 	RTC_TAMPER_DEBOUNCE_FREQ_DIV_2    = RTC_MODE0_CTRLB_DEBF_DIV2,
 	/** RTC debounce frequency is prescaled by a factor of 4. */
@@ -116,7 +117,7 @@ enum rtc_count_tamper_debounce_freq {
  *
  * The available action taken by the tamper input.
  */
-enum rtc_count_tamper_input_action {
+enum rtc_tamper_input_action {
 	/** RTC tamper input action is disabled. */
 	RTC_TAMPER_INPUT_ACTION_OFF     = RTC_TAMPCTRL_IN4ACT_OFF,
 	/** RTC tamper input action is wake and set tamper flag. */
@@ -129,11 +130,11 @@ enum rtc_count_tamper_input_action {
 };
 
 /**
- * \brief RTC tamper level select.
+ * \brief RTC tamper input level select.
  *
- * The available edge condition for tamper level select.
+ * The available edge condition for tamper INn level select.
  */
-enum rtc_count_tamper_level_sel {
+enum rtc_tamper_level_sel {
 	/** A falling edge condition will be detected on Tamper input. */
 	RTC_TAMPER_LEVEL_FALLING = RTC_TAMPCTRL_TAMLVL(0),
 	/** A rising edge condition will be detected on Tamper input. */
@@ -145,7 +146,7 @@ enum rtc_count_tamper_level_sel {
  *
  * The available sequential for tamper debounce.
  */
-enum rtc_count_tamper_debounce_seq {
+enum rtc_tamper_debounce_seq {
 	/** Tamper input detect edge with synchronous stability debounce. */
 	RTC_TAMPER_DEBOUNCE_SYNC,
 	/** Tamper input detect edge with asynchronous stability debounce. */
@@ -159,13 +160,13 @@ enum rtc_count_tamper_debounce_seq {
  *
  * The configuration structure for tamper INn.
  */
-struct rtc_count_tamper_input_config {
+struct rtc_tamper_input_config {
 	/** Debounce enable. */
 	bool debounce_enable;
 	/** Tamper level select. */
-	enum rtc_count_tamper_level_sel level;
+	enum rtc_tamper_level_sel level;
 	/** Tamper input action. */
-	enum rtc_count_tamper_input_action action;
+	enum rtc_tamper_input_action action;
 };
 
 /**
@@ -181,17 +182,17 @@ struct rtc_tamper_config {
 	/** GP register reset on tamper enable. */
 	bool gp_reset_on_tamper;
 	/** Active layer frequency. */
-	enum rtc_count_tamper_active_layer_freq actl_freq;
+	enum rtc_tamper_active_layer_freq_divider actl_freq_div;
 	/** Debounce frequency. */
-	enum rtc_count_tamper_debounce_freq deb_freq;
+	enum rtc_tamper_debounce_freq_divider deb_freq_div;
 	/** Debounce sequential. */
-	enum rtc_count_tamper_debounce_seq deb_seq;
+	enum rtc_tamper_debounce_seq deb_seq;
 	/** DMA on tamper enable. */
 	bool dma_tamper_enable;
 	/** General Purpose 0/1 Enable. */
 	bool gp0_enable;
 	/** Tamper IN configuration. */
-	struct rtc_count_tamper_input_config in_cfg[5];
+	struct rtc_tamper_input_config in_cfg[RTC_TAMPER_NUM];
 };
 
 /**
@@ -224,20 +225,17 @@ static inline void rtc_tamper_get_config_defaults(
 
 	config->bkup_reset_on_tamper= false;
 	config->gp_reset_on_tamper  = false;
-	config->actl_freq           = RTC_TAMPER_ACTIVE_LAYER_FREQ_DIV_8;
-	config->deb_freq            = RTC_TAMPER_DEBOUNCE_FREQ_DIV_8;
+	config->actl_freq_div       = RTC_TAMPER_ACTIVE_LAYER_FREQ_DIV_8;
+	config->deb_freq_div        = RTC_TAMPER_DEBOUNCE_FREQ_DIV_8;
 	config->deb_seq             = RTC_TAMPER_DEBOUNCE_SYNC;
 	config->dma_tamper_enable   = false;
 	config->gp0_enable          = true;
 
-	struct rtc_count_tamper_input_config in_default_cfg[] = {
-		{false, RTC_TAMPER_LEVEL_FALLING, RTC_TAMPER_INPUT_ACTION_OFF},
-		{false, RTC_TAMPER_LEVEL_FALLING, RTC_TAMPER_INPUT_ACTION_OFF},
-		{false, RTC_TAMPER_LEVEL_FALLING, RTC_TAMPER_INPUT_ACTION_OFF},
-		{false, RTC_TAMPER_LEVEL_FALLING, RTC_TAMPER_INPUT_ACTION_OFF},
-		{false, RTC_TAMPER_LEVEL_FALLING, RTC_TAMPER_INPUT_ACTION_OFF},
-	};
-	memcpy(config->in_cfg, in_default_cfg, RTC_TAMPER_NUM * sizeof(struct rtc_count_tamper_input_config));
+	for (uint8_t id = 0; id < RTC_TAMPER_NUM; id++) {
+		config->in_cfg[id].debounce_enable = false;
+		config->in_cfg[id].level = RTC_TAMPER_LEVEL_FALLING;
+		config->in_cfg[id].action = RTC_TAMPER_INPUT_ACTION_OFF;
+	}
 }
 enum status_code rtc_tamper_set_config (struct rtc_module *const module,
 		struct rtc_tamper_config *const tamper_cfg);
