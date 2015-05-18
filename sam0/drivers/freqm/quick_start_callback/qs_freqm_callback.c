@@ -48,8 +48,6 @@
 //! [setup]
 
 //! [callback_2]
-enum freqm_status measure_status;
-uint32_t measure_value;
 bool volatile freqm_read_done = false;
 //! [callback_2]
 
@@ -120,32 +118,37 @@ int main(void)
 	//! [setup_init]
 
 	//! [main]
-	while (true) {
-		//! [main_1]
-		freqm_start_measure(&freqm_instance);
-		//! [main_1]
+	uint32_t measure_result;
+	enum freqm_status status;
+	//! [main_1]
+	freqm_start_measure(&freqm_instance);
+	//! [main_1]
 
-		//! [main_2]
-		while (!freqm_read_done) {
-		}
-		measure_status = freqm_get_result_value(&freqm_instance, &measure_value);
-		//! [main_2]
-		//! [main_3]
-		if (measure_status == FREQM_STATUS_MEASURE_DONE) {
-			freqm_read_done = false;
-			LED_On(LED_0_PIN);
-		}
-		//! [main_3]
-		//! [main_4]
-		if (measure_status == FREQM_STATUS_CNT_OVERFLOW) {
-			freqm_clear_overflow(&freqm_instance);
-			break;
-		}
-		//! [main_4]
+	//! [main_2]
+	while (!freqm_read_done) {
 	}
-	LED_Toggle(LED_0_PIN);
-	volatile uint32_t delay = 50000;
-	while(delay--) {
+	status = freqm_get_result_value(&freqm_instance, &measure_result);
+	//! [main_2]
+	switch(status) {
+	//! [main_3]
+		case FREQM_STATUS_MEASURE_DONE:
+			LED_On(LED_0_PIN);
+			while (true) {
+			}
+	//! [main_3]
+	//! [main_4]
+		case FREQM_STATUS_CNT_OVERFLOW:
+			freqm_clear_overflow(&freqm_instance);
+			while (true) {
+				LED_Toggle(LED_0_PIN);
+				volatile uint32_t delay = 50000;
+				while(delay--) {
+				}
+			}
+	//! [main_4]
+		default:
+			Assert(false);
+			break;
 	}
 	//! [main]
 }
