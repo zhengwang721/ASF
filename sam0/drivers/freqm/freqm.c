@@ -117,3 +117,45 @@ enum status_code freqm_init(
 	return STATUS_OK;
 }
 
+/**
+ * \brief Read the measurement data result
+ *
+ * Reads the measurement data result.
+ *
+ * \param[in]  module_inst  Pointer to the FREQM software instance struct
+ * \param[out] result       Pointer to store the result value in
+ *
+ * \return Status of the FREQM read request.
+ * \retval FREQM_STATUS_MEASURE_DONE   Measurement result was retrieved successfully
+ * \retval FREQM_STATUS_MEASURE_BUSY   Measurement result was not ready
+ * \retval FREQM_STATUS_CNT_OVERFLOW   Measurement result was overflow
+ *                              
+ * \note If overflow occurred, configure faster reference clock or reduce reference clock cycles.
+ */
+enum freqm_status freqm_get_result_value(
+		struct freqm_module *const module_inst, uint32_t *result)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(result);
+
+	Freqm *const freqm_hw = module_inst->hw;
+	uint32_t result_cal;
+	*result = result_cal= 0;
+
+	if (freqm_hw->STATUS.reg & FREQM_STATUS_BUSY) {
+		/* Result not ready */
+		return FREQM_STATUS_MEASURE_BUSY;
+	} else {
+		if (freqm_hw->STATUS.reg & FREQM_STATUS_OVF) {
+			/* Overflow */
+			return FREQM_STATUS_CNT_OVERFLOW;
+		} else {
+			/* Get measurement output data (it will clear data done flag) */
+			result_cal = freqm_hw->VALUE.reg;
+			*result = result_cal / freqm_hw->CFGA.reg * module_inst->ref_clock_freq;
+			return FREQM_STATUS_MEASURE_DONE;
+		}
+	}
+}
