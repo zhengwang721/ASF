@@ -1631,23 +1631,50 @@ uint8_t sics_used_buf[NUM_REASM_BUFS];
 typedef struct _sics_frag
 {
   linkaddr_t frag_send_addr;
-  linkaddr_t frag_dest_addr;
   struct timer frag_reass_timer;
 	uint16_t processed_ip_len;
 	uint16_t frag_size;
 	uint16_t frag_tag;
-}sics_frag_t;
+} sics_frag_t;
 
 static sics_frag_t sics_frag_attr[NUM_REASM_BUFS];
+static struct ctimer reasm_ct;
 
-void sics_frag_buf_init(void);
+static void sics_frag_buf_init(void);
 
-void sics_frag_buf_init()
+static void sics_frag_buf_init()
 {
 	memset(&sics_frag_attr,0,(sizeof(sics_frag_t))*(NUM_REASM_BUFS));
 	memset(&sicslowpanbuf,0,(sizeof(uip_buf_t))*(NUM_REASM_BUFS));
 	memset(&sics_used_buf,0,NUM_REASM_BUFS);
 }
+
+static void reasm_timer_callback(void *ptr);
+
+static void reasm_timer_callback(void *ptr)
+{
+  unsigned int i;
+  
+  PRINTFI ("\r\n\n Inside reasm_ctimer_callback");
+  PRINTFI ("\r\n Using buffers -");
+  // Check timer expiry on any of the used buffers
+  for(i = 0; i < NUM_REASM_BUFS; i++)
+  {
+    if(sics_used_buf[i] == 1)
+    {
+      PRINTFI (" %d ", i);
+      if (timer_expired(&(sics_frag_attr[i].frag_reass_timer))) {
+        sics_used_buf[i] = 0;
+        memset(&(sics_frag_attr[i]),0,sizeof(sics_frag_t));
+        PRINTFI ("\(timed-out\),");
+      }
+    }
+  }
+  
+  ctimer_reset (&reasm_ct);
+  
+}
+
 #endif
 
 static void
@@ -2059,9 +2086,16 @@ sicslowpan_init(void)
    * send a packet.
    */
   tcpip_set_outputfunc(output);
+  
 #if SICSLOWPAN_CONF_FRAG
   sics_frag_buf_init();
+
+/* Callback timer to check if re-assembly buffers currently in use have timed-out. 
+ * Checked every half-period of the re-assembly timeout
+ */
+  ctimer_set(&reasm_ct, REASSEMBLY_TIMEOUT >> 1, reasm_timer_callback, NULL);
 #endif
+
 #if SICSLOWPAN_COMPRESSION == SICSLOWPAN_COMPRESSION_HC06
 /* Preinitialize any address contexts for better header compression
  * (Saves up to 13 bytes per 6lowpan packet)
