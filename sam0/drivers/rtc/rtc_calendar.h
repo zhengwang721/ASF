@@ -385,6 +385,12 @@ extern "C" {
 /** RTC continuously updated. */
 #  define FEATURE_RTC_CONTINUOUSLY_UPDATED
 #endif
+
+#if (SAML22) || defined(__DOXYGEN__)
+/** RTC tamper detection. */
+#  define FEATURE_RTC_TAMPER_DETECTION
+#endif
+
 /*@}*/
 
 #ifdef FEATURE_RTC_CLOCK_SELECTION
@@ -470,10 +476,14 @@ enum rtc_calendar_callback {
 	/** Callback for alarm 2. */
 	RTC_CALENDAR_CALLBACK_ALARM_2,
 #  endif
-#  if (RTC_NUM_OF_ALARMS > 3)	|| defined(__DOXYGEN__)
+#  if (RTC_NUM_OF_ALARMS > 3) || defined(__DOXYGEN__)
 	/** Callback for alarm 3. */
 	RTC_CALENDAR_CALLBACK_ALARM_3,
 #  endif
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Callback for tamper. */
+	RTC_CALENDAR_CALLBACK_TAMPER,
+#endif
 	/** Callback for  overflow. */
 	RTC_CALENDAR_CALLBACK_OVERFLOW,
 #  if !defined(__DOXYGEN__)
@@ -498,10 +508,14 @@ enum rtc_calendar_callback {
 	/** Callback for alarm 2. */
 	RTC_CALENDAR_CALLBACK_ALARM_2,
 #  endif
-#  if (RTC_NUM_OF_ALARMS > 3)	|| defined(__DOXYGEN__)
+#  if (RTC_NUM_OF_ALARMS > 3) || defined(__DOXYGEN__)
 	/** Callback for alarm 3. */
 	RTC_CALENDAR_CALLBACK_ALARM_3,
 #  endif
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Callback for tamper. */
+	RTC_CALENDAR_CALLBACK_TAMPER,
+#endif
 	/** Callback for  overflow. */
 	RTC_CALENDAR_CALLBACK_OVERFLOW,
 #  if !defined(__DOXYGEN__)
@@ -646,6 +660,12 @@ struct rtc_calendar_events {
 	 *  counter frequency.
 	 */
 	bool generate_event_on_periodic[8];
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Generate an output event on every tamper input. */
+	bool generate_event_on_tamper;
+	/** Tamper input event and capture the CLOCK value. */
+	bool on_event_to_tamper;
+#endif
 };
 
 /**
@@ -1030,6 +1050,18 @@ static inline void rtc_calendar_enable_events(
 		}
 	}
 
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/* Check if the user has requested a tamper event output. */
+	if (events->generate_event_on_tamper) {
+		event_mask |= RTC_MODE2_EVCTRL_TAMPEREO;
+	}
+
+	/* Check if the user has requested a tamper event input. */
+	if (events->on_event_to_tamper) {
+		event_mask |= RTC_MODE2_EVCTRL_TAMPEVEI;
+	}
+#endif
+
 	/* Enable given event(s). */
 	rtc_module->MODE2.EVCTRL.reg |= event_mask;
 }
@@ -1075,6 +1107,18 @@ static inline void rtc_calendar_disable_events(
 			event_mask |= RTC_MODE2_EVCTRL_PEREO(1 << i);
 		}
 	}
+
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/* Check if the user has requested a tamper event output. */
+	if (events->generate_event_on_tamper) {
+		event_mask |= RTC_MODE2_EVCTRL_TAMPEREO;
+	}
+
+	/* Check if the user has requested a tamper event input. */
+	if (events->on_event_to_tamper) {
+		event_mask |= RTC_MODE2_EVCTRL_TAMPEVEI;
+	}
+#endif
 
 	/* Disable given event(s). */
 	rtc_module->MODE2.EVCTRL.reg &= ~event_mask;
@@ -1134,6 +1178,13 @@ static inline uint32_t rtc_read_general_purpose_reg(
 }
 
 /** @} */
+#endif
+
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+#include "rtc_tamper.h"
+
+void rtc_tamper_get_stamp (struct rtc_module *const module,
+		struct rtc_calendar_time *const time);
 #endif
 
 /** @} */
