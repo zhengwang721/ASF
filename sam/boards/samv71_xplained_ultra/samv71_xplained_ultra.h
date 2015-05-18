@@ -92,16 +92,14 @@
 
 /*----------------------------------------------------------------------------*/
 
-/** UART0 pins (UTXD0 and URXD0) definitions, PA10,9. */
-#define PINS_UART0        (PIO_PA9A_URXD0 | PIO_PA10A_UTXD0)
-#define PINS_UART0_FLAGS  (IOPORT_MODE_MUX_A)
+#define CONSOLE_UART               USART1
+#define CONSOLE_UART_ID            ID_USART1
+/** USART1 pins definitions, PA21,PB4. */
+#define USART1_RXD_GPIO   PIO_PA21_IDX
+#define USART1_RXD_FLAGS  IOPORT_MODE_MUX_A
+#define USART1_TXD_GPIO   PIO_PB4_IDX
+#define USART1_TXD_FLAGS  IOPORT_MODE_MUX_D
 
-#define PINS_UART0_PORT   IOPORT_PIOA
-#define PINS_UART0_MASK   (PIO_PA9A_URXD0 | PIO_PA10A_UTXD0)
-#define PINS_UART0_PIO    PIOA
-#define PINS_UART0_ID     ID_PIOA
-#define PINS_UART0_TYPE   PIO_PERIPH_A
-#define PINS_UART0_ATTR   PIO_DEFAULT
 
 //! \name LED definitions
 //@{
