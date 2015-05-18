@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief BSD compatible socket interface.
+ * \brief BSD alike socket interface.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -51,7 +51,6 @@ INCLUDES
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
 
 #include "common/include/nm_common.h"
-
 
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 MACROS
@@ -115,32 +114,68 @@ MACROS
 */
 
 #define SOL_SOCKET												1
-/*!<
+/*!< 
 	Socket option.
 	Used with the @ref setsocketopt function
 */
 
-#define	SO_SET_UDP_SEND_CALLBACK							0x00
+#define	SO_SET_UDP_SEND_CALLBACK								0x00
 /*!<
 	Socket option used by the application to enable/disable
-	the use of UDP send callbacks.
+	the use of UDP send callbacks. 
 	Used with the @ref setsocketopt function.
 */
 
 #define IP_ADD_MEMBERSHIP										0x01
-/*!<
+/*!< 
 	Set Socket Option Add Membership command value.
 	Used with the @ref setsocketopt function.
 */
 
-
+	
 #define IP_DROP_MEMBERSHIP										0x02
-/*!<
+/*!< 
 	Set Socket Option Drop Membership command value.
 	Used with the @ref setsocketopt function.
 */
- //@}
 
+//@}
+
+
+/** @defgroup  SSLSocketOptions Defines
+ * @ingroup SocketHeader
+ * The following list of macros are used to define SSL Socket options.
+ * @{
+ */
+
+#define SOL_SSL_SOCKET											2
+/*!< 
+	SSL Socket option level.
+	Used with the @ref setsocketopt function
+*/
+
+
+#define SO_SSL_BYPASS_X509_VERIF								0x01
+/*!<
+	Allow an opened SSL socket to bypass the X509 certificate 
+	verification process.
+	It is highly required NOT to use this socket option in production
+	software applications. It is supported for debugging and testing 
+	purposes.
+	The option value should be casted to int type and it is handled
+	as a boolean flag.
+*/
+
+
+#define SO_SSL_SNI												0x02
+/*!<
+	Set the Server Name Indicator (SNI) for an SSL socket. The
+	SNI is a NULL terminated string containing the server name
+	assocated with the connection. It must not exceed the size
+	of HOSTNAME_MAX_SIZE.
+*/
+ //@}
+		
 /**************
 Socket Errors
 **************/
@@ -150,7 +185,7 @@ Socket Errors
  * Errors are listed in numerical order with the error macro name.
  * @{
  */
-#define SOCK_ERR_NO_ERROR											0
+#define SOCK_ERR_NO_ERROR											0   
 /*!<
 	Successfull socket operation
 */

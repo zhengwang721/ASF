@@ -278,5 +278,41 @@ sint8 nm_bus_ioctl(uint8 u8Cmd, void* pvParameter)
 */
 sint8 nm_bus_deinit(void)
 {
+	sint8 result = M2M_SUCCESS;
+	struct port_config pin_conf;
+		
+	port_get_config_defaults(&pin_conf);
+	/* Configure control pins as input no pull up. */
+	pin_conf.direction  = PORT_PIN_DIR_INPUT;
+	pin_conf.input_pull = PORT_PIN_PULL_NONE;
+
+#ifdef CONF_WINC_USE_I2C
+	i2c_master_disable(&i2c_master_instance);
+	port_pin_set_config(CONF_WIFI_M2M_I2C_SCL, &pin_conf);
+	port_pin_set_config(CONF_WIFI_M2M_I2C_SDA, &pin_conf);
+#endif /* CONF_WINC_USE_I2C */
+#ifdef CONF_WINC_USE_SPI
+	spi_disable(&master);
+	port_pin_set_config(CONF_WIFI_M2M_SPI_MOSI, &pin_conf);
+	port_pin_set_config(CONF_WIFI_M2M_SPI_MISO, &pin_conf);
+	port_pin_set_config(CONF_WIFI_M2M_SPI_SCK,  &pin_conf);
+	port_pin_set_config(CONF_WIFI_M2M_SPI_SS,   &pin_conf);
+#endif /* CONF_WINC_USE_SPI */
+	return result;
+}
+
+/*
+*	@fn			nm_bus_reinit
+*	@brief		re-initialize the bus wrapper
+*	@param [in]	void *config
+*					re-init configuration data
+*	@return		M2M_SUCCESS in case of success and M2M_ERR_BUS_FAIL in case of failure
+*	@author		Dina El Sissy
+*	@date		19 Sept 2012
+*	@version	1.0
+*/
+sint8 nm_bus_reinit(void* config)
+{
 	return M2M_SUCCESS;
 }
+
