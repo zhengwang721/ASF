@@ -8,7 +8,7 @@
 
 			<!-- Source -->
 			<build type="include-path" value="."/>
-			<build type="c-source" value="main_samd21.c"/>
+			<build type="c-source" value="main21.c"/>
 			<build type="header-file" value="main.h"/>
 			<build type="include-path" value="growl"/>
 			<build type="c-source" value="growl/growl.c"/>
@@ -16,6 +16,7 @@
 
 			<!-- Device support -->
 			<device-support value="samd21"/>
+			<device-support value="saml21"/>
 
 			<!-- Required modules -->
 			<require idref="common.components.wifi.winc1500"/>

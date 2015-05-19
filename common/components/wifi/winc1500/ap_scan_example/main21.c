@@ -44,10 +44,10 @@
 
 /** \mainpage
  * \section intro Introduction
- * This example demonstrates the use of the WINC1500 with the SAMD21 Xplained Pro
+ * This example demonstrates the use of the WINC1500 with the SAM Xplained Pro
  * board to scan for access point.<br>
  * It uses the following hardware:
- * - the SAMD21 Xplained Pro.
+ * - the SAM Xplained Pro.
  * - the WINC1500 on EXT1.
  *
  * \section files Main Files
@@ -73,7 +73,7 @@
  * -# In the terminal window, the following text should appear:
  * \code
  *    -- WINC1500 AP scan example --
- *    -- SAMD21_XPLAINED_PRO --
+ *    -- SAM_XPLAINED_PRO --
  *    -- Compiled: xxx xx xxxx xx:xx:xx --
  *
  *    [1] SSID:DEMO_AP1
