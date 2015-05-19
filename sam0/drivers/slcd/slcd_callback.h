@@ -66,11 +66,11 @@ typedef void (*slcd_callback_t)(enum slcd_callback_type type);
 /** SLCD callback type. */
 enum slcd_callback_type {
 	/** Frame Counter 0 Overflow callback.*/
-	SLCD_CALLBACK_FRAME_0_COUNTER_OVERFLOW = 0,
+	SLCD_CALLBACK_FC0_OVERFLOW = 0,
 	/** Frame Counter 1 Overflow callback.*/
-	SLCD_CALLBACK_FRAME_1_COUNTER_OVERFLOW,
+	SLCD_CALLBACK_FC1_OVERFLOW,
 	/** Frame Counter 2 Overflow callback.*/
-	SLCD_CALLBACK_FRAME_2_COUNTER_OVERFLOW,
+	SLCD_CALLBACK_FC2_OVERFLOW,
 	/** VLCD Ready Toggle callback.*/
 	SLCD_CALLBACK_VLCD_READY,
 	/** VLCD Status Toggle callback.*/

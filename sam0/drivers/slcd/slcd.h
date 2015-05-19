@@ -149,182 +149,17 @@ extern "C" {
 #endif
 
 /**
- * \brief Deadtime Insertion Value.
+ * \brief SLCD Frame Counter Definition.
  *
- * Enum deadtime at the end of each frame.
+ * Enum SLCD frame counter definition.
  */
-enum slcd_deadtime {
-	/** The dead time period is 0. */
-	SLCD_DEADTIME_0 = 0,
-	/** The dead time period is 1. */
-	SLCD_DEADTIME_1,
-	/** The dead time period is 2. */
-	SLCD_DEADTIME_2,
-	/** The dead time period is 3. */
-	SLCD_DEADTIME_3,
-	/** The dead time period is 4. */
-	SLCD_DEADTIME_4,
-	/** The dead time period is 5. */
-	SLCD_DEADTIME_5,
-	/** The dead time period is 6. */
-	SLCD_DEADTIME_6,
-	/** The dead time period is 7. */
-	SLCD_DEADTIME_7,
-};
-
-/**
- * \brief Reference Refresh Frequency.
- *
- * Enum Reference refresh frequency.
- */
-enum slcd_reference_refresh_freq {
-	/** Bias Reference refresh frequency is 2KHz. */
-	SLCD_REF_REFRESH_FREQ_2KHZ = 0,
-	/** Bias Reference refresh frequency is 1KHz. */
-	SLCD_REF_REFRESH_FREQ_1KHZ ,
-	/** Bias Reference refresh frequency is 500Hz. */
-	SLCD_REF_REFRESH_FREQ_500HZ ,
-	/** Bias Reference refresh frequency is 250Hz. */
-	SLCD_REF_REFRESH_FREQ_250HZ ,
-	/** Bias Reference refresh frequency is 125Hz. */
-	SLCD_REF_REFRESH_FREQ_125HZ ,
-	/** Bias Reference refresh frequency is 62.5Hz. */
-	SLCD_REF_REFRESH_FREQ_62HZ ,
-};
-
-/**
- * \brief Power Refresh Frequency.
- *
- * Enum Power refresh rrequency.
- */
-enum slcd_power_refresh_freq {
-	/** Charge pump refresh frequency is 2KHz. */
-	SLCD_POWER_REFRESH_FREQ_2KHZ = 0,
-	/** Charge pump refresh frequency is 1KHz. */
-	SLCD_POWER_REFRESH_FREQ_1KHZ ,
-	/** Charge pump refresh frequency is 500KHz. */
-	SLCD_POWER_REFRESH_FREQ_500HZ,
-	/** Charge pump refresh frequency is 250Hz. */
-	SLCD_POWER_REFRESH_FREQ_250HZ ,
-};
-
-/**
- * \brief Display Memory Update Frame Counter Selection.
- *
- * Enum Display memory update frame counter selection.
- */
-enum slcd_display_memory_update_sel_fc {
-	/** Display memory update frame counter is  Frame Counter 0. */
-	SLCD_DISPLAY_MEMORY_UPDATE_SEL_FC0 = 0,
-	/** Display memory update frame counter is  Frame Counter 1. */
-	SLCD_DISPLAY_MEMORY_UPDATE_SEL_FC1,
-	/** Display memory update frame counter is  Frame Counter 2. */
-	SLCD_DISPLAY_MEMORY_UPDATE_SEL_FC2,
-	/** Frame Counter event to DMU is forced to 0. */
-	SLCD_DISPLAY_MEMORY_UPDATE_SEL_NFC,
-};
-
-/**
- * \brief Internal/External VLCD selection.
- *
- * Enum how VLCD is generated.
- */
-enum slcd_vlcd_generated_sel {
-	/** Internal VLCD generation. */
-	SLCD_VLCD_INTERNAL = 0,
-	/** External VLCD generation. */
-	SLCD_VLCD_EXTTERNAL,
-};
-
-/**
- * \brief SLCD Bias Setting.
- *
- * Enum SLCD Bias Setting.
- */
-enum slcd_bias {
-	/** Static bias. */
-	SLCD_BIAS_STATIC = 0,
-	/** 1/2 bias. */
-	SLCD_BIAS_HALF,
-	/** 1/3 bias. */
-	SLCD_BIAS_THIRD,
-	/** 1/4 bias. */
-	SLCD_BIAS_FOURTH,
-
-};
-
-/**
- * \brief SLCD Duty Setting.
- *
- * Enum SLCD duty setting.
- */
-enum slcd_duty {
-	/** Static duty. */
-	SLCD_DUTY_STATIC = 0,
-	/** Half duty. */
-	SLCD_DUTY_HALF,
-	/** 1/3 duty. */
-	SLCD_DUTY_THIRD,
-	/** 1/4 duty. */
-	SLCD_DUTY_FOURTH,
-	/** 1/6 duty. */
-	SLCD_DUTY_SIXTH,
-	/** 1/8 duty. */
-	SLCD_DUTY_EIGHT,
-};
-
-/**
- * \brief Clock Prescaler.
- *
- * Enum Clock prescaler.
- */
-enum slcd_clock_presc {
-	/** Clock prescaler is 16. */
-	SLCD_CLOCK_PRESC_16 = 0,
-	/** Clock divider is 32. */
-	SLCD_CLOCK_PRESC_32,
-	/** Clock divider is 64. */
-	SLCD_CLOCK_PRESC_64,
-	/** Clock divider is 128. */
-	SLCD_CLOCK_PRESC_128,
-};
-
-/**
- * \brief Clock Divider.
- *
- * Enum Clock divider.
- */
-enum slcd_clock_div {
-	/** Clock divider is 1. */
-	SLCD_CLOCK_DIV_1 = 0,
-	/** Clock divider is 2. */
-	SLCD_CLOCK_DIV_2,
-	/** Clock divider is 3. */
-	SLCD_CLOCK_DIV_3,
-	/** Clock divider is 4. */
-	SLCD_CLOCK_DIV_4,
-	/** Clock divider is 5. */
-	SLCD_CLOCK_DIV_5,
-	/** Clock divider is 6. */
-	SLCD_CLOCK_DIV_6,
-	/** Clock divider is 7. */
-	SLCD_CLOCK_DIV_7,
-	/** Clock divider is 8. */
-	SLCD_CLOCK_DIV_8,
-};
-
-/**
- * \brief LCD Working Power Mode.
- *
- * Enum LCD working power mode.
- */
-enum slcd_power_supply_mode {
-	/** LCD power automatically select regualation mode or pump mode. */
-	SLCD_POWER_MODE_AUTO = 0,
-	/** LCD power use step-up pump loop only. */
-	SLCD_POWER_MODE_STEPUP,
-	/** LCD power use step-down drop-out regulation loop only. */
-	SLCD_POWER_MODE_STEPDOWN,
+enum slcd_frame_counter {
+	/** SLCD frame counter 0. */
+	SLCD_FRAME_COUNTER_0,
+	/** SLCD frame counter 1. */
+	SLCD_FRAME_COUNTER_1,
+	/** SLCD frame counter 2. */
+	SLCD_FRAME_COUNTER_2,
 };
 
 /**
@@ -340,86 +175,14 @@ enum slcd_waveform_mode {
 };
 
 /**
- * \brief Contrast Value.
- *
- * Enum Contrast value.
- */
-enum slcd_contrast {
-	/** SLCD contrast value is 1. */
-	SLCD_CONTRAST_1 = 0,
-	/** SLCD contrast value is 2. */
-	SLCD_CONTRAST_2,
-	/** SLCD contrast value is 3. */
-	SLCD_CONTRAST_3,
-	/** SLCD contrast value is 4. */
-	SLCD_CONTRAST_4,
-	/** SLCD contrast value is 5. */
-	SLCD_CONTRAST_5,
-	/** SLCD contrast value is 6. */
-	SLCD_CONTRAST_6,
-	/** SLCD contrast value is 7. */
-	SLCD_CONTRAST_7,
-	/** SLCD contrast value is 8. */
-	SLCD_CONTRAST_8,
-	/** SLCD contrast value is 9. */
-	SLCD_CONTRAST_9,
-	/** SLCD contrast value is 10. */
-	SLCD_CONTRAST_10,
-	/** SLCD contrast value is 11. */
-	SLCD_CONTRAST_11,
-	/** SLCD contrast value is 12. */
-	SLCD_CONTRAST_12,
-	/** SLCD contrast value is 13. */
-	SLCD_CONTRAST_13,
-	/** SLCD contrast value is 14. */
-	SLCD_CONTRAST_14,
-	/** SLCD contrast value is 15. */
-	SLCD_CONTRAST_15,
-	/** SLCD contrast value is 16. */
-	SLCD_CONTRAST_16,
-};
-
-/**
- * \brief SLCD Frame Counter Definition.
- *
- * Enum SLCD frame counter definition.
- */
-enum slcd_frame_counter {
-	/** SLCD frame counter 0. */
-	SLCD_FRAME_COUNTER_0,
-	/** SLCD frame counter 1. */
-	SLCD_FRAME_COUNTER_1,
-	/** SLCD frame counter 2. */
-	SLCD_FRAME_COUNTER_2,
-};
-
-/**
  * Basic configuration for SLCDC.
  */
-struct slcd_config {
-
-	/** Duty ratio setting.*/
-	enum slcd_duty duty;
-	/** Bias setting.*/
-	enum slcd_bias bias;
-	/** Clock prescaler. */
-	enum slcd_clock_presc clock_presc;
-	/** Clock divider. */
-	enum slcd_clock_div clock_div;
-
-	/** Internal/External VLCD selection.*/
-	enum slcd_vlcd_generated_sel xvlcd;
-    /** Keep SLCD enabled in standby sleep mode if true. */
+struc slcd_config {
+	/** Keep SLCD enabled in standby sleep mode if true. */
 	bool run_in_standby;
 	/** waveform mode selection. */
 	enum slcd_waveform_mode waveform_mode;
 
-	/** Display memory update frame counter selection. */
-	enum  slcd_display_memory_update_sel_fc  dmfcs;
-	/** Reference fefresh frequency. */
-	enum slcd_reference_refresh_freq ref_refresh_freq;
-	/** Power fefresh frequency. */
-	enum slcd_power_refresh_freq power_refresh_freq;
 	/** Low resistance network duration. */
 	uint8_t low_resistance_duration;
 	/** Enable Low resistance if true. */
@@ -428,12 +191,9 @@ struct slcd_config {
 	uint8_t bias_buffer_duration;
 	/** Enable bias buffer if true. */
 	bool enable_bias_buffer;
-	/** Enable external bias capacitor if true.*/
-	bool enable_ext_bias_capacitor;
-	/** Working power mode for LCD power supply.*/
-	enum slcd_power_supply_mode power_mode;
-};
-
+	/** Enable external bias capacitor if true. */
+	bool enable_ext_bias;
+}
 /**
  * \brief SLCD event enable/disable structure.
  *
@@ -442,30 +202,19 @@ struct slcd_config {
  */
 struct slcd_events {
 	/** Enable event generation on frame counter 0 overflow. */
-	bool generate_event_on_frame_counter_0_overflow;
+	bool generate_event_on_fc0_overflow;
 	/** Enable event generation on frame counter 1 overflow. */
-	bool generate_event_on_frame_counter_1_overflow;
+	bool generate_event_on_fc1_overflow;
 	/** Enable event generation on frame counter 2 overflow. */
-	bool generate_event_on_frame_counter_2_overflow;
-};
-
-/**
- * \brief SLCD Blink Mode Selection.
- *
- * Enum SLCD blinking mode.
- */
-enum slcd_blink_mode {
-	/** All segments are allowed to blink. */
-	SLCD_BLINK_ALL_SEG = 0,
-	/** Selected segments are allowed to blink. */
-	SLCD_BLINK_SELECT_SEG,
+	bool generate_event_on_fc2_overflow;
 };
 
 struct slcd_blink_config {
 	/** Frame counter selection for blinking. */
 	enum slcd_frame_counter fc;
-	/** Blinking Mode. */
-	enum slcd_blink_mode blink_mode;
+	/** All segments are allowed to blink if true, else only
+	  Selected segments are allowed to blink. */
+	bool blink_all_seg;
 	/** Mask segment 0 (SEG0) to blink, each bit enables SEG0,
 		connected to COM0 up to COM7.*/
 	uint8_t blink_seg0_mask;
@@ -548,18 +297,6 @@ struct slcd_automated_char_config {
 };
 
 /**
- * \brief Available clock source for SLCD.
- * SLCD clock source. Before enabling the SLCD module,
- * the SLCD clock must be enabled and selected .
- */
-enum slcd_clock_sel {
-	/** 32.768KHz from 32KHz internal ULP oscillator. */
-	SLCD_CLOCK_SELECTION_ULP32K = 0,
-	/** 32.768KHz from 32.768KHz external crystal oscillator. */
-	SLCD_CLOCK_SELECTION_XOSC32K,
-};
-
-/**
  * \name SLCD Basic Operation Functions
  * @{
  */
@@ -570,7 +307,7 @@ void slcd_enable(void);
 void slcd_disable(void);
 bool slcd_is_enabled(void);
 void slcd_reset(void);
-void slcd_set_contrast(enum slcd_contrast contrast);
+enum status_code slcd_set_contrast(uint8_t contrast);
 
 /**
  * \brief Determines if SLCD module(s) are currently synchronizing to the bus.
@@ -652,41 +389,18 @@ static inline void slcd_disable_display(void)
 		/* Wait for synchronization */
 	}
 }
-
 /**
- * \brief Deadtime enable.
+ * \brief  DMA Display Memory Update Frame Counter Selection.
  *
- * Enable deadtime.
- */
-static inline void slcd_enable_deadtime(void)
-{
-	//todo
-	while (slcd_is_syncing()) {
-		/* Wait for synchronization */
-	}
-}
-
-/**
- * \brief Deadtime disable.
+ * it's used to select the frame counter for DMA to update the display memory.
  *
- * Disable deadtime.
- */
-static inline void slcd_disable_deadtime(void)
-{
-	////todo
-	while (slcd_is_syncing()) {
-		/* Wait for synchronization */
-	}
-}
-
-/**
- * \brief Set deadtime.
+ *  \note It can be called only before the module is enabled.
  *
- * Set deadtime.
+ *  \param[in] fc Frame coungter index.
  */
-static inline void slcd_set_deadtime(enum slcd_deadtime deadtime)
+static inline void slcd_dma_display_memory_update_fc_sel(enum slcd_frame_counter fc)
 {
-	//todo
+	SLCD->CTRLA.bit.DMFCS = fc;
 }
 
 /** @} */
@@ -724,7 +438,6 @@ static inline void slcd_disable_blink(void)
 
 void slcd_blink_get_config_defaults(struct slcd_blink_config *blink_config);
 enum status_code slcd_blink_set_config(struct slcd_blink_config *const blink_config);
-
 
 /** @} */
 
@@ -782,15 +495,15 @@ static inline void slcd_enable_events(struct slcd_events *const events)
 
 	uint8_t event_mask = 0;
 
-	if (events->generate_event_on_frame_counter_0_overflow) {
+	if (events->generate_event_on_fc0_overflow) {
 		event_mask |= SLCD_EVCTRL_FC0OEO;
 	}
 
-	if (events->generate_event_on_frame_counter_1_overflow) {
+	if (events->generate_event_on_fc1_overflow) {
 		event_mask |= SLCD_EVCTRL_FC1OEO;
 	}
 
-	if (events->generate_event_on_frame_counter_2_overflow) {
+	if (events->generate_event_on_fc2_overflow) {
 		event_mask |= SLCD_EVCTRL_FC2OEO;
 	}
 
@@ -811,15 +524,15 @@ static inline void slcd_disable_events(struct slcd_events *const events)
 
 	uint8_t event_mask = 0;
 
-	if (events->generate_event_on_frame_counter_0_overflow) {
+	if (events->generate_event_on_fc0_overflow) {
 		event_mask |= SLCD_EVCTRL_FC0OEO;
 	}
 
-	if (events->generate_event_on_frame_counter_1_overflow) {
+	if (events->generate_event_on_fc1_overflow) {
 		event_mask |= SLCD_EVCTRL_FC1OEO;
 	}
 
-	if (events->generate_event_on_frame_counter_2_overflow) {
+	if (events->generate_event_on_fc2_overflow) {
 		event_mask |= SLCD_EVCTRL_FC2OEO;
 	}
 
@@ -911,74 +624,6 @@ static inline void slcd_disable_frame_counter(enum slcd_frame_counter fc)
 /** @} */
 
 /**
- * \name COM/SEG PIN Selection Functions
- * There are 52 LCD pins, but SLCD can drive up to 48 LCD pins which can be
- * individually enabled or disabled according to the LCD glass.
- * Each LCD pin can be configured as a frontplane (SEG) or backplane (COM) offering
- * various configurations.
- * @{
- */
-
-/**
- * \brief Set SLCD PIN.
- *
- *  Set SLCD PIN.
- *
- *  \note PIN cannot be set while the module is enabled.The number of LCD pins
- *	enabled should not be higher than the maximum of COM and SEG lines supported.
- *
- *	\param[in] pin_mask For LCD pins from 0 to 51.
- */
-static inline void slcd_set_pin(uint64_t pin_mask)
-{
-	SLCD->LPENL.reg = pin_mask & SLCD_LPENL_MASK;
-	SLCD->LPENH.reg = (pin_mask >> 32 ) & SLCD_LPENH_MASK;
-}
-
-/**
- * \brief Enable Single SLCD PIN.
- *
- *  Enable Single SLCD PIN.
- *
- *	\param[in] pin_index PIN index [0-51].
- */
-static inline void slcd_enable_single_pin(uint8_t pin_index)
-{
-	volatile uint32_t tmp;
-
-	tmp = SLCD->LPENL.reg;
-	tmp &= ~(0x1 << pin_index);
-	tmp |= (0x1 << pin_index);
-	SLCD->LPENL.reg = tmp & SLCD_LPENL_MASK;
-
-	tmp = SLCD->LPENH.reg;
-	tmp &= ~((0x1 << pin_index) >> 32);
-	tmp |= ((0x1 << pin_index) >> 32);
-	SLCD->LPENH.reg = tmp;
-}
-/**
- * \brief Disable Single SLCD PIN.
- *
- *  Disable Single SLCD PIN.
- *
- *	\param[in] pin_index PIN index [0-51].
- */
-static inline void slcd_disable_single_pin(uint8_t pin_index)
-{
-	volatile uint32_t tmp;
-
-	tmp = SLCD->LPENL.reg;
-	tmp &= ~(0x1 << pin_index);
-	SLCD->LPENL.reg = tmp & SLCD_LPENL_MASK;
-
-	tmp = SLCD->LPENH.reg;
-	tmp &= ~((0x1 << pin_index) >> 32);
-	SLCD->LPENH.reg = tmp & SLCD_LPENH_MASK;
-}
-
-/** @} */
-
-/**
  * \name Display Memory Functions
  * CPU can access display memory in direct access or in indirect access.
  * @{
@@ -986,8 +631,7 @@ static inline void slcd_disable_single_pin(uint8_t pin_index)
 void slcd_set_pixel(uint8_t pix_com, uint8_t pix_seg);
 void slcd_clear_pixel(uint8_t pix_com, uint8_t pix_seg);
 
-void slcd_set_seg_data(uint8_t seg_data,uint8_t byte_offset);
-void slcd_set_seg_mask(uint8_t seg_mask);
+void slcd_set_seg_data(uint8_t seg_data,uint8_t byte_offset,uint8_t seg_mask);
 /** @} */
 
 /**
@@ -1018,9 +662,9 @@ void slcd_automated_char_get_config_default(
 		struct slcd_automated_char_config *config);
 enum status_code slcd_automated_char_set_config(
 		struct slcd_automated_char_config *const config);
-void slcd_automated_char_write_data(uint32_t seg_data);
-void slcd_automated_char_set_mask(uint32_t data_mask);
-void slcd_automated_char_set_index(uint8_t com_line_index,uint8_t seg_line_index);
+void slcd_automated_char_write_data(uint8_t com_line_index,
+									uint8_t seg_line_index,
+									uint32_t seg_data,uint32_t data_mask);
 
 /** @} */
 

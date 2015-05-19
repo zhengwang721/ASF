@@ -48,12 +48,63 @@
  */
 
 #include <slcd.h>
+#include <conf_slcd.h>
+
 #include <system.h>
 
+#if !defined(CONF_SLCD_CLOCK_SOURCE)
+#  warning  SLCD_CLOCK_SOURCE is not defined, assuming 0.
+#  define CONF_SLCD_CLOCK_SOURCE 0
+#endif
 
-#if !defined(SLCD_CLOCK_SOURCE)
-#  warning  SLCD_CLOCK_SOURCE is not defined, assuming SLCD_CLOCK_SELECTION_ULP32K.
-#  define SLCD_CLOCK_SOURCE SLCD_CLOCK_SELECTION_ULP32K
+#if !defined(CONF_SLCD_DUTY)
+#  warning  CONF_SLCD_DUTY is not defined, assuming 0.
+#  define CONF_SLCD_DUTY 0
+#endif
+
+#if !defined(CONF_SLCD_BIAS)
+#  warning  CONF_SLCD_BIAS is not defined, assuming 0.
+#  define CONF_SLCD_BIAS 0
+#endif
+
+#if !defined(CONF_SLCD_PVAL)
+#  warning  CONF_SLCD_PVAL is not defined, assuming 0.
+#  define CONF_SLCD_PVAL 0
+#endif
+
+#if !defined(CONF_SLCD_CKDIV)
+#  warning  CONF_SLCD_CKDIV is not defined, assuming 0.
+#  define CONF_SLCD_CKDIV 0
+#endif
+
+#if !defined(CONF_SLCD_VLCD_SEL)
+#  warning  CONF_SLCD_VLCD_SEL is not defined, assuming 0.
+#  define CONF_SLCD_VLCD_SEL 0
+#endif
+
+#if !defined(CONF_SLCD_REF_REFRESH_FREQ)
+#  warning  CONF_SLCD_REF_REFRESH_FREQ is not defined, assuming 0.
+#  define CONF_SLCD_REF_REFRESH_FREQ 0
+#endif
+
+#if !defined(CONF_SLCD_POWER_REFRESH_FREQ)
+#  warning  CONF_SLCD_POWER_REFRESH_FREQ is not defined, assuming 0.
+#  define CONF_SLCD_POWER_REFRESH_FREQ 0
+#endif
+
+#if !defined(CONF_SLCD_POWER_MODE)
+#  warning  CONF_SLCD_POWER_MODE is not defined, assuming 0.
+#  define CONF_SLCD_POWER_MODE 0
+#endif
+
+#if !defined(CONF_SLCD_PIN_L_MASK)
+#  warning  CONF_SLCD_PIN_L_MASK is not defined, assuming 0.
+#  define CONF_SLCD_PIN_L_MASK 0
+#endif
+
+#if !defined(CONF_SLCD_PIN_H_MASK)
+#  warning  CONF_SLCD_PIN_H_MASK is not defined, assuming 0.
+#  define CONF_SLCD_PIN_H_MASK 0
 #endif
 
 /**
@@ -69,22 +120,14 @@ void slcd_get_config_defaults(struct slcd_config *config)
 	if (!config) {
 		return ;
 	}
-	config->duty = SLCD_DUTY_STATIC;
-	config->bias = SLCD_BIAS_STATIC;
-	config->clock_presc = SLCD_CLOCK_PRESC_16;
-	config->clock_div = SLCD_CLOCK_DIV_1;
-	config->xvlcd = SLCD_VLCD_INTERNAL;
+
 	config->run_in_standby = false;
 	config->waveform_mode = SLCD_LOW_POWER_WAVEFORM_MODE;
-	config->dmfcs = SLCD_DISPLAY_MEMORY_UPDATE_SEL_FC0;
-	config->ref_refresh_freq = SLCD_REF_REFRESH_FREQ_2KHZ;
-	config->power_refresh_freq = SLCD_POWER_REFRESH_FREQ_2KHZ;
 	config->low_resistance_duration = 0;
 	config->enable_low_resistance = false;
 	config->bias_buffer_duration = 0;
 	config->enable_bias_buffer = false;
-	config->enable_ext_bias_capacitor = false;
-	config->power_mode = SLCD_POWER_MODE_AUTO;
+	config->enable_ext_bias = false;
 }
 
 /**
@@ -105,30 +148,33 @@ enum status_code slcd_init(struct slcd_config *const config)
 	}
 	slcd_disable();
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_SLCD);
-	
+
 	/* Select SLCD clock */
-	OSC32KCTRL->SLCDCTRL.reg = SLCD_CLOCK_SOURCE;
+	OSC32KCTRL->SLCDCTRL.reg = CONF_SLCD_CLOCK_SOURCE & OSC32KCTRL_SLCDCTRL_MASK;
 
 	slcd_reset();
-	
-	SLCD->CTRLA.reg = SLCD_CTRLA_DUTY(config->duty) | SLCD_CTRLA_BIAS(config->bias)
-					 | SLCD_CTRLA_PRESC(config->clock_presc) | SLCD_CTRLA_CKDIV(config->clock_div) 
-					 | (config->xvlcd << SLCD_CTRLA_XVLCD_Pos)
+
+	SLCD->CTRLA.reg = SLCD_CTRLA_DUTY(CONF_SLCD_DUTY) | SLCD_CTRLA_BIAS(CONF_SLCD_BIAS)
+					 | SLCD_CTRLA_PRESC(CONF_SLCD_PVAL) | SLCD_CTRLA_CKDIV(CONF_SLCD_CKDIV)
+					 | (CONF_SLCD_VLCD_SEL << SLCD_CTRLA_XVLCD_Pos)
 					 | (config->run_in_standby << SLCD_CTRLA_RUNSTDBY_Pos)
-					 | (config->waveform_mode << SLCD_CTRLA_WMOD_Pos)
-					 | SLCD_CTRLA_DMFCS(config->dmfcs)
-					 | SLCD_CTRLA_RRF(config->ref_refresh_freq)
-					 | SLCD_CTRLA_PRF(config->power_refresh_freq)
+					 | SLCD_CTRLA_RRF(CONF_SLCD_REF_REFRESH_FREQ)
+					 | SLCD_CTRLA_PRF(CONF_SLCD_POWER_REFRESH_FREQ)
 					 | (config->waveform_mode << SLCD_CTRLA_WMOD_Pos);
-   SLCD->CTRLB.reg = SLCD_CTRLB_BBD(config->bias_buffer_duration)
+	SLCD->CTRLB.reg = SLCD_CTRLB_BBD(config->bias_buffer_duration)
   					| (config->enable_bias_buffer << SLCD_CTRLB_BBEN_Pos)
   					| SLCD_CTRLB_LRD(config->low_resistance_duration)
   					| (config->enable_low_resistance << SLCD_CTRLB_LREN_Pos);
+  					//| (config->enable_ext_bias << SLCD_CTRLB_EXTBIAS_Pos);
 
-   while (slcd_get_vlcd_ready_status()) {
-   }
-   SLCD->CTRLC.reg |= SLCD_CTRLC_LPPM(config->power_mode);
- 
+
+	SLCD->CTRLC.reg |= SLCD_CTRLC_LPPM(CONF_SLCD_POWER_MODE);
+	while (slcd_get_vlcd_ready_status()) {
+   	}
+
+	SLCD->LPENL.reg = CONF_SLCD_PIN_L_MASK & SLCD_LPENL_MASK;
+	SLCD->LPENH.reg = CONF_SLCD_PIN_H_MASK & SLCD_LPENH_MASK;
+
    return STATUS_OK;
 }
 
@@ -142,7 +188,7 @@ enum status_code slcd_init(struct slcd_config *const config)
 void slcd_enable(void)
 {
 	SLCD->CTRLA.reg |= SLCD_CTRLA_ENABLE;
-	
+
 	while (slcd_is_syncing()) {
 		/* Wait for synchronization */
 	}
@@ -173,7 +219,7 @@ void slcd_disable(void)
 
 bool slcd_is_enabled(void)
 {
-	return ((SLCD->CTRLA.reg & SLCD_CTRLA_ENABLE) == SLCD_CTRLA_ENABLE)
+	return ((SLCD->CTRLA.reg & SLCD_CTRLA_ENABLE) == SLCD_CTRLA_ENABLE);
 }
 
 /**
@@ -193,10 +239,10 @@ void slcd_reset(void)
 /**
  * \brief Set the SLCD fine contrast.
  *
- * The LCD contrast is defined by the value of VLCD voltage. The higher is the 
- * VLCD voltage, the higher is the contrast. The software contrast adjustment 
+ * The LCD contrast is defined by the value of VLCD voltage. The higher is the
+ * VLCD voltage, the higher is the contrast. The software contrast adjustment
  * is only possible in internal supply mode.
- * In internal supply mode, VLCD is in the range 2.5V to 3.5V. VLCD can be 
+ * In internal supply mode, VLCD is in the range 2.5V to 3.5V. VLCD can be
  * adjusted with 16 steps, each step is 60 mV.The contrast value can be written
  * at any time.
  *
@@ -206,19 +252,19 @@ void slcd_reset(void)
  * \retval STATUS_OK SLCD contrast set successful.
  * \retval STATUS_ERR_INVALID_ARG  SLCD is not working in internal supply mode.
  */
-void slcdc_set_contrast(enum slcd_contrast contrast)
+enum status_code slcd_set_contrast(uint8_t contrast)
 {
-	
+
 	if (SLCD->CTRLA.bit.XVLCD) {
 		return STATUS_ERR_INVALID_ARG;
 	}
 	uint16_t temp = SLCD->CTRLC.reg;
-	
+
 	temp &= ~ SLCD_CTRLC_CTST(0xf);
 	temp |= SLCD_CTRLC_CTST(contrast);
-	
+
 	SLCD->CTRLC.reg = temp;
-	
+	return STATUS_OK;
 }
 
 /**
@@ -235,7 +281,7 @@ void slcd_blink_get_config_defaults(struct slcd_blink_config *blink_config)
 		return ;
 	}
 	blink_config->fc = SLCD_FRAME_COUNTER_0;
-	blink_config->blink_mode = SLCD_BLINK_ALL_SEG;
+	blink_config->blink_all_seg = true;
 	blink_config->blink_seg0_mask = 0;
 	blink_config->blink_seg1_mask = 0;
 }
@@ -260,7 +306,7 @@ enum status_code  slcd_blink_set_config(struct slcd_blink_config *const blink_co
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	SLCD->BCFG.reg = (blink_config->blink_mode << SLCD_BCFG_MODE_Pos)
+	SLCD->BCFG.reg = (blink_config->blink_all_seg << SLCD_BCFG_MODE_Pos)
 					| SLCD_BCFG_FCS(blink_config->fc)
 					| SLCD_BCFG_BSS0(blink_config->blink_seg0_mask)
 					| SLCD_BCFG_BSS1(blink_config->blink_seg1_mask);
@@ -279,12 +325,16 @@ enum status_code  slcd_blink_set_config(struct slcd_blink_config *const blink_co
 {
 	if ((pix_com < SLCD_MAX_COM) &&
 			(pix_seg < SLCD_MAX_SEG)) {
-		uint64_t register_value = *(&(SLCD->SDATAL0.reg) + pix_com*4) 
-				| (*(&(SLCD->SDATAH0.reg) + pix_com*4) << 32) ;
-		register_value |= ((uint64_t)1 << pix_seg);
-		
-		*(&(SLCD->SDATAL0.reg) + pix_com*4) = register_value & SLCD_SDATAL0_MASK;
-		*(&(SLCD->SDATAH0.reg) + pix_com*4) = (register_value >> 32) & SLCD_SDATAL0_MASK;
+		uint32_t register_low  = *(&(SLCD->SDATAL0.reg) + pix_com*4);
+		uint32_t register_high = (&(SLCD->SDATAH0.reg) + pix_com*4);
+		if (pix_seg >= 32) {
+			register_high |= (1 <<(pix_seg-32));
+		} else {
+			register_low |= 1 <<pix_seg;
+		}
+
+		*(&(SLCD->SDATAL0.reg) + pix_com*4) = register_low & SLCD_SDATAL0_MASK;
+		*(&(SLCD->SDATAH0.reg) + pix_com*4) = register_high & SLCD_SDATAL0_MASK;
 	}
 }
 
@@ -298,13 +348,16 @@ enum status_code  slcd_blink_set_config(struct slcd_blink_config *const blink_co
 {
 	if ((pix_com < SLCD_MAX_COM) &&
 			(pix_seg < SLCD_MAX_SEG)) {
-		uint64_t register_value = *(&(SLCD->SDATAL0.reg) + pix_com*4) 
-				| (*(&(SLCD->SDATAH0.reg) + pix_com*4) << 32) ;
+		uint32_t register_low  = *(&(SLCD->SDATAL0.reg) + pix_com*4);
+		uint32_t register_high = (&(SLCD->SDATAH0.reg) + pix_com*4);
+		if (pix_seg >= 32) {
+			register_high &= ~(1 <<(pix_seg-32));
+		} else {
+			register_low &= ~(1 <<pix_seg);
+		}
 
-		register_value &= ~((uint64_t)1 << pix_seg);
-		*(&(SLCD->SDATAL0.reg) + pix_com*4) = register_value & SLCD_SDATAL0_MASK;
-		*(&(SLCD->SDATAH0.reg) + pix_com*4) = (register_value >> 32) & SLCD_SDATAL0_MASK;
-		
+		*(&(SLCD->SDATAL0.reg) + pix_com*4) = register_low & SLCD_SDATAL0_MASK;
+		*(&(SLCD->SDATAH0.reg) + pix_com*4) = register_high & SLCD_SDATAL0_MASK;
 	}
 }
 
@@ -313,33 +366,18 @@ enum status_code  slcd_blink_set_config(struct slcd_blink_config *const blink_co
  *
  * \param[in] pix_seg Pixel/segment SEG coordinate
  * \param[in] byte_offset Byte offset in display memory,
+ * \param[in] seg_mask Byte offset in display memory,
  */
-void slcd_set_seg_data(uint8_t seg_data,uint8_t byte_offset)
+void slcd_set_seg_data(uint8_t seg_data,uint8_t byte_offset,uint8_t seg_mask)
 {
 	uint32_t temp = SLCD->ISDATA.reg;
-	
+
 	temp &= (~ SLCD_ISDATA_SDATA(0xff)) | (~ SLCD_ISDATA_OFF(0x3f));
-	
-	temp |= SLCD_ISDATA_SDATA(seg_data)
-		 | SLCD_ISDATA_OFF(byte_offset);
-	
-	SLCD->ISDATA.reg = temp;
-}
-/**
- * \brief Mask specified segments data.
- *
- * When When specified segments mask is 1, segments data is not written
- * to display memory
- *
- * \param[in] pix_seg Pixel/segment SEG coordinate
- */
-void slcd_set_seg_mask(uint8_t seg_mask)
-{
-	uint32_t temp = SLCD->ISDATA.reg;
-	
-	temp &= ~ SLCD_ISDATA_SDMASK(0xff);
-	temp |= SLCD_ISDATA_SDMASK(seg_mask);
-	
+
+	SLCD->ISDATA.reg = SLCD_ISDATA_SDATA(seg_data)
+					 | SLCD_ISDATA_OFF(byte_offset)
+					 | SLCD_ISDATA_SDMASK(seg_mask);
+
 	SLCD->ISDATA.reg = temp;
 }
 
@@ -366,7 +404,7 @@ void slcd_automated_char_get_config_default(
 	config->digit_num = 0;
 	config->scrolling_step = 1;
 	config->com_line_num = 1;
-	
+
 }
 
 /**
@@ -374,7 +412,7 @@ void slcd_automated_char_get_config_default(
  *
  * Set Automated Character mode.
  *
- *  \note SLCD automated character mode cannot be set while module or 
+ *  \note SLCD automated character mode cannot be set while module or
  * automated character is enabled.
  *
  * \param[in] config  Pointer to an SLCD automated character configuration structure
@@ -406,35 +444,21 @@ enum status_code slcd_automated_char_set_config(
  * \brief Write segments data to display memory in automated character mode.
  *
  * \param[in] seg_data Pixel/segment data
- */
-void slcd_automated_char_write_data(uint32_t seg_data)
-{
-	while (slcd_get_char_writing_status()) {
-	}
-	SLCD->CMDATA.reg = SLCD_CMDATA_SDATA(seg_data);
-}
-
-/**
- * \brief Segments data mask.
- *
  * \param[in] data_mask Segments data mask
- */
-void slcd_automated_char_set_mask(uint32_t data_mask)
-{
-	SLCD->CMDMASK.reg = SLCD_CMDMASK_SDMASK(data_mask);
-}
-
-/**
- * \brief Segments COM/SEG lines index.
- *
  * \param[in] com_line_index COM line index
  * \param[in] seg_line_index Segments line index
  */
-
-void slcd_automated_char_set_index(uint8_t com_line_index,uint8_t seg_line_index)
+void slcd_automated_char_write_data(uint8_t com_line_index,
+									uint8_t seg_line_index,
+									uint32_t seg_data,uint32_t data_mask)
 {
+
 	SLCD->CMINDEX.reg = SLCD_CMINDEX_SINDEX(seg_line_index)
 						| SLCD_CMINDEX_CINDEX(com_line_index);
+	SLCD->CMDMASK.reg = SLCD_CMDMASK_SDMASK(data_mask);
+	SLCD->CMDATA.reg = SLCD_CMDATA_SDATA(seg_data);
+	while (slcd_get_char_writing_status()) {
+	}
 }
 
 /**
