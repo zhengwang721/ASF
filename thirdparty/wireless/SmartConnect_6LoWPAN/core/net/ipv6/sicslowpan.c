@@ -243,6 +243,56 @@ static uint16_t sicslowpan_len;
 /** Datagram tag to be put in the fragments I send. */
 static uint16_t my_tag;
 
+uip_buf_t sicslowpanbuf[NUM_REASM_BUFS];
+uint8_t sics_used_buf[NUM_REASM_BUFS];
+
+typedef struct _sics_frag
+{
+  linkaddr_t frag_send_addr;
+  struct timer frag_reass_timer;
+  uint16_t processed_ip_len;
+  uint16_t frag_size;
+  uint16_t frag_tag;
+} sics_frag_t;
+
+static sics_frag_t sics_frag_attr[NUM_REASM_BUFS];
+static struct ctimer reasm_ct;
+
+static void sics_frag_buf_init(void);
+static void reasm_timer_callback(void *ptr);
+
+static void sics_frag_buf_init()
+{
+  memset(&sics_frag_attr,0,(sizeof(sics_frag_t))*(NUM_REASM_BUFS));
+  memset(&sicslowpanbuf,0,(sizeof(uip_buf_t))*(NUM_REASM_BUFS));
+  memset(&sics_used_buf,0,NUM_REASM_BUFS);
+}
+
+
+static void reasm_timer_callback(void *ptr)
+{
+  unsigned int i;
+  
+  PRINTFI ("\r\n\n Inside reasm_ctimer_callback");
+  PRINTFI ("\r\n Using buffers -");
+  // Check timer expiry on any of the used buffers
+  for(i = 0; i < NUM_REASM_BUFS; i++)
+  {
+    if(sics_used_buf[i] == 1)
+    {
+      PRINTFI (" %d ", i);
+      if (timer_expired(&(sics_frag_attr[i].frag_reass_timer))) {
+        sics_used_buf[i] = 0;
+        memset(&(sics_frag_attr[i]),0,sizeof(sics_frag_t));
+        PRINTFI("\(timed-out\),");
+      }
+    }
+  }
+  
+  ctimer_reset (&reasm_ct);
+  
+}
+
 
 /** @} */
 #else /* SICSLOWPAN_CONF_FRAG */
@@ -300,8 +350,6 @@ set_packet_attrs(void)
 /*   } */
 
 }
-
-
 
 #if SICSLOWPAN_COMPRESSION == SICSLOWPAN_COMPRESSION_HC06
 /** \name HC06 specific variables
@@ -1610,6 +1658,7 @@ output(const uip_lladdr_t *localdest)
   return 1;
 }
 
+
 /*--------------------------------------------------------------------*/
 /** \brief Process a received 6lowpan packet.
  *  \param r The MAC layer
@@ -1623,59 +1672,6 @@ output(const uip_lladdr_t *localdest)
  * \note We do not check for overlapping sicslowpan fragments
  * (it is a SHALL in the RFC 4944 and should never happen)
  */
-
-#if SICSLOWPAN_CONF_FRAG
-uip_buf_t sicslowpanbuf[NUM_REASM_BUFS];
-uint8_t sics_used_buf[NUM_REASM_BUFS];
-
-typedef struct _sics_frag
-{
-  linkaddr_t frag_send_addr;
-  struct timer frag_reass_timer;
-	uint16_t processed_ip_len;
-	uint16_t frag_size;
-	uint16_t frag_tag;
-} sics_frag_t;
-
-static sics_frag_t sics_frag_attr[NUM_REASM_BUFS];
-static struct ctimer reasm_ct;
-
-static void sics_frag_buf_init(void);
-
-static void sics_frag_buf_init()
-{
-	memset(&sics_frag_attr,0,(sizeof(sics_frag_t))*(NUM_REASM_BUFS));
-	memset(&sicslowpanbuf,0,(sizeof(uip_buf_t))*(NUM_REASM_BUFS));
-	memset(&sics_used_buf,0,NUM_REASM_BUFS);
-}
-
-static void reasm_timer_callback(void *ptr);
-
-static void reasm_timer_callback(void *ptr)
-{
-  unsigned int i;
-  
-  PRINTFI ("\r\n\n Inside reasm_ctimer_callback");
-  PRINTFI ("\r\n Using buffers -");
-  // Check timer expiry on any of the used buffers
-  for(i = 0; i < NUM_REASM_BUFS; i++)
-  {
-    if(sics_used_buf[i] == 1)
-    {
-      PRINTFI (" %d ", i);
-      if (timer_expired(&(sics_frag_attr[i].frag_reass_timer))) {
-        sics_used_buf[i] = 0;
-        memset(&(sics_frag_attr[i]),0,sizeof(sics_frag_t));
-        PRINTFI ("\(timed-out\),");
-      }
-    }
-  }
-  
-  ctimer_reset (&reasm_ct);
-  
-}
-
-#endif
 
 static void
 input(void)
@@ -1714,6 +1710,7 @@ input(void)
   /* Save the RSSI of the incoming packet in case the upper layer will
      want to query us for it later. */
   last_rssi = (signed short)packetbuf_attr(PACKETBUF_ATTR_RSSI);
+
 #if SICSLOWPAN_CONF_FRAG
   /*
    * Since we don't support the mesh and broadcast header, the first header
