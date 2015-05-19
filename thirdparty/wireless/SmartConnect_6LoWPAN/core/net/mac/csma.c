@@ -55,13 +55,13 @@
 
 #include <stdio.h>
 
-#define DEBUG 0
-#if DEBUG
+#define _DEBUG_ 0
+#if _DEBUG_
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
-#else /* DEBUG */
+#else /* _DEBUG_ */
 #define PRINTF(...)
-#endif /* DEBUG */
+#endif /* _DEBUG_ */
 
 #ifndef CSMA_MAX_BACKOFF_EXPONENT
 #ifdef CSMA_CONF_MAX_BACKOFF_EXPONENT

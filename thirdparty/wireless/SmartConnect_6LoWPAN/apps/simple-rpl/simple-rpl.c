@@ -40,7 +40,7 @@
 
 #include <string.h>
 
-#define DEBUG DEBUG_NONE
+#define _DEBUG_ DEBUG_NONE
 #include "net/ip/uip-debug.h"
 
 #define RPL_DAG_GRACE_PERIOD (CLOCK_SECOND * 20 * 1)
@@ -94,7 +94,7 @@ create_dag_callback(void *ptr)
            dag->preference, dag->used,
            dag->joined, dag->rank);
     printf("\r\n Root's nodeid = 0x%2X%2X. ", root->u8[14], root->u8[15]);
-#endif /* DEBUG */
+#endif /* _DEBUG_ */
 
     /* We found a RPL network that we did not create so we just join
        it without becoming root. But if the network has an infinite

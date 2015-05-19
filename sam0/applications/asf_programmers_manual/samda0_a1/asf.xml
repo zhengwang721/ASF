@@ -1,0 +1,60 @@
+<asf xmlversion="1.0">
+	<project caption="ASF Manual (SAM DA0/A1)" force-caption="true" id="sam0.applications.asf_programmers_manual.atsamda0_a1">
+		<require idref="sam0.applications.asf_programmers_manual"/>
+
+		<generator value="doxygen-v2"/>
+
+		<info type="appnote" value="AT12824"/>
+
+		<info type="description" value="pdf">
+		This application note describes the Atmel Software Framework low level
+		module driver APIs for the Atmel SAM DA0/A1 series of devices.
+		</info>
+		<info type="keyword" value="pdf">
+			<keyword value="ASF"/>
+			<keyword value="API"/>
+			<keyword value="Reference"/>
+			<keyword value="Manual"/>
+			<keyword value="Driver"/>
+			<keyword value="Service"/>
+			<keyword value="Quick Start"/>
+		</info>
+
+		<config name="config.compiler.doxygen-v2.document_type" value="asf_manual"/>
+
+		<build type="include-path" value="."/>
+		<build type="header-file" value="revhistory.h"/>
+		<build type="doxygen-enable-section" value="DAC_DMA_USE_MODE_SELECTION"/>
+
+		<require idref="sam0.drivers.ac.appnote"/>
+		<require idref="sam0.drivers.adc.appnote_sam_d_r"/>
+		<require idref="sam0.drivers.bod.appnote.sam_d_r"/>
+		<require idref="sam0.drivers.dac.appnote_sam_d"/>
+		<require idref="sam0.drivers.dma"/>
+		<require idref="sam0.drivers.events.appnote"/>
+		<require idref="sam0.drivers.extint.appnote"/>
+		<require idref="sam0.drivers.nvm"/>
+		<require idref="sam0.drivers.pac.appnote"/>
+		<require idref="sam0.drivers.port"/>
+		<require idref="sam0.drivers.rtc.count_appnote"/>
+		<require idref="sam0.drivers.rtc.calendar_appnote"/>
+		<require idref="sam0.drivers.sercom.usart"/>
+		<require idref="sam0.drivers.sercom.i2c.master.appnote"/>
+		<require idref="sam0.drivers.sercom.i2c.slave.appnote"/>
+		<require idref="sam0.drivers.sercom.spi"/>
+		<require idref="sam0.drivers.system.appnote_1"/>
+		<require idref="sam0.drivers.system.clock.appnote_1"/>
+		<require idref="sam0.drivers.system.interrupt.appnote"/>
+		<require idref="sam0.drivers.system.pinmux"/>
+		<require idref="sam0.drivers.tc.appnote"/>
+		<require idref="sam0.drivers.tcc"/>
+		<require idref="sam0.drivers.wdt"/>
+		<require idref="sam0.drivers.i2s"/>
+		<require idref="sam0.drivers.usb"/>
+
+		<require idref="sam0.services.eeprom_emulator"/>
+		<require idref="sam0.services.rww_eeprom_emulator"/>
+
+		<device-support value="unspecified-samda1"/>
+	</project>
+</asf>

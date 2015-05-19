@@ -73,8 +73,8 @@
 #include <stdio.h>
 
 #include "net/ip/uip-debug.h"
-#define DEBUG DEBUG_NONE
-#if DEBUG
+#define _DEBUG_ DEBUG_NONE
+#if _DEBUG_
 /* PRINTFI and PRINTFO are defined for input and output to debug one without changing the timing of the other */
 uint8_t p;
 #include <stdio.h>
@@ -84,13 +84,14 @@ uint8_t p;
 #define PRINTPACKETBUF() printf("packetbuf buffer: "); for(p = 0; p < packetbuf_datalen(); p++){printf("%.2X", *(packetbuf_ptr + p));} printf("\n")
 #define PRINTUIPBUF() printf("UIP buffer: "); for(p = 0; p < uip_len; p++){printf("%.2X", uip_buf[p]);} printf("\n")
 #define PRINTSICSLOWPANBUF() printf("SICSLOWPAN buffer: "); for(p = 0; p < sicslowpan_len; p++){printf("%.2X", sicslowpan_buf[p]);}printf("\n")
+#endif	
 #else
 #undef PRINTF
 #define PRINTF(...) 
 #define PRINTPACKETBUF()
 #define PRINTUIPBUF()
 #define PRINTSICSLOWPANBUF()
-#endif /* DEBUG == 1*/
+#endif /* _DEBUG_ == 1*/
 
 #define FRAG_IN_DEBUG DEBUG_NONE
 #if FRAG_IN_DEBUG
@@ -535,8 +536,8 @@ compress_hdr_hc06(linkaddr_t *link_destaddr, uint8_t* tx_hdr_len)
 {
   uint8_t tmp, iphc0, iphc1;
   uint8_t* iphc_buf;
-/*
-#if DEBUG
+
+#if _DEBUG_
   { uint16_t ndx;
     PRINTF("before compression (%d): ", UIP_IP_BUF->len[1]);
     for(ndx = 0; ndx < UIP_IP_BUF->len[1] + 40; ndx++) {
@@ -546,7 +547,7 @@ compress_hdr_hc06(linkaddr_t *link_destaddr, uint8_t* tx_hdr_len)
     PRINTF("\n");
   }
 #endif
-*/
+
 
   iphc_buf = packetbuf_ptr + *tx_hdr_len;  //  Tied to the  start of IPHC header
   hc06_ptr = iphc_buf + 2;  // used for appending inline fields
@@ -2042,7 +2043,7 @@ input(void)
 		PRINTFI("\r\n uip_len %d",uip_len);
 		sicslowpan_len = 0;
     
-/*
+
 #if DEBUG
     if (!is_fragment) {
       uint16_t ndx;
@@ -2054,7 +2055,7 @@ input(void)
       PRINTFI("\n");
     }
 #endif
-*/
+
 
     /* if callback is set then set attributes and call */
     if(callback) {

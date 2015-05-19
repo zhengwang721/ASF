@@ -69,6 +69,7 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM DA0/DA1
  * \endif
  *
  * The outline of this documentation is as follows:
@@ -447,6 +448,12 @@ enum status_code adc_init(
 
 void adc_get_config_defaults(
 		struct adc_config *const config);
+
+#if (SAMD) || (SAMR21)
+void adc_regular_ain_channel(
+		uint32_t *pin_array, uint8_t size);
+#endif
+
 /** @} */
 
 /**
@@ -463,7 +470,7 @@ void adc_get_config_defaults(
  *
  * \return Bitmask of \c ADC_STATUS_* flags.
  *
- * \retval ADC_STATUS_RESULT_READY  ADC Result is ready to be read
+ * \retval ADC_STATUS_RESULT_READY  ADC result is ready to be read
  * \retval ADC_STATUS_WINDOW        ADC has detected a value inside the set
  *                                  window range
  * \retval ADC_STATUS_OVERRUN       ADC result has overrun
@@ -1053,10 +1060,15 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * \if DEVICE_SAML21_SUPPORT
  *  <tr>
  *      <td>A</td>
- *      <td>11/2014</td>
+ *      <td>04/2015</td>
  *      <td>Initial release.</td>
  * </tr>
  * \else
+ *	<tr>
+ *		<td>E</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAMDA0/DA1.</td>
+ *	</tr>
  *	<tr>
  *		<td>D</td>
  *		<td>12/2014</td>
