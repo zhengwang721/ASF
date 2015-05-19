@@ -1,0 +1,86 @@
+<asf xmlversion="1.0">
+
+		
+        <module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.core.net.rime" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="rimestats.c"/>
+			<!-- <build type="c-source"      value="abc.c"/>
+			<build type="c-source"      value="announcement.c"/>
+			<build type="c-source"      value="broadcast.c"/>
+			<build type="c-source"      value="broadcast-announcement.c"/>
+			<build type="c-source"      value="chameleon.c"/>
+			<build type="c-source"      value="chameleon-bitopt.c"/>
+			<build type="c-source"      value="chameleon-raw.c"/>
+			<build type="c-source"      value="channel.c"/>
+			<build type="c-source"      value="collect.c"/>
+			<build type="c-source"      value="collect-link-estimate.c"/>
+			<build type="c-source"      value="collect-neighbor.c"/>
+			<build type="c-source"      value="ipolite.c"/>
+			<build type="c-source"      value="mesh.c"/>
+			<build type="c-source"      value="multihop.c"/>
+			<build type="c-source"      value="neighbor-discovery.c"/>
+			<build type="c-source"      value="netflood.c"/>
+			<build type="c-source"      value="polite.c"/>
+			<build type="c-source"      value="polite-announcement.c"/>
+			<build type="c-source"      value="rime.c"/>
+		  
+			<build type="c-source"      value="rmh.c"/>
+			<build type="c-source"      value="route.c"/>
+			<build type="c-source"      value="route-discovery.c"/>
+			<build type="c-source"      value="rucb.c"/>
+			<build type="c-source"      value="rudolph0.c"/>
+			<build type="c-source"      value="rudolph1.c"/>
+			<build type="c-source"      value="rudolph2.c"/>
+			<build type="c-source"      value="runicast.c"/>
+			<build type="c-source"      value="stbroadcast.c"/>
+			<build type="c-source"      value="stunicast.c"/>
+			<build type="c-source"      value="timesynch.c"/>
+			<build type="c-source"      value="trickle.c"/>
+			<build type="c-source"      value="unicast.c"/> -->
+			<build type="header-file"      value="rimestats.h"/>
+			<build type="header-file"      value="rime.h"/>
+			<build type="header-file"      value="abc.h"/>
+			<build type="header-file"      value="announcement.h"/>
+			<build type="header-file"      value="broadcast.h"/>
+			<build type="header-file"      value="broadcast-announcement.h"/>
+			<build type="header-file"      value="chameleon.h"/>
+			<build type="header-file"      value="chameleon-bitopt.h"/>
+			<build type="header-file"      value="chameleon-raw.h"/>
+			<build type="header-file"      value="channel.h"/>
+			<build type="header-file"      value="collect.h"/>
+			<build type="header-file"      value="collect-link-estimate.h"/>
+			<build type="header-file"      value="collect-neighbor.h"/>
+			<build type="header-file"      value="ipolite.h"/>
+			<build type="header-file"      value="mesh.h"/>
+			<build type="header-file"      value="multihop.h"/>
+			<build type="header-file"      value="neighbor-discovery.h"/>
+			<build type="header-file"      value="netflood.h"/>
+			<build type="header-file"      value="polite.h"/>
+			<build type="header-file"      value="polite-announcement.h"/>
+			<build type="header-file"      value="rime.h"/>
+		   
+			<build type="header-file"      value="rmh.h"/>
+			<build type="header-file"      value="route.h"/>
+			<build type="header-file"      value="route-discovery.h"/>
+			<build type="header-file"      value="rucb.h"/>
+			<build type="header-file"      value="rudolph0.h"/>
+			<build type="header-file"      value="rudolph1.h"/>
+			<build type="header-file"      value="rudolph2.h"/>
+			<build type="header-file"      value="runicast.h"/>
+			<build type="header-file"      value="stbroadcast.h"/>
+			<build type="header-file"      value="stunicast.h"/>
+			<build type="header-file"      value="timesynch.h"/>
+			<build type="header-file"      value="trickle.h"/>
+			<build type="header-file"      value="unicast.h"/> 
+			<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.mac.generic"/>
+          	<build type="include-path" value="."/>	
+            <device-support value="sam0"/>		
+			<build type="doxygen-entry-point" value="group_contiki_core"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>		
+</asf>

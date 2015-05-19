@@ -122,8 +122,8 @@ static void _dac_set_config(
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true if the module synchronization is ongoing
- * \retval false if the module has completed synchronization
+ * \retval true If the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
  */
 bool dac_is_syncing(
 		struct dac_module *const dev_inst)
@@ -609,14 +609,13 @@ enum status_code dac_chan_write(
  *
  * \param[in] module_inst      Pointer to the DAC software device struct
  * \param[in] channel          DAC channel to write to
- * \param[in] buffer             Pointer to the digital data write buffer to be converted
- * \param[in] length             Length of the write buffer
+ * \param[in] buffer           Pointer to the digital data write buffer to be converted
+ * \param[in] length           Length of the write buffer
  *
  * \return Status of the operation.
  * \retval STATUS_OK           If the data was written or no data conversion required
- * \retval STATUS_ERR_UNSUPPORTED_DEV  The DAC is not configured as using
- *                                         event trigger.
- * \retval STATUS_BUSY      The DAC is busy to convert.
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  The DAC is not configured as using event trigger
+ * \retval STATUS_BUSY                 The DAC is busy to convert
  */
 enum status_code dac_chan_write_buffer_wait(
 		struct dac_module *const module_inst,
@@ -685,7 +684,7 @@ enum status_code dac_chan_write_buffer_wait(
  *
  * \retval DAC_STATUS_CHANNEL_0_EMPTY    Data has been transferred from DATABUF
  *                                       to DATA by a start conversion event
- *                                       and DATABUF is ready for new data.
+ *                                       and DATABUF is ready for new data
  * \retval DAC_STATUS_CHANNEL_0_UNDERRUN A start conversion event has occurred
  *                                       when DATABUF is empty
  *

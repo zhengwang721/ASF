@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_ccl_group SAM Configurable Custom Logic (CCL) Driver
  *
- * This driver for Atmel | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Configurable Custom Logic functionality.
  *
  * The following peripherals are used by this module:
@@ -87,7 +87,7 @@
  *
  * The output can be combinatorially generated from the inputs, or filtered to remove spike.
  * An optional sequential module can be enabled. The inputs of sequential module are 
- * individually controlled by two independent, adjacent LUT(LUT0/LUT1, LUT2/LUT3 etc) outputs,
+ * individually controlled by two independent, adjacent LUT(LUT0/LUT1, LUT2/LUT3 etc.) outputs,
  * enabling complex waveform generation.
  *
  * \section asfdoc_sam0_ccl_special_considerations Special Considerations
@@ -194,7 +194,7 @@ enum ccl_lut_input_src_sel {
 /**
  * \brief Select the LUT output filter options enum.
  *
- * Enum for the the LUT output filter options.
+ * Enum for the LUT output filter options.
  */
 enum ccl_lut_filter_sel {
 	/** Filter disabled. */
@@ -231,9 +231,11 @@ struct ccl_lut_config {
 	bool event_input_enable;
 	/** If \c true, incoming event is inverted. */
 	bool event_input_inverted_enable;
-	/** Selection of the input IN[2:0] source. */
+	/** Selection of the input0 source. */
 	enum ccl_lut_input_src_sel input0_src_sel;
+	/** Selection of the input1 source. */
 	enum ccl_lut_input_src_sel input1_src_sel;
+	/** Selection of the input2 source. */
 	enum ccl_lut_input_src_sel input2_src_sel;
 	/** If \c true, Edge detector is enabled. */
 	bool edge_selection_enable;
@@ -492,7 +494,7 @@ void ccl_lut_disable(const enum ccl_lut_id number);
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>09/2014</td>
+ *		<td>04/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

@@ -123,6 +123,7 @@
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
 			<device-support value="samd11"/>
+			<device-support value="samda1"/>
 			<require idref="sam0.drivers.system"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samd21"/>
 		</module>

@@ -165,12 +165,18 @@ uint32_t dacc_set_transfer_mode(Dacc *p_dacc, uint32_t ul_mode)
 	if (ul_mode) {
 #if (SAM3N) || (SAM4L) || (SAM4N)
 		p_dacc->DACC_MR |= DACC_MR_WORD;
+#elif (SAM4S) || (SAM4E)
+		p_dacc->DACC_MR |= DACC_MR_ONE;
+		p_dacc->DACC_MR |= DACC_MR_WORD_WORD;
 #else
 		p_dacc->DACC_MR |= DACC_MR_WORD_WORD;
 #endif
 	} else {
 #if (SAM3N) || (SAM4L) || (SAM4N)
 		p_dacc->DACC_MR &= (~DACC_MR_WORD);
+#elif (SAM4S) || (SAM4E)
+		p_dacc->DACC_MR |= DACC_MR_ONE;
+		p_dacc->DACC_MR &= (~DACC_MR_WORD_WORD);
 #else
 		p_dacc->DACC_MR &= (~DACC_MR_WORD_WORD);
 #endif
@@ -370,6 +376,7 @@ void dacc_enable_flexible_selection(Dacc *p_dacc)
 	p_dacc->DACC_MR |= DACC_MR_TAG;
 }
 
+#if (SAM3S) || (SAM3XA) || defined(__DOXYGEN__)
 /**
  * \brief Set the power save mode.
  *
@@ -394,6 +401,7 @@ uint32_t dacc_set_power_save(Dacc *p_dacc,
 	}
 	return DACC_RC_OK;
 }
+#endif /* (SAM3S) || (SAM3XA) */
 
 /**
  * \brief Set DACC timings.
@@ -492,7 +500,7 @@ uint32_t dacc_get_analog_control(Dacc *p_dacc)
 {
 	return p_dacc->DACC_ACR;
 }
-#endif /* (SAM3S) || (SAM3XA) */
+#endif /* (SAM3S) || (SAM3XA) || (SAM4S) || (SAM4E) */
 
 //@}
 

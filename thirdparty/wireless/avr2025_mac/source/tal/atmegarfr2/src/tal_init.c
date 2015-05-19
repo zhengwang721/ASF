@@ -403,9 +403,9 @@ static void trx_config(void)
 	                                                       * pending data
 	                                                       **/
 	trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_ENABLE); /* Enable
-	                                                      * buffer
-	                                                      * protection
-	                                                      * mode */
+	                                                     * buffer
+	                                                     * protection
+	                                                     * mode */
 	trx_reg_write(RG_IRQ_MASK, TRX_IRQ_DEFAULT);
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)
 	/* The TX start timestamp is taken by the respective PAL layer */

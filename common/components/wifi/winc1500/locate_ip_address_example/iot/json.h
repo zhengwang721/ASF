@@ -48,7 +48,7 @@
 #include <stdlib.h>
 
 #ifdef __cplusplus
-extern "C" 
+extern "C"
 {
 #endif
 
@@ -57,8 +57,8 @@ extern "C"
 /** Max size of token name. */
 #define JSON_MAX_NAME_SIZE 16
 
-/** 
- * \brief JSON type. 
+/**
+ * \brief JSON type.
  */
 enum json_type
 {
@@ -81,7 +81,7 @@ struct json_obj
 	char name[JSON_MAX_NAME_SIZE];
 	/** End pointer of JSON buffer. */
 	char *end_ptr;
-	
+
 	/** Value of this JSON token. */
 	union
 	{
@@ -93,7 +93,7 @@ struct json_obj
 		int i;
 		/* Real number data. */
 		double d;
-		/* Object or Array data. */ 
+		/* Object or Array data. */
 		char *o; /* Start point of object. */
 	} value;
 };

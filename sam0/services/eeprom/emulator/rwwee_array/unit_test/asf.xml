@@ -12,5 +12,7 @@
 		<require idref="common.utils.unit_test"/>
 		<device-support value="saml21"/>
 		<device-support value="saml22"/>
+		<device-support value="samda0"/>
+		<device-support value="samda1"/>
 	</module>
 </asf>

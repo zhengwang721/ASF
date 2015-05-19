@@ -61,6 +61,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_nvm_prerequisites
@@ -90,7 +91,11 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_NVM_RWWEE</td>
- *    <td>SAML21, SAML22, SAMD21-64K</td>
+ *    <td>SAML21, SAML22, SAMD21-64K, SAMDA0, SAMDA1</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_BOD12</td>
+ *    <td>SAML21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -281,9 +286,12 @@ extern "C" {
  * Define NVM features set according to different device family
  * @{
 */
-#if (SAML21) || (SAML22) || defined(SAMD21_64K) || defined(__DOXYGEN__)
-/** Read while write EEPROM emulation feature*/
+#if (SAML21) || (SAML22)|| (SAMDA0) || (SAMDA1) || defined(SAMD21_64K) || defined(__DOXYGEN__)
+/** Read while write EEPROM emulation feature. */
 #  define FEATURE_NVM_RWWEE
+#endif
+#if (SAML21) || defined(__DOXYGEN__)
+#define FEATURE_BOD12
 #endif
 /*@}*/
 
@@ -364,9 +372,9 @@ enum nvm_command {
 	 */
 	NVM_COMMAND_EXIT_LOW_POWER_MODE        = NVMCTRL_CTRLA_CMD_CPRM,
 #ifdef FEATURE_NVM_RWWEE
-	/** Read while write(RWW) EEPROM area erase row */
+	/** Read while write(RWW) EEPROM area erase row. */
 	NVM_COMMAND_RWWEE_ERASE_ROW            = NVMCTRL_CTRLA_CMD_RWWEEER,
-	/** RWW EEPROM write page */
+	/** RWW EEPROM write page. */
 	NVM_COMMAND_RWWEE_WRITE_PAGE           = NVMCTRL_CTRLA_CMD_RWWEEWP,
 #endif
 };
@@ -529,6 +537,23 @@ enum nvm_bod33_action {
 	NVM_BOD33_ACTION_INTERRUPT,
 };
 
+#ifdef FEATURE_BOD12
+/**
+ * \brief BOD12 Action.
+ *
+ * What action should be triggered when BOD12 is detected.
+ *
+ */
+enum nvm_bod12_action {
+	/** No action. */
+	NVM_BOD12_ACTION_NONE,
+	/** The BOD12 generates a reset. */
+	NVM_BOD12_ACTION_RESET,
+	/** The BOD12 generates an interrupt. */
+	NVM_BOD12_ACTION_INTERRUPT,
+};
+#endif
+
 /**
  * \brief WDT Window time-out period.
  *
@@ -613,6 +638,8 @@ struct nvm_fusebits {
 	bool                              bod33_enable;
 	/** BOD33 Action at power on. */
 	enum nvm_bod33_action             bod33_action;
+	/* BOD33 Hysteresis at power on*/
+	bool                              bod33_hysteresis;
 	/** WDT Enable at power on. */
 	bool                              wdt_enable;
 	/** WDT Always-on at power on. */
@@ -627,6 +654,16 @@ struct nvm_fusebits {
 	bool                              wdt_window_mode_enable_at_poweron;
 	/** NVM Lock bits. */
 	uint16_t                          lockbits;
+#ifdef FEATURE_BOD12
+	/** BOD12 Threshold level at power on. */
+	uint8_t                           bod12_level;
+	/** BOD12 Enable at power on. */
+	bool                              bod12_enable;
+	/** BOD12 Action at power on. */
+	enum nvm_bod12_action             bod12_action;
+	/* BOD12 Hysteresis at power on*/
+	bool                              bod12_hysteresis;
+#endif
 };
 
 /**
@@ -855,8 +892,8 @@ static inline enum nvm_error nvm_get_error(void)
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>08/2014</td>
- *		<td>Added support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAML21 and SAMDA0/DA1.</td>
  *	</tr> 
  *	<tr>
  *		<td>D</td>

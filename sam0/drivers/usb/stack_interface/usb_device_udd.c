@@ -64,8 +64,8 @@
 #  error The High speed mode is not supported on this part, please remove USB_DEVICE_HS_SUPPORT in conf_usb.h
 #endif
 
-#if !(SAMD21) && !(SAMR21) && !(SAMD11) && !(SAML21) && !(SAML22)
-# error The current USB Device Driver supports only SAMD21/R21/D11/L22
+#if !(SAMD21) && !(SAMR21) && !(SAMD11) && !(SAML21) && !(SAML22) && !(SAMDA1)
+# error The current USB Device Driver supports only SAMD21/R21/D11/L21/L22/DA1
 #endif
 
 #ifndef UDC_REMOTEWAKEUP_LPM_ENABLE
@@ -464,7 +464,7 @@ void udd_ep_abort(udd_ep_id_t ep)
 
 bool udd_is_high_speed(void)
 {
-#if SAMD21 || SAMR21 || SAMD11 || SAML21  || SAML22
+#if SAMD21 || SAMR21 || SAMD11 || SAML21  || SAML22 || SAMDA1
 	return false;
 #endif
 }

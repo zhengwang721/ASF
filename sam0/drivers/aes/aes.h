@@ -109,7 +109,7 @@ extern "C" {
  * - Counter (CTR)
  *
  * Data transfers both to and from the AES module can occur using the peripheral
- * DMA controller channels ,thus minimizing processor intervention for
+ * DMA controller channels, thus minimizing processor intervention for
  * large data buffer transfers.
  *
  * As soon as the initialization vector, the input data and the key are
@@ -455,7 +455,7 @@ static inline void aes_clear_status(
  * \param[in] module Pointer to the AES software instance struct
  * \param[in] id Index into the GHASH array (range 0 to 3)
  *
- * \return The content of the GHASHRx[x = 0...3] vlaue.
+ * \return The content of the GHASHRx[x = 0...3] value.
  */
 static inline uint32_t aes_gcm_read_ghash(struct aes_module *const module, uint32_t id)
 {
@@ -470,7 +470,7 @@ static inline uint32_t aes_gcm_read_ghash(struct aes_module *const module, uint3
  *
  * \param[in] module Pointer to the AES software instance struct
  * \param[in] id Index into the GHASHx array (range 0 to 3)
- * \param[in] ghash GCM hash vlaue
+ * \param[in] ghash GCM hash value
  */
 static inline void aes_gcm_write_ghash(struct aes_module *const module,
 									uint32_t id,uint32_t ghash)
@@ -534,7 +534,7 @@ static inline uint32_t aes_gcm_read_cipher_len(struct aes_module *const module)
  * \brief  Set the AES GCM cipher length.
  *
  * \param[in] module Pointer to the AES software instance struct
- * \param[in] len cipher length
+ * \param[in] len Cipher length
  */
 static inline void aes_gcm_write_cipher_len(struct aes_module *const module,
 										uint32_t len)
@@ -694,13 +694,8 @@ static inline void aes_gcm_set_gf_multiplication(struct aes_module *const module
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *      <td>B</td>
- *		<td>11/2014</td>
- *		<td>Corrected documentation typos.</td>
- *	</tr>
- *	<tr>
  *      <td>A</td>
- *		<td>09/2014</td>
+ *		<td>04/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

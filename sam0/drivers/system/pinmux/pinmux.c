@@ -95,7 +95,7 @@ static void _system_pinmux_config(
 		/* Check if the user has requested that the output buffer be enabled */
 		if ((config->direction == SYSTEM_PINMUX_PIN_DIR_OUTPUT) ||
 				(config->direction == SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK)) {
-			/* Cannot use a pullup if the output driver is enabled,
+			/* Cannot use a pull-up if the output driver is enabled,
 			 * if requested the input buffer can only sample the current
 			 * output state */
 			pin_cfg &= ~PORT_WRCONFIG_PULLEN;
@@ -127,7 +127,7 @@ static void _system_pinmux_config(
 		 * requested and it does not violate the valid set of port
 		 * configurations */
 		if (pin_cfg & PORT_WRCONFIG_PULLEN) {
-			/* Set the OUT register bits to enable the pullup if requested,
+			/* Set the OUT register bits to enable the pull-up if requested,
 			 * clear to enable pull-down */
 			if (config->input_pull == SYSTEM_PINMUX_PIN_PULL_UP) {
 				port->OUTSET.reg = pin_mask;
