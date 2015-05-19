@@ -111,7 +111,7 @@
 #define UIP_CONF_LLH_LEN                      0
 
 #define UIP_CONF_IPV6                         1
-#define ARCH_DOESNT_NEED_ALIGNED_STRUCTS 1
+#define ARCH_DOESNT_NEED_ALIGNED_STRUCTS      1
 #define UIP_ARCH_ADD32  0
 #define UIP_ARCH_CHKSUM 0
 #define UIP_ARCH_IPCHKSUM 0
@@ -136,7 +136,7 @@
 #define MUL_REASSEMBLY                        1
 
 #if MUL_REASSEMBLY
-  #define NUM_REASM_BUFS                      8
+  #define NUM_REASM_BUFS                      4
 #else
   #define NUM_REASM_BUFS                      1
 #endif

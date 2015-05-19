@@ -137,7 +137,7 @@
 #define MUL_REASSEMBLY                        1
 
 #if MUL_REASSEMBLY
-  #define NUM_REASM_BUFS                      8
+  #define NUM_REASM_BUFS                      4
 #else
   #define NUM_REASM_BUFS                      1
 #endif
@@ -155,7 +155,7 @@
 #endif
 
 #define UIP_CONF_BUFFER_SIZE            400
-#define PROCESS_CONF_STATS 1
+#define PROCESS_CONF_STATS              1
 #define UIP_CONF_MAX_ROUTES             8
 #define QUEUEBUF_CONF_NUM               12
 

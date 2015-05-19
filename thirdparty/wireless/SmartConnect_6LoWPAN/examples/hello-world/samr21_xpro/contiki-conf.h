@@ -140,7 +140,7 @@
 #define MUL_REASSEMBLY                        1
 
 #if MUL_REASSEMBLY
-  #define NUM_REASM_BUFS                      8
+  #define NUM_REASM_BUFS                      4
 #else
   #define NUM_REASM_BUFS                      1
 #endif

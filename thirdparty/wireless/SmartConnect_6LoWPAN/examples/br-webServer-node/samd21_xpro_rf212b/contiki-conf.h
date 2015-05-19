@@ -126,7 +126,7 @@
 #endif
 #define PROCESS_CONF_NO_PROCESS_NAMES         0
 #define SICSLOWPAN_CONF_COMPRESSION           SICSLOWPAN_COMPRESSION_HC06
-#define SICSLOWPAN_CONF_ACK_ALL   0
+#define SICSLOWPAN_CONF_ACK_ALL               0
 
 #define SICSLOWPAN_CONF_FRAG                  1
 #if SICSLOWPAN_CONF_FRAG
@@ -134,7 +134,7 @@
 #define MUL_REASSEMBLY                        1
 
 #if MUL_REASSEMBLY
-  #define NUM_REASM_BUFS                      8
+  #define NUM_REASM_BUFS                      4
 #else
   #define NUM_REASM_BUFS                      1
 #endif

@@ -134,7 +134,7 @@
 #define MUL_REASSEMBLY                        1
 
 #if MUL_REASSEMBLY
-  #define NUM_REASM_BUFS                      8
+  #define NUM_REASM_BUFS                      4
 #else
   #define NUM_REASM_BUFS                      1
 #endif
@@ -145,7 +145,7 @@
 #define SICSLOWPAN_CONF_MAX_MAC_TRANSMISSIONS 5
 
 
-#define UART1_CONF_TX_WITH_INTERRUPT        0
+#define UART1_CONF_TX_WITH_INTERRUPT          0
 
 #ifndef NETSTACK_CONF_RADIO
 #define NETSTACK_CONF_RADIO rf212_radio_driver
@@ -172,7 +172,7 @@
 #endif /* PROJECT_CONF_H */
 
 #ifndef NETSTACK_AES_KEY
-#define NETSTACK_AES_CONF_MASTER_KEY 0
+#define NETSTACK_AES_CONF_MASTER_KEY        0
 #define NETSTACK_AES_KEY                    "thingsquare mist" /* 16 bytes */
 #define NETSTACK_AES_KEY_DEFAULT            1
 #endif /* NETSTACK_AES_KEY */
