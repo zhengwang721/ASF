@@ -75,6 +75,12 @@
 # include "samg/sysclk.h"
 #elif SAMV71
 # include "samv71/sysclk.h"
+#elif SAMV70
+# include "samv70/sysclk.h"
+#elif SAME70
+# include "same70/sysclk.h"
+#elif SAMS70
+# include "sams70/sysclk.h"
 #elif (UC3A0 || UC3A1)
 # include "uc3a0_a1/sysclk.h"
 #elif UC3A3
