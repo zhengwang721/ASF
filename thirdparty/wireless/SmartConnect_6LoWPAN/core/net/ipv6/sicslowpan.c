@@ -84,7 +84,6 @@ uint8_t p;
 #define PRINTPACKETBUF() printf("packetbuf buffer: "); for(p = 0; p < packetbuf_datalen(); p++){printf("%.2X", *(packetbuf_ptr + p));} printf("\n")
 #define PRINTUIPBUF() printf("UIP buffer: "); for(p = 0; p < uip_len; p++){printf("%.2X", uip_buf[p]);} printf("\n")
 #define PRINTSICSLOWPANBUF() printf("SICSLOWPAN buffer: "); for(p = 0; p < sicslowpan_len; p++){printf("%.2X", sicslowpan_buf[p]);}printf("\n")
-#endif	
 #else
 #undef PRINTF
 #define PRINTF(...) 
