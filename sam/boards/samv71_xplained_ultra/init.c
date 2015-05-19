@@ -110,7 +110,8 @@ void board_init(void)
 
 #ifdef CONF_BOARD_UART_CONSOLE
 	/* Configure UART pins */
-	ioport_set_port_peripheral_mode(PINS_UART0_PORT, PINS_UART0,
-			PINS_UART0_FLAGS);
+	ioport_set_pin_peripheral_mode(USART1_RXD_GPIO, USART1_RXD_FLAGS);
+	MATRIX->CCFG_SYSIO |= CCFG_SYSIO_SYSIO4;
+	ioport_set_pin_peripheral_mode(USART1_TXD_GPIO, USART1_TXD_FLAGS);
 #endif
 }
