@@ -213,7 +213,7 @@ sint8 nm_bus_ioctl(uint8 u8Cmd, void* pvParameter)
 #endif
 		default:
 			s8Ret = -1;
-			M2M_ERR("invalide ioclt cmd\n");
+			M2M_ERR("Invalid IOCTL command!\n");
 			break;
 	}
 

@@ -3,7 +3,7 @@
 		<module type="application" id="common.components.wifi.winc1500.simple_tcp_client_example#0" caption="WINC1500 Simple TCP Client Example">
 			<!-- Summary Description -->
 			<info type="description" value="summary">
-				This example demonstrates the use of the WINC1500 with the SAMD21 Xplained Pro board to perform TCP client connection.
+				This example demonstrates how to perform a TCP client connection using the WINC1500 Wi-Fi module.
 			</info>
 
 			<!-- Source -->
@@ -26,7 +26,7 @@
 		<module type="application" id="common.components.wifi.winc1500.simple_tcp_client_example#1" caption="WINC1500 Simple TCP Client Example">
 			<!-- Summary Description -->
 			<info type="description" value="summary">
-				This example demonstrates the use of the WINC1500 with the SAM4S Xplained Pro board to perform TCP client connection.
+				This example demonstrates how to perform a TCP client connection using the WINC1500 Wi-Fi module.
 			</info>
 
 			<!-- Source -->
@@ -38,28 +38,8 @@
 
 			<!-- Device support -->
 			<device-support value="sam4s"/>
-
-			<!-- Required modules -->
-			<require idref="common.components.wifi.winc1500"/>
-			<require idref="common.services.basic.clock"/>
-			<require idref="common.utils.stdio.stdio_serial"/>
-			<info type="gui-flag" value="move-to-root"/>
-		</module>
-		<module type="application" id="common.components.wifi.winc1500.simple_tcp_client_example#2" caption="WINC1500 Simple TCP Client Example">
-			<!-- Summary Description -->
-			<info type="description" value="summary">
-				This example demonstrates the use of the WINC1500 with the SAMG53 Xplained Pro board to perform TCP client connection.
-			</info>
-
-			<!-- Source -->
-			<build type="include-path" value="."/>
-			<build type="c-source" value="main.c"/>
-			<build type="header-file" value="main.h"/>
-			<build type="include-path" value="script"/>
-			<build type="distribute" subtype="file" value="script/tcp_server.py"/>
-
-			<!-- Device support -->
 			<device-support value="samg53"/>
+			<device-support value="samg55"/>
 
 			<!-- Required modules -->
 			<require idref="common.components.wifi.winc1500"/>

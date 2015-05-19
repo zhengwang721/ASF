@@ -865,6 +865,7 @@ socket operations. Socket creation is dependent on the socket type.
 @endcode
 */
 NMI_API SOCKET socket(uint16 u16Domain, uint8 u8Type, uint8 u8Flags);
+NMI_API sint8 sslSetSockOpt(SOCKET sock, uint8  u8Opt, const void *pvOptVal, uint16 u16OptLen);
 /** @} */
 /** @defgroup BindFn bind
  *  @ingroup SocketAPI
