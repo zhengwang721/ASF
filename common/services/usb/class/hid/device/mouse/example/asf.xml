@@ -52,7 +52,8 @@
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
 			<device-support value="samd11"/>
-			<device-support value="saml21"/>		
+			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 			<require idref="common.services.usb.class.device"/>
 			<require idref="common.services.basic.sleepmgr"/>
 			<info type="keyword" value="technology">
