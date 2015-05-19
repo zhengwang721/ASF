@@ -18,6 +18,12 @@
 
 			<build type="define" name="I2C_MASTER_CALLBACK_MODE" value="false"/>
 
+			<build type="doxygen-entry-point" value="asfdoc_sam0_sercom_i2c_group"/>
+			<build type="doxygen-image-path" value="docimg"/>
+			<build type="doxygen-example-path" value="quick_start_master"/>
+			<build type="doxygen-example-path" value="quick_start_master_dma"/>
+			<build type="doxygen-quick-start" value="asfdoc_sam0_sercom_i2c_exqsg"/>
+			
 			<build type="header-file" value="quick_start_master/qs_i2c_master_basic_use.h"/>
 			<build type="header-file" value="quick_start_master_dma/qs_i2c_master_dma.h"/>
 
@@ -45,6 +51,11 @@
 			<build type="header-file" value="quick_start_master_callback/qs_i2c_master_callback.h"/>
 			<build type="header-file" value="quick_start_master_dma/qs_i2c_master_dma.h"/>
 
+			<build type="doxygen-entry-point" value="asfdoc_sam0_sercom_i2c_group"/>
+			<build type="doxygen-image-path" value="docimg"/>
+			<build type="doxygen-example-path" value="quick_start_master_callback"/>
+			<build type="doxygen-quick-start" value="asfdoc_sam0_sercom_i2c_exqsg"/>
+			
 			<device-support value="sam0"/>
 
 			<require idref="sam0.utils"/>
@@ -75,6 +86,12 @@
 			<build type="header-file" value="quick_start_slave_dma/qs_i2c_slave_dma.h"/>
 			<build type="header-file" value="quick_start_slave/qs_i2c_slave_basic_use.h"/>
 
+			<build type="doxygen-entry-point" value="asfdoc_sam0_sercom_i2c_group"/>
+			<build type="doxygen-image-path" value="docimg"/>
+			<build type="doxygen-example-path" value="quick_start_slave"/>
+			<build type="doxygen-example-path" value="quick_start_slave_dma"/>
+			<build type="doxygen-quick-start" value="asfdoc_sam0_sercom_i2c_exqsg"/>
+			
 			<device-support value="sam0"/>
 
 			<require idref="sam0.utils"/>
@@ -98,7 +115,12 @@
 			<build type="header-file" value="quick_start_slave/qs_i2c_slave_basic_use.h"/>
 			<build type="header-file" value="quick_start_slave_callback/qs_i2c_slave_callback.h"/>
 			<build type="header-file" value="quick_start_slave_dma/qs_i2c_slave_dma.h"/>
-
+			
+			<build type="doxygen-entry-point" value="asfdoc_sam0_sercom_i2c_group"/>
+			<build type="doxygen-image-path" value="docimg"/>
+			<build type="doxygen-example-path" value="quick_start_slave_callback"/>
+			<build type="doxygen-quick-start" value="asfdoc_sam0_sercom_i2c_exqsg"/>
+			
 			<device-support value="sam0"/>
 
 			<require idref="sam0.utils"/>
