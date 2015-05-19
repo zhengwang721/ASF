@@ -134,6 +134,9 @@
 			<build type="header-file" value="Include/arm_common_tables.h" toolchain="armgcc"/>
 			<require idref="sam.utils.fpu_used"/>
 			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="sams70"/>
+			<device-support value="same70"/>
 			<require idref="thirdparty.cmsis.license"/>
 			<info type="gui-flag" value="hidden"/>
 		</module>

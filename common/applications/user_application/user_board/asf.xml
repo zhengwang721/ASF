@@ -945,4 +945,244 @@
 		<generator value="doxygen"/>
 		<device-support value="atsamv71q21"/>
 	</project>
+	<project id="common.applications.user_application.user_board.samv70j19" caption="User board project template for SAMV70J19" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMV70J19 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.samv70j19"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamv70j19"/>
+	</project>
+	<project id="common.applications.user_application.user_board.samv70j20" caption="User board project template for SAMV70J20" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMV70J20 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.samv70j20"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamv70j20"/>
+	</project>
+	<project id="common.applications.user_application.user_board.samv70n19" caption="User board project template for SAMV70N19" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMV71N19 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.samv70n19"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamv70n19"/>
+	</project>
+	<project id="common.applications.user_application.user_board.samv70n20" caption="User board project template for SAMV70N20" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMV70N20 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.samv70n20"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamv70n20"/>
+	</project>
+	<project id="common.applications.user_application.user_board.samv70q19" caption="User board project template for SAMV70Q19" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMV70Q19 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.samv70q19"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamv70q19"/>
+	</project>
+	<project id="common.applications.user_application.user_board.samv70q20" caption="User board project template for SAMV70Q20" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMV70Q20 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.samv70q20"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamv70q20"/>
+	</project>
+	<project id="common.applications.user_application.user_board.sams70j19" caption="User board project template for SAMS70J19" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMS70J19 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.sams70j19"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsams70j19"/>
+	</project>
+	<project id="common.applications.user_application.user_board.sams70j20" caption="User board project template for SAMS70J20" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMS70J20 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.sams70j20"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsams70j20"/>
+	</project>
+	<project id="common.applications.user_application.user_board.sams70j21" caption="User board project template for SAMS70J21" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMS70J21 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.sams70j21"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsams70j21"/>
+	</project>
+	<project id="common.applications.user_application.user_board.sams70n19" caption="User board project template for SAMS70N19" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMS70N19 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.sams70n19"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsams70n19"/>
+	</project>
+	<project id="common.applications.user_application.user_board.sams70n20" caption="User board project template for SAMS70N20" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMS70N20 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.sams70n20"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsams70n20"/>
+	</project>
+	<project id="common.applications.user_application.user_board.sams70n21" caption="User board project template for SAMS70N21" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMS70N21 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.sams70n21"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsams70n21"/>
+	</project>
+	<project id="common.applications.user_application.user_board.sams70q19" caption="User board project template for SAMS70Q19" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMS70Q19 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.sams70q19"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsams70q19"/>
+	</project>
+	<project id="common.applications.user_application.user_board.sams70q20" caption="User board project template for SAMS70Q20" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMS70Q20 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.sams70q20"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsams70q20"/>
+	</project>
+	<project id="common.applications.user_application.user_board.sams70q21" caption="User board project template for SAMS70Q21" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMS70Q21 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.sams70q21"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsams70q21"/>
+	</project>
+	<project id="common.applications.user_application.user_board.same70j19" caption="User board project template for SAME70J19" type="template">
+		<info type="description" value="summary">
+		User board project template for SAME70J19 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.same70j19"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsame70j19"/>
+	</project>
+	<project id="common.applications.user_application.user_board.same70j20" caption="User board project template for SAME70J20" type="template">
+		<info type="description" value="summary">
+		User board project template for SAME70J20 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.same70j20"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsame70j20"/>
+	</project>
+	<project id="common.applications.user_application.user_board.same70j21" caption="User board project template for SAME70J21" type="template">
+		<info type="description" value="summary">
+		User board project template for SAME70J21 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.same70j21"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsame70j21"/>
+	</project>
+	<project id="common.applications.user_application.user_board.same70n19" caption="User board project template for SAME70N19" type="template">
+		<info type="description" value="summary">
+		User board project template for SAME70N19 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.same70n19"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsame70n19"/>
+	</project>
+	<project id="common.applications.user_application.user_board.same70n20" caption="User board project template for SAME70N20" type="template">
+		<info type="description" value="summary">
+		User board project template for SAME70N20 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.same70n20"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsame70n20"/>
+	</project>
+	<project id="common.applications.user_application.user_board.same70n21" caption="User board project template for SAME70N21" type="template">
+		<info type="description" value="summary">
+		User board project template for SAME70N21 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.same70n21"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsame70n21"/>
+	</project>
+	<project id="common.applications.user_application.user_board.same70q19" caption="User board project template for SAME70Q19" type="template">
+		<info type="description" value="summary">
+		User board project template for SAME70Q19 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.same70q19"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsame70q19"/>
+	</project>
+	<project id="common.applications.user_application.user_board.same70q20" caption="User board project template for SAME70Q20" type="template">
+		<info type="description" value="summary">
+		User board project template for SAME70Q20 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.same70q20"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsame70q20"/>
+	</project>
+	<project id="common.applications.user_application.user_board.same70q21" caption="User board project template for SAME70Q21" type="template">
+		<info type="description" value="summary">
+		User board project template for SAME70Q21 devices.
+		</info>
+		<require idref="common.applications.user_application.user_board.common"/>
+		<require idref="board.user_board.same70q21"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsame70q21"/>
+	</project>
 </asf>

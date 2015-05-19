@@ -631,5 +631,80 @@
 			<require idref="sam.drivers.pmc"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samv71"/>
 		</module>
+		<module type="service" id="common.services.basic.clock#25" caption="System Clock Control - SAMV70 implementation">
+			<info type="description" value="summary">
+			Driver for clock control (sysclk). Provides functions for accessing, configuring, enabling and disabling clocks. Common API.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Clocks"/>
+			</info>
+			<build type="header-file" value="genclk.h"/>
+			<build type="header-file" value="osc.h"/>
+			<build type="header-file" value="pll.h"/>
+			<build type="header-file" subtype="api" value="sysclk.h"/>
+			<build type="header-file" value="samv70/genclk.h"/>
+			<build type="header-file" value="samv70/osc.h"/>
+			<build type="header-file" value="samv70/pll.h"/>
+			<build type="c-source" value="samv70/sysclk.c"/>
+			<build type="header-file" value="samv70/sysclk.h"/>
+			<build type="include-path" value="."/>
+			<build type="module-config" subtype="required-header-file" value="conf_clock.h"/>
+			<build type="module-config" subtype="path" value="samv70/module_config"/>
+			<build type="doxygen-entry-point" value="clk_group"/>
+			<build type="doxygen-quick-start" value="sysclk_quickstart"/>
+			<device-support value="samv70"/>
+			<require idref="sam.drivers.pmc"/>
+			<generator value="doxygen-module" default-mcu="unspecified-samv70"/>
+		</module>
+		<module type="service" id="common.services.basic.clock#26" caption="System Clock Control - SAME70 implementation">
+			<info type="description" value="summary">
+			Driver for clock control (sysclk). Provides functions for accessing, configuring, enabling and disabling clocks. Common API.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Clocks"/>
+			</info>
+			<build type="header-file" value="genclk.h"/>
+			<build type="header-file" value="osc.h"/>
+			<build type="header-file" value="pll.h"/>
+			<build type="header-file" subtype="api" value="sysclk.h"/>
+			<build type="header-file" value="same70/genclk.h"/>
+			<build type="header-file" value="same70/osc.h"/>
+			<build type="header-file" value="same70/pll.h"/>
+			<build type="c-source" value="same70/sysclk.c"/>
+			<build type="header-file" value="same70/sysclk.h"/>
+			<build type="include-path" value="."/>
+			<build type="module-config" subtype="required-header-file" value="conf_clock.h"/>
+			<build type="module-config" subtype="path" value="same70/module_config"/>
+			<build type="doxygen-entry-point" value="clk_group"/>
+			<build type="doxygen-quick-start" value="sysclk_quickstart"/>
+			<device-support value="same70"/>
+			<require idref="sam.drivers.pmc"/>
+			<generator value="doxygen-module" default-mcu="unspecified-same70"/>
+		</module>
+		<module type="service" id="common.services.basic.clock#27" caption="System Clock Control - SAMS70 implementation">
+			<info type="description" value="summary">
+			Driver for clock control (sysclk). Provides functions for accessing, configuring, enabling and disabling clocks. Common API.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Clocks"/>
+			</info>
+			<build type="header-file" value="genclk.h"/>
+			<build type="header-file" value="osc.h"/>
+			<build type="header-file" value="pll.h"/>
+			<build type="header-file" subtype="api" value="sysclk.h"/>
+			<build type="header-file" value="sams70/genclk.h"/>
+			<build type="header-file" value="sams70/osc.h"/>
+			<build type="header-file" value="sams70/pll.h"/>
+			<build type="c-source" value="sams70/sysclk.c"/>
+			<build type="header-file" value="sams70/sysclk.h"/>
+			<build type="include-path" value="."/>
+			<build type="module-config" subtype="required-header-file" value="conf_clock.h"/>
+			<build type="module-config" subtype="path" value="sams70/module_config"/>
+			<build type="doxygen-entry-point" value="clk_group"/>
+			<build type="doxygen-quick-start" value="sysclk_quickstart"/>
+			<device-support value="sams70"/>
+			<require idref="sam.drivers.pmc"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sams70"/>
+		</module>
 	</select-by-device>
 </asf>

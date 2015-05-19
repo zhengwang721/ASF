@@ -97,6 +97,9 @@
 			<build type="build-config" subtype="c++-compiler-flags" value="-mfpu=fpv5-sp-d16" toolchain="armgcc"/>
 			<require idref="sam.utils.fpu_used"/>
 			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="sams70"/>
+			<device-support value="same70"/>
 		</module>
 	</select-by-device>
 
@@ -374,6 +377,48 @@
 			<require idref="sam.utils.cmsis.samv71.source.template"/>
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="samv71"/>
+		</module>	
+		<!-- SAMV70 //-->
+		<module type="driver" id="sam.utils#18" caption="SAMV70 compiler driver">
+			<info type="description" value="summary">
+			Compiler abstraction layer and code utilities for SAMV70 devices. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
+			</info>
+			<require idref="sam.utils.common"/>
+			<require idref="sam.utils.cmsis.samv70.include"/>
+			<require idref="sam.utils.cmsis.samv70.include.component"/>
+			<require idref="sam.utils.cmsis.samv70.include.instance"/>
+			<require idref="sam.utils.cmsis.samv70.include.pio"/>
+			<require idref="sam.utils.cmsis.samv70.source.template"/>
+			<info type="gui-flag" value="hidden"/>
+			<device-support value="samv70"/>
+		</module>
+		<!-- SAME70 //-->
+		<module type="driver" id="sam.utils#19" caption="SAME70 compiler driver">
+			<info type="description" value="summary">
+			Compiler abstraction layer and code utilities for SAME70 devices. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
+			</info>
+			<require idref="sam.utils.common"/>
+			<require idref="sam.utils.cmsis.same70.include"/>
+			<require idref="sam.utils.cmsis.same70.include.component"/>
+			<require idref="sam.utils.cmsis.same70.include.instance"/>
+			<require idref="sam.utils.cmsis.same70.include.pio"/>
+			<require idref="sam.utils.cmsis.same70.source.template"/>
+			<info type="gui-flag" value="hidden"/>
+			<device-support value="same70"/>
+		</module>
+		<!-- SAMS70 //-->
+		<module type="driver" id="sam.utils#20" caption="SAMS70 compiler driver">
+			<info type="description" value="summary">
+			Compiler abstraction layer and code utilities for SAMS70 devices. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
+			</info>
+			<require idref="sam.utils.common"/>
+			<require idref="sam.utils.cmsis.sams70.include"/>
+			<require idref="sam.utils.cmsis.sams70.include.component"/>
+			<require idref="sam.utils.cmsis.sams70.include.instance"/>
+			<require idref="sam.utils.cmsis.sams70.include.pio"/>
+			<require idref="sam.utils.cmsis.sams70.source.template"/>
+			<info type="gui-flag" value="hidden"/>
+			<device-support value="sams70"/>
 		</module>	
 	</select-by-device>
 </asf>

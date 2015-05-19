@@ -1248,6 +1248,72 @@
 /** @} */
 
 /**
+ * \name SAMV70 series
+ * @{
+ */
+#define SAMV70J ( \
+		SAM_PART_IS_DEFINED(SAMV70J19) || \
+		SAM_PART_IS_DEFINED(SAMV70J20) \
+	)
+
+#define SAMV70N ( \
+		SAM_PART_IS_DEFINED(SAMV70N19) || \
+		SAM_PART_IS_DEFINED(SAMV70N20) \
+	)
+
+#define SAMV70Q ( \
+		SAM_PART_IS_DEFINED(SAMV70Q19) || \
+		SAM_PART_IS_DEFINED(SAMV70Q20) \
+	)
+/** @} */
+
+/**
+ * \name SAMS70 series
+ * @{
+ */
+#define SAMS70J ( \
+		SAM_PART_IS_DEFINED(SAMS70J19) || \
+		SAM_PART_IS_DEFINED(SAMS70J20) || \
+		SAM_PART_IS_DEFINED(SAMS70J21) \
+	)
+
+#define SAMS70N ( \
+		SAM_PART_IS_DEFINED(SAMS70N19) || \
+		SAM_PART_IS_DEFINED(SAMS70N20) || \
+		SAM_PART_IS_DEFINED(SAMS70N21) \
+	)
+
+#define SAMS70Q ( \
+		SAM_PART_IS_DEFINED(SAMS70Q19) || \
+		SAM_PART_IS_DEFINED(SAMS70Q20) || \
+		SAM_PART_IS_DEFINED(SAMS70Q21) \
+	)
+/** @} */
+
+/**
+ * \name SAME70 series
+ * @{
+ */
+#define SAME70J ( \
+		SAM_PART_IS_DEFINED(SAME70J19) || \
+		SAM_PART_IS_DEFINED(SAME70J20) || \
+		SAM_PART_IS_DEFINED(SAME70J21) \
+	)
+
+#define SAME70N ( \
+		SAM_PART_IS_DEFINED(SAME70N19) || \
+		SAM_PART_IS_DEFINED(SAME70N20) || \
+		SAM_PART_IS_DEFINED(SAME70N21) \
+	)
+
+#define SAME70Q ( \
+		SAM_PART_IS_DEFINED(SAME70Q19) || \
+		SAM_PART_IS_DEFINED(SAME70Q20) || \
+		SAM_PART_IS_DEFINED(SAME70Q21) \
+	)
+/** @} */
+
+/**
  * \name SAM families
  * @{
  */
@@ -1320,6 +1386,15 @@
 /** SAMV71 Family */
 #define SAMV71 (SAMV71J || SAMV71N || SAMV71Q)
 
+/** SAMV70 Family */
+#define SAMV70 (SAMV70J || SAMV70N || SAMV70Q)
+
+/** SAME70 Family */
+#define SAME70 (SAME70J || SAME70N || SAME70Q)
+
+/** SAMS70 Family */
+#define SAMS70 (SAMS70J || SAMS70N || SAMS70Q)
+
 /** SAM0 product line (cortex-m0+) */
 #define SAM0 (SAMD20 || SAMD21 || SAMR21 || SAMD10 || SAMD11 || SAML21)
 
@@ -1327,7 +1402,7 @@
 
 /** SAM product line */
 #define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || \
-		SAM0 || SAM4N || SAM4C || SAM4CM || SAM4CP || SAMG || SAMV71)
+		SAM0 || SAM4N || SAM4C || SAM4CM || SAM4CP || SAMG || SAMV71 || SAMV70 || SAME70 || SAMS70)
 
 /** @} */
 
