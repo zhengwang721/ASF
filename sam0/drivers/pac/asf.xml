@@ -32,12 +32,15 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
+			<device-support value="samda0"/>
+			<device-support value="samda1"/>
 		</module>
 		<module type="meta" id="sam0.drivers.pac.common#sam_l" caption="Common files of PAC driver">
 			<build type="include-path" value="." />
 			<build type="include-path" value="pac_sam_l"/>
 			<build type="c-source" value="pac_sam_l/pac.c"/>
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 		</module>
 	</select-by-device>
 

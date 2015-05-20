@@ -68,6 +68,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rtc_calendar_prerequisites
@@ -125,7 +126,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
- *    <td>SAMD20, SAMD21, SAMR21, SAMD10, SAMD11</td>
+ *    <td>SAMD20, SAMD21, SAMR21, SAMD10, SAMD11, SAMDA0, SAMDA1</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -228,10 +229,10 @@
  * when the module is initialized. Dates outside the start to end year range
  * described below will need software adjustment:
  *
- * \f[ [YEAR_{START}, YEAR_{START}+64) \f]
+ * \f[ [YEAR_{START}, YEAR_{START}+64] \f]
  *
  * \subsection asfdoc_sam0_rtc_calendar_special_considerations_clock Clock Setup
- * \subsubsection asfdoc_sam0_rtc_calendar_clock_samd_r SAM D20/D21/R21/D10/D11 Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_calendar_clock_samd_r SAM D20/D21/R21/D10/D11/DA0/DA1 Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32KHz RC-oscillator with a prescaler of 32, giving a
@@ -385,6 +386,12 @@ extern "C" {
 /** RTC continuously updated. */
 #  define FEATURE_RTC_CONTINUOUSLY_UPDATED
 #endif
+
+#if (SAML22) || defined(__DOXYGEN__)
+/** RTC tamper detection. */
+#  define FEATURE_RTC_TAMPER_DETECTION
+#endif
+
 /*@}*/
 
 #ifdef FEATURE_RTC_CLOCK_SELECTION
@@ -470,10 +477,14 @@ enum rtc_calendar_callback {
 	/** Callback for alarm 2. */
 	RTC_CALENDAR_CALLBACK_ALARM_2,
 #  endif
-#  if (RTC_NUM_OF_ALARMS > 3)	|| defined(__DOXYGEN__)
+#  if (RTC_NUM_OF_ALARMS > 3) || defined(__DOXYGEN__)
 	/** Callback for alarm 3. */
 	RTC_CALENDAR_CALLBACK_ALARM_3,
 #  endif
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Callback for tamper. */
+	RTC_CALENDAR_CALLBACK_TAMPER,
+#endif
 	/** Callback for  overflow. */
 	RTC_CALENDAR_CALLBACK_OVERFLOW,
 #  if !defined(__DOXYGEN__)
@@ -498,10 +509,14 @@ enum rtc_calendar_callback {
 	/** Callback for alarm 2. */
 	RTC_CALENDAR_CALLBACK_ALARM_2,
 #  endif
-#  if (RTC_NUM_OF_ALARMS > 3)	|| defined(__DOXYGEN__)
+#  if (RTC_NUM_OF_ALARMS > 3) || defined(__DOXYGEN__)
 	/** Callback for alarm 3. */
 	RTC_CALENDAR_CALLBACK_ALARM_3,
 #  endif
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Callback for tamper. */
+	RTC_CALENDAR_CALLBACK_TAMPER,
+#endif
 	/** Callback for  overflow. */
 	RTC_CALENDAR_CALLBACK_OVERFLOW,
 #  if !defined(__DOXYGEN__)
@@ -646,6 +661,12 @@ struct rtc_calendar_events {
 	 *  counter frequency.
 	 */
 	bool generate_event_on_periodic[8];
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Generate an output event on every tamper input. */
+	bool generate_event_on_tamper;
+	/** Tamper input event and capture the CLOCK value. */
+	bool on_event_to_tamper;
+#endif
 };
 
 /**
@@ -762,7 +783,7 @@ static inline void rtc_calendar_get_time_defaults(
  *  - Clock read synchronization is enabled for SAML22
  *
  *  \param[out] config  Configuration structure to be initialized to default
- *                      values.
+ *                      values
  */
 static inline void rtc_calendar_get_config_defaults(
 		struct rtc_calendar_config *const config)
@@ -1030,6 +1051,18 @@ static inline void rtc_calendar_enable_events(
 		}
 	}
 
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/* Check if the user has requested a tamper event output. */
+	if (events->generate_event_on_tamper) {
+		event_mask |= RTC_MODE2_EVCTRL_TAMPEREO;
+	}
+
+	/* Check if the user has requested a tamper event input. */
+	if (events->on_event_to_tamper) {
+		event_mask |= RTC_MODE2_EVCTRL_TAMPEVEI;
+	}
+#endif
+
 	/* Enable given event(s). */
 	rtc_module->MODE2.EVCTRL.reg |= event_mask;
 }
@@ -1075,6 +1108,18 @@ static inline void rtc_calendar_disable_events(
 			event_mask |= RTC_MODE2_EVCTRL_PEREO(1 << i);
 		}
 	}
+
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/* Check if the user has requested a tamper event output. */
+	if (events->generate_event_on_tamper) {
+		event_mask |= RTC_MODE2_EVCTRL_TAMPEREO;
+	}
+
+	/* Check if the user has requested a tamper event input. */
+	if (events->on_event_to_tamper) {
+		event_mask |= RTC_MODE2_EVCTRL_TAMPEVEI;
+	}
+#endif
 
 	/* Disable given event(s). */
 	rtc_module->MODE2.EVCTRL.reg &= ~event_mask;
@@ -1134,6 +1179,13 @@ static inline uint32_t rtc_read_general_purpose_reg(
 }
 
 /** @} */
+#endif
+
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+#include "rtc_tamper.h"
+
+void rtc_tamper_get_stamp (struct rtc_module *const module,
+		struct rtc_calendar_time *const time);
 #endif
 
 /** @} */
@@ -1233,8 +1285,8 @@ static inline uint32_t rtc_read_general_purpose_reg(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Added support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAML21 and SAMDA0/DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

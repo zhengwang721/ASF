@@ -69,6 +69,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rtc_count_prerequisites
@@ -128,7 +129,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
- *    <td>SAMD20,SAMD21,SAMR21,SAMD10,SAMD11</td>
+ *    <td>SAMD20, SAMD21, SAMR21, SAMD10, SAMD11, SAMDA0, SAMDA1</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -227,7 +228,7 @@
  * \section asfdoc_sam0_rtc_count_special_considerations Special Considerations
  *
  * \subsection asfdoc_sam0_rtc_count_special_considerations_clock Clock Setup
- * \subsubsection asfdoc_sam0_rtc_count_clock_samd_r SAM D20/D21/R21/D10/D11 Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_count_clock_samd_r SAM D20/D21/R21/D10/D11/DA0/DA1 Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32KHz RC-oscillator with a prescaler of 32, giving a
@@ -375,6 +376,12 @@ extern "C" {
 /** RTC continuously updated. */
 #  define FEATURE_RTC_CONTINUOUSLY_UPDATED
 #endif
+
+#if (SAML22) || defined(__DOXYGEN__)
+/** RTC tamper detection. */
+#  define FEATURE_RTC_TAMPER_DETECTION
+#endif
+
 /*@}*/
 
 #ifdef FEATURE_RTC_CLOCK_SELECTION
@@ -450,21 +457,21 @@ enum rtc_count_compare {
  * \brief Available periodic interval source.
  */
 enum rtc_count_periodic_interval{
-	/** Periodic interval 0 */
+	/** Periodic interval 0. */
 	RTC_COUNT_PERIODIC_INTERVAL_0 = 0,
-	/** Periodic interval 1 */
+	/** Periodic interval 1. */
 	RTC_COUNT_PERIODIC_INTERVAL_1 = 1,
-	/** Periodic interval 2 */
+	/** Periodic interval 2. */
 	RTC_COUNT_PERIODIC_INTERVAL_2 = 2,
-	/** Periodic interval 3 */
+	/** Periodic interval 3. */
 	RTC_COUNT_PERIODIC_INTERVAL_3 = 3,
-	/** Periodic interval 4 */
+	/** Periodic interval 4. */
 	RTC_COUNT_PERIODIC_INTERVAL_4 = 4,
-	/** Periodic interval 5 */
+	/** Periodic interval 5. */
 	RTC_COUNT_PERIODIC_INTERVAL_5 = 5,
-	/** Periodic interval 6 */
+	/** Periodic interval 6. */
 	RTC_COUNT_PERIODIC_INTERVAL_6 = 6,
-	/** Periodic interval 7 */
+	/** Periodic interval 7. */
 	RTC_COUNT_PERIODIC_INTERVAL_7 = 7,
 };
 #endif
@@ -503,7 +510,7 @@ enum rtc_count_callback {
 	/** Callback for compare channel 2. */
 	RTC_COUNT_CALLBACK_COMPARE_2,
 #  endif
-#  if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
+#  if (RTC_NUM_OF_COMP16 > 3) || defined(__DOXYGEN__)
 	/** Callback for compare channel 3. */
 	RTC_COUNT_CALLBACK_COMPARE_3,
 #  endif
@@ -516,7 +523,12 @@ enum rtc_count_callback {
 	RTC_COUNT_CALLBACK_COMPARE_5,
 #  endif
 
-	/** Callback for  overflow. */
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Callback for tamper. */
+	RTC_COUNT_CALLBACK_TAMPER,
+#endif
+
+	/** Callback for overflow. */
 	RTC_COUNT_CALLBACK_OVERFLOW,
 #  if !defined(__DOXYGEN__)
 	/** Total number of callbacks. */
@@ -540,7 +552,7 @@ enum rtc_count_callback {
 	/** Callback for compare channel 2. */
 	RTC_COUNT_CALLBACK_COMPARE_2,
 #  endif
-#  if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
+#  if (RTC_NUM_OF_COMP16 > 3) || defined(__DOXYGEN__)
 	/** Callback for compare channel 3. */
 	RTC_COUNT_CALLBACK_COMPARE_3,
 #  endif
@@ -552,6 +564,12 @@ enum rtc_count_callback {
 	/** Callback for compare channel 5. */
 	RTC_COUNT_CALLBACK_COMPARE_5,
 #  endif
+
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Callback for tamper. */
+	RTC_COUNT_CALLBACK_TAMPER,
+#endif
+
 	/** Callback for overflow. */
 	RTC_COUNT_CALLBACK_OVERFLOW,
 #  if !defined(__DOXYGEN__)
@@ -646,6 +664,12 @@ struct rtc_count_events {
 	/** Generate an output event periodically at a binary division of the RTC
 	 *  counter frequency. */
 	bool generate_event_on_periodic[8];
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Generate an output event on every tamper input. */
+	bool generate_event_on_tamper;
+	/** Tamper input event and capture the COUNT value. */
+	bool on_event_to_tamper;
+#endif
 };
 
 #if !defined(__DOXYGEN__)
@@ -980,6 +1004,18 @@ static inline void rtc_count_enable_events(
 		}
 	}
 
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/* Check if the user has requested a tamper event output. */
+	if (events->generate_event_on_tamper) {
+		event_mask |= RTC_MODE0_EVCTRL_TAMPEREO;
+	}
+
+	/* Check if the user has requested a tamper event input. */
+	if (events->on_event_to_tamper) {
+		event_mask |= RTC_MODE0_EVCTRL_TAMPEVEI;
+	}
+#endif
+
 	/* Enable given event(s). */
 	rtc_module->MODE0.EVCTRL.reg |= event_mask;
 }
@@ -1025,6 +1061,18 @@ static inline void rtc_count_disable_events(
 			event_mask |= RTC_MODE0_EVCTRL_PEREO(1 << i);
 		}
 	}
+
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/* Check if the user has requested a tamper event output. */
+	if (events->generate_event_on_tamper) {
+		event_mask |= RTC_MODE0_EVCTRL_TAMPEREO;
+	}
+
+	/* Check if the user has requested a tamper event input. */
+	if (events->on_event_to_tamper) {
+		event_mask |= RTC_MODE0_EVCTRL_TAMPEVEI;
+	}
+#endif
 
 	/* Disable given event(s). */
 	rtc_module->MODE0.EVCTRL.reg &= ~event_mask;
@@ -1085,6 +1133,13 @@ static inline uint32_t rtc_read_general_purpose_reg(
 
 /** @} */
 #endif
+
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+#include "rtc_tamper.h"
+
+uint32_t rtc_tamper_get_stamp (struct rtc_module *const module);
+#endif
+
 
 /** @} */
 
@@ -1182,8 +1237,8 @@ static inline uint32_t rtc_read_general_purpose_reg(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Added support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAML21 and SAMDA0/DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

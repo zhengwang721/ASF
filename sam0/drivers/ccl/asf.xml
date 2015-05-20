@@ -27,6 +27,7 @@
 		<build type="doxygen-quick-start" value="asfdoc_sam0_ccl_exqsg"/>
 
 		<device-support value="saml21"/>
+		<device-support value="saml22"/>
 
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system"/>

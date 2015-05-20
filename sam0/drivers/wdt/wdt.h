@@ -66,7 +66,8 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_wdt_prerequisites
@@ -160,7 +161,7 @@
  * }
  * \enddot
  *
- * \note SAM L21's Watchdog Counter is \a not provided by GCLK, but it uses an
+ * \note Watchdog Counter of SAML21/L22 is \a not provided by GCLK, but it uses an
  *       internal 1KHz OSCULP32K output clock.
  *
  * \section asfdoc_sam0_wdt_special_considerations Special Considerations
@@ -250,8 +251,8 @@ struct wdt_conf {
 	bool always_on;
 	/** Enable/Disable the Watchdog Timer. */
 	bool enable;
-#if !(SAML21)
-	/** GCLK generator used to clock the peripheral except SAM L21.*/
+#if !(SAML21) && !(SAML22)
+	/** GCLK generator used to clock the peripheral except SAM L21/L22.*/
 	enum gclk_generator clock_source;
 #endif
 	/** Number of Watchdog timer clock ticks until the Watchdog expires. */
@@ -285,7 +286,7 @@ static inline bool wdt_is_syncing(void)
 {
 	Wdt *const WDT_module = WDT;
 
-#if (SAML21)
+#if (SAML21) || (SAML22)
 	if (WDT_module->SYNCBUSY.reg) {
 #else
 	if (WDT_module->STATUS.reg & WDT_STATUS_SYNCBUSY) {
@@ -323,7 +324,7 @@ static inline void wdt_get_config_defaults(
 	/* Default configuration values */
 	config->always_on            = false;
 	config->enable               = true;
-#if !(SAML21)
+#if !(SAML21) && !(SAML22)
 	config->clock_source         = GCLK_GENERATOR_4;
 #endif
 	config->timeout_period       = WDT_PERIOD_16384CLK;
@@ -345,7 +346,7 @@ static inline bool wdt_is_locked(void)
 {
 	Wdt *const WDT_module = WDT;
 
-#if (SAML21)
+#if (SAML21) || (SAML22)
 	return (WDT_module->CTRLA.reg & WDT_CTRLA_ALWAYSON);
 #else
 	return (WDT_module->CTRL.reg & WDT_CTRL_ALWAYSON);
@@ -435,10 +436,7 @@ void wdt_reset_count(void);
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Add support for SAML21</td>
- *	</tr>
- *	<tr>
- *		<td>Add SAMD21 support and driver updated to follow driver type convention:
+ *		<td>Driver updated to follow driver type convention:
  *             \li wdt_init, wdt_enable, wdt_disable functions removed
  *             \li wdt_set_config function added
  *             \li WDT module enable state moved inside the configuration struct </td>
@@ -473,8 +471,8 @@ void wdt_reset_count(void);
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>09/2014</td>
- *		<td>Added SAML21 support.</td>
+ *		<td>04/2015</td>
+ *		<td>Added SAML21 and SAMDA0/A1 support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

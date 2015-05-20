@@ -58,7 +58,7 @@
 /**
  * \defgroup group_trx_access
  *  This module includes api's and defenitions required for Devices with
- *externally plugged transceivers(Non Soc's)
+ * externally plugged transceivers(Non Soc's)
  * @{
  */
 /* === Includes ============================================================ */

@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
  * \page asfdoc_sam0_tc_callback_use_case Quick Start Guide for TC - Callback
@@ -82,6 +85,8 @@
  *   \snippet saml21_xplained_pro/conf_quick_start_callback.h definition_pwm
  * - SAM L22 Xplained Pro.
  *   \snippet saml22_xplained_pro/conf_quick_start_callback.h definition_pwm
+ * - SAM DA1 Xplained Pro.
+ *   \snippet samda1_xplained_pro/conf_quick_start_callback.h definition_pwm
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_callback.c module_inst
@@ -139,9 +144,6 @@
  * \subsection asfdoc_sam0_tc_callback_use_case_main_flow Workflow
  * -# Enter an infinite loop while the PWM wave is generated via the TC module.
  *    \snippet qs_tc_callback.c main_loop
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 

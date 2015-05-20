@@ -10,5 +10,6 @@
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.i2s"/>
 		<device-support value="samd21"/>
+		<device-support value="samda1"/>
 	</module>
 </asf>

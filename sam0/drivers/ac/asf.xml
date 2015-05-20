@@ -57,12 +57,15 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
+			<device-support value="samda0"/>
+			<device-support value="samda1"/>
 		</module>
 		<module type="meta" id="sam0.drivers.ac.common#sam_l" caption="Common files of AC driver">
 			<build type="include-path" value="." />
 			<build type="include-path" value="ac_sam_l"/>
 			<build type="c-source" value="ac_sam_l/ac.c"/>
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 		</module>
 	</select-by-device>
 

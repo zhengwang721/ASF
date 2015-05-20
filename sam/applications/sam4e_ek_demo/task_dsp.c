@@ -450,8 +450,10 @@ static void dsp_configure_dacc(void)
 	/* Set to half word transfer */
 	dacc_set_transfer_mode(DACC, DACC_MR_WORD_HALF);
 
+#if (SAM3S) || (SAM3XA)
 	/* Set to No Sleep Mode and No Fast Wake Up Mode*/
 	dacc_set_power_save(DACC, 0, 0);
+#endif
 
 	/* Select both left/right speaker channels. */
 	dacc_set_channel_selection(DACC, SPEAKER_CHANNEL_R);

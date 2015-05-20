@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
  * \page asfdoc_sam0_events_basic_use_case Quick Start Guide for EVENTS - Basic
@@ -73,6 +76,8 @@
  *   \snippet saml21_xplained_pro/conf_qs_events.h definition_event
  * - SAM L22 Xplained Pro
  *   \snippet saml22_xplained_pro/conf_qs_events.h definition_event
+ * - SAM DA1 Xplained Pro.
+ *   \snippet samda1_xplained_pro/conf_qs_events.h definition_event
  *
  * Copy-paste the following setup code to your user application:
  * \snippet qs_events_basic.c setup
@@ -123,7 +128,4 @@
  *    \snippet qs_events_basic.c main_1
  * -# Perform a software event trigger on the configured event channel.
  *    \snippet qs_events_basic.c main_2
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

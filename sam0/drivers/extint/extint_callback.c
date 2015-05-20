@@ -54,7 +54,7 @@ extern struct _extint_module _extint_dev;
 
 /**
  * \internal
- * This is the number of the channel whose callback is currently running
+ * This is the number of the channel whose callback is currently running.
  */
 uint8_t _current_channel;
 

@@ -143,6 +143,7 @@ extern "C" {
 #define SAMG55_XPLAINED_PRO        75  //!< SAMG55 Xplained Pro board.
 #define SAML21_XPLAINED_PRO        76  //!< SAM L21 Xplained Pro board.
 #define SAMD10_XPLAINED_MINI       77  //!< SAM D10 Xplained Mini board.
+#define SAMDA1_XPLAINED_PRO        78  //!< SAM DA1 Xplained Pro board.
 #define SAMW25_XPLAINED_PRO        79  //!< SAMW25 Xplained Pro board.
 #define SAML22_XPLAINED_PRO        80  //!< SAM L22 Xplained Pro board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices.
@@ -279,6 +280,8 @@ extern "C" {
 #  include "saml22_xplained_pro/saml22_xplained_pro.h"
 #elif BOARD == SAMD10_XPLAINED_MINI
 #  include "samd10_xplained_mini/samd10_xplained_mini.h"
+#elif BOARD == SAMDA1_XPLAINED_PRO
+#  include "samda1_xplained_pro/samda1_xplained_pro.h"
 #elif BOARD == SAM4N_XPLAINED_PRO
 #  include "sam4n_xplained_pro/sam4n_xplained_pro.h"
 #elif BOARD == SAMW25_XPLAINED_PRO

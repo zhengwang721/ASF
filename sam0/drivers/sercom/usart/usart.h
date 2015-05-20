@@ -68,6 +68,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_sercom_usart_prerequisites
@@ -97,35 +98,35 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_SYNC_SCHEME_V2</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_OVER_SAMPLE</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_HARDWARE_FLOW_CONTROL</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IRDA</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_LIN_SLAVE</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_COLLISION_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_START_FRAME_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA0/DA1</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -269,7 +270,8 @@ extern "C" {
  * Define SERCOM USART features set according to different device family.
  * @{
  */
-#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAML22) || defined(__DOXYGEN__)
+#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAML22) || (SAMDA0) || \
+	(SAMDA1) || defined(__DOXYGEN__)
 /** Usart sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2
 /** Usart over sampling. */
@@ -1116,7 +1118,7 @@ static inline void usart_disable_transceiver(
  *		<th>Changelog</th>
  *	</tr>
  *  <tr>
- *		<td>Add support for SAML21 (same features as SAMD21)</td>
+ *		<td>Add support for SAML21 and SAMDA0/DA1(same features as SAMD21)</td>
  *  </tr>
  *  <tr>
  *		<td>Add support for SAMD10/D11 (same features as SAMD21)</td>
@@ -1256,8 +1258,8 @@ static inline void usart_disable_transceiver(
  *	</tr>
  *	<tr>
  *		<td>F</td>
- *		<td>11/2014</td>
- *		<td>Add support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Add support for SAML21 and SAMDA0/DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>E</td>
