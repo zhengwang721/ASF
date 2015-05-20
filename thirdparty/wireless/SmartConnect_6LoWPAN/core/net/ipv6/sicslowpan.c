@@ -1701,6 +1701,7 @@ input(void)
   uncomp_hdr_len = 0;
   rx_hdr_len = 0;  
   rx_payload_len = 0;
+  sicslowpan_len = 0;
 
 
   PRINTFI("\n\r ******* SICSLOWPAN INPUT ********** \n");
@@ -1794,18 +1795,7 @@ input(void)
      return;
    }
    
-  // Before accepting FRAGN, check if re-assembly timer  expired   
-  if((hdr_val == SICSLOWPAN_DISPATCH_FRAGN) && (sics_used_buf[buff_index] == 1 && timer_expired(&(sics_frag_attr[buff_index].frag_reass_timer))))
-  {
-    PRINTFI ("\r\n FRAGN arrived after re-assembly timer expired");
-    PRINTFI ("\r\n size %d, tag %d, offset %d)\n",
-             frag_size, frag_tag, frag_offset << 3);
-	  sicslowpan_len = 0;
-	  sics_used_buf[buff_index] = 0;
-	  memset(&(sics_frag_attr[buff_index]),0,sizeof(sics_frag_t));
-    return;	  
-  }
-   
+     
 // Update frag attributes  
   switch(hdr_val) {
     case SICSLOWPAN_DISPATCH_FRAG1:
