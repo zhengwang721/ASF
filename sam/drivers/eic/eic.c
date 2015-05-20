@@ -57,17 +57,6 @@ extern "C" {
 /// @endcond
 
 /**
- * \defgroup sam_drivers_eic_group SAM4 External Interrupt Controller(EIC)
- *
- * See \ref sam_eic_quickstart.
- *
- * EIC allows pins to be configured as external interrupts.
- *
- * @{
- */
-
-
-/**
  * \internal
  * \brief EIC callback function pointer array
  */
