@@ -7,7 +7,6 @@
 		<build type="header-file" value="adc.h"/>
 		<build type="header-file" value="aes.h"/>
 		<build type="header-file" value="ccl.h"/>
-		<build type="header-file" value="dac.h"/>
 		<build type="header-file" value="dmac.h"/>
 		<build type="header-file" value="dsu.h"/>
 		<build type="header-file" value="eic.h"/>
@@ -31,7 +30,6 @@
 		<build type="header-file" value="tc.h"/>
 		<build type="header-file" value="tcc.h"/>
 		<build type="header-file" value="trng.h"/>
-		<build type="header-file" value="tsens.h"/>
 		<build type="header-file" value="usb.h"/>
 		<build type="header-file" value="wdt.h"/>
 		<info type="gui-flag" value="hidden"/>

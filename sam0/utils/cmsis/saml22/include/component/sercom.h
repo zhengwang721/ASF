@@ -413,9 +413,7 @@ typedef union {
     uint32_t :2;               /*!< bit: 14..15  Reserved                           */
     uint32_t TXEN:1;           /*!< bit:     16  Transmitter Enable                 */
     uint32_t RXEN:1;           /*!< bit:     17  Receiver Enable                    */
-    uint32_t :6;               /*!< bit: 18..23  Reserved                           */
-    uint32_t LINCMD:2;         /*!< bit: 24..25  LIN Command                        */
-    uint32_t :6;               /*!< bit: 26..31  Reserved                           */
+    uint32_t :14;              /*!< bit: 18..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } SERCOM_USART_CTRLB_Type;
@@ -441,20 +439,14 @@ typedef union {
 #define SERCOM_USART_CTRLB_TXEN     (0x1ul << SERCOM_USART_CTRLB_TXEN_Pos)
 #define SERCOM_USART_CTRLB_RXEN_Pos 17           /**< \brief (SERCOM_USART_CTRLB) Receiver Enable */
 #define SERCOM_USART_CTRLB_RXEN     (0x1ul << SERCOM_USART_CTRLB_RXEN_Pos)
-#define SERCOM_USART_CTRLB_LINCMD_Pos 24           /**< \brief (SERCOM_USART_CTRLB) LIN Command */
-#define SERCOM_USART_CTRLB_LINCMD_Msk (0x3ul << SERCOM_USART_CTRLB_LINCMD_Pos)
-#define SERCOM_USART_CTRLB_LINCMD(value) (SERCOM_USART_CTRLB_LINCMD_Msk & ((value) << SERCOM_USART_CTRLB_LINCMD_Pos))
-#define SERCOM_USART_CTRLB_MASK     0x03032747ul /**< \brief (SERCOM_USART_CTRLB) MASK Register */
+#define SERCOM_USART_CTRLB_MASK     0x00032747ul /**< \brief (SERCOM_USART_CTRLB) MASK Register */
 
 /* -------- SERCOM_USART_CTRLC : (SERCOM Offset: 0x08) (R/W 32) USART USART Control C -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
     uint32_t GTIME:3;          /*!< bit:  0.. 2  Guard Time                         */
-    uint32_t :5;               /*!< bit:  3.. 7  Reserved                           */
-    uint32_t BRKLEN:2;         /*!< bit:  8.. 9  LIN Master Break Length            */
-    uint32_t HDRDLY:2;         /*!< bit: 10..11  LIN Master Header Delay            */
-    uint32_t :4;               /*!< bit: 12..15  Reserved                           */
+    uint32_t :13;              /*!< bit:  3..15  Reserved                           */
     uint32_t INACK:1;          /*!< bit:     16  Inhibit Not Acknowledge            */
     uint32_t DSNACK:1;         /*!< bit:     17  Disable Successive NACK            */
     uint32_t :2;               /*!< bit: 18..19  Reserved                           */
@@ -471,12 +463,6 @@ typedef union {
 #define SERCOM_USART_CTRLC_GTIME_Pos 0            /**< \brief (SERCOM_USART_CTRLC) Guard Time */
 #define SERCOM_USART_CTRLC_GTIME_Msk (0x7ul << SERCOM_USART_CTRLC_GTIME_Pos)
 #define SERCOM_USART_CTRLC_GTIME(value) (SERCOM_USART_CTRLC_GTIME_Msk & ((value) << SERCOM_USART_CTRLC_GTIME_Pos))
-#define SERCOM_USART_CTRLC_BRKLEN_Pos 8            /**< \brief (SERCOM_USART_CTRLC) LIN Master Break Length */
-#define SERCOM_USART_CTRLC_BRKLEN_Msk (0x3ul << SERCOM_USART_CTRLC_BRKLEN_Pos)
-#define SERCOM_USART_CTRLC_BRKLEN(value) (SERCOM_USART_CTRLC_BRKLEN_Msk & ((value) << SERCOM_USART_CTRLC_BRKLEN_Pos))
-#define SERCOM_USART_CTRLC_HDRDLY_Pos 10           /**< \brief (SERCOM_USART_CTRLC) LIN Master Header Delay */
-#define SERCOM_USART_CTRLC_HDRDLY_Msk (0x3ul << SERCOM_USART_CTRLC_HDRDLY_Pos)
-#define SERCOM_USART_CTRLC_HDRDLY(value) (SERCOM_USART_CTRLC_HDRDLY_Msk & ((value) << SERCOM_USART_CTRLC_HDRDLY_Pos))
 #define SERCOM_USART_CTRLC_INACK_Pos 16           /**< \brief (SERCOM_USART_CTRLC) Inhibit Not Acknowledge */
 #define SERCOM_USART_CTRLC_INACK    (0x1ul << SERCOM_USART_CTRLC_INACK_Pos)
 #define SERCOM_USART_CTRLC_DSNACK_Pos 17           /**< \brief (SERCOM_USART_CTRLC) Disable Successive NACK */
@@ -484,7 +470,7 @@ typedef union {
 #define SERCOM_USART_CTRLC_MAXITER_Pos 20           /**< \brief (SERCOM_USART_CTRLC) Maximum Iterations */
 #define SERCOM_USART_CTRLC_MAXITER_Msk (0x7ul << SERCOM_USART_CTRLC_MAXITER_Pos)
 #define SERCOM_USART_CTRLC_MAXITER(value) (SERCOM_USART_CTRLC_MAXITER_Msk & ((value) << SERCOM_USART_CTRLC_MAXITER_Pos))
-#define SERCOM_USART_CTRLC_MASK     0x00730F07ul /**< \brief (SERCOM_USART_CTRLC) MASK Register */
+#define SERCOM_USART_CTRLC_MASK     0x00730007ul /**< \brief (SERCOM_USART_CTRLC) MASK Register */
 
 /* -------- SERCOM_I2CM_BAUD : (SERCOM Offset: 0x0C) (R/W 32) I2CM I2CM Baud Rate -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

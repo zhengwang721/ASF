@@ -180,7 +180,8 @@ typedef union {
 typedef union {
   struct {
     uint16_t BBD:4;            /*!< bit:  0.. 3  Bias Buffer Enable Duration        */
-    uint16_t :3;               /*!< bit:  4.. 6  Reserved                           */
+    uint16_t :2;               /*!< bit:  4.. 5  Reserved                           */
+    uint16_t EXTBIAS:1;        /*!< bit:      6  External Bias Capacitor            */
     uint16_t BBEN:1;           /*!< bit:      7  Bias Buffer Enable                 */
     uint16_t LRD:4;            /*!< bit:  8..11  Low Resistance Enable Duration     */
     uint16_t :3;               /*!< bit: 12..14  Reserved                           */
@@ -196,6 +197,8 @@ typedef union {
 #define SLCD_CTRLB_BBD_Pos          0            /**< \brief (SLCD_CTRLB) Bias Buffer Enable Duration */
 #define SLCD_CTRLB_BBD_Msk          (0xFul << SLCD_CTRLB_BBD_Pos)
 #define SLCD_CTRLB_BBD(value)       (SLCD_CTRLB_BBD_Msk & ((value) << SLCD_CTRLB_BBD_Pos))
+#define SLCD_CTRLB_EXTBIAS_Pos      6            /**< \brief (SLCD_CTRLB) External Bias Capacitor */
+#define SLCD_CTRLB_EXTBIAS          (0x1ul << SLCD_CTRLB_EXTBIAS_Pos)
 #define SLCD_CTRLB_BBEN_Pos         7            /**< \brief (SLCD_CTRLB) Bias Buffer Enable */
 #define SLCD_CTRLB_BBEN             (0x1ul << SLCD_CTRLB_BBEN_Pos)
 #define SLCD_CTRLB_LRD_Pos          8            /**< \brief (SLCD_CTRLB) Low Resistance Enable Duration */
@@ -203,7 +206,7 @@ typedef union {
 #define SLCD_CTRLB_LRD(value)       (SLCD_CTRLB_LRD_Msk & ((value) << SLCD_CTRLB_LRD_Pos))
 #define SLCD_CTRLB_LREN_Pos         15           /**< \brief (SLCD_CTRLB) Low Resistance Enable */
 #define SLCD_CTRLB_LREN             (0x1ul << SLCD_CTRLB_LREN_Pos)
-#define SLCD_CTRLB_MASK             0x8F8Ful     /**< \brief (SLCD_CTRLB) MASK Register */
+#define SLCD_CTRLB_MASK             0x8FCFul     /**< \brief (SLCD_CTRLB) MASK Register */
 
 /* -------- SLCD_CTRLC : (SLCD Offset: 0x06) (R/W 16) Control C -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
