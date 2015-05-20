@@ -37,6 +37,9 @@
 			<device-support value="sam4"/>
 			<device-support value="samg"/>
 			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="sams70"/>
+			<device-support value="same70"/>
 			<require idref="common.utils.stdio.common"/>
 			<require idref="sam.utils"/>
 			<build type="doxygen-entry-point" value="group_common_utils_stdio"/>
