@@ -202,8 +202,8 @@ static enum status_code _usart_set_config(
 			case ISO7816_PROTOCOL_T_0:
 				ctrlb |= (uint32_t)config->stopbits;	
 				ctrlc |= SERCOM_USART_CTRLC_GTIME(config->iso7816_opt.guard_time) | \
-						(config->iso7816_opt.inhibit_nack) << SERCOM_USART_CTRLC_INACK_Pos | \
-						(config->iso7816_opt.dis_suc_nack) << SERCOM_USART_CTRLC_MAXITER_Pos | \
+						(config->iso7816_opt.inhibit_nack) | \
+						(config->iso7816_opt.dis_suc_nack) | \
 						SERCOM_USART_CTRLC_MAXITER(config->iso7816_opt.max_iterations);
 				break;	
 			case ISO7816_PROTOCOL_T_1:
