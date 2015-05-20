@@ -1714,12 +1714,22 @@ input(void)
 
 #if SICSLOWPAN_CONF_FRAG
   /*
-   * Since we don't support the mesh and broadcast header, the first header
-   * we look for is the fragmentation header. 
-   Todo: Check for NALP dispatch prefix(00) first
+   *  NALP dispatch prefix(00xxxxxx) immediately after the 802.15.4 header indicates a non-6LoWPAN packet 
+   *  received in the same 802.15.4 channel. Need to drop it.
    */
 	hdr_val = (GET16(PACKETBUF_FRAG_PTR, PACKETBUF_FRAG_DISPATCH_SIZE) & 0xf800) >> 8;
-
+  
+  if ((hdr_val & 0xc0) == 0x00) 
+  {
+    PRINTFI ("\r\n Dropping the non-6LoWPAN frame received");
+    return;
+  }
+  
+  /*
+   * Since we don't support the mesh and broadcast header,  we look for
+   *  the fragmentation dispatch prefix followed by IPHC (HC06) dispatch. 
+   */
+  
   // Match incoming fragment with appropriate sicslowpanbuf buffer
 	if((hdr_val == SICSLOWPAN_DISPATCH_FRAG1))
 	{
