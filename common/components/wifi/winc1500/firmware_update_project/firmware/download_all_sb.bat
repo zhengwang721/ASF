@@ -101,5 +101,5 @@ echo     ##                 ##        ##     ## ##    ## ##    ##             ##
 echo     ##                 ##        ##     ##  ######   ######              ##
 echo     ##                                                                   ##
 echo     #######################################################################
-echo Downloading ends successfully
+echo Programming ends successfully
 pause

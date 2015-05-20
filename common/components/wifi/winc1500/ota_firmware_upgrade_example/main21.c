@@ -44,29 +44,36 @@
 
 /** \mainpage
  * \section intro Introduction
- * This example demonstrates the use of the WINC1500 with the SAMD21 Xplained Pro
+ * This example demonstrates the use of the WINC1500 with the SAM Xplained Pro
  * board to perform an OTA Firmware upgrade.
  * It uses the following hardware:
- * - the SAMD21 Xplained Pro.
+ * - the SAM Xplained Pro.
  * - the WINC1500 on EXT1.
  *
  * \section files Main Files
  * - main.c : Initialize the WINC1500.
  *
  * \section usage Usage
- * -# Configure your http server with the new firmware binary to use during OTA.
+ * -# You need to setup an HTTP server accessible via your Wi-Fi network. This HTTP
+ * server must have the "m2m_ota.bin" OTA firmware accessible at this location:
+ * http://SERVER_IP_ADDRESS/winc1500_ota.bin
+ *
+ * Note: 
+ * - the OTA firmware file is included in this project under the firwmare
+ * folder.
+ * - the server IP address must be set via the MAIN_OTA_URL macro from main.h file.
+ *
  * -# Configure below code in the config main.h for AP to connect to.
-
  * \code
  *     #define MAIN_WLAN_SSID        "DEMO_AP"
  *     #define MAIN_WLAN_AUTH        M2M_WIFI_SEC_WPA_PSK
  *     #define MAIN_WLAN_PSK         "12345678"
  *     #define MAIN_OTA_URL          "http://192.168.0.137/winc1500_ota.bin"
  * \endcode
- * -# Firmware binary file to use to run this example is included under the
- * firmware folder of the Atmel Studio 6 project.
+ *
  * -# Build the program and download it into the board.
  * -# On the computer, open and configure a terminal application as the follows.
+ *
  * \code
  *    Baud Rate : 115200
  *    Data : 8bit
@@ -78,7 +85,7 @@
  * -# In the terminal window, the following text should appear:
  * \code
  *    -- WINC1500 OTA firmware upgrade example --
- *    -- SAMD21_XPLAINED_PRO --
+ *    -- SAMXXX_XPLAINED_PRO --
  *    -- Compiled: xxx xx xxxx xx:xx:xx --
  *    Wi-Fi connected
  *    Wi-Fi IP is 192.168.0.10
@@ -100,7 +107,8 @@
  *    (3)NMI MIN DRV VERSION 17.0
  *    (3)Built at Sep 23 2014 13:09:07
  * \endcode
- * -# You can check the Firmware version and Build time.
+ *
+ * -# You can check the Firmware version and build time.
  *
  * \section compinfo Compilation Information
  * This software was written for the GNU GCC compiler using Atmel Studio 6.2

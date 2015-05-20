@@ -11,7 +11,7 @@
 			<build type="c-source" value="main21.c"/>
 			<build type="header-file" value="main.h"/>
 			<build type="include-path" value="firmware"/>
-			<build type="distribute" subtype="file" value="firmware/winc1500_ota.bin"/>
+			<build type="distribute" subtype="file" value="firmware/m2m_ota.bin"/>
 
 			<!-- Device support -->
 			<device-support value="samd21"/>
@@ -35,7 +35,7 @@
 			<build type="c-source" value="main.c"/>
 			<build type="header-file" value="main.h"/>
 			<build type="include-path" value="firmware"/>
-			<build type="distribute" subtype="file" value="firmware/winc1500_ota.bin"/>
+			<build type="distribute" subtype="file" value="firmware/m2m_ota.bin"/>
 
 			<!-- Device support -->
 			<device-support value="sam4s"/>

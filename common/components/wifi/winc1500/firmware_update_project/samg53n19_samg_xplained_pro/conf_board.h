@@ -1,8 +1,7 @@
 /**
- *
  * \file
  *
- * \brief WINC1500 Firmware Update
+ * \brief SAM4S Xplained Pro board configuration
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -39,43 +38,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
 
-/** \mainpage
- * \section intro Introduction
- * This empty project is a placeholder for the tools to use to perform the
- * following actions:
- * - WINC1500 firmware update
- * - WINC1500 root certificate update
- *
- * It can be used with the following hardware:
- * - the SAM4S Xplained Pro.
- * - the SAMG53 Xplained Pro.
- * - the SAMG55 Xplained Pro.
- * - the SAMD21 Xplained Pro.
- * - the SAMW25 Xplained Pro.
- * - the WINC1500 must be connected to EXT1.
- *
- * For a more information about WINC1500 update please refer to the following document
- * available under the doc folder:
- * - Atmel-AN004-Firmware-Update-Procedure-for-WINC1500-WiFi-Module-using-SAM-Xplained-Pro.pdf
- *
- * \section files Main Files
- * - samXXX_xplained_pro_firmware_update.bat : script to perform firmware update.
- * - samXXX_xplained_pro_certificate_update.bat : script to perform root certificate
- * update.
- *
- * \section contactinfo Contact Information
- * For further information, visit
- * <A href="http://www.atmel.com">Atmel</A>.\n
- */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include "asf.h"
+#define CONF_BOARD_UART_CONSOLE
 
-int main(void)
-{
-	while (1) {
-	}
-	return 0;
-}
+#define CONF_BOARD_SPI
+
+#define CONF_BOARD_SPI_NPCS0
+
+#endif /* CONF_BOARD_H_INCLUDED */

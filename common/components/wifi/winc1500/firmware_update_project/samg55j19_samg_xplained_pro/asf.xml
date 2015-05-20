@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="WINC1500 Firmware Update Project (v18.3.0) for SAMD21 XPlained Pro" id="common.components.wifi.winc1500.firmware_update_project.samd21_xplained_pro">
+	<project caption="WINC1500 Firmware Update Project (v18.3.0) for SAMG55 XPlained Pro" id="common.components.wifi.winc1500.firmware_update_project.samg55_xplained_pro">
 		<!-- Summary Description -->
 		<info type="description" value="summary">
 			This project includes tools and documentation to update the WINC1500 Wi-Fi module firmware, root certificates and gain values.
@@ -8,13 +8,14 @@
 		<!-- Source -->
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
 
 		<!-- Device support -->
-		<device-support value="atsamd21j18a"/>
+		<device-support value="atsamg55j19"/>
 
 		<!-- Required modules -->
 		<require idref="common.components.wifi.winc1500.firmware_update_project"/>
-		<require idref="board.samd21_xplained_pro"/>
+		<require idref="board.samg55_xplained_pro"/>
 
 		<!-- Generators -->
 		<generator value="armgcc"/>
