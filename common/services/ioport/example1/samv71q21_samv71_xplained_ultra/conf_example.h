@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Common GPIO API.
+ * \brief Common IOPORT service demo configuration header file.
  *
- * Copyright (c) 2010-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,44 +43,15 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef _GPIO_H_
-#define _GPIO_H_
+#ifndef CONF_EXAMPLE_H_INCLUDED
+#define CONF_EXAMPLE_H_INCLUDED
 
-#include <parts.h>
+/* Using LED0 SAMV71-XPLAINED-ULTRA (PA23) */
+#define EXAMPLE_LED_PORT (0)
+#define EXAMPLE_LED_MASK ((1 << 23))
 
-#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAME70 || SAMS70)
-# include "sam_gpio/sam_gpio.h"
-#elif XMEGA
-# include "xmega_gpio/xmega_gpio.h"
-#elif MEGA || MEGA_RF
-# include "mega_gpio/mega_gpio.h"
-#else
-# error Unsupported chip type
-#endif
+/* Using button SW0 on SAMV71-XPLAINED-ULTRA (PA9) */
+#define EXAMPLE_BUTTON_PORT (0)
+#define EXAMPLE_BUTTON_MASK ((1 << 9))
 
-/**
- * \defgroup gpio_group General Purpose Input/Output
- *
- * This is the common API for GPIO. Additional features are available
- * in the documentation of the specific modules.
- *
- * \section io_group_platform Platform Dependencies
- *
- * The following functions are available on all platforms, but there may
- * be variations in the function signature (i.e. parameters) and
- * behaviour. These functions are typically called by platform-specific
- * parts of drivers, and applications that aren't intended to be
- * portable:
- *   - gpio_pin_is_low()
- *   - gpio_pin_is_high()
- *   - gpio_set_pin_high()
- *   - gpio_set_pin_group_high()
- *   - gpio_set_pin_low()
- *   - gpio_set_pin_group_low()
- *   - gpio_toggle_pin()
- *   - gpio_toggle_pin_group()
- *   - gpio_configure_pin()
- *   - gpio_configure_group()
- */
-
-#endif  /* _GPIO_H_ */
+#endif /* CONF_EXAMPLE_H_INCLUDED */

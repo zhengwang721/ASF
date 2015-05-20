@@ -720,7 +720,7 @@ void pmc_enable_all_periph_clk(void)
 	PMC->PMC_PCER0 = PMC_MASK_STATUS0;
 	while ((PMC->PMC_PCSR0 & PMC_MASK_STATUS0) != PMC_MASK_STATUS0);
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CM || SAM4CP || SAMV71
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CM || SAM4CP || SAMV71  \
 		|| SAMV70 || SAME70 || SAMS70)
 	PMC->PMC_PCER1 = PMC_MASK_STATUS1;
 	while ((PMC->PMC_PCSR1 & PMC_MASK_STATUS1) != PMC_MASK_STATUS1);
@@ -735,7 +735,7 @@ void pmc_disable_all_periph_clk(void)
 	PMC->PMC_PCDR0 = PMC_MASK_STATUS0;
 	while ((PMC->PMC_PCSR0 & PMC_MASK_STATUS0) != 0);
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CM || SAM4CP || SAMV71
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CM || SAM4CP || SAMV71 \
 		|| SAMV70 || SAME70 || SAMS70)
 	PMC->PMC_PCDR1 = PMC_MASK_STATUS1;
 	while ((PMC->PMC_PCSR1 & PMC_MASK_STATUS1) != 0);
@@ -758,7 +758,7 @@ uint32_t pmc_is_periph_clk_enabled(uint32_t ul_id)
 		return 0;
 	}
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CM || SAM4CP || SAMV71
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CM || SAM4CP || SAMV71 \
 		|| SAMV70 || SAME70 || SAMS70)
 	if (ul_id < 32) {
 #endif
@@ -767,7 +767,7 @@ uint32_t pmc_is_periph_clk_enabled(uint32_t ul_id)
 		} else {
 			return 0;
 		}
-#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CM || SAM4CP || SAMV71
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CM || SAM4CP || SAMV71 \
 		|| SAMV70 || SAME70 || SAMS70)
 	} else {
 		ul_id -= 32;

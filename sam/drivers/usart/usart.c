@@ -484,7 +484,7 @@ uint32_t usart_init_rs485(Usart *p_usart,
 	return 0;
 }
 
-#if (!SAMG55 && !SAMV71)
+#if (!SAMG55 && !SAMV71 && !SAMV70 && !SAME70 && !SAMS70)
 /**
  * \brief Configure USART to work in IrDA mode.
  *
@@ -516,7 +516,7 @@ uint32_t usart_init_irda(Usart *p_usart,
 }
 #endif
 
-#if (!SAMV71)
+#if (!SAMV71 && !SAMV70 && !SAME70 && !SAMS70)
 /**
  * \brief Calculate a clock divider (\e CD) for the USART ISO7816 mode to
  * generate an ISO7816 clock as close as possible to the clock set point.
@@ -1558,7 +1558,7 @@ uint32_t *usart_get_rx_access(Usart *p_usart)
 }
 #endif
 
-#if (!SAM4L && !SAMV71)
+#if (!SAM4L && !SAMV71 && !SAMV70 && !SAME70 && !SAMS70)
 /**
  * \brief Get USART PDC base address.
  *

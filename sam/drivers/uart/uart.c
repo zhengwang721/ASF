@@ -106,7 +106,7 @@ uint32_t uart_init(Uart *p_uart, const sam_uart_opt_t *p_uart_opt)
 	/* Configure mode */
 	p_uart->UART_MR = p_uart_opt->ul_mode;
 
-#if (!SAMV71)
+#if (!SAMV71 && !SAMV70 && !SAME70 && !SAMS70)
 	/* Disable PDC channel */
 	p_uart->UART_PTCR = UART_PTCR_RXTDIS | UART_PTCR_TXTDIS;
 #endif
@@ -380,7 +380,7 @@ uint32_t uart_read(Uart *p_uart, uint8_t *puc_data)
 	return 0;
 }
 
-#if (!SAMV71)
+#if (!SAMV71 && !SAMV70 && !SAME70 && !SAMS70)
 /**
  * \brief Check if one receive buffer is filled.
  *
@@ -503,7 +503,7 @@ void uart_config_optical_interface(Uart *p_uart,
 }
 #endif
 
-#if (SAMG53 || SAMG54 || SAMV71)
+#if (SAMG53 || SAMG54 || SAMV71 || SAMV70 || SAME70 || SAMS70)
 /**
  * \brief Set sleepwalking match mode.
  *
