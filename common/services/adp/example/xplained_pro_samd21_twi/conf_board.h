@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ADP service implementation
+ * \brief SAM D21 Xplained PRO board configuration
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,25 +44,12 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef ADP_PACKET_H_INCLUDED
-#define ADP_PACKET_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include <compiler.h>
-#include "adp_interface.h"
+#define USER_LED_PIN         LED_0_PIN
+#define USER_LED_ACTIVE      LED_0_ACTIVE
+#define USER_LED_INACTIVE    LED_0_INACTIVE
+#define USER_LED_GPIO        LED0_GPIO
 
-#define ADP_MAX_PACKET_DATA_SIZE 254
-#define ADP_TOKEN 0xFF
-
-void adp_packet_init(void);
-
-bool adp_packet_is_received(void);
-uint8_t adp_packet_received_get_id(void);
-void adp_packet_send_header(uint8_t message_id, uint8_t message_length);
-void adp_packet_send_data(uint8_t* data, uint8_t data_length);
-bool adp_packet_transceive_header(uint8_t message_id, uint8_t message_length, uint8_t* rx_buf);
-bool adp_packet_transceive_data(uint8_t* data, uint8_t data_length, uint8_t* rx_buf);
-void adp_packet_wait_for_response(uint8_t received_id, uint8_t *receive_buf, uint8_t receive_buffer_size);
-bool adp_packet_check_for_response(uint8_t received_id, uint8_t *receive_buf, uint8_t receive_buffer_size);
-bool adp_packet_receive_packet_data(uint8_t *receive_buf);
-
-#endif
+#endif /* CONF_BOARD_H_INCLUDED */

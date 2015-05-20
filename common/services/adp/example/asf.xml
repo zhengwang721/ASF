@@ -2,8 +2,11 @@
 
 	<module type="meta" id="common.services.adp.example.common" caption="ADP example application">
 		<build type="c-source" value="adp_example.c"/>
+		<build type="c-source" value="adp_window.c"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="adp_example_adc.h"/>
+		<build type="header-file" value="adp_example_tc.h"/>
+		<build type="header-file" value="adp_window.h"/>
 		<require idref="common.services.adp"/>
 		<require idref="common.services.ioport"/>
 		<info type="gui-flag" value="move-to-root"/>
@@ -15,7 +18,8 @@
 			<info type="description" value="summary">
 				ADP example application
 			</info>
-			<build type="c-source" value="adp_example_adc_sam0.c"/>
+			<build type="c-source" value="sam0/adp_example_adc.c"/>
+			<build type="c-source" value="sam0/adp_example_tc.c"/>
 			<require idref="common.services.adp.example.common"/>
 			<device-support value="sam0"/>
 		</module>

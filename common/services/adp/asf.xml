@@ -1,10 +1,8 @@
 <asf xmlversion="1.0">
 	<module type="meta" id="common.services.adp.common" caption="ADP - Atmel Data Protocol">
 		<build type="c-source" value="adp.c"/>
-		<build type="c-source" value="adp_packet.c"/>
 		<build type="include-path" value="." />
 		<build type="header-file" subtype="api" value="adp.h"/>
-		<build type="header-file" value="adp_packet.h"/>
 		<build type="header-file" value="adp_interface.h"/>
 	</module>
 

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief ADP service implementation
+ * \brief SAM D21 TC configuration
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,12 +44,11 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef ADP_INTERFACE_H_INCLUDED
-#define ADP_INTERFACE_H_INCLUDED
+#ifndef CONF_TC_H_INCLUDED
+#define CONF_TC_H_INCLUDED
 
-/* Prototypes of communication functions used to setup, send and receive data */
-bool adp_interface_init(void);
-void adp_interface_transceive_procotol(uint8_t* tx_buf, uint16_t length, uint8_t* rx_buf);
-bool adp_interface_read_response(uint8_t* rx_buf, uint16_t length);
+//[definition_tc]
+#define CONF_TC_MODULE TC3
+//[definition_tc]
 
-#endif
+#endif /* CONF_EXAMPLE_H_INCLUDED */
