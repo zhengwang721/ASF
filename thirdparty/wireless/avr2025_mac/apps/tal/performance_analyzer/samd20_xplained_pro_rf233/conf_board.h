@@ -49,7 +49,6 @@
 #define CONF_BOARD_AT86RFX
 #define MCU_SOC_NAME        "ATSAMD20J18"
 
-
 #ifdef EXT_RF_FRONT_END_CTRL /*For External PA for 233FEM*/
 
 #define EXT_PA_SE2431L

@@ -83,7 +83,7 @@
  *
  * This driver provides an interface for the TRNG functions on the device.
  *
- * As soon as the TRNG is enabled, the module provides a new 32-bits random
+ * As soon as the TRNG is enabled, the module provides a new 32-bit random
  * data, for every 84 CLK_TRNG_APB clock cycles.
  *
  *
@@ -437,13 +437,8 @@ static inline enum status_code trng_read(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
- *		<td>11/2014</td>
- *		<td>Corrected documentation typos.</td>
- *	</tr>
- *	<tr>
  *		<td>A</td>
- *		<td>09/2014</td>
+ *		<td>04/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

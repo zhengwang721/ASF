@@ -40,12 +40,15 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
  * \page asfdoc_sam0_tcc_faultn_use_case Quick Start Guide for TCC - Recoverable Fault
  *
  * The supported board list:
- *    - SAM D21/R21/L21/L22 Xplained Pro
+ *    - SAM D21/R21/L21/L22/DA1 Xplained Pro
  *
  * In this use case, the TCC will be used to generate a PWM signal, with a
  * varying duty cycle. Here the pulse width is increased each time the timer
@@ -70,6 +73,8 @@
  *  <tr><td> SAML21 Xpro  </td><td> PA16 </td><td> SW0        </td></tr>
  *  <tr><td> SAML22 Xpro  </td><td> PC27 </td><td> LED0       </td></tr>
  *  <tr><td> SAML22 Xpro  </td><td> PC01 </td><td> SW0        </td></tr>
+ *  <tr><td> SAMDA1 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
+ *  <tr><td> SAMDA1 Xpro  </td><td> PA15 </td><td> SW0        </td></tr>
  * </table>
  *
  * The TCC module will be set up as follows:
@@ -113,6 +118,9 @@
  * - SAM L22 Xplained Pro.
  *   \snippet saml22_xplained_pro/conf_quick_start_faultn.h definition_pwm
  *   \snippet saml22_xplained_pro/conf_quick_start_faultn.h definition_fault
+ * - SAM DA1 Xplained Pro.
+ *   \snippet samda1_xplained_pro/conf_quick_start_faultn.h definition_pwm
+ *   \snippet samda1_xplained_pro/conf_quick_start_faultn.h definition_fault
  *
  * Add to the main application source file, before any functions:
  * \snippet qs_tcc_faultn.c additional_include
@@ -260,9 +268,6 @@
  * \subsection asfdoc_sam0_tcc_faultn_use_case_main_flow Workflow
  * -# Enter an infinite loop while the PWM wave is generated via the TCC module.
  *  \snippet qs_tcc_callback.c main_loop
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 

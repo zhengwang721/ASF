@@ -68,6 +68,7 @@ extern "C" {
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_dma_prerequisites
@@ -310,6 +311,9 @@ extern "C" {
 /** ExInitial description section. */
 extern DmacDescriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
 
+/* DMA channel interrup flag. */
+extern uint8_t g_chan_interrupt_flag[CONF_MAX_USED_CHANNEL_NUM];
+
 /** DMA priority level. */
 enum dma_priority_level {
 	/** Priority level 0. */
@@ -431,12 +435,12 @@ enum dma_transfer_trigger_action{
  * Callback types for DMA callback driver.
  */
 enum dma_callback_type {
-	/** Callback for transfer complete. */
-	DMA_CALLBACK_TRANSFER_DONE,
 	/** Callback for any of transfer errors. A transfer error is flagged
      *	if a bus error is detected during an AHB access or when the DMAC
 	 *  fetches an invalid descriptor. */
 	DMA_CALLBACK_TRANSFER_ERROR,
+	/** Callback for transfer complete. */
+	DMA_CALLBACK_TRANSFER_DONE,
 	/** Callback for channel suspend. */
 	DMA_CALLBACK_CHANNEL_SUSPEND,
 	/** Number of available callbacks. */
@@ -572,6 +576,7 @@ static inline void dma_enable_callback(struct dma_resource *resource,
 	Assert(resource);
 
 	resource->callback_enable |= 1 << type;
+	g_chan_interrupt_flag[resource->channel_id] |= (1UL << type);
 }
 
 /**
@@ -587,6 +592,8 @@ static inline void dma_disable_callback(struct dma_resource *resource,
 	Assert(resource);
 
 	resource->callback_enable &= ~(1 << type);
+	g_chan_interrupt_flag[resource->channel_id] &= (~(1UL << type) & DMAC_CHINTENSET_MASK);
+	DMAC->CHINTENCLR.reg = (1UL << type);
 }
 
 /**
@@ -827,8 +834,8 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  *    </tr>
  *    <tr>
  *        <td>C</td>
- *        <td>11/2014</td>
- *        <td>Added SAML21 support</td>
+ *        <td>04/2015</td>
+ *        <td>Added SAML21 and SAMDA0/DA1 support</td>
  *    </tr>
  *    <tr>
  *        <td>B</td>

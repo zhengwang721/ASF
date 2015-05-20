@@ -293,7 +293,7 @@ static enum status_code _i2c_slave_wait_for_bus(
  * \retval STATUS_ERR_IO            There was an error in the previous transfer
  * \retval STATUS_ERR_BAD_FORMAT    Master wants to write data
  * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) was provided
- * \retval STATUS_ERR_BUSY          The I<SUP>2</SUP>C module is busy with a job.
+ * \retval STATUS_ERR_BUSY          The I<SUP>2</SUP>C module is busy with a job
  * \retval STATUS_ERR_ERR_OVERFLOW  Master NACKed before entire packet was
  *                                  transferred
  * \retval STATUS_ERR_TIMEOUT       No response was given within the timeout

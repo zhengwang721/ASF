@@ -49,6 +49,7 @@
  *    - SAMR21 Xplained Pro
  *    - SAML21 Xplained Pro
  *    - SAML22 Xplained Pro
+ *    - SAMDA1 Xplained Pro
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Master mode
