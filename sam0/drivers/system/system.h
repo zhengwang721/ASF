@@ -119,7 +119,7 @@ extern "C" {
  * modes, the performance level, or the user configuration.
  *
  * In active mode, the voltage regulator can be chosen on the fly between a LDO
- * or a Buck converter.In standby mode, the low power voltage regulator is used
+ * or a Buck converter. In standby mode, the low power voltage regulator is used
  * to supply VDDCORE.
  *
  * \subsection asfdoc_sam0_system_module_overview_bbps Battery Backup Power Switch
@@ -135,14 +135,14 @@ extern "C" {
  * for comparisons and conversions.
  *
  * The SAM devices contain multiple references, including an internal
- * temperature sensor, and a fixed band-gap voltage source. When enabled, the
+ * temperature sensor and a fixed band-gap voltage source. When enabled, the
  * associated voltage reference can be selected within the desired peripheral
  * where applicable.
  *
  * \subsection asfdoc_sam0_system_module_overview_reset_cause System Reset Cause
  * In some applications there may be a need to execute a different program
  * flow based on how the device was reset. For example, if the cause of reset
- * was the Watchdog timer (WDT), this might indicate an error in the application
+ * was the Watchdog timer (WDT), this might indicate an error in the application,
  * and a form of error handling or error logging might be needed.
  *
  * For this reason, an API is provided to retrieve the cause of the last system
@@ -150,72 +150,72 @@ extern "C" {
  *
  * \if DEVICE_SAML21_SUPPORT
  * There are three groups of reset sources:
- *   - Power supply reset: Resets caused by an electrical issue. It covers POR and BODs reset.
+ *   - Power supply reset: Resets caused by an electrical issue. It covers POR and BOD reset.
  *   - User reset: Resets caused by the application. It covers external reset,
- *             system resetrequest and watchdog reset.
+ *             system reset, and watchdog reset.
  *   - Backup reset: Resets caused by a backup mode exit condition.
  *
  * \subsection asfdoc_sam0_system_module_overview_performance_level Performance Level
- * Performance level allows use to adjust the regulator output voltage to reduce
+ * Performance level allows user to adjust the regulator output voltage to reduce
  * power consumption. The user can select on the fly the performance level
- * configuration which best suits its application.
+ * configuration which best suits his application.
  *
- * The SAM device embeds up to three performance level (PL0 and PL2).
- * Each performance level defines a maximum frequency and a corresponding
- * consumption in µA/MHz,when the application selects a new performance level,
+ * The SAM device embeds up to two performance levels (PL0 and PL2).
+ * Each performance level defines a maximum frequency which correspond to the
+ * consumption in µA/MHz. When the application selects a new performance level,
  * the voltage applied on the full logic area moves from a value to another,
- * it can reduce the active consumption while decreasing the maximum frequency
+ * it can reduce the active consumption by decreasing the maximum frequency
  * of the device.
  *
  * Performance level transition is possible only when the device is in active
- * mode, after a reset, the device starts in the lowest performance level
+ * mode. After a reset, the device starts in the lowest performance level
  * (lowest power consumption and lowest max. frequency). The application can then
- * switch to another performance level at anytime without any stop in the code
+ * switch to another performance level at any time without any stop in the code
  * execution. As shown in \ref asfdoc_sam0_system_performance_level_transition_figure.
  *
- * \note When scaling down the performance level,the bus frequency should be first
+ * \note When scaling down the performance level, the bus frequency should be first
  *  scaled down in order to not exceed the maximum frequency allowed for the
  *  low performance level.
  *  When scaling up the performance level (for example from PL0 to PL2), the bus
- *  frequency can be increased only once the performance level transition is
- *  completed,check the performance level status.
+ *  frequency can be increased only when the performance level transition is
+ *  completed. Check the performance level status before increasing.
  *
  * \anchor asfdoc_sam0_system_performance_level_transition_figure
- * \image html performance_level_transition.svg "The performance level  transition"
+ * \image html performance_level_transition.svg "The Performance Level Transition"
  *
  * \subsection asfdoc_sam0_system_module_overview_power_domain Power Domain Gating
- * Power domain gating  can  turn on or off power domain voltage to save power
- * while keeping other domain powered up. It can be used in standby sleep mode,
- * in standby mode, when power-gated, the internal state of the logic can be
- * retained  allowing the application context to be kept.
+ * Power domain gating can turn on or off power domain voltage to save power
+ * while keeping other domains powered up. It can be used in standby sleep mode.
+ * When power-gated in standby sleep mode, the internal state of the logic can be
+ * retained allowing the application context to be kept.
  *
  * Power domain can be in three states:
- * - Active state: the power domain is powered on.
- * - Retention state: the main voltage supply for the power domain is switched off, 
+ * - Active state: The power domain is powered on.
+ * - Retention state: The main voltage supply for the power domain is switched off, 
  * while maintaining a secondary low-power supply for the sequential cells. The 
  * logic context is restored when waking up.
- * - Off state: the power domain is entirely powered off. The logic context is lost.
+ * - Off state: The power domain is entirely powered off. The logic context is lost.
  *
- * The SAM L21 device has three power domains: PD0, PD1 and PD2. 
- * - By default, a power domain is set automatically to retention state in standby 
- * sleep mode if no activity is required in it, the application can force all power
+ * The SAM L21 device has three power domains: PD0, PD1, and PD2. 
+ * - Default: The power domains are automatically set to retention state in standby 
+ * sleep mode if no activity require it. The application can force all power
  * domains to remain in active state during standby sleep mode in order to accelerate
  * wakeup time.
- * - Static Power_SleepWalking: When entering standby mode, if a peripheral needs to 
+ * - Static Power_SleepWalking: When entering standby mode and if a peripheral needs to 
  * remain in run mode to perform sleepwalking task, its power domain (PDn) remains in
  * active state as well as the inferior power domains (<PDn).
  * - Dynamic Power_SleepWalking: During standby mode, a power domain (PDn) in active
- * state (using the static Power_SleepWalking principle), can wakeup a superior power
+ * state (using the static Power_SleepWalking principle), can wake up a superior power
  * domain (>PDn) in order to perform a sleepwalking task. The superior power domain is 
  * then automatically set to active state. At the end of the sleepwalking task, either 
- * the device can be waken-up or the superior power domain can be set again to retention
+ * the device can be woken up or the superior power domain can be set again to retention
  * state.
  *
- * Power domains can be linked each other,it allows a power domain (PDn) to be kept
+ * Power domains can be linked to each other, it allows a power domain (PDn) to be kept
  * in active state if the inferior power domain (PDn-1) is in active state too.
  *
- * The table \ref asfdoc_sam0_system_power_domain_overview_table illustrates the 
- * four cases to consider in standby mode
+ * \ref asfdoc_sam0_system_power_domain_overview_table illustrates the 
+ * four cases to consider in standby mode.
  *
  * \anchor asfdoc_sam0_system_power_domain_overview_table
  * <table>
@@ -297,11 +297,11 @@ extern "C" {
  * \subsection asfdoc_sam0_system_module_overview_ram_state RAMs Low Power Mode
  * By default, in standby sleep mode, RAM is in low power mode (back biased) 
  * if its power domain is in retention state.
- * The table \ref asfdoc_sam0_system_power_ram_state_table lists RAMs low power mode.
+ * \ref asfdoc_sam0_system_power_ram_state_table lists RAMs low power mode.
  *
  * \anchor asfdoc_sam0_system_power_ram_state_table
  * <table>
- *  <caption>RAM Back-biasing mode</caption>
+ *  <caption>RAM Back-biasing Mode</caption>
  *  <tr>
  *      <th>RAM mode</th>
  *      <th>Description</th>
@@ -327,7 +327,7 @@ extern "C" {
  * \endif
  *
  * \subsection asfdoc_sam0_system_module_overview_sleep_mode Sleep Modes
- * The SAM devices have several sleep modes, where the sleep mode controls
+ * The SAM devices have several sleep modes. The sleep mode controls
  * which clock systems on the device will remain enabled or disabled when the
  * device enters a low power sleep mode.
  * \ref asfdoc_sam0_system_module_sleep_mode_table "The table below" lists the
@@ -451,13 +451,13 @@ extern "C" {
  * \endif
  * </table>
  *
- * To enter device sleep, one of the available sleep modes must be set, and the
- * function to enter sleep called. The device will automatically wake up in
- * response to an interrupt being generated or other device event.
+ * Before enter device sleep, one of the available sleep modes must be set.
+ * The device will automatically wake up in response to an interrupt being
+ * generated or any other device event.
  *
  * Some peripheral clocks will remain enabled during sleep, depending on their
- * configuration; if desired, modules can remain clocked during sleep to allow
- * them to continue to operate while other parts of the system are powered down
+ * configuration. If desired, the modules can remain clocked during sleep to allow
+ * them continue to operate while other parts of the system are powered down
  * to save power.
  *
  *

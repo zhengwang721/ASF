@@ -102,17 +102,17 @@ enum system_reset_backup_exit_source {
 enum system_wakeup_debounce_count {
 	/** No debouncing. */
 	SYSTEM_WAKEUP_DEBOUNCE_OFF         = RSTC_WKDBCONF_WKDBCNT_OFF,
-	/** Input pin shall be active for at least two 32KHz clock period. */
+	/** Input pin shall be active for at least two 32KHz clock periods. */
 	SYSTEM_WAKEUP_DEBOUNCE_2CK32       = RSTC_WKDBCONF_WKDBCNT_2K32,
-	/** Input pin shall be active for at least three 32KHz clock period. */
+	/** Input pin shall be active for at least three 32KHz clock periods. */
 	SYSTEM_WAKEUP_DEBOUNCE_3CK32       = RSTC_WKDBCONF_WKDBCNT_3CK32,
-	/** Input pin shall be active for at least 32 32KHz clock period. */
+	/** Input pin shall be active for at least 32 32KHz clock periods. */
 	SYSTEM_WAKEUP_DEBOUNCE_32CK32      = RSTC_WKDBCONF_WKDBCNT_32CK32,
-	/** Input pin shall be active for at least 512 32KHz clock period. */
+	/** Input pin shall be active for at least 512 32KHz clock periods. */
 	SYSTEM_WAKEUP_DEBOUNCE_512CK32     = RSTC_WKDBCONF_WKDBCNT_512CK32,
-	/** Input pin shall be active for at least 4096 32KHz clock period. */
+	/** Input pin shall be active for at least 4096 32KHz clock periods. */
 	SYSTEM_WAKEUP_DEBOUNCE_4096CK32    = RSTC_WKDBCONF_WKDBCNT_4096CK32,
-	/** Input pin shall be active for at least 32768 32KHz clock period. */
+	/** Input pin shall be active for at least 32768 32KHz clock periods. */
 	SYSTEM_WAKEUP_DEBOUNCE_32768CK32   = RSTC_WKDBCONF_WKDBCNT_32768CK32,
 };
 
@@ -125,7 +125,7 @@ enum system_wakeup_debounce_count {
  * \brief Reset the MCU.
  *
  * Resets the MCU and all associated peripherals and registers, except RTC,
- * OSC32KCTRL, RSTC, GCLK(if WRTLOCK is set) and I/O retention state of PM.
+ * OSC32KCTRL, RSTC, GCLK (if WRTLOCK is set), and I/O retention state of PM.
  *
  */
 static inline void system_reset(void)
@@ -228,12 +228,12 @@ static inline void system_disable_pin_wakeup(const uint16_t pin_mask)
 }
 
 /**
- * \brief Check whether  pin is active and causes the wakeup.
+ * \brief Check whether pin is active and causes the wakeup.
  *
- * Check whether pin is active that causes the wakeup
+ * Check whether pin is active and causes the wakeup
  * when exiting backup mode.
  *
- * \return Pin mask,the corresponding pin is active when its pin mask is 1.
+ * \return Pin mask, the corresponding pin is active when its pin mask is 1.
  */
 static inline uint16_t system_get_pin_wakeup_cause(void)
 {

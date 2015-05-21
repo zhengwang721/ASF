@@ -110,7 +110,7 @@ enum system_ram_back_bias_mode {
 /**
  * \brief Linked power domain.
  *
- * List of linked power domains. Power domains can be linked each other.
+ * List of linked power domains. Power domains can be linked to each other.
  * It allows a power domain (PDn) to be kept in active state if the inferior
  * power domain (PDn-1) is in active state too.
  */
@@ -129,7 +129,7 @@ enum system_linked_power_domain {
  * \brief Power domain.
  *
  * List of power domains. Power domain gating technique consists of turning
- * on or off power domain voltage to save power while keeping other domain
+ * on or off power domain voltage to save power while keeping other domains
  * powered up.
  */
 enum system_power_domain {
@@ -163,10 +163,10 @@ enum system_voltage_regulator_sel {
  */
 enum system_voltage_regulator_low_power_efficiency {
 	/** The voltage regulator in Low power mode has the default efficiency and
-		support the whole VDD range (1,62V to 3,6V). */
+		support the whole VDD range (1.62V to 3.6V). */
 	SYSTEM_VOLTAGE_REGULATOR_LOW_POWER_EFFICIENCY_DEFAULT,
 	/** The voltage regulator in Low power mode has the highest efficiency and
-		support the limited VDD range (2,5V to 3,6V). */
+		support the limited VDD range (2.5V to 3.6V). */
 	SYSTEM_VOLTAGE_REGULATOR_LOW_POWER_EFFICIENCY_HIGHTEST,
 };
 
@@ -227,7 +227,7 @@ enum system_voltage_reference {
  * \brief Backup IO enum.
  *
  * List of Backup input and output pins.
- * If enabled(\ref system_backup_pin_output_enable), those pin can be driven
+ * If enabled (\ref system_backup_pin_output_enable), the pins can be driven
  * by the SUPC.
  */
 enum system_backup_pin {
@@ -291,7 +291,7 @@ struct system_voltage_references_config {
 	enum system_voltage_references_sel  sel;
 	/** On Demand Control. */
 	bool on_demand;
-	/** run in standby. */
+	/** Run in standby. */
 	bool run_in_standby;
 };
 
@@ -301,7 +301,7 @@ struct system_voltage_references_config {
  * Configuration structure for Battery Backup Power Switch (BBPS).
  */
 struct system_battery_backup_power_switch_config {
-	/** Whether the device is woken up when switched
+	/** Whether the device is woken up or not when switched
 		from battery backup power to main power. */
 	bool wake_enabled;
 	/** Battery backup power switch configuration. */
@@ -317,10 +317,10 @@ struct system_battery_backup_power_switch_config {
  * \brief Retrieve the default configuration for voltage regulator.
  *
  * Fills a configuration structure with the default configuration:
- *   - Voltage scaling period is 1us
+ *   - Voltage scaling period is 1µs
  *   - Voltage scaling voltage step is 2*min_step
  *   - The voltage regulator is in low power mode in Standby sleep mode
- *   - The voltage regulator in active mode is a LDO voltage regulator
+ *   - The voltage regulator in active mode is an LDO voltage regulator
  *   - The voltage regulator in Low power mode has the default efficiency
  *
  * \param[out] config  Configuration structure to fill with default values
@@ -341,7 +341,7 @@ static inline void system_voltage_regulator_get_config_defaults(
  *
  * Configures voltage regulator with the given configuration.
  *
- * \param[in] config  voltage regulator configuration structure containing
+ * \param[in] config  Voltage regulator configuration structure containing
  *                    the new config
  */
 static inline void system_voltage_regulator_set_config(
@@ -392,7 +392,7 @@ static inline void system_voltage_regulator_disable(void)
  *
  * Fill a configuration structure with the default configuration:
  *   - 1.0V voltage reference typical value
- *   - On demand control:disabled
+ *   - On demand control disabled
  *   - The voltage reference and the temperature sensor are halted during standby sleep mode
  *
  * \param[out] config  Configuration structure to fill with default values
@@ -411,7 +411,7 @@ static inline void system_voltage_reference_get_config_defaults(
  *
  * Configures voltage reference with the given configuration.
  *
- * \param[in] config  voltage reference configuration structure containing
+ * \param[in] config  Voltage reference configuration structure containing
  *                    the new config
  */
 static inline void system_voltage_reference_set_config(
@@ -658,7 +658,7 @@ static inline void system_backup_pin_output_clear(
 /**
  *  \brief Get the backup I/O input values.
  *
- *  Get the backup I/O data input values, if the corresponding pin is enabled,
+ *  Get the backup I/O data input values. If the corresponding pin is enabled,
  *  the I/O input value is given on the pin.
  *
  *  \param[in] pin Backup pin index
@@ -725,13 +725,13 @@ static inline void system_sleep(void)
 /**
  * \brief Switch performance level.
  *
- *  When scaling down the performance level,the bus frequency should be first
- *  scaled down in order to not exceed the maximum frequency allowed for the
+ *  When scaling down the performance level, the bus frequency should be first
+ *  decreased in order to not exceed the maximum frequency allowed for the
  *  low performance level.
  *
  *  When scaling up the performance level (for example from PL0 to PL2), the bus
- *  frequency can be increased only once the performance level transition is
- *  completed,check the performance level status.
+ *  frequency can be increased only when the performance level transition is
+ *  completed. Check the performance level status before increasing.
  *
  * \param[in] performance_level  Performance level to switch
  *
@@ -775,7 +775,7 @@ static inline enum system_performance_level system_get_performance_level(void)
  * \brief Get performance level status.
  *
  * Get performance level status.
- * \return Performance level status: 1 Performance level is ready,0 others.
+ * \return Performance level status: 1 Performance level is ready, 0 others.
  */
 static inline uint8_t system_get_performance_level_status(void)
 {
@@ -835,7 +835,7 @@ static inline void system_standby_get_config_defaults(
  *
  * Configures standby with the given configuration.
  *
- * \param[in] config  standby configuration structure containing
+ * \param[in] config  Standby configuration structure containing
  *                    the new config
  */
 static inline void system_standby_set_config(
