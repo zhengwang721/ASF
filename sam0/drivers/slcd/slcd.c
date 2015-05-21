@@ -335,6 +335,8 @@ enum status_code  slcd_blink_set_config(struct slcd_blink_config *const blink_co
 
 		*(&(SLCD->SDATAL0.reg) + pix_com*4) = register_low & SLCD_SDATAL0_MASK;
 		*(&(SLCD->SDATAH0.reg) + pix_com*4) = register_high & SLCD_SDATAL0_MASK;
+		while (slcd_get_char_writing_status()) {
+		}
 	}
 }
 
@@ -379,6 +381,8 @@ void slcd_set_seg_data(uint8_t seg_data,uint8_t byte_offset,uint8_t seg_mask)
 					 | SLCD_ISDATA_SDMASK(seg_mask);
 
 	SLCD->ISDATA.reg = temp;
+	while (slcd_get_char_writing_status()) {
+	}
 }
 
 /**

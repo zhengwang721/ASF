@@ -57,8 +57,10 @@
  *  1:1/2 duty
  *  2:1/3 duty
  *  3:1/4 duty
+ *  4:1/6 duty
+ *  5:1/8 duty
 */
-#define CONF_SLCD_DUTY         0
+#define CONF_SLCD_DUTY         5
 
 /**
  * SLCD Bias Setting.
@@ -67,7 +69,7 @@
  *  2:1/3 bias
  *  3:1/4 bias
  */
-#define CONF_SLCD_BIAS         0
+#define CONF_SLCD_BIAS         3
 
 /**
  * SLCD Frame Frequency.
@@ -76,7 +78,7 @@
  * To get the frame frequency, CLK_SLCD_OSC is first divided by a prescaler
  * from 16 to 128 then divided by 1 up to 8 as following.
  *
- * FrameRate = CLK_SLCD_OSC / (PVAL*(CKDIV+1)(DUTY+1))
+ * FrameRate = CLK_SLCD_OSC / (PVAL*(CKDIV+1)*(DUTY+1))
  *
  * SLCD Prescaler Value (PVAL).
  * 0 : 16 prescaler
@@ -85,17 +87,21 @@
  * 3 : 128 prescaler
  *
  * SLCD Clock divider (CKDIV)
- * 0 : CKDIV is 0
- * 1 : CKDIV is 1
- * 2 : CKDIV is 2
- * 3 : CKDIV is 3
- * 4 : CKDIV is 4
- * 5 : CKDIV is 5
- * 6 : CKDIV is 6
- * 7 : CKDIV is 7
+ * 0 : CKDIV is 0,divided by 1
+ * 1 : CKDIV is 1,divided by 2
+ * 2 : CKDIV is 2,divided by 3
+ * 3 : CKDIV is 3,divided by 4
+ * 4 : CKDIV is 4,divided by 5
+ * 5 : CKDIV is 5,divided by 6
+ * 6 : CKDIV is 6,divided by 7
+ * 7 : CKDIV is 7,divided by 8
  */
+/**
+* With 1/8 DUTY and the following configuration(16 prescaler and CKDIV value is 7),
+* FrameRate = 32768/(16*(7+1)*8) = 32Hz
+*/
 #define CONF_SLCD_PVAL         0
-#define CONF_SLCD_CKDIV         0
+#define CONF_SLCD_CKDIV         7
 
 /** Internal/External VLCD selection.
 * 0 : Internal VLCD generation

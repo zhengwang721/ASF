@@ -107,7 +107,7 @@ static inline void slcd_enable_callback(const enum slcd_callback_type type)
 	if (type >= SLCD_CALLBACK_TYPE_NUM){
 		return STATUS_ERR_INVALID_ARG;
 	}
-	SLCD->INTENSET.reg = 1 << type
+	SLCD->INTENSET.reg = 1 << type;
 
 	return STATUS_OK;
 }
