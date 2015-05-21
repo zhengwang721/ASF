@@ -58,13 +58,13 @@
  *  - Callback APIs
  * \endif
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  *  - DAC (Digital to Analog Converter)
  *
  * The following devices can use this module:
  *  - Atmel | SMART SAM L21
  *
- * The outline of this documentation is as follows:
+ * The outline of this documentation is:
  *  - \ref asfdoc_sam0_dac_prerequisites
  *  - \ref asfdoc_sam0_dac_module_overview
  *  - \ref asfdoc_sam0_dac_special_considerations
@@ -81,7 +81,7 @@
  * \section asfdoc_sam0_dac_module_overview Module Overview
  *
  * The Digital-to-Analog converter converts a digital value to analog voltage.
- * The DAC Controller can operate as two independent DAC or as a single DAC
+ * The DAC Controller can operate as two independent DACs or as a single DAC
  * in differential mode. Each DAC is 12-bit resolution and it is capable of
  * converting up to 1M samples per second (Msps).
  *
@@ -91,7 +91,7 @@
  *
  * After being set up, the DAC will convert new digital values written to the
  * conversion data register (DATA0 or DATA1) to an analog value either on the
- * DAC output(VOUT0 or VOUT1) pin of the device, or internally for use as an
+ * DAC output (VOUT0 or VOUT1) pin of the device, or internally for use as an
  * input to the AC, ADC, and other analog modules.
  *
  * Writing the DATA register will start a new conversion. It is also possible
@@ -139,7 +139,7 @@
  *
  * VOUT0 signal is internally connected so that it can be used as input for
  * AC or ADC or OPAMP modules when DAC0 is enabled.
- * \note the pin VOUT0 will be dedicated to internal input and cannot be
+ * \note The pin VOUT0 will be dedicated to internal input and cannot be
  * configured as alternate function.
  *
  * \subsection asfdoc_sam0_dac_events Events
@@ -289,7 +289,7 @@
  *
  * \section asfdoc_sam0_dac_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_dac_extra. This includes:
+ * For extra information, see \ref asfdoc_sam0_dac_extra. This includes:
  *  - \ref asfdoc_sam0_dac_extra_acronyms
  *  - \ref asfdoc_sam0_dac_extra_dependencies
  *  - \ref asfdoc_sam0_dac_extra_errata
@@ -333,12 +333,12 @@ extern "C" {
  */
 #define DAC_STATUS_CHANNEL_1_EMPTY     (1UL << 1)
 
-/** Under-run Channel 0 - Set when a start conversion event occurs when
+/** Underrun Channel 0 - Set when a start conversion event occurs when
  *  DATABUF is empty.
  */
 #define DAC_STATUS_CHANNEL_0_UNDERRUN  (1UL << 2)
 
-/** Under-run Channel 1 - Set when a start conversion event occurs when
+/** Underrun Channel 1 - Set when a start conversion event occurs when
  *  DATABUF is empty.
  */
 #define DAC_STATUS_CHANNEL_1_UNDERRUN  (1UL << 3)
@@ -539,7 +539,7 @@ bool dac_chan_is_end_of_conversion(
  *
  *
  * \section asfdoc_sam0_dac_extra_dependencies Dependencies
- * This driver has the following dependencies:
+ * This driver has the following dependency:
  *
  *  - \ref asfdoc_sam0_system_pinmux_group "System Pin Multiplexer Driver"
  *
