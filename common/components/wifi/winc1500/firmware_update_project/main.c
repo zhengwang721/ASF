@@ -50,7 +50,6 @@
  * - WINC1500 root certificate update
  *
  * It can be used with the following hardware:
- * - the SAM4S Xplained Pro.
  * - the SAMG53 Xplained Pro.
  * - the SAMG55 Xplained Pro.
  * - the SAMD21 Xplained Pro.
