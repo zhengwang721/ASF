@@ -109,7 +109,7 @@ void ADC_Handler(void)
  *
  * Registers a callback function which is implemented by the user.
  *
- * \note The callback must be enabled by for the interrupt handler to call it
+ * \note The callback must be enabled for the interrupt handler to call it
  * when the condition for the callback is met.
  *
  * \param[in] module         Pointer to ADC software instance struct
@@ -159,10 +159,10 @@ void adc_unregister_callback(
 /**
  * \brief Read multiple samples from ADC.
  *
- * Read \c samples samples from the ADC into the buffer \c buffer.
+ * Read \c samples from the ADC into the \c buffer.
  * If there is no hardware trigger defined (event action) the
  * driver will retrigger the ADC conversion whenever a conversion
- * is complete until \c samples samples has been acquired. To avoid
+ * is complete until \c samples has been acquired. To avoid
  * jitter in the sampling frequency using an event trigger is advised.
  *
  * \param[in]  module_inst  Pointer to the ADC software instance struct

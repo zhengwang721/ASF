@@ -59,7 +59,7 @@
  * - Callback APIs
  * \endif
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  *  - ADC (Analog to Digital Converter)
  *
  * The following devices can use this module:
@@ -160,7 +160,7 @@
  * sampling rate to be reduced.
  *
  * \subsection asfdoc_sam0_adc_module_overview_resolution ADC Resolution
- * The ADC supports full 8-bit, 10-bit, or 12-bit resolution. Hardware
+ * The ADC supports full 8-, 10-, or 12-bit resolution. Hardware
  * oversampling and decimation can be used to increase the
  * effective resolution at the expense of throughput. Using oversampling and
  * decimation mode the ADC resolution is increased from 12-bit to an effective
@@ -197,11 +197,11 @@
  * \subsection asfdoc_sam0_adc_module_overview_conversion Conversion Modes
  * ADC conversions can be software triggered on demand by the user application,
  * if continuous sampling is not required. It is also possible to configure the
- * ADC in free-running mode, where new conversions are started as soon as the
+ * ADC in free running mode, where new conversions are started as soon as the
  * previous conversion is completed, or configure the ADC to scan across a
  * number of input pins (see \ref asfdoc_sam0_adc_module_overview_pin_scan).
  *
- * \subsection asfdoc_sam0_adc_module_overview_diff_mode Differential and Single-Ended Conversion
+ * \subsection asfdoc_sam0_adc_module_overview_diff_mode Differential and Single-ended Conversion
  * The ADC has two conversion modes; differential and single-ended. When
  * measuring signals where the positive input pin is always at a higher voltage
  * than the negative input pin, the single-ended conversion mode should be used
@@ -353,7 +353,7 @@
  * monitor threshold values are user-configurable, and follow the overall ADC
  * sampling bit precision set when the ADC is configured by the user application.
  * For example, only the eight lower bits of the window threshold values will be
- * compares to the sampled data whilst the ADC is configured in 8-bit mode.
+ * compared to the sampled data whilst the ADC is configured in 8-bit mode.
  * In addition, if using differential mode, the 8<SUP>th</SUP> bit will be considered as
  * the sign bit even if bit 9 is zero.
  *
@@ -547,7 +547,7 @@ static inline void adc_clear_status(
 /** @} */
 
 /**
- * \name Enable, Disable and Reset ADC Module, Start Conversion and Read Result
+ * \name Enable, Disable, and Reset ADC Module, Start Conversion and Read Result
  * @{
  */
 
@@ -648,7 +648,7 @@ static inline enum status_code adc_reset(
  * \brief Enables an ADC event input or output.
  *
  *  Enables one or more input or output events to or from the ADC module. See
- *  \ref adc_events "here" for a list of events this module supports.
+ *  \ref adc_events "Struct adc_events" for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.
  *
@@ -685,7 +685,7 @@ static inline void adc_enable_events(
  * \brief Disables an ADC event input or output.
  *
  *  Disables one or more input or output events to or from the ADC module. See
- *  \ref adc_events "here" for a list of events this module supports.
+ *  \ref adc_events "Struct adc_events" for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.
  *

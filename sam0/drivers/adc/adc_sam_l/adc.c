@@ -53,9 +53,9 @@
  * values. This function should be called on any new instance of the
  * configuration struct before being modified by the user application.
  *
- * The default configuration is as follows:
+ * The default configuration is:
  *  \li GCLK generator 0 (GCLK main) clock source
- *  \li internal bandgap reference
+ *  \li Internal bandgap reference
  *  \li Div 2 clock prescaler
  *  \li 12-bit resolution
  *  \li Window monitor disabled
