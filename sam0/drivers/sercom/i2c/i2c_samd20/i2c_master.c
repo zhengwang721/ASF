@@ -444,6 +444,7 @@ static enum status_code _i2c_master_read_packet(
 		/* Save last data to buffer. */
 		_i2c_master_wait_for_sync(module);
 		packet->data[counter] = i2c_module->DATA.reg;
+		_i2c_master_wait_for_bus(module);
 	}
 
 	return tmp_status;
