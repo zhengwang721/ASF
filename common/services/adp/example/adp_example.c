@@ -44,6 +44,48 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
+/**
+ * \page asfdoc_common_adp_example ADP Example
+ *
+ * \section asfdoc_common_adp_example_intro Introduction
+ * This simple example shows how to set up communication of the target MCU and 
+ * DataVisualization on PC.
+ *
+ * \section asfdoc_common_adp_example_files Main files:
+ * - \ref adp_example.c : the example itself.
+ * - \ref conf_board.h
+ * - \ref conf_clocks.h
+ * - \ref conf_tc.h
+ *
+ * \section asfdoc_common_adp_example_deviceinfo Device Info
+ * All SAM devices can be used.
+ * This example has been tested with the following setup:
+ * - SAM D21 Xplained Pro
+ *
+ * \section asfdoc_common_adp_example_setup Setup
+ * To run the test:
+ *  - Connect the IO1 Xplained Pro via EXT1.
+ *  - Connect the supported Xplained Pro board to the computer using a
+ *    micro USB cable.
+ *  - Build the project, program the target and run the application.
+ *  - Open DataVisualization.exe on the computer.
+ *  - Select the supported Xplained Pro board, then click "Connect" button 
+ *    in DataVisualization application.
+  
+ * \section asfdoc_common_adp_example_description Description of the example application
+ * This example application will initiate communication with the Data
+ * Visualization on the computer. Set up some elements on the dashboards, 
+ * and some data stream between the target mcu and the computer.
+ *
+ * \section asfdoc_common_adp_example_compinfo Compilation Info
+ * This software was written for the GNU GCC and AtmelStudio.
+ * Other compilers may or may not work.
+ *
+ * \section asfdoc_common_adp_example_contactinfo Contact Information
+ * For further information, visit
+ * <A href="http://www.atmel.com/">Atmel</A>.\n
+ */
+
 #include <compiler.h>
 #include <asf.h>
 #include <string.h>

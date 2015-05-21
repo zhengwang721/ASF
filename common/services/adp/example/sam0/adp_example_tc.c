@@ -50,7 +50,7 @@
 #include "conf_tc.h"
 
 struct tc_module tc_instance;
-bool time_out = true;
+volatile bool time_out = true;
 
 static void adp_example_tc_callback(struct tc_module *const module_inst)
 {

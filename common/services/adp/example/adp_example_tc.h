@@ -46,7 +46,7 @@
 #ifndef ADP_EXAMPLE_TC_H_INCLUDED
 #  define ADP_EXAMPLE_TC_H_INCLUDED
 
-extern bool time_out;
+volatile extern bool time_out;
 
 void adp_example_tc_init(void);
 

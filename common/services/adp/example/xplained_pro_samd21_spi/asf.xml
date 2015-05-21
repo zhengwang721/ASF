@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project id="common.services.adp.example.spi.samd21_xplained_pro" caption="ADP test">
+	<project id="common.services.adp.example.samd21_xplained_pro_spi" caption="ADP Example Application(SPI)">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
