@@ -52,7 +52,7 @@ INCLUDES
 
 #ifndef	_BOOT_
 #ifndef _FIRMWARE_
-#include "socket\include\socket.h"
+#include "socket/include/socket.h"
 #else
 #include "m2m_types.h"
 #endif
