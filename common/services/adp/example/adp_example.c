@@ -49,7 +49,7 @@
  *
  * \section asfdoc_common_adp_example_intro Introduction
  * This simple example shows how to set up communication of the target MCU and 
- * DataVisualization on PC.
+ * Data Visualizer on PC.
  *
  * \section asfdoc_common_adp_example_files Main files:
  * - \ref adp_example.c : the example itself.
@@ -68,13 +68,13 @@
  *  - Connect the supported Xplained Pro board to the computer using a
  *    micro USB cable.
  *  - Build the project, program the target and run the application.
- *  - Open DataVisualization.exe on the computer.
+ *  - Open Data Visualizer.exe on the computer.
  *  - Select the supported Xplained Pro board, then click "Connect" button 
- *    in DataVisualization application.
+ *    in Data Visualizer application.
   
  * \section asfdoc_common_adp_example_description Description of the example application
  * This example application will initiate communication with the Data
- * Visualization on the computer. Set up some elements on the dashboards, 
+ * Visualizer on the computer. Set up some elements on the dashboards, 
  * and some data stream between the target mcu and the computer.
  *
  * \section asfdoc_common_adp_example_compinfo Compilation Info
