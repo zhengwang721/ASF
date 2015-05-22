@@ -59,7 +59,6 @@
 			<!-- Device support -->
 			<device-support value="sam4s"/>
 			<device-support value="samg53"/>
-			<device-support value="samg55"/>
 
 			<!-- Required modules -->
 			<require idref="sam.drivers.rtt"/>
