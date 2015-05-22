@@ -162,7 +162,7 @@ int main(void)
 		/* Infinite loop */
 		if (!port_pin_get_input_level(BUTTON_0_PIN)) {
 		  	while (!port_pin_get_input_level(BUTTON_0_PIN)) {
-		  		/* Waitting for button steady */	
+		  		/* Waiting for button steady */	
 		  	}
 			/* Send every other packet with reversed data */
 			//! [revert_order]
