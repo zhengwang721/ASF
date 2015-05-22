@@ -3,7 +3,7 @@
  *
  * \brief SAM Analog Comparator Driver
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -67,6 +67,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_ac_prerequisites
@@ -118,7 +119,7 @@
  *    </tr>
  *    <tr>
  *      <td>FEATURE_AC_RUN_IN_STANDY_PAIR_COMPARATOR</td>
- *      <td>SAMD20/D21/D10/D11/R21</td>
+ *      <td>SAMD20/D21/D10/D11/R21/DA0/DA1</td>
  *    </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -306,17 +307,17 @@ extern "C" {
  * @{
  */
 #if (SAML21) || defined(__DOXYGEN__)
-   /** Setting of hysteresis level */
+   /** Setting of hysteresis level. */
 #  define FEATURE_AC_HYSTERESIS_LEVEL
-   /** SYNCBUSY scheme version 2 */
+   /** SYNCBUSY scheme version 2. */
 #  define FEATURE_AC_SYNCBUSY_SCHEME_VERSION_2
 #endif
 
 #if (SAML21) || defined(__DOXYGEN__)
- 	/** Run in standby feature for each comparator */
+ 	/** Run in standby feature for each comparator. */
 #  define FEATURE_AC_RUN_IN_STANDY_EACH_COMPARATOR
 #else
- 	/** Run in standby feature for comparator pair */
+ 	/** Run in standby feature for comparator pair. */
 #  define FEATURE_AC_RUN_IN_STANDY_PAIR_COMPARATOR
 #endif
 /* @} */
@@ -403,15 +404,15 @@ enum ac_callback {
 };
 
 #ifdef FEATURE_AC_HYSTERESIS_LEVEL
-/** Enum for possible hysteresis level types for AC module */
+/** Enum for possible hysteresis level types for AC module. */
 enum ac_hysteresis_level {
-	/** Hysteresis level of 50mV */
+	/** Hysteresis level of 50mV. */
 	AC_HYSTERESIS_LEVEL_50 = 0,
-	/** Hysteresis level of 70mV */
+	/** Hysteresis level of 70mV. */
 	AC_HYSTERESIS_LEVEL_70,
-	/** Hysteresis level of 90mV */
+	/** Hysteresis level of 90mV. */
 	AC_HYSTERESIS_LEVEL_90,
-	/** Hysteresis level of 110mV */
+	/** Hysteresis level of 110mV. */
 	AC_HYSTERESIS_LEVEL_110
 };
 #endif
@@ -489,7 +490,7 @@ enum ac_chan_neg_mux {
 	 *  reference. */
 	AC_CHAN_NEG_MUX_BANDGAP    = AC_COMPCTRL_MUXNEG_BANDGAP,
 	/**
-	 * For SAMD20/D21/D10/D11/R21:
+	 * For SAMD20/D21/D10/D11/R21/DA0/DA1:
 	 *     Negative comparator input is connected to the channel's internal DAC
 	 *     channel 0 output.
 	 * For SAML21:
@@ -635,7 +636,7 @@ struct ac_events {
 /**
  * \brief Analog Comparator module configuration structure.
  *
- *  Configuration structure for a Comparator channel, to configure the input and
+ *  Configuration structure for a comparator channel, to configure the input and
  *  output settings of the comparator.
  */
 struct ac_config {
@@ -644,11 +645,14 @@ struct ac_config {
 	 *  mode when triggered. */
 	bool run_in_standby[AC_PAIRS];
 #endif
-	/** Source generator for AC GCLK. */
+
 #if (SAMD) || (SAMR21)
+	/** Digital source generator for AC GCLK. */
 	enum gclk_generator dig_source_generator;
+	/** Analog source generator for AC GCLK. */
 	enum gclk_generator ana_source_generator;
 #else
+	/** Source generator for AC GCLK. */
 	enum gclk_generator source_generator;
 #endif
 };
@@ -656,7 +660,7 @@ struct ac_config {
 /**
  * \brief Analog Comparator Comparator channel configuration structure.
  *
- *  Configuration structure for a Comparator channel, to configure the input and
+ *  Configuration structure for a comparator channel, to configure the input and
  *  output settings of the comparator.
  */
 struct ac_chan_config {
@@ -983,7 +987,7 @@ static inline void ac_disable_events(
  *   \li Majority of five sample output filter
  *   \li Comparator disabled during sleep mode (if has this feature)
  *   \li Hysteresis enabled on the input pins
- *   \li Hysteresis level of 50mV if having this feature.
+ *   \li Hysteresis level of 50mV if having this feature
  *   \li Internal comparator output mode
  *   \li Comparator pin multiplexer 0 selected as the positive input
  *   \li Scaled V<SUB>CC</SUB> voltage selected as the negative input
@@ -1389,8 +1393,8 @@ static inline void ac_win_clear_status(
  *    </tr>
  *    <tr>
  *      <td>E</td>
- *      <td>12/2014</td>
- *      <td>Added support for SAML21.</td>
+ *      <td>04/2015</td>
+ *      <td>Added support for SAML21 and SAMDA0/DA1.</td>
  *    </tr>
  *    <tr>
  *      <td>D</td>

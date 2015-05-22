@@ -67,6 +67,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_sercom_spi_prerequisites
@@ -104,19 +105,19 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_SLAVE_SELECT_LOW_DETECT</td>
- *    <td>SAM D21/R21/D10/D11/L21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_HARDWARE_SLAVE_SELECT</td>
- *    <td>SAM D21/R21/D10/D11/L21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_ERROR_INTERRUPT</td>
- *    <td>SAM D21/R21/D10/D11/L21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_SYNC_SCHEME_VERSION_2</td>
- *    <td>SAM D21/R21/D10/D11/L21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -383,7 +384,7 @@ extern "C" {
  * Define SERCOM SPI features set according to different device family.
  * @{
  */
-#  if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAML21) || defined(__DOXYGEN__)
+#  if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAML21) || (SAMDA0) || (SAMDA1) || defined(__DOXYGEN__)
 /** SPI slave select low detection. */
 #  define FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 /** Slave select can be controlled by hardware. */
@@ -1084,8 +1085,8 @@ enum status_code spi_set_baudrate(
  *
  * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked
- * \retval STATUS_BUSY if the module was already locked
+ * \retval STATUS_OK If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 static inline enum status_code spi_lock(struct spi_module *const module)
 {
@@ -1113,8 +1114,8 @@ static inline enum status_code spi_lock(struct spi_module *const module)
  *
  * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked
- * \retval STATUS_BUSY if the module was already locked
+ * \retval STATUS_OK If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 static inline void spi_unlock(struct spi_module *const module)
 {
@@ -1416,10 +1417,7 @@ enum status_code spi_select_slave(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Add SAML21 support</td>
- *	</tr>  
- *	<tr>
- *		<td>Add SAMD21 support and added new features as below:
+ *		<td>Added new features as below:
  *             \li Slave select low detect
  *             \li Hardware slave select
  *             \li DMA support </td>
@@ -1770,8 +1768,8 @@ enum status_code spi_select_slave(
   *	</tr>
   *	<tr>
   *		<td>E</td>
-  *		<td>11/2014</td>
-  *		<td>Add SAM L21 support.</td>
+  *		<td>04/2015</td>
+  *		<td>Add SAM L21 and SAMDA0/DA1 support.</td>
   *	</tr>
   *	<tr>
   *		<td>D</td>

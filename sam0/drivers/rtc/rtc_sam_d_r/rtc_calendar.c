@@ -307,7 +307,7 @@ static void _rtc_calendar_set_config(
  *
  * \param[out] module  Pointer to the software instance struct
  * \param[in]   hw      Pointer to hardware instance
- * \param[in] config  Pointer to the configuration structure.
+ * \param[in]   config  Pointer to the configuration structure
  */
 void rtc_calendar_init(
 		struct rtc_module *const module,
@@ -450,7 +450,7 @@ void rtc_calendar_swap_time_mode(struct rtc_module *const module)
  * Sets the time provided to the calendar.
  *
  * \param[in, out] module  Pointer to the software instance struct
- * \param[in] time  The time to set in the calendar.
+ * \param[in] time  The time to set in the calendar
  */
 void rtc_calendar_set_time(
 		struct rtc_module *const module,
@@ -478,7 +478,7 @@ void rtc_calendar_set_time(
  * Retrieves the current time of the calendar.
  *
  * \param[in, out] module  Pointer to the software instance struct
- * \param[out] time  Pointer to value that will be filled with current time.
+ * \param[out] time  Pointer to value that will be filled with current time
  */
 void rtc_calendar_get_time(
 		struct rtc_module *const module,
@@ -514,12 +514,12 @@ void rtc_calendar_get_time(
  * Sets the time and mask specified to the requested alarm.
  *
  * \param[in, out] module  Pointer to the software instance struct
- * \param[in] alarm        The alarm struct to set the alarm with.
- * \param[in] alarm_index  The index of the alarm to set.
+ * \param[in] alarm        The alarm struct to set the alarm with
+ * \param[in] alarm_index  The index of the alarm to set
  *
  * \return Status of setting alarm.
- * \retval STATUS_OK               If alarm was set correctly.
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_OK               If alarm was set correctly
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided
  */
 enum status_code rtc_calendar_set_alarm(
 		struct rtc_module *const module,
@@ -560,12 +560,12 @@ enum status_code rtc_calendar_set_alarm(
  *
  * \param[in, out] module  Pointer to the software instance struct
  * \param[out] alarm  Pointer to the struct that will be filled with alarm
- *                    time and mask of the specified alarm.
- * \param[in] alarm_index  Index of alarm to get alarm time from.
+ *                    time and mask of the specified alarm
+ * \param[in] alarm_index  Index of alarm to get alarm time from
  *
  * \return Status of getting alarm.
- * \retval STATUS_OK               If alarm was read correctly.
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_OK               If alarm was read correctly
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided
  */
 enum status_code rtc_calendar_get_alarm(
 		struct rtc_module *const module,
@@ -610,11 +610,11 @@ enum status_code rtc_calendar_get_alarm(
  * \note Can only be used when the RTC is operated at 1Hz.
  *
  * \param[in, out] module  Pointer to the software instance struct
- * \param[in] value Between -127 and 127 used for the correction.
+ * \param[in] value Between -127 and 127 used for the correction
  *
  * \return Status of the calibration procedure.
- * \retval STATUS_OK               If calibration was done correctly.
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_OK               If calibration was done correctly
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided
  */
 enum status_code rtc_calendar_frequency_correction(
 		struct rtc_module *const module,

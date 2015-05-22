@@ -45,7 +45,7 @@
  * \page asfdoc_sam0_trng_basic_use_case Quick Start Guide for TRNG - Basic
  *
  * In this use case, the True Random Number Generator (TRNG) module is configured for:
- *  \li The TRNG peripheral will not be stopped in standby sleep mode.
+ *  \li The TRNG peripheral will not be stopped in standby sleep mode
  *
  * This use case will read random data in polling mode repeatly. After reading
  * a data, the board LED will be toggled.
