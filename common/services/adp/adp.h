@@ -52,6 +52,9 @@
 /** Version of ADP implemented here */
 #define ADP_VERSION                 1
 
+/** Start token for ADP data */
+#define ADP_TOKEN                   0xFF
+
 /** Maximum number of streams from PC to target */
 #define ADP_MAX_INCOMMING_STREAMS   5
 /** Maximum number of streams from target to PC */
@@ -60,8 +63,14 @@
 /** Maximum number of bytes target can request from PC in one request */
 #define ADP_MAX_BYTE_REQUEST        20
 
+/** Length of ADP packet header: Token, Message ID, Data Length */
+#define ADP_LENGTH_PACKET_HEADER    4
+
 /** Maximum number of bytes in data part of ADP packet */
 #define ADP_MAX_PACKET_DATA_SIZE    254
+
+/** Maximum number of all bytes in ADP packet */
+#define  ADP_MAX_PACKET_LENGTH (ADP_LENGTH_PACKET_HEADER + ADP_MAX_PACKET_DATA_SIZE)
 
 /** Key used to identify proper handshake message */
 #define ADP_HANDSHAKE_KEY {0x58, 0x99, 0xAB, 0xC9, 0x0F, 0xE2, 0xF7, 0xAA}
@@ -85,6 +94,22 @@
 #define ADP_COLOR_AQUA    0x00, 0xFF, 0xFF
 #define ADP_COLOR_ORANGE  0xFF, 0xA5, 0x00
 
+/** States in receive state machine */
+enum rx_state_e {
+	/** We are idle, waiting for a new packet */
+	RX_STATE_IDLE,
+	/** Start symbol received, waiting for Message ID */
+	RX_STATE_WAIT_MSG_ID,
+	/** Message ID received, waiting for data length */
+	RX_STATE_WAIT_LENGTH_LSB,
+	/** Message ID received, waiting for data length */
+	RX_STATE_WAIT_LENGTH_MSB,
+	/** Length received; we are receiving packet data */
+	RX_STATE_GET_DATA,
+	/** Start symbol received */
+	RX_STATE_GOT_SYMBOL,
+};
+
 /** Max length of labels */
  #define ADP_CONF_MAX_LABEL 20
 
@@ -101,27 +126,54 @@ static inline void adp_set_color(uint8_t* struct_member, uint8_t c_red, uint8_t 
 		strncpy(struct_member, string, sizeof(struct_member)); \
 		struct_member[sizeof(struct_member)-1] = '\0';
 
+/* MESSAGE FORMAT */
+SHORTENUM struct adp_msg_format {
+	/* Start token for ADP data */
+	uint8_t protocol_token;
+	/* Describes what data is sent */
+	uint8_t protocol_msg_id;
+	/* Length of data packet */
+	uint16_t data_length;
+	/* Data packet for the message */
+	uint8_t data[ADP_MAX_PACKET_DATA_SIZE];
+};
+
+
 /* MSG_REQ_HANDSHAKE */
 #define MSG_REQ_HANDSHAKE 0x00
 #define MSQ_REQ_HANDSHAKE_LEN 10
-struct adp_msg_request_handshake {
+enum adp_handshake_options {
+	/* Use GPIO */
+	ADP_HANDSHAKE_OPTIONS_GPIO,
+	/* Lock configuration */
+	ADP_HANDSHAKE_OPTIONS_LOCK,
+};
+SHORTENUM struct adp_msg_request_handshake {
+	/* Version of protocol on target */
 	uint8_t protocol_version;
+	/* Is GPIO in use in this app?
+	 * Can user change configuration on PC side? 
+	 */
+	uint8_t options;
+	/* Token used to verify ADP protocol */
+	uint8_t key[8];
 };
 
 /* MSG_RES_HANDSHAKE */
 #define MSG_RES_HANDSHAKE 0x10
 enum adp_handshake_status {
+	/* Handshake accepted */
 	ADP_HANDSHAKE_ACCEPTED,
+	/* Handshake rejected. Invalid protocol version */
 	ADP_HANDSHAKE_REJECTED_PROTOCOL,
+	/* Handshake rejected. Other reason */
 	ADP_HANDSHAKE_REJECTED_OTHER,
 };
-struct adp_msg_response_handshake {
+SHORTENUM struct adp_msg_response_handshake {
 	enum adp_handshake_status status;
 };
 
 enum adp_handshake_status adp_wait_for_handshake(void);
-bool adp_request_handshake(uint8_t protocol_version, uint8_t options, uint8_t *status);
-//enum adp_handshake_status adp_request_handshake(uint8_t protocol_version);
 
 /* MSG_REQ_STATUS */
 #define MSG_REQ_STATUS 0x02
@@ -131,64 +183,49 @@ bool adp_request_handshake(uint8_t protocol_version, uint8_t options, uint8_t *s
 /* MSG_RES_STATUS */
 #define MSG_RES_STATUS 0x12
 enum adp_status_code {
+	/* Invalid packet received */
 	ADP_STATUS_INVALID_PACKET,
+	/* Invalid configuration data received */
 	ADP_STATUS_INVALID_CONFIGURATION,
+	/* Data ready to be transmitted to target */
 	ADP_STATUS_DATA_READY,
+	/* Invalid stream request (req_data) */
 	ADP_STATUS_INVALID_REQUEST,
+	/* No data available on stream (req_data) */
+	ADP_STATUS_NO_DATA,
+	/* Request target software reset */
+	ADP_STATUS_RESET,
 };
-struct adp_msg_response_status {
+SHORTENUM struct adp_msg_response_status {
 	enum adp_status_code status;
 };
 
 enum adp_status_code adp_request_status(void);
 
-/* MSG_REQ_DATA_READY */
-#define MSG_REQ_DATA_READY 0x03
-#define MSG_REQ_DATA_READY_LEN 0
-/* This message has no data */
-
-/* MSG_RES_DATA_READY */
-#define MSG_RES_DATA_READY 0x13
-#define MSG_RES_DATA_READY_MAX_LEN (1+(3*ADP_MAX_INCOMMING_STREAMS))
-struct adp_msg_response_data_ready_stream {
-	uint8_t stream_id;
-	uint16_t data_size;
-} __attribute__((packed));
-#define MSG_RES_DATA_READY_STREAM_SIZE 3
-
-struct adp_msg_response_data_ready {
-	uint8_t  num_streams;
-	struct   adp_msg_response_data_ready_stream stream[ADP_MAX_INCOMMING_STREAMS];
-} __attribute__((packed));
-
-void adp_request_data_ready(struct adp_msg_response_data_ready *response);
-
-/* MSG_REQ_DATA */
-#define MSG_REQ_DATA 0x04
-#define MSG_REQ_DATA_LEN 2
-struct adp_msg_request_data {
-	uint8_t stream_id;
-	uint8_t bytes_to_send;
-} __attribute__((packed));
-
 /* MSG_RES_DATA */
 #define MSG_RES_DATA 0x14
 #define MSG_RES_DATA_MAX_LEN (ADP_MAX_BYTE_REQUEST + 4)
-struct adp_msg_response_data {
+SHORTENUM struct adp_msg_response_data {
+	/* ID of stream */
 	uint8_t stream_id;
+	/* Number of bytes in packet. 
+	 * If the target has requested data from an unknown stream, or if stream 
+	 * has no data to send, this field should be set to 0 and the appropriate 
+	 * status flag should be set.
+	 */
 	uint8_t bytes_sent;
-	uint16_t remaining_data;			
+	/* The data */		
 	uint8_t data[ADP_MAX_BYTE_REQUEST];
-} __attribute__((packed));
+};
 
 void adp_request_data(uint8_t stream_id, uint8_t bytes_to_send, struct adp_msg_response_data *response);
 
 #define MSG_RES_PACKET_DATA_MAX_LEN (ADP_MAX_BYTE_REQUEST + 2)
-struct adp_msg_packet_data {
-	uint8_t stream_id;
+SHORTENUM struct adp_msg_packet_data {
+	uint16_t stream_id;
 	uint8_t bytes_sent;
 	uint8_t data[ADP_MAX_BYTE_REQUEST];
-}__attribute__((packed));
+};
 bool adp_receive_packet_data(uint8_t *receive_buf);
 
 /* MSG_CONF_STREAM */
@@ -214,27 +251,33 @@ enum adp_stream_state {
 };
 
 enum adp_stream_mode {
+	/* Incoming (normal) */
 	ADP_STREAM_IN,
+	/* Incoming (single value) */
 	ADP_STREAM_IN_SINGLE,
+	/* Outgoing */
 	ADP_STREAM_OUT,
 };
 
-#define MSG_CONF_ACK 0x30
-#define ADP_ACK_NOT_OK 0
-#define ADP_ACK_OK     1
+#define MSG_CONF_ACK       0x30
+#define ADP_ACK_NOT_OK     0
+#define ADP_ACK_OK         1
 
-#define MSG_CONF_INFO   0x28
+#define MSG_CONF_INFO      0x28
 #define MSG_CONF_INFO_LEN
 bool adp_configure_info(const char* title, const char* description);
 
-#define MSG_CONF_STREAM 0x20
-#define MSG_CONF_STREAM_LEN 24
-struct adp_msg_configure_stream {
-	uint8_t stream_id;
+#define MSG_CONF_STREAM     0x20
+#define MSG_CONF_STREAM_LEN 5
+SHORTENUM struct adp_msg_configure_stream {
+	/* ID of stream */
+	uint16_t stream_id;
+	/* Stream type */
 	enum adp_stream_type type;
+	/* Stream mode/direction */
 	enum adp_stream_mode mode;
+	/* Stream state */
 	enum adp_stream_state state;
-	char label[ADP_CONF_MAX_LABEL];
 };
 
 static inline void adp_configure_stream_get_defaults(struct adp_msg_configure_stream *const config)
@@ -244,23 +287,22 @@ static inline void adp_configure_stream_get_defaults(struct adp_msg_configure_st
 	config->type = ADP_STREAM_UINT_8;
 	config->mode = ADP_STREAM_OUT;
 	config->state = ADP_STREAM_ON;
-	config->label[0] = '\0';
 }
 
-bool adp_configure_stream(struct adp_msg_configure_stream *const config);
+bool adp_configure_stream(struct adp_msg_configure_stream *const config, const char* label);
 
 /* MSG_CONF_TOGGLE_STREAM */
 #define MSG_CONF_TOGGLE_STREAM   0x21
-#define MSG_CONF_TOGGLE_STREAM_LEN 2
-struct adp_msg_toggle_stream {
-	uint8_t               stream_id;
-	enum adp_stream_state state;
+#define MSG_CONF_TOGGLE_STREAM_LEN 3
+SHORTENUM struct adp_msg_toggle_stream {
+	uint16_t               stream_id;
+	enum adp_stream_state  state;
 };
-bool adp_toggle_stream(uint8_t stream_id, enum adp_stream_state state);
+bool adp_toggle_stream(struct adp_msg_toggle_stream *const config);
 
 /* MSG_CONF_GRAPH */
 #define MSG_CONF_GRAPH           0x22
-#define MSG_CONF_GRAPH_LEN (42)
+#define MSG_CONF_GRAPH_LEN       23
 
 enum adp_graph_scale_mode {
 	ADP_GRAPH_SCALE_OFF,
@@ -268,59 +310,126 @@ enum adp_graph_scale_mode {
 };
 
 enum adp_graph_scroll_mode {
+	/* No scrolling */
 	ADP_GRAPH_SCROLL_OFF,
+	/* Stepping */
 	ADP_GRAPH_SCROLL_STEP,
+	/* Scroll */
 	ADP_GRAPH_SCROLL_SCROLL,
+	/* Circular/sweep */
 	ADP_GRAPH_SCROLL_CIRCULAR
 };
 
-struct adp_msg_configure_graph {
+SHORTENUM struct adp_msg_configure_graph {
+	/* ID of new graph */
 	uint8_t graph_id;
+	/* Range Xmin value */
 	uint32_t x_min;
+	/* Range Xmax value */
 	uint32_t x_max;
-	char x_label[ADP_CONF_MAX_LABEL];
+	/* Xscale numerator */
 	uint32_t x_scale_numerator;
+	/* X range scale value. Set to 0 to enable auto range */
 	uint32_t x_scale_denominator;
+	/* Vertical scaling */
 	enum adp_graph_scale_mode scale_mode;
+	/* RGB background color */
 	uint8_t background_color[3];
+	/* Horizontal scrolling */
 	enum adp_graph_scroll_mode scroll_mode;
 };
+
 static inline void adp_configure_graph_get_defaults(struct adp_msg_configure_graph *const config)
 {
 	Assert(config);
 	config->graph_id = 0;
 	config->x_min = 0;
 	config->x_max = 0;
-	config->x_label[0] = '\0';
 	config->x_scale_numerator = 0;
 	config->x_scale_denominator = 0;
 	config->scale_mode = ADP_GRAPH_SCALE_OFF;
 	adp_set_color(config->background_color, ADP_COLOR_WHITE);
 	config->scroll_mode = ADP_GRAPH_SCROLL_SCROLL;
 }
-bool adp_configure_graph(struct adp_msg_configure_graph *const config, const char* label);
 
-/* MSG_CONF_ADD_TO_GRAPH */
-#define MSG_CONF_ADD_STREAM_TO_AXIS    0x23
-#define MSG_CONF_ADD_STREAM_TO_AXIS_LEN 29
+bool adp_configure_graph(struct adp_msg_configure_graph *const config, \
+						const char* graph_label, const char* x_label);
+
+/* MSG_CONF_AXIS */
+#define MSG_CONF_AXIS       0x29
+#define MSG_CONF_AXIS_LEN   24
+SHORTENUM struct adp_msg_conf_axis {
+	/* ID of new axis */
+	uint16_t axis_id;
+	/* ID of graph */
+	uint16_t graph_id;
+	/* Range Ymin value */
+	int32_t y_min;
+	/* Range Ymax value */
+	int32_t y_max;
+	/* X range scale value.	Set to 0 to enable auto range */
+	uint32_t x_scale_numerator;
+	/* X range scale value.	Set to 0 to enable auto range */
+	uint32_t x_scale_denominator;
+	/* Mode */
+	uint8_t mode;                                         // TODO
+	/* RGB color */
+	uint8_t color[3];
+};
+
+static inline void adp_add_axis_to_graph_get_defaults(struct adp_msg_conf_axis *const config)
+{
+	Assert(config);
+	config->axis_id = 0;
+	config->graph_id = 0;
+	config->y_min = 0;
+	config->y_max = 0;
+	config->x_scale_numerator = 0;
+	config->x_scale_denominator = 0;
+	config->mode = 0;
+	adp_set_color(config->color, ADP_COLOR_BLACK);
+}
+
+bool adp_add_axis_to_graph(struct adp_msg_conf_axis *const config, const char* label);
+
+/* MSG_CONF_ADD_STREAM_TO_GRAPH */
+#define MSG_CONF_ADD_STREAM_TO_AXIS       0x23
+#define MSG_CONF_ADD_STREAM_TO_AXIS_LEN   32
 
 #define ADP_AXIS_LINE_bm    0x01
 #define ADP_AXIS_POINTS_bm  0x02
 
-struct adp_msg_add_stream_to_axis {
-	uint8_t graph_id;
-	uint8_t axis_id;
-	uint8_t stream_id;
+SHORTENUM struct adp_msg_add_stream_to_axis {
+	/* ID of graph */
+	uint16_t graph_id;
+	/* ID of new axis */
+	uint16_t axis_id;
+	/* ID of stream */
+	uint16_t stream_id;
+	/* Sample rate of stream, set to 0 if NA */
 	uint32_t sample_rate_numerator;
+	/* Sample rate of stream, set to 0 if NA */
 	uint32_t sample_rate_denominator;
+	/* Range Ymin value */
 	uint32_t y_scale_numerator;
+	/* Range Ymax value */
 	uint32_t y_scale_denominator;
+	/* Offset of values */
 	uint32_t y_offset;
+	/* Adjust the transparency */
 	uint8_t transparency;
+	/* For graphs:  bit 0 = line on/off
+	 *              bit 1 = points on/off
+	 * For text:    bit 0 = flag
+	 *              bit 1 = text
+	 */
 	uint8_t mode;                           // TODO
+	/* Thickness of line */
 	uint8_t line_thickness;
+	/* RGB color of line */
 	uint8_t line_color[3];
 };
+
 static inline void adp_add_stream_to_axis_get_defaults(struct adp_msg_add_stream_to_axis *const config)
 {
 	Assert(config);
@@ -342,29 +451,40 @@ bool adp_add_stream_to_axis(struct adp_msg_add_stream_to_axis *const config);
 
 /* MSG_CONF_CURSOR_TO_GRAPH */
 #define MSG_CONF_CURSOR_TO_GRAPH     0x24
-#define MSG_CONF_CURSOR_TO_GRAPH_LEN 52
-struct adp_msg_add_cursor_to_graph {
-	uint8_t stream_id;
-	uint8_t graph_id;
-	uint8_t axis_id;
-	char label[ADP_CONF_MAX_LABEL];
+#define MSG_CONF_CURSOR_TO_GRAPH_LEN 35
+SHORTENUM struct adp_msg_add_cursor_to_graph {
+	/* ID of streama */
+	uint16_t stream_id;
+	/* ID of graph */
+	uint16_t graph_id;
+	/* ID of axis */
+	uint16_t axis_id;
+	/* Thickness of line */
 	uint8_t thickness;
+	/* RGB color of cursor */
 	uint8_t color[3];
+	/* Starting point of cursor */
 	uint32_t initial_value;
+	/* Minimum allowed value */
 	uint32_t minimum_value;
+	/* Maximum */
 	uint32_t maximum_value;
+	/* Numerator of scaling value */
 	uint32_t scale_numerator;
+	/* Denominator of scaling value */
 	uint32_t scale_denominator;
+	/* Offset of value */
 	uint32_t scale_offset;
+	/* The style of line: Solid, dashed, dotted.. */
 	uint8_t line_style;          // TODO
 };
+
 static inline void adp_add_cursor_to_graph_get_defaults(struct adp_msg_add_cursor_to_graph *const config)
 {
 	Assert(config);
 	config->stream_id = 0;
 	config->graph_id = 0;
 	config->axis_id = 0;
-	config->label[0] = '\0';
 	config->thickness = 1;
 	adp_set_color(config->color, ADP_COLOR_WHITE);
 	config->initial_value = 0;
@@ -376,32 +496,38 @@ static inline void adp_add_cursor_to_graph_get_defaults(struct adp_msg_add_curso
 	config->line_style = 0;
 }
 
-bool adp_add_cursor_to_graph(struct adp_msg_add_cursor_to_graph *const config);
+bool adp_add_cursor_to_graph(struct adp_msg_add_cursor_to_graph *const config, const char* label);
 
-// remove
 /* MSG_CONF_GPIO_TO_GRAPH */
-#define MSG_CONF_GPIO_TO_GRAPH   0x25
-struct adp_msg_conf_gpio_to_graph {
-	uint8_t graph_id;
+#define MSG_CONF_GPIO_TO_GRAPH       0x25
+#define MSG_CONF_GPIO_TO_GRAPH_LEN   15
+SHORTENUM struct adp_msg_conf_gpio_to_graph {
+	/* ID of graph */
+	uint16_t graph_id;
+	/* GPIO number to add to graph. Bit 0: GPIO0. bit 1: GPIO1 etc. */
 	uint8_t gpio_number;
+	/* Used to group graphs and cursors to the same scale */
 	uint8_t group_id;
-	char tag_high_state[ADP_CONF_MAX_LABEL];
-	char tag_low_state[ADP_CONF_MAX_LABEL];
+	/* Adjust the transparency */
 	uint8_t transparency;
+	/* Mode */
 	uint16_t mode;                                    // TODO
+	/* Thickness of line */
 	uint8_t line_thickness;
+	/* RGB color of line when GPIO pin is high */
 	uint8_t line_color_high_state[3];
+	/* RGB color of line when GPIO pin is low */
 	uint8_t line_color_low_state[3];
+	/* The style of line */
 	uint8_t line_style;
 };
+
 static inline void adp_gpio_to_graph_get_defaults(struct adp_msg_conf_gpio_to_graph *const config)
 {
 	Assert(config);
 	config->graph_id = 0;
 	config->gpio_number = 0;
 	config->group_id = 0;
-	config->tag_high_state[0] = '\0';
-	config->tag_low_state[0] = '\0';
 	config->transparency = 0;
 	config->mode = 0;
 	config->line_thickness = 1;
@@ -410,24 +536,29 @@ static inline void adp_gpio_to_graph_get_defaults(struct adp_msg_conf_gpio_to_gr
 	config->line_style = 0;
 }
 
-bool adp_add_gpio_to_graph(struct adp_msg_conf_gpio_to_graph *const config);
+bool adp_add_gpio_to_graph(struct adp_msg_conf_gpio_to_graph *const config, \
+						const char* tag_high_state, const char* tag_low_state);
 
 /* MSG_CONF_TERMINAL */
 #define MSG_CONF_TERMINAL        0x26
-#define MSG_CONF_TERMINAL_LEN   9 // +label //(29)
-struct adp_msg_conf_terminal {
-	uint8_t terminal_id;
-	//char label[ADP_CONF_MAX_LABEL];
+#define MSG_CONF_TERMINAL_LEN    10
+SHORTENUM struct adp_msg_conf_terminal {
+	/* ID of terminal */
+	uint16_t terminal_id;
+	/* Number of characters wide */
 	uint8_t width;
+	/* Number of characters high */
 	uint8_t height;
+	/* RGB background color */
 	uint8_t background_color[3];
+	/* RGB background color */
 	uint8_t foreground_color[3];
 };
+
 static inline void adp_configure_terminal_get_defaults(struct adp_msg_conf_terminal *const config)
 {
 	Assert(config);
 	config->terminal_id = 0;
-	//config->label[0] = '\0';
 	config->width = 80;
 	config->height = 25;
 	adp_set_color(config->background_color, ADP_COLOR_WHITE);
@@ -435,19 +566,28 @@ static inline void adp_configure_terminal_get_defaults(struct adp_msg_conf_termi
 }
 
 bool adp_configure_terminal(struct adp_msg_conf_terminal *const config, const char* label);
-bool adp_transceive_terminal(struct adp_msg_conf_terminal *const config, const char* label, uint8_t* rx_buf);
 
 /* MSG_CONF_ADD_TO_TERMINAL */
-#define MSG_CONF_ADD_TO_TERMINAL 0x27
-#define MSG_CONF_ADD_TO_TERMINAL_LEN (29)
-struct adp_msg_add_stream_to_terminal {
-	uint8_t terminal_id;
-	uint8_t stream_id;
+#define MSG_CONF_ADD_TO_TERMINAL       0x27
+#define MSG_CONF_ADD_TO_TERMINAL_LEN   11
+SHORTENUM struct adp_msg_add_stream_to_terminal {
+	/* ID of Terminal */
+	uint16_t terminal_id;
+	/* ID of stream */
+	uint16_t stream_id;
+	/* 0bx x x N T S F F
+	 * N = implicit newline in incoming text
+	 * T = enable tag
+	 * S = timestamped
+	 * F = format (Hex, decimal, binary, ascii)
+	 */
 	uint8_t mode;                                    // TODO
+	/* RGB color of the text stream received */
 	uint8_t text_color[3];
-	char tag_text[ADP_CONF_MAX_LABEL];
+	/* RGB color of the tag text */
 	uint8_t tag_text_color[3];
 };
+
 static inline void adp_add_stream_to_terminal_get_defaults(struct adp_msg_add_stream_to_terminal *const config)
 {
 	Assert(config);
@@ -455,48 +595,16 @@ static inline void adp_add_stream_to_terminal_get_defaults(struct adp_msg_add_st
 	config->stream_id = 0;
 	config->mode = 0;
 	adp_set_color(config->text_color, ADP_COLOR_BLACK);
-	config->tag_text[0] = '\0';
 	adp_set_color(config->tag_text_color, ADP_COLOR_BLACK);
 }
 
-bool adp_add_stream_to_terminal(struct adp_msg_add_stream_to_terminal *const config);
-
-/* MSG_CONF_AXIS */
-#define MSG_CONF_AXIS 0x29
-#define MSG_CONF_AXIS_LEN 42
-struct adp_msg_conf_axis {
-	uint8_t axis_id;
-	uint8_t graph_id;
-	char label[ADP_CONF_MAX_LABEL];
-	int32_t y_min;
-	int32_t y_max;
-	uint32_t x_scale_numerator;
-	uint32_t x_scale_denominator;
-	uint8_t mode;                                         // TODO
-	uint8_t color[3];
-};
-static inline void adp_add_axis_to_graph_get_defaults(struct adp_msg_conf_axis *const config)
-{
-	Assert(config);
-	config->axis_id = 0;
-	config->graph_id = 0;
-	config->label[0] = '\0';
-	config->y_min = 0;
-	config->y_max = 0;
-	config->x_scale_numerator = 0;
-	config->x_scale_denominator = 0;
-	config->mode = 0;
-	adp_set_color(config->color, ADP_COLOR_BLACK);
-}
-
-bool adp_add_axis_to_graph(struct adp_msg_conf_axis *const config);
+bool adp_add_stream_to_terminal(struct adp_msg_add_stream_to_terminal *const config, const char* tag_text);
 
 /* MSG_CONF_DASHBOARD */
-#define MSG_CONF_DASHBOARD 0x2A
-#define MSG_CONF_DASHBOARD_LEN (6) // +label
-struct adp_msg_conf_dashboard {
-	uint8_t dashboard_id;
-	//char label[ADP_CONF_MAX_LABEL];
+#define MSG_CONF_DASHBOARD       0x2A
+#define MSG_CONF_DASHBOARD_LEN   7
+SHORTENUM struct adp_msg_conf_dashboard {
+	uint16_t dashboard_id;
 	uint8_t color[3];
 	uint16_t height;
 };
@@ -505,7 +613,6 @@ static inline void adp_conf_dashboard_get_defaults(struct adp_msg_conf_dashboard
 {
 	Assert(config);
 	config->dashboard_id = 0;
-	//config->label[0] = '\0';
 	adp_set_color(config->color, ADP_COLOR_BLACK);
 	config->height = 100;
 }
@@ -523,21 +630,39 @@ enum adp_dashboard_element_type {
 	ADP_ELEMENT_TYPE_SIGNAL,
 	ADP_ELEMENT_TYPE_SEGMENT,
 	ADP_ELEMENT_TYPE_GRAPH,
+	ADP_ELEMENT_TYPE_TEXT,
+	ADP_ELEMENT_TYPE_RADIO,
+	ADP_ELEMENT_TYPE_PIE,
 };
 
-#define MSG_CONF_DASHBOARD_COMMON_LEN 12
+#define MSG_CONF_DASHBOARD_COMMON_LEN    14
 #define ADP_DASHBOARD_ELEMENT_COMMON_MEMBERS \
-	uint8_t  dashboard_id; \
-	uint8_t  element_id;   \
-	enum     adp_dashboard_element_type element_type; \
-	uint8_t  z_index;      \
-	uint16_t x;            \
-	uint16_t y;            \
-	uint16_t width;        \
-	uint16_t height;
+	uint16_t  dashboard_id; \
+	uint16_t  element_id;   \
+	uint8_t   z_index;      \
+	uint16_t  x;            \
+	uint16_t  y;            \
+	uint16_t  width;        \
+	uint16_t  height;       \
+	enum adp_dashboard_element_type element_type; 
 
-struct adp_msg_conf_dashboard_element_common {
-	ADP_DASHBOARD_ELEMENT_COMMON_MEMBERS;
+SHORTENUM struct adp_msg_conf_dashboard_element_common {
+	/* Dashboard ID */
+	uint16_t  dashboard_id;
+	/* Unique ID of element */
+	uint16_t  element_id;
+	/* Order index */
+	uint8_t   z_index;
+	/* X-coordinate of element location. 0 is leftmost position on dashboard */
+	uint16_t  x;
+	/* Y-coordinate of element location. 0 is topmost position on dashboard */
+	uint16_t  y;
+	/* Width of element */
+	uint16_t  width;
+	/* Height of element */
+	uint16_t  height;
+	/* See each element type below */
+	enum adp_dashboard_element_type element_type;
 };
 
 static inline void adp_conf_dashboard_element_get_defaults(struct adp_msg_conf_dashboard_element_common *const config)
@@ -571,8 +696,8 @@ enum adp_label_vertical_alignment {
 	VERTICAL_ALIGNMENT_BOTTOM,
 };
 
-#define ADP_ELEMENT_TYPE_LABEL_LEN (MSG_CONF_DASHBOARD_COMMON_LEN + 32)
-struct adp_msg_conf_dashboard_element_label {
+#define ADP_ELEMENT_TYPE_LABEL_LEN (MSG_CONF_DASHBOARD_COMMON_LEN + 12)
+SHORTENUM struct adp_msg_conf_dashboard_element_label {
 	ADP_DASHBOARD_ELEMENT_COMMON_MEMBERS;
 	uint8_t                             font_size;
 	uint8_t                             attribute;                               // TODO
@@ -582,32 +707,29 @@ struct adp_msg_conf_dashboard_element_label {
 	uint8_t                             background_color[3];
 	uint8_t                             foreground_transparency;
 	uint8_t                             foreground_color[3];
-	char                                default_text[ADP_CONF_MAX_LABEL];
 };
 
 static inline void adp_conf_dashboard_label_get_defaults(struct adp_msg_conf_dashboard_element_label *const config)
 {
 	adp_conf_dashboard_element_get_defaults((struct adp_msg_conf_dashboard_element_common*)config);
 	config->element_type = ADP_ELEMENT_TYPE_LABEL;
+	config->font_size = 10;
 	config->attribute = 0;
 	config->horisontal_alignment = HORISONTAL_ALIGNMENT_LEFT;
 	config->vertical_alignment = VERTICAL_ALIGNMENT_CENTER;
-	config->font_size = 10;
 	config->background_transparency = 0;
 	adp_set_color(config->background_color, ADP_COLOR_BLACK);
 	config->foreground_transparency = 0;
 	adp_set_color(config->foreground_color, ADP_COLOR_BLACK);
-	config->default_text[0] = '\0';
 }
 
-bool adp_add_label_to_dashboard(struct adp_msg_conf_dashboard_element_label *const config);
+bool adp_add_label_to_dashboard(struct adp_msg_conf_dashboard_element_label *const config, const char* label);
 
-#define ADP_ELEMENT_TYPE_BUTTON_LEN (MSG_CONF_DASHBOARD_COMMON_LEN + 21)
+#define ADP_ELEMENT_TYPE_BUTTON_LEN (MSG_CONF_DASHBOARD_COMMON_LEN + 1)
 
-struct adp_msg_conf_dashboard_element_button {
+SHORTENUM struct adp_msg_conf_dashboard_element_button {
 	ADP_DASHBOARD_ELEMENT_COMMON_MEMBERS;
 	uint8_t font_size;
-	char    button_label[ADP_CONF_MAX_LABEL];
 };
 
 static inline void adp_conf_dashboard_button_get_defaults(struct adp_msg_conf_dashboard_element_button *const config)
@@ -615,13 +737,12 @@ static inline void adp_conf_dashboard_button_get_defaults(struct adp_msg_conf_da
 	adp_conf_dashboard_element_get_defaults((struct adp_msg_conf_dashboard_element_common*)config);
 	config->element_type = ADP_ELEMENT_TYPE_BUTTON;
 	config->font_size = 10;
-	config->button_label[0] = '\0';
 }
 
-bool adp_add_button_to_dashboard(struct adp_msg_conf_dashboard_element_button *const config);
+bool adp_add_button_to_dashboard(struct adp_msg_conf_dashboard_element_button *const config, const char* label);
 
 #define ADP_ELEMENT_TYPE_SLIDER_LEN (MSG_CONF_DASHBOARD_COMMON_LEN + 12)
-struct adp_msg_conf_dashboard_element_slider {
+SHORTENUM struct adp_msg_conf_dashboard_element_slider {
 	ADP_DASHBOARD_ELEMENT_COMMON_MEMBERS;
 	uint32_t minimum_value;
 	uint32_t maximum_value;
@@ -640,7 +761,7 @@ static inline void adp_conf_dashboard_slider_get_defaults(struct adp_msg_conf_da
 bool adp_add_slider_to_dashboard(struct adp_msg_conf_dashboard_element_slider *const config);
 
 #define ADP_ELEMENT_TYPE_SIGNAL_LEN (MSG_CONF_DASHBOARD_COMMON_LEN + 8)
-struct adp_msg_conf_dashboard_element_signal {
+SHORTENUM struct adp_msg_conf_dashboard_element_signal {
 	ADP_DASHBOARD_ELEMENT_COMMON_MEMBERS;
 	uint8_t on_transparency;
 	uint8_t on_color[3];
@@ -661,7 +782,7 @@ static inline void adp_conf_dashboard_signal_get_defaults(struct adp_msg_conf_da
 bool adp_add_signal_to_dashboard(struct adp_msg_conf_dashboard_element_signal *const config);
 
 #define ADP_ELEMENT_TYPE_PROGRESS_LEN (MSG_CONF_DASHBOARD_COMMON_LEN + 15)
-struct adp_msg_conf_dashboard_element_progress {
+SHORTENUM struct adp_msg_conf_dashboard_element_progress {
 	ADP_DASHBOARD_ELEMENT_COMMON_MEMBERS;
 	uint32_t minimum_value;
 	uint32_t maximum_value;
@@ -682,9 +803,11 @@ static inline void adp_conf_dashboard_progress_get_defaults(struct adp_msg_conf_
 bool adp_add_progress_to_dashboard(struct adp_msg_conf_dashboard_element_progress *const config);
 
 #define ADP_ELEMENT_TYPE_SEGMENT_LEN (MSG_CONF_DASHBOARD_COMMON_LEN + 6)
-struct adp_msg_conf_dashboard_element_segment {
+SHORTENUM struct adp_msg_conf_dashboard_element_segment {
 	ADP_DASHBOARD_ELEMENT_COMMON_MEMBERS;
+	/* Values: 1 ~ 20 */
 	uint8_t segment_count;
+	/* Values: 2 ~ 16*/
 	uint8_t base;
 	uint8_t transparency;
 	uint8_t color[3];
@@ -702,49 +825,108 @@ static inline void adp_conf_dashboard_segment_get_defaults(struct adp_msg_conf_d
 
 bool adp_add_segment_to_dashboard(struct adp_msg_conf_dashboard_element_segment *const config);
 
-#define  ADP_ELEMENT_TYPE_GRAPH_LEN (MSG_CONF_DASHBOARD_COMMON_LEN + 12)
-struct adp_msg_conf_dashboard_element_graph {
+/* MSG_CONF_ADD_GRAPH_TO_ELEMENT */
+#define  ADP_ELEMENT_TYPE_GRAPH_LEN (MSG_CONF_DASHBOARD_COMMON_LEN + 27)
+typedef union {
+	struct {
+		uint8_t mouse:1;
+		uint8_t fit_graph:1;
+		uint8_t :6;
+	} bit;
+	uint8_t reg;
+} mode_type;
+
+SHORTENUM struct adp_msg_conf_dashboard_element_graph {
 	ADP_DASHBOARD_ELEMENT_COMMON_MEMBERS;
 	uint8_t title_color[3];
 	uint8_t background_color[3];
 	uint8_t graph_background_color[3];
-	uint8_t plot_color[3];
-	char title_text[ADP_CONF_MAX_LABEL-1];
+	uint8_t plot_count;
+	float x_min;
+	float x_max;
+	float y_min;
+	float y_max;
+	mode_type mode;
 };
 
 static inline void adp_conf_dashboard_graph_get_defaults(struct adp_msg_conf_dashboard_element_graph *const config)
 {
 	adp_conf_dashboard_element_get_defaults((struct adp_msg_conf_dashboard_element_common*)config);
+	config->element_type = ADP_ELEMENT_TYPE_GRAPH;
 	adp_set_color(config->title_color, ADP_COLOR_WHITE);
 	adp_set_color(config->background_color, ADP_COLOR_BLACK);
 	adp_set_color(config->graph_background_color, ADP_COLOR_BLACK);
-	adp_set_color(config->plot_color, ADP_COLOR_RED);
-	config->title_text[0] = '\0';
+	config->plot_count = 1;
+	config->x_min = 0;
+	config->x_max = 10;
+	config->y_min = 0;
+	config->y_max = 5;
+	config->mode.bit.fit_graph = 1;
+	config->mode.bit.mouse = 0;
 }
 
-bool adp_add_graph_to_dashboard(struct adp_msg_conf_dashboard_element_graph *const config);
+bool adp_add_graph_to_dashboard(struct adp_msg_conf_dashboard_element_graph *const config, const char* title);
+
+
+/* MSG_CONF_ADD_TEXT_TO_ELEMENT */
+#define  ADP_ELEMENT_TYPE_TEXT_LEN (MSG_CONF_DASHBOARD_COMMON_LEN + 12)
+SHORTENUM struct adp_msg_conf_dashboard_element_text {
+	ADP_DASHBOARD_ELEMENT_COMMON_MEMBERS;
+	uint8_t minimum[4];
+	uint8_t maximum[4];
+	uint8_t value[4];
+};
+
+bool adp_add_text_to_dashboard(struct adp_msg_conf_dashboard_element_text *const config);
+
+/* MSG_CONF_ADD_RADIO_TO_ELEMENT */
+#define  ADP_ELEMENT_TYPE_RADIO_LEN (MSG_CONF_DASHBOARD_COMMON_LEN + 3)
+
+enum adp_radio_orientation {
+	HORIZONTAL,
+	VERTICAL,
+};
+
+SHORTENUM struct adp_msg_conf_dashboard_element_radio {
+	ADP_DASHBOARD_ELEMENT_COMMON_MEMBERS;
+	uint8_t font_size;
+	uint8_t number_items;
+	enum adp_radio_orientation orientation;
+};
+bool adp_add_radio_to_dashboard(struct adp_msg_conf_dashboard_element_radio *const config, const char* text);
+
+/* MSG_CONF_ADD_PIE_TO_ELEMENT */
+#define  ADP_ELEMENT_TYPE_PIE_LEN (MSG_CONF_DASHBOARD_COMMON_LEN + 7)
+
+SHORTENUM struct adp_msg_conf_dashboard_element_pie {
+	ADP_DASHBOARD_ELEMENT_COMMON_MEMBERS;
+	uint8_t background_color[3];
+	uint8_t title_color[3];
+	uint8_t number_slices;
+};
+bool adp_add_pie_to_dashboard(struct adp_msg_conf_dashboard_element_pie *const config, const char* title);
 
 /* MSG_CONF_ADD_STREAM_TO_ELEMENT */
-#define MSG_CONF_ADD_STREAM_TO_ELEMENT 0x2C
-#define MSG_CONF_ADD_STREAM_TO_ELEMENT_LEN 3
+#define MSG_CONF_ADD_STREAM_TO_ELEMENT       0x2C
+#define MSG_CONF_ADD_STREAM_TO_ELEMENT_LEN   6
 
-struct adp_conf_add_stream_to_element {
-	uint8_t dashboard_id;
-	uint8_t element_id;
-	uint8_t stream_id;
+SHORTENUM struct adp_conf_add_stream_to_element {
+	uint16_t dashboard_id;
+	uint16_t element_id;
+	uint16_t stream_id;
 };
 
 bool adp_add_stream_to_element(struct adp_conf_add_stream_to_element *const config);
 
 /* MSG_DATA_STREAM */
 #define MSG_DATA_STREAM 0x40
-struct adp_msg_data_stream_data {
-	uint8_t stream_id;
+SHORTENUM struct adp_msg_data_stream_data {
+	uint16_t stream_id;
 	uint8_t data_size;
 	uint8_t *data;
 };
 
-struct adp_msg_data_stream {
+SHORTENUM struct adp_msg_data_stream {
 	uint8_t number_of_streams;
 	struct adp_msg_data_stream_data stream[ADP_MAX_OUTGOING_STREAMS];
 };
@@ -752,9 +934,10 @@ struct adp_msg_data_stream {
 bool adp_send_stream(struct adp_msg_data_stream *const stream_data, uint8_t* receive_buf);
 bool adp_send_single_stream(uint8_t stream_id, uint8_t* data, uint8_t data_size, uint8_t* receive_buf);
 bool adp_transceive_stream(struct adp_msg_data_stream *const stream_data, uint8_t *receive_buf);
-bool adp_transceive_single_stream(uint8_t stream_id, uint8_t* data, uint8_t data_size, uint8_t* receive_buf);
+bool adp_transceive_single_stream(uint16_t stream_id, uint8_t* data, uint8_t data_size, uint8_t* receive_buf);
 
-/* Init SPI/USART/TWI interface used. And some other misc inits*/
+/* Init SPI/TWI interface used. And some other misc init */
 void adp_init(void);
+volatile uint16_t adp_add_send_byte(uint8_t* buffer, uint8_t index, uint8_t* data, uint16_t length);
 
 #endif

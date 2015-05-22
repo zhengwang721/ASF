@@ -47,9 +47,197 @@
 #include <compiler.h>
 
 #include "adp.h"
-#include "adp_packet.h"
+#include "adp_interface.h"
+#include "status_codes.h"
 #include <string.h>
 
+/** ID of last received message */
+static uint8_t last_received_message_id = 0xff;
+/** true if valid message has been received */
+static bool packet_received = false;
+/** Number of bytes received */
+static uint16_t bytes_received;
+/** Judge previous received data */
+static uint8_t prev_data = 0;
+/** The length of received data */
+static uint16_t length_received;
+/** Current state */
+static enum rx_state_e rx_state;
+
+volatile uint16_t adp_add_send_byte(uint8_t* buffer, uint8_t index, uint8_t* data, uint16_t length)
+{
+	for(uint16_t i = 0; i < length; i++) {
+		if (*(data + i) == ADP_TOKEN){
+			*(buffer + index) = ADP_TOKEN;
+			index++;
+		}
+		*(buffer + index) = *(data + i);
+		index++;
+	}
+
+	return index;
+}
+
+/**
+* \internal Handle incoming data byte
+*
+* \param[in] data New data byte to handle
+*
+* \return
+* \retval true Given data byte is part of message data
+* \retval false Given data byte is not part of message data
+*/
+static bool adp_add_receive_byte(uint8_t data)
+{
+	static uint8_t message_id;
+
+	if ((rx_state == RX_STATE_GOT_SYMBOL) && (data != ADP_TOKEN)) {
+		/* Abort packet reception, new packet incoming */
+		rx_state = RX_STATE_WAIT_LENGTH_LSB;
+	}
+
+	switch (rx_state) {
+		case RX_STATE_IDLE:
+			packet_received = false;
+			last_received_message_id = 0xFF;
+			/* We are waiting for a new packet. */
+			if (data != ADP_TOKEN) {
+				return false;
+			}
+			/* Got start symbol, wait for message ID */
+			rx_state = RX_STATE_WAIT_MSG_ID;
+			return false;
+
+		case RX_STATE_WAIT_MSG_ID:
+			if (data == ADP_TOKEN) {
+				/* Restart. Don't change state. Wait for new message ID */
+				return false;
+			}
+			message_id = data;
+			rx_state = RX_STATE_WAIT_LENGTH_LSB;
+			return false;
+
+		case RX_STATE_WAIT_LENGTH_LSB:
+			if (data == ADP_TOKEN) {
+				if (prev_data != ADP_TOKEN) {
+					prev_data = ADP_TOKEN;
+					return false;
+				}
+			}
+			length_received = data;
+			rx_state = RX_STATE_WAIT_LENGTH_MSB;
+			prev_data = 0;
+			return false;
+
+		case RX_STATE_WAIT_LENGTH_MSB:
+			if (data == ADP_TOKEN) {
+				if (prev_data != ADP_TOKEN) {
+					prev_data = ADP_TOKEN;
+					return false;
+				}
+			}
+			length_received += (uint16_t)data << 8;
+			prev_data = 0;
+			/* Got valid length, do we expect data? */
+			if (length_received == 0) {
+				/* No data here, wait for next packet */
+				rx_state = RX_STATE_IDLE;
+				packet_received = true;
+				last_received_message_id = message_id;
+				return false;
+			}
+
+			/* Wait for packet data */
+			bytes_received = 0;
+			rx_state = RX_STATE_GET_DATA;
+			return false;
+
+		case RX_STATE_GET_DATA:
+		case RX_STATE_GOT_SYMBOL:
+			if ((data == ADP_TOKEN) && (rx_state == RX_STATE_GET_DATA)) {
+				rx_state = RX_STATE_GOT_SYMBOL;
+				return false;
+			}
+			/* Add new data to rx buffer */
+			bytes_received++;
+			/* Are we done yet? */
+			if (length_received == bytes_received) {
+				/* Yes we are! */
+				packet_received = true;
+				rx_state = RX_STATE_IDLE;
+				last_received_message_id = message_id;
+				return true;
+			}
+			/* Not done yet.. keep on receiving */
+			rx_state = RX_STATE_GET_DATA;
+			return true;
+	}
+	return false;
+}
+
+static bool adp_is_received(void)
+{
+	if (bytes_received == 0) {
+		return false;
+	}
+	return packet_received;
+}
+
+static uint8_t adp_packet_received_get_id(void)
+{
+	return last_received_message_id;
+}
+
+static bool adp_protocol_add_byte(uint8_t rx_id, uint8_t* rx_buf, uint8_t length, uint8_t* protocol_buf)
+{
+	uint8_t i;
+
+	for (i = 0; i < length; i++)
+	{
+		if (adp_add_receive_byte(*(rx_buf + i)) == true) {
+			/* This is a data byte */
+			protocol_buf[bytes_received - 1] = *(rx_buf + i);
+		}
+		if (adp_is_received() & (adp_packet_received_get_id() == rx_id)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+static bool adp_check_for_response(uint8_t rx_id, uint8_t* protocol_buf, uint8_t length)
+{
+	uint8_t retry;
+	bool status = false;
+	uint8_t rx_buf[ADP_MAX_PACKET_DATA_SIZE] = {0,};
+
+	retry = 50;
+	length = length + ADP_LENGTH_PACKET_HEADER;
+	packet_received = false;
+	while((adp_is_received() == false) & (retry-- > 0)) {	
+		if(adp_interface_read_response(rx_buf, length) == STATUS_OK) {
+			status = adp_protocol_add_byte(rx_id, rx_buf, length, protocol_buf);
+			if(status == true) {
+				break;
+			}
+		}
+	}
+	
+	return status;
+}
+
+static void adp_wait_for_response(uint8_t rx_id, uint8_t* protocol_buf, uint8_t length)
+{
+	uint8_t rx_buf[ADP_MAX_PACKET_DATA_SIZE] = {0,};
+
+	packet_received = false;
+	length = length + ADP_LENGTH_PACKET_HEADER;
+	while((adp_is_received() == false)) {
+		if(adp_interface_read_response(rx_buf, length) == STATUS_OK) {
+			adp_protocol_add_byte(rx_id, rx_buf, length, protocol_buf);
+		}
+	}
+}
 
 /**
 * \brief Initialization of the ADP service
@@ -58,7 +246,7 @@
 */
 void adp_init(void)
 {
-	adp_packet_init();
+	adp_interface_init();
 }
 
 /**
@@ -71,24 +259,27 @@ void adp_init(void)
 * \retval true  If we got valid response
 * \retval false If we didn't receive a valid handshake response
 */
-bool adp_request_handshake(uint8_t protocol_version, uint8_t options, uint8_t *status)
+static bool adp_request_handshake(uint8_t protocol_version, uint8_t options, uint8_t* protocol_buf)
 {
+	uint16_t data_length = MSQ_REQ_HANDSHAKE_LEN + ADP_LENGTH_PACKET_HEADER;
 	uint8_t key[8] = ADP_HANDSHAKE_KEY;
-
-	adp_interface_send_start();
-	/* Send the packet header */
-	adp_packet_send_header(MSG_REQ_HANDSHAKE, MSQ_REQ_HANDSHAKE_LEN);
-	/* Send protocol version */
-	adp_packet_send_data(&protocol_version, 1);
-	/* Send the GPIO enable byte */
-	adp_packet_send_data(&options, 1);
-	/* Send the handshake key */
-	adp_packet_send_data(key, 8);
-	//adp_interface_send(key, 8);
-	adp_interface_send_stop();
-
-	/* Wait for response */
-	return adp_packet_check_for_response(MSG_RES_HANDSHAKE, status, 1);
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	struct adp_msg_request_handshake msg_request_handshake;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_REQ_HANDSHAKE;
+	msg_format.data_length = MSQ_REQ_HANDSHAKE_LEN;
+	
+	msg_request_handshake.protocol_version = ADP_VERSION;
+	msg_request_handshake.options = ADP_HANDSHAKE_OPTIONS_GPIO;
+	memcpy(&msg_request_handshake.key, key, 8);
+	memcpy((uint8_t*)&msg_format.data, &msg_request_handshake, sizeof(msg_request_handshake));
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
+	
+	return adp_check_for_response(MSG_RES_HANDSHAKE, protocol_buf, 1);
 }
 
 
@@ -121,97 +312,21 @@ enum adp_handshake_status adp_wait_for_handshake(void)
 */
 enum adp_status_code adp_request_status(void)
 {
+	uint16_t data_length = MSG_REQ_STATUS_LEN + ADP_LENGTH_PACKET_HEADER;
 	uint16_t status;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
 
-	/* Send header (no data in this message) */
-	adp_interface_send_start();
-	adp_packet_send_header(MSG_REQ_STATUS, MSG_REQ_STATUS_LEN);
-	adp_interface_send_stop();
-	/* Wait for status response from PC */
-	adp_packet_wait_for_response(MSG_RES_STATUS, (uint8_t*)&status, 2);
-	/* Return status */
-	return ((enum adp_status_code)status);
-}
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_REQ_STATUS;
+	msg_format.data_length = MSG_REQ_STATUS_LEN;
 
-/**
-* \brief Send MSG_REQ_DATA_READY and wait for response
-*
-* \param[out] response Data ready response struct
-*
-* \return None.
-*/
-void adp_request_data_ready(struct adp_msg_response_data_ready *response)
-{
-	uint8_t stream_num;
-	uint8_t receive_offset;
-	uint8_t receive_data[MSG_RES_DATA_READY_MAX_LEN];
-
-	memset(response, 0, sizeof(response));
-
-	/* Send packet header (no data in this message) */
-	adp_interface_send_start();
-	adp_packet_send_header(MSG_REQ_DATA_READY, MSG_REQ_DATA_READY_LEN);
-	adp_interface_send_stop();
-
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
 	/* Wait for response from PC */
-	adp_packet_wait_for_response(MSG_RES_DATA_READY, receive_data, MSG_RES_DATA_READY_MAX_LEN);
-
-	/* Build response struct */
-	response->num_streams = receive_data[0];
-	Assert(response->num_streams <= ADP_MAX_INCOMMING_STREAMS);
-
-	for (stream_num = 0; stream_num < response->num_streams; stream_num++) {
-		receive_offset = (stream_num * MSG_RES_DATA_READY_STREAM_SIZE) + 1;
-		response->stream[stream_num].stream_id = receive_data[receive_offset];
-		response->stream[stream_num].data_size = receive_data[receive_offset+1] | (receive_data[receive_offset+2] << 8);
-	}
-}
-
-
-/**
-* \brief Send MSG_REQ_DATA_READY and wait for response
-*
-* \param[in] request Struct containing request information
-* \param[out] response Struct containing response
-*
-* \return None
-*/
-void adp_request_data(uint8_t stream_id,uint8_t bytes_to_send, struct adp_msg_response_data *response)
-{
-	uint8_t receive_data[MSG_RES_DATA_MAX_LEN];
-	uint8_t n;
-
-	memset(response, 0, sizeof(response));		
-
-	if (bytes_to_send > ADP_MAX_BYTE_REQUEST) {
-		bytes_to_send = ADP_MAX_BYTE_REQUEST;
-	}
-
-	/* Send header and data */
-	adp_interface_send_start();
-	adp_packet_send_header(MSG_REQ_DATA, MSG_REQ_DATA_LEN);
-	adp_packet_send_data(&stream_id, 1);
-	adp_packet_send_data(&bytes_to_send, 1);
-	adp_interface_send_stop();
-
-	/* Wait for response */
-	adp_packet_wait_for_response(MSG_RES_DATA, receive_data, MSG_RES_DATA_MAX_LEN);
-
-	/* Build response struct */
-	response->stream_id = receive_data[0];
-	response->bytes_sent = receive_data[1];
-	Assert(response->bytes_sent <= ADP_MAX_BYTE_REQUEST);
-	response->remaining_data = receive_data[2] | (receive_data[3] << 8);
-
-	/* Copy data */
-	for (n=0; n < response->bytes_sent; n++) {
-		response->data[n] = receive_data[4+n];
-	}
-}
-
-bool adp_receive_packet_data(uint8_t *receive_buf)
-{
-	return adp_packet_receive_packet_data(receive_buf);
+	adp_wait_for_response(MSG_RES_STATUS, (uint8_t*)&status, 2);
+	return ((enum adp_status_code)status);
 }
 
 
@@ -230,22 +345,32 @@ bool adp_configure_info(const char* title, const char* description)
 	uint16_t title_len;
 	uint16_t description_len;
 	uint8_t ack;
+	uint16_t data_length;
+	uint16_t index = 0;
+	
+	struct adp_msg_format msg_format;
 
 	/* Add null-termination to length */
 	title_len = strlen(title) + 1;
 	description_len = strlen(description) + 1;
 	/* Make sure the strings are not too long */
-	Assert(title_len + description_len <= ADP_MAX_PACKET_DATA_SIZE);
+	Assert(title_len + description_len <= ADP_MAX_PACKET_DATA_SIZE);	
+	
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
 
-	/* Send packet */
-	adp_interface_send_start();
-	adp_packet_send_header(MSG_CONF_INFO, title_len + description_len);
-	adp_packet_send_data((uint8_t*)title, title_len);
-	adp_packet_send_data((uint8_t*)description, description_len);
-	adp_interface_send_stop();
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_INFO;
+	msg_format.data_length = title_len + description_len;
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)title, title_len);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)description, description_len);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
 
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
+
 	return (ack == ADP_ACK_OK);
 }
 
@@ -258,24 +383,36 @@ bool adp_configure_info(const char* title, const char* description)
 * \retval true   Message received and accepted
 * \retval false  Message received but not accepted
 */
-bool adp_configure_stream(struct adp_msg_configure_stream *const config)
+bool adp_configure_stream(struct adp_msg_configure_stream *const config, const char* label)
 {
 	uint8_t ack;
+	uint16_t data_length;
+	uint16_t label_len;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
 
-	/* Send message header */
-	adp_interface_send_start();
-	adp_packet_send_header(MSG_CONF_STREAM, MSG_CONF_STREAM_LEN);
-
-	/* Send configuration message */
-	adp_packet_send_data(&config->stream_id, 1);
-	adp_packet_send_data((uint8_t*)&config->type, 1);
-	adp_packet_send_data((uint8_t*)&config->mode, 1);
-	adp_packet_send_data((uint8_t*)&config->state, 1);
-	adp_packet_send_data((uint8_t*)config->label, ADP_CONF_MAX_LABEL);
-	adp_interface_send_stop();
+	/* Add null-termination to length */
+	label_len = strlen(label) + 1;
+	/* Make sure the strings are not too long */
+	Assert(label_len <= ADP_MAX_PACKET_DATA_SIZE);
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_STREAM;
+	msg_format.data_length = MSG_CONF_STREAM_LEN + label_len;
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->stream_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->type, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->mode, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->state, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)label, label_len);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
 
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
 	return (ack == ADP_ACK_OK);
 }
 
@@ -290,21 +427,27 @@ bool adp_configure_stream(struct adp_msg_configure_stream *const config)
 * \retval true   Message received and accepted
 * \retval false  Message received but not accepted
 */
-bool adp_toggle_stream(uint8_t stream_id, enum adp_stream_state state)
+bool adp_toggle_stream(struct adp_msg_toggle_stream *const config)
 {
 	uint8_t ack;
-
-	/* Send message header */
-	adp_interface_send_start();
-	adp_packet_send_header(MSG_CONF_TOGGLE_STREAM, MSG_CONF_TOGGLE_STREAM_LEN);
-
-	/* Send message data */
-	adp_packet_send_data(&stream_id, 1);
-	adp_packet_send_data((uint8_t*)&state, 1);
-	adp_interface_send_stop();
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_TOGGLE_STREAM;
+	msg_format.data_length = MSG_CONF_TOGGLE_STREAM_LEN;
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->stream_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->state, 1);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
 
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
 	return (ack == ADP_ACK_OK);
 }
 
@@ -318,38 +461,41 @@ bool adp_toggle_stream(uint8_t stream_id, enum adp_stream_state state)
 * \retval true   Message received and accepted
 * \retval false  Message received but not accepted
 */
-bool adp_configure_graph(struct adp_msg_configure_graph *const config, const char* label)
+bool adp_configure_graph(struct adp_msg_configure_graph *const config, \
+						const char* graph_label, const char* x_label)
 {
 	uint8_t ack;
-	uint16_t label_len;
+	uint16_t graph_label_len, x_label_len;
 
 	/* Add 0-termination to label string length */
-	label_len = strlen(label) + 1;
+	graph_label_len = strlen(graph_label) + 1;
+	x_label_len = strlen(x_label) + 1;
 
 	/* Make sure label isn't too big */
-	Assert(MSG_CONF_GRAPH_LEN + label_len <= ADP_MAX_PACKET_DATA_SIZE);
+	Assert(MSG_CONF_GRAPH_LEN + graph_label_len + x_label_len <= ADP_MAX_PACKET_DATA_SIZE);
 
-
-	/* Send message header */
-	adp_interface_send_start();
-	adp_packet_send_header(MSG_CONF_GRAPH, MSG_CONF_GRAPH_LEN + label_len);
-
-	/* Send message data */
-	adp_packet_send_data(&config->graph_id, 1);
-	//adp_packet_send_data((uint8_t*)config->label, ADP_CONF_MAX_LABEL);
-	adp_packet_send_data((uint8_t*)label, label_len);
-	adp_packet_send_data((uint8_t*)&config->x_min, 4);
-	adp_packet_send_data((uint8_t*)&config->x_max, 4);
-	adp_packet_send_data((uint8_t*)config->x_label, ADP_CONF_MAX_LABEL);
-	adp_packet_send_data((uint8_t*)&config->x_scale_numerator, 4);
-	adp_packet_send_data((uint8_t*)&config->x_scale_denominator, 4);
-	adp_packet_send_data((uint8_t*)&config->scale_mode, 1);
-	adp_packet_send_data((uint8_t*)&config->background_color, 3);
-	adp_packet_send_data((uint8_t*)&config->scroll_mode, 1);
-	adp_interface_send_stop();
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_GRAPH;
+	msg_format.data_length = MSG_CONF_GRAPH_LEN + graph_label_len + x_label_len;
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->graph_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)graph_label, graph_label_len);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->x_min, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->x_max, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)x_label, x_label_len);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->x_scale_numerator, MSG_CONF_GRAPH_LEN - 10);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
 
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
 	return (ack == ADP_ACK_OK);
 }
 
@@ -374,53 +520,27 @@ bool adp_configure_terminal(struct adp_msg_conf_terminal *const config, const ch
 	/* Make sure label isn't too big */
 	Assert(MSG_CONF_TERMINAL_LEN + label_len <= ADP_MAX_PACKET_DATA_SIZE);
 
-	/* Send message header */
-	adp_interface_send_start();
-	adp_packet_send_header(MSG_CONF_TERMINAL, MSG_CONF_TERMINAL_LEN + label_len);
-
-	/* Send message data */
-	adp_packet_send_data(&config->terminal_id, 1);
-	adp_packet_send_data((uint8_t*)label, label_len);
-	adp_packet_send_data(&config->width, 1);
-	adp_packet_send_data(&config->height, 1);
-	adp_packet_send_data((uint8_t*)&config->background_color, 3);
-	adp_packet_send_data((uint8_t*)&config->foreground_color, 3);
-	adp_interface_send_stop();
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_TERMINAL;
+	msg_format.data_length = MSG_CONF_TERMINAL_LEN + label_len;
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->terminal_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)label, label_len);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->width, MSG_CONF_TERMINAL_LEN - 1);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
 
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
 	return (ack == ADP_ACK_OK);
 }
-
-bool adp_transceive_terminal(struct adp_msg_conf_terminal *const config, const char* label, uint8_t* rx_buf)
-{
-	//uint8_t ack;
-	uint16_t label_len;
-	uint8_t status = false;
-
-	/* Add 0-termination to label string length */
-	label_len = strlen(label) + 1;
-
-	/* Make sure label isn't too big */
-	Assert(MSG_CONF_TERMINAL_LEN + label_len <= ADP_MAX_PACKET_DATA_SIZE);
-
-	/* Send message header */
-	adp_interface_send_start();
-	status |= adp_packet_transceive_header(MSG_CONF_TERMINAL, MSG_CONF_TERMINAL_LEN + label_len, rx_buf);
-
-	/* Send message data */
-	status |= adp_packet_transceive_data(&config->terminal_id, 1, rx_buf);
-	status |= adp_packet_transceive_data((uint8_t*)label, label_len, rx_buf);
-	status |= adp_packet_transceive_data(&config->width, 1, rx_buf);
-	status |= adp_packet_transceive_data(&config->height, 1, rx_buf);
-	status |= adp_packet_transceive_data((uint8_t*)&config->background_color, 3, rx_buf);
-	status |= adp_packet_transceive_data((uint8_t*)&config->foreground_color, 3, rx_buf);
-	
-	adp_interface_send_stop();
-
-	return status;
-}
-
 
 /**
 * \brief Send MSG_CONF_ADD_TO_TERMINAL and wait for response
@@ -431,25 +551,38 @@ bool adp_transceive_terminal(struct adp_msg_conf_terminal *const config, const c
 * \retval true   Message received and accepted
 * \retval false  Message received but not accepted
 */
-bool adp_add_stream_to_terminal(struct adp_msg_add_stream_to_terminal *const config)
+bool adp_add_stream_to_terminal(struct adp_msg_add_stream_to_terminal *const config, const char* tag_text)
 {
 	uint8_t ack;
+	uint16_t data_length;
+	uint16_t tag_text_len;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	/* Add 0-termination to label string length */
+	tag_text_len = strlen(tag_text) + 1;
 
-	/* Send message header */
-	adp_interface_send_start();
-	adp_packet_send_header(MSG_CONF_ADD_TO_TERMINAL, MSG_CONF_ADD_TO_TERMINAL_LEN);
-
-	/* Send message data */
-	adp_packet_send_data(&config->terminal_id, 1);
-	adp_packet_send_data(&config->stream_id, 1);
-	adp_packet_send_data(&config->mode, 1);
-	adp_packet_send_data((uint8_t*)&config->text_color, 3);
-	adp_packet_send_data((uint8_t*)config->tag_text, ADP_CONF_MAX_LABEL);
-	adp_packet_send_data((uint8_t*)&config->tag_text_color, 3);
-	adp_interface_send_stop();
+	/* Make sure label isn't too big */
+	Assert(MSG_CONF_ADD_TO_TERMINAL_LEN + tag_text_len <= ADP_MAX_PACKET_DATA_SIZE);
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_ADD_TO_TERMINAL;
+	msg_format.data_length = MSG_CONF_ADD_TO_TERMINAL_LEN + tag_text_len;
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->terminal_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->stream_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->mode, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->text_color, 3);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)tag_text, tag_text_len);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->tag_text_color, 3);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
 
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
 	return (ack == ADP_ACK_OK);
 }
 
@@ -463,28 +596,41 @@ bool adp_add_stream_to_terminal(struct adp_msg_add_stream_to_terminal *const con
 * \retval true   Message received and accepted
 * \retval false  Message received but not accepted
 */
-bool adp_add_axis_to_graph(struct adp_msg_conf_axis *const config)
+bool adp_add_axis_to_graph(struct adp_msg_conf_axis *const config, const char* label)
 {
 	uint8_t ack;
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint16_t label_len;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	/* Add 0-termination to label string length */
+	label_len = strlen(label) + 1;
 
-	/* Send message header */
-	adp_interface_send_start();
-	adp_packet_send_header(MSG_CONF_AXIS, MSG_CONF_AXIS_LEN);
-
-	/* Send message data */
-	adp_packet_send_data(&config->axis_id, 1);
-	adp_packet_send_data(&config->graph_id, 1);
-	adp_packet_send_data((uint8_t*)(config->label), ADP_CONF_MAX_LABEL);
-	adp_packet_send_data((uint8_t*)&config->y_min, 4);
-	adp_packet_send_data((uint8_t*)&config->y_max, 4);
-	adp_packet_send_data((uint8_t*)&config->x_scale_numerator, 4);
-	adp_packet_send_data((uint8_t*)&config->x_scale_denominator, 4);
-	adp_packet_send_data((uint8_t*)&config->mode, 1);
-	adp_packet_send_data((uint8_t*)&config->color, 3);
-	adp_interface_send_stop();
+	/* Make sure label isn't too big */
+	Assert(MSG_CONF_AXIS_LEN + label_len <= ADP_MAX_PACKET_DATA_SIZE);
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_AXIS;
+	msg_format.data_length = MSG_CONF_AXIS_LEN + label_len;
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->axis_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->graph_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)label, label_len);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->y_min, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->y_max, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->x_scale_numerator, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->x_scale_denominator, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->mode, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->color, 3);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
 
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
 	return (ack == ADP_ACK_OK);
 }
 
@@ -501,28 +647,34 @@ bool adp_add_axis_to_graph(struct adp_msg_conf_axis *const config)
 bool adp_add_stream_to_axis(struct adp_msg_add_stream_to_axis *const config)
 {
 	uint8_t ack;
-
-	/* Send message header */
-	adp_interface_send_start();
-	adp_packet_send_header(MSG_CONF_ADD_STREAM_TO_AXIS, MSG_CONF_ADD_STREAM_TO_AXIS_LEN);
-
-	/* Send message data */
-	adp_packet_send_data(&config->graph_id, 1);
-	adp_packet_send_data(&config->axis_id, 1);
-	adp_packet_send_data(&config->stream_id, 1);
-	adp_packet_send_data((uint8_t*)&config->sample_rate_numerator, 4);
-	adp_packet_send_data((uint8_t*)&config->sample_rate_denominator, 4);
-	adp_packet_send_data((uint8_t*)&config->y_scale_numerator, 4);
-	adp_packet_send_data((uint8_t*)&config->y_scale_denominator, 4);
-	adp_packet_send_data((uint8_t*)&config->y_offset, 4);
-	adp_packet_send_data((uint8_t*)&config->transparency, 1);
-	adp_packet_send_data((uint8_t*)&config->mode, 1);
-	adp_packet_send_data((uint8_t*)&config->line_thickness, 1);
-	adp_packet_send_data((uint8_t*)&config->line_color, 3);
-	adp_interface_send_stop();
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_ADD_STREAM_TO_AXIS;
+	msg_format.data_length = MSG_CONF_ADD_STREAM_TO_AXIS_LEN;
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->graph_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->axis_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->stream_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->sample_rate_numerator, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->sample_rate_denominator, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->y_scale_numerator, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->y_scale_denominator, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->y_offset, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->transparency, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->mode, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->line_thickness, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->line_color, 3);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
 
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
 	return (ack == ADP_ACK_OK);
 }
 
@@ -536,148 +688,100 @@ bool adp_add_stream_to_axis(struct adp_msg_add_stream_to_axis *const config)
 * \retval true   Message received and accepted
 * \retval false  Message received but not accepted
 */
-bool adp_add_cursor_to_graph(struct adp_msg_add_cursor_to_graph *const config)
+bool adp_add_cursor_to_graph(struct adp_msg_add_cursor_to_graph *const config, const char* label)
 {
 	uint8_t ack;
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint16_t label_len;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	/* Add 0-termination to label string length */
+	label_len = strlen(label) + 1;
 
-	/* Send message header */
-	adp_interface_send_start();
-	adp_packet_send_header(MSG_CONF_CURSOR_TO_GRAPH, MSG_CONF_CURSOR_TO_GRAPH_LEN);
-
-	/* Send message data */
-	adp_packet_send_data(&config->stream_id, 1);
-	adp_packet_send_data(&config->graph_id, 1);
-	adp_packet_send_data(&config->axis_id, 1);
-	adp_packet_send_data((uint8_t*)(config->label), ADP_CONF_MAX_LABEL);
-	adp_packet_send_data(&config->thickness, 1);
-	adp_packet_send_data((uint8_t*)&config->color, 3);
-	adp_packet_send_data((uint8_t*)&config->initial_value, 4);
-	adp_packet_send_data((uint8_t*)&config->minimum_value, 4);
-	adp_packet_send_data((uint8_t*)&config->maximum_value, 4);
-	adp_packet_send_data((uint8_t*)&config->scale_numerator, 4);
-	adp_packet_send_data((uint8_t*)&config->scale_denominator, 4);
-	adp_packet_send_data((uint8_t*)&config->scale_offset, 4);
-	adp_packet_send_data(&config->line_style, 1);
-	adp_interface_send_stop();
+	/* Make sure label isn't too big */
+	Assert(MSG_CONF_CURSOR_TO_GRAPH_LEN + label_len <= ADP_MAX_PACKET_DATA_SIZE);
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_CURSOR_TO_GRAPH;
+	msg_format.data_length = MSG_CONF_CURSOR_TO_GRAPH_LEN;
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->stream_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->graph_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->axis_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)label, label_len);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->thickness, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->color, 3);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->initial_value, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->minimum_value, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->maximum_value, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->scale_numerator, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->scale_denominator, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->scale_offset, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->line_style, 1);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
 
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
 	return (ack == ADP_ACK_OK);
 }
 
-
 /**
-* \brief Send MSG_DATA_STREAM
+* \brief Send MSG_CONF_CURSOR_TO_GRAPH and wait for response
 *
-* \param[in] stream_data Data stream struct
+* \param[in] config         Cursor configuration struct
+* \param[in] tag_high_state Tag text to display when GPIO pin is high.
+* \param[in] tag_low_state  Tag text to display when GPIO pin is low.
 *
-* \return None
+* \return Status from PC
+* \retval true   Message received and accepted
+* \retval false  Message received but not accepted
 */
-bool adp_send_stream(struct adp_msg_data_stream *const stream_data, uint8_t *receive_buf)
+bool adp_add_gpio_to_graph(struct adp_msg_conf_gpio_to_graph *const config, \
+					const char* tag_high_state, const char* tag_low_state)
 {
-	uint8_t stream_num;
-	uint8_t packet_size = 0;
-	bool status;
-
-	/* find packet size */
-	for (stream_num = 0; stream_num < stream_data->number_of_streams; stream_num++) {
-		packet_size += stream_data->stream[stream_num].data_size;
-	}
-	packet_size += (1 + (2*stream_data->number_of_streams));
-
-	adp_interface_send_start();
-
-	/* Send message header */
-	adp_packet_send_header(MSG_DATA_STREAM, packet_size);
-
-	/* Send message data */
-	adp_packet_send_data(&stream_data->number_of_streams, 1);
-	for (stream_num = 0; stream_num < stream_data->number_of_streams; stream_num++) {
-		adp_packet_send_data(&stream_data->stream[stream_num].stream_id, 1);
-		adp_packet_send_data(&stream_data->stream[stream_num].data_size, 1);
-		adp_packet_send_data((uint8_t*)stream_data->stream[stream_num].data, stream_data->stream[stream_num].data_size);
-	}
+	uint8_t ack;
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint16_t label_len, tag_high_state_len, tag_low_state_len;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
 	
-	status = adp_packet_receive_packet_data(receive_buf);
+	/* Add 0-termination to label string length */
+	tag_high_state_len = strlen(tag_high_state) + 1;
+	tag_low_state_len = strlen(tag_low_state) + 1;
+	label_len = tag_high_state_len + tag_low_state_len;
+
+	/* Make sure label isn't too big */
+	Assert(MSG_CONF_GPIO_TO_GRAPH_LEN + label_len <= ADP_MAX_PACKET_DATA_SIZE);
 	
-	adp_interface_send_stop();
+	struct adp_msg_format msg_format;
 	
-	return status;
-}
-
-bool adp_transceive_stream(struct adp_msg_data_stream *const stream_data, uint8_t *receive_buf)
-{
-	uint8_t stream_num;
-	uint8_t packet_size = 0;
-	bool status = false;
-
-	/* find packet size */
-	for (stream_num = 0; stream_num < stream_data->number_of_streams; stream_num++) {
-		packet_size += stream_data->stream[stream_num].data_size;
-	}
-	packet_size += (1 + (2*stream_data->number_of_streams));
-
-	adp_interface_send_start();
-
-	/* Send message header */
-	status |= adp_packet_transceive_header(MSG_DATA_STREAM, packet_size, receive_buf);
-
-	/* Send message data */
-	status |= adp_packet_transceive_data(&stream_data->number_of_streams, 1, \
-										receive_buf);
-	for (stream_num = 0; stream_num < stream_data->number_of_streams; stream_num++) {
-		status |= adp_packet_transceive_data( \
-								&stream_data->stream[stream_num].stream_id, \
-								1, receive_buf);
-		status |= adp_packet_transceive_data( \
-								&stream_data->stream[stream_num].data_size, \
-								1, receive_buf);
-		status |= adp_packet_transceive_data( \
-								(uint8_t*)stream_data->stream[stream_num].data, \
-								stream_data->stream[stream_num].data_size, receive_buf);
-	}	
-	adp_interface_send_stop();
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_GPIO_TO_GRAPH;
+	msg_format.data_length = MSG_CONF_GPIO_TO_GRAPH_LEN + label_len;
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->graph_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->gpio_number, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->graph_id, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)tag_high_state, tag_high_state_len);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)tag_low_state, tag_low_state_len);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->transparency, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->mode, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->line_thickness, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->line_color_high_state, 3);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->line_color_low_state, 3);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->line_style, 1);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
 	
-	return status;
-}
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
 
-
-/**
-* \brief Send data on one single stream
-*
-* \param[in] stream_id ID of stream
-* \param[in] data      Pointer to data to send
-* \param[in] data_size Size of data to send
-*
-* \return None
-*/
-bool adp_send_single_stream(uint8_t stream_id, uint8_t* data, uint8_t data_size, uint8_t* receive_buf)
-{
-	struct adp_msg_data_stream data_stream;
-	uint8_t status;
-
-	data_stream.number_of_streams = 1;
-	data_stream.stream[0].stream_id = stream_id;
-	data_stream.stream[0].data_size = data_size;
-	data_stream.stream[0].data = data;
-	status = adp_send_stream(&data_stream, receive_buf);
-	
-	return status;
-}
-
-
-bool adp_transceive_single_stream(uint8_t stream_id, uint8_t* data, uint8_t data_size, uint8_t* receive_buf)
-{
-	struct adp_msg_data_stream data_stream;
-	uint8_t status;
-
-	data_stream.number_of_streams = 1;
-	data_stream.stream[0].stream_id = stream_id;
-	data_stream.stream[0].data_size = data_size;
-	data_stream.stream[0].data = data;
-	status = adp_transceive_stream(&data_stream, receive_buf);
-	
-	return status;
+	/* Wait for response and return status */
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	return (ack == ADP_ACK_OK);
 }
 
 /**
@@ -701,45 +805,42 @@ bool adp_add_dashboard(struct adp_msg_conf_dashboard *const config, const char* 
 	/* Make sure label isn't too big */
 	Assert(MSG_CONF_DASHBOARD_LEN + label_len <= ADP_MAX_PACKET_DATA_SIZE);
 
-	/* Send message header */
-	adp_interface_send_start();
-	adp_packet_send_header(MSG_CONF_DASHBOARD, MSG_CONF_DASHBOARD_LEN + label_len);
-
-	/* Send message data */
-	adp_packet_send_data(&config->dashboard_id, 1);
-	adp_packet_send_data((uint8_t*)label, label_len);
-	adp_packet_send_data((uint8_t*)&config->color, 3);
-	adp_packet_send_data((uint8_t*)&config->height, 2);
-	adp_interface_send_stop();
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_DASHBOARD;
+	msg_format.data_length = MSG_CONF_DASHBOARD_LEN + label_len;
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index,(uint8_t*)&config->dashboard_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)label, label_len);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->color, 3);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->height, 2);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
 
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
 	return (ack == ADP_ACK_OK);
 }
 
-/**
-* \brief Send common data for all dashboard elements
-*
-* \param[in] config    Pointer to common data struct
-* \param[in] data      Total length of message (depending on element_type)
-*
-* \return None
-*/
-static void adp_send_dahboard_element_common_data(struct adp_msg_conf_dashboard_element_common *const config, uint8_t length)
+static uint16_t adp_add_dashboard_element_common_send_byte(uint8_t* add_buf, uint16_t index, \
+									struct adp_msg_conf_dashboard_element_common *const config)
 {
-	/* Send message header */
-	adp_interface_send_start();
-	adp_packet_send_header(MSG_CONF_DASHBOARD_ELEMENT, length);
-
-	/* Send common message data */
-	adp_packet_send_data(&config->dashboard_id, 1);
-	adp_packet_send_data(&config->element_id, 1);
-	adp_packet_send_data(&config->z_index, 1);
-	adp_packet_send_data((uint8_t*)&config->x, 2);
-	adp_packet_send_data((uint8_t*)&config->y, 2);
-	adp_packet_send_data((uint8_t*)&config->width, 2);
-	adp_packet_send_data((uint8_t*)&config->height, 2);
-	adp_packet_send_data(&config->element_type, 1);
+	index = adp_add_send_byte(add_buf, index, (uint8_t *)&config->dashboard_id, 2);
+	index = adp_add_send_byte(add_buf, index, (uint8_t *)&config->element_id, 2);
+	index = adp_add_send_byte(add_buf, index, (uint8_t *)&config->z_index, 1);
+	index = adp_add_send_byte(add_buf, index, (uint8_t *)&config->x, 2);
+	index = adp_add_send_byte(add_buf, index, (uint8_t *)&config->y, 2);
+	index = adp_add_send_byte(add_buf, index, (uint8_t *)&config->width, 2);
+	index = adp_add_send_byte(add_buf, index, (uint8_t *)&config->height, 2);
+	index = adp_add_send_byte(add_buf, index, (uint8_t *)&config->element_type, 1);
+	
+	return index;
 }
 
 /**
@@ -751,27 +852,44 @@ static void adp_send_dahboard_element_common_data(struct adp_msg_conf_dashboard_
 * \retval true   Message received and accepted
 * \retval false  Message received but not accepted
 */
-bool adp_add_label_to_dashboard(struct adp_msg_conf_dashboard_element_label *const config)
+bool adp_add_label_to_dashboard(struct adp_msg_conf_dashboard_element_label *const config, const char* label)
 {
 	uint8_t ack;
+	uint16_t label_len;
 
-	/* Send common message data */
-	adp_send_dahboard_element_common_data((struct adp_msg_conf_dashboard_element_common*)config, ADP_ELEMENT_TYPE_LABEL_LEN);
+	/* Add 0-termination to label string length */
+	label_len = strlen(label) + 1;
 
-	/* Send label specific message data */
-	adp_packet_send_data(&config->font_size, 1);
-	adp_packet_send_data(&config->attribute, 1);
-	adp_packet_send_data(&config->horisontal_alignment, 1);
-	adp_packet_send_data(&config->vertical_alignment, 1);
-	adp_packet_send_data(&config->background_transparency, 1);
-	adp_packet_send_data((uint8_t*)&config->background_color, 3);
-	adp_packet_send_data(&config->foreground_transparency, 1);
-	adp_packet_send_data((uint8_t*)&config->foreground_color, 3);
-	adp_packet_send_data((uint8_t*)config->default_text, ADP_CONF_MAX_LABEL);
-	adp_interface_send_stop();
+	/* Make sure label isn't too big */
+	Assert(ADP_ELEMENT_TYPE_LABEL_LEN + label_len <= ADP_MAX_PACKET_DATA_SIZE);
 
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_DASHBOARD_ELEMENT;
+	msg_format.data_length = ADP_ELEMENT_TYPE_LABEL_LEN + label_len;
+	index = adp_add_dashboard_element_common_send_byte((uint8_t*)&msg_format.data, index, \
+											(struct adp_msg_conf_dashboard_element_common *)config);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->font_size, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->attribute, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->horisontal_alignment, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->vertical_alignment, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->background_transparency, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->background_color, 3);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->foreground_transparency, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->foreground_color, 3);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)label, label_len);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
+	
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
 	return (ack == ADP_ACK_OK);
 }
 
@@ -784,20 +902,37 @@ bool adp_add_label_to_dashboard(struct adp_msg_conf_dashboard_element_label *con
 * \retval true   Message received and accepted
 * \retval false  Message received but not accepted
 */
-bool adp_add_button_to_dashboard(struct adp_msg_conf_dashboard_element_button *const config)
+bool adp_add_button_to_dashboard(struct adp_msg_conf_dashboard_element_button *const config, const char* label)
 {
 	uint8_t ack;
+	uint16_t label_len;
 
-	/* Send common message data */
-	adp_send_dahboard_element_common_data((struct adp_msg_conf_dashboard_element_common*)config, ADP_ELEMENT_TYPE_BUTTON_LEN);
+	/* Add 0-termination to label string length */
+	label_len = strlen(label) + 1;
 
-	/* Send button specific message data */
-	adp_packet_send_data(&config->font_size, 1);
-	adp_packet_send_data((uint8_t*)config->button_label, ADP_CONF_MAX_LABEL);
-	adp_interface_send_stop();
+	/* Make sure label isn't too big */
+	Assert(ADP_ELEMENT_TYPE_BUTTON_LEN + label_len <= ADP_MAX_PACKET_DATA_SIZE);
 
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_DASHBOARD_ELEMENT;
+	msg_format.data_length = ADP_ELEMENT_TYPE_BUTTON_LEN + label_len;
+	index = adp_add_dashboard_element_common_send_byte((uint8_t*)&msg_format.data, index, \
+										(struct adp_msg_conf_dashboard_element_common *)config);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->font_size, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)label, label_len);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
+	
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
 	return (ack == ADP_ACK_OK);
 }
 
@@ -811,20 +946,66 @@ bool adp_add_button_to_dashboard(struct adp_msg_conf_dashboard_element_button *c
 * \retval false  Message received but not accepted
 */
 bool adp_add_slider_to_dashboard(struct adp_msg_conf_dashboard_element_slider *const config)
+{	
+		uint8_t ack;
+		uint16_t data_length;
+		uint16_t index = 0;
+		uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+		
+		struct adp_msg_format msg_format;
+		
+		msg_format.protocol_token = ADP_TOKEN;
+		msg_format.protocol_msg_id = MSG_CONF_DASHBOARD_ELEMENT;
+		msg_format.data_length = ADP_ELEMENT_TYPE_SLIDER_LEN;
+		index = adp_add_dashboard_element_common_send_byte((uint8_t*)&msg_format.data, index, \
+												(struct adp_msg_conf_dashboard_element_common *)config);
+		index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->minimum_value, 4);
+		index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->maximum_value, 4);
+		index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->initial_value, 4);
+		data_length = ADP_LENGTH_PACKET_HEADER + index;
+		
+		/* Send the protocol packet data */
+		adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
+		
+		/* Wait for response and return status */
+		adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
+		return (ack == ADP_ACK_OK);
+}
+
+/**
+* \brief Add a progress bar to dashboard
+*
+* \param[in] config    Pointer to dashboard progress bar struct
+*
+* \return Status from PC
+* \retval true   Message received and accepted
+* \retval false  Message received but not accepted
+*/
+bool adp_add_progress_to_dashboard(struct adp_msg_conf_dashboard_element_progress *const config)
 {
 	uint8_t ack;
-
-	/* Send common message data */
-	adp_send_dahboard_element_common_data((struct adp_msg_conf_dashboard_element_common*)config, ADP_ELEMENT_TYPE_SLIDER_LEN);
-
-	/* Send slider specific message data */
-	adp_packet_send_data((uint8_t*)&config->minimum_value, 4);
-	adp_packet_send_data((uint8_t*)&config->maximum_value, 4);
-	adp_packet_send_data((uint8_t*)&config->initial_value, 4);
-	adp_interface_send_stop();
-
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_DASHBOARD_ELEMENT;
+	msg_format.data_length = ADP_ELEMENT_TYPE_PROGRESS_LEN;
+	index = adp_add_dashboard_element_common_send_byte((uint8_t*)&msg_format.data, index, \
+											(struct adp_msg_conf_dashboard_element_common *)config);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->minimum_value, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->maximum_value, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->initial_value, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->color, 3);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
+	
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
 	return (ack == ADP_ACK_OK);
 }
 
@@ -840,47 +1021,28 @@ bool adp_add_slider_to_dashboard(struct adp_msg_conf_dashboard_element_slider *c
 bool adp_add_signal_to_dashboard(struct adp_msg_conf_dashboard_element_signal *const config)
 {
 	uint8_t ack;
-
-	/* Send common message data */
-	adp_send_dahboard_element_common_data((struct adp_msg_conf_dashboard_element_common*)config, ADP_ELEMENT_TYPE_SIGNAL_LEN);
-
-	/* Send signal specific message data */
-	adp_packet_send_data(&config->on_transparency, 1);
-	adp_packet_send_data((uint8_t*)&config->on_color, 3);
-	adp_packet_send_data(&config->off_transparency, 1);
-	adp_packet_send_data((uint8_t*)&config->off_color, 3);
-	adp_interface_send_stop();
-
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_DASHBOARD_ELEMENT;
+	msg_format.data_length = ADP_ELEMENT_TYPE_SIGNAL_LEN;
+	index = adp_add_dashboard_element_common_send_byte((uint8_t*)&msg_format.data, index, \
+											(struct adp_msg_conf_dashboard_element_common *)config);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->on_transparency, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->on_color, 3);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->off_transparency, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->off_color, 3);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
+	
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
-	return (ack == ADP_ACK_OK);
-}
-
-/**
-* \brief Add a progress bar to dashboard
-*
-* \param[in] config    Pointer to dashboard progress bar struct
-*
-* \return Status from PC
-* \retval true   Message received and accepted
-* \retval false  Message received but not accepted
-*/
-bool adp_add_progress_to_dashboard(struct adp_msg_conf_dashboard_element_progress *const config)
-{
-	uint8_t ack;
-
-	/* Send common message data */
-	adp_send_dahboard_element_common_data((struct adp_msg_conf_dashboard_element_common*)config, ADP_ELEMENT_TYPE_PROGRESS_LEN);
-
-	/* Send progress specific message data */
-	adp_packet_send_data((uint8_t*)&config->minimum_value, 4);
-	adp_packet_send_data((uint8_t*)&config->maximum_value, 4);
-	adp_packet_send_data((uint8_t*)&config->initial_value, 4);
-	adp_packet_send_data((uint8_t*)&config->color, 3);
-	adp_interface_send_stop();
-
-	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
 	return (ack == ADP_ACK_OK);
 }
 
@@ -896,24 +1058,33 @@ bool adp_add_progress_to_dashboard(struct adp_msg_conf_dashboard_element_progres
 bool adp_add_segment_to_dashboard(struct adp_msg_conf_dashboard_element_segment *const config)
 {
 	uint8_t ack;
-
-	/* Send common message data */
-	adp_send_dahboard_element_common_data((struct adp_msg_conf_dashboard_element_common*)config, ADP_ELEMENT_TYPE_SEGMENT_LEN);
-
-	/* Send segment specific message data */
-	adp_packet_send_data(&config->segment_count, 1);
-	adp_packet_send_data(&config->base, 1);
-	adp_packet_send_data(&config->transparency, 1);
-	adp_packet_send_data((uint8_t*)&config->color, 3);
-	adp_interface_send_stop();
-
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_DASHBOARD_ELEMENT;
+	msg_format.data_length = ADP_ELEMENT_TYPE_SEGMENT_LEN;
+	index = adp_add_dashboard_element_common_send_byte((uint8_t*)&msg_format.data, index, \
+											(struct adp_msg_conf_dashboard_element_common *)config);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->segment_count, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->base, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->transparency, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->color, 3);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
+	
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
 	return (ack == ADP_ACK_OK);
 }
 
 /**
-* \brief Add a graph display to dashboard
+* \brief Add a graph to dashboard
 *
 * \param[in] config    Pointer to dashboard graph struct
 *
@@ -921,23 +1092,172 @@ bool adp_add_segment_to_dashboard(struct adp_msg_conf_dashboard_element_segment 
 * \retval true   Message received and accepted
 * \retval false  Message received but not accepted
 */
-bool adp_add_graph_to_dashboard(struct adp_msg_conf_dashboard_element_graph *const config)
+bool adp_add_graph_to_dashboard(struct adp_msg_conf_dashboard_element_graph *const config, const char* title)
 {
 	uint8_t ack;
+	uint16_t title_len;
 
-	/* Send common message data */
-	adp_send_dahboard_element_common_data((struct adp_msg_conf_dashboard_element_common*)config, ADP_ELEMENT_TYPE_SEGMENT_LEN);
+	/* Add 0-termination to label string length */
+	title_len = strlen(title) + 1;
 
-	/* Send segment specific message data */
-	adp_packet_send_data((uint8_t*)&config->title_color, 3);
-	adp_packet_send_data((uint8_t*)&config->background_color, 3);
-	adp_packet_send_data((uint8_t*)&config->graph_background_color, 3);
-	adp_packet_send_data((uint8_t*)&config->plot_color, 3);
-	adp_packet_send_data((uint8_t*)config->title_text, sizeof(config->title_text));
-	adp_interface_send_stop();
+	/* Make sure label isn't too big */
+	Assert(ADP_ELEMENT_TYPE_GRAPH_LEN + title_len <= ADP_MAX_PACKET_DATA_SIZE);
 
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_DASHBOARD_ELEMENT;
+	msg_format.data_length = ADP_ELEMENT_TYPE_GRAPH_LEN + title_len;
+	index = adp_add_dashboard_element_common_send_byte((uint8_t*)&msg_format.data, index, \
+										(struct adp_msg_conf_dashboard_element_common *)config);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->title_color, 3);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->background_color, 3);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->graph_background_color, 3);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)title, title_len);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->plot_count, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->x_min, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->x_max, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->y_min, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->y_max, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->mode, 1);
+	
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
+	
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	return (ack == ADP_ACK_OK);
+}
+
+/**
+* \brief Add data fields to dashboard
+*
+* \param[in] config    Pointer to dashboard text struct
+*
+* \return Status from PC
+* \retval true   Message received and accepted
+* \retval false  Message received but not accepted
+*/
+bool adp_add_text_to_dashboard(struct adp_msg_conf_dashboard_element_text *const config)
+{
+	uint8_t ack;
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_DASHBOARD_ELEMENT;
+	msg_format.data_length = ADP_ELEMENT_TYPE_TEXT_LEN;
+	index = adp_add_dashboard_element_common_send_byte((uint8_t*)&msg_format.data, index, \
+											(struct adp_msg_conf_dashboard_element_common *)config);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->minimum, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->maximum, 4);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->value, 4);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
+	
+	/* Wait for response and return status */
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	return (ack == ADP_ACK_OK);
+}
+
+/**
+* \brief Add a radio to dashboard
+*
+* \param[in] config    Pointer to dashboard radio struct
+*
+* \return Status from PC
+* \retval true   Message received and accepted
+* \retval false  Message received but not accepted
+*/
+bool adp_add_radio_to_dashboard(struct adp_msg_conf_dashboard_element_radio *const config, const char* text)
+{
+	uint8_t ack;
+	uint16_t text_len;
+
+	/* Add 0-termination to label string length */
+	text_len = strlen(text) + 1;
+
+	/* Make sure label isn't too big */
+	Assert(ADP_ELEMENT_TYPE_RADIO_LEN + text_len <= ADP_MAX_PACKET_DATA_SIZE);
+
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_DASHBOARD_ELEMENT;
+	msg_format.data_length = ADP_ELEMENT_TYPE_RADIO_LEN + text_len;
+	index = adp_add_dashboard_element_common_send_byte((uint8_t*)&msg_format.data, index, \
+											(struct adp_msg_conf_dashboard_element_common *)config);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->font_size, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->number_items, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->orientation, 1);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)text, text_len);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
+	
+	/* Wait for response and return status */
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	return (ack == ADP_ACK_OK);
+}
+
+/**
+* \brief Add a pie to dashboard
+*
+* \param[in] config    Pointer to dashboard pie struct
+*
+* \return Status from PC
+* \retval true   Message received and accepted
+* \retval false  Message received but not accepted
+*/
+bool adp_add_pie_to_dashboard(struct adp_msg_conf_dashboard_element_pie *const config, const char* title)
+{
+	uint8_t ack;
+	uint16_t title_len;
+
+	/* Add 0-termination to label string length */
+	title_len = strlen(title) + 1;
+
+	/* Make sure label isn't too big */
+	Assert(ADP_ELEMENT_TYPE_PIE_LEN + title_len <= ADP_MAX_PACKET_DATA_SIZE);
+
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_DASHBOARD_ELEMENT;
+	msg_format.data_length = ADP_ELEMENT_TYPE_PIE_LEN + title_len;
+	index = adp_add_dashboard_element_common_send_byte((uint8_t*)&msg_format.data, index, \
+											(struct adp_msg_conf_dashboard_element_common *)config);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->background_color, 3);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->title_color, 3);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)title, title_len);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->number_slices, 1);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
+	
+	/* Wait for response and return status */
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
 	return (ack == ADP_ACK_OK);
 }
 
@@ -953,19 +1273,81 @@ bool adp_add_graph_to_dashboard(struct adp_msg_conf_dashboard_element_graph *con
 bool adp_add_stream_to_element(struct adp_conf_add_stream_to_element *const config)
 {
 	uint8_t ack;
-
-	/* Send message header */
-	adp_interface_send_start();
-	adp_packet_send_header(MSG_CONF_ADD_STREAM_TO_ELEMENT, MSG_CONF_ADD_STREAM_TO_ELEMENT_LEN);
-
-	/* Send message data */
-	adp_packet_send_data(&config->dashboard_id, 1);
-	adp_packet_send_data(&config->element_id, 1);
-	adp_packet_send_data(&config->stream_id, 1);
-	adp_interface_send_stop();
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_CONF_ADD_STREAM_TO_ELEMENT;
+	msg_format.data_length = MSG_CONF_ADD_STREAM_TO_ELEMENT_LEN;
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->dashboard_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->element_id, 2);
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&config->stream_id, 2);
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
 
 	/* Wait for response and return status */
-	adp_packet_wait_for_response(MSG_CONF_ACK, &ack, 1);
+	adp_wait_for_response(MSG_CONF_ACK, &ack, 1);
 	return (ack == ADP_ACK_OK);
+}
+
+bool adp_transceive_stream(struct adp_msg_data_stream *const stream_data, uint8_t *protocol_buf)
+{
+	uint8_t stream_num;	
+	uint16_t data_length;
+	uint16_t index = 0;
+	uint8_t rx_buf[ADP_MAX_PACKET_LENGTH] = {0,};
+	
+	struct adp_msg_format msg_format;
+	
+	index = adp_add_send_byte((uint8_t*)&msg_format.data, index, (uint8_t*)&stream_data->number_of_streams, 1);
+	/* find packet size */
+	for (stream_num = 0; stream_num < stream_data->number_of_streams; stream_num++) {
+		index = adp_add_send_byte((uint8_t*)&msg_format.data, index, \
+						(uint8_t*)&stream_data->stream[stream_num].stream_id, 2);
+		index = adp_add_send_byte((uint8_t*)&msg_format.data, index, \
+						(uint8_t*)&stream_data->stream[stream_num].data_size, 1);
+		index = adp_add_send_byte((uint8_t*)&msg_format.data, index, \
+						stream_data->stream[stream_num].data, \
+						stream_data->stream[stream_num].data_size);
+	}
+	
+	msg_format.protocol_token = ADP_TOKEN;
+	msg_format.protocol_msg_id = MSG_DATA_STREAM;
+	msg_format.data_length = index;
+	data_length = ADP_LENGTH_PACKET_HEADER + index;
+	
+	/* Send the protocol packet data */
+	adp_interface_transceive_procotol((uint8_t*)&msg_format, data_length, rx_buf);
+	
+	return adp_protocol_add_byte(MSG_RES_DATA, rx_buf, data_length, protocol_buf);
+}
+
+
+/**
+* \brief Send and read data on one single stream
+*
+* \param[in] stream_id ID of stream
+* \param[in] data      Pointer to data to send
+* \param[in] data_size Size of data to send
+*
+* \return None
+*/
+bool adp_transceive_single_stream(uint16_t stream_id, uint8_t* data, uint8_t data_size, uint8_t* protocol_buf)
+{
+	struct adp_msg_data_stream data_stream;
+	volatile uint8_t status;
+
+	data_stream.number_of_streams = 1;
+	data_stream.stream[0].stream_id = stream_id;
+	data_stream.stream[0].data_size = data_size;
+	data_stream.stream[0].data = data;
+	status = adp_transceive_stream(&data_stream, protocol_buf);
+	
+	return status;
 }
 

@@ -48,46 +48,16 @@
 #include <system.h>
 
 #include <asf.h>
-#include "adp_interface.h"
+#include <adp_interface.h>
 
-#define EDBG_SPI EDBG_SPI_MODULE
-#define EDBG_SPI_SS_PIN PIN_PB31//PIN_PB17
+#define EDBG_TWI EDBG_I2C_MODULE
+#define TWI_EDBG_SLAVE_ADDR 0x28
+#define TIMEOUT 1000
 
-struct spi_module edbg_spi;
-struct spi_slave_inst slave;
-
-/**
-* \brief Send SPI start condition
-*
-*/
-static void adp_interface_send_start(void)
-{
-	spi_select_slave(&edbg_spi, &slave, true);
-}
+struct i2c_master_module i2c_master_instance;
 
 /**
-* \brief Send SPI stop condition
-*
-*/
-static void adp_interface_send_stop(void)
-{
-	spi_select_slave(&edbg_spi, &slave, false);
-}
-
-/**
-* \brief Sends and reads data byte on SPI
-*
-* \param[in]  data     Data byte to send
-* \param[in]  tx_data  SPI character to transmit
-* \param[out] rx_data  Pointer to store the received SPI character
-*/
-static void adp_interface_transceive(uint8_t *tx_data, uint8_t *rx_data, uint16_t length)
-{
-	spi_transceive_buffer_wait(&edbg_spi, tx_data, rx_data, length);
-}
-
-/**
-* \brief Initialize EDBG SPI communication for SAM0
+* \brief Initialize EDBG I2C communication for SAM0
 *
 */
 bool adp_interface_init(void)
@@ -95,51 +65,32 @@ bool adp_interface_init(void)
 	enum status_code return_value;
 
 	system_init();
-	ioport_init();
 
-	struct spi_slave_inst_config slave_dev_config;
-
-	struct spi_config config;
-
-	spi_slave_inst_get_config_defaults(&slave_dev_config);
-	slave_dev_config.ss_pin = EDBG_SPI_SS_PIN;
-	spi_attach_slave(&slave, &slave_dev_config);
-
-	spi_get_config_defaults(&config);
-	config.mode_specific.master.baudrate = 1000000;
-	config.mux_setting = EDBG_SPI_SERCOM_MUX_SETTING;
-	config.pinmux_pad0 = EDBG_SPI_SERCOM_PINMUX_PAD0;
-	config.pinmux_pad1 = PINMUX_UNUSED;
-	config.pinmux_pad2 = EDBG_SPI_SERCOM_PINMUX_PAD2;
-	config.pinmux_pad3 = EDBG_SPI_SERCOM_PINMUX_PAD3;
-
-	return_value = spi_init(&edbg_spi, EDBG_SPI, &config);
-
-	spi_enable(&edbg_spi);
-
+	struct i2c_master_config config_i2c_master;
+	i2c_master_get_config_defaults(&config_i2c_master);
+	config_i2c_master.buffer_timeout = 10000;
+	return_value = i2c_master_init(&i2c_master_instance, EDBG_TWI, &config_i2c_master);
+	i2c_master_enable(&i2c_master_instance);
 	return return_value;
 }
 
-/**
-* \brief Sends and reads protocol packet data byte on SPI
-*
-* \param[in]  tx_buf  Pointer to send the protocol packet data
-* \param[in]  length  The length of the send protocol packet data
-* \param[out] rx_buf  Pointer to store the received SPI character
-*/
-void adp_interface_transceive_procotol(uint8_t* tx_buf, uint16_t length, uint8_t* rx_buf)
+static enum status_code adp_interface_send(uint8_t* tx_buf, uint16_t length)
 {
-	/* Send SPI start condition */
-	adp_interface_send_start();
-
-	adp_interface_transceive(tx_buf, rx_buf, length);
+	enum status_code status;
 	
-	/* Send SPI end condition */
-	adp_interface_send_stop();
+	struct i2c_master_packet packet = {
+		.address = TWI_EDBG_SLAVE_ADDR,
+		.data_length = length,
+		.data = tx_buf,
+	};
+	/* Send data to PC */
+	status = i2c_master_write_packet_wait(&i2c_master_instance, &packet);
+	
+	return status;
 }
 
 /**
-* \brief Read response on SPI from PC
+* \brief Read response on I2C from PC
 *
 * return Status
 * \param[in]  rx_buf  Pointer to receive the data
@@ -148,13 +99,35 @@ void adp_interface_transceive_procotol(uint8_t* tx_buf, uint16_t length, uint8_t
 */
 bool adp_interface_read_response(uint8_t* rx_buf, uint16_t length)
 {
-	bool status;
+	enum status_code status;
+	uint8_t data_len;
 
-	/* Send SPI start condition */
-	adp_interface_send_start();	
-	status = spi_read_buffer_wait(&edbg_spi, rx_buf, length, 0xFF);
-	/* Send SPI end condition */
-	adp_interface_send_stop();
-
+	struct i2c_master_packet packet = {
+		.address = TWI_EDBG_SLAVE_ADDR,
+		.data_length = 1,
+		.data = &data_len,
+	};
+	i2c_master_read_packet_wait(&i2c_master_instance, &packet);
+	
+	if (data_len != 0)
+	{
+		packet.data_length = data_len;
+		packet.data = rx_buf;
+		status = i2c_master_read_packet_wait(&i2c_master_instance, &packet);
+	}
+	
 	return status;
+}
+
+/**
+* \brief Sends and reads protocol packet data byte on I2C
+*
+* \param[in]  tx_buf  Pointer to send the protocol packet data
+* \param[in]  length  The length of the send protocol packet data
+* \param[out] rx_buf  Pointer to store the received I2C character
+*/
+void adp_interface_transceive_procotol(uint8_t* tx_buf, uint16_t length, uint8_t* rx_buf)
+{	
+	adp_interface_send(tx_buf, length);
+	adp_interface_read_response(rx_buf, length);
 }

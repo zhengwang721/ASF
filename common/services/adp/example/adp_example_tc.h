@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ADP service implementation
+ * \brief ADP service example TC functions
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -43,13 +43,11 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#ifndef ADP_EXAMPLE_TC_H_INCLUDED
+#  define ADP_EXAMPLE_TC_H_INCLUDED
 
-#ifndef ADP_INTERFACE_H_INCLUDED
-#define ADP_INTERFACE_H_INCLUDED
+volatile extern bool time_out;
 
-/* Prototypes of communication functions used to setup, send and receive data */
-bool adp_interface_init(void);
-void adp_interface_transceive_procotol(uint8_t* tx_buf, uint16_t length, uint8_t* rx_buf);
-bool adp_interface_read_response(uint8_t* rx_buf, uint16_t length);
+void adp_example_tc_init(void);
 
 #endif

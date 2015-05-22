@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ADP service implementation
+ * \brief ADP service example TC functions for SAM0
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,12 +44,45 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef ADP_INTERFACE_H_INCLUDED
-#define ADP_INTERFACE_H_INCLUDED
+#include <compiler.h>
+#include <asf.h>
+#include "adp_example_tc.h"
+#include "conf_tc.h"
 
-/* Prototypes of communication functions used to setup, send and receive data */
-bool adp_interface_init(void);
-void adp_interface_transceive_procotol(uint8_t* tx_buf, uint16_t length, uint8_t* rx_buf);
-bool adp_interface_read_response(uint8_t* rx_buf, uint16_t length);
+struct tc_module tc_instance;
+volatile bool time_out = true;
 
-#endif
+static void adp_example_tc_callback(struct tc_module *const module_inst)
+{
+	time_out = true;
+}
+
+static void adp_example_tc_configure(void)
+{
+	struct tc_config config_tc;
+	
+	tc_get_config_defaults(&config_tc);
+	config_tc.clock_source = GCLK_GENERATOR_1;
+	config_tc.counter_size = TC_COUNTER_SIZE_8BIT;
+	config_tc.clock_prescaler = TC_CLOCK_PRESCALER_DIV16;
+	/* Timer = 16*(2^8 - 55 - 1)/32000 = 100ms */
+	config_tc.counter_8_bit.value = 0;
+	config_tc.counter_8_bit.period = 55;
+	
+	tc_init(&tc_instance, CONF_TC_MODULE, &config_tc);
+	tc_enable(&tc_instance);
+}
+
+static void adp_example_tc_configure_callback(void)
+{
+	tc_register_callback(&tc_instance, adp_example_tc_callback, \
+						TC_CALLBACK_OVERFLOW);
+	tc_enable_callback(&tc_instance, TC_CALLBACK_OVERFLOW);
+}
+
+void adp_example_tc_init(void)
+{
+ 	adp_example_tc_configure();
+	adp_example_tc_configure_callback();
+}
+
