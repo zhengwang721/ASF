@@ -284,7 +284,7 @@ static void reasm_timer_callback(void *ptr)
       if (timer_expired(&(sics_frag_attr[i].frag_reass_timer))) {
         sics_used_buf[i] = 0;
         memset(&(sics_frag_attr[i]),0,sizeof(sics_frag_t));
-        PRINTFI("\(timed-out\),");
+        PRINTFI ("\(timed-out\),");
       }
     }
   }
@@ -2046,12 +2046,12 @@ input(void)
 #if DEBUG
     if (!is_fragment) {
       uint16_t ndx;
-      PRINTFI("after decompression %u:", SICSLOWPAN_IP_BUF->len[1]);
+      PRINTF ("after decompression %u:", SICSLOWPAN_IP_BUF->len[1]);
       for (ndx = 0; ndx < SICSLOWPAN_IP_BUF->len[1] + 40; ndx++) {
         uint8_t data = ((uint8_t *) (SICSLOWPAN_IP_BUF))[ndx];
-        PRINTFI("%02x", data);
+        PRINTF ("%02x", data);
       }
-      PRINTFI("\n");
+      PRINTF ("\n");
     }
 #endif
 
