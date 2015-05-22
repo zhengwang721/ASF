@@ -2043,7 +2043,7 @@ input(void)
 		sicslowpan_len = 0;
     
 
-#if DEBUG
+#if _DEBUG_
     if (!is_fragment) {
       uint16_t ndx;
       PRINTF ("after decompression %u:", SICSLOWPAN_IP_BUF->len[1]);
