@@ -86,7 +86,7 @@ enum system_reset_cause {
 /**
  * \brief Reset the MCU.
  *
- * Resets the MCU and all associated peripherals and registers, except RTC, all 32kHz sources,
+ * Resets the MCU and all associated peripherals and registers, except RTC, all 32KHz sources,
  * WDT (if ALWAYSON is set) and GCLK (if WRTLOCK is set).
  *
  */

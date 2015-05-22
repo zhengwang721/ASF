@@ -61,6 +61,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_nvm_prerequisites
@@ -90,7 +91,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_NVM_RWWEE</td>
- *    <td>SAML21, SAMD21-64K</td>
+ *    <td>SAML21, SAMD21-64K, SAMDA0, SAMDA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_BOD12</td>
@@ -285,8 +286,8 @@ extern "C" {
  * Define NVM features set according to different device family
  * @{
 */
-#if (SAML21) || defined(SAMD21_64K) || defined(__DOXYGEN__)
-/** Read while write EEPROM emulation feature*/
+#if (SAML21) || (SAMDA0) || (SAMDA1) || defined(SAMD21_64K) || defined(__DOXYGEN__)
+/** Read while write EEPROM emulation feature. */
 #  define FEATURE_NVM_RWWEE
 #endif
 #if (SAML21) || defined(__DOXYGEN__)
@@ -371,9 +372,9 @@ enum nvm_command {
 	 */
 	NVM_COMMAND_EXIT_LOW_POWER_MODE        = NVMCTRL_CTRLA_CMD_CPRM,
 #ifdef FEATURE_NVM_RWWEE
-	/** Read while write(RWW) EEPROM area erase row */
+	/** Read while write(RWW) EEPROM area erase row. */
 	NVM_COMMAND_RWWEE_ERASE_ROW            = NVMCTRL_CTRLA_CMD_RWWEEER,
-	/** RWW EEPROM write page */
+	/** RWW EEPROM write page. */
 	NVM_COMMAND_RWWEE_WRITE_PAGE           = NVMCTRL_CTRLA_CMD_RWWEEWP,
 #endif
 };
@@ -891,8 +892,8 @@ static inline enum nvm_error nvm_get_error(void)
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>08/2014</td>
- *		<td>Added support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAML21 and SAMDA0/DA1.</td>
  *	</tr> 
  *	<tr>
  *		<td>D</td>

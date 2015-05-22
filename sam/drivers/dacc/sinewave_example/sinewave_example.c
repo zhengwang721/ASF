@@ -346,11 +346,13 @@ int main(void)
 	/* Enable DAC */
 	dacc_enable(DACC_BASE);
 #else
+#if (SAM3S) || (SAM3XA)
 	/* Power save:
 	 * sleep mode  - 0 (disabled)
 	 * fast wakeup - 0 (disabled)
 	 */
 	dacc_set_power_save(DACC_BASE, 0, 0);
+#endif
 	/* Timing:
 	 * refresh        - 0x08 (1024*8 dacc clocks)
 	 * max speed mode -    0 (disabled)
