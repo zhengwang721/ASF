@@ -48,7 +48,7 @@
 
 #include <board.h>
 
-// Interface configuration for SAM L21 Xplained Pro
+// Interface configuration for SAM L22 Xplained Pro
 #  define SSD1306_SPI                 EXT3_SPI_MODULE
 #  define CONFIG_SSD1306_FRAMEBUFFER
 
