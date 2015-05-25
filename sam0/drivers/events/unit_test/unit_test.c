@@ -3,7 +3,11 @@
  *
  * \brief SAM Event System Unit test
  *
+<<<<<<< HEAD
  * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
+=======
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * \asf_license_start
  *
@@ -82,7 +86,11 @@
  *      - SAM D21 Xplained Pro board
  *      - SAM R21 Xplained Pro board
  *      - SAM L21 Xplained Pro board
+<<<<<<< HEAD
  *      - SAM C21 Xplained Pro board
+=======
+ *      - SAM DA1 Xplained Pro board
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * \section appdoc_sam0_events_unit_test_setup Setup
  * The following connections has to be made using wires:
@@ -115,7 +123,7 @@
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

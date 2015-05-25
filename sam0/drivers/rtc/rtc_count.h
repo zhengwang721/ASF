@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_rtc_count_group SAM RTC Count Driver (RTC COUNT)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Real Time Clock functionality in Count
  * operating mode, for the configuration and retrieval of the current RTC
  * counter value. The following driver API modes are covered by this
@@ -69,7 +69,11 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+<<<<<<< HEAD
  *  - Atmel | SMART SAM C21
+=======
+ *  - Atmel | SMART SAM DA0/DA1
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rtc_count_prerequisites
@@ -129,7 +133,11 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
+<<<<<<< HEAD
  *    <td>SAMD20/D21/R21/D10/D11</td>
+=======
+ *    <td>SAMD20, SAMD21, SAMR21, SAMD10, SAMD11, SAMDA0, SAMDA1</td>
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -228,7 +236,7 @@
  * \section asfdoc_sam0_rtc_count_special_considerations Special Considerations
  *
  * \subsection asfdoc_sam0_rtc_count_special_considerations_clock Clock Setup
- * \subsubsection asfdoc_sam0_rtc_count_clock_samd_r SAM D20/D21/R21/D10/D11 Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_count_clock_samd_r SAM D20/D21/R21/D10/D11/DA0/DA1 Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32KHz RC-oscillator with a prescaler of 32, giving a
@@ -453,21 +461,21 @@ enum rtc_count_compare {
  * \brief Available periodic interval source.
  */
 enum rtc_count_periodic_interval{
-	/** Periodic interval 0 */
+	/** Periodic interval 0. */
 	RTC_COUNT_PERIODIC_INTERVAL_0 = 0,
-	/** Periodic interval 1 */
+	/** Periodic interval 1. */
 	RTC_COUNT_PERIODIC_INTERVAL_1 = 1,
-	/** Periodic interval 2 */
+	/** Periodic interval 2. */
 	RTC_COUNT_PERIODIC_INTERVAL_2 = 2,
-	/** Periodic interval 3 */
+	/** Periodic interval 3. */
 	RTC_COUNT_PERIODIC_INTERVAL_3 = 3,
-	/** Periodic interval 4 */
+	/** Periodic interval 4. */
 	RTC_COUNT_PERIODIC_INTERVAL_4 = 4,
-	/** Periodic interval 5 */
+	/** Periodic interval 5. */
 	RTC_COUNT_PERIODIC_INTERVAL_5 = 5,
-	/** Periodic interval 6 */
+	/** Periodic interval 6. */
 	RTC_COUNT_PERIODIC_INTERVAL_6 = 6,
-	/** Periodic interval 7 */
+	/** Periodic interval 7. */
 	RTC_COUNT_PERIODIC_INTERVAL_7 = 7,
 };
 #endif
@@ -695,6 +703,13 @@ struct rtc_count_config {
 	 *  needed for reading. */
 	bool continuously_update;
 #endif
+#if (SAML21)
+		/** Enable count read synchronization. The COUNT value requires
+		 * synchronization when reading. Disabling the synchronization 
+		 * will prevent the COUNT value from displaying the current value. */
+		bool enable_read_sync;
+#endif
+
 	/** Array of Compare values. Not all Compare values are available in 32-bit
 	 *  mode. */
 	uint32_t compare_values[RTC_NUM_OF_COMP16];
@@ -719,6 +734,7 @@ struct rtc_count_config {
  *  - Continuously sync count register off
  *  - No event source on
  *  - All compare values equal 0
+ *  - Count read synchronization is disabled for SAML21
  *
  *  \param[out] config  Configuration structure to be initialized to default
  *                      values.
@@ -736,6 +752,9 @@ static inline void rtc_count_get_config_defaults(
 
 #ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
 	config->continuously_update = false;
+#endif
+#if (SAML21)
+	config->enable_read_sync = false;
 #endif
 
 	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
@@ -1177,8 +1196,8 @@ static inline uint32_t rtc_read_general_purpose_reg(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Added support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAML21 and SAMDA0/DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

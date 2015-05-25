@@ -4,7 +4,7 @@
  * \brief Defines various structure definitions, used to communicate with
  * Peer node over the air - Performance Analyzer application
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,15 +42,12 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef APP_FRAME_FORMAT_H
 #define APP_FRAME_FORMAT_H
 
@@ -168,17 +165,17 @@ typedef struct {
  * node's CRC settings
  *
  */
- typedef struct {
- uint8_t status;
- } crc_stat_req_t;
- 
- /**
+typedef struct {
+	uint8_t status;
+} crc_stat_req_t;
+
+/**
  * \brief Remote Test Start Request Structure
  *
  */
- typedef struct {
- uint8_t remote_serial_data[REMOTE_MSG_BUF_SIZE];
- } remote_test_req_t;
+typedef struct {
+	uint8_t remote_serial_data[REMOTE_MSG_BUF_SIZE];
+} remote_test_req_t;
 
 /**
  * \brief CRC status response frame structure to send the peer

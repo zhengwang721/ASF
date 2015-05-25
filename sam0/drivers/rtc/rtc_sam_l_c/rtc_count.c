@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include "rtc_count.h"
@@ -208,7 +208,8 @@ static enum status_code _rtc_count_set_config(
 
 	Rtc *const rtc_module = module->hw;
 
-	rtc_module->MODE0.CTRLA.reg = RTC_MODE0_CTRLA_MODE(0) | config->prescaler;
+	rtc_module->MODE0.CTRLA.reg = RTC_MODE0_CTRLA_MODE(0) | config->prescaler
+								  | (config->enable_read_sync << RTC_MODE0_CTRLA_SYNCDIS_Pos);
 
 	/* Set mode and clear on match if applicable. */
 	switch (config->mode) {
@@ -488,7 +489,7 @@ enum status_code rtc_count_set_compare(
  *
  * \param[in,out] module  Pointer to the software instance struct
  * \param[out] comp_value  Pointer to 32-bit integer that will be populated with
- *                         the current compare value.
+ *                         the current compare value
  * \param[in]  comp_index  Index of compare to check
  *
  * \return Status of the reading procedure.

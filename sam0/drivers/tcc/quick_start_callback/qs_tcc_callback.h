@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
@@ -49,7 +52,11 @@
  * \page asfdoc_sam0_tcc_callback_use_case Quick Start Guide for TCC - Callback
  *
  * The supported board list:
+<<<<<<< HEAD
  *    - SAM D21/R21/L21/C21 Xplained Pro
+=======
+ *    - SAM D21/R21/L21/DA1 Xplained Pro
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * In this use case, the TCC will be used to generate a PWM signal, with a
  * varying duty cycle. Here the pulse width is increased each time the timer
@@ -63,7 +70,11 @@
  *  <tr><td> SAMD21 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
  *  <tr><td> SAMR21 Xpro  </td><td> PA19 </td><td> LED0       </td></tr>
  *  <tr><td> SAML21 Xpro  </td><td> PB10 </td><td> LED0       </td></tr>
+<<<<<<< HEAD
  *  <tr><td> SAMC21 Xpro  </td><td> PA15 </td><td> LED0       </td></tr>
+=======
+ *  <tr><td> SAMDA1 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  * </table>
  *
  * The TCC module will be set up as follows:
@@ -151,6 +162,10 @@
  * -# Enter an infinite loop while the PWM wave is generated via the TCC module.
  *  \snippet qs_tcc_callback.c main_loop
  */
+<<<<<<< HEAD
+=======
+
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 
 #include <asf.h>
 #include <conf_clocks.h>

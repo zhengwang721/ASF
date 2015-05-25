@@ -3,7 +3,11 @@
  *
  * \brief SAM TC - Timer Counter Driver
  *
+<<<<<<< HEAD:sam0/drivers/tc/tc_sam_l_c/tc.c
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+=======
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f:sam0/drivers/tc/tc_sam_l/tc.c
  *
  * \asf_license_start
  *
@@ -40,7 +44,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -626,7 +630,7 @@ enum status_code tc_set_compare_value(
  * \retval STATUS_OK                   The module was reset successfully
  * \retval STATUS_ERR_UNSUPPORTED_DEV  A 32-bit slave TC module was passed to
  *                                     the function. Only use reset on master
- *                                     TC.
+ *                                     TC
  */
 enum status_code tc_reset(
 		const struct tc_module *const module_inst)
@@ -678,7 +682,7 @@ enum status_code tc_reset(
  *
  * \retval STATUS_OK              The timer TOP value was updated successfully
  * \retval STATUS_ERR_INVALID_ARG The configured TC module counter size in the
- *                                module instance is invalid.
+ *                                module instance is invalid
  */
 enum status_code tc_set_top_value (
 		const struct tc_module *const module_inst,

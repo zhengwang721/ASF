@@ -3,7 +3,7 @@
  *
  * \brief SAM Reset related functionality
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef RESET_H_INCLUDED
@@ -86,7 +86,7 @@ enum system_reset_cause {
 /**
  * \brief Reset the MCU.
  *
- * Resets the MCU and all associated peripherals and registers, except RTC, all 32kHz sources,
+ * Resets the MCU and all associated peripherals and registers, except RTC, all 32KHz sources,
  * WDT (if ALWAYSON is set) and GCLK (if WRTLOCK is set).
  *
  */

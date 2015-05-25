@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef RTC_CALENDAR_H_INCLUDED
@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_rtc_calendar_group SAM RTC Calendar Driver (RTC CAL)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Real Time Clock functionality in Calendar
  * operating mode, for the configuration and retrieval of the current time and
  * date as maintained by the RTC module. The following driver API modes are
@@ -68,7 +68,11 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+<<<<<<< HEAD
  *  - Atmel | SMART SAM C21
+=======
+ *  - Atmel | SMART SAM DA0/DA1
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rtc_calendar_prerequisites
@@ -126,14 +130,18 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
+<<<<<<< HEAD
  *    <td>SAMD20/D21/R21/D10/D11</td>
+=======
+ *    <td>SAMD20, SAMD21, SAMR21, SAMD10, SAMD11, SAMDA0, SAMDA1</td>
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
  * selected device supports those features.
  *
  * \subsection asfdoc_sam0_rtc_calendar_module_overview_alarms Alarms and Overflow
- * The RTC has four independent hardware alarms that can be configured by the user
+ * The RTC has up to four independent hardware alarms that can be configured by the user
  * application. These alarms will be will triggered on match with the current
  * clock value, and can be set up to trigger an interrupt, event, or both. The
  * RTC can also be configured to clear the clock value on alarm match, resetting
@@ -229,10 +237,10 @@
  * when the module is initialized. Dates outside the start to end year range
  * described below will need software adjustment:
  *
- * \f[ [YEAR_{START}, YEAR_{START}+64) \f]
+ * \f[ [YEAR_{START}, YEAR_{START}+64] \f]
  *
  * \subsection asfdoc_sam0_rtc_calendar_special_considerations_clock Clock Setup
- * \subsubsection asfdoc_sam0_rtc_calendar_clock_samd_r SAM D20/D21/R21/D10/D11 Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_calendar_clock_samd_r SAM D20/D21/R21/D10/D11/DA0/DA1 Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32KHz RC-oscillator with a prescaler of 32, giving a
@@ -782,7 +790,7 @@ static inline void rtc_calendar_get_time_defaults(
  *  - Alarm will match on second, minute, hour, day, month, and year
  *
  *  \param[out] config  Configuration structure to be initialized to default
- *                      values.
+ *                      values
  */
 static inline void rtc_calendar_get_config_defaults(
 		struct rtc_calendar_config *const config)
@@ -1303,8 +1311,8 @@ static inline uint32_t rtc_read_general_purpose_reg(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Added support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAML21 and SAMDA0/DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

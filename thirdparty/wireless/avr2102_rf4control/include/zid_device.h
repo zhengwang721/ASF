@@ -9,12 +9,9 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #if (((defined ZID_PROFILE) && (defined ZID_DEVICE)) || (defined DOXYGEN))
@@ -111,6 +108,6 @@ void waiting_for_get_attribute_response_timeout_cb(void *callback_parameter);
 #endif /* ZID_DEVICE_H */
 
 #endif  /* #if (((defined ZID_PROFILE) && (defined ZID_DEVICE)) || (defined
-         *DOXYGEN)) */
+         * DOXYGEN)) */
 
 /* EOF */

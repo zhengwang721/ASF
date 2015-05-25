@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -455,61 +455,64 @@ static void _i2c_slave_wait_for_sync(
 }
 #endif
 
-#if (SAMD20)
+///@cond INTERNAL
 /**
- * \internal Workaround for SAMD20 Revision D, Errata 13574
+ * \internal Workaround for errata 13574
+ * Instead set ACK/NACK of CTRLB
  *
+ * This errata exist in part revisions of SAMD20/D21
+ * D10/D11/L21/DA0/DA1, but workaround can be works in all
+ * revision of those device. As this function operation
+ * should be use less cpu time as possible, so caller 
+ * function can ignore to check revision number, and use
+ * this workaround in all revision of those device.
  *
  * \param[in,out] module  Pointer to software module structure
- * \param[in] send_ack True send ACK, false send NACK
+ * \param[in] send_ack true send ACK, false send NACK
  */
 static inline void _i2c_slave_set_ctrlb_ackact(
 		struct i2c_slave_module *const module,
 		bool send_ack)
 {
 	Assert(module);
-	Assert(module->hw->I2CS);
+	Assert(module->hw);
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
-	uint32_t ctrlb_val = i2c_hw->CTRLB.reg;
 
-	/* Get MCU revision */
-	uint32_t rev = system_get_device_id();
-
-	rev &= DSU_DID_REVISION_Msk;
-	rev = rev >> DSU_DID_REVISION_Pos;
-
-	/* Errata 13574 exist at Revision D (3)*/
-	if (rev != 3) {
-		if (send_ack == true) {
-			i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
-		}
-		else {
-			i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
-		}
-		return;
-	}
-
+#if (SAMD20 || SAMD21 || SAMD10 || SAMD11 || SAML21 || SAMDA0 || SAMDA1)
+	/* Workaround, Following two write are atomic */
 	system_interrupt_enter_critical_section();
 	i2c_hw->STATUS.reg = 0;
-	i2c_hw->CTRLB.reg = 0;
 
 	if (send_ack == true) {
-		ctrlb_val &= ~SERCOM_I2CS_CTRLB_ACKACT;
+		i2c_hw->CTRLB.reg = 0;
 	}
 	else {
-		ctrlb_val |= SERCOM_I2CS_CTRLB_ACKACT;
+		i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_ACKACT;
 	}
-
-	i2c_hw->CTRLB.reg = ctrlb_val;
 	system_interrupt_leave_critical_section();
-
+#else
+	/* Normal operation */
+	if (send_ack == true) {
+		i2c_hw->CTRLB.reg &= ~SERCOM_I2CS_CTRLB_ACKACT;
+	}
+	else {
+		i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
+	}
+#endif
 	return;
 }
 
 /**
- * \internal Workaround for SAMD20 Revision D, Errata 13574
+ * \internal Workaround for SAM0 errata 13574,
+ * instead Set CMD3 of CTRLB
  *
+ * This errata exist in part revisions of SAMD20/D21
+ * D10/D11/L21/DA0/DA1, but workaround can be works in all
+ * revision of those device. As this function operation
+ * should be use less cpu time as possible, so caller 
+ * function can ignore to check revision number, and use
+ * this workaround in all revision of those device.
  *
  * \param[in,out] module  Pointer to software module structure
  */
@@ -517,31 +520,28 @@ static inline void _i2c_slave_set_ctrlb_cmd3(
 		struct i2c_slave_module *const module)
 {
 	Assert(module);
-	Assert(module->hw->I2CS);
+	Assert(module->hw);
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
-	/* Get MCU revision */
-	uint32_t rev = system_get_device_id();
-
-	rev &= DSU_DID_REVISION_Msk;
-	rev = rev >> DSU_DID_REVISION_Pos;
-
-	/* Errata 13574 exist at Revision D (3)*/
-	if (rev != 3) {
-		i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_CMD(0x3);
-		return;
-	}
-
+#if (SAMD20 || SAMD21 || SAMD10 || SAMD11 || SAML21 || SAMDA0 || SAMDA1)
+	/* Workaround */
+	/*
+	 * Below code instead i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_CMD(0x3);
+	 * CMD=0x3 clears all interrupts, so to keep the result similar
+	 * PREC is cleared if it was set
+	 */
 	if (i2c_hw->INTFLAG.bit.PREC) {
 		i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_PREC;
 	}
 	i2c_hw->INTFLAG.reg = SERCOM_I2CS_INTFLAG_AMATCH;
-
+#else
+	/* Normal operation */
+	i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_CMD(0x3);
+#endif
 	return;
 }
-
-#endif
+///@endcond
 
 /**
  * \brief Gets the I<SUP>2</SUP>C slave default configurations
@@ -561,7 +561,7 @@ static inline void _i2c_slave_set_ctrlb_cmd3(
  * - Do not run in standby
  * - PINMUX_DEFAULT for SERCOM pads
  *
- * Those default configuration only availale if the device supports it:
+ * Those default configuration only available if the device supports it:
  * - Not using 10-bit addressing
  * - Standard-mode and Fast-mode transfer speed
  * - SCL stretch disabled

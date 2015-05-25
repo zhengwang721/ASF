@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef DMA_H_INCLUDED
@@ -53,7 +53,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_dma_group SAM Direct Memory Access Controller Driver (DMAC)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the Direct Memory Access Controller(DMAC) module within
  * the device. The DMAC can transfer data between memories and peripherals, and
  * thus off-load these tasks from the CPU. The module supports peripheral to
@@ -68,7 +68,11 @@ extern "C" {
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+<<<<<<< HEAD
  *  - Atmel | SMART SAM C21
+=======
+ *  - Atmel | SMART SAM DA0/DA1
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_dma_prerequisites
@@ -328,6 +332,9 @@ extern "C" {
 /** ExInitial description section. */
 extern DmacDescriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
 
+/* DMA channel interrup flag. */
+extern uint8_t g_chan_interrupt_flag[CONF_MAX_USED_CHANNEL_NUM];
+
 /** DMA priority level. */
 enum dma_priority_level {
 	/** Priority level 0. */
@@ -449,12 +456,12 @@ enum dma_transfer_trigger_action{
  * Callback types for DMA callback driver.
  */
 enum dma_callback_type {
-	/** Callback for transfer complete. */
-	DMA_CALLBACK_TRANSFER_DONE,
 	/** Callback for any of transfer errors. A transfer error is flagged
      *	if a bus error is detected during an AHB access or when the DMAC
 	 *  fetches an invalid descriptor. */
 	DMA_CALLBACK_TRANSFER_ERROR,
+	/** Callback for transfer complete. */
+	DMA_CALLBACK_TRANSFER_DONE,
 	/** Callback for channel suspend. */
 	DMA_CALLBACK_CHANNEL_SUSPEND,
 	/** Number of available callbacks. */
@@ -528,7 +535,7 @@ struct dma_resource_config {
 /** Forward definition of the DMA resource. */
 struct dma_resource;
 /** Type definition for a DMA resource callback function. */
-typedef void (*dma_callback_t)(const struct dma_resource *const resource);
+typedef void (*dma_callback_t)(struct dma_resource *const resource);
 
 /** Structure for DMA transfer resource. */
 struct dma_resource {
@@ -590,6 +597,7 @@ static inline void dma_enable_callback(struct dma_resource *resource,
 	Assert(resource);
 
 	resource->callback_enable |= 1 << type;
+	g_chan_interrupt_flag[resource->channel_id] |= (1UL << type);
 }
 
 /**
@@ -605,6 +613,8 @@ static inline void dma_disable_callback(struct dma_resource *resource,
 	Assert(resource);
 
 	resource->callback_enable &= ~(1 << type);
+	g_chan_interrupt_flag[resource->channel_id] &= (~(1UL << type) & DMAC_CHINTENSET_MASK);
+	DMAC->CHINTENCLR.reg = (1UL << type);
 }
 
 /**
@@ -848,8 +858,8 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  *    </tr>
  *    <tr>
  *        <td>C</td>
- *        <td>11/2014</td>
- *        <td>Added SAML21 support</td>
+ *        <td>04/2015</td>
+ *        <td>Added SAML21 and SAMDA0/DA1 support</td>
  *    </tr>
  *    <tr>
  *        <td>B</td>

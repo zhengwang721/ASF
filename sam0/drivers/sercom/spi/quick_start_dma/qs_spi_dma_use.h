@@ -1,9 +1,15 @@
 /**
  * \file
  *
+<<<<<<< HEAD
  * \brief SAM Quick Start Guide for Using SPI driver with DMA
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+=======
+ * \brief SAM D21/R21/L21/DA1 Quick Start Guide for Using SPI driver with DMA
+ *
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * \asf_license_start
  *
@@ -48,7 +54,11 @@
  *    - SAMD21 Xplained Pro
  *    - SAMR21 Xplained Pro
  *    - SAML21 Xplained Pro
+<<<<<<< HEAD
  *    - SAMC21 Xplained Pro
+=======
+ *    - SAMDA1 Xplained Pro
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * This quick start will transmit a buffer data from master to slave through DMA.
  * In this use case the SPI master will be configured with the following
@@ -79,7 +89,7 @@
  *
  * \subsection asfdoc_sam0_sercom_spi_dma_use_case_prereq Prerequisites
  * The following connections has to be made using wires:
- * - SAM D21 Xplained Pro.
+ * - SAM D21/DA1 Xplained Pro.
  *  - \b SS_0:  EXT1 PIN15 (PA05) <--> EXT2 PIN15 (PA17)
  *  - \b DO/DI: EXT1 PIN16 (PA06) <--> EXT2 PIN17 (PA16)
  *  - \b DI/DO: EXT1 PIN17 (PA04) <--> EXT2 PIN16 (PA18)
@@ -117,10 +127,17 @@
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_master
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_slave
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
+<<<<<<< HEAD
  * For SAMC21 Xplained Pro:
  * \snippet samc21_xplained_pro/conf_quick_start.h definition_master
  * \snippet samc21_xplained_pro/conf_quick_start.h definition_slave
  * \snippet samc21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
+=======
+ * For SAMDA1 Xplained Pro:
+ * \snippet samda1_xplained_pro/conf_quick_start.h definition_master
+ * \snippet samda1_xplained_pro/conf_quick_start.h definition_slave
+ * \snippet samda1_xplained_pro/conf_quick_start.h definition_peripheral_trigger
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 
  * Add to the main application source file, outside of any functions:
  * \snippet qs_spi_dma_use.c buf_length
@@ -247,6 +264,6 @@
  * -# Enter endless loop.
  *    \snippet qs_spi_dma_use.c endless_loop
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

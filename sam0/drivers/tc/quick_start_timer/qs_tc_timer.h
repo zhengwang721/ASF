@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
  * \page asfdoc_sam0_tc_timer_use_case Quick Start Guide for TC - Timer
@@ -89,8 +92,13 @@
  *   \snippet samd11_xplained_pro/conf_qs_tc_timer.h definition_tc
  * - SAM L21 Xplained Pro.
  *   \snippet saml21_xplained_pro/conf_qs_tc_timer.h definition_tc
+<<<<<<< HEAD
  * - SAM C21 Xplained Pro.
  *   \snippet samc21_xplained_pro/conf_qs_tc_timer.h definition_tc
+=======
+ * - SAM DA1 Xplained Pro.
+ *   \snippet samda1_xplained_pro/conf_qs_tc_timer.h definition_tc
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_timer.c module_inst
@@ -146,9 +154,6 @@
  * \subsection asfdoc_sam0_tc_timer_use_case_main_flow Workflow
  * -# Enter an infinite loop while the timer is running.
  *    \snippet qs_tc_timer.c main_loop
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 

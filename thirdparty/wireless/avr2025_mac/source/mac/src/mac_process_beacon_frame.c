@@ -7,7 +7,7 @@
  * checks whether the coordinator does have pending data and initiates the
  * transmission of a data request frame if required.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,15 +46,12 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* === Includes ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #include <compiler.h>
 #include <string.h>
 #include <stdint.h>
@@ -289,7 +286,6 @@ void mac_process_beacon_frame(buffer_t *beacon)
 #endif /* GTS_SUPPORT */
 		} /* (MAC_PAN_COORD_STARTED != mac_state) */
 	} /* (MAC_SCAN_IDLE == mac_scan_state) */
-
 #endif  /* BEACON_SUPPORT */
 
 	/*
@@ -585,7 +581,6 @@ void mac_process_beacon_frame(buffer_t *beacon)
 			mac_bc_data_indicated = false;
 		}
 	} /* (MAC_SCAN_IDLE == mac_scan_state) */
-
 #endif /* BEACON_SUPPORT */
 
 	/* Handling of presented indirect traffic by the parent for this node.
@@ -720,7 +715,6 @@ void mac_process_beacon_frame(buffer_t *beacon)
 			}
 		} /* (mac_pib.mac_AutoRequest) */
 	} /* (MAC_SCAN_IDLE == mac_scan_state) */
-
 #endif /* (MAC_INDIRECT_DATA_BASIC == 1) && (MAC_SYNC_REQUEST == 1)) */
 } /* mac_process_beacon_frame() */
 

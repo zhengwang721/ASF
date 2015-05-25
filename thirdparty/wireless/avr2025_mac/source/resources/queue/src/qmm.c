@@ -5,7 +5,7 @@
  *  appending a buffer into the queue, removing a buffer from the queue and
  *  reading a buffer from the queue as per the search criteria.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,20 +43,17 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 /* === Includes ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include "return_val.h"
 #include "pal.h"
+#include "return_val.h"
 #include "bmm.h"
 #include "qmm.h"
 #include "app_config.h"
@@ -157,10 +154,9 @@ void qmm_queue_append(queue_t *q, buffer_t *buf)
 
 #if (_DEBUG_ > 1)
 		if (q->head == NULL) {
-			Assert(
-					"Corrupted queue: Null pointer has been queued" ==
-					0);
+			Assert("Corrupted queue: Null pointer has been queued");
 		}
+
 #endif
 
 #ifdef ENABLE_QUEUE_CAPACITY
@@ -172,6 +168,7 @@ void qmm_queue_append(queue_t *q, buffer_t *buf)
 
 #ifdef ENABLE_QUEUE_CAPACITY
 	return (status);
+
 #endif
 } /* qmm_queue_append */
 
@@ -233,12 +230,12 @@ static buffer_t *queue_read_or_remove(queue_t *q,
 			/* Remove buffer from the queue */
 			if (REMOVE_MODE == mode) {
 				/* Update head if buffer removed is first node
-				**/
+				 **/
 				if (buffer_current == q->head) {
 					q->head = buffer_current->next;
 				} else {
 					/* Update the link by removing the
-					 * buffer */
+					 *buffer */
 					buffer_previous->next
 						= buffer_current->next;
 				}
@@ -258,7 +255,7 @@ static buffer_t *queue_read_or_remove(queue_t *q,
 			/* Read buffer from the queue */
 			else {
 				/* Nothing needs done if the mode is READ_MODE
-				**/
+				 **/
 			}
 		}
 	} /* q->size != 0 */
@@ -266,7 +263,7 @@ static buffer_t *queue_read_or_remove(queue_t *q,
 	LEAVE_CRITICAL_REGION();
 
 	/* Return the buffer. note that pointer to header of buffer is returned
-	**/
+	 **/
 	return (buffer_current);
 } /* queue_read_or_remove */
 
@@ -323,7 +320,7 @@ void qmm_queue_flush(queue_t *q)
 
 		if (NULL == buf_to_free) {
 #if (_DEBUG_ > 0)
-			Assert("Corrupted queue" == 0);
+			ABORT("Corrupted queue");
 #endif
 			q->size = 0;
 			return;

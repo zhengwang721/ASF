@@ -1,5 +1,9 @@
 <asf xmlversion="1.0">
+<<<<<<< HEAD
 	<module type="application" id="sam0.drivers.extint.quick_start_callback" caption="Quick Start for the SAM EXTINT Driver (Callback)">
+=======
+	<module type="application" id="sam0.drivers.extint.quick_start_callback" caption="Quick Start for the SAM D20/D21/R21/L21/DA1 EXTINT Driver (Callback)">
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 		<info type="description" value="summary">
 		Quick start guide for the EXTINT driver demonstrating configuration and initialization in callback mode.
 		</info>
@@ -11,6 +15,10 @@
 		<device-support value="samd21"/>
 		<device-support value="samr21"/>
 		<device-support value="saml21"/>
+<<<<<<< HEAD
 		<device-support value="samc21"/>
+=======
+		<device-support value="samda1"/>
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 	</module>
 </asf>

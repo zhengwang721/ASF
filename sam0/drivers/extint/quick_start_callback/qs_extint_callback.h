@@ -3,7 +3,11 @@
  *
  * \brief SAM External Interrupt Driver Quick Start
  *
+<<<<<<< HEAD
  * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
+=======
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * \asf_license_start
  *
@@ -49,7 +53,11 @@
  *    - SAMD21 Xplained Pro
  *    - SAMR21 Xplained Pro
  *    - SAML21 Xplained Pro
+<<<<<<< HEAD
  *    - SAMC21 Xplained Pro
+=======
+ *    - SAMDA1 Xplained Pro
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * In this use case, the EXTINT module is configured for:
  *  - External interrupt channel connected to the board LED is used
@@ -116,6 +124,6 @@
  * -# External interrupt events from the driver are detected asynchronously; no
  *    special application \c main() code is required.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

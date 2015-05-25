@@ -3,7 +3,7 @@
  *
  * \brief Energy Detection Demo application implementation
  *
- * Copyright (C) 2014, Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,9 +46,6 @@
  * This is the reference manual for the EDDemo  Application
  */
 /*- Includes ---------------------------------------------------------------*/
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -159,13 +156,13 @@ int main(void)
 	#else
 	sysclk_init();
 	board_init();
-	#endif	
+	#endif
 	SYS_Init();
 	sio2host_init();
 	cpu_irq_enable();
 	LED_On(LED0);
 	while (1) {
-	SYS_TaskHandler();
-	APP_TaskHandler();
+		SYS_TaskHandler();
+		APP_TaskHandler();
 	}
 }

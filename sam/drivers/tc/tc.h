@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM4 Timer Counter (TC) driver.
+ * \brief SAM Timer Counter (TC) driver.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -48,9 +48,9 @@
 #define TC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_tc_group SAM4 Timer Counter (TC)
+ * \defgroup asfdoc_sam_drivers_tc_group SAM Timer Counter (TC) Driver
  *
- * This driver for SAM4 (and SAM3) devices provides an interface for
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for
  * the configuration and management of the device's Timer Counter
  * functionality.
  *
@@ -59,6 +59,9 @@
  * to perform a wide range of functions that includes frequency
  * measurement, event counting, interval measurement, pulse generation,
  * delay timing, and pulse width modulation.
+ *
+ * Devices from the following series can use this module:
+ * - Atmel | SMART SAM4L
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_tc_prerequisites

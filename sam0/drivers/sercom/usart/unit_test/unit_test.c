@@ -3,7 +3,11 @@
  *
  * \brief SAM USART Unit test
  *
+<<<<<<< HEAD
  * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+=======
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * \asf_license_start
  *
@@ -75,18 +79,32 @@
  *  - SAM D21 Xplained Pro board
  *  - SAM R21 Xplained Pro board
  *  - SAM L21 Xplained Pro board
+<<<<<<< HEAD
  *  - SAM C21 Xplained Pro board
  *
  * \section appdoc_sam0_usart_unit_test_setup Setup
  * The following connections has to be made using wires:
  * - SAM D20/D21 Xplained Pro board
+=======
+ *  - SAM DA1 Xplained Pro board
+ *
+ * \section appdoc_sam0_usart_unit_test_setup Setup
+ * The following connections has to be made using wires:
+ * - SAM D20 Xplained Pro board
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *  - \b TX/RX: EXT1 PIN17 (PA04) <--> EXT1 PIN13 (PB09)
+ * - SAM D21/DA1 Xplained Pro board
+ *  - \b TX/RX: EXT2 PIN17 (PA16) <--> EXT3 PIN17 (PB16)
  * - SAM R21 Xplained Pro board
- *  - \b TX/RX: EXT1 PIN9  (PA22) <--> EXT1 PIN15 (PB03)
+ *  - \b TX/RX: EXT1 PIN11 (PA16) <--> EXT1 PIN17 (PB02)
  * - SAM L21 Xplained Pro board
+<<<<<<< HEAD
  *  - \b TX/RX: EXT2 PIN14 (PA18) <--> EXT1 PIN13 (PB09)
  * - SAM C21 Xplained Pro board
  *  - \b TX/RX: EXT1 PIN17 (PA16) <--> EXT1 PIN13 (PA23)
+=======
+ *  - \b TX/RX: EXT2 PIN3  (PA10) <--> EXT2 PIN8  (PB13)
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a
@@ -112,7 +130,7 @@
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -148,7 +166,7 @@ volatile bool transfer_complete;
  *
  * * \param module USART module causing the interrupt (not used)
  */
-static void usart_callback(const struct usart_module *const module)
+static void usart_callback(struct usart_module *const module)
 {
 	transfer_complete = true;
 }
@@ -218,12 +236,14 @@ static void run_transfer_single_9bit_char_test(const struct test_case *test)
 	usart_disable(&usart_rx_module);
 	usart_rx_config.character_size = USART_CHARACTER_SIZE_9BIT;
 	usart_init(&usart_rx_module, CONF_RX_USART,	&usart_rx_config);
-	usart_enable(&usart_rx_module);
 
 	/* Re-configure TX USART to operate with 9 bit character size */
 	usart_disable(&usart_tx_module);
 	usart_tx_config.character_size = USART_CHARACTER_SIZE_9BIT;
 	usart_init(&usart_tx_module, CONF_TX_USART,	&usart_tx_config);
+	
+	/* Enable USART */
+	usart_enable(&usart_rx_module);
 	usart_enable(&usart_tx_module);
 
 	/* Write and read the data */
@@ -238,12 +258,14 @@ static void run_transfer_single_9bit_char_test(const struct test_case *test)
 	usart_disable(&usart_rx_module);
 	usart_rx_config.character_size = USART_CHARACTER_SIZE_8BIT;
 	usart_init(&usart_rx_module, CONF_RX_USART,	&usart_rx_config);
-	usart_enable(&usart_rx_module);
 
 	/* Put TX USART back in 8 bit mode */
 	usart_disable(&usart_tx_module);
 	usart_tx_config.character_size = USART_CHARACTER_SIZE_8BIT;
 	usart_init(&usart_tx_module, CONF_TX_USART,	&usart_tx_config);
+	
+	/* Enable USART */
+	usart_enable(&usart_rx_module);
 	usart_enable(&usart_tx_module);
 }
 
@@ -373,8 +395,6 @@ static void test_system_init(void)
 	usart_rx_config.baudrate    = TEST_USART_SPEED;
 	/* Apply configuration */
 	usart_init(&usart_rx_module, CONF_RX_USART, &usart_rx_config);
-	/* Enable USART */
-	usart_enable(&usart_rx_module);
 
 	/* Configure TX USART */
 	usart_get_config_defaults(&usart_tx_config);
@@ -387,6 +407,7 @@ static void test_system_init(void)
 	/* Apply configuration */
 	usart_init(&usart_tx_module, CONF_TX_USART, &usart_tx_config);
 	/* Enable USART */
+	usart_enable(&usart_rx_module);
 	usart_enable(&usart_tx_module);
 }
 

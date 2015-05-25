@@ -3,7 +3,11 @@
  *
  * \brief SAM Event System Driver Quick Start
  *
+<<<<<<< HEAD
  * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
+=======
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * \asf_license_start
  *
@@ -40,6 +44,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
  * \page asfdoc_sam0_events_basic_use_case Quick Start Guide for EVENTS - Basic
@@ -71,8 +78,13 @@
  *   \snippet samd11_xplained_pro/conf_qs_events.h definition_event
  * - SAM L21 Xplained Pro
  *   \snippet saml21_xplained_pro/conf_qs_events.h definition_event
+<<<<<<< HEAD
  * - SAM C21 Xplained Pro
  *   \snippet samc21_xplained_pro/conf_qs_events.h definition_event
+=======
+ * - SAM DA1 Xplained Pro.
+ *   \snippet samda1_xplained_pro/conf_qs_events.h definition_event
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * Copy-paste the following setup code to your user application:
  * \snippet qs_events_basic.c setup
@@ -123,7 +135,4 @@
  *    \snippet qs_events_basic.c main_1
  * -# Perform a software event trigger on the configured event channel.
  *    \snippet qs_events_basic.c main_2
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

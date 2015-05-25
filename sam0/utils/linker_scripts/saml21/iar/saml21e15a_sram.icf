@@ -3,7 +3,7 @@
  *
  * \brief Linker script for running in internal SRAM on the SAML21E15A
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,8 +51,6 @@ define symbol __ICFEDIT_region_RAM_start__    = 0x20000000;
 define symbol __ICFEDIT_region_RAM_end__      = 0x20000FFF;
 define symbol __ICFEDIT_region_LPRAM_start__  = 0x30000000;
 define symbol __ICFEDIT_region_LPRAM_end__    = 0x300007FF;
-define symbol __ICFEDIT_region_PICOPRAM_start__ = 0x50000000;
-define symbol __ICFEDIT_region_PICOPRAM_end__ = 0x50000FFF;
 /*-Sizes-*/
 if (!isdefinedsymbol(__ICFEDIT_size_cstack__)) {
   define symbol __ICFEDIT_size_cstack__    = 0x400;
@@ -65,7 +63,6 @@ if (!isdefinedsymbol(__ICFEDIT_size_heap__)) {
 define memory mem with size = 4G;
 define region RAM_region    = mem:[from __ICFEDIT_region_RAM_start__ to __ICFEDIT_region_RAM_end__];
 define region LPRAM_region  = mem:[from __ICFEDIT_region_LPRAM_start__ to __ICFEDIT_region_LPRAM_end__];
-define region PICOPRAM_region = mem:[from __ICFEDIT_region_PICOPRAM_start__ to __ICFEDIT_region_PICOPRAM_end__];
 
 define block CSTACK with alignment = 8, size = __ICFEDIT_size_cstack__ { };
 define block HEAP   with alignment = 8, size = __ICFEDIT_size_heap__   { };
@@ -78,4 +75,3 @@ place in RAM_region                           { readonly };
 place in RAM_region                           { readwrite };
 place at end of RAM_region                    { block CSTACK, block HEAP };
 place in LPRAM_region                         { section .lpram };
-place in PICOPRAM_region                      { section .picopram };

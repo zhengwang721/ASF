@@ -40,10 +40,17 @@
  * \asf_license_stop
  *
  */
+<<<<<<< HEAD
 /**
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
  
+=======
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 /**
  * \page asfdoc_sam0_tc_basic_use_case Quick Start Guide for TC - Basic
  *
@@ -84,8 +91,13 @@
  *   \snippet quick_start/samd11_xplained_pro/conf_quick_start.h definition_pwm
  * - SAM L21 Xplained Pro.
  *   \snippet quick_start/saml21_xplained_pro/conf_quick_start.h definition_pwm
+<<<<<<< HEAD
  * - SAM C21 Xplained Pro.
  *   \snippet quick_start/samc21_xplained_pro/conf_quick_start.h definition_pwm
+=======
+ * - SAM DA1 Xplained Pro.
+ *   \snippet quick_start/samda1_xplained_pro/conf_quick_start.h definition_pwm
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_basic.c module_inst
@@ -134,4 +146,8 @@
  * \subsection asfdoc_sam0_tc_basic_use_case_main_flow Workflow
  * -# Enter an infinite loop while the PWM wave is generated via the TC module.
  *    \snippet qs_tc_basic.c main_loop
+<<<<<<< HEAD
  */
+=======
+ */
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f

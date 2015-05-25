@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -1421,10 +1421,10 @@ uint32_t tcc_get_status(
 	}
 	/* Recoverable fault inputs */
 	if (status_flags & TCC_STATUS_FAULTAIN) {
-		status |= TCC_STATUS_NON_RECOVERABLE_FAULT_PRESENT(0);
+		status |= TCC_STATUS_RECOVERABLE_FAULT_PRESENT(0);
 	}
 	if (status_flags & TCC_STATUS_FAULTBIN) {
-		status |= TCC_STATUS_NON_RECOVERABLE_FAULT_PRESENT(1);
+		status |= TCC_STATUS_RECOVERABLE_FAULT_PRESENT(1);
 	}
 
 	/* Check for TCC capture overflow */

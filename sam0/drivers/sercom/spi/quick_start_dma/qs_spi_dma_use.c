@@ -1,9 +1,13 @@
 /**
  * \file
  *
- * \brief SAM Sercom SPI driver with DMA quick start
+ * \brief SAM Sercom SPI Driver with DMA Quick Start
  *
+<<<<<<< HEAD
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+=======
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * \asf_license_start
  *
@@ -40,7 +44,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
@@ -93,14 +97,14 @@ DmacDescriptor example_descriptor_rx;
 
 //! [setup]
 //! [_transfer_tx_done]
-static void transfer_tx_done( const struct dma_resource* const resource )
+static void transfer_tx_done(struct dma_resource* const resource )
 {
 	transfer_tx_is_done = true;
 }
 //! [_transfer_tx_done]
 
 //! [_transfer_rx_done]
-static void transfer_rx_done( const struct dma_resource* const resource )
+static void transfer_rx_done(struct dma_resource* const resource )
 {
 	transfer_rx_is_done = true;
 }

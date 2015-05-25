@@ -4,7 +4,7 @@
  * \brief Handles Serial I/O  Functionalities
  *
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,9 +42,6 @@
  */
 
 /* === INCLUDES ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #include "asf.h"
 #include "sio2ncp.h"
@@ -116,8 +113,10 @@ void sio2ncp_init(void)
 #endif
 
 #if (BOARD == SAM4L_XPLAINED_PRO)
+#if defined (NCP_RESET_GPIO)
 	ioport_set_pin_dir(NCP_RESET_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(NCP_RESET_GPIO, IOPORT_PIN_LEVEL_HIGH);
+#endif
 #endif /* (BOARD == SAM4L_XPLAINED_PRO) */
 	USART_NCP_RX_ISR_ENABLE();
 }

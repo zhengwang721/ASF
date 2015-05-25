@@ -75,7 +75,11 @@
  *  - SAM D21 Xplained Pro board
  *  - SAM R21 Xplained Pro board
  *  - SAM L21 Xplained Pro board
+<<<<<<< HEAD
  *  - SAM C21 Xplained Pro board
+=======
+ *  - SAM DA1 Xplained Pro board
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * \section appdoc_sam0_nvm_unit_test_setup Setup
  * The following connections has to be made using wires:
@@ -102,7 +106,7 @@
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -153,10 +157,10 @@ static void run_nvm_parameter_test(const struct test_case *test)
 			NVMCTRL_PAGE_SIZE);
 
 	/* Validate the page count */
-	test_assert_true(test, parameters.nvm_number_of_pages == NVMCTRL_PAGES,
+	test_assert_true(test, parameters.nvm_number_of_pages == FLASH_NB_OF_PAGES,
 			"Number of Pages incorrect (read: 0x%02x,"
 			" expected: 0x%02x)", parameters.nvm_number_of_pages,
-			NVMCTRL_PAGES);
+			FLASH_NB_OF_PAGES);
 }
 
 /**
@@ -177,6 +181,9 @@ static void run_nvm_init_test(const struct test_case *test)
 
 	/* Set wait state to 1 */
 	config.wait_states = 1;
+
+	/* Enable automatic page write mode */
+	config.manual_page_write = false;
 
 	/* Set the NVM configuration */
 	status = nvm_set_config(&config);

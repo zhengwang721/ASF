@@ -3,7 +3,7 @@
  *
  * \brief AT86RF212 PHY implementation
  *
- * Copyright (C) 2014, Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,9 +38,6 @@
  * \asf_license_stop
  *
  *
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifdef PHY_AT86RF212
@@ -99,11 +96,11 @@ void PHY_Init(void)
 	do {  phyWriteRegister(TRX_STATE_REG, TRX_CMD_TRX_OFF);
 	} while (TRX_STATUS_TRX_OFF !=
 			(phyReadRegister(TRX_STATUS_REG) & TRX_STATUS_MASK));
-			
+
 	reg = phyReadRegister(RF_CTRL_0_REG) & ~0x03;
-	phyWriteRegister(RF_CTRL_0_REG, reg | 0X03); //GC_TX_OFFS =3 for BPSK
-	
-	phyWriteRegister(PHY_TX_PWR_REG, 0x42); //3dBm
+	phyWriteRegister(RF_CTRL_0_REG, reg | 0X03); /* GC_TX_OFFS =3 for BPSK */
+
+	phyWriteRegister(PHY_TX_PWR_REG, 0x42); /* 3dBm */
 
 	phyWriteRegister(TRX_CTRL_1_REG,
 			(1 << TX_AUTO_CRC_ON) | (3 << SPI_CMD_MODE) |
@@ -164,7 +161,6 @@ void PHY_SetShortAddr(uint16_t addr)
 	phyWriteRegister(SHORT_ADDR_1_REG, d[1]);
 	phyWriteRegister(CSMA_SEED_0_REG, d[0] + d[1]);
 }
-
 
 /*************************************************************************//**
 *****************************************************************************/

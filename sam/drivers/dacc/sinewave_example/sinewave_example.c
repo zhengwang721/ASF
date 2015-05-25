@@ -3,7 +3,7 @@
  *
  * \brief DAC Sinewave Example.
  *
- * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -93,7 +93,7 @@
  * -# Input command according to the menu.
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -346,11 +346,13 @@ int main(void)
 	/* Enable DAC */
 	dacc_enable(DACC_BASE);
 #else
+#if (SAM3S) || (SAM3XA)
 	/* Power save:
 	 * sleep mode  - 0 (disabled)
 	 * fast wakeup - 0 (disabled)
 	 */
 	dacc_set_power_save(DACC_BASE, 0, 0);
+#endif
 	/* Timing:
 	 * refresh        - 0x08 (1024*8 dacc clocks)
 	 * max speed mode -    0 (disabled)
