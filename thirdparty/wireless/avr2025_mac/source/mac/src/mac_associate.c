@@ -5,7 +5,7 @@
  * @brief Implements the functionality required for Association.
  *
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,15 +44,12 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* === Includes ============================================================= */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #include <compiler.h>
 #include <string.h>
 #include <stdint.h>
@@ -203,8 +200,8 @@ void mlme_associate_request(uint8_t *m)
 				= (uint8_t *)assoc_req_frame +
 					LARGE_BUFFER_SIZE -
 					ASSOC_REQ_PAYLOAD_LEN - 2; /* Add 2
-	                                                           * octets for
-	                                                           * FCS. */
+	                                                            * octets for
+	                                                            * FCS. */
 
 	/* Update the payload field. */
 	*frame_ptr++ = ASSOCIATIONREQUEST;
@@ -426,8 +423,9 @@ void mlme_associate_response(uint8_t *m)
 				= (uint8_t *)assoc_resp_frame +
 					LARGE_BUFFER_SIZE -
 					ASSOC_RESP_PAYLOAD_LEN - 2; /* Add 2
-	                                                            * octets for
-	                                                            * FCS. */
+	                                                             * octets
+	                                                             *for
+	                                                             * FCS. */
 
 	/* Update the payload field. */
 	*frame_ptr++ = ASSOCIATIONRESPONSE;

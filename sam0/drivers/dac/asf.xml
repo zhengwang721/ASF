@@ -21,7 +21,12 @@
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
+<<<<<<< HEAD
 			<device-support value="samc21"/>
+=======
+			<device-support value="samda0"/>
+			<device-support value="samda1"/>
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
@@ -45,7 +50,12 @@
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
+<<<<<<< HEAD
 			<device-support value="samc21"/>
+=======
+			<device-support value="samda0"/>
+			<device-support value="samda1"/>
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
@@ -63,7 +73,12 @@
 			<device-support value="samd21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
+<<<<<<< HEAD
 			<device-support value="samc21"/>
+=======
+			<device-support value="samda0"/>
+			<device-support value="samda1"/>
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 		</module>
 		<module type="meta" id="sam0.drivers.dac.polled#sam_l" caption="DAC - Digital-to-Analog Converter">
 			<build type="include-path" value="." />
@@ -86,7 +101,12 @@
 			<device-support value="samd21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
+<<<<<<< HEAD
 			<device-support value="samc21"/>
+=======
+			<device-support value="samda0"/>
+			<device-support value="samda1"/>
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 		</module>
 		<module type="meta" id="sam0.drivers.dac.callback#sam_l" caption="DAC - Digital-to-Analog Converter">
 			<build type="include-path" value="." />
@@ -139,7 +159,12 @@
 		<device-support value="samd21"/>
 		<device-support value="samd10"/>
 		<device-support value="samd11"/>
+<<<<<<< HEAD
 		<device-support value="samc21"/>
+=======
+		<device-support value="samda0"/>
+		<device-support value="samda1"/>
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 	<module type="meta" id="sam0.drivers.dac.appnote_sam_l" caption="Application note for Digital-to-Analog(DAC)">

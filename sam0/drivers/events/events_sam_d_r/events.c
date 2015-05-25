@@ -3,7 +3,7 @@
  *
  * \brief SAM Event System Controller Driver
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -126,7 +126,7 @@ static void _events_release_channel(uint8_t channel)
 }
 
 
-/*聽This function is called by the system_init function, but should not be a public API call */
+/* This function is called by the system_init function, but should not be a public API call */
 #if defined(__GNUC__)
 #  pragma GCC diagnostic push
 #  pragma GCC diagnostic ignored "-Wmissing-prototypes"

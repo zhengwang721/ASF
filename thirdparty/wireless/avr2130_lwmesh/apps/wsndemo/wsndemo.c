@@ -3,7 +3,7 @@
  *
  * \brief WSNDemo application implementation
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -51,30 +51,30 @@
  * \section preface Preface
  * This is the reference manual for the WSN Demo Application Application
  * The WSNDemo application implements a typical wireless sensor network
- *scenario,
+ * scenario,
  * in which one central node collects the data from a network of sensors and
- *passes this data over a serial connection for further processing.
+ * passes this data over a serial connection for further processing.
  * In the case of the WSNDemo this processing is performed by the WSNMonitor PC
- *application. The BitCloud庐 Quick Start Guide  provides a detailed description
- *of the WSNDemo application scenario, and instructions on how to use
- *WSNMonitor.
- *  However since BitCloud is a ZigBee庐 PRO stack, there are a few differences
- *in the protocol:
- * 鈥Device types (Coordinator, Router and End Device) are simulated on the
- *application level; there is no such separation in Lightweight Mesh on the
- *stack level
- * 鈥The value of the extended address field is set equal to the value of the
- *short address field
- * 鈥For all frames, the LQI and RSSI fields are filled in by the coordinator
- *with the values of LQI and RSSI from the received frame. This means that nodes
- *that are not connected to the coordinator directly will have the same values
- *as the last node on the route to the coordinator
- * 鈥Sensor data values are generated randomly on all platforms
- * 鈥Sending data to the nodes on the network is not implemented and not
- *supported in this demo application
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ * application. The BitCloud&reg; Quick Start Guide  provides a detailed
+ *description
+ * of the WSNDemo application scenario, and instructions on how to use
+ * WSNMonitor.
+ *  However since BitCloud is a ZigBee&reg; PRO stack, there are a few
+ *differences
+ * in the protocol:
+ * • Device types (Coordinator, Router and End Device) are simulated on the
+ * application level; there is no such separation in Lightweight Mesh on the
+ * stack level
+ * • The value of the extended address field is set equal to the value of the
+ * short address field
+ * • For all frames, the LQI and RSSI fields are filled in by the coordinator
+ * with the values of LQI and RSSI from the received frame. This means that
+ *nodes
+ * that are not connected to the coordinator directly will have the same values
+ * as the last node on the route to the coordinator
+ * • Sensor data values are generated randomly on all platforms
+ * • Sending data to the nodes on the network is not implemented and not
+ * supported in this demo application
  */
 
 #include <stdlib.h>
@@ -495,7 +495,6 @@ void wsndemo_init(void)
 #if APP_COORDINATOR
 	sio2host_init();
 #endif
-	
 }
 
 /**

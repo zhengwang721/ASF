@@ -5,7 +5,7 @@
  *
  * -Performance Analyzer application
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,14 +43,11 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef APP_PER_MODE_H
 #define APP_PER_MODE_H
 
@@ -131,7 +128,7 @@
  */
 
 /**
- * \name Request and response Ids which sent over the air  
+ * \name Request and response Ids which sent over the air
  * \{
  */
 #define SET_PARAM                           (0x01)
@@ -234,6 +231,7 @@ extern trx_config_params_t curr_trx_config_params;
 
 /* Database to maintain the default settings of the configurable parameter */
 extern trx_config_params_t default_trx_config_params;
+
 /**
  * \brief Configure the frame to be used for Packet Streaming
  * \param frame_len Length of the frame to be used for Packet Streaming
@@ -290,9 +288,11 @@ void per_mode_initiator_rx_cb(frame_info_t *frame);
 void per_mode_initiator_ed_end_cb(uint8_t energy_level);
 
 /**
- * \brief This function is used to send a remote test repsonse command back to the initiator
+ * \brief This function is used to send a remote test repsonse command back to
+ *the initiator
  */
-bool send_remote_reply_cmd(uint8_t* serial_buf,uint8_t len);
+bool send_remote_reply_cmd(uint8_t *serial_buf, uint8_t len);
+
 /* ! \} */
 
 /**
@@ -303,7 +303,7 @@ bool send_remote_reply_cmd(uint8_t* serial_buf,uint8_t len);
 
 /**
  * \brief Initialize the application in PER Measurement mode as Receptor
- ***\param parameter Pointer to the paramter to be carried, if any.
+ ****\param parameter Pointer to the paramter to be carried, if any.
  */
 void per_mode_receptor_init(void *parameter);
 
@@ -358,7 +358,6 @@ void marker_tx_timer_handler_cb(void *parameter);
  */
 void marker_rsp_timer_handler_cb(void *parameter);
 
-
 #ifdef EXT_RF_FRONT_END_CTRL
 
 /**
@@ -371,6 +370,7 @@ void marker_rsp_timer_handler_cb(void *parameter);
 void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl);
 
 #endif
+
 /**
  * \brief The reverse_float is used for reversing a float variable for
  * supporting BIG ENDIAN systems
@@ -379,14 +379,15 @@ void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl);
 float reverse_float( const float float_val );
 
 /**
- * \brief Timer used in Packet Streaming Mode to add gap in between consecutive frames
+ * \brief Timer used in Packet Streaming Mode to add gap in between consecutive
+ *frames
  */
 void pkt_stream_gap_timer(void *parameter);
 
 /**
  * \brief This function is called to abort the packet streaming mode in progress
  */
-void stop_pkt_streaming(void * parameter);
+void stop_pkt_streaming(void *parameter);
 
 /* ! \} */
 #ifdef __cplusplus

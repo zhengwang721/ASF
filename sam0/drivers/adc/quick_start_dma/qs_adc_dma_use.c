@@ -1,7 +1,11 @@
 /**
  * \file
  *
+<<<<<<< HEAD
  * \brief SAM D21/D11/L21/C21 ADC with DMA quick start
+=======
+ * \brief SAM D21/D11/L21/DA1 ADC with DMA quick start
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -40,7 +44,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>

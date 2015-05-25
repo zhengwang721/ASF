@@ -3,7 +3,7 @@
  *
  * \brief SAM Brown Out Detector Driver
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef BOD_FEATURE_H_INCLUDED
@@ -54,7 +54,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_bod_group SAM Brown Out Detector Driver (BOD)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Brown Out Detector (BOD) modules, to detect
  * and respond to under-voltage events and take an appropriate action.
  *
@@ -65,6 +65,7 @@ extern "C" {
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_bod_prerequisites
@@ -172,7 +173,7 @@ enum bod_prescale {
  * List of possible BOD actions when a BOD module detects a brown out condition.
  */
 enum bod_action {
-	/** A BOD detect will do nothing, and the BOD state must be polled. */
+	/** A BOD detect will do nothing, and the BOD state can't be polled. */
 	BOD_ACTION_NONE      = SYSCTRL_BOD33_ACTION(0),
 	/** A BOD detect will reset the device. */
 	BOD_ACTION_RESET     = SYSCTRL_BOD33_ACTION(1),
@@ -337,7 +338,7 @@ static inline void bod_clear_detected(
 {
 	switch (bod_id) {
 		case BOD_BOD33:
-			SYSCTRL->INTFLAG.bit.BOD33DET = true;
+			SYSCTRL->INTFLAG.reg |= SYSCTRL_INTFLAG_BOD33DET;
 			return;
 		default:
 			Assert(false);
@@ -414,7 +415,7 @@ static inline void bod_clear_detected(
  *  - \subpage asfdoc_sam0_bod_application_use_case
  *
  * \page asfdoc_sam0_bod_application_use_case Application Use Case for BOD - Application
- * The preferred method of setting BOD33 levels and settings is trough the fuses.
+ * The preferred method of setting BOD33 levels and settings is through the fuses.
  * When it is desirable to set it in software, see the below use case.
  *
  * In this use case, a new BOD33 level might be set in SW if the clock settings
@@ -430,6 +431,11 @@ static inline void bod_clear_detected(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAMDA0/DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

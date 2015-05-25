@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM Analog to Digital Converter (RTC) Unit test
+ * \brief SAM RTC Calendar Unit test
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -70,6 +70,9 @@
  *
  * The following kit is required for carrying out the test:
  *  - SAM D21 Xplained Pro board
+ *  - SAM L21 Xplained Pro board
+ *  - SAM R21 Xplained Pro board
+ *  - SAM DA1 Xplained Pro board
  *
  * \section asfdoc_sam0_rtc_unit_test_setup Setup
  *
@@ -94,7 +97,7 @@
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

@@ -3,7 +3,7 @@
  *
  * \brief USB configuration file
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,9 +40,6 @@
  * \asf_license_stop
  *
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #ifndef _CONF_USB_H_
 #define _CONF_USB_H_
@@ -61,7 +58,8 @@
 #define  USB_DEVICE_PRODUCT_ID            USB_PID_ATMEL_ASF_HIDKEYBOARD
 #define  USB_DEVICE_MAJOR_VERSION         1
 #define  USB_DEVICE_MINOR_VERSION         0
-#define  USB_DEVICE_POWER                 100 /* Consumption on Vbus line (mA) */
+#define  USB_DEVICE_POWER                 100 /* Consumption on Vbus line (mA)
+	                                       **/
 #define  USB_DEVICE_ATTR \
 	(USB_CONFIG_ATTR_SELF_POWERED)
 /* (USB_CONFIG_ATTR_BUS_POWERED) */
@@ -90,6 +88,7 @@
  * USB Device Callbacks definitions (Optional)
  * @{
  */
+
 /* #define  UDC_VBUS_EVENT(b_vbus_high)
  *      user_callback_vbus_action(b_vbus_high) */
 /* extern void user_callback_vbus_action(bool b_vbus_high); */
@@ -100,8 +99,10 @@
 /* #define  UDC_RESUME_EVENT()               user_callback_resume_action() */
 /* extern void user_callback_resume_action(void); */
 /* ! Mandatory when USB_DEVICE_ATTR authorizes remote wakeup feature */
-/* #define  UDC_REMOTEWAKEUP_ENABLE()        user_callback_remotewakeup_enable() */
+/* #define  UDC_REMOTEWAKEUP_ENABLE()        user_callback_remotewakeup_enable()
+ **/
 /* extern void user_callback_remotewakeup_enable(void); */
+
 /* #define  UDC_REMOTEWAKEUP_DISABLE()
  *       user_callback_remotewakeup_disable() */
 /* extern void user_callback_remotewakeup_disable(void); */

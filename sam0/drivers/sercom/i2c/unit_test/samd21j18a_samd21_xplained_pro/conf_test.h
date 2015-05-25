@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -54,5 +54,13 @@
 #define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
 #define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
 #define CONF_STDIO_BAUDRATE       38400
+
+/* master sercom pinmux setting */
+#define CONF_I2C_MASTER_MODULE    SERCOM5
+#define CONF_MASTER_SDA_PINMUX    PINMUX_PB02D_SERCOM5_PAD0
+#define CONF_MASTER_SCK_PINMUX    PINMUX_PB03D_SERCOM5_PAD1
+
+/* slave sercom pinmux setting */
+#define CONF_I2C_SLAVE_MODULE     SERCOM2
 
 #endif /* CONF_TEST_H_INCLUDED */

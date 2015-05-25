@@ -3,7 +3,11 @@
  *
  * \brief SAM SERCOM I2C Slave Quick Start Guide with Callbacks
  *
+<<<<<<< HEAD
  * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
+=======
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * \asf_license_start
  *
@@ -126,7 +130,7 @@
  *  -# Read packet from master.
  *     \snippet qs_i2c_slave_callback.c read_packet
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

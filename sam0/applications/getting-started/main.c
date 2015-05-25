@@ -3,7 +3,11 @@
  *
  * \brief Getting Started Application.
  *
+<<<<<<< HEAD
  * Copyright (c) 2014 - 2015 Atmel Corporation. All rights reserved.
+=======
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * \asf_license_start
  *
@@ -80,7 +84,7 @@
  *    blinking.
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

@@ -3,7 +3,11 @@
  *
  * \brief SAM PAC Quick Start
  *
+<<<<<<< HEAD
  * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+=======
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * \asf_license_start
  *
@@ -73,8 +77,13 @@
  *    \snippet qs_pac_basic.c init
  * -# Lock peripheral access for the PORT module; attempting to update the
  *    module while it is in a protected state will cause a CPU exception.
+<<<<<<< HEAD
  *    For SAM D20/D21/D10/D11/R21, it is Hard Fault exception;
  *    For SAM L21/C21, it is system exception, see \ref SYSTEM_Handler().
+=======
+ *    For SAM D20/D21/D10/D11/R21/DA0/DA1, it is Hard Fault exception;
+ *    For SAM l21, it is system exception, see \ref SYSTEM_Handler().
+>>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *    \snippet qs_pac_basic.c init_lock
  * -# Enable global interrupts.
  *    \snippet qs_pac_basic.c enable_interrupts
@@ -96,7 +105,7 @@
  *    successfully.
  *    \snippet qs_pac_basic.c inf_loop
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

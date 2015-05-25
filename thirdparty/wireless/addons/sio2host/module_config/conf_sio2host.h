@@ -3,7 +3,7 @@
  *
  * \brief Serial Input & Output configuration
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,9 +38,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef CONF_SIO2HOST_H_INCLUDED
@@ -119,7 +116,7 @@
 #if (SAMD || SAMR21)
 #define USART_HOST                 SERCOM0
 #define HOST_SERCOM_MUX_SETTING    USART_RX_1_TX_0_XCK_1
-#define HOST_SERCOM_PINMUX_PAD0	   PINMUX_PA04D_SERCOM0_PAD0
+#define HOST_SERCOM_PINMUX_PAD0    PINMUX_PA04D_SERCOM0_PAD0
 #define HOST_SERCOM_PINMUX_PAD1    PINMUX_PA05D_SERCOM0_PAD1
 #define HOST_SERCOM_PINMUX_PAD2    PINMUX_UNUSED
 #define HOST_SERCOM_PINMUX_PAD3    PINMUX_UNUSED

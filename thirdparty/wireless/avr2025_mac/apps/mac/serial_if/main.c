@@ -3,7 +3,7 @@
  *
  * \brief MAC Serial Interface Application
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -88,14 +88,12 @@
  *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
  * Area
  *     Networks (WPANs).\n\n
- * 2)  <a href="http://www.atmel.com/design-support/">Atmel Design Support</a>.\n
+ * 2)  <a href="http://www.atmel.com/design-support/">Atmel Design
+ *Support</a>.\n
  *
  * \section contactinfo Contact Information
  * For further information,visit
  * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include "conf_board.h"

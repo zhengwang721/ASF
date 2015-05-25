@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -61,6 +61,10 @@
 
 #if !defined(CONF_CLOCK_APBB_DIVIDER)
 #  error CONF_CLOCK_APBB_DIVIDER not defined in conf_clocks.h
+#endif
+
+#if !defined(CONF_CLOCK_APBC_DIVIDER)
+#  error CONF_CLOCK_APBC_DIVIDER not defined in conf_clocks.h
 #endif
 
 #if !defined(CONF_CLOCK_OSC8M_PRESCALER)
@@ -169,10 +173,6 @@
 
 #if !defined(CONF_CLOCK_DFLL_ON_DEMAND)
 #  error CONF_CLOCK_DFLL_ON_DEMAND not defined in conf_clocks.h
-#endif
-
-#if !defined(CONF_CLOCK_DFLL_COARSE_VALUE)
-#  error CONF_CLOCK_DFLL_COARSE_VALUE not defined in conf_clocks.h
 #endif
 
 #if !defined(CONF_CLOCK_DFLL_FINE_VALUE)

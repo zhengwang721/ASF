@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <clock.h>
@@ -87,8 +87,6 @@
 #  define CONF_CLOCK_OSC32K_RUN_IN_STANDBY        false
 
 /* SYSTEM_CLOCK_SOURCE_OSCULP32K configuration - Internal Ultra Low Power 32KHz oscillator */
-#  define CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT    true
-#  define CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT   true
 
 /* SYSTEM_CLOCK_SOURCE_DFLL configuration - Digital Frequency Locked Loop */
 #  define CONF_CLOCK_DFLL_ENABLE                  false
@@ -97,12 +95,11 @@
 #  define CONF_CLOCK_DFLL_RUN_IN_STANDBY          false
 
 /* DFLL open loop mode configuration */
-#  define CONF_CLOCK_DFLL_COARSE_VALUE            (0x1f / 4)
 #  define CONF_CLOCK_DFLL_FINE_VALUE              (0xff / 4)
 
 /* DFLL closed loop mode configuration */
 #  define CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR   GCLK_GENERATOR_1
-#  define CONF_CLOCK_DFLL_MULTIPLY_FACTOR         (48000000 / 32768)
+#  define CONF_CLOCK_DFLL_MULTIPLY_FACTOR         1465 //(48000000 / 32768)
 #  define CONF_CLOCK_DFLL_QUICK_LOCK              true
 #  define CONF_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK   true
 #  define CONF_CLOCK_DFLL_KEEP_LOCK_ON_WAKEUP     true

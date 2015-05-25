@@ -3,7 +3,7 @@
  *
  * \brief SAM TCC - Timer Counter for Control Applications Driver
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_tcc_group SAM Timer Counter for Control Applications Driver (TCC)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the TCC module within the device, for waveform
  * generation and timing operations. It also provides extended options for
  * control applications.
@@ -71,6 +71,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_tcc_prerequisites
@@ -603,6 +604,26 @@
  *
  * \section asfdoc_sam0_tcc_special_considerations Special Considerations
  *
+ * \subsection asfdoc_sam0_tcc_special_considerations_specific_features Driver Feature Macro Definition
+ * \ref asfdoc_sam0_tcc_feature_table "The table below" shows some specific features
+ * of the TCC Module.
+ *
+ * \anchor asfdoc_sam0_tcc_feature_table
+ * <table>
+ *   <caption>TCC Module Specific Features</caption>
+ *  <tr>
+ *    <th>Driver Feature Macro</th>
+ *    <th>Supported devices</th>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_TCC_GENERATE_DMA_TRIGGER</td>
+ *    <td>SAML21</td>
+ *  </tr>
+ * </table>
+ *
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
+ *
  * \subsection asfdoc_sam0_tcc_special_considerations_tcc_feature Module Features
  *
  * The features of TCC, such as timer/counter size, number of compare capture
@@ -610,10 +631,10 @@
  * used.
  *
  * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM TCC Feature List
- * For SAM D21/R21/L21, the TCC features are:
+ * For SAM D21/R21/L21/DA0/DA1, the TCC features are:
  * \anchor asfdoc_sam0_tcc_features_d21
  * <table>
- *   <caption>TCC module features for SAM D21/R21/L21</caption>
+ *   <caption>TCC module features for SAM D21/R21/L21/DA0/DA1</caption>
  *   <tr>
  *     <th>TCC#</th>
  *     <th>Match/Capture channels</th>
@@ -743,6 +764,16 @@
 #if TCC_ASYNC == true
 #  include <system_interrupt.h>
 #endif
+
+/**
+ * Define port features set according to different device family.
+ * @{
+*/
+#if (SAML21) || defined(__DOXYGEN__)
+/** Generate DMA triggers. */
+#  define FEATURE_TCC_GENERATE_DMA_TRIGGER
+#endif
+/*@}*/
 
 #ifdef __cplusplus
 extern "C" {
@@ -1105,9 +1136,9 @@ enum tcc_event_action {
 	/** Decrement the counter on event, irrespective of count direction. */
 	TCC_EVENT_ACTION_DECREMENT,
 	/** Count during active state of asynchronous event. In this case,
-	* depending	on the count direction, the  count will be incremented
-    * or decremented on each
-	* prescaled GCLK_TCCx, as long as the input event remains active. */
+	* depending	on the count direction, the  count will be incremented 
+	* or decremented on each prescaled GCLK_TCCx, as long as the input
+	* event remains active. */
 	TCC_EVENT_ACTION_COUNT_DURING_ACTIVE,
 
 	/** Store period in capture register 0, pulse width in capture
@@ -1941,6 +1972,46 @@ static inline void tcc_restart_counter(
 
 /** @} */
 
+#ifdef FEATURE_TCC_GENERATE_DMA_TRIGGER
+/**
+ * \name Generate TCC DMA Triggers command
+ * @{
+ */
+
+/**
+ * \brief TCC DMA Trigger.
+ *
+ * TCC DMA trigger command.
+ *
+ * \param[in]  module_inst   Pointer to the software module instance struct
+ */
+static inline void tcc_dma_trigger_command(
+		const struct tcc_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	/* Get a pointer to the module's hardware instance */
+	Tcc *const tcc_module = module_inst->hw;
+
+	while (tcc_module->SYNCBUSY.bit.CTRLB) {
+			/* Wait for sync */
+	}
+
+	/* Make certain that there are no conflicting commands in the register */
+	tcc_module->CTRLBCLR.reg = TCC_CTRLBCLR_CMD_NONE;
+
+	while (tcc_module->SYNCBUSY.bit.CTRLB) {
+			/* Wait for sync */
+	}
+
+	/* Write command to execute */
+	tcc_module->CTRLBSET.reg = TCC_CTRLBSET_CMD_DMATRG;
+}
+/** @} */
+#endif
+
 /**
  * \name Get/Set Compare/Capture Register
  * @{
@@ -2362,8 +2433,8 @@ enum status_code tcc_set_double_buffer_compare_values(
  *  </tr>
  *  <tr>
  *      <td>C</td>
- *      <td>11/2014</td>
- *      <td>Added support for SAML21</td>
+ *      <td>04/2015</td>
+ *      <td>Added support for SAML21 and SAMDA0/DA1</td>
  *  </tr>
  *  <tr>
  *      <td>B</td>

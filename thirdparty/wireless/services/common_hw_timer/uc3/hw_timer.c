@@ -3,7 +3,7 @@
  *
  * @brief
  *
- *  Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -36,9 +36,6 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include <compiler.h>
@@ -186,7 +183,7 @@ uint8_t tmr_init(void)
 		                                       * with RC compare. */
 
 		.burst    = TC_BURST_NOT_GATED,       /* Burst signal selection.
-		                                       **/
+		                                      **/
 		.clki     = TC_CLOCK_RISING_EDGE,     /* Clock inversion. */
 		.tcclks   = TC_CLOCK_SOURCE_TC2       /* Internal source clock
 		                                       * 3, connected to fPBA /
