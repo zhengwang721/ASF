@@ -57,13 +57,13 @@
 #elif (SAM4E)
 # define MAX_PERIPH_ID    47
 #elif (SAMV71)
-# define MAX_PERIPH_ID    47
+# define MAX_PERIPH_ID    60
 #elif (SAMV70)
-# define MAX_PERIPH_ID    47
+# define MAX_PERIPH_ID    60
 #elif (SAME70)
-# define MAX_PERIPH_ID    47
+# define MAX_PERIPH_ID    60
 #elif (SAMS70)
-# define MAX_PERIPH_ID    47
+# define MAX_PERIPH_ID    60
 #elif (SAM4N)
 # define MAX_PERIPH_ID    31
 #elif (SAM4C || SAM4CM || SAM4CP)
@@ -253,7 +253,7 @@ uint32_t pmc_switch_mck_to_pllbck(uint32_t ul_pres)
 }
 #endif
 
-#if (SAM3XA || SAM3U)
+#if (SAM3XA || SAM3U || SAMV71 || SAMV70 || SAME70 || SAMS70)
 /**
  * \brief Switch master clock source selection to UPLL clock.
  *
@@ -616,7 +616,7 @@ uint32_t pmc_is_locked_pllbck(void)
 }
 #endif
 
-#if (SAM3XA || SAM3U)
+#if (SAM3XA || SAM3U || SAMV71 || SAMV70 || SAME70 || SAMS70)
 /**
  * \brief Enable UPLL clock.
  */
@@ -907,7 +907,7 @@ uint32_t pmc_switch_pck_to_pllbck(uint32_t ul_id, uint32_t ul_pres)
 }
 #endif
 
-#if (SAM3XA || SAM3U)
+#if (SAM3XA || SAM3U || SAMV71 || SAMV70 || SAME70 || SAMS70)
 /**
  * \brief Switch programmable clock source selection to UPLL clock.
  *
@@ -1121,7 +1121,7 @@ void pmc_switch_udpck_to_pllbck(uint32_t ul_usbdiv)
 }
 #endif
 
-#if (SAM3XA)
+#if (SAM3XA || SAMV71 || SAMV70 || SAME70 || SAMS70)
 /**
  * \brief Switch UDP (USB) clock source selection to UPLL clock.
  *
@@ -1433,7 +1433,7 @@ void pmc_disable_clock_failure_detector(void)
 	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | ul_reg;
 }
 
-#if (SAM4N || SAM4C || SAM4CM || SAM4CP)
+#if (SAM4N || SAM4C || SAM4CM || SAM4CP || SAMV71 || SAMV70 || SAME70 || SAMS70)
 /**
  * \brief Enable Slow Crystal Oscillator Frequency Monitoring.
  */
@@ -1479,7 +1479,7 @@ uint32_t pmc_get_writeprotect_status(void)
 	return PMC->PMC_WPSR;
 }
 
-#if (SAMG53 || SAMG54 || SAMG55)
+#if (SAMG53 || SAMG54 || SAMG55 || SAMV71 || SAMV70 || SAME70 || SAMS70)
 /**
  * \brief Enable the specified peripheral clock.
  *
@@ -1493,23 +1493,40 @@ uint32_t pmc_get_writeprotect_status(void)
 uint32_t pmc_enable_sleepwalking(uint32_t ul_id)
 {
 	uint32_t temp;
-#if SAMG55
+#if (SAMG55 || SAMV71 || SAMV70 || SAME70 || SAMS70)
 	if ((7 <= ul_id) && (ul_id<= 29)) {
 #else
 	if ((8 <= ul_id) && (ul_id<= 29)) {
 #endif
-		temp = pmc_get_active_status();
+		temp = pmc_get_active_status0();
 		if (temp & (1 << ul_id)) {
 			return 1;
 		}
 		PMC->PMC_SLPWK_ER0 = 1 << ul_id;
-		temp = pmc_get_active_status();
+		temp = pmc_get_active_status0();
 		if (temp & (1 << ul_id)) {
 			pmc_disable_sleepwalking(ul_id);
 			return 1;
 		}
 		return 0;
-	} else {
+	}	
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
+	else if ((32 <= ul_id) && (ul_id<= 60)) {
+		ul_id -= 32;
+		temp = pmc_get_active_status1();
+		if (temp & (1 << ul_id)) {
+			return 1;
+		}
+		PMC->PMC_SLPWK_ER1 = 1 << ul_id;
+		temp = pmc_get_active_status1();
+		if (temp & (1 << ul_id)) {
+			pmc_disable_sleepwalking(ul_id);
+			return 1;
+		}
+		return 0;
+	}
+#endif	
+	else {
 		return 1;
 	}
 }
@@ -1526,14 +1543,22 @@ uint32_t pmc_enable_sleepwalking(uint32_t ul_id)
  */
 uint32_t pmc_disable_sleepwalking(uint32_t ul_id)
 {
-#if SAMG55
+#if (SAMG55 || SAMV71 || SAMV70 || SAME70 || SAMS70)
 	if ((7 <= ul_id) && (ul_id<= 29)) {
 #else
 	if ((8 <= ul_id) && (ul_id<= 29)) {
 #endif		
 		PMC->PMC_SLPWK_DR0 = 1 << ul_id;
 		return 0;
-	} else {
+	}
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
+	else if ((32 <= ul_id) && (ul_id<= 60)) {
+		ul_id -= 32;
+		PMC->PMC_SLPWK_DR1 = 1 << ul_id;
+		return 0;
+	}	
+#endif	
+	else {
 		return 1;
 	}
 }
@@ -1543,7 +1568,7 @@ uint32_t pmc_disable_sleepwalking(uint32_t ul_id)
  *
  * \return the status register value.
  */
-uint32_t pmc_get_sleepwalking_status(void)
+uint32_t pmc_get_sleepwalking_status0(void)
 {
 	return PMC->PMC_SLPWK_SR0;
 }
@@ -1553,11 +1578,33 @@ uint32_t pmc_get_sleepwalking_status(void)
  *
  * \return the status register value.
  */
-uint32_t pmc_get_active_status(void)
+uint32_t pmc_get_active_status0(void)
 {
 	return PMC->PMC_SLPWK_ASR0;
 }
 
+#endif
+
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
+/**
+ * \brief Return peripheral sleepwalking enable status.
+ *
+ * \return the status register value.
+ */
+uint32_t pmc_get_sleepwalking_status1(void)
+{
+	return PMC->PMC_SLPWK_SR1;
+}
+
+/**
+ * \brief Return peripheral active status.
+ *
+ * \return the status register value.
+ */
+uint32_t pmc_get_active_status1(void)
+{
+	return PMC->PMC_SLPWK_ASR1;
+}
 #endif
 
 /// @cond 0

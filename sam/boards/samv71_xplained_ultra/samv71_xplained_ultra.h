@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMV71-XULTRA Board Definition.
+ * \brief SAMV71-XLTRA Board Definition.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,15 +44,15 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef _SAMV71_XULTRA_H_
-#define _SAMV71_XULTRA_H_
+#ifndef _SAMV71_XLTRA_H_
+#define _SAMV71_XLTRA_H_
 
 #include "compiler.h"
 #include "system_samv71.h"
 
 /*----------------------------------------------------------------------------*/
 /**
- *  \page samv71_xplained_ultra_opfreq "SAMV71-XULTRA - Operating frequencies"
+ *  \page samv71_xplained_ultra_opfreq "SAMV71-XLTRA - Operating frequencies"
  *  This page lists several definition related to the board operating frequency
  *
  *  \section Definitions
@@ -74,7 +74,7 @@
 
 /*----------------------------------------------------------------------------*/
 /**
- * \page samv71_xplained_ultra_info "SAMV71-XULTRA - Board informations"
+ * \page samv71_xplained_ultra_info "SAMV71-XLTRA - Board informations"
  * This page lists several definition related to the board description.
  *
  * \section Definitions
@@ -82,7 +82,7 @@
  */
 
 /** Name of the board */
-#define BOARD_NAME "SAMV71-XULTRA"
+#define BOARD_NAME "SAMV71-XLTRA"
 /** Board definition */
 #define samv71xultra
 /** Family definition (already defined) */
@@ -227,5 +227,16 @@
 /** List of all push button definitions. */
 #define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1}
 
+/** PCK0 pin definition (PA6) */
+#define PIN_PCK0         (PIO_PA6_IDX)
+#define PIN_PCK0_MUX     (IOPORT_MODE_MUX_B)
+#define PIN_PCK0_FLAGS   (IOPORT_MODE_MUX_B)
+#define PIN_PCK0_PORT    IOPORT_PIOA
+#define PIN_PCK0_MASK    PIO_PA6B_PCK0
+#define PIN_PCK0_PIO     PIOA
+#define PIN_PCK0_ID      ID_PIOA
+#define PIN_PCK0_TYPE    PIO_PERIPH_B
+#define PIN_PCK0_ATTR    PIO_DEFAULT
+
 /*----------------------------------------------------------------------------*/
-#endif  /* _SAMV71_XULTRA_H_ */
+#endif  /* _SAMV71_XLTRA_H_ */

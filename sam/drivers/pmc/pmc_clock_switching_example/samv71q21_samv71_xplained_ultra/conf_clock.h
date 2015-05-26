@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4E clock configuration.
+ * \brief SAMV71 clock configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -52,11 +52,11 @@
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_XTAL
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_BYPASS
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_4M_RC
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_8M_RC
+#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_8M_RC
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_12M_RC
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_XTAL
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_BYPASS
-#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
+//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_UPLLCK
 
 // ===== System Clock (MCK) Prescaler Options   (Fmck = Fsys / (SYSCLK_PRES))
@@ -72,7 +72,7 @@
 // ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
 // Use mul and div effective values here.
 #define CONFIG_PLL0_SOURCE          PLL_SRC_MAINCK_XTAL
-#define CONFIG_PLL0_MUL             16
+#define CONFIG_PLL0_MUL             15
 #define CONFIG_PLL0_DIV             1
 
 // ===== UPLL (UTMI) Hardware fixed at 480 MHz.
@@ -86,15 +86,14 @@
 // ===== Target frequency (System clock)
 // - XTAL frequency: 12MHz
 // - System clock source: PLLA
-// - System clock prescaler: 2 (divided by 2)
+// - System clock prescaler: 1 (divided by 1)
 // - PLLA source: XTAL
-// - PLLA output: XTAL * 16 / 1
-// - System clock: 12 * 16 / 1 / 2 = 96MHz
+// - PLLA output: XTAL * 25 / 1
+// - System clock: 12 * 25 / 1 / 1 = 300MHz
 // ===== Target frequency (USB Clock)
 // - USB clock source: UPLL
 // - USB clock divider: 1 (not divided)
 // - UPLL frequency: 480MHz
 // - USB clock: 480 / 1 = 480MHz
-
 
 #endif /* CONF_CLOCK_H_INCLUDED */

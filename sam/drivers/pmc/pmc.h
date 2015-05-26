@@ -133,7 +133,7 @@ uint32_t pmc_switch_mck_to_pllack(uint32_t ul_pres);
 #if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP || SAMG55)
 uint32_t pmc_switch_mck_to_pllbck(uint32_t ul_pres);
 #endif
-#if (SAM3XA || SAM3U)
+#if (SAM3XA || SAM3U || SAMV71 || SAMV70 || SAME70 || SAMS70)
 uint32_t pmc_switch_mck_to_upllck(uint32_t ul_pres);
 #endif
 #if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CM || SAMG || SAM4CP || SAMV71 || SAMV70 || SAME70 || SAMS70)
@@ -193,7 +193,7 @@ void pmc_disable_pllbck(void);
 uint32_t pmc_is_locked_pllbck(void);
 #endif
 
-#if (SAM3XA || SAM3U)
+#if (SAM3XA || SAM3U || SAMV71 || SAMV70 || SAME70 || SAMS70)
 void pmc_enable_upll_clock(void);
 void pmc_disable_upll_clock(void);
 uint32_t pmc_is_locked_upll(void);
@@ -241,7 +241,7 @@ void pmc_cpck_set_source(uint32_t ul_source);
 #if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP || SAMG55)
 uint32_t pmc_switch_pck_to_pllbck(uint32_t ul_id, uint32_t ul_pres);
 #endif
-#if (SAM3XA || SAM3U)
+#if (SAM3XA || SAM3U || SAMV71 || SAMV70 || SAME70 || SAMS70)
 uint32_t pmc_switch_pck_to_upllck(uint32_t ul_id, uint32_t ul_pres);
 #endif
 uint32_t pmc_switch_pck_to_mck(uint32_t ul_id, uint32_t ul_pres);
@@ -265,7 +265,7 @@ void pmc_switch_udpck_to_pllack(uint32_t ul_usbdiv);
 #if (SAM3S || SAM4S || SAMG55)
 void pmc_switch_udpck_to_pllbck(uint32_t ul_usbdiv);
 #endif
-#if (SAM3XA)
+#if (SAM3XA || SAMV71 || SAMV70 || SAME70 || SAMS70)
 void pmc_switch_udpck_to_upllck(uint32_t ul_usbdiv);
 #endif
 #if (SAM3S || SAM3XA || SAM4S || SAM4E || SAMG55 || SAMV71 || SAMV70 || SAME70 || SAMS70)
@@ -327,7 +327,7 @@ void pmc_disable_clock_failure_detector(void);
 
 //@}
 
-#if (SAM4N || SAM4C || SAM4CM || SAM4CP)
+#if (SAM4N || SAM4C || SAM4CM || SAM4CP || SAMV71 || SAMV70 || SAME70 || SAMS70)
 /**
  * \name Slow Crystal Oscillator Frequency Monitoring
  *
@@ -351,7 +351,7 @@ uint32_t pmc_get_writeprotect_status(void);
 
 //@}
 
-#if (SAMG53 || SAMG54 || SAMG55)
+#if (SAMG53 || SAMG54 || SAMG55 || SAMV71 || SAMV70 || SAME70 || SAMS70)
 /**
  * \name Sleepwalking configuration
  *
@@ -360,9 +360,12 @@ uint32_t pmc_get_writeprotect_status(void);
 
 uint32_t pmc_enable_sleepwalking(uint32_t ul_id);
 uint32_t pmc_disable_sleepwalking(uint32_t ul_id);
-uint32_t pmc_get_sleepwalking_status(void);
-uint32_t pmc_get_active_status(void);
-
+uint32_t pmc_get_sleepwalking_status0(void);
+uint32_t pmc_get_active_status0(void);
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
+uint32_t pmc_get_sleepwalking_status1(void);
+uint32_t pmc_get_active_status1(void);
+#endif
 //@}
 #endif
 

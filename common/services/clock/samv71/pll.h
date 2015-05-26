@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific PLL definitions.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -68,8 +68,11 @@ extern "C" {
 #define PLL_INPUT_MIN_HZ        3000000
 #define PLL_INPUT_MAX_HZ        32000000
 
-#define NR_PLLS     1
-#define PLLA_ID     0
+#define NR_PLLS             2
+#define PLLA_ID              0
+#define UPLL_ID             1   //!< USB UTMI PLL.
+
+#define PLL_UPLL_HZ     480000000
 
 #define PLL_COUNT   0x3fU
 
@@ -91,8 +94,22 @@ struct pll_config {
 			* CONFIG_PLL##pll_id##_MUL)                      \
 			/ CONFIG_PLL##pll_id##_DIV)
 
+/* Force UTMI PLL parameters (Hardware defined) */
+#ifdef CONFIG_PLL1_SOURCE
+# undef CONFIG_PLL1_SOURCE
+#endif
+#ifdef CONFIG_PLL1_MUL
+# undef CONFIG_PLL1_MUL
+#endif
+#ifdef CONFIG_PLL1_DIV
+# undef CONFIG_PLL1_DIV
+#endif
+#define CONFIG_PLL1_SOURCE  PLL_SRC_MAINCK_XTAL
+#define CONFIG_PLL1_MUL     0
+#define CONFIG_PLL1_DIV     0
+
 /**
- * \note The SAM4E PLL hardware interprets mul as mul+1. For readability the
+ * \note The SAMV71 PLL hardware interprets mul as mul+1. For readability the
  * hardware mul+1 is hidden in this implementation. Use mul as mul effective
  * value.
  */
@@ -103,6 +120,9 @@ static inline void pll_config_init(struct pll_config *p_cfg,
 
 	Assert(e_src < PLL_NR_SOURCES);
 
+	if (ul_div == 0 && ul_mul == 0) { /* Must only be true for UTMI PLL */
+		p_cfg->ctrl = CKGR_UCKR_UPLLCOUNT(PLL_COUNT);
+	} else { /* PLLA */
 	/* Calculate internal VCO frequency */
 	vco_hz = osc_get_rate(e_src) / ul_div;
 	Assert(vco_hz >= PLL_INPUT_MIN_HZ);
@@ -113,8 +133,9 @@ static inline void pll_config_init(struct pll_config *p_cfg,
 	Assert(vco_hz <= PLL_OUTPUT_MAX_HZ);
 
 	/* PMC hardware will automatically make it mul+1 */
-	p_cfg->ctrl = CKGR_PLLAR_MULA(ul_mul - 1) | CKGR_PLLAR_DIVA(ul_div) | \
-			CKGR_PLLAR_PLLACOUNT(PLL_COUNT);
+		p_cfg->ctrl = CKGR_PLLAR_MULA(ul_mul - 1) | CKGR_PLLAR_DIVA(ul_div)  \
+		| CKGR_PLLAR_PLLACOUNT(PLL_COUNT);
+	}
 }
 
 #define pll_config_defaults(cfg, pll_id)                                 \
@@ -129,6 +150,8 @@ static inline void pll_config_read(struct pll_config *p_cfg, uint32_t ul_pll_id)
 
 	if (ul_pll_id == PLLA_ID) {
 		p_cfg->ctrl = PMC->CKGR_PLLAR;
+	} else {
+		p_cfg->ctrl = PMC->CKGR_UCKR;
 	}
 }
 
@@ -139,6 +162,8 @@ static inline void pll_config_write(const struct pll_config *p_cfg, uint32_t ul_
 	if (ul_pll_id == PLLA_ID) {
 		pmc_disable_pllack(); // Always stop PLL first!
 		PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | p_cfg->ctrl;
+	} else {
+		PMC->CKGR_UCKR = p_cfg->ctrl;
 	}
 }
 
@@ -149,6 +174,8 @@ static inline void pll_enable(const struct pll_config *p_cfg, uint32_t ul_pll_id
 	if (ul_pll_id == PLLA_ID) {
 		pmc_disable_pllack(); // Always stop PLL first!
 		PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | p_cfg->ctrl;
+	} else {
+		PMC->CKGR_UCKR = p_cfg->ctrl | CKGR_UCKR_UPLLEN;
 	}
 }
 
@@ -161,6 +188,8 @@ static inline void pll_disable(uint32_t ul_pll_id)
 
 	if (ul_pll_id == PLLA_ID) {
 		pmc_disable_pllack();
+	} else {
+		PMC->CKGR_UCKR &= ~CKGR_UCKR_UPLLEN;
 	}
 }
 
@@ -168,8 +197,11 @@ static inline uint32_t pll_is_locked(uint32_t ul_pll_id)
 {
 	Assert(ul_pll_id < NR_PLLS);
 
-	UNUSED(ul_pll_id);
+	if (ul_pll_id == PLLA_ID) {
 	return pmc_is_locked_pllack();
+	} else {
+		return pmc_is_locked_upll();
+	}
 }
 
 static inline void pll_enable_source(enum pll_source e_src)
@@ -205,6 +237,15 @@ static inline void pll_enable_config_defaults(unsigned int ul_pll_id)
 				CONFIG_PLL0_SOURCE,
 				CONFIG_PLL0_DIV,
 				CONFIG_PLL0_MUL);
+		break;
+#endif
+#ifdef CONFIG_PLL1_SOURCE
+	case 1:
+		pll_enable_source(CONFIG_PLL1_SOURCE);
+		pll_config_init(&pllcfg,
+				CONFIG_PLL1_SOURCE,
+				CONFIG_PLL1_DIV,
+				CONFIG_PLL1_MUL);
 		break;
 #endif
 	default:
