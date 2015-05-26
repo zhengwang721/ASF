@@ -127,11 +127,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
-<<<<<<< HEAD
- *    <td>SAMD20/D21/R21/D10/D11</td>
-=======
  *    <td>SAMD20, SAMD21, SAMR21, SAMD10, SAMD11, SAMDA0, SAMDA1</td>
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the

@@ -74,14 +74,11 @@
  *  <tr><td> SAMR21 Xpro  </td><td> PA19 </td><td> LED0       </td></tr>
  *  <tr><td> SAMR21 Xpro  </td><td> PA28 </td><td> SW0        </td></tr>
  *  <tr><td> SAML21 Xpro  </td><td> PB10 </td><td> LED0       </td></tr>
-<<<<<<< HEAD
  *  <tr><td> SAML21 Xpro  </td><td> PA02 </td><td> SW0        </td></tr>
- *  <tr><td> SAMC21 Xpro  </td><td> PA15 </td><td> LED0       </td></tr>
- *  <tr><td> SAMC21 Xpro  </td><td> PA28 </td><td> SW0        </td></tr>
-=======
  *  <tr><td> SAMDA1 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
  *  <tr><td> SAMDA1 Xpro  </td><td> PA15 </td><td> SW0        </td></tr>
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *  <tr><td> SAMC21 Xpro  </td><td> PA15 </td><td> LED0       </td></tr>
+ *  <tr><td> SAMC21 Xpro  </td><td> PA28 </td><td> SW0        </td></tr>
  * </table>
  *
  * The TCC module will be set up as follows:

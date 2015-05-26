@@ -48,11 +48,8 @@
  *    - SAMD21 Xplained Pro
  *    - SAMR21 Xplained Pro
  *    - SAML21 Xplained Pro
-<<<<<<< HEAD
- *    - SAMC21 Xplained Pro
-=======
  *    - SAMDA1 Xplained Pro
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *    - SAMC21 Xplained Pro
  *
  * This quick start will transmit a buffer data from master to slave through DMA.
  * In this use case the SPI master will be configured with the following
@@ -121,18 +118,15 @@
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_master
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_slave
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
-<<<<<<< HEAD
- * For SAMC21 Xplained Pro:
- * \snippet samc21_xplained_pro/conf_quick_start.h definition_master
- * \snippet samc21_xplained_pro/conf_quick_start.h definition_slave
- * \snippet samc21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
-=======
  * For SAMDA1 Xplained Pro:
  * \snippet samda1_xplained_pro/conf_quick_start.h definition_master
  * \snippet samda1_xplained_pro/conf_quick_start.h definition_slave
  * \snippet samda1_xplained_pro/conf_quick_start.h definition_peripheral_trigger
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
-
+ * For SAMC21 Xplained Pro:
+ * \snippet samc21_xplained_pro/conf_quick_start.h definition_master
+ * \snippet samc21_xplained_pro/conf_quick_start.h definition_slave
+ * \snippet samc21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
+ *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_spi_dma_use.c buf_length
  * \snippet qs_spi_dma_use.c spi_baudrate

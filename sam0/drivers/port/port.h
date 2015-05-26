@@ -659,18 +659,6 @@ static inline enum status_code port_input_event_set_config(
 									| PORT_EVCTRL_PID0(pin_index);
 			break;
 		case PORT_INPUT_EVENT_1:
-<<<<<<< HEAD
-			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
-									| PORT_EVCTRL_PID0(pin_index);
-			break;
-		case PORT_INPUT_EVENT_2:
-			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
-									| PORT_EVCTRL_PID0(pin_index);
-			break;
-		case PORT_INPUT_EVENT_3:
-			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
-									| PORT_EVCTRL_PID0(pin_index);
-=======
 			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT1(config->action)
 						   		   | PORT_EVCTRL_PID1(pin_index);
 			break;
@@ -681,7 +669,6 @@ static inline enum status_code port_input_event_set_config(
 		case PORT_INPUT_EVENT_3:
 			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT3(config->action)
 						   		   | PORT_EVCTRL_PID3(pin_index);
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 			break;
 		default:
 			Assert(false);
