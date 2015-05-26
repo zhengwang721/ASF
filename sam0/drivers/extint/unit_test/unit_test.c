@@ -3,11 +3,7 @@
  *
  * \brief SAM External Interrupt Unit test
  *
-<<<<<<< HEAD
- * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
-=======
  * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * \asf_license_start
  *
@@ -74,11 +70,7 @@
  * Tests will be performed for rising and falling edges of the external signal.
  *
  * The following kit is required for carrying out the test:
-<<<<<<< HEAD
- *  - SAM D20/D21/R21/L21/C21 Xplained Pro board
-=======
- *  - SAM D20/D21/R21/L21/DA1 Xplained Pro board
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *  - SAM D20/D21/R21/L21/DA1/C21 Xplained Pro board
  *
  * \section appdoc_sam0_extint_unit_test_setup Setup
  * The following connections has to be made using wires:
@@ -89,13 +81,9 @@
  * - SAM R21 Xplained Pro
  *  - EXT1 \b Pin 3 (PA06) <-----> EXT3 Pin 10 (PA08)
  * - SAM L21 Xplained Pro
-<<<<<<< HEAD
- *  - EXT1 \b Pin 9 (PB04) <-----> Pin 10 (PA02)
+ *  - EXT1 \b Pin 9 (PB04) <-----> EXT3 Pin 5 (PB30)
  * - SAM C21 Xplained Pro
  *  - EXT1 \b Pin 9 (PB14) <-----> Pin 10 (PB15)
-=======
- *  - EXT1 \b Pin 9 (PB04) <-----> EXT3 Pin 5 (PB30)
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a

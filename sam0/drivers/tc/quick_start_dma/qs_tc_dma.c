@@ -1,11 +1,7 @@
 /**
  * \file
  *
-<<<<<<< HEAD
- * \brief SAM D21/R21/D11/L21/C21 Timer/Counter Driver with DMA Quickstart
-=======
- * \brief SAM D21/R21/D11/L21/DA1 Timer/Counter Driver with DMA Quickstart
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ * \brief SAM D21/R21/D11/L21/DA1/C21 Timer/Counter Driver with DMA Quickstart
  *
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *

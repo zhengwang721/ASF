@@ -52,11 +52,7 @@
  * \page asfdoc_sam0_tcc_faultn_use_case Quick Start Guide for TCC - Recoverable Fault
  *
  * The supported board list:
-<<<<<<< HEAD
- *    - SAM D21/R21/L21/C21 Xplained Pro
-=======
- *    - SAM D21/R21/L21/DA1 Xplained Pro
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *    - SAM D21/R21/L21/DA1/C21 Xplained Pro
  *
  * In this use case, the TCC will be used to generate a PWM signal, with a
  * varying duty cycle. Here the pulse width is increased each time the timer
@@ -126,15 +122,12 @@
  * - SAM L21 Xplained Pro.
  *   \snippet saml21_xplained_pro/conf_quick_start_faultn.h definition_pwm
  *   \snippet saml21_xplained_pro/conf_quick_start_faultn.h definition_fault
-<<<<<<< HEAD
- * - SAM C21 Xplained Pro:
- *   \snippet samc21_xplained_pro/conf_quick_start_faultx.h definition_pwm
- *   \snippet samc21_xplained_pro/conf_quick_start_faultx.h definition_fault
-=======
  * - SAM DA1 Xplained Pro.
  *   \snippet samda1_xplained_pro/conf_quick_start_faultn.h definition_pwm
  *   \snippet samda1_xplained_pro/conf_quick_start_faultn.h definition_fault
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ * - SAM C21 Xplained Pro:
+ *   \snippet samc21_xplained_pro/conf_quick_start_faultx.h definition_pwm
+ *   \snippet samc21_xplained_pro/conf_quick_start_faultx.h definition_fault
  *
  * Add to the main application source file, before any functions:
  * \snippet qs_tcc_faultn.c additional_include
@@ -283,10 +276,7 @@
  * -# Enter an infinite loop while the PWM wave is generated via the TCC module.
  *  \snippet qs_tcc_callback.c main_loop
  */
-<<<<<<< HEAD
-=======
 
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 
 #include <asf.h>
 #include <conf_clocks.h>

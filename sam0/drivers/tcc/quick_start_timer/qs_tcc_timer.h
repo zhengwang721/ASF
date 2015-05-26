@@ -52,11 +52,7 @@
  * \page asfdoc_sam0_tcc_timer_use_case Quick Start Guide for TCC - Timer
  *
  * The supported board list:
-<<<<<<< HEAD
- *    - SAM D21/R21/L21/C21 Xplained Pro
-=======
- *    - SAM D21/R21/L21/DA1 Xplained Pro
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *    - SAM D21/R21/L21/DA1/C21 Xplained Pro
  *    - SAM D11 Xplained Pro
  *
  * In this use case, the TCC will be used as a timer, to generate overflow and
@@ -149,10 +145,7 @@
  * -# Enter an infinite loop while the timer is running.
  *  \snippet qs_tcc_timer.c main_loop
  */
-<<<<<<< HEAD
-=======
 
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 
 #include <asf.h>
 #include <conf_clocks.h>

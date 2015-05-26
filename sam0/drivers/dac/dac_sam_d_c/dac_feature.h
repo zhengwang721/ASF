@@ -64,11 +64,8 @@
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM D10/D11
-<<<<<<< HEAD:sam0/drivers/dac/dac_sam_d_c/dac_feature.h
- *  - Atmel | SMART SAM C21
-=======
  *  - Atmel | SMART SAM DA0/DA1
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f:sam0/drivers/dac/dac_sam_d/dac_feature.h
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_dac_prerequisites

@@ -52,11 +52,7 @@
  * \page asfdoc_sam0_tcc_dma_use_case Quick Start Guide for Using DMA with TCC
  *
  * The supported board list:
-<<<<<<< HEAD
- *    - SAM D21/R21/L21/C21 Xplained Pro
-=======
- *    - SAM D21/R21/L21/DA1 Xplained Pro
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *    - SAM D21/R21/L21/DA1/C21 Xplained Pro
  *
  * In this use case, the TCC will be used to generate a PWM signal. Here
  * the pulse width varies through following values with the help of DMA
@@ -73,11 +69,8 @@
  *  <tr><td> SAMD21 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
  *  <tr><td> SAMR21 Xpro  </td><td> PA19 </td><td> LED0       </td></tr>
  *  <tr><td> SAML21 Xpro  </td><td> PB10 </td><td> LED0       </td></tr>
-<<<<<<< HEAD
- *  <tr><td> SAMC21 Xpro  </td><td> PA15 </td><td> LED0       </td></tr>
-=======
  *  <tr><td> SAMDA1 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *  <tr><td> SAMC21 Xpro  </td><td> PA15 </td><td> LED0       </td></tr>
  * </table>
  *
  * The TCC module will be setup as follows:
@@ -146,18 +139,15 @@
  * \snippet saml21_xplained_pro/conf_quick_start_dma.h definition_pwm
  * \snippet saml21_xplained_pro/conf_quick_start_dma.h definition_feedback
  * \snippet saml21_xplained_pro/conf_quick_start_dma.h definition_dma_compare_trigger
-<<<<<<< HEAD
- * - SAM C21 Xplained Pro.
- * \snippet samc21_xplained_pro/conf_quick_start_dma.h definition_pwm
- * \snippet samc21_xplained_pro/conf_quick_start_dma.h definition_feedback
- * \snippet samc21_xplained_pro/conf_quick_start_dma.h definition_dma_compare_trigger
-=======
  * - SAM DA1 Xplained Pro.
  * \snippet samda1_xplained_pro/conf_quick_start_dma.h definition_pwm
  * \snippet samda1_xplained_pro/conf_quick_start_dma.h definition_feedback
  * \snippet samda1_xplained_pro/conf_quick_start_dma.h definition_dma_compare_trigger
  * \snippet samda1_xplained_pro/conf_quick_start_dma.h definition_dma_capture_trigger
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ * - SAM C21 Xplained Pro.
+ * \snippet samc21_xplained_pro/conf_quick_start_dma.h definition_pwm
+ * \snippet samc21_xplained_pro/conf_quick_start_dma.h definition_feedback
+ * \snippet samc21_xplained_pro/conf_quick_start_dma.h definition_dma_compare_trigger
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tcc_dma.c module_inst

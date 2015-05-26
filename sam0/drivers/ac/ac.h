@@ -49,11 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_ac_group SAM Analog Comparator Driver (AC)
  *
-<<<<<<< HEAD
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
-=======
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  * and management of the device's Analog Comparator functionality, for the
  * comparison of analog voltages against a known reference voltage to determine
  * its relative level. The following driver API modes are covered by this
@@ -71,11 +67,8 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
-<<<<<<< HEAD
- *  - Atmel | SMART SAM C21
-=======
  *  - Atmel | SMART SAM DA0/DA1
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_ac_prerequisites
@@ -314,25 +307,15 @@ extern "C" {
  * Define AC driver feature set according to different device family.
  * @{
  */
-<<<<<<< HEAD
 #if (SAML21) || (SAMC21) || defined(__DOXYGEN__)
    /** Setting of hysteresis level */
-=======
-#if (SAML21) || defined(__DOXYGEN__)
-   /** Setting of hysteresis level. */
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 #  define FEATURE_AC_HYSTERESIS_LEVEL
    /** SYNCBUSY scheme version 2. */
 #  define FEATURE_AC_SYNCBUSY_SCHEME_VERSION_2
 #endif
 
-<<<<<<< HEAD
 #if (SAML21) || (SAMC21) || defined(__DOXYGEN__)
  	/** Run in standby feature for each comparator */
-=======
-#if (SAML21) || defined(__DOXYGEN__)
- 	/** Run in standby feature for each comparator. */
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 #  define FEATURE_AC_RUN_IN_STANDY_EACH_COMPARATOR
 #else
  	/** Run in standby feature for comparator pair. */

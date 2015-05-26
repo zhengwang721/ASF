@@ -78,17 +78,16 @@
 #  include "saml21.h"
 #endif
 
-<<<<<<< HEAD
-#if (SAMC21)
-#  include "samc21.h"
-=======
 #if (SAMDA0)
 #  include "samda0.h"
 #endif
 
 #if (SAMDA1)
 #  include "samda1.h"
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+#endif
+
+#if (SAMC21)
+#  include "samc21.h"
 #endif
 
 #endif /* _SAM_IO_ */

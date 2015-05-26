@@ -3,11 +3,7 @@
  *
  * \brief SAM Analog Comparator Driver
  *
-<<<<<<< HEAD:sam0/drivers/ac/ac_sam_l_c/ac.c
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
-=======
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f:sam0/drivers/ac/ac_sam_l/ac.c
  *
  * \asf_license_start
  *

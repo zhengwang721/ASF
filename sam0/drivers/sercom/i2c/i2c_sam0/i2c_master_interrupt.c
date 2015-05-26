@@ -3,11 +3,7 @@
  *
  * \brief SAM I2C Master Interrupt Driver
  *
-<<<<<<< HEAD:sam0/drivers/sercom/i2c/i2c_sam0/i2c_master_interrupt.c
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
-=======
  * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f:sam0/drivers/sercom/i2c/i2c_sam0/i2c_master_interrupt.c
  *
  * \asf_license_start
  *

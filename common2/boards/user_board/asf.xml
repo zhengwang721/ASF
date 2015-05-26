@@ -111,24 +111,6 @@
 		<device-support value="saml21j"/>
 	</board>
 
-<<<<<<< HEAD
-	<board id="board.user_board.samc21e" caption="User Board template">
-		<require idref="common2.boards.user_board.common"/>
-		<require idref="sam0.utils.linker_scripts"/>
-		<device-support value="samc21e"/>
-	</board>
-
-	<board id="board.user_board.samc21g" caption="User Board template">
-		<require idref="common2.boards.user_board.common"/>
-		<require idref="sam0.utils.linker_scripts"/>
-		<device-support value="samc21g"/>
-	</board>
-
-	<board id="board.user_board.samc21j" caption="User Board template">
-		<require idref="common2.boards.user_board.common"/>
-		<require idref="sam0.utils.linker_scripts"/>
-		<device-support value="samc21j"/>
-=======
 	<board id="board.user_board.samda0j" caption="User Board template">
 		<require idref="common2.boards.user_board.common"/>
 		<require idref="sam0.utils.linker_scripts"/>
@@ -163,6 +145,24 @@
 		<require idref="common2.boards.user_board.common"/>
 		<require idref="sam0.utils.linker_scripts"/>
 		<device-support value="samda1e"/>
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 	</board>
+
+	<board id="board.user_board.samc21e" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samc21e"/>
+	</board>
+
+	<board id="board.user_board.samc21g" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samc21g"/>
+	</board>
+
+	<board id="board.user_board.samc21j" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samc21j"/>
+	</board>
+
 </asf>

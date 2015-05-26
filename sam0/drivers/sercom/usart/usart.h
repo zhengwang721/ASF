@@ -68,11 +68,8 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
-<<<<<<< HEAD
- *  - Atmel | SMART SAM C21
-=======
  *  - Atmel | SMART SAM DA0/DA1
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_sercom_usart_prerequisites
@@ -311,12 +308,8 @@ extern "C" {
  * Define SERCOM USART features set according to different device family.
  * @{
  */
-<<<<<<< HEAD
-#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAMC21) || defined(__DOXYGEN__)
-=======
 #if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAMDA0) || \
-	(SAMDA1) || defined(__DOXYGEN__)
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+	(SAMDA1) || (SAMC21) || defined(__DOXYGEN__)
 /** Usart sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2
 /** Usart over sampling. */
