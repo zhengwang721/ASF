@@ -76,6 +76,7 @@
  * \name 6lowpan dispatches
  * @{
  */
+#define SICSLOWPAN_DISPATCH_NALP                    0x00 /* 00xxxxxx */
 #define SICSLOWPAN_DISPATCH_IPV6                    0x41 /* 01000001 = 65 */
 #define SICSLOWPAN_DISPATCH_HC1                     0x42 /* 01000010 = 66 */
 #define SICSLOWPAN_DISPATCH_IPHC                    0x60 /* 011xxxxx = ... */

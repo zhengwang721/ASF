@@ -1,0 +1,20 @@
+<asf xmlversion="1.0">
+	<project caption="I2C master bootloader bridge Example for SAM D21 Xplained Pro" id="sam0.applications.i2c_master_bootloader_bridge.samd21_xpro">
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_extint.h"/>
+		<build type="header-file" value="conf_sleepmgr.h"/>
+		<build type="header-file" value="conf_app.h"/>
+		<build type="include-path" value="."/>
+		<config name="config.sam0.drivers.sercom.usart" value="polled"/>
+		<config name="config.common.services.usb.class.device" value="cdc"/>
+		<config name="config.sam0.drivers.sercom.i2c.master" value="callback"/>
+		<require idref="sam0.applications.i2c_master_bootloader_bridge"/>
+		<require idref="board.samd21_xplained_pro"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="doxygen"/>
+		<generator value="as5_arm"/>
+		<device-support value="atsamd21j18a"/>
+	</project>
+</asf>
