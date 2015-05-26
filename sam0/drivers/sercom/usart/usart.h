@@ -289,7 +289,96 @@ extern "C" {
 /** Usart start buffer overflow notification. */
 #  define FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
 #endif
+
+#if (SAML22) || defined(__DOXYGEN__)
+/** ISO7816 for smart card interfacing. */
+#define FEATURE_USART_ISO7816
+#endif
 /*@}*/
+
+#ifdef FEATURE_USART_ISO7816
+/**
+ * \brief ISO7816 protocol type.
+ *
+ * ISO7816 protocol type.
+ */
+enum iso7816_protocol_type {
+	/** ISO7816 protocol type 0. */
+	ISO7816_PROTOCOL_T_0 = SERCOM_USART_CTRLA_CMODE,
+	/** ISO7816 protocol type 1. */
+	ISO7816_PROTOCOL_T_1 = (0x0ul << SERCOM_USART_CTRLA_CMODE_Pos),
+};
+
+/**
+ * \brief ISO7816 Guard Time
+ *
+ * The value of ISO7816 guard time.
+ */
+enum iso7816_guard_time {
+	/** The guard time is 2-bit times. */
+	ISO7816_GUARD_TIME_2_BIT = 2,
+	/** The guard time is 3-bit times. */
+	ISO7816_GUARD_TIME_3_BIT,
+	/** The guard time is 4-bit times. */
+	ISO7816_GUARD_TIME_4_BIT,
+	/** The guard time is 5-bit times. */
+	ISO7816_GUARD_TIME_5_BIT,
+	/** The guard time is 6-bit times. */
+	ISO7816_GUARD_TIME_6_BIT,
+	/** The guard time is 7-bit times. */
+	ISO7816_GUARD_TIME_7_BIT,
+};
+
+/**
+ * \brief ISO7816 Receive NACK Inhibit
+ *
+ * The value of ISO7816 receive NACK inhibit.
+ */
+enum iso7816_inhibit_nack {
+	/** The NACK is generated. */
+	ISO7816_INHIBIT_NACK_DISABLE = (0x0ul << SERCOM_USART_CTRLC_INACK_Pos),
+	/** The NACK is not generated. */
+	ISO7816_INHIBIT_NACK_ENABLE = SERCOM_USART_CTRLC_INACK,
+};
+
+/**
+ * \brief ISO7816 Disable Successive Receive NACK
+ *
+ * The value of ISO7816 disable successive receive NACK.
+ */
+enum iso7816_dis_suc_nack {
+	/** The successive receive NACK is enable. */
+	ISO7816_DIS_SUC_NACK_DISABLE = (0x0ul << SERCOM_USART_CTRLC_INACK_Pos),
+	/** The successive receive NACK is disable. */
+	ISO7816_DIS_SUC_NACK_ENABLE = SERCOM_USART_CTRLC_DSNACK,
+};
+
+struct iso7816_opt_t {
+	/* ISO7816 mode enable */
+	bool enabled;
+	/* ISO7816 protocol type */
+	enum iso7816_protocol_type protocol_t;
+	/* Guard time, which lasts two bit times */
+	enum iso7816_guard_time guard_time;
+	/*
+	 * Inhibit Non Acknowledge:
+	 *   - 0: the NACK is generated;
+	 *   - 1: the NACK is not generated.
+	 */
+	enum iso7816_inhibit_nack inhibit_nack;
+	/*
+	 * Disable successive NACKs.
+	 *  - 0: NACK is sent on the ISO line as soon as a parity error occurs
+	 * in the received character. Successive parity errors are counted up to
+	 * the value in the max_iterations field. These parity errors generate
+	 * a NACK on the ISO line. As soon as this value is reached, no additional
+	 * NACK is sent on the ISO line. The ITERATION flag is asserted.
+	 */
+	enum iso7816_dis_suc_nack dis_suc_nack;
+	/* Max number of repetitions */
+	uint32_t max_iterations;
+};
+#endif
 
 #ifndef PINMUX_DEFAULT
 /** Default pinmux. */
@@ -558,6 +647,10 @@ struct usart_config {
 	/** Enable start of frame dection. */
 	bool start_frame_detection_enable;
 #endif
+#ifdef FEATURE_USART_ISO7816
+	/** Enable ISO7816 for smart card interfacing. */
+	struct iso7816_opt_t iso7816_opt;
+#endif
 #ifdef FEATURE_USART_COLLISION_DECTION
 	/** Enable collision dection. */
 	bool collision_detection_enable;
@@ -667,6 +760,10 @@ struct usart_module {
 #ifdef FEATURE_USART_START_FRAME_DECTION
 	/** Start of frame dection enabled. */
 	bool start_frame_detection_enabled;
+#endif
+#ifdef FEATURE_USART_ISO7816
+	/** ISO7816 mode enable. */
+	bool iso7816_mode_enabled;
 #endif
 #  if USART_CALLBACK_MODE == true
 	/** Array to store callback function pointers in. */
@@ -848,17 +945,24 @@ static inline void usart_get_config_defaults(
 	config->lin_slave_enable      = false;
 #endif
 #ifdef FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
-	config->immediate_buffer_overflow_notification      = false;
+	config->immediate_buffer_overflow_notification  = false;
 #endif
 #ifdef FEATURE_USART_START_FRAME_DECTION
-	config->start_frame_detection_enable                = false;
+	config->start_frame_detection_enable            = false;
 #endif
 #ifdef FEATURE_USART_IRDA
-	config->encoding_format_enable                      = false;
-	config->receive_pulse_length                        = 19;
+	config->encoding_format_enable                  = false;
+	config->receive_pulse_length                    = 19;
+#endif
+#ifdef FEATURE_USART_ISO7816
+	config->iso7816_opt.enabled                     = false;
+	config->iso7816_opt.protocol_t                  = ISO7816_PROTOCOL_T_0;
+	config->iso7816_opt.inhibit_nack                = ISO7816_INHIBIT_NACK_DISABLE;
+	config->iso7816_opt.dis_suc_nack                = ISO7816_DIS_SUC_NACK_DISABLE;
+	config->iso7816_opt.max_iterations              = 3;
 #endif
 #ifdef FEATURE_USART_COLLISION_DECTION
-	config->collision_detection_enable                  = false;
+	config->collision_detection_enable              = false;
 #endif
 }
 

@@ -47,10 +47,6 @@
 #include "freqm.h"
 #include <gclk.h>
 
-#ifndef FREQM_GCLK_ID_REF
-#define FREQM_GCLK_ID_REF 5
-#endif
-
 /**
  * \brief Initializes a hardware FREQM module instance.
  *
