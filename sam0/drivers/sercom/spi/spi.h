@@ -3,11 +3,7 @@
  *
  * \brief SAM Serial Peripheral Interface Driver
  *
-<<<<<<< HEAD
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
-=======
  * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * \asf_license_start
  *
@@ -71,11 +67,8 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
-<<<<<<< HEAD
- *  - Atmel | SMART SAM C21
-=======
  *  - Atmel | SMART SAM DA0/DA1
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_sercom_spi_prerequisites
@@ -408,11 +401,7 @@ extern "C" {
  * Define SERCOM SPI features set according to different device family.
  * @{
  */
-<<<<<<< HEAD
-#  if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAML21) || (SAMC21) || defined(__DOXYGEN__)
-=======
-#  if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAML21) || (SAMDA0) || (SAMDA1) || defined(__DOXYGEN__)
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+#  if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAML21) || (SAMDA0) || (SAMDA1) || (SAMC21) || defined(__DOXYGEN__)
 /** SPI slave select low detection. */
 #  define FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 /** Slave select can be controlled by hardware. */
@@ -1803,13 +1792,8 @@ enum status_code spi_select_slave(
   *	</tr>
   *	<tr>
   *		<td>E</td>
-<<<<<<< HEAD
-  *		<td>12/2014</td>
-  *		<td>Add SAM L21/C21 support.</td>
-=======
-  *		<td>04/2015</td>
-  *		<td>Add SAM L21 and SAMDA0/DA1 support.</td>
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+  *		<td>06/2015</td>
+  *		<td>Add SAM L21, SAMDA0/DA1 and SAMC21 support.</td>
   *	</tr>
   *	<tr>
   *		<td>D</td>

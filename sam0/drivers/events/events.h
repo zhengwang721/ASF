@@ -3,11 +3,7 @@
  *
  * \brief SAM Event System Driver
  *
-<<<<<<< HEAD
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
-=======
  * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * \asf_license_start
  *
@@ -57,11 +53,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_events_group SAM Event System Driver (EVENTS)
  *
-<<<<<<< HEAD
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
-=======
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  * and management of the device's peripheral event resources and users within
  * the device, including enabling and disabling of peripheral source selection
  * and synchronization of clock domains between various modules. The following API
@@ -79,11 +71,8 @@ extern "C" {
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
-<<<<<<< HEAD
- *  - Atmel | SMART SAM C21
-=======
  *  - Atmel | SMART SAM DA0/DA1
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_events_prerequisites

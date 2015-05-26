@@ -688,7 +688,6 @@ static inline void adc_get_sequence_status(
 
 /** @} */
 
-<<<<<<< HEAD:sam0/drivers/adc/adc_sam_l_c/adc_feature.h
 #ifdef FEATURE_ADC_SUPPORT_MASTER_SLAVE
 /**
  * \brief Set ADC master and slave mode.
@@ -716,8 +715,6 @@ static inline void adc_set_master_slave_mode(
 #endif
 /** @} */
 
-=======
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f:sam0/drivers/adc/adc_sam_l/adc_feature.h
 #ifdef __cplusplus
 }
 #endif

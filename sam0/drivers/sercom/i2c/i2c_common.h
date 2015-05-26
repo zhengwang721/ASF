@@ -88,11 +88,8 @@ extern "C" {
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
-<<<<<<< HEAD
- *  - Atmel | SMART SAM C21
-=======
  *  - Atmel | SMART SAM DA0/DA1
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_sercom_i2c_prerequisites
@@ -124,35 +121,19 @@ extern "C" {
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED</td>
-<<<<<<< HEAD
- *		<td>SAM D21/R21/D10/D11/L21/C21</td>
+ *		<td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_10_BIT_ADDRESS</td>
- *		<td>SAM D21/R21/D10/D11/L21/C21</td>
+ *		<td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_SCL_STRETCH_MODE</td>
- *		<td>SAM D21/R21/D10/D11/L21/C21</td>
+ *		<td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_SCL_EXTEND_TIMEOUT</td>
- *		<td>SAM D21/R21/D10/D11/L21/C21</td>
-=======
- *		<td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
- *	</tr>
- *	<tr>
- *		<td>FEATURE_I2C_10_BIT_ADDRESS</td>
- *		<td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
- *	</tr>
- *	<tr>
- *		<td>FEATURE_I2C_SCL_STRETCH_MODE</td>
- *		<td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
- *	</tr>
- *	<tr>
- *		<td>FEATURE_I2C_SCL_EXTEND_TIMEOUT</td>
- *		<td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *		<td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
  *	</tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -419,11 +400,7 @@ extern "C" {
  *       supported by the driver now.
  * @{
  */
-<<<<<<< HEAD
-#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAMC21) || defined(__DOXYGEN__)
-=======
-#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAMDA0) || (SAMDA1) ||defined(__DOXYGEN__)
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAMDA0) || (SAMDA1) || (SAMC21) ||defined(__DOXYGEN__)
 /** Fast mode plus and high speed support. */
 #  define FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
 /** 10-bit address support. */
@@ -564,13 +541,8 @@ enum i2c_transfer_direction {
  *	</tr>
  *	<tr>
  *		<td>E</td>
-<<<<<<< HEAD
- *		<td>12/2014</td>
- *		<td>Added SAM L21/C21 support.</td>
-=======
- *		<td>04/2015</td>
- *		<td>Added SAM L21 and SAMDA0/DA1 support.</td>
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *		<td>06/2015</td>
+ *		<td>Added SAM L21, SAMDA0/DA1 and SAMC21 support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

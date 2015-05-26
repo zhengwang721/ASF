@@ -3,11 +3,7 @@
  *
  * \brief SAM Event System Driver Quick Start
  *
-<<<<<<< HEAD
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
-=======
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *
  * \asf_license_start
  *
@@ -89,15 +85,12 @@
  * - SAM L21 Xplained Pro.
  *   \snippet saml21_xplained_pro/conf_qs_events_interrupt_hook.h definition_event
  *   \snippet saml21_xplained_pro/conf_qs_events_interrupt_hook.h definition_tc
-<<<<<<< HEAD
- * - SAM C21 Xplained Pro.
- *   \snippet samc21_xplained_pro/conf_qs_events_interrupt_hook.h definition_event
- *   \snippet samc21_xplained_pro/conf_qs_events_interrupt_hook.h definition_tc
-=======
  * - SAM DA1 Xplained Pro.
  *   \snippet samda1_xplained_pro/conf_qs_events_interrupt_hook.h definition_event
  *   \snippet samda1_xplained_pro/conf_qs_events_interrupt_hook.h definition_tc
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ * - SAM C21 Xplained Pro.
+ *   \snippet samc21_xplained_pro/conf_qs_events_interrupt_hook.h definition_event
+ *   \snippet samc21_xplained_pro/conf_qs_events_interrupt_hook.h definition_tc
  *
  * Copy-paste the following setup code to your user application:
  * \snippet qs_events_interrupt_hook.c setup

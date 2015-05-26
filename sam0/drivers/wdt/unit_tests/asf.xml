@@ -11,14 +11,6 @@
 		<require idref="sam0.drivers.system"/>
 		<require idref="common.utils.unit_test"/>
 		<require idref="common2.services.delay"/>
-<<<<<<< HEAD
-		<device-support value="samd20"/>
-		<device-support value="samd21"/>
-		<device-support value="samr21"/>
-		<device-support value="saml21"/>
-		<device-support value="samc21"/>
-=======
 		<device-support value="sam0"/>
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 	</module>
 </asf>

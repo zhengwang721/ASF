@@ -50,11 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_tc_group SAM Timer/Counter Driver (TC)
  *
-<<<<<<< HEAD
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
-=======
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  * and management of the timer modules within the device, for waveform
  * generation and timing operations. The following driver API modes are covered
  * by this manual:
@@ -73,11 +69,8 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
-<<<<<<< HEAD
- *  - Atmel | SMART SAM C21
-=======
  *  - Atmel | SMART SAM DA0/DA1
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_tc_prerequisites
@@ -471,13 +464,8 @@
  * Define port features set according to different device family
  * @{
 */
-<<<<<<< HEAD
 #if (SAML21) || (SAMC21) || defined(__DOXYGEN__)
-/** TC double buffered */
-=======
-#if (SAML21) || defined(__DOXYGEN__)
 /** TC double buffered. */
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 #  define FEATURE_TC_DOUBLE_BUFFERED
 /** SYNCBUSY scheme version 2. */
 #  define FEATURE_TC_SYNCBUSY_SCHEME_VERSION_2
