@@ -177,7 +177,7 @@ enum slcd_waveform_mode {
 /**
  * Basic configuration for SLCDC.
  */
-struc slcd_config {
+struct slcd_config {
 	/** Keep SLCD enabled in standby sleep mode if true. */
 	bool run_in_standby;
 	/** waveform mode selection. */
@@ -193,7 +193,7 @@ struc slcd_config {
 	bool enable_bias_buffer;
 	/** Enable external bias capacitor if true. */
 	bool enable_ext_bias;
-}
+};
 /**
  * \brief SLCD event enable/disable structure.
  *
@@ -293,6 +293,8 @@ struct slcd_automated_char_config {
 		/** Define the number of COM line per row,
 		it equal to number of COM line - 1.*/
 	uint8_t com_line_num;
+	/** Segments data mask*/
+	uint32_t data_mask;
 
 };
 
@@ -635,9 +637,17 @@ void slcd_set_seg_data(uint8_t seg_data,uint8_t byte_offset,uint8_t seg_mask);
 /** @} */
 
 /**
- * \name Automated Character Mapping Functions
+ * \name Character Mapping Functions
  * @{
  */
+
+void slcd_character_map_set(
+		enum slcd_automated_char_order order,
+		uint8_t seg_line_num);
+void slcd_character_write_data(uint8_t com_line_index,
+							uint8_t seg_line_index,
+							uint32_t seg_data,
+							uint32_t data_mask);
 
 /**
  * \brief Enables Automated Character Display.
@@ -662,10 +672,6 @@ void slcd_automated_char_get_config_default(
 		struct slcd_automated_char_config *config);
 enum status_code slcd_automated_char_set_config(
 		struct slcd_automated_char_config *const config);
-void slcd_automated_char_write_data(uint8_t com_line_index,
-									uint8_t seg_line_index,
-									uint32_t seg_data,uint32_t data_mask);
-
 /** @} */
 
 /**

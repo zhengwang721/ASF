@@ -143,5 +143,5 @@
  * CONF_SLCD_PIN_H_MASK is pin mask [51,32]
  */
 #define CONF_SLCD_PIN_L_MASK       0xffffffff
-#define CONF_SLCD_PIN_H_MASK       0xff
+#define CONF_SLCD_PIN_H_MASK       0xfffff
 #endif

@@ -164,8 +164,8 @@ enum status_code slcd_init(struct slcd_config *const config)
 	SLCD->CTRLB.reg = SLCD_CTRLB_BBD(config->bias_buffer_duration)
   					| (config->enable_bias_buffer << SLCD_CTRLB_BBEN_Pos)
   					| SLCD_CTRLB_LRD(config->low_resistance_duration)
-  					| (config->enable_low_resistance << SLCD_CTRLB_LREN_Pos);
-  					//| (config->enable_ext_bias << SLCD_CTRLB_EXTBIAS_Pos);
+  					| (config->enable_low_resistance << SLCD_CTRLB_LREN_Pos)
+  					| (config->enable_ext_bias << SLCD_CTRLB_EXTBIAS_Pos);
 
 
 	SLCD->CTRLC.reg |= SLCD_CTRLC_LPPM(CONF_SLCD_POWER_MODE);
@@ -306,7 +306,7 @@ enum status_code  slcd_blink_set_config(struct slcd_blink_config *const blink_co
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	SLCD->BCFG.reg = (blink_config->blink_all_seg << SLCD_BCFG_MODE_Pos)
+	SLCD->BCFG.reg = (!(blink_config->blink_all_seg) << SLCD_BCFG_MODE_Pos)
 					| SLCD_BCFG_FCS(blink_config->fc)
 					| SLCD_BCFG_BSS0(blink_config->blink_seg0_mask)
 					| SLCD_BCFG_BSS1(blink_config->blink_seg1_mask);
@@ -325,16 +325,64 @@ enum status_code  slcd_blink_set_config(struct slcd_blink_config *const blink_co
 {
 	if ((pix_com < SLCD_MAX_COM) &&
 			(pix_seg < SLCD_MAX_SEG)) {
-		uint32_t register_low  = *(&(SLCD->SDATAL0.reg) + pix_com*4);
-		uint32_t register_high = (&(SLCD->SDATAH0.reg) + pix_com*4);
-		if (pix_seg >= 32) {
-			register_high |= (1 <<(pix_seg-32));
-		} else {
-			register_low |= 1 <<pix_seg;
+		switch(pix_com){
+			case 0:
+				if (pix_seg >= 32) {
+					SLCD->SDATAH0.reg |= (1 <<(pix_seg-32));
+				} else {
+					SLCD->SDATAL0.reg |= 1 <<pix_seg;
+				}
+				break;
+			case 1:
+				if (pix_seg >= 32) {
+					SLCD->SDATAH1.reg |= (1 <<(pix_seg-32));
+				} else {
+					SLCD->SDATAL1.reg |= 1 <<pix_seg;
+				}
+				break;
+			case 2:
+				if (pix_seg >= 32) {
+					SLCD->SDATAH2.reg |= (1 <<(pix_seg-32));
+				} else {
+					SLCD->SDATAL2.reg |= 1 <<pix_seg;
+				}
+				break;
+			case 3:
+				if (pix_seg >= 32) {
+					SLCD->SDATAH3.reg |= (1 <<(pix_seg-32));
+				} else {
+					SLCD->SDATAL3.reg |= 1 <<pix_seg;
+				}
+				break;
+			case 4:
+				if (pix_seg >= 32) {
+					SLCD->SDATAH4.reg |= (1 <<(pix_seg-32));
+				} else {
+					SLCD->SDATAL4.reg |= 1 <<pix_seg;
+				}
+				break;
+			case 5:
+				if (pix_seg >= 32) {
+					SLCD->SDATAH5.reg |= (1 <<(pix_seg-32));
+				} else {
+					SLCD->SDATAL5.reg |= 1 <<pix_seg;
+				}
+				break;
+			case 6:
+				if (pix_seg >= 32) {
+					SLCD->SDATAH6.reg |= (1 <<(pix_seg-32));
+				} else {
+					SLCD->SDATAL6.reg |= 1 <<pix_seg;
+				}
+				break;
+			case 7:
+				if (pix_seg >= 32) {
+					SLCD->SDATAH7.reg |= (1 <<(pix_seg-32));
+				} else {
+					SLCD->SDATAL7.reg |= 1 <<pix_seg;
+				}
+				break;
 		}
-
-		*(&(SLCD->SDATAL0.reg) + pix_com*4) = register_low & SLCD_SDATAL0_MASK;
-		*(&(SLCD->SDATAH0.reg) + pix_com*4) = register_high & SLCD_SDATAL0_MASK;
 		while (slcd_get_char_writing_status()) {
 		}
 	}
@@ -350,16 +398,66 @@ enum status_code  slcd_blink_set_config(struct slcd_blink_config *const blink_co
 {
 	if ((pix_com < SLCD_MAX_COM) &&
 			(pix_seg < SLCD_MAX_SEG)) {
-		uint32_t register_low  = *(&(SLCD->SDATAL0.reg) + pix_com*4);
-		uint32_t register_high = (&(SLCD->SDATAH0.reg) + pix_com*4);
-		if (pix_seg >= 32) {
-			register_high &= ~(1 <<(pix_seg-32));
-		} else {
-			register_low &= ~(1 <<pix_seg);
+		switch(pix_com){
+			case 0:
+				if (pix_seg >= 32) {
+					SLCD->SDATAH0.reg &= ~(1 <<(pix_seg-32));
+				} else {
+					SLCD->SDATAL0.reg &= ~(1 <<pix_seg);
+				}
+				break;
+			case 1:
+				if (pix_seg >= 32) {
+					SLCD->SDATAH1.reg &= ~(1 <<(pix_seg-32));
+				} else {
+					SLCD->SDATAL1.reg &= ~(1 <<pix_seg);
+				}
+				break;
+			case 2:
+				if (pix_seg >= 32) {
+					SLCD->SDATAH2.reg &= (1 <<(pix_seg-32));
+				} else {
+					SLCD->SDATAL2.reg &= ~(1 <<pix_seg);
+				}
+				break;
+			case 3:
+				if (pix_seg >= 32) {
+					SLCD->SDATAH3.reg &= ~(1 <<(pix_seg-32));
+				} else {
+					SLCD->SDATAL3.reg &= ~(1 <<pix_seg);
+				}
+				break;
+			case 4:
+				if (pix_seg >= 32) {
+					SLCD->SDATAH4.reg &= ~(1 <<(pix_seg-32));
+				} else {
+					SLCD->SDATAL4.reg &= ~(1 <<pix_seg);
+				}
+				break;
+			case 5:
+				if (pix_seg >= 32) {
+					SLCD->SDATAH5.reg &= ~(1 <<(pix_seg-32));
+				} else {
+					SLCD->SDATAL5.reg &= ~(1 <<pix_seg);
+				}
+				break;
+			case 6:
+				if (pix_seg >= 32) {
+					SLCD->SDATAH6.reg &= ~(1 <<(pix_seg-32));
+				} else {
+					SLCD->SDATAL6.reg &= ~(1 <<pix_seg);
+				}
+				break;
+			case 7:
+				if (pix_seg >= 32) {
+					SLCD->SDATAH7.reg &= ~(1 <<(pix_seg-32));
+				} else {
+					SLCD->SDATAL7.reg &= ~(1 <<pix_seg);
+				}
+				break;
 		}
-
-		*(&(SLCD->SDATAL0.reg) + pix_com*4) = register_low & SLCD_SDATAL0_MASK;
-		*(&(SLCD->SDATAH0.reg) + pix_com*4) = register_high & SLCD_SDATAL0_MASK;
+		while (slcd_get_char_writing_status()) {
+		}
 	}
 }
 
@@ -408,6 +506,7 @@ void slcd_automated_char_get_config_default(
 	config->digit_num = 0;
 	config->scrolling_step = 1;
 	config->com_line_num = 1;
+	config->data_mask = 0;
 
 }
 
@@ -431,7 +530,6 @@ enum status_code slcd_automated_char_set_config(
 	if (!config) {
 		return STATUS_ERR_INVALID_ARG;
 	}
-
 	SLCD->CMCFG.reg = SLCD_CMCFG_NSEG(config->seg_line_num)
 					 | (config->order  << SLCD_CMCFG_DEC_Pos);
 	SLCD->ACMCFG.reg = SLCD_ACMCFG_FCS(config->fc)
@@ -442,17 +540,37 @@ enum status_code slcd_automated_char_set_config(
 					 | SLCD_ACMCFG_STEPS(config->scrolling_step)
 					 | SLCD_ACMCFG_NCOM(config->com_line_num);
 
+	SLCD->CMDMASK.reg = SLCD_CMDMASK_SDMASK(config->data_mask);
+
 	return STATUS_OK;
 }
+
 /**
- * \brief Write segments data to display memory in automated character mode.
+ * \brief Set SLCD Character Mapping.
+ *
+ * Set Character mode amd SEG line per digit.
+ *
+ * \param[in] order  Mapping order in char mode
+ * \param[in] seg_line_num  Define the number of SEG line per digit,
+ * 	it equal to number of SEG line - 1
+ */
+void slcd_character_map_set(
+		enum slcd_automated_char_order order,
+		uint8_t seg_line_num)
+{
+	SLCD->CMCFG.reg = SLCD_CMCFG_NSEG(seg_line_num)
+					 | (order  << SLCD_CMCFG_DEC_Pos);
+}
+
+/**
+ * \brief Write segments data to display memory in character mode.
  *
  * \param[in] seg_data Pixel/segment data
  * \param[in] data_mask Segments data mask
  * \param[in] com_line_index COM line index
  * \param[in] seg_line_index Segments line index
  */
-void slcd_automated_char_write_data(uint8_t com_line_index,
+void slcd_character_write_data(uint8_t com_line_index,
 									uint8_t seg_line_index,
 									uint32_t seg_data,uint32_t data_mask)
 {
