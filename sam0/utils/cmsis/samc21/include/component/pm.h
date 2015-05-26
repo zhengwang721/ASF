@@ -51,7 +51,7 @@
 /*@{*/
 
 #define PM_U2240
-#define REV_PM                      0x200
+#define REV_PM                      0x210
 
 /* -------- PM_SLEEPCFG : (PM Offset: 0x01) (R/W  8) Sleep Configuration -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -69,7 +69,7 @@ typedef union {
 
 #define PM_SLEEPCFG_SLEEPMODE_Pos   0            /**< \brief (PM_SLEEPCFG) Sleep Mode */
 #define PM_SLEEPCFG_SLEEPMODE_Msk   (0x7ul << PM_SLEEPCFG_SLEEPMODE_Pos)
-#define PM_SLEEPCFG_SLEEPMODE(value) ((PM_SLEEPCFG_SLEEPMODE_Msk & ((value) << PM_SLEEPCFG_SLEEPMODE_Pos)))
+#define PM_SLEEPCFG_SLEEPMODE(value) (PM_SLEEPCFG_SLEEPMODE_Msk & ((value) << PM_SLEEPCFG_SLEEPMODE_Pos))
 #define   PM_SLEEPCFG_SLEEPMODE_IDLE0_Val 0x0ul  /**< \brief (PM_SLEEPCFG) CPU clock is OFF */
 #define   PM_SLEEPCFG_SLEEPMODE_IDLE1_Val 0x1ul  /**< \brief (PM_SLEEPCFG) AHB clock is OFF */
 #define   PM_SLEEPCFG_SLEEPMODE_IDLE2_Val 0x2ul  /**< \brief (PM_SLEEPCFG) APB clock are OFF */
@@ -88,7 +88,9 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint16_t :10;              /*!< bit:  0.. 9  Reserved                           */
+    uint16_t :6;               /*!< bit:  0.. 5  Reserved                           */
+    uint16_t VREGSMOD:2;       /*!< bit:  6.. 7  Voltage Regulator Standby mode     */
+    uint16_t :2;               /*!< bit:  8.. 9  Reserved                           */
     uint16_t BBIASHS:1;        /*!< bit:     10  Back Bias for HMCRAMCHS            */
     uint16_t :5;               /*!< bit: 11..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
@@ -99,10 +101,19 @@ typedef union {
 #define PM_STDBYCFG_OFFSET          0x08         /**< \brief (PM_STDBYCFG offset) Standby Configuration */
 #define PM_STDBYCFG_RESETVALUE      0x0400ul     /**< \brief (PM_STDBYCFG reset_value) Standby Configuration */
 
+#define PM_STDBYCFG_VREGSMOD_Pos    6            /**< \brief (PM_STDBYCFG) Voltage Regulator Standby mode */
+#define PM_STDBYCFG_VREGSMOD_Msk    (0x3ul << PM_STDBYCFG_VREGSMOD_Pos)
+#define PM_STDBYCFG_VREGSMOD(value) (PM_STDBYCFG_VREGSMOD_Msk & ((value) << PM_STDBYCFG_VREGSMOD_Pos))
+#define   PM_STDBYCFG_VREGSMOD_AUTO_Val   0x0ul  /**< \brief (PM_STDBYCFG) Automatic mode */
+#define   PM_STDBYCFG_VREGSMOD_PERFORMANCE_Val 0x1ul  /**< \brief (PM_STDBYCFG) Performance oriented */
+#define   PM_STDBYCFG_VREGSMOD_LP_Val     0x2ul  /**< \brief (PM_STDBYCFG) Low Power oriented */
+#define PM_STDBYCFG_VREGSMOD_AUTO   (PM_STDBYCFG_VREGSMOD_AUTO_Val << PM_STDBYCFG_VREGSMOD_Pos)
+#define PM_STDBYCFG_VREGSMOD_PERFORMANCE (PM_STDBYCFG_VREGSMOD_PERFORMANCE_Val << PM_STDBYCFG_VREGSMOD_Pos)
+#define PM_STDBYCFG_VREGSMOD_LP     (PM_STDBYCFG_VREGSMOD_LP_Val   << PM_STDBYCFG_VREGSMOD_Pos)
 #define PM_STDBYCFG_BBIASHS_Pos     10           /**< \brief (PM_STDBYCFG) Back Bias for HMCRAMCHS */
 #define PM_STDBYCFG_BBIASHS_Msk     (0x1ul << PM_STDBYCFG_BBIASHS_Pos)
-#define PM_STDBYCFG_BBIASHS(value)  ((PM_STDBYCFG_BBIASHS_Msk & ((value) << PM_STDBYCFG_BBIASHS_Pos)))
-#define PM_STDBYCFG_MASK            0x0400ul     /**< \brief (PM_STDBYCFG) MASK Register */
+#define PM_STDBYCFG_BBIASHS(value)  (PM_STDBYCFG_BBIASHS_Msk & ((value) << PM_STDBYCFG_BBIASHS_Pos))
+#define PM_STDBYCFG_MASK            0x04C0ul     /**< \brief (PM_STDBYCFG) MASK Register */
 
 /** \brief PM hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

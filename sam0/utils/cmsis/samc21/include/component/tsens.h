@@ -51,7 +51,7 @@
 /*@{*/
 
 #define TSENS_U2261
-#define REV_TSENS                   0x100
+#define REV_TSENS                   0x101
 
 /* -------- TSENS_CTRLA : (TSENS Offset: 0x00) (R/W  8) Control A Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -114,7 +114,7 @@ typedef union {
 
 #define TSENS_CTRLC_WINMODE_Pos     0            /**< \brief (TSENS_CTRLC) Window Monitor Mode */
 #define TSENS_CTRLC_WINMODE_Msk     (0x7ul << TSENS_CTRLC_WINMODE_Pos)
-#define TSENS_CTRLC_WINMODE(value)  ((TSENS_CTRLC_WINMODE_Msk & ((value) << TSENS_CTRLC_WINMODE_Pos)))
+#define TSENS_CTRLC_WINMODE(value)  (TSENS_CTRLC_WINMODE_Msk & ((value) << TSENS_CTRLC_WINMODE_Pos))
 #define   TSENS_CTRLC_WINMODE_DISABLE_Val 0x0ul  /**< \brief (TSENS_CTRLC) No window mode (default) */
 #define   TSENS_CTRLC_WINMODE_ABOVE_Val   0x1ul  /**< \brief (TSENS_CTRLC) VALUE greater than WINLT */
 #define   TSENS_CTRLC_WINMODE_BELOW_Val   0x2ul  /**< \brief (TSENS_CTRLC) VALUE less than WINUT */
@@ -213,13 +213,13 @@ typedef union {
 
 /* -------- TSENS_INTFLAG : (TSENS Offset: 0x06) (R/W  8) Interrupt Flag Status and Clear Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint8_t  RESRDY:1;         /*!< bit:      0  Result Ready                       */
-    uint8_t  OVERRUN:1;        /*!< bit:      1  Overrun                            */
-    uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor                     */
-    uint8_t  OVF:1;            /*!< bit:      3  Overflow                           */
-    uint8_t  :4;               /*!< bit:  4.. 7  Reserved                           */
+    __I uint8_t  RESRDY:1;         /*!< bit:      0  Result Ready                       */
+    __I uint8_t  OVERRUN:1;        /*!< bit:      1  Overrun                            */
+    __I uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor                     */
+    __I uint8_t  OVF:1;            /*!< bit:      3  Overflow                           */
+    __I uint8_t  :4;               /*!< bit:  4.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } TSENS_INTFLAG_Type;
@@ -293,7 +293,7 @@ typedef union {
 
 #define TSENS_VALUE_VALUE_Pos       0            /**< \brief (TSENS_VALUE) Measurement Value */
 #define TSENS_VALUE_VALUE_Msk       (0xFFFFFFul << TSENS_VALUE_VALUE_Pos)
-#define TSENS_VALUE_VALUE(value)    ((TSENS_VALUE_VALUE_Msk & ((value) << TSENS_VALUE_VALUE_Pos)))
+#define TSENS_VALUE_VALUE(value)    (TSENS_VALUE_VALUE_Msk & ((value) << TSENS_VALUE_VALUE_Pos))
 #define TSENS_VALUE_MASK            0x00FFFFFFul /**< \brief (TSENS_VALUE) MASK Register */
 
 /* -------- TSENS_WINLT : (TSENS Offset: 0x10) (R/W 32) Window Monitor Lower Threshold Register -------- */
@@ -312,7 +312,7 @@ typedef union {
 
 #define TSENS_WINLT_WINLT_Pos       0            /**< \brief (TSENS_WINLT) Window Lower Threshold */
 #define TSENS_WINLT_WINLT_Msk       (0xFFFFFFul << TSENS_WINLT_WINLT_Pos)
-#define TSENS_WINLT_WINLT(value)    ((TSENS_WINLT_WINLT_Msk & ((value) << TSENS_WINLT_WINLT_Pos)))
+#define TSENS_WINLT_WINLT(value)    (TSENS_WINLT_WINLT_Msk & ((value) << TSENS_WINLT_WINLT_Pos))
 #define TSENS_WINLT_MASK            0x00FFFFFFul /**< \brief (TSENS_WINLT) MASK Register */
 
 /* -------- TSENS_WINUT : (TSENS Offset: 0x14) (R/W 32) Window Monitor Upper Threshold Register -------- */
@@ -331,7 +331,7 @@ typedef union {
 
 #define TSENS_WINUT_WINUT_Pos       0            /**< \brief (TSENS_WINUT) Window Upper Threshold */
 #define TSENS_WINUT_WINUT_Msk       (0xFFFFFFul << TSENS_WINUT_WINUT_Pos)
-#define TSENS_WINUT_WINUT(value)    ((TSENS_WINUT_WINUT_Msk & ((value) << TSENS_WINUT_WINUT_Pos)))
+#define TSENS_WINUT_WINUT(value)    (TSENS_WINUT_WINUT_Msk & ((value) << TSENS_WINUT_WINUT_Pos))
 #define TSENS_WINUT_MASK            0x00FFFFFFul /**< \brief (TSENS_WINUT) MASK Register */
 
 /* -------- TSENS_GAIN : (TSENS Offset: 0x18) (R/W 32) Gain Register -------- */
@@ -350,7 +350,7 @@ typedef union {
 
 #define TSENS_GAIN_GAIN_Pos         0            /**< \brief (TSENS_GAIN) Time Amplifier Gain */
 #define TSENS_GAIN_GAIN_Msk         (0xFFFFFFul << TSENS_GAIN_GAIN_Pos)
-#define TSENS_GAIN_GAIN(value)      ((TSENS_GAIN_GAIN_Msk & ((value) << TSENS_GAIN_GAIN_Pos)))
+#define TSENS_GAIN_GAIN(value)      (TSENS_GAIN_GAIN_Msk & ((value) << TSENS_GAIN_GAIN_Pos))
 #define TSENS_GAIN_MASK             0x00FFFFFFul /**< \brief (TSENS_GAIN) MASK Register */
 
 /* -------- TSENS_OFFSET : (TSENS Offset: 0x1C) (R/W 32) Offset Register -------- */
@@ -369,7 +369,7 @@ typedef union {
 
 #define TSENS_OFFSET_OFFSETC_Pos    0            /**< \brief (TSENS_OFFSET) Offset Correction */
 #define TSENS_OFFSET_OFFSETC_Msk    (0xFFFFFFul << TSENS_OFFSET_OFFSETC_Pos)
-#define TSENS_OFFSET_OFFSETC(value) ((TSENS_OFFSET_OFFSETC_Msk & ((value) << TSENS_OFFSET_OFFSETC_Pos)))
+#define TSENS_OFFSET_OFFSETC(value) (TSENS_OFFSET_OFFSETC_Msk & ((value) << TSENS_OFFSET_OFFSETC_Pos))
 #define TSENS_OFFSET_MASK           0x00FFFFFFul /**< \brief (TSENS_OFFSET) MASK Register */
 
 /* -------- TSENS_CAL : (TSENS Offset: 0x20) (R/W 32) Calibration Register -------- */
@@ -390,10 +390,10 @@ typedef union {
 
 #define TSENS_CAL_FCAL_Pos          0            /**< \brief (TSENS_CAL) Frequency Calibration */
 #define TSENS_CAL_FCAL_Msk          (0x3Ful << TSENS_CAL_FCAL_Pos)
-#define TSENS_CAL_FCAL(value)       ((TSENS_CAL_FCAL_Msk & ((value) << TSENS_CAL_FCAL_Pos)))
+#define TSENS_CAL_FCAL(value)       (TSENS_CAL_FCAL_Msk & ((value) << TSENS_CAL_FCAL_Pos))
 #define TSENS_CAL_TCAL_Pos          8            /**< \brief (TSENS_CAL) Temperature Calibration */
 #define TSENS_CAL_TCAL_Msk          (0x3Ful << TSENS_CAL_TCAL_Pos)
-#define TSENS_CAL_TCAL(value)       ((TSENS_CAL_TCAL_Msk & ((value) << TSENS_CAL_TCAL_Pos)))
+#define TSENS_CAL_TCAL(value)       (TSENS_CAL_TCAL_Msk & ((value) << TSENS_CAL_TCAL_Pos))
 #define TSENS_CAL_MASK              0x00003F3Ful /**< \brief (TSENS_CAL) MASK Register */
 
 /* -------- TSENS_DBGCTRL : (TSENS Offset: 0x24) (R/W  8) Debug Control Register -------- */
