@@ -92,15 +92,11 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_NVM_RWWEE</td>
-<<<<<<< HEAD
- *    <td>SAML21,SAMD21-64K,SAMC21</td>
-=======
- *    <td>SAML21, SAMD21-64K, SAMDA0, SAMDA1</td>
+ *    <td>SAML21, SAMD21-64K, SAMDA0, SAMDA1,SAMC21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_BOD12</td>
  *    <td>SAML21</td>
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -291,13 +287,8 @@ extern "C" {
  * Define NVM features set according to different device family
  * @{
 */
-<<<<<<< HEAD
-#if (SAML21) || defined(SAMD21_64K) || (SAMC21) || defined(__DOXYGEN__)
-/** Read while write EEPROM emulation feature*/
-=======
-#if (SAML21) || (SAMDA0) || (SAMDA1) || defined(SAMD21_64K) || defined(__DOXYGEN__)
+#if (SAML21) || (SAMDA0) || (SAMDA1) || (SAMC21) || defined(SAMD21_64K) || defined(__DOXYGEN__)
 /** Read while write EEPROM emulation feature. */
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 #  define FEATURE_NVM_RWWEE
 #endif
 #if (SAML21) || defined(__DOXYGEN__)
@@ -656,6 +647,8 @@ struct nvm_fusebits {
 	bool                              bodvdd_enable;
 	/** BODVDD Action at power on. */
 	enum nvm_bod33_action             bodvdd_action;
+	/* BODVDD Hysteresis at power on*/
+	bool                              bodvdd_hysteresis;
 #else
 	/** BOD33 Threshold level at power on. */
 	uint8_t                           bod33_level;
@@ -663,12 +656,9 @@ struct nvm_fusebits {
 	bool                              bod33_enable;
 	/** BOD33 Action at power on. */
 	enum nvm_bod33_action             bod33_action;
-<<<<<<< HEAD
-#endif
-=======
 	/* BOD33 Hysteresis at power on*/
 	bool                              bod33_hysteresis;
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+#endif
 	/** WDT Enable at power on. */
 	bool                              wdt_enable;
 	/** WDT Always-on at power on. */

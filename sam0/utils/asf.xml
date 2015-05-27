@@ -140,7 +140,7 @@
 		</module>
 
 		<!-- SAMC21 //-->
-		<module type="driver" id="sam0.utils#6" caption="SAM C21 compiler driver">
+		<module type="driver" id="sam0.utils#8" caption="SAM C21 compiler driver">
 			<info type="description" value="summary">
 			Compiler abstraction layer and code utilities for SAMC21 devices. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
 			</info>

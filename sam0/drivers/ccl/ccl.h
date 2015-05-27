@@ -87,13 +87,8 @@
  * logic expression with three inputs.
  *
  * The output can be combinatorially generated from the inputs, or filtered to remove spike.
-<<<<<<< HEAD
- * An optional sequential module can be enabled. The inputs of sequential module are
- * individually controlled by two independent, adjacent LUT(LUT0/LUT1, LUT2/LUT3 etc) outputs,
-=======
  * An optional sequential module can be enabled. The inputs of sequential module are 
  * individually controlled by two independent, adjacent LUT(LUT0/LUT1, LUT2/LUT3 etc.) outputs,
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  * enabling complex waveform generation.
  *
  * \section asfdoc_sam0_ccl_special_considerations Special Considerations
@@ -334,38 +329,6 @@ static inline void ccl_module_disable(void)
 /** @} */
 
 /**
-<<<<<<< HEAD
- * \name Enable and Disable CCL Module
- * @{
- */
-
-/**
- * \brief Enables GCLK_CCL run in standby mode.
- *
- * Generic clock is required in standby sleep mode.
- *
- */
-static inline void ccl_gclk_runstdby_enable(void)
-{
-	/* Enable run in standy mode. */
-	CCL->CTRL.reg |= CCL_CTRL_RUNSTDBY;
-}
-
-/**
- * \brief Disables GCLK_CCL run in standby mode.
- *
- * Generic clock is not required in standby sleep mode.
- */
-static inline void ccl_gclk_runstdby_disable(void)
-{
-	/* Disable run in standy mode. */
-	CCL->CTRL.reg &= ~ CCL_CTRL_RUNSTDBY;
-}
-/** @} */
-
-/**
-=======
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  * \name Configure LUT
  * @{
  */

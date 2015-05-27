@@ -51,7 +51,7 @@
 /*@{*/
 
 #define RTC_U2250
-#define REV_RTC                     0x101
+#define REV_RTC                     0x110
 
 /* -------- RTC_MODE0_CTRLA : (RTC Offset: 0x00) (R/W 16) MODE0 MODE0 Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -63,7 +63,8 @@ typedef union {
     uint16_t :3;               /*!< bit:  4.. 6  Reserved                           */
     uint16_t MATCHCLR:1;       /*!< bit:      7  Clear on Match                     */
     uint16_t PRESCALER:4;      /*!< bit:  8..11  Prescaler                          */
-    uint16_t :4;               /*!< bit: 12..15  Reserved                           */
+    uint16_t :3;               /*!< bit: 12..14  Reserved                           */
+    uint16_t COUNTSYNC:1;      /*!< bit:     15  Count Read Synchronization Enable  */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RTC_MODE0_CTRLA_Type;
@@ -78,7 +79,7 @@ typedef union {
 #define RTC_MODE0_CTRLA_ENABLE      (0x1ul << RTC_MODE0_CTRLA_ENABLE_Pos)
 #define RTC_MODE0_CTRLA_MODE_Pos    2            /**< \brief (RTC_MODE0_CTRLA) Operating Mode */
 #define RTC_MODE0_CTRLA_MODE_Msk    (0x3ul << RTC_MODE0_CTRLA_MODE_Pos)
-#define RTC_MODE0_CTRLA_MODE(value) ((RTC_MODE0_CTRLA_MODE_Msk & ((value) << RTC_MODE0_CTRLA_MODE_Pos)))
+#define RTC_MODE0_CTRLA_MODE(value) (RTC_MODE0_CTRLA_MODE_Msk & ((value) << RTC_MODE0_CTRLA_MODE_Pos))
 #define   RTC_MODE0_CTRLA_MODE_COUNT32_Val 0x0ul  /**< \brief (RTC_MODE0_CTRLA) Mode 0: 32-bit Counter */
 #define   RTC_MODE0_CTRLA_MODE_COUNT16_Val 0x1ul  /**< \brief (RTC_MODE0_CTRLA) Mode 1: 16-bit Counter */
 #define   RTC_MODE0_CTRLA_MODE_CLOCK_Val  0x2ul  /**< \brief (RTC_MODE0_CTRLA) Mode 2: Clock/Calendar */
@@ -89,7 +90,7 @@ typedef union {
 #define RTC_MODE0_CTRLA_MATCHCLR    (0x1ul << RTC_MODE0_CTRLA_MATCHCLR_Pos)
 #define RTC_MODE0_CTRLA_PRESCALER_Pos 8            /**< \brief (RTC_MODE0_CTRLA) Prescaler */
 #define RTC_MODE0_CTRLA_PRESCALER_Msk (0xFul << RTC_MODE0_CTRLA_PRESCALER_Pos)
-#define RTC_MODE0_CTRLA_PRESCALER(value) ((RTC_MODE0_CTRLA_PRESCALER_Msk & ((value) << RTC_MODE0_CTRLA_PRESCALER_Pos)))
+#define RTC_MODE0_CTRLA_PRESCALER(value) (RTC_MODE0_CTRLA_PRESCALER_Msk & ((value) << RTC_MODE0_CTRLA_PRESCALER_Pos))
 #define   RTC_MODE0_CTRLA_PRESCALER_OFF_Val 0x0ul  /**< \brief (RTC_MODE0_CTRLA) CLK_RTC_CNT = GCLK_RTC/1 */
 #define   RTC_MODE0_CTRLA_PRESCALER_DIV1_Val 0x1ul  /**< \brief (RTC_MODE0_CTRLA) CLK_RTC_CNT = GCLK_RTC/1 */
 #define   RTC_MODE0_CTRLA_PRESCALER_DIV2_Val 0x2ul  /**< \brief (RTC_MODE0_CTRLA) CLK_RTC_CNT = GCLK_RTC/2 */
@@ -114,7 +115,9 @@ typedef union {
 #define RTC_MODE0_CTRLA_PRESCALER_DIV256 (RTC_MODE0_CTRLA_PRESCALER_DIV256_Val << RTC_MODE0_CTRLA_PRESCALER_Pos)
 #define RTC_MODE0_CTRLA_PRESCALER_DIV512 (RTC_MODE0_CTRLA_PRESCALER_DIV512_Val << RTC_MODE0_CTRLA_PRESCALER_Pos)
 #define RTC_MODE0_CTRLA_PRESCALER_DIV1024 (RTC_MODE0_CTRLA_PRESCALER_DIV1024_Val << RTC_MODE0_CTRLA_PRESCALER_Pos)
-#define RTC_MODE0_CTRLA_MASK        0x0F8Ful     /**< \brief (RTC_MODE0_CTRLA) MASK Register */
+#define RTC_MODE0_CTRLA_COUNTSYNC_Pos 15           /**< \brief (RTC_MODE0_CTRLA) Count Read Synchronization Enable */
+#define RTC_MODE0_CTRLA_COUNTSYNC   (0x1ul << RTC_MODE0_CTRLA_COUNTSYNC_Pos)
+#define RTC_MODE0_CTRLA_MASK        0x8F8Ful     /**< \brief (RTC_MODE0_CTRLA) MASK Register */
 
 /* -------- RTC_MODE1_CTRLA : (RTC Offset: 0x00) (R/W 16) MODE1 MODE1 Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -125,7 +128,8 @@ typedef union {
     uint16_t MODE:2;           /*!< bit:  2.. 3  Operating Mode                     */
     uint16_t :4;               /*!< bit:  4.. 7  Reserved                           */
     uint16_t PRESCALER:4;      /*!< bit:  8..11  Prescaler                          */
-    uint16_t :4;               /*!< bit: 12..15  Reserved                           */
+    uint16_t :3;               /*!< bit: 12..14  Reserved                           */
+    uint16_t COUNTSYNC:1;      /*!< bit:     15  Count Read Synchronization Enable  */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RTC_MODE1_CTRLA_Type;
@@ -140,7 +144,7 @@ typedef union {
 #define RTC_MODE1_CTRLA_ENABLE      (0x1ul << RTC_MODE1_CTRLA_ENABLE_Pos)
 #define RTC_MODE1_CTRLA_MODE_Pos    2            /**< \brief (RTC_MODE1_CTRLA) Operating Mode */
 #define RTC_MODE1_CTRLA_MODE_Msk    (0x3ul << RTC_MODE1_CTRLA_MODE_Pos)
-#define RTC_MODE1_CTRLA_MODE(value) ((RTC_MODE1_CTRLA_MODE_Msk & ((value) << RTC_MODE1_CTRLA_MODE_Pos)))
+#define RTC_MODE1_CTRLA_MODE(value) (RTC_MODE1_CTRLA_MODE_Msk & ((value) << RTC_MODE1_CTRLA_MODE_Pos))
 #define   RTC_MODE1_CTRLA_MODE_COUNT32_Val 0x0ul  /**< \brief (RTC_MODE1_CTRLA) Mode 0: 32-bit Counter */
 #define   RTC_MODE1_CTRLA_MODE_COUNT16_Val 0x1ul  /**< \brief (RTC_MODE1_CTRLA) Mode 1: 16-bit Counter */
 #define   RTC_MODE1_CTRLA_MODE_CLOCK_Val  0x2ul  /**< \brief (RTC_MODE1_CTRLA) Mode 2: Clock/Calendar */
@@ -149,7 +153,7 @@ typedef union {
 #define RTC_MODE1_CTRLA_MODE_CLOCK  (RTC_MODE1_CTRLA_MODE_CLOCK_Val << RTC_MODE1_CTRLA_MODE_Pos)
 #define RTC_MODE1_CTRLA_PRESCALER_Pos 8            /**< \brief (RTC_MODE1_CTRLA) Prescaler */
 #define RTC_MODE1_CTRLA_PRESCALER_Msk (0xFul << RTC_MODE1_CTRLA_PRESCALER_Pos)
-#define RTC_MODE1_CTRLA_PRESCALER(value) ((RTC_MODE1_CTRLA_PRESCALER_Msk & ((value) << RTC_MODE1_CTRLA_PRESCALER_Pos)))
+#define RTC_MODE1_CTRLA_PRESCALER(value) (RTC_MODE1_CTRLA_PRESCALER_Msk & ((value) << RTC_MODE1_CTRLA_PRESCALER_Pos))
 #define   RTC_MODE1_CTRLA_PRESCALER_OFF_Val 0x0ul  /**< \brief (RTC_MODE1_CTRLA) CLK_RTC_CNT = GCLK_RTC/1 */
 #define   RTC_MODE1_CTRLA_PRESCALER_DIV1_Val 0x1ul  /**< \brief (RTC_MODE1_CTRLA) CLK_RTC_CNT = GCLK_RTC/1 */
 #define   RTC_MODE1_CTRLA_PRESCALER_DIV2_Val 0x2ul  /**< \brief (RTC_MODE1_CTRLA) CLK_RTC_CNT = GCLK_RTC/2 */
@@ -174,7 +178,9 @@ typedef union {
 #define RTC_MODE1_CTRLA_PRESCALER_DIV256 (RTC_MODE1_CTRLA_PRESCALER_DIV256_Val << RTC_MODE1_CTRLA_PRESCALER_Pos)
 #define RTC_MODE1_CTRLA_PRESCALER_DIV512 (RTC_MODE1_CTRLA_PRESCALER_DIV512_Val << RTC_MODE1_CTRLA_PRESCALER_Pos)
 #define RTC_MODE1_CTRLA_PRESCALER_DIV1024 (RTC_MODE1_CTRLA_PRESCALER_DIV1024_Val << RTC_MODE1_CTRLA_PRESCALER_Pos)
-#define RTC_MODE1_CTRLA_MASK        0x0F0Ful     /**< \brief (RTC_MODE1_CTRLA) MASK Register */
+#define RTC_MODE1_CTRLA_COUNTSYNC_Pos 15           /**< \brief (RTC_MODE1_CTRLA) Count Read Synchronization Enable */
+#define RTC_MODE1_CTRLA_COUNTSYNC   (0x1ul << RTC_MODE1_CTRLA_COUNTSYNC_Pos)
+#define RTC_MODE1_CTRLA_MASK        0x8F0Ful     /**< \brief (RTC_MODE1_CTRLA) MASK Register */
 
 /* -------- RTC_MODE2_CTRLA : (RTC Offset: 0x00) (R/W 16) MODE2 MODE2 Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -187,7 +193,8 @@ typedef union {
     uint16_t CLKREP:1;         /*!< bit:      6  Clock Representation               */
     uint16_t MATCHCLR:1;       /*!< bit:      7  Clear on Match                     */
     uint16_t PRESCALER:4;      /*!< bit:  8..11  Prescaler                          */
-    uint16_t :4;               /*!< bit: 12..15  Reserved                           */
+    uint16_t :3;               /*!< bit: 12..14  Reserved                           */
+    uint16_t CLOCKSYNC:1;      /*!< bit:     15  Clock Read Synchronization Enable  */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RTC_MODE2_CTRLA_Type;
@@ -202,7 +209,7 @@ typedef union {
 #define RTC_MODE2_CTRLA_ENABLE      (0x1ul << RTC_MODE2_CTRLA_ENABLE_Pos)
 #define RTC_MODE2_CTRLA_MODE_Pos    2            /**< \brief (RTC_MODE2_CTRLA) Operating Mode */
 #define RTC_MODE2_CTRLA_MODE_Msk    (0x3ul << RTC_MODE2_CTRLA_MODE_Pos)
-#define RTC_MODE2_CTRLA_MODE(value) ((RTC_MODE2_CTRLA_MODE_Msk & ((value) << RTC_MODE2_CTRLA_MODE_Pos)))
+#define RTC_MODE2_CTRLA_MODE(value) (RTC_MODE2_CTRLA_MODE_Msk & ((value) << RTC_MODE2_CTRLA_MODE_Pos))
 #define   RTC_MODE2_CTRLA_MODE_COUNT32_Val 0x0ul  /**< \brief (RTC_MODE2_CTRLA) Mode 0: 32-bit Counter */
 #define   RTC_MODE2_CTRLA_MODE_COUNT16_Val 0x1ul  /**< \brief (RTC_MODE2_CTRLA) Mode 1: 16-bit Counter */
 #define   RTC_MODE2_CTRLA_MODE_CLOCK_Val  0x2ul  /**< \brief (RTC_MODE2_CTRLA) Mode 2: Clock/Calendar */
@@ -215,7 +222,7 @@ typedef union {
 #define RTC_MODE2_CTRLA_MATCHCLR    (0x1ul << RTC_MODE2_CTRLA_MATCHCLR_Pos)
 #define RTC_MODE2_CTRLA_PRESCALER_Pos 8            /**< \brief (RTC_MODE2_CTRLA) Prescaler */
 #define RTC_MODE2_CTRLA_PRESCALER_Msk (0xFul << RTC_MODE2_CTRLA_PRESCALER_Pos)
-#define RTC_MODE2_CTRLA_PRESCALER(value) ((RTC_MODE2_CTRLA_PRESCALER_Msk & ((value) << RTC_MODE2_CTRLA_PRESCALER_Pos)))
+#define RTC_MODE2_CTRLA_PRESCALER(value) (RTC_MODE2_CTRLA_PRESCALER_Msk & ((value) << RTC_MODE2_CTRLA_PRESCALER_Pos))
 #define   RTC_MODE2_CTRLA_PRESCALER_OFF_Val 0x0ul  /**< \brief (RTC_MODE2_CTRLA) CLK_RTC_CNT = GCLK_RTC/1 */
 #define   RTC_MODE2_CTRLA_PRESCALER_DIV1_Val 0x1ul  /**< \brief (RTC_MODE2_CTRLA) CLK_RTC_CNT = GCLK_RTC/1 */
 #define   RTC_MODE2_CTRLA_PRESCALER_DIV2_Val 0x2ul  /**< \brief (RTC_MODE2_CTRLA) CLK_RTC_CNT = GCLK_RTC/2 */
@@ -240,7 +247,9 @@ typedef union {
 #define RTC_MODE2_CTRLA_PRESCALER_DIV256 (RTC_MODE2_CTRLA_PRESCALER_DIV256_Val << RTC_MODE2_CTRLA_PRESCALER_Pos)
 #define RTC_MODE2_CTRLA_PRESCALER_DIV512 (RTC_MODE2_CTRLA_PRESCALER_DIV512_Val << RTC_MODE2_CTRLA_PRESCALER_Pos)
 #define RTC_MODE2_CTRLA_PRESCALER_DIV1024 (RTC_MODE2_CTRLA_PRESCALER_DIV1024_Val << RTC_MODE2_CTRLA_PRESCALER_Pos)
-#define RTC_MODE2_CTRLA_MASK        0x0FCFul     /**< \brief (RTC_MODE2_CTRLA) MASK Register */
+#define RTC_MODE2_CTRLA_CLOCKSYNC_Pos 15           /**< \brief (RTC_MODE2_CTRLA) Clock Read Synchronization Enable */
+#define RTC_MODE2_CTRLA_CLOCKSYNC   (0x1ul << RTC_MODE2_CTRLA_CLOCKSYNC_Pos)
+#define RTC_MODE2_CTRLA_MASK        0x8FCFul     /**< \brief (RTC_MODE2_CTRLA) MASK Register */
 
 /* -------- RTC_MODE0_EVCTRL : (RTC Offset: 0x04) (R/W 32) MODE0 MODE0 Event Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -289,12 +298,12 @@ typedef union {
 #define RTC_MODE0_EVCTRL_PEREO7     (1 << RTC_MODE0_EVCTRL_PEREO7_Pos)
 #define RTC_MODE0_EVCTRL_PEREO_Pos  0            /**< \brief (RTC_MODE0_EVCTRL) Periodic Interval x Event Output Enable */
 #define RTC_MODE0_EVCTRL_PEREO_Msk  (0xFFul << RTC_MODE0_EVCTRL_PEREO_Pos)
-#define RTC_MODE0_EVCTRL_PEREO(value) ((RTC_MODE0_EVCTRL_PEREO_Msk & ((value) << RTC_MODE0_EVCTRL_PEREO_Pos)))
+#define RTC_MODE0_EVCTRL_PEREO(value) (RTC_MODE0_EVCTRL_PEREO_Msk & ((value) << RTC_MODE0_EVCTRL_PEREO_Pos))
 #define RTC_MODE0_EVCTRL_CMPEO0_Pos 8            /**< \brief (RTC_MODE0_EVCTRL) Compare 0 Event Output Enable */
 #define RTC_MODE0_EVCTRL_CMPEO0     (1 << RTC_MODE0_EVCTRL_CMPEO0_Pos)
 #define RTC_MODE0_EVCTRL_CMPEO_Pos  8            /**< \brief (RTC_MODE0_EVCTRL) Compare x Event Output Enable */
 #define RTC_MODE0_EVCTRL_CMPEO_Msk  (0x1ul << RTC_MODE0_EVCTRL_CMPEO_Pos)
-#define RTC_MODE0_EVCTRL_CMPEO(value) ((RTC_MODE0_EVCTRL_CMPEO_Msk & ((value) << RTC_MODE0_EVCTRL_CMPEO_Pos)))
+#define RTC_MODE0_EVCTRL_CMPEO(value) (RTC_MODE0_EVCTRL_CMPEO_Msk & ((value) << RTC_MODE0_EVCTRL_CMPEO_Pos))
 #define RTC_MODE0_EVCTRL_OVFEO_Pos  15           /**< \brief (RTC_MODE0_EVCTRL) Overflow Event Output Enable */
 #define RTC_MODE0_EVCTRL_OVFEO      (0x1ul << RTC_MODE0_EVCTRL_OVFEO_Pos)
 #define RTC_MODE0_EVCTRL_MASK       0x000081FFul /**< \brief (RTC_MODE0_EVCTRL) MASK Register */
@@ -347,14 +356,14 @@ typedef union {
 #define RTC_MODE1_EVCTRL_PEREO7     (1 << RTC_MODE1_EVCTRL_PEREO7_Pos)
 #define RTC_MODE1_EVCTRL_PEREO_Pos  0            /**< \brief (RTC_MODE1_EVCTRL) Periodic Interval x Event Output Enable */
 #define RTC_MODE1_EVCTRL_PEREO_Msk  (0xFFul << RTC_MODE1_EVCTRL_PEREO_Pos)
-#define RTC_MODE1_EVCTRL_PEREO(value) ((RTC_MODE1_EVCTRL_PEREO_Msk & ((value) << RTC_MODE1_EVCTRL_PEREO_Pos)))
+#define RTC_MODE1_EVCTRL_PEREO(value) (RTC_MODE1_EVCTRL_PEREO_Msk & ((value) << RTC_MODE1_EVCTRL_PEREO_Pos))
 #define RTC_MODE1_EVCTRL_CMPEO0_Pos 8            /**< \brief (RTC_MODE1_EVCTRL) Compare 0 Event Output Enable */
 #define RTC_MODE1_EVCTRL_CMPEO0     (1 << RTC_MODE1_EVCTRL_CMPEO0_Pos)
 #define RTC_MODE1_EVCTRL_CMPEO1_Pos 9            /**< \brief (RTC_MODE1_EVCTRL) Compare 1 Event Output Enable */
 #define RTC_MODE1_EVCTRL_CMPEO1     (1 << RTC_MODE1_EVCTRL_CMPEO1_Pos)
 #define RTC_MODE1_EVCTRL_CMPEO_Pos  8            /**< \brief (RTC_MODE1_EVCTRL) Compare x Event Output Enable */
 #define RTC_MODE1_EVCTRL_CMPEO_Msk  (0x3ul << RTC_MODE1_EVCTRL_CMPEO_Pos)
-#define RTC_MODE1_EVCTRL_CMPEO(value) ((RTC_MODE1_EVCTRL_CMPEO_Msk & ((value) << RTC_MODE1_EVCTRL_CMPEO_Pos)))
+#define RTC_MODE1_EVCTRL_CMPEO(value) (RTC_MODE1_EVCTRL_CMPEO_Msk & ((value) << RTC_MODE1_EVCTRL_CMPEO_Pos))
 #define RTC_MODE1_EVCTRL_OVFEO_Pos  15           /**< \brief (RTC_MODE1_EVCTRL) Overflow Event Output Enable */
 #define RTC_MODE1_EVCTRL_OVFEO      (0x1ul << RTC_MODE1_EVCTRL_OVFEO_Pos)
 #define RTC_MODE1_EVCTRL_MASK       0x000083FFul /**< \brief (RTC_MODE1_EVCTRL) MASK Register */
@@ -406,12 +415,12 @@ typedef union {
 #define RTC_MODE2_EVCTRL_PEREO7     (1 << RTC_MODE2_EVCTRL_PEREO7_Pos)
 #define RTC_MODE2_EVCTRL_PEREO_Pos  0            /**< \brief (RTC_MODE2_EVCTRL) Periodic Interval x Event Output Enable */
 #define RTC_MODE2_EVCTRL_PEREO_Msk  (0xFFul << RTC_MODE2_EVCTRL_PEREO_Pos)
-#define RTC_MODE2_EVCTRL_PEREO(value) ((RTC_MODE2_EVCTRL_PEREO_Msk & ((value) << RTC_MODE2_EVCTRL_PEREO_Pos)))
+#define RTC_MODE2_EVCTRL_PEREO(value) (RTC_MODE2_EVCTRL_PEREO_Msk & ((value) << RTC_MODE2_EVCTRL_PEREO_Pos))
 #define RTC_MODE2_EVCTRL_ALARMEO0_Pos 8            /**< \brief (RTC_MODE2_EVCTRL) Alarm 0 Event Output Enable */
 #define RTC_MODE2_EVCTRL_ALARMEO0   (1 << RTC_MODE2_EVCTRL_ALARMEO0_Pos)
 #define RTC_MODE2_EVCTRL_ALARMEO_Pos 8            /**< \brief (RTC_MODE2_EVCTRL) Alarm x Event Output Enable */
 #define RTC_MODE2_EVCTRL_ALARMEO_Msk (0x1ul << RTC_MODE2_EVCTRL_ALARMEO_Pos)
-#define RTC_MODE2_EVCTRL_ALARMEO(value) ((RTC_MODE2_EVCTRL_ALARMEO_Msk & ((value) << RTC_MODE2_EVCTRL_ALARMEO_Pos)))
+#define RTC_MODE2_EVCTRL_ALARMEO(value) (RTC_MODE2_EVCTRL_ALARMEO_Msk & ((value) << RTC_MODE2_EVCTRL_ALARMEO_Pos))
 #define RTC_MODE2_EVCTRL_OVFEO_Pos  15           /**< \brief (RTC_MODE2_EVCTRL) Overflow Event Output Enable */
 #define RTC_MODE2_EVCTRL_OVFEO      (0x1ul << RTC_MODE2_EVCTRL_OVFEO_Pos)
 #define RTC_MODE2_EVCTRL_MASK       0x000081FFul /**< \brief (RTC_MODE2_EVCTRL) MASK Register */
@@ -462,12 +471,12 @@ typedef union {
 #define RTC_MODE0_INTENCLR_PER7     (1 << RTC_MODE0_INTENCLR_PER7_Pos)
 #define RTC_MODE0_INTENCLR_PER_Pos  0            /**< \brief (RTC_MODE0_INTENCLR) Periodic Interval x Interrupt Enable */
 #define RTC_MODE0_INTENCLR_PER_Msk  (0xFFul << RTC_MODE0_INTENCLR_PER_Pos)
-#define RTC_MODE0_INTENCLR_PER(value) ((RTC_MODE0_INTENCLR_PER_Msk & ((value) << RTC_MODE0_INTENCLR_PER_Pos)))
+#define RTC_MODE0_INTENCLR_PER(value) (RTC_MODE0_INTENCLR_PER_Msk & ((value) << RTC_MODE0_INTENCLR_PER_Pos))
 #define RTC_MODE0_INTENCLR_CMP0_Pos 8            /**< \brief (RTC_MODE0_INTENCLR) Compare 0 Interrupt Enable */
 #define RTC_MODE0_INTENCLR_CMP0     (1 << RTC_MODE0_INTENCLR_CMP0_Pos)
 #define RTC_MODE0_INTENCLR_CMP_Pos  8            /**< \brief (RTC_MODE0_INTENCLR) Compare x Interrupt Enable */
 #define RTC_MODE0_INTENCLR_CMP_Msk  (0x1ul << RTC_MODE0_INTENCLR_CMP_Pos)
-#define RTC_MODE0_INTENCLR_CMP(value) ((RTC_MODE0_INTENCLR_CMP_Msk & ((value) << RTC_MODE0_INTENCLR_CMP_Pos)))
+#define RTC_MODE0_INTENCLR_CMP(value) (RTC_MODE0_INTENCLR_CMP_Msk & ((value) << RTC_MODE0_INTENCLR_CMP_Pos))
 #define RTC_MODE0_INTENCLR_OVF_Pos  15           /**< \brief (RTC_MODE0_INTENCLR) Overflow Interrupt Enable */
 #define RTC_MODE0_INTENCLR_OVF      (0x1ul << RTC_MODE0_INTENCLR_OVF_Pos)
 #define RTC_MODE0_INTENCLR_MASK     0x81FFul     /**< \brief (RTC_MODE0_INTENCLR) MASK Register */
@@ -519,14 +528,14 @@ typedef union {
 #define RTC_MODE1_INTENCLR_PER7     (1 << RTC_MODE1_INTENCLR_PER7_Pos)
 #define RTC_MODE1_INTENCLR_PER_Pos  0            /**< \brief (RTC_MODE1_INTENCLR) Periodic Interval x Interrupt Enable */
 #define RTC_MODE1_INTENCLR_PER_Msk  (0xFFul << RTC_MODE1_INTENCLR_PER_Pos)
-#define RTC_MODE1_INTENCLR_PER(value) ((RTC_MODE1_INTENCLR_PER_Msk & ((value) << RTC_MODE1_INTENCLR_PER_Pos)))
+#define RTC_MODE1_INTENCLR_PER(value) (RTC_MODE1_INTENCLR_PER_Msk & ((value) << RTC_MODE1_INTENCLR_PER_Pos))
 #define RTC_MODE1_INTENCLR_CMP0_Pos 8            /**< \brief (RTC_MODE1_INTENCLR) Compare 0 Interrupt Enable */
 #define RTC_MODE1_INTENCLR_CMP0     (1 << RTC_MODE1_INTENCLR_CMP0_Pos)
 #define RTC_MODE1_INTENCLR_CMP1_Pos 9            /**< \brief (RTC_MODE1_INTENCLR) Compare 1 Interrupt Enable */
 #define RTC_MODE1_INTENCLR_CMP1     (1 << RTC_MODE1_INTENCLR_CMP1_Pos)
 #define RTC_MODE1_INTENCLR_CMP_Pos  8            /**< \brief (RTC_MODE1_INTENCLR) Compare x Interrupt Enable */
 #define RTC_MODE1_INTENCLR_CMP_Msk  (0x3ul << RTC_MODE1_INTENCLR_CMP_Pos)
-#define RTC_MODE1_INTENCLR_CMP(value) ((RTC_MODE1_INTENCLR_CMP_Msk & ((value) << RTC_MODE1_INTENCLR_CMP_Pos)))
+#define RTC_MODE1_INTENCLR_CMP(value) (RTC_MODE1_INTENCLR_CMP_Msk & ((value) << RTC_MODE1_INTENCLR_CMP_Pos))
 #define RTC_MODE1_INTENCLR_OVF_Pos  15           /**< \brief (RTC_MODE1_INTENCLR) Overflow Interrupt Enable */
 #define RTC_MODE1_INTENCLR_OVF      (0x1ul << RTC_MODE1_INTENCLR_OVF_Pos)
 #define RTC_MODE1_INTENCLR_MASK     0x83FFul     /**< \brief (RTC_MODE1_INTENCLR) MASK Register */
@@ -577,12 +586,12 @@ typedef union {
 #define RTC_MODE2_INTENCLR_PER7     (1 << RTC_MODE2_INTENCLR_PER7_Pos)
 #define RTC_MODE2_INTENCLR_PER_Pos  0            /**< \brief (RTC_MODE2_INTENCLR) Periodic Interval x Interrupt Enable */
 #define RTC_MODE2_INTENCLR_PER_Msk  (0xFFul << RTC_MODE2_INTENCLR_PER_Pos)
-#define RTC_MODE2_INTENCLR_PER(value) ((RTC_MODE2_INTENCLR_PER_Msk & ((value) << RTC_MODE2_INTENCLR_PER_Pos)))
+#define RTC_MODE2_INTENCLR_PER(value) (RTC_MODE2_INTENCLR_PER_Msk & ((value) << RTC_MODE2_INTENCLR_PER_Pos))
 #define RTC_MODE2_INTENCLR_ALARM0_Pos 8            /**< \brief (RTC_MODE2_INTENCLR) Alarm 0 Interrupt Enable */
 #define RTC_MODE2_INTENCLR_ALARM0   (1 << RTC_MODE2_INTENCLR_ALARM0_Pos)
 #define RTC_MODE2_INTENCLR_ALARM_Pos 8            /**< \brief (RTC_MODE2_INTENCLR) Alarm x Interrupt Enable */
 #define RTC_MODE2_INTENCLR_ALARM_Msk (0x1ul << RTC_MODE2_INTENCLR_ALARM_Pos)
-#define RTC_MODE2_INTENCLR_ALARM(value) ((RTC_MODE2_INTENCLR_ALARM_Msk & ((value) << RTC_MODE2_INTENCLR_ALARM_Pos)))
+#define RTC_MODE2_INTENCLR_ALARM(value) (RTC_MODE2_INTENCLR_ALARM_Msk & ((value) << RTC_MODE2_INTENCLR_ALARM_Pos))
 #define RTC_MODE2_INTENCLR_OVF_Pos  15           /**< \brief (RTC_MODE2_INTENCLR) Overflow Interrupt Enable */
 #define RTC_MODE2_INTENCLR_OVF      (0x1ul << RTC_MODE2_INTENCLR_OVF_Pos)
 #define RTC_MODE2_INTENCLR_MASK     0x81FFul     /**< \brief (RTC_MODE2_INTENCLR) MASK Register */
@@ -633,12 +642,12 @@ typedef union {
 #define RTC_MODE0_INTENSET_PER7     (1 << RTC_MODE0_INTENSET_PER7_Pos)
 #define RTC_MODE0_INTENSET_PER_Pos  0            /**< \brief (RTC_MODE0_INTENSET) Periodic Interval x Interrupt Enable */
 #define RTC_MODE0_INTENSET_PER_Msk  (0xFFul << RTC_MODE0_INTENSET_PER_Pos)
-#define RTC_MODE0_INTENSET_PER(value) ((RTC_MODE0_INTENSET_PER_Msk & ((value) << RTC_MODE0_INTENSET_PER_Pos)))
+#define RTC_MODE0_INTENSET_PER(value) (RTC_MODE0_INTENSET_PER_Msk & ((value) << RTC_MODE0_INTENSET_PER_Pos))
 #define RTC_MODE0_INTENSET_CMP0_Pos 8            /**< \brief (RTC_MODE0_INTENSET) Compare 0 Interrupt Enable */
 #define RTC_MODE0_INTENSET_CMP0     (1 << RTC_MODE0_INTENSET_CMP0_Pos)
 #define RTC_MODE0_INTENSET_CMP_Pos  8            /**< \brief (RTC_MODE0_INTENSET) Compare x Interrupt Enable */
 #define RTC_MODE0_INTENSET_CMP_Msk  (0x1ul << RTC_MODE0_INTENSET_CMP_Pos)
-#define RTC_MODE0_INTENSET_CMP(value) ((RTC_MODE0_INTENSET_CMP_Msk & ((value) << RTC_MODE0_INTENSET_CMP_Pos)))
+#define RTC_MODE0_INTENSET_CMP(value) (RTC_MODE0_INTENSET_CMP_Msk & ((value) << RTC_MODE0_INTENSET_CMP_Pos))
 #define RTC_MODE0_INTENSET_OVF_Pos  15           /**< \brief (RTC_MODE0_INTENSET) Overflow Interrupt Enable */
 #define RTC_MODE0_INTENSET_OVF      (0x1ul << RTC_MODE0_INTENSET_OVF_Pos)
 #define RTC_MODE0_INTENSET_MASK     0x81FFul     /**< \brief (RTC_MODE0_INTENSET) MASK Register */
@@ -690,14 +699,14 @@ typedef union {
 #define RTC_MODE1_INTENSET_PER7     (1 << RTC_MODE1_INTENSET_PER7_Pos)
 #define RTC_MODE1_INTENSET_PER_Pos  0            /**< \brief (RTC_MODE1_INTENSET) Periodic Interval x Interrupt Enable */
 #define RTC_MODE1_INTENSET_PER_Msk  (0xFFul << RTC_MODE1_INTENSET_PER_Pos)
-#define RTC_MODE1_INTENSET_PER(value) ((RTC_MODE1_INTENSET_PER_Msk & ((value) << RTC_MODE1_INTENSET_PER_Pos)))
+#define RTC_MODE1_INTENSET_PER(value) (RTC_MODE1_INTENSET_PER_Msk & ((value) << RTC_MODE1_INTENSET_PER_Pos))
 #define RTC_MODE1_INTENSET_CMP0_Pos 8            /**< \brief (RTC_MODE1_INTENSET) Compare 0 Interrupt Enable */
 #define RTC_MODE1_INTENSET_CMP0     (1 << RTC_MODE1_INTENSET_CMP0_Pos)
 #define RTC_MODE1_INTENSET_CMP1_Pos 9            /**< \brief (RTC_MODE1_INTENSET) Compare 1 Interrupt Enable */
 #define RTC_MODE1_INTENSET_CMP1     (1 << RTC_MODE1_INTENSET_CMP1_Pos)
 #define RTC_MODE1_INTENSET_CMP_Pos  8            /**< \brief (RTC_MODE1_INTENSET) Compare x Interrupt Enable */
 #define RTC_MODE1_INTENSET_CMP_Msk  (0x3ul << RTC_MODE1_INTENSET_CMP_Pos)
-#define RTC_MODE1_INTENSET_CMP(value) ((RTC_MODE1_INTENSET_CMP_Msk & ((value) << RTC_MODE1_INTENSET_CMP_Pos)))
+#define RTC_MODE1_INTENSET_CMP(value) (RTC_MODE1_INTENSET_CMP_Msk & ((value) << RTC_MODE1_INTENSET_CMP_Pos))
 #define RTC_MODE1_INTENSET_OVF_Pos  15           /**< \brief (RTC_MODE1_INTENSET) Overflow Interrupt Enable */
 #define RTC_MODE1_INTENSET_OVF      (0x1ul << RTC_MODE1_INTENSET_OVF_Pos)
 #define RTC_MODE1_INTENSET_MASK     0x83FFul     /**< \brief (RTC_MODE1_INTENSET) MASK Register */
@@ -748,36 +757,36 @@ typedef union {
 #define RTC_MODE2_INTENSET_PER7     (1 << RTC_MODE2_INTENSET_PER7_Pos)
 #define RTC_MODE2_INTENSET_PER_Pos  0            /**< \brief (RTC_MODE2_INTENSET) Periodic Interval x Enable */
 #define RTC_MODE2_INTENSET_PER_Msk  (0xFFul << RTC_MODE2_INTENSET_PER_Pos)
-#define RTC_MODE2_INTENSET_PER(value) ((RTC_MODE2_INTENSET_PER_Msk & ((value) << RTC_MODE2_INTENSET_PER_Pos)))
+#define RTC_MODE2_INTENSET_PER(value) (RTC_MODE2_INTENSET_PER_Msk & ((value) << RTC_MODE2_INTENSET_PER_Pos))
 #define RTC_MODE2_INTENSET_ALARM0_Pos 8            /**< \brief (RTC_MODE2_INTENSET) Alarm 0 Interrupt Enable */
 #define RTC_MODE2_INTENSET_ALARM0   (1 << RTC_MODE2_INTENSET_ALARM0_Pos)
 #define RTC_MODE2_INTENSET_ALARM_Pos 8            /**< \brief (RTC_MODE2_INTENSET) Alarm x Interrupt Enable */
 #define RTC_MODE2_INTENSET_ALARM_Msk (0x1ul << RTC_MODE2_INTENSET_ALARM_Pos)
-#define RTC_MODE2_INTENSET_ALARM(value) ((RTC_MODE2_INTENSET_ALARM_Msk & ((value) << RTC_MODE2_INTENSET_ALARM_Pos)))
+#define RTC_MODE2_INTENSET_ALARM(value) (RTC_MODE2_INTENSET_ALARM_Msk & ((value) << RTC_MODE2_INTENSET_ALARM_Pos))
 #define RTC_MODE2_INTENSET_OVF_Pos  15           /**< \brief (RTC_MODE2_INTENSET) Overflow Interrupt Enable */
 #define RTC_MODE2_INTENSET_OVF      (0x1ul << RTC_MODE2_INTENSET_OVF_Pos)
 #define RTC_MODE2_INTENSET_MASK     0x81FFul     /**< \brief (RTC_MODE2_INTENSET) MASK Register */
 
 /* -------- RTC_MODE0_INTFLAG : (RTC Offset: 0x0C) (R/W 16) MODE0 MODE0 Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint16_t PER0:1;           /*!< bit:      0  Periodic Interval 0                */
-    uint16_t PER1:1;           /*!< bit:      1  Periodic Interval 1                */
-    uint16_t PER2:1;           /*!< bit:      2  Periodic Interval 2                */
-    uint16_t PER3:1;           /*!< bit:      3  Periodic Interval 3                */
-    uint16_t PER4:1;           /*!< bit:      4  Periodic Interval 4                */
-    uint16_t PER5:1;           /*!< bit:      5  Periodic Interval 5                */
-    uint16_t PER6:1;           /*!< bit:      6  Periodic Interval 6                */
-    uint16_t PER7:1;           /*!< bit:      7  Periodic Interval 7                */
-    uint16_t CMP0:1;           /*!< bit:      8  Compare 0                          */
-    uint16_t :6;               /*!< bit:  9..14  Reserved                           */
-    uint16_t OVF:1;            /*!< bit:     15  Overflow                           */
+    __I uint16_t PER0:1;           /*!< bit:      0  Periodic Interval 0                */
+    __I uint16_t PER1:1;           /*!< bit:      1  Periodic Interval 1                */
+    __I uint16_t PER2:1;           /*!< bit:      2  Periodic Interval 2                */
+    __I uint16_t PER3:1;           /*!< bit:      3  Periodic Interval 3                */
+    __I uint16_t PER4:1;           /*!< bit:      4  Periodic Interval 4                */
+    __I uint16_t PER5:1;           /*!< bit:      5  Periodic Interval 5                */
+    __I uint16_t PER6:1;           /*!< bit:      6  Periodic Interval 6                */
+    __I uint16_t PER7:1;           /*!< bit:      7  Periodic Interval 7                */
+    __I uint16_t CMP0:1;           /*!< bit:      8  Compare 0                          */
+    __I uint16_t :6;               /*!< bit:  9..14  Reserved                           */
+    __I uint16_t OVF:1;            /*!< bit:     15  Overflow                           */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
-    uint16_t PER:8;            /*!< bit:  0.. 7  Periodic Interval x                */
-    uint16_t CMP:1;            /*!< bit:      8  Compare x                          */
-    uint16_t :7;               /*!< bit:  9..15  Reserved                           */
+    __I uint16_t PER:8;            /*!< bit:  0.. 7  Periodic Interval x                */
+    __I uint16_t CMP:1;            /*!< bit:      8  Compare x                          */
+    __I uint16_t :7;               /*!< bit:  9..15  Reserved                           */
   } vec;                       /*!< Structure used for vec  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RTC_MODE0_INTFLAG_Type;
@@ -804,37 +813,37 @@ typedef union {
 #define RTC_MODE0_INTFLAG_PER7      (1 << RTC_MODE0_INTFLAG_PER7_Pos)
 #define RTC_MODE0_INTFLAG_PER_Pos   0            /**< \brief (RTC_MODE0_INTFLAG) Periodic Interval x */
 #define RTC_MODE0_INTFLAG_PER_Msk   (0xFFul << RTC_MODE0_INTFLAG_PER_Pos)
-#define RTC_MODE0_INTFLAG_PER(value) ((RTC_MODE0_INTFLAG_PER_Msk & ((value) << RTC_MODE0_INTFLAG_PER_Pos)))
+#define RTC_MODE0_INTFLAG_PER(value) (RTC_MODE0_INTFLAG_PER_Msk & ((value) << RTC_MODE0_INTFLAG_PER_Pos))
 #define RTC_MODE0_INTFLAG_CMP0_Pos  8            /**< \brief (RTC_MODE0_INTFLAG) Compare 0 */
 #define RTC_MODE0_INTFLAG_CMP0      (1 << RTC_MODE0_INTFLAG_CMP0_Pos)
 #define RTC_MODE0_INTFLAG_CMP_Pos   8            /**< \brief (RTC_MODE0_INTFLAG) Compare x */
 #define RTC_MODE0_INTFLAG_CMP_Msk   (0x1ul << RTC_MODE0_INTFLAG_CMP_Pos)
-#define RTC_MODE0_INTFLAG_CMP(value) ((RTC_MODE0_INTFLAG_CMP_Msk & ((value) << RTC_MODE0_INTFLAG_CMP_Pos)))
+#define RTC_MODE0_INTFLAG_CMP(value) (RTC_MODE0_INTFLAG_CMP_Msk & ((value) << RTC_MODE0_INTFLAG_CMP_Pos))
 #define RTC_MODE0_INTFLAG_OVF_Pos   15           /**< \brief (RTC_MODE0_INTFLAG) Overflow */
 #define RTC_MODE0_INTFLAG_OVF       (0x1ul << RTC_MODE0_INTFLAG_OVF_Pos)
 #define RTC_MODE0_INTFLAG_MASK      0x81FFul     /**< \brief (RTC_MODE0_INTFLAG) MASK Register */
 
 /* -------- RTC_MODE1_INTFLAG : (RTC Offset: 0x0C) (R/W 16) MODE1 MODE1 Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint16_t PER0:1;           /*!< bit:      0  Periodic Interval 0                */
-    uint16_t PER1:1;           /*!< bit:      1  Periodic Interval 1                */
-    uint16_t PER2:1;           /*!< bit:      2  Periodic Interval 2                */
-    uint16_t PER3:1;           /*!< bit:      3  Periodic Interval 3                */
-    uint16_t PER4:1;           /*!< bit:      4  Periodic Interval 4                */
-    uint16_t PER5:1;           /*!< bit:      5  Periodic Interval 5                */
-    uint16_t PER6:1;           /*!< bit:      6  Periodic Interval 6                */
-    uint16_t PER7:1;           /*!< bit:      7  Periodic Interval 7                */
-    uint16_t CMP0:1;           /*!< bit:      8  Compare 0                          */
-    uint16_t CMP1:1;           /*!< bit:      9  Compare 1                          */
-    uint16_t :5;               /*!< bit: 10..14  Reserved                           */
-    uint16_t OVF:1;            /*!< bit:     15  Overflow                           */
+    __I uint16_t PER0:1;           /*!< bit:      0  Periodic Interval 0                */
+    __I uint16_t PER1:1;           /*!< bit:      1  Periodic Interval 1                */
+    __I uint16_t PER2:1;           /*!< bit:      2  Periodic Interval 2                */
+    __I uint16_t PER3:1;           /*!< bit:      3  Periodic Interval 3                */
+    __I uint16_t PER4:1;           /*!< bit:      4  Periodic Interval 4                */
+    __I uint16_t PER5:1;           /*!< bit:      5  Periodic Interval 5                */
+    __I uint16_t PER6:1;           /*!< bit:      6  Periodic Interval 6                */
+    __I uint16_t PER7:1;           /*!< bit:      7  Periodic Interval 7                */
+    __I uint16_t CMP0:1;           /*!< bit:      8  Compare 0                          */
+    __I uint16_t CMP1:1;           /*!< bit:      9  Compare 1                          */
+    __I uint16_t :5;               /*!< bit: 10..14  Reserved                           */
+    __I uint16_t OVF:1;            /*!< bit:     15  Overflow                           */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
-    uint16_t PER:8;            /*!< bit:  0.. 7  Periodic Interval x                */
-    uint16_t CMP:2;            /*!< bit:  8.. 9  Compare x                          */
-    uint16_t :6;               /*!< bit: 10..15  Reserved                           */
+    __I uint16_t PER:8;            /*!< bit:  0.. 7  Periodic Interval x                */
+    __I uint16_t CMP:2;            /*!< bit:  8.. 9  Compare x                          */
+    __I uint16_t :6;               /*!< bit: 10..15  Reserved                           */
   } vec;                       /*!< Structure used for vec  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RTC_MODE1_INTFLAG_Type;
@@ -861,38 +870,38 @@ typedef union {
 #define RTC_MODE1_INTFLAG_PER7      (1 << RTC_MODE1_INTFLAG_PER7_Pos)
 #define RTC_MODE1_INTFLAG_PER_Pos   0            /**< \brief (RTC_MODE1_INTFLAG) Periodic Interval x */
 #define RTC_MODE1_INTFLAG_PER_Msk   (0xFFul << RTC_MODE1_INTFLAG_PER_Pos)
-#define RTC_MODE1_INTFLAG_PER(value) ((RTC_MODE1_INTFLAG_PER_Msk & ((value) << RTC_MODE1_INTFLAG_PER_Pos)))
+#define RTC_MODE1_INTFLAG_PER(value) (RTC_MODE1_INTFLAG_PER_Msk & ((value) << RTC_MODE1_INTFLAG_PER_Pos))
 #define RTC_MODE1_INTFLAG_CMP0_Pos  8            /**< \brief (RTC_MODE1_INTFLAG) Compare 0 */
 #define RTC_MODE1_INTFLAG_CMP0      (1 << RTC_MODE1_INTFLAG_CMP0_Pos)
 #define RTC_MODE1_INTFLAG_CMP1_Pos  9            /**< \brief (RTC_MODE1_INTFLAG) Compare 1 */
 #define RTC_MODE1_INTFLAG_CMP1      (1 << RTC_MODE1_INTFLAG_CMP1_Pos)
 #define RTC_MODE1_INTFLAG_CMP_Pos   8            /**< \brief (RTC_MODE1_INTFLAG) Compare x */
 #define RTC_MODE1_INTFLAG_CMP_Msk   (0x3ul << RTC_MODE1_INTFLAG_CMP_Pos)
-#define RTC_MODE1_INTFLAG_CMP(value) ((RTC_MODE1_INTFLAG_CMP_Msk & ((value) << RTC_MODE1_INTFLAG_CMP_Pos)))
+#define RTC_MODE1_INTFLAG_CMP(value) (RTC_MODE1_INTFLAG_CMP_Msk & ((value) << RTC_MODE1_INTFLAG_CMP_Pos))
 #define RTC_MODE1_INTFLAG_OVF_Pos   15           /**< \brief (RTC_MODE1_INTFLAG) Overflow */
 #define RTC_MODE1_INTFLAG_OVF       (0x1ul << RTC_MODE1_INTFLAG_OVF_Pos)
 #define RTC_MODE1_INTFLAG_MASK      0x83FFul     /**< \brief (RTC_MODE1_INTFLAG) MASK Register */
 
 /* -------- RTC_MODE2_INTFLAG : (RTC Offset: 0x0C) (R/W 16) MODE2 MODE2 Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint16_t PER0:1;           /*!< bit:      0  Periodic Interval 0                */
-    uint16_t PER1:1;           /*!< bit:      1  Periodic Interval 1                */
-    uint16_t PER2:1;           /*!< bit:      2  Periodic Interval 2                */
-    uint16_t PER3:1;           /*!< bit:      3  Periodic Interval 3                */
-    uint16_t PER4:1;           /*!< bit:      4  Periodic Interval 4                */
-    uint16_t PER5:1;           /*!< bit:      5  Periodic Interval 5                */
-    uint16_t PER6:1;           /*!< bit:      6  Periodic Interval 6                */
-    uint16_t PER7:1;           /*!< bit:      7  Periodic Interval 7                */
-    uint16_t ALARM0:1;         /*!< bit:      8  Alarm 0                            */
-    uint16_t :6;               /*!< bit:  9..14  Reserved                           */
-    uint16_t OVF:1;            /*!< bit:     15  Overflow                           */
+    __I uint16_t PER0:1;           /*!< bit:      0  Periodic Interval 0                */
+    __I uint16_t PER1:1;           /*!< bit:      1  Periodic Interval 1                */
+    __I uint16_t PER2:1;           /*!< bit:      2  Periodic Interval 2                */
+    __I uint16_t PER3:1;           /*!< bit:      3  Periodic Interval 3                */
+    __I uint16_t PER4:1;           /*!< bit:      4  Periodic Interval 4                */
+    __I uint16_t PER5:1;           /*!< bit:      5  Periodic Interval 5                */
+    __I uint16_t PER6:1;           /*!< bit:      6  Periodic Interval 6                */
+    __I uint16_t PER7:1;           /*!< bit:      7  Periodic Interval 7                */
+    __I uint16_t ALARM0:1;         /*!< bit:      8  Alarm 0                            */
+    __I uint16_t :6;               /*!< bit:  9..14  Reserved                           */
+    __I uint16_t OVF:1;            /*!< bit:     15  Overflow                           */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
-    uint16_t PER:8;            /*!< bit:  0.. 7  Periodic Interval x                */
-    uint16_t ALARM:1;          /*!< bit:      8  Alarm x                            */
-    uint16_t :7;               /*!< bit:  9..15  Reserved                           */
+    __I uint16_t PER:8;            /*!< bit:  0.. 7  Periodic Interval x                */
+    __I uint16_t ALARM:1;          /*!< bit:      8  Alarm x                            */
+    __I uint16_t :7;               /*!< bit:  9..15  Reserved                           */
   } vec;                       /*!< Structure used for vec  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RTC_MODE2_INTFLAG_Type;
@@ -919,12 +928,12 @@ typedef union {
 #define RTC_MODE2_INTFLAG_PER7      (1 << RTC_MODE2_INTFLAG_PER7_Pos)
 #define RTC_MODE2_INTFLAG_PER_Pos   0            /**< \brief (RTC_MODE2_INTFLAG) Periodic Interval x */
 #define RTC_MODE2_INTFLAG_PER_Msk   (0xFFul << RTC_MODE2_INTFLAG_PER_Pos)
-#define RTC_MODE2_INTFLAG_PER(value) ((RTC_MODE2_INTFLAG_PER_Msk & ((value) << RTC_MODE2_INTFLAG_PER_Pos)))
+#define RTC_MODE2_INTFLAG_PER(value) (RTC_MODE2_INTFLAG_PER_Msk & ((value) << RTC_MODE2_INTFLAG_PER_Pos))
 #define RTC_MODE2_INTFLAG_ALARM0_Pos 8            /**< \brief (RTC_MODE2_INTFLAG) Alarm 0 */
 #define RTC_MODE2_INTFLAG_ALARM0    (1 << RTC_MODE2_INTFLAG_ALARM0_Pos)
 #define RTC_MODE2_INTFLAG_ALARM_Pos 8            /**< \brief (RTC_MODE2_INTFLAG) Alarm x */
 #define RTC_MODE2_INTFLAG_ALARM_Msk (0x1ul << RTC_MODE2_INTFLAG_ALARM_Pos)
-#define RTC_MODE2_INTFLAG_ALARM(value) ((RTC_MODE2_INTFLAG_ALARM_Msk & ((value) << RTC_MODE2_INTFLAG_ALARM_Pos)))
+#define RTC_MODE2_INTFLAG_ALARM(value) (RTC_MODE2_INTFLAG_ALARM_Msk & ((value) << RTC_MODE2_INTFLAG_ALARM_Pos))
 #define RTC_MODE2_INTFLAG_OVF_Pos   15           /**< \brief (RTC_MODE2_INTFLAG) Overflow */
 #define RTC_MODE2_INTFLAG_OVF       (0x1ul << RTC_MODE2_INTFLAG_OVF_Pos)
 #define RTC_MODE2_INTFLAG_MASK      0x81FFul     /**< \brief (RTC_MODE2_INTFLAG) MASK Register */
@@ -957,7 +966,9 @@ typedef union {
     uint32_t COUNT:1;          /*!< bit:      3  COUNT Register Busy                */
     uint32_t :1;               /*!< bit:      4  Reserved                           */
     uint32_t COMP0:1;          /*!< bit:      5  COMP 0 Register Busy               */
-    uint32_t :26;              /*!< bit:  6..31  Reserved                           */
+    uint32_t :9;               /*!< bit:  6..14  Reserved                           */
+    uint32_t COUNTSYNC:1;      /*!< bit:     15  Count Read Synchronization Enable Bit Busy */
+    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
     uint32_t :5;               /*!< bit:  0.. 4  Reserved                           */
@@ -983,8 +994,10 @@ typedef union {
 #define RTC_MODE0_SYNCBUSY_COMP0    (1 << RTC_MODE0_SYNCBUSY_COMP0_Pos)
 #define RTC_MODE0_SYNCBUSY_COMP_Pos 5            /**< \brief (RTC_MODE0_SYNCBUSY) COMP x Register Busy */
 #define RTC_MODE0_SYNCBUSY_COMP_Msk (0x1ul << RTC_MODE0_SYNCBUSY_COMP_Pos)
-#define RTC_MODE0_SYNCBUSY_COMP(value) ((RTC_MODE0_SYNCBUSY_COMP_Msk & ((value) << RTC_MODE0_SYNCBUSY_COMP_Pos)))
-#define RTC_MODE0_SYNCBUSY_MASK     0x0000002Ful /**< \brief (RTC_MODE0_SYNCBUSY) MASK Register */
+#define RTC_MODE0_SYNCBUSY_COMP(value) (RTC_MODE0_SYNCBUSY_COMP_Msk & ((value) << RTC_MODE0_SYNCBUSY_COMP_Pos))
+#define RTC_MODE0_SYNCBUSY_COUNTSYNC_Pos 15           /**< \brief (RTC_MODE0_SYNCBUSY) Count Read Synchronization Enable Bit Busy */
+#define RTC_MODE0_SYNCBUSY_COUNTSYNC (0x1ul << RTC_MODE0_SYNCBUSY_COUNTSYNC_Pos)
+#define RTC_MODE0_SYNCBUSY_MASK     0x0000802Ful /**< \brief (RTC_MODE0_SYNCBUSY) MASK Register */
 
 /* -------- RTC_MODE1_SYNCBUSY : (RTC Offset: 0x10) (R/  32) MODE1 MODE1 Synchronization Busy Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -997,7 +1010,9 @@ typedef union {
     uint32_t PER:1;            /*!< bit:      4  PER Register Busy                  */
     uint32_t COMP0:1;          /*!< bit:      5  COMP 0 Register Busy               */
     uint32_t COMP1:1;          /*!< bit:      6  COMP 1 Register Busy               */
-    uint32_t :25;              /*!< bit:  7..31  Reserved                           */
+    uint32_t :8;               /*!< bit:  7..14  Reserved                           */
+    uint32_t COUNTSYNC:1;      /*!< bit:     15  Count Read Synchronization Enable Bit Busy */
+    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
     uint32_t :5;               /*!< bit:  0.. 4  Reserved                           */
@@ -1027,8 +1042,10 @@ typedef union {
 #define RTC_MODE1_SYNCBUSY_COMP1    (1 << RTC_MODE1_SYNCBUSY_COMP1_Pos)
 #define RTC_MODE1_SYNCBUSY_COMP_Pos 5            /**< \brief (RTC_MODE1_SYNCBUSY) COMP x Register Busy */
 #define RTC_MODE1_SYNCBUSY_COMP_Msk (0x3ul << RTC_MODE1_SYNCBUSY_COMP_Pos)
-#define RTC_MODE1_SYNCBUSY_COMP(value) ((RTC_MODE1_SYNCBUSY_COMP_Msk & ((value) << RTC_MODE1_SYNCBUSY_COMP_Pos)))
-#define RTC_MODE1_SYNCBUSY_MASK     0x0000007Ful /**< \brief (RTC_MODE1_SYNCBUSY) MASK Register */
+#define RTC_MODE1_SYNCBUSY_COMP(value) (RTC_MODE1_SYNCBUSY_COMP_Msk & ((value) << RTC_MODE1_SYNCBUSY_COMP_Pos))
+#define RTC_MODE1_SYNCBUSY_COUNTSYNC_Pos 15           /**< \brief (RTC_MODE1_SYNCBUSY) Count Read Synchronization Enable Bit Busy */
+#define RTC_MODE1_SYNCBUSY_COUNTSYNC (0x1ul << RTC_MODE1_SYNCBUSY_COUNTSYNC_Pos)
+#define RTC_MODE1_SYNCBUSY_MASK     0x0000807Ful /**< \brief (RTC_MODE1_SYNCBUSY) MASK Register */
 
 /* -------- RTC_MODE2_SYNCBUSY : (RTC Offset: 0x10) (R/  32) MODE2 MODE2 Synchronization Busy Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -1042,7 +1059,9 @@ typedef union {
     uint32_t ALARM0:1;         /*!< bit:      5  ALARM 0 Register Busy              */
     uint32_t :5;               /*!< bit:  6..10  Reserved                           */
     uint32_t MASK0:1;          /*!< bit:     11  MASK 0 Register Busy               */
-    uint32_t :20;              /*!< bit: 12..31  Reserved                           */
+    uint32_t :3;               /*!< bit: 12..14  Reserved                           */
+    uint32_t CLOCKSYNC:1;      /*!< bit:     15  Clock Read Synchronization Enable Bit Busy */
+    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
     uint32_t :5;               /*!< bit:  0.. 4  Reserved                           */
@@ -1070,13 +1089,15 @@ typedef union {
 #define RTC_MODE2_SYNCBUSY_ALARM0   (1 << RTC_MODE2_SYNCBUSY_ALARM0_Pos)
 #define RTC_MODE2_SYNCBUSY_ALARM_Pos 5            /**< \brief (RTC_MODE2_SYNCBUSY) ALARM x Register Busy */
 #define RTC_MODE2_SYNCBUSY_ALARM_Msk (0x1ul << RTC_MODE2_SYNCBUSY_ALARM_Pos)
-#define RTC_MODE2_SYNCBUSY_ALARM(value) ((RTC_MODE2_SYNCBUSY_ALARM_Msk & ((value) << RTC_MODE2_SYNCBUSY_ALARM_Pos)))
+#define RTC_MODE2_SYNCBUSY_ALARM(value) (RTC_MODE2_SYNCBUSY_ALARM_Msk & ((value) << RTC_MODE2_SYNCBUSY_ALARM_Pos))
 #define RTC_MODE2_SYNCBUSY_MASK0_Pos 11           /**< \brief (RTC_MODE2_SYNCBUSY) MASK 0 Register Busy */
 #define RTC_MODE2_SYNCBUSY_MASK0    (1 << RTC_MODE2_SYNCBUSY_MASK0_Pos)
 #define RTC_MODE2_SYNCBUSY_MASK_Pos 11           /**< \brief (RTC_MODE2_SYNCBUSY) MASK x Register Busy */
 #define RTC_MODE2_SYNCBUSY_MASK_Msk (0x1ul << RTC_MODE2_SYNCBUSY_MASK_Pos)
-#define RTC_MODE2_SYNCBUSY_MASK(value) ((RTC_MODE2_SYNCBUSY_MASK_Msk & ((value) << RTC_MODE2_SYNCBUSY_MASK_Pos)))
-#define RTC_MODE2_SYNCBUSY_MASK_    0x0000082Ful /**< \brief (RTC_MODE2_SYNCBUSY) MASK Register */
+#define RTC_MODE2_SYNCBUSY_MASK(value) (RTC_MODE2_SYNCBUSY_MASK_Msk & ((value) << RTC_MODE2_SYNCBUSY_MASK_Pos))
+#define RTC_MODE2_SYNCBUSY_CLOCKSYNC_Pos 15           /**< \brief (RTC_MODE2_SYNCBUSY) Clock Read Synchronization Enable Bit Busy */
+#define RTC_MODE2_SYNCBUSY_CLOCKSYNC (0x1ul << RTC_MODE2_SYNCBUSY_CLOCKSYNC_Pos)
+#define RTC_MODE2_SYNCBUSY_MASK_    0x0000882Ful /**< \brief (RTC_MODE2_SYNCBUSY) MASK Register */
 
 /* -------- RTC_FREQCORR : (RTC Offset: 0x14) (R/W  8) Frequency Correction -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -1094,7 +1115,7 @@ typedef union {
 
 #define RTC_FREQCORR_VALUE_Pos      0            /**< \brief (RTC_FREQCORR) Correction Value */
 #define RTC_FREQCORR_VALUE_Msk      (0x7Ful << RTC_FREQCORR_VALUE_Pos)
-#define RTC_FREQCORR_VALUE(value)   ((RTC_FREQCORR_VALUE_Msk & ((value) << RTC_FREQCORR_VALUE_Pos)))
+#define RTC_FREQCORR_VALUE(value)   (RTC_FREQCORR_VALUE_Msk & ((value) << RTC_FREQCORR_VALUE_Pos))
 #define RTC_FREQCORR_SIGN_Pos       7            /**< \brief (RTC_FREQCORR) Correction Sign */
 #define RTC_FREQCORR_SIGN           (0x1ul << RTC_FREQCORR_SIGN_Pos)
 #define RTC_FREQCORR_MASK           0xFFul       /**< \brief (RTC_FREQCORR) MASK Register */
@@ -1114,7 +1135,7 @@ typedef union {
 
 #define RTC_MODE0_COUNT_COUNT_Pos   0            /**< \brief (RTC_MODE0_COUNT) Counter Value */
 #define RTC_MODE0_COUNT_COUNT_Msk   (0xFFFFFFFFul << RTC_MODE0_COUNT_COUNT_Pos)
-#define RTC_MODE0_COUNT_COUNT(value) ((RTC_MODE0_COUNT_COUNT_Msk & ((value) << RTC_MODE0_COUNT_COUNT_Pos)))
+#define RTC_MODE0_COUNT_COUNT(value) (RTC_MODE0_COUNT_COUNT_Msk & ((value) << RTC_MODE0_COUNT_COUNT_Pos))
 #define RTC_MODE0_COUNT_MASK        0xFFFFFFFFul /**< \brief (RTC_MODE0_COUNT) MASK Register */
 
 /* -------- RTC_MODE1_COUNT : (RTC Offset: 0x18) (R/W 16) MODE1 MODE1 Counter Value -------- */
@@ -1132,7 +1153,7 @@ typedef union {
 
 #define RTC_MODE1_COUNT_COUNT_Pos   0            /**< \brief (RTC_MODE1_COUNT) Counter Value */
 #define RTC_MODE1_COUNT_COUNT_Msk   (0xFFFFul << RTC_MODE1_COUNT_COUNT_Pos)
-#define RTC_MODE1_COUNT_COUNT(value) ((RTC_MODE1_COUNT_COUNT_Msk & ((value) << RTC_MODE1_COUNT_COUNT_Pos)))
+#define RTC_MODE1_COUNT_COUNT(value) (RTC_MODE1_COUNT_COUNT_Msk & ((value) << RTC_MODE1_COUNT_COUNT_Pos))
 #define RTC_MODE1_COUNT_MASK        0xFFFFul     /**< \brief (RTC_MODE1_COUNT) MASK Register */
 
 /* -------- RTC_MODE2_CLOCK : (RTC Offset: 0x18) (R/W 32) MODE2 MODE2 Clock Value -------- */
@@ -1155,22 +1176,22 @@ typedef union {
 
 #define RTC_MODE2_CLOCK_SECOND_Pos  0            /**< \brief (RTC_MODE2_CLOCK) Second */
 #define RTC_MODE2_CLOCK_SECOND_Msk  (0x3Ful << RTC_MODE2_CLOCK_SECOND_Pos)
-#define RTC_MODE2_CLOCK_SECOND(value) ((RTC_MODE2_CLOCK_SECOND_Msk & ((value) << RTC_MODE2_CLOCK_SECOND_Pos)))
+#define RTC_MODE2_CLOCK_SECOND(value) (RTC_MODE2_CLOCK_SECOND_Msk & ((value) << RTC_MODE2_CLOCK_SECOND_Pos))
 #define RTC_MODE2_CLOCK_MINUTE_Pos  6            /**< \brief (RTC_MODE2_CLOCK) Minute */
 #define RTC_MODE2_CLOCK_MINUTE_Msk  (0x3Ful << RTC_MODE2_CLOCK_MINUTE_Pos)
-#define RTC_MODE2_CLOCK_MINUTE(value) ((RTC_MODE2_CLOCK_MINUTE_Msk & ((value) << RTC_MODE2_CLOCK_MINUTE_Pos)))
+#define RTC_MODE2_CLOCK_MINUTE(value) (RTC_MODE2_CLOCK_MINUTE_Msk & ((value) << RTC_MODE2_CLOCK_MINUTE_Pos))
 #define RTC_MODE2_CLOCK_HOUR_Pos    12           /**< \brief (RTC_MODE2_CLOCK) Hour */
 #define RTC_MODE2_CLOCK_HOUR_Msk    (0x1Ful << RTC_MODE2_CLOCK_HOUR_Pos)
-#define RTC_MODE2_CLOCK_HOUR(value) ((RTC_MODE2_CLOCK_HOUR_Msk & ((value) << RTC_MODE2_CLOCK_HOUR_Pos)))
+#define RTC_MODE2_CLOCK_HOUR(value) (RTC_MODE2_CLOCK_HOUR_Msk & ((value) << RTC_MODE2_CLOCK_HOUR_Pos))
 #define RTC_MODE2_CLOCK_DAY_Pos     17           /**< \brief (RTC_MODE2_CLOCK) Day */
 #define RTC_MODE2_CLOCK_DAY_Msk     (0x1Ful << RTC_MODE2_CLOCK_DAY_Pos)
-#define RTC_MODE2_CLOCK_DAY(value)  ((RTC_MODE2_CLOCK_DAY_Msk & ((value) << RTC_MODE2_CLOCK_DAY_Pos)))
+#define RTC_MODE2_CLOCK_DAY(value)  (RTC_MODE2_CLOCK_DAY_Msk & ((value) << RTC_MODE2_CLOCK_DAY_Pos))
 #define RTC_MODE2_CLOCK_MONTH_Pos   22           /**< \brief (RTC_MODE2_CLOCK) Month */
 #define RTC_MODE2_CLOCK_MONTH_Msk   (0xFul << RTC_MODE2_CLOCK_MONTH_Pos)
-#define RTC_MODE2_CLOCK_MONTH(value) ((RTC_MODE2_CLOCK_MONTH_Msk & ((value) << RTC_MODE2_CLOCK_MONTH_Pos)))
+#define RTC_MODE2_CLOCK_MONTH(value) (RTC_MODE2_CLOCK_MONTH_Msk & ((value) << RTC_MODE2_CLOCK_MONTH_Pos))
 #define RTC_MODE2_CLOCK_YEAR_Pos    26           /**< \brief (RTC_MODE2_CLOCK) Year */
 #define RTC_MODE2_CLOCK_YEAR_Msk    (0x3Ful << RTC_MODE2_CLOCK_YEAR_Pos)
-#define RTC_MODE2_CLOCK_YEAR(value) ((RTC_MODE2_CLOCK_YEAR_Msk & ((value) << RTC_MODE2_CLOCK_YEAR_Pos)))
+#define RTC_MODE2_CLOCK_YEAR(value) (RTC_MODE2_CLOCK_YEAR_Msk & ((value) << RTC_MODE2_CLOCK_YEAR_Pos))
 #define RTC_MODE2_CLOCK_MASK        0xFFFFFFFFul /**< \brief (RTC_MODE2_CLOCK) MASK Register */
 
 /* -------- RTC_MODE1_PER : (RTC Offset: 0x1C) (R/W 16) MODE1 MODE1 Counter Period -------- */
@@ -1188,7 +1209,7 @@ typedef union {
 
 #define RTC_MODE1_PER_PER_Pos       0            /**< \brief (RTC_MODE1_PER) Counter Period */
 #define RTC_MODE1_PER_PER_Msk       (0xFFFFul << RTC_MODE1_PER_PER_Pos)
-#define RTC_MODE1_PER_PER(value)    ((RTC_MODE1_PER_PER_Msk & ((value) << RTC_MODE1_PER_PER_Pos)))
+#define RTC_MODE1_PER_PER(value)    (RTC_MODE1_PER_PER_Msk & ((value) << RTC_MODE1_PER_PER_Pos))
 #define RTC_MODE1_PER_MASK          0xFFFFul     /**< \brief (RTC_MODE1_PER) MASK Register */
 
 /* -------- RTC_MODE0_COMP : (RTC Offset: 0x20) (R/W 32) MODE0 MODE0 Compare n Value -------- */
@@ -1206,7 +1227,7 @@ typedef union {
 
 #define RTC_MODE0_COMP_COMP_Pos     0            /**< \brief (RTC_MODE0_COMP) Compare Value */
 #define RTC_MODE0_COMP_COMP_Msk     (0xFFFFFFFFul << RTC_MODE0_COMP_COMP_Pos)
-#define RTC_MODE0_COMP_COMP(value)  ((RTC_MODE0_COMP_COMP_Msk & ((value) << RTC_MODE0_COMP_COMP_Pos)))
+#define RTC_MODE0_COMP_COMP(value)  (RTC_MODE0_COMP_COMP_Msk & ((value) << RTC_MODE0_COMP_COMP_Pos))
 #define RTC_MODE0_COMP_MASK         0xFFFFFFFFul /**< \brief (RTC_MODE0_COMP) MASK Register */
 
 /* -------- RTC_MODE1_COMP : (RTC Offset: 0x20) (R/W 16) MODE1 MODE1 Compare n Value -------- */
@@ -1224,7 +1245,7 @@ typedef union {
 
 #define RTC_MODE1_COMP_COMP_Pos     0            /**< \brief (RTC_MODE1_COMP) Compare Value */
 #define RTC_MODE1_COMP_COMP_Msk     (0xFFFFul << RTC_MODE1_COMP_COMP_Pos)
-#define RTC_MODE1_COMP_COMP(value)  ((RTC_MODE1_COMP_COMP_Msk & ((value) << RTC_MODE1_COMP_COMP_Pos)))
+#define RTC_MODE1_COMP_COMP(value)  (RTC_MODE1_COMP_COMP_Msk & ((value) << RTC_MODE1_COMP_COMP_Pos))
 #define RTC_MODE1_COMP_MASK         0xFFFFul     /**< \brief (RTC_MODE1_COMP) MASK Register */
 
 /* -------- RTC_MODE2_ALARM : (RTC Offset: 0x20) (R/W 32) MODE2 MODE2_ALARM Alarm n Value -------- */
@@ -1247,22 +1268,22 @@ typedef union {
 
 #define RTC_MODE2_ALARM_SECOND_Pos  0            /**< \brief (RTC_MODE2_ALARM) Second */
 #define RTC_MODE2_ALARM_SECOND_Msk  (0x3Ful << RTC_MODE2_ALARM_SECOND_Pos)
-#define RTC_MODE2_ALARM_SECOND(value) ((RTC_MODE2_ALARM_SECOND_Msk & ((value) << RTC_MODE2_ALARM_SECOND_Pos)))
+#define RTC_MODE2_ALARM_SECOND(value) (RTC_MODE2_ALARM_SECOND_Msk & ((value) << RTC_MODE2_ALARM_SECOND_Pos))
 #define RTC_MODE2_ALARM_MINUTE_Pos  6            /**< \brief (RTC_MODE2_ALARM) Minute */
 #define RTC_MODE2_ALARM_MINUTE_Msk  (0x3Ful << RTC_MODE2_ALARM_MINUTE_Pos)
-#define RTC_MODE2_ALARM_MINUTE(value) ((RTC_MODE2_ALARM_MINUTE_Msk & ((value) << RTC_MODE2_ALARM_MINUTE_Pos)))
+#define RTC_MODE2_ALARM_MINUTE(value) (RTC_MODE2_ALARM_MINUTE_Msk & ((value) << RTC_MODE2_ALARM_MINUTE_Pos))
 #define RTC_MODE2_ALARM_HOUR_Pos    12           /**< \brief (RTC_MODE2_ALARM) Hour */
 #define RTC_MODE2_ALARM_HOUR_Msk    (0x1Ful << RTC_MODE2_ALARM_HOUR_Pos)
-#define RTC_MODE2_ALARM_HOUR(value) ((RTC_MODE2_ALARM_HOUR_Msk & ((value) << RTC_MODE2_ALARM_HOUR_Pos)))
+#define RTC_MODE2_ALARM_HOUR(value) (RTC_MODE2_ALARM_HOUR_Msk & ((value) << RTC_MODE2_ALARM_HOUR_Pos))
 #define RTC_MODE2_ALARM_DAY_Pos     17           /**< \brief (RTC_MODE2_ALARM) Day */
 #define RTC_MODE2_ALARM_DAY_Msk     (0x1Ful << RTC_MODE2_ALARM_DAY_Pos)
-#define RTC_MODE2_ALARM_DAY(value)  ((RTC_MODE2_ALARM_DAY_Msk & ((value) << RTC_MODE2_ALARM_DAY_Pos)))
+#define RTC_MODE2_ALARM_DAY(value)  (RTC_MODE2_ALARM_DAY_Msk & ((value) << RTC_MODE2_ALARM_DAY_Pos))
 #define RTC_MODE2_ALARM_MONTH_Pos   22           /**< \brief (RTC_MODE2_ALARM) Month */
 #define RTC_MODE2_ALARM_MONTH_Msk   (0xFul << RTC_MODE2_ALARM_MONTH_Pos)
-#define RTC_MODE2_ALARM_MONTH(value) ((RTC_MODE2_ALARM_MONTH_Msk & ((value) << RTC_MODE2_ALARM_MONTH_Pos)))
+#define RTC_MODE2_ALARM_MONTH(value) (RTC_MODE2_ALARM_MONTH_Msk & ((value) << RTC_MODE2_ALARM_MONTH_Pos))
 #define RTC_MODE2_ALARM_YEAR_Pos    26           /**< \brief (RTC_MODE2_ALARM) Year */
 #define RTC_MODE2_ALARM_YEAR_Msk    (0x3Ful << RTC_MODE2_ALARM_YEAR_Pos)
-#define RTC_MODE2_ALARM_YEAR(value) ((RTC_MODE2_ALARM_YEAR_Msk & ((value) << RTC_MODE2_ALARM_YEAR_Pos)))
+#define RTC_MODE2_ALARM_YEAR(value) (RTC_MODE2_ALARM_YEAR_Msk & ((value) << RTC_MODE2_ALARM_YEAR_Pos))
 #define RTC_MODE2_ALARM_MASK        0xFFFFFFFFul /**< \brief (RTC_MODE2_ALARM) MASK Register */
 
 /* -------- RTC_MODE2_MASK : (RTC Offset: 0x24) (R/W  8) MODE2 MODE2_ALARM Alarm n Mask -------- */
@@ -1281,7 +1302,7 @@ typedef union {
 
 #define RTC_MODE2_MASK_SEL_Pos      0            /**< \brief (RTC_MODE2_MASK) Alarm Mask Selection */
 #define RTC_MODE2_MASK_SEL_Msk      (0x7ul << RTC_MODE2_MASK_SEL_Pos)
-#define RTC_MODE2_MASK_SEL(value)   ((RTC_MODE2_MASK_SEL_Msk & ((value) << RTC_MODE2_MASK_SEL_Pos)))
+#define RTC_MODE2_MASK_SEL(value)   (RTC_MODE2_MASK_SEL_Msk & ((value) << RTC_MODE2_MASK_SEL_Pos))
 #define   RTC_MODE2_MASK_SEL_OFF_Val      0x0ul  /**< \brief (RTC_MODE2_MASK) Alarm Disabled */
 #define   RTC_MODE2_MASK_SEL_SS_Val       0x1ul  /**< \brief (RTC_MODE2_MASK) Match seconds only */
 #define   RTC_MODE2_MASK_SEL_MMSS_Val     0x2ul  /**< \brief (RTC_MODE2_MASK) Match seconds and minutes only */

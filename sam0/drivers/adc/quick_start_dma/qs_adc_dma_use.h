@@ -231,9 +231,8 @@
  * -# Enter endless loop.
  *  \snippet qs_adc_dma_use.c endless_loop
  */
-<<<<<<< HEAD
-=======
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+

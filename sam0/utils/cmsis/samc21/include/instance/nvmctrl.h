@@ -83,7 +83,6 @@
 #define NVMCTRL_FLASH_SIZE          262144  
 #define NVMCTRL_GCLK_ID             39       // Index of Generic Clock for test
 #define NVMCTRL_LOCKBIT_ADDRESS     0x00802000
-#define NVMCTRL_PAGES               4096    
 #define NVMCTRL_PAGE_HW             32      
 #define NVMCTRL_PAGE_SIZE           64      
 #define NVMCTRL_PAGE_W              16      

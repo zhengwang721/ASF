@@ -130,11 +130,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
-<<<<<<< HEAD
- *    <td>SAMD20/D21/R21/D10/D11</td>
-=======
  *    <td>SAMD20, SAMD21, SAMR21, SAMD10, SAMD11, SAMDA0, SAMDA1</td>
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -700,11 +696,11 @@ struct rtc_count_config {
 	 *  needed for reading. */
 	bool continuously_update;
 #endif
-#if (SAML21)
-		/** Enable count read synchronization. The COUNT value requires
-		 * synchronization when reading. Disabling the synchronization 
-		 * will prevent the COUNT value from displaying the current value. */
-		bool enable_read_sync;
+#if (SAML21 || SAMC21)
+	/** Enable count read synchronization. The COUNT value requires
+	 * synchronization when reading. Disabling the synchronization 
+	 * will prevent the COUNT value from displaying the current value. */
+	bool enable_read_sync;
 #endif
 
 	/** Array of Compare values. Not all Compare values are available in 32-bit

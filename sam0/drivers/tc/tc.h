@@ -1449,8 +1449,14 @@ static inline void tc_dma_trigger_command(
 		/* Wait for sync */
 	}
 
+#if SAML21
 	/* Write command to execute */
 	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_DMATRG_Val);
+#endif
+#if SAMC21
+	/* Write command to execute */
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_DMAOS_Val);
+#endif
 }
 /** @} */
 #endif
@@ -1679,18 +1685,6 @@ static inline void tc_clear_status(
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
-<<<<<<< HEAD
- *  <tr>
- *    <td>Added support for SAML21/C21</td>
- *  </tr>
- *  <tr>
- *    <td>Added support for SAMD10/D11</td>
- *  </tr>
- *  <tr>
- *    <td>Added support for SAMR21</td>
- *  </tr>
-=======
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *	<tr>
  *    <td>Added support for SAMD21 and do some modifications as below:
  *          \li Clean up in the configuration structure, the counter size

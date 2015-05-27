@@ -106,35 +106,19 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_SLAVE_SELECT_LOW_DETECT</td>
-<<<<<<< HEAD
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_HARDWARE_SLAVE_SELECT</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_ERROR_INTERRUPT</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_SYNC_SCHEME_VERSION_2</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
-=======
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
- *  </tr>
- *  <tr>
- *    <td>FEATURE_SPI_HARDWARE_SLAVE_SELECT</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
- *  </tr>
- *  <tr>
- *    <td>FEATURE_SPI_ERROR_INTERRUPT</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
- *  </tr>
- *  <tr>
- *    <td>FEATURE_SPI_SYNC_SCHEME_VERSION_2</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -1434,14 +1418,7 @@ enum status_code spi_select_slave(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
-<<<<<<< HEAD
- *		<td>Add SAML21/C21 support</td>
- *	</tr>  
- *	<tr>
- *		<td>Add SAMD21 support and added new features as below:
-=======
  *		<td>Added new features as below:
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *             \li Slave select low detect
  *             \li Hardware slave select
  *             \li DMA support </td>
