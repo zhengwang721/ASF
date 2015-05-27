@@ -836,6 +836,9 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bodvdd_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & FUSES_BODVDD_ACTION_Msk)
 			>> FUSES_BODVDD_ACTION_Pos);
+
+	fusebits->bodvdd_hysteresis = (raw_user_row[1] & FUSES_BODVDD_HYST_Msk)
+									>> FUSES_BODVDD_HYST_Pos;
 #else
 	fusebits->bod33_level = (uint8_t)
 				((raw_user_row[0] & SYSCTRL_FUSES_BOD33USERLEVEL_Msk)
