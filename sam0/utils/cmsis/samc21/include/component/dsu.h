@@ -268,7 +268,6 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DSU_DID_OFFSET              0x0018       /**< \brief (DSU_DID offset) Device Identification */
-#define DSU_DID_RESETVALUE          0x00000000ul /**< \brief (DSU_DID reset_value) Device Identification */
 
 #define DSU_DID_DEVSEL_Pos          0            /**< \brief (DSU_DID) Device Select */
 #define DSU_DID_DEVSEL_Msk          (0xFFul << DSU_DID_DEVSEL_Pos)

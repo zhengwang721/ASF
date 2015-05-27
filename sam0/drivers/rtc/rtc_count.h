@@ -696,11 +696,11 @@ struct rtc_count_config {
 	 *  needed for reading. */
 	bool continuously_update;
 #endif
-#if (SAML21)
-		/** Enable count read synchronization. The COUNT value requires
-		 * synchronization when reading. Disabling the synchronization 
-		 * will prevent the COUNT value from displaying the current value. */
-		bool enable_read_sync;
+#if (SAML21 || SAMC21)
+	/** Enable count read synchronization. The COUNT value requires
+	 * synchronization when reading. Disabling the synchronization 
+	 * will prevent the COUNT value from displaying the current value. */
+	bool enable_read_sync;
 #endif
 
 	/** Array of Compare values. Not all Compare values are available in 32-bit
