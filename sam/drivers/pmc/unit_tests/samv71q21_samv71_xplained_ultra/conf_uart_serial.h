@@ -3,7 +3,7 @@
  *
  * \brief Serial USART service configuration.
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,15 +47,6 @@
 #ifndef CONF_USART_SERIAL_H
 #define CONF_USART_SERIAL_H
 
-/** UART Interface */
-#define CONF_UART            CONSOLE_UART
-/** Character length setting */
-#define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
-/** Baudrate setting */
-#define CONF_UART_BAUDRATE   115200
-/** Parity setting */
-#define CONF_UART_PARITY     UART_MR_PAR_NO
-/** Stop bits setting */
-#define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
+/* Intentionally empty */
 
 #endif/* CONF_USART_SERIAL_H_INCLUDED */

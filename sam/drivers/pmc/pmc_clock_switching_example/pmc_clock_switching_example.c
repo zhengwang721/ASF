@@ -229,17 +229,8 @@ static void config_uart_and_pck(uint32_t ul_clock_source,
 		usart_settings.stop_bits= CONF_UART_STOP_BITS;
 		usart_settings.channel_mode= US_MR_CHMODE_NORMAL;
 		usart_init_rs232(CONSOLE_UART, &usart_settings, ul_master_clock);
-		/*const usart_serial_options_t uart_serial_options = {
-			.baudrate = PMC_CLOCK_SWITCHING_EXAMPLE_BAUDRATE,
-	#ifdef CONF_UART_CHAR_LENGTH
-			.charlength = CONF_UART_CHAR_LENGTH,
-	#endif
-			.paritytype = CONF_UART_PARITY,
-	#ifdef CONF_UART_STOP_BITS
-			.stopbits = CONF_UART_STOP_BITS,
-	#endif
-		};
-		stdio_serial_init(CONF_UART, &uart_serial_options);*/
+		usart_enable_tx(CONSOLE_UART);
+		usart_enable_rx(CONSOLE_UART);
 #else
 		const sam_uart_opt_t uart_console_settings = {
 			ul_master_clock, PMC_CLOCK_SWITCHING_EXAMPLE_BAUDRATE,

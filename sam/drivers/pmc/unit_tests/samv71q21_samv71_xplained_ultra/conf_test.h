@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Serial USART service configuration.
+ * \brief Unit test configuration.
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,18 +44,24 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_USART_SERIAL_H
-#define CONF_USART_SERIAL_H
+#ifndef CONF_TEST_H
+#define CONF_TEST_H
 
 /** UART Interface */
-#define CONF_UART            CONSOLE_UART
+#define CONF_TEST_UART       CONSOLE_UART
+/** Baudrate setting */
+#define CONF_TEST_BAUDRATE   115200
 /** Character length setting */
 #define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
-/** Baudrate setting */
-#define CONF_UART_BAUDRATE   115200
 /** Parity setting */
-#define CONF_UART_PARITY     UART_MR_PAR_NO
+#define CONF_TEST_PARITY     UART_MR_PAR_NO
 /** Stop bits setting */
 #define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
 
-#endif/* CONF_USART_SERIAL_H_INCLUDED */
+/** PCK output to pin PCK0 enable
+ *  (disabled by default since output is for debug only and not measured in
+ *  automatically tests)
+ */
+//#define CONF_TEST_PCK_OUTPUT_ENABLE
+
+#endif /* CONF_TEST_H_INCLUDED */
