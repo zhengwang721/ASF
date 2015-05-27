@@ -270,7 +270,7 @@ extern "C" {
  * Define SERCOM USART features set according to different device family.
  * @{
  */
-#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAMDA0) || \
+#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || \
 	(SAMDA1) || defined(__DOXYGEN__)
 /** Usart sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2
@@ -1118,7 +1118,7 @@ static inline void usart_disable_transceiver(
  *		<th>Changelog</th>
  *	</tr>
  *  <tr>
- *		<td>Add support for SAML21 and SAMDA0/DA1(same features as SAMD21)</td>
+ *		<td>Add support for SAML21 and SAMDAx(same features as SAMD21)</td>
  *  </tr>
  *  <tr>
  *		<td>Add support for SAMD10/D11 (same features as SAMD21)</td>
@@ -1259,7 +1259,7 @@ static inline void usart_disable_transceiver(
  *	<tr>
  *		<td>F</td>
  *		<td>04/2015</td>
- *		<td>Add support for SAML21 and SAMDA0/DA1.</td>
+ *		<td>Add support for SAML21 and SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>E</td>

@@ -399,7 +399,7 @@ extern "C" {
  *       supported by the driver now.
  * @{
  */
-#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAMDA0) || (SAMDA1) ||defined(__DOXYGEN__)
+#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAMDA1) ||defined(__DOXYGEN__)
 /** Fast mode plus and high speed support. */
 #  define FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
 /** 10-bit address support. */
@@ -541,7 +541,7 @@ enum i2c_transfer_direction {
  *	<tr>
  *		<td>E</td>
  *		<td>04/2015</td>
- *		<td>Added SAM L21 and SAMDA0/DA1 support.</td>
+ *		<td>Added SAM L21 and SAMDAx support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

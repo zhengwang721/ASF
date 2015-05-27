@@ -676,7 +676,7 @@ static inline void extint_nmi_clear_detected(
  *  <tr>
  *      <td>E</td>
  *      <td>04/2015</td>
- *      <td>Added support for SAML21 and SAMDA0/DA1.</td>
+ *      <td>Added support for SAML21 and SAMDAx.</td>
  *  </tr>
  *  <tr>
  *      <td>D</td>

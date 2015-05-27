@@ -162,7 +162,6 @@
 
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
-			<device-support value="samda0"/>
 			<device-support value="samda1"/>
 		</module>
 

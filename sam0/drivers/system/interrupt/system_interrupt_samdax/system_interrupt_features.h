@@ -76,13 +76,13 @@
  * \brief Table of possible system interrupt/exception vector numbers.
  *
  * Table of all possible interrupt and exception vector indexes within the
- * SAMDA0/DA1 device. Check peripherals configuration in SAMDA0/DA1 datasheet for
+ * SAMDA1 device. Check peripherals configuration in SAMDA1 datasheet for
  * available vector index for specific device.
  *
  */
 #if defined(__DOXYGEN__)
 /** \note The actual enumeration name is "system_interrupt_vector". */
-enum system_interrupt_vector_samda0_da1 {
+enum system_interrupt_vector_samda1 {
 #else
 enum system_interrupt_vector {
 #endif
