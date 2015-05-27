@@ -22,4 +22,23 @@
 
 		<device-support value="sam0"/>
 	</module>
+	<module type="application" id="sam0.applications.clock_fail_detector" caption="CLOCK Failure Detector Example">
+		<info type="description" value="summary">
+		Hardware based XOSC32K external 32KHz crystal oscillator runtime failure detector SAM devices.
+		</info>
+
+		<info type="keyword" value="technology">
+			<keyword value="Clocks"/>
+		</info>
+
+		<info type="gui-flag" value="move-to-root"/>
+
+		<build type="c-source" value="clock_failure_detector.c"/>
+
+		<build type="include-path" value="."/>
+
+		<require idref="sam0.drivers.system"/>
+
+		<device-support value="saml"/>
+	</module>
 </asf>
