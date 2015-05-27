@@ -492,7 +492,7 @@ struct adc_config {
 	bool sampling_time_compensation_enable;
 	/**
 	 * Positive input enabled mask for conversion sequence.
-	 * The sequence start from the lowest input, and go to the next enabled input
+	 * The sequence start from the lowest input,and go to the next enabled input
 	 * automatically when the conversion is done. If no bits are set the
 	 * sequence is disabled.
 	 */
@@ -595,7 +595,7 @@ static inline bool adc_is_syncing(
 /**
  * \brief Enable positive input sequence mask for conversion.
  *
- * The sequence start from the lowest input, and go to the next enabled input
+ * The sequence start from the lowest input,and go to the next enabled input
  * automatically when the conversion is done. If no bits are set the
  * sequence is disabled.
  *

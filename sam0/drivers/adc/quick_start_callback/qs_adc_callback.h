@@ -44,7 +44,7 @@
 /**
  * \page asfdoc_sam0_adc_basic_use_case_callback Quick Start Guide for ADC - Callback
  *
- * In this use case, the ADC will convert 128 samples using interrupt driven conversion.
+ * In this use case, the ADC will be convert 128 samples using interrupt driven conversion.
  * When all samples have been sampled, a callback will be called that signals the main
  * application that conversion is compete.
  *
@@ -89,7 +89,7 @@
  *
  * \subsection asfdoc_sam0_adc_basic_use_case_callback_workflow Workflow
  * -# Create a module software instance structure for the ADC module to store
- *    the ADC driver state while in use.
+ *    the ADC driver state while it is in use.
  *    \snippet qs_adc_callback.c module_inst
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.

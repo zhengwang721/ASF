@@ -62,7 +62,7 @@ extern "C" {
  */
 
 /**
- * Define DAC features set according to different device families.
+ * Define DAC features set according to different device family.
  * @{
  */
 #if (SAMD21 || SAMD10 || SAMD11 || SAMDA0 || SAMDA1)
@@ -93,12 +93,12 @@ enum dac_callback {
 	 *  (requires event triggered mode). */
 	DAC_CALLBACK_DATA_EMPTY,
 
-	/** Callback type for when a DAC channel data underrun condition occurs
+	/** Callback type for when a DAC channel data under-run condition occurs
 	 *  (requires event triggered mode). */
 	DAC_CALLBACK_DATA_UNDERRUN,
 
-	/** Callback type for when a DAC channel write buffer job complete (requires
-	 *  event triggered mode). */
+	/** Callback type for when a DAC channel write buffer job complete.
+	 *  (requires event triggered mode). */
 	DAC_CALLBACK_TRANSFER_COMPLETE,
 #if !defined(__DOXYGEN__)
 	DAC_CALLBACK_N,
