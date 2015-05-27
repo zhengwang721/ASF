@@ -647,6 +647,8 @@ struct nvm_fusebits {
 	bool                              bodvdd_enable;
 	/** BODVDD Action at power on. */
 	enum nvm_bod33_action             bodvdd_action;
+	/* BODVDD Hysteresis at power on*/
+	bool                              bodvdd_hysteresis;
 #else
 	/** BOD33 Threshold level at power on. */
 	uint8_t                           bod33_level;

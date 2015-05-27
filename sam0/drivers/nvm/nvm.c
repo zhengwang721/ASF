@@ -1021,6 +1021,19 @@ enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
 	fusebits[1] &= (~FUSES_BOD33_HYST_Msk);
 	fusebits[1] |= fb->bod33_hysteresis << FUSES_BOD33_HYST_Pos;
 
+#elif (SAMC21)
+	fusebits[0] &= (~FUSES_BODVDDUSERLEVEL_Msk);
+	fusebits[0] |= FUSES_BODVDDUSERLEVEL(fb->bodvdd_level);
+
+	fusebits[0] &= (~FUSES_BODVDD_DIS_Msk);
+	fusebits[0] |= (!fb->bodvdd_enable) << FUSES_BODVDD_DIS_Pos;
+
+	fusebits[0] &= (~FUSES_BODVDD_ACTION_Msk);
+	fusebits[0] |= fb->bodvdd_action << FUSES_BODVDD_ACTION_Pos;
+
+	fusebits[1] &= (~FUSES_BODVDD_HYST_Msk);
+	fusebits[1] |= fb->bodvdd_hysteresis << FUSES_BODVDD_HYST_Pos;
+
 #else
 	fusebits[0] &= (~SYSCTRL_FUSES_BOD33USERLEVEL_Msk);
 	fusebits[0] |= SYSCTRL_FUSES_BOD33USERLEVEL(fb->bod33_level);
@@ -1045,7 +1058,7 @@ enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
 	fusebits[0] &= (~WDT_FUSES_PER_Msk);
 	fusebits[0] |= fb->wdt_timeout_period << WDT_FUSES_PER_Pos;
 
-#if (SAML21)
+#if (SAML21) || (SAMC21)
 	fusebits[1] &= (~WDT_FUSES_WINDOW_Msk);
 	fusebits[1] |= fb->wdt_window_timeout << WDT_FUSES_WINDOW_Pos;
 #else
