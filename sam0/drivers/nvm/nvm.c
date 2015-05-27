@@ -821,7 +821,9 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod33_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & FUSES_BOD33_ACTION_Msk)
 			>> FUSES_BOD33_ACTION_Pos);
-<<<<<<< HEAD
+	fusebits->bod33_hysteresis = (bool)
+			((raw_user_row[1] & FUSES_BOD33_HYST_Msk)
+			>> FUSES_BOD33_HYST_Pos);
 #elif (SAMC21)
 	fusebits->bodvdd_level = (uint8_t)
 			((raw_user_row[0] & FUSES_BODVDDUSERLEVEL_Msk)
@@ -834,12 +836,6 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bodvdd_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & FUSES_BODVDD_ACTION_Msk)
 			>> FUSES_BODVDD_ACTION_Pos);
-=======
-
-	fusebits->bod33_hysteresis = (bool)
-			((raw_user_row[1] & FUSES_BOD33_HYST_Msk)
-			>> FUSES_BOD33_HYST_Pos);
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 #else
 	fusebits->bod33_level = (uint8_t)
 				((raw_user_row[0] & SYSCTRL_FUSES_BOD33USERLEVEL_Msk)
@@ -853,8 +849,6 @@ static void _nvm_translate_raw_fusebits_to_struct (
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_ACTION_Msk)
 			>> SYSCTRL_FUSES_BOD33_ACTION_Pos);
 
-<<<<<<< HEAD
-=======
 	fusebits->bod33_hysteresis = (bool)
 			((raw_user_row[1] & SYSCTRL_FUSES_BOD33_HYST_Msk)
 			>> SYSCTRL_FUSES_BOD33_HYST_Pos);
@@ -891,7 +885,6 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod12_hysteresis = (bool)
 			((raw_user_row[1] & FUSES_BOD12_HYST_Msk)
 			>> FUSES_BOD12_HYST_Pos);
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
 #endif
 
 	fusebits->wdt_enable = (bool)

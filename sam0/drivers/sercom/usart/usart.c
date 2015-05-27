@@ -556,13 +556,8 @@ enum status_code usart_read_wait(
  * \param[in]  tx_data  Pointer to data to transmit
  * \param[in]  length   Number of characters to transmit
  *
-<<<<<<< HEAD
- * \note if using 9-bit data, the array that *tx_data point to should be defined
- *       as uint16_t array and should be casted to uint8_t* pointer. Because it
-=======
  * \note If using 9-bit data, the array that *tx_data point to should be defined 
  *       as uint16_t array and should be casted to uint8_t* pointer. Because it 
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *       is an address pointer, the highest byte is not discarded. For example:
  *   \code
           #define TX_LEN 3
@@ -655,13 +650,8 @@ enum status_code usart_write_buffer_wait(
  * \param[out] rx_data  Pointer to receive buffer
  * \param[in]  length   Number of characters to receive
  *
-<<<<<<< HEAD
- * \note if using 9-bit data, the array that *rx_data point to should be defined
- *       as uint16_t array and should be casted to uint8_t* pointer. Because it
-=======
  * \note If using 9-bit data, the array that *rx_data point to should be defined 
  *       as uint16_t array and should be casted to uint8_t* pointer. Because it 
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *       is an address pointer, the highest byte is not discarded. For example:
  *   \code
           #define RX_LEN 3

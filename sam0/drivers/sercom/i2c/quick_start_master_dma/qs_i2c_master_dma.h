@@ -48,11 +48,8 @@
  *    - SAMD21 Xplained Pro
  *    - SAMR21 Xplained Pro
  *    - SAML21 Xplained Pro
-<<<<<<< HEAD
- *    - SAMC21 Xplained Pro
-=======
  *    - SAMDA1 Xplained Pro
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
+ *    - SAMC21 Xplained Pro
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Master mode

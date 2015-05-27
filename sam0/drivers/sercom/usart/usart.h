@@ -99,72 +99,40 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_SYNC_SCHEME_V2</td>
-<<<<<<< HEAD
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_OVER_SAMPLE</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_HARDWARE_FLOW_CONTROL</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IRDA</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_LIN_SLAVE</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_COLLISION_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_START_FRAME_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_RS485</td>
  *    <td>FEATURE_USART_LIN_MASTER</td>
  *    <td>SAM C21</td>
-=======
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
- *  </tr>
- *  <tr>
- *    <td>FEATURE_USART_OVER_SAMPLE</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
- *  </tr>
- *  <tr>
- *    <td>FEATURE_USART_HARDWARE_FLOW_CONTROL</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
- *  </tr>
- *  <tr>
- *    <td>FEATURE_USART_IRDA</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
- *  </tr>
- *  <tr>
- *    <td>FEATURE_USART_LIN_SLAVE</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
- *  </tr>
- *  <tr>
- *    <td>FEATURE_USART_COLLISION_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
- *  </tr>
- *  <tr>
- *    <td>FEATURE_USART_START_FRAME_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
- *  </tr>
- *  <tr>
- *    <td>FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1</td>
->>>>>>> bfd46b1bcf4434fbe2c43016cce446a6bb18ad6f
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
