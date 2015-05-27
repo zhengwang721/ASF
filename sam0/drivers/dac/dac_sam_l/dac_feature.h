@@ -64,7 +64,7 @@
  * The following devices can use this module:
  *  - Atmel | SMART SAM L21
  *
- * The outline of this documentation is:
+ * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_dac_prerequisites
  *  - \ref asfdoc_sam0_dac_module_overview
  *  - \ref asfdoc_sam0_dac_special_considerations
@@ -138,7 +138,7 @@
  * value. VOUT0 is the positive output and VOUT1 the negative output.
  *
  * VOUT0 signal is internally connected so that it can be used as input for
- * AC or ADC or OPAMP modules when DAC0 is enabled.
+ * AC, ADC, or OPAMP modules when DAC0 is enabled.
  * \note The pin VOUT0 will be dedicated to internal input and cannot be
  * configured as alternate function.
  *
@@ -570,7 +570,7 @@ bool dac_chan_is_end_of_conversion(
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_dac_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_dac_basic_use_case
@@ -598,8 +598,8 @@ bool dac_chan_is_end_of_conversion(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
- *		<td>04/2015</td>
+ *		<td>42450A</td>
+ *		<td>06/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

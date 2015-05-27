@@ -70,7 +70,7 @@ struct dac_module *_dac_instances[DAC_INST_NUM];
  * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
  *                                     mode was specified with a DAC instance
  *                                     configured in non-event mode
- * \retval STATUS_BUSY      The DAC is too busy to accept new job
+ * \retval STATUS_BUSY      The DAC is busy and can not accept a new job
  */
 enum status_code dac_chan_write_buffer_job(
 		struct dac_module *const module_inst,
@@ -145,7 +145,7 @@ enum status_code dac_chan_write_buffer_job(
  * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
  *                                     mode was specified with a DAC instance
  *                                     configured in non-event mode
- * \retval STATUS_BUSY      The DAC is too busy to accept new job
+ * \retval STATUS_BUSY      The DAC is busy and can not accept a new job
  */
 enum status_code dac_chan_write_job(
 		struct dac_module *const module_inst,

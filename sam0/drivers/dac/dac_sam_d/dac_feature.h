@@ -588,28 +588,28 @@ void dac_chan_disable_output_buffer(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>E</td>
+ *		<td>42110E</td>
  *		<td>04/2015</td>
- *		<td>Add SAMDA0/DA1 support.</td>
+ *		<td>Add SAMDA0/DA1 support</td>
  *	</tr>
  *	<tr>
- *		<td>D</td>
+ *		<td>42110D</td>
  *		<td>12/2014</td>
- *		<td>Add SAMD10/D11 support.</td>
+ *		<td>Add SAMD10/D11 support</td>
  *	</tr>
  *	<tr>
- *		<td>C</td>
+ *		<td>42110C</td>
  *		<td>01/2014</td>
- *		<td>Add SAMD21 support.</td>
+ *		<td>Add SAMD21 support</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
+ *		<td>42110B</td>
  *		<td>06/2013</td>
  *		<td>Added additional documentation on the event system. Corrected
  *          documentation typos.</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42110A</td>
  *		<td>06/2013</td>
  *		<td>Initial release</td>
  *	</tr>

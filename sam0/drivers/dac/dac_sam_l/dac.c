@@ -124,7 +124,7 @@ bool dac_is_syncing(
  *  instance of the configuration structures before being modified by the
  *  user application.
  *
- *  The default configuration is:
+ *  The default configuration is as follows:
  *   \li 1V from internal bandgap reference
  *   \li Drive the DAC output to the VOUT pin
  *   \li Right adjust data
@@ -611,7 +611,7 @@ enum status_code dac_chan_write(
  * \return Status of the operation.
  * \retval STATUS_OK           If the data was written or no data conversion required
  * \retval STATUS_ERR_UNSUPPORTED_DEV  The DAC is not configured as using event trigger
- * \retval STATUS_BUSY                 The DAC is busy to convert
+ * \retval STATUS_BUSY                 The DAC is busy and can not do the conversion
  */
 enum status_code dac_chan_write_buffer_wait(
 		struct dac_module *const module_inst,
