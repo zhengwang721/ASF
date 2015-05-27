@@ -1040,7 +1040,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_adc_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_adc_basic_use_case
@@ -1059,34 +1059,34 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *	</tr>
  * \if DEVICE_SAML21_SUPPORT
  *  <tr>
- *      <td>A</td>
- *      <td>04/2015</td>
- *      <td>Initial release.</td>
+ *      <td>42451A</td>
+ *      <td>06/2015</td>
+ *      <td>Initial release</td>
  * </tr>
  * \else
  *	<tr>
- *		<td>E</td>
+ *		<td>42109E</td>
  *		<td>04/2015</td>
- *		<td>Added support for SAMDA0/DA1.</td>
+ *		<td>Added support for SAMDA0/DA1</td>
  *	</tr>
  *	<tr>
- *		<td>D</td>
+ *		<td>42109D</td>
  *		<td>12/2014</td>
- *		<td>Added support for SAMR21 and SAMD10/D11.</td>
+ *		<td>Added support for SAMR21 and SAMD10/D11</td>
  *	</tr>
  *	<tr>
- *		<td>C</td>
+ *		<td>42109C</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAMD21.</td>
+ *		<td>Added support for SAMD21</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
+ *		<td>42109B</td>
  *		<td>06/2013</td>
  *		<td>Added additional documentation on the event system. Corrected
  *          documentation typos.</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42109A</td>
  *		<td>06/2013</td>
  *		<td>Initial release</td>
  *	</tr>
