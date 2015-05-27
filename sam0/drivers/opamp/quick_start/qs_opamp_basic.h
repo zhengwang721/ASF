@@ -72,7 +72,7 @@
  * -# Initialize the OPAMP module.
  *    \snippet qs_opamp_basic.c setup_2
  *
- * -# Setting and fill the OPAMP0 configuration struct with the default settings.
+ * -# Initialize the OPAMP0 configuration struct with the module's default values.
  *    \snippet qs_opamp_basic.c setup_3
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
