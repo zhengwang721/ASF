@@ -51,7 +51,7 @@
 /*@{*/
 
 #define RSTC_U2239
-#define REV_RSTC                    0x200
+#define REV_RSTC                    0x202
 
 /* -------- RSTC_RCAUSE : (RSTC Offset: 0x00) (R/   8) Reset Cause -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

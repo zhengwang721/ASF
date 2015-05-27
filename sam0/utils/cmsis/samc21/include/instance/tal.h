@@ -94,12 +94,8 @@
 #define REG_TAL_INTSTATUS28        (0x4200603CU) /**< \brief (TAL) Interrupt 28 Status */
 #define REG_TAL_INTSTATUS29        (0x4200603DU) /**< \brief (TAL) Interrupt 29 Status */
 #define REG_TAL_INTSTATUS30        (0x4200603EU) /**< \brief (TAL) Interrupt 30 Status */
-#define REG_TAL_DMACPUSEL0         (0x42006040U) /**< \brief (TAL) DMA Channel Interrupts CPU Select 0 */
-#define REG_TAL_EVCPUSEL0          (0x42006048U) /**< \brief (TAL) EVSYS Channel Interrupts CPU Select 0 */
-#define REG_TAL_EICCPUSEL0         (0x42006050U) /**< \brief (TAL) EIC External Interrupts CPU Select 0 */
-#define REG_TAL_INTCPUSEL0         (0x42006058U) /**< \brief (TAL) Interrupts CPU Select 0 */
-#define REG_TAL_INTCPUSEL1         (0x4200605CU) /**< \brief (TAL) Interrupts CPU Select 1 */
 #define REG_TAL_IRQTRIG            (0x42006060U) /**< \brief (TAL) Interrupt Trigger */
+#define REG_TAL_CPUIRQS0           (0x42006064U) /**< \brief (TAL) Interrupt Status for CPU 0 */
 #else
 #define REG_TAL_CTRLA              (*(RwReg8 *)0x42006000U) /**< \brief (TAL) Control A */
 #define REG_TAL_RSTCTRL            (*(RwReg8 *)0x42006004U) /**< \brief (TAL) Reset Control */
@@ -149,12 +145,8 @@
 #define REG_TAL_INTSTATUS28        (*(RoReg8 *)0x4200603CU) /**< \brief (TAL) Interrupt 28 Status */
 #define REG_TAL_INTSTATUS29        (*(RoReg8 *)0x4200603DU) /**< \brief (TAL) Interrupt 29 Status */
 #define REG_TAL_INTSTATUS30        (*(RoReg8 *)0x4200603EU) /**< \brief (TAL) Interrupt 30 Status */
-#define REG_TAL_DMACPUSEL0         (*(RwReg  *)0x42006040U) /**< \brief (TAL) DMA Channel Interrupts CPU Select 0 */
-#define REG_TAL_EVCPUSEL0          (*(RwReg  *)0x42006048U) /**< \brief (TAL) EVSYS Channel Interrupts CPU Select 0 */
-#define REG_TAL_EICCPUSEL0         (*(RwReg  *)0x42006050U) /**< \brief (TAL) EIC External Interrupts CPU Select 0 */
-#define REG_TAL_INTCPUSEL0         (*(RwReg  *)0x42006058U) /**< \brief (TAL) Interrupts CPU Select 0 */
-#define REG_TAL_INTCPUSEL1         (*(RwReg  *)0x4200605CU) /**< \brief (TAL) Interrupts CPU Select 1 */
 #define REG_TAL_IRQTRIG            (*(RwReg16*)0x42006060U) /**< \brief (TAL) Interrupt Trigger */
+#define REG_TAL_CPUIRQS0           (*(RoReg  *)0x42006064U) /**< \brief (TAL) Interrupt Status for CPU 0 */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for TAL peripheral ========== */

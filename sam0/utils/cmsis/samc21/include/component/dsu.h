@@ -51,7 +51,7 @@
 /*@{*/
 
 #define DSU_U2209
-#define REV_DSU                     0x230
+#define REV_DSU                     0x250
 
 /* -------- DSU_CTRL : (DSU Offset: 0x0000) ( /W  8) Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -150,7 +150,7 @@ typedef union {
 #define DSU_STATUSB_DCCD1           (1 << DSU_STATUSB_DCCD1_Pos)
 #define DSU_STATUSB_DCCD_Pos        2            /**< \brief (DSU_STATUSB) Debug Communication Channel x Dirty */
 #define DSU_STATUSB_DCCD_Msk        (0x3ul << DSU_STATUSB_DCCD_Pos)
-#define DSU_STATUSB_DCCD(value)     ((DSU_STATUSB_DCCD_Msk & ((value) << DSU_STATUSB_DCCD_Pos)))
+#define DSU_STATUSB_DCCD(value)     (DSU_STATUSB_DCCD_Msk & ((value) << DSU_STATUSB_DCCD_Pos))
 #define DSU_STATUSB_HPE_Pos         4            /**< \brief (DSU_STATUSB) Hot-Plugging Enable */
 #define DSU_STATUSB_HPE             (0x1ul << DSU_STATUSB_HPE_Pos)
 #define DSU_STATUSB_MASK            0x1Ful       /**< \brief (DSU_STATUSB) MASK Register */
@@ -171,7 +171,7 @@ typedef union {
 
 #define DSU_STATUSC_STATE_Pos       0            /**< \brief (DSU_STATUSC) State */
 #define DSU_STATUSC_STATE_Msk       (0x7ul << DSU_STATUSC_STATE_Pos)
-#define DSU_STATUSC_STATE(value)    ((DSU_STATUSC_STATE_Msk & ((value) << DSU_STATUSC_STATE_Pos)))
+#define DSU_STATUSC_STATE(value)    (DSU_STATUSC_STATE_Msk & ((value) << DSU_STATUSC_STATE_Pos))
 #define DSU_STATUSC_MASK            0x07ul       /**< \brief (DSU_STATUSC) MASK Register */
 
 /* -------- DSU_ADDR : (DSU Offset: 0x0004) (R/W 32) Address -------- */
@@ -190,10 +190,10 @@ typedef union {
 
 #define DSU_ADDR_AMOD_Pos           0            /**< \brief (DSU_ADDR) Access Mode */
 #define DSU_ADDR_AMOD_Msk           (0x3ul << DSU_ADDR_AMOD_Pos)
-#define DSU_ADDR_AMOD(value)        ((DSU_ADDR_AMOD_Msk & ((value) << DSU_ADDR_AMOD_Pos)))
+#define DSU_ADDR_AMOD(value)        (DSU_ADDR_AMOD_Msk & ((value) << DSU_ADDR_AMOD_Pos))
 #define DSU_ADDR_ADDR_Pos           2            /**< \brief (DSU_ADDR) Address */
 #define DSU_ADDR_ADDR_Msk           (0x3FFFFFFFul << DSU_ADDR_ADDR_Pos)
-#define DSU_ADDR_ADDR(value)        ((DSU_ADDR_ADDR_Msk & ((value) << DSU_ADDR_ADDR_Pos)))
+#define DSU_ADDR_ADDR(value)        (DSU_ADDR_ADDR_Msk & ((value) << DSU_ADDR_ADDR_Pos))
 #define DSU_ADDR_MASK               0xFFFFFFFFul /**< \brief (DSU_ADDR) MASK Register */
 
 /* -------- DSU_LENGTH : (DSU Offset: 0x0008) (R/W 32) Length -------- */
@@ -212,7 +212,7 @@ typedef union {
 
 #define DSU_LENGTH_LENGTH_Pos       2            /**< \brief (DSU_LENGTH) Length */
 #define DSU_LENGTH_LENGTH_Msk       (0x3FFFFFFFul << DSU_LENGTH_LENGTH_Pos)
-#define DSU_LENGTH_LENGTH(value)    ((DSU_LENGTH_LENGTH_Msk & ((value) << DSU_LENGTH_LENGTH_Pos)))
+#define DSU_LENGTH_LENGTH(value)    (DSU_LENGTH_LENGTH_Msk & ((value) << DSU_LENGTH_LENGTH_Pos))
 #define DSU_LENGTH_MASK             0xFFFFFFFCul /**< \brief (DSU_LENGTH) MASK Register */
 
 /* -------- DSU_DATA : (DSU Offset: 0x000C) (R/W 32) Data -------- */
@@ -230,7 +230,7 @@ typedef union {
 
 #define DSU_DATA_DATA_Pos           0            /**< \brief (DSU_DATA) Data */
 #define DSU_DATA_DATA_Msk           (0xFFFFFFFFul << DSU_DATA_DATA_Pos)
-#define DSU_DATA_DATA(value)        ((DSU_DATA_DATA_Msk & ((value) << DSU_DATA_DATA_Pos)))
+#define DSU_DATA_DATA(value)        (DSU_DATA_DATA_Msk & ((value) << DSU_DATA_DATA_Pos))
 #define DSU_DATA_MASK               0xFFFFFFFFul /**< \brief (DSU_DATA) MASK Register */
 
 /* -------- DSU_DCC : (DSU Offset: 0x0010) (R/W 32) Debug Communication Channel n -------- */
@@ -248,7 +248,7 @@ typedef union {
 
 #define DSU_DCC_DATA_Pos            0            /**< \brief (DSU_DCC) Data */
 #define DSU_DCC_DATA_Msk            (0xFFFFFFFFul << DSU_DCC_DATA_Pos)
-#define DSU_DCC_DATA(value)         ((DSU_DCC_DATA_Msk & ((value) << DSU_DCC_DATA_Pos)))
+#define DSU_DCC_DATA(value)         (DSU_DCC_DATA_Msk & ((value) << DSU_DCC_DATA_Pos))
 #define DSU_DCC_MASK                0xFFFFFFFFul /**< \brief (DSU_DCC) MASK Register */
 
 /* -------- DSU_DID : (DSU Offset: 0x0018) (R/  32) Device Identification -------- */
@@ -268,26 +268,27 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DSU_DID_OFFSET              0x0018       /**< \brief (DSU_DID offset) Device Identification */
+#define DSU_DID_RESETVALUE          0x00000000ul /**< \brief (DSU_DID reset_value) Device Identification */
 
 #define DSU_DID_DEVSEL_Pos          0            /**< \brief (DSU_DID) Device Select */
 #define DSU_DID_DEVSEL_Msk          (0xFFul << DSU_DID_DEVSEL_Pos)
-#define DSU_DID_DEVSEL(value)       ((DSU_DID_DEVSEL_Msk & ((value) << DSU_DID_DEVSEL_Pos)))
+#define DSU_DID_DEVSEL(value)       (DSU_DID_DEVSEL_Msk & ((value) << DSU_DID_DEVSEL_Pos))
 #define DSU_DID_REVISION_Pos        8            /**< \brief (DSU_DID) Revision Number */
 #define DSU_DID_REVISION_Msk        (0xFul << DSU_DID_REVISION_Pos)
-#define DSU_DID_REVISION(value)     ((DSU_DID_REVISION_Msk & ((value) << DSU_DID_REVISION_Pos)))
+#define DSU_DID_REVISION(value)     (DSU_DID_REVISION_Msk & ((value) << DSU_DID_REVISION_Pos))
 #define DSU_DID_DIE_Pos             12           /**< \brief (DSU_DID) Die Number */
 #define DSU_DID_DIE_Msk             (0xFul << DSU_DID_DIE_Pos)
-#define DSU_DID_DIE(value)          ((DSU_DID_DIE_Msk & ((value) << DSU_DID_DIE_Pos)))
+#define DSU_DID_DIE(value)          (DSU_DID_DIE_Msk & ((value) << DSU_DID_DIE_Pos))
 #define DSU_DID_SERIES_Pos          16           /**< \brief (DSU_DID) Series */
 #define DSU_DID_SERIES_Msk          (0x3Ful << DSU_DID_SERIES_Pos)
-#define DSU_DID_SERIES(value)       ((DSU_DID_SERIES_Msk & ((value) << DSU_DID_SERIES_Pos)))
+#define DSU_DID_SERIES(value)       (DSU_DID_SERIES_Msk & ((value) << DSU_DID_SERIES_Pos))
 #define   DSU_DID_SERIES_0_Val            0x0ul  /**< \brief (DSU_DID) Cortex-M0+ processor, basic feature set */
 #define   DSU_DID_SERIES_1_Val            0x1ul  /**< \brief (DSU_DID) Cortex-M0+ processor, CAN */
 #define DSU_DID_SERIES_0            (DSU_DID_SERIES_0_Val          << DSU_DID_SERIES_Pos)
 #define DSU_DID_SERIES_1            (DSU_DID_SERIES_1_Val          << DSU_DID_SERIES_Pos)
 #define DSU_DID_FAMILY_Pos          23           /**< \brief (DSU_DID) Family */
 #define DSU_DID_FAMILY_Msk          (0x1Ful << DSU_DID_FAMILY_Pos)
-#define DSU_DID_FAMILY(value)       ((DSU_DID_FAMILY_Msk & ((value) << DSU_DID_FAMILY_Pos)))
+#define DSU_DID_FAMILY(value)       (DSU_DID_FAMILY_Msk & ((value) << DSU_DID_FAMILY_Pos))
 #define   DSU_DID_FAMILY_0_Val            0x0ul  /**< \brief (DSU_DID) General purpose microcontroller */
 #define   DSU_DID_FAMILY_1_Val            0x1ul  /**< \brief (DSU_DID) PicoPower */
 #define   DSU_DID_FAMILY_2_Val            0x2ul  /**< \brief (DSU_DID) 5V Industrial */
@@ -296,7 +297,7 @@ typedef union {
 #define DSU_DID_FAMILY_2            (DSU_DID_FAMILY_2_Val          << DSU_DID_FAMILY_Pos)
 #define DSU_DID_PROCESSOR_Pos       28           /**< \brief (DSU_DID) Processor */
 #define DSU_DID_PROCESSOR_Msk       (0xFul << DSU_DID_PROCESSOR_Pos)
-#define DSU_DID_PROCESSOR(value)    ((DSU_DID_PROCESSOR_Msk & ((value) << DSU_DID_PROCESSOR_Pos)))
+#define DSU_DID_PROCESSOR(value)    (DSU_DID_PROCESSOR_Msk & ((value) << DSU_DID_PROCESSOR_Pos))
 #define   DSU_DID_PROCESSOR_0_Val         0x0ul  /**< \brief (DSU_DID) Cortex-M0 */
 #define   DSU_DID_PROCESSOR_1_Val         0x1ul  /**< \brief (DSU_DID) Cortex-M0+ */
 #define   DSU_DID_PROCESSOR_2_Val         0x2ul  /**< \brief (DSU_DID) Cortex-M3 */
@@ -322,7 +323,7 @@ typedef union {
 
 #define DSU_DCFG_DCFG_Pos           0            /**< \brief (DSU_DCFG) Device Configuration */
 #define DSU_DCFG_DCFG_Msk           (0xFFFFFFFFul << DSU_DCFG_DCFG_Pos)
-#define DSU_DCFG_DCFG(value)        ((DSU_DCFG_DCFG_Msk & ((value) << DSU_DCFG_DCFG_Pos)))
+#define DSU_DCFG_DCFG(value)        (DSU_DCFG_DCFG_Msk & ((value) << DSU_DCFG_DCFG_Pos))
 #define DSU_DCFG_MASK               0xFFFFFFFFul /**< \brief (DSU_DCFG) MASK Register */
 
 /* -------- DSU_ENTRY : (DSU Offset: 0x1000) (R/  32) Coresight ROM Table Entry n -------- */
@@ -346,7 +347,7 @@ typedef union {
 #define DSU_ENTRY_FMT               (0x1ul << DSU_ENTRY_FMT_Pos)
 #define DSU_ENTRY_ADDOFF_Pos        12           /**< \brief (DSU_ENTRY) Address Offset */
 #define DSU_ENTRY_ADDOFF_Msk        (0xFFFFFul << DSU_ENTRY_ADDOFF_Pos)
-#define DSU_ENTRY_ADDOFF(value)     ((DSU_ENTRY_ADDOFF_Msk & ((value) << DSU_ENTRY_ADDOFF_Pos)))
+#define DSU_ENTRY_ADDOFF(value)     (DSU_ENTRY_ADDOFF_Msk & ((value) << DSU_ENTRY_ADDOFF_Pos))
 #define DSU_ENTRY_MASK              0xFFFFF003ul /**< \brief (DSU_ENTRY) MASK Register */
 
 /* -------- DSU_END : (DSU Offset: 0x1008) (R/  32) Coresight ROM Table End -------- */
@@ -364,7 +365,7 @@ typedef union {
 
 #define DSU_END_END_Pos             0            /**< \brief (DSU_END) End Marker */
 #define DSU_END_END_Msk             (0xFFFFFFFFul << DSU_END_END_Pos)
-#define DSU_END_END(value)          ((DSU_END_END_Msk & ((value) << DSU_END_END_Pos)))
+#define DSU_END_END(value)          (DSU_END_END_Msk & ((value) << DSU_END_END_Pos))
 #define DSU_END_MASK                0xFFFFFFFFul /**< \brief (DSU_END) MASK Register */
 
 /* -------- DSU_MEMTYPE : (DSU Offset: 0x1FCC) (R/  32) Coresight ROM Table Memory Type -------- */
@@ -402,10 +403,10 @@ typedef union {
 
 #define DSU_PID4_JEPCC_Pos          0            /**< \brief (DSU_PID4) JEP-106 Continuation Code */
 #define DSU_PID4_JEPCC_Msk          (0xFul << DSU_PID4_JEPCC_Pos)
-#define DSU_PID4_JEPCC(value)       ((DSU_PID4_JEPCC_Msk & ((value) << DSU_PID4_JEPCC_Pos)))
+#define DSU_PID4_JEPCC(value)       (DSU_PID4_JEPCC_Msk & ((value) << DSU_PID4_JEPCC_Pos))
 #define DSU_PID4_FKBC_Pos           4            /**< \brief (DSU_PID4) 4KB count */
 #define DSU_PID4_FKBC_Msk           (0xFul << DSU_PID4_FKBC_Pos)
-#define DSU_PID4_FKBC(value)        ((DSU_PID4_FKBC_Msk & ((value) << DSU_PID4_FKBC_Pos)))
+#define DSU_PID4_FKBC(value)        (DSU_PID4_FKBC_Msk & ((value) << DSU_PID4_FKBC_Pos))
 #define DSU_PID4_MASK               0x000000FFul /**< \brief (DSU_PID4) MASK Register */
 
 /* -------- DSU_PID5 : (DSU Offset: 0x1FD4) (R/  32) Peripheral Identification 5 -------- */
@@ -454,7 +455,7 @@ typedef union {
 
 #define DSU_PID0_PARTNBL_Pos        0            /**< \brief (DSU_PID0) Part Number Low */
 #define DSU_PID0_PARTNBL_Msk        (0xFFul << DSU_PID0_PARTNBL_Pos)
-#define DSU_PID0_PARTNBL(value)     ((DSU_PID0_PARTNBL_Msk & ((value) << DSU_PID0_PARTNBL_Pos)))
+#define DSU_PID0_PARTNBL(value)     (DSU_PID0_PARTNBL_Msk & ((value) << DSU_PID0_PARTNBL_Pos))
 #define DSU_PID0_MASK               0x000000FFul /**< \brief (DSU_PID0) MASK Register */
 
 /* -------- DSU_PID1 : (DSU Offset: 0x1FE4) (R/  32) Peripheral Identification 1 -------- */
@@ -474,10 +475,10 @@ typedef union {
 
 #define DSU_PID1_PARTNBH_Pos        0            /**< \brief (DSU_PID1) Part Number High */
 #define DSU_PID1_PARTNBH_Msk        (0xFul << DSU_PID1_PARTNBH_Pos)
-#define DSU_PID1_PARTNBH(value)     ((DSU_PID1_PARTNBH_Msk & ((value) << DSU_PID1_PARTNBH_Pos)))
+#define DSU_PID1_PARTNBH(value)     (DSU_PID1_PARTNBH_Msk & ((value) << DSU_PID1_PARTNBH_Pos))
 #define DSU_PID1_JEPIDCL_Pos        4            /**< \brief (DSU_PID1) Low part of the JEP-106 Identity Code */
 #define DSU_PID1_JEPIDCL_Msk        (0xFul << DSU_PID1_JEPIDCL_Pos)
-#define DSU_PID1_JEPIDCL(value)     ((DSU_PID1_JEPIDCL_Msk & ((value) << DSU_PID1_JEPIDCL_Pos)))
+#define DSU_PID1_JEPIDCL(value)     (DSU_PID1_JEPIDCL_Msk & ((value) << DSU_PID1_JEPIDCL_Pos))
 #define DSU_PID1_MASK               0x000000FFul /**< \brief (DSU_PID1) MASK Register */
 
 /* -------- DSU_PID2 : (DSU Offset: 0x1FE8) (R/  32) Peripheral Identification 2 -------- */
@@ -498,12 +499,12 @@ typedef union {
 
 #define DSU_PID2_JEPIDCH_Pos        0            /**< \brief (DSU_PID2) JEP-106 Identity Code High */
 #define DSU_PID2_JEPIDCH_Msk        (0x7ul << DSU_PID2_JEPIDCH_Pos)
-#define DSU_PID2_JEPIDCH(value)     ((DSU_PID2_JEPIDCH_Msk & ((value) << DSU_PID2_JEPIDCH_Pos)))
+#define DSU_PID2_JEPIDCH(value)     (DSU_PID2_JEPIDCH_Msk & ((value) << DSU_PID2_JEPIDCH_Pos))
 #define DSU_PID2_JEPU_Pos           3            /**< \brief (DSU_PID2) JEP-106 Identity Code is used */
 #define DSU_PID2_JEPU               (0x1ul << DSU_PID2_JEPU_Pos)
 #define DSU_PID2_REVISION_Pos       4            /**< \brief (DSU_PID2) Revision Number */
 #define DSU_PID2_REVISION_Msk       (0xFul << DSU_PID2_REVISION_Pos)
-#define DSU_PID2_REVISION(value)    ((DSU_PID2_REVISION_Msk & ((value) << DSU_PID2_REVISION_Pos)))
+#define DSU_PID2_REVISION(value)    (DSU_PID2_REVISION_Msk & ((value) << DSU_PID2_REVISION_Pos))
 #define DSU_PID2_MASK               0x000000FFul /**< \brief (DSU_PID2) MASK Register */
 
 /* -------- DSU_PID3 : (DSU Offset: 0x1FEC) (R/  32) Peripheral Identification 3 -------- */
@@ -523,10 +524,10 @@ typedef union {
 
 #define DSU_PID3_CUSMOD_Pos         0            /**< \brief (DSU_PID3) ARM CUSMOD */
 #define DSU_PID3_CUSMOD_Msk         (0xFul << DSU_PID3_CUSMOD_Pos)
-#define DSU_PID3_CUSMOD(value)      ((DSU_PID3_CUSMOD_Msk & ((value) << DSU_PID3_CUSMOD_Pos)))
+#define DSU_PID3_CUSMOD(value)      (DSU_PID3_CUSMOD_Msk & ((value) << DSU_PID3_CUSMOD_Pos))
 #define DSU_PID3_REVAND_Pos         4            /**< \brief (DSU_PID3) Revision Number */
 #define DSU_PID3_REVAND_Msk         (0xFul << DSU_PID3_REVAND_Pos)
-#define DSU_PID3_REVAND(value)      ((DSU_PID3_REVAND_Msk & ((value) << DSU_PID3_REVAND_Pos)))
+#define DSU_PID3_REVAND(value)      (DSU_PID3_REVAND_Msk & ((value) << DSU_PID3_REVAND_Pos))
 #define DSU_PID3_MASK               0x000000FFul /**< \brief (DSU_PID3) MASK Register */
 
 /* -------- DSU_CID0 : (DSU Offset: 0x1FF0) (R/  32) Component Identification 0 -------- */
@@ -545,7 +546,7 @@ typedef union {
 
 #define DSU_CID0_PREAMBLEB0_Pos     0            /**< \brief (DSU_CID0) Preamble Byte 0 */
 #define DSU_CID0_PREAMBLEB0_Msk     (0xFFul << DSU_CID0_PREAMBLEB0_Pos)
-#define DSU_CID0_PREAMBLEB0(value)  ((DSU_CID0_PREAMBLEB0_Msk & ((value) << DSU_CID0_PREAMBLEB0_Pos)))
+#define DSU_CID0_PREAMBLEB0(value)  (DSU_CID0_PREAMBLEB0_Msk & ((value) << DSU_CID0_PREAMBLEB0_Pos))
 #define DSU_CID0_MASK               0x000000FFul /**< \brief (DSU_CID0) MASK Register */
 
 /* -------- DSU_CID1 : (DSU Offset: 0x1FF4) (R/  32) Component Identification 1 -------- */
@@ -565,10 +566,10 @@ typedef union {
 
 #define DSU_CID1_PREAMBLE_Pos       0            /**< \brief (DSU_CID1) Preamble */
 #define DSU_CID1_PREAMBLE_Msk       (0xFul << DSU_CID1_PREAMBLE_Pos)
-#define DSU_CID1_PREAMBLE(value)    ((DSU_CID1_PREAMBLE_Msk & ((value) << DSU_CID1_PREAMBLE_Pos)))
+#define DSU_CID1_PREAMBLE(value)    (DSU_CID1_PREAMBLE_Msk & ((value) << DSU_CID1_PREAMBLE_Pos))
 #define DSU_CID1_CCLASS_Pos         4            /**< \brief (DSU_CID1) Component Class */
 #define DSU_CID1_CCLASS_Msk         (0xFul << DSU_CID1_CCLASS_Pos)
-#define DSU_CID1_CCLASS(value)      ((DSU_CID1_CCLASS_Msk & ((value) << DSU_CID1_CCLASS_Pos)))
+#define DSU_CID1_CCLASS(value)      (DSU_CID1_CCLASS_Msk & ((value) << DSU_CID1_CCLASS_Pos))
 #define DSU_CID1_MASK               0x000000FFul /**< \brief (DSU_CID1) MASK Register */
 
 /* -------- DSU_CID2 : (DSU Offset: 0x1FF8) (R/  32) Component Identification 2 -------- */
@@ -587,7 +588,7 @@ typedef union {
 
 #define DSU_CID2_PREAMBLEB2_Pos     0            /**< \brief (DSU_CID2) Preamble Byte 2 */
 #define DSU_CID2_PREAMBLEB2_Msk     (0xFFul << DSU_CID2_PREAMBLEB2_Pos)
-#define DSU_CID2_PREAMBLEB2(value)  ((DSU_CID2_PREAMBLEB2_Msk & ((value) << DSU_CID2_PREAMBLEB2_Pos)))
+#define DSU_CID2_PREAMBLEB2(value)  (DSU_CID2_PREAMBLEB2_Msk & ((value) << DSU_CID2_PREAMBLEB2_Pos))
 #define DSU_CID2_MASK               0x000000FFul /**< \brief (DSU_CID2) MASK Register */
 
 /* -------- DSU_CID3 : (DSU Offset: 0x1FFC) (R/  32) Component Identification 3 -------- */
@@ -606,7 +607,7 @@ typedef union {
 
 #define DSU_CID3_PREAMBLEB3_Pos     0            /**< \brief (DSU_CID3) Preamble Byte 3 */
 #define DSU_CID3_PREAMBLEB3_Msk     (0xFFul << DSU_CID3_PREAMBLEB3_Pos)
-#define DSU_CID3_PREAMBLEB3(value)  ((DSU_CID3_PREAMBLEB3_Msk & ((value) << DSU_CID3_PREAMBLEB3_Pos)))
+#define DSU_CID3_PREAMBLEB3(value)  (DSU_CID3_PREAMBLEB3_Msk & ((value) << DSU_CID3_PREAMBLEB3_Pos))
 #define DSU_CID3_MASK               0x000000FFul /**< \brief (DSU_CID3) MASK Register */
 
 /** \brief DSU hardware registers */
