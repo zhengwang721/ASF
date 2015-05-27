@@ -377,7 +377,7 @@ enum system_osc48m_div {
 	SYSTEM_OSC48M_DIV_14,
 	/** Divide the 48MHz RC oscillator output by fifteen. */
 	SYSTEM_OSC48M_DIV_15,
-	/** Divide the 48MHz RC oscillator output by sexteen. */
+	/** Divide the 48MHz RC oscillator output by sixteen. */
 	SYSTEM_OSC48M_DIV_16,
 };
 

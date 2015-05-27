@@ -3,7 +3,7 @@
  *
  * \brief SAM SPI Quick Start
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -107,19 +107,11 @@
  *      \snippet qs_spi_master_callback.c conf_defaults
  *   -# Set MUX setting E.
  *      \snippet qs_spi_master_callback.c mux_setting
-<<<<<<< HEAD
- *   -# Set pinmux for pad 0 (data in MISO).
- *      \snippet qs_spi_master_callback.c di
- *   -# Set pinmux for pad 1 as unused, so the pin can be used for other purposes.
- *      \snippet qs_spi_master_callback.c ss
- *   -# Set pinmux for pad 2 (data out MOSI).
-=======
  *   -# Set pinmux for pad 0 (data in (MISO)).
  *      \snippet qs_spi_master_callback.c di
  *   -# Set pinmux for pad 1 as unused, so the pin can be used for other purposes.
  *      \snippet qs_spi_master_callback.c ss
  *   -# Set pinmux for pad 2 (data out (MOSI)).
->>>>>>> ef96079175123e286a2710d474c47bf6d713e8c1
  *      \snippet qs_spi_master_callback.c do
  *   -# Set pinmux for pad 3 (SCK).
  *      \snippet qs_spi_master_callback.c sck
@@ -158,6 +150,6 @@
  *    global variable to true.
  *    \snippet qs_spi_master_callback.c callback_var
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

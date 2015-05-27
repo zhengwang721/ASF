@@ -3,7 +3,7 @@
  *
  * \brief SDRAM controller (SDRAMC) driver for SAM.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -100,7 +100,7 @@ void sdramc_init(sdramc_memory_dev_t *p_sdram, uint32_t ul_clk)
 
 	/* Step 4. */
 
-	/* A minimum pause of 200 μs is provided to precede any signal toggle.
+	/* A minimum pause of 200 µs is provided to precede any signal toggle.
 	   (6 core cycles per iteration) */
 	for (i = 0; i < ((ul_clk / 1000000) * 200 / 6); i++) {
 		;

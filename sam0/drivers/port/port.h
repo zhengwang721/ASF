@@ -3,7 +3,7 @@
  *
  * \brief SAM GPIO Port Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef PORT_H_INCLUDED
@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_port_group SAM Port Driver (PORT)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's General Purpose Input/Output (GPIO) pin
  * functionality, for manual pin state reading and writing.
  *
@@ -61,6 +61,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DA0/DA1
  *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
@@ -297,7 +298,7 @@ struct port_config {
 	/** Port pull-up/pull-down for input pins. */
 	enum port_pin_pull input_pull;
 
-	/** Enable lowest possible powerstate on the pin
+	/** Enable lowest possible powerstate on the pin.
 	 *
 	 *  \note All other configurations will be ignored, the pin will be disabled.
 	 */
@@ -658,16 +659,16 @@ static inline enum status_code port_input_event_set_config(
 									| PORT_EVCTRL_PID0(pin_index);
 			break;
 		case PORT_INPUT_EVENT_1:
-			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
-									| PORT_EVCTRL_PID0(pin_index);
+			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT1(config->action)
+						   		   | PORT_EVCTRL_PID1(pin_index);
 			break;
 		case PORT_INPUT_EVENT_2:
-			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
-									| PORT_EVCTRL_PID0(pin_index);
+			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT2(config->action)
+						   		   | PORT_EVCTRL_PID2(pin_index);
 			break;
 		case PORT_INPUT_EVENT_3:
-			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
-									| PORT_EVCTRL_PID0(pin_index);
+			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT3(config->action)
+						   		   | PORT_EVCTRL_PID3(pin_index);
 			break;
 		default:
 			Assert(false);
@@ -730,10 +731,7 @@ static inline enum status_code port_input_event_set_config(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added input event feature and support for SAML21</td>
- *	</tr>
- *	<tr>
- *		<td>Added support for SAMD21</td>
+ *		<td>Added input event feature</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
@@ -762,8 +760,8 @@ static inline enum status_code port_input_event_set_config(
  *	</tr>
   *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Added input event feature and support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAML21 and SAMDA0/A1.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

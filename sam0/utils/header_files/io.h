@@ -5,7 +5,7 @@
  *
  * This file defines common SAM0 series.
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -76,6 +76,14 @@
 
 #if (SAML21)
 #  include "saml21.h"
+#endif
+
+#if (SAMDA0)
+#  include "samda0.h"
+#endif
+
+#if (SAMDA1)
+#  include "samda1.h"
 #endif
 
 #if (SAMC21)

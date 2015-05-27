@@ -76,10 +76,14 @@
  *  - SAM D20 Xplained Pro board
  *  - SAM D21 Xplained Pro board
  *  - SAM L21 Xplained Pro board
+ *  - SAM DA1 Xplained Pro board
  *  - SAM C21 Xplained Pro board
  *
  * \section asfdoc_sam0_adc_unit_test_setup Setup
  * The following connections has to be made using wires:
+ * - SAM D21/L21 Xplained Pro
+ *  - \b DAC VOUT (PA02) <-----> ADC4 (PA04)
+ * - SAM D20 Xplained Pro
  *  - \b DAC VOUT (PA02) <-----> ADC2 (PB08)
  *
  * To run the test:
@@ -106,7 +110,7 @@
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -155,7 +159,7 @@ volatile bool adc_init_success = false;
  *
  * \param module Pointer to the ADC module (not used)
  */
-static void adc_user_callback(const struct adc_module *const module)
+static void adc_user_callback(struct adc_module *const module)
 {
 	interrupt_flag = true;
 }
@@ -231,8 +235,8 @@ static void run_adc_init_test(const struct test_case *test)
 	/* Structure for ADC configuration */
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-	config.positive_input = ADC_POSITIVE_INPUT_PIN2;
-	config.negative_input = ADC_NEGATIVE_INPUT_GND;
+	config.positive_input = CONF_ADC_POSITIVE_INPUT;
+	config.negative_input = CONF_ADC_NEGATIVE_INPUT;
 #if (SAML21) || (SAMC21)
 	config.reference      = ADC_REFERENCE_INTREF;
 #else
@@ -448,8 +452,8 @@ static void setup_adc_average_mode_test(const struct test_case *test)
 	adc_disable(&adc_inst);
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-	config.positive_input     = ADC_POSITIVE_INPUT_PIN2;
-	config.negative_input     = ADC_NEGATIVE_INPUT_GND;
+	config.positive_input     = CONF_ADC_POSITIVE_INPUT;
+	config.negative_input     = CONF_ADC_NEGATIVE_INPUT;
 #if (SAML21) || (SAMC21)
 	config.reference          = ADC_REFERENCE_INTREF;
 #else
@@ -531,8 +535,8 @@ static void setup_adc_window_mode_test(const struct test_case *test)
 	adc_disable(&adc_inst);
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-	config.positive_input = ADC_POSITIVE_INPUT_PIN2;
-	config.negative_input = ADC_NEGATIVE_INPUT_GND;
+	config.positive_input = CONF_ADC_POSITIVE_INPUT;
+	config.negative_input = CONF_ADC_NEGATIVE_INPUT;
 #if (SAML21) || (SAMC21)
 	config.reference      = ADC_REFERENCE_INTREF;
 	config.clock_prescaler = ADC_CLOCK_PRESCALER_DIV16;

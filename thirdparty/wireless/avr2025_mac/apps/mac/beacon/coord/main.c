@@ -3,7 +3,7 @@
  *
  * @brief MAC Example Beacon Application - Coordinator
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -85,7 +85,8 @@
  *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
  * Area
  *     Networks (WPANs).\n\n
- * 2)  <a href="http://www.atmel.com/design-support/">Atmel Design Support</a>.\n
+ * 2)  <a href="http://www.atmel.com/design-support/">Atmel Design
+ *Support</a>.\n
  *
  * \section contactinfo Contact Information
  * For further information,visit
@@ -93,9 +94,6 @@
  */
 
 /* === INCLUDES ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #include <string.h>
 #include <inttypes.h>
 #include <stdio.h>
@@ -1123,6 +1121,7 @@ static bool assign_new_short_addr(uint64_t addr64, uint16_t *addr16)
 					i + 0x0001);                    /* get
 			                                                 * next
 			                                                 * short
+			                                                 *
 			                                                 *
 			                                                 *
 			                                                 *address

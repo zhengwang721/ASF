@@ -27,7 +27,7 @@
 
 		<module type="driver" id="sam0.drivers.divas#overload" caption="DIVAS - Divide and Square Root Accelerator (Overload APIs)">
 
-			<info type="appnote" value="ATxxxxx"/>
+			<info type="appnote" value="AT12200"/>
 
 			<info type="description" value="pdf">
 				This document describes how to use the Divide and Square Root Accelerator on the

@@ -3,7 +3,7 @@
  *
  * \brief SAM L21 Xplained Pro test configuration.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -56,12 +56,12 @@
 #define CONF_STDIO_BAUDRATE       38400
 
 /* SERCOM SPI pin-out defines for SPI slave */
-#define CONF_SPI_SLAVE_MODULE              EXT1_SPI_MODULE
-#define CONF_SPI_SLAVE_SPI_MUX             EXT1_SPI_SERCOM_MUX_SETTING
-#define CONF_SPI_SLAVE_DATA_IN_PIN_MUX     EXT1_SPI_SERCOM_PINMUX_PAD0
-#define CONF_SPI_SLAVE_SS_PIN_MUX          EXT1_SPI_SERCOM_PINMUX_PAD1
-#define CONF_SPI_SLAVE_DATA_OUT_PIN_MUX    EXT1_SPI_SERCOM_PINMUX_PAD2
-#define CONF_SPI_SLAVE_SCK_PIN_MUX         EXT1_SPI_SERCOM_PINMUX_PAD3
+#define CONF_SPI_SLAVE_MODULE              SERCOM1
+#define CONF_SPI_SLAVE_SPI_MUX             SPI_SIGNAL_MUX_SETTING_O
+#define CONF_SPI_SLAVE_DATA_IN_PIN_MUX     PINMUX_PA18C_SERCOM1_PAD2
+#define CONF_SPI_SLAVE_DATA_OUT_PIN_MUX    PINMUX_PA16C_SERCOM1_PAD0
+#define CONF_SPI_SLAVE_SCK_PIN_MUX         PINMUX_PA19C_SERCOM1_PAD3
+#define CONF_SPI_SLAVE_SS_PIN_MUX          PINMUX_PA17C_SERCOM1_PAD1
 /* SERCOM SPI pin-out defines for SPI master */
 #define CONF_SPI_MASTER_MODULE             EXT3_SPI_MODULE
 #define CONF_SPI_MASTER_SPI_MUX            EXT3_SPI_SERCOM_MUX_SETTING

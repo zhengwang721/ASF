@@ -4,7 +4,7 @@
  * \brief This file implements the TAL state machine and provides general
  * functionality used by the TAL.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,15 +43,12 @@
  */
 
 /*
- * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* === INCLUDES ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -215,21 +212,27 @@ void tal_task(void)
 			trx_bit_write(SR_RX_SAFE_MODE,
 					RX_SAFE_MODE_DISABLE);         /*
 			                                                *
+			                                                *
 			                                                *Disable
 			                                                * buffer
+			                                                *
 			                                                *
 			                                                *protection
 			                                                * mode
 			                                                **/
 			pal_timer_delay(2); /* Allow pin change to get effective
-			                     **/
+			                    **/
 			trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_ENABLE); /*
+			                                                      *
 			                                                      *
 			                                                      *Enable
 			                                                      *
+			                                                      *
 			                                                      *buffer
 			                                                      *
+			                                                      *
 			                                                      *protection
+			                                                      *
 			                                                      *
 			                                                      *mode
 			                                                      **/

@@ -4,7 +4,7 @@
  *
  * @brief Return values of APIs
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,15 +43,12 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef RETURN_VAL_H
 #define RETURN_VAL_H
 
@@ -192,7 +189,7 @@ typedef enum
 	                                     **/
 	MAC_READ_ONLY               = 0xFB, /**< SET request issued for read
 	                                     * only attribute defined by
-	                                     *802.15.4
+	                                     * 802.15.4
 	                                     **/
 	MAC_SCAN_IN_PROGRESS        = 0xFC /**< Scan operation failed because of
 	                                    * ongoing scan defined by 802.15.4

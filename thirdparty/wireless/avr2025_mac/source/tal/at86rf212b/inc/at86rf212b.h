@@ -5,7 +5,7 @@
  *
  * @brief File contains register and command defines specific for AT86RF212.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,15 +43,12 @@
  */
 
 /*
- * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef AT86RF212B_H
 #define AT86RF212B_H
 
@@ -140,7 +137,8 @@
  * hence proper reset is not done.TO be reverted back once the related bug is
  * fixed */
 #define RST_PULSE_WIDTH_US                                 (10) /*
-	                                                         * ((RST_PULSE_WIDTH_NS
+	                                                         *
+	                                                         *((RST_PULSE_WIDTH_NS
 	                                                         * + 999) /
 	                                                         * 1000) */
 

@@ -7,7 +7,10 @@
 		<build type="c-source" value="qs_emulator_basic.c"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.services.rww_eeprom_emulator"/>
+		<require idref="sam0.drivers.bod"/>
 		<device-support value="saml21"/>
 		<device-support value="samc21"/>
+		<device-support value="samda0"/>
+		<device-support value="samda1"/>
 	</module>
 </asf>

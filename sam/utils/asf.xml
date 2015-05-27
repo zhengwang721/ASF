@@ -45,6 +45,7 @@
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
 			<device-support value="sam4n"/>
+			<device-support value="atsam4c4c_0"/>
 			<device-support value="atsam4c8c_0"/>
 			<device-support value="atsam4c16c_0"/>
 			<device-support value="atsam4c32c_0"/>
@@ -52,6 +53,7 @@
 			<device-support value="atsam4cmp8c_0"/>
 			<device-support value="atsam4cmp16c_0"/>
 			<device-support value="atsam4cmp32c_0"/>
+			<device-support value="atsam4cms4c_0"/>
 			<device-support value="atsam4cms8c_0"/>
 			<device-support value="atsam4cms16c_0"/>
 			<device-support value="atsam4cms32c_0"/>
@@ -70,6 +72,7 @@
 			<build type="build-config" subtype="c++-compiler-flags" value="-mfpu=fpv4-sp-d16" toolchain="armgcc"/>
 			<require idref="sam.utils.fpu_used"/>
 			<device-support value="sam4e"/>
+			<device-support value="atsam4c4c_1"/>
 			<device-support value="atsam4c8c_1"/>
 			<device-support value="atsam4c16c_1"/>
 			<device-support value="atsam4c32c_1"/>
@@ -77,6 +80,7 @@
 			<device-support value="atsam4cmp8c_1"/>
 			<device-support value="atsam4cmp16c_1"/>
 			<device-support value="atsam4cmp32c_1"/>
+			<device-support value="atsam4cms4c_1"/>
 			<device-support value="atsam4cms8c_1"/>
 			<device-support value="atsam4cms16c_1"/>
 			<device-support value="atsam4cms32c_1"/>
@@ -323,6 +327,7 @@
 			<require idref="sam.utils.cmsis.sam4cm.include.pio"/>
 			<require idref="sam.utils.cmsis.sam4cm.source.template"/>
 			<info type="gui-flag" value="hidden"/>
+			<device-support value="sam4cms4"/>
 			<device-support value="sam4cmp8"/>
 			<device-support value="sam4cms8"/>
 			<device-support value="sam4cmp16"/>

@@ -1,7 +1,7 @@
 ﻿<asf xmlversion="1.0">
-	<module type="meta" id="sam0.drivers.system.appnote_1" caption="SYSTEM - Core System Driver For SAM D20/D21/R21/D10/D11">
+	<module type="meta" id="sam0.drivers.system.appnote_1" caption="SYSTEM - Core System Driver For SAM D20/D21/R21/D10/D11/DA0/DA1">
 		<info type="description" value="summary">
-			Driver for the SAM D20/D21/R21/D10/D11 core system modules. Provides a unified
+			Driver for the SAM D20/D21/R21/D10/D11/DA0/DA1 core system modules. Provides a unified
 			interface for the configuration and management of the core device
 			functionality required for a functional system.
 		</info>

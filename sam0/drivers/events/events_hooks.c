@@ -3,7 +3,7 @@
  *
  * \brief SAM Event System Controller Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,14 +40,14 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include "events.h"
 #include "events_hooks.h"
 #include "system_interrupt.h"
 
-#if (SAML21)
+#if (SAML21) || (SAMC21)
 #  define _EVENTS_INTFLAGS_DETECT  0x0fff0000
 #  define _EVENTS_INTFLAGS_OVERRUN 0x00000fff
 #else

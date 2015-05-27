@@ -3,7 +3,7 @@
  *
  * \brief SAM Watchdog Unit test
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -73,6 +73,8 @@
  *  - SAM D21 Xplained Pro board
  *  - SAM R21 Xplained Pro board
  *  - SAM L21 Xplained Pro board
+ *  - SAM DA1 Xplained Pro board
+ *  - SAM C21 Xplained Pro board
  *
  * \section appdoc_sam0_wdt_unit_test_setup Setup
  * The following connections has to be made using wires:
@@ -99,7 +101,7 @@
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -202,7 +204,7 @@ static void cdc_uart_init(void)
 int main(void)
 {
 	/* Check whether reset cause was Watchdog */
-#if (SAML21)
+#if (SAML21) || (SAMC21)
 	wdr_flag = (system_get_reset_cause() & RSTC_RCAUSE_WDT);
 #else
 	wdr_flag = (system_get_reset_cause() & PM_RCAUSE_WDT);
@@ -219,7 +221,7 @@ int main(void)
 		config_wdt.enable = false;
 	}
 	/* Set the desired configuration */
-#if !(SAML21)
+#if !((SAML21) || (SAMC21))
 	config_wdt.clock_source         = CONF_WDT_GCLK_GEN;
 #endif
 	config_wdt.timeout_period       = CONF_WDT_TIMEOUT_PERIOD;

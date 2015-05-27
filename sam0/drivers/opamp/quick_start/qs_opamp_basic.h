@@ -3,7 +3,7 @@
  *
  * \brief SAM OPAMP Driver Quick Start
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,7 +47,7 @@
  * In this use case, the OPAMP0 is configured as "Non-Inverting PGA" mode,
  *  Please refer to the second mode in datasheet "Build-in Modes" section.
  *
- * This use case sets up the OPAMP0 to inveret the input signal in OA0NEG
+ * This use case sets up the OPAMP0 to invert the input signal in OA0NEG
  * pin, and output it to the OA0OUT pin.
  * You can give a signal on OA0NEG and watch the output on OA0OUT
  * through oscilloscope.
@@ -103,6 +103,6 @@
  * \snippet qs_opamp_basic.c main
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

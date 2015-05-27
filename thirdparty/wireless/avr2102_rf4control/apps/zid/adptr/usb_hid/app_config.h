@@ -11,15 +11,12 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef APP_CONFIG_H
 #define APP_CONFIG_H
 
@@ -75,7 +72,7 @@ void main_resume_action(void);
 void main_suspend_action(void);
 
 #define APP_USER_STRING                 "My Target      "    /* 15 characters !
-	                                                      **/
+	                                                     **/
 #define USER_STRING_AVAILABLE           true
 #define NUM_SUPPORTED_DEV_TYPES         (1)
 #define NUM_SUPPORTED_PROFILES          (1)

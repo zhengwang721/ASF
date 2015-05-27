@@ -2,10 +2,10 @@
  * @file trx_access.c
  *
  * @brief Performs interface functionalities between the PHY layer and ASF
- *drivers
- *  Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * drivers
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,12 +43,9 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include "board.h"
@@ -89,8 +86,7 @@ AT86RFX_ISR()
 {
 	/*Clearing the RF interrupt*/
 	trx_irq_flag_clr();
-
-	/*Calling the interrupt routines*/
+  	/*Calling the interrupt routines*/
 	if (irq_hdl_trx) {
 		irq_hdl_trx();
 	}
@@ -112,18 +108,19 @@ void trx_spi_init(void)
 	config.pinmux_pad3 = AT86RFX_SPI_SERCOM_PINMUX_PAD3;
 	spi_init(&master, AT86RFX_SPI, &config);
 	spi_enable(&master);
-	   
-	struct extint_chan_conf eint_chan_conf; 
-	extint_chan_get_config_defaults(&eint_chan_conf); 
-	eint_chan_conf.gpio_pin = AT86RFX_IRQ_PIN; 
-	eint_chan_conf.gpio_pin_mux = AT86RFX_IRQ_PINMUX; 
-	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_DOWN; 
-	eint_chan_conf.wake_if_sleeping    = true; 
-	eint_chan_conf.filter_input_signal = false; 
-	eint_chan_conf.detection_criteria  = EXTINT_DETECT_RISING; 
-	extint_chan_set_config(AT86RFX_IRQ_CHAN, &eint_chan_conf); 
-	extint_register_callback(AT86RFX_ISR, AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT);
-	
+
+	struct extint_chan_conf eint_chan_conf;
+	extint_chan_get_config_defaults(&eint_chan_conf);
+	eint_chan_conf.gpio_pin = AT86RFX_IRQ_PIN;
+	eint_chan_conf.gpio_pin_mux = AT86RFX_IRQ_PINMUX;
+	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_DOWN;
+	eint_chan_conf.wake_if_sleeping    = true;
+	eint_chan_conf.filter_input_signal = false;
+	eint_chan_conf.detection_criteria  = EXTINT_DETECT_RISING;
+	extint_chan_set_config(AT86RFX_IRQ_CHAN, &eint_chan_conf);
+	extint_register_callback(AT86RFX_ISR, AT86RFX_IRQ_CHAN,
+			EXTINT_CALLBACK_TYPE_DETECT);
+
 #else
 	spi_master_init(AT86RFX_SPI);
 	spi_master_setup_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE, SPI_MODE_0,
@@ -156,7 +153,7 @@ uint8_t trx_reg_read(uint8_t addr)
 #endif
 
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/
+	**/
 	ENTER_TRX_CRITICAL_REGION();
 
 	/* Prepare the command byte */
@@ -202,8 +199,9 @@ uint8_t trx_reg_read(uint8_t addr)
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
+
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
+	 * interrupt */
 	LEAVE_TRX_CRITICAL_REGION();
 
 	return register_value;
@@ -212,7 +210,7 @@ uint8_t trx_reg_read(uint8_t addr)
 void trx_reg_write(uint8_t addr, uint8_t data)
 {
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/
+	**/
 	ENTER_TRX_CRITICAL_REGION();
 
 	/* Prepare the command byte */
@@ -259,8 +257,9 @@ void trx_reg_write(uint8_t addr, uint8_t data)
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
+
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
+	 * interrupt */
 	LEAVE_TRX_CRITICAL_REGION();
 }
 
@@ -269,7 +268,7 @@ void trx_irq_init(FUNC_PTR trx_irq_cb)
 	/*
 	 * Set the handler function.
 	 * The handler is set before enabling the interrupt to prepare for
-	 *spurious
+	 * spurious
 	 * interrupts, that can pop up the moment they are enabled
 	 */
 	irq_hdl_trx = (irq_handler_t)trx_irq_cb;
@@ -299,7 +298,7 @@ void trx_bit_write(uint8_t reg_addr, uint8_t mask, uint8_t pos,
 void trx_frame_read(uint8_t *data, uint8_t length)
 {
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/
+	**/
 	ENTER_TRX_CRITICAL_REGION();
 
 #if SAMD || SAMR21
@@ -351,16 +350,18 @@ void trx_frame_read(uint8_t *data, uint8_t length)
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
+
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
+	 * interrupt */
 	LEAVE_TRX_CRITICAL_REGION();
 }
 
 void trx_frame_write(uint8_t *data, uint8_t length)
 {
 	uint8_t temp;
+
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/
+	**/
 	ENTER_TRX_CRITICAL_REGION();
 
 #if SAMD || SAMR21
@@ -374,7 +375,7 @@ void trx_frame_write(uint8_t *data, uint8_t length)
 	}
 	spi_write(&master, temp);
 	while (!spi_is_write_complete(&master)) {
-	}
+	} 
 	/* Dummy read since SPI RX is double buffered */
 	while (!spi_is_ready_to_read(&master)) {
 	}
@@ -406,8 +407,9 @@ void trx_frame_write(uint8_t *data, uint8_t length)
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
+
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
+	 * interrupt */
 	LEAVE_TRX_CRITICAL_REGION();
 }
 
@@ -423,8 +425,9 @@ void trx_frame_write(uint8_t *data, uint8_t length)
 void trx_sram_write(uint8_t addr, uint8_t *data, uint8_t length)
 {
 	uint8_t temp;
+
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/
+	**/
 	ENTER_TRX_CRITICAL_REGION();
 
 #if SAMD || SAMR21
@@ -492,8 +495,9 @@ void trx_sram_write(uint8_t addr, uint8_t *data, uint8_t length)
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
+
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
+	 * interrupt */
 	LEAVE_TRX_CRITICAL_REGION();
 }
 
@@ -511,7 +515,7 @@ void trx_sram_read(uint8_t addr, uint8_t *data, uint8_t length)
 	delay_us(1); /* wap_rf4ce */
 
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/
+	**/
 	ENTER_TRX_CRITICAL_REGION();
 #if SAMD || SAMR21
 	uint16_t temp;
@@ -583,8 +587,9 @@ void trx_sram_read(uint8_t addr, uint8_t *data, uint8_t length)
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
+
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
+	 * interrupt */
 	LEAVE_TRX_CRITICAL_REGION();
 }
 

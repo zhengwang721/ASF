@@ -3,7 +3,7 @@
  *
  * \brief SAM RTC Driver (Calendar Mode)
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include "rtc_calendar.h"
@@ -319,7 +319,7 @@ static void _rtc_calendar_set_config(
  *
  * \param[out] module  Pointer to the software instance struct
  * \param[in]   hw      Pointer to hardware instance
- * \param[in] config  Pointer to the configuration structure
+ * \param[in]   config  Pointer to the configuration structure
  */
 void rtc_calendar_init(
 		struct rtc_module *const module,
