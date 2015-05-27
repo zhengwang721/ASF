@@ -126,6 +126,8 @@ typedef enum IRQn
   TCC2_IRQn                = 19, /**< 19 SAMC21E16A Timer Counter Control 2 (TCC2) */
   TC0_IRQn                 = 20, /**< 20 SAMC21E16A Basic Timer Counter 0 (TC0) */
   TC1_IRQn                 = 21, /**< 21 SAMC21E16A Basic Timer Counter 1 (TC1) */
+  TC2_IRQn                 = 22, /**< 22 SAMC21E16A Basic Timer Counter 2 (TC2) */
+  TC3_IRQn                 = 23, /**< 23 SAMC21E16A Basic Timer Counter 3 (TC3) */
   TC4_IRQn                 = 24, /**< 24 SAMC21E16A Basic Timer Counter 4 (TC4) */
   ADC0_IRQn                = 25, /**< 25 SAMC21E16A Analog Digital Converter 0 (ADC0) */
   ADC1_IRQn                = 26, /**< 26 SAMC21E16A Analog Digital Converter 1 (ADC1) */
@@ -182,8 +184,8 @@ typedef struct _DeviceVectors
   void* pfnTCC2_Handler;                  /* 19 Timer Counter Control 2 */
   void* pfnTC0_Handler;                   /* 20 Basic Timer Counter 0 */
   void* pfnTC1_Handler;                   /* 21 Basic Timer Counter 1 */
-  void* pfnReserved22;
-  void* pfnReserved23;
+  void* pfnTC2_Handler;                   /* 22 Basic Timer Counter 2 */
+  void* pfnTC3_Handler;                   /* 23 Basic Timer Counter 3 */
   void* pfnTC4_Handler;                   /* 24 Basic Timer Counter 4 */
   void* pfnADC0_Handler;                  /* 25 Analog Digital Converter 0 */
   void* pfnADC1_Handler;                  /* 26 Analog Digital Converter 1 */
@@ -222,6 +224,8 @@ void TCC1_Handler                ( void );
 void TCC2_Handler                ( void );
 void TC0_Handler                 ( void );
 void TC1_Handler                 ( void );
+void TC2_Handler                 ( void );
+void TC3_Handler                 ( void );
 void TC4_Handler                 ( void );
 void ADC0_Handler                ( void );
 void ADC1_Handler                ( void );
@@ -331,6 +335,8 @@ void PTC_Handler                 ( void );
 #include "instance/tal.h"
 #include "instance/tc0.h"
 #include "instance/tc1.h"
+#include "instance/tc2.h"
+#include "instance/tc3.h"
 #include "instance/tc4.h"
 #include "instance/tcc0.h"
 #include "instance/tcc1.h"
@@ -381,6 +387,8 @@ void PTC_Handler                 ( void );
 #define ID_TCC2          75 /**< \brief Timer Counter Control 2 (TCC2) */
 #define ID_TC0           76 /**< \brief Basic Timer Counter 0 (TC0) */
 #define ID_TC1           77 /**< \brief Basic Timer Counter 1 (TC1) */
+#define ID_TC2           78 /**< \brief Basic Timer Counter 2 (TC2) */
+#define ID_TC3           79 /**< \brief Basic Timer Counter 3 (TC3) */
 #define ID_TC4           80 /**< \brief Basic Timer Counter 4 (TC4) */
 #define ID_ADC0          81 /**< \brief Analog Digital Converter 0 (ADC0) */
 #define ID_ADC1          82 /**< \brief Analog Digital Converter 1 (ADC1) */
@@ -446,6 +454,8 @@ void PTC_Handler                 ( void );
 #define TAL                           (0x42006000UL) /**< \brief (TAL) APB Base Address */
 #define TC0                           (0x42003000UL) /**< \brief (TC0) APB Base Address */
 #define TC1                           (0x42003400UL) /**< \brief (TC1) APB Base Address */
+#define TC2                           (0x42003800UL) /**< \brief (TC2) APB Base Address */
+#define TC3                           (0x42003C00UL) /**< \brief (TC3) APB Base Address */
 #define TC4                           (0x42004000UL) /**< \brief (TC4) APB Base Address */
 #define TCC0                          (0x42002400UL) /**< \brief (TCC0) APB Base Address */
 #define TCC1                          (0x42002800UL) /**< \brief (TCC1) APB Base Address */
@@ -583,9 +593,11 @@ void PTC_Handler                 ( void );
 
 #define TC0               ((Tc       *)0x42003000UL) /**< \brief (TC0) APB Base Address */
 #define TC1               ((Tc       *)0x42003400UL) /**< \brief (TC1) APB Base Address */
+#define TC2               ((Tc       *)0x42003800UL) /**< \brief (TC2) APB Base Address */
+#define TC3               ((Tc       *)0x42003C00UL) /**< \brief (TC3) APB Base Address */
 #define TC4               ((Tc       *)0x42004000UL) /**< \brief (TC4) APB Base Address */
-#define TC_INST_NUM       3                          /**< \brief (TC) Number of instances */
-#define TC_INSTS          { TC0, TC1, TC4 }          /**< \brief (TC) Instances List */
+#define TC_INST_NUM       5                          /**< \brief (TC) Number of instances */
+#define TC_INSTS          { TC0, TC1, TC2, TC3, TC4 } /**< \brief (TC) Instances List */
 
 #define TCC0              ((Tcc      *)0x42002400UL) /**< \brief (TCC0) APB Base Address */
 #define TCC1              ((Tcc      *)0x42002800UL) /**< \brief (TCC1) APB Base Address */
@@ -622,11 +634,19 @@ void PTC_Handler                 ( void );
 #define FLASH_NB_OF_PAGES     1024
 #define FLASH_USER_PAGE_SIZE  64
 #define HSRAM_SIZE            0x2000UL /* 8 kB */
-#define FLASH_ADDR            (0x00000000UL) /**< FLASH base address */
-#define FLASH_USER_PAGE_ADDR  (0x00800000UL) /**< FLASH_USER_PAGE base address */
-#define HSRAM_ADDR            (0x20000000UL) /**< HSRAM base address */
 
-#define DSU_DID_RESETVALUE    0x1101000CUL
+#define FLASH_ADDR            (0x00000000u) /**< FLASH base address */
+#define FLASH_USER_PAGE_ADDR  (0x00800000u) /**< FLASH_USER_PAGE base address */
+#define HSRAM_ADDR            (0x20000000u) /**< HSRAM base address */
+#define HPB0_ADDR             (0x40000000u) /**< HPB0 base address */
+#define HPB1_ADDR             (0x41000000u) /**< HPB1 base address */
+#define HPB2_ADDR             (0x42000000u) /**< HPB2 base address */
+#define PPB_ADDR              (0xE0000000u) /**< PPB base address */
+
+#define DSU_DID_RESETVALUE    0x1101020CUL
+#define AC_PAIRS              2
+#define DMAC_CH_NUM           12
+#define EVSYS_CHANNELS        12
 #define PORT_GROUPS           1
 #define RWW_SIZE              0x800UL /* 2 kB */
 

@@ -51,7 +51,7 @@
 /*@{*/
 
 #define FREQM_U2257
-#define REV_FREQM                   0x100
+#define REV_FREQM                   0x101
 
 /* -------- FREQM_CTRLA : (FREQM Offset: 0x00) (R/W  8) Control A Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -108,7 +108,7 @@ typedef union {
 
 #define FREQM_CFGA_REFNUM_Pos       0            /**< \brief (FREQM_CFGA) Number of Reference Clock Cycles */
 #define FREQM_CFGA_REFNUM_Msk       (0xFFul << FREQM_CFGA_REFNUM_Pos)
-#define FREQM_CFGA_REFNUM(value)    ((FREQM_CFGA_REFNUM_Msk & ((value) << FREQM_CFGA_REFNUM_Pos)))
+#define FREQM_CFGA_REFNUM(value)    (FREQM_CFGA_REFNUM_Msk & ((value) << FREQM_CFGA_REFNUM_Pos))
 #define FREQM_CFGA_MASK             0x00FFul     /**< \brief (FREQM_CFGA) MASK Register */
 
 /* -------- FREQM_INTENCLR : (FREQM Offset: 0x08) (R/W  8) Interrupt Enable Clear Register -------- */
@@ -149,10 +149,10 @@ typedef union {
 
 /* -------- FREQM_INTFLAG : (FREQM Offset: 0x0A) (R/W  8) Interrupt Flag Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint8_t  DONE:1;           /*!< bit:      0  Measurement Done                   */
-    uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
+    __I uint8_t  DONE:1;           /*!< bit:      0  Measurement Done                   */
+    __I uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } FREQM_INTFLAG_Type;
@@ -223,7 +223,7 @@ typedef union {
 
 #define FREQM_VALUE_VALUE_Pos       0            /**< \brief (FREQM_VALUE) Measurement Value */
 #define FREQM_VALUE_VALUE_Msk       (0xFFFFFFul << FREQM_VALUE_VALUE_Pos)
-#define FREQM_VALUE_VALUE(value)    ((FREQM_VALUE_VALUE_Msk & ((value) << FREQM_VALUE_VALUE_Pos)))
+#define FREQM_VALUE_VALUE(value)    (FREQM_VALUE_VALUE_Msk & ((value) << FREQM_VALUE_VALUE_Pos))
 #define FREQM_VALUE_MASK            0x00FFFFFFul /**< \brief (FREQM_VALUE) MASK Register */
 
 /** \brief FREQM hardware registers */

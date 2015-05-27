@@ -50,8 +50,8 @@
 /** \addtogroup SAMC21_CAN Control Area Network */
 /*@{*/
 
-#define CAN_U2259
-#define REV_CAN                     0x100
+#define CAN_U2003
+#define REV_CAN                     0x200
 
 /* -------- CAN_CREL : (CAN Offset: 0x00) (R/  32) Core Release -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -67,17 +67,17 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define CAN_CREL_OFFSET             0x00         /**< \brief (CAN_CREL offset) Core Release */
-#define CAN_CREL_RESETVALUE         0x31000000ul /**< \brief (CAN_CREL reset_value) Core Release */
+#define CAN_CREL_RESETVALUE         0x32100000ul /**< \brief (CAN_CREL reset_value) Core Release */
 
 #define CAN_CREL_SUBSTEP_Pos        20           /**< \brief (CAN_CREL) Sub-step of Core Release */
 #define CAN_CREL_SUBSTEP_Msk        (0xFul << CAN_CREL_SUBSTEP_Pos)
-#define CAN_CREL_SUBSTEP(value)     ((CAN_CREL_SUBSTEP_Msk & ((value) << CAN_CREL_SUBSTEP_Pos)))
+#define CAN_CREL_SUBSTEP(value)     (CAN_CREL_SUBSTEP_Msk & ((value) << CAN_CREL_SUBSTEP_Pos))
 #define CAN_CREL_STEP_Pos           24           /**< \brief (CAN_CREL) Step of Core Release */
 #define CAN_CREL_STEP_Msk           (0xFul << CAN_CREL_STEP_Pos)
-#define CAN_CREL_STEP(value)        ((CAN_CREL_STEP_Msk & ((value) << CAN_CREL_STEP_Pos)))
+#define CAN_CREL_STEP(value)        (CAN_CREL_STEP_Msk & ((value) << CAN_CREL_STEP_Pos))
 #define CAN_CREL_REL_Pos            28           /**< \brief (CAN_CREL) Core Release */
 #define CAN_CREL_REL_Msk            (0xFul << CAN_CREL_REL_Pos)
-#define CAN_CREL_REL(value)         ((CAN_CREL_REL_Msk & ((value) << CAN_CREL_REL_Pos)))
+#define CAN_CREL_REL(value)         (CAN_CREL_REL_Msk & ((value) << CAN_CREL_REL_Pos))
 #define CAN_CREL_MASK               0xFFF00000ul /**< \brief (CAN_CREL) MASK Register */
 
 /* -------- CAN_ENDN : (CAN Offset: 0x04) (R/  32) Endian -------- */
@@ -95,7 +95,7 @@ typedef union {
 
 #define CAN_ENDN_ETV_Pos            0            /**< \brief (CAN_ENDN) Endianness Test Value */
 #define CAN_ENDN_ETV_Msk            (0xFFFFFFFFul << CAN_ENDN_ETV_Pos)
-#define CAN_ENDN_ETV(value)         ((CAN_ENDN_ETV_Msk & ((value) << CAN_ENDN_ETV_Pos)))
+#define CAN_ENDN_ETV(value)         (CAN_ENDN_ETV_Msk & ((value) << CAN_ENDN_ETV_Pos))
 #define CAN_ENDN_MASK               0xFFFFFFFFul /**< \brief (CAN_ENDN) MASK Register */
 
 /* -------- CAN_MRCFG : (CAN Offset: 0x08) (R/W 32) Message RAM Configuration -------- */
@@ -114,7 +114,7 @@ typedef union {
 
 #define CAN_MRCFG_QOS_Pos           0            /**< \brief (CAN_MRCFG) Quality of Service */
 #define CAN_MRCFG_QOS_Msk           (0x3ul << CAN_MRCFG_QOS_Pos)
-#define CAN_MRCFG_QOS(value)        ((CAN_MRCFG_QOS_Msk & ((value) << CAN_MRCFG_QOS_Pos)))
+#define CAN_MRCFG_QOS(value)        (CAN_MRCFG_QOS_Msk & ((value) << CAN_MRCFG_QOS_Pos))
 #define   CAN_MRCFG_QOS_DISABLE_Val       0x0ul  /**< \brief (CAN_MRCFG) Background (no sensitive operation) */
 #define   CAN_MRCFG_QOS_LOW_Val           0x1ul  /**< \brief (CAN_MRCFG) Sensitive Bandwidth */
 #define   CAN_MRCFG_QOS_MEDIUM_Val        0x2ul  /**< \brief (CAN_MRCFG) Sensitive Latency */
@@ -147,16 +147,16 @@ typedef union {
 
 #define CAN_DBTP_DSJW_Pos           0            /**< \brief (CAN_DBTP) Data (Re)Synchronization Jump Width */
 #define CAN_DBTP_DSJW_Msk           (0xFul << CAN_DBTP_DSJW_Pos)
-#define CAN_DBTP_DSJW(value)        ((CAN_DBTP_DSJW_Msk & ((value) << CAN_DBTP_DSJW_Pos)))
+#define CAN_DBTP_DSJW(value)        (CAN_DBTP_DSJW_Msk & ((value) << CAN_DBTP_DSJW_Pos))
 #define CAN_DBTP_DTSEG2_Pos         4            /**< \brief (CAN_DBTP) Data time segment after sample point */
 #define CAN_DBTP_DTSEG2_Msk         (0xFul << CAN_DBTP_DTSEG2_Pos)
-#define CAN_DBTP_DTSEG2(value)      ((CAN_DBTP_DTSEG2_Msk & ((value) << CAN_DBTP_DTSEG2_Pos)))
+#define CAN_DBTP_DTSEG2(value)      (CAN_DBTP_DTSEG2_Msk & ((value) << CAN_DBTP_DTSEG2_Pos))
 #define CAN_DBTP_DTSEG1_Pos         8            /**< \brief (CAN_DBTP) Data time segment before sample point */
 #define CAN_DBTP_DTSEG1_Msk         (0x1Ful << CAN_DBTP_DTSEG1_Pos)
-#define CAN_DBTP_DTSEG1(value)      ((CAN_DBTP_DTSEG1_Msk & ((value) << CAN_DBTP_DTSEG1_Pos)))
+#define CAN_DBTP_DTSEG1(value)      (CAN_DBTP_DTSEG1_Msk & ((value) << CAN_DBTP_DTSEG1_Pos))
 #define CAN_DBTP_DBRP_Pos           16           /**< \brief (CAN_DBTP) Data Baud Rate Prescaler */
 #define CAN_DBTP_DBRP_Msk           (0x1Ful << CAN_DBTP_DBRP_Pos)
-#define CAN_DBTP_DBRP(value)        ((CAN_DBTP_DBRP_Msk & ((value) << CAN_DBTP_DBRP_Pos)))
+#define CAN_DBTP_DBRP(value)        (CAN_DBTP_DBRP_Msk & ((value) << CAN_DBTP_DBRP_Pos))
 #define CAN_DBTP_TDC_Pos            23           /**< \brief (CAN_DBTP) Tranceiver Delay Compensation */
 #define CAN_DBTP_TDC                (0x1ul << CAN_DBTP_TDC_Pos)
 #define CAN_DBTP_MASK               0x009F1FFFul /**< \brief (CAN_DBTP) MASK Register */
@@ -182,7 +182,7 @@ typedef union {
 #define CAN_TEST_LBCK               (0x1ul << CAN_TEST_LBCK_Pos)
 #define CAN_TEST_TX_Pos             5            /**< \brief (CAN_TEST) Control of Transmit Pin */
 #define CAN_TEST_TX_Msk             (0x3ul << CAN_TEST_TX_Pos)
-#define CAN_TEST_TX(value)          ((CAN_TEST_TX_Msk & ((value) << CAN_TEST_TX_Pos)))
+#define CAN_TEST_TX(value)          (CAN_TEST_TX_Msk & ((value) << CAN_TEST_TX_Pos))
 #define   CAN_TEST_TX_CORE_Val            0x0ul  /**< \brief (CAN_TEST) TX controlled by CAN core */
 #define   CAN_TEST_TX_SAMPLE_Val          0x1ul  /**< \brief (CAN_TEST) TX monitoring sample point */
 #define   CAN_TEST_TX_DOMINANT_Val        0x2ul  /**< \brief (CAN_TEST) Dominant (0) level at pin CAN_TX */
@@ -212,10 +212,10 @@ typedef union {
 
 #define CAN_RWD_WDC_Pos             0            /**< \brief (CAN_RWD) Watchdog Configuration */
 #define CAN_RWD_WDC_Msk             (0xFFul << CAN_RWD_WDC_Pos)
-#define CAN_RWD_WDC(value)          ((CAN_RWD_WDC_Msk & ((value) << CAN_RWD_WDC_Pos)))
+#define CAN_RWD_WDC(value)          (CAN_RWD_WDC_Msk & ((value) << CAN_RWD_WDC_Pos))
 #define CAN_RWD_WDV_Pos             8            /**< \brief (CAN_RWD) Watchdog Value */
 #define CAN_RWD_WDV_Msk             (0xFFul << CAN_RWD_WDV_Pos)
-#define CAN_RWD_WDV(value)          ((CAN_RWD_WDV_Msk & ((value) << CAN_RWD_WDV_Pos)))
+#define CAN_RWD_WDV(value)          (CAN_RWD_WDV_Msk & ((value) << CAN_RWD_WDV_Pos))
 #define CAN_RWD_MASK                0x0000FFFFul /**< \brief (CAN_RWD) MASK Register */
 
 /* -------- CAN_CCCR : (CAN Offset: 0x18) (R/W 32) CC Control -------- */
@@ -236,7 +236,8 @@ typedef union {
     uint32_t PXHD:1;           /*!< bit:     12  Protocol Exception Handling Disable */
     uint32_t EFBI:1;           /*!< bit:     13  Edge Filtering during Bus Integration */
     uint32_t TXP:1;            /*!< bit:     14  Transmit Pause                     */
-    uint32_t :17;              /*!< bit: 15..31  Reserved                           */
+    uint32_t NISO:1;           /*!< bit:     15  Non ISO Operation                  */
+    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } CAN_CCCR_Type;
@@ -271,7 +272,9 @@ typedef union {
 #define CAN_CCCR_EFBI               (0x1ul << CAN_CCCR_EFBI_Pos)
 #define CAN_CCCR_TXP_Pos            14           /**< \brief (CAN_CCCR) Transmit Pause */
 #define CAN_CCCR_TXP                (0x1ul << CAN_CCCR_TXP_Pos)
-#define CAN_CCCR_MASK               0x000073FFul /**< \brief (CAN_CCCR) MASK Register */
+#define CAN_CCCR_NISO_Pos           15           /**< \brief (CAN_CCCR) Non ISO Operation */
+#define CAN_CCCR_NISO               (0x1ul << CAN_CCCR_NISO_Pos)
+#define CAN_CCCR_MASK               0x0000F3FFul /**< \brief (CAN_CCCR) MASK Register */
 
 /* -------- CAN_NBTP : (CAN Offset: 0x1C) (R/W 32) Nominal Bit Timing and Prescaler -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -292,16 +295,16 @@ typedef union {
 
 #define CAN_NBTP_NTSEG2_Pos         0            /**< \brief (CAN_NBTP) Nominal Time segment after sample point */
 #define CAN_NBTP_NTSEG2_Msk         (0x7Ful << CAN_NBTP_NTSEG2_Pos)
-#define CAN_NBTP_NTSEG2(value)      ((CAN_NBTP_NTSEG2_Msk & ((value) << CAN_NBTP_NTSEG2_Pos)))
+#define CAN_NBTP_NTSEG2(value)      (CAN_NBTP_NTSEG2_Msk & ((value) << CAN_NBTP_NTSEG2_Pos))
 #define CAN_NBTP_NTSEG1_Pos         8            /**< \brief (CAN_NBTP) Nominal Time segment before sample point */
 #define CAN_NBTP_NTSEG1_Msk         (0xFFul << CAN_NBTP_NTSEG1_Pos)
-#define CAN_NBTP_NTSEG1(value)      ((CAN_NBTP_NTSEG1_Msk & ((value) << CAN_NBTP_NTSEG1_Pos)))
+#define CAN_NBTP_NTSEG1(value)      (CAN_NBTP_NTSEG1_Msk & ((value) << CAN_NBTP_NTSEG1_Pos))
 #define CAN_NBTP_NBRP_Pos           16           /**< \brief (CAN_NBTP) Nominal Baud Rate Prescaler */
 #define CAN_NBTP_NBRP_Msk           (0x1FFul << CAN_NBTP_NBRP_Pos)
-#define CAN_NBTP_NBRP(value)        ((CAN_NBTP_NBRP_Msk & ((value) << CAN_NBTP_NBRP_Pos)))
+#define CAN_NBTP_NBRP(value)        (CAN_NBTP_NBRP_Msk & ((value) << CAN_NBTP_NBRP_Pos))
 #define CAN_NBTP_NSJW_Pos           25           /**< \brief (CAN_NBTP) Nominal (Re)Synchronization Jump Width */
 #define CAN_NBTP_NSJW_Msk           (0x7Ful << CAN_NBTP_NSJW_Pos)
-#define CAN_NBTP_NSJW(value)        ((CAN_NBTP_NSJW_Msk & ((value) << CAN_NBTP_NSJW_Pos)))
+#define CAN_NBTP_NSJW(value)        (CAN_NBTP_NSJW_Msk & ((value) << CAN_NBTP_NSJW_Pos))
 #define CAN_NBTP_MASK               0xFFFFFF7Ful /**< \brief (CAN_NBTP) MASK Register */
 
 /* -------- CAN_TSCC : (CAN Offset: 0x20) (R/W 32) Timestamp Counter Configuration -------- */
@@ -322,7 +325,7 @@ typedef union {
 
 #define CAN_TSCC_TSS_Pos            0            /**< \brief (CAN_TSCC) Timestamp Select */
 #define CAN_TSCC_TSS_Msk            (0x3ul << CAN_TSCC_TSS_Pos)
-#define CAN_TSCC_TSS(value)         ((CAN_TSCC_TSS_Msk & ((value) << CAN_TSCC_TSS_Pos)))
+#define CAN_TSCC_TSS(value)         (CAN_TSCC_TSS_Msk & ((value) << CAN_TSCC_TSS_Pos))
 #define   CAN_TSCC_TSS_ZERO_Val           0x0ul  /**< \brief (CAN_TSCC) Timestamp counter value always 0x0000 */
 #define   CAN_TSCC_TSS_INC_Val            0x1ul  /**< \brief (CAN_TSCC) Timestamp counter value incremented by TCP */
 #define   CAN_TSCC_TSS_EXT_Val            0x2ul  /**< \brief (CAN_TSCC) External timestamp counter value used */
@@ -331,7 +334,7 @@ typedef union {
 #define CAN_TSCC_TSS_EXT            (CAN_TSCC_TSS_EXT_Val          << CAN_TSCC_TSS_Pos)
 #define CAN_TSCC_TCP_Pos            16           /**< \brief (CAN_TSCC) Timestamp Counter Prescaler */
 #define CAN_TSCC_TCP_Msk            (0xFul << CAN_TSCC_TCP_Pos)
-#define CAN_TSCC_TCP(value)         ((CAN_TSCC_TCP_Msk & ((value) << CAN_TSCC_TCP_Pos)))
+#define CAN_TSCC_TCP(value)         (CAN_TSCC_TCP_Msk & ((value) << CAN_TSCC_TCP_Pos))
 #define CAN_TSCC_MASK               0x000F0003ul /**< \brief (CAN_TSCC) MASK Register */
 
 /* -------- CAN_TSCV : (CAN Offset: 0x24) (R/  32) Timestamp Counter Value -------- */
@@ -350,7 +353,7 @@ typedef union {
 
 #define CAN_TSCV_TSC_Pos            0            /**< \brief (CAN_TSCV) Timestamp Counter */
 #define CAN_TSCV_TSC_Msk            (0xFFFFul << CAN_TSCV_TSC_Pos)
-#define CAN_TSCV_TSC(value)         ((CAN_TSCV_TSC_Msk & ((value) << CAN_TSCV_TSC_Pos)))
+#define CAN_TSCV_TSC(value)         (CAN_TSCV_TSC_Msk & ((value) << CAN_TSCV_TSC_Pos))
 #define CAN_TSCV_MASK               0x0000FFFFul /**< \brief (CAN_TSCV) MASK Register */
 
 /* -------- CAN_TOCC : (CAN Offset: 0x28) (R/W 32) Timeout Counter Configuration -------- */
@@ -373,7 +376,7 @@ typedef union {
 #define CAN_TOCC_ETOC               (0x1ul << CAN_TOCC_ETOC_Pos)
 #define CAN_TOCC_TOS_Pos            1            /**< \brief (CAN_TOCC) Timeout Select */
 #define CAN_TOCC_TOS_Msk            (0x3ul << CAN_TOCC_TOS_Pos)
-#define CAN_TOCC_TOS(value)         ((CAN_TOCC_TOS_Msk & ((value) << CAN_TOCC_TOS_Pos)))
+#define CAN_TOCC_TOS(value)         (CAN_TOCC_TOS_Msk & ((value) << CAN_TOCC_TOS_Pos))
 #define   CAN_TOCC_TOS_CONT_Val           0x0ul  /**< \brief (CAN_TOCC) Continuout operation */
 #define   CAN_TOCC_TOS_TXEF_Val           0x1ul  /**< \brief (CAN_TOCC) Timeout controlled by TX Event FIFO */
 #define   CAN_TOCC_TOS_RXF0_Val           0x2ul  /**< \brief (CAN_TOCC) Timeout controlled by Rx FIFO 0 */
@@ -384,7 +387,7 @@ typedef union {
 #define CAN_TOCC_TOS_RXF1           (CAN_TOCC_TOS_RXF1_Val         << CAN_TOCC_TOS_Pos)
 #define CAN_TOCC_TOP_Pos            16           /**< \brief (CAN_TOCC) Timeout Period */
 #define CAN_TOCC_TOP_Msk            (0xFFFFul << CAN_TOCC_TOP_Pos)
-#define CAN_TOCC_TOP(value)         ((CAN_TOCC_TOP_Msk & ((value) << CAN_TOCC_TOP_Pos)))
+#define CAN_TOCC_TOP(value)         (CAN_TOCC_TOP_Msk & ((value) << CAN_TOCC_TOP_Pos))
 #define CAN_TOCC_MASK               0xFFFF0007ul /**< \brief (CAN_TOCC) MASK Register */
 
 /* -------- CAN_TOCV : (CAN Offset: 0x2C) (R/W 32) Timeout Counter Value -------- */
@@ -403,7 +406,7 @@ typedef union {
 
 #define CAN_TOCV_TOC_Pos            0            /**< \brief (CAN_TOCV) Timeout Counter */
 #define CAN_TOCV_TOC_Msk            (0xFFFFul << CAN_TOCV_TOC_Pos)
-#define CAN_TOCV_TOC(value)         ((CAN_TOCV_TOC_Msk & ((value) << CAN_TOCV_TOC_Pos)))
+#define CAN_TOCV_TOC(value)         (CAN_TOCV_TOC_Msk & ((value) << CAN_TOCV_TOC_Pos))
 #define CAN_TOCV_MASK               0x0000FFFFul /**< \brief (CAN_TOCV) MASK Register */
 
 /* -------- CAN_ECR : (CAN Offset: 0x40) (R/  32) Error Counter -------- */
@@ -425,15 +428,15 @@ typedef union {
 
 #define CAN_ECR_TEC_Pos             0            /**< \brief (CAN_ECR) Transmit Error Counter */
 #define CAN_ECR_TEC_Msk             (0xFFul << CAN_ECR_TEC_Pos)
-#define CAN_ECR_TEC(value)          ((CAN_ECR_TEC_Msk & ((value) << CAN_ECR_TEC_Pos)))
+#define CAN_ECR_TEC(value)          (CAN_ECR_TEC_Msk & ((value) << CAN_ECR_TEC_Pos))
 #define CAN_ECR_REC_Pos             8            /**< \brief (CAN_ECR) Receive Error Counter */
 #define CAN_ECR_REC_Msk             (0x7Ful << CAN_ECR_REC_Pos)
-#define CAN_ECR_REC(value)          ((CAN_ECR_REC_Msk & ((value) << CAN_ECR_REC_Pos)))
+#define CAN_ECR_REC(value)          (CAN_ECR_REC_Msk & ((value) << CAN_ECR_REC_Pos))
 #define CAN_ECR_RP_Pos              15           /**< \brief (CAN_ECR) Receive Error Passive */
 #define CAN_ECR_RP                  (0x1ul << CAN_ECR_RP_Pos)
 #define CAN_ECR_CEL_Pos             16           /**< \brief (CAN_ECR) CAN Error Logging */
 #define CAN_ECR_CEL_Msk             (0xFFul << CAN_ECR_CEL_Pos)
-#define CAN_ECR_CEL(value)          ((CAN_ECR_CEL_Msk & ((value) << CAN_ECR_CEL_Pos)))
+#define CAN_ECR_CEL(value)          (CAN_ECR_CEL_Msk & ((value) << CAN_ECR_CEL_Pos))
 #define CAN_ECR_MASK                0x00FFFFFFul /**< \brief (CAN_ECR) MASK Register */
 
 /* -------- CAN_PSR : (CAN Offset: 0x44) (R/  32) Protocol Status -------- */
@@ -463,7 +466,7 @@ typedef union {
 
 #define CAN_PSR_LEC_Pos             0            /**< \brief (CAN_PSR) Last Error Code */
 #define CAN_PSR_LEC_Msk             (0x7ul << CAN_PSR_LEC_Pos)
-#define CAN_PSR_LEC(value)          ((CAN_PSR_LEC_Msk & ((value) << CAN_PSR_LEC_Pos)))
+#define CAN_PSR_LEC(value)          (CAN_PSR_LEC_Msk & ((value) << CAN_PSR_LEC_Pos))
 #define   CAN_PSR_LEC_NONE_Val            0x0ul  /**< \brief (CAN_PSR) No Error */
 #define   CAN_PSR_LEC_STUFF_Val           0x1ul  /**< \brief (CAN_PSR) Stuff Error */
 #define   CAN_PSR_LEC_FORM_Val            0x2ul  /**< \brief (CAN_PSR) Form Error */
@@ -482,7 +485,7 @@ typedef union {
 #define CAN_PSR_LEC_NC              (CAN_PSR_LEC_NC_Val            << CAN_PSR_LEC_Pos)
 #define CAN_PSR_ACT_Pos             3            /**< \brief (CAN_PSR) Activity */
 #define CAN_PSR_ACT_Msk             (0x3ul << CAN_PSR_ACT_Pos)
-#define CAN_PSR_ACT(value)          ((CAN_PSR_ACT_Msk & ((value) << CAN_PSR_ACT_Pos)))
+#define CAN_PSR_ACT(value)          (CAN_PSR_ACT_Msk & ((value) << CAN_PSR_ACT_Pos))
 #define   CAN_PSR_ACT_SYNC_Val            0x0ul  /**< \brief (CAN_PSR) Node is synchronizing on CAN communication */
 #define   CAN_PSR_ACT_IDLE_Val            0x1ul  /**< \brief (CAN_PSR) Node is neither receiver nor transmitter */
 #define   CAN_PSR_ACT_RX_Val              0x2ul  /**< \brief (CAN_PSR) Node is operating as receiver */
@@ -499,7 +502,7 @@ typedef union {
 #define CAN_PSR_BO                  (0x1ul << CAN_PSR_BO_Pos)
 #define CAN_PSR_DLEC_Pos            8            /**< \brief (CAN_PSR) Data Phase Last Error Code */
 #define CAN_PSR_DLEC_Msk            (0x7ul << CAN_PSR_DLEC_Pos)
-#define CAN_PSR_DLEC(value)         ((CAN_PSR_DLEC_Msk & ((value) << CAN_PSR_DLEC_Pos)))
+#define CAN_PSR_DLEC(value)         (CAN_PSR_DLEC_Msk & ((value) << CAN_PSR_DLEC_Pos))
 #define   CAN_PSR_DLEC_NONE_Val           0x0ul  /**< \brief (CAN_PSR) No Error */
 #define   CAN_PSR_DLEC_STUFF_Val          0x1ul  /**< \brief (CAN_PSR) Stuff Error */
 #define   CAN_PSR_DLEC_FORM_Val           0x2ul  /**< \brief (CAN_PSR) Form Error */
@@ -526,7 +529,7 @@ typedef union {
 #define CAN_PSR_PXE                 (0x1ul << CAN_PSR_PXE_Pos)
 #define CAN_PSR_TDCV_Pos            16           /**< \brief (CAN_PSR) Transmitter Delay Compensation Value */
 #define CAN_PSR_TDCV_Msk            (0x7Ful << CAN_PSR_TDCV_Pos)
-#define CAN_PSR_TDCV(value)         ((CAN_PSR_TDCV_Msk & ((value) << CAN_PSR_TDCV_Pos)))
+#define CAN_PSR_TDCV(value)         (CAN_PSR_TDCV_Msk & ((value) << CAN_PSR_TDCV_Pos))
 #define CAN_PSR_MASK                0x007F7FFFul /**< \brief (CAN_PSR) MASK Register */
 
 /* -------- CAN_TDCR : (CAN Offset: 0x48) (R/W 32) Extended ID Filter Configuration -------- */
@@ -547,10 +550,10 @@ typedef union {
 
 #define CAN_TDCR_TDCF_Pos           0            /**< \brief (CAN_TDCR) Transmitter Delay Compensation Filter Length */
 #define CAN_TDCR_TDCF_Msk           (0x7Ful << CAN_TDCR_TDCF_Pos)
-#define CAN_TDCR_TDCF(value)        ((CAN_TDCR_TDCF_Msk & ((value) << CAN_TDCR_TDCF_Pos)))
+#define CAN_TDCR_TDCF(value)        (CAN_TDCR_TDCF_Msk & ((value) << CAN_TDCR_TDCF_Pos))
 #define CAN_TDCR_TDCO_Pos           8            /**< \brief (CAN_TDCR) Transmitter Delay Compensation Offset */
 #define CAN_TDCR_TDCO_Msk           (0x7Ful << CAN_TDCR_TDCO_Pos)
-#define CAN_TDCR_TDCO(value)        ((CAN_TDCR_TDCO_Msk & ((value) << CAN_TDCR_TDCO_Pos)))
+#define CAN_TDCR_TDCO(value)        (CAN_TDCR_TDCO_Msk & ((value) << CAN_TDCR_TDCO_Pos))
 #define CAN_TDCR_MASK               0x00007F7Ful /**< \brief (CAN_TDCR) MASK Register */
 
 /* -------- CAN_IR : (CAN Offset: 0x50) (R/W 32) Interrupt -------- */
@@ -912,7 +915,7 @@ typedef union {
 #define CAN_GFC_RRFS                (0x1ul << CAN_GFC_RRFS_Pos)
 #define CAN_GFC_ANFE_Pos            2            /**< \brief (CAN_GFC) Accept Non-matching Frames Extended */
 #define CAN_GFC_ANFE_Msk            (0x3ul << CAN_GFC_ANFE_Pos)
-#define CAN_GFC_ANFE(value)         ((CAN_GFC_ANFE_Msk & ((value) << CAN_GFC_ANFE_Pos)))
+#define CAN_GFC_ANFE(value)         (CAN_GFC_ANFE_Msk & ((value) << CAN_GFC_ANFE_Pos))
 #define   CAN_GFC_ANFE_RXF0_Val           0x0ul  /**< \brief (CAN_GFC) Accept in Rx FIFO 0 */
 #define   CAN_GFC_ANFE_RXF1_Val           0x1ul  /**< \brief (CAN_GFC) Accept in Rx FIFO 1 */
 #define   CAN_GFC_ANFE_REJECT_Val         0x2ul  /**< \brief (CAN_GFC) Reject */
@@ -921,7 +924,7 @@ typedef union {
 #define CAN_GFC_ANFE_REJECT         (CAN_GFC_ANFE_REJECT_Val       << CAN_GFC_ANFE_Pos)
 #define CAN_GFC_ANFS_Pos            4            /**< \brief (CAN_GFC) Accept Non-matching Frames Standard */
 #define CAN_GFC_ANFS_Msk            (0x3ul << CAN_GFC_ANFS_Pos)
-#define CAN_GFC_ANFS(value)         ((CAN_GFC_ANFS_Msk & ((value) << CAN_GFC_ANFS_Pos)))
+#define CAN_GFC_ANFS(value)         (CAN_GFC_ANFS_Msk & ((value) << CAN_GFC_ANFS_Pos))
 #define   CAN_GFC_ANFS_RXF0_Val           0x0ul  /**< \brief (CAN_GFC) Accept in Rx FIFO 0 */
 #define   CAN_GFC_ANFS_RXF1_Val           0x1ul  /**< \brief (CAN_GFC) Accept in Rx FIFO 1 */
 #define   CAN_GFC_ANFS_REJECT_Val         0x2ul  /**< \brief (CAN_GFC) Reject */
@@ -947,10 +950,10 @@ typedef union {
 
 #define CAN_SIDFC_FLSSA_Pos         0            /**< \brief (CAN_SIDFC) Filter List Standard Start Address */
 #define CAN_SIDFC_FLSSA_Msk         (0xFFFFul << CAN_SIDFC_FLSSA_Pos)
-#define CAN_SIDFC_FLSSA(value)      ((CAN_SIDFC_FLSSA_Msk & ((value) << CAN_SIDFC_FLSSA_Pos)))
+#define CAN_SIDFC_FLSSA(value)      (CAN_SIDFC_FLSSA_Msk & ((value) << CAN_SIDFC_FLSSA_Pos))
 #define CAN_SIDFC_LSS_Pos           16           /**< \brief (CAN_SIDFC) List Size Standard */
 #define CAN_SIDFC_LSS_Msk           (0xFFul << CAN_SIDFC_LSS_Pos)
-#define CAN_SIDFC_LSS(value)        ((CAN_SIDFC_LSS_Msk & ((value) << CAN_SIDFC_LSS_Pos)))
+#define CAN_SIDFC_LSS(value)        (CAN_SIDFC_LSS_Msk & ((value) << CAN_SIDFC_LSS_Pos))
 #define CAN_SIDFC_MASK              0x00FFFFFFul /**< \brief (CAN_SIDFC) MASK Register */
 
 /* -------- CAN_XIDFC : (CAN Offset: 0x88) (R/W 32) Extended ID Filter Configuration -------- */
@@ -970,10 +973,10 @@ typedef union {
 
 #define CAN_XIDFC_FLESA_Pos         0            /**< \brief (CAN_XIDFC) Filter List Extended Start Address */
 #define CAN_XIDFC_FLESA_Msk         (0xFFFFul << CAN_XIDFC_FLESA_Pos)
-#define CAN_XIDFC_FLESA(value)      ((CAN_XIDFC_FLESA_Msk & ((value) << CAN_XIDFC_FLESA_Pos)))
+#define CAN_XIDFC_FLESA(value)      (CAN_XIDFC_FLESA_Msk & ((value) << CAN_XIDFC_FLESA_Pos))
 #define CAN_XIDFC_LSE_Pos           16           /**< \brief (CAN_XIDFC) List Size Extended */
 #define CAN_XIDFC_LSE_Msk           (0x7Ful << CAN_XIDFC_LSE_Pos)
-#define CAN_XIDFC_LSE(value)        ((CAN_XIDFC_LSE_Msk & ((value) << CAN_XIDFC_LSE_Pos)))
+#define CAN_XIDFC_LSE(value)        (CAN_XIDFC_LSE_Msk & ((value) << CAN_XIDFC_LSE_Pos))
 #define CAN_XIDFC_MASK              0x007FFFFFul /**< \brief (CAN_XIDFC) MASK Register */
 
 /* -------- CAN_XIDAM : (CAN Offset: 0x90) (R/W 32) Extended ID AND Mask -------- */
@@ -992,7 +995,7 @@ typedef union {
 
 #define CAN_XIDAM_EIDM_Pos          0            /**< \brief (CAN_XIDAM) Extended ID Mask */
 #define CAN_XIDAM_EIDM_Msk          (0x1FFFFFFFul << CAN_XIDAM_EIDM_Pos)
-#define CAN_XIDAM_EIDM(value)       ((CAN_XIDAM_EIDM_Msk & ((value) << CAN_XIDAM_EIDM_Pos)))
+#define CAN_XIDAM_EIDM(value)       (CAN_XIDAM_EIDM_Msk & ((value) << CAN_XIDAM_EIDM_Pos))
 #define CAN_XIDAM_MASK              0x1FFFFFFFul /**< \brief (CAN_XIDAM) MASK Register */
 
 /* -------- CAN_HPMS : (CAN Offset: 0x94) (R/  32) High Priority Message Status -------- */
@@ -1014,10 +1017,10 @@ typedef union {
 
 #define CAN_HPMS_BIDX_Pos           0            /**< \brief (CAN_HPMS) Buffer Index */
 #define CAN_HPMS_BIDX_Msk           (0x3Ful << CAN_HPMS_BIDX_Pos)
-#define CAN_HPMS_BIDX(value)        ((CAN_HPMS_BIDX_Msk & ((value) << CAN_HPMS_BIDX_Pos)))
+#define CAN_HPMS_BIDX(value)        (CAN_HPMS_BIDX_Msk & ((value) << CAN_HPMS_BIDX_Pos))
 #define CAN_HPMS_MSI_Pos            6            /**< \brief (CAN_HPMS) Message Storage Indicator */
 #define CAN_HPMS_MSI_Msk            (0x3ul << CAN_HPMS_MSI_Pos)
-#define CAN_HPMS_MSI(value)         ((CAN_HPMS_MSI_Msk & ((value) << CAN_HPMS_MSI_Pos)))
+#define CAN_HPMS_MSI(value)         (CAN_HPMS_MSI_Msk & ((value) << CAN_HPMS_MSI_Pos))
 #define   CAN_HPMS_MSI_NONE_Val           0x0ul  /**< \brief (CAN_HPMS) No FIFO selected */
 #define   CAN_HPMS_MSI_LOST_Val           0x1ul  /**< \brief (CAN_HPMS) FIFO message lost */
 #define   CAN_HPMS_MSI_FIFO0_Val          0x2ul  /**< \brief (CAN_HPMS) Message stored in FIFO 0 */
@@ -1028,7 +1031,7 @@ typedef union {
 #define CAN_HPMS_MSI_FIFO1          (CAN_HPMS_MSI_FIFO1_Val        << CAN_HPMS_MSI_Pos)
 #define CAN_HPMS_FIDX_Pos           8            /**< \brief (CAN_HPMS) Filter Index */
 #define CAN_HPMS_FIDX_Msk           (0x7Ful << CAN_HPMS_FIDX_Pos)
-#define CAN_HPMS_FIDX(value)        ((CAN_HPMS_FIDX_Msk & ((value) << CAN_HPMS_FIDX_Pos)))
+#define CAN_HPMS_FIDX(value)        (CAN_HPMS_FIDX_Msk & ((value) << CAN_HPMS_FIDX_Pos))
 #define CAN_HPMS_FLST_Pos           15           /**< \brief (CAN_HPMS) Filter List */
 #define CAN_HPMS_FLST               (0x1ul << CAN_HPMS_FLST_Pos)
 #define CAN_HPMS_MASK               0x0000FFFFul /**< \brief (CAN_HPMS) MASK Register */
@@ -1272,13 +1275,13 @@ typedef union {
 
 #define CAN_RXF0C_F0SA_Pos          0            /**< \brief (CAN_RXF0C) Rx FIFO 0 Start Address */
 #define CAN_RXF0C_F0SA_Msk          (0xFFFFul << CAN_RXF0C_F0SA_Pos)
-#define CAN_RXF0C_F0SA(value)       ((CAN_RXF0C_F0SA_Msk & ((value) << CAN_RXF0C_F0SA_Pos)))
+#define CAN_RXF0C_F0SA(value)       (CAN_RXF0C_F0SA_Msk & ((value) << CAN_RXF0C_F0SA_Pos))
 #define CAN_RXF0C_F0S_Pos           16           /**< \brief (CAN_RXF0C) Rx FIFO 0 Size */
 #define CAN_RXF0C_F0S_Msk           (0x7Ful << CAN_RXF0C_F0S_Pos)
-#define CAN_RXF0C_F0S(value)        ((CAN_RXF0C_F0S_Msk & ((value) << CAN_RXF0C_F0S_Pos)))
+#define CAN_RXF0C_F0S(value)        (CAN_RXF0C_F0S_Msk & ((value) << CAN_RXF0C_F0S_Pos))
 #define CAN_RXF0C_F0WM_Pos          24           /**< \brief (CAN_RXF0C) Rx FIFO 0 Watermark */
 #define CAN_RXF0C_F0WM_Msk          (0x7Ful << CAN_RXF0C_F0WM_Pos)
-#define CAN_RXF0C_F0WM(value)       ((CAN_RXF0C_F0WM_Msk & ((value) << CAN_RXF0C_F0WM_Pos)))
+#define CAN_RXF0C_F0WM(value)       (CAN_RXF0C_F0WM_Msk & ((value) << CAN_RXF0C_F0WM_Pos))
 #define CAN_RXF0C_F0OM_Pos          31           /**< \brief (CAN_RXF0C) FIFO 0 Operation Mode */
 #define CAN_RXF0C_F0OM              (0x1ul << CAN_RXF0C_F0OM_Pos)
 #define CAN_RXF0C_MASK              0xFF7FFFFFul /**< \brief (CAN_RXF0C) MASK Register */
@@ -1306,13 +1309,13 @@ typedef union {
 
 #define CAN_RXF0S_F0FL_Pos          0            /**< \brief (CAN_RXF0S) Rx FIFO 0 Fill Level */
 #define CAN_RXF0S_F0FL_Msk          (0x7Ful << CAN_RXF0S_F0FL_Pos)
-#define CAN_RXF0S_F0FL(value)       ((CAN_RXF0S_F0FL_Msk & ((value) << CAN_RXF0S_F0FL_Pos)))
+#define CAN_RXF0S_F0FL(value)       (CAN_RXF0S_F0FL_Msk & ((value) << CAN_RXF0S_F0FL_Pos))
 #define CAN_RXF0S_F0GI_Pos          8            /**< \brief (CAN_RXF0S) Rx FIFO 0 Get Index */
 #define CAN_RXF0S_F0GI_Msk          (0x3Ful << CAN_RXF0S_F0GI_Pos)
-#define CAN_RXF0S_F0GI(value)       ((CAN_RXF0S_F0GI_Msk & ((value) << CAN_RXF0S_F0GI_Pos)))
+#define CAN_RXF0S_F0GI(value)       (CAN_RXF0S_F0GI_Msk & ((value) << CAN_RXF0S_F0GI_Pos))
 #define CAN_RXF0S_F0PI_Pos          16           /**< \brief (CAN_RXF0S) Rx FIFO 0 Put Index */
 #define CAN_RXF0S_F0PI_Msk          (0x3Ful << CAN_RXF0S_F0PI_Pos)
-#define CAN_RXF0S_F0PI(value)       ((CAN_RXF0S_F0PI_Msk & ((value) << CAN_RXF0S_F0PI_Pos)))
+#define CAN_RXF0S_F0PI(value)       (CAN_RXF0S_F0PI_Msk & ((value) << CAN_RXF0S_F0PI_Pos))
 #define CAN_RXF0S_F0F_Pos           24           /**< \brief (CAN_RXF0S) Rx FIFO 0 Full */
 #define CAN_RXF0S_F0F               (0x1ul << CAN_RXF0S_F0F_Pos)
 #define CAN_RXF0S_RF0L_Pos          25           /**< \brief (CAN_RXF0S) Rx FIFO 0 Message Lost */
@@ -1335,7 +1338,7 @@ typedef union {
 
 #define CAN_RXF0A_F0AI_Pos          0            /**< \brief (CAN_RXF0A) Rx FIFO 0 Acknowledge Index */
 #define CAN_RXF0A_F0AI_Msk          (0x3Ful << CAN_RXF0A_F0AI_Pos)
-#define CAN_RXF0A_F0AI(value)       ((CAN_RXF0A_F0AI_Msk & ((value) << CAN_RXF0A_F0AI_Pos)))
+#define CAN_RXF0A_F0AI(value)       (CAN_RXF0A_F0AI_Msk & ((value) << CAN_RXF0A_F0AI_Pos))
 #define CAN_RXF0A_MASK              0x0000003Ful /**< \brief (CAN_RXF0A) MASK Register */
 
 /* -------- CAN_RXBC : (CAN Offset: 0xAC) (R/W 32) Rx Buffer Configuration -------- */
@@ -1354,7 +1357,7 @@ typedef union {
 
 #define CAN_RXBC_RBSA_Pos           0            /**< \brief (CAN_RXBC) Rx Buffer Start Address */
 #define CAN_RXBC_RBSA_Msk           (0xFFFFul << CAN_RXBC_RBSA_Pos)
-#define CAN_RXBC_RBSA(value)        ((CAN_RXBC_RBSA_Msk & ((value) << CAN_RXBC_RBSA_Pos)))
+#define CAN_RXBC_RBSA(value)        (CAN_RXBC_RBSA_Msk & ((value) << CAN_RXBC_RBSA_Pos))
 #define CAN_RXBC_MASK               0x0000FFFFul /**< \brief (CAN_RXBC) MASK Register */
 
 /* -------- CAN_RXF1C : (CAN Offset: 0xB0) (R/W 32) Rx FIFO 1 Configuration -------- */
@@ -1376,13 +1379,13 @@ typedef union {
 
 #define CAN_RXF1C_F1SA_Pos          0            /**< \brief (CAN_RXF1C) Rx FIFO 1 Start Address */
 #define CAN_RXF1C_F1SA_Msk          (0xFFFFul << CAN_RXF1C_F1SA_Pos)
-#define CAN_RXF1C_F1SA(value)       ((CAN_RXF1C_F1SA_Msk & ((value) << CAN_RXF1C_F1SA_Pos)))
+#define CAN_RXF1C_F1SA(value)       (CAN_RXF1C_F1SA_Msk & ((value) << CAN_RXF1C_F1SA_Pos))
 #define CAN_RXF1C_F1S_Pos           16           /**< \brief (CAN_RXF1C) Rx FIFO 1 Size */
 #define CAN_RXF1C_F1S_Msk           (0x7Ful << CAN_RXF1C_F1S_Pos)
-#define CAN_RXF1C_F1S(value)        ((CAN_RXF1C_F1S_Msk & ((value) << CAN_RXF1C_F1S_Pos)))
+#define CAN_RXF1C_F1S(value)        (CAN_RXF1C_F1S_Msk & ((value) << CAN_RXF1C_F1S_Pos))
 #define CAN_RXF1C_F1WM_Pos          24           /**< \brief (CAN_RXF1C) Rx FIFO 1 Watermark */
 #define CAN_RXF1C_F1WM_Msk          (0x7Ful << CAN_RXF1C_F1WM_Pos)
-#define CAN_RXF1C_F1WM(value)       ((CAN_RXF1C_F1WM_Msk & ((value) << CAN_RXF1C_F1WM_Pos)))
+#define CAN_RXF1C_F1WM(value)       (CAN_RXF1C_F1WM_Msk & ((value) << CAN_RXF1C_F1WM_Pos))
 #define CAN_RXF1C_F1OM_Pos          31           /**< \brief (CAN_RXF1C) FIFO 1 Operation Mode */
 #define CAN_RXF1C_F1OM              (0x1ul << CAN_RXF1C_F1OM_Pos)
 #define CAN_RXF1C_MASK              0xFF7FFFFFul /**< \brief (CAN_RXF1C) MASK Register */
@@ -1411,20 +1414,20 @@ typedef union {
 
 #define CAN_RXF1S_F1FL_Pos          0            /**< \brief (CAN_RXF1S) Rx FIFO 1 Fill Level */
 #define CAN_RXF1S_F1FL_Msk          (0x7Ful << CAN_RXF1S_F1FL_Pos)
-#define CAN_RXF1S_F1FL(value)       ((CAN_RXF1S_F1FL_Msk & ((value) << CAN_RXF1S_F1FL_Pos)))
+#define CAN_RXF1S_F1FL(value)       (CAN_RXF1S_F1FL_Msk & ((value) << CAN_RXF1S_F1FL_Pos))
 #define CAN_RXF1S_F1GI_Pos          8            /**< \brief (CAN_RXF1S) Rx FIFO 1 Get Index */
 #define CAN_RXF1S_F1GI_Msk          (0x3Ful << CAN_RXF1S_F1GI_Pos)
-#define CAN_RXF1S_F1GI(value)       ((CAN_RXF1S_F1GI_Msk & ((value) << CAN_RXF1S_F1GI_Pos)))
+#define CAN_RXF1S_F1GI(value)       (CAN_RXF1S_F1GI_Msk & ((value) << CAN_RXF1S_F1GI_Pos))
 #define CAN_RXF1S_F1PI_Pos          16           /**< \brief (CAN_RXF1S) Rx FIFO 1 Put Index */
 #define CAN_RXF1S_F1PI_Msk          (0x3Ful << CAN_RXF1S_F1PI_Pos)
-#define CAN_RXF1S_F1PI(value)       ((CAN_RXF1S_F1PI_Msk & ((value) << CAN_RXF1S_F1PI_Pos)))
+#define CAN_RXF1S_F1PI(value)       (CAN_RXF1S_F1PI_Msk & ((value) << CAN_RXF1S_F1PI_Pos))
 #define CAN_RXF1S_F1F_Pos           24           /**< \brief (CAN_RXF1S) Rx FIFO 1 Full */
 #define CAN_RXF1S_F1F               (0x1ul << CAN_RXF1S_F1F_Pos)
 #define CAN_RXF1S_RF1L_Pos          25           /**< \brief (CAN_RXF1S) Rx FIFO 1 Message Lost */
 #define CAN_RXF1S_RF1L              (0x1ul << CAN_RXF1S_RF1L_Pos)
 #define CAN_RXF1S_DMS_Pos           30           /**< \brief (CAN_RXF1S) Debug Message Status */
 #define CAN_RXF1S_DMS_Msk           (0x3ul << CAN_RXF1S_DMS_Pos)
-#define CAN_RXF1S_DMS(value)        ((CAN_RXF1S_DMS_Msk & ((value) << CAN_RXF1S_DMS_Pos)))
+#define CAN_RXF1S_DMS(value)        (CAN_RXF1S_DMS_Msk & ((value) << CAN_RXF1S_DMS_Pos))
 #define   CAN_RXF1S_DMS_IDLE_Val          0x0ul  /**< \brief (CAN_RXF1S) Idle state */
 #define   CAN_RXF1S_DMS_DBGA_Val          0x1ul  /**< \brief (CAN_RXF1S) Debug message A received */
 #define   CAN_RXF1S_DMS_DBGB_Val          0x2ul  /**< \brief (CAN_RXF1S) Debug message A/B received */
@@ -1451,7 +1454,7 @@ typedef union {
 
 #define CAN_RXF1A_F1AI_Pos          0            /**< \brief (CAN_RXF1A) Rx FIFO 1 Acknowledge Index */
 #define CAN_RXF1A_F1AI_Msk          (0x3Ful << CAN_RXF1A_F1AI_Pos)
-#define CAN_RXF1A_F1AI(value)       ((CAN_RXF1A_F1AI_Msk & ((value) << CAN_RXF1A_F1AI_Pos)))
+#define CAN_RXF1A_F1AI(value)       (CAN_RXF1A_F1AI_Msk & ((value) << CAN_RXF1A_F1AI_Pos))
 #define CAN_RXF1A_MASK              0x0000003Ful /**< \brief (CAN_RXF1A) MASK Register */
 
 /* -------- CAN_RXESC : (CAN Offset: 0xBC) (R/W 32) Rx Buffer / FIFO Element Size Configuration -------- */
@@ -1474,7 +1477,7 @@ typedef union {
 
 #define CAN_RXESC_F0DS_Pos          0            /**< \brief (CAN_RXESC) Rx FIFO 0 Data Field Size */
 #define CAN_RXESC_F0DS_Msk          (0x7ul << CAN_RXESC_F0DS_Pos)
-#define CAN_RXESC_F0DS(value)       ((CAN_RXESC_F0DS_Msk & ((value) << CAN_RXESC_F0DS_Pos)))
+#define CAN_RXESC_F0DS(value)       (CAN_RXESC_F0DS_Msk & ((value) << CAN_RXESC_F0DS_Pos))
 #define   CAN_RXESC_F0DS_DATA8_Val        0x0ul  /**< \brief (CAN_RXESC) 8 byte data field */
 #define   CAN_RXESC_F0DS_DATA12_Val       0x1ul  /**< \brief (CAN_RXESC) 12 byte data field */
 #define   CAN_RXESC_F0DS_DATA16_Val       0x2ul  /**< \brief (CAN_RXESC) 16 byte data field */
@@ -1493,7 +1496,7 @@ typedef union {
 #define CAN_RXESC_F0DS_DATA64       (CAN_RXESC_F0DS_DATA64_Val     << CAN_RXESC_F0DS_Pos)
 #define CAN_RXESC_F1DS_Pos          4            /**< \brief (CAN_RXESC) Rx FIFO 1 Data Field Size */
 #define CAN_RXESC_F1DS_Msk          (0x7ul << CAN_RXESC_F1DS_Pos)
-#define CAN_RXESC_F1DS(value)       ((CAN_RXESC_F1DS_Msk & ((value) << CAN_RXESC_F1DS_Pos)))
+#define CAN_RXESC_F1DS(value)       (CAN_RXESC_F1DS_Msk & ((value) << CAN_RXESC_F1DS_Pos))
 #define   CAN_RXESC_F1DS_DATA8_Val        0x0ul  /**< \brief (CAN_RXESC) 8 byte data field */
 #define   CAN_RXESC_F1DS_DATA12_Val       0x1ul  /**< \brief (CAN_RXESC) 12 byte data field */
 #define   CAN_RXESC_F1DS_DATA16_Val       0x2ul  /**< \brief (CAN_RXESC) 16 byte data field */
@@ -1512,7 +1515,7 @@ typedef union {
 #define CAN_RXESC_F1DS_DATA64       (CAN_RXESC_F1DS_DATA64_Val     << CAN_RXESC_F1DS_Pos)
 #define CAN_RXESC_RBDS_Pos          8            /**< \brief (CAN_RXESC) Rx Buffer Data Field Size */
 #define CAN_RXESC_RBDS_Msk          (0x7ul << CAN_RXESC_RBDS_Pos)
-#define CAN_RXESC_RBDS(value)       ((CAN_RXESC_RBDS_Msk & ((value) << CAN_RXESC_RBDS_Pos)))
+#define CAN_RXESC_RBDS(value)       (CAN_RXESC_RBDS_Msk & ((value) << CAN_RXESC_RBDS_Pos))
 #define   CAN_RXESC_RBDS_DATA8_Val        0x0ul  /**< \brief (CAN_RXESC) 8 byte data field */
 #define   CAN_RXESC_RBDS_DATA12_Val       0x1ul  /**< \brief (CAN_RXESC) 12 byte data field */
 #define   CAN_RXESC_RBDS_DATA16_Val       0x2ul  /**< \brief (CAN_RXESC) 16 byte data field */
@@ -1551,13 +1554,13 @@ typedef union {
 
 #define CAN_TXBC_TBSA_Pos           0            /**< \brief (CAN_TXBC) Tx Buffers Start Address */
 #define CAN_TXBC_TBSA_Msk           (0xFFFFul << CAN_TXBC_TBSA_Pos)
-#define CAN_TXBC_TBSA(value)        ((CAN_TXBC_TBSA_Msk & ((value) << CAN_TXBC_TBSA_Pos)))
+#define CAN_TXBC_TBSA(value)        (CAN_TXBC_TBSA_Msk & ((value) << CAN_TXBC_TBSA_Pos))
 #define CAN_TXBC_NDTB_Pos           16           /**< \brief (CAN_TXBC) Number of Dedicated Transmit Buffers */
 #define CAN_TXBC_NDTB_Msk           (0x3Ful << CAN_TXBC_NDTB_Pos)
-#define CAN_TXBC_NDTB(value)        ((CAN_TXBC_NDTB_Msk & ((value) << CAN_TXBC_NDTB_Pos)))
+#define CAN_TXBC_NDTB(value)        (CAN_TXBC_NDTB_Msk & ((value) << CAN_TXBC_NDTB_Pos))
 #define CAN_TXBC_TFQS_Pos           24           /**< \brief (CAN_TXBC) Transmit FIFO/Queue Size */
 #define CAN_TXBC_TFQS_Msk           (0x3Ful << CAN_TXBC_TFQS_Pos)
-#define CAN_TXBC_TFQS(value)        ((CAN_TXBC_TFQS_Msk & ((value) << CAN_TXBC_TFQS_Pos)))
+#define CAN_TXBC_TFQS(value)        (CAN_TXBC_TFQS_Msk & ((value) << CAN_TXBC_TFQS_Pos))
 #define CAN_TXBC_TFQM_Pos           30           /**< \brief (CAN_TXBC) Tx FIFO/Queue Mode */
 #define CAN_TXBC_TFQM               (0x1ul << CAN_TXBC_TFQM_Pos)
 #define CAN_TXBC_MASK               0x7F3FFFFFul /**< \brief (CAN_TXBC) MASK Register */
@@ -1583,13 +1586,13 @@ typedef union {
 
 #define CAN_TXFQS_TFFL_Pos          0            /**< \brief (CAN_TXFQS) Tx FIFO Free Level */
 #define CAN_TXFQS_TFFL_Msk          (0x3Ful << CAN_TXFQS_TFFL_Pos)
-#define CAN_TXFQS_TFFL(value)       ((CAN_TXFQS_TFFL_Msk & ((value) << CAN_TXFQS_TFFL_Pos)))
+#define CAN_TXFQS_TFFL(value)       (CAN_TXFQS_TFFL_Msk & ((value) << CAN_TXFQS_TFFL_Pos))
 #define CAN_TXFQS_TFGI_Pos          8            /**< \brief (CAN_TXFQS) Tx FIFO Get Index */
 #define CAN_TXFQS_TFGI_Msk          (0x1Ful << CAN_TXFQS_TFGI_Pos)
-#define CAN_TXFQS_TFGI(value)       ((CAN_TXFQS_TFGI_Msk & ((value) << CAN_TXFQS_TFGI_Pos)))
+#define CAN_TXFQS_TFGI(value)       (CAN_TXFQS_TFGI_Msk & ((value) << CAN_TXFQS_TFGI_Pos))
 #define CAN_TXFQS_TFQPI_Pos         16           /**< \brief (CAN_TXFQS) Tx FIFO/Queue Put Index */
 #define CAN_TXFQS_TFQPI_Msk         (0x1Ful << CAN_TXFQS_TFQPI_Pos)
-#define CAN_TXFQS_TFQPI(value)      ((CAN_TXFQS_TFQPI_Msk & ((value) << CAN_TXFQS_TFQPI_Pos)))
+#define CAN_TXFQS_TFQPI(value)      (CAN_TXFQS_TFQPI_Msk & ((value) << CAN_TXFQS_TFQPI_Pos))
 #define CAN_TXFQS_TFQF_Pos          21           /**< \brief (CAN_TXFQS) Tx FIFO/Queue Full */
 #define CAN_TXFQS_TFQF              (0x1ul << CAN_TXFQS_TFQF_Pos)
 #define CAN_TXFQS_MASK              0x003F1F3Ful /**< \brief (CAN_TXFQS) MASK Register */
@@ -1610,7 +1613,7 @@ typedef union {
 
 #define CAN_TXESC_TBDS_Pos          0            /**< \brief (CAN_TXESC) Tx Buffer Data Field Size */
 #define CAN_TXESC_TBDS_Msk          (0x7ul << CAN_TXESC_TBDS_Pos)
-#define CAN_TXESC_TBDS(value)       ((CAN_TXESC_TBDS_Msk & ((value) << CAN_TXESC_TBDS_Pos)))
+#define CAN_TXESC_TBDS(value)       (CAN_TXESC_TBDS_Msk & ((value) << CAN_TXESC_TBDS_Pos))
 #define   CAN_TXESC_TBDS_DATA8_Val        0x0ul  /**< \brief (CAN_TXESC) 8 byte data field */
 #define   CAN_TXESC_TBDS_DATA12_Val       0x1ul  /**< \brief (CAN_TXESC) 12 byte data field */
 #define   CAN_TXESC_TBDS_DATA16_Val       0x2ul  /**< \brief (CAN_TXESC) 16 byte data field */
@@ -2418,13 +2421,13 @@ typedef union {
 
 #define CAN_TXEFC_EFSA_Pos          0            /**< \brief (CAN_TXEFC) Event FIFO Start Address */
 #define CAN_TXEFC_EFSA_Msk          (0xFFFFul << CAN_TXEFC_EFSA_Pos)
-#define CAN_TXEFC_EFSA(value)       ((CAN_TXEFC_EFSA_Msk & ((value) << CAN_TXEFC_EFSA_Pos)))
+#define CAN_TXEFC_EFSA(value)       (CAN_TXEFC_EFSA_Msk & ((value) << CAN_TXEFC_EFSA_Pos))
 #define CAN_TXEFC_EFS_Pos           16           /**< \brief (CAN_TXEFC) Event FIFO Size */
 #define CAN_TXEFC_EFS_Msk           (0x3Ful << CAN_TXEFC_EFS_Pos)
-#define CAN_TXEFC_EFS(value)        ((CAN_TXEFC_EFS_Msk & ((value) << CAN_TXEFC_EFS_Pos)))
+#define CAN_TXEFC_EFS(value)        (CAN_TXEFC_EFS_Msk & ((value) << CAN_TXEFC_EFS_Pos))
 #define CAN_TXEFC_EFWM_Pos          24           /**< \brief (CAN_TXEFC) Event FIFO Watermark */
 #define CAN_TXEFC_EFWM_Msk          (0x3Ful << CAN_TXEFC_EFWM_Pos)
-#define CAN_TXEFC_EFWM(value)       ((CAN_TXEFC_EFWM_Msk & ((value) << CAN_TXEFC_EFWM_Pos)))
+#define CAN_TXEFC_EFWM(value)       (CAN_TXEFC_EFWM_Msk & ((value) << CAN_TXEFC_EFWM_Pos))
 #define CAN_TXEFC_MASK              0x3F3FFFFFul /**< \brief (CAN_TXEFC) MASK Register */
 
 /* -------- CAN_TXEFS : (CAN Offset: 0xF4) (R/  32) Tx Event FIFO Status -------- */
@@ -2450,13 +2453,13 @@ typedef union {
 
 #define CAN_TXEFS_EFFL_Pos          0            /**< \brief (CAN_TXEFS) Event FIFO Fill Level */
 #define CAN_TXEFS_EFFL_Msk          (0x3Ful << CAN_TXEFS_EFFL_Pos)
-#define CAN_TXEFS_EFFL(value)       ((CAN_TXEFS_EFFL_Msk & ((value) << CAN_TXEFS_EFFL_Pos)))
+#define CAN_TXEFS_EFFL(value)       (CAN_TXEFS_EFFL_Msk & ((value) << CAN_TXEFS_EFFL_Pos))
 #define CAN_TXEFS_EFGI_Pos          8            /**< \brief (CAN_TXEFS) Event FIFO Get Index */
 #define CAN_TXEFS_EFGI_Msk          (0x1Ful << CAN_TXEFS_EFGI_Pos)
-#define CAN_TXEFS_EFGI(value)       ((CAN_TXEFS_EFGI_Msk & ((value) << CAN_TXEFS_EFGI_Pos)))
+#define CAN_TXEFS_EFGI(value)       (CAN_TXEFS_EFGI_Msk & ((value) << CAN_TXEFS_EFGI_Pos))
 #define CAN_TXEFS_EFPI_Pos          16           /**< \brief (CAN_TXEFS) Event FIFO Put Index */
 #define CAN_TXEFS_EFPI_Msk          (0x1Ful << CAN_TXEFS_EFPI_Pos)
-#define CAN_TXEFS_EFPI(value)       ((CAN_TXEFS_EFPI_Msk & ((value) << CAN_TXEFS_EFPI_Pos)))
+#define CAN_TXEFS_EFPI(value)       (CAN_TXEFS_EFPI_Msk & ((value) << CAN_TXEFS_EFPI_Pos))
 #define CAN_TXEFS_EFF_Pos           24           /**< \brief (CAN_TXEFS) Event FIFO Full */
 #define CAN_TXEFS_EFF               (0x1ul << CAN_TXEFS_EFF_Pos)
 #define CAN_TXEFS_TEFL_Pos          25           /**< \brief (CAN_TXEFS) Tx Event FIFO Element Lost */
@@ -2479,10 +2482,568 @@ typedef union {
 
 #define CAN_TXEFA_EFAI_Pos          0            /**< \brief (CAN_TXEFA) Event FIFO Acknowledge Index */
 #define CAN_TXEFA_EFAI_Msk          (0x1Ful << CAN_TXEFA_EFAI_Pos)
-#define CAN_TXEFA_EFAI(value)       ((CAN_TXEFA_EFAI_Msk & ((value) << CAN_TXEFA_EFAI_Pos)))
+#define CAN_TXEFA_EFAI(value)       (CAN_TXEFA_EFAI_Msk & ((value) << CAN_TXEFA_EFAI_Pos))
 #define CAN_TXEFA_MASK              0x0000001Ful /**< \brief (CAN_TXEFA) MASK Register */
 
-/** \brief CAN hardware registers */
+/* -------- CAN_RXBE_0 : (CAN Offset: 0x00) (R/W 32) Rx Buffer Element 0 -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t ID:29;            /*!< bit:  0..28  Identifier                         */
+    uint32_t RTR:1;            /*!< bit:     29  Remote Transmission Request        */
+    uint32_t XTD:1;            /*!< bit:     30  Extended Identifier                */
+    uint32_t ESI:1;            /*!< bit:     31  Error State Indicator              */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_RXBE_0_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_RXBE_0_OFFSET           0x00         /**< \brief (CAN_RXBE_0 offset) Rx Buffer Element 0 */
+#define CAN_RXBE_0_RESETVALUE       0x00000000ul /**< \brief (CAN_RXBE_0 reset_value) Rx Buffer Element 0 */
+
+#define CAN_RXBE_0_ID_Pos           0            /**< \brief (CAN_RXBE_0) Identifier */
+#define CAN_RXBE_0_ID_Msk           (0x1FFFFFFFul << CAN_RXBE_0_ID_Pos)
+#define CAN_RXBE_0_ID(value)        (CAN_RXBE_0_ID_Msk & ((value) << CAN_RXBE_0_ID_Pos))
+#define CAN_RXBE_0_RTR_Pos          29           /**< \brief (CAN_RXBE_0) Remote Transmission Request */
+#define CAN_RXBE_0_RTR              (0x1ul << CAN_RXBE_0_RTR_Pos)
+#define CAN_RXBE_0_XTD_Pos          30           /**< \brief (CAN_RXBE_0) Extended Identifier */
+#define CAN_RXBE_0_XTD              (0x1ul << CAN_RXBE_0_XTD_Pos)
+#define CAN_RXBE_0_ESI_Pos          31           /**< \brief (CAN_RXBE_0) Error State Indicator */
+#define CAN_RXBE_0_ESI              (0x1ul << CAN_RXBE_0_ESI_Pos)
+#define CAN_RXBE_0_MASK             0xFFFFFFFFul /**< \brief (CAN_RXBE_0) MASK Register */
+
+/* -------- CAN_RXBE_1 : (CAN Offset: 0x04) (R/W 32) Rx Buffer Element 1 -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t RXTS:16;          /*!< bit:  0..15  Rx Timestamp                       */
+    uint32_t DLC:4;            /*!< bit: 16..19  Data Length Code                   */
+    uint32_t BRS:1;            /*!< bit:     20  Bit Rate Search                    */
+    uint32_t FDF:1;            /*!< bit:     21  FD Format                          */
+    uint32_t :2;               /*!< bit: 22..23  Reserved                           */
+    uint32_t FIDX:7;           /*!< bit: 24..30  Filter Index                       */
+    uint32_t ANMF:1;           /*!< bit:     31  Accepted Non-matching Frame        */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_RXBE_1_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_RXBE_1_OFFSET           0x04         /**< \brief (CAN_RXBE_1 offset) Rx Buffer Element 1 */
+#define CAN_RXBE_1_RESETVALUE       0x00000000ul /**< \brief (CAN_RXBE_1 reset_value) Rx Buffer Element 1 */
+
+#define CAN_RXBE_1_RXTS_Pos         0            /**< \brief (CAN_RXBE_1) Rx Timestamp */
+#define CAN_RXBE_1_RXTS_Msk         (0xFFFFul << CAN_RXBE_1_RXTS_Pos)
+#define CAN_RXBE_1_RXTS(value)      (CAN_RXBE_1_RXTS_Msk & ((value) << CAN_RXBE_1_RXTS_Pos))
+#define CAN_RXBE_1_DLC_Pos          16           /**< \brief (CAN_RXBE_1) Data Length Code */
+#define CAN_RXBE_1_DLC_Msk          (0xFul << CAN_RXBE_1_DLC_Pos)
+#define CAN_RXBE_1_DLC(value)       (CAN_RXBE_1_DLC_Msk & ((value) << CAN_RXBE_1_DLC_Pos))
+#define CAN_RXBE_1_BRS_Pos          20           /**< \brief (CAN_RXBE_1) Bit Rate Search */
+#define CAN_RXBE_1_BRS              (0x1ul << CAN_RXBE_1_BRS_Pos)
+#define CAN_RXBE_1_FDF_Pos          21           /**< \brief (CAN_RXBE_1) FD Format */
+#define CAN_RXBE_1_FDF              (0x1ul << CAN_RXBE_1_FDF_Pos)
+#define CAN_RXBE_1_FIDX_Pos         24           /**< \brief (CAN_RXBE_1) Filter Index */
+#define CAN_RXBE_1_FIDX_Msk         (0x7Ful << CAN_RXBE_1_FIDX_Pos)
+#define CAN_RXBE_1_FIDX(value)      (CAN_RXBE_1_FIDX_Msk & ((value) << CAN_RXBE_1_FIDX_Pos))
+#define CAN_RXBE_1_ANMF_Pos         31           /**< \brief (CAN_RXBE_1) Accepted Non-matching Frame */
+#define CAN_RXBE_1_ANMF             (0x1ul << CAN_RXBE_1_ANMF_Pos)
+#define CAN_RXBE_1_MASK             0xFF3FFFFFul /**< \brief (CAN_RXBE_1) MASK Register */
+
+/* -------- CAN_RXBE_DATA : (CAN Offset: 0x08) (R/W 32) Rx Buffer Element Data -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t DB0:8;            /*!< bit:  0.. 7  Data Byte 0                        */
+    uint32_t DB1:8;            /*!< bit:  8..15  Data Byte 1                        */
+    uint32_t DB2:8;            /*!< bit: 16..23  Data Byte 2                        */
+    uint32_t DB3:8;            /*!< bit: 24..31  Data Byte 3                        */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_RXBE_DATA_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_RXBE_DATA_OFFSET        0x08         /**< \brief (CAN_RXBE_DATA offset) Rx Buffer Element Data */
+#define CAN_RXBE_DATA_RESETVALUE    0x00000000ul /**< \brief (CAN_RXBE_DATA reset_value) Rx Buffer Element Data */
+
+#define CAN_RXBE_DATA_DB0_Pos       0            /**< \brief (CAN_RXBE_DATA) Data Byte 0 */
+#define CAN_RXBE_DATA_DB0_Msk       (0xFFul << CAN_RXBE_DATA_DB0_Pos)
+#define CAN_RXBE_DATA_DB0(value)    (CAN_RXBE_DATA_DB0_Msk & ((value) << CAN_RXBE_DATA_DB0_Pos))
+#define CAN_RXBE_DATA_DB1_Pos       8            /**< \brief (CAN_RXBE_DATA) Data Byte 1 */
+#define CAN_RXBE_DATA_DB1_Msk       (0xFFul << CAN_RXBE_DATA_DB1_Pos)
+#define CAN_RXBE_DATA_DB1(value)    (CAN_RXBE_DATA_DB1_Msk & ((value) << CAN_RXBE_DATA_DB1_Pos))
+#define CAN_RXBE_DATA_DB2_Pos       16           /**< \brief (CAN_RXBE_DATA) Data Byte 2 */
+#define CAN_RXBE_DATA_DB2_Msk       (0xFFul << CAN_RXBE_DATA_DB2_Pos)
+#define CAN_RXBE_DATA_DB2(value)    (CAN_RXBE_DATA_DB2_Msk & ((value) << CAN_RXBE_DATA_DB2_Pos))
+#define CAN_RXBE_DATA_DB3_Pos       24           /**< \brief (CAN_RXBE_DATA) Data Byte 3 */
+#define CAN_RXBE_DATA_DB3_Msk       (0xFFul << CAN_RXBE_DATA_DB3_Pos)
+#define CAN_RXBE_DATA_DB3(value)    (CAN_RXBE_DATA_DB3_Msk & ((value) << CAN_RXBE_DATA_DB3_Pos))
+#define CAN_RXBE_DATA_MASK          0xFFFFFFFFul /**< \brief (CAN_RXBE_DATA) MASK Register */
+
+/* -------- CAN_RXF0E_0 : (CAN Offset: 0x00) (R/W 32) Rx FIFO 0 Element 0 -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t ID:29;            /*!< bit:  0..28  Identifier                         */
+    uint32_t RTR:1;            /*!< bit:     29  Remote Transmission Request        */
+    uint32_t XTD:1;            /*!< bit:     30  Extended Identifier                */
+    uint32_t ESI:1;            /*!< bit:     31  Error State Indicator              */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_RXF0E_0_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_RXF0E_0_OFFSET          0x00         /**< \brief (CAN_RXF0E_0 offset) Rx FIFO 0 Element 0 */
+#define CAN_RXF0E_0_RESETVALUE      0x00000000ul /**< \brief (CAN_RXF0E_0 reset_value) Rx FIFO 0 Element 0 */
+
+#define CAN_RXF0E_0_ID_Pos          0            /**< \brief (CAN_RXF0E_0) Identifier */
+#define CAN_RXF0E_0_ID_Msk          (0x1FFFFFFFul << CAN_RXF0E_0_ID_Pos)
+#define CAN_RXF0E_0_ID(value)       (CAN_RXF0E_0_ID_Msk & ((value) << CAN_RXF0E_0_ID_Pos))
+#define CAN_RXF0E_0_RTR_Pos         29           /**< \brief (CAN_RXF0E_0) Remote Transmission Request */
+#define CAN_RXF0E_0_RTR             (0x1ul << CAN_RXF0E_0_RTR_Pos)
+#define CAN_RXF0E_0_XTD_Pos         30           /**< \brief (CAN_RXF0E_0) Extended Identifier */
+#define CAN_RXF0E_0_XTD             (0x1ul << CAN_RXF0E_0_XTD_Pos)
+#define CAN_RXF0E_0_ESI_Pos         31           /**< \brief (CAN_RXF0E_0) Error State Indicator */
+#define CAN_RXF0E_0_ESI             (0x1ul << CAN_RXF0E_0_ESI_Pos)
+#define CAN_RXF0E_0_MASK            0xFFFFFFFFul /**< \brief (CAN_RXF0E_0) MASK Register */
+
+/* -------- CAN_RXF0E_1 : (CAN Offset: 0x04) (R/W 32) Rx FIFO 0 Element 1 -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t RXTS:16;          /*!< bit:  0..15  Rx Timestamp                       */
+    uint32_t DLC:4;            /*!< bit: 16..19  Data Length Code                   */
+    uint32_t BRS:1;            /*!< bit:     20  Bit Rate Search                    */
+    uint32_t FDF:1;            /*!< bit:     21  FD Format                          */
+    uint32_t :2;               /*!< bit: 22..23  Reserved                           */
+    uint32_t FIDX:7;           /*!< bit: 24..30  Filter Index                       */
+    uint32_t ANMF:1;           /*!< bit:     31  Accepted Non-matching Frame        */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_RXF0E_1_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_RXF0E_1_OFFSET          0x04         /**< \brief (CAN_RXF0E_1 offset) Rx FIFO 0 Element 1 */
+#define CAN_RXF0E_1_RESETVALUE      0x00000000ul /**< \brief (CAN_RXF0E_1 reset_value) Rx FIFO 0 Element 1 */
+
+#define CAN_RXF0E_1_RXTS_Pos        0            /**< \brief (CAN_RXF0E_1) Rx Timestamp */
+#define CAN_RXF0E_1_RXTS_Msk        (0xFFFFul << CAN_RXF0E_1_RXTS_Pos)
+#define CAN_RXF0E_1_RXTS(value)     (CAN_RXF0E_1_RXTS_Msk & ((value) << CAN_RXF0E_1_RXTS_Pos))
+#define CAN_RXF0E_1_DLC_Pos         16           /**< \brief (CAN_RXF0E_1) Data Length Code */
+#define CAN_RXF0E_1_DLC_Msk         (0xFul << CAN_RXF0E_1_DLC_Pos)
+#define CAN_RXF0E_1_DLC(value)      (CAN_RXF0E_1_DLC_Msk & ((value) << CAN_RXF0E_1_DLC_Pos))
+#define CAN_RXF0E_1_BRS_Pos         20           /**< \brief (CAN_RXF0E_1) Bit Rate Search */
+#define CAN_RXF0E_1_BRS             (0x1ul << CAN_RXF0E_1_BRS_Pos)
+#define CAN_RXF0E_1_FDF_Pos         21           /**< \brief (CAN_RXF0E_1) FD Format */
+#define CAN_RXF0E_1_FDF             (0x1ul << CAN_RXF0E_1_FDF_Pos)
+#define CAN_RXF0E_1_FIDX_Pos        24           /**< \brief (CAN_RXF0E_1) Filter Index */
+#define CAN_RXF0E_1_FIDX_Msk        (0x7Ful << CAN_RXF0E_1_FIDX_Pos)
+#define CAN_RXF0E_1_FIDX(value)     (CAN_RXF0E_1_FIDX_Msk & ((value) << CAN_RXF0E_1_FIDX_Pos))
+#define CAN_RXF0E_1_ANMF_Pos        31           /**< \brief (CAN_RXF0E_1) Accepted Non-matching Frame */
+#define CAN_RXF0E_1_ANMF            (0x1ul << CAN_RXF0E_1_ANMF_Pos)
+#define CAN_RXF0E_1_MASK            0xFF3FFFFFul /**< \brief (CAN_RXF0E_1) MASK Register */
+
+/* -------- CAN_RXF0E_DATA : (CAN Offset: 0x08) (R/W 32) Rx FIFO 0 Element Data -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t DB0:8;            /*!< bit:  0.. 7  Data Byte 0                        */
+    uint32_t DB1:8;            /*!< bit:  8..15  Data Byte 1                        */
+    uint32_t DB2:8;            /*!< bit: 16..23  Data Byte 2                        */
+    uint32_t DB3:8;            /*!< bit: 24..31  Data Byte 3                        */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_RXF0E_DATA_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_RXF0E_DATA_OFFSET       0x08         /**< \brief (CAN_RXF0E_DATA offset) Rx FIFO 0 Element Data */
+#define CAN_RXF0E_DATA_RESETVALUE   0x00000000ul /**< \brief (CAN_RXF0E_DATA reset_value) Rx FIFO 0 Element Data */
+
+#define CAN_RXF0E_DATA_DB0_Pos      0            /**< \brief (CAN_RXF0E_DATA) Data Byte 0 */
+#define CAN_RXF0E_DATA_DB0_Msk      (0xFFul << CAN_RXF0E_DATA_DB0_Pos)
+#define CAN_RXF0E_DATA_DB0(value)   (CAN_RXF0E_DATA_DB0_Msk & ((value) << CAN_RXF0E_DATA_DB0_Pos))
+#define CAN_RXF0E_DATA_DB1_Pos      8            /**< \brief (CAN_RXF0E_DATA) Data Byte 1 */
+#define CAN_RXF0E_DATA_DB1_Msk      (0xFFul << CAN_RXF0E_DATA_DB1_Pos)
+#define CAN_RXF0E_DATA_DB1(value)   (CAN_RXF0E_DATA_DB1_Msk & ((value) << CAN_RXF0E_DATA_DB1_Pos))
+#define CAN_RXF0E_DATA_DB2_Pos      16           /**< \brief (CAN_RXF0E_DATA) Data Byte 2 */
+#define CAN_RXF0E_DATA_DB2_Msk      (0xFFul << CAN_RXF0E_DATA_DB2_Pos)
+#define CAN_RXF0E_DATA_DB2(value)   (CAN_RXF0E_DATA_DB2_Msk & ((value) << CAN_RXF0E_DATA_DB2_Pos))
+#define CAN_RXF0E_DATA_DB3_Pos      24           /**< \brief (CAN_RXF0E_DATA) Data Byte 3 */
+#define CAN_RXF0E_DATA_DB3_Msk      (0xFFul << CAN_RXF0E_DATA_DB3_Pos)
+#define CAN_RXF0E_DATA_DB3(value)   (CAN_RXF0E_DATA_DB3_Msk & ((value) << CAN_RXF0E_DATA_DB3_Pos))
+#define CAN_RXF0E_DATA_MASK         0xFFFFFFFFul /**< \brief (CAN_RXF0E_DATA) MASK Register */
+
+/* -------- CAN_RXF1E_0 : (CAN Offset: 0x00) (R/W 32) Rx FIFO 1 Element 0 -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t ID:29;            /*!< bit:  0..28  Identifier                         */
+    uint32_t RTR:1;            /*!< bit:     29  Remote Transmission Request        */
+    uint32_t XTD:1;            /*!< bit:     30  Extended Identifier                */
+    uint32_t ESI:1;            /*!< bit:     31  Error State Indicator              */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_RXF1E_0_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_RXF1E_0_OFFSET          0x00         /**< \brief (CAN_RXF1E_0 offset) Rx FIFO 1 Element 0 */
+#define CAN_RXF1E_0_RESETVALUE      0x00000000ul /**< \brief (CAN_RXF1E_0 reset_value) Rx FIFO 1 Element 0 */
+
+#define CAN_RXF1E_0_ID_Pos          0            /**< \brief (CAN_RXF1E_0) Identifier */
+#define CAN_RXF1E_0_ID_Msk          (0x1FFFFFFFul << CAN_RXF1E_0_ID_Pos)
+#define CAN_RXF1E_0_ID(value)       (CAN_RXF1E_0_ID_Msk & ((value) << CAN_RXF1E_0_ID_Pos))
+#define CAN_RXF1E_0_RTR_Pos         29           /**< \brief (CAN_RXF1E_0) Remote Transmission Request */
+#define CAN_RXF1E_0_RTR             (0x1ul << CAN_RXF1E_0_RTR_Pos)
+#define CAN_RXF1E_0_XTD_Pos         30           /**< \brief (CAN_RXF1E_0) Extended Identifier */
+#define CAN_RXF1E_0_XTD             (0x1ul << CAN_RXF1E_0_XTD_Pos)
+#define CAN_RXF1E_0_ESI_Pos         31           /**< \brief (CAN_RXF1E_0) Error State Indicator */
+#define CAN_RXF1E_0_ESI             (0x1ul << CAN_RXF1E_0_ESI_Pos)
+#define CAN_RXF1E_0_MASK            0xFFFFFFFFul /**< \brief (CAN_RXF1E_0) MASK Register */
+
+/* -------- CAN_RXF1E_1 : (CAN Offset: 0x04) (R/W 32) Rx FIFO 1 Element 1 -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t RXTS:16;          /*!< bit:  0..15  Rx Timestamp                       */
+    uint32_t DLC:4;            /*!< bit: 16..19  Data Length Code                   */
+    uint32_t BRS:1;            /*!< bit:     20  Bit Rate Search                    */
+    uint32_t FDF:1;            /*!< bit:     21  FD Format                          */
+    uint32_t :2;               /*!< bit: 22..23  Reserved                           */
+    uint32_t FIDX:7;           /*!< bit: 24..30  Filter Index                       */
+    uint32_t ANMF:1;           /*!< bit:     31  Accepted Non-matching Frame        */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_RXF1E_1_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_RXF1E_1_OFFSET          0x04         /**< \brief (CAN_RXF1E_1 offset) Rx FIFO 1 Element 1 */
+#define CAN_RXF1E_1_RESETVALUE      0x00000000ul /**< \brief (CAN_RXF1E_1 reset_value) Rx FIFO 1 Element 1 */
+
+#define CAN_RXF1E_1_RXTS_Pos        0            /**< \brief (CAN_RXF1E_1) Rx Timestamp */
+#define CAN_RXF1E_1_RXTS_Msk        (0xFFFFul << CAN_RXF1E_1_RXTS_Pos)
+#define CAN_RXF1E_1_RXTS(value)     (CAN_RXF1E_1_RXTS_Msk & ((value) << CAN_RXF1E_1_RXTS_Pos))
+#define CAN_RXF1E_1_DLC_Pos         16           /**< \brief (CAN_RXF1E_1) Data Length Code */
+#define CAN_RXF1E_1_DLC_Msk         (0xFul << CAN_RXF1E_1_DLC_Pos)
+#define CAN_RXF1E_1_DLC(value)      (CAN_RXF1E_1_DLC_Msk & ((value) << CAN_RXF1E_1_DLC_Pos))
+#define CAN_RXF1E_1_BRS_Pos         20           /**< \brief (CAN_RXF1E_1) Bit Rate Search */
+#define CAN_RXF1E_1_BRS             (0x1ul << CAN_RXF1E_1_BRS_Pos)
+#define CAN_RXF1E_1_FDF_Pos         21           /**< \brief (CAN_RXF1E_1) FD Format */
+#define CAN_RXF1E_1_FDF             (0x1ul << CAN_RXF1E_1_FDF_Pos)
+#define CAN_RXF1E_1_FIDX_Pos        24           /**< \brief (CAN_RXF1E_1) Filter Index */
+#define CAN_RXF1E_1_FIDX_Msk        (0x7Ful << CAN_RXF1E_1_FIDX_Pos)
+#define CAN_RXF1E_1_FIDX(value)     (CAN_RXF1E_1_FIDX_Msk & ((value) << CAN_RXF1E_1_FIDX_Pos))
+#define CAN_RXF1E_1_ANMF_Pos        31           /**< \brief (CAN_RXF1E_1) Accepted Non-matching Frame */
+#define CAN_RXF1E_1_ANMF            (0x1ul << CAN_RXF1E_1_ANMF_Pos)
+#define CAN_RXF1E_1_MASK            0xFF3FFFFFul /**< \brief (CAN_RXF1E_1) MASK Register */
+
+/* -------- CAN_RXF1E_DATA : (CAN Offset: 0x08) (R/W 32) Rx FIFO 1 Element Data -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t DB0:8;            /*!< bit:  0.. 7  Data Byte 0                        */
+    uint32_t DB1:8;            /*!< bit:  8..15  Data Byte 1                        */
+    uint32_t DB2:8;            /*!< bit: 16..23  Data Byte 2                        */
+    uint32_t DB3:8;            /*!< bit: 24..31  Data Byte 3                        */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_RXF1E_DATA_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_RXF1E_DATA_OFFSET       0x08         /**< \brief (CAN_RXF1E_DATA offset) Rx FIFO 1 Element Data */
+#define CAN_RXF1E_DATA_RESETVALUE   0x00000000ul /**< \brief (CAN_RXF1E_DATA reset_value) Rx FIFO 1 Element Data */
+
+#define CAN_RXF1E_DATA_DB0_Pos      0            /**< \brief (CAN_RXF1E_DATA) Data Byte 0 */
+#define CAN_RXF1E_DATA_DB0_Msk      (0xFFul << CAN_RXF1E_DATA_DB0_Pos)
+#define CAN_RXF1E_DATA_DB0(value)   (CAN_RXF1E_DATA_DB0_Msk & ((value) << CAN_RXF1E_DATA_DB0_Pos))
+#define CAN_RXF1E_DATA_DB1_Pos      8            /**< \brief (CAN_RXF1E_DATA) Data Byte 1 */
+#define CAN_RXF1E_DATA_DB1_Msk      (0xFFul << CAN_RXF1E_DATA_DB1_Pos)
+#define CAN_RXF1E_DATA_DB1(value)   (CAN_RXF1E_DATA_DB1_Msk & ((value) << CAN_RXF1E_DATA_DB1_Pos))
+#define CAN_RXF1E_DATA_DB2_Pos      16           /**< \brief (CAN_RXF1E_DATA) Data Byte 2 */
+#define CAN_RXF1E_DATA_DB2_Msk      (0xFFul << CAN_RXF1E_DATA_DB2_Pos)
+#define CAN_RXF1E_DATA_DB2(value)   (CAN_RXF1E_DATA_DB2_Msk & ((value) << CAN_RXF1E_DATA_DB2_Pos))
+#define CAN_RXF1E_DATA_DB3_Pos      24           /**< \brief (CAN_RXF1E_DATA) Data Byte 3 */
+#define CAN_RXF1E_DATA_DB3_Msk      (0xFFul << CAN_RXF1E_DATA_DB3_Pos)
+#define CAN_RXF1E_DATA_DB3(value)   (CAN_RXF1E_DATA_DB3_Msk & ((value) << CAN_RXF1E_DATA_DB3_Pos))
+#define CAN_RXF1E_DATA_MASK         0xFFFFFFFFul /**< \brief (CAN_RXF1E_DATA) MASK Register */
+
+/* -------- CAN_SIDFE_0 : (CAN Offset: 0x00) (R/W 32) Standard Message ID Filter Element -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t SFID2:11;         /*!< bit:  0..10  Standard Filter ID 2               */
+    uint32_t :5;               /*!< bit: 11..15  Reserved                           */
+    uint32_t SFID1:11;         /*!< bit: 16..26  Standard Filter ID 1               */
+    uint32_t SFEC:3;           /*!< bit: 27..29  Standard Filter Element Configuration */
+    uint32_t SFT:2;            /*!< bit: 30..31  Standard Filter Type               */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_SIDFE_0_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_SIDFE_0_OFFSET          0x00         /**< \brief (CAN_SIDFE_0 offset) Standard Message ID Filter Element */
+#define CAN_SIDFE_0_RESETVALUE      0x00000000ul /**< \brief (CAN_SIDFE_0 reset_value) Standard Message ID Filter Element */
+
+#define CAN_SIDFE_0_SFID2_Pos       0            /**< \brief (CAN_SIDFE_0) Standard Filter ID 2 */
+#define CAN_SIDFE_0_SFID2_Msk       (0x7FFul << CAN_SIDFE_0_SFID2_Pos)
+#define CAN_SIDFE_0_SFID2(value)    (CAN_SIDFE_0_SFID2_Msk & ((value) << CAN_SIDFE_0_SFID2_Pos))
+#define CAN_SIDFE_0_SFID1_Pos       16           /**< \brief (CAN_SIDFE_0) Standard Filter ID 1 */
+#define CAN_SIDFE_0_SFID1_Msk       (0x7FFul << CAN_SIDFE_0_SFID1_Pos)
+#define CAN_SIDFE_0_SFID1(value)    (CAN_SIDFE_0_SFID1_Msk & ((value) << CAN_SIDFE_0_SFID1_Pos))
+#define CAN_SIDFE_0_SFEC_Pos        27           /**< \brief (CAN_SIDFE_0) Standard Filter Element Configuration */
+#define CAN_SIDFE_0_SFEC_Msk        (0x7ul << CAN_SIDFE_0_SFEC_Pos)
+#define CAN_SIDFE_0_SFEC(value)     (CAN_SIDFE_0_SFEC_Msk & ((value) << CAN_SIDFE_0_SFEC_Pos))
+#define   CAN_SIDFE_0_SFEC_DISABLE_Val    0x0ul  /**< \brief (CAN_SIDFE_0) Disable filter element */
+#define   CAN_SIDFE_0_SFEC_STF0M_Val      0x1ul  /**< \brief (CAN_SIDFE_0) Store in Rx FIFO 0 if filter match */
+#define   CAN_SIDFE_0_SFEC_STF1M_Val      0x2ul  /**< \brief (CAN_SIDFE_0) Store in Rx FIFO 1 if filter match */
+#define   CAN_SIDFE_0_SFEC_REJECT_Val     0x3ul  /**< \brief (CAN_SIDFE_0) Reject ID if filter match */
+#define   CAN_SIDFE_0_SFEC_PRIORITY_Val   0x4ul  /**< \brief (CAN_SIDFE_0) Set priority if filter match */
+#define   CAN_SIDFE_0_SFEC_PRIF0M_Val     0x5ul  /**< \brief (CAN_SIDFE_0) Set priority and store in FIFO 0 if filter match */
+#define   CAN_SIDFE_0_SFEC_PRIF1M_Val     0x6ul  /**< \brief (CAN_SIDFE_0) Set priority and store in FIFO 1 if filter match */
+#define   CAN_SIDFE_0_SFEC_STRXBUF_Val    0x7ul  /**< \brief (CAN_SIDFE_0) Store into Rx Buffer */
+#define CAN_SIDFE_0_SFEC_DISABLE    (CAN_SIDFE_0_SFEC_DISABLE_Val  << CAN_SIDFE_0_SFEC_Pos)
+#define CAN_SIDFE_0_SFEC_STF0M      (CAN_SIDFE_0_SFEC_STF0M_Val    << CAN_SIDFE_0_SFEC_Pos)
+#define CAN_SIDFE_0_SFEC_STF1M      (CAN_SIDFE_0_SFEC_STF1M_Val    << CAN_SIDFE_0_SFEC_Pos)
+#define CAN_SIDFE_0_SFEC_REJECT     (CAN_SIDFE_0_SFEC_REJECT_Val   << CAN_SIDFE_0_SFEC_Pos)
+#define CAN_SIDFE_0_SFEC_PRIORITY   (CAN_SIDFE_0_SFEC_PRIORITY_Val << CAN_SIDFE_0_SFEC_Pos)
+#define CAN_SIDFE_0_SFEC_PRIF0M     (CAN_SIDFE_0_SFEC_PRIF0M_Val   << CAN_SIDFE_0_SFEC_Pos)
+#define CAN_SIDFE_0_SFEC_PRIF1M     (CAN_SIDFE_0_SFEC_PRIF1M_Val   << CAN_SIDFE_0_SFEC_Pos)
+#define CAN_SIDFE_0_SFEC_STRXBUF    (CAN_SIDFE_0_SFEC_STRXBUF_Val  << CAN_SIDFE_0_SFEC_Pos)
+#define CAN_SIDFE_0_SFT_Pos         30           /**< \brief (CAN_SIDFE_0) Standard Filter Type */
+#define CAN_SIDFE_0_SFT_Msk         (0x3ul << CAN_SIDFE_0_SFT_Pos)
+#define CAN_SIDFE_0_SFT(value)      (CAN_SIDFE_0_SFT_Msk & ((value) << CAN_SIDFE_0_SFT_Pos))
+#define   CAN_SIDFE_0_SFT_RANGE_Val       0x0ul  /**< \brief (CAN_SIDFE_0) Range filter from SFID1 to SFID2 */
+#define   CAN_SIDFE_0_SFT_DUAL_Val        0x1ul  /**< \brief (CAN_SIDFE_0) Dual ID filter for SFID1 or SFID2 */
+#define   CAN_SIDFE_0_SFT_CLASSIC_Val     0x2ul  /**< \brief (CAN_SIDFE_0) Classic filter */
+#define CAN_SIDFE_0_SFT_RANGE       (CAN_SIDFE_0_SFT_RANGE_Val     << CAN_SIDFE_0_SFT_Pos)
+#define CAN_SIDFE_0_SFT_DUAL        (CAN_SIDFE_0_SFT_DUAL_Val      << CAN_SIDFE_0_SFT_Pos)
+#define CAN_SIDFE_0_SFT_CLASSIC     (CAN_SIDFE_0_SFT_CLASSIC_Val   << CAN_SIDFE_0_SFT_Pos)
+#define CAN_SIDFE_0_MASK            0xFFFF07FFul /**< \brief (CAN_SIDFE_0) MASK Register */
+
+/* -------- CAN_TXBE_0 : (CAN Offset: 0x00) (R/W 32) Tx Buffer Element 0 -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t ID:29;            /*!< bit:  0..28  Identifier                         */
+    uint32_t RTR:1;            /*!< bit:     29  Remote Transmission Request        */
+    uint32_t XTD:1;            /*!< bit:     30  Extended Identifier                */
+    uint32_t ESI:1;            /*!< bit:     31  Error State Indicator              */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_TXBE_0_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_TXBE_0_OFFSET           0x00         /**< \brief (CAN_TXBE_0 offset) Tx Buffer Element 0 */
+#define CAN_TXBE_0_RESETVALUE       0x00000000ul /**< \brief (CAN_TXBE_0 reset_value) Tx Buffer Element 0 */
+
+#define CAN_TXBE_0_ID_Pos           0            /**< \brief (CAN_TXBE_0) Identifier */
+#define CAN_TXBE_0_ID_Msk           (0x1FFFFFFFul << CAN_TXBE_0_ID_Pos)
+#define CAN_TXBE_0_ID(value)        (CAN_TXBE_0_ID_Msk & ((value) << CAN_TXBE_0_ID_Pos))
+#define CAN_TXBE_0_RTR_Pos          29           /**< \brief (CAN_TXBE_0) Remote Transmission Request */
+#define CAN_TXBE_0_RTR              (0x1ul << CAN_TXBE_0_RTR_Pos)
+#define CAN_TXBE_0_XTD_Pos          30           /**< \brief (CAN_TXBE_0) Extended Identifier */
+#define CAN_TXBE_0_XTD              (0x1ul << CAN_TXBE_0_XTD_Pos)
+#define CAN_TXBE_0_ESI_Pos          31           /**< \brief (CAN_TXBE_0) Error State Indicator */
+#define CAN_TXBE_0_ESI              (0x1ul << CAN_TXBE_0_ESI_Pos)
+#define CAN_TXBE_0_MASK             0xFFFFFFFFul /**< \brief (CAN_TXBE_0) MASK Register */
+
+/* -------- CAN_TXBE_1 : (CAN Offset: 0x04) (R/W 32) Tx Buffer Element 1 -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t :16;              /*!< bit:  0..15  Reserved                           */
+    uint32_t DLC:4;            /*!< bit: 16..19  Identifier                         */
+    uint32_t BRS:1;            /*!< bit:     20  Bit Rate Search                    */
+    uint32_t FDF:1;            /*!< bit:     21  FD Format                          */
+    uint32_t :1;               /*!< bit:     22  Reserved                           */
+    uint32_t EFC:1;            /*!< bit:     23  Event FIFO Control                 */
+    uint32_t MM:8;             /*!< bit: 24..31  Message Marker                     */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_TXBE_1_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_TXBE_1_OFFSET           0x04         /**< \brief (CAN_TXBE_1 offset) Tx Buffer Element 1 */
+#define CAN_TXBE_1_RESETVALUE       0x00000000ul /**< \brief (CAN_TXBE_1 reset_value) Tx Buffer Element 1 */
+
+#define CAN_TXBE_1_DLC_Pos          16           /**< \brief (CAN_TXBE_1) Identifier */
+#define CAN_TXBE_1_DLC_Msk          (0xFul << CAN_TXBE_1_DLC_Pos)
+#define CAN_TXBE_1_DLC(value)       (CAN_TXBE_1_DLC_Msk & ((value) << CAN_TXBE_1_DLC_Pos))
+#define CAN_TXBE_1_BRS_Pos          20           /**< \brief (CAN_TXBE_1) Bit Rate Search */
+#define CAN_TXBE_1_BRS              (0x1ul << CAN_TXBE_1_BRS_Pos)
+#define CAN_TXBE_1_FDF_Pos          21           /**< \brief (CAN_TXBE_1) FD Format */
+#define CAN_TXBE_1_FDF              (0x1ul << CAN_TXBE_1_FDF_Pos)
+#define CAN_TXBE_1_EFC_Pos          23           /**< \brief (CAN_TXBE_1) Event FIFO Control */
+#define CAN_TXBE_1_EFC              (0x1ul << CAN_TXBE_1_EFC_Pos)
+#define CAN_TXBE_1_MM_Pos           24           /**< \brief (CAN_TXBE_1) Message Marker */
+#define CAN_TXBE_1_MM_Msk           (0xFFul << CAN_TXBE_1_MM_Pos)
+#define CAN_TXBE_1_MM(value)        (CAN_TXBE_1_MM_Msk & ((value) << CAN_TXBE_1_MM_Pos))
+#define CAN_TXBE_1_MASK             0xFFBF0000ul /**< \brief (CAN_TXBE_1) MASK Register */
+
+/* -------- CAN_TXBE_DATA : (CAN Offset: 0x08) (R/W 32) Tx Buffer Element Data -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t DB0:8;            /*!< bit:  0.. 7  Data Byte 0                        */
+    uint32_t DB1:8;            /*!< bit:  8..15  Data Byte 1                        */
+    uint32_t DB2:8;            /*!< bit: 16..23  Data Byte 2                        */
+    uint32_t DB3:8;            /*!< bit: 24..31  Data Byte 3                        */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_TXBE_DATA_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_TXBE_DATA_OFFSET        0x08         /**< \brief (CAN_TXBE_DATA offset) Tx Buffer Element Data */
+#define CAN_TXBE_DATA_RESETVALUE    0x00000000ul /**< \brief (CAN_TXBE_DATA reset_value) Tx Buffer Element Data */
+
+#define CAN_TXBE_DATA_DB0_Pos       0            /**< \brief (CAN_TXBE_DATA) Data Byte 0 */
+#define CAN_TXBE_DATA_DB0_Msk       (0xFFul << CAN_TXBE_DATA_DB0_Pos)
+#define CAN_TXBE_DATA_DB0(value)    (CAN_TXBE_DATA_DB0_Msk & ((value) << CAN_TXBE_DATA_DB0_Pos))
+#define CAN_TXBE_DATA_DB1_Pos       8            /**< \brief (CAN_TXBE_DATA) Data Byte 1 */
+#define CAN_TXBE_DATA_DB1_Msk       (0xFFul << CAN_TXBE_DATA_DB1_Pos)
+#define CAN_TXBE_DATA_DB1(value)    (CAN_TXBE_DATA_DB1_Msk & ((value) << CAN_TXBE_DATA_DB1_Pos))
+#define CAN_TXBE_DATA_DB2_Pos       16           /**< \brief (CAN_TXBE_DATA) Data Byte 2 */
+#define CAN_TXBE_DATA_DB2_Msk       (0xFFul << CAN_TXBE_DATA_DB2_Pos)
+#define CAN_TXBE_DATA_DB2(value)    (CAN_TXBE_DATA_DB2_Msk & ((value) << CAN_TXBE_DATA_DB2_Pos))
+#define CAN_TXBE_DATA_DB3_Pos       24           /**< \brief (CAN_TXBE_DATA) Data Byte 3 */
+#define CAN_TXBE_DATA_DB3_Msk       (0xFFul << CAN_TXBE_DATA_DB3_Pos)
+#define CAN_TXBE_DATA_DB3(value)    (CAN_TXBE_DATA_DB3_Msk & ((value) << CAN_TXBE_DATA_DB3_Pos))
+#define CAN_TXBE_DATA_MASK          0xFFFFFFFFul /**< \brief (CAN_TXBE_DATA) MASK Register */
+
+/* -------- CAN_TXEFE_0 : (CAN Offset: 0x00) (R/W 32) Tx Event FIFO Element 0 -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t ID:29;            /*!< bit:  0..28  Identifier                         */
+    uint32_t RTR:1;            /*!< bit:     29  Remote Transmission Request        */
+    uint32_t XTD:1;            /*!< bit:     30  Extended Indentifier               */
+    uint32_t ESI:1;            /*!< bit:     31  Error State Indicator              */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_TXEFE_0_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_TXEFE_0_OFFSET          0x00         /**< \brief (CAN_TXEFE_0 offset) Tx Event FIFO Element 0 */
+#define CAN_TXEFE_0_RESETVALUE      0x00000000ul /**< \brief (CAN_TXEFE_0 reset_value) Tx Event FIFO Element 0 */
+
+#define CAN_TXEFE_0_ID_Pos          0            /**< \brief (CAN_TXEFE_0) Identifier */
+#define CAN_TXEFE_0_ID_Msk          (0x1FFFFFFFul << CAN_TXEFE_0_ID_Pos)
+#define CAN_TXEFE_0_ID(value)       (CAN_TXEFE_0_ID_Msk & ((value) << CAN_TXEFE_0_ID_Pos))
+#define CAN_TXEFE_0_RTR_Pos         29           /**< \brief (CAN_TXEFE_0) Remote Transmission Request */
+#define CAN_TXEFE_0_RTR             (0x1ul << CAN_TXEFE_0_RTR_Pos)
+#define CAN_TXEFE_0_XTD_Pos         30           /**< \brief (CAN_TXEFE_0) Extended Indentifier */
+#define CAN_TXEFE_0_XTD             (0x1ul << CAN_TXEFE_0_XTD_Pos)
+#define CAN_TXEFE_0_ESI_Pos         31           /**< \brief (CAN_TXEFE_0) Error State Indicator */
+#define CAN_TXEFE_0_ESI             (0x1ul << CAN_TXEFE_0_ESI_Pos)
+#define CAN_TXEFE_0_MASK            0xFFFFFFFFul /**< \brief (CAN_TXEFE_0) MASK Register */
+
+/* -------- CAN_TXEFE_1 : (CAN Offset: 0x04) (R/W 32) Tx Event FIFO Element 1 -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t TXTS:16;          /*!< bit:  0..15  Tx Timestamp                       */
+    uint32_t DLC:4;            /*!< bit: 16..19  Data Length Code                   */
+    uint32_t BRS:1;            /*!< bit:     20  Bit Rate Search                    */
+    uint32_t FDF:1;            /*!< bit:     21  FD Format                          */
+    uint32_t ET:2;             /*!< bit: 22..23  Event Type                         */
+    uint32_t MM:8;             /*!< bit: 24..31  Message Marker                     */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_TXEFE_1_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_TXEFE_1_OFFSET          0x04         /**< \brief (CAN_TXEFE_1 offset) Tx Event FIFO Element 1 */
+#define CAN_TXEFE_1_RESETVALUE      0x00000000ul /**< \brief (CAN_TXEFE_1 reset_value) Tx Event FIFO Element 1 */
+
+#define CAN_TXEFE_1_TXTS_Pos        0            /**< \brief (CAN_TXEFE_1) Tx Timestamp */
+#define CAN_TXEFE_1_TXTS_Msk        (0xFFFFul << CAN_TXEFE_1_TXTS_Pos)
+#define CAN_TXEFE_1_TXTS(value)     (CAN_TXEFE_1_TXTS_Msk & ((value) << CAN_TXEFE_1_TXTS_Pos))
+#define CAN_TXEFE_1_DLC_Pos         16           /**< \brief (CAN_TXEFE_1) Data Length Code */
+#define CAN_TXEFE_1_DLC_Msk         (0xFul << CAN_TXEFE_1_DLC_Pos)
+#define CAN_TXEFE_1_DLC(value)      (CAN_TXEFE_1_DLC_Msk & ((value) << CAN_TXEFE_1_DLC_Pos))
+#define CAN_TXEFE_1_BRS_Pos         20           /**< \brief (CAN_TXEFE_1) Bit Rate Search */
+#define CAN_TXEFE_1_BRS             (0x1ul << CAN_TXEFE_1_BRS_Pos)
+#define CAN_TXEFE_1_FDF_Pos         21           /**< \brief (CAN_TXEFE_1) FD Format */
+#define CAN_TXEFE_1_FDF             (0x1ul << CAN_TXEFE_1_FDF_Pos)
+#define CAN_TXEFE_1_ET_Pos          22           /**< \brief (CAN_TXEFE_1) Event Type */
+#define CAN_TXEFE_1_ET_Msk          (0x3ul << CAN_TXEFE_1_ET_Pos)
+#define CAN_TXEFE_1_ET(value)       (CAN_TXEFE_1_ET_Msk & ((value) << CAN_TXEFE_1_ET_Pos))
+#define   CAN_TXEFE_1_ET_TXE_Val          0x1ul  /**< \brief (CAN_TXEFE_1) Tx event */
+#define   CAN_TXEFE_1_ET_TXC_Val          0x2ul  /**< \brief (CAN_TXEFE_1) Transmission in spite of cancellation */
+#define CAN_TXEFE_1_ET_TXE          (CAN_TXEFE_1_ET_TXE_Val        << CAN_TXEFE_1_ET_Pos)
+#define CAN_TXEFE_1_ET_TXC          (CAN_TXEFE_1_ET_TXC_Val        << CAN_TXEFE_1_ET_Pos)
+#define CAN_TXEFE_1_MM_Pos          24           /**< \brief (CAN_TXEFE_1) Message Marker */
+#define CAN_TXEFE_1_MM_Msk          (0xFFul << CAN_TXEFE_1_MM_Pos)
+#define CAN_TXEFE_1_MM(value)       (CAN_TXEFE_1_MM_Msk & ((value) << CAN_TXEFE_1_MM_Pos))
+#define CAN_TXEFE_1_MASK            0xFFFFFFFFul /**< \brief (CAN_TXEFE_1) MASK Register */
+
+/* -------- CAN_XIDFE_0 : (CAN Offset: 0x00) (R/W 32) Extended Message ID Filter Element 0 -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t EFID1:29;         /*!< bit:  0..28  Extended Filter ID 1               */
+    uint32_t EFEC:3;           /*!< bit: 29..31  Extended Filter Element Configuration */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_XIDFE_0_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_XIDFE_0_OFFSET          0x00         /**< \brief (CAN_XIDFE_0 offset) Extended Message ID Filter Element 0 */
+#define CAN_XIDFE_0_RESETVALUE      0x00000000ul /**< \brief (CAN_XIDFE_0 reset_value) Extended Message ID Filter Element 0 */
+
+#define CAN_XIDFE_0_EFID1_Pos       0            /**< \brief (CAN_XIDFE_0) Extended Filter ID 1 */
+#define CAN_XIDFE_0_EFID1_Msk       (0x1FFFFFFFul << CAN_XIDFE_0_EFID1_Pos)
+#define CAN_XIDFE_0_EFID1(value)    (CAN_XIDFE_0_EFID1_Msk & ((value) << CAN_XIDFE_0_EFID1_Pos))
+#define CAN_XIDFE_0_EFEC_Pos        29           /**< \brief (CAN_XIDFE_0) Extended Filter Element Configuration */
+#define CAN_XIDFE_0_EFEC_Msk        (0x7ul << CAN_XIDFE_0_EFEC_Pos)
+#define CAN_XIDFE_0_EFEC(value)     (CAN_XIDFE_0_EFEC_Msk & ((value) << CAN_XIDFE_0_EFEC_Pos))
+#define   CAN_XIDFE_0_EFEC_DISABLE_Val    0x0ul  /**< \brief (CAN_XIDFE_0) Disable filter element */
+#define   CAN_XIDFE_0_EFEC_STF0M_Val      0x1ul  /**< \brief (CAN_XIDFE_0) Store in Rx FIFO 0 if filter match */
+#define   CAN_XIDFE_0_EFEC_STF1M_Val      0x2ul  /**< \brief (CAN_XIDFE_0) Store in Rx FIFO 1 if filter match */
+#define   CAN_XIDFE_0_EFEC_REJECT_Val     0x3ul  /**< \brief (CAN_XIDFE_0) Reject ID if filter match */
+#define   CAN_XIDFE_0_EFEC_PRIORITY_Val   0x4ul  /**< \brief (CAN_XIDFE_0) Set priority if filter match */
+#define   CAN_XIDFE_0_EFEC_PRIF0M_Val     0x5ul  /**< \brief (CAN_XIDFE_0) Set priority and store in FIFO 0 if filter match */
+#define   CAN_XIDFE_0_EFEC_PRIF1M_Val     0x6ul  /**< \brief (CAN_XIDFE_0) Set priority and store in FIFO 1 if filter match */
+#define   CAN_XIDFE_0_EFEC_STRXBUF_Val    0x7ul  /**< \brief (CAN_XIDFE_0) Store into Rx Buffer */
+#define CAN_XIDFE_0_EFEC_DISABLE    (CAN_XIDFE_0_EFEC_DISABLE_Val  << CAN_XIDFE_0_EFEC_Pos)
+#define CAN_XIDFE_0_EFEC_STF0M      (CAN_XIDFE_0_EFEC_STF0M_Val    << CAN_XIDFE_0_EFEC_Pos)
+#define CAN_XIDFE_0_EFEC_STF1M      (CAN_XIDFE_0_EFEC_STF1M_Val    << CAN_XIDFE_0_EFEC_Pos)
+#define CAN_XIDFE_0_EFEC_REJECT     (CAN_XIDFE_0_EFEC_REJECT_Val   << CAN_XIDFE_0_EFEC_Pos)
+#define CAN_XIDFE_0_EFEC_PRIORITY   (CAN_XIDFE_0_EFEC_PRIORITY_Val << CAN_XIDFE_0_EFEC_Pos)
+#define CAN_XIDFE_0_EFEC_PRIF0M     (CAN_XIDFE_0_EFEC_PRIF0M_Val   << CAN_XIDFE_0_EFEC_Pos)
+#define CAN_XIDFE_0_EFEC_PRIF1M     (CAN_XIDFE_0_EFEC_PRIF1M_Val   << CAN_XIDFE_0_EFEC_Pos)
+#define CAN_XIDFE_0_EFEC_STRXBUF    (CAN_XIDFE_0_EFEC_STRXBUF_Val  << CAN_XIDFE_0_EFEC_Pos)
+#define CAN_XIDFE_0_MASK            0xFFFFFFFFul /**< \brief (CAN_XIDFE_0) MASK Register */
+
+/* -------- CAN_XIDFE_1 : (CAN Offset: 0x04) (R/W 32) Extended Message ID Filter Element 1 -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t EFID2:29;         /*!< bit:  0..28  Extended Filter ID 2               */
+    uint32_t :1;               /*!< bit:     29  Reserved                           */
+    uint32_t EFT:2;            /*!< bit: 30..31  Extended Filter Type               */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} CAN_XIDFE_1_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define CAN_XIDFE_1_OFFSET          0x04         /**< \brief (CAN_XIDFE_1 offset) Extended Message ID Filter Element 1 */
+#define CAN_XIDFE_1_RESETVALUE      0x00000000ul /**< \brief (CAN_XIDFE_1 reset_value) Extended Message ID Filter Element 1 */
+
+#define CAN_XIDFE_1_EFID2_Pos       0            /**< \brief (CAN_XIDFE_1) Extended Filter ID 2 */
+#define CAN_XIDFE_1_EFID2_Msk       (0x1FFFFFFFul << CAN_XIDFE_1_EFID2_Pos)
+#define CAN_XIDFE_1_EFID2(value)    (CAN_XIDFE_1_EFID2_Msk & ((value) << CAN_XIDFE_1_EFID2_Pos))
+#define CAN_XIDFE_1_EFT_Pos         30           /**< \brief (CAN_XIDFE_1) Extended Filter Type */
+#define CAN_XIDFE_1_EFT_Msk         (0x3ul << CAN_XIDFE_1_EFT_Pos)
+#define CAN_XIDFE_1_EFT(value)      (CAN_XIDFE_1_EFT_Msk & ((value) << CAN_XIDFE_1_EFT_Pos))
+#define   CAN_XIDFE_1_EFT_RANGEM_Val      0x0ul  /**< \brief (CAN_XIDFE_1) Range filter from EFID1 to EFID2 */
+#define   CAN_XIDFE_1_EFT_DUAL_Val        0x1ul  /**< \brief (CAN_XIDFE_1) Dual ID filter for EFID1 or EFID2 */
+#define   CAN_XIDFE_1_EFT_CLASSIC_Val     0x2ul  /**< \brief (CAN_XIDFE_1) Classic filter */
+#define   CAN_XIDFE_1_EFT_RANGE_Val       0x3ul  /**< \brief (CAN_XIDFE_1) Range filter from EFID1 to EFID2 with no XIDAM mask */
+#define CAN_XIDFE_1_EFT_RANGEM      (CAN_XIDFE_1_EFT_RANGEM_Val    << CAN_XIDFE_1_EFT_Pos)
+#define CAN_XIDFE_1_EFT_DUAL        (CAN_XIDFE_1_EFT_DUAL_Val      << CAN_XIDFE_1_EFT_Pos)
+#define CAN_XIDFE_1_EFT_CLASSIC     (CAN_XIDFE_1_EFT_CLASSIC_Val   << CAN_XIDFE_1_EFT_Pos)
+#define CAN_XIDFE_1_EFT_RANGE       (CAN_XIDFE_1_EFT_RANGE_Val     << CAN_XIDFE_1_EFT_Pos)
+#define CAN_XIDFE_1_MASK            0xDFFFFFFFul /**< \brief (CAN_XIDFE_1) MASK Register */
+
+/** \brief CAN APB hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef struct {
   __I  CAN_CREL_Type             CREL;        /**< \brief Offset: 0x00 (R/  32) Core Release */
@@ -2539,6 +3100,100 @@ typedef struct {
   __IO CAN_TXEFA_Type            TXEFA;       /**< \brief Offset: 0xF8 (R/W 32) Tx Event FIFO Acknowledge */
 } Can;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+/** \brief CAN Mram_rxbe hardware registers */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef struct {
+  __IO CAN_RXBE_0_Type           RXBE_0;      /**< \brief Offset: 0x00 (R/W 32) Rx Buffer Element 0 */
+  __IO CAN_RXBE_1_Type           RXBE_1;      /**< \brief Offset: 0x04 (R/W 32) Rx Buffer Element 1 */
+  __IO CAN_RXBE_DATA_Type        RXBE_DATA[16]; /**< \brief Offset: 0x08 (R/W 32) Rx Buffer Element Data */
+} CanMramRxbe
+#ifdef __GNUC__
+  __attribute__ ((aligned (4)))
+#endif
+;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+/** \brief CAN Mram_rxf0e hardware registers */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef struct {
+  __IO CAN_RXF0E_0_Type          RXF0E_0;     /**< \brief Offset: 0x00 (R/W 32) Rx FIFO 0 Element 0 */
+  __IO CAN_RXF0E_1_Type          RXF0E_1;     /**< \brief Offset: 0x04 (R/W 32) Rx FIFO 0 Element 1 */
+  __IO CAN_RXF0E_DATA_Type       RXF0E_DATA[16]; /**< \brief Offset: 0x08 (R/W 32) Rx FIFO 0 Element Data */
+} CanMramRxf0e
+#ifdef __GNUC__
+  __attribute__ ((aligned (4)))
+#endif
+;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+/** \brief CAN Mram_rxf1e hardware registers */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef struct {
+  __IO CAN_RXF1E_0_Type          RXF1E_0;     /**< \brief Offset: 0x00 (R/W 32) Rx FIFO 1 Element 0 */
+  __IO CAN_RXF1E_1_Type          RXF1E_1;     /**< \brief Offset: 0x04 (R/W 32) Rx FIFO 1 Element 1 */
+  __IO CAN_RXF1E_DATA_Type       RXF1E_DATA[16]; /**< \brief Offset: 0x08 (R/W 32) Rx FIFO 1 Element Data */
+} CanMramRxf1e
+#ifdef __GNUC__
+  __attribute__ ((aligned (4)))
+#endif
+;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+/** \brief CAN Mram_sidfe hardware registers */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef struct {
+  __IO CAN_SIDFE_0_Type          SIDFE_0;     /**< \brief Offset: 0x00 (R/W 32) Standard Message ID Filter Element */
+} CanMramSidfe
+#ifdef __GNUC__
+  __attribute__ ((aligned (4)))
+#endif
+;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+/** \brief CAN Mram_txbe hardware registers */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef struct {
+  __IO CAN_TXBE_0_Type           TXBE_0;      /**< \brief Offset: 0x00 (R/W 32) Tx Buffer Element 0 */
+  __IO CAN_TXBE_1_Type           TXBE_1;      /**< \brief Offset: 0x04 (R/W 32) Tx Buffer Element 1 */
+  __IO CAN_TXBE_DATA_Type        TXBE_DATA[16]; /**< \brief Offset: 0x08 (R/W 32) Tx Buffer Element Data */
+} CanMramTxbe
+#ifdef __GNUC__
+  __attribute__ ((aligned (4)))
+#endif
+;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+/** \brief CAN Mram_txefe hardware registers */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef struct {
+  __IO CAN_TXEFE_0_Type          TXEFE_0;     /**< \brief Offset: 0x00 (R/W 32) Tx Event FIFO Element 0 */
+  __IO CAN_TXEFE_1_Type          TXEFE_1;     /**< \brief Offset: 0x04 (R/W 32) Tx Event FIFO Element 1 */
+} CanMramTxefe
+#ifdef __GNUC__
+  __attribute__ ((aligned (4)))
+#endif
+;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+/** \brief CAN Mram_xifde hardware registers */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef struct {
+  __IO CAN_XIDFE_0_Type          XIDFE_0;     /**< \brief Offset: 0x00 (R/W 32) Extended Message ID Filter Element 0 */
+  __IO CAN_XIDFE_1_Type          XIDFE_1;     /**< \brief Offset: 0x04 (R/W 32) Extended Message ID Filter Element 1 */
+} CanMramXifde
+#ifdef __GNUC__
+  __attribute__ ((aligned (4)))
+#endif
+;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+#define SECTION_CAN_MRAM_RXBE
+#define SECTION_CAN_MRAM_RXF0E
+#define SECTION_CAN_MRAM_RXF1E
+#define SECTION_CAN_MRAM_SIDFE
+#define SECTION_CAN_MRAM_TXBE
+#define SECTION_CAN_MRAM_TXEFE
+#define SECTION_CAN_MRAM_XIFDE
 
 /*@}*/
 

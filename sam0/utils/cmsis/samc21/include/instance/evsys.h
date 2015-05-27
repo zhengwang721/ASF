@@ -180,7 +180,6 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for EVSYS peripheral ========== */
-#define EVSYS_CHANNELS              12       // Number of Channels
 #define EVSYS_CHANNELS_BITS         4        // Number of bits to select Channel
 #define EVSYS_CHANNELS_MSB          11       // Number of Channels - 1
 #define EVSYS_EXTEVT_NUM            0        // Number of External Event Generators
