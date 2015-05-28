@@ -1,0 +1,37 @@
+<asf xmlversion="1.0">
+	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
+	<!-- **************************************************************************************************** -->
+	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.ota-server" caption="Smart Connect 6LoWPAN OTA Server Application">
+		<info type="description" value="summary">
+      Server-side (Host) app to demonstrate over-the-air upgrade of stack firmware on top of an external bootloader
+		</info>
+		<build type="c-source"      value="sc6-ota-mgr.c"/>
+		<build type="c-source"      value="ota-main.c"/>
+		<build type="c-source"      value="symbols.c"/>
+		<build type="include-path" value="inc/"/>
+		<build type="header-file" value="conf_common_sw_timer.h"/>
+		<build type="header-file"      value="symbols.h"/>
+		<build type="include-path" value="."/>
+		<build type="define" name="UIP_CONF_IPV6" value="1"/>		
+		<require idref="thirdparty.wireless.addons.sio2host"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.src"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ip"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ipv4"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ipv6"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.thsq-conf"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.aes"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64-addr"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.mdns"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.simple-rpl"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.servreg-hack"/>
+		<require idref="config.thirdparty.wireless.addons.ota"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.ota_mgr.server"/>
+    <require idref="thirdparty.wireless.smartconnect_6lowpan.apps.led_control"/>
+     <build type="define" name="ENABLE_LEDCTRL" value="1"/>
+		<require idref="thirdparty.wireless.services.nvm" />
+		<device-support value="sam0"/>	
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+
+</asf>

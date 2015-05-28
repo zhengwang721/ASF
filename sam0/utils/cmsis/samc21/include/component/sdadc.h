@@ -51,7 +51,7 @@
 /*@{*/
 
 #define SDADC_U2260
-#define REV_SDADC                   0x100
+#define REV_SDADC                   0x101
 
 /* -------- SDADC_CTRLA : (SDADC Offset: 0x00) (R/W  8) Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -99,10 +99,18 @@ typedef union {
 
 #define SDADC_REFCTRL_REFSEL_Pos    0            /**< \brief (SDADC_REFCTRL) Reference Selection */
 #define SDADC_REFCTRL_REFSEL_Msk    (0x3ul << SDADC_REFCTRL_REFSEL_Pos)
-#define SDADC_REFCTRL_REFSEL(value) ((SDADC_REFCTRL_REFSEL_Msk & ((value) << SDADC_REFCTRL_REFSEL_Pos)))
+#define SDADC_REFCTRL_REFSEL(value) (SDADC_REFCTRL_REFSEL_Msk & ((value) << SDADC_REFCTRL_REFSEL_Pos))
+#define   SDADC_REFCTRL_REFSEL_INTREF_Val 0x0ul  /**< \brief (SDADC_REFCTRL) Internal Bandgap Reference */
+#define   SDADC_REFCTRL_REFSEL_AREFB_Val  0x1ul  /**< \brief (SDADC_REFCTRL) External Reference */
+#define   SDADC_REFCTRL_REFSEL_DAC_Val    0x2ul  /**< \brief (SDADC_REFCTRL) Internal DAC Output */
+#define   SDADC_REFCTRL_REFSEL_INTVCC_Val 0x3ul  /**< \brief (SDADC_REFCTRL) VDDANA */
+#define SDADC_REFCTRL_REFSEL_INTREF (SDADC_REFCTRL_REFSEL_INTREF_Val << SDADC_REFCTRL_REFSEL_Pos)
+#define SDADC_REFCTRL_REFSEL_AREFB  (SDADC_REFCTRL_REFSEL_AREFB_Val << SDADC_REFCTRL_REFSEL_Pos)
+#define SDADC_REFCTRL_REFSEL_DAC    (SDADC_REFCTRL_REFSEL_DAC_Val  << SDADC_REFCTRL_REFSEL_Pos)
+#define SDADC_REFCTRL_REFSEL_INTVCC (SDADC_REFCTRL_REFSEL_INTVCC_Val << SDADC_REFCTRL_REFSEL_Pos)
 #define SDADC_REFCTRL_REFRANGE_Pos  4            /**< \brief (SDADC_REFCTRL) Reference Range */
 #define SDADC_REFCTRL_REFRANGE_Msk  (0x3ul << SDADC_REFCTRL_REFRANGE_Pos)
-#define SDADC_REFCTRL_REFRANGE(value) ((SDADC_REFCTRL_REFRANGE_Msk & ((value) << SDADC_REFCTRL_REFRANGE_Pos)))
+#define SDADC_REFCTRL_REFRANGE(value) (SDADC_REFCTRL_REFRANGE_Msk & ((value) << SDADC_REFCTRL_REFRANGE_Pos))
 #define SDADC_REFCTRL_ONREFBUF_Pos  7            /**< \brief (SDADC_REFCTRL) Reference Buffer */
 #define SDADC_REFCTRL_ONREFBUF      (0x1ul << SDADC_REFCTRL_ONREFBUF_Pos)
 #define SDADC_REFCTRL_MASK          0xB3ul       /**< \brief (SDADC_REFCTRL) MASK Register */
@@ -121,17 +129,17 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define SDADC_CTRLB_OFFSET          0x02         /**< \brief (SDADC_CTRLB offset) Control B */
-#define SDADC_CTRLB_RESETVALUE      0x0000ul     /**< \brief (SDADC_CTRLB reset_value) Control B */
+#define SDADC_CTRLB_RESETVALUE      0x2000ul     /**< \brief (SDADC_CTRLB reset_value) Control B */
 
 #define SDADC_CTRLB_PRESCALER_Pos   0            /**< \brief (SDADC_CTRLB) Prescaler Configuration */
 #define SDADC_CTRLB_PRESCALER_Msk   (0xFFul << SDADC_CTRLB_PRESCALER_Pos)
-#define SDADC_CTRLB_PRESCALER(value) ((SDADC_CTRLB_PRESCALER_Msk & ((value) << SDADC_CTRLB_PRESCALER_Pos)))
+#define SDADC_CTRLB_PRESCALER(value) (SDADC_CTRLB_PRESCALER_Msk & ((value) << SDADC_CTRLB_PRESCALER_Pos))
 #define SDADC_CTRLB_OSR_Pos         8            /**< \brief (SDADC_CTRLB) Over Sampling Ratio */
 #define SDADC_CTRLB_OSR_Msk         (0x7ul << SDADC_CTRLB_OSR_Pos)
-#define SDADC_CTRLB_OSR(value)      ((SDADC_CTRLB_OSR_Msk & ((value) << SDADC_CTRLB_OSR_Pos)))
+#define SDADC_CTRLB_OSR(value)      (SDADC_CTRLB_OSR_Msk & ((value) << SDADC_CTRLB_OSR_Pos))
 #define SDADC_CTRLB_SKPCNT_Pos      12           /**< \brief (SDADC_CTRLB) Skip Sample Count */
 #define SDADC_CTRLB_SKPCNT_Msk      (0xFul << SDADC_CTRLB_SKPCNT_Pos)
-#define SDADC_CTRLB_SKPCNT(value)   ((SDADC_CTRLB_SKPCNT_Msk & ((value) << SDADC_CTRLB_SKPCNT_Pos)))
+#define SDADC_CTRLB_SKPCNT(value)   (SDADC_CTRLB_SKPCNT_Msk & ((value) << SDADC_CTRLB_SKPCNT_Pos))
 #define SDADC_CTRLB_MASK            0xF7FFul     /**< \brief (SDADC_CTRLB) MASK Register */
 
 /* -------- SDADC_EVCTRL : (SDADC Offset: 0x04) (R/W  8) Event Control -------- */
@@ -217,12 +225,12 @@ typedef union {
 
 /* -------- SDADC_INTFLAG : (SDADC Offset: 0x07) (R/W  8) Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint8_t  RESRDY:1;         /*!< bit:      0  Result Ready Interrupt Flag        */
-    uint8_t  OVERRUN:1;        /*!< bit:      1  Overrun Interrupt Flag             */
-    uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor Interrupt Flag      */
-    uint8_t  :5;               /*!< bit:  3.. 7  Reserved                           */
+    __I uint8_t  RESRDY:1;         /*!< bit:      0  Result Ready Interrupt Flag        */
+    __I uint8_t  OVERRUN:1;        /*!< bit:      1  Overrun Interrupt Flag             */
+    __I uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor Interrupt Flag      */
+    __I uint8_t  :5;               /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } SDADC_INTFLAG_Type;
@@ -256,7 +264,7 @@ typedef union {
 
 #define SDADC_SEQSTATUS_SEQSTATE_Pos 0            /**< \brief (SDADC_SEQSTATUS) Sequence State */
 #define SDADC_SEQSTATUS_SEQSTATE_Msk (0xFul << SDADC_SEQSTATUS_SEQSTATE_Pos)
-#define SDADC_SEQSTATUS_SEQSTATE(value) ((SDADC_SEQSTATUS_SEQSTATE_Msk & ((value) << SDADC_SEQSTATUS_SEQSTATE_Pos)))
+#define SDADC_SEQSTATUS_SEQSTATE(value) (SDADC_SEQSTATUS_SEQSTATE_Msk & ((value) << SDADC_SEQSTATUS_SEQSTATE_Pos))
 #define SDADC_SEQSTATUS_SEQBUSY_Pos 7            /**< \brief (SDADC_SEQSTATUS) Sequence Busy */
 #define SDADC_SEQSTATUS_SEQBUSY     (0x1ul << SDADC_SEQSTATUS_SEQBUSY_Pos)
 #define SDADC_SEQSTATUS_MASK        0x8Ful       /**< \brief (SDADC_SEQSTATUS) MASK Register */
@@ -277,7 +285,7 @@ typedef union {
 
 #define SDADC_INPUTCTRL_MUXSEL_Pos  0            /**< \brief (SDADC_INPUTCTRL) SDADC Input Selection */
 #define SDADC_INPUTCTRL_MUXSEL_Msk  (0xFul << SDADC_INPUTCTRL_MUXSEL_Pos)
-#define SDADC_INPUTCTRL_MUXSEL(value) ((SDADC_INPUTCTRL_MUXSEL_Msk & ((value) << SDADC_INPUTCTRL_MUXSEL_Pos)))
+#define SDADC_INPUTCTRL_MUXSEL(value) (SDADC_INPUTCTRL_MUXSEL_Msk & ((value) << SDADC_INPUTCTRL_MUXSEL_Pos))
 #define   SDADC_INPUTCTRL_MUXSEL_AIN0_Val 0x0ul  /**< \brief (SDADC_INPUTCTRL) SDADC AIN0 Pin */
 #define   SDADC_INPUTCTRL_MUXSEL_AIN1_Val 0x1ul  /**< \brief (SDADC_INPUTCTRL) SDADC AIN1 Pin */
 #define   SDADC_INPUTCTRL_MUXSEL_AIN2_Val 0x2ul  /**< \brief (SDADC_INPUTCTRL) SDADC AIN2 Pin */
@@ -320,7 +328,7 @@ typedef union {
 
 #define SDADC_WINCTRL_WINMODE_Pos   0            /**< \brief (SDADC_WINCTRL) Window Monitor Mode */
 #define SDADC_WINCTRL_WINMODE_Msk   (0x7ul << SDADC_WINCTRL_WINMODE_Pos)
-#define SDADC_WINCTRL_WINMODE(value) ((SDADC_WINCTRL_WINMODE_Msk & ((value) << SDADC_WINCTRL_WINMODE_Pos)))
+#define SDADC_WINCTRL_WINMODE(value) (SDADC_WINCTRL_WINMODE_Msk & ((value) << SDADC_WINCTRL_WINMODE_Pos))
 #define SDADC_WINCTRL_MASK          0x07ul       /**< \brief (SDADC_WINCTRL) MASK Register */
 
 /* -------- SDADC_WINLT : (SDADC Offset: 0x0C) (R/W 32) Window Monitor Lower Threshold -------- */
@@ -339,7 +347,7 @@ typedef union {
 
 #define SDADC_WINLT_WINLT_Pos       0            /**< \brief (SDADC_WINLT) Window Lower Threshold */
 #define SDADC_WINLT_WINLT_Msk       (0xFFFFFFul << SDADC_WINLT_WINLT_Pos)
-#define SDADC_WINLT_WINLT(value)    ((SDADC_WINLT_WINLT_Msk & ((value) << SDADC_WINLT_WINLT_Pos)))
+#define SDADC_WINLT_WINLT(value)    (SDADC_WINLT_WINLT_Msk & ((value) << SDADC_WINLT_WINLT_Pos))
 #define SDADC_WINLT_MASK            0x00FFFFFFul /**< \brief (SDADC_WINLT) MASK Register */
 
 /* -------- SDADC_WINUT : (SDADC Offset: 0x10) (R/W 32) Window Monitor Upper Threshold -------- */
@@ -358,7 +366,7 @@ typedef union {
 
 #define SDADC_WINUT_WINUT_Pos       0            /**< \brief (SDADC_WINUT) Window Upper Threshold */
 #define SDADC_WINUT_WINUT_Msk       (0xFFFFFFul << SDADC_WINUT_WINUT_Pos)
-#define SDADC_WINUT_WINUT(value)    ((SDADC_WINUT_WINUT_Msk & ((value) << SDADC_WINUT_WINUT_Pos)))
+#define SDADC_WINUT_WINUT(value)    (SDADC_WINUT_WINUT_Msk & ((value) << SDADC_WINUT_WINUT_Pos))
 #define SDADC_WINUT_MASK            0x00FFFFFFul /**< \brief (SDADC_WINUT) MASK Register */
 
 /* -------- SDADC_OFFSETCORR : (SDADC Offset: 0x14) (R/W 32) Offset Correction -------- */
@@ -377,7 +385,7 @@ typedef union {
 
 #define SDADC_OFFSETCORR_OFFSETCORR_Pos 0            /**< \brief (SDADC_OFFSETCORR) Offset Correction Value */
 #define SDADC_OFFSETCORR_OFFSETCORR_Msk (0xFFFFFFul << SDADC_OFFSETCORR_OFFSETCORR_Pos)
-#define SDADC_OFFSETCORR_OFFSETCORR(value) ((SDADC_OFFSETCORR_OFFSETCORR_Msk & ((value) << SDADC_OFFSETCORR_OFFSETCORR_Pos)))
+#define SDADC_OFFSETCORR_OFFSETCORR(value) (SDADC_OFFSETCORR_OFFSETCORR_Msk & ((value) << SDADC_OFFSETCORR_OFFSETCORR_Pos))
 #define SDADC_OFFSETCORR_MASK       0x00FFFFFFul /**< \brief (SDADC_OFFSETCORR) MASK Register */
 
 /* -------- SDADC_GAINCORR : (SDADC Offset: 0x18) (R/W 16) Gain Correction -------- */
@@ -392,11 +400,11 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define SDADC_GAINCORR_OFFSET       0x18         /**< \brief (SDADC_GAINCORR offset) Gain Correction */
-#define SDADC_GAINCORR_RESETVALUE   0x0000ul     /**< \brief (SDADC_GAINCORR reset_value) Gain Correction */
+#define SDADC_GAINCORR_RESETVALUE   0x0001ul     /**< \brief (SDADC_GAINCORR reset_value) Gain Correction */
 
 #define SDADC_GAINCORR_GAINCORR_Pos 0            /**< \brief (SDADC_GAINCORR) Gain Correction Value */
 #define SDADC_GAINCORR_GAINCORR_Msk (0x3FFFul << SDADC_GAINCORR_GAINCORR_Pos)
-#define SDADC_GAINCORR_GAINCORR(value) ((SDADC_GAINCORR_GAINCORR_Msk & ((value) << SDADC_GAINCORR_GAINCORR_Pos)))
+#define SDADC_GAINCORR_GAINCORR(value) (SDADC_GAINCORR_GAINCORR_Msk & ((value) << SDADC_GAINCORR_GAINCORR_Pos))
 #define SDADC_GAINCORR_MASK         0x3FFFul     /**< \brief (SDADC_GAINCORR) MASK Register */
 
 /* -------- SDADC_SHIFTCORR : (SDADC Offset: 0x1A) (R/W  8) Shift Correction -------- */
@@ -415,7 +423,7 @@ typedef union {
 
 #define SDADC_SHIFTCORR_SHIFTCORR_Pos 0            /**< \brief (SDADC_SHIFTCORR) Shift Correction Value */
 #define SDADC_SHIFTCORR_SHIFTCORR_Msk (0xFul << SDADC_SHIFTCORR_SHIFTCORR_Pos)
-#define SDADC_SHIFTCORR_SHIFTCORR(value) ((SDADC_SHIFTCORR_SHIFTCORR_Msk & ((value) << SDADC_SHIFTCORR_SHIFTCORR_Pos)))
+#define SDADC_SHIFTCORR_SHIFTCORR(value) (SDADC_SHIFTCORR_SHIFTCORR_Msk & ((value) << SDADC_SHIFTCORR_SHIFTCORR_Pos))
 #define SDADC_SHIFTCORR_MASK        0x0Ful       /**< \brief (SDADC_SHIFTCORR) MASK Register */
 
 /* -------- SDADC_SWTRIG : (SDADC Offset: 0x1C) (R/W  8) Software Trigger -------- */
@@ -506,10 +514,10 @@ typedef union {
 
 #define SDADC_RESULT_RESULT_Pos     0            /**< \brief (SDADC_RESULT) Result Value */
 #define SDADC_RESULT_RESULT_Msk     (0xFFFFFFul << SDADC_RESULT_RESULT_Pos)
-#define SDADC_RESULT_RESULT(value)  ((SDADC_RESULT_RESULT_Msk & ((value) << SDADC_RESULT_RESULT_Pos)))
+#define SDADC_RESULT_RESULT(value)  (SDADC_RESULT_RESULT_Msk & ((value) << SDADC_RESULT_RESULT_Pos))
 #define SDADC_RESULT_RESERVED_Pos   24           /**< \brief (SDADC_RESULT) Reserved */
 #define SDADC_RESULT_RESERVED_Msk   (0xFFul << SDADC_RESULT_RESERVED_Pos)
-#define SDADC_RESULT_RESERVED(value) ((SDADC_RESULT_RESERVED_Msk & ((value) << SDADC_RESULT_RESERVED_Pos)))
+#define SDADC_RESULT_RESERVED(value) (SDADC_RESULT_RESERVED_Msk & ((value) << SDADC_RESULT_RESERVED_Pos))
 #define SDADC_RESULT_MASK           0xFFFFFFFFul /**< \brief (SDADC_RESULT) MASK Register */
 
 /* -------- SDADC_SEQCTRL : (SDADC Offset: 0x28) (R/W  8) Sequence Control -------- */
@@ -528,7 +536,7 @@ typedef union {
 
 #define SDADC_SEQCTRL_SEQEN_Pos     0            /**< \brief (SDADC_SEQCTRL) Enable Positive Input in the Sequence */
 #define SDADC_SEQCTRL_SEQEN_Msk     (0x7ul << SDADC_SEQCTRL_SEQEN_Pos)
-#define SDADC_SEQCTRL_SEQEN(value)  ((SDADC_SEQCTRL_SEQEN_Msk & ((value) << SDADC_SEQCTRL_SEQEN_Pos)))
+#define SDADC_SEQCTRL_SEQEN(value)  (SDADC_SEQCTRL_SEQEN_Msk & ((value) << SDADC_SEQCTRL_SEQEN_Pos))
 #define SDADC_SEQCTRL_MASK          0x07ul       /**< \brief (SDADC_SEQCTRL) MASK Register */
 
 /* -------- SDADC_ANACTRL : (SDADC Offset: 0x2C) (R/W  8) Analog Control -------- */
@@ -548,7 +556,7 @@ typedef union {
 
 #define SDADC_ANACTRL_CTRSDADC_Pos  0            /**< \brief (SDADC_ANACTRL) SDADC Control */
 #define SDADC_ANACTRL_CTRSDADC_Msk  (0x3Ful << SDADC_ANACTRL_CTRSDADC_Pos)
-#define SDADC_ANACTRL_CTRSDADC(value) ((SDADC_ANACTRL_CTRSDADC_Msk & ((value) << SDADC_ANACTRL_CTRSDADC_Pos)))
+#define SDADC_ANACTRL_CTRSDADC(value) (SDADC_ANACTRL_CTRSDADC_Msk & ((value) << SDADC_ANACTRL_CTRSDADC_Pos))
 #define SDADC_ANACTRL_ONCHOP_Pos    6            /**< \brief (SDADC_ANACTRL) Chopper */
 #define SDADC_ANACTRL_ONCHOP        (0x1ul << SDADC_ANACTRL_ONCHOP_Pos)
 #define SDADC_ANACTRL_BUFTEST_Pos   7            /**< \brief (SDADC_ANACTRL) BUFTEST */

@@ -3,7 +3,7 @@
  *
  * \brief SAM External Interrupt Driver Quick Start
  *
- * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,6 +49,7 @@
  *    - SAMD21 Xplained Pro
  *    - SAMR21 Xplained Pro
  *    - SAML21 Xplained Pro
+ *    - SAMDA1 Xplained Pro
  *    - SAMC21 Xplained Pro
  *
  * In this use case, the EXTINT module is configured for:
@@ -116,6 +117,6 @@
  * -# External interrupt events from the driver are detected asynchronously; no
  *    special application \c main() code is required.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

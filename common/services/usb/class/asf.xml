@@ -40,6 +40,7 @@
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
+			<device-support value="samda1"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#cdc_stdio" caption="USB Device CDC Standard I/O (stdio)">
@@ -75,6 +76,7 @@
 			<device-support value="samr21"/>
 			<device-support value="sam4c32e"/>
 			<device-support value="saml21"/>
+			<device-support value="samda1"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#composite" caption="USB Composite Device">
@@ -117,6 +119,7 @@
 			<device-support value="sam4c32e"/>
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
+			<device-support value="samda1"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#dfu_atmel" caption="USB Device DFU Atmel">
@@ -177,6 +180,7 @@
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
+			<device-support value="samda1"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#hid_keyboard" caption="USB Device HID keyboard">
@@ -214,6 +218,7 @@
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
+			<device-support value="samda1"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#hid_mouse" caption="USB Device HID mouse">
@@ -224,6 +229,44 @@
 			<require idref="common.services.usb.class.hid.device.mouse.single"/>
 			<build type="doxygen-entry-point" value="udi_hid_mouse_group"/>
 			<build type="doxygen-quick-start" value="udi_hid_mouse_quickstart"/>
+			<device-support value="uc3a"/>
+			<device-support value="uc3a3_a4"/>
+			<device-support value="uc3b"/>
+			<device-support value="uc3c"/>
+			<device-support value="uc3d"/>
+			<device-support value="uc3l3"/>
+			<device-support value="uc3l4"/>
+			<device-support value="xmegaa1u"/>
+			<device-support value="xmegaa3u"/>
+			<device-support value="xmegaa3bu"/>
+			<device-support value="xmegaa4u"/>
+			<device-support value="xmegab"/>
+			<device-support value="xmegac"/>
+			<device-support value="sam3s"/>
+			<device-support value="sam3sd"/>
+			<device-support value="sam3u"/>
+			<device-support value="sam3x"/>
+			<device-support value="sam3a"/>
+			<device-support value="sam4s"/>
+			<device-support value="sam4l"/>
+			<device-support value="sam4e"/>
+			<device-support value="samd21"/>
+			<device-support value="samr21"/>
+			<device-support value="sam4c32e"/>
+			<device-support value="samd11"/>
+			<device-support value="saml21"/>
+			<device-support value="samg55"/>
+			<device-support value="samda1"/>
+			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
+		</module>
+		<module type="service" id="common.services.usb.class.device#hid_mtouch" caption="USB Device HID multi-touch">
+			<info type="keyword" value="technology">
+				<keyword value="USB"/>
+				<keyword value="Communication" />
+			</info>
+			<require idref="common.services.usb.class.hid.device.mtouch.single"/>
+			<build type="doxygen-entry-point" value="udi_hid_mtouch_group"/>
+			<build type="doxygen-quick-start" value="udi_hid_mtouch_quickstart"/>
 			<device-support value="uc3a"/>
 			<device-support value="uc3a3_a4"/>
 			<device-support value="uc3b"/>
@@ -287,6 +330,7 @@
 			<device-support value="sam4c32e"/>
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
+			<device-support value="samda1"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#phdc" caption="USB Device PHDC">
@@ -322,6 +366,7 @@
 			<device-support value="sam4c32e"/>
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
+			<device-support value="samda1"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#vendor_class" caption="USB Device Vendor Class">
@@ -330,7 +375,7 @@
 				<keyword value="Communication" />
 			</info>
 			<require idref="common.services.usb.class.vendor.device.single"/>
-			<build type="doxygen-entry-point" value="udi_vendor_group_desc"/>
+			<build type="doxygen-entry-point" value="udi_vendor_group"/>
 			<build type="doxygen-quick-start" value="udi_vendor_quickstart"/>
 			<device-support value="uc3a"/>
 			<device-support value="uc3a3_a4"/>
@@ -358,6 +403,7 @@
 			<device-support value="sam4c32e"/>
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
+			<device-support value="samda1"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 	</select-by-config>
@@ -399,6 +445,7 @@
 			<device-support value="sam4c32e"/>
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
+			<device-support value="samda1"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.host#mass_storage" caption="USB Host Mass Storage Class">
@@ -421,6 +468,7 @@
 			<device-support value="sam4c32e"/>
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
+			<device-support value="samda1"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.host#multiple_classes" caption="USB Host Multiple classes">
@@ -444,6 +492,7 @@
 			<device-support value="samr21"/>
 			<device-support value="sam4c32e"/>
 			<device-support value="saml21"/>
+			<device-support value="samda1"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.host#hid_mouse" caption="USB Host HID mouse">
@@ -466,6 +515,7 @@
 			<device-support value="sam4c32e"/>
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
+			<device-support value="samda1"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.host#vendor" caption="USB Host Vendor">
@@ -487,6 +537,7 @@
 			<device-support value="samr21"/>
 			<device-support value="sam4c32e"/>
 			<device-support value="saml21"/>
+			<device-support value="samda1"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 	</select-by-config>

@@ -3,7 +3,7 @@
  *
  * @brief This file implements ED Scan
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,15 +42,12 @@
  */
 
 /*
- * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* === INCLUDES ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #include <stddef.h>
 #include <stdint.h>
@@ -219,7 +216,6 @@ void ed_scan_done(void)
 			= (uint8_t)(((uint16_t)max_ed_level *
 				0xFF) / CLIP_VALUE_REG);
 	}
-
 #endif
 	tal_ed_end_cb(max_ed_level);
 }

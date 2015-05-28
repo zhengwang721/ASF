@@ -57,7 +57,22 @@
 		<build type="header-file"   value="../../include/return_val.h"/>
 		<build type="include-path"  value="../../include/"/>
 	</module>
+	
+	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.pal.rf215" caption="PAL SPI access for external transceivers">
+	        <info type="description" value="summary">
+			The PAL Layer forms the wrapper layer that forms the interface between the Stack and the Low level drivers.This module includes PAL(Platform Abstraction Layer) wrapper files for boards with External Transceivers
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<build type="c-source"      value="pal.c"/>
+			<build type="header-file"   value="pal.h"/>
+			<build type="doxygen-entry-point" value="group_pal"/>
 
+			<require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
+			<require idref="thirdparty.wireless.avr2025_mac.source.pal.inc"/>
+			<require idref="thirdparty.wireless.common_services.trx_access.rf215"/>
+			<device-support value="sam4s"/>
+			<device-support value="sam4l"/>
+    </module>
 	<device-alias-map name="avr2025_mac_pal_support">
 		<device-support value="atxmega256a3u"/>
 		<device-support value="atxmega256a3bu"/>

@@ -50,16 +50,6 @@
 			<build type="linker-config" subtype="aux-script" value="samd20/iar/samd20e18_sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsamd20e18"/>
 		</module>
-		<module type="build-specific" caption="Linker script for SAMD20E1F" id="sam0.utils.linker_scripts#atsamd20e1f">
-			<info type="description" value="summary">
-			Linker script for the SAMD20E1F device.
-			</info>
-			<build type="linker-config" subtype="script" value="samd20/gcc/samd20e1f_flash.ld" toolchain="armgcc"/>
-			<build type="linker-config" subtype="aux-script" value="samd20/gcc/samd20e1f_sram.ld" toolchain="armgcc"/>
-			<build type="linker-config" subtype="script" value="samd20/iar/samd20e1f_flash.icf" toolchain="iarewarm"/>
-			<build type="linker-config" subtype="aux-script" value="samd20/iar/samd20e1f_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsamd20e1f"/>
-		</module>
 		<module type="build-specific" caption="Linker script for SAMD20G14" id="sam0.utils.linker_scripts#atsamd20g14">
 			<info type="description" value="summary">
 			Linker script for the SAMD20G14 device.
@@ -182,7 +172,7 @@
 		</module>
 		<module type="build-specific" caption="Linker script for SAMD21E15A" id="sam0.utils.linker_scripts#atsamd21e15a">
 			<info type="description" value="summary">
-			Linker script for the SAMD21E15 device.
+			Linker script for the SAMD21E15A device.
 			</info>
 			<build type="linker-config" subtype="script" value="samd21/gcc/samd21e15a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21e15a_sram.ld" toolchain="armgcc"/>
@@ -190,9 +180,39 @@
 			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21e15a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsamd21e15a"/>
 		</module>
+		<module type="build-specific" caption="Linker script for SAMD21E15B" id="sam0.utils.linker_scripts#atsamd21e15b">
+			<info type="description" value="summary">
+			Linker script for the SAMD21E15B device.
+			</info>
+			<build type="linker-config" subtype="script" value="samd21/gcc/samd21e15b_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21e15b_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd21/iar/samd21e15b_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21e15b_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamd21e15b"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMD21E15BU" id="sam0.utils.linker_scripts#atsamd21e15bu">
+			<info type="description" value="summary">
+			Linker script for the SAMD21E15BU device.
+			</info>
+			<build type="linker-config" subtype="script" value="samd21/gcc/samd21e15bu_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21e15bu_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd21/iar/samd21e15bu_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21e15bu_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamd21e15bu"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMD21E15L" id="sam0.utils.linker_scripts#atsamd21e15l">
+			<info type="description" value="summary">
+			Linker script for the SAMD21E15L device.
+			</info>
+			<build type="linker-config" subtype="script" value="samd21/gcc/samd21e15l_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21e15l_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd21/iar/samd21e15l_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21e15l_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamd21e15l"/>
+		</module>
 		<module type="build-specific" caption="Linker script for SAMD21E16A" id="sam0.utils.linker_scripts#atsamd21e16a">
 			<info type="description" value="summary">
-			Linker script for the SAMD21E16 device.
+			Linker script for the SAMD21E16A device.
 			</info>
 			<build type="linker-config" subtype="script" value="samd21/gcc/samd21e16a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21e16a_sram.ld" toolchain="armgcc"/>
@@ -200,9 +220,39 @@
 			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21e16a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsamd21e16a"/>
 		</module>
+		<module type="build-specific" caption="Linker script for SAMD21E16B" id="sam0.utils.linker_scripts#atsamd21e16b">
+			<info type="description" value="summary">
+			Linker script for the SAMD21E16B device.
+			</info>
+			<build type="linker-config" subtype="script" value="samd21/gcc/samd21e16b_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21e16b_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd21/iar/samd21e16b_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21e16b_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamd21e16b"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMD21E16BU" id="sam0.utils.linker_scripts#atsamd21e16bu">
+			<info type="description" value="summary">
+			Linker script for the SAMD21E16BU device.
+			</info>
+			<build type="linker-config" subtype="script" value="samd21/gcc/samd21e16bu_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21e16bu_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd21/iar/samd21e16bu_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21e16bu_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamd21e16bu"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMD21E16L" id="sam0.utils.linker_scripts#atsamd21e16l">
+			<info type="description" value="summary">
+			Linker script for the SAMD21E16L device.
+			</info>
+			<build type="linker-config" subtype="script" value="samd21/gcc/samd21e16l_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21e16l_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd21/iar/samd21e16l_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21e16l_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamd21e16l"/>
+		</module>
 		<module type="build-specific" caption="Linker script for SAMD21E17A" id="sam0.utils.linker_scripts#atsamd21e17a">
 			<info type="description" value="summary">
-			Linker script for the SAMD21E17 device.
+			Linker script for the SAMD21E17A device.
 			</info>
 			<build type="linker-config" subtype="script" value="samd21/gcc/samd21e17a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21e17a_sram.ld" toolchain="armgcc"/>
@@ -212,7 +262,7 @@
 		</module>
 		<module type="build-specific" caption="Linker script for SAMD21E18A" id="sam0.utils.linker_scripts#atsamd21e18a">
 			<info type="description" value="summary">
-			Linker script for the SAMD21E18 device.
+			Linker script for the SAMD21E18A device.
 			</info>
 			<build type="linker-config" subtype="script" value="samd21/gcc/samd21e18a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21e18a_sram.ld" toolchain="armgcc"/>
@@ -222,7 +272,7 @@
 		</module>
 		<module type="build-specific" caption="Linker script for SAMD21G15A" id="sam0.utils.linker_scripts#atsamd21g15a">
 			<info type="description" value="summary">
-			Linker script for the SAMD21G15 device.
+			Linker script for the SAMD21G15A device.
 			</info>
 			<build type="linker-config" subtype="script" value="samd21/gcc/samd21g15a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21g15a_sram.ld" toolchain="armgcc"/>
@@ -230,9 +280,19 @@
 			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21g15a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsamd21g15a"/>
 		</module>
+		<module type="build-specific" caption="Linker script for SAMD21G15B" id="sam0.utils.linker_scripts#atsamd21g15b">
+			<info type="description" value="summary">
+			Linker script for the SAMD21G15B device.
+			</info>
+			<build type="linker-config" subtype="script" value="samd21/gcc/samd21g15b_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21g15b_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd21/iar/samd21g15b_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21g15b_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamd21g15b"/>
+		</module>
 		<module type="build-specific" caption="Linker script for SAMD21G16A" id="sam0.utils.linker_scripts#atsamd21g16a">
 			<info type="description" value="summary">
-			Linker script for the SAMD21G16 device.
+			Linker script for the SAMD21G16A device.
 			</info>
 			<build type="linker-config" subtype="script" value="samd21/gcc/samd21g16a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21g16a_sram.ld" toolchain="armgcc"/>
@@ -240,9 +300,19 @@
 			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21g16a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsamd21g16a"/>
 		</module>
+		<module type="build-specific" caption="Linker script for SAMD21G16B" id="sam0.utils.linker_scripts#atsamd21g16b">
+			<info type="description" value="summary">
+			Linker script for the SAMD21G16B device.
+			</info>
+			<build type="linker-config" subtype="script" value="samd21/gcc/samd21g16b_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21g16b_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd21/iar/samd21g16b_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21g16b_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamd21g16b"/>
+		</module>
 		<module type="build-specific" caption="Linker script for SAMD21G17A" id="sam0.utils.linker_scripts#atsamd21g17a">
 			<info type="description" value="summary">
-			Linker script for the SAMD21G17 device.
+			Linker script for the SAMD21G17A device.
 			</info>
 			<build type="linker-config" subtype="script" value="samd21/gcc/samd21g17a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21g17a_sram.ld" toolchain="armgcc"/>
@@ -250,9 +320,19 @@
 			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21g17a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsamd21g17a"/>
 		</module>
+		<module type="build-specific" caption="Linker script for SAMD21G17AU" id="sam0.utils.linker_scripts#atsamd21g17au">
+			<info type="description" value="summary">
+			Linker script for the SAMD21G17AU device.
+			</info>
+			<build type="linker-config" subtype="script" value="samd21/gcc/samd21g17au_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21g17au_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd21/iar/samd21g17au_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21g17au_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamd21g17au"/>
+		</module>		
 		<module type="build-specific" caption="Linker script for SAMD21G18A" id="sam0.utils.linker_scripts#atsamd21g18a">
 			<info type="description" value="summary">
-			Linker script for the SAMD21G18 device.
+			Linker script for the SAMD21G18A device.
 			</info>
 			<build type="linker-config" subtype="script" value="samd21/gcc/samd21g18a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21g18a_sram.ld" toolchain="armgcc"/>
@@ -260,9 +340,19 @@
 			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21g18a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsamd21g18a"/>
 		</module>
+		<module type="build-specific" caption="Linker script for SAMD21G18AU" id="sam0.utils.linker_scripts#atsamd21g18au">
+			<info type="description" value="summary">
+			Linker script for the SAMD21G18AU device.
+			</info>
+			<build type="linker-config" subtype="script" value="samd21/gcc/samd21g18au_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21g18au_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd21/iar/samd21g18au_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21g18au_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamd21g18au"/>
+		</module>		
 		<module type="build-specific" caption="Linker script for SAMD21J15A" id="sam0.utils.linker_scripts#atsamd21j15a">
 			<info type="description" value="summary">
-			Linker script for the SAMD21J15 device.
+			Linker script for the SAMD21J15A device.
 			</info>
 			<build type="linker-config" subtype="script" value="samd21/gcc/samd21j15a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21j15a_sram.ld" toolchain="armgcc"/>
@@ -270,9 +360,19 @@
 			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21j15a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsamd21j15a"/>
 		</module>
+		<module type="build-specific" caption="Linker script for SAMD21J15B" id="sam0.utils.linker_scripts#atsamd21j15b">
+			<info type="description" value="summary">
+			Linker script for the SAMD21J15B device.
+			</info>
+			<build type="linker-config" subtype="script" value="samd21/gcc/samd21j15b_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21j15b_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd21/iar/samd21j15b_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21j15b_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamd21j15b"/>
+		</module>
 		<module type="build-specific" caption="Linker script for SAMD21J16A" id="sam0.utils.linker_scripts#atsamd21j16a">
 			<info type="description" value="summary">
-			Linker script for the SAMD21J16 device.
+			Linker script for the SAMD21J16A device.
 			</info>
 			<build type="linker-config" subtype="script" value="samd21/gcc/samd21j16a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21j16a_sram.ld" toolchain="armgcc"/>
@@ -280,9 +380,19 @@
 			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21j16a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsamd21j16a"/>
 		</module>
+		<module type="build-specific" caption="Linker script for SAMD21J16B" id="sam0.utils.linker_scripts#atsamd21j16b">
+			<info type="description" value="summary">
+			Linker script for the SAMD21J16B device.
+			</info>
+			<build type="linker-config" subtype="script" value="samd21/gcc/samd21j16b_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21j16b_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd21/iar/samd21j16b_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd21/iar/samd21j16b_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamd21j16b"/>
+		</module>
 		<module type="build-specific" caption="Linker script for SAMD21J17A" id="sam0.utils.linker_scripts#atsamd21j17a">
 			<info type="description" value="summary">
-			Linker script for the SAMD21J17 device.
+			Linker script for the SAMD21J17A device.
 			</info>
 			<build type="linker-config" subtype="script" value="samd21/gcc/samd21j17a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21j17a_sram.ld" toolchain="armgcc"/>
@@ -292,7 +402,7 @@
 		</module>
 		<module type="build-specific" caption="Linker script for SAMD21J18A" id="sam0.utils.linker_scripts#atsamd21j18a">
 			<info type="description" value="summary">
-			Linker script for the SAMD21J18 device.
+			Linker script for the SAMD21J18A device.
 			</info>
 			<build type="linker-config" subtype="script" value="samd21/gcc/samd21j18a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samd21/gcc/samd21j18a_sram.ld" toolchain="armgcc"/>
@@ -570,6 +680,186 @@
 			<build type="linker-config" subtype="script" value="saml21/iar/saml21j18a_flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="saml21/iar/saml21j18a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsaml21j18a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA0E14A" id="sam0.utils.linker_scripts#atsamda0e14a">
+			<info type="description" value="summary">
+			Linker script for the SAMDA0E14A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda0/gcc/samda0e14a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/gcc/samda0e14a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda0/iar/samda0e14a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/iar/samda0e14a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda0e14a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA0E15A" id="sam0.utils.linker_scripts#atsamda0e15a">
+			<info type="description" value="summary">
+			Linker script for the SAMDA0E15A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda0/gcc/samda0e15a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/gcc/samda0e15a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda0/iar/samda0e15a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/iar/samda0e15a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda0e15a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA0E16A" id="sam0.utils.linker_scripts#atsamda0e16a">
+			<info type="description" value="summary">
+			Linker script for the SAMDA0E16A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda0/gcc/samda0e16a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/gcc/samda0e16a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda0/iar/samda0e16a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/iar/samda0e16a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda0e16a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA0G14A" id="sam0.utils.linker_scripts#atsamda0g14">
+			<info type="description" value="summary">
+			Linker script for the SAMDA0G14A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda0/gcc/samda0g14a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/gcc/samda0g14a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda0/iar/samda0g14a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/iar/samda0g14a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda0g14a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA0G15A" id="sam0.utils.linker_scripts#atsamda0g15a">
+			<info type="description" value="summary">
+			Linker script for the SAMDA0G15A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda0/gcc/samda0g15a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/gcc/samda0g15a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda0/iar/samda0g15a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/iar/samda0g15a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda0g15a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA0G16A" id="sam0.utils.linker_scripts#atsamda0g16a">
+			<info type="description" value="summary">
+			Linker script for the SAMDA0G16A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda0/gcc/samda0g16a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/gcc/samda0g16a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda0/iar/samda0g16a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/iar/samda0g16a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda0g16a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA0J14A" id="sam0.utils.linker_scripts#atsamda0j14a">
+			<info type="description" value="summary">
+			Linker script for the SAMDA0J14A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda0/gcc/samda0j14a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/gcc/samda0j14a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda0/iar/samda0j14a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/iar/samda0j14a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda0j14a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA0J15A" id="sam0.utils.linker_scripts#atsamda0j15a">
+			<info type="description" value="summary">
+			Linker script for the SAMDA0J15A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda0/gcc/samda0j15a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/gcc/samda0j15a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda0/iar/samda0j15a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/iar/samda0j15a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda0j15a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA0J16A" id="sam0.utils.linker_scripts#atsamda0j16a">
+			<info type="description" value="summary">
+			Linker script for the SAMDA0J16A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda0/gcc/samda0j16a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/gcc/samda0j16a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda0/iar/samda0j16a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda0/iar/samda0j16a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda0j16a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA1E14A" id="sam0.utils.linker_scripts#atsamda1e14a">
+			<info type="description" value="summary">
+			Linker script for the SAMDA1E14A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda1/gcc/samda1e14a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/gcc/samda1e14a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda1/iar/samda1e14a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/iar/samda1e14a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda1e14a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA1E15A" id="sam0.utils.linker_scripts#atsamda1e15a">
+			<info type="description" value="summary">
+			Linker script for the SAMDA1E15A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda1/gcc/samda1e15a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/gcc/samda1e15a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda1/iar/samda1e15a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/iar/samda1e15a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda1e15a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA1E16A" id="sam0.utils.linker_scripts#atsamda1e16a">
+			<info type="description" value="summary">
+			Linker script for the SAMDA1E16A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda1/gcc/samda1e16a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/gcc/samda1e16a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda1/iar/samda1e16a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/iar/samda1e16a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda1e16a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA1G14A" id="sam0.utils.linker_scripts#atsamda1g14">
+			<info type="description" value="summary">
+			Linker script for the SAMDA1G14A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda1/gcc/samda1g14a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/gcc/samda1g14a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda1/iar/samda1g14a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/iar/samda1g14a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda1g14a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA1G15A" id="sam0.utils.linker_scripts#atsamda1g15a">
+			<info type="description" value="summary">
+			Linker script for the SAMDA1G15A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda1/gcc/samda1g15a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/gcc/samda1g15a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda1/iar/samda1g15a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/iar/samda1g15a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda1g15a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA1G16A" id="sam0.utils.linker_scripts#atsamda1g16a">
+			<info type="description" value="summary">
+			Linker script for the SAMDA1G16A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda1/gcc/samda1g16a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/gcc/samda1g16a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda1/iar/samda1g16a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/iar/samda1g16a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda1g16a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA1J14A" id="sam0.utils.linker_scripts#atsamda1j14a">
+			<info type="description" value="summary">
+			Linker script for the SAMDA1J14A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda1/gcc/samda1j14a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/gcc/samda1j14a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda1/iar/samda1j14a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/iar/samda1j14a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda1j14a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA1J15A" id="sam0.utils.linker_scripts#atsamda1j15a">
+			<info type="description" value="summary">
+			Linker script for the SAMDA1J15A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda1/gcc/samda1j15a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/gcc/samda1j15a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda1/iar/samda1j15a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/iar/samda1j15a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda1j15a"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMDA1J16A" id="sam0.utils.linker_scripts#atsamda1j16a">
+			<info type="description" value="summary">
+			Linker script for the SAMDA1J16A device.
+			</info>
+			<build type="linker-config" subtype="script" value="samda1/gcc/samda1j16a_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/gcc/samda1j16a_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samda1/iar/samda1j16a_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samda1/iar/samda1j16a_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamda1j16a"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAMC21E15A" id="sam0.utils.linker_scripts#atsamc21e15a">
 			<info type="description" value="summary">

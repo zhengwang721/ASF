@@ -3,7 +3,7 @@
  *
  * \brief This file defines all Req, confirm, Indication message constants.
  * - Performance Analyzer application
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,15 +41,12 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef PERF_MSG_CONST_H
 #define PERF_MSG_CONST_H
 
@@ -89,7 +86,7 @@
 #define REGISTER_WRITE_CONFIRM_LEN      (5)
 #define REGISTER_DUMP_CONFIRM_LEN       (6)
 #define PKT_STREAM_CONFIRM_LEN          (3)
-#define RX_ON_CONFIRM_LEN			    (3)
+#define RX_ON_CONFIRM_LEN                           (3)
 #define ED_SCAN_START_CONFIRM_LEN       (7)
 #define ED_SCAN_END_INDICATION_LEN      (2)
 #define SENSOR_DATA_CONFIRM_LEN         (10)
@@ -128,7 +125,6 @@
 #define RANGE_TEST_IN_PROGRESS            (0x31)
 #define PKT_STREAM_IN_PROGRESS            (0x32)
 #define RX_ON_MODE_IN_PROGRESS            (0x33)
-
 
 /* ! \} */
 
@@ -196,7 +192,7 @@
 #define RANGE_TEST_TX                           (0x10)
 #define RANGE_TEST_STOP                         (0x11)
 #define REMOTE_TEST_MODE                        (0X12)
-#define PKT_STREAM_MODE							(0X13)
+#define PKT_STREAM_MODE                                                 (0X13)
 
 #define RANGE_TST_PKT_SEQ_POS                    (11)
 
@@ -274,8 +270,8 @@
 /* Field positions - REGISTER_READ, WRITE */
 #define REGISTER_ADDR_POS                 (3)
 #define REGISTER_VAL_POS                  (5)
-#define PKTSTREAM_STOP					  (0)
-#define RX_ON_STOP					      (0)
+#define PKTSTREAM_STOP                                    (0)
+#define RX_ON_STOP                                            (0)
 /* Field positions - REGISTER_DUMP_REQ */
 #define START_REG_ADDR_POS                (3)
 #define END_REG_ADDR_POS                  (5)
@@ -287,16 +283,12 @@
 #define MSG_LEN_ED_SCAN_REQ               (7)
 
 /* Field positions - PKT_STREAM_REQ frame */
-#define FRAME_LEN_1                       (4) 
+#define FRAME_LEN_1                       (4)
 #define FRAME_LEN_2                       (5)
 #define GAP_TIME_1                        (6)
 #define GAP_TIME_2                        (7)
 #define TIMEOUT_VAL_1                     (8)
 #define TIMEOUT_VAL_2                     (9)
-
-
-
-
 
 /* ! \} */
 /* === Types ================================================================ */
@@ -326,7 +318,7 @@ enum msg_code {
 	RANGE_TEST_START_REQ            =     (0X50),
 	RANGE_TEST_STOP_REQ             =     (0x52),
 	PKT_STREAM_REQ                  =     (0X22),
-	RX_ON_REQ						=     (0X24),
+	RX_ON_REQ                                               =     (0X24),
 
 	/* Confirms and Indications */
 
@@ -354,7 +346,7 @@ enum msg_code {
 	RANGE_TEST_BEACON               =     (0x55),
 	RANGE_TEST_MARKER_INDICATION    =     (0x56),
 	PKT_STREAM_CONFIRM              =     (0x23),
-	RX_ON_CONFIRM					=     (0X25)
+	RX_ON_CONFIRM                                   =     (0X25)
 }
 SHORTENUM;
 

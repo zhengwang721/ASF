@@ -3,7 +3,7 @@
  *
  * @brief Stack configuration parameters
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,19 +42,21 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2015, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef STACK_CONFIG_H
 #define STACK_CONFIG_H
 
 #include "compiler.h"
+#include "tal_types.h"
+#include "ieee_const.h"
+#if (TAL_TYPE == AT86RF215)
+#include "ieee_154g.h"
+#endif
 
 /**
  * \ingroup group_inc
@@ -97,7 +99,7 @@
  +          +
  +   PAL    +
  +          +
- +++----------+
+ ++++----------+
  */
 /* Reduce the header file dependency by using hard-coded values */
 #define LARGE_BUFFER_SIZE               (160)
@@ -110,11 +112,11 @@
  +          +
  +   TAL    +
  +          +
- +++----------+
+ ++++----------+
  +          +
  +   PAL    +
  +          +
- +++----------+
+ ++++----------+
  */
 
 /**
@@ -129,9 +131,15 @@
  * Size of frame_info_t + max number of payload octets +
  * 1 octet LQI  + 1 octet ED value.
  */
+#if (TAL_TYPE == AT86RF215)
+#define LARGE_BUFFER_SIZE                   (sizeof(frame_info_t) + \
+	aMaxPHYPacketSize_4g + \
+	LQI_LEN + ED_VAL_LEN)
+#else
 #define LARGE_BUFFER_SIZE                   (sizeof(frame_info_t) + \
 	aMaxPHYPacketSize + \
 	LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN)
+#endif
 
 /**
  * The following macro holds the size of a small buffer.
@@ -148,9 +156,15 @@
  * 1 octet LQI  + 1 octet ED value.
  * The buffer size has to be a DWORD.
  */
+#if (TAL_TYPE == AT86RF215)
+#define LARGE_BUFFER_SIZE                   (sizeof(frame_info_t) + \
+	aMaxPHYPacketSize_4g + \
+	LQI_LEN + ED_VAL_LEN)
+#else
 #define LARGE_BUFFER_SIZE                   (((sizeof(frame_info_t) + \
 	aMaxPHYPacketSize + \
 	LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN) / 4 + 1) * 4)
+#endif
 
 /**
  * The following macro holds the size of a small buffer.
@@ -171,15 +185,15 @@
  +          +    +          +
  +   MAC    +    +   RTB    +
  +          +    +          +
- +++----------+    +----------+
+ ++++----------+    +----------+
  +          +    +          +
  +   TAL    + or +   TAL    +
  +          +    +          +
- +++----------+    +----------+
+ ++++----------+    +----------+
  +          +    +          +
  +   PAL    +    +   PAL    +
  +          +    +          +
- +++----------+    +----------+
+ ++++----------+    +----------+
  */
 
 /**

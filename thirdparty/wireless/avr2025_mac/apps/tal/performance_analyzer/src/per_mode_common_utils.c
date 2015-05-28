@@ -4,7 +4,7 @@
  * \brief  Common utilities for both Initiator and Receptor in PER Measurement
  * mode - Performance Analyzer application
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,15 +42,12 @@
  */
 
 /*
- * Copyright(c) 2013-2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* === INCLUDES ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #include <stdio.h>
 #include "tfa.h"
 #include "tal.h"
@@ -75,45 +72,45 @@ static uint8_t prev_non_26chn_tx_power;
 uint8_t pkt_buffer[LARGE_BUFFER_SIZE];
 
 #if (ANTENNA_DIVERSITY == 1)
- static uint8_t ant_sel_before_ct;
- static uint8_t ant_div_before_ct;
+static uint8_t ant_sel_before_ct;
+static uint8_t ant_div_before_ct;
 #endif /* End of #if (ANTENNA_DIVERSITY == 1) */
 
 /* Database to maintain the default settings of the configurable parameter */
- trx_config_params_t default_trx_config_params;
- 
+trx_config_params_t default_trx_config_params;
+
 /* Database to maintain the updated/latest settings of the configurable
  * parameters */
- trx_config_params_t curr_trx_config_params;
+trx_config_params_t curr_trx_config_params;
 
-  uint8_t cw_start_mode;
+uint8_t cw_start_mode;
 
-  uint16_t cw_tmr_val;
-  
-  uint8_t last_tx_power_format_set;  
-  
-  bool peer_found;
- 
-  uint32_t pkt_stream_gap_time;
- 
-  bool pulse_mode ;
-  
-  bool rdy_to_tx;
-  
-  bool remote_serial_tx_failure;
-  
-  bool rx_on_mode;
- 
- /*Pointer to the data frame to be used in Packet Streaming Mode*/
-  frame_info_t *stream_pkt;
+uint16_t cw_tmr_val;
+
+uint8_t last_tx_power_format_set;
+
+bool peer_found;
+
+uint32_t pkt_stream_gap_time;
+
+bool pulse_mode;
+
+bool rdy_to_tx;
+
+bool remote_serial_tx_failure;
+
+bool rx_on_mode;
+
+/*Pointer to the data frame to be used in Packet Streaming Mode*/
+frame_info_t *stream_pkt;
 
 #if (TAL_TYPE == AT86RF233)
- /* Backup for ISM frequency related registers for CW Transmission */
-  static uint8_t cc_band_ct;
-  static uint8_t cc_number_ct;
+/* Backup for ISM frequency related registers for CW Transmission */
+static uint8_t cc_band_ct;
+static uint8_t cc_number_ct;
 #endif /* End of #if (TAL_TYPE == AT86RF233) */
-  
-bool cw_ack_sent,remote_cw_start,remote_pulse_cw_start;  
+
+bool cw_ack_sent, remote_cw_start, remote_pulse_cw_start;
 
 /* === DEFINES============================================================== */
 
@@ -127,11 +124,11 @@ bool cw_ack_sent,remote_cw_start,remote_pulse_cw_start;
 
 #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
 	(defined CW_SUPPORTED)))
-	
+
 static void stop_pulse_cb(void *callback_parameter);
 
 #endif /* End of #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) &&
-        *(defined CW_SUPPORTED))) */ 
+        *(defined CW_SUPPORTED))) */
 /* === IMPLEMENTATION======================================================= */
 
 /*
@@ -295,71 +292,66 @@ void config_per_test_parameters(void)
 	}
 }
 
-
 /**
  * \brief This function initiates packet streaming test.
- * \param gap_time Gap to be provided between consecutive frames 
+ * \param gap_time Gap to be provided between consecutive frames
  *  in terms of milliseconds
- * \timeout : This parameter is used by the receptor node to 
- *   timeout/stop the packet streaming 
+ * \timeout : This parameter is used by the receptor node to
+ *   timeout/stop the packet streaming
  * \param frame_len Length of the Data frame to be streamed
  */
-void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop,uint16_t frame_len)
+void pktstream_test(uint16_t gap_time, uint16_t timeout, bool start_stop,
+		uint16_t frame_len)
 {
 	pkt_stream_gap_time = gap_time;
 	/*Return if the frame length is less than 127(Max MPDU Length)*/
-	if(frame_len<=127)
-	{
-		usr_pkt_stream_confirm(MAC_SUCCESS,start_stop);
+	if (frame_len <= 127) {
+		usr_pkt_stream_confirm(MAC_SUCCESS, start_stop);
+	} else {
+		usr_pkt_stream_confirm(INVALID_ARGUMENT, start_stop);
 	}
-	else
-	{
-		usr_pkt_stream_confirm(INVALID_ARGUMENT,start_stop);
-	}
-	
-/*  Send the Packet Stream Start Confirm in case of Receptor before beginning
- *  packet streaming.Serial Handler will take care in sending the confirmation
- *   over the air to the Host*/
-	if((node_info.main_state == PER_TEST_RECEPTOR))
-	{
+
+	/*  Send the Packet Stream Start Confirm in case of Receptor before
+	 * beginning
+	 *  packet streaming.Serial Handler will take care in sending the
+	 *confirmation
+	 *   over the air to the Host*/
+	if ((node_info.main_state == PER_TEST_RECEPTOR)) {
 		serial_data_handler();
 	}
-	if(start_stop)
-	{
+
+	if (start_stop) {
 		/*Configure the frame for streaming*/
 		configure_pkt_stream_frames(frame_len);
-		
-		op_mode=PKT_STREAM_MODE;
-		
+
+		op_mode = PKT_STREAM_MODE;
+
 		/*Start the gap timer*/
-		if(pkt_stream_gap_time)
-		{
-			sw_timer_start(T_APP_TIMER,pkt_stream_gap_time*1E3,SW_TIMEOUT_RELATIVE,(FUNC_PTR)pkt_stream_gap_timer,NULL);
-		}
-		else
-		{
+		if (pkt_stream_gap_time) {
+			sw_timer_start(T_APP_TIMER, pkt_stream_gap_time * 1E3,
+					SW_TIMEOUT_RELATIVE,
+					(FUNC_PTR)pkt_stream_gap_timer, NULL);
+		} else {
 			rdy_to_tx = true;
 		}
+
 		pkt_stream_stop = false;
-		
-		if((node_info.main_state == PER_TEST_RECEPTOR) && 1 <= timeout )
-		{
+
+		if ((node_info.main_state ==
+				PER_TEST_RECEPTOR) && 1 <= timeout) {
 			sw_timer_start(CW_TX_TIMER,
-			(uint32_t)timeout * 1E6,
-			SW_TIMEOUT_RELATIVE,
-			(FUNC_PTR)stop_pkt_streaming,
-			NULL);
+					(uint32_t)timeout * 1E6,
+					SW_TIMEOUT_RELATIVE,
+					(FUNC_PTR)stop_pkt_streaming,
+					NULL);
 		}
-	}
-	else
-	{
-	/*stop packet streaming once the current packet transmission is completed*/
+	} else {
+		/*stop packet streaming once the current packet transmission is
+		 *completed*/
 		pkt_stream_stop = true;
 		sw_timer_stop(T_APP_TIMER);
-		 op_mode=TX_OP_MODE;
+		op_mode = TX_OP_MODE;
 	}
-	
-	
 }
 
 /**
@@ -376,7 +368,8 @@ void configure_pkt_stream_frames(uint16_t frame_len)
 	uint16_t temp_value;
 	app_payload_t *tmp;
 
-	stream_pkt = (frame_info_t *)pkt_buffer;	
+	stream_pkt = (frame_info_t *)pkt_buffer;
+
 	/*
 	 * Fill in PHY frame.
 	 */
@@ -389,7 +382,7 @@ void configure_pkt_stream_frames(uint16_t frame_len)
 	frame_ptr = temp_frame_ptr
 				= (uint8_t *)stream_pkt +
 					LARGE_BUFFER_SIZE -
-					app_frame_length - FCS_LEN; 
+					app_frame_length - FCS_LEN;
 
 	tmp = (app_payload_t *)temp_frame_ptr;
 
@@ -403,7 +396,7 @@ void configure_pkt_stream_frames(uint16_t frame_len)
 	 * by TAL.
 	 */
 	/* 1=> cmd ID*/
-	for (index = 0; index < (app_frame_length - 1); index++) { 
+	for (index = 0; index < (app_frame_length - 1); index++) {
 		*temp_frame_ptr++ = index; /* dummy values */
 	}
 
@@ -436,23 +429,22 @@ void configure_pkt_stream_frames(uint16_t frame_len)
 	frame_ptr--;
 	*frame_ptr = (uint8_t)rand();
 
-	/* Set the FCF. */ 
-// Reserved frame type so that other apps doesnot receive and process this data
+	/* Set the FCF. */
+	/* Reserved frame type so that other apps doesnot receive and process
+	 * this data */
 	fcf |= 0x04 | FCF_SET_SOURCE_ADDR_MODE(FCF_SHORT_ADDR) |
 			FCF_SET_DEST_ADDR_MODE(FCF_SHORT_ADDR);
-
 
 	frame_ptr -= FCF_LEN;
 	convert_16_bit_to_byte_array(CCPU_ENDIAN_TO_LE16(fcf), frame_ptr);
 
 	/* First element shall be length of PHY frame. */
 	frame_ptr--;
-	*frame_ptr = (uint8_t)frame_len; 
+	*frame_ptr = (uint8_t)frame_len;
 
 	/* Finished building of frame. */
 	stream_pkt->mpdu = frame_ptr;
 }
-
 
 /**
  * \brief Timer used in Packet Streaming Mode to add gap in between
@@ -461,28 +453,27 @@ void configure_pkt_stream_frames(uint16_t frame_len)
 void pkt_stream_gap_timer(void *parameter)
 {
 	rdy_to_tx = true;
-	parameter=parameter;
+	parameter = parameter;
 }
 
 /**
  * \brief This function is called to abort the packet streaming mode inprogress
  */
-void stop_pkt_streaming(void * parameter)
+void stop_pkt_streaming(void *parameter)
 {
 	pkt_stream_stop = true;
 	sw_timer_stop(T_APP_TIMER);
-	if(sw_timer_is_running(CW_TX_TIMER))
-	{
+	if (sw_timer_is_running(CW_TX_TIMER)) {
 		sw_timer_stop(CW_TX_TIMER);
-	}			
-	usr_pkt_stream_confirm(MAC_SUCCESS,false);
-	if(node_info.main_state == PER_TEST_RECEPTOR)
-	{
+	}
+
+	usr_pkt_stream_confirm(MAC_SUCCESS, false);
+	if (node_info.main_state == PER_TEST_RECEPTOR) {
 		sw_timer_start(T_APP_TIMER,
-		LED_BLINK_RATE_IN_MICRO_SEC,
-		SW_TIMEOUT_RELATIVE,
-		(FUNC_PTR)led_blinker_timer_handler_cb,
-		NULL);
+				LED_BLINK_RATE_IN_MICRO_SEC,
+				SW_TIMEOUT_RELATIVE,
+				(FUNC_PTR)led_blinker_timer_handler_cb,
+				NULL);
 	}
 }
 
@@ -494,20 +485,19 @@ void stop_pkt_streaming(void * parameter)
 void pulse_cw_transmission(void)
 {
 	uint16_t channel;
-	
+
 	/*Start the Pulse CW Trx after the confirmation is sent*/
-	if(node_info.main_state == PER_TEST_RECEPTOR && !cw_ack_sent)
-	{
-	   remote_pulse_cw_start = true;
-	   usr_cont_pulse_tx_confirm(MAC_SUCCESS);	   
-	   return;
+	if (node_info.main_state == PER_TEST_RECEPTOR && !cw_ack_sent) {
+		remote_pulse_cw_start = true;
+		usr_cont_pulse_tx_confirm(MAC_SUCCESS);
+		return;
 	}
-	
+
 	remote_pulse_cw_start = false;
 	cw_ack_sent = false;
-	
+
 	op_mode = CONTINUOUS_TX_MODE;
-	tal_pib_get(phyCurrentChannel,(uint8_t *)&channel);
+	tal_pib_get(phyCurrentChannel, (uint8_t *)&channel);
 
 	/* Save all user settings before continuous tx */
 	save_all_settings();
@@ -520,7 +510,6 @@ void pulse_cw_transmission(void)
 		tal_set_frequency_regs(cc_band_ct, cc_number_ct);
 	}
 
-
 #endif /* End of (TAL_TYPE == AT86RF233) */
 
 	/* Start  the Continuous Wave transmission */
@@ -531,8 +520,6 @@ void pulse_cw_transmission(void)
 			SW_TIMEOUT_RELATIVE,
 			(FUNC_PTR)stop_pulse_cb,
 			NULL);
-	
-	
 }
 
 #endif
@@ -551,7 +538,7 @@ static void stop_pulse_cb(void *callback_parameter)
 	op_mode = TX_OP_MODE;
 	/* recover all user setting set before continuous tx */
 	recover_all_settings();
-		
+
 	usr_cont_pulse_tx_confirm(MAC_SUCCESS);
 	/* Keep compiler happy. */
 	callback_parameter = callback_parameter;
@@ -562,106 +549,101 @@ static void stop_pulse_cb(void *callback_parameter)
 /*
  * \brief Start CW transmission on current channel page
  * \param tx_mode  Continuous transmission mode
- * \param tmr_val  This parameter is used by the receptor node 
+ * \param tmr_val  This parameter is used by the receptor node
  *  to stop the CW transmission
  */
 #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
 	(defined CW_SUPPORTED)))
-void start_cw_transmission(uint8_t tx_mode,uint16_t tmr_val)
+void start_cw_transmission(uint8_t tx_mode, uint16_t tmr_val)
 {
-	
-/* If the test is initiated on the receptor node, First send the 
- * Start confirmation back to the host.
- * Once this is done the test could be started.
- * The cw_ack_sent flag is used for this purpose
- */
-if(node_info.main_state == PER_TEST_RECEPTOR && !cw_ack_sent)
-{
-     /* timer value should not exceed 3600 seconds */
-	if((tx_mode !=CW_MODE && tx_mode != PRBS_MODE) || (3600 < tmr_val)) 
-	{
-		usr_cont_wave_tx_confirm(INVALID_ARGUMENT, 0x01, tx_mode);
-		return;
-	}
-	else
-	{
-	   /* Send Set confirmation with status SUCCESS and start CW trx on 
-	    * successful transmission of the Confirmation message*/
-	   usr_cont_wave_tx_confirm(MAC_SUCCESS, START_CWT, tx_mode); 
-	   remote_cw_start = true;
-	   cw_start_mode = tx_mode;
-	   cw_tmr_val = tmr_val;
-	   return;
-	}
-	
-	
-}
+	/* If the test is initiated on the receptor node, First send the
+	 * Start confirmation back to the host.
+	 * Once this is done the test could be started.
+	 * The cw_ack_sent flag is used for this purpose
+	 */
+	if (node_info.main_state == PER_TEST_RECEPTOR && !cw_ack_sent) {
+		/* timer value should not exceed 3600 seconds */
+		if ((tx_mode != CW_MODE &&
+				tx_mode != PRBS_MODE) || (3600 < tmr_val)) {
+			usr_cont_wave_tx_confirm(INVALID_ARGUMENT, 0x01,
+					tx_mode);
+			return;
+		} else {
+			/* Send Set confirmation with status SUCCESS and start
+			 * CW trx on
+			 * successful transmission of the Confirmation message*/
+			usr_cont_wave_tx_confirm(MAC_SUCCESS, START_CWT,
+					tx_mode);
+			remote_cw_start = true;
+			cw_start_mode = tx_mode;
+			cw_tmr_val = tmr_val;
+			return;
+		}
+	} else if (node_info.main_state == PER_TEST_INITIATOR ||
+			(node_info.main_state == SINGLE_NODE_TESTS) ||
+			((node_info.main_state == PER_TEST_RECEPTOR) &&
+			cw_ack_sent)) {
+		/* Save all user settings before continuous tx */
+		save_all_settings();
 
-else if(node_info.main_state == PER_TEST_INITIATOR || (node_info.main_state == SINGLE_NODE_TESTS) || ((node_info.main_state == PER_TEST_RECEPTOR) && cw_ack_sent))
-{
-	/* Save all user settings before continuous tx */
-	save_all_settings();
-
-	/* Added to ensure CW transmission happen in every attempt */
-	tal_reset(false);
+		/* Added to ensure CW transmission happen in every attempt */
+		tal_reset(false);
 
 #if (ANTENNA_DIVERSITY == 1)
-	if (ANT_DIV_DISABLE == ant_div_before_ct) {
-		tal_ant_div_config(ANT_DIVERSITY_DISABLE, ant_sel_before_ct);
-	}
+		if (ANT_DIV_DISABLE == ant_div_before_ct) {
+			tal_ant_div_config(ANT_DIVERSITY_DISABLE,
+					ant_sel_before_ct);
+		}
 
 #endif
 
-if((node_info.main_state == PER_TEST_RECEPTOR) && 1 <= tmr_val )
-{
-	sw_timer_start(CW_TX_TIMER,
-	(uint32_t)tmr_val * 1E6,
-	SW_TIMEOUT_RELATIVE,
-	(FUNC_PTR)stop_cw_transmission,
-	(void *)&tx_mode);
+		if ((node_info.main_state ==
+				PER_TEST_RECEPTOR) && 1 <= tmr_val) {
+			sw_timer_start(CW_TX_TIMER,
+					(uint32_t)tmr_val * 1E6,
+					SW_TIMEOUT_RELATIVE,
+					(FUNC_PTR)stop_cw_transmission,
+					(void *)&tx_mode);
+		}
 
-	
-}
+		switch (tx_mode) {
+		case CW_MODE: /* CW mode*/
+		{
+			/* In CW_MODE the parameter random_content is obsolete.
+			 **/
+			tfa_continuous_tx_start(CW_MODE, false);
+		}
+		break;
 
-	switch (tx_mode) {
-	case CW_MODE: /* CW mode*/
-	{
-		/* In CW_MODE the parameter random_content is obsolete. */
-		tfa_continuous_tx_start(CW_MODE, false);
-	}
-	break;
+		case PRBS_MODE: /* PRBS mode*/
+		{
+			/* Start PRBS_MODE mode using random content. */
+			tfa_continuous_tx_start(PRBS_MODE, true);
+		}
+		break;
 
-	case PRBS_MODE: /* PRBS mode*/
-	{
-		/* Start PRBS_MODE mode using random content. */
-		tfa_continuous_tx_start(PRBS_MODE, true);
-	}
-	break;
+		default:
+		{
+			usr_cont_wave_tx_confirm(INVALID_ARGUMENT, 0x01,
+					tx_mode);
+			return;
+		}
+		}
 
-	default:
-	{
-		usr_cont_wave_tx_confirm(INVALID_ARGUMENT, 0x01, tx_mode);
-		return;
+		op_mode = CONTINUOUS_TX_MODE;
+		if (node_info.main_state == PER_TEST_RECEPTOR) {
+			cw_ack_sent = false;
+		} else {
+			/* Send Set confirmation with status SUCCESS */
+			usr_cont_wave_tx_confirm(MAC_SUCCESS, START_CWT,
+					tx_mode);
+		}
 	}
-	}
-
-	op_mode = CONTINUOUS_TX_MODE;
-	if(node_info.main_state == PER_TEST_RECEPTOR )
-	{
-		cw_ack_sent=false;
-	}
-	else
-	{
-	
-	/* Send Set confirmation with status SUCCESS */
-	usr_cont_wave_tx_confirm(MAC_SUCCESS, START_CWT, tx_mode);
-	}
-}
 }
 
 /*
  * \brief Stop CW transmission on current channel page
- * \param parameter Pointer to the variable which defines 
+ * \param parameter Pointer to the variable which defines
  *  the Continuous transmission mode
  */
 void stop_cw_transmission(void *parameter)
@@ -675,15 +657,13 @@ void stop_cw_transmission(void *parameter)
 	op_mode = TX_OP_MODE;
 	usr_cont_wave_tx_confirm(MAC_SUCCESS, STOP_CWT /*stop*/, cw_mode);
 	remote_cw_start = false;
-	if(node_info.main_state == PER_TEST_RECEPTOR)
-	{
+	if (node_info.main_state == PER_TEST_RECEPTOR) {
 		sw_timer_start(T_APP_TIMER,
-		LED_BLINK_RATE_IN_MICRO_SEC,
-		SW_TIMEOUT_RELATIVE,
-		(FUNC_PTR)led_blinker_timer_handler_cb,
-		NULL);
+				LED_BLINK_RATE_IN_MICRO_SEC,
+				SW_TIMEOUT_RELATIVE,
+				(FUNC_PTR)led_blinker_timer_handler_cb,
+				NULL);
 	}
-	
 }
 
 #endif
@@ -790,39 +770,34 @@ void dump_trx_register_values(uint16_t start_reg_addr, uint16_t end_reg_addr)
 }
 
 /**
- * \brief This function is called to initiate the RX_ON test 
- * The transceiver is put into the RX_ON mode and no requests are handled until 
+ * \brief This function is called to initiate the RX_ON test
+ * The transceiver is put into the RX_ON mode and no requests are handled until
  * this mode is stopped.
- * On the receptor ,the mode is stopped only on reception of the RX_ON_STOP 
+ * On the receptor ,the mode is stopped only on reception of the RX_ON_STOP
  * command which is sent without ack_req
- * \param start_stop_param Indicates whether the request is to 
+ * \param start_stop_param Indicates whether the request is to
  * Start or Stop the mode
  */
 void rx_on_test(bool start_stop_param)
 {
-
-
-	if(start_stop_param)
-	{
-		if(node_info.main_state != PER_TEST_RECEPTOR)
-		{
-			
+	if (start_stop_param) {
+		if (node_info.main_state != PER_TEST_RECEPTOR) {
 			set_trx_state(CMD_RX_ON);
-			curr_trx_config_params.trx_state = RX_ON ;
+			curr_trx_config_params.trx_state = RX_ON;
 		}
-    /* For receptor the mode is switched on successful transmission of 
-	 * the confirmation message*/
+
+		/* For receptor the mode is switched on successful transmission
+		 * of
+		 * the confirmation message*/
 		rx_on_mode = true;
-	}
-	else
-	{
+	} else {
 		set_trx_state(CMD_RX_AACK_ON);
-		curr_trx_config_params.trx_state = RX_AACK_ON ;
+		curr_trx_config_params.trx_state = RX_AACK_ON;
 		rx_on_mode = false;
 	}
-	usr_rx_on_confirm(MAC_SUCCESS,start_stop_param);
-}
 
+	usr_rx_on_confirm(MAC_SUCCESS, start_stop_param);
+}
 
 #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
 	(defined CW_SUPPORTED)))
@@ -872,12 +847,11 @@ void recover_all_settings(void)
 #endif /* End of #if(TAL_TYPE == AT86RF233) */
 
 	/*RPC settings are reseted during tal_reset,hence reconfiguring based
-	 *on old config*/
-#if ((TAL_TYPE == ATMEGARFR2)||(TAL_TYPE == AT86RF233))
+	 * on old config*/
+#if ((TAL_TYPE == ATMEGARFR2) || (TAL_TYPE == AT86RF233))
 	if (true == curr_trx_config_params.rpc_enable) {
 		/* RPC feature configuration. */
-		tal_rpc_mode_config(ENABLE_ALL_RPC_MODES); 
-		                                            
+		tal_rpc_mode_config(ENABLE_ALL_RPC_MODES);
 	} else {
 		tal_rpc_mode_config(DISABLE_ALL_RPC_MODES);
 	}
@@ -908,7 +882,6 @@ void recover_all_settings(void)
 
 #endif /* End of #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) &&
         *(defined CW_SUPPORTED))) */
-
 
 #ifdef EXT_RF_FRONT_END_CTRL
 
@@ -943,7 +916,7 @@ void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl)
 		/* if the channel changed from 26 to other  */
 		if (prev_chnl == CHANNEL_26) {
 			/* Set back the tx power to default value i.e. 20dBm,
-			 *TX_PWR 0x09 */
+			 * TX_PWR 0x09 */
 			pib_value.pib_value_8bit = prev_non_26chn_tx_power;
 			tal_pib_set(phyTransmitPower, &pib_value);
 			curr_trx_config_params.tx_power_reg = trx_bit_read(
@@ -956,7 +929,6 @@ void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl)
 }
 
 #endif /* End of EXT_RF_FRONT_END_CTRL */
-
 
 /**
  * \brief Timer Callback function  if identify command is received on air
@@ -992,6 +964,7 @@ void led_blinker_timer_handler_cb(void *parameter)
 				(FUNC_PTR)led_blinker_timer_handler_cb,
 				NULL);
 	}
+
 #endif
 	return;
 }
@@ -1020,4 +993,5 @@ float reverse_float( const float float_val )
 #endif
 	return retuVal;
 }
+
 /* EOF */

@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include "dac.h"
@@ -69,8 +69,8 @@ struct dac_module *_dac_instances[DAC_INST_NUM];
  * \retval STATUS_OK           If the data was written
  * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
  *                                     mode was specified with a DAC instance
- *                                     configured in non-event mode.
- * \retval STATUS_BUSY      The DAC is busy to accept new job.
+ *                                     configured in non-event mode
+ * \retval STATUS_BUSY      The DAC is busy to accept new job
  */
 enum status_code dac_chan_write_buffer_job(
 		struct dac_module *const module_inst,
@@ -136,8 +136,8 @@ enum status_code dac_chan_write_buffer_job(
  * \retval STATUS_OK           If the data was written
  * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
  *                                     mode was specified with a DAC instance
- *                                     configured in non-event mode.
- * \retval STATUS_BUSY      The DAC is busy to accept new job.
+ *                                     configured in non-event mode
+ * \retval STATUS_BUSY      The DAC is busy to accept new job
  */
 enum status_code dac_chan_write_job(
 		struct dac_module *const module_inst,
@@ -178,11 +178,11 @@ enum status_code dac_chan_write_job(
  * \param[in]     type        Type of callback function to register
  *
  * \return Status of the registration operation.
- * \retval STATUS_OK                   The callback was registered successfully.
- * \retval STATUS_ERR_INVALID_ARG      If an invalid callback type was supplied.
+ * \retval STATUS_OK                   The callback was registered successfully
+ * \retval STATUS_ERR_INVALID_ARG      If an invalid callback type was supplied
  * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
  *                                     mode was specified with a DAC instance
- *                                     configured in non-event mode.
+ *                                     configured in non-event mode
  */
 enum status_code dac_register_callback(
 		struct dac_module *const module_inst,
@@ -221,11 +221,11 @@ enum status_code dac_register_callback(
  * \param[in]     type        Type of callback function to unregister
  *
  * \return Status of the de-registration operation.
- * \retval STATUS_OK                   The callback was unregistered successfully.
- * \retval STATUS_ERR_INVALID_ARG      If an invalid callback type was supplied.
+ * \retval STATUS_OK                   The callback was unregistered successfully
+ * \retval STATUS_ERR_INVALID_ARG      If an invalid callback type was supplied
  * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
  *                                     mode was specified with a DAC instance
- *                                     configured in non-event mode.
+ *                                     configured in non-event mode
  */
 enum status_code dac_unregister_callback(
 		struct dac_module *const module_inst,
@@ -262,10 +262,10 @@ enum status_code dac_unregister_callback(
  * \param[in]     type        Type of callback function callbacks to enable
  *
  * \return Status of the callback enable operation.
- * \retval STATUS_OK                   The callback was enabled successfully.
+ * \retval STATUS_OK                   The callback was enabled successfully
  * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
  *                                     mode was specified with a DAC instance
- *                                     configured in non-event mode.
+ *                                     configured in non-event mode
  */
 enum status_code dac_chan_enable_callback(
 		struct dac_module *const module_inst,
@@ -298,10 +298,10 @@ enum status_code dac_chan_enable_callback(
  * \param[in]     type        Type of callback function callbacks to disable
  *
  * \return Status of the callback disable operation.
- * \retval STATUS_OK                   The callback was disabled successfully.
+ * \retval STATUS_OK                   The callback was disabled successfully
  * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
  *                                     mode was specified with a DAC instance
- *                                     configured in non-event mode.
+ *                                     configured in non-event mode
  */
 enum status_code dac_chan_disable_callback(
 		struct dac_module *const module_inst,

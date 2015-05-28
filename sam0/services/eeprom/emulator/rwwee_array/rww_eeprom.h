@@ -3,7 +3,7 @@
  *
  * \brief SAM Read While Write EEPROM Emulator
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef RWW_EEPROM_H_INCLUDED
@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_rww_eeprom_group SAM Read While Write EEPROM (RWW EEPROM) Emulator Service
  *
- * This driver for Atmel庐 | SMART SAM provides a RWW emulated EEPROM
+ * This driver for Atmel&reg; | SMART SAM provides a RWW emulated EEPROM
  * memory area, for the storage and retrieval of user-application
  * configuration data into and out of non-volatile memory. The main array
  * can therefore run code while eeprom data is written.
@@ -59,6 +59,8 @@
  *
  * The following devices can use this module:
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM D21
+ *  - Atmel | SMART SAM DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rww_eeprom_prerequisites
@@ -75,7 +77,7 @@
  *
  * \section asfdoc_sam0_rww_eeprom_module_overview Module Overview
  *
- * SAM device embedds a separate read while write EEPROM emulation (RWWEE) array
+ * SAM device embeds a separate read while write EEPROM emulation (RWWEE) array
  * that can be programmed while the main array is not blocked.
  * To use RWWEE memory, data must be written as a number of physical memory pages
  * (of several bytes each) rather than being individually byte addressable, and
@@ -367,7 +369,7 @@ extern "C" {
 /**
  * \brief RWW EEPROM Logical Page in Each Row.
  *
- * Enum for the possible logical pages that are stored in each physical row .
+ * Enum for the possible logical pages that are stored in each physical row.
  *
  */
 enum rwwee_logical_page_num_in_row {
@@ -541,7 +543,7 @@ enum status_code rww_eeprom_emulator_read_buffer(
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>11/2014</td>
+ *		<td>04/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

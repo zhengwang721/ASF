@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include "wdt.h"
@@ -89,19 +89,15 @@ enum status_code wdt_set_config(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	while (wdt_is_syncing()) {
-		/* Wait for all hardware modules to complete synchronization */
-	}
-
 	/* Disable the Watchdog module */
 	WDT_module->CTRLA.reg &= ~WDT_CTRLA_ENABLE;
 
-	if(config->enable == false) {
-		return STATUS_OK;
-	}
-
 	while (wdt_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
+	}
+
+	if(config->enable == false) {
+		return STATUS_OK;
 	}
 
 	uint32_t new_config = 0;
@@ -120,6 +116,10 @@ enum status_code wdt_set_config(
 		WDT_module->CTRLA.reg &= ~WDT_CTRLA_WEN;
 	}
 
+	while (wdt_is_syncing()) {
+		/* Wait for all hardware modules to complete synchronization */
+	}
+
 	/* Write the new Watchdog configuration */
 	WDT_module->CONFIG.reg = new_config;
 
@@ -130,16 +130,16 @@ enum status_code wdt_set_config(
 			= (config->early_warning_period - 1) << WDT_EWCTRL_EWOFFSET_Pos;
 	}
 
-	while (wdt_is_syncing()) {
-		/* Wait for all hardware modules to complete synchronization */
-	}
-
 	/* Either enable or lock-enable the Watchdog timer depending on the user
 	 * settings */
 	if (config->always_on) {
 		WDT_module->CTRLA.reg |= WDT_CTRLA_ALWAYSON;
 	} else {
 		WDT_module->CTRLA.reg |= WDT_CTRLA_ENABLE;
+	}
+
+	while (wdt_is_syncing()) {
+		/* Wait for all hardware modules to complete synchronization */
 	}
 
 	return STATUS_OK;
@@ -176,6 +176,10 @@ enum status_code wdt_set_config(
 	/* Disable the Watchdog module */
 	WDT_module->CTRL.reg &= ~WDT_CTRL_ENABLE;
 
+	while (wdt_is_syncing()) {
+		/* Wait for all hardware modules to complete synchronization */
+	}
+
 	if(config->enable == false) {
 		return STATUS_OK;
 	}
@@ -187,10 +191,6 @@ enum status_code wdt_set_config(
 	system_gclk_chan_enable(WDT_GCLK_ID);
 	if (config->always_on) {
 		system_gclk_chan_lock(WDT_GCLK_ID);
-	}
-
-	while (wdt_is_syncing()) {
-		/* Wait for all hardware modules to complete synchronization */
 	}
 
 	uint32_t new_config = 0;
@@ -227,16 +227,16 @@ enum status_code wdt_set_config(
 			= (config->early_warning_period - 1) << WDT_EWCTRL_EWOFFSET_Pos;
 	}
 
-	while (wdt_is_syncing()) {
-		/* Wait for all hardware modules to complete synchronization */
-	}
-
 	/* Either enable or lock-enable the Watchdog timer depending on the user
 	 * settings */
 	if (config->always_on) {
 		WDT_module->CTRL.reg |= WDT_CTRL_ALWAYSON;
 	} else {
 		WDT_module->CTRL.reg |= WDT_CTRL_ENABLE;
+	}
+
+	while (wdt_is_syncing()) {
+		/* Wait for all hardware modules to complete synchronization */
 	}
 
 	return STATUS_OK;
@@ -255,10 +255,10 @@ void wdt_reset_count(void)
 {
 	Wdt *const WDT_module = WDT;
 
+	/* Disable the Watchdog module */
+	WDT_module->CLEAR.reg = WDT_CLEAR_CLEAR_KEY;
+
 	while (wdt_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
-
-	/* Disable the Watchdog module */
-	WDT_module->CLEAR.reg = WDT_CLEAR_CLEAR_KEY;
 }

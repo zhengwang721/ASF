@@ -3,7 +3,7 @@
  *
  * \brief USB Device wrapper layer for compliance with common driver UDD
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <string.h>
@@ -64,8 +64,8 @@
 #  error The High speed mode is not supported on this part, please remove USB_DEVICE_HS_SUPPORT in conf_usb.h
 #endif
 
-#if !(SAMD21) && !(SAMR21) && !(SAMD11) && !(SAML21)
-# error The current USB Device Driver supports only SAMD21/R21/D11/L21
+#if !(SAMD21) && !(SAMR21) && !(SAMD11) && !(SAML21) && !(SAMDA1)
+# error The current USB Device Driver supports only SAMD21/R21/D11/L21/DA1
 #endif
 
 #ifndef UDC_REMOTEWAKEUP_LPM_ENABLE
@@ -464,7 +464,7 @@ void udd_ep_abort(udd_ep_id_t ep)
 
 bool udd_is_high_speed(void)
 {
-#if SAMD21 || SAMR21 || SAMD11 || SAML21
+#if SAMD21 || SAMR21 || SAMD11 || SAML21 || SAMDA1
 	return false;
 #endif
 }
@@ -1056,7 +1056,7 @@ static void _usb_device_lpm_suspend(struct usb_module *module_inst, void *pointe
 	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
 
-//#warning Here the sleep mode must be choose to have a DFLL startup time < bmAttribut.BESL
+//#warning Here the sleep mode must be choose to have a DFLL startup time < bmAttribut.HIRD
 	udd_sleep_mode(UDD_STATE_SUSPEND_LPM);  // Enter in LPM SUSPEND mode
 	if ((*lpm_wakeup_enable)) {
 		UDC_REMOTEWAKEUP_LPM_ENABLE();

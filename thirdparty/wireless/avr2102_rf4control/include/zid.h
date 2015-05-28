@@ -9,12 +9,9 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #if ((defined ZID_PROFILE) || (defined DOXYGEN))
@@ -42,6 +39,7 @@
 #ifndef DISCOVERY_DURATION
 #define DISCOVERY_DURATION              0x00186A
 #endif
+
 /** The automatic discovery response mode duration shall be set to 0x1c9c38
  *(30s). */
 #ifndef AUTO_DISC_DURATION_SYM
@@ -51,13 +49,15 @@
 #ifndef DISCOVERY_REPETITION_INTERVAL
 #define DISCOVERY_REPETITION_INTERVAL   0x00F424
 #endif
+
 /** Default value for maximum number of times the discovery request command is
- *sent */
+ * sent */
 #ifndef MAX_DISCOVERY_REPETITIONS
 #define MAX_DISCOVERY_REPETITIONS       0x1E
 #endif
+
 /** Default value for Number of reported node descriptor received during
- *discovery process */
+ * discovery process */
 #ifndef MAX_REPORTED_NODE_DESCRIPTORS
 #define MAX_REPORTED_NODE_DESCRIPTORS   1
 #endif
@@ -114,7 +114,7 @@
  *  the pairing initiator. */
 #define aplcMaxPairIndicationWaitTime   1 /* second */
 #define aplcMaxPairIndicationWaitTime_us   1200000UL /*(aplcMaxPairIndicationWaitTime
-	                                              ** 1000000UL)*/
+	                                             ** 1000000UL)*/
 
 /** The maximum time a device shall wait for a response command frame following
  *  a request command frame. */
@@ -193,7 +193,7 @@ typedef enum zid_protocol_tag {
 #define HID_NUM_NULL_REPORTS                0
 
 /** Constant defines used for TxOption field for report data transmission mode
- **/
+**/
 #define TXO_CTRL_PIPE   0x80
 #define TXO_INTER_PIPE  0x00
 

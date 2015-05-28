@@ -3,7 +3,7 @@
  *
  * \brief SAM Asynchronous Timer (AST) driver.
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -48,14 +48,17 @@
 #define AST_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_ast_group SAM4L Asynchronous Timer (AST)
+ * \defgroup asfdoc_sam_drivers_ast_group SAM4L Asynchronous Timer (AST) Driver
  *
- * This driver for SAM4L devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Asynchronous Timer functionality.
  *
  * The Asynchronous Timer can generate periodic interrupts and peripheral events
  * from output from the prescaler, as well as alarm interrupts and peripheral
  * events, which can trigger at any counter value.
+ *
+ * Devices from the following series can use this module:
+ * - Atmel | SMART SAM4L
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_ast_prerequisites
@@ -97,7 +100,7 @@
  * interrupt, event, or both. The AST can also be configured to clear the clock
  * value on alarm match which will generate an overflow interrupt.
  *
- * \note Refer to module configuration at the end of the ast section of the device
+ * \note Refer to module configuration at the end of the AST section of the device
  * datasheet for the number of alarms supported.
  *
  * Whilst in Calendar Mode and using a nominal 1Hz input clock frequency, a register

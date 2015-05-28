@@ -40,12 +40,16 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef ADC_FEATURE_H_INCLUDED
 #define ADC_FEATURE_H_INCLUDED
 
+/**
+ * \addtogroup asfdoc_sam0_adc_group
+ * @{
+ */
 
 #ifdef __cplusplus
 extern "C" {
@@ -69,7 +73,7 @@ extern struct adc_module *_adc_instances[ADC_INST_NUM];
 struct adc_module;
 
 /** Type of the callback functions. */
-typedef void (*adc_callback_t)(const struct adc_module *const module);
+typedef void (*adc_callback_t)(struct adc_module *const module);
 
 /**
  * \brief ADC callback enum.
@@ -91,11 +95,6 @@ enum adc_callback {
 };
 
 #endif
-
-/**
- * \addtogroup asfdoc_sam0_adc_group
- * @{
- */
 
 /**
  * \brief ADC reference voltage enum.
@@ -343,7 +342,7 @@ enum adc_accumulate_samples {
 	ADC_ACCUMULATE_SAMPLES_64   = ADC_AVGCTRL_SAMPLENUM_64,
 	/** Average 128 samples. */
 	ADC_ACCUMULATE_SAMPLES_128  = ADC_AVGCTRL_SAMPLENUM_128,
-	/** Average 265 samples. */
+	/** Average 256 samples. */
 	ADC_ACCUMULATE_SAMPLES_256  = ADC_AVGCTRL_SAMPLENUM_256,
 	/** Average 512 samples. */
 	ADC_ACCUMULATE_SAMPLES_512  = ADC_AVGCTRL_SAMPLENUM_512,
@@ -476,7 +475,7 @@ struct adc_correction_config {
 	/**
 	 * This value defines how the ADC conversion result is compensated for
 	 * offset error before written to the result register. This is a 12-bit
-	 * value in two鈥檚 complement format.
+	 * value in two's complement format.
 	 */
 	int16_t offset_correction;
 };
@@ -719,6 +718,8 @@ static inline void adc_set_master_slave_mode(
 #ifdef __cplusplus
 }
 #endif
+
+/** @} */
 
 #endif /* ADC_FEATURE_H_INCLUDED */
 

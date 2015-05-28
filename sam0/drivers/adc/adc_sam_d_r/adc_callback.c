@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include "adc_callback.h"
@@ -59,6 +59,10 @@ static void _adc_interrupt_handler(const uint8_t instance)
 				(module->registered_callback_mask & (1 << ADC_CALLBACK_READ_BUFFER))) {
 			/* clear interrupt flag */
 			module->hw->INTFLAG.reg = ADC_INTFLAG_RESRDY;
+
+			while (adc_is_syncing(module)) {
+				/* Wait for synchronization */
+			}
 
 			/* store ADC result in job buffer */
 			*(module->job_buffer++) = module->hw->RESULT.reg;

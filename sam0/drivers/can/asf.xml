@@ -24,9 +24,11 @@
 		<build type="module-config" subtype="required-header-file" value="conf_can.h"/>
 		<build type="module-config" subtype="path" value="module_config"/>
 		<build type="header-file" value="quick_start/qs_can_basic.h"/>
+		<build type="header-file" value="quick_start_fd/qs_can_fd.h"/>
 
-		<build type="doxygen-entry-point" value="asfdoc_sam0_can_group"/>
 		<build type="doxygen-example-path" value="quick_start"/>
+		<build type="doxygen-example-path" value="quick_start_fd"/>
+		<build type="doxygen-entry-point" value="asfdoc_sam0_can_group"/>
 		<build type="doxygen-quick-start" value="asfdoc_sam0_can_exqsg"/>
 
 		<device-support value="samc21"/>

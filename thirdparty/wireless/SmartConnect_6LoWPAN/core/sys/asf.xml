@@ -1,0 +1,54 @@
+<asf xmlversion="1.0">
+
+		
+        <module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.core.sys" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="arg.c"/>
+			<build type="c-source"      value="autostart.c"/>
+			<build type="c-source"      value="compower.c"/>
+			<build type="c-source"      value="ctimer.c"/>
+			<build type="c-source"      value="energest.c"/>
+			<build type="c-source"      value="etimer.c"/>
+			<build type="c-source"      value="mt.c"/>
+			<build type="c-source"      value="process.c"/>
+			<build type="c-source"      value="procinit.c"/>
+			<build type="c-source"      value="rtimer.c"/>
+			<build type="c-source"      value="stimer.c"/>
+			<build type="c-source"      value="timer.c"/>
+			
+			<build type="header-file"   value="arg.h"/>
+			<build type="header-file"   value="autostart.h"/>
+			<build type="header-file"   value="cc.h"/>
+			<build type="header-file"   value="contiki-clock.h"/>
+			<build type="header-file"   value="compower.h"/>
+			<build type="header-file"   value="ctimer.h"/>
+			<build type="header-file"   value="dsc.h"/>
+			<build type="header-file"   value="energest.h"/>
+			<build type="header-file"   value="etimer.h"/>
+			<build type="header-file"   value="lc.h"/>
+			<build type="header-file"   value="lc-addrlabels.h"/>
+			<build type="header-file"   value="lc-switch.h"/>
+			<build type="header-file"   value="loader.h"/>
+			<build type="header-file"   value="log.h"/>
+			<build type="header-file"   value="mt.h"/>
+			<build type="header-file"   value="node-id.h"/>
+			<build type="header-file"   value="process.h"/>
+			<build type="header-file"   value="procinit.h"/>
+			<build type="header-file"   value="pt.h"/>
+			<build type="header-file"   value="pt-sem.h"/>
+			<build type="header-file"   value="rtimer.h"/>
+			<build type="header-file"   value="stimer.h"/>
+			<build type="header-file"   value="subprocess.h"/>
+			<build type="header-file"   value="timer.h"/>
+			<build type="define" name="AUTOSTART_ENABLE" value="1"/>
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki_core"/>
+            <device-support value="sam0"/>		
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>		
+</asf>

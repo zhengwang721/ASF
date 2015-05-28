@@ -3,7 +3,7 @@
  *
  * \brief SAM D21 Xplained Pro board definition
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -623,7 +623,7 @@ void system_board_init(void);
 /** \name 802.15.4 TRX Interface definitions
  * @{
  */
-
+#ifndef EXT2_CONFIG
 #define AT86RFX_SPI                  EXT1_SPI_MODULE
 #define AT86RFX_RST_PIN              EXT1_PIN_7
 #define AT86RFX_MISC_PIN             EXT1_PIN_12
@@ -646,6 +646,7 @@ void system_board_init(void);
 #define AT86RFX_IRQ_PINMUX     EXT1_IRQ_PINMUX
 
 
+#endif
 /** Enables the transceiver main interrupt. */
 #define ENABLE_TRX_IRQ()     \
 		extint_chan_enable_callback(AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT)

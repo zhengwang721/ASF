@@ -3,7 +3,7 @@
  *
  * \brief SAM ADC functionality
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,12 +40,16 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef ADC_FEATURE_H_INCLUDED
 #define ADC_FEATURE_H_INCLUDED
 
+/**
+ * \addtogroup asfdoc_sam0_adc_group
+ * @{
+ */
 
 #ifdef __cplusplus
 extern "C" {
@@ -62,7 +66,7 @@ extern struct adc_module *_adc_instances[ADC_INST_NUM];
 struct adc_module;
 
 /** Type of the callback functions. */
-typedef void (*adc_callback_t)(const struct adc_module *const module);
+typedef void (*adc_callback_t)(struct adc_module *const module);
 
 /**
  * \brief ADC Callback enum
@@ -84,11 +88,6 @@ enum adc_callback {
 };
 
 #endif
-
-/**
- * \addtogroup asfdoc_sam0_adc_group
- * @{
- */
 
 /**
  * \brief ADC reference voltage enum
@@ -332,7 +331,7 @@ enum adc_accumulate_samples {
 	ADC_ACCUMULATE_SAMPLES_64   = ADC_AVGCTRL_SAMPLENUM_64,
 	/** Average 128 samples. */
 	ADC_ACCUMULATE_SAMPLES_128  = ADC_AVGCTRL_SAMPLENUM_128,
-	/** Average 265 samples. */
+	/** Average 256 samples. */
 	ADC_ACCUMULATE_SAMPLES_256  = ADC_AVGCTRL_SAMPLENUM_256,
 	/** Average 512 samples. */
 	ADC_ACCUMULATE_SAMPLES_512  = ADC_AVGCTRL_SAMPLENUM_512,
@@ -453,7 +452,7 @@ struct adc_correction_config {
 	/**
 	 * This value defines how the ADC conversion result is compensated for
 	 * offset error before written to the result register. This is a 12-bit
-	 * value in two鈥檚 complement format.
+	 * value in two's complement format.
 	 */
 	int16_t offset_correction;
 };
@@ -497,17 +496,21 @@ struct adc_config {
 	enum adc_gain_factor gain_factor;
 	/** Positive MUX input. */
 	enum adc_positive_input positive_input;
-	/** Negative MUX input. */
+	/** Negative MUX input. For singled-ended conversion mode, the negative
+	 * input must be connected to ground. This ground could be the internal
+	 * GND, IOGND or an external ground connected to a pin. */
 	enum adc_negative_input negative_input;
 	/** Number of ADC samples to accumulate when using the
-	 *  \c ADC_RESOLUTION_CUSTOM mode.
+	 *  \c ADC_RESOLUTION_CUSTOM mode.Note: if the result width increases,
+	 *  result resolution will be changed accordingly.
 	 */
 	enum adc_accumulate_samples accumulate_samples;
 	/** Division ration when using the ADC_RESOLUTION_CUSTOM mode. */
 	enum adc_divide_result divide_result;
 	/** Left adjusted result. */
 	bool left_adjust;
-	/** Enables differential mode if true. */
+	/** Enables differential mode if true. 
+	 * if false, ADC will run in singled-ended mode. */
 	bool differential_mode;
 	/** Enables free running mode if true. */
 	bool freerunning;
@@ -524,7 +527,7 @@ struct adc_config {
 	 * prescaled clock cycles (depends of \c ADC_PRESCALER value), thus
 	 * controlling the ADC input impedance. Sampling time is set according to
 	 * the formula:
-	 * Sample time = (sample_length+1) * (ADCclk / 2)
+	 * Sample time = (sample_length+1) * (ADCclk / 2).
 	 */
 	uint8_t sample_length;
 	/** Window monitor configuration structure. */
@@ -715,11 +718,11 @@ static inline void adc_disable_pin_scan_mode(
 
 /** @} */
 
-/** @} */
-
 #ifdef __cplusplus
 }
 #endif
+
+/** @} */
 
 #endif /* ADC_FEATURE_H_INCLUDED */
 

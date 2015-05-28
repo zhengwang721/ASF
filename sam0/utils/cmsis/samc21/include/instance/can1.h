@@ -144,9 +144,10 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for CAN1 peripheral ========== */
-#define CAN1_CLK_AHB_DOMAIN                  // Power domain of AHB
 #define CAN1_CLK_AHB_ID             9        // Index of AHB clock
 #define CAN1_DMAC_ID_DEBUG          15       // DMA CAN Debug Req
 #define CAN1_GCLK_ID                27       // Index of Generic Clock
+#define CAN1_MSG_RAM_ADDR           0x200000000
+#define CAN1_QOS_RESET_VAL          2        // QOS reset value
 
 #endif /* _SAMC21_CAN1_INSTANCE_ */

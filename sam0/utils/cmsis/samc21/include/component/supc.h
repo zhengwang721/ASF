@@ -51,7 +51,7 @@
 /*@{*/
 
 #define SUPC_U2117
-#define REV_SUPC                    0x200
+#define REV_SUPC                    0x210
 
 /* -------- SUPC_INTENCLR : (SUPC Offset: 0x00) (R/W 32) Interrupt Enable Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -121,15 +121,15 @@ typedef union {
 
 /* -------- SUPC_INTFLAG : (SUPC Offset: 0x08) (R/W 32) Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint32_t BODVDDRDY:1;      /*!< bit:      0  BODVDD Ready                       */
-    uint32_t BODVDDDET:1;      /*!< bit:      1  BODVDD Detection                   */
-    uint32_t BVDDSRDY:1;       /*!< bit:      2  BODVDD Synchronization Ready       */
-    uint32_t BODCORERDY:1;     /*!< bit:      3  BODCORE Ready                      */
-    uint32_t BODCOREDET:1;     /*!< bit:      4  BODCORE Detection                  */
-    uint32_t BCORESRDY:1;      /*!< bit:      5  BODCORE Synchronization Ready      */
-    uint32_t :26;              /*!< bit:  6..31  Reserved                           */
+    __I uint32_t BODVDDRDY:1;      /*!< bit:      0  BODVDD Ready                       */
+    __I uint32_t BODVDDDET:1;      /*!< bit:      1  BODVDD Detection                   */
+    __I uint32_t BVDDSRDY:1;       /*!< bit:      2  BODVDD Synchronization Ready       */
+    __I uint32_t BODCORERDY:1;     /*!< bit:      3  BODCORE Ready                      */
+    __I uint32_t BODCOREDET:1;     /*!< bit:      4  BODCORE Detection                  */
+    __I uint32_t BCORESRDY:1;      /*!< bit:      5  BODCORE Synchronization Ready      */
+    __I uint32_t :26;              /*!< bit:  6..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } SUPC_INTFLAG_Type;
@@ -215,7 +215,7 @@ typedef union {
 #define SUPC_BODVDD_HYST            (0x1ul << SUPC_BODVDD_HYST_Pos)
 #define SUPC_BODVDD_ACTION_Pos      3            /**< \brief (SUPC_BODVDD) Action when Threshold Crossed */
 #define SUPC_BODVDD_ACTION_Msk      (0x3ul << SUPC_BODVDD_ACTION_Pos)
-#define SUPC_BODVDD_ACTION(value)   ((SUPC_BODVDD_ACTION_Msk & ((value) << SUPC_BODVDD_ACTION_Pos)))
+#define SUPC_BODVDD_ACTION(value)   (SUPC_BODVDD_ACTION_Msk & ((value) << SUPC_BODVDD_ACTION_Pos))
 #define   SUPC_BODVDD_ACTION_NONE_Val     0x0ul  /**< \brief (SUPC_BODVDD) No action */
 #define   SUPC_BODVDD_ACTION_RESET_Val    0x1ul  /**< \brief (SUPC_BODVDD) The BOD33 generates a reset */
 #define   SUPC_BODVDD_ACTION_INT_Val      0x2ul  /**< \brief (SUPC_BODVDD) The BOD33 generates an interrupt */
@@ -230,7 +230,7 @@ typedef union {
 #define SUPC_BODVDD_ACTCFG          (0x1ul << SUPC_BODVDD_ACTCFG_Pos)
 #define SUPC_BODVDD_PSEL_Pos        12           /**< \brief (SUPC_BODVDD) Prescaler Select */
 #define SUPC_BODVDD_PSEL_Msk        (0xFul << SUPC_BODVDD_PSEL_Pos)
-#define SUPC_BODVDD_PSEL(value)     ((SUPC_BODVDD_PSEL_Msk & ((value) << SUPC_BODVDD_PSEL_Pos)))
+#define SUPC_BODVDD_PSEL(value)     (SUPC_BODVDD_PSEL_Msk & ((value) << SUPC_BODVDD_PSEL_Pos))
 #define   SUPC_BODVDD_PSEL_DIV2_Val       0x0ul  /**< \brief (SUPC_BODVDD) Divide clock by 2 */
 #define   SUPC_BODVDD_PSEL_DIV4_Val       0x1ul  /**< \brief (SUPC_BODVDD) Divide clock by 4 */
 #define   SUPC_BODVDD_PSEL_DIV8_Val       0x2ul  /**< \brief (SUPC_BODVDD) Divide clock by 8 */
@@ -265,7 +265,7 @@ typedef union {
 #define SUPC_BODVDD_PSEL_DIV65536   (SUPC_BODVDD_PSEL_DIV65536_Val << SUPC_BODVDD_PSEL_Pos)
 #define SUPC_BODVDD_LEVEL_Pos       16           /**< \brief (SUPC_BODVDD) Threshold Level for VDD */
 #define SUPC_BODVDD_LEVEL_Msk       (0x3Ful << SUPC_BODVDD_LEVEL_Pos)
-#define SUPC_BODVDD_LEVEL(value)    ((SUPC_BODVDD_LEVEL_Msk & ((value) << SUPC_BODVDD_LEVEL_Pos)))
+#define SUPC_BODVDD_LEVEL(value)    (SUPC_BODVDD_LEVEL_Msk & ((value) << SUPC_BODVDD_LEVEL_Pos))
 #define SUPC_BODVDD_MASK            0x003FF17Eul /**< \brief (SUPC_BODVDD) MASK Register */
 
 /* -------- SUPC_BODCORE : (SUPC Offset: 0x14) (R/W 32) BODCORE Control -------- */
@@ -298,7 +298,7 @@ typedef union {
 #define SUPC_BODCORE_HYST           (0x1ul << SUPC_BODCORE_HYST_Pos)
 #define SUPC_BODCORE_ACTION_Pos     3            /**< \brief (SUPC_BODCORE) Action when Threshold Crossed */
 #define SUPC_BODCORE_ACTION_Msk     (0x3ul << SUPC_BODCORE_ACTION_Pos)
-#define SUPC_BODCORE_ACTION(value)  ((SUPC_BODCORE_ACTION_Msk & ((value) << SUPC_BODCORE_ACTION_Pos)))
+#define SUPC_BODCORE_ACTION(value)  (SUPC_BODCORE_ACTION_Msk & ((value) << SUPC_BODCORE_ACTION_Pos))
 #define   SUPC_BODCORE_ACTION_NONE_Val    0x0ul  /**< \brief (SUPC_BODCORE) No action */
 #define   SUPC_BODCORE_ACTION_RESET_Val   0x1ul  /**< \brief (SUPC_BODCORE) The BOD12 generates a reset */
 #define   SUPC_BODCORE_ACTION_INT_Val     0x2ul  /**< \brief (SUPC_BODCORE) The BOD12 generates an interrupt */
@@ -313,7 +313,7 @@ typedef union {
 #define SUPC_BODCORE_ACTCFG         (0x1ul << SUPC_BODCORE_ACTCFG_Pos)
 #define SUPC_BODCORE_PSEL_Pos       12           /**< \brief (SUPC_BODCORE) Prescaler Select */
 #define SUPC_BODCORE_PSEL_Msk       (0xFul << SUPC_BODCORE_PSEL_Pos)
-#define SUPC_BODCORE_PSEL(value)    ((SUPC_BODCORE_PSEL_Msk & ((value) << SUPC_BODCORE_PSEL_Pos)))
+#define SUPC_BODCORE_PSEL(value)    (SUPC_BODCORE_PSEL_Msk & ((value) << SUPC_BODCORE_PSEL_Pos))
 #define   SUPC_BODCORE_PSEL_DIV2_Val      0x0ul  /**< \brief (SUPC_BODCORE) Divide clock by 2 */
 #define   SUPC_BODCORE_PSEL_DIV4_Val      0x1ul  /**< \brief (SUPC_BODCORE) Divide clock by 4 */
 #define   SUPC_BODCORE_PSEL_DIV8_Val      0x2ul  /**< \brief (SUPC_BODCORE) Divide clock by 8 */
@@ -348,7 +348,7 @@ typedef union {
 #define SUPC_BODCORE_PSEL_DIV65536  (SUPC_BODCORE_PSEL_DIV65536_Val << SUPC_BODCORE_PSEL_Pos)
 #define SUPC_BODCORE_LEVEL_Pos      16           /**< \brief (SUPC_BODCORE) Threshold Level */
 #define SUPC_BODCORE_LEVEL_Msk      (0x3Ful << SUPC_BODCORE_LEVEL_Pos)
-#define SUPC_BODCORE_LEVEL(value)   ((SUPC_BODCORE_LEVEL_Msk & ((value) << SUPC_BODCORE_LEVEL_Pos)))
+#define SUPC_BODCORE_LEVEL(value)   (SUPC_BODCORE_LEVEL_Msk & ((value) << SUPC_BODCORE_LEVEL_Pos))
 #define SUPC_BODCORE_MASK           0x003FF17Eul /**< \brief (SUPC_BODCORE) MASK Register */
 
 /* -------- SUPC_VREG : (SUPC Offset: 0x18) (R/W 32) VREG Control -------- */
@@ -405,10 +405,10 @@ typedef union {
 #define SUPC_VREF_ONDEMAND          (0x1ul << SUPC_VREF_ONDEMAND_Pos)
 #define SUPC_VREF_SEL_Pos           16           /**< \brief (SUPC_VREF) Voltage Reference Selection */
 #define SUPC_VREF_SEL_Msk           (0xFul << SUPC_VREF_SEL_Pos)
-#define SUPC_VREF_SEL(value)        ((SUPC_VREF_SEL_Msk & ((value) << SUPC_VREF_SEL_Pos)))
+#define SUPC_VREF_SEL(value)        (SUPC_VREF_SEL_Msk & ((value) << SUPC_VREF_SEL_Pos))
 #define   SUPC_VREF_SEL_1V024_Val         0x0ul  /**< \brief (SUPC_VREF) 1.024V voltage reference typical value */
-#define   SUPC_VREF_SEL_2V048_Val         0x1ul  /**< \brief (SUPC_VREF) 2.048V voltage reference typical value */
-#define   SUPC_VREF_SEL_4V096_Val         0x2ul  /**< \brief (SUPC_VREF) 4.096V voltage reference typical value */
+#define   SUPC_VREF_SEL_2V048_Val         0x2ul  /**< \brief (SUPC_VREF) 2.048V voltage reference typical value */
+#define   SUPC_VREF_SEL_4V096_Val         0x3ul  /**< \brief (SUPC_VREF) 4.096V voltage reference typical value */
 #define SUPC_VREF_SEL_1V024         (SUPC_VREF_SEL_1V024_Val       << SUPC_VREF_SEL_Pos)
 #define SUPC_VREF_SEL_2V048         (SUPC_VREF_SEL_2V048_Val       << SUPC_VREF_SEL_Pos)
 #define SUPC_VREF_SEL_4V096         (SUPC_VREF_SEL_4V096_Val       << SUPC_VREF_SEL_Pos)

@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
@@ -68,7 +68,7 @@ DmacDescriptor example_descriptor SECTION_DMAC_DESCRIPTOR;
 //! [transfer_descriptor]
 
 //! [_transfer_done]
-static void transfer_done( const struct dma_resource* const resource )
+static void transfer_done(struct dma_resource* const resource )
 {
 	transfer_is_done = true;
 }

@@ -109,8 +109,38 @@
 			<device-support value="saml21"/>
 		</module>
 
+		<!-- SAMDA0 //-->
+		<module type="driver" id="sam0.utils#6" caption="SAM DA0 compiler driver">
+			<info type="description" value="summary">
+			Compiler abstraction layer and code utilities for SAMDA0 devices. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
+			</info>
+			<require idref="sam0.utils.common"/>
+			<require idref="sam0.utils.cmsis.samda0.include"/>
+			<require idref="sam0.utils.cmsis.samda0.include.component"/>
+			<require idref="sam0.utils.cmsis.samda0.include.instance"/>
+			<require idref="sam0.utils.cmsis.samda0.include.pio"/>
+			<require idref="sam0.utils.cmsis.samda0.source.template"/>
+			<info type="gui-flag" value="hidden"/>
+			<device-support value="samda0"/>
+		</module>
+
+		<!-- SAMDA1 //-->
+		<module type="driver" id="sam0.utils#7" caption="SAM DA1 compiler driver">
+			<info type="description" value="summary">
+			Compiler abstraction layer and code utilities for SAMDA1 devices. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
+			</info>
+			<require idref="sam0.utils.common"/>
+			<require idref="sam0.utils.cmsis.samda1.include"/>
+			<require idref="sam0.utils.cmsis.samda1.include.component"/>
+			<require idref="sam0.utils.cmsis.samda1.include.instance"/>
+			<require idref="sam0.utils.cmsis.samda1.include.pio"/>
+			<require idref="sam0.utils.cmsis.samda1.source.template"/>
+			<info type="gui-flag" value="hidden"/>
+			<device-support value="samda1"/>
+		</module>
+
 		<!-- SAMC21 //-->
-		<module type="driver" id="sam0.utils#6" caption="SAM C21 compiler driver">
+		<module type="driver" id="sam0.utils#8" caption="SAM C21 compiler driver">
 			<info type="description" value="summary">
 			Compiler abstraction layer and code utilities for SAMC21 devices. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
 			</info>
