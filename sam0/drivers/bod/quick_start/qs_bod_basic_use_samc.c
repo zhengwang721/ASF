@@ -60,16 +60,6 @@ static void configure_bodvdd(void)
 	bodvdd_enable();
 //! [setup_enable]
 }
-
-static void configure_bodcore(void)
-{
-	struct bodcore_config config_bodcore;
-	bodcore_get_config_defaults(&config_bodcore);
-
-	bodcore_set_config(&config_bodcore);
-
-	bodcore_enable();
-}
 //! [setup]
 
 int main(void)
@@ -78,11 +68,6 @@ int main(void)
 //! [setup_init_vdd]
 	configure_bodvdd();
 //! [setup_init_vdd]
-
-	/* Configure the BOD CORE module */
-//! [setup_init_core]
-	configure_bodcore();
-//! [setup_init_core]
 
 //! [main]
 //! [main_loop]

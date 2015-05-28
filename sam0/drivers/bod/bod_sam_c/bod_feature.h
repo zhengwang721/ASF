@@ -213,106 +213,6 @@ struct bodvdd_config {
 	bool hysteresis;
 };
 
-
-/**
- * \brief Brown Out Detector input clock prescale values.
- *
- * List of possible BODCORE controller prescaler values, to reduce the sampling
- * speed of a BODCORE to lower the power consumption.
- */
-enum bodcore_prescale {
-	/** Divide input prescaler clock by 2. */
-	BODCORE_PRESCALE_DIV_2       = SUPC_BODCORE_PSEL(0),
-	/** Divide input prescaler clock by 4. */
-	BODCORE_PRESCALE_DIV_4       = SUPC_BODCORE_PSEL(1),
-	/** Divide input prescaler clock by 8. */
-	BODCORE_PRESCALE_DIV_8       = SUPC_BODCORE_PSEL(2),
-	/** Divide input prescaler clock by 16. */
-	BODCORE_PRESCALE_DIV_16      = SUPC_BODCORE_PSEL(3),
-	/** Divide input prescaler clock by 32. */
-	BODCORE_PRESCALE_DIV_32      = SUPC_BODCORE_PSEL(4),
-	/** Divide input prescaler clock by 64. */
-	BODCORE_PRESCALE_DIV_64      = SUPC_BODCORE_PSEL(5),
-	/** Divide input prescaler clock by 128. */
-	BODCORE_PRESCALE_DIV_128     = SUPC_BODCORE_PSEL(6),
-	/** Divide input prescaler clock by 256. */
-	BODCORE_PRESCALE_DIV_256     = SUPC_BODCORE_PSEL(7),
-	/** Divide input prescaler clock by 512. */
-	BODCORE_PRESCALE_DIV_512     = SUPC_BODCORE_PSEL(8),
-	/** Divide input prescaler clock by 1024. */
-	BODCORE_PRESCALE_DIV_1024    = SUPC_BODCORE_PSEL(9),
-	/** Divide input prescaler clock by 2048. */
-	BODCORE_PRESCALE_DIV_2048    = SUPC_BODCORE_PSEL(10),
-	/** Divide input prescaler clock by 4096. */
-	BODCORE_PRESCALE_DIV_4096    = SUPC_BODCORE_PSEL(11),
-	/** Divide input prescaler clock by 8192. */
-	BODCORE_PRESCALE_DIV_8192    = SUPC_BODCORE_PSEL(12),
-	/** Divide input prescaler clock by 16384. */
-	BODCORE_PRESCALE_DIV_16384   = SUPC_BODCORE_PSEL(13),
-	/** Divide input prescaler clock by 32768. */
-	BODCORE_PRESCALE_DIV_32768   = SUPC_BODCORE_PSEL(14),
-	/** Divide input prescaler clock by 65536. */
-	BODCORE_PRESCALE_DIV_65536   = SUPC_BODCORE_PSEL(15),
-};
-
-/**
- * \brief Brown Out Detector sampling modes in active sleep mode.
- *
- * List of possible BODCORE module voltage sampling modes in active sleep mode.
- */
-enum bodcore_mode_in_active {
-	/** BODCORE will sample the supply line continuously. */
-	BODCORE_ACTCFG_CONTINUOUS = 0,
-	/** BODCORE will use the BODCORE sampling clock (1KHz) to sample the supply line. */
-	BODCORE_ACTCFG_SAMPLED    = SUPC_BODCORE_ACTCFG,
-};
-
-/**
- * \brief Brown Out Detector sampling modes in standby sleep mode.
- *
- * List of possible BODCORE module voltage sampling modes in standby sleep mode.
- */
-enum bodcore_mode_in_standby {
-	/** BODCORE will sample the supply line continuously. */
-	BODCORE_STDBYCFG_CONTINUOUS = 0,
-	/** BODCORE will use the BODCORE sampling clock (1KHz) to sample the supply line. */
-	BODCORE_STDBYCFG_SAMPLED    = SUPC_BODCORE_STDBYCFG,
-};
-
-/**
- * \brief Brown Out Detector detection actions.
- *
- * List of possible BODCORE actions when a BODCORE module detects a brown-out condition.
- */
-enum bodcore_action {
-	/** A BODCORE detect will do nothing, and the BODCORE state must be polled. */
-	BODCORE_ACTION_NONE      = SUPC_BODCORE_ACTION(0),
-	/** A BODCORE detect will reset the device. */
-	BODCORE_ACTION_RESET     = SUPC_BODCORE_ACTION(1),
-	/** A BODCORE detect will fire an interrupt. */
-	BODCORE_ACTION_INTERRUPT = SUPC_BODCORE_ACTION(2),
-};
-
-/** Configuration structure for a BODCORE module. */
-struct bodcore_config {
-	/** Input sampler clock prescaler factor, to reduce the 1KHz clock from the
-	 *  ULP32K to lower the sampling rate of the BODCORE. */
-	enum bodcore_prescale prescaler;
-	/** BODCORE configuration in active mode. */
-	enum bodcore_mode_in_active mode_in_active;
-	/** BODCORE configuration in backup sleep mode. */
-	enum bodcore_mode_in_standby mode_in_standby;
-	/** Action to perform when a low power detection is made. */
-	enum bodcore_action action;
-	/** BODCORE level to trigger at (see electrical section of device datasheet). */
-	uint8_t level;
-	/** If \c true, the BODCORE is kept enabled and sampled during device sleep. */
-	bool run_in_standby;
-	/** If \c true, enables detection hysteresis. */
-	bool hysteresis;
-};
-
-
 /**
  * \name Configuration and Initialization
  * @{
@@ -325,9 +225,9 @@ struct bodcore_config {
  * - Clock prescaler set to divide the input clock by two
  * - Continuous in active mode
  * - Continuous in standby mode
- * - No action on BODVDD detect
+ * - Reset on BODVDD detect
  * - Hysteresis enabled
- * - BODVDD level 0x7 on V<SUB>DD</SUB>
+ * - BODVDD level 42 on V<SUB>DD</SUB>
  * - BODVDD kept enabled during standby
  *
  * \param[out] conf  BODVDD configuration struct to set to default settings
@@ -341,8 +241,8 @@ static inline void bodvdd_get_config_defaults(
 	conf->prescaler       = BODVDD_PRESCALE_DIV_2;
 	conf->mode_in_active  = BODVDD_ACTCFG_CONTINUOUS;
 	conf->mode_in_standby = BODVDD_STDBYCFG_CONTINUOUS;
-	conf->action          = BODVDD_ACTION_NONE;
-	conf->level           = 0x7;
+	conf->action          = BODVDD_ACTION_RESET;
+	conf->level           = 0x2A;
 	conf->run_in_standby  = true;
 	conf->hysteresis      = true;
 }
@@ -409,102 +309,7 @@ static inline bool bodvdd_is_detected(void)
  */
 static inline void bodvdd_clear_detected(void)
 {
-	SUPC->INTFLAG.bit.BODVDDDET = true;
-	return;
-}
-
-/**
- * \brief Get default BODCORE configuration.
- *
- * The default BODCORE configuration is:
- * - Clock prescaler set to divide the input clock by two
- * - Continuous in active mode
- * - Continuous in standby mode
- * - Reset on BODCORE detect
- * - Hysteresis enabled
- * - BODCORE level 0x12
- * - BODCORE kept enabled during device sleep
- *
- * \param[out] conf  BODCORE configuration struct to set to default settings
- */
-static inline void bodcore_get_config_defaults(
-		struct bodcore_config *const conf)
-{
-	/* Sanity check arguments */
-	Assert(conf);
-
-	conf->prescaler       = BODCORE_PRESCALE_DIV_2;
-	conf->mode_in_active  = BODCORE_ACTCFG_CONTINUOUS;
-	conf->mode_in_standby = BODCORE_STDBYCFG_CONTINUOUS;
-	conf->action          = BODCORE_ACTION_RESET;
-	conf->level           = 0x12;
-	conf->run_in_standby  = true;
-	conf->hysteresis      = true;
-}
-
-enum status_code bodcore_set_config(
-		struct bodcore_config *const conf);
-
-/**
- * \brief Enables a configured BODCORE module.
- *
- * Enables the BODCORE module that has been previously configured.
- *
- * \return Error code indicating the status of the enable operation.
- *
- * \retval STATUS_OK               If the BODCORE was successfully enabled
- */
-static inline enum status_code bodcore_enable(void)
-{
-	SUPC->BODCORE.reg |= SUPC_BODCORE_ENABLE;
-	while (!(SUPC->STATUS.reg & SUPC_STATUS_BCORESRDY)) {
-		/* Wait for BODCORE register sync ready */
-	}
-
-	return STATUS_OK;
-}
-
-/**
- * \brief Disables an enabled BODCORE module.
- *
- * Disables the BODCORE module that was previously enabled.
- *
- * \return Error code indicating the status of the disable operation.
- *
- * \retval STATUS_OK               If the BODCORE was successfully disabled
- */
-static inline enum status_code bodcore_disable(void)
-{
-	SUPC->BODCORE.reg &= ~SUPC_BODCORE_ENABLE;
-	return STATUS_OK;
-}
-
-/**
- * \brief Checks if the BODCORE low voltage detection has occurred.
- *
- * Determines if the BODCORE has detected a voltage lower than its
- * configured threshold.
- *
- * \return Detection status of the BODCORE.
- *
- * \retval true   If the BODCORE has detected a low voltage condition
- * \retval false  If the BODCORE has not detected a low voltage condition
- */
-static inline bool bodcore_is_detected(void)
-{
-	return SUPC->STATUS.bit.BODCOREDET;
-}
-
-/**
- * \brief Clears the low voltage detection state of the BODCORE.
- *
- * Clears the low voltage condition of BODCORE module, so that new
- * low voltage conditions can be detected.
- *
- */
-static inline void bodcore_clear_detected(void)
-{
-	SUPC->INTFLAG.bit.BODCOREDET = true;
+	SUPC->INTFLAG.reg |= SUPC_INTFLAG_BODVDDDET;
 	return;
 }
 

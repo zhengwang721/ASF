@@ -43,7 +43,7 @@
 /**
  * \page asfdoc_sam0_bod_basic_use_case Quick Start Guide for BOD - Basic
  *
- * In this use case, the BODVDD and BODCORE will be configured with the following
+ * In this use case, the BODVDD will be configured with the following
  * settings:
  * - Continuous sampling mode
  * - Prescaler setting of 2
@@ -60,7 +60,6 @@
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_bod_basic_use_samc.c setup_init_vdd
- * \snippet qs_bod_basic_use_samc.c setup_init_core
  *
  * \subsection asfdoc_sam0_bod_basic_use_case_setup_flow Workflow
  * -# Create a BODVDD module configuration struct, which can be filled out to
@@ -77,8 +76,6 @@
  * -# Enable the BODVDD module so that it will monitor the power supply voltage.
  *    \snippet qs_bod_basic_use_samc.c setup_enable
  * 
- *
- * The workflow of the BODCORE is same as the BODVDD.
  *
  * \section asfdoc_sam0_bod_basic_use_case_main Use Case
  *
