@@ -89,11 +89,7 @@
 
 /* ========== Instance parameters for AC peripheral ========== */
 #define AC_COMPCTRL_MUXNEG_OPAMP    7        // OPAMP selection for MUXNEG
-/* The Analog Comparators and ADC1 use the same generic clock configuration.
- * GCLK_ADC1 must be used to configure the clock for AC as GCLK_AC is not 
- * functional. Errata reference: 13404 
- */
-#define AC_GCLK_ID                  34       // Index of Generic Clock
+#define AC_GCLK_ID                  40       // Index of Generic Clock
 #define AC_NUM_CMP                  4        // Number of comparators
 #define AC_SPEED_LEVELS             2        // Number of speed values
 

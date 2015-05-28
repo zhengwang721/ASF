@@ -60,7 +60,15 @@ static enum status_code _ac_set_config(
 	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	gclk_chan_conf.source_generator = config->source_generator;
+#if (SAMC21)
+	/* The Analog Comparators and ADC1 use the same generic clock configuration.
+ 	 * GCLK_ADC1 must be used to configure the clock for AC as GCLK_AC is not 
+ 	 * functional. Errata reference: 13404 
+ 	 */
+	system_gclk_chan_set_config(ADC1_GCLK_ID, &gclk_chan_conf);
+#else
 	system_gclk_chan_set_config(AC_GCLK_ID, &gclk_chan_conf);
+#endif
 	system_gclk_chan_enable(AC_GCLK_ID);
 
 	return STATUS_OK;
