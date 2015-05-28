@@ -184,12 +184,6 @@ enum status_code ac_chan_set_config(
 		compctrl_temp |= AC_COMPCTRL_RUNSTDBY;
 	}
 
-	/* Enable output hysteresis if required */
-	if (config->enable_hysteresis == true) {
-		compctrl_temp |= AC_COMPCTRL_HYSTEN;
-	}
-	compctrl_temp |= AC_COMPCTRL_HYST(config->hysteresis_level);
-
 	/* Set output signal routing mode */
 	compctrl_temp |= config->output_mode;
 
