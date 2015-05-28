@@ -607,10 +607,10 @@ enum status_code rww_eeprom_emulator_get_parameters(
 /**
  * \brief Initializes the RWW EEPROM Emulator service.
  *
- * Initializes the emulated RWW EEPROM memory space, if the emulated RWW EEPROM memory
+ * Initializes the emulated RWW EEPROM memory space. If the emulated RWW EEPROM memory
  * has not been previously initialized, it will need to be explicitly formatted
  * via \ref rww_eeprom_emulator_erase_memory(). The RWW EEPROM memory space will \b not
- * be automatically erased by the initialization function, so that partial data
+ * be automatically erased by the initialization function. Partial data
  * may be recovered by the user application manually if the service is unable to
  * initialize successfully.
  *
