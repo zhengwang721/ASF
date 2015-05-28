@@ -124,6 +124,31 @@ struct system_voltage_references_config {
 };
 
 /**
+ * \brief Voltage Regulator switch in Standby mode.
+ *
+ */
+enum system_vreg_switch_mode {
+	/** Automatic mode. */
+	SYSTEM_VREG_SWITCH_AUTO        = PM_STDBYCFG_VREGSMOD_AUTO_Val,
+	/** Performance oriented. */
+	SYSTEM_VREG_SWITCH_PERFORMANCE = PM_STDBYCFG_VREGSMOD_PERFORMANCE_Val,
+	/** Low Power consumption oriented. */
+	SYSTEM_VREG_SWITCH_LP          = PM_STDBYCFG_VREGSMOD_LP_Val,
+};
+
+/**
+ * \brief Standby configuration.
+ *
+ * Configuration structure for standby mode.
+ */
+struct system_standby_config {
+	/** Regulator switch mode in standby. */
+	enum system_vreg_switch_mode vreg_switch_mode;
+	/** Back bias for HMCRAMCHS (false : no, true: standby). */
+	bool hmcramchs_back_bias;
+};
+
+/**
  * \name Voltage Regulator
  * @{
  */
@@ -313,6 +338,46 @@ static inline void system_sleep(void)
 /**
  * @}
  */
+
+/**
+ * \name Standby Configuration
+ * @{
+ */
+
+/**
+ * \brief Retrieve the default configuration for standby.
+ *
+ * Fills a configuration structure with the default configuration for standby:
+ *   - Automatic VREG switching is used
+ *   - Retention back biasing mode for HMCRAMCHS
+ *
+ * \param[out] config  Configuration structure to fill with default values
+ */
+static inline void system_standby_get_config_defaults(
+		struct system_standby_config *const config)
+{
+	Assert(config);
+
+	config->vreg_switch_mode    = SYSTEM_VREG_SWITCH_AUTO;
+	config->hmcramchs_back_bias = true;
+}
+
+/**
+ * \brief Configure standby mode.
+ *
+ * Configures standby with the given configuration.
+ *
+ * \param[in] config  standby configuration structure containing
+ *                    the new config
+ */
+static inline void system_standby_set_config(
+		struct system_standby_config *const config)
+{
+	Assert(config);
+
+	PM->STDBYCFG.reg = PM_STDBYCFG_VREGSMOD(config->vreg_switch_mode) |
+					 PM_STDBYCFG_BBIASHS(config->hmcramchs_back_bias);
+}
 
 /** @} */
 

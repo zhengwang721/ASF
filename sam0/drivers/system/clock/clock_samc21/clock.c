@@ -204,8 +204,6 @@ void system_clock_source_osculp32k_set_config(
 {
 	OSC32KCTRL_OSCULP32K_Type temp = OSC32KCTRL->OSCULP32K;
 	/* Update settings via a temporary struct to reduce register access */
-	temp.bit.EN1K     = config->enable_1khz_output;
-	temp.bit.EN32K    = config->enable_32khz_output;
 	temp.bit.WRTLOCK  = config->write_once;
 	OSC32KCTRL->OSCULP32K  = temp;
 }

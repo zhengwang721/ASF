@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM C21 Xplained Pro example configuration.
+ * \brief SAM Brown Out Detector Driver
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,16 +40,53 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#include "bod.h"
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
-
-/** If \true, the non-maskable pin is used to check when the
- *   button state changes, when \false the external pins is used.
+/**
+ * \brief Configure a Brown Out Detector module.
+ *
+ * Configures a given BOD module with the settings stored in the given
+ * configuration structure.
+ *
+ * \param[in] conf     Configuration settings to use for the specified BODVDD
+ *
+ * \retval STATUS_OK                  Operation completed successfully
+ * \retval STATUS_ERR_INVALID_ARG     An invalid BOD was supplied
+ * \retval STATUS_ERR_INVALID_OPTION  The requested BOD level was outside the acceptable range
  */
-#define   USE_EIC_NMI               false
+enum status_code bodvdd_set_config(
+		struct bodvdd_config *const conf)
+{
+	/* Sanity check arguments */
+	Assert(conf);
 
-#endif /* CONF_TEST_H_INCLUDED */
+	uint32_t temp = 0;
+
+	/* Check if module is enabled. */
+	if (SUPC->BODVDD.reg & SUPC_BODVDD_ENABLE) {
+		SUPC->BODVDD.reg &= ~SUPC_BODVDD_ENABLE;
+	}
+
+	/* Convert BOD prescaler, trigger action and mode to a bitmask */
+	temp |= (uint32_t)conf->prescaler | (uint32_t)conf->action |
+			(uint32_t)conf->mode_in_active | (uint32_t)conf->mode_in_standby;
+
+	if (conf->hysteresis == true) {
+		temp |= SUPC_BODVDD_HYST;
+	}
+
+	if (conf->run_in_standby == true) {
+		temp |= SUPC_BODVDD_RUNSTDBY;
+	}
+
+	if (conf->level > 0x3F) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	SUPC->BODVDD.reg = SUPC_BODVDD_LEVEL(conf->level) | temp;
+
+	return STATUS_OK;
+}
