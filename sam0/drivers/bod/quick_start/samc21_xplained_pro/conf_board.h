@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief SAM BOD Driver Quick Start
+ * \brief SAM C21 Xplained Pro board configuration.
  *
- * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,44 +38,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include <asf.h>
 
-//! [setup]
-static void configure_bod33(void)
-{
-//! [setup_config]
-	struct bod_config config_bod33;
-//! [setup_config]
-//! [setup_config_defaults]
-	bod_get_config_defaults(&config_bod33);
-//! [setup_config_defaults]
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [setup_set_config]
-	bod_set_config(BOD_BOD33, &config_bod33);
-//! [setup_set_config]
-
-//! [setup_enable]
-	bod_enable(BOD_BOD33);
-//! [setup_enable]
-}
-//! [setup]
-
-int main(void)
-{
-	/* Configure the BOD 3.3V module */
-//! [setup_init]
-	configure_bod33();
-//! [setup_init]
-
-//! [main]
-//! [main_loop]
-	while (true) {
-		/* Infinite loop */
-	}
-//! [main_loop]
-//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */

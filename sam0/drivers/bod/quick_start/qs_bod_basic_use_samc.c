@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief SAM C21 External Interrupt Driver Configuration Header
+ * \brief SAM BOD Driver Quick Start
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,15 +36,44 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_EXTINT_H_INCLUDED
-#define CONF_EXTINT_H_INCLUDED
+#include <asf.h>
 
-#  define EXTINT_CLOCK_SELECTION   EXTINT_CLK_GCLK
-#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
+//! [setup]
+static void configure_bodvdd(void)
+{
+//! [setup_config]
+	struct bodvdd_config config_bodvdd;
+//! [setup_config]
+//! [setup_config_defaults]
+	bodvdd_get_config_defaults(&config_bodvdd);
+//! [setup_config_defaults]
 
-#endif
+//! [setup_set_config]
+	bodvdd_set_config(&config_bodvdd);
+//! [setup_set_config]
+
+//! [setup_enable]
+	bodvdd_enable();
+//! [setup_enable]
+}
+//! [setup]
+
+int main(void)
+{
+	/* Configure the BOD VDD module */
+//! [setup_init_vdd]
+	configure_bodvdd();
+//! [setup_init_vdd]
+
+//! [main]
+//! [main_loop]
+	while (true) {
+		/* Infinite loop */
+	}
+//! [main_loop]
+//! [main]
+}
