@@ -82,7 +82,7 @@ static void configure_usart_cdc(void)
 //! [CDC_setup]
 
 //! [lin_setup]
-static void lin_read_callback(const struct usart_module *const usart_module)
+static void lin_read_callback(struct usart_module *const usart_module)
 {
 
 	uint8_t i = 0;
@@ -106,7 +106,7 @@ static void lin_read_callback(const struct usart_module *const usart_module)
 		}
 	}
 }
-static void lin_read_error_callback(const struct usart_module *const usart_module)
+static void lin_read_error_callback(struct usart_module *const usart_module)
 {
       printf("Data Read error\r\n");
 }
