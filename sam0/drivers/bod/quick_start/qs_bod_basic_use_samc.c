@@ -3,7 +3,7 @@
  *
  * \brief SAM BOD Driver Quick Start
  *
- * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,31 +43,31 @@
 #include <asf.h>
 
 //! [setup]
-static void configure_bod33(void)
+static void configure_bodvdd(void)
 {
 //! [setup_config]
-	struct bod_config config_bod33;
+	struct bodvdd_config config_bodvdd;
 //! [setup_config]
 //! [setup_config_defaults]
-	bod_get_config_defaults(&config_bod33);
+	bodvdd_get_config_defaults(&config_bodvdd);
 //! [setup_config_defaults]
 
 //! [setup_set_config]
-	bod_set_config(BOD_BOD33, &config_bod33);
+	bodvdd_set_config(&config_bodvdd);
 //! [setup_set_config]
 
 //! [setup_enable]
-	bod_enable(BOD_BOD33);
+	bodvdd_enable();
 //! [setup_enable]
 }
 //! [setup]
 
 int main(void)
 {
-	/* Configure the BOD 3.3V module */
-//! [setup_init]
-	configure_bod33();
-//! [setup_init]
+	/* Configure the BOD VDD module */
+//! [setup_init_vdd]
+	configure_bodvdd();
+//! [setup_init_vdd]
 
 //! [main]
 //! [main_loop]

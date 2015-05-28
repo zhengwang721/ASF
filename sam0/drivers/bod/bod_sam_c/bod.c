@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief SAM BOD Driver Quick Start
+ * \brief SAM Brown Out Detector Driver
  *
- * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,44 +38,55 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include <asf.h>
+#include "bod.h"
 
-//! [setup]
-static void configure_bod33(void)
+/**
+ * \brief Configure a Brown Out Detector module.
+ *
+ * Configures a given BOD module with the settings stored in the given
+ * configuration structure.
+ *
+ * \param[in] conf     Configuration settings to use for the specified BODVDD
+ *
+ * \retval STATUS_OK                  Operation completed successfully
+ * \retval STATUS_ERR_INVALID_ARG     An invalid BOD was supplied
+ * \retval STATUS_ERR_INVALID_OPTION  The requested BOD level was outside the acceptable range
+ */
+enum status_code bodvdd_set_config(
+		struct bodvdd_config *const conf)
 {
-//! [setup_config]
-	struct bod_config config_bod33;
-//! [setup_config]
-//! [setup_config_defaults]
-	bod_get_config_defaults(&config_bod33);
-//! [setup_config_defaults]
+	/* Sanity check arguments */
+	Assert(conf);
 
-//! [setup_set_config]
-	bod_set_config(BOD_BOD33, &config_bod33);
-//! [setup_set_config]
+	uint32_t temp = 0;
 
-//! [setup_enable]
-	bod_enable(BOD_BOD33);
-//! [setup_enable]
-}
-//! [setup]
-
-int main(void)
-{
-	/* Configure the BOD 3.3V module */
-//! [setup_init]
-	configure_bod33();
-//! [setup_init]
-
-//! [main]
-//! [main_loop]
-	while (true) {
-		/* Infinite loop */
+	/* Check if module is enabled. */
+	if (SUPC->BODVDD.reg & SUPC_BODVDD_ENABLE) {
+		SUPC->BODVDD.reg &= ~SUPC_BODVDD_ENABLE;
 	}
-//! [main_loop]
-//! [main]
+
+	/* Convert BOD prescaler, trigger action and mode to a bitmask */
+	temp |= (uint32_t)conf->prescaler | (uint32_t)conf->action |
+			(uint32_t)conf->mode_in_active | (uint32_t)conf->mode_in_standby;
+
+	if (conf->hysteresis == true) {
+		temp |= SUPC_BODVDD_HYST;
+	}
+
+	if (conf->run_in_standby == true) {
+		temp |= SUPC_BODVDD_RUNSTDBY;
+	}
+
+	if (conf->level > 0x3F) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	SUPC->BODVDD.reg = SUPC_BODVDD_LEVEL(conf->level) | temp;
+
+	return STATUS_OK;
 }
