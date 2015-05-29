@@ -302,9 +302,14 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 			(adc_result > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET)) &&
 			(adc_result < (ADC_VAL_DAC_HALF_OUTPUT + ADC_OFFSET)),
 			"Error in ADC conversion at 0.5V input (Expected: ~%d, Result: %d)", ADC_VAL_DAC_HALF_OUTPUT, adc_result);
-#if !(SAMC21) /* Errata 14094 */
+
+	/* Errata 14094 for SAMC21
+	   Once set, the ADC.SWTRIG.START will not be cleared until the Microcontroller is reset.
+	   Border effect: FLUSH function always start a new conversion, once START = 1. */
+#if !(SAMC21)
 	adc_flush(&adc_inst);
 #endif
+
 	/* Set 1V on DAC output */
 	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_ONE_VOLT);
 	delay_ms(1);
@@ -323,7 +328,8 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 
 	/* Ensure ADC gives linearly increasing conversions for linearly increasing inputs */
 	for (uint16_t i = 0; i < DAC_VAL_ONE_VOLT; i++) {
-#if !(SAMC21)  /* Errata 14094 */
+	/* Errata 14094 for SAMC21 */
+#if !(SAMC21)
 		adc_flush(&adc_inst);
 #endif
 		/* Write the next highest DAC output voltage */
