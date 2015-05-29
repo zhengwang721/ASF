@@ -71,7 +71,7 @@ extern "C" {
  * - Cipher Feedback (CFB)
  * - Counter (CTR)
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  *  - AES (Advanced Encryption Standard)
  *
  * The following devices can use this module:
@@ -694,8 +694,8 @@ static inline void aes_gcm_set_gf_multiplication(struct aes_module *const module
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *      <td>A</td>
- *		<td>05/2015</td>
+ *      <td>42445A</td>
+ *		<td>06/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
