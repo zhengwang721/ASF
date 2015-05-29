@@ -811,7 +811,7 @@ enum status_code rww_eeprom_emulator_write_page(
  * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
  *                                      RWW EEPROM memory space was supplied
  * \retval STATUS_ERR_BAD_FORMAT        Page data checksum is not correct, maybe data
- *                                      is damaged.
+ *                                      is damaged
  */
 enum status_code rww_eeprom_emulator_read_page(
 		const uint8_t logical_page,

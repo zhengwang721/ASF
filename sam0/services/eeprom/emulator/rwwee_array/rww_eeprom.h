@@ -211,7 +211,7 @@
  *
  * \subsubsection asfdoc_sam0_rww_eeprom_module_overview_implementation_rc Row Contents
  * Each physical row initially stores the contents of one or two logical RWW EEPROM
- * memory pages (it depends on application configuration file). This quartered or
+ * memory pages (it depends on application configuration file). This quarters or
  * halves the available storage space for the emulated RWW EEPROM
  * but reduces the overall number of row erases that are required, by reserving
  * two or three pages within each row for updated versions of the logical page contents.
@@ -224,8 +224,8 @@
  * current row to the spare row with the new (updated) logical page data, before
  * the old row is erased.
  *
- * When it's configured, each physical row stores the contents of one logical RWW EEPROM
- * memory page, this system will allow for the same logical page to be updated up
+ * When it is configured, each physical row stores the contents of one logical RWW EEPROM
+ * memory page. This system will allow for the same logical page to be updated up
  * to four times into the physical memory before a row erasure procedure is needed.
  * In the case of multiple versions of the same logical RWW EEPROM page being stored in
  * the same physical row, the right-most (highest physical memory page address)
@@ -244,7 +244,7 @@
  * reducing the lifespan of the non-volatile memory.
  *
  * \subsection asfdoc_sam0_rww_eeprom_special_considerations_memlayout Memory Layout
- * A single logical RWW EEPROM page is physically stored as the page contents and a
+ * A single logical RWW EEPROM page is physically stored as the page content and a
  * header inside a single physical page, as shown in
  * \ref asfdoc_sam0_rww_eeprom_page_layout "the following figure".
  *
@@ -252,7 +252,7 @@
  * \image html page_layout.svg "Internal Layout of an Emulated RWW EEPROM Age"
  *
  * \note In the following memory layout example, each physical row stores the
- * contents of one logical RWW EEPROM page, you can refer to
+ * contents of one logical RWW EEPROM page. Refer to
  * <a href="http://www.atmel.com/images/atmel-42125-sam-d20-eeprom-emulator-service-eeprom_application-note_at03265.pdf"> 
  * "AT03265: SAM EEPROM Emulator Service (EEPROM)"</a> 
  * for the example of two logical EEPROM pages in one row.
@@ -263,10 +263,10 @@
  * the first time.
  *
  * \anchor asfdoc_sam0_rww_eeprom_init_layout
- * \image html init_layout.svg "Initial Physical Layout of The Emulated RWW EEPROM Memory"
+ * \image html init_layout.svg "Initial Physical Layout of the Emulated RWW EEPROM Memory"
  *
  * When a RWW EEPROM page needs to be committed to physical memory, the next free
- * page in the same row will be chosen - this makes recovery simple, as the
+ * page in the same row will be chosen. This makes recovery simple, as the
  * right-most version of a logical page in a row is considered the most current.
  * With four pages to a physical NVM row, this allows for up to four updates to
  * the same logical page to be made before an erase is needed.
@@ -312,7 +312,7 @@
  *
  * \subsection asfdoc_sam0_rww_eeprom_special_considerations_pagesize Logical RWW EEPROM Page Size
  * As a small amount of information needs to be stored in a header before the
- * contents of a logical EEPROM page in memory (for use by the emulation
+ * content of a logical EEPROM page in memory (for use by the emulation
  * service), the available data in each RWW EEPROM page is less than the total size
  * of a single NVM memory page by several bytes.
  *
@@ -330,9 +330,9 @@
  *
  * \subsection asfdoc_sam0_rww_eeprom_special_considerations_checksum RWW EEPROM Page Checksum
  * For each page, a checksum function is used to verify the integrity of
- * the page data. After reading the page data using \ref rww_eeprom_emulator_read_page() ,
- * when its checksum is not correct, and an error can be detected.
- * This function can be enabled or disabled through the configuration file.
+ * the page data. After reading the page data using 
+ * \ref rww_eeprom_emulator_read_page(). When its checksum is not correct, and an error can be
+ * detected. This function can be enabled or disabled through the configuration file.
  *
  * \section asfdoc_sam0_rww_eeprom_extra_info Extra Information
  *
@@ -525,7 +525,7 @@ enum status_code rww_eeprom_emulator_read_buffer(
  */
 
 /**
- * \page asfdoc_sam0_rww_eeprom_exqsg Examples for Emulated RWW EEPROM service
+ * \page asfdoc_sam0_rww_eeprom_exqsg Examples for Emulated RWW EEPROM Service
  *
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_rww_eeprom_group. QSGs are simple examples with
@@ -545,7 +545,7 @@ enum status_code rww_eeprom_emulator_read_buffer(
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>04/2015</td>
+ *		<td>05/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

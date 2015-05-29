@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_sam0_rww_eeprom_basic_use_case Quick Start Guide for the Emulated RWW EEPROM module - Basic Use Case
+ * \page asfdoc_sam0_rww_eeprom_basic_use_case Quick Start Guide for the Emulated RWW EEPROM Module - Basic Use Case
  *
  * In this use case, the RWW EEPROM emulator module is configured and a sample page
  * of data read and write. The first byte of the first RWW EEPROM page is toggled,
