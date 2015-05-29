@@ -590,7 +590,7 @@ void dac_chan_disable_output_buffer(
  *	<tr>
  *		<td>E</td>
  *		<td>04/2015</td>
- *		<td>Add SAMDA0/DA1 support.</td>
+ *		<td>Add SAMDAx support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

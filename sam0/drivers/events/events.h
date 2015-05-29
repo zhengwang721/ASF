@@ -685,7 +685,7 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset);
  *  <tr>
  *      <td>F</td>
  *      <td>04/2015</td>
- *      <td>Added support for SAML21 and SAMDA0/DA1.</td>
+ *      <td>Added support for SAML21 and SAMDAx.</td>
  *  </tr>
  *  <tr>
  *      <td>E</td>

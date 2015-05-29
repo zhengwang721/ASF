@@ -72,7 +72,7 @@ void configure_eeprom(void)
 //! [check_re-init]
 }
 
-#if (SAMD21) || (SAMDA0) || (SAMDA1)
+#if (SAMD21) || (SAMDA1)
 void SYSCTRL_Handler(void)
 {
 	if (SYSCTRL->INTFLAG.reg & SYSCTRL_INTFLAG_BOD33DET) {
@@ -83,7 +83,7 @@ void SYSCTRL_Handler(void)
 #endif
 static void configure_bod(void)
 {
-#if (SAMD21) || (SAMDA0) || (SAMDA1)
+#if (SAMD21) || (SAMDA1)
 	struct bod_config config_bod33;
 	bod_get_config_defaults(&config_bod33);
 	config_bod33.action = BOD_ACTION_INTERRUPT;
