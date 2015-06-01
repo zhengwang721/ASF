@@ -94,7 +94,7 @@
  *
  * \section asfdoc_sam0_trng_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_trng_extra. This includes:
+ * For extra information, see \ref asfdoc_sam0_trng_extra. This includes:
  *  - \ref asfdoc_sam0_trng_extra_acronyms
  *  - \ref asfdoc_sam0_trng_extra_dependencies
  *  - \ref asfdoc_sam0_trng_extra_errata
@@ -129,7 +129,7 @@ typedef void (*trng_callback_t)(struct trng_module *const module_inst);
 
 /** Enum for possible callback types for the TRNG module. */
 enum trng_callback {
-	/** Callback for specific number of random data ready. */
+	/** Callback for specific number of random data ready */
 	TRNG_CALLBACK_READ_BUFFER = 0,
 	/** Number of available callbacks. */
 #if !defined(__DOXYGEN__)
@@ -186,7 +186,7 @@ struct trng_config {
  * disable events via \ref trng_enable_events() and \ref trng_disable_events().
  */
 struct trng_events {
-	/** Enable event generation on random data ready. */
+	/** Enable event generation on random data ready */
 	bool generate_event_on_data_ready;
 };
 
@@ -437,9 +437,9 @@ static inline enum status_code trng_read(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
- *		<td>04/2015</td>
- *		<td>Initial release</td>
+ *		<td>42444A</td>
+ *		<td>06/2015</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
