@@ -119,14 +119,14 @@ enum rtc_tamper_debounce_freq_divider {
  */
 enum rtc_tamper_input_action {
 	/** RTC tamper input action is disabled. */
-	RTC_TAMPER_INPUT_ACTION_OFF     = RTC_TAMPCTRL_IN4ACT_OFF,
+	RTC_TAMPER_INPUT_ACTION_OFF     = RTC_TAMPCTRL_IN0ACT_OFF,
 	/** RTC tamper input action is wake and set tamper flag. */
-	RTC_TAMPER_INPUT_ACTION_WAKE    = RTC_TAMPCTRL_IN4ACT_WAKE,
+	RTC_TAMPER_INPUT_ACTION_WAKE    = RTC_TAMPCTRL_IN0ACT_WAKE,
 	/** RTC tamper input action is capture timestamp and set tamper flag. */
-	RTC_TAMPER_INPUT_ACTION_CAPTURE = RTC_TAMPCTRL_IN4ACT_CAPTURE,
+	RTC_TAMPER_INPUT_ACTION_CAPTURE = RTC_TAMPCTRL_IN0ACT_CAPTURE,
 	/** RTC tamper input action is compare IN to OUT, when a mismatch occurs,
 	 *  capture timestamp and set tamper flag. */
-	RTC_TAMPER_INPUT_ACTION_ACTL    = RTC_TAMPCTRL_IN4ACT_ACTL,
+	RTC_TAMPER_INPUT_ACTION_ACTL    = RTC_TAMPCTRL_IN0ACT_ACTL,
 };
 
 /**
