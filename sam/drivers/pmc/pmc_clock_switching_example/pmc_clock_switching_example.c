@@ -228,7 +228,10 @@ static void config_uart_and_pck(uint32_t ul_clock_source,
 		usart_settings.parity_type = CONF_UART_PARITY;
 		usart_settings.stop_bits= CONF_UART_STOP_BITS;
 		usart_settings.channel_mode= US_MR_CHMODE_NORMAL;
-		usart_init_rs232(CONSOLE_UART, &usart_settings, ul_master_clock);
+		usart_init_rs232(CONSOLE_UART, &usart_settings,
+			ul_master_clock /
+			((CONFIG_SYSCLK_DIV == SYSCLK_DIV_3) ? 
+			3 : (1 << (CONFIG_SYSCLK_DIV >> PMC_MCKR_MDIV_Pos))));
 		usart_enable_tx(CONSOLE_UART);
 		usart_enable_rx(CONSOLE_UART);
 #else

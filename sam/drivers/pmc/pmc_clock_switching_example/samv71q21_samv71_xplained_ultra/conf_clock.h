@@ -59,15 +59,21 @@
 #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_UPLLCK
 
-// ===== System Clock (MCK) Prescaler Options   (Fmck = Fsys / (SYSCLK_PRES))
-//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
-#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
+// ===== Processor Clock (HCLK) Prescaler Options   (Fhclk = Fsys / (SYSCLK_PRES))
+#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
+//#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_4
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_8
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_16
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_32
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_64
 //#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_3
+
+// ===== System Clock (MCK) Division Options     (Fmck = Fhclk / (SYSCLK_DIV))
+//#define CONFIG_SYSCLK_DIV          SYSCLK_DIV_1
+#define CONFIG_SYSCLK_DIV          SYSCLK_DIV_2
+//#define CONFIG_SYSCLK_DIV          SYSCLK_DIV_4
+//#define CONFIG_SYSCLK_DIV          SYSCLK_DIV_3
 
 // ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
 // Use mul and div effective values here.

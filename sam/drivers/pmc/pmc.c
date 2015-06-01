@@ -110,6 +110,20 @@ void pmc_mck_set_prescaler(uint32_t ul_pres)
 	while (!(PMC->PMC_SR & PMC_SR_MCKRDY));
 }
 
+#if SAMV71 || SAMV70 || SAME70 || SAMS70
+/**
+ * \brief Set the division of the MCK.
+ *
+ * \param ul_div Division value.
+ */
+void pmc_mck_set_division(uint32_t ul_div)
+{
+	PMC->PMC_MCKR =
+			(PMC->PMC_MCKR & (~PMC_MCKR_MDIV_Msk)) | ul_div;
+	while (!(PMC->PMC_SR & PMC_SR_MCKRDY));
+}
+#endif
+
 /**
  * \brief Set the source of the MCK.
  *

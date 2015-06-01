@@ -126,6 +126,9 @@ extern "C" {
 //@{
 
 void pmc_mck_set_prescaler(uint32_t ul_pres);
+#if SAMV71 || SAMV70 || SAME70 || SAMS70
+void pmc_mck_set_division(uint32_t ul_div);
+#endif
 void pmc_mck_set_source(uint32_t ul_source);
 uint32_t pmc_switch_mck_to_sclk(uint32_t ul_pres);
 uint32_t pmc_switch_mck_to_mainck(uint32_t ul_pres);

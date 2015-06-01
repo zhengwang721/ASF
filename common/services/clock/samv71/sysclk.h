@@ -266,6 +266,14 @@ extern "C" {
 #define SYSCLK_PRES_3   PMC_MCKR_PRES_CLK_3  //!< Set master clock prescaler to 3
 //@}
 
+//! \name Master Clock Division (MCK)
+//@{
+#define SYSCLK_DIV_1   PMC_MCKR_MDIV_EQ_PCK  //!< Set master clock division to 1
+#define SYSCLK_DIV_2   PMC_MCKR_MDIV_PCK_DIV2  //!< Set master clock division to 2
+#define SYSCLK_DIV_4   PMC_MCKR_MDIV_PCK_DIV4  //!< Set master clock division to 4
+#define SYSCLK_DIV_3   PMC_MCKR_MDIV_PCK_DIV3  //!< Set master clock division to 3
+//@}
+
 //! \name USB Clock Sources
 //@{
 #define USBCLK_SRC_PLL0       0     //!< Use PLLA
@@ -396,8 +404,8 @@ static inline uint32_t sysclk_get_peripheral_hz(void)
 	/* CONFIG_SYSCLK_PRES is the register value for setting the expected */
 	/* prescaler, not an immediate value. */
 	return sysclk_get_main_hz() /
-		((CONFIG_SYSCLK_PRES == SYSCLK_PRES_3) ? 3 :
-			(1 << (CONFIG_SYSCLK_PRES >> PMC_MCKR_PRES_Pos)));
+		(((CONFIG_SYSCLK_PRES == SYSCLK_PRES_3) ? 3 : (1 << (CONFIG_SYSCLK_PRES >> PMC_MCKR_PRES_Pos))) *
+		((CONFIG_SYSCLK_DIV == SYSCLK_DIV_3) ? 3 : (1 << (CONFIG_SYSCLK_DIV >> PMC_MCKR_MDIV_Pos))));
 }
 
 /**
