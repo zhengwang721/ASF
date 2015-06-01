@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="WINC1500 Firmware Update Project (v18.3.0) for SAMG53 XPlained Pro" id="common.components.wifi.winc1500.firmware_update_project.samg53_xplained_pro">
+	<project caption="WINC1500 Firmware Update Project (v18.3.1) for SAMG53 XPlained Pro" id="common.components.wifi.winc1500.firmware_update_project.samg53_xplained_pro">
 		<!-- Summary Description -->
 		<info type="description" value="summary">
 			This project includes tools and documentation to update the WINC1500 Wi-Fi module firmware, root certificates and gain values.

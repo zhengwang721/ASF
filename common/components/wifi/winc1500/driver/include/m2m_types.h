@@ -108,7 +108,7 @@ MACROS
 /*!< Firmware Minor release version number.
 */
 
-#define M2M_FIRMWARE_VERSION_PATCH_NO					(0)
+#define M2M_FIRMWARE_VERSION_PATCH_NO					(1)
 /*!< Firmware patch release version number.
 */
 
