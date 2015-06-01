@@ -152,6 +152,8 @@ uint32_t system_clock_source_get_hz(
 void system_clock_source_osc48m_set_config(
 		struct system_clock_source_osc48m_config *const config)
 {
+	Assert(config);
+
 	OSCCTRL_OSC48MCTRL_Type temp = OSCCTRL->OSC48MCTRL;
 
 	/* Use temporary struct to reduce register access */
@@ -164,6 +166,8 @@ void system_clock_source_osc48m_set_config(
 		OSCCTRL->OSC48MDIV.reg = OSCCTRL_OSC48MDIV_DIV(config->div);
 		while(OSCCTRL->OSC48MSYNCBUSY.reg) ;
 	}
+
+	OSCCTRL->OSC48MSTUP.reg = OSCCTRL_OSC48MSTUP_STARTUP(config->startup_time);
 }
 
 /**
