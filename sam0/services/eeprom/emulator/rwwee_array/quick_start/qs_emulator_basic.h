@@ -44,8 +44,8 @@
 /**
  * \page asfdoc_sam0_rww_eeprom_basic_use_case Quick Start Guide for the Emulated RWW EEPROM Module - Basic Use Case
  *
- * In this use case, the RWW EEPROM emulator module is configured and a sample page
- * of data read and write. The first byte of the first RWW EEPROM page is toggled,
+ * In this use case, the RWW EEPROM emulator module is configured, and a sample page
+ * is read and written. The first byte of the first RWW EEPROM page is toggled,
  * and a LED is turned on or off to reflect the new state. Each time the device
  * is reset, the LED should toggle to a different state to indicate correct
  * non-volatile storage and retrieval.

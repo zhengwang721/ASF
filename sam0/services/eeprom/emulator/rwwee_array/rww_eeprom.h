@@ -62,7 +62,7 @@
  *  - Atmel | SMART SAM D21
  *  - Atmel | SMART SAM DA1
  *
- * The outline of this documentation is:
+ * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rww_eeprom_prerequisites
  *  - \ref asfdoc_sam0_rww_eeprom_module_overview
  *  - \ref asfdoc_sam0_rww_eeprom_special_considerations
@@ -108,7 +108,7 @@
  * \subsubsection asfdoc_sam0_rww_eeprom_module_overview_implementation_ec Emulator Characteristics
  * This emulator is designed for <b>best reliability, with a good balance of
  * available storage and write-cycle limits</b>. It is designed to ensure that
- * page data is atomically updated so that in the event of a failed update the
+ * page data is atomic updated, so that in the event of a failed update the
  * previous data is not lost (when used correctly). With the exception of a
  * system reset with data cached to the internal write-cache buffer, at most
  * only the latest write to physical non-volatile memory will be lost in the
@@ -544,8 +544,8 @@ enum status_code rww_eeprom_emulator_read_buffer(
  *		<th>Comments</th>
  *	</tr>
  *	<tr>
- *		<td>A</td>
- *		<td>05/2015</td>
+ *		<td>42447A</td>
+ *		<td>06/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
