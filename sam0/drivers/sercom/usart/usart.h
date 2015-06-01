@@ -131,7 +131,7 @@
  *  <tr>
  *    <td>FEATURE_USART_RS485</td>
  *    <td>FEATURE_USART_LIN_MASTER</td>
- *    <td>SAM C21</td>
+ *    <td>SAM L22</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
