@@ -96,8 +96,6 @@ enum tsens_callback {
  */
 struct tsens_module {
 #if !defined(__DOXYGEN__)
-	/** Pointer to TSENS hardware module. */
-	Tsens *hw;
 	/** Array to store callback functions. */
 	tsens_callback_t callback[TSENS_CALLBACK_NUM];
 	/** Pointer to used for TSENS results. */

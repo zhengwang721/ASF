@@ -61,7 +61,18 @@ void TSENS_Handler(void)
 		TSENS->INTFLAG.reg = TSENS_INTFLAG_RESRDY;
 
 		/* store TSENS result in job buffer */
+#if (ERRATA_14476)
+		uint32_t temp = TSENS->VALUE.reg & 0x00FFFFFF;
+		if(temp & 0x00800000) {
+			*(module->value) = ~(temp - 1) & 0x00FFFFFF;
+		} else if(temp == 0) {
+			*(module->value) = temp;
+		} else {
+			*(module->value) = ~temp + 1;
+		}
+#else
 		*(module->value) = TSENS->VALUE.reg & 0x00FFFFFF;
+#endif
 		
 		if(module->callback[TSENS_CALLBACK_RESULT_READY] != NULL) {
 			module->callback[TSENS_CALLBACK_RESULT_READY]();

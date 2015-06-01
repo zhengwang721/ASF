@@ -229,6 +229,20 @@ struct tsens_events {
 };
 
 /**
+ * \brief Calibration configuration structure.
+ *
+ * Calibration configuration structure.
+ */
+struct tsens_calibration {
+	/** Time amplifier gain0(bits 19:0). */
+	uint32_t gain0;
+	/** Time amplifier gain1(bits 23:20). */
+	uint32_t gain1;
+	/** Offset correction. */
+	int32_t offset;
+};
+
+/**
  * \brief TSENS configuration structure.
  *
  * Configuration structure for an TSENS instance. This structure should be
@@ -246,6 +260,8 @@ struct tsens_config {
 	struct tsens_window_config window;
 	/** Event action to take on incoming event. */
 	enum tsens_event_action event_action;
+	/** Calibration value. */
+	struct tsens_calibration calibration;
 };
 
 
@@ -254,6 +270,31 @@ struct tsens_config {
  * @{
  */
 enum status_code tsens_init(struct tsens_config *config);
+
+/*
+ * \name NVM Temperature Calibration Area Mapping
+ */
+ 
+/* Temperature calibration position. */
+#define NVM_TSENS_TCAL_POS     0
+/* Temperature calibration size. */
+#define NVM_TSENS_TCAL_SIZE    6
+/* Frequency calibration position. */
+#define NVM_TSENS_FCAL_POS     6
+/* Frequency calibration size. */
+#define NVM_TSENS_FCAL_SIZE    6
+/* Gain0(bits 19:0) calibration position. */
+#define NVM_TSENS_GAIN0_POS    12
+/* Gain0(bits 19:0) calibration size. */
+#define NVM_TSENS_GAIN0_SIZE   20
+/* Gain1(bits 23:20) calibration position. */
+#define NVM_TSENS_GAIN1_POS    32
+/* Gain1(bits 23:20) calibration size. */
+#define NVM_TSENS_GAIN1_SIZE   4
+/* Offset calibration position. */
+#define NVM_TSENS_OFFSET_POS   36
+/* Offset calibration size. */
+#define NVM_TSENS_OFFSET_SIZE  24
 
 /**
  * \brief Initializes an TSENS configuration structure to defaults.
@@ -282,6 +323,15 @@ static inline void tsens_get_config_defaults(struct tsens_config *const config)
 	config->window.window_upper_value     = 0;
 	config->window.window_lower_value     = 0;
 	config->event_action                  = TSENS_EVENT_ACTION_DISABLED;
+	config->calibration.gain0             = (*((uint32_t *)(NVMCTRL_TEMP_LOG) + \
+						(NVM_TSENS_GAIN0_POS / 32)) >> (NVM_TSENS_GAIN0_POS % 32)) \
+						&((1 << NVM_TSENS_GAIN0_SIZE) - 1);
+	config->calibration.gain1             = (*((uint32_t *)(NVMCTRL_TEMP_LOG) + \
+						(NVM_TSENS_GAIN1_POS / 32)) >> (NVM_TSENS_GAIN1_POS % 32)) \
+						&((1 << NVM_TSENS_GAIN1_SIZE) - 1);
+	config->calibration.offset            = (*((uint32_t *)(NVMCTRL_TEMP_LOG) + \
+						(NVM_TSENS_OFFSET_POS / 32)) >> (NVM_TSENS_OFFSET_POS % 32)) \
+						& ((1 << NVM_TSENS_OFFSET_SIZE) - 1);
 }
 
 /** @} */

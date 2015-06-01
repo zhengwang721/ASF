@@ -46,32 +46,6 @@
 
 #include "tsens.h"
 
-/*
- * \name NVM Temperature Calibration Area Mapping
- */
- 
-/* Temperature calibration position. */
-#define NVM_TSENS_TCAL_POS     0
-/* Temperature calibration size. */
-#define NVM_TSENS_TCAL_SIZE    6
-/* Frequency calibration position. */
-#define NVM_TSENS_FCAL_POS     6
-/* Frequency calibration size. */
-#define NVM_TSENS_FCAL_SIZE    6
-/* Gain0(bits 19:0) calibration position. */
-#define NVM_TSENS_GAIN0_POS    12
-/* Gain0(bits 19:0) calibration size. */
-#define NVM_TSENS_GAIN0_SIZE   20
-/* Gain1(bits 23:20) calibration position. */
-#define NVM_TSENS_GAIN1_POS    32
-/* Gain1(bits 23:20) calibration size. */
-#define NVM_TSENS_GAIN1_SIZE   4
-/* Offset calibration position. */
-#define NVM_TSENS_OFFSET_POS   36
-/* Offset calibration size. */
-#define NVM_TSENS_OFFSET_SIZE  24
-
-
 /**
  * \internal Writes an TSENS configuration to the hardware module
  *
@@ -142,23 +116,15 @@ static enum status_code _tsens_set_config(struct tsens_config *const config)
 	uint32_t tsens_fcal = (*((uint32_t *)(NVMCTRL_TEMP_LOG) + \
 					(NVM_TSENS_FCAL_POS / 32)) >> (NVM_TSENS_FCAL_POS % 32)) \
 					& ((1 << NVM_TSENS_FCAL_SIZE) - 1);
-	uint32_t tsens_gain0 = (*((uint32_t *)(NVMCTRL_TEMP_LOG) + \
-					(NVM_TSENS_GAIN0_POS / 32)) >> (NVM_TSENS_GAIN0_POS % 32)) \
-					& ((1 << NVM_TSENS_GAIN0_SIZE) - 1);
-	uint32_t tsens_gain1 = (*((uint32_t *)(NVMCTRL_TEMP_LOG) + \
-					(NVM_TSENS_GAIN1_POS / 32)) >> (NVM_TSENS_GAIN1_POS % 32)) \
-					& ((1 << NVM_TSENS_GAIN1_SIZE) - 1);
-	int32_t tsens_offset = (*((uint32_t *)(NVMCTRL_TEMP_LOG) + \
-					(NVM_TSENS_OFFSET_POS / 32)) >> (NVM_TSENS_OFFSET_POS % 32)) \
-					& ((1 << NVM_TSENS_OFFSET_SIZE) - 1);
-	uint32_t tsens_gain = (tsens_gain0) | (tsens_gain1 << NVM_TSENS_GAIN0_SIZE);
+	uint32_t tsens_gain = (config->calibration.gain0) | \
+					(config->calibration.gain1 << NVM_TSENS_GAIN0_SIZE);
 
 	tsens_gain = 9600;
 	tsens_offset = -910;
 	
 	TSENS->CAL.reg = TSENS_CAL_TCAL(tsens_tcal) | TSENS_CAL_FCAL(tsens_fcal);
 	TSENS->GAIN.reg = TSENS_GAIN_GAIN(tsens_gain);
-	TSENS->OFFSET.reg = TSENS_OFFSET_OFFSETC(tsens_offset);
+	TSENS->OFFSET.reg = TSENS_OFFSET_OFFSETC(config->calibration.offset);
 
 	return STATUS_OK;
 }
