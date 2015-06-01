@@ -108,7 +108,7 @@
  * \subsubsection asfdoc_sam0_rww_eeprom_module_overview_implementation_ec Emulator Characteristics
  * This emulator is designed for <b>best reliability, with a good balance of
  * available storage and write-cycle limits</b>. It is designed to ensure that
- * page data is atomic updated, so that in the event of a failed update the
+ * page data is updated by an atomic operation, so that in the event of a failed update the
  * previous data is not lost (when used correctly). With the exception of a
  * system reset with data cached to the internal write-cache buffer, at most
  * only the latest write to physical non-volatile memory will be lost in the
