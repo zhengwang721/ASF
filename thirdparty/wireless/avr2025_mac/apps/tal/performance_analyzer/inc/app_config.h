@@ -55,9 +55,7 @@
 /* === Includes ============================================================= */
 
 #include "stack_config.h"
-#include "user_interface.h"
-#include <conf_board.h>
-#include "board.h"
+
 
 /* === Macros =============================================================== */
 
