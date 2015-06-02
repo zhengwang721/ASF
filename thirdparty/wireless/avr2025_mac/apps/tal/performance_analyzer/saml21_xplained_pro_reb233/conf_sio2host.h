@@ -1,7 +1,7 @@
 /**
- * \file
+ * \file conf_sio2host.h
  *
- * \brief SAM L21 Xplained Pro board initialization
+ * \brief Serial Input & Output configuration
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -38,53 +38,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#include <compiler.h>
-#include <board.h>
-#include <conf_board.h>
-#include <port.h>
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
+/** Since MCPS.DATA.indication requires max no of bytes of around 150 bytes than
+ *all other primitives,the Maximum Buffer size is kept as 156 bytes */
+ #define SERIAL_RX_BUF_SIZE_HOST    156
 
-#if defined(__GNUC__)
-void board_init(void) WEAK __attribute__((alias("system_board_init")));
-#elif defined(__ICCARM__)
-void board_init(void);
-#  pragma weak board_init=system_board_init
-#endif
+#define USART_HOST                 EDBG_CDC_MODULE
+#define HOST_SERCOM_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define HOST_SERCOM_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define HOST_SERCOM_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define HOST_SERCOM_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define HOST_SERCOM_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+/** Baudrate setting */
+#define USART_HOST_BAUDRATE        9600
 
-void system_board_init(void)
-{
-	struct port_config pin_conf;
-	port_get_config_defaults(&pin_conf);
-
-	/* Configure LEDs as outputs, turn them off */
-	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(LED_0_PIN, &pin_conf);
-	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
-
-	/* Set buttons as inputs */
-	pin_conf.direction  = PORT_PIN_DIR_INPUT;
-	pin_conf.input_pull = PORT_PIN_PULL_UP;
-	port_pin_set_config(BUTTON_0_PIN, &pin_conf);
-	
-#ifdef CONF_BOARD_AT86RFX
-	port_get_config_defaults(&pin_conf);
-	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(AT86RFX_SPI_SCK, &pin_conf);
-	port_pin_set_config(AT86RFX_SPI_MOSI, &pin_conf);
-	port_pin_set_config(AT86RFX_SPI_CS, &pin_conf);
-	port_pin_set_config(AT86RFX_RST_PIN, &pin_conf);
-	port_pin_set_config(AT86RFX_SLP_PIN, &pin_conf);
-	port_pin_set_output_level(AT86RFX_SPI_SCK, true);
-	port_pin_set_output_level(AT86RFX_SPI_MOSI, true);
-	port_pin_set_output_level(AT86RFX_SPI_CS, true);
-	port_pin_set_output_level(AT86RFX_RST_PIN, true);
-	port_pin_set_output_level(AT86RFX_SLP_PIN, true);
-	pin_conf.direction  = PORT_PIN_DIR_INPUT;
-	port_pin_set_config(AT86RFX_SPI_MISO, &pin_conf);
-#endif	
-}
+#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(3, USART_HOST_ISR_VECT); \
+	USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC; \
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM3);
+#endif /* CONF_SIO2HOST_H_INCLUDED */

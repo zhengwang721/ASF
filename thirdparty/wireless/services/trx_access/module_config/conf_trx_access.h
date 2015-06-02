@@ -40,7 +40,7 @@
  * \asf_license_stop
  */
 
-#ifndef CONF_TRX_ACCESS_H_INCLUDED
+#ifndef CONF_TRX_ACCESS_H_INCLUDED 
 #define CONF_TRX_ACCESS_H_INCLUDED
 
 #include <parts.h>
@@ -52,7 +52,7 @@
 
 #ifndef AT86RFX_SPI_BAUDRATE
 #define AT86RFX_SPI_BAUDRATE         (4000000)
-#endif
+#endif 
 #if (UC3)
 #include "gpio.h"
 
@@ -259,7 +259,7 @@ void at86rfx_isr(void);
 #define AT86RFX_CPS                  PIN_PA23
 #define LED0 LED0_PIN
 
-#define AT86RFX_SPI_MUX_SETTING          SPI_SIGNAL_MUX_SETTING_A
+#define AT86RFX_SPI_SERCOM_MUX_SETTING          SPI_SIGNAL_MUX_SETTING_A
 #define AT86RFX_SPI_SERCOM_PINMUX_PAD0   PINMUX_UNUSED
 #define AT86RFX_SPI_SERCOM_PINMUX_PAD1   PINMUX_UNUSED
 #define AT86RFX_SPI_SERCOM_PINMUX_PAD2   PINMUX_UNUSED

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM L21 Xplained Pro board initialization
+ * \brief Board configuration
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -40,51 +40,40 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
+
+#define CONF_BOARD_AT86RFX
+
+#define EXT2_CONFIG
+
+#ifdef EXT_RF_FRONT_END_CTRL /*For External PA for 233FEM*/
+
+#define EXT_PA_SE2431L
+
 /*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ * Value of an external LNA gain.
+ * If no external LNA is available, the value is 0.
  */
+#define EXT_LNA_HIGH_GAIN    (14)
 
-#include <compiler.h>
-#include <board.h>
-#include <conf_board.h>
-#include <port.h>
+/*
+ * Value of an external LNA gain.
+ * If no external LNA is available, the value is 0.
+ */
+#define EXT_LNA_HIGH_GAIN    (14)
 
-#if defined(__GNUC__)
-void board_init(void) WEAK __attribute__((alias("system_board_init")));
-#elif defined(__ICCARM__)
-void board_init(void);
-#  pragma weak board_init=system_board_init
 #endif
 
-void system_board_init(void)
-{
-	struct port_config pin_conf;
-	port_get_config_defaults(&pin_conf);
+#ifdef CUSTOM_DEFAULT_TX_PWR /*For External PA for 233FEM*/
 
-	/* Configure LEDs as outputs, turn them off */
-	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(LED_0_PIN, &pin_conf);
-	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+/*
+ * Default value of transmit power of transceiver: Preset
+ *    - definition acct. IEEE802.15.4 PHY PIB attribute phyTransmitPower
+ *    - TX Pout init value based on validation
+ */
+#define TAL_TRANSMIT_POWER_DEFAULT      (TX_PWR_TOLERANCE | 0x14)
+#endif
+#define MCU_SOC_NAME        "ATSAML21J18A"
 
-	/* Set buttons as inputs */
-	pin_conf.direction  = PORT_PIN_DIR_INPUT;
-	pin_conf.input_pull = PORT_PIN_PULL_UP;
-	port_pin_set_config(BUTTON_0_PIN, &pin_conf);
-	
-#ifdef CONF_BOARD_AT86RFX
-	port_get_config_defaults(&pin_conf);
-	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(AT86RFX_SPI_SCK, &pin_conf);
-	port_pin_set_config(AT86RFX_SPI_MOSI, &pin_conf);
-	port_pin_set_config(AT86RFX_SPI_CS, &pin_conf);
-	port_pin_set_config(AT86RFX_RST_PIN, &pin_conf);
-	port_pin_set_config(AT86RFX_SLP_PIN, &pin_conf);
-	port_pin_set_output_level(AT86RFX_SPI_SCK, true);
-	port_pin_set_output_level(AT86RFX_SPI_MOSI, true);
-	port_pin_set_output_level(AT86RFX_SPI_CS, true);
-	port_pin_set_output_level(AT86RFX_RST_PIN, true);
-	port_pin_set_output_level(AT86RFX_SLP_PIN, true);
-	pin_conf.direction  = PORT_PIN_DIR_INPUT;
-	port_pin_set_config(AT86RFX_SPI_MISO, &pin_conf);
-#endif	
-}
+#endif /* CONF_BOARD_H_INCLUDED */
