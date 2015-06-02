@@ -235,6 +235,7 @@ void sysclk_init(void)
 		pll_config_defaults(&pllcfg, 1);
 		pll_enable(&pllcfg, 1);
 		pll_wait_for_lock(1);
+		pmc_mck_set_division(CONFIG_SYSCLK_DIV);
 		pmc_switch_mck_to_upllck(CONFIG_SYSCLK_PRES);
 	}
 	/* Update the SystemFrequency variable */
