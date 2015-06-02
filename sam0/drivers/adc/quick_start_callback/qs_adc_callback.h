@@ -46,7 +46,7 @@
  *
  * In this use case, the ADC will convert 128 samples using interrupt driven conversion.
  * When all samples have been sampled, a callback will be called that signals the main
- * application that conversion is compete.
+ * application that conversion is complete.
  *
  * The ADC will be set up as follows:
  * - V<SUB>CC</SUB> / 2 as reference
@@ -101,7 +101,7 @@
  *    an asynchronous read job.
  * \snippet qs_adc_callback.c job_complete_callback
  * -# Configure the ADC module.
- *  -# Create a ADC module configuration struct, which can be filled out to
+ *  -# Create an ADC module configuration struct, which can be filled out to
  *     adjust the configuration of a physical ADC peripheral.
  *     \snippet qs_adc_callback.c setup_config
  *  -# Initialize the ADC configuration struct with the module's default values.

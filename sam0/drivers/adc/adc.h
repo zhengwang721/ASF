@@ -48,10 +48,10 @@
 #define ADC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_adc_group SAM Analog to Digital Converter Driver (ADC)
+ * \defgroup asfdoc_sam0_adc_group SAM Analog-to-Digital Converter Driver (ADC)
  *
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
- * and management of the device's Analog to Digital Converter functionality, for
+ * and management of the device's Analog-to-Digital Converter functionality, for
  * the conversion of analog voltages into a corresponding digital form.
  * The following driver API modes are covered by this manual:
  * - Polled APIs
@@ -60,7 +60,7 @@
  * \endif
  *
  * The following peripheral is used by this module:
- *  - ADC (Analog to Digital Converter)
+ *  - ADC (Analog-to-Digital Converter)
  *
  * The following devices can use this module:
  * \if DEVICE_SAML21_SUPPORT
@@ -92,9 +92,9 @@
  * functions on the device, to convert analog voltages to a corresponding
  * digital value. The ADC has up to 12-bit resolution, and is capable of
  * \if DEVICE_SAML21_SUPPORT
- * converting up to 1,000,000 samples per second (1 Msps).
+ * converting up to 1,000,000 samples per second (1 MSPS).
  * \else
- * converting up to 500K samples per second (Ksps).
+ * converting up to 500K samples per second (KSPS).
  * \endif
  *
  * The ADC has a compare function for accurate monitoring of user defined
@@ -239,7 +239,7 @@
  *
  * The effective ADC conversion rate will be reduced by a factor of the number
  * of accumulated samples;
- * however the effective resolution will be increased according to
+ * however, the effective resolution will be increased according to
  * \ref asfdoc_sam0_adc_module_hw_av_resolution "the table below".
  *
  * \anchor asfdoc_sam0_adc_module_hw_av_resolution
@@ -321,7 +321,7 @@
  * In single conversion, a latency of 13 ADC Generic Clock cycles is added for
  * the final sample result availability. As the correction time is always less
  * than the propagation delay, in free running mode this latency appears only
- * during the first conversion. After the first conversion is complete future
+ * during the first conversion. After the first conversion is complete, future
  * conversion results are available at the defined sampling rate.
  *
  * \subsection asfdoc_sam0_adc_module_overview_pin_scan Pin Scan
@@ -803,7 +803,7 @@ static inline enum status_code adc_read(
 /**
  * \brief Flushes the ADC pipeline.
  *
- * Flushes the pipeline and restart the ADC clock on the next peripheral clock
+ * Flushes the pipeline and restarts the ADC clock on the next peripheral clock
  * edge. All conversions in progress will be lost. When flush is complete, the
  * module will resume where it left off.
  *
@@ -1061,7 +1061,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *  <tr>
  *      <td>42451A</td>
  *      <td>06/2015</td>
- *      <td>Initial release</td>
+ *      <td>Initial document release</td>
  * </tr>
  * \else
  *	<tr>

@@ -438,7 +438,7 @@ struct adc_correction_config {
 	 * This value defines how the ADC conversion result is compensated for gain
 	 * error before written to the result register. This is a fractional value,
 	 * 1-bit integer plus an 11-bit fraction, therefore
-	 * 1/2 <= gain_correction < 2. Valid \c gain_correction values ranges from
+	 * 1/2 ≤ gain_correction < 2. Valid \c gain_correction values ranges from
 	 * \c 0b010000000000 to \c 0b111111111111.
 	 */
 	uint16_t gain_correction;

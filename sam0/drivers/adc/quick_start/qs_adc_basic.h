@@ -87,7 +87,7 @@
  *          In most cases, this should be global.
  *
  * -# Configure the ADC module.
- *  -# Create a ADC module configuration struct, which can be filled out to
+ *  -# Create an ADC module configuration struct, which can be filled out to
  *     adjust the configuration of a physical ADC peripheral.
  *     \snippet qs_adc_basic.c setup_config
  *  -# Initialize the ADC configuration struct with the module's default values.
