@@ -59,7 +59,7 @@
  * \endif
  *
  * The following peripheral is used by this module:
- *  - DAC (Digital to Analog Converter)
+ *  - DAC (Digital-to-Analog Converter)
  *
  * The following devices can use this module:
  *  - Atmel | SMART SAM L21
@@ -80,9 +80,9 @@
  *
  * \section asfdoc_sam0_dac_module_overview Module Overview
  *
- * The Digital-to-Analog converter converts a digital value to analog voltage.
+ * The Digital-to-Analog converter converts a digital value to an analog voltage.
  * The DAC Controller can operate as two independent DACs or as a single DAC
- * in differential mode. Each DAC is 12-bit resolution and it is capable of
+ * in differential mode. Each DAC has a 12-bit resolution and it is capable of
  * converting up to 1M samples per second (Msps).
  *
  * A common use of DAC is to generate audio signals by connecting the DAC
@@ -106,7 +106,7 @@
  * \subsection asfdoc_sam0_dac_conversion_range Conversion Range
  * The conversion range is between GND and the selected voltage reference.
  * Available voltage references are:
- * \li voltage supply (VDDANA)
+ * \li Voltage supply (VDDANA)
  * \li Internal bandgap reference (INTREF)
  * \li Unbuffered External voltage reference (VREFPU)
  * \li Buffered External voltage reference (VREFPB)
@@ -600,7 +600,7 @@ bool dac_chan_is_end_of_conversion(
  *	<tr>
  *		<td>42450A</td>
  *		<td>06/2015</td>
- *		<td>Initial release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
