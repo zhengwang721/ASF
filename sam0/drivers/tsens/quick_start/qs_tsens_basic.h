@@ -49,27 +49,16 @@
  *
  * In this use case, the TSENS will be configured with the following settings:
  *  - GCLK generator 0 (GCLK main) clock source
- *  - Internal bandgap reference 1V
- *  - Div 2 clock prescaler
- *  - Over Sampling Ratio is 64
- *  - Skip 2 samples
- *  - Mux input on TSENS AIN1
- *  - All events (input and generation) disabled
  *  - Free running disabled
- *  - Run in standby disabled
- *  - On command disabled
- *  - Disable all positive input in sequence
+ *  - Run in standby
  *  - Window monitor disabled
- *  - No gain/offset/shift correction
+ *  - All events (input and generation) disabled
+ *  - Calibration value which read from NVM or user set
  *
  * \section asfdoc_sam0_tsens_basic_use_case_setup Setup
  *
  * \subsection asfdoc_sam0_tsens_basic_use_case_prereq Prerequisites
  * There are no special setup requirements for this use-case.
- *
- * \subsection asfdoc_sam0_tsens_basic_use_case_code Code
- * Add to the main application source file, outside of any functions:
- * \snippet qs_tsens_basic.c module_inst
  *
  * Copy-paste the following setup code to your user application:
  * \snippet qs_tsens_basic.c setup
@@ -78,11 +67,6 @@
  * \snippet qs_tsens_basic.c setup_init
  *
  * \subsection asfdoc_sam0_tsens_basic_use_case_workflow Workflow
- * -# Create a module software instance structure for the TSENS module to store
- *    the TSENS driver state while it is in use.
- *    \snippet qs_tsens_basic.c module_inst
- *    \note This should never go out of scope as long as the module is in use.
- *          In most cases, this should be global.
  *
  * -# Configure the TSENS module.
  *  -# Create a TSENS module configuration struct, which can be filled out to

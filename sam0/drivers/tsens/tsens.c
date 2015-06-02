@@ -90,7 +90,7 @@ static enum status_code _tsens_set_config(struct tsens_config *const config)
 
 	/* Configure CTRLC */
 	TSENS->CTRLC.reg = 
-			(config->freerunning << TSENS_CTRLC_FREERUN_Pos) | \
+			(config->free_running << TSENS_CTRLC_FREERUN_Pos) | \
 			(config->window.window_mode);
 
 	/* Configure lower threshold */

@@ -82,7 +82,7 @@ int main(void)
 	int32_t result;
 	
 //! [start_conv]
-	tsens_trigger_conversion();
+	tsens_start_conversion();
 //! [start_conv]
 
 	do {

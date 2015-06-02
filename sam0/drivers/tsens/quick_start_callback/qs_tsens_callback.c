@@ -46,11 +46,6 @@
 
 #include <asf.h>
 
-//void configure_tsens(void);
-//void configure_tsens_callbacks(void);
-//void tsens_complete_callback(
-	//const struct tsens_module *const module);
-
 //! [result_buffer]
 int32_t tsens_result;
 //! [result_buffer]
@@ -109,9 +104,10 @@ int main(void)
 //! [setup_init]
 
 //! [main]
-//! [enable_global_interrupts]
+//! [enable_interrupts]
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_TSENS);
 	system_interrupt_enable_global();
-//! [enable_global_interrupts]
+//! [enable_interrupts]
 
 //! [start_tsens_job]
 	tsens_read_job(&tsens_instance, &tsens_result);

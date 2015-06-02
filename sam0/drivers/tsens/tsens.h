@@ -251,7 +251,7 @@ struct tsens_config {
 	/** GCLK generator used to clock the peripheral. */
 	enum gclk_generator clock_source;
 	/** Enables free running mode if true. */
-	bool freerunning;
+	bool free_running;
 	/** Enables TSENS in standby sleep mode if true. */
 	bool run_in_standby;
 	/** Window monitor configuration structure. */
@@ -282,6 +282,31 @@ enum status_code tsens_init(struct tsens_config *config);
  *  \li Free running disabled
  *  \li Run in standby disabled
  *  \li Window monitor disabled
+ * Register GAIN and OFFSET is loaded from NVM, or can also be fixed. 
+ * If fix this bitfield, the relationship between GCLK frequency, GAIN 
+ * and resolution as below:
+ * <table>
+ *  <tr>
+ *	  <th>Resolution (#/&deg;C)</th>
+ *	  <th>GAIN@48MHz</th>
+ *	  <th>GAIN@40MHz</th>
+ *	</tr>
+ *	<tr>
+ *	  <td>&times;1 (1&deg;)</td>
+ *    <td>960</td>
+ *    <td>800</td>
+ *  </tr>
+ *	<tr>
+ *	  <td>&times;10 (0.1&deg;)</td>
+ *    <td>9600</td>
+ *    <td>8000</td>
+ *  </tr>
+ *	<tr>
+ *	  <td>&times;100 (1&deg;)</td>
+ *    <td>96000</td>
+ *    <td>80000</td>
+ *  </tr>
+ * </table>
  *
  * \param[out] config  Pointer to configuration struct to initialize to
  *                     default values
@@ -290,7 +315,7 @@ static inline void tsens_get_config_defaults(struct tsens_config *const config)
 {
 	Assert(config);
 	config->clock_source                  = GCLK_GENERATOR_0;
-	config->freerunning                   = false;
+	config->free_running                  = false;
 	config->run_in_standby                = false;
 	config->window.window_mode            = TSENS_WINDOW_MODE_DISABLE;
 	config->window.window_upper_value     = 0;
@@ -524,12 +549,12 @@ static inline void tsens_disable_events(struct tsens_events *const events)
 }
 
 /**
- * \brief Trigger an TSENS conversion.
+ * \brief Start an TSENS conversion.
  *
- * Trigger a new TSENS conversion.
+ * Start a new TSENS conversion.
  *
  */
-static inline void tsens_trigger_conversion(void)
+static inline void tsens_start_conversion(void)
 {
 	TSENS->CTRLB.reg |= TSENS_CTRLB_START;
 	
@@ -566,8 +591,8 @@ static inline enum status_code tsens_read(int32_t *result)
 	}
 	
 	/* Get TSENS result */
-#if (ERRATA_14476)
 	uint32_t temp = TSENS->VALUE.reg & 0x00FFFFFF;
+#if (ERRATA_14476)
 	if(temp & 0x00800000) {
 		*result = ~(temp - 1) & 0x00FFFFFF;
 	} else if(temp == 0) {
@@ -576,7 +601,12 @@ static inline enum status_code tsens_read(int32_t *result)
 		*result = ~temp + 1;
 	}
 #else
-	*result = TSENS->VALUE.reg & 0x00FFFFFF;
+	if(temp & 0x00800000) {
+		temp = ~(temp - 1) & 0x00FFFFFF;
+		*result = ~temp + 1;
+	} else {
+		*result = temp;
+	}
 #endif
 
 	/* Reset ready flag */
