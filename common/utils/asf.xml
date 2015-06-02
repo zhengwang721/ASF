@@ -4,7 +4,6 @@
 		<device-support value="samd21"/>
 		<device-support value="samr21"/>
 		<device-support value="saml21"/>
-		<device-support value="samda0"/>
 		<device-support value="samda1"/>
 		<device-support value="samc21"/>
 	</device-alias-map>

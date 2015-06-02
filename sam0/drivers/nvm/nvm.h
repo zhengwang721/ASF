@@ -92,7 +92,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_NVM_RWWEE</td>
- *    <td>SAML21, SAMD21-64K, SAMDA0, SAMDA1,SAMC21</td>
+ *    <td>SAML21, SAMD21-64K, SAMDAx, SAMC21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_BOD12</td>
@@ -287,7 +287,7 @@ extern "C" {
  * Define NVM features set according to different device family
  * @{
 */
-#if (SAML21) || (SAMDA0) || (SAMDA1) || (SAMC21) || defined(SAMD21_64K) || defined(__DOXYGEN__)
+#if (SAML21) || (SAMDA1) || (SAMC21) || defined(SAMD21_64K) || defined(__DOXYGEN__)
 /** Read while write EEPROM emulation feature. */
 #  define FEATURE_NVM_RWWEE
 #endif
@@ -915,7 +915,7 @@ static inline enum nvm_error nvm_get_error(void)
  *	<tr>
  *		<td>E</td>
  *		<td>04/2015</td>
- *		<td>Added support for SAML21 and SAMDA0/DA1.</td>
+ *		<td>Added support for SAML21 and SAMDAx.</td>
  *	</tr> 
  *	<tr>
  *		<td>D</td>

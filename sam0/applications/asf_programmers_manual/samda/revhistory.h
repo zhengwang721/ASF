@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief Instance description for PAC2
+ * \brief ASF Programmers Manual Revision History
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,19 +39,23 @@
  *
  */
 
-#ifndef _SAMDA0_PAC2_INSTANCE_
-#define _SAMDA0_PAC2_INSTANCE_
 
-/* ========== Register definition for PAC2 peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_PAC2_WPCLR             (0x42000000U) /**< \brief (PAC2) Write Protection Clear */
-#define REG_PAC2_WPSET             (0x42000004U) /**< \brief (PAC2) Write Protection Set */
-#else
-#define REG_PAC2_WPCLR             (*(RwReg  *)0x42000000U) /**< \brief (PAC2) Write Protection Clear */
-#define REG_PAC2_WPSET             (*(RwReg  *)0x42000004U) /**< \brief (PAC2) Write Protection Set */
-#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-/* ========== Instance parameters for PAC2 peripheral ========== */
-#define PAC2_WPROT_DEFAULT_VAL      0x00800000 // PAC protection mask at reset
-
-#endif /* _SAMDA0_PAC2_INSTANCE_ */
+/**
+ * \page appdoc_samda1_asf_prog_manual_samd_a1_revision_history Document Revision History
+ *
+ * <table>
+ *  <tr>
+ *    <th>Doc. Rev.</td>
+ *    <th>Date</td>
+ *    <th>Comments</td>
+ *  </tr>
+ *  <tr>
+ *    <td>A</td>
+ *    <td>04/2015</td>
+ *    <td>Initial release.</td>
+ *  </tr>
+ * </table>
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */

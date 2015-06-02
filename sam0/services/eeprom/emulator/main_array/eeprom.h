@@ -500,7 +500,7 @@ enum status_code eeprom_emulator_read_buffer(
  *	<tr>
  *		<td>E</td>
  *		<td>04/2015</td>
- *		<td>Add SAML21 and SAMDA0/DA1 support.</td>
+ *		<td>Add SAML21 and SAMDAx support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

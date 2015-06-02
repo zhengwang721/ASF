@@ -29,7 +29,7 @@
 		<build type="include-path" value="system_interrupt_samr21"/>
 		<build type="include-path" value="system_interrupt_samd10_d11"/>
 		<build type="include-path" value="system_interrupt_saml21"/>
-		<build type="include-path" value="system_interrupt_samda0_da1"/>
+		<build type="include-path" value="system_interrupt_samda"/>
 		<build type="include-path" value="system_interrupt_samc21"/>
 
 		<build type="c-source" value="system_interrupt.c"/>
@@ -40,7 +40,7 @@
 		<build type="header-file" value="system_interrupt_samr21/system_interrupt_features.h"/>
 		<build type="header-file" value="system_interrupt_samd10_d11/system_interrupt_features.h"/>
 		<build type="header-file" value="system_interrupt_saml21/system_interrupt_features.h"/>
-		<build type="header-file" value="system_interrupt_samda0_da1/system_interrupt_features.h"/>
+		<build type="header-file" value="system_interrupt_samda/system_interrupt_features.h"/>
 		<build type="header-file" value="system_interrupt_samc21/system_interrupt_features.h"/>
 		
 		<build type="header-file" value="quick_start/qs_system_interrupt.h"/>
@@ -52,7 +52,7 @@
 		<build type="doxygen-example-path" value="system_interrupt_samr21"/>
 		<build type="doxygen-example-path" value="system_interrupt_samd10_d11"/>
 		<build type="doxygen-example-path" value="system_interrupt_saml21"/>
-		<build type="doxygen-example-path" value="system_interrupt_samda0_da1"/>
+		<build type="doxygen-example-path" value="system_interrupt_samda"/>
 		<build type="doxygen-example-path" value="system_interrupt_samc21"/>
 		<build type="doxygen-quick-start" value="asfdoc_sam0_system_interrupt_exqsg"/>
 
@@ -252,10 +252,9 @@
 				<require idref="sam0.utils"/>
 				<require idref="thirdparty.cmsis"/>
 			</module>
-
-			<module type="driver" id="sam0.drivers.system.interrupt#samda0_da1" caption="SYSTEM - Interrupt Driver">
+			<module type="driver" id="sam0.drivers.system.interrupt#samdax" caption="SYSTEM - Interrupt Driver">
 				<info type="description" value="summary">
-					Driver for the SAM DA0/DA1 Interrupt System. Provides a unified
+					Driver for the SAM DAx Interrupt System. Provides a unified
 					interface for the configuration and management interrupts within
 					the device, including the enabling, disabling and entering, leaving
 					of critical sections.
@@ -273,20 +272,19 @@
 				</info>
 
 				<info type="description" value="pdf">
-					This document describes how to use the Interrupts on the SAM DA0/DA1,
+					This document describes how to use the Interrupts on the SAM DAx,
 					both the ASF driver and the peripheral itself.
 				</info>
 
 				<build type="include-path" value="." />
-				<build type="include-path" value="system_interrupt_samda0_da1"/>
+				<build type="include-path" value="system_interrupt_samda"/>
 
 				<build type="c-source" value="system_interrupt.c"/>
 
 				<build type="header-file" subtype="api" value="system_interrupt.h"/>
 
-				<build type="header-file" value="system_interrupt_samda0_da1/system_interrupt_features.h"/>
+				<build type="header-file" value="system_interrupt_samda/system_interrupt_features.h"/>
 
-				<device-support value="samda0"/>
 				<device-support value="samda1"/>
 
 				<require idref="sam0.utils"/>

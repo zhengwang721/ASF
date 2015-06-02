@@ -33,7 +33,6 @@
 		<device-support value="samr21"/>
 		<device-support value="samd10"/>
 		<device-support value="samd11"/>
-		<device-support value="samda0"/>
 		<device-support value="samda1"/>
 
 		<require idref="sam0.utils"/>
@@ -130,7 +129,6 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
-			<device-support value="samda0"/>
 			<device-support value="samda1"/>
 		</module>
 		<module type="driver" id="sam0.drivers.bod#sam_l" caption="BOD - Brown Out Detector">

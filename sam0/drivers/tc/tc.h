@@ -484,7 +484,7 @@
 #if SAMD20 || SAML21 || SAMC21
 #  define TC_INSTANCE_OFFSET 0
 #endif
-#if SAMD21 || SAMR21 || SAMDA0 || SAMDA1
+#if SAMD21 || SAMR21 || SAMDA1
 #  define TC_INSTANCE_OFFSET 3
 #endif
 #if SAMD10 || SAMD11
@@ -1735,7 +1735,7 @@ static inline void tc_clear_status(
  *	<tr>
  *		<td>E</td>
  *		<td>04/2015</td>
- *		<td>Added support for SAML21 and SAMDA0/DA1.</td>
+ *		<td>Added support for SAML21 and SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
