@@ -75,17 +75,17 @@
  *
  * \section asfdoc_sam0_tsens_module_overview Module Overview
  *
- * The Temperature Sensor (TSENS) can be used to accurately measure the operating 
- * temperature of the device. The TSENS accurately measures the operating 
- * temperature of the device by comparing the difference in two temperature 
- * dependent frequencies to a known frequency. The frequency of the 
- * temperature dependent oscillator (TOSC) is measured twice: first with the 
- * min configuration and next with the max configuration. The number of periods 
- * of GCLK_TSENS used for the measurement is defined by the GAIN register. The 
- * width of the resulting pulse is measured using a counter clocked by 
+ * The Temperature Sensor (TSENS) can be used to accurately measure the operating
+ * temperature of the device. The TSENS accurately measures the operating
+ * temperature of the device by comparing the difference in two temperature
+ * dependent frequencies to a known frequency. The frequency of the
+ * temperature dependent oscillator (TOSC) is measured twice: first with the
+ * min configuration and next with the max configuration. The number of periods
+ * of GCLK_TSENS used for the measurement is defined by the GAIN register. The
+ * width of the resulting pulse is measured using a counter clocked by
  * GCLK_TSENS in the up direction for the 1st phase and in the down 2nd phase.
  *
- * The resulting signed value is proportional to the temperature and is 
+ * The resulting signed value is proportional to the temperature and is
  * corrected for offset by the contents of the OFFSET register.
  *
  * Accurately measures a temperature:
@@ -95,8 +95,8 @@
  *
  *
  * \subsection asfdoc_sam0_tsens_module_overview_window_monitor Window Monitor
- * The TSENS module window monitor function can be used to automatically 
- * compare the conversion result against a predefined pair of upper and 
+ * The TSENS module window monitor function can be used to automatically
+ * compare the conversion result against a predefined pair of upper and
  * lower threshold values.
  *
  *
@@ -244,7 +244,7 @@ struct tsens_calibration {
  * \brief TSENS configuration structure.
  *
  * Configuration structure for an TSENS instance. This structure should be
- * initialized by the \ref tsens_get_config_defaults() function before being 
+ * initialized by the \ref tsens_get_config_defaults() function before being
  * modified by the user application.
  */
 struct tsens_config {
@@ -282,8 +282,8 @@ enum status_code tsens_init(struct tsens_config *config);
  *  \li Free running disabled
  *  \li Run in standby disabled
  *  \li Window monitor disabled
- * Register GAIN and OFFSET is loaded from NVM, or can also be fixed. 
- * If fix this bitfield, the relationship between GCLK frequency, GAIN 
+ * Register GAIN and OFFSET is loaded from NVM, or can also be fixed.
+ * If fix this bitfield, the relationship between GCLK frequency, GAIN
  * and resolution as below:
  * <table>
  *  <tr>
@@ -321,7 +321,7 @@ static inline void tsens_get_config_defaults(struct tsens_config *const config)
 	config->window.window_upper_value     = 0;
 	config->window.window_lower_value     = 0;
 	config->event_action                  = TSENS_EVENT_ACTION_DISABLED;
-	
+
 	uint32_t tsens_bits[2];
 	tsens_bits[0] = *((uint32_t *)NVMCTRL_TEMP_LOG);
 	tsens_bits[1] = *(((uint32_t *)NVMCTRL_TEMP_LOG) + 1);
@@ -451,12 +451,12 @@ static inline bool tsens_is_syncing(void)
  * \brief Enables the TSENS module.
  *
  * Enables an TSENS module that has previously been configured.
- 
+
  */
 static inline void tsens_enable(void)
 {
 	TSENS->CTRLA.reg |= TSENS_CTRLA_ENABLE;
-	
+
 	while (tsens_is_syncing()) {
 		/* Wait for synchronization */
 	}
@@ -471,7 +471,7 @@ static inline void tsens_enable(void)
 static inline void tsens_disable(void)
 {
 	TSENS->CTRLA.reg &= ~TSENS_CTRLA_ENABLE;
-	
+
 	while (tsens_is_syncing()) {
 		/* Wait for synchronization */
 	}
@@ -491,7 +491,7 @@ static inline void tsens_reset(void)
 
 	/* Software reset the module */
 	TSENS->CTRLA.reg |= TSENS_CTRLA_SWRST;
-	
+
 	while (tsens_is_syncing()) {
 		/* Wait for synchronization */
 	}
@@ -557,7 +557,7 @@ static inline void tsens_disable_events(struct tsens_events *const events)
 static inline void tsens_start_conversion(void)
 {
 	TSENS->CTRLB.reg |= TSENS_CTRLB_START;
-	
+
 	while (tsens_is_syncing()) {
 		/* Wait for synchronization */
 	}
@@ -584,12 +584,12 @@ static inline enum status_code tsens_read(int32_t *result)
 		/* Result not ready */
 		return STATUS_BUSY;
 	}
-	
+
 	if (TSENS->STATUS.reg & TSENS_STATUS_OVF) {
 		/* The result is not valid */
 		return STATUS_ERR_BAD_DATA;
 	}
-	
+
 	/* Get TSENS result */
 	uint32_t temp = TSENS->VALUE.reg & 0x00FFFFFF;
 #if (ERRATA_14476)

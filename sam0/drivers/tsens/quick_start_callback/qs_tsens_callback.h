@@ -47,9 +47,9 @@
 /**
  * \page asfdoc_sam0_tsens_basic_use_case_callback Quick Start Guide for TSENS - Callback
  *
- * In this use case, the TSENS will measure the temperature using interrupt 
- * driven conversion. When the temperature value have been measured, a 
- * callback will be called that signals the main application that conversion 
+ * In this use case, the TSENS will measure the temperature using interrupt
+ * driven conversion. When the temperature value have been measured, a
+ * callback will be called that signals the main application that conversion
  * is compete.
  *
  * The TSENS will be set up as follows:

@@ -21,8 +21,6 @@
 			<build type="doxygen-entry-point" value="asfdoc_sam0_tsens_group"/>
 			<build type="doxygen-quick-start" value="asfdoc_sam0_tsens_exqsg"/>
 
-			<build type="define" name="TSENS_CALLBACK_MODE" value="false"/>
-
 			<device-support value="samc21"/>
 
 			<require idref="sam0.utils"/>
@@ -63,9 +61,6 @@
 			<build type="doxygen-example-path" value="quick_start"/>
 			<build type="doxygen-entry-point" value="asfdoc_sam0_tsens_group"/>
 			<build type="doxygen-quick-start" value="asfdoc_sam0_tsens_exqsg"/>
-
-			<build type="define" name="TSENS_CALLBACK_MODE" value="true"/>
-			<build type="doxygen-enable-section" value="TSENS_CALLBACK_MODE"/>
 
 			<device-support value="samc21"/>
 

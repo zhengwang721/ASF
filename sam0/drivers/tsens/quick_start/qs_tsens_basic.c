@@ -80,7 +80,7 @@ int main(void)
 
 //! [get_res]
 	int32_t result;
-	
+
 //! [start_conv]
 	tsens_start_conversion();
 //! [start_conv]

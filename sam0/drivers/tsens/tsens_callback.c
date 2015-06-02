@@ -113,12 +113,11 @@ enum status_code tsens_register_callback(
 	if(callback_type > TSENS_CALLBACK_NUM) {
 		return STATUS_ERR_INVALID_ARG;
 	}
-	
+
 	/* Register callback function */
 	module->callback[callback_type] = callback_func;
-	module->value = 0;
 	_tsens_instances = module;
-	
+
 	return STATUS_OK;
 }
 
@@ -141,11 +140,10 @@ enum status_code tsens_unregister_callback(
 	if(callback_type > TSENS_CALLBACK_NUM) {
 		return STATUS_ERR_INVALID_ARG;
 	}
-	
+
 	/* Register callback function */
 	module->callback[callback_type] = NULL;
-	module->value = 0;
-	
+
 	return STATUS_OK;
 }
 
@@ -155,12 +153,8 @@ enum status_code tsens_unregister_callback(
  * \param[in]  module_inst  Pointer to the TSENS software instance struct
  * \param[out] result       Pointer to store the TSENS result
  *
- * \return Status of the job start.
- * \retval STATUS_OK        The conversion job was started successfully and is
- *                          in progress
- * \retval STATUS_BUSY      The TSENS is already busy with another job
  */
-enum status_code tsens_read_job(
+void tsens_read_job(
 		struct tsens_module *const module_inst,
 		int32_t *result)
 {
@@ -172,6 +166,4 @@ enum status_code tsens_read_job(
 	if(!(TSENS->CTRLC.reg & TSENS_CTRLC_FREERUN)) {
 		tsens_start_conversion();
 	}
-
-	return STATUS_OK;
 }

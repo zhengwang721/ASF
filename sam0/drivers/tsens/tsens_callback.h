@@ -51,7 +51,7 @@
 extern "C" {
 #endif
 
-#include <compiler.h> 
+#include <compiler.h>
 #include <system_interrupt.h>
 #include "tsens.h"
 
@@ -129,7 +129,7 @@ enum status_code tsens_unregister_callback(
 static inline void tsens_enable_callback(enum tsens_callback callback_type)
 {
 	uint32_t inenset_temp = 0;
-	
+
 	switch (callback_type) {
 		case TSENS_CALLBACK_RESULT_READY:
 			inenset_temp |= TSENS_INTFLAG_RESRDY;
@@ -164,7 +164,7 @@ static inline void tsens_enable_callback(enum tsens_callback callback_type)
 static inline void tsens_disable_callback(enum tsens_callback callback_type)
 {
 	uint32_t inenclr_temp = 0;
-	
+
 	switch (callback_type) {
 		case TSENS_CALLBACK_RESULT_READY:
 			inenclr_temp |= TSENS_INTENCLR_OVERRUN;
@@ -187,9 +187,7 @@ static inline void tsens_disable_callback(enum tsens_callback callback_type)
 	TSENS->INTENCLR.reg = inenclr_temp;
 }
 
-enum status_code tsens_read_job(
-			struct tsens_module *const module_inst,
-			int32_t *result);
+void tsens_read_job(struct tsens_module *const module_inst, int32_t *result);
 /** @} */
 
 /** @} */

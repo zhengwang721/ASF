@@ -46,6 +46,9 @@
 
 #include "tsens.h"
 
+#define WINDOW_MIN_VALUE    -40
+#define WINDOW_MAX_VALUE    105
+
 /**
  * \internal Writes an TSENS configuration to the hardware module
  *
@@ -69,43 +72,42 @@ static enum status_code _tsens_set_config(struct tsens_config *const config)
 	/* Configure run in standby */
 	TSENS->CTRLA.reg = (config->run_in_standby << TSENS_CTRLA_RUNSTDBY_Pos);
 
-	while (tsens_is_syncing()) {
-		/* Wait for synchronization */
-	}
-
 	/* Check validity of window thresholds */
 	if (config->window.window_mode != TSENS_WINDOW_MODE_DISABLE) {
-		if (config->window.window_lower_value > (int32_t)(TSENS_VALUE_MASK / 2) ||
-			config->window.window_lower_value < -(int32_t)(TSENS_VALUE_MASK / 2 + 1) ||
-			config->window.window_upper_value > (int32_t)(TSENS_VALUE_MASK / 2) ||
-			config->window.window_upper_value < -(int32_t)(TSENS_VALUE_MASK / 2 + 1)) {
-			/* Invalid value */
-			return STATUS_ERR_INVALID_ARG;
-		} else if (config->window.window_lower_value > (int32_t)TSENS_VALUE_MASK ||
-				config->window.window_upper_value > (int32_t)TSENS_VALUE_MASK){
-			/* Invalid value */
-			return STATUS_ERR_INVALID_ARG;
-		}
+		if((config->window.window_lower_value < WINDOW_MIN_VALUE) || \
+			(config->window.window_upper_value > WINDOW_MAX_VALUE)) {
+				return STATUS_ERR_INVALID_ARG;
+			}
 	}
 
 	/* Configure CTRLC */
-	TSENS->CTRLC.reg = 
+	TSENS->CTRLC.reg =
 			(config->free_running << TSENS_CTRLC_FREERUN_Pos) | \
 			(config->window.window_mode);
 
+#if ERRATA_14476
 	/* Configure lower threshold */
-	TSENS->WINLT.reg =
+	TSENS->WINLT.reg = \
+			config->window.window_upper_value << TSENS_WINLT_WINLT_Pos;
+
+	/* Configure upper threshold */
+	TSENS->WINUT.reg = \
+			config->window.window_lower_value << TSENS_WINUT_WINUT_Pos;
+#else
+	/* Configure lower threshold */
+	TSENS->WINLT.reg = \
 			config->window.window_lower_value << TSENS_WINLT_WINLT_Pos;
 
-	/* Configure lower threshold */
-	TSENS->WINUT.reg = config->window.window_upper_value <<
-			TSENS_WINUT_WINUT_Pos;
+	/* Configure upper threshold */
+	TSENS->WINUT.reg = \
+			config->window.window_upper_value << TSENS_WINUT_WINUT_Pos;
+#endif
 
 	/* Configure events */
 	TSENS->EVCTRL.reg = config->event_action;
 
 	/* Disable all interrupts */
-	TSENS->INTENCLR.reg = 
+	TSENS->INTENCLR.reg =
 			(1 << TSENS_INTENCLR_OVF_Pos) | (1 << TSENS_INTENCLR_WINMON_Pos) | \
 			(1 << TSENS_INTENCLR_OVERRUN_Pos) | (1 << TSENS_INTENCLR_RESRDY_Pos);
 
@@ -115,7 +117,7 @@ static enum status_code _tsens_set_config(struct tsens_config *const config)
 				((tsens_bits & TSENS_FUSES_TCAL_Msk) >> TSENS_FUSES_TCAL_Pos);
 	uint32_t tsens_fcal = \
 				((tsens_bits & TSENS_FUSES_FCAL_Msk) >> TSENS_FUSES_FCAL_Pos);
-	
+
 	TSENS->CAL.reg = TSENS_CAL_TCAL(tsens_tcal) | TSENS_CAL_FCAL(tsens_fcal);
 	TSENS->GAIN.reg = TSENS_GAIN_GAIN(config->calibration.gain);
 	TSENS->OFFSET.reg = TSENS_OFFSET_OFFSETC(config->calibration.offset);
