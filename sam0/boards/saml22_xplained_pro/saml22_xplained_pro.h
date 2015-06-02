@@ -99,7 +99,7 @@ void system_board_init(void);
 #define SW0_EIC_PIN               PIN_PC01A_EIC_EXTINT9
 #define SW0_EIC_MUX               MUX_PC01A_EIC_EXTINT9
 #define SW0_EIC_PINMUX            PINMUX_PC01A_EIC_EXTINT9
-#define SW0_EIC_LINE              2
+#define SW0_EIC_LINE              9
 /** @} */
 
 /**
@@ -152,16 +152,16 @@ void system_board_init(void);
  */
 #define EXT1_PIN_3                PIN_PA02
 #define EXT1_PIN_4                PIN_PA03
-#define EXT1_PIN_5                PIN_PC00
-#define EXT1_PIN_6                PIN_PC01
+#define EXT1_PIN_5                PIN_PA20
+#define EXT1_PIN_6                PIN_PA21
 #define EXT1_PIN_7                PIN_PB08
 #define EXT1_PIN_8                PIN_PB09
 #define EXT1_PIN_9                PIN_PC02
 #define EXT1_PIN_10               PIN_PC03
 #define EXT1_PIN_11               PIN_PB30
 #define EXT1_PIN_12               PIN_PB31
-#define EXT1_PIN_13               PIN_PC25
-#define EXT1_PIN_14               PIN_PC24
+#define EXT1_PIN_13               PIN_PA23
+#define EXT1_PIN_14               PIN_PA22
 #define EXT1_PIN_15               PIN_PB21
 #define EXT1_PIN_16               PIN_PB00
 #define EXT1_PIN_17               PIN_PB02
@@ -228,14 +228,28 @@ void system_board_init(void);
  */
 #define EXT1_UART_MODULE              SERCOM2
 #define EXT1_UART_SERCOM_MUX_SETTING  USART_RX_1_TX_0_XCK_1
-#define EXT1_UART_SERCOM_PINMUX_PAD0  PINMUX_PA22D_SERCOM5_PAD0
-#define EXT1_UART_SERCOM_PINMUX_PAD1  PINMUX_PA23D_SERCOM5_PAD1
+#define EXT1_UART_SERCOM_PINMUX_PAD0  PINMUX_PA22D_SERCOM2_PAD0
+#define EXT1_UART_SERCOM_PINMUX_PAD1  PINMUX_PA23D_SERCOM2_PAD1
 #define EXT1_UART_SERCOM_PINMUX_PAD2  PINMUX_UNUSED
 #define EXT1_UART_SERCOM_PINMUX_PAD3  PINMUX_UNUSED
 #define EXT1_UART_SERCOM_DMAC_ID_TX   SERCOM2_DMAC_ID_TX
 #define EXT1_UART_SERCOM_DMAC_ID_RX   SERCOM2_DMAC_ID_RX
 /** @} */
 
+/** \name Extension header #1 USART RS485 definitions
+ *  @{
+ */
+#define EXT1_RS485_MODULE              SERCOM2
+#define EXT1_RS485_SERCOM_MUX_SETTING  USART_RX_1_TX_0_XCK_1_TE_2
+#define EXT1_RS485_SERCOM_PINMUX_PAD0  PINMUX_PA22D_SERCOM2_PAD0
+#define EXT1_RS485_SERCOM_PINMUX_PAD1  PINMUX_PA23D_SERCOM2_PAD1
+#define EXT1_RS485_SERCOM_PINMUX_PAD2  PINMUX_PA20D_SERCOM2_PAD2
+#define EXT1_RS485_SERCOM_PINMUX_PAD3  PINMUX_UNUSED
+#define EXT1_RS485_SERCOM_DMAC_ID_TX   SERCOM2_DMAC_ID_TX
+#define EXT1_RS485_SERCOM_DMAC_ID_RX   SERCOM2_DMAC_ID_RX
+#define EXT1_RS485_CTS_PIN             EXT1_PIN_6
+
+/** @} */
 /** \name Extension header #1 SPI definitions
  *  @{
  */
@@ -256,14 +270,14 @@ void system_board_init(void);
 #define EXT2_PIN_4                PIN_PA05
 #define EXT2_PIN_5                PIN_PB04
 #define EXT2_PIN_6                PIN_PB05
-#define EXT2_PIN_7                PIN_PA20
-#define EXT2_PIN_8                PIN_PA21
+#define EXT2_PIN_7                PIN_PC28
+#define EXT2_PIN_8                PIN_PA27
 #define EXT2_PIN_9                PIN_PB06
 #define EXT2_PIN_10               PIN_PB07
-#define EXT2_PIN_11               PIN_PB30//TODO
-#define EXT2_PIN_12               PIN_PB31//no define TODO
-#define EXT2_PIN_13               PIN_PA23
-#define EXT2_PIN_14               PIN_PA22
+#define EXT2_PIN_11               PIN_PB30
+#define EXT2_PIN_12               PIN_PB31
+#define EXT2_PIN_13               PIN_PA13
+#define EXT2_PIN_14               PIN_PA12
 #define EXT2_PIN_15               PIN_PA17
 #define EXT2_PIN_16               PIN_PA18
 #define EXT2_PIN_17               PIN_PA16
@@ -328,14 +342,14 @@ void system_board_init(void);
 /** \name Extension header #2 UART definitions
  *  @{
  */
-#define EXT2_UART_MODULE              SERCOM4
-#define EXT2_UART_SERCOM_MUX_SETTING  USART_RX_3_TX_2_XCK_3
-#define EXT2_UART_SERCOM_PINMUX_PAD0  PINMUX_UNUSED
-#define EXT2_UART_SERCOM_PINMUX_PAD1  PINMUX_UNUSED
-#define EXT2_UART_SERCOM_PINMUX_PAD2  PINMUX_PC24D_SERCOM4_PAD2
-#define EXT2_UART_SERCOM_PINMUX_PAD3  PINMUX_PC25D_SERCOM4_PAD3
-#define EXT2_UART_SERCOM_DMAC_ID_TX   SERCOM4_DMAC_ID_TX
-#define EXT2_UART_SERCOM_DMAC_ID_RX   SERCOM4_DMAC_ID_RX
+#define EXT2_UART_MODULE              SERCOM3
+#define EXT2_UART_SERCOM_MUX_SETTING  USART_RX_1_TX_0_XCK_1
+#define EXT2_UART_SERCOM_PINMUX_PAD0  PINMUX_PA12D_SERCOM3_PAD0
+#define EXT2_UART_SERCOM_PINMUX_PAD1  PINMUX_PA13D_SERCOM3_PAD1
+#define EXT2_UART_SERCOM_PINMUX_PAD2  PINMUX_UNUSED
+#define EXT2_UART_SERCOM_PINMUX_PAD3  PINMUX_UNUSED
+#define EXT2_UART_SERCOM_DMAC_ID_TX   SERCOM3_DMAC_ID_TX
+#define EXT2_UART_SERCOM_DMAC_ID_RX   SERCOM3_DMAC_ID_RX
 /** @} */
 
 /** \name Extension header #2 SPI definitions
@@ -356,20 +370,20 @@ void system_board_init(void);
  */
 #define EXT3_PIN_3                PIN_PA06
 #define EXT3_PIN_4                PIN_PA07
-#define EXT3_PIN_5                PIN_PC20
-#define EXT3_PIN_6                PIN_PC21
+#define EXT3_PIN_5                PIN_PC16
+#define EXT3_PIN_6                PIN_PC17
 #define EXT3_PIN_7                PIN_PB16
 #define EXT3_PIN_8                PIN_PB17
 #define EXT3_PIN_9                PIN_PB18
 #define EXT3_PIN_10               PIN_PB19
-#define EXT3_PIN_11               0//TODO
-#define EXT3_PIN_12               0
+#define EXT3_PIN_11               PIN_PB30
+#define EXT3_PIN_12               PIN_PB31
 #define EXT3_PIN_13               PIN_PA15
 #define EXT3_PIN_14               PIN_PA14
-#define EXT3_PIN_15               PIN_PA11
-#define EXT3_PIN_16               PIN_PA08
-#define EXT3_PIN_17               PIN_PA10
-#define EXT3_PIN_18               PIN_PA09
+#define EXT3_PIN_15               PIN_PA09
+#define EXT3_PIN_16               PIN_PA10
+#define EXT3_PIN_17               PIN_PA08
+#define EXT3_PIN_18               PIN_PA11
 /** @} */
 
 /** \name Extension header #3 pin definitions by function
