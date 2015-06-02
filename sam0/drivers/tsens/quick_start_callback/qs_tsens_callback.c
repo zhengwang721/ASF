@@ -62,7 +62,7 @@ struct tsens_module tsens_instance;
 //! [job_complete_callback]
 volatile bool tsens_read_done = false;
 
-static void tsens_complete_callback(void)
+static void tsens_complete_callback(enum tsens_callback i)
 {
 	tsens_read_done = true;
 }

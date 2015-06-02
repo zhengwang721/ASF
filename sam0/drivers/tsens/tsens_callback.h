@@ -61,9 +61,6 @@ extern "C" {
  * @{
  */
 
-/** Type of the callback functions. */
-typedef void (*tsens_callback_t)(void);
-
 /**
  * \brief TSENS Callback Types.
  *
@@ -84,6 +81,9 @@ enum tsens_callback {
 	TSENS_CALLBACK_NUM,
 #  endif
 };
+
+/** Type of the callback functions. */
+typedef void (*tsens_callback_t)(enum tsens_callback);
 
 /**
  * \brief TSENS software device instance structure.

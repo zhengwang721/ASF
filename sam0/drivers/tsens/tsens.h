@@ -234,10 +234,8 @@ struct tsens_events {
  * Calibration configuration structure.
  */
 struct tsens_calibration {
-	/** Time amplifier gain0(bits 19:0). */
-	uint32_t gain0;
-	/** Time amplifier gain1(bits 23:20). */
-	uint32_t gain1;
+	/** Time amplifier gain. */
+	uint32_t gain;
 	/** Offset correction. */
 	int32_t offset;
 };
@@ -271,31 +269,6 @@ struct tsens_config {
  */
 enum status_code tsens_init(struct tsens_config *config);
 
-/*
- * \name NVM Temperature Calibration Area Mapping
- */
- 
-/* Temperature calibration position. */
-#define NVM_TSENS_TCAL_POS     0
-/* Temperature calibration size. */
-#define NVM_TSENS_TCAL_SIZE    6
-/* Frequency calibration position. */
-#define NVM_TSENS_FCAL_POS     6
-/* Frequency calibration size. */
-#define NVM_TSENS_FCAL_SIZE    6
-/* Gain0(bits 19:0) calibration position. */
-#define NVM_TSENS_GAIN0_POS    12
-/* Gain0(bits 19:0) calibration size. */
-#define NVM_TSENS_GAIN0_SIZE   20
-/* Gain1(bits 23:20) calibration position. */
-#define NVM_TSENS_GAIN1_POS    32
-/* Gain1(bits 23:20) calibration size. */
-#define NVM_TSENS_GAIN1_SIZE   4
-/* Offset calibration position. */
-#define NVM_TSENS_OFFSET_POS   36
-/* Offset calibration size. */
-#define NVM_TSENS_OFFSET_SIZE  24
-
 /**
  * \brief Initializes an TSENS configuration structure to defaults.
  *
@@ -323,15 +296,15 @@ static inline void tsens_get_config_defaults(struct tsens_config *const config)
 	config->window.window_upper_value     = 0;
 	config->window.window_lower_value     = 0;
 	config->event_action                  = TSENS_EVENT_ACTION_DISABLED;
-	config->calibration.gain0             = (*((uint32_t *)(NVMCTRL_TEMP_LOG) + \
-						(NVM_TSENS_GAIN0_POS / 32)) >> (NVM_TSENS_GAIN0_POS % 32)) \
-						&((1 << NVM_TSENS_GAIN0_SIZE) - 1);
-	config->calibration.gain1             = (*((uint32_t *)(NVMCTRL_TEMP_LOG) + \
-						(NVM_TSENS_GAIN1_POS / 32)) >> (NVM_TSENS_GAIN1_POS % 32)) \
-						&((1 << NVM_TSENS_GAIN1_SIZE) - 1);
-	config->calibration.offset            = (*((uint32_t *)(NVMCTRL_TEMP_LOG) + \
-						(NVM_TSENS_OFFSET_POS / 32)) >> (NVM_TSENS_OFFSET_POS % 32)) \
-						& ((1 << NVM_TSENS_OFFSET_SIZE) - 1);
+	
+	uint32_t tsens_bits[2];
+	tsens_bits[0] = *((uint32_t *)NVMCTRL_TEMP_LOG);
+	tsens_bits[1] = *(((uint32_t *)NVMCTRL_TEMP_LOG) + 1);
+	config->calibration.gain     = \
+		((tsens_bits[0] & TSENS_FUSES_GAIN_0_Msk) >> TSENS_FUSES_GAIN_0_Pos) | \
+		((tsens_bits[1] & TSENS_FUSES_GAIN_1_Msk) >> TSENS_FUSES_GAIN_1_Pos);
+	config->calibration.offset   = \
+		((tsens_bits[0] & TSENS_FUSES_OFFSET_Msk) >> TSENS_FUSES_OFFSET_Pos);
 }
 
 /** @} */
@@ -452,18 +425,16 @@ static inline bool tsens_is_syncing(void)
 /**
  * \brief Enables the TSENS module.
  *
- * Enables an TSENS module that has previously been configured. If any 
- * internal reference is selected it will be enabled.
+ * Enables an TSENS module that has previously been configured.
+ 
  */
-static inline enum status_code tsens_enable(void)
+static inline void tsens_enable(void)
 {
 	TSENS->CTRLA.reg |= TSENS_CTRLA_ENABLE;
 	
 	while (tsens_is_syncing()) {
 		/* Wait for synchronization */
 	}
-	
-	return STATUS_OK;
 }
 
 /**
@@ -472,15 +443,13 @@ static inline enum status_code tsens_enable(void)
  * Disables an TSENS module that was previously enabled.
  *
  */
-static inline enum status_code tsens_disable(void)
+static inline void tsens_disable(void)
 {
 	TSENS->CTRLA.reg &= ~TSENS_CTRLA_ENABLE;
 	
 	while (tsens_is_syncing()) {
 		/* Wait for synchronization */
 	}
-	
-	return STATUS_OK;
 }
 
 /**
@@ -490,7 +459,7 @@ static inline enum status_code tsens_disable(void)
  * default values.
  *
  */
-static inline enum status_code tsens_reset(void)
+static inline void tsens_reset(void)
 {
 	/* Disable to make sure the pipeline is flushed before reset */
 	tsens_disable();
@@ -501,8 +470,6 @@ static inline enum status_code tsens_reset(void)
 	while (tsens_is_syncing()) {
 		/* Wait for synchronization */
 	}
-	
-	return STATUS_OK;
 }
 
 
@@ -534,7 +501,7 @@ static inline void tsens_enable_events(struct tsens_events *const events)
 /**
  * \brief Disables an TSENS event output.
  *
- *  Disables one or more input or output events to or from the TSENS module. See
+ *  Disables one or more output events to or from the TSENS module. See
  *  \ref tsens_events "here" for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.
@@ -557,12 +524,12 @@ static inline void tsens_disable_events(struct tsens_events *const events)
 }
 
 /**
- * \brief Starts an TSENS conversion.
+ * \brief Trigger an TSENS conversion.
  *
- * Starts a new TSENS conversion.
+ * Trigger a new TSENS conversion.
  *
  */
-static inline void tsens_start_conversion(void)
+static inline void tsens_trigger_conversion(void)
 {
 	TSENS->CTRLB.reg |= TSENS_CTRLB_START;
 	
@@ -587,8 +554,6 @@ static inline void tsens_start_conversion(void)
 static inline enum status_code tsens_read(int32_t *result)
 {
 	Assert(result);
-	
-	tsens_start_conversion();
 
 	if (!(tsens_get_status() & TSENS_STATUS_RESULT_READY)) {
 		/* Result not ready */
@@ -681,9 +646,7 @@ static inline enum status_code tsens_read(int32_t *result)
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_tsens_basic_use_case
- * \if TSENS_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_tsens_basic_use_case_callback
- * \endif
  *
  * \page asfdoc_sam0_tsens_document_revision_history Document Revision History
  *

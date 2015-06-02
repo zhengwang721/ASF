@@ -56,11 +56,7 @@ void TSENS_Handler(void)
 	/* get interrupt flags and mask out enabled callbacks */
 	uint32_t flags = TSENS->INTFLAG.reg;
 
-	if (flags & TSENS_INTFLAG_RESRDY) {
-		/* clear interrupt flag */
-		TSENS->INTFLAG.reg = TSENS_INTFLAG_RESRDY;
-
-		/* store TSENS result in job buffer */
+	/* store TSENS result in job buffer */
 #if (ERRATA_14476)
 		uint32_t temp = TSENS->VALUE.reg & 0x00FFFFFF;
 		if(temp & 0x00800000) {
@@ -73,20 +69,15 @@ void TSENS_Handler(void)
 #else
 		*(module->value) = TSENS->VALUE.reg & 0x00FFFFFF;
 #endif
-		
-		if(module->callback[TSENS_CALLBACK_RESULT_READY] != NULL) {
-			module->callback[TSENS_CALLBACK_RESULT_READY]();
-		}
-	}
 
-	for(uint8_t i = 1; i < TSENS_CALLBACK_NUM; i++)
+	for(uint8_t i = 0; i < TSENS_CALLBACK_NUM; i++)
 	{
 		if (flags & ((uint32_t)0x01 << i)) {
 			/* Clear the INTFLAG anyway */
 			TSENS->INTFLAG.reg = (uint32_t)0x01 << i;
 
-			if(module->callback[TSENS_CALLBACK_RESULT_READY] != NULL) {
-				module->callback[TSENS_CALLBACK_RESULT_READY]();
+			if(module->callback[i] != NULL) {
+				module->callback[i]((enum tsens_callback)i);
 			}
 		}
 	}
@@ -168,11 +159,13 @@ enum status_code tsens_read_job(
 		int32_t *result)
 {
 	Assert(module_inst);
-	Assert(buffer);
+	Assert(result);
 
 	module_inst->value = result;
 
-	tsens_start_conversion();
+	if(!(TSENS->CTRLC.reg & TSENS_CTRLC_FREERUN)) {
+		tsens_trigger_conversion();
+	}
 
 	return STATUS_OK;
 }

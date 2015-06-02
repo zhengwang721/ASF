@@ -110,20 +110,14 @@ static enum status_code _tsens_set_config(struct tsens_config *const config)
 			(1 << TSENS_INTENCLR_OVERRUN_Pos) | (1 << TSENS_INTENCLR_RESRDY_Pos);
 
 	/* Read calibration from NVM */
-	uint32_t tsens_tcal = (*((uint32_t *)(NVMCTRL_TEMP_LOG) + \
-					(NVM_TSENS_TCAL_POS / 32)) >> (NVM_TSENS_TCAL_POS % 32)) \
-					& ((1 << NVM_TSENS_TCAL_SIZE) - 1);
-	uint32_t tsens_fcal = (*((uint32_t *)(NVMCTRL_TEMP_LOG) + \
-					(NVM_TSENS_FCAL_POS / 32)) >> (NVM_TSENS_FCAL_POS % 32)) \
-					& ((1 << NVM_TSENS_FCAL_SIZE) - 1);
-	uint32_t tsens_gain = (config->calibration.gain0) | \
-					(config->calibration.gain1 << NVM_TSENS_GAIN0_SIZE);
-
-	tsens_gain = 9600;
-	tsens_offset = -910;
+	uint32_t tsens_bits = *((uint32_t *)NVMCTRL_TEMP_LOG);
+	uint32_t tsens_tcal = \
+				((tsens_bits & TSENS_FUSES_TCAL_Msk) >> TSENS_FUSES_TCAL_Pos);
+	uint32_t tsens_fcal = \
+				((tsens_bits & TSENS_FUSES_FCAL_Msk) >> TSENS_FUSES_FCAL_Pos);
 	
 	TSENS->CAL.reg = TSENS_CAL_TCAL(tsens_tcal) | TSENS_CAL_FCAL(tsens_fcal);
-	TSENS->GAIN.reg = TSENS_GAIN_GAIN(tsens_gain);
+	TSENS->GAIN.reg = TSENS_GAIN_GAIN(config->calibration.gain);
 	TSENS->OFFSET.reg = TSENS_OFFSET_OFFSETC(config->calibration.offset);
 
 	return STATUS_OK;
