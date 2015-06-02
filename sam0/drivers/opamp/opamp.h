@@ -81,8 +81,8 @@
  * Each operational amplifier can be configured in standalone operational amplifier
  * and operational amplifier with built-in feedback. All OPAMPs can be cascaded
  * to support circuits such as differential amplifiers.
- * \note For more detail configuration reference, refer to the datasheet
- * "Build-in Modes" section.
+ * \note For more detail configuration reference, refer to the "Built-in Modes"
+ * section in the device datasheet.
  *
  * Each OPAMP has one positive and one negative input which can be flexible chosen
  * from analog input pins including the output of another OPAMP, internal inputs
@@ -459,7 +459,7 @@ static inline void opamp_module_disable(void)
 /**
  * \brief Enables OPAMP voltage doubler.
  *
- * The analog input muxes have low resistance, but consume more
+ * The analog input MUXes have low resistance, but consume more
  * power at lower voltages (e.g., driven by the voltage doubler).
  *
  */
@@ -478,7 +478,7 @@ static inline void opamp_voltage_doubler_enable(void)
 /**
  * \brief Disables OPAMP voltage doubler.
  *
- * The analog input muxes have high resistance, but consume less power
+ * The analog input MUXes have high resistance, but consume less power
  * at lower voltages (e.g., the voltage doubler is disabled).
  */
 static inline void opamp_voltage_doubler_disable(void)
@@ -496,8 +496,8 @@ static inline void opamp_voltage_doubler_disable(void)
  *  instances of these configuration structures before being modified by the
  *  user application.
  *
- *  The default configuration is setting OPAMP0 as "Voltage Follower",
- *  refer to the first mode in datasheet "Build-in Modes" section.
+ *  The default configuration is setting OPAMP0 as "Voltage Follower", refer to
+ *  the first mode of "Built-in Modes" in the device datasheet.
  *
  *  \param[out] config  OPAMP0 configuration structure to initialize to
  *                       default values
@@ -513,8 +513,8 @@ void opamp0_get_config_defaults(struct opamp0_config *const config);
  *  instances of these configuration structures before being modified by the
  *  user application.
  *
- *  The default configuration is setting OPAMP1 as "Voltage Follower",
- *  refer to the first mode in datasheet "Build-in Modes" section.
+ *  The default configuration is setting OPAMP1 as "Voltage Follower", refer to
+ *  the first mode of "Built-in Modes" in the device datasheet.
  *
  *  \param[out] config  OPAMP1 configuration structure to initialize to
  *                       default values
@@ -530,8 +530,8 @@ void opamp1_get_config_defaults(struct opamp1_config *const config);
  *  instances of these configuration structures before being modified by the
  *  user application.
  *
- *  The default configuration is setting OPAMP2 as "Voltage Follower",
- *  refer to the first mode in datasheet "Build-in Modes" section.
+ *  The default configuration is setting OPAMP2 as "Voltage Follower", refer to
+ *  the first mode of "Built-in Modes" in the device datasheet.
  *
  *  \param[out] config  OPAMP2 configuration structure to initialize to
  *                       default values
@@ -669,7 +669,7 @@ bool opamp_is_ready(const enum opamp_id number);
  *	<tr>
  *		<td>42446A</td>
  *		<td>06/2015</td>
- *		<td>Initial release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
