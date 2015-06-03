@@ -304,13 +304,13 @@
 				</info>
 
 				<build type="include-path" value="." />
-				<build type="include-path" value="system_interrupt_samc21"/>
+				<build type="include-path" value="system_interrupt_samc20_c21"/>
 
 				<build type="c-source" value="system_interrupt.c"/>
 
 				<build type="header-file" subtype="api" value="system_interrupt.h"/>
 
-				<build type="header-file" value="system_interrupt_samc21/system_interrupt_features.h"/>
+				<build type="header-file" value="system_interrupt_samc20_c21/system_interrupt_features.h"/>
 
 				<device-support value="samc21"/>
 
