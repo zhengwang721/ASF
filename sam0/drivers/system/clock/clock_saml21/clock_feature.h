@@ -111,9 +111,9 @@ extern "C" {
  *
  * There are three clock domains:
  *
- * - CPU Clock Domain.
- * - Low Power Clock Domain(LP Clock Domain).
- * - Backup Clock Domain(BUP Clock Domain).
+ * - CPU Clock Domain
+ * - Low Power Clock Domain(LP Clock Domain)
+ * - Backup Clock Domain(BUP Clock Domain)
  *
  * Each clock domain (CPU, LP, BUP) can be changed on the fly. To ensure
  * correct operation, frequencies must be selected so that BUPDIV ≥ LPDIV ≥ HSDIV.
@@ -578,7 +578,7 @@ struct system_clock_source_xosc32k_config {
  * Internal 16MHz (nominal) oscillator configuration structure.
  */
 struct system_clock_source_osc16m_config {
-	/* Internal 16MHz RC oscillator prescaler */
+	/** Internal 16MHz RC oscillator prescaler */
 	enum system_osc16m_fsel fsel;
 	/** Keep the OSC16M enabled in standby sleep mode */
 	bool run_in_standby;
@@ -1248,7 +1248,7 @@ struct system_clock_source_dpll_config {
 	/** Bypass lock signal */
 	bool lock_bypass;
 	/** Wake up fast. If this is set DPLL output clock is enabled after
-	 * the star-tup time */
+	 * the start-up time */
 	bool wake_up_fast;
 	/** Enable low power mode  */
 	bool low_power_enable;

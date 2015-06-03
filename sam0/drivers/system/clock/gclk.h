@@ -86,7 +86,7 @@ enum gclk_generator {
 	GCLK_GENERATOR_4,
 #endif
 #if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 4)
-	/** GCLK generator channel 5. */
+	/** GCLK generator channel 5 */
 	GCLK_GENERATOR_5,
 #endif
 #if defined(__DOXYGEN__) || (GCLK_GEN_NUM_MSB > 5)
