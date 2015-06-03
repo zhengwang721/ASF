@@ -122,7 +122,7 @@
  * \subsubsection asfdoc_sam0_rww_eeprom_module_overview_implementation_pf Physical Memory
  * RWW EEPROM emulator is divided into a number of physical rows, each
  * containing four identically sized pages. Pages may be read or written
- * to individually, however pages must be erased before being reprogrammed and
+ * to individually, however, pages must be erased before being reprogrammed and
  * the smallest granularity available for erasure is one single row.
  *
  * This discrepancy results in the need for an emulator scheme that is able to
