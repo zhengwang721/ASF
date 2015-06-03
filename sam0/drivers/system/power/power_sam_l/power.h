@@ -301,8 +301,8 @@ struct system_voltage_references_config {
  * Configuration structure for Battery Backup Power Switch (BBPS).
  */
 struct system_battery_backup_power_switch_config {
-	/** Whether the device is woken up or not when switched
-		from battery backup power to main power. */
+	/** Enable device wake up when BBPS switches from
+		battery backup power to main power. */
 	bool wake_enabled;
 	/** Battery backup power switch configuration. */
 	enum system_battery_power_switch battery_power_switch;
@@ -703,9 +703,9 @@ static inline void system_set_sleepmode(
  * \brief Put the system to sleep waiting for interrupt.
  *
  * Executes a device DSB (Data Synchronization Barrier) instruction to ensure
- * all ongoing memory accesses have completed, then a WFI (Wait For Interrupt)
- * instruction to place the device into the sleep mode specified by
- * \ref system_set_sleepmode until woken by an interrupt.
+ * all ongoing memory accesses have completed. Further, a WFI (Wait For Interrupt)
+ * instruction is executed to place the device into the sleep mode specified by
+ * \ref system_set_sleepmode.
  */
 static inline void system_sleep(void)
 {
@@ -725,13 +725,12 @@ static inline void system_sleep(void)
 /**
  * \brief Switch performance level.
  *
- *  When scaling down the performance level, the bus frequency should be first
- *  decreased in order to not exceed the maximum frequency allowed for the
- *  low performance level.
+ *  The bus frequency must be reduced prior to scaling down the performance level,
+ *  in order to not exceed the maximum frequency allowed for the performance level.
  *
  *  When scaling up the performance level (for example from PL0 to PL2), the bus
- *  frequency can be increased only when the performance level transition is
- *  completed. Check the performance level status before increasing.
+ *  frequency can be increased first when the performance level transition is
+ *  completed. Check the performance level status before increasing the frequency.
  *
  * \param[in] performance_level  Performance level to switch
  *

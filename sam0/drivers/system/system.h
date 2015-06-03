@@ -156,19 +156,19 @@ extern "C" {
  *   - Backup reset: Resets caused by a backup mode exit condition.
  *
  * \subsection asfdoc_sam0_system_module_overview_performance_level Performance Level
- * Performance level allows user to adjust the regulator output voltage to reduce
- * power consumption. The user can select on the fly the performance level
- * configuration which best suits his application.
+ * Performance level allows the user to adjust the regulator output voltage to reduce
+ * power consumption. The user can on the fly select the most suitable performance
+ * level, depending on the application demands.
  *
- * The SAM device embeds up to two performance levels (PL0 and PL2).
- * Each performance level defines a maximum frequency which correspond to the
- * consumption in µA/MHz. When the application selects a new performance level,
- * the voltage applied on the full logic area moves from a value to another,
- * it can reduce the active consumption by decreasing the maximum frequency
- * of the device.
+ * The SAM device can operate at two different performance levels (PL0 and PL2).
+ * When operating at PL0, the voltage applied on the full logic area is reduced
+ * by voltage scaling. This voltage scaling technique allows to reduce the active
+ * power consumption while decreasing the maximum frequency of the device. When
+ * operating at PL2, the voltage regulator supplies the highest voltage, allowing
+ * the device to run at higher clock speeds.
  *
  * Performance level transition is possible only when the device is in active
- * mode. After a reset, the device starts in the lowest performance level
+ * mode. After a reset, the device starts at the lowest performance level
  * (lowest power consumption and lowest max. frequency). The application can then
  * switch to another performance level at any time without any stop in the code
  * execution. As shown in \ref asfdoc_sam0_system_performance_level_transition_figure.
@@ -176,40 +176,42 @@ extern "C" {
  * \note When scaling down the performance level, the bus frequency should be first
  *  scaled down in order to not exceed the maximum frequency allowed for the
  *  low performance level.
- *  When scaling up the performance level (for example from PL0 to PL2), the bus
+ *  When scaling up the performance level (e.g. from PL0 to PL2), the bus
  *  frequency can be increased only when the performance level transition is
  *  completed. Check the performance level status before increasing.
  *
  * \anchor asfdoc_sam0_system_performance_level_transition_figure
- * \image html performance_level_transition.svg "The Performance Level Transition"
+ * \image html performance_level_transition.svg "Performance Level Transition"
  *
  * \subsection asfdoc_sam0_system_module_overview_power_domain Power Domain Gating
- * Power domain gating can turn on or off power domain voltage to save power
- * while keeping other domains powered up. It can be used in standby sleep mode.
- * When power-gated in standby sleep mode, the internal state of the logic can be
- * retained allowing the application context to be kept.
+ * Power domain gating allows power saving by reducing the voltage in logic
+ * areas in the device to a low-power supply. The feature is available in
+ * Standby sleep mode and will reduce the voltage in domains where all peripherals
+ * are idle. Internal logic will maintain its content, meaning the corresponding
+ * peripherals will not need to be reconfigured when normal operating voltage
+ * is returned. Most power domains can be in the following three states:
  *
- * Power domain can be in three states:
  * - Active state: The power domain is powered on.
  * - Retention state: The main voltage supply for the power domain is switched off, 
  * while maintaining a secondary low-power supply for the sequential cells. The 
  * logic context is restored when waking up.
  * - Off state: The power domain is entirely powered off. The logic context is lost.
  *
- * The SAM L21 device has three power domains: PD0, PD1, and PD2. 
- * - Default: The power domains are automatically set to retention state in standby 
- * sleep mode if no activity require it. The application can force all power
- * domains to remain in active state during standby sleep mode in order to accelerate
- * wakeup time.
- * - Static Power_SleepWalking: When entering standby mode and if a peripheral needs to 
- * remain in run mode to perform sleepwalking task, its power domain (PDn) remains in
- * active state as well as the inferior power domains (<PDn).
- * - Dynamic Power_SleepWalking: During standby mode, a power domain (PDn) in active
- * state (using the static Power_SleepWalking principle), can wake up a superior power
- * domain (>PDn) in order to perform a sleepwalking task. The superior power domain is 
- * then automatically set to active state. At the end of the sleepwalking task, either 
- * the device can be woken up or the superior power domain can be set again to retention
- * state.
+ * The SAM L21 device  contains three power domains which can be controlled using
+ * power domain gating, namely PD0, PD1, and PD2. These power domains can be
+ * configured to the following cases:
+ * - Default with no sleepwalking peripherals: A power domain is automatically set
+ * to retention state in standby sleep mode if no activity require it. The application
+ * can force all power domains to remain in active state during standby sleep mode
+ * in order to accelerate wakeup time.
+ * - Default with sleepwalking peripherals: If one or more peripherals are enabled
+ * to perform sleepwalking tasks in standby sleep mode, the corresponding power
+ * domain (PDn) remains in active state as well as all inferior power domains (<PDn).
+ * - Sleepwalking with dynamic power domain gating: During standby sleep mode, a
+ * power domain (PDn) in active can wake up a superior power domain (>PDn) in order
+ * to perform a sleepwalking task. The superior power domain is then automatically
+ * set to active state. At the end of the sleepwalking task, the device can either
+ * be woken up or the superior power domain can return to retention state.
  *
  * Power domains can be linked to each other, it allows a power domain (PDn) to be kept
  * in active state if the inferior power domain (PDn-1) is in active state too.
@@ -222,7 +224,6 @@ extern "C" {
  *  <caption>Sleep Mode versus Power Domain State Overview</caption>
  *  <tr>
  *      <th>Sleep mode</th>
- *      <th></th>
  *      <th>PD0</th>
  *      <th>PD1</th>
  *      <th>PD2</th>
@@ -230,8 +231,7 @@ extern "C" {
  *      <th>PDBACKUP</th>
  *  </tr>
  *  <tr>
- *      <td>IDLE</td>
- *      <td></td>
+ *      <td>Idle</td>
  *      <td>active</td>
  *      <td>active</td>
  *      <td>active</td>
@@ -239,8 +239,7 @@ extern "C" {
  *      <td>active</td>
  *  </tr>
  *  <tr>
- *      <td>Standby</td>
- *      <td>Case 1</td>
+ *      <td>Standby - Case 1</td>
  *      <td>active</td>
  *      <td>active</td>
  *      <td>active</td>
@@ -248,8 +247,7 @@ extern "C" {
  *      <td>active</td>
  *  </tr>
  *  <tr>
- *      <td>Standby</td>
- *      <td>Case 2</td>
+ *      <td>Standby - Case 2</td>
  *      <td>active</td>
  *      <td>active</td>
  *      <td>retention</td>
@@ -257,8 +255,7 @@ extern "C" {
  *      <td>active</td>
  *  </tr>
  *  <tr>
- *      <td>Standby</td>
- *      <td>Case 3</td>
+ *      <td>Standby - Case 3</td>
  *      <td>active</td>
  *      <td>retention</td>
  *      <td>retention</td>
@@ -266,8 +263,7 @@ extern "C" {
  *      <td>active</td>
  *  </tr>
  *  <tr>
- *      <td>Standby</td>
- *      <td>Case 4</td>
+ *      <td>Standby - Case 4</td>
  *      <td>retention</td>
  *      <td>retention</td>
  *      <td>retention</td>
@@ -276,21 +272,19 @@ extern "C" {
  *  </tr>
  *  <tr>
  *      <td>Backup</td>
- *      <td></td>
- *      <td>OFF</td>
- *      <td>OFF</td>
- *      <td>OFF</td>
- *      <td>OFF</td>
+ *      <td>off</td>
+ *      <td>off</td>
+ *      <td>off</td>
+ *      <td>off</td>
  *      <td>active</td>
  *  </tr>
  *  <tr>
  *      <td>Off</td>
- *      <td></td>
- *      <td>OFF</td>
- *      <td>OFF</td>
- *      <td>OFF</td>
- *      <td>OFF</td>
- *      <td>OFF</td>
+ *      <td>off</td>
+ *      <td>off</td>
+ *      <td>off</td>
+ *      <td>off</td>
+ *      <td>off</td>
  *  </tr>
  * </table>
  *
@@ -349,7 +343,7 @@ extern "C" {
  *      <th>RAM mode</th>
  *  </tr>
  *  <tr>
- *      <td>IDLE</td>
+ *      <td>Idle</td>
  *      <td>Run</td>
  *      <td>Stop</td>
  *      <td>Run if requested</td>
@@ -379,18 +373,18 @@ extern "C" {
  *      <td>Stop</td>
  *      <td>Stop</td>
  *      <td>Backup</td>
- *      <td>OFF</td>
+ *      <td>Off</td>
  *  </tr>
  *  <tr>
  *      <td>Off</td>
- *      <td>OFF</td>
- *      <td>OFF</td>
- *      <td>OFF</td>
- *      <td>OFF</td>
- *      <td>OFF</td>
- *      <td>OFF</td>
- *      <td>OFF</td>
- *      <td>OFF</td>
+ *      <td>Off</td>
+ *      <td>Off</td>
+ *      <td>Off</td>
+ *      <td>Off</td>
+ *      <td>Off</td>
+ *      <td>Off</td>
+ *      <td>Off</td>
+ *      <td>Off</td>
  *  </tr>
  * \else
  *  <tr>
@@ -405,7 +399,7 @@ extern "C" {
  *      <th>RAM mode</th>
  *  </tr>
  *  <tr>
- *      <td>IDLE 0</td>
+ *      <td>Idle 0</td>
  *      <td>Stop</td>
  *      <td>Run</td>
  *      <td>Run</td>
@@ -416,7 +410,7 @@ extern "C" {
  *      <td>Normal</td>
  *  </tr>
  *  <tr>
- *      <td>IDLE 1</td>
+ *      <td>Idle 1</td>
  *      <td>Stop</td>
  *      <td>Stop</td>
  *      <td>Run</td>
@@ -427,7 +421,7 @@ extern "C" {
  *      <td>Normal</td>
  *  </tr>
  *  <tr>
- *      <td>IDLE 2</td>
+ *      <td>Idle 2</td>
  *      <td>Stop</td>
  *      <td>Stop</td>
  *      <td>Stop</td>
@@ -438,7 +432,7 @@ extern "C" {
  *      <td>Normal</td>
  *  </tr>
  *  <tr>
- *      <td>STANDBY</td>
+ *      <td>Standby</td>
  *      <td>Stop</td>
  *      <td>Stop</td>
  *      <td>Stop</td>
@@ -451,9 +445,9 @@ extern "C" {
  * \endif
  * </table>
  *
- * Before enter device sleep, one of the available sleep modes must be set.
+ * Before entering device sleep, one of the available sleep modes must be set.
  * The device will automatically wake up in response to an interrupt being
- * generated or any other device event.
+ * generated or upon any other sleep mode exit condition.
  *
  * Some peripheral clocks will remain enabled during sleep, depending on their
  * configuration. If desired, the modules can remain clocked during sleep to allow
@@ -560,7 +554,7 @@ void system_init(void);
  * This is a list of the available Quick Start Guides (QSGs) and example
  * applications. QSGs are simple examples with step-by-step instructions to 
  * configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  * \if DEVICE_SAML21_SUPPORT
@@ -654,35 +648,35 @@ void system_init(void);
  *  </tr>
  * \if DEVICE_SAML21_SUPPORT
  *  <tr>
- *      <td>A</td>
- *      <td>04/2015</td>
- *      <td>Initial release.</td>
+ *      <td>42449A</td>
+ *      <td>06/2015</td>
+ *      <td>Initial document release</td>
  * </tr>
  * \else
  *  <tr>
- *      <td>E</td>
+ *      <td>42120E</td>
  *      <td>04/2015</td>
- *      <td>Added support for SAMDA0/DA1.</td>
+ *      <td>Added support for SAMDAx</td>
  * </tr>
  *  <tr>
- *      <td>D</td>
+ *      <td>42120D</td>
  *      <td>12/2014</td>
- *      <td>Added support for SAMR21 and SAMD10/D11.</td>
+ *      <td>Added support for SAMR21 and SAMD10/D11</td>
  * </tr>
  * <tr>
- *      <td>C</td>
+ *      <td>42120C</td>
  *      <td>01/2014</td>
- *      <td>Added support for SAMD21.</td>
+ *      <td>Added support for SAMD21</td>
  *  </tr>
  *  <tr>
- *      <td>B</td>
+ *      <td>42120B</td>
  *      <td>06/2013</td>
- *      <td>Corrected documentation typos.</td>
+ *      <td>Corrected documentation typos</td>
  *  </tr>
  *  <tr>
- *      <td>A</td>
+ *      <td>42120A</td>
  *      <td>06/2013</td>
- *      <td>Initial release</td>
+ *      <td>Initial document release</td>
  *  </tr>
  * \endif
  * </table>

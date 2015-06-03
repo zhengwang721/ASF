@@ -47,19 +47,20 @@
  *    - SAM L21 Xplained Pro
  *
  * This example demonstrates how to use the power driver. BUTTON0 is used to
- * wake up the system from the standby mode and as an external wakeup
- * pin to wake up the system from the BACKUP mode. The wakeup pin level is low.
+ * wake up the system from the standby sleep mode and as an external wakeup pin
+ * to wake up the system from the backup sleep mode. The wakeup pin level is low.
  * PB22/PB23 are used as GCLK0/GCLK1 output pins, the oscilloscope can be used to
  * monitor their clock frequencies.
  *
- * After POR, LED0 is ON and GCLK0/GCLK1 are running at 4MHz. After one second,
- * LED0 becomes OFF and the system enters standby mode. BUTTON0 can be used to
- * wake up the system. After the system wakeup, LED0 becomes ON and the performance
- * level switch to PL2, GCLK0 is running at 48MHz, and GCLK1 is running at 4MHz.
- * Then LED0 toggles two times and becomes OFF; the system enters the BACKUP mode.
+ * After power-on-reset (POR), GCLK0 and GCLK1 runs at 4MHz and LED0 is turned on.
+ * After one second, LED0 is turned off and the system enters standby sleep mode.
+ * BUTTON0 can then be used to wake up the system. After the system wakeup, LED0
+ * is turned on, the performance level is switched to PL2, and the GCLK0 is increased
+ * to 48MHz. Further LED0 toggles two times and is turned off before the system
+ * enters BACKUP.
  *
- * When PA04 is connected to low level, the system wakes up from the BACKUP mode
- * and LED0 toggles four times. GCLK0/GCLK1 are running at 4MHz.
+ * When BUTTON0 pushes, it connects to low level, system wakes up from the backup
+ * sleep mode, LED0 toggles four times. GCLK0/GCLK1 are running at 4MHz.
  *
  * \section asfdoc_sam0_power_basic_use_case_setup Quick Start
  *
@@ -90,7 +91,7 @@
  * \subsection asfdoc_sam0_power_basic_use_case_main_flow Workflow
  * -# Check if the RESET is caused by external wakeup pin.
  *    \snippet quick_start/qs_power.c ext_wakeup
- * -# Check STANDBY mode and BACKUP mode.
+ * -# Check the standby mode and the backup sleep mode.
  *    \snippet quick_start/qs_power.c backup_stanby_mode
  */
 /*

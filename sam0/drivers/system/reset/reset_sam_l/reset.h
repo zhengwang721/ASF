@@ -228,10 +228,10 @@ static inline void system_disable_pin_wakeup(const uint16_t pin_mask)
 }
 
 /**
- * \brief Check whether pin is active and causes the wakeup.
+ * \brief Check whether any of the enabled wake up pins are active and caused the wakeup.
  *
- * Check whether pin is active and causes the wakeup
- * when exiting backup mode.
+ * Check whether any of the enabled wake up pins are active and caused the wakeup
+ *  from backup sleep mode when exiting backup mode.
  *
  * \return Pin mask, the corresponding pin is active when its pin mask is 1.
  */
