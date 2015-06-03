@@ -103,6 +103,7 @@
 
 		<build type="header-file" value="quick_start/qs_bod_basic_use_samc.h"/>
 
+		<device-support value="samc20"/>
 		<device-support value="samc21"/>
 
 		<require idref="sam0.utils"/>
@@ -161,6 +162,7 @@
 			<build type="header-file" value="bod_sam_c/bod_feature.h"/>
 			<build type="doxygen-entry-point" value="asfdoc_sam0_bod_group"/>
 
+			<device-support value="samc20"/>
 			<device-support value="samc21"/>
 		</module>
 	</select-by-device>

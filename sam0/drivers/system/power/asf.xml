@@ -40,9 +40,9 @@
 
 			<device-support value="saml21"/>
 		</module>
-		<module type="driver" id="sam0.drivers.system.power#sam_c" caption="SYSTEM - Power Management for SAM C21">
+		<module type="driver" id="sam0.drivers.system.power#sam_c" caption="SYSTEM - Power Management for SAM C20/C21">
 			<info type="description" value="summary">
-				Driver for the SAM C21 power management units. Provides a unified
+				Driver for the SAM C20/C21 power management units. Provides a unified
 				interface for power configuration and management in the device.
 			</info>
 			<info type="keyword" value="technology">
@@ -56,6 +56,7 @@
 			<require idref="thirdparty.cmsis"/>
 			<require idref="sam0.utils"/>
 
+			<device-support value="samc20"/>
 			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
