@@ -52,6 +52,7 @@ struct tsens_module *_tsens_instances;
 void TSENS_Handler(void)
 {
 	struct tsens_module *module = _tsens_instances;
+	Assert(module);
 
 	/* get interrupt flags and mask out enabled callbacks */
 	uint32_t flags = TSENS->INTFLAG.reg;

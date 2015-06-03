@@ -87,20 +87,16 @@ static enum status_code _tsens_set_config(struct tsens_config *const config)
 
 #if ERRATA_14476
 	/* Configure lower threshold */
-	TSENS->WINLT.reg = \
-			config->window.window_upper_value << TSENS_WINLT_WINLT_Pos;
+	TSENS->WINLT.reg = TSENS_WINLT_WINLT(config->window.window_upper_value);
 
 	/* Configure upper threshold */
-	TSENS->WINUT.reg = \
-			config->window.window_lower_value << TSENS_WINUT_WINUT_Pos;
+	TSENS->WINUT.reg = TSENS_WINLT_WINLT(config->window.window_lower_value);
 #else
 	/* Configure lower threshold */
-	TSENS->WINLT.reg = \
-			config->window.window_lower_value << TSENS_WINLT_WINLT_Pos;
+	TSENS->WINLT.reg = TSENS_WINLT_WINLT(config->window.window_lower_value);
 
 	/* Configure upper threshold */
-	TSENS->WINUT.reg = \
-			config->window.window_upper_value << TSENS_WINUT_WINUT_Pos;
+	TSENS->WINUT.reg = TSENS_WINLT_WINLT(config->window.window_upper_value);
 #endif
 
 	/* Configure events */
