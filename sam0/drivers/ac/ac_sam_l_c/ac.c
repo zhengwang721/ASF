@@ -66,10 +66,11 @@ static enum status_code _ac_set_config(
  	 * functional. Errata reference: 13404 
  	 */
 	system_gclk_chan_set_config(ADC1_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(ADC1_GCLK_ID);
 #else
 	system_gclk_chan_set_config(AC_GCLK_ID, &gclk_chan_conf);
-#endif
 	system_gclk_chan_enable(AC_GCLK_ID);
+#endif
 
 	return STATUS_OK;
 }
