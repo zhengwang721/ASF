@@ -52,7 +52,7 @@
 * \internal
 * \brief slcd callback function pointer
 */
-slcd_callback_t slcd_callback_pointer[SLCD_CALLBACK_TYPE_NUM]={NULL};
+slcd_callback_t slcd_callback_pointer[SLCD_CALLBACK_TYPE_NUM];
 
 
 /**

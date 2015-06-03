@@ -117,9 +117,7 @@
  */
 void slcd_get_config_defaults(struct slcd_config *config)
 {
-	if (!config) {
-		return ;
-	}
+	Assert(config);
 
 	config->run_in_standby = false;
 	config->waveform_mode = SLCD_LOW_POWER_WAVEFORM_MODE;
@@ -146,12 +144,12 @@ enum status_code slcd_init(struct slcd_config *const config)
 	if (!config) {
 		return STATUS_ERR_INVALID_ARG;
 	}
-	slcd_disable();
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_SLCD);
 
 	/* Select SLCD clock */
 	OSC32KCTRL->SLCDCTRL.reg = CONF_SLCD_CLOCK_SOURCE & OSC32KCTRL_SLCDCTRL_MASK;
 
+	slcd_disable();
 	slcd_reset();
 
 	SLCD->CTRLA.reg = SLCD_CTRLA_DUTY(CONF_SLCD_DUTY) | SLCD_CTRLA_BIAS(CONF_SLCD_BIAS)
@@ -277,9 +275,8 @@ enum status_code slcd_set_contrast(uint8_t contrast)
  */
 void slcd_blink_get_config_defaults(struct slcd_blink_config *blink_config)
 {
-	if (!blink_config) {
-		return ;
-	}
+	Assert(blink_config);
+
 	blink_config->fc = SLCD_FRAME_COUNTER_0;
 	blink_config->blink_all_seg = true;
 	blink_config->blink_seg0_mask = 0;
@@ -494,9 +491,8 @@ void slcd_set_seg_data(uint8_t seg_data,uint8_t byte_offset,uint8_t seg_mask)
 void slcd_automated_char_get_config_default(
 		struct slcd_automated_char_config *config)
 {
-	if (!config) {
-		return ;
-	}
+	Assert(config);
+
 	config->order = SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_LEFT;
 	config->fc = SLCD_FRAME_COUNTER_0;
 	config->mode = SLCD_AUTOMATED_CHAR_SEQ;
@@ -594,9 +590,8 @@ void slcd_character_write_data(uint8_t com_line_index,
 void slcd_circular_shift_get_config_defaults(
 		struct slcd_circular_shift_config *const config)
 {
-	if (!config) {
-		return ;
-	}
+	Assert(config);
+
 	config->fc = SLCD_FRAME_COUNTER_0;
 	config->dir = SLCD_CIRCULAR_SHIFT_LEFT;
 	config->size = 0;

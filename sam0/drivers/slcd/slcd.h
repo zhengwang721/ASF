@@ -229,9 +229,9 @@ struct slcd_blink_config {
  * Enum SLCD circular shift direction.
  */
 enum slcd_circular_shift_dir {
-	/** Sircular shift direction is left. */
+	/** Circular shift direction is left. */
 	SLCD_CIRCULAR_SHIFT_LEFT = 0,
-	/** Sircular shift direction is right. */
+	/** Circular shift direction is right. */
 	SLCD_CIRCULAR_SHIFT_RIGHT,
 };
 
@@ -290,7 +290,7 @@ struct slcd_automated_char_config {
 	/** Define the number of steps in scrolling mode.
 		scrolling_step = character string length - digit_num + 1*/
 	uint8_t scrolling_step;
-		/** Define the number of COM line per row,
+	/** Define the number of COM line per row,
 		it equal to number of COM line - 1.*/
 	uint8_t com_line_num;
 	/** Segments data mask*/
@@ -320,7 +320,7 @@ enum status_code slcd_set_contrast(uint8_t contrast);
  * that it is ready, to prevent blocking delays for synchronization in the
  * user application.
  *
- * \return Synchronization status of the underlying hardware module(s).
+ * \return Synchronization status of the underlying hardware module.
  *
  * \retval true  if the module synchronization is ongoing
  * \retval false if the module has completed synchronization
@@ -633,7 +633,7 @@ static inline void slcd_disable_frame_counter(enum slcd_frame_counter fc)
 void slcd_set_pixel(uint8_t pix_com, uint8_t pix_seg);
 void slcd_clear_pixel(uint8_t pix_com, uint8_t pix_seg);
 
-void slcd_set_seg_data(uint8_t seg_data,uint8_t byte_offset,uint8_t seg_mask);
+void slcd_set_seg_data(uint8_t seg_data, uint8_t byte_offset, uint8_t seg_mask);
 /** @} */
 
 /**

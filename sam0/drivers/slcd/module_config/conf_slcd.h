@@ -101,7 +101,7 @@
 * FrameRate = 32768/(16*(7+1)*8) = 32Hz
 */
 #define CONF_SLCD_PVAL         0
-#define CONF_SLCD_CKDIV         7
+#define CONF_SLCD_CKDIV        7
 
 /** Internal/External VLCD selection.
 * 0 : Internal VLCD generation
