@@ -118,6 +118,23 @@ void pmc_mck_set_prescaler(uint32_t ul_pres)
  */
 void pmc_mck_set_division(uint32_t ul_div)
 {
+	switch (ul_div) {
+		case 1:
+			ul_div = PMC_MCKR_MDIV_EQ_PCK;
+			break;
+		case 2:
+			ul_div = PMC_MCKR_MDIV_PCK_DIV2;
+			break;
+		case 3:
+			ul_div = PMC_MCKR_MDIV_PCK_DIV3;
+			break;
+		case 4:
+			ul_div = PMC_MCKR_MDIV_PCK_DIV4;
+			break;
+		default:
+			ul_div = PMC_MCKR_MDIV_EQ_PCK;
+			break;
+	}
 	PMC->PMC_MCKR =
 			(PMC->PMC_MCKR & (~PMC_MCKR_MDIV_Msk)) | ul_div;
 	while (!(PMC->PMC_SR & PMC_SR_MCKRDY));

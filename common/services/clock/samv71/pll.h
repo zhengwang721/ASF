@@ -69,7 +69,7 @@ extern "C" {
 #define PLL_INPUT_MAX_HZ        32000000
 
 #define NR_PLLS             2
-#define PLLA_ID              0
+#define PLLA_ID             0
 #define UPLL_ID             1   //!< USB UTMI PLL.
 
 #define PLL_UPLL_HZ     480000000

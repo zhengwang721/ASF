@@ -242,16 +242,16 @@ extern "C" {
 
 //! \name Master Clock Sources (MCK)
 //@{
-#define SYSCLK_SRC_SLCK_RC         0 //!< Internal 32kHz RC oscillator as master source clock
-#define SYSCLK_SRC_SLCK_XTAL       1 //!< External 32kHz crystal oscillator as master source clock
-#define SYSCLK_SRC_SLCK_BYPASS     2 //!< External 32kHz bypass oscillator as master source clock
+#define SYSCLK_SRC_SLCK_RC                0 //!< Internal 32kHz RC oscillator as master source clock
+#define SYSCLK_SRC_SLCK_XTAL            1 //!< External 32kHz crystal oscillator as master source clock
+#define SYSCLK_SRC_SLCK_BYPASS       2 //!< External 32kHz bypass oscillator as master source clock
 #define SYSCLK_SRC_MAINCK_4M_RC    3 //!< Internal 4MHz RC oscillator as master source clock
 #define SYSCLK_SRC_MAINCK_8M_RC    4 //!< Internal 8MHz RC oscillator as master source clock
-#define SYSCLK_SRC_MAINCK_12M_RC   5 //!< Internal 12MHz RC oscillator as master source clock
-#define SYSCLK_SRC_MAINCK_XTAL     6 //!< External crystal oscillator as master source clock
+#define SYSCLK_SRC_MAINCK_12M_RC  5 //!< Internal 12MHz RC oscillator as master source clock
+#define SYSCLK_SRC_MAINCK_XTAL       6 //!< External crystal oscillator as master source clock
 #define SYSCLK_SRC_MAINCK_BYPASS   7 //!< External bypass oscillator as master source clock
-#define SYSCLK_SRC_PLLACK          8 //!< Use PLLACK as master source clock
-#define SYSCLK_SRC_UPLLCK               9       //!< Use UPLLCK as master source clock
+#define SYSCLK_SRC_PLLACK                  8 //!< Use PLLACK as master source clock
+#define SYSCLK_SRC_UPLLCK                  9       //!< Use UPLLCK as master source clock
 //@}
 
 //! \name Master Clock Prescalers (MCK)
@@ -404,8 +404,7 @@ static inline uint32_t sysclk_get_peripheral_hz(void)
 	/* CONFIG_SYSCLK_PRES is the register value for setting the expected */
 	/* prescaler, not an immediate value. */
 	return sysclk_get_main_hz() /
-		(((CONFIG_SYSCLK_PRES == SYSCLK_PRES_3) ? 3 : (1 << (CONFIG_SYSCLK_PRES >> PMC_MCKR_PRES_Pos))) *
-		((CONFIG_SYSCLK_DIV == SYSCLK_DIV_3) ? 3 : (1 << (CONFIG_SYSCLK_DIV >> PMC_MCKR_MDIV_Pos))));
+		(((CONFIG_SYSCLK_PRES == SYSCLK_PRES_3) ? 3 : (1 << (CONFIG_SYSCLK_PRES >> PMC_MCKR_PRES_Pos))) * CONFIG_SYSCLK_DIV);
 }
 
 /**
