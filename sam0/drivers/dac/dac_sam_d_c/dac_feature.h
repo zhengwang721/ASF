@@ -59,7 +59,7 @@
  * \endif
  *
  * The following peripherals are used by this module:
- *  - DAC (Digital to Analog Converter)
+ *  - DAC (Digital-to-Analog Converter)
  *
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
@@ -550,15 +550,15 @@ void dac_chan_disable_output_buffer(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Add configuration for using 14-bit hardware dithering (SAMC21 support)</td>
+ *	</tr>
+ *	<tr>
  *		<td>Added new configuration parameters \c databuf_protection_bypass,
  *		\c voltage_pump_disable. Added new callback functions
  *		\c dac_chan_write_buffer_wait,
  *		\c dac_chan_write_buffer_job, \c dac_chan_write_job,
  *		\c dac_get_job_status, \c dac_abort_job and new callback type
  *		\c DAC_CALLBACK_TRANSFER_COMPLETE for DAC conversion job</td>
- *	</tr>
- *	<tr>
- *		<td>Add SAMC21 support</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
@@ -572,7 +572,7 @@ void dac_chan_disable_output_buffer(
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_dac_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_dac_basic_use_case
@@ -580,14 +580,14 @@ void dac_chan_disable_output_buffer(
  *  - \subpage asfdoc_sam0_dac_basic_use_case_callback
  * \endif
  * \if DAC_DMA_USE_MODE_SELECTION
- *	- \subpage asfdoc_sam0_adc_dma_use_case_dac_in_dma
- *	\else
+ *  - \subpage asfdoc_sam0_adc_dma_use_case_dac_in_dma
+ * \else
  *  - \subpage asfdoc_sam0_adc_dma_use_case
  * \endif
  *
  * \if DAC_DMA_USE_MODE_SELECTION
  * \page asfdoc_sam0_adc_dma_use_case_dac_in_dma Quick Start Guide for Using DMA with ADC/DAC
- * For	this examples, see
+ * For this examples, see
  * \ref asfdoc_sam0_adc_dma_use_case
  * \endif
  *
@@ -600,30 +600,30 @@ void dac_chan_disable_output_buffer(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>E</td>
- *		<td>04/2015</td>
- *		<td>Add SAMDAx support.</td>
+ *		<td>42110E</td>
+ *		<td>06/2015</td>
+ *		<td>Add SAMC21 and SAMDAx support</td>
  *	</tr>
  *	<tr>
- *		<td>D</td>
+ *		<td>42110D</td>
  *		<td>12/2014</td>
- *		<td>Add SAMD10/D11 support.</td>
+ *		<td>Add SAMD10/D11 support</td>
  *	</tr>
  *	<tr>
- *		<td>C</td>
+ *		<td>42110C</td>
  *		<td>01/2014</td>
- *		<td>Add SAMD21 support.</td>
+ *		<td>Add SAMD21 support</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
+ *		<td>42110B</td>
  *		<td>06/2013</td>
  *		<td>Added additional documentation on the event system. Corrected
  *          documentation typos.</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42110A</td>
  *		<td>06/2013</td>
- *		<td>Initial release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
