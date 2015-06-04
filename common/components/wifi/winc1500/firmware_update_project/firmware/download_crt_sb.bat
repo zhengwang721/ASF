@@ -2,7 +2,7 @@
 
 set TOOL=%1
 set MCU=%2
-set IMAGE_FILE=%3
+set IMAGE_FILE=%CD%\%3
 set MCU_ALIAS=%4
 set varPath=%PROGRAMFILES%
 :CheckOS
@@ -11,7 +11,30 @@ IF EXIST "%PROGRAMFILES(X86)%" (GOTO 64BIT) ELSE (GOTO RUN)
 set varPath=%PROGRAMFILES(X86)%
 :RUN
 echo %MCU_ALIAS% flashing script: please connect %TOOL% and power up the board.
-"%varPath%\Atmel\Atmel Studio 6.2\atbackend\atprogram.exe" -t %TOOL% -i SWD -d %MCU% chiperase
+
+:: Test path length.
+if NOT "%IMAGE_FILE:~240,1%"=="" (
+	echo.
+	echo [ERROR] File path is too long. Please move firmware update tool at the root of your hard drive and try again.
+	echo.
+	pause
+	exit
+)
+
+:: Try to locate atprogram tool from Atmel Studio.
+set atprogPath=
+IF EXIST "%varPath%\Atmel\Atmel Studio 6.2\atbackend\atprogram.exe" (
+	set "atprogPath=%varPath%\Atmel\Atmel Studio 6.2\atbackend\atprogram.exe"
+) ELSE (
+	echo.
+	echo [ERROR] Cannot open atprogram tool at default location:
+	echo "%varPath%\Atmel\Atmel Studio 6.2\atbackend\atprogram.exe"
+	echo.
+	set /p atprogPath=Please provide full path to atprogram.exe to continue: 
+)
+
+:: Perform chip erase.
+"%atprogPath%" -t %TOOL% -i SWD -d %MCU% chiperase
 IF %ERRORLEVEL% NEQ 0 ( echo Fail
 echo     #######################################################################
 echo     ##                                                                   ##
@@ -27,7 +50,9 @@ echo     #######################################################################
 pause
 exit
 )
-"%varPath%\Atmel\Atmel Studio 6.2\atbackend\atprogram.exe" -t %TOOL% -i SWD -d %MCU% program -f %IMAGE_FILE%
+
+:: Program serial bridge.
+"%atprogPath%" -t %TOOL% -i SWD -d %MCU% program -f %IMAGE_FILE%
 IF %ERRORLEVEL% NEQ 0 ( echo Fail
 echo     #######################################################################
 echo     ##                                                                   ##

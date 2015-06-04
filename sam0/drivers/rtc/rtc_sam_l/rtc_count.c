@@ -489,7 +489,7 @@ enum status_code rtc_count_set_compare(
  *
  * \param[in,out] module  Pointer to the software instance struct
  * \param[out] comp_value  Pointer to 32-bit integer that will be populated with
- *                         the current compare value.
+ *                         the current compare value
  * \param[in]  comp_index  Index of compare to check
  *
  * \return Status of the reading procedure.

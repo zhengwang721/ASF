@@ -599,7 +599,7 @@ bool dac_chan_is_end_of_conversion(
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>12/2014</td>
+ *		<td>04/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

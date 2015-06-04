@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_ccl_group SAM Configurable Custom Logic (CCL) Driver
  *
- * This driver for Atmel | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Configurable Custom Logic functionality.
  *
  * The following peripherals are used by this module:
@@ -87,7 +87,7 @@
  *
  * The output can be combinatorially generated from the inputs, or filtered to remove spike.
  * An optional sequential module can be enabled. The inputs of sequential module are 
- * individually controlled by two independent, adjacent LUT(LUT0/LUT1, LUT2/LUT3 etc) outputs,
+ * individually controlled by two independent, adjacent LUT(LUT0/LUT1, LUT2/LUT3 etc.) outputs,
  * enabling complex waveform generation.
  *
  * \section asfdoc_sam0_ccl_special_considerations Special Considerations
@@ -194,7 +194,7 @@ enum ccl_lut_input_src_sel {
 /**
  * \brief Select the LUT output filter options enum.
  *
- * Enum for the the LUT output filter options.
+ * Enum for the LUT output filter options.
  */
 enum ccl_lut_filter_sel {
 	/** Filter disabled. */
@@ -231,9 +231,11 @@ struct ccl_lut_config {
 	bool event_input_enable;
 	/** If \c true, incoming event is inverted. */
 	bool event_input_inverted_enable;
-	/** Selection of the input IN[2:0] source. */
+	/** Selection of the input0 source. */
 	enum ccl_lut_input_src_sel input0_src_sel;
+	/** Selection of the input1 source. */
 	enum ccl_lut_input_src_sel input1_src_sel;
+	/** Selection of the input2 source. */
 	enum ccl_lut_input_src_sel input2_src_sel;
 	/** If \c true, Edge detector is enabled. */
 	bool edge_selection_enable;
@@ -264,7 +266,8 @@ void ccl_init(struct ccl_config *const config);
  *  by the user application.
  *
  *  The default configuration is as follows:
- *   \li Configurable Custom Logic will not be stopped in standby sleep mode
+ *   \li GCLK_CLL will be stopped in standby sleep mode
+ *   \li Generator 0 is the default GCLK generator
  *
  *  \param[out] config  Configuration structure to initialize to default values
  */
@@ -302,8 +305,7 @@ static inline void ccl_module_reset(void)
 /**
  * \brief Enables CCL module.
  *
- * Enable the peripheral. Each CCL must also be enabled individually
- * by the Enable bit in the corresponding CCL Control register.
+ * Enable the peripheral.
  *
  */
 static inline void ccl_module_enable(void)
@@ -326,35 +328,6 @@ static inline void ccl_module_disable(void)
 /** @} */
 
 /**
- * \name Enable and Disable CCL Module
- * @{
- */
- 
-/**
- * \brief Enables GCLK_CCL run in standby mode.
- *
- * Generic clock is required in standby sleep mode.
- *
- */
-static inline void ccl_gclk_runstdby_enable(void)
-{
-	/* Enable run in standy mode. */
-	CCL->CTRL.reg |= CCL_CTRL_RUNSTDBY;
-}
-
-/**
- * \brief Disables GCLK_CCL run in standby mode.
- *
- * Generic clock is not required in standby sleep mode.
- */
-static inline void ccl_gclk_runstdby_disable(void)
-{
-	/* Disable run in standy mode. */
-	CCL->CTRL.reg &= ~ CCL_CTRL_RUNSTDBY;
-}
-/** @} */
-
-/**
  * \name Configure LUT
  * @{
  */
@@ -364,10 +337,12 @@ static inline void ccl_gclk_runstdby_disable(void)
  *
  *  Writes a given sequential selection configuration to the hardware module.
  *
+ *  \note This function can only be used when the CCL module is disabled.
+ *
  *  \param[in] seq_selection       Enum for the sequential selection configuration
  *  \param[in] number     SEQ unit number to config
  */
-void ccl_seq_config(const enum ccl_seq_id number,
+enum status_code ccl_seq_config(const enum ccl_seq_id number,
 		const enum ccl_seq_selection seq_selection);
 
 /**
@@ -379,6 +354,15 @@ void ccl_seq_config(const enum ccl_seq_id number,
  *  instances of these configuration structures before being modified by the
  *  user application.
  *
+ *  The default configuration is as follows:
+ *   \li Truth table value is 0x00
+ *   \li LUT event output is disabled
+ *   \li LUT incoming event is disabled
+ *   \li LUT incoming event is not inverted
+ *   \li The input IN[2:0] source is masked
+ *   \li The edge detector is disabled
+ *   \li The LUT output filter is disabled
+ *
  *  \param[out] config  LUT configuration structure to initialize to
  *                       default values
  */
@@ -388,10 +372,12 @@ void ccl_lut_get_config_defaults(struct ccl_lut_config *const config);
  *
  *  Writes a given LUT configuration to the hardware  module.
  *
+ *  \note This function can only be used when the CCL module is disabled.
+ *
  *  \param[in] config       Pointer to the LUT configuration struct
  *  \param[in] number     LUT number to config
  */
-void ccl_lut_set_config(const enum ccl_lut_id number,
+enum status_code ccl_lut_set_config(const enum ccl_lut_id number,
 		struct ccl_lut_config *const config);
 /** @} */
 
@@ -404,7 +390,7 @@ void ccl_lut_set_config(const enum ccl_lut_id number,
  * \brief Enables an LUT that was previously configured.
  *
  *  Enables an LUT that was previously configured via a call to
- *  the set configuration function.
+ *  \ref ccl_lut_set_config function.
  *
  *  \param[in] number      LUT number to enable
  */
@@ -492,7 +478,7 @@ void ccl_lut_disable(const enum ccl_lut_id number);
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>09/2014</td>
+ *		<td>04/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

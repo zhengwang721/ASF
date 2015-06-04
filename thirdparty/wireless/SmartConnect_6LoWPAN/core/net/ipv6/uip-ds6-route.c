@@ -65,13 +65,13 @@ LIST(notificationlist);
 
 static int num_routes = 0;
 
-#undef DEBUG
-#define DEBUG DEBUG_NONE
+#undef _DEBUG_
+#define _DEBUG_ DEBUG_NONE
 #include "net/ip/uip-debug.h"
 
 static void rm_routelist_callback(nbr_table_item_t *ptr);
 /*---------------------------------------------------------------------------*/
-#if DEBUG != DEBUG_NONE
+#if _DEBUG_ != DEBUG_NONE
 static void
 assert_nbr_routes_list_sane(void)
 {
@@ -97,7 +97,7 @@ assert_nbr_routes_list_sane(void)
            num_routes, count, UIP_CONF_MAX_ROUTES);
   }
 }
-#endif /* DEBUG != DEBUG_NONE */
+#endif /* _DEBUG_ != DEBUG_NONE */
 /*---------------------------------------------------------------------------*/
 #if UIP_DS6_NOTIFICATIONS
 static void
@@ -248,9 +248,9 @@ uip_ds6_route_add(uip_ipaddr_t *ipaddr, uint8_t length,
   uip_ds6_route_t *r;
   struct uip_ds6_route_neighbor_route *nbrr;
 
-#if DEBUG != DEBUG_NONE
+#if _DEBUG_ != DEBUG_NONE
   assert_nbr_routes_list_sane();
-#endif /* DEBUG != DEBUG_NONE */
+#endif /* _DEBUG_ != DEBUG_NONE */
 
   /* Get link-layer address of next hop, make sure it is in neighbor table */
   const uip_lladdr_t *nexthop_lladdr = uip_ds6_nbr_lladdr_from_ipaddr(nexthop);
@@ -364,9 +364,9 @@ uip_ds6_route_add(uip_ipaddr_t *ipaddr, uint8_t length,
   call_route_callback(UIP_DS6_NOTIFICATION_ROUTE_ADD, ipaddr, nexthop);
 #endif
 
-#if DEBUG != DEBUG_NONE
+#if _DEBUG_ != DEBUG_NONE
   assert_nbr_routes_list_sane();
-#endif /* DEBUG != DEBUG_NONE */
+#endif /* _DEBUG_ != DEBUG_NONE */
   return r;
 }
 
@@ -375,9 +375,9 @@ void
 uip_ds6_route_rm(uip_ds6_route_t *route)
 {
   struct uip_ds6_route_neighbor_route *neighbor_route;
-#if DEBUG != DEBUG_NONE
+#if _DEBUG_ != DEBUG_NONE
   assert_nbr_routes_list_sane();
-#endif /* DEBUG != DEBUG_NONE */
+#endif /* _DEBUG_ != DEBUG_NONE */
   if(route != NULL && route->neighbor_routes != NULL) {
 
     PRINTF("uip_ds6_route_rm: removing route: ");
@@ -415,7 +415,7 @@ uip_ds6_route_rm(uip_ds6_route_t *route)
     call_route_callback(UIP_DS6_NOTIFICATION_ROUTE_RM,
         &route->ipaddr, uip_ds6_route_nexthop(route));
 #endif
-#if 0 //(DEBUG & DEBUG_ANNOTATE) == DEBUG_ANNOTATE
+#if 0 //(_DEBUG_ & DEBUG_ANNOTATE) == DEBUG_ANNOTATE
     /* we need to check if this was the last route towards "nexthop" */
     /* if so - remove that link (annotation) */
     uip_ds6_route_t *r;
@@ -436,18 +436,18 @@ uip_ds6_route_rm(uip_ds6_route_t *route)
 #endif
   }
 
-#if DEBUG != DEBUG_NONE
+#if _DEBUG_ != DEBUG_NONE
   assert_nbr_routes_list_sane();
-#endif /* DEBUG != DEBUG_NONE */
+#endif /* _DEBUG_ != DEBUG_NONE */
   return;
 }
 /*---------------------------------------------------------------------------*/
 static void
 rm_routelist(struct uip_ds6_route_neighbor_routes *routes)
 {
-#if DEBUG != DEBUG_NONE
+#if _DEBUG_ != DEBUG_NONE
   assert_nbr_routes_list_sane();
-#endif /* DEBUG != DEBUG_NONE */
+#endif /* _DEBUG_ != DEBUG_NONE */
   PRINTF("uip_ds6_route_rm_routelist\n");
   if(routes != NULL && routes->route_list != NULL) {
     struct uip_ds6_route_neighbor_route *r;
@@ -458,9 +458,9 @@ rm_routelist(struct uip_ds6_route_neighbor_routes *routes)
     }
     nbr_table_remove(nbr_routes, routes);
   }
-#if DEBUG != DEBUG_NONE
+#if _DEBUG_ != DEBUG_NONE
   assert_nbr_routes_list_sane();
-#endif /* DEBUG != DEBUG_NONE */
+#endif /* _DEBUG_ != DEBUG_NONE */
 }
 /*---------------------------------------------------------------------------*/
 static void
@@ -487,9 +487,9 @@ uip_ds6_defrt_add(uip_ipaddr_t *ipaddr, unsigned long interval)
 {
   uip_ds6_defrt_t *d;
 
-#if DEBUG != DEBUG_NONE
+#if _DEBUG_ != DEBUG_NONE
   assert_nbr_routes_list_sane();
-#endif /* DEBUG != DEBUG_NONE */
+#endif /* _DEBUG_ != DEBUG_NONE */
 
   PRINTF("uip_ds6_defrt_add\n");
   d = uip_ds6_defrt_lookup(ipaddr);
@@ -535,9 +535,9 @@ uip_ds6_defrt_add(uip_ipaddr_t *ipaddr, unsigned long interval)
   call_route_callback(UIP_DS6_NOTIFICATION_DEFRT_ADD, ipaddr, ipaddr);
 #endif
 
-#if DEBUG != DEBUG_NONE
+#if _DEBUG_ != DEBUG_NONE
   assert_nbr_routes_list_sane();
-#endif /* DEBUG != DEBUG_NONE */
+#endif /* _DEBUG_ != DEBUG_NONE */
 
   return d;
 }
@@ -547,9 +547,9 @@ uip_ds6_defrt_rm(uip_ds6_defrt_t *defrt)
 {
   uip_ds6_defrt_t *d;
 
-#if DEBUG != DEBUG_NONE
+#if _DEBUG_ != DEBUG_NONE
   assert_nbr_routes_list_sane();
-#endif /* DEBUG != DEBUG_NONE */
+#endif /* _DEBUG_ != DEBUG_NONE */
 
   /* Make sure that the defrt is in the list before we remove it. */
   for(d = list_head(defaultrouterlist);
@@ -567,9 +567,9 @@ uip_ds6_defrt_rm(uip_ds6_defrt_t *defrt)
       return;
     }
   }
-#if DEBUG != DEBUG_NONE
+#if _DEBUG_ != DEBUG_NONE
   assert_nbr_routes_list_sane();
-#endif /* DEBUG != DEBUG_NONE */
+#endif /* _DEBUG_ != DEBUG_NONE */
 
 }
 /*---------------------------------------------------------------------------*/

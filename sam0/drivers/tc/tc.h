@@ -69,6 +69,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_tc_prerequisites
@@ -158,7 +159,7 @@
  *
  * \note The connection of events between modules requires the use of the
  *       \ref asfdoc_sam0_events_group "SAM Event System Driver (EVENTS)"
- *       to route output event of one module to the the input event of another.
+ *       to route output event of one module to the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
  *
@@ -463,15 +464,15 @@
  * @{
 */
 #if (SAML21) || defined(__DOXYGEN__)
-/** TC double buffered */
+/** TC double buffered. */
 #  define FEATURE_TC_DOUBLE_BUFFERED
-/** SYNCBUSY scheme version 2 */
+/** SYNCBUSY scheme version 2. */
 #  define FEATURE_TC_SYNCBUSY_SCHEME_VERSION_2
-/** TC time stamp capture and pulse width capture */
+/** TC time stamp capture and pulse width capture. */
 #  define FEATURE_TC_STAMP_PW_CAPTURE
-/** Read synchronization of COUNT*/
+/** Read synchronization of COUNT. */
 #  define FEATURE_TC_READ_SYNC
-/** IO pin edge capture*/
+/** IO pin edge capture. */
 #  define FEATURE_TC_IO_CAPTURE
 #endif
 
@@ -485,7 +486,7 @@
 #if SAMD20 || SAML21
 #  define TC_INSTANCE_OFFSET 0
 #endif
-#if SAMD21 || SAMR21
+#if SAMD21 || SAMR21 || SAMDA1
 #  define TC_INSTANCE_OFFSET 3
 #endif
 #if SAMD10 || SAMD11
@@ -1680,15 +1681,6 @@ static inline void tc_clear_status(
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
- *  <tr>
- *    <td>Added support for SAML21</td>
- *  </tr>
- *  <tr>
- *    <td>Added support for SAMD10/D11</td>
- *  </tr>
- *  <tr>
- *    <td>Added support for SAMR21</td>
- *  </tr>
  *	<tr>
  *    <td>Added support for SAMD21 and do some modifications as below:
  *          \li Clean up in the configuration structure, the counter size
@@ -1716,6 +1708,7 @@ static inline void tc_clear_status(
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_tc_basic_use_case
+ *  - \subpage asfdoc_sam0_tc_macth_freq_use_case
  * \if TC_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_tc_timer_use_case
  *  - \subpage asfdoc_sam0_tc_callback_use_case
@@ -1732,8 +1725,8 @@ static inline void tc_clear_status(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Added support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAML21 and SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

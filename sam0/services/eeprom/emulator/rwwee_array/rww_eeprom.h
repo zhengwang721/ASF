@@ -60,6 +60,7 @@
  * The following devices can use this module:
  *  - Atmel | SMART SAM L21
  *  - Atmel | SMART SAM D21
+ *  - Atmel | SMART SAM DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rww_eeprom_prerequisites
@@ -76,7 +77,7 @@
  *
  * \section asfdoc_sam0_rww_eeprom_module_overview Module Overview
  *
- * SAM device embedds a separate read while write EEPROM emulation (RWWEE) array
+ * SAM device embeds a separate read while write EEPROM emulation (RWWEE) array
  * that can be programmed while the main array is not blocked.
  * To use RWWEE memory, data must be written as a number of physical memory pages
  * (of several bytes each) rather than being individually byte addressable, and
@@ -368,7 +369,7 @@ extern "C" {
 /**
  * \brief RWW EEPROM Logical Page in Each Row.
  *
- * Enum for the possible logical pages that are stored in each physical row .
+ * Enum for the possible logical pages that are stored in each physical row.
  *
  */
 enum rwwee_logical_page_num_in_row {
@@ -542,7 +543,7 @@ enum status_code rww_eeprom_emulator_read_buffer(
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>11/2014</td>
+ *		<td>04/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

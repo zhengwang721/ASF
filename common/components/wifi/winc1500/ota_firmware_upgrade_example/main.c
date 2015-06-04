@@ -54,7 +54,15 @@
  * - main.c : Initialize the WINC1500.
  *
  * \section usage Usage
- * -# Configure your http server with the new firmware binary to use during OTA.
+ * -# You need to setup an HTTP server accessible via your Wi-Fi network. This HTTP
+ * server must have the "m2m_ota.bin" OTA firmware accessible at this location:
+ * http://SERVER_IP_ADDRESS/winc1500_ota.bin
+ *
+ * Note: 
+ * - the OTA firmware file is included in this project under the firwmare
+ * folder.
+ * - the server IP address must be set via the MAIN_OTA_URL macro from main.h file.
+ *
  * -# Configure below code in the config main.h for AP to connect to.
  * \code
  *     #define MAIN_WLAN_SSID        "DEMO_AP"
@@ -62,10 +70,10 @@
  *     #define MAIN_WLAN_PSK         "12345678"
  *     #define MAIN_OTA_URL          "http://192.168.0.137/winc1500_ota.bin"
  * \endcode
- * -# Firmware binary file to use to run this example is included under the
- * firmware folder of the Atmel Studio 6 project.
+ *
  * -# Build the program and download it into the board.
  * -# On the computer, open and configure a terminal application as the follows.
+ *
  * \code
  *    Baud Rate : 115200
  *    Data : 8bit
@@ -99,7 +107,8 @@
  *    (3)NMI MIN DRV VERSION 17.0
  *    (3)Built at Sep 23 2014 13:09:07
  * \endcode
- * -# You can check the Firmware version and Build time.
+ *
+ * -# You can check the Firmware version and build time.
  *
  * \section compinfo Compilation Information
  * This software was written for the GNU GCC compiler using Atmel Studio 6.2
@@ -128,14 +137,14 @@
 static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
-		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+		.baudrate =		CONF_UART_BAUDRATE,
+		.charlength =	CONF_UART_CHAR_LENGTH,
+		.paritytype =	CONF_UART_PARITY,
+		.stopbits =		CONF_UART_STOP_BITS,
 	};
 
 	/* Configure UART console. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
-	pio_configure_pin_group(CONF_UART_PIO, CONF_PINS_UART,
-			CONF_PINS_UART_FLAGS);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 

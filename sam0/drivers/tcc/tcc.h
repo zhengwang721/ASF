@@ -71,6 +71,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_tcc_prerequisites
@@ -603,6 +604,26 @@
  *
  * \section asfdoc_sam0_tcc_special_considerations Special Considerations
  *
+ * \subsection asfdoc_sam0_tcc_special_considerations_specific_features Driver Feature Macro Definition
+ * \ref asfdoc_sam0_tcc_feature_table "The table below" shows some specific features
+ * of the TCC Module.
+ *
+ * \anchor asfdoc_sam0_tcc_feature_table
+ * <table>
+ *   <caption>TCC Module Specific Features</caption>
+ *  <tr>
+ *    <th>Driver Feature Macro</th>
+ *    <th>Supported devices</th>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_TCC_GENERATE_DMA_TRIGGER</td>
+ *    <td>SAML21</td>
+ *  </tr>
+ * </table>
+ *
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
+ *
  * \subsection asfdoc_sam0_tcc_special_considerations_tcc_feature Module Features
  *
  * The features of TCC, such as timer/counter size, number of compare capture
@@ -610,10 +631,10 @@
  * used.
  *
  * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM TCC Feature List
- * For SAM D21/R21/L21, the TCC features are:
+ * For SAM D21/R21/L21/DA0/DA1, the TCC features are:
  * \anchor asfdoc_sam0_tcc_features_d21
  * <table>
- *   <caption>TCC module features for SAM D21/R21/L21</caption>
+ *   <caption>TCC module features for SAM D21/R21/L21/DA0/DA1</caption>
  *   <tr>
  *     <th>TCC#</th>
  *     <th>Match/Capture channels</th>
@@ -663,15 +684,6 @@
  *     <td></td>
  *   </tr>
  * </table>
- *
- * <table>
- *  <tr>
- *    <td>FEATURE_TCC_GENERATE_DMA_TRIGGER</td>
- *    <td>SAML21</td>
- *  </tr>
- * </table>
- * \note The specific features are only available in the driver when the
- * selected device supports those features.
  *
  * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d11 SAM D10/D11 TCC Feature List
  * For SAM D10/D11, the TCC features are:
@@ -754,11 +766,11 @@
 #endif
 
 /**
- * Define port features set according to different device family
+ * Define port features set according to different device family.
  * @{
 */
 #if (SAML21) || defined(__DOXYGEN__)
-/** Generate DMA triggers*/
+/** Generate DMA triggers. */
 #  define FEATURE_TCC_GENERATE_DMA_TRIGGER
 #endif
 /*@}*/
@@ -1124,9 +1136,9 @@ enum tcc_event_action {
 	/** Decrement the counter on event, irrespective of count direction. */
 	TCC_EVENT_ACTION_DECREMENT,
 	/** Count during active state of asynchronous event. In this case,
-	* depending	on the count direction, the  count will be incremented
-    * or decremented on each
-	* prescaled GCLK_TCCx, as long as the input event remains active. */
+	* depending	on the count direction, the  count will be incremented 
+	* or decremented on each prescaled GCLK_TCCx, as long as the input
+	* event remains active. */
 	TCC_EVENT_ACTION_COUNT_DURING_ACTIVE,
 
 	/** Store period in capture register 0, pulse width in capture
@@ -2421,8 +2433,8 @@ enum status_code tcc_set_double_buffer_compare_values(
  *  </tr>
  *  <tr>
  *      <td>C</td>
- *      <td>11/2014</td>
- *      <td>Added support for SAML21</td>
+ *      <td>04/2015</td>
+ *      <td>Added support for SAML21 and SAMDAx</td>
  *  </tr>
  *  <tr>
  *      <td>B</td>

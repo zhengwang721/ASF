@@ -98,4 +98,22 @@
 		<require idref="sam0.utils.linker_scripts"/>
 		<device-support value="saml21"/>
 	</board>
+
+	<board id="board.user_board.samda1j" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samda1j"/>
+	</board>
+
+	<board id="board.user_board.samda1g" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samda1g"/>
+	</board>
+
+	<board id="board.user_board.samda1e" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samda1e"/>
+	</board>
 </asf>

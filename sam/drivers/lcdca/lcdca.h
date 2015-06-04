@@ -47,13 +47,16 @@
 #define LCDCA_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_lcdca_group SAM4L Liquid Crystal Display (LCDCA)
+ * \defgroup asfdoc_sam_drivers_lcdca_group SAM4L Liquid Crystal Display (LCDCA) Driver
  *
- * This driver for SAM4L devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Liquid Crystal Display Controller functionality.
  *
  * The LCD controller is intended for monochrome passive Liquid Crystal Displays
  * (LCDs) with up to four common terminals and up to 40 segment terminals.
+ *
+ * Devices from the following series can use this module:
+ * - Atmel | SMART SAM4L
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_lcdca_prerequisites
