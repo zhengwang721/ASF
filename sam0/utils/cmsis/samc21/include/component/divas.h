@@ -110,7 +110,7 @@ typedef union {
 
 #define DIVAS_DIVIDEND_DIVIDEND_Pos 0            /**< \brief (DIVAS_DIVIDEND) DIVIDEND */
 #define DIVAS_DIVIDEND_DIVIDEND_Msk (0xFFFFFFFFul << DIVAS_DIVIDEND_DIVIDEND_Pos)
-#define DIVAS_DIVIDEND_DIVIDEND(value) ((DIVAS_DIVIDEND_DIVIDEND_Msk & ((value) << DIVAS_DIVIDEND_DIVIDEND_Pos)))
+#define DIVAS_DIVIDEND_DIVIDEND(value) (DIVAS_DIVIDEND_DIVIDEND_Msk & ((value) << DIVAS_DIVIDEND_DIVIDEND_Pos))
 #define DIVAS_DIVIDEND_MASK         0xFFFFFFFFul /**< \brief (DIVAS_DIVIDEND) MASK Register */
 
 /* -------- DIVAS_DIVISOR : (DIVAS Offset: 0x0C) (R/W 32) Divisor -------- */
@@ -128,7 +128,7 @@ typedef union {
 
 #define DIVAS_DIVISOR_DIVISOR_Pos   0            /**< \brief (DIVAS_DIVISOR) DIVISOR */
 #define DIVAS_DIVISOR_DIVISOR_Msk   (0xFFFFFFFFul << DIVAS_DIVISOR_DIVISOR_Pos)
-#define DIVAS_DIVISOR_DIVISOR(value) ((DIVAS_DIVISOR_DIVISOR_Msk & ((value) << DIVAS_DIVISOR_DIVISOR_Pos)))
+#define DIVAS_DIVISOR_DIVISOR(value) (DIVAS_DIVISOR_DIVISOR_Msk & ((value) << DIVAS_DIVISOR_DIVISOR_Pos))
 #define DIVAS_DIVISOR_MASK          0xFFFFFFFFul /**< \brief (DIVAS_DIVISOR) MASK Register */
 
 /* -------- DIVAS_RESULT : (DIVAS Offset: 0x10) (R/  32) Result -------- */
@@ -146,7 +146,7 @@ typedef union {
 
 #define DIVAS_RESULT_RESULT_Pos     0            /**< \brief (DIVAS_RESULT) RESULT */
 #define DIVAS_RESULT_RESULT_Msk     (0xFFFFFFFFul << DIVAS_RESULT_RESULT_Pos)
-#define DIVAS_RESULT_RESULT(value)  ((DIVAS_RESULT_RESULT_Msk & ((value) << DIVAS_RESULT_RESULT_Pos)))
+#define DIVAS_RESULT_RESULT(value)  (DIVAS_RESULT_RESULT_Msk & ((value) << DIVAS_RESULT_RESULT_Pos))
 #define DIVAS_RESULT_MASK           0xFFFFFFFFul /**< \brief (DIVAS_RESULT) MASK Register */
 
 /* -------- DIVAS_REM : (DIVAS Offset: 0x14) (R/  32) Remainder -------- */
@@ -164,7 +164,7 @@ typedef union {
 
 #define DIVAS_REM_REM_Pos           0            /**< \brief (DIVAS_REM) REM */
 #define DIVAS_REM_REM_Msk           (0xFFFFFFFFul << DIVAS_REM_REM_Pos)
-#define DIVAS_REM_REM(value)        ((DIVAS_REM_REM_Msk & ((value) << DIVAS_REM_REM_Pos)))
+#define DIVAS_REM_REM(value)        (DIVAS_REM_REM_Msk & ((value) << DIVAS_REM_REM_Pos))
 #define DIVAS_REM_MASK              0xFFFFFFFFul /**< \brief (DIVAS_REM) MASK Register */
 
 /* -------- DIVAS_SQRNUM : (DIVAS Offset: 0x18) (R/W 32) Square Root Input -------- */
@@ -182,7 +182,7 @@ typedef union {
 
 #define DIVAS_SQRNUM_SQRNUM_Pos     0            /**< \brief (DIVAS_SQRNUM) Square Root Input */
 #define DIVAS_SQRNUM_SQRNUM_Msk     (0xFFFFFFFFul << DIVAS_SQRNUM_SQRNUM_Pos)
-#define DIVAS_SQRNUM_SQRNUM(value)  ((DIVAS_SQRNUM_SQRNUM_Msk & ((value) << DIVAS_SQRNUM_SQRNUM_Pos)))
+#define DIVAS_SQRNUM_SQRNUM(value)  (DIVAS_SQRNUM_SQRNUM_Msk & ((value) << DIVAS_SQRNUM_SQRNUM_Pos))
 #define DIVAS_SQRNUM_MASK           0xFFFFFFFFul /**< \brief (DIVAS_SQRNUM) MASK Register */
 
 /** \brief DIVAS hardware registers */

@@ -3,7 +3,7 @@
  *
  * \brief SAM Peripheral Access Controller Driver
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -75,7 +75,7 @@ __no_inline enum status_code system_peripheral_lock(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	PAC->WRCTRL.reg = peripheral_id | PAC_WRCTRL_KEY(PAC_WRCTRL_KEY_SET);
+	PAC->WRCTRL.reg = peripheral_id | PAC_WRCTRL_KEY(PAC_WRCTRL_KEY_SET_Val);
 
 	return STATUS_OK;
 }
@@ -110,7 +110,7 @@ __no_inline enum status_code system_peripheral_lock_always(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	PAC->WRCTRL.reg = peripheral_id | PAC_WRCTRL_KEY(PAC_WRCTRL_KEY_SETLCK);
+	PAC->WRCTRL.reg = peripheral_id | PAC_WRCTRL_KEY(PAC_WRCTRL_KEY_SETLCK_Val);
 
 	return STATUS_OK;
 }
@@ -144,7 +144,7 @@ __no_inline enum status_code system_peripheral_unlock(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	PAC->WRCTRL.reg = peripheral_id | PAC_WRCTRL_KEY(PAC_WRCTRL_KEY_CLR);
+	PAC->WRCTRL.reg = peripheral_id | PAC_WRCTRL_KEY(PAC_WRCTRL_KEY_CLR_Val);
 
 	return STATUS_OK;
 }

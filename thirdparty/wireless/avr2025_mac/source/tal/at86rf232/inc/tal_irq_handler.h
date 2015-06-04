@@ -3,7 +3,7 @@
  *
  * @brief
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,9 +41,6 @@
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef TAL_IRQ_HANDLER_H
 #define TAL_IRQ_HANDLER_H
 
@@ -91,7 +88,7 @@ void trx_irq_awake_handler_cb(void);
 void trx_irq_timestamp_handler_cb(void);
 
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined
-         *DOXYGEN) */
+         * DOXYGEN) */
 
 /* ! @} */
 #ifdef __cplusplus

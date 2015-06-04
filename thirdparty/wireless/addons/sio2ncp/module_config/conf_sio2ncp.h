@@ -3,7 +3,7 @@
  *
  * \brief Serial Input & Output configuration
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,9 +38,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef CONF_SIO2NCP_H_INCLUDED
@@ -116,7 +113,7 @@
 #define USART_NCP_BAUDRATE        9600
 
 #define NCP_SERCOM_MUX_SETTING    USART_RX_1_TX_0_XCK_1
-#define NCP_SERCOM_PINMUX_PAD0	  PINMUX_UNUSED
+#define NCP_SERCOM_PINMUX_PAD0    PINMUX_UNUSED
 #define NCP_SERCOM_PINMUX_PAD1    PINMUX_UNUSED
 #define NCP_SERCOM_PINMUX_PAD2    PINMUX_PB09D_SERCOM4_PAD1
 #define NCP_SERCOM_PINMUX_PAD3    PINMUX_PB08D_SERCOM4_PAD0

@@ -95,8 +95,6 @@
 
 /* ========== Instance parameters for DMAC peripheral ========== */
 #define DMAC_CH_BITS                4        // Number of bits to select channel
-#define DMAC_CH_NUM                 12       // Number of channels
-#define DMAC_CLK_AHB_DOMAIN                  // Clock domain of AHB clock
 #define DMAC_CLK_AHB_ID             7        // AHB clock index
 #define DMAC_EVIN_NUM               4        // Number of input events
 #define DMAC_EVOUT_NUM              4        // Number of output events

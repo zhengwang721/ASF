@@ -3,7 +3,7 @@
  *
  * \brief SAM4E DMA Controller (DMAC) driver.
  *
- * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -48,12 +48,18 @@
 #define DMAC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_dmac_group SAM4E DMA Controller (DMAC)
+ * \defgroup asfdoc_sam_drivers_dmac_group SAM3A/3U/3X/4E DMA Controller (DMAC) Driver
  *
- * The DMA Controller (DMAC) is an AHB-central DMA controller core that
+ * This driver for Atmel&reg; | SMART SAM4 DMA Controller (DMAC) is an AHB-central DMA controller core that
  * transfers data from a source peripheral to a destination peripheral
  * over one or more AMBA buses. This is a driver for the configuration,
  * enabling, disabling, and use of the DMAC peripheral.
+ *
+ * Devices from the following series can use this module:
+ * - Atmel | SMART SAM3A
+ * - Atmel | SMART SAM3U
+ * - Atmel | SMART SAM3X
+ * - Atmel | SMART SAM4E
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_dmac_prerequisites

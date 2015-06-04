@@ -3,7 +3,7 @@
  *
  * @brief Declarations for low-level security API
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,15 +42,12 @@
  */
 
 /*
- * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef SAL_H
 #define SAL_H
 
@@ -114,7 +111,7 @@
 #define SR_AES_MODE   0x03, 0x70, 4
 
 /** Access parameters for sub-register AES_REQUEST in register @ref RG_AES_CTRL
- **/
+**/
 #define SR_AES_REQUEST   0x03, 0x80, 7
 
 /** Base address for Transceiver AES address space **/

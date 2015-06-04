@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21/D11/L21/C21 Quick Start Guide for Using ADC/DAC driver with DMA
+ * \brief SAM D21/D11/L21/DA1/C21 Quick Start Guide for Using ADC/DAC driver with DMA
  *
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -51,6 +51,7 @@
  *    - SAMD21 Xplained Pro
  *    - SAMD11 Xplained Pro
  *    - SAML21 Xplained Pro
+ *    - SAMDA1 Xplained Pro
  *    - SAMC21 Xplained Pro
  *
  * This quick start will convert an analog input signal from AIN4 and output
@@ -230,3 +231,8 @@
  * -# Enter endless loop.
  *  \snippet qs_adc_dma_use.c endless_loop
  */
+
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+

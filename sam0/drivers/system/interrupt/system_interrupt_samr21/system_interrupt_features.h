@@ -3,7 +3,7 @@
  *
  * \brief SAM R21 System Interrupt Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -60,11 +60,11 @@
 		MREPEAT(name##_INST_NUM, _MODULE_IRQn, name)
 
 #  define _SYSTEM_INTERRUPT_IPSR_MASK              0x0000003f
-#  define _SYSTEM_INTERRUPT_PRIORITY_MASK          0x00000007
+#  define _SYSTEM_INTERRUPT_PRIORITY_MASK          0x00000003
 
 #  define _SYSTEM_INTERRUPT_EXTERNAL_VECTOR_START  0
 
-#  define _SYSTEM_INTERRUPT_SYSTICK_PRI_POS        29
+#  define _SYSTEM_INTERRUPT_SYSTICK_PRI_POS        30
 #endif
 
 /**

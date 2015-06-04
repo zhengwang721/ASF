@@ -3,7 +3,7 @@
  *
  * \brief Peer2Peer application implementation
  *
- * Copyright (C) 2014, Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,12 +44,12 @@
  * \mainpage
  * \section preface Preface
  * This is the reference manual for the LWMesh Peer2Peer Application
- * //TODO
+ * The LightWeight Mesh Peer2Peer  implements a wireless UART application.Two nodes are used in this application
+ * These two nodes must be configured with addresses 0x0001 and 0x0000 respectively.
+ * To test this application,open a terminal for both the nodes.On entering text in the terminal the data is transmitted from one 
+ * node to another node(0x0001 to 0x0000 and vice-versa)
  */
 /*- Includes ---------------------------------------------------------------*/
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

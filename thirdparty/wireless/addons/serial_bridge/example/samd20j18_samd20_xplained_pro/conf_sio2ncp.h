@@ -3,7 +3,7 @@
  *
  * \brief Serial Input & Output configuration
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,17 +39,14 @@
  *
  * \asf_license_stop
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #ifndef CONF_SIO2NCP_H_INCLUDED
 #define CONF_SIO2NCP_H_INCLUDED
 
-#define USART_NCP                 EXT1_UART_MODULE	
-	
+#define USART_NCP                 EXT1_UART_MODULE
+
 #define NCP_SERCOM_MUX_SETTING    EXT1_UART_SERCOM_MUX_SETTING
-#define NCP_SERCOM_PINMUX_PAD0	  EXT1_UART_SERCOM_PINMUX_PAD0
+#define NCP_SERCOM_PINMUX_PAD0    EXT1_UART_SERCOM_PINMUX_PAD0
 #define NCP_SERCOM_PINMUX_PAD1    EXT1_UART_SERCOM_PINMUX_PAD1
 #define NCP_SERCOM_PINMUX_PAD2    EXT1_UART_SERCOM_PINMUX_PAD2
 #define NCP_SERCOM_PINMUX_PAD3    EXT1_UART_SERCOM_PINMUX_PAD3

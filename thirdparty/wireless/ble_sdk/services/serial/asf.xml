@@ -1,0 +1,33 @@
+<asf xmlversion="1.0">
+		<select-by-device id="thirdparty.wireless.ble_sdk.services.serial">
+			<module type="meta" id="thirdparty.wireless.ble_sdk.services.serial#0"     caption="uart">
+				<info type="description" value="summary">
+				UART Driver
+				</info>
+				<build type="c-source"      value="uart/sam0/serial_drv.c"/>
+				<build type="header-file"   value="uart/serial_drv.h"/>
+				<build type="include-path"  value="uart/"/>
+
+				<require idref="sam0.drivers.sercom.usart"/>
+
+				<build type="module-config" subtype="required-header-file" value="conf_serialdrv.h"/>
+				<build type="module-config" subtype="path" value="module_config"/>
+
+				<device-support value="samd21"/>
+			</module>
+   <module type="meta" id="thirdparty.wireless.ble_sdk.services.serial#1"     caption="uart">
+				<info type="description" value="summary">
+				UART Driver
+				</info>
+				<build type="c-source"      value="uart/sam/serial_drv.c"/>
+				<build type="header-file"   value="uart/serial_drv.h"/>
+				<build type="include-path"  value="uart/"/>
+
+				<require idref="sam.drivers.usart"/>
+
+				<build type="module-config" subtype="required-header-file" value="conf_serialdrv.h"/>
+				<build type="module-config" subtype="path" value="module_config"/>
+				<device-support value="samg55"/>
+			</module>
+		</select-by-device>
+</asf>

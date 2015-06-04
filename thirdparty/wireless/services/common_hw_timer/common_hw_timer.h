@@ -3,7 +3,7 @@
  *
  * @brief
  *
- *  Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,9 +39,6 @@
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef COMMON_HW_TIMER_H
 #define COMMON_HW_TIMER_H
 
@@ -52,7 +49,7 @@
  * \ingroup group_pal_common_sw_timer
  * \defgroup group_pal_common_hw_timer
  * Implements a common api interface for accessing timer drivers of all
- *architectures
+ * architectures
  * @{
  */
 

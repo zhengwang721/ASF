@@ -7,15 +7,10 @@
 		<build type="include-path" value="."/>
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="c-source" value="unit_test.c"/>
-		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
 		<require idref="sam0.drivers.wdt"/>
 		<require idref="sam0.drivers.system"/>
 		<require idref="common.utils.unit_test"/>
 		<require idref="common2.services.delay"/>
-		<device-support value="samd20"/>
-		<device-support value="samd21"/>
-		<device-support value="samr21"/>
-		<device-support value="saml21"/>
-		<device-support value="samc21"/>
+		<device-support value="sam0"/>
 	</module>
 </asf>

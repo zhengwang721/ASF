@@ -40,12 +40,16 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef ADC_FEATURE_H_INCLUDED
 #define ADC_FEATURE_H_INCLUDED
 
+/**
+ * \addtogroup asfdoc_sam0_adc_group
+ * @{
+ */
 
 #ifdef __cplusplus
 extern "C" {
@@ -69,7 +73,7 @@ extern struct adc_module *_adc_instances[ADC_INST_NUM];
 struct adc_module;
 
 /** Type of the callback functions. */
-typedef void (*adc_callback_t)(const struct adc_module *const module);
+typedef void (*adc_callback_t)(struct adc_module *const module);
 
 /**
  * \brief ADC callback enum.
@@ -93,11 +97,6 @@ enum adc_callback {
 #endif
 
 /**
- * \addtogroup asfdoc_sam0_adc_group
- * @{
- */
-
-/**
  * \brief ADC reference voltage enum.
  *
  * Enum for the possible reference voltages for the ADC.
@@ -112,8 +111,14 @@ enum adc_reference {
 	ADC_REFERENCE_INTVCC1 = ADC_REFCTRL_REFSEL_INTVCC1,
 	/** External reference A. */
 	ADC_REFERENCE_AREFA   = ADC_REFCTRL_REFSEL_AREFA,
+#if (SAML21)
 	/** External reference B. */
 	ADC_REFERENCE_AREFB   = ADC_REFCTRL_REFSEL_AREFB,
+#endif
+#if (SAMC21)
+	/** DAC. */
+	ADC_REFERENCE_DAC     = ADC_REFCTRL_REFSEL_DAC,
+#endif
 	/** VDDANA. */
 	ADC_REFERENCE_INTVCC2 = ADC_REFCTRL_REFSEL_INTVCC2,
 };
@@ -265,26 +270,23 @@ enum adc_positive_input {
 	ADC_POSITIVE_INPUT_PIN23         = ADC_INPUTCTRL_MUXPOS_AIN23,
 	/** Temperature reference. */
 	ADC_POSITIVE_INPUT_TEMP          = ADC_INPUTCTRL_MUXPOS_TEMP,
+#endif
 	/** Bandgap voltage. */
 	ADC_POSITIVE_INPUT_BANDGAP       = ADC_INPUTCTRL_MUXPOS_BANDGAP,
-#else
-	/** BUFRR. */
-	ADC_POSITIVE_INPUT_BUFRR         = ADC_INPUTCTRL_MUXPOS_BUFRR,
-	/** BUFRR1. */
-	ADC_POSITIVE_INPUT_BUFRR1        = ADC_INPUTCTRL_MUXPOS_BUFRR1,
-#endif
 	/** 1/4 scaled core supply. */
 	ADC_POSITIVE_INPUT_SCALEDCOREVCC = ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC,
 	/** 1/4 scaled I/O supply. */
 	ADC_POSITIVE_INPUT_SCALEDIOVCC   = ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC,
 	/** DAC input. */
 	ADC_POSITIVE_INPUT_DAC           = ADC_INPUTCTRL_MUXPOS_DAC,
+#if !(SAMC21)
 	/** SCALEDVBAT. */
 	ADC_POSITIVE_INPUT_SCALEDVBAT    = ADC_INPUTCTRL_MUXPOS_SCALEDVBAT,
 	/** OPAMP01. */
 	ADC_POSITIVE_INPUT_OPAMP01       = ADC_INPUTCTRL_MUXPOS_OPAMP01,
 	/** OPAMP02. */
 	ADC_POSITIVE_INPUT_OPAMP2        = ADC_INPUTCTRL_MUXPOS_OPAMP2,
+#endif
 };
 
 /**
@@ -306,13 +308,11 @@ enum adc_negative_input {
 	ADC_NEGATIVE_INPUT_PIN4          = ADC_INPUTCTRL_MUXNEG_AIN4,
 	/** ADC5 pin. */
 	ADC_NEGATIVE_INPUT_PIN5          = ADC_INPUTCTRL_MUXNEG_AIN5,
+#if !(SAMC21)
 	/** ADC6 pin. */
 	ADC_NEGATIVE_INPUT_PIN6          = ADC_INPUTCTRL_MUXNEG_AIN6,
 	/** ADC7 pin. */
 	ADC_NEGATIVE_INPUT_PIN7          = ADC_INPUTCTRL_MUXNEG_AIN7,
-#if (SAMC21)
-	/** ADC VCM pin. */
-	ADC_NEGATIVE_INPUT_VCM           = ADC_INPUTCTRL_MUXNEG_VCM,
 #endif
 	/** Internal ground. */
 	ADC_NEGATIVE_INPUT_GND           = ADC_INPUTCTRL_MUXNEG(0x18u),
@@ -343,7 +343,7 @@ enum adc_accumulate_samples {
 	ADC_ACCUMULATE_SAMPLES_64   = ADC_AVGCTRL_SAMPLENUM_64,
 	/** Average 128 samples. */
 	ADC_ACCUMULATE_SAMPLES_128  = ADC_AVGCTRL_SAMPLENUM_128,
-	/** Average 265 samples. */
+	/** Average 256 samples. */
 	ADC_ACCUMULATE_SAMPLES_256  = ADC_AVGCTRL_SAMPLENUM_256,
 	/** Average 512 samples. */
 	ADC_ACCUMULATE_SAMPLES_512  = ADC_AVGCTRL_SAMPLENUM_512,
@@ -476,7 +476,7 @@ struct adc_correction_config {
 	/**
 	 * This value defines how the ADC conversion result is compensated for
 	 * offset error before written to the result register. This is a 12-bit
-	 * value in two鈥檚 complement format.
+	 * value in two's complement format.
 	 */
 	int16_t offset_correction;
 };
@@ -719,6 +719,8 @@ static inline void adc_set_master_slave_mode(
 #ifdef __cplusplus
 }
 #endif
+
+/** @} */
 
 #endif /* ADC_FEATURE_H_INCLUDED */
 

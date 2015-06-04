@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM4 Analog Comparator Controller (ACC) driver.
+ * \brief SAM Analog Comparator Controller (ACC) driver.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -48,15 +48,20 @@
 #define ACC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_acc_group SAM4 Analog Comparator Controller (ACC)
+ * \defgroup asfdoc_sam_drivers_acc_group SAM3S/4E/4S Analog Comparator Controller (ACC) Driver
  *
- * This driver for SAM4E and SAM4S devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Analog Comparator Controller functionality.
  *
  * The Analog Comparator compares two voltages, and the result of this comparison
  * gives a compare output. The user application can select whether to use a high-speed
  * or a low-power option as well as selecting the hysteresis level, edge detection,
  * and polarity.
+ *
+ * Devices from the following series can use this module:
+ * - Atmel | SMART SAM3S
+ * - Atmel | SMART SAM4E
+ * - Atmel | SMART SAM4S
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_acc_prerequisites
@@ -129,7 +134,7 @@
  * \subsection asfdoc_sam_drivers_acc_special_considerations_fault Fault Output
  *
  * The ACC module has a FAULT output that is connected to the FAULT input of the
- * PWM module. Refer to "fault mode鈥 and the implementation of the pwm in
+ * PWM module. Refer to "fault mode" and the implementation of the pwm in
  * the device-specific datasheet.
  *
  *

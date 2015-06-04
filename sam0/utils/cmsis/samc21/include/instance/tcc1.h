@@ -50,9 +50,9 @@
 #define REG_TCC1_CTRLBCLR          (0x42002804U) /**< \brief (TCC1) Control B Clear */
 #define REG_TCC1_CTRLBSET          (0x42002805U) /**< \brief (TCC1) Control B Set */
 #define REG_TCC1_SYNCBUSY          (0x42002808U) /**< \brief (TCC1) Synchronization Busy */
-#define REG_TCC1_FCTRLA            (0x4200280CU) /**< \brief (TCC1) Recoverable FaultA Configuration */
-#define REG_TCC1_FCTRLB            (0x42002810U) /**< \brief (TCC1) Recoverable FaultB Configuration */
-#define REG_TCC1_DRVCTRL           (0x42002818U) /**< \brief (TCC1) Driver Configuration */
+#define REG_TCC1_FCTRLA            (0x4200280CU) /**< \brief (TCC1) Recoverable Fault A Configuration */
+#define REG_TCC1_FCTRLB            (0x42002810U) /**< \brief (TCC1) Recoverable Fault B Configuration */
+#define REG_TCC1_DRVCTRL           (0x42002818U) /**< \brief (TCC1) Driver Control */
 #define REG_TCC1_DBGCTRL           (0x4200281EU) /**< \brief (TCC1) Debug Control */
 #define REG_TCC1_EVCTRL            (0x42002820U) /**< \brief (TCC1) Event Control */
 #define REG_TCC1_INTENCLR          (0x42002824U) /**< \brief (TCC1) Interrupt Enable Clear */
@@ -66,7 +66,6 @@
 #define REG_TCC1_CC0               (0x42002844U) /**< \brief (TCC1) Compare and Capture 0 */
 #define REG_TCC1_CC1               (0x42002848U) /**< \brief (TCC1) Compare and Capture 1 */
 #define REG_TCC1_PATTBUF           (0x42002864U) /**< \brief (TCC1) Pattern Buffer */
-#define REG_TCC1_WAVEBUF           (0x42002868U) /**< \brief (TCC1) Waveform Control Buffer */
 #define REG_TCC1_PERBUF            (0x4200286CU) /**< \brief (TCC1) Period Buffer */
 #define REG_TCC1_CCBUF0            (0x42002870U) /**< \brief (TCC1) Compare and Capture Buffer 0 */
 #define REG_TCC1_CCBUF1            (0x42002874U) /**< \brief (TCC1) Compare and Capture Buffer 1 */
@@ -75,9 +74,9 @@
 #define REG_TCC1_CTRLBCLR          (*(RwReg8 *)0x42002804U) /**< \brief (TCC1) Control B Clear */
 #define REG_TCC1_CTRLBSET          (*(RwReg8 *)0x42002805U) /**< \brief (TCC1) Control B Set */
 #define REG_TCC1_SYNCBUSY          (*(RoReg  *)0x42002808U) /**< \brief (TCC1) Synchronization Busy */
-#define REG_TCC1_FCTRLA            (*(RwReg  *)0x4200280CU) /**< \brief (TCC1) Recoverable FaultA Configuration */
-#define REG_TCC1_FCTRLB            (*(RwReg  *)0x42002810U) /**< \brief (TCC1) Recoverable FaultB Configuration */
-#define REG_TCC1_DRVCTRL           (*(RwReg  *)0x42002818U) /**< \brief (TCC1) Driver Configuration */
+#define REG_TCC1_FCTRLA            (*(RwReg  *)0x4200280CU) /**< \brief (TCC1) Recoverable Fault A Configuration */
+#define REG_TCC1_FCTRLB            (*(RwReg  *)0x42002810U) /**< \brief (TCC1) Recoverable Fault B Configuration */
+#define REG_TCC1_DRVCTRL           (*(RwReg  *)0x42002818U) /**< \brief (TCC1) Driver Control */
 #define REG_TCC1_DBGCTRL           (*(RwReg8 *)0x4200281EU) /**< \brief (TCC1) Debug Control */
 #define REG_TCC1_EVCTRL            (*(RwReg  *)0x42002820U) /**< \brief (TCC1) Event Control */
 #define REG_TCC1_INTENCLR          (*(RwReg  *)0x42002824U) /**< \brief (TCC1) Interrupt Enable Clear */
@@ -91,7 +90,6 @@
 #define REG_TCC1_CC0               (*(RwReg  *)0x42002844U) /**< \brief (TCC1) Compare and Capture 0 */
 #define REG_TCC1_CC1               (*(RwReg  *)0x42002848U) /**< \brief (TCC1) Compare and Capture 1 */
 #define REG_TCC1_PATTBUF           (*(RwReg16*)0x42002864U) /**< \brief (TCC1) Pattern Buffer */
-#define REG_TCC1_WAVEBUF           (*(RwReg  *)0x42002868U) /**< \brief (TCC1) Waveform Control Buffer */
 #define REG_TCC1_PERBUF            (*(RwReg  *)0x4200286CU) /**< \brief (TCC1) Period Buffer */
 #define REG_TCC1_CCBUF0            (*(RwReg  *)0x42002870U) /**< \brief (TCC1) Compare and Capture Buffer 0 */
 #define REG_TCC1_CCBUF1            (*(RwReg  *)0x42002874U) /**< \brief (TCC1) Compare and Capture Buffer 1 */

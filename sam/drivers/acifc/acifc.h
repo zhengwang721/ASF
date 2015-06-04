@@ -3,7 +3,7 @@
  *
  * \brief SAM4L Analog Comparator Interface Driver.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -48,14 +48,17 @@
 #define ACIFC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_acifc_group SAM4L Analog Comparator Interface Controller (ACIFC)
+ * \defgroup asfdoc_sam_drivers_acifc_group SAM4L Analog Comparator Interface Controller (ACIFC) Driver
  *
- * This driver for SAM4L devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Analog Comparator Interface Controller functionality.
  *
  * The Analog Comparator Interface controls eight Analog Comparators (AC) with
  * identical behavior. Each Analog Comparator compares two voltages, yielding an
  * output that depends on the result of the comparison.
+ *
+ * Devices from the following series can use this module:
+ * - Atmel | SMART SAM4L
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_acifc_prerequisites

@@ -52,6 +52,7 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
+			<device-support value="samda1"/>
 		</module>
 		<module type="meta" id="sam0.drivers.adc.polled#sam_l" caption="ADC - Analog-to-Digital Converter">
 			<build type="include-path" value="." />
@@ -76,6 +77,7 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
+			<device-support value="samda1"/>
 		</module>
 		<module type="meta" id="sam0.drivers.adc.callback#sam_l" caption="ADC - Analog-to-Digital Converter">
 			<build type="include-path" value="." />
@@ -133,6 +135,7 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
+			<device-support value="samda1"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>

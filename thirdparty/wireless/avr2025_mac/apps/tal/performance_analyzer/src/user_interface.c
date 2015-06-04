@@ -4,7 +4,7 @@
  * \brief LED, Button and terminal print functions - Perfoamnce Analyzer
  * application
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,14 +42,11 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 /* === INCLUDES ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #include "tal.h"
 # include "app_init.h"
 #if (LED_COUNT > 0)
@@ -189,7 +186,7 @@ bool app_debounce_button(void)
 			key_cnt++;
 		}
 	} else if (!(button_pressed()) &&
-			(key_cnt == COUNT_FOR_VALID_KEY_PRESS)){ 
+			(key_cnt == COUNT_FOR_VALID_KEY_PRESS)) {
 		/* Button released */
 		ret = 1;
 		key_cnt = 0;
@@ -294,7 +291,6 @@ void app_led_event(led_event_t ev)
 		LED_Off(TX_LED);
 		LED_Off(RX_LED);
 		break;
-		
 	}
 #endif
 }

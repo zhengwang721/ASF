@@ -3,7 +3,7 @@
  *
  * \brief Energy Detection Demo application implementation
  *
- * Copyright (C) 2014, Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,11 +44,13 @@
  * \mainpage
  * \section preface Preface
  * This is the reference manual for the EDDemo  Application
+ * The Lightweight Mesh EDDemo application demonstrates the energy detection(ED) feature of Atmel Transceivers and helps analysing the energy on all channels .
+ * This application requires only one node for demonstration.
+ * No Data communication is performed in this application and no networking API's are used.
+ * A terminal needs to be connected to the node .
+ * The node measures the energy values on all channels periodically and prints the results on the connected terminal.
  */
 /*- Includes ---------------------------------------------------------------*/
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -159,13 +161,13 @@ int main(void)
 	#else
 	sysclk_init();
 	board_init();
-	#endif	
+	#endif
 	SYS_Init();
 	sio2host_init();
 	cpu_irq_enable();
 	LED_On(LED0);
 	while (1) {
-	SYS_TaskHandler();
-	APP_TaskHandler();
+		SYS_TaskHandler();
+		APP_TaskHandler();
 	}
 }

@@ -3,7 +3,7 @@
  *
  * \brief DMAC (DMA Controller) driver example for SAM.
  *
- * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -48,14 +48,14 @@
 #define DMAC_EXAMPLE_H_INCLUDED
 
 /**
- * \page asfdoc_sam_drivers_dmac_example SAM4E Direct Memory Access Controller - Example memory to memory transfer
+ * \page asfdoc_sam_drivers_dmac_example SAM Direct Memory Access Controller - Example memory to memory transfer
  *
  * \section asfdoc_sam_drivers_dmac_example_purpose Purpose
  * This example demonstrates how to configure and use DMAC controller
  * for single and multiple memory to memory data buffer transfers.
  *
  * \section asfdoc_sam_drivers_dmac_example_requirements Requirements
- * This example can be used with SAM4E evaluation kits that have a DMA
+ * This example can be used with SAM evaluation kits that have a DMA
  * Controller.
  *
  * \section asfdoc_sam_drivers_dmac_example_description Description

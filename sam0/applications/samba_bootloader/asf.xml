@@ -1,0 +1,23 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.applications.samba_bootloader" caption="SAM0 SAM-BA Bootloader Example">
+		<info type="description" value="summary">
+		SAM-BA Bootloader Example for SAM0.
+		</info>
+
+		<info type="keyword" value="technology">
+			<keyword value="SAM-BA"/>
+		</info>
+
+		<info type="gui-flag" value="move-to-root"/>
+		<build type="c-source" value="main.c"/>
+		<build type="c-source" value="sam_ba_monitor.c"/>
+		<build type="c-source" value="usart_sam_ba.c"/>
+		<build type="header-file" value="sam_ba_monitor.h"/>
+		<build type="header-file" value="usart_sam_ba.h"/>
+		<build type="include-path" value="."/>
+		<require idref="sam0.drivers.sercom.usart"/>
+		<require idref="sam0.drivers.port"/>
+		<require idref="sam0.drivers.system"/>
+		<device-support value="sam0"/>
+	</module>
+</asf>

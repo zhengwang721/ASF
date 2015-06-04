@@ -4,7 +4,7 @@
  * \brief Receptor functionalities in PER Measurement mode - Performance
  * Analyzer
  * application
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,15 +42,12 @@
  */
 
 /*
- * Copyright(c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* === INCLUDES ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #include <stdio.h>
 #include <stdlib.h>
 #include <inttypes.h>
@@ -88,7 +85,7 @@
 #define LED_BLINK_RATE_IN_MICRO_SEC           (50000)
 #define DELAY_BEFORE_APP_RESET_IN_MICRO_SEC   (5000)
 
-/* === PROTOTYPES ========================================================== */ 
+/* === PROTOTYPES ========================================================== */
 static void app_reset_cb(void *parameter);
 static void send_result_rsp(void);
 static void send_peer_info_rsp(void);
@@ -125,10 +122,9 @@ static uint8_t marker_seq_num = 0;
 /*Length of the Remote Command Request Received*/
 static uint8_t remote_cmd_len;
 /*Flag to denote whether a remote test request is received or not */
-static bool remote_cmd_rx=false;
+static bool remote_cmd_rx = false;
 /*Pointer to the remote test request serial data payload received*/
-static uint8_t* remote_cmd_ptr;
-
+static uint8_t *remote_cmd_ptr;
 
 /* ! \} */
 
@@ -144,11 +140,9 @@ void per_mode_receptor_init(void *parameter)
 	pib_value_t pib_value;
 #endif
 	/* PER TEST Receptor sequence number */
-	do 
-	{
+	do {
 		seq_num_receptor = rand();
 	} while (!seq_num_receptor);
-	
 
 	printf("\r\n Starting PER Measurement mode as Reflector");
 	config_per_test_parameters();
@@ -171,66 +165,62 @@ void per_mode_receptor_init(void *parameter)
  */
 void per_mode_receptor_task(void)
 {
-	/* If a remote test request is received the received over the air payload 
-	 * is converted into a serial data frame which will be handled by 
-	 * the Serial handler as if it was received from the UI*/	
-	if(remote_cmd_rx)
-	{
-		convert_ota_serial_frame_rx(remote_cmd_ptr,remote_cmd_len);	
+	/* If a remote test request is received the received over the air
+	 * payload
+	 * is converted into a serial data frame which will be handled by
+	 * the Serial handler as if it was received from the UI*/
+	if (remote_cmd_rx) {
+		convert_ota_serial_frame_rx(remote_cmd_ptr, remote_cmd_len);
 		remote_cmd_rx = false;
-	}	
-	
+	}
+
 	/* For Range Test  in PER Mode the receptor has to poll for a button
-	 * press to initiate marker transmission 
+	 * press to initiate marker transmission
 	 * If CW Transmission or Packet Streaming is initiated then this could
 	 * be aborted by pressing the push button
 	 */
-	if (range_test_in_progress || remote_cw_start ||(!pkt_stream_stop && !node_info.transmitting)) {
+	if (range_test_in_progress || remote_cw_start ||
+			(!pkt_stream_stop && !node_info.transmitting)) {
 		static uint8_t key_press;
 		/* Check for any key press */
 		key_press = app_debounce_button();
 
 		if (key_press != 0) {
 			printf("\r\n\nButton Pressed...");
-			if(range_test_in_progress)
-			{
-			if (send_range_test_marker_cmd()) {
-				printf("\r\nInitiating Marker Transmission...");
-				/* Timer for LED Blink for Marker Transmission*/
-				sw_timer_start(APP_TIMER_TO_TX,
-						LED_BLINK_RATE_IN_MICRO_SEC,
-						SW_TIMEOUT_RELATIVE,
-						(FUNC_PTR)marker_tx_timer_handler_cb,
-						NULL);
-			}
-			}
-			else if(remote_cw_start)
-			{
-				remote_cw_start=false;
+			if (range_test_in_progress) {
+				if (send_range_test_marker_cmd()) {
+					printf(
+							"\r\nInitiating Marker Transmission...");
+					/* Timer for LED Blink for Marker
+					 *Transmission*/
+					sw_timer_start(APP_TIMER_TO_TX,
+							LED_BLINK_RATE_IN_MICRO_SEC,
+							SW_TIMEOUT_RELATIVE,
+							(FUNC_PTR)marker_tx_timer_handler_cb,
+							NULL);
+				}
+			} else if (remote_cw_start) {
+				remote_cw_start = false;
 				sw_timer_stop(CW_TX_TIMER);
 				stop_cw_transmission(&(cw_start_mode));
-			}
-			
-			
-			else 
-			{
+			} else {
 				stop_pkt_streaming(NULL);
 			}
 		}
 	}
-	/* If the node is in packet streaming mode and ready to transmit  
+
+	/* If the node is in packet streaming mode and ready to transmit
 	 * then initiate the next frame*/
-	if(!pkt_stream_stop && rdy_to_tx && !node_info.transmitting)
-	{
-		tal_tx_frame(stream_pkt,NO_CSMA_NO_IFS,false);
-		node_info.transmitting=true;
-		if(pkt_stream_gap_time)
-		{
-			sw_timer_start(T_APP_TIMER,pkt_stream_gap_time*1E3,SW_TIMEOUT_RELATIVE,(FUNC_PTR)pkt_stream_gap_timer,NULL);
+	if (!pkt_stream_stop && rdy_to_tx && !node_info.transmitting) {
+		tal_tx_frame(stream_pkt, NO_CSMA_NO_IFS, false);
+		node_info.transmitting = true;
+		if (pkt_stream_gap_time) {
+			sw_timer_start(T_APP_TIMER, pkt_stream_gap_time * 1E3,
+					SW_TIMEOUT_RELATIVE,
+					(FUNC_PTR)pkt_stream_gap_timer, NULL);
 			rdy_to_tx = false;
 		}
 	}
-	
 }
 
 /**
@@ -282,22 +272,23 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
 {
 	status = status;
 	frame = frame;
-	
-	if(remote_cw_start)
-	{		
+
+	if (remote_cw_start) {
 		cw_ack_sent = true;
 		start_cw_transmission(cw_start_mode, cw_tmr_val);
 	}
-	if(remote_pulse_cw_start)
-	{
+
+	if (remote_pulse_cw_start) {
 		cw_ack_sent = true;
 		pulse_cw_transmission();
 	}
-/*enable rx on mode in receptor after sending rxon confirm to the initiator*/
-	if(rx_on_mode)
-	{
+
+	/*enable rx on mode in receptor after sending rxon confirm to the
+	 *initiator*/
+	if (rx_on_mode) {
 		set_trx_state(CMD_RX_ON);
 	}
+
 	/* Allow the next transmission to happen */
 	node_info.transmitting = false;
 }
@@ -306,9 +297,8 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
  * \brief This function is used to send a remote test response command back to
  *  the initiator
  */
-bool send_remote_reply_cmd(uint8_t* serial_buf,uint8_t len)
+bool send_remote_reply_cmd(uint8_t *serial_buf, uint8_t len)
 {
-	
 	uint16_t payload_length;
 	app_payload_t msg;
 
@@ -317,24 +307,24 @@ bool send_remote_reply_cmd(uint8_t* serial_buf,uint8_t len)
 	seq_num_receptor++;
 	msg.seq_num = seq_num_receptor;
 
-	payload_length = ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-REMOTE_MSG_BUF_SIZE+len+1));
-	memcpy(&msg.payload.remote_test_req_data.remote_serial_data,serial_buf+1,len+1); 
+	payload_length
+		= ((sizeof(app_payload_t) - sizeof(general_pkt_t) +
+			sizeof(remote_test_req_t) - REMOTE_MSG_BUF_SIZE + len +
+			1));
+	memcpy(&msg.payload.remote_test_req_data.remote_serial_data,
+			serial_buf + 1, len + 1);
 	/* Send the frame to Peer node */
-	if(MAC_SUCCESS == transmit_frame(FCF_SHORT_ADDR,(uint8_t *)&(node_info.peer_short_addr),FCF_SHORT_ADDR,
-	seq_num_receptor,
-	(uint8_t *)&msg,
-	payload_length,
-	true))
-	{
+	if (MAC_SUCCESS ==
+			transmit_frame(FCF_SHORT_ADDR,
+			(uint8_t *)&(node_info.peer_short_addr), FCF_SHORT_ADDR,
+			seq_num_receptor,
+			(uint8_t *)&msg,
+			payload_length,
+			true)) {
 		return true;
-	}
-	
-	else
-	{
+	} else {
 		return false;
 	}
-	
-	
 }
 
 /*
@@ -351,24 +341,22 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
 	static uint8_t rx_count;
 	uint8_t expected_frame_size;
 
-
 	/* Point to the message : 1 =>size is first byte and 2=>FCS*/
 	msg
 		= (app_payload_t *)(mac_frame_info->mpdu + LENGTH_FIELD_LEN +
 			FRAME_OVERHEAD - FCS_LEN);
 
-/* If the remote node is in RX_ON mode then do not accept any request unless 
- * the request is to stop the RX_ON mode*/
-if(rx_on_mode)
-{
-	
-
-	if(!((msg->cmd_id == REMOTE_TEST_CMD) && (msg->payload.remote_test_req_data.remote_serial_data[MESSAGE_ID_POS])==(RX_ON_REQ|REMOTE_CMD_MASK)))
-	{
-
-		return;
+	/* If the remote node is in RX_ON mode then do not accept any request
+	 * unless
+	 * the request is to stop the RX_ON mode*/
+	if (rx_on_mode) {
+		if (!((msg->cmd_id == REMOTE_TEST_CMD) &&
+				(msg->payload.remote_test_req_data.
+				remote_serial_data[MESSAGE_ID_POS]) ==
+				(RX_ON_REQ | REMOTE_CMD_MASK))) {
+			return;
+		}
 	}
-}
 
 #ifdef CRC_SETTING_ON_REMOTE_NODE
 	/* If counting of wrong CRC packets is enabled on receptor node */
@@ -378,7 +366,7 @@ if(rx_on_mode)
 		uint16_t dest_addr;
 		memcpy(&dest_addr, &mac_frame_info->mpdu[PL_POS_DST_ADDR_START],
 				SHORT_ADDR_LEN);
-		tal_pib_get(macShortAddress,(uint8_t*)&my_addr_temp);
+		tal_pib_get(macShortAddress, (uint8_t *)&my_addr_temp);
 
 		my_addr = (uint16_t)my_addr_temp;
 		/* Check the destination address of the packet is my address  */
@@ -397,8 +385,10 @@ if(rx_on_mode)
 			}
 
 			frames_with_wrong_crc++;
+			return;
 		}
 	}
+
 #endif /* #ifdef CRC_SETTING_ON_REMOTE_NODE */
 
 	switch ((msg->cmd_id)) {
@@ -441,7 +431,9 @@ if(rx_on_mode)
 		} else {
 			cur_seq_no = mac_frame_info->mpdu[PL_POS_SEQ_NUM];
 			/* Check for the duplicate packets */
-			if (prev_seq_no != cur_seq_no) {
+			if (prev_seq_no == cur_seq_no) {
+				frames_with_wrong_crc++;
+			} else {
 				number_rx_frames++;
 				prev_seq_no = cur_seq_no;
 				/* Extract LQI and  RSSI */
@@ -496,6 +488,7 @@ if(rx_on_mode)
 						"\r\nNumber of received frames with wrong CRC = %" PRIu32,
 						frames_with_wrong_crc);
 			}
+
 #endif /* #ifdef CRC_SETTING_ON_REMOTE_NODE */
 
 			number_rx_frames = 0;
@@ -568,9 +561,12 @@ if(rx_on_mode)
 				}
 			}
 		}
+
 		/* Update database with this values */
-		curr_trx_config_params.antenna_selected = msg->payload.div_set_req_data.ant_sel;
-		curr_trx_config_params.antenna_diversity = msg->payload.div_set_req_data.status;
+		curr_trx_config_params.antenna_selected
+			= msg->payload.div_set_req_data.ant_sel;
+		curr_trx_config_params.antenna_diversity
+			= msg->payload.div_set_req_data.status;
 
 		break;
 	}     /* DIV_SET_REQ */
@@ -652,10 +648,10 @@ if(rx_on_mode)
 	case SET_DEFAULT_REQ:
 	{
 		config_per_test_parameters();
-		
 	}
 	break;
-	/* The REMOTE_TEST_CMD handles the remote test requests 
+
+	/* The REMOTE_TEST_CMD handles the remote test requests
 	 * sent from the initiator node.
 	 * The received payload is extracted and sent to the serial handler*/
 	case REMOTE_TEST_CMD:
@@ -663,13 +659,20 @@ if(rx_on_mode)
 		if (remote_cmd_seq_num == msg->seq_num) {
 			return;
 		}
+
 		remote_cmd_seq_num = msg->seq_num;
-/*Command received by the receptor to start a test ,from the initiator node*/
-		remote_cmd_len = *(mac_frame_info->mpdu + LENGTH_FIELD_LEN + FRAME_OVERHEAD + CMD_ID_LEN + SEQ_NUM_LEN - FCS_LEN);
-		remote_cmd_ptr = msg->payload.remote_test_req_data.remote_serial_data;
+		/*Command received by the receptor to start a test ,from the
+		 *initiator node*/
+		remote_cmd_len
+			= *(mac_frame_info->mpdu + LENGTH_FIELD_LEN +
+				FRAME_OVERHEAD + CMD_ID_LEN +
+				SEQ_NUM_LEN - FCS_LEN);
+		remote_cmd_ptr
+			= msg->payload.remote_test_req_data.remote_serial_data;
 		remote_cmd_rx = true;
 		break;
 	}
+
 	case RANGE_TEST_START_PKT:
 	{
 		/* set the flag to indicate that the receptor node is in range
@@ -771,14 +774,14 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 	pib_value_t pib_value;
 
 	switch (msg->payload.set_parm_req_data.param_type) {
-    /* If Parameter = channel */
-	case CHANNEL: 
+	/* If Parameter = channel */
+	case CHANNEL:
 	{
 #ifdef EXT_RF_FRONT_END_CTRL
 		uint16_t chn_before_set;
-		tal_pib_get(phyCurrentChannel,(uint8_t *)&chn_before_set);
+		tal_pib_get(phyCurrentChannel, (uint8_t *)&chn_before_set);
 #endif
-		
+
 		param_val = msg->payload.set_parm_req_data.param_value;
 
 #if (TAL_TYPE == AT86RF233)
@@ -799,8 +802,8 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 	break;
 
 #if (TAL_TYPE == AT86RF233)
-    /* If Parameter = frequency in band 8 */
-	case FREQ_BAND_08: 
+	/* If Parameter = frequency in band 8 */
+	case FREQ_BAND_08:
 	{
 		float frequency;
 		param_val = msg->payload.set_parm_req_data.param_value;
@@ -810,8 +813,9 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 		printf("\r\n Frequency changed to %0.1fMHz", (double)frequency);
 	}
 	break;
-    /* If Parameter = frequency in band 9 */
-	case FREQ_BAND_09: 
+
+	/* If Parameter = frequency in band 9 */
+	case FREQ_BAND_09:
 	{
 		float frequency;
 		param_val = msg->payload.set_parm_req_data.param_value;
@@ -821,6 +825,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 		printf("\r\n Frequency changed to %0.1fMHz", (double)frequency);
 	}
 	break;
+
 #endif
 	case CHANNEL_PAGE:
 	{
@@ -828,9 +833,9 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 		pib_value.pib_value_8bit = param_val;
 		retval_t status  = tal_pib_set(phyCurrentPage,
 				&pib_value);
-				
+
 		if (status == MAC_SUCCESS) {
-			curr_trx_config_params.channel_page=param_val;
+			curr_trx_config_params.channel_page = param_val;
 			printf("\r\n Channel page changed to %d", param_val);
 		} else {
 			printf("\r\n Channel page change failed");
@@ -840,7 +845,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 
 	/* Handle Tx power value in dBm */
 	/* If parameter = Tx power in dBm */
-	case TX_POWER_DBM: 
+	case TX_POWER_DBM:
 	{
 		uint8_t temp_var;
 #if (TAL_TYPE == AT86RF233)
@@ -882,20 +887,19 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 			printf(
 					"\r\n Tx Power set to %d dBm (TX_PWR=0x%x) on the node",
 					(int8_t)temp_val, tx_pwr_reg);
-				   /* update the data base with this value*/
+			/* update the data base with this value*/
 
-                    /*Tx power in dBm also need to be
-					 * updated as it changes with reg value
-					 **/
-					curr_trx_config_params.tx_power_dbm = temp_val;					
+			/*Tx power in dBm also need to be
+			 * updated as it changes with reg value
+			 **/
+			curr_trx_config_params.tx_power_dbm = temp_val;
 		} else {
 			printf(
 					"\r\n Tx Power set to %d dBm (TX_PWR=0x%x) on the node",
 					(int8_t)param_val, tx_pwr_reg);
-					curr_trx_config_params.tx_power_dbm = param_val;
-					
-		       }
-					curr_trx_config_params.tx_power_reg = tx_pwr_reg;
+			curr_trx_config_params.tx_power_dbm = param_val;
+		}
+		curr_trx_config_params.tx_power_reg = tx_pwr_reg;
 #endif /* (TAL_TYPE != AT86RF233) */
 
 #else               /* In case of AT86Rf212 */
@@ -909,7 +913,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 	/* Handle Tx power value in dBm */
 	/* If Parameter = TX power in Reg value */
-	case TX_POWER_REG: 
+	case TX_POWER_REG:
 	{
 		int8_t tx_pwr_dbm = 0;
 #if (TAL_TYPE == AT86RF233)
@@ -951,17 +955,18 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 			printf(
 					"\r\n Tx Power set to %d dBm (TX_PWR=0x%x) on the node",
 					tx_pwr_dbm, param_val);
-					/* update the data base with this value*/
-					curr_trx_config_params.tx_power_reg = param_val;
+			/* update the data base with this value*/
+			curr_trx_config_params.tx_power_reg = param_val;
 
-					/*Tx power in dBm also need to be
-					 * updated as it changes with reg value
-					 **/
-					curr_trx_config_params.tx_power_dbm = tx_pwr_dbm;
+			/*Tx power in dBm also need to be
+			 * updated as it changes with reg value
+			 **/
+			curr_trx_config_params.tx_power_dbm = tx_pwr_dbm;
 #endif /* End of (TAL_TYPE != AT86RF233) */
 		}
 	}
 	break;
+
 #endif /* End of (TAL_TYPE != AT86RF212) */
 	default:
 		printf(" \r\nUnsupported Parameter");
@@ -1003,6 +1008,7 @@ void marker_tx_timer_handler_cb(void *parameter)
 				(FUNC_PTR)marker_tx_timer_handler_cb,
 				NULL);
 	}
+
 #endif
 	return;
 }
@@ -1040,6 +1046,7 @@ void marker_rsp_timer_handler_cb(void *parameter)
 				(FUNC_PTR)marker_rsp_timer_handler_cb,
 				NULL);
 	}
+
 #endif
 	return;
 }
@@ -1127,7 +1134,7 @@ static void send_result_rsp(void)
 #endif /* #ifdef CRC_SETTING_ON_REMOTE_NODE */
 	{
 		/* Set a value of 0xffffffff if we are not counting CRC errors*/
-		   data->frames_with_wrong_crc
+		data->frames_with_wrong_crc
 			= CCPU_ENDIAN_TO_LE32((uint32_t)(-1));
 	}
 
@@ -1181,7 +1188,7 @@ static void send_peer_info_rsp(void)
  * \brief Function used to send response to the received range test packet
  * \param seq_num sequence number of the range test packet received
  * \param frame_count Count of the received Range Test Packet
- * \param ed ED value of the received range test packet which has to be 
+ * \param ed ED value of the received range test packet which has to be
  *  uploaded into the response payload
  * \param lqi LQI value of the received range test packet which has to be
  * uploaded into the response payload
@@ -1216,7 +1223,6 @@ static void send_range_test_rsp(uint8_t seq_num, uint32_t frame_count,
 			true);
 }
 
-
 /**
  * \brief Function used to get the board details of peer node
  *
@@ -1231,8 +1237,11 @@ static void get_node_info(peer_info_rsp_t *data)
 	/* Get the MAC address of the node */
 	data->mac_address = tal_pib.IeeeAddress;
 	data->fw_version = reverse_float(FIRMWARE_VERSION);
-	data->feature_mask = CCPU_ENDIAN_TO_LE32((MULTI_CHANNEL_SELECT)|(PER_RANGE_TEST_MODE)|(PER_REMOTE_CONFIG_MODE)|(PKT_STREAMING_MODE)|(CONTINUOUS_RX_ON_MODE));
-	
+	data->feature_mask
+		= CCPU_ENDIAN_TO_LE32(
+			(MULTI_CHANNEL_SELECT) | (PER_RANGE_TEST_MODE) |
+			(PER_REMOTE_CONFIG_MODE) | (PKT_STREAMING_MODE) |
+			(CONTINUOUS_RX_ON_MODE));
 }
 
 #if (ANTENNA_DIVERSITY == 1)

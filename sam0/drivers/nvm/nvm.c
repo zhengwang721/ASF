@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include "nvm.h"
@@ -198,7 +198,8 @@ enum status_code nvm_execute_command(
 	uint32_t temp;
 
 	/* Check that the address given is valid  */
-	if (address > ((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)){
+	if (address > ((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)
+		&& !(address >= NVMCTRL_AUX0_ADDRESS && address <= NVMCTRL_AUX1_ADDRESS )){
 #ifdef FEATURE_NVM_RWWEE
 		if (address >= ((uint32_t)NVMCTRL_RWW_EEPROM_SIZE + NVMCTRL_RWW_EEPROM_ADDR)
 			|| address < NVMCTRL_RWW_EEPROM_ADDR){
@@ -288,6 +289,9 @@ enum status_code nvm_execute_command(
  * Writes from a buffer to a given page in the NVM memory, retaining any
  * unmodified data already stored in the page.
  *
+ * \note If manual write mode is enable, write command must be executed after
+ * this function, otherwise the data will not write to NVM from page buffer.
+ *
  * \warning This routine is unsafe if data integrity is critical; a system reset
  *          during the update process will result in up to one row of data being
  *          lost. If corruption must be avoided in all circumstances (including
@@ -361,6 +365,7 @@ enum status_code nvm_update_buffer(
 	} while (error_code == STATUS_BUSY);
 
 	if (error_code != STATUS_OK) {
+		system_interrupt_leave_critical_section();
 		return error_code;
 	}
 
@@ -374,6 +379,7 @@ enum status_code nvm_update_buffer(
 		} while (error_code == STATUS_BUSY);
 
 		if (error_code != STATUS_OK) {
+			system_interrupt_leave_critical_section();
 			return error_code;
 		}
 	}
@@ -400,6 +406,9 @@ enum status_code nvm_update_buffer(
  * \note For SAMD21 RWW devices, see \c SAMD21_64K, command \c NVM_COMMAND_RWWEE_WRITE_PAGE
  * must be executed before any other commands after writing a page,
  * refer to errata 13588.
+ *
+ * \note If manual write mode is enable, write command must be executed after
+ * this function, otherwise the data will not write to NVM from page buffer.
  *
  * \return Status of the attempt to write a page.
  *
@@ -484,11 +493,12 @@ enum status_code nvm_write_buffer(
 		NVM_MEMORY[nvm_address++] = data;
 	}
 
-	/* Perform a manual NVM write when the length of data to be programmed is
-	 * less than page size */
-	if (length < NVMCTRL_PAGE_SIZE) {
+	/* If automatic page write mode is enable, then perform a manual NVM
+	 * write when the length of data to be programmed is less than page size
+	 */
+	if ((_nvm_dev.manual_page_write == false) && (length < NVMCTRL_PAGE_SIZE)) {
 #ifdef FEATURE_NVM_RWWEE
-	 return ((is_rww_eeprom) ? 
+	 return ((is_rww_eeprom) ?
 				(nvm_execute_command(NVM_COMMAND_RWWEE_WRITE_PAGE,destination_address, 0)):
 	 			(nvm_execute_command(NVM_COMMAND_WRITE_PAGE,destination_address, 0)));
 #else
@@ -646,7 +656,7 @@ enum status_code nvm_erase_row(
 #endif
 
 #ifdef FEATURE_NVM_RWWEE
-	nvm_module->CTRLA.reg = ((is_rww_eeprom) ? 
+	nvm_module->CTRLA.reg = ((is_rww_eeprom) ?
 								(NVM_COMMAND_RWWEE_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY):
 								(NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY));
 #else
@@ -794,7 +804,12 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod33_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & FUSES_BOD33_ACTION_Msk)
 			>> FUSES_BOD33_ACTION_Pos);
-#elif (SAMD20) || (SAMD21)
+
+	fusebits->bod33_hysteresis = (bool)
+			((raw_user_row[1] & FUSES_BOD33_HYST_Msk)
+			>> FUSES_BOD33_HYST_Pos);
+
+#elif (SAMD20) || (SAMD21) || (SAMR21)|| (SAMDA1)
 	fusebits->bod33_level = (uint8_t)
 			((raw_user_row[0] & FUSES_BOD33USERLEVEL_Msk)
 			>> FUSES_BOD33USERLEVEL_Pos);
@@ -806,6 +821,9 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod33_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & FUSES_BOD33_ACTION_Msk)
 			>> FUSES_BOD33_ACTION_Pos);
+	fusebits->bod33_hysteresis = (bool)
+			((raw_user_row[1] & FUSES_BOD33_HYST_Msk)
+			>> FUSES_BOD33_HYST_Pos);
 #elif (SAMC21)
 	fusebits->bodvdd_level = (uint8_t)
 			((raw_user_row[0] & FUSES_BODVDDUSERLEVEL_Msk)
@@ -818,6 +836,9 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bodvdd_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & FUSES_BODVDD_ACTION_Msk)
 			>> FUSES_BODVDD_ACTION_Pos);
+
+	fusebits->bodvdd_hysteresis = (raw_user_row[1] & FUSES_BODVDD_HYST_Msk)
+									>> FUSES_BODVDD_HYST_Pos;
 #else
 	fusebits->bod33_level = (uint8_t)
 				((raw_user_row[0] & SYSCTRL_FUSES_BOD33USERLEVEL_Msk)
@@ -831,6 +852,42 @@ static void _nvm_translate_raw_fusebits_to_struct (
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_ACTION_Msk)
 			>> SYSCTRL_FUSES_BOD33_ACTION_Pos);
 
+	fusebits->bod33_hysteresis = (bool)
+			((raw_user_row[1] & SYSCTRL_FUSES_BOD33_HYST_Msk)
+			>> SYSCTRL_FUSES_BOD33_HYST_Pos);
+
+#endif
+
+#ifdef FEATURE_BOD12
+
+#ifndef FUSES_BOD12USERLEVEL_Pos
+#define FUSES_BOD12USERLEVEL_Pos 17
+#define FUSES_BOD12USERLEVEL_Msk (0x3Ful << FUSES_BOD12USERLEVEL_Pos)
+#endif
+#ifndef FUSES_BOD12_DIS_Pos
+#define FUSES_BOD12_DIS_Pos 23
+#define FUSES_BOD12_DIS_Msk (0x1ul << FUSES_BOD12_DIS_Pos)
+#endif
+#ifndef FUSES_BOD12_ACTION_Pos
+#define FUSES_BOD12_ACTION_Pos 24
+#define FUSES_BOD12_ACTION_Msk (0x3ul << FUSES_BOD12_ACTION_Pos)
+#endif
+	
+	fusebits->bod12_level = (uint8_t)
+			((raw_user_row[0] & FUSES_BOD12USERLEVEL_Msk)
+			>> FUSES_BOD12USERLEVEL_Pos);
+
+	fusebits->bod12_enable = (bool)
+			(!((raw_user_row[0] & FUSES_BOD12_DIS_Msk)
+			>> FUSES_BOD12_DIS_Pos));
+
+	fusebits->bod12_action = (enum nvm_bod12_action)
+			((raw_user_row[0] & FUSES_BOD12_ACTION_Msk)
+			>> FUSES_BOD33_ACTION_Pos);
+
+	fusebits->bod12_hysteresis = (bool)
+			((raw_user_row[1] & FUSES_BOD12_HYST_Msk)
+			>> FUSES_BOD12_HYST_Pos);
 #endif
 
 	fusebits->wdt_enable = (bool)
@@ -885,7 +942,7 @@ enum status_code nvm_get_fuses (
 
 	/* Make sure the module is ready */
 	while (!nvm_is_ready()) {
-	};
+	}
 
 	/* Read the fuse settings in the user row, 64 bit */
 	((uint16_t*)&raw_fusebits)[0] = (uint16_t)NVM_MEMORY[NVMCTRL_USER / 2];
@@ -898,3 +955,180 @@ enum status_code nvm_get_fuses (
 	return error_code;
 }
 
+/**
+ * \brief Set fuses from user row.
+ *
+ * Set fuse settings from the user row.
+ *
+ * \note When writing to the user row, the values do not get loaded by the
+ * other modules on the device until a device reset occurs.
+ *
+ * \param[in] fusebits Pointer to a 64-bit wide memory buffer of type struct nvm_fusebits
+ *
+ * \return             Status of read fuses attempt.
+ *
+ * \retval STATUS_OK   This function will always return STATUS_OK
+ *
+ * \retval STATUS_BUSY             If the NVM controller was already busy
+ *                                 executing a command when the new command
+ *                                 was issued
+ * \retval STATUS_ERR_IO           If the command was invalid due to memory or
+ *                                 security locking
+ * \retval STATUS_ERR_INVALID_ARG  If the given command was invalid or
+ *                                 unsupported
+ * \retval STATUS_ERR_BAD_ADDRESS  If the given address was invalid
+ */
+
+enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
+{
+    uint32_t fusebits[2];
+	enum status_code error_code = STATUS_OK;
+
+	if (fb == NULL) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+    /* Read the fuse settings in the user row, 64 bit */
+    fusebits[0] = *((uint32_t *)NVMCTRL_AUX0_ADDRESS);
+    fusebits[1] = *(((uint32_t *)NVMCTRL_AUX0_ADDRESS) + 1);
+
+	/* Set user fuses bit */
+	fusebits[0] &= (~NVMCTRL_FUSES_BOOTPROT_Msk);
+	fusebits[0] |= NVMCTRL_FUSES_BOOTPROT(fb->bootloader_size);
+
+	fusebits[0] &= (~NVMCTRL_FUSES_EEPROM_SIZE_Msk);
+	fusebits[0] |= NVMCTRL_FUSES_EEPROM_SIZE(fb->eeprom_size);
+
+#if (SAML21)
+	fusebits[0] &= (~FUSES_BOD33USERLEVEL_Msk);
+	fusebits[0] |= FUSES_BOD33USERLEVEL(fb->bod33_level);
+
+	fusebits[0] &= (~FUSES_BOD33_DIS_Msk);
+	fusebits[0] |= (!fb->bod33_enable) << FUSES_BOD33_DIS_Pos;
+
+	fusebits[0] &= (~FUSES_BOD33_ACTION_Msk);
+	fusebits[0] |= fb->bod33_action << FUSES_BOD33_ACTION_Pos;
+
+	fusebits[1] &= (~FUSES_BOD33_HYST_Msk);
+	fusebits[1] |= fb->bod33_hysteresis << FUSES_BOD33_HYST_Pos;
+
+#elif (SAMD20) || (SAMD21) || (SAMR21) || (SAMDA1)
+	fusebits[0] &= (~FUSES_BOD33USERLEVEL_Msk);
+	fusebits[0] |= FUSES_BOD33USERLEVEL(fb->bod33_level);
+
+	fusebits[0] &= (~FUSES_BOD33_EN_Msk);
+	fusebits[0] |= (fb->bod33_enable) << FUSES_BOD33_EN_Pos;
+
+	fusebits[0] &= (~FUSES_BOD33_ACTION_Msk);
+	fusebits[0] |= fb->bod33_action << FUSES_BOD33_ACTION_Pos;
+
+	fusebits[1] &= (~FUSES_BOD33_HYST_Msk);
+	fusebits[1] |= fb->bod33_hysteresis << FUSES_BOD33_HYST_Pos;
+
+#elif (SAMC21)
+	fusebits[0] &= (~FUSES_BODVDDUSERLEVEL_Msk);
+	fusebits[0] |= FUSES_BODVDDUSERLEVEL(fb->bodvdd_level);
+
+	fusebits[0] &= (~FUSES_BODVDD_DIS_Msk);
+	fusebits[0] |= (!fb->bodvdd_enable) << FUSES_BODVDD_DIS_Pos;
+
+	fusebits[0] &= (~FUSES_BODVDD_ACTION_Msk);
+	fusebits[0] |= fb->bodvdd_action << FUSES_BODVDD_ACTION_Pos;
+
+	fusebits[1] &= (~FUSES_BODVDD_HYST_Msk);
+	fusebits[1] |= fb->bodvdd_hysteresis << FUSES_BODVDD_HYST_Pos;
+
+#else
+	fusebits[0] &= (~SYSCTRL_FUSES_BOD33USERLEVEL_Msk);
+	fusebits[0] |= SYSCTRL_FUSES_BOD33USERLEVEL(fb->bod33_level);
+
+	fusebits[0] &= (~SYSCTRL_FUSES_BOD33_EN_Msk);
+	fusebits[0] |= (fb->bod33_enable) << SYSCTRL_FUSES_BOD33_EN_Pos;
+
+	fusebits[0] &= (~SYSCTRL_FUSES_BOD33_ACTION_Msk);
+	fusebits[0] |= fb->bod33_action << SYSCTRL_FUSES_BOD33_ACTION_Pos;
+
+	fusebits[1] &= (~SYSCTRL_FUSES_BOD33_HYST_Msk);
+	fusebits[1] |= fb->bod33_hysteresis << SYSCTRL_FUSES_BOD33_HYST_Pos;
+
+#endif
+
+	fusebits[0] &= (~WDT_FUSES_ENABLE_Msk);
+	fusebits[0] |= fb->wdt_enable << WDT_FUSES_ENABLE_Pos;
+
+	fusebits[0] &= (~WDT_FUSES_ALWAYSON_Msk);
+	fusebits[0] |= (fb->wdt_always_on) << WDT_FUSES_ALWAYSON_Pos;
+
+	fusebits[0] &= (~WDT_FUSES_PER_Msk);
+	fusebits[0] |= fb->wdt_timeout_period << WDT_FUSES_PER_Pos;
+
+#if (SAML21) || (SAMC21)
+	fusebits[1] &= (~WDT_FUSES_WINDOW_Msk);
+	fusebits[1] |= fb->wdt_window_timeout << WDT_FUSES_WINDOW_Pos;
+#else
+   /* WDT Windows timout lay between two 32-bit words in the user row. the last one bit lays in word[0],
+	   and the other bits in word[1] */
+	fusebits[0] &= (~WDT_FUSES_WINDOW_0_Msk);
+	fusebits[0] |= (fb->wdt_window_timeout & 0x1) << WDT_FUSES_WINDOW_0_Pos;
+
+	fusebits[1] &= (~WDT_FUSES_WINDOW_1_Msk);
+	fusebits[1] |= (fb->wdt_window_timeout >> 1) << WDT_FUSES_WINDOW_1_Pos;
+
+#endif
+	fusebits[1] &= (~WDT_FUSES_EWOFFSET_Msk);
+	fusebits[1] |= fb->wdt_early_warning_offset << WDT_FUSES_EWOFFSET_Pos;
+
+	fusebits[1] &= (~WDT_FUSES_WEN_Msk);
+	fusebits[1] |= fb->wdt_window_mode_enable_at_poweron << WDT_FUSES_WEN_Pos;
+
+	fusebits[1] &= (~NVMCTRL_FUSES_REGION_LOCKS_Msk);
+	fusebits[1] |= fb->lockbits << NVMCTRL_FUSES_REGION_LOCKS_Pos;
+
+#ifdef FEATURE_BOD12
+	
+#ifndef FUSES_BOD12USERLEVEL_Pos
+#define FUSES_BOD12USERLEVEL_Pos 17
+#define FUSES_BOD12USERLEVEL_Msk (0x3Ful << FUSES_BOD12USERLEVEL_Pos)
+#endif
+#ifndef FUSES_BOD12_DIS_Pos
+#define FUSES_BOD12_DIS_Pos 23
+#define FUSES_BOD12_DIS_Msk (0x1ul << FUSES_BOD12_DIS_Pos)
+#endif
+#ifndef FUSES_BOD12_ACTION_Pos
+#define FUSES_BOD12_ACTION_Pos 24
+#define FUSES_BOD12_ACTION_Msk (0x3ul << FUSES_BOD12_ACTION_Pos)
+#endif
+		
+	fusebits[0] &= (~FUSES_BOD12USERLEVEL_Msk);
+	fusebits[0] |= ((FUSES_BOD12USERLEVEL_Msk & ((fb->bod33_level) << 
+						FUSES_BOD12USERLEVEL_Pos)));
+
+	fusebits[0] &= (~FUSES_BOD12_DIS_Msk);
+	fusebits[0] |= (!fb->bod12_enable) << FUSES_BOD12_DIS_Pos;
+
+	fusebits[0] &= (~FUSES_BOD12_ACTION_Msk);
+	fusebits[0] |= fb->bod12_action << FUSES_BOD12_ACTION_Pos;
+
+	fusebits[1] &= (~FUSES_BOD12_HYST_Msk);
+	fusebits[1] |= fb->bod12_hysteresis << FUSES_BOD12_HYST_Pos;
+#endif
+
+	error_code = nvm_execute_command(NVM_COMMAND_ERASE_AUX_ROW,NVMCTRL_AUX0_ADDRESS,0);
+	if (error_code != STATUS_OK) {
+		return error_code;
+	}
+
+	error_code = nvm_execute_command(NVM_COMMAND_PAGE_BUFFER_CLEAR,NVMCTRL_AUX0_ADDRESS,0);
+	if (error_code != STATUS_OK) {
+		return error_code;
+	}
+
+	*((uint32_t *)NVMCTRL_AUX0_ADDRESS) = fusebits[0];
+    *(((uint32_t *)NVMCTRL_AUX0_ADDRESS) + 1) = fusebits[1];
+
+	error_code = nvm_execute_command(NVM_COMMAND_WRITE_AUX_ROW,NVMCTRL_AUX0_ADDRESS,0);
+	if (error_code != STATUS_OK) {
+		return error_code;
+	}
+
+	return error_code;
+}

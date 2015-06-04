@@ -99,16 +99,16 @@ void CAN0_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler
 void CAN1_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 #endif
 void TCC0_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#ifdef ID_TCC1
 void TCC1_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
+#ifdef ID_TCC2
 void TCC2_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
 void TC0_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void TC1_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-#ifdef ID_TC2
 void TC2_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-#endif
-#ifdef ID_TC3
 void TC3_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
-#endif
 void TC4_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 #ifdef ID_ADC0
 void ADC0_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
@@ -191,20 +191,20 @@ const DeviceVectors exception_table = {
         (void*) (0UL), /* Reserved */
 #endif
         (void*) TCC0_Handler,           /* 17 Timer Counter Control 0 */
+#ifdef ID_TCC1
         (void*) TCC1_Handler,           /* 18 Timer Counter Control 1 */
+#else
+        (void*) (0UL), /* Reserved */
+#endif
+#ifdef ID_TCC2
         (void*) TCC2_Handler,           /* 19 Timer Counter Control 2 */
+#else
+        (void*) (0UL), /* Reserved */
+#endif
         (void*) TC0_Handler,            /* 20 Basic Timer Counter 0 */
         (void*) TC1_Handler,            /* 21 Basic Timer Counter 1 */
-#ifdef ID_TC2
         (void*) TC2_Handler,            /* 22 Basic Timer Counter 2 */
-#else
-        (void*) (0UL), /* Reserved */
-#endif
-#ifdef ID_TC3
         (void*) TC3_Handler,            /* 23 Basic Timer Counter 3 */
-#else
-        (void*) (0UL), /* Reserved */
-#endif
         (void*) TC4_Handler,            /* 24 Basic Timer Counter 4 */
 #ifdef ID_ADC0
         (void*) ADC0_Handler,           /* 25 Analog Digital Converter 0 */

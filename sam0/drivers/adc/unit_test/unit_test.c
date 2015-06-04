@@ -76,10 +76,14 @@
  *  - SAM D20 Xplained Pro board
  *  - SAM D21 Xplained Pro board
  *  - SAM L21 Xplained Pro board
+ *  - SAM DA1 Xplained Pro board
  *  - SAM C21 Xplained Pro board
  *
  * \section asfdoc_sam0_adc_unit_test_setup Setup
  * The following connections has to be made using wires:
+ * - SAM D21/L21/C21 Xplained Pro
+ *  - \b DAC VOUT (PA02) <-----> ADC4 (PA04)
+ * - SAM D20 Xplained Pro
  *  - \b DAC VOUT (PA02) <-----> ADC2 (PB08)
  *
  * To run the test:
@@ -106,7 +110,7 @@
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -155,7 +159,7 @@ volatile bool adc_init_success = false;
  *
  * \param module Pointer to the ADC module (not used)
  */
-static void adc_user_callback(const struct adc_module *const module)
+static void adc_user_callback(struct adc_module *const module)
 {
 	interrupt_flag = true;
 }
@@ -231,8 +235,8 @@ static void run_adc_init_test(const struct test_case *test)
 	/* Structure for ADC configuration */
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-	config.positive_input = ADC_POSITIVE_INPUT_PIN2;
-	config.negative_input = ADC_NEGATIVE_INPUT_GND;
+	config.positive_input = CONF_ADC_POSITIVE_INPUT;
+	config.negative_input = CONF_ADC_NEGATIVE_INPUT;
 #if (SAML21) || (SAMC21)
 	config.reference      = ADC_REFERENCE_INTREF;
 #else
@@ -299,7 +303,12 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 			(adc_result < (ADC_VAL_DAC_HALF_OUTPUT + ADC_OFFSET)),
 			"Error in ADC conversion at 0.5V input (Expected: ~%d, Result: %d)", ADC_VAL_DAC_HALF_OUTPUT, adc_result);
 
+	/* Errata 14094 for SAMC21
+	   Once set, the ADC.SWTRIG.START will not be cleared until the Microcontroller is reset.
+	   Border effect: FLUSH function always start a new conversion, once START = 1. */
+#if !(SAMC21)
 	adc_flush(&adc_inst);
+#endif
 
 	/* Set 1V on DAC output */
 	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_ONE_VOLT);
@@ -319,8 +328,10 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 
 	/* Ensure ADC gives linearly increasing conversions for linearly increasing inputs */
 	for (uint16_t i = 0; i < DAC_VAL_ONE_VOLT; i++) {
+	/* Errata 14094 for SAMC21 */
+#if !(SAMC21)
 		adc_flush(&adc_inst);
-
+#endif
 		/* Write the next highest DAC output voltage */
 		dac_chan_write(&dac_inst, DAC_CHANNEL_0, i);
 		delay_ms(1);
@@ -448,8 +459,8 @@ static void setup_adc_average_mode_test(const struct test_case *test)
 	adc_disable(&adc_inst);
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-	config.positive_input     = ADC_POSITIVE_INPUT_PIN2;
-	config.negative_input     = ADC_NEGATIVE_INPUT_GND;
+	config.positive_input     = CONF_ADC_POSITIVE_INPUT;
+	config.negative_input     = CONF_ADC_NEGATIVE_INPUT;
 #if (SAML21) || (SAMC21)
 	config.reference          = ADC_REFERENCE_INTREF;
 #else
@@ -531,8 +542,8 @@ static void setup_adc_window_mode_test(const struct test_case *test)
 	adc_disable(&adc_inst);
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-	config.positive_input = ADC_POSITIVE_INPUT_PIN2;
-	config.negative_input = ADC_NEGATIVE_INPUT_GND;
+	config.positive_input = CONF_ADC_POSITIVE_INPUT;
+	config.negative_input = CONF_ADC_NEGATIVE_INPUT;
 #if (SAML21) || (SAMC21)
 	config.reference      = ADC_REFERENCE_INTREF;
 	config.clock_prescaler = ADC_CLOCK_PRESCALER_DIV16;

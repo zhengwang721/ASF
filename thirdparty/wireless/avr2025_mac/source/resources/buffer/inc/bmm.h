@@ -3,7 +3,7 @@
  *
  * @brief This file contains the Buffer Management Module definitions.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,15 +41,12 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef BMM_INTERFACE_H
 #define BMM_INTERFACE_H
 
@@ -116,6 +113,7 @@ extern "C" {
  * This function should be called before using any other functionality
  * of buffer module.
  *
+ * @ingroup apiResApi
  */
 void bmm_buffer_init(void);
 
@@ -131,8 +129,15 @@ void bmm_buffer_init(void);
  * @return pointer to the buffer allocated,
  *  NULL if buffer not available.
  *
+ * @ingroup apiResApi
  */
+#if defined(ENABLE_LARGE_BUFFER)
+buffer_t *bmm_buffer_alloc(uint16_t size);
+
+#else
 buffer_t *bmm_buffer_alloc(uint8_t size);
+
+#endif
 
 /**
  * @brief Frees up a buffer.
@@ -143,10 +148,14 @@ buffer_t *bmm_buffer_alloc(uint8_t size);
  *
  * @param pbuffer Pointer to buffer that has to be freed.
  *
+ * @ingroup apiResApi
  */
 void bmm_buffer_free(buffer_t *pbuffer);
 
-/* ! @} */
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
+
 #endif /* BMM_INTERFACE_H */
 
 /* EOF */

@@ -51,7 +51,7 @@
 /*@{*/
 
 #define PAC_U2120
-#define REV_PAC                     0x100
+#define REV_PAC                     0x110
 
 /* -------- PAC_WRCTRL : (PAC Offset: 0x00) (R/W 32) Write control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -70,10 +70,10 @@ typedef union {
 
 #define PAC_WRCTRL_PERID_Pos        0            /**< \brief (PAC_WRCTRL) Peripheral identifier */
 #define PAC_WRCTRL_PERID_Msk        (0xFFFFul << PAC_WRCTRL_PERID_Pos)
-#define PAC_WRCTRL_PERID(value)     ((PAC_WRCTRL_PERID_Msk & ((value) << PAC_WRCTRL_PERID_Pos)))
+#define PAC_WRCTRL_PERID(value)     (PAC_WRCTRL_PERID_Msk & ((value) << PAC_WRCTRL_PERID_Pos))
 #define PAC_WRCTRL_KEY_Pos          16           /**< \brief (PAC_WRCTRL) Peripheral access control key */
 #define PAC_WRCTRL_KEY_Msk          (0xFFul << PAC_WRCTRL_KEY_Pos)
-#define PAC_WRCTRL_KEY(value)       ((PAC_WRCTRL_KEY_Msk & ((value) << PAC_WRCTRL_KEY_Pos)))
+#define PAC_WRCTRL_KEY(value)       (PAC_WRCTRL_KEY_Msk & ((value) << PAC_WRCTRL_KEY_Pos))
 #define   PAC_WRCTRL_KEY_OFF_Val          0x0ul  /**< \brief (PAC_WRCTRL) No action */
 #define   PAC_WRCTRL_KEY_CLR_Val          0x1ul  /**< \brief (PAC_WRCTRL) Clear protection */
 #define   PAC_WRCTRL_KEY_SET_Val          0x2ul  /**< \brief (PAC_WRCTRL) Set protection */
@@ -140,17 +140,17 @@ typedef union {
 
 /* -------- PAC_INTFLAGAHB : (PAC Offset: 0x10) (R/W 32) Bridge interrupt flag status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint32_t FLASH_:1;         /*!< bit:      0  FLASH                              */
-    uint32_t HSRAMCM0P_:1;     /*!< bit:      1  HSRAMCM0P                          */
-    uint32_t HSRAMDSU_:1;      /*!< bit:      2  HSRAMDSU                           */
-    uint32_t HPB1_:1;          /*!< bit:      3  HPB1                               */
-    uint32_t HPB0_:1;          /*!< bit:      4  HPB0                               */
-    uint32_t HPB2_:1;          /*!< bit:      5  HPB2                               */
-    uint32_t LPRAMDMAC_:1;     /*!< bit:      6  LPRAMDMAC                          */
-    uint32_t DIVAS_:1;         /*!< bit:      7  DIVAS                              */
-    uint32_t :24;              /*!< bit:  8..31  Reserved                           */
+    __I uint32_t FLASH_:1;         /*!< bit:      0  FLASH                              */
+    __I uint32_t HSRAMCM0P_:1;     /*!< bit:      1  HSRAMCM0P                          */
+    __I uint32_t HSRAMDSU_:1;      /*!< bit:      2  HSRAMDSU                           */
+    __I uint32_t HPB1_:1;          /*!< bit:      3  HPB1                               */
+    __I uint32_t HPB0_:1;          /*!< bit:      4  HPB0                               */
+    __I uint32_t HPB2_:1;          /*!< bit:      5  HPB2                               */
+    __I uint32_t LPRAMDMAC_:1;     /*!< bit:      6  LPRAMDMAC                          */
+    __I uint32_t DIVAS_:1;         /*!< bit:      7  DIVAS                              */
+    __I uint32_t :24;              /*!< bit:  8..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PAC_INTFLAGAHB_Type;
@@ -179,22 +179,22 @@ typedef union {
 
 /* -------- PAC_INTFLAGA : (PAC Offset: 0x14) (R/W 32) Peripheral interrupt flag status - Bridge A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint32_t PAC_:1;           /*!< bit:      0  PAC                                */
-    uint32_t PM_:1;            /*!< bit:      1  PM                                 */
-    uint32_t MCLK_:1;          /*!< bit:      2  MCLK                               */
-    uint32_t RSTC_:1;          /*!< bit:      3  RSTC                               */
-    uint32_t OSCCTRL_:1;       /*!< bit:      4  OSCCTRL                            */
-    uint32_t OSC32KCTRL_:1;    /*!< bit:      5  OSC32KCTRL                         */
-    uint32_t SUPC_:1;          /*!< bit:      6  SUPC                               */
-    uint32_t GCLK_:1;          /*!< bit:      7  GCLK                               */
-    uint32_t WDT_:1;           /*!< bit:      8  WDT                                */
-    uint32_t RTC_:1;           /*!< bit:      9  RTC                                */
-    uint32_t EIC_:1;           /*!< bit:     10  EIC                                */
-    uint32_t FREQM_:1;         /*!< bit:     11  FREQM                              */
-    uint32_t TSENS_:1;         /*!< bit:     12  TSENS                              */
-    uint32_t :19;              /*!< bit: 13..31  Reserved                           */
+    __I uint32_t PAC_:1;           /*!< bit:      0  PAC                                */
+    __I uint32_t PM_:1;            /*!< bit:      1  PM                                 */
+    __I uint32_t MCLK_:1;          /*!< bit:      2  MCLK                               */
+    __I uint32_t RSTC_:1;          /*!< bit:      3  RSTC                               */
+    __I uint32_t OSCCTRL_:1;       /*!< bit:      4  OSCCTRL                            */
+    __I uint32_t OSC32KCTRL_:1;    /*!< bit:      5  OSC32KCTRL                         */
+    __I uint32_t SUPC_:1;          /*!< bit:      6  SUPC                               */
+    __I uint32_t GCLK_:1;          /*!< bit:      7  GCLK                               */
+    __I uint32_t WDT_:1;           /*!< bit:      8  WDT                                */
+    __I uint32_t RTC_:1;           /*!< bit:      9  RTC                                */
+    __I uint32_t EIC_:1;           /*!< bit:     10  EIC                                */
+    __I uint32_t FREQM_:1;         /*!< bit:     11  FREQM                              */
+    __I uint32_t TSENS_:1;         /*!< bit:     12  TSENS                              */
+    __I uint32_t :19;              /*!< bit: 13..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PAC_INTFLAGA_Type;
@@ -233,15 +233,15 @@ typedef union {
 
 /* -------- PAC_INTFLAGB : (PAC Offset: 0x18) (R/W 32) Peripheral interrupt flag status - Bridge B -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint32_t PORT_:1;          /*!< bit:      0  PORT                               */
-    uint32_t DSU_:1;           /*!< bit:      1  DSU                                */
-    uint32_t NVMCTRL_:1;       /*!< bit:      2  NVMCTRL                            */
-    uint32_t DMAC_:1;          /*!< bit:      3  DMAC                               */
-    uint32_t MTB_:1;           /*!< bit:      4  MTB                                */
-    uint32_t HMATRIXHS_:1;     /*!< bit:      5  HMATRIXHS                          */
-    uint32_t :26;              /*!< bit:  6..31  Reserved                           */
+    __I uint32_t PORT_:1;          /*!< bit:      0  PORT                               */
+    __I uint32_t DSU_:1;           /*!< bit:      1  DSU                                */
+    __I uint32_t NVMCTRL_:1;       /*!< bit:      2  NVMCTRL                            */
+    __I uint32_t DMAC_:1;          /*!< bit:      3  DMAC                               */
+    __I uint32_t MTB_:1;           /*!< bit:      4  MTB                                */
+    __I uint32_t HMATRIXHS_:1;     /*!< bit:      5  HMATRIXHS                          */
+    __I uint32_t :26;              /*!< bit:  6..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PAC_INTFLAGB_Type;
@@ -266,34 +266,34 @@ typedef union {
 
 /* -------- PAC_INTFLAGC : (PAC Offset: 0x1C) (R/W 32) Peripheral interrupt flag status - Bridge C -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint32_t EVSYS_:1;         /*!< bit:      0  EVSYS                              */
-    uint32_t SERCOM0_:1;       /*!< bit:      1  SERCOM0                            */
-    uint32_t SERCOM1_:1;       /*!< bit:      2  SERCOM1                            */
-    uint32_t SERCOM2_:1;       /*!< bit:      3  SERCOM2                            */
-    uint32_t SERCOM3_:1;       /*!< bit:      4  SERCOM3                            */
-    uint32_t SERCOM4_:1;       /*!< bit:      5  SERCOM4                            */
-    uint32_t SERCOM5_:1;       /*!< bit:      6  SERCOM5                            */
-    uint32_t CAN0_:1;          /*!< bit:      7  CAN0                               */
-    uint32_t CAN1_:1;          /*!< bit:      8  CAN1                               */
-    uint32_t TCC0_:1;          /*!< bit:      9  TCC0                               */
-    uint32_t TCC1_:1;          /*!< bit:     10  TCC1                               */
-    uint32_t TCC2_:1;          /*!< bit:     11  TCC2                               */
-    uint32_t TC0_:1;           /*!< bit:     12  TC0                                */
-    uint32_t TC1_:1;           /*!< bit:     13  TC1                                */
-    uint32_t TC2_:1;           /*!< bit:     14  TC2                                */
-    uint32_t TC3_:1;           /*!< bit:     15  TC3                                */
-    uint32_t TC4_:1;           /*!< bit:     16  TC4                                */
-    uint32_t ADC0_:1;          /*!< bit:     17  ADC0                               */
-    uint32_t ADC1_:1;          /*!< bit:     18  ADC1                               */
-    uint32_t SDADC_:1;         /*!< bit:     19  SDADC                              */
-    uint32_t AC_:1;            /*!< bit:     20  AC                                 */
-    uint32_t DAC_:1;           /*!< bit:     21  DAC                                */
-    uint32_t PTC_:1;           /*!< bit:     22  PTC                                */
-    uint32_t CCL_:1;           /*!< bit:     23  CCL                                */
-    uint32_t TAL_:1;           /*!< bit:     24  TAL                                */
-    uint32_t :7;               /*!< bit: 25..31  Reserved                           */
+    __I uint32_t EVSYS_:1;         /*!< bit:      0  EVSYS                              */
+    __I uint32_t SERCOM0_:1;       /*!< bit:      1  SERCOM0                            */
+    __I uint32_t SERCOM1_:1;       /*!< bit:      2  SERCOM1                            */
+    __I uint32_t SERCOM2_:1;       /*!< bit:      3  SERCOM2                            */
+    __I uint32_t SERCOM3_:1;       /*!< bit:      4  SERCOM3                            */
+    __I uint32_t SERCOM4_:1;       /*!< bit:      5  SERCOM4                            */
+    __I uint32_t SERCOM5_:1;       /*!< bit:      6  SERCOM5                            */
+    __I uint32_t CAN0_:1;          /*!< bit:      7  CAN0                               */
+    __I uint32_t CAN1_:1;          /*!< bit:      8  CAN1                               */
+    __I uint32_t TCC0_:1;          /*!< bit:      9  TCC0                               */
+    __I uint32_t TCC1_:1;          /*!< bit:     10  TCC1                               */
+    __I uint32_t TCC2_:1;          /*!< bit:     11  TCC2                               */
+    __I uint32_t TC0_:1;           /*!< bit:     12  TC0                                */
+    __I uint32_t TC1_:1;           /*!< bit:     13  TC1                                */
+    __I uint32_t TC2_:1;           /*!< bit:     14  TC2                                */
+    __I uint32_t TC3_:1;           /*!< bit:     15  TC3                                */
+    __I uint32_t TC4_:1;           /*!< bit:     16  TC4                                */
+    __I uint32_t ADC0_:1;          /*!< bit:     17  ADC0                               */
+    __I uint32_t ADC1_:1;          /*!< bit:     18  ADC1                               */
+    __I uint32_t SDADC_:1;         /*!< bit:     19  SDADC                              */
+    __I uint32_t AC_:1;            /*!< bit:     20  AC                                 */
+    __I uint32_t DAC_:1;           /*!< bit:     21  DAC                                */
+    __I uint32_t PTC_:1;           /*!< bit:     22  PTC                                */
+    __I uint32_t CCL_:1;           /*!< bit:     23  CCL                                */
+    __I uint32_t TAL_:1;           /*!< bit:     24  TAL                                */
+    __I uint32_t :7;               /*!< bit: 25..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PAC_INTFLAGC_Type;
