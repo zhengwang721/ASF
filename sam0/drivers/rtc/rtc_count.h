@@ -1189,8 +1189,8 @@ static inline uint32_t rtc_read_general_purpose_reg(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>04/2015</td>
- *		<td>Added support for SAML21 and SAMDAx.</td>
+ *		<td>06/2015</td>
+ *		<td>Added support for SAML21, SAMC21, and SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
