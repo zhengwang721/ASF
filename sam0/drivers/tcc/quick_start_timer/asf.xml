@@ -12,7 +12,6 @@
 		<device-support value="samd10"/>
 		<device-support value="samr21"/>
 		<device-support value="saml21"/>
-		<device-support value="samda0"/>
 		<device-support value="samda1"/>
 		<device-support value="samc21"/>
 	</module>

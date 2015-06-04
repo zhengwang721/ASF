@@ -130,6 +130,8 @@ static void configure_can(void)
 
 	/* Enable interrupts for this CAN module */
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_CAN0);
+	can_enable_interrupt(&can_instance, CAN_PROTOCAL_ERROR_ARBITRATION
+			| CAN_PROTOCAL_ERROR_DATA);
 }
 //! [can_init_setup]
 
@@ -295,6 +297,12 @@ void CAN0_Handler(void)
 		printf("\r\n\r\n");
 	}
 
+	if ((status & CAN_PROTOCAL_ERROR_ARBITRATION)
+			|| (status & CAN_PROTOCAL_ERROR_DATA)) {
+		can_clear_interrupt_status(&can_instance, CAN_PROTOCAL_ERROR_ARBITRATION
+			 	| CAN_PROTOCAL_ERROR_DATA);
+		printf("Protocal error, please double check the clock in two boards. \r\n\r\n");
+	}
 }
 //! [can_interrupt_handler]
 

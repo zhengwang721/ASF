@@ -126,7 +126,7 @@ static enum status_code _sdadc_set_config(
 	}
 
 	/* Configure reference */
-	sdadc_module->REFCTRL.reg = (config->reference.ref_sel) || (config->reference.ref_range) ||
+	sdadc_module->REFCTRL.reg = (config->reference.ref_sel) | (config->reference.ref_range) |
 						(config->reference.on_ref_buffer << SDADC_REFCTRL_ONREFBUF_Pos);
 
 	/* Configure CTRLB */

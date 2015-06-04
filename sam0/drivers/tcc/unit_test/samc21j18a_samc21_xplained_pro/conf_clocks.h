@@ -53,7 +53,7 @@
 #  define CONF_CLOCK_CPU_DIVIDER                  SYSTEM_MAIN_CLOCK_DIV_1
 
 /* SYSTEM_CLOCK_SOURCE_OSC48M configuration - Internal 48MHz oscillator */
-#  define CONF_CLOCK_OSC48M_FREQ_DIV              SYSTEM_OSC48M_DIV_1
+#  define CONF_CLOCK_OSC48M_FREQ_DIV              SYSTEM_OSC48M_DIV_12
 #  define CONF_CLOCK_OSC48M_ON_DEMAND             true
 #  define CONF_CLOCK_OSC48M_RUN_IN_STANDBY        false
 
@@ -93,9 +93,6 @@
 #  define CONF_CLOCK_OSC32K_ON_DEMAND             true
 #  define CONF_CLOCK_OSC32K_RUN_IN_STANDBY        false
 
-/* SYSTEM_CLOCK_SOURCE_OSCULP32K configuration - Internal Ultra Low Power 32KHz oscillator */
-#  define CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT    true
-#  define CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT   true
 
 /* SYSTEM_CLOCK_SOURCE_DPLL configuration - Digital Phase-Locked Loop */
 #  define CONF_CLOCK_DPLL_ENABLE                  false

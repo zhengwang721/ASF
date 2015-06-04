@@ -68,7 +68,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM DA0/DA1
+ *  - Atmel | SMART SAM DAx
  *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
@@ -99,35 +99,35 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_SYNC_SCHEME_V2</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_OVER_SAMPLE</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_HARDWARE_FLOW_CONTROL</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IRDA</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_LIN_SLAVE</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_COLLISION_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_START_FRAME_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA0/DA1/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_RS485</td>
@@ -276,7 +276,7 @@ extern "C" {
  * Define SERCOM USART features set according to different device family.
  * @{
  */
-#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAMDA0) || \
+#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || \
 	(SAMDA1) || (SAMC21) || defined(__DOXYGEN__)
 /** Usart sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2
@@ -1300,7 +1300,7 @@ static inline bool lin_master_transmission_status(struct usart_module *const mod
  *		<th>Changelog</th>
  *	</tr>
  *  <tr>
- *		<td>Add support for SAML21 and SAMDA0/DA1(same features as SAMD21)</td>
+ *		<td>Add support for SAML21 and SAMDAx(same features as SAMD21)</td>
  *  </tr>
  *  <tr>
  *		<td>Add support for SAMD10/D11 (same features as SAMD21)</td>
@@ -1442,7 +1442,7 @@ static inline bool lin_master_transmission_status(struct usart_module *const mod
  *	<tr>
  *		<td>F</td>
  *		<td>04/2015</td>
- *		<td>Add support for SAML21 and SAMDA0/DA1.</td>
+ *		<td>Add support for SAML21 and SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>E</td>

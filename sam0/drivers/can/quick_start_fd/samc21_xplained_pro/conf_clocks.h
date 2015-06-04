@@ -53,7 +53,7 @@
 #  define CONF_CLOCK_CPU_DIVIDER                  SYSTEM_MAIN_CLOCK_DIV_1
 
 /* SYSTEM_CLOCK_SOURCE_OSC48M configuration - Internal 48MHz oscillator */
-#  define CONF_CLOCK_OSC48M_FREQ_DIV              SYSTEM_OSC48M_DIV_1
+#  define CONF_CLOCK_OSC48M_FREQ_DIV              SYSTEM_OSC48M_DIV_3
 #  define CONF_CLOCK_OSC48M_ON_DEMAND             true
 #  define CONF_CLOCK_OSC48M_RUN_IN_STANDBY        false
 
@@ -76,8 +76,8 @@
 #  define CONF_CLOCK_XOSC32K_STARTUP_TIME         SYSTEM_XOSC32K_STARTUP_65536
 #  define CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT    false
 #  define CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT  true
-#  define CONF_CLOCK_XOSC32K_ON_DEMAND            true
-#  define CONF_CLOCK_XOSC32K_RUN_IN_STANDBY       false
+#  define CONF_CLOCK_XOSC32K_ON_DEMAND            false
+#  define CONF_CLOCK_XOSC32K_RUN_IN_STANDBY       true
 #  define CONF_CLOCK_XOSC32K_FAILURE_DETECTOT_PRE    SYSTEM_CLOCK_XOSC32K_FAILURE_DETECTOR_PRESCALER_1
 #  define CONF_CLOCK_XOSC32K_FAILURE_DETECTOT_EVENT_OUTPUT_EANBLE  false
 #  define CONF_CLOCK_XOSC32K_FAILURE_DETECTOT_EANBLE  false
@@ -93,14 +93,11 @@
 #  define CONF_CLOCK_OSC32K_ON_DEMAND             true
 #  define CONF_CLOCK_OSC32K_RUN_IN_STANDBY        false
 
-/* SYSTEM_CLOCK_SOURCE_OSCULP32K configuration - Internal Ultra Low Power 32KHz oscillator */
-#  define CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT    true
-#  define CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT   true
 
 /* SYSTEM_CLOCK_SOURCE_DPLL configuration - Digital Phase-Locked Loop */
 #  define CONF_CLOCK_DPLL_ENABLE                  true
-#  define CONF_CLOCK_DPLL_ON_DEMAND               true
-#  define CONF_CLOCK_DPLL_RUN_IN_STANDBY          false
+#  define CONF_CLOCK_DPLL_ON_DEMAND               false
+#  define CONF_CLOCK_DPLL_RUN_IN_STANDBY          true
 #  define CONF_CLOCK_DPLL_LOCK_BYPASS             false
 #  define CONF_CLOCK_DPLL_WAKE_UP_FAST            false
 #  define CONF_CLOCK_DPLL_LOW_POWER_ENABLE        false
@@ -126,15 +123,15 @@
 
 /* Configure GCLK generator 0 (Main Clock) */
 #  define CONF_CLOCK_GCLK_0_ENABLE                true
-#  define CONF_CLOCK_GCLK_0_RUN_IN_STANDBY        false
-#  define CONF_CLOCK_GCLK_0_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_OSC48M
+#  define CONF_CLOCK_GCLK_0_RUN_IN_STANDBY        true
+#  define CONF_CLOCK_GCLK_0_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_DPLL
 #  define CONF_CLOCK_GCLK_0_PRESCALER             1
 #  define CONF_CLOCK_GCLK_0_OUTPUT_ENABLE         false
 
 /* Configure GCLK generator 1 */
 #  define CONF_CLOCK_GCLK_1_ENABLE                true
-#  define CONF_CLOCK_GCLK_1_RUN_IN_STANDBY        false
-#  define CONF_CLOCK_GCLK_1_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_OSC48M
+#  define CONF_CLOCK_GCLK_1_RUN_IN_STANDBY        true
+#  define CONF_CLOCK_GCLK_1_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_XOSC32K
 #  define CONF_CLOCK_GCLK_1_PRESCALER             1
 #  define CONF_CLOCK_GCLK_1_OUTPUT_ENABLE         false
 

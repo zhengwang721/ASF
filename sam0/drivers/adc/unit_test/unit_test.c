@@ -81,7 +81,7 @@
  *
  * \section asfdoc_sam0_adc_unit_test_setup Setup
  * The following connections has to be made using wires:
- * - SAM D21/L21 Xplained Pro
+ * - SAM D21/L21/C21 Xplained Pro
  *  - \b DAC VOUT (PA02) <-----> ADC4 (PA04)
  * - SAM D20 Xplained Pro
  *  - \b DAC VOUT (PA02) <-----> ADC2 (PB08)
@@ -303,7 +303,12 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 			(adc_result < (ADC_VAL_DAC_HALF_OUTPUT + ADC_OFFSET)),
 			"Error in ADC conversion at 0.5V input (Expected: ~%d, Result: %d)", ADC_VAL_DAC_HALF_OUTPUT, adc_result);
 
+	/* Errata 14094 for SAMC21
+	   Once set, the ADC.SWTRIG.START will not be cleared until the Microcontroller is reset.
+	   Border effect: FLUSH function always start a new conversion, once START = 1. */
+#if !(SAMC21)
 	adc_flush(&adc_inst);
+#endif
 
 	/* Set 1V on DAC output */
 	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_ONE_VOLT);
@@ -323,8 +328,10 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 
 	/* Ensure ADC gives linearly increasing conversions for linearly increasing inputs */
 	for (uint16_t i = 0; i < DAC_VAL_ONE_VOLT; i++) {
+	/* Errata 14094 for SAMC21 */
+#if !(SAMC21)
 		adc_flush(&adc_inst);
-
+#endif
 		/* Write the next highest DAC output voltage */
 		dac_chan_write(&dac_inst, DAC_CHANNEL_0, i);
 		delay_ms(1);

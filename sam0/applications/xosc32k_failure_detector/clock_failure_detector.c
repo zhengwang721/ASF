@@ -115,7 +115,6 @@ static void init_osculp32k(void)
 	/* Configure and enable the OSCULP32K clock source */
 	struct system_clock_source_osculp32k_config osculp32k_conf;
 	system_clock_source_osculp32k_get_config_defaults(&osculp32k_conf);
-	osculp32k_conf.enable_1khz_output = false;
 
 	system_clock_source_osculp32k_set_config(&osculp32k_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_ULP32K);

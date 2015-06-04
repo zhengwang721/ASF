@@ -33,7 +33,6 @@
 		<device-support value="samr21"/>
 		<device-support value="samd10"/>
 		<device-support value="samd11"/>
-		<device-support value="samda0"/>
 		<device-support value="samda1"/>
 
 		<require idref="sam0.utils"/>
@@ -75,6 +74,41 @@
 
 		<generator value="doxygen-module-v2" default-mcu="unspecified-saml21"/>
 	</module>
+	<module type="meta" id="sam0.drivers.bod.appnote.sam_c" caption="BOD - Brown Out Detector">
+		<info type="keyword" value="technology">
+			<keyword value="Power Management" />
+		</info>
+
+		<info type="appnote" value="AT12198"/>
+		<info type="keyword" value="pdf">
+			<keyword value="BOD"/>
+			<keyword value="Brown Out Detector"/>
+			<keyword value="Power Management" />
+		</info>
+
+		<info type="description" value="pdf">
+			This application note describes how to use the ASF driver for
+			interfacing the Brown Out Detector(s) on the SAM C.
+		</info>
+
+		<build type="include-path" value="."/>
+		<build type="include-path" value="bod_sam_c"/>
+		<build type="header-file" subtype="api" value="bod.h"/>
+		<build type="header-file" value="bod_sam_c/bod_feature.h"/>
+		<build type="c-source" value="bod_sam_c/bod.c"/>
+
+		<build type="doxygen-entry-point" value="asfdoc_sam0_bod_group"/>
+		<build type="doxygen-example-path" value="quick_start"/>
+		<build type="doxygen-quick-start" value="asfdoc_sam0_bod_exqsg"/>
+
+		<build type="header-file" value="quick_start/qs_bod_basic_use_samc.h"/>
+
+		<device-support value="samc21"/>
+
+		<require idref="sam0.utils"/>
+
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samc21"/>
+	</module>
 	<select-by-device id="sam0.drivers.bod" caption="BOD - Brown Out Detector">
 		<module type="driver" id="sam0.drivers.bod#sam_d_r" caption="BOD - Brown Out Detector">
 			<info type="description" value="summary">
@@ -95,7 +129,6 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
-			<device-support value="samda0"/>
 			<device-support value="samda1"/>
 		</module>
 		<module type="driver" id="sam0.drivers.bod#sam_l" caption="BOD - Brown Out Detector">
@@ -113,6 +146,22 @@
 			<build type="doxygen-entry-point" value="asfdoc_sam0_bod_group"/>
 
 			<device-support value="saml21"/>
+		</module>
+		<module type="driver" id="sam0.drivers.bod#sam_c" caption="BOD - Brown Out Detector">
+			<info type="description" value="summary">
+				Driver for the SAM Brown Out Detector(s). Provides a unified
+				interface for the configuration and management of the BOD modules,
+				including the threshold voltages and desired  actions.
+			</info>
+
+			<build type="include-path" value="." />
+			<build type="include-path" value="bod_sam_c"/>
+			<build type="header-file" subtype="api" value="bod.h"/>
+			<build type="c-source" value="bod_sam_c/bod.c"/>
+			<build type="header-file" value="bod_sam_c/bod_feature.h"/>
+			<build type="doxygen-entry-point" value="asfdoc_sam0_bod_group"/>
+
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 </asf>
