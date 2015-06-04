@@ -59,7 +59,7 @@
  * - Callback APIs
  * \endif
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  *  - TRNG (True Random Number Generator)
  *
  * The following devices can use this module:
@@ -174,8 +174,8 @@ struct trng_module {
  *  Configuration structure for a True Random Number Generator.
  */
 struct trng_config {
-	/** If \c true, the True Random Number Generator will not stopped in
-	 *  standby sleep mode. */
+	/** If \c true, the True Random Number Generator will not be stopped in
+	 *  standby sleep mode */
 	bool run_in_standby;
 };
 
