@@ -142,7 +142,7 @@
 		</module>
 	</select-by-device>
 
-	<select-by-config id="sam.utils.fpu_used" name="config.compiler.armgcc.fpu_used" caption="SAM FPU usage" default="yes">
+	<select-by-config id="sam.utils.fpu_used" name="config.compiler.armgcc.fpu_used" caption="SAM FPU usage" default="fpv4">
 		<module type="meta" id="sam.utils.fpu_used#no" caption="SAM with FPU but not used">
 			<build type="library" subtype="user" value="Lib/GCC/libarm_cortexM7l_math.a" toolchain="armgcc"/>
 		</module>
