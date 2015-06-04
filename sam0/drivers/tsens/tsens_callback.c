@@ -58,22 +58,12 @@ void TSENS_Handler(void)
 	uint32_t flags = TSENS->INTFLAG.reg;
 
 	/* store TSENS result in job buffer */
-	uint32_t temp = TSENS->VALUE.reg & 0x00FFFFFF;
+	uint32_t temp = TSENS->VALUE.reg;
+	if(temp & 0x00800000) {
+		temp |= ~TSENS_VALUE_MASK;
+	}
 #if (ERRATA_14476)
-	if(temp & 0x00800000) {
-		*(module->value) = ~(temp - 1) & 0x00FFFFFF;
-	} else if(temp == 0) {
-		*(module->value) = temp;
-	} else {
-		*(module->value) = ~temp + 1;
-	}
-#else
-	if(temp & 0x00800000) {
-		temp = ~(temp - 1) & 0x00FFFFFF;
-		*(module->value) = ~temp + 1;
-	} else {
-		*(module->value) = temp;
-	}
+	*(module->value) = temp * (-1);
 #endif
 
 	for(uint8_t i = 0; i < TSENS_CALLBACK_NUM; i++)

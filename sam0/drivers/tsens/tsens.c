@@ -156,3 +156,92 @@ enum status_code tsens_init(struct tsens_config *config)
 	/* Write configuration to module */
 	return _tsens_set_config(config);
 }
+
+/**
+ * \brief Initializes an TSENS configuration structure to defaults.
+ *
+ * Initializes a given TSENS configuration struct to a set of known default
+ * values. This function should be called on any new instance of the
+ * configuration struct before being modified by the user application.
+ *
+ * The default configuration is as follows:
+ *  \li GCLK generator 0 (GCLK main) clock source
+ *  \li All events (input and generation) disabled
+ *  \li Free running disabled
+ *  \li Run in standby disabled
+ *  \li Window monitor disabled
+ *
+ * Register GAIN and OFFSET is loaded from NVM, or can also be fixed.
+ * If fix this bitfield, pay attention to the relationship between 
+ * GCLK frequency, GAIN and resolution.
+ *
+ * \param[out] config  Pointer to configuration struct to initialize to
+ *                     default values
+ */
+void tsens_get_config_defaults(struct tsens_config *const config)
+{
+	Assert(config);
+	config->clock_source                  = GCLK_GENERATOR_0;
+	config->free_running                  = false;
+	config->run_in_standby                = false;
+	config->window.window_mode            = TSENS_WINDOW_MODE_DISABLE;
+	config->window.window_upper_value     = 0;
+	config->window.window_lower_value     = 0;
+	config->event_action                  = TSENS_EVENT_ACTION_DISABLED;
+
+	uint32_t tsens_bits[2];
+	tsens_bits[0] = *((uint32_t *)NVMCTRL_TEMP_LOG);
+	tsens_bits[1] = *(((uint32_t *)NVMCTRL_TEMP_LOG) + 1);
+	config->calibration.offset   = \
+		((tsens_bits[0] & TSENS_FUSES_OFFSET_Msk) >> TSENS_FUSES_OFFSET_Pos);
+	config->calibration.gain     = \
+		((tsens_bits[0] & TSENS_FUSES_GAIN_0_Msk) >> TSENS_FUSES_GAIN_0_Pos) | \
+		((tsens_bits[1] & TSENS_FUSES_GAIN_1_Msk) >> TSENS_FUSES_GAIN_1_Pos);
+}
+
+/**
+ * \brief Reads the TSENS result.
+ *
+ * Reads the result from an TSENS conversion that was previously started.
+ *
+ * \param[out] result       Pointer to store the result value in
+ *
+ * \return Status of the TSENS read request.
+ * \retval STATUS_OK           The result was retrieved successfully
+ * \retval STATUS_BUSY         A conversion result was not ready
+ * \retval STATUS_ERR_OVERFLOW The result register has been overwritten by the
+ *                             TSENS module before the result was read by the software
+ */
+enum status_code tsens_read(int32_t *result)
+{
+	Assert(result);
+
+	if (!(tsens_get_status() & TSENS_STATUS_RESULT_READY)) {
+		/* Result not ready */
+		return STATUS_BUSY;
+	}
+
+	if (TSENS->STATUS.reg & TSENS_STATUS_OVF) {
+		/* The result is not valid */
+		return STATUS_ERR_BAD_DATA;
+	}
+
+	/* Get TSENS result */
+	uint32_t temp = TSENS->VALUE.reg;
+	if(temp & 0x00800000) {
+		temp |= ~TSENS_VALUE_MASK;
+	}
+#if (ERRATA_14476)
+	*result = temp * (-1);
+#endif
+
+	/* Reset ready flag */
+	tsens_clear_status(TSENS_STATUS_RESULT_READY);
+
+	if (tsens_get_status() & TSENS_STATUS_OVERRUN) {
+		tsens_clear_status(TSENS_STATUS_OVERRUN);
+		return STATUS_ERR_OVERFLOW;
+	}
+
+	return STATUS_OK;
+}

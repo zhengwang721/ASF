@@ -92,7 +92,32 @@
  *  - &plusmn;1&deg;C over 0&deg; ~ 60&deg;C
  *  - &plusmn;3&deg;C over -40&deg; ~ 85&deg;C
  *  - &plusmn;5&deg;C over -40&deg; ~ 105&deg;C
- *
+ * 
+ * Register GAIN and OFFSET is loaded from NVM, or can also be fixed by user.
+ * If fix this bitfield, the relationship between GCLK frequency, GAIN
+ * and resolution as below:
+ * <table>
+ *  <tr>
+ *	  <th>Resolution (#/&deg;C)</th>
+ *	  <th>GAIN@48MHz</th>
+ *	  <th>GAIN@40MHz</th>
+ *	</tr>
+ *	<tr>
+ *	  <td>&times;1 (1&deg;)</td>
+ *    <td>960</td>
+ *    <td>800</td>
+ *  </tr>
+ *	<tr>
+ *	  <td>&times;10 (0.1&deg;)</td>
+ *    <td>9600</td>
+ *    <td>8000</td>
+ *  </tr>
+ *	<tr>
+ *	  <td>&times;100 (1&deg;)</td>
+ *    <td>96000</td>
+ *    <td>80000</td>
+ *  </tr>
+ * </table>
  *
  * \subsection asfdoc_sam0_tsens_module_overview_window_monitor Window Monitor
  * The TSENS module window monitor function can be used to automatically
@@ -268,69 +293,7 @@ struct tsens_config {
  * @{
  */
 enum status_code tsens_init(struct tsens_config *config);
-
-/**
- * \brief Initializes an TSENS configuration structure to defaults.
- *
- * Initializes a given TSENS configuration struct to a set of known default
- * values. This function should be called on any new instance of the
- * configuration struct before being modified by the user application.
- *
- * The default configuration is as follows:
- *  \li GCLK generator 0 (GCLK main) clock source
- *  \li All events (input and generation) disabled
- *  \li Free running disabled
- *  \li Run in standby disabled
- *  \li Window monitor disabled
- * Register GAIN and OFFSET is loaded from NVM, or can also be fixed.
- * If fix this bitfield, the relationship between GCLK frequency, GAIN
- * and resolution as below:
- * <table>
- *  <tr>
- *	  <th>Resolution (#/&deg;C)</th>
- *	  <th>GAIN@48MHz</th>
- *	  <th>GAIN@40MHz</th>
- *	</tr>
- *	<tr>
- *	  <td>&times;1 (1&deg;)</td>
- *    <td>960</td>
- *    <td>800</td>
- *  </tr>
- *	<tr>
- *	  <td>&times;10 (0.1&deg;)</td>
- *    <td>9600</td>
- *    <td>8000</td>
- *  </tr>
- *	<tr>
- *	  <td>&times;100 (1&deg;)</td>
- *    <td>96000</td>
- *    <td>80000</td>
- *  </tr>
- * </table>
- *
- * \param[out] config  Pointer to configuration struct to initialize to
- *                     default values
- */
-static inline void tsens_get_config_defaults(struct tsens_config *const config)
-{
-	Assert(config);
-	config->clock_source                  = GCLK_GENERATOR_0;
-	config->free_running                  = false;
-	config->run_in_standby                = false;
-	config->window.window_mode            = TSENS_WINDOW_MODE_DISABLE;
-	config->window.window_upper_value     = 0;
-	config->window.window_lower_value     = 0;
-	config->event_action                  = TSENS_EVENT_ACTION_DISABLED;
-
-	uint32_t tsens_bits[2];
-	tsens_bits[0] = *((uint32_t *)NVMCTRL_TEMP_LOG);
-	tsens_bits[1] = *(((uint32_t *)NVMCTRL_TEMP_LOG) + 1);
-	config->calibration.gain     = \
-		((tsens_bits[0] & TSENS_FUSES_GAIN_0_Msk) >> TSENS_FUSES_GAIN_0_Pos) | \
-		((tsens_bits[1] & TSENS_FUSES_GAIN_1_Msk) >> TSENS_FUSES_GAIN_1_Pos);
-	config->calibration.offset   = \
-		((tsens_bits[0] & TSENS_FUSES_OFFSET_Msk) >> TSENS_FUSES_OFFSET_Pos);
-}
+void tsens_get_config_defaults(struct tsens_config *const config);
 
 /** @} */
 
@@ -563,62 +526,7 @@ static inline void tsens_start_conversion(void)
 	}
 }
 
-/**
- * \brief Reads the TSENS result.
- *
- * Reads the result from an TSENS conversion that was previously started.
- *
- * \param[out] result       Pointer to store the result value in
- *
- * \return Status of the TSENS read request.
- * \retval STATUS_OK           The result was retrieved successfully
- * \retval STATUS_BUSY         A conversion result was not ready
- * \retval STATUS_ERR_OVERFLOW The result register has been overwritten by the
- *                             TSENS module before the result was read by the software
- */
-static inline enum status_code tsens_read(int32_t *result)
-{
-	Assert(result);
-
-	if (!(tsens_get_status() & TSENS_STATUS_RESULT_READY)) {
-		/* Result not ready */
-		return STATUS_BUSY;
-	}
-
-	if (TSENS->STATUS.reg & TSENS_STATUS_OVF) {
-		/* The result is not valid */
-		return STATUS_ERR_BAD_DATA;
-	}
-
-	/* Get TSENS result */
-	uint32_t temp = TSENS->VALUE.reg & 0x00FFFFFF;
-#if (ERRATA_14476)
-	if(temp & 0x00800000) {
-		*result = ~(temp - 1) & 0x00FFFFFF;
-	} else if(temp == 0) {
-		*result = temp;
-	} else {
-		*result = ~temp + 1;
-	}
-#else
-	if(temp & 0x00800000) {
-		temp = ~(temp - 1) & 0x00FFFFFF;
-		*result = ~temp + 1;
-	} else {
-		*result = temp;
-	}
-#endif
-
-	/* Reset ready flag */
-	tsens_clear_status(TSENS_STATUS_RESULT_READY);
-
-	if (tsens_get_status() & TSENS_STATUS_OVERRUN) {
-		tsens_clear_status(TSENS_STATUS_OVERRUN);
-		return STATUS_ERR_OVERFLOW;
-	}
-
-	return STATUS_OK;
-}
+enum status_code tsens_read(int32_t *result);
 
 /** @} */
 
