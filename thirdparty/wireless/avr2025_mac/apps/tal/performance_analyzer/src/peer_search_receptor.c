@@ -3,7 +3,7 @@
  *
  * \brief Receptor functionalities in Peer Search Process - Performance Analyzer
  *  application
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,14 +41,11 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 /* === INCLUDES ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #include <stdlib.h>
 #include "tal.h"
@@ -284,7 +281,7 @@ static void peer_rsp_send_tx_done_cb(retval_t status, frame_info_t *frame)
  * \brief Send peer response. This is a unicast send to the node which
  *        had earlier send the peer request
  *
- * \param src_addr The address which had been sent as payload of peer request  
+ * \param src_addr The address which had been sent as payload of peer request
  *                it becomes the source address of node which sent peer rsp
  * \param seq_num Sequence number of the Peer request frame
  */

@@ -33,11 +33,12 @@
 			<build type="doxygen-entry-point" value="asfdoc_sam0_tcc_group" />
 			<build type="doxygen-quick-start" value="asfdoc_sam0_tcc_exqsg"/>
 
-			<device-support value="samd21"/>
-			<device-support value="samr21"/>
-			<device-support value="samd10"/>
-			<device-support value="samd11"/>
-			<device-support value="saml21"/>
+			<device-support value="samd21" />
+			<device-support value="samr21" />
+			<device-support value="samd10" />
+			<device-support value="samd11" />
+			<device-support value="saml21" />
+			<device-support value="samda1" />
 			<device-support value="samc21"/>
 
 			<require idref="sam0.utils" />
@@ -98,11 +99,12 @@
 			<build type="doxygen-entry-point" value="asfdoc_sam0_tcc_group" />
 			<build type="doxygen-quick-start" value="asfdoc_sam0_tcc_exqsg"/>
 
-			<device-support value="samd21"/>
-			<device-support value="samr21"/>
-			<device-support value="samd10"/>
-			<device-support value="samd11"/>
-			<device-support value="saml21"/>
+			<device-support value="samd21" />
+			<device-support value="samr21" />
+			<device-support value="samd10" />
+			<device-support value="samd11" />
+			<device-support value="saml21" />
+			<device-support value="samda1" />
 			<device-support value="samc21"/>
 
 			<require idref="sam0.utils" />

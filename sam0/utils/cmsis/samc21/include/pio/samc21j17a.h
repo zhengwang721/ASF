@@ -1188,38 +1188,6 @@
 #define MUX_PA11B_ADC0_AIN11               1L
 #define PINMUX_PA11B_ADC0_AIN11    ((PIN_PA11B_ADC0_AIN11 << 16) | MUX_PA11B_ADC0_AIN11)
 #define PORT_PA11B_ADC0_AIN11      (1ul << 11)
-#define PIN_PB04B_ADC0_AIN12              36L  /**< \brief ADC0 signal: AIN12 on PB04 mux B */
-#define MUX_PB04B_ADC0_AIN12               1L
-#define PINMUX_PB04B_ADC0_AIN12    ((PIN_PB04B_ADC0_AIN12 << 16) | MUX_PB04B_ADC0_AIN12)
-#define PORT_PB04B_ADC0_AIN12      (1ul <<  4)
-#define PIN_PB05B_ADC0_AIN13              37L  /**< \brief ADC0 signal: AIN13 on PB05 mux B */
-#define MUX_PB05B_ADC0_AIN13               1L
-#define PINMUX_PB05B_ADC0_AIN13    ((PIN_PB05B_ADC0_AIN13 << 16) | MUX_PB05B_ADC0_AIN13)
-#define PORT_PB05B_ADC0_AIN13      (1ul <<  5)
-#define PIN_PB06B_ADC0_AIN14              38L  /**< \brief ADC0 signal: AIN14 on PB06 mux B */
-#define MUX_PB06B_ADC0_AIN14               1L
-#define PINMUX_PB06B_ADC0_AIN14    ((PIN_PB06B_ADC0_AIN14 << 16) | MUX_PB06B_ADC0_AIN14)
-#define PORT_PB06B_ADC0_AIN14      (1ul <<  6)
-#define PIN_PB07B_ADC0_AIN15              39L  /**< \brief ADC0 signal: AIN15 on PB07 mux B */
-#define MUX_PB07B_ADC0_AIN15               1L
-#define PINMUX_PB07B_ADC0_AIN15    ((PIN_PB07B_ADC0_AIN15 << 16) | MUX_PB07B_ADC0_AIN15)
-#define PORT_PB07B_ADC0_AIN15      (1ul <<  7)
-#define PIN_PA08B_ADC0_AIN16               8L  /**< \brief ADC0 signal: AIN16 on PA08 mux B */
-#define MUX_PA08B_ADC0_AIN16               1L
-#define PINMUX_PA08B_ADC0_AIN16    ((PIN_PA08B_ADC0_AIN16 << 16) | MUX_PA08B_ADC0_AIN16)
-#define PORT_PA08B_ADC0_AIN16      (1ul <<  8)
-#define PIN_PA09B_ADC0_AIN17               9L  /**< \brief ADC0 signal: AIN17 on PA09 mux B */
-#define MUX_PA09B_ADC0_AIN17               1L
-#define PINMUX_PA09B_ADC0_AIN17    ((PIN_PA09B_ADC0_AIN17 << 16) | MUX_PA09B_ADC0_AIN17)
-#define PORT_PA09B_ADC0_AIN17      (1ul <<  9)
-#define PIN_PA10B_ADC0_AIN18              10L  /**< \brief ADC0 signal: AIN18 on PA10 mux B */
-#define MUX_PA10B_ADC0_AIN18               1L
-#define PINMUX_PA10B_ADC0_AIN18    ((PIN_PA10B_ADC0_AIN18 << 16) | MUX_PA10B_ADC0_AIN18)
-#define PORT_PA10B_ADC0_AIN18      (1ul << 10)
-#define PIN_PA11B_ADC0_AIN19              11L  /**< \brief ADC0 signal: AIN19 on PA11 mux B */
-#define MUX_PA11B_ADC0_AIN19               1L
-#define PINMUX_PA11B_ADC0_AIN19    ((PIN_PA11B_ADC0_AIN19 << 16) | MUX_PA11B_ADC0_AIN19)
-#define PORT_PA11B_ADC0_AIN19      (1ul << 11)
 #define PIN_PA03B_ADC0_VREFP               3L  /**< \brief ADC0 signal: VREFP on PA03 mux B */
 #define MUX_PA03B_ADC0_VREFP               1L
 #define PINMUX_PA03B_ADC0_VREFP    ((PIN_PA03B_ADC0_VREFP << 16) | MUX_PA03B_ADC0_VREFP)

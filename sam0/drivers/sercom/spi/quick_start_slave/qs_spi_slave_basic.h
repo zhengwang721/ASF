@@ -95,19 +95,11 @@
  *      \snippet qs_spi_slave_basic.c conf_format
  *   -# Set MUX setting E.
  *      \snippet qs_spi_slave_basic.c mux_setting
-<<<<<<< HEAD
- *   -# Set pinmux for pad 0 (data in MOSI).
- *      \snippet qs_spi_slave_basic.c di
- *   -# Set pinmux for pad 1 (slave select).
- *      \snippet qs_spi_slave_basic.c ss
- *   -# Set pinmux for pad 2 (data out MISO).
-=======
  *   -# Set pinmux for pad 0 (data in (MOSI)).
  *      \snippet qs_spi_slave_basic.c di
  *   -# Set pinmux for pad 1 (slave select).
  *      \snippet qs_spi_slave_basic.c ss
  *   -# Set pinmux for pad 2 (data out (MISO)).
->>>>>>> ef96079175123e286a2710d474c47bf6d713e8c1
  *      \snippet qs_spi_slave_basic.c do
  *   -# Set pinmux for pad 3 (SCK).
  *      \snippet qs_spi_slave_basic.c sck
@@ -129,6 +121,6 @@
  *    LED will flash quickly.
  *    \snippet qs_spi_slave_basic.c inf_loop
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

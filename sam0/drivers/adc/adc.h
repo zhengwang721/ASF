@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_adc_group SAM Analog to Digital Converter Driver (ADC)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Analog to Digital Converter functionality, for
  * the conversion of analog voltages into a corresponding digital form.
  * The following driver API modes are covered by this manual:
@@ -70,6 +70,7 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM DA0/DA1
  * \endif
  *
  * The outline of this documentation is as follows:
@@ -299,7 +300,7 @@
  * \subsection asfdoc_sam0_adc_module_overview_offset_corr Offset and Gain Correction
  * Inherent gain and offset errors affect the absolute accuracy of the ADC.
  *
- * The offset error is defined as the deviation of the ADC鈥檚 actual transfer
+ * The offset error is defined as the deviation of the ADC's actual transfer
  * function from ideal straight line at zero input voltage.
  *
  * The gain error is defined as the deviation of the last output step's
@@ -476,6 +477,12 @@ enum status_code adc_init(
 
 void adc_get_config_defaults(
 		struct adc_config *const config);
+
+#if (SAMD) || (SAMR21)
+void adc_regular_ain_channel(
+		uint32_t *pin_array, uint8_t size);
+#endif
+
 /** @} */
 
 /**
@@ -492,7 +499,7 @@ void adc_get_config_defaults(
  *
  * \return Bitmask of \c ADC_STATUS_* flags.
  *
- * \retval ADC_STATUS_RESULT_READY  ADC Result is ready to be read
+ * \retval ADC_STATUS_RESULT_READY  ADC result is ready to be read
  * \retval ADC_STATUS_WINDOW        ADC has detected a value inside the set
  *                                  window range
  * \retval ADC_STATUS_OVERRUN       ADC result has overrun
@@ -1095,10 +1102,15 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * \if DEVICE_SAML21_SUPPORT
  *  <tr>
  *      <td>A</td>
- *      <td>11/2014</td>
+ *      <td>04/2015</td>
  *      <td>Initial release.</td>
  * </tr>
  * \else
+ *	<tr>
+ *		<td>E</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAMDAx.</td>
+ *	</tr>
  *	<tr>
  *		<td>D</td>
  *		<td>12/2014</td>

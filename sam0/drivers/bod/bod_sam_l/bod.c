@@ -3,7 +3,7 @@
  *
  * \brief SAM Brown Out Detector Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include "bod.h"
@@ -93,10 +93,6 @@ enum status_code bod33_set_config(
 	SUPC->BOD33.reg = SUPC_BOD33_LEVEL(conf->level) |
 			SUPC_BOD33_BKUPLEVEL(conf->backuplevel) | temp;
 
-	while (!(SUPC->STATUS.reg & SUPC_STATUS_B33SRDY)) {
-		/* Wait for BOD33 register sync ready */
-	}
-
 	return STATUS_OK;
 }
 
@@ -142,10 +138,6 @@ enum status_code bod12_set_config(
 	}
 
 	SUPC->BOD12.reg = SUPC_BOD12_LEVEL(conf->level) | temp;
-
-	while (!(SUPC->STATUS.reg & SUPC_STATUS_B12SRDY)) {
-		/* Wait for BOD12 register sync ready */
-	}
 
 	return STATUS_OK;
 }

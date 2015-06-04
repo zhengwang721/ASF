@@ -3,7 +3,7 @@
  *
  * \brief SAM4 Reset Controller (RSTC) driver.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -48,8 +48,8 @@
 #define RSTC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_rstc_group SAM4 Reset Controller (RSTC)
- * This driver for SAM devices provides an interface for the configuration
+ * \defgroup asfdoc_sam_drivers_rstc_group SAM3/4C/4CM/4CP/4E/4N/4S/G Reset Controller (RSTC) Driver
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Reset Controller functionality.
  *
  * The Reset Controller manages all Resets of the System including;
@@ -59,6 +59,16 @@
  * The following peripherals are used by this module:
  *
  * - RSTC (Reset Controller)
+ *
+ * Devices from the following series can use this module:
+ * - Atmel | SMART SAM3
+ * - Atmel | SMART SAM4C
+ * - Atmel | SMART SAM4CM
+ * - Atmel | SMART SAM4CP
+ * - Atmel | SMART SAM4E
+ * - Atmel | SMART SAM4N
+ * - Atmel | SMART SAM4S
+ * - Atmel | SMART SAM G
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_rstc_prerequisites
@@ -103,7 +113,7 @@
  * a reset.
  *
  * \subsubsection asfdoc_sam_drivers_rstc_module_overview_nrst_external NRST External Reset Control
- * The NRST Manager can assert NRST for a programmable time period of between 60渭s and 2s
+ * The NRST Manager can assert NRST for a programmable time period of between 60µs and 2s
  * (approximately). This allows the Reset Controller to shape the NRST pin level and thus to
  * guarantee that the NRST line is low for a time that is compliant with any external devices
  * also connected to the system reset.

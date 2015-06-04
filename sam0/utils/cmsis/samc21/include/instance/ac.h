@@ -89,8 +89,8 @@
 
 /* ========== Instance parameters for AC peripheral ========== */
 #define AC_COMPCTRL_MUXNEG_OPAMP    7        // OPAMP selection for MUXNEG
-#define AC_GCLK_ID                  34       // Index of Generic Clock
+#define AC_GCLK_ID                  40       // Index of Generic Clock
 #define AC_NUM_CMP                  4        // Number of comparators
-#define AC_PAIRS                    2        // Number of pairs of comparators
+#define AC_SPEED_LEVELS             2        // Number of speed values
 
 #endif /* _SAMC21_AC_INSTANCE_ */

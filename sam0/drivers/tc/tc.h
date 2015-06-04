@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_tc_group SAM Timer/Counter Driver (TC)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the timer modules within the device, for waveform
  * generation and timing operations. The following driver API modes are covered
  * by this manual:
@@ -69,6 +69,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DA0/DA1
  *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
@@ -134,6 +135,10 @@
  *    <td>FEATURE_TC_IO_CAPTURE</td>
  *    <td>SAML21/C21</td>
  *  </tr>
+ *  <tr>
+ *    <td>FEATURE_TC_GENERATE_DMA_TRIGGER</td>
+ *    <td>SAML21</td>
+ *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
  * selected device supports those features.
@@ -155,7 +160,7 @@
  *
  * \note The connection of events between modules requires the use of the
  *       \ref asfdoc_sam0_events_group "SAM Event System Driver (EVENTS)"
- *       to route output event of one module to the the input event of another.
+ *       to route output event of one module to the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
  *
@@ -460,16 +465,18 @@
  * @{
 */
 #if (SAML21) || (SAMC21) || defined(__DOXYGEN__)
-/** TC double buffered */
+/** TC double buffered. */
 #  define FEATURE_TC_DOUBLE_BUFFERED
-/** SYNCBUSY scheme version 2 */
+/** SYNCBUSY scheme version 2. */
 #  define FEATURE_TC_SYNCBUSY_SCHEME_VERSION_2
-/** TC time stamp capture and pulse width capture */
+/** TC time stamp capture and pulse width capture. */
 #  define FEATURE_TC_STAMP_PW_CAPTURE
-/** Read synchronization of COUNT*/
+/** Read synchronization of COUNT. */
 #  define FEATURE_TC_READ_SYNC
-/** IO pin edge capture*/
+/** IO pin edge capture. */
 #  define FEATURE_TC_IO_CAPTURE
+/** Generate DMA triggers. */
+#  define FEATURE_TC_GENERATE_DMA_TRIGGER
 #endif
 /*@}*/
 
@@ -477,7 +484,7 @@
 #if SAMD20 || SAML21 || SAMC21
 #  define TC_INSTANCE_OFFSET 0
 #endif
-#if SAMD21 || SAMR21
+#if SAMD21 || SAMR21 || SAMDA1
 #  define TC_INSTANCE_OFFSET 3
 #endif
 #if SAMD10 || SAMD11
@@ -1291,7 +1298,7 @@ static inline void tc_stop_counter(
 	}
 
 	/* Write command to execute */
-	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(2);
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_STOP_Val);
 }
 
 /**
@@ -1323,7 +1330,7 @@ static inline void tc_start_counter(
 	}
 
 	/* Write command to execute */
-	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(1);
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_RETRIGGER_Val);
 }
 
 /** @} */
@@ -1363,7 +1370,7 @@ static inline void tc_update_double_buffer(
 	}
 
 	/* Write command to execute */
-	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(3);
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_UPDATE_Val);
 }
 /** @} */
 #endif
@@ -1403,7 +1410,53 @@ static inline void tc_sync_read_count(
 	}
 
 	/* Write command to execute */
-	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(4);
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_READSYNC_Val);
+}
+/** @} */
+#endif
+
+#ifdef FEATURE_TC_GENERATE_DMA_TRIGGER
+/**
+ * \name Generate TC DMA Triggers command
+ * @{
+ */
+
+/**
+ * \brief TC DMA Trigger.
+ *
+ * TC DMA trigger command.
+ *
+ * \param[in]  module_inst   Pointer to the software module instance struct
+ */
+static inline void tc_dma_trigger_command(
+		const struct tc_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	/* Get a pointer to the module's hardware instance */
+	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
+
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
+
+	/* Make certain that there are no conflicting commands in the register */
+	tc_module->CTRLBCLR.reg = TC_CTRLBCLR_CMD_NONE;
+
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
+
+#if SAML21
+	/* Write command to execute */
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_DMATRG_Val);
+#endif
+#if SAMC21
+	/* Write command to execute */
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_DMAOS_Val);
+#endif
 }
 /** @} */
 #endif
@@ -1632,15 +1685,6 @@ static inline void tc_clear_status(
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
- *  <tr>
- *    <td>Added support for SAML21/C21</td>
- *  </tr>
- *  <tr>
- *    <td>Added support for SAMD10/D11</td>
- *  </tr>
- *  <tr>
- *    <td>Added support for SAMR21</td>
- *  </tr>
  *	<tr>
  *    <td>Added support for SAMD21 and do some modifications as below:
  *          \li Clean up in the configuration structure, the counter size
@@ -1668,6 +1712,7 @@ static inline void tc_clear_status(
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_tc_basic_use_case
+ *  - \subpage asfdoc_sam0_tc_macth_freq_use_case
  * \if TC_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_tc_timer_use_case
  *  - \subpage asfdoc_sam0_tc_callback_use_case
@@ -1689,8 +1734,8 @@ static inline void tc_clear_status(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Added support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAML21 and SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

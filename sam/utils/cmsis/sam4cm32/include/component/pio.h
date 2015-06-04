@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,7 +38,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -113,8 +113,7 @@ typedef struct {
   __I  uint32_t Reserved12[5];
   __IO uint32_t PIO_SCHMITT;   /**< \brief (Pio Offset: 0x0100) Schmitt Trigger Register */
   __I  uint32_t Reserved13[5];
-  __IO uint32_t PIO_DRIVER1;   /**< \brief (Pio Offset: 0x0118) I/O Drive Register 1 */
-  __IO uint32_t PIO_DRIVER2;   /**< \brief (Pio Offset: 0x011C) I/O Drive Register 2 */
+  __IO uint32_t PIO_DRIVER;   /**< \brief (Pio Offset: 0x0118) I/O Drive Register */
 } Pio;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- PIO_PER : (PIO Offset: 0x0000) PIO Enable Register -------- */

@@ -75,6 +75,7 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
+			<device-support value="samda1"/>
 		</module>
 		<module type="meta" id="sam0.drivers.rtc.count#sam_l" caption="RTC - Real Time Counter">
 			<build type="include-path" value="." />
@@ -98,6 +99,7 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
+			<device-support value="samda1"/>
 		</module>
 		<module type="meta" id="sam0.drivers.rtc.calendar#sam_l" caption="RTC - Real Time Counter">
 			<build type="include-path" value="." />
@@ -122,6 +124,7 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
+			<device-support value="samda1"/>
 		</module>
 		<module type="meta" id="sam0.drivers.rtc.count_interrupt#sam_l" caption="RTC - Real Time Counter">
 			<build type="include-path" value="." />
@@ -147,6 +150,7 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
+			<device-support value="samda1"/>
 		</module>
 		<module type="meta" id="sam0.drivers.rtc.calendar_interrupt#sam_l" caption="RTC - Real Time Counter">
 			<build type="include-path" value="." />

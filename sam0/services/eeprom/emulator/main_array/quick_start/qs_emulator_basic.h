@@ -82,7 +82,7 @@
  *    erase/re-try initialization.
  *    \snippet qs_emulator_basic.c check_re-init
  *
- * Config BOD to give an early warning ,so that we could prevent data loss.
+ * Config BOD to give an early warning, so that we could prevent data loss.
  * \snippet qs_emulator_basic.c setup_bod
  *
  * \section asfdoc_sam0_eeprom_basic_use_case_main Use Case
@@ -109,6 +109,6 @@
  *    when detecting a BOD early warning.
  *    \snippet qs_emulator_basic.c write_page_not_commit
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

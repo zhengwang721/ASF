@@ -91,10 +91,10 @@ typedef union {
 
 /* -------- MCLK_INTFLAG : (MCLK Offset: 0x03) (R/W  8) Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint8_t  CKRDY:1;          /*!< bit:      0  Clock Ready                        */
-    uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
+    __I uint8_t  CKRDY:1;          /*!< bit:      0  Clock Ready                        */
+    __I uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } MCLK_INTFLAG_Type;
@@ -122,7 +122,7 @@ typedef union {
 
 #define MCLK_CPUDIV_CPUDIV_Pos      0            /**< \brief (MCLK_CPUDIV) CPU Clock Division Factor */
 #define MCLK_CPUDIV_CPUDIV_Msk      (0xFFul << MCLK_CPUDIV_CPUDIV_Pos)
-#define MCLK_CPUDIV_CPUDIV(value)   ((MCLK_CPUDIV_CPUDIV_Msk & ((value) << MCLK_CPUDIV_CPUDIV_Pos)))
+#define MCLK_CPUDIV_CPUDIV(value)   (MCLK_CPUDIV_CPUDIV_Msk & ((value) << MCLK_CPUDIV_CPUDIV_Pos))
 #define   MCLK_CPUDIV_CPUDIV_DIV1_Val     0x1ul  /**< \brief (MCLK_CPUDIV) Divide by 1 */
 #define   MCLK_CPUDIV_CPUDIV_DIV2_Val     0x2ul  /**< \brief (MCLK_CPUDIV) Divide by 2 */
 #define   MCLK_CPUDIV_CPUDIV_DIV4_Val     0x4ul  /**< \brief (MCLK_CPUDIV) Divide by 4 */

@@ -51,7 +51,7 @@
 /*@{*/
 
 #define DAC_U2214
-#define REV_DAC                     0x200
+#define REV_DAC                     0x201
 
 /* -------- DAC_CTRLA : (DAC Offset: 0x00) (R/W  8) Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -109,7 +109,7 @@ typedef union {
 #define DAC_CTRLB_DITHER            (0x1ul << DAC_CTRLB_DITHER_Pos)
 #define DAC_CTRLB_REFSEL_Pos        6            /**< \brief (DAC_CTRLB) Reference Selection */
 #define DAC_CTRLB_REFSEL_Msk        (0x3ul << DAC_CTRLB_REFSEL_Pos)
-#define DAC_CTRLB_REFSEL(value)     ((DAC_CTRLB_REFSEL_Msk & ((value) << DAC_CTRLB_REFSEL_Pos)))
+#define DAC_CTRLB_REFSEL(value)     (DAC_CTRLB_REFSEL_Msk & ((value) << DAC_CTRLB_REFSEL_Pos))
 #define   DAC_CTRLB_REFSEL_INT1V_Val      0x0ul  /**< \brief (DAC_CTRLB) Internal 1.0V reference */
 #define   DAC_CTRLB_REFSEL_AVCC_Val       0x1ul  /**< \brief (DAC_CTRLB) AVCC */
 #define   DAC_CTRLB_REFSEL_VREFP_Val      0x2ul  /**< \brief (DAC_CTRLB) External reference */
@@ -186,11 +186,11 @@ typedef union {
 
 /* -------- DAC_INTFLAG : (DAC Offset: 0x06) (R/W  8) Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
+typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint8_t  UNDERRUN:1;       /*!< bit:      0  Underrun                           */
-    uint8_t  EMPTY:1;          /*!< bit:      1  Data Buffer Empty                  */
-    uint8_t  :6;               /*!< bit:  2.. 7  Reserved                           */
+    __I uint8_t  UNDERRUN:1;       /*!< bit:      0  Underrun                           */
+    __I uint8_t  EMPTY:1;          /*!< bit:      1  Data Buffer Empty                  */
+    __I uint8_t  :6;               /*!< bit:  2.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } DAC_INTFLAG_Type;
@@ -238,7 +238,7 @@ typedef union {
 
 #define DAC_DATA_DATA_Pos           0            /**< \brief (DAC_DATA) Data value to be converted */
 #define DAC_DATA_DATA_Msk           (0xFFFFul << DAC_DATA_DATA_Pos)
-#define DAC_DATA_DATA(value)        ((DAC_DATA_DATA_Msk & ((value) << DAC_DATA_DATA_Pos)))
+#define DAC_DATA_DATA(value)        (DAC_DATA_DATA_Msk & ((value) << DAC_DATA_DATA_Pos))
 #define DAC_DATA_MASK               0xFFFFul     /**< \brief (DAC_DATA) MASK Register */
 
 /* -------- DAC_DATABUF : (DAC Offset: 0x0C) ( /W 16) Data Buffer -------- */
@@ -256,7 +256,7 @@ typedef union {
 
 #define DAC_DATABUF_DATABUF_Pos     0            /**< \brief (DAC_DATABUF) Data Buffer */
 #define DAC_DATABUF_DATABUF_Msk     (0xFFFFul << DAC_DATABUF_DATABUF_Pos)
-#define DAC_DATABUF_DATABUF(value)  ((DAC_DATABUF_DATABUF_Msk & ((value) << DAC_DATABUF_DATABUF_Pos)))
+#define DAC_DATABUF_DATABUF(value)  (DAC_DATABUF_DATABUF_Msk & ((value) << DAC_DATABUF_DATABUF_Pos))
 #define DAC_DATABUF_MASK            0xFFFFul     /**< \brief (DAC_DATABUF) MASK Register */
 
 /* -------- DAC_SYNCBUSY : (DAC Offset: 0x10) (R/  32) Synchronization Busy -------- */

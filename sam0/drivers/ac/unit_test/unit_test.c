@@ -3,7 +3,7 @@
  *
  * \brief SAM Analog Comparator (AC) Unit test
  *
- * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -75,6 +75,7 @@
  *  - SAM D20 Xplained Pro board
  *  - SAM D21 Xplained Pro board
  *  - SAM L21 Xplained Pro board
+ *  - SAM DA1 Xplained Pro board
  *  - SAM C21 Xplained Pro board
  *
  * \section appdoc_sam0_ac_unit_test_setup Setup
@@ -107,7 +108,7 @@
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -329,9 +330,6 @@ static void setup_ac_callback_mode_test(const struct test_case *test)
 	struct ac_config config;
 	struct ac_chan_config channel_config;
 
-	/* Set input to 0V */
-	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_ZERO_VOLT);
-
 	/* Set the flag to false */
 	ac_init_success = false;
 	ac_reset(&ac_inst);
@@ -397,8 +395,13 @@ static void run_ac_callback_mode_test(const struct test_case *test)
 	test_assert_true(test, ac_init_success,
 			"Skipping test due to failed AC initialization");
 
+	/* Set input to 0V */
+	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_ZERO_VOLT);
+	/* Wait for AC output */
+	delay_ms(1);
 	/* Test for rising edge detection */
 	dac_chan_write(&dac_inst, DAC_CHANNEL_0, DAC_VAL_ONE_VOLT);
+	/* Wait for AC output */
 	delay_ms(1);
 	do {
 		timeout_cycles--;

@@ -3,7 +3,7 @@
  *
  * \brief SAM4L PARC driver.
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -48,14 +48,17 @@
 #define PARC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_parc_group SAM4L Parallel Capture (PARC)
+ * \defgroup asfdoc_sam_drivers_parc_group SAM4L Parallel Capture (PARC) Driver
  *
- * This driver for SAM4L devices provides an interface for the configuration and
- * management of the Parallel Capture module.
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for 
+ * the configuration and management of the Parallel Capture module.
  *
  * The Parallel Capture module samples an external 8-bit bus with an external
  * input clock. It can be connected to a CMOS digital image sensor, an ADC,
  * a DSP synchronous port, etc.
+ *
+ * Devices from the following series can use this module:
+ * - Atmel | SMART SAM4L
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_parc_prerequisites
@@ -620,7 +623,7 @@ static inline uint32_t parc_get_version(
  * </tr>
  *  <tr>
  *      <td>CMOS</td>
- *      <td>Complementary Metal鈥揙xide鈥揝emiconductor</td>
+ *      <td>Complementary Metal-Oxide-Semiconductor</td>
  * </tr>
  *  <tr>
  *      <td>DMA</td>

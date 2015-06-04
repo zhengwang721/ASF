@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef DAC_FEATURE_H_INCLUDED
@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_dac_group SAM Digital-to-Analog Driver (DAC)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the conversion of
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the conversion of
  * digital values to analog voltage. The following driver API modes are covered
  * by this manual:
  *
@@ -64,6 +64,7 @@
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM DA0/DA1
  *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
@@ -102,7 +103,7 @@
  * \ref asfdoc_sam0_dac_module_block_diagram "the figure below".
  *
  * \anchor asfdoc_sam0_dac_module_block_diagram
- * \image html dac_block_diagram.gif "DAC Block Diagram"
+ * \image html dac_block_diagram.svg "DAC Block Diagram"
  *
  * \subsection asfdoc_sam0_dac_conversion_range Conversion Range
  * The conversion range is between GND and the selected voltage reference.
@@ -281,7 +282,7 @@
  * enabled when it is not needed, to ensure minimum power consumption.
  *
  * \subsection asfdoc_sam0_dac_special_considerations_conversion_time Conversion Time
- * DAC conversion time is approximately 2.85渭s. The user must ensure that new
+ * DAC conversion time is approximately 2.85µs. The user must ensure that new
  * data is not written to the DAC before the last conversion is complete.
  * Conversions should be triggered by a periodic event from a Timer/Counter or
  * another peripheral.
@@ -599,11 +600,15 @@ void dac_chan_disable_output_buffer(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>E</td>
+ *		<td>04/2015</td>
+ *		<td>Add SAMDAx support.</td>
+ *	</tr>
+ *	<tr>
  *		<td>D</td>
  *		<td>12/2014</td>
  *		<td>Add SAMD10/D11 support.</td>
  *	</tr>
- *	<tr>
  *	<tr>
  *		<td>C</td>
  *		<td>01/2014</td>

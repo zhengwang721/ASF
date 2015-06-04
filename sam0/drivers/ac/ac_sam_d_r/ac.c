@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include "ac.h"
@@ -135,21 +135,24 @@ enum status_code ac_init(
 	/* Turn on the digital interface clock and GCLK */
 	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	gclk_chan_conf.source_generator = config->source_generator;
 
 	if (hw == AC) {
 		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_AC);
+		gclk_chan_conf.source_generator = config->dig_source_generator;
 		system_gclk_chan_set_config(AC_GCLK_ID_DIG, &gclk_chan_conf);
-		system_gclk_chan_set_config(AC_GCLK_ID_ANA, &gclk_chan_conf);
 		system_gclk_chan_enable(AC_GCLK_ID_DIG);
+		gclk_chan_conf.source_generator = config->ana_source_generator;
+		system_gclk_chan_set_config(AC_GCLK_ID_ANA, &gclk_chan_conf);
 		system_gclk_chan_enable(AC_GCLK_ID_ANA);
 	}
 #if (AC_INST_NUM == 2)
 	else if (hw == AC1) {
 		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_AC1);
+		gclk_chan_conf.source_generator = config->dig_source_generator;
 		system_gclk_chan_set_config(AC1_GCLK_ID_DIG, &gclk_chan_conf);
-		system_gclk_chan_set_config(AC1_GCLK_ID_ANA, &gclk_chan_conf);
 		system_gclk_chan_enable(AC1_GCLK_ID_DIG);
+		gclk_chan_conf.source_generator = config->ana_source_generator;
+		system_gclk_chan_set_config(AC1_GCLK_ID_ANA, &gclk_chan_conf);
 		system_gclk_chan_enable(AC1_GCLK_ID_ANA);
 	}
 #elif (AC_INST_NUM >= 3)

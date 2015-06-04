@@ -3,7 +3,7 @@
  *
  * \brief SAM Read While Write(RWW) EEPROM Emulator Service Unit test
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -70,6 +70,8 @@
  *
  * The following kit is required for carrying out the test:
  *      - SAM L21 Xplained Pro board
+ *      - SAM C21 Xplained Pro board
+ *      - SAM DA1 Xplained Pro board
  *
  * \section appdoc_sam0_rww_eeprom_emulator_unit_test_setup Setup
  * The following connections has to be made using wires:
@@ -101,7 +103,7 @@
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

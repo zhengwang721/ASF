@@ -3,7 +3,7 @@
  *
  * @brief Handles Serial Interface Functionalities
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,12 +41,9 @@
  */
 
 /*
- * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
 #include "conf_board.h"
@@ -116,7 +113,7 @@ void serial_interface_init(void)
 /**
  * \brief get the new buffer for next transmission through serial
  *
- ****\return unsigned integer pointer to buf
+ * \return unsigned integer pointer to buf
  */
 static uint8_t *get_next_tx_buffer(void)
 {
@@ -1583,9 +1580,11 @@ static void handle_incoming_msg(void)
 			ret_val = wpan_mlme_scan_req(sio_rx_buf[3],          /*
 					                                      *
 					                                      *
+					                                      *
 					                                      *ScanType
 					                                      **/
 					scan_channels,                       /*
+					                                      *
 					                                      *
 					                                      *
 					                                      *ScanChannels
@@ -1593,9 +1592,11 @@ static void handle_incoming_msg(void)
 					sio_rx_buf[8],                       /*
 					                                      *
 					                                      *
+					                                      *
 					                                      *ScanDuration
 					                                      **/
 					sio_rx_buf[9]);                      /*
+					                                      *
 					                                      *
 					                                      *
 					                                      *ChannelPage

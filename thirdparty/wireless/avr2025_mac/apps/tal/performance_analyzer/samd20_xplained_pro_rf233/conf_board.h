@@ -3,7 +3,7 @@
  *
  * \brief Board configuration
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,9 +40,6 @@
  * \asf_license_stop
  *
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
@@ -51,7 +48,6 @@
 #define CONF_BOARD_COM_PORT
 #define CONF_BOARD_AT86RFX
 #define MCU_SOC_NAME        "ATSAMD20J18"
-
 
 #ifdef EXT_RF_FRONT_END_CTRL /*For External PA for 233FEM*/
 

@@ -92,7 +92,7 @@
 				<keyword value="I/O"/>
 			</info>
 			<info type="description" value="summary">
-				IOPORT - General purpose I/O driver that includes functions for various I/O operations (set direction, set/get pin value, toggle pins etc.) Common API for XMEGA, UC3 and SAM.
+				IOPORT - General purpose I/O driver that includes functions for various I/O operations (set direction, set/get pin value, toggle pins etc.) Common API for SAM0.
 			</info>
 			<build type="doxygen-entry-point" value="ioport_group"/>
 			<build type="doxygen-quick-start" value="ioport_quickstart"/>
