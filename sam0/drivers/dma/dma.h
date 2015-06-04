@@ -855,8 +855,8 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  *    </tr>
  *    <tr>
  *        <td>C</td>
- *        <td>04/2015</td>
- *        <td>Added SAML21 and SAMDAx support</td>
+ *        <td>06/2015</td>
+ *        <td>Added SAML21, SAMC21, and SAMDAx support</td>
  *    </tr>
  *    <tr>
  *        <td>B</td>
