@@ -118,6 +118,8 @@ typedef enum IRQn
   SERCOM1_IRQn             =  9, /**<  9 SAML21E15B Serial Communication Interface 1 (SERCOM1) */
   SERCOM2_IRQn             = 10, /**< 10 SAML21E15B Serial Communication Interface 2 (SERCOM2) */
   SERCOM3_IRQn             = 11, /**< 11 SAML21E15B Serial Communication Interface 3 (SERCOM3) */
+  SERCOM4_IRQn             = 12, /**< 12 SAML21E15B Serial Communication Interface 4 (SERCOM4) */
+  SERCOM5_IRQn             = 13, /**< 13 SAML21E15B Serial Communication Interface 5 (SERCOM5) */
   TCC0_IRQn                = 14, /**< 14 SAML21E15B Timer Counter Control 0 (TCC0) */
   TCC1_IRQn                = 15, /**< 15 SAML21E15B Timer Counter Control 1 (TCC1) */
   TCC2_IRQn                = 16, /**< 16 SAML21E15B Timer Counter Control 2 (TCC2) */
@@ -169,8 +171,8 @@ typedef struct _DeviceVectors
   void* pfnSERCOM1_Handler;               /*  9 Serial Communication Interface 1 */
   void* pfnSERCOM2_Handler;               /* 10 Serial Communication Interface 2 */
   void* pfnSERCOM3_Handler;               /* 11 Serial Communication Interface 3 */
-  void* pfnReserved12;
-  void* pfnReserved13;
+  void* pfnSERCOM4_Handler;               /* 12 Serial Communication Interface 4 */
+  void* pfnSERCOM5_Handler;               /* 13 Serial Communication Interface 5 */
   void* pfnTCC0_Handler;                  /* 14 Timer Counter Control 0 */
   void* pfnTCC1_Handler;                  /* 15 Timer Counter Control 1 */
   void* pfnTCC2_Handler;                  /* 16 Timer Counter Control 2 */
@@ -209,6 +211,8 @@ void SERCOM0_Handler             ( void );
 void SERCOM1_Handler             ( void );
 void SERCOM2_Handler             ( void );
 void SERCOM3_Handler             ( void );
+void SERCOM4_Handler             ( void );
+void SERCOM5_Handler             ( void );
 void TCC0_Handler                ( void );
 void TCC1_Handler                ( void );
 void TCC2_Handler                ( void );
@@ -312,6 +316,8 @@ void TRNG_Handler                ( void );
 #include "instance/sercom1.h"
 #include "instance/sercom2.h"
 #include "instance/sercom3.h"
+#include "instance/sercom4.h"
+#include "instance/sercom5.h"
 #include "instance/supc.h"
 #include "instance/tal.h"
 #include "instance/tc0.h"
@@ -356,6 +362,7 @@ void TRNG_Handler                ( void );
 #define ID_SERCOM1       65 /**< \brief Serial Communication Interface 1 (SERCOM1) */
 #define ID_SERCOM2       66 /**< \brief Serial Communication Interface 2 (SERCOM2) */
 #define ID_SERCOM3       67 /**< \brief Serial Communication Interface 3 (SERCOM3) */
+#define ID_SERCOM4       68 /**< \brief Serial Communication Interface 4 (SERCOM4) */
 #define ID_TCC0          69 /**< \brief Timer Counter Control 0 (TCC0) */
 #define ID_TCC1          70 /**< \brief Timer Counter Control 1 (TCC1) */
 #define ID_TCC2          71 /**< \brief Timer Counter Control 2 (TCC2) */
@@ -367,6 +374,7 @@ void TRNG_Handler                ( void );
 
 // Peripheral instances on HPB3 bridge
 #define ID_EVSYS         96 /**< \brief Event System Interface (EVSYS) */
+#define ID_SERCOM5       97 /**< \brief Serial Communication Interface 5 (SERCOM5) */
 #define ID_TC4           98 /**< \brief Basic Timer Counter 4 (TC4) */
 #define ID_ADC           99 /**< \brief Analog Digital Converter (ADC) */
 #define ID_AC           100 /**< \brief Analog Comparators (AC) */
@@ -423,6 +431,8 @@ void TRNG_Handler                ( void );
 #define SERCOM1                       (0x42000400UL) /**< \brief (SERCOM1) APB Base Address */
 #define SERCOM2                       (0x42000800UL) /**< \brief (SERCOM2) APB Base Address */
 #define SERCOM3                       (0x42000C00UL) /**< \brief (SERCOM3) APB Base Address */
+#define SERCOM4                       (0x42001000UL) /**< \brief (SERCOM4) APB Base Address */
+#define SERCOM5                       (0x43000400UL) /**< \brief (SERCOM5) APB Base Address */
 #define SUPC                          (0x40001400UL) /**< \brief (SUPC) APB Base Address */
 #define TAL                           (0x40002C00UL) /**< \brief (TAL) APB Base Address */
 #define TC0                           (0x42002000UL) /**< \brief (TC0) APB Base Address */
@@ -537,8 +547,10 @@ void TRNG_Handler                ( void );
 #define SERCOM1           ((Sercom   *)0x42000400UL) /**< \brief (SERCOM1) APB Base Address */
 #define SERCOM2           ((Sercom   *)0x42000800UL) /**< \brief (SERCOM2) APB Base Address */
 #define SERCOM3           ((Sercom   *)0x42000C00UL) /**< \brief (SERCOM3) APB Base Address */
-#define SERCOM_INST_NUM   4                          /**< \brief (SERCOM) Number of instances */
-#define SERCOM_INSTS      { SERCOM0, SERCOM1, SERCOM2, SERCOM3 } /**< \brief (SERCOM) Instances List */
+#define SERCOM4           ((Sercom   *)0x42001000UL) /**< \brief (SERCOM4) APB Base Address */
+#define SERCOM5           ((Sercom   *)0x43000400UL) /**< \brief (SERCOM5) APB Base Address */
+#define SERCOM_INST_NUM   6                          /**< \brief (SERCOM) Number of instances */
+#define SERCOM_INSTS      { SERCOM0, SERCOM1, SERCOM2, SERCOM3, SERCOM4, SERCOM5 } /**< \brief (SERCOM) Instances List */
 
 #define SUPC              ((Supc     *)0x40001400UL) /**< \brief (SUPC) APB Base Address */
 #define SUPC_INST_NUM     1                          /**< \brief (SUPC) Number of instances */
@@ -606,7 +618,7 @@ void TRNG_Handler                ( void );
 #define HPB4_ADDR             (0x44000000u) /**< HPB4 base address */
 #define PPB_ADDR              (0xE0000000u) /**< PPB base address */
 
-#define DSU_DID_RESETVALUE    0x1081010DUL
+#define DSU_DID_RESETVALUE    0x1081011CUL
 #define NVMCTRL_RWW_EEPROM_SIZE 0x400UL /* 1 kB */
 #define PORT_GROUPS           1
 #define USB_HOST_IMPLEMENTED  1

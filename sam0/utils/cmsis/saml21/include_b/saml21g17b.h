@@ -605,7 +605,7 @@ void TRNG_Handler                ( void );
 #define FLASH_NB_OF_PAGES     2048
 #define FLASH_USER_PAGE_SIZE  64
 #define HSRAM_SIZE            0x4000UL /* 16 kB */
-#define LPRAM_SIZE            0x1800UL /* 6 kB */
+#define LPRAM_SIZE            0x2000UL /* 8 kB */
 
 #define FLASH_ADDR            (0x00000000u) /**< FLASH base address */
 #define FLASH_USER_PAGE_ADDR  (0x00800000u) /**< FLASH_USER_PAGE base address */
@@ -618,7 +618,7 @@ void TRNG_Handler                ( void );
 #define HPB4_ADDR             (0x44000000u) /**< HPB4 base address */
 #define PPB_ADDR              (0xE0000000u) /**< PPB base address */
 
-#define DSU_DID_RESETVALUE    0x10810106UL
+#define DSU_DID_RESETVALUE    0x10810115UL
 #define NVMCTRL_RWW_EEPROM_SIZE 0x1000UL /* 4 kB */
 #define PORT_GROUPS           2
 #define USB_HOST_IMPLEMENTED  1

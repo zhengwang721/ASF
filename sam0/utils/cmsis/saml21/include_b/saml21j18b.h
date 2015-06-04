@@ -630,7 +630,7 @@ void TRNG_Handler                ( void );
 #define HPB4_ADDR             (0x44000000u) /**< HPB4 base address */
 #define PPB_ADDR              (0xE0000000u) /**< PPB base address */
 
-#define DSU_DID_RESETVALUE    0x10810100UL
+#define DSU_DID_RESETVALUE    0x1081010FUL
 #define NVMCTRL_RWW_EEPROM_SIZE 0x2000UL /* 8 kB */
 #define PORT_GROUPS           2
 #define USB_HOST_IMPLEMENTED  1

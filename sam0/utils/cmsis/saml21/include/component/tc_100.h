@@ -116,22 +116,6 @@ typedef union {
 #define TC_CTRLA_PRESCALER_Pos      8            /**< \brief (TC_CTRLA) Prescaler */
 #define TC_CTRLA_PRESCALER_Msk      (0x7ul << TC_CTRLA_PRESCALER_Pos)
 #define TC_CTRLA_PRESCALER(value)   (TC_CTRLA_PRESCALER_Msk & ((value) << TC_CTRLA_PRESCALER_Pos))
-#define   TC_CTRLA_PRESCALER_DIV1_Val     0x0ul  /**< \brief (TC_CTRLA) Prescaler: GCLK_TC */
-#define   TC_CTRLA_PRESCALER_DIV2_Val     0x1ul  /**< \brief (TC_CTRLA) Prescaler: GCLK_TC/2 */
-#define   TC_CTRLA_PRESCALER_DIV4_Val     0x2ul  /**< \brief (TC_CTRLA) Prescaler: GCLK_TC/4 */
-#define   TC_CTRLA_PRESCALER_DIV8_Val     0x3ul  /**< \brief (TC_CTRLA) Prescaler: GCLK_TC/8 */
-#define   TC_CTRLA_PRESCALER_DIV16_Val    0x4ul  /**< \brief (TC_CTRLA) Prescaler: GCLK_TC/16 */
-#define   TC_CTRLA_PRESCALER_DIV64_Val    0x5ul  /**< \brief (TC_CTRLA) Prescaler: GCLK_TC/64 */
-#define   TC_CTRLA_PRESCALER_DIV256_Val   0x6ul  /**< \brief (TC_CTRLA) Prescaler: GCLK_TC/256 */
-#define   TC_CTRLA_PRESCALER_DIV1024_Val  0x7ul  /**< \brief (TC_CTRLA) Prescaler: GCLK_TC/1024 */
-#define TC_CTRLA_PRESCALER_DIV1     (TC_CTRLA_PRESCALER_DIV1_Val   << TC_CTRLA_PRESCALER_Pos)
-#define TC_CTRLA_PRESCALER_DIV2     (TC_CTRLA_PRESCALER_DIV2_Val   << TC_CTRLA_PRESCALER_Pos)
-#define TC_CTRLA_PRESCALER_DIV4     (TC_CTRLA_PRESCALER_DIV4_Val   << TC_CTRLA_PRESCALER_Pos)
-#define TC_CTRLA_PRESCALER_DIV8     (TC_CTRLA_PRESCALER_DIV8_Val   << TC_CTRLA_PRESCALER_Pos)
-#define TC_CTRLA_PRESCALER_DIV16    (TC_CTRLA_PRESCALER_DIV16_Val  << TC_CTRLA_PRESCALER_Pos)
-#define TC_CTRLA_PRESCALER_DIV64    (TC_CTRLA_PRESCALER_DIV64_Val  << TC_CTRLA_PRESCALER_Pos)
-#define TC_CTRLA_PRESCALER_DIV256   (TC_CTRLA_PRESCALER_DIV256_Val << TC_CTRLA_PRESCALER_Pos)
-#define TC_CTRLA_PRESCALER_DIV1024  (TC_CTRLA_PRESCALER_DIV1024_Val << TC_CTRLA_PRESCALER_Pos)
 #define TC_CTRLA_ALOCK_Pos          11           /**< \brief (TC_CTRLA) Auto Lock */
 #define TC_CTRLA_ALOCK              (0x1ul << TC_CTRLA_ALOCK_Pos)
 #define TC_CTRLA_CAPTEN0_Pos        16           /**< \brief (TC_CTRLA) Capture Channel 0 Enable */
@@ -684,7 +668,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  PERBUF:8;         /*!< bit:  0.. 7  Period Buffer Value                */
+    uint8_t  PERB:8;           /*!< bit:  0.. 7  Period Buffer Value                */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } TC_COUNT8_PERBUF_Type;
@@ -693,9 +677,9 @@ typedef union {
 #define TC_COUNT8_PERBUF_OFFSET     0x2F         /**< \brief (TC_COUNT8_PERBUF offset) COUNT8 Period Buffer */
 #define TC_COUNT8_PERBUF_RESETVALUE 0xFFul       /**< \brief (TC_COUNT8_PERBUF reset_value) COUNT8 Period Buffer */
 
-#define TC_COUNT8_PERBUF_PERBUF_Pos 0            /**< \brief (TC_COUNT8_PERBUF) Period Buffer Value */
-#define TC_COUNT8_PERBUF_PERBUF_Msk (0xFFul << TC_COUNT8_PERBUF_PERBUF_Pos)
-#define TC_COUNT8_PERBUF_PERBUF(value) (TC_COUNT8_PERBUF_PERBUF_Msk & ((value) << TC_COUNT8_PERBUF_PERBUF_Pos))
+#define TC_COUNT8_PERBUF_PERB_Pos   0            /**< \brief (TC_COUNT8_PERBUF) Period Buffer Value */
+#define TC_COUNT8_PERBUF_PERB_Msk   (0xFFul << TC_COUNT8_PERBUF_PERB_Pos)
+#define TC_COUNT8_PERBUF_PERB(value) (TC_COUNT8_PERBUF_PERB_Msk & ((value) << TC_COUNT8_PERBUF_PERB_Pos))
 #define TC_COUNT8_PERBUF_MASK       0xFFul       /**< \brief (TC_COUNT8_PERBUF) MASK Register */
 
 /* -------- TC_COUNT16_CCBUF : (TC Offset: 0x30) (R/W 16) COUNT16 COUNT16 Compare and Capture Buffer -------- */

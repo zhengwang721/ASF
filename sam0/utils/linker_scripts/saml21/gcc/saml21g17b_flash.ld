@@ -51,7 +51,7 @@ MEMORY
 {
   rom      (rx)  : ORIGIN = 0x00000000, LENGTH = 0x00020000
   ram      (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00004000
-  lpram    (rwx) : ORIGIN = 0x30000000, LENGTH = 0x00001800
+  lpram    (rwx) : ORIGIN = 0x30000000, LENGTH = 0x00002000
 }
 
 /* The stack size used by the application. NOTE: you need to adjust according to your application. */

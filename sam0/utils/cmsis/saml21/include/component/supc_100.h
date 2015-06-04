@@ -414,7 +414,8 @@ typedef union {
     uint32_t :1;               /*!< bit:      0  Reserved                           */
     uint32_t ENABLE:1;         /*!< bit:      1  Enable                             */
     uint32_t SEL:2;            /*!< bit:  2.. 3  Voltage Regulator Selection in active mode */
-    uint32_t :2;               /*!< bit:  4.. 5  Reserved                           */
+    uint32_t :1;               /*!< bit:      4  Reserved                           */
+    uint32_t STDBYPL0:1;       /*!< bit:      5  Standby in PL0                     */
     uint32_t RUNSTDBY:1;       /*!< bit:      6  Run during Standby                 */
     uint32_t :1;               /*!< bit:      7  Reserved                           */
     uint32_t LPEFF:1;          /*!< bit:      8  Low Power Efficiency               */
@@ -422,7 +423,7 @@ typedef union {
     uint32_t VSVSTEP:4;        /*!< bit: 16..19  Voltage Scaling Voltage Step       */
     uint32_t :4;               /*!< bit: 20..23  Reserved                           */
     uint32_t VSPER:8;          /*!< bit: 24..31  Voltage Scaling Period             */
-  } bit;                       /*!< Structure used for bit  access                  */
+    } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } SUPC_VREG_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -441,15 +442,19 @@ typedef union {
 #define SUPC_VREG_SEL_LDO           (SUPC_VREG_SEL_LDO_Val         << SUPC_VREG_SEL_Pos)
 #define SUPC_VREG_SEL_BUCK          (SUPC_VREG_SEL_BUCK_Val        << SUPC_VREG_SEL_Pos)
 #define SUPC_VREG_SEL_SCVREG        (SUPC_VREG_SEL_SCVREG_Val      << SUPC_VREG_SEL_Pos)
+#define SUPC_VREG_STDBYPL0_Pos      5            /**< \brief (SUPC_VREG) Standby in PL0 */
+#define SUPC_VREG_STDBYPL0          (0x1ul << SUPC_VREG_STDBYPL0_Pos)
 #define SUPC_VREG_RUNSTDBY_Pos      6            /**< \brief (SUPC_VREG) Run during Standby */
 #define SUPC_VREG_RUNSTDBY          (0x1ul << SUPC_VREG_RUNSTDBY_Pos)
+#define SUPC_VREG_LPEFF_Pos         8            /**< \brief (SUPC_VREG) Low Power Efficiency */
+#define SUPC_VREG_LPEFF             (0x1ul << SUPC_VREG_LPEFF_Pos)
 #define SUPC_VREG_VSVSTEP_Pos       16           /**< \brief (SUPC_VREG) Voltage Scaling Voltage Step */
 #define SUPC_VREG_VSVSTEP_Msk       (0xFul << SUPC_VREG_VSVSTEP_Pos)
 #define SUPC_VREG_VSVSTEP(value)    (SUPC_VREG_VSVSTEP_Msk & ((value) << SUPC_VREG_VSVSTEP_Pos))
 #define SUPC_VREG_VSPER_Pos         24           /**< \brief (SUPC_VREG) Voltage Scaling Period */
 #define SUPC_VREG_VSPER_Msk         (0xFFul << SUPC_VREG_VSPER_Pos)
 #define SUPC_VREG_VSPER(value)      (SUPC_VREG_VSPER_Msk & ((value) << SUPC_VREG_VSPER_Pos))
-#define SUPC_VREG_MASK              0xFF0F004Eul /**< \brief (SUPC_VREG) MASK Register */
+#define SUPC_VREG_MASK              0xFF0F016Eul /**< \brief (SUPC_VREG) MASK Register */
 
 /* -------- SUPC_VREF : (SUPC Offset: 0x1C) (R/W 32) VREF Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

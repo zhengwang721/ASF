@@ -415,6 +415,15 @@
 #define MUX_PA25C_SERCOM3_PAD3             2L
 #define PINMUX_PA25C_SERCOM3_PAD3  ((PIN_PA25C_SERCOM3_PAD3 << 16) | MUX_PA25C_SERCOM3_PAD3)
 #define PORT_PA25C_SERCOM3_PAD3    (1ul << 25)
+/* ========== PORT definition for SERCOM4 peripheral ========== */
+#define PIN_PA14D_SERCOM4_PAD2            14L  /**< \brief SERCOM4 signal: PAD2 on PA14 mux D */
+#define MUX_PA14D_SERCOM4_PAD2             3L
+#define PINMUX_PA14D_SERCOM4_PAD2  ((PIN_PA14D_SERCOM4_PAD2 << 16) | MUX_PA14D_SERCOM4_PAD2)
+#define PORT_PA14D_SERCOM4_PAD2    (1ul << 14)
+#define PIN_PA15D_SERCOM4_PAD3            15L  /**< \brief SERCOM4 signal: PAD3 on PA15 mux D */
+#define MUX_PA15D_SERCOM4_PAD3             3L
+#define PINMUX_PA15D_SERCOM4_PAD3  ((PIN_PA15D_SERCOM4_PAD3 << 16) | MUX_PA15D_SERCOM4_PAD3)
+#define PORT_PA15D_SERCOM4_PAD3    (1ul << 15)
 /* ========== PORT definition for TCC0 peripheral ========== */
 #define PIN_PA04E_TCC0_WO0                 4L  /**< \brief TCC0 signal: WO0 on PA04 mux E */
 #define MUX_PA04E_TCC0_WO0                 4L
@@ -569,6 +578,23 @@
 #define MUX_PA03B_DAC_VREFP                1L
 #define PINMUX_PA03B_DAC_VREFP     ((PIN_PA03B_DAC_VREFP << 16) | MUX_PA03B_DAC_VREFP)
 #define PORT_PA03B_DAC_VREFP       (1ul <<  3)
+/* ========== PORT definition for SERCOM5 peripheral ========== */
+#define PIN_PA22D_SERCOM5_PAD0            22L  /**< \brief SERCOM5 signal: PAD0 on PA22 mux D */
+#define MUX_PA22D_SERCOM5_PAD0             3L
+#define PINMUX_PA22D_SERCOM5_PAD0  ((PIN_PA22D_SERCOM5_PAD0 << 16) | MUX_PA22D_SERCOM5_PAD0)
+#define PORT_PA22D_SERCOM5_PAD0    (1ul << 22)
+#define PIN_PA23D_SERCOM5_PAD1            23L  /**< \brief SERCOM5 signal: PAD1 on PA23 mux D */
+#define MUX_PA23D_SERCOM5_PAD1             3L
+#define PINMUX_PA23D_SERCOM5_PAD1  ((PIN_PA23D_SERCOM5_PAD1 << 16) | MUX_PA23D_SERCOM5_PAD1)
+#define PORT_PA23D_SERCOM5_PAD1    (1ul << 23)
+#define PIN_PA24D_SERCOM5_PAD2            24L  /**< \brief SERCOM5 signal: PAD2 on PA24 mux D */
+#define MUX_PA24D_SERCOM5_PAD2             3L
+#define PINMUX_PA24D_SERCOM5_PAD2  ((PIN_PA24D_SERCOM5_PAD2 << 16) | MUX_PA24D_SERCOM5_PAD2)
+#define PORT_PA24D_SERCOM5_PAD2    (1ul << 24)
+#define PIN_PA25D_SERCOM5_PAD3            25L  /**< \brief SERCOM5 signal: PAD3 on PA25 mux D */
+#define MUX_PA25D_SERCOM5_PAD3             3L
+#define PINMUX_PA25D_SERCOM5_PAD3  ((PIN_PA25D_SERCOM5_PAD3 << 16) | MUX_PA25D_SERCOM5_PAD3)
+#define PORT_PA25D_SERCOM5_PAD3    (1ul << 25)
 /* ========== PORT definition for TC4 peripheral ========== */
 #define PIN_PA18E_TC4_WO0                 18L  /**< \brief TC4 signal: WO0 on PA18 mux E */
 #define MUX_PA18E_TC4_WO0                  4L
