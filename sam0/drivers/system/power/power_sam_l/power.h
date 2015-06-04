@@ -266,7 +266,7 @@ struct system_standby_config {
 	/** Enable dynamic power gating for power domain 1. */
 	bool enable_dpgpd1;
 	/** Automatic VREG switching disable. */
-	enum system_vreg_switch_mode vreg_switch_mode;
+	enum system_vreg_switch_mode vregs_mode;
 	/** Linked power domain. */
 	enum system_linked_power_domain linked_power_domain;
 	/** Back bias for HMCRAMCHS. */
@@ -837,7 +837,7 @@ static inline void system_standby_get_config_defaults(
 	config->power_domain        = SYSTEM_POWER_DOMAIN_DEFAULT;
 	config->enable_dpgpd0       = false;
 	config->enable_dpgpd1       = false;
-	config->vreg_switch_mode	= SYSTEM_SYSTEM_VREG_SWITCH_AUTO;
+	config->vregs_mode	= SYSTEM_SYSTEM_VREG_SWITCH_AUTO;
 	config->linked_power_domain = SYSTEM_LINKED_POWER_DOMAIN_DEFAULT;
 	config->hmcramchs_back_bias = SYSTEM_RAM_BACK_BIAS_RETENTION;
 	config->hmcramclp_back_bias = SYSTEM_RAM_BACK_BIAS_RETENTION;
@@ -859,7 +859,7 @@ static inline void system_standby_set_config(
 	PM->STDBYCFG.reg = PM_STDBYCFG_PDCFG(config->power_domain)
 					 | (config->enable_dpgpd0 << PM_STDBYCFG_DPGPD0_Pos)
 					 | (config->enable_dpgpd1 << PM_STDBYCFG_DPGPD1_Pos)
-					 | PM_STDBYCFG_VREGSMOD(config->vreg_switch_mode)
+					 | PM_STDBYCFG_VREGSMOD(config->vregs_mode)
 					 | PM_STDBYCFG_LINKPD(config->linked_power_domain)
 					 | PM_STDBYCFG_BBIASHS(config->hmcramchs_back_bias)
 					 | PM_STDBYCFG_BBIASLP(config->hmcramclp_back_bias)
