@@ -50,8 +50,8 @@
 #include "lib/simEnvChange.h"
 #endif /* CONTIKI_TARGET_COOJA */
 
-#define DEBUG 0
-#if DEBUG
+#define _DEBUG_ 0
+#if _DEBUG_
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #else
@@ -215,18 +215,18 @@ send_one_packet(mac_callback_t sent, void *ptr)
 #else /* ! NULLRDC_802154_AUTOACK */
 
     switch(NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen())) {
-    case RADIO_TX_OK:
-      ret = MAC_TX_OK;
-      break;
-    case RADIO_TX_COLLISION:
-      ret = MAC_TX_COLLISION;
-      break;
-    case RADIO_TX_NOACK:
-      ret = MAC_TX_NOACK;
-      break;
-    default:
-      ret = MAC_TX_ERR;
-      break;
+      case RADIO_TX_OK:
+        ret = MAC_TX_OK;
+        break;
+      case RADIO_TX_COLLISION:
+        ret = MAC_TX_COLLISION;
+        break;
+      case RADIO_TX_NOACK:
+        ret = MAC_TX_NOACK;
+        break;
+      default:
+        ret = MAC_TX_ERR;
+        break;
     }
 
 #endif /* ! NULLRDC_802154_AUTOACK */

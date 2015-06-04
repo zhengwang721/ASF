@@ -32,13 +32,13 @@
 
 #include "net/mac/mac.h"
 
-#define DEBUG 0
-#if DEBUG
+#define _DEBUG_ 0
+#if _DEBUG_
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
-#else /* DEBUG */
+#else /* _DEBUG_ */
 #define PRINTF(...)
-#endif /* DEBUG */
+#endif /* _DEBUG_ */
 
 /*---------------------------------------------------------------------------*/
 void

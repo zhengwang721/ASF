@@ -55,7 +55,7 @@
 #include <limits.h>
 #include <string.h>
 
-#define DEBUG DEBUG_NONE
+#define _DEBUG_ DEBUG_NONE
 
 #include "net/ip/uip-debug.h"
 
@@ -543,7 +543,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   }
 
 #if RPL_LEAF_ONLY
-#if (DEBUG) & DEBUG_PRINT
+#if (_DEBUG_) & DEBUG_PRINT
   if(uc_addr == NULL) {
     PRINTF("RPL: LEAF ONLY sending unicast-DIO from multicast-DIO\n");
   }
@@ -934,7 +934,7 @@ dao_output_target(rpl_parent_t *parent, uip_ipaddr_t *prefix, uint8_t lifetime)
 static void
 dao_ack_input(void)
 {
-#if DEBUG
+#if _DEBUG_
   unsigned char *buffer;
   uint8_t buffer_length;
   uint8_t instance_id;
@@ -952,7 +952,7 @@ dao_ack_input(void)
     sequence, status);
   PRINT6ADDR(&UIP_IP_BUF->srcipaddr);
   PRINTF("\n");
-#endif /* DEBUG */
+#endif /* _DEBUG_ */
   uip_len = 0;
 }
 /*---------------------------------------------------------------------------*/

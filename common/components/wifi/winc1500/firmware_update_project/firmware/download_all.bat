@@ -42,7 +42,7 @@ echo Downloading Gain Values...
 if "%2" == "SAMW25" ( Set GAIN_FILE=samw25_gain_setting.csv
 goto DOWNLOAD_GAIN
 )
-Set GAIN_FILE=samd21_gain_setting.csv
+Set GAIN_FILE=default_gain_setting.csv
 :DOWNLOAD_GAIN
 gain_builder.exe -file_path ../gain_sheets/%GAIN_FILE% -no_wait
 :END
@@ -76,5 +76,5 @@ echo     ##                 ##        ##     ##  ######   ######              ##
 echo     ##                                                                   ##
 echo     #######################################################################
 
-echo Downloading ends successfully
+echo Programming ends successfully
 pause

@@ -51,6 +51,7 @@
 			<build type="include-path" value="."/>
 			<device-support value="samd21"/>
 			<device-support value="saml21"/>
+			<device-support value="samda1"/>
 			<require idref="sam0.drivers.system"/>
 			<require idref="common.services.basic.sleepmgr"/>
 			<require idref="common.services.usb.class.host"/>

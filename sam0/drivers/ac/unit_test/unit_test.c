@@ -75,6 +75,7 @@
  *  - SAM D20 Xplained Pro board
  *  - SAM D21 Xplained Pro board
  *  - SAM L21 Xplained Pro board
+ *  - SAM DA1 Xplained Pro board
  *
  * \section appdoc_sam0_ac_unit_test_setup Setup
  * The following connections has to be made using wires:

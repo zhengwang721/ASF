@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_opamp_group SAM Operational Amplifier Controller (OPAMP) Driver
  *
- * This driver for Atmel | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Operational Amplifier Controller functionality.
  *
  * The following peripherals are used by this module:
@@ -578,7 +578,7 @@ void opamp_enable(const enum opamp_id number);
  *  Disables an OPAMP that was previously enabled via a call to
  *  \ref opamp_enable().
  *
- *  \param[in] number      OPAMP number to enable
+ *  \param[in] number      OPAMP number to disable
  */
 void opamp_disable(const enum opamp_id number);
 
@@ -668,7 +668,7 @@ bool opamp_is_ready(const enum opamp_id number);
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>09/2014</td>
+ *		<td>04/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

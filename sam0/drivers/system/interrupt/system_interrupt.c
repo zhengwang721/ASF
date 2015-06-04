@@ -78,7 +78,7 @@ bool system_interrupt_is_pending(
 /**
  * \brief Set a interrupt vector as pending.
  *
- * Set the requested interrupt vector as pending (i.e issues a software
+ * Set the requested interrupt vector as pending (i.e. issues a software
  * interrupt request for the specified vector). The software handler will be
  * handled (if enabled) in a priority order based on vector number and
  * configured priority settings.
