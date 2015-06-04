@@ -277,7 +277,7 @@ enum port_input_event{
  *  Configuration structure for a port input event.
  */
 struct port_input_event_config{
-	/** PPort input event action. */
+	/** Port input event action. */
 	enum port_input_event_action  action;
 	/** GPIO pin. */
 	uint8_t gpio_pin;
@@ -758,10 +758,10 @@ static inline enum status_code port_input_event_set_config(
  *		<th>Date</td>
  *		<th>Comments</td>
  *	</tr>
-  *	<tr>
+ *	<tr>
  *		<td>E</td>
- *		<td>04/2015</td>
- *		<td>Added support for SAML21 and SAMDAx.</td>
+ *		<td>06/2015</td>
+ *		<td>Added input event feature and support for SAML21, SAMC21, and SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
