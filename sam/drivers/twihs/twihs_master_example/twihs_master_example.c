@@ -3,7 +3,7 @@
  *
  * \brief TWI EEPROM Example for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -56,11 +56,12 @@
  *  - SAMG53 Xplained Pro kit
  *  - SAM4N Xplained Pro kit
  *  - SAMG55 Xplained Pro kit
+ *  - SAMV71 Xplained Ultra kit
  *
  * \section files Main files:
  *  - twi.c SAM Two-Wire Interface driver implementation.
  *  - twi.h SAM Two-Wire Interface driver definitions.
- *  - TWIHS_eeprom_example.c Example application.
+ *  - TWIHS_master_example.c Example application.
  *
  * \section exampledescription Description of the Example
  * Upon startup, the program configures PIOs for console UART, LEDs and TWI
