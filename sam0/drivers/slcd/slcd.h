@@ -215,12 +215,6 @@ struct slcd_blink_config {
 	/** All segments are allowed to blink if true, else only
 	  Selected segments are allowed to blink. */
 	bool blink_all_seg;
-	/** Mask segment 0 (SEG0) to blink, each bit enables SEG0,
-		connected to COM0 up to COM7.*/
-	uint8_t blink_seg0_mask;
-	/** Mask segment 1 (SEG1) to blink, each bit enables SEG0,
-		connected to COM0 up to COM7.*/
-	uint8_t blink_seg1_mask;
 };
 
 /**
@@ -441,6 +435,10 @@ static inline void slcd_disable_blink(void)
 void slcd_blink_get_config_defaults(struct slcd_blink_config *blink_config);
 enum status_code slcd_blink_set_config(struct slcd_blink_config *const blink_config);
 
+void slcd_clear_blink_all_pixel(void);
+void slcd_clear_blink_pixel(uint8_t pix_com,uint8_t pix_seg);
+void slcd_set_blink_pixel(uint8_t pix_com,uint8_t pix_seg);
+
 /** @} */
 
 /**
@@ -630,6 +628,7 @@ static inline void slcd_disable_frame_counter(enum slcd_frame_counter fc)
  * CPU can access display memory in direct access or in indirect access.
  * @{
  */
+void slcd_set_display_memory(void);
 void slcd_set_pixel(uint8_t pix_com, uint8_t pix_seg);
 void slcd_clear_pixel(uint8_t pix_com, uint8_t pix_seg);
 

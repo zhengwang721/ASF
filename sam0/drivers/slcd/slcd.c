@@ -279,8 +279,6 @@ void slcd_blink_get_config_defaults(struct slcd_blink_config *blink_config)
 
 	blink_config->fc = SLCD_FRAME_COUNTER_0;
 	blink_config->blink_all_seg = true;
-	blink_config->blink_seg0_mask = 0;
-	blink_config->blink_seg1_mask = 0;
 }
 
 /**
@@ -304,11 +302,87 @@ enum status_code  slcd_blink_set_config(struct slcd_blink_config *const blink_co
 	}
 
 	SLCD->BCFG.reg = (!(blink_config->blink_all_seg) << SLCD_BCFG_MODE_Pos)
-					| SLCD_BCFG_FCS(blink_config->fc)
-					| SLCD_BCFG_BSS0(blink_config->blink_seg0_mask)
-					| SLCD_BCFG_BSS1(blink_config->blink_seg1_mask);
+					| SLCD_BCFG_FCS(blink_config->fc);
 	return STATUS_OK;
 }
+
+/**
+ * \brief Start an SLCD pixel/segment blinking.
+ *
+ * \param[in] pix_com Pixel/segment COM coordinate
+ * \param[in] pix_seg Pixel/segment SEG coordinate (range 0 to 1 inclusive)
+ */
+void slcd_set_blink_pixel(
+		uint8_t pix_com,
+		uint8_t pix_seg)
+{
+	/* Validate parameters. */
+	Assert(pix_seg<=1);
+	
+	if (pix_seg == 0) {
+		SLCD->BCFG.reg |= SLCD_BCFG_BSS0(1 << pix_com);
+	}
+
+	if (pix_seg == 1) {
+		SLCD->BCFG.reg |= SLCD_BCFG_BSS1(1 << pix_com);
+	}
+}
+
+/**
+ * \brief Stop a specified SLCD pixel/segment from blinking.
+ *
+ * \param[in] pix_com Pixel/segment COM coordinate
+ * \param[in] pix_seg Pixel/segment SEG coordinate (range 0 to 1 inclusive)
+ */
+void slcd_clear_blink_pixel(
+		uint8_t pix_com,
+		uint8_t pix_seg)
+{
+	/* Validate parameters. */
+	Assert(pix_seg<=1);
+	
+	if (pix_seg == 0) {
+		SLCD->BCFG.reg &= ~ SLCD_BCFG_BSS0(1 << pix_com);
+	}
+
+	if (pix_seg == 1) {
+		SLCD->BCFG.reg &= ~ SLCD_BCFG_BSS1(1 << pix_com);
+	}
+}
+
+/**
+ * \brief Stop all SLCD pixels/segments from blinking.
+ */
+void slcd_clear_blink_all_pixel(void)
+{
+	SLCD->BCFG.bit.BSS0 = 0;
+	SLCD->BCFG.bit.BSS1 = 0;
+}
+
+
+/**
+ * \brief Set all bits in the SLCD display memory high.
+ */
+void slcd_set_display_memory(void)
+{
+	SLCD->SDATAH0 = SLCD_SDATAH0_MASK;
+	SLCD->SDATAL0 = SLCD_SDATAL0_MASK;
+	SLCD->SDATAH1 = SLCD_SDATAH1_MASK;
+	SLCD->SDATAL1 = SLCD_SDATAL1_MASK;
+	SLCD->SDATAH2 = SLCD_SDATAH2_MASK;
+	SLCD->SDATAL2 = SLCD_SDATAL2_MASK;
+	SLCD->SDATAH3 = SLCD_SDATAH3_MASK;
+	SLCD->SDATAL3 = SLCD_SDATAL3_MASK;
+	SLCD->SDATAH4 = SLCD_SDATAH4_MASK;
+	SLCD->SDATAL4 = SLCD_SDATAL4_MASK;
+	SLCD->SDATAH5 = SLCD_SDATAH5_MASK;
+	SLCD->SDATAL5 = SLCD_SDATAL5_MASK;
+	SLCD->SDATAH6 = SLCD_SDATAH6_MASK;
+	SLCD->SDATAL6 = SLCD_SDATAL6_MASK;
+	SLCD->SDATAH7 = SLCD_SDATAH7_MASK;
+	SLCD->SDATAL7 = SLCD_SDATAL7_MASK;
+}
+
 
 /**
  * \brief Enable the specified pixel/segment in the SLCD display memory.
