@@ -1,15 +1,16 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.twihs.twihs_slave_example" caption="TWIHS SLAVE example">
+	<module type="application" id="sam.drivers.twihs.twihs_master_example" caption="TWIHS SLAVE example">
 		<info type="description" value="summary">
 		The application demonstrates how to use the SAM TWI peripheral in slave mode.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>
 		</info>
-		<build type="c-source" value="twihs_slave_example.c"/>
+		<build type="c-source" value="twihs_eeprom_example.c"/>
 		<device-support value="samg51"/>
 		<device-support value="samg53"/>
-		<device-support value="samg54"/>
+		<device-support value="samg54"/>		
+		<device-support value="samv70"/>	
 		<device-support value="samv71"/>	
 		<require idref="sam.drivers.pmc"/>
 		<require idref="sam.drivers.twihs"/>

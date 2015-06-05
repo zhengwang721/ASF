@@ -198,6 +198,7 @@ static inline void twihs_send_clear(Twihs *p_twihs)
 	p_twihs->TWIHS_CR = TWIHS_CR_CLEAR;
 }
 
+#ifndef SAMV71
 /**
  * \brief Enable alternative command mode.
  *
@@ -217,6 +218,7 @@ static inline void twihs_disable_alternative_command(Twihs *p_twihs)
 {
 	p_twihs->TWIHS_CR = TWIHS_CR_ACMDIS;
 }
+#endif
 
 /**
  * \brief Normal value to be returned in the ACK cycle of the data phase in slave receiver mode.
@@ -406,7 +408,9 @@ void twihs_set_slave_addr(Twihs *p_twihs, uint32_t ul_device_addr);
 uint32_t twihs_slave_read(Twihs *p_twihs, uint8_t *p_data);
 uint32_t twihs_slave_write(Twihs *p_twihs, uint8_t *p_data);
 void twihs_reset(Twihs *p_twihs);
+#ifndef SAMV71
 Pdc *twihs_get_pdc_base(Twihs *p_twihs);
+#endif
 void twihs_set_write_protection(Twihs *p_twihs, bool flag);
 void twihs_read_write_protection_status(Twihs *p_twihs, uint32_t *p_status);
 void twihs_smbus_set_timing(Twihs *p_twihs, uint32_t ul_timing);
