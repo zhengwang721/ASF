@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM C21 Reset functionality
+ * \brief SAM C2x Reset functionality
  *
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *

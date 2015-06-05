@@ -69,8 +69,8 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM DA0/DA1
- *  - Atmel | SMART SAM C21
+ *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rtc_count_prerequisites
@@ -114,15 +114,15 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PERIODIC_INT</td>
- *    <td>SAML21/C21</td>
+ *    <td>SAML21/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PRESCALER_OFF</td>
- *    <td>SAML21/C21</td>
+ *    <td>SAML21/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CLOCK_SELECTION</td>
- *    <td>SAML21/C21</td>
+ *    <td>SAML21/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_GENERAL_PURPOSE_REG</td>
@@ -283,7 +283,7 @@
  * }
  * \enddot
  *
- * \subsubsection asfdoc_sam0_rtc_calendar_clock_saml SAM L21/C21 Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_calendar_clock_saml SAM L21/C20/C21 Clock Setup
  * The RTC clock can be selected from OSC32K,XOSC32K or OSCULP32K , and a 32KHz
  * or 1KHz oscillator clock frequency is required. This clock must be
  * configured and enabled in the 32KHz oscillator controller before using the RTC.
@@ -364,14 +364,14 @@ extern "C" {
  * Define port features set according to different device family
  * @{
 */
-#if (SAML21) || (SAMC21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** RTC periodic interval interrupt. */
 #  define FEATURE_RTC_PERIODIC_INT
 /** RTC prescaler is off. */
 #  define FEATURE_RTC_PRESCALER_OFF
 /** RTC clock selection. */
 #  define FEATURE_RTC_CLOCK_SELECTION
-#  if !(SAMC21)
+#  if !(SAMC20) && !(SAMC21)
 /** General purpose registers. */
 #  define FEATURE_RTC_GENERAL_PURPOSE_REG
 #  endif
@@ -696,7 +696,7 @@ struct rtc_count_config {
 	 *  needed for reading. */
 	bool continuously_update;
 #endif
-#if (SAML21 || SAMC21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 	/** Enable count read synchronization. The COUNT value requires
 	 * synchronization when reading. Disabling the synchronization 
 	 * will prevent the COUNT value from displaying the current value. */

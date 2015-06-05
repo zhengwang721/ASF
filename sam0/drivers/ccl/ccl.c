@@ -48,7 +48,7 @@
 
 void ccl_init(struct ccl_config *const config)
 {
-#if SAMC21
+#if (SAMC20) || (SAMC21)
 	/* Turn on the digital interface clock. */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_CCL);
 #else

@@ -68,8 +68,8 @@ extern "C" {
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM DA0/DA1
- *  - Atmel | SMART SAM C21
+ *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_dma_prerequisites
@@ -106,7 +106,7 @@ extern "C" {
  *      <th>Dma channel number</th>
  *    </tr>
  *    <tr>
- *      <td>SAMD21/R21/C21</td>
+ *      <td>SAMD21/R21/C20/C21</td>
  *      <td>12</td>
  *    </tr>
  *    <tr>
@@ -189,7 +189,7 @@ extern "C" {
  *  </tr>
  *  <tr>
  *    <td>FEATURE_DMA_CHANNEL_STANDBY</td>
- *    <td>SAML21/C21</td>
+ *    <td>SAML21/C20/C21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -319,7 +319,7 @@ extern "C" {
 #include <compiler.h>
 #include "conf_dma.h"
 
-#if (SAML21) || (SAMC21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 #define FEATURE_DMA_CHANNEL_STANDBY
 #endif
 

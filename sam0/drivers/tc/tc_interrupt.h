@@ -72,7 +72,7 @@ static enum system_interrupt_vector _tc_interrupt_get_interrupt_vector(
 {
 	static uint8_t tc_interrupt_vectors[TC_INST_NUM] =
 		{
-#if (SAML21E) || (SAML21G) || (SAMC21E) || (SAMC21G)
+#if (SAML21E) || (SAML21G)
 			SYSTEM_INTERRUPT_MODULE_TC0,
 			SYSTEM_INTERRUPT_MODULE_TC1,
 			SYSTEM_INTERRUPT_MODULE_TC4

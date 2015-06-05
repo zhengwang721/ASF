@@ -61,8 +61,8 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM DA0/DA1
- *  - Atmel | SMART SAM C21
+ *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_nvm_prerequisites
@@ -92,7 +92,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_NVM_RWWEE</td>
- *    <td>SAML21, SAMD21-64K, SAMDAx, SAMC21</td>
+ *    <td>SAML21, SAMD21-64K, SAMDAx, SAMC20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_BOD12</td>
@@ -287,7 +287,7 @@ extern "C" {
  * Define NVM features set according to different device family
  * @{
 */
-#if (SAML21) || (SAMDA1) || (SAMC21) || defined(SAMD21_64K) || defined(__DOXYGEN__)
+#if (SAML21) || (SAMDA1) || (SAMC20) || (SAMC21) || defined(SAMD21_64K) || defined(__DOXYGEN__)
 /** Read while write EEPROM emulation feature. */
 #  define FEATURE_NVM_RWWEE
 #endif
@@ -444,7 +444,7 @@ struct nvm_config {
 	 * nvm controller.
 	 */
 	bool disable_cache;
-#if (SAMC21)
+#if (SAMC20) || (SAMC21)
 	/**
 	 * Setting this to true will disable the pre-fetch RWW cache in front of the
 	 * nvm controller.
@@ -640,7 +640,7 @@ struct nvm_fusebits {
 	enum nvm_bootloader_size          bootloader_size;
 	/** EEPROM emulation area size. */
 	enum nvm_eeprom_emulator_size     eeprom_size;
-#if (SAMC21)
+#if (SAMC20) || (SAMC21)
 	/** BODVDD Threshold level at power on. */
 	uint8_t                           bodvdd_level;
 	/** BODVDD Enable at power on. */
@@ -717,7 +717,7 @@ static inline void nvm_get_config_defaults(
 	config->manual_page_write = true;
 	config->wait_states       = NVMCTRL->CTRLB.bit.RWS;
 	config->disable_cache     = false;
-#if (SAMC21)
+#if (SAMC20) || (SAMC21)
 	config->disable_rww_cache = false;
 #endif
 	config->cache_readmode    = NVM_CACHE_READMODE_NO_MISS_PENALTY;

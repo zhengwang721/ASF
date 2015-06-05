@@ -99,7 +99,7 @@ static void _adc_interrupt_handler(const uint8_t instance)
 }
 
 /** Interrupt handler for the ADC module. */
-#if (ADC_INST_NUM > 1)
+#if (ADC_INST_NUM > 1) || (SAMC20)
 #   define _ADC_INTERRUPT_HANDLER(n, m) \
 		void ADC##n##_Handler(void) \
 		{ \

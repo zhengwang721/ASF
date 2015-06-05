@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM C21 Clock configuration
+ * \brief SAM C2x Clock configuration
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *

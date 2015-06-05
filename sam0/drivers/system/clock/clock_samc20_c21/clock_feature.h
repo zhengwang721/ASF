@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM C21 Clock Driver
+ * \brief SAM C2x Clock Driver
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -48,9 +48,9 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_system_clock_group SAM C21 System Clock Management Driver (SYSTEM CLOCK)
+ * \defgroup asfdoc_sam0_system_clock_group SAM C20/C21 System Clock Management Driver (SYSTEM CLOCK)
  *
- * This driver for Atmel® | SMART SAM C21 devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM C20/C21 devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection and
@@ -65,7 +65,7 @@ extern "C" {
  * - MCLK (Main Clock)
  *
  * The following devices can use this module:
- *  - Atmel | SMART SAM C21
+ *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_system_clock_prerequisites

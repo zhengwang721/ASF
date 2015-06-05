@@ -61,8 +61,8 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM DA0/DA1
- *  - Atmel | SMART SAM C21
+ *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_port_prerequisites
@@ -94,7 +94,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_PORT_INPUT_EVENT</td>
- *    <td>SAML21/C21</td>
+ *    <td>SAML21/C20/C21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -169,7 +169,7 @@ extern "C" {
  * Define port features set according to different device family.
  * @{
 */
-#if (SAML21) || (SAMC21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** Event input control feature support for PORT group. */
 #  define FEATURE_PORT_INPUT_EVENT
 #endif

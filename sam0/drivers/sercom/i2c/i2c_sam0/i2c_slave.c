@@ -169,7 +169,7 @@ enum status_code i2c_slave_init(
 	}
 
 	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
-#if (SAML21) || (SAMC21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 	uint32_t pm_index     = sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
 #else
 	uint32_t pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;

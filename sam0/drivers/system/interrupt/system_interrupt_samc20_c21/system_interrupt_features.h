@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM C21 System Interrupt Driver
+ * \brief SAM C2x System Interrupt Driver
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -73,7 +73,7 @@
  * \brief Table of possible system interrupt/exception vector numbers.
  *
  * Table of all possible interrupt and exception vector indexes within the
- * SAMC21 device.
+ * SAMC20/C21 device.
  */
 #if defined(__DOXYGEN__)
 /** \note The actual enumeration name is "system_interrupt_vector". */
