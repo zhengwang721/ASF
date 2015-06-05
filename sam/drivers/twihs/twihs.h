@@ -408,7 +408,7 @@ void twihs_set_slave_addr(Twihs *p_twihs, uint32_t ul_device_addr);
 uint32_t twihs_slave_read(Twihs *p_twihs, uint8_t *p_data);
 uint32_t twihs_slave_write(Twihs *p_twihs, uint8_t *p_data);
 void twihs_reset(Twihs *p_twihs);
-#ifndef SAMV71
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 Pdc *twihs_get_pdc_base(Twihs *p_twihs);
 #endif
 void twihs_set_write_protection(Twihs *p_twihs, bool flag);
