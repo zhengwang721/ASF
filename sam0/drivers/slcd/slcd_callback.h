@@ -60,9 +60,6 @@ extern "C" {
  * @{
  */
 
-/** SLCD interrupt callback function type. */
-typedef void (*slcd_callback_t)(enum slcd_callback_type type);
-
 /** SLCD callback type. */
 enum slcd_callback_type {
 	/** Frame Counter 0 Overflow callback.*/
@@ -78,6 +75,9 @@ enum slcd_callback_type {
 	/** Pump Run Status Toggle callback.*/
 	SLCD_CALLBACK_PUMP_TOGGLE,
 };
+
+/** SLCD interrupt callback function type. */
+typedef void (*slcd_callback_t)(enum slcd_callback_type type);
 
 /** \internal Max number of callback type. */
 #define SLCD_CALLBACK_TYPE_NUM 6
@@ -104,12 +104,9 @@ enum status_code slcd_unregister_callback(
  */
 static inline void slcd_enable_callback(const enum slcd_callback_type type)
 {
-	if (type >= SLCD_CALLBACK_TYPE_NUM){
-		return STATUS_ERR_INVALID_ARG;
+	if (type < SLCD_CALLBACK_TYPE_NUM){
+		SLCD->INTENSET.reg = 1 << type;
 	}
-	SLCD->INTENSET.reg = 1 << type;
-
-	return STATUS_OK;
 }
 
 /**
@@ -122,12 +119,9 @@ static inline void slcd_enable_callback(const enum slcd_callback_type type)
  */
 static inline void slcd_disable_callback(const enum slcd_callback_type type)
 {
-	if (type >= SLCD_CALLBACK_TYPE_NUM){
-		return STATUS_ERR_INVALID_ARG;
+	if (type < SLCD_CALLBACK_TYPE_NUM){
+		SLCD->INTENCLR.reg = 1 << type;
 	}
-	SLCD->INTENCLR.reg = 1 << type;
-
-	return STATUS_OK;
 }
 
 /** @} */

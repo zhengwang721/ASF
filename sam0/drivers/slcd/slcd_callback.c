@@ -106,8 +106,6 @@ enum status_code slcd_unregister_callback(
 	return STATUS_OK;
 }
 
-
-
 /**
 * \internal The SLCD interrupt handler.
 */
