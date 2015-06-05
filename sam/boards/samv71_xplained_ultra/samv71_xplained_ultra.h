@@ -418,4 +418,4 @@
 #define TWIHS0_CLK_FLAGS   (IOPORT_MODE_MUX_A)
 
 /*----------------------------------------------------------------------------*/
-#endif  /* _SAMV71_XULTRA_H_ */
+#endif   /* _SAMV71_XLTRA_H_ */
