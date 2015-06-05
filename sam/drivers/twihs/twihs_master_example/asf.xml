@@ -6,7 +6,7 @@
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>
 		</info>
-		<build type="c-source" value="twihs_eeprom_example.c"/>
+		<build type="c-source" value="twihs_master_example.c"/>
 		<device-support value="samg51"/>
 		<device-support value="samg53"/>
 		<device-support value="samg54"/>		
