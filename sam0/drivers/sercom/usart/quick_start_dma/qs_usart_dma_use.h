@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
  * \page asfdoc_sam0_sercom_usart_dma_use_case Quick Start Guide for Using DMA with SERCOM USART
@@ -48,6 +51,7 @@
  *    - SAMD21 Xplained Pro
  *    - SAMR21 Xplained Pro
  *    - SAMD11 Xplained Pro
+ *    - SAMDA1 Xplained Pro
  *    - SAML21 Xplained Pro
  *    - SAMC21 Xplained Pro
  *
@@ -209,7 +213,4 @@
  *
  * -# Enter endless loop.
  *    \snippet qs_usart_dma_use.c endless_loop
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

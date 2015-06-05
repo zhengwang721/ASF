@@ -377,8 +377,33 @@ enum system_osc48m_div {
 	SYSTEM_OSC48M_DIV_14,
 	/** Divide the 48MHz RC oscillator output by fifteen. */
 	SYSTEM_OSC48M_DIV_15,
-	/** Divide the 48MHz RC oscillator output by sexteen. */
+	/** Divide the 48MHz RC oscillator output by sixteen. */
 	SYSTEM_OSC48M_DIV_16,
+};
+
+/**
+ * \brief Available start-up times for the OSC48M.
+ *
+ * Available internal 48MHz oscillator start-up times, as a number of internal
+ * clock cycles.
+ */
+enum system_osc48m_startup {
+	/** Wait 8 clock cycles until the clock source is considered stable. */
+	SYSTEM_OSC48M_STARTUP_8,
+	/** Wait 16 clock cycles until the clock source is considered stable. */
+	SYSTEM_OSC48M_STARTUP_16,
+	/** Wait 32 clock cycles until the clock source is considered stable. */
+	SYSTEM_OSC48M_STARTUP_32,
+	/** Wait 64 clock cycles until the clock source is considered stable. */
+	SYSTEM_OSC48M_STARTUP_64,
+	/** Wait 128 clock cycles until the clock source is considered stable. */
+	SYSTEM_OSC48M_STARTUP_128,
+	/** Wait 256 clock cycles until the clock source is considered stable. */
+	SYSTEM_OSC48M_STARTUP_256,
+	/** Wait 512 clock cycles until the clock source is considered stable. */
+	SYSTEM_OSC48M_STARTUP_512,
+	/** Wait 1024 clock cycles until the clock source is considered stable. */
+	SYSTEM_OSC48M_STARTUP_1024,
 };
 
 /**
@@ -567,6 +592,8 @@ struct system_clock_source_osc48m_config {
 	/** Run On Demand. If this is set the OSC48M won't run
 	 * until requested by a peripheral. */
 	bool on_demand;
+	/** Crystal oscillator start-up time. */
+	enum system_osc48m_startup startup_time;
 };
 
 /**
@@ -575,10 +602,6 @@ struct system_clock_source_osc48m_config {
  * Internal 32KHz Ultra Low Power oscillator configuration structure.
  */
 struct system_clock_source_osculp32k_config {
-	/** Enable 1KHz output. */
-	bool enable_1khz_output;
-	/** Enable 32KHz output. */
-	bool enable_32khz_output;
 	/** Lock configuration after it has been written,
 	 *  a device reset will release the lock. */
 	bool write_once;
@@ -833,8 +856,6 @@ static inline void system_clock_source_osculp32k_get_config_defaults(
 {
 	Assert(config);
 
-	config->enable_1khz_output  = true;
-	config->enable_32khz_output = true;
 	config->write_once          = false;
 }
 
@@ -859,6 +880,7 @@ void system_clock_source_osculp32k_set_config(
  *   - Clock divider by 12 and output frequency 4MHz
  *   - Don't run in STANDBY sleep mode
  *   - Run only when requested by peripheral (on demand)
+ *   - Start-up time of 8 clock cycles
  *
  * \param[out] config  Configuration structure to fill with default values
  */
@@ -870,6 +892,7 @@ static inline void system_clock_source_osc48m_get_config_defaults(
 	config->div = SYSTEM_OSC48M_DIV_12;
 	config->run_in_standby  = false;
 	config->on_demand       = true;
+	config->startup_time = SYSTEM_OSC48M_STARTUP_8;
 }
 
 void system_clock_source_osc48m_set_config(

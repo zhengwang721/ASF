@@ -3,7 +3,7 @@
  *
  * \brief Board configuration
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,9 +40,6 @@
  * \asf_license_stop
  *
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
@@ -51,7 +48,7 @@
 #define BOARD_NAME          "REB231FE2-EK"
 
 /*Board Has an External PA Connected to the Radio ,Following are the constatnts
- *related to the Exxt PA */
+ * related to the Exxt PA */
 
 #ifdef EXT_RF_FRONT_END_CTRL /*For External PA for 231FEM-EK*/
 

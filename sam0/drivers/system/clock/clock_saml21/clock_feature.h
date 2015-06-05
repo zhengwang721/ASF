@@ -3,7 +3,7 @@
  *
  * \brief SAM L21 Clock Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef SYSTEM_CLOCK_FEATURE_H_INCLUDED
@@ -53,7 +53,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_clock_group SAM System Clock Management Driver (SYSTEM CLOCK)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection and
@@ -118,7 +118,7 @@ extern "C" {
  * Backup Clock Domain(BUP Clock Domain).
  *
  * Each clock domain (CPU, LP, BUP) can be changed on the fly.To ensure
- * correct operation, frequencies must be selected so that BUPDIV 鈮LPDIV 鈮HSDIV.
+ * correct operation, frequencies must be selected so that BUPDIV ≥ LPDIV ≥ HSDIV.
  * Also, frequencies must never exceed the specified maximum frequency for each clock domain.
  * A module may be connected to several clock domains (for instance, AHB and APB).
  *
@@ -595,10 +595,6 @@ struct system_clock_source_osc16m_config {
  * Internal 32KHz Ultra Low Power oscillator configuration structure.
  */
 struct system_clock_source_osculp32k_config {
-	/** Enable 1KHz output. */
-	bool enable_1khz_output;
-	/** Enable 32KHz output. */
-	bool enable_32khz_output;
 	/** Lock configuration after it has been written,
 	 *  a device reset will release the lock. */
 	bool write_once;
@@ -802,8 +798,6 @@ static inline void system_clock_source_osculp32k_get_config_defaults(
 {
 	Assert(config);
 
-	config->enable_1khz_output  = true;
-	config->enable_32khz_output = true;
 	config->write_once          = false;
 }
 
@@ -1437,11 +1431,6 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *
  * \section asfdoc_sam0_system_clock_extra_errata Errata
  *
- *	- This driver implements workaround for errata 10558
- *
- *	  "Several reset values of SYSCTRL.INTFLAG are wrong (BOD and DFLL)"
- *	  When system_init is called it will reset these interrupts flags before they are used.
-
  *	- This driver implements experimental workaround for errata 9905
  *
  *	  "The DFLL clock must be requested before being configured otherwise a
@@ -1486,13 +1475,8 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
- *		<td>11/2014</td>
- *		<td>Corrected documentation typos</td>
- *	</tr>
- *	<tr>
  *		<td>A</td>
- *		<td>12/2014</td>
+ *		<td>04/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

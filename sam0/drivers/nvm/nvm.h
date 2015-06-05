@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef NVM_H_INCLUDED
@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_nvm_group SAM Non-Volatile Memory Driver (NVM)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of non-volatile memories within the device, for partitioning,
  * erasing, reading, and writing of data.
  *
@@ -61,6 +61,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DA0/DA1
  *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
@@ -91,7 +92,11 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_NVM_RWWEE</td>
- *    <td>SAML21,SAMD21-64K,SAMC21</td>
+ *    <td>SAML21, SAMD21-64K, SAMDAx, SAMC21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_BOD12</td>
+ *    <td>SAML21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -212,8 +217,7 @@
  *
  * Writing to the NVM memory must be performed by the \ref nvm_write_buffer()
  * function - additionally, a manual page program command must be issued if
- * the NVM controller is configured in manual page writing mode, or a buffer of
- * data less than a full page is passed to the buffer write function.
+ * the NVM controller is configured in manual page writing mode.
  *
  * Before a page can be updated, the associated NVM memory row must be erased
  * first via the \ref nvm_erase_row() function. Writing to a non-erased page
@@ -271,6 +275,7 @@ extern "C" {
 /* Define SAMD21-64K devices */
 #if defined(SAMD21E15L) || defined(SAMD21E16L) || defined(__SAMD21E15L__) || defined(__SAMD21E16L__) \
 	|| defined(SAMD21E15B) || defined(SAMD21E16B) || defined(__SAMD21E15B__) || defined(__SAMD21E16B__) \
+	|| defined(SAMD21E15BU) || defined(SAMD21E16BU) || defined(__SAMD21E15BU__) || defined(__SAMD21E16BU__) \
 	|| defined(SAMD21G15B) || defined(SAMD21G16B) || defined(__SAMD21G15B__) || defined(__SAMD21G16B__) \
 	|| defined(SAMD21J15B) || defined(SAMD21J16B) || defined(__SAMD21J15B__) || defined(__SAMD21J16B__)
 
@@ -282,9 +287,12 @@ extern "C" {
  * Define NVM features set according to different device family
  * @{
 */
-#if (SAML21) || defined(SAMD21_64K) || (SAMC21) || defined(__DOXYGEN__)
-/** Read while write EEPROM emulation feature*/
+#if (SAML21) || (SAMDA1) || (SAMC21) || defined(SAMD21_64K) || defined(__DOXYGEN__)
+/** Read while write EEPROM emulation feature. */
 #  define FEATURE_NVM_RWWEE
+#endif
+#if (SAML21) || defined(__DOXYGEN__)
+#define FEATURE_BOD12
 #endif
 /*@}*/
 
@@ -365,9 +373,9 @@ enum nvm_command {
 	 */
 	NVM_COMMAND_EXIT_LOW_POWER_MODE        = NVMCTRL_CTRLA_CMD_CPRM,
 #ifdef FEATURE_NVM_RWWEE
-	/** Read while write(RWW) EEPROM area erase row */
+	/** Read while write(RWW) EEPROM area erase row. */
 	NVM_COMMAND_RWWEE_ERASE_ROW            = NVMCTRL_CTRLA_CMD_RWWEEER,
-	/** RWW EEPROM write page */
+	/** RWW EEPROM write page. */
 	NVM_COMMAND_RWWEE_WRITE_PAGE           = NVMCTRL_CTRLA_CMD_RWWEEWP,
 #endif
 };
@@ -537,6 +545,23 @@ enum nvm_bod33_action {
 	NVM_BOD33_ACTION_INTERRUPT,
 };
 
+#ifdef FEATURE_BOD12
+/**
+ * \brief BOD12 Action.
+ *
+ * What action should be triggered when BOD12 is detected.
+ *
+ */
+enum nvm_bod12_action {
+	/** No action. */
+	NVM_BOD12_ACTION_NONE,
+	/** The BOD12 generates a reset. */
+	NVM_BOD12_ACTION_RESET,
+	/** The BOD12 generates an interrupt. */
+	NVM_BOD12_ACTION_INTERRUPT,
+};
+#endif
+
 /**
  * \brief WDT Window time-out period.
  *
@@ -622,6 +647,8 @@ struct nvm_fusebits {
 	bool                              bodvdd_enable;
 	/** BODVDD Action at power on. */
 	enum nvm_bod33_action             bodvdd_action;
+	/* BODVDD Hysteresis at power on*/
+	bool                              bodvdd_hysteresis;
 #else
 	/** BOD33 Threshold level at power on. */
 	uint8_t                           bod33_level;
@@ -629,6 +656,8 @@ struct nvm_fusebits {
 	bool                              bod33_enable;
 	/** BOD33 Action at power on. */
 	enum nvm_bod33_action             bod33_action;
+	/* BOD33 Hysteresis at power on*/
+	bool                              bod33_hysteresis;
 #endif
 	/** WDT Enable at power on. */
 	bool                              wdt_enable;
@@ -644,6 +673,16 @@ struct nvm_fusebits {
 	bool                              wdt_window_mode_enable_at_poweron;
 	/** NVM Lock bits. */
 	uint16_t                          lockbits;
+#ifdef FEATURE_BOD12
+	/** BOD12 Threshold level at power on. */
+	uint8_t                           bod12_level;
+	/** BOD12 Enable at power on. */
+	bool                              bod12_enable;
+	/** BOD12 Action at power on. */
+	enum nvm_bod12_action             bod12_action;
+	/* BOD12 Hysteresis at power on*/
+	bool                              bod12_hysteresis;
+#endif
 };
 
 /**
@@ -661,7 +700,7 @@ struct nvm_fusebits {
  *
  * The default configuration is as follows:
  *  \li Power reduction mode enabled after sleep until first NVM access
- *  \li Automatic page commit when full pages are written to
+ *  \li Automatic page write mode disabled
  *  \li Number of FLASH wait states left unchanged
  *
  * \param[out] config  Configuration structure to initialize to default values
@@ -675,7 +714,7 @@ static inline void nvm_get_config_defaults(
 
 	/* Write the default configuration for the NVM configuration */
 	config->sleep_power_mode  = NVM_SLEEP_POWER_MODE_WAKEONACCESS;
-	config->manual_page_write = false;
+	config->manual_page_write = true;
 	config->wait_states       = NVMCTRL->CTRLB.bit.RWS;
 	config->disable_cache     = false;
 #if (SAMC21)
@@ -742,6 +781,7 @@ enum status_code nvm_execute_command(
 		const uint32_t parameter);
 
 enum status_code nvm_get_fuses(struct nvm_fusebits *fusebits);
+enum status_code nvm_set_fuses(struct nvm_fusebits *fb);
 
 bool nvm_is_page_locked(uint16_t page_number);
 
@@ -874,8 +914,8 @@ static inline enum nvm_error nvm_get_error(void)
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>08/2014</td>
- *		<td>Added support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAML21 and SAMDAx.</td>
  *	</tr> 
  *	<tr>
  *		<td>D</td>

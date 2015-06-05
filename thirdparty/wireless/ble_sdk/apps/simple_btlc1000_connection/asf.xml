@@ -1,0 +1,13 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="SIMPLE BTLC1000 CONNECTION APPLICATION" id="thirdparty.wireless.ble_sdk.apps.simple_btlc1000_connection">
+		<info type="description" value="summary">
+		Simple BTLC1000 Connection application for BLE stack
+		</info>
+		<build type="c-source" value="main.c"/>
+		<require idref="thirdparty.wireless.ble_sdk.lib"/>
+		<require idref="thirdparty.wireless.ble_sdk.inc"/>
+		<require idref="thirdparty.wireless.ble_sdk.src"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

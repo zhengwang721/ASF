@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
@@ -72,18 +72,18 @@ void configure_eeprom(void)
 //! [check_re-init]
 }
 
-#if (SAMD21)
+#if (SAMD21) || (SAMDA1)
 void SYSCTRL_Handler(void)
 {
 	if (SYSCTRL->INTFLAG.reg & SYSCTRL_INTFLAG_BOD33DET) {
 		SYSCTRL->INTFLAG.reg |= SYSCTRL_INTFLAG_BOD33DET;
-		eeprom_emulator_commit_page_buffer();
+		rww_eeprom_emulator_commit_page_buffer();
 	}
 }
 #endif
 static void configure_bod(void)
 {
-#if (SAMD21)
+#if (SAMD21) || (SAMDA1)
 	struct bod_config config_bod33;
 	bod_get_config_defaults(&config_bod33);
 	config_bod33.action = BOD_ACTION_INTERRUPT;

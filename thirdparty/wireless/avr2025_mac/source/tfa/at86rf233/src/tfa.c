@@ -3,7 +3,7 @@
  *
  * \brief Implementation of Transceiver Feature Access (TFA) functionality.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,12 +41,9 @@
  */
 
 /*
- * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #if (defined ENABLE_TFA) || (defined TFA_BAT_MON)
@@ -394,7 +391,7 @@ uint16_t tfa_get_batmon_voltage(void)
 
 	/* Scan through the current range for the matching threshold. */
 	if (mv == 1) { /* 1 = indicates that voltage is within supported range
-		        **/
+		       **/
 		vth_val = 0x0F;
 		for (uint8_t i = 0; i < 16; i++) {
 			trx_bit_write(SR_BATMON_VTH, vth_val);

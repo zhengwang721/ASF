@@ -3,7 +3,7 @@
  *
  * \brief  Main of Performance_Analyzer application
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,15 +42,12 @@
 
 /**
  * \page license License
- * Copyright(c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* === INCLUDES ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #include <stdlib.h>
 #include "tal.h"
 #include "tal_helper.h"
@@ -163,7 +160,7 @@
  * - \b Packet \b Error \b Rate \b Measurement \b(PER) is to evaluate
  * the packet transmission and reception capabilities of the wireless nodes.
  * The Transmitter node shall be connected to the Performance Analyzer.
- * If 慖nitiate Peer searchcommand is received from the analyzer after the
+ * If 'Initiate Peer search' command is received from the analyzer after the
  * board
  * is connected, then the node (Transmitter) tries to find its peer node (i.e.
  * Reflector).
@@ -279,7 +276,8 @@
  *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
  * Area
  *     Networks (WPANs).\n\n
- * 2)  <a href="http://www.atmel.com/design-support/">Atmel Design Support</a>.\n
+ * 2)  <a href="http://www.atmel.com/design-support/">Atmel Design
+ *Support</a>.\n
  * \page contactinfo Contact Information
  * For further information,visit
  * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
@@ -438,6 +436,7 @@ volatile node_ib_t node_info;
 void performance_analyzer_init(void)
 {
 	sio2host_init();
+
 	/*
 	 * Power ON - so set the board to INIT state. All hardware, PAL, TAL and
 	 * stack level initialization must be done using this function
@@ -446,21 +445,21 @@ void performance_analyzer_init(void)
 
 	/* INIT was a success - so change to WAIT_FOR_EVENT state */
 	set_main_state(WAIT_FOR_EVENT, NULL);
-
 }
 
 /**
- * \brief This task needs to be called in a while(1) for performing 
+ * \brief This task needs to be called in a while(1) for performing
  *  Performance Analyzer tasks
  */
 void performance_analyzer_task(void)
 {
 	pal_task(); /* Handle platform specific tasks, like serial
-		            * interface */
+	             * interface */
 	tal_task(); /* Handle transceiver specific tasks */
 	app_task(); /* Application task */
 	serial_data_handler();
 }
+
 /**
  * \brief Application task
  */
@@ -618,7 +617,7 @@ void set_main_state(main_state_t state, void *arg)
  *
  * \return MAC_SUCCESS      if the TAL has accepted the data for frame
  *                          transmission
- *         TAL_BUSY         if the TAL is busy servicing the previous tx 
+ *         TAL_BUSY         if the TAL is busy servicing the previous tx
  *                          request
  */
 retval_t transmit_frame(uint8_t dst_addr_mode,
@@ -722,9 +721,7 @@ retval_t transmit_frame(uint8_t dst_addr_mode,
 
 	/* First element shall be length of PHY frame. */
 	frame_ptr--;
-	*frame_ptr = (uint8_t) frame_length;
-	
-	
+	*frame_ptr = (uint8_t)frame_length;
 
 	/* Finished building of frame. */
 	node_info.tx_frame_info->mpdu = frame_ptr;

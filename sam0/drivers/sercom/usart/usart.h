@@ -41,7 +41,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef USART_H_INCLUDED
@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_sercom_usart_group SAM Serial USART Driver (SERCOM USART)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the SERCOM module in its USART mode to transfer or receive
  * USART data frames. The following driver API modes are covered by this
  * manual:
@@ -68,6 +68,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DAx
  *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
@@ -98,35 +99,35 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_SYNC_SCHEME_V2</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_OVER_SAMPLE</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_HARDWARE_FLOW_CONTROL</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IRDA</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_LIN_SLAVE</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_COLLISION_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_START_FRAME_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION</td>
- *    <td>SAM D21/R21/D10/D11/L21/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_RS485</td>
@@ -275,7 +276,8 @@ extern "C" {
  * Define SERCOM USART features set according to different device family.
  * @{
  */
-#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAMC21) || defined(__DOXYGEN__)
+#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || \
+	(SAMDA1) || (SAMC21) || defined(__DOXYGEN__)
 /** Usart sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2
 /** Usart over sampling. */
@@ -762,7 +764,7 @@ struct usart_module;
  *
  * Type of the callback functions.
  */
-typedef void (*usart_callback_t)(const struct usart_module *const module);
+typedef void (*usart_callback_t)(struct usart_module *const module);
 #endif
 
 /**
@@ -1298,7 +1300,7 @@ static inline bool lin_master_transmission_status(struct usart_module *const mod
  *		<th>Changelog</th>
  *	</tr>
  *  <tr>
- *		<td>Add support for SAML21 (same features as SAMD21)</td>
+ *		<td>Add support for SAML21 and SAMDAx(same features as SAMD21)</td>
  *  </tr>
  *  <tr>
  *		<td>Add support for SAMD10/D11 (same features as SAMD21)</td>
@@ -1439,8 +1441,8 @@ static inline bool lin_master_transmission_status(struct usart_module *const mod
  *	</tr>
  *	<tr>
  *		<td>F</td>
- *		<td>11/2014</td>
- *		<td>Add support for SAML21.</td>
+ *		<td>04/2015</td>
+ *		<td>Add support for SAML21 and SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>E</td>

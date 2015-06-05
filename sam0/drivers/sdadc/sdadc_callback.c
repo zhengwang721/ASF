@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
-/**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -160,10 +160,10 @@ void sdadc_unregister_callback(
 /**
  * \brief Read multiple samples from SDADC.
  *
- * Read \c samples samples from the SDADC into the buffer \c buffer.
+ * Read \c samples from the SDADC into the \c buffer.
  * If there is no hardware trigger defined (event action) the
  * driver will retrigger the SDADC conversion whenever a conversion
- * is complete until \c samples samples has been acquired. To avoid
+ * is complete until \c samples has been acquired. To avoid
  * jitter in the sampling frequency using an event trigger is advised.
  *
  * \param[in]  module_inst  Pointer to the SDADC software instance struct

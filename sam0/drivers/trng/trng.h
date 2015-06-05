@@ -3,7 +3,7 @@
  *
  * \brief SAM True Random Number Generator (TRNG) Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_trng_group SAM True Random Number Generator (TRNG) Driver
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's True Random Number Generator functionality.
  *
  * The following driver API modes are covered by this manual:
@@ -83,7 +83,7 @@
  *
  * This driver provides an interface for the TRNG functions on the device.
  *
- * As soon as the TRNG is enabled, the module provides a new 32-bits random
+ * As soon as the TRNG is enabled, the module provides a new 32-bit random
  * data, for every 84 CLK_TRNG_APB clock cycles.
  *
  *
@@ -437,13 +437,8 @@ static inline enum status_code trng_read(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
- *		<td>11/2014</td>
- *		<td>Corrected documentation typos.</td>
- *	</tr>
- *	<tr>
  *		<td>A</td>
- *		<td>09/2014</td>
+ *		<td>04/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

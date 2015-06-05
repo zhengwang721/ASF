@@ -95,10 +95,9 @@
 
 /* ========== Instance parameters for ADC1 peripheral ========== */
 #define ADC1_DMAC_ID_RESRDY         43       // index of DMA RESRDY trigger
-#define ADC1_EXTCHANNEL_MSB         15       // Number of external channels
+#define ADC1_EXTCHANNEL_MSB         11       // Number of external channels
 #define ADC1_GCLK_ID                34       // index of Generic Clock
-#define ADC1_MASTER_SLAVE_MODE      1        // ADC Master/Slave Mode
-#define ADC1_RESULT_BITS            16       // Size of RESULT.RESULT bitfield
-#define ADC1_RESULT_MSB             15       // Size of Result
+#define ADC1_INT_CH30               0        // Select OPAMP or CTAT on Channel 30
+#define ADC1_MASTER_SLAVE_MODE      2        // ADC Master/Slave Mode
 
 #endif /* _SAMC21_ADC1_INSTANCE_ */

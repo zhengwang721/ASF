@@ -3,7 +3,7 @@
  *
  * @brief RF4CE Serial Interface Application
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -78,7 +78,8 @@
  *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
  * Area
  *     Networks (WPANs).\n\n
- * 2)  <a href="http://www.atmel.com/design-support/">Atmel Design Support</a>.\n
+ * 2)  <a href="http://www.atmel.com/design-support/">Atmel Design
+ *Support</a>.\n
  *
  * \section contactinfo Contact Information
  * For further information,visit
@@ -86,9 +87,6 @@
  */
 
 /* === Includes ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -99,6 +97,7 @@
 #include "serial_interface.h"
 #include "app_config.h"
 #include "pb_pairing.h"
+#include "nwk_config.h"
 
 /* === Macros ============================================================== */
 

@@ -3,7 +3,7 @@
  *
  * @brief This file handles the frame transmission within the TAL.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,15 +41,12 @@
  */
 
 /*
- * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* === INCLUDES ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #include <stdint.h>
 #include <string.h>
@@ -194,7 +191,6 @@ retval_t tal_tx_frame(frame_info_t *tx_frame, csma_mode_t csma_mode,
 				return MAC_CHANNEL_ACCESS_FAILURE;
 			}
 		}
-
 #endif  /* #if (MAC_INDIRECT_DATA_FFD == 1) */
 		send_frame(csma_mode, perform_frame_retry);
 	}
@@ -484,8 +480,9 @@ void handle_tx_end_irq(bool underrun_occured)
 					trx_status = set_trx_state(
 							CMD_TX_ARET_ON);
 				} while (trx_status != TX_ARET_ON);
+
 				/* Toggle the SLP_TR pin triggering
-				 *transmission. */
+				 * transmission. */
 				TRX_SLP_TR_HIGH();
 				PAL_WAIT_65_NS();
 				TRX_SLP_TR_LOW();
@@ -540,7 +537,6 @@ void tal_tx_beacon(frame_info_t *tx_frame)
 		if (trx_status != PLL_ON) {
 			Assert("PLL_ON failed for beacon transmission" == 0);
 		}
-
 #endif
 	} while (trx_status != PLL_ON);
 

@@ -4,7 +4,7 @@
  * @brief This file defines all message structures for the MAC.
  *
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,15 +43,12 @@
  */
 
 /*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef MAC_MSG_TYPES_H
 #define MAC_MSG_TYPES_H
 
@@ -807,7 +804,7 @@ typedef struct mlme_start_req_tag {
 
 	/**
 	 * The mode used to identify the key to be used (see Table 96 in
-	 *7.6.2.2.2).
+	 * 7.6.2.2.2).
 	 * This parameter is ignored if the CoordRealignSecurityLevel parameter
 	 * is set to 0x00.
 	 */
@@ -815,7 +812,7 @@ typedef struct mlme_start_req_tag {
 
 	/**
 	 * The originator of the key to be used (see 7.6.2.4.1). This parameter
-	 *is
+	 * is
 	 * ignored if the CoordRealignKeyIdMode parameter is ignored or set to
 	 * 0x00.
 	 */
