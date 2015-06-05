@@ -81,7 +81,7 @@ typedef enum _pio_type {
 	PIO_NOT_A_PIN   = PIO_TYPE_NOT_A_PIN,
 	PIO_PERIPH_A    = PIO_TYPE_PIO_PERIPH_A,
 	PIO_PERIPH_B    = PIO_TYPE_PIO_PERIPH_B,
-#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM)
+#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAME70 || SAMS70)
 	PIO_PERIPH_C    = PIO_TYPE_PIO_PERIPH_C,
 	PIO_PERIPH_D    = PIO_TYPE_PIO_PERIPH_D,
 #endif
@@ -155,7 +155,7 @@ void pio_set_multi_driver(Pio *p_pio, const uint32_t ul_mask,
 		const uint32_t ul_multi_driver_enable);
 uint32_t pio_get_multi_driver_status(const Pio *p_pio);
 
-#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
+#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAME70 || SAMS70)
 void pio_pull_down(Pio *p_pio, const uint32_t ul_mask,
 		const uint32_t ul_pull_down_enable);
 #endif
@@ -165,7 +165,7 @@ void pio_disable_output_write(Pio *p_pio, const uint32_t ul_mask);
 uint32_t pio_get_output_write_status(const Pio *p_pio);
 void pio_sync_output_write(Pio *p_pio, const uint32_t ul_mask);
 
-#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
+#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAME70 || SAMS70)
 void pio_set_schmitt_trigger(Pio *p_pio, const uint32_t ul_mask);
 uint32_t pio_get_schmitt_trigger(const Pio *p_pio);
 #endif
@@ -181,7 +181,7 @@ void pio_set_additional_interrupt_mode(Pio *p_pio,
 void pio_set_writeprotect(Pio *p_pio, const uint32_t ul_enable);
 uint32_t pio_get_writeprotect_status(const Pio *p_pio);
 
-#if (SAM3S || SAM4S || SAM4E)
+#if (SAM3S || SAM4S || SAM4E || SAMV71 || SAMV70 || SAME70 || SAMS70)
 void pio_capture_set_mode(Pio *p_pio, uint32_t ul_mode);
 void pio_capture_enable(Pio *p_pio);
 void pio_capture_disable(Pio *p_pio);
@@ -190,7 +190,9 @@ void pio_capture_enable_interrupt(Pio *p_pio, const uint32_t ul_mask);
 void pio_capture_disable_interrupt(Pio * p_pio, const uint32_t ul_mask);
 uint32_t pio_capture_get_interrupt_status(const Pio *p_pio);
 uint32_t pio_capture_get_interrupt_mask(const Pio *p_pio);
+#if !(SAMV71 || SAMV70 || SAME70 || SAMS70)
 Pdc *pio_capture_get_pdc_base(const Pio *p_pio);
+#endif
 #endif
 
 /* GPIO Support */

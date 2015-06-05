@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions.
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,7 @@
 
 /**
  * \page sysclk_quickstart Quick Start Guide for the System Clock Management
- * service (SAM4E)
+ * service (SAMV71)
  *
  * This is the quick start guide for the \ref sysclk_group "System Clock
  * Management" service, with step-by-step instructions on how to configure and
@@ -125,7 +125,7 @@
 
 /**
  * \page sysclk_quickstart_use_case_2 Advanced use case - Peripheral Bus Clock
- * Management (SAM4E)
+ * Management (SAMV71)
  *
  * \section sysclk_quickstart_use_case_2 Advanced use case - Peripheral Bus
  * Clock Management
@@ -251,6 +251,7 @@ extern "C" {
 #define SYSCLK_SRC_MAINCK_XTAL     6 //!< External crystal oscillator as master source clock
 #define SYSCLK_SRC_MAINCK_BYPASS   7 //!< External bypass oscillator as master source clock
 #define SYSCLK_SRC_PLLACK          8 //!< Use PLLACK as master source clock
+#define SYSCLK_SRC_UPLLCK          9       //!< Use UPLLCK as master source clock
 //@}
 
 //! \name Master Clock Prescalers (MCK)
@@ -265,9 +266,18 @@ extern "C" {
 #define SYSCLK_PRES_3   PMC_MCKR_PRES_CLK_3  //!< Set master clock prescaler to 3
 //@}
 
+//! \name Master Clock Division (MCK)
+//@{
+#define SYSCLK_DIV_1   PMC_MCKR_MDIV_EQ_PCK  //!< Set master clock division to 1
+#define SYSCLK_DIV_2   PMC_MCKR_MDIV_PCK_DIV2  //!< Set master clock division to 2
+#define SYSCLK_DIV_4   PMC_MCKR_MDIV_PCK_DIV4  //!< Set master clock division to 4
+#define SYSCLK_DIV_3   PMC_MCKR_MDIV_PCK_DIV3  //!< Set master clock division to 3
+//@}
+
 //! \name USB Clock Sources
 //@{
 #define USBCLK_SRC_PLL0       0     //!< Use PLLA
+#define USBCLK_SRC_UPLL       1     //!< Use UPLL
 //@}
 
 /**
@@ -353,6 +363,11 @@ static inline uint32_t sysclk_get_main_hz(void)
 	}
 #endif
 
+#ifdef CONFIG_PLL1_SOURCE
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_UPLLCK) {
+		return PLL_UPLL_HZ;
+	}
+#endif
 	else {
 		/* unhandled_case(CONFIG_SYSCLK_SOURCE); */
 		return 0;
@@ -389,8 +404,7 @@ static inline uint32_t sysclk_get_peripheral_hz(void)
 	/* CONFIG_SYSCLK_PRES is the register value for setting the expected */
 	/* prescaler, not an immediate value. */
 	return sysclk_get_main_hz() /
-		((CONFIG_SYSCLK_PRES == SYSCLK_PRES_3) ? 3 :
-			(1 << (CONFIG_SYSCLK_PRES >> PMC_MCKR_PRES_Pos)));
+		(((CONFIG_SYSCLK_PRES == SYSCLK_PRES_3) ? 3 : (1 << (CONFIG_SYSCLK_PRES >> PMC_MCKR_PRES_Pos))) * CONFIG_SYSCLK_DIV);
 }
 
 /**

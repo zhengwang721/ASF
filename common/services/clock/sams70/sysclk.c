@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions.
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -108,6 +108,10 @@ void sysclk_set_source(uint32_t ul_src)
 	case SYSCLK_SRC_PLLACK:
 		pmc_mck_set_source(PMC_MCKR_CSS_PLLA_CLK);
 		break;
+
+	case SYSCLK_SRC_UPLLCK:
+		pmc_mck_set_source(PMC_MCKR_CSS_UPLL_CLK);
+		break;
 	}
 
 	SystemCoreClockUpdate();
@@ -117,7 +121,7 @@ void sysclk_set_source(uint32_t ul_src)
 /**
  * \brief Enable USB clock.
  *
- * \note The SAM3S UDP hardware interprets div as div+1. For readability the hardware div+1
+ * \note The SAMV71 UDP hardware interprets div as div+1. For readability the hardware div+1
  * is hidden in this implementation. Use div as div effective value.
  *
  * \param pll_id Source of the USB clock.
@@ -140,6 +144,14 @@ void sysclk_enable_usb(void)
 		return;
 	}
 #endif
+
+	if (CONFIG_USBCLK_SOURCE == USBCLK_SRC_UPLL) {
+
+		pmc_enable_upll_clock();
+		pmc_switch_udpck_to_upllck(CONFIG_USBCLK_DIV - 1);
+		pmc_enable_udpck();
+		return;
+	}
 }
 
 /**
@@ -155,6 +167,8 @@ void sysclk_disable_usb(void)
 
 void sysclk_init(void)
 {
+	struct pll_config pllcfg;
+
 	/* Set flash wait state to max in case the below clock switching. */
 	system_init_flash(CHIP_FREQ_CPU_MAX);
 
@@ -207,16 +221,23 @@ void sysclk_init(void)
 
 #ifdef CONFIG_PLL0_SOURCE
 	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_PLLACK) {
-		struct pll_config pllcfg;
-
 		pll_enable_source(CONFIG_PLL0_SOURCE);
 		pll_config_defaults(&pllcfg, 0);
 		pll_enable(&pllcfg, 0);
 		pll_wait_for_lock(0);
+		pmc_mck_set_division(CONFIG_SYSCLK_DIV);
 		pmc_switch_mck_to_pllack(CONFIG_SYSCLK_PRES);
 	}
 #endif
 
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_UPLLCK) {
+		pll_enable_source(CONFIG_PLL1_SOURCE);
+		pll_config_defaults(&pllcfg, 1);
+		pll_enable(&pllcfg, 1);
+		pll_wait_for_lock(1);
+		pmc_mck_set_division(CONFIG_SYSCLK_DIV);
+		pmc_switch_mck_to_upllck(CONFIG_SYSCLK_PRES);
+	}
 	/* Update the SystemFrequency variable */
 	SystemCoreClockUpdate();
 
