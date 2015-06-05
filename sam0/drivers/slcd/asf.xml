@@ -5,8 +5,7 @@
 		</info>
 		<module type="driver" id="sam0.drivers.slcd#polling" caption="SLCD - Segment Liquid Crystal Display Controller">
 			<info type="keyword" value="technology">
-				<keyword value="Display" />
-				<keyword value="Segment"/>
+				<keyword value="Graphics" />
 			</info>
 			<build type="include-path" value="."/>
 			<build type="c-source" value="slcd.c"/>
@@ -20,8 +19,7 @@
 		</module>
 		<module type="driver" id="sam0.drivers.slcd#callback" caption="SLCD - Segment Liquid Crystal Display Controller">
 			<info type="keyword" value="technology">
-				<keyword value="Display" />
-				<keyword value="Segment"/>
+				<keyword value="Graphics" />
 			</info>
 			<build type="include-path" value="."/>
 			<build type="c-source" value="slcd.c"/>
@@ -38,14 +36,12 @@
 	</select-by-config>
 	<module type="meta" id="sam0.drivers.slcd.appnote" caption="SLCD - Segment Liquid Crystal Display Controller">
 			<info type="keyword" value="technology">
-				<keyword value="Display" />
-				<keyword value="Segment"/>
+				<keyword value="Graphics" />
 			</info>
 
 			<info type="appnote" value="AT13155"/>
 			<info type="keyword" value="pdf">
-				<keyword value="Display" />
-				<keyword value="Segment"/>
+				<keyword value="Graphics" />
 			</info>
 			<info type="description" value="pdf">
 				This application note describes how to use the ASF driver for
