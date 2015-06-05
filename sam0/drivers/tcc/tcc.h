@@ -2434,7 +2434,7 @@ enum status_code tcc_set_double_buffer_compare_values(
  *  <tr>
  *      <td>C</td>
  *      <td>04/2015</td>
- *      <td>Added support for SAML21 and SAMDA0/DA1</td>
+ *      <td>Added support for SAML21 and SAMDAx</td>
  *  </tr>
  *  <tr>
  *      <td>B</td>

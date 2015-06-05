@@ -984,7 +984,7 @@ static inline void system_pac_disable_event(void)
  *	<tr>
  *		<td>F</td>
  *		<td>04/2015</td>
- *		<td>Added support for SAML21 and SAMDA0/DA1.</td>
+ *		<td>Added support for SAML21 and SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>E</td>

@@ -1067,7 +1067,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *	<tr>
  *		<td>E</td>
  *		<td>04/2015</td>
- *		<td>Added support for SAMDA0/DA1.</td>
+ *		<td>Added support for SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
