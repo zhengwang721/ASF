@@ -12,5 +12,6 @@
 		<generator value="as5_arm"/>
 		<generator value="doxygen-v2"/>
 		<device-support value="atsaml22n18a"/>
+		<config name="config.compiler.iarewarm.dlib" value="full"/>
 	</project>
 </asf>
