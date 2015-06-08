@@ -1392,7 +1392,7 @@ static inline void ac_win_clear_status(
  *    <tr>
  *      <td>E</td>
  *      <td>06/2015</td>
- *      <td>Added support for SAML21, SAMC21, SAMDAx.</td>
+ *      <td>Added support for SAML21, SAMC21, and SAMDAx.</td>
  *    </tr>
  *    <tr>
  *      <td>D</td>
