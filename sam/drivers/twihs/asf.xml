@@ -13,7 +13,10 @@
 		<device-support value="samg51"/>
 		<device-support value="samg53"/>
 		<device-support value="samg54"/>
+		<device-support value="samv70"/>
 		<device-support value="samv71"/>
+		<device-support value="same70"/>
+		<device-support value="sams70"/>
 		<require idref="sam.utils"/>
 		<generator value="doxygen-module" default-mcu="unspecified-samg53"/>
 	</module>

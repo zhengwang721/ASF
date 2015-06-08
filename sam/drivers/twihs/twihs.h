@@ -198,7 +198,7 @@ static inline void twihs_send_clear(Twihs *p_twihs)
 	p_twihs->TWIHS_CR = TWIHS_CR_CLEAR;
 }
 
-#ifndef SAMV71
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 /**
  * \brief Enable alternative command mode.
  *

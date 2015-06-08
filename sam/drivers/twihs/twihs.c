@@ -630,7 +630,7 @@ void twihs_smbus_set_timing(Twihs *p_twihs, uint32_t ul_timing)
 	p_twihs->TWIHS_SMBTR = ul_timing;;
 }
 
-#ifndef SAMV71
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 /**
  * \brief Set length/direction/PEC for alternative command mode.
  *

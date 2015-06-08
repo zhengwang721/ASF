@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief TWI EEPROM Example for SAM.
+ * \brief TWIHS MASTER Example for SAM.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -42,20 +42,17 @@
  */
 
 /**
- * \mainpage TWI EEPROM Example
+ * \mainpage TWI MASTER Example
  *
  * \section intro Introduction
  *
- * The application demonstrates how to use the SAM TWI driver to access an
+ * The application demonstrates how to use the SAM TWIHS driver to access an
  * external serial EEPROM chip.
  *
  * \section Requirements
  *
  * This package can be used with the following setup:
- *  - SAM3X evaluation kit
  *  - SAMG53 Xplained Pro kit
- *  - SAM4N Xplained Pro kit
- *  - SAMG55 Xplained Pro kit
  *  - SAMV71 Xplained Ultra kit
  *
  * \section files Main files:
@@ -64,11 +61,11 @@
  *  - TWIHS_master_example.c Example application.
  *
  * \section exampledescription Description of the Example
- * Upon startup, the program configures PIOs for console UART, LEDs and TWI
- * connected to EEPROM on board. Then it configures the TWI driver and data
- * package. The clock of I2C bus is set as 400kHz.
+ * Upon startup, the program configures PIOs for console UART, LEDs and TWIHS
+ * connected to EEPROM on board. Then it configures the TWIHS driver and data
+ * package. The clock of I2C bus is set as 150kHz.
  * After initializing the master mode, the example sends test pattern to the
- * EEPROM. When sending is complete, TWI driver reads the memory and saves the
+ * EEPROM. When sending is complete, TWIHS driver reads the memory and saves the
  * content in the reception buffer. Then the program compares the content
  * received with the test pattern sent before and prints the comparison result.
  * The corresponding LED is turned on.
@@ -122,31 +119,11 @@ extern "C" {
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
-#if SAM4N
-/** TWI ID for simulated EEPROM application to use */
-#define BOARD_ID_TWIHS_EEPROM    ID_TWIHS0
-/** TWI Base for simulated TWI EEPROM application to use */
-#define BOARD_BASE_TWIHS_EEPROM  TWIHS0
-/** The address for simulated TWI EEPROM application */
-#undef  AT24C_ADDRESS
-#define AT24C_ADDRESS          0x40
-#endif
-
-#if SAMV71
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
 /** TWI ID for simulated EEPROM application to use */
 #define BOARD_ID_TWIHS_EEPROM         ID_TWIHS0
 /** TWI Base for simulated TWI EEPROM application to use */
 #define BOARD_BASE_TWIHS_EEPROM       TWIHS0
-/** The address for simulated TWI EEPROM application */
-#undef  AT24C_ADDRESS
-#define AT24C_ADDRESS        0x40
-#endif
-
-#if SAMG55
-/** TWI ID for simulated EEPROM application to use */
-#define BOARD_ID_TWIHS_EEPROM         ID_TWI4
-/** TWI Base for simulated TWI EEPROM application to use */
-#define BOARD_BASE_TWIHS_EEPROM       TWI4
 /** The address for simulated TWI EEPROM application */
 #undef  AT24C_ADDRESS
 #define AT24C_ADDRESS        0x40
@@ -226,13 +203,9 @@ int main(void)
 	board_init();
 
 	/* Turn off LEDs */
-#if SAM3XA
-	LED_Off(LED0_GPIO);
-	LED_Off(LED1_GPIO);
-#else
 	LED_Off(LED0);
-#endif
-	/* Initialize the console UART */
+	
+    /* Initialize the console UART */
 	configure_console();
 
 	/* Output example information */
@@ -247,14 +220,8 @@ int main(void)
 		}
 	}
 
-#if (SAMG55)
-	/* Enable the peripheral and set TWI mode. */
-	flexcom_enable(BOARD_FLEXCOM_TWI);
-	flexcom_set_opmode(BOARD_FLEXCOM_TWI, FLEXCOM_TWI);
-#else
 	/* Enable the peripheral clock for TWI */
 	pmc_enable_periph_clk(BOARD_ID_TWIHS_EEPROM);
-#endif
 
 	/* Configure the options of TWI driver */
 	opt.master_clk = sysclk_get_cpu_hz();
@@ -278,10 +245,6 @@ int main(void)
 
 	if (twihs_master_init(BOARD_BASE_TWIHS_EEPROM, &opt) != TWIHS_SUCCESS) {
 		puts("-E-\tTWI master initialization failed.\r");
-#if SAM3XA
-		LED_On(LED0_GPIO);
-		LED_On(LED1_GPIO);
-#endif
 		while (1) {
 			/* Capture error */
 		}
@@ -290,26 +253,18 @@ int main(void)
 	/* Send test pattern to EEPROM */
 	if (twihs_master_write(BOARD_BASE_TWIHS_EEPROM, &packet_tx) != TWIHS_SUCCESS) {
 		puts("-E-\tTWI master write packet failed.\r");
-#if SAM3XA
-		LED_On(LED0_GPIO);
-		LED_On(LED1_GPIO);
-#endif
 		while (1) {
 			/* Capture error */
 		}
 	}
-	//printf("Write:\tOK!\n\r");
+	printf("Write:\tOK!\n\r");
 
 	/* Wait at least 10 ms */
 	mdelay(WAIT_TIME);
 
-	/* Get memory from EEPROM */
+	/* Get memory from MASTER */
 	if (twihs_master_read(BOARD_BASE_TWIHS_EEPROM, &packet_rx) != TWIHS_SUCCESS) {
 		puts("-E-\tTWI master read packet failed.\r");
-#if SAM3XA
-		LED_On(LED0_GPIO);
-		LED_On(LED1_GPIO);
-#endif
 		while (1) {
 			/* Capture error */
 		}
@@ -321,9 +276,6 @@ int main(void)
 		if (test_data_tx[i] != gs_uc_test_data_rx[i]) {
 			/* No match */
 			puts("Data comparison:\tUnmatched!\r");
-#if SAM3XA
-			LED_On(LED0_GPIO);
-#endif
 			while (1) {
 				/* Capture error */
 			}
@@ -331,11 +283,7 @@ int main(void)
 	}
 	/* Match */
 	puts("Data comparison:\tMatched!\r");
-#if SAM3XA
-	LED_On(LED1_GPIO);
-#else
 	LED_On(LED0);
-#endif
 	while (1) {
 	}
 }
