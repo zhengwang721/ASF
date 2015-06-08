@@ -162,7 +162,7 @@
  * }
  * \enddot
  *
- * \note SAM L21's Watchdog Counter is \a not provided by GCLK, but it uses an
+ * \note SAM L21 and C21's Watchdog Counter is \a not provided by GCLK, but it uses an
  *       internal 1KHz OSCULP32K output clock.
  *
  * \section asfdoc_sam0_wdt_special_considerations Special Considerations
@@ -253,7 +253,7 @@ struct wdt_conf {
 	/** Enable/Disable the Watchdog Timer. */
 	bool enable;
 #if !((SAML21) && (SAMC21))
-	/** GCLK generator used to clock the peripheral except SAM L21.*/
+	/** GCLK generator used to clock the peripheral except SAM L21 and C21.*/
 	enum gclk_generator clock_source;
 #endif
 	/** Number of Watchdog timer clock ticks until the Watchdog expires. */
@@ -471,14 +471,9 @@ void wdt_reset_count(void);
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>F</td>
- *		<td>01/2015</td>
- *		<td>Added SAMC21 support.</td>
- *	</tr>
- *	<tr>
  *		<td>E</td>
- *		<td>04/2015</td>
- *		<td>Added SAML21 and SAMDAx support.</td>
+ *		<td>06/2015</td>
+ *		<td>Added SAML21, SAMC21, and SAMDAx support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

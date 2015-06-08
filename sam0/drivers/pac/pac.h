@@ -832,9 +832,6 @@ static inline void system_pac_disable_event(void)
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21</td>
- *	</tr>
- *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
@@ -983,53 +980,37 @@ static inline void system_pac_disable_event(void)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>G</td>
- *		<td>01/2015</td>
- *		<td>Added support for SAMC21.</td>
- *	</tr> 
- *	<tr>
- *		<td>F</td>
- *		<td>04/2015</td>
- *		<td>Added support for SAML21 and SAMDAx.</td>
+ *		<td>42107F</td>
+ *		<td>06/2015</td>
+ *		<td>Added support for SAML21, SAMC21, and SAMDAx</td>
  *	</tr>
  *	<tr>
- *		<td>E</td>
+ *		<td>42107E</td>
  *		<td>12/2014</td>
- *		<td>Added support for SAMR21 and SAMD10/D11.</td>
+ *		<td>Added support for SAMR21 and SAMD10/D11</td>
  *	</tr>
  *	<tr>
- *		<td>D</td>
+ *		<td>42107D</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAMD21.</td>
+ *		<td>Added support for SAMD21</td>
  *	</tr>
  *	<tr>
- *		<td>C</td>
+ *		<td>42107C</td>
  *		<td>10/2013</td>
  *		<td>Extended acronyms list</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
+ *		<td>42107B</td>
  *		<td>06/2013</td>
- *		<td>Corrected documentation typos.</td>
+ *		<td>Corrected documentation typos</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42107A</td>
  *		<td>06/2013</td>
- *		<td>Initial release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
 
 #endif /* PAC_H_INCLUDED */
-
-
-
-
-
-
-
-
-
-
-
 

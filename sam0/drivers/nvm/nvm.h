@@ -871,11 +871,7 @@ static inline enum nvm_error nvm_get_error(void)
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAML21.</td>
- *	</tr>
- *	<tr>
- *		<td>Added support for SAMD21, removed BOD12 reference, removed
- *          nvm_set_fuses() API</td>
+ *		<td>Removed BOD12 reference, removed nvm_set_fuses() API</td>
  *	</tr>
  *	<tr>
  *		<td>Added functions to read/write fuse settings</td>
@@ -913,29 +909,29 @@ static inline enum nvm_error nvm_get_error(void)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>E</td>
- *		<td>04/2015</td>
- *		<td>Added support for SAML21 and SAMDAx.</td>
+ *		<td>42114E</td>
+ *		<td>06/2015</td>
+ *		<td>Added support for SAML21, SAMC21 and SAMDAx</td>
  *	</tr> 
  *	<tr>
- *		<td>D</td>
+ *		<td>42114D</td>
  *		<td>12/2014</td>
- *		<td>Added support for SAMR21 and SAMD10/D11.</td>
+ *		<td>Added support for SAMR21 and SAMD10/D11</td>
  *	</tr>
  *	<tr>
- *		<td>C</td>
+ *		<td>42114C</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAMD21.</td>
+ *		<td>Added support for SAMD21</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
+ *		<td>42114B</td>
  *		<td>06/2013</td>
- *		<td>Corrected documentation typos.</td>
+ *		<td>Corrected documentation typos</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42114A</td>
  *		<td>06/2013</td>
- *		<td>Initial release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
