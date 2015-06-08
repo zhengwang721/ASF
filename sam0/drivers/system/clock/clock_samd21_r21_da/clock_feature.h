@@ -103,7 +103,7 @@ extern "C" {
  *	</tr>
  *	<tr>
  *		<td>FEATURE_SYSTEM_CLOCK_DPLL</td>
- *		<td>SAMD21, SAMR21, SAMD10, SAMD11, SAMDA0, SAMDA1</td>
+ *		<td>SAMD21, SAMR21, SAMD10, SAMD11, SAMDAx</td>
  *	</tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -272,7 +272,7 @@ extern "C" {
  * Define system clock features set according to different device family.
  * @{
  */
-#if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAMDA1) || (SAMDA0) || defined(__DOXYGEN__)
+#if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAMDA1) || defined(__DOXYGEN__)
 /** Digital Phase Locked Loop (DPLL) feature support. */
 #  define FEATURE_SYSTEM_CLOCK_DPLL
 #endif
@@ -1459,7 +1459,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	<tr>
  *		<td>E</td>
  *		<td>04/2015</td>
- *		<td>Added support for SAMDA0/DA1.</td>
+ *		<td>Added support for SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

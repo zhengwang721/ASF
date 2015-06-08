@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="ASF Manual (SAM DA0/A1)" force-caption="true" id="sam0.applications.asf_programmers_manual.atsamda0_a1">
+	<project caption="ASF Manual (SAM DA1)" force-caption="true" id="sam0.applications.asf_programmers_manual.atsamda1">
 		<require idref="sam0.applications.asf_programmers_manual"/>
 
 		<generator value="doxygen-v2"/>
@@ -8,7 +8,7 @@
 
 		<info type="description" value="pdf">
 		This application note describes the Atmel Software Framework low level
-		module driver APIs for the Atmel SAM DA0/A1 series of devices.
+		module driver APIs for the Atmel SAM DA1 series of devices.
 		</info>
 		<info type="keyword" value="pdf">
 			<keyword value="ASF"/>

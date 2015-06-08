@@ -435,7 +435,7 @@ static inline void bod_clear_detected(
  *	<tr>
  *		<td>E</td>
  *		<td>04/2015</td>
- *		<td>Added support for SAMDA0/DA1.</td>
+ *		<td>Added support for SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

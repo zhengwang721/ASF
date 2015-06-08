@@ -11,7 +11,6 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
-			<device-support value="samda0"/>
 			<device-support value="samda1"/>
 		</module>
 		<module type="meta" id="sam0.drivers.events.common#sam_l" caption="EVSYS - Event System Common">
