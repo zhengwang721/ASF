@@ -300,7 +300,7 @@ static inline void twihs_clear_disable_clock_wait_state(Twihs *p_twihs)
 	p_twihs->TWIHS_SMR &= ~TWIHS_SMR_SCLWSDIS;
 }
 
-#if (SAMG53 || SAMG54)
+#if (SAMG53 || SAMG54 || SAMV70 || SAMV71 || SAME70 || SAMS70)
 /**
  * \brief Slave Address 1 matching disabled.
  *
