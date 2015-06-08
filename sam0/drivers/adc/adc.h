@@ -92,7 +92,7 @@
  * functions on the device, to convert analog voltages to a corresponding
  * digital value. The ADC has up to 12-bit resolution, and is capable of
  * \if DEVICE_SAML21_SUPPORT
- * converting up to 1,000,000 samples per second (1 MSPS).
+ * converting up to 1,000,000 samples per second (MSPS).
  * \else
  * converting up to 500K samples per second (KSPS).
  * \endif
