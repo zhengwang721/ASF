@@ -94,7 +94,7 @@
  * \snippet qs_i2c_slave_dma.c init
  *
  * \subsection asfdoc_sam0_sercom_i2c_slave_dma_use_setup_workflow Workflow
- * - Configure and enable module:
+ * -# Configure and enable module:
  * \snippet qs_i2c_slave_dma.c initialize_i2c
  *  -# Create and initialize configuration structure.
  *    \snippet qs_i2c_slave_dma.c init_conf
@@ -105,7 +105,7 @@
  *  -# Enable the module.
  *    \snippet qs_i2c_slave_dma.c enable_module
  *
- * - Configure DMA
+ * -# Configure DMA
  *  -# Create a DMA resource configuration structure, which can be filled out to
  *    adjust the configuration of a single DMA transfer.
  *    \snippet qs_i2c_slave_dma.c dma_setup_1
