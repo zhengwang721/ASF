@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM C21 Xplained Pro board configuration.
+ * \brief SAM TSENS Quick Start
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,11 +40,60 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#include <asf.h>
 
-#endif /* CONF_BOARD_H_INCLUDED */
+void configure_tsens(void);
+
+//! [setup]
+void configure_tsens(void)
+{
+//! [setup_config]
+	struct tsens_config config_tsens;
+//! [setup_config]
+//! [setup_config_defaults]
+	tsens_get_config_defaults(&config_tsens);
+//! [setup_config_defaults]
+
+//! [setup_set_config]
+	tsens_init(&config_tsens);
+//! [setup_set_config]
+
+//! [setup_enable]
+	tsens_enable();
+//! [setup_enable]
+}
+//! [setup]
+
+int main(void)
+{
+	system_init();
+
+//! [setup_init]
+	configure_tsens();
+//! [setup_init]
+
+//! [main]
+
+//! [get_res]
+	int32_t result;
+
+//! [start_conv]
+	tsens_start_conversion();
+//! [start_conv]
+
+	do {
+		/* Wait for conversion to be done and read out result */
+	} while (tsens_read(&result) != STATUS_OK);
+//! [get_res]
+
+//! [inf_loop]
+	while (1) {
+		/* Infinite loop */
+	}
+//! [inf_loop]
+//! [main]
+}

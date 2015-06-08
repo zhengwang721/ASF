@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief AT30TSE75X Temperature sensor driver configuration file.
+ * \brief SAM TSENS Quick Start
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -40,16 +40,89 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_AT30TSE75X_H_INCLUDED
-#define CONF_AT30TSE75X_H_INCLUDED
 
-#include <board.h>
+#include <asf.h>
 
-#define AT30TSE_SERCOM      EXT1_I2C_MODULE
-#define AT30TSE_PINMUX_PAD0 EXT1_I2C_SERCOM_PINMUX_PAD0
-#define AT30TSE_PINMUX_PAD1 EXT1_I2C_SERCOM_PINMUX_PAD1
+//! [result_buffer]
+int32_t tsens_result;
+//! [result_buffer]
 
-#endif /* CONF_AT30TSE75X_H_INCLUDED */
+//! [module_inst]
+struct tsens_module tsens_instance;
+//! [module_inst]
+
+//! [job_complete_callback]
+volatile bool tsens_read_done = false;
+
+static void tsens_complete_callback(enum tsens_callback i)
+{
+	tsens_read_done = true;
+}
+//! [job_complete_callback]
+
+//! [setup]
+static void configure_tsens(void)
+{
+//! [setup_config]
+	struct tsens_config config_tsens;
+//! [setup_config]
+//! [setup_config_defaults]
+	tsens_get_config_defaults(&config_tsens);
+//! [setup_config_defaults]
+
+//! [setup_set_config]
+	tsens_init(&config_tsens);
+//! [setup_set_config]
+
+//! [setup_enable]
+	tsens_enable();
+//! [setup_enable]
+}
+
+static void configure_tsens_callbacks(void)
+{
+//! [setup_register_callback]
+	tsens_register_callback(&tsens_instance,
+			tsens_complete_callback, TSENS_CALLBACK_RESULT_READY);
+//! [setup_register_callback]
+//! [setup_enable_callback]
+	tsens_enable_callback(TSENS_CALLBACK_RESULT_READY);
+//! [setup_enable_callback]
+}
+//! [setup]
+
+int main(void)
+{
+	system_init();
+
+//! [setup_init]
+	configure_tsens();
+	configure_tsens_callbacks();
+//! [setup_init]
+
+//! [main]
+//! [enable_interrupts]
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_TSENS);
+	system_interrupt_enable_global();
+//! [enable_interrupts]
+
+//! [start_tsens_job]
+	tsens_read_job(&tsens_instance, &tsens_result);
+//! [start_tsens_job]
+
+//! [job_complete_poll]
+	while (tsens_read_done == false) {
+		/* Wait for asynchronous TSENS read to complete */
+	}
+//! [job_complete_poll]
+
+//! [inf_loop]
+	while (1) {
+		/* Infinite loop */
+	}
+//! [inf_loop]
+//! [main]
+}
