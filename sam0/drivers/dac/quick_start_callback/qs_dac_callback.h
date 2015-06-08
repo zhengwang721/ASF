@@ -59,7 +59,7 @@
  * \section asfdoc_sam0_dac_callback_basic_use_case_callback_setup Setup
  *
  * \subsection asfdoc_sam0_dac_callback_basic_use_case_prereq Prerequisites
- * There are no special setup requirements for this use-case.
+ * There are no special setup requirements for this use case.
  *
  * \subsection asfdoc_sam0_dac_callback_basic_use_case_callback_code Code
  * Add to the main application source file, outside of any functions:
