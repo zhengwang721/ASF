@@ -45,7 +45,7 @@
  * \page asfdoc_sam0_opamp_basic_use_case Quick Start Guide for OPAMP - Basic
  *
  * In this use case, the OPAMP0 is configured as "Non-Inverting PGA" mode,
- * refer to the second mode in datasheet "Build-in Modes" section.
+ * refer to the second mode of "Built-in Modes" in the device datasheet.
  *
  * This use case sets up the OPAMP0 to invert the input signal in OA0NEG
  * pin, and output it to the OA0OUT pin.
@@ -55,7 +55,7 @@
  * \section asfdoc_sam0_opamp_basic_use_case_setup Setup
  *
  * \subsection asfdoc_sam0_opamp_basic_use_case_setup_prereq Prerequisites
- * There are no special setup requirements for this use-case.
+ * There are no special setup requirements for this use case.
  *
  * \subsection asfdoc_sam0_opamp_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
