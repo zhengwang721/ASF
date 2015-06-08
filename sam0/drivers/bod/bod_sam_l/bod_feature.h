@@ -52,7 +52,7 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_bod_group SAM Brown Out Detector(BOD) Driver
+ * \defgroup asfdoc_sam0_bod_group SAM Brown Out Detector (BOD) Driver
  *
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Brown Out Detector (BOD) modules, to detect
@@ -223,11 +223,11 @@ struct bod33_config {
 	uint8_t backuplevel;
 	/** BOD33 level to trigger at when monitors VDD excpt in backup sleep mode */
 	uint8_t level;
-	/** If \c true, the BOD33 is kept enabled and sampled during device sleep. */
+	/** If \c true, the BOD33 is kept enabled and sampled during device sleep */
 	bool run_in_backup;
-	/** If \c true, the BOD33 is kept enabled and sampled during standby. */
+	/** If \c true, the BOD33 is kept enabled and sampled during standby */
 	bool run_in_standby;
-	/** If \c true, enables detection hysteresis. */
+	/** If \c true, enables detection hysteresis */
 	bool hysteresis;
 };
 
@@ -314,7 +314,7 @@ enum bod12_action {
 /** Configuration structure for a BOD12 module. */
 struct bod12_config {
 	/** Input sampler clock prescaler factor, to reduce the 1KHz clock from the
-	 *  ULP32K to lower the sampling rate of the BOD12. */
+	 *  ULP32K to lower the sampling rate of the BOD12 */
 	enum bod12_prescale prescaler;
 	/** BOD12 configuration in active mode */
 	enum bod12_mode_in_active mode_in_active;
@@ -324,9 +324,9 @@ struct bod12_config {
 	enum bod12_action action;
 	/** BOD12 level to trigger at (see electrical section of device datasheet) */
 	uint8_t level;
-	/** If \c true, the BOD12 is kept enabled and sampled during device sleep. */
+	/** If \c true, the BOD12 is kept enabled and sampled during device sleep */
 	bool run_in_standby;
-	/** If \c true, enables detection hysteresis. */
+	/** If \c true, enables detection hysteresis */
 	bool hysteresis;
 };
 
