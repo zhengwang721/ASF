@@ -53,7 +53,7 @@
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Configurable Custom Logic functionality.
  *
- * The following peripheral are used by this module:
+ * The following peripheral is used by this module:
  *  - CCL (Configurable Custom Logic)
  *
  * The following devices can use this module:
@@ -87,7 +87,7 @@
  *
  * The output can be combinatorially generated from the inputs, or filtered to remove spike.
  * An optional sequential module can be enabled. The inputs of sequential module are 
- * individually controlled by two independent, adjacent LUT(LUT0/LUT1, LUT2/LUT3 etc.) outputs,
+ * individually controlled by two independent, adjacent LUT(LUT0/LUT1, LUT2/LUT3, etc.) outputs,
  * enabling complex waveform generation.
  *
  * \section asfdoc_sam0_ccl_special_considerations Special Considerations
@@ -97,7 +97,7 @@
  *
  * \section asfdoc_sam0_ccl_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_ccl_extra. This includes:
+ * For extra information, see \ref asfdoc_sam0_ccl_extra. This includes:
  *  - \ref asfdoc_sam0_ccl_extra_acronyms
  *  - \ref asfdoc_sam0_ccl_extra_dependencies
  *  - \ref asfdoc_sam0_ccl_extra_errata
@@ -213,7 +213,7 @@ enum ccl_lut_filter_sel {
 struct ccl_config {
 	/** GCLK generator used to clock the peripheral */
 	enum gclk_generator clock_source;
-	/** If \c true, the GCLK_CCL clock will not stop in standby sleep mode. */
+	/** If \c true, the GCLK_CCL clock will not stop in standby sleep mode */
 	bool run_in_standby;
 };
 
@@ -237,7 +237,7 @@ struct ccl_lut_config {
 	enum ccl_lut_input_src_sel input1_src_sel;
 	/** Selection of the input2 source */
 	enum ccl_lut_input_src_sel input2_src_sel;
-	/** If \c true, Edge detector is enabled. */
+	/** If \c true, Edge detector is enabled */
 	bool edge_selection_enable;
 	/**  Selection of the LUT output filter options */
 	enum ccl_lut_filter_sel filter_sel;
