@@ -1071,7 +1071,7 @@ static inline void rtc_write_general_purpose_reg(
  * \param[in] module  Pointer to the software instance struct
  * \param[in] index General purpose register index (0..3)
  *
- * \retval Value of general purpose register
+ * \return Value of general purpose register
  */
 static inline uint32_t rtc_read_general_purpose_reg(
 	struct rtc_module *const module,
@@ -1189,8 +1189,8 @@ static inline uint32_t rtc_read_general_purpose_reg(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>04/2015</td>
- *		<td>Added support for SAML21 and SAMDAx.</td>
+ *		<td>06/2015</td>
+ *		<td>Added support for SAML21, SAMC21, and SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

@@ -40,6 +40,10 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+
 #ifndef CONF_RTC_H_INCLUDED
 #define CONF_RTC_H_INCLUDED
 
