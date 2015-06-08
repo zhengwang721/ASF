@@ -63,7 +63,7 @@
  * \snippet qs_trng_callback.c setup_init
  *
  * \subsection asfdoc_sam0_trng_callback_use_case_setup_flow Workflow
- * -# Create a TRNG device instance struct, which will be associated with an
+ * -# Create a TRNG device instance struct, which will be associated with a
  *    TRNG peripheral hardware instance.
  *    \snippet qs_trng_callback.c setup_1
  *    \note Device instance structures shall \b never go out of scope when in
