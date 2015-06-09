@@ -115,7 +115,7 @@ extern "C" {
 #define EEPROM_MEM_ADDR_LENGTH  2
 
 #define STRING_EOL    "\r"
-#define STRING_HEADER "--TWI EEPROM Example --\r\n" \
+#define STRING_HEADER "--TWIHS MASTER Example --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 

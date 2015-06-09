@@ -414,7 +414,9 @@ Pdc *twihs_get_pdc_base(Twihs *p_twihs);
 void twihs_set_write_protection(Twihs *p_twihs, bool flag);
 void twihs_read_write_protection_status(Twihs *p_twihs, uint32_t *p_status);
 void twihs_smbus_set_timing(Twihs *p_twihs, uint32_t ul_timing);
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 void twihs_set_alternative_command(Twihs *p_twihs, uint32_t ul_alt_cmd);
+#endif
 void twihs_set_filter(Twihs *p_twihs, uint32_t ul_filter);
 void twihs_mask_slave_addr(Twihs *p_twihs, uint32_t ul_mask);
 

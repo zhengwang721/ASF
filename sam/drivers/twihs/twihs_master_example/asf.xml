@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="sam.drivers.twihs.twihs_master_example" caption="TWIHS MASTER example">
 		<info type="description" value="summary">
-		The application demonstrates how to use the SAM TWI peripheral in slave mode.
+		The application demonstrates how to use the SAM TWIHS peripheral in master mode.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Communication"/>
