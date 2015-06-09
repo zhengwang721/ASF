@@ -257,7 +257,7 @@ int main(void)
 			/* Capture error */
 		}
 	}
-	printf("Write:\tOK!\n\r");
+	puts("Write:\tOK!\n\r");
 
 	/* Wait at least 10 ms */
 	mdelay(WAIT_TIME);
