@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for WDT driver.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -88,6 +88,10 @@
  * - sam4cmp16c_sam4cmp_db
  * - sam4cms16c_sam4cms_db
  * - sam4cp16b_sam4cp16bmb
+ * - samv70
+ * - samv71
+ * - same70
+ * - sams70
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
