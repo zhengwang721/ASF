@@ -193,7 +193,8 @@ static void run_flash_configure_test(const struct test_case *test)
 		test_assert_true(test, ul_tmp_ws == 4,
 				"Test flash configure:adaptively set wait state error!");
 	}
-#elif (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM)
+#elif (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM || \
+	 SAMV71 || SAMV70 || SAMS70 || SAME70)
 	} else if (ul_mck < CHIP_FREQ_FWS_3) {
 		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
 		test_assert_true(test, ul_tmp_ws == 3,
@@ -319,7 +320,8 @@ static void run_flash_write_test(const struct test_case *test)
 		ul_page_buffer[ul_idx] = 1 << (ul_idx % 32);
 	}
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM || \
+	 SAMV71 || SAMV70 || SAMS70 || SAME70)
 	/* Write the test page */
 	flash_erase_sector(ul_test_page_addr);
 
@@ -356,7 +358,8 @@ static void run_flash_lock_test(const struct test_case *test)
 	volatile uint32_t ul_locked_region_num;
 	volatile uint32_t lockerror = 0;
 	uint32_t ul_test_page_addr = TEST_PAGE_ADDRESS;
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM || \
+	 SAMV71 || SAMV70 || SAMS70 || SAME70)
 	flash_erase_sector(ul_test_page_addr);
 #endif
 	uint32_t ul_page_buffer[IFLASH_PAGE_SIZE / sizeof(uint32_t)];
@@ -392,7 +395,8 @@ static void run_flash_lock_test(const struct test_case *test)
 	lockerror = flash_write(ul_test_page_addr, (void *)ul_page_buffer,
 			IFLASH_PAGE_SIZE, 0);
 
-#if (SAM3SD8 || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM)
+#if (SAM3SD8 || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM || \
+	 SAMV71 || SAMV70 || SAMS70 || SAME70)
 	/* SAM3SD8, SAM4S, SAM4E, SAM4N, SAM4C and SAM4CP have a bigger page region which
 	 * requires special attention.
 	 */
@@ -481,7 +485,13 @@ int main(void)
 {
 	const usart_serial_options_t usart_serial_options = {
 		.baudrate   = CONF_TEST_BAUDRATE,
-		.paritytype = CONF_TEST_PARITY
+#ifdef CONF_TEST_CHAR_LENGTH
+		.charlength = CONF_TEST_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_TEST_PARITY,
+#ifdef CONF_TEST_STOP_BITS
+		.stopbits = CONF_TEST_STOP_BITS,
+#endif
 	};
 
 	/* Initialize the system clock and board */
