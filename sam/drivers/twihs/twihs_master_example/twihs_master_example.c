@@ -262,7 +262,7 @@ int main(void)
 	/* Wait at least 10 ms */
 	mdelay(WAIT_TIME);
 
-	/* Get memory from MASTER */
+	/* Get memory from EEPROM*/
 	if (twihs_master_read(BOARD_BASE_TWIHS_EEPROM, &packet_rx) != TWIHS_SUCCESS) {
 		puts("-E-\tTWI master read packet failed.\r");
 		while (1) {
