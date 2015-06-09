@@ -195,8 +195,4 @@ void tsens_read_job(struct tsens_module *const module_inst, int32_t *result);
 }
 #endif
 
-#ifdef __cplusplus
-}
-#endif
-
 #endif /* TSENS_CALLBACK_H_INCLUDED */
