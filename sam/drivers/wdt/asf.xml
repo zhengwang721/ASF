@@ -19,8 +19,9 @@
 			<device-support value="sam4cm"/>
 			<device-support value="sam4cp"/>
 			<device-support value="samg"/>
+			<device-support value="samv71"/>
 			<require idref="sam.utils"/>
-			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
+			<generator value="doxygen-module" default-mcu="unspecified-samv71"/>
 		</module>
 		<module type="driver" id="sam.drivers.wdt#sam4l" caption="WDT - Watchdog Timer">
 			<info type="description" value="summary">
