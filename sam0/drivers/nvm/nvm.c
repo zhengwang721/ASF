@@ -109,7 +109,7 @@ enum status_code nvm_set_config(
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
 
-#if (SAML21) || (SAMC21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, MCLK_APBBMASK_NVMCTRL);
 #else
@@ -125,7 +125,7 @@ enum status_code nvm_set_config(
 		return STATUS_BUSY;
 	}
 
-#if (!SAMC21)
+#if (!SAMC20) && (!SAMC21)
 	/* Writing configuration to the CTRLB register */
 	nvm_module->CTRLB.reg =
 			NVMCTRL_CTRLB_SLEEPPRM(config->sleep_power_mode) |
@@ -215,7 +215,7 @@ enum status_code nvm_execute_command(
 
 	/* turn off cache before issuing flash commands */
 	temp = nvm_module->CTRLB.reg;
-#if (SAMC21)
+#if (SAMC20) || (SAMC21)
 	nvm_module->CTRLB.reg = ((temp &(~(NVMCTRL_CTRLB_CACHEDIS(0x2)))) 
 							| NVMCTRL_CTRLB_CACHEDIS(0x1));
 #else
@@ -824,7 +824,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod33_hysteresis = (bool)
 			((raw_user_row[1] & FUSES_BOD33_HYST_Msk)
 			>> FUSES_BOD33_HYST_Pos);
-#elif (SAMC21)
+#elif (SAMC20) || (SAMC21)
 	fusebits->bodvdd_level = (uint8_t)
 			((raw_user_row[0] & FUSES_BODVDDUSERLEVEL_Msk)
 			>> FUSES_BODVDDUSERLEVEL_Pos);
@@ -899,7 +899,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->wdt_timeout_period = (uint8_t)
 			((raw_user_row[0] & WDT_FUSES_PER_Msk) >> WDT_FUSES_PER_Pos);
 
-#if (SAML21) || (SAMC21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 	fusebits->wdt_window_timeout = (enum nvm_wdt_window_timeout)
 			((raw_user_row[1] & WDT_FUSES_WINDOW_Msk) >> WDT_FUSES_WINDOW_Pos);
 #else
@@ -1024,7 +1024,7 @@ enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
 	fusebits[1] &= (~FUSES_BOD33_HYST_Msk);
 	fusebits[1] |= fb->bod33_hysteresis << FUSES_BOD33_HYST_Pos;
 
-#elif (SAMC21)
+#elif (SAMC20) || (SAMC21)
 	fusebits[0] &= (~FUSES_BODVDDUSERLEVEL_Msk);
 	fusebits[0] |= FUSES_BODVDDUSERLEVEL(fb->bodvdd_level);
 
@@ -1061,7 +1061,7 @@ enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
 	fusebits[0] &= (~WDT_FUSES_PER_Msk);
 	fusebits[0] |= fb->wdt_timeout_period << WDT_FUSES_PER_Pos;
 
-#if (SAML21) || (SAMC21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 	fusebits[1] &= (~WDT_FUSES_WINDOW_Msk);
 	fusebits[1] |= fb->wdt_window_timeout << WDT_FUSES_WINDOW_Pos;
 #else

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM C21 Power functionality
+ * \brief SAM C2x Power functionality
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *

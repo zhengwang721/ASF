@@ -45,7 +45,7 @@
  */
 
 #include "adc.h"
-#if (ADC_INST_NUM > 1)
+#if (ADC_INST_NUM > 1) || (SAMC20)
 
 #  define _ADC_GCLK_ID(n,unused)           TPASTE3(ADC,n,_GCLK_ID),
 #  define _ADC_APBCMASK(n,unused)          TPASTE2(MCLK_APBCMASK_ADC,n),
@@ -287,30 +287,57 @@ static inline void _adc_configure_ain_pin(uint8_t index, uint32_t pin)
 #       error ADC pin mappings are not defined for this device.
 #   endif
 	};
+#elif (SAMC20)
+	const uint32_t pinmapping[] = {
+#   if (SAMC20E)
+			PIN_PA02B_ADC0_AIN0,  PIN_PA03B_ADC0_AIN1,
+			PIN_INVALID_ADC_AIN,  PIN_INVALID_ADC_AIN,
+			PIN_PA04B_ADC0_AIN4,  PIN_PA05B_ADC0_AIN5,
+			PIN_PA06B_ADC0_AIN6,  PIN_PA07B_ADC0_AIN7,
+			PIN_PA08B_ADC0_AIN8,  PIN_PA09B_ADC0_AIN9,
+			PIN_PA10B_ADC0_AIN10, PIN_PA11B_ADC0_AIN11,
+#   elif (SAMC20G)
+			PIN_PA02B_ADC0_AIN0,  PIN_PA03B_ADC0_AIN1,
+			PIN_PB08B_ADC0_AIN2,  PIN_PB09B_ADC0_AIN3,
+			PIN_PA04B_ADC0_AIN4,  PIN_PA05B_ADC0_AIN5,
+			PIN_PA06B_ADC0_AIN6,  PIN_PA07B_ADC0_AIN7,
+			PIN_PA08B_ADC0_AIN8,  PIN_PA09B_ADC0_AIN9,
+			PIN_PA10B_ADC0_AIN10, PIN_PA11B_ADC0_AIN11,
+#   elif (SAMC20J)
+			PIN_PA02B_ADC0_AIN0,  PIN_PA03B_ADC0_AIN1,
+			PIN_PB08B_ADC0_AIN2,  PIN_PB09B_ADC0_AIN3,
+			PIN_PA04B_ADC0_AIN4,  PIN_PA05B_ADC0_AIN5,
+			PIN_PA06B_ADC0_AIN6,  PIN_PA07B_ADC0_AIN7,
+			PIN_PA08B_ADC0_AIN8,  PIN_PA09B_ADC0_AIN9,
+			PIN_PA10B_ADC0_AIN10, PIN_PA11B_ADC0_AIN11,
+#   else
+#       error ADC pin mappings are not defined for this device.
+#   endif
+	};
 #elif (SAMC21)
 	const uint32_t *pinmapping = NULL;;
 	const uint32_t pinmapping0[] = {
 #   if (SAMC21E)
 			PIN_PA02B_ADC0_AIN0,  PIN_PA03B_ADC0_AIN1,
-			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN,  PIN_INVALID_ADC_AIN,
 			PIN_PA04B_ADC0_AIN4,  PIN_PA05B_ADC0_AIN5,
 			PIN_PA06B_ADC0_AIN6,  PIN_PA07B_ADC0_AIN7,
-			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
-			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_PA08B_ADC0_AIN8,  PIN_PA09B_ADC0_AIN9,
+			PIN_PA10B_ADC0_AIN10, PIN_PA11B_ADC0_AIN11,
 #   elif (SAMC21G)
 			PIN_PA02B_ADC0_AIN0,  PIN_PA03B_ADC0_AIN1,
 			PIN_PB08B_ADC0_AIN2,  PIN_PB09B_ADC0_AIN3,
 			PIN_PA04B_ADC0_AIN4,  PIN_PA05B_ADC0_AIN5,
 			PIN_PA06B_ADC0_AIN6,  PIN_PA07B_ADC0_AIN7,
-			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
-			PIN_PB02B_ADC0_AIN10, PIN_PB03B_ADC0_AIN11,
+			PIN_PA08B_ADC0_AIN8,  PIN_PA09B_ADC0_AIN9,
+			PIN_PA10B_ADC0_AIN10, PIN_PA11B_ADC0_AIN11,
 #   elif (SAMC21J)
 			PIN_PA02B_ADC0_AIN0,  PIN_PA03B_ADC0_AIN1,
 			PIN_PB08B_ADC0_AIN2,  PIN_PB09B_ADC0_AIN3,
 			PIN_PA04B_ADC0_AIN4,  PIN_PA05B_ADC0_AIN5,
 			PIN_PA06B_ADC0_AIN6,  PIN_PA07B_ADC0_AIN7,
-			PIN_PB00B_ADC0_AIN8,  PIN_PB01B_ADC0_AIN9,
-			PIN_PB02B_ADC0_AIN10, PIN_PB03B_ADC0_AIN11,
+			PIN_PA08B_ADC0_AIN8,  PIN_PA09B_ADC0_AIN9,
+			PIN_PA10B_ADC0_AIN10, PIN_PA11B_ADC0_AIN11,
 #   else
 #       error ADC pin mappings are not defined for this device.
 #   endif
@@ -539,7 +566,7 @@ static enum status_code _adc_set_config(
 					(config->window.window_lower_value > 511 ||
 					config->window.window_lower_value < -512 ||
 					config->window.window_upper_value > 511 ||
-					config->window.window_upper_value > -512)) {
+					config->window.window_upper_value < -512)) {
 				/* Invalid value */
 				return STATUS_ERR_INVALID_ARG;
 			} else if (config->window.window_lower_value > 1023 ||

@@ -68,7 +68,7 @@
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
  *  - Atmel | SMART SAM DAx
- *  - Atmel | SMART SAM C21
+ *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_sercom_spi_prerequisites
@@ -106,19 +106,19 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_SLAVE_SELECT_LOW_DETECT</td>
- *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_HARDWARE_SLAVE_SELECT</td>
- *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_ERROR_INTERRUPT</td>
- *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_SYNC_SCHEME_VERSION_2</td>
- *    <td>SAM D21/R21/D10/D11/L21/DAx/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -386,7 +386,8 @@ extern "C" {
  * Define SERCOM SPI features set according to different device family.
  * @{
  */
-#  if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAML21) || (SAMDA1) || (SAMC21) || defined(__DOXYGEN__)
+#  if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAML21) || (SAMDA1) || \
+		(SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** SPI slave select low detection. */
 #  define FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 /** Slave select can be controlled by hardware. */

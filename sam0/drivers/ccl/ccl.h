@@ -58,7 +58,7 @@
  *
  * The following devices can use this module:
  *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM C21
+ *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_ccl_prerequisites

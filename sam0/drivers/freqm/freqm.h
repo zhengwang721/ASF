@@ -63,6 +63,7 @@
  *  - FREQM (Frequency Meter)
  *
  * The following devices can use this module:
+ *  - Atmel | SMART SAM C20
  *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:

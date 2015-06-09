@@ -69,8 +69,8 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM DA0/DA1
- *  - Atmel | SMART SAM C21
+ *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_tc_prerequisites
@@ -117,23 +117,23 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_TC_DOUBLE_BUFFERED</td>
- *    <td>SAML21/C21</td>
+ *    <td>SAML21/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_TC_SYNCBUSY_SCHEME_VERSION_2</td>
- *    <td>SAML21/C21</td>
+ *    <td>SAML21/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_TC_STAMP_PW_CAPTURE</td>
- *    <td>SAML21/C21</td>
+ *    <td>SAML21/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_TC_READ_SYNC</td>
- *    <td>SAML21/C21</td>
+ *    <td>SAML21/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_TC_IO_CAPTURE</td>
- *    <td>SAML21/C21</td>
+ *    <td>SAML21/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_TC_GENERATE_DMA_TRIGGER</td>
@@ -464,7 +464,7 @@
  * Define port features set according to different device family
  * @{
 */
-#if (SAML21) || (SAMC21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** TC double buffered. */
 #  define FEATURE_TC_DOUBLE_BUFFERED
 /** SYNCBUSY scheme version 2. */
@@ -481,7 +481,7 @@
 /*@}*/
 
 #if !defined(__DOXYGEN__)
-#if SAMD20 || SAML21 || SAMC21
+#if SAMD20 || SAML21 || SAMC20 || SAMC21
 #  define TC_INSTANCE_OFFSET 0
 #endif
 #if SAMD21 || SAMR21 || SAMDA1
@@ -493,7 +493,7 @@
 
 #if SAMD20
 #  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC0_CC8_NUM
-#elif SAML21 || SAMC21
+#elif SAML21 || SAMC20 || SAMC21
 #  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC0_CC_NUM
 #elif SAMD10 || SAMD11
 #  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC1_CC8_NUM
@@ -505,7 +505,7 @@
 /** TC Instance MAX ID Number. */
 #if SAMD20E || SAMD21G || SAMD21E || SAMR21
 #define TC_INST_MAX_ID  5
-#elif SAML21 || SAMC21
+#elif SAML21 || SAMC20 || SAMC21
 #define TC_INST_MAX_ID  4
 #elif SAMD10 || SAMD11
 #define TC_INST_MAX_ID  2
@@ -600,7 +600,7 @@ enum tc_compare_capture_channel {
 };
 
 /** TC wave generation mode. */
-#if SAML21 || SAMC21
+#if SAML21 || SAMC20 || SAMC21
 #define TC_WAVE_GENERATION_NORMAL_FREQ_MODE TC_WAVE_WAVEGEN_NFRQ
 #define TC_WAVE_GENERATION_MATCH_FREQ_MODE  TC_WAVE_WAVEGEN_MFRQ
 #define TC_WAVE_GENERATION_NORMAL_PWM_MODE  TC_WAVE_WAVEGEN_NPWM
@@ -728,7 +728,7 @@ enum tc_count_direction {
 };
 
 /** Waveform inversion mode. */
-#if SAML21 || SAMC21
+#if SAML21 || SAMC20 || SAMC21
 #define TC_WAVEFORM_INVERT_CC0_MODE  TC_DRVCTRL_INVEN(1)
 #define TC_WAVEFORM_INVERT_CC1_MODE  TC_DRVCTRL_INVEN(2)
 #else
@@ -860,7 +860,7 @@ struct tc_config {
 
 	/** When \c true the module is enabled during standby. */
 	bool run_in_standby;
-#if (SAML21) || (SAMC21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 	/** Run on demand. */
 	bool on_demand;
 #endif
@@ -877,7 +877,7 @@ struct tc_config {
 	enum tc_reload_action reload_action;
 
 	/** Specifies which channel(s) to invert the waveform on.
-		For SAML21/C21, it's also used to invert IO input pin. */
+		For SAML21/C20/C21, it's also used to invert IO input pin. */
 	uint8_t waveform_invert_output;
 
 	/** Specifies which channel(s) to enable channel capture
@@ -999,7 +999,7 @@ static inline bool tc_is_syncing(
 	/* Get a pointer to the module's hardware instance */
 	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
 
-#if (SAML21) || (SAMC21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 	return (tc_module->SYNCBUSY.reg);
 #else
 	return (tc_module->STATUS.reg & TC_STATUS_SYNCBUSY);
@@ -1021,10 +1021,10 @@ static inline bool tc_is_syncing(
  *  \li Normal frequency wave generation
  *  \li GCLK reload action
  *  \li Don't run in standby
- *  \li Don't run on demand for SAML21/C21
+ *  \li Don't run on demand for SAML21/C20/C21
  *  \li No inversion of waveform output
  *  \li No capture enabled
- *  \li No I/O capture enabled for SAML21/C21
+ *  \li No I/O capture enabled for SAML21/C20/C21
  *  \li No event input enabled
  *  \li Count upward
  *  \li Don't perform one-shot operations
@@ -1053,7 +1053,7 @@ static inline void tc_get_config_defaults(
 	config->wave_generation            = TC_WAVE_GENERATION_NORMAL_FREQ;
 	config->reload_action              = TC_RELOAD_ACTION_GCLK;
 	config->run_in_standby             = false;
-#if (SAML21) || (SAMC21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 	config->on_demand                  = false;
 #endif
 	config->waveform_invert_output     = TC_WAVEFORM_INVERT_OUTPUT_NONE;
@@ -1453,7 +1453,7 @@ static inline void tc_dma_trigger_command(
 	/* Write command to execute */
 	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_DMATRG_Val);
 #endif
-#if SAMC21
+#if (SAMC20) || (SAMC21)
 	/* Write command to execute */
 	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_DMAOS_Val);
 #endif

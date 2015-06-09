@@ -65,7 +65,7 @@
  * The following devices can use this module:
  * \if DEVICE_SAML21_SUPPORT
  *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM C21
+ *  - Atmel | SMART SAM C20/C21
  * \else
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
@@ -604,8 +604,10 @@ static inline enum status_code adc_enable(
 #   if (ADC_INST_NUM > 1)
 	system_interrupt_enable(_adc_interrupt_get_interrupt_vector(
 			_adc_get_inst_index(adc_module)));
-#   else
-	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_ADC);
+#   elif (SAMC20)
+		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_ADC0);
+#	else
+		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_ADC);
 #   endif
 #endif
 
@@ -636,8 +638,10 @@ static inline enum status_code adc_disable(
 #   if (ADC_INST_NUM > 1)
 	system_interrupt_disable(_adc_interrupt_get_interrupt_vector(
 			_adc_get_inst_index(adc_module)));
-#   else
-	system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_ADC);
+#   elif (SAMC20)
+		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_ADC0);
+#	else
+		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_ADC);
 #   endif
 #endif
 

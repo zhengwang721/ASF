@@ -601,6 +601,10 @@ enum status_code tsens_read(int32_t *result);
  *	</tr>
  * </table>
  */
+ 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TSENS_H_INCLUDED */
 

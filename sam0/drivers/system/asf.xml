@@ -76,9 +76,9 @@
 		<device-support value="saml21"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-saml21"/>
 	</module>
-	<module type="meta" id="sam0.drivers.system.appnote_3" caption="SYSTEM - Core System Driver For SAM C21">
+	<module type="meta" id="sam0.drivers.system.appnote_3" caption="SYSTEM - Core System Driver For SAM C21/C20">
 		<info type="description" value="summary">
-			Driver for the SAM C21 core system modules. Provides a unified
+			Driver for the SAM C21/C20 core system modules. Provides a unified
 			interface for the configuration and management of the core device
 			functionality required for a functional system.
 		</info>
@@ -98,7 +98,7 @@
 
 		<info type="description" value="pdf">
 			This document describes how to use the core system modules on the
-			SAM C21, both the ASF driver and the peripheral itself.
+			SAM C21/C20, both the ASF driver and the peripheral itself.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="include-path" value="power/power_sam_c"/>
@@ -112,6 +112,7 @@
 		<build type="doxygen-image-path" value="docimg"/>
 
 		<device-support value="samc21"/>
+		<device-support value="samc20"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samc21"/>
 	</module>
 	<module type="driver" id="sam0.drivers.system" caption="SYSTEM - Core System Driver">

@@ -56,7 +56,7 @@ extern "C" {
 #endif
 
 /*@{*/
-#if (SAMC21) || defined(__DOXYGEN__)
+#if (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** Output Driver Strength Selection feature support. */
 #  define FEATURE_ADC_SUPPORT_MASTER_SLAVE
 #endif
@@ -115,7 +115,7 @@ enum adc_reference {
 	/** External reference B. */
 	ADC_REFERENCE_AREFB   = ADC_REFCTRL_REFSEL_AREFB,
 #endif
-#if (SAMC21)
+#if (SAMC20) || (SAMC21)
 	/** DAC. */
 	ADC_REFERENCE_DAC     = ADC_REFCTRL_REFSEL_DAC,
 #endif
@@ -243,7 +243,7 @@ enum adc_positive_input {
 	ADC_POSITIVE_INPUT_PIN10         = ADC_INPUTCTRL_MUXPOS_AIN10,
 	/** ADC11 pin. */
 	ADC_POSITIVE_INPUT_PIN11         = ADC_INPUTCTRL_MUXPOS_AIN11,
-#if !(SAMC21)
+#if !(SAMC20) && !(SAMC21)
 	/** ADC12 pin. */
 	ADC_POSITIVE_INPUT_PIN12         = ADC_INPUTCTRL_MUXPOS_AIN12,
 	/** ADC13 pin. */
@@ -279,7 +279,7 @@ enum adc_positive_input {
 	ADC_POSITIVE_INPUT_SCALEDIOVCC   = ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC,
 	/** DAC input. */
 	ADC_POSITIVE_INPUT_DAC           = ADC_INPUTCTRL_MUXPOS_DAC,
-#if !(SAMC21)
+#if !(SAMC20) && !(SAMC21)
 	/** SCALEDVBAT. */
 	ADC_POSITIVE_INPUT_SCALEDVBAT    = ADC_INPUTCTRL_MUXPOS_SCALEDVBAT,
 	/** OPAMP01. */
@@ -308,7 +308,7 @@ enum adc_negative_input {
 	ADC_NEGATIVE_INPUT_PIN4          = ADC_INPUTCTRL_MUXNEG_AIN4,
 	/** ADC5 pin. */
 	ADC_NEGATIVE_INPUT_PIN5          = ADC_INPUTCTRL_MUXNEG_AIN5,
-#if !(SAMC21)
+#if !(SAMC20) && !(SAMC21)
 	/** ADC6 pin. */
 	ADC_NEGATIVE_INPUT_PIN6          = ADC_INPUTCTRL_MUXNEG_AIN6,
 	/** ADC7 pin. */

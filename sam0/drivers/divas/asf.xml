@@ -19,6 +19,7 @@
 			<build type="doxygen-example-path" value="quick_start"/>
 			<build type="doxygen-quick-start" value="asfdoc_sam0_divas_exqsg"/>
 
+			<device-support value="samc20"/>
 			<device-support value="samc21"/>
 
 			<require idref="sam0.utils"/>
@@ -49,6 +50,7 @@
 			<build type="doxygen-example-path" value="quick_start_overload"/>
 			<build type="doxygen-quick-start" value="asfdoc_sam0_divas_exqsg"/>
 
+			<device-support value="samc20"/>
 			<device-support value="samc21"/>
 
 			<require idref="sam0.utils"/>
