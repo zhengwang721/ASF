@@ -73,9 +73,7 @@
 
 // ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
 // Use mul and div effective values here.
-#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
-#define CONFIG_PLL0_SOURCE          PLL_SRC_SLCK_XTAL
-#endif
+#define CONFIG_PLL0_SOURCE          PLL_SRC_MAINCK_XTAL
 #define CONFIG_PLL0_MUL             3662
 #define CONFIG_PLL0_DIV             1
 
