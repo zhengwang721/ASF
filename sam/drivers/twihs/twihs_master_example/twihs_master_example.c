@@ -108,7 +108,7 @@ extern "C" {
 /** EEPROM Wait Time */
 #define WAIT_TIME   10
 /** TWI Bus Clock 400kHz */
-#define TWIHS_CLK     150000
+#define TWIHS_CLK     400000
 /** Address of AT24C chips */
 #define AT24C_ADDRESS           0x50
 #define EEPROM_MEM_ADDR         0
@@ -129,7 +129,12 @@ extern "C" {
 #define AT24C_ADDRESS        0x40
 #endif
 
-static const uint8_t test_data_tx[] = "123456789abcdefghijklmn";
+static const uint8_t test_data_tx[] = {
+	/** SAM TWI EEPROM EXAMPLE */
+	'S', 'A', 'M', ' ', 'T', 'W', 'I', ' ',
+	'E', 'E', 'P', 'R', 'O', 'M', ' ',
+	'E', 'X', 'A', 'M', 'P', 'L', 'E'
+};
 
 /** Data to be sent */
 #define TEST_DATA_LENGTH  (sizeof(test_data_tx) / sizeof(uint8_t))

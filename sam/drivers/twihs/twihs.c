@@ -265,6 +265,7 @@ uint32_t twihs_master_read(Twihs *p_twihs, twihs_packet_t *p_packet)
 			TWIHS_MMR_IADRSZ_Msk);
 
 	/* Set internal address for remote chip */
+	p_twihs->TWIHS_IADR = 0;
 	p_twihs->TWIHS_IADR = twihs_mk_addr(p_packet->addr, p_packet->addr_length);
 
 	/* Send a START Condition */
