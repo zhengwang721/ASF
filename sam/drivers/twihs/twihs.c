@@ -328,7 +328,8 @@ uint32_t twihs_master_write(Twihs *p_twihs, twihs_packet_t *p_packet)
 			TWIHS_MMR_IADRSZ_Msk);
 
 	/* Set internal address for remote chip */
-	p_twihs->TWIHS_IADR = twihs_mk_addr(p_packet->addr, p_packet->addr_length);
+	p_twi->TWI_IADR = 0;
+	p_twi->TWI_IADR = twi_mk_addr(p_packet->addr, p_packet->addr_length);
 
 	/* Send all bytes */
 	while (cnt > 0) {
