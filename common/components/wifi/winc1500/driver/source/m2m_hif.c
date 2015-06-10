@@ -601,9 +601,9 @@ sint8 hif_receive(uint32 u32Addr, uint8 *pu8Buf, uint16 u16Sz, uint8 isDone)
 			/* set RX done */
 			ret = hif_set_rx_done();
 		}
-
+			
 		ret = M2M_ERR_FAIL;
-		M2M_ERR(" hif_receive: Invalid arguemtn\n");
+		M2M_ERR(" hif_receive: Invalid argument\n");
 		goto ERR1;
 	}
 
@@ -633,7 +633,7 @@ sint8 hif_receive(uint32 u32Addr, uint8 *pu8Buf, uint16 u16Sz, uint8 isDone)
 	}
 
 	/* check if this is the last packet */
-	if((((address+size) - (u32Addr+u16Sz)) < 4) || isDone)
+	if((((address+size) - (u32Addr+u16Sz)) <= 0) || isDone)
 	{
 		gu8HifSizeDone = 1;
 

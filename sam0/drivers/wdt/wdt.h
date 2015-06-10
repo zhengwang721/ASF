@@ -472,7 +472,7 @@ void wdt_reset_count(void);
  *	<tr>
  *		<td>E</td>
  *		<td>04/2015</td>
- *		<td>Added SAML21 and SAMDA0/A1 support.</td>
+ *		<td>Added SAML21 and SAMDAx support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

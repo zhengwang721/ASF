@@ -129,7 +129,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
- *    <td>SAMD20, SAMD21, SAMR21, SAMD10, SAMD11, SAMDA0, SAMDA1</td>
+ *    <td>SAMD20, SAMD21, SAMR21, SAMD10, SAMD11, SAMDAx</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -1184,7 +1184,7 @@ static inline uint32_t rtc_read_general_purpose_reg(
  *	<tr>
  *		<td>E</td>
  *		<td>04/2015</td>
- *		<td>Added support for SAML21 and SAMDA0/DA1.</td>
+ *		<td>Added support for SAML21 and SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

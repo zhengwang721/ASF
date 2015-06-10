@@ -384,7 +384,7 @@ extern "C" {
  * Define SERCOM SPI features set according to different device family.
  * @{
  */
-#  if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAML21) || (SAMDA0) || (SAMDA1) || defined(__DOXYGEN__)
+#  if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAML21) || (SAMDA1) || defined(__DOXYGEN__)
 /** SPI slave select low detection. */
 #  define FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 /** Slave select can be controlled by hardware. */
@@ -1769,7 +1769,7 @@ enum status_code spi_select_slave(
   *	<tr>
   *		<td>E</td>
   *		<td>04/2015</td>
-  *		<td>Add SAM L21 and SAMDA0/DA1 support.</td>
+  *		<td>Add SAM L21 and SAMDAx support.</td>
   *	</tr>
   *	<tr>
   *		<td>D</td>
