@@ -258,5 +258,12 @@
 #define PIN_PCK0_TYPE    PIO_PERIPH_B
 #define PIN_PCK0_ATTR    PIO_DEFAULT
 
+
+/** TWI0 pins definition */
+#define TWIHS0_DATA_GPIO   PIO_PA3_IDX
+#define TWIHS0_DATA_FLAGS  (IOPORT_MODE_MUX_A)
+#define TWIHS0_CLK_GPIO    PIO_PA4_IDX
+#define TWIHS0_CLK_FLAGS   (IOPORT_MODE_MUX_A)
+
 /*----------------------------------------------------------------------------*/
-#endif  /* _SAMV71_XLTRA_H_ */
+#endif   /* _SAMV71_XLTRA_H_ */
