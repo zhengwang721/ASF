@@ -186,13 +186,13 @@ static void run_wdt_test(const struct test_case *test)
 int main(void)
 {
 	const usart_serial_options_t usart_serial_options = {
-		.baudrate = CONF_UART_BAUDRATE,
-#ifdef CONF_UART_CHAR_LENGTH
-		.charlength = CONF_UART_CHAR_LENGTH,
+		.baudrate = CONF_TEST_BAUDRATE,
+#ifdef CONF_TEST_CHAR_LENGTH
+		.charlength = CONF_TEST_CHAR_LENGTH,
 #endif
-		.paritytype = CONF_UART_PARITY,
-#ifdef CONF_UART_STOP_BITS
-		.stopbits = CONF_UART_STOP_BITS,
+		.paritytype = CONF_TEST_PARITY,
+#ifdef CONF_TEST_STOP_BITS
+		.stopbits = CONF_TEST_STOP_BITS,
 #endif
 	};
 
