@@ -1002,6 +1002,7 @@ static inline void usart_get_config_defaults(
 #endif
 #ifdef FEATURE_USART_ISO7816
 	config->iso7816_opt.enabled                     = false;
+	config->iso7816_opt.guard_time                  = ISO7816_GUARD_TIME_2_BIT;
 	config->iso7816_opt.protocol_t                  = ISO7816_PROTOCOL_T_0;
 	config->iso7816_opt.inhibit_nack                = ISO7816_INHIBIT_NACK_DISABLE;
 	config->iso7816_opt.dis_suc_nack                = ISO7816_DIS_SUC_NACK_DISABLE;
