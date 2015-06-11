@@ -175,11 +175,19 @@ int main(void)
 	afec_ch_get_config_defaults(&afec_ch_cfg);
 	afec_ch_set_config(AFEC0, AFEC_TEMPERATURE_SENSOR, &afec_ch_cfg);
 
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
+	/*
+	 * Because the internal ADC offset is 0x200, it should cancel it and shift
+	 * down to 0.
+	 */
+	afec_channel_set_analog_offset(AFEC0, AFEC_TEMPERATURE_SENSOR, 0x200);
+#else
 	/*
 	 * Because the internal ADC offset is 0x800, it should cancel it and shift
 	 * down to 0.
 	 */
 	afec_channel_set_analog_offset(AFEC0, AFEC_TEMPERATURE_SENSOR, 0x800);
+#endif
 
 	struct afec_temp_sensor_config afec_temp_sensor_cfg;
 
@@ -202,7 +210,7 @@ int main(void)
 
 			ul_vol = g_ul_value * VOLT_REF / MAX_DIGITAL;
 			
-		#if SAMV71
+		#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
 			/*
 			 * According to datasheet, The output voltage VT = 0.72V at 27C
 			 * and the temperature slope dVT/dT = 2.33 mV/C

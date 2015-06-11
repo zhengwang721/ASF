@@ -96,6 +96,8 @@ enum afec_trigger {
 	AFEC_TRIG_PWM_EVENT_LINE_0 = AFEC_MR_TRGSEL_AFEC_TRIG4 | AFEC_MR_TRGEN,
 	/* PWM Event Line 1 */
 	AFEC_TRIG_PWM_EVENT_LINE_1 = AFEC_MR_TRGSEL_AFEC_TRIG5 | AFEC_MR_TRGEN,
+	/*Analog Comparator*/
+	AFEC_TRIG_ANALOG_COMPARATOR = AFEC_MR_TRGSEL_AFEC_TRIG6 | AFEC_MR_TRGEN,
 	/* Freerun mode conversion. */
 	AFEC_TRIG_FREERUN = 0xFF,
 };
@@ -150,6 +152,8 @@ enum afec_channel_num {
 	AFEC_TEMPERATURE_SENSOR,
 	AFEC_CHANNEL_ALL = 0x0FFF,
 } ;
+
+#define NB_CH_AFE0  (12UL)
 #endif
 
 /** Definitions for AFEC gain value */
@@ -180,7 +184,7 @@ enum afec_startup_time {
 	AFEC_STARTUP_TIME_15 = AFEC_MR_STARTUP_SUT960
 };
 
-#if defined __SAM4E8C__  || defined __SAM4E16C__ || defined __SAM4E8E__  || defined __SAM4E16E__
+#if SAM4E
 /** Definitions for AFEC analog settling time */
 enum afec_settling_time {
 	AFEC_SETTLING_TIME_0 = AFEC_MR_SETTLING_AST3,
@@ -370,7 +374,7 @@ static inline void afec_ch_sanity_check(Afec *const afec,
 	#elif defined __SAM4E8E__  || defined __SAM4E16E__
 		Assert(channel < NB_CH_AFE0);
 	#elif SAMV71
-		//Assert(channel < NB_CH_AFE0);
+		Assert(channel < NB_CH_AFE0);
 	#endif
 	} else if (afec == AFEC1) {
 		Assert(channel < NB_CH_AFE1);
@@ -654,7 +658,7 @@ static inline uint32_t afec_get_interrupt_mask(Afec *const afec)
 	return afec->AFEC_IMR;
 }
 
-#if defined __SAM4E8C__  || defined __SAM4E16C__ || defined __SAM4E8E__  || defined __SAM4E16E__
+#if SAM4E
 /**
  * \brief Get PDC registers base address.
  *
