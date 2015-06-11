@@ -71,16 +71,29 @@
 #define AFEC_INTERRUPT_GAP1                  (17UL)
 #elif defined __SAM4E8E__  || defined __SAM4E16E__
 #define AFEC_INTERRUPT_GAP1                  (8UL)
+#elif SAMV71
+/* The gap between bit EOC11 and DRDY in interrupt register */
+#define AFEC_INTERRUPT_GAP1                  (12UL)
 #endif
 
+#ifdef SAMV71Q
+/* The gap between bit COMPE and TEMPCHG in interrupt register */
+#define AFEC_INTERRUPT_GAP2                  (3UL)
+#else
 /* The gap between bit RXBUFF and TEMPCHG in interrupt register */
 #define AFEC_INTERRUPT_GAP2                  (1UL)
+#endif
 
 /* The number of channel in channel sequence1 register */
 #define AFEC_SEQ1_CHANNEL_NUM                (8UL)
 
+#ifdef SAMV71
+/* The interrupt source number of temperature sensor */
+#define AFEC_TEMP_INT_SOURCE_NUM             (11UL)
+#else
 /* The interrupt source number of temperature sensor */
 #define AFEC_TEMP_INT_SOURCE_NUM             (15UL)
+#endif
 
 afec_callback_t afec_callback_pointer[NUM_OF_AFEC][_AFEC_NUM_OF_INTERRUPT_SOURCE];
 
@@ -142,12 +155,17 @@ static void afec_set_config(Afec *const afec, struct afec_config *config)
 {
 	uint32_t reg = 0;
 
-	reg = (config->anach ? AFEC_MR_ANACH_ALLOWED : 0) |
-			(config->useq ? AFEC_MR_USEQ_REG_ORDER : 0) |
+	reg = (config->useq ? AFEC_MR_USEQ_REG_ORDER : 0) |
+		#ifdef SAMV71Q
+			AFEC_MR_PRESCAL((config->mck / config->afec_clock )- 1) |
+			AFEC_MR_ONE |
+		#else
+			(config->anach ? AFEC_MR_ANACH_ALLOWED : 0) |
 			AFEC_MR_PRESCAL(config->mck / (2 * config->afec_clock) - 1) |
+			(config->settling_time) |		
+		#endif
 			AFEC_MR_TRACKTIM(config->tracktim) |
 			AFEC_MR_TRANSFER(config->transfer) |
-			(config->settling_time) |
 			(config->startup_time);
 
 	afec->AFEC_MR = reg;
@@ -201,6 +219,7 @@ void afec_temp_sensor_set_config(Afec *const afec,
 
 	afec->AFEC_TEMPCWR = AFEC_TEMPCWR_TLOWTHRES(config->low_threshold) |
 			AFEC_TEMPCWR_THIGHTHRES(config->high_threshold);
+			
 }
 
 /**
@@ -212,10 +231,10 @@ void afec_temp_sensor_set_config(Afec *const afec,
  * The default configuration is as follows:
  * - 12 -bit resolution
  * - AFEC clock frequency is 6MHz
- * - Start Up Time is 64 periods AFEC clock
+ * - Start Up Time is 64 periods AFEC clock, for SAMV71 is 24 periods AFEC clock
  * - Analog Settling Time is 3 periods of AFEC clock
  * - Tracking Time is 3 periods of AFEC clock
- * - Transfer Period is 5 periods AFEC clock
+ * - Transfer Period is 5 periods AFEC clock,for SAMV71 is 7 periods AFEC clock
  * - Allows different analog settings for each channel
  * - The controller converts channels in a simple numeric order
  * - Appends the channel number to the conversion result in AFE_LDCR register
@@ -231,16 +250,21 @@ void afec_get_config_defaults(struct afec_config *const cfg)
 
 	cfg->resolution = AFEC_12_BITS;
 	cfg->mck = sysclk_get_cpu_hz();
-	cfg->afec_clock = 6000000UL;
-	cfg->startup_time = AFEC_STARTUP_TIME_4;
-	cfg->settling_time = AFEC_SETTLING_TIME_0;
-	cfg->tracktim = 2;
-	cfg->transfer = 1;
-	cfg->anach = true;
-	cfg->useq = false;
-	cfg->tag = true;
-	cfg->stm = true;
-	cfg->ibctl = 1;
+	#ifdef SAMV71Q
+			cfg->afec_clock = 6000000UL;
+			cfg->startup_time = AFEC_STARTUP_TIME_4;
+	#else
+		cfg->afec_clock = 6000000UL;
+		cfg->startup_time = AFEC_STARTUP_TIME_4;
+		cfg->settling_time = AFEC_SETTLING_TIME_0;
+	#endif
+		cfg->tracktim = 2;
+		cfg->transfer = 1;
+		cfg->anach = true;
+		cfg->useq = false;
+		cfg->tag = true;
+		cfg->stm = true;
+		cfg->ibctl = 1;
 }
 
 /**
@@ -260,7 +284,7 @@ void afec_ch_get_config_defaults(struct afec_ch_config *const cfg)
 	Assert(cfg);
 
 	cfg->diff = false;
-	cfg->gain = AFEC_GAINVALUE_1;
+	cfg->gain = AFEC_GAINVALUE_0;
 }
 
 /**
@@ -420,8 +444,13 @@ void afec_enable_interrupt(Afec *const afec,
 	}
 
 	if (interrupt_source < AFEC_INTERRUPT_DATA_READY) {
-		if (interrupt_source == AFEC_INTERRUPT_EOC_15) {
+	  #if SAMV71
+		if (interrupt_source == AFEC_INTERRUPT_EOC_11) {
 			afec->AFEC_IER = 1 << AFEC_TEMP_INT_SOURCE_NUM;
+	  #else
+		if (interrupt_source == AFEC_INTERRUPT_EOC_15) {
+			afec->AFEC_IER = 1 << AFEC_TEMP_INT_SOURCE_NUM;	  
+	  #endif 
 		} else {
 			afec->AFEC_IER = 1 << interrupt_source;
 		}
@@ -448,8 +477,13 @@ void afec_disable_interrupt(Afec *const afec,
 	}
 
 	if (interrupt_source < AFEC_INTERRUPT_DATA_READY) {
-		if (interrupt_source == AFEC_INTERRUPT_EOC_15) {
+	  #ifdef SAMV71Q
+		if (interrupt_source == AFEC_INTERRUPT_EOC_11) {
 			afec->AFEC_IDR = 1 << AFEC_TEMP_INT_SOURCE_NUM;
+	  #else
+		if (interrupt_source == AFEC_INTERRUPT_EOC_15) {
+			afec->AFEC_IDR = 1 << AFEC_TEMP_INT_SOURCE_NUM;	  
+	  #endif
 		} else {
 			afec->AFEC_IDR = 1 << interrupt_source;
 		}
@@ -505,7 +539,7 @@ static void afec_process_callback(Afec *const afec)
 					afec_interrupt(inst_num, (enum afec_interrupt_source)cnt);
 				}
 			}
-		#elif defined __SAM4E8E__  || defined __SAM4E16E__
+		#elif defined __SAM4E8E__  || defined __SAM4E16E__ || SAMV71
 			if (status & (1 << cnt)) {
 				afec_interrupt(inst_num, (enum afec_interrupt_source)cnt);
 			}

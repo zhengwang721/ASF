@@ -50,6 +50,16 @@
 #include "compiler.h"
 #include "status_codes.h"
 
+#if SAMV71
+/** Definitions for AFEC resolution */
+enum afec_resolution {
+	AFEC_12_BITS = AFEC_EMR_RES_NO_AVERAGE,    /* AFEC 12-bit resolution */
+	AFEC_13_BITS = AFEC_EMR_RES_OSR4,          /* AFEC 13-bit resolution */
+	AFEC_14_BITS = AFEC_EMR_RES_OSR16,         /* AFEC 14-bit resolution */
+	AFEC_15_BITS = AFEC_EMR_RES_OSR64,         /* AFEC 15-bit resolution */
+	AFEC_16_BITS = AFEC_EMR_RES_OSR256         /* AFEC 16-bit resolution */
+};
+#else
 /** Definitions for AFEC resolution */
 enum afec_resolution {
 	AFEC_10_BITS = AFEC_EMR_RES_LOW_RES,       /* AFEC 10-bit resolution */
@@ -59,7 +69,7 @@ enum afec_resolution {
 	AFEC_15_BITS = AFEC_EMR_RES_OSR64,         /* AFEC 15-bit resolution */
 	AFEC_16_BITS = AFEC_EMR_RES_OSR256         /* AFEC 16-bit resolution */
 };
-
+#endif
 /** Definitions for AFEC power mode */
 enum afec_power_mode {
 	/* AFEC core on and reference voltage circuitry on */
@@ -123,6 +133,23 @@ enum afec_channel_num {
 	AFEC_TEMPERATURE_SENSOR,
 	AFEC_CHANNEL_ALL = 0xFFFF,
 } ;
+#elif SAMV71
+/** Definitions for AFEC channel number */
+enum afec_channel_num {
+	AFEC_CHANNEL_0 = 0,
+	AFEC_CHANNEL_1,
+	AFEC_CHANNEL_2,
+	AFEC_CHANNEL_3,
+	AFEC_CHANNEL_4,
+	AFEC_CHANNEL_5,
+	AFEC_CHANNEL_6,
+	AFEC_CHANNEL_7,
+	AFEC_CHANNEL_8,
+	AFEC_CHANNEL_9,
+	AFEC_CHANNEL_10,
+	AFEC_TEMPERATURE_SENSOR,
+	AFEC_CHANNEL_ALL = 0x0FFF,
+} ;
 #endif
 
 /** Definitions for AFEC gain value */
@@ -153,6 +180,7 @@ enum afec_startup_time {
 	AFEC_STARTUP_TIME_15 = AFEC_MR_STARTUP_SUT960
 };
 
+#if defined __SAM4E8C__  || defined __SAM4E16C__ || defined __SAM4E8E__  || defined __SAM4E16E__
 /** Definitions for AFEC analog settling time */
 enum afec_settling_time {
 	AFEC_SETTLING_TIME_0 = AFEC_MR_SETTLING_AST3,
@@ -160,6 +188,7 @@ enum afec_settling_time {
 	AFEC_SETTLING_TIME_2 = AFEC_MR_SETTLING_AST9,
 	AFEC_SETTLING_TIME_3 = AFEC_MR_SETTLING_AST17
 };
+#endif
 
 /** Definitions for Comparison Mode */
 enum afec_cmp_mode {
@@ -193,8 +222,10 @@ struct afec_config {
 	uint32_t afec_clock;
 	/** Start Up Time */
 	enum afec_startup_time startup_time;
-	/** Analog Settling Time = (settling_time + 1) / AFEC clock */
-	enum afec_settling_time settling_time;
+	#if defined __SAM4E8C__  || defined __SAM4E16C__ || defined __SAM4E8E__  || defined __SAM4E16E__
+		/** Analog Settling Time = (settling_time + 1) / AFEC clock */
+		enum afec_settling_time settling_time;
+	#endif
 	/** Tracking Time = tracktim / AFEC clock */
 	uint8_t tracktim;
 	/** Transfer Period = (transfer * 2 + 3) / AFEC clock */
@@ -280,6 +311,28 @@ enum afec_interrupt_source {
 	_AFEC_NUM_OF_INTERRUPT_SOURCE,
 	AFEC_INTERRUPT_ALL = 0xDF00FFFF,
 };
+#elif SAMV71
+/** AFEC interrupt source type */
+enum afec_interrupt_source {
+	AFEC_INTERRUPT_EOC_0 = 0,
+	AFEC_INTERRUPT_EOC_1,
+	AFEC_INTERRUPT_EOC_2,
+	AFEC_INTERRUPT_EOC_3,
+	AFEC_INTERRUPT_EOC_4,
+	AFEC_INTERRUPT_EOC_5,
+	AFEC_INTERRUPT_EOC_6,
+	AFEC_INTERRUPT_EOC_7,
+	AFEC_INTERRUPT_EOC_8,
+	AFEC_INTERRUPT_EOC_9,
+	AFEC_INTERRUPT_EOC_10,
+	AFEC_INTERRUPT_EOC_11,
+	AFEC_INTERRUPT_DATA_READY,
+	AFEC_INTERRUPT_OVERRUN_ERROR,
+	AFEC_INTERRUPT_COMP_ERROR,
+	AFEC_INTERRUPT_TEMP_CHANGE,
+	_AFEC_NUM_OF_INTERRUPT_SOURCE,
+	AFEC_INTERRUPT_ALL = 0x47000FFF,
+};
 #endif
 
 typedef void (*afec_callback_t)(void);
@@ -316,6 +369,8 @@ static inline void afec_ch_sanity_check(Afec *const afec,
 		Assert((channel < NB_CH_AFE0) || (channel == AFEC_TEMPERATURE_SENSOR));
 	#elif defined __SAM4E8E__  || defined __SAM4E16E__
 		Assert(channel < NB_CH_AFE0);
+	#elif SAMV71
+		//Assert(channel < NB_CH_AFE0);
 	#endif
 	} else if (afec == AFEC1) {
 		Assert(channel < NB_CH_AFE1);
@@ -599,6 +654,7 @@ static inline uint32_t afec_get_interrupt_mask(Afec *const afec)
 	return afec->AFEC_IMR;
 }
 
+#if defined __SAM4E8C__  || defined __SAM4E16C__ || defined __SAM4E8E__  || defined __SAM4E16E__
 /**
  * \brief Get PDC registers base address.
  *
@@ -647,6 +703,7 @@ static inline enum status_code afec_start_calibration(Afec *const afec)
 	afec->AFEC_CR = AFEC_CR_AUTOCAL;
 	return STATUS_OK;
 }
+#endif
 
 /**
  * \page sam_afec_quickstart Quickstart guide for SAM AFEC driver

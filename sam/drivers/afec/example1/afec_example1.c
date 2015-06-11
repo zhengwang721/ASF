@@ -119,7 +119,13 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+	#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+	#endif
+		.paritytype = CONF_UART_PARITY,
+	#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+	#endif
 	};
 
 	/* Configure console UART. */
@@ -181,20 +187,34 @@ int main(void)
 	afec_temp_sensor_cfg.rctc = true;
 	afec_temp_sensor_set_config(AFEC0, &afec_temp_sensor_cfg);
 
-	afec_set_callback(AFEC0, AFEC_INTERRUPT_EOC_15,
-			afec_temp_sensor_end_conversion, 1);
+	#if SAMV71
+		afec_set_callback(AFEC0, AFEC_INTERRUPT_EOC_11,
+				afec_temp_sensor_end_conversion, 1);
+
+	#else
+		afec_set_callback(AFEC0, AFEC_INTERRUPT_EOC_15,
+				afec_temp_sensor_end_conversion, 1);
+    #endif
 
 	while (1) {
 
 		if(is_conversion_done == true) {
 
 			ul_vol = g_ul_value * VOLT_REF / MAX_DIGITAL;
-
+			
+		#if SAMV71
+			/*
+			 * According to datasheet, The output voltage VT = 0.72V at 27C
+			 * and the temperature slope dVT/dT = 2.33 mV/C
+			 */
+			ul_temp = (ul_vol - 720)  * 100 / 233 + 27;
+		#else
 			/*
 			 * According to datasheet, The output voltage VT = 1.44V at 27C
 			 * and the temperature slope dVT/dT = 4.7 mV/C
 			 */
-			ul_temp = (ul_vol - 1440)  * 100 / 470 + 27;
+			ul_temp = (ul_vol - 1440)  * 100 / 470 + 27;		
+		#endif
 
 			printf("Temperature is: %4d\r", (int)ul_temp);
 			is_conversion_done = false;
