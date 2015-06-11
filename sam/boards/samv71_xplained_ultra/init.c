@@ -114,4 +114,9 @@ void board_init(void)
 	MATRIX->CCFG_SYSIO |= CCFG_SYSIO_SYSIO4;
 	ioport_set_pin_peripheral_mode(USART1_TXD_GPIO, USART1_TXD_FLAGS);
 #endif
+
+#ifdef CONF_BOARD_TWIHS0
+	ioport_set_pin_peripheral_mode(TWIHS0_DATA_GPIO, TWIHS0_DATA_FLAGS);
+	ioport_set_pin_peripheral_mode(TWIHS0_CLK_GPIO, TWIHS0_CLK_FLAGS);
+#endif
 }
