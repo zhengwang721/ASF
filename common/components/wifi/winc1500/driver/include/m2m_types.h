@@ -1794,14 +1794,3 @@ typedef struct{
  /**@}*/
 
 #endif
-r.
-	*/
-	uint8	__PAD8__;
-	/*!< Padding bytes for forcing 4-byte alignment
-	*/
-}tstrM2MMulticastMac;
-
-
- /**@}*/
-
-#endif
