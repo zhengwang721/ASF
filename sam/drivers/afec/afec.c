@@ -284,11 +284,8 @@ void afec_ch_get_config_defaults(struct afec_ch_config *const cfg)
 	Assert(cfg);
 
 	cfg->diff = false;
-  #if (SAMV71 || SAMV70 || SAME70 || SAMS70)
-	cfg->gain = AFEC_GAINVALUE_0;
-  #else
    	cfg->gain = AFEC_GAINVALUE_1;
-  #endif
+
 }
 
 /**

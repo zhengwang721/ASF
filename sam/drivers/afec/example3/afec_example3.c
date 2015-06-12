@@ -51,7 +51,7 @@
  *
  * \section Requirements
  *
- * This example can be used on SAM4E-EK boards.
+ * This example can be used on SAM4E-EK boards,SAMV71-Xplained-Ultra.
  *
  * \section Description
  *
@@ -178,30 +178,23 @@ int main(void)
 	afec_ch_get_config_defaults(&afec_ch_cfg);
 	
 #if (SAMV71 || SAMV70 || SAME70 || SAMS70) 
-	afec_ch_set_config(AFEC0, AFEC_CHANNEL_0, &afec_ch_cfg);
-
 	/*
 	 * Because the internal AFEC offset is 0x200, it should cancel it and shift
 	 * down to 0.
 	 */
 	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_0, 0x200);
 
-	afec_set_trigger(AFEC0, AFEC_TRIG_SW);
+	afec_ch_cfg->gain = AFEC_GAINVALUE_0;
 
-	afec_set_comparison_mode(AFEC0, AFEC_CMP_MODE_2, AFEC_CHANNEL_0, 0);
-	afec_set_comparison_window(AFEC0, gs_us_low_threshold, gs_us_high_threshold);
-
-	/* Enable channel for potentiometer. */
-	afec_channel_enable(AFEC0, AFEC_CHANNEL_0);
 #else
-	afec_ch_set_config(AFEC0, AFEC_CHANNEL_POTENTIOMETER, &afec_ch_cfg);
-
 	/*
 	 * Because the internal AFEC offset is 0x800, it should cancel it and shift
 	 * down to 0.
 	 */
 	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_POTENTIOMETER, 0x800);
+#endif
 
+	afec_ch_set_config(AFEC0, AFEC_CHANNEL_POTENTIOMETER, &afec_ch_cfg);
 	afec_set_trigger(AFEC0, AFEC_TRIG_SW);
 
 	afec_set_comparison_mode(AFEC0, AFEC_CMP_MODE_2, AFEC_CHANNEL_POTENTIOMETER, 0);
@@ -209,7 +202,7 @@ int main(void)
 
 	/* Enable channel for potentiometer. */
 	afec_channel_enable(AFEC0, AFEC_CHANNEL_POTENTIOMETER);
-#endif
+
 
 	afec_set_callback(AFEC0, AFEC_INTERRUPT_COMP_ERROR, afec_print_comp_result, 1);
 
