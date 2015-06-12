@@ -75,7 +75,7 @@
  * - \ref conf_sleepmgr.h
  *
  * \section device_info Device Info
- * The SAM4E devices can be used.
+ * The SAM4E ,SAMV71-Xplained-Ultra devices can be used.
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -153,7 +153,7 @@ static void run_afec_tc_trig_test(const struct test_case *test)
 
 	afec_set_callback(AFEC0, AFEC_INTERRUPT_DATA_READY,
 			afec_set_data_ready_flag, 1);
-	delay_ms(2000);
+	delay_ms(3000);
 
 	test_assert_true(test, is_data_ready == true,
 			"AFEC using TC trigger test failed");
