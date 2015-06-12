@@ -90,6 +90,7 @@
  * - sam4cp16b_sam4cp16bmb
  * - sam4cmp16c_sam4cmp_db
  * - sam4cms16c_sam4cms_db
+ * - samv71q21_samv71_xplained_ultra
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -397,8 +398,8 @@ static void run_flash_lock_test(const struct test_case *test)
 
 #if (SAM3SD8 || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM || \
 	 SAMV71 || SAMV70 || SAMS70 || SAME70)
-	/* SAM3SD8, SAM4S, SAM4E, SAM4N, SAM4C and SAM4CP have a bigger page region which
-	 * requires special attention.
+	/* SAM3SD8, SAM4S, SAM4E, SAM4N, SAM4C, SAM4CP, SAMV71, SAMV70, SAMS70,
+	 * and SAME70 have a bigger page region which requires special attention.
 	 */
 	ul_locked_region_num = flash_is_locked(IFLASH_ADDR,
 			ul_test_page_addr + IFLASH_PAGE_SIZE - 1);
