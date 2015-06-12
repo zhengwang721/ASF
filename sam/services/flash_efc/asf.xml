@@ -18,6 +18,10 @@
 		<device-support value="sam4cp"/>
 		<device-support value="sam4cm"/>
 		<device-support value="samg"/>
+		<device-support value="samv71"/>
+		<device-support value="samv70"/>
+		<device-support value="same70"/>
+		<device-support value="sams70"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="sam.drivers.efc"/>
 		<require idref="sam.utils"/>
