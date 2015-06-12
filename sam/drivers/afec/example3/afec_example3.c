@@ -184,7 +184,7 @@ int main(void)
 	 */
 	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_0, 0x200);
 
-	afec_ch_cfg->gain = AFEC_GAINVALUE_0;
+	afec_ch_cfg.gain = AFEC_GAINVALUE_0;
 
 #else
 	/*

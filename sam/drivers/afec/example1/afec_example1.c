@@ -174,7 +174,7 @@ int main(void)
 	struct afec_ch_config afec_ch_cfg;
 	afec_ch_get_config_defaults(&afec_ch_cfg);
 #if (SAMV71 || SAMV70 || SAME70 || SAMS70)
-	afec_ch_cfg->gain = AFEC_GAINVALUE_0;
+	afec_ch_cfg.gain = AFEC_GAINVALUE_0;
 #endif 
 	afec_ch_set_config(AFEC0, AFEC_TEMPERATURE_SENSOR, &afec_ch_cfg);
 
