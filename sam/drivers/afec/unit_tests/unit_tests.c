@@ -185,7 +185,13 @@ int main(void)
 {
 	const usart_serial_options_t usart_serial_options = {
 		.baudrate   = CONF_TEST_BAUDRATE,
-		.paritytype = CONF_TEST_PARITY
+		.paritytype = CONF_TEST_PARITY,
+	#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+	#endif
+	#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+	#endif
 	};
 
 	/* Initialize the system clock and board */
@@ -201,12 +207,20 @@ int main(void)
 
 	afec_get_config_defaults(&afec_cfg);
 	afec_init(AFEC0, &afec_cfg);
-
+	
+  #if (SAMV71 || SAMV70 || SAME70 || SAMS70)
+	/*
+	 * Because the internal ADC offset is 0x200, it should cancel it and shift
+	 * down to 0.
+	 */
+	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_1, 0x200);
+#else
 	/*
 	 * Because the internal ADC offset is 0x800, it should cancel it and shift
 	 * down to 0.
 	 */
 	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_1, 0x800);
+#endif
 
 	afec_channel_enable(AFEC0, AFEC_CHANNEL_1);
 

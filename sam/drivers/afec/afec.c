@@ -173,8 +173,11 @@ static void afec_set_config(Afec *const afec, struct afec_config *config)
 	afec->AFEC_EMR = (config->tag ? AFEC_EMR_TAG : 0) |
 			(config->resolution) |
 			(config->stm ? AFEC_EMR_STM : 0);
-
+  #if (SAMV71 || SAMV70 || SAME70 || SAMS70)
 	afec->AFEC_ACR = AFEC_ACR_IBCTL(config->ibctl) | AFEC_ACR_PGA0EN | AFEC_ACR_PGA1EN;
+  #else
+    afec->AFEC_ACR = AFEC_ACR_IBCTL(config->ibctl);
+  #endif
 }
 
 /**

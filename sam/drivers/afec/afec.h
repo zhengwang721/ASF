@@ -154,6 +154,7 @@ enum afec_channel_num {
 } ;
 
 #define NB_CH_AFE0  (12UL)
+#define NB_CH_AFE1  (12UL)
 #endif
 
 /** Definitions for AFEC gain value */

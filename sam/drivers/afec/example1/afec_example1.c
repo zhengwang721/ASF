@@ -175,7 +175,7 @@ int main(void)
 	afec_ch_get_config_defaults(&afec_ch_cfg);
 	afec_ch_set_config(AFEC0, AFEC_TEMPERATURE_SENSOR, &afec_ch_cfg);
 
-#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
+#if SAMV71
 	/*
 	 * Because the internal ADC offset is 0x200, it should cancel it and shift
 	 * down to 0.

@@ -112,7 +112,13 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+	#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+	#endif
+		.paritytype = CONF_UART_PARITY,
+	#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+	#endif
 	};
 
 	/* Configure console UART. */
@@ -129,9 +135,12 @@ static void afec_print_comp_result(void)
 
 	/* Disable Compare Interrupt. */
 	afec_disable_interrupt(AFEC0, AFEC_INTERRUPT_COMP_ERROR);
-
+	
+#if SAMV71
+	us_adc = afec_channel_get_value(AFEC0, AFEC_CHANNEL_0);
+#else
 	us_adc = afec_channel_get_value(AFEC0, AFEC_CHANNEL_POTENTIOMETER);
-
+#endif
 	printf("-ISR-:Potentiometer voltage %d mv is in the comparison "
 			"window:%d -%d mv!\n\r",
 			(int)(us_adc * VOLT_REF / MAX_DIGITAL),
@@ -167,6 +176,24 @@ int main(void)
 
 	struct afec_ch_config afec_ch_cfg;
 	afec_ch_get_config_defaults(&afec_ch_cfg);
+	
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70) 
+	afec_ch_set_config(AFEC0, AFEC_CHANNEL_0, &afec_ch_cfg);
+
+	/*
+	 * Because the internal AFEC offset is 0x200, it should cancel it and shift
+	 * down to 0.
+	 */
+	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_0, 0x200);
+
+	afec_set_trigger(AFEC0, AFEC_TRIG_SW);
+
+	afec_set_comparison_mode(AFEC0, AFEC_CMP_MODE_2, AFEC_CHANNEL_0, 0);
+	afec_set_comparison_window(AFEC0, gs_us_low_threshold, gs_us_high_threshold);
+
+	/* Enable channel for potentiometer. */
+	afec_channel_enable(AFEC0, AFEC_CHANNEL_0);
+#else
 	afec_ch_set_config(AFEC0, AFEC_CHANNEL_POTENTIOMETER, &afec_ch_cfg);
 
 	/*
@@ -182,6 +209,7 @@ int main(void)
 
 	/* Enable channel for potentiometer. */
 	afec_channel_enable(AFEC0, AFEC_CHANNEL_POTENTIOMETER);
+#endif
 
 	afec_set_callback(AFEC0, AFEC_INTERRUPT_COMP_ERROR, afec_print_comp_result, 1);
 
