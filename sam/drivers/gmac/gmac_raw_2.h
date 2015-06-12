@@ -3,7 +3,7 @@
  *
  * \brief GMAC (Ethernet MAC) driver for SAM.
  *
- * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -74,13 +74,8 @@ typedef void (*gmac_dev_tx_cb_t) (uint32_t ul_status);
 /** Wakeup callback */
 typedef void (*gmac_dev_wakeup_cb_t) (void);
 
-/**
- * GMAC driver structure.
- */
-typedef struct gmac_device {
+typedef struct gmac_queue {
 
-	/** Pointer to HW register base */
-	Gmac *p_hw;
 	/**
 	 * Pointer to allocated TX buffer.
 	 * Section 3.6 of AMBA 2.0 spec states that burst should not cross
@@ -114,26 +109,36 @@ typedef struct gmac_device {
 
 	/** Number of free TD before wakeup callback is invoked */
 	uint8_t uc_wakeup_threshold;
+}gmac_queue_t;
+/**
+ * GMAC driver structure.
+ */
+typedef struct gmac_device {
+
+	/** Pointer to HW register base */
+	Gmac *p_hw;
+    /** Base Queue list params **/
+    gmac_queue_t gmac_queue_list[GMAC_QUE_N];
 } gmac_device_t;
 
 void gmac_dev_init(Gmac* p_gmac, gmac_device_t* p_gmac_dev,
 		gmac_options_t* p_opt);
-uint32_t gmac_dev_rx_buf_used(gmac_device_t* p_gmac_dev);
-uint32_t gmac_dev_read(gmac_device_t* p_gmac_dev, uint8_t* p_frame,
+uint32_t gmac_dev_rx_buf_used(gmac_device_t* p_gmac_dev, gmac_quelist_t queue_idx);
+uint32_t gmac_dev_read(gmac_device_t* p_gmac_dev, gmac_quelist_t queue_idx, uint8_t* p_frame,
 		uint32_t ul_frame_size, uint32_t* p_rcv_size);
-uint32_t gmac_dev_tx_buf_used(gmac_device_t* p_gmac_dev);
-uint32_t gmac_dev_write(gmac_device_t* p_gmac_dev, void *p_buffer,
+uint32_t gmac_dev_tx_buf_used(gmac_device_t* p_gmac_dev, gmac_quelist_t queue_idx);
+uint32_t gmac_dev_write(gmac_device_t* p_gmac_dev, gmac_quelist_t queue_idx, void *p_buffer,
 		uint32_t ul_size, gmac_dev_tx_cb_t func_tx_cb);
-uint32_t gmac_dev_write_nocopy(gmac_device_t* p_gmac_dev,
+uint32_t gmac_dev_write_nocopy(gmac_device_t* p_gmac_dev, gmac_quelist_t queue_idx,
 		uint32_t ul_size, gmac_dev_tx_cb_t func_tx_cb);
-uint8_t *gmac_dev_get_tx_buffer(gmac_device_t* p_gmac_dev);
-uint32_t gmac_dev_get_tx_load(gmac_device_t* p_gmac_dev);
-void gmac_dev_set_rx_callback(gmac_device_t* p_gmac_dev,
+uint8_t *gmac_dev_get_tx_buffer(gmac_device_t* p_gmac_dev, gmac_quelist_t queue_idx);
+uint32_t gmac_dev_get_tx_load(gmac_device_t* p_gmac_dev, gmac_quelist_t queue_idx);
+void gmac_dev_set_rx_callback(gmac_device_t* p_gmac_dev, gmac_quelist_t queue_idx,
 		gmac_dev_tx_cb_t func_rx_cb);
-uint8_t gmac_dev_set_tx_wakeup_callback(gmac_device_t* p_gmac_dev,
+uint8_t gmac_dev_set_tx_wakeup_callback(gmac_device_t* p_gmac_dev, gmac_quelist_t queue_idx,
 		gmac_dev_wakeup_cb_t func_wakeup, uint8_t uc_threshold);
-void gmac_dev_reset(gmac_device_t* p_gmac_dev);
-void gmac_handler(gmac_device_t* p_gmac_dev);
+void gmac_dev_reset(gmac_device_t* p_gmac_dev, gmac_quelist_t queue_idx);
+void gmac_handler(gmac_device_t* p_gmac_dev, gmac_quelist_t queue_idx);
 
 /// @cond 0
 /**INDENT-OFF**/
