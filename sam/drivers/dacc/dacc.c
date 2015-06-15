@@ -178,7 +178,7 @@ uint32_t dacc_set_transfer_mode(Dacc *p_dacc, uint32_t ul_mode)
 		p_dacc->DACC_MR |= DACC_MR_ONE;
 		p_dacc->DACC_MR |= DACC_MR_WORD_WORD;
 #elif (SAMV70 || SAMV71 || SAME70 || SAMS70)
-	p_dacc->DACC_MR |= DACC_MR_WORD_ENABLED;
+		p_dacc->DACC_MR |= DACC_MR_WORD_ENABLED;
 #else
 		p_dacc->DACC_MR |= DACC_MR_WORD_WORD;
 #endif
@@ -373,8 +373,6 @@ uint32_t dacc_set_channel_selection(Dacc *p_dacc, uint32_t ul_channel)
 	if (ul_channel > MAX_CH_NB) {
 		return DACC_RC_INVALID_PARAM;
 	}
-	//mr &= ~(DACC_MR_TAG);
-	//mr |= ul_channel << DACC_MR_USER_SEL_Pos;
 	p_dacc->DACC_CHER = mr;
 #else
 	uint32_t mr = p_dacc->DACC_MR & (~DACC_MR_USER_SEL_Msk);
@@ -388,6 +386,7 @@ uint32_t dacc_set_channel_selection(Dacc *p_dacc, uint32_t ul_channel)
 	return DACC_RC_OK;
 }
 
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 /**
  * \brief Enable the flexible channel selection mode (TAG).
  *
@@ -401,11 +400,9 @@ uint32_t dacc_set_channel_selection(Dacc *p_dacc, uint32_t ul_channel)
  */
 void dacc_enable_flexible_selection(Dacc *p_dacc)
 {
-#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
-#else
 	p_dacc->DACC_MR |= DACC_MR_TAG;
-#endif
 }
+#endif
 
 #if (SAM3S) || (SAM3XA) || defined(__DOXYGEN__)
 /**
@@ -456,7 +453,6 @@ uint32_t dacc_set_timing(Dacc *p_dacc,
 	} else {
 		mr &= ~(DACC_MR_MAXS0 | DACC_MR_MAXS1);
 	}
-	//mr |= (DACC_MR_STARTUP_Msk & ((ul_startup) << DACC_MR_STARTUP_Pos));
 #else
 	uint32_t mr = p_dacc->DACC_MR
 	& (~(DACC_MR_REFRESH_Msk | DACC_MR_STARTUP_Msk));

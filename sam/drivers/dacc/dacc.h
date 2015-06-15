@@ -98,7 +98,9 @@ uint32_t dacc_set_timing(Dacc *p_dacc, uint32_t ul_startup,
 
 #if (SAM3S) || (SAM3XA) || (SAM4S) || (SAM4E) || (SAMV70) || (SAMV71) || (SAME70) || (SAMS70) || defined(__DOXYGEN__)
 uint32_t dacc_set_channel_selection(Dacc *p_dacc, uint32_t ul_channel);
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 void dacc_enable_flexible_selection(Dacc *p_dacc);
+#endif
 
 #if (SAM3S) || (SAM3XA)
 uint32_t dacc_set_power_save(Dacc *p_dacc, uint32_t ul_sleep_mode,
