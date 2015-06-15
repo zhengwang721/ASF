@@ -86,7 +86,7 @@
  * known reference clock as soon as the FREQM is enabled. Two generic clocks are
  * used by the FREQM. The frequency of the measured clock is:
  * \f[
- *    f_{CLK_MSR} = \frac{VALUE}{REFNUM} \times f_{CLK_REF}
+ *    f_{CLK\_MSR} = \frac{VALUE}{REFNUM} \times f_{CLK\_REF}
  * \f]
  * Ratio can be measured with 24-bit accuracy.
  *
@@ -350,6 +350,7 @@ enum freqm_status freqm_get_result_value(
 #ifdef __cplusplus
 }
 #endif
+/** @} */
 
 
 /**
