@@ -127,6 +127,7 @@
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
 			<device-support value="samd11"/>
+			<device-support value="samda1"/>
 			<require idref="sam0.drivers.system"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samd21"/>
 		</module>
@@ -147,6 +148,24 @@
 			<device-support value="saml21"/>
 			<require idref="sam0.drivers.system"/>
 			<generator value="doxygen-module" default-mcu="unspecified-saml21"/>
+		</module>
+		<module type="service" id="common.services.basic.sleepmgr#7" caption="Sleep manager - SAMC implementation">
+			<info type="description" value="summary">
+			The sleep manager provides functions for centralized management of sleep modes. Common API for SAMC.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Power Management" />
+			</info>
+			<build type="header-file" subtype="api" value="sleepmgr.h"/>
+			<build type="header-file" subtype="api" value="samc/sleepmgr.h"/>
+			<build type="c-source" value="samc/sleepmgr.c"/>
+			<build type="module-config" subtype="required-header-file" value="conf_sleepmgr.h"/>
+			<build type="include-path" value="."/>
+			<build type="module-config" subtype="path" value="samc/module_config"/>
+			<build type="doxygen-entry-point" value="sleepmgr_group"/>
+			<device-support value="samc21"/>
+			<require idref="sam0.drivers.system"/>
+			<generator value="doxygen-module" default-mcu="unspecified-samc21"/>
 		</module>
 	</select-by-device>
 </asf>

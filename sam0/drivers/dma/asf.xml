@@ -36,6 +36,9 @@
 		<device-support value="samd10"/>
 		<device-support value="samd11"/>
 		<device-support value="saml21"/>
+		<device-support value="samda1"/>
+		<device-support value="samc20"/>
+		<device-support value="samc21"/>
 
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system"/>

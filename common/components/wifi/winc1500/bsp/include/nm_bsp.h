@@ -290,6 +290,10 @@ void nm_bsp_interrupt_ctrl(uint8 u8Enable);
 #include "nm_bsp_aps3_cortus.h"
 #endif
 
+#if (defined __SAML21J18A__)
+#include "bsp/include/nm_bsp_saml21.h"
+#endif
+
 #if (defined __SAMD21J18A__) || (defined __SAMD21G18A__)
 #include "bsp/include/nm_bsp_samd21.h"
 #endif
@@ -300,6 +304,10 @@ void nm_bsp_interrupt_ctrl(uint8 u8Enable);
 
 #ifdef __SAMG53N19__
 #include "bsp/include/nm_bsp_samg53.h"
+#endif
+
+#ifdef __SAMG55J19__
+#include "bsp/include/nm_bsp_samg55.h"
 #endif
 
 #ifdef CORTUS_APP

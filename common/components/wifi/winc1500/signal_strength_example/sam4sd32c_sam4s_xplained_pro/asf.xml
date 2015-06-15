@@ -2,7 +2,7 @@
 	<project caption="WINC1500 Signal Strength Example for SAM4S XPlained Pro" id="common.components.wifi.winc1500.signal_strength_example.sam4s_xplained_pro">
 		<!-- Summary Description -->
 		<info type="description" value="summary">
-			This example demonstrates the use of the WINC1500 with the SAM4S Xplained Pro board to check the signal strength such as RSSI.
+			This example demonstrates how to check the signal strength (RSSI) of the WINC1500 Wi-Fi module.
 		</info>
 
 		<!-- Source -->
