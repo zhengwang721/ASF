@@ -157,6 +157,15 @@ enum afec_channel_num {
 #define NB_CH_AFE1  (12UL)
 #endif
 
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
+enum afec_sample_hold_mode {
+	/*Single Sample-and-Hold mode*/
+	AFEC_SAMPLE_HOLD_MODE_0,
+	/*Dual Sample-and-Hold mode*/
+	AFEC_SAMPLE_HOLD_MODE_1,
+};
+#endif
+
 /** Definitions for AFEC gain value */
 enum afec_gainvalue {
 	AFEC_GAINVALUE_0 = 0,
@@ -357,6 +366,14 @@ void afec_enable(Afec *const afec);
 void afec_disable(Afec *const afec);
 void afec_set_callback(Afec *const afec, enum afec_interrupt_source source,
 		afec_callback_t callback, uint8_t irq_level);
+void afec_configure_auto_error_correction(Afec *const afec,
+		const enum afec_channel_num channel,int16_t offcorr, uint16_t gaincorr);
+
+uint32_t afec_get_correction_value(Afec *const afec,
+	   const enum afec_channel_num afec_ch);
+void afec_set_sample_hold_mode(Afec *const afec,
+		const enum afec_channel_num channel,const enum afec_sample_hold_mode mode);
+
 
 /**
  * \internal

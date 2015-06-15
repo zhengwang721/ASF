@@ -640,4 +640,84 @@ void afec_configure_sequence(Afec *const afec,
 	}
 }
 
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
+/**
+ * \brief Configure Automatic Error Correction.
+ *
+ * \param afec  Base address of the AFEC
+ * \param uc_num Number of channels in the list.
+ */
+void afec_configure_auto_error_correction(Afec *const afec,
+		const enum afec_channel_num channel,int16_t offcorr, uint16_t gaincorr)
+{
+
+	if (channel != AFEC_CHANNEL_ALL) {
+		afec_ch_sanity_check(afec, channel);
+	}
+
+	uint32_t reg = 0;
+	reg = afec->AFEC_CECR;
+	reg = (channel == AFEC_CHANNEL_ALL)? 0 :~(0x1u << channel);
+	reg |= (channel == AFEC_CHANNEL_ALL)? AFEC_CHANNEL_ALL:(0x1u << channel);
+	afec->AFEC_CECR = reg;
+
+	afec->AFEC_COSR = AFEC_COSR_CSEL;
+    afec->AFEC_CVR = AFEC_CVR_OFFSETCORR(offcorr) | AFEC_CVR_GAINCORR(gaincorr);		 
+	
+}
+
+/**
+ * \brief correct the Converted Data of the selected channel if automatic error correction is enabled.
+ *
+ * \param afec  Base address of the AFEC.
+ * \param afec_ch AFEC channel number.
+ *
+ * \return AFEC corrected value of the selected channel.
+ */
+ uint32_t afec_get_correction_value(Afec *const afec,
+		const enum afec_channel_num afec_ch)
+{	
+	uint32_t corrected_data = 0;
+	uint32_t converted_data = 0;
+	
+	afec_ch_sanity_check(afec, afec_ch);
+
+	afec->AFEC_CSELR = afec_ch;
+	converted_data = afec->AFEC_CDR;
+
+	corrected_data = (converted_data + (afec->AFEC_CVR & AFEC_CVR_OFFSETCORR_Msk)) * 
+						(afec->AFEC_CVR >> AFEC_CVR_GAINCORR_Pos)/1024u;
+	return 	corrected_data;
+	
+}
+
+/**
+ * \brief Configure sample&hold mode.
+ *
+ * \param afec  Base address of the AFEC.
+ * \param channel   Channel number.
+ * \param mode sample&hold mode.
+ */
+void afec_set_sample_hold_mode(Afec *const afec,
+		const enum afec_channel_num channel,const enum afec_sample_hold_mode mode)
+{
+		if (channel != AFEC_CHANNEL_ALL) {
+		afec_ch_sanity_check(afec, channel);
+	}
+		
+	uint32_t reg = 0;
+	reg = afec->AFEC_SHMR;
+	if (mode == AFEC_SAMPLE_HOLD_MODE_1) {
+		
+		reg |= (channel == AFEC_CHANNEL_ALL)? AFEC_CHANNEL_ALL:0x1u << channel;
+	}
+	else {
+		
+		reg = (channel == AFEC_CHANNEL_ALL)? 0 :~(0x1u << channel);
+	}
+	afec->AFEC_SHMR = reg;
+		
+}
+#endif
+
 //@}
