@@ -50,7 +50,7 @@
 #include "compiler.h"
 #include "status_codes.h"
 
-#if SAMV71
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
 /** Definitions for AFEC resolution */
 enum afec_resolution {
 	AFEC_12_BITS = AFEC_EMR_RES_NO_AVERAGE,    /* AFEC 12-bit resolution */
@@ -135,7 +135,7 @@ enum afec_channel_num {
 	AFEC_TEMPERATURE_SENSOR,
 	AFEC_CHANNEL_ALL = 0xFFFF,
 } ;
-#elif SAMV71
+#elif (SAMV71 || SAMV70 || SAME70 || SAMS70)
 /** Definitions for AFEC channel number */
 enum afec_channel_num {
 	AFEC_CHANNEL_0 = 0,
@@ -325,7 +325,7 @@ enum afec_interrupt_source {
 	_AFEC_NUM_OF_INTERRUPT_SOURCE,
 	AFEC_INTERRUPT_ALL = 0xDF00FFFF,
 };
-#elif SAMV71
+#elif (SAMV71 || SAMV70 || SAME70 || SAMS70)
 /** AFEC interrupt source type */
 enum afec_interrupt_source {
 	AFEC_INTERRUPT_EOC_0 = 0,
@@ -367,7 +367,7 @@ void afec_disable(Afec *const afec);
 void afec_set_callback(Afec *const afec, enum afec_interrupt_source source,
 		afec_callback_t callback, uint8_t irq_level);
 
-#if SAMV71
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
 void afec_configure_auto_error_correction(Afec *const afec,
 		const enum afec_channel_num channel,int16_t offsetcorr, uint16_t gaincorr);
 
@@ -393,7 +393,7 @@ static inline void afec_ch_sanity_check(Afec *const afec,
 		Assert((channel < NB_CH_AFE0) || (channel == AFEC_TEMPERATURE_SENSOR));
 	#elif defined __SAM4E8E__  || defined __SAM4E16E__
 		Assert(channel < NB_CH_AFE0);
-	#elif SAMV71
+	#elif (SAMV71 || SAMV70 || SAME70 || SAMS70)
 		Assert(channel < NB_CH_AFE0);
 	#endif
 	} else if (afec == AFEC1) {

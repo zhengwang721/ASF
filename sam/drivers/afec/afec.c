@@ -445,7 +445,7 @@ void afec_enable_interrupt(Afec *const afec,
 	}
 
 	if (interrupt_source < AFEC_INTERRUPT_DATA_READY) {
-	  #if SAMV71
+	  #if (SAMV71 || SAMV70 || SAME70 || SAMS70)
 		if (interrupt_source == AFEC_INTERRUPT_EOC_11) {
 			afec->AFEC_IER = 1 << AFEC_TEMP_INT_SOURCE_NUM;
 	  #else
@@ -688,8 +688,8 @@ void afec_configure_auto_error_correction(Afec *const afec,
 	converted_data = afec->AFEC_CDR;
 
 	corrected_data = (converted_data + (afec->AFEC_CVR & AFEC_CVR_OFFSETCORR_Msk)) * 
-						(afec->AFEC_CVR >> AFEC_CVR_GAINCORR_Pos) / 1024u;
-	return 	corrected_data;
+			(afec->AFEC_CVR >> AFEC_CVR_GAINCORR_Pos) / 1024u;
+	return corrected_data;
 	
 }
 
