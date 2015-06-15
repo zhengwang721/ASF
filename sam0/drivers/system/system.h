@@ -70,6 +70,10 @@ extern "C" {
  *  - PM (Power Manager)
  *  - RSTC(Reset Controller)
  *  - SUPC(Supply Controller)
+ * \elseif DEVICE_SAMC21_SUPPORT
+ *  - PM(Power Manager)
+ *  - RSTC(Reset Controller)
+ *  - SUPC(Supply Controller)
  * \else
  *  - SYSCTRL (System Control)
  *  - PM (Power Manager)
@@ -78,11 +82,13 @@ extern "C" {
  * The following devices can use this module:
  * \if DEVICE_SAML21_SUPPORT
  *  - Atmel | SMART SAM L21
+ * \elseif DEVICE_SAMC21_SUPPORT
+ *  - Atmel | SMART SAM C20/C21
  * \else
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM DA0/DA1
+ *  - Atmel | SMART SAM DAx
  * \endif
  *
  * The outline of this documentation is as follows:
@@ -127,6 +133,15 @@ extern "C" {
  * It includes functionality that enables automatic power switching between main
  * power and battery backup power. This will ensure power to the backup domain,
  * when the main battery or power source is unavailable.
+ * \endif
+ *
+ * \if DEVICE_SAMC21_SUPPORT
+ * \subsection asfdoc_sam0_system_module_overview_vreg Voltage Regulator
+ * The SAM device controls the voltage regulators for the core (VDDCORE). It sets
+ * the voltage regulators according to the sleep modes.
+ *
+ * There are a selectable reference voltage and voltage dependent on the temperature
+ * which can be used by analog modules like the ADC.
  * \endif
  *
  * \subsection asfdoc_sam0_system_module_overview_vref Voltage References
@@ -191,30 +206,30 @@ extern "C" {
  *
  * Power domain can be in three states:
  * - Active state: the power domain is powered on.
- * - Retention state: the main voltage supply for the power domain is switched off, 
- * while maintaining a secondary low-power supply for the sequential cells. The 
+ * - Retention state: the main voltage supply for the power domain is switched off,
+ * while maintaining a secondary low-power supply for the sequential cells. The
  * logic context is restored when waking up.
  * - Off state: the power domain is entirely powered off. The logic context is lost.
  *
- * The SAM L21 device has three power domains: PD0, PD1 and PD2. 
- * - By default, a power domain is set automatically to retention state in standby 
+ * The SAM L21 device has three power domains: PD0, PD1 and PD2.
+ * - By default, a power domain is set automatically to retention state in standby
  * sleep mode if no activity is required in it, the application can force all power
  * domains to remain in active state during standby sleep mode in order to accelerate
  * wakeup time.
- * - Static Power_SleepWalking: When entering standby mode, if a peripheral needs to 
+ * - Static Power_SleepWalking: When entering standby mode, if a peripheral needs to
  * remain in run mode to perform sleepwalking task, its power domain (PDn) remains in
  * active state as well as the inferior power domains (<PDn).
  * - Dynamic Power_SleepWalking: During standby mode, a power domain (PDn) in active
  * state (using the static Power_SleepWalking principle), can wakeup a superior power
- * domain (>PDn) in order to perform a sleepwalking task. The superior power domain is 
- * then automatically set to active state. At the end of the sleepwalking task, either 
+ * domain (>PDn) in order to perform a sleepwalking task. The superior power domain is
+ * then automatically set to active state. At the end of the sleepwalking task, either
  * the device can be waken-up or the superior power domain can be set again to retention
  * state.
  *
  * Power domains can be linked each other,it allows a power domain (PDn) to be kept
  * in active state if the inferior power domain (PDn-1) is in active state too.
  *
- * The table \ref asfdoc_sam0_system_power_domain_overview_table illustrates the 
+ * The table \ref asfdoc_sam0_system_power_domain_overview_table illustrates the
  * four cases to consider in standby mode
  *
  * \anchor asfdoc_sam0_system_power_domain_overview_table
@@ -295,7 +310,7 @@ extern "C" {
  * </table>
  *
  * \subsection asfdoc_sam0_system_module_overview_ram_state RAMs Low Power Mode
- * By default, in standby sleep mode, RAM is in low power mode (back biased) 
+ * By default, in standby sleep mode, RAM is in low power mode (back biased)
  * if its power domain is in retention state.
  * The table \ref asfdoc_sam0_system_power_ram_state_table lists RAMs low power mode.
  *
@@ -591,6 +606,15 @@ void system_init(void);
  *      <td>RSTC</td>
  *      <td>Reset Controller</td>
  *  </tr>
+ * \elseif DEVICE_SAMC21_SUPPORT
+ *  <tr>
+ *      <td>SUPC</td>
+ *      <td>Supply Controller</td>
+ *  </tr>
+ *  <tr>
+ *      <td>RSTC</td>
+ *      <td>Reset Controller</td>
+ *  </tr>
  * \else
  *  <tr>
  *      <td>SYSCTRL</td>
@@ -621,6 +645,10 @@ void system_init(void);
  *      <th>Changelog</th>
  *  </tr>
  * \if DEVICE_SAML21_SUPPORT
+ *  <tr>
+ *      <td>Initial Release</td>
+ *  </tr>
+ * \elseif DEVICE_SAMC21_SUPPORT
  *  <tr>
  *      <td>Initial Release</td>
  *  </tr>
@@ -656,6 +684,12 @@ void system_init(void);
  *  <tr>
  *      <td>A</td>
  *      <td>04/2015</td>
+ *      <td>Initial release.</td>
+ * </tr>
+ * \elseif DEVICE_SAMC21_SUPPORT
+ *  <tr>
+ *      <td>A</td>
+ *      <td>12/2014</td>
  *      <td>Initial release.</td>
  * </tr>
  * \else
