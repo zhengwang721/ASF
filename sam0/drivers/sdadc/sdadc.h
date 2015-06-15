@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_sdadc_group SAM Sigma-Delta Analog-to-Digital Converter (SDADC) Driver
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Configurable Custom Logic functionality.
  *
  * The following peripherals are used by this module:
@@ -80,7 +80,7 @@
  * and a decimation of the bitstream at the output of the SDADC. The input selection
  * is up to three input analog channels.
  *
- * The SDADC provides up to 16-bit resolution at about 1000 samples per second (1ksps)
+ * The SDADC provides up to 16-bit resolution at about 1000 samples per second (1KSPS)
  * and sized 24 bits signed result to handle filtering and gain correction without overflow.
  * The SDADC measurements can be started by either application software or an incoming
  * event from another peripheral in the device. 
@@ -195,14 +195,14 @@ typedef void (*sdadc_callback_t)(const struct sdadc_module *const module);
  *
  */
 enum sdadc_callback {
-	/** Callback for buffer received. */
+	/** Callback for buffer received */
 	SDADC_CALLBACK_READ_BUFFER,
-	/** Callback when window is hit. */
+	/** Callback when window is hit */
 	SDADC_CALLBACK_WINDOW,
-	/** Callback for error. */
+	/** Callback for error */
 	SDADC_CALLBACK_ERROR,
 #  if !defined(__DOXYGEN__)
-	/** Number of available callbacks. */
+	/** Number of available callbacks */
 	SDADC_CALLBACK_N,
 #  endif
 };
@@ -234,13 +234,13 @@ enum sdadc_callback {
  *
  */
 enum sdadc_reference_select {
-	/** Internal Bandgap Reference. */
+	/** Internal Bandgap Reference */
 	SDADC_REFERENCE_INTREF = SDADC_REFCTRL_REFSEL(0),
-	/** External reference B. */
+	/** External reference B */
 	SDADC_REFERENCE_AREFB  = SDADC_REFCTRL_REFSEL(1),
-	/** DACOUT. */
+	/** DACOUT */
 	SDADC_REFERENCE_DACOUT = SDADC_REFCTRL_REFSEL(2),
-	/** VDDANA. */
+	/** VDDANA */
 	SDADC_REFERENCE_INTVCC = SDADC_REFCTRL_REFSEL(3),
 };
 
@@ -251,13 +251,13 @@ enum sdadc_reference_select {
  *
  */
 enum sdadc_reference_range {
-	/** Vref < 1.4V. */
+	/** Vref < 1.4V */
 	SDADC_REFRANGE_0 = SDADC_REFCTRL_REFRANGE(0),
-	/** 1.4V < Vref < 2.4V. */
+	/** 1.4V < Vref < 2.4V */
 	SDADC_REFRANGE_1 = SDADC_REFCTRL_REFRANGE(1),
-	/** 2.4V < Vref < 3.6V. */
+	/** 2.4V < Vref < 3.6V */
 	SDADC_REFRANGE_2 = SDADC_REFCTRL_REFRANGE(2),
-	/** Vref > 3.6V. */
+	/** Vref > 3.6V */
 	SDADC_REFRANGE_3 = SDADC_REFCTRL_REFRANGE(3),
 };
 
@@ -268,15 +268,15 @@ enum sdadc_reference_range {
  *
  */
 enum sdadc_over_sampling_ratio {
-	/** SDADC over Sampling Ratio is 64. */
+	/** SDADC over Sampling Ratio is 64 */
 	SDADC_OVER_SAMPLING_RATIO64    = SDADC_CTRLB_OSR(0),
-	/** SDADC over Sampling Ratio is 128. */
+	/** SDADC over Sampling Ratio is 128 */
 	SDADC_OVER_SAMPLING_RATIO128   = SDADC_CTRLB_OSR(1),
-	/** SDADC over Sampling Ratio is 256. */
+	/** SDADC over Sampling Ratio is 256 */
 	SDADC_OVER_SAMPLING_RATIO256   = SDADC_CTRLB_OSR(2),
-	/** SDADC over Sampling Ratio is 512. */
+	/** SDADC over Sampling Ratio is 512 */
 	SDADC_OVER_SAMPLING_RATIO512   = SDADC_CTRLB_OSR(3),
-	/** SDADC over Sampling Ratio is 1024. */
+	/** SDADC over Sampling Ratio is 1024 */
 	SDADC_OVER_SAMPLING_RATIO1024  = SDADC_CTRLB_OSR(4),
 };
 
@@ -287,15 +287,15 @@ enum sdadc_over_sampling_ratio {
  *
  */
 enum sdadc_window_mode {
-	/** No window mode. */
+	/** No window mode */
 	SDADC_WINDOW_MODE_DISABLE          = SDADC_WINCTRL_WINMODE(0),
-	/** RESULT > WINLT. */
+	/** RESULT > WINLT */
 	SDADC_WINDOW_MODE_ABOVE            = SDADC_WINCTRL_WINMODE(1),
-	/** RESULT < WINUT. */
+	/** RESULT < WINUT */
 	SDADC_WINDOW_MODE_BELOW            = SDADC_WINCTRL_WINMODE(2),
-	/** WINLT < RESULT < WINUT. */
+	/** WINLT < RESULT < WINUT */
 	SDADC_WINDOW_MODE_INSIDE           = SDADC_WINCTRL_WINMODE(3),
-	/** !(WINLT < RESULT < WINUT). */
+	/** !(WINLT < RESULT < WINUT) */
 	SDADC_WINDOW_MODE_OUTSIDE          = SDADC_WINCTRL_WINMODE(4),
 };
 
@@ -306,11 +306,11 @@ enum sdadc_window_mode {
  *
  */
 enum sdadc_event_action {
-	/** Event action disabled. */
+	/** Event action disabled */
 	SDADC_EVENT_ACTION_DISABLED         = 0,
-	/** Flush SDADC and start conversion. */
+	/** Flush SDADC and start conversion */
 	SDADC_EVENT_ACTION_FLUSH_START_CONV = SDADC_EVCTRL_FLUSHEI,
-	/** Start conversion. */
+	/** Start conversion */
 	SDADC_EVENT_ACTION_START_CONV       = SDADC_EVCTRL_STARTEI,
 };
 
@@ -321,11 +321,11 @@ enum sdadc_event_action {
  *
  */
 enum sdadc_mux_input {
-	/** Select SDADC AINN0 and AINP0 pins. */
+	/** Select SDADC AINN0 and AINP0 pins */
 	SDADC_MUX_INPUT_AIN0    = SDADC_INPUTCTRL_MUXSEL_AIN0,
-	/** Select SDADC AINN1 and AINP1 pins. */
+	/** Select SDADC AINN1 and AINP1 pins */
 	SDADC_MUX_INPUT_AIN1    = SDADC_INPUTCTRL_MUXSEL_AIN1,
-	/** Select SDADC AINN2 and AINP2 pins. */
+	/** Select SDADC AINN2 and AINP2 pins */
 	SDADC_MUX_INPUT_AIN2    = SDADC_INPUTCTRL_MUXSEL_AIN2,
 };
 
@@ -334,11 +334,11 @@ enum sdadc_mux_input {
  * Enum for the possible SDADC interrupt flags.
  */
 enum sdadc_interrupt_flag {
-	/** SDADC result ready. */
+	/** SDADC result ready */
 	SDADC_INTERRUPT_RESULT_READY = SDADC_INTFLAG_RESRDY,
-	/** SDADC result overwritten before read. */
+	/** SDADC result overwritten before read */
 	SDADC_INTERRUPT_OVERRUN      = SDADC_INTFLAG_OVERRUN,
-	/** Window monitor match. */
+	/** Window monitor match */
 	SDADC_INTERRUPT_WINDOW       = SDADC_INTFLAG_WINMON,
 };
 #endif
@@ -349,11 +349,11 @@ enum sdadc_interrupt_flag {
  * Reference configuration structure.
  */
 struct sdadc_reference {
-	/** Reference voltage selection. */
+	/** Reference voltage selection */
 	enum sdadc_reference_select ref_sel;
-	/** Reference voltage range. */
+	/** Reference voltage range */
 	enum sdadc_reference_select ref_range;
-	/** Reference buffer turning switch. */
+	/** Reference buffer turning switch */
 	bool on_ref_buffer;
 };
 
@@ -363,11 +363,11 @@ struct sdadc_reference {
  * Window monitor configuration structure.
  */
 struct sdadc_window_config {
-	/** Selected window mode. */
+	/** Selected window mode */
 	enum sdadc_window_mode window_mode;
-	/** Lower window value. */
+	/** Lower window value */
 	int32_t window_lower_value;
-	/** Upper window value. */
+	/** Upper window value */
 	int32_t window_upper_value;
 };
 
@@ -378,9 +378,9 @@ struct sdadc_window_config {
  * disable events via \ref sdadc_enable_events() and \ref sdadc_disable_events().
  */
 struct sdadc_events {
-	/** Enable event generation on conversion done. */
+	/** Enable event generation on conversion done */
 	bool generate_event_on_conversion_done;
-	/** Enable event generation on window monitor. */
+	/** Enable event generation on window monitor */
 	bool generate_event_on_window_monitor;
 };
 
@@ -392,11 +392,11 @@ struct sdadc_events {
  * \ref sdadc_get_config_defaults.
  */
 struct sdadc_correction_config {
-	/** Offset correction. */
+	/** Offset correction */
 	int32_t offset_correction;
-	/** Gain correction. */
+	/** Gain correction */
 	uint16_t gain_correction;
-	/** Shift correction. */
+	/** Shift correction */
 	uint8_t shift_correction;
 };
 
@@ -408,31 +408,31 @@ struct sdadc_correction_config {
  * function before being modified by the user application.
  */
 struct sdadc_config {
-	/** GCLK generator used to clock the peripheral. */
+	/** GCLK generator used to clock the peripheral */
 	enum gclk_generator clock_source;
-	/** Voltage reference. */
+	/** Voltage reference */
 	struct sdadc_reference reference;
-	/** Over sampling ratio. */
+	/** Over sampling ratio */
 	enum sdadc_over_sampling_ratio osr;
-	/** Clock prescaler. */
+	/** Clock prescaler */
 	uint8_t clock_prescaler;
-	/** Skip Count. */
+	/** Skip Count */
 	uint8_t skip_count;
-	/** MUX input. */
+	/** MUX input */
 	enum sdadc_mux_input mux_input;
-	/** Enables free running mode if true. */
+	/** Enables free running mode if true */
 	bool freerunning;
-	/** Enables SDADC in standby sleep mode if true. */
+	/** Enables SDADC in standby sleep mode if true */
 	bool run_in_standby;
-	/** Enables SDADC depend on other peripheral if true. */
+	/** Enables SDADC depend on other peripheral if true */
 	bool on_command;
-	/** Enables positive input in the sequence if true. */
+	/** Enables positive input in the sequence if true */
 	bool seq_enable[3];
-	/** Window monitor configuration structure. */
+	/** Window monitor configuration structure */
 	struct sdadc_window_config window;
-	/** Gain and offset correction configuration structure. */
+	/** Gain and offset correction configuration structure */
 	struct sdadc_correction_config correction;
-	/** Event action to take on incoming event. */
+	/** Event action to take on incoming event */
 	enum sdadc_event_action event_action;
 };
 
@@ -447,24 +447,24 @@ struct sdadc_config {
  */
 struct sdadc_module {
 #if !defined(__DOXYGEN__)
-	/** Pointer to SDADC hardware module. */
+	/** Pointer to SDADC hardware module */
 	Sdadc *hw;
-	/** Keep reference configuration so we know when enable is called. */
+	/** Keep reference configuration so we know when enable is called */
 	struct sdadc_reference reference;
 #  if SDADC_CALLBACK_MODE == true
-	/** Array to store callback functions. */
+	/** Array to store callback functions */
 	sdadc_callback_t callback[SDADC_CALLBACK_N];
-	/** Pointer to buffer used for SDADC results. */
+	/** Pointer to buffer used for SDADC results */
 	volatile int32_t *job_buffer;
-	/** Remaining number of conversions in current job. */
+	/** Remaining number of conversions in current job */
 	volatile uint16_t remaining_conversions;
-	/** Bit mask for callbacks registered. */
+	/** Bit mask for callbacks registered */
 	uint8_t registered_callback_mask;
-	/** Bit mask for callbacks enabled. */
+	/** Bit mask for callbacks enabled */
 	uint8_t enabled_callback_mask;
-	/** Holds the status of the ongoing or last conversion job. */
+	/** Holds the status of the ongoing or last conversion job */
 	volatile enum status_code job_status;
-	/** If software triggering is needed. */
+	/** If software triggering is needed */
 	bool software_trigger;
 #  endif
 #endif
@@ -1124,7 +1124,7 @@ static inline void sdadc_disable_interrupt(struct sdadc_module *const module_ins
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_sdadc_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_sdadc_basic_use_case
@@ -1142,8 +1142,8 @@ static inline void sdadc_disable_interrupt(struct sdadc_module *const module_ins
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>03/2015</td>
- *		<td>Initial release</td>
+ *		<td>06/2015</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */

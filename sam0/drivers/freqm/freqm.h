@@ -138,9 +138,9 @@ typedef void (*freqm_callback_t)(void);
 
 /** Enum for possible callback types for the FREQM module. */
 enum freqm_callback {
-	/** Callback for measurement done. */
+	/** Callback for measurement done */
 	FREQM_CALLBACK_DONE = 0,
-	/** Number of available callbacks. */
+	/** Number of available callbacks */
 #if !defined(__DOXYGEN__)
 	FREQM_CALLBACK_N,
 #endif
@@ -158,12 +158,12 @@ enum freqm_callback {
  */
 struct freqm_module {
 #if !defined(__DOXYGEN__)
-	/** Hardware module pointer of the associated FREQM peripheral. */
+	/** Hardware module pointer of the associated FREQM peripheral */
 	Freqm *hw;
-	/** The frequency of reference clock in Hz.*/
+	/** The frequency of reference clock in Hz*/
 	uint32_t ref_clock_freq;
 #  if FREQM_CALLBACK_MODE == true
-	/** Array of callbacks. */
+	/** Array of callbacks */
 	freqm_callback_t callback[FREQM_CALLBACK_N];
 #  endif
 #endif
@@ -171,11 +171,11 @@ struct freqm_module {
 
 /** Enum for the possible status types for the FREQM module. */
 enum freqm_status {
-	/** FREQM measurement is finish. */
+	/** FREQM measurement is finish */
 	FREQM_STATUS_MEASURE_DONE =  0,
-	/** FREQM measurement is ongoing or not. */
+	/** FREQM measurement is ongoing or not */
 	FREQM_STATUS_MEASURE_BUSY =  1,
-	/** FREQM sticky count value overflow. */
+	/** FREQM sticky count value overflow */
 	FREQM_STATUS_CNT_OVERFLOW =  2,
 };
 
@@ -185,11 +185,11 @@ enum freqm_status {
  *  Configuration structure for a Frequency Meter.
  */
 struct freqm_config {
-	/** GCLK source select for measurement. */
+	/** GCLK source select for measurement */
 	enum gclk_generator msr_clock_source;
-	/** GCLK source select for reference. */
+	/** GCLK source select for reference */
 	enum gclk_generator ref_clock_source;
-	/** Measurement duration in number of reference clock cycles. Range 1~255. */
+	/** Measurement duration in number of reference clock cycles. Range 1~255 */
 	uint16_t ref_clock_circles;
 };
 
