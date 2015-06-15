@@ -71,9 +71,11 @@ extern "C" {
  *  - RSTC(Reset Controller)
  *  - SUPC(Supply Controller)
  * \elseif DEVICE_SAMC21_SUPPORT
- *  - PM(Power Manager)
+ *
+ *  - PM (Power Managersdsd)
  *  - RSTC(Reset Controller)
  *  - SUPC(Supply Controller)
+ *
  * \else
  *  - SYSCTRL (System Control)
  *  - PM (Power Manager)
