@@ -131,6 +131,10 @@ void dacc_reset(Dacc *p_dacc)
  */
 uint32_t dacc_set_trigger(Dacc *p_dacc, uint32_t ul_trigger)
 {
+#if  (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	uint32_t mr = p_dacc->DACC_TRIGR & (~(DACC_TRIGR_TRGSEL0_Msk | DACC_TRIGR_TRGSEL1_Msk));
+	p_dacc->DACC_TRIGR = mr | DACC_TRIGR_TRGEN0_EN | DACC_TRIGR_TRGEN1_EN | DACC_TRIGR_TRGSEL0(ul_trigger) | DACC_TRIGR_TRGSEL1(ul_trigger);
+#else
 	uint32_t mr = p_dacc->DACC_MR & (~(DACC_MR_TRGSEL_Msk));
 #if (SAM3N) || (SAM4L) || (SAM4N)
 	p_dacc->DACC_MR = mr
@@ -138,6 +142,7 @@ uint32_t dacc_set_trigger(Dacc *p_dacc, uint32_t ul_trigger)
 		| ((ul_trigger << DACC_MR_TRGSEL_Pos) & DACC_MR_TRGSEL_Msk);
 #else
 	p_dacc->DACC_MR = mr | DACC_MR_TRGEN_EN | DACC_MR_TRGSEL(ul_trigger);
+#endif
 #endif
 	return DACC_RC_OK;
 }
@@ -149,7 +154,11 @@ uint32_t dacc_set_trigger(Dacc *p_dacc, uint32_t ul_trigger)
  */
 void dacc_disable_trigger(Dacc *p_dacc)
 {
+#if  (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	p_dacc->DACC_TRIGR &= ~(DACC_TRIGR_TRGEN0_EN | DACC_TRIGR_TRGEN1_EN);
+#else
 	p_dacc->DACC_MR &= ~DACC_MR_TRGEN;
+#endif
 }
 
 /**
@@ -168,6 +177,8 @@ uint32_t dacc_set_transfer_mode(Dacc *p_dacc, uint32_t ul_mode)
 #elif (SAM4S) || (SAM4E)
 		p_dacc->DACC_MR |= DACC_MR_ONE;
 		p_dacc->DACC_MR |= DACC_MR_WORD_WORD;
+#elif (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	p_dacc->DACC_MR |= DACC_MR_WORD_ENABLED;
 #else
 		p_dacc->DACC_MR |= DACC_MR_WORD_WORD;
 #endif
@@ -177,6 +188,8 @@ uint32_t dacc_set_transfer_mode(Dacc *p_dacc, uint32_t ul_mode)
 #elif (SAM4S) || (SAM4E)
 		p_dacc->DACC_MR |= DACC_MR_ONE;
 		p_dacc->DACC_MR &= (~DACC_MR_WORD_WORD);
+#elif (SAMV70 || SAMV71 || SAME70 || SAMS70)
+		p_dacc->DACC_MR |= DACC_MR_WORD_DISABLED;
 #else
 		p_dacc->DACC_MR &= (~DACC_MR_WORD_WORD);
 #endif
@@ -246,10 +259,15 @@ uint32_t dacc_get_interrupt_status(Dacc *p_dacc)
  *
  * \param p_dacc Pointer to a DACC instance. 
  * \param ul_data The data to be transferred to analog value. 
+ * \param channel The channel to convert the data ul_data
  */
-void dacc_write_conversion_data(Dacc *p_dacc, uint32_t ul_data)
+void dacc_write_conversion_data(Dacc *p_dacc, uint32_t ul_data, uint32_t channel)
 {
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	p_dacc->DACC_CDR[channel] = ul_data;
+#else
 	p_dacc->DACC_CDR = ul_data;
+#endif
 }
 
 /**
@@ -280,7 +298,7 @@ uint32_t dacc_get_writeprotect_status(Dacc *p_dacc)
 	return p_dacc->DACC_WPSR;
 }
 
-#if !SAM4L
+#if !(SAM4L || SAMV70 || SAMV71 || SAME70 || SAMS70)
 /**
  * \brief Get PDC registers base address.
  *
@@ -296,7 +314,7 @@ Pdc *dacc_get_pdc_base(Dacc *p_dacc)
 }
 #endif
 
-#if (SAM3N) || (SAM4L) || (SAM4N) || defined(__DOXYGEN__)
+#if (SAM3N) || (SAM4L) || (SAM4N)|| defined(__DOXYGEN__)
 /**
  * \brief Enable DACC.
  *
@@ -339,7 +357,7 @@ uint32_t dacc_set_timing(Dacc *p_dacc, uint32_t ul_startup,
 }
 #endif /* #if (SAM3N) || (SAM4L) || (SAM4N) */
 
-#if (SAM3S) || (SAM3XA) || (SAM4S) || (SAM4E) || defined(__DOXYGEN__)
+#if (SAM3S) || (SAM3XA) || (SAM4S) || (SAM4E) || (SAMV70) || (SAMV71) || (SAME70) || (SAMS70) || defined(__DOXYGEN__)
 /**
  * \brief Disable flexible (TAG) mode and select a channel for DAC outputs.
  *
@@ -350,6 +368,15 @@ uint32_t dacc_set_timing(Dacc *p_dacc, uint32_t ul_startup,
  */
 uint32_t dacc_set_channel_selection(Dacc *p_dacc, uint32_t ul_channel)
 {
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	uint32_t mr = p_dacc->DACC_CHER & (~(DACC_CHER_CH0 | DACC_CHER_CH1));
+	if (ul_channel > MAX_CH_NB) {
+		return DACC_RC_INVALID_PARAM;
+	}
+	//mr &= ~(DACC_MR_TAG);
+	//mr |= ul_channel << DACC_MR_USER_SEL_Pos;
+	p_dacc->DACC_CHER = mr;
+#else
 	uint32_t mr = p_dacc->DACC_MR & (~DACC_MR_USER_SEL_Msk);
 	if (ul_channel > MAX_CH_NB) {
 		return DACC_RC_INVALID_PARAM;
@@ -357,6 +384,7 @@ uint32_t dacc_set_channel_selection(Dacc *p_dacc, uint32_t ul_channel)
 	mr &= ~(DACC_MR_TAG);
 	mr |= ul_channel << DACC_MR_USER_SEL_Pos;
 	p_dacc->DACC_MR = mr;
+#endif
 	return DACC_RC_OK;
 }
 
@@ -373,7 +401,10 @@ uint32_t dacc_set_channel_selection(Dacc *p_dacc, uint32_t ul_channel)
  */
 void dacc_enable_flexible_selection(Dacc *p_dacc)
 {
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+#else
 	p_dacc->DACC_MR |= DACC_MR_TAG;
+#endif
 }
 
 #if (SAM3S) || (SAM3XA) || defined(__DOXYGEN__)
@@ -416,15 +447,27 @@ uint32_t dacc_set_power_save(Dacc *p_dacc,
 uint32_t dacc_set_timing(Dacc *p_dacc,
 		uint32_t ul_refresh, uint32_t ul_maxs, uint32_t ul_startup)
 {
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
 	uint32_t mr = p_dacc->DACC_MR
-		& (~(DACC_MR_REFRESH_Msk | DACC_MR_STARTUP_Msk));
+		& (~(DACC_MR_REFRESH_Msk));
+	mr |= DACC_MR_REFRESH(ul_refresh);
+	if (ul_maxs) {
+		mr |= (DACC_MR_MAXS0 | DACC_MR_MAXS1);
+	} else {
+		mr &= ~(DACC_MR_MAXS0 | DACC_MR_MAXS1);
+	}
+	//mr |= (DACC_MR_STARTUP_Msk & ((ul_startup) << DACC_MR_STARTUP_Pos));
+#else
+	uint32_t mr = p_dacc->DACC_MR
+	& (~(DACC_MR_REFRESH_Msk | DACC_MR_STARTUP_Msk));
 	mr |= DACC_MR_REFRESH(ul_refresh);
 	if (ul_maxs) {
 		mr |= DACC_MR_MAXS;
-	} else {
+		} else {
 		mr &= ~DACC_MR_MAXS;
 	}
 	mr |= (DACC_MR_STARTUP_Msk & ((ul_startup) << DACC_MR_STARTUP_Pos));
+#endif
 	p_dacc->DACC_MR = mr;
 	return DACC_RC_OK;
 }
@@ -500,7 +543,7 @@ uint32_t dacc_get_analog_control(Dacc *p_dacc)
 {
 	return p_dacc->DACC_ACR;
 }
-#endif /* (SAM3S) || (SAM3XA) || (SAM4S) || (SAM4E) */
+#endif /* (SAM3S) || (SAM3XA) || (SAM4S) || (SAM4E) || (SAMV70) || (SAMV71) || (SAME70) || (SAMS70) */
 
 //@}
 

@@ -82,21 +82,21 @@ void dacc_enable_interrupt(Dacc *p_dacc, uint32_t ul_interrupt_mask);
 void dacc_disable_interrupt(Dacc *p_dacc, uint32_t ul_interrupt_mask);
 uint32_t dacc_get_interrupt_mask(Dacc *p_dacc);
 uint32_t dacc_get_interrupt_status(Dacc *p_dacc);
-void dacc_write_conversion_data(Dacc *p_dacc, uint32_t ul_data);
+void dacc_write_conversion_data(Dacc *p_dacc, uint32_t ul_data, uint32_t channel);
 void dacc_set_writeprotect(Dacc *p_dacc, uint32_t ul_enable);
 uint32_t dacc_get_writeprotect_status(Dacc *p_dacc);
-#if (!SAM4L)
+#if !(SAM4L || SAMV70 || SAMV71 || SAME70 || SAMS70)
 Pdc *dacc_get_pdc_base(Dacc *p_dacc);
 #endif
 
-#if (SAM3N) || (SAM4L) || (SAM4N) || defined(__DOXYGEN__)
+#if (SAM3N) || (SAM4L) || (SAM4N) || (SAM4L) || defined(__DOXYGEN__)
 void dacc_enable(Dacc *p_dacc);
 void dacc_disable(Dacc *p_dacc);
 uint32_t dacc_set_timing(Dacc *p_dacc, uint32_t ul_startup,
 		uint32_t ul_clock_divider);
 #endif
 
-#if (SAM3S) || (SAM3XA) || (SAM4S) || (SAM4E) || defined(__DOXYGEN__)
+#if (SAM3S) || (SAM3XA) || (SAM4S) || (SAM4E) || (SAMV70) || (SAMV71) || (SAME70) || (SAMS70) || defined(__DOXYGEN__)
 uint32_t dacc_set_channel_selection(Dacc *p_dacc, uint32_t ul_channel);
 void dacc_enable_flexible_selection(Dacc *p_dacc);
 
@@ -104,6 +104,7 @@ void dacc_enable_flexible_selection(Dacc *p_dacc);
 uint32_t dacc_set_power_save(Dacc *p_dacc, uint32_t ul_sleep_mode,
 		uint32_t ul_fast_wakeup_mode);
 #endif
+
 uint32_t dacc_set_timing(Dacc *p_dacc, uint32_t ul_refresh, uint32_t ul_maxs,
 		uint32_t ul_startup);
 uint32_t dacc_enable_channel(Dacc *p_dacc, uint32_t ul_channel);
