@@ -917,7 +917,7 @@ void system_clock_init(void)
 
 	/* Configure all GCLK generators except for the main generator, which
 	 * is configured later after all other clock systems are set up */
-	MREPEAT(9, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
+	MREPEAT(GCLK_GEN_NUM, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
 #  if CONF_CLOCK_DFLL_ENABLE == true
 	/* Enable DFLL reference clock if in closed loop mode */
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {

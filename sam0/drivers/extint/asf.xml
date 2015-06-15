@@ -54,12 +54,14 @@
 			<device-support value="samd11"/>
 			<device-support value="samda1"/>
 		</module>
-		<module type="meta" id="sam0.drivers.extint.polled#sam_l" caption="EXTINT - External Interrupt">
+		<module type="meta" id="sam0.drivers.extint.polled#sam_l_c" caption="EXTINT - External Interrupt">
 			<build type="include-path" value="." />
-			<build type="include-path" value="extint_sam_l"/>
-			<build type="c-source" value="extint_sam_l/extint.c"/>
+			<build type="include-path" value="extint_sam_l_c"/>
+			<build type="c-source" value="extint_sam_l_c/extint.c"/>
 
 			<device-support value="saml21"/>
+			<device-support value="samc20"/>
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 	<module type="meta" id="sam0.drivers.extint.appnote" caption="EXTINT - External Interrupt (Callback APIs)">
