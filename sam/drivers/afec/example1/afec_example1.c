@@ -178,7 +178,7 @@ int main(void)
 #endif 
 	afec_ch_set_config(AFEC0, AFEC_TEMPERATURE_SENSOR, &afec_ch_cfg);
 
-#if SAMV71
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
 	/*
 	 * Because the internal ADC offset is 0x200, it should cancel it and shift
 	 * down to 0.
@@ -198,14 +198,14 @@ int main(void)
 	afec_temp_sensor_cfg.rctc = true;
 	afec_temp_sensor_set_config(AFEC0, &afec_temp_sensor_cfg);
 
-	#if SAMV71
-		afec_set_callback(AFEC0, AFEC_INTERRUPT_EOC_11,
-				afec_temp_sensor_end_conversion, 1);
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
+	afec_set_callback(AFEC0, AFEC_INTERRUPT_EOC_11,
+			afec_temp_sensor_end_conversion, 1);
 
-	#else
-		afec_set_callback(AFEC0, AFEC_INTERRUPT_EOC_15,
-				afec_temp_sensor_end_conversion, 1);
-    #endif
+#else
+	afec_set_callback(AFEC0, AFEC_INTERRUPT_EOC_15,
+			afec_temp_sensor_end_conversion, 1);
+#endif
 
 	while (1) {
 
@@ -213,19 +213,19 @@ int main(void)
 
 			ul_vol = g_ul_value * VOLT_REF / MAX_DIGITAL;
 			
-		#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
 			/*
 			 * According to datasheet, The output voltage VT = 0.72V at 27C
 			 * and the temperature slope dVT/dT = 2.33 mV/C
 			 */
 			ul_temp = (ul_vol - 720)  * 100 / 233 + 27;
-		#else
+#else
 			/*
 			 * According to datasheet, The output voltage VT = 1.44V at 27C
 			 * and the temperature slope dVT/dT = 4.7 mV/C
 			 */
 			ul_temp = (ul_vol - 1440)  * 100 / 470 + 27;		
-		#endif
+#endif
 
 			printf("Temperature is: %4d\r", (int)ul_temp);
 			is_conversion_done = false;

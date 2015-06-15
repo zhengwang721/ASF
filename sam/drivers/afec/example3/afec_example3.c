@@ -136,11 +136,8 @@ static void afec_print_comp_result(void)
 	/* Disable Compare Interrupt. */
 	afec_disable_interrupt(AFEC0, AFEC_INTERRUPT_COMP_ERROR);
 	
-#if SAMV71
-	us_adc = afec_channel_get_value(AFEC0, AFEC_CHANNEL_0);
-#else
 	us_adc = afec_channel_get_value(AFEC0, AFEC_CHANNEL_POTENTIOMETER);
-#endif
+
 	printf("-ISR-:Potentiometer voltage %d mv is in the comparison "
 			"window:%d -%d mv!\n\r",
 			(int)(us_adc * VOLT_REF / MAX_DIGITAL),
@@ -182,7 +179,7 @@ int main(void)
 	 * Because the internal AFEC offset is 0x200, it should cancel it and shift
 	 * down to 0.
 	 */
-	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_0, 0x200);
+	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_POTENTIOMETER, 0x200);
 
 	afec_ch_cfg.gain = AFEC_GAINVALUE_0;
 
