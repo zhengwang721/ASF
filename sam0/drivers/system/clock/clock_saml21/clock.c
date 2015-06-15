@@ -295,7 +295,7 @@ void system_clock_source_osc32k_set_config(
  * Configures the Ultra Low Power 32KHz internal RC oscillator with the given
  * configuration settings.
  *
- * \note The OSCULP32K is enabled by default after a power-on reset (POR) and
+ * \note The OSCULP32K is enabled by default after a Power On Reset (POR) and
  *       will always run except during POR.
  *
  * \param[in] config  OSCULP32K configuration structure containing the new config
@@ -763,7 +763,7 @@ bool system_clock_source_is_ready(
  *
  * \note OSC16M is always enabled and if user selects other clocks for GCLK generators,
  * the OSC16M default enable can be disabled after system_clock_init. Make sure the
- * clock switch successfully before disabling OSC16M.
+ * clock switches successfully before disabling OSC8M.
  */
 void system_clock_init(void)
 {
