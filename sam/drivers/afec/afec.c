@@ -645,10 +645,12 @@ void afec_configure_sequence(Afec *const afec,
  * \brief Configure Automatic Error Correction.
  *
  * \param afec  Base address of the AFEC
- * \param uc_num Number of channels in the list.
+ * \param channel  Number of channels in the list.
+ * \param offsetcorr  the Offset Correction value,signed value
+ * \param gaincorr the Gain Correction value.
  */
 void afec_configure_auto_error_correction(Afec *const afec,
-		const enum afec_channel_num channel,int16_t offcorr, uint16_t gaincorr)
+		const enum afec_channel_num channel, int16_t offsetcorr, uint16_t gaincorr)
 {
 
 	if (channel != AFEC_CHANNEL_ALL) {
@@ -657,12 +659,12 @@ void afec_configure_auto_error_correction(Afec *const afec,
 
 	uint32_t reg = 0;
 	reg = afec->AFEC_CECR;
-	reg = (channel == AFEC_CHANNEL_ALL)? 0 :~(0x1u << channel);
-	reg |= (channel == AFEC_CHANNEL_ALL)? AFEC_CHANNEL_ALL:(0x1u << channel);
+	reg = (channel == AFEC_CHANNEL_ALL)? 0 : ~(0x1u << channel);
+	reg |= (channel == AFEC_CHANNEL_ALL)? AFEC_CHANNEL_ALL : (0x1u << channel);
 	afec->AFEC_CECR = reg;
 
 	afec->AFEC_COSR = AFEC_COSR_CSEL;
-    afec->AFEC_CVR = AFEC_CVR_OFFSETCORR(offcorr) | AFEC_CVR_GAINCORR(gaincorr);		 
+    afec->AFEC_CVR = AFEC_CVR_OFFSETCORR(offsetcorr) | AFEC_CVR_GAINCORR(gaincorr);		 
 	
 }
 
@@ -686,7 +688,7 @@ void afec_configure_auto_error_correction(Afec *const afec,
 	converted_data = afec->AFEC_CDR;
 
 	corrected_data = (converted_data + (afec->AFEC_CVR & AFEC_CVR_OFFSETCORR_Msk)) * 
-						(afec->AFEC_CVR >> AFEC_CVR_GAINCORR_Pos)/1024u;
+						(afec->AFEC_CVR >> AFEC_CVR_GAINCORR_Pos) / 1024u;
 	return 	corrected_data;
 	
 }
@@ -695,13 +697,13 @@ void afec_configure_auto_error_correction(Afec *const afec,
  * \brief Configure sample&hold mode.
  *
  * \param afec  Base address of the AFEC.
- * \param channel   Channel number.
+ * \param channel   AFEC Channel number.
  * \param mode sample&hold mode.
  */
 void afec_set_sample_hold_mode(Afec *const afec,
-		const enum afec_channel_num channel,const enum afec_sample_hold_mode mode)
+		const enum afec_channel_num channel, const enum afec_sample_hold_mode mode)
 {
-		if (channel != AFEC_CHANNEL_ALL) {
+	if (channel != AFEC_CHANNEL_ALL) {
 		afec_ch_sanity_check(afec, channel);
 	}
 		
@@ -709,11 +711,11 @@ void afec_set_sample_hold_mode(Afec *const afec,
 	reg = afec->AFEC_SHMR;
 	if (mode == AFEC_SAMPLE_HOLD_MODE_1) {
 		
-		reg |= (channel == AFEC_CHANNEL_ALL)? AFEC_CHANNEL_ALL:0x1u << channel;
+		reg |= (channel == AFEC_CHANNEL_ALL)? AFEC_CHANNEL_ALL : 0x1u << channel;
 	}
 	else {
 		
-		reg = (channel == AFEC_CHANNEL_ALL)? 0 :~(0x1u << channel);
+		reg = (channel == AFEC_CHANNEL_ALL)? 0 : ~(0x1u << channel);
 	}
 	afec->AFEC_SHMR = reg;
 		

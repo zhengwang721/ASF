@@ -366,15 +366,17 @@ void afec_enable(Afec *const afec);
 void afec_disable(Afec *const afec);
 void afec_set_callback(Afec *const afec, enum afec_interrupt_source source,
 		afec_callback_t callback, uint8_t irq_level);
+
+#if SAMV71
 void afec_configure_auto_error_correction(Afec *const afec,
-		const enum afec_channel_num channel,int16_t offcorr, uint16_t gaincorr);
+		const enum afec_channel_num channel,int16_t offsetcorr, uint16_t gaincorr);
 
 uint32_t afec_get_correction_value(Afec *const afec,
 	   const enum afec_channel_num afec_ch);
 void afec_set_sample_hold_mode(Afec *const afec,
 		const enum afec_channel_num channel,const enum afec_sample_hold_mode mode);
 
-
+#endif
 /**
  * \internal
  * \brief AFEC channel sanity check
