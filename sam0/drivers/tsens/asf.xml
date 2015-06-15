@@ -11,8 +11,6 @@
 				<keyword value="Sensors"/>
 			</info>
 
-			<build name="TSENS_CALLBACK_MODE" type="define" value="false" />
-			
 			<build type="c-source" value="tsens.c"/>
 			<build type="header-file" subtype="api" value="tsens.h"/>
 			<build type="include-path" value="."/>
@@ -65,9 +63,6 @@
 		<build type="header-file" subtype="api" value="tsens_callback.h"/>
 		<build type="c-source" value="tsens.c"/>
 		<build type="c-source" value="tsens_callback.c"/>
-
-		<build type="define" name="TSENS_CALLBACK_MODE" value="true"/>
-		<build type="doxygen-enable-section" value="TSENS_CALLBACK_MODE"/>
 
 		<build type="header-file" value="quick_start/qs_tsens_basic.h"/>
 		<build type="header-file" value="quick_start_callback/qs_tsens_callback.h"/>

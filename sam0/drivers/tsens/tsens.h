@@ -208,19 +208,19 @@ extern "C" {
  *
  */
 enum tsens_window_mode {
-	/** No window mode. */
+	/** No window mode */
 	TSENS_WINDOW_MODE_DISABLE          = TSENS_CTRLC_WINMODE_DISABLE,
-	/** RESULT > WINLT. */
+	/** RESULT > WINLT */
 	TSENS_WINDOW_MODE_ABOVE            = TSENS_CTRLC_WINMODE_ABOVE,
-	/** RESULT < WINUT. */
+	/** RESULT < WINUT */
 	TSENS_WINDOW_MODE_BELOW            = TSENS_CTRLC_WINMODE_BELOW,
-	/** WINLT < RESULT < WINUT. */
+	/** WINLT < RESULT < WINUT */
 	TSENS_WINDOW_MODE_INSIDE           = TSENS_CTRLC_WINMODE_INSIDE,
-	/** !(WINLT < RESULT < WINUT). */
+	/** !(WINLT < RESULT < WINUT) */
 	TSENS_WINDOW_MODE_OUTSIDE          = TSENS_CTRLC_WINMODE_OUTSIDE,
-	/** VALUE > WINUT with hysteresis to WINLT. */
+	/** VALUE > WINUT with hysteresis to WINLT */
 	TSENS_WINDOW_MODE_HYST_ABOVE       = TSENS_CTRLC_WINMODE_HYST_ABOVE,
-	/** VALUE < WINLT with hysteresis to WINUT. */
+	/** VALUE < WINLT with hysteresis to WINUT */
 	TSENS_WINDOW_MODE_HYST_BELOW       = TSENS_CTRLC_WINMODE_HYST_BELOW,
 };
 
@@ -231,9 +231,9 @@ enum tsens_window_mode {
  *
  */
 enum tsens_event_action {
-	/** Event action disabled. */
+	/** Event action disabled */
 	TSENS_EVENT_ACTION_DISABLED         = 0,
-	/** Start conversion. */
+	/** Start conversion */
 	TSENS_EVENT_ACTION_START_CONV       = TSENS_EVCTRL_STARTEI,
 };
 
@@ -243,11 +243,11 @@ enum tsens_event_action {
  * Window monitor configuration structure.
  */
 struct tsens_window_config {
-	/** Selected window mode. */
+	/** Selected window mode */
 	enum tsens_window_mode window_mode;
-	/** Lower window value. */
+	/** Lower window value */
 	int32_t window_lower_value;
-	/** Upper window value. */
+	/** Upper window value */
 	int32_t window_upper_value;
 };
 
@@ -258,7 +258,7 @@ struct tsens_window_config {
  * disable events via \ref tsens_enable_events() and \ref tsens_disable_events().
  */
 struct tsens_events {
-	/** Enable event generation on window monitor. */
+	/** Enable event generation on window monitor */
 	bool generate_event_on_window_monitor;
 };
 
@@ -268,9 +268,9 @@ struct tsens_events {
  * Calibration configuration structure.
  */
 struct tsens_calibration {
-	/** Time amplifier gain. */
+	/** Time amplifier gain */
 	uint32_t gain;
-	/** Offset correction. */
+	/** Offset correction */
 	int32_t offset;
 };
 
@@ -282,17 +282,17 @@ struct tsens_calibration {
  * modified by the user application.
  */
 struct tsens_config {
-	/** GCLK generator used to clock the peripheral. */
+	/** GCLK generator used to clock the peripheral */
 	enum gclk_generator clock_source;
-	/** Enables free running mode if true. */
+	/** Enables free running mode if true */
 	bool free_running;
-	/** Enables TSENS in standby sleep mode if true. */
+	/** Enables TSENS in standby sleep mode if true */
 	bool run_in_standby;
-	/** Window monitor configuration structure. */
+	/** Window monitor configuration structure */
 	struct tsens_window_config window;
-	/** Event action to take on incoming event. */
+	/** Event action to take on incoming event */
 	enum tsens_event_action event_action;
-	/** Calibration value. */
+	/** Calibration value */
 	struct tsens_calibration calibration;
 };
 
