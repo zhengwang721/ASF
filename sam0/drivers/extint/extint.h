@@ -67,6 +67,8 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_extint_prerequisites
@@ -285,7 +287,7 @@ struct extint_chan_conf {
 	uint32_t gpio_pin_mux;
 	/** Internal pull to enable on the input pin. */
 	enum extint_pull gpio_pin_pull;
-#if (SAML21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 	/** Enable asynchronous edge detection. */
 	bool enable_async_edge_detection;
 #else
@@ -331,7 +333,7 @@ struct extint_nmi_conf {
 	 *  detection modes for NMIs.
 	 */
 	enum extint_detect detection_criteria;
-#if (SAML21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 	/** Enable asynchronous edge detection. */
 	bool enable_async_edge_detection;
 #endif
@@ -356,7 +358,7 @@ struct _extint_module
 	/** Asynchronous channel callback table, for user-registered handlers. */
 	extint_callback_t callbacks[EIC_NUMBER_OF_INTERRUPTS];
 #  else
-	/** Dummy value to ensure the struct has at least one member */
+	/** Dummy value to ensure the struct has at least one member. */
 	uint8_t _dummy;
 #  endif
 };
@@ -470,7 +472,7 @@ static inline void extint_nmi_get_config_defaults(
 	config->gpio_pin_pull       = EXTINT_PULL_UP;
 	config->filter_input_signal = false;
 	config->detection_criteria  = EXTINT_DETECT_FALLING;
-#if (SAML21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 	 config->enable_async_edge_detection = false;
 #endif
 
@@ -625,12 +627,6 @@ static inline void extint_nmi_clear_detected(
  *      <th>Changelog</th>
  *  </tr>
  *  <tr>
- *      <td>Add SAML21 support</td>
- *  </tr>
- *  <tr>
- *      <td>Add SAMR21 support</td>
- *  </tr>
- *  <tr>
  *      <td>
  *      \li Driver updated to follow driver type convention.
  *      \li Removed \c %extint_reset(), \c %extint_disable() and
@@ -680,8 +676,8 @@ static inline void extint_nmi_clear_detected(
  *  </tr>
  *  <tr>
  *      <td>E</td>
- *      <td>12/2014</td>
- *      <td>Added support for SAML21.</td>
+ *      <td>06/2015</td>
+ *      <td>Added support for SAML21, SAMC21, and SAMDAx.</td>
  *  </tr>
  *  <tr>
  *      <td>D</td>

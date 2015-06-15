@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21/R21/L21 Quick Start Guide for Using SPI driver with DMA
+ * \brief SAM D21/R21/L21/DA1/C21 Quick Start Guide for Using SPI driver with DMA
  *
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -48,6 +48,8 @@
  *    - SAMD21 Xplained Pro
  *    - SAMR21 Xplained Pro
  *    - SAML21 Xplained Pro
+ *    - SAMDA1 Xplained Pro
+ *    - SAMC21 Xplained Pro
  *
  * This quick start will transmit a buffer data from master to slave through DMA.
  * In this use case the SPI master will be configured with the following
@@ -55,6 +57,7 @@
  * - Master Mode enabled
  * - MSB of the data is transmitted first
  * - Transfer mode 0
+ * - SPI MUX Setting E
  * - 8-bit character size
  * - Not enabled in sleep mode
  * - Baudrate 100000
@@ -65,6 +68,7 @@
  * - Preloading of shift register enabled
  * - MSB of the data is transmitted first
  * - Transfer mode 0
+ * - SPI MUX Setting E
  * - 8-bit character size
  * - Not enabled in sleep mode
  * - GLCK generator 0
@@ -76,7 +80,7 @@
  *
  * \subsection asfdoc_sam0_sercom_spi_dma_use_case_prereq Prerequisites
  * The following connections has to be made using wires:
- * - SAM D21 Xplained Pro.
+ * - SAM D21/DA1 Xplained Pro.
  *  - \b SS_0:  EXT1 PIN15 (PA05) <--> EXT2 PIN15 (PA17)
  *  - \b DO/DI: EXT1 PIN16 (PA06) <--> EXT2 PIN17 (PA16)
  *  - \b DI/DO: EXT1 PIN17 (PA04) <--> EXT2 PIN16 (PA18)
@@ -91,6 +95,11 @@
  *  - \b DO/DI: EXT1 PIN16 (PA06) <--> EXT1 PIN11 (PA08)
  *  - \b DI/DO: EXT1 PIN17 (PA04) <--> EXT2 PIN03 (PA10)
  *  - \b SCK:   EXT1 PIN18 (PA07) <--> EXT2 PIN04 (PA11)
+ * - SAM C21 Xplained Pro.
+ *  - \b SS_0:  EXT1 PIN15 (PA17) <--> EXT2 PIN15 (PB03)
+ *  - \b DO/DI: EXT1 PIN16 (PA18) <--> EXT2 PIN17 (PB02)
+ *  - \b DI/DO: EXT1 PIN17 (PA16) <--> EXT2 PIN16 (PB00)
+ *  - \b SCK:   EXT1 PIN18 (PA19) <--> EXT2 PIN18 (PB01)
  *
  * \subsection asfdoc_sam0_spi_dma_use_case_setup_code Code
  *
@@ -109,7 +118,15 @@
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_master
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_slave
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
-
+ * For SAMDA1 Xplained Pro:
+ * \snippet samda1_xplained_pro/conf_quick_start.h definition_master
+ * \snippet samda1_xplained_pro/conf_quick_start.h definition_slave
+ * \snippet samda1_xplained_pro/conf_quick_start.h definition_peripheral_trigger
+ * For SAMC21 Xplained Pro:
+ * \snippet samc21_xplained_pro/conf_quick_start.h definition_master
+ * \snippet samc21_xplained_pro/conf_quick_start.h definition_slave
+ * \snippet samc21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
+ *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_spi_dma_use.c buf_length
  * \snippet qs_spi_dma_use.c spi_baudrate

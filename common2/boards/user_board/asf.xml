@@ -110,4 +110,59 @@
 		<require idref="sam0.utils.linker_scripts"/>
 		<device-support value="saml21j"/>
 	</board>
+
+	<board id="board.user_board.samda1j" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samda1j"/>
+	</board>
+
+	<board id="board.user_board.samda1g" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samda1g"/>
+	</board>
+
+	<board id="board.user_board.samda1e" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samda1e"/>
+	</board>
+
+	<board id="board.user_board.samc21e" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samc21e"/>
+	</board>
+
+	<board id="board.user_board.samc21g" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samc21g"/>
+	</board>
+
+	<board id="board.user_board.samc21j" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samc21j"/>
+	</board>
+
+	<board id="board.user_board.samc20e" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samc20e"/>
+	</board>
+
+	<board id="board.user_board.samc20g" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samc20g"/>
+	</board>
+
+	<board id="board.user_board.samc20j" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samc20j"/>
+	</board>
+
 </asf>

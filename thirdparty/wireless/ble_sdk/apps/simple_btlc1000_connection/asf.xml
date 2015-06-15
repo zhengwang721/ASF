@@ -6,7 +6,7 @@
 		<build type="c-source" value="main.c"/>
 		<require idref="thirdparty.wireless.ble_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_sdk.inc"/>
-  <require idref="thirdparty.wireless.ble_sdk.src"/>
+		<require idref="thirdparty.wireless.ble_sdk.src"/>
 		<device-support-alias value="ble_stack_lib_support"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>

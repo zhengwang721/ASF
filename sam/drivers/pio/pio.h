@@ -212,11 +212,10 @@ void pio_toggle_pin_group(Pio *p_pio, uint32_t ul_mask);
 uint32_t pio_configure_pin_group(Pio *p_pio, uint32_t ul_mask,
 		const uint32_t ul_flags);
 
-#if (SAM4C || SAM4CP || SAM4CM)
+#if (SAM4C || SAM4CP || SAM4CM || SAMG55)
 enum pio_io_drive_mode {
-	PIO_IO_DRIVE_HIGH = 0,
-	PIO_IO_DRIVE_MEDIUM,
-	PIO_IO_DRIVE_LOW,
+	PIO_IO_DRIVE_LOW = 0,
+	PIO_IO_DRIVE_HIGH,
 };
 void pio_set_io_drive(Pio *p_pio, uint32_t ul_line,
 		enum pio_io_drive_mode mode);

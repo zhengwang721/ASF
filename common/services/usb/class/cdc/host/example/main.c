@@ -51,7 +51,7 @@
  */
 int main(void)
 {
-#if SAMD21 || SAML21
+#if SAMD21 || SAML21 || SAMDA1
 	system_init();
 #else
 	/* Initialize the synchronous clock system to the default configuration
