@@ -81,11 +81,13 @@ static void _i2c_master_read(
 	if (sclsm_flag) {
 		if (module->send_nack && module->buffer_remaining == 1) {
 			/* Set action to NACK. */
+			_i2c_master_wait_for_sync(module);
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
 		}
 	} else {
 		if (module->send_nack && module->buffer_remaining == 0) {
 			/* Set action to NACK. */
+			_i2c_master_wait_for_sync(module);
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
 		}
 	}
@@ -95,9 +97,6 @@ static void _i2c_master_read(
 			/* Send stop condition */
 			_i2c_master_wait_for_sync(module);
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
-		} else {
-		  	_i2c_master_wait_for_sync(module);
-			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(1);
 		}
 	}
 	
@@ -705,6 +704,9 @@ void _i2c_master_interrupt_handler(
 			_i2c_master_write(module);
 		} else {
 			_i2c_master_read(module);
+			if (!module->send_stop) {
+				return;
+			}
 		}
 	}
 
@@ -712,7 +714,11 @@ void _i2c_master_interrupt_handler(
 	if ((module->buffer_length > 0) && (module->buffer_remaining <= 0) &&
 			(module->status == STATUS_BUSY) &&
 			(module->transfer_direction == I2C_TRANSFER_READ)) {
-
+		
+		/* Clear write interrupt flag */
+		if (i2c_module->INTFLAG.reg & SERCOM_I2CM_INTFLAG_SB) {
+			i2c_module->INTFLAG.reg = SERCOM_I2CM_INTFLAG_SB;
+		}
 		/* Stop packet operation */
 		i2c_module->INTENCLR.reg =
 				SERCOM_I2CM_INTENCLR_MB | SERCOM_I2CM_INTENCLR_SB;

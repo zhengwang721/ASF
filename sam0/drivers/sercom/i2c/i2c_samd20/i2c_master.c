@@ -439,14 +439,15 @@ static enum status_code _i2c_master_read_packet(
 			/* Send stop command unless arbitration is lost. */
 			_i2c_master_wait_for_sync(module);
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
-		} else {
-		  	_i2c_master_wait_for_sync(module);
-			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(1);
 		}
 
 		/* Save last data to buffer. */
 		_i2c_master_wait_for_sync(module);
 		packet->data[counter] = i2c_module->DATA.reg;
+		if (!module->send_stop) {
+			_i2c_master_wait_for_bus(module);
+			i2c_module->INTFLAG.reg = SERCOM_I2CM_INTFLAG_SB;
+		}
 	}
 
 	return tmp_status;
