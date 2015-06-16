@@ -240,7 +240,7 @@ void at86rfx_isr(void);
 #endif
 #endif
 
-#if (SAMD || SAMR21)
+#if (SAMD || SAMR21 || SAML21)
 #if SAMR21
 #warning \
 	"For SAMR21 Antenna Diversity Related Pin configurations refer to system_board_init function of SAMR21 Xplained Pro board_init.c file "
@@ -294,5 +294,5 @@ void at86rfx_isr(void);
 	}
 
 #endif
-#endif /* SAMD || SAMR21 */
+#endif /* SAMD || SAMR21 || SAML21 */
 #endif /* CONF_TRX_ACCESS_H_INCLUDED */
