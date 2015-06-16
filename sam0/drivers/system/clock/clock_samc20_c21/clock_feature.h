@@ -1090,11 +1090,11 @@ static inline enum status_code system_apb_clock_clear_mask(
  * \brief Reference clock source of the DPLL module.
  */
 enum system_clock_source_dpll_reference_clock {
-	/** Select XOSC32K as clock reference. */
+	/** Select XOSC32K as clock reference */
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC32K,
-	/** Select XOSC as clock reference. */
+	/** Select XOSC as clock reference */
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC,
-	/** Select GCLK as clock reference. */
+	/** Select GCLK as clock reference */
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK,
 };
 
@@ -1102,15 +1102,15 @@ enum system_clock_source_dpll_reference_clock {
  * \brief Lock time-out value of the DPLL module.
  */
 enum system_clock_source_dpll_lock_time {
-	/** Set no time-out as default. */
+	/** Set no time-out as default */
 	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT,
-	/** Set time-out if no lock within 8ms. */
+	/** Set time-out if no lock within 8ms */
 	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_8MS = 0x04,
-	/** Set time-out if no lock within 9ms. */
+	/** Set time-out if no lock within 9ms */
 	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_9MS,
-	/** Set time-out if no lock within 10ms. */
+	/** Set time-out if no lock within 10ms */
 	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_10MS,
-	/** Set time-out if no lock within 11ms. */
+	/** Set time-out if no lock within 11ms */
 	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_11MS,
 };
 
@@ -1118,13 +1118,13 @@ enum system_clock_source_dpll_lock_time {
  * \brief Filter type of the DPLL module.
  */
 enum system_clock_source_dpll_filter {
-	/** Default filter mode. */
+	/** Default filter mode */
 	SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT,
-	/** Low bandwidth filter. */
+	/** Low bandwidth filter */
 	SYSTEM_CLOCK_SOURCE_DPLL_FILTER_LOW_BANDWIDTH_FILTER,
-	/** High bandwidth filter. */
+	/** High bandwidth filter */
 	SYSTEM_CLOCK_SOURCE_DPLL_FILTER_HIGH_BANDWIDTH_FILTER,
-	/** High damping filter. */
+	/** High damping filter */
 	SYSTEM_CLOCK_SOURCE_DPLL_FILTER_HIGH_DAMPING_FILTER,
 };
 
@@ -1147,31 +1147,32 @@ enum system_clock_source_dpll_prescaler {
  */
 struct system_clock_source_dpll_config {
 	/** Run On Demand. If this is set the DPLL won't run
-	 * until requested by a peripheral. */
+	 * until requested by a peripheral */
 	bool on_demand;
-	/** Keep the DPLL enabled in standby sleep mode. */
+	/** Keep the DPLL enabled in standby sleep mode */
 	bool run_in_standby;
-	/** Bypass lock signal. */
+	/** Bypass lock signal */
 	bool lock_bypass;
 	/** Wake up fast. If this is set DPLL output clock is enabled after
-	 * the startup time. */
+	 * the startup time */
 	bool wake_up_fast;
-	/** Enable low power mode.  */
+	/** Enable low power mode  */
 	bool low_power_enable;
 
-	/** Output frequency of the clock. */
+	/** Output frequency of the clock */
 	uint32_t output_frequency;
-	/** Reference frequency of the clock. */
+	/** Reference frequency of the clock */
 	uint32_t reference_frequency;
-	/** Devider of reference clock. */
+	/** Devider of reference clock */
 	uint16_t reference_divider;
 
-	/** Filter type of the DPLL module. */
+	/** Filter type of the DPLL module */
 	enum system_clock_source_dpll_filter          filter;
-	/** Lock time-out value of the DPLL module. */
+	/** Lock time-out value of the DPLL module */
 	enum system_clock_source_dpll_lock_time       lock_time;
-	/** Reference clock source of the DPLL module. */
+	/** Reference clock source of the DPLL module */
 	enum system_clock_source_dpll_reference_clock reference_clock;
+	/** DPLL prescaler*/
 	enum system_clock_source_dpll_prescaler  prescaler;
 };
 
