@@ -408,7 +408,8 @@ uint32_t dacc_set_timing(Dacc *p_dacc, uint32_t ul_startup,
 }
 #endif /* #if (SAM3N) || (SAM4L) || (SAM4N) */
 
-#if (SAM3S) || (SAM3XA) || (SAM4S) || (SAM4E) || (SAMV70) || (SAMV71) || (SAME70) || (SAMS70) || defined(__DOXYGEN__)
+#if (SAM3S) || (SAM3XA) || (SAM4S) || (SAM4E) || SAMV70 || SAMV71 || SAME70 || SAMS70 || defined(__DOXYGEN__)
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 /**
  * \brief Disable flexible (TAG) mode and select a channel for DAC outputs.
  *
@@ -419,13 +420,6 @@ uint32_t dacc_set_timing(Dacc *p_dacc, uint32_t ul_startup,
  */
 uint32_t dacc_set_channel_selection(Dacc *p_dacc, uint32_t ul_channel)
 {
-#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
-	uint32_t mr = p_dacc->DACC_CHER & (~(DACC_CHER_CH0 | DACC_CHER_CH1));
-	if (ul_channel > MAX_CH_NB) {
-		return DACC_RC_INVALID_PARAM;
-	}
-	p_dacc->DACC_CHER = mr;
-#else
 	uint32_t mr = p_dacc->DACC_MR & (~DACC_MR_USER_SEL_Msk);
 	if (ul_channel > MAX_CH_NB) {
 		return DACC_RC_INVALID_PARAM;
@@ -433,11 +427,10 @@ uint32_t dacc_set_channel_selection(Dacc *p_dacc, uint32_t ul_channel)
 	mr &= ~(DACC_MR_TAG);
 	mr |= ul_channel << DACC_MR_USER_SEL_Pos;
 	p_dacc->DACC_MR = mr;
-#endif
+
 	return DACC_RC_OK;
 }
 
-#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 /**
  * \brief Enable the flexible channel selection mode (TAG).
  *

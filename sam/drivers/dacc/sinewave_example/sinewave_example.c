@@ -373,10 +373,10 @@ int main(void)
 	 */
 #if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 	dacc_set_timing(DACC_BASE, 0x08, 1, 0x10);
-#endif
 
 	/* Disable TAG and select output channel DACC_CHANNEL */
 	dacc_set_channel_selection(DACC_BASE, DACC_CHANNEL);
+#endif
 
 	/* Enable output channel DACC_CHANNEL */
 	dacc_enable_channel(DACC_BASE, DACC_CHANNEL);
