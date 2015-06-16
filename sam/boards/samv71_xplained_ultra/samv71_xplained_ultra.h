@@ -267,5 +267,16 @@
 
 /** AFEC channel for potentiometer */
 #define AFEC_CHANNEL_POTENTIOMETER  AFEC_CHANNEL_0
+
+/** PWM LED0 pin definitions. */
+#define PIN_PWM_LED0_GPIO    PIO_PA23_IDX
+#define PIN_PWM_LED0_FLAGS   (PIO_PERIPH_B | PIO_DEFAULT)
+#define PIN_PWM_LED0_CHANNEL PWM_CHANNEL_0
+
+/** PWM LED1 pin definitions. */
+#define PIN_PWM_LED1_GPIO    PIO_PC9_IDX
+#define PIN_PWM_LED1_FLAGS   (PIO_PERIPH_C | PIO_DEFAULT)
+#define PIN_PWM_LED1_CHANNEL PWM_CHANNEL_1
+
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAMV71_XLTRA_H_ */
