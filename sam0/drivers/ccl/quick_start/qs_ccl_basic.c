@@ -176,7 +176,7 @@ int main(void)
 	configure_ccl_lut0();
 	configure_ccl_lut1();
 	/** Configure the sequential logic with the D flip flop mode. */
-	//! [setup_14]	
+	//! [setup_14]
 	ccl_seq_config(CCL_SEQ_0, CCL_SEQ_D_FLIP_FLOP);
 	//! [setup_14]
 	//! [setup_init]
