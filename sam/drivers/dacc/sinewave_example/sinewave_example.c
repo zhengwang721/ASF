@@ -371,10 +371,8 @@ int main(void)
 	 * max speed mode -    0 (disabled)
 	 * startup time   - 0x10 (1024 dacc clocks)
 	 */
-#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 	dacc_set_timing(DACC_BASE, 0x08, 1, 0x10);
-#else
-	dacc_set_timing(DACC_BASE, 0x08, 0, 0x10);
 #endif
 
 	/* Disable TAG and select output channel DACC_CHANNEL */
