@@ -88,7 +88,7 @@
 			<keyword value="Clocks" />
 		</info>
 
-		<info type="appnote" value="ATXXXX"/>
+		<info type="appnote" value="AT13485"/>
 		<info type="keyword" value="pdf">
 			<keyword value="SYSTEM"/>
 			<keyword value="I/O"/>
