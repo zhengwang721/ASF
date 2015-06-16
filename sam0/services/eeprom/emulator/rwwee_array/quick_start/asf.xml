@@ -10,5 +10,6 @@
 		<require idref="sam0.drivers.bod"/>
 		<device-support value="saml21"/>
 		<device-support value="samda1"/>
+		<device-support value="samc21"/>
 	</module>
 </asf>
