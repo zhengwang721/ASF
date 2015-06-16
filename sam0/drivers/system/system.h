@@ -72,7 +72,7 @@ extern "C" {
  *  - SUPC(Supply Controller)
  * \elseif DEVICE_SAMC21_SUPPORT
  *
- *  - PM (Power Managersdsd)
+ *  - PM (Power Manager)
  *  - RSTC(Reset Controller)
  *  - SUPC(Supply Controller)
  *
