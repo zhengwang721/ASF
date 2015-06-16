@@ -691,7 +691,7 @@ void system_init(void);
  * \elseif DEVICE_SAMC21_SUPPORT
  *  <tr>
  *      <td>A</td>
- *      <td>12/2014</td>
+ *      <td>06/2015</td>
  *      <td>Initial release.</td>
  * </tr>
  * \else
