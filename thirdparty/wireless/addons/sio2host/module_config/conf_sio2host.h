@@ -91,7 +91,7 @@
 
 /* ! \name Configuration for SAM4L */
 /* ! @{ */
-#if (SAM && !(SAMD || SAMR21))
+#if (SAM && !(SAMD || SAMR21 || SAML21))
 #define USART_HOST                 USART0
 /* / ** Baudrate setting * / */
 #define USART_HOST_BAUDRATE        9600
