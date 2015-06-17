@@ -522,48 +522,6 @@ uint32_t dacc_set_prescaler(Dacc *p_dacc, uint32_t ul_prescaler)
 }
 
 /**
- * \brief Enable DACC diff.
- *
- * \param p_dacc Pointer to a DACC instance. 
- *
- * \return \ref DACC_RC_OK for OK.
- */
-uint32_t dacc_diff_enable(Dacc *p_dacc)
-{
-	p_dacc->DACC_MR |= DACC_MR_DIFF_ENABLED;
-	return DACC_RC_OK;
-}
-
-/**
- * \brief Disable DACC diff.
- *
- * \param p_dacc Pointer to a DACC instance. 
- *
- * \return \ref DACC_RC_OK for OK.
- */
-uint32_t dacc_diff_disable(Dacc *p_dacc)
-{
-	p_dacc->DACC_MR &= ((~DACC_MR_DIFF) | DACC_MR_DIFF_DISABLED);
-	return DACC_RC_OK;
-}
-
-/**
- * \brief Set DACC maxs.
- *
- * \param p_dacc Pointer to a DACC instance. 
- * \param ul_prescaler Maxs value.
- *
- * \return \ref DACC_RC_OK for OK.
- */
-uint32_t dacc_set_maxs(Dacc *p_dacc, uint32_t ul_maxs)
-{
-	uint32_t mr = p_dacc->DACC_MR & (~(DACC_MR_MAXS0 | DACC_MR_MAXS1));
-	ul_maxs &= (DACC_MR_MAXS0 | DACC_MR_MAXS1);
-	p_dacc->DACC_MR = mr | ul_maxs;
-	return DACC_RC_OK;
-}
-
-/**
  * \brief Set DACC osr.
  *
  * \param p_dacc Pointer to a DACC instance. 
