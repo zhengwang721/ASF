@@ -71,6 +71,8 @@ extern "C" {
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_events_prerequisites
@@ -360,7 +362,7 @@ struct events_config {
 	uint8_t                    generator;
 	/** Clock source for the event channel. */
 	uint8_t                    clock_source;
-#if (SAML21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 	/** Run in standby mode for the channel. */
 	bool                       run_in_standby;
 	/** Run On Demand. */
@@ -379,11 +381,11 @@ struct events_config {
 ///@cond INTERNAL
 /**
  * \internal
- * Status bit offsets in the status register/interrupt register
+ * Status bit offsets in the status register/interrupt register.
  *
  * @{
  */
-#if (SAML21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 #  define _EVENTS_START_OFFSET_BUSY_BITS           16
 #  define _EVENTS_START_OFFSET_USER_READY_BIT      0
 #  define _EVENTS_START_OFFSET_DETECTION_BIT       16
@@ -412,7 +414,7 @@ struct events_config {
  */
 struct events_resource {
 #if !defined(__DOXYGEN__)
-	/* Channel allocated for the event resource. */
+	/** Channel allocated for the event resource. */
 	uint8_t channel;
 	/** Channel setting in CHANNEL register. */
 	uint32_t channel_reg;
@@ -422,9 +424,18 @@ struct events_resource {
 #if EVENTS_INTERRUPT_HOOKS_MODE == true
 typedef void (*events_interrupt_hook)(struct events_resource *resource);
 
+/**
+ * \brief Event hook.
+ *
+ * Event hook structure.
+ *
+ */
 struct events_hook {
+	/** Event resource. */
 	struct events_resource *resource;
+	/** Event hook function. */
 	events_interrupt_hook hook_func;
+	/** Next event hook. */
 	struct events_hook *next;
 };
 #endif
@@ -461,7 +472,7 @@ enum status_code events_allocate(struct events_resource *resource, struct events
  * Attach a user peripheral to the event channel to receive events.
  *
  * \param[in] resource Pointer to an \ref events_resource struct instance
- * \param[in] user_id  A number identifying the user peripheral found in the device header file.
+ * \param[in] user_id  A number identifying the user peripheral found in the device header file
  *
  * \return Status of the user attach procedure.
  * \retval STATUS_OK No errors detected when attaching the event user
@@ -474,7 +485,7 @@ enum status_code events_attach_user(struct events_resource *resource, uint8_t us
  * Deattach an user peripheral from the event channels so it does not receive any more events.
  *
  * \param[in] resource Pointer to an \ref event_resource struct instance
- * \param[in] user_id  A number identifying the user peripheral found in the device header file.
+ * \param[in] user_id  A number identifying the user peripheral found in the device header file
  *
  * \return Status of the user detach procedure.
  * \retval STATUS_OK No errors detected when detaching the event user
@@ -673,10 +684,14 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset);
  *      <th>Comments</td>
  *  </tr>
  *  <tr>
+ *      <td>G</td>
+ *      <td>01/2015</td>
+ *      <td>Added support for SAMC21. </td>
+ *  </tr>
+ *  <tr>
  *      <td>F</td>
- *      <td>12/2014</td>
- *      <td>Added support for SAML21 and fix a bug in internal function
- *          _events_find_bit_position(). </td>
+ *      <td>04/2015</td>
+ *      <td>Added support for SAML21 and SAMDAx.</td>
  *  </tr>
  *  <tr>
  *      <td>E</td>

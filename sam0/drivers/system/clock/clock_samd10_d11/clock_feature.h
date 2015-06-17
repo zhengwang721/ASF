@@ -526,9 +526,9 @@ enum system_clock_source {
 	SYSTEM_CLOCK_SOURCE_DFLL     = GCLK_SOURCE_DFLL48M,
 	/** Internal Ultra Low Power 32KHz oscillator. */
 	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
-	/** Generator input pad */
+	/** Generator input pad. */
 	SYSTEM_CLOCK_SOURCE_GCLKIN     = GCLK_SOURCE_GCLKIN,
-	/** Generic clock generator one output */
+	/** Generic clock generator one output. */
 	SYSTEM_CLOCK_SOURCE_GCLKGEN1   = GCLK_SOURCE_GCLKGEN1,
 #ifdef FEATURE_SYSTEM_CLOCK_DPLL
 	/** Digital Phase Locked Loop (DPLL).
@@ -607,7 +607,7 @@ struct system_clock_source_xosc32k_config {
  * Internal 8MHz (nominal) oscillator configuration structure.
  */
 struct system_clock_source_osc8m_config {
-	/* Internal 8MHz RC oscillator prescaler. */
+	/** Internal 8MHz RC oscillator prescaler. */
 	enum system_osc8m_div prescaler;
 	/** Keep the OSC8M enabled in standby sleep mode. */
 	bool run_in_standby;
@@ -1364,11 +1364,6 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *
  * \section asfdoc_sam0_system_clock_extra_errata Errata
  *
- *	- This driver implements workaround for errata 10558
- *
- *	  "Several reset values of SYSCTRL.INTFLAG are wrong (BOD and DFLL)"
- *	  When system_init is called it will reset these interrupts flags before they are used.
-
  *	- This driver implements experimental workaround for errata 9905
  *
  *	  "The DFLL clock must be requested before being configured otherwise a
@@ -1417,7 +1412,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *			\li Updated dfll configuration function to implement workaround for
  *			    errata 9905 in the DFLL module
  *			\li Updated \c system_clock_init() to reset interrupt flags before
- *			    they are used, errata 10558
+ *			    they are used
  *			\li Fixed \c system_clock_source_get_hz() to return correcy DFLL
  *			    frequency number
  *		</td>
@@ -1459,6 +1454,11 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>04/2015</td>
+ *		<td>Added support for SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

@@ -265,5 +265,7 @@
 #define TWIHS0_CLK_GPIO    PIO_PA4_IDX
 #define TWIHS0_CLK_FLAGS   (IOPORT_MODE_MUX_A)
 
+/** AFEC channel for potentiometer */
+#define AFEC_CHANNEL_POTENTIOMETER  AFEC_CHANNEL_0
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAMV71_XLTRA_H_ */

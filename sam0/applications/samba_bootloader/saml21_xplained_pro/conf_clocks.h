@@ -86,7 +86,6 @@
 #  define CONF_CLOCK_OSC32K_ON_DEMAND             true
 #  define CONF_CLOCK_OSC32K_RUN_IN_STANDBY        false
 
-/* SYSTEM_CLOCK_SOURCE_OSCULP32K configuration - Internal Ultra Low Power 32KHz oscillator */
 
 /* SYSTEM_CLOCK_SOURCE_DFLL configuration - Digital Frequency Locked Loop */
 #  define CONF_CLOCK_DFLL_ENABLE                  false
@@ -95,7 +94,6 @@
 #  define CONF_CLOCK_DFLL_RUN_IN_STANDBY          false
 
 /* DFLL open loop mode configuration */
-#  define CONF_CLOCK_DFLL_COARSE_VALUE            (0x1f / 4)
 #  define CONF_CLOCK_DFLL_FINE_VALUE              (0xff / 4)
 
 /* DFLL closed loop mode configuration */

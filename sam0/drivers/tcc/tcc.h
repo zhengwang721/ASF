@@ -71,6 +71,8 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_tcc_prerequisites
@@ -629,11 +631,11 @@
  * channels, and number of outputs, are dependent on the TCC module instance being
  * used.
  *
- * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM D21/R21/L21 TCC Feature List
- * For SAM D21/R21/L21, the TCC features are:
+ * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM TCC Feature List
+ * For SAM D21/R21/L21/DA0/DA1, the TCC features are:
  * \anchor asfdoc_sam0_tcc_features_d21
  * <table>
- *   <caption>TCC module features for SAM D21/R21/L21</caption>
+ *   <caption>TCC module features for SAM D21/R21/L21/DA0/DA1</caption>
  *   <tr>
  *     <th>TCC#</th>
  *     <th>Match/Capture channels</th>
@@ -765,11 +767,11 @@
 #endif
 
 /**
- * Define port features set according to different device family
+ * Define port features set according to different device family.
  * @{
 */
 #if (SAML21) || defined(__DOXYGEN__)
-/** Generate DMA triggers*/
+/** Generate DMA triggers. */
 #  define FEATURE_TCC_GENERATE_DMA_TRIGGER
 #endif
 /*@}*/
@@ -1135,9 +1137,9 @@ enum tcc_event_action {
 	/** Decrement the counter on event, irrespective of count direction. */
 	TCC_EVENT_ACTION_DECREMENT,
 	/** Count during active state of asynchronous event. In this case,
-	* depending	on the count direction, the  count will be incremented
-    * or decremented on each
-	* prescaled GCLK_TCCx, as long as the input event remains active. */
+	* depending	on the count direction, the  count will be incremented 
+	* or decremented on each prescaled GCLK_TCCx, as long as the input
+	* event remains active. */
 	TCC_EVENT_ACTION_COUNT_DURING_ACTIVE,
 
 	/** Store period in capture register 0, pulse width in capture
@@ -2432,8 +2434,8 @@ enum status_code tcc_set_double_buffer_compare_values(
  *  </tr>
  *  <tr>
  *      <td>C</td>
- *      <td>11/2014</td>
- *      <td>Added support for SAML21</td>
+ *      <td>04/2015</td>
+ *      <td>Added support for SAML21 and SAMDAx</td>
  *  </tr>
  *  <tr>
  *      <td>B</td>

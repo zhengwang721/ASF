@@ -13,5 +13,6 @@
 		<require idref="sam0.utils.stdio.stdio_serial"/>
 		<require idref="common.utils.unit_test"/>
 		<device-support value="samd21"/>
+		<device-support value="samda1"/>
 	</module>
 </asf>

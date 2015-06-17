@@ -63,7 +63,37 @@ MACROS
  * @ingroup m2m_wifi
  */
 /**@{*/
-#define MAKE_VERSION(major, minor, patch) (((uint16)(major) << 8) | ((minor << 4) | (patch) ))
+#define M2M_MAJOR_SHIFT (8)
+#define M2M_MINOR_SHIFT (4)
+#define M2M_PATCH_SHIFT (0)
+
+#define M2M_DRV_VERSION_SHIFT (16)
+#define M2M_FW_VERSION_SHIFT (0)
+
+#define M2M_GET_MAJOR(ver_info_hword) ((uint8)((ver_info_hword) >> M2M_MAJOR_SHIFT) & 0xff)
+#define M2M_GET_MINOR(ver_info_hword) ((uint8)((ver_info_hword) >> M2M_MINOR_SHIFT) & 0x0f)
+#define M2M_GET_PATCH(ver_info_hword) ((uint8)((ver_info_hword) >> M2M_PATCH_SHIFT) & 0x0f)
+
+#define M2M_GET_FW_VER(ver_info_word)  ((uint16) ((ver_info_word) >> M2M_FW_VERSION_SHIFT))
+#define M2M_GET_DRV_VER(ver_info_word) ((uint16) ((ver_info_word) >> M2M_DRV_VERSION_SHIFT))
+
+#define M2M_GET_DRV_MAJOR(ver_info_word) M2M_GET_MAJOR(M2M_GET_DRV_VER(ver_info_word))
+#define M2M_GET_DRV_MINOR(ver_info_word) M2M_GET_MINOR(M2M_GET_DRV_VER(ver_info_word))
+#define M2M_GET_DRV_PATCH(ver_info_word) M2M_GET_PATCH(M2M_GET_DRV_VER(ver_info_word))
+
+#define M2M_GET_FW_MAJOR(ver_info_word) M2M_GET_MAJOR(M2M_GET_FW_VER(ver_info_word))
+#define M2M_GET_FW_MINOR(ver_info_word) M2M_GET_MINOR(M2M_GET_FW_VER(ver_info_word))
+#define M2M_GET_FW_PATCH(ver_info_word) M2M_GET_PATCH(M2M_GET_FW_VER(ver_info_word))
+
+#define M2M_MAKE_VERSION(major, minor, patch) ( \
+	((uint16)((major)  & 0xff)  << M2M_MAJOR_SHIFT) | \
+	((uint16)((minor)  & 0x0f)  << M2M_MINOR_SHIFT) | \
+	((uint16)((patch)  & 0x0f)  << M2M_PATCH_SHIFT))
+
+#define M2M_MAKE_VERSION_INFO(fw_major, fw_minor, fw_patch, drv_major, drv_minor, drv_patch) \
+	( \
+	( ((uint32)M2M_MAKE_VERSION((fw_major),  (fw_minor),  (fw_patch)))  << M2M_FW_VERSION_SHIFT) | \
+	( ((uint32)M2M_MAKE_VERSION((drv_major), (drv_minor), (drv_patch))) << M2M_DRV_VERSION_SHIFT))
 
 /*======*======*======*======*
 		FIRMWARE VERSION NO INFO
@@ -74,11 +104,11 @@ MACROS
 */
 
 
-#define M2M_FIRMWARE_VERSION_MINOR_NO					(1)
+#define M2M_FIRMWARE_VERSION_MINOR_NO					(3)
 /*!< Firmware Minor release version number.
 */
 
-#define M2M_FIRMWARE_VERSION_PATCH_NO					(1)
+#define M2M_FIRMWARE_VERSION_PATCH_NO					(0)
 /*!< Firmware patch release version number.
 */
 
@@ -91,11 +121,11 @@ MACROS
 */
 
 
-#define M2M_DRIVER_VERSION_MINOR_NO						(1)
+#define M2M_DRIVER_VERSION_MINOR_NO						(3)
 /*!< Driver Minor release version number.
 */
 
-#define M2M_DRIVER_VERSION_PATCH_NO						(1)
+#define M2M_DRIVER_VERSION_PATCH_NO						(0)
 /*!< Driver patch release version number.
 */
 
@@ -136,26 +166,26 @@ MACROS
 #define M2M_DEVICE_NAME_MAX								48
 /*!< Maximum Size for the device name including the NULL termination.
  */
-
+ 
 
 #define M2M_LISTEN_INTERVAL 							1
 /*!< The STA uses the Listen Interval parameter to indicate to the AP how
 	many beacon intervals it shall sleep before it retrieves the queued frames
-	from the AP.
+	from the AP. 
 */
 
 
 #define M2M_1X_USR_NAME_MAX								21
-/*!< The maximum size of the user name including the NULL termination.
+/*!< The maximum size of the user name including the NULL termination. 
 	It is used for RADIUS authentication in case of connecting the device to
-	an AP secured with WPA-Enterprise.
+	an AP secured with WPA-Enterprise. 
 */
 
 
 #define M2M_1X_PWD_MAX									41
-/*!< The maximum size of the password including the NULL termination.
+/*!< The maximum size of the password including the NULL termination. 
 	It is used for RADIUS authentication in case of connecting the device to
-	an AP secured with WPA-Enterprise.
+	an AP secured with WPA-Enterprise. 
 */
 
 #define M2M_CUST_IE_LEN_MAX								252
@@ -218,27 +248,27 @@ MACROS
 #define M2M_SCAN_ERR_IP      							((sint8)-3)
 /*!< currently not used.
 */
-#define M2M_SCAN_ERR_AP      							((sint8)-4)
+#define M2M_SCAN_ERR_AP      							((sint8)-4)	
 /*!< currently not used.
 */
 #define M2M_SCAN_ERR_P2P      							((sint8)-5)
 /*!< currently not used.
 */
-#define M2M_SCAN_ERR_WPS      							((sint8)-6)
+#define M2M_SCAN_ERR_WPS      							((sint8)-6)	
 /*!< currently not used.
 */
 
 
 #define M2M_DEFAULT_CONN_EMPTY_LIST						((sint8)-20)
 /*!<
-	A failure response that indicates an empty network list as
+	A failure response that indicates an empty network list as 
 	a result to the function call m2m_default_connect.
 */
 
 
 #define M2M_DEFAULT_CONN_SCAN_MISMATCH					((sint8)-21)
 /*!<
-	A failure response that indicates that no one of the cached networks
+	A failure response that indicates that no one of the cached networks 
 	was found in the scan results, as a result to the function call m2m_default_connect.
 */
 
@@ -257,28 +287,28 @@ MACROS
 /*======*======*======*======*
 	OTA DEFINITIONS
  *======*======*======*======*/
-
+ 
 #define OTA_ROLLB_STATUS_VALID				(0x12526285)
-/*!<
+/*!< 
 	Magic value updated in the Control structure in case of ROLLACK image Valid
 */
 #define OTA_ROLLB_STATUS_INVALID			(0x23987718)
-/*!<
+/*!< 
 	Magic value updated in the Control structure in case of ROLLACK image InValid
 */
 #define OTA_MAGIC_VALUE						(0x1ABCDEF9)
-/*!<
+/*!< 
 	Magic value set at the beginning of the OTA image header
 */
 #define OTA_SHA256_DIGEST_SIZE 				(32)
-/*!<
-	Sha256 digest size in the OTA image,
-	the sha256 digest is set at the beginning of image before the OTA header
+/*!< 
+	Sha256 digest size in the OTA image, 
+	the sha256 digest is set at the beginning of image before the OTA header 
 */
 
 #define OTA_SUCCESS 						(0)
 /*!<
-	OTA Success status
+	OTA Success status 
 */
 #define OTA_ERR_WORKING_IMAGE_LOAD_FAIL		((sint8)-1)
 /*!<
@@ -286,22 +316,22 @@ MACROS
 */
 #define OTA_ERR_INVAILD_CONTROL_SEC			((sint8)-2)
 /*!<
-	Control structure is being corrupted
+	Control structure is being corrupted   
 */
 #define M2M_ERR_OTA_SWITCH_FAIL     		((sint8)-3)
 /*!<
-	switching to the updated image failed as may be the image is invalid
+	switching to the updated image failed as may be the image is invalid 
 */
 #define M2M_ERR_OTA_START_UPDATE_FAIL     	((sint8)-4)
 /*!<
-	OTA update fail due to multiple reasons
+	OTA update fail due to multiple reasons 
 	- Connection failure
-	- Image integrity fail
-
+	- Image integrity fail  
+	
 */
 #define M2M_ERR_OTA_ROLLBACK_FAIL     		((sint8)-5)
 /*!<
-	Roll-back failed due to Roll-back image is not valid
+	Roll-back failed due to Roll-back image is not valid 
 */
 #define M2M_ERR_OTA_INVAILD_FLASH_SIZE     	((sint8)-6)
 /*!<
@@ -316,13 +346,13 @@ MACROS
 /**
 * @addtogroup WlanEnums
 */
- /**@{*/
+ /**@{*/ 
 /*!
 @enum	\
 	tenuM2mWepKeyIndex
-
+	
 @brief
-
+	
 */
 typedef enum {
 	M2M_WIFI_WEP_KEY_INDEX_1 = ((uint8) 1),
@@ -336,10 +366,10 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mConfigCmd
-
+	
 @brief
 	This enum contains all the host commands used to configure the WINC board.
-
+	
 */
 typedef enum {
 	M2M_WIFI_REQ_RESTART = M2M_CONFIG_CMD_BASE,
@@ -396,15 +426,33 @@ typedef enum {
 		do not need it.
 	*/
 	M2M_WIFI_RESP_MEMORY_RECOVER,
-	M2M_WIFI_REQ_CUST_INFO_ELEMENT
+	M2M_WIFI_REQ_CUST_INFO_ELEMENT,
 	/*!< Add Custom ELement to Beacon Managament Frame.
+	*/
+	M2M_WIFI_REQ_SCAN,
+	/*!< Request scan command.
+	*/
+	M2M_WIFI_RESP_SCAN_DONE,
+	/*!< Scan complete notification response.
+	*/
+	M2M_WIFI_REQ_SCAN_RESULT,
+	/*!< Request Scan results command.
+	*/
+	M2M_WIFI_RESP_SCAN_RESULT,
+	/*!< Request Scan results resopnse.
+	*/
+	M2M_WIFI_REQ_SET_SCAN_OPTION,
+	/*!< Set Scan options "slot time, slot number .. etc" .
+	*/
+	M2M_WIFI_REQ_SET_SCAN_REGION
+	/*!< Set scan region.
 	*/
 }tenuM2mConfigCmd;
 
 /*!
 @enum	\
 	tenuM2mServerCmd
-
+	
 @brief
 	This enum contains all the WINC commands while in PS mode.
 	These command are currently not supported.
@@ -419,7 +467,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mStaCmd
-
+	
 @brief
 	This enum contains all the WINC commands while in Station mode.
 */
@@ -442,26 +490,26 @@ typedef enum {
 	M2M_WIFI_REQ_SLEEP,
 	/*!< Set PS mode command.
 	*/
-	M2M_WIFI_REQ_SCAN,
+	M2M_WIFI_REQ_SCAN_RESERVED,
 	/*!< Request scan command.
 	*/
 	M2M_WIFI_REQ_WPS_SCAN,
 	/*!< Request WPS scan command.
 	*/
-	M2M_WIFI_RESP_SCAN_DONE,
+	M2M_WIFI_RESP_SCAN_DONE_RESERVED,
 	/*!< Scan complete notification response.
 	*/
-	M2M_WIFI_REQ_SCAN_RESULT,
+	M2M_WIFI_REQ_SCAN_RESULT_RESERVED,
 	/*!< Request Scan results command.
 	*/
-	M2M_WIFI_RESP_SCAN_RESULT,
+	M2M_WIFI_RESP_SCAN_RESULT_RESERVED,
 	/*!< Request Scan results resopnse.
 	*/
 	M2M_WIFI_REQ_WPS,
 	/*!< Request WPS start command.
 	*/
 	M2M_WIFI_REQ_START_WPS,
-	/*!< This command is for internal use by the WINC and
+	/*!< This command is for internal use by the WINC and 
 		should not be used by the host driver.
 	*/
 	M2M_WIFI_REQ_DISABLE_WPS,
@@ -471,7 +519,7 @@ typedef enum {
 	/*!< Response indicating that IP address was obtained.
 	*/
 	M2M_WIFI_RESP_IP_CONFIGURED,
-	/*!< This command is for internal use by the WINC and
+	/*!< This command is for internal use by the WINC and 
 		should not be used by the host driver.
 	*/
 	M2M_WIFI_RESP_IP_CONFLICT,
@@ -499,10 +547,10 @@ typedef enum {
 	M2M_WIFI_RESP_ETHERNET_RX_PACKET,
 	/*!< Receive ethernet packet in bypass mode.
 	*/
-	M2M_WIFI_REQ_SET_SCAN_OPTION,
+	M2M_WIFI_REQ_SET_SCAN_OPTION_RESERVED,
 	/*!< Set Scan options "slot time, slot number .. etc" .
 	*/
-	M2M_WIFI_REQ_SET_SCAN_REGION,
+	M2M_WIFI_REQ_SET_SCAN_REGION_RESERVED,
 	/*!< Set scan region.
 	*/
 	M2M_WIFI_REQ_DOZE,
@@ -517,13 +565,13 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mP2pCmd
-
+	
 @brief
 	This enum contains all the WINC commands while in P2P mode.
 */
 typedef enum {
 	M2M_WIFI_REQ_P2P_INT_CONNECT = M2M_P2P_CMD_BASE,
-	/*!< This command is for internal use by the WINC and
+	/*!< This command is for internal use by the WINC and 
 		should not be used by the host driver.
 	*/
 	M2M_WIFI_REQ_ENABLE_P2P,
@@ -533,7 +581,7 @@ typedef enum {
 	/*!< Disable P2P mode command.
 	*/
 	M2M_WIFI_REQ_P2P_REPOST
-	/*!< This command is for internal use by the WINC and
+	/*!< This command is for internal use by the WINC and 
 		should not be used by the host driver.
 	*/
 }tenuM2mP2pCmd;
@@ -542,7 +590,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mApCmd
-
+	
 @brief
 	This enum contains all the WINC commands while in AP mode.
 */
@@ -558,7 +606,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mOtaCmd
-
+	
 @brief
 
 */
@@ -578,7 +626,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mIpCmd
-
+	
 @brief
 
 */
@@ -593,7 +641,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mConnState
-
+	
 @brief
 	Wi-Fi Connection State.
 */
@@ -612,7 +660,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mSecType
-
+	
 @brief
 	Wi-Fi Supported Security types.
 */
@@ -638,7 +686,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mSecType
-
+	
 @brief
 	Wi-Fi Supported SSID types.
 */
@@ -654,7 +702,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mScanCh
-
+	
 @brief
 	Wi-Fi RF Channels.
 */
@@ -679,7 +727,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mScanRegion
-
+	
 @brief
 	Wi-Fi RF Channels.
 */
@@ -692,7 +740,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuPowerSaveModes
-
+	
 @brief
 	Power Save Modes.
 */
@@ -702,8 +750,8 @@ typedef enum {
 	*/
 	M2M_PS_AUTOMATIC,
 	/*!< Power save is done automatically by the WINC.
-		This mode doesn't disable all of the WINC modules and
-		use higher amount of power than the H_AUTOMATIC and
+		This mode doesn't disable all of the WINC modules and 
+		use higher amount of power than the H_AUTOMATIC and 
 		the DEEP_AUTOMATIC modes..
 	*/
 	M2M_PS_H_AUTOMATIC,
@@ -723,7 +771,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mWifiMode
-
+	
 @brief
 	Wi-Fi Operation Mode.
 */
@@ -739,7 +787,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuWPSTrigger
-
+	
 @brief
 	WPS Triggering Methods.
 */
@@ -838,7 +886,7 @@ typedef struct{
 @struct	\
 	tstrM2mWifiConnect
 
-@brief
+@brief	
 	Wi-Fi Connect Request
 */
 typedef struct{
@@ -851,7 +899,8 @@ typedef struct{
 	uint8				au8SSID[M2M_MAX_SSID_LEN];
 	/*!< SSID of the desired AP. It must be NULL terminated string.
 	*/
-#define __CONN_PAD_SIZE__		(4 - ((sizeof(tstrM2MWifiSecInfo) + M2M_MAX_SSID_LEN + 2) % 4))
+	uint8 				u8NoSaveCred;
+#define __CONN_PAD_SIZE__		(4 - ((sizeof(tstrM2MWifiSecInfo) + M2M_MAX_SSID_LEN + 3) % 4))
 	uint8				__PAD__[__CONN_PAD_SIZE__];
 	/*!< Padding bytes for forcing 4-byte alignment
 	*/

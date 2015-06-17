@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM Sercom SPI driver with DMA quick start
+ * \brief SAM Sercom SPI Driver with DMA Quick Start
  *
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *

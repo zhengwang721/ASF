@@ -91,7 +91,7 @@ sint8 nm_bsp_init(void)
 
 /**
  *	@fn		nm_bsp_reset
- *	@brief	Reset NMC1500 SoC by setting CHIP_EN and RESET_N signals low,
+ *	@brief	Reset WINC1500 SoC by setting CHIP_EN and RESET_N signals low,
  *           CHIP_EN high then RESET_N high
  */
 void nm_bsp_reset(void)

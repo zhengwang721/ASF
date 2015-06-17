@@ -46,6 +46,8 @@
 #include "sys/etimer.h"
 #include "net/ip/uip.h"
 #include "net/ipv6/uip-ds6.h"
+
+#define _DEBUG_ 0
 #include "net/ip/uip-debug.h"
 
 #include "simple-udp.h"
@@ -77,7 +79,7 @@ receiver(struct simple_udp_connection *c,
          const uint8_t *data,
          uint16_t datalen)
 {
-  printf("Data received from ");
+  printf("\r\n Data received from ");
   uip_debug_ipaddr_print(sender_addr);
   printf(" on port %d from port %d with length %d: '%s'\n",
          receiver_port, sender_port, datalen, data);
