@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21 External Interrupt Driver Configuration Header
+ * \brief SAM L21 External Interrupt Driver Configuration Header
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

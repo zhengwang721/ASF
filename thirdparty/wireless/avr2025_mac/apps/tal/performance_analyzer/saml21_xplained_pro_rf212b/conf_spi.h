@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21 SPI configuration
+ * \brief SAM L21 SPI configuration
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
