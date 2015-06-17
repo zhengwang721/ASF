@@ -391,25 +391,25 @@ void supc_set_regulator_trim_user(Supc *p_supc, uint32_t value)
 
 #if (SAMV70 || SAMV71 || SAME70 || SAMS70)
 /**
- * \brief Enable sram backup.
+ * \brief SRAM On In Backup Mode.
  *
  * \param p_supc Pointer to a SUPC instance.
  *
  */
 void supc_backup_sram_on(Supc *p_supc)
 {
-	p_supc->SUPC_MR |= SUPC_MR_BKUPRETON;
+	p_supc->SUPC_MR |= (SUPC_MR_KEY_PASSWD | SUPC_MR_BKUPRETON);
 }
 
 /**
- * \brief Disable sram backup.
+ * \brief SRAM Off In Backup Mode.
  *
  * \param p_supc Pointer to a SUPC instance.
  *
  */
 void supc_backup_sram_off(Supc *p_supc)
 {
-	p_supc->SUPC_MR &= (~SUPC_MR_BKUPRETON);	
+	p_supc->SUPC_MR &= (~(SUPC_MR_KEY_PASSWD | SUPC_MR_BKUPRETON));	
 }
 #endif
 
