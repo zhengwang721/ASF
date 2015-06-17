@@ -382,9 +382,6 @@ int main(void)
 	dacc_set_channel_selection(DACC_BASE, DACC_CHANNEL);
 #endif
 
-#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
-	//dacc_set_trigger(DACC_BASE, 0, DACC_CHANNEL);
-#endif
 	/* Enable output channel DACC_CHANNEL */
 	dacc_enable_channel(DACC_BASE, DACC_CHANNEL);
 
