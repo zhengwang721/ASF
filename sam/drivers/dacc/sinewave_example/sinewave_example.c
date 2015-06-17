@@ -310,8 +310,13 @@ void SysTick_Handler(void)
 				: wave_to_dacc(gc_us_sine_data[g_ul_index_sample],
 					 g_l_amplitude,
 					 MAX_DIGITAL * 2, MAX_AMPLITUDE);
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
+		dacc_write_conversion_data(DACC_BASE, dac_val);
+#endif
 	}
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
 	dacc_write_conversion_data(DACC_BASE, dac_val, DACC_CHANNEL);
+#endif
 }
 
 /**
@@ -372,14 +377,14 @@ int main(void)
 	 * startup time   - 0x10 (1024 dacc clocks)
 	 */
 #if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
-	dacc_set_timing(DACC_BASE, 0x08, 1, 0x10);
+	dacc_set_timing(DACC_BASE, 0x08, 0, 0x10);
 
 	/* Disable TAG and select output channel DACC_CHANNEL */
 	dacc_set_channel_selection(DACC_BASE, DACC_CHANNEL);
 #endif
 
 #if (SAMV70 || SAMV71 || SAME70 || SAMS70)
-	dacc_set_trigger(DACC_BASE, 0, 0);
+	dacc_set_trigger(DACC_BASE, 0, DACC_CHANNEL);
 #endif
 	/* Enable output channel DACC_CHANNEL */
 	dacc_enable_channel(DACC_BASE, DACC_CHANNEL);
