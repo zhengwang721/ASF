@@ -312,11 +312,10 @@ void SysTick_Handler(void)
 					 MAX_DIGITAL * 2, MAX_AMPLITUDE);
 #if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 		dacc_write_conversion_data(DACC_BASE, dac_val);
+#else
+		dacc_write_conversion_data(DACC_BASE, dac_val, DACC_CHANNEL);
 #endif
 	}
-#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
-	dacc_write_conversion_data(DACC_BASE, dac_val, DACC_CHANNEL);
-#endif
 }
 
 /**
@@ -384,7 +383,7 @@ int main(void)
 #endif
 
 #if (SAMV70 || SAMV71 || SAME70 || SAMS70)
-	dacc_set_trigger(DACC_BASE, 0, DACC_CHANNEL);
+	//dacc_set_trigger(DACC_BASE, 0, DACC_CHANNEL);
 #endif
 	/* Enable output channel DACC_CHANNEL */
 	dacc_enable_channel(DACC_BASE, DACC_CHANNEL);
