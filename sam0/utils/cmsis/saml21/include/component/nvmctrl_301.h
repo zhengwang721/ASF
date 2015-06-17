@@ -129,7 +129,7 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define NVMCTRL_CTRLB_OFFSET        0x04         /**< \brief (NVMCTRL_CTRLB offset) Control B */
-#define NVMCTRL_CTRLB_RESETVALUE    0x00000080ul /**< \brief (NVMCTRL_CTRLB reset_value) Control B */
+#define NVMCTRL_CTRLB_RESETVALUE    0x00000000ul /**< \brief (NVMCTRL_CTRLB reset_value) Control B */
 
 #define NVMCTRL_CTRLB_RWS_Pos       1            /**< \brief (NVMCTRL_CTRLB) NVM Read Wait States */
 #define NVMCTRL_CTRLB_RWS_Msk       (0xFul << NVMCTRL_CTRLB_RWS_Pos)

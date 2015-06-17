@@ -366,7 +366,9 @@ static inline void system_voltage_regulator_set_config(
 	SUPC->VREG.bit.VSVSTEP  = config->voltage_scale_step;
 	SUPC->VREG.bit.RUNSTDBY = config->run_in_standby;
 	SUPC->VREG.bit.SEL      = config->regulator_sel;
+#if (SAML21XXXB)
 	SUPC->VREG.bit.LPEFF    = config->low_power_efficiency;
+#endif
 	while(!(SUPC->STATUS.reg & SUPC_STATUS_VREGRDY)) {
 		;
 	}
@@ -859,7 +861,9 @@ static inline void system_standby_set_config(
 	PM->STDBYCFG.reg = PM_STDBYCFG_PDCFG(config->power_domain)
 					 | (config->enable_dpgpd0 << PM_STDBYCFG_DPGPD0_Pos)
 					 | (config->enable_dpgpd1 << PM_STDBYCFG_DPGPD1_Pos)
+#if (SAML21XXXB)
 					 | PM_STDBYCFG_VREGSMOD(config->vregs_mode)
+#endif
 					 | PM_STDBYCFG_LINKPD(config->linked_power_domain)
 					 | PM_STDBYCFG_BBIASHS(config->hmcramchs_back_bias)
 					 | PM_STDBYCFG_BBIASLP(config->hmcramclp_back_bias)

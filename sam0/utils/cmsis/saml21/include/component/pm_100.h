@@ -219,15 +219,8 @@ typedef union {
 #define PM_STDBYCFG_DPGPD0          (0x1ul << PM_STDBYCFG_DPGPD0_Pos)
 #define PM_STDBYCFG_DPGPD1_Pos      5            /**< \brief (PM_STDBYCFG) Dynamic Power Gating for PD1 */
 #define PM_STDBYCFG_DPGPD1          (0x1ul << PM_STDBYCFG_DPGPD1_Pos)
-#define PM_STDBYCFG_VREGSMOD_Pos    6            /**< \brief (PM_STDBYCFG) Voltage Regulator Standby mode */
-#define PM_STDBYCFG_VREGSMOD_Msk    (0x3ul << PM_STDBYCFG_VREGSMOD_Pos)
-#define PM_STDBYCFG_VREGSMOD(value) (PM_STDBYCFG_VREGSMOD_Msk & ((value) << PM_STDBYCFG_VREGSMOD_Pos))
-#define   PM_STDBYCFG_VREGSMOD_AUTO_Val   0x0ul  /**< \brief (PM_STDBYCFG) Automatic mode */
-#define   PM_STDBYCFG_VREGSMOD_PERFORMANCE_Val 0x1ul  /**< \brief (PM_STDBYCFG) Performance oriented */
-#define   PM_STDBYCFG_VREGSMOD_LP_Val     0x2ul  /**< \brief (PM_STDBYCFG) Low Power oriented */
-#define PM_STDBYCFG_VREGSMOD_AUTO   (PM_STDBYCFG_VREGSMOD_AUTO_Val << PM_STDBYCFG_VREGSMOD_Pos)
-#define PM_STDBYCFG_VREGSMOD_PERFORMANCE (PM_STDBYCFG_VREGSMOD_PERFORMANCE_Val << PM_STDBYCFG_VREGSMOD_Pos)
-#define PM_STDBYCFG_VREGSMOD_LP     (PM_STDBYCFG_VREGSMOD_LP_Val   << PM_STDBYCFG_VREGSMOD_Pos)
+#define PM_STDBYCFG_AVREGSD_Pos     7            /**< \brief (PM_STDBYCFG) Automatic VREG Switching Disable */
+#define PM_STDBYCFG_AVREGSD         (0x1ul << PM_STDBYCFG_AVREGSD_Pos)
 #define PM_STDBYCFG_LINKPD_Pos      8            /**< \brief (PM_STDBYCFG) Linked Power Domain */
 #define PM_STDBYCFG_LINKPD_Msk      (0x3ul << PM_STDBYCFG_LINKPD_Pos)
 #define PM_STDBYCFG_LINKPD(value)   (PM_STDBYCFG_LINKPD_Msk & ((value) << PM_STDBYCFG_LINKPD_Pos))

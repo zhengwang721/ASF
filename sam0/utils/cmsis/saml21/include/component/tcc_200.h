@@ -190,13 +190,11 @@ typedef union {
 #define   TCC_CTRLBCLR_CMD_STOP_Val       0x2ul  /**< \brief (TCC_CTRLBCLR) Force stop */
 #define   TCC_CTRLBCLR_CMD_UPDATE_Val     0x3ul  /**< \brief (TCC_CTRLBCLR) Force update or double buffered registers */
 #define   TCC_CTRLBCLR_CMD_READSYNC_Val   0x4ul  /**< \brief (TCC_CTRLBCLR) Force COUNT read synchronization */
-#define   TCC_CTRLBCLR_CMD_DMAOS_Val      0x5ul  /**< \brief (TCC_CTRLBCLR) One-shot DMA trigger */
 #define TCC_CTRLBCLR_CMD_NONE       (TCC_CTRLBCLR_CMD_NONE_Val     << TCC_CTRLBCLR_CMD_Pos)
 #define TCC_CTRLBCLR_CMD_RETRIGGER  (TCC_CTRLBCLR_CMD_RETRIGGER_Val << TCC_CTRLBCLR_CMD_Pos)
 #define TCC_CTRLBCLR_CMD_STOP       (TCC_CTRLBCLR_CMD_STOP_Val     << TCC_CTRLBCLR_CMD_Pos)
 #define TCC_CTRLBCLR_CMD_UPDATE     (TCC_CTRLBCLR_CMD_UPDATE_Val   << TCC_CTRLBCLR_CMD_Pos)
 #define TCC_CTRLBCLR_CMD_READSYNC   (TCC_CTRLBCLR_CMD_READSYNC_Val << TCC_CTRLBCLR_CMD_Pos)
-#define TCC_CTRLBCLR_CMD_DMAOS      (TCC_CTRLBCLR_CMD_DMAOS_Val    << TCC_CTRLBCLR_CMD_Pos)
 #define TCC_CTRLBCLR_MASK           0xFFul       /**< \brief (TCC_CTRLBCLR) MASK Register */
 
 /* -------- TCC_CTRLBSET : (TCC Offset: 0x05) (R/W  8) Control B Set -------- */
@@ -241,13 +239,11 @@ typedef union {
 #define   TCC_CTRLBSET_CMD_STOP_Val       0x2ul  /**< \brief (TCC_CTRLBSET) Force stop */
 #define   TCC_CTRLBSET_CMD_UPDATE_Val     0x3ul  /**< \brief (TCC_CTRLBSET) Force update or double buffered registers */
 #define   TCC_CTRLBSET_CMD_READSYNC_Val   0x4ul  /**< \brief (TCC_CTRLBSET) Force COUNT read synchronization */
-#define   TCC_CTRLBSET_CMD_DMAOS_Val      0x5ul  /**< \brief (TCC_CTRLBSET) One-shot DMA trigger */
 #define TCC_CTRLBSET_CMD_NONE       (TCC_CTRLBSET_CMD_NONE_Val     << TCC_CTRLBSET_CMD_Pos)
 #define TCC_CTRLBSET_CMD_RETRIGGER  (TCC_CTRLBSET_CMD_RETRIGGER_Val << TCC_CTRLBSET_CMD_Pos)
 #define TCC_CTRLBSET_CMD_STOP       (TCC_CTRLBSET_CMD_STOP_Val     << TCC_CTRLBSET_CMD_Pos)
 #define TCC_CTRLBSET_CMD_UPDATE     (TCC_CTRLBSET_CMD_UPDATE_Val   << TCC_CTRLBSET_CMD_Pos)
 #define TCC_CTRLBSET_CMD_READSYNC   (TCC_CTRLBSET_CMD_READSYNC_Val << TCC_CTRLBSET_CMD_Pos)
-#define TCC_CTRLBSET_CMD_DMAOS      (TCC_CTRLBSET_CMD_DMAOS_Val    << TCC_CTRLBSET_CMD_Pos)
 #define TCC_CTRLBSET_MASK           0xFFul       /**< \brief (TCC_CTRLBSET) MASK Register */
 
 /* -------- TCC_SYNCBUSY : (TCC Offset: 0x08) (R/  32) Synchronization Busy -------- */
