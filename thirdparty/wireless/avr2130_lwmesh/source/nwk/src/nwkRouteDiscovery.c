@@ -269,7 +269,6 @@ bool nwkRouteDiscoveryRequestReceived(NWK_DataInd_t *ind)
 	if (1 == command->multicast && NWK_GroupIsMember(command->dstAddr)) {
 		reply = true;
 	}
-
 #endif
 
 	if (0 == command->multicast && command->dstAddr == nwkIb.addr) {

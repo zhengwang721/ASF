@@ -286,7 +286,6 @@ void mac_process_beacon_frame(buffer_t *beacon)
 #endif /* GTS_SUPPORT */
 		} /* (MAC_PAN_COORD_STARTED != mac_state) */
 	} /* (MAC_SCAN_IDLE == mac_scan_state) */
-
 #endif  /* BEACON_SUPPORT */
 
 	/*
@@ -582,7 +581,6 @@ void mac_process_beacon_frame(buffer_t *beacon)
 			mac_bc_data_indicated = false;
 		}
 	} /* (MAC_SCAN_IDLE == mac_scan_state) */
-
 #endif /* BEACON_SUPPORT */
 
 	/* Handling of presented indirect traffic by the parent for this node.
@@ -717,7 +715,6 @@ void mac_process_beacon_frame(buffer_t *beacon)
 			}
 		} /* (mac_pib.mac_AutoRequest) */
 	} /* (MAC_SCAN_IDLE == mac_scan_state) */
-
 #endif /* (MAC_INDIRECT_DATA_BASIC == 1) && (MAC_SYNC_REQUEST == 1)) */
 } /* mac_process_beacon_frame() */
 

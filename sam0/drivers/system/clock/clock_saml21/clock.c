@@ -295,6 +295,9 @@ void system_clock_source_osc32k_set_config(
  * Configures the Ultra Low Power 32KHz internal RC oscillator with the given
  * configuration settings.
  *
+ * \note The OSCULP32K is enabled by default after a Power On Reset (POR) and
+ *       will always run except during POR.
+ *
  * \param[in] config  OSCULP32K configuration structure containing the new config
  */
 void system_clock_source_osculp32k_set_config(
@@ -302,8 +305,6 @@ void system_clock_source_osculp32k_set_config(
 {
 	OSC32KCTRL_OSCULP32K_Type temp = OSC32KCTRL->OSCULP32K;
 	/* Update settings via a temporary struct to reduce register access */
-	temp.bit.EN1K     = config->enable_1khz_output;
-	temp.bit.EN32K    = config->enable_32khz_output;
 	temp.bit.WRTLOCK  = config->write_once;
 	OSC32KCTRL->OSCULP32K  = temp;
 }
@@ -762,7 +763,7 @@ bool system_clock_source_is_ready(
  *
  * \note OSC16M is always enabled and if user selects other clocks for GCLK generators,
  * the OSC16M default enable can be disabled after system_clock_init. Make sure the
- * clock switch successfully before disabling OSC8M.
+ * clock switches successfully before disabling OSC8M.
  */
 void system_clock_init(void)
 {
@@ -836,10 +837,6 @@ void system_clock_init(void)
 	} else {
 		_system_clock_source_osc16m_freq_sel();
 	}
-
-	uint32_t mask = OSC32KCTRL->OSCULP32K.reg & (~(OSC32KCTRL_OSCULP32K_EN32K | OSC32KCTRL_OSCULP32K_EN1K));
-	OSC32KCTRL->OSCULP32K.reg = mask | (CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN1K_Pos)
-									 | (CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN32K_Pos);
 
 	/* DFLL Config (Open and Closed Loop) */
 #if CONF_CLOCK_DFLL_ENABLE == true
@@ -920,7 +917,7 @@ void system_clock_init(void)
 
 	/* Configure all GCLK generators except for the main generator, which
 	 * is configured later after all other clock systems are set up */
-	MREPEAT(9, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
+	MREPEAT(GCLK_GEN_NUM, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
 #  if CONF_CLOCK_DFLL_ENABLE == true
 	/* Enable DFLL reference clock if in closed loop mode */
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {

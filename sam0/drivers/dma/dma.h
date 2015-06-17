@@ -68,6 +68,8 @@ extern "C" {
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_dma_prerequisites
@@ -98,8 +100,25 @@ extern "C" {
  * the DMAC to transfer the data into another peripheral or into SRAM.
  * The CPU can remain in sleep during this time to reduce power consumption.
  *
- * The DMAC module has 12 channels. The DMA channel
- * operation can be suspended at any time by software, by events
+ * <table>
+ *    <tr>
+ *      <th>Device</th>
+ *      <th>Dma channel number</th>
+ *    </tr>
+ *    <tr>
+ *      <td>SAMD21/R21/C20/C21</td>
+ *      <td>12</td>
+ *    </tr>
+ *    <tr>
+ *      <td>SAMD10/D11</td>
+ *      <td>6</td>
+ *    </tr>
+ *    <tr>
+ *      <td>SAML21</td>
+ *      <td>16</td>
+ *    </tr>
+ * </table>
+ * The DMA channel operation can be suspended at any time by software, by events
  * from event system, or after selectable descriptor execution. The operation
  * can be resumed by software or by events from event system.
  * The DMAC driver for SAM supports four types of transfers such as
@@ -170,7 +189,7 @@ extern "C" {
  *  </tr>
  *  <tr>
  *    <td>FEATURE_DMA_CHANNEL_STANDBY</td>
- *    <td>SAML21</td>
+ *    <td>SAML21/C20/C21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -300,7 +319,7 @@ extern "C" {
 #include <compiler.h>
 #include "conf_dma.h"
 
-#if (SAML21)
+#if (SAML21) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 #define FEATURE_DMA_CHANNEL_STANDBY
 #endif
 
@@ -309,6 +328,9 @@ extern "C" {
 
 /** ExInitial description section. */
 extern DmacDescriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
+
+/* DMA channel interrup flag. */
+extern uint8_t g_chan_interrupt_flag[CONF_MAX_USED_CHANNEL_NUM];
 
 /** DMA priority level. */
 enum dma_priority_level {
@@ -431,12 +453,12 @@ enum dma_transfer_trigger_action{
  * Callback types for DMA callback driver.
  */
 enum dma_callback_type {
-	/** Callback for transfer complete. */
-	DMA_CALLBACK_TRANSFER_DONE,
 	/** Callback for any of transfer errors. A transfer error is flagged
      *	if a bus error is detected during an AHB access or when the DMAC
 	 *  fetches an invalid descriptor. */
 	DMA_CALLBACK_TRANSFER_ERROR,
+	/** Callback for transfer complete. */
+	DMA_CALLBACK_TRANSFER_DONE,
 	/** Callback for channel suspend. */
 	DMA_CALLBACK_CHANNEL_SUSPEND,
 	/** Number of available callbacks. */
@@ -572,6 +594,7 @@ static inline void dma_enable_callback(struct dma_resource *resource,
 	Assert(resource);
 
 	resource->callback_enable |= 1 << type;
+	g_chan_interrupt_flag[resource->channel_id] |= (1UL << type);
 }
 
 /**
@@ -587,6 +610,8 @@ static inline void dma_disable_callback(struct dma_resource *resource,
 	Assert(resource);
 
 	resource->callback_enable &= ~(1 << type);
+	g_chan_interrupt_flag[resource->channel_id] &= (~(1UL << type) & DMAC_CHINTENSET_MASK);
+	DMAC->CHINTENCLR.reg = (1UL << type);
 }
 
 /**
@@ -792,6 +817,9 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  *     <th>Changelog</th>
  *   </tr>
  *   <tr>
+ *     <td>Add SAM C21 support</td>
+ *   </tr>
+ *   <tr>
  *     <td>Add SAM L21 support</td>
  *   </tr>
  *   <tr>
@@ -827,8 +855,8 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  *    </tr>
  *    <tr>
  *        <td>C</td>
- *        <td>11/2014</td>
- *        <td>Added SAML21 support</td>
+ *        <td>06/2015</td>
+ *        <td>Added SAML21, SAMC21, and SAMDAx support</td>
  *    </tr>
  *    <tr>
  *        <td>B</td>

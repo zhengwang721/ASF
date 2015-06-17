@@ -48,7 +48,7 @@
 #define BOARD_NAME          "REB231FE2-EK"
 
 /*Board Has an External PA Connected to the Radio ,Following are the constatnts
- *related to the Exxt PA */
+ * related to the Exxt PA */
 
 #ifdef EXT_RF_FRONT_END_CTRL /*For External PA for 231FEM-EK*/
 

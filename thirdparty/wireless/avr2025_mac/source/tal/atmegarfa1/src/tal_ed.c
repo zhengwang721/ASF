@@ -216,7 +216,6 @@ void ed_scan_done(void)
 			= (uint8_t)(((uint16_t)max_ed_level *
 				0xFF) / CLIP_VALUE_REG);
 	}
-
 #endif
 	tal_ed_end_cb(max_ed_level);
 }

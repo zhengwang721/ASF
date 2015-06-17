@@ -54,7 +54,7 @@ extern "C" {
 
 struct sw_timer_module;
 
-/** 
+/**
  * Callback Function type of time out event in the timer.
  *
  * \param[in]  timer_id        ID of timer.
@@ -150,9 +150,9 @@ void sw_timer_disable(struct sw_timer_module *const module_inst);
  *
  * \return If negative value, registering timer was failed. Otherwise this value is ID of timer.
  */
-int sw_timer_register_callback(struct sw_timer_module *const module_inst, 
+int sw_timer_register_callback(struct sw_timer_module *const module_inst,
 	sw_timer_callback_t callback, void *context, uint32_t period);
-	
+
 /**
  * \brief Unregister callback.
  *

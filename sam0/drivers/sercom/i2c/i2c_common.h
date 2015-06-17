@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Common Driver
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -88,6 +88,8 @@ extern "C" {
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_sercom_i2c_prerequisites
@@ -119,19 +121,19 @@ extern "C" {
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED</td>
- *		<td>SAM D21/R21/D10/D11/L21</td>
+ *		<td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_10_BIT_ADDRESS</td>
- *		<td>SAM D21/R21/D10/D11/L21</td>
+ *		<td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_SCL_STRETCH_MODE</td>
- *		<td>SAM D21/R21/D10/D11/L21</td>
+ *		<td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_SCL_EXTEND_TIMEOUT</td>
- *		<td>SAM D21/R21/D10/D11/L21</td>
+ *		<td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
  *	</tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -292,7 +294,7 @@ extern "C" {
  * \li \b UNKNOWN If the master has recently been enabled or connected to
  * the bus. Is forced to \b IDLE after given
  * \ref asfdoc_sam0_sercom_i2c_unknown_bus_timeout "timeout" when
- * the master module is enabled.
+ * the master module is enabled
  *
  * The bus state diagram can be seen in
  * \ref asfdoc_sam0_sercom_i2c_bus_states_figure "the figure below".
@@ -398,7 +400,8 @@ extern "C" {
  *       supported by the driver now.
  * @{
  */
-#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) ||defined(__DOXYGEN__)
+#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAMDA1) || \
+	(SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** Fast mode plus and high speed support. */
 #  define FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
 /** 10-bit address support. */
@@ -485,7 +488,7 @@ enum i2c_transfer_direction {
  *	<tr>
  *		<td>
  *		\li Added 10-bit addressing and high speed support in SAM D21
- *		\li Seperate structure i2c_packet into i2c_master_packet and i2c_slave packet
+ *		\li Separate structure i2c_packet into i2c_master_packet and i2c_slave packet
  *		</td>
  *	</tr>
  *	<tr>
@@ -539,8 +542,8 @@ enum i2c_transfer_direction {
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Added SAM L21 support.</td>
+ *		<td>06/2015</td>
+ *		<td>Added SAM L21, SAMDAx and SAMC21 support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

@@ -109,7 +109,7 @@ enum status_code nvm_set_config(
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
 
-#if (SAML21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, MCLK_APBBMASK_NVMCTRL);
 #else
@@ -125,6 +125,7 @@ enum status_code nvm_set_config(
 		return STATUS_BUSY;
 	}
 
+#if (!SAMC20) && (!SAMC21)
 	/* Writing configuration to the CTRLB register */
 	nvm_module->CTRLB.reg =
 			NVMCTRL_CTRLB_SLEEPPRM(config->sleep_power_mode) |
@@ -132,6 +133,21 @@ enum status_code nvm_set_config(
 			NVMCTRL_CTRLB_RWS(config->wait_states) |
 			((config->disable_cache & 0x01) << NVMCTRL_CTRLB_CACHEDIS_Pos) |
 			NVMCTRL_CTRLB_READMODE(config->cache_readmode);
+#else
+	uint8_t cache_disable_value =  0;
+	if (config->disable_rww_cache == false) {
+		cache_disable_value = 0x02;
+	} else {
+		cache_disable_value = (config->disable_cache & 0x01);
+	}
+	/* Writing configuration to the CTRLB register */
+	nvm_module->CTRLB.reg =
+			NVMCTRL_CTRLB_SLEEPPRM(config->sleep_power_mode) |
+			((config->manual_page_write & 0x01) << NVMCTRL_CTRLB_MANW_Pos) |
+			NVMCTRL_CTRLB_RWS(config->wait_states) |
+			(cache_disable_value << NVMCTRL_CTRLB_CACHEDIS_Pos) |
+			NVMCTRL_CTRLB_READMODE(config->cache_readmode);
+#endif
 
 	/* Initialize the internal device struct */
 	_nvm_dev.page_size         = (8 << nvm_module->PARAM.bit.PSZ);
@@ -199,7 +215,12 @@ enum status_code nvm_execute_command(
 
 	/* turn off cache before issuing flash commands */
 	temp = nvm_module->CTRLB.reg;
+#if (SAMC20) || (SAMC21)
+	nvm_module->CTRLB.reg = ((temp &(~(NVMCTRL_CTRLB_CACHEDIS(0x2)))) 
+							| NVMCTRL_CTRLB_CACHEDIS(0x1));
+#else
 	nvm_module->CTRLB.reg = temp | NVMCTRL_CTRLB_CACHEDIS;
+#endif
 
 	/* Clear error flags */
 	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
@@ -783,7 +804,12 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod33_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & FUSES_BOD33_ACTION_Msk)
 			>> FUSES_BOD33_ACTION_Pos);
-#elif (SAMD20) || (SAMD21) || (SAMR21)
+
+	fusebits->bod33_hysteresis = (bool)
+			((raw_user_row[1] & FUSES_BOD33_HYST_Msk)
+			>> FUSES_BOD33_HYST_Pos);
+
+#elif (SAMD20) || (SAMD21) || (SAMR21)|| (SAMDA1)
 	fusebits->bod33_level = (uint8_t)
 			((raw_user_row[0] & FUSES_BOD33USERLEVEL_Msk)
 			>> FUSES_BOD33USERLEVEL_Pos);
@@ -795,6 +821,24 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod33_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & FUSES_BOD33_ACTION_Msk)
 			>> FUSES_BOD33_ACTION_Pos);
+	fusebits->bod33_hysteresis = (bool)
+			((raw_user_row[1] & FUSES_BOD33_HYST_Msk)
+			>> FUSES_BOD33_HYST_Pos);
+#elif (SAMC20) || (SAMC21)
+	fusebits->bodvdd_level = (uint8_t)
+			((raw_user_row[0] & FUSES_BODVDDUSERLEVEL_Msk)
+			>> FUSES_BODVDDUSERLEVEL_Pos);
+
+	fusebits->bodvdd_enable = (bool)
+			(!((raw_user_row[0] & FUSES_BODVDD_DIS_Msk)
+			>> FUSES_BODVDD_DIS_Pos));
+
+	fusebits->bodvdd_action = (enum nvm_bod33_action)
+			((raw_user_row[0] & FUSES_BODVDD_ACTION_Msk)
+			>> FUSES_BODVDD_ACTION_Pos);
+
+	fusebits->bodvdd_hysteresis = (raw_user_row[1] & FUSES_BODVDD_HYST_Msk)
+									>> FUSES_BODVDD_HYST_Pos;
 #else
 	fusebits->bod33_level = (uint8_t)
 				((raw_user_row[0] & SYSCTRL_FUSES_BOD33USERLEVEL_Msk)
@@ -807,6 +851,43 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod33_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_ACTION_Msk)
 			>> SYSCTRL_FUSES_BOD33_ACTION_Pos);
+
+	fusebits->bod33_hysteresis = (bool)
+			((raw_user_row[1] & SYSCTRL_FUSES_BOD33_HYST_Msk)
+			>> SYSCTRL_FUSES_BOD33_HYST_Pos);
+
+#endif
+
+#ifdef FEATURE_BOD12
+
+#ifndef FUSES_BOD12USERLEVEL_Pos
+#define FUSES_BOD12USERLEVEL_Pos 17
+#define FUSES_BOD12USERLEVEL_Msk (0x3Ful << FUSES_BOD12USERLEVEL_Pos)
+#endif
+#ifndef FUSES_BOD12_DIS_Pos
+#define FUSES_BOD12_DIS_Pos 23
+#define FUSES_BOD12_DIS_Msk (0x1ul << FUSES_BOD12_DIS_Pos)
+#endif
+#ifndef FUSES_BOD12_ACTION_Pos
+#define FUSES_BOD12_ACTION_Pos 24
+#define FUSES_BOD12_ACTION_Msk (0x3ul << FUSES_BOD12_ACTION_Pos)
+#endif
+	
+	fusebits->bod12_level = (uint8_t)
+			((raw_user_row[0] & FUSES_BOD12USERLEVEL_Msk)
+			>> FUSES_BOD12USERLEVEL_Pos);
+
+	fusebits->bod12_enable = (bool)
+			(!((raw_user_row[0] & FUSES_BOD12_DIS_Msk)
+			>> FUSES_BOD12_DIS_Pos));
+
+	fusebits->bod12_action = (enum nvm_bod12_action)
+			((raw_user_row[0] & FUSES_BOD12_ACTION_Msk)
+			>> FUSES_BOD33_ACTION_Pos);
+
+	fusebits->bod12_hysteresis = (bool)
+			((raw_user_row[1] & FUSES_BOD12_HYST_Msk)
+			>> FUSES_BOD12_HYST_Pos);
 #endif
 
 	fusebits->wdt_enable = (bool)
@@ -818,7 +899,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->wdt_timeout_period = (uint8_t)
 			((raw_user_row[0] & WDT_FUSES_PER_Msk) >> WDT_FUSES_PER_Pos);
 
-#if (SAML21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 	fusebits->wdt_window_timeout = (enum nvm_wdt_window_timeout)
 			((raw_user_row[1] & WDT_FUSES_WINDOW_Msk) >> WDT_FUSES_WINDOW_Pos);
 #else
@@ -927,7 +1008,10 @@ enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
 	fusebits[0] &= (~FUSES_BOD33_ACTION_Msk);
 	fusebits[0] |= fb->bod33_action << FUSES_BOD33_ACTION_Pos;
 
-#elif (SAMD20) || (SAMD21) || (SAMR21)
+	fusebits[1] &= (~FUSES_BOD33_HYST_Msk);
+	fusebits[1] |= fb->bod33_hysteresis << FUSES_BOD33_HYST_Pos;
+
+#elif (SAMD20) || (SAMD21) || (SAMR21) || (SAMDA1)
 	fusebits[0] &= (~FUSES_BOD33USERLEVEL_Msk);
 	fusebits[0] |= FUSES_BOD33USERLEVEL(fb->bod33_level);
 
@@ -936,6 +1020,22 @@ enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
 
 	fusebits[0] &= (~FUSES_BOD33_ACTION_Msk);
 	fusebits[0] |= fb->bod33_action << FUSES_BOD33_ACTION_Pos;
+
+	fusebits[1] &= (~FUSES_BOD33_HYST_Msk);
+	fusebits[1] |= fb->bod33_hysteresis << FUSES_BOD33_HYST_Pos;
+
+#elif (SAMC20) || (SAMC21)
+	fusebits[0] &= (~FUSES_BODVDDUSERLEVEL_Msk);
+	fusebits[0] |= FUSES_BODVDDUSERLEVEL(fb->bodvdd_level);
+
+	fusebits[0] &= (~FUSES_BODVDD_DIS_Msk);
+	fusebits[0] |= (!fb->bodvdd_enable) << FUSES_BODVDD_DIS_Pos;
+
+	fusebits[0] &= (~FUSES_BODVDD_ACTION_Msk);
+	fusebits[0] |= fb->bodvdd_action << FUSES_BODVDD_ACTION_Pos;
+
+	fusebits[1] &= (~FUSES_BODVDD_HYST_Msk);
+	fusebits[1] |= fb->bodvdd_hysteresis << FUSES_BODVDD_HYST_Pos;
 
 #else
 	fusebits[0] &= (~SYSCTRL_FUSES_BOD33USERLEVEL_Msk);
@@ -946,6 +1046,9 @@ enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
 
 	fusebits[0] &= (~SYSCTRL_FUSES_BOD33_ACTION_Msk);
 	fusebits[0] |= fb->bod33_action << SYSCTRL_FUSES_BOD33_ACTION_Pos;
+
+	fusebits[1] &= (~SYSCTRL_FUSES_BOD33_HYST_Msk);
+	fusebits[1] |= fb->bod33_hysteresis << SYSCTRL_FUSES_BOD33_HYST_Pos;
 
 #endif
 
@@ -958,7 +1061,7 @@ enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
 	fusebits[0] &= (~WDT_FUSES_PER_Msk);
 	fusebits[0] |= fb->wdt_timeout_period << WDT_FUSES_PER_Pos;
 
-#if (SAML21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 	fusebits[1] &= (~WDT_FUSES_WINDOW_Msk);
 	fusebits[1] |= fb->wdt_window_timeout << WDT_FUSES_WINDOW_Pos;
 #else
@@ -980,6 +1083,35 @@ enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
 	fusebits[1] &= (~NVMCTRL_FUSES_REGION_LOCKS_Msk);
 	fusebits[1] |= fb->lockbits << NVMCTRL_FUSES_REGION_LOCKS_Pos;
 
+#ifdef FEATURE_BOD12
+	
+#ifndef FUSES_BOD12USERLEVEL_Pos
+#define FUSES_BOD12USERLEVEL_Pos 17
+#define FUSES_BOD12USERLEVEL_Msk (0x3Ful << FUSES_BOD12USERLEVEL_Pos)
+#endif
+#ifndef FUSES_BOD12_DIS_Pos
+#define FUSES_BOD12_DIS_Pos 23
+#define FUSES_BOD12_DIS_Msk (0x1ul << FUSES_BOD12_DIS_Pos)
+#endif
+#ifndef FUSES_BOD12_ACTION_Pos
+#define FUSES_BOD12_ACTION_Pos 24
+#define FUSES_BOD12_ACTION_Msk (0x3ul << FUSES_BOD12_ACTION_Pos)
+#endif
+		
+	fusebits[0] &= (~FUSES_BOD12USERLEVEL_Msk);
+	fusebits[0] |= ((FUSES_BOD12USERLEVEL_Msk & ((fb->bod33_level) << 
+						FUSES_BOD12USERLEVEL_Pos)));
+
+	fusebits[0] &= (~FUSES_BOD12_DIS_Msk);
+	fusebits[0] |= (!fb->bod12_enable) << FUSES_BOD12_DIS_Pos;
+
+	fusebits[0] &= (~FUSES_BOD12_ACTION_Msk);
+	fusebits[0] |= fb->bod12_action << FUSES_BOD12_ACTION_Pos;
+
+	fusebits[1] &= (~FUSES_BOD12_HYST_Msk);
+	fusebits[1] |= fb->bod12_hysteresis << FUSES_BOD12_HYST_Pos;
+#endif
+
 	error_code = nvm_execute_command(NVM_COMMAND_ERASE_AUX_ROW,NVMCTRL_AUX0_ADDRESS,0);
 	if (error_code != STATUS_OK) {
 		return error_code;
@@ -1000,4 +1132,3 @@ enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
 
 	return error_code;
 }
-

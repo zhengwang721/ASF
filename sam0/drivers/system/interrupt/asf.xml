@@ -29,6 +29,8 @@
 		<build type="include-path" value="system_interrupt_samr21"/>
 		<build type="include-path" value="system_interrupt_samd10_d11"/>
 		<build type="include-path" value="system_interrupt_saml21"/>
+		<build type="include-path" value="system_interrupt_samda"/>
+		<build type="include-path" value="system_interrupt_samc20_c21"/>
 
 		<build type="c-source" value="system_interrupt.c"/>
 
@@ -38,6 +40,8 @@
 		<build type="header-file" value="system_interrupt_samr21/system_interrupt_features.h"/>
 		<build type="header-file" value="system_interrupt_samd10_d11/system_interrupt_features.h"/>
 		<build type="header-file" value="system_interrupt_saml21/system_interrupt_features.h"/>
+		<build type="header-file" value="system_interrupt_samda/system_interrupt_features.h"/>
+		<build type="header-file" value="system_interrupt_samc20_c21/system_interrupt_features.h"/>
 		
 		<build type="header-file" value="quick_start/qs_system_interrupt.h"/>
 
@@ -48,6 +52,8 @@
 		<build type="doxygen-example-path" value="system_interrupt_samr21"/>
 		<build type="doxygen-example-path" value="system_interrupt_samd10_d11"/>
 		<build type="doxygen-example-path" value="system_interrupt_saml21"/>
+		<build type="doxygen-example-path" value="system_interrupt_samda"/>
+		<build type="doxygen-example-path" value="system_interrupt_samc20_c21"/>
 		<build type="doxygen-quick-start" value="asfdoc_sam0_system_interrupt_exqsg"/>
 
 		<device-support value="sam0"/>
@@ -242,6 +248,98 @@
 				<build type="header-file" value="system_interrupt_saml21/system_interrupt_features.h"/>
 
 				<device-support value="saml21"/>
+
+				<require idref="sam0.utils"/>
+				<require idref="thirdparty.cmsis"/>
+			</module>
+			<module type="driver" id="sam0.drivers.system.interrupt#samdax" caption="SYSTEM - Interrupt Driver">
+				<info type="description" value="summary">
+					Driver for the SAM DAx Interrupt System. Provides a unified
+					interface for the configuration and management interrupts within
+					the device, including the enabling, disabling and entering, leaving
+					of critical sections.
+				</info>
+
+				<info type="keyword" value="technology">
+					<keyword value="Interrupt" />
+				</info>
+
+				<info type="appnote" value="AT03261"/>
+				<info type="keyword" value="pdf">
+					<keyword value="SYSTEM"/>
+					<keyword value="I/O"/>
+					<keyword value="Interrupt" />
+				</info>
+
+				<info type="description" value="pdf">
+					This document describes how to use the Interrupts on the SAM DAx,
+					both the ASF driver and the peripheral itself.
+				</info>
+
+				<build type="include-path" value="." />
+				<build type="include-path" value="system_interrupt_samda"/>
+
+				<build type="c-source" value="system_interrupt.c"/>
+
+				<build type="header-file" subtype="api" value="system_interrupt.h"/>
+
+				<build type="header-file" value="system_interrupt_samda/system_interrupt_features.h"/>
+
+				<device-support value="samda1"/>
+
+				<require idref="sam0.utils"/>
+				<require idref="thirdparty.cmsis"/>
+			</module>
+
+			<module type="driver" id="sam0.drivers.system.interrupt#samc21" caption="SYSTEM - Interrupt Driver For SAMC21">
+				<info type="description" value="summary">
+					Driver for the SAM C21 Interrupt System. Provides a unified
+					interface for the configuration and management interrupts within
+					the device, including the enabling, disabling and entering, leaving
+					of critical sections.
+				</info>
+
+				<info type="keyword" value="technology">
+					<keyword value="Interrupt" />
+				</info>
+
+				<build type="include-path" value="." />
+				<build type="include-path" value="system_interrupt_samc20_c21"/>
+
+				<build type="c-source" value="system_interrupt.c"/>
+
+				<build type="header-file" subtype="api" value="system_interrupt.h"/>
+
+				<build type="header-file" value="system_interrupt_samc20_c21/system_interrupt_features.h"/>
+
+				<device-support value="samc21"/>
+
+				<require idref="sam0.utils"/>
+				<require idref="thirdparty.cmsis"/>
+			</module>
+
+			<module type="driver" id="sam0.drivers.system.interrupt#samc20" caption="SYSTEM - Interrupt Driver For SAMC20">
+				<info type="description" value="summary">
+					Driver for the SAM C20 Interrupt System. Provides a unified
+					interface for the configuration and management interrupts within
+					the device, including the enabling, disabling and entering, leaving
+					of critical sections.
+				</info>
+
+				<info type="keyword" value="technology">
+					<keyword value="Interrupt" />
+				</info>
+
+				<build type="include-path" value="." />
+				<build type="include-path" value="system_interrupt_samc20_c21"/>
+
+				<build type="c-source" value="system_interrupt.c"/>
+
+				<build type="header-file" subtype="api" value="system_interrupt.h"/>
+
+				<build type="header-file" value="system_interrupt_samc20_c21/system_interrupt_features.h"/>
+
+				<device-support value="samc20"/>
 
 				<require idref="sam0.utils"/>
 				<require idref="thirdparty.cmsis"/>

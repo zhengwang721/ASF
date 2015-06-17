@@ -1,3 +1,3 @@
 @ECHO OFF
 @TITLE "Image Downloader - Atmel Corporation"
-image_downloader -fw_path ../../../firmware/m2m_aio.bin -port 0
+image_downloader.exe -port 0 -fw2b0_path ../../../firmware/m2m_aio.bin

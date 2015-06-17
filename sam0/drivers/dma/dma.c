@@ -77,6 +77,9 @@ static DmacDescriptor _write_back_section[CONF_MAX_USED_CHANNEL_NUM] SECTION_DMA
 /** Internal DMA resource pool. */
 static struct dma_resource* _dma_active_resource[CONF_MAX_USED_CHANNEL_NUM];
 
+/* DMA channel interrup flag. */
+uint8_t g_chan_interrupt_flag[CONF_MAX_USED_CHANNEL_NUM]={0};
+
 /**
  * \brief Find a free channel for a DMA resource.
  *
@@ -308,7 +311,7 @@ enum status_code dma_allocate(struct dma_resource *resource,
 
 	if (!_dma_inst._dma_init) {
 		/* Initialize clocks for DMA */
-#if (SAML21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 		system_ahb_clock_set_mask(MCLK_AHBMASK_DMAC);
 #else
 		system_ahb_clock_set_mask(PM_AHBMASK_DMAC);
@@ -448,9 +451,7 @@ enum status_code dma_start_transfer_job(struct dma_resource *resource)
 
 	/* Set the interrupt flag */
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
-	DMAC->CHINTENSET.reg = DMAC_CHINTENSET_TERR |
-			 DMAC_CHINTENSET_TCMPL | DMAC_CHINTENSET_SUSP;
-
+	DMAC->CHINTENSET.reg = (DMAC_CHINTENSET_MASK & g_chan_interrupt_flag[resource->channel_id]);
 	/* Set job status */
 	resource->job_status = STATUS_BUSY;
 

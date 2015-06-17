@@ -3,7 +3,7 @@
  *
  * \brief SAM L21 Clock configuration
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,6 +43,7 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+ 
 #include <clock.h>
 
 #ifndef CONF_CLOCKS_H_INCLUDED
@@ -86,9 +87,6 @@
 #  define CONF_CLOCK_OSC32K_ON_DEMAND             true
 #  define CONF_CLOCK_OSC32K_RUN_IN_STANDBY        false
 
-/* SYSTEM_CLOCK_SOURCE_OSCULP32K configuration - Internal Ultra Low Power 32KHz oscillator */
-#  define CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT    true
-#  define CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT   true
 
 /* SYSTEM_CLOCK_SOURCE_DFLL configuration - Digital Frequency Locked Loop */
 #  define CONF_CLOCK_DFLL_ENABLE                  false
