@@ -141,6 +141,7 @@ uint32_t dacc_set_trigger(Dacc *p_dacc, uint32_t ul_trigger, uint32_t channel)
 		p_dacc->DACC_TRIGR = mr | DACC_TRIGR_TRGEN1_EN | DACC_TRIGR_TRGSEL1(ul_trigger);
 		
 	}
+	return DACC_RC_OK;
 }
 #else
 /**
@@ -209,7 +210,7 @@ uint32_t dacc_set_transfer_mode(Dacc *p_dacc, uint32_t ul_mode)
 		p_dacc->DACC_MR |= DACC_MR_ONE;
 		p_dacc->DACC_MR |= DACC_MR_WORD_WORD;
 #elif (SAMV70 || SAMV71 || SAME70 || SAMS70)
-		p_dacc->DACC_MR |= DACC_MR_WORD_ENABLED;
+		p_dacc->DACC_MR = ul_mode;
 #else
 		p_dacc->DACC_MR |= DACC_MR_WORD_WORD;
 #endif
@@ -220,7 +221,7 @@ uint32_t dacc_set_transfer_mode(Dacc *p_dacc, uint32_t ul_mode)
 		p_dacc->DACC_MR |= DACC_MR_ONE;
 		p_dacc->DACC_MR &= (~DACC_MR_WORD_WORD);
 #elif (SAMV70 || SAMV71 || SAME70 || SAMS70)
-		p_dacc->DACC_MR |= DACC_MR_WORD_DISABLED;
+		p_dacc->DACC_MR = ul_mode;
 #else
 		p_dacc->DACC_MR &= (~DACC_MR_WORD_WORD);
 #endif
@@ -500,6 +501,88 @@ uint32_t dacc_set_timing(Dacc *p_dacc,
 	mr |= (DACC_MR_STARTUP_Msk & ((ul_startup) << DACC_MR_STARTUP_Pos));
 
 	p_dacc->DACC_MR = mr;
+	return DACC_RC_OK;
+}
+#endif
+
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+/**
+ * \brief Set DACC prescaler.
+ *
+ * \param p_dacc Pointer to a DACC instance. 
+ * \param ul_prescaler Prescaler value.
+ *
+ * \return \ref DACC_RC_OK for OK.
+ */
+uint32_t dacc_set_prescaler(Dacc *p_dacc, uint32_t ul_prescaler) 
+{
+	uint32_t mr = p_dacc->DACC_MR & (~DACC_MR_PRESCALER_Msk);
+	p_dacc->DACC_MR = mr | DACC_MR_PRESCALER(ul_prescaler);	
+	return DACC_RC_OK;
+}
+
+/**
+ * \brief Enable DACC diff.
+ *
+ * \param p_dacc Pointer to a DACC instance. 
+ *
+ * \return \ref DACC_RC_OK for OK.
+ */
+uint32_t dacc_diff_enable(Dacc *p_dacc)
+{
+	p_dacc->DACC_MR |= DACC_MR_DIFF_ENABLED;
+	return DACC_RC_OK;
+}
+
+/**
+ * \brief Disable DACC diff.
+ *
+ * \param p_dacc Pointer to a DACC instance. 
+ *
+ * \return \ref DACC_RC_OK for OK.
+ */
+uint32_t dacc_diff_disable(Dacc *p_dacc)
+{
+	p_dacc->DACC_MR &= ((~DACC_MR_DIFF) | DACC_MR_DIFF_DISABLED);
+	return DACC_RC_OK;
+}
+
+/**
+ * \brief Set DACC maxs.
+ *
+ * \param p_dacc Pointer to a DACC instance. 
+ * \param ul_prescaler Maxs value.
+ *
+ * \return \ref DACC_RC_OK for OK.
+ */
+uint32_t dacc_set_maxs(Dacc *p_dacc, uint32_t ul_maxs)
+{
+	uint32_t mr = p_dacc->DACC_MR & (~(DACC_MR_MAXS0 | DACC_MR_MAXS1));
+	ul_maxs &= (DACC_MR_MAXS0 | DACC_MR_MAXS1);
+	p_dacc->DACC_MR = mr | ul_maxs;
+	return DACC_RC_OK;
+}
+
+/**
+ * \brief Set DACC osr.
+ *
+ * \param p_dacc Pointer to a DACC instance. 
+ * \param channel DACC osr channel to be set.
+ * \param ul_prescaler Osr value.
+ *
+ * \return \ref DACC_RC_OK for OK.
+ */
+uint32_t dacc_set_osr(Dacc *p_dacc, uint32_t channel, uint32_t ul_osr)
+{
+	uint32_t mr = p_dacc->DACC_TRIGR;
+	if(channel == 0) {
+		mr &= (~DACC_TRIGR_OSR0_Msk);
+		mr |=  DACC_TRIGR_OSR0(ul_osr);
+	}else if(channel == 1) {
+		mr &= (~DACC_TRIGR_OSR1_Msk);
+		mr |=  DACC_TRIGR_OSR1(ul_osr);
+	}
+	p_dacc->DACC_TRIGR = mr;
 	return DACC_RC_OK;
 }
 #endif

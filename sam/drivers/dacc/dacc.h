@@ -123,6 +123,13 @@ uint32_t dacc_set_power_save(Dacc *p_dacc, uint32_t ul_sleep_mode,
 uint32_t dacc_set_timing(Dacc *p_dacc, uint32_t ul_refresh, uint32_t ul_maxs,
 		uint32_t ul_startup);
 #endif
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+uint32_t dacc_set_prescaler(Dacc *p_dacc, uint32_t ul_prescaler);
+uint32_t dacc_diff_enable(Dacc *p_dacc);
+uint32_t dacc_diff_disable(Dacc *p_dacc);
+uint32_t dacc_set_maxs(Dacc *p_dacc, uint32_t ul_maxs);
+uint32_t dacc_set_osr(Dacc *p_dacc, uint32_t channel, uint32_t ul_osr);
+#endif
 uint32_t dacc_enable_channel(Dacc *p_dacc, uint32_t ul_channel);
 uint32_t dacc_disable_channel(Dacc *p_dacc, uint32_t ul_channel);
 uint32_t dacc_get_channel_status(Dacc *p_dacc);
