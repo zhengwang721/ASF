@@ -59,6 +59,7 @@
  *
  * The following devices can use this module:
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM C21
  *  - Atmel | SMART SAM D21
  *  - Atmel | SMART SAM DA1
  *

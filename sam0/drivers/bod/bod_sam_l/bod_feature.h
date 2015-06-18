@@ -386,6 +386,10 @@ enum status_code bod33_set_config(
 static inline enum status_code bod33_enable(void)
 {
 	SUPC->BOD33.reg |= SUPC_BOD33_ENABLE;
+	while (!(SUPC->STATUS.reg & SUPC_STATUS_B33SRDY)) {
+		/* Wait for BOD33 register sync ready */
+	}
+
 	return STATUS_OK;
 }
 
@@ -477,6 +481,10 @@ enum status_code bod12_set_config(
 static inline enum status_code bod12_enable(void)
 {
 	SUPC->BOD12.reg |= SUPC_BOD12_ENABLE;
+	while (!(SUPC->STATUS.reg & SUPC_STATUS_B12SRDY)) {
+		/* Wait for BOD12 register sync ready */
+	}
+
 	return STATUS_OK;
 }
 

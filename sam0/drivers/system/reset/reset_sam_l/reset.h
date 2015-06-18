@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM L21 Reset functionality
+ * \brief SAM Reset functionality
  *
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *

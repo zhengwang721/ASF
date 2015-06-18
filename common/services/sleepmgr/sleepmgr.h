@@ -63,6 +63,8 @@
 # include "samd/sleepmgr.h"
 #elif (SAML21)
 # include "saml/sleepmgr.h"
+#elif (SAMC21)
+# include "samc/sleepmgr.h"
 #else
 # error Unsupported device.
 #endif

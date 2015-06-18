@@ -52,7 +52,7 @@
  *
  * \section Requirements
  *
- * This package can be used with SAM D21/R21/L21 xplained pro.
+ * This package can be used with SAM D21/R21/L21/C21 Xplained Pro.
  *
  * \section Description
  *

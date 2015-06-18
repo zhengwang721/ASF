@@ -58,6 +58,7 @@
  *
  * The following devices can use this module:
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_ccl_prerequisites
@@ -247,7 +248,7 @@ struct ccl_lut_config {
  * \name Initialize and Reset CCL Module
  * @{
  */
- 
+
 /**
  * \brief Initializes CCL module.
  *
@@ -301,7 +302,7 @@ static inline void ccl_module_reset(void)
  * \name Enable and Disable CCL Module
  * @{
  */
- 
+
 /**
  * \brief Enables CCL module.
  *
@@ -331,8 +332,8 @@ static inline void ccl_module_disable(void)
  * \name Configure LUT
  * @{
  */
- 
-/** 
+
+/**
  *  \brief Writes sequential selection to the hardware module.
  *
  *  Writes a given sequential selection configuration to the hardware module.
@@ -385,7 +386,7 @@ enum status_code ccl_lut_set_config(const enum ccl_lut_id number,
  * \name Enable and Disable LUT
  * @{
  */
- 
+
 /**
  * \brief Enables an LUT that was previously configured.
  *
@@ -476,6 +477,11 @@ void ccl_lut_disable(const enum ccl_lut_id number);
  *		<th>Date</td>
  *		<th>Comments</td>
  *	</tr>
+ *    <tr>
+ *      <td>B</td>
+ *      <td>12/2014</td>
+ *      <td>Added support for SAMC21.</td>
+ *    </tr>
  *	<tr>
  *		<td>42447A</td>
  *		<td>06/2015</td>

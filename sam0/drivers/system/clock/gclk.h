@@ -209,6 +209,8 @@ static inline void system_gclk_gen_get_config_defaults(
 	config->high_when_disabled = false;
 #if SAML21
 	config->source_clock       = GCLK_SOURCE_OSC16M;
+#elif (SAMC20) || (SAMC21)
+	config->source_clock       = GCLK_SOURCE_OSC48M;
 #else
 	config->source_clock       = GCLK_SOURCE_OSC8M;
 #endif
