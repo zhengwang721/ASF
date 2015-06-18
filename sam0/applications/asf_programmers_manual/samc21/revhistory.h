@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief SAM C21 Direct Memory Access Driver Configuration Header
+ * \brief ASF Programmers Manual Revision History
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,12 +38,24 @@
  * \asf_license_stop
  *
  */
+
+
+/**
+ * \page appdoc_samc21_asf_prog_manual_samc21_revision_history Document Revision History
+ *
+ * <table>
+ *  <tr>
+ *    <th>Doc. Rev.</td>
+ *    <th>Date</td>
+ *    <th>Comments</td>
+ *  </tr>
+ *  <tr>
+ *    <td>A</td>
+ *    <td>06/2015</td>
+ *    <td>Initial release.</td>
+ *  </tr>
+ * </table>
+ */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_DMA_H_INCLUDED
-#define CONF_DMA_H_INCLUDED
-
-# define CONF_MAX_USED_CHANNEL_NUM     1
-
-#endif
