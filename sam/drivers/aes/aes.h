@@ -213,7 +213,7 @@ typedef enum aes_interrupt_source {
 #if SAM4E
 /** \internal Max number of interrupt sources. */
 #define AES_INTERRUPT_SOURCE_NUM 2
-#elif SAM4C || SAM4CP || SAM4CM
+#elif SAM4C || SAM4CP || SAM4CM || SAMV70 || SAMV71 || SAME70 || SAMS70
 /** \internal Max number of interrupt sources. */
 #define AES_INTERRUPT_SOURCE_NUM 6
 #endif
