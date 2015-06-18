@@ -98,7 +98,7 @@ typedef struct {
 	uint32_t ul_mck;
 } pwm_clock_t;
 
-#if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E || SAMV70 || SAMV71 || SAME70 || SAMS70)
 /** Definitions for PWM channels used by motor stepper */
 typedef enum {
 	PWM_STEPPER_MOTOR_CH_0_1 = 0,  /* Channel 0 and 1 */
@@ -128,21 +128,21 @@ typedef enum {
 	PWM_FAULT_MAINOSC = (1 << 0),
 	PWM_FAULT_PWMFI2 = (1 << 1),
 	PWM_FAULT_PWMFI0 = (1 << 2),
-	PWM_FAULT_PWMFI1 = (1 << 3)
-#elif (SAM3S || SAM4S || SAM4E)
+	PWM_FAULT_PWMFI1 = (1 << 3),
+#elif (SAM3S || SAM4S || SAM4E || SAMV70 || SAMV71 || SAME70 || SAMS70)
 	PWM_FAULT_PWMFI1 = (1 << 0),
 	PWM_FAULT_MAINOSC = (1 << 1),
 	PWM_FAULT_ADC = (1 << 2),
 	PWM_FAULT_ACC = (1 << 3),
 	PWM_FAULT_TIMER_0 = (1 << 4),
-	PWM_FAULT_TIMER_1 = (1 << 5)
+	PWM_FAULT_TIMER_1 = (1 << 5),
 #elif (SAM3XA)
 	PWM_FAULT_PWMFI0 = (1 << 0),
 	PWM_FAULT_PWMFI1 = (1 << 1),
 	PWM_FAULT_PWMFI2 = (1 << 2),
 	PWM_FAULT_MAINOSC = (1 << 3),
 	PWM_FAULT_ADC = (1 << 4),
-	PWM_FAULT_TIMER_0 = (1 << 5)
+	PWM_FAULT_TIMER_0 = (1 << 5),
 #endif
 } pwm_fault_id_t;
 
@@ -259,7 +259,7 @@ typedef struct {
 	/** Offset address of PWM register in which a write access has been attempted */
 	uint32_t ul_offset;
 } pwm_protect_t;
-#endif /* (SAM3U || SAM3S || SAM3XA) */
+#endif /* (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E || SAMV70 || SAMV71 || SAME70 || SAMS70) */
 
 /** Input parameters when configuring a PWM channel mode */
 typedef struct {
@@ -276,7 +276,7 @@ typedef struct {
 	/** Period Cycle Value */
 	uint32_t ul_period;
 
-#if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E || SAMV70 || SAMV71 || SAME70 || SAMS70)
     /** Channel counter event */
 	pwm_counter_event_t counter_event;
     /** Boolean of channel dead-time generator */
@@ -330,7 +330,7 @@ void pwm_channel_enable_interrupt(Pwm *p_pwm, uint32_t ul_event,
 void pwm_channel_disable_interrupt(Pwm *p_pwm, uint32_t ul_event,
 		uint32_t ul_fault);
 
-#if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E || SAMV70 || SAMV71 || SAME70 || SAMS70)
 void pwm_channel_update_output(Pwm *p_pwm, pwm_channel_t *p_channel,
 		pwm_output_t *p_output, bool b_sync);
 void pwm_channel_update_dead_time(Pwm *p_pwm, pwm_channel_t *p_channel,
@@ -349,12 +349,13 @@ void pwm_cmp_enable_interrupt(Pwm *p_pwm, uint32_t ul_sources,
 		pwm_cmp_interrupt_t type);
 void pwm_cmp_disable_interrupt(Pwm *p_pwm, uint32_t ul_sources,
 		pwm_cmp_interrupt_t type);
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 void pwm_pdc_set_request_mode(Pwm *p_pwm, pwm_pdc_request_mode_t request_mode,
 		uint32_t ul_cmp_unit);
 
 void pwm_pdc_enable_interrupt(Pwm *p_pwm, uint32_t ul_sources);
 void pwm_pdc_disable_interrupt(Pwm *p_pwm, uint32_t ul_sources);
-
+#endif
 uint32_t pwm_sync_init(Pwm *p_pwm, pwm_sync_update_mode_t mode,
 		uint32_t ul_update_period);
 void pwm_sync_unlock_update(Pwm *p_pwm);

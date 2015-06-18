@@ -499,7 +499,7 @@ void pwm_channel_disable_interrupt(Pwm *p_pwm, uint32_t ul_event,
 }
 
 
-#if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E || SAMV70 || SAMV71 || SAME70 || SAMS70)
 /**
  * \brief Change output selection of the PWM channel.
  *
@@ -796,7 +796,7 @@ void pwm_cmp_disable_interrupt(Pwm *p_pwm, uint32_t ul_sources,
 	}
 }
 
-
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 /**
  * \brief Set PDC transfer request mode.
  *
@@ -840,6 +840,7 @@ void pwm_pdc_disable_interrupt(Pwm *p_pwm, uint32_t ul_sources)
 {
 	p_pwm->PWM_IDR2 = ul_sources;
 }
+#endif
 
 /**
  * \brief Initialize synchronous channels update mode and period.
