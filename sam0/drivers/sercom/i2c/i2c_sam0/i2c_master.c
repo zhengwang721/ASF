@@ -568,10 +568,6 @@ static enum status_code _i2c_master_read_packet(
 		/* Save last data to buffer. */
 		_i2c_master_wait_for_sync(module);
 		packet->data[counter] = i2c_module->DATA.reg;
-		if (!module->send_stop) {
-			_i2c_master_wait_for_bus(module);
-			i2c_module->INTFLAG.reg = SERCOM_I2CM_INTFLAG_SB;
-		}
 	}
 
 	return tmp_status;

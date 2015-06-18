@@ -619,9 +619,6 @@ void _i2c_master_interrupt_handler(
 			_i2c_master_write(module);
 		} else {
 			_i2c_master_read(module);
-			if ((module->buffer_remaining == 0) && (!module->send_stop)) {
-				return;
-			}
 		}
 	}
 
