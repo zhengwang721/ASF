@@ -81,7 +81,7 @@
 /** Period value of PWM output waveform */
 #define PERIOD_VALUE       100
 /** Initial duty cycle value */
-#define INIT_DUTY_VALUE    50
+#define INIT_DUTY_VALUE    0
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- PWM LED Example --\r\n" \
@@ -96,51 +96,19 @@ pwm_channel_t g_pwm_channel_led;
  */
 #if (SAMV70 || SAMV71 || SAME70 || SAMS70)
 void PWM0_Handler(void)
-{
-	static uint32_t ul_count = 0;  /* PWM counter value */
-	static uint32_t ul_duty = INIT_DUTY_VALUE;  /* PWM duty cycle rate */
-	static uint8_t fade_in = 1;  /* LED fade in flag */
-
-	uint32_t events = pwm_channel_get_interrupt_status(PWM0);
-
-	/* Interrupt on PIN_PWM_LED0_CHANNEL */
-	if ((events & (1 << PIN_PWM_LED0_CHANNEL)) ==
-	(1 << PIN_PWM_LED0_CHANNEL)) {
-		ul_count++;
-
-		/* Fade in/out */
-		if (ul_count == (PWM_FREQUENCY / (PERIOD_VALUE - INIT_DUTY_VALUE))) {
-			/* Fade in */
-			if (fade_in) {
-				ul_duty++;
-				if (ul_duty == PERIOD_VALUE) {
-					fade_in = 0;
-				}
-				} else {
-				/* Fade out */
-				ul_duty--;
-				if (ul_duty == INIT_DUTY_VALUE) {
-					fade_in = 1;
-				}
-			}
-
-			/* Set new duty cycle */
-			ul_count = 0;
-			g_pwm_channel_led.channel = PIN_PWM_LED0_CHANNEL;
-			pwm_channel_update_duty(PWM0, &g_pwm_channel_led, ul_duty);
-			g_pwm_channel_led.channel = PIN_PWM_LED1_CHANNEL;
-			pwm_channel_update_duty(PWM0, &g_pwm_channel_led, ul_duty);
-		}
-	}
-}
 #else
 void PWM_Handler(void)
+#endif
 {
 	static uint32_t ul_count = 0;  /* PWM counter value */
 	static uint32_t ul_duty = INIT_DUTY_VALUE;  /* PWM duty cycle rate */
 	static uint8_t fade_in = 1;  /* LED fade in flag */
 
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	uint32_t events = pwm_channel_get_interrupt_status(PWM0);
+#else
 	uint32_t events = pwm_channel_get_interrupt_status(PWM);
+#endif
 
 	/* Interrupt on PIN_PWM_LED0_CHANNEL */
 	if ((events & (1 << PIN_PWM_LED0_CHANNEL)) ==
@@ -166,13 +134,20 @@ void PWM_Handler(void)
 			/* Set new duty cycle */
 			ul_count = 0;
 			g_pwm_channel_led.channel = PIN_PWM_LED0_CHANNEL;
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+			pwm_channel_update_duty(PWM0, &g_pwm_channel_led, ul_duty);
+#else
 			pwm_channel_update_duty(PWM, &g_pwm_channel_led, ul_duty);
+#endif
 			g_pwm_channel_led.channel = PIN_PWM_LED1_CHANNEL;
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+			pwm_channel_update_duty(PWM0, &g_pwm_channel_led, ul_duty);
+#else
 			pwm_channel_update_duty(PWM, &g_pwm_channel_led, ul_duty);
+#endif
 		}
 	}
 }
-#endif
 
 /**
  *  \brief Configure the Console UART.
@@ -216,7 +191,6 @@ int main(void)
 	/* Enable PWM peripheral clock */
 #if (SAMV70 || SAMV71 || SAME70 || SAMS70)
 	pmc_enable_periph_clk(ID_PWM0);
-	pmc_enable_periph_clk(ID_PWM0);
 #else
 	pmc_enable_periph_clk(ID_PWM);
 #endif
@@ -237,7 +211,6 @@ int main(void)
 		.ul_mck = sysclk_get_cpu_hz()
 	};
 #if (SAMV70 || SAMV71 || SAME70 || SAMS70)
-	pwm_init(PWM0, &clock_setting);
 	pwm_init(PWM0, &clock_setting);
 #else
 	pwm_init(PWM, &clock_setting);
@@ -294,11 +267,6 @@ int main(void)
 
 	/* Configure interrupt and enable PWM interrupt */
 #if (SAMV70 || SAMV71 || SAME70 || SAMS70)
-	NVIC_DisableIRQ(PWM0_IRQn);
-	NVIC_ClearPendingIRQ(PWM0_IRQn);
-	NVIC_SetPriority(PWM0_IRQn, 0);
-	NVIC_EnableIRQ(PWM0_IRQn);
-	
 	NVIC_DisableIRQ(PWM0_IRQn);
 	NVIC_ClearPendingIRQ(PWM0_IRQn);
 	NVIC_SetPriority(PWM0_IRQn, 0);
