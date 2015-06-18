@@ -1,0 +1,821 @@
+/**
+ * \file
+ *
+ * \brief SAM XDMA Controller (DMAC) driver.
+ *
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+
+#ifndef XDMAC_H_INCLUDED
+#define XDMAC_H_INCLUDED
+
+/**
+ * \defgroup asfdoc_sam_drivers_xdmac_group SAMV71/V70/E70/S70 XDMA Controller (XDMAC) Driver
+ *
+ * This driver for Atmel&reg; | SMART SAM7 XDMA Controller (XDMAC) is a AHB-protocol central
+ * direct memory access controller. It performs peripheral data transfer and memory move operations
+ * over one or two bus ports through the unidirectional communication channel.
+ * This is a driver for the configuration, enabling, disabling, and use of the XDMAC peripheral.
+ *
+ * Devices from the following series can use this module:
+ * - Atmel | SMART SAMV71
+ * - Atmel | SMART SAMV70
+ * - Atmel | SMART SAMS70
+ * - Atmel | SMART SAME70
+ *
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_sam_drivers_xdmac_prerequisites
+ *  - \ref asfdoc_sam_drivers_xdmac_module_overview
+ *  - \ref asfdoc_sam_drivers_xdmac_special_considerations
+ *  - \ref asfdoc_sam_drivers_xdmac_extra_info
+ *  - \ref asfdoc_sam_drivers_xdmac_examples
+ *  - \ref asfdoc_sam_drivers_xdmac_api_overview
+ *
+ *
+ * \section asfdoc_sam_drivers_xdmac_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_sam_drivers_xdmac_module_overview Module Overview
+ * The DMA Controller (XDMAC) is a AHB-protocol central direct memory access controller.
+ * It performs peripheral data transfer and memory move operations over one or two bus ports
+ * through the unidirectional communication channel. Each channel is fully programmable and
+ * provides both peripheral or memory to memory transfer. The channel features are configurable
+ * at implementation time.
+ *
+ *
+ * \section asfdoc_sam_drivers_xdmac_special_considerations Special Considerations
+ * There are no special considerations for this module.
+ *
+ *
+ * \section asfdoc_sam_drivers_xdmac_extra_info Extra Information
+ *
+ * For extra information, see \ref asfdoc_sam_drivers_xdmac_extra. This includes:
+ *  - \ref asfdoc_sam_drivers_xdmac_extra_acronyms
+ *  - \ref asfdoc_sam_drivers_xdmac_extra_dependencies
+ *  - \ref asfdoc_sam_drivers_xdmac_extra_errata
+ *  - \ref asfdoc_sam_drivers_xdmac_extra_history
+ *
+ * \section asfdoc_sam_drivers_xdmac_examples Examples
+ *
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_sam_drivers_xdmac_exqsg.
+ *
+ *
+ * \section asfdoc_sam_drivers_xdmac_api_overview API Overview
+ * @{
+ */
+
+#include  <compiler.h>
+
+/** @cond */
+/**INDENT-OFF**/
+#ifdef __cplusplus
+extern "C" {
+#endif
+/**INDENT-ON**/
+/** @endcond */
+
+/** DMA status or return code */
+typedef enum {
+	  /** Operation is successful */
+    XDMAD_OK = 0,
+    /** Channel occupied or transfer not finished */       
+    XDMAD_PARTIAL_DONE,
+    XDMAD_DONE,
+    XDMAD_BUSY, 
+    /** Operation failed */         
+    XDMAD_ERROR,  
+    /** Operation cancelled */       
+    XDMAD_CANCELED       
+} xdmac_status_t;
+
+/** XDMA state for channel */
+typedef enum {
+	  /** Free channel. */
+    XDMAD_STATE_FREE = 0, 
+    /** Allocated to some peripheral. */     
+    XDMAD_STATE_ALLOCATED,
+    /** XDMA started. */      
+    XDMAD_STATE_START,
+    /** XDMA in transferring. */       
+    XDMAD_STATE_IN_XFR, 
+    /** XDMA transfer done. */       
+    XDMAD_STATE_DONE,  
+    /** XDMA transfer stopped. */        
+    XDMAD_STATE_HALTED,        
+} xdmac_state_t;
+
+/** XDMA driver channel */
+typedef struct {
+	  /** HW ID for source. */
+    uint8_t bSrcPeriphID;  
+    /** HW ID for destination. */         
+    uint8_t bDstPeriphID;   
+    /** DMA channel state. */        
+    xdmac_state_t state;         
+} xdmac_channel_t;
+
+/** XDMA driver instance */
+typedef struct {
+    Xdmac *p_xdmac;
+    xdmac_channel_t XdmaChannels[XDMACCHID_NUMBER];
+    uint8_t numChannels;
+ } xdmac_module_t;
+
+/** XDMA config register for channel */
+typedef struct {
+    /** Microblock Control Member. */
+    uint32_t mbr_ubc;
+    /** Source Address Member. */
+    uint32_t mbr_sa;
+    /** Destination Address Member. */
+    uint32_t mbr_da;
+    /** Configuration Register. */
+    uint32_t mbr_cfg;
+    /** Block Control Member. */
+    uint32_t mbr_bc;
+    /** Data Stride Member. */
+    uint32_t mbr_ds;
+    /** Source Microblock Stride Member. */
+    uint32_t mbr_sus;
+    /** Destination Microblock Stride Member. */
+    uint32_t mbr_dus;
+} xdmac_channel_config_t;
+
+/** 
+ * \brief Structure for storing parameters for DMA view0 that can be
+ * performed by the DMA Master transfer.
+ */
+typedef struct {
+    /** Next Descriptor Address number. */
+    uint32_t mbr_nda;
+    /** Microblock Control Member. */
+    uint32_t mbr_ubc;
+    /** Transfer Address Member. */
+    uint32_t mbr_ta;
+} LinkedListDescriporView0;
+
+/**
+ * \brief Structure for storing parameters for DMA view1 that can be
+ * performed by the DMA Master transfer.
+ */
+typedef struct {
+    /** Next Descriptor Address number. */
+    uint32_t mbr_nda;
+    /** Microblock Control Member. */
+    uint32_t mbr_ubc;
+    /** Source Address Member. */
+    uint32_t mbr_sa;
+    /** Destination Address Member. */
+    uint32_t mbr_da;
+} LinkedListDescriporView1;
+
+/**
+ * \brief Structure for storing parameters for DMA view2 that can be
+ * performed by the DMA Master transfer.
+ */
+typedef struct {
+    /** Next Descriptor Address number. */
+    uint32_t mbr_nda;
+    /** Microblock Control Member. */
+    uint32_t mbr_ubc;
+    /** Source Address Member. */
+    uint32_t mbr_sa;
+    /** Destination Address Member. */
+    uint32_t mbr_da;
+    /** Configuration Register. */
+    uint32_t mbr_cfg;
+}LinkedListDescriporView2;
+
+/**
+ * \brief Structure for storing parameters for DMA view3 that can be
+ * performed by the DMA Master transfer.
+ */
+typedef struct {
+    /** Next Descriptor Address number. */
+    uint32_t mbr_nda;
+    /** Microblock Control Member. */
+    uint32_t mbr_ubc;
+    /** Source Address Member. */
+    uint32_t mbr_sa;
+    /** Destination Address Member. */
+    uint32_t mbr_da;
+    /** Configuration Register. */
+    uint32_t mbr_cfg;
+    /** Block Control Member. */
+    uint32_t mbr_bc;
+    /** Data Stride Member. */
+    uint32_t mbr_ds;
+    /** Source Microblock Stride Member. */
+    uint32_t mbr_sus;
+    /** Destination Microblock Stride Member. */
+    uint32_t mbr_dus;
+}LinkedListDescriporView3;
+
+/**
+ * \brief Enables XDMAC global interrupt.
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[in] ul_mask A bitmask of interrupts to be enabled
+ */
+static inline void xdmac_enable_interrupt(Xdmac *p_xdmac, uint32_t ul_mask )
+{
+    Assert(p_xdmac);
+    p_xdmac->XDMAC_GIE = ( XDMAC_GIE_IE0 << ul_mask) ;
+}
+
+/**
+ * \brief Disables XDMAC global interrupt
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[in] ul_mask A bitmask of interrupts to be disabled.
+ */
+static inline void xdmac_disable_interrupt(Xdmac *p_xdmac, uint32_t ul_mask )
+{
+    Assert(p_xdmac);
+    pXdmac->XDMAC_GID = (XDMAC_GID_ID0 << ul_mask);
+}
+
+/**
+ * \brief Get XDMAC global interrupt mask.
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ */
+static inline uint32_t xdmac_get_interrupt_mask(Xdmac *p_xdmac)
+{
+    Assert(p_xdmac);
+    return (p_xdmac->XDMAC_GIM);
+}
+
+/**
+ * \brief Get XDMAC global interrupt status.
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ */
+static inline uint32_t xdmac_get_interrupt_status(Xdmac *p_xdmac)
+{
+    Assert(p_xdmac);
+    return (p_xdmac->XDMAC_GIS);
+}
+
+/**
+ * \brief enables the relevant channel of given XDMAC.
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[in]  ul_num  XDMA Channel number (range 0 to 23)
+ */
+static inline void xdmac_channel_enable(Xdmac *p_xdmac, uint32_t ul_num)
+{
+    Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_GE = (XDMAC_GE_EN0 << ul_num);
+}
+
+/**
+ * \brief Disables the relevant channel of given XDMAC.
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[in]  ul_num  XDMA Channel number (range 0 to 23)
+ */
+static inline void xdmac_channel_disable(Xdmac *p_xdmac, uint32_t ul_num)
+{
+    Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_GD =(XDMAC_GD_DI0 << ul_num);
+}
+
+/**
+ * \brief Get Global channel status of given XDMAC.
+ * \note: When set to 1, this bit indicates that the channel x is enabled.
+          If a channel disable request is issued, this bit remains asserted
+          until pending transaction is completed.
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ */
+static inline uint32_t xdmac_channel_get_status(Xdmac *p_xdmac)
+{
+
+    Assert(p_xdmac);
+    return p_xdmac->XDMAC_GS;
+}
+
+/**
+ * \brief Suspend the relevant channel's read.
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[in] ul_num  XDMA Channel number (range 0 to 23).
+ */
+static inline void xdmac_channel_read_suspend(Xdmac *p_xdmac, uint32_t ul_num)
+{
+    Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_GRS |= XDMAC_GRS_RS0 << ul_num;
+}
+
+/**
+ * \brief Suspend the relevant channel's write.
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[in] ul_num  XDMA Channel number (range 0 to 23).
+ */
+static inline void xdmac_channel_write_suspend(Xdmac *p_xdmac, uint32_t ul_num)
+{
+    Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    pXdmac->XDMAC_GWS |= XDMAC_GWS_WS0 << ul_num;
+}
+
+/**
+ * \brief Suspend the relevant channel's read & write.
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[in] ul_num  XDMA Channel number (range 0 to 23).
+ */
+static inline void xdmac_channel_readwrite_suspend(Xdmac *p_xdmac, uint32_t ul_num)
+{
+    Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_GRWS = (XDMAC_GRWS_RWS0 << ul_num);
+}
+
+/**
+ * \brief Resume the relevant channel's read & write.
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[in] ul_num  XDMA Channel number (range 0 to 23).
+ */
+static inline void xdmac_channel_readwrite_resume(Xdmac *p_xdmac, uint32_t ul_num)
+{
+		Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_GRWR = (XDMAC_GRWR_RWR0 << ul_num);
+}
+
+/**
+ * \brief Set software transfer request on the relevant channel.
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[in] ul_num  XDMA Channel number (range 0 to 23).
+ */
+static inline void xdmac_channel_software_request(Xdmac *p_xdmac, uint32_t ul_num)
+{
+		Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_GSWR = (XDMAC_GSWR_SWREQ0 << ul_num);
+}
+
+/**
+ * \brief Get software transfer status of the relevant channel.
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ */
+static inline uint32_t xdmac_get_software_request_status(Xdmac *p_xdmac)
+{
+    Assert(p_xdmac);
+    return p_xdmac->XDMAC_GSWS;
+}
+
+/**
+ * \brief Set software flush request on the relevant channel.
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[in] ul_num  XDMA Channel number (range 0 to 23).
+ */
+static inline void xdmac_channel_software_flush_request(Xdmac *p_xdmac, uint32_t ul_num)
+{
+  	Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_GSWF = (XDMAC_GSWF_SWF0 << ul_num);
+    while( !(XDMAC_GetChannelIsr(p_xdmac, ul_num) & XDMAC_CIS_FIS) );
+}
+
+/**
+ * \brief Enable interrupt with mask on the relevant channel of given XDMA.
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[in] ul_num  XDMA Channel number (range 0 to 23).
+ * \param[in] ul_mask Interrupt mask.
+ */
+static inline void xdmac_channel_enable_interrupt(Xdmac *p_xdmac, uint32_t ul_num, uint32_t ul_mask)
+{
+  	Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_CHID[ul_num].XDMAC_CIE = ul_mask;
+}
+
+/**
+ * \brief Disable interrupt with mask on the relevant channel of given XDMA.
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[in] ul_num  XDMA Channel number (range 0 to 23).
+ * \param[in] ul_mask Interrupt mask.
+ */
+static inline void xdmac_channel_disable_interrupt(Xdmac *p_xdmac, uint32_t ul_num, uint32_t ul_mask)
+{
+  	Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_CHID[ul_num].XDMAC_CID = ul_mask;
+}
+
+/**
+ * \brief Get interrupt mask for the relevant channel of given XDMA.
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[in] ul_num  XDMA Channel number (range 0 to 23).
+ */
+static inline uint32_t xdmac_channel_get_interrupt_mask(Xdmac *p_xdmac, uint32_t ul_num)
+{
+   	Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    return p_xdmac->XDMAC_CHID[ul_num].XDMAC_CIM;
+}
+
+/**
+ * \brief Get interrupt status for the relevant channel of given XDMA.
+ *
+ * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[in] ul_num  XDMA Channel number (range 0 to 23).
+ */
+static inline uint32_t xdmac_channel_get_interrupt_status(Xdmac *p_xdmac, uint32_t ul_num)
+{
+  	Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    return p_xdmac->XDMAC_CHID[ul_num].XDMAC_CIS;
+}
+
+/**
+ * \brief Set source address for the relevant channel of given XDMA.
+ *
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  DMA Channel number (range 0 to 23)
+ * \param[in] ul_addr Source address
+ */
+static inline void xdmac_channel_set_source_addr(Xdmac *p_xdmac, uint32_t ul_num, uint32_t ul_addr)
+{
+  	Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_CHID[ul_num].XDMAC_CSA = ul_addr;
+}
+
+/**
+ * \brief Set destination address for the relevant channel of given XDMA.
+ *
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  DMA Channel number (range 0 to 23)
+ * \param[in] ul_addr Destination address
+ */
+static inline void xdmac_channel_set_destination_addr(Xdmac *p_xdmac, uint32_t ul_num, uint32_t ul_addr)
+{
+  	Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_CHID[ul_num].XDMAC_CDA = ul_addr;
+}
+
+/**
+ * \brief Set next descriptor's address & interface for the relevant channel of given XDMA.
+ *
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  DMA Channel number (range 0 to 23)
+ * \param[in] ul_addr Address of next descriptor.
+ * \param[in] ndaif Interface of next descriptor.
+ */
+static inline void xdmac_channel_set_descriptor_addr(Xdmac *p_xdmac, uint32_t ul_num,
+		uint32_t ul_addr, uint8_t ndaif)
+{
+   	Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    Assert(ndaif<2);
+    p_xdmac->XDMAC_CHID[ul_num].XDMAC_CNDA = (ul_addr & 0xFFFFFFFC) | ndaif;
+}
+
+/**
+ * \brief Set next descriptor's configuration for the relevant channel of given XDMA.
+ *
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  DMA Channel number (range 0 to 23)
+ * \param[in] ul_cfg Configuration of next descriptor.
+ */
+static inline void xdmac_channel_set_descriptor_control(Xdmac *p_xdmac, uint32_t ul_num, uint32_t ul_cfg)
+{
+    Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_CHID[ul_num].XDMAC_CNDC = ul_cfg;
+}
+
+/**
+ * \brief Set microblock length for the relevant channel of given XDMA.
+ *
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  DMA Channel number (range 0 to 23)
+ * \param[in] ublen Microblock length.
+ */
+static inline void xdmac_channel_set_microblock_control(Xdmac *p_xdmac, uint32_t ul_num, uint32_t ublen)
+{
+     Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_CHID[ul_num].XDMAC_CUBC = XDMAC_CUBC_UBLEN(ublen);
+}
+
+/**
+ * \brief Set block length for the relevant channel of given XDMA.
+ *
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  XDMA Channel number (range 0 to 23)
+ * \param[in] blen Block length.
+ */
+static inline void xdmac_channel_set_block_control(Xdmac *p_xdmac, uint32_t ul_num, uint32_t blen)
+{
+    Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_CHID[ul_num].XDMAC_CBC = XDMAC_CBC_BLEN(blen);
+}
+
+/**
+ * \brief Set configuration for the relevant channel of given XDMA.
+ *
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  XDMA Channel number (range 0 to 23)
+ * \param[in] config Channel configuration.
+ */
+static inline void xdmac_channel_set_config(Xdmac *p_xdmac, uint32_t ul_num, uint32_t config)
+{
+   Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_CHID[ul_num].XDMAC_CC = config;
+}
+
+/**
+ * \brief Set the relevant channel's data stride memory pattern of given XDMA.
+ *
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  XDMA Channel number (range 0 to 23)
+ * \param[in] dds_msp Data stride memory pattern.
+ */
+static inline void xdmac_channel_set_datastride_mempattern(Xdmac *p_xdmac, uint32_t ul_num, uint32_t dds_msp)
+{
+    Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_CHID[ul_num].XDMAC_CDS_MSP = dds_msp;
+}
+
+/**
+ * \brief Set the relevant channel's source microblock stride of given XDMA.
+ *
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  XDMA Channel number (range 0 to 23)
+ * \param[in] subs Source microblock stride.
+ */
+static inline void xdmac_channel_set_source_microblock_stride(Xdmac *p_xdmac,
+		uint32_t ul_num, uint32_t subs)
+{
+    Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_CHID[ul_num].XDMAC_CSUS = XDMAC_CSUS_SUBS(subs);
+}
+
+/**
+ * \brief Set the relevant channel's destination microblock stride of given XDMA.
+ *
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  XDMA Channel number (range 0 to 23)
+ * \param[in] dubs Destination microblock stride.
+ */
+static inline void xdmac_channel_set_destination_microblock_stride(Xdmac *p_xdmac,
+		uint32_t ul_num, uint32_t dubs)
+{
+    Assert(p_xdmac);
+    Assert(ul_num < XDMAC_CHANNEL_NUM);
+    p_xdmac->XDMAC_CHID[ul_num].XDMAC_CDUS = XDMAC_CDUS_DUBS(dubs);
+}
+
+void xdmac_init(xdmac_module_t *p_module_inst);
+uint32_t xdmac_allocate_channel(xdmac_module_t *p_module_inst, uint8_t uc_src_id, uint8_t uc_dst_id);
+xdmac_status_t xdmac_free_channel(xdmac_module_t *p_module_inst, uint32_t ul_num);
+xdmac_status_t xdmac_configure_transfer(xdmac_module_t *p_module_inst, uint32_t ul_num, xdmac_channel_config_t *p_cfg,
+		uint32_t ul_desc_cfg, uint32_t ul_desc_addr);
+xdmac_status_t xdmac_is_transfer_done(xdmac_module_t *p_module_inst, uint32_t ul_num);
+xdmac_status_t xdmac_start_transfer(xdmac_module_t *p_module_inst, uint32_t ul_num);
+xdmac_status_t xdmac_stop_transfer(xdmac_module_t *p_module_inst, uint32_t ul_num);
+
+/** @cond */
+/**INDENT-OFF**/
+#ifdef __cplusplus
+}
+#endif
+/**INDENT-ON**/
+/** @endcond */
+
+ /** @} */
+
+/**
+ * \page asfdoc_sam_drivers_dmac_extra Extra Information for Direct Memory Access Controller Driver
+ *
+ * \section asfdoc_sam_drivers_dmac_extra_acronyms Acronyms
+ * Below is a table listing the acronyms used in this module, along with their
+ * intended meanings.
+ *
+ * <table>
+ *  <tr>
+ *      <th>Acronym</th>
+ *      <th>Definition</th>
+ *  </tr>
+ *  <tr>
+ *      <td>AHB</td>
+ *      <td>AMBA High-performance Bus</td>
+ * </tr>
+ *  <tr>
+ *      <td>AMBA</td>
+ *      <td>Advanced Microcontroller Bus Architecture</td>
+ * </tr>
+ *  <tr>
+ *      <td>FIFO</td>
+ *      <td>First In First Out</td>
+ * </tr>
+ *  <tr>
+ *      <td>LLI</td>
+ *      <td>Linked List Item</td>
+ * </tr>
+ *  <tr>
+ *      <td>QSG</td>
+ *      <td>Quick Start Guide</td>
+ * </tr>
+ * </table>
+ *
+ *
+ * \section asfdoc_sam_drivers_dmac_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ *  - None
+ *
+ *
+ * \section asfdoc_sam_drivers_dmac_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_sam_drivers_dmac_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
+ *
+ * <table>
+ *	<tr>
+ *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Initial document release</td>
+ *	</tr>
+ * </table>
+ */
+ 
+/**
+ * \page asfdoc_sam_drivers_dmac_exqsg Examples for Direct Memory Access Controller Driver
+ *
+ * This is a list of the available Quick Start Guides (QSGs) and example
+ * applications for \ref asfdoc_sam_drivers_dmac_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
+ *
+ *  - \subpage asfdoc_sam_drivers_dmac_qsg
+ *  - \subpage asfdoc_sam_drivers_dmac_example
+ *
+ * \page asfdoc_sam_drivers_dmac_document_revision_history Document Revision History
+ *
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>42291A</td>
+ *		<td>05/2014</td>
+ *		<td>Initial document release</td>
+ *	</tr>
+ * </table>
+ *
+ */
+
+  /**
+ * \page asfdoc_sam_drivers_dmac_qsg Quick Start Guide for the DMAC driver
+ *
+ * This is the quick start guide for the \ref asfdoc_sam_drivers_dmac_group, with
+ * step-by-step instructions on how to configure and use the driver for
+ * a specific use case.The code examples can be copied into e.g the main
+ * application loop or any other function that will need to control the
+ * DMAC module.
+ *
+ * \section asfdoc_sam_drivers_dmac_qsg_use_cases Use Cases
+ * - \ref asfdoc_sam_drivers_dmac_qsg_basic
+ *
+ * \section asfdoc_sam_drivers_dmac_qsg_basic DMAC Basic Usage
+ *
+ * This use case will demonstrate how to initialize the DMAC module to
+ * perform a single memory to memory transfer.
+ *
+ *
+ * \section asfdoc_sam_drivers_dmac_qsg_basic_setup Setup Steps
+ *
+ * \subsection asfdoc_sam_drivers_dmac_qsg_basic_prereq Prerequisites
+ *
+ * This module requires the following service
+ * - \ref clk_group "System Clock Management (sysclock)"
+ *
+ * \subsection asfdoc_sam_drivers_dmac_qsg_basic_setup_code Setup Code
+ *
+ * Add these macros and global variable to the top of your application's C-file:
+ * \snippet dmac_example.c dmac_define_channel
+ * \snippet dmac_example.c dmac_define_buffer
+ *
+ * Add this to the main loop or a setup function:
+ * \snippet dmac_example.c dmac_init_clock
+ *
+ * \subsection asfdoc_sam_drivers_dmac_qsg_basic_setup_workflow Workflow
+ *
+ * -# Define the variables needed, in order to perform a data transfer:
+ * \snippet dmac_example.c dmac_define_vars
+ * -# Prepare the data buffer to be transferred:
+ * \snippet dmac_example.c dmac_define_prepare_buffer
+ * -# Initialize the DMAC module:
+ * \snippet dmac_example.c dmac_init_module
+ * -# Set the priority to round-robin:
+ * \snippet dmac_example.c dmac_set_priority
+ * -# Enable the DMAC module:
+ * \snippet dmac_example.c dmac_enable_module
+ * -# Configure the channel for:
+ *    - Enable stop on done
+ *    - Enable AHB protection
+ *    - Set the FIFO so that largest defined length AHB burst is performed
+ * \snippet dmac_example.c dmac_configure_channel
+ *
+ * \section asfdoc_sam_drivers_dmac_qsg_basic_usage Usage Steps
+ *
+ * \subsection asfdoc_sam_drivers_dmac_qsg_basic_usage_code Usage Code
+ * Configure the DMA source and destination buffer addresses:
+ * \snippet dmac_example.c dmac_configure_for_single_transfer_1
+ *
+ * Configure DMA CTRLA:
+ *    - Set the buffer transfer size to DMA_BUF_SIZE
+ *    - Set the source transfer width to 32-bit
+ *    - Set the destination transfer width to 32-bit
+ * \snippet dmac_example.c dmac_configure_for_single_transfer_2
+ *
+ * Configure DMA CTRLB:
+ *    - Disable source buffer descriptor fetch
+ *    - Disable destination buffer descriptor Fetch
+ *    - Enable memory-to-memory transfer
+ *    - Increment the source address
+ *    - Increment the  destination address
+ * \snippet dmac_example.c dmac_configure_for_single_transfer_3
+ *
+ * Initialize the DMA transfer:
+ * \snippet dmac_example.c dmac_configure_for_single_transfer_4
+ *
+ * Start the DMA transfer:
+ * \snippet dmac_example.c dmac_start_transfer
+ *
+ * Finally, poll for the DMA transfer to complete:
+ * \snippet dmac_example.c dmac_wait_for_done
+ */
+
+#endif /* XDMAC_H_INCLUDED */
