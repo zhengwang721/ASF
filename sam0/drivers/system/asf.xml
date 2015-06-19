@@ -30,6 +30,7 @@
 		<build type="header-file" value="power/power_sam_d_r/power.h"/>
 		<build type="header-file" value="reset/reset_sam_d_r/reset.h"/>
 		<build type="c-source" value="system.c"/>
+		<build type="doxygen-enable-section" value="DEVICE_SAMD21_SYSTEM_SUPPORT"/>
 		<build type="doxygen-entry-point" value="asfdoc_sam0_system_group"/>
 
 		<device-support value="sam0"/>
@@ -66,7 +67,7 @@
 		<build type="header-file" value="power/power_sam_l/power.h"/>
 		<build type="header-file" value="reset/reset_sam_l/reset.h"/>
 		<build type="c-source" value="system.c"/>
-		<build type="doxygen-enable-section" value="DEVICE_SAML21_SUPPORT"/>
+		<build type="doxygen-enable-section" value="DEVICE_SAML21_SYSTEM_SUPPORT"/>
 		<build type="doxygen-entry-point" value="asfdoc_sam0_system_group"/>
 		<build type="doxygen-quick-start" value="asfdoc_sam0_drivers_power_exqsg"/>
 		<build type="doxygen-example-path" value="power"/>
@@ -107,7 +108,7 @@
 		<build type="header-file" value="power/power_sam_c/power.h"/>
 		<build type="header-file" value="reset/reset_sam_c/reset.h"/>
 		<build type="c-source" value="system.c"/>
-		<build type="doxygen-enable-section" value="DEVICE_SAMC21_SUPPORT"/>
+		<build type="doxygen-enable-section" value="DEVICE_SAMC21_SYSTEM_SUPPORT"/>
 		<build type="doxygen-entry-point" value="asfdoc_sam0_system_group"/>
 		<build type="doxygen-image-path" value="docimg"/>
 
