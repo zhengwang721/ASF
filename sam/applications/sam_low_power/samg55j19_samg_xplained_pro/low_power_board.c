@@ -90,7 +90,7 @@ void init_specific_board(void)
 	 */
 	pio_set_input(PIOA, 0xE7FFFFFF, PIO_PULLUP);
 	pio_set_input(PIOA, 0x18000000, PIO_DEFAULT);
-	pio_set_output(PIOB, 0xFFFFFFFF, HIGH, DISABLE, DISABLE);
+	pio_set_input(PIOB, 0xFFFFFFFF, PIO_PULLUP);
 
 	/* Enable the PMC clocks of push button for wakeup */
 	pmc_enable_periph_clk(ID_PIOA);
