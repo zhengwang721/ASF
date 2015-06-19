@@ -500,10 +500,8 @@ extern "C" {
  * For SYSTEM module related examples, refer to the sub-modules listed in
  * the \ref asfdoc_sam0_system_module_overview "system module overview".
  *
- * \if DEVICE_SAML21_SYSTEM_SUPPORT
  * For a list of examples related to this driver, see
  * \ref asfdoc_sam0_drivers_power_exqsg.
- * \endif
  *
  *
  * \section asfdoc_sam0_system_api_overview API Overview
