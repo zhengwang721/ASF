@@ -334,8 +334,10 @@ void aes_write_input_data(Aes *const p_aes,
 void aes_read_output_data(Aes *const p_aes,
 		uint32_t *p_output_data_buffer);
 
-#if SAM4C || SAM4CP || SAM4CM || defined(__DOXYGEN__)
+#if SAM4C || SAM4CP || SAM4CM || SAMV70 || SAMV71 || SAME70 || SAMS70 || defined(__DOXYGEN__)
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 Pdc *aes_get_pdc_base(Aes *p_aes);
+#endif
 
 /**
  * \brief Get the AES Additional Authenticated Data (AAD) length in bytes.
@@ -480,7 +482,7 @@ static inline void aes_write_gcmh(Aes *const p_aes, uint32_t id, uint32_t hword)
 	p_aes->AES_GCMHR[id] = hword;
 }
 
-#endif /* #if SAM4C || SAM4CP || SAM4CM || defined(__DOXYGEN__) */
+#endif /* #if SAM4C || SAM4CP || SAM4CM || SAMV70 || SAMV71 || SAME70 || SAMS70 || defined(__DOXYGEN__) */
 
 #ifdef __cplusplus
 }

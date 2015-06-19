@@ -182,7 +182,7 @@ void aes_set_config(
 		ul_mode |= AES_MR_LOD;
 	}
 
-	#if SAM4C || SAM4CP || SAM4CM
+	#if (SAM4C || SAM4CP || SAM4CM || SAMV70 || SAMV71 || SAME70 || SAMS70)
 	if ((p_cfg->opmode == AES_GCM_MODE) && (p_cfg->gtag_en == true)) {
 		ul_mode |= AES_MR_GTAGEN;
 	}
@@ -306,8 +306,8 @@ void aes_read_output_data(
 	}
 }
 
-#if SAM4C || SAM4CP || SAM4CM || defined(__DOXYGEN__)
-
+#if SAM4C || SAM4CP || SAM4CM || SAMV70 || SAMV71 || SAME70 || SAMS70 || defined(__DOXYGEN__)
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 /**
  * \brief Get AES PDC base address.
  *
@@ -332,6 +332,7 @@ Pdc *aes_get_pdc_base(
 
 	return p_pdc_base;
 }
+#endif
 
 #endif /* SAM4C || SAM4CP || SAM4CM || defined(__DOXYGEN__) */
 
