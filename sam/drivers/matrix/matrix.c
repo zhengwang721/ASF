@@ -440,8 +440,9 @@ void matrix_set_system_io(uint32_t ul_io)
 	p_matrix->MATRIX_SYSIO = ul_io;
 
 #elif (SAMV71 || SAMV70 || SAMS70 || SAME70)
-
-	p_matrix->CCFG_SYSIO |= (ul_io & 0xFF);
+	
+	p_matrix->CCFG_SYSIO &= 0xFFFF0000;
+	p_matrix->CCFG_SYSIO |= (ul_io & 0xFFFF);
 
 #else
 
