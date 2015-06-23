@@ -152,6 +152,19 @@ typedef enum {
 	GMAC_PHY_INVALID = 0xFF, /* Invalid mode*/
 } gmac_mii_mode_t;
 
+/* This is the list of GMAC priority queue */
+typedef enum  {
+	GMAC_QUE_0 = 0,
+#if !(SAM4E)
+	GMAC_QUE_1 = 1,
+	GMAC_QUE_2 = 2,
+#endif
+#  if !defined(__DOXYGEN__)
+	GMAC_QUE_N,
+#  endif
+
+}gmac_quelist_t;
+
 /** Receive buffer descriptor struct */
 COMPILER_PACK_SET(8)
 typedef struct gmac_rx_descriptor {
@@ -985,6 +998,7 @@ static inline void gmac_set_address64(Gmac* p_gmac, uint8_t uc_index,
  * \param p_gmac   Pointer to the GMAC instance.
  * \param mode   Media independent interface mode.
  */
+#if (SAM4E)
 static inline void gmac_select_mii_mode(Gmac* p_gmac, gmac_mii_mode_t mode)
 {
 	switch (mode) {
@@ -998,6 +1012,135 @@ static inline void gmac_select_mii_mode(Gmac* p_gmac, gmac_mii_mode_t mode)
 		break;
 	}
 }
+#else
+static inline void gmac_select_mii_mode(Gmac* p_gmac, gmac_mii_mode_t mode)
+{
+	switch (mode) {
+		case GMAC_PHY_MII:
+			p_gmac->GMAC_UR |= GMAC_UR_RMII;
+			break;
+
+		case GMAC_PHY_RMII:
+		default:
+			p_gmac->GMAC_UR &= ~GMAC_UR_RMII;
+			break;
+	}
+}
+#endif
+
+#if !(SAM4E)
+static inline void gmac_set_tsu_compare(Gmac *p_gmac, uint32_t seconds47, uint32_t seconds31, uint32_t nanosec )
+{
+	p_gmac->GMAC_SCH = seconds47;
+	p_gmac->GMAC_SCL = seconds31;
+	p_gmac->GMAC_NSC = nanosec;
+}
+
+static inline uint32_t gmac_get_priority_interrupt_status(Gmac* p_gmac, gmac_quelist_t queue_idx)
+{
+	return p_gmac->GMAC_ISRPQ[queue_idx - 1];
+}
+
+static inline void gmac_set_tx_priority_queue(Gmac* p_gmac, uint32_t ul_addr, gmac_quelist_t queue_idx)
+{
+    p_gmac->GMAC_TBQBAPQ[queue_idx - 1] = GMAC_TBQB_ADDR_Msk & ul_addr;
+}
+
+static inline uint32_t gmac_get_tx_priority_queue(Gmac* p_gmac, gmac_quelist_t queue_idx)
+{
+	return p_gmac->GMAC_TBQBAPQ[queue_idx - 1];
+}
+
+static inline void gmac_set_rx_priority_queue(Gmac* p_gmac, uint32_t ul_addr, gmac_quelist_t queue_idx)
+{
+    p_gmac->GMAC_RBQBAPQ[queue_idx - 1] = GMAC_RBQB_ADDR_Msk & ul_addr;
+}
+
+static inline uint32_t gmac_get_rx_priority_queue(Gmac* p_gmac, gmac_quelist_t queue_idx)
+{
+	return p_gmac->GMAC_RBQBAPQ[queue_idx - 1];
+}
+
+static inline void gmac_set_rx_priority_bufsize(Gmac* p_gmac, uint32_t ul_size, gmac_quelist_t queue_idx)
+{
+	p_gmac->GMAC_RBSRPQ[queue_idx - 1] = ul_size;
+}
+
+static inline void gmac_enable_cbsque_a(Gmac* p_gmac, uint8_t uc_enable)
+{
+	if (uc_enable) {
+		p_gmac->GMAC_CBSCR |= GMAC_CBSCR_QAE;
+	} else {
+		p_gmac->GMAC_CBSCR &= ~GMAC_CBSCR_QAE;
+	}
+}
+
+static inline void gmac_enable_cbsque_b(Gmac* p_gmac, uint8_t uc_enable)
+{
+	if (uc_enable) {
+		p_gmac->GMAC_CBSCR |= GMAC_CBSCR_QBE;
+	} else {
+		p_gmac->GMAC_CBSCR &= ~GMAC_CBSCR_QBE;
+	}
+}
+
+static inline void gmac_config_idleslope_a(Gmac* p_gmac, uint32_t idleslope_a)
+{    
+	p_gmac->GMAC_CBSISQA = idleslope_a;
+}
+
+static inline void gmac_config_idleslope_b(Gmac* p_gmac, uint32_t idleslope_b)
+{    
+	p_gmac->GMAC_CBSISQB = idleslope_b;
+}
+
+static inline void gmac_write_screener_reg_1(Gmac* p_gmac, uint32_t reg_val, gmac_quelist_t queue_idx)
+{
+	p_gmac->GMAC_ST1RPQ[queue_idx] = reg_val;
+}
+
+static inline void gmac_write_screener_reg_2 (Gmac* p_gmac, uint32_t reg_val, uint32_t index)
+{
+	p_gmac->GMAC_ST2RPQ[index] = reg_val;
+}
+
+static inline void gmac_enable_priority_interrupt(Gmac* p_gmac, uint32_t ul_source, gmac_quelist_t queue_idx)
+{
+	p_gmac->GMAC_IERPQ[queue_idx - 1] = ul_source;
+}
+
+static inline void gmac_disable_priority_interrupt(Gmac* p_gmac, uint32_t ul_source, gmac_quelist_t queue_idx)
+{
+	p_gmac->GMAC_IDRPQ[queue_idx - 1] = ul_source;
+}
+
+static inline uint32_t gmac_get_priority_interrupt_mask(Gmac* p_gmac, gmac_quelist_t queue_idx)
+{
+	return p_gmac->GMAC_IMRPQ[queue_idx - 1];
+}
+
+static inline void gmac_write_ethtype_reg(Gmac* p_gmac, uint16_t ethertype, gmac_quelist_t queue_idx)
+{
+	p_gmac->GMAC_ST2ER[queue_idx] = (uint32_t)ethertype;
+}
+
+static inline void gmac_write_screen_compare_reg(Gmac* p_gmac, uint32_t c0reg, uint16_t c1reg, uint32_t index)
+{
+	volatile uint32_t *p_PRAS;
+	uint32_t ul_dlt;
+
+	ul_dlt = (uint32_t)&(p_gmac->GMAC_ST2CW01);
+	ul_dlt = ul_dlt - (uint32_t)&(p_gmac->GMAC_ST2CW00);
+
+	p_PRAS = (volatile uint32_t *)((uint32_t)&(p_gmac->GMAC_ST2CW00) +
+			index * ul_dlt);
+	*p_PRAS = c0reg;
+	p_PRAS = (volatile uint32_t *)((uint32_t)&(p_gmac->GMAC_ST2CW10) +
+			index * ul_dlt);
+	*p_PRAS = (uint32_t)c1reg;
+}
+
+#endif
 
 uint8_t gmac_phy_read(Gmac* p_gmac, uint8_t uc_phy_address, uint8_t uc_address,
 		uint32_t* p_value);
