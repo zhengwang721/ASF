@@ -143,17 +143,17 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { // __I to avoid read-modify-write on write-to-clear register
   struct {
-    uint32_t BOD33RDY:1;       /*!< bit:      0  BOD33 Ready                        */
-    uint32_t BOD33DET:1;       /*!< bit:      1  BOD33 Detection                    */
-    uint32_t B33SRDY:1;        /*!< bit:      2  BOD33 Synchronization Ready        */
-    uint32_t BOD12RDY:1;       /*!< bit:      3  BOD12 Ready                        */
-    uint32_t BOD12DET:1;       /*!< bit:      4  BOD12 Detection                    */
-    uint32_t B12SRDY:1;        /*!< bit:      5  BOD12 Synchronization Ready        */
-    uint32_t :2;               /*!< bit:  6.. 7  Reserved                           */
-    uint32_t VREGRDY:1;        /*!< bit:      8  Voltage Regulator Ready            */
-    uint32_t APWSRDY:1;        /*!< bit:      9  Automatic Power Switch Ready       */
-    uint32_t VCORERDY:1;       /*!< bit:     10  VDDCORE Ready                      */
-    uint32_t :21;              /*!< bit: 11..31  Reserved                           */
+    __I uint32_t BOD33RDY:1;       /*!< bit:      0  BOD33 Ready                        */
+    __I uint32_t BOD33DET:1;       /*!< bit:      1  BOD33 Detection                    */
+    __I uint32_t B33SRDY:1;        /*!< bit:      2  BOD33 Synchronization Ready        */
+    __I uint32_t BOD12RDY:1;       /*!< bit:      3  BOD12 Ready                        */
+    __I uint32_t BOD12DET:1;       /*!< bit:      4  BOD12 Detection                    */
+    __I uint32_t B12SRDY:1;        /*!< bit:      5  BOD12 Synchronization Ready        */
+    __I uint32_t :2;               /*!< bit:  6.. 7  Reserved                           */
+    __I uint32_t VREGRDY:1;        /*!< bit:      8  Voltage Regulator Ready            */
+    __I uint32_t APWSRDY:1;        /*!< bit:      9  Automatic Power Switch Ready       */
+    __I uint32_t VCORERDY:1;       /*!< bit:     10  VDDCORE Ready                      */
+    __I uint32_t :21;              /*!< bit: 11..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } SUPC_INTFLAG_Type;
