@@ -122,6 +122,23 @@ static uint8_t wifi_connected;
 static uint8_t packetCnt = 0;
 
 /**
+ * \brief Configure UART console.
+ */
+static void configure_console(void)
+{
+	const usart_serial_options_t uart_serial_options = {
+		.baudrate =		CONF_UART_BAUDRATE,
+		.charlength =	CONF_UART_CHAR_LENGTH,
+		.paritytype =	CONF_UART_PARITY,
+		.stopbits =		CONF_UART_STOP_BITS,
+	};
+
+	/* Configure UART console. */
+	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
+	stdio_serial_init(CONF_UART, &uart_serial_options);
+}
+
+/**
  * \brief Callback to get the Data from socket.
  *
  * \param[in] sock socket handler.
@@ -224,23 +241,6 @@ static void wifi_cb(uint8_t u8MsgType, void *pvMsg)
 	default:
 		break;
 	}
-}
-
-/**
- * \brief Configure UART console.
- */
-static void configure_console(void)
-{
-	const usart_serial_options_t uart_serial_options = {
-		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
-	};
-
-	/* Configure UART console. */
-	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
-	pio_configure_pin_group(CONF_UART_PIO, CONF_PINS_UART,
-			CONF_PINS_UART_FLAGS);
-	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
 /**

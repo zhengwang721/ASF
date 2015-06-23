@@ -542,6 +542,12 @@ void _usart_interrupt_handler(
 				error_code &= ~SERCOM_USART_STATUS_CTS;
 			}
 #endif
+#ifdef FEATURE_USART_LIN_MASTER
+			/* TXE status should not be considered as an error */
+			if(error_code & SERCOM_USART_STATUS_TXE) {
+				error_code &= ~SERCOM_USART_STATUS_TXE;
+			}
+#endif
 			/* Check if an error has occurred during the receiving */
 			if (error_code) {
 				/* Check which error occurred */

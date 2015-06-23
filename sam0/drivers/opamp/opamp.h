@@ -53,7 +53,7 @@
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Operational Amplifier Controller functionality.
  *
- * The following peripheral is used by this module:
+ * The following peripherals are used by this module:
  *  - OPAMP (Operational Amplifier Controller)
  *
  * The following devices can use this module:
@@ -75,7 +75,7 @@
  *
  * \section asfdoc_sam0_opamp_module_overview Module Overview
  *
- * The OPAMP is an individually configurable low power, general purpose operational
+ * The OPAMP is individually configurable low power, general purpose operational
  * amplifier offering a high degree of flexibility and rail-to-rail inputs.
  *
  * Each operational amplifier can be configured in standalone operational amplifier
@@ -84,7 +84,7 @@
  * \note For more detail configuration reference, refer to the datasheet
  * "Build-in Modes" section.
  *
- * Each OPAMP has one positive and one negative input which can be flexible chosen
+ * Each OPAMP has one positive and one negative input which be flexibly chosen
  * from analog input pins including the output of another OPAMP, internal inputs
  * such as the DAC or the resistor ladder, and the ground.
  *
@@ -102,7 +102,7 @@
  *
  * \section asfdoc_sam0_opamp_extra_info Extra Information
  *
- * For extra information, see \ref asfdoc_sam0_opamp_extra. This includes:
+ * For extra information see \ref asfdoc_sam0_opamp_extra. This includes:
  *  - \ref asfdoc_sam0_opamp_extra_acronyms
  *  - \ref asfdoc_sam0_opamp_extra_dependencies
  *  - \ref asfdoc_sam0_opamp_extra_errata
@@ -141,7 +141,7 @@ enum opamp_id {
 };
 
 /**
- * \brief Negative input MUX selection configuration enum.
+ * \brief Negative input mux selection configuration enum.
  *
  * Enum for the negative input of OPAMP0.
  */
@@ -157,7 +157,7 @@ enum opamp0_neg_mux {
 };
 
 /**
- * \brief Negative input MUX selection configuration enum.
+ * \brief Negative input mux selection configuration enum.
  *
  * Enum for the negative input of OPAMP1.
  */
@@ -173,7 +173,7 @@ enum opamp1_neg_mux {
 };
 
 /**
- * \brief Negative input MUX selection configuration enum.
+ * \brief Negative input mux selection configuration enum.
  *
  * Enum for the negative input of OPAMP2.
  */
@@ -193,7 +193,7 @@ enum opamp2_neg_mux {
 };
 
 /**
- * \brief Positive input MUX selection configuration enum.
+ * \brief Positive input mux selection configuration enum.
  *
  * Enum for the positive input of OPAMP0.
  */
@@ -209,7 +209,7 @@ enum opamp0_pos_mux {
 };
 
 /**
- * \brief Positive input MUX selection configuration enum.
+ * \brief Positive input mux selection configuration enum.
  *
  * Enum for the positive input of OPAMP1.
  */
@@ -225,7 +225,7 @@ enum opamp1_pos_mux {
 };
 
 /**
- * \brief Positive input MUX selection configuration enum.
+ * \brief Positive input mux selection configuration enum.
  *
  * Enum for the positive input of OPAMP2.
  */
@@ -247,9 +247,9 @@ enum opamp2_pos_mux {
 };
 
 /**
- * \brief Potentiometer selection MUX configuration enum.
+ * \brief Potentimeter selection mux configuration enum.
  *
- * Enum for the potentiometer selection of OPAMP 0 to 2.
+ * Enum for the Potentimeter selection of OPAMP 0 to 2.
  */
 enum opamp_pot_mux {
 	/** Gain = R2/R1 = 1/7. */
@@ -271,7 +271,7 @@ enum opamp_pot_mux {
 };
 
 /**
- * \brief Resistor 1 MUX selection configuration enum.
+ * \brief Resistor 1 mux selection configuration enum.
  *
  * Enum for the Resistor 1 of OPAMP0.
  */
@@ -287,7 +287,7 @@ enum opamp0_res1_mux {
 };
 
 /**
- * \brief Resistor 1 MUX selection configuration enum.
+ * \brief Resistor 1 mux selection configuration enum.
  *
  * Enum for the Resistor 1 of OPAMP1.
  */
@@ -303,7 +303,7 @@ enum opamp1_res1_mux {
 };
 
 /**
- * \brief Resistor 1 MUX selection configuration enum.
+ * \brief Resistor 1 mux selection configuration enum.
  *
  * Enum for the Resistor 1 of OPAMP2.
  */
@@ -319,7 +319,7 @@ enum opamp2_res1_mux {
 };
 
 /**
- * \brief Bias mode selection MUX configuration enum.
+ * \brief Bias mode selection mux configuration enum.
  *
  * Enum for the Bias mode selection of OPAMP 0 to 2.
  */
@@ -340,7 +340,7 @@ enum opamp_bias_selection {
  *  Common configuration structure for OPAMP 0 to 2.
  */
 struct opamp_config_common {
-	/**  Potentiometer selection. */
+	/**  Potentimeter selection. */
 	enum opamp_pot_mux potentiometer_selection;
 	/** If \c true, R1 connected to RES1MUX. */
 	bool r1_enable;
@@ -367,11 +367,11 @@ struct opamp_config_common {
  *  Configuration structure for OPAMP 0.
  */
 struct opamp0_config {
-	/** Negative input MUX selection. */
+	/** Negative input mux selection. */
 	enum opamp0_neg_mux negative_input;
-	/** Positive input MUX selection. */
+	/** Positive input mux selection. */
 	enum opamp0_pos_mux positive_input;
-	/** Resistor 1 MUX selection. */
+	/** Resistor 1 mux selection. */
 	enum opamp0_res1_mux r1_connection;
 	/** If \c true, the comparator will continue to sample during sleep
 	 *  mode when triggered. */
@@ -384,11 +384,11 @@ struct opamp0_config {
  *  Configuration structure for OPAMP 1.
  */
 struct opamp1_config {
-	/** Negative input MUX selection. */
+	/** Negative input mux selection. */
 	enum opamp1_neg_mux negative_input;
-	/** Positive input MUX selection. */
+	/** Positive input mux selection. */
 	enum opamp1_pos_mux positive_input;
-	/** Resistor 1 MUX selection. */
+	/** Resistor 1 mux selection. */
 	enum opamp1_res1_mux r1_connection;
 	/** If \c true, the comparator will continue to sample during sleep
 	 *  mode when triggered. */
@@ -401,11 +401,11 @@ struct opamp1_config {
  *  Configuration structure for OPAMP 2.
  */
 struct opamp2_config {
-	/** Negative input MUX selection. */
+	/** Negative input mux selection. */
 	enum opamp2_neg_mux negative_input;
-	/** Positive input MUX selection. */
+	/** Positive input mux selection. */
 	enum opamp2_pos_mux positive_input;
-	/** Resistor 1 MUX selection. */
+	/** Resistor 1 mux selection. */
 	enum opamp2_res1_mux r1_connection;
 	/** If \c true, the comparator will continue to sample during sleep
 	 *  mode when triggered. */
@@ -460,7 +460,7 @@ static inline void opamp_module_disable(void)
  * \brief Enables OPAMP voltage doubler.
  *
  * The analog input muxes have low resistance, but consume more
- * power at lower voltages (e.g., driven by the voltage doubler).
+ * power at lower voltages(e.g., driven by the voltage doubler).
  *
  */
 static inline void opamp_voltage_doubler_enable(void)
