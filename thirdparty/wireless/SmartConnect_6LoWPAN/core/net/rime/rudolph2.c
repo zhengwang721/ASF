@@ -81,8 +81,8 @@ enum {
 #define FLAG_LAST_RECEIVED 0x02
 #define FLAG_IS_STOPPED    0x04
 
-#define DEBUG 0
-#if DEBUG
+#define _DEBUG_ 0
+#if _DEBUG_
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #else

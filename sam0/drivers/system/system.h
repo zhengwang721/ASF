@@ -70,6 +70,10 @@ extern "C" {
  *  - PM (Power Manager)
  *  - RSTC(Reset Controller)
  *  - SUPC(Supply Controller)
+ * \elseif DEVICE_SAMC21_SUPPORT
+ *  - PM(Power Manager)
+ *  - RSTC(Reset Controller)
+ *  - SUPC(Supply Controller)
  * \else
  *  - SYSCTRL (System Control)
  *  - PM (Power Manager)
@@ -78,11 +82,13 @@ extern "C" {
  * The following devices can use this module:
  * \if DEVICE_SAML21_SUPPORT
  *  - Atmel | SMART SAM L21
+ * \elseif DEVICE_SAMC21_SUPPORT
+ *  - Atmel | SMART SAM C20/C21
  * \else
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM DA0/DA1
+ *  - Atmel | SMART SAM DAx
  * \endif
  *
  * The outline of this documentation is as follows:
@@ -127,6 +133,15 @@ extern "C" {
  * It includes functionality that enables automatic power switching between main
  * power and battery backup power. This will ensure power to the backup domain,
  * when the main battery or power source is unavailable.
+ * \endif
+ *
+ * \if DEVICE_SAMC21_SUPPORT
+ * \subsection asfdoc_sam0_system_module_overview_vreg Voltage Regulator
+ * The SAM device controls the voltage regulators for the core (VDDCORE). It sets
+ * the voltage regulators according to the sleep modes.
+ *
+ * There are a selectable reference voltage and voltage dependent on the temperature
+ * which can be used by analog modules like the ADC.
  * \endif
  *
  * \subsection asfdoc_sam0_system_module_overview_vref Voltage References
@@ -289,7 +304,7 @@ extern "C" {
  * </table>
  *
  * \subsection asfdoc_sam0_system_module_overview_ram_state RAMs Low Power Mode
- * By default, in standby sleep mode, RAM is in low power mode (back biased) 
+ * By default, in standby sleep mode, RAM is in low power mode (back biased)
  * if its power domain is in retention state.
  * \ref asfdoc_sam0_system_power_ram_state_table lists RAMs low power mode.
  *
@@ -585,6 +600,15 @@ void system_init(void);
  *      <td>RSTC</td>
  *      <td>Reset Controller</td>
  *  </tr>
+ * \elseif DEVICE_SAMC21_SUPPORT
+ *  <tr>
+ *      <td>SUPC</td>
+ *      <td>Supply Controller</td>
+ *  </tr>
+ *  <tr>
+ *      <td>RSTC</td>
+ *      <td>Reset Controller</td>
+ *  </tr>
  * \else
  *  <tr>
  *      <td>SYSCTRL</td>
@@ -615,6 +639,10 @@ void system_init(void);
  *      <th>Changelog</th>
  *  </tr>
  * \if DEVICE_SAML21_SUPPORT
+ *  <tr>
+ *      <td>Initial Release</td>
+ *  </tr>
+ * \elseif DEVICE_SAMC21_SUPPORT
  *  <tr>
  *      <td>Initial Release</td>
  *  </tr>
@@ -651,6 +679,12 @@ void system_init(void);
  *      <td>42449A</td>
  *      <td>06/2015</td>
  *      <td>Initial document release</td>
+ * </tr>
+ * \elseif DEVICE_SAMC21_SUPPORT
+ *  <tr>
+ *      <td>A</td>
+ *      <td>12/2014</td>
+ *      <td>Initial release.</td>
  * </tr>
  * \else
  *  <tr>
