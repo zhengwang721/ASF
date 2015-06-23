@@ -65,6 +65,7 @@
  * The following devices can use this module:
  * \if DEVICE_SAML21_SUPPORT
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM C20/C21
  * \else
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
@@ -437,6 +438,34 @@ extern "C" {
 
 /** @} */
 
+#if ADC_CALLBACK_MODE == true
+#   if (ADC_INST_NUM > 1)
+#       define _ADC_INTERRUPT_VECT_NUM(n, unused) \
+			SYSTEM_INTERRUPT_MODULE_ADC##n,
+/**
+ * \internal Get the interrupt vector for the given device instance
+ *
+ * \param[in] The ADC module instance number
+ *
+ * \return Interrupt vector for of the given ADC module instance.
+ */
+static enum system_interrupt_vector _adc_interrupt_get_interrupt_vector(
+		uint32_t inst_num)
+{
+	static uint8_t adc_interrupt_vectors[ADC_INST_NUM] = {
+		MREPEAT(ADC_INST_NUM, _ADC_INTERRUPT_VECT_NUM, 0)
+	};
+
+	return (enum system_interrupt_vector)adc_interrupt_vectors[inst_num];
+}
+#   endif
+#endif
+
+#if !defined(__DOXYGEN__)
+uint8_t _adc_get_inst_index(
+		Adc *const hw);
+#endif
+
 /**
  * \name Driver Initialization and Configuration
  * @{
@@ -572,7 +601,14 @@ static inline enum status_code adc_enable(
 	}
 
 #if ADC_CALLBACK_MODE == true
-	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_ADC);
+#   if (ADC_INST_NUM > 1)
+	system_interrupt_enable(_adc_interrupt_get_interrupt_vector(
+			_adc_get_inst_index(adc_module)));
+#   elif (SAMC20)
+		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_ADC0);
+#	else
+		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_ADC);
+#   endif
 #endif
 
 	adc_module->CTRLA.reg |= ADC_CTRLA_ENABLE;
@@ -599,7 +635,14 @@ static inline enum status_code adc_disable(
 	Adc *const adc_module = module_inst->hw;
 
 #if ADC_CALLBACK_MODE == true
-	system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_ADC);
+#   if (ADC_INST_NUM > 1)
+	system_interrupt_disable(_adc_interrupt_get_interrupt_vector(
+			_adc_get_inst_index(adc_module)));
+#   elif (SAMC20)
+		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_ADC0);
+#	else
+		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_ADC);
+#   endif
 #endif
 
 	while (adc_is_syncing(module_inst)) {
@@ -1013,6 +1056,9 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<th>Changelog</th>
  *	</tr>
  * \if DEVICE_SAML21_SUPPORT
+ *	<tr>
+ *		<td>Added support for SAMC21</td>
+ *	</tr>
  *  <tr>
  *		<td>Initial Release</td>
  * </tr>
@@ -1067,7 +1113,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *	<tr>
  *		<td>E</td>
  *		<td>04/2015</td>
- *		<td>Added support for SAMDA0/DA1.</td>
+ *		<td>Added support for SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

@@ -239,7 +239,7 @@ enum status_code i2c_master_init(
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
 	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
-#if (SAML21)
+#if (SAML21) || (SAMC20) || (SAMC21)
 	uint32_t pm_index     = sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
 #else
 	uint32_t pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
@@ -563,6 +563,9 @@ static enum status_code _i2c_master_read_packet(
 			/* Send stop command unless arbitration is lost. */
 			_i2c_master_wait_for_sync(module);
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
+		} else {
+		  	_i2c_master_wait_for_sync(module);
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(1);
 		}
 
 		/* Save last data to buffer. */

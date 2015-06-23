@@ -61,6 +61,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM C21
  *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
@@ -499,7 +500,7 @@ enum status_code eeprom_emulator_read_buffer(
  *	<tr>
  *		<td>E</td>
  *		<td>04/2015</td>
- *		<td>Add SAML21 and SAMDA0/DA1 support.</td>
+ *		<td>Add SAML21 and SAMDAx support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

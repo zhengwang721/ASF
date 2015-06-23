@@ -65,7 +65,7 @@ extern "C" {
  * Define DAC features set according to different device families.
  * @{
  */
-#if (SAMD21 || SAMD10 || SAMD11 || SAMDA0 || SAMDA1)
+#if (SAMD21 || SAMD10 || SAMD11 || SAMDA1)
 #  define FEATURE_DAC_DATABUF_WRITE_PROTECTION
 #endif
 /**@}*/
