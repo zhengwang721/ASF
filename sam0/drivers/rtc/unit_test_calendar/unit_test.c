@@ -205,6 +205,9 @@ static void run_rtc_calendar_test(const struct test_case *test)
     	calendar_time.year   = 2014;
     	rtc_calendar_set_time(&rtc_inst, &calendar_time);
 	delay_s(3);
+        
+	rtc_calendar_get_time(&rtc_inst, &calendar_time);
+	printf("calendar time is %d %d %d %d:%d:%d\n", calendar_time.year, calendar_time.month, calendar_time.day, calendar_time.hour, calendar_time.minute, calendar_time.second);
 	result = rtc_calendar_is_alarm_match(&rtc_inst,0);
 	test_assert_true(test, result ==  true,
 		"RTC calendar alarm match test failed");
