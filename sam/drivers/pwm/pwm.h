@@ -83,7 +83,7 @@ typedef enum {
 typedef enum {
 	PWM_LOW = LOW,     /* Low level */
 	PWM_HIGH = HIGH,  /* High level */
-#if SAM4E
+#if (SAM4E || SAMV70 || SAMV71 || SAME70 || SAMS70)
 	PWM_HIGHZ,  /* High Impedance */
 #endif
 } pwm_level_t;
@@ -192,16 +192,37 @@ typedef enum {
 	PWM_SYNC_UNDERRUN = (1 << 3)      /* Synchronous Channels Update Underrun Error */
 } pwm_sync_interrupt_t;
 
-#if SAM4E
+#if (SAM4E || SAMV70 || SAMV71 || SAME70 || SAMS70)
 typedef enum {
 	PWM_SPREAD_SPECTRUM_MODE_TRIANGULAR = 0,
 	PWM_SPREAD_SPECTRUM_MODE_RANDOM
 } pwm_spread_spectrum_mode_t;
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+typedef enum {
+	PWM_LEADING_EDGE1_MODE_LINC = PWM_LEBR1_PWMLFEN,
+	PWM_LEADING_EDGE1_MODE_LDEC = PWM_LEBR1_PWMLREN,
+	PWM_LEADING_EDGE1_MODE_HINC = PWM_LEBR1_PWMHFEN,
+	PWM_LEADING_EDGE1_MODE_HDEC = PWM_LEBR1_PWMHREN,
+	PWM_LEADING_EDGE2_MODE_LINC = PWM_LEBR2_PWMLFEN,
+	PWM_LEADING_EDGE2_MODE_LDEC = PWM_LEBR2_PWMLREN,
+	PWM_LEADING_EDGE2_MODE_HINC = PWM_LEBR2_PWMHFEN,
+	PWM_LEADING_EDGE2_MODE_HDEC = PWM_LEBR2_PWMHREN,
+	PWM_LEADING_EDGE3_MODE_LINC = PWM_LEBR3_PWMLFEN,
+	PWM_LEADING_EDGE3_MODE_LDEC = PWM_LEBR3_PWMLREN,
+	PWM_LEADING_EDGE3_MODE_HINC = PWM_LEBR3_PWMHFEN,
+	PWM_LEADING_EDGE3_MODE_HDEC = PWM_LEBR3_PWMHREN,
+	PWM_LEADING_EDGE4_MODE_LINC = PWM_LEBR4_PWMLFEN,
+	PWM_LEADING_EDGE4_MODE_LDEC = PWM_LEBR4_PWMLREN,
+	PWM_LEADING_EDGE4_MODE_HINC = PWM_LEBR4_PWMHFEN,
+	PWM_LEADING_EDGE4_MODE_HDEC = PWM_LEBR4_PWMHREN,
+} pwm_leading_edge_blanking_mode_t;
+#else
 typedef enum {
 	PWM_ADDITIONAL_EDGE_MODE_INC = PWM_CAE_ADEDGM_INC,
 	PWM_ADDITIONAL_EDGE_MODE_DEC = PWM_CAE_ADEDGM_DEC,
 	PWM_ADDITIONAL_EDGE_MODE_BOTH = PWM_CAE_ADEDGM_BOTH,
 } pwm_additional_edge_mode_t;
+#endif
 #endif
 
 /** Configurations of a PWM channel output */
@@ -299,7 +320,7 @@ typedef struct {
 	pwm_level_t ul_fault_output_pwmh;
 	/** Channel PWML output level in fault protection */
 	pwm_level_t ul_fault_output_pwml;
-#endif /* (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E) */
+#endif /* (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E || SAMV70 || SAMV71 || SAME70 || SAMS70) */
 #if SAM4E
 	/** Spread Spectrum Value */
 	uint32_t ul_spread;
@@ -309,6 +330,17 @@ typedef struct {
 	uint32_t ul_additional_edge;
 	/** Additional Edge Mode */
 	pwm_additional_edge_mode_t additional_edge_mode;
+#elif (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	/** Spread Spectrum Value */
+	uint32_t ul_spread;
+	/** Spread Spectrum Mode */
+	pwm_spread_spectrum_mode_t spread_spectrum_mode;
+	/** Leading Edge Value */
+	uint32_t ul_leading_edge_delay;
+	/** Leading Edge Mode */
+	pwm_leading_edge_blanking_mode_t leading_edge_blanking_mode;
+	/** PPM Mode in Channel mode */
+	uint32_t ul_ppm_mode;
 #endif
 } pwm_channel_t;
 
@@ -370,21 +402,30 @@ bool pwm_get_protect_status(Pwm *p_pwm, pwm_protect_t * p_protect);
 
 uint32_t pwm_get_interrupt_status(Pwm *p_pwm);
 uint32_t pwm_get_interrupt_mask(Pwm *p_pwm);
-#endif /* (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E) */
+#endif /* (SAM3U || SAM3S || SAM3XA || SAM4S || SAM4E || SAMV70 || SAMV71 || SAME70 || SAMS70) */
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAMV70 || SAMV71 || SAME70 || SAMS70)
 void pwm_stepper_motor_init(Pwm *p_pwm, pwm_stepper_motor_pair_t pair,
 		bool b_enable_gray, bool b_down);
-#endif /* (SAM3S || SAM3XA || SAM4S || SAM4E) */
+#endif /* (SAM3S || SAM3XA || SAM4S || SAM4E || SAMV70 || SAMV71 || SAME70 || SAMS70) */
 
-#if SAM4E
 void pwm_channel_update_spread(Pwm *p_pwm, pwm_channel_t *p_channel,
 		uint32_t ul_spread);
+void pwm_channel_update_leading_edge(Pwm *p_pwm, pwm_channel_t *p_channel,
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	uint32_t ul_leading_edge_delay,
+	pwm_leading_edge_blanking_mode_t leading_edge_blanking_mode);
+#endif
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 void pwm_channel_update_additional_edge(Pwm *p_pwm, pwm_channel_t *p_channel,
-		uint32_t ul_additional_edge,
-		pwm_additional_edge_mode_t additional_edge_mode);
+	uint32_t ul_additional_edge,
+	pwm_additional_edge_mode_t additional_edge_mode);
 void pwm_channel_update_polarity_mode(Pwm *p_pwm, pwm_channel_t *p_channel,
 		bool polarity_inversion_flag, pwm_level_t polarity_value);
+#endif
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+void pwm_set_dma_duty(Pwm *p_pwm, uint32_t ul_dma_duty_value);
+void pwm_set_ext_trigger_mode(Pwm *p_pwm, pwm_channel_t *p_channel, uint32_t ul_mode);
 #endif
 
 /// @cond 0

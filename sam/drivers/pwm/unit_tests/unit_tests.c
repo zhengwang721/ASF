@@ -111,8 +111,10 @@
 /** PWM period value */
 #define PERIOD_VALUE   50
 
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 /** PDC transfer packet */
 pdc_packet_t g_pdc_tx_packet;
+#endif
 
 /* Changed when a PWM period interrupt happens */
 static volatile int32_t gs_l_pwm_period_int_flag = 0U;
@@ -131,10 +133,19 @@ static volatile uint32_t gs_ul_ms_ticks = 0U;
 /**
  * \brief PWM interrupt handler.
  */
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+void PWM0_Handler(void)
+#else
 void PWM_Handler(void)
+#endif
 {
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	gs_l_pwm_period_int_flag = pwm_channel_get_interrupt_status(PWM0) &
+			(1 << PWM_UNIT_TEST_CH);
+#else
 	gs_l_pwm_period_int_flag = pwm_channel_get_interrupt_status(PWM) &
 			(1 << PWM_UNIT_TEST_CH);
+#endif
 
 #if (SAM3U || SAM3S || SAM3XA || SAM4S)
 	uint32_t status2 = pwm_get_interrupt_status(PWM);
@@ -175,16 +186,31 @@ static void delay_ms(uint32_t ul_dly_ticks)
 static void run_pwm_test(const struct test_case *test)
 {
 	/* Enable PWM interrupt line from the core */
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	NVIC_DisableIRQ(PWM0_IRQn);
+	NVIC_ClearPendingIRQ(PWM0_IRQn);
+	NVIC_SetPriority(PWM0_IRQn, 4);
+	NVIC_EnableIRQ(PWM0_IRQn);
+#else
 	NVIC_DisableIRQ(PWM_IRQn);
 	NVIC_ClearPendingIRQ(PWM_IRQn);
 	NVIC_SetPriority(PWM_IRQn, 4);
 	NVIC_EnableIRQ(PWM_IRQn);
+#endif
 
 	/* Enable PWMC peripheral clock */
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	pmc_enable_periph_clk(ID_PWM0);
+#else
 	pmc_enable_periph_clk(ID_PWM);
+#endif
 
 	/* Disable PWM channel */
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	pwm_channel_disable(PWM0, PWM_UNIT_TEST_CH);
+#else
 	pwm_channel_disable(PWM, PWM_UNIT_TEST_CH);
+#endif
 
 	/* Set PWM clock A as PWM_FREQUENCY*PERIOD_VALUE (clock B is not used) */
 	pwm_clock_t test_clock = {
@@ -192,7 +218,11 @@ static void run_pwm_test(const struct test_case *test)
 		.ul_clkb = 0,
 		.ul_mck = sysclk_get_cpu_hz()
 	};
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	pwm_init(PWM0, &test_clock);
+#else
 	pwm_init(PWM, &test_clock);
+#endif
 
 	/* Test1 */
 	/* Configure PWM channel */
@@ -205,22 +235,39 @@ static void run_pwm_test(const struct test_case *test)
 
 	/* Initialize PWM channel */
 	test_channel.channel = PWM_UNIT_TEST_CH;
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	pwm_channel_init(PWM0, &test_channel);
+#else
 	pwm_channel_init(PWM, &test_channel);
+#endif
 
 	/* Enable PWM channel */
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	pwm_channel_enable(PWM0, PWM_UNIT_TEST_CH);
+#else
 	pwm_channel_enable(PWM, PWM_UNIT_TEST_CH);
+#endif
 
 	/*
 	 * Enable PWM channel event interrupt and wait for PWM to trigger
 	 * a period interrupt after PERIOD_VALUE.
 	 */
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	pwm_channel_enable_interrupt(PWM0, PWM_UNIT_TEST_CH, 0);
+#else
 	pwm_channel_enable_interrupt(PWM, PWM_UNIT_TEST_CH, 0);
+#endif
 	delay_ms(50);
 	test_assert_true(test, gs_l_pwm_period_int_flag != 0,
 			"Test1: No period interrupt triggered!");
 	/* Disable event interrupt and PWM channel */
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	pwm_channel_disable_interrupt(PWM0, PWM_UNIT_TEST_CH, 0);
+	pwm_channel_disable(PWM0, PWM_UNIT_TEST_CH);
+#else
 	pwm_channel_disable_interrupt(PWM, PWM_UNIT_TEST_CH, 0);
 	pwm_channel_disable(PWM, PWM_UNIT_TEST_CH);
+#endif
 
 #if (SAM3U || SAM3S || SAM3XA || SAM4S)
 	/* Test2 */
@@ -306,7 +353,13 @@ int main(void)
 {
 	const usart_serial_options_t usart_serial_options = {
 		.baudrate   = CONF_TEST_BAUDRATE,
-		.paritytype = CONF_TEST_PARITY
+#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
 	};
 
 	sysclk_init();
