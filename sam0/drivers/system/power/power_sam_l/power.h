@@ -774,7 +774,7 @@ static inline enum system_performance_level system_get_performance_level(void)
  * \brief Get performance level status.
  *
  * Get performance level status.
- * \return Performance level status: 1 Performance level is ready, 0 others.
+ * \return Performance level status: Written to one when the performance level is ready.
  */
 static inline uint8_t system_get_performance_level_status(void)
 {

@@ -58,7 +58,7 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_system_group SAM System Driver (SYSTEM)
+ * \defgroup asfdoc_sam0_system_group SAM System (SYSTEM) Driver
  *
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's system relation functionality, necessary for
@@ -188,12 +188,12 @@ extern "C" {
  * switch to another performance level at any time without any stop in the code
  * execution. As shown in \ref asfdoc_sam0_system_performance_level_transition_figure.
  *
- * \note When scaling down the performance level, the bus frequency should be first
+ * \note When scaling down the performance level, the bus frequency should first be
  *  scaled down in order to not exceed the maximum frequency allowed for the
  *  low performance level.
- *  When scaling up the performance level (e.g. from PL0 to PL2), the bus
- *  frequency can be increased only when the performance level transition is
- *  completed. Check the performance level status before increasing.
+ *  When scaling up the performance level (e.g. from PL0 to PL2), check the performance
+ *  level status before increasing the bus frequency. It can be increased only 
+ *  when the performance level transition is completed. 
  *
  * \anchor asfdoc_sam0_system_performance_level_transition_figure
  * \image html performance_level_transition.svg "Performance Level Transition"
@@ -684,7 +684,7 @@ void system_init(void);
  *  <tr>
  *      <td>A</td>
  *      <td>12/2014</td>
- *      <td>Initial release.</td>
+ *      <td>Initial document release.</td>
  * </tr>
  * \else
  *  <tr>
