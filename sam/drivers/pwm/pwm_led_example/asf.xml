@@ -9,10 +9,6 @@
 		<build type="c-source" value="pwm_led_example.c"/>
 		<build type="include-path" value="."/>
 		<device-support value="sam"/>
-		<device-support value="samv70"/>
-		<device-support value="samv71"/>
-		<device-support value="same70"/>
-		<device-support value="sams70"/>
 		<require idref="sam.drivers.pwm"/>
 		<require idref="common.services.basic.gpio"/>
 		<require idref="common.services.basic.clock"/>

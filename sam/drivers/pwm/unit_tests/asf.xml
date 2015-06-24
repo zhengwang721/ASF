@@ -7,10 +7,6 @@
 		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
 		<build type="include-path" value="."/>
 		<device-support value="sam"/>
-		<device-support value="samv70"/>
-		<device-support value="samv71"/>
-		<device-support value="same70"/>
-		<device-support value="sams70"/>
 		<require idref="sam.drivers.pio"/>
 		<require idref="sam.drivers.pmc"/>
 		<require idref="sam.drivers.pwm"/>
