@@ -99,12 +99,12 @@ MACROS
 		FIRMWARE VERSION NO INFO
  *======*======*======*======*/
 
-#define M2M_FIRMWARE_VERSION_MAJOR_NO 					(18)
+#define M2M_FIRMWARE_VERSION_MAJOR_NO 					(19)
 /*!< Firmware Major release version number.
 */
 
 
-#define M2M_FIRMWARE_VERSION_MINOR_NO					(3)
+#define M2M_FIRMWARE_VERSION_MINOR_NO					(2)
 /*!< Firmware Minor release version number.
 */
 
@@ -116,12 +116,12 @@ MACROS
   SUPPORTED DRIVER VERSION NO INFO
  *======*======*======*======*/
 
-#define M2M_DRIVER_VERSION_MAJOR_NO 					(18)
+#define M2M_DRIVER_VERSION_MAJOR_NO 					(19)
 /*!< Driver Major release version number.
 */
 
 
-#define M2M_DRIVER_VERSION_MINOR_NO						(3)
+#define M2M_DRIVER_VERSION_MINOR_NO						(2)
 /*!< Driver Minor release version number.
 */
 
@@ -196,9 +196,6 @@ MACROS
 #define M2M_CONFIG_CMD_BASE									1
 /*!< The base value of all the host configuration commands opcodes.
 */
-#define M2M_SERVER_CMD_BASE									20
-/*!< The base value of all the power save mode host commands codes.
-*/
 #define M2M_STA_CMD_BASE									40
 /*!< The base value of all the station mode host commands opcodes.
 */
@@ -210,6 +207,9 @@ MACROS
 */
 #define M2M_OTA_CMD_BASE									100
 /*!< The base value of all the OTA mode host commands opcodes.
+*/
+#define M2M_SERVER_CMD_BASE									120
+/*!< The base value of all the power save mode host commands codes.
 */
 
 
@@ -288,11 +288,11 @@ MACROS
 	OTA DEFINITIONS
  *======*======*======*======*/
  
-#define OTA_ROLLB_STATUS_VALID				(0x12526285)
+#define OTA_STATUS_VALID					(0x12526285)
 /*!< 
 	Magic value updated in the Control structure in case of ROLLACK image Valid
 */
-#define OTA_ROLLB_STATUS_INVALID			(0x23987718)
+#define OTA_STATUS_INVALID					(0x23987718)
 /*!< 
 	Magic value updated in the Control structure in case of ROLLACK image InValid
 */
@@ -362,6 +362,104 @@ typedef enum {
 	/*!< Index for WEP key Authentication
 	*/
 }tenuM2mWepKeyIndex;
+
+/*!
+@enum	\
+	tenuM2mPwrMode
+	
+@brief
+	
+*/
+typedef enum {
+	PWR_AUTO = ((uint8) 1),
+	/*!< FW will decide the best power mode to use internally. */
+	PWR_LOW1,
+	/*low power mode #1. RX current 60mA, sensitivity Ok.*/
+	PWR_LOW2,
+	/*low power mode #2, RX current 55mA, sensitivity is less by 3dBm*/
+	PWR_HIGH,
+	/* high power mode: RX current 100mA.*/
+}tenuM2mPwrMode;
+
+/*!
+@struct	\	
+	tstrM2mPwrState
+
+@brief
+	Power Mode
+*/
+typedef struct {
+	uint8	u8PwrMode; 
+	/*!< power Save Mode
+	*/
+	uint8	__PAD24__[3];
+	/*!< Padding bytes for forcing 4-byte alignment
+	*/
+}tstrM2mPwrMode;
+/*!
+@enum	\
+	tenuM2mTxPwrLevel
+	
+@brief
+	
+*/
+typedef enum {
+	TX_PWR_HIGH = ((uint8) 1),
+	/*!< PPA Gain 6dbm	PA Gain 18dbm */
+	TX_PWR_MED,
+	/*!< PPA Gain 6dbm	PA Gain 12dbm */
+	TX_PWR_LOW,
+	/*!< PPA Gain 6dbm	PA Gain 6dbm */
+}tenuM2mTxPwrLevel;
+
+/*!
+@struct	\	
+	tstrM2mTxPwrLevel
+
+@brief
+	Tx power level 
+*/
+typedef struct {
+	uint8	u8TxPwrLevel; 
+	/*!< Tx power level
+	*/
+	uint8	__PAD24__[3];
+	/*!< Padding bytes for forcing 4-byte alignment
+	*/
+}tstrM2mTxPwrLevel;
+
+/*!
+@struct	\	
+	tstrM2mEnableLogs
+
+@brief
+	Enable Firmware logs
+*/
+typedef struct {
+	uint8	u8Enable; 
+	/*!< Enable/Disable firmware logs
+	*/
+	uint8	__PAD24__[3];
+	/*!< Padding bytes for forcing 4-byte alignment
+	*/
+}tstrM2mEnableLogs;
+
+/*!
+@struct	\	
+	tstrM2mBatteryVoltage
+
+@brief
+	Battery Voltage
+*/
+typedef struct {
+	//Note: on SAMD D21 the size of double is 8 Bytes
+	uint16	u16BattVolt; 
+	/*!< Battery Voltage
+	*/
+	uint8	__PAD16__[2];
+	/*!< Padding bytes for forcing 4-byte alignment
+	*/
+}tstrM2mBatteryVoltage;
 
 /*!
 @enum	\
@@ -444,25 +542,31 @@ typedef enum {
 	M2M_WIFI_REQ_SET_SCAN_OPTION,
 	/*!< Set Scan options "slot time, slot number .. etc" .
 	*/
-	M2M_WIFI_REQ_SET_SCAN_REGION
+	M2M_WIFI_REQ_SET_SCAN_REGION,
 	/*!< Set scan region.
 	*/
+	M2M_WIFI_REQ_SET_POWER_PROFILE,
+	/*!< The API shall set power mode to one of 3 modes
+	*/
+	M2M_WIFI_REQ_SET_TX_POWER,
+	/*!<  API to set TX power. 
+	*/
+	M2M_WIFI_REQ_SET_BATTERY_VOLTAGE,
+	/*!<  API to set Battery Voltage. 
+	*/
+	M2M_WIFI_REQ_SET_ENABLE_LOGS,
+	/*!<  API to set Battery Voltage. 
+	*/
+	M2M_WIFI_REQ_GET_SYS_TIME,
+	/*!<
+		REQ GET time of day from WINC.
+	*/
+	M2M_WIFI_RESP_GET_SYS_TIME,
+	/*!<
+		RESP time of day from host.
+	*/
+	M2M_WIFI_MAX_CONFIG_ALL,
 }tenuM2mConfigCmd;
-
-/*!
-@enum	\
-	tenuM2mServerCmd
-	
-@brief
-	This enum contains all the WINC commands while in PS mode.
-	These command are currently not supported.
-*/
-typedef enum {
-	M2M_WIFI_REQ_CLIENT_CTRL = M2M_SERVER_CMD_BASE,
-	M2M_WIFI_RESP_CLIENT_INFO,
-	M2M_WIFI_REQ_SERVER_INIT
-}tenuM2mServerCmd;
-
 
 /*!
 @enum	\
@@ -490,21 +594,25 @@ typedef enum {
 	M2M_WIFI_REQ_SLEEP,
 	/*!< Set PS mode command.
 	*/
-	M2M_WIFI_REQ_SCAN_RESERVED,
-	/*!< Request scan command.
-	*/
+	M2M_WIFI_RESERVED,
+	/*!<
+	 * Reserved for debuging
+	 * */
 	M2M_WIFI_REQ_WPS_SCAN,
 	/*!< Request WPS scan command.
 	*/
-	M2M_WIFI_RESP_SCAN_DONE_RESERVED,
-	/*!< Scan complete notification response.
-	*/
-	M2M_WIFI_REQ_SCAN_RESULT_RESERVED,
-	/*!< Request Scan results command.
-	*/
-	M2M_WIFI_RESP_SCAN_RESULT_RESERVED,
-	/*!< Request Scan results resopnse.
-	*/
+	M2M_WIFI_RESERVED1,
+	/*!<
+	 * Reserved for debuging
+	 * */
+	M2M_WIFI_RESERVED2,
+	/*!<
+	 * Reserved for debuging
+	 * */
+	M2M_WIFI_RESERVED3,
+	/*!<
+	 * Reserved for debuging
+	 * */
 	M2M_WIFI_REQ_WPS,
 	/*!< Request WPS start command.
 	*/
@@ -547,20 +655,39 @@ typedef enum {
 	M2M_WIFI_RESP_ETHERNET_RX_PACKET,
 	/*!< Receive ethernet packet in bypass mode.
 	*/
-	M2M_WIFI_REQ_SET_SCAN_OPTION_RESERVED,
-	/*!< Set Scan options "slot time, slot number .. etc" .
-	*/
-	M2M_WIFI_REQ_SET_SCAN_REGION_RESERVED,
-	/*!< Set scan region.
-	*/
+	M2M_WIFI_RESERVED4,
+	/*!<
+	 * Reserved for debuging
+	 * */
+	M2M_WIFI_RESERVED5,
+	/*!<
+	 * Reserved for debuging
+	 * */
 	M2M_WIFI_REQ_DOZE,
 	/*!< Used to force the WINC to sleep in manual PS mode.
 	*/
-	M2M_WIFI_REQ_SET_MAC_MCAST
+	M2M_WIFI_REQ_SET_MAC_MCAST,
 	/*!< Set the WINC multicast filters.
 	*/
+	M2M_WIFI_MAX_STA_ALL,
 } tenuM2mStaCmd;
 
+/*!
+@enum	\
+	tenuM2mApCmd
+
+@brief
+	This enum contains all the WINC commands while in AP mode.
+*/
+typedef enum {
+	M2M_WIFI_REQ_ENABLE_AP = M2M_AP_CMD_BASE,
+	/*!< Enable AP mode command.
+	*/
+	M2M_WIFI_REQ_DISABLE_AP,
+	/*!< Disable AP mode command.
+	*/
+	M2M_WIFI_MAX_AP_ALL,
+}tenuM2mApCmd;
 
 /*!
 @enum	\
@@ -580,28 +707,13 @@ typedef enum {
 	M2M_WIFI_REQ_DISABLE_P2P,
 	/*!< Disable P2P mode command.
 	*/
-	M2M_WIFI_REQ_P2P_REPOST
+	M2M_WIFI_REQ_P2P_REPOST,
 	/*!< This command is for internal use by the WINC and 
 		should not be used by the host driver.
 	*/
+	M2M_WIFI_MAX_P2P_ALL,
 }tenuM2mP2pCmd;
 
-
-/*!
-@enum	\
-	tenuM2mApCmd
-	
-@brief
-	This enum contains all the WINC commands while in AP mode.
-*/
-typedef enum {
-	M2M_WIFI_REQ_ENABLE_AP = M2M_AP_CMD_BASE,
-	/*!< Enable AP mode command.
-	*/
-	M2M_WIFI_REQ_DISABLE_AP,
-	/*!< Disable AP mode command.
-	*/
-}tenuM2mApCmd;
 
 /*!
 @enum	\
@@ -619,8 +731,27 @@ typedef enum {
 	M2M_OTA_REQ_ROLLBACK,
 	M2M_OTA_RESP_NOTIF_UPDATE_INFO,
 	M2M_OTA_RESP_UPDATE_STATUS,
-	M2M_OTA_REQ_TEST
+	M2M_OTA_REQ_TEST,
+	M2M_OTA_MAX_ALL,
 }tenuM2mOtaCmd;
+
+
+/*!
+@enum	\
+	tenuM2mServerCmd
+
+@brief
+	This enum contains all the WINC commands while in PS mode.
+	These command are currently not supported.
+*/
+typedef enum {
+	M2M_WIFI_REQ_CLIENT_CTRL = M2M_SERVER_CMD_BASE,
+	M2M_WIFI_RESP_CLIENT_INFO,
+	M2M_WIFI_REQ_SERVER_INIT,
+	M2M_WIFI_MAX_SERVER_ALL
+}tenuM2mServerCmd;
+
+
 
 
 /*!
@@ -1636,6 +1767,30 @@ typedef struct {
 	uint32 u32OtaRollbackImagFirmwareVer;
 /*!<
 	Roll-back image version (ex 18.0.3)
+*/
+	uint32 u32OtaCortusAppWorkingOffset;
+/*!<
+	cortus app working offset in flash 
+*/
+	uint32 u32OtaCortusAppWorkingValidSts;
+/*!<
+	Working Cortus app valid status 
+*/
+	uint32 u32OtaCortusAppWorkingVer;
+/*!<
+	Working cortus app version (ex 18.0.3)
+*/
+	uint32 u32OtaCortusAppRollbackOffset;
+/*!<
+	cortus app rollback offset in flash 
+*/
+	uint32 u32OtaCortusAppRollbackValidSts;
+/*!<
+	roll-back cortus app valid status 
+*/
+	uint32 u32OtaCortusAppRollbackVer;
+/*!<
+	Roll-back cortus app version (ex 18.0.3)
 */
 	uint32 u32OtaControlSecCrc;
 /*!<
