@@ -1130,7 +1130,7 @@ void pwm_channel_update_spread(Pwm *p_pwm, pwm_channel_t *p_channel,
 }
 
 /**
- * \brief Change additional edge value and mode.
+ * \brief Change leading edge value and mode.
  *
  * \param p_pwm Pointer to a PWM instance.
  * \param p_channel Configurations of the specified PWM channel.
@@ -1142,11 +1142,11 @@ void pwm_channel_update_leading_edge(Pwm *p_pwm, pwm_channel_t *p_channel,
 		pwm_leading_edge_blanking_mode_t leading_edge_blanking_mode)
 {
 	uint32_t ul_mask;
-	/* Save new additional edge value */
+	/* Save new leading edge value */
 	p_channel->ul_leading_edge_delay = ul_leading_edge_delay;
 	p_channel->leading_edge_blanking_mode = leading_edge_blanking_mode;
 
-	/* Write channel additional edge update register */
+	/* Write channel leading edge update register */
 	if (p_channel->channel == 1) {
 		ul_mask = p_pwm->PWM_LEBR1;
 		p_pwm->PWM_LEBR1 = PWM_LEBR1_LEBDELAY(ul_leading_edge_delay) | leading_edge_blanking_mode;
