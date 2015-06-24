@@ -296,6 +296,18 @@ uint32_t pwm_channel_init(Pwm *p_pwm, pwm_channel_t *p_channel)
 	p_pwm->PWM_CH_NUM_0X400[ch_num].PWM_CAE =
 			PWM_CAE_ADEDGV(p_channel->ul_additional_edge) |
 			p_channel->additional_edge_mode;
+#elif (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	if (!ch_num) {
+		if (p_channel->spread_spectrum_mode ==
+		PWM_SPREAD_SPECTRUM_MODE_RANDOM) {
+			p_pwm->PWM_SSPR = PWM_SSPR_SPRD(p_channel->ul_spread) |
+			PWM_SSPR_SPRDM;
+			} else {
+			p_pwm->PWM_SSPR = PWM_SSPR_SPRD(p_channel->ul_spread);
+		}
+	}
+	p_pwm->PWM_CH_NUM[ch_num].PWM_CMR &= (~PWM_CMR_PPM);
+	p_pwm->PWM_CH_NUM[ch_num].PWM_CMR |= (p_channel->ul_ppm_mode & PWM_CMR_PPM);
 #endif
 
 	return 0;
@@ -1032,7 +1044,7 @@ void pwm_stepper_motor_init(Pwm *p_pwm, pwm_stepper_motor_pair_t pair,
 }
 #endif
 
-#if (SAM4E || SAMV70 || SAMV71 || SAME70 || SAMS70)
+#if SAM4E
 /**
  * \brief Change spread spectrum value.
  *
@@ -1050,42 +1062,6 @@ void pwm_channel_update_spread(Pwm *p_pwm, pwm_channel_t *p_channel,
 	p_pwm->PWM_SSPUP = PWM_SSPUP_SPRDUP(ul_spread);
 }
 
-#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
-/**
- * \brief Change additional edge value and mode.
- *
- * \param p_pwm Pointer to a PWM instance.
- * \param p_channel Configurations of the specified PWM channel.
- * \param ul_leading_edge_delay Leading-Edge Blanking Delay for TRGINx.
- * \param leading_edge_blanking_mode New additional edge mode.
- */
-void pwm_channel_update_leading_edge(Pwm *p_pwm, pwm_channel_t *p_channel,
-		uint32_t ul_leading_edge_delay,
-		pwm_leading_edge_blanking_mode_t leading_edge_blanking_mode)
-{
-	uint32_t ul_mask;
-	/* Save new additional edge value */
-	p_channel->ul_leading_edge_delay = ul_leading_edge_delay;
-	p_channel->leading_edge_blanking_mode = leading_edge_blanking_mode;
-
-	/* Write channel additional edge update register */
-	if (p_channel->channel == 1) {
-		ul_mask = p_pwm->PWM_LEBR1;
-		p_pwm->PWM_LEBR1 = PWM_LEBR1_LEBDELAY(ul_leading_edge_delay) | leading_edge_blanking_mode;
-	} else if (p_channel->channel == 2) {
-		ul_mask = p_pwm->PWM_LEBR2;
-		p_pwm->PWM_LEBR2 = PWM_LEBR2_LEBDELAY(ul_leading_edge_delay) | leading_edge_blanking_mode;
-	} else if (p_channel->channel == 3) {
-		ul_mask = p_pwm->PWM_LEBR3;
-		p_pwm->PWM_LEBR3 = PWM_LEBR3_LEBDELAY(ul_leading_edge_delay) | leading_edge_blanking_mode;
-	} else if (p_channel->channel == 4) {
-		ul_mask = p_pwm->PWM_LEBR4;
-		p_pwm->PWM_LEBR4 = PWM_LEBR4_LEBDELAY(ul_leading_edge_delay) | leading_edge_blanking_mode;
-	}
-}
-#endif
-
-#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 /**
  * \brief Change additional edge value and mode.
  *
@@ -1135,7 +1111,56 @@ void pwm_channel_update_polarity_mode(Pwm *p_pwm, pwm_channel_t *p_channel,
 		}
 	}
 }
-#endif
+#elif (SAMV70 || SAMV71 || SAME70 || SAMS70)
+/**
+ * \brief Change spread spectrum value.
+ *
+ * \param p_pwm Pointer to a PWM instance.
+ * \param p_channel Configurations of the specified PWM channel.
+ * \param ul_spread New spread spectrum value.
+ */
+void pwm_channel_update_spread(Pwm *p_pwm, pwm_channel_t *p_channel,
+		uint32_t ul_spread)
+{
+	/* Save new spread spectrum value */
+	p_channel->ul_spread = ul_spread;
+
+	/* Write spread spectrum update register */
+	p_pwm->PWM_SSPUP = PWM_SSPUP_SPRDUP(ul_spread);
+}
+
+/**
+ * \brief Change additional edge value and mode.
+ *
+ * \param p_pwm Pointer to a PWM instance.
+ * \param p_channel Configurations of the specified PWM channel.
+ * \param ul_leading_edge_delay Leading-Edge Blanking Delay for TRGINx.
+ * \param leading_edge_blanking_mode New additional edge mode.
+ */
+void pwm_channel_update_leading_edge(Pwm *p_pwm, pwm_channel_t *p_channel,
+		uint32_t ul_leading_edge_delay,
+		pwm_leading_edge_blanking_mode_t leading_edge_blanking_mode)
+{
+	uint32_t ul_mask;
+	/* Save new additional edge value */
+	p_channel->ul_leading_edge_delay = ul_leading_edge_delay;
+	p_channel->leading_edge_blanking_mode = leading_edge_blanking_mode;
+
+	/* Write channel additional edge update register */
+	if (p_channel->channel == 1) {
+		ul_mask = p_pwm->PWM_LEBR1;
+		p_pwm->PWM_LEBR1 = PWM_LEBR1_LEBDELAY(ul_leading_edge_delay) | leading_edge_blanking_mode;
+	} else if (p_channel->channel == 2) {
+		ul_mask = p_pwm->PWM_LEBR2;
+		p_pwm->PWM_LEBR2 = PWM_LEBR2_LEBDELAY(ul_leading_edge_delay) | leading_edge_blanking_mode;
+	} else if (p_channel->channel == 3) {
+		ul_mask = p_pwm->PWM_LEBR3;
+		p_pwm->PWM_LEBR3 = PWM_LEBR3_LEBDELAY(ul_leading_edge_delay) | leading_edge_blanking_mode;
+	} else if (p_channel->channel == 4) {
+		ul_mask = p_pwm->PWM_LEBR4;
+		p_pwm->PWM_LEBR4 = PWM_LEBR4_LEBDELAY(ul_leading_edge_delay) | leading_edge_blanking_mode;
+	}
+}
 #endif
 
 #if (SAMV70 || SAMV71 || SAME70 || SAMS70)
