@@ -477,7 +477,7 @@ void ccl_lut_disable(const enum ccl_lut_id number);
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>42447A</td>
+ *		<td>42448A</td>
  *		<td>06/2015</td>
  *		<td>Initial document release</td>
  *	</tr>
