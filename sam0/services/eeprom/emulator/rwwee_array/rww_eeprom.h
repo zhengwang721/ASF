@@ -331,7 +331,7 @@
  * \subsection asfdoc_sam0_rww_eeprom_special_considerations_checksum RWW EEPROM Page Checksum
  * For each page, a checksum function is used to verify the integrity of
  * the page data. After reading the page data using 
- * \ref rww_eeprom_emulator_read_page(). When its checksum is not correct, and an error can be
+ * \ref rww_eeprom_emulator_read_page(). When its checksum is not correct, an error can be
  * detected. This function can be enabled or disabled through the configuration file.
  *
  * \section asfdoc_sam0_rww_eeprom_extra_info Extra Information
