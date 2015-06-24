@@ -411,18 +411,18 @@ void pwm_stepper_motor_init(Pwm *p_pwm, pwm_stepper_motor_pair_t pair,
 
 #if SAM4E
 void pwm_channel_update_spread(Pwm *p_pwm, pwm_channel_t *p_channel,
-	uint32_t ul_spread);
+		uint32_t ul_spread);
 void pwm_channel_update_additional_edge(Pwm *p_pwm, pwm_channel_t *p_channel,
-	uint32_t ul_additional_edge,
-	pwm_additional_edge_mode_t additional_edge_mode);
+		uint32_t ul_additional_edge,
+		pwm_additional_edge_mode_t additional_edge_mode);
 void pwm_channel_update_polarity_mode(Pwm *p_pwm, pwm_channel_t *p_channel,
 		bool polarity_inversion_flag, pwm_level_t polarity_value);
 #elif (SAMV70 || SAMV71 || SAME70 || SAMS70)
 void pwm_channel_update_spread(Pwm *p_pwm, pwm_channel_t *p_channel,
-	uint32_t ul_spread);
+		uint32_t ul_spread);
 void pwm_channel_update_leading_edge(Pwm *p_pwm, pwm_channel_t *p_channel,
-	uint32_t ul_leading_edge_delay,
-	pwm_leading_edge_blanking_mode_t leading_edge_blanking_mode);
+		uint32_t ul_leading_edge_delay,
+		pwm_leading_edge_blanking_mode_t leading_edge_blanking_mode);
 #endif
 
 #if (SAMV70 || SAMV71 || SAME70 || SAMS70)
