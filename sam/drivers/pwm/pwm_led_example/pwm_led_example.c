@@ -52,7 +52,7 @@
  *
  * \section Requirements
  *
- * This example can be used on any SAM3/4 boards. The 2 required leds need to
+ * This example can be used on SAM boards. The 2 required leds need to
  * be connected to PWM output pins, else consider probing the PWM output pins
  * with an oscilloscope.
  *
