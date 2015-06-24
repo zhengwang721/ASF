@@ -58,7 +58,7 @@
 
 /** The erase pin mask value in the PIO mode and erase mode. */
 #define PIN_PIO_MODE_MSK         CCFG_SYSIO_SYSIO12
-#define PIN_ERASE_MODE_MSK       (0)
+#define PIN_ERASE_MODE_MSK       (~CCFG_SYSIO_SYSIO12)
 
 /** Test page start address. */
 #define TEST_PAGE_ADDRESS        (IFLASH_ADDR + IFLASH_SIZE - IFLASH_PAGE_SIZE * 4)

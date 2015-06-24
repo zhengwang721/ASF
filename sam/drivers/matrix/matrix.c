@@ -467,7 +467,7 @@ uint32_t matrix_get_system_io(void)
 
 #elif (SAMV71 || SAMV70 || SAMS70 || SAME70)
 
-	return (p_matrix->CCFG_SYSIO & 0xFF);
+	return (p_matrix->CCFG_SYSIO & 0xFFFF);
 
 #else
 
