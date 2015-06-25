@@ -306,8 +306,7 @@ void aes_read_output_data(
 	}
 }
 
-#if SAM4C || SAM4CP || SAM4CM || SAMV70 || SAMV71 || SAME70 || SAMS70 || defined(__DOXYGEN__)
-#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
+#if SAM4C || SAM4CP || SAM4CM || defined(__DOXYGEN__)
 /**
  * \brief Get AES PDC base address.
  *
@@ -332,8 +331,6 @@ Pdc *aes_get_pdc_base(
 
 	return p_pdc_base;
 }
-#endif
-
 #endif /* SAM4C || SAM4CP || SAM4CM || defined(__DOXYGEN__) */
 
 /**
@@ -357,7 +354,7 @@ void aes_set_callback(
 		aes_callback_pointer[0] = callback;
 	} else if (source == AES_INTERRUPT_UNSPECIFIED_REGISTER_ACCESS) {
 		aes_callback_pointer[1] = callback;
-	}
+	} 
 
 #if SAM4C || SAM4CP || SAM4CM
 	else if (source == AES_INTERRUPT_END_OF_RECEIVE_BUFFER) {
@@ -368,6 +365,10 @@ void aes_set_callback(
 		aes_callback_pointer[4] = callback;
 	} else if (source == AES_INTERRUPT_TRANSMIT_BUFFER_FULL) {
 		aes_callback_pointer[5] = callback;
+	}
+#elif SAMV70 || SAMV71 || SAME70 || SAMS70
+	else if ((source == AES_INTERRUPT_IER_TAGRDY)) {
+		aes_callback_pointer[2] = callback;
 	}
 #endif /* SAM4C || SAM4CP || SAM4CM */
 	irq_register_handler((IRQn_Type)AES_IRQn, irq_level);

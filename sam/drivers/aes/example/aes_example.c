@@ -1036,7 +1036,7 @@ int main(void)
 			#if SAM4E
 			printf(
 					"ECB mode encryption and decryption test with DMA.\r\n");
-			//ecb_mode_test_dma();
+			ecb_mode_test_dma();
 			#else
 			printf("This mode is not supported by device.\r\n");
 			#endif

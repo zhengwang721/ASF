@@ -207,15 +207,20 @@ typedef enum aes_interrupt_source {
 	AES_INTERRUPT_RECEIVE_BUFFER_FULL = AES_IER_RXBUFF,
 	/** Transmit buffer empty interrupt (SAM4C devices only). */
 	AES_INTERRUPT_TRANSMIT_BUFFER_FULL = AES_IER_TXBUFE,
+#elif SAMV70 || SAMV71 || SAME70 || SAMS70 
+	AES_INTERRUPT_IER_TAGRDY = AES_IER_TAGRDY,
 #endif /* SAM4C || SAM4CP || SAM4CM || defined(__DOXYGEN__) */
 } aes_interrupt_source_t;
 
 #if SAM4E
 /** \internal Max number of interrupt sources. */
 #define AES_INTERRUPT_SOURCE_NUM 2
-#elif SAM4C || SAM4CP || SAM4CM || SAMV70 || SAMV71 || SAME70 || SAMS70
+#elif SAM4C || SAM4CP || SAM4CM
 /** \internal Max number of interrupt sources. */
 #define AES_INTERRUPT_SOURCE_NUM 6
+#elif SAMV70 || SAMV71 || SAME70 || SAMS70
+/** \internal Max number of interrupt sources. */
+#define AES_INTERRUPT_SOURCE_NUM 3
 #endif
 
 /** AES interrupt callback function type. */
