@@ -9,13 +9,9 @@
 			<!-- Source -->
 			<build type="include-path" value="."/>
 			<build type="c-source" value="main.c"/>
-			<build type="distribute" subtype="file" value="samg53_xplained_pro_certificate_update.bat"/>
 			<build type="distribute" subtype="file" value="samg53_xplained_pro_firmware_update.bat"/>
-			<build type="distribute" subtype="file" value="samg55_xplained_pro_certificate_update.bat"/>
 			<build type="distribute" subtype="file" value="samg55_xplained_pro_firmware_update.bat"/>
-			<build type="distribute" subtype="file" value="samd21_xplained_pro_certificate_update.bat"/>
 			<build type="distribute" subtype="file" value="samd21_xplained_pro_firmware_update.bat"/>
-			<build type="distribute" subtype="file" value="samw25_xplained_pro_certificate_update.bat"/>
 			<build type="distribute" subtype="file" value="samw25_xplained_pro_firmware_update.bat"/>
 			<build type="include-path" value="doc"/>
 			<build type="distribute" subtype="file" value="doc/Atmel-AN004-Firmware-Update-Procedure-for-WINC1500-WiFi-Module-using-a-SAM-Xplained-Pro.pdf"/>
