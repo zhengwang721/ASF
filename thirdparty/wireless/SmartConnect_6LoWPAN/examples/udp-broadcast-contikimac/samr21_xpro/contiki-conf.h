@@ -69,8 +69,11 @@
 #define CONTIKI_TARGET_NETSIM 0
 /* radio driver blocks until ACK is received */
 #define NULLRDC_CONF_ACK_WAIT_TIME          (50 * RTIMER_SECOND/1000)
+
 #define NULLRDC_CONF_802154_AUTOACK         1
 #define NULLRDC_CONF_SEND_802154_ACK        1
+#define NULLRDC_CONF_802154_AUTOACK_HW      0
+
 #define NETSTACK_CONF_MAC   csma_driver
 
 #define NETSTACK_CONF_FRAMER                framer_802154
@@ -125,8 +128,18 @@
 #define PROCESS_CONF_NO_PROCESS_NAMES         0
 #define SICSLOWPAN_CONF_COMPRESSION           SICSLOWPAN_COMPRESSION_HC06
 #define SICSLOWPAN_CONF_ACK_ALL   0
+
 #define SICSLOWPAN_CONF_FRAG                  1
-//#define SICSLOWPAN_CONF_MAXAGE                4
+#if SICSLOWPAN_CONF_FRAG
+#define REASSEMBLY_TIMEOUT                    10 * CLOCK_SECOND
+#define MUL_REASSEMBLY                        1
+
+#if MUL_REASSEMBLY
+  #define NUM_REASM_BUFS                      4
+#else
+  #define NUM_REASM_BUFS                      1
+#endif
+#endif // SICSLOWPAN_CONF_FRAG
 
 #define LED_UDP_PORT 8840
 

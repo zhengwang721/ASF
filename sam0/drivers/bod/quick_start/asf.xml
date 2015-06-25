@@ -13,7 +13,6 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
-			<device-support value="samda0"/>
 			<device-support value="samda1"/>
 		</module>
 		<module type="application" id="sam0.drivers.bod.quick_start#sam_l" caption="Quick Start for the SAM BOD Driver (Polled)">
@@ -26,6 +25,16 @@
 			<require idref="sam0.drivers.bod"/>
 			<device-support value="saml21"/>
 			<device-support value="saml22"/>
+		</module>
+		<module type="application" id="sam0.drivers.bod.quick_start#sam_c" caption="Quick Start for the SAM BOD Driver (Polled)">
+			<info type="description" value="summary">
+			Quick start guide demonstrating BOD configuration.
+			</info>
+			<info type="gui-flag" value="move-to-root"/>
+			<build type="c-source" value="qs_bod_basic_use_samc.c"/>
+			<build type="include-path" value="."/>
+			<require idref="sam0.drivers.bod"/>
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 </asf>

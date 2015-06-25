@@ -28,6 +28,8 @@
 
 		<device-support value="saml21"/>
 		<device-support value="saml22"/>
+		<device-support value="samc20"/>
+		<device-support value="samc21"/>
 
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system"/>

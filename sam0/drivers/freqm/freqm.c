@@ -47,6 +47,10 @@
 #include "freqm.h"
 #include <gclk.h>
 
+#ifndef FREQM_GCLK_ID_REF
+#define FREQM_GCLK_ID_REF (FREQM_GCLK_ID_MSR + 1)
+#endif
+
 /**
  * \brief Initializes a hardware FREQM module instance.
  *
@@ -75,13 +79,6 @@ enum status_code freqm_init(
 	/* Initialize device instance */
 	module_inst->hw = hw;
 
-	/* Perform a software reset */
-	hw->CTRLA.reg = FREQM_CTRLA_SWRST;
-
-	while (freqm_is_syncing()) {
-		/* Wait for all hardware modules to complete synchronization */
-	}
-
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, MCLK_APBAMASK_FREQM);
 
@@ -97,6 +94,13 @@ enum status_code freqm_init(
 	system_gclk_chan_enable(FREQM_GCLK_ID_REF);
 	
 	module_inst->ref_clock_freq = system_gclk_gen_get_hz(config->ref_clock_source);
+
+	/* Perform a software reset */
+	hw->CTRLA.reg = FREQM_CTRLA_SWRST;
+
+	while (freqm_is_syncing()) {
+		/* Wait for all hardware modules to complete synchronization */
+	}
 
 	/* Initialize the FREQM with new configurations */
 	hw->CFGA.reg = config->ref_clock_circles;
@@ -150,7 +154,9 @@ enum freqm_status freqm_get_result_value(
 		} else {
 			/* Get measurement output data (it will clear data done flag) */
 			result_cal = freqm_hw->VALUE.reg;
-			*result = result_cal / freqm_hw->CFGA.reg * module_inst->ref_clock_freq;
+			freqm_hw->INTFLAG.reg |= FREQM_INTFLAG_DONE;
+
+			*result = result_cal * module_inst->ref_clock_freq / freqm_hw->CFGA.reg;
 			return FREQM_STATUS_MEASURE_DONE;
 		}
 	}

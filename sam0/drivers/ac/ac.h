@@ -67,7 +67,8 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM DA0/DA1
+ *  - Atmel | SMART SAM DA1
+ *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_ac_prerequisites
@@ -107,15 +108,15 @@
  *    </tr>
  *    <tr>
  *      <td>FEATURE_AC_HYSTERESIS_LEVEL</td>
- *      <td>SAML21/L22</td>
+ *      <td>SAML21/L22/C20/C21</td>
  *    </tr>
  *    <tr>
  *      <td>FEATURE_AC_SYNCBUSY_SCHEME_VERSION_2</td>
- *      <td>SAML21/L22</td>
+ *      <td>SAML21/L22/C20/C21</td>
  *    </tr>
  *    <tr>
  *      <td>FEATURE_AC_RUN_IN_STANDY_EACH_COMPARATOR</td>
- *      <td>SAML21/L22</td>
+ *      <td>SAML21/L22/C20/C21</td>
  *    </tr>
  *    <tr>
  *      <td>FEATURE_AC_RUN_IN_STANDY_PAIR_COMPARATOR</td>
@@ -306,14 +307,14 @@ extern "C" {
  * Define AC driver feature set according to different device family.
  * @{
  */
-#if (SAML21) || (SAML22) || defined(__DOXYGEN__)
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
    /** Setting of hysteresis level */
 #  define FEATURE_AC_HYSTERESIS_LEVEL
    /** SYNCBUSY scheme version 2. */
 #  define FEATURE_AC_SYNCBUSY_SCHEME_VERSION_2
 #endif
 
-#if (SAML21) || (SAML22) || defined(__DOXYGEN__)
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
  	/** Run in standby feature for each comparator */
 #  define FEATURE_AC_RUN_IN_STANDY_EACH_COMPARATOR
 #else
@@ -494,7 +495,7 @@ enum ac_chan_neg_mux {
 	 * For SAMD20/D21/D10/D11/R21/DA0/DA1:
 	 *     Negative comparator input is connected to the channel's internal DAC
 	 *     channel 0 output.
-	 * For SAML21:
+	 * For SAML21/C20/C21:
 	 *     Negative comparator input is connected to the channel's internal DAC
 	 *     channel 0 output for Comparator 0 or OPAMP output for Comparator 1.
 	 */
@@ -1363,9 +1364,6 @@ static inline void ac_win_clear_status(
  *      <th>Changelog</th>
  *    </tr>
  *    <tr>
- *      <td>Added support for SAMD21</td>
- *    </tr>
- *    <tr>
  *      <td>Initial Release</td>
  *    </tr>
  * </table>
@@ -1395,8 +1393,8 @@ static inline void ac_win_clear_status(
  *    </tr>
  *    <tr>
  *      <td>E</td>
- *      <td>04/2015</td>
- *      <td>Added support for SAML21 and SAMDA0/DA1.</td>
+ *      <td>06/2015</td>
+ *      <td>Added support for SAML21, SAMC21, and SAMDAx.</td>
  *    </tr>
  *    <tr>
  *      <td>D</td>

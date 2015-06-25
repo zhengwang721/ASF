@@ -108,7 +108,7 @@
 /* Theoretical frequency value of clock source */
 #define FREQM_CLK_FREQ_VAL     4000000
 /* Offset due to FREQM errors */
-#define FREQM_OFFSET           1000
+#define FREQM_OFFSET           200000
 
 /* Structure for UART module connected to EDBG (used for unit test output) */
 struct usart_module cdc_uart_module;
@@ -181,7 +181,7 @@ static void run_freqm_polling_read_test(const struct test_case *test)
 			== FREQM_STATUS_MEASURE_BUSY) {
 	}
 	/* Test result */
-	test_assert_true(test, measure_status == FREQM_STATUS_CNT_OVERFLOW, 
+	test_assert_true(test, measure_status != FREQM_STATUS_CNT_OVERFLOW, 
 			"Overflow condition occus in polling mode!");
 
 	test_assert_true(test,
@@ -216,7 +216,7 @@ static void run_freqm_callback_read_test(const struct test_case *test)
 	measure_status = freqm_get_result_value(&freqm_instance, &measure_result);
 
 	/* Test result */
-	test_assert_true(test, measure_status == FREQM_STATUS_CNT_OVERFLOW, 
+	test_assert_true(test, measure_status != FREQM_STATUS_CNT_OVERFLOW, 
 			"Overflow condition occus in callback mode!");
 
 	test_assert_true(test,

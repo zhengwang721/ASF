@@ -60,7 +60,7 @@
 #include "timer_hw.h"
 #include "conf_extint.h"
 
-static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 0x25, 0x75, 0x11, 0x6a, 0x7f, 0x7f};
+static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
 at_ble_LTK_t app_bond_info;
 bool app_device_bond = false;
@@ -71,12 +71,13 @@ htpt_app_t htpt_data;
 void app_init(void)
 {
 	uint8_t port = 74;
-	at_ble_addr_t addr = {AT_BLE_ADDRESS_PUBLIC,
-		{0x25, 0x75, 0x11, 0x6a, 0x7f, 0x7f} };
-	
+	at_ble_addr_t addr;
     // init device
 	at_ble_init(&port);
-
+	
+	at_ble_addr_get(&addr);
+	/* Update the Address in scan response data*/
+	memcpy(&scan_rsp_data[4], &addr.addr, 6);
 	at_ble_addr_set(&addr);
 
 	/* Initialize the htpt to default value */
