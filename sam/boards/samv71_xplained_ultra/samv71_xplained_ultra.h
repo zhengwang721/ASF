@@ -261,11 +261,22 @@
 
 /** TWI0 pins definition */
 #define TWIHS0_DATA_GPIO   PIO_PA3_IDX
-#define TWIHS0_DATA_FLAGS  (IOPORT_MODE_MUX_A)
+#define TWIHS0_DATA_FLAGS  (IOPORT_MODE_MUX_B)
 #define TWIHS0_CLK_GPIO    PIO_PA4_IDX
-#define TWIHS0_CLK_FLAGS   (IOPORT_MODE_MUX_A)
+#define TWIHS0_CLK_FLAGS   (IOPORT_MODE_MUX_C)
 
 /** AFEC channel for potentiometer */
 #define AFEC_CHANNEL_POTENTIOMETER  AFEC_CHANNEL_0
+
+/** PWM LED0 pin definitions. */
+#define PIN_PWM_LED0_GPIO    PIO_PA23_IDX
+#define PIN_PWM_LED0_FLAGS   (IOPORT_MODE_MUX_B)
+#define PIN_PWM_LED0_CHANNEL PWM_CHANNEL_0
+
+/** PWM LED1 pin definitions. */
+#define PIN_PWM_LED1_GPIO    PIO_PA24_IDX
+#define PIN_PWM_LED1_FLAGS   (IOPORT_MODE_MUX_B)
+#define PIN_PWM_LED1_CHANNEL PWM_CHANNEL_1
+
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAMV71_XLTRA_H_ */
