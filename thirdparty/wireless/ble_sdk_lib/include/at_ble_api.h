@@ -1692,7 +1692,7 @@ at_ble_status_t at_ble_encryption_start(at_ble_handle_t conn_handle, at_ble_LTK_
   * @return @ref AT_BLE_SUCCESS operation completed successfully.
   * @return @ref AT_BLE_FAILURE Generic error.
   */
-at_ble_status_t at_ble_encryption_request_reply(at_ble_handle_t conn_handle,uint8_t auth, bool key_found, at_ble_LTK_t key);
+at_ble_status_t at_ble_encryption_request_reply(at_ble_handle_t conn_handle,at_ble_auth_t auth, bool key_found, at_ble_LTK_t key);
 
  /**@brief Handles request of resolving a resolvable random address ,@ref AT_BLE_RESOLV_RAND_ADDR_STATUS event is used to inform 
   * which key has been used to perform resolution.
