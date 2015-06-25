@@ -367,7 +367,7 @@ void aes_set_callback(
 		aes_callback_pointer[5] = callback;
 	}
 #elif SAMV70 || SAMV71 || SAME70 || SAMS70
-	else if ((source == AES_INTERRUPT_IER_TAGRDY)) {
+	else if ((source == AES_INTERRUPT_TAG_READY)) {
 		aes_callback_pointer[2] = callback;
 	}
 #endif /* SAM4C || SAM4CP || SAM4CM */
@@ -417,6 +417,12 @@ void AES_Handler(void)
 	if ((status & AES_ISR_TXBUFE) && (mask & AES_IMR_TXBUFE)) {
 		if (aes_callback_pointer[5]) {
 			aes_callback_pointer[5]();
+		}
+	}
+#elif SAMV70 || SAMV71 || SAME70 || SAMS70
+	if ((status & AES_IER_TAGRDY) && (mask & AES_IER_TAGRDY)) {
+		if (aes_callback_pointer[2]) {
+			aes_callback_pointer[2]();
 		}
 	}
 #endif /* SAM4C || SAM4CP || SAM4CM */

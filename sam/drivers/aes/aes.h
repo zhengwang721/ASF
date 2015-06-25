@@ -208,7 +208,7 @@ typedef enum aes_interrupt_source {
 	/** Transmit buffer empty interrupt (SAM4C devices only). */
 	AES_INTERRUPT_TRANSMIT_BUFFER_FULL = AES_IER_TXBUFE,
 #elif SAMV70 || SAMV71 || SAME70 || SAMS70 
-	AES_INTERRUPT_IER_TAGRDY = AES_IER_TAGRDY,
+	AES_INTERRUPT_TAG_READY = AES_IER_TAGRDY,
 #endif /* SAM4C || SAM4CP || SAM4CM || defined(__DOXYGEN__) */
 } aes_interrupt_source_t;
 
