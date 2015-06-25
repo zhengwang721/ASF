@@ -1,0 +1,44 @@
+<asf xmlversion="1.0">
+	<module type="meta" id="thirdparty.wireless.ble_sdk_lib.ble_stack" caption="COMPONENT - BLE_STACK">
+		<info type="description" value="summary">
+		</info>
+		<build type="c-source"      value="event.c"/>
+		<build type="c-source"      value="gap.c"/>
+		<build type="c-source"      value="gatt_client.c"/>
+		<build type="c-source"      value="gatt_server.c"/>
+		<build type="c-source"      value="security.c"/>
+  <build type="c-source"      value="external_host/dbg_task.c"/>
+  <build type="c-source"      value="external_host/gapc_task.c"/>
+  <build type="c-source"      value="external_host/gapm_task.c"/>
+  <build type="c-source"      value="external_host/gattc_task.c"/>
+  <build type="c-source"      value="external_host/gattm_task.c"/>
+  <build type="c-source"      value="external_host/interface.c"/>
+  <build type="c-source"      value="external_host/htpt_task.c"/>
+  <build type="c-source"      value="external_host/error.c"/>
+  <build type="c-source"      value="profiles/htpt.c"/>
+  
+		<build type="include-path"  value="include/"/>
+		<build type="include-path"  value="external_host/"/>  
+		<build type="header-file"   value="include/atts_task.h"/>
+		<build type="header-file"   value="include/cmn_defs.h"/>
+  <build type="header-file"   value="include/dbg_task.h"/>
+  <build type="header-file"   value="include/device.h"/>
+  <build type="header-file"   value="include/diss_task.h"/>
+  <build type="header-file"   value="include/event.h"/>
+  <build type="header-file"   value="include/gapc_task.h"/>
+  <build type="header-file"   value="include/gapm_task.h"/>
+  <build type="header-file"   value="include/gattc_task.h"/>
+  <build type="header-file"   value="include/gattm_task.h"/>
+  <build type="header-file"   value="include/ll_if.h"/>
+  <build type="header-file"   value="include/smpc_task.h"/>
+  <build type="header-file"   value="external_host/interface.h"/>
+  <build type="header-file"   value="include/htpt.h"/>
+  <build type="header-file"   value="include/htpt_task.h"/>
+  <build type="header-file"   value="include/profiles.h"/>
+  <build type="header-file"   value="include/error.h"/>
+		
+		<build type="doxygen-entry-point" value="ble_stack_group"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		
+	</module>
+</asf>
