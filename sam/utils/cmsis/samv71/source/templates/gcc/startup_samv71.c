@@ -291,60 +291,6 @@ const DeviceVectors exception_table = {
         .pfnRSWDT_Handler  = (void*) RSWDT_Handler   /* 63 Reinforced Secure Watchdog Timer */
 };
 
-#if defined(ENABLE_TCM)
-	extern char _itcm_lma, _sitcm, _eitcm;
-	extern char _sdtcm_stack, _edtcm_stack, _sstack, _estack;
-
-	#define SRAM_STACK_BASE     ((void *)(&_sstack))
-	#define DTCM_STACK_BASE     ((void *)(&_sdtcm_stack))
-	#define SRAM_STACK_LIMIT    ((void *)(&_estack))
-	#define DTCM_STACK_LIMIT    ((void *)(&_edtcm_stack))
-
-/**
-  * \brief  Changes the stack's location from SRAM to DTCM
- */
-void TCM_StackInit(void);
-void TCM_StackInit(void)
-{
-    uint32_t offset = (uint32_t)SRAM_STACK_LIMIT - (uint32_t)DTCM_STACK_LIMIT;
-    volatile char *dst = (volatile char *)DTCM_STACK_LIMIT;
-    volatile char *src = (volatile char *)SRAM_STACK_LIMIT;
-    /* copy code_TCM from flash to ITCM */
-    while(src > (volatile char *)SRAM_STACK_BASE){
-        *--dst = *--src;
-    }
-    __set_MSP(__get_MSP() - offset);
-}
-
-/**
-  *\brief  TCM memory enable
-  */
-__STATIC_INLINE void TCM_Enable(void) 
-{
-
-    __DSB();
-    __ISB();
-    SCB->ITCMCR = (SCB_ITCMCR_EN_Msk  | SCB_ITCMCR_RMW_Msk | SCB_ITCMCR_RETEN_Msk);
-    SCB->DTCMCR = ( SCB_DTCMCR_EN_Msk | SCB_DTCMCR_RMW_Msk | SCB_DTCMCR_RETEN_Msk);
-    __DSB();
-    __ISB();
-}
-#endif
-
-/**
- * \brief  TCM memory Disable
- */
-__STATIC_INLINE void TCM_Disable(void) 
-{
-
-    __DSB();
-    __ISB();
-    SCB->ITCMCR &= ~(uint32_t)SCB_ITCMCR_EN_Msk;
-    SCB->DTCMCR &= ~(uint32_t)SCB_DTCMCR_EN_Msk;
-    __DSB();
-    __ISB();
-}
-
 /**
  * \brief This is the code that gets called on processor reset.
  * To initialize the device, and call the main() routine.
@@ -371,26 +317,6 @@ void Reset_Handler(void)
         /* Set the vector table base address */
         pSrc = (uint32_t *) & _sfixed;
         SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
-
-	#if defined(ENABLE_TCM)
-	/* 32 Kb */
-	EFC->EEFC_FCR = (EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FCMD_CGPB | EEFC_FCR_FARG(8));
-	EFC->EEFC_FCR = (EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FCMD_SGPB | EEFC_FCR_FARG(7));
-
-	TCM_Enable();
-	
-	volatile char *dst = &_sitcm;
-	volatile char *src = &_itcm_lma;
-	/* copy code_TCM from flash to ITCM */
-	while(dst < &_eitcm){
-		*dst++ = *src++;
-	}
-	#else
-	EFC->EEFC_FCR = (EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FCMD_CGPB | EEFC_FCR_FARG(8));
-	EFC->EEFC_FCR = (EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FCMD_CGPB | EEFC_FCR_FARG(7));
-
-	TCM_Disable();
-	#endif
 
         /* Initialize the C library */
         __libc_init_array();
