@@ -55,7 +55,7 @@ MEMORY
 }
 
 /* The stack size used by the application. NOTE: you need to adjust according to your application. */
-STACK_SIZE = DEFINED(STACK_SIZE) ? STACK_SIZE : 0x400;
+STACK_SIZE = DEFINED(STACK_SIZE) ? STACK_SIZE : 0x2000;
 __ram_end__ = ORIGIN(ram) + LENGTH(ram) - 4;
 
 /* The heapsize used by the application. NOTE: you need to adjust according to your application. */
