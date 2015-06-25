@@ -47,7 +47,7 @@
 #include "rpl-private.h"
 #include "uip-mcast6.h"
 
-#define DEBUG DEBUG_NONE
+#define _DEBUG_ DEBUG_NONE
 #include "net/ip/uip-debug.h"
 
 #include <limits.h>

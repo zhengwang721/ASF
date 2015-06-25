@@ -74,6 +74,7 @@
  *      - SAM R21 Xplained Pro board
  *      - SAM L21 Xplained Pro board
  *      - SAM L22 Xplained Pro board
+ *      - SAM C21 Xplained Pro board
  *      - SAM DA1 Xplained Pro board
  *
  * \section appdoc_sam0_eeprom_emulator_unit_test_setup Setup

@@ -95,6 +95,9 @@ static void _i2c_master_read(
 			/* Send stop condition */
 			_i2c_master_wait_for_sync(module);
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
+		} else {
+		  	_i2c_master_wait_for_sync(module);
+			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(1);
 		}
 	}
 	
@@ -683,7 +686,11 @@ void _i2c_master_interrupt_handler(
 			/* Send stop condition */
 			_i2c_master_wait_for_sync(module);
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
+		} else {
+			/* Clear write interrupt flag */
+			i2c_module->INTFLAG.reg = SERCOM_I2CM_INTFLAG_MB;
 		}
+		
 		if (callback_mask & (1 << I2C_MASTER_CALLBACK_WRITE_COMPLETE)) {
 			module->callbacks[I2C_MASTER_CALLBACK_WRITE_COMPLETE](module);
 		}

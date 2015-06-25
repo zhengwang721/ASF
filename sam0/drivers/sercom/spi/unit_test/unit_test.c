@@ -78,6 +78,7 @@
  *  - SAM L21 Xplained Pro board
  *  - SAM L22 Xplained Pro board
  *  - SAM DA1 Xplained Pro board
+ *  - SAM C21 Xplained Pro board
  *
  * \section appdoc_sam0_spi_unit_test_setup Setup
  * The following connections has to be made using wires:
@@ -106,6 +107,11 @@
  *  - \b DO/DI: EXT1 PIN16 (PB00) <--> EXT2 PIN17 (PA16)
  *  - \b DI/DO: EXT1 PIN17 (PB02) <--> EXT2 PIN16 (PA18)
  *  - \b SCK:   EXT1 PIN18 (PB01) <--> EXT2 PIN19 (PA19)
+ * - SAM C21 Xplained Pro.
+ *  - \b SS_0:  EXT1 PIN15 (PA17) <--> EXT2 PIN15 (PB03)
+ *  - \b DO/DI: EXT1 PIN16 (PA18) <--> EXT2 PIN17 (PB02)
+ *  - \b DI/DO: EXT1 PIN17 (PA16) <--> EXT2 PIN16 (PB00)
+ *  - \b SCK:   EXT1 PIN18 (PA19) <--> EXT2 PIN18 (PB01)
  *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a

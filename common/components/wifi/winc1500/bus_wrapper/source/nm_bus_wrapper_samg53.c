@@ -130,8 +130,6 @@ sint8 nm_bus_init(void *pvinit)
 {
 	sint8 result = M2M_SUCCESS;
 #ifdef CONF_WINC_USE_I2C
-	/* TODO: implement I2C. */
-	result = M2M_ERR;
 
 #elif CONF_WINC_USE_SPI
 	/* Configure SPI pins. */
@@ -215,7 +213,7 @@ sint8 nm_bus_ioctl(uint8 u8Cmd, void* pvParameter)
 #endif
 		default:
 			s8Ret = -1;
-			M2M_ERR("invalide ioclt cmd\n");
+			M2M_ERR("Invalid IOCTL command!\n");
 			break;
 	}
 

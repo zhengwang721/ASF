@@ -79,18 +79,19 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
-			<device-support value="samda0"/>
 			<device-support value="samda1"/>
 		</module>
 		<module type="meta" id="sam0.drivers.rtc.count#sam_l" caption="RTC - Real Time Counter">
 			<build type="include-path" value="." />
-			<build type="include-path" value="rtc_sam_l"/>
-			<build type="module-config" subtype="path" value="rtc_sam_l/module_config"/>
+			<build type="include-path" value="rtc_sam_l_c"/>
+			<build type="module-config" subtype="path" value="rtc_sam_l_c/module_config"/>
 			<build type="module-config" subtype="required-header-file" value="conf_rtc.h"/>
-			<build type="c-source" value="rtc_sam_l/rtc_count.c"/>
+			<build type="c-source" value="rtc_sam_l_c/rtc_count.c"/>
 
 			<device-support value="saml21"/>
 			<device-support value="saml22"/>
+			<device-support value="samc20"/>
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 	<select-by-device id="sam0.drivers.rtc.calendar" caption="RTC - Real Time Counter">
@@ -104,18 +105,19 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
-			<device-support value="samda0"/>
 			<device-support value="samda1"/>
 		</module>
 		<module type="meta" id="sam0.drivers.rtc.calendar#sam_l" caption="RTC - Real Time Counter">
 			<build type="include-path" value="." />
-			<build type="include-path" value="rtc_sam_l"/>
-			<build type="module-config" subtype="path" value="rtc_sam_l/module_config"/>
+			<build type="include-path" value="rtc_sam_l_c"/>
+			<build type="module-config" subtype="path" value="rtc_sam_l_c/module_config"/>
 			<build type="module-config" subtype="required-header-file" value="conf_rtc.h"/>
-			<build type="c-source" value="rtc_sam_l/rtc_calendar.c"/>
+			<build type="c-source" value="rtc_sam_l_c/rtc_calendar.c"/>
 
 			<device-support value="saml21"/>
 			<device-support value="saml22"/>
+			<device-support value="samc20"/>
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 	<select-by-device id="sam0.drivers.rtc.count_interrupt" caption="RTC - Real Time Counter">
@@ -130,19 +132,20 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
-			<device-support value="samda0"/>
 			<device-support value="samda1"/>
 		</module>
 		<module type="meta" id="sam0.drivers.rtc.count_interrupt#sam_l" caption="RTC - Real Time Counter">
 			<build type="include-path" value="." />
-			<build type="include-path" value="rtc_sam_l"/>
-			<build type="module-config" subtype="path" value="rtc_sam_l/module_config"/>
+			<build type="include-path" value="rtc_sam_l_c"/>
+			<build type="module-config" subtype="path" value="rtc_sam_l_c/module_config"/>
 			<build type="module-config" subtype="required-header-file" value="conf_rtc.h"/>
-			<build type="c-source" value="rtc_sam_l/rtc_count.c"/>
-			<build type="c-source" value="rtc_sam_l/rtc_count_interrupt.c"/>
+			<build type="c-source" value="rtc_sam_l_c/rtc_count.c"/>
+			<build type="c-source" value="rtc_sam_l_c/rtc_count_interrupt.c"/>
 
 			<device-support value="saml21"/>
 			<device-support value="saml22"/>
+			<device-support value="samc20"/>
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 	<select-by-device id="sam0.drivers.rtc.calendar_interrupt" caption="RTC - Real Time Counter">
@@ -157,19 +160,20 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
-			<device-support value="samda0"/>
 			<device-support value="samda1"/>
 		</module>
 		<module type="meta" id="sam0.drivers.rtc.calendar_interrupt#sam_l" caption="RTC - Real Time Counter">
 			<build type="include-path" value="." />
-			<build type="include-path" value="rtc_sam_l"/>
-			<build type="module-config" subtype="path" value="rtc_sam_l/module_config"/>
+			<build type="include-path" value="rtc_sam_l_c"/>
+			<build type="module-config" subtype="path" value="rtc_sam_l_c/module_config"/>
 			<build type="module-config" subtype="required-header-file" value="conf_rtc.h"/>
-			<build type="c-source" value="rtc_sam_l/rtc_calendar.c"/>
-			<build type="c-source" value="rtc_sam_l/rtc_calendar_interrupt.c"/>
+			<build type="c-source" value="rtc_sam_l_c/rtc_calendar.c"/>
+			<build type="c-source" value="rtc_sam_l_c/rtc_calendar_interrupt.c"/>
 
 			<device-support value="saml21"/>
 			<device-support value="saml22"/>
+			<device-support value="samc20"/>
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 	<module type="meta" id="sam0.drivers.rtc.count_appnote" caption="RTC - Real Time Counter in Count Mode (Callback APIs)">

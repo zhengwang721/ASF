@@ -71,7 +71,8 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM DA0/DA1
+ *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_tcc_prerequisites
@@ -2472,7 +2473,7 @@ enum status_code tcc_set_double_buffer_compare_values(
  *  <tr>
  *      <td>C</td>
  *      <td>04/2015</td>
- *      <td>Added support for SAML21 and SAMDA0/DA1</td>
+ *      <td>Added support for SAML21 and SAMDAx</td>
  *  </tr>
  *  <tr>
  *      <td>B</td>
