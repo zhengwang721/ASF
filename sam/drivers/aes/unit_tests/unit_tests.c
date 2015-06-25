@@ -69,6 +69,7 @@
  * - sam4e16e_sam4e_ek
  * - sam4c16c_sam4c_ek
  * - sam4cp16b_sam4cp16bmb
+ * - samv71q21_samv71_xplained_ultra
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
