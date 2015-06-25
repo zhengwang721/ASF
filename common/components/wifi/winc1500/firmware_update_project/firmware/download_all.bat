@@ -1,6 +1,15 @@
 @ECHO off
-SET PORT_NUM=0		
-::0 means try to get available port number and if failed will prompt user to enter it
+::download_all.bat [Mode] (COM)
+::  Mode: any of {UART, I2C, OTA}.
+::  COM: COM port number of target device (optional).
+
+::Use specified COM port if provided else prompt user.
+IF [%2]==[] (
+SET PORT_NUM=0
+) ELSE (
+SET PORT_NUM=%2
+)
+
 SET FIRMWARE_2B0_PATH=../../../firmware/m2m_aio_2b0.bin		
 SET FIRMWARE_3A0_PATH=../../../firmware/m2m_aio_3a0.bin		
 
@@ -47,30 +56,30 @@ goto DOWNLOAD_GAIN
 )
 Set GAIN_FILE=-hp ../gain_sheets/default_gain_setting.csv
 :DOWNLOAD_GAIN
-gain_builder.exe %GAIN_FILE% -no_wait
+gain_builder.exe %GAIN_FILE% -no_wait -port %PORT_NUM%
 IF %ERRORLEVEL% NEQ  0 goto END
-cd ..\..\..\Tools\root_certificate_downloader\%FMode%
+cd ..\..\root_certificate_downloader\%FMode%
 echo Downloading root certificates...
 :DOWNLOAD_ROOT_CERT 
 setlocal EnableDelayedExpansion
 set /a c=0
 set seq=
-for %%X in (..\binary\*.cer) do (
+for %%X in (..\crt\*.cer) do (
 	set /a c+=1
 	@set seq=!seq! %%X
 )
-root_certificate_downloader.exe -n %c% %seq% -no_wait -port 0
+root_certificate_downloader.exe -n %c% %seq% -no_wait -port %PORT_NUM%
 :END
 IF %ERRORLEVEL% NEQ  0 ( echo Fail
 echo     #######################################################################
 echo     ##                                                                   ##
-echo     ##                    ########    ###     ####  ##                   ##
-echo     ##                    ##         ## ##     ##   ##                   ##
-echo     ##                    ##        ##   ##    ##   ##                   ##
-echo     ##                    ######   ##     ##   ##   ##                   ##
-echo     ##                    ##       #########   ##   ##                   ##
-echo     ##                    ##       ##     ##   ##   ##                   ##
-echo     ##                    ##       ##     ##  ####  ########             ##
+echo     ##                  ########    ###     ####  ##                     ##
+echo     ##                  ##         ## ##     ##   ##                     ##
+echo     ##                  ##        ##   ##    ##   ##                     ##
+echo     ##                  ######   ##     ##   ##   ##                     ##
+echo     ##                  ##       #########   ##   ##                     ##
+echo     ##                  ##       ##     ##   ##   ##                     ##
+echo     ##                  ##       ##     ##  ####  ########               ##
 echo     ##                                                                   ##
 echo     #######################################################################
 pause
@@ -78,18 +87,18 @@ exit
 )
 )
 
-echo OK
+echo OK.
 echo     #######################################################################
 echo     ##                                                                   ##
-echo     ##                 ########     ###     ######   ######              ##
-echo     ##                 ##     ##   ## ##   ##    ## ##    ##             ##
-echo     ##                 ##     ##  ##   ##  ##       ##                   ##
-echo     ##                 ########  ##     ##  ######   ######              ##
-echo     ##                 ##        #########       ##       ##             ##
-echo     ##                 ##        ##     ## ##    ## ##    ##             ##
-echo     ##                 ##        ##     ##  ######   ######              ##
+echo     ##               ########     ###     ######   ######                ##
+echo     ##               ##     ##   ## ##   ##    ## ##    ##               ##
+echo     ##               ##     ##  ##   ##  ##       ##                     ##
+echo     ##               ########  ##     ##  ######   ######                ##
+echo     ##               ##        #########       ##       ##               ##
+echo     ##               ##        ##     ## ##    ## ##    ##               ##
+echo     ##               ##        ##     ##  ######   ######                ##
 echo     ##                                                                   ##
 echo     #######################################################################
 
 echo Programming ends successfully
-pause
+IF %PORT_NUM%==0 pause
