@@ -249,7 +249,7 @@
  * \ref asfdoc_sam0_rww_eeprom_page_layout "the following figure".
  *
  * \anchor asfdoc_sam0_rww_eeprom_page_layout
- * \image html page_layout.svg "Internal Layout of an Emulated RWW EEPROM Age"
+ * \image html page_layout.svg "Internal Layout of an Emulated RWW EEPROM Page"
  *
  * \note In the following memory layout example, each physical row stores the
  * contents of one logical RWW EEPROM page. Refer to
