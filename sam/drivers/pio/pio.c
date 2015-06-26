@@ -1214,7 +1214,7 @@ void pio_keypad_set_row_num(Pio *p_pio, uint8_t num)
  */
 uint8_t pio_keypad_get_row_num(const Pio *p_pio)
 {
-  	return ((p_pio->PIO_KRCR & PIO_KRCR_NBR_Msk) >> PIO_KRCR_NBR_Pos);
+	return ((p_pio->PIO_KRCR & PIO_KRCR_NBR_Msk) >> PIO_KRCR_NBR_Pos);
 }
 
 /**
@@ -1225,7 +1225,7 @@ uint8_t pio_keypad_get_row_num(const Pio *p_pio)
  */
 void pio_keypad_set_column_num(Pio *p_pio, uint8_t num)
 {
-  	p_pio->PIO_KRCR &= (~PIO_KRCR_NBC_Msk);
+	p_pio->PIO_KRCR &= (~PIO_KRCR_NBC_Msk);
 	p_pio->PIO_KRCR |= PIO_KRCR_NBC(num);
 }
 
@@ -1238,7 +1238,7 @@ void pio_keypad_set_column_num(Pio *p_pio, uint8_t num)
  */
 uint8_t pio_keypad_get_column_num(const Pio *p_pio)
 {
-  	return ((p_pio->PIO_KRCR & PIO_KRCR_NBC_Msk) >> PIO_KRCR_NBC_Pos);
+	return ((p_pio->PIO_KRCR & PIO_KRCR_NBC_Msk) >> PIO_KRCR_NBC_Pos);
 }
 
 /**

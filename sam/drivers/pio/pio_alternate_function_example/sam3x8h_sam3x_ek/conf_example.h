@@ -63,8 +63,8 @@
 #define PUSH_BUTTON_ATTR         (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
 
 /** The erase pin mask value in the PIO mode and erase mode. */
-#define PIN_PIO_MODE_MSK         0
-#define PIN_ERASE_MODE_MSK       CCFG_SYSIO_SYSIO12
+#define PIN_PIO_MODE_MSK         (matrix_get_system_io() & (~CCFG_SYSIO_SYSIO12))
+#define PIN_ERASE_MODE_MSK       (matrix_get_system_io() | CCFG_SYSIO_SYSIO12)
 
 /* Internal Flash 0 base address. */
 #define IFLASH_ADDR              IFLASH0_ADDR

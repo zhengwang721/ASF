@@ -192,7 +192,6 @@ int main(void)
 	uint32_t ul_error;
 	volatile uint32_t *p_test_page_data;
 	uint32_t p_buffer[BUFFER_SIZE];
-	uint32_t ul_io;
 	
 	/* Initialize the system. */
 	sysclk_init();
@@ -261,8 +260,7 @@ int main(void)
 
 	/* Configure Erase pin NOT in Erase mode. */
 	puts("-I- Configure Erase pin in PIO mode.\r\n");
-	ul_io = matrix_get_system_io() | PIN_PIO_MODE_MSK;
-	matrix_set_system_io(ul_io);
+	matrix_set_system_io(PIN_PIO_MODE_MSK);
 
 	/**
 	 * Ask the user to close the erase jumper and then open it(200ms minimum).
@@ -293,8 +291,7 @@ int main(void)
 	puts("Read OK! Erase is out of function!\r\n");
 	/* Configure Erase pin as Erase function. */
 	puts("-I- Configure Erase pin as Erase function\r\n");
-	ul_io = matrix_get_system_io() & PIN_ERASE_MODE_MSK;
-	matrix_set_system_io(ul_io);
+	matrix_set_system_io(PIN_ERASE_MODE_MSK);
 
 	/**
 	 * Ask the user to close the erase jumper and then open it(200ms minimum).
