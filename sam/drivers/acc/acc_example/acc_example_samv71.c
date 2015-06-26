@@ -59,7 +59,7 @@
  * The acc_irq is aimed to demonstrate the usage of ACC peripheral with
  * interrupt support. The DAC0 and AD0 are selected as two inputs.
  * The user can change the output voltage of DAC0 and change the voltage
- * on AD5 by adjusting VR1.
+ * on AD0.
  *
  * The output voltage of DAC0 is ranged from (1/6)*ADVREF to (5/6)*ADVREF,and
  * the input voltage of AD0 is ranged from 0 to ADVREF.
@@ -90,7 +90,7 @@
  *     -- m: Display this menu again.--
  *     \endcode
  * -# Input command according to the menu.
- * -# Change voltage on AD5 by adjusting VR1 to see what comparison event happen.
+ * -# Change voltage on AD0  to see what comparison event happen.
  *
  */
 /*
@@ -374,7 +374,7 @@ int main(void)
 			 * voltage value = (sample data / max. resolution) * reference voltage
 			 */
 			s_volt = (ul_value * VOLT_REF) / MAX_DIGITAL;
-			printf("-I- Voltage on potentiometer(AD5) is %d mv\n\r", s_volt);
+			printf("-I- Voltage on potentiometer(AD0) is %d mv\n\r", s_volt);
 			printf("-I- Voltage on DAC0 is %ld mv \n\r", (long)l_volt_dac0);
 			break;
 			
