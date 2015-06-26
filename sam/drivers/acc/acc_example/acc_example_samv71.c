@@ -177,7 +177,7 @@ static void dsplay_menu(void)
  */
 static int16_t get_input_voltage(void)
 {
-	uint8_t i = 0, uc_key;
+	uint32_t i = 0, uc_key;
 	int16_t us_value = 0;
 	int8_t c_length = 0;
 	int8_t ac_str_temp[5] = { 0 };
@@ -238,7 +238,7 @@ static int16_t get_input_voltage(void)
  */
 int main(void)
 {
-	uint8_t uc_key;
+	uint32_t uc_key;
 	int16_t s_volt = 0;
 	uint32_t ul_value = 0;
 	volatile uint32_t ul_status = 0x0;
