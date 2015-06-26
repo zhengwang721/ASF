@@ -145,8 +145,8 @@ extern "C" {
 #define SAMD10_XPLAINED_MINI       77  //!< SAM D10 Xplained Mini board.
 #define SAMDA1_XPLAINED_PRO        78  //!< SAM DA1 Xplained Pro board.
 #define SAMW25_XPLAINED_PRO        79  //!< SAMW25 Xplained Pro board.
-#define SAML22_XPLAINED_PRO        80  //!< SAM L22 Xplained Pro board.
 #define SAMC21_XPLAINED_PRO        80  //!< SAM C21 Xplained Pro board.
+#define SAML22_XPLAINED_PRO        81  //!< SAM L22 Xplained Pro board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices.
 #define AVR_SIMULATOR_UC3          98  //!< Simulator for the AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).

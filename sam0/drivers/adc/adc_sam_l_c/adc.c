@@ -74,7 +74,9 @@ const uint8_t _adc_gclk_ids[ADC_INST_NUM] = { ADC_GCLK_ID };
 #if (SAML21)
 const uint32_t _adc_apbcmasks[ADC_INST_NUM] = { MCLK_APBDMASK_ADC };
 #else
+#if (!SAML22)
 const uint32_t _adc_apbcmasks[ADC_INST_NUM] = { ADC_APBCMASKS };
+#endif
 #endif
 
 /* List of Number of external channels of ADC modules. */

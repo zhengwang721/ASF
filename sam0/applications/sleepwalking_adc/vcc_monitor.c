@@ -191,7 +191,7 @@ static void adc_setup(void)
 {
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-#if (!SAML21) && (!SAML22) &&¡¡(£¡SAMC21)
+#if (!SAML21) && (!SAML22) && (!SAMC21)
 	config.gain_factor        = ADC_GAIN_FACTOR_1X;
 #endif
 	/* Use GCLK generator 4 as clock source */
