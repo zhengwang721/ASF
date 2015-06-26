@@ -844,7 +844,7 @@ static inline void system_standby_set_config(
 					 | (config->disable_avregsd << PM_STDBYCFG_AVREGSD_Pos)
 					 | PM_STDBYCFG_LINKPD(config->linked_power_domain)
 					 | PM_STDBYCFG_BBIASHS(config->hmcramchs_back_bias)
-					 | PM_STDBYCFG_BBIASLP(config->hmcramclp_back_bias)
+					 | PM_STDBYCFG_BBIASLP(config->hmcramclp_back_bias);
 }
 
 /**
