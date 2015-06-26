@@ -208,21 +208,13 @@ static enum status_code _rtc_count_set_config(
 
 	Rtc *const rtc_module = module->hw;
 
-<<<<<<< HEAD:sam0/drivers/rtc/rtc_sam_l/rtc_count.c
-	rtc_module->MODE0.CTRLA.reg = RTC_MODE0_CTRLA_MODE(0) | config->prescaler;
-#if (SAML22)
-	if(config->enable_read_sync) {
-		rtc_module->MODE0.CTRLA.reg |= RTC_MODE0_CTRLA_COUNTSYNC;
-	}
-=======
 #if SAML21
 	rtc_module->MODE0.CTRLA.reg = RTC_MODE0_CTRLA_MODE(0) | config->prescaler
 			| (config->enable_read_sync << RTC_MODE0_CTRLA_SYNCDIS_Pos);
 #endif
-#if (SAMC20) || (SAMC21) 
+#if (SAMC20) || (SAMC21) || (SAML22)
 	rtc_module->MODE0.CTRLA.reg = RTC_MODE0_CTRLA_MODE(0) | config->prescaler
 			| (config->enable_read_sync << RTC_MODE0_CTRLA_COUNTSYNC_Pos);
->>>>>>> d04cd8133e12e2b3c617ba2b1500a63dd02c1d22:sam0/drivers/rtc/rtc_sam_l_c/rtc_count.c
 #endif
 
 	/* Set mode and clear on match if applicable. */
