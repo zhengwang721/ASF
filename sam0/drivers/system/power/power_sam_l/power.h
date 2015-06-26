@@ -267,10 +267,11 @@ struct system_standby_config {
 	bool enable_dpgpd0;
 	/** Enable dynamic power gating for power domain 1. */
 	bool enable_dpgpd1;
-	/**  VREG switching mode */
 #if (SAML21XXXB)
+	/** VREG switching mode */
 	enum system_vreg_switch_mode vregs_mode;
 #else
+	/** Automatic VREG switching disable. */
 	bool disable_avregsd;
 #endif
 	/** Linked power domain. */
