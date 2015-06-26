@@ -12,6 +12,7 @@
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_extint.h"/>
 		<build type="header-file" value="conf_spi.h"/>
+		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="header-file" value="conf_winc.h"/>
 
 		<!-- Device support -->
