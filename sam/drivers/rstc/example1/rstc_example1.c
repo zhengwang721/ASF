@@ -230,8 +230,11 @@ static void display_menu(void)
  */
 int main(void)
 {
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	uint32_t uc_key;
+#else
 	uint8_t uc_key;
-	
+#endif	
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();
