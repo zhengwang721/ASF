@@ -190,7 +190,7 @@ static void run_gpbr_test(const struct test_case *test)
 		/* Read the data from GPBR0 */
 		ul_read_value = gpbr_read(GPBR0);
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM || SAMV70 || SAMV71 || SAME70 || SAMS70)
 		/* Erase flag page */
 		flash_erase_page(ul_test_page_addr, IFLASH_ERASE_PAGES_8);
 
@@ -229,7 +229,7 @@ static void run_gpbr_test(const struct test_case *test)
 	/* Wait for RTT alarm event */
 	rtt_write_alarm_time(RTT, RTT_WAIT_TIME);
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM || SAMV70 || SAMV71 || SAME70 || SAMS70)
 	/* Erase flag page */
 	if(flash_erase_page(ul_test_page_addr, IFLASH_ERASE_PAGES_8) != FLASH_RC_OK)
 		printf("erase page failed!\r\n");
@@ -251,7 +251,7 @@ static void run_gpbr_test(const struct test_case *test)
 
 	/* Enter backup mode */
 	pmc_enable_backupmode();
-#if (!(SAM4S) && !(SAM4E) && !(SAM4N) && !(SAM4C) && !(SAM4CP) && !(SAM4CM))
+#if (!(SAM4S) && !(SAM4E) && !(SAM4N) && !(SAM4C) && !(SAM4CP) && !(SAM4CM) && !(SAMV70) && !(SAMV71) && !(SAME70) && !(SAMS70))
 	supc_enable_backup_mode(SUPC);
 #endif
 
