@@ -103,6 +103,8 @@ void board_init(void)
 	 */
 	ioport_set_pin_dir(LED0_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(LED0_GPIO, LED0_INACTIVE_LEVEL);
+	ioport_set_pin_dir(LED1_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(LED1_GPIO, LED0_INACTIVE_LEVEL);
 
 	/* Configure Push Button pins */
 	ioport_set_pin_input_mode(GPIO_PUSH_BUTTON_1, GPIO_PUSH_BUTTON_1_FLAGS,
@@ -118,6 +120,13 @@ void board_init(void)
 #ifdef CONF_BOARD_TWIHS0
 	ioport_set_pin_peripheral_mode(TWIHS0_DATA_GPIO, TWIHS0_DATA_FLAGS);
 	ioport_set_pin_peripheral_mode(TWIHS0_CLK_GPIO, TWIHS0_CLK_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_SPI
+	ioport_set_pin_peripheral_mode(SPI0_MISO_GPIO, SPI0_MISO_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI0_MOSI_GPIO, SPI0_MOSI_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI0_NPCS0_GPIO, SPI0_NPCS0_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI0_SPCK_GPIO, SPI0_SPCK_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_PWM_LED0
