@@ -17,9 +17,9 @@ echo Mode %1
 if "%1" == "UART"  Goto contine_UART
 if "%1" == "I2C"   Goto contine_I2C
 if "%1" == "OTA"   Goto contine_OTA
-	echo Define the mode (I2C/UART/OTA)
-	pause
-	exit
+echo Define the mode (I2C/UART/OTA)
+IF %PORT_NUM%==0 pause
+exit
 
 :contine_I2C
 Set  FMode=debug_i2c
@@ -82,7 +82,7 @@ echo     ##                  ##       ##     ##   ##   ##                     ##
 echo     ##                  ##       ##     ##  ####  ########               ##
 echo     ##                                                                   ##
 echo     #######################################################################
-pause
+IF %PORT_NUM%==0 pause
 exit
 )
 )
