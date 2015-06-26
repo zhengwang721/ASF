@@ -22,6 +22,14 @@
 			<device-support value="samg54"/>
 			<device-support value="sam4cp"/>
 			<device-support value="sam4cm"/>
+			<device-support value="samv71n"/>
+			<device-support value="samv71q"/>
+			<device-support value="samv70n"/>
+			<device-support value="samv70q"/>
+			<device-support value="same70n"/>
+			<device-support value="same70q"/>
+			<device-support value="sams70n"/>
+			<device-support value="sams70q"/>
 			<require idref="sam.utils"/>
 			<require idref="common.services.basic.clock"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
