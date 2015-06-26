@@ -363,7 +363,7 @@ int main(void)
 
 #if (SAMV71 || SAMV70|| SAME70 || SAMS70)
 	if (GPIO_PUSH_BUTTON_2 == PIO_PB12_IDX) {
-		matrix_set_system_io(CCFG_SYSIO_SYSIO12);
+		matrix_set_system_io(matrix_get_system_io() | CCFG_SYSIO_SYSIO12);
 	}
 	ioport_set_pin_dir(GPIO_PUSH_BUTTON_2, IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(GPIO_PUSH_BUTTON_2, GPIO_PUSH_BUTTON_2_FLAGS);
