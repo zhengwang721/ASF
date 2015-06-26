@@ -113,9 +113,7 @@ static void configure_console(void)
  */
 static void wait_for_message_gone(void)
 {
-#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
-	while (!usart_is_tx_buf_empty(CONSOLE_UART));
-#else
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 	while (!uart_is_tx_buf_empty(CONSOLE_UART));
 #endif
 }
