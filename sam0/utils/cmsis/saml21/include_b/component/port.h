@@ -56,100 +56,163 @@
 /* -------- PORT_DIR : (PORT Offset: 0x00) (R/W 32) GROUP Data Direction -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
+  struct {
+    uint32_t DIR:32;           /*!< bit:  0..31  Port Data Direction                */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PORT_DIR_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define PORT_DIR_OFFSET             0x00         /**< \brief (PORT_DIR offset) Data Direction */
 #define PORT_DIR_RESETVALUE         0x00000000ul /**< \brief (PORT_DIR reset_value) Data Direction */
+
+#define PORT_DIR_DIR_Pos            0            /**< \brief (PORT_DIR) Port Data Direction */
+#define PORT_DIR_DIR_Msk            (0xFFFFFFFFul << PORT_DIR_DIR_Pos)
+#define PORT_DIR_DIR(value)         (PORT_DIR_DIR_Msk & ((value) << PORT_DIR_DIR_Pos))
 #define PORT_DIR_MASK               0xFFFFFFFFul /**< \brief (PORT_DIR) MASK Register */
 
 /* -------- PORT_DIRCLR : (PORT Offset: 0x04) (R/W 32) GROUP Data Direction Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
+  struct {
+    uint32_t DIRCLR:32;        /*!< bit:  0..31  Port Data Direction Clear          */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PORT_DIRCLR_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define PORT_DIRCLR_OFFSET          0x04         /**< \brief (PORT_DIRCLR offset) Data Direction Clear */
 #define PORT_DIRCLR_RESETVALUE      0x00000000ul /**< \brief (PORT_DIRCLR reset_value) Data Direction Clear */
+
+#define PORT_DIRCLR_DIRCLR_Pos      0            /**< \brief (PORT_DIRCLR) Port Data Direction Clear */
+#define PORT_DIRCLR_DIRCLR_Msk      (0xFFFFFFFFul << PORT_DIRCLR_DIRCLR_Pos)
+#define PORT_DIRCLR_DIRCLR(value)   (PORT_DIRCLR_DIRCLR_Msk & ((value) << PORT_DIRCLR_DIRCLR_Pos))
 #define PORT_DIRCLR_MASK            0xFFFFFFFFul /**< \brief (PORT_DIRCLR) MASK Register */
 
 /* -------- PORT_DIRSET : (PORT Offset: 0x08) (R/W 32) GROUP Data Direction Set -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
+  struct {
+    uint32_t DIRSET:32;        /*!< bit:  0..31  Port Data Direction Set            */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PORT_DIRSET_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define PORT_DIRSET_OFFSET          0x08         /**< \brief (PORT_DIRSET offset) Data Direction Set */
 #define PORT_DIRSET_RESETVALUE      0x00000000ul /**< \brief (PORT_DIRSET reset_value) Data Direction Set */
+
+#define PORT_DIRSET_DIRSET_Pos      0            /**< \brief (PORT_DIRSET) Port Data Direction Set */
+#define PORT_DIRSET_DIRSET_Msk      (0xFFFFFFFFul << PORT_DIRSET_DIRSET_Pos)
+#define PORT_DIRSET_DIRSET(value)   (PORT_DIRSET_DIRSET_Msk & ((value) << PORT_DIRSET_DIRSET_Pos))
 #define PORT_DIRSET_MASK            0xFFFFFFFFul /**< \brief (PORT_DIRSET) MASK Register */
 
 /* -------- PORT_DIRTGL : (PORT Offset: 0x0C) (R/W 32) GROUP Data Direction Toggle -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
+  struct {
+    uint32_t DIRTGL:32;        /*!< bit:  0..31  Port Data Direction Toggle         */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PORT_DIRTGL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define PORT_DIRTGL_OFFSET          0x0C         /**< \brief (PORT_DIRTGL offset) Data Direction Toggle */
 #define PORT_DIRTGL_RESETVALUE      0x00000000ul /**< \brief (PORT_DIRTGL reset_value) Data Direction Toggle */
+
+#define PORT_DIRTGL_DIRTGL_Pos      0            /**< \brief (PORT_DIRTGL) Port Data Direction Toggle */
+#define PORT_DIRTGL_DIRTGL_Msk      (0xFFFFFFFFul << PORT_DIRTGL_DIRTGL_Pos)
+#define PORT_DIRTGL_DIRTGL(value)   (PORT_DIRTGL_DIRTGL_Msk & ((value) << PORT_DIRTGL_DIRTGL_Pos))
 #define PORT_DIRTGL_MASK            0xFFFFFFFFul /**< \brief (PORT_DIRTGL) MASK Register */
 
 /* -------- PORT_OUT : (PORT Offset: 0x10) (R/W 32) GROUP Data Output Value -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
+  struct {
+    uint32_t OUT:32;           /*!< bit:  0..31  Port Data Output Value             */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PORT_OUT_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define PORT_OUT_OFFSET             0x10         /**< \brief (PORT_OUT offset) Data Output Value */
 #define PORT_OUT_RESETVALUE         0x00000000ul /**< \brief (PORT_OUT reset_value) Data Output Value */
+
+#define PORT_OUT_OUT_Pos            0            /**< \brief (PORT_OUT) Port Data Output Value */
+#define PORT_OUT_OUT_Msk            (0xFFFFFFFFul << PORT_OUT_OUT_Pos)
+#define PORT_OUT_OUT(value)         (PORT_OUT_OUT_Msk & ((value) << PORT_OUT_OUT_Pos))
 #define PORT_OUT_MASK               0xFFFFFFFFul /**< \brief (PORT_OUT) MASK Register */
 
 /* -------- PORT_OUTCLR : (PORT Offset: 0x14) (R/W 32) GROUP Data Output Value Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
+  struct {
+    uint32_t OUTCLR:32;        /*!< bit:  0..31  Port Data Output Value Clear       */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PORT_OUTCLR_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define PORT_OUTCLR_OFFSET          0x14         /**< \brief (PORT_OUTCLR offset) Data Output Value Clear */
 #define PORT_OUTCLR_RESETVALUE      0x00000000ul /**< \brief (PORT_OUTCLR reset_value) Data Output Value Clear */
+
+#define PORT_OUTCLR_OUTCLR_Pos      0            /**< \brief (PORT_OUTCLR) Port Data Output Value Clear */
+#define PORT_OUTCLR_OUTCLR_Msk      (0xFFFFFFFFul << PORT_OUTCLR_OUTCLR_Pos)
+#define PORT_OUTCLR_OUTCLR(value)   (PORT_OUTCLR_OUTCLR_Msk & ((value) << PORT_OUTCLR_OUTCLR_Pos))
 #define PORT_OUTCLR_MASK            0xFFFFFFFFul /**< \brief (PORT_OUTCLR) MASK Register */
 
 /* -------- PORT_OUTSET : (PORT Offset: 0x18) (R/W 32) GROUP Data Output Value Set -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
+  struct {
+    uint32_t OUTSET:32;        /*!< bit:  0..31  Port Data Output Value Set         */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PORT_OUTSET_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define PORT_OUTSET_OFFSET          0x18         /**< \brief (PORT_OUTSET offset) Data Output Value Set */
 #define PORT_OUTSET_RESETVALUE      0x00000000ul /**< \brief (PORT_OUTSET reset_value) Data Output Value Set */
+
+#define PORT_OUTSET_OUTSET_Pos      0            /**< \brief (PORT_OUTSET) Port Data Output Value Set */
+#define PORT_OUTSET_OUTSET_Msk      (0xFFFFFFFFul << PORT_OUTSET_OUTSET_Pos)
+#define PORT_OUTSET_OUTSET(value)   (PORT_OUTSET_OUTSET_Msk & ((value) << PORT_OUTSET_OUTSET_Pos))
 #define PORT_OUTSET_MASK            0xFFFFFFFFul /**< \brief (PORT_OUTSET) MASK Register */
 
 /* -------- PORT_OUTTGL : (PORT Offset: 0x1C) (R/W 32) GROUP Data Output Value Toggle -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
+  struct {
+    uint32_t OUTTGL:32;        /*!< bit:  0..31  Port Data Output Value Toggle      */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PORT_OUTTGL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define PORT_OUTTGL_OFFSET          0x1C         /**< \brief (PORT_OUTTGL offset) Data Output Value Toggle */
 #define PORT_OUTTGL_RESETVALUE      0x00000000ul /**< \brief (PORT_OUTTGL reset_value) Data Output Value Toggle */
+
+#define PORT_OUTTGL_OUTTGL_Pos      0            /**< \brief (PORT_OUTTGL) Port Data Output Value Toggle */
+#define PORT_OUTTGL_OUTTGL_Msk      (0xFFFFFFFFul << PORT_OUTTGL_OUTTGL_Pos)
+#define PORT_OUTTGL_OUTTGL(value)   (PORT_OUTTGL_OUTTGL_Msk & ((value) << PORT_OUTTGL_OUTTGL_Pos))
 #define PORT_OUTTGL_MASK            0xFFFFFFFFul /**< \brief (PORT_OUTTGL) MASK Register */
 
 /* -------- PORT_IN : (PORT Offset: 0x20) (R/  32) GROUP Data Input Value -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
+  struct {
+    uint32_t IN:32;            /*!< bit:  0..31  Port Data Input Value              */
+  } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PORT_IN_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define PORT_IN_OFFSET              0x20         /**< \brief (PORT_IN offset) Data Input Value */
 #define PORT_IN_RESETVALUE          0x00000000ul /**< \brief (PORT_IN reset_value) Data Input Value */
+
+#define PORT_IN_IN_Pos              0            /**< \brief (PORT_IN) Port Data Input Value */
+#define PORT_IN_IN_Msk              (0xFFFFFFFFul << PORT_IN_IN_Pos)
+#define PORT_IN_IN(value)           (PORT_IN_IN_Msk & ((value) << PORT_IN_IN_Pos))
 #define PORT_IN_MASK                0xFFFFFFFFul /**< \brief (PORT_IN) MASK Register */
 
 /* -------- PORT_CTRL : (PORT Offset: 0x24) (R/W 32) GROUP Control -------- */

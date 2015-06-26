@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -108,9 +108,6 @@ void Dummy_Handler(void);
 #ifdef       ID_TRNG
 #pragma weak TRNG_Handler             = Dummy_Handler
 #endif
-#ifdef       ID_PICOP
-#pragma weak PICOP_Handler            = Dummy_Handler
-#endif
 
 /* Exception Table */
 #pragma language = extended
@@ -213,11 +210,7 @@ const DeviceVectors __vector_table[] = {
 #else
         (void*) (0UL), /* Reserved*/
 #endif
-#ifdef ID_PICOP
-        (void*) PICOP_Handler           /* 28 PicoProcessor */
-#else
         (void*) (0UL)  /* Reserved*/
-#endif
 };
 
 /**------------------------------------------------------------------------------

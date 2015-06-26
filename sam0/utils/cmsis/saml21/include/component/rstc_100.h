@@ -129,14 +129,14 @@ typedef union {
 #define RSTC_WKDBCONF_WKDBCNT_Msk   (0x1Ful << RSTC_WKDBCONF_WKDBCNT_Pos)
 #define RSTC_WKDBCONF_WKDBCNT(value) (RSTC_WKDBCONF_WKDBCNT_Msk & ((value) << RSTC_WKDBCONF_WKDBCNT_Pos))
 #define   RSTC_WKDBCONF_WKDBCNT_OFF_Val   0x0ul  /**< \brief (RSTC_WKDBCONF) No debouncing.Input pin is low or high level sensitive depending on its WKPOLx bit. */
-#define   RSTC_WKDBCONF_WKDBCNT_2K32_Val  0x1ul  /**< \brief (RSTC_WKDBCONF) Input pin shall be active for at least two 32kHz clock period. */
+#define   RSTC_WKDBCONF_WKDBCNT_2CK32_Val 0x1ul  /**< \brief (RSTC_WKDBCONF) Input pin shall be active for at least two 32kHz clock period. */
 #define   RSTC_WKDBCONF_WKDBCNT_3CK32_Val 0x2ul  /**< \brief (RSTC_WKDBCONF) Input pin shall be active for at least three 32kHz clock period. */
 #define   RSTC_WKDBCONF_WKDBCNT_32CK32_Val 0x3ul  /**< \brief (RSTC_WKDBCONF) Input pin shall be active for at least 32 32kHz clock period. */
 #define   RSTC_WKDBCONF_WKDBCNT_512CK32_Val 0x4ul  /**< \brief (RSTC_WKDBCONF) Input pin shall be active for at least 512 32kHz clock period. */
 #define   RSTC_WKDBCONF_WKDBCNT_4096CK32_Val 0x5ul  /**< \brief (RSTC_WKDBCONF) Input pin shall be active for at least 4096 32kHz clock period. */
 #define   RSTC_WKDBCONF_WKDBCNT_32768CK32_Val 0x6ul  /**< \brief (RSTC_WKDBCONF) Input pin shall be active for at least 32768 32kHz clock period. */
 #define RSTC_WKDBCONF_WKDBCNT_OFF   (RSTC_WKDBCONF_WKDBCNT_OFF_Val << RSTC_WKDBCONF_WKDBCNT_Pos)
-#define RSTC_WKDBCONF_WKDBCNT_2K32  (RSTC_WKDBCONF_WKDBCNT_2K32_Val << RSTC_WKDBCONF_WKDBCNT_Pos)
+#define RSTC_WKDBCONF_WKDBCNT_2CK32 (RSTC_WKDBCONF_WKDBCNT_2CK32_Val << RSTC_WKDBCONF_WKDBCNT_Pos)
 #define RSTC_WKDBCONF_WKDBCNT_3CK32 (RSTC_WKDBCONF_WKDBCNT_3CK32_Val << RSTC_WKDBCONF_WKDBCNT_Pos)
 #define RSTC_WKDBCONF_WKDBCNT_32CK32 (RSTC_WKDBCONF_WKDBCNT_32CK32_Val << RSTC_WKDBCONF_WKDBCNT_Pos)
 #define RSTC_WKDBCONF_WKDBCNT_512CK32 (RSTC_WKDBCONF_WKDBCNT_512CK32_Val << RSTC_WKDBCONF_WKDBCNT_Pos)

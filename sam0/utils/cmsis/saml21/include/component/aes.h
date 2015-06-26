@@ -241,93 +241,16 @@ typedef union {
 #define AES_DBGCTRL_DBGRUN          (0x1ul << AES_DBGCTRL_DBGRUN_Pos)
 #define AES_DBGCTRL_MASK            0x01ul       /**< \brief (AES_DBGCTRL) MASK Register */
 
-/* -------- AES_KEYWORD0 : (AES Offset: 0x0C) ( /W 32) Keyword 0 -------- */
+/* -------- AES_KEYWORD : (AES Offset: 0x0C) ( /W 32) Keyword n -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
-} AES_KEYWORD0_Type;
+} AES_KEYWORD_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define AES_KEYWORD0_OFFSET         0x0C         /**< \brief (AES_KEYWORD0 offset) Keyword 0 */
-#define AES_KEYWORD0_RESETVALUE     0x00000000ul /**< \brief (AES_KEYWORD0 reset_value) Keyword 0 */
-#define AES_KEYWORD0_MASK           0xFFFFFFFFul /**< \brief (AES_KEYWORD0) MASK Register */
-
-/* -------- AES_KEYWORD1 : (AES Offset: 0x10) ( /W 32) Keyword 1 -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} AES_KEYWORD1_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define AES_KEYWORD1_OFFSET         0x10         /**< \brief (AES_KEYWORD1 offset) Keyword 1 */
-#define AES_KEYWORD1_RESETVALUE     0x00000000ul /**< \brief (AES_KEYWORD1 reset_value) Keyword 1 */
-#define AES_KEYWORD1_MASK           0xFFFFFFFFul /**< \brief (AES_KEYWORD1) MASK Register */
-
-/* -------- AES_KEYWORD2 : (AES Offset: 0x14) ( /W 32) Keyword 2 -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} AES_KEYWORD2_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define AES_KEYWORD2_OFFSET         0x14         /**< \brief (AES_KEYWORD2 offset) Keyword 2 */
-#define AES_KEYWORD2_RESETVALUE     0x00000000ul /**< \brief (AES_KEYWORD2 reset_value) Keyword 2 */
-#define AES_KEYWORD2_MASK           0xFFFFFFFFul /**< \brief (AES_KEYWORD2) MASK Register */
-
-/* -------- AES_KEYWORD3 : (AES Offset: 0x18) ( /W 32) Keyword 3 -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} AES_KEYWORD3_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define AES_KEYWORD3_OFFSET         0x18         /**< \brief (AES_KEYWORD3 offset) Keyword 3 */
-#define AES_KEYWORD3_RESETVALUE     0x00000000ul /**< \brief (AES_KEYWORD3 reset_value) Keyword 3 */
-#define AES_KEYWORD3_MASK           0xFFFFFFFFul /**< \brief (AES_KEYWORD3) MASK Register */
-
-/* -------- AES_KEYWORD4 : (AES Offset: 0x1C) ( /W 32) Keyword 4 -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} AES_KEYWORD4_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define AES_KEYWORD4_OFFSET         0x1C         /**< \brief (AES_KEYWORD4 offset) Keyword 4 */
-#define AES_KEYWORD4_RESETVALUE     0x00000000ul /**< \brief (AES_KEYWORD4 reset_value) Keyword 4 */
-#define AES_KEYWORD4_MASK           0xFFFFFFFFul /**< \brief (AES_KEYWORD4) MASK Register */
-
-/* -------- AES_KEYWORD5 : (AES Offset: 0x20) ( /W 32) Keyword 5 -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} AES_KEYWORD5_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define AES_KEYWORD5_OFFSET         0x20         /**< \brief (AES_KEYWORD5 offset) Keyword 5 */
-#define AES_KEYWORD5_RESETVALUE     0x00000000ul /**< \brief (AES_KEYWORD5 reset_value) Keyword 5 */
-#define AES_KEYWORD5_MASK           0xFFFFFFFFul /**< \brief (AES_KEYWORD5) MASK Register */
-
-/* -------- AES_KEYWORD6 : (AES Offset: 0x24) ( /W 32) Keyword 6 -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} AES_KEYWORD6_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define AES_KEYWORD6_OFFSET         0x24         /**< \brief (AES_KEYWORD6 offset) Keyword 6 */
-#define AES_KEYWORD6_RESETVALUE     0x00000000ul /**< \brief (AES_KEYWORD6 reset_value) Keyword 6 */
-#define AES_KEYWORD6_MASK           0xFFFFFFFFul /**< \brief (AES_KEYWORD6) MASK Register */
-
-/* -------- AES_KEYWORD7 : (AES Offset: 0x28) ( /W 32) Keyword 7 -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} AES_KEYWORD7_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define AES_KEYWORD7_OFFSET         0x28         /**< \brief (AES_KEYWORD7 offset) Keyword 7 */
-#define AES_KEYWORD7_RESETVALUE     0x00000000ul /**< \brief (AES_KEYWORD7 reset_value) Keyword 7 */
-#define AES_KEYWORD7_MASK           0xFFFFFFFFul /**< \brief (AES_KEYWORD7) MASK Register */
+#define AES_KEYWORD_OFFSET          0x0C         /**< \brief (AES_KEYWORD offset) Keyword n */
+#define AES_KEYWORD_RESETVALUE      0x00000000ul /**< \brief (AES_KEYWORD reset_value) Keyword n */
+#define AES_KEYWORD_MASK            0xFFFFFFFFul /**< \brief (AES_KEYWORD) MASK Register */
 
 /* -------- AES_INDATA : (AES Offset: 0x38) (R/W 32) Indata -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -340,137 +263,38 @@ typedef union {
 #define AES_INDATA_RESETVALUE       0x00000000ul /**< \brief (AES_INDATA reset_value) Indata */
 #define AES_INDATA_MASK             0xFFFFFFFFul /**< \brief (AES_INDATA) MASK Register */
 
-/* -------- AES_INTVECTV0 : (AES Offset: 0x3C) ( /W 32) Initialisation Vector 0 -------- */
+/* -------- AES_INTVECTV : (AES Offset: 0x3C) ( /W 32) Initialisation Vector n -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
-} AES_INTVECTV0_Type;
+} AES_INTVECTV_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define AES_INTVECTV0_OFFSET        0x3C         /**< \brief (AES_INTVECTV0 offset) Initialisation Vector 0 */
-#define AES_INTVECTV0_RESETVALUE    0x00000000ul /**< \brief (AES_INTVECTV0 reset_value) Initialisation Vector 0 */
-#define AES_INTVECTV0_MASK          0xFFFFFFFFul /**< \brief (AES_INTVECTV0) MASK Register */
+#define AES_INTVECTV_OFFSET         0x3C         /**< \brief (AES_INTVECTV offset) Initialisation Vector n */
+#define AES_INTVECTV_RESETVALUE     0x00000000ul /**< \brief (AES_INTVECTV reset_value) Initialisation Vector n */
+#define AES_INTVECTV_MASK           0xFFFFFFFFul /**< \brief (AES_INTVECTV) MASK Register */
 
-/* -------- AES_INTVECTV1 : (AES Offset: 0x40) ( /W 32) Initialisation Vector 1 -------- */
+/* -------- AES_HASHKEY : (AES Offset: 0x5C) (R/W 32) Hash key n -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
-} AES_INTVECTV1_Type;
+} AES_HASHKEY_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define AES_INTVECTV1_OFFSET        0x40         /**< \brief (AES_INTVECTV1 offset) Initialisation Vector 1 */
-#define AES_INTVECTV1_RESETVALUE    0x00000000ul /**< \brief (AES_INTVECTV1 reset_value) Initialisation Vector 1 */
-#define AES_INTVECTV1_MASK          0xFFFFFFFFul /**< \brief (AES_INTVECTV1) MASK Register */
+#define AES_HASHKEY_OFFSET          0x5C         /**< \brief (AES_HASHKEY offset) Hash key n */
+#define AES_HASHKEY_RESETVALUE      0x00000000ul /**< \brief (AES_HASHKEY reset_value) Hash key n */
+#define AES_HASHKEY_MASK            0xFFFFFFFFul /**< \brief (AES_HASHKEY) MASK Register */
 
-/* -------- AES_INTVECTV2 : (AES Offset: 0x44) ( /W 32) Initialisation Vector 2 -------- */
+/* -------- AES_GHASH : (AES Offset: 0x6C) (R/W 32) Galois Hash n -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   uint32_t reg;                /*!< Type      used for register access              */
-} AES_INTVECTV2_Type;
+} AES_GHASH_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define AES_INTVECTV2_OFFSET        0x44         /**< \brief (AES_INTVECTV2 offset) Initialisation Vector 2 */
-#define AES_INTVECTV2_RESETVALUE    0x00000000ul /**< \brief (AES_INTVECTV2 reset_value) Initialisation Vector 2 */
-#define AES_INTVECTV2_MASK          0xFFFFFFFFul /**< \brief (AES_INTVECTV2) MASK Register */
-
-/* -------- AES_INTVECTV3 : (AES Offset: 0x48) ( /W 32) Initialisation Vector 3 -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} AES_INTVECTV3_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define AES_INTVECTV3_OFFSET        0x48         /**< \brief (AES_INTVECTV3 offset) Initialisation Vector 3 */
-#define AES_INTVECTV3_RESETVALUE    0x00000000ul /**< \brief (AES_INTVECTV3 reset_value) Initialisation Vector 3 */
-#define AES_INTVECTV3_MASK          0xFFFFFFFFul /**< \brief (AES_INTVECTV3) MASK Register */
-
-/* -------- AES_HASHKEY0 : (AES Offset: 0x5C) (R/W 32) Hash key 0 -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} AES_HASHKEY0_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define AES_HASHKEY0_OFFSET         0x5C         /**< \brief (AES_HASHKEY0 offset) Hash key 0 */
-#define AES_HASHKEY0_RESETVALUE     0x00000000ul /**< \brief (AES_HASHKEY0 reset_value) Hash key 0 */
-#define AES_HASHKEY0_MASK           0xFFFFFFFFul /**< \brief (AES_HASHKEY0) MASK Register */
-
-/* -------- AES_HASHKEY1 : (AES Offset: 0x60) (R/W 32) Hash key 1 -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} AES_HASHKEY1_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define AES_HASHKEY1_OFFSET         0x60         /**< \brief (AES_HASHKEY1 offset) Hash key 1 */
-#define AES_HASHKEY1_RESETVALUE     0x00000000ul /**< \brief (AES_HASHKEY1 reset_value) Hash key 1 */
-#define AES_HASHKEY1_MASK           0xFFFFFFFFul /**< \brief (AES_HASHKEY1) MASK Register */
-
-/* -------- AES_HASHKEY2 : (AES Offset: 0x64) (R/W 32) Hash key 2 -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} AES_HASHKEY2_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define AES_HASHKEY2_OFFSET         0x64         /**< \brief (AES_HASHKEY2 offset) Hash key 2 */
-#define AES_HASHKEY2_RESETVALUE     0x00000000ul /**< \brief (AES_HASHKEY2 reset_value) Hash key 2 */
-#define AES_HASHKEY2_MASK           0xFFFFFFFFul /**< \brief (AES_HASHKEY2) MASK Register */
-
-/* -------- AES_HASHKEY3 : (AES Offset: 0x68) (R/W 32) Hash key 3 -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} AES_HASHKEY3_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define AES_HASHKEY3_OFFSET         0x68         /**< \brief (AES_HASHKEY3 offset) Hash key 3 */
-#define AES_HASHKEY3_RESETVALUE     0x00000000ul /**< \brief (AES_HASHKEY3 reset_value) Hash key 3 */
-#define AES_HASHKEY3_MASK           0xFFFFFFFFul /**< \brief (AES_HASHKEY3) MASK Register */
-
-/* -------- AES_GHASH0 : (AES Offset: 0x6C) (R/W 32) Galois Hash 0 -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} AES_GHASH0_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define AES_GHASH0_OFFSET           0x6C         /**< \brief (AES_GHASH0 offset) Galois Hash 0 */
-#define AES_GHASH0_RESETVALUE       0x00000000ul /**< \brief (AES_GHASH0 reset_value) Galois Hash 0 */
-#define AES_GHASH0_MASK             0xFFFFFFFFul /**< \brief (AES_GHASH0) MASK Register */
-
-/* -------- AES_GHASH1 : (AES Offset: 0x70) (R/W 32) Galois Hash 1 -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} AES_GHASH1_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define AES_GHASH1_OFFSET           0x70         /**< \brief (AES_GHASH1 offset) Galois Hash 1 */
-#define AES_GHASH1_RESETVALUE       0x00000000ul /**< \brief (AES_GHASH1 reset_value) Galois Hash 1 */
-#define AES_GHASH1_MASK             0xFFFFFFFFul /**< \brief (AES_GHASH1) MASK Register */
-
-/* -------- AES_GHASH2 : (AES Offset: 0x74) (R/W 32) Galois Hash 2 -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} AES_GHASH2_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define AES_GHASH2_OFFSET           0x74         /**< \brief (AES_GHASH2 offset) Galois Hash 2 */
-#define AES_GHASH2_RESETVALUE       0x00000000ul /**< \brief (AES_GHASH2 reset_value) Galois Hash 2 */
-#define AES_GHASH2_MASK             0xFFFFFFFFul /**< \brief (AES_GHASH2) MASK Register */
-
-/* -------- AES_GHASH3 : (AES Offset: 0x78) (R/W 32) Galois Hash 3 -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} AES_GHASH3_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define AES_GHASH3_OFFSET           0x78         /**< \brief (AES_GHASH3 offset) Galois Hash 3 */
-#define AES_GHASH3_RESETVALUE       0x00000000ul /**< \brief (AES_GHASH3 reset_value) Galois Hash 3 */
-#define AES_GHASH3_MASK             0xFFFFFFFFul /**< \brief (AES_GHASH3) MASK Register */
+#define AES_GHASH_OFFSET            0x6C         /**< \brief (AES_GHASH offset) Galois Hash n */
+#define AES_GHASH_RESETVALUE        0x00000000ul /**< \brief (AES_GHASH reset_value) Galois Hash n */
+#define AES_GHASH_MASK              0xFFFFFFFFul /**< \brief (AES_GHASH) MASK Register */
 
 /* -------- AES_CIPLEN : (AES Offset: 0x80) (R/W 32) Cipher Length -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -505,29 +329,13 @@ typedef struct {
   __IO AES_DATABUFPTR_Type       DATABUFPTR;  /**< \brief Offset: 0x08 (R/W  8) Data buffer pointer */
   __O  AES_DBGCTRL_Type          DBGCTRL;     /**< \brief Offset: 0x09 ( /W  8) Debug control */
        RoReg8                    Reserved1[0x2];
-  __O  AES_KEYWORD0_Type         KEYWORD0;    /**< \brief Offset: 0x0C ( /W 32) Keyword 0 */
-  __O  AES_KEYWORD1_Type         KEYWORD1;    /**< \brief Offset: 0x10 ( /W 32) Keyword 1 */
-  __O  AES_KEYWORD2_Type         KEYWORD2;    /**< \brief Offset: 0x14 ( /W 32) Keyword 2 */
-  __O  AES_KEYWORD3_Type         KEYWORD3;    /**< \brief Offset: 0x18 ( /W 32) Keyword 3 */
-  __O  AES_KEYWORD4_Type         KEYWORD4;    /**< \brief Offset: 0x1C ( /W 32) Keyword 4 */
-  __O  AES_KEYWORD5_Type         KEYWORD5;    /**< \brief Offset: 0x20 ( /W 32) Keyword 5 */
-  __O  AES_KEYWORD6_Type         KEYWORD6;    /**< \brief Offset: 0x24 ( /W 32) Keyword 6 */
-  __O  AES_KEYWORD7_Type         KEYWORD7;    /**< \brief Offset: 0x28 ( /W 32) Keyword 7 */
+  __O  AES_KEYWORD_Type          KEYWORD[8];  /**< \brief Offset: 0x0C ( /W 32) Keyword n */
        RoReg8                    Reserved2[0xC];
   __IO AES_INDATA_Type           INDATA;      /**< \brief Offset: 0x38 (R/W 32) Indata */
-  __O  AES_INTVECTV0_Type        INTVECTV0;   /**< \brief Offset: 0x3C ( /W 32) Initialisation Vector 0 */
-  __O  AES_INTVECTV1_Type        INTVECTV1;   /**< \brief Offset: 0x40 ( /W 32) Initialisation Vector 1 */
-  __O  AES_INTVECTV2_Type        INTVECTV2;   /**< \brief Offset: 0x44 ( /W 32) Initialisation Vector 2 */
-  __O  AES_INTVECTV3_Type        INTVECTV3;   /**< \brief Offset: 0x48 ( /W 32) Initialisation Vector 3 */
+  __O  AES_INTVECTV_Type         INTVECTV[4]; /**< \brief Offset: 0x3C ( /W 32) Initialisation Vector n */
        RoReg8                    Reserved3[0x10];
-  __IO AES_HASHKEY0_Type         HASHKEY0;    /**< \brief Offset: 0x5C (R/W 32) Hash key 0 */
-  __IO AES_HASHKEY1_Type         HASHKEY1;    /**< \brief Offset: 0x60 (R/W 32) Hash key 1 */
-  __IO AES_HASHKEY2_Type         HASHKEY2;    /**< \brief Offset: 0x64 (R/W 32) Hash key 2 */
-  __IO AES_HASHKEY3_Type         HASHKEY3;    /**< \brief Offset: 0x68 (R/W 32) Hash key 3 */
-  __IO AES_GHASH0_Type           GHASH0;      /**< \brief Offset: 0x6C (R/W 32) Galois Hash 0 */
-  __IO AES_GHASH1_Type           GHASH1;      /**< \brief Offset: 0x70 (R/W 32) Galois Hash 1 */
-  __IO AES_GHASH2_Type           GHASH2;      /**< \brief Offset: 0x74 (R/W 32) Galois Hash 2 */
-  __IO AES_GHASH3_Type           GHASH3;      /**< \brief Offset: 0x78 (R/W 32) Galois Hash 3 */
+  __IO AES_HASHKEY_Type          HASHKEY[4];  /**< \brief Offset: 0x5C (R/W 32) Hash key n */
+  __IO AES_GHASH_Type            GHASH[4];    /**< \brief Offset: 0x6C (R/W 32) Galois Hash n */
        RoReg8                    Reserved4[0x4];
   __IO AES_CIPLEN_Type           CIPLEN;      /**< \brief Offset: 0x80 (R/W 32) Cipher Length */
   __IO AES_RANDSEED_Type         RANDSEED;    /**< \brief Offset: 0x84 (R/W 32) Random Seed */

@@ -835,6 +835,25 @@ typedef union {
 #define TAL_IRQTRIG_OVERRIDE(value) (TAL_IRQTRIG_OVERRIDE_Msk & ((value) << TAL_IRQTRIG_OVERRIDE_Pos))
 #define TAL_IRQTRIG_MASK            0xFF3Ful     /**< \brief (TAL_IRQTRIG) MASK Register */
 
+/* -------- TAL_CPUIRQS : (TAL Offset: 0x64) (R/  32) Interrupt Status for CPU n -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t CPUIRQS:29;       /*!< bit:  0..28  Interrupt Requests for CPU n       */
+    uint32_t :3;               /*!< bit: 29..31  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} TAL_CPUIRQS_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define TAL_CPUIRQS_OFFSET          0x64         /**< \brief (TAL_CPUIRQS offset) Interrupt Status for CPU n */
+#define TAL_CPUIRQS_RESETVALUE      0x00000000ul /**< \brief (TAL_CPUIRQS reset_value) Interrupt Status for CPU n */
+
+#define TAL_CPUIRQS_CPUIRQS_Pos     0            /**< \brief (TAL_CPUIRQS) Interrupt Requests for CPU n */
+#define TAL_CPUIRQS_CPUIRQS_Msk     (0x1FFFFFFFul << TAL_CPUIRQS_CPUIRQS_Pos)
+#define TAL_CPUIRQS_CPUIRQS(value)  (TAL_CPUIRQS_CPUIRQS_Msk & ((value) << TAL_CPUIRQS_CPUIRQS_Pos))
+#define TAL_CPUIRQS_MASK            0x1FFFFFFFul /**< \brief (TAL_CPUIRQS) MASK Register */
+
 /** \brief TalCtis hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef struct {
@@ -872,6 +891,8 @@ typedef struct {
   __IO TAL_INTCPUSEL0_Type       INTCPUSEL0;  /**< \brief Offset: 0x58 (R/W 32) Interrupts CPU Select 0 */
   __IO TAL_INTCPUSEL1_Type       INTCPUSEL1;  /**< \brief Offset: 0x5C (R/W 32) Interrupts CPU Select 1 */
   __IO TAL_IRQTRIG_Type          IRQTRIG;     /**< \brief Offset: 0x60 (R/W 16) Interrupt Trigger */
+       RoReg8                    Reserved8[0x2];
+  __I  TAL_CPUIRQS_Type          CPUIRQS[2];  /**< \brief Offset: 0x64 (R/  32) Interrupt Status for CPU n */
 } Tal;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 

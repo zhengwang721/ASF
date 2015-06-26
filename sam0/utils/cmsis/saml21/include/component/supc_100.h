@@ -416,9 +416,7 @@ typedef union {
     uint32_t SEL:2;            /*!< bit:  2.. 3  Voltage Regulator Selection in active mode */
     uint32_t :2;               /*!< bit:  4.. 5  Reserved                           */
     uint32_t RUNSTDBY:1;       /*!< bit:      6  Run during Standby                 */
-    uint32_t :1;               /*!< bit:      7  Reserved                           */
-    uint32_t LPEFF:1;          /*!< bit:      8  Low Power Efficiency               */
-    uint32_t :7;               /*!< bit:  9..15  Reserved                           */
+    uint32_t :9;               /*!< bit:  7..15  Reserved                           */
     uint32_t VSVSTEP:4;        /*!< bit: 16..19  Voltage Scaling Voltage Step       */
     uint32_t :4;               /*!< bit: 20..23  Reserved                           */
     uint32_t VSPER:8;          /*!< bit: 24..31  Voltage Scaling Period             */
