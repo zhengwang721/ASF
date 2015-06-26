@@ -125,6 +125,7 @@ enum system_linked_power_domain {
 	SYSTEM_LINKED_POWER_DOMAIN_PD012     = PM_STDBYCFG_LINKPD_PD012_Val,
 };
 
+#if (SAML21XXXB)
 /**
  * \brief VREG switching mode.
  *
@@ -138,6 +139,7 @@ enum system_vreg_switch_mode {
 	/** Low Power consumption oriented. */
 	SYSTEM_SYSTEM_VREG_SWITCH_LP,
 };
+#endif
 
 /**
  * \brief Power domain.
@@ -265,8 +267,12 @@ struct system_standby_config {
 	bool enable_dpgpd0;
 	/** Enable dynamic power gating for power domain 1. */
 	bool enable_dpgpd1;
-	/** Automatic VREG switching disable. */
+	/**  VREG switching mode */
+#if (SAML21XXXB)
 	enum system_vreg_switch_mode vregs_mode;
+#else
+	bool disable_avregsd;
+#endif
 	/** Linked power domain. */
 	enum system_linked_power_domain linked_power_domain;
 	/** Back bias for HMCRAMCHS. */
@@ -839,7 +845,11 @@ static inline void system_standby_get_config_defaults(
 	config->power_domain        = SYSTEM_POWER_DOMAIN_DEFAULT;
 	config->enable_dpgpd0       = false;
 	config->enable_dpgpd1       = false;
-	config->vregs_mode	= SYSTEM_SYSTEM_VREG_SWITCH_AUTO;
+#if (SAML21XXXB)
+	config->vregs_mode          = SYSTEM_SYSTEM_VREG_SWITCH_AUTO;
+#else
+	config->disable_avregsd     = false;
+#endif
 	config->linked_power_domain = SYSTEM_LINKED_POWER_DOMAIN_DEFAULT;
 	config->hmcramchs_back_bias = SYSTEM_RAM_BACK_BIAS_RETENTION;
 	config->hmcramclp_back_bias = SYSTEM_RAM_BACK_BIAS_RETENTION;
@@ -863,6 +873,8 @@ static inline void system_standby_set_config(
 					 | (config->enable_dpgpd1 << PM_STDBYCFG_DPGPD1_Pos)
 #if (SAML21XXXB)
 					 | PM_STDBYCFG_VREGSMOD(config->vregs_mode)
+#else
+					 | (config->disable_avregsd << PM_STDBYCFG_AVREGSD_Pos)
 #endif
 					 | PM_STDBYCFG_LINKPD(config->linked_power_domain)
 					 | PM_STDBYCFG_BBIASHS(config->hmcramchs_back_bias)

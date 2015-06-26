@@ -123,7 +123,7 @@
 	((uint8_t)(((x) * 3) & 0xff))
 
 /* Test page is set to 8th from last */
-#define TEST_PAGE_ADDR     (NVMCTRL_FLASH_SIZE - 8*NVMCTRL_PAGE_SIZE)
+#define TEST_PAGE_ADDR     (FLASH_NB_OF_PAGES - 8) * NVMCTRL_PAGE_SIZE
 
 /* Flag to indicate NVM initialization status */
 static volatile bool nvm_init_success = false;
