@@ -244,8 +244,34 @@
 #define PIN_PUSHBUTTON_1_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
 #define PIN_PUSHBUTTON_1_IRQn  PIOA_IRQn
 
+/**
+ * Push button #1 definition. Attributes = pull-up + debounce + interrupt on
+ * rising edge.
+ */
+#define BUTTON_1_NAME             "SW1"
+#define BUTTON_1_PIN              SW1_PIN
+#define BUTTON_1_ACTIVE           SW1_ACTIVE
+#define BUTTON_1_INACTIVE         SW1_INACTIVE
+#define BUTTON_1_SUPC_INPUT       SW1_SUPC_INPUT
+
+#define PUSHBUTTON_2_NAME        "SW1"
+#define PUSHBUTTON_2_WKUP_LINE   (2)
+#define PUSHBUTTON_2_WKUP_FSTT   (PMC_FSMR_FSTT2)
+#define GPIO_PUSH_BUTTON_2       (PIO_PB12_IDX)
+#define GPIO_PUSH_BUTTON_2_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
+#define GPIO_PUSH_BUTTON_2_SENSE (IOPORT_SENSE_RISING)
+
+#define PIN_PUSHBUTTON_2       {PIO_PB12, PIOB, ID_PIOB, PIO_INPUT, \
+		PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define PIN_PUSHBUTTON_2_MASK  PIO_PB12
+#define PIN_PUSHBUTTON_2_PIO   PIOB
+#define PIN_PUSHBUTTON_2_ID    ID_PIOB
+#define PIN_PUSHBUTTON_2_TYPE  PIO_INPUT
+#define PIN_PUSHBUTTON_2_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+#define PIN_PUSHBUTTON_2_IRQn  PIOB_IRQn
+
 /** List of all push button definitions. */
-#define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1}
+#define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1,PIN_PUSHBUTTON_2}
 
 /** PCK0 pin definition (PA6) */
 #define PIN_PCK0         (PIO_PA6_IDX)
@@ -261,11 +287,38 @@
 
 /** TWI0 pins definition */
 #define TWIHS0_DATA_GPIO   PIO_PA3_IDX
-#define TWIHS0_DATA_FLAGS  (IOPORT_MODE_MUX_A)
+#define TWIHS0_DATA_FLAGS  (IOPORT_MODE_MUX_B)
 #define TWIHS0_CLK_GPIO    PIO_PA4_IDX
-#define TWIHS0_CLK_FLAGS   (IOPORT_MODE_MUX_A)
+#define TWIHS0_CLK_FLAGS   (IOPORT_MODE_MUX_C)
+
+/** SPI0 pins definition */
+#define SPI0_MISO_GPIO    PIO_PD20_IDX
+#define SPI0_MISO_FLAGS  (IOPORT_MODE_MUX_B)
+#define SPI0_MOSI_GPIO    PIO_PD21_IDX
+#define SPI0_MOSI_FLAGS  (IOPORT_MODE_MUX_B)
+#define SPI0_NPCS0_GPIO   PIO_PB2_IDX
+#define SPI0_NPCS0_FLAGS  (IOPORT_MODE_MUX_D)
+#define SPI0_NPCS1_GPIO   PIO_PD25_IDX
+#define SPI0_NPCS1_FLAGS  (IOPORT_MODE_MUX_B)
+#define SPI0_NPCS2_GPIO   PIO_PD12_IDX
+#define SPI0_NPCS2_FLAGS  (IOPORT_MODE_MUX_C)
+#define SPI0_NPCS3_GPIO   PIO_PD27_IDX
+#define SPI0_NPCS3_FLAGS  (IOPORT_MODE_MUX_B)
+#define SPI0_SPCK_GPIO    PIO_PD22_IDX
+#define SPI0_SPCK_FLAGS  (IOPORT_MODE_MUX_B)
 
 /** AFEC channel for potentiometer */
 #define AFEC_CHANNEL_POTENTIOMETER  AFEC_CHANNEL_0
+
+/** PWM LED0 pin definitions. */
+#define PIN_PWM_LED0_GPIO    PIO_PA23_IDX
+#define PIN_PWM_LED0_FLAGS   (IOPORT_MODE_MUX_B)
+#define PIN_PWM_LED0_CHANNEL PWM_CHANNEL_0
+
+/** PWM LED1 pin definitions. */
+#define PIN_PWM_LED1_GPIO    PIO_PA24_IDX
+#define PIN_PWM_LED1_FLAGS   (IOPORT_MODE_MUX_B)
+#define PIN_PWM_LED1_CHANNEL PWM_CHANNEL_1
+
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAMV71_XLTRA_H_ */
