@@ -113,7 +113,11 @@ static void configure_console(void)
  */
 static void wait_for_message_gone(void)
 {
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	while (!usart_is_tx_buf_empty(CONSOLE_UART));
+#else
 	while (!uart_is_tx_buf_empty(CONSOLE_UART));
+#endif
 }
 
 /**
@@ -252,9 +256,12 @@ int main(void)
 	display_menu();
 	
 	while (1) {
-		/* Wait for a key press or reset IRQ to trigger. */
+		/* Wait for a key press or reset IRQ to trigger. */	
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+		while (usart_read(CONSOLE_UART, &uc_key) && (!reset_interrupt_triggered));
+#else
 		while (uart_read(CONSOLE_UART, &uc_key) && (!reset_interrupt_triggered));
-		
+#endif		
 		//! [reset_irq_has_triggered]
 		if (reset_interrupt_triggered) {
 			/* Critical section to access a variable that is set in an IRQ. */
