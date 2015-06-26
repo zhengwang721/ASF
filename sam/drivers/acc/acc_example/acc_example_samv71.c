@@ -183,7 +183,7 @@ static int16_t get_input_voltage(void)
 	int8_t ac_str_temp[5] = { 0 };
 
 	while (1) {
-		while (uart_read(CONSOLE_UART, &uc_key)) {
+		while (usart_read(CONSOLE_UART, &uc_key)) {
 		}
 		if (uc_key == '\n' || uc_key == '\r') {
 			puts("\r");
@@ -328,7 +328,7 @@ int main(void)
 	dsplay_menu();
 
 	while (1) {
-		while (uart_read(CONSOLE_UART, &uc_key)) {
+		while (usart_read(CONSOLE_UART, &uc_key)) {
 		}
 
 		printf("input: %c\r\n", uc_key);
