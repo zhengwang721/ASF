@@ -52,18 +52,17 @@
  * \section Requirements
  *
  * This package can be used with the following setup:
- *  - SAMG53 Xplained Pro kit
  *  - SAMV71 Xplained Ultra kit
  *
  * \section files Main files:
- *  - twi.c SAM Two-Wire Interface driver implementation.
- *  - twi.h SAM Two-Wire Interface driver definitions.
+ *  - twihs.c SAM Two-Wire Interface driver implementation.
+ *  - twihs.h SAM Two-Wire Interface driver definitions.
  *  - TWIHS_master_example.c Example application.
  *
  * \section exampledescription Description of the Example
  * Upon startup, the program configures PIOs for console UART, LEDs and TWIHS
  * connected to EEPROM on board. Then it configures the TWIHS driver and data
- * package. The clock of I2C bus is set as 150kHz.
+ * package. The clock of I2C bus is set as 400kHz.
  * After initializing the master mode, the example sends test pattern to the
  * EEPROM. When sending is complete, TWIHS driver reads the memory and saves the
  * content in the reception buffer. Then the program compares the content
