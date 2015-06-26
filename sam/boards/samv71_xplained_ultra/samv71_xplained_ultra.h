@@ -244,8 +244,34 @@
 #define PIN_PUSHBUTTON_1_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
 #define PIN_PUSHBUTTON_1_IRQn  PIOA_IRQn
 
+/**
+ * Push button #1 definition. Attributes = pull-up + debounce + interrupt on
+ * rising edge.
+ */
+#define BUTTON_1_NAME             "SW1"
+#define BUTTON_1_PIN              SW1_PIN
+#define BUTTON_1_ACTIVE           SW1_ACTIVE
+#define BUTTON_1_INACTIVE         SW1_INACTIVE
+#define BUTTON_1_SUPC_INPUT       SW1_SUPC_INPUT
+
+#define PUSHBUTTON_2_NAME        "SW1"
+#define PUSHBUTTON_2_WKUP_LINE   (2)
+#define PUSHBUTTON_2_WKUP_FSTT   (PMC_FSMR_FSTT2)
+#define GPIO_PUSH_BUTTON_2       (PIO_PB12_IDX)
+#define GPIO_PUSH_BUTTON_2_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
+#define GPIO_PUSH_BUTTON_2_SENSE (IOPORT_SENSE_RISING)
+
+#define PIN_PUSHBUTTON_2       {PIO_PB12, PIOB, ID_PIOB, PIO_INPUT, \
+		PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define PIN_PUSHBUTTON_2_MASK  PIO_PB12
+#define PIN_PUSHBUTTON_2_PIO   PIOB
+#define PIN_PUSHBUTTON_2_ID    ID_PIOB
+#define PIN_PUSHBUTTON_2_TYPE  PIO_INPUT
+#define PIN_PUSHBUTTON_2_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+#define PIN_PUSHBUTTON_2_IRQn  PIOB_IRQn
+
 /** List of all push button definitions. */
-#define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1}
+#define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1,PIN_PUSHBUTTON_2}
 
 /** PCK0 pin definition (PA6) */
 #define PIN_PCK0         (PIO_PA6_IDX)
