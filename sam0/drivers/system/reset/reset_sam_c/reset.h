@@ -60,18 +60,18 @@ extern "C" {
  * List of possible reset causes of the system.
  */
 enum system_reset_cause {
-	/** The system was last reset by a software reset. */
+	/** The system was last reset by a software reset */
 	SYSTEM_RESET_CAUSE_SOFTWARE       = RSTC_RCAUSE_SYST,
-	/** The system was last reset by the watchdog timer. */
+	/** The system was last reset by the watchdog timer */
 	SYSTEM_RESET_CAUSE_WDT            = RSTC_RCAUSE_WDT,
 	/** The system was last reset because the external reset 
-		line was pulled low. */
+		line was pulled low */
 	SYSTEM_RESET_CAUSE_EXTERNAL_RESET = RSTC_RCAUSE_EXT,
-	/** The system was last reset by VDD brown out detector. */
+	/** The system was last reset by VDD brown out detector */
 	SYSTEM_RESET_CAUSE_BODVDD         = RSTC_RCAUSE_BODVDD,
-	/** The system was last reset by VDDCORE brown out detector. */
+	/** The system was last reset by VDDCORE brown out detector */
 	SYSTEM_RESET_CAUSE_BODCORE        = RSTC_RCAUSE_BODCORE,
-	/** The system was last reset by the POR (Power on reset). */
+	/** The system was last reset by the POR (Power on reset) */
 	SYSTEM_RESET_CAUSE_POR            = RSTC_RCAUSE_POR,
 };
 

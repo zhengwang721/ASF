@@ -632,10 +632,10 @@
  * used.
  *
  * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM TCC Feature List
- * For SAM D21/R21/L21/DA0/DA1, the TCC features are:
+ * For SAM D21/R21/L21/DAx/C21, the TCC features are:
  * \anchor asfdoc_sam0_tcc_features_d21
  * <table>
- *   <caption>TCC module features for SAM D21/R21/L21/DA0/DA1</caption>
+ *   <caption>TCC module features for SAM D21/R21/L21/DAx/C21</caption>
  *   <tr>
  *     <th>TCC#</th>
  *     <th>Match/Capture channels</th>
