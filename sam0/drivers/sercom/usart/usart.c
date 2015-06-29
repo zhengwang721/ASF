@@ -184,15 +184,6 @@ static enum status_code _usart_set_config(
 
 	/* Check parity mode bits */
 	if (config->parity != USART_PARITY_NONE) {
-#ifdef FEATURE_USART_LIN_SLAVE
-		if(config->lin_slave_enable) {
-			ctrla |= SERCOM_USART_CTRLA_FORM(0x5);
-		} else {
-			ctrla |= SERCOM_USART_CTRLA_FORM(1);
-		}
-#else
-		ctrla |= SERCOM_USART_CTRLA_FORM(1);
-#endif
 		ctrlb |= config->parity;
 	} else {
 #ifdef FEATURE_USART_LIN_SLAVE
@@ -205,6 +196,17 @@ static enum status_code _usart_set_config(
 		ctrla |= SERCOM_USART_CTRLA_FORM(0);
 #endif
 	}
+
+#ifdef FEATURE_USART_LIN_MASTER
+	usart_hw->CTRLC.reg = ((usart_hw->CTRLC.reg) & SERCOM_USART_CTRLC_GTIME_Msk)
+						| config->lin_header_delay
+						| config->lin_break_length;
+
+	if (config->lin_node != LIN_INVALID_MODE) {
+		ctrla &= ~(SERCOM_USART_CTRLA_FORM(0xf));
+		ctrla |= config->lin_node;
+	}
+#endif
 
 	/* Set whether module should run in standby. */
 	if (config->run_in_standby || system_is_debugger_present()) {
@@ -222,6 +224,11 @@ static enum status_code _usart_set_config(
 
 	/* Write configuration to CTRLA */
 	usart_hw->CTRLA.reg = ctrla;
+
+#ifdef FEATURE_USART_RS485
+	usart_hw->CTRLC.reg &= ~(SERCOM_USART_CTRLC_GTIME(0x7));
+	usart_hw->CTRLC.reg |= SERCOM_USART_CTRLC_GTIME(config->rs485_guard_time);
+#endif
 
 	return STATUS_OK;
 }

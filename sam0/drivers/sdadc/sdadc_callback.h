@@ -64,7 +64,7 @@ extern "C" {
  * the driver.
  */
 enum sdadc_job_type {
-	/** Asynchronous SDADC read into a user provided buffer. */
+	/** Asynchronous SDADC read into a user provided buffer */
 	SDADC_JOB_READ_BUFFER,
 };
 

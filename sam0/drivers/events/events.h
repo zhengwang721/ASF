@@ -684,39 +684,34 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset);
  *      <th>Comments</td>
  *  </tr>
  *  <tr>
- *      <td>G</td>
- *      <td>01/2015</td>
- *      <td>Added support for SAMC21. </td>
+ *      <td>42108F</td>
+ *      <td>06/2015</td>
+ *      <td>Added support for SAML21, SAMDAx and SAMC20/C21.</td>
  *  </tr>
  *  <tr>
- *      <td>F</td>
- *      <td>04/2015</td>
- *      <td>Added support for SAML21 and SAMDAx.</td>
- *  </tr>
- *  <tr>
- *      <td>E</td>
+ *      <td>42108E</td>
  *      <td>12/2014</td>
  *      <td>Added support for interrupt hook mode.
  *         Added support for SAMR21 and SAMD10/D11</td>
  *  </tr>
  *  <tr>
- *      <td>D</td>
+ *      <td>42108D</td>
  *      <td>01/2014</td>
  *      <td>Update to support SAMD21 and corrected documentation typos.</td>
  *  </tr>
  *  <tr>
- *      <td>C</td>
+ *      <td>42108C</td>
  *      <td>11/2013</td>
  *      <td>Fixed incorrect documentation for the event signal paths. Added
  *          configuration steps overview to the documentation.</td>
  *  </tr>
  *  <tr>
- *      <td>B</td>
+ *      <td>42108B</td>
  *      <td>06/2013</td>
  *      <td>Corrected documentation typos.</td>
  *  </tr>
  *  <tr>
- *      <td>A</td>
+ *      <td>42108A</td>
  *      <td>06/2013</td>
  *      <td>Initial release</td>
  *  </tr>
