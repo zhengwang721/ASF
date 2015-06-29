@@ -330,9 +330,6 @@ static void run_i2c_master_transfer_test(const struct test_case *test)
 	test_assert_true(test, timeout_cycles > 0,
                          "i2c master write without stop failed");
 	
-	/* use i2c_master_send_stop to complete master writing */
-	i2c_master_send_stop(&i2c_master_instance);
-	
 	/* wait the master read to finish */
 	master_packet.data = master_read_buffer;
 	timeout_cycles = 1000;
