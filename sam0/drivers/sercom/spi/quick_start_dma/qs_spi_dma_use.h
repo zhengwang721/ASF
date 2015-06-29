@@ -100,7 +100,7 @@
  *  - \b SS_0:  EXT1 PIN15 (PB21) <--> EXT2 PIN15 (PA17)
  *  - \b DO/DI: EXT1 PIN16 (PB00) <--> EXT2 PIN17 (PA16)
  *  - \b DI/DO: EXT1 PIN17 (PB02) <--> EXT2 PIN16 (PA18)
- *  - \b SCK:   EXT1 PIN18 (PB01) <--> EXT2 PIN19 (PA19)
+ *  - \b SCK:   EXT1 PIN18 (PB01) <--> EXT2 PIN18 (PA19)
  * - SAM C21 Xplained Pro.
  *  - \b SS_0:  EXT1 PIN15 (PA17) <--> EXT2 PIN15 (PB03)
  *  - \b DO/DI: EXT1 PIN16 (PA18) <--> EXT2 PIN17 (PB02)
