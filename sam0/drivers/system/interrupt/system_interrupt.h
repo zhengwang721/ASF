@@ -368,21 +368,6 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMC21</td>
- *	</tr>
- *	<tr>
- *		<td>Added support for SAML21</td>
- *	</tr>
- *	<tr>
- *		<td>Added support for SAMD10/D11</td>
- *	</tr>
- *	<tr>
- *		<td>Added support for SAMR21</td>
- *	</tr>
- *	<tr>
- *		<td>Added support for SAMD21</td>
- *	</tr>
- *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
@@ -410,8 +395,8 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>04/2015</td>
- *		<td>Add support for SAML21 and SAMDAx.</td>
+ *		<td>06/2015</td>
+ *		<td>Add support for SAML21, SAMDAx, and SAMC20/C21.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

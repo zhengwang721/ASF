@@ -67,7 +67,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM DA1
+ *  - Atmel | SMART SAM DAx
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -120,7 +120,7 @@
  *    </tr>
  *    <tr>
  *      <td>FEATURE_AC_RUN_IN_STANDY_PAIR_COMPARATOR</td>
- *      <td>SAMD20/D21/D10/D11/R21/DA0/DA1</td>
+ *      <td>SAMD20/D21/D10/D11/R21/DAx</td>
  *    </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -492,7 +492,7 @@ enum ac_chan_neg_mux {
 	AC_CHAN_NEG_MUX_BANDGAP    = AC_COMPCTRL_MUXNEG_BANDGAP,
 #if !(SAML22)
 	/**
-	 * For SAMD20/D21/D10/D11/R21/DA0/DA1:
+	 * For SAMD20/D21/D10/D11/R21/DAx:
 	 *     Negative comparator input is connected to the channel's internal DAC
 	 *     channel 0 output.
 	 * For SAML21/C20/C21:
@@ -1394,7 +1394,7 @@ static inline void ac_win_clear_status(
  *    <tr>
  *      <td>E</td>
  *      <td>06/2015</td>
- *      <td>Added support for SAML21, SAMC21, and SAMDAx.</td>
+ *      <td>Added support for SAML21, SAMC20/C21, and SAMDAx.</td>
  *    </tr>
  *    <tr>
  *      <td>D</td>

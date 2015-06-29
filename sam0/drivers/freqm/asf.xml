@@ -47,7 +47,7 @@
 	</select-by-config>
 
 	<module type="meta" id="sam0.drivers.freqm.appnote" caption="FREQM - Frequency Meter">
-		<info type="appnote" value="ATXXXXX"/>
+		<info type="appnote" value="AT13481"/>
 
 		<info type="description" value="pdf">
 			This document describes how to use the Frequency Meter
