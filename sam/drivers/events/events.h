@@ -51,7 +51,7 @@
  * \defgroup asfdoc_sam_drivers_events_group SAM4L Peripheral Event Controller (PEVC) Driver
  *
  * This driver provides a unified interface for the configuration and
- * management of the event channels within the Atmel&reg; | SMART SAM device.
+ * management of the Event Channels within the Atmel&reg; | SMART SAM device.
  *
  * The peripheral event generators and users are interconnected by a network
  * known as the Peripheral Event System.
@@ -176,8 +176,8 @@
  *
  *   node [label="Destination\nPeripherals" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral;
  *
- *   src_peripheral -> events_chan:f1 [label="Source\nMUXs"];
- *   events_chan:f1 -> events_user:f1 [label="Channel\nMUXs"];
+ *   src_peripheral -> events_chan:f1 [label="Source\nMUXes"];
+ *   events_chan:f1 -> events_user:f1 [label="Channel\nMUXes"];
  *   events_user:f1 -> dst_peripheral;
  * }
  * \enddot
@@ -194,7 +194,7 @@
  *     event enabled.
  *
  * \subsubsection asfdoc_sam_drivers_events_overview_config_evsys Event System
- *  -# The event system channel must be configured and enabled, with the.
+ *  -# The event system channel must be configured and enabled, with the
  *     correct source peripheral selected as the channel's Event Generator.
  *  -# The event system user must be configured and enabled, with the
  *     correct source Event Channel selected as the source.
@@ -314,13 +314,13 @@ struct events_conf {
  * Configuration structure for an Event Channel.
  */
 struct events_ch_conf {
-	/** Channel to configure (user). */
+	/** Channel to configure (user) */
 	uint32_t channel_id;
-	/** Event generator to connect to the channel. */
+	/** Event generator to connect to the channel */
 	uint32_t generator_id;
-	/** Enable Event Shaper (EVS) or not. */
+	/** Enable Event Shaper (EVS) or not */
 	bool shaper_enable;
-	/** Edge detection for Event Channels. */
+	/** Edge detection for Event Channels */
 	enum events_igf_edge   igf_edge;
 };
 
@@ -573,7 +573,7 @@ static inline void events_ch_clear_overrun_status(
  * This is a list of the available Quick Start Guides (QSGs) and example
  * applications for \ref asfdoc_sam_drivers_events_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  *  - \subpage asfdoc_sam_events_qsg
@@ -587,6 +587,11 @@ static inline void events_ch_clear_overrun_status(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>42312B</td>
+ *		<td>07/2015</td>
+ *		<td>Updated title of application note and added supported devices</td>
  *	</tr>
  *	<tr>
  *		<td>42312A</td>
@@ -613,7 +618,7 @@ static inline void events_ch_clear_overrun_status(
  * \section asfdoc_sam_events_qsg_basic_use_case Basic Use Case
  *
  * This use case will demonstrate how to use the Peripheral Event Controller
- * on SAM4L_EK. In this use case, one event channel is configured as:
+ * on SAM4L_EK. In this use case, one Event Channel is configured as:
  * - Configure AST periodic event 0 as a generator
  * - Configure PDCA channel 0 as a user to transfer one word
  * - Enable the event shaper for the generator
