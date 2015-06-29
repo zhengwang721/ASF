@@ -2,9 +2,9 @@
  *
  * \file
  *
- * \brief IOT Temperature Sensor Demo.
+ * \brief IoT Temperature Sensor Demo.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,8 +51,7 @@
 #include "socket/include/socket.h"
 #include "conf_winc.h"
 
-/** Message format definitions. */
-/* Configure and enable access point mode with provisioning page. */
+/** Configure and enable access point mode with provisioning page. */
 tstrM2MAPConfig ap_config = {
 	DEMO_WLAN_AP_NAME,			// Access Point Name.
 	DEMO_WLAN_AP_CHANNEL,		// Channel to use.
@@ -70,7 +69,7 @@ char user_credentials[108];
 char provision_ssid[70];
 char provision_pwd[30];
 
-
+/** Message format definitions. */
 typedef struct s_msg_user_input {
     uint8_t channel;
 	uint8_t security;
@@ -127,25 +126,33 @@ static uint8 wifi_provisioned = 1; //Assuming we are already provisioned
 
 /** Global counter delay for timer. */
 static uint32_t delay = 0;
-/** Global counters for LED toggling*/
+
+/** Global counters for LED toggling. */
 static uint32_t toggle_led_ms = 0;
 
 /** SysTick counter for non busy wait delay. */
 extern uint32_t ms_ticks;
 
-static void parse_user_input(char* user_input)
+/**
+ * \brief Parse user input data.
+ */
+static void parse_user_input(char *user_input)
 {
-char* uinput;
-    uinput = strtok (user_input,":");
-	uinput != NULL ? (user_data.SSID = uinput) : (user_data.SSID = (char*)DEFAULT_SSID);
+	char *uinput;
+	
+	uinput = strtok (user_input,":");
+	uinput != NULL ? (user_data.SSID = uinput) : (user_data.SSID = (char *)DEFAULT_SSID);
 	uinput = strtok (NULL, ":");
-	uinput != NULL ? (user_data.password = uinput) : (user_data.password = (char*)DEFAULT_PWD);
+	uinput != NULL ? (user_data.password = uinput) : (user_data.password = (char *)DEFAULT_PWD);
 	uinput = strtok (NULL, ":");
 	uinput != NULL ? (user_data.security = atoi(uinput)) : (user_data.security = DEFAULT_AUTH);
 	uinput = strtok (NULL, ":");
 	uinput != NULL ? (user_data.channel = atoi(uinput)-1) : (user_data.channel = DEFAULT_CHANNEL);
 }
 
+/**
+ * \brief Print provisioning information.
+ */
 static void print_provisioning_details(void)
 {
 	printf("\r\nStarted as Access point %s\r\n",DEMO_WLAN_AP_NAME);
@@ -153,22 +160,23 @@ static void print_provisioning_details(void)
 	puts("Please press SW0 on D21 and enter credentials if the webpage is not served through above method\r\n");
 }
 
-/*returns duration of the button pressed
-returns -1 if the button has not been released*/
+/**
+ * \brief Get duration of the button pressed.
+ *
+ * \return -1 if the button has not been released.
+ */
 static int32_t button_press_duration(bool current_button_state)
 {
-static bool previous_button_state = false;
-static int32_t button_press_start_ms = 0;
-int32_t button_press_duration_ms = -1;
+	static bool previous_button_state = false;
+	static int32_t button_press_start_ms = 0;
+	int32_t button_press_duration_ms = -1;
 
-	/*Button has been pressed*/
-	if(current_button_state == true && previous_button_state == false)
-	{
+	/* Button has been pressed. */
+	if (current_button_state == true && previous_button_state == false) {
 		button_press_start_ms = ms_ticks;
 	}
-	/*Button has been released*/
-	if(current_button_state == false && previous_button_state == true)
-	{
+	/* Button has been released. */
+	if (current_button_state == false && previous_button_state == true) {
 		button_press_duration_ms = ms_ticks - button_press_start_ms;
 	}
 	previous_button_state = current_button_state;
@@ -278,35 +286,39 @@ static void demo_wifi_state(uint8 u8MsgType, void *pvMsg)
 			}
 			break;
 		}
+
 		case M2M_WIFI_RESP_CONN_INFO: {
 			tstrM2MConnInfo *pstrConnInfo = (tstrM2MConnInfo*) pvMsg;
 			printf("Connected to %s\r\n",pstrConnInfo->acSSID);
 			break;
 		}
+
 		case M2M_WIFI_RESP_DEFAULT_CONNECT: {
 			tstrM2MDefaultConnResp *pstrResp = (tstrM2MDefaultConnResp*) pvMsg;
 			if(pstrResp->s8ErrorCode == M2M_DEFAULT_CONN_SCAN_MISMATCH || 
 			pstrResp->s8ErrorCode == M2M_DEFAULT_CONN_EMPTY_LIST)
 			{
-				/*If we didn't find previously provisioned Access point
-				or we don't find any Access point around, we enter provisioning mode*/
-				wifi_provisioned = 0; /*Also set provisioning to zero, as our assumption was incorrect*/
+				/* If we didn't find previously provisioned Access point
+				or we don't find any Access point around, we enter provisioning mode. */
+				wifi_provisioned = 0; /* Also set provisioning to zero, as our assumption was incorrect. */
 				m2m_wifi_start_provision_mode(&ap_config,gacHttpProvDomainName,1);
 				print_provisioning_details();
 			}
 			break;
 		}
+
 		case M2M_WIFI_REQ_DHCP_CONF: {
 			uint8 *pu8IPAddress = (uint8*) pvMsg;
 			printf("m2m_wifi_state: M2M_WIFI_REQ_DHCP_CONF: IP is %u.%u.%u.%u\n",
 					pu8IPAddress[0], pu8IPAddress[1], pu8IPAddress[2], pu8IPAddress[3]);
 			if(wifi_provisioned == 1){
-				/*Set the LED when connected*/
+				/* Switch ON the LED when connected. */
 				port_pin_set_output_level(LED_0_PIN, false); 
 				wifi_connected = 1;
 			}
 			break;
 		}
+
 		case M2M_WIFI_RESP_PROVISION_INFO : {
 			tstrM2MProvisionInfo *pstrProvInfo = (tstrM2MProvisionInfo*)pvMsg;
 
@@ -314,8 +326,8 @@ static void demo_wifi_state(uint8 u8MsgType, void *pvMsg)
 				wifi_provisioned = 1;
 				m2m_wifi_connect((char*)pstrProvInfo->au8SSID,strlen((char*)pstrProvInfo->au8SSID),
 				pstrProvInfo->u8SecType, pstrProvInfo->au8Password, M2M_WIFI_CH_ALL);
-								
-				//Copy the provisioned info into user_data, so we can connect back when disconnected
+
+				/* Copy the provisioned info into user_data, so we can connect back when disconnected. */
 				strncpy(provision_ssid,(char*)pstrProvInfo->au8SSID,strlen((char*)pstrProvInfo->au8SSID));
 				strncpy(provision_pwd,(char*)pstrProvInfo->au8Password,strlen((char*)pstrProvInfo->au8Password));
 				user_data.SSID = provision_ssid;
@@ -375,13 +387,12 @@ void demo_start(void)
 		/* Handle pending events from WINC1500. */
 		m2m_wifi_handle_events(NULL);
 		
-		/*Calculate duration of time the button was pressed
+		/* Calculate duration of time the button was pressed.
 		If button was pressed and held for more than 10s we would enter provisioning mode
-		short press would allow us to enter credentials from serial console*/
+		short press would allow us to enter credentials from serial console. */
 		int32_t button_pressed_duration_ms = button_press_duration(!port_pin_get_input_level(CREDENTIAL_ENTRY_BUTTON));
-		if((button_pressed_duration_ms != -1 && button_pressed_duration_ms < 2000)
-		 && !wifi_provisioned)
-		{
+		if ((button_pressed_duration_ms != -1 && button_pressed_duration_ms < 2000)
+		 && !wifi_provisioned) {
 			printf("Enter Credentials and press ENTER\r\n");
 			printf("eg: <SSID>:<Password>:<SecurityType>:<WifiChannel>\r\n");
 			printf("For Security\r\n");
@@ -400,20 +411,17 @@ void demo_start(void)
 			wifi_provisioned = 1;
 		}
 		
-		/*Force provisioning mode if the user presses SW0 for more than 10s*/
-		if(button_pressed_duration_ms != -1 && (button_pressed_duration_ms > 10000))
-		{
+		/* Force provisioning mode if the user presses SW0 for more than 10s. */
+		if (button_pressed_duration_ms != -1 && (button_pressed_duration_ms > 10000)) {
 			wifi_provisioned = 0;
 			wifi_connected = 0;
 			
-			m2m_wifi_start_provision_mode(&ap_config,gacHttpProvDomainName,1);
+			m2m_wifi_start_provision_mode(&ap_config, gacHttpProvDomainName, 1);
 			print_provisioning_details();
 		}
 		
-		if(!wifi_provisioned)
-		{
-			if(ms_ticks - toggle_led_ms >= 500)
-			{
+		if (!wifi_provisioned) {
+			if(ms_ticks - toggle_led_ms >= 500) {
 				toggle_led_ms = ms_ticks;
 				port_pin_toggle_output_level(LED_0_PIN);	
 			}

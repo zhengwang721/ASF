@@ -16,7 +16,8 @@
 			<build type="c-source" value="qtouch/touch.c"/>
 			<build type="header-file" value="qtouch/QDebugSettings.h"/>
 
-
+			<build type="include-path" value="doc"/>
+			<build type="distribute" subtype="file" value="doc/Atmel-WINC1500-Internet-of-Things-Sensor-Demo-using-SAM-D21-Xplained-Pro.pdf"/>
 			<build type="include-path" value="android_app"/>
 			<build type="distribute" subtype="file" value="android_app/Atmel_IOT_Sensor_v2.0.18.apk"/>
 

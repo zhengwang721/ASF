@@ -65,7 +65,7 @@ extern "C" {
 #define DEMO_WLAN_AP_IP_ADDRESS				{192,168,1,10}
 #define DEMO_WLAN_AP_DOMAIN_NAME			"atmelconfig.com"
 
-#define DEMO_WLAN_AP_NAME					"DEMOTOUCH_AP"// Access Point Name.
+#define DEMO_WLAN_AP_NAME					"WINC1500_TOUCH_MyAP"// Access Point Name.
 #define DEMO_WLAN_AP_CHANNEL				1// Channel to use.
 #define DEMO_WLAN_AP_WEP_INDEX				0// Wep key index.
 #define DEMO_WLAN_AP_WEP_SIZE				WEP_40_KEY_STRING_SIZE// Wep key size.

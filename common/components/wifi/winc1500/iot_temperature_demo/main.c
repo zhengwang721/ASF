@@ -2,9 +2,9 @@
  *
  * \file
  *
- * \brief IOT Temperature Sensor Demo.
+ * \brief IoT Temperature Sensor Demo.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,7 +45,10 @@
 /** \mainpage
  * \section intro Introduction
  * This IoT temperature sensor demo is configured to work with the SAM D21
- * Xplained Pro using the WINC1500 Wi-Fi module.
+ * Xplained Pro using the WINC1500 Wi-Fi module. It will basically report
+ * temperature sensor information to provided Android application via your
+ * home network. The Android application can be located in the android_app
+ * folder.
  * It uses the following hardware:
  * - the WINC1500 module on EXT1.
  * - the IO1 sensors on EXT2 (optional).
