@@ -250,37 +250,37 @@ extern "C" {
  * Enumerate for the possible division ratios of an Input Glitch Filter.
  */
 enum events_igf_divider {
-	/** Select a prescaler division ratio of 1. */
+	/** Select a prescaler division ratio of 1 */
 	EVENT_IGF_DIVIDER_1       = 0,
-	/** Select a prescaler division ratio of 2. */
+	/** Select a prescaler division ratio of 2 */
 	EVENT_IGF_DIVIDER_2       = 1,
-	/** Select a prescaler division ratio of 4. */
+	/** Select a prescaler division ratio of 4 */
 	EVENT_IGF_DIVIDER_4       = 2,
-	/** Select a prescaler division ratio of 8. */
+	/** Select a prescaler division ratio of 8 */
 	EVENT_IGF_DIVIDER_8       = 3,
-	/** Select a prescaler division ratio of 16. */
+	/** Select a prescaler division ratio of 16 */
 	EVENT_IGF_DIVIDER_16      = 4,
-	/** Select a prescaler division ratio of 32. */
+	/** Select a prescaler division ratio of 32 */
 	EVENT_IGF_DIVIDER_32      = 5,
-	/** Select a prescaler division ratio of 64. */
+	/** Select a prescaler division ratio of 64 */
 	EVENT_IGF_DIVIDER_64      = 6,
-	/** Select a prescaler division ratio of 128. */
+	/** Select a prescaler division ratio of 128 */
 	EVENT_IGF_DIVIDER_128     = 7,
-	/** Select a prescaler division ratio of 256. */
+	/** Select a prescaler division ratio of 256 */
 	EVENT_IGF_DIVIDER_256     = 8,
-	/** Select a prescaler division ratio of 512. */
+	/** Select a prescaler division ratio of 512 */
 	EVENT_IGF_DIVIDER_512     = 9,
-	/** Select a prescaler division ratio of 1024. */
+	/** Select a prescaler division ratio of 1024 */
 	EVENT_IGF_DIVIDER_1024    = 10,
-	/** Select a prescaler division ratio of 2048. */
+	/** Select a prescaler division ratio of 2048 */
 	EVENT_IGF_DIVIDER_2048    = 11,
-	/** Select a prescaler division ratio of 4096. */
+	/** Select a prescaler division ratio of 4096 */
 	EVENT_IGF_DIVIDER_4096    = 12,
-	/** Select a prescaler division ratio of 8192. */
+	/** Select a prescaler division ratio of 8192 */
 	EVENT_IGF_DIVIDER_8192    = 13,
-	/** Select a prescaler division ratio of 16384. */
+	/** Select a prescaler division ratio of 16384 */
 	EVENT_IGF_DIVIDER_16384   = 14,
-	/** Select a prescaler division ratio of 32768. */
+	/** Select a prescaler division ratio of 32768 */
 	EVENT_IGF_DIVIDER_32768   = 15
 };
 
@@ -288,13 +288,13 @@ enum events_igf_divider {
  * \brief Event Input Glitch Filter edge detection configurations.
  */
 enum events_igf_edge {
-	/** Input Glitch Filter is disabled. */
+	/** Input Glitch Filter is disabled */
 	EVENT_IGF_EDGE_NONE    = 0,
-	/** Event detection through Input Glitch Filter on rising edge. */
+	/** Event detection through Input Glitch Filter on rising edge */
 	EVENT_IGF_EDGE_RISING  = 1,
-	/** Event detection through Input Glitch Filter on falling edge. */
+	/** Event detection through Input Glitch Filter on falling edge */
 	EVENT_IGF_EDGE_FALLING = 2,
-	/** Event detection through Input Glitch Filter on both edges. */
+	/** Event detection through Input Glitch Filter on both edges */
 	EVENT_IGF_EDGE_BOTH    = 3
 };
 
@@ -304,7 +304,7 @@ enum events_igf_edge {
  * Configuration structure for event module.
  */
 struct events_conf {
-	/** Input Glitch Filter divider. */
+	/** Input Glitch Filter divider */
 	enum events_igf_divider igf_divider;
 };
 
@@ -573,7 +573,7 @@ static inline void events_ch_clear_overrun_status(
  * This is a list of the available Quick Start Guides (QSGs) and example
  * applications for \ref asfdoc_sam_drivers_events_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSG can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  *  - \subpage asfdoc_sam_events_qsg
@@ -591,7 +591,7 @@ static inline void events_ch_clear_overrun_status(
  *	<tr>
  *		<td>42312B</td>
  *		<td>07/2015</td>
- *		<td>Updated title of application note and added supported devices</td>
+ *		<td>Updated title of application note and added list of supported devices</td>
  *	</tr>
  *	<tr>
  *		<td>42312A</td>
