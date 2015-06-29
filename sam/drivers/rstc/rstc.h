@@ -346,7 +346,7 @@ static inline void rstc_assert_reset_of_coprocessor(
  * This is a list of the available Quick Start Guides (QSGs) and example
  * applications for \ref asfdoc_sam_drivers_rstc_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  *  - \subpage asfdoc_sam_drivers_rstc_quick_start
@@ -363,7 +363,7 @@ static inline void rstc_assert_reset_of_coprocessor(
  *	<tr>
  *		<td>42279B</td>
  *		<td>07/2015</td>
- *		<td>Updated title of application note and added supported devices</td>
+ *		<td>Updated title of application note and added list of supported devices</td>
  *	</tr>
  *	<tr>
  *		<td>42279A</td>
