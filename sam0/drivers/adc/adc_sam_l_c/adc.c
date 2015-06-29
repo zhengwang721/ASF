@@ -71,12 +71,8 @@
 const uint8_t _adc_gclk_ids[ADC_INST_NUM] = { ADC_GCLK_ID };
 
 /* List of ADC APB Masks */
-#if (SAML21)
-const uint32_t _adc_apbcmasks[ADC_INST_NUM] = { MCLK_APBDMASK_ADC };
-#else
-#if (!SAML22)
+#if (ADC_INST_NUM > 1) || (SAMC20)
 const uint32_t _adc_apbcmasks[ADC_INST_NUM] = { ADC_APBCMASKS };
-#endif
 #endif
 
 /* List of Number of external channels of ADC modules. */
@@ -764,7 +760,7 @@ enum status_code adc_init(
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_ADC);
 #elif (SAML21)
 	/* Turn on the digital interface clock */
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBD, _adc_apbcmasks[instance]);
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBD, MCLK_APBDMASK_ADC);
 #else
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, _adc_apbcmasks[instance]);
 #endif
