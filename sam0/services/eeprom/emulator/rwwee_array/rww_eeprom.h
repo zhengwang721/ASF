@@ -59,9 +59,9 @@
  *
  * The following devices can use this module:
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM C21
  *  - Atmel | SMART SAM D21
- *  - Atmel | SMART SAM DA1
+ *  - Atmel | SMART SAM C20/C21
+ *  - Atmel | SMART SAM DAx
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rww_eeprom_prerequisites

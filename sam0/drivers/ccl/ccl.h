@@ -87,8 +87,8 @@
  * logic expression with three inputs.
  *
  * The output can be combinatorially generated from the inputs, or filtered to remove spike.
- * An optional sequential module can be enabled. The inputs of sequential module are 
- * individually controlled by two independent, adjacent LUT(LUT0/LUT1, LUT2/LUT3, etc.) outputs,
+ * An optional sequential module can be enabled. The inputs of sequential module are
+ * individually controlled by two independent, adjacent LUT(LUT0/LUT1, LUT2/LUT3 etc.) outputs,
  * enabling complex waveform generation.
  *
  * \section asfdoc_sam0_ccl_special_considerations Special Considerations
@@ -477,11 +477,6 @@ void ccl_lut_disable(const enum ccl_lut_id number);
  *		<th>Date</td>
  *		<th>Comments</td>
  *	</tr>
- *    <tr>
- *      <td>B</td>
- *      <td>12/2014</td>
- *      <td>Added support for SAMC21.</td>
- *    </tr>
  *	<tr>
  *		<td>42447A</td>
  *		<td>06/2015</td>
