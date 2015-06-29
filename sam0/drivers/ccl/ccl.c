@@ -133,7 +133,7 @@ enum status_code ccl_seq_config(const enum ccl_seq_id number,
 {
 	if(CCL->CTRL.reg & CCL_CTRL_ENABLE)
 		return STATUS_BUSY;
-	
+
 	CCL->SEQCTRL[number].reg = seq_selection;
 
 	return STATUS_OK;

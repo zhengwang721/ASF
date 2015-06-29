@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief SAM TSENS Quick Start
+ * \brief ASF Programmers Manual Revision History
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,89 +38,24 @@
  * \asf_license_stop
  *
  */
+
+
+/**
+ * \page appdoc_samc21_asf_prog_manual_samc21_revision_history Document Revision History
+ *
+ * <table>
+ *  <tr>
+ *    <th>Doc. Rev.</td>
+ *    <th>Date</td>
+ *    <th>Comments</td>
+ *  </tr>
+ *  <tr>
+ *    <td>A</td>
+ *    <td>06/2015</td>
+ *    <td>Initial release.</td>
+ *  </tr>
+ * </table>
+ */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-
-#include <asf.h>
-
-//! [result]
-int32_t tsens_result;
-//! [result]
-
-//! [module_inst]
-struct tsens_module tsens_instance;
-//! [module_inst]
-
-//! [job_complete_callback]
-volatile bool tsens_read_done = false;
-
-static void tsens_complete_callback(enum tsens_callback i)
-{
-	tsens_read_done = true;
-}
-//! [job_complete_callback]
-
-//! [setup]
-static void configure_tsens(void)
-{
-//! [setup_config]
-	struct tsens_config config_tsens;
-//! [setup_config]
-//! [setup_config_defaults]
-	tsens_get_config_defaults(&config_tsens);
-//! [setup_config_defaults]
-
-//! [setup_set_config]
-	tsens_init(&config_tsens);
-//! [setup_set_config]
-
-//! [setup_enable]
-	tsens_enable();
-//! [setup_enable]
-}
-
-static void configure_tsens_callbacks(void)
-{
-//! [setup_register_callback]
-	tsens_register_callback(&tsens_instance,
-			tsens_complete_callback, TSENS_CALLBACK_RESULT_READY);
-//! [setup_register_callback]
-//! [setup_enable_callback]
-	tsens_enable_callback(TSENS_CALLBACK_RESULT_READY);
-//! [setup_enable_callback]
-}
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-//! [setup_init]
-	configure_tsens();
-	configure_tsens_callbacks();
-//! [setup_init]
-
-//! [main]
-//! [enable_interrupts]
-	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_TSENS);
-	system_interrupt_enable_global();
-//! [enable_interrupts]
-
-//! [start_tsens_job]
-	tsens_read_job(&tsens_instance, &tsens_result);
-//! [start_tsens_job]
-
-//! [job_complete_poll]
-	while (tsens_read_done == false) {
-		/* Wait for asynchronous TSENS read to complete */
-	}
-//! [job_complete_poll]
-
-//! [inf_loop]
-	while (1) {
-		/* Infinite loop */
-	}
-//! [inf_loop]
-//! [main]
-}
