@@ -184,6 +184,7 @@ static enum status_code _usart_set_config(
 
 	/* Check parity mode bits */
 	if (config->parity != USART_PARITY_NONE) {
+		ctrla |= SERCOM_USART_CTRLA_FORM(1);
 		ctrlb |= config->parity;
 	} else {
 #ifdef FEATURE_USART_LIN_SLAVE
@@ -583,7 +584,7 @@ enum status_code usart_read_wait(
           uint16_t tx_buf[TX_LEN] = {0x0111, 0x0022, 0x0133};
           usart_write_buffer_wait(&module, (uint8_t*)tx_buf, TX_LEN);
     \endcode
- * 
+ *
  * \return Status of the operation.
  * \retval STATUS_OK              If operation was completed
  * \retval STATUS_ERR_INVALID_ARG If operation was not completed, due to invalid
@@ -672,7 +673,7 @@ enum status_code usart_write_buffer_wait(
  * \note If using 9-bit data, the array that *rx_data point to should be defined 
  *       as uint16_t array and should be casted to uint8_t* pointer. Because it 
  *       is an address pointer, the highest byte is not discarded. For example:
- *   \code      
+ *   \code
           #define RX_LEN 3
           uint16_t rx_buf[RX_LEN] = {0x0,};
           usart_read_buffer_wait(&module, (uint8_t*)rx_buf, RX_LEN);
