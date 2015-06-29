@@ -50,7 +50,7 @@ void configure_ccl_lut0(void);
 void configure_ccl_lut1(void);
 
 //! [setup]
-static void configure_ccl(void)
+void configure_ccl(void)
 {
 	/** Creates a new configuration structure for the CCL. */
 	//! [setup_1]
@@ -68,7 +68,7 @@ static void configure_ccl(void)
 	//! [setup_3]
 }
 
-static void configure_ccl_lut0(void)
+void configure_ccl_lut0(void)
 {
 	/** Creates a new configuration structure for the LUT0. */
 	//! [setup_4]
@@ -117,7 +117,7 @@ static void configure_ccl_lut0(void)
 	//! [setup_8]
 }
 
-static void configure_ccl_lut1(void)
+void configure_ccl_lut1(void)
 {
 	/** Creates a new configuration structure for the LUT1. */
 	//! [setup_9]
