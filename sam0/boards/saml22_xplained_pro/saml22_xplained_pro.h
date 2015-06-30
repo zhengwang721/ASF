@@ -117,8 +117,8 @@ void system_board_init(void);
 #define LED0                      LED0_PIN
 
 #define LED_0_PWM4CTRL_MODULE     TCC0
-#define LED_0_PWM4CTRL_CHANNEL    0
-#define LED_0_PWM4CTRL_OUTPUT     0
+#define LED_0_PWM4CTRL_CHANNEL    3
+#define LED_0_PWM4CTRL_OUTPUT     3
 #define LED_0_PWM4CTRL_PIN        PIN_PC27F_TCC0_WO3
 #define LED_0_PWM4CTRL_MUX        MUX_PC27F_TCC0_WO3
 #define LED_0_PWM4CTRL_PINMUX     PINMUX_PC27F_TCC0_WO3
