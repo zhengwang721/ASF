@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Unit test
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -325,9 +325,6 @@ static void run_i2c_master_transfer_test(const struct test_case *test)
 	} while (timeout_cycles > 0);
 	test_assert_true(test, timeout_cycles > 0,
                          "i2c master write without stop failed");
-	
-	/* use i2c_master_send_stop to complete master writing */
-	i2c_master_send_stop(&i2c_master_instance);
 	
 	/* wait the master read to finish */
 	master_packet.data = master_read_buffer;
