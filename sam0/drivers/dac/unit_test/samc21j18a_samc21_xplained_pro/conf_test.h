@@ -40,10 +40,9 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-
 #ifndef CONF_TEST_H_INCLUDED
 #define CONF_TEST_H_INCLUDED
 
@@ -54,12 +53,5 @@
 #define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
 #define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
 #define CONF_STDIO_BAUDRATE       38400
-
-/* GPIO pin used for testing the interrupts */
-#define GPIO_TEST_PIN_EXTINT  EXT1_PIN_10
-
-#define EIC_TEST_CHANNEL      EXT1_IRQ_INPUT
-#define EIC_TEST_PIN          EXT1_IRQ_PIN
-#define EIC_TEST_PIN_MUX      EXT1_IRQ_PINMUX
 
 #endif /* CONF_TEST_H_INCLUDED */

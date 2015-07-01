@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -55,11 +55,14 @@
 #define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
 #define CONF_STDIO_BAUDRATE       38400
 
-/* GPIO pin used for testing the interrupts */
-#define GPIO_TEST_PIN_EXTINT  EXT1_PIN_10
+/* master sercom pinmux setting */
+#define CONF_I2C_MASTER_MODULE    SERCOM0
+#define CONF_MASTER_SDA_PINMUX    PINMUX_PA08C_SERCOM0_PAD0
+#define CONF_MASTER_SCK_PINMUX    PINMUX_PA09C_SERCOM0_PAD1
 
-#define EIC_TEST_CHANNEL      EXT1_IRQ_INPUT
-#define EIC_TEST_PIN          EXT1_IRQ_PIN
-#define EIC_TEST_PIN_MUX      EXT1_IRQ_PINMUX
+/* slave sercom pinmux setting */
+#define CONF_I2C_SLAVE_MODULE     SERCOM2
+#define CONF_SLAVE_SDA_PINMUX     PINMUX_PA12C_SERCOM2_PAD0
+#define CONF_SLAVE_SCK_PINMUX     PINMUX_PA13C_SERCOM2_PAD1
 
 #endif /* CONF_TEST_H_INCLUDED */
