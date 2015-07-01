@@ -48,16 +48,15 @@
 #define CONF_QUICK_START_H_INCLUDED
 
 //[definition_pwm]
-/** PWM module to use */
-#define CONF_PWM_MODULE      LED_0_PWM4CTRL_MODULE
+#define CONF_PWM_MODULE      TCC0
 /** PWM channel */
-#define CONF_PWM_CHANNEL     LED_0_PWM4CTRL_CHANNEL
+#define CONF_PWM_CHANNEL     0
 /** PWM output */
-#define CONF_PWM_OUTPUT      LED_0_PWM4CTRL_OUTPUT
+#define CONF_PWM_OUTPUT      0
 /** PWM output pin */
-#define CONF_PWM_OUT_PIN     LED_0_PWM4CTRL_PIN
+#define CONF_PWM_OUT_PIN     PIN_PB18F_TCC0_WO0
 /** PWM output pin mux */
-#define CONF_PWM_OUT_MUX     LED_0_PWM4CTRL_MUX
+#define CONF_PWM_OUT_MUX     MUX_PB18F_TCC0_WO0
 //[definition_pwm]
 
 //[definition_fault]

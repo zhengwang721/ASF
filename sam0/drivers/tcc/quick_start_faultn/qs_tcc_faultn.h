@@ -71,7 +71,7 @@
  *  <tr><td> SAMR21 Xpro  </td><td> PA28 </td><td> SW0        </td></tr>
  *  <tr><td> SAML21 Xpro  </td><td> PB10 </td><td> LED0       </td></tr>
  *  <tr><td> SAML21 Xpro  </td><td> PA16 </td><td> SW0        </td></tr>
- *  <tr><td> SAML22 Xpro  </td><td> PC27 </td><td> LED0       </td></tr>
+ *  <tr><td> SAML22 Xpro  </td><td> PB18 </td><td> EXT3 Pin 9 </td></tr>
  *  <tr><td> SAML22 Xpro  </td><td> PC01 </td><td> SW0        </td></tr>
  *  <tr><td> SAMDA1 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
  *  <tr><td> SAMDA1 Xpro  </td><td> PA15 </td><td> SW0        </td></tr>
