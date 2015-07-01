@@ -131,6 +131,9 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_RS485</td>
+ *    <td>SAM C20/C21</td>
+ *  </tr>
+ * <tr>
  *    <td>FEATURE_USART_LIN_MASTER</td>
  *    <td>SAM C20/C21</td>
  *  </tr>
@@ -311,11 +314,11 @@ extern "C" {
  * LIN node type.
  */
 enum lin_node_type {
-	/* LIN master mode */
+	/** LIN master mode */
 	LIN_MASTER_NODE = SERCOM_USART_CTRLA_FORM(0x02),
-	/* LIN slave mode */
+	/** LIN slave mode */
 	LIN_SLAVE_NODE = SERCOM_USART_CTRLA_FORM(0x04),
-	/* Neither LIN master nor LIN slave mode */
+	/** Neither LIN master nor LIN slave mode */
 	LIN_INVALID_MODE = SERCOM_USART_CTRLA_FORM(0x00),
 };
 
@@ -325,9 +328,9 @@ enum lin_node_type {
  * LIN master command enum.
  */
 enum lin_master_cmd {
-	/* LIN master software control transmission command */
+	/** LIN master software control transmission command */
 	LIN_MASTER_SOFTWARE_CONTROL_TRANSMIT_CMD = SERCOM_USART_CTRLB_LINCMD(0x01),
-	/* LIN master automatically transmission command */
+	/** LIN master automatically transmission command */
 	LIN_MASTER_AUTO_TRANSMIT_CMD = SERCOM_USART_CTRLB_LINCMD(0x02),
 };
 
@@ -339,16 +342,16 @@ enum lin_master_cmd {
  * This field is only valid when using automatically transmission command
  */
 enum lin_master_header_delay {
-	/* Delay between break and sync transmission is 1 bit time.
+	/** Delay between break and sync transmission is 1 bit time.
 		Delay between sync and ID transmission is 1 bit time. */
 	LIN_MASTER_HEADER_DELAY_0 = SERCOM_USART_CTRLC_HDRDLY(0x0),
-	/* Delay between break and sync transmission is 4 bit time.
+	/** Delay between break and sync transmission is 4 bit time.
 		Delay between sync and ID transmission is 4 bit time. */
 	LIN_MASTER_HEADER_DELAY_1 = SERCOM_USART_CTRLC_HDRDLY(0x01),
-	/* Delay between break and sync transmission is 8 bit time.
+	/** Delay between break and sync transmission is 8 bit time.
 		Delay between sync and ID transmission is 4 bit time. */
 	LIN_MASTER_HEADER_DELAY_2 = SERCOM_USART_CTRLC_HDRDLY(0x02),
-	/* Delay between break and sync transmission is 14 bit time.
+	/** Delay between break and sync transmission is 14 bit time.
 		Delay between sync and ID transmission is 4 bit time. */
 	LIN_MASTER_HEADER_DELAY_3 = SERCOM_USART_CTRLC_HDRDLY(0x03),
 };
@@ -359,13 +362,13 @@ enum lin_master_header_delay {
  * Length of the break field transmitted when in LIN master mode
  */
 enum lin_master_break_length {
-	/* Break field transmission is 13 bit times. */
+	/** Break field transmission is 13 bit times. */
 	LIN_MASTER_BREAK_LENGTH_13_BIT = SERCOM_USART_CTRLC_BRKLEN(0x0),
-	/* Break field transmission is 17 bit times. */
+	/** Break field transmission is 17 bit times. */
 	LIN_MASTER_BREAK_LENGTH_17_BIT = SERCOM_USART_CTRLC_BRKLEN(0x1),
-	/* Break field transmission is 13 bit times. */
+	/** Break field transmission is 21 bit times. */
 	LIN_MASTER_BREAK_LENGTH_21_BIT = SERCOM_USART_CTRLC_BRKLEN(0x2),
-	/* Break field transmission is 13 bit times. */
+	/** Break field transmission is 26 bit times. */
 	LIN_MASTER_BREAK_LENGTH_26_BIT = SERCOM_USART_CTRLC_BRKLEN(0x3),
 };
 #endif
@@ -600,21 +603,21 @@ enum usart_sample_adjustment {
  * The value of RS485 guard time.
  */
 enum rs485_guard_time {
-	/*The guard time is 0-bit time. */
+	/** The guard time is 0-bit time. */
 	RS485_GUARD_TIME_0_BIT = 0,
-	/*The guard time is 1-bit time. */
+	/** The guard time is 1-bit time. */
 	RS485_GUARD_TIME_1_BIT,
-	/*The guard time is 2-bit times. */
+	/** The guard time is 2-bit times. */
 	RS485_GUARD_TIME_2_BIT,
-	/*The guard time is 3-bit times. */
+	/** The guard time is 3-bit times. */
 	RS485_GUARD_TIME_3_BIT,
-	/*The guard time is 4-bit times. */
+	/** The guard time is 4-bit times. */
 	RS485_GUARD_TIME_4_BIT,
-	/*The guard time is 5-bit times. */
+	/** The guard time is 5-bit times. */
 	RS485_GUARD_TIME_5_BIT,
-	/*The guard time is 6-bit times. */
+	/** The guard time is 6-bit times. */
 	RS485_GUARD_TIME_6_BIT,
-	/*The guard time is 7-bit times. */
+	/** The guard time is 7-bit times. */
 	RS485_GUARD_TIME_7_BIT,
 };	
 #endif
@@ -684,6 +687,7 @@ struct usart_config {
 	bool start_frame_detection_enable;
 #endif
 #ifdef FEATURE_USART_RS485
+	/** RS485 guard time. */
 	enum rs485_guard_time rs485_guard_time;
 #endif
 #ifdef FEATURE_USART_COLLISION_DECTION
@@ -1195,7 +1199,7 @@ static inline void usart_disable_transceiver(
 
 #ifdef FEATURE_USART_LIN_MASTER
 /**
- * \name LIN  Master Command and Status
+ * \name LIN Master Command and Status
  * @{
  */
 
@@ -1299,25 +1303,21 @@ static inline bool lin_master_transmission_status(struct usart_module *const mod
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
- *  <tr>
- *		<td>Add support for SAML21 and SAMDAx(same features as SAMD21)</td>
- *  </tr>
- *  <tr>
- *		<td>Add support for SAMD10/D11 (same features as SAMD21)</td>
- *  </tr>
- *  <tr>
- *		<td>Add support for SAMR21 (same features as SAMD21)</td>
- *  </tr>
+  *	<tr>
+ *		<td>Added new feature as below:
+ *          \li LIN master
+ *          \li RS485
+ *	</tr>
  *	<tr>
- *		<td>Add support for SAMD21 and added new feature as below:
-                \li Oversample
-                \li Buffer overflow notification
-                \li Irda
-                \li Lin slave
-                \li Start frame detection
-                \li Hardware flow control
-                \li Collision detection
-                \li DMA support </td>
+ *		<td>Added new feature as below:
+ *          \li Oversample
+ *          \li Buffer overflow notification
+ *          \li Irda
+ *          \li Lin slave
+ *          \li Start frame detection
+ *          \li Hardware flow control
+ *          \li Collision detection
+ *          \li DMA support </td>
  *	</tr>
  *	<tr>
  *		<td>\li Added new \c transmitter_enable and \c receiver_enable Boolean
@@ -1440,32 +1440,32 @@ static inline bool lin_master_transmission_status(struct usart_module *const mod
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>F</td>
- *		<td>04/2015</td>
- *		<td>Add support for SAML21 and SAMDAx.</td>
+ *		<td>42118F</td>
+ *		<td>06/2015</td>
+ *		<td>Add support for SAML21, SAMDAx, and SAMC20/C21.</td>
  *	</tr>
  *	<tr>
- *		<td>E</td>
+ *		<td>42118E</td>
  *		<td>12/2014</td>
  *		<td>Add support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>
- *		<td>D</td>
+ *		<td>42118D</td>
  *		<td>01/2014</td>
  *		<td>Add support for SAMD21.</td>
  *	</tr>
  *	<tr>
- *		<td>C</td>
+ *		<td>42118C</td>
  *		<td>10/2013</td>
  *		<td>Replaced the pad multiplexing documentation with a condensed table.</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
+ *		<td>42118B</td>
  *		<td>06/2013</td>
  *		<td>Corrected documentation typos.</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42118A</td>
  *		<td>06/2013</td>
  *		<td>Initial release</td>
  *	</tr>

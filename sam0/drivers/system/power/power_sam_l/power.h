@@ -259,8 +259,6 @@ struct system_standby_config {
 	enum system_ram_back_bias_mode hmcramchs_back_bias;
 	/** Back bias for HMCRAMCLP */
 	enum system_ram_back_bias_mode hmcramclp_back_bias;
-	/** Back bias for PICOPRAM */
-	enum system_ram_back_bias_mode picopram_back_bias;
 };
 
 /**
@@ -317,7 +315,7 @@ struct system_battery_backup_power_switch_config {
  * \brief Retrieve the default configuration for voltage regulator.
  *
  * Fills a configuration structure with the default configuration:
- *   - Voltage scaling period is 1µs
+ *   - Voltage scaling period is 1μs
  *   - Voltage scaling voltage step is 2*min_step
  *   - The voltage regulator is in low power mode in Standby sleep mode
  *   - The voltage regulator in active mode is an LDO voltage regulator
@@ -581,7 +579,7 @@ static inline void system_backup_pin_output_disable(
 static inline bool system_backup_pin_output_is_enabled(
 		enum system_backup_pin pin)
 {
-	bool enabled = false; 
+	bool enabled = false;
 
 	if (pin == SYSTEM_BACKUP_PIN_PSOK) {
 		if (SUPC->BBPS.reg & SUPC_BBPS_PSOKEN) {
@@ -804,7 +802,6 @@ static inline void system_clear_performance_level_status(void)
  * \brief Retrieve the default configuration for standby.
  *
  * Fills a configuration structure with the default configuration for standby:
- *   - Retention back biasing mode for PICOPRAM
  *   - Retention back biasing mode for HMCRAMCLP
  *   - Retention back biasing mode for HMCRAMCHS
  *   - Power domains PD0/PD1/PD2 are not linked
@@ -826,7 +823,6 @@ static inline void system_standby_get_config_defaults(
 	config->linked_power_domain = SYSTEM_LINKED_POWER_DOMAIN_DEFAULT;
 	config->hmcramchs_back_bias = SYSTEM_RAM_BACK_BIAS_RETENTION;
 	config->hmcramclp_back_bias = SYSTEM_RAM_BACK_BIAS_RETENTION;
-	config->picopram_back_bias  = SYSTEM_RAM_BACK_BIAS_RETENTION;
 }
 
 /**
@@ -847,8 +843,7 @@ static inline void system_standby_set_config(
 					 | (config->disable_avregsd << PM_STDBYCFG_AVREGSD_Pos)
 					 | PM_STDBYCFG_LINKPD(config->linked_power_domain)
 					 | PM_STDBYCFG_BBIASHS(config->hmcramchs_back_bias)
-					 | PM_STDBYCFG_BBIASLP(config->hmcramclp_back_bias)
-					 | PM_STDBYCFG_BBIASPP(config->picopram_back_bias);
+					 | PM_STDBYCFG_BBIASLP(config->hmcramclp_back_bias);
 }
 
 /**
