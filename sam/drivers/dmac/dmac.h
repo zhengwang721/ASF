@@ -50,7 +50,11 @@
 /**
  * \defgroup asfdoc_sam_drivers_dmac_group SAM3A/3U/3X/4E DMA Controller (DMAC) Driver
  *
- * This driver for Atmel&reg; | SMART SAM4 DMA Controller (DMAC) is an AHB-central DMA controller core that
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers 
+ * provides an interface for the configuration and management of the 
+ * device's Direct Memory Access DMA Controller (DMAC) functionality.
+ *
+ * The DMAC is an AHB-central DMA controller core that
  * transfers data from a source peripheral to a destination peripheral
  * over one or more AMBA buses. This is a driver for the configuration,
  * enabling, disabling, and use of the DMAC peripheral.
