@@ -8,7 +8,7 @@
 
 		<info type="description" value="pdf">
 		This application note describes the Atmel Software Framework low level
-		module driver APIs for the Atmel SAM D21 series of devices.
+		module driver APIs for the Atmel SAM L21 series of devices.
 		</info>
 		<info type="keyword" value="pdf">
 			<keyword value="ASF"/>

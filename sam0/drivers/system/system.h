@@ -66,25 +66,29 @@ extern "C" {
  * extends across multiple hardware peripherals.
  *
  * The following peripherals are used by this module:
- * \if DEVICE_SAML21_SUPPORT
+ * \if DEVICE_SAML21_SYSTEM_SUPPORT
  *  - PM (Power Manager)
  *  - RSTC(Reset Controller)
  *  - SUPC(Supply Controller)
- * \elseif DEVICE_SAMC21_SUPPORT
- *  - PM(Power Manager)
+ * \endif
+ * \if DEVICE_SAMC21_SYSTEM_SUPPORT
+ *  - PM (Power Manager)
  *  - RSTC(Reset Controller)
  *  - SUPC(Supply Controller)
- * \else
+ * \endif
+ * \if DEVICE_SAMD21_SYSTEM_SUPPORT
  *  - SYSCTRL (System Control)
  *  - PM (Power Manager)
  * \endif
  *
  * The following devices can use this module:
- * \if DEVICE_SAML21_SUPPORT
+ * \if DEVICE_SAML21_SYSTEM_SUPPORT
  *  - Atmel | SMART SAM L21
- * \elseif DEVICE_SAMC21_SUPPORT
+ * \endif
+ * \if DEVICE_SAMC21_SYSTEM_SUPPORT
  *  - Atmel | SMART SAM C20/C21
- * \else
+ * \endif
+ * \if DEVICE_SAMD21_SYSTEM_SUPPORT
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
@@ -118,8 +122,8 @@ extern "C" {
  * - \ref asfdoc_sam0_system_pinmux_group "System Pin Multiplexer Control" (sub-module)
  *
  *
- * \if DEVICE_SAML21_SUPPORT
- * \subsection asfdoc_sam0_system_module_overview_vreg Voltage Regulator
+ * \if DEVICE_SAML21_SYSTEM_SUPPORT
+ * \subsection asfdoc_sam0_system_module_overview_vreg_l21 Voltage Regulator
  * The SAM device controls the voltage regulators for the core (VDDCORE) and
  * backup (VDDBU) domains. It sets the voltage regulators according to the sleep
  * modes, the performance level, or the user configuration.
@@ -135,8 +139,8 @@ extern "C" {
  * when the main battery or power source is unavailable.
  * \endif
  *
- * \if DEVICE_SAMC21_SUPPORT
- * \subsection asfdoc_sam0_system_module_overview_vreg Voltage Regulator
+ * \if DEVICE_SAMC21_SYSTEM_SUPPORT
+ * \subsection asfdoc_sam0_system_module_overview_vreg_c21 Voltage Regulator
  * The SAM device controls the voltage regulators for the core (VDDCORE). It sets
  * the voltage regulators according to the sleep modes.
  *
@@ -163,7 +167,7 @@ extern "C" {
  * For this reason, an API is provided to retrieve the cause of the last system
  * reset, so that appropriate action can be taken.
  *
- * \if DEVICE_SAML21_SUPPORT
+ * \if DEVICE_SAML21_SYSTEM_SUPPORT
  * There are three groups of reset sources:
  *   - Power supply reset: Resets caused by an electrical issue. It covers POR and BODs reset.
  *   - User reset: Resets caused by the application. It covers external reset,
@@ -351,7 +355,7 @@ extern "C" {
  * \anchor asfdoc_sam0_system_module_sleep_mode_table
  * <table>
  *  <caption>SAM Device Sleep Modes</caption>
- * \if DEVICE_SAML21_SUPPORT
+ * \if DEVICE_SAML21_SYSTEM_SUPPORT
  *  <tr>
  *      <th>Sleep mode</th>
  *      <th>System clock</th>
@@ -496,10 +500,8 @@ extern "C" {
  * For SYSTEM module related examples, refer to the sub-modules listed in
  * the \ref asfdoc_sam0_system_module_overview "system module overview".
  *
- * \if DEVICE_SAML21_SUPPORT
  * For a list of examples related to this driver, see
  * \ref asfdoc_sam0_drivers_power_exqsg.
- * \endif
  *
  *
  * \section asfdoc_sam0_system_api_overview API Overview
@@ -578,7 +580,7 @@ void system_init(void);
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
- * \if DEVICE_SAML21_SUPPORT
+ * \if DEVICE_SAML21_SYSTEM_SUPPORT
  *  - \subpage asfdoc_sam0_power_basic_use_case
  * \endif
  *
@@ -597,7 +599,7 @@ void system_init(void);
  *      <td>PM</td>
  *      <td>Power Manager</td>
  *  </tr>
- * \if DEVICE_SAML21_SUPPORT
+ * \if DEVICE_SAML21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>SUPC</td>
  *      <td>Supply Controller</td>
@@ -606,7 +608,8 @@ void system_init(void);
  *      <td>RSTC</td>
  *      <td>Reset Controller</td>
  *  </tr>
- * \elseif DEVICE_SAMC21_SUPPORT
+ * \endif
+ * \if DEVICE_SAMC21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>SUPC</td>
  *      <td>Supply Controller</td>
@@ -615,7 +618,8 @@ void system_init(void);
  *      <td>RSTC</td>
  *      <td>Reset Controller</td>
  *  </tr>
- * \else
+ * \endif
+ * \if DEVICE_SAMD21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>SYSCTRL</td>
  *      <td>System control interface</td>
@@ -644,21 +648,17 @@ void system_init(void);
  *  <tr>
  *      <th>Changelog</th>
  *  </tr>
- * \if DEVICE_SAML21_SUPPORT
+ * \if DEVICE_SAML21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>Initial Release</td>
  *  </tr>
- * \elseif DEVICE_SAMC21_SUPPORT
+ * \endif
+ * \if DEVICE_SAMC21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>Initial Release</td>
  *  </tr>
- * \else
- *  <tr>
- *      <td>Added low power features and support for SAML21</td>
- *  </tr>
- *  <tr>
- *      <td>Added support for SAMD21</td>
- *  </tr>
+ * \endif
+ * \if DEVICE_SAMD21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>Added new \c system_reset() to reset the complete MCU with some exceptions</td>
  *  </tr>
@@ -680,19 +680,21 @@ void system_init(void);
  *      <th>Date</td>
  *      <th>Comments</td>
  *  </tr>
- * \if DEVICE_SAML21_SUPPORT
+ * \if DEVICE_SAML21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>A</td>
  *      <td>04/2015</td>
  *      <td>Initial release.</td>
  * </tr>
- * \elseif DEVICE_SAMC21_SUPPORT
+ * \endif
+ * \if DEVICE_SAMC21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>A</td>
- *      <td>12/2014</td>
+ *      <td>06/2015</td>
  *      <td>Initial release.</td>
  * </tr>
- * \else
+ * \endif
+ * \if DEVICE_SAMD21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>E</td>
  *      <td>04/2015</td>
