@@ -104,7 +104,7 @@ enum system_interrupt_vector {
 	SYSTEM_INTERRUPT_MODULE_FREQM      = FREQM_IRQn,
 #ifdef ID_TSENS
 	/** Interrupt vector index for Temperature Sensor peripheral interrupt. */
-	SYSTEM_INTERRUPT_MODULE_TSENS       = TSENS_IRQn,
+	SYSTEM_INTERRUPT_MODULE_TSENS      = TSENS_IRQn,
 #endif
 	/** Interrupt vector index for a Non Volatile Memory Controller interrupt. */
 	SYSTEM_INTERRUPT_MODULE_NVMCTRL    = NVMCTRL_IRQn,
@@ -129,7 +129,7 @@ enum system_interrupt_vector {
 	 *  substituted for "n" in the entry name (e.g.
 	 *  \c SYSTEM_INTERRUPT_MODULE_TCC0).
 	 */
-	SYSTEM_INTERRUPT_MODULE_TCCn        = TCCn_IRQn,
+	SYSTEM_INTERRUPT_MODULE_TCCn       = TCCn_IRQn,
 
 	/** Interrupt vector index for a Timer/Counter peripheral interrupt.
 	 *
@@ -154,22 +154,22 @@ enum system_interrupt_vector {
 	SYSTEM_INTERRUPT_MODULE_TC0        = TC0_IRQn,
 	SYSTEM_INTERRUPT_MODULE_TC1        = TC1_IRQn,
 #ifdef ID_TC2
-	SYSTEM_INTERRUPT_MODULE_TC2	       = TC2_IRQn,
+	SYSTEM_INTERRUPT_MODULE_TC2        = TC2_IRQn,
 #endif
 #ifdef ID_TC3
-	SYSTEM_INTERRUPT_MODULE_TC3 	   = TC3_IRQn,
+	SYSTEM_INTERRUPT_MODULE_TC3        = TC3_IRQn,
 #endif
 
 	SYSTEM_INTERRUPT_MODULE_TC4        = TC4_IRQn,
 #endif
 
 #ifdef ID_CAN0
-	/** Interrupt vector index for  Control Area Network 0  interrupt. */
+	/** Interrupt vector index for Control Area Network 0 interrupt. */
 	SYSTEM_INTERRUPT_MODULE_CAN0       = CAN0_IRQn,
 #endif
 #ifdef ID_CAN1
-	/** Interrupt vector index for	Control Area Network 1	interrupt. */
-	SYSTEM_INTERRUPT_MODULE_CAN1	   = CAN1_IRQn,
+	/** Interrupt vector index for Control Area Network 1 interrupt. */
+	SYSTEM_INTERRUPT_MODULE_CAN1       = CAN1_IRQn,
 #endif
 #ifdef ID_AC
 	/** Interrupt vector index for an Analog Comparator peripheral interrupt. */

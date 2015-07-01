@@ -61,13 +61,13 @@ extern "C" {
  * different sleep modes can be found in \ref asfdoc_sam0_system_module_overview_sleep_mode.
  */
 enum system_sleepmode {
-	/** IDLE 0 sleep mode. */
+	/** IDLE 0 sleep mode */
 	SYSTEM_SLEEPMODE_IDLE_0 = PM_SLEEPCFG_SLEEPMODE(0),
-	/** IDLE 1 sleep mode. */
+	/** IDLE 1 sleep mode */
 	SYSTEM_SLEEPMODE_IDLE_1 = PM_SLEEPCFG_SLEEPMODE(0x1),
-	/** IDLE 2 sleep mode. */
+	/** IDLE 2 sleep mode */
 	SYSTEM_SLEEPMODE_IDLE_2 = PM_SLEEPCFG_SLEEPMODE(0x2),
-	/** Standby sleep mode. */
+	/** Standby sleep mode */
 	SYSTEM_SLEEPMODE_STANDBY = PM_SLEEPCFG_SLEEPMODE(0x4),
 };
 
@@ -77,11 +77,11 @@ enum system_sleepmode {
  * Voltage references selection for ADC/DAC.
  */
 enum system_voltage_references_sel {
-	/** 1.024V voltage reference typical value. */
+	/** 1.024V voltage reference typical value */
 	SYSTEM_VOLTAGE_REFERENCE_1V024  = SUPC_VREF_SEL_1V024_Val,
-	/** 2.048V voltage reference typical value. */
+	/** 2.048V voltage reference typical value */
 	SYSTEM_VOLTAGE_REFERENCE_2V048  = SUPC_VREF_SEL_2V048_Val,
-	/** 4.096V voltage reference typical value. */
+	/** 4.096V voltage reference typical value */
 	SYSTEM_VOLTAGE_REFERENCE_4V096    = SUPC_VREF_SEL_4V096_Val,
 };
 
@@ -93,9 +93,9 @@ enum system_voltage_references_sel {
  * device.
  */
 enum system_voltage_reference {
-	/** Temperature sensor voltage reference. */
+	/** Temperature sensor voltage reference */
 	SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE,
-	/** Voltage reference output for ADC/DAC. */
+	/** Voltage reference output for ADC/DAC */
 	SYSTEM_VOLTAGE_REFERENCE_OUTPUT,
 };
 
@@ -105,7 +105,7 @@ enum system_voltage_reference {
  * Configuration structure for VREG.
  */
 struct system_voltage_regulator_config {
-	/** Run in standby in standby sleep mode. */
+	/** Run in standby in standby sleep mode */
 	bool run_in_standby;
 };
 
@@ -115,11 +115,11 @@ struct system_voltage_regulator_config {
  * Configuration structure for VREF.
  */
 struct system_voltage_references_config {
-	/** Voltage references selection. */
+	/** Voltage references selection */
 	enum system_voltage_references_sel  sel;
-	/** On demand control. */
+	/** On demand control */
 	bool on_demand;
-	/** run in standby. */
+	/** run in standby */
 	bool run_in_standby;
 };
 
@@ -128,11 +128,11 @@ struct system_voltage_references_config {
  *
  */
 enum system_vreg_switch_mode {
-	/** Automatic mode. */
+	/** Automatic mode */
 	SYSTEM_VREG_SWITCH_AUTO        = PM_STDBYCFG_VREGSMOD_AUTO_Val,
-	/** Performance oriented. */
+	/** Performance oriented */
 	SYSTEM_VREG_SWITCH_PERFORMANCE = PM_STDBYCFG_VREGSMOD_PERFORMANCE_Val,
-	/** Low Power consumption oriented. */
+	/** Low Power consumption oriented */
 	SYSTEM_VREG_SWITCH_LP          = PM_STDBYCFG_VREGSMOD_LP_Val,
 };
 
@@ -142,9 +142,9 @@ enum system_vreg_switch_mode {
  * Configuration structure for standby mode.
  */
 struct system_standby_config {
-	/** Regulator switch mode in standby. */
+	/** Regulator switch mode in standby */
 	enum system_vreg_switch_mode vreg_switch_mode;
-	/** Back bias for HMCRAMCHS (false : no, true: standby). */
+	/** Back bias for HMCRAMCHS (false : no, true: standby) */
 	bool hmcramchs_back_bias;
 };
 
@@ -380,6 +380,10 @@ static inline void system_standby_set_config(
 }
 
 /** @} */
+
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }
