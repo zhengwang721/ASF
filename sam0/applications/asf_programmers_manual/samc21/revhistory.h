@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief SAM D21 Xplained Pro board configuration.
+ * \brief ASF Programmers Manual Revision History
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -40,13 +38,24 @@
  * \asf_license_stop
  *
  */
+
+
+/**
+ * \page appdoc_samc21_asf_prog_manual_samc21_revision_history Document Revision History
+ *
+ * <table>
+ *  <tr>
+ *    <th>Doc. Rev.</td>
+ *    <th>Date</td>
+ *    <th>Comments</td>
+ *  </tr>
+ *  <tr>
+ *    <td>A</td>
+ *    <td>06/2015</td>
+ *    <td>Initial release.</td>
+ *  </tr>
+ * </table>
+ */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
-
-#define CONF_TC_INSTANCE TC3
-
-#endif /* CONF_BOARD_H_INCLUDED */

@@ -1056,9 +1056,6 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<th>Changelog</th>
  *	</tr>
  * \if DEVICE_SAML21_SUPPORT
- *	<tr>
- *		<td>Added support for SAMC21</td>
- *	</tr>
  *  <tr>
  *		<td>Initial Release</td>
  * </tr>
