@@ -54,12 +54,12 @@
 #include "dev/watchdog.h"
 #include <string.h>
 
-#define DEBUG DEBUG_NONE
+#define _DEBUG_ DEBUG_NONE
 #include "net/ip/uip-debug.h"
 
 #define TRICKLE_VERBOSE 0
 
-#if DEBUG && TRICKLE_VERBOSE
+#if _DEBUG_ && TRICKLE_VERBOSE
 #define VERBOSE_PRINTF(...) PRINTF(__VA_ARGS__)
 #define VERBOSE_PRINT_SEED(s) PRINT_SEED(s)
 #else

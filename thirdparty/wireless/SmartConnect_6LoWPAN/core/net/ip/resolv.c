@@ -67,8 +67,8 @@
 #include "net/ip/uip-udp-packet.h"
 #include "lib/random.h"
 
-#ifndef DEBUG
-#define DEBUG CONTIKI_TARGET_COOJA
+#ifndef _DEBUG_
+#define _DEBUG_ CONTIKI_TARGET_COOJA
 #endif
 #define VERBOSE_DEBUG 0
 #if UIP_UDP
@@ -91,7 +91,7 @@
 #define DEBUG_PRINTF(...) do { } while(0)
 #endif
 
-#if DEBUG || VERBOSE_DEBUG
+#if _DEBUG_ || VERBOSE_DEBUG
 #define PRINTF(...) printf(__VA_ARGS__)
 #else
 #define PRINTF(...) do { } while(0)

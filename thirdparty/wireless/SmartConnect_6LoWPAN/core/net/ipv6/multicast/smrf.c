@@ -49,7 +49,7 @@
 #include "net/netstack.h"
 #include <string.h>
 
-#define DEBUG DEBUG_NONE
+#define _DEBUG_ DEBUG_NONE
 #include "net/ip/uip-debug.h"
 
 #if UIP_CONF_IPV6

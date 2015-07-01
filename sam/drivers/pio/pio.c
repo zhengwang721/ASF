@@ -198,7 +198,6 @@ void pio_set_peripheral(Pio *p_pio, const pio_type_t ul_type,
 		ul_sr = p_pio->PIO_ABCDSR[1];
 		p_pio->PIO_ABCDSR[1] &= (~ul_mask & ul_sr);
 		break;
-
 	case PIO_PERIPH_B:
 		ul_sr = p_pio->PIO_ABCDSR[0];
 		p_pio->PIO_ABCDSR[0] = (ul_mask | ul_sr);
@@ -214,7 +213,6 @@ void pio_set_peripheral(Pio *p_pio, const pio_type_t ul_type,
 		ul_sr = p_pio->PIO_ABCDSR[1];
 		p_pio->PIO_ABCDSR[1] = (ul_mask | ul_sr);
 		break;
-
 	case PIO_PERIPH_D:
 		ul_sr = p_pio->PIO_ABCDSR[0];
 		p_pio->PIO_ABCDSR[0] = (ul_mask | ul_sr);
@@ -1157,7 +1155,7 @@ Pdc *pio_capture_get_pdc_base(const Pio *p_pio)
 }
 #endif
 
-#if (SAM4C || SAM4CP || SAM4CM)
+#if (SAM4C || SAM4CP || SAM4CM || SAMG55)
 /**
  * \brief Set PIO IO drive.
  *
@@ -1168,13 +1166,8 @@ Pdc *pio_capture_get_pdc_base(const Pio *p_pio)
 void pio_set_io_drive(Pio *p_pio, uint32_t ul_line,
 		enum pio_io_drive_mode mode)
 {
-	if (ul_line > 15) {
-		p_pio->PIO_DRIVER2 &= ~(3 << ((ul_line - 15) * 2));
-		p_pio->PIO_DRIVER2 |= mode << ((ul_line - 15) * 2);
-	} else {
-		p_pio->PIO_DRIVER1 &= ~(3 << (ul_line * 2));
-		p_pio->PIO_DRIVER1 |= mode << (ul_line * 2);
-	}
+	p_pio->PIO_DRIVER &= ~(1 << ul_line);
+	p_pio->PIO_DRIVER |= mode << ul_line;
 }
 #endif
 
