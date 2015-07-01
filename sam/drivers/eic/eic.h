@@ -148,7 +148,7 @@ extern "C" {
 
 /** \name External Interrupt lines */
 /* @{ */
-/** Non-Maskable Interrupt */
+/** Non-Maskable Interrupt. */
 #define EXT_NMI     0
 /** External Interrupt 1. */
 #define EXT_INT1    1
@@ -463,6 +463,11 @@ static inline bool eic_line_interrupt_is_pending(Eic *eic,
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>42278B</td>
+ *		<td>07/2015</td>
+ *		<td>Updated title of application note and added list of supported devices</td>
  *	</tr>
  *	<tr>
  *		<td>42278A</td>
