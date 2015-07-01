@@ -85,8 +85,8 @@
  *  - \b PA12 (EXT1 PIN7) <-----> PA08 (EXT2 PIN11) 
  *  - \b PA13 (EXT1 PIN8) <-----> PA09 (EXT2 PIN12)
  * - SAM L22 Xplained Pro board
- *  - \b PB30 (EXT1 PIN11) <-----> PA08 (EXT3 PIN17) 
- *  - \b PB31 (EXT1 PIN12) <-----> PA09 (EXT3 PIN15)
+ *  - \b PB30 (EXT1 PIN11) <-----> PA12 (EXT2 PIN14) 
+ *  - \b PB31 (EXT1 PIN12) <-----> PA13 (EXT2 PIN13)
  * - SAM R21 Xplained Pro board
  *  - \b PA16 (EXT1 PIN11) <-----> PB02 (EXT1 PIN17) 
  *  - \b PA17 (EXT1 PIN12) <-----> PB03 (EXT1 PIN15)

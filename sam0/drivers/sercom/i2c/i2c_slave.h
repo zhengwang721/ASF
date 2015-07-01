@@ -461,7 +461,7 @@ static void _i2c_slave_wait_for_sync(
  * Instead set ACK/NACK of CTRLB
  *
  * This errata exist in part revisions of SAMD20/D21
- * D10/D11/L21/DAx/C20/C21, but workaround can be works in all
+ * D10/D11/L21/L22/DAx/C20/C21, but workaround can be works in all
  * revision of those device. As this function operation
  * should be use less cpu time as possible, so caller 
  * function can ignore to check revision number, and use
