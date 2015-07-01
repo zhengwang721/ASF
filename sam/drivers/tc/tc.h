@@ -50,9 +50,9 @@
 /**
  * \defgroup asfdoc_sam_drivers_tc_group SAM Timer Counter (TC) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for
- * the configuration and management of the device's Timer Counter
- * functionality.
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers 
+ * provides an interface for the configuration and management of the 
+ * device's Timer Counter functionality.
  *
  * The Timer Counter (TC) includes several identical 16-bit or 32-bit
  * Timer Counter channels. Each channel can be independently programmed
