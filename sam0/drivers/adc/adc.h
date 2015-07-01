@@ -1106,7 +1106,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * \if DEVICE_SAML21_SUPPORT
  *  <tr>
  *      <td>42451A</td>
- *      <td>06/2015</td>
+ *      <td>07/2015</td>
  *      <td>Initial document release</td>
  * </tr>
  * \else
