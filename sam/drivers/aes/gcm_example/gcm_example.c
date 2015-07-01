@@ -229,7 +229,7 @@ static void gcm_mode_encryption_test(void)
 	/* Write the j0 + 1 in IV register */
 	j0[3] = 0x02000000;
 
-	aes_write_initvector(AES, (uint32_t *)j0);
+	aes_write_initvector(AES, j0);
 
 	/* set AADLEN */
 	aes_write_authen_datalength(AES, gcm_input_data.aad_len);
