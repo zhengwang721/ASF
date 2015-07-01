@@ -1,0 +1,29 @@
+<asf xmlversion="1.0">
+		<module type="driver" id="sam0.drivers.spi" caption="SPI - Serial Peripheral Interface (Polled APIs)">
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+
+			<info type="appnote" value="ATxxxxx"/>
+			<info type="keyword" value="pdf">
+				<keyword value="SPI"/>
+				<keyword value="I/O"/>
+				<keyword value="Serial Peripheral Interface Bus"/>
+			</info>
+			
+			<build type="c-source" value="spi.c"/>
+			<build type="header-file" subtype="api" value="spi.h"/>
+			<build type="header-file" value="quick_start_slave/qs_spi_slave_basic.h"/>
+			<build type="include-path" value="."/>
+			<build type="module-config" subtype="path" value="module_config"/>
+			<build type="module-config" subtype="required-header-file" value="conf_spi.h"/>
+			<build type="doxygen-entry-point" value="asfdoc_sam0_spi_group"/>
+			<build type="doxygen-example-path" value="quick_start_master"/>
+			<build type="doxygen-quick-start" value="asfdoc_sam0_spi_exqsg"/>
+
+			<device-support value="samb11"/>
+			<require idref="sam0.utils"/>
+
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
+		</module>
+</asf>
