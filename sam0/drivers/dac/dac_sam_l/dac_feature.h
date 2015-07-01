@@ -47,7 +47,7 @@
 #define DAC_FEATURE_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_dac_group SAM Digital-to-Analog Driver (DAC)
+ * \defgroup asfdoc_sam0_dac_group SAM Digital-to-Analog (DAC) Driver
  *
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for the conversion of
  * digital values to analog voltage. The following driver API modes are covered
@@ -597,7 +597,7 @@ bool dac_chan_is_end_of_conversion(
  *	</tr>
  *	<tr>
  *		<td>42450A</td>
- *		<td>06/2015</td>
+ *		<td>07/2015</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>
