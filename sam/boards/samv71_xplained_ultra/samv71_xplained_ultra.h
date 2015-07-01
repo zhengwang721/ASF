@@ -287,9 +287,9 @@
 
 /** TWI0 pins definition */
 #define TWIHS0_DATA_GPIO   PIO_PA3_IDX
-#define TWIHS0_DATA_FLAGS  (IOPORT_MODE_MUX_B)
+#define TWIHS0_DATA_FLAGS  (IOPORT_MODE_MUX_A)
 #define TWIHS0_CLK_GPIO    PIO_PA4_IDX
-#define TWIHS0_CLK_FLAGS   (IOPORT_MODE_MUX_C)
+#define TWIHS0_CLK_FLAGS   (IOPORT_MODE_MUX_A)
 
 /** SPI0 pins definition */
 #define SPI0_MISO_GPIO    PIO_PD20_IDX
