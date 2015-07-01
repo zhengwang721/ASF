@@ -668,7 +668,7 @@ bool opamp_is_ready(const enum opamp_id number);
  *	</tr>
  *	<tr>
  *		<td>42446A</td>
- *		<td>06/2015</td>
+ *		<td>07/2015</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>
