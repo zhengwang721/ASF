@@ -48,7 +48,7 @@
 #define TC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_tc_group SAM Timer Counter (TC) Driver
+ * \defgroup asfdoc_sam_drivers_tc_group SAM4L Timer Counter (TC) Driver
  *
  * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers 
  * provides an interface for the configuration and management of the 
