@@ -457,10 +457,20 @@ typedef struct {
 #define FUSES_BOD33_HYST_Pos        9            /**< \brief (NVMCTRL_USER) BOD33 Hysteresis */
 #define FUSES_BOD33_HYST_Msk        (0x1ul << FUSES_BOD33_HYST_Pos)
 
-#define FUSES_HOT_ADC_VAL_ADDR      (NVMCTRL_TEMP_LOG + 4)
-#define FUSES_HOT_ADC_VAL_Pos       20           /**< \brief (NVMCTRL_TEMP_LOG) 12-bit ADC conversion at hot temperature */
-#define FUSES_HOT_ADC_VAL_Msk       (0xFFFul << FUSES_HOT_ADC_VAL_Pos)
-#define FUSES_HOT_ADC_VAL(value)    (FUSES_HOT_ADC_VAL_Msk & ((value) << FUSES_HOT_ADC_VAL_Pos))
+#define FUSES_DFLL48M_COARSE_CAL_ADDR NVMCTRL_OTP5
+#define FUSES_DFLL48M_COARSE_CAL_Pos 26           /**< \brief (NVMCTRL_OTP5) DFLL48M Coarse Calibration */
+#define FUSES_DFLL48M_COARSE_CAL_Msk (0x3Ful << FUSES_DFLL48M_COARSE_CAL_Pos)
+#define FUSES_DFLL48M_COARSE_CAL(value) (FUSES_DFLL48M_COARSE_CAL_Msk & ((value) << FUSES_DFLL48M_COARSE_CAL_Pos))
+
+#define FUSES_HOT_ADC_VAL_CTAT_ADDR (NVMCTRL_TEMP_LOG + 8)
+#define FUSES_HOT_ADC_VAL_CTAT_Pos  12           /**< \brief (NVMCTRL_TEMP_LOG) 12-bit ADC conversion at hot temperature CTAT */
+#define FUSES_HOT_ADC_VAL_CTAT_Msk  (0xFFFul << FUSES_HOT_ADC_VAL_CTAT_Pos)
+#define FUSES_HOT_ADC_VAL_CTAT(value) (FUSES_HOT_ADC_VAL_CTAT_Msk & ((value) << FUSES_HOT_ADC_VAL_CTAT_Pos))
+
+#define FUSES_HOT_ADC_VAL_PTAT_ADDR (NVMCTRL_TEMP_LOG + 4)
+#define FUSES_HOT_ADC_VAL_PTAT_Pos  20           /**< \brief (NVMCTRL_TEMP_LOG) 12-bit ADC conversion at hot temperature PTAT */
+#define FUSES_HOT_ADC_VAL_PTAT_Msk  (0xFFFul << FUSES_HOT_ADC_VAL_PTAT_Pos)
+#define FUSES_HOT_ADC_VAL_PTAT(value) (FUSES_HOT_ADC_VAL_PTAT_Msk & ((value) << FUSES_HOT_ADC_VAL_PTAT_Pos))
 
 #define FUSES_HOT_INT1V_VAL_ADDR    (NVMCTRL_TEMP_LOG + 4)
 #define FUSES_HOT_INT1V_VAL_Pos     0            /**< \brief (NVMCTRL_TEMP_LOG) 2's complement of the internal 1V reference drift at hot temperature (versus a 1.0 centered value) */
@@ -477,10 +487,15 @@ typedef struct {
 #define FUSES_HOT_TEMP_VAL_INT_Msk  (0xFFul << FUSES_HOT_TEMP_VAL_INT_Pos)
 #define FUSES_HOT_TEMP_VAL_INT(value) (FUSES_HOT_TEMP_VAL_INT_Msk & ((value) << FUSES_HOT_TEMP_VAL_INT_Pos))
 
-#define FUSES_ROOM_ADC_VAL_ADDR     (NVMCTRL_TEMP_LOG + 4)
-#define FUSES_ROOM_ADC_VAL_Pos      8            /**< \brief (NVMCTRL_TEMP_LOG) 12-bit ADC conversion at room temperature */
-#define FUSES_ROOM_ADC_VAL_Msk      (0xFFFul << FUSES_ROOM_ADC_VAL_Pos)
-#define FUSES_ROOM_ADC_VAL(value)   (FUSES_ROOM_ADC_VAL_Msk & ((value) << FUSES_ROOM_ADC_VAL_Pos))
+#define FUSES_ROOM_ADC_VAL_CTAT_ADDR (NVMCTRL_TEMP_LOG + 8)
+#define FUSES_ROOM_ADC_VAL_CTAT_Pos 0            /**< \brief (NVMCTRL_TEMP_LOG) 12-bit ADC conversion at room temperature CTAT */
+#define FUSES_ROOM_ADC_VAL_CTAT_Msk (0xFFFul << FUSES_ROOM_ADC_VAL_CTAT_Pos)
+#define FUSES_ROOM_ADC_VAL_CTAT(value) (FUSES_ROOM_ADC_VAL_CTAT_Msk & ((value) << FUSES_ROOM_ADC_VAL_CTAT_Pos))
+
+#define FUSES_ROOM_ADC_VAL_PTAT_ADDR (NVMCTRL_TEMP_LOG + 4)
+#define FUSES_ROOM_ADC_VAL_PTAT_Pos 8            /**< \brief (NVMCTRL_TEMP_LOG) 12-bit ADC conversion at room temperature PTAT */
+#define FUSES_ROOM_ADC_VAL_PTAT_Msk (0xFFFul << FUSES_ROOM_ADC_VAL_PTAT_Pos)
+#define FUSES_ROOM_ADC_VAL_PTAT(value) (FUSES_ROOM_ADC_VAL_PTAT_Msk & ((value) << FUSES_ROOM_ADC_VAL_PTAT_Pos))
 
 #define FUSES_ROOM_INT1V_VAL_ADDR   NVMCTRL_TEMP_LOG
 #define FUSES_ROOM_INT1V_VAL_Pos    24           /**< \brief (NVMCTRL_TEMP_LOG) 2's complement of the internal 1V reference drift at room temperature (versus a 1.0 centered value) */
