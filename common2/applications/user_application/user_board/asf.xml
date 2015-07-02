@@ -71,6 +71,13 @@
 		<require idref="common.applications.user_application.sam0_system"/>
 	</module>
 
+	<module type="meta" id="common.applications.user_application.sam0_system.user_board.common_samb11" caption="User board project template">
+		<info type="gui-flag" value="move-to-root"/>
+		<build type="include-path" value="config_samb11"/>
+		<build type="header-file" value="config_samb11/conf_board.h"/>
+		<require idref="common.applications.user_application.sam0_system"/>
+	</module>
+
 	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd20j18" caption="User board project template for SAMD20J18" type="template">
 		<info type="description" value="summary">
 		User board project template for SAMD20J18 devices.
@@ -1174,5 +1181,16 @@
 		<generator value="as5_arm_template"/>
 		<generator value="doxygen"/>
 		<device-support value="atsamc20j18a"/>
+	</project>
+
+	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamb11g18a" caption="User board project template for SAMB11G18A" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMB11G18A devices.
+		</info>
+		<require idref="common.applications.user_application.sam0_system.user_board.common_samb11"/>
+		<require idref="board.user_board.samb11g"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamb11g18a"/>
 	</project>
 </asf>

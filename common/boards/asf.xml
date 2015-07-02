@@ -9,6 +9,7 @@
 		<device-support value="avr"/>
 		<device-support value="sam"/>
 		<device-support value="sam0"/>
+		<device-support value="samb"/>
 		<require idref="common.utils"/>
 	</module>
 </asf>
