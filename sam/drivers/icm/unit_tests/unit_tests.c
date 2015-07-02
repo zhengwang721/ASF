@@ -230,7 +230,7 @@ int main(void)
 #ifdef CONF_UART_CHAR_LENGTH
 		.charlength = CONF_UART_CHAR_LENGTH,
 #endif
-		.paritytype = CONF_UART_PARITY,
+		.paritytype = CONF_TEST_PARITY,
 #ifdef CONF_UART_STOP_BITS
 		.stopbits = CONF_UART_STOP_BITS,
 #endif
