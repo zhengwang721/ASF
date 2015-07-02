@@ -48,6 +48,6 @@
 #define OLED1_EXT_HEADER  EXT3
 
 //! Timer/Counter instance to use as tick timer
-#define TICK_TC TC3
+#define TICK_TC TC2
 
 #endif // CONF_DEMO_H
