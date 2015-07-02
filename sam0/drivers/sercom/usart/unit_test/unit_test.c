@@ -87,7 +87,7 @@
  * - SAM R21 Xplained Pro board
  *  - \b TX/RX: EXT1 PIN11 (PA16) <--> EXT1 PIN17 (PB02)
  * - SAM L21 Xplained Pro board
- *  - \b TX/RX: EXT2 PIN3  (PA10) <--> EXT1 PIN8  (PA13)
+ *  - \b TX/RX: EXT2 PIN3  (PA10) <--> EXT2 PIN8  (PB13)
  * - SAM C21 Xplained Pro board
  *  - \b TX/RX: EXT1 PIN11 (PA12) <--> EXT2 PIN4  (PA09)
  *
