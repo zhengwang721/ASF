@@ -177,8 +177,6 @@ uint32_t g_ul_freq[FREQ_OPTIONS_NUM] =
 /** Present frequency index in list g_ul_freq[]. */
 uint8_t g_uc_freq_idx = 0;
 
-
-
 /** Pointer to receive buffer base. */
 uint8_t *p_revdata = &g_c_recv_buff[0];
 /** count number for received data. */
@@ -293,6 +291,13 @@ static void display_main_menu(void)
 			"-- m: Display this menu again.--\r");
 }
 
+**
+* \brief transmit data in synchronous mode.
+*
+* \param *p_buff  data to be transmitted
+* \param ulsize size of all data.
+*
+*/
 static uint8_t transmit_mode_sync(uint8_t *p_buff, uint32_t ulsize)
 {
 	Assert(p_buff);
