@@ -225,7 +225,6 @@ void EIC_8_Handler(void)
 	eic_line_interrupt(8);
 }
 
-//@}
 
 /// @cond 0
 /**INDENT-OFF**/
