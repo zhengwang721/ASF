@@ -16,6 +16,7 @@
 		<require idref="common.utils.part_macros" />
 		<info type="gui-flag" value="hidden"/>
 		<device-support value="sam0"/>
+		<device-support value="samb"/>
 	</module>
 
 	<select-by-device id="sam0.utils" caption="SAM0 compiler driver">
@@ -152,6 +153,21 @@
 			<require idref="sam0.utils.cmsis.samc20.source.template"/>
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="samc20"/>
+		</module>
+
+		<!-- SAMB11 //-->
+		<module type="driver" id="sam0.utils#11" caption="SAM B11 compiler driver">
+			<info type="description" value="summary">
+			Compiler abstraction layer and code utilities for SAMB11 devices. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
+			</info>
+			<require idref="sam0.utils.common"/>
+			<require idref="sam0.utils.cmsis.samb11.include"/>
+			<require idref="sam0.utils.cmsis.samb11.include.component"/>
+			<require idref="sam0.utils.cmsis.samb11.include.instance"/>
+			<require idref="sam0.utils.cmsis.samb11.include.pio"/>
+			<require idref="sam0.utils.cmsis.samb11.source.template"/>
+			<info type="gui-flag" value="hidden"/>
+			<device-support value="samb11"/>
 		</module>
 	</select-by-device>
 </asf>
