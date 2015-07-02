@@ -46,9 +46,9 @@
 
 #include <asf.h>
 
-//! [result_buffer]
+//! [result]
 int32_t tsens_result;
-//! [result_buffer]
+//! [result]
 
 //! [module_inst]
 struct tsens_module tsens_instance;
