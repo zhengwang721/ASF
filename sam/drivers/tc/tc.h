@@ -48,7 +48,7 @@
 #define TC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_tc_group SAM4L Timer Counter (TC) Driver
+ * \defgroup asfdoc_sam_drivers_tc_group SAM3/4S/4L/4E/4N/4CM/4C/G Timer Counter (TC) Driver
  *
  * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers 
  * provides an interface for the configuration and management of the 
@@ -61,7 +61,14 @@
  * delay timing, and pulse width modulation.
  *
  * Devices from the following series can use this module:
+ * - Atmel | SMART SAM3
+ * - Atmel | SMART SAM4S
  * - Atmel | SMART SAM4L
+ * - Atmel | SMART SAM4E
+ * - Atmel | SMART SAM4N
+ * - Atmel | SMART SAM4CM
+ * - Atmel | SMART SAM4C
+ * - Atmel | SMART SAMG
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_tc_prerequisites
