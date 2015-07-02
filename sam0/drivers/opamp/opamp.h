@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_opamp_group SAM Operational Amplifier Controller (OPAMP) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the device's Operational Amplifier Controller functionality.
  *
  * The following peripheral is used by this module:
