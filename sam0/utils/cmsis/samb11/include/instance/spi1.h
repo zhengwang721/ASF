@@ -50,7 +50,9 @@
 #define REG_SPI1_RECEIVE_DATA        (0x40007004U) /**< \brief (SPI1) Read one byte from SPI Receive Data FIFO.  */
 #define REG_SPI1_TRANSMIT_STATUS     (0x40007008U) /**< \brief (SPI1) Status of the SPI transmitter. Each field can generate an interrupt if corresponding bit in  the Tx interrupt mask register is set.  */
 #define REG_SPI1_RECEIVE_STATUS      (0x4000700cU) /**< \brief (SPI1) Status of the SPI receiver. Each field can generate an interrupt if corresponding bit in  the Rx interrupt mask register is set.  */
+#define REG_SPI1_CLOCK_SOURCE_SELECT (0x40007010U) /**< \brief (SPI1) Clock Source Select */
 #define REG_SPI1_SPI_CLK_DIVIDER     (0x40007014U) /**< \brief (SPI1) Register sets the divide ratio used to generate the sck clock from the module's input clock.  */
+#define REG_SPI1_SPI_MODULE_ENABLE   (0x40007018U) /**< \brief (SPI1) SPI Enable */
 #define REG_SPI1_SPI_MASTER_MODE     (0x4000701cU) /**< \brief (SPI1) SPI Master/Slave Mode. When clear, SPI is in Slave Mode.  */
 #define REG_SPI1_SPI_FAULT_ENABLE    (0x40007020U) /**< \brief (SPI1) SPI Fault Detection Mode. If set, SPI bus contention will be detected, and the fault  bit in the rx_status register will be set, forcing the SPI Module into idle state.  When a fault is detected, the current SPI transaction is abandoned and the interface switches  to slave mode in the wait state.   */
 #define REG_SPI1_SPI_CONFIGURATION   (0x40007024U) /**< \brief (SPI1) SPI Operation Configuration Register. This register should not be modified while SPI bus is active,  otherwise the SPI Module state shall not be guaranteed.  */
@@ -62,7 +64,9 @@
 #define REG_SPI1_RECEIVE_DATA        (*(RoReg8 *)0x40007004U) /**< \brief (SPI1) Read one byte from SPI Receive Data FIFO.  */
 #define REG_SPI1_TRANSMIT_STATUS     (*(RoReg8 *)0x40007008U) /**< \brief (SPI1) Status of the SPI transmitter. Each field can generate an interrupt if corresponding bit in  the Tx interrupt mask register is set.  */
 #define REG_SPI1_RECEIVE_STATUS      (*(RoReg8 *)0x4000700cU) /**< \brief (SPI1) Status of the SPI receiver. Each field can generate an interrupt if corresponding bit in  the Rx interrupt mask register is set.  */
+#define REG_SPI1_CLOCK_SOURCE_SELECT (*(RwReg8 *)0x40007010U) /**< \brief (SPI1) Clock Source Select */
 #define REG_SPI1_SPI_CLK_DIVIDER     (*(RwReg16*)0x40007014U) /**< \brief (SPI1) Register sets the divide ratio used to generate the sck clock from the module's input clock.  */
+#define REG_SPI1_SPI_MODULE_ENABLE   (*(RwReg8 *)0x40007018U) /**< \brief (SPI1) SPI Enable */
 #define REG_SPI1_SPI_MASTER_MODE     (*(RwReg8 *)0x4000701cU) /**< \brief (SPI1) SPI Master/Slave Mode. When clear, SPI is in Slave Mode.  */
 #define REG_SPI1_SPI_FAULT_ENABLE    (*(RwReg8 *)0x40007020U) /**< \brief (SPI1) SPI Fault Detection Mode. If set, SPI bus contention will be detected, and the fault  bit in the rx_status register will be set, forcing the SPI Module into idle state.  When a fault is detected, the current SPI transaction is abandoned and the interface switches  to slave mode in the wait state.   */
 #define REG_SPI1_SPI_CONFIGURATION   (*(RwReg8 *)0x40007024U) /**< \brief (SPI1) SPI Operation Configuration Register. This register should not be modified while SPI bus is active,  otherwise the SPI Module state shall not be guaranteed.  */

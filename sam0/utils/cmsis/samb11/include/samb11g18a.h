@@ -103,10 +103,28 @@ typedef enum IRQn
   PendSV_IRQn               = -2 , /**< 14  Cortex-M4 Pend SV Interrupt          */
   SysTick_IRQn              = -1 , /**< 15  Cortex-M4 System Tick Interrupt      */
 /******  SAMB11 specific Interrupt Numbers ***********************************/
-  HFLASHC_IRQn              = 0  , /**< 0   Not present in SAMB11 (HFLASHC)     */
-  PDCA_0_IRQn               = 1  , /**< 1   Not present in SAMB11 (PDCA)        */
+  UART0_RX_IRQn             = 0  , /**< 0   Not present in SAMB11 (UART)        */
+  UART0_TX_IRQn             = 1  , /**< 1   Not present in SAMB11 (UART)        */
+  UART1_RX_IRQn             = 2  , /**< 2   Not present in SAMB11 (UART)        */
+  UART1_TX_IRQn             = 3  , /**< 3   Not present in SAMB11 (UART)        */
+  SPI0_RX_IRQn              = 4  , /**< 4   Not present in SAMB11 (SPI)         */
+  SPI0_TX_IRQn              = 5  , /**< 5   Not present in SAMB11 (SPI)         */
+  SPI1_RX_IRQn              = 6  , /**< 6   Not present in SAMB11 (SPI)         */
+  SPI1_TX_IRQn              = 7  , /**< 7   Not present in SAMB11 (SPI)         */
+  I2C0_RX_IRQn              = 8  , /**< 8   Not present in SAMB11 (I2C)         */
+  I2C0_TX_IRQn              = 9  , /**< 9   Not present in SAMB11 (I2C)         */
+  I2C1_RX_IRQn              = 10 , /**< 10  Not present in SAMB11 (I2C)         */
+  I2C1_TX_IRQn              = 11 , /**< 11  Not present in SAMB11 (I2C)         */
+  WDT0_IRQn                 = 12 , /**< 12  Not present in SAMB11 (WDT)         */
+  WDT1_IRQn                 = 13 , /**< 13  Not present in SAMB11 (WDT)         */
+  DUALTIMER0_IRQn           = 14 , /**< 14  Not present in SAMB11 (DUALTIMER)   */
+  PROV_DMA_CTRL0_IRQn       = 15 , /**< 15  Not present in SAMB11 (PROV_DMA_CTRL) */
+  GPIO0_IRQn                = 23 , /**< 23  Not present in SAMB11 (GPIO)        */
+  GPIO1_IRQn                = 24 , /**< 24  Not present in SAMB11 (GPIO)        */
+  GPIO2_IRQn                = 25 , /**< 25  Not present in SAMB11 (GPIO)        */
+  TIMER0_IRQn               = 26 , /**< 26  Not present in SAMB11 (TIMER)       */
 
-  PERIPH_COUNT_IRQn        = 2  /**< Number of peripheral IDs */
+  PERIPH_COUNT_IRQn        = 27  /**< Number of peripheral IDs */
 } IRQn_Type;
 
 typedef struct _DeviceVectors
@@ -132,9 +150,34 @@ typedef struct _DeviceVectors
   void* pfnSysTick_Handler;                      /* 15  Cortex-M4 System Tick Interrupt      */
 
   /* Peripheral handlers */
-  void* pfnHFLASHC_Handler;                      /* 0   Not present in SAMB11 (HFLASHC) */
-  void* pfnPDCA_0_Handler;                       /* 1   Not present in SAMB11 (PDCA)   */
-  void* pfnReserved2;
+  void* pfnUART0_RX_Handler;                     /* 0   Not present in SAMB11 (UART)   */
+  void* pfnUART0_TX_Handler;                     /* 1   Not present in SAMB11 (UART)   */
+  void* pfnUART1_RX_Handler;                     /* 2   Not present in SAMB11 (UART)   */
+  void* pfnUART1_TX_Handler;                     /* 3   Not present in SAMB11 (UART)   */
+  void* pfnSPI0_RX_Handler;                      /* 4   Not present in SAMB11 (SPI)    */
+  void* pfnSPI0_TX_Handler;                      /* 5   Not present in SAMB11 (SPI)    */
+  void* pfnSPI1_RX_Handler;                      /* 6   Not present in SAMB11 (SPI)    */
+  void* pfnSPI1_TX_Handler;                      /* 7   Not present in SAMB11 (SPI)    */
+  void* pfnI2C0_RX_Handler;                      /* 8   Not present in SAMB11 (I2C)    */
+  void* pfnI2C0_TX_Handler;                      /* 9   Not present in SAMB11 (I2C)    */
+  void* pfnI2C1_RX_Handler;                      /* 10  Not present in SAMB11 (I2C)    */
+  void* pfnI2C1_TX_Handler;                      /* 11  Not present in SAMB11 (I2C)    */
+  void* pfnWDT0_Handler;                         /* 12  Not present in SAMB11 (WDT)    */
+  void* pfnWDT1_Handler;                         /* 13  Not present in SAMB11 (WDT)    */
+  void* pfnDUALTIMER0_Handler;                   /* 14  Not present in SAMB11 (DUALTIMER) */
+  void* pfnPROV_DMA_CTRL0_Handler;               /* 15  Not present in SAMB11 (PROV_DMA_CTRL) */
+  void* pfnReserved16;
+  void* pfnReserved17;
+  void* pfnReserved18;
+  void* pfnReserved19;
+  void* pfnReserved20;
+  void* pfnReserved21;
+  void* pfnReserved22;
+  void* pfnGPIO0_Handler;                        /* 23  Not present in SAMB11 (GPIO)   */
+  void* pfnGPIO1_Handler;                        /* 24  Not present in SAMB11 (GPIO)   */
+  void* pfnGPIO2_Handler;                        /* 25  Not present in SAMB11 (GPIO)   */
+  void* pfnTIMER0_Handler;                       /* 26  Not present in SAMB11 (TIMER)  */
+  void* pfnReserved27;
 } DeviceVectors;
 
 /* CORTEX-M0 core handlers */
@@ -150,14 +193,32 @@ void PendSV_Handler       ( void );
 void SysTick_Handler      ( void );
 
 /* Peripherals handlers */
-void HFLASHC_Handler     ( void );
-void PDCA_0_Handler      ( void );
+void UART0_RX_Handler    ( void );
+void UART0_TX_Handler    ( void );
+void UART1_RX_Handler    ( void );
+void UART1_TX_Handler    ( void );
+void SPI0_RX_Handler     ( void );
+void SPI0_TX_Handler     ( void );
+void SPI1_RX_Handler     ( void );
+void SPI1_TX_Handler     ( void );
+void I2C0_RX_Handler     ( void );
+void I2C0_TX_Handler     ( void );
+void I2C1_RX_Handler     ( void );
+void I2C1_TX_Handler     ( void );
+void WDT0_Handler        ( void );
+void WDT1_Handler        ( void );
+void DUALTIMER0_Handler  ( void );
+void PROV_DMA_CTRL0_Handler( void );
+void GPIO0_Handler       ( void );
+void GPIO1_Handler       ( void );
+void GPIO2_Handler       ( void );
+void TIMER0_Handler      ( void );
 
 /*
  * \brief Configuration of the CORTEX-M0 Processor and Core Peripherals
  */
 
-#define __CM0_REV               1
+#define __CM0_REV               0
 #define __NVIC_PRIO_BITS        2
 #define __Vendor_SysTickConfig  0
 #define __FPU_PRESENT           0
@@ -333,7 +394,7 @@ void PDCA_0_Handler      ( void );
 /* ************************************************************************** */
 /**  DEVICE SIGNATURES FOR SAMB11G18A */
 /* ************************************************************************** */
-#define LPMCU_MISC_REGS_LPMCU_CHIP_ID_REV_ID 0x002000b0UL
+#define LPMCU_CHIP_ID_REV_ID     0x002000b0UL
 
 
 #ifdef __cplusplus

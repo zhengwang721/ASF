@@ -157,6 +157,33 @@ typedef union {
 #define SPI_RECEIVE_STATUS_FIFO_OVERRUN       (0x1ul << SPI_RECEIVE_STATUS_FIFO_OVERRUN_Pos)  
 #define SPI_RECEIVE_STATUS_MASK               0x3Ful    /**< \brief (SPI_RECEIVE_STATUS) Register MASK */
 
+/* -------- SPI_CLOCK_SOURCE_SELECT : (SPI Offset: 0x10) (R/W  8) Clock Source Select -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union { 
+  struct {
+    uint8_t  CLOCK:2;                   /*!< bit:   0..1  Clock Used to Generate Divided Clock     */
+    uint8_t  :6;                        /*!< bit:   2..7  Reserved                                 */
+  } bit;                                /*!< Structure used for bit  access                        */
+  uint8_t  reg;                         /*!< Type used for register access                         */
+} SPI_CLOCK_SOURCE_SELECT_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define SPI_CLOCK_SOURCE_SELECT_OFFSET        0x10           /**<  \brief (SPI_CLOCK_SOURCE_SELECT offset) Clock Source Select */
+#define SPI_CLOCK_SOURCE_SELECT_RESETVALUE    0x00ul         /**<  \brief (SPI_CLOCK_SOURCE_SELECT reset_value) Clock Source Select */
+
+#define SPI_CLOCK_SOURCE_SELECT_CLOCK_Pos     0  /**< \brief (SPI_CLOCK_SOURCE_SELECT) Clock Used to Generate Divided Clock */
+#define SPI_CLOCK_SOURCE_SELECT_CLOCK_Msk     (0x3ul << SPI_CLOCK_SOURCE_SELECT_CLOCK_Pos)
+#define SPI_CLOCK_SOURCE_SELECT_CLOCK(value)  (SPI_CLOCK_SOURCE_SELECT_CLOCK_Msk & ((value) << SPI_CLOCK_SOURCE_SELECT_CLOCK_Pos))  
+  #define SPI_CLOCK_SOURCE_SELECT_CLOCK_0_Val        0X0ul  /**< \brief (SPI_CLOCK_SOURCE_SELECT) 26 MHz Clock  */
+  #define SPI_CLOCK_SOURCE_SELECT_CLOCK_1_Val        0X1ul  /**< \brief (SPI_CLOCK_SOURCE_SELECT) 13 MHz Clock  */
+  #define SPI_CLOCK_SOURCE_SELECT_CLOCK_2_Val        0X2ul  /**< \brief (SPI_CLOCK_SOURCE_SELECT) 6.5 MHz Clock  */
+  #define SPI_CLOCK_SOURCE_SELECT_CLOCK_3_Val        0X3ul  /**< \brief (SPI_CLOCK_SOURCE_SELECT) 3.25 MHz Clock  */
+#define SPI_CLOCK_SOURCE_SELECT_CLOCK_0       (SPI_CLOCK_SOURCE_SELECT_CLOCK_0_Val << SPI_CLOCK_SOURCE_SELECT_CLOCK_Pos)
+#define SPI_CLOCK_SOURCE_SELECT_CLOCK_1       (SPI_CLOCK_SOURCE_SELECT_CLOCK_1_Val << SPI_CLOCK_SOURCE_SELECT_CLOCK_Pos)
+#define SPI_CLOCK_SOURCE_SELECT_CLOCK_2       (SPI_CLOCK_SOURCE_SELECT_CLOCK_2_Val << SPI_CLOCK_SOURCE_SELECT_CLOCK_Pos)
+#define SPI_CLOCK_SOURCE_SELECT_CLOCK_3       (SPI_CLOCK_SOURCE_SELECT_CLOCK_3_Val << SPI_CLOCK_SOURCE_SELECT_CLOCK_Pos)
+#define SPI_CLOCK_SOURCE_SELECT_MASK          0x03ul    /**< \brief (SPI_CLOCK_SOURCE_SELECT) Register MASK */
+
 /* -------- SPI_SPI_CLK_DIVIDER : (SPI Offset: 0x14) (R/W  16) Register sets the divide ratio used to generate the sck clock from the module's input clock.  -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
@@ -174,6 +201,24 @@ typedef union {
 #define SPI_SPI_CLK_DIVIDER_SPI_DIVIDE_RATIO_Msk (0xFFFFul << SPI_SPI_CLK_DIVIDER_SPI_DIVIDE_RATIO_Pos)
 #define SPI_SPI_CLK_DIVIDER_SPI_DIVIDE_RATIO(value) (SPI_SPI_CLK_DIVIDER_SPI_DIVIDE_RATIO_Msk & ((value) << SPI_SPI_CLK_DIVIDER_SPI_DIVIDE_RATIO_Pos))  
 #define SPI_SPI_CLK_DIVIDER_MASK              0xFFFFul    /**< \brief (SPI_SPI_CLK_DIVIDER) Register MASK */
+
+/* -------- SPI_SPI_MODULE_ENABLE : (SPI Offset: 0x18) (R/W  8) SPI Enable -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union { 
+  struct {
+    uint8_t  ENABLE:1;                  /*!< bit:      0  Enables SPI operation                    */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
+  } bit;                                /*!< Structure used for bit  access                        */
+  uint8_t  reg;                         /*!< Type used for register access                         */
+} SPI_SPI_MODULE_ENABLE_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define SPI_SPI_MODULE_ENABLE_OFFSET          0x18           /**<  \brief (SPI_SPI_MODULE_ENABLE offset) SPI Enable */
+#define SPI_SPI_MODULE_ENABLE_RESETVALUE      0x00ul         /**<  \brief (SPI_SPI_MODULE_ENABLE reset_value) SPI Enable */
+
+#define SPI_SPI_MODULE_ENABLE_ENABLE_Pos      0  /**< \brief (SPI_SPI_MODULE_ENABLE) Enables SPI operation                */
+#define SPI_SPI_MODULE_ENABLE_ENABLE          (0x1ul << SPI_SPI_MODULE_ENABLE_ENABLE_Pos)  
+#define SPI_SPI_MODULE_ENABLE_MASK            0x01ul    /**< \brief (SPI_SPI_MODULE_ENABLE) Register MASK */
 
 /* -------- SPI_SPI_MASTER_MODE : (SPI Offset: 0x1c) (R/W  8) SPI Master/Slave Mode. When clear, SPI is in Slave Mode.  -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -390,19 +435,23 @@ typedef struct {  /* SPI Master/Slave Controller */
   __I  SPI_TRANSMIT_STATUS_Type       TRANSMIT_STATUS; /**< \brief Offset: 0x08 (R/    8) Status of the SPI transmitter. Each field can generate an interrupt if corresponding bit in  the Tx interrupt mask register is set.  */
        RoReg8                         Reserved3[0x3];
   __I  SPI_RECEIVE_STATUS_Type        RECEIVE_STATUS; /**< \brief Offset: 0x0C (R/    8) Status of the SPI receiver. Each field can generate an interrupt if corresponding bit in  the Rx interrupt mask register is set.  */
-       RoReg8                         Reserved4[0x7];
+       RoReg8                         Reserved4[0x3];
+  __IO SPI_CLOCK_SOURCE_SELECT_Type   CLOCK_SOURCE_SELECT; /**< \brief Offset: 0x10 (R/W   8) Clock Source Select */
+       RoReg8                         Reserved5[0x3];
   __IO SPI_SPI_CLK_DIVIDER_Type       SPI_CLK_DIVIDER; /**< \brief Offset: 0x14 (R/W  16) Register sets the divide ratio used to generate the sck clock from the module's input clock.  */
-       RoReg8                         Reserved5[0x6];
-  __IO SPI_SPI_MASTER_MODE_Type       SPI_MASTER_MODE; /**< \brief Offset: 0x1C (R/W   8) SPI Master/Slave Mode. When clear, SPI is in Slave Mode.  */
-       RoReg8                         Reserved6[0x3];
-  __IO SPI_SPI_FAULT_ENABLE_Type      SPI_FAULT_ENABLE; /**< \brief Offset: 0x20 (R/W   8) SPI Fault Detection Mode. If set, SPI bus contention will be detected, and the fault  bit in the rx_status register will be set, forcing the SPI Module into idle state.  When a fault is detected, the current SPI transaction is abandoned and the interface switches  to slave mode in the wait state.   */
+       RoReg8                         Reserved6[0x2];
+  __IO SPI_SPI_MODULE_ENABLE_Type     SPI_MODULE_ENABLE; /**< \brief Offset: 0x18 (R/W   8) SPI Enable */
        RoReg8                         Reserved7[0x3];
-  __IO SPI_SPI_CONFIGURATION_Type     SPI_CONFIGURATION; /**< \brief Offset: 0x24 (R/W   8) SPI Operation Configuration Register. This register should not be modified while SPI bus is active,  otherwise the SPI Module state shall not be guaranteed.  */
+  __IO SPI_SPI_MASTER_MODE_Type       SPI_MASTER_MODE; /**< \brief Offset: 0x1C (R/W   8) SPI Master/Slave Mode. When clear, SPI is in Slave Mode.  */
        RoReg8                         Reserved8[0x3];
-  __I  SPI_SPI_BUS_STATUS_Type        SPI_BUS_STATUS; /**< \brief Offset: 0x28 (R/    8) Status of SPI bus.  */
+  __IO SPI_SPI_FAULT_ENABLE_Type      SPI_FAULT_ENABLE; /**< \brief Offset: 0x20 (R/W   8) SPI Fault Detection Mode. If set, SPI bus contention will be detected, and the fault  bit in the rx_status register will be set, forcing the SPI Module into idle state.  When a fault is detected, the current SPI transaction is abandoned and the interface switches  to slave mode in the wait state.   */
        RoReg8                         Reserved9[0x3];
-  __IO SPI_TX_INTERRUPT_MASK_Type     TX_INTERRUPT_MASK; /**< \brief Offset: 0x2C (R/W   8) Enable or Disable the generation of interrupts by the tx_status register.  */
+  __IO SPI_SPI_CONFIGURATION_Type     SPI_CONFIGURATION; /**< \brief Offset: 0x24 (R/W   8) SPI Operation Configuration Register. This register should not be modified while SPI bus is active,  otherwise the SPI Module state shall not be guaranteed.  */
        RoReg8                         Reserved10[0x3];
+  __I  SPI_SPI_BUS_STATUS_Type        SPI_BUS_STATUS; /**< \brief Offset: 0x28 (R/    8) Status of SPI bus.  */
+       RoReg8                         Reserved11[0x3];
+  __IO SPI_TX_INTERRUPT_MASK_Type     TX_INTERRUPT_MASK; /**< \brief Offset: 0x2C (R/W   8) Enable or Disable the generation of interrupts by the tx_status register.  */
+       RoReg8                         Reserved12[0x3];
   __IO SPI_RX_INTERRUPT_MASK_Type     RX_INTERRUPT_MASK; /**< \brief Offset: 0x30 (R/W   8) Enable or Disable the generation of interrupts by the rx_status register.  */
 } Spi;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */

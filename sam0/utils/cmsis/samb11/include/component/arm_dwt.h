@@ -112,7 +112,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  MASK:5;                    /*!< bit:   0..4  Size of the ignore mask applied to address range matching */
+    uint8_t  MASK_VALUE:5;              /*!< bit:   0..4  Size of the ignore mask applied to address range matching */
     uint8_t  :3;                        /*!< bit:   5..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
@@ -122,9 +122,9 @@ typedef union {
 #define ARM_DWT_DWT_MASK0_OFFSET              0x24           /**<  \brief (ARM_DWT_DWT_MASK0 offset) DWT Mask Register 0 */
 #define ARM_DWT_DWT_MASK0_RESETVALUE          0x00ul         /**<  \brief (ARM_DWT_DWT_MASK0 reset_value) DWT Mask Register 0 */
 
-#define ARM_DWT_DWT_MASK0_MASK_Pos            0  /**< \brief (ARM_DWT_DWT_MASK0) Size of the ignore mask applied to address range matching */
-#define ARM_DWT_DWT_MASK0_MASK_Msk            (0x1Ful << ARM_DWT_DWT_MASK0_MASK_Pos)
-#define ARM_DWT_DWT_MASK0_MASK(value)         (ARM_DWT_DWT_MASK0_MASK_Msk & ((value) << ARM_DWT_DWT_MASK0_MASK_Pos))  
+#define ARM_DWT_DWT_MASK0_MASK_VALUE_Pos      0  /**< \brief (ARM_DWT_DWT_MASK0) Size of the ignore mask applied to address range matching */
+#define ARM_DWT_DWT_MASK0_MASK_VALUE_Msk      (0x1Ful << ARM_DWT_DWT_MASK0_MASK_VALUE_Pos)
+#define ARM_DWT_DWT_MASK0_MASK_VALUE(value)   (ARM_DWT_DWT_MASK0_MASK_VALUE_Msk & ((value) << ARM_DWT_DWT_MASK0_MASK_VALUE_Pos))  
 #define ARM_DWT_DWT_MASK0_MASK                0x1Ful    /**< \brief (ARM_DWT_DWT_MASK0) Register MASK */
 
 /* -------- ARM_DWT_DWT_FUNCTION0 : (ARM_DWT Offset: 0x28) (R/  32) DWT Function Register 0 -------- */
@@ -182,7 +182,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  MASK:5;                    /*!< bit:   0..4  Size of the ignore mask applied to address range matching */
+    uint8_t  MASK_VALUE:5;              /*!< bit:   0..4  Size of the ignore mask applied to address range matching */
     uint8_t  :3;                        /*!< bit:   5..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
@@ -192,9 +192,9 @@ typedef union {
 #define ARM_DWT_DWT_MASK1_OFFSET              0x34           /**<  \brief (ARM_DWT_DWT_MASK1 offset) DWT Mask Register 1 */
 #define ARM_DWT_DWT_MASK1_RESETVALUE          0x00ul         /**<  \brief (ARM_DWT_DWT_MASK1 reset_value) DWT Mask Register 1 */
 
-#define ARM_DWT_DWT_MASK1_MASK_Pos            0  /**< \brief (ARM_DWT_DWT_MASK1) Size of the ignore mask applied to address range matching */
-#define ARM_DWT_DWT_MASK1_MASK_Msk            (0x1Ful << ARM_DWT_DWT_MASK1_MASK_Pos)
-#define ARM_DWT_DWT_MASK1_MASK(value)         (ARM_DWT_DWT_MASK1_MASK_Msk & ((value) << ARM_DWT_DWT_MASK1_MASK_Pos))  
+#define ARM_DWT_DWT_MASK1_MASK_VALUE_Pos      0  /**< \brief (ARM_DWT_DWT_MASK1) Size of the ignore mask applied to address range matching */
+#define ARM_DWT_DWT_MASK1_MASK_VALUE_Msk      (0x1Ful << ARM_DWT_DWT_MASK1_MASK_VALUE_Pos)
+#define ARM_DWT_DWT_MASK1_MASK_VALUE(value)   (ARM_DWT_DWT_MASK1_MASK_VALUE_Msk & ((value) << ARM_DWT_DWT_MASK1_MASK_VALUE_Pos))  
 #define ARM_DWT_DWT_MASK1_MASK                0x1Ful    /**< \brief (ARM_DWT_DWT_MASK1) Register MASK */
 
 /* -------- ARM_DWT_DWT_FUNCTION1 : (ARM_DWT Offset: 0x38) (R/  32) DWT Function Register 1 -------- */

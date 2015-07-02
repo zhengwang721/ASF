@@ -237,8 +237,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :5;                        /*!< bit:   0..4  Reserved                                 */
-    uint32_t PRI_N0:3;                  /*!< bit:   5..7  Priority of Interrupt 0                  */
+    uint32_t :6;                        /*!< bit:   0..5  Reserved                                 */
+    uint32_t PRI_N0:2;                  /*!< bit:   6..7  Priority of Interrupt 0                  */
     uint32_t :6;                        /*!< bit:  8..13  Reserved                                 */
     uint32_t PRI_N1:2;                  /*!< bit: 14..15  Priority of Interrupt 1                  */
     uint32_t :6;                        /*!< bit: 16..21  Reserved                                 */
@@ -253,8 +253,8 @@ typedef union {
 #define ARM_SYSCTRL_NVIC_IPR0_OFFSET          0x400          /**<  \brief (ARM_SYSCTRL_NVIC_IPR0 offset) Interrupt Priority Register 0 */
 #define ARM_SYSCTRL_NVIC_IPR0_RESETVALUE      0x00ul         /**<  \brief (ARM_SYSCTRL_NVIC_IPR0 reset_value) Interrupt Priority Register 0 */
 
-#define ARM_SYSCTRL_NVIC_IPR0_PRI_N0_Pos      5  /**< \brief (ARM_SYSCTRL_NVIC_IPR0) Priority of Interrupt 0              */
-#define ARM_SYSCTRL_NVIC_IPR0_PRI_N0_Msk      (0x7ul << ARM_SYSCTRL_NVIC_IPR0_PRI_N0_Pos)
+#define ARM_SYSCTRL_NVIC_IPR0_PRI_N0_Pos      6  /**< \brief (ARM_SYSCTRL_NVIC_IPR0) Priority of Interrupt 0              */
+#define ARM_SYSCTRL_NVIC_IPR0_PRI_N0_Msk      (0x3ul << ARM_SYSCTRL_NVIC_IPR0_PRI_N0_Pos)
 #define ARM_SYSCTRL_NVIC_IPR0_PRI_N0(value)   (ARM_SYSCTRL_NVIC_IPR0_PRI_N0_Msk & ((value) << ARM_SYSCTRL_NVIC_IPR0_PRI_N0_Pos))  
 #define ARM_SYSCTRL_NVIC_IPR0_PRI_N1_Pos      14  /**< \brief (ARM_SYSCTRL_NVIC_IPR0) Priority of Interrupt 1              */
 #define ARM_SYSCTRL_NVIC_IPR0_PRI_N1_Msk      (0x3ul << ARM_SYSCTRL_NVIC_IPR0_PRI_N1_Pos)
@@ -265,14 +265,14 @@ typedef union {
 #define ARM_SYSCTRL_NVIC_IPR0_PRI_N3_Pos      30  /**< \brief (ARM_SYSCTRL_NVIC_IPR0) Priority of Interrupt 3              */
 #define ARM_SYSCTRL_NVIC_IPR0_PRI_N3_Msk      (0x3ul << ARM_SYSCTRL_NVIC_IPR0_PRI_N3_Pos)
 #define ARM_SYSCTRL_NVIC_IPR0_PRI_N3(value)   (ARM_SYSCTRL_NVIC_IPR0_PRI_N3_Msk & ((value) << ARM_SYSCTRL_NVIC_IPR0_PRI_N3_Pos))  
-#define ARM_SYSCTRL_NVIC_IPR0_MASK            0xC0C0C0E0ul    /**< \brief (ARM_SYSCTRL_NVIC_IPR0) Register MASK */
+#define ARM_SYSCTRL_NVIC_IPR0_MASK            0xC0C0C0C0ul    /**< \brief (ARM_SYSCTRL_NVIC_IPR0) Register MASK */
 
 /* -------- ARM_SYSCTRL_NVIC_IPR1 : (ARM_SYSCTRL Offset: 0x404) (R/W  32) Interrupt Priority Register 1 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :5;                        /*!< bit:   0..4  Reserved                                 */
-    uint32_t PRI_N4:3;                  /*!< bit:   5..7  Priority of Interrupt 4                  */
+    uint32_t :6;                        /*!< bit:   0..5  Reserved                                 */
+    uint32_t PRI_N4:2;                  /*!< bit:   6..7  Priority of Interrupt 4                  */
     uint32_t :6;                        /*!< bit:  8..13  Reserved                                 */
     uint32_t PRI_N5:2;                  /*!< bit: 14..15  Priority of Interrupt 5                  */
     uint32_t :6;                        /*!< bit: 16..21  Reserved                                 */
@@ -287,8 +287,8 @@ typedef union {
 #define ARM_SYSCTRL_NVIC_IPR1_OFFSET          0x404          /**<  \brief (ARM_SYSCTRL_NVIC_IPR1 offset) Interrupt Priority Register 1 */
 #define ARM_SYSCTRL_NVIC_IPR1_RESETVALUE      0x00ul         /**<  \brief (ARM_SYSCTRL_NVIC_IPR1 reset_value) Interrupt Priority Register 1 */
 
-#define ARM_SYSCTRL_NVIC_IPR1_PRI_N4_Pos      5  /**< \brief (ARM_SYSCTRL_NVIC_IPR1) Priority of Interrupt 4              */
-#define ARM_SYSCTRL_NVIC_IPR1_PRI_N4_Msk      (0x7ul << ARM_SYSCTRL_NVIC_IPR1_PRI_N4_Pos)
+#define ARM_SYSCTRL_NVIC_IPR1_PRI_N4_Pos      6  /**< \brief (ARM_SYSCTRL_NVIC_IPR1) Priority of Interrupt 4              */
+#define ARM_SYSCTRL_NVIC_IPR1_PRI_N4_Msk      (0x3ul << ARM_SYSCTRL_NVIC_IPR1_PRI_N4_Pos)
 #define ARM_SYSCTRL_NVIC_IPR1_PRI_N4(value)   (ARM_SYSCTRL_NVIC_IPR1_PRI_N4_Msk & ((value) << ARM_SYSCTRL_NVIC_IPR1_PRI_N4_Pos))  
 #define ARM_SYSCTRL_NVIC_IPR1_PRI_N5_Pos      14  /**< \brief (ARM_SYSCTRL_NVIC_IPR1) Priority of Interrupt 5              */
 #define ARM_SYSCTRL_NVIC_IPR1_PRI_N5_Msk      (0x3ul << ARM_SYSCTRL_NVIC_IPR1_PRI_N5_Pos)
@@ -299,14 +299,14 @@ typedef union {
 #define ARM_SYSCTRL_NVIC_IPR1_PRI_N7_Pos      30  /**< \brief (ARM_SYSCTRL_NVIC_IPR1) Priority of Interrupt 7              */
 #define ARM_SYSCTRL_NVIC_IPR1_PRI_N7_Msk      (0x3ul << ARM_SYSCTRL_NVIC_IPR1_PRI_N7_Pos)
 #define ARM_SYSCTRL_NVIC_IPR1_PRI_N7(value)   (ARM_SYSCTRL_NVIC_IPR1_PRI_N7_Msk & ((value) << ARM_SYSCTRL_NVIC_IPR1_PRI_N7_Pos))  
-#define ARM_SYSCTRL_NVIC_IPR1_MASK            0xC0C0C0E0ul    /**< \brief (ARM_SYSCTRL_NVIC_IPR1) Register MASK */
+#define ARM_SYSCTRL_NVIC_IPR1_MASK            0xC0C0C0C0ul    /**< \brief (ARM_SYSCTRL_NVIC_IPR1) Register MASK */
 
 /* -------- ARM_SYSCTRL_NVIC_IPR2 : (ARM_SYSCTRL Offset: 0x408) (R/W  32) Interrupt Priority Register 2 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :5;                        /*!< bit:   0..4  Reserved                                 */
-    uint32_t PRI_N8:3;                  /*!< bit:   5..7  Priority of Interrupt 8                  */
+    uint32_t :6;                        /*!< bit:   0..5  Reserved                                 */
+    uint32_t PRI_N8:2;                  /*!< bit:   6..7  Priority of Interrupt 8                  */
     uint32_t :6;                        /*!< bit:  8..13  Reserved                                 */
     uint32_t PRI_N9:2;                  /*!< bit: 14..15  Priority of Interrupt 9                  */
     uint32_t :6;                        /*!< bit: 16..21  Reserved                                 */
@@ -321,8 +321,8 @@ typedef union {
 #define ARM_SYSCTRL_NVIC_IPR2_OFFSET          0x408          /**<  \brief (ARM_SYSCTRL_NVIC_IPR2 offset) Interrupt Priority Register 2 */
 #define ARM_SYSCTRL_NVIC_IPR2_RESETVALUE      0x00ul         /**<  \brief (ARM_SYSCTRL_NVIC_IPR2 reset_value) Interrupt Priority Register 2 */
 
-#define ARM_SYSCTRL_NVIC_IPR2_PRI_N8_Pos      5  /**< \brief (ARM_SYSCTRL_NVIC_IPR2) Priority of Interrupt 8              */
-#define ARM_SYSCTRL_NVIC_IPR2_PRI_N8_Msk      (0x7ul << ARM_SYSCTRL_NVIC_IPR2_PRI_N8_Pos)
+#define ARM_SYSCTRL_NVIC_IPR2_PRI_N8_Pos      6  /**< \brief (ARM_SYSCTRL_NVIC_IPR2) Priority of Interrupt 8              */
+#define ARM_SYSCTRL_NVIC_IPR2_PRI_N8_Msk      (0x3ul << ARM_SYSCTRL_NVIC_IPR2_PRI_N8_Pos)
 #define ARM_SYSCTRL_NVIC_IPR2_PRI_N8(value)   (ARM_SYSCTRL_NVIC_IPR2_PRI_N8_Msk & ((value) << ARM_SYSCTRL_NVIC_IPR2_PRI_N8_Pos))  
 #define ARM_SYSCTRL_NVIC_IPR2_PRI_N9_Pos      14  /**< \brief (ARM_SYSCTRL_NVIC_IPR2) Priority of Interrupt 9              */
 #define ARM_SYSCTRL_NVIC_IPR2_PRI_N9_Msk      (0x3ul << ARM_SYSCTRL_NVIC_IPR2_PRI_N9_Pos)
@@ -333,14 +333,14 @@ typedef union {
 #define ARM_SYSCTRL_NVIC_IPR2_PRI_N11_Pos     30  /**< \brief (ARM_SYSCTRL_NVIC_IPR2) Priority of Interrupt 11             */
 #define ARM_SYSCTRL_NVIC_IPR2_PRI_N11_Msk     (0x3ul << ARM_SYSCTRL_NVIC_IPR2_PRI_N11_Pos)
 #define ARM_SYSCTRL_NVIC_IPR2_PRI_N11(value)  (ARM_SYSCTRL_NVIC_IPR2_PRI_N11_Msk & ((value) << ARM_SYSCTRL_NVIC_IPR2_PRI_N11_Pos))  
-#define ARM_SYSCTRL_NVIC_IPR2_MASK            0xC0C0C0E0ul    /**< \brief (ARM_SYSCTRL_NVIC_IPR2) Register MASK */
+#define ARM_SYSCTRL_NVIC_IPR2_MASK            0xC0C0C0C0ul    /**< \brief (ARM_SYSCTRL_NVIC_IPR2) Register MASK */
 
 /* -------- ARM_SYSCTRL_NVIC_IPR3 : (ARM_SYSCTRL Offset: 0x40c) (R/W  32) Interrupt Priority Register 3 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :5;                        /*!< bit:   0..4  Reserved                                 */
-    uint32_t PRI_N12:3;                 /*!< bit:   5..7  Priority of Interrupt 12                 */
+    uint32_t :6;                        /*!< bit:   0..5  Reserved                                 */
+    uint32_t PRI_N12:2;                 /*!< bit:   6..7  Priority of Interrupt 12                 */
     uint32_t :6;                        /*!< bit:  8..13  Reserved                                 */
     uint32_t PRI_N13:2;                 /*!< bit: 14..15  Priority of Interrupt 13                 */
     uint32_t :6;                        /*!< bit: 16..21  Reserved                                 */
@@ -355,8 +355,8 @@ typedef union {
 #define ARM_SYSCTRL_NVIC_IPR3_OFFSET          0x40C          /**<  \brief (ARM_SYSCTRL_NVIC_IPR3 offset) Interrupt Priority Register 3 */
 #define ARM_SYSCTRL_NVIC_IPR3_RESETVALUE      0x00ul         /**<  \brief (ARM_SYSCTRL_NVIC_IPR3 reset_value) Interrupt Priority Register 3 */
 
-#define ARM_SYSCTRL_NVIC_IPR3_PRI_N12_Pos     5  /**< \brief (ARM_SYSCTRL_NVIC_IPR3) Priority of Interrupt 12             */
-#define ARM_SYSCTRL_NVIC_IPR3_PRI_N12_Msk     (0x7ul << ARM_SYSCTRL_NVIC_IPR3_PRI_N12_Pos)
+#define ARM_SYSCTRL_NVIC_IPR3_PRI_N12_Pos     6  /**< \brief (ARM_SYSCTRL_NVIC_IPR3) Priority of Interrupt 12             */
+#define ARM_SYSCTRL_NVIC_IPR3_PRI_N12_Msk     (0x3ul << ARM_SYSCTRL_NVIC_IPR3_PRI_N12_Pos)
 #define ARM_SYSCTRL_NVIC_IPR3_PRI_N12(value)  (ARM_SYSCTRL_NVIC_IPR3_PRI_N12_Msk & ((value) << ARM_SYSCTRL_NVIC_IPR3_PRI_N12_Pos))  
 #define ARM_SYSCTRL_NVIC_IPR3_PRI_N13_Pos     14  /**< \brief (ARM_SYSCTRL_NVIC_IPR3) Priority of Interrupt 13             */
 #define ARM_SYSCTRL_NVIC_IPR3_PRI_N13_Msk     (0x3ul << ARM_SYSCTRL_NVIC_IPR3_PRI_N13_Pos)
@@ -367,7 +367,7 @@ typedef union {
 #define ARM_SYSCTRL_NVIC_IPR3_PRI_N15_Pos     30  /**< \brief (ARM_SYSCTRL_NVIC_IPR3) Priority of Interrupt 15             */
 #define ARM_SYSCTRL_NVIC_IPR3_PRI_N15_Msk     (0x3ul << ARM_SYSCTRL_NVIC_IPR3_PRI_N15_Pos)
 #define ARM_SYSCTRL_NVIC_IPR3_PRI_N15(value)  (ARM_SYSCTRL_NVIC_IPR3_PRI_N15_Msk & ((value) << ARM_SYSCTRL_NVIC_IPR3_PRI_N15_Pos))  
-#define ARM_SYSCTRL_NVIC_IPR3_MASK            0xC0C0C0E0ul    /**< \brief (ARM_SYSCTRL_NVIC_IPR3) Register MASK */
+#define ARM_SYSCTRL_NVIC_IPR3_MASK            0xC0C0C0C0ul    /**< \brief (ARM_SYSCTRL_NVIC_IPR3) Register MASK */
 
 /* -------- ARM_SYSCTRL_NVIC_IPR4 : (ARM_SYSCTRL Offset: 0x410) (R/W  32) Interrupt Priority Register 4 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
