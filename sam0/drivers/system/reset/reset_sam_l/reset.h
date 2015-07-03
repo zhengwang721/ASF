@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM L21/L22 Reset functionality
+ * \brief SAM Reset functionality
  *
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -93,8 +93,10 @@ enum system_reset_cause {
  * List of possible backup exit source.
  */
 enum system_reset_backup_exit_source {
+#if SAML21
 	/** The backup exit source was external wakeup. */
 	SYSTEM_RESET_BACKKUP_EXIT_EXTWAKE    = RSTC_BKUPEXIT_EXTWAKE,
+#endif
 	/** The backup exit source was RTC interrupt. */
 	SYSTEM_RESET_BACKKUP_EXIT_RTC        = RSTC_BKUPEXIT_RTC,
 	/** The backup exit source was battery backup power switch. */

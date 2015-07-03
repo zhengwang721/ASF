@@ -820,16 +820,78 @@ NMI_API sint8 m2m_wifi_default_connect(void);
 	tuniM2MWifiAuth
 	tstr1xAuthCredentials
 	tstrM2mWifiWepParams
-
+	
 @warning
 	-This function must be called in station mode only.
 	-Successful completion of this function does not guarantee success of the WIFI connection, and
 	a negative return value indicates only locally-detected errors.
-
+	
 @return	The function returns @ref M2M_SUCCESS for successful operations and a negative value otherwise.
-
+	
 */
 NMI_API sint8 m2m_wifi_connect(char *pcSsid, uint8 u8SsidLen, uint8 u8SecType, void *pvAuthInfo, uint16 u16Ch);
+ /**@}*/
+/** @defgroup WifiConnectFn m2m_wifi_connect_sc
+ *   @ingroup WLANAPI
+ *   Asynchronous wi-fi connection function to a specific AP. Prior to a successful connection, the application developers must know the SSID of the AP, the security type,
+ *   the authentication information parameters and the channel number to which the connection will be established.this API allows the user to choose
+ *   whether to
+ *  The connection status is known when a response of @ref M2M_WIFI_RESP_CON_STATE_CHANGED is received based on the states defined in @ref tenuM2mConnState,
+ *  successful connection is defined by @ref M2M_WIFI_CONNECTED
+ *   The only difference between this function and @ref m2m_wifi_connect, is the option to save the acess point info ( SSID, password...etc) or not.
+ *   Connection using this function is expected to be made to a specific AP and to a specified channel.
+ */
+ /**@{*/
+/*!
+@fn	\
+	NMI_API sint8 m2m_wifi_connect_sc(char *pcSsid, uint8 u8SsidLen, uint8 u8SecType, void *pvAuthInfo, uint16 u16Ch,uint8 u8SaveCred);
+
+@param [in]	pcSsid
+				A buffer holding the SSID corresponding to the requested AP.
+				
+@param [in]	u8SsidLen
+				Length of the given SSID (not including the NULL termination).
+				A length less than ZERO or greater than the maximum defined SSID @ref M2M_MAX_SSID_LEN will result in a negative error 
+				@ref M2M_ERR_FAIL.
+				
+@param [in]	u8SecType
+				Wi-Fi security type security for the network. It can be one of the following types:
+				-@ref M2M_WIFI_SEC_OPEN
+				-@ref M2M_WIFI_SEC_WEP
+				-@ref M2M_WIFI_SEC_WPA_PSK
+				-@ref M2M_WIFI_SEC_802_1X
+				A value outside these possible values will result in a negative return error @ref M2M_ERR_FAIL.
+
+@param [in]	pvAuthInfo
+				Authentication parameters required for completing the connection. It is type is based on the Security type.
+				If the authentication parameters are NULL or are greater than the maximum length of the authentication parameters length as defined by
+				@ref M2M_MAX_PSK_LEN a negative error will return @ref M2M_ERR_FAIL(-12) indicating connection failure.
+
+@param [in]	u16Ch
+				Wi-Fi channel number as defined in @ref tenuM2mScanCh enumeration.
+				Channel number greater than @ref M2M_WIFI_CH_14 returns a negative error @ref M2M_ERR_FAIL(-12).
+				Except if the value is M2M_WIFI_CH_ALL(255), since this indicates that the firmware should scan all channels to find the SSID requested to connect to.
+				Failure to find the connection match will return a negative error @ref M2M_DEFAULT_CONN_SCAN_MISMATCH.
+				
+@param [in] u8NoSaveCred
+				Option to store the acess point SSID and password into the WINC flash memory or not.
+				
+@pre
+  		Prior to a successful connection request, the wi-fi driver must have been successfully initialized through the call of the @ref @m2m_wifi_init function
+@see
+	tuniM2MWifiAuth
+	tstr1xAuthCredentials
+	tstrM2mWifiWepParams
+	
+@warning
+	-This function must be called in station mode only.
+	-Successful completion of this function does not guarantee success of the WIFI connection, and
+	a negative return value indicates only locally-detected errors.
+	
+@return	The function returns @ref M2M_SUCCESS for successful operations and a negative value otherwise.
+	
+*/
+ NMI_API sint8 m2m_wifi_connect_sc(char *pcSsid, uint8 u8SsidLen, uint8 u8SecType, void *pvAuthInfo, uint16 u16Ch, uint8 u8SaveCred);
  /**@}*/
 /** @defgroup WifiDisconnectFn m2m_wifi_disconnect
  *   @ingroup WLANAPI
@@ -839,18 +901,18 @@ NMI_API sint8 m2m_wifi_connect(char *pcSsid, uint8 u8SsidLen, uint8 u8SecType, v
 /*!
 @fn	\
 	NMI_API sint8 m2m_wifi_disconnect(void);
-
-@pre
+	
+@pre 
 	Disconnection must be made to a successfully connected AP. If the WINC is not in the connected state, a call to this function will hold insignificant.
 
 @warning
 	This function must be called in station mode only.
-
+	
 @see
 	m2m_wifi_connect
 	m2m_wifi_default_connect
-
-@return
+	
+@return		
 	The function returns @ref M2M_SUCCESS for successful operations and a negative value otherwise.
 */
 NMI_API sint8 m2m_wifi_disconnect(void);
@@ -859,18 +921,18 @@ NMI_API sint8 m2m_wifi_disconnect(void);
  *   @ingroup WLANAPI
  *    Asynchronous wi-fi provisioning function, which starts the WINC HTTP PROVISIONING mode.
 	The function triggers the WINC to activate the Wi-Fi AP (HOTSPOT) mode with the passed configuration parameters and then starts the
-	HTTP Provision WEB Server.
+	HTTP Provision WEB Server. 
 	The provisioning status is returned in an event @ref M2M_WIFI_RESP_PROVISION_INFO
  */
  /**@{*/
 /*!
 @fn	\
 	NMI_API sint8 m2m_wifi_start_provision_mode(tstrM2MAPConfig *pstrAPConfig, char *pcHttpServerDomainName, uint8 bEnableHttpRedirect);
-
+	
 @param [in]	pstrAPConfig
 				AP configuration parameters as defined in @ref tstrM2MAPConfig configuration structure.
 				A NULL value passed in, will result in a negative error @ref M2M_ERR_FAIL.
-
+				
 @param [in]	pcHttpServerDomainName
 				Domain name of the HTTP Provision WEB server which others will use to load the provisioning Home page.
 				For example "wincconf.net".
@@ -882,11 +944,11 @@ NMI_API sint8 m2m_wifi_disconnect(void);
 				- Non-Zero value	       Use HTTP Redirect. In this case, all http traffic (http://URL) from the associated
 									device (Phone, PC, ...etc) will be redirected to the WINC HTTP Provisioning Home page.
 
-@pre
+@pre	
 	- A Wi-Fi notification callback of type @ref tpfAppWifiCb MUST be implemented and registered at startup. Registering the callback
 	  is done through passing it to the initialization @ref m2m_wifi_init function.
 	- The event @ref M2M_WIFI_RESP_CONN_INFO must be handled in the callback to receive the requested connection info.
-
+	
 @see
 	tpfAppWifiCb
 	m2m_wifi_init
@@ -896,12 +958,12 @@ NMI_API sint8 m2m_wifi_disconnect(void);
 
 @warning
 		DO Not use ".local" in the pcHttpServerDomainName.
-
+		
 @return
 	The function returns @ref M2M_SUCCESS for successful operations and a negative value otherwise.
 
 \section Example
-  The example demonstrates a code snippet for how provisioning is triggered and the response event received accordingly.
+  The example demonstrates a code snippet for how provisioning is triggered and the response event received accordingly. 
 @code
 	#include "m2m_wifi.h"
 	#include "m2m_types.h"

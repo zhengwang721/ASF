@@ -579,8 +579,6 @@ bool dac_chan_is_end_of_conversion(
  * \endif
  * \if DAC_DMA_USE_MODE_SELECTION
  *  - \subpage asfdoc_sam0_adc_dma_use_case_dac_in_dma
- * \else
- *  - \subpage asfdoc_sam0_adc_dma_use_case
  * \endif
  *
  * \if DAC_DMA_USE_MODE_SELECTION

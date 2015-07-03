@@ -64,6 +64,8 @@
  *
  * The following devices can use this module:
  *  - Atmel | SMART SAM L22
+ *  - Atmel | SMART SAM C20
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_freqm_prerequisites
@@ -81,11 +83,18 @@
  *
  * \section asfdoc_sam0_freqm_module_overview Module Overview
  *
+ * The module accurately measures the frequency of a clock by comparing it to a
+ * known reference clock as soon as the FREQM is enabled. Two generic clocks are
+ * used by the FREQM. The frequency of the measured clock is:
+ * \f[
+ *    f_{CLK\_MSR} = \frac{VALUE}{REFNUM} \times f_{CLK\_REF}
+ * \f]
+ * Ratio can be measured with 24-bit accuracy.
+ *
+ * The FREQM has one interrupt source, which generates when a frequency measurement 
+ * is done. It can be used to wake up the device from sleep modes.
+ *
  * This driver provides an interface for the FREQM functions on the device.
- *
- * As soon as the FREQM is enabled, the module accurately measure the frequency
- * of a clock by comparing it to a known reference clock.
- *
  *
  * \section asfdoc_sam0_freqm_special_considerations Special Considerations
  *
@@ -119,7 +128,7 @@ extern "C" {
 #endif
 
 #if FREQM_CALLBACK_MODE == true
-/* Forward declaration of struct */
+/** Forward declaration of struct */
 struct freqm_module;
 
 extern struct freqm_module *_freqm_instance;
@@ -129,9 +138,9 @@ typedef void (*freqm_callback_t)(void);
 
 /** Enum for possible callback types for the FREQM module. */
 enum freqm_callback {
-	/** Callback for measurement done. */
+	/** Callback for measurement done */
 	FREQM_CALLBACK_DONE = 0,
-	/** Number of available callbacks. */
+	/** Number of available callbacks */
 #if !defined(__DOXYGEN__)
 	FREQM_CALLBACK_N,
 #endif
@@ -149,12 +158,12 @@ enum freqm_callback {
  */
 struct freqm_module {
 #if !defined(__DOXYGEN__)
-	/** Hardware module pointer of the associated FREQM peripheral. */
+	/** Hardware module pointer of the associated FREQM peripheral */
 	Freqm *hw;
-	/** The frequency of reference clock in Hz.*/
+	/** The frequency of reference clock in Hz*/
 	uint32_t ref_clock_freq;
 #  if FREQM_CALLBACK_MODE == true
-	/** Array of callbacks. */
+	/** Array of callbacks */
 	freqm_callback_t callback[FREQM_CALLBACK_N];
 #  endif
 #endif
@@ -162,11 +171,11 @@ struct freqm_module {
 
 /** Enum for the possible status types for the FREQM module. */
 enum freqm_status {
-	/** FREQM measurement is finish. */
+	/** FREQM measurement is finish */
 	FREQM_STATUS_MEASURE_DONE =  0,
-	/** FREQM measurement is ongoing or not. */
+	/** FREQM measurement is ongoing or not */
 	FREQM_STATUS_MEASURE_BUSY =  1,
-	/** FREQM sticky count value overflow. */
+	/** FREQM sticky count value overflow */
 	FREQM_STATUS_CNT_OVERFLOW =  2,
 };
 
@@ -176,22 +185,13 @@ enum freqm_status {
  *  Configuration structure for a Frequency Meter.
  */
 struct freqm_config {
-	/** GCLK source select for measurement. */
+	/** GCLK source select for measurement */
 	enum gclk_generator msr_clock_source;
-	/** GCLK source select for reference. */
+	/** GCLK source select for reference */
 	enum gclk_generator ref_clock_source;
-	/** Measurement duration in number of reference clock cycles. Range 1~255. */
+	/** Measurement duration in number of reference clock cycles. Range 1~255 */
 	uint16_t ref_clock_circles;
 };
-
-/**
- * \name Driver Initialization and Configuration
- * @{
- */
-enum status_code freqm_init(
-		struct freqm_module *const module_inst,
-		Freqm *const hw,
-		struct freqm_config *const config);
 
 /**
  * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
@@ -217,6 +217,15 @@ static inline bool freqm_is_syncing(void)
 
 	return false;
 }
+
+/**
+ * \name Driver Initialization and Configuration
+ * @{
+ */
+enum status_code freqm_init(
+		struct freqm_module *const module_inst,
+		Freqm *const hw,
+		struct freqm_config *const config);
 
 /**
  * \brief Initializes all members of a FREQM configuration structure
@@ -296,6 +305,12 @@ static inline void freqm_disable(
 	}
 }
 
+/** @} */
+
+/**
+ * \name Read FREQM Result
+ * @{
+ */
 /**
  * \brief Start a manual measurement process.
  *
@@ -328,10 +343,6 @@ static inline void freqm_clear_overflow(struct freqm_module *const module)
 	module->hw->STATUS.reg |= FREQM_STATUS_OVF;
 }
 
-/**
- * \name Read FREQM Result
- * @{
- */
 enum freqm_status freqm_get_result_value(
 		struct freqm_module *const module_inst, uint32_t *result);
 
@@ -340,8 +351,8 @@ enum freqm_status freqm_get_result_value(
 #ifdef __cplusplus
 }
 #endif
-
 /** @} */
+
 
 /**
  * \page asfdoc_sam0_freqm_extra Extra Information for FREQM Driver
@@ -392,7 +403,7 @@ enum freqm_status freqm_get_result_value(
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_freqm_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_freqm_basic_use_case
@@ -410,8 +421,8 @@ enum freqm_status freqm_get_result_value(
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>05/2015</td>
- *		<td>Initial release</td>
+ *		<td>06/2015</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */

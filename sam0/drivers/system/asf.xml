@@ -30,6 +30,7 @@
 		<build type="header-file" value="power/power_sam_d_r/power.h"/>
 		<build type="header-file" value="reset/reset_sam_d_r/reset.h"/>
 		<build type="c-source" value="system.c"/>
+		<build type="doxygen-enable-section" value="DEVICE_SAMD21_SYSTEM_SUPPORT"/>
 		<build type="doxygen-entry-point" value="asfdoc_sam0_system_group"/>
 
 		<device-support value="sam0"/>
@@ -66,7 +67,7 @@
 		<build type="header-file" value="power/power_sam_l/power.h"/>
 		<build type="header-file" value="reset/reset_sam_l/reset.h"/>
 		<build type="c-source" value="system.c"/>
-		<build type="doxygen-enable-section" value="DEVICE_SAML21_SUPPORT"/>
+		<build type="doxygen-enable-section" value="DEVICE_SAML21_SYSTEM_SUPPORT"/>
 		<build type="doxygen-entry-point" value="asfdoc_sam0_system_group"/>
 		<build type="doxygen-quick-start" value="asfdoc_sam0_drivers_power_exqsg"/>
 		<build type="doxygen-example-path" value="power"/>
@@ -75,6 +76,45 @@
 
 		<device-support value="saml21"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-saml21"/>
+	</module>
+	<module type="meta" id="sam0.drivers.system.appnote_3" caption="SYSTEM - Core System Driver For SAM C21/C20">
+		<info type="description" value="summary">
+			Driver for the SAM C21/C20 core system modules. Provides a unified
+			interface for the configuration and management of the core device
+			functionality required for a functional system.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="I/O" />
+			<keyword value="CPU" />
+			<keyword value="Clocks" />
+		</info>
+
+		<info type="appnote" value="AT13485"/>
+		<info type="keyword" value="pdf">
+			<keyword value="SYSTEM"/>
+			<keyword value="I/O"/>
+			<keyword value="CPU"/>
+			<keyword value="Clocks"/>
+		</info>
+
+		<info type="description" value="pdf">
+			This document describes how to use the core system modules on the
+			SAM C21/C20, both the ASF driver and the peripheral itself.
+		</info>
+		<build type="include-path" value="."/>
+		<build type="include-path" value="power/power_sam_c"/>
+		<build type="include-path" value="reset/reset_sam_c"/>
+		<build type="header-file" subtype="api" value="system.h"/>
+		<build type="header-file" value="power/power_sam_c/power.h"/>
+		<build type="header-file" value="reset/reset_sam_c/reset.h"/>
+		<build type="c-source" value="system.c"/>
+		<build type="doxygen-enable-section" value="DEVICE_SAMC21_SYSTEM_SUPPORT"/>
+		<build type="doxygen-entry-point" value="asfdoc_sam0_system_group"/>
+		<build type="doxygen-image-path" value="docimg"/>
+
+		<device-support value="samc21"/>
+		<device-support value="samc20"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samc21"/>
 	</module>
 	<module type="driver" id="sam0.drivers.system" caption="SYSTEM - Core System Driver">
 		<info type="description" value="summary">

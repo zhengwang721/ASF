@@ -82,8 +82,8 @@ static struct polite_announcement_state {
   clock_time_t min_interval, max_interval;
 } c;
 
-#define DEBUG 0
-#if DEBUG
+#define _DEBUG_ 0
+#if _DEBUG_
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #else

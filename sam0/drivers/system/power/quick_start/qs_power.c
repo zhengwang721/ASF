@@ -134,12 +134,11 @@ int main(void)
 //! [setup_init]
 
 //! [ext_wakeup]
+#if SAML21
 	/* Check if the RESET is caused by external wakeup pin */
 	if (system_get_reset_cause() == SYSTEM_RESET_CAUSE_BACKUP
 		&& system_get_backup_exit_source() == SYSTEM_RESET_BACKKUP_EXIT_EXTWAKE
-#if SAML21
 		&& (system_get_pin_wakeup_cause() & (1 << CONF_EXT_WAKEUP_PIN))
-#endif
 		) {
 		system_init();
 		delay_init();
@@ -149,6 +148,7 @@ int main(void)
 		port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
 		while(1);
 	}
+#endif
 //! [ext_wakeup]
 
 //! [backup_stanby_mode]
@@ -198,12 +198,13 @@ int main(void)
 	/* Set external wakeup detector */
 	system_enable_pin_wakeup(1<<CONF_EXT_WAKEUP_PIN);
 	system_set_pin_wakeup_debounce_counter(SYSTEM_WAKEUP_DEBOUNCE_2CK32);
-#endif
+
 	/* Enter BACKUP mode */
 	system_set_sleepmode(SYSTEM_SLEEPMODE_BACKUP);
 	system_sleep();
 
 	/* Now system is in BACKUP mode and wait for extwakeup pin to low */
+#endif
 //! [backup_stanby_mode]
 
 //! [setup_init]
