@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_rww_eeprom_group SAM Read While Write EEPROM (RWW EEPROM) Emulator Service
  *
- * This driver for Atmel&reg; | SMART SAM provides an RWW emulated EEPROM
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an RWW emulated EEPROM
  * memory area, for the storage and retrieval of user-application
  * configuration data into and out of non-volatile memory. The main array
  * can therefore run code while EEPROM data is written.
