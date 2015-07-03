@@ -345,7 +345,7 @@ void TIMER0_Handler      ( void );
 #define WDT_INST_NUM           2
 #define WDT_INSTS              { WDT0, WDT1 }
 
-#define LPMCU_MISC_REGS0       ((Lpmcu_Misc_Regs *)0x4000b000UL) /**< \brief (LPMCU_MISC_REGS0) Base Address */
+#define LPMCU_MISC_REGS0       ((LpmcuMiscRegs *)0x4000b000UL) /**< \brief (LPMCU_MISC_REGS0) Base Address */
 #define LPMCU_MISC_REGS_INST_NUM 1
 #define LPMCU_MISC_REGS_INSTS  { LPMCU_MISC_REGS0 }
 

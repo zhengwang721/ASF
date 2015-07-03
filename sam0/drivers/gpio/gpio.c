@@ -45,16 +45,6 @@
  */
 #include <gpio.h>
 
-static void _REG_WR(uint32_t addr, uint32_t value)
-{
-	(*(volatile unsigned int *)(addr)) = (value);
-}
-
-static uint32_t _REG_RD(uint32_t addr)
-{
-	return (*(volatile unsigned int *)(addr));
-}
-
 /**
  *  \brief Initializes a gpio pin/group configuration structure to defaults.
  *
@@ -101,65 +91,49 @@ void gpio_get_config_defaults(struct gpio_config *const config)
 enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
 		const struct gpio_config *config)
 {
-	uint32_t regaddr,regval;
 	enum status_code status = STATUS_OK;
 
 	/* Following GPIO's should never be modified by user.
-		* GPIO_0 & GPIO_1 are used for SWD
-		* GPIO_14 is used by firmware for coex.
-		*/
-	if ((gpio_pin == PIN_GPIO_0) || \
-		(gpio_pin == PIN_GPIO_1) || \
-		(gpio_pin == PIN_GPIO_14) ||
-		(gpio_pin > 23))
+	* GPIO_0 & GPIO_1 are used for SWD
+	* GPIO_14 is used by firmware for coex.
+	*/
+	if ((gpio_pin == LPGPIO_0) || \
+		(gpio_pin == LPGPIO_1) || \
+		(gpio_pin == LPGPIO_14) ||
+		(gpio_pin > 24))
 	{
 		status = STATUS_ERR_INVALID_ARG;
 	} else {
 		if (gpio_pin <= 7) {
-			regaddr = REG_LPMCU_MISC_REGS0_PINMUX_SEL_0;
+			LPMCU_MISC_REGS0->PINMUX_SEL_0.reg &= ~(7 << ((gpio_pin % 8) * 4));
 		} else if (gpio_pin <= 15) {
-			regaddr = REG_LPMCU_MISC_REGS0_PINMUX_SEL_1;
+			LPMCU_MISC_REGS0->PINMUX_SEL_1.reg &= ~(7 << ((gpio_pin % 8) * 4));
 		} else if (gpio_pin <= 23) {
-			regaddr = REG_LPMCU_MISC_REGS0_PINMUX_SEL_2;
+			LPMCU_MISC_REGS0->PINMUX_SEL_2.reg &= ~(7 << ((gpio_pin % 8) * 4));
 		}
-		regval = _REG_RD(regaddr);
-		regval &= ~(7 << ((gpio_pin % 8) * 4));
-		_REG_WR(regaddr, regval);
 
 		if(config->direction == GPIO_PIN_DIR_INPUT) {
 			if(gpio_pin <= 7) {
-				GPIO0->OUTENCLR |= (1 << gpio_pin);
+				GPIO0->OUTENCLR.reg |= (1 << gpio_pin);
 			} else if (gpio_pin <= 15) {
-				GPIO1->OUTENCLR |= (1 << (gpio_pin % 8));
+				GPIO1->OUTENCLR.reg |= (1 << (gpio_pin % 8));
 			} else if (gpio_pin <= 23) {
-				GPIO2->OUTENCLR |= (1 << (gpio_pin % 16));
+				GPIO2->OUTENCLR.reg |= (1 << (gpio_pin % 16));
 			}
 			/* pull_enable. */
 			switch(config->input_pull) {
 				case GPIO_PIN_PULL_NONE:
-					regaddr = REG_LPMCU_MISC_REGS0_PULL_ENABLE;
-					regval = _REG_RD(regaddr);
-					regval |= (1 << gpio_pin);
-					_REG_WR(regaddr, regval);
+					LPMCU_MISC_REGS0->PULL_ENABLE.reg |= (1 << gpio_pin);
 					break;
 				case GPIO_PIN_PULL_UP:
-					regaddr = REG_LPMCU_MISC_REGS0_PULL_ENABLE;
-					regval = _REG_RD(regaddr);
-					regval &= ~(1 << gpio_pin);
-					_REG_WR(regaddr, regval);
+					LPMCU_MISC_REGS0->PULL_ENABLE.reg &= ~(1 << gpio_pin);
 					break;
 #ifdef CHIPVERSION_B0
 				case GPIO_PIN_PULL_DOWN:
 					/* Set R-Type */
-					regaddr = REG_LPMCU_MISC_REGS0_RTYPE_PAD_0;
-					regval = _REG_RD(regaddr);
-					regval |= (1 << gpio_pin);
-					_REG_WR(regaddr, regval);
+					LPMCU_MISC_REGS0->RTYPE_PAD_0.reg |= (1 << gpio_pin);
 					/* Sete REN */
-					regaddr = REG_LPMCU_MISC_REGS0_PULL_ENABLE;
-					regval = _REG_RD(regaddr);
-					regval &= ~(1 << gpio_pin);
-					_REG_WR(regaddr, regval);
+					LPMCU_MISC_REGS0->PULL_ENABLE.reg &= ~(1 << gpio_pin);
 					break;
 #endif	//CHIPVERSION_B0
 				default:
@@ -168,11 +142,11 @@ enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
 			}
 		} else if(config->direction == GPIO_PIN_DIR_OUTPUT) {
 			if (gpio_pin <= 7) {
-				GPIO0->OUTENSET |= (1 << gpio_pin);
+				GPIO0->OUTENSET.reg |= (1 << gpio_pin);
 			} else if (gpio_pin <= 15) {
-				GPIO1->OUTENSET |= (1 << (gpio_pin % 8));
+				GPIO1->OUTENSET.reg |= (1 << (gpio_pin % 8));
 			} else if (gpio_pin <= 23) {
-				GPIO2->OUTENSET |= (1 << (gpio_pin % 16));
+				GPIO2->OUTENSET.reg |= (1 << (gpio_pin % 16));
 			}
 		}
 	}
@@ -194,13 +168,13 @@ bool gpio_pin_get_input_level(const uint8_t gpio_pin)
 	uint32_t regval;
 
 	if (gpio_pin <= 7) {
-		regval = GPIO0->DATA;
+		regval = GPIO0->DATA.reg;
 		return (regval & (1 << gpio_pin));
 	} else if (gpio_pin <= 15) {
-		regval = GPIO1->DATA;
+		regval = GPIO1->DATA.reg;
 		return (regval & (1 << (gpio_pin % 8)));
 	} else if (gpio_pin <= 23) {
-		regval = GPIO2->DATA;
+		regval = GPIO2->DATA.reg;
 		return (regval & (1 << (gpio_pin % 16)));
 	}
 }
@@ -220,13 +194,13 @@ bool gpio_pin_get_output_level(const uint8_t gpio_pin)
 	uint32_t regval;
 
 	if (gpio_pin <= 7) {
-		regval = GPIO0->DATAOUT;
+		regval = GPIO0->DATAOUT.reg;
 		return (regval & (1 << gpio_pin));
 	} else if (gpio_pin <= 15) {
-		regval = GPIO1->DATAOUT;
+		regval = GPIO1->DATAOUT.reg;
 		return (regval & (1 << (gpio_pin % 8)));
 	} else if (gpio_pin <= 23) {
-		regval = GPIO2->DATAOUT;
+		regval = GPIO2->DATAOUT.reg;
 		return (regval & (1 << (gpio_pin % 16)));
 	}
 }
@@ -243,21 +217,21 @@ void gpio_pin_set_output_level(const uint8_t gpio_pin, const bool level)
 {
 	if(gpio_pin <= 7) {
 		if(level) {
-			GPIO0->DATAOUT |= (1 << gpio_pin);
+			GPIO0->DATAOUT.reg |= (1 << gpio_pin);
 		} else {
-			GPIO0->DATAOUT &= ~(1 << gpio_pin);
+			GPIO0->DATAOUT.reg &= ~(1 << gpio_pin);
 		}
 	} else if (gpio_pin <= 15) {
 		if(level) {
-			GPIO1->DATAOUT |= (1 << (gpio_pin % 8));
+			GPIO1->DATAOUT.reg |= (1 << (gpio_pin % 8));
 		} else {
-			GPIO1->DATAOUT &= ~(1 << (gpio_pin % 8));
+			GPIO1->DATAOUT.reg &= ~(1 << (gpio_pin % 8));
 		}
 	} else if (gpio_pin <= 23) {
 		if(level) {
-			GPIO2->DATAOUT |= (1 << (gpio_pin % 16));
+			GPIO2->DATAOUT.reg |= (1 << (gpio_pin % 16));
 		} else {
-			GPIO2->DATAOUT &= ~(1 << (gpio_pin % 16));
+			GPIO2->DATAOUT.reg &= ~(1 << (gpio_pin % 16));
 		}
 	}
 }
@@ -272,11 +246,34 @@ void gpio_pin_set_output_level(const uint8_t gpio_pin, const bool level)
 void gpio_pin_toggle_output_level(const uint8_t gpio_pin)
 {
 	if (gpio_pin <= 7) {
-		GPIO0->DATAOUT ^= (1 << gpio_pin);
+		GPIO0->DATAOUT.reg ^= (1 << gpio_pin);
 	} else if (gpio_pin <= 15) {
-		GPIO1->DATAOUT ^= (1 << (gpio_pin % 8));
+		GPIO1->DATAOUT.reg ^= (1 << (gpio_pin % 8));
 	} else if (gpio_pin <= 23) {
-		GPIO2->DATAOUT ^= (1 << (gpio_pin % 16));
+		GPIO2->DATAOUT.reg ^= (1 << (gpio_pin % 16));
+	}
+}
+
+/**
+ *  \brief Writes a GPIO pin configuration to the hardware module.
+ *
+ *  Writes out a given configuration of a GPIO pin configuration to the hardware
+ *  module.
+ *
+ *  \param[in] gpio_pin   Index of the GPIO pin to toggle.
+ *  \param[in] pinmux_sel PINMUX selection.
+ */
+void gpio_pinmux_cofiguration(const uint8_t gpio_pin, enum gpio_pinmux_sel pinmux_sel)
+{
+	if (gpio_pin <= 7) {
+		LPMCU_MISC_REGS0->PINMUX_SEL_0.reg &= ~(7 << ((gpio_pin % 8) * 4));
+		LPMCU_MISC_REGS0->PINMUX_SEL_0.reg |= (pinmux_sel << ((gpio_pin % 8)*4));
+	} else if (gpio_pin <= 15) {
+		LPMCU_MISC_REGS0->PINMUX_SEL_1.reg &= ~(7 << ((gpio_pin % 8) * 4));
+		LPMCU_MISC_REGS0->PINMUX_SEL_1.reg |= (pinmux_sel << ((gpio_pin % 8)*4));
+	} else if (gpio_pin <= 23) {
+		LPMCU_MISC_REGS0->PINMUX_SEL_2.reg &= ~(7 << ((gpio_pin % 8) * 4));
+		LPMCU_MISC_REGS0->PINMUX_SEL_2.reg |= (pinmux_sel << ((gpio_pin % 8)*4));
 	}
 }
 

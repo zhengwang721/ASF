@@ -172,6 +172,22 @@ enum gpio_pin_pull {
 };
 
 /**
+ *  \brief GPIO pinmux selection enum.
+ *
+ *  Enum for the pinmux settings of the GPIO pin configuration.
+ */
+enum gpio_pinmux_sel {
+	GPIO_PINMUX_SEL_0 = 0,
+	GPIO_PINMUX_SEL_1,
+	GPIO_PINMUX_SEL_2,
+	GPIO_PINMUX_SEL_3,
+	GPIO_PINMUX_SEL_4,
+	GPIO_PINMUX_SEL_5,
+	GPIO_PINMUX_SEL_6,
+	GPIO_PINMUX_SEL_7,
+};
+
+/**
  *  \brief GPIO pin configuration structure.
  *
  *  Configuration structure for a GPIO pin instance. This structure should be
@@ -216,8 +232,13 @@ bool gpio_pin_get_input_level(const uint8_t gpio_pin);
 bool gpio_pin_get_output_level(const uint8_t gpio_pin);
 void gpio_pin_set_output_level(const uint8_t gpio_pin, const bool level);
 void gpio_pin_toggle_output_level(const uint8_t gpio_pin);
-
 /** @} */
+
+/** \name PINMUX selection configuration
+ * @{
+ */
+void gpio_pinmux_cofiguration(const uint8_t gpio_pin, enum gpio_pinmux_sel pinmux_sel);
+/** @}*/
 
 /** @}*/
 
