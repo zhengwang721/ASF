@@ -1,0 +1,21 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="PROXIMITY REPORTER APPLICATION" id="thirdparty.wireless.ble_sdk.apps.pxp_reporter">
+		<info type="description" value="summary">
+		Proximity Reporter Application for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="pxp_reporter.h"/> 
+		<build type="c-source" value="pxp_application.c"/>
+		<build type="c-source" value="pxp_reporter.c"/>
+		<build type="c-source" value="pxp_immediate_alert_service.c"/>
+		<build type="c-source" value="pxp_linkloss_service.c"/>
+		<build type="c-source" value="pxp_txpower_service.c"/>
+		<require idref="thirdparty.wireless.ble_sdk.lib"/>
+		<require idref="thirdparty.wireless.ble_sdk.inc"/>
+		<require idref="thirdparty.wireless.ble_sdk.src"/>
+		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
+		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>
