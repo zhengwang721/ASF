@@ -259,8 +259,8 @@ uint32_t pdc_read_tx_next_counter(Pdc *p_pdc);
  *
  *
  *
- * \page asfdoc_sam_pmc_quickstart_basic Quick Start Guide for PDC - Basic
- * This is the quickstart guide for the \ref asfdoc_sam_drivers_pdc_group 
+ * \page asfdoc_sam_pdc_quickstart_basic Quick Start Guide for PDC - Basic
+ * This is the quickstart guide for \ref asfdoc_sam_drivers_pdc_group
  * with step-by-step instructions on how to configure and use the driver.
  *
  *
@@ -294,7 +294,7 @@ uint32_t pdc_read_tx_next_counter(Pdc *p_pdc);
  * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
- *  - \subpage asfdoc_sam_pmc_quickstart_basic
+ *  - \subpage asfdoc_sam_pdc_quickstart_basic
  *  - \subpage asfdoc_sam_drivers_pdc_example
  *
  *
