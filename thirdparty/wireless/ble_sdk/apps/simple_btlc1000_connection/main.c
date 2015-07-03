@@ -60,10 +60,10 @@
 #define BEACON_IDENTIFIER (0x46)
 
 /* Beacon advertisement Interval */
-#define BEACON_ADV_INTERVAL (32) //in 0.625ms
+#define BEACON_ADV_INTERVAL (100) //in 0.625ms
 
 /* Beacon Advertisement timeout */
-#define BEACON_ADV_TIMEOUT	(50) //in 0.625ms
+#define BEACON_ADV_TIMEOUT	(1000) //in 0.625ms
 
 /* Beacon Advertise at exact interval */
 #define BEACON_ABSOLUTE_INTERVAL_ADV (true)
