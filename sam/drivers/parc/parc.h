@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam_drivers_parc_group SAM4L Parallel Capture (PARC) Driver
  *
- * This driver for Atmel® | SMART ARM®-based microcontrollers provides an interface for 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for 
  * the configuration and management of the Parallel Capture module.
  *
  * The Parallel Capture module samples an external 8-bit bus with an external
