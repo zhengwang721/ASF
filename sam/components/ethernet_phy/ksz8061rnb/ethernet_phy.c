@@ -59,9 +59,9 @@ extern "C" {
 /// @endcond
 
 /**
- * \defgroup ksz8051mnl_ethernet_phy_group PHY component (KSZ8051MNL)
+ * \defgroup ksz8061rnb_ethernet_phy_group PHY component (KSZ8061RNB)
  *
- * Driver for the ksz8051mnl component. This driver provides access to the main
+ * Driver for the ksz8061rnb component. This driver provides access to the main
  * features of the PHY.
  *
  * \section dependencies Dependencies

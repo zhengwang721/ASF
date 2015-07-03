@@ -1094,9 +1094,9 @@ static inline void gmac_config_idleslope_b(Gmac* p_gmac, uint32_t idleslope_b)
 	p_gmac->GMAC_CBSISQB = idleslope_b;
 }
 
-static inline void gmac_write_screener_reg_1(Gmac* p_gmac, uint32_t reg_val, gmac_quelist_t queue_idx)
+static inline void gmac_write_screener_reg_1(Gmac* p_gmac, uint32_t reg_val, uint32_t index)
 {
-	p_gmac->GMAC_ST1RPQ[queue_idx] = reg_val;
+	p_gmac->GMAC_ST1RPQ[index] = reg_val;
 }
 
 static inline void gmac_write_screener_reg_2 (Gmac* p_gmac, uint32_t reg_val, uint32_t index)
@@ -1119,9 +1119,9 @@ static inline uint32_t gmac_get_priority_interrupt_mask(Gmac* p_gmac, gmac_queli
 	return p_gmac->GMAC_IMRPQ[queue_idx - 1];
 }
 
-static inline void gmac_write_ethtype_reg(Gmac* p_gmac, uint16_t ethertype, gmac_quelist_t queue_idx)
+static inline void gmac_write_ethtype_reg(Gmac* p_gmac, uint16_t ethertype, uint32_t index)
 {
-	p_gmac->GMAC_ST2ER[queue_idx] = (uint32_t)ethertype;
+	p_gmac->GMAC_ST2ER[index] = (uint32_t)ethertype;
 }
 
 static inline void gmac_write_screen_compare_reg(Gmac* p_gmac, uint32_t c0reg, uint16_t c1reg, uint32_t index)
