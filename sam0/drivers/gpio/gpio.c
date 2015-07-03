@@ -165,18 +165,20 @@ enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
  */
 bool gpio_pin_get_input_level(const uint8_t gpio_pin)
 {
-	uint32_t regval;
+	uint32_t regval = 0;
 
 	if (gpio_pin <= 7) {
 		regval = GPIO0->DATA.reg;
-		return (regval & (1 << gpio_pin));
+		regval &= (1 << gpio_pin);
 	} else if (gpio_pin <= 15) {
 		regval = GPIO1->DATA.reg;
-		return (regval & (1 << (gpio_pin % 8)));
+		regval &= (1 << (gpio_pin % 8));
 	} else if (gpio_pin <= 23) {
 		regval = GPIO2->DATA.reg;
-		return (regval & (1 << (gpio_pin % 16)));
+		regval &= (1 << (gpio_pin % 16));
 	}
+	
+	return regval;
 }
 
 /**
@@ -191,18 +193,20 @@ bool gpio_pin_get_input_level(const uint8_t gpio_pin)
  */
 bool gpio_pin_get_output_level(const uint8_t gpio_pin)
 {
-	uint32_t regval;
+	uint32_t regval = 0;
 
 	if (gpio_pin <= 7) {
 		regval = GPIO0->DATAOUT.reg;
-		return (regval & (1 << gpio_pin));
+		regval &= (1 << gpio_pin);
 	} else if (gpio_pin <= 15) {
 		regval = GPIO1->DATAOUT.reg;
-		return (regval & (1 << (gpio_pin % 8)));
+		regval &= (1 << (gpio_pin % 8));
 	} else if (gpio_pin <= 23) {
 		regval = GPIO2->DATAOUT.reg;
-		return (regval & (1 << (gpio_pin % 16)));
+		regval &= (1 << (gpio_pin % 16));
 	}
+	
+	return regval;
 }
 
 /**

@@ -76,7 +76,7 @@ void configure_gpio_pins(void)
 
 int main(void)
 {
-	system_init();
+	//system_init();
 
 	//! [setup_init]
 	configure_gpio_pins();
