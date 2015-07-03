@@ -116,7 +116,7 @@
  *          In most cases, this should be global.
  *
  * -# Configure the ADC module.
- *  -# Create a ADC module configuration struct, which can be filled out to
+ *  -# Create an ADC module configuration struct, which can be filled out to
  *     adjust the configuration of a physical ADC peripheral.
  *     \snippet qs_adc_dma_use.c setup_adc_config
  *  -# Initialize the ADC configuration struct with the module's default values.
@@ -177,7 +177,7 @@
  *    adjust the configuration of a single DMA transfer.
  *  \snippet qs_adc_dma_use.c setup_dma_config
  *
- * -# Initialize the DMA resource configuration struct with the module's.
+ * -# Initialize the DMA resource configuration struct with the module's
  *    default values.
  *    \snippet qs_adc_dma_use.c setup_dma_set_config_default
  *    \note This should always be performed before using the configuration
