@@ -141,16 +141,14 @@ typedef union {
 #define   GCLK_GENCTRL_SRC_GCLKIN_Val     0x1ul  /**< \brief (GCLK_GENCTRL) Generator input pad */
 #define   GCLK_GENCTRL_SRC_GCLKGEN1_Val   0x2ul  /**< \brief (GCLK_GENCTRL) Generic clock generator 1 output */
 #define   GCLK_GENCTRL_SRC_OSCULP32K_Val  0x3ul  /**< \brief (GCLK_GENCTRL) OSCULP32K oscillator output */
-#define   GCLK_GENCTRL_SRC_OSC32K_Val     0x4ul  /**< \brief (GCLK_GENCTRL) OSC32K oscillator output */
-#define   GCLK_GENCTRL_SRC_XOSC32K_Val    0x5ul  /**< \brief (GCLK_GENCTRL) XOSC32K oscillator output */
-#define   GCLK_GENCTRL_SRC_OSC16M_Val     0x6ul  /**< \brief (GCLK_GENCTRL) OSC16M oscillator output */
-#define   GCLK_GENCTRL_SRC_DFLL48M_Val    0x7ul  /**< \brief (GCLK_GENCTRL) DFLL48M output */
-#define   GCLK_GENCTRL_SRC_DPLL96M_Val    0x8ul  /**< \brief (GCLK_GENCTRL) DPLL96M output */
+#define   GCLK_GENCTRL_SRC_XOSC32K_Val    0x4ul  /**< \brief (GCLK_GENCTRL) XOSC32K oscillator output */
+#define   GCLK_GENCTRL_SRC_OSC16M_Val     0x5ul  /**< \brief (GCLK_GENCTRL) OSC16M oscillator output */
+#define   GCLK_GENCTRL_SRC_DFLL48M_Val    0x6ul  /**< \brief (GCLK_GENCTRL) DFLL48M output */
+#define   GCLK_GENCTRL_SRC_DPLL96M_Val    0x7ul  /**< \brief (GCLK_GENCTRL) DPLL96M output */
 #define GCLK_GENCTRL_SRC_XOSC       (GCLK_GENCTRL_SRC_XOSC_Val     << GCLK_GENCTRL_SRC_Pos)
 #define GCLK_GENCTRL_SRC_GCLKIN     (GCLK_GENCTRL_SRC_GCLKIN_Val   << GCLK_GENCTRL_SRC_Pos)
 #define GCLK_GENCTRL_SRC_GCLKGEN1   (GCLK_GENCTRL_SRC_GCLKGEN1_Val << GCLK_GENCTRL_SRC_Pos)
 #define GCLK_GENCTRL_SRC_OSCULP32K  (GCLK_GENCTRL_SRC_OSCULP32K_Val << GCLK_GENCTRL_SRC_Pos)
-#define GCLK_GENCTRL_SRC_OSC32K     (GCLK_GENCTRL_SRC_OSC32K_Val   << GCLK_GENCTRL_SRC_Pos)
 #define GCLK_GENCTRL_SRC_XOSC32K    (GCLK_GENCTRL_SRC_XOSC32K_Val  << GCLK_GENCTRL_SRC_Pos)
 #define GCLK_GENCTRL_SRC_OSC16M     (GCLK_GENCTRL_SRC_OSC16M_Val   << GCLK_GENCTRL_SRC_Pos)
 #define GCLK_GENCTRL_SRC_DFLL48M    (GCLK_GENCTRL_SRC_DFLL48M_Val  << GCLK_GENCTRL_SRC_Pos)

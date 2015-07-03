@@ -71,7 +71,7 @@ void PendSV_Handler          ( void ) __attribute__ ((weak, alias("Dummy_Handler
 void SysTick_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 
 /* Peripherals handlers */
-void SYSTEM_Handler          ( void ) __attribute__ ((weak, alias("Dummy_Handler"))); /* MCLK, OSCCTRL, OSC32KCTRL, PAC, PM, SUPC, TAL */
+void SYSTEM_Handler          ( void ) __attribute__ ((weak, alias("Dummy_Handler"))); /* MCLK, OSC32KCTRL, OSCCTRL, PAC, PM, SUPC, TAL */
 void WDT_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void RTC_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void EIC_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
@@ -136,7 +136,7 @@ const DeviceVectors exception_table = {
         (void*) SysTick_Handler,
 
         /* Configurable interrupts */
-        (void*) SYSTEM_Handler,         /*  0 Main Clock, Oscillators Control, 32k Oscillators Control, Peripheral Access Controller, Power Manager, Supply Controller, Trigger Allocator */
+        (void*) SYSTEM_Handler,         /*  0 Main Clock, 32k Oscillators Control, Oscillators Control, Peripheral Access Controller, Power Manager, Supply Controller, Trigger Allocator */
         (void*) WDT_Handler,            /*  1 Watchdog Timer */
         (void*) RTC_Handler,            /*  2 Real-Time Counter */
         (void*) EIC_Handler,            /*  3 External Interrupt Controller */

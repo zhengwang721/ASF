@@ -312,14 +312,21 @@ void extint_chan_set_config(
 		= (EIC_module->CONFIG[channel / 8].reg &
 			~((EIC_CONFIG_SENSE0_Msk | EIC_CONFIG_FILTEN0) << config_pos)) |
 			(new_config << config_pos);
-
+#if (SAML22)
+	/* Config asynchronous edge detection */
+	if (config->enable_async_edge_detection) {
+		EIC_module->ASYNCH.reg |= (1UL << channel);
+	} else {
+		EIC_module->ASYNCH.reg &= (EIC_ASYNCH_MASK & (~(1UL << channel)));
+	}
+#else
 	/* Config asynchronous edge detection */
 	if (config->enable_async_edge_detection) {
 		EIC_module->EIC_ASYNCH.reg |= (1UL << channel);
 	} else {
 		EIC_module->EIC_ASYNCH.reg &= (EIC_EIC_ASYNCH_MASK & (~(1UL << channel)));
 	}
-
+#endif
 	_extint_enable();
 }
 

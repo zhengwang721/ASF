@@ -316,6 +316,10 @@ typedef union {
 #define TAL_CTICTRLA_ACTION_IGNORE  (TAL_CTICTRLA_ACTION_IGNORE_Val << TAL_CTICTRLA_ACTION_Pos)
 #define TAL_CTICTRLA_RESTART_Pos    2            /**< \brief (TAL_CTICTRLA) Action when global restart issued */
 #define TAL_CTICTRLA_RESTART        (0x1ul << TAL_CTICTRLA_RESTART_Pos)
+#define   TAL_CTICTRLA_RESTART_RESTART_Val 0x0ul  /**< \brief (TAL_CTICTRLA) Restart when requested */
+#define   TAL_CTICTRLA_RESTART_IGNORE_Val 0x1ul  /**< \brief (TAL_CTICTRLA) Ignore restart request */
+#define TAL_CTICTRLA_RESTART_RESTART (TAL_CTICTRLA_RESTART_RESTART_Val << TAL_CTICTRLA_RESTART_Pos)
+#define TAL_CTICTRLA_RESTART_IGNORE (TAL_CTICTRLA_RESTART_IGNORE_Val << TAL_CTICTRLA_RESTART_Pos)
 #define TAL_CTICTRLA_MASK           0x07ul       /**< \brief (TAL_CTICTRLA) MASK Register */
 
 /* -------- TAL_CTIMASK : (TAL Offset: 0x11) (R/W  8) CTIS Cross-Trigger Interface n Mask -------- */
@@ -800,6 +804,25 @@ typedef union {
 #define TAL_IRQTRIG_OVERRIDE(value) (TAL_IRQTRIG_OVERRIDE_Msk & ((value) << TAL_IRQTRIG_OVERRIDE_Pos))
 #define TAL_IRQTRIG_MASK            0xFF3Ful     /**< \brief (TAL_IRQTRIG) MASK Register */
 
+/* -------- TAL_CPUIRQS : (TAL Offset: 0x64) (R/  32) Interrupt Status for CPU n -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t CPUIRQS:26;       /*!< bit:  0..25  Interrupt Requests for CPU n       */
+    uint32_t :6;               /*!< bit: 26..31  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} TAL_CPUIRQS_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define TAL_CPUIRQS_OFFSET          0x64         /**< \brief (TAL_CPUIRQS offset) Interrupt Status for CPU n */
+#define TAL_CPUIRQS_RESETVALUE      0x00000000ul /**< \brief (TAL_CPUIRQS reset_value) Interrupt Status for CPU n */
+
+#define TAL_CPUIRQS_CPUIRQS_Pos     0            /**< \brief (TAL_CPUIRQS) Interrupt Requests for CPU n */
+#define TAL_CPUIRQS_CPUIRQS_Msk     (0x3FFFFFFul << TAL_CPUIRQS_CPUIRQS_Pos)
+#define TAL_CPUIRQS_CPUIRQS(value)  (TAL_CPUIRQS_CPUIRQS_Msk & ((value) << TAL_CPUIRQS_CPUIRQS_Pos))
+#define TAL_CPUIRQS_MASK            0x03FFFFFFul /**< \brief (TAL_CPUIRQS) MASK Register */
+
 /** \brief TalCtis hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef struct {
@@ -837,6 +860,8 @@ typedef struct {
   __IO TAL_INTCPUSEL0_Type       INTCPUSEL0;  /**< \brief Offset: 0x58 (R/W 32) Interrupts CPU Select 0 */
   __IO TAL_INTCPUSEL1_Type       INTCPUSEL1;  /**< \brief Offset: 0x5C (R/W 32) Interrupts CPU Select 1 */
   __IO TAL_IRQTRIG_Type          IRQTRIG;     /**< \brief Offset: 0x60 (R/W 16) Interrupt Trigger */
+       RoReg8                    Reserved8[0x2];
+  __I  TAL_CPUIRQS_Type          CPUIRQS[1];  /**< \brief Offset: 0x64 (R/  32) Interrupt Status for CPU n */
 } Tal;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 

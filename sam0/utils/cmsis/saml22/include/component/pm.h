@@ -192,8 +192,8 @@ typedef union {
     uint16_t :6;               /*!< bit:  0.. 5  Reserved                           */
     uint16_t VREGSMOD:2;       /*!< bit:  6.. 7  Voltage Regulator Standby mode     */
     uint16_t :2;               /*!< bit:  8.. 9  Reserved                           */
-    uint16_t BBIASHS:1;        /*!< bit:     10  Back Bias for HMCRAMCHS            */
-    uint16_t :5;               /*!< bit: 11..15  Reserved                           */
+    uint16_t BBIASHS:2;        /*!< bit: 10..11  Back Bias for HMCRAMCHS            */
+    uint16_t :4;               /*!< bit: 12..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } PM_STDBYCFG_Type;
@@ -212,9 +212,9 @@ typedef union {
 #define PM_STDBYCFG_VREGSMOD_PERFORMANCE (PM_STDBYCFG_VREGSMOD_PERFORMANCE_Val << PM_STDBYCFG_VREGSMOD_Pos)
 #define PM_STDBYCFG_VREGSMOD_LP     (PM_STDBYCFG_VREGSMOD_LP_Val   << PM_STDBYCFG_VREGSMOD_Pos)
 #define PM_STDBYCFG_BBIASHS_Pos     10           /**< \brief (PM_STDBYCFG) Back Bias for HMCRAMCHS */
-#define PM_STDBYCFG_BBIASHS_Msk     (0x1ul << PM_STDBYCFG_BBIASHS_Pos)
+#define PM_STDBYCFG_BBIASHS_Msk     (0x3ul << PM_STDBYCFG_BBIASHS_Pos)
 #define PM_STDBYCFG_BBIASHS(value)  (PM_STDBYCFG_BBIASHS_Msk & ((value) << PM_STDBYCFG_BBIASHS_Pos))
-#define PM_STDBYCFG_MASK            0x04C0ul     /**< \brief (PM_STDBYCFG) MASK Register */
+#define PM_STDBYCFG_MASK            0x0CC0ul     /**< \brief (PM_STDBYCFG) MASK Register */
 
 /** \brief PM hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
