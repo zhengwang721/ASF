@@ -50,7 +50,7 @@
  * \defgroup asfdoc_sam_drivers_gpio_group SAM4L General-Purpose Input/Output (GPIO) Driver
  * 
  *
- * This driver for Atmel® | SMART ARM®-based microcontrollers 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers 
  * provides an interface for the configuration and management of 
  * the on-chip General-Purpose Input/Output (GPIO) controller with 
  * both interrupt and event support.
