@@ -34,7 +34,7 @@
   <build type="header-file"   value="external_host/interface.h"/>
   <build type="header-file"   value="include/htpt.h"/>
   <build type="header-file"   value="include/htpt_task.h"/>
-  <build type="header-file"   value="include/profiles.h"/>
+  <!-- <build type="header-file"   value="include/profiles.h"/> -->
   <build type="header-file"   value="include/error.h"/>
 		
 		<build type="doxygen-entry-point" value="ble_stack_group"/>

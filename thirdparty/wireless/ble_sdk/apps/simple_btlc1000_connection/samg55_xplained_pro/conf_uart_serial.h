@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Timer Driver Configuration Header
+ * \brief USART Serial Configuration
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,15 +40,22 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_TIMER_H_INCLUDED
-#define CONF_TIMER_H_INCLUDED
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     0
-#define ID_TC                (ID_TC0)
+#ifndef CONF_USART_SERIAL_H_INCLUDED
+#define CONF_USART_SERIAL_H_INCLUDED
 
-#define DEF_1MHZ			(1000000)
-#define DEF_120MHz			(120000000)
-#define TIMER_OVF_COUNT_1SEC	(DEF_120MHz/(128*65535))
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   (115200UL)
+/** Character length setting */
+#define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
+/** Parity setting */
+#define CONF_UART_PARITY     US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
 
-#endif
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

@@ -55,15 +55,9 @@ void platform_interface_callback(uint8_t* data, uint32_t len)
 				{
 					if(!special_events_handler(msg_id, src_id, NULL))
 					{
-						// post it into the event queue
-						if(msg_id != 0x3401)
-						{
+
 							event_post(msg_id, src_id, NULL);
-						}
-						else
-						{
 							state = NMI_BLE_WAITING;
-						}
 					}
 				}
 

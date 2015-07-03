@@ -27,19 +27,19 @@ uint8_t dbg_le_set_bd_addr_req_handler(uint8_t* addr)
 		if(u8Status != AT_BLE_SUCCESS)
 			break;
 
-		chip_id&=0xFFFFFF00;
+		chip_id&=0xFFFFFF;
 		switch(chip_id)
 		{
-			case 0x2000a000 :
+			case 0x2000a0 :
 				gap_dev_addr = 0x10000E26;
 				break;
-			case 0x2000a200 :
+			case 0x2000a2 :
 				gap_dev_addr = 0x10001096;
 				break;
-			case 0x2000a300 :
+			case 0x2000a3 :
 				gap_dev_addr = 0x10001156;
 				break;
-			case 0x2000a400 :
+			case 0x2000a4 :
 				gap_dev_addr = 0x1000085A;
 				break;
 		}

@@ -12,6 +12,13 @@
 		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
 		<device-support-alias value="ble_stack_lib_support"/>
+		<build type="distribute" subtype="user-file" value="BTLC1000_BluSDK_HTPT_Getting_Started_Guide.pdf"/>		
+		<info type="keyword" value="technology">
+			<keyword value="Wireless"/>
+			<keyword value="Communication"/>
+			<keyword value="BLE"/>
+			<keyword value="Bluetooth"/>
+		</info>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

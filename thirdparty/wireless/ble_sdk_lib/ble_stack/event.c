@@ -118,6 +118,11 @@ static at_ble_events_t handle_ble_event(uint16_t msg_id, uint16_t src_id, uint8_
 
 	switch(msg_id)
 	{
+		case GAPM_DEVICE_READY_IND:
+		{
+			evt_num = AT_BLE_DEVICE_READY;
+		}
+		break;
 		case GAPM_CMP_EVT:
 		{
 			evt_num = gapm_cmp_evt(data, params);
