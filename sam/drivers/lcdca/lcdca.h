@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam_drivers_lcdca_group SAM4L Liquid Crystal Display (LCDCA) Driver
  *
- * This driver for Atmel® | SMART ARM®-based microcontrollers provides an interface for 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for 
  * the configuration and management of the device's Liquid Crystal Display Controller 
  * functionality.
  *
