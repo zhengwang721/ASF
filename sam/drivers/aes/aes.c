@@ -63,7 +63,7 @@ aes_callback_t aes_callback_pointer[AES_INTERRUPT_SOURCE_NUM];
  * Initializes the specified AES configuration structure to a set of
  * known default values.
  *
- * \note This function should be called to initialize <b>all</b> new instances of
+ * \note This function should be called to initialize <i>all</i> new instances of
  * AES configuration structures before they are further modified by the user
  * application.
  *
@@ -196,7 +196,7 @@ void aes_set_config(
 }
 
 /**
- * \brief Write the 128/192/256bit cryptographic key.
+ * \brief Write the 128/192/256-bit cryptographic key.
  *
  * \param[out] p_aes Module hardware register base address pointer
  * \param[in]  p_key Pointer to 4/6/8 contiguous 32-bit words
