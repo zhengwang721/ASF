@@ -259,11 +259,10 @@ uint32_t pdc_read_tx_next_counter(Pdc *p_pdc);
  *
  *
  *
- * \page asfdoc_sam_pmc_quickstart Quickstart Guide for SAM4
- * This is the quickstart guide for the "PDC driver" with step-by-step
- * instructions on how to configure and use the driver.
+ * \page asfdoc_sam_pmc_quickstart_basic Quick Start Guide for PDC - Basic
+ * This is the quickstart guide for the \ref asfdoc_sam_drivers_pdc_group 
+ * with step-by-step instructions on how to configure and use the driver.
  *
- * \section asfdoc_sam_pmc_quickstart_basic_use_case Basic Use Case
  *
  * A handler is required for the interrupt, below is a simple example:
  * \snippet pdc_uart_example.c int_handler
@@ -295,6 +294,7 @@ uint32_t pdc_read_tx_next_counter(Pdc *p_pdc);
  * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
+ *  - \subpage asfdoc_sam_pmc_quickstart_basic
  *  - \subpage asfdoc_sam_drivers_pdc_example
  *
  *
