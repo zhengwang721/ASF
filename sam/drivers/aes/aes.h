@@ -53,7 +53,7 @@
 /**
  * \defgroup asfdoc_sam_drivers_aes_group SAM4C/4E Advanced Encryption Standard (AES) Driver
  *
- * This driver for Atmel® | SMART ARM®-based microcontrollers provides an interface for 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for 
  * the configuration and management of the device's Advanced Encryption
  * Standard functionality.
  *
