@@ -207,6 +207,8 @@ typedef enum aes_interrupt_source {
 	AES_INTERRUPT_RECEIVE_BUFFER_FULL = AES_IER_RXBUFF,
 	/** Transmit buffer empty interrupt (SAM4C devices only). */
 	AES_INTERRUPT_TRANSMIT_BUFFER_FULL = AES_IER_TXBUFE,
+#elif SAMV70 || SAMV71 || SAME70 || SAMS70 
+	AES_INTERRUPT_TAG_READY = AES_IER_TAGRDY,
 #endif /* SAM4C || SAM4CP || SAM4CM || defined(__DOXYGEN__) */
 } aes_interrupt_source_t;
 
@@ -216,6 +218,9 @@ typedef enum aes_interrupt_source {
 #elif SAM4C || SAM4CP || SAM4CM
 /** \internal Max number of interrupt sources. */
 #define AES_INTERRUPT_SOURCE_NUM 6
+#elif SAMV70 || SAMV71 || SAME70 || SAMS70
+/** \internal Max number of interrupt sources. */
+#define AES_INTERRUPT_SOURCE_NUM 3
 #endif
 
 /** AES interrupt callback function type. */
@@ -334,8 +339,10 @@ void aes_write_input_data(Aes *const p_aes,
 void aes_read_output_data(Aes *const p_aes,
 		uint32_t *p_output_data_buffer);
 
-#if SAM4C || SAM4CP || SAM4CM || defined(__DOXYGEN__)
+#if SAM4C || SAM4CP || SAM4CM || SAMV70 || SAMV71 || SAME70 || SAMS70 || defined(__DOXYGEN__)
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 Pdc *aes_get_pdc_base(Aes *p_aes);
+#endif
 
 /**
  * \brief Get the AES Additional Authenticated Data (AAD) length in bytes.
@@ -480,7 +487,7 @@ static inline void aes_write_gcmh(Aes *const p_aes, uint32_t id, uint32_t hword)
 	p_aes->AES_GCMHR[id] = hword;
 }
 
-#endif /* #if SAM4C || SAM4CP || SAM4CM || defined(__DOXYGEN__) */
+#endif /* #if SAM4C || SAM4CP || SAM4CM || SAMV70 || SAMV71 || SAME70 || SAMS70 || defined(__DOXYGEN__) */
 
 #ifdef __cplusplus
 }
