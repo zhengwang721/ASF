@@ -79,6 +79,9 @@ static void ble_data_sent_confim(void);
 /* Set BLE Address, If address is NULL then it will use BD public address */
 static void ble_set_address(at_ble_addr_t *addr);
 
+/* Update temperature type and location */
+static void update_temperature_type_location(void);
+
 static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
 at_ble_LTK_t app_bond_info;
@@ -88,6 +91,7 @@ at_ble_auth_t auth_info;
 htp_app_t htp_data;
 
 volatile bool app_timer_done = false;
+volatile bool button_pressed = false;
 
 /* Set BLE Address, If address is NULL then it will use BD public address */
 static void ble_set_address(at_ble_addr_t *addr)
@@ -555,6 +559,13 @@ int main (void)
 				else
 				{
 					DBG_LOG("Pairing failed");
+					/* Stop the hardware timer */
+					hw_timer_stop();
+					
+					/* BLE device disconnected, indicate to user */
+					ble_device_disconnected_ind();					
+					
+					at_ble_disconnect(handle, AT_BLE_TERMINATED_BY_USER);
 				}
 			}
 			break;
@@ -655,6 +666,13 @@ void htp_temperature_send(htp_app_t *htp_temp)
 	timestamp.month = 8;
 	timestamp.sec = 36;
 	timestamp.year = 15;
+	
+	if(button_pressed)
+	{
+		update_temperature_type_location();
+		button_pressed = false;
+	}
+	
 	at_ble_htpt_temp_send(convert_ieee754_ieee11073_float((float)temperature),
 	                     &timestamp,
 						 htp_temp->flags,
@@ -664,6 +682,11 @@ void htp_temperature_send(htp_app_t *htp_temp)
 }
 
 void button_cb(void)
+{
+	button_pressed = true;
+}
+
+static void update_temperature_type_location(void)
 {
 	htp_data.temperature_type = (at_ble_htpt_temp_type)((htp_data.temperature_type+1) % 9);
 	if ((htp_data.temperature_type == HTP_TYPE_ARMPIT) && (htp_data.flags == (HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE)))
