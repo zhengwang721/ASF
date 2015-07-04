@@ -297,7 +297,7 @@ int main (void)
 	
 	DBG_LOG("BLE Beacon Initialization completed");
 	
-	while(at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS)
+	while(at_ble_event_get(&event, params, 0xFFFFFFFF) == AT_BLE_SUCCESS)
 	{
 		switch(event)
 		{

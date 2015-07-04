@@ -83,7 +83,7 @@ static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 0xd6, 0xb2
 
 at_ble_LTK_t app_bond_info;
 bool app_device_bond = false;
-uint8_t auth_info = 0;
+at_ble_auth_t auth_info;
 
 htp_app_t htp_data;
 
@@ -255,7 +255,7 @@ int main (void)
 	
 	DBG_LOG("HTP Initialization completed. Waiting for Event");
 	
-	while(at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS)
+	while(at_ble_event_get(&event, params, 0xFFFFFFFF) == AT_BLE_SUCCESS)
 	{
 		switch(event)
 		{
@@ -574,9 +574,9 @@ int main (void)
 				}
 			
 				if(at_ble_encryption_request_reply(handle,
-													auth_info,
-													key_found,
-													app_bond_info) != AT_BLE_SUCCESS)
+                                                                  auth_info,
+                                                                  key_found,
+                                                                  app_bond_info) != AT_BLE_SUCCESS)
 				{
 					DBG_LOG("Encryption request reply failed");
 				}
@@ -624,7 +624,7 @@ void htp_init_defaults(htp_app_t *htp_temp)
 	htp_temp->min_measurement_intv = 1;
 	htp_temp->security_lvl = HTPT_UNAUTH;
 	htp_temp->optional = HTPT_ALL_FEAT_SUP;
-	htp_temp->flags = HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE;
+	htp_temp->flags = (at_ble_htpt_temp_flags)(HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE);
 }
 
 
@@ -665,14 +665,14 @@ void htp_temperature_send(htp_app_t *htp_temp)
 
 void button_cb(void)
 {
-	htp_data.temperature_type = ((htp_data.temperature_type+1) % 9);
+	htp_data.temperature_type = (at_ble_htpt_temp_type)((htp_data.temperature_type+1) % 9);
 	if ((htp_data.temperature_type == HTP_TYPE_ARMPIT) && (htp_data.flags == (HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE)))
 	{
-		htp_data.flags = HTPT_FLAG_FAHRENHEIT | HTPT_FLAG_TYPE;
+		htp_data.flags = (at_ble_htpt_temp_flags)(HTPT_FLAG_FAHRENHEIT | HTPT_FLAG_TYPE);
 	}
 	else if (htp_data.temperature_type == HTP_TYPE_ARMPIT)
 	{
-		htp_data.flags = HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE;
+		htp_data.flags = (at_ble_htpt_temp_flags)(HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE);
 	}
 }
 

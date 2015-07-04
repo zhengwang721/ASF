@@ -79,6 +79,8 @@ at_ble_status_t platform_init(void* platform_params)
 {	
 	ble_configure_control_pin();	
 	configure_serial_drv();
+        /* Keep compiler happy */
+        platform_params = platform_params;
 	return AT_BLE_SUCCESS;
 }
 

@@ -114,7 +114,9 @@ int ser_fifo_init(ser_fifo_desc_t *ser_fifo_desc, void *buffer, uint16_t size);
  */
 static inline uint8_t ser_fifo_get_used_size(ser_fifo_desc_t *ser_fifo_desc)
 {
-	return ((ser_fifo_desc->write_index - ser_fifo_desc->read_index) & ser_fifo_desc->mask);
+        uint16_t read_index;
+        read_index = ser_fifo_desc->read_index;
+	return ((ser_fifo_desc->write_index - read_index) & ser_fifo_desc->mask);
 }
 
 /**
@@ -140,7 +142,16 @@ static inline uint8_t ser_fifo_get_free_size(ser_fifo_desc_t *ser_fifo_desc)
  */
 static inline bool ser_fifo_is_empty(ser_fifo_desc_t *ser_fifo_desc)
 {
-	return (ser_fifo_desc->write_index == ser_fifo_desc->read_index);
+  uint16_t read_index;
+  read_index = ser_fifo_desc->read_index;
+  if(read_index == ser_fifo_desc->write_index)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
 }
 
 /**
@@ -313,7 +324,7 @@ static inline int ser_fifo_push_uint32(ser_fifo_desc_t *ser_fifo_desc, uint32_t 
  */
 static inline uint8_t ser_fifo_pull_uint8_nocheck(ser_fifo_desc_t *ser_fifo_desc)
 {
-	uint8_t read_index;
+	uint16_t read_index;
 	uint8_t item;
 
 	read_index = ser_fifo_desc->read_index;
@@ -366,7 +377,7 @@ static inline int ser_fifo_pull_uint8(ser_fifo_desc_t *ser_fifo_desc, uint8_t *i
  */
 static inline uint16_t ser_fifo_pull_uint16_nocheck(ser_fifo_desc_t *ser_fifo_desc)
 {
-	uint8_t read_index;
+	uint16_t read_index;
 	uint16_t item;
 
 	read_index = ser_fifo_desc->read_index;
@@ -393,7 +404,7 @@ static inline uint16_t ser_fifo_pull_uint16_nocheck(ser_fifo_desc_t *ser_fifo_de
  */
 static inline int ser_fifo_pull_uint16(ser_fifo_desc_t *ser_fifo_desc, uint16_t *item)
 {
-	uint8_t read_index;
+	uint16_t read_index;
 
 	if (ser_fifo_is_empty(ser_fifo_desc)) {
 		return SER_FIFO_ERROR_UNDERFLOW;
@@ -419,7 +430,7 @@ static inline int ser_fifo_pull_uint16(ser_fifo_desc_t *ser_fifo_desc, uint16_t 
  */
 static inline uint32_t ser_fifo_pull_uint32_nocheck(ser_fifo_desc_t *ser_fifo_desc)
 {
-	uint8_t read_index;
+	uint16_t read_index;
 	uint32_t item;
 
 	read_index = ser_fifo_desc->read_index;
@@ -446,7 +457,7 @@ static inline uint32_t ser_fifo_pull_uint32_nocheck(ser_fifo_desc_t *ser_fifo_de
  */
 static inline int ser_fifo_pull_uint32(ser_fifo_desc_t *ser_fifo_desc, uint32_t *item)
 {
-	uint8_t read_index;
+	uint16_t read_index;
 
 	if (ser_fifo_is_empty(ser_fifo_desc)) {
 		return SER_FIFO_ERROR_UNDERFLOW;
