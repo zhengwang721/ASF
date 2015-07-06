@@ -55,8 +55,8 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_drivers_aes_group SAM Advanced Encryption Standard (AES) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
- * and management of the device's Advanced Encryption Standard functionality. The following 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
+ * and management of the device's Advanced Encryption Standard functionality. The following
  * driver API modes are covered by this manual:
  *
  *  - Polled APIs

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4 Reset Controller (RSTC) driver.
+ * \brief SAM Reset Controller (RSTC) driver.
  *
  * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
@@ -70,6 +70,10 @@
  * - Atmel | SMART SAM4N
  * - Atmel | SMART SAM4S
  * - Atmel | SMART SAM G
+ * - Atmel | SMART SAMV71
+ * - Atmel | SMART SAMV70
+ * - Atmel | SMART SAMS70
+ * - Atmel | SMART SAME70
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_rstc_prerequisites

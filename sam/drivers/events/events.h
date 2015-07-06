@@ -50,8 +50,9 @@
 /**
  * \defgroup asfdoc_sam_drivers_events_group SAM4L Peripheral Event Controller (PEVC) Driver
  *
- * This driver provides a unified interface for the configuration and
- * management of the Event Channels within the Atmel&reg; | SMART SAM device.
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers 
+ * provides a unified interface for the configuration and
+ * management of the Event Channels.
  *
  * The peripheral event generators and users are interconnected by a network
  * known as the Peripheral Event System.

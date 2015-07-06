@@ -60,7 +60,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_group SAM System (SYSTEM) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the device's system relation functionality, necessary for
  * the basic device operation. This is not limited to a single peripheral, but
  * extends across multiple hardware peripherals.
@@ -196,8 +196,8 @@ extern "C" {
  *  scaled down in order to not exceed the maximum frequency allowed for the
  *  low performance level.
  *  When scaling up the performance level (e.g. from PL0 to PL2), check the performance
- *  level status before increasing the bus frequency. It can be increased only 
- *  when the performance level transition is completed. 
+ *  level status before increasing the bus frequency. It can be increased only
+ *  when the performance level transition is completed.
  *
  * \anchor asfdoc_sam0_system_performance_level_transition_figure
  * \image html performance_level_transition.svg "Performance Level Transition"
@@ -211,8 +211,8 @@ extern "C" {
  * is returned. Most power domains can be in the following three states:
  *
  * - Active state: The power domain is powered on.
- * - Retention state: The main voltage supply for the power domain is switched off, 
- * while maintaining a secondary low-power supply for the sequential cells. The 
+ * - Retention state: The main voltage supply for the power domain is switched off,
+ * while maintaining a secondary low-power supply for the sequential cells. The
  * logic context is restored when waking up.
  * - Off state: The power domain is entirely powered off. The logic context is lost.
  *
@@ -235,7 +235,7 @@ extern "C" {
  * Power domains can be linked to each other, it allows a power domain (PDn) to be kept
  * in active state if the inferior power domain (PDn-1) is in active state too.
  *
- * \ref asfdoc_sam0_system_power_domain_overview_table illustrates the 
+ * \ref asfdoc_sam0_system_power_domain_overview_table illustrates the
  * four cases to consider in standby mode.
  *
  * \anchor asfdoc_sam0_system_power_domain_overview_table
@@ -569,7 +569,7 @@ void system_init(void);
 * \page asfdoc_sam0_drivers_power_exqsg Examples for Power Driver
  *
  * This is a list of the available Quick Start Guides (QSGs) and example
- * applications. QSGs are simple examples with step-by-step instructions to 
+ * applications. QSGs are simple examples with step-by-step instructions to
  * configure and use this driver in a selection of
  * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
