@@ -54,7 +54,7 @@
 			<device-support value="samd11"/>
 			<device-support value="samda1"/>
 		</module>
-		<module type="meta" id="sam0.drivers.adc.polled#sam_l" caption="ADC - Analog-to-Digital Converter">
+		<module type="meta" id="sam0.drivers.adc.polled#sam_l_c" caption="ADC - Analog-to-Digital Converter">
 			<build type="include-path" value="." />
 			<build type="include-path" value="adc_sam_l_c"/>
 			<build type="c-source" value="adc_sam_l_c/adc.c"/>
@@ -80,7 +80,7 @@
 			<device-support value="samd11"/>
 			<device-support value="samda1"/>
 		</module>
-		<module type="meta" id="sam0.drivers.adc.callback#sam_l" caption="ADC - Analog-to-Digital Converter">
+		<module type="meta" id="sam0.drivers.adc.callback#sam_l_c" caption="ADC - Analog-to-Digital Converter">
 			<build type="include-path" value="." />
 			<build type="include-path" value="adc_sam_l_c"/>
 			<build type="c-source" value="adc_sam_l_c/adc.c"/>
@@ -144,7 +144,7 @@
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
-	<module type="meta" id="sam0.drivers.adc.appnote_sam_l" caption="ADC - Analog-to-Digital Converter">
+	<module type="meta" id="sam0.drivers.adc.appnote_sam_l_c" caption="ADC - Analog-to-Digital Converter">
 		<info type="keyword" value="technology">
 				<keyword value="Analog Conversion"/>
 			</info>
