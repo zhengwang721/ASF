@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM SERCOM I2C Master Quick Start Guide
+ * \brief SAM B11 I2C Master Quick Start Guide
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
