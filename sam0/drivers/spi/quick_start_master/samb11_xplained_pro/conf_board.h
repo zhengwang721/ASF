@@ -47,10 +47,4 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-#define BUTTON_0_PIN     GPIO_23
-#define LED_0_PIN        GPIO_22
-
-#define LED0_ACTIVE      false
-#define LED0_INACTIVE    !LED0_ACTIVE
-
 #endif /* CONF_BOARD_H_INCLUDED */

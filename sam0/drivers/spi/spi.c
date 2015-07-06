@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Serial Peripheral Interface Driver
+ * \brief Serial Peripheral Interface Driver for SAMB11
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -45,10 +45,6 @@
  */
 #include "spi.h"
 
-#define CONF_SPI_MASTER_ENABLE   (1)
-#define REG_WR(addr, value)      (*(volatile unsigned int *)(addr)) = (value)
-#define REG_RD(addr)             (*(volatile unsigned int *)(addr))
-
 /**
  * \brief Determines if the SPI module is currently synchronizing to the bus.
  *
@@ -88,7 +84,6 @@ static enum status_code _spi_set_config(
 		const struct spi_config *const config)
 {
 	SPI_SPI_CONFIGURATION_Type spi_cfg;
-	uint8_t dummy = 0;
 	Spi *const spi_module = (module->hw);
 
 	spi_cfg.reg = 0;
@@ -104,7 +99,7 @@ static enum status_code _spi_set_config(
 	/* Find baud value and write it */
 	if (config->mode == SPI_MODE_MASTER) {
 		// This divider value needs to be based on baud rate. For now we will use the 1 for testing.
-		//spi_module->CLKDIVIDER.reg = config->clock_divider;
+		spi_module->SPI_CLK_DIVIDER.reg = config->clock_divider;
 	}
 #endif
 	/* Set data order */
@@ -132,7 +127,7 @@ static enum status_code _spi_set_config(
 			break;
 	}
 	spi_module->SPI_CONFIGURATION.reg = spi_cfg.reg;
-	#if 0
+#if 0
 	//clear all spi RX status bits before enabling it.
 	while(spi_module->RECEIVE_STATUS.reg != 0) {
 		dummy = spi_module->RECEIVE_DATA.reg;
@@ -140,9 +135,9 @@ static enum status_code _spi_set_config(
 	
 	// Write a dummy byte
 	spi_module->TRANSMIT_DATA.reg = 0x0;
-	#endif
+#endif
 	//Enable SPI
-	spi_module->ENABLE.bit.SPI_ENABLE = 1;
+	spi_module->SPI_MODULE_ENABLE.reg = 1;
 	return STATUS_OK;
 }
 
@@ -257,13 +252,13 @@ void spi_slave_inst_get_config_defaults(
 void spi_get_config_defaults(
 		struct spi_config *const config)
 {
-	Spi *spi_module = (Spi *)(SP0);
+	Spi *spi_module = (Spi *)(SPI0);
 	/* Default configuration values */
-	if((spi_module->ENABLE.reg == 0) && (spi_module->CLKDIVIDER.reg == 0)) {
+	if((spi_module->SPI_MODULE_ENABLE.reg == 0) && (spi_module->SPI_CLK_DIVIDER.reg == 0)) {
 		config->core_idx = SPI_CORE1;
 	} else {
-		spi_module = (SPI *)(SPI1);
-		if((spi_module->ENABLE.reg == 0) && (spi_module->CLKDIVIDER.reg == 0)) {
+		spi_module = (Spi *)(SPI1);
+		if((spi_module->SPI_MODULE_ENABLE.reg == 0) && (spi_module->SPI_CLK_DIVIDER.reg == 0)) {
 			config->core_idx = SPI_CORE2;
 		} else {
 			config->core_idx = SPI_CORE_MAX;
@@ -287,16 +282,16 @@ void spi_get_config_defaults(
 
 	/* pinmux config defaults  Upper 16 bits inform the GPIO number and lower 16 bits for pinmux selection*/
 	if(config->core_idx == SPI_CORE1){
-		config->pinmux_pad[0] = (LPGPIO_10 << 8)|(PINMUX_VAL_2);
-		config->pinmux_pad[1] = (LPGPIO_11 << 8)|(PINMUX_VAL_2);
-		config->pinmux_pad[2] = (LPGPIO_12 << 8)|(PINMUX_VAL_2);
-		config->pinmux_pad[3] = (LPGPIO_13 << 8)|(PINMUX_VAL_2);
+		config->pinmux_pad[0] = (LPGPIO_10 << 8);
+		config->pinmux_pad[1] = (LPGPIO_11 << 8);
+		config->pinmux_pad[2] = (LPGPIO_12 << 8);
+		config->pinmux_pad[3] = (LPGPIO_13 << 8);
 	}
 	else {
-		config->pinmux_pad[0] = (LPGPIO_2 << 8)|(PINMUX_VAL_4);
-		config->pinmux_pad[1] = (LPGPIO_3 << 8)|(PINMUX_VAL_4);
-		config->pinmux_pad[2] = (LPGPIO_4 << 8)|(PINMUX_VAL_4);
-		config->pinmux_pad[3] = (LPGPIO_5 << 8)|(PINMUX_VAL_4);
+		config->pinmux_pad[0] = (LPGPIO_2 << 8);
+		config->pinmux_pad[1] = (LPGPIO_3 << 8);
+		config->pinmux_pad[2] = (LPGPIO_4 << 8);
+		config->pinmux_pad[3] = (LPGPIO_5 << 8);
 	}
 };
 
@@ -322,17 +317,7 @@ void spi_attach_slave(
 	slave->address_enabled = config->address_enabled;
 	slave->address         = config->address;
 
-	/* enable GPIO to be SS */
-	if(slave->ss_pin <= 7) {
-		GPIO0->OUTENSET.reg |= 1 << slave->ss_pin;
-		GPIO0->DATAOUT.reg  |= 1 << slave->ss_pin;
-	} else if (slave->ss_pin <= 15) {
-		GPIO1->OUTENSET.reg |= 1 << slave->ss_pin;
-		GPIO1->DATAOUT.reg  |= 1 << slave->ss_pin;
-	} else if (slave->ss_pin <= 23) {
-		GPIO2->OUTENSET.reg |= 1 << slave->ss_pin;
-		GPIO2->DATAOUT.reg  |= 1 << slave->ss_pin;
-	}
+	gpio_pin_set_output_level(slave->ss_pin, true);
 }
 
 /**
@@ -353,25 +338,25 @@ void spi_reset(struct spi_module *const module)
 
 	/* Software reset the module */	
 	/* Assert Reset to SPI0 cores. */
-	if((uint32_t)spi_module == SPI0) {
+	if(spi_module == (void *)SPI0) {
 		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg &= \
 								~(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_SPI0_CORE_RSTN | \
 								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_SPI0_IF_RSTN);
 	}
 	/* Assert Reset to SPI1 cores. */
-	if((uint32_t)spi_module == SPI1) {
+	if(spi_module == (void *)SPI1) {
 		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg &= \
 								~(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_SPI1_CORE_RSTN | \
 								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_SPI1_IF_RSTN);
 	}
 	/* Clear Reset to SPI0 cores. */
-	if((uint32_t)spi_module == SPI0) {
+	if(spi_module == (void *)SPI0) {
 		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |= \
 								(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_SPI0_CORE_RSTN | \
 								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_SPI0_IF_RSTN);
 	}
 	/* Clear Reset to SPI1 cores. */
-	if((uint32_t)spi_module == SPI1) {
+	if(spi_module == (void *)SPI1) {
 		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |= \
 								(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_SPI1_CORE_RSTN | \
 								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_SPI1_IF_RSTN);
@@ -401,9 +386,6 @@ enum status_code spi_init(
 
 	uint8_t idx;
 	uint8_t pinnum = 0;
-	uint8_t muxval = 0;
-	uint32_t regaddr = 0;
-	uint32_t regval = 0;
 
 	/* Initialize device instance */
 	if(config->core_idx == SPI_CORE1) {
@@ -417,8 +399,8 @@ enum status_code spi_init(
 	Spi *const spi_module = (module->hw);
 
 	/* Check if module is enabled. */
-	if (spi_module->ENABLE.bit.SPI_ENABLE) {
-		spi_module->ENABLE.bit.SPI_ENABLE = 0;
+	if (spi_module->SPI_MODULE_ENABLE.reg) {
+		spi_module->SPI_MODULE_ENABLE.reg = 0;
 	}
 
 	spi_reset(module);
@@ -427,36 +409,15 @@ enum status_code spi_init(
 
 	/* Set the pinmux for this spi module. */
 	for(idx = 0; idx < 4; idx++) {
-		pinnum = (uint8_t)((config->pinmux_pad[idx] >> 8) & 0xFF);
-		muxval = (uint8_t)(config->pinmux_pad[idx] & 0xFF);
-		if( pinnum <= 7) {
-			regaddr = REG_LPMCU_MISC_REGS0_PINMUX_SEL_0;
-		} else if(pinnum <= 15) {
-			regaddr = REG_LPMCU_MISC_REGS0_PINMUX_SEL_1;
-		} else if(pinnum <= 23) {
-			regaddr = REG_LPMCU_MISC_REGS0_PINMUX_SEL_2;
-		}
-		regval = REG_RD(regaddr);
-		regval &= ~(7 << ((pinnum%8)*4));
-		regval |= (muxval << ((pinnum%8)*4));
-		REG_WR(regaddr,regval);
+		gpio_pinmux_cofiguration(config->pinmux_pad[idx], GPIO_PINMUX_SEL_2);
 	}
 
 	/* Setting the default value for SS- PIN. */
 	pinnum = (config->pinmux_pad[2] >> 8) & 0xFF;
-	if(pinnum <= 7) {
-		GPIO0->OUTENSET |= (1 << pinnum);
-		GPIO0->DATAOUT  |= (1 << pinnum);
-	} else if(pinnum <= 15) {
-		GPIO1->OUTENSET |= (1 << (pinnum % 8));
-		GPIO1->DATAOUT  |= (1 << (pinnum % 8));
-	} else if(pinnum <= 23) {
-		GPIO2->OUTENSET |= (1 << (pinnum % 16));
-		GPIO2->DATAOUT  |= (1 << (pinnum % 16));
-	}
+	gpio_pin_set_output_level(pinnum, true);
 	
 	/* Set up the input clock & divider for the module */
-	spi_module->CLKSEL.reg = config->clock_source;
+	spi_module->CLOCK_SOURCE_SELECT.reg = config->clock_source;
 	spi_module->SPI_CLK_DIVIDER.reg = config->clock_divider;
 	
 #  if CONF_SPI_MASTER_ENABLE == true
@@ -529,7 +490,7 @@ void spi_enable(struct spi_module *const module)
 #endif
 
 	/* Enable SPI */
-	spi_module->ENABLE.bit.SPI_ENABLE = 1;
+	spi_module->SPI_MODULE_ENABLE.reg = 1;
 }
 
 /**
@@ -552,7 +513,7 @@ void spi_disable(struct spi_module *const module)
 #  endif
 
 	/* Disable SPI */
-	spi_module->ENABLE.bit.SPI_ENABLE = 0;
+	spi_module->SPI_MODULE_ENABLE.reg = 0;
 }
 
 /**
@@ -873,26 +834,11 @@ enum status_code spi_select_slave(
 {
 	uint8_t gpio_num = slave->ss_pin;
 	if(select) { // ASSERT Slave select pin
-		if(gpio_num <= 7) {
-			GPIO0->DATAOUT &= ~(1 << gpio_num);
-		} else if(gpio_num <= 15) {
-			GPIO1->DATAOUT &= ~(1 << (gpio_num % 8));
-		} else if(gpio_num <= 23) {
-			GPIO2->DATAOUT &= ~(1 << (gpio_num % 16));
-		} else {
-			return STATUS_ERR_INVALID_ARG;
-		}
+		gpio_pin_set_output_level(gpio_num, false);
 	} else {			 // DEASSERT Slave select pin
-		if(gpio_num <= 7) {
-			GPIO0->DATAOUT |= (1 << gpio_num);
-		} else if(gpio_num <= 15) {
-			GPIO1->DATAOUT |= (1 << (gpio_num % 8));
-		} else if(gpio_num <= 23) {
-			GPIO2->DATAOUT |= (1 << (gpio_num % 16));
-		} else {
-			return STATUS_ERR_INVALID_ARG;
-		}
+		gpio_pin_set_output_level(gpio_num, true);
 	}
+	
 	return STATUS_OK;
 }
 			

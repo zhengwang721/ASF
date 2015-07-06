@@ -52,5 +52,7 @@
 #  define CONF_SPI_SLAVE_ENABLE      false
 #  define CONF_SPI_TIMEOUT           10000
 
+#  define SPI_CALLBACK_MODE          false
+
 #endif /* CONF_SPI_H_INCLUDED */
 

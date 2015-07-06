@@ -67,34 +67,6 @@ struct spi_slave_inst slave;
 //! [slave_dev_inst]
 //! [setup]
 
-static void system_init(void)
-{
-	uint8_t gpio_pin = 0;
-	
-	/* Buttion init */
-	gpio_pin = BUTTON_0_PIN;
-	if(gpio_pin <= 7) {
-		GPIO0->OUTENCLR |= (1 << gpio_pin);
-	} else if(gpio_pin <= 15) {
-		GPIO1->OUTENCLR |= (1 << (gpio_pin % 8));
-	} else if(gpio_pin <= 23) {
-		GPIO2->OUTENCLR |= (1 << (gpio_pin % 16));
-	}
-	
-	/* LED init */
-	gpio_pin = LED_0_PIN;
-	if(gpio_pin <= 7) {
-		GPIO0->OUTENSET |= (1 << gpio_pin);
-		GPIO0->DATAOUT  |= (1 << gpio_pin);
-	} else if(gpio_pin <= 15) {
-		GPIO1->OUTENSET |= (1 << (gpio_pin % 8));
-		GPIO1->DATAOUT  |= (1 << (gpio_pin % 8));
-	} else if(gpio_pin <= 23) {
-		GPIO2->OUTENSET |= (1 << (gpio_pin % 16));
-		GPIO2->DATAOUT  |= (1 << (gpio_pin % 16));
-	}
-}
-
 //! [configure_spi]
 static void configure_spi_master(void)
 {
@@ -116,7 +88,7 @@ static void configure_spi_master(void)
 	spi_get_config_defaults(&config_spi_master);
 //! [conf_defaults]
 //! [init]
-	spi_init(&spi_master_instance, EXT1_SPI_MODULE, &config_spi_master);
+	spi_init(&spi_master_instance, &config_spi_master);
 //! [init]
 
 //! [enable]
@@ -126,47 +98,11 @@ static void configure_spi_master(void)
 }
 //! [configure_spi]
 
-static void port_pin_set_output_level(uint8_t gpio_pin, bool level)
-{
-	if (level == true) {
-		if (gpio_pin <= 7) {
-			GPIO0->DATAOUT.reg  |= (level << gpio_pin);
-		} else if (gpio_pin <= 15) {
-			GPIO1->DATAOUT.reg  |= (level << (gpio_pin % 8));
-		} else if (gpio_pin <= 23) {
-			GPIO2->DATAOUT.reg  |= (level << (gpio_pin % 16));
-		}
-	} else {
-		if (gpio_pin <= 7) {
-			GPIO0->DATAOUT.reg  &= ~(level << gpio_pin);
-		} else if (gpio_pin <= 15) {
-			GPIO1->DATAOUT.reg  &= ~(level << (gpio_pin % 8));
-		} else if (gpio_pin <= 23) {
-			GPIO2->DATAOUT.reg  &= ~(level << (gpio_pin % 16));
-		}
-	}
-}
-
-static uint8_t port_pin_get_input_level(uint8_t gpio_pin)
-{
-	uint8_t level = 0;
-	
-	if(gpio_pin <= 7) {
-		level = GPIO0->DATA.reg & gpio_pin;
-	} else if(gpio_pin <= 15) {
-		level = GPIO1->DATA.reg & (gpio_pin % 8);
-	} else if(gpio_pin <= 23) {
-		level = GPIO2->DATA.reg & (gpio_pin % 16);
-	}
-	
-	return level;
-}
-
 int main(void)
 {
 //! [main_setup]
 //! [system_init]
-	system_init();
+	//system_init();
 //! [system_init]
 //! [run_config]
 	configure_spi_master();
@@ -177,7 +113,7 @@ int main(void)
 //! [inf_loop]
 	while (true) {
 		/* Infinite loop */
-		if(!port_pin_get_input_level(BUTTON_0_PIN)) {
+		if(!gpio_pin_get_input_level(BUTTON_0_PIN)) {
 			//! [select_slave]
 			spi_select_slave(&spi_master_instance, &slave, true);
 			//! [select_slave]
@@ -188,7 +124,7 @@ int main(void)
 			spi_select_slave(&spi_master_instance, &slave, false);
 			//! [deselect_slave]
 			//! [light_up]
-			port_pin_set_output_level(LED_0_PIN, LED0_ACTIVE);
+			gpio_pin_set_output_level(LED_0_PIN, LED0_ACTIVE);
 			//! [light_up]
 		}
 	}
