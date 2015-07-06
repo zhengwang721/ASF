@@ -116,10 +116,10 @@ enum adc_reference {
 	ADC_REFERENCE_AREFB   = ADC_REFCTRL_REFSEL_AREFB,
 #endif
 #if (SAMC20) || (SAMC21)
-	/** DAC. */
+	/** DAC */
 	ADC_REFERENCE_DAC     = ADC_REFCTRL_REFSEL_DAC,
 #endif
-	/** VDDANA. */
+	/** VDDANA */
 	ADC_REFERENCE_INTVCC2 = ADC_REFCTRL_REFSEL_INTVCC2,
 };
 
@@ -280,7 +280,7 @@ enum adc_positive_input {
 	/** DAC input */
 	ADC_POSITIVE_INPUT_DAC           = ADC_INPUTCTRL_MUXPOS_DAC,
 #if !(SAMC20) && !(SAMC21)
-	/** SCALEDVBAT. */
+	/** SCALEDVBAT */
 	ADC_POSITIVE_INPUT_SCALEDVBAT    = ADC_INPUTCTRL_MUXPOS_SCALEDVBAT,
 	/** OPAMP01 */
 	ADC_POSITIVE_INPUT_OPAMP01       = ADC_INPUTCTRL_MUXPOS_OPAMP01,
@@ -418,9 +418,9 @@ enum adc_oversampling_and_decimation {
  * Enum for the trigger selection in dual mode.
  */
 enum adc_dual_mode_trigger_selection {
-	/** Start event or software trigger will start a conversion on both ADCs. */
+	/** Start event or software trigger will start a conversion on both ADCs */
 	ADC_DUAL_MODE_BOTH         = ADC_CTRLC_DUALSEL_BOTH,
-	/** START event or software trigger will alternatingly start a conversion on ADC0 and ADC1. */
+	/** START event or software trigger will alternatingly start a conversion on ADC0 and ADC1 */
 	ADC_DUAL_MODE_INTERLEAVE   = ADC_CTRLC_DUALSEL_INTERLEAVE,
 };
 #endif
@@ -698,7 +698,7 @@ static inline void adc_get_sequence_status(
  * \param[in] master_inst  Pointer to the master ADC software instance struct
  * \param[in] slave_inst   Pointer to the slave ADC software instance struct
  * \param[in] dualsel      Dual mode trigger selection
- *                         
+ *
  */
 static inline void adc_set_master_slave_mode(
 		struct adc_module *const master_inst,
@@ -708,10 +708,10 @@ static inline void adc_set_master_slave_mode(
 	/* Sanity check arguments */
 	Assert(master_inst);
 	Assert(slave_inst);
-	
+
 	slave_inst->hw->CTRLA.reg |= ADC_CTRLA_SLAVEEN;
 	master_inst->hw->CTRLC.reg |= dualsel;
-			
+
 };
 #endif
 /** @} */
