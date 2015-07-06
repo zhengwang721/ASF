@@ -136,9 +136,9 @@ enum rtc_tamper_input_action {
  */
 enum rtc_tamper_level_sel {
 	/** A falling edge condition will be detected on Tamper input. */
-	RTC_TAMPER_LEVEL_FALLING = RTC_TAMPCTRL_TAMLVL(0),
+	RTC_TAMPER_LEVEL_FALLING = (0),
 	/** A rising edge condition will be detected on Tamper input. */
-	RTC_TAMPER_LEVEL_RISING  = RTC_TAMPCTRL_TAMLVL(1),
+	RTC_TAMPER_LEVEL_RISING  = (1),
 };
 
 /**
