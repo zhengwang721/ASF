@@ -43,13 +43,8 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-
-#include <string.h>
 #include "i2c_common.h"
-
-#define REG_WR(addr, value)      (*(volatile unsigned int *)(addr)) = (value)
-#define REG_RD(addr)             (*(volatile unsigned int *)(addr))
-
+#include "i2c_master.h"
 
 enum i2c_status_code _i2c_set_config(
 									I2C *const i2c_module,
@@ -57,47 +52,15 @@ enum i2c_status_code _i2c_set_config(
 									uint32_t baud_rate,
 									uint8_t clock_source)
 {
-	/* Temporary variables. */
 	uint8_t idx = 0;
-	uint8_t pinnum = 0;
-	uint8_t muxval = 0;
-	uint32_t regaddr = 0;
-	uint32_t regval = 0;
-	//enum i2c_status_code tmp_status_code = STATUS_OK;
-
-#if 1
-	// Pin Mux programming
-	for (idx=0; idx<2; idx++) {
-		pinnum = (uint8_t)((pinmux_pad[idx] >> 8) & 0xFF);
-		muxval = (uint8_t)(pinmux_pad[idx] & 0xFF);
-
-		if (pinnum <= 7) {
-			regaddr = 0x4000b044;
-		} else if (pinnum <= 15) {
-			regaddr = 0x4000b048;
-		} else if(pinnum <= 23) {
-			regaddr = 0x4000b04c;
-		}
-		regval = REG_RD(regaddr);
-		regval &= ~(7 << ((pinnum%8)*4));
-		regval |= (muxval << ((pinnum%8)*4));
-		REG_WR(regaddr,regval);
+	
+	/* Set the pinmux for this i2c module. */
+	for(idx = 0; idx < 2; idx++) {
+		gpio_pinmux_cofiguration(pinmux_pad[idx], GPIO_PINMUX_SEL_2);
 	}
-#else
-	regaddr = 0x4000b048;
-	regval = REG_RD(regaddr);
-	regval &= ~((0x7 << 24) | (0x7 << 28));
-	regval |= ((1 << 24) | (1 << 28));
-	REG_WR(regaddr,regval);
-	regaddr = 0x4000b1AC;
-	regval = REG_RD(regaddr);
-	regval &= ~((0x1f << 24) | (0x1f << 16));
-	regval |= ((9 << 24) | (8 << 16));
-	REG_WR(regaddr,regval);
-#endif
 	
 	/* Find and set baudrate. */
-	///i2c_module->CLKSEL.reg = I2C_CLK_INPUT_0;
+	i2c_module->CLOCK_SOURCE_SELECT.reg = clock_source;
 	i2c_module->I2C_CLK_DIVIDER.reg = 0x10;
 	
 	return I2C_STATUS_OK;
@@ -105,24 +68,24 @@ enum i2c_status_code _i2c_set_config(
 
 enum i2c_status_code _i2c_reset(I2C *const i2c_module)
 {
-	uint32_t regval;
 	if (i2c_module == (I2C *)I2C0) {
-		regval = REG_RD(REG_LPMCU_MISC_REGS0_LPMCU_GLOBAL_RESET_0);
-		regval &= ~(((1 << 8)) | (1 << 9));
-		REG_WR(REG_LPMCU_MISC_REGS0_LPMCU_GLOBAL_RESET_0, regval);
-		regval |= ((1 << 8) | (1 << 9));
-		REG_WR(REG_LPMCU_MISC_REGS0_LPMCU_GLOBAL_RESET_0, regval);
+		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg &= 
+								~(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_CORE_RSTN |
+								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_IF_RSTN);
+		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |=
+								(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_CORE_RSTN |
+								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_IF_RSTN);						
 	}
 #ifdef CHIPVERSION_B0
 	else if(i2c_module == (I2C *)I2C1) {
-		regval = REG_RD(REG_LPMCU_MISC_REGS0_LPMCU_GLOBAL_RESET_1);
-		regval &= ~((LPMCU_CORTEX_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_CORE_RSTN) |
-								(LPMCU_CORTEX_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_IF_RSTN));
-		REG_WR(REG_LPMCU_MISC_REGS0_LPMCU_GLOBAL_RESET_1,regval);
-		regval |= ((LPMCU_CORTEX_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_CORE_RSTN) |
-								(LPMCU_CORTEX_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_IF_RSTN));
-		REG_WR(REG_LPMCU_MISC_REGS0_LPMCU_GLOBAL_RESET_1,regval);
+		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg &=
+								~(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C1_CORE_RSTN |
+								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C1_IF_RSTN);
+		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |=
+								(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C1_CORE_RSTN |
+								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C1_IF_RSTN);
 	}
 #endif
+
 	return I2C_STATUS_OK;
 }

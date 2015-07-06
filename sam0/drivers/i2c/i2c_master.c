@@ -127,8 +127,8 @@ static inline bool i2c_master_is_active (
 		const struct i2c_master_module *const module)
 {
 	/* Sanity check. */
-	//Assert(module);
-	//Assert(module->hw);
+	Assert(module);
+	Assert(module->hw);
 	
 	I2C *const i2c_hw = (module->hw);
 	return (i2c_hw->I2C_STATUS.bit.I2C_ACTIVE);
@@ -145,7 +145,7 @@ static void _i2c_master_wait_for_idle(
 		const struct i2c_master_module *const module)
 {
 	/* Sanity check. */
-	//Assert(module);
+	Assert(module);
 
 	while (i2c_master_is_active(module)) {
 		/* Wait for I2C module to sync. */
@@ -197,8 +197,8 @@ void i2c_master_get_config_defaults(
 	config->core_idx		= I2C_CORE1;
 	config->baud_rate		= I2C_MASTER_BAUD_RATE_100KHZ;
 	config->clock_source 	= I2C_CLK_INPUT_3;
-	///config->pinmux_pad[0]   = ((LPGPIO_8 << PINNUM_OFFSET) | PINMUX_VAL_2);
-	///config->pinmux_pad[1]   = ((LPGPIO_9 << PINNUM_OFFSET) | PINMUX_VAL_2);
+	config->pinmux_pad[0]   = (LPGPIO_8 << 8);
+	config->pinmux_pad[1]   = (LPGPIO_9 << 8);
 }
 
 /**
@@ -237,13 +237,11 @@ enum i2c_status_code i2c_master_init(
 
 	I2C *const i2c_module = (module->hw);
 	
-	///if(i2c_module->ENABLE) {
-		//return I2C_STATUS_ERR_DENIED;
-		///i2c_module->ENABLE = I2C_DISABLE;
-	///}
+	if(i2c_module->ENABLE) {
+		i2c_module->I2C_MODULE_ENABLE.bit.ENABLE = false;
+	}
 	
 	_i2c_reset(i2c_module);
-
 
 #if I2C_MASTER_CALLBACK_MODE == true
 
@@ -333,7 +331,7 @@ static enum i2c_status_code _i2c_master_read_packet(
 	/* Flush the FIFO */
 	i2c_module->I2C_FLUSH.reg;
 	
-	//Enable I2C on bus (start condition)
+	/* Enable I2C on bus (start condition) */
 	i2c_module->I2C_ONBUS.bit.ONBUS_ENABLE = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
 	
 	/* Address I2C slave in case of Master mode enabled */
@@ -380,9 +378,10 @@ enum i2c_status_code i2c_master_read_packet_wait(
 		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
-	//Assert(module);
-	//Assert(module->hw);
-	//Assert(packet);
+	Assert(module);
+	Assert(module->hw);
+	Assert(packet);
+	
 	if((module == NULL) || (packet == NULL))
 		return I2C_STATUS_ERR_INVALID_ARG;
 
@@ -425,9 +424,10 @@ enum i2c_status_code i2c_master_read_packet_wait_no_stop(
 		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
-	//Assert(module);
-	//Assert(module->hw);
-	//Assert(packet);
+	Assert(module);
+	Assert(module->hw);
+	Assert(packet);
+	
 	if((module == NULL) || (packet == NULL))
 		return I2C_STATUS_ERR_INVALID_ARG;
 
@@ -519,9 +519,10 @@ enum i2c_status_code i2c_master_write_packet_wait(
 		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
-	//Assert(module);
-	//Assert(module->hw);
-	//Assert(packet);
+	Assert(module);
+	Assert(module->hw);
+	Assert(packet);
+	
 	if((module == NULL) || (packet == NULL))
 		return I2C_STATUS_ERR_INVALID_ARG;
 	
@@ -563,9 +564,9 @@ enum i2c_status_code i2c_master_write_packet_wait_no_stop(
 		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
-	//Assert(module);
-	//Assert(module->hw);
-	//Assert(packet);
+	Assert(module);
+	Assert(module->hw);
+	Assert(packet);
 
 	if((module == NULL) || (packet == NULL))
 		return I2C_STATUS_ERR_INVALID_ARG;
@@ -597,8 +598,8 @@ enum i2c_status_code i2c_master_write_packet_wait_no_stop(
 void i2c_master_send_stop(struct i2c_master_module *const module)
 {
 	/* Sanity check */
-	//Assert(module);
-	//Assert(module->hw);
+	Assert(module);
+	Assert(module->hw);
 
 	I2C *const i2c_module = (module->hw);
 

@@ -1,7 +1,8 @@
 #ifndef I2C_COMMON_H_INCLUDED
 #define I2C_COMMON_H_INCLUDED
 
-#include <asf.h>
+#include <compiler.h>
+#include <gpio.h>
 
 #define I2C_WRITE_TO_SLAVE	0
 #define I2C_READ_FROM_SLAVE	1
@@ -10,14 +11,14 @@ static inline void _i2c_disable(I2C *const i2c_module)
 {
 	if(i2c_module == NULL)
 		return;
-	//i2c_module->ENABLE = I2C_DISABLE;
+	i2c_module->I2C_MODULE_ENABLE.bit.ENABLE = false;
 }
 
 static inline void _i2c_enable(I2C *const i2c_module)
 {
 	if(i2c_module == NULL)
 		return;
-	//i2c_module->ENABLE = I2C_ENABLE;
+	i2c_module->I2C_MODULE_ENABLE.bit.ENABLE = true;
 }
 
 enum i2c_status_code _i2c_set_config(
