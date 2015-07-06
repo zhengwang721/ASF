@@ -49,14 +49,15 @@
 
 /**
  * \defgroup asfdoc_sam_drivers_rstc_group SAM3/4C/4CM/4CP/4E/4N/4S/G Reset Controller (RSTC) Driver
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
- * and management of the device's Reset Controller functionality.
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers 
+ * provides an interface for the configuration and management of the device's 
+ * Reset Controller functionality.
  *
  * The Reset Controller manages all Resets of the System including;
  * external devices (via the NRST pin), Processor Reset and Peripheral Reset.
  * It also provides the status of the last reset source.
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  *
  * - RSTC (Reset Controller)
  *
@@ -131,8 +132,8 @@
  * detects a Brownout or Voltage regulation loss.
  *
  * \subsubsection asfdoc_sam_drivers_rstc_module_overview_reset_state_backup Backup Reset
- * A Backup reset occurs when the chip returns from Backup Mode. The core_backup_reset signal
- * is asserted by the Supply Controller when a Backup reset occurs.
+ * A Backup Reset occurs when the chip returns from Backup Mode. The core_backup_reset signal
+ * is asserted by the Supply Controller when a Backup Reset occurs.
  *
  * \subsubsection asfdoc_sam_drivers_rstc_module_overview_reset_state_user User Reset
  * If User Reset is enabled then the state is entered when a low level is detected on the
@@ -171,7 +172,7 @@
  * Particular cases are listed below:
  * - When in User Reset:
  *  - A watchdog event is impossible because the Watchdog Timer is being reset
- *  - A software reset is impossible because the processor reset is being activated
+ *  - A Software Reset is impossible because the processor reset is being activated
  * - When in Software Reset:
  *  - A watchdog event has priority over the current state
  *  - The NRST has no effect
@@ -350,7 +351,7 @@ static inline void rstc_assert_reset_of_coprocessor(
  * This is a list of the available Quick Start Guides (QSGs) and example
  * applications for \ref asfdoc_sam_drivers_rstc_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  *  - \subpage asfdoc_sam_drivers_rstc_quick_start
@@ -363,6 +364,11 @@ static inline void rstc_assert_reset_of_coprocessor(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>42279B</td>
+ *		<td>07/2015</td>
+ *		<td>Updated title of application note and added list of supported devices</td>
  *	</tr>
  *	<tr>
  *		<td>42279A</td>
