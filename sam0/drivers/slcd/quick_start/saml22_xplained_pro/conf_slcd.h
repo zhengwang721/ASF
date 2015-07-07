@@ -58,7 +58,7 @@
  *  2:1/3 duty
  *  3:1/4 duty
 */
-#define CONF_SLCD_DUTY         0
+#define CONF_SLCD_DUTY         3
 
 /**
  * SLCD Bias Setting.
@@ -67,7 +67,7 @@
  *  2:1/3 bias
  *  3:1/4 bias
  */
-#define CONF_SLCD_BIAS         0
+#define CONF_SLCD_BIAS         2
 
 /**
  * SLCD Frame Frequency.
@@ -95,7 +95,7 @@
  * 7 : CKDIV is 7
  */
 #define CONF_SLCD_PVAL         0
-#define CONF_SLCD_CKDIV         0
+#define CONF_SLCD_CKDIV        7
 
 /** Internal/External VLCD selection.
 * 0 : Internal VLCD generation
@@ -103,7 +103,7 @@
 */
 #define CONF_SLCD_VLCD_SEL        0
 
-/** Reference fefresh frequency. 
+/** Reference refresh frequency. 
 *  0: Bias Reference refresh frequency is 2KHz
 *  1: Bias Reference refresh frequency is 1KHz
 *  2: Bias Reference refresh frequency is 500Hz
@@ -136,6 +136,6 @@
  * CONF_SLCD_PIN_L_MASK is pin mask [31,0]
  * CONF_SLCD_PIN_H_MASK is pin mask [51,32]
  */ 
-#define CONF_SLCD_PIN_L_MASK       0xffffffff
-#define CONF_SLCD_PIN_H_MASK       0xff
+#define CONF_SLCD_PIN_L_MASK       0xCFFFC3C0
+#define CONF_SLCD_PIN_H_MASK       0x00000FF0
 #endif

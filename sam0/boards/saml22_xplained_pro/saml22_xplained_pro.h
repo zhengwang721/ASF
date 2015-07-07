@@ -526,6 +526,8 @@ void system_board_init(void);
 #define CCL_LUT1_OUT_PIN  PIN_PA11I_CCL_OUT1
 /** @} */
 
+#define SLCD_BACLKLIGHT    PIN_PC27
+
 /**
  * \brief Turns off the specified LEDs.
  *

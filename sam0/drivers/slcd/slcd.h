@@ -247,9 +247,9 @@ struct slcd_circular_shift_config {
  */
 enum slcd_automated_char_order {
 	/** Segment is starting from bottom right . */
-	SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_LEFT = 0,
+	SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_RIGHT = 0,
 	/** Segment is starting from bottom left . */
-	SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_RIGHT,
+	SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_LEFT,
 };
 
 /**

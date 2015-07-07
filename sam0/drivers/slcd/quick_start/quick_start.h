@@ -47,8 +47,8 @@
  * The supported board list:
  *    - SAM L22 Xplained Pro
  *
- * The SLCD Xplained Pro extension board must be connected to extension
- * header 1 on the SAM L22 Xplained Pro.
+ * The SEGMENT LCD1 Xplained Pro extension board must be connected to extension
+ * header 5 on the SAM L22 Xplained Pro.
  *
  * This example demonstrates how to use the SLCD driver, it cover the following case:
  * - Direct Memory Access

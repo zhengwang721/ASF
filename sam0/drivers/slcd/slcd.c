@@ -166,9 +166,7 @@ enum status_code slcd_init(struct slcd_config *const config)
   					| (config->enable_ext_bias << SLCD_CTRLB_EXTBIAS_Pos);
 
 
-	SLCD->CTRLC.reg |= SLCD_CTRLC_LPPM(CONF_SLCD_POWER_MODE);
-	while (slcd_get_vlcd_ready_status()) {
-   	}
+    SLCD->CTRLC.reg |= SLCD_CTRLC_LPPM(CONF_SLCD_POWER_MODE) | SLCD_CTRLC_CTST(0x0F);
 
 	SLCD->LPENL.reg = CONF_SLCD_PIN_L_MASK & SLCD_LPENL_MASK;
 	SLCD->LPENH.reg = CONF_SLCD_PIN_H_MASK & SLCD_LPENH_MASK;
@@ -190,6 +188,9 @@ void slcd_enable(void)
 	while (slcd_is_syncing()) {
 		/* Wait for synchronization */
 	}
+
+	while (!slcd_get_vlcd_ready_status()) {
+   	}
 }
 
 /**

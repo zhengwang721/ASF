@@ -55,7 +55,7 @@
 
 /* SYSTEM_CLOCK_SOURCE_OSC16M configuration - Internal 16MHz oscillator */
 #  define CONF_CLOCK_OSC16M_FREQ_SEL              SYSTEM_OSC16M_4M
-#  define CONF_CLOCK_OSC16M_ON_DEMAND             true
+#  define CONF_CLOCK_OSC16M_ON_DEMAND             false
 #  define CONF_CLOCK_OSC16M_RUN_IN_STANDBY        false
 
 /* SYSTEM_CLOCK_SOURCE_XOSC configuration - External clock/oscillator */
@@ -76,7 +76,7 @@
 #  define CONF_CLOCK_XOSC32K_STARTUP_TIME         SYSTEM_XOSC32K_STARTUP_65536
 #  define CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT    false
 #  define CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT  true
-#  define CONF_CLOCK_XOSC32K_ON_DEMAND            true
+#  define CONF_CLOCK_XOSC32K_ON_DEMAND            false
 #  define CONF_CLOCK_XOSC32K_RUN_IN_STANDBY       false
 #  define CONF_CLOCK_XOSC32K_CLOCK_FAILURE_DETECT false
 #  define CONF_CLOCK_XOSC32K_CLOCK_FAILURE_DIV    SYSTEM_CFD_DIV_1

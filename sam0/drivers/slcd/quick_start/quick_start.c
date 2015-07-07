@@ -47,47 +47,22 @@
 
 #include <asf.h>
 
-typedef struct _CHAR_MAP_TB
-{
-	uint8_t  c;
-	uint32_t value;
-}CHAR_MAP;
 
-const CHAR_MAP charactor_map[] = {
-	{'0',0x0},{'1',0x0},{'2',0x0},{'3',0x0},{'4',0x0},{'5',0x0},{'6',0x0},
-	{'7',0x0},{'8',0x0},{'9',0x0},
-	{'A',0x0},{'B',0x0},{'C',0x0},{'D',0x0},{'E',0x0},{'F',0x0},{'G',0x0},
-	{'H',0x0},{'I',0x0},{'J',0x0},{'K',0x0},{'L',0x0},{'M',0x0},{'N',0x0},
-	{'O',0x0},{'P',0x0},{'Q',0x0},{'R',0x0},{'S',0x0},{'T',0x0},
-	{'U',0x0},{'B',0x0},{'W',0x0},{'X',0x0},{'Y',0x0},{'Z',0x0},
-	{'a',0x0},{'b',0x0},{'c',0x0},{'d',0x0},{'e',0x0},{'f',0x0},{'g',0x0},
-	{'h',0x0},{'i',0x0},{'j',0x0},{'k',0x0},{'l',0x0},{'m',0x0},{'n',0x0},
-	{'o',0x0},{'p',0x0},{'q',0x0},{'r',0x0},{'s',0x0},{'t',0x0},
-	{'u',0x0},{'v',0x0},{'w',0x0},{'x',0x0},{'y',0x0},{'z',0x0},{255,0}
+
+const uint32_t charactor_map[] = {
+	0x2e74,0x440,0x23c4,0x25c4,0x5e0,0x25a4,0x27a4,0x444,0x27e4,0x25e4, /*0-9*/
+	0x7e4,0xa545,0x2224,0xa445,0x23a4,0x3a4,0x2724, /*A-G*/
+	0x7e0,0xa005,0x2640,0x12b0,0x2220,0x678,0x1668, /*H-N*/
+	0x2664,0x3e4,0x3664,0x13e4,0x25a4,0x8005,/*O-T*/
+	0x2660,0xa30,0x1e60,0x1818,0x8018,0x2814/*U-Z*/
 };
 
-const CHAR_MAP charactor_map_dec[]= {
-		{'0',0x0},{'1',0x0},{'2',0x0},{'3',0x0},{'4',0x0},{'5',0x0},{'6',0x0},
-		{'7',0x0},{'8',0x0},{'9',0x0},
-		{'A',0x0},{'B',0x0},{'C',0x0},{'D',0x0},{'E',0x0},{'F',0x0},{'G',0x0},
-		{'H',0x0},{'I',0x0},{'J',0x0},{'K',0x0},{'L',0x0},{'M',0x0},{'N',0x0},
-		{'O',0x0},{'P',0x0},{'Q',0x0},{'R',0x0},{'S',0x0},{'T',0x0},
-		{'U',0x0},{'B',0x0},{'W',0x0},{'X',0x0},{'Y',0x0},{'Z',0x0},
-		{'a',0x0},{'b',0x0},{'c',0x0},{'d',0x0},{'e',0x0},{'f',0x0},{'g',0x0},
-		{'h',0x0},{'i',0x0},{'j',0x0},{'k',0x0},{'l',0x0},{'m',0x0},{'n',0x0},
-		{'o',0x0},{'p',0x0},{'q',0x0},{'r',0x0},{'s',0x0},{'t',0x0},
-		{'u',0x0},{'v',0x0},{'w',0x0},{'x',0x0},{'y',0x0},{'z',0x0},{255,0}
-};
-
-#define CHAR_LEN (sizeof(charactor_map)/sizeof(CHAR_MAP))
-
-const uint32_t num_map[10] = {0x1234,0x1234,0x1234,0x1234,0x1234,0x1234,0x1234,0x1234,0x1234,0x1234};
-const uint32_t num_map_dec[10] = {0x1234,0x1234,0x1234,0x1234,0x1234,0x1234,0x1234,0x1234,0x1234,0x1234};
-
-#define ATMEL_ICON  0,24
+#define C42412A_ICON_USB            1, 1
+#define C42412A_ICON_COLON          3, 1
+#define C42412A_ICON_BAT            0, 0
+#define C42412A_ICON_ATMEL          0, 1
 
 struct usart_module usart_instance;
-
 /**
  *  Configure serial console.
  */
@@ -113,7 +88,11 @@ int main(void)
 	configure_console();
 	delay_init();
 
+	/* Turn on the backlight. */
+	port_pin_set_output_level(SLCD_BACLKLIGHT,true);
+
 	printf("SLCD example starts\r\n");
+
 	slcd_get_config_defaults(&config);
 	slcd_init(&config);
 
@@ -126,22 +105,25 @@ int main(void)
 	slcd_set_display_memory();
 	delay_s(1);
 	slcd_clear_display_memory();
-	slcd_set_pixel(ATMEL_ICON);
-
+	slcd_set_pixel(C42412A_ICON_USB);
+	slcd_set_pixel(C42412A_ICON_COLON);
+	slcd_set_pixel(C42412A_ICON_BAT);
+	slcd_set_pixel(C42412A_ICON_ATMEL);
 	delay_s(2);
-	slcd_disable();
-	slcd_character_map_set(SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_RIGHT,1);
-	for(uint32_t i = 0 ; i < 8 ; i++) {
-			slcd_character_write_data(0,14+i*2,
-	  							charactor_map[i].value,0xffff0000);
+
+	slcd_character_map_set(SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_RIGHT,3);
+	for(uint32_t i = 0 ; i < 5 ; i++) {
+		slcd_character_write_data(0,4+i*4,charactor_map[10+i],0xFF4002);
 	}
 	delay_s(2);
+
 	slcd_disable();
 	struct slcd_blink_config blink_config;
 	slcd_blink_get_config_defaults(&blink_config);
+	blink_config.blink_all_seg = false;
 	slcd_blink_set_config(&blink_config);
 
-	for(uint32_t i=0;i<7;i++){
+	for(uint32_t i=0; i<4; i++){
 		slcd_set_blink_pixel(i,0);
 		slcd_set_blink_pixel(i,1);
 	}
