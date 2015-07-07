@@ -57,7 +57,7 @@ extern "C" {
 #include <compiler.h>
 #include <system_interrupt.h>
 /**
- * \addtogroup asfdoc_sam0_drivers_freqm_group
+ * \addtogroup asfdoc_sam0_freqm_group
  *
  * @{
  */

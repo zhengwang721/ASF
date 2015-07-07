@@ -95,6 +95,7 @@
 #define REG_TAL_INTCPUSEL0         (0x40003058U) /**< \brief (TAL) Interrupts CPU Select 0 */
 #define REG_TAL_INTCPUSEL1         (0x4000305CU) /**< \brief (TAL) Interrupts CPU Select 1 */
 #define REG_TAL_IRQTRIG            (0x40003060U) /**< \brief (TAL) Interrupt Trigger */
+#define REG_TAL_CPUIRQS0           (0x40003064U) /**< \brief (TAL) Interrupt Status for CPU 0 */
 #else
 #define REG_TAL_CTRLA              (*(RwReg8 *)0x40003000U) /**< \brief (TAL) Control A */
 #define REG_TAL_RSTCTRL            (*(RwReg8 *)0x40003004U) /**< \brief (TAL) Reset Control */
@@ -145,6 +146,7 @@
 #define REG_TAL_INTCPUSEL0         (*(RwReg  *)0x40003058U) /**< \brief (TAL) Interrupts CPU Select 0 */
 #define REG_TAL_INTCPUSEL1         (*(RwReg  *)0x4000305CU) /**< \brief (TAL) Interrupts CPU Select 1 */
 #define REG_TAL_IRQTRIG            (*(RwReg16*)0x40003060U) /**< \brief (TAL) Interrupt Trigger */
+#define REG_TAL_CPUIRQS0           (*(RoReg  *)0x40003064U) /**< \brief (TAL) Interrupt Status for CPU 0 */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for TAL peripheral ========== */

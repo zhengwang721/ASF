@@ -78,6 +78,8 @@
  *   \snippet saml22_xplained_pro/conf_qs_events.h definition_event
  * - SAM DA1 Xplained Pro.
  *   \snippet samda1_xplained_pro/conf_qs_events.h definition_event
+ * - SAM C21 Xplained Pro
+ *   \snippet samc21_xplained_pro/conf_qs_events.h definition_event
  *
  * Copy-paste the following setup code to your user application:
  * \snippet qs_events_basic.c setup

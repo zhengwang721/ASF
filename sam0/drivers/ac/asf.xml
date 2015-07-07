@@ -57,15 +57,16 @@
 			<device-support value="samr21"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
-			<device-support value="samda0"/>
 			<device-support value="samda1"/>
 		</module>
-		<module type="meta" id="sam0.drivers.ac.common#sam_l" caption="Common files of AC driver">
+		<module type="meta" id="sam0.drivers.ac.common#sam_l_c" caption="Common files of AC driver">
 			<build type="include-path" value="." />
-			<build type="include-path" value="ac_sam_l"/>
-			<build type="c-source" value="ac_sam_l/ac.c"/>
+			<build type="include-path" value="ac_sam_l_c"/>
+			<build type="c-source" value="ac_sam_l_c/ac.c"/>
 			<device-support value="saml21"/>
 			<device-support value="saml22"/>
+			<device-support value="samc20"/>
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 
@@ -86,10 +87,10 @@
 		</info>
 
 		<build type="include-path" value="."/>
-		<build type="include-path" value="ac_sam_l"/>
+		<build type="include-path" value="ac_sam_l_c"/>
 		<build type="header-file" subtype="api" value="ac.h"/>
 		<build type="header-file" subtype="api" value="ac_callback.h"/>
-		<build type="c-source" value="ac_sam_l/ac.c"/>
+		<build type="c-source" value="ac_sam_l_c/ac.c"/>
 		<build type="c-source" value="ac_callback.c"/>
 
 		<build type="define" name="AC_CALLBACK_MODE" value="true"/>

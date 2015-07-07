@@ -48,7 +48,7 @@
 
 void ccl_init(struct ccl_config *const config)
 {
-#if (SAML22)
+#if (SAML22) || (SAMC20) || (SAMC21)
 	/* Turn on the digital interface clock. */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_CCL);
 #else
@@ -66,9 +66,11 @@ void ccl_init(struct ccl_config *const config)
 	system_gclk_chan_enable(CCL_GCLK_ID);
 
 	if(config->run_in_standby) {
-		ccl_gclk_runstdby_enable();
+		/* Enable run in standy mode. */
+		CCL->CTRL.reg |= CCL_CTRL_RUNSTDBY;
 	} else {
-		ccl_gclk_runstdby_disable();
+		/* Disable run in standy mode. */
+		CCL->CTRL.reg &= ~ CCL_CTRL_RUNSTDBY;
 	}
 }
 
@@ -89,13 +91,16 @@ void ccl_lut_get_config_defaults(struct ccl_lut_config *const config)
 	config->filter_sel = CCL_LUT_FILTER_DISABLE;
 }
 
-void ccl_lut_set_config(const enum ccl_lut_id number,
+enum status_code ccl_lut_set_config(const enum ccl_lut_id number,
 		struct ccl_lut_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
 
 	uint32_t temp = 0;
+
+	if(CCL->CTRL.reg & CCL_CTRL_ENABLE)
+		return STATUS_BUSY;
 
 	if (config->event_output_enable) {
 		temp |= CCL_LUTCTRL_LUTEO;
@@ -119,12 +124,19 @@ void ccl_lut_set_config(const enum ccl_lut_id number,
 		CCL_LUTCTRL_INSEL2(config->input2_src_sel) |
 		CCL_LUTCTRL_TRUTH(config->truth_table_value) |
 		config->filter_sel;
+
+	return STATUS_OK;
 }
 
-void ccl_seq_config(const enum ccl_seq_id number,
+enum status_code ccl_seq_config(const enum ccl_seq_id number,
 		const enum ccl_seq_selection seq_selection)
 {
+	if(CCL->CTRL.reg & CCL_CTRL_ENABLE)
+		return STATUS_BUSY;
+
 	CCL->SEQCTRL[number].reg = seq_selection;
+
+	return STATUS_OK;
 }
 
 void ccl_lut_enable(const enum ccl_lut_id number)

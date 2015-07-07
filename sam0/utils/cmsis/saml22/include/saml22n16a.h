@@ -101,8 +101,8 @@ typedef enum IRQn
   /******  SAML22N16A-specific Interrupt Numbers ***********************/
   SYSTEM_IRQn              =  0, /**<  0 SAML22N16A System Interrupts */
   MCLK_IRQn                =  0, /**<  0 SAML22N16A Main Clock (MCLK) */
-  OSCCTRL_IRQn             =  0, /**<  0 SAML22N16A Oscillators Control (OSCCTRL) */
   OSC32KCTRL_IRQn          =  0, /**<  0 SAML22N16A 32k Oscillators Control (OSC32KCTRL) */
+  OSCCTRL_IRQn             =  0, /**<  0 SAML22N16A Oscillators Control (OSCCTRL) */
   PAC_IRQn                 =  0, /**<  0 SAML22N16A Peripheral Access Controller (PAC) */
   PM_IRQn                  =  0, /**<  0 SAML22N16A Power Manager (PM) */
   SUPC_IRQn                =  0, /**<  0 SAML22N16A Supply Controller (SUPC) */
@@ -159,7 +159,7 @@ typedef struct _DeviceVectors
   void* pfnSysTick_Handler;
 
   /* Peripheral handlers */
-  void* pfnSYSTEM_Handler;                /*  0 Main Clock, Oscillators Control, 32k Oscillators Control, Peripheral Access Controller, Power Manager, Supply Controller, Trigger Allocator */
+  void* pfnSYSTEM_Handler;                /*  0 Main Clock, 32k Oscillators Control, Oscillators Control, Peripheral Access Controller, Power Manager, Supply Controller, Trigger Allocator */
   void* pfnWDT_Handler;                   /*  1 Watchdog Timer */
   void* pfnRTC_Handler;                   /*  2 Real-Time Counter */
   void* pfnEIC_Handler;                   /*  3 External Interrupt Controller */

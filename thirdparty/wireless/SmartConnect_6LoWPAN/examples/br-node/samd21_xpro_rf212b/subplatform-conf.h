@@ -25,7 +25,7 @@
 #define UIP_CONF_DS6_MADDR_NBU                        2
 
 #undef NBR_TABLE_CONF_MAX_NEIGHBORS
-#define NBR_TABLE_CONF_MAX_NEIGHBORS                  32
+#define NBR_TABLE_CONF_MAX_NEIGHBORS                  20
 
 #undef UIP_CONF_BUFFER_SIZE
 #define UIP_CONF_BUFFER_SIZE                          800
@@ -40,7 +40,7 @@
 // #define NBR_TABLE_CONF_MAX_NEIGHBORS         64
 
 #undef UIP_CONF_MAX_ROUTES
-#define UIP_CONF_MAX_ROUTES                         32 // 32
+#define UIP_CONF_MAX_ROUTES                           32 // 32
 
 /* Make HTTP/TCP connection way faster. */
 #undef UIP_CONF_TCP_SPLIT
@@ -55,7 +55,7 @@
 #undef UIP_FALLBACK_INTERFACE
 #define UIP_FALLBACK_INTERFACE ip64_uip_fallback_interface
 
-#define IP64_ADDRMAP_CONF_ENTRIES             32//32
+#define IP64_ADDRMAP_CONF_ENTRIES                    20 //32
 
 /*#undef IEEE_ADDR_CONF_HARDCODED
 #define IEEE_ADDR_CONF_HARDCODED             1

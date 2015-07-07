@@ -80,10 +80,12 @@
  *
  * This application has been tested on following boards:
  * - SAM L22 Xplained Pro
+ * - SAM C21 Xplained Pro
  *
  * \section appdoc_sam0_xosc32k_fail_detect_usageinfo Usage
  * Connect an oscilloscope to the pin:
  * - SAM L22 Xplained Pro: PA20
+ * - SAM C21 Xplained Pro: PA16
  * 
  * Run the example application, then press and hold the board button to turn 
  * off the external XOSC32K crystal clock source to observe the fail-over to 
@@ -118,7 +120,6 @@ static void init_osculp32k(void)
 	/* Configure and enable the OSCULP32K clock source */
 	struct system_clock_source_osculp32k_config osculp32k_conf;
 	system_clock_source_osculp32k_get_config_defaults(&osculp32k_conf);
-	osculp32k_conf.enable_1khz_output = false;
 
 	system_clock_source_osculp32k_set_config(&osculp32k_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_ULP32K);
@@ -134,7 +135,11 @@ static void init_xosc32k(void)
 	system_clock_source_xosc32k_get_config_defaults(&xosc32k_conf);
 
 	xosc32k_conf.on_demand = false;
+#if (SAML22)
 	xosc32k_conf.clock_failure_detect.cfd_enable = true;
+#else
+	xosc32k_conf.enable_clock_failure_detector = true;
+#endif
 	system_clock_source_xosc32k_set_config(&xosc32k_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
 	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_XOSC32K));

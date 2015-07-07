@@ -51,6 +51,7 @@
  *    - SAML21 Xplained Pro
  *    - SAML22 Xplained Pro
  *    - SAMDA1 Xplained Pro
+ *    - SAMC21 Xplained Pro
  *
  * In this use case, the EXTINT module is configured for:
  *  - External interrupt channel connected to the board LED is used

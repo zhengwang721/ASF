@@ -173,7 +173,7 @@ enum bod_prescale {
  * List of possible BOD actions when a BOD module detects a brown out condition.
  */
 enum bod_action {
-	/** A BOD detect will do nothing, and the BOD state must be polled. */
+	/** A BOD detect will do nothing, and the BOD state can't be polled. */
 	BOD_ACTION_NONE      = SYSCTRL_BOD33_ACTION(0),
 	/** A BOD detect will reset the device. */
 	BOD_ACTION_RESET     = SYSCTRL_BOD33_ACTION(1),
@@ -435,7 +435,7 @@ static inline void bod_clear_detected(
  *	<tr>
  *		<td>E</td>
  *		<td>04/2015</td>
- *		<td>Added support for SAMDA0/DA1.</td>
+ *		<td>Added support for SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

@@ -20,6 +20,8 @@
 			<require idref="sam0.drivers.system" />
 
 			<device-support value="saml22" />
+			<device-support value="samc20" />
+			<device-support value="samc21" />
 		</module>
 
 		<module caption="FREQM - Frequency Meter (Callback APIs)" id="sam0.drivers.freqm#callback" type="driver">
@@ -39,11 +41,13 @@
 			<require idref="sam0.drivers.system" />
 
 			<device-support value="saml22" />
+			<device-support value="samc20" />
+			<device-support value="samc21" />
 		</module>
 	</select-by-config>
 
 	<module type="meta" id="sam0.drivers.freqm.appnote" caption="FREQM - Frequency Meter">
-		<info type="appnote" value="ATXXXXX"/>
+		<info type="appnote" value="AT13481"/>
 
 		<info type="description" value="pdf">
 			This document describes how to use the Frequency Meter
@@ -68,6 +72,8 @@
 		<build type="doxygen-quick-start" value="asfdoc_sam0_freqm_exqsg"/>
 
 		<device-support value="saml22"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-saml22"/>
+		<device-support value="samc20" />
+		<device-support value="samc21"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samc21"/>
 	</module>
 </asf>

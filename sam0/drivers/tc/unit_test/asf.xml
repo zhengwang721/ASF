@@ -19,5 +19,6 @@
 		<device-support value="saml21"/>
 		<device-support value="saml22"/>
 		<device-support value="samda1"/>
+		<device-support value="samc21"/>
 	</module>
 </asf>
