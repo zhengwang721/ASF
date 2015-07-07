@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM GPIO GPIO Driver for SAMB11
+ * \brief SAM GPIO Driver for SAMB11
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -99,8 +99,7 @@ enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
 	*/
 	if ((gpio_pin == LPGPIO_0) || \
 		(gpio_pin == LPGPIO_1) || \
-		(gpio_pin == LPGPIO_14) ||
-		(gpio_pin > 24))
+		(gpio_pin == LPGPIO_14))
 	{
 		status = STATUS_ERR_INVALID_ARG;
 	} else {
@@ -113,12 +112,10 @@ enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
 		}
 
 		if(config->direction == GPIO_PIN_DIR_INPUT) {
-			if(gpio_pin <= 7) {
+			if(gpio_pin < 16) {
 				GPIO0->OUTENCLR.reg |= (1 << gpio_pin);
-			} else if (gpio_pin <= 15) {
-				GPIO1->OUTENCLR.reg |= (1 << (gpio_pin % 8));
-			} else if (gpio_pin <= 23) {
-				GPIO2->OUTENCLR.reg |= (1 << (gpio_pin % 16));
+			} else {
+				GPIO1->OUTENCLR.reg |= (1 << (gpio_pin % 16));
 			}
 			/* pull_enable. */
 			switch(config->input_pull) {
@@ -141,12 +138,10 @@ enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
 					break;
 			}
 		} else if(config->direction == GPIO_PIN_DIR_OUTPUT) {
-			if (gpio_pin <= 7) {
+			if (gpio_pin < 16) {
 				GPIO0->OUTENSET.reg |= (1 << gpio_pin);
-			} else if (gpio_pin <= 15) {
-				GPIO1->OUTENSET.reg |= (1 << (gpio_pin % 8));
-			} else if (gpio_pin <= 23) {
-				GPIO2->OUTENSET.reg |= (1 << (gpio_pin % 16));
+			} else {
+				GPIO1->OUTENSET.reg |= (1 << (gpio_pin % 16));
 			}
 		}
 	}
@@ -167,14 +162,11 @@ bool gpio_pin_get_input_level(const uint8_t gpio_pin)
 {
 	uint32_t regval = 0;
 
-	if (gpio_pin <= 7) {
+	if (gpio_pin < 16) {
 		regval = GPIO0->DATA.reg;
 		regval &= (1 << gpio_pin);
-	} else if (gpio_pin <= 15) {
+	} else {
 		regval = GPIO1->DATA.reg;
-		regval &= (1 << (gpio_pin % 8));
-	} else if (gpio_pin <= 23) {
-		regval = GPIO2->DATA.reg;
 		regval &= (1 << (gpio_pin % 16));
 	}
 	
@@ -195,14 +187,11 @@ bool gpio_pin_get_output_level(const uint8_t gpio_pin)
 {
 	uint32_t regval = 0;
 
-	if (gpio_pin <= 7) {
+	if (gpio_pin < 16) {
 		regval = GPIO0->DATAOUT.reg;
 		regval &= (1 << gpio_pin);
-	} else if (gpio_pin <= 15) {
+	} else {
 		regval = GPIO1->DATAOUT.reg;
-		regval &= (1 << (gpio_pin % 8));
-	} else if (gpio_pin <= 23) {
-		regval = GPIO2->DATAOUT.reg;
 		regval &= (1 << (gpio_pin % 16));
 	}
 	
@@ -219,23 +208,17 @@ bool gpio_pin_get_output_level(const uint8_t gpio_pin)
  */
 void gpio_pin_set_output_level(const uint8_t gpio_pin, const bool level)
 {
-	if(gpio_pin <= 7) {
+	if(gpio_pin < 16) {
 		if(level) {
 			GPIO0->DATAOUT.reg |= (1 << gpio_pin);
 		} else {
 			GPIO0->DATAOUT.reg &= ~(1 << gpio_pin);
 		}
-	} else if (gpio_pin <= 15) {
+	} else {
 		if(level) {
-			GPIO1->DATAOUT.reg |= (1 << (gpio_pin % 8));
+			GPIO1->DATAOUT.reg |= (1 << (gpio_pin % 16));
 		} else {
-			GPIO1->DATAOUT.reg &= ~(1 << (gpio_pin % 8));
-		}
-	} else if (gpio_pin <= 23) {
-		if(level) {
-			GPIO2->DATAOUT.reg |= (1 << (gpio_pin % 16));
-		} else {
-			GPIO2->DATAOUT.reg &= ~(1 << (gpio_pin % 16));
+			GPIO1->DATAOUT.reg &= ~(1 << (gpio_pin % 16));
 		}
 	}
 }
@@ -249,12 +232,10 @@ void gpio_pin_set_output_level(const uint8_t gpio_pin, const bool level)
  */
 void gpio_pin_toggle_output_level(const uint8_t gpio_pin)
 {
-	if (gpio_pin <= 7) {
+	if (gpio_pin < 16) {
 		GPIO0->DATAOUT.reg ^= (1 << gpio_pin);
-	} else if (gpio_pin <= 15) {
-		GPIO1->DATAOUT.reg ^= (1 << (gpio_pin % 8));
-	} else if (gpio_pin <= 23) {
-		GPIO2->DATAOUT.reg ^= (1 << (gpio_pin % 16));
+	} else {
+		GPIO1->DATAOUT.reg ^= (1 << (gpio_pin % 16));
 	}
 }
 
