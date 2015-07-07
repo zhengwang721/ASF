@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief AT30TSE75X Temperature sensor driver configuration file.
+ * \brief Smart Card driver configuration file.
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,21 +43,29 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_AT30TSE75X_H_INCLUDED
-#define CONF_AT30TSE75X_H_INCLUDED
+#ifndef CONF_ISO7816_H_INCLUDED
+#define CONF_ISO7816_H_INCLUDED
 
-#include <board.h>
+#define CONF_STDIO_USART            EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING      EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0      EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1      EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2      EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3      EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE         38400
 
-#ifdef EXT1_I2C_MODULE
-/* Default Interface configuration for Xplained Pro kit */
-#  define AT30TSE_SERCOM      EXT1_I2C_MODULE
-#  define AT30TSE_PINMUX_PAD0 EXT1_I2C_SERCOM_PINMUX_PAD0
-#  define AT30TSE_PINMUX_PAD1 EXT1_I2C_SERCOM_PINMUX_PAD1
-#else
-/* Dummy configuration */
-#  define AT30TSE_SERCOM      0
-#  define AT30TSE_PINMUX_PAD0 0
-#  define AT30TSE_PINMUX_PAD1 0
-#endif
 
-#endif /* CONF_AT30TSE75X_H_INCLUDED */
+#define CONF_ISO7816_USART          EXT1_UART_MODULE
+#define CONF_ISO7816_MUX_SETTING    EXT1_UART_SERCOM_MUX_SETTING
+#define CONF_ISO7816_PINMUX_PAD0    EXT1_UART_SERCOM_PINMUX_PAD0
+#define CONF_ISO7816_PINMUX_PAD1    EXT1_UART_SERCOM_PINMUX_PAD1
+#define CONF_ISO7816_PINMUX_PAD2    EXT1_UART_SERCOM_PINMUX_PAD2
+#define CONF_ISO7816_PINMUX_PAD3    EXT1_UART_SERCOM_PINMUX_PAD3
+/** Define the baudrate of ISO7816 mode. */
+#define CONF_ISO7816_BAUDRATE        9600
+/** Define the FI_DI_RATIO filed value. */
+#define CONF_ISO7816_FI_DI           372
+
+#define CONF_ISO7816_PIN_RST        EXT1_PIN_15
+
+#endif /* CONF_ISO7816_H_INCLUDED */
