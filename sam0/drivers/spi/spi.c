@@ -399,7 +399,7 @@ enum status_code spi_init(
 	Spi *const spi_module = (module->hw);
 
 	/* Check if module is enabled. */
-	if (spi_module->SPI_MODULE_ENABLE.reg) {
+	if (spi_module->SPI_MODULE_ENABLE.reg & SPI_SPI_MODULE_ENABLE_MASK) {
 		spi_module->SPI_MODULE_ENABLE.reg = 0;
 	}
 

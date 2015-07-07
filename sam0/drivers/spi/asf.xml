@@ -13,7 +13,6 @@
 			
 			<build type="c-source" value="spi.c"/>
 			<build type="header-file" subtype="api" value="spi.h"/>
-			<build type="header-file" value="quick_start_slave/qs_spi_slave_basic.h"/>
 			<build type="include-path" value="."/>
 			<build type="module-config" subtype="path" value="module_config"/>
 			<build type="module-config" subtype="required-header-file" value="conf_spi.h"/>
