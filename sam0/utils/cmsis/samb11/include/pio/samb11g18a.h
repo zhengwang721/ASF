@@ -44,6 +44,35 @@
 #ifndef _SAMB11G18A_PIO_
 #define _SAMB11G18A_PIO_
 
+
+#define LPGPIO_0        0
+#define LPGPIO_1        1
+#define LPGPIO_2        2
+#define LPGPIO_3        3
+#define LPGPIO_4        4
+#define LPGPIO_5        5
+#define LPGPIO_6        6
+#define LPGPIO_7        7
+#define LPGPIO_8        8
+#define LPGPIO_9        9
+#define LPGPIO_10       10
+#define LPGPIO_11       11
+#define LPGPIO_12       12
+#define LPGPIO_13       13
+#define LPGPIO_14       14
+#define LPGPIO_15       15
+#define LPGPIO_16       16
+#define LPGPIO_17       17
+#define LPGPIO_18       18
+#define LPGPIO_19       19
+#define LPGPIO_20       20
+#ifdef CHIPVERSION_B0
+	#define LPGPIO_21   21
+	#define LPGPIO_22   22
+	#define LPGPIO_23   23
+	#define LPGPIO_24   24
+#endif
+
 #define PIN_PA00                           0  /**< \brief Pin Number for PA00 */
 #define PORT_PA00                 (1ul <<  0) /**< \brief PORT Mask  for PA00 */
 #define PIN_PA01                           1  /**< \brief Pin Number for PA01 */
