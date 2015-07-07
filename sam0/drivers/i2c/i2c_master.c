@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief I2C Master Driver
+ * \brief I2C Master Driver for SAMB11
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -43,9 +43,7 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include <stdint.h>
-#include <string.h>
-#include <asf.h>
+
 #include "i2c_master.h"
 
 #if I2C_MASTER_CALLBACK_MODE == true
@@ -53,10 +51,10 @@
 #endif
 
 /* Forward declaration */
-enum i2c_status_code _i2c_master_wait_for_bus(
+enum status_code _i2c_master_wait_for_bus(
 		struct i2c_master_module *const module);
 
-enum i2c_status_code _i2c_master_address_response(
+enum status_code _i2c_master_address_response(
 		struct i2c_master_module *const module);
 
 #if !defined(__DOXYGEN__)
@@ -68,38 +66,39 @@ enum i2c_status_code _i2c_master_address_response(
  * \param[in]  config  Configuration structure with configurations to set
  *
  * \return Status of setting configuration.
- * \retval I2C_STATUS_OK                        If module was configured correctly
- * \retval I2C_STATUS_ERR_ALREADY_INITIALIZED   If setting other GCLK generator than
+ * \retval STATUS_OK                        If module was configured correctly
+ * \retval STATUS_ERR_ALREADY_INITIALIZED   If setting other GCLK generator than
  *                                          previously set
- * \retval I2C_STATUS_ERR_BAUDRATE_UNAVAILABLE  If given baud rate is not compatible
+ * \retval STATUS_ERR_BAUDRATE_UNAVAILABLE  If given baud rate is not compatible
  *                                          with set GCLK frequency
  */
-static enum i2c_status_code _i2c_master_set_config(
+static enum status_code _i2c_master_set_config(
 		struct i2c_master_module *const module,
 		const struct i2c_master_config *const config)
 {
-	enum i2c_status_code status;
+	enum status_code status;
 	I2C *const i2c_module = (module->hw);
 	
-	status = _i2c_set_config(i2c_module,(uint16_t *)config->pinmux_pad, config->baud_rate, config->clock_source);
+	status = _i2c_set_config(i2c_module, (uint16_t *)config->pinmux_pad, \
+						config->baud_rate, config->clock_source);
 	i2c_module->I2C_MASTER_MODE.bit.MASTER_ENABLE = I2C_I2C_MASTER_MODE_MASTER_ENABLE_1;
 	
 	return status;
 }
 #endif /* __DOXYGEN__ */
 
-enum i2c_status_code i2c_master_lock(
+enum status_code i2c_master_lock(
 		struct i2c_master_module *const module)
 {
-	enum i2c_status_code status;
+	enum status_code status;
 
 	//system_interrupt_enter_critical_section();
 
 	if (module->locked) {
-		status = I2C_STATUS_BUSY;
+		status = STATUS_BUSY;
 	} else {
 		module->locked = true;
-		status = I2C_STATUS_OK;
+		status = STATUS_OK;
 	}
 
 	//system_interrupt_leave_critical_section();
@@ -212,18 +211,18 @@ void i2c_master_get_config_defaults(
  * \param[in]  config  Pointer to the configuration struct
  *
  * \return Status of initialization.
- * \retval I2C_STATUS_OK                        Module initiated correctly
- * \retval I2C_STATUS_ERR_INVALID_ARG           Invalid argument in module or config structure.
- * \retval I2C_STATUS_ERR_ALREADY_INITIALIZED   If the Pinmux is not a valid one for I2C signals.
+ * \retval STATUS_OK                        Module initiated correctly
+ * \retval STATUS_ERR_INVALID_ARG           Invalid argument in module or config structure.
+ * \retval STATUS_ERR_ALREADY_INITIALIZED   If the Pinmux is not a valid one for I2C signals.
  *
  */
-enum i2c_status_code i2c_master_init(
+enum status_code i2c_master_init(
 		struct i2c_master_module *const module,
 		const struct i2c_master_config *const config)
 {
 	/* Sanity check arguments. */
 	if((module == NULL) || (config == NULL))
-		return I2C_STATUS_ERR_INVALID_ARG;
+		return STATUS_ERR_INVALID_ARG;
 	
 	/* Initialize software module */
 	if(config->core_idx == I2C_CORE1)
@@ -233,12 +232,12 @@ enum i2c_status_code i2c_master_init(
 		module->hw = (void *)I2C1;
 #endif	//CHIPVERSION_B0
 	else
-		return I2C_STATUS_ERR_INVALID_ARG;
+		return STATUS_ERR_INVALID_ARG;
 
 	I2C *const i2c_module = (module->hw);
 	
-	if(i2c_module->ENABLE) {
-		i2c_module->I2C_MODULE_ENABLE.bit.ENABLE = false;
+	if(i2c_module->I2C_MODULE_ENABLE.reg) {
+		i2c_module->I2C_MODULE_ENABLE.reg = false;
 	}
 	
 	_i2c_reset(i2c_module);
@@ -251,16 +250,16 @@ enum i2c_status_code i2c_master_init(
 	module->buffer_length = 0;
 	module->buffer_remaining = 0;
 
-	module->status = I2C_STATUS_OK;
+	module->status = STATUS_OK;
 	module->buffer = NULL;
 #endif
 
 	i2c_master_enable(module);
 	/* Set config and return status. */
-	if(_i2c_master_set_config(module, config) != I2C_STATUS_OK)
-		return I2C_STATUS_ERR_NOT_INITIALIZED;
+	if(_i2c_master_set_config(module, config) != STATUS_OK)
+		return STATUS_ERR_NOT_INITIALIZED;
 	
-	return I2C_STATUS_OK;
+	return STATUS_OK;
 }
 
 /**
@@ -302,16 +301,16 @@ void i2c_master_reset(struct i2c_master_module *const module)
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
  * \return Status of reading packet.
- * \retval I2C_STATUS_OK                    The packet was read successfully
- * \retval I2C_STATUS_ERR_TIMEOUT           If no response was given within
+ * \retval STATUS_OK                    The packet was read successfully
+ * \retval STATUS_ERR_TIMEOUT           If no response was given within
  *                                      specified timeout period
- * \retval I2C_STATUS_ERR_DENIED            If error on bus
- * \retval I2C_STATUS_ERR_PACKET_COLLISION  If arbitration is lost
- * \retval I2C_STATUS_ERR_BAD_ADDRESS       If slave is busy, or no slave
+ * \retval STATUS_ERR_DENIED            If error on bus
+ * \retval STATUS_ERR_PACKET_COLLISION  If arbitration is lost
+ * \retval STATUS_ERR_BAD_ADDRESS       If slave is busy, or no slave
  *                                      acknowledged the address
  *
  */
-static enum i2c_status_code _i2c_master_read_packet(
+static enum status_code _i2c_master_read_packet(
 		struct i2c_master_module *const module,
 		struct i2c_master_packet *const packet)
 {
@@ -329,7 +328,7 @@ static enum i2c_status_code _i2c_master_read_packet(
 	} while(status);
 	
 	/* Flush the FIFO */
-	i2c_module->I2C_FLUSH.reg;
+	i2c_module->I2C_FLUSH.reg = 1;
 	
 	/* Enable I2C on bus (start condition) */
 	i2c_module->I2C_ONBUS.bit.ONBUS_ENABLE = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
@@ -349,10 +348,11 @@ static enum i2c_status_code _i2c_master_read_packet(
 	}
 	
 	/* Send stop condition. */
-	if(!module->no_stop)
+	if(!module->no_stop) {
 		i2c_module->I2C_ONBUS.bit.ONBUS_ENABLE = I2C_I2C_ONBUS_ONBUS_ENABLE_0;
+	}
 	
-	return I2C_STATUS_OK;
+	return STATUS_OK;
 }
 
 /**
@@ -368,12 +368,12 @@ static enum i2c_status_code _i2c_master_read_packet(
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
  * \return Status of reading packet.
- * \retval I2C_STATUS_OK                    The packet was read successfully
- * \retval I2C_STATUS_ERR_INVALID_ARG       Invalid argument in module or config strucuture
+ * \retval STATUS_OK                    The packet was read successfully
+ * \retval STATUS_ERR_INVALID_ARG       Invalid argument in module or config strucuture
  *                                      		specified timeout period
- * \retval I2C_STATUS_BUSY            			If module has a pending request.
+ * \retval STATUS_BUSY            			If module has a pending request.
  */
-enum i2c_status_code i2c_master_read_packet_wait(
+enum status_code i2c_master_read_packet_wait(
 		struct i2c_master_module *const module,
 		struct i2c_master_packet *const packet)
 {
@@ -383,12 +383,12 @@ enum i2c_status_code i2c_master_read_packet_wait(
 	Assert(packet);
 	
 	if((module == NULL) || (packet == NULL))
-		return I2C_STATUS_ERR_INVALID_ARG;
+		return STATUS_ERR_INVALID_ARG;
 
 #if I2C_MASTER_CALLBACK_MODE == true
 	/* Check if the I2C module is busy with a job. */
 	if (module->buffer_remaining > 0) {
-		return I2C_STATUS_BUSY;
+		return STATUS_BUSY;
 	}
 #endif
 
@@ -414,12 +414,12 @@ enum i2c_status_code i2c_master_read_packet_wait(
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
  * \return Status of reading packet.
- * \retval I2C_STATUS_OK                    The packet was read successfully
- * \retval I2C_STATUS_ERR_INVALID_ARG       Invalid argument in module or config strucuture
+ * \retval STATUS_OK                    The packet was read successfully
+ * \retval STATUS_ERR_INVALID_ARG       Invalid argument in module or config strucuture
  *                                      		specified timeout period
- * \retval I2C_STATUS_BUSY            			If module has a pending request.
+ * \retval STATUS_BUSY            			If module has a pending request.
  */
-enum i2c_status_code i2c_master_read_packet_wait_no_stop(
+enum status_code i2c_master_read_packet_wait_no_stop(
 		struct i2c_master_module *const module,
 		struct i2c_master_packet *const packet)
 {
@@ -429,12 +429,12 @@ enum i2c_status_code i2c_master_read_packet_wait_no_stop(
 	Assert(packet);
 	
 	if((module == NULL) || (packet == NULL))
-		return I2C_STATUS_ERR_INVALID_ARG;
+		return STATUS_ERR_INVALID_ARG;
 
 #if I2C_MASTER_CALLBACK_MODE == true
 	/* Check if the I2C module is busy with a job. */
 	if (module->buffer_remaining > 0) {
-		return I2C_STATUS_BUSY;
+		return STATUS_BUSY;
 	}
 #endif
 
@@ -451,9 +451,9 @@ enum i2c_status_code i2c_master_read_packet_wait_no_stop(
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
  * \return Status of write packet.
- * \retval I2C_STATUS_OK                    The packet was write successfully
+ * \retval STATUS_OK                    The packet was write successfully
  */
-static enum i2c_status_code _i2c_master_write_packet(
+static enum status_code _i2c_master_write_packet(
 		struct i2c_master_module *const module,
 		struct i2c_master_packet *const packet)
 {
@@ -470,7 +470,7 @@ static enum i2c_status_code _i2c_master_write_packet(
 	} while (status);
 	
 	/* Flush the FIFO */
-	i2c_module->I2C_FLUSH.reg;
+	i2c_module->I2C_FLUSH.reg = 1;
 	
 	/* Enable I2C on bus (start condition) */
 	i2c_module->I2C_ONBUS.bit.ONBUS_ENABLE = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
@@ -490,10 +490,11 @@ static enum i2c_status_code _i2c_master_write_packet(
 	}
 
 	/* Send stop condition */
-	if(!module->no_stop)
+	if(!module->no_stop) {
 		i2c_module->I2C_ONBUS.bit.ONBUS_ENABLE = I2C_I2C_ONBUS_ONBUS_ENABLE_0;
+	}
 	
-	return I2C_STATUS_OK;
+	return STATUS_OK;
 }
 
 /**
@@ -509,12 +510,12 @@ static enum i2c_status_code _i2c_master_write_packet(
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
  * \return Status of write packet.
- * \retval I2C_STATUS_OK                    The packet was written successfully
- * \retval I2C_STATUS_ERR_INVALID_ARG       Invalid argument in module or packet structure
+ * \retval STATUS_OK                    The packet was written successfully
+ * \retval STATUS_ERR_INVALID_ARG       Invalid argument in module or packet structure
  *                                      		specified timeout period
- * \retval I2C_STATUS_BUSY            			If module has a pending request.
+ * \retval STATUS_BUSY            			If module has a pending request.
  */
-enum i2c_status_code i2c_master_write_packet_wait(
+enum status_code i2c_master_write_packet_wait(
 		struct i2c_master_module *const module,
 		struct i2c_master_packet *const packet)
 {
@@ -524,12 +525,12 @@ enum i2c_status_code i2c_master_write_packet_wait(
 	Assert(packet);
 	
 	if((module == NULL) || (packet == NULL))
-		return I2C_STATUS_ERR_INVALID_ARG;
+		return STATUS_ERR_INVALID_ARG;
 	
 #if I2C_MASTER_CALLBACK_MODE == true
 	/* Check if the I2C module is busy with a job */
 	if (module->buffer_remaining > 0) {
-		return I2C_STATUS_BUSY;
+		return STATUS_BUSY;
 	}
 #endif
 
@@ -554,12 +555,12 @@ enum i2c_status_code i2c_master_write_packet_wait(
  * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
  * \return Status of write packet.
- * \retval I2C_STATUS_OK                    The packet was written successfully
- * \retval I2C_STATUS_ERR_INVALID_ARG       Invalid argument in module or config structure
+ * \retval STATUS_OK                    The packet was written successfully
+ * \retval STATUS_ERR_INVALID_ARG       Invalid argument in module or config structure
  *                                      		specified timeout period
- * \retval I2C_STATUS_BUSY            			If module has a pending request.
+ * \retval STATUS_BUSY            			If module has a pending request.
  */
-enum i2c_status_code i2c_master_write_packet_wait_no_stop(
+enum status_code i2c_master_write_packet_wait_no_stop(
 		struct i2c_master_module *const module,
 		struct i2c_master_packet *const packet)
 {
@@ -569,12 +570,12 @@ enum i2c_status_code i2c_master_write_packet_wait_no_stop(
 	Assert(packet);
 
 	if((module == NULL) || (packet == NULL))
-		return I2C_STATUS_ERR_INVALID_ARG;
+		return STATUS_ERR_INVALID_ARG;
 	
 #if I2C_MASTER_CALLBACK_MODE == true
 	/* Check if the I2C module is busy with a job */
 	if (module->buffer_remaining > 0) {
-		return I2C_STATUS_BUSY;
+		return STATUS_BUSY;
 	}
 #endif
 
@@ -638,9 +639,9 @@ void i2c_master_send_start(struct i2c_master_module *const module)
  * \param[out]     byte    Read one byte data to slave
  *
  * \return Status of reading byte.
- * \retval I2C_STATUS_OK                    The packet was read successfully
+ * \retval STATUS_OK                    The packet was read successfully
  */
-enum i2c_status_code i2c_master_read_byte(
+enum status_code i2c_master_read_byte(
 		struct i2c_master_module *const module,
 		uint8_t *byte)
 {
@@ -651,7 +652,7 @@ enum i2c_status_code i2c_master_read_byte(
 	
 	*byte = i2c_module->RECEIVE_DATA.bit.RX_BYTE;
 	
-	return I2C_STATUS_OK;
+	return STATUS_OK;
 }
 
 /**
@@ -662,9 +663,9 @@ enum i2c_status_code i2c_master_read_byte(
  * \param[in]			 byte		 command 0 - Write, 1 - Read
  *
  * \return Status of writing byte.
- * \retval I2C_STATUS_OK   The Address and command was written successfully
+ * \retval STATUS_OK   The Address and command was written successfully
  */
-enum i2c_status_code i2c_master_write_address(
+enum status_code i2c_master_write_address(
 		struct i2c_master_module *const module,
 		uint8_t address,
 		uint8_t command)
@@ -676,7 +677,7 @@ enum i2c_status_code i2c_master_write_address(
 	
 	i2c_module->TRANSMIT_DATA.reg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 | (address << 1) | command;
 		
-	return I2C_STATUS_OK;
+	return STATUS_OK;
 }
 
 
@@ -687,9 +688,9 @@ enum i2c_status_code i2c_master_write_address(
  * \param[in]      byte    Send one byte data to slave
  *
  * \return Status of writing byte.
- * \retval I2C_STATUS_OK   One byte was written successfully
+ * \retval STATUS_OK   One byte was written successfully
  */
-enum i2c_status_code i2c_master_write_byte(
+enum status_code i2c_master_write_byte(
 		struct i2c_master_module *const module,
 		uint8_t byte)
 {
@@ -700,7 +701,7 @@ enum i2c_status_code i2c_master_write_byte(
 	
 	i2c_module->TRANSMIT_DATA.reg = (uint16_t)byte;
 	
-	return I2C_STATUS_OK;
+	return STATUS_OK;
 }
 
 #ifdef FEATURE_I2C_DMA_SUPPORT

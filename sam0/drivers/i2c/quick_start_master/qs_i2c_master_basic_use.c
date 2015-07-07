@@ -3,7 +3,7 @@
  *
  * \brief SAM B11 I2C Master Quick Start Guide
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -114,7 +114,7 @@ int main(void)
 	/* Write buffer to slave until success. */
 	//! [write_packet]
 	while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) !=
-			I2C_STATUS_OK) {
+			STATUS_OK) {
 		/* Increment timeout counter and check if timed out. */
 		if (timeout++ == TIMEOUT) {
 			break;
@@ -126,7 +126,7 @@ int main(void)
 	//! [read_packet]
 	packet.data = read_buffer;
 	while (i2c_master_read_packet_wait(&i2c_master_instance, &packet) !=
-			I2C_STATUS_OK) {
+			STATUS_OK) {
 		/* Increment timeout counter and check if timed out. */
 		if (timeout++ == TIMEOUT) {
 			break;

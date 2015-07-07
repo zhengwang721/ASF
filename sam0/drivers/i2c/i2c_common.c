@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief I2C Driver
+ * \brief I2C Driver for SAMB11
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,14 +43,14 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include "i2c_common.h"
-#include "i2c_master.h"
 
-enum i2c_status_code _i2c_set_config(
-									I2C *const i2c_module,
-									uint16_t *pinmux_pad,
-									uint32_t baud_rate,
-									uint8_t clock_source)
+#include "i2c_common.h"
+
+enum status_code _i2c_set_config(
+								I2C *const i2c_module,
+								uint16_t *pinmux_pad,
+								uint32_t baud_rate,
+								uint8_t clock_source)
 {
 	uint8_t idx = 0;
 	
@@ -63,10 +63,10 @@ enum i2c_status_code _i2c_set_config(
 	i2c_module->CLOCK_SOURCE_SELECT.reg = clock_source;
 	i2c_module->I2C_CLK_DIVIDER.reg = 0x10;
 	
-	return I2C_STATUS_OK;
+	return STATUS_OK;
 }
 
-enum i2c_status_code _i2c_reset(I2C *const i2c_module)
+enum status_code _i2c_reset(I2C *const i2c_module)
 {
 	if (i2c_module == (I2C *)I2C0) {
 		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg &= 
@@ -78,14 +78,14 @@ enum i2c_status_code _i2c_reset(I2C *const i2c_module)
 	}
 #ifdef CHIPVERSION_B0
 	else if(i2c_module == (I2C *)I2C1) {
-		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg &=
-								~(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C1_CORE_RSTN |
-								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C1_IF_RSTN);
-		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |=
-								(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C1_CORE_RSTN |
-								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C1_IF_RSTN);
+		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg &=
+								~(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_CORE_RSTN |
+								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_IF_RSTN);
+		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg |=
+								(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_CORE_RSTN |
+								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_IF_RSTN);
 	}
 #endif
 
-	return I2C_STATUS_OK;
+	return STATUS_OK;
 }
