@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief I2C Driver for SAMB11
+ * \brief SAM GPIO Driver Quick Start for SAMB11
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -43,36 +43,54 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#include <asf.h>
 
-#ifndef I2C_COMMON_H_INCLUDED
-#define I2C_COMMON_H_INCLUDED
+void configure_gpio_pins(void);
 
-#include <compiler.h>
-#include <gpio.h>
-
-#define I2C_WRITE_TO_SLAVE	0
-#define I2C_READ_FROM_SLAVE	1
-
-static inline void _i2c_disable(I2C *const i2c_module)
+//! [setup]
+void configure_gpio_pins(void)
 {
-	if(i2c_module == NULL)
-		return;
-	i2c_module->I2C_MODULE_ENABLE.reg = false;
-}
+//! [setup_1]
+	struct gpio_config config_gpio_pin;
+//! [setup_1]
+//! [setup_2]
+	gpio_get_config_defaults(&config_gpio_pin);
+//! [setup_2]
 
-static inline void _i2c_enable(I2C *const i2c_module)
+//! [setup_3]
+	config_gpio_pin.direction  = GPIO_PIN_DIR_INPUT;
+	config_gpio_pin.input_pull = GPIO_PIN_PULL_UP;
+//! [setup_3]
+//! [setup_4]
+	gpio_pin_set_config(BUTTON_0_PIN, &config_gpio_pin);
+//! [setup_4]
+
+//! [setup_5]
+	config_gpio_pin.direction = GPIO_PIN_DIR_OUTPUT;
+//! [setup_5]
+//! [setup_6]
+	gpio_pin_set_config(LED_0_PIN, &config_gpio_pin);
+//! [setup_6]
+}
+//! [setup]
+
+int main(void)
 {
-	if(i2c_module == NULL)
-		return;
-	i2c_module->I2C_MODULE_ENABLE.reg = true;
-}
+	//system_init();
 
-enum status_code _i2c_set_config(
-						I2C *const i2c_module,
-						uint16_t *pinmux_pad,
-						uint32_t baud_rate,
-						uint8_t clock_source);
-									
-enum status_code _i2c_reset(I2C *const i2c_module);
-									
-#endif	//I2C_COMMON_H_INCLUDED
+	//! [setup_init]
+	configure_gpio_pins();
+	//! [setup_init]
+
+	//! [main]
+	while (true) {
+		//! [main_1]
+		bool pin_state = gpio_pin_get_input_level(BUTTON_0_PIN);
+		//! [main_1]
+
+		//! [main_2]
+		gpio_pin_set_output_level(LED_0_PIN, !pin_state);
+		//! [main_2]
+	}
+	//! [main]
+}

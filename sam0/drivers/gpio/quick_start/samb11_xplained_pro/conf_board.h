@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief I2C Driver for SAMB11
+ * \brief SAM B11 Xplained Pro board configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -43,49 +43,7 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include "i2c_common.h"
-
-enum status_code _i2c_set_config(
-								I2C *const i2c_module,
-								uint16_t *pinmux_pad,
-								uint32_t baud_rate,
-								uint8_t clock_source)
-{
-	uint8_t idx = 0;
-	
-	/* Set the pinmux for this i2c module. */
-	for(idx = 0; idx < 2; idx++) {
-		gpio_pinmux_cofiguration(pinmux_pad[idx], GPIO_PINMUX_SEL_2);
-	}
-	
-	/* Find and set baudrate. */
-	i2c_module->CLOCK_SOURCE_SELECT.reg = clock_source;
-	i2c_module->I2C_CLK_DIVIDER.reg = 0x10;
-	
-	return STATUS_OK;
-}
-
-enum status_code _i2c_reset(I2C *const i2c_module)
-{
-	if (i2c_module == (I2C *)I2C0) {
-		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg &= 
-								~(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_CORE_RSTN |
-								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_IF_RSTN);
-		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |=
-								(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_CORE_RSTN |
-								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_IF_RSTN);						
-	}
-#ifdef CHIPVERSION_B0
-	else if(i2c_module == (I2C *)I2C1) {
-		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg &=
-								~(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_CORE_RSTN |
-								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_IF_RSTN);
-		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg |=
-								(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_CORE_RSTN |
-								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_IF_RSTN);
-	}
-#endif
-
-	return STATUS_OK;
-}
+#endif /* CONF_BOARD_H_INCLUDED */

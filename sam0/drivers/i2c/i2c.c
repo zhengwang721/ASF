@@ -44,20 +44,39 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#include "i2c_master.h"
+#include "i2c.h"
 
-#if I2C_MASTER_CALLBACK_MODE == true
-//# include "i2c_master_interrupt.h"
+/**
+ * \brief Resets the I2C module
+ *
+ * This function will reset the I2C module to its power on default values and
+ * disable it.
+ *
+ * \param[in,out] module Pointer to the software instance struct
+ */
+static enum status_code _i2c_reset(I2C *const i2c_module)
+{
+	if (i2c_module == (I2C *)I2C0) {
+		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg &=
+		~(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_CORE_RSTN |
+		LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_IF_RSTN);
+		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |=
+		(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_CORE_RSTN |
+		LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_IF_RSTN);
+	}
+#ifdef CHIPVERSION_B0
+	else if(i2c_module == (I2C *)I2C1) {
+		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg &=
+		~(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_CORE_RSTN |
+		LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_IF_RSTN);
+		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg |=
+		(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_CORE_RSTN |
+		LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_IF_RSTN);
+	}
 #endif
 
-/* Forward declaration */
-enum status_code _i2c_master_wait_for_bus(
-		struct i2c_master_module *const module);
-
-enum status_code _i2c_master_address_response(
-		struct i2c_master_module *const module);
-
-#if !defined(__DOXYGEN__)
+	return STATUS_OK;
+}
 
 /**
  * \internal Sets configurations to module
@@ -73,22 +92,43 @@ enum status_code _i2c_master_address_response(
  *                                          with set GCLK frequency
  */
 static enum status_code _i2c_master_set_config(
-		struct i2c_master_module *const module,
+		struct i2c_module *const module,
 		const struct i2c_master_config *const config)
 {
 	enum status_code status;
+	uint8_t idx = 0;
 	I2C *const i2c_module = (module->hw);
 	
-	status = _i2c_set_config(i2c_module, (uint16_t *)config->pinmux_pad, \
-						config->baud_rate, config->clock_source);
-	i2c_module->I2C_MASTER_MODE.bit.MASTER_ENABLE = I2C_I2C_MASTER_MODE_MASTER_ENABLE_1;
+	/* Set the pinmux for this i2c module. */
+	for(idx = 0; idx < 2; idx++) {
+		
+		gpio_pinmux_cofiguration(config->pinmux_pad[idx], GPIO_PINMUX_SEL_2);
+	}
+	/* Find and set baudrate. */
+	i2c_module->CLOCK_SOURCE_SELECT.reg = config->clock_source;
+	i2c_module->I2C_CLK_DIVIDER.reg = 0x10;
+	i2c_module->I2C_MASTER_MODE.reg = I2C_I2C_MASTER_MODE_MASTER_ENABLE_1;
 	
 	return status;
 }
-#endif /* __DOXYGEN__ */
 
-enum status_code i2c_master_lock(
-		struct i2c_master_module *const module)
+/**
+ * \brief Attempt to get lock on driver instance
+ *
+ * This function checks the instance's lock, which indicates whether or not it
+ * is currently in use, and sets the lock if it was not already set.
+ *
+ * The purpose of this is to enable exclusive access to driver instances, so
+ * that, e.g., transactions by different services will not interfere with each
+ * other.
+ *
+ * \param[in,out] module Pointer to the driver instance to lock
+ *
+ * \retval I2C_STATUS_OK   If the module was locked
+ * \retval I2C_STATUS_BUSY If the module was already locked
+ */
+enum status_code i2c_lock(
+		struct i2c_module *const module)
 {
 	enum status_code status;
 
@@ -106,7 +146,16 @@ enum status_code i2c_master_lock(
 	return status;
 }
 
-void i2c_master_unlock(struct i2c_master_module *const module)
+/**
+ * \brief Unlock driver instance
+ *
+ * This function clears the instance lock, indicating that it is available for
+ * use.
+ *
+ * \param[in,out] module Pointer to the driver instance to lock
+ *
+ */
+void i2c_unlock(struct i2c_module *const module)
 {
 	module->locked = false;
 }
@@ -122,8 +171,8 @@ void i2c_master_unlock(struct i2c_master_module *const module)
  * \retval true   Module is active 
  * \retval false  Module is not active
  */
-static inline bool i2c_master_is_active (
-		const struct i2c_master_module *const module)
+static inline bool i2c_is_active (
+		const struct i2c_module *const module)
 {
 	/* Sanity check. */
 	Assert(module);
@@ -140,13 +189,13 @@ static inline bool i2c_master_is_active (
  *
  * \param[in]  module  Pointer to software module structure
  */
-static void _i2c_master_wait_for_idle(
-		const struct i2c_master_module *const module)
+static void _i2c_wait_for_idle(
+		const struct i2c_module *const module)
 {
 	/* Sanity check. */
 	Assert(module);
 
-	while (i2c_master_is_active(module)) {
+	while (i2c_is_active(module)) {
 		/* Wait for I2C module to sync. */
 	}
 }
@@ -160,13 +209,13 @@ static void _i2c_master_wait_for_idle(
  *
  * \param[in]  module  Pointer to the software module struct
  */
-static inline void i2c_master_enable(
-		const struct i2c_master_module *const module)
+void i2c_enable(
+		const struct i2c_module *const module)
 {
 	I2C *const i2c_module = (module->hw);
 
 	/* Wait for module to sync. */
-	_i2c_master_wait_for_idle(module);
+	_i2c_wait_for_idle(module);
 	/* Enable module. */
 	_i2c_enable(i2c_module);
 }
@@ -178,17 +227,19 @@ static inline void i2c_master_enable(
  *
  * \param[in]  module  Pointer to the software module struct
  */
-static inline void i2c_master_disable(
-		const struct i2c_master_module *const module)
+void i2c_disable(
+		const struct i2c_module *const module)
 {
 
 	I2C *const i2c_module = (module->hw);
 
 	/* Wait for module to sync. */
-	_i2c_master_wait_for_idle(module);
+	_i2c_wait_for_idle(module);
 	/* Enable module. */
 	_i2c_disable(i2c_module);
 }
+
+#  if CONF_I2C_MASTER_ENABLE == true
 
 void i2c_master_get_config_defaults(
 		struct i2c_master_config *const config)
@@ -217,7 +268,7 @@ void i2c_master_get_config_defaults(
  *
  */
 enum status_code i2c_master_init(
-		struct i2c_master_module *const module,
+		struct i2c_module *const module,
 		const struct i2c_master_config *const config)
 {
 	/* Sanity check arguments. */
@@ -237,7 +288,7 @@ enum status_code i2c_master_init(
 	I2C *const i2c_module = (module->hw);
 	
 	if(i2c_module->I2C_MODULE_ENABLE.reg) {
-		i2c_module->I2C_MODULE_ENABLE.reg = false;
+		i2c_module->I2C_MODULE_ENABLE.reg = I2C_I2C_MODULE_ENABLE_ENABLE;
 	}
 	
 	_i2c_reset(i2c_module);
@@ -249,12 +300,11 @@ enum status_code i2c_master_init(
 	module->enabled_callback = 0;
 	module->buffer_length = 0;
 	module->buffer_remaining = 0;
-
 	module->status = STATUS_OK;
 	module->buffer = NULL;
 #endif
 
-	i2c_master_enable(module);
+	i2c_enable(module);
 	/* Set config and return status. */
 	if(_i2c_master_set_config(module, config) != STATUS_OK)
 		return STATUS_ERR_NOT_INITIALIZED;
@@ -269,14 +319,14 @@ enum status_code i2c_master_init(
  *
  * \param[in,out] module Pointer to software module structure
  */
-void i2c_master_reset(struct i2c_master_module *const module)
+void i2c_reset(struct i2c_module *const module)
 {
 	/* Sanity check arguments */
 
 	I2C *const i2c_module = (module->hw);
 
 	/* Disable module */
-	i2c_master_disable(module);
+	i2c_disable(module);
 
 #if I2C_MASTER_CALLBACK_MODE == true
 	/* Clear all pending interrupts */
@@ -291,7 +341,6 @@ void i2c_master_reset(struct i2c_master_module *const module)
 
 #if !defined(__DOXYGEN__)
 #endif /* __DOXYGEN__ */
-
 
 /**
  * \internal
@@ -311,7 +360,7 @@ void i2c_master_reset(struct i2c_master_module *const module)
  *
  */
 static enum status_code _i2c_master_read_packet(
-		struct i2c_master_module *const module,
+		struct i2c_module *const module,
 		struct i2c_master_packet *const packet)
 {
 
@@ -374,7 +423,7 @@ static enum status_code _i2c_master_read_packet(
  * \retval STATUS_BUSY            			If module has a pending request.
  */
 enum status_code i2c_master_read_packet_wait(
-		struct i2c_master_module *const module,
+		struct i2c_module *const module,
 		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
@@ -420,7 +469,7 @@ enum status_code i2c_master_read_packet_wait(
  * \retval STATUS_BUSY            			If module has a pending request.
  */
 enum status_code i2c_master_read_packet_wait_no_stop(
-		struct i2c_master_module *const module,
+		struct i2c_module *const module,
 		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
@@ -454,7 +503,7 @@ enum status_code i2c_master_read_packet_wait_no_stop(
  * \retval STATUS_OK                    The packet was write successfully
  */
 static enum status_code _i2c_master_write_packet(
-		struct i2c_master_module *const module,
+		struct i2c_module *const module,
 		struct i2c_master_packet *const packet)
 {
 	I2C *const i2c_module = (module->hw);
@@ -516,7 +565,7 @@ static enum status_code _i2c_master_write_packet(
  * \retval STATUS_BUSY            			If module has a pending request.
  */
 enum status_code i2c_master_write_packet_wait(
-		struct i2c_master_module *const module,
+		struct i2c_module *const module,
 		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
@@ -561,7 +610,7 @@ enum status_code i2c_master_write_packet_wait(
  * \retval STATUS_BUSY            			If module has a pending request.
  */
 enum status_code i2c_master_write_packet_wait_no_stop(
-		struct i2c_master_module *const module,
+		struct i2c_module *const module,
 		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
@@ -596,7 +645,7 @@ enum status_code i2c_master_write_packet_wait_no_stop(
  *
  * \param[in,out] module  Pointer to the software instance struct
  */
-void i2c_master_send_stop(struct i2c_master_module *const module)
+void i2c_master_send_stop(struct i2c_module *const module)
 {
 	/* Sanity check */
 	Assert(module);
@@ -605,7 +654,7 @@ void i2c_master_send_stop(struct i2c_master_module *const module)
 	I2C *const i2c_module = (module->hw);
 
 	/* Send stop command */
-	_i2c_master_wait_for_idle(module);
+	_i2c_wait_for_idle(module);
 	
 	i2c_module->I2C_ONBUS.bit.ONBUS_ENABLE = I2C_I2C_ONBUS_ONBUS_ENABLE_0;
 }
@@ -622,14 +671,14 @@ void i2c_master_send_stop(struct i2c_master_module *const module)
  *
  * \param[in,out] module  Pointer to the software instance struct
  */
-void i2c_master_send_start(struct i2c_master_module *const module)
+void i2c_master_send_start(struct i2c_module *const module)
 {
 	I2C *const i2c_module = (module->hw);
 
-	_i2c_master_wait_for_idle(module);
+	_i2c_wait_for_idle(module);
 	
 	/* Send start command */
-	i2c_module->I2C_ONBUS.bit.ONBUS_ENABLE = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
+	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
 }
 
 /**
@@ -642,13 +691,13 @@ void i2c_master_send_start(struct i2c_master_module *const module)
  * \retval STATUS_OK                    The packet was read successfully
  */
 enum status_code i2c_master_read_byte(
-		struct i2c_master_module *const module,
+		struct i2c_module *const module,
 		uint8_t *byte)
 {
   	I2C *const i2c_module = (module->hw);
 
 	/* Read a byte from slave. */
-	_i2c_master_wait_for_idle(module);
+	_i2c_wait_for_idle(module);
 	
 	*byte = i2c_module->RECEIVE_DATA.bit.RX_BYTE;
 	
@@ -666,14 +715,14 @@ enum status_code i2c_master_read_byte(
  * \retval STATUS_OK   The Address and command was written successfully
  */
 enum status_code i2c_master_write_address(
-		struct i2c_master_module *const module,
+		struct i2c_module *const module,
 		uint8_t address,
 		uint8_t command)
 {
   	I2C *const i2c_module = (module->hw);
 	  
 	/* Write byte to slave. */
-	_i2c_master_wait_for_idle(module);
+	_i2c_wait_for_idle(module);
 	
 	i2c_module->TRANSMIT_DATA.reg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 | (address << 1) | command;
 		
@@ -691,15 +740,15 @@ enum status_code i2c_master_write_address(
  * \retval STATUS_OK   One byte was written successfully
  */
 enum status_code i2c_master_write_byte(
-		struct i2c_master_module *const module,
+		struct i2c_module *const module,
 		uint8_t byte)
 {
   	I2C *const i2c_module = (module->hw);
 
 	/* Write byte to slave. */
-	_i2c_master_wait_for_idle(module);
+	_i2c_wait_for_idle(module);
 	
-	i2c_module->TRANSMIT_DATA.reg = (uint16_t)byte;
+	i2c_module->TRANSMIT_DATA.reg = (uint16_t)I2C_TRANSMIT_DATA_TX_DATA(byte);
 	
 	return STATUS_OK;
 }
@@ -722,10 +771,12 @@ enum status_code i2c_master_write_byte(
  * \param[in] direction I<SUP>2</SUP>C transfer direction
  *
  */
-static inline void i2c_master_dma_set_transfer(struct i2c_master_module *const module,
+static inline void i2c_master_dma_set_transfer(struct i2c_module *const module,
 		uint16_t addr, uint8_t length, enum i2c_transfer_direction direction)
 {
 }
+
+#  endif
 
 /** @} */
 #endif
