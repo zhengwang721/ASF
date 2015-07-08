@@ -115,14 +115,6 @@ extern "C" {
 /**INDENT-ON**/
 /** @endcond */
 
-/** Number of DMA channels */
-#define XDMAC_CHANNEL_NUM               24
-
-/** DMA transfer from or to memory */
-#define XDMAC_TRANSFER_MEMORY  0xFF
-/** Channel allocate failed */
-#define XDMAC_ALLOC_FAILED     0xFFFF 
-
 /** DMA channel hardware interface number */
 #define XDAMC_CHANNEL_HWID_HSMCI      0
 #define XDAMC_CHANNEL_HWID_SPI0_T     1
@@ -168,51 +160,18 @@ extern "C" {
 #define XDAMC_CHANNEL_HWID_TC2        42
 #define XDAMC_CHANNEL_HWID_TC3        43
 
-/** DMA status or return code */
-typedef enum {
-	  /** Operation is successful */
-    XDMAC_OK = 0,
-    /** Channel occupied or transfer not finished */       
-    XDMAC_PARTIAL_DONE,
-    XDMAC_DONE,
-    XDMAC_BUSY, 
-    /** Operation failed */         
-    XDMAC_ERROR,  
-    /** Operation cancelled */       
-    XDMAC_CANCELED       
-} xdmac_status_t;
-
 /** XDMA state for channel */
 typedef enum {
-	  /** Free channel. */
-    XDMAC_STATE_FREE = 0, 
-    /** Allocated to some peripheral. */     
-    XDMAC_STATE_ALLOCATED,
-    /** XDMA started. */      
-    XDMAC_STATE_START,
-    /** XDMA in transferring. */       
-    XDMAC_STATE_IN_XFR, 
-    /** XDMA transfer done. */       
-    XDMAC_STATE_DONE,  
-    /** XDMA transfer stopped. */        
-    XDMAC_STATE_HALTED,        
-} xdmac_channel_state_t;
-
-/** XDMA driver channel */
-typedef struct {
-	  /** HW ID for source. */
-    uint8_t bSrcPeriphID;  
-    /** HW ID for destination. */         
-    uint8_t bDstPeriphID;   
-    /** DMA channel state. */        
-    xdmac_state_t state;         
-} xdmac_channel_t;
+	/** Free channel. */
+	XDMAC_STATE_FREE = 0, 
+	/** Allocated to some peripheral. */     
+	XDMAC_STATE_ALLOCATED,
+ } xdmac_channel_state_t;
 
 /** XDMA driver instance */
 typedef struct {
     Xdmac *p_xdmac;
-    xdmac_channel_t XdmaChannels[XDMACCHID_NUMBER];
-    uint8_t numChannels;
+    xdmac_channel_state_t xdmac_channels[XDMACCHID_NUMBER];
  } xdmac_module_t;
 
 /** XDMA config register for channel */
@@ -714,13 +673,10 @@ static inline void xdmac_channel_set_destination_microblock_stride(Xdmac *p_xdma
 }
 
 void xdmac_init(xdmac_module_t *p_module_inst);
-uint32_t xdmac_allocate_channel(xdmac_module_t *p_module_inst, uint8_t uc_src_id, uint8_t uc_dst_id);
-xdmac_status_t xdmac_free_channel(xdmac_module_t *p_module_inst, uint32_t ul_num);
-xdmac_status_t xdmac_configure_transfer(xdmac_module_t *p_module_inst, uint32_t ul_num, xdmac_channel_config_t *p_cfg,
+enum status_code xdmac_configure_transfer(xdmac_module_t *p_module_inst, uint32_t ul_num, xdmac_channel_config_t *p_cfg,
 		uint32_t ul_desc_cfg, uint32_t ul_desc_addr);
-xdmac_status_t xdmac_is_transfer_done(xdmac_module_t *p_module_inst, uint32_t ul_num);
-xdmac_status_t xdmac_start_transfer(xdmac_module_t *p_module_inst, uint32_t ul_num);
-xdmac_status_t xdmac_stop_transfer(xdmac_module_t *p_module_inst, uint32_t ul_num);
+void xdmac_start_transfer(xdmac_module_t *p_module_inst, uint32_t ul_num);
+void xdmac_stop_transfer(xdmac_module_t *p_module_inst, uint32_t ul_num);
 
 /** @cond */
 /**INDENT-OFF**/

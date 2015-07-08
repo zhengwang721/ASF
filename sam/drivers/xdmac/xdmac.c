@@ -56,74 +56,10 @@ void xdmac_init(xdmac_module_t *p_module_inst)
 	uint32_t j;
 
 	p_module_inst->p_xdmac = XDMAC;
- 	p_module_inst->numChannels = (XDMAC_GTYPE_NB_CH(xdmac_get_type(XDMAC)) + 1);
-
+ 
 	for (j = 0; j < p_module_inst->numChannels; j ++) {
-		p_module_inst->XdmaChannels[j].bSrcPeriphID = 0;
-		p_module_inst->XdmaChannels[j].bDstPeriphID = 0;
-		p_module_inst->XdmaChannels[j].state = XDMAC_STATE_FREE;
+		p_module_inst->xdmac_channels[j].state = XDMAC_STATE_FREE;
 	}	
-}
-
-/**
- * \brief Allocate a XDMA channel for upper layer.
- *
- * \param[out] p_module_inst Pointer to XDMA driver instance
- * \param uc_src_id Source peripheral ID, 0xFF for memory.
- * \param uc_dst_id Destination peripheral ID, 0xFF for memory.
- *
- * \return Channel number if allocation successful, XDMAC_ALLOC_FAILED if allocation failed.
- */
-uint32_t xdmac_allocate_channel(xdmac_module_t *p_module_inst,
-		uint8_t uc_src_id, uint8_t uc_dst_id)
-{
-    uint32_t i;
-    /* Can't support peripheral to peripheral */
-    if ((( uc_src_id != XDMAC_TRANSFER_MEMORY ) && ( uc_dst_id != XDMAC_TRANSFER_MEMORY )))
-    {
-        return XDMAC_ALLOC_FAILED;
-    }
-
-    for (i = 0; i < p_module_inst->numChannels; i++)
-    {
-        if ( p_module_inst->XdmaChannels[i].state == XDMAC_STATE_FREE )
-        {
-            /* Allocate the channel */
-            p_module_inst->XdmaChannels[i].state = XDMAC_STATE_ALLOCATED;
-            /* Get general informations */
-            p_module_inst->XdmaChannels[i].bSrcPeriphID = uc_src_id;
-            p_module_inst->XdmaChannels[i].bDstPeriphID = uc_dst_id;
-            return  ((i) & 0xFF);
-        }
-    }
-     return XDMAC_ALLOC_FAILED;
-}
-
-/**
- * \brief Free the specified XDMA channel.
- *
- * \param[out] p_module_inst Pointer to XDMA driver instance
- * \param[in] ul_num The specified channel number.
- */
-xdmac_status_t xdmac_free_channel(xdmac_module_t *p_module_inst,
-		uint32_t ul_num)
-{
-	Assert(p_module_inst != NULL);
-
-	if (ul_num >= p_module_inst->numChannels)
-		return XDMAC_ERROR;
-
-	switch (p_module_inst->XdmaChannels[ul_num].state) {
-		case XDMAC_STATE_ALLOCATED: 
-		case XDMAC_STATE_START: 
-		case XDMAC_STATE_IN_XFR: 
-			return XDMAC_BUSY;
-		case XDMAC_STATE_DONE:
-		case XDMAC_STATE_HALTED:          
-			p_module_inst->XdmaChannels[ul_num].state = XDMAC_STATE_FREE;
-			break;
-		}
-	return XDMAC_OK;
 }
 
 /**
@@ -135,22 +71,20 @@ xdmac_status_t xdmac_free_channel(xdmac_module_t *p_module_inst,
  * \param[in] ul_desc_cfg   The configuration for next descriptor
  * \param[in] ul_desc_addr The address for next descriptor
  */
-xdmac_status_t xdmac_configure_transfer(xdmac_module_t *p_module_inst,
+enum status_code xdmac_configure_transfer(xdmac_module_t *p_module_inst,
 		uint32_t ul_num, xdmac_channel_config_t *p_cfg,
 		uint32_t ul_desc_cfg, uint32_t ul_desc_addr)
 {
 	Assert(p_module_inst != NULL);
 
-	if (ul_num >= p_module_inst->numChannels)
-		return XDMAC_ERROR;
-
 	Xdmac *p_xdmac = p_module_inst->p_xdmac;
 	xdmac_channel_get_interrupt_status( p_xdmac, ul_num);
 
-	if (p_module_inst->XdmaChannels[ul_num].state == XDMAC_STATE_FREE )
-		return XDMAC_ERROR;
-	if (p_module_inst->XdmaChannels[ul_num].state == XDMAC_STATE_START )
-		return XDMAC_BUSY;
+	if (p_module_inst->xdmac_channels[ul_num].state == XDMAC_STATE_FREE) {
+		p_module_inst->xdmac_channels[ul_num].state == XDMAC_STATE_ALLOCATED;
+	} else {
+		return STATUS_ERR_BUSY;
+	}
 
 	/* Linked List is enabled */
 	if ((ul_desc_cfg & XDMAC_CNDC_NDE) == XDMAC_CNDC_NDE_DSCR_FETCH_EN) {
@@ -179,34 +113,7 @@ xdmac_status_t xdmac_configure_transfer(xdmac_module_t *p_module_inst,
 		xdmac_channel_set_descriptor_addr(p_xdmac, ul_num, 0, 0);
 		xdmac_channel_set_descriptor_control(p_xdmac, ul_num, 0);
 	}
-	return XDMAC_OK;
-}
-
-/**
- * \brief Check if DMA transfer is finished.
- *
- * \param[out] p_module_inst Pointer to XDMA driver instance.
- * \param[in] ul_num The checked channel number.
- */
-xdmac_status_t xdmac_is_transfer_done(xdmac_module_t *p_module_inst,
-		uint32_t ul_num)
-{
-	uint8_t state;    
-	Assert(p_module_inst != NULL);
-
-	if (ul_num >= p_module_inst->numChannels)
-		return XDMAC_ERROR;
-
-	state = p_module_inst->XdmaChannels[ul_num].state;
-
-	if (state == XDMAC_STATE_ALLOCATED)
-		return XDMAC_OK;
-	if (state == XDMAC_STATE_FREE)
-		return XDMAC_ERROR;
-	if (state != XDMAC_STATE_DONE)
-		return XDMAC_BUSY;
-
-	return XDMAC_OK;	
+	return STATUS_OK;
 }
 
 /**
@@ -215,26 +122,17 @@ xdmac_status_t xdmac_is_transfer_done(xdmac_module_t *p_module_inst,
  * \param[out] p_module_inst Pointer to XDMA driver instance.
  * \param[in] ul_num The channel number.
  */
-xdmac_status_t xdmac_start_transfer(xdmac_module_t *p_module_inst,
+void xdmac_start_transfer(xdmac_module_t *p_module_inst,
 	uint32_t ul_num)
 {
 	Assert(p_module_inst != NULL);
 
-	if (ul_num >= p_module_inst->numChannels)
-		return XDMAC_ERROR;
-
 	Xdmac *p_xdmac = p_module_inst->p_xdmac;
-	if ( p_module_inst->XdmaChannels[ul_num].state == XDMAC_STATE_FREE) {
-		return XDMAC_ERROR;
-	} else if ( p_module_inst->XdmaChannels[ul_num].state == XDMAC_STATE_START) {
-		return XDMAC_BUSY;
-	}
+
 	/* Change state to transferring */
-	p_module_inst->XdmaChannels[ul_num].state = XDMAC_STATE_START;
 	xdmac_channel_enable(p_xdmac, ul_num);
 	xdmac_enable_interrupt(p_xdmac, ul_num);
 
-	return XDMAC_OK;
 }
 
 /**
@@ -243,17 +141,13 @@ xdmac_status_t xdmac_start_transfer(xdmac_module_t *p_module_inst,
  * \param[out] p_module_inst Pointer to XDMA driver instance.
  * \param[in] ul_num The channel number.
  */
-xdmac_status_t xdmac_stop_transfer(xdmac_module_t *p_module_inst,
+void xdmac_stop_transfer(xdmac_module_t *p_module_inst,
 		uint32_t ul_num)
 {
  	Assert(p_module_inst != NULL);
 
-	if (ul_num >= p_module_inst->numChannels)
-		return XDMAC_ERROR;
-
 	Xdmac *p_xdmac = p_module_inst->p_xdmac;
 
-	p_module_inst->XdmaChannels[ul_num].state = XDMAC_STATE_HALTED;
 	/* Disable channel */
 	xdmac_channel_disable(p_xdmac, ul_num);
 	/* Disable interrupts */
@@ -261,7 +155,5 @@ xdmac_status_t xdmac_stop_transfer(xdmac_module_t *p_module_inst,
 	/* Clear pending status */
 	xdmac_channel_get_interrupt_status(p_xdmac, ul_num);
 	xdmac_get_interrupt_status(p_xdmac);
-  
-    return XDMAC_OK;
 }
 	
