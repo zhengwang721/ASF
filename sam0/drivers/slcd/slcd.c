@@ -302,8 +302,8 @@ enum status_code  slcd_blink_set_config(struct slcd_blink_config *const blink_co
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	SLCD->BCFG.reg = (!(blink_config->blink_all_seg) << SLCD_BCFG_MODE_Pos)
-					| SLCD_BCFG_FCS(blink_config->fc);
+	SLCD->BCFG.bit.MODE = (!(blink_config->blink_all_seg) << SLCD_BCFG_MODE_Pos);
+	SLCD->BCFG.bit.FCS	= SLCD_BCFG_FCS(blink_config->fc);
 	return STATUS_OK;
 }
 

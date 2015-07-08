@@ -1,11 +1,11 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common2.components.display.c8263a.example" caption="C8263a Display LCD Glass Example">
+	<module type="application" id="common2.components.display.c42412a.example" caption="C42412a Display LCD Glass Example">
 		<info type="description" value="summary">
 			A simple example for drawing pictures and strings on the c8263a LCD Glass.
 		</info>
-		<build type="c-source" value="c8263a_example.c"/>
+		<build type="c-source" value="c42412a_example.c"/>
 		<device-support value="saml22"/>
-		<require idref="common2.components.display.c8263a"/>
+		<require idref="common2.components.display.c42412a"/>
 		<require idref="sam0.drivers.port"/>
 		<require idref="sam0.drivers.sercom.usart"/>
 		<require idref="sam0.utils"/>
