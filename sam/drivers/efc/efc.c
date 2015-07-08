@@ -184,8 +184,6 @@ void efc_disable_frdy_interrupt(Efc *p_efc)
  *
  * \param p_efc Pointer to an EFC instance.
  */
-__no_inline
-RAMFUNC
 void efc_enable_write_protection(Efc *p_efc)
 {
 	p_efc->EEFC_WPMR = EEFC_WPMR_WPKEY_PASSWD | EEFC_WPMR_WPEN;
@@ -196,8 +194,6 @@ void efc_enable_write_protection(Efc *p_efc)
  *
  * \param p_efc Pointer to an EFC instance.
  */
-__no_inline
-RAMFUNC
 void efc_disable_write_protection(Efc *p_efc)
 {
 	p_efc->EEFC_WPMR = EEFC_WPMR_WPKEY_PASSWD;

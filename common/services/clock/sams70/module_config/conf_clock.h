@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMV71 clock configuration.
+ * \brief SAMS70 clock configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
