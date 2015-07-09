@@ -51,9 +51,11 @@
  * header 5 on the SAM L22 Xplained Pro.
  *
  * This example demonstrates how to use the SLCD driver, it cover the following case:
- * - Direct Memory Access
+ * - Display Memory Mapping(Direct Access and Indirect Access)
  * - Character Mapping
  * - Blinking
+ * - Automated Character Mapping
+ * - Automated Bit Mapping
  *
  * Upon startup, the program uses the USART driver to display application
  * output message.

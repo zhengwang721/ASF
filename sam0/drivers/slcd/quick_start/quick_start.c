@@ -51,7 +51,15 @@ struct dma_resource example_resource_abm;
 struct dma_resource example_resource_acm;
 COMPILER_ALIGNED(16)
 DmacDescriptor example_descriptor_acm ;
-DmacDescriptor example_descriptor_abm ;
+COMPILER_ALIGNED(16)
+DmacDescriptor example_descriptor_abm;
+COMPILER_ALIGNED(16)
+DmacDescriptor example_descriptor_abm1;
+COMPILER_ALIGNED(16)
+DmacDescriptor example_descriptor_abm2;
+COMPILER_ALIGNED(16)
+DmacDescriptor example_descriptor_abm3;
+
 struct usart_module usart_instance;
 
 /*Charactor map 0-9,A-Z*/
@@ -64,13 +72,49 @@ const uint32_t charactor_map[] = {
 };
 
 /* HELLO ATMEL map */
-uint32_t display_array[11]={0x7e0,0x23a4,0x2220,0x2220,0x2664,0,0x7e4,0x8005,0x678,0x23a4,0x2220};//HELLO ATMEL
+uint32_t display_array[11]={0x7e0,0x23a4,0x2220,0x2220,0x2664,0,0x7e4,0x8005,0x678,0x23a4,0x2220};
 #define DISPLAY_ARRAY_SIZE (sizeof(display_array)/sizeof(uint32_t))
 
 /*ICON COM/SEG map */
 #define C42412A_ICON_USB            1, 1
 #define C42412A_ICON_BAT            0, 0
 #define C42412A_ICON_ATMEL          0, 1
+
+/* Automated Bit Mapping
+ Format: [00,offset,data mask,data]
+ data:[7-0]
+ data mask:[15-8]
+ offset:[21-16]
+*/
+const uint32_t abm_matrix_string0[] = {
+	0x00002f10,0x00012211,0x00022211, /* COM0  */
+	0x00060f00,0x00070000,0x00080000, /* COM1  */
+	0x000c0f80,0x000d0088,0x000e0088, /* COM2 */
+	0x00124f10,0x00134411,0x00144411  /* COM3 */
+ };
+
+const uint32_t abm_matrix_string1[] = {
+	0x00002f10,0x00012211,0x00022211, /* COM0  */
+	0x00060f80,0x00070088,0x00080088, /* COM1  */
+	0x000c0f90,0x000d0099,0x000e0099, /* COM2  */
+	0x00124f10,0x00134411,0x00144411  /* COM3  */
+ };
+
+const uint32_t abm_matrix_string2[] = {
+	0x00002f90,0x00012299,0x00022299, /* COM0  */
+	0x00060f10,0x00070011,0x00080011, /* COM1  */
+	0x000c0f80,0x000d0088,0x000e0088, /* COM2  */
+	0x00124f10,0x00134411,0x00144411  /* COM3  */
+ };
+
+const uint32_t abm_matrix_string3[] = {
+	0x00002f10,0x00012211,0x00022211, /* COM0  */
+	0x00060f00,0x00070000,0x00080000, /* COM1  */
+	0x000c0f00,0x000d0000,0x000e0000, /* COM2  */
+	0x00124f80,0x00134488,0x00144488  /* COM3  */
+ };
+
+#define ABM_MATRIX_SIZE (sizeof(abm_matrix_string0)/sizeof(uint32_t))
 
 /**
  *  Configure serial console.
@@ -91,15 +135,14 @@ static void configure_console(void)
 
 static void configure_dma_acm(void)
 {
+	struct dma_resource_config acm_config;
 
-	struct dma_resource_config rx_config;
+	dma_get_config_defaults(&acm_config);
 
-	dma_get_config_defaults(&rx_config);
+	acm_config.peripheral_trigger = SLCD_DMAC_ID_ACMDRDY;
+	acm_config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 
-	rx_config.peripheral_trigger = SLCD_DMAC_ID_ACMDRDY;
-	rx_config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
-
-	dma_allocate(&example_resource_acm, &rx_config);
+	dma_allocate(&example_resource_acm, &acm_config);
 
 	struct dma_descriptor_config acm_descriptor_config;
 
@@ -119,35 +162,47 @@ static void configure_dma_acm(void)
 	dma_add_descriptor(&example_resource_acm, &example_descriptor_acm);
 	dma_start_transfer_job(&example_resource_acm);
 }
-#if 0
+
 static void configure_dma_abm(void)
 {
 
-	struct dma_resource_config rx_config;
+	struct dma_resource_config abm_config;
+	dma_get_config_defaults(&abm_config);
+	abm_config.peripheral_trigger = SLCD_DMAC_ID_ABMDRDY;
+	abm_config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 
-	dma_get_config_defaults(&rx_config);
+	dma_allocate(&example_resource_abm, &abm_config);
 
-	rx_config.peripheral_trigger = AES_DMAC_ID_RD;
-	rx_config.trigger_action = DMA_TRIGGER_ACTON_BLOCK;
+	struct dma_descriptor_config abm_descriptor_config;
+	dma_descriptor_get_config_defaults(&abm_descriptor_config);
 
-	dma_allocate(&example_resource_rx, &rx_config);
+	abm_descriptor_config.beat_size = DMA_BEAT_SIZE_WORD;
+	abm_descriptor_config.src_increment_enable = true;
+	abm_descriptor_config.step_selection = DMA_STEPSEL_SRC;
+	abm_descriptor_config.dst_increment_enable = false;
+	abm_descriptor_config.block_transfer_count = ABM_MATRIX_SIZE;
+	abm_descriptor_config.source_address = (uint32_t)abm_matrix_string0+sizeof(abm_matrix_string0);
+	abm_descriptor_config.destination_address = (uint32_t)&SLCD->ISDATA.reg;
+	abm_descriptor_config.next_descriptor_address =  (uint32_t)&example_descriptor_abm1;
 
-	struct dma_descriptor_config rx_descriptor_config;
+	dma_descriptor_create(&example_descriptor_abm, &abm_descriptor_config);
 
-	dma_descriptor_get_config_defaults(&rx_descriptor_config);
+	abm_descriptor_config.source_address = (uint32_t)abm_matrix_string1+sizeof(abm_matrix_string1);
+	abm_descriptor_config.next_descriptor_address =  (uint32_t)&example_descriptor_abm2;
+	dma_descriptor_create(&example_descriptor_abm1, &abm_descriptor_config);
 
-	rx_descriptor_config.beat_size = DMA_BEAT_SIZE_WORD;
-	rx_descriptor_config.src_increment_enable = false;
-	rx_descriptor_config.block_transfer_count = AES_EXAMPLE_REFBUF_SIZE;
-	rx_descriptor_config.source_address = (uint32_t)&(AES->INDATA);
-	rx_descriptor_config.destination_address =
-		(uint32_t)output_data + sizeof(output_data);
+	abm_descriptor_config.source_address = (uint32_t)abm_matrix_string2+sizeof(abm_matrix_string2);
+	abm_descriptor_config.next_descriptor_address =  (uint32_t)&example_descriptor_abm3;
+	dma_descriptor_create(&example_descriptor_abm2, &abm_descriptor_config);
 
-	dma_descriptor_create(&example_descriptor_rx, &rx_descriptor_config);
+	abm_descriptor_config.source_address = (uint32_t)abm_matrix_string3+sizeof(abm_matrix_string3);
+	abm_descriptor_config.next_descriptor_address =  (uint32_t)&example_descriptor_abm;
+	dma_descriptor_create(&example_descriptor_abm3, &abm_descriptor_config);
 
-	dma_add_descriptor(&example_resource_rx, &example_descriptor_rx);
+	dma_add_descriptor(&example_resource_abm, &example_descriptor_abm);
+	dma_start_transfer_job(&example_resource_abm);
 }
-#endif
+
 int main(void)
 {
 	struct slcd_config config;
@@ -155,7 +210,7 @@ int main(void)
 	system_init();
 	configure_console();
 	delay_init();
-	
+
 	/* Turn on the backlight. */
 	port_pin_set_output_level(SLCD_BACLKLIGHT,true);
 
@@ -166,23 +221,29 @@ int main(void)
 	slcd_set_contrast(0x8);
 
 	configure_dma_acm();
+	configure_dma_abm();
 
 	slcd_enable();
 
+	/* 1. Display all*/
 	slcd_set_display_memory();
 	delay_s(1);
 	slcd_clear_display_memory();
+
+	/* 2. Display icon*/
 	slcd_set_pixel(C42412A_ICON_USB);
 	slcd_set_pixel(C42412A_ICON_BAT);
 	slcd_set_pixel(C42412A_ICON_ATMEL);
-	delay_s(2);
+	delay_s(1);
 
+	/* 3. Character map*/
 	slcd_character_map_set(SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_RIGHT,3);
 	for(uint32_t i = 0 ; i < 5 ; i++) {
 		slcd_character_write_data(0,4+i*4,charactor_map[10+i],0xFF4002);
 	}
 	delay_s(2);
 
+	/* 4. Blinking*/
 	slcd_disable();
 	struct slcd_blink_config blink_config;
 	slcd_blink_get_config_defaults(&blink_config);
@@ -199,8 +260,9 @@ int main(void)
 
 	slcd_enable_blink();
 	slcd_enable();
-	
 	delay_s(2);
+
+	/* 5. Automated Character Mapping*/
 	slcd_disable();
 	struct slcd_automated_char_config acm_config;
 	slcd_automated_char_get_config_default(&acm_config);
@@ -218,9 +280,22 @@ int main(void)
 
 	slcd_set_frame_counter(SLCD_FRAME_COUNTER_1,true,0x1E);
 	slcd_enable_frame_counter(SLCD_FRAME_COUNTER_1);
-	
+
 	slcd_enable_automated_character();
 	slcd_enable();
+	delay_s(3);
+
+	/* 6. Automated Bit Mapping*/
+	slcd_disable();
+	slcd_disable_automated_character();
+	slcd_clear_display_memory();
+	slcd_disable_frame_counter(SLCD_FRAME_COUNTER_2);
+	slcd_set_automated_bit(ABM_MATRIX_SIZE,SLCD_FRAME_COUNTER_2);
+	slcd_set_frame_counter(SLCD_FRAME_COUNTER_2,true,0x1F);
+	slcd_enable_frame_counter(SLCD_FRAME_COUNTER_2);
+	slcd_enable_automated_bit();
+	slcd_enable();
+
     while(1){
 
     }
