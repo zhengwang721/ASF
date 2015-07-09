@@ -568,7 +568,7 @@ void slcd_automated_char_get_config_default(
 {
 	Assert(config);
 
-	config->order = SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_LEFT;
+	config->order = SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_RIGHT;
 	config->fc = SLCD_FRAME_COUNTER_0;
 	config->mode = SLCD_AUTOMATED_CHAR_SEQ;
 	config->seg_line_num = 0;
