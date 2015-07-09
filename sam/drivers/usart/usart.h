@@ -82,6 +82,11 @@ extern "C" {
 #define SPI_MODE_2  (SPI_CPOL)
 #define SPI_MODE_3  (SPI_CPOL | SPI_CPHA)
 
+/**micro definition for LIN mode of SAMV71*/
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
+#define US_MR_USART_MODE_LIN_MASTER  0x0A
+#define US_MR_USART_MODE_LIN_SLAVE   0x0B
+#endif
 /* Input parameters when initializing RS232 and similar modes. */
 typedef struct {
 	/* Set baud rate of the USART (unused in slave modes). */
@@ -200,6 +205,56 @@ typedef struct {
 	uint32_t channel_mode;
 } usart_spi_opt_t;
 
+/* Input parameters when initializing LIN mode. */
+typedef struct {
+	/* Set the frequency of the LIN clock. */
+	uint32_t baudrate;
+
+	/*
+	 * Which LIN mode to use, which should be one of the following:
+	 * PUBLISH, SUBSCRIBE, IGNORE.
+	 */
+	uint8_t lin_node_action;
+	
+	/*
+	 *0: In master node configuration, the identifier parity is computed and sent automatically. In master node and slave node
+	 *configuration, the parity is checked automatically.
+	 *1: Whatever the node configuration is, the Identifier parity is not computed/sent and it is not checked.
+	 */
+	 uint8_t parity_dis;
+	 
+	/*
+	 *0: In master node configuration, the checksum is computed and sent automatically. In slave node configuration, the check-
+	 *sum is checked automatically.
+	 *1: Whatever the node configuration is, the checksum is not computed/sent and it is not checked.
+	 */
+	 uint8_t check_dis;
+	 
+	/*
+	 *0: LIN 2.0 ¡°enhanced¡± checksum
+	 *1: LIN 1.3 ¡°classic¡± checksum
+	 */
+	 uint8_t checksum_type;
+	 
+	/*
+	 *0: The response data length is defined by field DLC of this register.
+     *1: The response data length is defined by bits 5 and 6 of the identifier (IDCHR in US_LINIR).
+	 */
+	uint32_t data_len_mode;
+	 
+	/*
+	 *0: The Frame slot mode is enabled.
+     *1: The Frame slot mode is disabled.
+	 */
+	uint32_t frame_slot_mod_dis;
+		
+	/*
+	 * 0¨C255: Defines the response data length if DLM = 0,in that 
+	 * case the response data length is equal to DLC+1 bytes.
+	 */
+	uint32_t dlc;
+} usart_lin_opt_t;
+
 void usart_reset(Usart *p_usart);
 uint32_t usart_set_async_baudrate(Usart *p_usart,
 		uint32_t baudrate, uint32_t ul_mck);
@@ -236,7 +291,7 @@ uint32_t usart_init_spi_master(Usart *p_usart,
 		const usart_spi_opt_t *p_usart_opt, uint32_t ul_mck);
 uint32_t usart_init_spi_slave(Usart *p_usart,
 		const usart_spi_opt_t *p_usart_opt);
-#if (SAM3XA || SAM4L || SAMG55)
+#if (SAM3XA || SAM4L || SAMG55 || SAMV71 || SAMV70 || SAME70 || SAMS70)
 uint32_t usart_init_lin_master(Usart *p_usart, uint32_t ul_baudrate,
 		uint32_t ul_mck);
 uint32_t usart_init_lin_slave(Usart *p_usart, uint32_t ul_baudrate,
@@ -260,6 +315,25 @@ void usart_lin_set_tx_identifier(Usart *p_usart, uint8_t uc_id);
 uint8_t usart_lin_read_identifier(Usart *p_usart);
 uint8_t usart_lin_get_data_length(Usart *usart);
 #endif
+uint8_t usart_lin_identifier_send_complete(Usart *usart);
+uint8_t usart_lin_identifier_reception_complete(Usart *usart);
+uint8_t usart_lin_tx_complete(Usart *usart);
+void  usart_lon_set_comm_type(Usart *p_usart, uint8_t uc_type);
+void usart_lon_disable_coll_detection(Usart *p_usart);
+void usart_lon_enable_coll_detection(Usart *p_usart);
+void  usart_lon_set_tcol(Usart *p_usart, uint8_t uc_type);
+void  usart_lon_set_cdtail(Usart *p_usart, uint8_t uc_type);
+void  usart_lon_set_dmam(Usart *p_usart, uint8_t uc_type);
+void  usart_lon_set_beta1_tx_len(Usart *p_usart, uint32_t ul_len);
+void  usart_lon_set_beta1_rx_len(Usart *p_usart, uint32_t ul_len);
+void  usart_lon_set_priority(Usart *p_usart, uint8_t uc_psnb, uint8_t uc_nps);
+void  usart_lon_set_tx_idt(Usart *p_usart, uint32_t ul_time);
+void  usart_lon_set_rx_idt(Usart *p_usart, uint32_t ul_time);
+void  usart_lon_set_pre_len(Usart *p_usart, uint32_t ul_len);
+void  usart_lon_set_data_len(Usart *p_usart, uint8_t uc_len);
+void  usart_lon_set_l2hdr(Usart *p_usart, uint8_t uc_bli, uint8_t uc_altp, uint8_t uc_pb);
+uint32_t usart_lon_is_tx_end(Usart *p_usart);
+uint32_t usart_lon_is_rx_end(Usart *p_usart);
 void usart_enable_tx(Usart *p_usart);
 void usart_disable_tx(Usart *p_usart);
 void usart_reset_tx(Usart *p_usart);
@@ -304,7 +378,7 @@ Pdc *usart_get_pdc_base(Usart *p_usart);
 void usart_enable_writeprotect(Usart *p_usart);
 void usart_disable_writeprotect(Usart *p_usart);
 uint32_t usart_get_writeprotect_status(Usart *p_usart);
-#if (SAM3S || SAM4S || SAM3U || SAM3XA || SAM4L || SAM4E || SAM4C || SAM4CP || SAM4CM)
+#if (SAM3S || SAM4S || SAM3U || SAM3XA || SAM4L || SAM4E || SAM4C || SAM4CP || SAM4CM || SAMV70 || SAMV71 || SAMS70 || SAME70)
 void usart_man_set_tx_pre_len(Usart *p_usart, uint8_t uc_len);
 void usart_man_set_tx_pre_pattern(Usart *p_usart, uint8_t uc_pattern);
 void usart_man_set_tx_polarity(Usart *p_usart, uint8_t uc_polarity);

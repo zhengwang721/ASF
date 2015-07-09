@@ -113,6 +113,11 @@
 #define PIN_USART0_CTS_IDX    (PIO_PB2_IDX)
 #define PIN_USART0_CTS_FLAGS  (IOPORT_MODE_MUX_C)
 
+/** USART0 pin RTS */
+#define PIN_USART0_RTS_IDX    (PIO_PB3_IDX)
+#define PIN_USART0_RTS_FLAGS  (IOPORT_MODE_MUX_C)
+
+
 //! \name LED definitions
 //@{
 #define LED0_GPIO            (PIO_PA23_IDX)

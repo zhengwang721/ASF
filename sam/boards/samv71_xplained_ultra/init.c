@@ -161,4 +161,10 @@ ioport_set_pin_peripheral_mode(PIN_USART0_SCK_IDX,PIN_USART0_SCK_FLAGS);
 /* Configure USART synchronous communication CTS pin */
 ioport_set_pin_peripheral_mode(PIN_USART0_CTS_IDX,PIN_USART0_CTS_FLAGS);
 #endif
+
+#ifdef CONF_BOARD_USART_RTS
+/* Configure USART RTS pin */
+ioport_set_pin_peripheral_mode(PIN_USART0_RTS_IDX,
+PIN_USART0_RTS_FLAGS);
+#endif
 }
