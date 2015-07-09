@@ -166,6 +166,51 @@ typedef union {
 #define I2C_RECEIVE_STATUS_NAK                (0x1ul << I2C_RECEIVE_STATUS_NAK_Pos)  
 #define I2C_RECEIVE_STATUS_MASK               0x3Ful    /**< \brief (I2C_RECEIVE_STATUS) Register MASK */
 
+/* -------- I2C_CLOCK_SOURCE_SELECT : (I2C Offset: 0x10) (R/W  8) Clock Source Select -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union { 
+  struct {
+    uint8_t  CLOCK:2;                   /*!< bit:   0..1  Clock Used to Generate Divided Clock     */
+    uint8_t  :6;                        /*!< bit:   2..7  Reserved                                 */
+  } bit;                                /*!< Structure used for bit  access                        */
+  uint8_t  reg;                         /*!< Type used for register access                         */
+} I2C_CLOCK_SOURCE_SELECT_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define I2C_CLOCK_SOURCE_SELECT_OFFSET        0x10           /**<  \brief (I2C_CLOCK_SOURCE_SELECT offset) Clock Source Select */
+#define I2C_CLOCK_SOURCE_SELECT_RESETVALUE    0x00ul         /**<  \brief (I2C_CLOCK_SOURCE_SELECT reset_value) Clock Source Select */
+
+#define I2C_CLOCK_SOURCE_SELECT_CLOCK_Pos     0  /**< \brief (I2C_CLOCK_SOURCE_SELECT) Clock Used to Generate Divided Clock */
+#define I2C_CLOCK_SOURCE_SELECT_CLOCK_Msk     (0x3ul << I2C_CLOCK_SOURCE_SELECT_CLOCK_Pos)
+#define I2C_CLOCK_SOURCE_SELECT_CLOCK(value)  (I2C_CLOCK_SOURCE_SELECT_CLOCK_Msk & ((value) << I2C_CLOCK_SOURCE_SELECT_CLOCK_Pos))  
+  #define I2C_CLOCK_SOURCE_SELECT_CLOCK_0_Val        0X0ul  /**< \brief (I2C_CLOCK_SOURCE_SELECT) 26 MHz Clock  */
+  #define I2C_CLOCK_SOURCE_SELECT_CLOCK_1_Val        0X1ul  /**< \brief (I2C_CLOCK_SOURCE_SELECT) 13 MHz Clock  */
+  #define I2C_CLOCK_SOURCE_SELECT_CLOCK_2_Val        0X2ul  /**< \brief (I2C_CLOCK_SOURCE_SELECT) 6.5 MHz Clock  */
+  #define I2C_CLOCK_SOURCE_SELECT_CLOCK_3_Val        0X3ul  /**< \brief (I2C_CLOCK_SOURCE_SELECT) 3.25 MHz Clock  */
+#define I2C_CLOCK_SOURCE_SELECT_CLOCK_0       (I2C_CLOCK_SOURCE_SELECT_CLOCK_0_Val << I2C_CLOCK_SOURCE_SELECT_CLOCK_Pos)
+#define I2C_CLOCK_SOURCE_SELECT_CLOCK_1       (I2C_CLOCK_SOURCE_SELECT_CLOCK_1_Val << I2C_CLOCK_SOURCE_SELECT_CLOCK_Pos)
+#define I2C_CLOCK_SOURCE_SELECT_CLOCK_2       (I2C_CLOCK_SOURCE_SELECT_CLOCK_2_Val << I2C_CLOCK_SOURCE_SELECT_CLOCK_Pos)
+#define I2C_CLOCK_SOURCE_SELECT_CLOCK_3       (I2C_CLOCK_SOURCE_SELECT_CLOCK_3_Val << I2C_CLOCK_SOURCE_SELECT_CLOCK_Pos)
+#define I2C_CLOCK_SOURCE_SELECT_MASK          0x03ul    /**< \brief (I2C_CLOCK_SOURCE_SELECT) Register MASK */
+
+/* -------- I2C_I2C_MODULE_ENABLE : (I2C Offset: 0x14) (R/W  8) I2C Enable -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union { 
+  struct {
+    uint8_t  ENABLE:1;                  /*!< bit:      0  Enables I2C Operation                    */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
+  } bit;                                /*!< Structure used for bit  access                        */
+  uint8_t  reg;                         /*!< Type used for register access                         */
+} I2C_I2C_MODULE_ENABLE_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define I2C_I2C_MODULE_ENABLE_OFFSET          0x14           /**<  \brief (I2C_I2C_MODULE_ENABLE offset) I2C Enable */
+#define I2C_I2C_MODULE_ENABLE_RESETVALUE      0x00ul         /**<  \brief (I2C_I2C_MODULE_ENABLE reset_value) I2C Enable */
+
+#define I2C_I2C_MODULE_ENABLE_ENABLE_Pos      0  /**< \brief (I2C_I2C_MODULE_ENABLE) Enables I2C Operation                */
+#define I2C_I2C_MODULE_ENABLE_ENABLE          (0x1ul << I2C_I2C_MODULE_ENABLE_ENABLE_Pos)  
+#define I2C_I2C_MODULE_ENABLE_MASK            0x01ul    /**< \brief (I2C_I2C_MODULE_ENABLE) Register MASK */
+
 /* -------- I2C_I2C_CLK_DIVIDER : (I2C Offset: 0x18) (R/W  16) Register sets the divide ratio used to generate the sck clock from the module's input clock.  -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
@@ -355,21 +400,25 @@ typedef struct {  /* I2C Master/Slave Controller */
   __I  I2C_TRANSMIT_STATUS_Type       TRANSMIT_STATUS; /**< \brief Offset: 0x08 (R/    8) Status of the I2C transmitter. Each field can generate an interrupt if corresponding bit in  the Tx interrupt mask register is set.  */
        RoReg8                         Reserved3[0x3];
   __I  I2C_RECEIVE_STATUS_Type        RECEIVE_STATUS; /**< \brief Offset: 0x0C (R/    8) Status of the I2C receiver. Each field can generate an interrupt if corresponding bit in  the Rx interrupt mask register is set.  */
-       RoReg8                         Reserved4[0xB];
-  __IO I2C_I2C_CLK_DIVIDER_Type       I2C_CLK_DIVIDER; /**< \brief Offset: 0x18 (R/W  16) Register sets the divide ratio used to generate the sck clock from the module's input clock.  */
-       RoReg8                         Reserved5[0x2];
-  __IO I2C_I2C_MASTER_MODE_Type       I2C_MASTER_MODE; /**< \brief Offset: 0x1C (R/W   8) Selects I2C Master or Slave Mode.  */
+       RoReg8                         Reserved4[0x3];
+  __IO I2C_CLOCK_SOURCE_SELECT_Type   CLOCK_SOURCE_SELECT; /**< \brief Offset: 0x10 (R/W   8) Clock Source Select */
+       RoReg8                         Reserved5[0x3];
+  __IO I2C_I2C_MODULE_ENABLE_Type     I2C_MODULE_ENABLE; /**< \brief Offset: 0x14 (R/W   8) I2C Enable */
        RoReg8                         Reserved6[0x3];
-  __IO I2C_I2C_ONBUS_Type             I2C_ONBUS;      /**< \brief Offset: 0x20 (R/W   8) Enable/Disable transactions when in Master Mode.  */
-       RoReg8                         Reserved7[0x3];
-  __IO I2C_I2C_SLAVE_ADDRESS_Type     I2C_SLAVE_ADDRESS; /**< \brief Offset: 0x24 (R/W   8) Configures the I2C slave Address.  */
+  __IO I2C_I2C_CLK_DIVIDER_Type       I2C_CLK_DIVIDER; /**< \brief Offset: 0x18 (R/W  16) Register sets the divide ratio used to generate the sck clock from the module's input clock.  */
+       RoReg8                         Reserved7[0x2];
+  __IO I2C_I2C_MASTER_MODE_Type       I2C_MASTER_MODE; /**< \brief Offset: 0x1C (R/W   8) Selects I2C Master or Slave Mode.  */
        RoReg8                         Reserved8[0x3];
-  __I  I2C_I2C_STATUS_Type            I2C_STATUS;     /**< \brief Offset: 0x28 (R/    8) Status of I2C Module.  */
+  __IO I2C_I2C_ONBUS_Type             I2C_ONBUS;      /**< \brief Offset: 0x20 (R/W   8) Enable/Disable transactions when in Master Mode.  */
        RoReg8                         Reserved9[0x3];
-  __IO I2C_TX_INTERRUPT_MASK_Type     TX_INTERRUPT_MASK; /**< \brief Offset: 0x2C (R/W   8) Enable or Disable the generation of interrupts by the tx_status register.  */
+  __IO I2C_I2C_SLAVE_ADDRESS_Type     I2C_SLAVE_ADDRESS; /**< \brief Offset: 0x24 (R/W   8) Configures the I2C slave Address.  */
        RoReg8                         Reserved10[0x3];
-  __IO I2C_RX_INTERRUPT_MASK_Type     RX_INTERRUPT_MASK; /**< \brief Offset: 0x30 (R/W   8) Enable or Disable the generation of interrupts by the rx_status register.  */
+  __I  I2C_I2C_STATUS_Type            I2C_STATUS;     /**< \brief Offset: 0x28 (R/    8) Status of I2C Module.  */
        RoReg8                         Reserved11[0x3];
+  __IO I2C_TX_INTERRUPT_MASK_Type     TX_INTERRUPT_MASK; /**< \brief Offset: 0x2C (R/W   8) Enable or Disable the generation of interrupts by the tx_status register.  */
+       RoReg8                         Reserved12[0x3];
+  __IO I2C_RX_INTERRUPT_MASK_Type     RX_INTERRUPT_MASK; /**< \brief Offset: 0x30 (R/W   8) Enable or Disable the generation of interrupts by the rx_status register.  */
+       RoReg8                         Reserved13[0x3];
   __I  I2C_I2C_FLUSH_Type             I2C_FLUSH;      /**< \brief Offset: 0x34 (R/    8) Writing to this address  flushes the contents of both the Tx and Rx FIFOs. The value written has no effect. Flushing the Tx FIFO will abort ongoing transactions when the current byte has been transmitted.  */
 } I2C;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */

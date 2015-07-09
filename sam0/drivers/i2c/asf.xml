@@ -1,0 +1,28 @@
+<asf xmlversion="1.0">
+		<module type="driver" id="sam0.drivers.i2c" caption="I2C - Inter-Integrated Circuit Bus">
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+
+			<info type="appnote" value="ATxxxxx"/>
+			<info type="keyword" value="pdf">
+				<keyword value="I2C"/>
+				<keyword value="I/O"/>
+				<keyword value="Inter-Integrated Circuit Bus"/>
+			</info>
+			
+			<build type="c-source" value="i2c.c"/>
+			<build type="header-file" subtype="api" value="i2c.h"/>
+			<build type="header-file" value="quick_start_master/qs_i2c_master_basic_use.h"/>
+			<build type="include-path" value="."/>
+			<build type="doxygen-entry-point" value="asfdoc_sam0_i2c_group"/>
+			<build type="doxygen-example-path" value="quick_start_master"/>
+			<build type="doxygen-quick-start" value="asfdoc_sam0_i2c_exqsg"/>
+
+			<device-support value="samb"/>
+			<require idref="sam0.utils"/>
+			<require idref="sam0.drivers.gpio"/>
+
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
+		</module>
+</asf>
