@@ -307,6 +307,20 @@
 #define SPI0_SPCK_GPIO    PIO_PD22_IDX
 #define SPI0_SPCK_FLAGS  (IOPORT_MODE_MUX_B)
 
+/** QSPI pins definition */
+#define QSPI_QSCK_GPIO    PIO_PA14_IDX
+#define QSPI_QSCK_FLAGS   (IOPORT_MODE_MUX_A)
+#define QSPI_QCS_GPIO     PIO_PA11_IDX
+#define QSPI_QCS_FLAGS    (IOPORT_MODE_MUX_A)
+#define QSPI_QIO0_GPIO    PIO_PA13_IDX
+#define QSPI_QIO0_FLAGS   (IOPORT_MODE_MUX_A)
+#define QSPI_QIO1_GPIO    PIO_PA12_IDX
+#define QSPI_QIO1_FLAGS   (IOPORT_MODE_MUX_A)
+#define QSPI_QIO2_GPIO    PIO_PA17_IDX
+#define QSPI_QIO2_FLAGS   (IOPORT_MODE_MUX_A)
+#define QSPI_QIO3_GPIO    PIO_PD31_IDX
+#define QSPI_QIO3_FLAGS   (IOPORT_MODE_MUX_A)
+
 /** AFEC channel for potentiometer */
 #define AFEC_CHANNEL_POTENTIOMETER  AFEC_CHANNEL_0
 
@@ -319,25 +333,6 @@
 #define PIN_PWM_LED1_GPIO    PIO_PA24_IDX
 #define PIN_PWM_LED1_FLAGS   (IOPORT_MODE_MUX_B)
 #define PIN_PWM_LED1_CHANNEL PWM_CHANNEL_1
-
-/*----------------------------------------------------------------------------*/
-/* GMAC HW configurations */
-#define BOARD_GMAC_PHY_ADDR 1
-
-#define PIN_GMAC_RESET_MASK   PIO_PC10
-#define PIN_GMAC_RESET_PIO    PIOC
-#define PIN_GMAC_INT_MASK     PIO_PA19
-#define PIN_GMAC_INT_PIO      PIOA
-#define PIN_GMAC_SIGDET_MASK  PIO_PA29
-#define PIN_GMAC_SIGDET_PIO   PIOA
-#define PIN_GMAC_PERIPH  PIO_PERIPH_A
-#define PIN_GMAC_PIO     PIOD
-#define PIN_GMAC_MASK   (PIO_PD0A_GTXCK | PIO_PD1A_GTXEN | PIO_PD2A_GTX0 | \
-						 PIO_PD3A_GTX1 | PIO_PD4A_GRXDV | PIO_PD5A_GRX0 |  \
-						 PIO_PD6A_GRX1 | PIO_PD7A_GRXER | PIO_PD8A_GMDC | \
-						 PIO_PD9A_GMDIO)
-
-
 
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAMV71_XLTRA_H_ */

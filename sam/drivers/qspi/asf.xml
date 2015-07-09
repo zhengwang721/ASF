@@ -1,0 +1,27 @@
+<asf xmlversion="1.0">
+	<select-by-device id="sam.drivers.qspi" caption="QSPI - QUAD Serial Peripheral Interface">
+		<module type="driver" id="sam.drivers.qspi#0" caption="QSPI - QUAD Serial Peripheral Interface">
+			<info type="description" value="summary">
+			The Quad Serial Peripheral Interface (QSPI) circuit is a synchronous serial data link that provides communication with external devices in Master or Slave Mode.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+			<build type="c-source" value="qspi.c"/>
+			<build type="header-file" subtype="api" value="qspi.h"/>
+			<build type="include-path" value="."/>
+			<build type="doxygen-entry-point" value="sam_drivers_qspi_group"/>
+			<device-support value="samv71n"/>
+			<device-support value="samv71q"/>
+			<device-support value="samv70n"/>
+			<device-support value="samv70q"/>
+			<device-support value="same70n"/>
+			<device-support value="same70q"/>
+			<device-support value="sams70n"/>
+			<device-support value="sams70q"/>
+			<require idref="sam.utils"/>
+			<require idref="common.services.basic.clock"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
+		</module>
+	</select-by-device>
+</asf>
