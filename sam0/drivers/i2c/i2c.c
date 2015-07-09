@@ -101,12 +101,11 @@ static enum status_code _i2c_master_set_config(
 	
 	/* Set the pinmux for this i2c module. */
 	for(idx = 0; idx < 2; idx++) {
-		
-		gpio_pinmux_cofiguration(config->pinmux_pad[idx], GPIO_PINMUX_SEL_2);
+		gpio_pinmux_cofiguration(config->pinmux_pad[idx]>>16, config->pinmux_pad[idx] & 0xff);
 	}
 	/* Find and set baudrate. */
 	i2c_module->CLOCK_SOURCE_SELECT.reg = config->clock_source;
-	i2c_module->I2C_CLK_DIVIDER.reg = 0x10;
+	i2c_module->I2C_CLK_DIVIDER.reg = I2C_I2C_CLK_DIVIDER_I2C_DIVIDE_RATIO(0x10);
 	i2c_module->I2C_MASTER_MODE.reg = I2C_I2C_MASTER_MODE_MASTER_ENABLE_1;
 	
 	return status;
@@ -159,29 +158,6 @@ void i2c_unlock(struct i2c_module *const module)
 {
 	module->locked = false;
 }
-
-/**
- * \brief Returns the activity status of the module
- *
- * Returns the activity status of the module.
- *
- * \param[in]  module  Pointer to software module structure
- *
- * \return Status of the synchronization.
- * \retval true   Module is active 
- * \retval false  Module is not active
- */
-static inline bool i2c_is_active (
-		const struct i2c_module *const module)
-{
-	/* Sanity check. */
-	Assert(module);
-	Assert(module->hw);
-	
-	I2C *const i2c_hw = (module->hw);
-	return (i2c_hw->I2C_STATUS.bit.I2C_ACTIVE);
-}
-
 
 /**
  * \internal
@@ -247,8 +223,8 @@ void i2c_master_get_config_defaults(
 	config->core_idx		= I2C_CORE1;
 	config->baud_rate		= I2C_MASTER_BAUD_RATE_100KHZ;
 	config->clock_source 	= I2C_CLK_INPUT_3;
-	config->pinmux_pad[0]   = (LPGPIO_8 << 8);
-	config->pinmux_pad[1]   = (LPGPIO_9 << 8);
+	config->pinmux_pad[0]   = PINMUX_LP_GPIO_8_MUX2_I2C0_SDA;
+	config->pinmux_pad[1]   = PINMUX_LP_GPIO_9_MUX2_I2C0_SCK;
 }
 
 /**
@@ -380,7 +356,7 @@ static enum status_code _i2c_master_read_packet(
 	i2c_module->I2C_FLUSH.reg = 1;
 	
 	/* Enable I2C on bus (start condition) */
-	i2c_module->I2C_ONBUS.bit.ONBUS_ENABLE = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
+	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
 	
 	/* Address I2C slave in case of Master mode enabled */
 	cfg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 | (packet->address << 1) | I2C_READ_FROM_SLAVE;
@@ -398,7 +374,7 @@ static enum status_code _i2c_master_read_packet(
 	
 	/* Send stop condition. */
 	if(!module->no_stop) {
-		i2c_module->I2C_ONBUS.bit.ONBUS_ENABLE = I2C_I2C_ONBUS_ONBUS_ENABLE_0;
+		i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_0;
 	}
 	
 	return STATUS_OK;
@@ -511,7 +487,7 @@ static enum status_code _i2c_master_write_packet(
 	uint32_t cfg = 0;
 	uint32_t status = 0;
 
-	/* Return value. */
+	/* Return value */
 	uint16_t tmp_data_length = packet->data_length;
 
 	do {
@@ -522,7 +498,7 @@ static enum status_code _i2c_master_write_packet(
 	i2c_module->I2C_FLUSH.reg = 1;
 	
 	/* Enable I2C on bus (start condition) */
-	i2c_module->I2C_ONBUS.bit.ONBUS_ENABLE = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
+	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
 	
 	/* Address I2C slave in case of Master mode enabled */
 	cfg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 | ((packet->address) << 1) | I2C_WRITE_TO_SLAVE;
@@ -540,7 +516,7 @@ static enum status_code _i2c_master_write_packet(
 
 	/* Send stop condition */
 	if(!module->no_stop) {
-		i2c_module->I2C_ONBUS.bit.ONBUS_ENABLE = I2C_I2C_ONBUS_ONBUS_ENABLE_0;
+		i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_0;
 	}
 	
 	return STATUS_OK;
@@ -656,7 +632,7 @@ void i2c_master_send_stop(struct i2c_module *const module)
 	/* Send stop command */
 	_i2c_wait_for_idle(module);
 	
-	i2c_module->I2C_ONBUS.bit.ONBUS_ENABLE = I2C_I2C_ONBUS_ONBUS_ENABLE_0;
+	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_0;
 }
 
 /**

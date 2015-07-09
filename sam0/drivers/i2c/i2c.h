@@ -296,18 +296,56 @@ enum status_code i2c_master_write_byte(
 		
 #  endif
 
+/**
+ * \brief Disable driver instance
+ *
+ * This function disable driver instance
+ *
+ * \param[in,out] module Pointer to the driver instance to disable
+ *
+ */
 static inline void _i2c_disable(I2C *const i2c_module)
 {
 	if(i2c_module == NULL)
-	return;
+		return;
 	i2c_module->I2C_MODULE_ENABLE.reg = (I2C_I2C_MODULE_ENABLE_ENABLE_Pos << 0);;
 }
 
+/**
+ * \brief Enable driver instance
+ *
+ * This function enable driver instance
+ *
+ * \param[in,out] module Pointer to the driver instance to enable
+ *
+ */
 static inline void _i2c_enable(I2C *const i2c_module)
 {
 	if(i2c_module == NULL)
-	return;
+		return;
 	i2c_module->I2C_MODULE_ENABLE.reg= (I2C_I2C_MODULE_ENABLE_ENABLE_Pos << 1);
+}
+
+/**
+ * \brief Returns the activity status of the module
+ *
+ * Returns the activity status of the module.
+ *
+ * \param[in]  module  Pointer to software module structure
+ *
+ * \return Status of the synchronization.
+ * \retval true   Module is active 
+ * \retval false  Module is not active
+ */
+static inline bool i2c_is_active (
+		const struct i2c_module *const module)
+{
+	/* Sanity check. */
+	Assert(module);
+	Assert(module->hw);
+	
+	I2C *const i2c_hw = (module->hw);
+	return (i2c_hw->I2C_STATUS.bit.I2C_ACTIVE);
 }
 
 /** @} */
