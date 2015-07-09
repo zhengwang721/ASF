@@ -97,9 +97,9 @@ enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
 	* GPIO_0 & GPIO_1 are used for SWD
 	* GPIO_14 is used by firmware for coex.
 	*/
-	if ((gpio_pin == LPGPIO_0) || \
-		(gpio_pin == LPGPIO_1) || \
-		(gpio_pin == LPGPIO_14))
+	if ((gpio_pin == PIN_LP_GPIO_0) || \
+		(gpio_pin == PIN_LP_GPIO_1) || \
+		(gpio_pin == PIN_LP_GPIO_14))
 	{
 		status = STATUS_ERR_INVALID_ARG;
 	} else {
