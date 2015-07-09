@@ -150,19 +150,6 @@ enum spi_transfer_mode {
 };
 
 /**
- * \brief SPI signal mux settings
- *
- * Set the functionality of the GPIO pins for SPI.
- * As not all settings can be used in different modes of operation, proper
- * settings must be chosen according to the rest of the configuration.
- *
- */
-enum spi_signal_mux_setting {
-	/** SPI MUX setting A */
-	SPI_SIGNAL_MUX_SETTING_A = ((2 << 8) | (2 << 12) | (2 << 16) | (2 << 20)),
-};
-
-/**
  * \brief SPI modes enum
  *
  * SPI mode selection.

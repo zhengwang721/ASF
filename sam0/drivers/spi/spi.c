@@ -268,7 +268,6 @@ void spi_get_config_defaults(
 	config->mode             = SPI_MODE_MASTER;
 	config->data_order       = SPI_DATA_ORDER_MSB;
 	config->transfer_mode    = SPI_TRANSFER_MODE_0;
-	config->mux_setting      = SPI_SIGNAL_MUX_SETTING_A;
 	//config->run_in_standby   = 0;
 	config->receiver_enable  = true;
 	config->clock_source     = SPI_CLK_INPUT_0;
@@ -288,10 +287,10 @@ void spi_get_config_defaults(
 		config->pinmux_pad[3] = PINMUX_LP_GPIO_13_MUX2_SPI0_MISO;
 	}
 	else {
-		//config->pinmux_pad[0] = PINMUX_LP_GPIO_2_MUX4_SPI0_SCK;
-		//config->pinmux_pad[1] = PINMUX_LP_GPIO_3_MUX4_SPI0_MOSI;
-		//config->pinmux_pad[2] = PINMUX_LP_GPIO_4_MUX4_SPI0_SSN;
-		//config->pinmux_pad[3] = PINMUX_LP_GPIO_5_MUX4_SPI0_MISO;
+		config->pinmux_pad[0] = PINMUX_LP_GPIO_2_MUX4_SPI0_SCK;
+		config->pinmux_pad[1] = PINMUX_LP_GPIO_3_MUX4_SPI0_MOSI;
+		config->pinmux_pad[2] = PINMUX_LP_GPIO_4_MUX4_SPI0_SSN;
+		config->pinmux_pad[3] = PINMUX_LP_GPIO_5_MUX4_SPI0_MISO;
 	}
 };
 
@@ -414,7 +413,7 @@ enum status_code spi_init(
 	}
 
 	/* Setting the default value for SS- PIN. */
-	pinnum = (config->pinmux_pad[2] >> 8) & 0xFF;
+	pinnum = (config->pinmux_pad[2] >> 16) & 0xFF;
 	gpio_pin_set_output_level(pinnum, true);
 	
 	/* Set up the input clock & divider for the module */
