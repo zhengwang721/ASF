@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Timer Driver Configuration Header
+ * \brief This file controls the software Serial FIFO management.
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,15 +40,36 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_TIMER_H_INCLUDED
-#define CONF_TIMER_H_INCLUDED
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     0
-#define ID_TC                (ID_TC0)
+#include "serial_fifo.h"
 
-#define DEF_1MHZ			(1000000)
-#define DEF_120MHz			(120000000)
-#define TIMER_OVF_COUNT_1SEC	(DEF_120MHz/(128*65535))
+int ser_fifo_init(ser_fifo_desc_t *fifo_desc, void *buffer, uint16_t size)
+{
+	// Check the size parameter. It must be not null...
+	Assert (size);
 
-#endif
+	// ... must be a 2-power ...
+	Assert (!(size & (size - 1)));
+
+	// ... and must fit in a uint16_t. Since the read and write indexes are using a
+	// double-index range implementation, the max FIFO size is thus 32768 items.
+	Assert (size <= 32768);
+
+	// Serial Fifo starts empty.
+	fifo_desc->read_index  = 0;
+	fifo_desc->write_index = 0;
+
+	// Save the size parameter.
+	fifo_desc->size = size;
+
+	// Create a mask to speed up the FIFO management (index swapping).
+	fifo_desc->mask = (2 * (uint16_t)size) - 1;
+
+	// Save the buffer pointer.
+	fifo_desc->buffer.u8ptr = buffer;
+
+	return SER_FIFO_OK;
+}

@@ -8,6 +8,7 @@
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_serialdrv.h"/>
+		<build type="header-file" value="conf_console.h"/>
   
 		<require idref="board.samd21_xplained_pro"/>
 		

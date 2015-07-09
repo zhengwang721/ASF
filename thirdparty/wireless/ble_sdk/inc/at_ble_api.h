@@ -153,6 +153,13 @@ typedef enum
 	AT_BLE_TIMEOUT
 }at_ble_status_t;
 
+typedef enum
+{
+	AT_BLE_CHIP_ID_A0 = 0x2000a0,
+	AT_BLE_CHIP_ID_A2 = 0x2000a2,
+	AT_BLE_CHIP_ID_A3 = 0x2000a3,
+	AT_BLE_CHIP_ID_A4 = 0x2000a4,
+}at_ble_chip_id;
  
 /// Enumeration for GAP Parameters
 typedef enum 
@@ -369,7 +376,9 @@ typedef enum{
 	AT_BLE_HTPT_CFG_INDNTF_IND,
 	/* Custom user defined events */
 	/** A user-defined event is delivered to the system */
-	AT_BLE_CUSTOM_EVENT, 
+	AT_BLE_CUSTOM_EVENT,
+	
+	AT_BLE_DEVICE_READY, 
 
 }at_ble_events_t; 
 
@@ -1545,6 +1554,8 @@ at_ble_status_t at_ble_scan_start(uint16_t interval, uint16_t window,
 	uint16_t timeout, at_ble_scan_type_t type ,at_ble_scan_mode_t mode,
 	bool filter_whitelist, bool filter_dublicates);
 
+at_ble_status_t at_ble_chip_id_get(uint32_t* pu32chip_id);
+
  /**@brief Stops an ongoing scan operation
   *
   * @return @ref AT_BLE_SUCCESS Scan operation stopped successfully .
@@ -1621,6 +1632,7 @@ at_ble_status_t at_ble_connection_param_update(at_ble_handle_t handle,
 
 /**@brief Reply to connection parameters update request @ref AT_BLE_CONN_PARAM_UPDATE_REQUEST
   *
+  
   * @param[in] conn_handle handle of the connection to be updated
   * @param[in] connection_params new parameters to be used
   *
