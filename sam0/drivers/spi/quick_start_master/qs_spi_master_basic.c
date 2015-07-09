@@ -83,7 +83,7 @@ static void configure_spi_master(void)
 //! [slave_init]
 	spi_attach_slave(&slave, &slave_dev_config);
 //! [slave_init]
-	/* Configure, initialize and enable SERCOM SPI module */
+	/* Configure, initialize and enable SPI module */
 //! [conf_defaults]
 	spi_get_config_defaults(&config_spi_master);
 //! [conf_defaults]

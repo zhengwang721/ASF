@@ -45,25 +45,24 @@
  */
 
 /**
- * \page asfdoc_sam0_sercom_spi_slave_basic_use Quick Start Guide for SERCOM SPI Slave - Polled
+ * \page asfdoc_sam0_spi_slave_basic_use Quick Start Guide for SPI Slave - Polled
  *
- * In this use case, the SPI on extension header 1 of the Xplained Pro board
+ * In this use case, the SPI on extension header of the Xplained Pro board
  * will configured with the following settings:
  * - Slave mode enabled
  * - Preloading of shift register enabled
  * - MSB of the data is transmitted first
  * - Transfer mode 0
- * - SPI MUX Setting A
  * - 8-bit character size
  * - Not enabled in sleep mode
  *
  *
- * \section asfdoc_sam0_sercom_spi_slave_basic_use_setup Setup
+ * \section asfdoc_sam0_spi_slave_basic_use_setup Setup
  *
- * \subsection asfdoc_sam0_sercom_spi_slave_basic_use_prereq Prerequisites
+ * \subsection asfdoc_sam0_spi_slave_basic_use_prereq Prerequisites
  * The device must be connected to a SPI master which must read from the device.
  *
- * \subsection asfdoc_sam0_sercom_spi_slave_basic_use_setup_code Code
+ * \subsection asfdoc_sam0_spi_slave_basic_use_setup_code Code
  * The following must be added to the user application source file, outside
  * any functions:
  *
@@ -80,7 +79,7 @@
  * Add to user application \c main().
  * \snippet qs_spi_slave_basic.c main_start
  *
- * \subsection asfdoc_sam0_sercom_spi_slave_basic_use_workflow Workflow
+ * \subsection asfdoc_sam0_spi_slave_basic_use_workflow Workflow
  * -# Initialize system.
  *    \snippet qs_spi_slave_basic.c system_init
  * -# Setup the SPI.
@@ -100,11 +99,11 @@
  *   -# Enable SPI module.
  *      \snippet qs_spi_slave_basic.c enable
  *
- * \section asfdoc_sam0_sercom_spi_slave_basic_use_case Use Case
- * \subsection asfdoc_sam0_sercom_spi_slave_basic_use_case_code Code
+ * \section asfdoc_sam0_spi_slave_basic_use_case Use Case
+ * \subsection asfdoc_sam0_spi_slave_basic_use_case_code Code
  * Add the following to your user application \c main().
  * \snippet qs_spi_slave_basic.c main_use_case
- * \subsection asfdoc_sam0_sercom_spi_slave_basic_use_case_workflow Workflow
+ * \subsection asfdoc_sam0_spi_slave_basic_use_case_workflow Workflow
  * -# Read data from SPI master.
  *    \snippet qs_spi_slave_basic.c read
  * -# Compare the received data with the transmitted data from SPI master.

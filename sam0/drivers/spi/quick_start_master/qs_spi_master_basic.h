@@ -45,25 +45,24 @@
  */
 
 /**
- * \page asfdoc_sam0_sercom_spi_master_basic_use Quick Start Guide for SERCOM SPI Master - Polled
+ * \page asfdoc_sam0_spi_master_basic_use Quick Start Guide for SPI Master - Polled
  *
- * In this use case, the SPI on extension header 1 of the Xplained Pro board
+ * In this use case, the SPI on extension header of the Xplained Pro board
  * will configured with the following settings:
  * - Master Mode enabled
  * - MSB of the data is transmitted first
  * - Transfer mode 0
- * - SPI MUX Setting A
  * - 8-bit character size
  * - Not enabled in sleep mode
  * - Baudrate 100000
  *
  *
- * \section asfdoc_sam0_sercom_spi_master_basic_use_setup Setup
+ * \section asfdoc_sam0_spi_master_basic_use_setup Setup
  *
- * \subsection asfdoc_sam0_sercom_spi_master_basic_use_prereq Prerequisites
+ * \subsection asfdoc_sam0_spi_master_basic_use_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_sam0_sercom_spi_master_basic_use_setup_code Code
+ * \subsection asfdoc_sam0_spi_master_basic_use_setup_code Code
  * The following must be added to the user application:
  *
  * A sample buffer to send via SPI.
@@ -83,7 +82,7 @@
  * Add to user application \c main().
  * \snippet qs_spi_master_basic.c main_setup
  *
- * \section asfdoc_sam0_sercom_spi_master_basic_use_workflow Workflow
+ * \section asfdoc_sam0_spi_master_basic_use_workflow Workflow
  * -# Initialize system.
  *    \snippet qs_spi_master_basic.c system_init
  * -# Setup the SPI.
@@ -105,11 +104,11 @@
  *   -# Enable SPI module.
  *      \snippet qs_spi_master_basic.c enable
  *
- * \section asfdoc_sam0_sercom_spi_master_basic_use_case Use Case
- * \subsection asfdoc_sam0_sercom_spi_master_basic_use_case_code Code
+ * \section asfdoc_sam0_spi_master_basic_use_case Use Case
+ * \subsection asfdoc_sam0_spi_master_basic_use_case_code Code
  * Add the following to your user application \c main().
  * \snippet qs_spi_master_basic.c main_use_case
- * \subsection asfdoc_sam0_sercom_spi_master_basic_use_case_workflow Workflow
+ * \subsection asfdoc_sam0_spi_master_basic_use_case_workflow Workflow
  * -# Select slave.
  *    \snippet qs_spi_master_basic.c select_slave
  * -# Write buffer to SPI slave.

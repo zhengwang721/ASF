@@ -132,7 +132,7 @@ static enum status_code _spi_set_config(
 	while(spi_module->RECEIVE_STATUS.reg != 0) {
 		dummy = spi_module->RECEIVE_DATA.reg;
 	}
-	
+
 	// Write a dummy byte
 	spi_module->TRANSMIT_DATA.reg = 0x0;
 #endif
@@ -218,7 +218,7 @@ void spi_slave_inst_get_config_defaults(
 		struct spi_slave_inst_config *const config)
 {
 	Assert(config);
-	
+
 	config->ss_pin          = PIN_LP_GPIO_12;
 	config->address_enabled = false;
 	config->address         = 0;
@@ -243,9 +243,9 @@ void spi_slave_inst_get_config_defaults(
  *  \li Baudrate 2000000
  *  \li Default pinmux settings for all pads
  *  \li Clock source 0 (26MHz)
- *	\li	Clock divider 2 (Formula: baud_rate = ((clock input freq/clock_divider+1)/4))
- *											(For Example: if clock source is CLOCK_INPUT_0 then
- *												((26000000/(2+1))/4) ~= 2000000 bps)
+ *  \li	Clock divider 2 (Formula: baud_rate = ((clock input freq/clock_divider+1)/4))
+ *                                  (For Example: if clock source is CLOCK_INPUT_0 then
+ *                                  ((26000000/(2+1))/4) ~= 2000000 bps)
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
@@ -272,7 +272,7 @@ void spi_get_config_defaults(
 	config->receiver_enable  = true;
 	config->clock_source     = SPI_CLK_INPUT_0;
 	config->clock_divider    = 2;
-	
+
 	/* Clear mode specific config */
 	memset(&(config->mode_specific), 0, sizeof(config->mode_specific));
 
@@ -335,7 +335,7 @@ void spi_reset(struct spi_module *const module)
 	/* Disable the module */
 	spi_disable(module);
 
-	/* Software reset the module */	
+	/* Software reset the module */
 	/* Assert Reset to SPI0 cores. */
 	if(spi_module == (void *)SPI0) {
 		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg &= \
@@ -415,11 +415,11 @@ enum status_code spi_init(
 	/* Setting the default value for SS- PIN. */
 	pinnum = (config->pinmux_pad[2] >> 16) & 0xFF;
 	gpio_pin_set_output_level(pinnum, true);
-	
+
 	/* Set up the input clock & divider for the module */
 	spi_module->CLOCK_SOURCE_SELECT.reg = config->clock_source;
 	spi_module->SPI_CLK_DIVIDER.reg = config->clock_divider;
-	
+
 #  if CONF_SPI_MASTER_ENABLE == true
 	if (config->mode == SPI_MODE_MASTER) {
 		/* Set the mode in SPI master mode */
@@ -482,7 +482,6 @@ void spi_enable(struct spi_module *const module)
 	Spi *const spi_module = (module->hw);
 
 #if SPI_CALLBACK_MODE == true
-	//system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
 	if((uint32_t)spi_module == SPI0)
 		NVIC_EnableIRQ(SPIRX0_IRQn);
 	else if((uint32_t)spi_module == SPI1)
@@ -494,9 +493,9 @@ void spi_enable(struct spi_module *const module)
 }
 
 /**
- * \brief Disables the SERCOM SPI module
+ * \brief Disables the SPI module
  *
- * This function will disable the SERCOM SPI module.
+ * This function will disable the SPI module.
  *
  * \param[in,out] module  Pointer to the software instance struct
  */
@@ -505,7 +504,6 @@ void spi_disable(struct spi_module *const module)
 	Spi *const spi_module = (module->hw);
 
 #  if SPI_CALLBACK_MODE == true
-	//system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 	if((uint32_t)spi_module == SPI0)
 		NVIC_DisableIRQ(SPIRX0_IRQn);
 	else if((uint32_t)spi_module == SPI1)
@@ -572,7 +570,7 @@ void spi_unlock(struct spi_module *const module)
  * This function will send a single SPI character via SPI and ignore any data
  * shifted in by the connected device. To both send and receive data, use the
  * \ref spi_transceive_wait function or use the \ref spi_read function after
- * writing a character. 
+ * writing a character.
  *
  * Note that this function does not handle the SS (Slave Select)
  * pin(s) in master mode; this must be handled from the user application.
@@ -664,8 +662,8 @@ enum status_code spi_read(
  *
  * \param[in] module    Pointer to the software instance struct
  * \param[in] tx_data   Pointer containing the data to be transmitted.
- * \param[out] rx_data	Pointer to store the received data
- * \param[in] length		length of data to be read.
+ * \param[out] rx_data  Pointer to store the received data
+ * \param[in] length    length of data to be read.
  *
  * \returns Status of the read operation.
  * \retval STATUS_OK            If data was read
@@ -698,16 +696,16 @@ enum status_code spi_transceive_buffer_wait(
 	} else if(length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
-	
+
 	//Check for Idle
 	do {
 		u8status = _spi_is_active(spi_module);
 	}while(u8status);
-	
+
 	// Clear all status registers
 	spi_module->RECEIVE_STATUS.reg;
 	spi_module->TRANSMIT_STATUS.reg;
-	
+
 	//Start transfer
 	while(u16transferlen < length) {
 		//Write data to MOSI
@@ -730,7 +728,7 @@ enum status_code spi_transceive_buffer_wait(
 	}while(!u8status);
 
 	return STATUS_OK;
-	
+
 }
 
 /**
@@ -744,7 +742,7 @@ enum status_code spi_transceive_buffer_wait(
  *
  * \param[in] module    Pointer to the software instance struct
  * \param[in] tx_data   Pointer containing the data to be transmitted.
- * \param[out] rx_data	Pointer to store the received data
+ * \param[out] rx_data  Pointer to store the received data
  *
  * \returns Status of the read operation.
  * \retval STATUS_OK            If data was read
@@ -770,8 +768,8 @@ enum status_code spi_transceive_wait(
  *
  * \param[in] module    Pointer to the software instance struct
  * \param[out] rx_data  Pointer to store the received data
- * \param[in] length		length of data to be read.
- * \param[in] dummy			dummy byte to be sent on bus when reading data.
+ * \param[in] length    length of data to be read.
+ * \param[in] dummy     dummy byte to be sent on bus when reading data.
  *
  * \returns Status of the read operation.
  * \retval STATUS_OK            If data was read
@@ -798,13 +796,13 @@ enum status_code spi_read_buffer_wait(
  *
  * \param[in] module    Pointer to the software instance struct
  * \param[out] tx_data  Pointer to buffer to be transmitted
- * \param[in] length		length of data to be read
+ * \param[in] length    length of data to be read
  *
  * \returns Status of the read operation.
  * \retval STATUS_OK            If data was read
  * \retval STATUS_ERR_IO        If no data is available
  * \retval STATUS_ERR_OVERFLOW  If the data is overflown
- */ 
+ */
 enum status_code spi_write_buffer_wait(
 		struct spi_module *const module,
 		uint8_t *tx_data,
@@ -823,10 +821,10 @@ enum status_code spi_write_buffer_wait(
  * \param[in] select    Bool to select the salve or deselect.
  *
  * \returns Status of the slave select operation.
- *		
+ *
  * \retval STATUS_OK                If SS pin is a valid one and selected/deselected.
  * \retval STATUS_ERR_INVALID_ARG   Invalid SS pin.
- */ 
+ */
 enum status_code spi_select_slave(
 		struct spi_module *const module,
 		struct spi_slave_inst *const slave,
@@ -838,7 +836,6 @@ enum status_code spi_select_slave(
 	} else {			 // DEASSERT Slave select pin
 		gpio_pin_set_output_level(gpio_num, true);
 	}
-	
+
 	return STATUS_OK;
 }
-			

@@ -71,7 +71,7 @@ void configure_spi_slave(void)
 //! [config]
 	struct spi_config config_spi_slave;
 //! [config]
-	/* Configure, initialize and enable SERCOM SPI module */
+	/* Configure, initialize and enable SPI module */
 //! [conf_defaults]
 	spi_get_config_defaults(&config_spi_slave);
 //! [conf_defaults]
