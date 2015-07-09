@@ -339,7 +339,7 @@ struct spi_config {
 	/** clock divider value to use*/
 	uint8_t clock_divider;
 	/** SPI PAD pinmux */
-	uint16_t pinmux_pad[4];
+	uint32_t pinmux_pad[4];
 };
 
 /**

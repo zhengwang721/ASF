@@ -67,7 +67,7 @@ static inline bool _spi_is_active(
 }
 
 /**
- * \internal Writes an SPI SERCOM configuration to the hardware module.
+ * \internal Writes an SPI configuration to the hardware module.
  *
  * This function will write out a given configuration to the hardware module.
  * Can only be done when the module is disabled.
@@ -137,7 +137,7 @@ static enum status_code _spi_set_config(
 	spi_module->TRANSMIT_DATA.reg = 0x0;
 #endif
 	//Enable SPI
-	spi_module->SPI_MODULE_ENABLE.reg = 1;
+	spi_module->SPI_MODULE_ENABLE.reg = SPI_SPI_MODULE_ENABLE_ENABLE;
 	return STATUS_OK;
 }
 
@@ -219,7 +219,7 @@ void spi_slave_inst_get_config_defaults(
 {
 	Assert(config);
 	
-	config->ss_pin          = LPGPIO_12;
+	config->ss_pin          = PIN_LP_GPIO_12;
 	config->address_enabled = false;
 	config->address         = 0;
 }
@@ -282,16 +282,16 @@ void spi_get_config_defaults(
 
 	/* pinmux config defaults  Upper 16 bits inform the GPIO number and lower 16 bits for pinmux selection*/
 	if(config->core_idx == SPI_CORE1){
-		config->pinmux_pad[0] = (LPGPIO_10 << 8);
-		config->pinmux_pad[1] = (LPGPIO_11 << 8);
-		config->pinmux_pad[2] = (LPGPIO_12 << 8);
-		config->pinmux_pad[3] = (LPGPIO_13 << 8);
+		config->pinmux_pad[0] = PINMUX_LP_GPIO_10_MUX2_SPI0_SCK;
+		config->pinmux_pad[1] = PINMUX_LP_GPIO_11_MUX2_SPI0_MOSI;
+		config->pinmux_pad[2] = PINMUX_LP_GPIO_12_MUX2_SPI0_SSN;
+		config->pinmux_pad[3] = PINMUX_LP_GPIO_13_MUX2_SPI0_MISO;
 	}
 	else {
-		config->pinmux_pad[0] = (LPGPIO_2 << 8);
-		config->pinmux_pad[1] = (LPGPIO_3 << 8);
-		config->pinmux_pad[2] = (LPGPIO_4 << 8);
-		config->pinmux_pad[3] = (LPGPIO_5 << 8);
+		//config->pinmux_pad[0] = PINMUX_LP_GPIO_2_MUX4_SPI0_SCK;
+		//config->pinmux_pad[1] = PINMUX_LP_GPIO_3_MUX4_SPI0_MOSI;
+		//config->pinmux_pad[2] = PINMUX_LP_GPIO_4_MUX4_SPI0_SSN;
+		//config->pinmux_pad[3] = PINMUX_LP_GPIO_5_MUX4_SPI0_MISO;
 	}
 };
 
@@ -400,7 +400,7 @@ enum status_code spi_init(
 
 	/* Check if module is enabled. */
 	if (spi_module->SPI_MODULE_ENABLE.reg & SPI_SPI_MODULE_ENABLE_MASK) {
-		spi_module->SPI_MODULE_ENABLE.reg = 0;
+		spi_module->SPI_MODULE_ENABLE.reg = (0x0ul << SPI_SPI_MODULE_ENABLE_ENABLE_Pos);
 	}
 
 	spi_reset(module);
@@ -409,7 +409,8 @@ enum status_code spi_init(
 
 	/* Set the pinmux for this spi module. */
 	for(idx = 0; idx < 4; idx++) {
-		gpio_pinmux_cofiguration(config->pinmux_pad[idx], GPIO_PINMUX_SEL_2);
+		gpio_pinmux_cofiguration(config->pinmux_pad[idx]>>16, \
+								(uint8_t)(config->pinmux_pad[idx] & 0xFF));
 	}
 
 	/* Setting the default value for SS- PIN. */
@@ -422,14 +423,14 @@ enum status_code spi_init(
 	
 #  if CONF_SPI_MASTER_ENABLE == true
 	if (config->mode == SPI_MODE_MASTER) {
-		/* Set the SERCOM in SPI master mode */
+		/* Set the mode in SPI master mode */
 		spi_module->SPI_MASTER_MODE.reg = SPI_MODE_MASTER;
 	}
 #  endif
 
 #  if CONF_SPI_SLAVE_ENABLE == true
 	if (config->mode == SPI_MODE_SLAVE) {
-		/* Set the SERCOM in SPI slave mode */
+		/* Set the mode in SPI slave mode */
 		spi_module->SPI_MASTER_MODE.reg = SPI_MODE_SLAVE;
 	}
 #  endif
@@ -490,7 +491,7 @@ void spi_enable(struct spi_module *const module)
 #endif
 
 	/* Enable SPI */
-	spi_module->SPI_MODULE_ENABLE.reg = 1;
+	spi_module->SPI_MODULE_ENABLE.reg = SPI_SPI_MODULE_ENABLE_ENABLE;
 }
 
 /**
@@ -513,7 +514,7 @@ void spi_disable(struct spi_module *const module)
 #  endif
 
 	/* Disable SPI */
-	spi_module->SPI_MODULE_ENABLE.reg = 0;
+	spi_module->SPI_MODULE_ENABLE.reg = (0x0ul << SPI_SPI_MODULE_ENABLE_ENABLE_Pos);
 }
 
 /**
@@ -756,7 +757,7 @@ enum status_code spi_transceive_wait(
 		uint8_t *tx_data,
 		uint8_t *rx_data)
 {
-	return spi_transceive_buffer_wait(module,tx_data,rx_data,1);
+	return spi_transceive_buffer_wait(module, tx_data, rx_data, 1);
 }
 
 /**
