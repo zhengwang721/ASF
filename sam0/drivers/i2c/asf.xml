@@ -14,11 +14,9 @@
 			<build type="c-source" value="i2c.c"/>
 			<build type="header-file" subtype="api" value="i2c.h"/>
 			<build type="header-file" value="quick_start_master/qs_i2c_master_basic_use.h"/>
-			<build type="header-file" value="quick_start_slave/qs_i2c_slave_basic_use.h"/>
 			<build type="include-path" value="."/>
 			<build type="doxygen-entry-point" value="asfdoc_sam0_i2c_group"/>
 			<build type="doxygen-example-path" value="quick_start_master"/>
-			<build type="doxygen-example-path" value="quick_start_slave"/>
 			<build type="doxygen-quick-start" value="asfdoc_sam0_i2c_exqsg"/>
 
 			<device-support value="samb"/>
