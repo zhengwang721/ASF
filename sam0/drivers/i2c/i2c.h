@@ -57,20 +57,20 @@
 extern "C" {
 #endif
 
-#define I2C_WRITE_TO_SLAVE		0
-#define I2C_READ_FROM_SLAVE		1
+#define I2C_WRITE_TO_SLAVE      0
+#define I2C_READ_FROM_SLAVE     1
 
-#define I2C_MASTER_CALLBACK_MODE	(0)
+#define I2C_MASTER_CALLBACK_MODE     (0)
 
 /** \brief I2C Core index
  *
  * Some version of chip has multiple I2C modules.
  */
 enum i2c_core_idx {
-	I2C_CORE1	= 1,
+	I2C_CORE1 = 1,
 #ifdef CHIPVERSION_B0
 	I2C_CORE2,
-#endif	//CHIPVERSION_B0
+#endif      //CHIPVERSION_B0
 	I2C_CORE_MAX,
 };
 
@@ -293,7 +293,7 @@ enum status_code i2c_master_read_byte(
 enum status_code i2c_master_write_byte(
 		struct i2c_module *const module,
 		uint8_t byte);
-		
+
 #  endif
 
 /**
@@ -306,9 +306,9 @@ enum status_code i2c_master_write_byte(
  */
 static inline void _i2c_disable(I2C *const i2c_module)
 {
-	if(i2c_module == NULL)
+	if (i2c_module == NULL)
 		return;
-	i2c_module->I2C_MODULE_ENABLE.reg = (I2C_I2C_MODULE_ENABLE_ENABLE_Pos << 0);;
+	i2c_module->I2C_MODULE_ENABLE.reg = 0;
 }
 
 /**
@@ -321,9 +321,9 @@ static inline void _i2c_disable(I2C *const i2c_module)
  */
 static inline void _i2c_enable(I2C *const i2c_module)
 {
-	if(i2c_module == NULL)
+	if (i2c_module == NULL)
 		return;
-	i2c_module->I2C_MODULE_ENABLE.reg= (I2C_I2C_MODULE_ENABLE_ENABLE_Pos << 1);
+	i2c_module->I2C_MODULE_ENABLE.reg= (1 << I2C_I2C_MODULE_ENABLE_ENABLE_Pos);
 }
 
 /**
@@ -343,13 +343,13 @@ static inline bool i2c_is_active (
 	/* Sanity check. */
 	Assert(module);
 	Assert(module->hw);
-	
+
 	I2C *const i2c_hw = (module->hw);
 	return (i2c_hw->I2C_STATUS.bit.I2C_ACTIVE);
 }
 
 /** @} */
-		
+
 /** @}*/
 
 #ifdef __cplusplus

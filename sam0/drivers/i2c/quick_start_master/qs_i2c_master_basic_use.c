@@ -66,7 +66,7 @@ static uint8_t read_buffer[DATA_LENGTH];
 
 /* Init software module. */
 //! [dev_inst]
-struct i2c_master_module i2c_master_instance;
+struct i2c_module i2c_master_instance;
 //! [dev_inst]
 
 void configure_i2c_master(void);

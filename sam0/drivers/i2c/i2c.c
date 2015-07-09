@@ -58,20 +58,20 @@ static enum status_code _i2c_reset(I2C *const i2c_module)
 {
 	if (i2c_module == (I2C *)I2C0) {
 		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg &=
-		~(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_CORE_RSTN |
-		LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_IF_RSTN);
+			~(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_CORE_RSTN |
+			LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_IF_RSTN);
 		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |=
-		(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_CORE_RSTN |
-		LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_IF_RSTN);
+			(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_CORE_RSTN |
+			LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_I2C0_IF_RSTN);
 	}
 #ifdef CHIPVERSION_B0
-	else if(i2c_module == (I2C *)I2C1) {
+	else if (i2c_module == (I2C *)I2C1) {
 		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg &=
-		~(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_CORE_RSTN |
-		LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_IF_RSTN);
+			~(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_CORE_RSTN |
+			LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_IF_RSTN);
 		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg |=
-		(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_CORE_RSTN |
-		LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_IF_RSTN);
+			(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_CORE_RSTN |
+			LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_CORTUS_I2C1_IF_RSTN);
 	}
 #endif
 
@@ -95,19 +95,19 @@ static enum status_code _i2c_master_set_config(
 		struct i2c_module *const module,
 		const struct i2c_master_config *const config)
 {
-	enum status_code status;
+	enum status_code status = STATUS_OK;
 	uint8_t idx = 0;
 	I2C *const i2c_module = (module->hw);
-	
+
 	/* Set the pinmux for this i2c module. */
-	for(idx = 0; idx < 2; idx++) {
+	for (idx = 0; idx < 2; idx++) {
 		gpio_pinmux_cofiguration(config->pinmux_pad[idx]>>16, config->pinmux_pad[idx] & 0xff);
 	}
 	/* Find and set baudrate. */
 	i2c_module->CLOCK_SOURCE_SELECT.reg = config->clock_source;
 	i2c_module->I2C_CLK_DIVIDER.reg = I2C_I2C_CLK_DIVIDER_I2C_DIVIDE_RATIO(0x10);
 	i2c_module->I2C_MASTER_MODE.reg = I2C_I2C_MASTER_MODE_MASTER_ENABLE_1;
-	
+
 	return status;
 }
 
@@ -180,7 +180,7 @@ static void _i2c_wait_for_idle(
  * \brief Enables the I<SUP>2</SUP>C module
  *
  * Enables the requested I<SUP>2</SUP>C module and set the bus state to IDLE
- * after the specified \ref asfdoc_sam0_sercom_i2c_timeout "timeout" period if no
+ * after the specified \ref asfdoc_sam0_i2c_timeout "timeout" period if no
  * stop bit is detected.
  *
  * \param[in]  module  Pointer to the software module struct
@@ -220,9 +220,9 @@ void i2c_disable(
 void i2c_master_get_config_defaults(
 		struct i2c_master_config *const config)
 {
-	config->core_idx		= I2C_CORE1;
-	config->baud_rate		= I2C_MASTER_BAUD_RATE_100KHZ;
-	config->clock_source 	= I2C_CLK_INPUT_3;
+	config->core_idx        = I2C_CORE1;
+	config->baud_rate       = I2C_MASTER_BAUD_RATE_100KHZ;
+	config->clock_source    = I2C_CLK_INPUT_3;
 	config->pinmux_pad[0]   = PINMUX_LP_GPIO_8_MUX2_I2C0_SDA;
 	config->pinmux_pad[1]   = PINMUX_LP_GPIO_9_MUX2_I2C0_SCK;
 }
@@ -230,7 +230,7 @@ void i2c_master_get_config_defaults(
 /**
  * \brief Initializes the requested I<SUP>2</SUP>C hardware module
  *
- * Initializes the SERCOM I<SUP>2</SUP>C master device requested and sets the provided
+ * Initializes the I<SUP>2</SUP>C master device requested and sets the provided
  * software module struct. Run this function before any further use of
  * the driver.
  *
@@ -250,23 +250,23 @@ enum status_code i2c_master_init(
 	/* Sanity check arguments. */
 	if((module == NULL) || (config == NULL))
 		return STATUS_ERR_INVALID_ARG;
-	
+
 	/* Initialize software module */
 	if(config->core_idx == I2C_CORE1)
 		module->hw = (void *)I2C0;
 #ifdef CHIPVERSION_B0
 	else if(config->core_idx == I2C_CORE2)
 		module->hw = (void *)I2C1;
-#endif	//CHIPVERSION_B0
-	else
+#endif  //CHIPVERSION_B0
+	else {
 		return STATUS_ERR_INVALID_ARG;
-
+	}
 	I2C *const i2c_module = (module->hw);
-	
-	if(i2c_module->I2C_MODULE_ENABLE.reg) {
+
+	if (i2c_module->I2C_MODULE_ENABLE.reg) {
 		i2c_module->I2C_MODULE_ENABLE.reg = I2C_I2C_MODULE_ENABLE_ENABLE;
 	}
-	
+
 	_i2c_reset(i2c_module);
 
 #if I2C_MASTER_CALLBACK_MODE == true
@@ -284,7 +284,7 @@ enum status_code i2c_master_init(
 	/* Set config and return status. */
 	if(_i2c_master_set_config(module, config) != STATUS_OK)
 		return STATUS_ERR_NOT_INITIALIZED;
-	
+
 	return STATUS_OK;
 }
 
@@ -307,7 +307,7 @@ void i2c_reset(struct i2c_module *const module)
 #if I2C_MASTER_CALLBACK_MODE == true
 	/* Clear all pending interrupts */
 	//system_interrupt_enter_critical_section();
-	//system_interrupt_clear_pending(_sercom_get_interrupt_vector(module->hw));
+	//system_interrupt_clear_pending(_get_interrupt_vector(module->hw));
 	//system_interrupt_leave_critical_section();
 #endif
 
@@ -341,7 +341,7 @@ static enum status_code _i2c_master_read_packet(
 {
 
 	I2C *const i2c_module = (module->hw);
-	uint16_t i	= 0;
+	uint16_t i = 0;
 	uint32_t cfg = 0;
 	uint32_t status = 0;
 
@@ -351,13 +351,13 @@ static enum status_code _i2c_master_read_packet(
 	do {
 		status = i2c_module->I2C_STATUS.bit.I2C_ACTIVE;
 	} while(status);
-	
+
 	/* Flush the FIFO */
 	i2c_module->I2C_FLUSH.reg = 1;
-	
+
 	/* Enable I2C on bus (start condition) */
 	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
-	
+
 	/* Address I2C slave in case of Master mode enabled */
 	cfg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 | (packet->address << 1) | I2C_READ_FROM_SLAVE;
 	i2c_module->TRANSMIT_DATA.reg = cfg;
@@ -365,18 +365,18 @@ static enum status_code _i2c_master_read_packet(
 		status = i2c_module->RECEIVE_STATUS.reg;
 		if (status & I2C_RECEIVE_STATUS_RX_FIFO_NOT_EMPTY)
 			packet->data[i++] = i2c_module->RECEIVE_DATA.reg;
-	} while(i < tmp_data_length); 
-	
+	} while (i < tmp_data_length); 
+
 	/* Now check whether the core has sent the data out and its good to free the bus. */
 	while (!(status & I2C_TRANSMIT_STATUS_TX_FIFO_EMPTY)) {
 		status = i2c_module->TRANSMIT_STATUS.reg;
 	}
-	
+
 	/* Send stop condition. */
-	if(!module->no_stop) {
+	if (!module->no_stop) {
 		i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_0;
 	}
-	
+
 	return STATUS_OK;
 }
 
@@ -395,8 +395,8 @@ static enum status_code _i2c_master_read_packet(
  * \return Status of reading packet.
  * \retval STATUS_OK                    The packet was read successfully
  * \retval STATUS_ERR_INVALID_ARG       Invalid argument in module or config strucuture
- *                                      		specified timeout period
- * \retval STATUS_BUSY            			If module has a pending request.
+ *                                      specified timeout period
+ * \retval STATUS_BUSY                  If module has a pending request.
  */
 enum status_code i2c_master_read_packet_wait(
 		struct i2c_module *const module,
@@ -406,7 +406,7 @@ enum status_code i2c_master_read_packet_wait(
 	Assert(module);
 	Assert(module->hw);
 	Assert(packet);
-	
+
 	if((module == NULL) || (packet == NULL))
 		return STATUS_ERR_INVALID_ARG;
 
@@ -418,7 +418,7 @@ enum status_code i2c_master_read_packet_wait(
 #endif
 
 	module->no_stop = false;
-	
+
 	return _i2c_master_read_packet(module, packet);
 }
 
@@ -441,8 +441,8 @@ enum status_code i2c_master_read_packet_wait(
  * \return Status of reading packet.
  * \retval STATUS_OK                    The packet was read successfully
  * \retval STATUS_ERR_INVALID_ARG       Invalid argument in module or config strucuture
- *                                      		specified timeout period
- * \retval STATUS_BUSY            			If module has a pending request.
+ *                                      specified timeout period
+ * \retval STATUS_BUSY                  If module has a pending request.
  */
 enum status_code i2c_master_read_packet_wait_no_stop(
 		struct i2c_module *const module,
@@ -452,7 +452,7 @@ enum status_code i2c_master_read_packet_wait_no_stop(
 	Assert(module);
 	Assert(module->hw);
 	Assert(packet);
-	
+
 	if((module == NULL) || (packet == NULL))
 		return STATUS_ERR_INVALID_ARG;
 
@@ -483,8 +483,8 @@ static enum status_code _i2c_master_write_packet(
 		struct i2c_master_packet *const packet)
 {
 	I2C *const i2c_module = (module->hw);
-	uint16_t i	= 0;
-	uint32_t cfg = 0;
+	uint16_t i      = 0;
+	uint32_t cfg    = 0;
 	uint32_t status = 0;
 
 	/* Return value */
@@ -493,32 +493,33 @@ static enum status_code _i2c_master_write_packet(
 	do {
 		status = i2c_module->I2C_STATUS.bit.I2C_ACTIVE;
 	} while (status);
-	
+
 	/* Flush the FIFO */
 	i2c_module->I2C_FLUSH.reg = 1;
-	
+
 	/* Enable I2C on bus (start condition) */
 	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
-	
+
 	/* Address I2C slave in case of Master mode enabled */
 	cfg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 | ((packet->address) << 1) | I2C_WRITE_TO_SLAVE;
 	i2c_module->TRANSMIT_DATA.reg = cfg;
 	do {
 		status = i2c_module->TRANSMIT_STATUS.reg;
-		if (status & I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_Msk)
+		if (status & I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_Msk) {
 			i2c_module->TRANSMIT_DATA.reg = packet->data[i++];
+		}
 	} while (i < tmp_data_length); 
-	
+
 	/* Now check whether the core has sent the data out and its good to free the bus */
 	while (!(status & I2C_TRANSMIT_STATUS_TX_FIFO_EMPTY)) {
 			status = i2c_module->TRANSMIT_STATUS.reg;
 	}
 
 	/* Send stop condition */
-	if(!module->no_stop) {
+	if (!module->no_stop) {
 		i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_0;
 	}
-	
+
 	return STATUS_OK;
 }
 
@@ -537,8 +538,8 @@ static enum status_code _i2c_master_write_packet(
  * \return Status of write packet.
  * \retval STATUS_OK                    The packet was written successfully
  * \retval STATUS_ERR_INVALID_ARG       Invalid argument in module or packet structure
- *                                      		specified timeout period
- * \retval STATUS_BUSY            			If module has a pending request.
+ *                                      specified timeout period
+ * \retval STATUS_BUSY                  If module has a pending request.
  */
 enum status_code i2c_master_write_packet_wait(
 		struct i2c_module *const module,
@@ -548,10 +549,10 @@ enum status_code i2c_master_write_packet_wait(
 	Assert(module);
 	Assert(module->hw);
 	Assert(packet);
-	
-	if((module == NULL) || (packet == NULL))
+
+	if ((module == NULL) || (packet == NULL)) {
 		return STATUS_ERR_INVALID_ARG;
-	
+	}
 #if I2C_MASTER_CALLBACK_MODE == true
 	/* Check if the I2C module is busy with a job */
 	if (module->buffer_remaining > 0) {
@@ -582,8 +583,8 @@ enum status_code i2c_master_write_packet_wait(
  * \return Status of write packet.
  * \retval STATUS_OK                    The packet was written successfully
  * \retval STATUS_ERR_INVALID_ARG       Invalid argument in module or config structure
- *                                      		specified timeout period
- * \retval STATUS_BUSY            			If module has a pending request.
+ *                                      specified timeout period
+ * \retval STATUS_BUSY                  If module has a pending request.
  */
 enum status_code i2c_master_write_packet_wait_no_stop(
 		struct i2c_module *const module,
@@ -594,9 +595,9 @@ enum status_code i2c_master_write_packet_wait_no_stop(
 	Assert(module->hw);
 	Assert(packet);
 
-	if((module == NULL) || (packet == NULL))
+	if((module == NULL) || (packet == NULL)) {
 		return STATUS_ERR_INVALID_ARG;
-	
+	}
 #if I2C_MASTER_CALLBACK_MODE == true
 	/* Check if the I2C module is busy with a job */
 	if (module->buffer_remaining > 0) {
@@ -631,7 +632,7 @@ void i2c_master_send_stop(struct i2c_module *const module)
 
 	/* Send stop command */
 	_i2c_wait_for_idle(module);
-	
+
 	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_0;
 }
 
@@ -652,7 +653,7 @@ void i2c_master_send_start(struct i2c_module *const module)
 	I2C *const i2c_module = (module->hw);
 
 	_i2c_wait_for_idle(module);
-	
+
 	/* Send start command */
 	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
 }
@@ -670,13 +671,13 @@ enum status_code i2c_master_read_byte(
 		struct i2c_module *const module,
 		uint8_t *byte)
 {
-  	I2C *const i2c_module = (module->hw);
+	I2C *const i2c_module = (module->hw);
 
 	/* Read a byte from slave. */
 	_i2c_wait_for_idle(module);
-	
+
 	*byte = i2c_module->RECEIVE_DATA.bit.RX_BYTE;
-	
+
 	return STATUS_OK;
 }
 
@@ -685,7 +686,7 @@ enum status_code i2c_master_read_byte(
  *
  * \param[in,out]  module  Pointer to software module struct
  * \param[in]      byte    Address of slave
- * \param[in]			 byte		 command 0 - Write, 1 - Read
+ * \param[in]      byte    command 0 - Write, 1 - Read
  *
  * \return Status of writing byte.
  * \retval STATUS_OK   The Address and command was written successfully
@@ -695,13 +696,13 @@ enum status_code i2c_master_write_address(
 		uint8_t address,
 		uint8_t command)
 {
-  	I2C *const i2c_module = (module->hw);
-	  
+	I2C *const i2c_module = (module->hw);
+
 	/* Write byte to slave. */
 	_i2c_wait_for_idle(module);
-	
+
 	i2c_module->TRANSMIT_DATA.reg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 | (address << 1) | command;
-		
+
 	return STATUS_OK;
 }
 
@@ -719,13 +720,13 @@ enum status_code i2c_master_write_byte(
 		struct i2c_module *const module,
 		uint8_t byte)
 {
-  	I2C *const i2c_module = (module->hw);
+	I2C *const i2c_module = (module->hw);
 
 	/* Write byte to slave. */
 	_i2c_wait_for_idle(module);
-	
+
 	i2c_module->TRANSMIT_DATA.reg = (uint16_t)I2C_TRANSMIT_DATA_TX_DATA(byte);
-	
+
 	return STATUS_OK;
 }
 
