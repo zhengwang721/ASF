@@ -232,7 +232,7 @@ struct i2c_master_config {
 	enum i2c_clock_input clock_source;
 	/** PAD0 (SDA) pinmux. */
 	/** PAD1 (SCL) pinmux. */
-	uint16_t pinmux_pad[2];
+	uint32_t pinmux_pad[2];
 };
 
 /**
