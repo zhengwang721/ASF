@@ -433,7 +433,7 @@ static inline bool bod33_is_detected(void)
  */
 static inline void bod33_clear_detected(void)
 {
-	SUPC->INTFLAG.reg |= SUPC_INTFLAG_BOD33DET;
+	SUPC->INTFLAG.reg = SUPC_INTFLAG_BOD33DET;
 	return;
 }
 
@@ -528,7 +528,7 @@ static inline bool bod12_is_detected(void)
  */
 static inline void bod12_clear_detected(void)
 {
-	SUPC->INTFLAG.reg |= SUPC_INTFLAG_BOD12DET;
+	SUPC->INTFLAG.reg = SUPC_INTFLAG_BOD12DET;
 	return;
 }
 

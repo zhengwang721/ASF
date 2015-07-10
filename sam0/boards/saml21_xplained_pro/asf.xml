@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<board id="board.saml21_xplained_pro" vendor="Atmel" caption="SAM L21 Xplained Pro">
+	<board id="board.saml21_xplained_pro" vendor="Atmel" caption="SAM L21 Xplained Pro (ATSAML21J18A)">
 		<build type="define" name="BOARD" value="SAML21_XPLAINED_PRO"/>
 		<build type="define" name="__SAML21J18A__" value=""/>
 		<build type="include-path" value="."/>
