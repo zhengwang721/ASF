@@ -5,11 +5,15 @@
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="pxp_reporter.h"/> 
+		<build type="header-file" value="pxp_application.h"/>
+		<build type="header-file" value="immediate_alert_service.h"/> 
+		<build type="header-file" value="linkloss_service.h"/> 
+		<build type="header-file" value="tx_power_service.h"/> 
 		<build type="c-source" value="pxp_application.c"/>
 		<build type="c-source" value="pxp_reporter.c"/>
-		<build type="c-source" value="pxp_immediate_alert_service.c"/>
-		<build type="c-source" value="pxp_linkloss_service.c"/>
-		<build type="c-source" value="pxp_txpower_service.c"/>
+		<build type="c-source" value="immediate_alert_service.c"/>
+		<build type="c-source" value="linkloss_service.c"/>
+		<build type="c-source" value="tx_power_service.c"/>
 		<require idref="thirdparty.wireless.ble_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_sdk.inc"/>
 		<require idref="thirdparty.wireless.ble_sdk.src"/>

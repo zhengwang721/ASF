@@ -1,7 +1,11 @@
+
+
+
+
 /**
  * \file
  *
- * \brief Proximity Reporter Profile Application declarations
+ * \brief Link Loss Service declarations
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -45,38 +49,22 @@
  */
 
 
-#ifndef __PXP_REPORTER_H__
-#define __PXP_REPORTER_H__
+#ifndef __IMMEDIATEALERT_SERVICE_H__
+#define __IMMEDIATEALERT_SERVICE_H__
 
 #include "at_ble_api.h"
-#include "platform.h"
-#include "console_serial.h"
-
-#include "linkloss_service.h"
-#include "tx_power_service.h"
-#include "immediate_alert_service.h"
 
 #define DBG_LOG printf
 #define DBG_LOG printf
 
-
-
-typedef struct {
-	uint8_t linkloss;
-	uint8_t pathloss;	
-}features_option;
-
-#pragma pack (8) 
 
 typedef struct{
-	linkloss_serv_record linkloss_service;
-	immediate_alert_serv_record immediate_alert_service;
-	tx_power_serv_record tx_power_service;
-}proximity_serv_info ;
+	at_ble_uuid_t immediate_alert_serv_uuid;
+	at_ble_handle_t immediate_alert_serv_handle;
+	at_ble_characteristic_t immediate_alert_serv_chars;
+}immediate_alert_serv_record;
 
-void init_proximity_reporter (proximity_serv_info *services , features_option *choice);
 
-uint8_t add_proximity_service_database (proximity_serv_info *services ,features_option *choice);
-#define SUCCESS 1
+void init_immediate_alert_service(immediate_alert_serv_record *immediate_alert_serv);
 
-#endif 
+#endif /* __IMMEDIATEALERT_SERVICE_H__ */

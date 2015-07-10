@@ -1,102 +1,95 @@
 
 #include "pxp_reporter.h"
 
-
-at_ble_status_t register_linkloss_service(void );
-at_ble_status_t register_txpower_service(void );	
-at_ble_status_t register_immediate_alert_service(void );
+uint8_t tx_pwr_initial_value;
+//at_ble_handle_t tx_serv_handle;
 	
-
-		
-uint8_t proximity_reporter_init(void );
-
-
-
-uint8_t proximity_reporter_init(void )
+void init_proximity_reporter (proximity_serv_info *services , features_option *choice) 
 {
-		
-	uint8_t idx = 0;
-	uint8_t adv_data[ PXP_ADV_DATA_NAME_LEN + LL_ADV_DATA_UUID_LEN   + (2*2)];
-	//at_ble_status_t status_t;
 	
-		
-		// registering service link loss service
-	
-		if (register_linkloss_service() == AT_BLE_SUCCESS) {
-			DBG_LOG("Linkloss service successfully registered \r\n")	;
-		} 
-		else {
-			DBG_LOG("Linkloss service registration failed \r\n");	
-		}
-		
-		//registering optional services
-		
-		//Txpower Service
-		
-		if (register_txpower_service() == AT_BLE_SUCCESS) {
-			DBG_LOG("txpower service successfully registered \r\n")	;
-		}
-		else {
-			DBG_LOG("txpower service registration failed \r\n");
-		}
-		
-		//Immediate alert service
-		if (register_immediate_alert_service() == AT_BLE_SUCCESS) {
-			DBG_LOG("Immediate alert service successfully registered \r\n")	;
-		}
-		else {
-			DBG_LOG("Immediate service registration failed \r\n");
-		}
-		
-		
-	adv_data[idx++] = LL_ADV_DATA_UUID_LEN + ADV_TYPE_LEN +  TXP_ADV_DATA_UUID_LEN + IAL_ADV_DATA_UUID_LEN ;
-	adv_data[idx++] = LL_ADV_DATA_UUID_TYPE;
-	
-	/* Appending the UUID */
-	memcpy(&adv_data[idx], LL_ADV_DATA_UUID_DATA, LL_ADV_DATA_UUID_LEN);
-	idx += LL_ADV_DATA_UUID_LEN;
-	
-	/* Prepare ADV Data for LL Service */
-	memcpy(&adv_data[idx], TXP_ADV_DATA_UUID_DATA, TXP_ADV_DATA_UUID_LEN);
-	idx += TXP_ADV_DATA_UUID_LEN;
-	
-	/* Prepare ADV Data for LL Service */
-	memcpy(&adv_data[idx], IAL_ADV_DATA_UUID_DATA, IAL_ADV_DATA_UUID_LEN);
-	idx += IAL_ADV_DATA_UUID_LEN;
-	
-	/*Appending the complete name to the Ad packet */
-	adv_data[idx++] = PXP_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = PXP_ADV_DATA_NAME_TYPE;
-	memcpy(&adv_data[idx], PXP_ADV_DATA_NAME_DATA, PXP_ADV_DATA_NAME_LEN );
-	idx += PXP_ADV_DATA_NAME_LEN ;
-	
-	/*if ((status_t = at_ble_adv_set_tx_power((int8_t ) 3)) != AT_BLE_SUCCESS) {
-		DBG_LOG("Setting the tx power is failed for %x\r\n",status_t);
-	} else {
-		DBG_LOG("Setting the tx power is successful \r\n");
-	}*/
-	
-	if (at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN) != AT_BLE_SUCCESS) {
-		DBG_LOG("\r\n failed adv data set");
-	}
-	else
-	{
-		DBG_LOG("Successfully adv data set");
+	if (choice ->linkloss ) {
+		// Initializing the linkloss service for linkloss
+		init_linkloss_service(&services->linkloss_service);
 	}
 	
-	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
-	APP_PXP_FAST_ADV, APP_PXP_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
-	{
-		DBG_LOG("\r\nBLE Adv start Failed");
+	if (choice->pathloss) {	
+		//Initializing the immediate alert service
+		init_immediate_alert_service(&services->immediate_alert_service);
+		//Initializing the tx power service
+		init_tx_power_service(&services->tx_power_service);
 	}
-	else
-	{
-		DBG_LOG_1LVL("\r\nBLE Started Adv");
-	}
-	
-
-	return 1;
-	//Set the advertisement parameters and start advertising
-	//at_ble_status_t at_ble_adv_data_set( );
+			
 }
+		
+uint8_t add_proximity_service_database (proximity_serv_info *services ,features_option *choice)
+{
+	
+	
+	//Adding services for link loss
+	if (choice->linkloss) 
+	{		//Linkloss service
+			
+			if(at_ble_primary_service_define(&services->linkloss_service.linkloss_serv_uuid,
+								  &services->linkloss_service.linkloss_serv_handle, NULL, 0,
+					   &services->linkloss_service.linkloss_serv_chars, 1) == AT_BLE_SUCCESS) 
+			{
+				#ifdef DBG_LOG
+				//DBG_LOG("Linkloss successfull added and handle is %x\n",
+							//				linkloss_service->linkloss_serv_handle);
+				#endif
+			}
+			else
+			{
+				DBG_LOG("Fail link loss service definition");
+				return AT_BLE_FAILURE;
+			}
+	}
+		
+	//Adding services for pathloss
+	if (choice->pathloss) 
+	{	//Immediate Alert Service
+	
+		if(at_ble_primary_service_define(&services->immediate_alert_service.immediate_alert_serv_uuid,
+			 &services->immediate_alert_service.immediate_alert_serv_handle, NULL, 0,
+			  &services->immediate_alert_service.immediate_alert_serv_chars, 1) == AT_BLE_SUCCESS)
+		{
+			#ifdef DBG_LOG
+			//DBG_LOG("Immediate alert service successfully added and handle is %x",
+							//	immediate_alert_service->immediate_alert_serv_handle);
+			#endif
+		}
+		else
+		{
+			#ifdef DBG_LOG
+			DBG_LOG("Fail immediate_alert__service_define");
+			#endif
+			return AT_BLE_FAILURE;
+		}
+		// Tx Power Service
+		
+		
+		if(at_ble_primary_service_define(&services->tx_power_service.tx_power_serv_uuid,&services->tx_power_service.tx_power_serv_handle,
+		 NULL, 0, &services->tx_power_service.tx_power_serv_chars, 1) == AT_BLE_SUCCESS) 
+		{
+			#ifdef DBG_LOG
+			//DBG_LOG("tx power successful added and handle is %x",tx_serv_handle);
+			#endif
+		}
+		else
+		{
+			#ifdef DBG_LOG
+			DBG_LOG("Fail at_ble_primary_service_define");
+			#endif
+			return AT_BLE_FAILURE;
+		}
+ 
+	}
+	DBG_LOG("The link loss handle is %x",services->linkloss_service.linkloss_serv_handle);
+	DBG_LOG("The immediate loss handle is %x",services->immediate_alert_service.immediate_alert_serv_handle);
+	DBG_LOG("The tx power handle is %x",services->tx_power_service.tx_power_serv_handle);
+	return AT_BLE_SUCCESS;	
+}
+
+
+
 

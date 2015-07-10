@@ -49,26 +49,27 @@
 
 #include "asf.h"
 #include "console_serial.h"
+#include "timer_hw.h"
+#include "pxp_application.h"
 #include "pxp_reporter.h"
 
 
-#define link_loss 1
-#define path_loss 2
-
-int8_t tx_power;
 
 
-extern at_ble_handle_t linkloss_alert_characteristic_handle;
-extern at_ble_handle_t immediate_alert_characteristic_handle;
-extern at_ble_handle_t txpower_characteristic_handle;
 
-volatile uint8_t linkloss_current_alert_level;
-volatile uint8_t pathloss_alert_value;
 
+
+
+uint8_t linkloss_current_alert_level;
+uint8_t pathloss_alert_value; 
 
 uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
+	
+proximity_serv_info services_info;
+features_option choice;
 
-//void general_adv_start();
+
+
 uint8_t proximity_reporter_init(void );
 void app_init(void );
 
@@ -77,11 +78,103 @@ bool app_device_bond = false;
 uint8_t auth_info = 0;
 
 
+
+#define LL_INTERVAL_SLOW	3
+#define LL_INTERVAL_MEDIUM	2
+#define LL_INTERVAL_FAST	1
+
+
+#define PL_INTERVAL_SLOW	8
+#define PL_INTERVAL_MEDIUM	6
+#define PL_INTERVAL_FAST	4
+
+uint8_t led_state = 1;
+uint8_t timer_interval = LL_INTERVAL_SLOW;
+
+
+void timer_callback_handler(void); 
+
+void timer_callback_handler(void)
+{
+	hw_timer_stop();
+	if (led_state==1)
+	{
+		led_state = 0;
+		LED_Off(LED0);
+		hw_timer_start(timer_interval);
+	}
+	else {
+		led_state = 1;
+		LED_On(LED0);
+		hw_timer_start(timer_interval);
+	}
+	
+}
+
+
+void start_advertising(void)
+{
+	uint8_t idx = 0;
+	uint8_t adv_data[ PXP_ADV_DATA_NAME_LEN + LL_ADV_DATA_UUID_LEN   + (2*2)];
+		
+	adv_data[idx++] = LL_ADV_DATA_UUID_LEN + ADV_TYPE_LEN +  TXP_ADV_DATA_UUID_LEN + IAL_ADV_DATA_UUID_LEN ;
+	adv_data[idx++] = LL_ADV_DATA_UUID_TYPE;
+	
+	//Appending the UUID 
+	memcpy(&adv_data[idx], LL_ADV_DATA_UUID_DATA, LL_ADV_DATA_UUID_LEN);
+	idx += LL_ADV_DATA_UUID_LEN;
+	
+	 //Prepare ADV Data for TXP Service 
+	memcpy(&adv_data[idx], TXP_ADV_DATA_UUID_DATA, TXP_ADV_DATA_UUID_LEN);
+	idx += TXP_ADV_DATA_UUID_LEN;
+	
+	//Prepare ADV Data for IAS Service 
+	memcpy(&adv_data[idx], IAL_ADV_DATA_UUID_DATA, IAL_ADV_DATA_UUID_LEN);
+	idx += IAL_ADV_DATA_UUID_LEN;
+	
+	//Appending the complete name to the Ad packet 
+	adv_data[idx++] = PXP_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
+	adv_data[idx++] = PXP_ADV_DATA_NAME_TYPE;
+	memcpy(&adv_data[idx], PXP_ADV_DATA_NAME_DATA, PXP_ADV_DATA_NAME_LEN );
+	idx += PXP_ADV_DATA_NAME_LEN ;
+	
+	
+	if (at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN) != AT_BLE_SUCCESS) {
+		#ifdef DBG_LOG
+		DBG_LOG("failed adv data set");
+		#endif 
+	}
+	else
+	{
+		#ifdef DBG_LOG
+	//	DBG_LOG("Successfully adv data set");
+		#endif
+	}
+	
+	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
+	APP_PXP_FAST_ADV, APP_PXP_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
+	{
+		#ifdef DBG_LOG
+		DBG_LOG("BLE Adv start Failed");
+		#endif
+	}
+	else
+	{
+		#ifdef DBG_LOG
+		DBG_LOG("BLE Started Adv");
+		#endif
+	}
+}
+
+
 void app_init(void)
 {
 	uint8_t port = 74;
 	at_ble_addr_t addr;
-	uint16_t uuid = 0x1803;
+	uint16_t uuid = 0x1802;
+
+	
+	
 	// init device
 	at_ble_init(&port);
 	
@@ -92,27 +185,45 @@ void app_init(void)
 	at_ble_addr_set(&addr);
 }
 
+
+
 int main(void )
 {
 	at_ble_events_t event;
 	uint8_t params[512];
+	at_ble_handle_t handle;
 	
-	at_ble_handle_t handle = 0;
-	at_ble_status_t status;
+
 
 	system_init();
 	serial_console_init();
 	app_init();
-
-
-	if ((proximity_reporter_init()) != SUCCESS) {
-		DBG_LOG_1LVL("\r\n Proximity reporter initialization failed\n");
-	} 
-	else 
-	{
-		DBG_LOG_1LVL("\r\nProximity reporter initialized successfully and started advertisement");
-	}
 	
+	hw_timer_init();
+	hw_timer_register_callback(timer_callback_handler);
+	
+	#if LINKLOSS
+	choice.linkloss = 1;
+	#endif 
+
+	#if PATHLOSS
+	choice.pathloss = 1;
+	#endif
+	
+	init_proximity_reporter (&services_info , &choice) ;
+	
+	if (add_proximity_service_database (&services_info ,&choice) != AT_BLE_SUCCESS) 
+	{
+		#ifdef DBG_LOG
+		DBG_LOG("Failed to add the service data base");
+		#endif
+	} else {
+		#ifdef DBG_LOG
+		//DBG_LOG("Service database successfully added");
+		#endif
+	}	
+	
+	start_advertising();
 	
 	while(at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS)
 	{
@@ -123,8 +234,8 @@ int main(void )
 				
 				at_ble_connected_t conn_params;
 				memcpy((uint8_t *)&conn_params, params, sizeof(at_ble_connected_t));
-				
-				DBG_LOG("\r\nDevice connected to 0x%02x%02x%02x%02x%02x%02x handle=0x%x",
+				#ifdef DBG_LOG
+				DBG_LOG("Device connected to 0x%02x%02x%02x%02x%02x%02x handle=0x%x",
 				conn_params.peer_addr.addr[5],
 				conn_params.peer_addr.addr[4],
 				conn_params.peer_addr.addr[3],
@@ -132,22 +243,12 @@ int main(void )
 				conn_params.peer_addr.addr[1],
 				conn_params.peer_addr.addr[0],
 				conn_params.handle);
+				#endif
 				handle = conn_params.handle;
+				hw_timer_stop();
+				LED_Off(LED0);
+				led_state = 0;
 				
-				
-				
-				//Reading the transmission power 
-				if ((tx_power = at_ble_tx_power_get(handle)) == -1) {
-					DBG_LOG("Failed to read the tx power value\r\n");	
-				} else {
-					DBG_LOG("Tx power read is successfull and value is %x\r\n",tx_power);
-				}
-			
-				if ((status = at_ble_characteristic_value_set(txpower_characteristic_handle,(uint8_t *)&tx_power,0 ,sizeof(int8_t))) != AT_BLE_SUCCESS){
-					DBG_LOG("Setting the tx power characteristic failed because %x \r\n ",status);
-				} else {
-					DBG_LOG("Setting the tx power value is succesful \n");
-				}
 			}
 			break;
 
@@ -156,30 +257,39 @@ int main(void )
 				
 				at_ble_disconnected_t disconnect;
 				memcpy((uint8_t *)&disconnect, params, sizeof(at_ble_disconnected_t));
-				
-				DBG_LOG("\r\nDevice disconnected Reason:0x%02x Handle=0x%x", disconnect.reason, disconnect.handle);
-				
+				#ifdef DBG_LOG
+				DBG_LOG("Device disconnected Reason:0x%02x Handle=0x%x", disconnect.reason, disconnect.handle);
+				#endif
 				
 				if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
 				APP_PXP_FAST_ADV, APP_PXP_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
 				{
-					DBG_LOG_1LVL("\r\nBLE Adv start Failed");
+					#ifdef DBG_LOG
+					DBG_LOG("BLE Adv start Failed");
+					#endif
 				}
 				else
 				{
-					DBG_LOG_1LVL("\r\nBLE Started Adv");
+					DBG_LOG("BLE Started Adv");
 				}
 				
-				
-				
-				while (1) {	
-					if (linkloss_current_alert_level == 0)
-						DBG_LOG("Link loss : Low Alert  \r\n");
-					else if (linkloss_current_alert_level == 1)
-						DBG_LOG("Link loss : Mid Alert  \r\n");
-					else if (linkloss_current_alert_level == 2)
-						DBG_LOG("Link loss : High Alert \r\n");
+				if (linkloss_current_alert_level == 0) {
+					DBG_LOG("Link loss : Low Alert  ");
+					timer_interval = LL_INTERVAL_SLOW;
+					LED_On(LED0);
+					hw_timer_start(timer_interval);
+					} else if (linkloss_current_alert_level == 1) {
+					DBG_LOG("Link loss : Mid Alert  ");
+					timer_interval = LL_INTERVAL_MEDIUM;
+					LED_On(LED0);
+					hw_timer_start(timer_interval);
+					} else if (linkloss_current_alert_level == 2) {
+					DBG_LOG("Link loss : High Alert ");
+					timer_interval = LL_INTERVAL_FAST;
+					LED_On(LED0);
+					hw_timer_start(timer_interval);
 				}
+				
 			}
 			break;
 			
@@ -190,25 +300,40 @@ int main(void )
 				
 				memcpy((uint8_t *)&change_params, params, sizeof(at_ble_characteristic_changed_t));
 
-				DBG_LOG("Characteristic 0x%x changed, new_value = ",
+			DBG_LOG("Characteristic 0x%x changed, new_value = ",
 				change_params.char_handle);
-				for(i=0; i<change_params.char_len; i++)
+			for(i=0; i<change_params.char_len; i++)
 				DBG_LOG("0x%02x ", change_params.char_new_value[i]);
-				DBG_LOG("\n");
-				
-				if (change_params.char_handle == linkloss_alert_characteristic_handle)
+	
+				if (change_params.char_handle == services_info.linkloss_service.linkloss_serv_chars.char_val_handle)
 				{
 					linkloss_current_alert_level = change_params.char_new_value[0];
-					DBG_LOG("The current alert level for linkloss is %x \r\n",linkloss_current_alert_level); 
-				} else if (change_params.char_handle == immediate_alert_characteristic_handle) {
+					DBG_LOG("The current alert level for linkloss is %x",linkloss_current_alert_level); 
+				} else if (change_params.char_handle == services_info.immediate_alert_service.immediate_alert_serv_chars.char_val_handle) {
 					pathloss_alert_value = change_params.char_new_value[0];
-					DBG_LOG("There is pathloss current alert level is %x \r\n",pathloss_alert_value);
+					DBG_LOG("There is pathloss current alert level is %x",pathloss_alert_value);
+					if (pathloss_alert_value == 2) {
+						DBG_LOG("Pathloss : High Alert");
+						timer_interval = PL_INTERVAL_FAST;
+						LED_On(LED0);
+						hw_timer_start(timer_interval);
+						} else if (pathloss_alert_value == 1) {
+						DBG_LOG("Pathloss : Mid Alert");
+						timer_interval = PL_INTERVAL_MEDIUM;
+						LED_On(LED0);
+						hw_timer_start(timer_interval);
+						} else if (pathloss_alert_value == 0) {
+						DBG_LOG("Pathloss : Low Alert");
+						hw_timer_stop();
+						LED_Off(LED0);
+						led_state = 0;
+					}
 				}  
 			}
 			break;
 			
 			case AT_BLE_CONN_PARAM_UPDATE_DONE : {
-			DBG_LOG("\r\n AT_BLE_CONN_PARAM_UPDATE \n\r");
+			//DBG_LOG("AT_BLE_CONN_PARAM_UPDATE \n\r");
 			}
 			break;
 			
@@ -219,14 +344,14 @@ int main(void )
 				uint8_t i = 0;
 				char bond;
 	
-				DBG_LOG("\r\nRemote device request pairing");
+				DBG_LOG("Remote device request pairing");
 			
 				/* Check if we are already bonded (Only one bonded connection is supported
 				in this example)*/
 				if(app_device_bond)
 				{
-					DBG_LOG("\r\nBound relation exists with previously peer device");
-					DBG_LOG("\r\nTo remove existing bonding information and accept pairing request from peer device press y else press n : ");
+					DBG_LOG("Bound relation exists with previously peer device");
+					DBG_LOG("To remove existing bonding information and accept pairing request from peer device press y else press n : ");
 					do
 					{
 						bond = 'y';//getchar();						
@@ -237,12 +362,12 @@ int main(void )
 						}
 						else if ((bond == 'N') || (bond == 'n'))
 						{
-							DBG_LOG("\r\nPairing failed \n");
+							DBG_LOG("Pairing failed \n");
 							break;
 						}
 						else
 						{
-							DBG_LOG("\r\nWrong value entered please try again : \n");
+							DBG_LOG("Wrong value entered please try again : \n");
 						}
 					}while(app_device_bond);
 				}
@@ -278,7 +403,7 @@ int main(void )
 					app_bond_info.ediv = rand()&0xffff; 
 					app_bond_info.key_size = 16;
 					/* Send pairing response */
-					DBG_LOG("\r\n Sending pairing response handle=0x%x",
+					DBG_LOG("Sending pairing response handle=0x%x",
 							handle);
 					if(at_ble_authenticate(handle, &features, &app_bond_info, NULL) != AT_BLE_SUCCESS)
 					{
@@ -307,7 +432,7 @@ int main(void )
 					{
 						passkey_ascii[i] = (passkey[i] + 48); 
 					}
-					DBG_LOG("\r\nplease enter the following code on the other device : ");
+					DBG_LOG("please enter the following code on the other device : ");
 					for(i=0; i<AT_BLE_PASSKEY_LEN ; i++)
 					{
 						DBG_LOG("%c",passkey_ascii[i]);
@@ -325,7 +450,7 @@ int main(void )
 				memcpy((uint8_t *)&pair_params, params, sizeof(at_ble_pair_done_t));				
 				if(pair_params.status == AT_BLE_SUCCESS)
 				{
-					DBG_LOG("\r\nPairing procedure completed successfully \n");
+					DBG_LOG("Pairing procedure completed successfully \n");
 					app_device_bond = true;
 					auth_info = pair_params.auth;
 					
@@ -334,12 +459,12 @@ int main(void )
 					/* Enable the HTPT Profile */
 					if(at_ble_htpt_enable(handle, HTPT_CFG_STABLE_MEAS_IND) == AT_BLE_FAILURE)
 					{
-						DBG_LOG("\r\nFailure in HTPT Profile Enable");
+						DBG_LOG("Failure in HTPT Profile Enable");
 					}
 				}
 				else
 				{
-					DBG_LOG("\r\nPairing failed \n");
+					DBG_LOG("Pairing failed \n");
 				}
 			}
 			break;
@@ -368,31 +493,31 @@ int main(void )
 				memcpy((uint8_t *)&enc_status, params, sizeof(at_ble_encryption_status_changed_t));
 				if(enc_status.status == AT_BLE_SUCCESS)
 				{
-					DBG_LOG("\r\nEncryption completed successfully \n");
+					DBG_LOG("Encryption completed successfully \n");
 					
 					handle = enc_status.handle;
 					
 					/* Enable the HTPT Profile */
 					if(at_ble_htpt_enable(handle, HTPT_CFG_STABLE_MEAS_IND) == AT_BLE_FAILURE)
 					{
-						DBG_LOG("\r\nFailure in HTPT Profile Enable");
+						DBG_LOG("Failure in HTPT Profile Enable");
 					}
 				}
 				else
 				{
-					DBG_LOG("\r\nEncryption failed \n");
+					DBG_LOG("Encryption failed \n");
 				}
 			}
 			break;
 			
 			
 			case AT_BLE_UNDEFINED_EVENT : {
-			DBG_LOG("\r\n undefined event \n\r");
+			//DBG_LOG("undefined event \n\r");
 			}
 			break;
 			
 			default:
-			DBG_LOG("\r\nUnknown event received: event=0x%x", event);
+			DBG_LOG("Unknown event received: event=0x%x", event);
 			break;
 		}
 	}

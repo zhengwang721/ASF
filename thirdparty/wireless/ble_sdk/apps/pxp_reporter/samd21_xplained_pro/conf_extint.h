@@ -57,17 +57,18 @@ static inline void button_init(void)
 	extint_chan_get_config_defaults(&eint_chan_conf);
 
 	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
+	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_UP;
 	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_MUX;
-	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_FALLING;
 	eint_chan_conf.filter_input_signal = true;
 	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
 	
 	extint_register_callback(button_cb,
-	BUTTON_0_EIC_LINE,
-	EXTINT_CALLBACK_TYPE_DETECT);
+							BUTTON_0_EIC_LINE,
+							EXTINT_CALLBACK_TYPE_DETECT);
 	
 	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
-	EXTINT_CALLBACK_TYPE_DETECT);
+							EXTINT_CALLBACK_TYPE_DETECT);
 }
 
 #endif
