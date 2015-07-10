@@ -276,10 +276,12 @@ extern "C" {
 #  include "samr21_xplained_pro/samr21_xplained_pro.h"
 #elif BOARD == SAMD11_XPLAINED_PRO
 #  include "samd11_xplained_pro/samd11_xplained_pro.h"
-#elif BOARD == SAML21_XPLAINED_PRO
+#elif BOARD == SAML21_XPLAINED_PRO && defined(__SAML21J18A__)
 #  include "saml21_xplained_pro/saml21_xplained_pro.h"
 #elif BOARD == SAML22_XPLAINED_PRO
 #  include "saml22_xplained_pro/saml22_xplained_pro.h"
+#elif BOARD == SAML21_XPLAINED_PRO && defined(__SAML21J18B__)
+#  include "saml21_xplained_pro_b/saml21_xplained_pro.h"
 #elif BOARD == SAMD10_XPLAINED_MINI
 #  include "samd10_xplained_mini/samd10_xplained_mini.h"
 #elif BOARD == SAMDA1_XPLAINED_PRO
