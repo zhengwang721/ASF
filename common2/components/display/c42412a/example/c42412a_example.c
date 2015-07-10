@@ -89,7 +89,7 @@ static void configure_console(void)
 {
 	struct usart_config config_usart;
 	usart_get_config_defaults(&config_usart);
-	config_usart.baudrate	 = 38400;
+	config_usart.baudrate = 38400;
 	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
 	config_usart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
 	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
@@ -147,9 +147,9 @@ static void c42412a_num_dec_test(void)
 	delay_s(1);
 	c42412a_clear_numeric_dec();
 	c42412a_show_numeric_dec(-98765);
-    delay_s(1);
-    c42412a_clear_numeric_dec();
-    c42412a_show_numeric_dec(-198765);
+	delay_s(1);
+	c42412a_clear_numeric_dec();
+	c42412a_show_numeric_dec(-198765);
 }
 
 static void c42412a_animation_test(void)
@@ -174,7 +174,7 @@ int main(void)
 	c42412a_init();
 
 	c42412a_show_all();
-    c42412a_set_contrast(0x8);
+	c42412a_set_contrast(0x8);
 	delay_s(1);
 	c42412a_clear_all();
 
@@ -185,8 +185,8 @@ int main(void)
 	c42412a_text_test();
 	delay_s(1);
 	c42412a_num_dec_test();
-    delay_s(1);
-    c42412a_animation_test();
+	delay_s(1);
+	c42412a_animation_test();
 	while (1) {
 	}
 }

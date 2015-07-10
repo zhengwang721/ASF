@@ -66,8 +66,8 @@ void c42412a_init(void)
 	slcd_init(&config);
 
 	slcd_set_frame_counter(SLCD_FRAME_COUNTER_0,false,CONF_C42412A_FC0);
-	slcd_set_frame_counter(SLCD_FRAME_COUNTER_1,false,CONF_C42412A_FC0);
-	slcd_set_frame_counter(SLCD_FRAME_COUNTER_2,false,CONF_C42412A_FC0);
+	slcd_set_frame_counter(SLCD_FRAME_COUNTER_1,false,CONF_C42412A_FC1);
+	slcd_set_frame_counter(SLCD_FRAME_COUNTER_2,false,CONF_C42412A_FC2);
 	slcd_set_contrast(CONF_C42412A_CONTRAST);
 	slcd_enable();
 }
