@@ -91,11 +91,6 @@ static enum status_code _spi_set_config(
 	module->receiver_enabled = config->receiver_enable;
 
 #if CONF_SPI_MASTER_ENABLE == true
-	/* Value to write to BAUD register */
-	uint16_t baud = 0;
-#endif
-
-#if CONF_SPI_MASTER_ENABLE == true
 	/* Find baud value and write it */
 	if (config->mode == SPI_MODE_MASTER) {
 		// This divider value needs to be based on baud rate. For now we will use the 1 for testing.
@@ -240,12 +235,12 @@ void spi_slave_inst_get_config_defaults(
  *  \li Character size 8 bit
  *  \li Not enabled in sleep mode
  *  \li Receiver enabled
- *  \li Baudrate 2000000
+ *  \li Baudrate 1300000
  *  \li Default pinmux settings for all pads
  *  \li Clock source 0 (26MHz)
- *  \li	Clock divider 2 (Formula: baud_rate = ((clock input freq/clock_divider+1)/4))
+ *  \li	Clock divider 4 (Formula: baud_rate = ((clock input freq/clock_divider+1)/4))
  *                                  (For Example: if clock source is CLOCK_INPUT_0 then
- *                                  ((26000000/(2+1))/4) ~= 2000000 bps)
+ *                                  ((26000000/(4+1))/4) = 1300000 bps)
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
@@ -271,7 +266,7 @@ void spi_get_config_defaults(
 	//config->run_in_standby   = 0;
 	config->receiver_enable  = true;
 	config->clock_source     = SPI_CLK_INPUT_0;
-	config->clock_divider    = 2;
+	config->clock_divider    = 4;
 
 	/* Clear mode specific config */
 	memset(&(config->mode_specific), 0, sizeof(config->mode_specific));

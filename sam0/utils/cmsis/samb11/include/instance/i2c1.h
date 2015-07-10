@@ -50,6 +50,8 @@
 #define REG_I2C1_RECEIVE_DATA        (0x40003404U) /**< \brief (I2C1) Read one byte from I2C Receive Data FIFO.  */
 #define REG_I2C1_TRANSMIT_STATUS     (0x40003408U) /**< \brief (I2C1) Status of the I2C transmitter. Each field can generate an interrupt if corresponding bit in  the Tx interrupt mask register is set.  */
 #define REG_I2C1_RECEIVE_STATUS      (0x4000340cU) /**< \brief (I2C1) Status of the I2C receiver. Each field can generate an interrupt if corresponding bit in  the Rx interrupt mask register is set.  */
+#define REG_I2C1_CLOCK_SOURCE_SELECT (0x40003410U) /**< \brief (I2C1) Clock Source Select */
+#define REG_I2C1_I2C_MODULE_ENABLE   (0x40003414U) /**< \brief (I2C1) I2C Enable */
 #define REG_I2C1_I2C_CLK_DIVIDER     (0x40003418U) /**< \brief (I2C1) Register sets the divide ratio used to generate the sck clock from the module's input clock.  */
 #define REG_I2C1_I2C_MASTER_MODE     (0x4000341cU) /**< \brief (I2C1) Selects I2C Master or Slave Mode.  */
 #define REG_I2C1_I2C_ONBUS           (0x40003420U) /**< \brief (I2C1) Enable/Disable transactions when in Master Mode.  */
@@ -63,6 +65,8 @@
 #define REG_I2C1_RECEIVE_DATA        (*(RoReg8 *)0x40003404U) /**< \brief (I2C1) Read one byte from I2C Receive Data FIFO.  */
 #define REG_I2C1_TRANSMIT_STATUS     (*(RoReg8 *)0x40003408U) /**< \brief (I2C1) Status of the I2C transmitter. Each field can generate an interrupt if corresponding bit in  the Tx interrupt mask register is set.  */
 #define REG_I2C1_RECEIVE_STATUS      (*(RoReg8 *)0x4000340cU) /**< \brief (I2C1) Status of the I2C receiver. Each field can generate an interrupt if corresponding bit in  the Rx interrupt mask register is set.  */
+#define REG_I2C1_CLOCK_SOURCE_SELECT (*(RwReg8 *)0x40003410U) /**< \brief (I2C1) Clock Source Select */
+#define REG_I2C1_I2C_MODULE_ENABLE   (*(RwReg8 *)0x40003414U) /**< \brief (I2C1) I2C Enable */
 #define REG_I2C1_I2C_CLK_DIVIDER     (*(RwReg16*)0x40003418U) /**< \brief (I2C1) Register sets the divide ratio used to generate the sck clock from the module's input clock.  */
 #define REG_I2C1_I2C_MASTER_MODE     (*(RwReg8 *)0x4000341cU) /**< \brief (I2C1) Selects I2C Master or Slave Mode.  */
 #define REG_I2C1_I2C_ONBUS           (*(RwReg8 *)0x40003420U) /**< \brief (I2C1) Enable/Disable transactions when in Master Mode.  */

@@ -173,6 +173,20 @@
 
 
 /* ========== GPIO definition for I2C peripheral ========== */
-//Jeffy Please fill it
+#define PIN_LP_GPIO_8_MUX2_I2C0_SDA			8L              /**< \brief I2C0 signal: SDA on LP_GPIO_8 mux 2 */
+#define MUX_LP_GPIO_8_MUX2_I2C0_SDA			2L
+#define PINMUX_LP_GPIO_8_MUX2_I2C0_SDA		((PIN_LP_GPIO_8_MUX2_I2C0_SDA << 16) | MUX_LP_GPIO_8_MUX2_I2C0_SDA)
+
+#define PIN_LP_GPIO_9_MUX2_I2C0_SCK			9L              /**< \brief I2C0 signal: SCK on LP_GPIO_9 mux 2 */
+#define MUX_LP_GPIO_9_MUX2_I2C0_SCK			2L
+#define PINMUX_LP_GPIO_9_MUX2_I2C0_SCK		((PIN_LP_GPIO_9_MUX2_I2C0_SCK << 16) | MUX_LP_GPIO_9_MUX2_I2C0_SCK)
+
+#define PIN_LP_GPIO_14_MUX4_I2C1_SDA		14L				/**< \brief I2C1 signal: SDA on LP_GPIO_14 mux 4 */
+#define MUX_LP_GPIO_14_MUX4_I2C1_SDA		4L
+#define PINMUX_LP_GPIO_14_MUX4_I2C1_SDA		((PIN_LP_GPIO_14_MUX4_I2C1_SDA << 16) | MUX_LP_GPIO_14_MUX4_I2C1_SDA)
+
+#define PIN_LP_GPIO_15_MUX4_I2C1_SCK		15L				/**< \brief I2C1 signal: SCK on LP_GPIO_15 mux 4 */
+#define MUX_LP_GPIO_15_MUX4_I2C1_SCK		4L
+#define PINMUX_LP_GPIO_15_MUX4_I2C1_SCK		((PIN_LP_GPIO_15_MUX4_I2C1_SCK << 16) | MUX_LP_GPIO_15_MUX4_I2C1_SCK)
 
 #endif /* _SAMB11G18A_PIO_ */

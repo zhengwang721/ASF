@@ -308,8 +308,6 @@ struct spi_config {
 	enum spi_data_order data_order;
 	/** Transfer mode */
 	enum spi_transfer_mode transfer_mode;
-	/** Mux setting */
-	enum spi_signal_mux_setting mux_setting;
 	/** Enabled in sleep modes */
 	//uint8_t run_in_standby;
 	/** Enable receiver */
