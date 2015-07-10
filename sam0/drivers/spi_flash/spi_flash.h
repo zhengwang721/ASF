@@ -101,14 +101,23 @@
  * @{
  */
 
+#include <stdint.h>
+#include <string.h>
 #include <compiler.h>
+#include <gpio.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/** Flash memory size: 265 KBytes */
+/** Flash memory size: 256 KBytes */
 #define FLASH_MEMORY_SIZE       0x40000
+
+/** Accessible NVDS area start spi flash address */
+#define FLASH_NVDS_START_ADDRESS  0x3F000
+
+/** Accessible NVDS area spi flash size */
+#define FLASH_NVDS_SIZE         0x1000
 
 /** Flash memory sector size 4 KBytes */
 #define FLASH_SECTOR_SIZE       0x1000
@@ -122,6 +131,7 @@ extern "C" {
 /** Flash page mask */
 #define FLASH_PAGE_MASK         0xFFFF00
 
+/** Memory base address */
 #define AHB_DATA_MEM_BASE       0x10000000
 #define GET_AHB_ADDRESS(x)      ((AHB_DATA_MEM_BASE + (unsigned long)x))
 

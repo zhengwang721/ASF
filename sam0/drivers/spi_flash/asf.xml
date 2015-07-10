@@ -21,7 +21,7 @@
 		<build type="header-file" subtype="api" value="spi_flash.h"/>
 		<build type="c-source" value="spi_flash.c"/>
 
-		<build type="header-file" value="quick_start/qs_spi_flash.h"/>
+		<build type="header-file" value="quick_start/qs_spi_flash_basic.h"/>
 
 		<build type="doxygen-entry-point" value="asfdoc_sam0_spi_flash_group"/>
 		<build type="doxygen-example-path" value="quick_start"/>

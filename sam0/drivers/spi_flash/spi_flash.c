@@ -94,13 +94,13 @@ static void spi_flash_write_disable(void)
 }
 
 /**
- *  \brief SPI flash read status.
+ *  \brief SPI flash read status register.
  *
  * Read SPI flash status
  *
  * \return Status register value.
  */
-static uint8_t spi_flash_read_status(void)
+static uint8_t spi_flash_read_status_reg(void)
 {
 	volatile uint32_t status_value;
 
@@ -140,7 +140,7 @@ static void spi_flash_page_program(uint32_t memory_addr,uint32_t flash_addr, uin
 	cmd[3] = (unsigned char) (flash_addr);
 
 	SPI_FLASH0->READ_CTRL.reg = SPI_FLASH_READ_CTRL_RDATA_COUNT(0x0);
-	SPI_FLASH0->CMD_BUFFER0 = cmd[0] | (cmd[1] << 8) | (cmd[2] << 16) | (cmd[3] << 24);
+	SPI_FLASH0->CMD_BUFFER0.reg = cmd[0] | (cmd[1] << 8) | (cmd[2] << 16) | (cmd[3] << 24);
 	SPI_FLASH0->DIRECTION.reg = 0x0F;
 	SPI_FLASH0->DMA_START_ADDRESS.reg = memory_addr;
 
@@ -186,6 +186,13 @@ static void spi_flash_pp(uint32_t flash_addr, uint32_t memory_addr, uint16_t siz
 */
 void spi_flash_init(void)
 {
+	/* PINMUX init */
+	LPMCU_MISC_REGS0->PINMUX_SEL_3.reg = \
+							LPMCU_MISC_REGS_PINMUX_SEL_3_LP_SIP_0_SEL_1 | \
+							LPMCU_MISC_REGS_PINMUX_SEL_3_LP_SIP_1_SEL_3 | \
+							LPMCU_MISC_REGS_PINMUX_SEL_3_LP_SIP_2_SEL_2 | \
+							LPMCU_MISC_REGS_PINMUX_SEL_3_LP_SIP_3_SEL_4;
+
 	SPI_FLASH0->MODE_CTRL.reg = SPI_FLASH_MODE_CTRL_RESETVALUE;
 	spi_flash_leave_low_power_mode();
 }
@@ -248,7 +255,7 @@ void spi_flash_read(void *read_buf, uint32_t flash_addr, uint32_t size)
 	cmd[4] = 0xA5;
 
 	SPI_FLASH0->READ_CTRL.reg = SPI_FLASH_READ_CTRL_RDATA_COUNT(size);
-	SPI_FLASH0->CMD_BUFFER0 = cmd[0] | (cmd[1] << 8) | (cmd[2] << 16) | (cmd[3] << 24);
+	SPI_FLASH0->CMD_BUFFER0.reg = cmd[0] | (cmd[1] << 8) | (cmd[2] << 16) | (cmd[3] << 24);
 	SPI_FLASH0->DIRECTION.reg = 0x1F;
 	SPI_FLASH0->DMA_START_ADDRESS.reg = memory_addr;
 
@@ -281,16 +288,16 @@ int8_t spi_flash_write(void *write_buf, uint32_t flash_addr, uint32_t size)
 
 	if((write_buf != NULL) && (size != 0)) {
 		/* Ensure the write size does not exceed the flash limit. */
-		if((flash_addr + size) <= FLASH_TOTAL_SZ) {
+		if((flash_addr + size) <= FLASH_MEMORY_SIZE) {
 			/* Get the destination buffer Address. */
 			memory_addr = GET_AHB_ADDRESS((unsigned long)write_buf);
 			/* Perform read operation. */
-			offset = flash_addr % FLASH_PAGE_SZ;
+			offset = flash_addr % FLASH_PAGE_SIZE;
 
 			/* First part of data in the address page. */
 			if (offset) {
-				write_size = FLASH_PAGE_SZ - offset;
-				spi_flash_pp(flash_addr, memory_addr, MIN(size, write_size));
+				write_size = FLASH_PAGE_SIZE - offset;
+				spi_flash_pp(flash_addr, memory_addr, min(size, write_size));
 				if (size < write_size) {
 					ret = 0;
 					goto EXIT;
@@ -300,7 +307,7 @@ int8_t spi_flash_write(void *write_buf, uint32_t flash_addr, uint32_t size)
 				size -= write_size;
 			}
 			do {
-				write_size = MIN(size, FLASH_PAGE_SZ);
+				write_size = min(size, FLASH_PAGE_SIZE);
 
 				/* Write complete page or the remaining data. */
 				spi_flash_pp(flash_addr, memory_addr, write_size);
@@ -334,7 +341,7 @@ void spi_flash_sector_erase(uint32_t flash_addr)
 	spi_flash_read_status_reg();
 
 	SPI_FLASH0->READ_CTRL.reg |= SPI_FLASH_READ_CTRL_RDATA_COUNT(0x0);
-	SPI_FLASH0->CMD_BUFFER0 = cmd[0] | (cmd[1] << 8) | (cmd[2] << 16) | (cmd[3] << 24);
+	SPI_FLASH0->CMD_BUFFER0.reg = cmd[0] | (cmd[1] << 8) | (cmd[2] << 16) | (cmd[3] << 24);
 	SPI_FLASH0->DIRECTION.reg = 0x0F;
 	SPI_FLASH0->DMA_START_ADDRESS.reg = 0x0;
 
@@ -355,6 +362,9 @@ void spi_flash_sector_erase(uint32_t flash_addr)
 * Erases SPI Flash Sector
 * \param[in]  start_offset   Start address of the spi flash
 * \param[in]  size           Size of the spi flash
+*
+* \retval 1    Address over spi flash memory size
+* \retval 0    Operation complete
 */
 unsigned char spi_flash_erase(uint32_t start_offset, uint32_t size)
 {
@@ -376,7 +386,7 @@ unsigned char spi_flash_erase(uint32_t start_offset, uint32_t size)
 			while(spi_flash_read_status_reg() & 0x01) {
 				/* Waiting. */
 			}
-			start_offset += FLASH_SECT_SIZE;
+			start_offset += FLASH_SECTOR_SIZE;
     }
 
 	spi_flash_write_disable();
