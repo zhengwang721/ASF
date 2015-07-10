@@ -1,0 +1,42 @@
+<asf xmlversion="1.0">
+	<select-by-config id="config.board.samv71_xplained_ultra.led" name="config.board.samv71_xplained_ultra.led" caption="SAMV71 XULTRA LED support" default="yes">
+		<module type="meta" id="config.board.samv71_xplained_ultra.led#no" caption="SAMV71 XULTRA LED support disabled">
+		</module>
+		<module type="meta" id="config.board.samv71_xplained_ultra.led#yes" caption="SAMV71 XULTRA LED support enabled">
+			<build type="header-file" subtype="api" value="led.h"/>
+			<build type="include-path" value="."/>
+			<require idref="common.services.ioport"/>
+		</module>
+	</select-by-config>
+
+	<select-by-config id="config.board.samv71_xplained_ultra.init" name="config.board.samv71_xplained_ultra.init" caption="SAMV71 initialization support" default="yes">
+		<module type="meta" id="config.board.samv71_xplained_ultra.init#no" caption="SAMV71 initialization support disabled">
+		</module>
+		<module type="meta" id="config.board.samv71_xplained_ultra.init#yes" caption="SAMV71 initialization support enabled">
+			<build type="c-source" value="init.c"/>
+			<require idref="common.services.ioport"/>
+		</module>
+	</select-by-config>
+
+	<board id="board.samv71_xplained_ultra" vendor="Atmel" caption="SAMV71-XULTRA">
+		<build type="define" name="BOARD" value="SAMV71_XPLAINED_ULTRA"/>
+		<build type="define" name="__SAMV71Q21__" value=""/>
+		<build type="header-file" value="samv71_xplained_ultra.h"/>
+		<build type="include-path" value="."/>
+		<build type="include-path" value=".."/>
+		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
+		<build type="macro-config" subtype="script" value="debug_scripts/gcc/samv71_xplained_ultra_flash.gdb" toolchain="armgcc"/>
+		<build type="macro-config" subtype="aux-script" value="debug_scripts/gcc/samv71_xplained_ultra_sram.gdb" toolchain="armgcc"/>
+		<build type="macro-config" subtype="script" value="debug_scripts/iar/samv71_xplained_ultra_flash.mac" toolchain="iarewarm"/>
+		<build type="macro-config" subtype="aux-script" value="debug_scripts/iar/samv71_xplained_ultra_sram.mac" toolchain="iarewarm"/>
+		<device-support value="samv71"/>
+		<require idref="sam.utils.cmsis.samv71.source.template"/>
+		<require idref="common.boards"/>
+		<require idref="config.board.samv71_xplained_ultra.init"/>
+		<require idref="config.board.samv71_xplained_ultra.led"/>
+		
+		<!-- Debug drivers default configuration -->
+		<config name="config.compiler.iarewarm.debugger.driver" value="cmsisdap"/>
+	</board>
+</asf>

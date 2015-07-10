@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_trng_group SAM True Random Number Generator (TRNG) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the device's True Random Number Generator functionality.
  *
  * The following driver API modes are covered by this manual:

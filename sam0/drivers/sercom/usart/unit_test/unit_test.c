@@ -92,7 +92,7 @@
  * - SAM L22 Xplained Pro board
  *  - \b TX/RX: EXT1 PIN13  (PA23) <--> EXT3 PIN3  (PA06)
  * - SAM C21 Xplained Pro board
- *  - \b TX/RX: EXT1 PIN17 (PA16) <--> EXT1 PIN13 (PA23)
+ *  - \b TX/RX: EXT1 PIN11 (PA12) <--> EXT2 PIN4  (PA09)
  *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a

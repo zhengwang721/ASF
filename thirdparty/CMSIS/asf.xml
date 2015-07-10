@@ -4,8 +4,8 @@
 		<module type="library" id="thirdparty.cmsis#0" caption="CMSIS thirdparty sources">
 			<info type="description" value="summary">
 			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all
-Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
-and reduces time-to-market for new embedded applications.
+			Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
+			and reduces time-to-market for new embedded applications.
 			</info>
 			<build type="include-path" value="Include/" toolchain="armgcc"/>
 			<build type="include-path" value="Lib/GCC/" toolchain="armgcc"/>
@@ -24,8 +24,8 @@ and reduces time-to-market for new embedded applications.
 		<module type="library" id="thirdparty.cmsis#1" caption="CMSIS thirdparty sources">
 			<info type="description" value="summary">
 			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all
-Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
-and reduces time-to-market for new embedded applications.
+			Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
+			and reduces time-to-market for new embedded applications.
 			</info>
 			<build type="include-path" value="Include/" toolchain="armgcc"/>
 			<build type="include-path" value="Lib/GCC/" toolchain="armgcc"/>
@@ -64,8 +64,8 @@ and reduces time-to-market for new embedded applications.
 		<module type="library" id="thirdparty.cmsis#2" caption="CMSIS thirdparty sources">
 			<info type="description" value="summary">
 			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all
-Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
-and reduces time-to-market for new embedded applications.
+			Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
+			and reduces time-to-market for new embedded applications.
 			</info>
 			<build type="include-path" value="Include/" toolchain="armgcc"/>
 			<build type="include-path" value="Lib/GCC/" toolchain="armgcc"/>
@@ -100,8 +100,8 @@ and reduces time-to-market for new embedded applications.
 		<module type="library" id="thirdparty.cmsis#3" caption="CMSIS thirdparty sources">
 			<info type="description" value="summary">
 			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all
-Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
-and reduces time-to-market for new embedded applications.
+			Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
+			and reduces time-to-market for new embedded applications.
 			</info>
 			<build type="include-path" value="Include/" toolchain="armgcc"/>
 			<build type="include-path" value="Lib/GCC/" toolchain="armgcc"/>
@@ -115,19 +115,96 @@ and reduces time-to-market for new embedded applications.
 			<require idref="thirdparty.cmsis.license"/>
 			<info type="gui-flag" value="hidden"/>
 		</module>
+		<module type="library" id="thirdparty.cmsis#4" caption="CMSIS thirdparty sources">
+			<info type="description" value="summary">
+			The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all
+			Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects
+			and reduces time-to-market for new embedded applications.
+			</info>
+			<build type="include-path" value="Include/" toolchain="armgcc"/>
+			<build type="include-path" value="Lib/GCC/" toolchain="armgcc"/>
+			<build type="library" subtype="compiler" value="libm" toolchain="armgcc"/>
+			<build type="define" name="ARM_MATH_CM7" value="true"/>
+			<build type="header-file" value="Include/core_cm7.h" toolchain="armgcc"/>
+			<build type="header-file" value="Include/core_cmSimd.h" toolchain="armgcc"/>
+			<build type="header-file" value="Include/arm_math.h" toolchain="armgcc"/>
+			<build type="header-file" value="Include/core_cmFunc.h" toolchain="armgcc"/>
+			<build type="header-file" value="Include/core_cmInstr.h" toolchain="armgcc"/>
+			<build type="header-file" value="Include/arm_const_structs.h" toolchain="armgcc"/>
+			<build type="header-file" value="Include/arm_common_tables.h" toolchain="armgcc"/>
+			<require idref="sam.utils.fpu_used"/>
+			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="sams70"/>
+			<device-support value="same70"/>
+			<require idref="thirdparty.cmsis.license"/>
+			<info type="gui-flag" value="hidden"/>
+		</module>
 	</select-by-device>
 
 	<select-by-config id="sam.utils.fpu_used" name="config.compiler.armgcc.fpu_used" caption="SAM FPU usage" default="yes">
-		<module type="meta" id="sam.utils.fpu_used#no" caption="SAM with FPU but not used">
-			<build type="library" subtype="user" value="Lib/GCC/libarm_cortexM4l_math.a" toolchain="armgcc"/>
-		</module>
-		<module type="meta" id="sam.utils.fpu_used#yes" caption="SAM with FPU used">
-			<build type="library" subtype="user" value="Lib/GCC/libarm_cortexM4lf_math_softfp.a" toolchain="armgcc"/>
-			<build type="build-config" subtype="assembler-flags" value="-mfloat-abi=softfp" toolchain="armgcc"/>
-			<build type="build-config" subtype="c-compiler-flags" value="-mfloat-abi=softfp" toolchain="armgcc"/>
-			<build type="build-config" subtype="c++-compiler-flags" value="-mfloat-abi=softfp" toolchain="armgcc"/>
-			<build type="distribute" subtype="file" value="Lib/GCC/libarm_cortexM4lf_math.a"/>
-		</module>
+		<select-by-device id="sam.utils.fpu_used#no">
+			<module type="meta" id="sam.utils.fpu_used#no#0" caption="SAM with FPU but not used">
+				<build type="library" subtype="user" value="Lib/GCC/libarm_cortexM4l_math.a" toolchain="armgcc"/>
+				<device-support value="samg"/>
+				<device-support value="sam4e"/>
+				<device-support value="atsam4c4c_1"/>
+				<device-support value="atsam4c8c_1"/>
+				<device-support value="atsam4c16c_1"/>
+				<device-support value="atsam4c32c_1"/>
+				<device-support value="atsam4c32e_1"/>
+				<device-support value="atsam4cmp8c_1"/>
+				<device-support value="atsam4cmp16c_1"/>
+				<device-support value="atsam4cmp32c_1"/>
+				<device-support value="atsam4cms4c_1"/>
+				<device-support value="atsam4cms8c_1"/>
+				<device-support value="atsam4cms16c_1"/>
+				<device-support value="atsam4cms32c_1"/>
+				<device-support value="atsam4cp16b_1"/>
+			</module>
+			<module type="meta" id="sam.utils.fpu_used#no#1" caption="SAM with FPU but not used">
+				<build type="library" subtype="user" value="Lib/GCC/libarm_cortexM7l_math.a" toolchain="armgcc"/>
+				<device-support value="samv71"/>
+				<device-support value="samv70"/>
+				<device-support value="sams70"/>
+				<device-support value="same70"/>
+			</module>
+		</select-by-device>
+		<select-by-device id="sam.utils.fpu_used#yes">
+			<module type="meta" id="sam.utils.fpu_used#yes#0" caption="SAM with FPU used">
+				<build type="library" subtype="user" value="Lib/GCC/libarm_cortexM4lf_math_softfp.a" toolchain="armgcc"/>
+				<build type="build-config" subtype="assembler-flags" value="-mfloat-abi=softfp" toolchain="armgcc"/>
+				<build type="build-config" subtype="c-compiler-flags" value="-mfloat-abi=softfp" toolchain="armgcc"/>
+				<build type="build-config" subtype="c++-compiler-flags" value="-mfloat-abi=softfp" toolchain="armgcc"/>
+				<build type="distribute" subtype="file" value="Lib/GCC/libarm_cortexM4lf_math.a"/>
+				<device-support value="samg"/>
+				<device-support value="sam4e"/>
+				<device-support value="atsam4c4c_1"/>
+				<device-support value="atsam4c8c_1"/>
+				<device-support value="atsam4c16c_1"/>
+				<device-support value="atsam4c32c_1"/>
+				<device-support value="atsam4c32e_1"/>
+				<device-support value="atsam4cmp8c_1"/>
+				<device-support value="atsam4cmp16c_1"/>
+				<device-support value="atsam4cmp32c_1"/>
+				<device-support value="atsam4cms4c_1"/>
+				<device-support value="atsam4cms8c_1"/>
+				<device-support value="atsam4cms16c_1"/>
+				<device-support value="atsam4cms32c_1"/>
+				<device-support value="atsam4cp16b_1"/>
+			</module>
+			<module type="meta" id="sam.utils.fpu_used#yes#1" caption="SAM with FPU used">
+				<build type="library" subtype="user" value="Lib/GCC/libarm_cortexM7lfsp_math_softfp.a" toolchain="armgcc"/>
+				<build type="build-config" subtype="assembler-flags" value="-mfloat-abi=softfp" toolchain="armgcc"/>
+				<build type="build-config" subtype="c-compiler-flags" value="-mfloat-abi=softfp" toolchain="armgcc"/>
+				<build type="build-config" subtype="c++-compiler-flags" value="-mfloat-abi=softfp" toolchain="armgcc"/>
+				<build type="distribute" subtype="file" value="Lib/GCC/libarm_cortexM7lfsp_math.a"/>
+				<device-support value="samv71"/>
+				<device-support value="samv70"/>
+				<device-support value="sams70"/>
+				<device-support value="same70"/>
+			</module>
+		</select-by-device>
 	</select-by-config>
 
 	<module type="meta" id="thirdparty.cmsis.license" caption="CMSIS license">
