@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief DMAC (DMA Controller) driver example for SAM.
+ * \brief XDMAC (XDMA Controller) driver example for SAM.
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,38 +44,35 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef DMAC_EXAMPLE_H_INCLUDED
-#define DMAC_EXAMPLE_H_INCLUDED
+#ifndef XDMAC_EXAMPLE_H_INCLUDED
+#define XDMAC_EXAMPLE_H_INCLUDED
 
 /**
- * \page asfdoc_sam_drivers_dmac_example SAM Direct Memory Access Controller - Example memory to memory transfer
+ * \page asfdoc_sam_drivers_xdmac_example SAM Extensible Direct Memory Access Controller - Example memory to memory transfer
  *
- * \section asfdoc_sam_drivers_dmac_example_purpose Purpose
- * This example demonstrates how to configure and use DMAC controller
- * for single and multiple memory to memory data buffer transfers.
+ * \section asfdoc_sam_drivers_xdmac_example_purpose Purpose
+ * This example demonstrates how to configure and use XDMA controller
+ * for memory to memory data buffer transfers.
  *
- * \section asfdoc_sam_drivers_dmac_example_requirements Requirements
- * This example can be used with SAM evaluation kits that have a DMA
+ * \section asfdoc_sam_drivers_xdmac_example_requirements Requirements
+ * This example can be used with SAM evaluation kits that have a XDMA
  * Controller.
  *
- * \section asfdoc_sam_drivers_dmac_example_description Description
+ * \section asfdoc_sam_drivers_xdmac_example_description Description
  * This example transfers data in one RAM buffer to another RAM buffer.
- * Two transfer modes will be used:
- * -# It uses single buffer transfer with polling mode.
- *    After transfer is done, the transferred data will be verified.
- * -# It uses multiple buffer transfer with interrupt mode.
- *    After transfer is done, the transferred data will be verified.
+ * It uses single block with multiple microblock transfer with interrupt mode.
+ * After transfer is done, the transferred data will be verified.
  *
- * \section asfdoc_sam_drivers_dmac_example_files Main Files
- * - dmac.c: Direct Memory Access Controller driver
- * - dmac.h: Direct Memory Access Controller driver header file
- * - dmac_example1.c: Direct Memory Access Controller example application
+ * \section asfdoc_sam_drivers_xdmac_example_files Main Files
+ * - xdmac.c: Direct Memory Access Controller driver
+ * - xdmac.h: Direct Memory Access Controller driver header file
+ * - xdmac_example.c: Direct Memory Access Controller example application
  *
- * \section asfdoc_sam_drivers_dmac_example_compilinfo Compilation Information
+ * \section asfdoc_sam_drivers_xdmac_example_compilinfo Compilation Information
  * This software is written for GNU GCC and IAR Embedded Workbench&reg;
  * for Atmel&reg;. Other compilers may or may not work.
  *
- * \section asfdoc_sam_drivers_dmac_example_usage Usage
+ * \section asfdoc_sam_drivers_xdmac_example_usage Usage
  * -# Build the program and download it into the evaluation board.
  * -# On the computer, open and configure a terminal application
  *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
@@ -88,15 +85,11 @@
  * -# In the terminal window, the following text should appear.
  *    (values depend on the board and the chip used):
  *    \code
- *     -- DMAC Example --
+ *     -- XDMAC Example --
  *     -- xxxxxx-xx
  *     -- Compiled: xxx xx xxxx xx:xx:xx --
  *
- *     Test single buffer transfer......
- *     > Test OK
- *
- *     Test multiple buffer transfer......
  *     > Test OK. \endcode
  */
  
- #endif /* DMAC_EXAMPLE_H_INCLUDED */
+ #endif /* XDMAC_EXAMPLE_H_INCLUDED */

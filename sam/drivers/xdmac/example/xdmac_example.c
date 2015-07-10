@@ -51,20 +51,21 @@
 /** Micro-block length for single transfer  */
 #define MICROBLOCK_LEN       16
 
-//! [dmac_define_channel]
+//! [xdmac_define_channel]
 /** XDMA channel used in this example. */
 #define XDMA_CH 0
-//! [dmac_define_channel]
+//! [xdmac_define_channel]
 
-/** Global XDMA driver instance for all XDMA transfers in application. */
-static xdmac_module_t xdmac_module;
+/** XDMA channel configuration. */
 static xdmac_channel_config_t xdmac_channel_cfg;
 
 /* DMA transfer done flag. */
 volatile uint32_t g_xfer_done = 0;
 
+//! [xdmac_define_buffer]
 COMPILER_ALIGNED(8) static uint8_t src_buf[512];
 COMPILER_ALIGNED(8) static uint8_t dst_buf[512];
+//! [xdmac_define_buffer]
 
 /**
  * \brief Configure the console UART.
@@ -122,28 +123,40 @@ int main(void)
 	printf("-- %s\n\r", BOARD_NAME);
 	printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
 
-	/* Test DMA single buffer transfer */
-	xdmac_init(&xdmac_module);
+	/* Initialize and enable DMA controller */
+	pmc_enable_periph_clk(ID_XDMAC);
+
+	   /*Enable XDMA interrupt */ 
+	NVIC_ClearPendingIRQ(XDMAC_IRQn);
+	NVIC_SetPriority( XDMAC_IRQn ,1);
+	NVIC_EnableIRQ(XDMAC_IRQn);
+
+	for (i = 0; i < 512; i++) {
+		src_buf[i] = 0x55;
+		dst_buf[i] = 0;
+	}
 
 	xdmac_channel_cfg.mbr_ubc = MICROBLOCK_LEN;
 	xdmac_channel_cfg.mbr_sa = (uint32_t)src_buf;
 	xdmac_channel_cfg.mbr_da = (uint32_t)dst_buf;
 	xdmac_channel_cfg.mbr_cfg = XDMAC_CC_TYPE_MEM_TRAN |
 		XDMAC_CC_MEMSET_NORMAL_MODE |
-		XDMAC_CC_CSIZE_CHK_1 |
+		XDMAC_CC_MBSIZE_SINGLE |
 		XDMAC_CC_DWIDTH_BYTE |
 		XDMAC_CC_SIF_AHB_IF0 |
 		XDMAC_CC_DIF_AHB_IF0 |
-		XDMAC_CC_SAM_FIXED_AM |
-		XDMAC_CC_DAM_FIXED_AM;
-	xdmac_channel_cfg.mbr_bc = 0 ;
+		XDMAC_CC_SAM_INCREMENTED_AM |
+		XDMAC_CC_DAM_INCREMENTED_AM;
+	xdmac_channel_cfg.mbr_bc = 31 ;
 	xdmac_channel_cfg.mbr_ds =  0;
 	xdmac_channel_cfg.mbr_sus = 0;
 	xdmac_channel_cfg.mbr_dus = 0; 
 	
-	xdmac_configure_transfer(&xdmac_module, XDMA_CH, &xdmac_channel_cfg, 0, 0);
-
-	xdmac_start_transfer(&xdmac_module, XDMA_CH);
+	xdmac_configure_transfer(XDMAC, XDMA_CH, &xdmac_channel_cfg, 0, 0);
+	xdmac_enable_interrupt(XDMAC, XDMA_CH);
+	xdmac_channel_enable_interrupt(XDMAC, XDMA_CH, XDMAC_CIE_BIE);
+	xdmac_channel_enable(XDMAC, XDMA_CH);
+	
 
 	while (!g_xfer_done) {
 	}
@@ -151,7 +164,7 @@ int main(void)
 	/* Verify the transferred data */
 	for (i = 0; i < 512; i++) {
 		if (src_buf[i] != dst_buf[i]) {
-			printf("> Test NG.\n\r");
+			printf("> Test Fail.\n\r");
 			while (1) {
 			}
 		}

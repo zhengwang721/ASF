@@ -12,7 +12,7 @@
 		<device-support value="samv71"/>
 		<device-support value="sams70"/>
 		<device-support value="same70"/>
-		<require idref="sam.drivers.dmac"/>
+		<require idref="sam.drivers.xdmac"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
 		<info type="gui-flag" value="move-to-root"/>
