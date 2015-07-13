@@ -47,10 +47,14 @@
 
 #define TIMER_RELOAD_VALUE		1000000
 
-void configure_gpio_pins(void);
-void configure_timer(void);
-
 //! [setup]
+//! [setup_gpio_init]
+void configure_gpio_pins(void);
+//! [setup_gpio_init]
+//! [setup_timer_init]
+void configure_timer(void);
+//! [setup_timer_init]
+
 void configure_gpio_pins(void)
 {
 //! [setup_gpio_1]
@@ -85,16 +89,13 @@ void configure_timer(void)
 
 int main(void)
 {
+	//! [setup_init]	
 	//system_init();
 
-	//! [setup_gpio_init]
 	configure_gpio_pins();
-	//! [setup_gpio_init]
-	
-	//! [setup_timer_init]
+
 	configure_timer();
-	//! [setup_timer_init]
-	
+
 	//! [setup_timer_value]
 	timer_set_value(TIMER_RELOAD_VALUE);
 	//! [setup_timer_value]
@@ -102,20 +103,21 @@ int main(void)
 	//! [setup_timer_enable]
 	timer_enable();
 	//! [setup_timer_enable]
+	//! [setup_init]
 	
-	//! [main]
+	//! [main_loop]
 	while (true) {
-		//! [main_1]
+		//! [main_loop_1]
 		if (timer_get_interrupt_status()) {
-		//! [main_1]
-			//! [main_2]
+		//! [main_loop_1]
+			//! [main_loop_2]
 			timer_clear_interrupt_status();
-			//! [main_2]
+			//! [main_loop_2]
 			
-			//! [main_3]
+			//! [main_loop_3]
 			gpio_pin_toggle_output_level(LED_0_PIN);
-			//! [main_3]
+			//! [main_loop_3]
 		}
 	}
-	//! [main]
+	//! [main_loop]
 }

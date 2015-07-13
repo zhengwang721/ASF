@@ -63,17 +63,18 @@
  * \snippet qs_timer_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
- * \snippet qs_timer_basic.c setup
+ * \snippet qs_timer_basic.c setup_init
  *
  * \subsection asfdoc_sam0_timer_basic_use_case_setup_flow Workflow
+ * -# Create a new function \c configure_gpio_pins(), which will be used to configure
+ *    the GPIO peripheral.
+ * -# Create a new function \c configure_timer(), which will be used to configure
+ *    the TIMER peripheral.
  * -# Create a GPIO module pin configuration struct, which can be filled out to
  *    adjust the configuration of a single gpio pin.
  *    \snippet qs_timer_basic.c setup_gpio_1
  * -# Initialize the pin configuration struct with the module's default values.
  *    \snippet qs_timer_basic.c setup_gpio_2
- *    \note This should always be performed before using the configuration
- *          struct to ensure that all values are initialized to known default
- *          settings.
  *
  * -# Adjust the configuration struct to request an output pin.
  *    \snippet qs_timer_basic.c setup_gpio_3
@@ -86,24 +87,27 @@
  *    \snippet qs_timer_basic.c setup_timer_1
  * -# Initialize the TIMER configuration struct with the module's default values.
  *    \snippet qs_timer_basic.c setup_timer_2
- *    \note This should always be performed before using the configuration
- *           struct to ensure that all values are initialized to known default
- *           settings.
+ *
  * -# Configure the TIMER module with the desired settings.
-  *    \snippet qs_timer_basic.c setup_timer_3
+ *    \snippet qs_timer_basic.c setup_timer_3
+ * -# Set the TIMER module reload value.
+ *    \snippet qs_timer_basic.c setup_timer_value
+ *
+ * -# Set the TIMER module enable.
+ *    \snippet qs_timer_basic.c setup_timer_enable
  *
  * \section asfdoc_sam0_timer_basic_use_case_use_main Use Case
  *
  * \subsection asfdoc_sam0_timer_basic_use_case_code Code
  * Copy-paste the following code to your user application:
- * \snippet qs_timer_basic.c main
+ * \snippet qs_timer_basic.c main_loop
  *
  * \subsection asfdoc_sam0_timer_basic_use_case_flow Workflow
  * -# Read in the current timer interrupt status.
- *    \snippet qs_timer_basic.c main_1
+ *    \snippet qs_timer_basic.c main_loop_1
  * -# Clear the timer interrupt status.
- *    \snippet qs_timer_basic.c main_2
+ *    \snippet qs_timer_basic.c main_loop_2
  * -# Write the inverted pin level state to LED pin, which has been configured as
  *    an output in the use-case setup code.
- *    \snippet qs_timer_basic.c main_3
+ *    \snippet qs_timer_basic.c main_loop_3
  */
