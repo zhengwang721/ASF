@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Quick Start for the SAM B11 AON TIMER driver" id="sam0.drivers.timer.quick_start.samb11_xplained_pro">
+	<project caption="Quick Start for the SAM B11 TIMER driver" id="sam0.drivers.timer.quick_start.samb11_xplained_pro">
 		<info type="gui-flag" value="move-to-root"/>
 		<require idref="board.samb11_xplained_pro"/>
 		<require idref="sam0.drivers.timer.quick_start"/>

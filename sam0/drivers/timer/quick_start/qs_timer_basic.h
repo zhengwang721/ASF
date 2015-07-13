@@ -63,7 +63,7 @@
  * \snippet qs_timer_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
- * \snippet qs_timer_basic.c setup_init
+ * \snippet qs_timer_basic.c setup
  *
  * \subsection asfdoc_sam0_timer_basic_use_case_setup_flow Workflow
  * -# Create a GPIO module pin configuration struct, which can be filled out to
