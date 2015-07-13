@@ -117,7 +117,7 @@ extern "C" {
 /** @endcond */
 
 /** DMA channel hardware interface number */
-#define XDAMC_CHANNEL_HWID_HSMCI      0
+#define XDAMC_CHANNEL_HWID_HSMCI       0
 #define XDAMC_CHANNEL_HWID_SPI0_TX     1
 #define XDAMC_CHANNEL_HWID_SPI0_RX     2
 #define XDAMC_CHANNEL_HWID_SPI1_TX     3
@@ -130,7 +130,7 @@ extern "C" {
 #define XDAMC_CHANNEL_HWID_USART1_RX   10
 #define XDAMC_CHANNEL_HWID_USART2_TX   11
 #define XDAMC_CHANNEL_HWID_USART2_RX   12
-#define XDAMC_CHANNEL_HWID_PWM0       13
+#define XDAMC_CHANNEL_HWID_PWM0        13
 #define XDAMC_CHANNEL_HWID_TWIHS0_TX   14
 #define XDAMC_CHANNEL_HWID_TWIHS0_RX   15
 #define XDAMC_CHANNEL_HWID_TWIHS1_TX   16
@@ -147,19 +147,36 @@ extern "C" {
 #define XDAMC_CHANNEL_HWID_UART3_RX    27
 #define XDAMC_CHANNEL_HWID_UART4_TX    28
 #define XDAMC_CHANNEL_HWID_UART4_RX    29
-#define XDAMC_CHANNEL_HWID_DAC        30
+#define XDAMC_CHANNEL_HWID_DAC         30
 #define XDAMC_CHANNEL_HWID_SSC_TX      32
 #define XDAMC_CHANNEL_HWID_SSC_RX      33
-#define XDAMC_CHANNEL_HWID_PIOA       34
-#define XDAMC_CHANNEL_HWID_AFEC0      35
-#define XDAMC_CHANNEL_HWID_AFEC1      36
-#define XDAMC_CHANNEL_HWID_AES_TX     37
+#define XDAMC_CHANNEL_HWID_PIOA        34
+#define XDAMC_CHANNEL_HWID_AFEC0       35
+#define XDAMC_CHANNEL_HWID_AFEC1       36
+#define XDAMC_CHANNEL_HWID_AES_TX      37
 #define XDAMC_CHANNEL_HWID_AES_RX      38
-#define XDAMC_CHANNEL_HWID_PWM1       39
-#define XDAMC_CHANNEL_HWID_TC0        40
-#define XDAMC_CHANNEL_HWID_TC1        41
-#define XDAMC_CHANNEL_HWID_TC2        42
-#define XDAMC_CHANNEL_HWID_TC3        43
+#define XDAMC_CHANNEL_HWID_PWM1        39
+#define XDAMC_CHANNEL_HWID_TC0         40
+#define XDAMC_CHANNEL_HWID_TC1         41
+#define XDAMC_CHANNEL_HWID_TC2         42
+#define XDAMC_CHANNEL_HWID_TC3         43
+
+/* XDMA_MBR_UBC */
+#define   XDMA_UBC_NDE            (0x1u << 24)
+#define   XDMA_UBC_NDE_FETCH_DIS  (0x0u << 24)
+#define   XDMA_UBC_NDE_FETCH_EN   (0x1u << 24)
+#define   XDMA_UBC_NSEN           (0x1u << 25)
+#define   XDMA_UBC_NSEN_UNCHANGED (0x0u << 25)
+#define   XDMA_UBC_NSEN_UPDATED   (0x1u << 25)
+#define   XDMA_UBC_NDEN           (0x1u << 26)
+#define   XDMA_UBC_NDEN_UNCHANGED (0x0u << 26)
+#define   XDMA_UBC_NDEN_UPDATED   (0x1u << 26)
+#define   XDMA_UBC_NVIEW_Pos      27
+#define   XDMA_UBC_NVIEW_Msk      (0x3u << XDMA_UBC_NVIEW_Pos)
+#define   XDMA_UBC_NVIEW_NDV0     (0x0u << XDMA_UBC_NVIEW_Pos)
+#define   XDMA_UBC_NVIEW_NDV1     (0x1u << XDMA_UBC_NVIEW_Pos)
+#define   XDMA_UBC_NVIEW_NDV2     (0x2u << XDMA_UBC_NVIEW_Pos)
+#define   XDMA_UBC_NVIEW_NDV3     (0x3u << XDMA_UBC_NVIEW_Pos)
 
 /** XDMA config register for channel */
 typedef struct {
@@ -190,8 +207,8 @@ typedef struct {
 	uint32_t mbr_nda;
 	/** Microblock Control Member. */
 	uint32_t mbr_ubc;
-	/** Transfer Address Member. */
-	uint32_t mbr_ta;
+	/** Destination Address Member. */
+	uint32_t mbr_da;
 } lld_view0;
 
 /**

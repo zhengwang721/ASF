@@ -67,6 +67,9 @@ COMPILER_ALIGNED(8) static uint8_t src_buf[512];
 COMPILER_ALIGNED(8) static uint8_t dst_buf[512];
 //! [xdmac_define_buffer]
 
+/** Linked list descriptor */
+COMPILER_WORD_ALIGNED static lld_view0 lld[2];
+
 /**
  * \brief Configure the console UART.
  */
@@ -126,16 +129,18 @@ int main(void)
 	/* Initialize and enable DMA controller */
 	pmc_enable_periph_clk(ID_XDMAC);
 
-	   /*Enable XDMA interrupt */ 
+	   /*Enable XDMA interrupt */
 	NVIC_ClearPendingIRQ(XDMAC_IRQn);
 	NVIC_SetPriority( XDMAC_IRQn ,1);
 	NVIC_EnableIRQ(XDMAC_IRQn);
 
+	/* Initialize source and destination buffer */
 	for (i = 0; i < 512; i++) {
 		src_buf[i] = 0x55;
 		dst_buf[i] = 0;
 	}
 
+	/* Initialize channel config */
 	xdmac_channel_cfg.mbr_ubc = MICROBLOCK_LEN;
 	xdmac_channel_cfg.mbr_sa = (uint32_t)src_buf;
 	xdmac_channel_cfg.mbr_da = (uint32_t)dst_buf;
@@ -147,17 +152,37 @@ int main(void)
 		XDMAC_CC_DIF_AHB_IF0 |
 		XDMAC_CC_SAM_INCREMENTED_AM |
 		XDMAC_CC_DAM_INCREMENTED_AM;
-	xdmac_channel_cfg.mbr_bc = 31 ;
+	xdmac_channel_cfg.mbr_bc = 15;
 	xdmac_channel_cfg.mbr_ds =  0;
 	xdmac_channel_cfg.mbr_sus = 0;
-	xdmac_channel_cfg.mbr_dus = 0; 
-	
+	xdmac_channel_cfg.mbr_dus = 0;
+
 	xdmac_configure_transfer(XDMAC, XDMA_CH, &xdmac_channel_cfg);
+
+	/* Initialize linked list descriptor */
+	lld[0].mbr_nda = (uint32_t)(&lld[1]);
+	lld[0].mbr_ubc = XDMA_UBC_NVIEW_NDV0 |
+			XDMA_UBC_NDE_FETCH_EN |
+			XDMA_UBC_NSEN_UPDATED |
+			XDMA_UBC_NDEN_UPDATED |
+			MICROBLOCK_LEN;
+	lld[0].mbr_da = (uint32_t)dst_buf;
+
+	lld[1].mbr_nda = 0;
+	lld[1].mbr_ubc = 256;
+	lld[1].mbr_da = (uint32_t)dst_buf + 256;
+
+	xdmac_channel_set_descriptor_control(XDMAC, XDMA_CH, XDMAC_CNDC_NDVIEW_NDV0 |
+			XDMAC_CNDC_NDE_DSCR_FETCH_EN |
+			XDMAC_CNDC_NDSUP_SRC_PARAMS_UPDATED |
+			XDMAC_CNDC_NDDUP_DST_PARAMS_UPDATED);
+	xdmac_channel_set_descriptor_addr(XDMAC, XDMA_CH, (uint32_t)(&lld[0]), 0);
+
 	xdmac_enable_interrupt(XDMAC, XDMA_CH);
 	xdmac_channel_enable_interrupt(XDMAC, XDMA_CH, XDMAC_CIE_BIE);
 	xdmac_channel_enable(XDMAC, XDMA_CH);
-	
 
+	/* Wait transfer finish */
 	while (!g_xfer_done) {
 	}
 
@@ -170,7 +195,7 @@ int main(void)
 		}
 	}
 	printf("> Test OK.\n\r");
-	
+
 	while (1) {
 	}
 }
