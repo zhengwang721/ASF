@@ -63,8 +63,8 @@
 void timer_get_config_defaults(struct timer_config *config)
 {
 	config->interrupt_enable = TIMER_CTRL_INTERRUPT_ENABLE;
-	config->select_ext_clk = 0;
-	config->select_ext_enable = 0;
+	config->external_input_enable = 0;
+	config->interrupt_enable = 0;
 }
 
 /**
@@ -80,8 +80,8 @@ void timer_get_config_defaults(struct timer_config *config)
 void timer_init(const struct timer_config *config)
 {
 	TIMER0->CTRL.reg = config->interrupt_enable
-		| config->select_ext_clk
-		| config->select_ext_enable;
+		| config->external_input_clock
+		| config->interrupt_enable;
 }
 
 /**
@@ -109,7 +109,7 @@ void timer_set_value(uint32_t value)
  *
  * \retval The status of module
  */
-uint32_t timer_get_int_status(void)
+uint32_t timer_get_interrupt_status(void)
 {
 	return TIMER0->INTSTATUSCLEAR.reg;
 }
@@ -119,7 +119,7 @@ uint32_t timer_get_int_status(void)
  *
  * Clear the TIMER0 module interrupt status
  */
-void timer_clear_int_status(void)
+void timer_clear_interrupt_status(void)
 {
 	TIMER0->INTSTATUSCLEAR.reg = 1;
 }
@@ -131,7 +131,7 @@ void timer_clear_int_status(void)
  */
 void timer_enable(void)
 {
-	TIMER0->CTRL.reg |= TIMER_CTRL_INTERRUPT_ENABLE;
+	TIMER0->CTRL.reg |= TIMER_CTRL_ENABLE;
 }
 
 /**
@@ -141,5 +141,5 @@ void timer_enable(void)
  */
 void timer_disable(void)
 {
-	TIMER0->CTRL.reg &= (~TIMER_CTRL_INTERRUPT_ENABLE);
+	TIMER0->CTRL.reg &= (~TIMER_CTRL_ENABLE);
 }

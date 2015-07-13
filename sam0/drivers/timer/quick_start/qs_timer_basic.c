@@ -70,16 +70,16 @@ void configure_gpio_pins(void)
 
 void configure_timer(void)
 {
-	//! [setup_config]
+	//! [setup_timer_1]
 	struct timer_config config_timer;
-	//! [setup_config]
-	//! [setup_config_defaults]
+	//! [setup_timer_1]
+	//! [setup_timer_2]
 	timer_get_config_defaults(&config_timer);
-	//! [setup_config_defaults]
+	//! [setup_timer_2]
 	
-	//! [setup_set_config]
+	//! [setup_timer_3]
 	timer_init(&config_timer);
-	//! [setup_set_config]
+	//! [setup_timer_3]
 }
 //! [setup]
 
@@ -105,18 +105,15 @@ int main(void)
 	
 	//! [main]
 	while (true) {
-		
-		if (timer_get_int_status()) {
-			//! [main_1]
-			timer_clear_int_status();
-			//! [main_1]
+		//! [main_1]
+		if (timer_get_interrupt_status()) {
+		//! [main_1]
+			//! [main_2]
+			timer_clear_interrupt_status();
+			//! [main_2]
 			
-			//! [main_2]
-			bool pin_state = gpio_pin_get_input_level(BUTTON_0_PIN);
-			//! [main_2]
-
 			//! [main_3]
-			gpio_pin_set_output_level(LED_0_PIN, !pin_state);
+			gpio_pin_toggle_output_level(LED_0_PIN);
 			//! [main_3]
 		}
 	}

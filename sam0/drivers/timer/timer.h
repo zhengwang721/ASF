@@ -60,17 +60,20 @@ extern "C" {
  * modified by the user application.
  */
 struct timer_config {
+	/** Select external input as enable  */
+	uint8_t external_input_enable;
+	/** Select external input as clock */
+	uint8_t external_input_clock;
+	/** Enable timer interrupt */
 	uint8_t interrupt_enable;
-	uint8_t select_ext_clk;
-	uint8_t select_ext_enable;
 };
 
 void timer_get_config_defaults(struct timer_config *config);
 void timer_init(const struct timer_config *config);
 uint32_t timer_get_value(void);
 void timer_set_value(uint32_t value);
-uint32_t timer_get_int_status(void);
-void timer_clear_int_status(void);
+uint32_t timer_get_interrupt_status(void);
+void timer_clear_interrupt_status(void);
 void timer_enable(void);
 void timer_disable(void);
 
