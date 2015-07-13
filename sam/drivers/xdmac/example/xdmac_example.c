@@ -152,7 +152,7 @@ int main(void)
 	xdmac_channel_cfg.mbr_sus = 0;
 	xdmac_channel_cfg.mbr_dus = 0; 
 	
-	xdmac_configure_transfer(XDMAC, XDMA_CH, &xdmac_channel_cfg, 0, 0);
+	xdmac_configure_transfer(XDMAC, XDMA_CH, &xdmac_channel_cfg);
 	xdmac_enable_interrupt(XDMAC, XDMA_CH);
 	xdmac_channel_enable_interrupt(XDMAC, XDMA_CH, XDMAC_CIE_BIE);
 	xdmac_channel_enable(XDMAC, XDMA_CH);

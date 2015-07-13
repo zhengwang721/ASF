@@ -52,40 +52,17 @@
  * \param[out] p_xdmac Module hardware register base address pointer.
  * \param[in] channel_num The used channel number.
  * \param[in] p_cfg   The configuration for used channel
- * \param[in] desc_cfg   The configuration for next descriptor
- * \param[in] desc_addr The address for next descriptor
  */
 void xdmac_configure_transfer(Xdmac *p_xdmac,
-		uint32_t channel_num, xdmac_channel_config_t *p_cfg,
-		uint32_t desc_cfg, uint32_t desc_addr)
+		uint32_t channel_num, xdmac_channel_config_t *p_cfg)
 {
 	xdmac_channel_get_interrupt_status( p_xdmac, channel_num);
-
-	/* Linked List is enabled */
-	if ((desc_cfg & XDMAC_CNDC_NDE) == XDMAC_CNDC_NDE_DSCR_FETCH_EN) {
-		if ((desc_cfg & XDMAC_CNDC_NDVIEW_Msk) == XDMAC_CNDC_NDVIEW_NDV0) {
-			xdmac_channel_set_config(p_xdmac, channel_num, p_cfg->mbr_cfg );
-			xdmac_channel_set_source_addr(p_xdmac, channel_num, p_cfg->mbr_sa);
-			xdmac_channel_set_destination_addr(p_xdmac, channel_num, p_cfg->mbr_da);
-		}
-		if ((desc_cfg & XDMAC_CNDC_NDVIEW_Msk) == XDMAC_CNDC_NDVIEW_NDV1) {
-			xdmac_channel_set_config(p_xdmac, channel_num, p_cfg->mbr_cfg );
-		}
-		xdmac_channel_set_descriptor_addr(p_xdmac, channel_num, desc_addr, 0);
-		xdmac_channel_set_descriptor_control(p_xdmac, channel_num, desc_cfg);
-	}
-	/* LLI is disabled. */
-	else
-	{
-		xdmac_channel_set_source_addr(p_xdmac, channel_num, p_cfg->mbr_sa);
-		xdmac_channel_set_destination_addr(p_xdmac, channel_num, p_cfg->mbr_da);
-		xdmac_channel_set_microblock_control(p_xdmac, channel_num, p_cfg->mbr_ubc);
-		xdmac_channel_set_block_control(p_xdmac, channel_num, p_cfg->mbr_bc);
-		xdmac_channel_set_datastride_mempattern(p_xdmac, channel_num, p_cfg->mbr_ds);
-		xdmac_channel_set_source_microblock_stride(p_xdmac, channel_num, p_cfg->mbr_sus);
-		xdmac_channel_set_destination_microblock_stride(p_xdmac, channel_num, p_cfg->mbr_dus);
-		xdmac_channel_set_config(p_xdmac, channel_num, p_cfg->mbr_cfg );
-		xdmac_channel_set_descriptor_addr(p_xdmac, channel_num, 0, 0);
-		xdmac_channel_set_descriptor_control(p_xdmac, channel_num, 0);
-	}
+	xdmac_channel_set_source_addr(p_xdmac, channel_num, p_cfg->mbr_sa);
+	xdmac_channel_set_destination_addr(p_xdmac, channel_num, p_cfg->mbr_da);
+	xdmac_channel_set_microblock_control(p_xdmac, channel_num, p_cfg->mbr_ubc);
+	xdmac_channel_set_block_control(p_xdmac, channel_num, p_cfg->mbr_bc);
+	xdmac_channel_set_datastride_mempattern(p_xdmac, channel_num, p_cfg->mbr_ds);
+	xdmac_channel_set_source_microblock_stride(p_xdmac, channel_num, p_cfg->mbr_sus);
+	xdmac_channel_set_destination_microblock_stride(p_xdmac, channel_num, p_cfg->mbr_dus);
+	xdmac_channel_set_config(p_xdmac, channel_num, p_cfg->mbr_cfg );
 }

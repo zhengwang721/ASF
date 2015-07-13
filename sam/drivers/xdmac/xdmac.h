@@ -659,7 +659,7 @@ static inline void xdmac_channel_set_destination_microblock_stride(Xdmac *p_xdma
 }
 
 void xdmac_configure_transfer(Xdmac *p_xdmac, uint32_t channel_num,
-		xdmac_channel_config_t *p_cfg, uint32_t desc_cfg, uint32_t desc_addr);
+		xdmac_channel_config_t *p_cfg);
 
 /** @cond */
 /**INDENT-OFF**/
