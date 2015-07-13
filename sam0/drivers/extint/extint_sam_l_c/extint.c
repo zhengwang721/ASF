@@ -380,7 +380,7 @@ enum status_code extint_nmi_set_config(
 		new_config |= EIC_NMICTRL_NMIFILTEN;
 	}
 
-#if (SAML21XXXB) || (SAML21) || (SAMC21)
+#if (SAML21XXXB) || (SAML22) || (SAMC21)
 	/* Enable asynchronous edge detection if requested in the config */
 	if (config->enable_async_edge_detection) {
 		new_config |= EIC_NMICTRL_NMIASYNCH;
