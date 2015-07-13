@@ -161,11 +161,11 @@ int main(void)
 
 	/* Initialize linked list descriptor */
 	lld[0].mbr_nda = (uint32_t)(&lld[1]);
-	lld[0].mbr_ubc = XDMA_UBC_NVIEW_NDV0 |
-			XDMA_UBC_NDE_FETCH_EN |
-			XDMA_UBC_NSEN_UPDATED |
-			XDMA_UBC_NDEN_UPDATED |
-			MICROBLOCK_LEN;
+	lld[0].mbr_ubc = XDMAC_UBC_NVIEW_NDV0 |
+			XDMAC_UBC_NDE_FETCH_EN |
+			XDMAC_UBC_NSEN_UPDATED |
+			XDMAC_UBC_NDEN_UPDATED |
+			XDMAC_UBC_UBLEN(MICROBLOCK_LEN);
 	lld[0].mbr_da = (uint32_t)dst_buf;
 
 	lld[1].mbr_nda = 0;
