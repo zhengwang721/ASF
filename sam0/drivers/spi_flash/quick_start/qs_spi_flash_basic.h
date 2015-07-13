@@ -90,9 +90,11 @@
  *    \snippet qs_spi_flash_basic.c main_3
  * -# Write spi-flash designated area.
  *    \snippet qs_spi_flash_basic.c main_4
+ * -# Read spi-flash designated area.
+ *    \snippet qs_spi_flash_basic.c main_5
  * -# Compare write in and read out data. If the data isn't matched, LED will
  *    flash quickly. If matched, it will continue.
- *    \snippet qs_spi_flash_basic.c main_5
+ *    \snippet qs_spi_flash_basic.c main_6
  * -# Infinite loop. If all the operation is right, LED will flash slowly.
  *    \snippet qs_spi_flash_basic.c inf_loop
  */

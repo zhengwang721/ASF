@@ -70,7 +70,6 @@
 	#define PIN_LP_GPIO_21   21
 	#define PIN_LP_GPIO_22   22
 	#define PIN_LP_GPIO_23   23
-	#define PIN_LP_GPIO_24   24
 #endif
 
 /* ========== GPIO definition for SPI0 peripheral ========== */
@@ -86,9 +85,9 @@
 #define MUX_LP_GPIO_4_MUX5_SPI0_SSN       5L
 #define PINMUX_LP_GPIO_4_MUX5_SPI0_SSN    ((PIN_LP_GPIO_4_MUX5_SPI0_SSN << 16) | MUX_LP_GPIO_4_MUX5_SPI0_SSN)
 
-#define PIN_LP_GPIO_5_MUX5_SPI0_SCK       5L              /**< \brief SPI0 signal: SCK on LP_GPIO_5 mux 5 */
-#define MUX_LP_GPIO_5_MUX5_SPI0_SCK       5L
-#define PINMUX_LP_GPIO_5_MUX5_SPI0_SCK    ((PIN_LP_GPIO_5_MUX5_SPI0_SCK << 16) | MUX_LP_GPIO_5_MUX5_SPI0_SCK)
+#define PIN_LP_GPIO_5_MUX5_SPI0_MISO       5L              /**< \brief SPI0 signal: MISO on LP_GPIO_5 mux 5 */
+#define MUX_LP_GPIO_5_MUX5_SPI0_MISO       5L
+#define PINMUX_LP_GPIO_5_MUX5_SPI0_MISO    ((PIN_LP_GPIO_5_MUX5_SPI0_MISO << 16) | MUX_LP_GPIO_5_MUX5_SPI0_MISO)
 
 #define PIN_LP_GPIO_6_MUX5_SPI0_SCK       6L              /**< \brief SPI0 signal: SCK on LP_GPIO_6 mux 5 */
 #define MUX_LP_GPIO_6_MUX5_SPI0_SCK       5L
@@ -139,54 +138,54 @@
 #define PINMUX_LP_GPIO_19_MUX5_SPI0_MISO   ((PIN_LP_GPIO_19_MUX5_SPI0_MISO << 16) | MUX_LP_GPIO_19_MUX5_SPI0_MISO)
 
 /* ========== GPIO definition for SPI1 peripheral ========== */
-#define PIN_LP_GPIO_2_MUX4_SPI0_SCK       2L              /**< \brief SPI0 signal: SCK on LP_GPIO_2 mux 4 */
-#define MUX_LP_GPIO_2_MUX4_SPI0_SCK       4L
-#define PINMUX_LP_GPIO_2_MUX4_SPI0_SCK    ((PIN_LP_GPIO_2_MUX4_SPI0_SCK << 16) | MUX_LP_GPIO_2_MUX4_SPI0_SCK)
+#define PIN_LP_GPIO_2_MUX4_SPI1_SCK        2L              /**< \brief SPI1 signal: SCK on LP_GPIO_2 mux 4 */
+#define MUX_LP_GPIO_2_MUX4_SPI1_SCK        4L
+#define PINMUX_LP_GPIO_2_MUX4_SPI1_SCK     ((PIN_LP_GPIO_2_MUX4_SPI1_SCK << 16) | MUX_LP_GPIO_2_MUX4_SPI1_SCK)
 
-#define PIN_LP_GPIO_3_MUX4_SPI0_MOSI      3L              /**< \brief SPI0 signal: MOSI on LP_GPIO_3 mux 4 */
-#define MUX_LP_GPIO_3_MUX4_SPI0_MOSI      4L
-#define PINMUX_LP_GPIO_3_MUX4_SPI0_MOSI   ((PIN_LP_GPIO_3_MUX4_SPI0_MOSI << 16) | MUX_LP_GPIO_3_MUX4_SPI0_MOSI)
+#define PIN_LP_GPIO_3_MUX4_SPI1_MOSI       3L              /**< \brief SPI1 signal: MOSI on LP_GPIO_3 mux 4 */
+#define MUX_LP_GPIO_3_MUX4_SPI1_MOSI       4L
+#define PINMUX_LP_GPIO_3_MUX4_SPI1_MOSI    ((PIN_LP_GPIO_3_MUX4_SPI1_MOSI << 16) | MUX_LP_GPIO_3_MUX4_SPI1_MOSI)
 
-#define PIN_LP_GPIO_4_MUX4_SPI0_SSN       4L              /**< \brief SPI0 signal: SSN on LP_GPIO_4 mux 4 */
-#define MUX_LP_GPIO_4_MUX4_SPI0_SSN       4L
-#define PINMUX_LP_GPIO_4_MUX4_SPI0_SSN    ((PIN_LP_GPIO_4_MUX4_SPI0_SSN << 16) | MUX_LP_GPIO_4_MUX4_SPI0_SSN)
+#define PIN_LP_GPIO_4_MUX4_SPI1_SSN        4L              /**< \brief SPI1 signal: SSN on LP_GPIO_4 mux 4 */
+#define MUX_LP_GPIO_4_MUX4_SPI1_SSN        4L
+#define PINMUX_LP_GPIO_4_MUX4_SPI1_SSN     ((PIN_LP_GPIO_4_MUX4_SPI1_SSN << 16) | MUX_LP_GPIO_4_MUX4_SPI1_SSN)
 
-#define PIN_LP_GPIO_5_MUX4_SPI0_MISO      5L              /**< \brief SPI0 signal: SCK on LP_GPIO_5 mux 4 */
-#define MUX_LP_GPIO_5_MUX4_SPI0_MISO      4L
-#define PINMUX_LP_GPIO_5_MUX4_SPI0_MISO   ((PIN_LP_GPIO_5_MUX4_SPI0_MISO << 16) | MUX_LP_GPIO_5_MUX4_SPI0_MISO)
+#define PIN_LP_GPIO_5_MUX4_SPI1_MISO       5L              /**< \brief SPI1 signal: SCK on LP_GPIO_5 mux 4 */
+#define MUX_LP_GPIO_5_MUX4_SPI1_MISO       4L
+#define PINMUX_LP_GPIO_5_MUX4_SPI1_MISO    ((PIN_LP_GPIO_5_MUX4_SPI1_MISO << 16) | MUX_LP_GPIO_5_MUX4_SPI1_MISO)
 
-#define PIN_LP_GPIO_16_MUX4_SPI0_SCK      16L              /**< \brief SPI0 signal: SCK on LP_GPIO_16 mux 4 */
-#define MUX_LP_GPIO_16_MUX4_SPI0_SCK      4L
-#define PINMUX_LP_GPIO_16_MUX4_SPI0_SCK   ((PIN_LP_GPIO_16_MUX4_SPI0_SCK << 16) | MUX_LP_GPIO_16_MUX4_SPI0_SCK)
+#define PIN_LP_GPIO_16_MUX4_SPI1_SSN       16L              /**< \brief SPI1 signal: SSN on LP_GPIO_16 mux 4 */
+#define MUX_LP_GPIO_16_MUX4_SPI1_SSN       4L
+#define PINMUX_LP_GPIO_16_MUX4_SPI1_SSN    ((PIN_LP_GPIO_16_MUX4_SPI1_SSN << 16) | MUX_LP_GPIO_16_MUX4_SPI1_SSN)
 
-#define PIN_LP_GPIO_17_MUX4_SPI0_SSN      17L              /**< \brief SPI0 signal: SSN on LP_GPIO_17 mux 4 */
-#define MUX_LP_GPIO_17_MUX4_SPI0_SSN      4L
-#define PINMUX_LP_GPIO_17_MUX4_SPI0_SSN   ((PIN_LP_GPIO_17_MUX4_SPI0_SSN << 16) | MUX_LP_GPIO_17_MUX4_SPI0_SSN)
+#define PIN_LP_GPIO_17_MUX4_SPI1_SCK       17L              /**< \brief SPI1 signal: SCK on LP_GPIO_17 mux 4 */
+#define MUX_LP_GPIO_17_MUX4_SPI1_SCK       4L
+#define PINMUX_LP_GPIO_17_MUX4_SPI1_SCK    ((PIN_LP_GPIO_17_MUX4_SPI1_SCK << 16) | MUX_LP_GPIO_17_MUX4_SPI1_SCK)
 
-#define PIN_LP_GPIO_18_MUX4_SPI0_MISO     18L              /**< \brief SPI0 signal: MISO on LP_GPIO_18 mux 4 */
-#define MUX_LP_GPIO_18_MUX4_SPI0_MISO     4L
-#define PINMUX_LP_GPIO_18_MUX4_SPI0_MISO  ((PIN_LP_GPIO_18_MUX4_SPI0_MISO << 16) | MUX_LP_GPIO_18_MUX4_SPI0_MISO)
+#define PIN_LP_GPIO_18_MUX4_SPI1_MISO      18L              /**< \brief SPI1 signal: MISO on LP_GPIO_18 mux 4 */
+#define MUX_LP_GPIO_18_MUX4_SPI1_MISO      4L
+#define PINMUX_LP_GPIO_18_MUX4_SPI1_MISO   ((PIN_LP_GPIO_18_MUX4_SPI1_MISO << 16) | MUX_LP_GPIO_18_MUX4_SPI1_MISO)
 
-#define PIN_LP_GPIO_19_MUX4_SPI0_MOSI     19L              /**< \brief SPI0 signal: MOSI on LP_GPIO_19 mux 4 */
-#define MUX_LP_GPIO_19_MUX4_SPI0_MOSI     4L
-#define PINMUX_LP_GPIO_19_MUX4_SPI0_MOSI  ((PIN_LP_GPIO_19_MUX4_SPI0_MOSI << 16) | MUX_LP_GPIO_19_MUX4_SPI0_MOSI)
+#define PIN_LP_GPIO_19_MUX4_SPI1_MOSI      19L              /**< \brief SPI1 signal: MOSI on LP_GPIO_19 mux 4 */
+#define MUX_LP_GPIO_19_MUX4_SPI1_MOSI      4L
+#define PINMUX_LP_GPIO_19_MUX4_SPI1_MOSI   ((PIN_LP_GPIO_19_MUX4_SPI1_MOSI << 16) | MUX_LP_GPIO_19_MUX4_SPI1_MOSI)
 
 
 /* ========== GPIO definition for I2C peripheral ========== */
-#define PIN_LP_GPIO_8_MUX2_I2C0_SDA			8L              /**< \brief I2C0 signal: SDA on LP_GPIO_8 mux 2 */
-#define MUX_LP_GPIO_8_MUX2_I2C0_SDA			2L
-#define PINMUX_LP_GPIO_8_MUX2_I2C0_SDA		((PIN_LP_GPIO_8_MUX2_I2C0_SDA << 16) | MUX_LP_GPIO_8_MUX2_I2C0_SDA)
+#define PIN_LP_GPIO_8_MUX2_I2C0_SDA        8L              /**< \brief I2C0 signal: SDA on LP_GPIO_8 mux 2 */
+#define MUX_LP_GPIO_8_MUX2_I2C0_SDA        2L
+#define PINMUX_LP_GPIO_8_MUX2_I2C0_SDA     ((PIN_LP_GPIO_8_MUX2_I2C0_SDA << 16) | MUX_LP_GPIO_8_MUX2_I2C0_SDA)
 
-#define PIN_LP_GPIO_9_MUX2_I2C0_SCK			9L              /**< \brief I2C0 signal: SCK on LP_GPIO_9 mux 2 */
-#define MUX_LP_GPIO_9_MUX2_I2C0_SCK			2L
-#define PINMUX_LP_GPIO_9_MUX2_I2C0_SCK		((PIN_LP_GPIO_9_MUX2_I2C0_SCK << 16) | MUX_LP_GPIO_9_MUX2_I2C0_SCK)
+#define PIN_LP_GPIO_9_MUX2_I2C0_SCK        9L              /**< \brief I2C0 signal: SCK on LP_GPIO_9 mux 2 */
+#define MUX_LP_GPIO_9_MUX2_I2C0_SCK        2L
+#define PINMUX_LP_GPIO_9_MUX2_I2C0_SCK     ((PIN_LP_GPIO_9_MUX2_I2C0_SCK << 16) | MUX_LP_GPIO_9_MUX2_I2C0_SCK)
 
-#define PIN_LP_GPIO_14_MUX4_I2C1_SDA		14L				/**< \brief I2C1 signal: SDA on LP_GPIO_14 mux 4 */
-#define MUX_LP_GPIO_14_MUX4_I2C1_SDA		4L
-#define PINMUX_LP_GPIO_14_MUX4_I2C1_SDA		((PIN_LP_GPIO_14_MUX4_I2C1_SDA << 16) | MUX_LP_GPIO_14_MUX4_I2C1_SDA)
+#define PIN_LP_GPIO_14_MUX4_I2C1_SDA       14L             /**< \brief I2C1 signal: SDA on LP_GPIO_14 mux 4 */
+#define MUX_LP_GPIO_14_MUX4_I2C1_SDA       4L
+#define PINMUX_LP_GPIO_14_MUX4_I2C1_SDA    ((PIN_LP_GPIO_14_MUX4_I2C1_SDA << 16) | MUX_LP_GPIO_14_MUX4_I2C1_SDA)
 
-#define PIN_LP_GPIO_15_MUX4_I2C1_SCK		15L				/**< \brief I2C1 signal: SCK on LP_GPIO_15 mux 4 */
-#define MUX_LP_GPIO_15_MUX4_I2C1_SCK		4L
-#define PINMUX_LP_GPIO_15_MUX4_I2C1_SCK		((PIN_LP_GPIO_15_MUX4_I2C1_SCK << 16) | MUX_LP_GPIO_15_MUX4_I2C1_SCK)
+#define PIN_LP_GPIO_15_MUX4_I2C1_SCK       15L             /**< \brief I2C1 signal: SCK on LP_GPIO_15 mux 4 */
+#define MUX_LP_GPIO_15_MUX4_I2C1_SCK       4L
+#define PINMUX_LP_GPIO_15_MUX4_I2C1_SCK    ((PIN_LP_GPIO_15_MUX4_I2C1_SCK << 16) | MUX_LP_GPIO_15_MUX4_I2C1_SCK)
 
 #endif /* _SAMB11G18A_PIO_ */

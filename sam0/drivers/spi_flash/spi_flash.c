@@ -43,7 +43,7 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include <spi_flash.h>
+#include "spi_flash.h"
 
 /**
  *  \brief SPI flash write enable.

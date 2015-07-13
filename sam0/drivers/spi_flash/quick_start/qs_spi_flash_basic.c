@@ -106,6 +106,12 @@ int main(void)
 //!  [main_4]
 
 //!  [main_5]
+	spi_flash_read((unsigned char *)read_buf, \
+				(unsigned long)FLASH_NVDS_START_ADDRESS, \
+				FLASH_PAGE_SIZE);
+//!  [main_5]
+
+//!  [main_6]
 	for (i = 0; i < FLASH_PAGE_SIZE; i++) {
 		if(read_buf[i] != write_buf[i]) {
 			while(1) {
@@ -117,7 +123,7 @@ int main(void)
 			}
 		}
 	}
-//!  [main_5]
+//!  [main_6]
 
 //!  [inf_loop]
 	while (true) {

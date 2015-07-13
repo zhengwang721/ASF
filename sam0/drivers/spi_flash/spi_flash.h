@@ -223,7 +223,7 @@ void spi_flash_leave_low_power_mode(void);
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>06/2013</td>
+ *		<td>06/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
