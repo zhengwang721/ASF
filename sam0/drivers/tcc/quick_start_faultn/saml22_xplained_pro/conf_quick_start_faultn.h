@@ -68,7 +68,7 @@
 #define CONF_FAULT_EIC_LINE      SW0_EIC_LINE
 
 /** FAULT event generator */
-#define CONF_FAULT_EVENT_GENERATOR EVSYS_ID_GEN_EIC_EXTINT_2
+#define CONF_FAULT_EVENT_GENERATOR EVSYS_ID_GEN_EIC_EXTINT_9
 /** FAULT event user for recoverable fault */
 #define CONF_FAULT_EVENT_USER      EVSYS_ID_USER_TCC0_MC_0
 //[definition_fault]
