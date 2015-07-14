@@ -231,8 +231,8 @@ typedef struct {
 	 uint8_t check_dis;
 	 
 	/*
-	 *0: LIN 2.0 ¡°enhanced¡± checksum
-	 *1: LIN 1.3 ¡°classic¡± checksum
+	 *0: LIN 2.0 "enhanced" checksum
+	 *1: LIN 1.3 "classic" checksum
 	 */
 	 uint8_t checksum_type;
 	 
@@ -249,7 +249,7 @@ typedef struct {
 	uint32_t frame_slot_mod_dis;
 		
 	/*
-	 * 0¨C255: Defines the response data length if DLM = 0,in that 
+	 * 0-255: Defines the response data length if DLM = 0,in that 
 	 * case the response data length is equal to DLC+1 bytes.
 	 */
 	uint32_t dlc;
@@ -315,9 +315,11 @@ void usart_lin_set_tx_identifier(Usart *p_usart, uint8_t uc_id);
 uint8_t usart_lin_read_identifier(Usart *p_usart);
 uint8_t usart_lin_get_data_length(Usart *usart);
 #endif
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
 uint8_t usart_lin_identifier_send_complete(Usart *usart);
 uint8_t usart_lin_identifier_reception_complete(Usart *usart);
 uint8_t usart_lin_tx_complete(Usart *usart);
+uint32_t usart_init_lon(Usart *p_usart,uint32_t ul_baudrate,uint32_t ul_mck);
 void  usart_lon_set_comm_type(Usart *p_usart, uint8_t uc_type);
 void usart_lon_disable_coll_detection(Usart *p_usart);
 void usart_lon_enable_coll_detection(Usart *p_usart);
@@ -334,6 +336,7 @@ void  usart_lon_set_data_len(Usart *p_usart, uint8_t uc_len);
 void  usart_lon_set_l2hdr(Usart *p_usart, uint8_t uc_bli, uint8_t uc_altp, uint8_t uc_pb);
 uint32_t usart_lon_is_tx_end(Usart *p_usart);
 uint32_t usart_lon_is_rx_end(Usart *p_usart);
+#endif
 void usart_enable_tx(Usart *p_usart);
 void usart_disable_tx(Usart *p_usart);
 void usart_reset_tx(Usart *p_usart);

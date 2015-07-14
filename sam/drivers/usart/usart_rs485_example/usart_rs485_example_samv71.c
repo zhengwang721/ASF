@@ -254,7 +254,7 @@ void USART_Handler(void)
 	}
 	
 	/*receive interrupt rise, store character to receiver buffer*/
-	if((g_state == RECEIVING) && (usart_read(BOARD_USART, &uc_char) == 0)) {
+	if((g_state == RECEIVING) && (usart_read(BOARD_USART, (uint32_t *)&uc_char) == 0)) {
 		*p_revdata++ = uc_char;
 		g_ulcount++;
 		if(g_ulcount >= BUFFER_SIZE) {
@@ -437,7 +437,7 @@ int main(void)
 
 	/* If acknowledgement received in a short time. */
 	if (usart_is_rx_ready(BOARD_USART)) {
-		usart_read(BOARD_USART, &uc_sync);
+		usart_read(BOARD_USART, (uint32_t *)&uc_sync);
 		/* Acknowledgement. */
 		if (uc_sync == ACK_CHAR) {
 			/* Act as transmitter, start transmitting. */
@@ -453,7 +453,7 @@ int main(void)
 		}
 		
 		/* Sync character is received. */		
-		usart_read(BOARD_USART, &uc_sync);
+		usart_read(BOARD_USART, (uint32_t *)&uc_sync);
 		if (uc_sync == SYNC_CHAR) {
 			/* SEND XOff as acknowledgement. */
 			uc_sync = ACK_CHAR;

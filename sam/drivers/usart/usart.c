@@ -906,38 +906,6 @@ uint32_t usart_init_lin_slave(Usart *p_usart, uint32_t ul_baudrate,
 
 	return 0;
 }
-/**
- * \brief Configure USART to work in LON mode.
- *
- * \note By default, the transmitter and receiver aren't enabled.
- *
- * \param p_usart Pointer to a USART instance.
- * \param ul_baudrate Baudrate to be used.
- * \param ul_mck USART module input clock frequency.
- *
- * \retval 0 on success.
- * \retval 1 on failure.
- */
-uint32_t usart_init_lon(Usart *p_usart,uint32_t ul_baudrate,
-		uint32_t ul_mck)
-{
-	/* Reset the USART and shut down TX and RX. */
-	usart_reset(p_usart);
-
-	/* Set up the baudrate. */
-	if (usart_set_async_baudrate(p_usart, ul_baudrate, ul_mck)) {
-		return 1;
-	}
-	
-	/* Set LIN master mode. */
-	p_usart->US_MR = (p_usart->US_MR & ~US_MR_USART_MODE_Msk) |
-			US_MR_USART_MODE_LON;
-
-	usart_enable_rx(p_usart);
-	usart_enable_tx(p_usart);
-
-	return 0;
-}
 
 /**
  * \brief Abort the current LIN transmission.
@@ -1150,6 +1118,7 @@ uint8_t usart_lin_get_data_length(Usart *usart)
 
 #endif
 
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
 /**
  * \brief Get identifier send status.
  *
@@ -1205,6 +1174,39 @@ uint8_t usart_lin_tx_complete(Usart *usart)
 	else {
 		return 0;
 	}
+}
+
+/**
+ * \brief Configure USART to work in LON mode.
+ *
+ * \note By default, the transmitter and receiver aren't enabled.
+ *
+ * \param p_usart Pointer to a USART instance.
+ * \param ul_baudrate Baudrate to be used.
+ * \param ul_mck USART module input clock frequency.
+ *
+ * \retval 0 on success.
+ * \retval 1 on failure.
+ */
+uint32_t usart_init_lon(Usart *p_usart,uint32_t ul_baudrate,
+		uint32_t ul_mck)
+{
+	/* Reset the USART and shut down TX and RX. */
+	usart_reset(p_usart);
+
+	/* Set up the baudrate. */
+	if (usart_set_async_baudrate(p_usart, ul_baudrate, ul_mck)) {
+		return 1;
+	}
+	
+	/* Set LIN master mode. */
+	p_usart->US_MR = (p_usart->US_MR & ~US_MR_USART_MODE_Msk) |
+			US_MR_USART_MODE_LON;
+
+	usart_enable_rx(p_usart);
+	usart_enable_tx(p_usart);
+
+	return 0;
 }
 
 /**
@@ -1283,7 +1285,7 @@ void  usart_lon_set_dmam(Usart *p_usart, uint8_t uc_type)
  * \brief set LON Beta1 Length after Transmission.
  *
  * \param p_usart Pointer to a USART instance.
- * \param ul_len 1每16777215: LON beta1 length after transmission in tbit 
+ * \param ul_len 1-16777215: LON beta1 length after transmission in tbit 
  */
 void  usart_lon_set_beta1_tx_len(Usart *p_usart, uint32_t ul_len)
 {
@@ -1294,7 +1296,7 @@ void  usart_lon_set_beta1_tx_len(Usart *p_usart, uint32_t ul_len)
  * \brief set LON Beta1 Length after Reception.
  *
  * \param p_usart Pointer to a USART instance.
- * \param ul_len 1每16777215: LON beta1 length after reception in tbit. 
+ * \param ul_len 1-16777215: LON beta1 length after reception in tbit. 
  */
 void  usart_lon_set_beta1_rx_len(Usart *p_usart, uint32_t ul_len)
 {
@@ -1317,7 +1319,7 @@ void  usart_lon_set_priority(Usart *p_usart, uint8_t uc_psnb, uint8_t uc_nps)
  * \brief set LON Indeterminate Time after Transmission.
  *
  * \param p_usart Pointer to a USART instance.
- * \param ul_time 1每16777215: LON Indeterminate Time after Transmission (comm_type = 1 mode only). 
+ * \param ul_time 1-16777215: LON Indeterminate Time after Transmission (comm_type = 1 mode only). 
  */
 void  usart_lon_set_tx_idt(Usart *p_usart, uint32_t ul_time)
 {
@@ -1328,7 +1330,7 @@ void  usart_lon_set_tx_idt(Usart *p_usart, uint32_t ul_time)
  * \brief set LON Indeterminate Time after Reception.
  *
  * \param p_usart Pointer to a USART instance.
- * \param ul_time 1每16777215: LON Indeterminate Time after Reception (comm_type = 1 mode only). 
+ * \param ul_time 1-16777215: LON Indeterminate Time after Reception (comm_type = 1 mode only). 
  */
 void  usart_lon_set_rx_idt(Usart *p_usart, uint32_t ul_time)
 {
@@ -1339,7 +1341,7 @@ void  usart_lon_set_rx_idt(Usart *p_usart, uint32_t ul_time)
  * \brief set LON Preamble Length.
  *
  * \param p_usart Pointer to a USART instance.
- * \param ul_len 1每16383: LON preamble length in tbit(without byte-sync). 
+ * \param ul_len 1-16383: LON preamble length in tbit(without byte-sync). 
  */
 void  usart_lon_set_pre_len(Usart *p_usart, uint32_t ul_len)
 {
@@ -1350,7 +1352,7 @@ void  usart_lon_set_pre_len(Usart *p_usart, uint32_t ul_len)
  * \brief set LON  Data Length.
  *
  * \param p_usart Pointer to a USART instance.
- * \param uc_len 0每255: LON data length is LONDL+1 bytes. 
+ * \param uc_len 0-255: LON data length is LONDL+1 bytes. 
  */
 void  usart_lon_set_data_len(Usart *p_usart, uint8_t uc_len)
 {
@@ -1395,6 +1397,7 @@ uint32_t usart_lon_is_rx_end(Usart *p_usart)
 {
 	return (p_usart->US_CSR & US_CSR_LRXD) > 0;
 }
+#endif
 
 /**
  * \brief Enable USART transmitter.

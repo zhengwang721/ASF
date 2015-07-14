@@ -291,7 +291,7 @@ static void display_main_menu(void)
 			"-- m: Display this menu again.--\r");
 }
 
-**
+/**
 * \brief transmit data in synchronous mode.
 *
 * \param *p_buff  data to be transmitted
