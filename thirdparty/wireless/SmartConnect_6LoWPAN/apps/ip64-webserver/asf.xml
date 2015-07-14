@@ -19,9 +19,7 @@
 			<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.network-reboot"/>
 			<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.simple-udp-ping"/>
 			<require idref="thirdparty.wireless.smartconnect_6lowpan.core"/>			
-			<build type="distribute" subtype="directory" value="httpd-fs"/>	
-			<build type="distribute" subtype="user-file" value="makefsdata.pl"/>	
-			<build type="distribute" subtype="user-file" value="Readme.txt"/>	
+			<build type="distribute" subtype="directory" value="Scripts"/>	
 			<device-support value="sam0"/>		
 			<build type="doxygen-entry-point" value="group_contiki_apps"/>	
             <info type="keyword" value="technology">
