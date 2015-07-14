@@ -70,7 +70,44 @@
 	#define PIN_LP_GPIO_21   21
 	#define PIN_LP_GPIO_22   22
 	#define PIN_LP_GPIO_23   23
+	#define PIN_LP_GPIO_24   24
 #endif
+
+#define MEGAMUX_SEL0_UART1_RXD            0L
+#define MEGAMUX_SEL1_UART1_TXD            1L
+#define MEGAMUX_SEL2_UART1_CTS            2L
+#define MEGAMUX_SEL3_UART1 RTS            3L
+#define MEGAMUX_SEL4_UART2_RXD            4L
+#define MEGAMUX_SEL5_UART2_TXD            5L
+#define MEGAMUX_SEL6_UART2_CTS            6L
+#define MEGAMUX_SEL7_UART2_RTS            7L
+#define MEGAMUX_SEL8_I2C0_SDA             8L
+#define MEGAMUX_SEL9_I2C0_SCL             9L
+#define MEGAMUX_SEL10_I2C1_SDA            10L
+#define MEGAMUX_SEL11_I2C1_SCL            11L
+#define MEGAMUX_SEL12_PWM_1               12L
+#define MEGAMUX_SEL13_PWM_2               13L
+#define MEGAMUX_SEL14_PWM_3               14L
+#define MEGAMUX_SEL15_PWM_4               15L
+#define MEGAMUX_SEL16_LP_CLOCK_OUT        16L
+#define MEGAMUX_SEL17_WLAN_TX_ACTIVE      17L
+#define MEGAMUX_SEL18_WLAN_RX_ACTIVE      18L
+#define MEGAMUX_SEL19_BLE_TX_ACTIVE       19L
+#define MEGAMUX_SEL20_BLE_RX_ACTIVE       20L
+#define MEGAMUX_SEL21_BLE_IN_PROCESS      21L
+#define MEGAMUX_SEL22_BLE_MBSY            22L
+#define MEGAMUX_SEL23_BLE_SYNC            23L
+#define MEGAMUX_SEL24_BLE_RXNTX           24L
+#define MEGAMUX_SEL25_BLE_PTI 0           25L
+#define MEGAMUX_SEL26_BLE_PTI 1           26L
+#define MEGAMUX_SEL27_BLE_PTI 2           27L
+#define MEGAMUX_SEL28_BLE_PTI 3           28L
+#define MEGAMUX_SEL29_QUAD_DEC_X_IN_A     29L
+#define MEGAMUX_SEL30_QUAD_DEC_X_IN_B     30L
+#define MEGAMUX_SEL31_QUAD_DEC_Y_IN_A     31L
+#define MEGAMUX_SEL32_QUAD_DEC_Y_IN_B     32L
+#define MEGAMUX_SEL33_QUAD_DEC_Z_IN_A     33L
+#define MEGAMUX_SEL34_QUAD_DEC_Z_IN_B     34L
 
 /* ========== GPIO definition for SPI0 peripheral ========== */
 #define PIN_LP_GPIO_2_MUX5_SPI0_SCK       2L              /**< \brief SPI0 signal: SCK on LP_GPIO_2 mux 5 */
@@ -187,5 +224,30 @@
 #define PIN_LP_GPIO_15_MUX4_I2C1_SCK       15L             /**< \brief I2C1 signal: SCK on LP_GPIO_15 mux 4 */
 #define MUX_LP_GPIO_15_MUX4_I2C1_SCK       4L
 #define PINMUX_LP_GPIO_15_MUX4_I2C1_SCK    ((PIN_LP_GPIO_15_MUX4_I2C1_SCK << 16) | MUX_LP_GPIO_15_MUX4_I2C1_SCK)
+
+/* I2C0 signal: SDA on gpio_pin mux 1 and MEGAMUX 8 */
+#define PINMUX_MEGAMUX_SEL8_I2C0_SDA_PIN(gpio_pin)    ((gpio_pin << 16) | (MEGAMUX_SEL8_I2C0_SDA << 8) | 1)
+
+/* I2C0 signal: SCK on gpio_pin mux 1 and MEGAMUX 9 */
+#define PINMUX_MEGAMUX_SEL9_I2C0_SCK_PIN(gpio_pin)    ((gpio_pin << 16) | (MEGAMUX_SEL9_I2C0_SCL << 8) | 1)
+
+/* I2C1 signal: SDA on gpio_pin mux 1 and MEGAMUX 10 */
+#define PINMUX_MEGAMUX_SEL10_I2C0_SDA_PIN(gpio_pin)   ((gpio_pin << 16) | (MEGAMUX_SEL10_I2C1_SDA << 8) | 1)
+
+/* I2C1 signal: SCK on gpio_pin mux 1 and MEGAMUX 11 */
+#define PINMUX_MEGAMUX_SEL11_I2C0_SCK_PIN(gpio_pin)   ((gpio_pin << 16) | (MEGAMUX_SEL11_I2C1_SCL << 8) | 1)
+
+/* ========== GPIO definition for PWM peripheral ========== */
+/* PWM1 signal: PWM1 on gpio_pin mux 1 and MEGAMUX 12 */
+#define PINMUX_MEGAMUX_SEL12_PWM1_PIN(gpio_pin)       ((gpio_pin << 16) | (MEGAMUX_SEL12_PWM_1 << 8) | 1)
+
+/* PWM2 signal: PWM2 on gpio_pin mux 1 and MEGAMUX 13 */
+#define PINMUX_MEGAMUX_SEL13_PWM2_PIN(gpio_pin)       ((gpio_pin << 16) | (MEGAMUX_SEL13_PWM_2 << 8) | 1)
+
+/* PWM3 signal: PWM3 on gpio_pin mux 1 and MEGAMUX 14 */
+#define PINMUX_MEGAMUX_SEL14_PWM3_PIN(gpio_pin)       ((gpio_pin << 16) | (MEGAMUX_SEL14_PWM_3 << 8) | 1)
+
+/* PWM4 signal: PWM4 on gpio_pin mux 1 and MEGAMUX 15 */
+#define PINMUX_MEGAMUX_SEL15_PWM4_PIN(gpio_pin)       ((gpio_pin << 16) | (MEGAMUX_SEL15_PWM_4 << 8) | 1)
 
 #endif /* _SAMB11G18A_PIO_ */

@@ -130,9 +130,11 @@ static uint8_t spi_flash_read_status_reg(void)
 * \param[in]  flash_addr     Start address of the spi flash
 * \param[in]  size           Number of bytes to be programmed to flash
 */
-static void spi_flash_page_program(uint32_t memory_addr,uint32_t flash_addr, uint32_t size)
+static void spi_flash_page_program(uint32_t flash_addr, uint32_t memory_addr, uint16_t size)
 {
 	unsigned char cmd[8];
+	
+	spi_flash_write_enable();
 
 	cmd[0] = 0x02;
 	cmd[1] = (unsigned char) (flash_addr >> 16);
@@ -153,24 +155,7 @@ static void spi_flash_page_program(uint32_t memory_addr,uint32_t flash_addr, uin
 			SPI_FLASH_IRQ_STATUS_FLASH_TRANS_DONE) {
 		/* Wait for current flash transaction done. */
 	}
-}
-
-/**
-* \brief Program SPI Flash page
-*
-* Program SPI Flash page
-*
-* \param[in]  memory_addr   Start address of memory
-* \param[in]  flash_addr    Start address of the spi flash
-* \param[in]  size          Number of bytes to be programmed to flash
-*/
-static void spi_flash_pp(uint32_t flash_addr, uint32_t memory_addr, uint16_t size)
-{
-	spi_flash_write_enable();
-
-	/* Use shared packet memory as temp mem */
-	spi_flash_page_program(memory_addr, flash_addr, size);
-
+	
 	/* add additional read_status_reg before the while this gives the flash
 	 * memory time to update the registers.
 	 */
@@ -202,7 +187,7 @@ void spi_flash_init(void)
 *
 * Reads SPI Flash Chip ID
 */
-uint32_t spi_flash_rdid(void)
+uint32_t spi_flash_read_id(void)
 {
 	volatile uint32_t register_value;
 
@@ -297,7 +282,7 @@ int8_t spi_flash_write(void *write_buf, uint32_t flash_addr, uint32_t size)
 			/* First part of data in the address page. */
 			if (offset) {
 				write_size = FLASH_PAGE_SIZE - offset;
-				spi_flash_pp(flash_addr, memory_addr, min(size, write_size));
+				spi_flash_page_program(flash_addr, memory_addr, min(size, write_size));
 				if (size < write_size) {
 					ret = 0;
 					goto EXIT;
@@ -310,7 +295,7 @@ int8_t spi_flash_write(void *write_buf, uint32_t flash_addr, uint32_t size)
 				write_size = min(size, FLASH_PAGE_SIZE);
 
 				/* Write complete page or the remaining data. */
-				spi_flash_pp(flash_addr, memory_addr, write_size);
+				spi_flash_page_program(flash_addr, memory_addr, write_size);
 				memory_addr += write_size;
 				flash_addr += write_size;
 				size -= write_size;
@@ -328,7 +313,7 @@ int8_t spi_flash_write(void *write_buf, uint32_t flash_addr, uint32_t size)
 * Erases SPI Flash Sector
 * \param[in]  flash_addr  Flash memory address within the sector to erase
 */
-void spi_flash_sector_erase(uint32_t flash_addr)
+static void spi_flash_sector_erase(uint32_t flash_addr)
 {
 	uint8_t cmd[8] = {0,};
 

@@ -248,17 +248,49 @@ void gpio_pin_toggle_output_level(const uint8_t gpio_pin)
  *  \param[in] gpio_pin   Index of the GPIO pin to toggle.
  *  \param[in] pinmux_sel PINMUX selection.
  */
-void gpio_pinmux_cofiguration(const uint8_t gpio_pin, enum gpio_pinmux_sel pinmux_sel)
+void gpio_pinmux_cofiguration(const uint8_t gpio_pin, uint16_t pinmux_sel)
 {
+	uint8_t megamux_sel = (pinmux_sel >> 8) & 0xFF;
+
+	pinmux_sel &= 0xFF;
+
 	if (gpio_pin <= 7) {
 		LPMCU_MISC_REGS0->PINMUX_SEL_0.reg &= ~(7 << ((gpio_pin % 8) * 4));
 		LPMCU_MISC_REGS0->PINMUX_SEL_0.reg |= (pinmux_sel << ((gpio_pin % 8)*4));
+		if (pinmux_sel == 0x01) {
+			if (gpio_pin <= 3) {
+				LPMCU_MISC_REGS0->MEGA_MUX_IO_SEL_0.reg &= ~(0x3F << ((gpio_pin % 4) * 8));
+				LPMCU_MISC_REGS0->MEGA_MUX_IO_SEL_0.reg |= (megamux_sel << ((gpio_pin % 4) * 8));
+			} else if (gpio_pin <= 7) {
+				LPMCU_MISC_REGS0->MEGA_MUX_IO_SEL_1.reg &= ~(0x3F << ((gpio_pin % 4) * 8));
+				LPMCU_MISC_REGS0->MEGA_MUX_IO_SEL_1.reg |= (megamux_sel << ((gpio_pin % 4) * 8));
+			}
+		}
 	} else if (gpio_pin <= 15) {
 		LPMCU_MISC_REGS0->PINMUX_SEL_1.reg &= ~(7 << ((gpio_pin % 8) * 4));
 		LPMCU_MISC_REGS0->PINMUX_SEL_1.reg |= (pinmux_sel << ((gpio_pin % 8)*4));
+		if (pinmux_sel == 0x01) {
+			if (gpio_pin <= 11) {
+				LPMCU_MISC_REGS0->MEGA_MUX_IO_SEL_2.reg &= ~(0x3F << ((gpio_pin % 4) * 8));
+				LPMCU_MISC_REGS0->MEGA_MUX_IO_SEL_2.reg |= (megamux_sel << ((gpio_pin % 4) * 8));
+			} else if (gpio_pin <= 15) {
+				LPMCU_MISC_REGS0->MEGA_MUX_IO_SEL_3.reg &= ~(0x3F << ((gpio_pin % 4) * 8));
+				LPMCU_MISC_REGS0->MEGA_MUX_IO_SEL_3.reg |= (megamux_sel << ((gpio_pin % 4) * 8));
+			}
+		}
 	} else if (gpio_pin <= 23) {
 		LPMCU_MISC_REGS0->PINMUX_SEL_2.reg &= ~(7 << ((gpio_pin % 8) * 4));
 		LPMCU_MISC_REGS0->PINMUX_SEL_2.reg |= (pinmux_sel << ((gpio_pin % 8)*4));
+		if (pinmux_sel == 0x01) {
+			if (gpio_pin <= 19) {
+				LPMCU_MISC_REGS0->MEGA_MUX_IO_SEL_4.reg &= ~(0x3F << ((gpio_pin % 4) * 8));
+				LPMCU_MISC_REGS0->MEGA_MUX_IO_SEL_4.reg |= (megamux_sel << ((gpio_pin % 4) * 8));
+			} else if (gpio_pin <= 23) {
+				LPMCU_MISC_REGS0->MEGA_MUX_IO_SEL_5.reg &= ~(0x3F << ((gpio_pin % 4) * 8));
+				LPMCU_MISC_REGS0->MEGA_MUX_IO_SEL_5.reg |= (megamux_sel << ((gpio_pin % 4) * 8));
+			}
+		}
 	}
+	
 }
 

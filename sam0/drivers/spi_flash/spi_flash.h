@@ -142,10 +142,9 @@ extern "C" {
 */
 
 void spi_flash_init(void) ;
-uint32_t spi_flash_rdid(void);
+uint32_t spi_flash_read_id(void);
 void spi_flash_read(void *read_buf, uint32_t flash_addr, uint32_t size);
 int8_t spi_flash_write(void *write_buf, uint32_t flash_addr, uint32_t size);
-void spi_flash_sector_erase(uint32_t flash_addr);
 uint8_t spi_flash_erase(uint32_t start_offset, uint32_t size);
 void spi_flash_enter_low_power_mode(void);
 void spi_flash_leave_low_power_mode(void);
