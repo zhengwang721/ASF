@@ -99,29 +99,29 @@
 #define QSPI_SYSTEMATICALLY       2
 
 /* Clock polarity. */
-#define QSPI_CLK_POLARITY 0
+#define QSPI_CLK_POLARITY         0
 
 /* Clock phase. */
-#define QSPI_CLK_PHASE 0
+#define QSPI_CLK_PHASE            0
 
 /* Delay before SPCK. */
-#define QSPI_DLYBS 0x40
+#define QSPI_DLYBS                0x40
 
 /* Delay between consecutive transfers. */
-#define QSPI_DLYBCT 0x10
+#define QSPI_DLYBCT               0x10
 
 /* QSPI clock setting (Hz). */
 static uint32_t gs_ul_spi_clock = 1000000;
 
 qspid_t g_qspid = {
 	QSPI,
-	QspiMemMode,
+	mem_mode,
 	0,
 	0,
 	0
 };
 
-unsigned char p_buffercode[20] = {
+unsigned char p_buffercode[] = {
 	0x50, 0x10, 0x44, 0x20, 0xB5, 0x19, 0x00, 0x80, 0x09, 0x15, 0x00, 0x80,
 	0x61, 0x15, 0x00, 0x80, 0x71, 0x15, 0x00, 0x80
 };
@@ -152,7 +152,9 @@ static void configure_console(void)
 static void qspi_memory_mode_initialize(void)
 {
 	puts("-I- Initialize QSPI to Serial Memory Mode\r");
-
+	
+	qspi_config_t mem_mode_config;
+	
 	p_dev = (qspi_inst_frame_t *)malloc (sizeof(qspi_inst_frame_t));  
     memset(p_dev, 0, sizeof(qspi_inst_frame_t));
     p_dev->inst_frame.bm.b_width = QSPI_IFR_WIDTH_SINGLE_BIT_SPI;
@@ -162,18 +164,9 @@ static void qspi_memory_mode_initialize(void)
     memset(p_mem, 0, sizeof(qspi_inst_frame_t));
     p_mem->inst_frame.bm.b_width = QSPI_IFR_WIDTH_SINGLE_BIT_SPI;
 
+	qspi_get_default_config(&mem_mode_config);
 	/* Configure an QSPI peripheral. */	
-	qspi_disable(QSPI);
-	qspi_reset(QSPI);
-	qspi_set_lastxfer(QSPI);
-	qspi_set_chip_select_mode(QSPI, QSPI_LASTXFER);
-	qspi_set_clock_polarity(QSPI, QSPI_CLK_POLARITY);
-	qspi_set_clock_phase(QSPI, QSPI_CLK_PHASE);
-	qspi_set_bits_per_transfer(QSPI, QSPI_MR_NBBITS_8_BIT);
-	qspi_set_baudrate(QSPI, (sysclk_get_cpu_hz() / gs_ul_spi_clock));
-	qspi_set_transfer_delay(QSPI, QSPI_DLYBS);
-	qspi_set_memory_mode(QSPI);
-	qspi_enable(QSPI);
+	qspi_set_config(&mem_mode_config);
 }
 
 /**
@@ -191,6 +184,13 @@ void SysTick_Handler(void)
  */
 int main(void)
 {
+	uint8_t mem_verified = 0;
+	uint32_t __start_sp, idx;
+	uint32_t (*__start_new)(void);
+	uint32_t buffer[4];
+	
+	uint8_t *p_memory;
+	
 	/* Initialize the system */
 	sysclk_init();
 	board_init();
@@ -211,20 +211,12 @@ int main(void)
 	/* Enable SMC peripheral clock */
 	pmc_enable_periph_clk(ID_QSPI);
 	
-	uint8_t mem_verified = 0;
-	uint32_t __start_sp, idx;
-	uint32_t (*__start_new)(void);
-	uint32_t buffer[4];
-	
-	uint8_t *p_memory = (uint8_t *)( QSPIMEM_ADDR );
-	
 	/* QSPI memory mode configure */
 	qspi_memory_mode_initialize();
 	puts("QSPI drivers initialized\n\r");
 	
 	/* enable quad mode */
 	s25fl1d_set_quad_mode(&g_qspid, 1);
-	//S25FL1D_QuadMode(ENABLE);
 	
 	/* Unlock block protection */
 	s25fl1d_unprotect(&g_qspid);
@@ -234,30 +226,31 @@ int main(void)
 	s25fl1d_erase_chip(&g_qspid);
 	
 	/* Flash the code to QSPI flash */
-	puts("Writing to Memory\n\r");
+	puts("Writing to Memory\n");
 	
 	s25fl1d_write(&g_qspid, (uint32_t *)p_buffercode, sizeof(p_buffercode), 0, 0);
 	
 	/* Lock block protection */
 	s25fl1d_protect(&g_qspid);
 	
-	printf("Example code written 0x%x bytes to Memory\r\n", sizeof(p_buffercode));
+	printf("\rExample code written 0x%x bytes to Memory\r", sizeof(p_buffercode));
 	
-	puts("Verifying \n\r");
+	puts("Verifying \r");
 	/* Start continuous read mode to enter in XIP mode*/
 	s25fl1d_read_quad_io(&g_qspid, buffer, sizeof(buffer), 0, 1, 0);
 	
+	p_memory = (uint8_t *)QSPIMEM_ADDR;
 	for(idx = 0; idx < sizeof(p_buffercode); idx++) {
 		if(*p_memory == p_buffercode[idx]) {
 			p_memory++;
 		} else {
 			mem_verified = 1;
-			printf("Data does not match at 0x%x \n\r", p_memory);
+			printf("\nData does not match at 0x%x \r", p_memory);
 			break;
 		}
 	}
 	if(!mem_verified) {
-		puts("Everything is OK \n\r");
+		puts("Everything is OK \r");
 		/* set PC and SP */
 		__start_new = (uint32_t(*) (void) ) buffer[1];
 		__start_sp = buffer[0];

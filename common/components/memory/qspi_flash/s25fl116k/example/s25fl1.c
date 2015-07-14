@@ -129,7 +129,7 @@ void delay_ms(volatile uint32_t ul_ms)
  * \param read_write  Read/write access.
  * \param size  Data size to be read/write.
  */
-void s25fl1d_send_command(qspid_t *p_qspid, uint8_t instr, uint32_t *p_tx_data, uint32_t *p_rx_data, access_t read_write, uint32_t size)
+void s25fl1d_send_command(qspid_t *p_qspid, uint8_t instr, uint32_t *p_tx_data, uint32_t *p_rx_data, qspi_access_t read_write, uint32_t size)
 {
 	p_qspid->qspi_command.instruction = instr;
 	p_dev->inst_frame.bm.b_inst_en = 1;	
@@ -142,23 +142,23 @@ void s25fl1d_send_command(qspid_t *p_qspid, uint8_t instr, uint32_t *p_tx_data, 
 		size += (sizeof(uint32_t) - (size % sizeof(uint32_t)));
 	}
 	
-	if(read_write == CmdAccess) {
+	if(read_write == cmd_access) {
 		p_dev->inst_frame.bm.b_tfr_type = (QSPI_IFR_TFRTYP_TRSFR_READ >> QSPI_IFR_TFRTYP_Pos);
 		p_dev->inst_frame.bm.b_data_en = 0;
 		
-		qspi_send_command(p_qspid, 0);
+		qspi_flash_send_command(p_qspid, 0);
 	}
-	else if (read_write == WriteAccess) {
+	else if (read_write == write_access) {
 		p_dev->inst_frame.bm.b_data_en = 1;
 		p_dev->inst_frame.bm.b_tfr_type = (QSPI_IFR_TFRTYP_TRSFR_WRITE >> QSPI_IFR_TFRTYP_Pos);
 		p_qspid->qspi_buffer.tx_data_size = size;
-		qspi_send_command_with_data(p_qspid, 0);
+		qspi_flash_send_command_with_data(p_qspid, 0);
 	}
 	else {
 		p_dev->inst_frame.bm.b_tfr_type = (QSPI_IFR_TFRTYP_TRSFR_READ >> QSPI_IFR_TFRTYP_Pos);
 		p_dev->inst_frame.bm.b_data_en = 1;
 		p_qspid->qspi_buffer.rx_data_size = size;
-		qspi_read_command(p_qspid, 0);
+		qspi_flash_read_command(p_qspid, 0);
 	}
 }
 
@@ -173,11 +173,11 @@ void s25fl1d_send_command(qspid_t *p_qspid, uint8_t instr, uint32_t *p_tx_data, 
  * \param size  Data size to be read/write.
  * \param secure  Enable or disable scramble on QSPI.
  */
-void s25fl1d_memory_access(qspid_t *p_qspid, uint8_t instr, uint32_t addr, uint32_t *p_tx_data, uint32_t *p_rx_data, access_t read_write, uint32_t size, uint8_t secure)
+void s25fl1d_memory_access(qspid_t *p_qspid, uint8_t instr, uint32_t addr, uint32_t *p_tx_data, uint32_t *p_rx_data, qspi_access_t read_write, uint32_t size, uint8_t secure)
 {
 	uint8_t qspi_buffer[4];
 	p_qspid->qspi_command.instruction = instr;
-	p_qspid->qspi_mode = QspiMemMode;
+	p_qspid->qspi_mode = mem_mode;
 	p_qspid->qspi_buffer.p_data_tx = p_tx_data;
 	p_qspid->qspi_buffer.p_data_rx = p_rx_data;
 	p_mem->addr= addr;
@@ -186,15 +186,15 @@ void s25fl1d_memory_access(qspid_t *p_qspid, uint8_t instr, uint32_t addr, uint3
 	p_mem->inst_frame.bm.b_addr_en = 1;
 	p_qspid->p_qspi_frame = p_mem;
 	
-	if (read_write == WriteAccess) {
+	if (read_write == write_access) {
 		p_mem->inst_frame.bm.b_tfr_type = (QSPI_IFR_TFRTYP_TRSFR_WRITE_MEMORY >> QSPI_IFR_TFRTYP_Pos);
 		p_qspid->qspi_buffer.tx_data_size = size;
 	} else {
 		p_mem->inst_frame.bm.b_tfr_type = (QSPI_IFR_TFRTYP_TRSFR_READ_MEMORY >> QSPI_IFR_TFRTYP_Pos);
 		p_qspid->qspi_buffer.rx_data_size = size;
 	}
-	qspi_enable_mem_access(p_qspid, 0, secure);
-	qspi_read_write_mem(p_qspid, read_write);
+	qspi_flash_enable_mem_access(p_qspid, 0, secure);
+	qspi_flash_read_write_mem(p_qspid, read_write);
 }
 
 /**
@@ -205,7 +205,7 @@ void s25fl1d_memory_access(qspid_t *p_qspid, uint8_t instr, uint32_t addr, uint3
 static uint8_t s25fl1d_read_status1(qspid_t *p_qspid)
 {
     uint8_t status;    
-    s25fl1d_send_command(p_qspid, READ_STATUS_1, 0, (uint32_t *)(&status), ReadAccess, 1);
+    s25fl1d_send_command(p_qspid, READ_STATUS_1, 0, (uint32_t *)(&status), read_access, 1);
     return status;
 }
 
@@ -217,7 +217,7 @@ static uint8_t s25fl1d_read_status1(qspid_t *p_qspid)
 static uint8_t s25fl1d_read_status2(qspid_t *p_qspid)
 {
     uint8_t status;    
-    s25fl1d_send_command(p_qspid, READ_STATUS_2, 0, (uint32_t *)&status, ReadAccess, 1);
+    s25fl1d_send_command(p_qspid, READ_STATUS_2, 0, (uint32_t *)&status, read_access, 1);
     return status;
 }
 
@@ -229,7 +229,7 @@ static uint8_t s25fl1d_read_status2(qspid_t *p_qspid)
 static uint8_t s25fl1d_read_status3(qspid_t *p_qspid)
 {
     uint8_t status;
-    s25fl1d_send_command(p_qspid, READ_STATUS_3, 0, (uint32_t *)&status, ReadAccess, 1);
+    s25fl1d_send_command(p_qspid, READ_STATUS_3, 0, (uint32_t *)&status, read_access, 1);
     return status;
 }
 
@@ -264,7 +264,7 @@ static void s25fl1d_enable_write(qspid_t *p_qspid)
 {
     uint8_t status = 0;
     while(!(status & STATUS_WEL)) {
-      s25fl1d_send_command(p_qspid, WRITE_ENABLE, 0, 0, CmdAccess, 0);
+      s25fl1d_send_command(p_qspid, WRITE_ENABLE, 0, 0, cmd_access, 0);
       status = s25fl1d_read_status1(p_qspid);
     }
 }
@@ -279,7 +279,7 @@ static void s25fl1d_disable_write(qspid_t *p_qspid)
     uint8_t status;
     status = s25fl1d_read_status1(p_qspid);
     while( (status & STATUS_WEL) != 0) {
-        s25fl1d_send_command(p_qspid, WRITE_DISABLE, 0, 0, CmdAccess, 0);
+        s25fl1d_send_command(p_qspid, WRITE_DISABLE, 0, 0, cmd_access, 0);
         status = s25fl1d_read_status1(p_qspid);
     }
 }
@@ -293,7 +293,7 @@ static void s25fl1d_disable_write(qspid_t *p_qspid)
 static void s25fl1d_write_status(qspid_t *p_qspid, uint8_t *p_status)
 {
     s25fl1d_enable_write(p_qspid);
-    s25fl1d_send_command(p_qspid, WRITE_STATUS, (uint32_t *)p_status, 0, WriteAccess, 3);  
+    s25fl1d_send_command(p_qspid, WRITE_STATUS, (uint32_t *)p_status, 0, write_access, 3);  
     s25fl1d_disable_write(p_qspid);
 }
 
@@ -305,8 +305,8 @@ static void s25fl1d_write_status(qspid_t *p_qspid, uint8_t *p_status)
  */
 static void s25fl1d_write_volatile_status(qspid_t *p_qspid, uint8_t *p_status)
 {
-    s25fl1d_send_command(p_qspid, 0x50, 0, 0 , CmdAccess, 0); 
-    s25fl1d_send_command(p_qspid, WRITE_STATUS, &p_status, 0 , WriteAccess, 3);
+    s25fl1d_send_command(p_qspid, 0x50, 0, 0 , cmd_access, 0); 
+    s25fl1d_send_command(p_qspid, WRITE_STATUS, &p_status, 0 , write_access, 3);
     s25fl1d_disable_write(p_qspid);
 }
 
@@ -411,7 +411,7 @@ static uint8_t s25fl1d_check_protected_addr(uint8_t status1, uint32_t ul_addr)
 uint32_t s25fl1d_read_jedec_id(qspid_t *p_qspid)
 {
     static uint32_t pId;
-    s25fl1d_send_command(p_qspid, READ_JEDEC_ID, 0, &pId, ReadAccess, 3);
+    s25fl1d_send_command(p_qspid, READ_JEDEC_ID, 0, &pId, read_access, 3);
     return pId;
 }
 
@@ -465,7 +465,7 @@ void s25fl1d_enable_wrap(qspid_t *p_qspid, uint8_t byte_align)
     status[2] |= (byte_align << 5);
 
     p_dev->inst_frame.bm.b_dummy_cycles = 24;
-    s25fl1d_send_command(p_qspid, WRAP_ENABLE,(uint32_t *)&status[2], 0,  WriteAccess, 1);
+    s25fl1d_send_command(p_qspid, WRAP_ENABLE,(uint32_t *)&status[2], 0,  write_access, 1);
 
     s25fl1d_write_volatile_status(p_qspid, status);
     status[2] = s25fl1d_read_status3(p_qspid);
@@ -504,8 +504,8 @@ void s25fl1d_set_read_latency_control(qspid_t *p_qspid, uint8_t latency)
  */
 void s25fl1d_soft_reset(qspid_t *p_qspid)
 {
-    s25fl1d_send_command(p_qspid, SOFT_RESET_ENABLE,0, 0,  CmdAccess, 0);
-    s25fl1d_send_command(p_qspid, SOFT_RESET, 0, 0, CmdAccess, 0);
+    s25fl1d_send_command(p_qspid, SOFT_RESET_ENABLE,0, 0,  cmd_access, 0);
+    s25fl1d_send_command(p_qspid, SOFT_RESET, 0, 0, cmd_access, 0);
 }
 
 /**
@@ -603,12 +603,12 @@ unsigned char s25fl1d_protect(qspid_t *p_qspid)
         return 0;
     }
 	
-    status[0] |= STATUS_SWP;
+    status[0] |= (STATUS_SWP | STATUS_SPRL);
     s25fl1d_write_status(p_qspid, status);
 
     /* Check the new status */
     status[0] = s25fl1d_read_status(p_qspid);
-    if ((status[0] & (STATUS_SPRL | STATUS_SWP)) != 0) {
+    if ((status[0] & (STATUS_SPRL | STATUS_SWP)) != (STATUS_SPRL | STATUS_SWP)) {
 		puts("\r-E Lock protection failed!\n");
         return ERROR_PROTECTED;
     }
@@ -638,7 +638,7 @@ unsigned char s25fl1d_erase_chip(qspid_t *p_qspid)
 		return 1;
     } else {
 		s25fl1d_enable_write(p_qspid);
-		s25fl1d_send_command(p_qspid, CHIP_ERASE_2, 0, 0, CmdAccess, 0);
+		s25fl1d_send_command(p_qspid, CHIP_ERASE_2, 0, 0, cmd_access, 0);
 
 		while(status & STATUS_RDYBSY) {
 			delay_ms(200);
@@ -684,7 +684,7 @@ unsigned char s25fl1d_erase_sector(qspid_t *p_qspid,unsigned int address)
     p_dev->addr = address;
     p_dev->inst_frame.bm.b_addr_en = 1;
     /* Start the block erase command */
-    s25fl1d_send_command(p_qspid, BLOCK_ERASE_4K, 0, 0, CmdAccess, 0);
+    s25fl1d_send_command(p_qspid, BLOCK_ERASE_4K, 0, 0, cmd_access, 0);
     
     /* Wait for transfer to finish */
     s25fl1d_is_busy(p_qspid);
@@ -722,7 +722,7 @@ unsigned char s25fl1d_erase_64k_block(qspid_t *p_qspid, unsigned int address)
     p_dev->addr = address;
     p_dev->inst_frame.bm.b_addr_en = 1;
     /* Start the block erase command */
-    s25fl1d_send_command(p_qspid, BLOCK_ERASE_64K, 0, 0, CmdAccess, 0);
+    s25fl1d_send_command(p_qspid, BLOCK_ERASE_64K, 0, 0, cmd_access, 0);
     
     /* Wait for transfer to finish */
     s25fl1d_is_busy(p_qspid);
@@ -748,25 +748,26 @@ unsigned char s25fl1d_erase_64k_block(qspid_t *p_qspid, unsigned int address)
 {
     unsigned int i = 0;
     
-    uint32_t  number_of_writes = (size >> 8); //  ((Size / pagezize))
+	 /* Size / pagezize */
+    uint32_t  number_of_writes = (size >> 8);
     uint32_t addr = address;
   
 	/* if less than page size */
     if(number_of_writes == 0) {
         s25fl1d_enable_write(p_qspid);
-        s25fl1d_memory_access(p_qspid, BYTE_PAGE_PROGRAM , addr, pData, 0,  WriteAccess, size, secure);
+        s25fl1d_memory_access(p_qspid, BYTE_PAGE_PROGRAM , addr, pData, 0,  write_access, size, secure);
     } else {
 		/* multiple page */
         for(i=0; i< number_of_writes; i++) {
             s25fl1d_enable_write(p_qspid);
-            s25fl1d_memory_access(p_qspid, BYTE_PAGE_PROGRAM , addr, pData, 0, WriteAccess, PAGE_SIZE, secure);            
+            s25fl1d_memory_access(p_qspid, BYTE_PAGE_PROGRAM , addr, pData, 0, write_access, PAGE_SIZE, secure);            
             s25fl1d_is_busy(p_qspid);
             pData += (PAGE_SIZE >> 2);
             addr += PAGE_SIZE;
         }
         if(size % PAGE_SIZE ) {
             s25fl1d_enable_write(p_qspid);
-            s25fl1d_memory_access(p_qspid, BYTE_PAGE_PROGRAM , addr, pData, 0, WriteAccess, (size - (number_of_writes * PAGE_SIZE)), secure);         
+            s25fl1d_memory_access(p_qspid, BYTE_PAGE_PROGRAM , addr, pData, 0, write_access, (size - (number_of_writes * PAGE_SIZE)), secure);         
             s25fl1d_is_busy(p_qspid);
         }
     }
@@ -785,13 +786,14 @@ unsigned char s25fl1d_erase_64k_block(qspid_t *p_qspid, unsigned int address)
  * \return 0 if successful; otherwise, fail.
  */
  unsigned char s25fl1d_read(qspid_t *p_qspid, uint32_t *p_data,  uint32_t size, uint32_t address)
-{   
-    const uint8_t dummy_read = 1;    // 1 DummyRead is 8 dummy cycles of SPI
+{
+	/** 1 DummyRead is 8 dummy cycles of SPI */
+    const uint8_t dummy_read = 1;    
     uint8_t *p_data_rx;
     uint8_t secure = 0;
     
     p_data_rx = malloc(size);
-    s25fl1d_memory_access(p_qspid, READ_ARRAY , address, 0, (uint32_t *)p_data_rx, ReadAccess, (size + dummy_read), secure);
+    s25fl1d_memory_access(p_qspid, READ_ARRAY , address, 0, (uint32_t *)p_data_rx, read_access, (size + dummy_read), secure);
     memcpy(p_data, p_data_rx , size);
     
     p_data_rx = NULL;
@@ -816,7 +818,7 @@ unsigned char s25fl1d_erase_64k_block(qspid_t *p_qspid, unsigned int address)
     p_mem->inst_frame.bm.b_dummy_cycles = 8;
     p_mem->inst_frame.bm.b_width = QSPI_IFR_WIDTH_DUAL_OUTPUT;
     
-    s25fl1d_memory_access(p_qspid, READ_ARRAY_DUAL , address, 0, p_data, ReadAccess, size, secure);
+    s25fl1d_memory_access(p_qspid, READ_ARRAY_DUAL , address, 0, p_data, read_access, size, secure);
     
     return 0;
 }
@@ -836,7 +838,7 @@ unsigned char s25fl1d_erase_64k_block(qspid_t *p_qspid, unsigned int address)
     uint8_t secure = 0;
     p_mem->inst_frame.bm.b_dummy_cycles  = 8;
     p_mem->inst_frame.bm.b_width = QSPI_IFR_WIDTH_QUAD_OUTPUT;
-    s25fl1d_memory_access(p_qspid, READ_ARRAY_QUAD,  address, 0, p_data, ReadAccess, size, secure);
+    s25fl1d_memory_access(p_qspid, READ_ARRAY_QUAD,  address, 0, p_data, read_access, size, secure);
     
     return 0;
 }
@@ -865,14 +867,13 @@ unsigned char s25fl1d_erase_64k_block(qspid_t *p_qspid, unsigned int address)
 
       p_mem->inst_frame.bm.b_width = QSPI_IFR_WIDTH_DUAL_IO;
       
-      s25fl1d_memory_access(p_qspid, READ_ARRAY_DUAL_IO , address, 0, p_data, ReadAccess, size, secure);
+      s25fl1d_memory_access(p_qspid, READ_ARRAY_DUAL_IO , address, 0, p_data, read_access, size, secure);
       
       p_mem->inst_frame.bm.b_opt_en = 0;
       p_mem->inst_frame.bm.b_continues_read  = 0;
 	  
       return 0;
 }
-
 
 /**
  * \brief Reads data from the specified address on the serial flash.
@@ -898,7 +899,7 @@ unsigned char s25fl1d_erase_64k_block(qspid_t *p_qspid, unsigned int address)
 
       p_mem->inst_frame.bm.b_width = QSPI_IFR_WIDTH_QUAD_IO;
       
-      s25fl1d_memory_access(p_qspid, READ_ARRAY_QUAD_IO , address, 0, p_data, ReadAccess, size, secure);
+      s25fl1d_memory_access(p_qspid, READ_ARRAY_QUAD_IO , address, 0, p_data, read_access, size, secure);
       
       p_mem->inst_frame.bm.b_opt_en = 0;
       p_mem->inst_frame.bm.b_continues_read  = 0;

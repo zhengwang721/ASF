@@ -64,126 +64,7 @@
  *
  * @{
  */
-#ifndef QSPI_WPMR_WPKEY_PASSWD
-#define QSPI_WPMR_WPKEY_PASSWD QSPI_WPMR_WPKEY((uint32_t) 0x515350)
-#endif
 
-/**
- * \brief Read QSPI RDR register for SPI mode
- *
- * \param p_qspi   Pointer to an Qspi instance.
- */
-__STATIC_INLINE uint16_t qspi_read_spi( Qspi *p_qspi )
-{
-	assert(p_qspi);
-	while(!(p_qspi->QSPI_SR & QSPI_SR_RDRF));
-    return  p_qspi->QSPI_RDR;
-}
-
-/**
- * \brief Write to QSPI Tx register in SPI mode
- *
- * \param p_qspi   Pointer to an Qspi instance.
- * \param w_data   Data to transmit
- */
-__STATIC_INLINE void qspi_write_spi( Qspi *p_qspi, uint16_t w_data)
-{
-    assert(p_qspi);
-    /* Send data */
-	while(!(p_qspi->QSPI_SR & QSPI_SR_TXEMPTY));
-    p_qspi->QSPI_TDR = w_data ;
-	while(!(p_qspi->QSPI_SR & QSPI_SR_TDRE));
-}
-
-/**
- * \brief Reads the Instruction frame of QSPI
- *
- * \param pQspi   Pointer to an Qspi instance.
- */
-__STATIC_INLINE uint32_t qspi_get_inst_frame( Qspi *p_qspi )
-{
-    assert(p_qspi);
-    return p_qspi->QSPI_IFR;
-}
-
-/**
- * \brief Resets a QSPI peripheral.
- *
- * \param p_qspi  Pointer to a Qspi instance.
- */
-void qspi_reset( Qspi *p_qspi )
-{
-    assert(p_qspi);
-    p_qspi->QSPI_CR = QSPI_CR_SWRST ;
-}
-
-/**
- * \brief Enables a QSPI peripheral.
- *
- * \param p_qspi  Pointer to a Qspi instance.
- */
-void qspi_enable( Qspi *p_qspi )
-{
-    assert(p_qspi);
-    p_qspi->QSPI_CR = QSPI_CR_QSPIEN;
-    while(!(p_qspi->QSPI_SR & QSPI_SR_QSPIENS));
-}
-
-/**
- * \brief Disables a QSPI peripheral.
- *
- * \param p_qspi  Pointer to a Qspi instance.
- */
-void qspi_disable( Qspi *p_qspi )
-{
-    assert(p_qspi);
-    p_qspi->QSPI_CR = QSPI_CR_QSPIDIS ;
-    while(p_qspi->QSPI_SR & QSPI_SR_QSPIENS);
-}
-
-/**
- * \brief Set a QSPI peripheral run mode.
- *
- * \param p_qspi  Pointer to a Qspi instance.
- * \param ul_mode p_qspi run mode to be set.
- */
-void qspi_set_run_mode(Qspi *p_qspi, uint32_t ul_mode)
-{
-	assert(p_qspi);	
-	if (ul_mode == 0) {
-		p_qspi->QSPI_MR &= (~QSPI_MR_SMM_MEMORY);
-	} else {
-		p_qspi->QSPI_MR |= QSPI_MR_SMM_MEMORY;	
-	}
-}
-
-/**
- * \brief Set qspi minimum inactive qcs delay.
- *
- * \param p_qspi  Pointer to a Qspi instance.
- * \param uc_dlybct Time to be delay.
- */
-void qspi_set_minimum_inactive_qcs_delay(Qspi *p_qspi, uint8_t uc_dlybct)
-{
-	assert(p_qspi);
-	
-	uint32_t ul_mask = p_qspi->QSPI_MR & (~QSPI_MR_DLYBCT_Msk);
-	p_qspi->QSPI_MR = ul_mask | QSPI_MR_DLYBCT(uc_dlybct);
-}
-
-/**
- * \brief Set qspi delay between consecutive transfers.
- *
- * \param p_qspi  Pointer to a Qspi instance.
- * \param uc_dlycs Time to be delay.
- */
-void qspi_set_delay_between_consecutive_transfers(Qspi *p_qspi, uint32_t uc_dlycs)
-{
-	assert(p_qspi);
-	
-	uint32_t ul_mask = p_qspi->QSPI_MR & (~QSPI_MR_DLYCS_Msk);
-	p_qspi->QSPI_MR = ul_mask | QSPI_MR_DLYCS(uc_dlycs);
-}
 
 /**
  * \brief Qspi read datas.
@@ -193,14 +74,14 @@ void qspi_set_delay_between_consecutive_transfers(Qspi *p_qspi, uint32_t uc_dlyc
  * \param num_of_bytes Read datas num.
  * \return status Read option result.
  */
-qspi_status_t qspi_read(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_bytes)
+enum status_code qspi_read(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_bytes)
 {
 	assert(p_qspi);
 	if (num_of_bytes == 0) {
-		return QSPI_SUCCESS;
+		return STATUS_OK;
 	}
 		
-	qspi_status_t status = QSPI_UNKNOWN_ERROR;
+	enum status_code status = OPERATION_IN_PROGRESS;
 	uint32_t num_of_bytes_read = 0;
 	uint32_t num_of_attempt = 0;
 	uint8_t *pw_data = (uint8_t *)us_data;
@@ -213,15 +94,15 @@ qspi_status_t qspi_read(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_bytes)
 				qspi_write_spi(p_qspi, dummy);
 				*us_data = qspi_read_spi(p_qspi);
 				num_of_attempt = 0;
-				status = QSPI_SUCCESS;
+				status = STATUS_OK;
 				break;
 			} else {
 				if(num_of_attempt > 0xFFFF) {
-					status = QSPI_READ_ERROR;
+					status = ERR_TIMEOUT;
 					puts(" SPI Read Error \n\r");
 					break;
 				} else {
-					status = QSPI_READ_ERROR;
+					status = STATUS_ERR_BUSY;
 					num_of_attempt++;
 				}
 			}
@@ -240,15 +121,15 @@ qspi_status_t qspi_read(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_bytes)
 				}
 				num_of_bytes_read++;
 				num_of_attempt = 0;
-				status = QSPI_SUCCESS;
+				status = STATUS_OK;
 				qspi_write_spi(p_qspi, dummy);
 			} else {
 				if(num_of_attempt > 0xFFFF) {
-					status = QSPI_READ_ERROR;
+					status = ERR_TIMEOUT;
 					puts(" SPI MultiRead Error \n\r");
 					break;
 				} else {
-					status = QSPI_READ_ERROR;
+					status = STATUS_ERR_BUSY;
 					num_of_attempt++;
 				}
 			}
@@ -266,14 +147,14 @@ qspi_status_t qspi_read(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_bytes)
  * \param num_of_bytes Write datas num.
  * \return status Write option result.
  */
-qspi_status_t qspi_write(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_bytes)
+enum status_code qspi_write(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_bytes)
 {
 	assert(p_qspi);
 	if (num_of_bytes == 0) {
-		return QSPI_SUCCESS;
+		return STATUS_OK;
 	}
 	
-	qspi_status_t status = QSPI_UNKNOWN_ERROR;
+	enum status_code status = OPERATION_IN_PROGRESS;
 	uint32_t num_of_bytes_write = 0;
 	uint32_t num_of_attempt = 0;
 	uint8_t *pw_data = (uint8_t *)us_data;
@@ -284,13 +165,13 @@ qspi_status_t qspi_write(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_bytes)
 			if(p_qspi->QSPI_SR & QSPI_SR_TDRE) {
 				qspi_write_spi(p_qspi, (uint16_t)(*us_data));
 				num_of_attempt = 0;
-				status = QSPI_SUCCESS;
+				status = STATUS_OK;
 				break;
 			} else {
-				status = QSPI_BUSY_SENDING;
+				status = STATUS_ERR_BUSY;
 				num_of_attempt++;
 				if(num_of_attempt > 0xFFFF) {
-					status = QSPI_WRITE_ERROR;
+					status = ERR_TIMEOUT;
 					puts(" SPI Write Error \n\r");
 					break;
 				}
@@ -308,12 +189,12 @@ qspi_status_t qspi_write(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_bytes)
 				qspi_write_spi(p_qspi, (uint16_t )(*pw_data));
 				pw_data += Addr_Inc;
 				num_of_attempt = 0;
-				status = QSPI_SUCCESS;
+				status = STATUS_OK;
 			} else {
-				status = QSPI_BUSY_SENDING;
+				status = STATUS_ERR_BUSY;
 				num_of_attempt++;
 				if(num_of_attempt > 0xFFFF) {
-					status = QSPI_WRITE_ERROR;
+					status = ERR_TIMEOUT;
 					puts(" SPI Multi Write Error \n\r");
 					break;
 				}
@@ -325,219 +206,58 @@ qspi_status_t qspi_write(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_bytes)
 }
 
 /**
- * \brief Ends ongoing transfer by releasing CS of QSPI peripheral.
+ * \brief Config qspi according the config struct
  *
- * \param pQspi  Pointer to an Qspi instance.
+ * \param p_qspi_config     Pointer to an qspi_config_t struct.
+ *
  */
-void qspi_end_transfer(Qspi *p_qspi)
+void qspi_set_config(qspi_config_t * p_qspi_config)
 {
-    assert(p_qspi);
-    while(!(p_qspi->QSPI_SR & QSPI_SR_TXEMPTY));
-    p_qspi->QSPI_CR = QSPI_CR_LASTXFER;
+	/* Configure an QSPI peripheral. */
+	qspi_disable(p_qspi_config->p_qspi_hw);
+	qspi_reset(p_qspi_config->p_qspi_hw);
+	qspi_set_lastxfer(p_qspi_config->p_qspi_hw);
+	qspi_set_chip_select_mode(p_qspi_config->p_qspi_hw, p_qspi_config->ul_csmode);
+	qspi_set_clock_polarity(p_qspi_config->p_qspi_hw, p_qspi_config->ul_clock_polarity);
+	qspi_set_clock_phase(p_qspi_config->p_qspi_hw, p_qspi_config->ul_clock_phase);
+	qspi_set_bits_per_transfer(p_qspi_config->p_qspi_hw, p_qspi_config->ul_bits_per_transfer);
+	qspi_set_baudrate(p_qspi_config->p_qspi_hw, p_qspi_config->ul_baudrate);
+	qspi_set_transfer_delay(p_qspi_config->p_qspi_hw, p_qspi_config->ul_transfer_delay);
+	qspi_set_memory_mode(p_qspi_config->p_qspi_hw);
+	qspi_enable(p_qspi_config->p_qspi_hw);
 }
 
 /**
- * \brief Set qspi clock polarity.
+ * \brief Config qspi according the config struct
  *
- * \param p_qspi  Pointer to a Qspi instance.
- * \param ul_polarity Polarity to be set.
+ * \param p_qspi_config     Pointer to an qspi_config_t struct.
+ *
  */
-void qspi_set_clock_polarity(Qspi *p_qspi, uint32_t ul_polarity)
+void qspi_get_default_config(qspi_config_t * p_qspi_config)
 {
-	assert(p_qspi);
-	if (ul_polarity) {
-		p_qspi->QSPI_SCR |= QSPI_SCR_CPOL;	
-	} else {
-		p_qspi->QSPI_SCR &= (~QSPI_SCR_CPOL);	
-	} 
+	p_qspi_config->p_qspi_hw = QSPI;
+	p_qspi_config->ul_csmode = 1;
+	p_qspi_config->ul_clock_polarity = 0;
+	p_qspi_config->ul_clock_phase = 0;
+	p_qspi_config->ul_bits_per_transfer = QSPI_MR_NBBITS_8_BIT;
+	p_qspi_config->ul_baudrate = sysclk_get_cpu_hz() / 1000000;
+	p_qspi_config->ul_transfer_delay = 0x40;
 }
 
 /**
- * \brief Set qspi clock phase.
- *
- * \param p_qspi  Pointer to a Qspi instance.
- * \param ul_phase Phase to be set.
- */
-void qspi_set_clock_phase(Qspi *p_qspi, uint32_t ul_phase)
-{
-	assert(p_qspi);
-	if (ul_phase) {
-		p_qspi->QSPI_SCR |= QSPI_SCR_CPHA;
-	} else {
-		p_qspi->QSPI_SCR &= (~QSPI_SCR_CPHA);
-	}
-}
-
-/**
- * \brief Set qspi clock baudrate.
- *
- * \param p_qspi  Pointer to a Qspi instance.
- * \param uc_baudrate_div Baudrate_div to be set.
- */
-void qspi_set_baudrate(Qspi *p_qspi, uint8_t uc_baudrate_div)
-{
-	assert(p_qspi);
-	uint32_t ul_mask = p_qspi->QSPI_SCR & (~QSPI_SCR_SCBR_Msk);
-	p_qspi->QSPI_SCR = ul_mask | QSPI_SCR_SCBR(uc_baudrate_div);
-}
-
-/**
- * \brief Set qspi clock transfer delay.
- *
- * \param p_qspi  Pointer to a Qspi instance.
- * \param uc_dlybs Delay before QSCK.
- */
-void qspi_set_transfer_delay(Qspi *p_qspi, uint8_t uc_dlybs)
-{
-	assert(p_qspi);
-	uint32_t ul_mask = p_qspi->QSPI_SCR & (~QSPI_SCR_DLYBS_Msk);
-	p_qspi->QSPI_SCR = ul_mask | QSPI_SCR_DLYBS(uc_dlybs);
-}
-
-/**
- * \brief Set qspi instruction addr.
- *
- * \param p_qspi  Pointer to a Qspi instance.
- * \param ul_addr Address to be set.
- */
-void qspi_set_instruction_addr(Qspi *p_qspi, uint32_t ul_addr)
-{
-	assert(p_qspi);	
-	p_qspi->QSPI_IAR = QSPI_IAR_ADDR(ul_addr);
-}
-
-/**
- * \brief Set qspi instruction code.
- *
- * \param p_qspi  Pointer to a Qspi instance.
- * \param ul_instruction_code Code to be set.
- */
-void qspi_set_instruction_code(Qspi *p_qspi, qspi_mem_cmd_t ul_instruction_code)
-{
-	assert(p_qspi);
-	p_qspi->QSPI_ICR = QSPI_ICR_INST(ul_instruction_code.instruction) | QSPI_ICR_OPT(ul_instruction_code.option);
-}
-
-/**
- * \brief Set qspi instruction frame.
- *
- * \param p_qspi  Pointer to a Qspi instance.
- * \param ul_instruction_frame Frame to be set.
- */
-void qspi_set_instruction_frame(Qspi *p_qspi, qspi_inst_frame_t ul_instruction_frame)
-{
-	assert(p_qspi);
-	uint32_t ul_mask = 0;
-	ul_mask |= QSPI_IFR_WIDTH(ul_instruction_frame.inst_frame.bm.b_width);
-	if (ul_instruction_frame.inst_frame.bm.b_inst_en) {
-		ul_mask |= QSPI_IFR_INSTEN;
-	}
-	if (ul_instruction_frame.inst_frame.bm.b_addr_en) {
-		ul_mask |= QSPI_IFR_ADDREN;
-	}
-	if (ul_instruction_frame.inst_frame.bm.b_opt_en) {
-		ul_mask |= QSPI_IFR_OPTEN;
-	}
-	if (ul_instruction_frame.inst_frame.bm.b_data_en) {
-		ul_mask |= QSPI_IFR_DATAEN;
-	}
-	ul_mask |= QSPI_IFR_OPTL(ul_instruction_frame.inst_frame.bm.b_opt_len);
-	if (ul_instruction_frame.inst_frame.bm.b_addr_len) {
-		ul_mask |= QSPI_IFR_ADDRL_32_BIT;
-	}
-	ul_mask |= QSPI_IFR_TFRTYP(ul_instruction_frame.inst_frame.bm.b_tfr_type);
-	if (ul_instruction_frame.inst_frame.bm.b_continues_read) {
-		ul_mask |= QSPI_IFR_CRM_ENABLED;
-	}
-	ul_mask |= QSPI_IFR_NBDUM(ul_instruction_frame.inst_frame.bm.b_dummy_cycles);
-	
-	p_qspi->QSPI_IFR = ul_mask;
-}
-
-/**
- * \brief Set qspi scrambling mode.
- *
- * \param p_qspi  Pointer to a Qspi instance.
- * \param ul_mode Mode to be set.
- */
-void qspi_set_scrambling_mode(Qspi *p_qspi, uint32_t ul_scr_enable, uint32_t ul_random_mode)
-{
-	assert(p_qspi);
-	p_qspi->QSPI_SMR &= (~(QSPI_SMR_SCREN | QSPI_SMR_RVDIS));
-		
-	if (ul_scr_enable) {
-		p_qspi->QSPI_SCR |= QSPI_SMR_SCREN;
-	} else {
-		p_qspi->QSPI_SCR &= (~QSPI_SMR_SCREN);
-	}
-	
-	if (ul_random_mode) {
-		p_qspi->QSPI_SCR |= QSPI_SMR_RVDIS;
-	} else {
-		p_qspi->QSPI_SCR &= (~QSPI_SMR_RVDIS);
-	}
-}
-
-/**
- * \brief Set qspi scrambling key.
- *
- * \param p_qspi  Pointer to a Qspi instance.
- * \param ul_mode Mode to be set.
- * \return If write succeeded, return 0, else return 1.
- */
-uint32_t qspi_set_scrambing_key(Qspi *p_qspi, uint32_t ul_key)
-{
-	assert(p_qspi);
-	if (p_qspi->QSPI_WPMR & QSPI_WPMR_WPEN) {
-		return 1;
-	}
-	p_qspi->QSPI_SKR = QSPI_SKR_USRK(ul_key);
-	
-	return 0;
-}
-
-/**
- * \brief Enable write protection.
- *
- * \param p_qspi  Pointer to a Qspi instance.
- * \ul_enable Protection status to be set.
- */
-void qspi_set_writeprotect(Qspi *p_qspi, uint32_t ul_enable)
-{
-	assert(p_qspi);
-	if (ul_enable) {
-		p_qspi->QSPI_WPMR |= (QSPI_WPMR_WPKEY_PASSWD | QSPI_WPMR_WPEN);
-	} else {
-		p_qspi->QSPI_WPMR &= (~(QSPI_WPMR_WPKEY_PASSWD | QSPI_WPMR_WPEN));
-	}
-}
-
-/**
- * \brief Get write protection status.
- *
- * \param p_qspi  Pointer to a Qspi instance.
- * \return Write protection status.
- */
-uint32_t qspi_get_writeprotect_status(Qspi *p_qspi)
-{
-	assert(p_qspi);
-	return p_qspi->QSPI_WPSR;
-}
-
-/**
- * \brief Send an instruction over QSPI (oly a flash command no data)
+ * \brief Send an instruction over QSPI (only a flash command no data)
  *
  * \param pQspi     Pointer to an Qspi instance.
- * \param keep_cfg   To keep Instruction fram value or restes to zero
+ * \param keep_cfg   To keep Instruction frame value or reset to zero
  *
  * \return Returns 1 if At least one instruction end has been detected since the last read of QSPI_SR.; otherwise
  * returns 0.
  */
-qspi_status_t qspi_send_command(qspid_t *p_qspid, uint8_t const keep_cfg)
+enum status_code qspi_flash_send_command(qspid_t *p_qspid, uint8_t const keep_cfg)
 {  
     qspi_inst_frame_t* const p_frame = p_qspid->p_qspi_frame;
     qspi_mem_cmd_t p_command = p_qspid->qspi_command;
-    qspi_status_t Status = QSPI_UNKNOWN_ERROR;
+    enum status_code status = OPERATION_IN_PROGRESS;
     
     if(p_frame->inst_frame.bm.b_addr_en) {
 		qspi_set_instruction_addr(p_qspid->p_qspi_hw, p_frame->addr);
@@ -547,11 +267,13 @@ qspi_status_t qspi_send_command(qspid_t *p_qspid, uint8_t const keep_cfg)
     __DSB();
 	__ISB();
 	qspi_end_transfer(p_qspid->p_qspi_hw);
-    while(!(p_qspid->p_qspi_hw->QSPI_SR & QSPI_SR_INSTRE));             // poll CR reg to know status if instruction has end
+	/** poll CR reg to know status if instruction has end */
+    while(!(p_qspid->p_qspi_hw->QSPI_SR & QSPI_SR_INSTRE));             
     if(!keep_cfg) {
 		p_frame->inst_frame.val = 0;
     }
-    return Status;
+	status = STATUS_OK;
+    return status;
 }
 
 /**
@@ -563,32 +285,34 @@ qspi_status_t qspi_send_command(qspid_t *p_qspid, uint8_t const keep_cfg)
  * \return Returns 1 if At least one instruction end has been detected since the last read of QSPI_SR.; otherwise
  * returns 0.
  */
-qspi_status_t qspi_send_command_with_data(qspid_t *p_qspid, uint8_t const keep_cfg)
+enum status_code qspi_flash_send_command_with_data(qspid_t *p_qspid, uint8_t const keep_cfg)
 {  
     qspi_inst_frame_t* const  p_frame = p_qspid->p_qspi_frame;
     qspi_mem_cmd_t p_command = p_qspid->qspi_command;
     qspi_buffer_t p_buffer = p_qspid->qspi_buffer;
     uint32_t *p_qspi_buffer = (uint32_t *)QSPIMEM_ADDR;
-    qspi_status_t Status = QSPI_UNKNOWN_ERROR;
+    enum status_code status = OPERATION_IN_PROGRESS;
    
     assert(p_buffer.p_data_tx);
         
     qspi_set_instruction_code(p_qspid->p_qspi_hw, p_command);
     qspi_set_instruction_frame(p_qspid->p_qspi_hw, *p_frame );
-    
-    qspi_get_inst_frame(p_qspid->p_qspi_hw);                        // to synchronize system bus accesses
-    if(!keep_cfg)
-    {
+    /** to synchronize system bus accesses */
+    qspi_get_inst_frame(p_qspid->p_qspi_hw);                        
+    if(!keep_cfg) {
       p_frame->inst_frame.val = 0;
     }
     
     memcpy(p_qspi_buffer, p_buffer.p_data_tx, p_buffer.tx_data_size); 
 	__DSB();
 	__ISB();
-    qspi_end_transfer(p_qspid->p_qspi_hw) ;                         // End transmission after all data has been sent
-    while(!(p_qspid->p_qspi_hw->QSPI_SR & QSPI_SR_INSTRE));         // poll CR reg to know status if instruction has end
+	/** End transmission after all data has been sent */
+    qspi_end_transfer(p_qspid->p_qspi_hw) ;     
+	/** poll CR reg to know status if instruction has end */                    
+    while(!(p_qspid->p_qspi_hw->QSPI_SR & QSPI_SR_INSTRE));        
     
-    return Status;
+	status = STATUS_OK;
+    return status;
 }
 
 /**
@@ -600,29 +324,33 @@ qspi_status_t qspi_send_command_with_data(qspid_t *p_qspid, uint8_t const keep_c
  * \return Returns 1 if At least one instruction end has been detected since the last read of QSPI_SR.; otherwise
  * returns 0.
  */
-qspi_status_t qspi_read_command(qspid_t *p_qspid, uint8_t const keep_cfg)
+enum status_code qspi_flash_read_command(qspid_t *p_qspid, uint8_t const keep_cfg)
 {  
     qspi_inst_frame_t* const p_frame = p_qspid->p_qspi_frame;
     qspi_mem_cmd_t  p_command = p_qspid->qspi_command;
     qspi_buffer_t *p_buffer = &p_qspid->qspi_buffer;
     uint32_t *p_qspi_buffer = (uint32_t *)QSPIMEM_ADDR;
-    qspi_status_t status = QSPI_UNKNOWN_ERROR;
+    enum status_code status = OPERATION_IN_PROGRESS;
     
     assert(p_buffer->rx_data_size);
       
     qspi_set_instruction_code(p_qspid->p_qspi_hw, p_command);
     qspi_set_instruction_frame(p_qspid->p_qspi_hw, *p_frame);
     
-    qspi_get_inst_frame(p_qspid->p_qspi_hw);                        // to synchronize system bus accesses   
+	/** to synchronize system bus accesses */
+    qspi_get_inst_frame(p_qspid->p_qspi_hw);                           
     if(!keep_cfg) {
 		p_frame->inst_frame.val = 0;
     }
     memcpy(p_buffer->p_data_rx , p_qspi_buffer,  p_buffer->rx_data_size);
 	__DSB();
 	__ISB();
-    qspi_end_transfer(p_qspid->p_qspi_hw);                        // End transmission after all data has been sent
-    while(!(p_qspid->p_qspi_hw->QSPI_SR & QSPI_SR_INSTRE));       // poll CR reg to know status if instruction has end
-	    
+	/** End transmission after all data has been sent */
+    qspi_end_transfer(p_qspid->p_qspi_hw);
+	/** poll CR reg to know status if instruction has end */                        
+    while(!(p_qspid->p_qspi_hw->QSPI_SR & QSPI_SR_INSTRE));       
+	
+	status = STATUS_OK;    
     return status;
 }
 
@@ -636,12 +364,12 @@ qspi_status_t qspi_read_command(qspid_t *p_qspid, uint8_t const keep_cfg)
  * \return Returns 1 if At least one instruction end has been detected since the last read of QSPI_SR.; otherwise
  * returns 0.
  */
-qspi_status_t qspi_enable_mem_access(qspid_t *p_qspid, uint8_t const keep_cfg, uint8_t scramble_flag)
+enum status_code qspi_flash_enable_mem_access(qspid_t *p_qspid, uint8_t const keep_cfg, uint8_t scramble_flag)
 {  
     qspi_inst_frame_t* const p_frame = p_qspid->p_qspi_frame;
     qspi_mem_cmd_t p_command = p_qspid->qspi_command;
         
-    qspi_status_t Status = QSPI_UNKNOWN_ERROR;
+    enum status_code status = OPERATION_IN_PROGRESS;
      
     qspi_set_instruction_code(p_qspid->p_qspi_hw, p_command);
     
@@ -651,12 +379,13 @@ qspi_status_t qspi_enable_mem_access(qspid_t *p_qspid, uint8_t const keep_cfg, u
     
     qspi_set_instruction_frame(p_qspid->p_qspi_hw, *p_frame );
     
-    qspi_get_inst_frame(p_qspid->p_qspi_hw);                        // to synchronize system bus accesses   
+	/** to synchronize system bus accesses */
+    qspi_get_inst_frame(p_qspid->p_qspi_hw);                          
     if(!keep_cfg) {
 		p_frame->inst_frame.val = 0;
     } 
-    Status = QSPI_SUCCESS;
-    return Status;
+    status = STATUS_OK;
+    return status;
 }
 
 /**
@@ -667,26 +396,28 @@ qspi_status_t qspi_enable_mem_access(qspid_t *p_qspid, uint8_t const keep_cfg, u
  * \return Returns 1 if At least one instruction end has been detected since the last read of QSPI_SR.; otherwise
  * returns 0.
  */
-qspi_status_t qspi_read_write_mem(qspid_t *p_qspid, access_t const read_write)
+enum status_code qspi_flash_read_write_mem(qspid_t *p_qspid, qspi_access_t const read_write)
 {  
-    qspi_status_t Status = QSPI_UNKNOWN_ERROR;
+    enum status_code status = OPERATION_IN_PROGRESS;
     qspi_inst_frame_t* const p_frame = p_qspid->p_qspi_frame;
     uint32_t *p_qspi_mem = (uint32_t *)(QSPIMEM_ADDR | p_frame->addr);
     qspi_buffer_t *p_buffer = &p_qspid->qspi_buffer;
     
-    assert( ( (read_write > CmdAccess) && (read_write <= WriteAccess) ) ? true: false );
-    if (read_write == WriteAccess) {
+    assert( ( (read_write > cmd_access) && (read_write <= write_access) ) ? true: false );
+    if (read_write == write_access) {
 		memcpy(p_qspi_mem, p_buffer->p_data_tx , p_buffer->tx_data_size ); 
     } else {
 		memcpy(p_buffer->p_data_rx, p_qspi_mem, p_buffer->rx_data_size ); 
     }
 	__DSB();
 	__ISB();
-    qspi_end_transfer(p_qspid->p_qspi_hw) ;                   // End transmission after all data has been sent
-    while(!(p_qspid->p_qspi_hw->QSPI_SR & QSPI_SR_INSTRE));             // poll CR reg to know status if instruction has end
+	/** End transmission after all data has been sent */
+    qspi_end_transfer(p_qspid->p_qspi_hw) ;   
+	/** poll CR reg to know status if instruction has end */                
+    while(!(p_qspid->p_qspi_hw->QSPI_SR & QSPI_SR_INSTRE));             
     
-    Status = QSPI_SUCCESS;
-    return Status;
+    status = STATUS_OK;
+    return status;
 }
 
 /**
