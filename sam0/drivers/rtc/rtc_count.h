@@ -67,7 +67,7 @@
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D09/D10/D11
  *  - Atmel | SMART SAM L21
  *  - Atmel | SMART SAM DAx
  *  - Atmel | SMART SAM C20/C21
@@ -130,7 +130,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
- *    <td>SAMD20, SAMD21, SAMR21, SAMD10, SAMD11, SAMDAx</td>
+ *    <td>SAMD20, SAMD21, SAMR21, SAMD09, SAMD10, SAMD11, SAMDAx</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -229,7 +229,7 @@
  * \section asfdoc_sam0_rtc_count_special_considerations Special Considerations
  *
  * \subsection asfdoc_sam0_rtc_count_special_considerations_clock Clock Setup
- * \subsubsection asfdoc_sam0_rtc_count_clock_samd_r SAM D20/D21/R21/D10/D11/DA0/DA1 Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_count_clock_samd_r SAM D2x/R21/D09/D1x/DAx Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32KHz RC-oscillator with a prescaler of 32, giving a
@@ -698,7 +698,7 @@ struct rtc_count_config {
 #endif
 #if (SAML21) || (SAMC20) || (SAMC21)
 	/** Enable count read synchronization. The COUNT value requires
-	 * synchronization when reading. Disabling the synchronization 
+	 * synchronization when reading. Disabling the synchronization
 	 * will prevent the COUNT value from displaying the current value. */
 	bool enable_read_sync;
 #endif

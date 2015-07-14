@@ -66,7 +66,7 @@
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D09/D10/D11
  *  - Atmel | SMART SAM L21
  *  - Atmel | SMART SAM DAx
  *  - Atmel | SMART SAM C20/C21
@@ -233,7 +233,7 @@
  * \f[ [YEAR_{START}, YEAR_{START}+64] \f]
  *
  * \subsection asfdoc_sam0_rtc_calendar_special_considerations_clock Clock Setup
- * \subsubsection asfdoc_sam0_rtc_calendar_clock_samd_r SAM D20/D21/R21/D10/D11/DA0/DA1 Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_calendar_clock_samd_r SAM D2x/R21/D09/D1x/DAx Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32KHz RC-oscillator with a prescaler of 32, giving a

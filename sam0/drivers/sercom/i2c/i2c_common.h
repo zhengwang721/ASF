@@ -86,7 +86,7 @@ extern "C" {
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D09/D10/D11
  *  - Atmel | SMART SAM L21
  *  - Atmel | SMART SAM DAx
  *  - Atmel | SMART SAM C20/C21
@@ -125,15 +125,15 @@ extern "C" {
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_10_BIT_ADDRESS</td>
- *		<td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
+ *		<td>SAM D21/R21/D09/D10/D11/L21/DAx/C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_SCL_STRETCH_MODE</td>
- *		<td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
+ *		<td>SAM D21/R21/D09/D10/D11/L21/DAx/C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_SCL_EXTEND_TIMEOUT</td>
- *		<td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
+ *		<td>SAM D21/R21/D09/D10/D11/L21/DAx/C20/C21</td>
  *	</tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -396,12 +396,10 @@ extern "C" {
  * \name Driver Feature Definition
  * Define SERCOM I<SUP>2</SUP>C driver features set according to different device family.
  *
- * \note The high speed mode and 10-bit address feature are not
- *       supported by the driver now.
  * @{
  */
 #if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAMDA1) || \
-	(SAMC20) || (SAMC21) || defined(__DOXYGEN__)
+	(SAMC20) || (SAMC21) || (SAMD09) || defined(__DOXYGEN__)
 /** Fast mode plus and high speed support. */
 #  define FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
 /** 10-bit address support. */
