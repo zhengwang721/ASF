@@ -39,7 +39,7 @@
 /* 
  * This is the platform configuration file for Atmel SAM R21 platform.
  */
-#define F_CPU                           8000000ul
+#define F_CPU                           48000000ul
 
 #define CLOCK_CONF_SECOND               128
 #define RTIMER_ARCH_SECOND              31250

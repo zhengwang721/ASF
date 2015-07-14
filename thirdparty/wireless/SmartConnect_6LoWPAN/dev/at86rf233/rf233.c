@@ -235,7 +235,13 @@ rf233_init(void)
   /* init SPI and GPIOs, wake up from sleep/power up. */
   //rf233_arch_init();
   trx_spi_init();
-  ENABLE_TRX_IRQ();
+ 
+  /* reset will put us into TRX_OFF state */
+  /* reset the radio core */
+  port_pin_set_output_level(AT86RFX_RST_PIN, false);
+  delay_cycles_ms(1);
+  port_pin_set_output_level(AT86RFX_RST_PIN, true);
+  
   port_pin_set_output_level(AT86RFX_SLP_PIN, false); /*wakeup from sleep*/
 
   /* before enabling interrupts, make sure we have cleared IRQ status */
@@ -246,20 +252,12 @@ rf233_init(void)
 
   if(radio_state == STATE_P_ON) {
 	  trx_reg_write(RF233_REG_TRX_STATE, TRXCMD_TRX_OFF);
-	  } else {
-	  /* reset will put us into TRX_OFF state */
-	  /* reset the radio core */
-	  port_pin_set_output_level(AT86RFX_RST_PIN, false);
-	  delay_cycles_ms(10);
-	  port_pin_set_output_level(AT86RFX_RST_PIN, true);
-	  delay_cycles_ms(2);  /* datasheet: max 1 ms */
-	  /* Radio is now in state TRX_OFF */
-  }
-  system_interrupt_enable_global();
-  PRINTF("REB233 radio configured to use EXT%u\n", REB233XPRO_HEADER);
+	  } 
   /* Assign regtemp to regtemp to avoid compiler warnings */
   regtemp = regtemp;
   trx_irq_init((FUNC_PTR)rf233_interrupt_poll);
+  ENABLE_TRX_IRQ();  
+  system_interrupt_enable_global();
   /* Configure the radio using the default values except these. */
   trx_reg_write(RF233_REG_TRX_CTRL_1,      RF233_REG_TRX_CTRL_1_CONF);
   trx_reg_write(RF233_REG_PHY_CC_CCA,      RF233_REG_PHY_CC_CCA_CONF);

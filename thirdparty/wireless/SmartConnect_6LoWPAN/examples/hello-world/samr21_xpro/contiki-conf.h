@@ -101,7 +101,7 @@
 #define RIMESTATS_CONF_ENABLED 1
 
 #define  UIP_CONF_IP_FORWARD  0
-#define RF_CHANNEL                            14
+#define RF_CHANNEL                            18
 #define NETSTACK_CONF_BRIDGE_MODE    0
 #define WITH_PETSCII  1
 
