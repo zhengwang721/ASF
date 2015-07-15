@@ -46,6 +46,9 @@
 
 #include "uart.h"
 
+/* The calibration should be removed lately. */
+#define REG_READ_32(addr)					(*(volatile unsigned int*)(addr))
+#define REG_WRITE_32(addr,val)				(*(volatile unsigned int*)(addr) = val)
 static uint32_t calibrate_clk(void)
 {
 	uint32_t clock;
@@ -87,6 +90,29 @@ static uint32_t calibrate_clk(void)
 	return clock;
 }
 
+static void uart_set_baudrate(struct uart_module *const module,
+		const uint32_t baud_rate)
+{
+	uint32_t clock;
+	uint16_t integerpart = 0;
+	uint8_t fractionalpart = 0;
+	uint32_t diff;
+	uint8_t i = 0;
+
+	clock = calibrate_clk();
+	integerpart = clock / baud_rate;
+	diff = clock - (baud_rate * integerpart);
+	i = 0;
+	while(diff > (baud_rate / 16)) {
+		i++;
+		diff -= (baud_rate / 16);
+	}
+	fractionalpart = (i + 1) / 2;
+
+	module->hw->UART_CLOCK_SOURCE = 0;
+	module->hw->UART_BAUD_RATE = ((uint32_t)integerpart << 3) | ((uint32_t)fractionalpart << 0);
+}
+
 /**
  * \brief Gets the UART default configurations
  *
@@ -113,19 +139,20 @@ void uart_get_config_defaults(
 }
 
 /**
-* \brief Initializes the device
-*
-* Initializes the UART device based on the setting specified in the
-* configuration struct.
-*
-* \param[in]  module  enumeration UART hw module
-* \param[in]  config  Pointer to configuration struct
-*
-* \return Status of the initialization.
-*
-* \retval UART_STATUS_OK                       The initialization was successful
-* \retval UART_STATUS_ERR_GPIO_NOT_AVAILABLE   Requested GPIO for UART-RXD and UART-TXD is not available.
-*/
+ * \brief Initializes the device
+ *
+ * Initializes the UART device based on the setting specified in the
+ * configuration struct.
+ *
+ * \param[in]  module  enumeration UART hw module
+ * \param[in]  hw      Pointer to USART hardware instance
+ * \param[in]  config  Pointer to configuration struct
+ *
+ * \return Status of the initialization.
+ *
+ * \retval UART_STATUS_OK                       The initialization was successful
+ * \retval UART_STATUS_ERR_GPIO_NOT_AVAILABLE   Requested GPIO for UART-RXD and UART-TXD is not available.
+ */
 enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 		const struct uart_config *const config)
 {
@@ -134,6 +161,7 @@ enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 	Assert(hw);
 	Assert(config);
 
+	uint8_t config_temp = 0;
 	enum status_code status_code = STATUS_OK;
 
 	/* Assign module pointer to software instance struct */
@@ -143,7 +171,7 @@ enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 	if(hw == UART0) {
 		gpio_pinmux_cofiguration(PIN_LP_GPIO_2_MUX2_UART0_RXD, MUX_LP_GPIO_2_MUX2_UART0_RXD);
 	} else if(hw == UART1) {
-		module->hw = (void *)SPI1;
+		gpio_pinmux_cofiguration(PIN_LP_GPIO_6_MUX2_UART1_RXD, MUX_LP_GPIO_6_MUX2_UART1_RXD);
 	} else {
 		return STATUS_ERR_INVALID_ARG;
 	}
@@ -159,68 +187,24 @@ enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 
 	/* program the uart configuration. */
 	if(config->flow_control) {
-		uart->config |= (1<<5);		//flow control
+		config_temp |= UART_UART_CONFIGURATION_CTS_ENABLE_1;
 	}
-	
-	if(config->stop_bits == 2) {
-		uart->config |= (1<<4);		//number of stop bits
-	}
-	
-	if(config->parity == UART_EVEN_PARITY) {
-		//enable parity
-		uart->config |= (1<<1);
-	} else if(config->parity == UART_ODD_PARITY) {
-		//enable parity
-		uart->config |= (1<<1);
-		// select parity type
-		uart->config |= (1<<2);
-		
-	} else if(config->parity == UART_SPACE_PARITY) {
-		//enable parity
-		uart->config |= (1<<1);
-		// select parity type
-		uart->config |= (2<<2);
-	} else if(config->parity == UART_MARK_PARITY) {
-		//enable parity
-		uart->config |= (1<<1);
-		// select parity type
-		uart->config |= (13<<2);
-	} else {
-		uart->config &= ~(1<<1);
-	}
-	
-	if(config->data_bits == 7) {
-		// select 7bit data width
-		uart->config |= (1<<0);
-	}
-
-	module->hw->UART_CONFIGURATION = 0;
+	config_temp |= config->data_bits;
+	config_temp |= config->stop_bits;
+	if(config->parity != UART_NO_PARITY) {
+		config_temp |= UART_UART_CONFIGURATION_PARITY_ENABLE_1;
+		if(config->parity == UART_ODD_PARITY) {
+			config_temp |= UART_UART_CONFIGURATION_PARITY_MODE_1;				
+		} else if(config->parity == UART_SPACE_PARITY) {
+			config_temp |= UART_UART_CONFIGURATION_PARITY_MODE_2;
+		} else if(config->parity == UART_MARK_PARITY) {
+			config_temp |= UART_UART_CONFIGURATION_PARITY_MODE_3;
+		}
+	}	
+	module->hw->UART_CONFIGURATION = config_temp;
 
 	/* Calculate the baud rate. */
-	uint32_t clock;
-	uint32_t baudrate;
-	uint16_t integerpart = 0;
-	uint8_t fractionalpart = 0;
-	uint32_t diff;
-	uint8_t i = 0;
-	uint8_t muxval = 0;
-	uint8_t idx;
-	uint32_t regaddr,regval;
-
-	baudrate = config->baud_rate;
-	clock = calibrate_clk();
-	integerpart = clock / baudrate;
-	diff = clock - (baudrate * integerpart);
-	i = 0;
-	while(diff > (baudrate/16)) {
-		i++;
-		diff -= (baudrate/16);
-	}
-	fractionalpart = (i+1)/2;
-
-	module->hw->UART_CLOCK_SOURCE= 0;
-	module->hw->UART_BAUD_RATE = ((uint32_t)integerpart << 3) | ((uint32_t)fractionalpart << 0);
-
+	uart_set_baudrate(module, config->baud_rate);
 
 	module->hw->RX_INTERRUPT_MASK = 0;	// disable int at initialization, enable it at read time
 	module->hw->TX_INTERRUPT_MASK = 0;	// disable int at initialization, enable it at write time

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM USART Quick Start
+ * \brief SAM UART Quick Start
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,40 +45,36 @@
  */
 #include <asf.h>
 
-void configure_usart(void);
+void configure_uart(void);
 
 //! [module_inst]
-struct usart_module usart_instance;
+struct uart_module uart_instance;
 //! [module_inst]
 
 //! [setup]
-void configure_usart(void)
+void configure_uart(void)
 {
 //! [setup_config]
-	struct usart_config config_usart;
+	struct uart_config config_uart;
 //! [setup_config]
 //! [setup_config_defaults]
-	usart_get_config_defaults(&config_usart);
+	uart_get_config_defaults(&config_uart);
 //! [setup_config_defaults]
 
 //! [setup_change_config]
-	config_usart.baudrate    = 9600;
-	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
-	config_usart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	config_usart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	config_usart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
+	config_uart.baudrate    = 9600;
+	config_uart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
+	config_uart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
+	config_uart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
+	config_uart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
+	config_uart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
 //! [setup_change_config]
 
 //! [setup_set_config]
-	while (usart_init(&usart_instance,
-			EDBG_CDC_MODULE, &config_usart) != STATUS_OK) {
+	while (uart_init(&uart_instance,
+			EDBG_CDC_MODULE, &config_uart) != STATUS_OK) {
 	}
 //! [setup_set_config]
-
-//! [setup_enable]
-	usart_enable(&usart_instance);
-//! [setup_enable]
 }
 //! [setup]
 
@@ -87,13 +83,13 @@ int main(void)
 	system_init();
 
 //! [setup_init]
-	configure_usart();
+	configure_uart();
 //! [setup_init]
 
 //! [main]
 //! [main_send_string]
 	uint8_t string[] = "Hello World!\r\n";
-	usart_write_buffer_wait(&usart_instance, string, sizeof(string));
+	uart_write_buffer_wait(&uart_instance, string, sizeof(string));
 //! [main_send_string]
 
 //! [main_rec_var]
@@ -103,10 +99,10 @@ int main(void)
 //! [main_loop]
 	while (true) {
 //! [main_read]
-		if (usart_read_wait(&usart_instance, &temp) == STATUS_OK) {
+		if (uart_read_wait(&uart_instance, &temp) == STATUS_OK) {
 //! [main_read]
 //! [main_write]
-			while (usart_write_wait(&usart_instance, temp) != STATUS_OK) {
+			while (uart_write_wait(&uart_instance, temp) != STATUS_OK) {
 			}
 //! [main_write]
 		}

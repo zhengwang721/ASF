@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM USART Quick Start
+ * \brief SAM UART Quick Start
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,74 +42,71 @@
  */
 
 /**
- * \page asfdoc_sam0_sercom_usart_basic_use_case Quick Start Guide for SERCOM USART - Basic
+ * \page asfdoc_sam0_uart_basic_use_case Quick Start Guide for UART - Basic
  *
  * This quick start will echo back characters typed into the terminal. In this
- * use case the USART will be configured with the following settings:
+ * use case the UART will be configured with the following settings:
  * - Asynchronous mode
  * - 9600 Baudrate
  * - 8-bits, No Parity and one Stop Bit
  * - TX and RX enabled and connected to the Xplained Pro Embedded Debugger virtual COM port
  *
- * \section asfdoc_sam0_sercom_usart_basic_use_case_setup Setup
+ * \section asfdoc_sam0_uart_basic_use_case_setup Setup
  *
- * \subsection asfdoc_sam0_sercom_usart_basic_use_case_prereq Prerequisites
+ * \subsection asfdoc_sam0_uart_basic_use_case_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_sam0_usart_basic_use_case_setup_code Code
+ * \subsection asfdoc_sam0_uart_basic_use_case_setup_code Code
  * Add to the main application source file, outside of any functions:
- * \snippet qs_usart_basic_use.c module_inst
+ * \snippet qs_uart_basic_use.c module_inst
  *
  * Copy-paste the following setup code to your user application:
- * \snippet qs_usart_basic_use.c setup
+ * \snippet qs_uart_basic_use.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
- * \snippet qs_usart_basic_use.c setup_init
+ * \snippet qs_uart_basic_use.c setup_init
  *
- * \subsection asfdoc_sam0_usart_basic_use_case_setup_flow Workflow
- * -# Create a module software instance structure for the USART module to store
- *    the USART driver state while it is in use.
- *    \snippet qs_usart_basic_use.c module_inst
+ * \subsection asfdoc_sam0_uart_basic_use_case_setup_flow Workflow
+ * -# Create a module software instance structure for the UART module to store
+ *    the UART driver state while it is in use.
+ *    \snippet qs_uart_basic_use.c module_inst
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- * -# Configure the USART module.
- *  -# Create a USART module configuration struct, which can be filled out to
- *     adjust the configuration of a physical USART peripheral.
- *     \snippet qs_usart_basic_use.c setup_config
- *  -# Initialize the USART configuration struct with the module's default values.
- *     \snippet qs_usart_basic_use.c setup_config_defaults
+ * -# Configure the UART module.
+ *  -# Create a UART module configuration struct, which can be filled out to
+ *     adjust the configuration of a physical UART peripheral.
+ *     \snippet qs_uart_basic_use.c setup_config
+ *  -# Initialize the UART configuration struct with the module's default values.
+ *     \snippet qs_uart_basic_use.c setup_config_defaults
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *  -# Alter the USART settings to configure the physical pinout, baudrate, and
+ *  -# Alter the UART settings to configure the physical pinout, baudrate, and
  *     other relevant parameters.
- *     \snippet qs_usart_basic_use.c setup_change_config
- *  -# Configure the USART module with the desired settings, retrying while the
+ *     \snippet qs_uart_basic_use.c setup_change_config
+ *  -# Configure the UART module with the desired settings, retrying while the
  *     driver is busy until the configuration is stressfully set.
- *     \snippet qs_usart_basic_use.c setup_set_config
- *  -# Enable the USART module.
- *     \snippet qs_usart_basic_use.c setup_enable
+ *     \snippet qs_uart_basic_use.c setup_set_config
  *
+ * \section asfdoc_sam0_uart_basic_use_case_main Use Case
  *
- * \section asfdoc_sam0_usart_basic_use_case_main Use Case
- *
- * \subsection asfdoc_sam0_usart_basic_use_case_main_code Code
+ * \subsection asfdoc_sam0_uart_basic_use_case_main_code Code
  * Copy-paste the following code to your user application:
- * \snippet qs_usart_basic_use.c main
+ * \snippet qs_uart_basic_use.c main
  *
- * \subsection asfdoc_sam0_usart_basic_use_case_main_flow Workflow
- * -# Send a string to the USART to show the demo is running, blocking until
+ * \subsection asfdoc_sam0_uart_basic_use_case_main_flow Workflow
+ * -# Send a string to the UART to show the demo is running, blocking until
  *    all characters have been sent.
- *    \snippet qs_usart_basic_use.c main_send_string
- * -# Enter an infinite loop to continuously echo received values on the USART.
- *    \snippet qs_usart_basic_use.c main_loop
- * -# Perform a blocking read of the USART, storing the received character into
+ *    \snippet qs_uart_basic_use.c main_send_string
+ * -# Enter an infinite loop to continuously echo received values on the UART.
+ *    \snippet qs_uart_basic_use.c main_loop
+ * -# Perform a blocking read of the UART, storing the received character into
  *    the previously declared temporary variable.
- *    \snippet qs_usart_basic_use.c main_read
- * -# Echo the received variable back to the USART via a blocking write.
- *    \snippet qs_usart_basic_use.c main_write
+ *    \snippet qs_uart_basic_use.c main_read
+ * -# Echo the received variable back to the UART via a blocking write.
+ *    \snippet qs_uart_basic_use.c main_write
  */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
