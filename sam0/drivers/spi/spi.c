@@ -404,7 +404,7 @@ enum status_code spi_init(
 	/* Set the pinmux for this spi module. */
 	for(idx = 0; idx < 4; idx++) {
 		gpio_pinmux_cofiguration(config->pinmux_pad[idx]>>16, \
-								(uint8_t)(config->pinmux_pad[idx] & 0xFF));
+								(uint16_t)(config->pinmux_pad[idx] & 0xFFFF));
 	}
 
 	/* Setting the default value for SS- PIN. */
