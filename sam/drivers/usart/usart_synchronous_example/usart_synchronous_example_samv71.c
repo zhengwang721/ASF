@@ -341,7 +341,6 @@ int main(void)
 {
 	uint8_t uc_char;
 	uint8_t *p_data;
-	//uint32_t ulsize;
 
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -404,8 +403,7 @@ int main(void)
 		case 'w':
 		case 'W':
 			g_uc_state = STATE_WRITE;
-			//usart_enable_interrupt(BOARD_USART, US_IER_TXRDY);
-			p_data = &tran_buff[0];
+			p_data = (uint8_t *)&tran_buff[0];
 			transmit_mode_sync(p_data, BUFFER_SIZE);
 
 			while (!g_ul_sent_done) {
