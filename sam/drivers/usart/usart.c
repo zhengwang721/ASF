@@ -1144,7 +1144,7 @@ uint8_t usart_lin_identifier_send_complete(Usart *usart)
  */
 uint8_t usart_lin_identifier_reception_complete(Usart *usart)
 {
-	return(usart->US_CSR & US_CSR_LINID) > 0;
+	return (usart->US_CSR & US_CSR_LINID) > 0;
 }
 
 /**
