@@ -48,31 +48,31 @@
 #define XDMAC_EXAMPLE_H_INCLUDED
 
 /**
- * \page asfdoc_sam_drivers_xdmac_example SAM Extensible Direct Memory Access Controller - Example memory to memory transfer
+ * \mainpage SAM Extensible Direct Memory Access Controller Example - memory to memory transfer
  *
- * \section asfdoc_sam_drivers_xdmac_example_purpose Purpose
+ * \section Purpose
  * This example demonstrates how to configure and use XDMA controller
  * for memory to memory data buffer transfers.
  *
- * \section asfdoc_sam_drivers_xdmac_example_requirements Requirements
+ * \section Requirements
  * This example can be used with SAM evaluation kits that have a XDMA
  * Controller.
  *
- * \section asfdoc_sam_drivers_xdmac_example_description Description
+ * \section Description
  * This example transfers data in one RAM buffer to another RAM buffer.
  * It uses single block with multiple microblock transfer with interrupt mode.
  * After transfer is done, the transferred data will be verified.
  *
- * \section asfdoc_sam_drivers_xdmac_example_files Main Files
+ * \section Main Files
  * - xdmac.c: Direct Memory Access Controller driver
  * - xdmac.h: Direct Memory Access Controller driver header file
  * - xdmac_example.c: Direct Memory Access Controller example application
  *
- * \section asfdoc_sam_drivers_xdmac_example_compilinfo Compilation Information
+ * \section Compilation Information
  * This software is written for GNU GCC and IAR Embedded Workbench&reg;
  * for Atmel&reg;. Other compilers may or may not work.
  *
- * \section asfdoc_sam_drivers_xdmac_example_usage Usage
+ * \section Usage
  * -# Build the program and download it into the evaluation board.
  * -# On the computer, open and configure a terminal application
  *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:

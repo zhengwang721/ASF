@@ -4,7 +4,7 @@
 		This example demonstrates user how to configurate and use XDMAC controller for buffer transfer.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="XDMA Controller"/>
+			<keyword value="DMA Controller"/>
 		</info>
 		<build type="c-source" value="xdmac_example.c"/>
 		<build type="include-path" value="."/>

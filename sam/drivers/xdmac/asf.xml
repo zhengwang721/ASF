@@ -5,7 +5,7 @@
 		It provides functions for configuring and using the on-chip XDMAC.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="XDMA Controller"/>
+			<keyword value="DMA Controller"/>
 		</info>
 		
 		<build type="c-source" value="xdmac.c"/>
