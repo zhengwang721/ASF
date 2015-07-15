@@ -2,7 +2,7 @@
 	<module type="driver" id="sam0.drivers.spi_flash" caption="SPI flash Control for SAMB11">
 
 		<info type="keyword" value="technology">
-			<keyword value="SPI flash" />
+			<keyword value="Memory" />
 		</info>
 
 		<info type="appnote" value="ATxxxxx"/>

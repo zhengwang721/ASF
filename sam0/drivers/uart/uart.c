@@ -109,8 +109,10 @@ static void uart_set_baudrate(struct uart_module *const module,
 	}
 	fractionalpart = (i + 1) / 2;
 
-	module->hw->UART_CLOCK_SOURCE = 0;
-	module->hw->UART_BAUD_RATE = ((uint32_t)integerpart << 3) | ((uint32_t)fractionalpart << 0);
+	module->hw->UART_CLOCK_SOURCE.reg = UART_UART_CLOCK_SOURCE_CLOCK_SELECT_0;
+	module->hw->UART_BAUD_RATE.reg =
+		((uint32_t)integerpart << UART_UART_BAUD_RATE_INTEGER_DIVISION_Pos) |
+		((uint32_t)fractionalpart << UART_UART_BAUD_RATE_FRACTIONAL_DIVISION_Pos);
 }
 
 /**
@@ -123,8 +125,7 @@ static void uart_set_baudrate(struct uart_module *const module,
  * - parity   UART_NO_PARITY
  * - flow_control 0 - No Flow control
  * - stop_bits 1 - 1 stop bit
- * - pinmux_pad[] - Pinmux for UART_RXD and UART_TXD of CORE 1.
- *									Core 0 is by default not available.
+ * - pinmux_pad[] - Pinmux default are UART0.
  *
  * \param[out] config  Pointer to configuration structure to be initiated
  */
@@ -136,6 +137,10 @@ void uart_get_config_defaults(
 	config->stop_bits = UART_1_STOP_BIT;
 	config->parity = UART_NO_PARITY;
 	config->flow_control = false;
+	config->pinmux_pad[0] = PINMUX_LP_GPIO_2_MUX2_UART0_RXD;
+	config->pinmux_pad[1] = PINMUX_LP_GPIO_3_MUX2_UART0_TXD;
+	config->pinmux_pad[2] = PINMUX_LP_GPIO_4_MUX2_UART0_CTS;
+	config->pinmux_pad[3] = PINMUX_LP_GPIO_5_MUX2_UART0_RTS;
 }
 
 /**
@@ -162,28 +167,29 @@ enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 	Assert(config);
 
 	uint8_t config_temp = 0;
-	enum status_code status_code = STATUS_OK;
+	uint8_t i,index;
 
 	/* Assign module pointer to software instance struct */
 	module->hw = hw;
 
-	/* Pin Mux programming */
-	if(hw == UART0) {
-		gpio_pinmux_cofiguration(PIN_LP_GPIO_2_MUX2_UART0_RXD, MUX_LP_GPIO_2_MUX2_UART0_RXD);
-	} else if(hw == UART1) {
-		gpio_pinmux_cofiguration(PIN_LP_GPIO_6_MUX2_UART1_RXD, MUX_LP_GPIO_6_MUX2_UART1_RXD);
+	/* Set the pinmux for this UART module. */
+	if(config->flow_control) {
+		index = 4;
 	} else {
-		return STATUS_ERR_INVALID_ARG;
+		index = 2;
+	}
+	for(i = 0; i < index; i++) {
+		gpio_pinmux_cofiguration(config->pinmux_pad[i] >> 16, \
+								(uint16_t)(config->pinmux_pad[i] & 0xFFFF));
 	}
 
-
 	/* empty UART FIFO */
-	while (module->hw->RECEIVE_STATUS & UART_RECEIVE_STATUS_RX_FIFO_NOT_EMPTY) {
-		i = module->hw->RECEIVE_DATA;
+	while (module->hw->RECEIVE_STATUS.reg & UART_RECEIVE_STATUS_RX_FIFO_NOT_EMPTY) {
+		i = module->hw->RECEIVE_DATA.reg;
 	}
 	
 	/* reset configuration register */
-	module->hw->UART_CONFIGURATION = 0;
+	module->hw->UART_CONFIGURATION.reg = 0;
 
 	/* program the uart configuration. */
 	if(config->flow_control) {
@@ -201,13 +207,13 @@ enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 			config_temp |= UART_UART_CONFIGURATION_PARITY_MODE_3;
 		}
 	}	
-	module->hw->UART_CONFIGURATION = config_temp;
+	module->hw->UART_CONFIGURATION.reg = config_temp;
 
 	/* Calculate the baud rate. */
 	uart_set_baudrate(module, config->baud_rate);
 
-	module->hw->RX_INTERRUPT_MASK = 0;	// disable int at initialization, enable it at read time
-	module->hw->TX_INTERRUPT_MASK = 0;	// disable int at initialization, enable it at write time
+	module->hw->RX_INTERRUPT_MASK.reg = 0;	// disable int at initialization, enable it at read time
+	module->hw->TX_INTERRUPT_MASK.reg = 0;	// disable int at initialization, enable it at write time
 	
 	return STATUS_OK;
 }
@@ -227,9 +233,9 @@ enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 enum status_code uart_write_wait(struct uart_module *const module,
 		const uint8_t tx_data)
 {
-	while (!(module->hw->TRANSMIT_STATUS & UART_TRANSMIT_STATUS_TX_FIFO_NOT_FULL));
+	while (!(module->hw->TRANSMIT_STATUS.reg & UART_TRANSMIT_STATUS_TX_FIFO_NOT_FULL));
 
-	module->hw->TRANSMIT_DATA = tx_data;
+	module->hw->TRANSMIT_DATA.reg = tx_data;
 	
 	return STATUS_OK;
 }
@@ -248,9 +254,9 @@ enum status_code uart_write_wait(struct uart_module *const module,
 enum status_code uart_read_wait(struct uart_module *const module,
 		uint8_t *const rx_data)
 {
-	while (!(module->hw->RECEIVE_STATUS & UART_RECEIVE_STATUS_RX_FIFO_NOT_EMPTY));
+	while (!(module->hw->RECEIVE_STATUS.reg & UART_RECEIVE_STATUS_RX_FIFO_NOT_EMPTY));
 
-	*rx_data = module->hw->RECEIVE_DATA;
+	*rx_data = module->hw->RECEIVE_DATA.reg;
 	
 	return STATUS_OK;
 }

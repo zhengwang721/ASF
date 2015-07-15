@@ -11,6 +11,7 @@
 				<keyword value="Universal Asynchronous Receiver/Transmitter Interface"/>
 			</info>
 			
+			<build type="include-path" value="."/>
 			<build type="c-source" value="uart.c"/>
 			<build type="header-file" subtype="api" value="uart.h"/>
 			<build type="header-file" value="quick_start_basic/qs_uart_basic.h"/>
@@ -21,6 +22,7 @@
 
 			<device-support value="samb11"/>
 			<require idref="sam0.utils"/>
+			<require idref="sam0.drivers.gpio"/>
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
 		</module>

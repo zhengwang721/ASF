@@ -49,6 +49,7 @@
 #define UART_H_INCLUDED
 
 #include <compiler.h>
+#include <gpio.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -113,6 +114,8 @@ struct uart_config{
 	enum uart_parity_selection parity;
 	/** flow control type */
 	bool flow_control;
+	/** UART PAD pinmux */
+	uint32_t pinmux_pad[4];
 };
 
 /**

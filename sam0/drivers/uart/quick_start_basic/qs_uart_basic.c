@@ -62,12 +62,11 @@ void configure_uart(void)
 //! [setup_config_defaults]
 
 //! [setup_change_config]
-	config_uart.baudrate    = 9600;
-	config_uart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
-	config_uart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	config_uart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	config_uart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	config_uart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
+	config_uart.baud_rate = 9600;
+	config_uart.pinmux_pad[0] = EDBG_CDC_SERCOM_PINMUX_PAD0;
+	config_uart.pinmux_pad[1] = EDBG_CDC_SERCOM_PINMUX_PAD1;
+	config_uart.pinmux_pad[2] = EDBG_CDC_SERCOM_PINMUX_PAD2;
+	config_uart.pinmux_pad[3] = EDBG_CDC_SERCOM_PINMUX_PAD3;
 //! [setup_change_config]
 
 //! [setup_set_config]
@@ -80,7 +79,7 @@ void configure_uart(void)
 
 int main(void)
 {
-	system_init();
+//	system_init();
 
 //! [setup_init]
 	configure_uart();
@@ -93,7 +92,7 @@ int main(void)
 //! [main_send_string]
 
 //! [main_rec_var]
-	uint16_t temp;
+	uint8_t temp;
 //! [main_rec_var]
 
 //! [main_loop]
