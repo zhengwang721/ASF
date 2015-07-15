@@ -5,8 +5,6 @@
 			This example demonstrates how to configure and use the S25FL116K FLASH.
 			</info>
 			<build type="c-source" value="s25fl116k_example.c"/>
-			<build type="header-file" value="s25fl1.h"/>
-			<build type="c-source" value="s25fl1.c"/>
 			<build type="include-path" value="."/>
 			<device-support value="atsam3x8h"/>
 			<device-support value="samv70"/>
@@ -14,6 +12,7 @@
 			<device-support value="same70"/>
 			<device-support value="sams70"/>
 			<require idref="sam.drivers.qspi"/>
+			<require idref="common.services.delay"/>
 			<require idref="common.components.memory.qspi_flash.s25fl116k"/>
 			<require idref="sam.drivers.uart"/>
 			<require idref="sam.utils.syscalls"/>

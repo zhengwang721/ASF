@@ -86,7 +86,7 @@
 
 #include "asf.h"
 #include "conf_board.h"
-#include "s25fl1.h"
+#include "s25fl1dxx.h"
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "--QSpi Example --\r\n" \
@@ -144,29 +144,6 @@ static void configure_console(void)
 
 	/* Configure console UART. */
 	stdio_serial_init(CONF_UART, &uart_serial_options);
-}
-
-/**
- * \brief Initialize QSPI serial memory mode.
- */
-static void qspi_memory_mode_initialize(void)
-{
-	puts("-I- Initialize QSPI to Serial Memory Mode\r");
-
-	qspi_config_t mem_mode_config;
-
-	p_dev = (qspi_inst_frame_t *)malloc (sizeof(qspi_inst_frame_t));
-	memset(p_dev, 0, sizeof(qspi_inst_frame_t));
-	p_dev->inst_frame.bm.b_width = QSPI_IFR_WIDTH_SINGLE_BIT_SPI;
-
-
-	p_mem = (qspi_inst_frame_t *)malloc (sizeof(qspi_inst_frame_t));
-	memset(p_mem, 0, sizeof(qspi_inst_frame_t));
-	p_mem->inst_frame.bm.b_width = QSPI_IFR_WIDTH_SINGLE_BIT_SPI;
-
-	qspi_get_default_config(&mem_mode_config);
-	/* Configure an QSPI peripheral. */
-	qspi_set_config(&mem_mode_config);
 }
 
 /**
