@@ -290,7 +290,7 @@ void nm_bsp_interrupt_ctrl(uint8 u8Enable);
 #include "nm_bsp_aps3_cortus.h"
 #endif
 
-#if (defined __SAML21J18A__)
+#if (defined __SAML21J18A__) || (defined __SAML21J18B__)
 #include "bsp/include/nm_bsp_saml21.h"
 #endif
 
