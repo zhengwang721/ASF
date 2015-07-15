@@ -418,7 +418,7 @@ enum adc_oversampling_and_decimation {
  * Enum for the trigger selection in dual mode.
  */
 enum adc_dual_mode_trigger_selection {
-	/** Start event or software trigger will start a conversion on both ADCs. */
+	/** Start event or software trigger will start a conversion on both ADCs */
 	ADC_DUAL_MODE_BOTH         = ADC_CTRLC_DUALSEL_BOTH,
 	/** START event or software trigger will alternatingly start a conversion on ADC0 and ADC1 */
 	ADC_DUAL_MODE_INTERLEAVE   = ADC_CTRLC_DUALSEL_INTERLEAVE,
