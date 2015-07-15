@@ -121,7 +121,7 @@ typedef struct {
  */
 typedef struct {
   Qspi               *p_qspi_hw;       /* QSPI Hw instance */
-  qspi_mode_t        *qspi_mode;       /* Qspi mode: SPI or Serial Memory */
+  qspi_mode_t        qspi_mode;       /* Qspi mode: SPI or Serial Memory */
   qspi_mem_cmd_t     qspi_command;     /* Qspi command structure*/
   qspi_buffer_t      qspi_buffer;      /* Qspi buffer*/
   qspi_inst_frame_t  *p_qspi_frame;    /* Qspi QSPI mode Fram register informations*/

@@ -48,22 +48,14 @@
  *
  */
 
-#ifndef S25FL1_H
-#define S25FL1_H
+#ifndef S25FL1XX_H
+#define S25FL1XX_H
 
 #include "qspi.h"
 
 /*----------------------------------------------------------------------------
  *        Macros
  *----------------------------------------------------------------------------*/
-
-/**
- *        Exported variables
- */
-/** Depending on DYN_TRACES, dwTraceLevel is a modifiable runtime variable or a define */
-#if !defined(NOTRACE) && (DYN_TRACES == 1)
-	extern uint32_t dwTraceLevel ;
-#endif
 
 #define Size(pAt25)                      ((pAt25)->pDesc->size)
 #define PageSize(pAt25)                  ((pAt25)->pDesc->pageSize)
@@ -128,9 +120,9 @@
 #define STATUS_SPRL_LOCKED               (1 << 7)
 /** Quad enable bit */
 #define STATUS_QUAD_ENABLE               (1 << 1)
-   /** Quad enable bit */
+/** Quad enable bit */
 #define STATUS_WRAP_ENABLE               (0 << 4)
-   /** Latency control bits */
+/** Latency control bits */
 #define STATUS_LATENCY_CTRL              (0xF << 0)
 #define STATUS_WRAP_BYTE                 (1 << 5)
 #define BLOCK_PROTECT_Msk                (7 << 2)
@@ -154,13 +146,13 @@
 #define SOFT_RESET                       0x99
 /** Read status register command code. */
 #define READ_STATUS_1                    0x05
-   /** Read status register command code. */
+/** Read status register command code. */
 #define READ_STATUS_2                    0x35
-   /** Read status register command code. */
+/** Read status register command code. */
 #define READ_STATUS_3                    0x33
 /** Write enable command code. */
 #define WRITE_ENABLE                     0x06
-/*8 Write Enable for Volatile Status Register. */
+/** Write Enable for Volatile Status Register. */
 #define WRITE_ENABLE_FOR_VOLATILE_STATUS 0x50
 /** Write disable command code. */
 #define WRITE_DISABLE                    0x04
@@ -210,32 +202,28 @@
 #define MACRONIX_SPI_FLASH               0xC2
 #define SST_SPI_FLASH                    0xBF
 
-extern volatile uint32_t systick_count;
-extern uint8_t systick_configured;
-
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
-void delay_ms(volatile uint32_t ul_ms);
 void qspi_memory_mode_initialize(void);
-uint32_t s25fl1d_read_jedec_id(qspid_t *p_qspid);
-void s25fl1d_soft_reset(qspid_t *p_qspid);
-unsigned char s25fl1d_unprotect(qspid_t *p_qspid);
-unsigned char s25fl1d_data_unprotect(qspid_t *p_qspid);
-unsigned char s25fl1d_protect(qspid_t *p_qspid);
-void s25fl1d_set_quad_mode(qspid_t *p_qspid, uint8_t ul_mode);
-void s25fl1d_enable_wrap(qspid_t *p_qspid, uint8_t byte_align);
-void s25fl1d_set_read_latency_control(qspid_t *p_qspid, uint8_t latency);
-unsigned char s25fl1d_erase_chip(qspid_t *p_qspid);
-unsigned char s25fl1d_erase_sector(qspid_t *p_qspid, unsigned int address);
-unsigned char s25fl1d_erase_64k_block(qspid_t *p_qspid, unsigned int address);
-unsigned char s25fl1d_write(qspid_t *p_qspid, uint32_t *pData, uint32_t size, uint32_t address, uint8_t secure);
-unsigned char s25fl1d_read(qspid_t *p_qspid, uint32_t *p_data,  uint32_t size, uint32_t address);
-unsigned char s25fl1d_read_dual(qspid_t *p_qspid, uint32_t *p_data, uint32_t size, uint32_t address);
-unsigned char s25fl1d_read_quad(qspid_t *p_qspid, uint32_t *p_data, uint32_t size, uint32_t address);
-unsigned char s25fl1d_read_dual_io(qspid_t *p_qspid, uint32_t *p_data, uint32_t size, uint32_t address,
+uint32_t s25fl1xx_read_jedec_id(qspid_t *p_qspid);
+void s25fl1xx_soft_reset(qspid_t *p_qspid);
+uint8_t s25fl1xx_unprotect(qspid_t *p_qspid);
+uint8_t s25fl1xx_data_unprotect(qspid_t *p_qspid);
+uint8_t s25fl1xx_protect(qspid_t *p_qspid);
+void s25fl1xx_set_quad_mode(qspid_t *p_qspid, uint8_t ul_mode);
+void s25fl1xx_enable_wrap(qspid_t *p_qspid, uint8_t byte_align);
+void s25fl1xx_set_read_latency_control(qspid_t *p_qspid, uint8_t latency);
+uint8_t s25fl1xx_erase_chip(qspid_t *p_qspid);
+uint8_t s25fl1xx_erase_sector(qspid_t *p_qspid, uint32_t address);
+uint8_t s25fl1xx_erase_64k_block(qspid_t *p_qspid, uint32_t address);
+uint8_t s25fl1xx_write(qspid_t *p_qspid, uint32_t *pData, uint32_t size, uint32_t address, uint8_t secure);
+uint8_t s25fl1xx_read(qspid_t *p_qspid, uint32_t *p_data,  uint32_t size, uint32_t address);
+uint8_t s25fl1xx_read_dual(qspid_t *p_qspid, uint32_t *p_data, uint32_t size, uint32_t address);
+uint8_t s25fl1xx_read_quad(qspid_t *p_qspid, uint32_t *p_data, uint32_t size, uint32_t address);
+uint8_t s25fl1xx_read_dual_io(qspid_t *p_qspid, uint32_t *p_data, uint32_t size, uint32_t address,
 								   uint8_t cont_mode, uint8_t secure);
-unsigned char s25fl1d_read_quad_io(qspid_t *p_qspid, uint32_t *p_data, uint32_t size, uint32_t address,
+uint8_t s25fl1xx_read_quad_io(qspid_t *p_qspid, uint32_t *p_data, uint32_t size, uint32_t address,
 								   uint8_t cont_mode, uint8_t secure);
 
 #endif // #ifndef S25FL1_H

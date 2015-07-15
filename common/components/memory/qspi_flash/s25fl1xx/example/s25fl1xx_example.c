@@ -147,14 +147,6 @@ static void configure_console(void)
 }
 
 /**
- *  \brief Handler for System Tick interrupt.
- */
-void SysTick_Handler(void)
-{
-	systick_count ++;
-}
-
-/**
  * \brief Application entry point for sdramc_example.
  *
  * \return Unused (ANSI-C compatibility).
@@ -178,13 +170,6 @@ int main(void)
 	/* Output example information */
 	puts(STRING_HEADER);
 
-	/* Systick configuration. */
-	puts("Configure systick to get 1ms tick period.\r");
-	if (SysTick_Config(sysclk_get_cpu_hz() / 1000)) {
-		puts("-F- Systick configuration error\r");
-	}
-	systick_configured = 1;
-
 	/* Enable SMC peripheral clock */
 	pmc_enable_periph_clk(ID_QSPI);
 
@@ -193,28 +178,28 @@ int main(void)
 	puts("QSPI drivers initialized\n\r");
 
 	/* enable quad mode */
-	s25fl1d_set_quad_mode(&g_qspid, 1);
+	s25fl1xx_set_quad_mode(&g_qspid, 1);
 
 	/* Unlock block protection */
-	s25fl1d_unprotect(&g_qspid);
-	s25fl1d_data_unprotect(&g_qspid);
+	s25fl1xx_unprotect(&g_qspid);
+	s25fl1xx_data_unprotect(&g_qspid);
 
 	/* erase entire chip  */
-	s25fl1d_erase_chip(&g_qspid);
+	s25fl1xx_erase_chip(&g_qspid);
 
 	/* Flash the code to QSPI flash */
 	puts("Writing to Memory\n");
 
-	s25fl1d_write(&g_qspid, (uint32_t *)p_buffercode, sizeof(p_buffercode), 0, 0);
+	s25fl1xx_write(&g_qspid, (uint32_t *)p_buffercode, sizeof(p_buffercode), 0, 0);
 
 	/* Lock block protection */
-	s25fl1d_protect(&g_qspid);
+	s25fl1xx_protect(&g_qspid);
 
 	printf("\rExample code written 0x%x bytes to Memory\r", sizeof(p_buffercode));
 
 	puts("Verifying \r");
 	/* Start continuous read mode to enter in XIP mode*/
-	s25fl1d_read_quad_io(&g_qspid, buffer, sizeof(buffer), 0, 1, 0);
+	s25fl1xx_read_quad_io(&g_qspid, buffer, sizeof(buffer), 0, 1, 0);
 
 	p_memory = (uint8_t *)QSPIMEM_ADDR;
 	for(idx = 0; idx < sizeof(p_buffercode); idx++) {
