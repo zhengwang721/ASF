@@ -152,20 +152,20 @@ static void configure_console(void)
 static void qspi_memory_mode_initialize(void)
 {
 	puts("-I- Initialize QSPI to Serial Memory Mode\r");
-	
+
 	qspi_config_t mem_mode_config;
-	
-	p_dev = (qspi_inst_frame_t *)malloc (sizeof(qspi_inst_frame_t));  
-    memset(p_dev, 0, sizeof(qspi_inst_frame_t));
-    p_dev->inst_frame.bm.b_width = QSPI_IFR_WIDTH_SINGLE_BIT_SPI;
+
+	p_dev = (qspi_inst_frame_t *)malloc (sizeof(qspi_inst_frame_t));
+	memset(p_dev, 0, sizeof(qspi_inst_frame_t));
+	p_dev->inst_frame.bm.b_width = QSPI_IFR_WIDTH_SINGLE_BIT_SPI;
 
 
-    p_mem = (qspi_inst_frame_t *)malloc (sizeof(qspi_inst_frame_t));
-    memset(p_mem, 0, sizeof(qspi_inst_frame_t));
-    p_mem->inst_frame.bm.b_width = QSPI_IFR_WIDTH_SINGLE_BIT_SPI;
+	p_mem = (qspi_inst_frame_t *)malloc (sizeof(qspi_inst_frame_t));
+	memset(p_mem, 0, sizeof(qspi_inst_frame_t));
+	p_mem->inst_frame.bm.b_width = QSPI_IFR_WIDTH_SINGLE_BIT_SPI;
 
 	qspi_get_default_config(&mem_mode_config);
-	/* Configure an QSPI peripheral. */	
+	/* Configure an QSPI peripheral. */
 	qspi_set_config(&mem_mode_config);
 }
 
@@ -188,9 +188,9 @@ int main(void)
 	uint32_t __start_sp, idx;
 	uint32_t (*__start_new)(void);
 	uint32_t buffer[4];
-	
+
 	uint8_t *p_memory;
-	
+
 	/* Initialize the system */
 	sysclk_init();
 	board_init();
@@ -200,7 +200,7 @@ int main(void)
 
 	/* Output example information */
 	puts(STRING_HEADER);
-	
+
 	/* Systick configuration. */
 	puts("Configure systick to get 1ms tick period.\r");
 	if (SysTick_Config(sysclk_get_cpu_hz() / 1000)) {
@@ -210,35 +210,35 @@ int main(void)
 
 	/* Enable SMC peripheral clock */
 	pmc_enable_periph_clk(ID_QSPI);
-	
+
 	/* QSPI memory mode configure */
 	qspi_memory_mode_initialize();
 	puts("QSPI drivers initialized\n\r");
-	
+
 	/* enable quad mode */
 	s25fl1d_set_quad_mode(&g_qspid, 1);
-	
+
 	/* Unlock block protection */
 	s25fl1d_unprotect(&g_qspid);
 	s25fl1d_data_unprotect(&g_qspid);
 
 	/* erase entire chip  */
 	s25fl1d_erase_chip(&g_qspid);
-	
+
 	/* Flash the code to QSPI flash */
 	puts("Writing to Memory\n");
-	
+
 	s25fl1d_write(&g_qspid, (uint32_t *)p_buffercode, sizeof(p_buffercode), 0, 0);
-	
+
 	/* Lock block protection */
 	s25fl1d_protect(&g_qspid);
-	
+
 	printf("\rExample code written 0x%x bytes to Memory\r", sizeof(p_buffercode));
-	
+
 	puts("Verifying \r");
 	/* Start continuous read mode to enter in XIP mode*/
 	s25fl1d_read_quad_io(&g_qspid, buffer, sizeof(buffer), 0, 1, 0);
-	
+
 	p_memory = (uint8_t *)QSPIMEM_ADDR;
 	for(idx = 0; idx < sizeof(p_buffercode); idx++) {
 		if(*p_memory == p_buffercode[idx]) {
@@ -254,14 +254,14 @@ int main(void)
 		/* set PC and SP */
 		__start_new = (uint32_t(*) (void) ) buffer[1];
 		__start_sp = buffer[0];
-		
+
 		puts("\n\r Starting getting started example from QSPI flash \n\r");
 		puts("========================================================= \n\r");
 
 		__set_MSP(__start_sp);
-		
+
 		__start_new();
 	}
-	
+
 	while(1);
 }

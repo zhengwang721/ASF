@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- *         SAMV71 Software Package License 
+ *         SAMV71 Software Package License
  * ----------------------------------------------------------------------------
  * Copyright (c) 2015, Atmel Corporation
  *
@@ -48,7 +48,7 @@
  */
 /** Depending on DYN_TRACES, dwTraceLevel is a modifiable runtime variable or a define */
 #if !defined(NOTRACE) && (DYN_TRACES == 1)
-    extern uint32_t dwTraceLevel ;
+	extern uint32_t dwTraceLevel ;
 #endif
 
 #define Size(pAt25)                      ((pAt25)->pDesc->size)
@@ -111,19 +111,19 @@
 /** Sector protection registers are unlocked. */
 #define STATUS_SPRL_UNLOCKED             (0 << 7)
 /** Sector protection registers are locked. */
-#define STATUS_SPRL_LOCKED               (1 << 7) 
+#define STATUS_SPRL_LOCKED               (1 << 7)
 /** Quad enable bit */
 #define STATUS_QUAD_ENABLE               (1 << 1)
    /** Quad enable bit */
-#define STATUS_WRAP_ENABLE               (0 << 4)  
+#define STATUS_WRAP_ENABLE               (0 << 4)
    /** Latency control bits */
-#define STATUS_LATENCY_CTRL              (0xF << 0)    
-#define STATUS_WRAP_BYTE                 (1 << 5) 
-#define BLOCK_PROTECT_Msk                (7 << 2)  
-#define TOP_BTM_PROTECT_Msk              (1 << 5)  
-#define SEC_PROTECT_Msk                  (1 << 6)     
-#define CHIP_PROTECT_Msk                 (0x1F << 2)    
-  
+#define STATUS_LATENCY_CTRL              (0xF << 0)
+#define STATUS_WRAP_BYTE                 (1 << 5)
+#define BLOCK_PROTECT_Msk                (7 << 2)
+#define TOP_BTM_PROTECT_Msk              (1 << 5)
+#define SEC_PROTECT_Msk                  (1 << 6)
+#define CHIP_PROTECT_Msk                 (0x1F << 2)
+
 /** Sequential program mode command code 1. */
 #define SEQUENTIAL_PROGRAM_1             0xAD
 /** Sequential program mode command code 2. */
@@ -173,11 +173,11 @@
 /** Fast Read array  command code. */
 #define READ_ARRAY_DUAL                  0x3B
 /** Fast Read array  command code. */
-#define READ_ARRAY_QUAD                  0x6B   
+#define READ_ARRAY_QUAD                  0x6B
 /** Fast Read array  command code. */
 #define READ_ARRAY_DUAL_IO               0xBB
 /** Fast Read array  command code. */
-#define READ_ARRAY_QUAD_IO               0xEB 
+#define READ_ARRAY_QUAD_IO               0xEB
 /** Continuous Read Mode Reset command code. */
 #define CONTINOUS_READ_MODE_RESET        0xEB
 /** Deep power-down command code. */
