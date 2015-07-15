@@ -186,15 +186,11 @@ main(int argc, char *argv[])
 
   printf("\r\n\n\n\n Starting the SmartConnect-6LoWPAN \r\n Platform : Atmel IoT device \r\n");
   print_reset_causes();
-#if SAMR21 
-  eui64 = edbg_eui_read_eui64();
-#endif
-
-  set_link_addr();
-
-  random_init(node_id);
-
   netstack_init();
+  #if SAMR21
+  eui64 = edbg_eui_read_eui64();
+  #endif 
+  set_link_addr();  
   rf_set_channel(RF_CHANNEL);
   printf("\r\n Configured RF channel: %d\r\n", rf_get_channel());
   leds_off(LEDS_ALL);

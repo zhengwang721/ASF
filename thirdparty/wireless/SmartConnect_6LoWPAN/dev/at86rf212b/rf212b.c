@@ -55,6 +55,7 @@ PROCESS(rf212_radio_process, "RF212 radio driver");
 static int  on(void);
 static int  off(void);
 static void radiocore_hard_recovery(void);
+static void rf_generate_random_seed(void);
 static void flush_buffer(void);
 static uint8_t flag_transmit = 0;
 static volatile int radio_is_on = 0;
@@ -234,10 +235,69 @@ system_interrupt_enable_global();
   trx_reg_write(RF212_REG_TRX_CTRL_2, RF212_REG_TRX_CTRL_2_CONF);
   trx_reg_write(RF212_REG_IRQ_MASK,        RF212_REG_IRQ_MASK_CONF);
   
+  rf_generate_random_seed();
   /* start the radio process */
   process_start(&rf212_radio_process, NULL);
   return 0;
 }
+
+/*
+ * \brief Generates a 16-bit random number used as initial seed for srand()
+ *
+ */
+static void rf_generate_random_seed(void)
+{
+	uint16_t seed = 0;
+	uint8_t cur_random_val = 0;
+
+	/*
+	 * We need to disable TRX IRQs while generating random values in RX_ON,
+	 * we do not want to receive frames at this point of time at all.
+	 */
+	ENTER_TRX_REGION();
+
+	do 
+	{
+		/* Ensure that PLL has locked and receive mode is reached. */
+		trx_reg_write(RF212_REG_TRX_STATE, TRXCMD_TRX_OFF);
+		trx_reg_write(RF212_REG_TRX_STATE, TRXCMD_PLL_ON);
+		trx_reg_write(RF212_REG_TRX_STATE, TRXCMD_RX_ON);
+		
+	} while (TRXCMD_RX_ON != rf212_status());
+
+
+	/* Ensure that register bit RX_PDT_DIS is set to 0. */
+	trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE);
+
+	/*
+	 * The 16-bit random value is generated from various 2-bit random
+	 * values.
+	 */
+	for (uint8_t i = 0; i < 8; i++) {
+		/* Now we can safely read the 2-bit random number. */
+		cur_random_val = trx_bit_read(SR_RND_VALUE);
+		seed = seed << 2;
+		seed |= cur_random_val;
+		delay_us(1); /* wait that the random value gets updated */
+	}
+
+	do
+	{
+		/* Ensure that PLL has locked and receive mode is reached. */
+		trx_reg_write(RF212_REG_TRX_STATE, TRXCMD_TRX_OFF);		
+	} while (TRXCMD_TRX_OFF != rf212_status());
+	/*
+	 * Now we need to clear potential pending TRX IRQs and
+	 * enable the TRX IRQs again.
+	 */
+	trx_reg_read(RF212_REG_IRQ_STATUS);
+	trx_irq_flag_clr();
+	LEAVE_TRX_REGION();
+
+	/* Set the seed for the random number generator. */
+	srand(seed);
+}
+
 /* Put the Radio in sleep mode */
 
 int
