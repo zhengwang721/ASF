@@ -77,7 +77,7 @@ extern "C" {
 /**
  * @}
  */
- 
+
 /**
  * \brief Input parameters when initializing the TWIHS module mode.
  */

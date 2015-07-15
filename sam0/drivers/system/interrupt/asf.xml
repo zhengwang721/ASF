@@ -42,7 +42,7 @@
 		<build type="header-file" value="system_interrupt_saml21/system_interrupt_features.h"/>
 		<build type="header-file" value="system_interrupt_samda/system_interrupt_features.h"/>
 		<build type="header-file" value="system_interrupt_samc20_c21/system_interrupt_features.h"/>
-		
+
 		<build type="header-file" value="quick_start/qs_system_interrupt.h"/>
 
 		<build type="doxygen-entry-point" value="asfdoc_sam0_system_interrupt_group"/>

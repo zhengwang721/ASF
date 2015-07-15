@@ -377,7 +377,7 @@
 /** CAN1 PIN TX. */
 #define PIN_CAN1_TX_IDX           PIO_PC14_IDX
 #define PIN_CAN1_TX_FLAGS         IOPORT_MODE_MUX_C
-=======
+
 /** PWM LED0 pin definitions. */
 #define PIN_PWM_LED0_GPIO    PIO_PA23_IDX
 #define PIN_PWM_LED0_FLAGS   (IOPORT_MODE_MUX_B)
@@ -406,7 +406,7 @@
 						 PIO_PD9A_GMDIO)
 
 
->>>>>>> 897e60a7d5ecd9af3c2bd58bb76a932b1a36466e
+
 
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAMV71_XLTRA_H_ */

@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_rww_eeprom_group SAM Read While Write EEPROM (RWW EEPROM) Emulator Service
  *
- * This driver for Atmel&reg; | SMART SAM provides an RWW emulated EEPROM
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an RWW emulated EEPROM
  * memory area, for the storage and retrieval of user-application
  * configuration data into and out of non-volatile memory. The main array
  * can therefore run code while EEPROM data is written.
@@ -59,9 +59,9 @@
  *
  * The following devices can use this module:
  *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM C21
  *  - Atmel | SMART SAM D21
- *  - Atmel | SMART SAM DA1
+ *  - Atmel | SMART SAM C20/C21
+ *  - Atmel | SMART SAM DAx
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rww_eeprom_prerequisites
@@ -250,7 +250,7 @@
  * \ref asfdoc_sam0_rww_eeprom_page_layout "the following figure".
  *
  * \anchor asfdoc_sam0_rww_eeprom_page_layout
- * \image html page_layout.svg "Internal Layout of an Emulated RWW EEPROM Age"
+ * \image html page_layout.svg "Internal Layout of an Emulated RWW EEPROM Page"
  *
  * \note In the following memory layout example, each physical row stores the
  * contents of one logical RWW EEPROM page. Refer to
@@ -332,7 +332,7 @@
  * \subsection asfdoc_sam0_rww_eeprom_special_considerations_checksum RWW EEPROM Page Checksum
  * For each page, a checksum function is used to verify the integrity of
  * the page data. After reading the page data using 
- * \ref rww_eeprom_emulator_read_page(). When its checksum is not correct, and an error can be
+ * \ref rww_eeprom_emulator_read_page(). When its checksum is not correct, an error can be
  * detected. This function can be enabled or disabled through the configuration file.
  *
  * \section asfdoc_sam0_rww_eeprom_extra_info Extra Information

@@ -122,7 +122,7 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(TWIHS0_CLK_GPIO, TWIHS0_CLK_FLAGS);
 #endif
 
-<<<<<<< HEAD
+
 #ifdef CONF_BOARD_CAN0
 /* Configure the CAN0 TX and RX pins. */
 ioport_set_pin_peripheral_mode(PIN_CAN0_RX_IDX, PIN_CAN0_RX_FLAGS);
@@ -139,7 +139,7 @@ ioport_set_pin_peripheral_mode(PIN_CAN1_TX_IDX, PIN_CAN1_TX_FLAGS);
 
 #endif
 
-=======
+
 #ifdef CONF_BOARD_SPI
 	ioport_set_pin_peripheral_mode(SPI0_MISO_GPIO, SPI0_MISO_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI0_MOSI_GPIO, SPI0_MOSI_FLAGS);
@@ -185,5 +185,5 @@ ioport_set_pin_peripheral_mode(PIN_USART0_CTS_IDX,PIN_USART0_CTS_FLAGS);
 ioport_set_pin_peripheral_mode(PIN_USART0_RTS_IDX,
 PIN_USART0_RTS_FLAGS);
 #endif
->>>>>>> 897e60a7d5ecd9af3c2bd58bb76a932b1a36466e
+
 }

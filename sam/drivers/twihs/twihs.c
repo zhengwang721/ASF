@@ -57,7 +57,7 @@ extern "C" {
 /**
  * \defgroup sam_drivers_twihs_group High-Speed Two-Wire Interface (TWIHS)
  *
- * Driver for the TWIHS (High-Speed Two-Wire Interface). This driver provides access to the main 
+ * Driver for the TWIHS (High-Speed Two-Wire Interface). This driver provides access to the main
  * features of the TWIHS controller.
  * The TWIHS interconnects components on a unique two-wire bus.
  * The TWIHS is programmable as a master or a slave with sequential or single-byte access.
@@ -342,7 +342,7 @@ uint32_t twihs_master_write(Twihs *p_twihs, twihs_packet_t *p_packet)
 			continue;
 		}
 		p_twihs->TWIHS_THR = *buffer++;
-		
+
 		cnt--;
 	}
 

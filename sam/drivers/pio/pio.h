@@ -221,6 +221,27 @@ void pio_set_io_drive(Pio *p_pio, uint32_t ul_line,
 		enum pio_io_drive_mode mode);
 #endif
 
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
+void pio_keypad_enable(Pio *p_pio);
+void pio_keypad_disable(Pio *p_pio);
+void pio_keypad_set_row_num(Pio *p_pio, uint8_t num);
+uint8_t pio_keypad_get_row_num(const Pio *p_pio);
+void pio_keypad_set_column_num(Pio *p_pio, uint8_t num);
+uint8_t pio_keypad_get_column_num(const Pio *p_pio);
+void pio_keypad_set_debouncing_value(Pio *p_pio, uint16_t value);
+uint16_t pio_keypad_get_debouncing_value(const Pio *p_pio);
+void pio_keypad_enable_interrupt(Pio *p_pio, uint32_t ul_mask);
+void pio_keypad_disable_interrupt(Pio *p_pio, uint32_t ul_mask);
+uint32_t pio_keypad_get_interrupt_mask(const Pio *p_pio);
+uint32_t pio_keypad_get_press_status(const Pio *p_pio);
+uint32_t pio_keypad_get_release_status(const Pio *p_pio);
+uint8_t pio_keypad_get_simult_press_num(const Pio *p_pio);
+uint8_t pio_keypad_get_simult_release_num(const Pio *p_pio);
+uint8_t pio_keypad_get_press_row_index(const Pio *p_pio, uint8_t queue);
+uint8_t pio_keypad_get_press_column_index(const Pio *p_pio, uint8_t queue);
+uint8_t pio_keypad_get_release_row_index(const Pio *p_pio, uint8_t queue);
+uint8_t pio_keypad_get_release_column_index(const Pio *p_pio, uint8_t queue);
+#endif
 /**
  * \page sam_pio_quickstart Quick Start Guide for the SAM PIO driver
  *
