@@ -1144,12 +1144,7 @@ uint8_t usart_lin_identifier_send_complete(Usart *usart)
  */
 uint8_t usart_lin_identifier_reception_complete(Usart *usart)
 {
-	if(usart->US_CSR & US_CSR_LINID) {
-		return 1;
-	}
-	else {
-		return 0;
-	}
+	return(usart->US_CSR & US_CSR_LINID) > 0;
 }
 
 /**
@@ -1163,12 +1158,7 @@ uint8_t usart_lin_identifier_reception_complete(Usart *usart)
  */
 uint8_t usart_lin_tx_complete(Usart *usart)
 {
-	if(usart->US_CSR & US_CSR_LINTC) {
-		return 1;
-	}
-	else {
-		return 0;
-	}
+	return (usart->US_CSR & US_CSR_LINTC) > 0;
 }
 
 /**
