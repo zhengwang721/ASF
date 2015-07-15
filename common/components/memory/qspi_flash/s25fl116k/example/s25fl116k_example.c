@@ -86,7 +86,7 @@
 
 #include "asf.h"
 #include "conf_board.h"
-#include "s25fl1dxx.h"
+#include "s25fl1xx.h"
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "--QSpi Example --\r\n" \
