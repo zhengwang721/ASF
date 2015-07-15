@@ -100,6 +100,23 @@
 #define USART1_TXD_GPIO   PIO_PB4_IDX
 #define USART1_TXD_FLAGS  IOPORT_MODE_MUX_D
 
+/** USART0 pins definitions, PB0,PB1. */
+#define USART0_RXD_GPIO   PIO_PB0_IDX
+#define USART0_RXD_FLAGS  IOPORT_MODE_MUX_C
+#define USART0_TXD_GPIO   PIO_PB1_IDX
+#define USART0_TXD_FLAGS  IOPORT_MODE_MUX_C
+
+#define PIN_USART0_SCK_IDX    (PIO_PB13_IDX)
+#define PIN_USART0_SCK_FLAGS  (IOPORT_MODE_MUX_C)
+
+/** USART0 pin CTS */
+#define PIN_USART0_CTS_IDX    (PIO_PB2_IDX)
+#define PIN_USART0_CTS_FLAGS  (IOPORT_MODE_MUX_C)
+
+/** USART0 pin RTS */
+#define PIN_USART0_RTS_IDX    (PIO_PB3_IDX)
+#define PIN_USART0_RTS_FLAGS  (IOPORT_MODE_MUX_C)
+
 
 //! \name LED definitions
 //@{
@@ -244,8 +261,34 @@
 #define PIN_PUSHBUTTON_1_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
 #define PIN_PUSHBUTTON_1_IRQn  PIOA_IRQn
 
+/**
+ * Push button #1 definition. Attributes = pull-up + debounce + interrupt on
+ * rising edge.
+ */
+#define BUTTON_1_NAME             "SW1"
+#define BUTTON_1_PIN              SW1_PIN
+#define BUTTON_1_ACTIVE           SW1_ACTIVE
+#define BUTTON_1_INACTIVE         SW1_INACTIVE
+#define BUTTON_1_SUPC_INPUT       SW1_SUPC_INPUT
+
+#define PUSHBUTTON_2_NAME        "SW1"
+#define PUSHBUTTON_2_WKUP_LINE   (2)
+#define PUSHBUTTON_2_WKUP_FSTT   (PMC_FSMR_FSTT2)
+#define GPIO_PUSH_BUTTON_2       (PIO_PB12_IDX)
+#define GPIO_PUSH_BUTTON_2_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
+#define GPIO_PUSH_BUTTON_2_SENSE (IOPORT_SENSE_RISING)
+
+#define PIN_PUSHBUTTON_2       {PIO_PB12, PIOB, ID_PIOB, PIO_INPUT, \
+		PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define PIN_PUSHBUTTON_2_MASK  PIO_PB12
+#define PIN_PUSHBUTTON_2_PIO   PIOB
+#define PIN_PUSHBUTTON_2_ID    ID_PIOB
+#define PIN_PUSHBUTTON_2_TYPE  PIO_INPUT
+#define PIN_PUSHBUTTON_2_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+#define PIN_PUSHBUTTON_2_IRQn  PIOB_IRQn
+
 /** List of all push button definitions. */
-#define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1}
+#define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1,PIN_PUSHBUTTON_2}
 
 /** PCK0 pin definition (PA6) */
 #define PIN_PCK0         (PIO_PA6_IDX)
@@ -264,6 +307,22 @@
 #define TWIHS0_DATA_FLAGS  (IOPORT_MODE_MUX_A)
 #define TWIHS0_CLK_GPIO    PIO_PA4_IDX
 #define TWIHS0_CLK_FLAGS   (IOPORT_MODE_MUX_A)
+
+/** SPI0 pins definition */
+#define SPI0_MISO_GPIO    PIO_PD20_IDX
+#define SPI0_MISO_FLAGS  (IOPORT_MODE_MUX_B)
+#define SPI0_MOSI_GPIO    PIO_PD21_IDX
+#define SPI0_MOSI_FLAGS  (IOPORT_MODE_MUX_B)
+#define SPI0_NPCS0_GPIO   PIO_PB2_IDX
+#define SPI0_NPCS0_FLAGS  (IOPORT_MODE_MUX_D)
+#define SPI0_NPCS1_GPIO   PIO_PD25_IDX
+#define SPI0_NPCS1_FLAGS  (IOPORT_MODE_MUX_B)
+#define SPI0_NPCS2_GPIO   PIO_PD12_IDX
+#define SPI0_NPCS2_FLAGS  (IOPORT_MODE_MUX_C)
+#define SPI0_NPCS3_GPIO   PIO_PD27_IDX
+#define SPI0_NPCS3_FLAGS  (IOPORT_MODE_MUX_B)
+#define SPI0_SPCK_GPIO    PIO_PD22_IDX
+#define SPI0_SPCK_FLAGS  (IOPORT_MODE_MUX_B)
 
 /** AFEC channel for potentiometer */
 #define AFEC_CHANNEL_POTENTIOMETER  AFEC_CHANNEL_0
@@ -318,6 +377,36 @@
 /** CAN1 PIN TX. */
 #define PIN_CAN1_TX_IDX           PIO_PC14_IDX
 #define PIN_CAN1_TX_FLAGS         IOPORT_MODE_MUX_C
+=======
+/** PWM LED0 pin definitions. */
+#define PIN_PWM_LED0_GPIO    PIO_PA23_IDX
+#define PIN_PWM_LED0_FLAGS   (IOPORT_MODE_MUX_B)
+#define PIN_PWM_LED0_CHANNEL PWM_CHANNEL_0
+
+/** PWM LED1 pin definitions. */
+#define PIN_PWM_LED1_GPIO    PIO_PA24_IDX
+#define PIN_PWM_LED1_FLAGS   (IOPORT_MODE_MUX_B)
+#define PIN_PWM_LED1_CHANNEL PWM_CHANNEL_1
+
+/*----------------------------------------------------------------------------*/
+/* GMAC HW configurations */
+#define BOARD_GMAC_PHY_ADDR 1
+
+#define PIN_GMAC_RESET_MASK   PIO_PC10
+#define PIN_GMAC_RESET_PIO    PIOC
+#define PIN_GMAC_INT_MASK     PIO_PA19
+#define PIN_GMAC_INT_PIO      PIOA
+#define PIN_GMAC_SIGDET_MASK  PIO_PA29
+#define PIN_GMAC_SIGDET_PIO   PIOA
+#define PIN_GMAC_PERIPH  PIO_PERIPH_A
+#define PIN_GMAC_PIO     PIOD
+#define PIN_GMAC_MASK   (PIO_PD0A_GTXCK | PIO_PD1A_GTXEN | PIO_PD2A_GTX0 | \
+						 PIO_PD3A_GTX1 | PIO_PD4A_GRXDV | PIO_PD5A_GRX0 |  \
+						 PIO_PD6A_GRX1 | PIO_PD7A_GRXER | PIO_PD8A_GMDC | \
+						 PIO_PD9A_GMDIO)
+
+
+>>>>>>> 897e60a7d5ecd9af3c2bd58bb76a932b1a36466e
 
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAMV71_XLTRA_H_ */

@@ -103,6 +103,8 @@ void board_init(void)
 	 */
 	ioport_set_pin_dir(LED0_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(LED0_GPIO, LED0_INACTIVE_LEVEL);
+	ioport_set_pin_dir(LED1_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(LED1_GPIO, LED0_INACTIVE_LEVEL);
 
 	/* Configure Push Button pins */
 	ioport_set_pin_input_mode(GPIO_PUSH_BUTTON_1, GPIO_PUSH_BUTTON_1_FLAGS,
@@ -120,6 +122,7 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(TWIHS0_CLK_GPIO, TWIHS0_CLK_FLAGS);
 #endif
 
+<<<<<<< HEAD
 #ifdef CONF_BOARD_CAN0
 /* Configure the CAN0 TX and RX pins. */
 ioport_set_pin_peripheral_mode(PIN_CAN0_RX_IDX, PIN_CAN0_RX_FLAGS);
@@ -136,4 +139,51 @@ ioport_set_pin_peripheral_mode(PIN_CAN1_TX_IDX, PIN_CAN1_TX_FLAGS);
 
 #endif
 
+=======
+#ifdef CONF_BOARD_SPI
+	ioport_set_pin_peripheral_mode(SPI0_MISO_GPIO, SPI0_MISO_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI0_MOSI_GPIO, SPI0_MOSI_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI0_NPCS0_GPIO, SPI0_NPCS0_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI0_SPCK_GPIO, SPI0_SPCK_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_PWM_LED0
+	/* Configure PWM LED0 pin */
+	ioport_set_pin_peripheral_mode(PIN_PWM_LED0_GPIO, PIN_PWM_LED0_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_PWM_LED1
+	/* Configure PWM LED1 pin */
+	ioport_set_pin_peripheral_mode(PIN_PWM_LED1_GPIO, PIN_PWM_LED1_FLAGS);
+#endif
+
+
+#ifdef CONF_BOARD_USART_RXD
+/* Configure USART RXD pin */
+ioport_set_pin_peripheral_mode(USART0_RXD_GPIO,
+USART0_RXD_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_USART_TXD
+/* Configure USART TXD pin */
+ioport_set_pin_peripheral_mode(USART0_TXD_GPIO,
+USART0_TXD_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_USART_SCK
+/* Configure USART synchronous communication SCK pin */
+ioport_set_pin_peripheral_mode(PIN_USART0_SCK_IDX,PIN_USART0_SCK_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_USART_CTS
+/* Configure USART synchronous communication CTS pin */
+ioport_set_pin_peripheral_mode(PIN_USART0_CTS_IDX,PIN_USART0_CTS_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_USART_RTS
+/* Configure USART RTS pin */
+ioport_set_pin_peripheral_mode(PIN_USART0_RTS_IDX,
+PIN_USART0_RTS_FLAGS);
+#endif
+>>>>>>> 897e60a7d5ecd9af3c2bd58bb76a932b1a36466e
 }
