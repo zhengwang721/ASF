@@ -1,7 +1,7 @@
 /**
 * \file
 *
-* \brief Health Thermometer Profile Application
+* \brief Proximity Monitor Profile Application
 *
 * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
 *
@@ -47,11 +47,13 @@
 /**
 * \mainpage
 * \section preface Preface
-* This is the reference manual for the Health Thermometer Profile Application
+* This is the reference manual for the Proximity Monitor Profile Application
 */
 /*- Includes ---------------------------------------------------------------*/
 
 #define DEBUG_LOG
+
+//#define BY_DEFAULT_CONN
 
 #include <asf.h>
 #include "platform.h"
@@ -62,118 +64,83 @@
 #include "console_serial.h"
 #include "timer_hw.h"
 #include "conf_extint.h"
+#include "ble_utils.h"
 
-at_ble_LTK_t app_bond_info;
-bool app_device_bond = false;
-uint8_t auth_info = 0;
-uint8_t count1, serv_avail_count, device_found_id;
-at_ble_scan_info_t scan_info[10];
-//pxp_peripheral pxp_reporter;
+#include "ble_manager.h"
+#include "immediate_alert.h"
+#include "link_loss.h"
+
+
 at_ble_primary_service_found_t service_avail[6];
 
+at_ble_addr_t peer_addr = {AT_BLE_ADDRESS_PUBLIC,{0x03, 0x18, 0xf0, 0x05, 0xf0, 0xf8}};
+	
+extern gatt_char_handler_t txps_handle;
+extern gatt_char_handler_t lls_handle;
+extern gatt_char_handler_t ias_handle;
 
+extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
-void app_init(void)
+volatile bool app_timer_done = false;
+
+void rssi_update (at_ble_handle_t conn_handle)
 {
-	uint8_t port = 74;
-	at_ble_addr_t addr;
+	int8_t rssi_power = 0;
+	
+	app_timer_done=false;
+	/* Get the Received signal strength intensity of the connect device/handle*/
+	
+	rssi_power = at_ble_rx_power_get(conn_handle);
+	
+	DBG_LOG("Rx power is %04d dBm", rssi_power);
+	
+		
+	//DBG_LOG("%04d", conn_handle);
+	
+	//if((rssi_power < PXP_LOW_ALERT_RANGE)&&(rssi_power > PXP_HIGH_ALERT_RANGE))
+	//{
+		//lls_alert_level_write(conn_handle, lls_handle.char_handle, IAS_LOW_ALERT);
+		//DBG_LOG("LOW ALERT");
+	//}	
+	//else if (rssi_power > PXP_HIGH_ALERT_RANGE)
+	//{
+		//lls_alert_level_write(conn_handle, lls_handle.char_handle, IAS_HIGH_ALERT);
+		//DBG_LOG("HIGH ALERT");
+	//}
+}
+	
+
+void pxp_app_init(void)
+{
+	
 	at_ble_status_t scan_status;
 	
-	// init device reset the link layer
-	at_ble_init(&port);
-	
-	
-	at_ble_addr_get(&addr);
-	
-	at_ble_addr_set(&addr);
-	
 	/* Initialize the scanning procedure */
-	scan_status = pxp_scan_start();
+	scan_status = gap_dev_scan();
 	
+	/* Check for scan status */
 	if(scan_status == AT_BLE_SUCCESS)
 	{
-		DBG_LOG("\r\nScanning process initiated ");
+		DBG_LOG("Scanning process initiated");
 	}
 	else if(scan_status == AT_BLE_INVALID_PARAM)
 	{
-		DBG_LOG("\r\nScan parameters are invalid");
+		DBG_LOG("Scan parameters are invalid");
 	}
 	else if(scan_status == AT_BLE_FAILURE)
 	{
-		DBG_LOG("\r\nScanning Failed Generic error");
-	}
-
+		DBG_LOG("Scanning Failed Generic error");
+	}	
 }
 
-void pxp_parse(void)
-{
-	uint8_t flag1,i,j,k;
-	for(i=0;i<serv_avail_count;i++)
-	{
-		
-		for(j=0;j<scan_info[i].adv_data_len;j++)
-		{
-			flag1=scan_info[i].adv_data[j];
-			
-			if(scan_info[i].adv_data[j+1]==0x09)     // check for local name
-			{
-				DBG_LOG("Device name is :");
-				for(k=1;k<flag1;k++)
-				{
-					DBG_LOG("%c",scan_info[i].adv_data[j+k+1]);
-				}
-			}
-			
-			else if(scan_info[i].adv_data[j+1]==0x03) // check for services
-			{
-				DBG_LOG("Device supported Services :");
-				if((scan_info[i].adv_data[j+2]==0x03)&&(scan_info[i].adv_data[j+3]==0x18))
-				{
-					device_found_id=i;
-				}
-				for(k=1;k<flag1;k++)
-				{
-					DBG_LOG("%02X",scan_info[i].adv_data[j+k+1]);
-				}
-			}
-			
-			else
-			{
-				for(k=0;k<flag1;k++)
-				{
-					//DBG_LOG("%02X ",scan_info[i].adv_data[j+k+1]);
-				}
-			}
-			
-			j+=k;
-			DBG_LOG("\r\n");
-		}
-		
-		DBG_LOG("\r\nDevice Address 0x%02x%02x%02x%02x%02x%02x ",
-		scan_info[i].dev_addr.addr[5],
-		scan_info[i].dev_addr.addr[4],
-		scan_info[i].dev_addr.addr[3],
-		scan_info[i].dev_addr.addr[2],
-		scan_info[i].dev_addr.addr[1],
-		scan_info[i].dev_addr.addr[0]);
-	}
-}
+
+
 
 int main (void)
 {
 	at_ble_events_t event;
 	uint8_t params[512];
-	at_ble_addr_t pxp_peripheral[2];
-	at_ble_connection_params_t pxp_parameter;
-	//at_ble_addr_t rem_dev = {0x00,0x03,0x18,0xf0,0x05,0xf0,0xf8};
-	//at_ble_addr_t rem_dev = {.type=0x00, .addr[6] = {0x03,0xa4,0x1a,0x38,0xdb,0xd5}};
-		
-	at_ble_handle_t handle = 0;
-	at_ble_characteristic_found_t charcter_avail[20];
 	
-	pxp_monitor_discover_t discover_role;
-	discover_role = DISCOVER_SERVICE;
-
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -182,445 +149,65 @@ int main (void)
 	system_init();
 	#endif
 	
-	hw_timer_init();
-	hw_timer_register_callback(timer_callback_handler);
-	
-	//button_init();
+	/* Initialize serial console */
 	serial_console_init();
 	
-	DBG_LOG_1LVL("\r\nInitializing Proximity Application");
-
-	app_init();
-	serv_avail_count=0;
-	count1=0;
+	/* Initialize the hardware timer */
+	hw_timer_init();
 	
-	while(at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS)
+	/* Register the callback */
+	hw_timer_register_callback(timer_callback_handler);
+	
+	/* initialize the ble chip  and Set the device mac address */
+	ble_device_init(NULL);
+	
+	DBG_LOG("Initializing Proximity Monitor Application");
+
+	/* Initialize the pxp service */
+	pxp_app_init();
+	
+	while(1)
 	{
-		switch(event)
+		if(at_ble_event_get(&event, params,-1) == AT_BLE_SUCCESS)
 		{
-			case AT_BLE_SCAN_INFO:
-			{
-				memcpy((uint8_t *)&scan_info[serv_avail_count], params, sizeof(at_ble_scan_info_t));
-				
-				//uint8_t device_name_poin,service_name_poin,counter;
-				//uint8_t temp_buf,device_name_len,service_name_len;
-				//
-				//DBG_LOG("\r\n ");
-				//
-				//for(counter=0;counter<scan_info[serv_avail_count].adv_data_len;counter++)
-				//{
-					//DBG_LOG("%02X ",scan_info[serv_avail_count].adv_data[counter]);
-				//}
-				//
-				//DBG_LOG("\r\n ");
-				//
-				//for(counter=0;counter<scan_info[serv_avail_count].adv_data_len;counter++)
-				//{
-					//
-					//temp_buf = scan_info[serv_avail_count].adv_data[counter];
-					//DBG_LOG("%02X  ",temp_buf);
-					//if(scan_info[serv_avail_count].adv_data[counter+1]==0x09)
-					//{
-						//device_name_poin = counter+2;
-						//device_name_len = temp_buf-1;
-						//DBG_LOG("%02X ",device_name_poin);
-						//DBG_LOG("%02X ",device_name_len);
-					//}
-					//if(scan_info[serv_avail_count].adv_data[counter+1]==0x03)
-					//{
-						//service_name_poin = counter+2;
-						//service_name_len = temp_buf-1;
-					//}
-					//counter=counter+temp_buf;
-				//}
-				//
-				//for(counter=0;counter<device_name_len;counter++)
-				//{
-					//DBG_LOG("%c",scan_info[serv_avail_count].adv_data[device_name_poin]);	
-				//}
-				//DBG_LOG("\r\n ");
-				//for(counter=0;counter<service_name_len;counter++)
-				//{
-					//DBG_LOG("%c",scan_info[serv_avail_count].adv_data[service_name_poin]);
-				//}
-				
-				{
-					DBG_LOG("\r\nDevice found Address 0x%02X%02X%02X%02X%02X%02X adv len %02d",
-					scan_info[serv_avail_count].dev_addr.addr[5],
-					scan_info[serv_avail_count].dev_addr.addr[4],
-					scan_info[serv_avail_count].dev_addr.addr[3],
-					scan_info[serv_avail_count].dev_addr.addr[2],
-					scan_info[serv_avail_count].dev_addr.addr[1],
-					scan_info[serv_avail_count].dev_addr.addr[0],
-					scan_info[serv_avail_count].adv_data_len);
-				}
-				
-				
-				serv_avail_count++;
-			}
-			break;
-			
-			
-			case AT_BLE_SCAN_REPORT:
-			{
-				at_ble_status_t connect_status;
-				at_ble_scan_report_t scan_report;
-				
-				memcpy((uint8_t *)&scan_report, params, sizeof(at_ble_scan_report_t));
-				
-				pxp_parse();
-				if(device_found_id)
-				{
-					DBG_LOG("\r\nSupported Address is 0x%02x%02x%02x%02x%02x%02x Type %d length %d\r\n",
-					scan_info[device_found_id].dev_addr.addr[5],
-					scan_info[device_found_id].dev_addr.addr[4],
-					scan_info[device_found_id].dev_addr.addr[3],
-					scan_info[device_found_id].dev_addr.addr[2],
-					scan_info[device_found_id].dev_addr.addr[1],
-					scan_info[device_found_id].dev_addr.addr[0],
-					scan_info[device_found_id].type,
-					scan_info[device_found_id].adv_data_len);
-				}
-				
-				if(scan_report.status==AT_BLE_SUCCESS)
-				{
-					at_ble_scan_stop();   // Stop the current scan active
-					
-					DBG_LOG("\r\nScan Process Completed ");
-					
-					pxp_parameter.con_intv_min = PXP_CONN_MIN;
-					pxp_parameter.con_intv_max = PXP_CONN_MAX;
-					pxp_parameter.con_latency = PXP_CONN_LATENCY;
-					pxp_parameter.ce_len_min = PXP_CE_LEN_MIN;
-					pxp_parameter.ce_len_max = PXP_CE_LEN_MAX;
-					pxp_parameter.superv_to = PXP_SUPER_TIMOUT;//500
-					
-					memcpy((uint8_t *)&pxp_peripheral[0], &scan_info[device_found_id].dev_addr,sizeof(at_ble_addr_t));
-					
-					connect_status=at_ble_connect(pxp_peripheral, 1 , SCAN_INTERVAL, SCAN_WINDOW, &pxp_parameter);
-
-					//memcpy((uint8_t *)&pxp_peripheral[0], &rem_dev,sizeof(at_ble_addr_t));
-					
-					//connect_status = pxp_dev_connect(scan_info[device_found_id].dev_addr);
-					
-					
-					
-					if(connect_status == AT_BLE_SUCCESS)
-					{
-						DBG_LOG("\r\nConnection request Send ");
-					}
-					else if(connect_status == AT_BLE_INVALID_PARAM)
-					{
-						DBG_LOG("\r\nConnect request failed invalid parameter");
-					}
-					else if(connect_status == AT_BLE_FAILURE)
-					{
-						DBG_LOG("\r\nConnect request failed");
-					}
-					DBG_LOG("\r\n");
-				}
-				
-				else
-				{
-					DBG_LOG("\r\n Scanning  has insufficient data, type is %02x",scan_report.status);
-					while(1);
-				}
-			}
-			break;
-			
-			case AT_BLE_CONNECTED:
-			{
-				at_ble_connected_t conn_params;
-				at_ble_status_t connection_status;
-				
-				memcpy((uint8_t *)&conn_params, params, sizeof(at_ble_connected_t));
-				
-				DBG_LOG("\r\nDevice connected to 0x%02x%02x%02x%02x%02x%02x handle=0x%x status=%02X",
-				conn_params.peer_addr.addr[5],
-				conn_params.peer_addr.addr[4],
-				conn_params.peer_addr.addr[3],
-				conn_params.peer_addr.addr[2],
-				conn_params.peer_addr.addr[1],
-				conn_params.peer_addr.addr[0],
-				conn_params.handle,
-				conn_params.conn_status);
-				handle = conn_params.handle;
-				//pxp_reporter.handle;
-				
-				LED_On(LED0);
-				if(conn_params.conn_status==AT_BLE_SUCCESS)
-				{
-					connection_status = at_ble_primary_service_discover_all( handle, PXP_STARTING_HANDLE, PXP_ENDING_HANDLE);
-					DBG_LOG("\r\n");
-					serv_avail_count=0; // make service discover counter to zero
-					
-					if(connection_status==AT_BLE_SUCCESS)
-					{
-						DBG_LOG("\r\n GATT Discovery request started ");
-					}
-					else
-					{
-						DBG_LOG("\r\n GATT Discovery request failed");
-					}
-				}
-			}
-			break;
-
-			case AT_BLE_DISCONNECTED:
-			{
-				at_ble_disconnected_t disconnect;
-				memcpy((uint8_t *)&disconnect, params, sizeof(at_ble_disconnected_t));
-				LED_Off(LED0);
-				DBG_LOG("\r\nDevice disconnected Reason:0x%02x Handle=0x%x", disconnect.reason, disconnect.handle);
-			}
-			break;
-			
-			case AT_BLE_DISCOVERY_COMPLETE:
-			{
-				at_ble_discovery_complete_t discover_status;
-				memcpy((uint8_t *)&discover_status, params, sizeof(at_ble_discovery_complete_t));
-				
-				#ifdef DEBUG_LOG
-				DBG_LOG("\r\nDiscovery Complete  DiscoveryStatus 0x%02x DiscoveryRole 0x%02x",discover_status.status,discover_role);
-				#endif
-				
-				count1++;
-				if(discover_status.status == AT_BLE_DISCOVERY_SUCCESS)
-				{
-					
-					if(discover_role == DISCOVER_SERVICE)
-					{
-						switch(count1)
-						{
-							case 01:
-							{
-								if(at_ble_characteristic_discover_all( handle, tx_handler.srt_handle, tx_handler.end_handle) == AT_BLE_SUCCESS)
-								{
-									#ifdef DEBUG_LOG
-									DBG_LOG("\r\nTx Characteristic Discovery Started");
-									#endif
-								}
-								else
-								{
-									#ifdef DEBUG_LOG
-									DBG_LOG("\r\nTx Characteristic Discovery Failed");
-									#endif
-								}
-							}
-							break;
-							
-							case 02:
-							{
-								if(at_ble_characteristic_discover_all( handle, immed_alert_handler.srt_handle, immed_alert_handler.end_handle) == AT_BLE_SUCCESS)
-								{
-									#ifdef DEBUG_LOG
-									DBG_LOG("\r\n Immediate Characteristic Discovery Started");
-									#endif
-								}
-								else
-								{
-									#ifdef DEBUG_LOG
-									DBG_LOG("\r\n Immediate Characteristic Discovery Failed");
-									#endif
-								}
-							}
-							break;
-							
-							case 03:
-							{
-								if(at_ble_characteristic_discover_all( handle, linkloss_handler.srt_handle, linkloss_handler.end_handle) == AT_BLE_SUCCESS)
-								{
-									#ifdef DEBUG_LOG
-									DBG_LOG("\r\n Link Loss Characteristic Discovery Started");
-									#endif
-								}
-								else
-								{
-									#ifdef DEBUG_LOG
-									DBG_LOG("\r\n Link Loss Characteristic Discovery Failed");
-									#endif
-								}
-								discover_role = GATT_DISC_COMPLETE;
-							}
-							break;
-						}
-						
-						
-					}
-					
-					else if(discover_role == GATT_DISC_COMPLETE)
-					{
-						
-						discover_role = DISCOVER_SERVICE;
-						DBG_LOG("\r\nGATT Discovery Completed");
-						
-						// GATT discovery completed Read the TX Power from peripheral
-						if(at_ble_characteristic_read(handle, tx_handler.val_handle, 0, 0x01) == AT_BLE_SUCCESS)
-						{
-							#ifdef DEBUG_LOG
-							DBG_LOG("\r\nCharacteristic Read Request successfully");
-							#endif
-							serv_avail_count=0;
-						}
-						else
-						{
-							#ifdef DEBUG_LOG
-							DBG_LOG("\r\nCharacteristic Read Request failed");
-							#endif
-						}
-					}
-				}
-				
-			}
-			break;
-
-			case AT_BLE_PRIMARY_SERVICE_FOUND:
-			{
-				
-				memcpy((uint8_t *)&service_avail[serv_avail_count], params, sizeof(at_ble_primary_service_found_t));
-				
-				if((service_avail[serv_avail_count].service_uuid.uuid[0]==0x04)&&(service_avail[serv_avail_count].service_uuid.uuid[1]==0x18)) // for Tx power service
-				{
-					tx_handler.srt_handle = service_avail[serv_avail_count].start_handle;
-					tx_handler.end_handle = service_avail[serv_avail_count].end_handle;
-					DBG_LOG("\r\n Tx Power Service found");
-					#ifdef DEBUG_LOG
-					DBG_LOG("\r\n Tx power service handler  %04X %04X",tx_handler.srt_handle,tx_handler.end_handle);
-					#endif
-				}
-				
-				else if((service_avail[serv_avail_count].service_uuid.uuid[0]==0x03)&&(service_avail[serv_avail_count].service_uuid.uuid[1]==0x18)) // for link loss service
-				{
-					linkloss_handler.srt_handle = service_avail[serv_avail_count].start_handle;
-					linkloss_handler.end_handle = service_avail[serv_avail_count].end_handle;
-					DBG_LOG("\r\n Link Loss Service found");
-					#ifdef DEBUG_LOG
-					DBG_LOG("\r\n link loss service discovered  %04X %04X",linkloss_handler.srt_handle,linkloss_handler.end_handle);
-					#endif
-				}
-				
-				
-				else if((service_avail[serv_avail_count].service_uuid.uuid[0]==0x02)&&(service_avail[serv_avail_count].service_uuid.uuid[1]==0x18)) // for Immediate alert service
-				{
-					immed_alert_handler.srt_handle = service_avail[serv_avail_count].start_handle;
-					immed_alert_handler.end_handle = service_avail[serv_avail_count].end_handle;
-					DBG_LOG("\r\n Immediate Alert Service found");
-					#ifdef DEBUG_LOG
-					DBG_LOG("\r\n Immediate Alert service discovered %04X %04X ",immed_alert_handler.srt_handle,immed_alert_handler.end_handle);
-					#endif
-				}
-				
-				else
-				{
-					#ifdef DEBUG_LOG
-					DBG_LOG("\r\n handler %02x Service available handler  %04X %04X ",
-					service_avail[serv_avail_count].conn_handle, service_avail[serv_avail_count].start_handle,service_avail[serv_avail_count].end_handle);
-					for(uint8_t n=0;n<sizeof(service_avail[serv_avail_count].service_uuid.uuid);n++)
-					{
-						DBG_LOG("%02X",service_avail[serv_avail_count].service_uuid.uuid[n]);
-					}
-					#endif
-				}
-				
-				serv_avail_count++;
-			}
-			break;
-			
-			case AT_BLE_CHARACTERISTIC_FOUND:
-			{
-				memcpy((uint8_t *)&charcter_avail[serv_avail_count], params, sizeof(at_ble_characteristic_found_t));
-				
-				if((charcter_avail[serv_avail_count].char_uuid.uuid[0]==0x07)&&(charcter_avail[serv_avail_count].char_uuid.uuid[1]==0x2a))
-				{
-					tx_handler.val_handle = charcter_avail[serv_avail_count].value_handle;
-					#ifdef DEBUG_LOG
-					DBG_LOG("\r\n Tx power characteristics %04X",tx_handler.val_handle);
-					#endif
-				}
-				
-				else if((charcter_avail[serv_avail_count].char_uuid.uuid[0]==0x06)&&(charcter_avail[serv_avail_count].char_uuid.uuid[1]==0x2a))
-				{
-					if((charcter_avail[serv_avail_count].char_handle>linkloss_handler.srt_handle)&&(charcter_avail[serv_avail_count].char_handle<linkloss_handler.end_handle))
-					{
-						linkloss_handler.val_handle = charcter_avail[serv_avail_count].value_handle;
-						#ifdef DEBUG_LOG
-						DBG_LOG("\r\n link loss characteristics %04X",linkloss_handler.val_handle);
-						#endif
-					}
-					else
-					{
-						immed_alert_handler.val_handle = charcter_avail[serv_avail_count].value_handle;
-						#ifdef DEBUG_LOG
-						DBG_LOG("\r\n Immediate alert characteristics %04X",immed_alert_handler.val_handle);
-						#endif
-					}
-				}
-				
-				else
-				{
-					
-					#ifdef DEBUG_LOG
-					DBG_LOG("\r\n handler %02x Characteristics available handler  %04X  value %04X ",
-					charcter_avail[serv_avail_count].conn_handle, charcter_avail[serv_avail_count].char_handle,charcter_avail[serv_avail_count].value_handle);
-					for(uint8_t n=0;n<sizeof(charcter_avail[serv_avail_count].char_uuid.uuid);n++)
-					{
-						DBG_LOG("%02X",charcter_avail[serv_avail_count].char_uuid.uuid[n]);
-					}
-					#endif
-				}
-				
-				serv_avail_count++;
-			}
-			break;
-			
-			case AT_BLE_CHARACTERISTIC_READ_RESPONSE:
-			{
-				at_ble_characteristic_read_response_t read_resp;
-				//at_ble_status_t temp_status;
-				//int8_t rx_power;
-				
-				memcpy((uint8_t *)&read_resp, params, sizeof(at_ble_characteristic_read_response_t));
-				
-				#ifdef DEBUG_LOG
-				DBG_LOG("\r\n Read response Conn_handle %02X handle %02X length %02X Offset %02X",
-				read_resp.conn_handle,read_resp.char_handle,read_resp.char_len,read_resp.char_offset);
-				for(uint8_t n=0;n<read_resp.char_len;n++)
-				{
-					DBG_LOG("%02X",read_resp.char_value[n]);
-				}
-				#endif
-				
-				if(read_resp.char_handle == tx_handler.val_handle)
-				{
-					DBG_LOG("\r\n Tx Power of device is %04d dBm",read_resp.char_value[0]);
-				}
-				
-				// set link loss profile to high alert upon connection
-				if(pxp_write(handle,linkloss_handler.val_handle,HIGH_ALERT)==AT_BLE_FAILURE)
-				{
-					DBG_LOG("\r\n Link Loss write characteristics failed");
-				}
-			}
-			break;
-			
-			default:
-			LED_Off(LED0);
-			DBG_LOG("\r\nUnknown event received: event=0x%x", event);
-			DBG_LOG("  %d",event);
-			break;
+			ble_event_manager(event, params);
 		}
+		if(app_timer_done )
+		{
+			rssi_update(ble_connected_dev_info[0].handle);
+			hw_timer_start(PXP_RSSI_UPDATE_INTERVAL);
+			app_timer_done = false;
+		}	
 	}
+	
 }
 
-
-
-
+// timer routine for rssi calculation
 void timer_callback_handler(void)
 {
-	int8_t rx_power;
-	//at_ble_status_t status_1;
+
+	//int8_t rssi_power;
+	//uint32_t i,j;
+	//
+	//at_ble_handle_t conn_handle = 0xff;
+		
 	hw_timer_stop();
-	rx_power = at_ble_rx_power_get(0x00);
-	DBG_LOG("\r\n Rx power is %04d",rx_power);
-	hw_timer_start(0x02);
+	
+	app_timer_done = true;
+	
+	//conn_handle=ble_connected_dev_info[0].handle;
+	//DBG_LOG("%02d",conn_handle);
+	
+	
+	///* Get the Received signal strength intensity of the connect device/handle*/
+	//while(1)
+	//{
+		//rssi_power = at_ble_rx_power_get(ble_connected_dev_info[0].handle);
+		//DBG_LOG("Rx power is %04d dBm", rssi_power);
+		//for(i=0;i<0xffff;i++)
+		//for(j=0;j<256;j++);
+	//}
+	
+	//rssi_update(ble_connected_dev_info[0].handle);
+	
 }

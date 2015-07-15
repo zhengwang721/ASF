@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Health Thermometer Profile Application declarations
+ * \brief Proximity Monitor Profile Application declarations
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -50,38 +50,10 @@
 
 #include "at_ble_api.h"
 
-#define DBG_LOG printf
-#define DBG_LOG_1LVL printf
-
-#define PXP_MIN -40
-#define PXP_MAX -60
-
-#define PXP_STARTING_HANDLE 1
-#define PXP_ENDING_HANDLE 0xFFFF
-
-
-/**@brief Temperature measurement stability type
-*/
-typedef enum
-{
-	DISCOVER_SERVICE= 0,
-	DISCOVER_CHARACTERISTIC,
-	GATT_DISC_COMPLETE
-}pxp_monitor_discover_t;
-
-typedef struct
-{
-	at_ble_addr_t dev_addr;
-	uint8_t dev_name[AT_BLE_ADV_MAX_SIZE];
-	uint8_t dev_name_len;
-	uint8_t dev_ser[AT_BLE_ADV_MAX_SIZE];
-	uint8_t dev_ser_len;
-}pxp_scan_info;
-
-void app_init(void);
-
+void pxp_app_init(void);
 void timer_callback_handler(void);
 
+void rssi_update (at_ble_handle_t conn_handle);
 
 
 #endif /*__PXP_MONITOR_H__*/
