@@ -8,18 +8,6 @@
 			<keyword value="XDMA Controller"/>
 		</info>
 		
-		<info type="appnote" value="AT07892"/>		
-		<info type="keyword" value="pdf">
-			<keyword value="Direct" />
-			<keyword value="Memory"/>
-			<keyword value="Peripherals"/>
-		</info>
-
-		<info type="description" value="pdf">
-			This application note describes how to use the ASF driver for
-			interfacing to the Direct Memory Access Controller on SAM.
-		</info>
-		
 		<build type="c-source" value="xdmac.c"/>
 		<build type="header-file" subtype="api" value="xdmac.h"/>
 		<build type="include-path" value="."/>
@@ -34,6 +22,6 @@
 		<device-support value="same70"/>
 		<device-support value="sams70"/>
 		<require idref="sam.utils"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-samv71"/>
+		<generator value="doxygen-module" default-mcu="unspecified-samv71"/>
 	</module>
 </asf>

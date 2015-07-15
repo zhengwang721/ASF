@@ -274,106 +274,106 @@ typedef struct {
 /**
  * \brief Get XDMAC global type.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  */
-static inline uint32_t xdmac_get_type( Xdmac *p_xdmac)
+static inline uint32_t xdmac_get_type( Xdmac *xdmac)
 {
-	Assert(p_xdmac);
-	return p_xdmac->XDMAC_GTYPE;
+	Assert(xdmac);
+	return xdmac->XDMAC_GTYPE;
 }
 
 /**
  * \brief Get XDMAC global configuration.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  */
-static inline uint32_t xdmac_get_config(Xdmac *p_xdmac)
+static inline uint32_t xdmac_get_config(Xdmac *xdmac)
 {
-	Assert(p_xdmac);
-	return p_xdmac->XDMAC_GCFG;
+	Assert(xdmac);
+	return xdmac->XDMAC_GCFG;
 }
 
 /**
  * \brief Get XDMAC global weighted arbiter configuration.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  */
-static inline uint32_t xdmac_get_arbiter(Xdmac *p_xdmac)
+static inline uint32_t xdmac_get_arbiter(Xdmac *xdmac)
 {
-	Assert(p_xdmac);
-	return p_xdmac->XDMAC_GWAC;
+	Assert(xdmac);
+	return xdmac->XDMAC_GWAC;
 }
 
 /**
  * \brief Enables XDMAC global interrupt.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  * \param[in] mask A bitmask of channels to be enabled interrupt.
  */
-static inline void xdmac_enable_interrupt(Xdmac *p_xdmac, uint32_t mask)
+static inline void xdmac_enable_interrupt(Xdmac *xdmac, uint32_t mask)
 {
-	Assert(p_xdmac);
-	p_xdmac->XDMAC_GIE = ( XDMAC_GIE_IE0 << mask) ;
+	Assert(xdmac);
+	xdmac->XDMAC_GIE = ( XDMAC_GIE_IE0 << mask) ;
 }
 
 /**
  * \brief Disables XDMAC global interrupt
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  * \param[in] mask A bitmask of channels to be disabled interrupt.
  */
-static inline void xdmac_disable_interrupt(Xdmac *p_xdmac, uint32_t mask)
+static inline void xdmac_disable_interrupt(Xdmac *xdmac, uint32_t mask)
 {
-	Assert(p_xdmac);
-	p_xdmac->XDMAC_GID = (XDMAC_GID_ID0 << mask);
+	Assert(xdmac);
+	xdmac->XDMAC_GID = (XDMAC_GID_ID0 << mask);
 }
 
 /**
  * \brief Get XDMAC global interrupt mask.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  */
-static inline uint32_t xdmac_get_interrupt_mask(Xdmac *p_xdmac)
+static inline uint32_t xdmac_get_interrupt_mask(Xdmac *xdmac)
 {
-	Assert(p_xdmac);
-	return (p_xdmac->XDMAC_GIM);
+	Assert(xdmac);
+	return (xdmac->XDMAC_GIM);
 }
 
 /**
  * \brief Get XDMAC global interrupt status.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  */
-static inline uint32_t xdmac_get_interrupt_status(Xdmac *p_xdmac)
+static inline uint32_t xdmac_get_interrupt_status(Xdmac *xdmac)
 {
-	Assert(p_xdmac);
-	return (p_xdmac->XDMAC_GIS);
+	Assert(xdmac);
+	return (xdmac->XDMAC_GIS);
 }
 
 /**
  * \brief enables the relevant channel of given XDMAC.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  * \param[in]  channel_num  XDMA Channel number (range 0 to 23)
  */
-static inline void xdmac_channel_enable(Xdmac *p_xdmac, uint32_t channel_num)
+static inline void xdmac_channel_enable(Xdmac *xdmac, uint32_t channel_num)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_GE = (XDMAC_GE_EN0 << channel_num);
+	xdmac->XDMAC_GE = (XDMAC_GE_EN0 << channel_num);
 }
 
 /**
  * \brief Disables the relevant channel of given XDMAC.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  * \param[in]  channel_num  XDMA Channel number (range 0 to 23)
  */
-static inline void xdmac_channel_disable(Xdmac *p_xdmac, uint32_t channel_num)
+static inline void xdmac_channel_disable(Xdmac *xdmac, uint32_t channel_num)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_GD =(XDMAC_GD_DI0 << channel_num);
+	xdmac->XDMAC_GD =(XDMAC_GD_DI0 << channel_num);
 }
 
 /**
@@ -381,304 +381,304 @@ static inline void xdmac_channel_disable(Xdmac *p_xdmac, uint32_t channel_num)
  * \note: When set to 1, this bit indicates that the channel x is enabled.
           If a channel disable request is issued, this bit remains asserted
           until pending transaction is completed.
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  */
-static inline uint32_t xdmac_channel_get_status(Xdmac *p_xdmac)
+static inline uint32_t xdmac_channel_get_status(Xdmac *xdmac)
 {
-	Assert(p_xdmac);
-	return p_xdmac->XDMAC_GS;
+	Assert(xdmac);
+	return xdmac->XDMAC_GS;
 }
 
 /**
  * \brief Suspend the relevant channel's read.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  * \param[in] channel_num  XDMA Channel number (range 0 to 23).
  */
-static inline void xdmac_channel_read_suspend(Xdmac *p_xdmac, uint32_t channel_num)
+static inline void xdmac_channel_read_suspend(Xdmac *xdmac, uint32_t channel_num)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_GRS |= XDMAC_GRS_RS0 << channel_num;
+	xdmac->XDMAC_GRS |= XDMAC_GRS_RS0 << channel_num;
 }
 
 /**
  * \brief Suspend the relevant channel's write.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  * \param[in] channel_num  XDMA Channel number (range 0 to 23).
  */
-static inline void xdmac_channel_write_suspend(Xdmac *p_xdmac, uint32_t channel_num)
+static inline void xdmac_channel_write_suspend(Xdmac *xdmac, uint32_t channel_num)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_GWS |= XDMAC_GWS_WS0 << channel_num;
+	xdmac->XDMAC_GWS |= XDMAC_GWS_WS0 << channel_num;
 }
 
 /**
  * \brief Suspend the relevant channel's read & write.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  * \param[in] channel_num  XDMA Channel number (range 0 to 23).
  */
-static inline void xdmac_channel_readwrite_suspend(Xdmac *p_xdmac, uint32_t channel_num)
+static inline void xdmac_channel_readwrite_suspend(Xdmac *xdmac, uint32_t channel_num)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_GRWS = (XDMAC_GRWS_RWS0 << channel_num);
+	xdmac->XDMAC_GRWS = (XDMAC_GRWS_RWS0 << channel_num);
 }
 
 /**
  * \brief Resume the relevant channel's read & write.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  * \param[in] channel_num  XDMA Channel number (range 0 to 23).
  */
-static inline void xdmac_channel_readwrite_resume(Xdmac *p_xdmac, uint32_t channel_num)
+static inline void xdmac_channel_readwrite_resume(Xdmac *xdmac, uint32_t channel_num)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_GRWR = (XDMAC_GRWR_RWR0 << channel_num);
+	xdmac->XDMAC_GRWR = (XDMAC_GRWR_RWR0 << channel_num);
 }
 
 /**
  * \brief Set software transfer request on the relevant channel.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  * \param[in] channel_num  XDMA Channel number (range 0 to 23).
  */
-static inline void xdmac_channel_software_request(Xdmac *p_xdmac, uint32_t channel_num)
+static inline void xdmac_channel_software_request(Xdmac *xdmac, uint32_t channel_num)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_GSWR = (XDMAC_GSWR_SWREQ0 << channel_num);
+	xdmac->XDMAC_GSWR = (XDMAC_GSWR_SWREQ0 << channel_num);
 }
 
 /**
  * \brief Get software transfer status of the relevant channel.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  */
-static inline uint32_t xdmac_get_software_request_status(Xdmac *p_xdmac)
+static inline uint32_t xdmac_get_software_request_status(Xdmac *xdmac)
 {
-	Assert(p_xdmac);
-	return p_xdmac->XDMAC_GSWS;
+	Assert(xdmac);
+	return xdmac->XDMAC_GSWS;
 }
 
 /**
  * \brief Enable interrupt with mask on the relevant channel of given XDMA.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  * \param[in] channel_num  XDMA Channel number (range 0 to 23).
  * \param[in] mask Interrupt mask.
  */
-static inline void xdmac_channel_enable_interrupt(Xdmac *p_xdmac, uint32_t channel_num, uint32_t mask)
+static inline void xdmac_channel_enable_interrupt(Xdmac *xdmac, uint32_t channel_num, uint32_t mask)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_CHID[channel_num].XDMAC_CIE = mask;
+	xdmac->XDMAC_CHID[channel_num].XDMAC_CIE = mask;
 }
 
 /**
  * \brief Disable interrupt with mask on the relevant channel of given XDMA.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  * \param[in] channel_num  XDMA Channel number (range 0 to 23).
  * \param[in] mask Interrupt mask.
  */
-static inline void xdmac_channel_disable_interrupt(Xdmac *p_xdmac, uint32_t channel_num, uint32_t mask)
+static inline void xdmac_channel_disable_interrupt(Xdmac *xdmac, uint32_t channel_num, uint32_t mask)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_CHID[channel_num].XDMAC_CID = mask;
+	xdmac->XDMAC_CHID[channel_num].XDMAC_CID = mask;
 }
 
 /**
  * \brief Get interrupt mask for the relevant channel of given XDMA.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  * \param[in] channel_num  XDMA Channel number (range 0 to 23).
  */
-static inline uint32_t xdmac_channel_get_interrupt_mask(Xdmac *p_xdmac, uint32_t channel_num)
+static inline uint32_t xdmac_channel_get_interrupt_mask(Xdmac *xdmac, uint32_t channel_num)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	return p_xdmac->XDMAC_CHID[channel_num].XDMAC_CIM;
+	return xdmac->XDMAC_CHID[channel_num].XDMAC_CIM;
 }
 
 /**
  * \brief Get interrupt status for the relevant channel of given XDMA.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  * \param[in] channel_num  XDMA Channel number (range 0 to 23).
  */
-static inline uint32_t xdmac_channel_get_interrupt_status(Xdmac *p_xdmac, uint32_t channel_num)
+static inline uint32_t xdmac_channel_get_interrupt_status(Xdmac *xdmac, uint32_t channel_num)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	return p_xdmac->XDMAC_CHID[channel_num].XDMAC_CIS;
+	return xdmac->XDMAC_CHID[channel_num].XDMAC_CIS;
 }
 
 /**
  * \brief Set software flush request on the relevant channel.
  *
- * \param[out] p_xdmac Module hardware register base address pointer.
+ * \param[out] xdmac Module hardware register base address pointer.
  * \param[in] channel_num  XDMA Channel number (range 0 to 23).
  */
-static inline void xdmac_channel_software_flush_request(Xdmac *p_xdmac, uint32_t channel_num)
+static inline void xdmac_channel_software_flush_request(Xdmac *xdmac, uint32_t channel_num)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_GSWF = (XDMAC_GSWF_SWF0 << channel_num);
-	while( !(xdmac_channel_get_interrupt_status(p_xdmac, channel_num) & XDMAC_CIS_FIS) );
+	xdmac->XDMAC_GSWF = (XDMAC_GSWF_SWF0 << channel_num);
+	while( !(xdmac_channel_get_interrupt_status(xdmac, channel_num) & XDMAC_CIS_FIS) );
 }
 
 /**
  * \brief Set source address for the relevant channel of given XDMA.
  *
- * \param[out] p_xdmac Module hardware register base address pointer
+ * \param[out] xdmac Module hardware register base address pointer
  * \param[in] channel_num  DMA Channel number (range 0 to 23)
  * \param[in] src_addr Source address
  */
-static inline void xdmac_channel_set_source_addr(Xdmac *p_xdmac, uint32_t channel_num, uint32_t src_addr)
+static inline void xdmac_channel_set_source_addr(Xdmac *xdmac, uint32_t channel_num, uint32_t src_addr)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_CHID[channel_num].XDMAC_CSA = src_addr;
+	xdmac->XDMAC_CHID[channel_num].XDMAC_CSA = src_addr;
 }
 
 /**
  * \brief Set destination address for the relevant channel of given XDMA.
  *
- * \param[out] p_xdmac Module hardware register base address pointer
+ * \param[out] xdmac Module hardware register base address pointer
  * \param[in] channel_num  DMA Channel number (range 0 to 23)
  * \param[in] dst_addr Destination address
  */
-static inline void xdmac_channel_set_destination_addr(Xdmac *p_xdmac, uint32_t channel_num, uint32_t dst_addr)
+static inline void xdmac_channel_set_destination_addr(Xdmac *xdmac, uint32_t channel_num, uint32_t dst_addr)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_CHID[channel_num].XDMAC_CDA = dst_addr;
+	xdmac->XDMAC_CHID[channel_num].XDMAC_CDA = dst_addr;
 }
 
 /**
  * \brief Set next descriptor's address & interface for the relevant channel of given XDMA.
  *
- * \param[out] p_xdmac Module hardware register base address pointer
+ * \param[out] xdmac Module hardware register base address pointer
  * \param[in] channel_num  DMA Channel number (range 0 to 23)
  * \param[in] desc_addr Address of next descriptor.
  * \param[in] ndaif Interface of next descriptor.
  */
-static inline void xdmac_channel_set_descriptor_addr(Xdmac *p_xdmac, uint32_t channel_num,
+static inline void xdmac_channel_set_descriptor_addr(Xdmac *xdmac, uint32_t channel_num,
 		uint32_t desc_addr, uint8_t ndaif)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
 	Assert(ndaif<2);
-	p_xdmac->XDMAC_CHID[channel_num].XDMAC_CNDA = (desc_addr & 0xFFFFFFFC) | ndaif;
+	xdmac->XDMAC_CHID[channel_num].XDMAC_CNDA = (desc_addr & 0xFFFFFFFC) | ndaif;
 }
 
 /**
  * \brief Set next descriptor's configuration for the relevant channel of given XDMA.
  *
- * \param[out] p_xdmac Module hardware register base address pointer
+ * \param[out] xdmac Module hardware register base address pointer
  * \param[in] channel_num  DMA Channel number (range 0 to 23)
  * \param[in] config Configuration of next descriptor.
  */
-static inline void xdmac_channel_set_descriptor_control(Xdmac *p_xdmac, uint32_t channel_num, uint32_t config)
+static inline void xdmac_channel_set_descriptor_control(Xdmac *xdmac, uint32_t channel_num, uint32_t config)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_CHID[channel_num].XDMAC_CNDC = config;
+	xdmac->XDMAC_CHID[channel_num].XDMAC_CNDC = config;
 }
 
 /**
  * \brief Set microblock length for the relevant channel of given XDMA.
  *
- * \param[out] p_xdmac Module hardware register base address pointer
+ * \param[out] xdmac Module hardware register base address pointer
  * \param[in] channel_num  DMA Channel number (range 0 to 23)
  * \param[in] ublen Microblock length.
  */
-static inline void xdmac_channel_set_microblock_control(Xdmac *p_xdmac, uint32_t channel_num, uint32_t ublen)
+static inline void xdmac_channel_set_microblock_control(Xdmac *xdmac, uint32_t channel_num, uint32_t ublen)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_CHID[channel_num].XDMAC_CUBC = XDMAC_CUBC_UBLEN(ublen);
+	xdmac->XDMAC_CHID[channel_num].XDMAC_CUBC = XDMAC_CUBC_UBLEN(ublen);
 }
 
 /**
  * \brief Set block length for the relevant channel of given XDMA.
  *
- * \param[out] p_xdmac Module hardware register base address pointer
+ * \param[out] xdmac Module hardware register base address pointer
  * \param[in] channel_num  XDMA Channel number (range 0 to 23)
  * \param[in] blen Block length.
  */
-static inline void xdmac_channel_set_block_control(Xdmac *p_xdmac, uint32_t channel_num, uint32_t blen)
+static inline void xdmac_channel_set_block_control(Xdmac *xdmac, uint32_t channel_num, uint32_t blen)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_CHID[channel_num].XDMAC_CBC = XDMAC_CBC_BLEN(blen);
+	xdmac->XDMAC_CHID[channel_num].XDMAC_CBC = XDMAC_CBC_BLEN(blen);
 }
 
 /**
  * \brief Set configuration for the relevant channel of given XDMA.
  *
- * \param[out] p_xdmac Module hardware register base address pointer
+ * \param[out] xdmac Module hardware register base address pointer
  * \param[in] channel_num  XDMA Channel number (range 0 to 23)
  * \param[in] config Channel configuration.
  */
-static inline void xdmac_channel_set_config(Xdmac *p_xdmac, uint32_t channel_num, uint32_t config)
+static inline void xdmac_channel_set_config(Xdmac *xdmac, uint32_t channel_num, uint32_t config)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_CHID[channel_num].XDMAC_CC = config;
+	xdmac->XDMAC_CHID[channel_num].XDMAC_CC = config;
 }
 
 /**
  * \brief Set the relevant channel's data stride memory pattern of given XDMA.
  *
- * \param[out] p_xdmac Module hardware register base address pointer
+ * \param[out] xdmac Module hardware register base address pointer
  * \param[in] channel_num  XDMA Channel number (range 0 to 23)
  * \param[in] dds_msp Data stride memory pattern.
  */
-static inline void xdmac_channel_set_datastride_mempattern(Xdmac *p_xdmac, uint32_t channel_num, uint32_t dds_msp)
+static inline void xdmac_channel_set_datastride_mempattern(Xdmac *xdmac, uint32_t channel_num, uint32_t dds_msp)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_CHID[channel_num].XDMAC_CDS_MSP = dds_msp;
+	xdmac->XDMAC_CHID[channel_num].XDMAC_CDS_MSP = dds_msp;
 }
 
 /**
  * \brief Set the relevant channel's source microblock stride of given XDMA.
  *
- * \param[out] p_xdmac Module hardware register base address pointer
+ * \param[out] xdmac Module hardware register base address pointer
  * \param[in] channel_num  XDMA Channel number (range 0 to 23)
  * \param[in] subs Source microblock stride.
  */
-static inline void xdmac_channel_set_source_microblock_stride(Xdmac *p_xdmac,
+static inline void xdmac_channel_set_source_microblock_stride(Xdmac *xdmac,
 		uint32_t channel_num, uint32_t subs)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_CHID[channel_num].XDMAC_CSUS = XDMAC_CSUS_SUBS(subs);
+	xdmac->XDMAC_CHID[channel_num].XDMAC_CSUS = XDMAC_CSUS_SUBS(subs);
 }
 
 /**
  * \brief Set the relevant channel's destination microblock stride of given XDMA.
  *
- * \param[out] p_xdmac Module hardware register base address pointer
+ * \param[out] xdmac Module hardware register base address pointer
  * \param[in] channel_num  XDMA Channel number (range 0 to 23)
  * \param[in] dubs Destination microblock stride.
  */
-static inline void xdmac_channel_set_destination_microblock_stride(Xdmac *p_xdmac,
+static inline void xdmac_channel_set_destination_microblock_stride(Xdmac *xdmac,
 		uint32_t channel_num, uint32_t dubs)
 {
-	Assert(p_xdmac);
+	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	p_xdmac->XDMAC_CHID[channel_num].XDMAC_CDUS = XDMAC_CDUS_DUBS(dubs);
+	xdmac->XDMAC_CHID[channel_num].XDMAC_CDUS = XDMAC_CDUS_DUBS(dubs);
 }
 
-void xdmac_configure_transfer(Xdmac *p_xdmac, uint32_t channel_num,
+void xdmac_configure_transfer(Xdmac *xdmac, uint32_t channel_num,
 		xdmac_channel_config_t *p_cfg);
 
 /** @cond */

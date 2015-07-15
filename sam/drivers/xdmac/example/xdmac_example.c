@@ -51,10 +51,14 @@
 /** Micro-block length for single transfer  */
 #define MICROBLOCK_LEN       16
 
-//! [xdmac_define_channel]
+/** Block length for single transfer  */
+#define BLOCK_LEN                 16
+
+/** The buffer size for transfer  */
+#define BUFFER_SIZE               512
+
 /** XDMA channel used in this example. */
 #define XDMA_CH 0
-//! [xdmac_define_channel]
 
 /** XDMA channel configuration. */
 static xdmac_channel_config_t xdmac_channel_cfg;
@@ -62,13 +66,15 @@ static xdmac_channel_config_t xdmac_channel_cfg;
 /* DMA transfer done flag. */
 volatile uint32_t g_xfer_done = 0;
 
-//! [xdmac_define_buffer]
-COMPILER_ALIGNED(8) static uint8_t src_buf[512];
-COMPILER_ALIGNED(8) static uint8_t dst_buf[512];
-//! [xdmac_define_buffer]
+COMPILER_ALIGNED(8)
+static uint8_t src_buf[BUFFER_SIZE];
+
+COMPILER_ALIGNED(8)
+static uint8_t dst_buf[BUFFER_SIZE];
 
 /** Linked list descriptor */
-COMPILER_WORD_ALIGNED static lld_view0 lld[2];
+COMPILER_WORD_ALIGNED
+static lld_view0 lld[2];
 
 /**
  * \brief Configure the console UART.
@@ -77,13 +83,9 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-#ifdef CONF_UART_CHAR_LENGTH
 		.charlength = CONF_UART_CHAR_LENGTH,
-#endif
 		.paritytype = CONF_UART_PARITY,
-#ifdef CONF_UART_STOP_BITS
 		.stopbits = CONF_UART_STOP_BITS,
-#endif
 	};
 
 	/* Configure console UART. */
@@ -129,13 +131,13 @@ int main(void)
 	/* Initialize and enable DMA controller */
 	pmc_enable_periph_clk(ID_XDMAC);
 
-	   /*Enable XDMA interrupt */
+	/*Enable XDMA interrupt */
 	NVIC_ClearPendingIRQ(XDMAC_IRQn);
 	NVIC_SetPriority( XDMAC_IRQn ,1);
 	NVIC_EnableIRQ(XDMAC_IRQn);
 
 	/* Initialize source and destination buffer */
-	for (i = 0; i < 512; i++) {
+	for (i = 0; i < BUFFER_SIZE; i++) {
 		src_buf[i] = 0x55;
 		dst_buf[i] = 0;
 	}
@@ -152,7 +154,7 @@ int main(void)
 		XDMAC_CC_DIF_AHB_IF0 |
 		XDMAC_CC_SAM_INCREMENTED_AM |
 		XDMAC_CC_DAM_INCREMENTED_AM;
-	xdmac_channel_cfg.mbr_bc = 15;
+	xdmac_channel_cfg.mbr_bc = BLOCK_LEN - 1;
 	xdmac_channel_cfg.mbr_ds =  0;
 	xdmac_channel_cfg.mbr_sus = 0;
 	xdmac_channel_cfg.mbr_dus = 0;
@@ -169,8 +171,8 @@ int main(void)
 	lld[0].mbr_da = (uint32_t)dst_buf;
 
 	lld[1].mbr_nda = 0;
-	lld[1].mbr_ubc = 256;
-	lld[1].mbr_da = (uint32_t)dst_buf + 256;
+	lld[1].mbr_ubc = (BUFFER_SIZE - MICROBLOCK_LEN * BLOCK_LEN);
+	lld[1].mbr_da = (uint32_t)dst_buf + MICROBLOCK_LEN * BLOCK_LEN;
 
 	xdmac_channel_set_descriptor_control(XDMAC, XDMA_CH, XDMAC_CNDC_NDVIEW_NDV0 |
 			XDMAC_CNDC_NDE_DSCR_FETCH_EN |
@@ -187,7 +189,7 @@ int main(void)
 	}
 
 	/* Verify the transferred data */
-	for (i = 0; i < 512; i++) {
+	for (i = 0; i < BUFFER_SIZE; i++) {
 		if (src_buf[i] != dst_buf[i]) {
 			printf("> Test Fail.\n\r");
 			while (1) {
