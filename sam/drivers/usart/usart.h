@@ -205,56 +205,6 @@ typedef struct {
 	uint32_t channel_mode;
 } usart_spi_opt_t;
 
-/* Input parameters when initializing LIN mode. */
-typedef struct {
-	/* Set the frequency of the LIN clock. */
-	uint32_t baudrate;
-
-	/*
-	 * Which LIN mode to use, which should be one of the following:
-	 * PUBLISH, SUBSCRIBE, IGNORE.
-	 */
-	uint8_t lin_node_action;
-	
-	/*
-	 *0: In master node configuration, the identifier parity is computed and sent automatically. In master node and slave node
-	 *configuration, the parity is checked automatically.
-	 *1: Whatever the node configuration is, the Identifier parity is not computed/sent and it is not checked.
-	 */
-	 uint8_t parity_dis;
-	 
-	/*
-	 *0: In master node configuration, the checksum is computed and sent automatically. In slave node configuration, the check-
-	 *sum is checked automatically.
-	 *1: Whatever the node configuration is, the checksum is not computed/sent and it is not checked.
-	 */
-	 uint8_t check_dis;
-	 
-	/*
-	 *0: LIN 2.0 "enhanced" checksum
-	 *1: LIN 1.3 "classic" checksum
-	 */
-	 uint8_t checksum_type;
-	 
-	/*
-	 *0: The response data length is defined by field DLC of this register.
-     *1: The response data length is defined by bits 5 and 6 of the identifier (IDCHR in US_LINIR).
-	 */
-	uint32_t data_len_mode;
-	 
-	/*
-	 *0: The Frame slot mode is enabled.
-     *1: The Frame slot mode is disabled.
-	 */
-	uint32_t frame_slot_mod_dis;
-		
-	/*
-	 * 0-255: Defines the response data length if DLM = 0,in that 
-	 * case the response data length is equal to DLC+1 bytes.
-	 */
-	uint32_t dlc;
-} usart_lin_opt_t;
-
 void usart_reset(Usart *p_usart);
 uint32_t usart_set_async_baudrate(Usart *p_usart,
 		uint32_t baudrate, uint32_t ul_mck);
@@ -319,7 +269,7 @@ uint8_t usart_lin_get_data_length(Usart *usart);
 uint8_t usart_lin_identifier_send_complete(Usart *usart);
 uint8_t usart_lin_identifier_reception_complete(Usart *usart);
 uint8_t usart_lin_tx_complete(Usart *usart);
-uint32_t usart_init_lon(Usart *p_usart,uint32_t ul_baudrate,uint32_t ul_mck);
+uint32_t usart_init_lon(Usart *p_usart, uint32_t ul_baudrate, uint32_t ul_mck);
 void  usart_lon_set_comm_type(Usart *p_usart, uint8_t uc_type);
 void usart_lon_disable_coll_detection(Usart *p_usart);
 void usart_lon_enable_coll_detection(Usart *p_usart);
@@ -399,7 +349,7 @@ uint32_t usart_get_version(Usart *p_usart);
 #if SAMG55
 void usart_set_sleepwalking(Usart *p_uart, uint8_t ul_low_value,
 		bool cmpmode, bool cmppar, uint8_t ul_high_value);
-#endif		
+#endif
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -477,9 +427,9 @@ void usart_set_sleepwalking(Usart *p_uart, uint8_t ul_low_value,
 	    };
     #if SAM4L
       sysclk_enable_peripheral_clock(USART_SERIAL);
-    #else  
+    #else
 	    sysclk_enable_peripheral_clock(USART_SERIAL_ID);
-    #endif 
+    #endif
 	    usart_init_rs232(USART_SERIAL, &usart_console_settings,
 	            sysclk_get_main_hz());
 	    usart_enable_tx(USART_SERIAL);
@@ -519,9 +469,9 @@ void usart_set_sleepwalking(Usart *p_uart, uint8_t ul_low_value,
  *   \code
 	  #if SAM4L
       sysclk_enable_peripheral_clock(USART_SERIAL);
-    #else  
+    #else
 	    sysclk_enable_peripheral_clock(USART_SERIAL_ID);
-    #endif 
+    #endif
 \endcode
  * -# Initialize the USART module in RS232 mode:
  *   \code
@@ -600,9 +550,9 @@ void usart_set_sleepwalking(Usart *p_uart, uint8_t ul_low_value,
 
     #if SAM4L
       sysclk_enable_peripheral_clock(USART_SERIAL);
-    #else  
+    #else
 	    sysclk_enable_peripheral_clock(USART_SERIAL_ID);
-    #endif 
+    #endif
 
 	    usart_init_rs232(USART_SERIAL, &usart_console_settings,
 	            sysclk_get_main_hz());
@@ -643,9 +593,9 @@ void usart_set_sleepwalking(Usart *p_uart, uint8_t ul_low_value,
  *   \code
     #if SAM4L
       sysclk_enable_peripheral_clock(USART_SERIAL);
-    #else  
+    #else
 	    sysclk_enable_peripheral_clock(USART_SERIAL_ID);
-    #endif   
+    #endif
 \endcode
  * -# Initialize the USART module in RS232 mode:
  *   \code
@@ -731,9 +681,9 @@ void usart_set_sleepwalking(Usart *p_uart, uint8_t ul_low_value,
 
     #if SAM4L
       sysclk_enable_peripheral_clock(USART_SERIAL);
-    #else  
+    #else
 	    sysclk_enable_peripheral_clock(USART_SERIAL_ID);
-    #endif 
+    #endif
 
 	    usart_init_rs232(USART_SERIAL, &usart_console_settings,
 	            sysclk_get_main_hz());
@@ -777,9 +727,9 @@ void usart_set_sleepwalking(Usart *p_uart, uint8_t ul_low_value,
  *   \code
     #if SAM4L
       sysclk_enable_peripheral_clock(USART_SERIAL);
-    #else  
+    #else
 	    sysclk_enable_peripheral_clock(USART_SERIAL_ID);
-    #endif 
+    #endif
 \endcode
  * -# Initialize the USART module in RS232 mode:
  *   \code

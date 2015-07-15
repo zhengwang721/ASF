@@ -52,7 +52,7 @@
  *  \par Requirements
  *
  * This example can be used on  SAMV71-Xplained-Ultra boards and requires 2 boards to
- * be connected directly through populated USART pins. 
+ * be connected directly through populated USART pins.
  * \copydoc usart_sync_example_pin_defs
  *
  *  \par Description
@@ -195,20 +195,19 @@ void USART0_Handler(void)
 
 	/* Read USART Status. */
 	ul_status = usart_get_status(BOARD_USART);
-	
+
 	if(ul_status & (US_IER_TXRDY | US_IER_TXEMPTY)) {
 		usart_disable_interrupt(BOARD_USART, (US_IER_TXRDY | US_IER_TXEMPTY));
 	}
-	
+
 	/* Receive register is full. */
-	if((g_uc_state == STATE_READ) && (usart_read(BOARD_USART, &uc_char) == 0)) {
+	if((g_uc_state == STATE_READ) && (usart_read(BOARD_USART, (uint32_t *)&uc_char) == 0)) {
 		*p_revdata++ = uc_char;
 		g_ulcount++;
 		if(g_ulcount >= BUFFER_SIZE) {
 			usart_disable_interrupt(BOARD_USART, US_IER_RXRDY);
 			g_ul_recv_done = true;
 		}
-		
 	}
 
 }
@@ -268,7 +267,7 @@ static void configure_usart(uint32_t ul_ismaster, uint32_t ul_baudrate)
 
 	/* Disable all the interrupts. */
 	usart_disable_interrupt(BOARD_USART, ALL_INTERRUPT_MASK);
-	
+
 	/* Enable TX & RX function. */
 	usart_enable_tx(BOARD_USART);
 	usart_enable_rx(BOARD_USART);
@@ -309,11 +308,11 @@ static uint8_t transmit_mode_sync(uint8_t *p_buff, uint32_t ulsize)
 			p_buff++;
 		}
 	}
-	
+
 	while(!usart_is_tx_empty(BOARD_USART)) {
 				;  /*waiting for transmit over*/
 	}
-	
+
 	g_ul_sent_done = true;
 	return 0;
 }
@@ -407,7 +406,7 @@ int main(void)
 			g_uc_state = STATE_WRITE;
 			//usart_enable_interrupt(BOARD_USART, US_IER_TXRDY);
 			p_data = &tran_buff[0];
-			transmit_mode_sync(p_data, BUFFER_SIZE);	
+			transmit_mode_sync(p_data, BUFFER_SIZE);
 
 			while (!g_ul_sent_done) {
 			}
@@ -427,7 +426,7 @@ int main(void)
 			} else {
 				puts("----USART SLAVE Read----\r");
 			}
-			
+
 			usart_enable_interrupt(BOARD_USART, US_IER_RXRDY);
 
 			while (!g_ul_recv_done) {

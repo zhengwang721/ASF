@@ -247,12 +247,12 @@ void USART_Handler(void)
 
 	/* Read USART status. */
 	ul_status = usart_get_status(BOARD_USART);
-	
+
 	/*transmit interrupt rises*/
 	if(ul_status & (US_IER_TXRDY | US_IER_TXEMPTY)) {
 		usart_disable_interrupt(BOARD_USART, (US_IER_TXRDY | US_IER_TXEMPTY));
 	}
-	
+
 	/*receive interrupt rise, store character to receiver buffer*/
 	if((g_state == RECEIVING) && (usart_read(BOARD_USART, (uint32_t *)&uc_char) == 0)) {
 		*p_revdata++ = uc_char;
@@ -260,7 +260,7 @@ void USART_Handler(void)
 		if(g_ulcount >= BUFFER_SIZE) {
 			g_state = RECEIVED;
 			usart_disable_interrupt(BOARD_USART, US_IER_RXRDY);
-		}		
+		}
 	}
 }
 
@@ -288,10 +288,10 @@ static void configure_usart(void)
 	/* Configure USART in RS485 mode. */
 	usart_init_rs485(BOARD_USART, &usart_console_settings,
 			sysclk_get_cpu_hz());
-	
+
 	/* enable transmitter timeguard, 4 bit period delay. */
 	usart_set_tx_timeguard(BOARD_USART, 4);
-	
+
 	/* Disable all the interrupts. */
 	usart_disable_interrupt(BOARD_USART, ALL_INTERRUPT_MASK);
 
@@ -357,11 +357,11 @@ static uint8_t func_transmit(const uint8_t *p_buff, uint32_t ulsize)
 			p_buff++;
 		}
 	}
-	
+
 	while(!usart_is_tx_empty(BOARD_USART)) {
 		;  /*waiting for transmit over*/
 	}
-	
+
 	return 0;
 }
 
@@ -451,8 +451,8 @@ int main(void)
 		puts("-I- Receiving sync character.\r");
 		while (!usart_is_rx_ready(BOARD_USART)) {
 		}
-		
-		/* Sync character is received. */		
+
+		/* Sync character is received. */
 		usart_read(BOARD_USART, (uint32_t *)&uc_sync);
 		if (uc_sync == SYNC_CHAR) {
 			/* SEND XOff as acknowledgement. */
@@ -464,7 +464,7 @@ int main(void)
 			 */
 			wait(100);
 
-			/* Send a ack character XOff . */		
+			/* Send a ack character XOff . */
 			func_transmit(&uc_sync, 1);
 
 			g_state = RECEIVING;
