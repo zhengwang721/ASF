@@ -1,0 +1,15 @@
+<asf xmlversion="1.0">
+	<project caption="led example for the ATmega328p" id="mega.applications.mega328p_led_example.atmega328p_xplained_mini">
+		<info type="description" value="summary">
+		ATmega328p Xplained MINI Led example
+		</info>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="include-path" value="."/>
+		<require idref="board.atmega328p_xplained_mini"/>
+		<require idref="mega.applications.mega328p_led_example"/>
+		<generator value="avrgcc"/>
+		<generator value="as5_8"/>
+		<generator value="doxygen"/>
+		<device-support value="atmega328p"/>
+	</project>
+</asf>
