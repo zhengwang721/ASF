@@ -1,0 +1,390 @@
+/**
+ * \file
+ *
+ * \brief SAM PWM Driver for SAMB11
+ *
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+#include "pwm.h"
+
+/**
+ * \internal Get the register configuration values by PWM device
+ */
+static uint32_t _pwm_reg_output_polarity(enum pwm_device_select device_select)
+{
+	switch (device_select) {
+		case PWM1:
+			return LPMCU_MISC_REGS_PWM_1_CONTROL_OUTPUT_POLARITY;
+		case PWM2:
+			return LPMCU_MISC_REGS_PWM_2_CONTROL_OUTPUT_POLARITY;
+		case PWM3:
+			return LPMCU_MISC_REGS_PWM_3_CONTROL_OUTPUT_POLARITY;
+		case PWM4:
+			return LPMCU_MISC_REGS_PWM_4_CONTROL_OUTPUT_POLARITY;
+
+		default:
+			return 0;
+	}
+}
+
+/**
+ * \internal Get the register configuration values by PWM device
+ */
+static uint32_t _pwm_reg_agcdata_fmt(enum pwm_device_select device_select)
+{
+	switch (device_select) {
+		case PWM1:
+			return LPMCU_MISC_REGS_PWM_1_CONTROL_AGCDATA_FMT;
+		case PWM2:
+			return LPMCU_MISC_REGS_PWM_2_CONTROL_AGCDATA_FMT;
+		case PWM3:
+			return LPMCU_MISC_REGS_PWM_3_CONTROL_AGCDATA_FMT;
+		case PWM4:
+			return LPMCU_MISC_REGS_PWM_4_CONTROL_AGCDATA_FMT;
+
+		default:
+			return 0;
+	}
+}
+
+/**
+ * \internal Get the register configuration values by PWM device
+ */
+static uint32_t _pwm_reg_sample_method(enum pwm_device_select device_select, bool value)
+{
+	switch (device_select) {
+		case PWM1:
+			return LPMCU_MISC_REGS_PWM_1_CONTROL_SAMPLE_METHOD(value);
+		case PWM2:
+			return LPMCU_MISC_REGS_PWM_2_CONTROL_SAMPLE_METHOD(value);
+		case PWM3:
+			return LPMCU_MISC_REGS_PWM_3_CONTROL_SAMPLE_METHOD(value);
+		case PWM4:
+			return LPMCU_MISC_REGS_PWM_4_CONTROL_SAMPLE_METHOD(value);
+
+		default:
+			return 0;
+	}
+}
+
+/**
+ * \internal Get the register configuration values by PWM device
+ */
+static uint32_t _pwm_reg_use_old_pwm(enum pwm_device_select device_select, bool value)
+{
+	switch (device_select) {
+		case PWM1:
+			return LPMCU_MISC_REGS_PWM_1_CONTROL_USE_OLD_PWM(value);
+		case PWM2:
+			return LPMCU_MISC_REGS_PWM_2_CONTROL_USE_OLD_PWM(value);
+		case PWM3:
+			return LPMCU_MISC_REGS_PWM_3_CONTROL_USE_OLD_PWM(value);
+		case PWM4:
+			return LPMCU_MISC_REGS_PWM_4_CONTROL_USE_OLD_PWM(value);
+
+		default:
+			return 0;
+	}
+}
+
+/**
+ * \internal Get the register configuration values by PWM device
+ */
+static uint32_t _pwm_reg_period(enum pwm_device_select device_select, enum pwm_period value)
+{
+	switch (device_select) {
+		case PWM1:
+			return LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_PERIOD(value);
+		case PWM2:
+			return LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_PERIOD(value);
+		case PWM3:
+			return LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_PERIOD(value);
+		case PWM4:
+			return LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_PERIOD(value);
+
+		default:
+			return 0;
+	}
+}
+
+/**
+ * \internal Get the register configuration values by PWM device
+ */
+static uint32_t _pwm_reg_agcdata_in(enum pwm_device_select device_select, uint32_t value)
+{
+	switch (device_select) {
+		case PWM1:
+			return LPMCU_MISC_REGS_PWM_1_CONTROL_AGCDATA_IN(value);
+		case PWM2:
+			return LPMCU_MISC_REGS_PWM_2_CONTROL_AGCDATA_IN(value);
+		case PWM3:
+			return LPMCU_MISC_REGS_PWM_3_CONTROL_AGCDATA_IN(value);
+		case PWM4:
+			return LPMCU_MISC_REGS_PWM_4_CONTROL_AGCDATA_IN(value);
+
+		default:
+			return 0;
+	}
+}
+
+/**
+ * \internal Get the register configuration values by PWM device
+ */
+static uint32_t _pwm_reg_use_agcupdate(enum pwm_device_select device_select)
+{
+	switch (device_select) {
+		case PWM1:
+			return LPMCU_MISC_REGS_PWM_1_CONTROL_USE_AGCUPDATE;
+		case PWM2:
+			return LPMCU_MISC_REGS_PWM_2_CONTROL_USE_AGCUPDATE;
+		case PWM3:
+			return LPMCU_MISC_REGS_PWM_3_CONTROL_USE_AGCUPDATE;
+		case PWM4:
+			return LPMCU_MISC_REGS_PWM_4_CONTROL_USE_AGCUPDATE;
+
+		default:
+			return 0;
+	}
+}
+
+/**
+ * \internal Get the register configuration values by PWM device
+ */
+static uint32_t _pwm_reg_agcupdate(enum pwm_device_select device_select)
+{
+	switch (device_select) {
+		case PWM1:
+			return LPMCU_MISC_REGS_PWM_1_CONTROL_AGCUPDATE;
+		case PWM2:
+			return LPMCU_MISC_REGS_PWM_2_CONTROL_AGCUPDATE;
+		case PWM3:
+			return LPMCU_MISC_REGS_PWM_3_CONTROL_AGCUPDATE;
+		case PWM4:
+			return LPMCU_MISC_REGS_PWM_4_CONTROL_AGCUPDATE;
+
+		default:
+			return 0;
+	}
+}
+
+/**
+ * \internal Get the register configuration values by PWM device
+ */
+static uint32_t _pwm_reg_clock_sel(enum pwm_device_select device_select, enum pwm_clock_select value)
+{
+	switch (device_select) {
+		case PWM1:
+			return LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL(value);
+		case PWM2:
+			return LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL(value);
+		case PWM3:
+			return LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL(value);
+		case PWM4:
+			return LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL(value);
+
+		default:
+			return 0;
+	}
+}
+
+/**
+ *  \brief Initializes a pwm configuration structure to defaults.
+ *
+ *  Initializes a given pwm configuration structure to a set of
+ *  known default values. This function should be called on all new
+ *  instances of these configuration structures before being modified by the
+ *  user application.
+ *
+ *  The default configuration is as follows:
+ *   \li 1 not to inverse the polarity
+ *   \li Sample method 0
+ *   \li Use new pwm
+ *   \li PWM period is 4
+ *   \li Duty cycle is 50%
+ *   \li No use agcupdate
+ *   \li Clock is 26MHz
+ *
+ *  \param[out] config  Configuration structure to initialize to default values.
+ */
+void pwm_get_config_defaults(struct pwm_config *const config)
+{
+	config->output_polarity = false;
+	config->agcdata_format = false;
+	config->sample_method = PWM_SAMPLE_METHOD_0;
+	config->use_old = false;
+	config->period = PWM_PERIOD_4;
+	config->agcdata_in = 50;
+	config->use_agcupdate = false;
+	config->agc_update = false;
+	config->clock_select = PWM_CLOCK_SELECT_26_0;
+	config->pinmux_pad = 0;
+}
+
+/**
+ * \brief Initializes the PWM module
+ *
+ * This function will initialize the PWM module, based on the values
+ * of the config struct.
+ *
+ * \param[in]   device_select   PWM device
+ * \param[in]   config          Pointer to the config struct
+ *
+ * \return The status of the configuration.
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  If unsupported device were provided
+ * \retval STATUS_OK                   If the configuration was written
+ */
+enum status_code pwm_init(enum pwm_device_select device_select, \
+		const struct pwm_config *const config)
+{
+	uint32_t reg_value = 0;
+
+	if ((device_select == 0) || (device_select > PWM4)) {
+		return STATUS_ERR_UNSUPPORTED_DEV;
+	}
+
+	if (config->output_polarity) {
+		reg_value |= _pwm_reg_output_polarity(device_select);
+	}
+
+	if (config->agcdata_format) {
+		reg_value |= _pwm_reg_agcdata_fmt(device_select);
+	}
+
+	reg_value |= _pwm_reg_sample_method(device_select, config->sample_method) | \
+				_pwm_reg_use_old_pwm(device_select, config->use_old);
+
+	/* If period > 8 will be set to 4 as default. */
+	if (config->period > PWM_PERIOD_8) {
+		reg_value |= _pwm_reg_period(device_select, PWM_PERIOD_4);
+	} else {
+		reg_value |= _pwm_reg_period(device_select, config->period);
+	}
+	reg_value |= _pwm_reg_agcdata_in(device_select, config->agcdata_in);
+
+	if (config->use_agcupdate) {
+		reg_value |= _pwm_reg_use_agcupdate(device_select);
+	}
+
+	if (config->agc_update) {
+		reg_value |= _pwm_reg_agcupdate(device_select);
+	}
+
+	reg_value |= _pwm_reg_clock_sel(device_select, config->clock_select);
+
+	switch(device_select) {
+		case PWM1:
+			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg = reg_value;
+			break;
+
+		case PWM2:
+			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg = reg_value;
+			break;
+
+		case PWM3:
+			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg = reg_value;
+			break;
+
+		case PWM4:
+			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg = reg_value;
+			break;
+	}
+
+	gpio_pinmux_cofiguration(config->pinmux_pad >> 16, \
+							(uint16_t)(config->pinmux_pad));
+
+	return STATUS_OK;
+}
+
+/**
+ * \brief Enables the PWM module
+ *
+ * This function will enable the PWM module.
+ *
+ * \param[in] device_select  PWM device
+ */
+void pwm_enable(enum pwm_device_select device_select)
+{
+	switch (device_select) {
+		case PWM1:
+			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg |= LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_EN;
+			break;
+
+		case PWM2:
+			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg |= LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_EN;
+			break;
+
+		case PWM3:
+			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg |= LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_EN;
+			break;
+
+		case PWM4:
+			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg |= LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_EN;
+			break;
+	}
+}
+
+/**
+ * \brief Disable the PWM module
+ *
+ * This function will disable the PWM module.
+ *
+ * \param[in] device_select  PWM device
+ */
+void pwm_disable(enum pwm_device_select device_select)
+{
+	switch (device_select) {
+		case PWM1:
+			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg &= ~LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_EN;
+			break;
+
+		case PWM2:
+			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg &= ~LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_EN;
+			break;
+
+		case PWM3:
+			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg &= ~LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_EN;
+			break;
+
+		case PWM4:
+			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg &= ~LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_EN;
+			break;
+	}
+}
