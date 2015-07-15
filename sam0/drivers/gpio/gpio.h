@@ -211,7 +211,7 @@ void gpio_pin_toggle_output_level(const uint8_t gpio_pin);
 /** \name PINMUX selection configuration
  * @{
  */
-void gpio_pinmux_cofiguration(const uint8_t gpio_pin, enum gpio_pinmux_sel pinmux_sel);
+void gpio_pinmux_cofiguration(const uint8_t gpio_pin, uint16_t pinmux_sel);
 /** @}*/
 
 /** @}*/

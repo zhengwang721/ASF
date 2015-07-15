@@ -101,7 +101,8 @@ static enum status_code _i2c_master_set_config(
 
 	/* Set the pinmux for this i2c module. */
 	for (idx = 0; idx < 2; idx++) {
-		gpio_pinmux_cofiguration(config->pinmux_pad[idx]>>16, config->pinmux_pad[idx] & 0xff);
+		gpio_pinmux_cofiguration(config->pinmux_pad[idx]>>16, \
+								(uint16_t)(config->pinmux_pad[idx] & 0xFFFF));
 	}
 	/* Find and set baudrate. */
 	i2c_module->CLOCK_SOURCE_SELECT.reg = config->clock_source;
