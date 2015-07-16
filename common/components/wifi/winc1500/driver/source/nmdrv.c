@@ -182,7 +182,7 @@ sint8 nm_drv_init(void * arg)
 	}
 #endif
 	M2M_INFO("Chip ID %lx\n", nmi_get_chipid());
-#ifdef USE_SPI
+#ifdef CONF_WINC_USE_SPI
 	/* Must do this after global reset to set SPI data packet size. */
 	nm_spi_init();
 #endif
