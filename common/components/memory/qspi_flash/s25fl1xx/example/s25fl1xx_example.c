@@ -111,7 +111,7 @@
 #define QSPI_DLYBCT               0x10
 
 /* QSPI clock setting (Hz). */
-static uint32_t gs_ul_spi_clock = 1000000;
+static uint32_t gs_spi_clock = 1000000;
 
 qspid_t g_qspid = {
 	QSPI,
@@ -121,7 +121,24 @@ qspid_t g_qspid = {
 	0
 };
 
-unsigned char p_buffercode[] = {
+qspi_config_t mode_config = {
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0
+};
+
+unsigned char buffercode[] = {
 	0x50, 0x10, 0x44, 0x20, 0xB5, 0x19, 0x00, 0x80, 0x09, 0x15, 0x00, 0x80,
 	0x61, 0x15, 0x00, 0x80, 0x71, 0x15, 0x00, 0x80
 };
@@ -158,7 +175,7 @@ int main(void)
 	uint32_t (*__start_new)(void);
 	uint32_t buffer[4];
 
-	uint8_t *p_memory;
+	uint8_t *memory;
 
 	/* Initialize the system */
 	sysclk_init();
@@ -174,7 +191,7 @@ int main(void)
 	pmc_enable_periph_clk(ID_QSPI);
 
 	/* QSPI memory mode configure */
-	qspi_memory_mode_initialize();
+	s25fl1xx_initialize(g_qspid.qspi_hw, &mode_config, 1);
 	puts("QSPI drivers initialized\n\r");
 
 	/* enable quad mode */
@@ -190,24 +207,24 @@ int main(void)
 	/* Flash the code to QSPI flash */
 	puts("Writing to Memory\n");
 
-	s25fl1xx_write(&g_qspid, (uint32_t *)p_buffercode, sizeof(p_buffercode), 0, 0);
+	s25fl1xx_write(&g_qspid, (uint32_t *)buffercode, sizeof(buffercode), 0, 0);
 
 	/* Lock block protection */
 	s25fl1xx_protect(&g_qspid);
 
-	printf("\rExample code written 0x%x bytes to Memory\r", sizeof(p_buffercode));
+	printf("\rExample code written 0x%x bytes to Memory\r", sizeof(buffercode));
 
 	puts("Verifying \r");
 	/* Start continuous read mode to enter in XIP mode*/
 	s25fl1xx_read_quad_io(&g_qspid, buffer, sizeof(buffer), 0, 1, 0);
 
-	p_memory = (uint8_t *)QSPIMEM_ADDR;
-	for(idx = 0; idx < sizeof(p_buffercode); idx++) {
-		if(*p_memory == p_buffercode[idx]) {
-			p_memory++;
+	memory = (uint8_t *)QSPIMEM_ADDR;
+	for(idx = 0; idx < sizeof(buffercode); idx++) {
+		if(*memory == buffercode[idx]) {
+			memory++;
 		} else {
 			mem_verified = 1;
-			printf("\nData does not match at 0x%x \r", p_memory);
+			printf("\nData does not match at 0x%x \r", memory);
 			break;
 		}
 	}

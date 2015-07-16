@@ -69,14 +69,14 @@
 /**
  * \brief Qspi read datas.
  *
- * \param p_qspi  Pointer to a Qspi instance.
+ * \param qspi  Pointer to a Qspi instance.
  * \param us_data Pointer to read datas.
  * \param num_of_bytes Read datas num.
  * \return status Read option result.
  */
-enum status_code qspi_read(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_bytes)
+enum status_code qspi_read(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes)
 {
-	assert(p_qspi);
+	assert(qspi);
 	if (num_of_bytes == 0) {
 		return STATUS_OK;
 	}
@@ -89,10 +89,10 @@ enum status_code qspi_read(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_byte
 
 	if (num_of_bytes == 1) {
 		for(; ;) {
-			if (p_qspi->QSPI_SR & QSPI_SR_RDRF) {
-				*us_data = qspi_read_spi(p_qspi);
-				qspi_write_spi(p_qspi, dummy);
-				*us_data = qspi_read_spi(p_qspi);
+			if (qspi->QSPI_SR & QSPI_SR_RDRF) {
+				*us_data = qspi_read_spi(qspi);
+				qspi_write_spi(qspi, dummy);
+				*us_data = qspi_read_spi(qspi);
 				num_of_attempt = 0;
 				status = STATUS_OK;
 				break;
@@ -109,12 +109,12 @@ enum status_code qspi_read(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_byte
 		}
 	} else {
 		/* dummy read  and write to discard  first bytes recvd and start receiving new data*/
-		dummy = qspi_read_spi(p_qspi);
-		qspi_write_spi(p_qspi, dummy);
+		dummy = qspi_read_spi(qspi);
+		qspi_write_spi(qspi, dummy);
 		for(; num_of_bytes_read < num_of_bytes;) {
-			if (p_qspi->QSPI_SR & QSPI_SR_TDRE) {
-				*pw_data= qspi_read_spi(p_qspi);
-				if(p_qspi->QSPI_MR & QSPI_MR_NBBITS_Msk) {
+			if (qspi->QSPI_SR & QSPI_SR_TDRE) {
+				*pw_data= qspi_read_spi(qspi);
+				if(qspi->QSPI_MR & QSPI_MR_NBBITS_Msk) {
 					pw_data += sizeof(uint16_t);
 				} else {
 					pw_data += sizeof(uint8_t);
@@ -122,7 +122,7 @@ enum status_code qspi_read(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_byte
 				num_of_bytes_read++;
 				num_of_attempt = 0;
 				status = STATUS_OK;
-				qspi_write_spi(p_qspi, dummy);
+				qspi_write_spi(qspi, dummy);
 			} else {
 				if(num_of_attempt > 0xFFFF) {
 					status = ERR_TIMEOUT;
@@ -142,14 +142,14 @@ enum status_code qspi_read(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_byte
 /**
  * \brief Qspi write datas.
  *
- * \param p_qspi  Pointer to a Qspi instance.
+ * \param qspi  Pointer to a Qspi instance.
  * \param us_data Pointer to datas to be written.
  * \param num_of_bytes Write datas num.
  * \return status Write option result.
  */
-enum status_code qspi_write(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_bytes)
+enum status_code qspi_write(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes)
 {
-	assert(p_qspi);
+	assert(qspi);
 	if (num_of_bytes == 0) {
 		return STATUS_OK;
 	}
@@ -162,8 +162,8 @@ enum status_code qspi_write(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_byt
 
 	if (num_of_bytes == 1) {
 		for(;;) {
-			if(p_qspi->QSPI_SR & QSPI_SR_TDRE) {
-				qspi_write_spi(p_qspi, (uint16_t)(*us_data));
+			if(qspi->QSPI_SR & QSPI_SR_TDRE) {
+				qspi_write_spi(qspi, (uint16_t)(*us_data));
 				num_of_attempt = 0;
 				status = STATUS_OK;
 				break;
@@ -178,15 +178,15 @@ enum status_code qspi_write(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_byt
 			}
 		}
 	} else {
-		if(p_qspi->QSPI_MR & QSPI_MR_NBBITS_Msk) {
+		if(qspi->QSPI_MR & QSPI_MR_NBBITS_Msk) {
 			Addr_Inc = sizeof(uint16_t);
 		} else {
 			Addr_Inc = sizeof(uint8_t);
 		}
 
 		for(; num_of_bytes_write < num_of_bytes; num_of_bytes_write++) {
-			if (p_qspi->QSPI_SR & QSPI_SR_TXEMPTY) {
-				qspi_write_spi(p_qspi, (uint16_t )(*pw_data));
+			if (qspi->QSPI_SR & QSPI_SR_TXEMPTY) {
+				qspi_write_spi(qspi, (uint16_t )(*pw_data));
 				pw_data += Addr_Inc;
 				num_of_attempt = 0;
 				status = STATUS_OK;
@@ -208,40 +208,49 @@ enum status_code qspi_write(Qspi *p_qspi, uint16_t *us_data, uint32_t num_of_byt
 /**
  * \brief Config qspi according the config struct
  *
- * \param p_qspi_config     Pointer to an qspi_config_t struct.
+ * \param qspi_config     Pointer to an qspi_config_t struct.
  *
  */
-void qspi_set_config(qspi_config_t * p_qspi_config)
+void qspi_set_config(Qspi *qspi, qspi_config_t *qspi_config)
 {
-	/* Configure an QSPI peripheral. */
-	qspi_disable(p_qspi_config->p_qspi_hw);
-	qspi_reset(p_qspi_config->p_qspi_hw);
-	qspi_set_lastxfer(p_qspi_config->p_qspi_hw);
-	qspi_set_chip_select_mode(p_qspi_config->p_qspi_hw, p_qspi_config->ul_csmode);
-	qspi_set_clock_polarity(p_qspi_config->p_qspi_hw, p_qspi_config->ul_clock_polarity);
-	qspi_set_clock_phase(p_qspi_config->p_qspi_hw, p_qspi_config->ul_clock_phase);
-	qspi_set_bits_per_transfer(p_qspi_config->p_qspi_hw, p_qspi_config->ul_bits_per_transfer);
-	qspi_set_baudrate(p_qspi_config->p_qspi_hw, p_qspi_config->ul_baudrate);
-	qspi_set_transfer_delay(p_qspi_config->p_qspi_hw, p_qspi_config->ul_transfer_delay);
-	qspi_set_memory_mode(p_qspi_config->p_qspi_hw);
-	qspi_enable(p_qspi_config->p_qspi_hw);
+	if(qspi_config->serial_memory) {
+		qspi_set_memory_mode(qspi);
+	} else {
+		qspi_set_spi_mode(qspi);
+	}
+	if(qspi_config->loopback_en) {
+		qspi_enable_loopback(qspi);
+	}
+	if(qspi_config->wait_data_for_transfer) {
+		qspi_wait_data_read_before_transfer(qspi);
+	}
+	qspi_set_chip_select_mode(qspi, qspi_config->csmode);
+	qspi_set_bits_per_transfer(qspi, qspi_config->bits_per_transfer);
+	qspi_set_minimum_inactive_qcs_delay(qspi, qspi_config->min_delay_qcs);
+	qspi_set_delay_between_consecutive_transfers(qspi, qspi_config->delay_between_ct);
+	qspi_set_clock_polarity(qspi, qspi_config->clock_polarity);
+	qspi_set_clock_phase(qspi, qspi_config->clock_phase);
+	qspi_set_baudrate(qspi, qspi_config->baudrate);
+	qspi_set_transfer_delay(qspi, qspi_config->transfer_delay);
+	qspi_set_scrambling_mode(qspi, qspi_config->scrambling_en, qspi_config->scrambling_random_value_dis);
+	qspi_set_scrambing_key(qspi, qspi_config->scrambling_user_key);
 }
 
 /**
  * \brief Config qspi according the config struct
  *
- * \param p_qspi_config     Pointer to an qspi_config_t struct.
+ * \param qspi_config     Pointer to an qspi_config_t struct.
  *
  */
-void qspi_get_default_config(qspi_config_t * p_qspi_config)
+void qspi_get_default_config(qspi_config_t * qspi_config)
 {
-	p_qspi_config->p_qspi_hw = QSPI;
-	p_qspi_config->ul_csmode = 1;
-	p_qspi_config->ul_clock_polarity = 0;
-	p_qspi_config->ul_clock_phase = 0;
-	p_qspi_config->ul_bits_per_transfer = QSPI_MR_NBBITS_8_BIT;
-	p_qspi_config->ul_baudrate = sysclk_get_cpu_hz() / 1000000;
-	p_qspi_config->ul_transfer_delay = 0x40;
+	qspi_config->serial_memory = 1;
+	qspi_config->csmode = 1;
+	qspi_config->clock_polarity = 0;
+	qspi_config->clock_phase = 0;
+	qspi_config->bits_per_transfer = QSPI_MR_NBBITS_8_BIT;
+	qspi_config->baudrate = sysclk_get_cpu_hz() / 1000000;
+	qspi_config->transfer_delay = 0x40;
 }
 
 /**
@@ -253,24 +262,24 @@ void qspi_get_default_config(qspi_config_t * p_qspi_config)
  * \return Returns 1 if At least one instruction end has been detected since the last read of QSPI_SR.; otherwise
  * returns 0.
  */
-enum status_code qspi_flash_send_command(qspid_t *p_qspid, uint8_t const keep_cfg)
+enum status_code qspi_flash_send_command(qspid_t *qspid, uint8_t const keep_cfg)
 {
-	qspi_inst_frame_t* const p_frame = p_qspid->p_qspi_frame;
-	qspi_mem_cmd_t p_command = p_qspid->qspi_command;
+	qspi_inst_frame_t* const frame = qspid->qspi_frame;
+	qspi_mem_cmd_t command = qspid->qspi_command;
 	enum status_code status = OPERATION_IN_PROGRESS;
 
-	if(p_frame->inst_frame.bm.b_addr_en) {
-		qspi_set_instruction_addr(p_qspid->p_qspi_hw, p_frame->addr);
+	if(frame->inst_frame.bm.b_addr_en) {
+		qspi_set_instruction_addr(qspid->qspi_hw, frame->addr);
 	}
-	qspi_set_instruction_code(p_qspid->p_qspi_hw, p_command);
-	qspi_set_instruction_frame(p_qspid->p_qspi_hw, *p_frame);
+	qspi_set_instruction_code(qspid->qspi_hw, command);
+	qspi_set_instruction_frame(qspid->qspi_hw, *frame);
 	__DSB();
 	__ISB();
-	qspi_end_transfer(p_qspid->p_qspi_hw);
+	qspi_end_transfer(qspid->qspi_hw);
 	/** poll CR reg to know status if instruction has end */
-	while(!(p_qspid->p_qspi_hw->QSPI_SR & QSPI_SR_INSTRE));
+	while(!(qspid->qspi_hw->QSPI_SR & QSPI_SR_INSTRE));
 	if(!keep_cfg) {
-		p_frame->inst_frame.val = 0;
+		frame->inst_frame.val = 0;
 	}
 	status = STATUS_OK;
 	return status;
@@ -285,31 +294,31 @@ enum status_code qspi_flash_send_command(qspid_t *p_qspid, uint8_t const keep_cf
  * \return Returns 1 if At least one instruction end has been detected since the last read of QSPI_SR.; otherwise
  * returns 0.
  */
-enum status_code qspi_flash_send_command_with_data(qspid_t *p_qspid, uint8_t const keep_cfg)
+enum status_code qspi_flash_send_command_with_data(qspid_t *qspid, uint8_t const keep_cfg)
 {
-	qspi_inst_frame_t* const  p_frame = p_qspid->p_qspi_frame;
-	qspi_mem_cmd_t p_command = p_qspid->qspi_command;
-	qspi_buffer_t p_buffer = p_qspid->qspi_buffer;
-	uint32_t *p_qspi_buffer = (uint32_t *)QSPIMEM_ADDR;
+	qspi_inst_frame_t* const  frame = qspid->qspi_frame;
+	qspi_mem_cmd_t command = qspid->qspi_command;
+	qspi_buffer_t buffer = qspid->qspi_buffer;
+	uint32_t *qspi_buffer = (uint32_t *)QSPIMEM_ADDR;
 	enum status_code status = OPERATION_IN_PROGRESS;
 
-	assert(p_buffer.p_data_tx);
+	assert(buffer.data_tx);
 
-	qspi_set_instruction_code(p_qspid->p_qspi_hw, p_command);
-	qspi_set_instruction_frame(p_qspid->p_qspi_hw, *p_frame );
+	qspi_set_instruction_code(qspid->qspi_hw, command);
+	qspi_set_instruction_frame(qspid->qspi_hw, *frame );
 	/** to synchronize system bus accesses */
-	qspi_get_inst_frame(p_qspid->p_qspi_hw);
+	qspi_get_inst_frame(qspid->qspi_hw);
 	if(!keep_cfg) {
-		p_frame->inst_frame.val = 0;
+		frame->inst_frame.val = 0;
 	}
 
-	memcpy(p_qspi_buffer, p_buffer.p_data_tx, p_buffer.tx_data_size);
+	memcpy(qspi_buffer, buffer.data_tx, buffer.tx_data_size);
 	__DSB();
 	__ISB();
 	/** End transmission after all data has been sent */
-	qspi_end_transfer(p_qspid->p_qspi_hw) ;
+	qspi_end_transfer(qspid->qspi_hw) ;
 	/** poll CR reg to know status if instruction has end */
-	while(!(p_qspid->p_qspi_hw->QSPI_SR & QSPI_SR_INSTRE));
+	while(!(qspid->qspi_hw->QSPI_SR & QSPI_SR_INSTRE));
 
 	status = STATUS_OK;
 	return status;
@@ -324,31 +333,31 @@ enum status_code qspi_flash_send_command_with_data(qspid_t *p_qspid, uint8_t con
  * \return Returns 1 if At least one instruction end has been detected since the last read of QSPI_SR.; otherwise
  * returns 0.
  */
-enum status_code qspi_flash_read_command(qspid_t *p_qspid, uint8_t const keep_cfg)
+enum status_code qspi_flash_read_command(qspid_t *qspid, uint8_t const keep_cfg)
 {
-	qspi_inst_frame_t* const p_frame = p_qspid->p_qspi_frame;
-	qspi_mem_cmd_t  p_command = p_qspid->qspi_command;
-	qspi_buffer_t *p_buffer = &p_qspid->qspi_buffer;
-	uint32_t *p_qspi_buffer = (uint32_t *)QSPIMEM_ADDR;
+	qspi_inst_frame_t* const frame = qspid->qspi_frame;
+	qspi_mem_cmd_t  command = qspid->qspi_command;
+	qspi_buffer_t *buffer = &qspid->qspi_buffer;
+	uint32_t *qspi_buffer = (uint32_t *)QSPIMEM_ADDR;
 	enum status_code status = OPERATION_IN_PROGRESS;
 
-	assert(p_buffer->rx_data_size);
+	assert(buffer->rx_data_size);
 
-	qspi_set_instruction_code(p_qspid->p_qspi_hw, p_command);
-	qspi_set_instruction_frame(p_qspid->p_qspi_hw, *p_frame);
+	qspi_set_instruction_code(qspid->qspi_hw, command);
+	qspi_set_instruction_frame(qspid->qspi_hw, *frame);
 
 	/** to synchronize system bus accesses */
-	qspi_get_inst_frame(p_qspid->p_qspi_hw);
+	qspi_get_inst_frame(qspid->qspi_hw);
 	if(!keep_cfg) {
-		p_frame->inst_frame.val = 0;
+		frame->inst_frame.val = 0;
 	}
-	memcpy(p_buffer->p_data_rx , p_qspi_buffer,  p_buffer->rx_data_size);
+	memcpy(buffer->data_rx , qspi_buffer,  buffer->rx_data_size);
 	__DSB();
 	__ISB();
 	/** End transmission after all data has been sent */
-	qspi_end_transfer(p_qspid->p_qspi_hw);
+	qspi_end_transfer(qspid->qspi_hw);
 	/** poll CR reg to know status if instruction has end */
-	while(!(p_qspid->p_qspi_hw->QSPI_SR & QSPI_SR_INSTRE));
+	while(!(qspid->qspi_hw->QSPI_SR & QSPI_SR_INSTRE));
 
 	status = STATUS_OK;
 	return status;
@@ -364,25 +373,25 @@ enum status_code qspi_flash_read_command(qspid_t *p_qspid, uint8_t const keep_cf
  * \return Returns 1 if At least one instruction end has been detected since the last read of QSPI_SR.; otherwise
  * returns 0.
  */
-enum status_code qspi_flash_enable_mem_access(qspid_t *p_qspid, uint8_t const keep_cfg, uint8_t scramble_flag)
+enum status_code qspi_flash_enable_mem_access(qspid_t *qspid, uint8_t const keep_cfg, uint8_t scramble_flag)
 {
-	qspi_inst_frame_t* const p_frame = p_qspid->p_qspi_frame;
-	qspi_mem_cmd_t p_command = p_qspid->qspi_command;
+	qspi_inst_frame_t* const frame = qspid->qspi_frame;
+	qspi_mem_cmd_t command = qspid->qspi_command;
 
 	enum status_code status = OPERATION_IN_PROGRESS;
 
-	qspi_set_instruction_code(p_qspid->p_qspi_hw, p_command);
+	qspi_set_instruction_code(qspid->qspi_hw, command);
 
 	if(scramble_flag) {
-		qspi_set_scrambling_mode(p_qspid->p_qspi_hw, scramble_flag, 1);
+		qspi_set_scrambling_mode(qspid->qspi_hw, scramble_flag, 1);
 	}
 
-	qspi_set_instruction_frame(p_qspid->p_qspi_hw, *p_frame );
+	qspi_set_instruction_frame(qspid->qspi_hw, *frame );
 
 	/** to synchronize system bus accesses */
-	qspi_get_inst_frame(p_qspid->p_qspi_hw);
+	qspi_get_inst_frame(qspid->qspi_hw);
 	if(!keep_cfg) {
-		p_frame->inst_frame.val = 0;
+		frame->inst_frame.val = 0;
 	}
 	status = STATUS_OK;
 	return status;
@@ -396,25 +405,25 @@ enum status_code qspi_flash_enable_mem_access(qspid_t *p_qspid, uint8_t const ke
  * \return Returns 1 if At least one instruction end has been detected since the last read of QSPI_SR.; otherwise
  * returns 0.
  */
-enum status_code qspi_flash_read_write_mem(qspid_t *p_qspid, qspi_access_t const read_write)
+enum status_code qspi_flash_read_write_mem(qspid_t *qspid, qspi_access_t const read_write)
 {
 	enum status_code status = OPERATION_IN_PROGRESS;
-	qspi_inst_frame_t* const p_frame = p_qspid->p_qspi_frame;
-	uint32_t *p_qspi_mem = (uint32_t *)(QSPIMEM_ADDR | p_frame->addr);
-	qspi_buffer_t *p_buffer = &p_qspid->qspi_buffer;
+	qspi_inst_frame_t* const frame = qspid->qspi_frame;
+	uint32_t *qspi_mem = (uint32_t *)(QSPIMEM_ADDR | frame->addr);
+	qspi_buffer_t *buffer = &qspid->qspi_buffer;
 
 	assert( ( (read_write > cmd_access) && (read_write <= write_access) ) ? true: false );
 	if (read_write == write_access) {
-		memcpy(p_qspi_mem, p_buffer->p_data_tx , p_buffer->tx_data_size );
+		memcpy(qspi_mem, buffer->data_tx , buffer->tx_data_size );
 	} else {
-		memcpy(p_buffer->p_data_rx, p_qspi_mem, p_buffer->rx_data_size );
+		memcpy(buffer->data_rx, qspi_mem, buffer->rx_data_size );
 	}
 	__DSB();
 	__ISB();
 	/** End transmission after all data has been sent */
-	qspi_end_transfer(p_qspid->p_qspi_hw) ;
+	qspi_end_transfer(qspid->qspi_hw) ;
 	/** poll CR reg to know status if instruction has end */
-	while(!(p_qspid->p_qspi_hw->QSPI_SR & QSPI_SR_INSTRE));
+	while(!(qspid->qspi_hw->QSPI_SR & QSPI_SR_INSTRE));
 
 	status = STATUS_OK;
 	return status;
