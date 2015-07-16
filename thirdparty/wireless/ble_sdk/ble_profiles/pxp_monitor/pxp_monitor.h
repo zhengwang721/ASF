@@ -40,8 +40,10 @@
  * \asf_license_stop
  *
  */
+
 /*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
+ *Support</a>
  */
 
 #ifndef __PXP_MONITOR_H__
@@ -51,61 +53,136 @@
 
 #define PROXIMITY_MONITOR
 
-typedef enum
-{
+typedef enum {
 	AD_TYPE_FLAGS = 01,
 	AD_TYPE_COMPLETE_LIST_UUID = 0x03,
 	AD_TYPE_COMPLETE_LOCAL_NAME = 0x09
-}AD_TYPE;
+} AD_TYPE;
 
-#define PXP_RSSI_UPDATE_INTERVAL	(0x01)
-#define PXP_LOW_ALERT_RANGE			(-70)
-#define PXP_HIGH_ALERT_RANGE		(-90)
+#define PXP_RSSI_UPDATE_INTERVAL        (0x01)
+#define PXP_LOW_ALERT_RANGE             (-70)
+#define PXP_HIGH_ALERT_RANGE            (-90)
 
+#define PXP_ASCII_TO_DECIMAL_VALUE      (48)
+
+/* *@brief Initializes Proximity profile
+ * handler Pointer reference to respective variables
+ *
+ */
 void pxp_monitor_init(void);
 
+/**@brief Search for a given AD type in a buffer, received from advertising
+ * packets
+ *
+ * starts search form the buffer, need to provide required search params
+ *
+ * @param[in] scan_buffer where all received advertising packet are stored
+ * @param[in] scanned_dev_count elements in scan_buffer
+ *
+ * @return @ref AT_BLE_SUCCESS operation programmed successfully
+ * @return @ref AT_BLE_INVALID_PARAM incorrect parameter.
+ * @return @ref AT_BLE_FAILURE Generic error.
+ */
 at_ble_status_t pxp_monitor_scan_data_handler(at_ble_scan_info_t *scan_buffer,
-												uint8_t scanned_dev_count);
-												
+		uint8_t scanned_dev_count);
+
+/**@brief peer device connection terminated
+ *
+ * handler for disconnect notification
+ * try to send connect request for previously connect device.
+ *
+ * @param[in] available disconnect handler of peer and
+ * reason for disconnection
+ *
+ * @return @ref AT_BLE_SUCCESS Reconnect request sent to previously connected
+ *device
+ * @return @ref AT_BLE_FAILURE Reconnection fails.
+ */
 at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect);
 
+/**@brief Connected event state handle after connection request to peer device
+ *
+ * After connecting to the peer device start the GATT primary discovery
+ *
+ * @param[in] at_ble_connected_t parameters of the established connection
+ *
+ * @return @ref AT_BLE_SUCCESS operation programmed successfully.
+ * @return @ref AT_BLE_INVALID_PARAM if GATT discovery parameter are incorrect
+ *parameter.
+ * @return @ref AT_BLE_FAILURE Generic error.
+ */
+at_ble_status_t pxp_monitor_connected_state_handler(
+		at_ble_connected_t *conn_params);
 
- /**@brief After the successful connection handler
-  *
-  * After connecting to the peer device start the GATT primary discovery
-  *
-  * @param[in] at_ble_connected_t parameters of the established connection
-  *
-  * @return @ref AT_BLE_SUCCESS operation programmed successfully.
-  * @return @ref AT_BLE_INVALID_PARAM if GATT discovery parameter are incorrect parameter.
-  * @return @ref AT_BLE_FAILURE Generic error.
-  */
-at_ble_status_t pxp_monitor_connected_state_handler(at_ble_connected_t * conn_params);
-
-
- /**@brief Discover all Characteristics supported for Proximity Service in a connected device
+/**@brief Discover all Characteristics supported for Proximity Service of a
+ * connected device
  *  and handles discovery complete
- * Search will go from start_handle to end_handle, whenever a characteristic is found
- * After search and discovery completes will initialize the alert level and read the tx power value as defined
- * @ref AT_BLE_CHARACTERISTIC_FOUND event is sent and @ref AT_BLE_DISCOVERY_COMPLETE is sent at end of discover operation.
+ * Search will go from start_handle to end_handle, whenever a characteristic is
+ *found
+ * After search and discovery completes will initialize the alert level and read
+ *the tx power value as defined
+ * @ref AT_BLE_CHARACTERISTIC_FOUND event is sent and @ref
+ *AT_BLE_DISCOVERY_COMPLETE is sent at end of discover operation.
  *
  * @param[in] discover_status discovery status on each
  * @param[in] start_handle start of the searched range
  * @param[in] end_handle   end of the searched range
  *
  */
-void pxp_monitor_discovery_complete_handler(at_ble_discovery_complete_t *discover_status);
+void pxp_monitor_discovery_complete_handler(
+		at_ble_discovery_complete_t *discover_status);
 
+/**@brief Handles the read response from the peer/connected device
+ *
+ * if any read request send, response back event is handle.
+ * compare the read response characteristics with available service.
+ * and data is handle to the respective service.
+ */
+void pxp_monitor_characteristic_read_response(
+		at_ble_characteristic_read_response_t *char_read_resp);
 
+/**@brief Handles all Discovered characteristics of a given handler in a
+ * connected device
+ *
+ * Compare the characteristics UUID with proximity services whenever a
+ *characteristics is found
+ * if compare stores the characteristics handler of respective service
+ *
+ * @param[in] characteristic_found Discovered characteristics params of a
+ *connected device
+ *
+ */
+void pxp_monitor_characteristic_found_handler(
+		at_ble_characteristic_found_t *characteristic_found);
 
-void pxp_monitor_characteristic_read_response(at_ble_characteristic_read_response_t *char_read_resp);
+/**@brief Discover the Proximity services
+ *
+ * Search will go from start_handle to end_handle, whenever a service is found
+ *and
+ * compare with proximity services and stores the respective handlers
+ * @ref PXP_MONITOR_CONNECTED_STATE_HANDLER event i.
+ *
+ * @param[in] at_ble_primary_service_found_t  Primary service parameter
+ *
+ */
+void pxp_monitor_service_found_handler(
+		at_ble_primary_service_found_t *primary_service_params);
 
-void pxp_monitor_characteristic_found_handler(at_ble_characteristic_found_t *characteristic_found);
-
-void pxp_monitor_service_found_handler(at_ble_primary_service_found_t * primary_service_params);
-
-at_ble_status_t pxp_monitor_connect_request(at_ble_scan_info_t * scan_buffer, uint8_t index);
-
-//void rssi_update (at_ble_handle_t conn_handle);
+/**@brief Connect to a peer device
+ *
+ * Connecting to a peer device, implicitly starting the necessary scan operation
+ *then
+ * connecting if a device in the peers list is found.
+ *
+ * @param[in] scan_buffer a list of peers that the device will connect to one of
+ *them
+ * @param[in] index index of elements in peers, to initiate the connection
+ *
+ * @return @ref AT_BLE_SUCCESS operation programmed successfully
+ * @return @ref AT_BLE_INVALID_PARAM incorrect parameter.
+ * @return @ref AT_BLE_FAILURE Generic error.
+ */
+at_ble_status_t pxp_monitor_connect_request(at_ble_scan_info_t *scan_buffer,
+		uint8_t index);
 
 #endif /*__PXP_MONITOR_H__*/

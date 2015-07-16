@@ -40,20 +40,41 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
+ * Support</a>
+ */
 
 #ifndef __PXP_MONITOR_APP_H__
 #define __PXP_MONITOR_APP_H__
 
+#include "ble_manager.h"
 #include "at_ble_api.h"
+#include "pxp_monitor.h"
+#include "immediate_alert.h"
+#include "console_serial.h"
+#include "timer_hw.h"
+#include "conf_extint.h"
 
+/**@brief Proximity Application initialization
+ * start the scanning process as defined with scan prams
+ */
 void pxp_app_init(void);
+
+/* @brief timer call back for rssi update
+ * enable the flags to execute the application task
+ *
+ */
 void timer_callback_handler(void);
 
-void rssi_update (at_ble_handle_t conn_handle);
-
+/**@brief Check for Link Loss and Path Loss alert
+ * check for Low Alert value if crossed write Low Alert value to Immediate Alert
+ * Service
+ *           High Alert value if crossed write High Alert value to IAS service
+ *
+ * @param[in] conn_handle Connection handle of a connected device
+ */
+void rssi_update(at_ble_handle_t conn_handle);
 
 #endif /*__PXP_MONITOR_H__*/

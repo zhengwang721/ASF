@@ -151,11 +151,11 @@ static inline void ble_manager_dummy_handler(void *param)
 #if defined PROXIMITY_MONITOR
 #define BLE_PROFILE_INIT						pxp_monitor_init
 #define BLE_CONNECTED_STATE_HANDLER(param)		ble_connected_state_handler(param);\
-												pxp_monitor_connected_state_handler(param);
-												
+pxp_monitor_connected_state_handler(param);
+
 #define BLE_DISCONNECTED_STATE_HANDLER(param)	ble_disconnected_state_handler(param);\
-												pxp_disconnect_event_handler(param);
-																								
+pxp_disconnect_event_handler(param);
+
 #define BLE_PRIMARY_SERVICE_FOUND_HANDLER		pxp_monitor_service_found_handler
 #define BLE_DISCOVERY_COMPLETE_HANDLER			pxp_monitor_discovery_complete_handler
 #define	BLE_SCAN_DATA_HANDLER					pxp_monitor_scan_data_handler
