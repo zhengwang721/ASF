@@ -111,8 +111,8 @@ static void uart_set_baudrate(struct uart_module *const module,
 
 	module->hw->UART_CLOCK_SOURCE.reg = UART_UART_CLOCK_SOURCE_CLOCK_SELECT_0;
 	module->hw->UART_BAUD_RATE.reg =
-		((uint32_t)integerpart << UART_UART_BAUD_RATE_INTEGER_DIVISION_Pos) |
-		((uint32_t)fractionalpart << UART_UART_BAUD_RATE_FRACTIONAL_DIVISION_Pos);
+		UART_UART_BAUD_RATE_INTEGER_DIVISION(integerpart) |
+		UART_UART_BAUD_RATE_FRACTIONAL_DIVISION(fractionalpart);
 }
 
 /**
@@ -155,8 +155,7 @@ void uart_get_config_defaults(
  *
  * \return Status of the initialization.
  *
- * \retval UART_STATUS_OK                       The initialization was successful
- * \retval UART_STATUS_ERR_GPIO_NOT_AVAILABLE   Requested GPIO for UART-RXD and UART-TXD is not available.
+ * \retval STATUS_OK                       The initialization was successful
  */
 enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 		const struct uart_config *const config)
@@ -197,15 +196,33 @@ enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 	}
 	config_temp |= config->data_bits;
 	config_temp |= config->stop_bits;
-	if(config->parity != UART_NO_PARITY) {
-		config_temp |= UART_UART_CONFIGURATION_PARITY_ENABLE_1;
-		if(config->parity == UART_ODD_PARITY) {
-			config_temp |= UART_UART_CONFIGURATION_PARITY_MODE_1;				
-		} else if(config->parity == UART_SPACE_PARITY) {
+	switch(config->parity) {
+		case UART_NO_PARITY:
+			config_temp |= UART_UART_CONFIGURATION_PARITY_ENABLE_0;
+			break;
+
+		case UART_EVEN_PARITY:
+			config_temp |= UART_UART_CONFIGURATION_PARITY_ENABLE_1;
+			config_temp |= UART_UART_CONFIGURATION_PARITY_MODE_0;
+			break;
+
+		case UART_ODD_PARITY:
+			config_temp |= UART_UART_CONFIGURATION_PARITY_ENABLE_1;
+			config_temp |= UART_UART_CONFIGURATION_PARITY_MODE_1;
+			break;
+
+		case UART_SPACE_PARITY:
+			config_temp |= UART_UART_CONFIGURATION_PARITY_ENABLE_1;
 			config_temp |= UART_UART_CONFIGURATION_PARITY_MODE_2;
-		} else if(config->parity == UART_MARK_PARITY) {
+			break;
+
+		case UART_MARK_PARITY:
+			config_temp |= UART_UART_CONFIGURATION_PARITY_ENABLE_1;
 			config_temp |= UART_UART_CONFIGURATION_PARITY_MODE_3;
-		}
+			break;
+
+		default:
+			break;
 	}	
 	module->hw->UART_CONFIGURATION.reg = config_temp;
 
@@ -228,7 +245,7 @@ enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 * \param[in]  tx_data  Data to transfer
 *
 * \return Status of the operation.
-* \retval UART_STATUS_OK         If the operation was completed
+* \retval STATUS_OK         If the operation was completed
 */
 enum status_code uart_write_wait(struct uart_module *const module,
 		const uint8_t tx_data)
@@ -249,7 +266,7 @@ enum status_code uart_write_wait(struct uart_module *const module,
 * \param[out]  rx_data  Pointer to received data
 *
 * \return Status of the operation.
-* \retval UART_STATUS_OK                If the operation was completed
+* \retval STATUS_OK                If the operation was completed
 */
 enum status_code uart_read_wait(struct uart_module *const module,
 		uint8_t *const rx_data)
@@ -276,7 +293,7 @@ enum status_code uart_read_wait(struct uart_module *const module,
 * \param[in]  length   Number of characters to transmit
 * 
 * \return Status of the operation.
-* \retval UART_STATUS_OK              If operation was completed
+* \retval STATUS_OK              If operation was completed
 */
 enum status_code uart_write_buffer_wait(struct uart_module *const module, 
 		const uint8_t *tx_data, uint32_t length)
@@ -302,7 +319,7 @@ enum status_code uart_write_buffer_wait(struct uart_module *const module,
  * \param[in]  length   Number of characters to receive
  *
  * \return Status of the operation.
- * \retval UART_STATUS_OK                If operation was completed
+ * \retval STATUS_OK                If operation was completed
  */
 enum status_code uart_read_buffer_wait(struct uart_module *const module,
 		uint8_t *rx_data, uint16_t length)
