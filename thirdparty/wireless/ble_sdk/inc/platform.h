@@ -53,6 +53,14 @@
 #include <string.h>
 #include "at_ble_api.h"
 
+typedef enum {
+	BLE_IDLE_STATE = 0,
+	BLE_SOF_STATE,
+	BLE_HEADER_STATE,
+	BLE_PAYLOAD_STATE,
+	BLE_EOF_STATE
+}ble_serial_state_t;
+
 typedef struct{
 	uint8_t (*wr_api32) (uint32_t memAddr,uint32_t* data,uint8_t size);
 	uint8_t (*wr_api32_reset) (uint32_t memAddr,uint32_t* data,uint8_t size);
@@ -123,6 +131,15 @@ void platform_event_signal(void);
   */
 uint8_t platform_event_wait(uint32_t timeout);
 void fw_led(bool tempo);
+
+ /** @brief receives the bytes from platform driver
+  *  @note more details at the platform porting guide
+  *
+  * @param[out] at_ble_status_t AT_BLE_SUCCESS or AT_BLE_FAILURE
+  *
+  */
+at_ble_status_t platform_ble_event_data(void);
+
  /** @}*/
 
 #endif // __PLATFORM_H__

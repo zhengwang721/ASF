@@ -53,8 +53,6 @@
 
 #define DEBUG_LOG
 
-//#define BY_DEFAULT_CONN
-
 #include <asf.h>
 #include "platform.h"
 #include "at_ble_api.h"
@@ -138,9 +136,6 @@ void pxp_app_init(void)
 
 int main (void)
 {
-	at_ble_events_t event;
-	uint8_t params[512];
-	
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -168,46 +163,25 @@ int main (void)
 	
 	while(1)
 	{
-		if(at_ble_event_get(&event, params,-1) == AT_BLE_SUCCESS)
-		{
-			ble_event_manager(event, params);
-		}
+		/* BLE Event Task */
+		ble_event_task();
+		
+		/* Application Task */				
 		if(app_timer_done )
 		{
 			rssi_update(ble_connected_dev_info[0].handle);
 			hw_timer_start(PXP_RSSI_UPDATE_INTERVAL);
 			app_timer_done = false;
-		}	
+		}
 	}
-	
 }
 
 // timer routine for rssi calculation
 void timer_callback_handler(void)
 {
-
-	//int8_t rssi_power;
-	//uint32_t i,j;
-	//
-	//at_ble_handle_t conn_handle = 0xff;
-		
+	/* Stop the timer*/
 	hw_timer_stop();
 	
+	/* Enable the flag the serve the task*/
 	app_timer_done = true;
-	
-	//conn_handle=ble_connected_dev_info[0].handle;
-	//DBG_LOG("%02d",conn_handle);
-	
-	
-	///* Get the Received signal strength intensity of the connect device/handle*/
-	//while(1)
-	//{
-		//rssi_power = at_ble_rx_power_get(ble_connected_dev_info[0].handle);
-		//DBG_LOG("Rx power is %04d dBm", rssi_power);
-		//for(i=0;i<0xffff;i++)
-		//for(j=0;j<256;j++);
-	//}
-	
-	//rssi_update(ble_connected_dev_info[0].handle);
-	
 }

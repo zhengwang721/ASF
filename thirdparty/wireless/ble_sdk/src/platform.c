@@ -56,14 +56,30 @@ static volatile uint32_t event_flag = 0;
 extern ser_fifo_desc_t ble_usart_tx_fifo;
 extern ser_fifo_desc_t ble_usart_rx_fifo;
 
-typedef struct ble_event_frame{
+#define BLE_SERIAL_START_BYTE (0x05)
+
+#define BLE_SERIAL_HEADER_LEN (0x09)
+
+
+
+COMPILER_PACK_SET(1)	
+typedef struct ble_event_header{
+		uint16_t msg_id;
+		uint16_t dest_task_id;
+		uint16_t src_task_id;
+		uint16_t payload_len;
+}ble_event_header_t;
+
+typedef struct ble_event_frame{	
 	uint8_t start_byte;
-	uint16_t msg_id;
-	uint16_t dest_task_id;
-	uint16_t src_task_id;
-	uint16_t payload_len;
-	uint8_t payload[BLE_MAX_TX_PAYLOAD_SIZE];
+	ble_event_header_t header;
+	uint8_t payload[BLE_MAX_RX_PAYLOAD_SIZE];
 }ble_event_frame_t;
+COMPILER_PACK_RESET()
+
+volatile ble_serial_state_t ble_rx_state = BLE_SOF_STATE;
+
+ble_event_frame_t ble_evt_frame;
 
 //#define BLE_DBG_ENABLE
 #define DBG_LOG_BLE		printf
@@ -183,31 +199,105 @@ void platform_event_signal()
 uint8_t platform_event_wait(uint32_t timeout)
 {
 	uint8_t status = AT_BLE_SUCCESS;
-	uint32_t t_rx_data;
-	
-	start_timer(timeout);
-	do 
+	if (ble_rx_state == BLE_EOF_STATE)
 	{
-		if(ser_fifo_pull_uint8(&ble_usart_rx_fifo, (uint8_t *)&t_rx_data) == SER_FIFO_OK)
-		{
-			platform_interface_callback((uint8_t *)&t_rx_data, 1);
-		}
-	}while((event_flag != 1) && (timer_done()>0));
-	if (event_flag == 1)
-	{
-		event_flag = 0;
-	#ifdef BLE_DBG_ENABLE
-		DBG_LOG_BLE("\r\nSS\n");
-	#endif
-	}	
+		printf("\r\nMSG-ID:0x%X", ble_evt_frame.header.msg_id);
+		platform_interface_callback((uint8_t *)&ble_evt_frame, (ble_evt_frame.header.payload_len + BLE_SERIAL_HEADER_LEN));
+		ble_rx_state = BLE_SOF_STATE;
+	}
 	else
 	{
-		status = AT_BLE_TIMEOUT;
-	#ifdef BLE_DBG_ENABLE
-		DBG_LOG_BLE("\r\nSF\n");
-	#endif
+		uint32_t t_rx_data;
+	
+		start_timer(timeout);
+		do
+		{
+			if(ser_fifo_pull_uint8(&ble_usart_rx_fifo, (uint8_t *)&t_rx_data) == SER_FIFO_OK)
+			{
+				platform_interface_callback((uint8_t *)&t_rx_data, 1);
+			}
+		}while((event_flag != 1) && (timer_done()>0));
+		if (event_flag == 1)
+		{
+			event_flag = 0;
+			#ifdef BLE_DBG_ENABLE
+			DBG_LOG_BLE("\r\nSS\n");
+			#endif
+		}
+		else
+		{
+			status = AT_BLE_TIMEOUT;
+			#ifdef BLE_DBG_ENABLE
+			DBG_LOG_BLE("\r\nSF\n");
+			#endif
+		}		
 	}
 	return status;
+}
+
+at_ble_status_t platform_ble_event_data(void)
+{
+	uint32_t t_rx_data = 0;
+	static uint16_t received_index = 0;
+	if (ble_rx_state == BLE_EOF_STATE)
+	{
+		return AT_BLE_SUCCESS;
+	}
+	
+	while(ser_fifo_pull_uint8(&ble_usart_rx_fifo, (uint8_t *)&t_rx_data) == SER_FIFO_OK)
+	{
+		if (ble_rx_state == BLE_SOF_STATE)
+		{
+			if (t_rx_data == BLE_SERIAL_START_BYTE)
+			{
+				ble_evt_frame.start_byte = t_rx_data;
+				ble_rx_state = BLE_HEADER_STATE;
+				received_index = 0;
+			}
+		}
+		else if (ble_rx_state == BLE_HEADER_STATE)
+		{
+			uint8_t *header_p = (uint8_t *)&ble_evt_frame.header;
+			if (received_index < BLE_SERIAL_HEADER_LEN - 2)
+			{
+				header_p[received_index++] = t_rx_data;
+			}
+			else
+			{
+				header_p[received_index++] = t_rx_data;
+				if (ble_evt_frame.header.payload_len)
+				{
+					if (ble_evt_frame.header.payload_len < BLE_MAX_TX_PAYLOAD_SIZE)
+					{
+						ble_rx_state = BLE_PAYLOAD_STATE;
+						received_index = 0;
+					}
+					else
+					{
+						/* Received Wrong size of data */
+						ble_rx_state = BLE_SOF_STATE;
+					}
+					
+				}
+				else
+				{				
+					ble_rx_state = BLE_EOF_STATE;
+					return AT_BLE_SUCCESS; 
+				}
+				
+			}			
+		}
+		else if (ble_rx_state == BLE_PAYLOAD_STATE)
+		{
+			ble_evt_frame.payload[received_index++] = t_rx_data;
+			if(received_index == ble_evt_frame.header.payload_len)
+			{			
+				ble_rx_state = BLE_EOF_STATE;
+				return AT_BLE_SUCCESS;
+			}
+		}	
+	}
+	return AT_BLE_FAILURE;
 }
 
 void serial_rx_callback(void) {}
