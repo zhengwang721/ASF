@@ -57,7 +57,7 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-//! Checking board configuration of the AT24C EEPROM
+//! Checking board configuration of the AT24MAC EEPROM
 #if !defined(BOARD_AT24MAC_TWIHS_INSTANCE)
 # warning The AT24MAC TWIHS instance has not been defined. Using default settings.
 # define BOARD_AT24MAC_TWIHS_INSTANCE      TWIHS0 /* TWIHS instance (TWIHS0) */
