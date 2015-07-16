@@ -112,11 +112,10 @@ void pxp_monitor_init(void)
 /**@brief Connect to a peer device
  *
  * Connecting to a peer device, implicitly starting the necessary scan operation
- *then
- * connecting if a device in the peers list is found.
+ * then connecting if a device in the peers list is found.
  *
  * @param[in] scan_buffer a list of peers that the device will connect to one of
- *them
+ * them
  * @param[in] index index of elements in peers, to initiate the connection
  *
  * @return @ref AT_BLE_SUCCESS operation programmed successfully
@@ -144,9 +143,8 @@ at_ble_status_t pxp_monitor_connect_request(at_ble_scan_info_t *scan_buffer,
 }
 
 /**@brief Search for a given AD type in a buffer, received from advertising
- * packets
- *
- * starts search form the buffer, need to provide required search params
+ * packets starts search from the buffer, need to provide required 
+ * search params
  *
  * @param[in] scan_buffer where all received advertising packet are stored
  * @param[in] scanned_dev_count elements in scan_buffer
@@ -165,7 +163,7 @@ at_ble_status_t pxp_monitor_scan_data_handler(at_ble_scan_info_t *scan_buffer,
 		for (index = 0; index < scanned_dev_count; index++) {
 			at_ble_uuid_t service_uuid;
 
-			/* Service type to be searched*/
+			/* Service type to be searched */
 			service_uuid.type = AT_BLE_UUID_16;
 
 			/* Service UUID */
@@ -235,9 +233,9 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
  *
  * After connecting to the peer device start the GATT primary discovery
  *
- * @param[in] at_ble_connected_t parameters of the established connection
+ * @param[in] conn_params parameters of the established connection
  *
- * @return @ref AT_BLE_SUCCESS operation programmed successfully.
+ * @return @ref AT_BLE_SUCCESS operation successfully.
  * @return @ref AT_BLE_INVALID_PARAM if GATT discovery parameter are incorrect
  *parameter.
  * @return @ref AT_BLE_FAILURE Generic error.
@@ -338,9 +336,7 @@ void pxp_monitor_service_found_handler(
  * @ref AT_BLE_CHARACTERISTIC_FOUND event is sent and @ref
  *AT_BLE_DISCOVERY_COMPLETE is sent at end of discover operation.
  *
- * @param[in] discover_status discovery status on each
- * @param[in] start_handle start of the searched range
- * @param[in] end_handle   end of the searched range
+ * @param[in] discover_status discovery status of each handle
  *
  */
 void pxp_monitor_discovery_complete_handler(
@@ -453,7 +449,6 @@ void pxp_monitor_characteristic_read_response(
 	lls_alert_read_response(char_read_resp, &lls_handle);
 #endif
 
-	/* rssi_update(ble_connected_dev_info[0].handle); */
 	hw_timer_start(PXP_RSSI_UPDATE_INTERVAL);
 }
 

@@ -3,7 +3,7 @@
  *
  * \brief Proximity Monitor Profile Application declarations
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -58,20 +58,20 @@
 #include "conf_extint.h"
 
 /**@brief Proximity Application initialization
- * start the scanning process as defined with scan prams
+ * as part of it start the scanning process as defined with scan param
  */
 void pxp_app_init(void);
 
-/* @brief timer call back for rssi update
+/* @brief timer call back
  * enable the flags to execute the application task
  *
  */
 void timer_callback_handler(void);
 
 /**@brief Check for Link Loss and Path Loss alert
- * check for Low Alert value if crossed write Low Alert value to Immediate Alert
- * Service
- *           High Alert value if crossed write High Alert value to IAS service
+ * check for Low Alert value if the exceeds the rssi range, write 
+ * Low Alert value to Immediate Alert Service
+ *           High Alert value if crossed, write High Alert value to IAS service
  *
  * @param[in] conn_handle Connection handle of a connected device
  */

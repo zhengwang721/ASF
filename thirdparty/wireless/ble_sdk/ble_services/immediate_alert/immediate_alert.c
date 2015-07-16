@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Immediate Alert Service declarations
+ * \brief Immediate Alert Service
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -62,7 +62,7 @@
  *
  * @param[in] conn_handle handle of the connection
  * @param[in] char_handle handle of the characteristic
- * @param[in] alert level need to write
+ * @param[in] alert_level alert level need to write
  *
  * @return @ref AT_BLE_SUCCESS operation completed successfully
  * @return @ref AT_BLE_FAILURE Generic error.

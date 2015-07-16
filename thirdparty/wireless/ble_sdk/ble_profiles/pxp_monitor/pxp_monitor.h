@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Proximity Monitor Profile Application declarations
+ * \brief Proximity Monitor Profile declarations
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -51,6 +51,7 @@
 
 #include "ble_manager.h"
 
+/* Enables proximity monitor profile */
 #define PROXIMITY_MONITOR
 
 typedef enum {
@@ -63,7 +64,7 @@ typedef enum {
 #define PXP_LOW_ALERT_RANGE             (-70)
 #define PXP_HIGH_ALERT_RANGE            (-90)
 
-#define PXP_ASCII_TO_DECIMAL_VALUE      (48)
+#define PXP_ASCII_TO_DECIMAL_VALUE      ('0')
 
 /* *@brief Initializes Proximity profile
  * handler Pointer reference to respective variables

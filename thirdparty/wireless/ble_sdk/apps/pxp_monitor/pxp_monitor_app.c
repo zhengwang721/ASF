@@ -3,7 +3,7 @@
  *
  * \brief Proximity Monitor Profile Application
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -60,8 +60,6 @@
 
 #include "pxp_monitor_app.h"
 
-at_ble_primary_service_found_t service_avail[6];
-
 at_ble_addr_t peer_addr
 	= {AT_BLE_ADDRESS_PUBLIC, {0x03, 0x18, 0xf0, 0x05, 0xf0, 0xf8}};
 
@@ -94,13 +92,13 @@ void rssi_update(at_ble_handle_t conn_handle)
 	/* if received rssi is above no alert zone and below high alert zone */
 	if ((rssi_power < PXP_LOW_ALERT_RANGE) &&
 			(rssi_power > PXP_HIGH_ALERT_RANGE)) {
-		ias_alert_level_write(conn_handle, lls_handle.char_handle,
+		ias_alert_level_write(conn_handle, ias_handle.char_handle,
 				IAS_LOW_ALERT);
 		DBG_LOG("LOW ALERT");
 	}
 	/* if received rssi is above no alert zone and below high alert zone */
-	else if (rssi_power > PXP_HIGH_ALERT_RANGE) {
-		ias_alert_level_write(conn_handle, lls_handle.char_handle,
+	else if (rssi_power < PXP_HIGH_ALERT_RANGE) {
+		ias_alert_level_write(conn_handle, ias_handle.char_handle,
 				IAS_HIGH_ALERT);
 		DBG_LOG("HIGH ALERT");
 	}
@@ -145,7 +143,7 @@ int main(void)
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);
 
-	/* initialize the ble chip  and Set the device mac address */
+	/* initialize the BLE chip  and Set the device mac address */
 	ble_device_init(NULL);
 
 	DBG_LOG("Initializing Proximity Monitor Application");
@@ -172,9 +170,9 @@ int main(void)
  */
 void timer_callback_handler(void)
 {
-	/* Stop the timer*/
+	/* Stop the timer */
 	hw_timer_stop();
 
-	/* Enable the flag the serve the task*/
+	/* Enable the flag the serve the task */
 	app_timer_done = true;
 }

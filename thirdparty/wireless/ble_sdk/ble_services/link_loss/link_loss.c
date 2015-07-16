@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Link Loss Service declarations
+ * \brief Link Loss Service
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
