@@ -93,11 +93,6 @@
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
-/* Chip select. */
-#define QSPI_NOT_RELOADED         0
-#define QSPI_LASTXFER             1
-#define QSPI_SYSTEMATICALLY       2
-
 /* Clock polarity. */
 #define QSPI_CLK_POLARITY         0
 
@@ -110,35 +105,11 @@
 /* Delay between consecutive transfers. */
 #define QSPI_DLYBCT               0x10
 
-/* QSPI clock setting (Hz). */
-static uint32_t gs_spi_clock = 1000000;
+struct qspid_t g_qspid = {QSPI, 0, 0, 0};
 
-qspid_t g_qspid = {
-	QSPI,
-	mem_mode,
-	0,
-	0,
-	0
-};
+struct qspi_config_t mode_config = {0, false, false, 0, 0, 0, 0, 0, 0, 0, 0, false, false, 0};
 
-qspi_config_t mode_config = {
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0
-};
-
-unsigned char buffercode[] = {
+uint8_t buffercode[] = {
 	0x50, 0x10, 0x44, 0x20, 0xB5, 0x19, 0x00, 0x80, 0x09, 0x15, 0x00, 0x80,
 	0x61, 0x15, 0x00, 0x80, 0x71, 0x15, 0x00, 0x80
 };
@@ -219,16 +190,16 @@ int main(void)
 	s25fl1xx_read_quad_io(&g_qspid, buffer, sizeof(buffer), 0, 1, 0);
 
 	memory = (uint8_t *)QSPIMEM_ADDR;
-	for(idx = 0; idx < sizeof(buffercode); idx++) {
+	for (idx = 0; idx < sizeof(buffercode); idx++) {
 		if(*memory == buffercode[idx]) {
 			memory++;
 		} else {
 			mem_verified = 1;
-			printf("\nData does not match at 0x%x \r", memory);
+			printf("\nData does not match at 0x%x \r", (int)memory);
 			break;
 		}
 	}
-	if(!mem_verified) {
+	if (!mem_verified) {
 		puts("Everything is OK \r");
 		/* set PC and SP */
 		__start_new = (uint32_t(*) (void) ) buffer[1];

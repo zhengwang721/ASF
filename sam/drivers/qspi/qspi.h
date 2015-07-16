@@ -64,24 +64,29 @@ extern "C" {
 #define QSPI_WPMR_WPKEY_PASSWD QSPI_WPMR_WPKEY((uint32_t) 0x515350)
 #endif
 
-/**
- * \brief qspi enum types for QSPI modes.
- */
-typedef enum{
-	spi_mode = QSPI_MR_SMM_SPI,
-	mem_mode = QSPI_MR_SMM_MEMORY
-}qspi_mode_t;
+/** QSPI chip select mode. */
+#define QSPI_NOT_RELOADED         0
+#define QSPI_LASTXFER             1
+#define QSPI_SYSTEMATICALLY       2
 
 /**
- * \brief qspi frame structure for QSPI mode
+ * \brief Qspi enum types for QSPI modes.
  */
-typedef struct {
+enum qspi_run_mode {
+	spi_mode = QSPI_MR_SMM_SPI,
+	mem_mode = QSPI_MR_SMM_MEMORY
+};
+
+/**
+ * \brief Qspi frame structure for QSPI mode
+ */
+struct qspi_inst_frame_t {
 	union _qspiinst_frame {
 		uint32_t val;
 		struct _qspiinst_frame_bitmap {
 					/** Width of QSPI Addr , inst data */
 			uint32_t b_width:3,
-					/** Reserved*/
+					/** Reserved */
 					reserved0:1,
 					/** Enable Inst */
 					b_inst_en:1,
@@ -91,31 +96,31 @@ typedef struct {
 					b_opt_en:1,
 					/** Enable Data */
 					b_data_en:1,
-					/** Option Length*/
+					/** Option Length */
 					b_opt_len:2,
-					/** Addrs Length*/
+					/** Addrs Length */
 					b_addr_len:1,
-					/** Option Length*/
+					/** Option Length */
 					reserved1:1,
-					/** Transfer type*/
+					/** Transfer type */
 					b_tfr_type:2,
-					/** Continoues read mode*/
+					/** Continoues read mode */
 					b_continues_read:1,
 					/** Reserved*/
 					reserved2:1,
 					/**< Unicast hash match */
 					b_dummy_cycles:5,
-					/** Reserved*/
+					/** Reserved */
 					reserved3:11;
 		} bm;
 	} inst_frame;
   uint32_t       addr;
-}qspi_inst_frame_t;
+};
 
 /**
- * \brief qspi buffer structure
+ * \brief Qspi buffer structure
  */
-typedef struct {
+struct qspi_buffer_t {
 	/** Tx buffer size */
 	uint32_t      tx_data_size;
 	/** Rx buffer size */
@@ -124,113 +129,80 @@ typedef struct {
 	uint32_t      *data_tx;
 	/** Rx buffer */
 	uint32_t      *data_rx;
-}qspi_buffer_t;
+};
 
 /**
- * \brief qspi command structure
+ * \brief Qspi command structure
  */
-typedef struct {
-	/** Qspi instruction code*/
+struct qspi_mem_cmd_t {
+	/** Qspi instruction code */
 	uint8_t       instruction;
-	/** Qspi option code*/
+	/** Qspi option code */
 	uint8_t       option;
-}qspi_mem_cmd_t;
+};
 
 /**
- * \brief qspi driver structure
+ * \brief Qspi driver structure
  */
-typedef struct {
+struct qspid_t {
 	/** QSPI Hw instance */
 	Qspi               *qspi_hw;
-	/** Qspi mode: SPI or Serial Memory */
-	qspi_mode_t        qspi_mode;
-	/** Qspi command structure*/
-	qspi_mem_cmd_t     qspi_command;
-	/** Qspi buffer*/
-	qspi_buffer_t      qspi_buffer;
-	/** Qspi QSPI mode Frame register informations*/
-	qspi_inst_frame_t  *qspi_frame;
-}qspid_t;
+	/** Qspi command structure */
+	struct qspi_mem_cmd_t     qspi_command;
+	/** Qspi buffer */
+	struct qspi_buffer_t      qspi_buffer;
+	/** Qspi QSPI mode Frame register informations */
+	struct qspi_inst_frame_t  *qspi_frame;
+};
 
 /**
- * \brief qspi config structure
+ * \brief Qspi config structure
  */
-typedef struct {
-	/** Qspi serial memory mode*/
-	uint32_t       serial_memory;
-	/** local loopback enable*/
-	uint32_t       loopback_en;
-	/** wait data read for transfer*/
-	uint32_t       wait_data_for_transfer;
-	/** chip select mode*/
-	uint32_t       csmode;
-	/** numbers of bits per transfer*/
-	uint32_t       bits_per_transfer;
-	/** minimum inactive QCS delay*/
-	uint32_t       min_delay_qcs;
-	/** delay between consecutive transfers*/
-	uint32_t       delay_between_ct;
-	/** Qspi clock polarity*/
-	uint32_t       clock_polarity;
-	/** Qspi clock phase*/
-	uint32_t       clock_phase;
-	/** Qspi baudrate*/
-	uint32_t       baudrate;
-	/** Qspi transfer delay*/
-	uint32_t       transfer_delay;
-	/** Scrambling/Unscrambling Enable*/
-	uint32_t      scrambling_en;
-	/** Scrambling/Unscrambling Random Value Disable*/
-	uint32_t      scrambling_random_value_dis;
-	/** Scrambling User Key*/
-	uint32_t      scrambling_user_key;
-}qspi_config_t;
+struct qspi_config_t {
+	/** Qspi serial memory mode */
+	enum qspi_run_mode  serial_memory_mode;
+	/** Local loop back enable */
+	bool                loopback_en;
+	/** Wait data read for transfer */
+	bool                wait_data_for_transfer;
+	/** Chip select mode */
+	uint32_t            csmode;
+	/** Numbers of bits per transfer */
+	uint32_t            bits_per_transfer;
+	/** Minimum inactive QCS delay */
+	uint32_t            min_delay_qcs;
+	/** Delay between consecutive transfers */
+	uint32_t            delay_between_ct;
+	/** Qspi clock polarity */
+	uint32_t            clock_polarity;
+	/** Qspi clock phase */
+	uint32_t            clock_phase;
+	/** Qspi baudrate(Hz) */
+	uint32_t            baudrate;
+	/** Qspi transfer delay */
+	uint32_t            transfer_delay;
+	/** Scrambling/unscrambling enable */
+	bool                scrambling_en;
+	/** Scrambling/unscrambling random value disable */
+	bool                scrambling_random_value_dis;
+	/** Scrambling user key */
+	uint32_t            scrambling_user_key;
+};
 
 /**
- * \brief qspi access modes
+ * \brief Qspi access modes
  */
-typedef enum{
-	/** cmd access*/
-	cmd_access  = 0,
-	/** read access*/
-	read_access,
-	/** write access*/
-	write_access
-}qspi_access_t;
+enum qspi_access {
+	/** Cmd access */
+	QSPI_CMD_ACCESS  = 0,
+	/** Read access */
+	QSPI_READ_ACCESS,
+	/** Write access */
+	QSPI_WRITE_ACCESS
+};
 
 /**
- * \brief Issue a LASTXFER command.
- *  The next transfer is the last transfer and after that CS is de-asserted.
- *
- * \param qspi Pointer to an QSPI instance.
- */
-static inline void qspi_set_lastxfer(Qspi *qspi)
-{
-	qspi->QSPI_CR = QSPI_CR_LASTXFER;
-}
-
-/**
- * \brief Set QSPI to Memory mode.
- *
- * \param spi Pointer to an QSPI instance.
- */
-static inline void qspi_set_memory_mode(Qspi *qspi)
-{
-	qspi->QSPI_MR |= QSPI_MR_SMM_MEMORY;
-}
-
-/**
- * \brief Set QSPI to SPI mode (Master mode only).
- *
- * \param qspi Pointer to an QSPI instance.
- */
-static inline void qspi_set_spi_mode(Qspi *qspi)
-{
-	qspi->QSPI_MR &= (~QSPI_MR_SMM_SPI);
-}
-
-/**
- * \brief Enable loopback mode.
+ * \brief Enable loop back mode.
  *
  * \param qspi Pointer to an QSPI instance.
  */
@@ -240,56 +212,13 @@ static inline void qspi_enable_loopback(Qspi *qspi)
 }
 
 /**
- * \brief Disable loopback mode.
+ * \brief Disable loop back mode.
  *
  * \param qspi Pointer to an QSPI instance.
  */
 static inline void qspi_disable_loopback(Qspi *qspi)
 {
 	qspi->QSPI_MR &= (~QSPI_MR_LLB);
-}
-
-/**
- * \brief Enable waiting RX_EMPTY before transfer starts.
- *
- * \param qspi Pointer to an QSPI instance.
- */
-static inline void qspi_wait_data_read_before_transfer(Qspi *qspi)
-{
-	qspi->QSPI_MR |= QSPI_MR_WDRBT;
-}
-
-/**
- * \brief Disable waiting RX_EMPTY before transfer starts.
- *
- * \param qspi Pointer to an QSPI instance.
- */
-static inline void qspi_disable_tx_on_rx_empty(Qspi *qspi)
-{
-	qspi->QSPI_MR &= (~QSPI_MR_WDRBT);
-}
-
-/**
- * \brief Set Chip Select Mode.
- *
- * \param qspi Pointer to an QSPI instance.
- * \param csmode Chip select mode to be set.
- */
-static inline void qspi_set_chip_select_mode(Qspi *qspi, uint32_t csmode)
-{
-	uint32_t mask = qspi->QSPI_MR & (~QSPI_MR_CSMODE_Msk);
-	qspi->QSPI_MR = mask | QSPI_MR_CSMODE(csmode);
-}
-
-/**
- * \brief Set the number of data bits transferred.
- *
- * \param qspi Pointer to an QSPI instance.
- */
-static inline void qspi_set_bits_per_transfer(Qspi *qspi, uint32_t bits)
-{
-	uint32_t mask = qspi->QSPI_MR & (~QSPI_MR_NBBITS_Msk);
-	qspi->QSPI_MR = mask | bits;
 }
 
 /**
@@ -350,62 +279,6 @@ static inline void qspi_disable( Qspi *qspi )
 }
 
 /**
- * \brief Set a QSPI peripheral run mode.
- *
- * \param qspi  Pointer to a Qspi instance.
- * \param mode qspi run mode to be set.
- */
-static inline void qspi_set_run_mode(Qspi *qspi, uint32_t mode)
-{
-	assert(qspi);
-	if (mode == 0) {
-		qspi->QSPI_MR &= (~QSPI_MR_SMM_MEMORY);
-	} else {
-		qspi->QSPI_MR |= QSPI_MR_SMM_MEMORY;
-	}
-}
-
-/**
- * \brief Set qspi minimum inactive qcs delay.
- *
- * \param qspi  Pointer to a Qspi instance.
- * \param uc_dlybct Time to be delay.
- */
-static inline void qspi_set_minimum_inactive_qcs_delay(Qspi *qspi, uint8_t uc_dlybct)
-{
-	assert(qspi);
-
-	uint32_t mask = qspi->QSPI_MR & (~QSPI_MR_DLYBCT_Msk);
-	qspi->QSPI_MR = mask | QSPI_MR_DLYBCT(uc_dlybct);
-}
-
-/**
- * \brief Set qspi delay between consecutive transfers.
- *
- * \param qspi  Pointer to a Qspi instance.
- * \param uc_dlycs Time to be delay.
- */
-static inline void qspi_set_delay_between_consecutive_transfers(Qspi *qspi, uint32_t uc_dlycs)
-{
-	assert(qspi);
-
-	uint32_t mask = qspi->QSPI_MR & (~QSPI_MR_DLYCS_Msk);
-	qspi->QSPI_MR = mask | QSPI_MR_DLYCS(uc_dlycs);
-}
-
-/**
- * \brief Ends ongoing transfer by releasing CS of QSPI peripheral.
- *
- * \param pQspi  Pointer to an Qspi instance.
- */
-static inline void qspi_end_transfer(Qspi *qspi)
-{
-	assert(qspi);
-	while(!(qspi->QSPI_SR & QSPI_SR_TXEMPTY));
-	qspi->QSPI_CR = QSPI_CR_LASTXFER;
-}
-
-/**
  * \brief Set qspi clock polarity.
  *
  * \param qspi  Pointer to a Qspi instance.
@@ -441,7 +314,7 @@ static inline void qspi_set_clock_phase(Qspi *qspi, uint32_t phase)
  * \brief Set qspi clock baudrate.
  *
  * \param qspi  Pointer to a Qspi instance.
- * \param uc_baudrate_div Baudrate_div to be set.
+ * \param uc_baudrate_div   Baudrate_div to be set.
  */
 static inline void qspi_set_baudrate(Qspi *qspi, uint8_t uc_baudrate_div)
 {
@@ -451,23 +324,10 @@ static inline void qspi_set_baudrate(Qspi *qspi, uint8_t uc_baudrate_div)
 }
 
 /**
- * \brief Set qspi clock transfer delay.
- *
- * \param qspi  Pointer to a Qspi instance.
- * \param uc_dlybs Delay before QSCK.
- */
-static inline void qspi_set_transfer_delay(Qspi *qspi, uint8_t uc_dlybs)
-{
-	assert(qspi);
-	uint32_t mask = qspi->QSPI_SCR & (~QSPI_SCR_DLYBS_Msk);
-	qspi->QSPI_SCR = mask | QSPI_SCR_DLYBS(uc_dlybs);
-}
-
-/**
  * \brief Set qspi instruction addr.
  *
  * \param qspi  Pointer to a Qspi instance.
- * \param addr Address to be set.
+ * \param addr  Address to be set.
  */
 static inline void qspi_set_instruction_addr(Qspi *qspi, uint32_t addr)
 {
@@ -479,9 +339,9 @@ static inline void qspi_set_instruction_addr(Qspi *qspi, uint32_t addr)
  * \brief Set qspi instruction code.
  *
  * \param qspi  Pointer to a Qspi instance.
- * \param instruction_code Code to be set.
+ * \param instruction_code    Code to be set.
  */
-static inline void qspi_set_instruction_code(Qspi *qspi, qspi_mem_cmd_t instruction_code)
+static inline void qspi_set_instruction_code(Qspi *qspi, struct qspi_mem_cmd_t instruction_code)
 {
 	assert(qspi);
 	qspi->QSPI_ICR = QSPI_ICR_INST(instruction_code.instruction) | QSPI_ICR_OPT(instruction_code.option);
@@ -491,9 +351,9 @@ static inline void qspi_set_instruction_code(Qspi *qspi, qspi_mem_cmd_t instruct
  * \brief Set qspi instruction frame.
  *
  * \param qspi  Pointer to a Qspi instance.
- * \param instruction_frame Frame to be set.
+ * \param instruction_frame   Frame to be set.
  */
-static inline void qspi_set_instruction_frame(Qspi *qspi, qspi_inst_frame_t instruction_frame)
+static inline void qspi_set_instruction_frame(Qspi *qspi, struct qspi_inst_frame_t instruction_frame)  //remove inline
 {
 	assert(qspi);
 	uint32_t mask = 0;
@@ -538,7 +398,7 @@ static inline uint32_t qspi_get_inst_frame(Qspi *qspi)
  * \brief Set qspi scrambling mode.
  *
  * \param qspi  Pointer to a Qspi instance.
- * \param mode Mode to be set.
+ * \param mode  Mode to be set.
  */
 static inline void qspi_set_scrambling_mode(Qspi *qspi, uint32_t scr_enable, uint32_t random_mode)
 {
@@ -546,15 +406,15 @@ static inline void qspi_set_scrambling_mode(Qspi *qspi, uint32_t scr_enable, uin
 	qspi->QSPI_SMR &= (~(QSPI_SMR_SCREN | QSPI_SMR_RVDIS));
 
 	if (scr_enable) {
-		qspi->QSPI_SCR |= QSPI_SMR_SCREN;
+		qspi->QSPI_SMR |= QSPI_SMR_SCREN;
 	} else {
-		qspi->QSPI_SCR &= (~QSPI_SMR_SCREN);
+		qspi->QSPI_SMR &= (~QSPI_SMR_SCREN);
 	}
 
 	if (random_mode) {
-		qspi->QSPI_SCR |= QSPI_SMR_RVDIS;
+		qspi->QSPI_SMR |= QSPI_SMR_RVDIS;
 	} else {
-		qspi->QSPI_SCR &= (~QSPI_SMR_RVDIS);
+		qspi->QSPI_SMR &= (~QSPI_SMR_RVDIS);
 	}
 }
 
@@ -562,7 +422,7 @@ static inline void qspi_set_scrambling_mode(Qspi *qspi, uint32_t scr_enable, uin
  * \brief Set qspi scrambling key.
  *
  * \param qspi  Pointer to a Qspi instance.
- * \param mode Mode to be set.
+ * \param mode  Mode to be set.
  * \return If write succeeded, return 0, else return 1.
  */
 static inline uint32_t qspi_set_scrambing_key(Qspi *qspi, uint32_t key)
@@ -579,7 +439,8 @@ static inline uint32_t qspi_set_scrambing_key(Qspi *qspi, uint32_t key)
 /**
  * \brief Enable write protection.
  *
- * \param qspi  Pointer to a Qspi instance.
+ * \param qspi    Pointer to a Qspi instance.
+ * \param enable  Enable or disable write protect.
  * \enable Protection status to be set.
  */
 static inline void qspi_set_writeprotect(Qspi *qspi, uint32_t enable)
@@ -590,33 +451,6 @@ static inline void qspi_set_writeprotect(Qspi *qspi, uint32_t enable)
 	} else {
 		qspi->QSPI_WPMR &= (~(QSPI_WPMR_WPKEY_PASSWD | QSPI_WPMR_WPEN));
 	}
-}
-
-/**
- * \brief Read QSPI RDR register for SPI mode
- *
- * \param qspi   Pointer to an Qspi instance.
- */
-static inline uint16_t qspi_read_spi( Qspi *qspi )
-{
-	assert(qspi);
-	while(!(qspi->QSPI_SR & QSPI_SR_RDRF));
-	return  qspi->QSPI_RDR;
-}
-
-/**
- * \brief Write to QSPI Tx register in SPI mode
- *
- * \param qspi   Pointer to an Qspi instance.
- * \param w_data   Data to transmit
- */
-static inline void qspi_write_spi( Qspi *qspi, uint16_t w_data)
-{
-	assert(qspi);
-	/* Send data */
-	while(!(qspi->QSPI_SR & QSPI_SR_TXEMPTY));
-	qspi->QSPI_TDR = w_data ;
-	while(!(qspi->QSPI_SR & QSPI_SR_TDRE));
 }
 
 /**
@@ -631,17 +465,15 @@ static inline uint32_t qspi_get_writeprotect_status(Qspi *qspi)
 	return qspi->QSPI_WPSR;
 }
 
-void qspi_set_config(Qspi *qspi, qspi_config_t *qspi_config);
-void qspi_get_default_config(qspi_config_t * qspi_config);
+void qspi_initialize(Qspi *qspi, struct qspi_config_t *qspi_config);
+void qspi_set_config(Qspi *qspi, struct qspi_config_t *qspi_config);
+void qspi_get_default_config(struct qspi_config_t * qspi_config);
 enum status_code qspi_read(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes);
 enum status_code qspi_write(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes);
 
 /** Functionality API -- Serial Memory Mode */
-enum status_code qspi_flash_send_command(qspid_t *qspid, uint8_t const keep_cfg);
-enum status_code qspi_flash_send_command_with_data(qspid_t *qspid, uint8_t const keep_cfg);
-enum status_code qspi_flash_read_command(qspid_t *qspid, uint8_t const keep_cfg);
-enum status_code qspi_flash_enable_mem_access(qspid_t *qspid, uint8_t const keep_cfg, uint8_t scramble_flag);
-enum status_code qspi_flash_read_write_mem(qspid_t *qspid, qspi_access_t const read_write);
+enum status_code qspi_flash_exec_command(struct qspid_t *qspid, enum qspi_access read_write);
+enum status_code qspi_flash_memory_access(struct qspid_t *qspid, enum qspi_access read_write, uint8_t scramble_flag);
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -674,30 +506,30 @@ enum status_code qspi_flash_read_write_mem(qspid_t *qspid, qspi_access_t const r
  * \subsection spi_basic_use_case_setup_code Example code
  * Add to application C-file:
  * \code
-		void qspi_set_config(qspi_config_t * qspi_config)
-		{
-			qspi_disable(qspi_config->qspi_hw);
-			qspi_reset(qspi_config->qspi_hw);
-			qspi_set_lastxfer(qspi_config->qspi_hw);
-			qspi_set_chip_select_mode(qspi_config->qspi_hw, qspi_config->csmode);
-			qspi_set_clock_polarity(qspi_config->qspi_hw, qspi_config->clock_polarity);
-			qspi_set_clock_phase(qspi_config->qspi_hw, qspi_config->clock_phase);
-			qspi_set_bits_per_transfer(qspi_config->qspi_hw, qspi_config->bits_per_transfer);
-			qspi_set_baudrate(qspi_config->qspi_hw, qspi_config->baudrate);
-			qspi_set_transfer_delay(qspi_config->qspi_hw, qspi_config->transfer_delay);
-			qspi_set_memory_mode(qspi_config->qspi_hw);
-			qspi_enable(qspi_config->qspi_hw);
-		}
-
 		void qspi_get_default_config(qspi_config_t * qspi_config)
 		{
-			qspi_config->qspi_hw = QSPI;
+			qspi_config->serial_memory = 1;
+			qspi_config->loopback_en = false;
+			qspi_config->wait_data_for_transfer = false;
 			qspi_config->csmode = 1;
+			qspi_config->bits_per_transfer = QSPI_MR_NBBITS_8_BIT;
+			qspi_config->min_delay_qcs = 0;
+			qspi_config->delay_between_ct = 0;
 			qspi_config->clock_polarity = 0;
 			qspi_config->clock_phase = 0;
-			qspi_config->bits_per_transfer = QSPI_MR_NBBITS_8_BIT;
 			qspi_config->baudrate = sysclk_get_cpu_hz() / 1000000;
 			qspi_config->transfer_delay = 0x40;
+			qspi_config->scrambling_en = false;
+			qspi_config->scrambling_random_value_dis = false;
+			qspi_config->scrambling_user_key = 0;
+		}
+
+		void qspi_initialize(Qspi *qspi, struct qspi_config_t *qspi_config)
+		{
+			qspi_disable(qspi);
+			qspi_reset(qspi);
+			qspi_set_config(qspi, qspi_config);
+			qspi_enable(qspi);
 		}
 \endcode
  */
