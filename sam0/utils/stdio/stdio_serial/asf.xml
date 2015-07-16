@@ -5,6 +5,7 @@
 		implements a stdio serial interface on SAM devices.
 		</info>
 		<device-support value="sam0"/>
+		<device-support value="samb"/>
 		<build type="header-file" subtype="api" value="stdio_serial.h"/>
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="group_common_utils_stdio_stdio_serial"/>
