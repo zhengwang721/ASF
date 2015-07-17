@@ -1,20 +1,16 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="PROXIMITY MONITOR APPLICATION" id="thirdparty.wireless.ble_sdk.apps.pxp_reporter">
+	<module type="meta" caption="BLE OBSERVER APPLICATION" id="thirdparty.wireless.ble_sdk.apps.ble_observer">
 		<info type="description" value="summary">
-		Proximity Monitor application for BLE stack
+		BLE OBSERVER application for BLE stack
 		</info>
 		<build type="include-path" value="."/>
-		<build type="header-file" value="pxp_reporter_app.h"/>
-		<build type="c-source" value="pxp_reporter_app.c"/>
+		<build type="header-file" value="ble_observer.h"/>
+		<build type="c-source" value="ble_observer.c"/>
 		<require idref="thirdparty.wireless.ble_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_sdk.inc"/>
 		<require idref="thirdparty.wireless.ble_sdk.src"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
-		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.pxp_reporter"/>
-		<require idref="thirdparty.wireless.ble_sdk.ble_services.immediate_alert"/>
-		<require idref="thirdparty.wireless.ble_sdk.ble_services.link_loss"/>
-		<require idref="thirdparty.wireless.ble_sdk.ble_services.tx_power"/>
 		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>
 		<require idref="thirdparty.wireless.ble_sdk.utils"/>
 		<device-support-alias value="ble_stack_lib_support"/>

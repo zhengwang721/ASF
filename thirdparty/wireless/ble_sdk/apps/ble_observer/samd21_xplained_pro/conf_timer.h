@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Proximity Reporter Profile Application declarations
+ * \brief Timer Driver Configuration Header
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,54 +40,11 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
+#ifndef CONF_TIMER_H_INCLUDED
+#define CONF_TIMER_H_INCLUDED
 
+#define CONF_TC_MODULE TC3
+#define TC_COUNT_1SEC  (48000000ul/1024ul)
+struct tc_module tc_instance;
 
-#ifndef __PXP_APP_H__
-#define __PXP_APP_H__
-
-#include "at_ble_api.h"
-#include "platform.h"
-#include "console_serial.h"
-
-
-#define SUCCESS 1
-
-#define DBG_LOG printf
-#define DBG_LOG_1LVL printf
-
-#define APP_PXP_FAST_ADV 100 //100 ms
-
-#define APP_PXP_ADV_TIMEOUT 1000 // 100 Secs
-
-
-#define APP_PXP_FAST_ADV 100 //100 ms
-
-#define APP_PXP_ADV_TIMEOUT 1000 // 100 Secs
-
-#define SCAN_RESP_LEN 10
-#define ADV_DATA_LEN 18
-
-#define ADV_TYPE_LEN (0x01)
-
-#define LL_ADV_DATA_UUID_LEN	 (2)
-#define LL_ADV_DATA_UUID_TYPE	 (0x03)
-#define LL_ADV_DATA_UUID_DATA	 "\x03\x18"
-
-#define TXP_ADV_DATA_UUID_LEN	 (2)
-#define TXP_ADV_DATA_UUID_TYPE	 (0x03)
-#define TXP_ADV_DATA_UUID_DATA	 "\x04\x18"
-
-#define IAL_ADV_DATA_UUID_LEN	 (2)
-#define IAL_ADV_DATA_UUID_TYPE	 (0x03)
-#define IAL_ADV_DATA_UUID_DATA	 "\x02\x18"
-
-
-#define PXP_ADV_DATA_NAME_LEN	 (9)
-#define PXP_ADV_DATA_NAME_TYPE	 (0x09)
-#define PXP_ADV_DATA_NAME_DATA	 "ATMEL-PXP"
-
-extern uint8_t scan_rsp_data[SCAN_RESP_LEN];
-#endif 
+#endif

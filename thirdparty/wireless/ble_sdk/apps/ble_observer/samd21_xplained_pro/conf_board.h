@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21 External Interrupt Driver Configuration Header
+ * \brief SAM D21 Xplained Pro board configuration.
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,35 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXTINT_H_INCLUDED
-#define CONF_EXTINT_H_INCLUDED
 
-#include <asf.h>
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
-
-
-void button_cb(void);
-
-/* Button Initialize */
-static inline void button_init(void)
-{
-	struct extint_chan_conf eint_chan_conf;
-	extint_chan_get_config_defaults(&eint_chan_conf);
-
-	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
-	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_UP;
-	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_MUX;
-	eint_chan_conf.detection_criteria = EXTINT_DETECT_FALLING;
-	eint_chan_conf.filter_input_signal = true;
-	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
-	
-	extint_register_callback(button_cb,
-							BUTTON_0_EIC_LINE,
-							EXTINT_CALLBACK_TYPE_DETECT);
-	
-	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
-							EXTINT_CALLBACK_TYPE_DETECT);
-}
-
-#endif
+#endif /* CONF_BOARD_H_INCLUDED */

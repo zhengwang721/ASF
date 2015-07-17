@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21 External Interrupt Driver Configuration Header
+ * \brief BLE Observer Application
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -23,7 +23,7 @@
  *    from this software without specific prior written permission.
  *
  * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
+ *    Atmel micro controller product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -40,35 +40,29 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXTINT_H_INCLUDED
-#define CONF_EXTINT_H_INCLUDED
 
-#include <asf.h>
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
+ *Support</a>
+ */
 
-#define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
+#ifndef __BLE_OBSERVER_H__
+#define __BLE_OBSERVER_H__
 
+/** @brief Handler for scan info event
+ *
+ * @param[out] none
+ * @param[in]  scan information data
+ *
+ */
+void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data);
 
-void button_cb(void);
+/** @brief Ble Observer initialization function
+ *
+ * @param[out] none
+ * @param[in]  none
+ *
+ */
+void ble_observer_init(void);
 
-/* Button Initialize */
-static inline void button_init(void)
-{
-	struct extint_chan_conf eint_chan_conf;
-	extint_chan_get_config_defaults(&eint_chan_conf);
-
-	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
-	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_UP;
-	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_MUX;
-	eint_chan_conf.detection_criteria = EXTINT_DETECT_FALLING;
-	eint_chan_conf.filter_input_signal = true;
-	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
-	
-	extint_register_callback(button_cb,
-							BUTTON_0_EIC_LINE,
-							EXTINT_CALLBACK_TYPE_DETECT);
-	
-	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
-							EXTINT_CALLBACK_TYPE_DETECT);
-}
-
-#endif
+#endif /*__BLE_OBSERVER_H__*/
