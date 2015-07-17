@@ -45,7 +45,6 @@
  */
 
 #include "qspi.h"
-#include "sysclk.h"
 
 /**
  * \defgroup sam_drivers_qspi_group Quad Serial Peripheral Interface (QSPI)
@@ -279,7 +278,7 @@ void qspi_get_config_default(struct qspi_config_t * qspi_config)
 	qspi_config->delay_between_ct = 0;
 	qspi_config->clock_polarity = 0;
 	qspi_config->clock_phase = 0;
-	qspi_config->baudrate = sysclk_get_cpu_hz() / 1000000;
+	qspi_config->baudrate = 1000000;
 	qspi_config->transfer_delay = 0x40;
 	qspi_config->scrambling_en = false;
 	qspi_config->scrambling_random_value_dis = false;

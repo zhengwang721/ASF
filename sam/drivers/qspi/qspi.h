@@ -51,6 +51,7 @@
 #include "string.h"
 #include "status_codes.h"
 #include <assert.h>
+#include "sysclk.h"
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -318,11 +319,12 @@ static inline void qspi_set_clock_phase(Qspi *qspi, uint32_t phase)
  * \param qspi  Pointer to a Qspi instance.
  * \param uc_baudrate_div   Baudrate_div to be set.
  */
-static inline void qspi_set_baudrate(Qspi *qspi, uint8_t uc_baudrate_div)
+static inline void qspi_set_baudrate(Qspi *qspi, uint8_t baudrate)
 {
 	assert(qspi);
+	uint32_t scbr_value = sysclk_get_peripheral_hz() / baudrate - 1;
 	uint32_t mask = qspi->QSPI_SCR & (~QSPI_SCR_SCBR_Msk);
-	qspi->QSPI_SCR = mask | QSPI_SCR_SCBR(uc_baudrate_div);
+	qspi->QSPI_SCR = mask | QSPI_SCR_SCBR(scbr_value);
 }
 
 /**
@@ -483,7 +485,7 @@ enum status_code qspi_flash_access_memory(struct qspid_t *qspid, enum qspi_acces
 			qspi_config->delay_between_ct = 0;
 			qspi_config->clock_polarity = 0;
 			qspi_config->clock_phase = 0;
-			qspi_config->baudrate = sysclk_get_cpu_hz() / 1000000;
+			qspi_config->baudrate = 1000000;
 			qspi_config->transfer_delay = 0x40;
 			qspi_config->scrambling_en = false;
 			qspi_config->scrambling_random_value_dis = false;
