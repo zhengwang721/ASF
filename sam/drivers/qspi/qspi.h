@@ -317,12 +317,13 @@ static inline void qspi_set_clock_phase(Qspi *qspi, uint32_t phase)
  * \brief Set qspi clock baudrate.
  *
  * \param qspi  Pointer to a Qspi instance.
- * \param uc_baudrate_div   Baudrate_div to be set.
+ * \param baudrate   Baudrate to be set.
  */
-static inline void qspi_set_baudrate(Qspi *qspi, uint8_t baudrate)
+static inline void qspi_set_baudrate(Qspi *qspi, uint32_t baudrate)
 {
 	assert(qspi);
 	uint32_t scbr_value = sysclk_get_peripheral_hz() / baudrate - 1;
+	assert((scbr_value < 255) ? true: false);
 	uint32_t mask = qspi->QSPI_SCR & (~QSPI_SCR_SCBR_Msk);
 	qspi->QSPI_SCR = mask | QSPI_SCR_SCBR(scbr_value);
 }
