@@ -52,7 +52,6 @@
 #include "stddef.h"
 #include "at_ble_api.h"
 #include "ble_utils.h"
-#include "pxp_monitor.h"
 #include "platform.h"
 
 #define TX_POWER_SERVICE
@@ -60,7 +59,7 @@
 #define IMMEDIATE_ALERT_SERVICE
 
 #define PRXIMITY_MONITOR
-#define BLE_DEVICE_ROLE BLE_CENTRAL
+#define BLE_DEVICE_ROLE BLE_BROADCASTER
 
 
 /* Service UUID's */
@@ -86,6 +85,7 @@
 #define BLE_CENTRAL						(0x01)
 #define BLE_PERIPHERAL					(0x02)
 #define BLE_CENTRAL_PERIPHERAL			(0x03)
+#define BLE_BROADCASTER                 (0x04)
 
 /* BLE Event Get Timeout Value */
 #define AT_BLE_EVENT_TIMEOUT			(-1)
@@ -142,6 +142,21 @@ static inline void ble_manager_dummy_handler(void *param)
 {
 	while(0);
 }
+
+#if (BLE_DEVICE_ROLE == BLE_BROADCASTER)
+
+#define BLE_PROFILE_INIT()						ble_manager_dummy_handler(NULL)
+#define BLE_PRIMARY_SERVICE_FOUND_HANDLER		ble_manager_dummy_handler
+#define BLE_DISCOVERY_COMPLETE_HANDLER			ble_manager_dummy_handler
+#define	BLE_SCAN_DATA_HANDLER					ble_manager_dummy_handler
+#define BLE_CHARACTERISTIC_READ_RESPONSE		ble_manager_dummy_handler
+#define BLE_CHARACTERISTIC_FOUND_HANDLER		ble_manager_dummy_handler
+#define BLE_DISCONNECTED_STATE_HANDLER			ble_manager_dummy_handler
+#define BLE_CONNECTED_STATE_HANDLER				ble_manager_dummy_handler
+#define BLE_SCAN_REPORT_HANDLER					ble_manager_dummy_handler
+#define BLE_SCAN_INFO_HANDLER					ble_manager_dummy_handler
+#define BLE_CHARACTERISTIC_WRITE_RESPONSE		ble_manager_dummy_handler
+#endif
 
 #if (BLE_DEVICE_ROLE == BLE_CENTRAL)
 

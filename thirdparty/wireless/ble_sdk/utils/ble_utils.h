@@ -54,6 +54,20 @@
 #define DBG_LOG		    printf("\r\n");\
 						printf
 						
+#define IEEE11073_EXPONENT						(0xFF000000)
+
+#define IEEE754_MANTISA(val)					((uint32_t)(val * 10))
+
+#define IEEE754_TO_IEEE11073_FLOAT(f_val)		(IEEE11073_EXPONENT | \
+IEEE754_MANTISA(f_val))
+
+static inline uint32_t convert_ieee754_ieee11073_float(float f_val)
+{
+	uint32_t ieee11073_float;
+	ieee11073_float = IEEE754_TO_IEEE11073_FLOAT(f_val);
+	return (ieee11073_float);
+}
+						
 
 
 #endif /*__BLE_UTILS_H__*/
