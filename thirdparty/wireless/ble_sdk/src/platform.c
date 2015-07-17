@@ -89,13 +89,13 @@ void platform_interface_send(uint8_t* data, uint32_t len)
 #ifdef BLE_DBG_ENABLE
 	uint32_t i;
 
-	DBG_LOG_BLE("\r\nRx:%d: ", rx_buf_idx);
+	DBG_LOG_BLE("Rx:%d: ", rx_buf_idx);
 	for (i = 0; i < rx_buf_idx; i++)
 	{
 		DBG_LOG_BLE("0x%X, ", rx_buf[i]);
 	}
 	rx_buf_idx = 0;
-	DBG_LOG_BLE("\r\nTxLen:%d: ", len);
+	DBG_LOG_BLE("TxLen:%d: ", len);
 	for (i = 0; i < len; i++)
 	{
 		DBG_LOG_BLE("0x%X, ", data[i]);
@@ -162,7 +162,7 @@ void platform_cmd_cmpl_wait(bool* timeout)
 	if (cmd_cmpl_flag == 1)
 	{
 	#ifdef BLE_DBG_ENABLE
-		DBG_LOG_BLE("\r\nAS\n");
+		DBG_LOG_BLE("AS\n");
 	#endif
 		cmd_cmpl_flag = 0;
 	}
@@ -170,7 +170,7 @@ void platform_cmd_cmpl_wait(bool* timeout)
 	{
 		*timeout = true;
 	#ifdef BLE_DBG_ENABLE
-		DBG_LOG_BLE("\r\nAF\n");
+		DBG_LOG_BLE("AF\n");
 	#endif
 	}
 }
@@ -197,14 +197,14 @@ uint8_t platform_event_wait(uint32_t timeout)
 	{
 		event_flag = 0;
 	#ifdef BLE_DBG_ENABLE
-		DBG_LOG_BLE("\r\nSS\n");
+		DBG_LOG_BLE("SS\n");
 	#endif
 	}	
 	else
 	{
 		status = AT_BLE_TIMEOUT;
 	#ifdef BLE_DBG_ENABLE
-		DBG_LOG_BLE("\r\nSF\n");
+		DBG_LOG_BLE("SF\n");
 	#endif
 	}
 	return status;

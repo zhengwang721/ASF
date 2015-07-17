@@ -1,7 +1,10 @@
+
+
+
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief Link Loss Service declarations
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -44,45 +47,23 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+#ifndef __LINKLOSS_SERVICE_H__
+#define __LINKLOSS_SERVICE_H__
 
-/* USART6 module is used in SYNC. mode. */
-#define CONF_BOARD_USART0
+#include "at_ble_api.h"
 
-#include "linkloss_service.h"
-#include "tx_power_service.h"
-#include "immediate_alert_service.h"
-
-/** Configure AT30TSE pins */
-#define CONF_BOARD_AT30TSE
-
-#define BOARD_FLEXCOM_TWI			FLEXCOM4
 #define DBG_LOG printf
 #define DBG_LOG printf
 
-#endif /* CONF_BOARD_H_INCLUDED */
-
-
-typedef struct {
-	uint8_t linkloss;
-	uint8_t pathloss;	
-}features_option;
-
-#pragma pack (8) 
 
 typedef struct{
-	linkloss_serv_record linkloss_service;
-	immediate_alert_serv_record immediate_alert_service;
-	tx_power_serv_record tx_power_service;
-}proximity_serv_info ;
+	at_ble_uuid_t linkloss_serv_uuid;
+	at_ble_handle_t linkloss_serv_handle;
+	at_ble_characteristic_t linkloss_serv_chars;
+	}linkloss_serv_record;
 
-void init_proximity_reporter (proximity_serv_info *services , features_option *choice);
 
-uint8_t add_proximity_service_database (proximity_serv_info *services ,features_option *choice);
-#define SUCCESS 1
+void init_linkloss_service(linkloss_serv_record *linkloss_serv);
 
-#endif 
+#endif /* __LINKLOSSSERVICE_H__ */
