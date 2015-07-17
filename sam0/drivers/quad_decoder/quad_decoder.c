@@ -85,28 +85,19 @@ void quad_decoder_init(enum quad_decoder_axis qdec,
 {
 	switch (qdec) {
 	case QDEC_AXIS_X:
-		LPMCU_MISC_REGS0->QUAD_DEC_1_CTRL.reg |=
-				LPMCU_MISC_REGS_QUAD_DEC_1_CTRL_CLOCK_SEL(config->clock_sel);
-		LPMCU_MISC_REGS0->QUAD_DEC_1_THRESHOLD.reg |=
-				LPMCU_MISC_REGS_QUAD_DEC_1_THRESHOLD_UPPER(config->threshold_upper);
-		LPMCU_MISC_REGS0->QUAD_DEC_1_THRESHOLD.reg |=
-				LPMCU_MISC_REGS_QUAD_DEC_1_THRESHOLD_LOWER(config->threshold_lower);
+		LPMCU_MISC_REGS0->QUAD_DEC_1_CTRL.bit.CLOCK_SEL  = config->clock_sel;
+		LPMCU_MISC_REGS0->QUAD_DEC_1_THRESHOLD.bit.UPPER = config->threshold_upper;
+		LPMCU_MISC_REGS0->QUAD_DEC_1_THRESHOLD.bit.LOWER = config->threshold_lower;
 		break;
 	case QDEC_AXIS_Y:
-		LPMCU_MISC_REGS0->QUAD_DEC_2_CTRL.reg |=
-				LPMCU_MISC_REGS_QUAD_DEC_2_CTRL_CLOCK_SEL(config->clock_sel);
-		LPMCU_MISC_REGS0->QUAD_DEC_2_THRESHOLD.reg |=
-				LPMCU_MISC_REGS_QUAD_DEC_2_THRESHOLD_UPPER(config->threshold_upper);
-		LPMCU_MISC_REGS0->QUAD_DEC_2_THRESHOLD.reg |=
-				LPMCU_MISC_REGS_QUAD_DEC_2_THRESHOLD_LOWER(config->threshold_lower);
+		LPMCU_MISC_REGS0->QUAD_DEC_2_CTRL.bit.CLOCK_SEL  = config->clock_sel;
+		LPMCU_MISC_REGS0->QUAD_DEC_2_THRESHOLD.bit.UPPER = config->threshold_upper;
+		LPMCU_MISC_REGS0->QUAD_DEC_2_THRESHOLD.bit.LOWER = config->threshold_lower;
 		break;
 	case QDEC_AXIS_Z:
-		LPMCU_MISC_REGS0->QUAD_DEC_3_CTRL.reg |=
-				LPMCU_MISC_REGS_QUAD_DEC_3_CTRL_CLOCK_SEL(config->clock_sel);
-		LPMCU_MISC_REGS0->QUAD_DEC_3_THRESHOLD.reg |=
-				LPMCU_MISC_REGS_QUAD_DEC_3_THRESHOLD_UPPER(config->threshold_upper);
-		LPMCU_MISC_REGS0->QUAD_DEC_3_THRESHOLD.reg |=
-				LPMCU_MISC_REGS_QUAD_DEC_3_THRESHOLD_LOWER(config->threshold_lower);
+		LPMCU_MISC_REGS0->QUAD_DEC_3_CTRL.bit.CLOCK_SEL  = config->clock_sel;
+		LPMCU_MISC_REGS0->QUAD_DEC_3_THRESHOLD.bit.UPPER = config->threshold_upper;
+		LPMCU_MISC_REGS0->QUAD_DEC_3_THRESHOLD.bit.LOWER = config->threshold_lower;
 		break;
 	}
 
@@ -202,15 +193,15 @@ void quad_decoder_clear_irq_status(enum quad_decoder_axis qdec)
 	switch (qdec) {
 	case QDEC_AXIS_X:
 		LPMCU_MISC_REGS0->QUAD_DEC_1_CTRL.reg |= 
-				LPMCU_MISC_REGS_QUAD_DEC_1_CTRL_ENABLE;
+				LPMCU_MISC_REGS_QUAD_DEC_1_CTRL_CLR_IRQ;
 		break;
 	case QDEC_AXIS_Y:
 		LPMCU_MISC_REGS0->QUAD_DEC_2_CTRL.reg |= 
-				LPMCU_MISC_REGS_QUAD_DEC_2_CTRL_ENABLE;
+				LPMCU_MISC_REGS_QUAD_DEC_2_CTRL_CLR_IRQ;
 		break;
 	case QDEC_AXIS_Z:
 		LPMCU_MISC_REGS0->QUAD_DEC_3_CTRL.reg |= 
-				LPMCU_MISC_REGS_QUAD_DEC_3_CTRL_ENABLE;
+				LPMCU_MISC_REGS_QUAD_DEC_3_CTRL_CLR_IRQ;
 		break;
 	}
 }

@@ -61,24 +61,24 @@ void configure_quad_decoder(void)
 	quad_decoder_get_config_defaults(&config_quad_decoder);
 //! [get_def]
 //! [set_config1]
-	config_quad_decoder.pinmux_pad[0] = QUAD_DECODER_MUX_X_A;
-	config_quad_decoder.pinmux_pad[1] = QUAD_DECODER_MUX_X_B;
+	config_quad_decoder.pinmux_pad[0] = CONF_QUAD_DECODER_MUX_X_A;
+	config_quad_decoder.pinmux_pad[1] = CONF_QUAD_DECODER_MUX_X_B;
 //! [set_config1]
 //! [init_qdec1]
 	quad_decoder_init(QDEC_AXIS_X, &config_quad_decoder);
 //! [init_qdec1]
 
 //! [set_config2]
-	config_quad_decoder.pinmux_pad[0] = QUAD_DECODER_MUX_Y_A;
-	config_quad_decoder.pinmux_pad[1] = QUAD_DECODER_MUX_Y_B;
+	config_quad_decoder.pinmux_pad[0] = CONF_QUAD_DECODER_MUX_Y_A;
+	config_quad_decoder.pinmux_pad[1] = CONF_QUAD_DECODER_MUX_Y_B;
 //! [set_config2]
 //! [init_qdec2]
 	quad_decoder_init(QDEC_AXIS_Y, &config_quad_decoder);
 //! [init_qdec2]
 
 //! [set_config3]
-	config_quad_decoder.pinmux_pad[0] = QUAD_DECODER_MUX_Z_A;
-	config_quad_decoder.pinmux_pad[1] = QUAD_DECODER_MUX_Z_B;
+	config_quad_decoder.pinmux_pad[0] = CONF_QUAD_DECODER_MUX_Z_A;
+	config_quad_decoder.pinmux_pad[1] = CONF_QUAD_DECODER_MUX_Z_B;
 //! [set_config3]
 //! [init_qdec3]
 	quad_decoder_init(QDEC_AXIS_Z, &config_quad_decoder);
