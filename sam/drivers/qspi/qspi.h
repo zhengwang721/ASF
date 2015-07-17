@@ -116,7 +116,7 @@ struct qspi_inst_frame_t {
 					reserved3:11;
 		} bm;
 	} inst_frame;
-	uint32_t       addr;
+	uint32_t addr;
 };
 
 /**
@@ -124,13 +124,13 @@ struct qspi_inst_frame_t {
  */
 struct qspi_buffer_t {
 	/** Tx buffer size */
-	uint32_t      tx_data_size;
+	uint32_t tx_data_size;
 	/** Rx buffer size */
-	uint32_t      rx_data_size;
+	uint32_t rx_data_size;
 	/** Tx buffer */
-	uint32_t      *data_tx;
+	uint32_t *data_tx;
 	/** Rx buffer */
-	uint32_t      *data_rx;
+	uint32_t *data_rx;
 };
 
 /**
@@ -138,9 +138,9 @@ struct qspi_buffer_t {
  */
 struct qspi_mem_cmd_t {
 	/** Qspi instruction code */
-	uint8_t       instruction;
+	uint8_t instruction;
 	/** Qspi option code */
-	uint8_t       option;
+	uint8_t option;
 };
 
 /**
@@ -148,13 +148,13 @@ struct qspi_mem_cmd_t {
  */
 struct qspid_t {
 	/** QSPI Hw instance */
-	Qspi               *qspi_hw;
+	Qspi *qspi_hw;
 	/** Qspi command structure */
-	struct qspi_mem_cmd_t     qspi_command;
+	struct qspi_mem_cmd_t qspi_command;
 	/** Qspi buffer */
-	struct qspi_buffer_t      qspi_buffer;
+	struct qspi_buffer_t qspi_buffer;
 	/** Qspi QSPI mode Frame register informations */
-	struct qspi_inst_frame_t  *qspi_frame;
+	struct qspi_inst_frame_t *qspi_frame;
 };
 
 /**
@@ -164,31 +164,31 @@ struct qspi_config_t {
 	/** Qspi serial memory mode */
 	enum qspi_run_mode  serial_memory_mode;
 	/** Local loop back enable */
-	bool                loopback_en;
+	bool loopback_en;
 	/** Wait data read for transfer */
-	bool                wait_data_for_transfer;
+	bool wait_data_for_transfer;
 	/** Chip select mode */
-	enum qspi_cs_mode   csmode;
+	enum qspi_cs_mode csmode;
 	/** Numbers of bits per transfer */
-	uint32_t            bits_per_transfer;
+	uint32_t bits_per_transfer;
 	/** Minimum inactive QCS delay */
-	uint32_t            min_delay_qcs;
+	uint32_t min_delay_qcs;
 	/** Delay between consecutive transfers */
-	uint32_t            delay_between_ct;
+	uint32_t delay_between_ct;
 	/** Qspi clock polarity */
-	uint32_t            clock_polarity;
+	uint32_t clock_polarity;
 	/** Qspi clock phase */
-	uint32_t            clock_phase;
+	uint32_t clock_phase;
 	/** Qspi baudrate(Hz) */
-	uint32_t            baudrate;
+	uint32_t baudrate;
 	/** Qspi transfer delay */
-	uint32_t            transfer_delay;
+	uint32_t transfer_delay;
 	/** Scrambling/unscrambling enable */
-	bool                scrambling_en;
+	bool scrambling_en;
 	/** Scrambling/unscrambling random value disable */
-	bool                scrambling_random_value_dis;
+	bool scrambling_random_value_dis;
 	/** Scrambling user key */
-	uint32_t            scrambling_user_key;
+	uint32_t scrambling_user_key;
 };
 
 /**
@@ -250,7 +250,7 @@ static inline void qspi_disable_interrupt(Qspi *qspi, uint32_t sources)
  *
  * \param qspi  Pointer to a Qspi instance.
  */
-static inline void qspi_reset( Qspi *qspi )
+static inline void qspi_reset(Qspi *qspi)
 {
 	assert(qspi);
 	qspi->QSPI_CR = QSPI_CR_SWRST ;
@@ -261,7 +261,7 @@ static inline void qspi_reset( Qspi *qspi )
  *
  * \param qspi  Pointer to a Qspi instance.
  */
-static inline void qspi_enable( Qspi *qspi )
+static inline void qspi_enable(Qspi *qspi)
 {
 	assert(qspi);
 	qspi->QSPI_CR = QSPI_CR_QSPIEN;
@@ -273,7 +273,7 @@ static inline void qspi_enable( Qspi *qspi )
  *
  * \param qspi  Pointer to a Qspi instance.
  */
-static inline void qspi_disable( Qspi *qspi )
+static inline void qspi_disable(Qspi *qspi)
 {
 	assert(qspi);
 	qspi->QSPI_CR = QSPI_CR_QSPIDIS ;

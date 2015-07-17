@@ -143,7 +143,7 @@ static void s25fl1xx_exec_command(struct qspid_t *qspid, uint8_t instr, uint32_t
 	qspid->qspi_buffer.data_rx = rx_data;
 
 	/** to prevent unaligned access */
-	if( (size % sizeof(uint32_t)) && size > 1) {
+	if((size % sizeof(uint32_t)) && size > 1) {
 		size += (sizeof(uint32_t) - (size % sizeof(uint32_t)));
 	}
 
@@ -276,7 +276,7 @@ static void s25fl1xx_disable_write(struct qspid_t *qspid)
 {
 	uint8_t status;
 	status = s25fl1xx_read_status1(qspid);
-	while( (status & STATUS_WEL) != 0) {
+	while((status & STATUS_WEL) != 0) {
 		s25fl1xx_exec_command(qspid, WRITE_DISABLE, 0, 0, QSPI_CMD_ACCESS, 0);
 		status = s25fl1xx_read_status1(qspid);
 	}
@@ -340,7 +340,7 @@ static uint8_t s25fl1xx_check_protected_addr(uint8_t status1, uint32_t addr)
 			is_protected = 1;
 		}
 	} else {
-		if((addr > (0x1FFFFF - (2*addr_ump ) + 1)) && (addr < 0x1FFFFF)) {
+		if((addr > (0x1FFFFF - (2*addr_ump) + 1)) && (addr < 0x1FFFFF)) {
 			is_protected = 1;
 		}
 	}
@@ -352,7 +352,7 @@ static uint8_t s25fl1xx_check_protected_addr(uint8_t status1, uint32_t addr)
 			is_protected = 1;
 		}
 	} else {
-		if( (addr > (0x1FFFFF - (4*addr_ump) + 1)) && (addr < 0x1FFFFF)) {
+		if((addr > (0x1FFFFF - (4*addr_ump) + 1)) && (addr < 0x1FFFFF)) {
 			is_protected = 1;
 		}
 	}
@@ -364,7 +364,7 @@ static uint8_t s25fl1xx_check_protected_addr(uint8_t status1, uint32_t addr)
 			is_protected = 1;
 		}
 	} else {
-		if((addr > (0x1FFFFF - (8*addr_ump ) + 1)) && (addr < 0x1FFFFF)) {
+		if((addr > (0x1FFFFF - (8*addr_ump) + 1)) && (addr < 0x1FFFFF)) {
 			is_protected = 1;
 		}
 	}
@@ -759,7 +759,7 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
 			pData += (PAGE_SIZE >> 2);
 			addr += PAGE_SIZE;
 		}
-		if(size % PAGE_SIZE ) {
+		if(size % PAGE_SIZE) {
 			s25fl1xx_enable_write(qspid);
 			s25fl1xx_memory_access(qspid, BYTE_PAGE_PROGRAM , addr, pData, 0, QSPI_WRITE_ACCESS, (size - (number_of_writes * PAGE_SIZE)), secure);
 			s25fl1xx_is_busy(qspid);

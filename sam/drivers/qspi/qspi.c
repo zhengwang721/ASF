@@ -186,7 +186,7 @@ static inline void qspi_set_transfer_delay(Qspi *qspi, uint8_t uc_dlybs)
  *
  * \param qspi   Pointer to an Qspi instance.
  */
-static inline uint16_t qspi_read_spi( Qspi *qspi )
+static inline uint16_t qspi_read_spi(Qspi *qspi)
 {
 	assert(qspi);
 	while(!(qspi->QSPI_SR & QSPI_SR_RDRF));
@@ -199,7 +199,7 @@ static inline uint16_t qspi_read_spi( Qspi *qspi )
  * \param qspi     Pointer to an Qspi instance.
  * \param w_data   Data to transmit
  */
-static inline void qspi_write_spi( Qspi *qspi, uint16_t w_data)
+static inline void qspi_write_spi(Qspi *qspi, uint16_t w_data)
 {
 	assert(qspi);
 	/** Send data */
@@ -328,7 +328,7 @@ enum status_code qspi_write(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes
 
 		for(; num_of_bytes_write < num_of_bytes; num_of_bytes_write++) {
 			if (qspi->QSPI_SR & QSPI_SR_TXEMPTY) {
-				qspi_write_spi(qspi, (uint16_t )(*pw_data));
+				qspi_write_spi(qspi, (uint16_t)(*pw_data));
 				pw_data += Addr_Inc;
 				num_of_attempt = 0;
 				status = STATUS_OK;
@@ -436,7 +436,7 @@ void qspi_get_config_default(struct qspi_config_t * qspi_config)
  */
 enum status_code qspi_flash_execute_command(struct qspid_t *qspid, enum qspi_access read_write)
 {
-	struct qspi_inst_frame_t* const frame = qspid->qspi_frame;
+	struct qspi_inst_frame_t * const frame = qspid->qspi_frame;
 	struct qspi_mem_cmd_t command = qspid->qspi_command;
 	enum status_code status = OPERATION_IN_PROGRESS;
 
@@ -462,7 +462,7 @@ enum status_code qspi_flash_execute_command(struct qspid_t *qspid, enum qspi_acc
 		assert(buffer.tx_data_size);
 
 		qspi_set_instruction_code(qspid->qspi_hw, command);
-		qspi_set_instruction_frame(qspid->qspi_hw, *frame );
+		qspi_set_instruction_frame(qspid->qspi_hw, *frame);
 		/** to synchronize system bus accesses */
 		qspi_get_inst_frame(qspid->qspi_hw);
 
@@ -499,22 +499,22 @@ enum status_code qspi_flash_access_memory(struct qspid_t *qspid, enum qspi_acces
 	uint32_t *qspi_mem = (uint32_t *)(QSPIMEM_ADDR | frame->addr);
 	struct qspi_buffer_t *buffer = &qspid->qspi_buffer;
 
-	assert( ( (read_write > QSPI_CMD_ACCESS) && (read_write <= QSPI_WRITE_ACCESS) ) ? true: false );
+	assert(((read_write > QSPI_CMD_ACCESS) && (read_write <= QSPI_WRITE_ACCESS)) ? true: false);
 
 	qspi_set_instruction_code(qspid->qspi_hw, command);
 
 	if(scramble_flag) {
 		qspi_set_scrambling_mode(qspid->qspi_hw, scramble_flag, 1);
 	}
-	qspi_set_instruction_frame(qspid->qspi_hw, *frame );
+	qspi_set_instruction_frame(qspid->qspi_hw, *frame);
 	/** to synchronize system bus accesses */
 	qspi_get_inst_frame(qspid->qspi_hw);
 	frame->inst_frame.val = 0;
 
 	if (read_write == QSPI_WRITE_ACCESS) {
-		memcpy(qspi_mem, buffer->data_tx , buffer->tx_data_size );
+		memcpy(qspi_mem, buffer->data_tx , buffer->tx_data_size);
 	} else {
-		memcpy(buffer->data_rx, qspi_mem, buffer->rx_data_size );
+		memcpy(buffer->data_rx, qspi_mem, buffer->rx_data_size);
 	}
 	__DSB();
 	__ISB();

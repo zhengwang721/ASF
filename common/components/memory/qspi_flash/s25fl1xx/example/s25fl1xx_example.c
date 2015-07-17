@@ -202,7 +202,7 @@ int main(void)
 	if (!mem_verified) {
 		puts("Everything is OK \r");
 		/* set PC and SP */
-		__start_new = (uint32_t(*) (void) ) buffer[1];
+		__start_new = (uint32_t(*) (void)) buffer[1];
 		__start_sp = buffer[0];
 
 		puts("\n\r Starting getting started example from QSPI flash \n\r");
