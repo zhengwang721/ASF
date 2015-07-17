@@ -350,42 +350,6 @@ static inline void qspi_set_instruction_code(Qspi *qspi, struct qspi_mem_cmd_t i
 }
 
 /**
- * \brief Set qspi instruction frame.
- *
- * \param qspi  Pointer to a Qspi instance.
- * \param instruction_frame   Frame to be set.
- */
-static inline void qspi_set_instruction_frame(Qspi *qspi, struct qspi_inst_frame_t instruction_frame)  //remove inline
-{
-	assert(qspi);
-	uint32_t mask = 0;
-	mask |= QSPI_IFR_WIDTH(instruction_frame.inst_frame.bm.b_width);
-	if (instruction_frame.inst_frame.bm.b_inst_en) {
-		mask |= QSPI_IFR_INSTEN;
-	}
-	if (instruction_frame.inst_frame.bm.b_addr_en) {
-		mask |= QSPI_IFR_ADDREN;
-	}
-	if (instruction_frame.inst_frame.bm.b_opt_en) {
-		mask |= QSPI_IFR_OPTEN;
-	}
-	if (instruction_frame.inst_frame.bm.b_data_en) {
-		mask |= QSPI_IFR_DATAEN;
-	}
-	mask |= QSPI_IFR_OPTL(instruction_frame.inst_frame.bm.b_opt_len);
-	if (instruction_frame.inst_frame.bm.b_addr_len) {
-		mask |= QSPI_IFR_ADDRL_32_BIT;
-	}
-	mask |= QSPI_IFR_TFRTYP(instruction_frame.inst_frame.bm.b_tfr_type);
-	if (instruction_frame.inst_frame.bm.b_continues_read) {
-		mask |= QSPI_IFR_CRM_ENABLED;
-	}
-	mask |= QSPI_IFR_NBDUM(instruction_frame.inst_frame.bm.b_dummy_cycles);
-
-	qspi->QSPI_IFR = mask;
-}
-
-/**
  * \brief Reads the Instruction frame of QSPI
  *
  * \param pQspi   Pointer to an Qspi instance.
@@ -472,6 +436,7 @@ void qspi_set_config(Qspi *qspi, struct qspi_config_t *qspi_config);
 void qspi_get_config_default(struct qspi_config_t * qspi_config);
 enum status_code qspi_read(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes);
 enum status_code qspi_write(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes);
+void qspi_set_instruction_frame(Qspi *qspi, struct qspi_inst_frame_t instruction_frame);
 
 /** Functionality API -- Serial Memory Mode */
 enum status_code qspi_flash_execute_command(struct qspid_t *qspid, enum qspi_access read_write);

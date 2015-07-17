@@ -209,6 +209,84 @@ static inline void qspi_write_spi(Qspi *qspi, uint16_t w_data)
 }
 
 /**
+ * \brief Config qspi according the config struct
+ *
+ * \param pQspi         Pointer to an Qspi instance.
+ * \param qspi_config   Pointer to an qspi_config_t struct.
+ *
+ */
+void qspi_initialize(Qspi *qspi, struct qspi_config_t *qspi_config)
+{
+	qspi_disable(qspi);
+	qspi_reset(qspi);
+
+	/** Configure an QSPI peripheral. */
+	qspi_set_config(qspi, qspi_config);
+
+	qspi_enable(qspi);
+}
+
+/**
+ * \brief Config qspi according the config struct
+ *
+ * \param pQspi        Pointer to an Qspi instance.
+ * \param qspi_config  Pointer to an qspi_config_t struct.
+ *
+ */
+void qspi_set_config(Qspi *qspi, struct qspi_config_t *qspi_config)
+{
+	if(qspi_config->serial_memory_mode == mem_mode) {
+		qspi_set_memory_mode(qspi);
+	} else {
+		qspi_set_spi_mode(qspi);
+	}
+	if(qspi_config->loopback_en) {
+		qspi_enable_loopback(qspi);
+	} else {
+		qspi_disable_loopback(qspi);
+	}
+	if(qspi_config->wait_data_for_transfer) {
+		qspi_enable_wait_data_read_before_transfer(qspi);
+	} else {
+		qspi_disable_wait_data_read_before_transfer(qspi);
+	}
+	qspi_set_chip_select_mode(qspi, qspi_config->csmode);
+	qspi_set_bits_per_transfer(qspi, qspi_config->bits_per_transfer);
+	qspi_set_minimum_inactive_qcs_delay(qspi, qspi_config->min_delay_qcs);
+	qspi_set_delay_between_consecutive_transfers(qspi, qspi_config->delay_between_ct);
+	qspi_set_clock_polarity(qspi, qspi_config->clock_polarity);
+	qspi_set_clock_phase(qspi, qspi_config->clock_phase);
+	qspi_set_baudrate(qspi, qspi_config->baudrate);
+	qspi_set_transfer_delay(qspi, qspi_config->transfer_delay);
+	qspi_set_scrambling_mode(qspi, qspi_config->scrambling_en, qspi_config->scrambling_random_value_dis);
+	qspi_set_scrambing_key(qspi, qspi_config->scrambling_user_key);
+}
+
+/**
+ * \brief Config qspi according the config struct
+ *
+ * \param qspi_config     Pointer to an qspi_config_t struct.
+ *
+ */
+void qspi_get_config_default(struct qspi_config_t * qspi_config)
+{
+	qspi_config->serial_memory_mode = mem_mode;
+	qspi_config->loopback_en = false;
+	qspi_config->wait_data_for_transfer = false;
+	qspi_config->csmode = QSPI_LASTXFER;
+	qspi_config->bits_per_transfer = QSPI_MR_NBBITS_8_BIT;
+	qspi_config->min_delay_qcs = 0;
+	qspi_config->delay_between_ct = 0;
+	qspi_config->clock_polarity = 0;
+	qspi_config->clock_phase = 0;
+	qspi_config->baudrate = sysclk_get_cpu_hz() / 1000000;
+	qspi_config->transfer_delay = 0x40;
+	qspi_config->scrambling_en = false;
+	qspi_config->scrambling_random_value_dis = false;
+	qspi_config->scrambling_user_key = 0;
+}
+
+/**
  * \brief Qspi read data.
  *
  * \param qspi         Pointer to a Qspi instance.
@@ -348,81 +426,39 @@ enum status_code qspi_write(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes
 }
 
 /**
- * \brief Config qspi according the config struct
+ * \brief Set qspi instruction frame.
  *
- * \param pQspi         Pointer to an Qspi instance.
- * \param qspi_config   Pointer to an qspi_config_t struct.
- *
+ * \param qspi  Pointer to a Qspi instance.
+ * \param instruction_frame   Frame to be set.
  */
-void qspi_initialize(Qspi *qspi, struct qspi_config_t *qspi_config)
+void qspi_set_instruction_frame(Qspi *qspi, struct qspi_inst_frame_t instruction_frame)
 {
-	qspi_disable(qspi);
-	qspi_reset(qspi);
-
-	/** Configure an QSPI peripheral. */
-	qspi_set_config(qspi, qspi_config);
-
-	qspi_enable(qspi);
-}
-
-/**
- * \brief Config qspi according the config struct
- *
- * \param pQspi        Pointer to an Qspi instance.
- * \param qspi_config  Pointer to an qspi_config_t struct.
- *
- */
-void qspi_set_config(Qspi *qspi, struct qspi_config_t *qspi_config)
-{
-	if(qspi_config->serial_memory_mode == mem_mode) {
-		qspi_set_memory_mode(qspi);
-	} else {
-		qspi_set_spi_mode(qspi);
+	assert(qspi);
+	uint32_t mask = 0;
+	mask |= QSPI_IFR_WIDTH(instruction_frame.inst_frame.bm.b_width);
+	if (instruction_frame.inst_frame.bm.b_inst_en) {
+		mask |= QSPI_IFR_INSTEN;
 	}
-	if(qspi_config->loopback_en) {
-		qspi_enable_loopback(qspi);
-	} else {
-		qspi_disable_loopback(qspi);
+	if (instruction_frame.inst_frame.bm.b_addr_en) {
+		mask |= QSPI_IFR_ADDREN;
 	}
-	if(qspi_config->wait_data_for_transfer) {
-		qspi_enable_wait_data_read_before_transfer(qspi);
-	} else {
-		qspi_disable_wait_data_read_before_transfer(qspi);
+	if (instruction_frame.inst_frame.bm.b_opt_en) {
+		mask |= QSPI_IFR_OPTEN;
 	}
-	qspi_set_chip_select_mode(qspi, qspi_config->csmode);
-	qspi_set_bits_per_transfer(qspi, qspi_config->bits_per_transfer);
-	qspi_set_minimum_inactive_qcs_delay(qspi, qspi_config->min_delay_qcs);
-	qspi_set_delay_between_consecutive_transfers(qspi, qspi_config->delay_between_ct);
-	qspi_set_clock_polarity(qspi, qspi_config->clock_polarity);
-	qspi_set_clock_phase(qspi, qspi_config->clock_phase);
-	qspi_set_baudrate(qspi, qspi_config->baudrate);
-	qspi_set_transfer_delay(qspi, qspi_config->transfer_delay);
-	qspi_set_scrambling_mode(qspi, qspi_config->scrambling_en, qspi_config->scrambling_random_value_dis);
-	qspi_set_scrambing_key(qspi, qspi_config->scrambling_user_key);
-}
+	if (instruction_frame.inst_frame.bm.b_data_en) {
+		mask |= QSPI_IFR_DATAEN;
+	}
+	mask |= QSPI_IFR_OPTL(instruction_frame.inst_frame.bm.b_opt_len);
+	if (instruction_frame.inst_frame.bm.b_addr_len) {
+		mask |= QSPI_IFR_ADDRL_32_BIT;
+	}
+	mask |= QSPI_IFR_TFRTYP(instruction_frame.inst_frame.bm.b_tfr_type);
+	if (instruction_frame.inst_frame.bm.b_continues_read) {
+		mask |= QSPI_IFR_CRM_ENABLED;
+	}
+	mask |= QSPI_IFR_NBDUM(instruction_frame.inst_frame.bm.b_dummy_cycles);
 
-/**
- * \brief Config qspi according the config struct
- *
- * \param qspi_config     Pointer to an qspi_config_t struct.
- *
- */
-void qspi_get_config_default(struct qspi_config_t * qspi_config)
-{
-	qspi_config->serial_memory_mode = mem_mode;
-	qspi_config->loopback_en = false;
-	qspi_config->wait_data_for_transfer = false;
-	qspi_config->csmode = QSPI_LASTXFER;
-	qspi_config->bits_per_transfer = QSPI_MR_NBBITS_8_BIT;
-	qspi_config->min_delay_qcs = 0;
-	qspi_config->delay_between_ct = 0;
-	qspi_config->clock_polarity = 0;
-	qspi_config->clock_phase = 0;
-	qspi_config->baudrate = sysclk_get_cpu_hz() / 1000000;
-	qspi_config->transfer_delay = 0x40;
-	qspi_config->scrambling_en = false;
-	qspi_config->scrambling_random_value_dis = false;
-	qspi_config->scrambling_user_key = 0;
+	qspi->QSPI_IFR = mask;
 }
 
 /**
