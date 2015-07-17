@@ -104,9 +104,11 @@ struct qspi_inst_frame_t *mem;
  * \param qspi                      Pointer to an S25FL1 qspid_t struct.
  * \param mode_config               Configure settings to config qspid.
  * \param use_default_config Config QSPI use default configures.
+ * \return status S23FL1XX initialize result.
  */
-void s25fl1xx_initialize(Qspi *qspi, struct qspi_config_t *mode_config, uint32_t use_default_config)
+enum status_code s25fl1xx_initialize(Qspi *qspi, struct qspi_config_t *mode_config, uint32_t use_default_config)
 {
+	enum status_code status = STATUS_OK;
 	puts("-I- Initialize S25FL1xx.\r");
 
 	dev = (struct qspi_inst_frame_t *)malloc (sizeof(struct qspi_inst_frame_t));
@@ -121,7 +123,8 @@ void s25fl1xx_initialize(Qspi *qspi, struct qspi_config_t *mode_config, uint32_t
 		qspi_get_config_default(mode_config);
 	}
 
-	qspi_initialize(qspi, mode_config);
+	status = qspi_initialize(qspi, mode_config);
+	return status;
 }
 
 /**
@@ -199,6 +202,7 @@ static void s25fl1xx_memory_access(struct qspid_t *qspid, uint8_t instr, uint32_
  * \brief Reads and returns the status register of the serial flash.
  *
  * \param qspid  Pointer to an S25FL1 qspid_t struct.
+ * \return QSPI status1
  */
 static uint8_t s25fl1xx_read_status1(struct qspid_t *qspid)
 {
@@ -211,6 +215,7 @@ static uint8_t s25fl1xx_read_status1(struct qspid_t *qspid)
  * \brief Reads and returns the status register of the serial flash.
  *
  * \param qspid  Pointer to an S25FL1 qspid_t struct.
+ * \return QSPI status2
  */
 static uint8_t s25fl1xx_read_status2(struct qspid_t *qspid)
 {
@@ -223,6 +228,7 @@ static uint8_t s25fl1xx_read_status2(struct qspid_t *qspid)
  * \brief Reads and returns the status register of the serial flash.
  *
  * \param qspid  Pointer to an S25FL1 qspid_t struct.
+ * \return QSPI status3
  */
 static uint8_t s25fl1xx_read_status3(struct qspid_t *qspid)
 {
@@ -235,6 +241,7 @@ static uint8_t s25fl1xx_read_status3(struct qspid_t *qspid)
  * \brief Reads and returns the status register of the serial flash.
  *
  * \param qspid  Pointer to an S25FL1 qspid_t struct.
+ * \return QSPI status1/2/3
  */
 static uint32_t s25fl1xx_read_status(struct qspid_t *qspid)
 {
@@ -313,6 +320,7 @@ static void s25fl1xx_write_volatile_status(struct qspid_t *qspid, uint8_t *statu
  *
  * \param qspid Pointer to an S25FL1 qspid_t struct.
  * \param addr  Address to be checked.
+ * \return If 0 returned, addr is unprotected, else protected.
  */
 static uint8_t s25fl1xx_check_protected_addr(uint8_t status1, uint32_t addr)
 {
@@ -402,6 +410,7 @@ static uint8_t s25fl1xx_check_protected_addr(uint8_t status1, uint32_t addr)
  * \brief Reads and returns the serial flash device ID.
  *
  * \param qspid  Pointer to an S25FL1 qspid_t struct.
+ * \return Jedec id read from chip.
  */
 uint32_t s25fl1xx_read_jedec_id(struct qspid_t *qspid)
 {
@@ -510,6 +519,7 @@ void s25fl1xx_soft_reset(struct qspid_t *qspid)
  *
  * \return 0 if the device has been unprotected; otherwise returns
  * S25FL1D_ERROR_PROTECTED.
+ * \return S25FL1 protection status.
  */
 uint8_t s25fl1xx_unprotect(struct qspid_t *qspid)
 {

@@ -205,7 +205,7 @@
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
-void s25fl1xx_initialize(Qspi *qspi, struct qspi_config_t *mode_config, uint32_t use_default_config);
+enum status_code s25fl1xx_initialize(Qspi *qspi, struct qspi_config_t *mode_config, uint32_t use_default_config);
 uint32_t s25fl1xx_read_jedec_id(struct qspid_t *qspid);
 void s25fl1xx_soft_reset(struct qspid_t *qspid);
 uint8_t s25fl1xx_unprotect(struct qspid_t *qspid);

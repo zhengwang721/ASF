@@ -318,6 +318,7 @@ static inline void qspi_set_clock_phase(Qspi *qspi, uint32_t phase)
  *
  * \param qspi  Pointer to a Qspi instance.
  * \param baudrate   Baudrate to be set.
+ * \return status Baudrate set result.
  */
 static inline enum status_code qspi_set_baudrate(Qspi *qspi, uint32_t baudrate)
 {
@@ -360,6 +361,7 @@ static inline void qspi_set_instruction_code(Qspi *qspi, struct qspi_mem_cmd_t i
  * \brief Reads the Instruction frame of QSPI
  *
  * \param pQspi   Pointer to an Qspi instance.
+ * \return status QSPI frame value.
  */
 static inline uint32_t qspi_get_inst_frame(Qspi *qspi)
 {
@@ -431,6 +433,7 @@ static inline void qspi_set_writeprotect(Qspi *qspi, uint32_t enable)
  *
  * \param qspi  Pointer to a Qspi instance.
  * \return Write protection status.
+ * \return status QSPI write protect status.
  */
 static inline uint32_t qspi_get_writeprotect_status(Qspi *qspi)
 {
@@ -438,7 +441,7 @@ static inline uint32_t qspi_get_writeprotect_status(Qspi *qspi)
 	return qspi->QSPI_WPSR;
 }
 
-void qspi_initialize(Qspi *qspi, struct qspi_config_t *qspi_config);
+enum status_code qspi_initialize(Qspi *qspi, struct qspi_config_t *qspi_config);
 void qspi_get_config_default(struct qspi_config_t * qspi_config);
 enum status_code qspi_read(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes);
 enum status_code qspi_write(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes);

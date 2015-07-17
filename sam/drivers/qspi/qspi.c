@@ -184,6 +184,7 @@ static inline void qspi_set_transfer_delay(Qspi *qspi, uint8_t uc_dlybs)
  * \brief Read QSPI RDR register for SPI mode
  *
  * \param qspi   Pointer to an Qspi instance.
+ * \return status Data value read from QSPI.
  */
 static inline uint16_t qspi_read_spi(Qspi *qspi)
 {
@@ -212,10 +213,12 @@ static inline void qspi_write_spi(Qspi *qspi, uint16_t w_data)
  *
  * \param pQspi        Pointer to an Qspi instance.
  * \param qspi_config  Pointer to an qspi_config_t struct.
+ * \return status QSPI set config result.
  *
  */
-void qspi_set_config(Qspi *qspi, struct qspi_config_t *qspi_config)
+enum status_code qspi_set_config(Qspi *qspi, struct qspi_config_t *qspi_config)
 {
+	enum status_code status = STATUS_OK;
 	if(qspi_config->serial_memory_mode == mem_mode) {
 		qspi_set_memory_mode(qspi);
 	} else {
@@ -237,10 +240,11 @@ void qspi_set_config(Qspi *qspi, struct qspi_config_t *qspi_config)
 	qspi_set_delay_between_consecutive_transfers(qspi, qspi_config->delay_between_ct);
 	qspi_set_clock_polarity(qspi, qspi_config->clock_polarity);
 	qspi_set_clock_phase(qspi, qspi_config->clock_phase);
-	qspi_set_baudrate(qspi, qspi_config->baudrate);
+	status = qspi_set_baudrate(qspi, qspi_config->baudrate);
 	qspi_set_transfer_delay(qspi, qspi_config->transfer_delay);
 	qspi_set_scrambling_mode(qspi, qspi_config->scrambling_en, qspi_config->scrambling_random_value_dis);
 	qspi_set_scrambing_key(qspi, qspi_config->scrambling_user_key);
+	return status;
 }
 
 /**
@@ -248,17 +252,20 @@ void qspi_set_config(Qspi *qspi, struct qspi_config_t *qspi_config)
  *
  * \param pQspi         Pointer to an Qspi instance.
  * \param qspi_config   Pointer to an qspi_config_t struct.
+ * \return status       QSPI initialize result.
  *
  */
-void qspi_initialize(Qspi *qspi, struct qspi_config_t *qspi_config)
+enum status_code qspi_initialize(Qspi *qspi, struct qspi_config_t *qspi_config)
 {
+	enum status_code status = STATUS_OK;
 	qspi_disable(qspi);
 	qspi_reset(qspi);
 
 	/** Configure an QSPI peripheral. */
-	qspi_set_config(qspi, qspi_config);
+	status = qspi_set_config(qspi, qspi_config);
 
 	qspi_enable(qspi);
+	return status;
 }
 
 /**

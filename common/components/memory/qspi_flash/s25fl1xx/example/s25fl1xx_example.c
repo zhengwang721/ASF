@@ -147,6 +147,7 @@ int main(void)
 	uint32_t buffer[4];
 
 	uint8_t *memory;
+	enum status_code status = STATUS_OK;
 
 	/* Initialize the system */
 	sysclk_init();
@@ -162,8 +163,16 @@ int main(void)
 	pmc_enable_periph_clk(ID_QSPI);
 
 	/* QSPI memory mode configure */
-	s25fl1xx_initialize(g_qspid.qspi_hw, &mode_config, 1);
-	puts("QSPI drivers initialized\n\r");
+	status = s25fl1xx_initialize(g_qspid.qspi_hw, &mode_config, 1);
+	if (status == STATUS_OK) {
+		puts("QSPI drivers initialized\n\r");
+	} else {
+		puts("QSPI drivers initialize failed\n\r");
+		while (1) {
+			/* Capture error */
+		}
+	}
+
 
 	/* enable quad mode */
 	s25fl1xx_set_quad_mode(&g_qspid, 1);
