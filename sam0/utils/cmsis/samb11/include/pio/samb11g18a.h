@@ -73,14 +73,14 @@
 	#define PIN_LP_GPIO_24   24
 #endif
 
-#define MEGAMUX_SEL0_UART1_RXD            0L
-#define MEGAMUX_SEL1_UART1_TXD            1L
-#define MEGAMUX_SEL2_UART1_CTS            2L
-#define MEGAMUX_SEL3_UART1 RTS            3L
-#define MEGAMUX_SEL4_UART2_RXD            4L
-#define MEGAMUX_SEL5_UART2_TXD            5L
-#define MEGAMUX_SEL6_UART2_CTS            6L
-#define MEGAMUX_SEL7_UART2_RTS            7L
+#define MEGAMUX_SEL0_UART0_RXD            0L
+#define MEGAMUX_SEL1_UART0_TXD            1L
+#define MEGAMUX_SEL2_UART0_CTS            2L
+#define MEGAMUX_SEL3_UART0_RTS            3L
+#define MEGAMUX_SEL4_UART1_RXD            4L
+#define MEGAMUX_SEL5_UART1_TXD            5L
+#define MEGAMUX_SEL6_UART1_CTS            6L
+#define MEGAMUX_SEL7_UART1_RTS            7L
 #define MEGAMUX_SEL8_I2C0_SDA             8L
 #define MEGAMUX_SEL9_I2C0_SCL             9L
 #define MEGAMUX_SEL10_I2C1_SDA            10L
@@ -268,5 +268,48 @@
 
 /* QDEC signal: QDEC Z IN B on gpio_pin mux 1 and MEGAMUX 34 */
 #define PINMUX_MEGAMUX_SEL34_QDEC_Z_B_PIN(gpio_pin)   ((gpio_pin << 16) | (MEGAMUX_SEL34_QUAD_DEC_Z_IN_B << 8) | 1)
+
+/* ========== GPIO definition for UART peripheral ========== */
+#define PIN_LP_GPIO_2_MUX2_UART0_RXD		2L              /**< \brief UART0 signal: RXD on LP_GPIO_2 mux 2 */
+#define MUX_LP_GPIO_2_MUX2_UART0_RXD		2L
+#define PINMUX_LP_GPIO_2_MUX2_UART0_RXD		((PIN_LP_GPIO_2_MUX2_UART0_RXD << 16) | MUX_LP_GPIO_2_MUX2_UART0_RXD)
+
+#define PIN_LP_GPIO_3_MUX2_UART0_TXD		3L              /**< \brief UART0 signal: TXD on LP_GPIO_3 mux 2 */
+#define MUX_LP_GPIO_3_MUX2_UART0_TXD		2L
+#define PINMUX_LP_GPIO_3_MUX2_UART0_TXD		((PIN_LP_GPIO_3_MUX2_UART0_TXD << 16) | MUX_LP_GPIO_3_MUX2_UART0_TXD)
+
+#define PIN_LP_GPIO_4_MUX2_UART0_CTS		4L              /**< \brief UART0 signal: CTS on LP_GPIO_4 mux 2 */
+#define MUX_LP_GPIO_4_MUX2_UART0_CTS		2L
+#define PINMUX_LP_GPIO_4_MUX2_UART0_CTS		((PIN_LP_GPIO_4_MUX2_UART0_CTS << 16) | MUX_LP_GPIO_4_MUX2_UART0_CTS)
+
+#define PIN_LP_GPIO_5_MUX2_UART0_RTS		5L              /**< \brief UART0 signal: RTS on LP_GPIO_5 mux 2 */
+#define MUX_LP_GPIO_5_MUX2_UART0_RTS		2L
+#define PINMUX_LP_GPIO_5_MUX2_UART0_RTS		((PIN_LP_GPIO_5_MUX2_UART0_RTS << 16) | MUX_LP_GPIO_5_MUX2_UART0_RTS)
+
+#define PIN_LP_GPIO_6_MUX2_UART1_RXD		6L              /**< \brief UART1 signal: RXD on LP_GPIO_6 mux 2 */
+#define MUX_LP_GPIO_6_MUX2_UART1_RXD		2L
+#define PINMUX_LP_GPIO_6_MUX2_UART1_RXD		((PIN_LP_GPIO_6_MUX2_UART1_RXD << 16) | MUX_LP_GPIO_6_MUX2_UART1_RXD)
+
+#define PIN_LP_GPIO_7_MUX2_UART1_TXD		7L              /**< \brief UART1 signal: TXD on LP_GPIO_7 mux 2 */
+#define MUX_LP_GPIO_7_MUX2_UART1_TXD		2L
+#define PINMUX_LP_GPIO_7_MUX2_UART1_TXD		((PIN_LP_GPIO_7_MUX2_UART1_TXD << 16) | MUX_LP_GPIO_7_MUX2_UART1_TXD)
+
+#define PIN_LP_GPIO_14_MUX2_UART1_CTS		14L             /**< \brief UART1 signal: CTS on LP_GPIO_14 mux 2 */
+#define MUX_LP_GPIO_14_MUX2_UART1_CTS		2L
+#define PINMUX_LP_GPIO_14_MUX2_UART1_CTS	((PIN_LP_GPIO_14_MUX2_UART1_CTS << 16) | MUX_LP_GPIO_14_MUX2_UART1_CTS)
+
+#define PIN_LP_GPIO_15_MUX2_UART1_RTS		15L             /**< \brief UART1 signal: RTS on LP_GPIO_15 mux 2 */
+#define MUX_LP_GPIO_15_MUX2_UART1_RTS		2L
+#define PINMUX_LP_GPIO_15_MUX2_UART1_RTS	((PIN_LP_GPIO_15_MUX2_UART1_RTS << 16) | MUX_LP_GPIO_15_MUX2_UART1_RTS)
+
+#define PINMUX_MEGAMUX_SEL0_UART0_RXD_PIN(gpio_pin)    ((gpio_pin << 16) | (MEGAMUX_SEL0_UART0_RXD << 8) | 1)
+#define PINMUX_MEGAMUX_SEL1_UART0_TXD_PIN(gpio_pin)    ((gpio_pin << 16) | (MEGAMUX_SEL1_UART0_TXD << 8) | 1)
+#define PINMUX_MEGAMUX_SEL2_UART0_CTS_PIN(gpio_pin)    ((gpio_pin << 16) | (MEGAMUX_SEL2_UART0_CTS << 8) | 1)
+#define PINMUX_MEGAMUX_SEL3_UART0_RTS_PIN(gpio_pin)    ((gpio_pin << 16) | (MEGAMUX_SEL3_UART0_RTS << 8) | 1)
+
+#define PINMUX_MEGAMUX_SEL4_UART1_RXD_PIN(gpio_pin)    ((gpio_pin << 16) | (MEGAMUX_SEL4_UART1_RXD << 8) | 1)
+#define PINMUX_MEGAMUX_SEL5_UART1_TXD_PIN(gpio_pin)    ((gpio_pin << 16) | (MEGAMUX_SEL5_UART1_TXD << 8) | 1)
+#define PINMUX_MEGAMUX_SEL6_UART1_CTS_PIN(gpio_pin)    ((gpio_pin << 16) | (MEGAMUX_SEL6_UART1_CTS << 8) | 1)
+#define PINMUX_MEGAMUX_SEL7_UART1_RTS_PIN(gpio_pin)    ((gpio_pin << 16) | (MEGAMUX_SEL7_UART1_RTS << 8) | 1)
 
 #endif /* _SAMB11G18A_PIO_ */

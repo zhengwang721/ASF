@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief USART Serial wrapper service for the SAM D/L/C/R devices.
+ * \brief UART Serial wrapper service for the SAM B11 devices.
  *
- * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,12 +43,12 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef _USART_SERIAL_H_
-#define _USART_SERIAL_H_
+#ifndef _UART_SERIAL_H_
+#define _UART_SERIAL_H_
 
 #include "compiler.h"
 #include "status_codes.h"
-#include "usart.h"
+#include "uart.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -56,25 +56,21 @@ extern "C" {
 
 /** \name Serial Management Configuration */
 
-typedef Sercom * usart_inst_t;
-
-//struct usart_module usart;
-
-/*! \brief Initializes the Usart in serial mode.
+/*! \brief Initializes the Uart in serial mode.
  *
- * \param[in,out] module  Software instance of the USART to initialize.
- * \param[in]     hw      Base address of the hardware USART.
- * \param[in]     config  Configuration settings for the USART.
+ * \param[in,out] module  Software instance of the UART to initialize.
+ * \param[in]     hw      Base address of the hardware UART.
+ * \param[in]     config  Configuration settings for the UART.
  *
  * \retval true if the initialization was successful
  * \retval false if initialization failed (error in baud rate calculation)
  */
 static inline bool usart_serial_init(
-		struct usart_module *const module,
-		usart_inst_t const hw,
-		const struct usart_config *const config)
+		struct uart_module *const module,
+		Uart * const hw,
+		const struct uart_config *const config)
 {
-	if (usart_init(module, hw, config) == STATUS_OK) {
+	if (uart_init(module, hw, config) == STATUS_OK) {
 		return true;
 	}
 	else {
@@ -82,70 +78,70 @@ static inline bool usart_serial_init(
 	}
 }
 
-/** \brief Sends a character with the USART.
+/** \brief Sends a character with the UART.
  *
- * \param[in,out] module  Software instance of the USART.
+ * \param[in,out] module  Software instance of the UART.
  * \param[in]     c       Character to write.
  *
  * \return Status code
  */
 static inline enum status_code usart_serial_putchar(
-		struct usart_module *const module,
+		struct uart_module *const module,
 		uint8_t c)
 {
-	while(STATUS_OK !=usart_write_wait(module, c));
+	while(STATUS_OK !=uart_write_wait(module, c));
 
 	return STATUS_OK;
 }
 
 /** \brief Waits until a character is received, and returns it.
  *
- * \param[in,out] module  Software instance of the USART.
+ * \param[in,out] module  Software instance of the UART.
  * \param[out]    c       Destination for the read character.
  */
 static inline void usart_serial_getchar(
-		struct usart_module *const module,
+		struct uart_module *const module,
 		uint8_t *c)
 {
 	uint16_t temp = 0;
 
-	while(STATUS_OK != usart_read_wait(module, &temp));
+	while(STATUS_OK != uart_read_wait(module, &temp));
 
 	*c = temp;
 }
 
 /**
- * \brief Send a sequence of bytes to USART device
+ * \brief Send a sequence of bytes to UART device
  *
- * \param[in,out] module   Software instance of the USART.
+ * \param[in,out] module   Software instance of the UART.
  * \param[in]     tx_data  Data buffer to read the data to write from.
  * \param[in]     length   Length of data to write.
  */
 static inline enum status_code usart_serial_write_packet(
-		struct usart_module *const module,
+		struct uart_module *const module,
 		const uint8_t *tx_data,
 		uint16_t length)
 {
-	return usart_write_buffer_wait(module, tx_data, length);
+	return uart_write_buffer_wait(module, tx_data, length);
 }
 
 /**
- * \brief Receive a sequence of bytes from USART device
+ * \brief Receive a sequence of bytes from UART device
  *
- * \param[in,out] module   Software instance of the USART.
+ * \param[in,out] module   Software instance of the UART.
  * \param[out]    rx_data  Data buffer to store the read data into.
  * \param[in]     length   Length of data to read.
  */
 static inline enum status_code usart_serial_read_packet(
-		struct usart_module *const module,
+		struct uart_module *const module,
 		uint8_t *rx_data,
 		uint16_t length)
 {
-	return usart_read_buffer_wait(module, rx_data, length);
+	return uart_read_buffer_wait(module, rx_data, length);
 }
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif  // _USART_SERIAL_H_
+#endif  // _UART_SERIAL_H_
