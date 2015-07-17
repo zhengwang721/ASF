@@ -432,7 +432,6 @@ static inline uint32_t qspi_get_writeprotect_status(Qspi *qspi)
 }
 
 void qspi_initialize(Qspi *qspi, struct qspi_config_t *qspi_config);
-void qspi_set_config(Qspi *qspi, struct qspi_config_t *qspi_config);
 void qspi_get_config_default(struct qspi_config_t * qspi_config);
 enum status_code qspi_read(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes);
 enum status_code qspi_write(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes);

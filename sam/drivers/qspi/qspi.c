@@ -211,24 +211,6 @@ static inline void qspi_write_spi(Qspi *qspi, uint16_t w_data)
 /**
  * \brief Config qspi according the config struct
  *
- * \param pQspi         Pointer to an Qspi instance.
- * \param qspi_config   Pointer to an qspi_config_t struct.
- *
- */
-void qspi_initialize(Qspi *qspi, struct qspi_config_t *qspi_config)
-{
-	qspi_disable(qspi);
-	qspi_reset(qspi);
-
-	/** Configure an QSPI peripheral. */
-	qspi_set_config(qspi, qspi_config);
-
-	qspi_enable(qspi);
-}
-
-/**
- * \brief Config qspi according the config struct
- *
  * \param pQspi        Pointer to an Qspi instance.
  * \param qspi_config  Pointer to an qspi_config_t struct.
  *
@@ -260,6 +242,24 @@ void qspi_set_config(Qspi *qspi, struct qspi_config_t *qspi_config)
 	qspi_set_transfer_delay(qspi, qspi_config->transfer_delay);
 	qspi_set_scrambling_mode(qspi, qspi_config->scrambling_en, qspi_config->scrambling_random_value_dis);
 	qspi_set_scrambing_key(qspi, qspi_config->scrambling_user_key);
+}
+
+/**
+ * \brief Config qspi according the config struct
+ *
+ * \param pQspi         Pointer to an Qspi instance.
+ * \param qspi_config   Pointer to an qspi_config_t struct.
+ *
+ */
+void qspi_initialize(Qspi *qspi, struct qspi_config_t *qspi_config)
+{
+	qspi_disable(qspi);
+	qspi_reset(qspi);
+
+	/** Configure an QSPI peripheral. */
+	qspi_set_config(qspi, qspi_config);
+
+	qspi_enable(qspi);
 }
 
 /**
