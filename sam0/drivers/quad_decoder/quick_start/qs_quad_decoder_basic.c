@@ -49,51 +49,45 @@ volatile int16_t	qdec_axis_x,
 					qdec_axis_y,
 					qdec_axis_z;
 
-void configure_qdec(void);
+void configure_quad_decoder(void);
 
 //! [setup]
-void configure_qdec(void)
+void configure_quad_decoder(void)
 {
 //! [set_conf]
-	struct qdec_config config_qdec;
+	struct quad_decoder_config config_quad_decoder;
 //! [set_conf]
 //! [get_def]
-	qdec_get_config_defaults(&config_qdec);
+	quad_decoder_get_config_defaults(&config_quad_decoder);
 //! [get_def]
-
-//! [init_qdec1]
-	qdec_init(QDEC_AXIS_X, &config_qdec);
-//! [init_qdec1]
-
 //! [set_config1]
-	config_qdec.pinmux_pad[0] = 
-			PINMUX_MEGAMUX_SEL31_QDEC_Y_A_PIN(PIN_LP_GPIO_17);
-	config_qdec.pinmux_pad[1] = 
-			PINMUX_MEGAMUX_SEL32_QDEC_Y_B_PIN(PIN_LP_GPIO_18);
+	config_quad_decoder.pinmux_pad[0] = QUAD_DECODER_MUX_X_A;
+	config_quad_decoder.pinmux_pad[1] = QUAD_DECODER_MUX_X_B;
 //! [set_config1]
-//! [init_qdec2]
-	qdec_init(QDEC_AXIS_Y, &config_qdec);
-//! [init_qdec2]
+//! [init_qdec1]
+	quad_decoder_init(QDEC_AXIS_X, &config_quad_decoder);
+//! [init_qdec1]
 
 //! [set_config2]
-	config_qdec.pinmux_pad[0] = 
-			PINMUX_MEGAMUX_SEL33_QDEC_Z_A_PIN(PIN_LP_GPIO_19);
-	config_qdec.pinmux_pad[1] = 
-			PINMUX_MEGAMUX_SEL34_QDEC_Z_B_PIN(PIN_LP_GPIO_20);
+	config_quad_decoder.pinmux_pad[0] = QUAD_DECODER_MUX_Y_A;
+	config_quad_decoder.pinmux_pad[1] = QUAD_DECODER_MUX_Y_B;
 //! [set_config2]
+//! [init_qdec2]
+	quad_decoder_init(QDEC_AXIS_Y, &config_quad_decoder);
+//! [init_qdec2]
+
+//! [set_config3]
+	config_quad_decoder.pinmux_pad[0] = QUAD_DECODER_MUX_Z_A;
+	config_quad_decoder.pinmux_pad[1] = QUAD_DECODER_MUX_Z_B;
+//! [set_config3]
 //! [init_qdec3]
-	qdec_init(QDEC_AXIS_Y, &config_qdec);
+	quad_decoder_init(QDEC_AXIS_Z, &config_quad_decoder);
 //! [init_qdec3]
 
-//! [enable_clk]
-	qdec_clock_enable(QDEC_AXIS_X);
-	qdec_clock_enable(QDEC_AXIS_Y);
-	qdec_clock_enable(QDEC_AXIS_Z);
-//! [enable_clk]
 //! [enable_qdec]
-	qdec_enable(QDEC_AXIS_X);
-	qdec_enable(QDEC_AXIS_Y);
-	qdec_enable(QDEC_AXIS_Z);
+	quad_decoder_enable(QDEC_AXIS_X);
+	quad_decoder_enable(QDEC_AXIS_Y);
+	quad_decoder_enable(QDEC_AXIS_Z);
 //! [enable_qdec]
 }
 //! [setup]
@@ -101,9 +95,10 @@ void configure_qdec(void)
 int main(void)
 {
 //! [add_main]
+	uint8_t staus;
 	//system_init();
 
-	configure_qdec();
+	configure_quad_decoder();
 
 //! [add_main]
 
@@ -115,29 +110,27 @@ int main(void)
 		/* Check irq status, if trigger irq, clear irq status and 
 		 * reset the quad decoder to reset counter */
 //! [get_irq]
-		uint8_t staus = qdec_get_irq_status();
+		staus = quad_decoder_get_irq_status();
 //! [get_irq]
 //! [ckeck_status]
 		if (staus & LPMCU_MISC_REGS_QUAD_DEC_IRQS_QUAD_DEC_1_IRQ) {
 //! [ckeck_status]
 //! [clear_status]
-			qdec_clear_irq_status(QDEC_AXIS_X);
+			quad_decoder_clear_irq_status(QDEC_AXIS_X);
 //! [clear_status]
-//! [reset]
-			qdec_reset(QDEC_AXIS_X);
-//! [reset]
-		} else if (staus & LPMCU_MISC_REGS_QUAD_DEC_IRQS_QUAD_DEC_2_IRQ) {
-			qdec_clear_irq_status(QDEC_AXIS_Y);
-			qdec_reset(QDEC_AXIS_Y);
-		} else if (staus & LPMCU_MISC_REGS_QUAD_DEC_IRQS_QUAD_DEC_3_IRQ) {
-			qdec_clear_irq_status(QDEC_AXIS_Z);
-			qdec_reset(QDEC_AXIS_Z);
 		}
+		if (staus & LPMCU_MISC_REGS_QUAD_DEC_IRQS_QUAD_DEC_2_IRQ) {
+			quad_decoder_clear_irq_status(QDEC_AXIS_Y);
+		}
+		if (staus & LPMCU_MISC_REGS_QUAD_DEC_IRQS_QUAD_DEC_3_IRQ) {
+			quad_decoder_clear_irq_status(QDEC_AXIS_Z);
+		}
+		
 //! [get_counter]
 		/* Get x,y,z axis current counter */
-		qdec_axis_x = qdec_get_counter(QDEC_AXIS_X);
-		qdec_axis_y = qdec_get_counter(QDEC_AXIS_Y);
-		qdec_axis_z = qdec_get_counter(QDEC_AXIS_Z);
+		qdec_axis_x = quad_decoder_get_counter(QDEC_AXIS_X);
+		qdec_axis_y = quad_decoder_get_counter(QDEC_AXIS_Y);
+		qdec_axis_z = quad_decoder_get_counter(QDEC_AXIS_Z);
 //! [get_counter]
 	}
 //! [main_imp]

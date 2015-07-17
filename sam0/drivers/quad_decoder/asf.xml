@@ -1,12 +1,12 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.qdec" caption="QDEC - QUAD DECODER for SAMB11">
+	<module type="driver" id="sam0.drivers.quad_decoder" caption="QUAD DECODER - QUAD DECODER for SAMB11">
 		<info type="keyword" value="technology">
 			<keyword value="Digital Signal Processing"/>
 		</info>
 
 		<info type="appnote" value="ATxxxxx"/>
 		<info type="keyword" value="pdf">
-			<keyword value="QDEC"/>
+			<keyword value="QUAD DECODER"/>
 		</info>
 
 		<info type="description" value="pdf">
@@ -15,14 +15,14 @@
 		</info>
 
 		<build type="include-path" value="."/>
-		<build type="header-file" subtype="api" value="qdec.h"/>
-		<build type="c-source" value="qdec.c"/>
+		<build type="header-file" subtype="api" value="quad_decoder.h"/>
+		<build type="c-source" value="quad_decoder.c"/>
 
-		<build type="header-file" value="quick_start/qs_qdec_basic.h"/>
+		<build type="header-file" value="quick_start/qs_quad_decoder_basic.h"/>
 
-		<build type="doxygen-entry-point" value="asfdoc_sam0_qdec_group"/>
+		<build type="doxygen-entry-point" value="asfdoc_sam0_quad_decoder_group"/>
 		<build type="doxygen-example-path" value="quick_start"/>
-		<build type="doxygen-quick-start" value="asfdoc_sam0_qdec_exqsg"/>
+		<build type="doxygen-quick-start" value="asfdoc_sam0_quad_decoder_exqsg"/>
 
 		<device-support value="samb"/>
 		<require idref="sam0.utils"/>

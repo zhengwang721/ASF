@@ -43,8 +43,8 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef QUAD_DEC_H_INCLUDED
-#define QUAD_DEC_H_INCLUDED
+#ifndef QUAD_DECODER_H_INCLUDED
+#define QUAD_DECODER_H_INCLUDED
 
 #include <compiler.h>
 #include "gpio.h"
@@ -58,7 +58,7 @@ extern "C" {
  *
  * Values is the axis(x,y,z) of QUAD DECODER instance.
  */
-enum qdec_axis {
+enum quad_decoder_axis {
 	QDEC_AXIS_X = 0,
 	QDEC_AXIS_Y,
 	QDEC_AXIS_Z,
@@ -70,27 +70,28 @@ enum qdec_axis {
  * QUAD DECODER module clock.
  *
  */
-enum qdec_clock_input {
-	/** source from clock input 0 26MHz*/
+enum quad_decoder_clock_input {
+	/** Source from clock input 0 26MHz */
 	QDEC_CLK_INPUT_0 = 0,
-	/** source from clock input 1 13MHz */
+	/** Source from clock input 1 13MHz */
 	QDEC_CLK_INPUT_1,
-	/** source from clock input 2 6.5MHz*/
+	/** Source from clock input 2 6.5MHz */
 	QDEC_CLK_INPUT_2,
-	/** source from clock input 3 3MHz*/
+	/** Source from clock input 3 3MHz */
 	QDEC_CLK_INPUT_3,
 };
 
 /**
  * \brief QUAD DECODER configuration structure.
  *
- * Configuration struct for a QUAD DECODER instance. This structure should be
- * initialized by the \ref quad_dec_get_config_defaults function before being
- * modified by the user application.
+ * Configuration struct for a QUAD DECODER instance.
+ * This structure should be initialized by the
+ * \ref quad_decoder_get_config_defaults function
+ * before being modified by the user application.
  */
-struct qdec_config {
+struct quad_decoder_config {
 	/** Quad Decoder Source Clock Frequency Select */
-	uint8_t clock_sel; 
+	enum quad_decoder_clock_input clock_sel; 
 	/** Upper Threshold of counter for Quad Decoder */
 	int16_t threshold_upper;
 	/** Lower Threshold of counter for Quad Decoder */
@@ -101,17 +102,17 @@ struct qdec_config {
 	
 };
 
-void qdec_get_config_defaults(struct qdec_config *config);
-void qdec_init(enum qdec_axis qdec,
-		const struct qdec_config *config);
-void qdec_clock_enable(enum qdec_axis qdec);
-void qdec_clock_disable(enum qdec_axis qdec);
-void qdec_enable(enum qdec_axis qdec);
-void qdec_disable(enum qdec_axis qdec);
-uint8_t qdec_get_irq_status(void);
-void qdec_clear_irq_status(enum qdec_axis qdec);
-int16_t qdec_get_counter(enum qdec_axis qdec);
-void qdec_reset(enum qdec_axis qdec);
+void quad_decoder_get_config_defaults(
+		struct quad_decoder_config *config);
+void quad_decoder_init(enum quad_decoder_axis qdec,
+		const struct quad_decoder_config *config);
+void quad_decoder_enable(enum quad_decoder_axis qdec);
+void quad_decoder_disable(enum quad_decoder_axis qdec);
+uint8_t quad_decoder_get_irq_status(void);
+void quad_decoder_clear_irq_status(enum quad_decoder_axis qdec);
+int16_t quad_decoder_get_counter(enum quad_decoder_axis qdec);
+void quad_decoder_reset(enum quad_decoder_axis qdec);
+
 #ifdef __cplusplus
 }
 #endif

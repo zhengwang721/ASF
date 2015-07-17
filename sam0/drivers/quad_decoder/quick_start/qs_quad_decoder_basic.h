@@ -45,72 +45,70 @@
  */
 
 /**
- * \page asfdoc_sam0_qdec_use_case Quick Start Guide for QUAD DECODER - Basic
+ * \page asfdoc_sam0_quad_decoder_use_case Quick Start Guide for QUAD DECODER - Basic
  *
  * In this use case, the QUAD DECODER module is configured for quad decoder.
  *
- * \section asfdoc_sam0_qdec_basic_use_case_setup Setup
+ * \section asfdoc_sam0_quad_decoder_basic_use_case_setup Setup
  *
- * \subsection asfdoc_sam0_qdec_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_sam0_quad_decoder_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_sam0_qdec_basic_use_case_setup_code Code
+ * \subsection asfdoc_sam0_quad_decoder_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
- * \snippet qs_qdec_basic.c setup
+ * \snippet qs_quad_decoder_basic.c setup
  *
- * \subsection asfdoc_sam0_qdec_use_case_main_code Add to Main
+ * \subsection asfdoc_sam0_quad_decoder_use_case_main_code Add to Main
  * Add the following to \c main().
- * \snippet qs_qdec_basic.c add_main
+ * \snippet qs_quad_decoder_basic.c add_main
  *
- * \subsection asfdoc_sam0_qdec_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_sam0_quad_decoder_basic_use_case_setup_flow Workflow
  * -# Make configuration structure.
- *    \snippet qs_qdec_basic.c set_conf
+ *    \snippet qs_quad_decoder_basic.c set_conf
  *
  * -# Fill the configuration structure with the default driver configuration.
- *    \snippet qs_qdec_basic.c get_def
+ *    \snippet qs_quad_decoder_basic.c get_def
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- * -# Initialize module.
- *    \snippet qs_qdec_basic.c init_qdec1
+ * -# Change configurations axis x as desired.
+ *    \snippet qs_quad_decoder_basic.c set_config1
  *
- * -# Change configurations as desired.
- *    \snippet qs_qdec_basic.c set_config1
+ * -# Initialize axis x module.
+ *    \snippet qs_quad_decoder_basic.c init_qdec1
  *
- * -# Initialize module.
- *    \snippet qs_qdec_basic.c init_qdec2
+ * -# Change configurations axis y as desired.
+ *    \snippet qs_quad_decoder_basic.c set_config2
  *
- * -# Change configurations as desired.
- *    \snippet qs_qdec_basic.c set_config2
+ * -# Initialize axis y module.
+ *    \snippet qs_quad_decoder_basic.c init_qdec2
  *
- * -# Initialize module.
- *    \snippet qs_qdec_basic.c init_qdec3
+ * -# Change configurations axis z as desired.
+ *    \snippet qs_quad_decoder_basic.c set_config3
  *
- * -# Enable clock.
- *    \snippet qs_qdec_basic.c enable_clk
+ * -# Initialize axis z module.
+ *    \snippet qs_quad_decoder_basic.c init_qdec3
  *
  * -# Enable module.
- *    \snippet qs_qdec_basic.c enable_qdec
+ *    \snippet qs_quad_decoder_basic.c enable_qdec
  *
- * \section asfdoc_sam0_qdec_basic_use_case_basic_implement Implementation
+ * \section asfdoc_sam0_quad_decoder_basic_use_case_basic_implement Implementation
  * Add the following to \c main().
- * \snippet qs_qdec_basic.c main_imp
+ * \snippet qs_quad_decoder_basic.c main_imp
  *
- * \subsection asfdoc_sam0_qdec_basic_use_case_basic_workflow Workflow
+ * \subsection asfdoc_sam0_quad_decoder_basic_use_case_basic_workflow Workflow
  * -# Start an infinite loop, to continuously get quad decoder counter.
- *    \snippet qs_qdec_basic.c main_loop
+ *    \snippet qs_quad_decoder_basic.c main_loop
  *
  * -# Get the irq status.
- *    \snippet qs_qdec_basic.c get_irq
+ *    \snippet qs_quad_decoder_basic.c get_irq
  *
  * -# Check to see if irq occurred.
- *    \snippet qs_qdec_basic.c ckeck_status
+ *    \snippet qs_quad_decoder_basic.c ckeck_status
  * -# Once an irq occurs, clear the irq status.
- *    \snippet qs_qdec_basic.c clear_status
- * -# Reset the module, so that reset counter to 0
- *    \snippet qs_qdec_basic.c reset
+ *    \snippet qs_quad_decoder_basic.c clear_status
  *
  * -# Get the x,y,z counter
- *    \snippet qs_qdec_basic.c get_counter
+ *    \snippet qs_quad_decoder_basic.c get_counter
  */
