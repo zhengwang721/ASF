@@ -263,7 +263,7 @@ void qspi_initialize(Qspi *qspi, struct qspi_config_t *qspi_config)
 }
 
 /**
- * \brief Config qspi according the config struct
+ * \brief Get default config
  *
  * \param qspi_config     Pointer to an qspi_config_t struct.
  *
