@@ -1,9 +1,9 @@
 /**
- * \file timer_hw.h
+ * \file
  *
- * \brief Handles timer functionalities
+ * \brief Timer Driver Configuration Header
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,16 +38,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+#ifndef CONF_TIMER_H_INCLUDED
+#define CONF_TIMER_H_INCLUDED
 
-#ifndef __TIMER_HW_H__
-#define __TIMER_HW_H__
+#define TIMER                (TC0)
+#define TIMER_CHANNEL_ID     0
+#define ID_TC                (ID_TC0)
 
-typedef void (*hw_timer_callback_t)(void);
+#define DEF_1MHZ			(1000000)
+#define DEF_120MHz			(120000000)
+#define TIMER_OVF_COUNT_1SEC	(DEF_120MHz/(128*65535))
 
-void hw_timer_init(void);
-void hw_timer_register_callback(hw_timer_callback_t cb_ptr);
-void hw_timer_start(uint32_t timer_val);
-void hw_timer_stop(void);
-
-#endif /* __TIMER_HW_H__ */
+#endif

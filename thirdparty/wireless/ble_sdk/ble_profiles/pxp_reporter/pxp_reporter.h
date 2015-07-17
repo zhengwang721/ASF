@@ -1,9 +1,9 @@
 /**
 * \file
 *
-* \brief Proximity Reporter Profile Application declarations
+* \brief Proximity Reporter Profile declarations
 *
-* Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+* Copyright (c) 2015 Atmel Corporation. All rights reserved.
 *
 * \asf_license_start
 *
@@ -48,38 +48,29 @@
 #ifndef __PXP_REPORTER_H__
 #define __PXP_REPORTER_H__
 
+#include "ble_manager.h"
+
+
 /****************************************************************************************
 *							        Includes	                                     							*
 ****************************************************************************************/
 
 
-#include "at_ble_api.h"
-#include "platform.h"
-#include "console_serial.h"
-
-#include "timer_hw.h"
-
-
-#include "ble_manager.h"
-#include "ble_utils.h"
-
 /****************************************************************************************
 *							        Macros	                                     							*
 ****************************************************************************************/
+#define LL_INTERVAL_SLOW			(3)
+#define LL_INTERVAL_MEDIUM			(2)
+#define LL_INTERVAL_FAST			(1)
 
-#define LL_INTERVAL_SLOW	3
-#define LL_INTERVAL_MEDIUM	2
-#define LL_INTERVAL_FAST	1
+
+#define PL_INTERVAL_SLOW			(8)
+#define PL_INTERVAL_MEDIUM			(6)
+#define PL_INTERVAL_FAST			(4)
 
 
-#define PL_INTERVAL_SLOW	8
-#define PL_INTERVAL_MEDIUM	6
-#define PL_INTERVAL_FAST	4
+typedef void (*reporter_callback_t)(uint8_t);
 
-/****************************************************************************************
-*							        Types                                    							*
-****************************************************************************************/
-extern uint8_t timer_interval;
 
 /****************************************************************************************
 *							        Function Prototypes	                                     							*
@@ -95,7 +86,7 @@ extern uint8_t timer_interval;
   *
   * @return void
   */
-void pxp_app_init(void);
+void pxp_app_init(void *param);
 
 /** @brief Initialize the services of the profile
   * 
@@ -117,7 +108,6 @@ void pxp_service_init(void);
   * @return @ref AT_BLE_SUCCESS operation completed successfully
   * @return @ref AT_BLE_FAILURE Generic error.
   */
-
 at_ble_status_t pxp_service_define (void);
 
 
@@ -140,10 +130,8 @@ void pxp_reporter_adv(void);
   * @return @ref AT_BLE_SUCCESS operation completed successfully
   * @return @ref AT_BLE_FAILURE Generic error.
   */
-
-
-
 at_ble_status_t pxp_reporter_connected_state_handler (at_ble_connected_t * conn_params);
+
 
 /** @brief disconnection event handler
   * 
@@ -156,16 +144,20 @@ at_ble_status_t pxp_reporter_connected_state_handler (at_ble_connected_t * conn_
   */
 at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect);
 
+
 /** @brief character changed handler
   * 
-  * @param[in] at_ble_characteristic_changed_t which incluedes handle,new value
+  * @param[in] at_ble_characteristic_changed_t which includes handle,new value
   *
-  * @pre Must be called when character change event occured
+  * @pre Must be called when character change event occurred
   *
   * @return @ref AT_BLE_SUCCESS operation completed successfully
   * @return @ref AT_BLE_FAILURE Generic error.
   */
 at_ble_status_t pxp_reporter_char_changed_handler(at_ble_characteristic_changed_t *char_handle);
+
+void register_pathloss_handler(reporter_callback_t pathloss_fn);
+void register_linkloss_handler(reporter_callback_t linkloss_fn);
 
 #endif
 

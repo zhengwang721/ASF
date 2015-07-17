@@ -1,9 +1,9 @@
 /**
- * \file timer_hw.h
+ * \file
  *
- * \brief Handles timer functionalities
+ * \brief Sleep manager configuration
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,16 +38,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-#ifndef __TIMER_HW_H__
-#define __TIMER_HW_H__
+#define CONFIG_SLEEPMGR_ENABLE
 
-typedef void (*hw_timer_callback_t)(void);
-
-void hw_timer_init(void);
-void hw_timer_register_callback(hw_timer_callback_t cb_ptr);
-void hw_timer_start(uint32_t timer_val);
-void hw_timer_stop(void);
-
-#endif /* __TIMER_HW_H__ */
+#endif /* CONF_SLEEPMGR_H */

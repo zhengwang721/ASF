@@ -1,9 +1,9 @@
 /**
- * \file timer_hw.h
+ * \file
  *
- * \brief Handles timer functionalities
+ * \brief USART Serial Configuration
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,16 +38,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef __TIMER_HW_H__
-#define __TIMER_HW_H__
+#ifndef CONF_USART_SERIAL_H_INCLUDED
+#define CONF_USART_SERIAL_H_INCLUDED
 
-typedef void (*hw_timer_callback_t)(void);
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   (115200UL)
+/** Character length setting */
+#define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
+/** Parity setting */
+#define CONF_UART_PARITY     US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
 
-void hw_timer_init(void);
-void hw_timer_register_callback(hw_timer_callback_t cb_ptr);
-void hw_timer_start(uint32_t timer_val);
-void hw_timer_stop(void);
-
-#endif /* __TIMER_HW_H__ */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

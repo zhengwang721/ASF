@@ -1,9 +1,9 @@
 /**
- * \file timer_hw.h
+ * \file
  *
- * \brief Handles timer functionalities
+ * \brief Board configuration.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,16 +38,25 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef __TIMER_HW_H__
-#define __TIMER_HW_H__
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-typedef void (*hw_timer_callback_t)(void);
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-void hw_timer_init(void);
-void hw_timer_register_callback(hw_timer_callback_t cb_ptr);
-void hw_timer_start(uint32_t timer_val);
-void hw_timer_stop(void);
+/* USART6 module is used in SYNC. mode. */
+#define CONF_BOARD_USART0
 
-#endif /* __TIMER_HW_H__ */
+
+/** Configure AT30TSE pins */
+#define CONF_BOARD_AT30TSE
+
+#define BOARD_FLEXCOM_TWI			FLEXCOM4
+
+#endif /* CONF_BOARD_H_INCLUDED */

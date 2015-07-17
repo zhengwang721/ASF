@@ -1,10 +1,9 @@
-
 /**
  * \file
  *
  * \brief Link Loss Service declarations
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,16 +48,28 @@
 #ifndef __LINK_LOSS_H__
 #define __LINK_LOSS_H__
 
-/****************************************************************************************
-*							        Includes	                                     							*
-****************************************************************************************/
-
-#include <asf.h>
 #include "at_ble_api.h"
+#include "ble_utils.h"
 #include "ble_manager.h"
-#include "at_ble_api.h"
 
+/** @brief count of included service in Linkloss service
+  * 
+  */
 
+#define LLS_INCLUDED_SERVICE_COUNT  (0)
+
+/** @brief count of characteristics in linkloss service
+  * 
+  */
+#define LLS_CHARACTERISTIC_COUNT	(1)
+
+#define INVALID_LLS_PARAM			(0xff)
+
+typedef enum linkloss_alert_level {
+	LLS_NO_ALERT,
+	LLS_MILD_ALERT,
+	LLS_HIGH_ALERT
+} linkloss_alert_level_t;
 
 /****************************************************************************************
 *							        Function Prototypes	                                     							*
@@ -88,5 +99,12 @@ void init_linkloss_service(gatt_service_handler_t *linkloss_serv);
 
 at_ble_status_t lls_primary_service_define(gatt_service_handler_t *lls_service);
 
+
+/** @brief sets the alert value of the Linkloss service
+  * @param[in] gatt_service_handler_t  the service info which has handle range,uuid and characteristic array fields
+  * @param[in] at_ble_characteristic_changed_t  the information of the characteristic changed.
+  * @return @ref ias alert value
+  */
+uint8_t lls_set_alert_value(at_ble_characteristic_changed_t *change_params, gatt_service_handler_t *lls_handler);
 
 #endif /* __LINK_LOSS_H__ */

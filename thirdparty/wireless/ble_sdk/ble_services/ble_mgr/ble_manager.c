@@ -1,4 +1,3 @@
-
 /**
 * \file
 *
@@ -48,20 +47,15 @@
 
 #include <asf.h>
 #include <string.h>
-#include "stddef.h"
 #include "at_ble_api.h"
 #include "ble_manager.h"
-
 #include "ble_utils.h"
 
-#include "pxp_reporter.h"
-#include "tx_power.h"
+#if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)
 #include "link_loss.h"
 #include "immediate_alert.h"
-
-#if defined PROXIMITY_REPORTER
-
-
+#include "tx_power.h"
+#include "pxp_reporter.h"
 #endif
 
 #if defined PROXIMITY_MONITOR
@@ -81,8 +75,8 @@ at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
 #if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)
 at_ble_LTK_t app_bond_info;
-bool app_device_bond ;
-uint8_t auth_info ;
+bool app_device_bond;
+uint8_t auth_info;
 #endif
 
 static void ble_init(void);
@@ -92,7 +86,7 @@ void ble_device_init(at_ble_addr_t *addr)
 {
 	ble_init();
 	ble_set_address(addr);
-	BLE_PROFILE_INIT();
+	BLE_PROFILE_INIT(NULL);
 }
 
 /* Initialize the BLE */
@@ -228,6 +222,7 @@ at_ble_status_t ble_scan_report_handler(at_ble_scan_report_t *scan_report)
 #endif
 
 
+#if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_PERIPHERAL))
 void ble_connected_state_handler(at_ble_connected_t *conn_params)
 {
 	memcpy(ble_connected_dev_info, (uint8_t *)conn_params, sizeof(at_ble_connected_t));
@@ -259,12 +254,12 @@ void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect)
 	DBG_LOG("Device disconnected Reason:0x%02x Handle=0x%x", disconnect->reason, disconnect->handle);
 }
 
-void ble_conn_param_update (void)
+void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update)
 {
 	DBG_LOG("AT_BLE_CONN_PARAM_UPDATE ");
 }
 
-void ble_pair_request_handler(void)
+void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 {
 	at_ble_pair_features_t features;
 	uint8_t i = 0;
@@ -435,25 +430,13 @@ void ble_encryption_request_handler (at_ble_encryption_request_t *encry_req)
 
 	at_ble_encryption_request_reply(ble_connected_dev_info->handle,auth_info ,key_found,app_bond_info);
 }
+#endif
 
 
 void ble_event_manager(at_ble_events_t events, void *event_params)
 {
 	switch(events)
 	{
-		//#if BLE_DEVICE_ROLE == BLE_CENTRAL  
-		//case AT_BLE_SCAN_INFO:
-		//{
-			//BLE_SCAN_INFO_HANDLER((at_ble_scan_info_t *)event_params);
-		//}
-		//break;
-		
-		//case AT_BLE_SCAN_REPORT:
-		//{
-			//BLE_SCAN_REPORT_HANDLER((at_ble_scan_report_t *)event_params);
-		//}
-		//break;
-		
 		case AT_BLE_CONNECTED:
 		{
 			BLE_CONNECTED_STATE_HANDLER((at_ble_connected_t *)event_params);
@@ -465,37 +448,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 			BLE_DISCONNECTED_STATE_HANDLER((at_ble_disconnected_t *)event_params);
 		}
 		break;
-		
-		//case AT_BLE_DISCOVERY_COMPLETE:
-		//{
-			//BLE_DISCOVERY_COMPLETE_HANDLER((at_ble_discovery_complete_t *)event_params);
-		//}
-		//break;
-
-		//case AT_BLE_PRIMARY_SERVICE_FOUND:
-		//{
-			//BLE_PRIMARY_SERVICE_FOUND_HANDLER((at_ble_primary_service_found_t *)event_params);
-		//}
-		//break;
-		
-		//case AT_BLE_CHARACTERISTIC_FOUND:
-		//{
-			//BLE_CHARACTERISTIC_FOUND_HANDLER((at_ble_characteristic_found_t *)event_params);
-		//}
-		//break;
-		
-		//case AT_BLE_CHARACTERISTIC_READ_RESPONSE:
-		//{
-			//BLE_CHARACTERISTIC_READ_RESPONSE((at_ble_characteristic_read_response_t *)event_params);
-		//}
-		//break;
-		
-		//case AT_BLE_CHARACTERISTIC_WRITE_RESPONSE:
-		//{
-			//BLE_CHARACTERISTIC_WRITE_RESPONSE((at_ble_characteristic_write_response_t *)event_params);
-		//}
-		//break;
-		
+				
 		case AT_BLE_CHARACTERISTIC_CHANGED :
 		{
 			BLE_CHARACTERISTIC_CHANGED ((at_ble_characteristic_changed_t *)event_params);
@@ -504,13 +457,13 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 		
 		case AT_BLE_CONN_PARAM_UPDATE_DONE :
 		{
-			BLE_CONN_PARAM_UPDATE_DONE();
+			BLE_CONN_PARAM_UPDATE_DONE((at_ble_conn_param_update_done_t *)event_params);
 		}
 		break;
 		
 		case AT_BLE_PAIR_REQUEST :
 		{
-			BLE_PAIR_REQUEST();
+			BLE_PAIR_REQUEST((at_ble_pair_request_t *)event_params);
 		}
 		break;
 		
@@ -536,11 +489,6 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 			BLE_ENCRYPTION_STATUS_CHANGED((at_ble_encryption_status_changed_t *)event_params);
 		}
 		break;
-		//case AT_BLE_SLAVE_SEC_REQUEST:
-		//{
-			//
-		//}
-		//break;
 		
 		default:
 		{

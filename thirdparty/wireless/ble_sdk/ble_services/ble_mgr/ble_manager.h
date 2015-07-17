@@ -47,12 +47,108 @@
 #ifndef __BLE_MANAGER_H__
 #define __BLE_MANAGER_H__
 
+#include <asf.h>
+#include <string.h>
+#include "stddef.h"
+#include "at_ble_api.h"
+#include "ble_utils.h"
+#include "platform.h"
+#include "pxp_reporter.h"
+//#include "immediate_alert.h"
+//#include "tx_power.h"
+//#include "link_loss.h"
+
+#define PROXIMITY_REPORTER
 #define TX_POWER_SERVICE
 #define LINK_LOSS_SERVICE
 #define IMMEDIATE_ALERT_SERVICE
 
-#define PROXIMITY_REPORTER
+#define BLE_CENTRAL				(0x01)
+#define BLE_PERIPHERAL			(0x02)
+#define BLE_CENTRAL_PERIPHERAL	(0x03)
+#define BLE_OBSERVER			(0x04)
+
 #define BLE_DEVICE_ROLE BLE_PERIPHERAL
+
+static inline void ble_manager_dummy_handler(void *param)
+{
+	while(0);
+}
+
+#if (BLE_DEVICE_ROLE == BLE_OBSERVER)
+
+
+#define MAX_SCAN_DEVICE				(10)			  //Max number of scan device @Todo parse when scan info is available
+#define SCAN_INTERVAL				(96)              //Scan interval 30ms in term of 625us
+#define SCAN_WINDOW					(96)              //Scan window 30ms values in term of 625ms
+#define SCAN_TIMEOUT				(0x0000)          //Timeout  Scan time-out, 0x0000 disables time-out
+
+#define LE_LIMITED_DISCOVERABLE_MODE  ((uint8_t) 1 << 0)
+#define LE_GENERAL_DISCOVERABLE_MODE  ((uint8_t) 1 << 1)
+#define BREDR_NOT_SUPPORTED			  ((uint8_t) 1 << 2)
+#define	LE_BREDR_CAPABLE_CONTROLLER   ((uint8_t) 1 << 3)
+#define LE_BREDR_CAPABLE_HOST		  ((uint8_t) 1 << 4)
+
+/*Length of Adv data types*/
+#define APPEARANCE_SIZE 2
+#define TX_POWER_LEVEL_SIZE 1
+#define ADV_INTERVAL_SIZE 2
+
+/* Gap Advertisement Types */
+typedef enum
+{
+	FLAGS = 0X01,
+	INCOMPLETE_LIST_16BIT_SERV_UUIDS,
+	COMPLETE_LIST_16BIT_SERV_UUIDS,
+	INCOMPLETE_LIST_32BIT_SERV_UUIDS,
+	COMPLETE_LIST_32BIT_SERV_UUIDS,
+	INCOMPLETE_LIST_128BIT_SERV_UUIDS,
+	COMPLETE_LIST_128BIT_SERV_UUIDS,
+	SHORTENED_LOCAL_NAME,
+	COMPLETE_LOCAL_NAME,
+	TX_POWER_LEVEL,
+	CLASS_OF_DEVICE = 0X0D,
+	SIMPLE_PAIRING_HASHING,
+	SIMPLE_PAIRING_RANDOMIZER,
+	DEVICE_ID,
+	SECURITY_MANAGER_OOB_FLAGS,
+	SLAVE_CONNECTION_INTERVAL_RANGE,
+	LIST_16BIT_SERV_SOLICITATION_UUIDS = 0X14,
+	LIST_128BIT_SERV_SOLICITATION_UUIDS,
+	SERVICE_DATA,
+	PUBLIC_TARGET_ADDRESS,
+	RANDOM_TARGET_ADDRESS,
+	APPEARANCE,
+	ADVERTISING_INTERVAL,
+	LE_BLUETOOTH_DEVICE_ADDRESS,
+	LE_ROLE,
+	SIMPLE_PAIRING_HASHING_C256,
+	SIMPLE_PAIRING_RANDOMIZER_R256,
+	SERVICE_DATA_32BIT = 0X20,
+	SERVICE_DATA_128BIT,
+	LE_SECURE_CONNECTIONS_CONFIRMATION_VALUE,
+	LE_SECURE_CONNECTIONS_RANDOM_VALUE,
+	THREED_INFORMATION_DATA = 0X3D,
+	MANUFACTURER_SPECIFIC_DATA = 0XFF
+}gap_ad_type;
+
+#define BLE_PROFILE_INIT						ble_manager_dummy_handler
+#define BLE_CONNECTED_STATE_HANDLER				ble_manager_dummy_handler
+#define BLE_DISCONNECTED_STATE_HANDLER			ble_manager_dummy_handler
+#define BLE_CHARACTERISTIC_CHANGED				ble_manager_dummy_handler
+#define BLE_CONN_PARAM_UPDATE_DONE				ble_manager_dummy_handler
+#define	BLE_PAIR_REQUEST						ble_manager_dummy_handler
+#define BLE_PAIR_KEY_REQUEST					ble_manager_dummy_handler
+#define BLE_PAIR_DONE							ble_manager_dummy_handler
+#define BLE_ENCRYPTION_REQUEST					ble_manager_dummy_handler
+#define BLE_ENCRYPTION_STATUS_CHANGED			ble_manager_dummy_handler
+#endif
+
+#if defined PROXIMITY_REPORTER
+
+
+#endif
+
 
 
 /* Service UUID's */
@@ -74,10 +170,6 @@
 /* Tx Power Level Characteristic UUID */
 #define TX_POWER_LEVEL_CHAR_UUID		(0x2A07)
 
-#define BLE_CENTRAL				(0x01)
-#define BLE_PERIPHERAL			(0x02)
-#define BLE_CENTRAL_PERIPHERAL	(0x03)
-
 
 typedef struct adv_element
 {
@@ -85,12 +177,6 @@ typedef struct adv_element
 	uint8_t type;
 	uint8_t *data;
 }adv_element_t;
-
-
-//at_ble_LTK_t app_bond_info;
-//bool app_device_bond = false;
-//uint8_t auth_info = 0;
-//at_ble_handle_t handle;
 
 
 /**
@@ -142,12 +228,6 @@ typedef struct gatt_char_handler
 #define MAX_DEVICE_CONNECTED		(1)
 #endif
 
-
-static inline void ble_manager_dummy_handler(void *param)
-{
-	while(0);
-}
-
 #if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)
 
 #define BLE_PROFILE_INIT						pxp_app_init
@@ -196,8 +276,8 @@ static inline void ble_manager_dummy_handler(void *param)
 
 void ble_device_init(at_ble_addr_t *addr);
 
-void ble_conn_param_update (void);
-void ble_pair_request_handler(void);
+void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update);
+void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req);
 void ble_pair_key_request_handler(at_ble_pair_key_request_t *pair_key);
 at_ble_status_t ble_pair_done_handler(at_ble_pair_done_t *pairing_params);
 void ble_encryption_request_handler (at_ble_encryption_request_t *encry_req);
@@ -210,6 +290,10 @@ at_ble_status_t ble_scan_info_handler(at_ble_scan_info_t *scan_param);
 at_ble_status_t ble_scan_report_handler(at_ble_scan_report_t *scan_report);
 uint8_t scan_info_parse(at_ble_scan_info_t *scan_info_data, at_ble_uuid_t *ble_service_uuid, uint8_t adv_type);
 void ble_characteristic_found_handler(at_ble_characteristic_found_t *characteristic_found);
+#endif
+
+#if (BLE_DEVICE_ROLE == BLE_OBSERVER)
+at_ble_status_t gap_dev_scan(void);
 #endif
 
 void ble_event_manager(at_ble_events_t events , void *event_params);

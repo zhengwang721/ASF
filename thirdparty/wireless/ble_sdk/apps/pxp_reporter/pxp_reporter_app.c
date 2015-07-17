@@ -1,10 +1,9 @@
-
 /**
 * \file
 *
 * \brief Proximity Reporter Profile Application
 *
-* Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+* Copyright (c) 2015 Atmel Corporation. All rights reserved.
 *
 * \asf_license_start
 *
@@ -45,54 +44,116 @@
 * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
 */
 
-/* === INCLUDES ============================================================ */
+/****************************************************************************************
+*							        Includes	                                     	*
+****************************************************************************************/
 
-#include "asf.h"
+
+#include <asf.h>
 #include "console_serial.h"
-/* Ble Profile include files */
-#include "pxp_reporter_app.h"
+#include "at_ble_api.h"
+#include "platform.h"
 #include "pxp_reporter.h"
-
-/*Ble Services includes*/
-#include "ble_manager.h"
+#include "timer_hw.h"
 #include "ble_utils.h"
+#include "pxp_reporter_app.h"
+#include "ble_manager.h"
+#include "immediate_alert.h"
+#include "link_loss.h"
+#include "tx_power.h"
+
 
 
 /* === GLOBALS ============================================================ */
-uint8_t led_state = 1;
+/* PXP Application LED State */
+bool pxp_led_state = true;
+extern uint8_t timer_interval;
+
+
 
 /**
-* \Timer callback handler
+* \Timer callback handler called on timer expiry
 */
-
-void timer_callback_handler(void);
 
 void timer_callback_handler(void)
 {
 	hw_timer_stop();
-	if (led_state==1)
+	if (pxp_led_state)
 	{
-		led_state = 0;
+		pxp_led_state = false;
 		LED_Off(LED0);
 		hw_timer_start(timer_interval);
 	}
 	else {
-		led_state = 1;
+		pxp_led_state = false;
 		LED_On(LED0);
 		hw_timer_start(timer_interval);
 	}
 	
 }
 
+void app_pathloss_alert(uint8_t alert_val)
+{
+	
+		if (alert_val == IAS_HIGH_ALERT)
+		{
+			DBG_LOG("Pathloss : High Alert");
+			timer_interval = PL_INTERVAL_FAST;
+			LED_On(LED0);
+			hw_timer_start(timer_interval);
+		}
+
+		else if (alert_val == IAS_MILD_ALERT)
+		{
+			DBG_LOG("Pathloss : Mild Alert");
+			timer_interval = PL_INTERVAL_MEDIUM;
+			LED_On(LED0);
+			hw_timer_start(timer_interval);
+		}
+
+		else if (alert_val == IAS_NO_ALERT)
+		{
+			DBG_LOG("Pathloss : No Alert");
+			hw_timer_stop();
+			LED_Off(LED0);
+			pxp_led_state = 0;
+		} 
+}
+
+void app_linkloss_alert(uint8_t alert_val)
+{
+		if (alert_val == LLS_NO_ALERT)
+				{
+					DBG_LOG("Link loss : No Alert  ");
+					hw_timer_stop();
+					LED_Off(LED0);
+					pxp_led_state = 0;
+				}
+				else if (alert_val == LLS_MILD_ALERT)
+				{
+					DBG_LOG("Link loss : Mid Alert  ");
+					timer_interval = LL_INTERVAL_MEDIUM;
+					LED_On(LED0);
+					hw_timer_start(timer_interval);
+				}
+				else if (alert_val == LLS_HIGH_ALERT)
+				{
+					DBG_LOG("Link loss : No Alert ");
+					timer_interval = LL_INTERVAL_FAST;
+					LED_On(LED0);
+					hw_timer_start(timer_interval);
+				}
+		
+}
+
 /**
-* \Proximity Reporter main function
+* \Proximity Reporter Application main function
 */
 
-int main(void )
+int main(void)
 {
 	at_ble_events_t event;
-	uint8_t params[EVENT_MAX_PARAM_LENGTH];
-	
+	uint8_t params[EVENT_MAX_PARAM_LENGTH];	
 	
 	#if SAMG55
 	/* Initialize the SAM system. */
@@ -113,6 +174,9 @@ int main(void )
 	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
+	
+	register_pathloss_handler(app_pathloss_alert);
+	register_linkloss_handler(app_linkloss_alert);
 	
 	DBG_LOG("Initializing Proximity Reporter Application");
 	
