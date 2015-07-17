@@ -118,7 +118,7 @@ void s25fl1xx_initialize(Qspi *qspi, struct qspi_config_t *mode_config, uint32_t
 	mem->inst_frame.bm.b_width = QSPI_IFR_WIDTH_SINGLE_BIT_SPI;
 
 	if (use_default_config) {
-		qspi_get_default_config(mode_config);
+		qspi_get_config_default(mode_config);
 	}
 
 	qspi_initialize(qspi, mode_config);
@@ -159,7 +159,7 @@ static void s25fl1xx_exec_command(struct qspid_t *qspid, uint8_t instr, uint32_t
 		dev->inst_frame.bm.b_data_en = 1;
 		qspid->qspi_buffer.rx_data_size = size;
 	}
-	qspi_flash_exec_command(qspid, read_write);
+	qspi_flash_execute_command(qspid, read_write);
 }
 
 /**
@@ -192,7 +192,7 @@ static void s25fl1xx_memory_access(struct qspid_t *qspid, uint8_t instr, uint32_
 		mem->inst_frame.bm.b_tfr_type = (QSPI_IFR_TFRTYP_TRSFR_READ_MEMORY >> QSPI_IFR_TFRTYP_Pos);
 		qspid->qspi_buffer.rx_data_size = size;
 	}
-	qspi_flash_memory_access(qspid, read_write, secure);
+	qspi_flash_access_memory(qspid, read_write, secure);
 }
 
 /**

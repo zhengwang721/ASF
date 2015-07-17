@@ -65,9 +65,11 @@ extern "C" {
 #endif
 
 /** QSPI chip select mode. */
-#define QSPI_NOT_RELOADED         0
-#define QSPI_LASTXFER             1
-#define QSPI_SYSTEMATICALLY       2
+enum qspi_cs_mode {
+	QSPI_NOT_RELOADED = 0,
+	QSPI_LASTXFER,
+	QSPI_SYSTEMATICALLY,
+};
 
 /**
  * \brief Qspi enum types for QSPI modes.
@@ -114,7 +116,7 @@ struct qspi_inst_frame_t {
 					reserved3:11;
 		} bm;
 	} inst_frame;
-  uint32_t       addr;
+	uint32_t       addr;
 };
 
 /**
@@ -166,7 +168,7 @@ struct qspi_config_t {
 	/** Wait data read for transfer */
 	bool                wait_data_for_transfer;
 	/** Chip select mode */
-	uint32_t            csmode;
+	enum qspi_cs_mode   csmode;
 	/** Numbers of bits per transfer */
 	uint32_t            bits_per_transfer;
 	/** Minimum inactive QCS delay */
@@ -467,13 +469,13 @@ static inline uint32_t qspi_get_writeprotect_status(Qspi *qspi)
 
 void qspi_initialize(Qspi *qspi, struct qspi_config_t *qspi_config);
 void qspi_set_config(Qspi *qspi, struct qspi_config_t *qspi_config);
-void qspi_get_default_config(struct qspi_config_t * qspi_config);
+void qspi_get_config_default(struct qspi_config_t * qspi_config);
 enum status_code qspi_read(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes);
 enum status_code qspi_write(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes);
 
 /** Functionality API -- Serial Memory Mode */
-enum status_code qspi_flash_exec_command(struct qspid_t *qspid, enum qspi_access read_write);
-enum status_code qspi_flash_memory_access(struct qspid_t *qspid, enum qspi_access read_write, uint8_t scramble_flag);
+enum status_code qspi_flash_execute_command(struct qspid_t *qspid, enum qspi_access read_write);
+enum status_code qspi_flash_access_memory(struct qspid_t *qspid, enum qspi_access read_write, uint8_t scramble_flag);
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -506,7 +508,7 @@ enum status_code qspi_flash_memory_access(struct qspid_t *qspid, enum qspi_acces
  * \subsection spi_basic_use_case_setup_code Example code
  * Add to application C-file:
  * \code
-		void qspi_get_default_config(qspi_config_t * qspi_config)
+		void qspi_get_config_default(qspi_config_t * qspi_config)
 		{
 			qspi_config->serial_memory = 1;
 			qspi_config->loopback_en = false;

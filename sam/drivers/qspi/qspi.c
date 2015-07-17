@@ -407,12 +407,12 @@ void qspi_set_config(Qspi *qspi, struct qspi_config_t *qspi_config)
  * \param qspi_config     Pointer to an qspi_config_t struct.
  *
  */
-void qspi_get_default_config(struct qspi_config_t * qspi_config)
+void qspi_get_config_default(struct qspi_config_t * qspi_config)
 {
 	qspi_config->serial_memory_mode = mem_mode;
 	qspi_config->loopback_en = false;
 	qspi_config->wait_data_for_transfer = false;
-	qspi_config->csmode = 1;
+	qspi_config->csmode = QSPI_LASTXFER;
 	qspi_config->bits_per_transfer = QSPI_MR_NBBITS_8_BIT;
 	qspi_config->min_delay_qcs = 0;
 	qspi_config->delay_between_ct = 0;
@@ -434,7 +434,7 @@ void qspi_get_default_config(struct qspi_config_t * qspi_config)
  * \return Returns 1 if At least one instruction end has been detected since the last read of QSPI_SR.; otherwise
  * returns 0.
  */
-enum status_code qspi_flash_exec_command(struct qspid_t *qspid, enum qspi_access read_write)
+enum status_code qspi_flash_execute_command(struct qspid_t *qspid, enum qspi_access read_write)
 {
 	struct qspi_inst_frame_t* const frame = qspid->qspi_frame;
 	struct qspi_mem_cmd_t command = qspid->qspi_command;
@@ -469,9 +469,11 @@ enum status_code qspi_flash_exec_command(struct qspid_t *qspid, enum qspi_access
 		memcpy(qspi_buffer, buffer.data_tx, buffer.tx_data_size);
 	}
 
-	__DSB();
-	__ISB();
-	qspi_end_transfer(qspid->qspi_hw);
+	if (read_write == QSPI_READ_ACCESS || read_write == QSPI_WRITE_ACCESS) {
+		__DSB();
+		__ISB();
+		qspi_end_transfer(qspid->qspi_hw);
+	}
 	/** poll CR reg to know status if instruction has end */
 	while(!(qspid->qspi_hw->QSPI_SR & QSPI_SR_INSTRE));
 	frame->inst_frame.val = 0;
@@ -489,7 +491,7 @@ enum status_code qspi_flash_exec_command(struct qspid_t *qspid, enum qspi_access
  * \return Returns 1 if At least one instruction end has been detected since the last read of QSPI_SR.; otherwise
  * returns 0.
  */
-enum status_code qspi_flash_memory_access(struct qspid_t *qspid, enum qspi_access read_write, uint8_t scramble_flag)
+enum status_code qspi_flash_access_memory(struct qspid_t *qspid, enum qspi_access read_write, uint8_t scramble_flag)
 {
 	enum status_code status = OPERATION_IN_PROGRESS;
 	struct qspi_inst_frame_t* const frame = qspid->qspi_frame;
