@@ -66,7 +66,7 @@ extern "C" {
 /// @endcond
 
 #ifndef AT24MAC_MEM_ADDR_LEN
-#  error Please define AT24MAC_MEM_ADDR_LEN according to the using AT24C
+#  error Please define AT24MAC_MEM_ADDR_LEN according to the using AT24MAC
 #else
 #  if AT24MAC_MEM_ADDR_LEN>3
 #    error AT24MAC_MEM_ADDR_LEN over 3 not supported
@@ -344,7 +344,7 @@ uint32_t at24macxx_fill_pattern(uint32_t u32_start_address,
 
 	for (addr = u32_start_address; addr < u32_end_address + 1; addr++) {
 		if (at24macxx_write_byte((uint16_t)addr, u8_pattern) !=
-				AT24MAC_WRITE_SUCCESS) {		
+				AT24MAC_WRITE_SUCCESS) {
 			printf("addr = %d\n", addr);
 			return AT24MAC_WRITE_FAIL;
 		}
