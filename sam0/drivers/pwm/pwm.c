@@ -259,6 +259,97 @@ void pwm_get_config_defaults(struct pwm_config *const config)
 }
 
 /**
+ * \brief Set the duty cycle of the PWM module.
+ *
+ * This function will set the duty cycle of the PWM module, based on the values
+ * of setting.
+ *
+ * \param[in]   device_select   PWM device
+ * \param[in]   agcdata_in      Agc value from AGC. This value specifies the
+ *                              duty cycle in 2th complement form centered around
+ *                              the zero.
+ */
+void pwm_set_agcdata_in(enum pwm_device_select device_select, \
+					int32_t agcdata_in)
+{
+	uint32_t reg_value;
+	
+	reg_value = _pwm_reg_agcdata_in(device_select, agcdata_in);
+	
+	switch(device_select) {
+		case PWM1:
+			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg &= \
+					~LPMCU_MISC_REGS_PWM_1_CONTROL_AGCDATA_IN_Msk;
+			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg |= reg_value;
+			break;
+
+		case PWM2:
+			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg &= \
+					~LPMCU_MISC_REGS_PWM_2_CONTROL_AGCDATA_IN_Msk;
+			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg = reg_value;
+			break;
+
+		case PWM3:
+			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg &= \
+					~LPMCU_MISC_REGS_PWM_3_CONTROL_AGCDATA_IN_Msk;
+			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg = reg_value;
+			break;
+
+		case PWM4:
+			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg &= \
+					~LPMCU_MISC_REGS_PWM_4_CONTROL_AGCDATA_IN_Msk;
+			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg = reg_value;
+			break;
+	}
+}
+
+/**
+ * \brief Set the period of the PWM module.
+ *
+ * This function will set the frequence of the PWM module, based on the values
+ * of setting period.
+ *
+ * \param[in]   device_select   PWM device
+ * \param[in]   period          Programmable PWM update period
+ */
+void pwm_set_period(enum pwm_device_select device_select, \
+					enum pwm_period period)
+{
+	uint32_t reg_value;
+	
+	if (period > PWM_PERIOD_8) {
+		reg_value = PWM_PERIOD_4;
+	}
+	reg_value = _pwm_reg_period(device_select, period);
+	
+	switch(device_select) {
+		case PWM1:
+			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg &= \
+					~LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_PERIOD_Msk;
+			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg |= reg_value;
+			break;
+
+		case PWM2:
+			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg &= \
+					~LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_PERIOD_Msk;
+			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg = reg_value;
+			break;
+
+		case PWM3:
+			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg &= \
+					~LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_PERIOD_Msk;
+			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg = reg_value;
+			break;
+
+		case PWM4:
+			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg &= \
+					~LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_PERIOD_Msk;
+			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg = reg_value;
+			break;
+	}
+}
+
+/**
  * \brief Initializes the PWM module
  *
  * This function will initialize the PWM module, based on the values
@@ -344,18 +435,26 @@ void pwm_enable(enum pwm_device_select device_select)
 {
 	switch (device_select) {
 		case PWM1:
+			LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg |= \
+									LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_PWM_1_CLK_EN;
 			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg |= LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_EN;
 			break;
 
 		case PWM2:
+			LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg |= \
+									LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_PWM_2_CLK_EN;
 			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg |= LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_EN;
 			break;
 
 		case PWM3:
+			LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg |= \
+									LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_PWM_3_CLK_EN;
 			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg |= LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_EN;
 			break;
 
 		case PWM4:
+			LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg |= \
+									LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_PWM_4_CLK_EN;
 			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg |= LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_EN;
 			break;
 	}
@@ -372,19 +471,59 @@ void pwm_disable(enum pwm_device_select device_select)
 {
 	switch (device_select) {
 		case PWM1:
+			LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg &= \
+									~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_PWM_1_CLK_EN;
 			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg &= ~LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_EN;
 			break;
 
 		case PWM2:
+			LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg &= \
+									~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_PWM_2_CLK_EN;
 			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg &= ~LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_EN;
 			break;
 
 		case PWM3:
+			LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg &= \
+									~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_PWM_3_CLK_EN;
 			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg &= ~LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_EN;
 			break;
 
 		case PWM4:
+			LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg &= \
+									~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_PWM_4_CLK_EN;
 			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg &= ~LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_EN;
+			break;
+	}
+}
+
+/**
+ * \brief Reset the PWM module
+ *
+ * This function will reset the PWM module.
+ *
+ * \param[in] device_select  PWM device
+ */
+void pwm_reset(enum pwm_device_select device_select)
+{
+	switch (device_select) {
+		case PWM1:
+			LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |= \
+									LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_PWM_1_RSTN;
+			break;
+
+		case PWM2:
+			LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |= \
+									LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_PWM_2_RSTN;
+			break;
+
+		case PWM3:
+			LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |= \
+									LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_PWM_3_RSTN;
+			break;
+
+		case PWM4:
+			LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |= \
+									LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_PWM_4_RSTN;
 			break;
 	}
 }

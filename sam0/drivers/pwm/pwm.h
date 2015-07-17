@@ -234,7 +234,7 @@ struct pwm_config {
 	bool use_old;
 	/** Programmable PWM update period. */
 	enum pwm_period period;
-	/** Agc value from AGC. This value specifies the Duty cycle in 2th
+	/** Agc value from AGC. This value specifies the duty cycle in 2th
 	 * Complement form centered around the zero.
 	 */
 	int32_t agcdata_in;
@@ -259,18 +259,23 @@ struct pwm_config {
  */
 
 void pwm_get_config_defaults(struct pwm_config *const config);
+void pwm_set_agcdata_in(enum pwm_device_select device_select, \
+					int32_t agcdata_in);
+void pwm_set_period(enum pwm_device_select device_select, \
+					enum pwm_period period);
 enum status_code pwm_init(enum pwm_device_select device_select, \
-		const struct pwm_config *const config);
+					const struct pwm_config *const config);
 
 /** @} */
 
 /**
- * \name Enable/Disable
+ * \name Enable/Disable and Reset
  * @{
  */
 
 void pwm_enable(enum pwm_device_select device_select);
 void pwm_disable(enum pwm_device_select device_select);
+void pwm_reset(enum pwm_device_select device_select);
 
 /** @} */
 
