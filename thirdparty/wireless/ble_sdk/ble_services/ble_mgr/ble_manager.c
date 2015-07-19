@@ -245,12 +245,12 @@ void ble_connected_state_handler(at_ble_connected_t *conn_params)
 		DBG_LOG("Slave security request failed");
 	}
 	
-	//LED_On(LED0);
+	
 }
 
 void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect)
 {
-	//LED_Off(LED0);
+	
 	DBG_LOG("Device disconnected Reason:0x%02x Handle=0x%x", disconnect->reason, disconnect->handle);
 }
 

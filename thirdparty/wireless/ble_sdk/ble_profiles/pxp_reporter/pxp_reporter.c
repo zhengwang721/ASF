@@ -81,8 +81,6 @@ extern uint8_t pxp_led_state;
 /** @brief Scan response data*/
 uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
-/** @brief Timer interval for timer used for led blinking */
-uint8_t timer_interval = LL_INTERVAL_SLOW;
 
 /** @brief Alert value used for immediate alert service helps in pathloss */
 uint8_t pathloss_alert_value = INVALID_IAS_PARAM ;
@@ -107,7 +105,7 @@ void pxp_service_init(void)
 	
 	#if defined PATHLOSS
 	
-	//init_immediate_alert_service(&ias_handle);
+	init_immediate_alert_service(&ias_handle);
 	init_tx_power_service(&txps_handle);
 	
 	#endif
@@ -134,8 +132,8 @@ at_ble_status_t pxp_service_define (void)
 	#if defined PATHLOSS
 	// need to define the return type and put it into console
 	
-	//ias_primary_service_define(&ias_handle);
-	//txps_primary_service_define(&txps_handle);
+	ias_primary_service_define(&ias_handle);
+	txps_primary_service_define(&txps_handle);
 	#endif
 	
 	DBG_LOG("The link loss handle is %x",lls_handle.serv_handle);
@@ -169,9 +167,9 @@ at_ble_status_t pxp_reporter_char_changed_handler(at_ble_characteristic_changed_
 		DBG_LOG("0x%02x ", change_params.char_new_value[index]);
 	}	
 
-	//linkloss_current_alert_level = lls_set_alert_value(&change_params,&lls_handle);
+	linkloss_current_alert_level = lls_set_alert_value(&change_params,&lls_handle);
 	
-	//pathloss_alert_value		 = ias_set_alert_value(&change_params,&ias_handle);
+	pathloss_alert_value		 = ias_set_alert_value(&change_params,&ias_handle);
 	
 	if (pathloss_alert_value != INVALID_IAS_PARAM)
 	{
@@ -219,6 +217,7 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 		DBG_LOG("BLE Started Adv");
 	}
 	
+	//DBG_LOG("The linkloss value is %d",linkloss_current_alert_level);
 	linkloss_cb(linkloss_current_alert_level);
 
 	return AT_BLE_SUCCESS;

@@ -67,7 +67,8 @@
 /* === GLOBALS ============================================================ */
 /* PXP Application LED State */
 bool pxp_led_state = true;
-extern uint8_t timer_interval;
+/** @brief Timer interval for timer used for led blinking */
+uint8_t timer_interval = LL_INTERVAL_SLOW;
 
 
 
@@ -77,6 +78,7 @@ extern uint8_t timer_interval;
 
 void timer_callback_handler(void)
 {
+	
 	hw_timer_stop();
 	if (pxp_led_state)
 	{
@@ -85,7 +87,7 @@ void timer_callback_handler(void)
 		hw_timer_start(timer_interval);
 	}
 	else {
-		pxp_led_state = false;
+		pxp_led_state = true;
 		LED_On(LED0);
 		hw_timer_start(timer_interval);
 	}
@@ -122,7 +124,7 @@ void app_pathloss_alert(uint8_t alert_val)
 
 void app_linkloss_alert(uint8_t alert_val)
 {
-		if (alert_val == LLS_NO_ALERT)
+				if (alert_val == LLS_NO_ALERT)
 				{
 					DBG_LOG("Link loss : No Alert  ");
 					hw_timer_stop();
@@ -138,7 +140,7 @@ void app_linkloss_alert(uint8_t alert_val)
 				}
 				else if (alert_val == LLS_HIGH_ALERT)
 				{
-					DBG_LOG("Link loss : No Alert ");
+					DBG_LOG("Link loss : High Alert ");
 					timer_interval = LL_INTERVAL_FAST;
 					LED_On(LED0);
 					hw_timer_start(timer_interval);
