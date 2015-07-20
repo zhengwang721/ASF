@@ -302,12 +302,12 @@ extern "C" {
 #if (SAML22) || defined(__DOXYGEN__)
 /** ISO7816 for smart card interfacing. */
 #define FEATURE_USART_ISO7816
-/** RS485 mode. */
-#  define FEATURE_USART_RS485
 #endif
 #if (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** LIN master mode. */
 #define FEATURE_USART_LIN_MASTER
+#endif
+#if (SAML22) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** RS485 mode. */
 #  define FEATURE_USART_RS485
 #endif
@@ -380,7 +380,7 @@ enum lin_master_break_length {
 #endif
 #ifdef FEATURE_USART_ISO7816
 /**
- * \brief ISO7816 protocol type.
+ * \brief ISO7816 protocol type
  *
  * ISO7816 protocol type.
  */
@@ -392,7 +392,7 @@ enum iso7816_protocol_type {
 };
 
 /**
- * \brief ISO7816 Guard Time
+ * \brief ISO7816 guard time
  *
  * The value of ISO7816 guard time.
  */
@@ -412,7 +412,7 @@ enum iso7816_guard_time {
 };
 
 /**
- * \brief ISO7816 Receive NACK Inhibit
+ * \brief ISO7816 receive NACK inhibit
  *
  * The value of ISO7816 receive NACK inhibit.
  */
@@ -424,7 +424,7 @@ enum iso7816_inhibit_nack {
 };
 
 /**
- * \brief ISO7816 Disable Successive Receive NACK
+ * \brief ISO7816 disable successive receive NACK
  *
  * The value of ISO7816 disable successive receive NACK.
  */
@@ -435,12 +435,17 @@ enum iso7816_dis_suc_nack {
 	ISO7816_DIS_SUC_NACK_ENABLE = SERCOM_USART_CTRLC_DSNACK,
 };
 
+/**
+ * \brief ISO7816 configuration structure
+ *
+ * ISO7816 configuration structure.
+ */
 struct iso7816_opt_t {
-	/* ISO7816 mode enable */
+	/* ISO7816 mode enable. */
 	bool enabled;
-	/* ISO7816 protocol type */
+	/* ISO7816 protocol type. */
 	enum iso7816_protocol_type protocol_t;
-	/* Guard time, which lasts two bit times */
+	/* Guard time, which lasts two bit times. */
 	enum iso7816_guard_time guard_time;
 	/*
 	 * Inhibit Non Acknowledge:
@@ -457,7 +462,7 @@ struct iso7816_opt_t {
 	 * NACK is sent on the ISO line. The ITERATION flag is asserted.
 	 */
 	enum iso7816_dis_suc_nack dis_suc_nack;
-	/* Max number of repetitions */
+	/* Max number of repetitions. */
 	uint32_t max_iterations;
 };
 #endif
