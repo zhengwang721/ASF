@@ -1,4 +1,4 @@
-﻿/**
+/**
  * \file
  *
  * \brief SAM ADC functionality

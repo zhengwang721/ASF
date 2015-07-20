@@ -3,7 +3,7 @@
  *
  * \brief SAM D20 Xplained Pro test configuration.
  *
- * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,17 +54,5 @@
 #define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
 #define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
 #define CONF_STDIO_BAUDRATE       38400
-
-#define CONF_TEST_TC0             TC4
-#define CONF_TEST_TC1             TC5
-#define CONF_EIC_PIN              PIN_PB00A_EIC_EXTINT0
-#define CONF_EIC_MUX              MUX_PB00A_EIC_EXTINT0
-#define CONF_TEST_PIN_OUT         PIN_PB09F_TC4_WO1
-#define CONF_TEST_PIN_MUX         MUX_PB09F_TC4_WO1
-#define CONF_EVENT_GENERATOR_ID   EVSYS_ID_GEN_EIC_EXTINT_0
-#define CONF_EVENT_USED_ID        EVSYS_ID_USER_TC5_EVU
-#define CONF_CAPTURE_CHAN_0       0
-#define CONF_CAPTURE_CHAN_1       1
-#define CONF_TEST_TOLERANCE       10
 
 #endif /* CONF_TEST_H_INCLUDED */
