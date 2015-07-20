@@ -10,4 +10,5 @@ if NOT "%CD:~230,1%"=="" (
 	exit
 )
 
-image_builder -http_modify ../../../provisioning_webpage/ -fw_path ../../../firmware/m2m_aio.bin
+image_builder -http_modify ../../../provisioning_webpage/ -fw_path ../../../firmware/m2m_aio_2b0.bin
+image_builder -1003A0 -http_modify ../../../provisioning_webpage/ -fw_path ../../../firmware/m2m_aio_3a0.bin
