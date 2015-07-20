@@ -1,0 +1,23 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="PROXIMITY MONITOR APPLICATION" id="thirdparty.wireless.ble_sdk.apps.pxp_monitor">
+		<info type="description" value="summary">
+		Proximity Monitor application for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="pxp_monitor_app.h"/>
+		<build type="c-source" value="pxp_monitor_app.c"/>
+		<require idref="thirdparty.wireless.ble_sdk.lib"/>
+		<require idref="thirdparty.wireless.ble_sdk.inc"/>
+		<require idref="thirdparty.wireless.ble_sdk.src"/>
+		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
+		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.pxp_monitor"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.immediate_alert"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.link_loss"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.tx_power"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>
+		<require idref="thirdparty.wireless.ble_sdk.utils"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>
