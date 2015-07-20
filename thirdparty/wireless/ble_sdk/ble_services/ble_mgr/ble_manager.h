@@ -145,6 +145,22 @@ typedef enum
 #define	BLE_SCAN_DATA_HANDLER								ble_observer_scan_data_handler
 #endif
 
+#if (BLE_DEVICE_ROLE == BLE_BROADCASTER)
+#define BLE_PROFILE_INIT									ble_dummy_handler
+#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER				ble_dummy_handler
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER			ble_dummy_handler
+#define BLE_CHARACTERISTIC_CHANGED							ble_dummy_handler
+#define BLE_CONN_PARAM_UPDATE_DONE							ble_dummy_handler
+#define	BLE_PAIR_REQUEST									ble_dummy_handler
+#define BLE_PAIR_KEY_REQUEST								ble_dummy_handler
+#define BLE_PAIR_DONE										ble_dummy_handler
+#define BLE_ENCRYPTION_REQUEST								ble_dummy_handler
+#define BLE_ENCRYPTION_STATUS_CHANGED						ble_dummy_handler
+#define BLE_SCAN_REPORT_HANDLER								ble_dummy_handler
+#define BLE_SCAN_INFO_HANDLER								ble_dummy_handler
+#define	BLE_SCAN_DATA_HANDLER								ble_dummy_handler
+#endif
+
 /* Service UUID's */
 
 /* Link Loss service UUID */

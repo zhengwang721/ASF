@@ -140,10 +140,10 @@ status_t brd_set_advertisement_type(uint8_t type)
 {
 	if (type == ADV_TYPE_SCANNABLE_UNDIRECTED) {
 		adv_type = AT_BLE_ADV_TYPE_SCANNABLE_UNDIRECTED;
-		DBG_LOG("\nAdvertisement type set to scannable undirected");
+		DBG_LOG("Advertisement type set to scannable undirected");
 	} else if (type == ADV_TYPE_NONCONN_UNDIRECTED) {
 		adv_type = AT_BLE_ADV_TYPE_NONCONN_UNDIRECTED;
-		DBG_LOG("\nAdvertisement type set to nonconnectable undirected");
+		DBG_LOG("Advertisement type set to nonconnectable undirected");
 	} else {
 		return STATUS_INVALID_PARAM;
 	}
@@ -171,10 +171,10 @@ void brd_start_broadcast(void)
 
 	if (at_ble_adv_data_set(adv_data, adv_length, scan_rsp_data,
 			scan_length) != AT_BLE_SUCCESS) {
-		DBG_LOG("BLE adv data set failed");
+		DBG_LOG("BLE Broadcast data set failed");
 		return;
 	} else {
-		DBG_LOG("BLE adv data set success");
+		DBG_LOG("BLE Broadcast data set success");
 	}
 
 	if ((status
@@ -184,9 +184,9 @@ void brd_start_broadcast(void)
 					APP_BROADCAST_FAST_ADV,
 					APP_BROADCAST_ADV_TIMEOUT,
 					0)) != AT_BLE_SUCCESS) {
-		DBG_LOG("BLE advertisement start failed(%d)", status);
+		DBG_LOG("BLE Broadcast start failed(%d)", status);
 	} else {
-		DBG_LOG("Started Advertisement");
+		DBG_LOG("Started Broadcasting");
 
 		/* Indicate to user that beacon advertisement started in
 		 * broadcaster mode*/

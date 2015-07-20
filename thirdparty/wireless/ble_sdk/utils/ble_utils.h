@@ -53,6 +53,7 @@
 #define BLE_PERIPHERAL				(0x02)
 #define BLE_CENTRAL_AND_PERIPHERAL	(0x03)
 #define BLE_OBSERVER				(0x04)
+#define BLE_BROADCASTER				(0x05)
 
 #define DBG_LOG_CONT	printf
 
