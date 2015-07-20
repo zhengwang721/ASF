@@ -64,9 +64,6 @@
 #define PL_INTERVAL_MEDIUM			(6)
 #define PL_INTERVAL_FAST			(4)
 
-/** @brief Maximum length of event parameters */
-#define EVENT_MAX_PARAM_LENGTH			(524)
-
 /** @brief Timer call back handler called on timer expiry
   *
   */

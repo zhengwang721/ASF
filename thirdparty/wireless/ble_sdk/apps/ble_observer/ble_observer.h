@@ -59,6 +59,8 @@
   */
 void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data);
 
+at_ble_status_t ble_observer_scan_data_handler(at_ble_scan_info_t *scan_info_data, uint8_t scan_resp_count);
+
 
 /** @brief Ble Observer initialization function
   *

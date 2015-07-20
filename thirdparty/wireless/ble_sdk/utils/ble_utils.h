@@ -49,6 +49,11 @@
 
 #include <asf.h>
 
+#define BLE_CENTRAL					(0x01)
+#define BLE_PERIPHERAL				(0x02)
+#define BLE_CENTRAL_AND_PERIPHERAL	(0x03)
+#define BLE_OBSERVER				(0x04)
+
 #define DBG_LOG_CONT	printf
 
 #define DBG_LOG		    printf("\r\n");\

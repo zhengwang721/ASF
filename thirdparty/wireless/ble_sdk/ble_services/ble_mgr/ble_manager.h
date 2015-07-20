@@ -58,14 +58,11 @@
 #include "pxp_reporter.h"
 #endif
 
+#if (BLE_DEVICE_ROLE == BLE_OBSERVER)
+#include "ble_observer.h"
+#endif
+
 #define BLE_DEVICE_NAME				"ATMEL-DEV"
-
-#define BLE_CENTRAL					(0x01)
-#define BLE_PERIPHERAL				(0x02)
-#define BLE_CENTRAL_AND_PERIPHERAL	(0x03)
-#define BLE_OBSERVER				(0x04)
-
-#define BLE_DEVICE_ROLE				BLE_PERIPHERAL
 
 static inline void ble_dummy_handler(void *param)
 {
@@ -74,8 +71,8 @@ static inline void ble_dummy_handler(void *param)
 
 #if ((BLE_DEVICE_ROLE == BLE_OBSERVER) || (BLE_DEVICE_ROLE == BLE_OBSERVER) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)) 
 #define MAX_SCAN_DEVICE				(10)			  //Max number of scan device
-#define SCAN_INTERVAL				(48)              //Scan interval 30ms in term of 625us
-#define SCAN_WINDOW					(48)              //Scan window 30ms values in term of 625ms
+#define SCAN_INTERVAL				(96)              //Scan interval 30ms in term of 625us
+#define SCAN_WINDOW					(96)              //Scan window 30ms values in term of 625ms
 #define SCAN_TIMEOUT				(0x0000)          //Timeout  Scan time-out, 0x0000 disables time-out
 #endif
 
@@ -131,16 +128,21 @@ typedef enum
 }gap_ad_type;
 
 #if (BLE_DEVICE_ROLE == BLE_OBSERVER)
-#define BLE_PROFILE_INIT						ble_dummy_handler
-#define BLE_CONNECTED_STATE_HANDLER				ble_dummy_handler
-#define BLE_DISCONNECTED_STATE_HANDLER			ble_dummy_handler
-#define BLE_CHARACTERISTIC_CHANGED				ble_dummy_handler
-#define BLE_CONN_PARAM_UPDATE_DONE				ble_dummy_handler
-#define	BLE_PAIR_REQUEST						ble_dummy_handler
-#define BLE_PAIR_KEY_REQUEST					ble_dummy_handler
-#define BLE_PAIR_DONE							ble_dummy_handler
-#define BLE_ENCRYPTION_REQUEST					ble_dummy_handler
-#define BLE_ENCRYPTION_STATUS_CHANGED			ble_dummy_handler
+#define BLE_PROFILE_INIT									ble_dummy_handler
+#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER				ble_dummy_handler
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER			ble_dummy_handler
+#define BLE_CHARACTERISTIC_CHANGED							ble_dummy_handler
+#define BLE_CONN_PARAM_UPDATE_DONE							ble_dummy_handler
+#define	BLE_PAIR_REQUEST									ble_dummy_handler
+#define BLE_PAIR_KEY_REQUEST								ble_dummy_handler
+#define BLE_PAIR_DONE										ble_dummy_handler
+#define BLE_ENCRYPTION_REQUEST								ble_dummy_handler
+#define BLE_ENCRYPTION_STATUS_CHANGED						ble_dummy_handler
+#define BLE_SCAN_REPORT_HANDLER								ble_scan_report_handler
+#define BLE_SCAN_INFO_HANDLER(param)						ble_observer_scan_info_handler(param);\
+															ble_scan_info_handler(param);
+															
+#define	BLE_SCAN_DATA_HANDLER								ble_observer_scan_data_handler
 #endif
 
 /* Service UUID's */
@@ -182,7 +184,7 @@ typedef struct gatt_service_handler
 
 
 /* All GAP Connection Parameter defined */
-#if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
+#if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
 #define GAP_CONN_INTERVAL_MIN			(20)        //Connection interval min 20ms
 #define GAP_CONN_INTERVAL_MAX			(40)		//Connection interval max 40ms
 #define GAP_CONN_SLAVE_LATENCY			(0)
@@ -193,9 +195,9 @@ typedef struct gatt_service_handler
 #define GAP_CONNECT_PEER_COUNT			(1)
 #define GATT_DISCOVERY_STARTING_HANDLE	(0x0001)
 #define GATT_DISCOVERY_ENDING_HANDLE	(0xFFFF)
-#else
-#define MAX_DEVICE_CONNECTED			(1)
 #endif
+
+#define MAX_DEVICE_CONNECTED			(1)
 
 
 
@@ -215,6 +217,8 @@ typedef struct gatt_service_handler
 #define BLE_PAIR_DONE								ble_pair_done_handler
 #define BLE_ENCRYPTION_REQUEST						ble_encryption_request_handler
 #define BLE_ENCRYPTION_STATUS_CHANGED				ble_encryption_status_change_handler
+#define BLE_SCAN_REPORT_HANDLER						ble_dummy_handler
+#define BLE_SCAN_INFO_HANDLER						ble_dummy_handler
 #endif
 
 

@@ -6,6 +6,7 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="ble_observer.h"/>
 		<build type="c-source" value="ble_observer.c"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_OBSERVER"/>
 		<require idref="thirdparty.wireless.ble_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_sdk.inc"/>
 		<require idref="thirdparty.wireless.ble_sdk.src"/>

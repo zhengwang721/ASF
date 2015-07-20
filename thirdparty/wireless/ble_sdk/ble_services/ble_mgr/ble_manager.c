@@ -73,12 +73,12 @@
 
 at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
-#if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
+#if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)|| (BLE_DEVICE_ROLE == BLE_OBSERVER))
 uint8_t scan_response_count = 0;
 at_ble_scan_info_t scan_info[MAX_SCAN_DEVICE];
 #endif
 
-#if ((BLE_DEVICE_ROLE == BLE_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
+#if ((BLE_DEVICE_ROLE == BLE_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)|| (BLE_DEVICE_ROLE == BLE_OBSERVER))
 at_ble_LTK_t app_bond_info;
 bool app_device_bond;
 uint8_t auth_info;
@@ -183,7 +183,7 @@ static void ble_set_address(at_ble_addr_t *addr)
 	}
 }
 
-#if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
+#if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
 at_ble_status_t gap_dev_connect(at_ble_addr_t *dev_addr)
 {
 	at_ble_connection_params_t gap_conn_parameter;
@@ -304,12 +304,12 @@ void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 			}
 			else if ((bond == 'N') || (bond == 'n'))
 			{
-				DBG_LOG("Pairing failed \n");
+				DBG_LOG("Pairing failed");
 				break;
 			}
 			else
 			{
-				DBG_LOG("Wrong value entered please try again : \n");
+				DBG_LOG("Wrong value entered please try again");
 			}
 		}while(app_device_bond);
 	}
@@ -382,12 +382,11 @@ void ble_pair_key_request_handler (at_ble_pair_key_request_t *pair_key)
 		{
 			passkey_ascii[i] = (passkey[i] + 48);
 		}
-		DBG_LOG("please enter the following code on the other device : ");
+		DBG_LOG("please enter the following pass-code on the other device : ");
 		for(i=0; i<AT_BLE_PASSKEY_LEN ; i++)
 		{
-			DBG_LOG("%c",passkey_ascii[i]);
+			DBG_LOG_CONT("%c",passkey_ascii[i]);
 		}
-		DBG_LOG("\n");
 		at_ble_pair_key_reply(pair_key_request.handle,pair_key_request.type,passkey_ascii);
 	}
 	
@@ -400,7 +399,7 @@ at_ble_status_t ble_pair_done_handler(at_ble_pair_done_t *pairing_params)
 	
 	if(pair_params.status == AT_BLE_SUCCESS)
 	{
-		DBG_LOG("Pairing procedure completed successfully \n");
+		DBG_LOG("Pairing procedure completed successfully");
 		app_device_bond = true;
 		auth_info = pair_params.auth;
 		ble_connected_dev_info->handle = pair_params.handle;
@@ -409,7 +408,7 @@ at_ble_status_t ble_pair_done_handler(at_ble_pair_done_t *pairing_params)
 	}
 	else
 	{
-		DBG_LOG("Pairing failed \n");
+		DBG_LOG("Pairing failed");
 	}
 	return(AT_BLE_SUCCESS);
 }
@@ -421,13 +420,13 @@ void ble_encryption_status_change_handler(at_ble_encryption_status_changed_t *en
 	
 	if(enc_status.status == AT_BLE_SUCCESS)
 	{
-		DBG_LOG("Encryption completed successfully \n");
+		DBG_LOG("Encryption completed successfully");
 			
 		ble_connected_dev_info->handle = enc_status.handle;			
 	}
 	else
 	{
-		DBG_LOG("Encryption failed \n");
+		DBG_LOG("Encryption failed");
 	}	
 }
 
@@ -467,7 +466,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	 */
 	case AT_BLE_SCAN_INFO:
 	{
-		
+		BLE_SCAN_INFO_HANDLER((at_ble_scan_info_t *)event_params);
 	}
 	break;
 	
@@ -476,7 +475,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	 */
 	case AT_BLE_SCAN_REPORT:
 	{
-		
+		BLE_SCAN_REPORT_HANDLER((at_ble_scan_report_t *)event_params);
 	}
 	break;
 	
@@ -494,7 +493,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	 */
 	case AT_BLE_CONNECTED:
 	{
-		//BLE_CONNECTED_STATE_HANDLER((at_ble_connected_t *)event_params);
+		BLE_CONNECTED_STATE_HANDLER((at_ble_connected_t *)event_params);
 	} 
 	break;
 	

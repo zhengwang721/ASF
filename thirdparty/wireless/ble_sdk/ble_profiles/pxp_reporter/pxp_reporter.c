@@ -168,7 +168,7 @@ at_ble_status_t pxp_reporter_char_changed_handler(at_ble_characteristic_changed_
 	DBG_LOG("Characteristic 0x%x changed, new_value = ", change_params.char_handle);
 	for(index=0; index<change_params.char_len; index++)
 	{
-		DBG_LOG("0x%02x ", change_params.char_new_value[index]);
+		DBG_LOG_CONT("0x%02x ", change_params.char_new_value[index]);
 	}	
 
 	linkloss_current_alert_level = lls_set_alert_value(&change_params,&lls_handle);

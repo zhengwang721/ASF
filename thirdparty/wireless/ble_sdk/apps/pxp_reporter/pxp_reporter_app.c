@@ -155,7 +155,7 @@ void app_linkloss_alert(uint8_t alert_val)
 int main(void)
 {
 	at_ble_events_t event;
-	uint8_t params[EVENT_MAX_PARAM_LENGTH];	
+	uint8_t params[AT_BLE_EVENT_PARAM_MAX_SIZE];	
 	
 	#if SAMG55
 	/* Initialize the SAM system. */

@@ -458,6 +458,13 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 	}
 }
 
+at_ble_status_t ble_observer_scan_data_handler(at_ble_scan_info_t *scan_info_data, uint8_t scan_resp_count)
+{
+	DBG_LOG("Scan Complete. Total No.of device scanned:%d", scan_resp_count);
+	ble_observer_init();
+	return AT_BLE_SUCCESS;
+}
+
 int main(void )
 {
 	at_ble_events_t event;
@@ -476,7 +483,10 @@ int main(void )
 
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
-
+	
+	/* observer init */
+	ble_observer_init();
+	
 	/* Receiving events */
 	while (at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS) {
 		ble_event_manager(event, params);
