@@ -179,7 +179,7 @@ static enum status_code _i2c_master_set_config(
 	int32_t  denominator = 2*fscl;
 	/* For more accurate result, can use round div. */
 	tmp_baud = (int32_t)(div_ceil(numerator, denominator));
-	 
+
 	/* Check that baudrate is supported at current speed. */
 	if (tmp_baud > 255 || tmp_baud < 0) {
 		/* Baud rate not supported. */
@@ -241,9 +241,9 @@ enum status_code i2c_master_init(
 	module->hw = hw;
 
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
-	
+
 	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
-	uint32_t pm_index, gclk_index; 
+	uint32_t pm_index, gclk_index;
 #if (SAML21) || (SAMC20) || (SAMC21)
 #if (SAML21)
 	if (sercom_index == 5) {
@@ -261,13 +261,13 @@ enum status_code i2c_master_init(
 	pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
 	gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
 #endif
-	
+
 	/* Turn on module in PM */
 #if (SAML21)
 	if (sercom_index == 5) {
 		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBD, 1 << pm_index);
 	} else {
-		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);	
+		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
 	}
 #else
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, 1 << pm_index);
@@ -636,7 +636,7 @@ enum status_code i2c_master_read_packet_wait(
 
 	module->send_stop = true;
 	module->send_nack = true;
-	
+
 	return _i2c_master_read_packet(module, packet);
 }
 
@@ -1005,7 +1005,7 @@ enum status_code i2c_master_read_byte(
 	*byte = i2c_module->DATA.reg;
 	/* Wait for response. */
 	tmp_status = _i2c_master_wait_for_bus(module);
-	
+
 	return tmp_status;
 }
 
@@ -1030,7 +1030,7 @@ enum status_code i2c_master_write_byte(
 {
   	enum status_code tmp_status;
   	SercomI2cm *const i2c_module = &(module->hw->I2CM);
-	
+
 	/* Write byte to slave. */
 	_i2c_master_wait_for_sync(module);
 	i2c_module->DATA.reg = byte;

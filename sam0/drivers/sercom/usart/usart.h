@@ -66,7 +66,7 @@
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D09/D10/D11
  *  - Atmel | SMART SAM L21
  *  - Atmel | SMART SAM DAx
  *  - Atmel | SMART SAM C20/C21
@@ -99,35 +99,35 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_SYNC_SCHEME_V2</td>
- *    <td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D09/D10/D11/L21/DAx/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_OVER_SAMPLE</td>
- *    <td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D09/D10/D11/L21/DAx/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_HARDWARE_FLOW_CONTROL</td>
- *    <td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D09/D10/D11/L21/DAx/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IRDA</td>
- *    <td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D09/D10/D11/L21/DAx/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_LIN_SLAVE</td>
- *    <td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D09/D10/D11/L21/DAx/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_COLLISION_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D09/D10/D11/L21/DAx/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_START_FRAME_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D09/D10/D11/L21/DAx/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION</td>
- *    <td>SAM D21/R21/D10/D11/L21/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D09/D10/D11/L21/DAx/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_RS485</td>
@@ -279,7 +279,7 @@ extern "C" {
  * Define SERCOM USART features set according to different device family.
  * @{
  */
-#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || \
+#if (SAMD21) || (SAMR21) || (SAMD09) || (SAMD10) || (SAMD11) || (SAML21) || \
 	(SAMDA1) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** Usart sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2

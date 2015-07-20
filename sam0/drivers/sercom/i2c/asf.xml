@@ -120,6 +120,7 @@
 			<build type="c-source" value="i2c_sam0/i2c_master.c"/>
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="samd09"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
@@ -144,6 +145,7 @@
 			<build type="c-source" value="i2c_sam0/i2c_master_interrupt.c"/>
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="samd09"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
@@ -166,6 +168,7 @@
 			<build type="c-source" value="i2c_sam0/i2c_slave.c"/>
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="samd09"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
@@ -190,6 +193,7 @@
 			<build type="c-source" value="i2c_sam0/i2c_slave_interrupt.c"/>
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="samd09"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>

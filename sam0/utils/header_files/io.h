@@ -66,6 +66,10 @@
 #  include "samr21.h"
 #endif
 
+#if (SAMD09)
+#  include "samd09.h"
+#endif
+
 #if (SAMD10)
 #  include "samd10.h"
 #endif

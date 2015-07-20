@@ -67,7 +67,7 @@
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D09/D10/D11
  *  - Atmel | SMART SAM L21
  *  - Atmel | SMART SAM DAx
  *  - Atmel | SMART SAM C20/C21
@@ -201,7 +201,7 @@
  * generation match mode.
  *
  * When using 32-bit counter size, two 16-bit counters are chained together
- * in a cascade formation. Except in SAM D10/D11, Even numbered TC modules
+ * in a cascade formation. Except in SAM D09/D10/D11, Even numbered TC modules
  * (e.g. TC0, TC2) can be configured as 32-bit counters. The odd numbered
  * counters will act as slaves to the even numbered masters, and will not
  * be reconfigurable until the master timer is disabled. The pairing of timer
@@ -233,7 +233,7 @@
  *   </tr>
  * </table>
  *
- * In SAMD10/D11, odd numbered TC modules (e.g. TC1) can be configured as 32-bit
+ * In SAMD09/SAMD10/D11, odd numbered TC modules (e.g. TC1) can be configured as 32-bit
  * counters. The even numbered(e.g. TC2) counters will act as slaves to the odd
  * numbered masters.
  *
@@ -490,7 +490,7 @@
 #if SAMD21 || SAMR21 || SAMDA1
 #  define TC_INSTANCE_OFFSET 3
 #endif
-#if SAMD10 || SAMD11
+#if SAMD09 || SAMD10 || SAMD11
 #  define TC_INSTANCE_OFFSET 1
 #endif
 
@@ -498,7 +498,7 @@
 #  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC0_CC8_NUM
 #elif SAML21 || SAMC20 || SAMC21
 #  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC0_CC_NUM
-#elif SAMD10 || SAMD11
+#elif SAMD09 || SAMD10 || SAMD11
 #  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC1_CC8_NUM
 #else
 #  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC3_CC8_NUM
@@ -510,7 +510,7 @@
 #define TC_INST_MAX_ID  5
 #elif SAML21 || SAMC20 || SAMC21
 #define TC_INST_MAX_ID  4
-#elif SAMD10 || SAMD11
+#elif SAMD09 || SAMD10 || SAMD11
 #define TC_INST_MAX_ID  2
 #else
 #define TC_INST_MAX_ID  7
