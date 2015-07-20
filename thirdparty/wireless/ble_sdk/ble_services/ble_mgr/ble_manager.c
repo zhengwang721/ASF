@@ -3,7 +3,7 @@
 *
 * \brief Ble Manager
 *
-* Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+* Copyright (c) 2015 Atmel Corporation. All rights reserved.
 *
 * \asf_license_start
 *
@@ -51,29 +51,34 @@
 #include "ble_manager.h"
 #include "ble_utils.h"
 
-#if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)
-#include "link_loss.h"
-#include "immediate_alert.h"
-#include "tx_power.h"
-#include "pxp_reporter.h"
+#if defined LINK_LOSS_SERVICE
+	#include "link_loss.h"
+#endif
+
+#if defined IMMEDIATE_ALERT_SERVICE
+	#include "immediate_alert.h"
+#endif
+
+#if defined TX_POWER_SERVICE	
+	#include "tx_power.h"
+#endif
+
+#if defined PROXIMITY_REPORTER
+	#include "pxp_reporter.h"
 #endif
 
 #if defined PROXIMITY_MONITOR
-#include "pxp_monitor.h"
-#include "tx_power.h"
-#include "link_loss.h"
-#include "immediate_alert.h"
-#endif
-
-
-#if (BLE_DEVICE_ROLE == BLE_CENTRAL)
-uint8_t scan_response_count = 0;
-at_ble_scan_info_t scan_info[MAX_SCAN_DEVICE];
+	#include "pxp_monitor.h"
 #endif
 
 at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
-#if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)
+#if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
+uint8_t scan_response_count = 0;
+at_ble_scan_info_t scan_info[MAX_SCAN_DEVICE];
+#endif
+
+#if ((BLE_DEVICE_ROLE == BLE_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
 at_ble_LTK_t app_bond_info;
 bool app_device_bond;
 uint8_t auth_info;
@@ -84,9 +89,26 @@ static void ble_set_address(at_ble_addr_t *addr);
 
 void ble_device_init(at_ble_addr_t *addr)
 {
+	char *dev_name = NULL;
 	ble_init();
 	ble_set_address(addr);
+	
+	dev_name = (char *)BLE_DEVICE_NAME;
+	if (ble_set_device_name((uint8_t *)dev_name, strlen(dev_name)) != AT_BLE_SUCCESS)
+	{
+		DBG_LOG("Device name set failed");
+	}
+	
 	BLE_PROFILE_INIT(NULL);
+}
+
+at_ble_status_t ble_set_device_name(uint8_t *name, uint8_t name_len)
+{
+	if ((name == NULL) || (name_len < 1))
+	{
+		return AT_BLE_INVALID_PARAM;
+	}
+	return at_ble_device_name_set(name, name_len);
 }
 
 /* Initialize the BLE */
@@ -161,7 +183,7 @@ static void ble_set_address(at_ble_addr_t *addr)
 	}
 }
 
-#if (BLE_DEVICE_ROLE == BLE_CENTRAL)
+#if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
 at_ble_status_t gap_dev_connect(at_ble_addr_t *dev_addr)
 {
 	at_ble_connection_params_t gap_conn_parameter;
@@ -219,10 +241,10 @@ at_ble_status_t ble_scan_report_handler(at_ble_scan_report_t *scan_report)
 	}
 	return AT_BLE_FAILURE;
 }
-#endif
+#endif /* ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)) */
 
 
-#if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_PERIPHERAL))
+
 void ble_connected_state_handler(at_ble_connected_t *conn_params)
 {
 	memcpy(ble_connected_dev_info, (uint8_t *)conn_params, sizeof(at_ble_connected_t));
@@ -244,7 +266,6 @@ void ble_connected_state_handler(at_ble_connected_t *conn_params)
 	else {
 		DBG_LOG("Slave security request failed");
 	}
-	
 	
 }
 
@@ -275,7 +296,7 @@ void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 		DBG_LOG("To remove existing bonding information and accept pairing request from peer device press y else press n : ");
 		do
 		{
-			bond = 'y';//getchar();
+			bond = 'y';
 			if((bond == 'Y') || (bond == 'y'))
 			{
 				app_device_bond = false;
@@ -359,7 +380,6 @@ void ble_pair_key_request_handler (at_ble_pair_key_request_t *pair_key)
 		/* Convert passkey to ASCII format */
 		for(i=0; i<AT_BLE_PASSKEY_LEN ; i++)
 		{
-			//DBG_LOG("please enter the 0x%02X ",passkey[i]);
 			passkey_ascii[i] = (passkey[i] + 48);
 		}
 		DBG_LOG("please enter the following code on the other device : ");
@@ -403,15 +423,12 @@ void ble_encryption_status_change_handler(at_ble_encryption_status_changed_t *en
 	{
 		DBG_LOG("Encryption completed successfully \n");
 			
-		ble_connected_dev_info->handle = enc_status.handle;
-			
+		ble_connected_dev_info->handle = enc_status.handle;			
 	}
 	else
 	{
 		DBG_LOG("Encryption failed \n");
-	}
-	
-	
+	}	
 }
 
 void ble_encryption_request_handler (at_ble_encryption_request_t *encry_req)
@@ -430,71 +447,387 @@ void ble_encryption_request_handler (at_ble_encryption_request_t *encry_req)
 
 	at_ble_encryption_request_reply(ble_connected_dev_info->handle,auth_info ,key_found,app_bond_info);
 }
-#endif
 
 
 void ble_event_manager(at_ble_events_t events, void *event_params)
 {
 	switch(events)
 	{
-		case AT_BLE_CONNECTED:
-		{
-			BLE_CONNECTED_STATE_HANDLER((at_ble_connected_t *)event_params);
-		}
-		break;
-
-		case AT_BLE_DISCONNECTED:
-		{
-			BLE_DISCONNECTED_STATE_HANDLER((at_ble_disconnected_t *)event_params);
-		}
-		break;
-				
-		case AT_BLE_CHARACTERISTIC_CHANGED :
-		{
-			BLE_CHARACTERISTIC_CHANGED ((at_ble_characteristic_changed_t *)event_params);
-		}
-		break;
 		
-		case AT_BLE_CONN_PARAM_UPDATE_DONE :
-		{
-			BLE_CONN_PARAM_UPDATE_DONE((at_ble_conn_param_update_done_t *)event_params);
-		}
-		break;
+		/* GAP events */
+	/** Undefined event received  */
+	case AT_BLE_UNDEFINED_EVENT:
+	{
+		DBG_LOG("BLE-Manager:Undefined Event=0x%X", events);
+	}
+	break;
+	
+	/** Scan info needs to be delivered either adv data or scan response data. \n
+	 * Refer to @ref at_ble_scan_info_t
+	 */
+	case AT_BLE_SCAN_INFO:
+	{
 		
-		case AT_BLE_PAIR_REQUEST :
-		{
-			BLE_PAIR_REQUEST((at_ble_pair_request_t *)event_params);
-		}
-		break;
+	}
+	break;
+	
+	/** Scan report received at the end of scan period if @ref AT_BLE_SCAN_GEN_DISCOVERY or @ref AT_BLE_SCAN_LIM_DISCOVERY are used. \n
+	 * Refer to @ref at_ble_scan_report_t
+	 */
+	case AT_BLE_SCAN_REPORT:
+	{
 		
-		case AT_BLE_PAIR_KEY_REQUEST:
-		{
-			BLE_PAIR_KEY_REQUEST((at_ble_pair_key_request_t *)event_params);
-		}
-		break;
+	}
+	break;
+	
+	/** Used random address. \n
+	 *	Refer to at_ble_rand_addr_changed_t
+	 */
+	case AT_BLE_RAND_ADDR_CHANGED:
+	{
 		
-		case AT_BLE_PAIR_DONE:
-		{
-			BLE_PAIR_DONE((at_ble_pair_done_t *)event_params);
-		}
-		break;
-		case AT_BLE_ENCRYPTION_REQUEST:
-		{
-			BLE_ENCRYPTION_REQUEST((at_ble_encryption_request_t *)event_params);
-		}
-		break;
+	}
+	break;
+	
+	/** connected to a peer device. \n
+	 *	Refer to at_ble_connected_t
+	 */
+	case AT_BLE_CONNECTED:
+	{
+		//BLE_CONNECTED_STATE_HANDLER((at_ble_connected_t *)event_params);
+	} 
+	break;
+	
+	/** peer device connection terminated. \n
+	 *	Refer to at_ble_disconnected_t
+	 */
+	case AT_BLE_DISCONNECTED:
+	{
+		BLE_DISCONNECTED_STATE_HANDLER((at_ble_disconnected_t *)event_params);
+	}
+	break;
+	
+	 /** connection parameters updated. It is requires to call @ref at_ble_conn_update_reply function to send resonse back if needed.\n
+	  * Refer to @ref at_ble_conn_param_update_done_t
+	  */
+	case AT_BLE_CONN_PARAM_UPDATE_DONE:
+	{
+		BLE_CONN_PARAM_UPDATE_DONE((at_ble_conn_param_update_done_t *)event_params);
+	}
+	break;
+	
+	 /** peer device asks for connection parameters update. \n
+	 *	Refer to at_ble_conn_param_update_request_t
+	 */
+	case AT_BLE_CONN_PARAM_UPDATE_REQUEST:
+	{
 		
-		case AT_BLE_ENCRYPTION_STATUS_CHANGED:
-		{
-			BLE_ENCRYPTION_STATUS_CHANGED((at_ble_encryption_status_changed_t *)event_params);
-		}
-		break;
+	}
+	break;
+	
+	 /** reported RX power value. \n
+	 *	Refer to at_ble_rx_power_value_t
+	 */	 
+	case AT_BLE_RX_POWER_VALUE:
+	{
 		
-		default:
-		{
-			DBG_LOG("ble_event_manager-Unknown Event: event=0x%X", events);
-		}
-		break;
+	}
+	break;
+	
+	/** Pairing procedure is completed. \n
+	 *	Refer to at_ble_pair_done_t
+	 */
+	case AT_BLE_PAIR_DONE:
+	{
+		BLE_PAIR_DONE((at_ble_pair_done_t *)event_params);
+	}
+	break;
+	
+	/** A central device asks for Pairing. \n
+	 * Refer to at_ble_pair_request_t 
+	 */
+	case AT_BLE_PAIR_REQUEST:
+	{
+		BLE_PAIR_REQUEST((at_ble_pair_request_t *)event_params);
+	}
+	break;
+	
+	/** Slave security request. \n
+	 *	Refer to at_ble_slave_sec_request_t
+	 */
+	case AT_BLE_SLAVE_SEC_REQUEST:
+	{
+		
+	}
+	break;
+	
+	/** A passkey or OOB data is requested as part of pairing procedure. \n
+	 * Refer to @ref at_ble_pair_key_request_t 
+	 */
+	case AT_BLE_PAIR_KEY_REQUEST:
+	{
+		BLE_PAIR_KEY_REQUEST((at_ble_pair_key_request_t *)event_params);
+	}
+	break;
+	
+	/** Encryption is requested by a master device. \n
+	 *	Refer to at_ble_encryption_request_t
+	 */
+	case AT_BLE_ENCRYPTION_REQUEST:
+	{
+		BLE_ENCRYPTION_REQUEST((at_ble_encryption_request_t *)event_params);
+	}
+	break;
+	
+	/** Encryption status changed. \n
+	 *	Refer to at_ble_encryption_status_changed_t
+	 */
+	case AT_BLE_ENCRYPTION_STATUS_CHANGED:
+	{
+		BLE_ENCRYPTION_STATUS_CHANGED((at_ble_encryption_status_changed_t *)event_params);
+	}
+	break;
+	
+	/** Resolve random address status. \n
+	 *	Refer to at_ble_resolv_rand_addr_status_t
+	 */
+	case AT_BLE_RESOLV_RAND_ADDR_STATUS:
+	{
+		
+	}
+	break;
+	
+	/* GATT Client events */
+	/** A primary service is found. \n
+	 * Refer to @ref at_ble_primary_service_found_t
+	 */
+	case AT_BLE_PRIMARY_SERVICE_FOUND:
+	{
+		
+	}
+	break;
+	
+	/** An included service is found . \n
+	 * Refer to @ref at_ble_included_service_found_t
+	 */
+	case AT_BLE_INCLUDED_SERVICE_FOUND:
+	{
+		
+	}
+	break;
+	 
+	/** A Characteristic is found. \n 
+	 * Refer to @ref at_ble_characteristic_found_t
+	 */
+	case AT_BLE_CHARACTERISTIC_FOUND:
+	{
+		
+	}
+	break;
+	
+	 /** A descriptor is found. \n
+	  * Refer to @ref at_ble_descriptor_found_t
+	  */
+	case AT_BLE_DESCRIPTOR_FOUND:
+	{
+		
+	}
+	break;
+	
+	/** A discover operation has completed. \n
+	 * Refer to @ref at_ble_discovery_complete_t
+	 */
+	case AT_BLE_DISCOVERY_COMPLETE:
+	{
+		
+	}
+	break;
+	
+	/** Characteristic read by UUID procedure is done. \n
+	 *	Refer to at_ble_characteristic_read_response_t
+	 */
+	case AT_BLE_CHARACTERISTIC_READ_BY_UUID_RESPONSE:
+	{
+		
+	}
+	break;
+	
+	 /** Characteristic read procedure is done. \n
+	  * Refer to @ref at_ble_characteristic_read_response_t
+	  */
+	case AT_BLE_CHARACTERISTIC_READ_RESPONSE:
+	{
+		
+	}
+	break;
+	
+	/** Characteristic multiple read procedure is done. \n
+	  * Refer to @ref at_ble_characteristic_read_response_t
+	  */
+	case AT_BLE_CHARACTERISTIC_READ_MULTIBLE_RESPONSE:
+	{
+		
+	}
+	break;
+	
+	/** Characteristic write procedure is done. \n
+	  * Refer to @ref at_ble_characteristic_write_response_t
+	  */
+	case AT_BLE_CHARACTERISTIC_WRITE_RESPONSE:
+	{
+		
+	}
+	break;
+	
+	/** A Notification is received. \n
+	  * Refer to @ref at_ble_notification_recieved_t
+	  */
+	case AT_BLE_NOTIFICATION_RECIEVED:
+	{
+		
+	}
+	break;
+	
+	 /** An Indication is received. \n
+	  * Refer to @ref at_ble_indication_recieved_t
+	  */
+	case AT_BLE_INDICATION_RECIEVED:
+	{
+		
+	}
+	break;
+	
+	/* GATT Server events */
+	 /** The peer confirmed that it has received an Indication. \n
+	  * Refer to @ref at_ble_indication_confirmed_t
+	  */
+	case AT_BLE_INDICATION_CONFIRMED:
+	{
+		
+	}
+	break;
+	
+	/** The peer has changed a characteristic value. \n
+	  * Refer to @ref at_ble_characteristic_changed_t
+	  */
+	case AT_BLE_CHARACTERISTIC_CHANGED:
+	{
+		BLE_CHARACTERISTIC_CHANGED ((at_ble_characteristic_changed_t *)event_params);
+	}
+	break;
+	
+	/** The peer has confirmed that it has received the service changed notification. \n
+	  * Refer to @ref at_ble_service_changed_notification_confirmed_t
+	  */
+	case AT_BLE_SERVICE_CHANGED_NOTIFICATION_CONFIRMED:
+	{
+		
+	}
+	break;
+	
+	/** The peer asks for a write Authorization. \n
+	  * Refer to @ref at_ble_write_authorize_request_t
+	  */
+	case AT_BLE_WRITE_AUTHORIZE_REQUEST:
+	{
+		
+	}
+	break;
+	
+	 /** The peer asks for a read Authorization. \n
+	  * Refer to @ref at_ble_read_authorize_request_t
+	  */
+	case AT_BLE_READ_AUTHORIZE_REQUEST:
+	{
+		
+	}
+	break;
+	
+	/* L2CAP events */
+	/** An L2CAP packet received from a registered custom CID. \n
+	  * Refer to @ref at_ble_l2cap_rx_t
+	  */
+	case AT_BLE_L2CAP_RX:
+	{
+		
+	}
+	break;
+	
+	/* HTPT Health Thermometer Profile events */
+	/** Inform APP of database creation status. \n
+	  * Refer to @ref at_ble_htpt_create_db_cfm_t
+	  */
+	case AT_BLE_HTPT_CREATE_DB_CFM:
+	{
+		
+	}
+	break;
+	
+	/** Error indication to APP. \n
+	  * Refer to @ref at_ble_prf_server_error_ind_t
+	  */
+	case AT_BLE_HTPT_ERROR_IND:
+	{
+		
+	}
+	break;
+	
+	/** Automatically sent to the APP after a disconnection with the peer device to confirm disabled profile. \n
+	  * Refer to @ref at_ble_htpt_disable_ind_t
+	  */
+	case AT_BLE_HTPT_DISABLE_IND:
+	{
+		
+	}
+	break;
+	
+	/** Temperature value confirm to APP. \n
+	  * Refer to @ref at_ble_htpt_temp_send_cfm_t
+	  */
+	case AT_BLE_HTPT_TEMP_SEND_CFM:
+	{
+		
+	}
+	break;
+	
+	/** Inform APP of new measurement interval value. \n
+	  * Refer to @ref at_ble_htpt_meas_intv_chg_ind_t
+	  */
+	case AT_BLE_HTPT_MEAS_INTV_CHG_IND:
+	{
+		
+	}
+	break;
+	
+	/** Inform APP of new configuration value. \n
+	  * Refer to @ref at_ble_htpt_cfg_indntf_ind_t
+	  */
+	case AT_BLE_HTPT_CFG_INDNTF_IND:
+	{
+		
+	}
+	break;
+	
+	/* Custom user defined events */
+	/** A user-defined event is delivered to the system */
+	case AT_BLE_CUSTOM_EVENT:
+	{
+		
+	}
+	break;
+	
+	
+	case AT_BLE_DEVICE_READY:
+	{
+		
+	}
+	break;
+	
+	default:
+	{
+		DBG_LOG("BLE-Manager:Unknown Event=0x%X", events);
+	}
+	break;		
 	}
 }
 

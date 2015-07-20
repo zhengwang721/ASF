@@ -71,6 +71,15 @@ typedef enum linkloss_alert_level {
 	LLS_HIGH_ALERT
 } linkloss_alert_level_t;
 
+typedef struct gatt_lls_char_handler
+{
+	at_ble_handle_t start_handle;
+	at_ble_handle_t end_handle;
+	at_ble_handle_t char_handle;
+	at_ble_status_t char_discovery;
+	uint8_t *char_data;
+}gatt_lls_char_handler_t;
+
 /****************************************************************************************
 *							        Function Prototypes	                                     							*
 ****************************************************************************************/

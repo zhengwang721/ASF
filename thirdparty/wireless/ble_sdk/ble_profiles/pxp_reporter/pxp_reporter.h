@@ -59,15 +59,51 @@
 /****************************************************************************************
 *							        Macros	                                     							*
 ****************************************************************************************/
-#define LL_INTERVAL_SLOW			(3)
-#define LL_INTERVAL_MEDIUM			(2)
-#define LL_INTERVAL_FAST			(1)
+
+#define PATHLOSS
 
 
-#define PL_INTERVAL_SLOW			(8)
-#define PL_INTERVAL_MEDIUM			(6)
-#define PL_INTERVAL_FAST			(4)
+/** @brief APP_PXP_FAST_ADV between 0x0020 and 0x4000 in 0.625 ms units (20ms to 10.24s). */
+#define APP_PXP_FAST_ADV				(100) //100 ms
 
+/** @brief APP_PXP_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
+#define APP_PXP_ADV_TIMEOUT				(1000) // 100 Secs
+
+/** @brief scan_resp_len is the length of the scan response data */
+#define SCAN_RESP_LEN					(10)
+
+/** @brief ADV_DATA_LEN */
+#define ADV_DATA_LEN					(18)
+
+/** @brief ADV_TYPE_LEN */
+#define ADV_TYPE_LEN					(0x01)
+
+/** @brief LL_ADV_DATA_UUID_LEN the size of LL service uuid */
+#define LL_ADV_DATA_UUID_LEN			(2)
+
+/** @brief LL_ADV_DATA_UUID_TYPE the total sizeof LL service uuid*/
+#define LL_ADV_DATA_UUID_TYPE			(0x03)
+
+/** @brief TXP_ADV_DATA_UUID_LEN the size of TXP service uuid */
+#define TXP_ADV_DATA_UUID_LEN			(2)
+
+/** @brief TXP_ADV_DATA_UUID_TYPE the total sizeof TXP service uuid*/
+#define TXP_ADV_DATA_UUID_TYPE			(0x03)
+
+/** @brief IAL_ADV_DATA_UUID_LEN the size of IAL service uuid */
+#define IAL_ADV_DATA_UUID_LEN			(2)
+
+/** @brief IAL_ADV_DATA_UUID_TYPE the total sizeof IAL service uuid*/
+#define IAL_ADV_DATA_UUID_TYPE			(0x03)
+
+/** @brief PXP_ADV_DATA_NAME_LEN the  length of the device name */
+#define PXP_ADV_DATA_NAME_LEN			(9)
+
+/** @brief PXP_ADV_DATA_NAME_TYPE the gap ad data type */
+#define PXP_ADV_DATA_NAME_TYPE			(0x09)
+
+/* @brief PXP_ADV_DATA_NAME_DATA the actual name of device */
+#define PXP_ADV_DATA_NAME_DATA			("ATMEL-PXP")
 
 typedef void (*reporter_callback_t)(uint8_t);
 
@@ -86,7 +122,7 @@ typedef void (*reporter_callback_t)(uint8_t);
   *
   * @return void
   */
-void pxp_app_init(void *param);
+void pxp_reporter_init(void *param);
 
 /** @brief Initialize the services of the profile
   * 
@@ -130,7 +166,7 @@ void pxp_reporter_adv(void);
   * @return @ref AT_BLE_SUCCESS operation completed successfully
   * @return @ref AT_BLE_FAILURE Generic error.
   */
-at_ble_status_t pxp_reporter_connected_state_handler (at_ble_connected_t * conn_params);
+extern at_ble_status_t pxp_reporter_connected_state_handler (at_ble_connected_t * conn_params);
 
 
 /** @brief disconnection event handler

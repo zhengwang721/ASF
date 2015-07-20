@@ -65,15 +65,21 @@
 *							        Macros	                                     		*
 ****************************************************************************************/
 
-#define PATHLOSS
-
 /****************************************************************************************
 *							        Globals	                                     		*
 ****************************************************************************************/
-
+#ifdef LINK_LOSS_SERVICE
 gatt_service_handler_t txps_handle;
+#endif // LINK_LOSS_SERVICE
+
+#ifdef TX_POWER_SERVICE
 gatt_service_handler_t lls_handle;
+#endif // TX_POWER_SERVICE
+
+#ifdef IMMEDIATE_ALERT_SERVICE
 gatt_service_handler_t ias_handle;
+#endif // IMMEDIATE_ALER_SERVICE
+
 
 /** @brief led_state  the state of the led*/
 extern uint8_t pxp_led_state;
@@ -103,11 +109,9 @@ void pxp_service_init(void)
 {
 	init_linkloss_service(&lls_handle);
 	
-	#if defined PATHLOSS
-	
+	#if defined PATHLOSS	
 	init_immediate_alert_service(&ias_handle);
-	init_tx_power_service(&txps_handle);
-	
+	init_tx_power_service(&txps_handle);	
 	#endif
 }
 
@@ -234,23 +238,24 @@ void pxp_reporter_adv(void)
 	
 	adv_data[idx++] = LL_ADV_DATA_UUID_LEN + ADV_TYPE_LEN +  TXP_ADV_DATA_UUID_LEN + IAL_ADV_DATA_UUID_LEN ;
 	adv_data[idx++] = LL_ADV_DATA_UUID_TYPE;
-	
+
+#ifdef LINK_LOSS_SERVICE	
 	/* Appending the UUID */
 	adv_data[idx++] = (uint8_t)LINK_LOSS_SERVICE_UUID;
 	adv_data[idx++] = (uint8_t)(LINK_LOSS_SERVICE_UUID >> 8);
-	
-	
+#endif	//LINK_LOSS_SERVICE
+
+#ifdef TX_POWER_SERVICE
 	//Prepare ADV Data for TXP Service
 	adv_data[idx++] = (uint8_t)TX_POWER_SERVICE_UUID;
 	adv_data[idx++] = (uint8_t)(TX_POWER_SERVICE_UUID >> 8);
-	
-	
-	
+#endif // TX_POWER_SERVICE	
+
+#ifdef IMMEDIATE_ALERT_SERVICE
 	//Prepare ADV Data for IAS Service
 	adv_data[idx++] = (uint8_t)IMMEDIATE_ALERT_SERVICE_UUID;
 	adv_data[idx++] = (uint8_t)(IMMEDIATE_ALERT_SERVICE_UUID >> 8);
-	
-	
+#endif	
 	
 	//Appending the complete name to the Ad packet
 	adv_data[idx++] = PXP_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
@@ -273,8 +278,7 @@ void pxp_reporter_adv(void)
 		#ifdef DBG_LOG
 		DBG_LOG("BLE Started Adv");
 		#endif
-	}
-	
+	}	
 	else
 	{
 		#ifdef DBG_LOG
@@ -287,7 +291,7 @@ void pxp_reporter_adv(void)
 * \Pxp reporter Initialization which initializes service,defines and start adv
 */
 
-void pxp_app_init(void *param)
+void pxp_reporter_init(void *param)
 {
 	/* pxp services initialization*/
 	pxp_service_init();

@@ -61,6 +61,7 @@
 uint8_t tx_power_initial_value = DEFAULT_TX_PWR_VALUE;
 
 
+
 /** @brief Tx power service initialization
   * 
   */

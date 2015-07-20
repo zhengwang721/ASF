@@ -96,6 +96,15 @@ typedef enum immediate_alert_level {
 /* Perform the signed write  */
 #define IAS_NO_SIGNED_WRITE                     (false)
 
+typedef struct gatt_ias_char_handler
+{
+	at_ble_handle_t start_handle;
+	at_ble_handle_t end_handle;
+	at_ble_handle_t char_handle;
+	at_ble_status_t char_discovery;
+	uint8_t *char_data;
+}gatt_ias_char_handler_t;
+
 
 /**@brief write a characteristic  to Immediate Alert Characteristics
  *

@@ -49,40 +49,38 @@
 
 #include <asf.h>
 #include <string.h>
-#include "stddef.h"
+#include <stddef.h>
 #include "at_ble_api.h"
 #include "ble_utils.h"
 #include "platform.h"
+
+#if defined PROXIMITY_REPORTER
 #include "pxp_reporter.h"
-//#include "immediate_alert.h"
-//#include "tx_power.h"
-//#include "link_loss.h"
+#endif
 
-#define PROXIMITY_REPORTER
-#define TX_POWER_SERVICE
-#define LINK_LOSS_SERVICE
-#define IMMEDIATE_ALERT_SERVICE
+#define BLE_DEVICE_NAME				"ATMEL-DEV"
 
-#define BLE_CENTRAL				(0x01)
-#define BLE_PERIPHERAL			(0x02)
-#define BLE_CENTRAL_PERIPHERAL	(0x03)
-#define BLE_OBSERVER			(0x04)
+#define BLE_CENTRAL					(0x01)
+#define BLE_PERIPHERAL				(0x02)
+#define BLE_CENTRAL_AND_PERIPHERAL	(0x03)
+#define BLE_OBSERVER				(0x04)
 
-#define BLE_DEVICE_ROLE BLE_PERIPHERAL
+#define BLE_DEVICE_ROLE				BLE_PERIPHERAL
 
-static inline void ble_manager_dummy_handler(void *param)
+static inline void ble_dummy_handler(void *param)
 {
-	while(0);
+	UNUSED(param);
 }
 
-#if (BLE_DEVICE_ROLE == BLE_OBSERVER)
-
-
-#define MAX_SCAN_DEVICE				(10)			  //Max number of scan device @Todo parse when scan info is available
-#define SCAN_INTERVAL				(96)              //Scan interval 30ms in term of 625us
-#define SCAN_WINDOW					(96)              //Scan window 30ms values in term of 625ms
+#if ((BLE_DEVICE_ROLE == BLE_OBSERVER) || (BLE_DEVICE_ROLE == BLE_OBSERVER) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)) 
+#define MAX_SCAN_DEVICE				(10)			  //Max number of scan device
+#define SCAN_INTERVAL				(48)              //Scan interval 30ms in term of 625us
+#define SCAN_WINDOW					(48)              //Scan window 30ms values in term of 625ms
 #define SCAN_TIMEOUT				(0x0000)          //Timeout  Scan time-out, 0x0000 disables time-out
+#endif
 
+
+/* Observer related declarations */
 #define LE_LIMITED_DISCOVERABLE_MODE  ((uint8_t) 1 << 0)
 #define LE_GENERAL_DISCOVERABLE_MODE  ((uint8_t) 1 << 1)
 #define BREDR_NOT_SUPPORTED			  ((uint8_t) 1 << 2)
@@ -90,14 +88,14 @@ static inline void ble_manager_dummy_handler(void *param)
 #define LE_BREDR_CAPABLE_HOST		  ((uint8_t) 1 << 4)
 
 /*Length of Adv data types*/
-#define APPEARANCE_SIZE 2
-#define TX_POWER_LEVEL_SIZE 1
-#define ADV_INTERVAL_SIZE 2
+#define APPEARANCE_SIZE					2
+#define TX_POWER_LEVEL_SIZE				1
+#define ADV_INTERVAL_SIZE				2
 
 /* Gap Advertisement Types */
 typedef enum
 {
-	FLAGS = 0X01,
+	FLAGS = 0x01,
 	INCOMPLETE_LIST_16BIT_SERV_UUIDS,
 	COMPLETE_LIST_16BIT_SERV_UUIDS,
 	INCOMPLETE_LIST_32BIT_SERV_UUIDS,
@@ -107,13 +105,13 @@ typedef enum
 	SHORTENED_LOCAL_NAME,
 	COMPLETE_LOCAL_NAME,
 	TX_POWER_LEVEL,
-	CLASS_OF_DEVICE = 0X0D,
+	CLASS_OF_DEVICE = 0x0D,
 	SIMPLE_PAIRING_HASHING,
 	SIMPLE_PAIRING_RANDOMIZER,
 	DEVICE_ID,
 	SECURITY_MANAGER_OOB_FLAGS,
 	SLAVE_CONNECTION_INTERVAL_RANGE,
-	LIST_16BIT_SERV_SOLICITATION_UUIDS = 0X14,
+	LIST_16BIT_SERV_SOLICITATION_UUIDS = 0x14,
 	LIST_128BIT_SERV_SOLICITATION_UUIDS,
 	SERVICE_DATA,
 	PUBLIC_TARGET_ADDRESS,
@@ -124,32 +122,26 @@ typedef enum
 	LE_ROLE,
 	SIMPLE_PAIRING_HASHING_C256,
 	SIMPLE_PAIRING_RANDOMIZER_R256,
-	SERVICE_DATA_32BIT = 0X20,
+	SERVICE_DATA_32BIT = 0x20,
 	SERVICE_DATA_128BIT,
 	LE_SECURE_CONNECTIONS_CONFIRMATION_VALUE,
 	LE_SECURE_CONNECTIONS_RANDOM_VALUE,
-	THREED_INFORMATION_DATA = 0X3D,
-	MANUFACTURER_SPECIFIC_DATA = 0XFF
+	THREED_INFORMATION_DATA = 0x3D,
+	MANUFACTURER_SPECIFIC_DATA = 0xFF
 }gap_ad_type;
 
-#define BLE_PROFILE_INIT						ble_manager_dummy_handler
-#define BLE_CONNECTED_STATE_HANDLER				ble_manager_dummy_handler
-#define BLE_DISCONNECTED_STATE_HANDLER			ble_manager_dummy_handler
-#define BLE_CHARACTERISTIC_CHANGED				ble_manager_dummy_handler
-#define BLE_CONN_PARAM_UPDATE_DONE				ble_manager_dummy_handler
-#define	BLE_PAIR_REQUEST						ble_manager_dummy_handler
-#define BLE_PAIR_KEY_REQUEST					ble_manager_dummy_handler
-#define BLE_PAIR_DONE							ble_manager_dummy_handler
-#define BLE_ENCRYPTION_REQUEST					ble_manager_dummy_handler
-#define BLE_ENCRYPTION_STATUS_CHANGED			ble_manager_dummy_handler
+#if (BLE_DEVICE_ROLE == BLE_OBSERVER)
+#define BLE_PROFILE_INIT						ble_dummy_handler
+#define BLE_CONNECTED_STATE_HANDLER				ble_dummy_handler
+#define BLE_DISCONNECTED_STATE_HANDLER			ble_dummy_handler
+#define BLE_CHARACTERISTIC_CHANGED				ble_dummy_handler
+#define BLE_CONN_PARAM_UPDATE_DONE				ble_dummy_handler
+#define	BLE_PAIR_REQUEST						ble_dummy_handler
+#define BLE_PAIR_KEY_REQUEST					ble_dummy_handler
+#define BLE_PAIR_DONE							ble_dummy_handler
+#define BLE_ENCRYPTION_REQUEST					ble_dummy_handler
+#define BLE_ENCRYPTION_STATUS_CHANGED			ble_dummy_handler
 #endif
-
-#if defined PROXIMITY_REPORTER
-
-
-#endif
-
-
 
 /* Service UUID's */
 
@@ -170,7 +162,6 @@ typedef enum
 /* Tx Power Level Characteristic UUID */
 #define TX_POWER_LEVEL_CHAR_UUID		(0x2A07)
 
-
 typedef struct adv_element
 {
 	uint8_t len;
@@ -180,7 +171,7 @@ typedef struct adv_element
 
 
 /**
-* GATT characteristics handles
+* GATT services handles
 */
 typedef struct gatt_service_handler
 {
@@ -190,92 +181,70 @@ typedef struct gatt_service_handler
 }gatt_service_handler_t;
 
 
-typedef struct gatt_char_handler
-{
-	at_ble_handle_t start_handle;
-	at_ble_handle_t end_handle;
-	at_ble_handle_t char_handle;
-	at_ble_status_t char_discovery;
-	uint8_t *char_data;
-}gatt_char_handler_t;
-
-
-
 /* All GAP Connection Parameter defined */
-#if (BLE_DEVICE_ROLE == BLE_CENTRAL)
+#if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
+#define GAP_CONN_INTERVAL_MIN			(20)        //Connection interval min 20ms
+#define GAP_CONN_INTERVAL_MAX			(40)		//Connection interval max 40ms
+#define GAP_CONN_SLAVE_LATENCY			(0)
+#define GAP_CE_LEN_MIN					(0)
+#define GAP_CE_LEN_MAX					(0)
+#define GAP_SUPERVISION_TIMOUT			(0x1f4)		// 500 for supervision timeout
 
-#define GAP_CONN_INTERVAL_MIN		(20)        //Connection interval min 20ms
-#define GAP_CONN_INTERVAL_MAX		(40)		//Connection interval max 40ms
-#define GAP_CONN_SLAVE_LATENCY		(0)
-#define GAP_CE_LEN_MIN				(0)
-#define GAP_CE_LEN_MAX				(0)
-#define GAP_SUPERVISION_TIMOUT		(0x1f4)			// 500 for supervision timeout
-
-#define MAX_SCAN_DEVICE				(10)			  //Max number of scan device @Todo parse when scan info is available
-#define SCAN_INTERVAL				(48)              //Scan interval 30ms in term of 625us
-#define SCAN_WINDOW					(48)              //Scan window 30ms values in term of 625ms
-#define SCAN_TIMEOUT				(0x0000)          //Timeout  Scan time-out, 0x0000 disables time-out
-
-#define GAP_CONNECT_PEER_COUNT		(1)
-
+#define GAP_CONNECT_PEER_COUNT			(1)
 #define GATT_DISCOVERY_STARTING_HANDLE	(0x0001)
 #define GATT_DISCOVERY_ENDING_HANDLE	(0xFFFF)
+#else
+#define MAX_DEVICE_CONNECTED			(1)
 #endif
 
-#if (BLE_DEVICE_ROLE == BLE_CENTRAL)
-#define MAX_DEVICE_CONNECTED		(1)
-#else
-#define MAX_DEVICE_CONNECTED		(1)
-#endif
+
+
 
 #if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)
 
-#define BLE_PROFILE_INIT						pxp_app_init
-#define BLE_CONNECTED_STATE_HANDLER(param)		ble_connected_state_handler(param);\
-												pxp_reporter_connected_state_handler(param);
+#if defined PROXIMITY_REPORTER
+#define BLE_PROFILE_INIT							pxp_reporter_init 
+#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER		pxp_reporter_connected_state_handler
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER	pxp_disconnect_event_handler
+#define BLE_CHARACTERISTIC_CHANGED					pxp_reporter_char_changed_handler
+#endif		
 
-#define BLE_DISCONNECTED_STATE_HANDLER(param)	ble_disconnected_state_handler(param);\
-												pxp_disconnect_event_handler(param);
-
-#define BLE_CHARACTERISTIC_CHANGED				pxp_reporter_char_changed_handler
-		
-
-#define BLE_CONN_PARAM_UPDATE_DONE				ble_conn_param_update
-#define	BLE_PAIR_REQUEST						ble_pair_request_handler
-#define BLE_PAIR_KEY_REQUEST					ble_pair_key_request_handler
-#define BLE_PAIR_DONE							ble_pair_done_handler
-#define BLE_ENCRYPTION_REQUEST					ble_encryption_request_handler
-#define BLE_ENCRYPTION_STATUS_CHANGED			ble_encryption_status_change_handler
+#define BLE_CONN_PARAM_UPDATE_DONE					ble_conn_param_update
+#define	BLE_PAIR_REQUEST							ble_pair_request_handler
+#define BLE_PAIR_KEY_REQUEST						ble_pair_key_request_handler
+#define BLE_PAIR_DONE								ble_pair_done_handler
+#define BLE_ENCRYPTION_REQUEST						ble_encryption_request_handler
+#define BLE_ENCRYPTION_STATUS_CHANGED				ble_encryption_status_change_handler
 #endif
 
 
-#if (BLE_DEVICE_ROLE == BLE_CENTRAL)
-
-#define BLE_SCAN_REPORT_HANDLER					ble_scan_report_handler
-#define BLE_SCAN_INFO_HANDLER					ble_scan_info_handler
+#if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
+#define BLE_SCAN_REPORT_HANDLER						ble_scan_report_handler
+#define BLE_SCAN_INFO_HANDLER						ble_scan_info_handler
 
 #if defined PROXIMITY_MONITOR
-#define BLE_PROFILE_INIT						pxp_monitor_init
-#define BLE_CONNECTED_STATE_HANDLER(param)		ble_connected_state_handler(param);\
-												pxp_monitor_connected_state_handler(param);
-												
-#define BLE_DISCONNECTED_STATE_HANDLER(param)	ble_disconnected_state_handler(param);\
-												pxp_disconnect_event_handler(param);
-																								
-#define BLE_PRIMARY_SERVICE_FOUND_HANDLER		pxp_monitor_service_found_handler
-#define BLE_DISCOVERY_COMPLETE_HANDLER			pxp_monitor_discovery_complete_handler
-#define	BLE_SCAN_DATA_HANDLER					pxp_monitor_scan_data_handler
-#define BLE_CHARACTERISTIC_READ_RESPONSE		pxp_monitor_characteristic_read_response
-#define BLE_CHARACTERISTIC_FOUND_HANDLER		pxp_monitor_characteristic_found_handler
-
-#endif
-#define BLE_CHARACTERISTIC_WRITE_RESPONSE		ble_manager_dummy_handler
+#define BLE_PROFILE_INIT							pxp_monitor_init
+#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER		pxp_monitor_connected_state_handler
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER	pxp_disconnect_event_handler																								
+#define BLE_PRIMARY_SERVICE_FOUND_HANDLER			pxp_monitor_service_found_handler
+#define BLE_DISCOVERY_COMPLETE_HANDLER				pxp_monitor_discovery_complete_handler
+#define	BLE_SCAN_DATA_HANDLER						pxp_monitor_scan_data_handler
+#define BLE_CHARACTERISTIC_READ_RESPONSE			pxp_monitor_characteristic_read_response
+#define BLE_CHARACTERISTIC_FOUND_HANDLER			pxp_monitor_characteristic_found_handler
 #endif
 
+#define BLE_CHARACTERISTIC_WRITE_RESPONSE			ble_dummy_handler
+#endif
 
+/* Common functions */
+#define BLE_CONNECTED_STATE_HANDLER(param)			ble_connected_state_handler(param);\
+													BLE_ADDITIONAL_CONNECTED_STATE_HANDLER(param);
+
+#define BLE_DISCONNECTED_STATE_HANDLER(param)		ble_disconnected_state_handler(param);\
+													BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER(param);
 
 void ble_device_init(at_ble_addr_t *addr);
-
+at_ble_status_t ble_set_device_name(uint8_t *name, uint8_t name_len);
 void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update);
 void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req);
 void ble_pair_key_request_handler(at_ble_pair_key_request_t *pair_key);
@@ -283,7 +252,7 @@ at_ble_status_t ble_pair_done_handler(at_ble_pair_done_t *pairing_params);
 void ble_encryption_request_handler (at_ble_encryption_request_t *encry_req);
 void ble_encryption_status_change_handler(at_ble_encryption_status_changed_t *encry_status);
 
-#if (BLE_DEVICE_ROLE == BLE_CENTRAL)
+#if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
 at_ble_status_t gap_dev_connect(at_ble_addr_t dev_addr[]);
 at_ble_status_t gap_dev_scan(void);
 at_ble_status_t ble_scan_info_handler(at_ble_scan_info_t *scan_param);
@@ -292,14 +261,11 @@ uint8_t scan_info_parse(at_ble_scan_info_t *scan_info_data, at_ble_uuid_t *ble_s
 void ble_characteristic_found_handler(at_ble_characteristic_found_t *characteristic_found);
 #endif
 
-#if (BLE_DEVICE_ROLE == BLE_OBSERVER)
-at_ble_status_t gap_dev_scan(void);
-#endif
 
 void ble_event_manager(at_ble_events_t events , void *event_params);
 void ble_discovery_complete_handler(at_ble_discovery_complete_t *discover_status);
 void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect);
-void ble_connected_state_handler(at_ble_connected_t *conn_params);
 
+void ble_connected_state_handler(at_ble_connected_t *conn_params);
 
 #endif /*__BLE_MANAGER_H__*/

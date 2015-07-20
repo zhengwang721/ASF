@@ -68,6 +68,15 @@
   */
 #define TXPS_CHARACTERISTIC_COUNT		(1)
 
+typedef struct gatt_txps_char_handler
+{
+	at_ble_handle_t start_handle;
+	at_ble_handle_t end_handle;
+	at_ble_handle_t char_handle;
+	at_ble_status_t char_discovery;
+	uint8_t *char_data;
+}gatt_txps_char_handler_t;
+
 
 /****************************************************************************************
 *							        Function Declarations	                            *
