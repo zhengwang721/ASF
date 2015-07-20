@@ -57,8 +57,8 @@
  *  \li Select input clock as 26MHz 
  *  \li Set counter upper threshold as 32767
  *  \li Set counter lower threshold as -32768
- *  \li Set pinmux_pad[0] as MEGAMUX_SEL29_QUAD_DEC_X_IN_A
- *  \li Set pinmux_pad[1] as MEGAMUX_SEL29_QUAD_DEC_X_IN_B
+ *  \li Set pinmux_pad[0] as 0
+ *  \li Set pinmux_pad[1] as 0
  *
  * \param[out]  config  Pointer to a QUAD DECODER module configuration structure to set
  */
