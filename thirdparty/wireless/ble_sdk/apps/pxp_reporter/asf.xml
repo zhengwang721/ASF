@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="PROXIMITY MONITOR APPLICATION" id="thirdparty.wireless.ble_sdk.apps.pxp_reporter">
+	<module type="meta" caption="PROXIMITY REPORTER APPLICATION" id="thirdparty.wireless.ble_sdk.apps.pxp_reporter">
 		<info type="description" value="summary">
-		Proximity Monitor application for BLE stack
+		Proximity Reporter application for BLE stack
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="pxp_reporter_app.h"/>
