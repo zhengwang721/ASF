@@ -51,9 +51,6 @@
 
 #include "ble_manager.h"
 
-/* Enables proximity monitor profile */
-#define PROXIMITY_MONITOR
-
 typedef enum {
 	AD_TYPE_FLAGS = 01,
 	AD_TYPE_COMPLETE_LIST_UUID = 0x03,

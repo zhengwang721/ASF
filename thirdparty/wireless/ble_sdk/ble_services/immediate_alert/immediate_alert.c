@@ -57,7 +57,7 @@
 
 
 
-
+#if defined IAS_GATT_SERVER
 /****************************************************************************************
 *							        Globals                                     		*
 ****************************************************************************************/
@@ -149,3 +149,34 @@ uint8_t ias_set_alert_value(at_ble_characteristic_changed_t *change_params, gatt
 	}
 	return INVALID_IAS_PARAM;
 }
+
+#endif //IAS_GATT_SERVER
+
+#if defined IAS_GATT_CLIENT
+/**@brief write a characteristic  to Immediate Alert Characteristics
+ *
+ * if with_response is True, write completion will be reported via @ref
+ *AT_BLE_CHARACTERISTIC_WRITE_RESPONSE event
+ *
+ * @param[in] conn_handle handle of the connection
+ * @param[in] char_handle handle of the characteristic
+ * @param[in] alert_level alert level need to write
+ *
+ * @return @ref AT_BLE_SUCCESS operation completed successfully
+ * @return @ref AT_BLE_FAILURE Generic error.
+ */
+at_ble_status_t ias_alert_level_write(at_ble_handle_t conn_handle,
+		at_ble_handle_t char_handle,
+		immediate_alert_level_t alert_level)
+{
+	/* for immediate alert write without response */
+	return (at_ble_characteristic_write(conn_handle,
+	       char_handle,
+	       IAS_WRITE_OFFSET,
+	       IAS_WRITE_LENGTH,
+	       &alert_level,
+	       IAS_NO_SIGNED_WRITE,
+	       IAS_WRITE_WITH_RESPONSE));
+}
+
+#endif //IAS_GATT_CLIENT

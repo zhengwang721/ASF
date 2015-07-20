@@ -50,6 +50,8 @@
 
 #include "ble_manager.h"
 
+ #if defined TXPS_GATT_SERVER
+
 /****************************************************************************************
 *							        Macros	                                     		*
 ****************************************************************************************/
@@ -107,6 +109,57 @@ void init_tx_power_service(gatt_service_handler_t *tx_power_serv);
   * @return @ref AT_BLE_FAILURE Generic error.
   */
 at_ble_status_t txps_primary_service_define(gatt_service_handler_t *txps_primary_service);
-//
-//
+#endif//TXPS_GATT_SERVER
+
+#if defined TXPS_GATT_CLIENT
+/* Tx Power Maximum Character byte support */
+#define MAX_TX_POWER_CHAR_SIZE                  (1)
+
+/* Tx Power offset at where to start reading */
+#define TXPS_POWER_READ_OFFSET                  (0)
+
+/* Tx Power length of data to read */
+#define TXPS_POWER_READ_LENGTH                  (1)
+
+/* Tx Power invalid Characteristics handler */
+#define TXPS_INVALID_CHAR_HANDLE                (0)
+
+/* Tx Power invalid read Power value */
+#define TXPS_INVALID_POWER_VALUE                (0xFF)
+
+typedef struct gatt_txps_char_handler
+{
+	at_ble_handle_t start_handle;
+	at_ble_handle_t end_handle;
+	at_ble_handle_t char_handle;
+	at_ble_status_t char_discovery;
+	uint8_t *char_data;
+}gatt_txps_char_handler_t;
+
+/**@brief Send the Read Request to Tx Power service
+ *
+ * Read value will be reported via @ref AT_BLE_CHARACTERISTIC_READ_RESPONSE
+ *event
+ *
+ * @param[in] conn_handle handle of the connection
+ * @param[in] char_handle handle of the characteristic
+ * @return @ref AT_BLE_SUCCESS operation completed successfully
+ * @return @ref AT_BLE_INVALID_PARAM Invalid arguments.
+ * @return @ref AT_BLE_FAILURE Generic error.
+ */
+at_ble_status_t txps_power_read(at_ble_handle_t conn_handle,
+    at_ble_handle_t char_handle);
+
+/**@brief Read a Tx Power
+ *
+ * @param[in] read_value read response data available form
+ *at_ble_characteristic_read_response_t
+ * @return TX power in dBm .
+ * @return @ref TXPS_INVALID_POWER_VALUE if is not valid result
+ */
+int8_t txps_power_read_response(
+    at_ble_characteristic_read_response_t *char_read_resp,
+    gatt_txps_char_handler_t *txps_handler);
+#endif //TXPS_GATT_CLIENT
+
 #endif /* __TX_POWER_H__ */

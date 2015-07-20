@@ -6,6 +6,7 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="pxp_monitor_app.h"/>
 		<build type="c-source" value="pxp_monitor_app.c"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_CENTRAL"/>
 		<require idref="thirdparty.wireless.ble_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_sdk.inc"/>
 		<require idref="thirdparty.wireless.ble_sdk.src"/>

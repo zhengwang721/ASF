@@ -55,6 +55,8 @@
 
 #include "link_loss.h"
 
+
+#if defined LLS_GATT_SERVER
 /****************************************************************************************
 *							        Globals	                                     		*
 ****************************************************************************************/
@@ -153,3 +155,98 @@ uint8_t lls_set_alert_value(at_ble_characteristic_changed_t *change_params, gatt
 	}
 	return INVALID_LLS_PARAM;
 }
+
+#endif //LLS_GATT_SERVER
+
+#if defined LLS_GATT_CLIENT
+/**@brief write a characteristic  to Link Loss Characteristics
+ *
+ * if with_response is True, write completion will be reported via @ref
+ *AT_BLE_CHARACTERISTIC_WRITE_RESPONSE event
+ *
+ * @param[in] conn_handle handle of the connection
+ * @param[in] char_handle handle of the characteristic
+ * @param[in] alert level need to write
+ *
+ * @return @ref AT_BLE_SUCCESS operation completed successfully
+ * @return @ref AT_BLE_FAILURE Generic error.
+ */
+at_ble_status_t lls_alert_level_write(at_ble_handle_t conn_handle,
+		at_ble_handle_t char_handle,
+		link_loss_alert_level_t alert_level)
+{
+	/* for link loss alert write with response */
+	return (at_ble_characteristic_write(conn_handle,
+	       char_handle,
+	       LLS_WRITE_OFFSET,
+	       LLS_WRITE_LENGTH,
+	       &alert_level,
+	       LLS_NO_SIGNED_WRITE,
+	       LLS_WRITE_WITH_RESPONSE));
+}
+
+/**@brief Send the Read request to link loss handler
+ * Read value will be reported via @ref AT_BLE_CHARACTERISTIC_READ_RESPONSE
+ *event
+ *
+ * @param[in] conn_handle handle of the connection
+ * @param[in] char_handle handle of the characteristic
+ * @return @ref AT_BLE_SUCCESS operation completed successfully
+ * @return @ref AT_BLE_INVALID_PARAM Invalid arguments.
+ * @return @ref AT_BLE_FAILURE Generic error.
+ */
+at_ble_status_t lls_alert_level_read(at_ble_handle_t conn_handle,
+		at_ble_handle_t char_handle)
+{
+	if (char_handle == LLS_INVALID_CHAR_HANDLE) {
+		return (AT_BLE_INVALID_HANDLE);
+	} else {
+		return (at_ble_characteristic_read(conn_handle,
+		       char_handle,
+		       LLS_READ_OFFSET,
+		       LLS_READ_LENGTH));
+	}
+}
+
+/**@brief Read Link Loss Alert Value
+ *
+ * @param[in] read_value read response data available form
+ *at_ble_characteristic_read_response_t
+ * @return Link Loss Alert level .
+ * @return LLS_READ_RESP_INVALID if value are other than alert levels
+ */
+int8_t lls_alert_read_response(at_ble_characteristic_read_response_t *read_resp,
+		gatt_char_handler_t *lls_handler)
+{
+	if (read_resp->char_handle == lls_handler->char_handle) {
+		memcpy(lls_handler->char_data,
+				&read_resp->char_value[LLS_READ_OFFSET],
+				LLS_READ_LENGTH);
+
+		DBG_LOG("Link Loss Alert level set to");
+
+		switch (read_resp->char_value[LLS_READ_OFFSET]) {
+		case LLS_NO_ALERT:
+		{
+			DBG_LOG_CONT(" NO ALERT ");
+		}
+		break;
+
+		case LLS_LOW_ALERT:
+		{
+			DBG_LOG_CONT(" LOW ALERT ");
+		}
+		break;
+
+		case LLS_HIGH_ALERT:
+		{
+			DBG_LOG_CONT(" HIGH ALERT ");
+		}
+		break;
+		}
+		return (read_resp->char_value[LLS_READ_OFFSET]);
+	}
+
+	return(LLS_READ_RESP_INVALID);
+}
+#endif //LLS_GATT_CLIENT

@@ -81,19 +81,19 @@ extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 extern uint8_t scan_response_count;
 
 #if defined TX_POWER_SERVICE
-gatt_char_handler_t txps_handle =
+gatt_txps_char_handler_t txps_handle =
 {0, 0, 0, AT_BLE_INVALID_PARAM, NULL};
 uint8_t tx_power_char_data[MAX_TX_POWER_CHAR_SIZE];
 #endif
 
 #if defined LINK_LOSS_SERVICE
-gatt_char_handler_t lls_handle =
+gatt_lls_char_handler_t lls_handle =
 {0, 0, 0, AT_BLE_INVALID_PARAM, NULL};
 uint8_t lls_char_data[MAX_LLS_CHAR_SIZE];
 #endif
 
 #if defined IMMEDIATE_ALERT_SERVICE
-gatt_char_handler_t ias_handle =
+gatt_ias_char_handler_t ias_handle =
 {0, 0, 0, AT_BLE_INVALID_PARAM, NULL};
 uint8_t ias_char_data[MAX_IAS_CHAR_SIZE];
 #endif
@@ -102,8 +102,9 @@ uint8_t ias_char_data[MAX_IAS_CHAR_SIZE];
  * handler Pointer reference to respective variables
  *
  */
-void pxp_monitor_init(void)
+void pxp_monitor_init(void *param)
 {
+	UNUSED(param);
 	lls_handle.char_data = lls_char_data;
 	ias_handle.char_data = ias_char_data;
 	txps_handle.char_data = tx_power_char_data;

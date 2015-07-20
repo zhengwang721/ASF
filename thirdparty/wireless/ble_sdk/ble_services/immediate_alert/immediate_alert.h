@@ -91,7 +91,7 @@ typedef enum immediate_alert_level {
 #define IAS_WRITE_LENGTH                        (1)
 
 /* Immediate alert write without response */
-#define IAS_WRITE_WITH_RESPONSE					(false)
+#define IAS_WRITE_WITH_RESPONSE					        (false)
 
 /* Perform the signed write  */
 #define IAS_NO_SIGNED_WRITE                     (false)
@@ -157,6 +157,6 @@ at_ble_status_t ias_primary_service_define(gatt_service_handler_t *ias_primary_s
   * @return @ref ias alert value
   */
 uint8_t ias_set_alert_value(at_ble_characteristic_changed_t *change_params, gatt_service_handler_t *ias_handler);
-#endif
+#endif //IAS_GATT_SERVER
 
 #endif /* __IMMEDIATE_ALERT_H__ */

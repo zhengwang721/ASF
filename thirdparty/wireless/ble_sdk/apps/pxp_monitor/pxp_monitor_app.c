@@ -60,12 +60,28 @@
 
 #include "pxp_monitor_app.h"
 
+#if defined IMMEDIATE_ALERT_SERVICE
+#include "immediate_alert.h"
+#endif
+
+#if defined TX_POWER_SERVICE
+#include "tx_power.h"
+#endif
+
+#if defined LINK_LOSS_SERVICE
+#include "link_loss.h"
+#endif
+
+#if defined PROXIMITY_REPORTER
+#include "pxp_reporter.h"
+#endif
+
 at_ble_addr_t peer_addr
 	= {AT_BLE_ADDRESS_PUBLIC, {0x03, 0x18, 0xf0, 0x05, 0xf0, 0xf8}};
 
-extern gatt_char_handler_t txps_handle;
-extern gatt_char_handler_t lls_handle;
-extern gatt_char_handler_t ias_handle;
+extern gatt_txps_char_handler_t txps_handle;
+extern gatt_lls_char_handler_t lls_handle;
+extern gatt_ias_char_handler_t ias_handle;
 
 extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 

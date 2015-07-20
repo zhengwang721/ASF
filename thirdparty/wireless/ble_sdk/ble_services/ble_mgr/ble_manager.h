@@ -58,6 +58,10 @@
 #include "pxp_reporter.h"
 #endif
 
+#if defined PROXIMITY_MONITOR
+#include "pxp_monitor.h"
+#endif
+
 #if (BLE_DEVICE_ROLE == BLE_OBSERVER)
 #include "ble_observer.h"
 #endif
@@ -69,7 +73,7 @@ static inline void ble_dummy_handler(void *param)
 	UNUSED(param);
 }
 
-#if ((BLE_DEVICE_ROLE == BLE_OBSERVER) || (BLE_DEVICE_ROLE == BLE_OBSERVER) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)) 
+#if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)) 
 #define MAX_SCAN_DEVICE				(10)			  //Max number of scan device
 #define SCAN_INTERVAL				(96)              //Scan interval 30ms in term of 625us
 #define SCAN_WINDOW					(96)              //Scan window 30ms values in term of 625ms
@@ -263,7 +267,6 @@ typedef struct gatt_service_handler
 #define BLE_DISCONNECTED_STATE_HANDLER(param)		ble_disconnected_state_handler(param);\
 													BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER(param);
 
-void ble_device_init(at_ble_addr_t *addr);
 at_ble_status_t ble_set_device_name(uint8_t *name, uint8_t name_len);
 void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update);
 void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req);
@@ -282,6 +285,8 @@ void ble_characteristic_found_handler(at_ble_characteristic_found_t *characteris
 #endif
 
 
+at_ble_status_t ble_event_task(void);
+void ble_device_init(at_ble_addr_t *addr);
 void ble_event_manager(at_ble_events_t events , void *event_params);
 void ble_discovery_complete_handler(at_ble_discovery_complete_t *discover_status);
 void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect);
