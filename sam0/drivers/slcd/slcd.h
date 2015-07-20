@@ -265,7 +265,6 @@ enum slcd_automated_char_order {
  *
  * Enum automated char display mode.
  */
-
 enum slcd_automated_char_mode {
 	/** Sequential Display Mode */
 	SLCD_AUTOMATED_CHAR_SEQ = 0,

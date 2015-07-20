@@ -60,7 +60,11 @@ extern "C" {
  * @{
  */
 
-/** SLCD callback type. */
+/**
+ * \brief SLCD callback type
+ *
+ * Enum SLCD callback type. 
+ */
 enum slcd_callback_type {
 	/** Frame Counter 0 Overflow callback */
 	SLCD_CALLBACK_FC0_OVERFLOW = 0,
