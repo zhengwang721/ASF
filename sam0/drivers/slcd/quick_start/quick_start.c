@@ -47,6 +47,7 @@
 
 #include <asf.h>
 
+//! [slcd_var]
 struct dma_resource example_resource_abm;
 struct dma_resource example_resource_acm;
 COMPILER_ALIGNED(16)
@@ -61,7 +62,9 @@ COMPILER_ALIGNED(16)
 DmacDescriptor example_descriptor_abm3;
 
 struct usart_module usart_instance;
+//! [slcd_var]
 
+//! [slcd_data]
 /*Charactor map 0-9,A-Z*/
 const uint32_t charactor_map[] = {
 	0x2e74,0x440,0x23c4,0x25c4,0x5e0,0x25a4,0x27a4,0x444,0x27e4,0x25e4, /*0-9*/
@@ -72,7 +75,8 @@ const uint32_t charactor_map[] = {
 };
 
 /* HELLO ATMEL map */
-uint32_t display_array[11]={0x7e0,0x23a4,0x2220,0x2220,0x2664,0,0x7e4,0x8005,0x678,0x23a4,0x2220};
+uint32_t display_array[11]={0x7e0,0x23a4,0x2220,0x2220,0x2664,0,
+							0x7e4,0x8005,0x678,0x23a4,0x2220};
 #define DISPLAY_ARRAY_SIZE (sizeof(display_array)/sizeof(uint32_t))
 
 /*ICON COM/SEG map */
@@ -115,7 +119,9 @@ const uint32_t abm_matrix_string3[] = {
  };
 
 #define ABM_MATRIX_SIZE (sizeof(abm_matrix_string0)/sizeof(uint32_t))
+//! [slcd_data]
 
+//! [setup]
 /**
  *  Configure serial console.
  */
@@ -132,7 +138,9 @@ static void configure_console(void)
 	stdio_serial_init(&usart_instance, EDBG_CDC_MODULE, &config_usart);
 	usart_enable(&usart_instance);
 }
-
+/**
+ *  Configure automated character mapping with DMA.
+ */
 static void configure_dma_acm(void)
 {
 	struct dma_resource_config acm_config;
@@ -153,7 +161,8 @@ static void configure_dma_acm(void)
 	acm_descriptor_config.block_transfer_count = DISPLAY_ARRAY_SIZE;
 	acm_descriptor_config.step_selection = DMA_STEPSEL_SRC;
 	acm_descriptor_config.dst_increment_enable = false;
-	acm_descriptor_config.source_address = (uint32_t)display_array+sizeof(display_array);
+	acm_descriptor_config.source_address = (uint32_t)display_array
+											+ sizeof(display_array);
 	acm_descriptor_config.destination_address = (uint32_t)&SLCD->CMDATA.reg;
     acm_descriptor_config.next_descriptor_address =  (uint32_t)&example_descriptor_acm;
 
@@ -163,6 +172,9 @@ static void configure_dma_acm(void)
 	dma_start_transfer_job(&example_resource_acm);
 }
 
+/**
+ *  Configure automated bit mapping with DMA.
+ */
 static void configure_dma_abm(void)
 {
 
@@ -181,32 +193,38 @@ static void configure_dma_abm(void)
 	abm_descriptor_config.step_selection = DMA_STEPSEL_SRC;
 	abm_descriptor_config.dst_increment_enable = false;
 	abm_descriptor_config.block_transfer_count = ABM_MATRIX_SIZE;
-	abm_descriptor_config.source_address = (uint32_t)abm_matrix_string0+sizeof(abm_matrix_string0);
+	abm_descriptor_config.source_address = (uint32_t)abm_matrix_string0
+											+ sizeof(abm_matrix_string0);
 	abm_descriptor_config.destination_address = (uint32_t)&SLCD->ISDATA.reg;
 	abm_descriptor_config.next_descriptor_address =  (uint32_t)&example_descriptor_abm1;
 
 	dma_descriptor_create(&example_descriptor_abm, &abm_descriptor_config);
 
-	abm_descriptor_config.source_address = (uint32_t)abm_matrix_string1+sizeof(abm_matrix_string1);
+	abm_descriptor_config.source_address = (uint32_t)abm_matrix_string1
+											+ sizeof(abm_matrix_string1);
 	abm_descriptor_config.next_descriptor_address =  (uint32_t)&example_descriptor_abm2;
 	dma_descriptor_create(&example_descriptor_abm1, &abm_descriptor_config);
 
-	abm_descriptor_config.source_address = (uint32_t)abm_matrix_string2+sizeof(abm_matrix_string2);
+	abm_descriptor_config.source_address = (uint32_t)abm_matrix_string2
+											+ sizeof(abm_matrix_string2);
 	abm_descriptor_config.next_descriptor_address =  (uint32_t)&example_descriptor_abm3;
 	dma_descriptor_create(&example_descriptor_abm2, &abm_descriptor_config);
 
-	abm_descriptor_config.source_address = (uint32_t)abm_matrix_string3+sizeof(abm_matrix_string3);
+	abm_descriptor_config.source_address = (uint32_t)abm_matrix_string3
+											+ sizeof(abm_matrix_string3);
 	abm_descriptor_config.next_descriptor_address =  (uint32_t)&example_descriptor_abm;
 	dma_descriptor_create(&example_descriptor_abm3, &abm_descriptor_config);
 
 	dma_add_descriptor(&example_resource_abm, &example_descriptor_abm);
 	dma_start_transfer_job(&example_resource_abm);
 }
+//! [setup]
 
 int main(void)
 {
-	struct slcd_config config;
+//! [setup_init]
 
+	struct slcd_config config;
 	system_init();
 	configure_console();
 	delay_init();
@@ -215,34 +233,48 @@ int main(void)
 	port_pin_set_output_level(SLCD_BACLKLIGHT,true);
 
 	printf("SLCD example starts\r\n");
-
+//! [setup_config]
 	slcd_get_config_defaults(&config);
 	slcd_init(&config);
 	slcd_set_contrast(0x8);
-
+//! [setup_config]
+//! [slcd_dma_config]
 	configure_dma_acm();
 	configure_dma_abm();
+//! [slcd_dma_config]
 
+//! [module_enable]
 	slcd_enable();
+//! [module_enable]
 
+//! [setup_init]
+
+//! [use_cases]
+//! [use_cases_1]
 	/* 1. Display all*/
 	slcd_set_display_memory();
 	delay_s(1);
 	slcd_clear_display_memory();
+//! [use_cases_1]
 
+//! [use_cases_2]
 	/* 2. Display icon*/
 	slcd_set_pixel(C42412A_ICON_USB);
 	slcd_set_pixel(C42412A_ICON_BAT);
 	slcd_set_pixel(C42412A_ICON_ATMEL);
 	delay_s(1);
+//! [use_cases_2]
 
+//! [use_cases_3]
 	/* 3. Character map*/
 	slcd_character_map_set(SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_RIGHT,3);
 	for(uint32_t i = 0 ; i < 5 ; i++) {
 		slcd_character_write_data(0,4+i*4,charactor_map[10+i],0xFF4002);
 	}
 	delay_s(2);
+//! [use_cases_3]
 
+//! [use_cases_4]
 	/* 4. Blinking*/
 	slcd_disable();
 	struct slcd_blink_config blink_config;
@@ -261,7 +293,9 @@ int main(void)
 	slcd_enable_blink();
 	slcd_enable();
 	delay_s(2);
+//! [use_cases_4]
 
+//! [use_cases_5]
 	/* 5. Automated Character Mapping*/
 	slcd_disable();
 	struct slcd_automated_char_config acm_config;
@@ -284,7 +318,9 @@ int main(void)
 	slcd_enable_automated_character();
 	slcd_enable();
 	delay_s(3);
+//! [use_cases_5]
 
+//! [use_cases_6]
 	/* 6. Automated Bit Mapping*/
 	slcd_disable();
 	slcd_disable_automated_character();
@@ -295,7 +331,8 @@ int main(void)
 	slcd_enable_frame_counter(SLCD_FRAME_COUNTER_2);
 	slcd_enable_automated_bit();
 	slcd_enable();
-
+//! [use_cases_6]
+//! [use_cases]
     while(1){
 
     }

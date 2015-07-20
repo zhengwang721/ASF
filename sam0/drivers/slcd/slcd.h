@@ -48,10 +48,6 @@
 #ifndef SLCD_H_INCLUDED
 #define SLCD_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**
  * \defgroup asfdoc_sam0_drivers_slcd_group SAM Segment Liquid Crystal Display(SLCD) Controller
  *
@@ -63,7 +59,7 @@ extern "C" {
  *  - Callback APIs
  *
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  *  - Segment Liquid Crystal Display(SLCD)
  *
  * The following devices can use this module:
@@ -87,7 +83,7 @@ extern "C" {
  *
  * \subsection asfdoc_sam0_drivers_slcd_module_overview_internal Display Overview
  *
- * An LCD display is made of several segments (pixels or complete symbols)
+ * A LCD display is made of several segments (pixels or complete symbols)
  * which can be visible or invisible. A segment has two electrodes with liquid
  * crystal between them. These electrodes are the common terminal (COM pin) and
  * the segment terminal (SEG pin). When a voltage above a threshold voltage is applied
@@ -106,7 +102,7 @@ extern "C" {
  * \subsection asfdoc_sam0_drivers_slcd_special_considerations_io I/O Lines
  *
  * The SLCD pins (SEG and COM) are multiplexed with other peripherals. The
- * user application must first configure the I/O Controller, to give control of
+ * user application must first configure the I/O controller, to give control of
  * the requisite pins to the SLCD.
  *
  * \subsection asfdoc_sam0_drivers_slcd_special_considerations_power Power Management
@@ -149,145 +145,162 @@ extern "C" {
 #endif
 
 /**
- * \brief SLCD Frame Counter Definition.
+ * \brief SLCD frame counter definition
  *
  * Enum SLCD frame counter definition.
  */
 enum slcd_frame_counter {
-	/** SLCD frame counter 0. */
+	/** SLCD frame counter 0 */
 	SLCD_FRAME_COUNTER_0,
-	/** SLCD frame counter 1. */
+	/** SLCD frame counter 1 */
 	SLCD_FRAME_COUNTER_1,
-	/** SLCD frame counter 2. */
+	/** SLCD frame counter 2 */
 	SLCD_FRAME_COUNTER_2,
 };
 
 /**
- * \brief Waveform Mode.
+ * \brief Waveform mode
  *
- * Enum Waveform mode.
+ * Enum waveform mode.
  */
 enum slcd_waveform_mode {
-	/** Low power waveform mode. */
+	/** Low power waveform mode */
 	SLCD_LOW_POWER_WAVEFORM_MODE = 0,
-	/** Standard waveform mode. */
+	/** Standard waveform mode */
 	SLCD_STANDARD_WAVEFORM_MODE,
 };
 
 /**
+ * \brief SLCD configuration structure
+ *
  * Basic configuration for SLCDC.
  */
 struct slcd_config {
-	/** Keep SLCD enabled in standby sleep mode if true. */
+	/** Keep SLCD enabled in standby sleep mode if true */
 	bool run_in_standby;
-	/** waveform mode selection. */
+	/** waveform mode selection */
 	enum slcd_waveform_mode waveform_mode;
 
-	/** Low resistance network duration. */
+	/** Low resistance network duration */
 	uint8_t low_resistance_duration;
-	/** Enable Low resistance if true. */
+	/** Enable Low resistance if true */
 	bool enable_low_resistance;
-	/** Bias buffer duration. */
+	/** Bias buffer duration */
 	uint8_t bias_buffer_duration;
-	/** Enable bias buffer if true. */
+	/** Enable bias buffer if true */
 	bool enable_bias_buffer;
-	/** Enable external bias capacitor if true. */
+	/** Enable external bias capacitor if true */
 	bool enable_ext_bias;
 };
 /**
- * \brief SLCD event enable/disable structure.
+ * \brief SLCD event enable/disable structure
  *
  * Event flags for the SLCD module. This is used to enable and
  * disable events via \ref slcd_enable_events() and \ref slcd_disable_events().
  */
 struct slcd_events {
-	/** Enable event generation on frame counter 0 overflow. */
+	/** Enable event generation on frame counter 0 overflow */
 	bool generate_event_on_fc0_overflow;
-	/** Enable event generation on frame counter 1 overflow. */
+	/** Enable event generation on frame counter 1 overflow */
 	bool generate_event_on_fc1_overflow;
-	/** Enable event generation on frame counter 2 overflow. */
+	/** Enable event generation on frame counter 2 overflow */
 	bool generate_event_on_fc2_overflow;
 };
 
+/**
+ * \brief SLCD blink configuration
+ *
+ * SLCD blink configuration.
+ */
 struct slcd_blink_config {
-	/** Frame counter selection for blinking. */
+	/** Frame counter selection for blinking */
 	enum slcd_frame_counter fc;
 	/** All segments are allowed to blink if true, else only
-	  Selected segments are allowed to blink. */
+	  Selected segments are allowed to blink */
 	bool blink_all_seg;
 };
 
 /**
- * \brief SLCD Circular Shift Direction.
+ * \brief SLCD circular shift direction
  *
  * Enum SLCD circular shift direction.
  */
 enum slcd_circular_shift_dir {
-	/** Circular shift direction is left. */
+	/** Circular shift direction is left */
 	SLCD_CIRCULAR_SHIFT_LEFT = 0,
-	/** Circular shift direction is right. */
+	/** Circular shift direction is right */
 	SLCD_CIRCULAR_SHIFT_RIGHT,
 };
 
+/**
+ * \brief SLCD circular shift configuration
+ *
+ * SLCD circular shift configuration.
+ */
 struct slcd_circular_shift_config {
-	/** Frame counter selection for circular shift. */
+	/** Frame counter selection for circular shift */
 	enum slcd_frame_counter fc;
-	/** Shift direction. */
+	/** Shift direction */
 	enum slcd_circular_shift_dir dir;
-	/** Size of the circular shift register, MAX. size is 16.*/
+	/** Size of the circular shift register, MAX. size is 16 */
 	uint8_t size;
-	/** Circular shift register value. */
+	/** Circular shift register value */
 	uint16_t data;
 };
 
 /**
- * \brief Automated Char  Order.
+ * \brief Automated char  order
  *
- * Enum Automated char order.
+ * Enum automated char order.
  */
 enum slcd_automated_char_order {
-	/** Segment is starting from bottom right . */
+	/** Segment is starting from bottom right */
 	SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_RIGHT = 0,
-	/** Segment is starting from bottom left . */
+	/** Segment is starting from bottom left */
 	SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_LEFT,
 };
 
 /**
- * \brief Automated Char Display Mode.
+ * \brief Automated char display mode
  *
- * Enum Automated char display mode.
+ * Enum automated char display mode.
  */
 
 enum slcd_automated_char_mode {
-	/** Sequential Display Mode . */
+	/** Sequential Display Mode */
 	SLCD_AUTOMATED_CHAR_SEQ = 0,
-	/** Scrolling Display Mode. */
+	/** Scrolling Display Mode */
 	SLCD_AUTOMATED_CHAR_SCROLL,
 };
 
+/**
+ * \brief Automated char configuration
+ *
+ * SLCD automated char configuration.
+ */
 struct slcd_automated_char_config {
-	/** Mapping order in automated char mode. */
+	/** Mapping order in automated char mode */
 	enum slcd_automated_char_order order;
-	/** Frame counter selection for automated character mapping. */
+	/** Frame counter selection for automated character mapping */
 	enum slcd_frame_counter fc;
-	/** Display mode. */
+	/** Display mode */
 	enum slcd_automated_char_mode mode;
 	/** Define the number of SEG line per digit,
-		it equal to number of SEG line - 1.*/
+		it equal to number of SEG line - 1 */
 	uint8_t seg_line_num;
-	/** Define the index of the first segment terminal of the digit to display.*/
+	/** Define the index of the first segment terminal of the digit to display */
 	uint8_t start_seg_line;
-	/** Define the number of digit per row.*/
+	/** Define the number of digit per row */
 	uint8_t row_digit_num;
-	/** Define the number of digit, it must be greater than 1.*/
+	/** Define the number of digit, it must be greater than 1 */
 	uint8_t digit_num;
 	/** Define the number of steps in scrolling mode.
-		scrolling_step = character string length - digit_num + 1*/
+		scrolling_step = character string length - digit_num + 1 */
 	uint8_t scrolling_step;
 	/** Define the number of COM line per row,
-		it equal to number of COM line - 1.*/
+		it equal to number of COM line - 1 */
 	uint8_t com_line_num;
-	/** Segments data mask*/
+	/** Segments data mask */
 	uint32_t data_mask;
 
 };
@@ -306,7 +319,7 @@ void slcd_reset(void);
 enum status_code slcd_set_contrast(uint8_t contrast);
 
 /**
- * \brief Determines if SLCD module(s) are currently synchronizing to the bus.
+ * \brief Determines if SLCD module is currently synchronizing to the bus
  *
  * Checks to see if the underlying hardware peripheral module(s) are currently
  * synchronizing across multiple clock domains to the hardware bus, This
@@ -330,7 +343,7 @@ static inline bool slcd_is_syncing(void)
 }
 
 /**
- * \brief Lock Shadow Memory.
+ * \brief Lock shadow memory
  *
  * It allows update of shadow display memory. If the display memory
  * is modified, the display remains unchanged when locked.
@@ -341,7 +354,7 @@ static inline void slcd_lock_shadow_memory(void)
 }
 
 /**
- * \brief Unlock Shadow Memory.
+ * \brief Unlock shadow memory
  *
  * Unlock the shadow display memory.
  */
@@ -351,7 +364,7 @@ static inline void slcd_unlock_shadow_memory(void)
 }
 
 /**
- * \brief Clear Display Memory.
+ * \brief Clear display memory
  *
  * Clears immediately the display memory.
  */
@@ -361,7 +374,7 @@ static inline void slcd_clear_display_memory(void)
 }
 
 /**
- * \brief Display enable.
+ * \brief Display enable
  *
  * Enable COM/SEG signal output.
  */
@@ -374,7 +387,7 @@ static inline void slcd_enable_display(void)
 }
 
 /**
- * \brief Display disable.
+ * \brief Display disable
  *
  * Disable COM/SEG signal output.
  */
@@ -386,7 +399,7 @@ static inline void slcd_disable_display(void)
 	}
 }
 /**
- * \brief  DMA Display Memory Update Frame Counter Selection.
+ * \brief  DMA Display Memory Update Frame Counter Selection
  *
  * it's used to select the frame counter for DMA to update the display memory.
  *
@@ -407,7 +420,7 @@ static inline void slcd_dma_display_memory_update_fc_sel(enum slcd_frame_counter
  */
 
 /**
- * \brief Blink Mode Enable.
+ * \brief Blink mode enable
  *
  * Enable blink mode.
  */
@@ -420,7 +433,7 @@ static inline void slcd_enable_blink(void)
 }
 
 /**
- * \brief Blink Mode Disable.
+ * \brief Blink mode disable
  *
  * Disable blink mode.
  */
@@ -447,11 +460,10 @@ void slcd_set_blink_pixel(uint8_t pix_com,uint8_t pix_seg);
  */
 
 /**
- * \brief Blank Mode Enable.
+ * \brief Blank mode enable
  *
  * Enable blank mode.
  */
-
 static inline void slcd_enable_blank(void)
 {
 	SLCD->CTRLD.reg |= SLCD_CTRLD_BLANK;
@@ -460,7 +472,7 @@ static inline void slcd_enable_blank(void)
 	}
 }
 /**
- * \brief Blank Mode Disable.
+ * \brief Blank mode disable
  *
  * Disable blank mode.
  */
@@ -479,9 +491,9 @@ static inline void slcd_disable_blank(void)
  */
 
 /**
- * \brief Enables a SLCD event output.
+ * \brief Enables a SLCD event output
  *
- *  Enables one or more output events
+ *  Enables one or more output events.
  *
  *  \note Events cannot be altered while the module is enabled.
  *
@@ -511,7 +523,7 @@ static inline void slcd_enable_events(struct slcd_events *const events)
 }
 
 /**
- * \brief Disables a SLCD event output.
+ * \brief Disables a SLCD event output
  *
  *  Disables one or more SLCD events output.
  *
@@ -547,7 +559,7 @@ static inline void slcd_disable_events(struct slcd_events *const events)
  */
 
 /**
- * \brief Frame Counter Configuration.
+ * \brief Frame counter configuration
  *
  *  Config frame counter.
  *
@@ -557,7 +569,7 @@ static inline void slcd_disable_events(struct slcd_events *const events)
  *  \param[in] presc_bypass_enable Bypass of the frame counter prescaler
  *  \param[in] overflow_value  Frame counter overflow value. The number of frame
  *		before overflow is ((overflow_value+1)*8) when presc_bypass_enable=0
- 		else (overflow_value+1). The MAX. overflow value is 0x1ffff.
+ 		else (overflow_value+1). The MAX. overflow value is 0x1ffff
  */
 static inline void slcd_set_frame_counter(enum slcd_frame_counter fc,
 										   bool  presc_bypass_enable,
@@ -568,7 +580,7 @@ static inline void slcd_set_frame_counter(enum slcd_frame_counter fc,
 }
 
 /**
- * \brief Enables a Frame Counter.
+ * \brief Enables a frame counter
  *
  *  Enables one frame counter.
  *
@@ -596,7 +608,7 @@ static inline void slcd_enable_frame_counter(enum slcd_frame_counter fc)
 }
 
 /**
- * \brief Disable a Frame Counter.
+ * \brief Disable a frame counter.
  *
  *  Disable one frame counter.
  *
@@ -649,7 +661,7 @@ void slcd_character_write_data(uint8_t com_line_index,
 							uint32_t data_mask);
 
 /**
- * \brief Enables Automated Character Display.
+ * \brief Enables automated character display
  *
  *  Enables automated character display.
  */
@@ -659,7 +671,7 @@ static inline void slcd_enable_automated_character(void)
 }
 
 /**
- * \brief Disables Automated Character Display.
+ * \brief Disables automated character display
  *
  *  Disables automated character display.
  */
@@ -679,7 +691,7 @@ enum status_code slcd_automated_char_set_config(
  */
 
 /**
- * \brief Enables Automated Bit Display.
+ * \brief Enables automated bit display
  *
  *  Enables automated bit display.
  */
@@ -689,7 +701,7 @@ static inline void slcd_enable_automated_bit(void)
 }
 
 /**
- * \brief Disables Automated Bit Display.
+ * \brief Disables automated bit display
  *
  *  Disables automated bit display.
  */
@@ -699,7 +711,7 @@ static inline void slcd_disable_automated_bit(void)
 }
 
 /**
- * \brief Sets Automated Bit Display.
+ * \brief Sets automated bit display
  *
  *  Sets automated bit display.
  *
@@ -720,7 +732,7 @@ static inline void slcd_set_automated_bit(uint8_t size,enum slcd_frame_counter f
  */
 
 /**
- * \brief Enable SLCD circular shift mode.
+ * \brief Enable SLCD circular shift mode
  */
 static inline void slcd_enable_circular_shift(void)
 {
@@ -730,9 +742,8 @@ static inline void slcd_enable_circular_shift(void)
 	}
 }
 /**
- * \brief Disable SLCD circular shift mode.
+ * \brief Disable SLCD circular shift mode
  */
-
 static inline void slcd_disable_circular_shift(void)
 {
 	SLCD->CTRLD.reg &= ~SLCD_CTRLD_CSREN;
@@ -754,7 +765,7 @@ enum status_code slcd_circular_shift_set_config(
  */
 
 /**
- * \brief Checks if auto bit mapping state machine is busy.
+ * \brief Checks if auto bit mapping state machine is busy
  *
  * Checks if  auto bit mapping state machine is busy or not.
  *
@@ -768,7 +779,7 @@ static inline bool slcd_get_auto_bit_status(void)
 }
 
 /**
- * \brief Checks if auto character mapping state machine is busy.
+ * \brief Checks if auto character mapping state machine is busy
  *
  * Checks if  auto character state machine is busy or not.
  *
@@ -782,7 +793,7 @@ static inline bool slcd_get_auto_char_status(void)
 }
 
 /**
- * \brief Checks if character writing function is busy.
+ * \brief Checks if character writing function is busy
  *
  * Checksif character writing function is busy or not.
  *
@@ -796,7 +807,7 @@ static inline bool slcd_get_char_writing_status(void)
 }
 
 /**
- * \brief Checks VLCD and VDD33 status.
+ * \brief Checks VLCD and VDD33 status
  *
  * Checks VLCD and VDD33 status.
  *
@@ -810,7 +821,7 @@ static inline bool slcd_get_vlcd_vdd33_status(void)
 }
 
 /**
- * \brief Checks LCD Charge Pump Status.
+ * \brief Checks LCD charge pump status
  *
  * Checks LCD Charge Pump Status.
  *
@@ -824,7 +835,7 @@ static inline bool slcd_get_charge_pump_status(void)
 }
 
 /**
- * \brief Checks if VLCD  is Ready.
+ * \brief Checks if VLCD  is ready
  *
  * Checks if VLCD is well regulated to the target value.
  *
@@ -839,6 +850,9 @@ static inline bool slcd_get_vlcd_ready_status(void)
 
 /** @} */
 
+#ifdef __cplusplus
+}
+#endif
 
 /** @} */
 
@@ -933,9 +947,5 @@ static inline bool slcd_get_vlcd_ready_status(void)
  * </table>
  *
  */
-
- #ifdef __cplusplus
-}
-#endif
 
 #endif  /* SLCD_H_INCLUDED */
