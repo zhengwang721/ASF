@@ -1412,13 +1412,17 @@ static inline bool lin_master_transmission_status(struct usart_module *const mod
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
-  *	<tr>
+ *	<tr>
  *		<td>Added new feature as below:
+ *          \li ISO7816
+ *	</tr>
+ *	<tr>
+ *		<td>Added new features as below:
  *          \li LIN master
  *          \li RS485
  *	</tr>
  *	<tr>
- *		<td>Added new feature as below:
+ *		<td>Added new features as below:
  *          \li Oversample
  *          \li Buffer overflow notification
  *          \li Irda
@@ -1551,7 +1555,7 @@ static inline bool lin_master_transmission_status(struct usart_module *const mod
  *	<tr>
  *		<td>42118F</td>
  *		<td>06/2015</td>
- *		<td>Add support for SAML21, SAMDAx, and SAMC20/C21.</td>
+ *		<td>Add support for SAML21/L22, SAMDAx, and SAMC20/C21.</td>
  *	</tr>
  *	<tr>
  *		<td>42118E</td>
