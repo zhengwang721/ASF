@@ -328,6 +328,8 @@ uint8_t scan_info_parse(at_ble_scan_info_t *scan_info_data,
 	return AT_BLE_FAILURE;
 }
 
+#endif //((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
+
 
 
 void ble_connected_state_handler(at_ble_connected_t *conn_params)
@@ -531,7 +533,7 @@ void ble_encryption_request_handler (at_ble_encryption_request_t *encry_req)
 
 	at_ble_encryption_request_reply(ble_connected_dev_info->handle,auth_info ,key_found,app_bond_info);
 }
-#endif //((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
+
 
 
 void ble_event_manager(at_ble_events_t events, void *event_params)
