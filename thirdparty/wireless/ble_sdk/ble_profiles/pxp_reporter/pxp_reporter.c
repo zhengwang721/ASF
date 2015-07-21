@@ -161,16 +161,7 @@ at_ble_status_t pxp_service_define (void)
 at_ble_status_t pxp_reporter_char_changed_handler(at_ble_characteristic_changed_t *char_handle)
 {
 	at_ble_characteristic_changed_t change_params;
-	
-	//uint32_t index = 0;
-
 	memcpy((uint8_t *)&change_params, char_handle, sizeof(at_ble_characteristic_changed_t));
-
-	//
-	//for(index=0; index<change_params.char_len; index++)
-	//{
-		//DBG_LOG_CONT("0x%02x ", change_params.char_new_value[index]);
-	//}	
 
 	linkloss_current_alert_level = lls_set_alert_value(&change_params,&lls_handle);
 	
