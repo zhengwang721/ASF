@@ -52,44 +52,33 @@
 #include "at_ble_api.h"
 #include "ble_manager.h"
 
-/** scan interval value characteristic value initial and maximum length */
-#define SPS_CHAR_SCAN_INT_VALUE_INIT_VALUE		0x00
-#define SPS_CHAR_SCAN_INT_VALUE_MAX_VALUE		0x00
+/**@brief Scan parameter service UUID */
+#define SPS_SERVICE_UUID 0x1813
 
-/** scan refresh value characteristic value initial and maximum length */
-#define SPS_CHAR_SCAN_REFRESH_INIT_VALUE		0x00
-#define SPS_CHAR_SCAN_REFRESH_MAX_VALUE			0x00
+/**@brief Scan interval characteristic uuid */
+#define SPS_CHAR_SCAN_INT_VALUE_UUID 0x2a4f
 
-/** The type of the information*/
-typedef enum {
-	/* scan interval characteristic */
-	SPS_SCAN_INTERVAL,
-	/* scan refresh characteristic */
-	SPS_SCAN_REFRESH
-}sps_info_type;
+/**@brief Scan refresh characteristic uuid */
+#define SPS_CHAR_SCAN_REFRESH_UUID 0x2a31
 
-/** Configurable Client characteristic data for a given sps info type*/
-typedef struct{
-	uint16_t data_len;
-	uint8_t *info_data;
-}sps_info_data;
-
-/**@brief  Generic Function used to update the SPS info type during connection
+/**@brief Function used to update the scan refresh characteristic value during connection
  *
  * @param[in] sps_serv gatt service information
- * @param[in] info_type @ref sps_info_type, specifies the characteristic
  * @param[in] info_data @ref sps_info_data, holds the new data information
  * @return none
  */
-at_ble_status_t sps_info_update(sps_gatt_service_handler_t *dis_serv , sps_info_type info_type, sps_info_data* info_data);
+at_ble_status_t sps_scan_refresh_char_update(sps_gatt_service_handler_t *sps_serv, uint8_t scan_refresh_value);
 
 /**@brief Initialize the service with its included service, characteristics, and descriptors
  *
  * @param[in] sps_serv gatt service information
+ * @param[in] scan_interval_window used to know the gatt client scan interval window
+ * @param[in] scan_refresh application uses to get the updated scan interval window of the gatt client
  *
  * @return none
  */
-void sps_init_service(sps_gatt_service_handler_t *sps_serv);
+void sps_init_service(sps_gatt_service_handler_t *sps_serv, uint16_t *scan_interval_window, uint8_t *scan_refresh);
+
 
 /**@brief defining a initialized service 
  *
