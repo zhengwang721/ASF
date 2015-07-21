@@ -330,6 +330,19 @@ uint8_t scan_info_parse(at_ble_scan_info_t *scan_info_data,
 
 #endif //((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
 
+at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
+{
+	if (at_ble_send_slave_sec_request(conn_handle, true, true) == AT_BLE_SUCCESS)
+	{
+		DBG_LOG("Slave security request successful");
+		return AT_BLE_SUCCESS;
+	}
+	else {
+		DBG_LOG("Slave security request failed");
+	}
+	return AT_BLE_FAILURE;
+}
+
 
 
 void ble_connected_state_handler(at_ble_connected_t *conn_params)
@@ -346,15 +359,8 @@ void ble_connected_state_handler(at_ble_connected_t *conn_params)
 	DBG_LOG("handle=0x%x status=%02X", conn_params->handle, conn_params->conn_status);
 
 	#if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)	
-		if (at_ble_send_slave_sec_request(conn_params->handle,true,true) == AT_BLE_SUCCESS)
-		{
-			DBG_LOG("Slave security request successful");
-		}
-		else {
-			DBG_LOG("Slave security request failed");
-		}
-	#endif	
-
+		ble_send_slave_sec_request(conn_params->handle);		
+	#endif
 }
 
 void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect)
@@ -691,7 +697,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	 */
 	case AT_BLE_PRIMARY_SERVICE_FOUND:
 	{
-		
+		BLE_PRIMARY_SERVICE_FOUND_HANDLER((at_ble_primary_service_found_t *)event_params);
 	}
 	break;
 	
@@ -709,7 +715,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	 */
 	case AT_BLE_CHARACTERISTIC_FOUND:
 	{
-		
+		BLE_CHARACTERISTIC_FOUND_HANDLER((at_ble_characteristic_found_t *)event_params);
 	}
 	break;
 	
@@ -718,7 +724,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	  */
 	case AT_BLE_DESCRIPTOR_FOUND:
 	{
-		
+		BLE_DESCRIPTOR_FOUND_HANDLER((at_ble_descriptor_found_t *)event_params);
 	}
 	break;
 	
@@ -727,7 +733,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	 */
 	case AT_BLE_DISCOVERY_COMPLETE:
 	{
-		
+		BLE_DISCOVERY_COMPLETE_HANDLER((at_ble_discovery_complete_t *)event_params);
 	}
 	break;
 	
@@ -763,7 +769,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	  */
 	case AT_BLE_CHARACTERISTIC_WRITE_RESPONSE:
 	{
-		
+		BLE_CHARACTERISTIC_WRITE_RESPONSE((at_ble_characteristic_write_response_t *)event_params);
 	}
 	break;
 	
@@ -772,7 +778,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	  */
 	case AT_BLE_NOTIFICATION_RECIEVED:
 	{
-		
+		BLE_NOTIFICATION_RECEIVED_HANDLER((at_ble_notification_recieved_t *)event_params);
 	}
 	break;
 	
@@ -800,7 +806,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	  */
 	case AT_BLE_CHARACTERISTIC_CHANGED:
 	{
-		BLE_CHARACTERISTIC_CHANGED ((at_ble_characteristic_changed_t *)event_params);
+		BLE_CHARACTERISTIC_CHANGED((at_ble_characteristic_changed_t *)event_params);
 	}
 	break;
 	

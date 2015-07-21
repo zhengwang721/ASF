@@ -100,11 +100,6 @@ void anp_client_adv(void)
 		DBG_LOG("adv set data successful");
 	}
 	
-	#ifdef OLED_MSG
-	gfx_mono_draw_string("                          ", 0, XPOS_UPDATE_POS_Y, &sysfont);
-	gfx_mono_draw_string("Advertising Mode", 0, XPOS_UPDATE_POS_Y, &sysfont);
-	#endif
-	
 	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
 	APP_ANP_FAST_ADV, APP_ANP_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
 	{
@@ -119,46 +114,21 @@ void anp_client_adv(void)
 void anp_client_connected_state_handler(at_ble_connected_t *params)
 {
 	at_ble_status_t status;
-	#ifdef OLED_MSG
-	gfx_mono_draw_string("                          ", 0, XPOS_UPDATE_POS_Y, &sysfont);
-	gfx_mono_draw_string("Connected Mode", 0, XPOS_UPDATE_POS_Y, &sysfont);
-	#endif
 	
-	memcpy((uint8_t *)&app_anp_info.conn_params, params, sizeof(at_ble_connected_t));
-		
-			
-	DBG_LOG("BLE: Connected to peer device Address: 0x%02x%02x%02x%02x%02x%02x Connection handle: 0x%02x",
-	app_anp_info.conn_params.peer_addr.addr[5],
-	app_anp_info.conn_params.peer_addr.addr[4],
-	app_anp_info.conn_params.peer_addr.addr[3],
-	app_anp_info.conn_params.peer_addr.addr[2],
-	app_anp_info.conn_params.peer_addr.addr[1],
-	app_anp_info.conn_params.peer_addr.addr[0],
-	app_anp_info.conn_params.handle);
-	
-	
-	DBG_LOG("BLE: Started Security Procedure");
-	
+	memcpy((uint8_t *)&app_anp_info.conn_params, params, sizeof(at_ble_connected_t));		
+
 	ancs_enable(&ancs_data, app_anp_info.conn_params.handle);
 	
 	if(!app_anp_info.devicedb)
-	{
-		
-		
-			DBG_LOG("BLE: Database discovery");
-		
-
-		app_anp_info.discover_role = DISCOVER_SERVICE;
-		
-		
-				/* Discover Remote Service by service UUID */
+	{		
+		DBG_LOG("BLE: Database discovery");
+		app_anp_info.discover_role = DISCOVER_SERVICE;			
+		/* Discover Remote Service by service UUID */
 		status = at_ble_primary_service_discover_by_uuid(app_anp_info.conn_params.handle,START_HANDLE, END_HANDLE, &ancs_data.ancs_serv.service_uuid);
-		
 		if(status != AT_BLE_SUCCESS)
 		{
 			DBG_LOG("BLE: Failed to start service discovery. status = %d", status);
-		}
-		
+		}		
 	}
 
 }
@@ -226,26 +196,7 @@ void anp_client_service_found_handler(at_ble_primary_service_found_t * params)
 	DBG_LOG("BLE: Discover service Info:  ConnHandle 0x%02x : Start handle 0x%02x : End handle : 0x%02x",
 	ancs_data.ancs_serv.conn_handle,
 	ancs_data.ancs_serv.start_handle,
-	ancs_data.ancs_serv.end_handle);
-	
-	DBG_LOG("BLE: Service 128bit UUID Value 0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X",
-	ancs_data.ancs_serv.service_uuid.uuid[15],
-	ancs_data.ancs_serv.service_uuid.uuid[14],
-	ancs_data.ancs_serv.service_uuid.uuid[13],
-	ancs_data.ancs_serv.service_uuid.uuid[12],
-	ancs_data.ancs_serv.service_uuid.uuid[11],
-	ancs_data.ancs_serv.service_uuid.uuid[10],
-	ancs_data.ancs_serv.service_uuid.uuid[9],
-	ancs_data.ancs_serv.service_uuid.uuid[8],
-	ancs_data.ancs_serv.service_uuid.uuid[7],
-	ancs_data.ancs_serv.service_uuid.uuid[6],
-	ancs_data.ancs_serv.service_uuid.uuid[5],
-	ancs_data.ancs_serv.service_uuid.uuid[4],
-	ancs_data.ancs_serv.service_uuid.uuid[3],
-	ancs_data.ancs_serv.service_uuid.uuid[2],
-	ancs_data.ancs_serv.service_uuid.uuid[1],
-	ancs_data.ancs_serv.service_uuid.uuid[0]);
-	
+	ancs_data.ancs_serv.end_handle);	
 }
 
 
@@ -271,55 +222,27 @@ void anp_client_characteristic_found_handler(at_ble_characteristic_found_t *para
 	app_anp_info.char_info.conn_handle,
 	app_anp_info.char_info.char_handle,
 	app_anp_info.char_info.value_handle,
-	app_anp_info.char_info.properties);
-	
-	printf("BLE: Characteristic 128bit UUID Value 0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X,0x%02X",
-	app_anp_info.char_info.char_uuid.uuid[15],
-	app_anp_info.char_info.char_uuid.uuid[14],
-	app_anp_info.char_info.char_uuid.uuid[13],
-	app_anp_info.char_info.char_uuid.uuid[12],
-	app_anp_info.char_info.char_uuid.uuid[11],
-	app_anp_info.char_info.char_uuid.uuid[10],
-	app_anp_info.char_info.char_uuid.uuid[9],
-	app_anp_info.char_info.char_uuid.uuid[8],
-	app_anp_info.char_info.char_uuid.uuid[7],
-	app_anp_info.char_info.char_uuid.uuid[6],
-	app_anp_info.char_info.char_uuid.uuid[5],
-	app_anp_info.char_info.char_uuid.uuid[4],
-	app_anp_info.char_info.char_uuid.uuid[3],
-	app_anp_info.char_info.char_uuid.uuid[2],
-	app_anp_info.char_info.char_uuid.uuid[1],
-	app_anp_info.char_info.char_uuid.uuid[0]);
-	
+	app_anp_info.char_info.properties);	
 }
 
 void anp_client_disconnected_event_handler(at_ble_disconnected_t *params)
 {
-			at_ble_disconnected_t disconnect;
-			memcpy((uint8_t *)&disconnect, params, sizeof(at_ble_disconnected_t));
-			app_anp_info.devicedb = FALSE;
+	at_ble_disconnected_t disconnect;
+	memcpy((uint8_t *)&disconnect, params, sizeof(at_ble_disconnected_t));
+	app_anp_info.devicedb = FALSE;
 			
 	
-			DBG_LOG("BLE: Device disconnected Reason:0x%02x Handle=0x%x", disconnect.reason, disconnect.handle);
+	DBG_LOG("BLE: Device disconnected Reason:0x%02x Handle=0x%x", disconnect.reason, disconnect.handle);
 	
-			
-			#ifdef OLED_MSG
-			gfx_mono_draw_string("                   ", 0, SCROLL_UPDATE_POS_Y, &sysfont);
-			gfx_mono_draw_string("                      ", 0, (XPOS_UPDATE_POS_Y+1), &sysfont);
-			gfx_mono_draw_string("                   ", 0, (XPOS_UPDATE_POS_Y+XPOS_UPDATE_POS_Y+2), &sysfont);
-			gfx_mono_draw_string("                          ", 0, XPOS_UPDATE_POS_Y, &sysfont);
-			gfx_mono_draw_string("Advertising Mode", 0, XPOS_UPDATE_POS_Y, &sysfont);
-			#endif
-			
-			if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
-			APP_ANP_FAST_ADV, APP_ANP_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
-			{
-				DBG_LOG("BLE Adv start Failed");
-			}
-			else
-			{
-				DBG_LOG("BLE Started Adv");
-			}
+	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
+	APP_ANP_FAST_ADV, APP_ANP_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
+	{
+		DBG_LOG("BLE Adv start Failed");
+	}
+	else
+	{
+		DBG_LOG("BLE Started Adv");
+	}
 			
 }
 
@@ -348,8 +271,7 @@ void anp_client_char_changed_handler(at_ble_characteristic_changed_t *params)
 	DBG_LOG("Characteristic 0x%x changed, new_value = ",
 	change_params.char_handle);
 	for(i=0; i<change_params.char_len; i++)
-	DBG_LOG("0x%02x ", change_params.char_new_value[i]);
-	DBG_LOG("\n");
+	DBG_LOG_CONT("0x%02x ", change_params.char_new_value[i]);
 }
 
 void anp_client_write_response_handler(at_ble_characteristic_write_response_t *params)
@@ -357,7 +279,6 @@ void anp_client_write_response_handler(at_ble_characteristic_write_response_t *p
 	at_ble_characteristic_write_response_t writersp;
 	memcpy((uint8_t *)&writersp, params, sizeof(at_ble_characteristic_write_response_t));
 	DBG_LOG("Write Response Conn_Handle:0x%02x char_handle:0x%02x status:0x%02x", writersp.conn_handle, writersp.char_handle, writersp.status);
-	
 }
 
 void anp_client_notification_handler(at_ble_notification_recieved_t *params)
@@ -365,18 +286,10 @@ void anp_client_notification_handler(at_ble_notification_recieved_t *params)
 	 at_ble_notification_recieved_t notif;
 	 memcpy((uint8_t *)&notif, params, sizeof(at_ble_notification_recieved_t));
 	 
-	 
-	// DBG_LOG("Notification Received:0x%02x : 0x%02x", notif.char_value[0], notif.char_value[2]);
-	 
-	 
 	 if(notif.char_value[0] == NOTIFICATION_ADDED)
 	 {
 		 if(notif.char_value[2] == CATEGORY_ID_INCOMINGCALL)
 		 {
-			 #ifdef OLED_MSG
-			 gfx_mono_draw_string("                          ", 0, XPOS_UPDATE_POS_Y, &sysfont);
-			 gfx_mono_draw_string("Incoming Call Alert", 0, XPOS_UPDATE_POS_Y, &sysfont);
-			 #endif
 			 DBG_LOG("Incoming Call Alert");
 		 }
 	 }
@@ -384,31 +297,25 @@ void anp_client_notification_handler(at_ble_notification_recieved_t *params)
 	 {
 		 if(notif.char_value[2] == CATEGORY_ID_INCOMINGCALL)
 		 {
-			 #ifdef OLED_MSG
-			 gfx_mono_draw_string("                          ", 0, XPOS_UPDATE_POS_Y, &sysfont);
-			 gfx_mono_draw_string("Alert Mode", 0, XPOS_UPDATE_POS_Y, &sysfont);
-			 #endif
 			 DBG_LOG("Alert Mode");
 		 }
 	 }
 }
 
-void anp_client_write_notification_handler(void)
+void anp_client_write_notification_handler(void *param)
 {
 	uint8_t data[2] = {1, 0};
 	if(at_ble_characteristic_write(ancs_data.notification_source_desc.conn_handle, ancs_data.notification_source_desc.desc_handle, 0, 2, data,FALSE, TRUE) == AT_BLE_FAILURE)
 	{
 		DBG_LOG("\r\nFailed to send characteristic Write Request");
 	}
+	UNUSED(param);
 }
 
-void anp_client_init( void)
+void anp_client_init( void *params)
 {
-	DBG_LOG("In client init");
-		
-		anp_info_init();
-		
-		ancs_init(&ancs_data);
-		
-		anp_client_adv();
+	anp_info_init();
+	ancs_init(&ancs_data);
+	anp_client_adv();
+	UNUSED(params);
 }

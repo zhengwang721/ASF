@@ -169,7 +169,7 @@ typedef struct
 
 void anp_info_init(void);
 
-void anp_client_init( void);
+void anp_client_init( void *params);
 
 void anp_client_adv(void);
 
@@ -193,5 +193,5 @@ void anp_client_write_response_handler(at_ble_characteristic_write_response_t *p
 
 void anp_client_notification_handler(at_ble_notification_recieved_t *params);
 
-void anp_client_write_notification_handler(void);
+void anp_client_write_notification_handler(void *param);
 #endif /* __ANP_CLIENT_H__*/
