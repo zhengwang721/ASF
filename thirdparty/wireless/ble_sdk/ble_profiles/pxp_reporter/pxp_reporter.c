@@ -46,7 +46,7 @@
  */
 
 /****************************************************************************************
-*							        Includes	                                     							*
+*							        Includes	                                     	*
 ****************************************************************************************/
 #include <asf.h>
 #include <string.h>
@@ -137,8 +137,6 @@ at_ble_status_t pxp_service_define (void)
 	lls_primary_service_define(&lls_handle);
 	
 	#if defined PATHLOSS
-	// need to define the return type and put it into console
-	
 	ias_primary_service_define(&ias_handle);
 	txps_primary_service_define(&txps_handle);
 	#endif
@@ -147,7 +145,6 @@ at_ble_status_t pxp_service_define (void)
 	DBG_LOG("  -> Link Loss Service");
 	
 	#if defined PATHLOSS
-	
 	DBG_LOG("  -> Immediate Alert Service");
 	DBG_LOG("  -> Tx Power Service");
 	
