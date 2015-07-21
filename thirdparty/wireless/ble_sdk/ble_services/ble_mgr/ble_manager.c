@@ -351,7 +351,7 @@ at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 void ble_connected_state_handler(at_ble_connected_t *conn_params)
 {
 	memcpy(ble_connected_dev_info, (uint8_t *)conn_params, sizeof(at_ble_connected_t));
-	DBG_LOG("Device connected to 0x%02x%02x%02x%02x%02x%02x",
+	DBG_LOG("Bluetooth Device connected to a device with address 0x%02x%02x%02x%02x%02x%02x",
 	conn_params->peer_addr.addr[5],
 	conn_params->peer_addr.addr[4],
 	conn_params->peer_addr.addr[3],
@@ -359,8 +359,6 @@ void ble_connected_state_handler(at_ble_connected_t *conn_params)
 	conn_params->peer_addr.addr[1],
 	conn_params->peer_addr.addr[0]);
 	
-	DBG_LOG("handle=0x%x status=%02X", conn_params->handle, conn_params->conn_status);
-
 	#if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)	
 		ble_send_slave_sec_request(conn_params->handle);		
 	#endif
@@ -445,7 +443,7 @@ void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 		app_bond_info.ediv = rand()&0xffff;
 		app_bond_info.key_size = 16;
 		/* Send pairing response */
-		DBG_LOG("Sending pairing response handle=0x%x",	ble_connected_dev_info->handle);
+		DBG_LOG("Sending pairing response");
 		if(at_ble_authenticate(ble_connected_dev_info->handle, &features, &app_bond_info, NULL) != AT_BLE_SUCCESS)
 		{
 			features.bond = false;
