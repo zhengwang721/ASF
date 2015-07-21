@@ -140,12 +140,13 @@ at_ble_status_t pxp_service_define (void)
 	txps_primary_service_define(&txps_handle);
 	#endif
 	
-	DBG_LOG("The link loss handle is %x",lls_handle.serv_handle);
+	DBG_LOG("The Supported Services in Proximity Reporter are:");
+	DBG_LOG("  -> Link Loss Service");
 	
 	#if defined PATHLOSS
 	
-	DBG_LOG("The immediate loss handle is %x",ias_handle.serv_handle);
-	DBG_LOG("The tx power handle is %x",txps_handle.serv_handle);
+	DBG_LOG("  -> Immediate Alert Service");
+	DBG_LOG("  -> Tx Power Service");
 	
 	#endif
 	
@@ -160,16 +161,7 @@ at_ble_status_t pxp_service_define (void)
 at_ble_status_t pxp_reporter_char_changed_handler(at_ble_characteristic_changed_t *char_handle)
 {
 	at_ble_characteristic_changed_t change_params;
-	
-	uint32_t index = 0;
-
 	memcpy((uint8_t *)&change_params, char_handle, sizeof(at_ble_characteristic_changed_t));
-
-	DBG_LOG("Characteristic 0x%x changed, new_value = ", change_params.char_handle);
-	for(index=0; index<change_params.char_len; index++)
-	{
-		DBG_LOG_CONT("0x%02x ", change_params.char_new_value[index]);
-	}	
 
 	linkloss_current_alert_level = lls_set_alert_value(&change_params,&lls_handle);
 	
@@ -218,7 +210,7 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 	}
 	else
 	{
-		DBG_LOG("BLE Started Adv");
+		DBG_LOG("Bluetooth Device is in Advertising Mode");
 	}
 	
 	//DBG_LOG("The linkloss value is %d",linkloss_current_alert_level);
@@ -276,7 +268,7 @@ void pxp_reporter_adv(void)
 	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, APP_PXP_FAST_ADV, APP_PXP_ADV_TIMEOUT, 0) == AT_BLE_SUCCESS)
 	{
 		#ifdef DBG_LOG
-		DBG_LOG("BLE Started Adv");
+		DBG_LOG("Bluetooth device is in Advertising Mode");
 		#endif
 	}	
 	else
