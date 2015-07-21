@@ -92,14 +92,6 @@ static inline at_ble_status_t BLE_UNUSED2_VAR(void *param1_var, void *param2_var
 	return AT_BLE_SUCCESS;
 }
 
-#if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)) 
-#define MAX_SCAN_DEVICE				(10)			  //Max number of scan device
-#define SCAN_INTERVAL				(96)              //Scan interval 30ms in term of 625us
-#define SCAN_WINDOW					(96)              //Scan window 30ms values in term of 625ms
-#define SCAN_TIMEOUT				(0x0000)          //Timeout  Scan time-out, 0x0000 disables time-out
-#endif //((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)) 
-
-
 /* Observer related declarations */
 #define LE_LIMITED_DISCOVERABLE_MODE  ((uint8_t) 1 << 0)
 #define LE_GENERAL_DISCOVERABLE_MODE  ((uint8_t) 1 << 1)
@@ -237,6 +229,13 @@ typedef struct gatt_service_handler
 #define GAP_CONNECT_PEER_COUNT			(1)
 #define GATT_DISCOVERY_STARTING_HANDLE	(0x0001)
 #define GATT_DISCOVERY_ENDING_HANDLE	(0xFFFF)
+
+#define MAX_SCAN_DEVICE					(10)			  //Max number of scan device
+#define SCAN_INTERVAL					(96)              //Scan interval 30ms in term of 625us
+#define SCAN_WINDOW						(96)              //Scan window 30ms values in term of 625ms
+#define SCAN_TIMEOUT					(0x0000)          //Timeout  Scan time-out, 0x0000 disables time-out
+#define SCAN_TYPE						(AT_BLE_SCAN_ACTIVE)
+
 #endif //((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
 
 #define MAX_DEVICE_CONNECTED			(1)
