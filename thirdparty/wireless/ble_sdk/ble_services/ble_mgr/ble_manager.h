@@ -160,28 +160,53 @@ typedef enum
 
 /* Service UUID's */
 
-/* Link Loss service UUID */
-#define LINK_LOSS_SERVICE_UUID			(0x1803)
-
 /* Immediate Alert service UUID  */
-#define IMMEDIATE_ALERT_SERVICE_UUID	(0x1802)
+#define IMMEDIATE_ALERT_SERVICE_UUID			(0x1802)
+
+/* Link Loss service UUID */
+#define LINK_LOSS_SERVICE_UUID					(0x1803)
 
 /* Tx Power service UUID */
-#define TX_POWER_SERVICE_UUID			(0x1804)
+#define TX_POWER_SERVICE_UUID					(0x1804)
 
 /* Current time service UUID */
-#define CURRENT_TIME_SERVICE_UUID		(0x1805)
+#define CURRENT_TIME_SERVICE_UUID				(0x1805)
 
+/* device information service uuid */
+#define DIS_SERVICE_UUID 						(0x180A)
+
+/** battery service uuid */
+#define BAT_SERVICE_UUID 						(0x180F)
+
+/** Scan param service uuid */
+#define SPS_SERVICE_UUID 						(0x1813)
 
 /* Characteristics UUID's */
 /* Alert Level Characteristic UUID */
-#define ALERT_LEVEL_CHAR_UUID			(0x2A06)
+#define ALERT_LEVEL_CHAR_UUID					(0x2A06)
 
 /* Tx Power Level Characteristic UUID */
-#define TX_POWER_LEVEL_CHAR_UUID		(0x2A07)
+#define TX_POWER_LEVEL_CHAR_UUID				(0x2A07)
 
+/** battery level characteristic uuid */
+#define BAT_CHAR_BAT_LEVEL_UUID 				(0x2A19)
+
+/* device information service characteristics uuids */
+#define DIS_CHAR_SYSTEM_ID_UUID					(0x2A23)
+#define DIS_CHAR_MODEL_NUMBER_UUID				(0x2A24)
+#define DIS_CHAR_SERIAL_NUMBER_UUID				(0x2A25)
+#define DIS_CHAR_FIRMWARE_REIVSION_UUID			(0x2A26)															
+#define DIS_CHAR_HARDWARE_REVISION_UUID			(0x2A27)
+#define DIS_CHAR_SOFTWARE_REVISION_UUID			(0x2A28)
+#define DIS_CHAR_MANUFACTURER_NAME_UUID			(0x2A29)
+#define DIS_CHAR_IEEE_REG_CERT_DATA_LIST_UUID	(0x2A2A)
 /* Current Time char UUID */
-#define CURRENT_TIME_CHAR_UUID			(0x2A2B)
+#define CURRENT_TIME_CHAR_UUID					(0x2A2B)
+/** scan refresh characteristic uuid */
+#define SPS_CHAR_SCAN_REFRESH_UUID 				(0x2A31)
+/** scan interval characteristic uuid */
+#define SPS_CHAR_SCAN_INT_VALUE_UUID 			(0x2A4F)														
+#define DIS_CHAR_PNP_ID_UUID					(0x2A50)
 
 typedef struct adv_element
 {
@@ -189,7 +214,6 @@ typedef struct adv_element
 	uint8_t type;
 	uint8_t *data;
 }adv_element_t;
-
 
 /**
 * GATT services handles
@@ -200,7 +224,6 @@ typedef struct gatt_service_handler
 	at_ble_handle_t	serv_handle;
 	at_ble_characteristic_t	serv_chars;
 }gatt_service_handler_t;
-
 
 /* All GAP Connection Parameter defined */
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
@@ -217,8 +240,6 @@ typedef struct gatt_service_handler
 #endif //((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
 
 #define MAX_DEVICE_CONNECTED			(1)
-
-
 
 
 #if ((BLE_DEVICE_ROLE == BLE_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
@@ -297,8 +318,6 @@ typedef struct gatt_service_handler
 #define BLE_DISCONNECTED_STATE_HANDLER(param)		ble_disconnected_state_handler(param);\
 													BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER(param);
 													
-
-
 #ifndef BLE_PROFILE_INIT
 #define BLE_PROFILE_INIT										ble_dummy_handler
 #endif
