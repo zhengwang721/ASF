@@ -53,36 +53,10 @@
 /* USART6 module is used in SYNC. mode. */
 #define CONF_BOARD_USART0
 
-#include "linkloss_service.h"
-#include "tx_power_service.h"
-#include "immediate_alert_service.h"
 
 /** Configure AT30TSE pins */
 #define CONF_BOARD_AT30TSE
 
 #define BOARD_FLEXCOM_TWI			FLEXCOM4
-#define DBG_LOG printf
-#define DBG_LOG printf
 
 #endif /* CONF_BOARD_H_INCLUDED */
-
-
-typedef struct {
-	uint8_t linkloss;
-	uint8_t pathloss;	
-}features_option;
-
-#pragma pack (8) 
-
-typedef struct{
-	linkloss_serv_record linkloss_service;
-	immediate_alert_serv_record immediate_alert_service;
-	tx_power_serv_record tx_power_service;
-}proximity_serv_info ;
-
-void init_proximity_reporter (proximity_serv_info *services , features_option *choice);
-
-uint8_t add_proximity_service_database (proximity_serv_info *services ,features_option *choice);
-#define SUCCESS 1
-
-#endif 
