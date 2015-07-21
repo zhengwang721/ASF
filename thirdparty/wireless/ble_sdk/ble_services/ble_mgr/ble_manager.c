@@ -337,7 +337,7 @@ at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 {
 	if (at_ble_send_slave_sec_request(conn_handle, true, true) == AT_BLE_SUCCESS)
 	{
-		DBG_LOG("Slave security request successful");
+		DBG_LOG_DEV("Slave security request successful");
 		return AT_BLE_SUCCESS;
 	}
 	else {
@@ -454,7 +454,6 @@ void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 			at_ble_authenticate(ble_connected_dev_info->handle, &features, NULL, NULL);
 			
 		}
-		DBG_LOG("authenticate done");
 	}
 }
 
@@ -467,9 +466,8 @@ void ble_pair_key_request_handler (at_ble_pair_key_request_t *pair_key)
 	
 	at_ble_pair_key_request_t pair_key_request;
 	memcpy((uint8_t *)&pair_key_request, pair_key, sizeof(at_ble_pair_key_request_t));
-	DBG_LOG("handle 0x%02X ",pair_key_request.handle);
-	DBG_LOG("passkey_type 0x%02X ",pair_key_request.passkey_type);	
-	DBG_LOG("type 0x%02X ",pair_key_request.type);
+	DBG_LOG_DEV("passkey_type 0x%02X ",pair_key_request.passkey_type);	
+	DBG_LOG_DEV("type 0x%02X ",pair_key_request.type);
 	
 	/* Display passkey */
 	if(pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_DISPLAY)
@@ -479,7 +477,7 @@ void ble_pair_key_request_handler (at_ble_pair_key_request_t *pair_key)
 		{
 			passkey_ascii[i] = (passkey[i] + 48);
 		}
-		DBG_LOG("please enter the following pass-code on the other device : ");
+		DBG_LOG("please enter the following pass-code on the other device:");
 		for(i=0; i<AT_BLE_PASSKEY_LEN ; i++)
 		{
 			DBG_LOG_CONT("%c",passkey_ascii[i]);
@@ -506,6 +504,7 @@ at_ble_status_t ble_pair_done_handler(at_ble_pair_done_t *pairing_params)
 	else
 	{
 		DBG_LOG("Pairing failed");
+		at_ble_disconnect(ble_connected_dev_info->handle, AT_BLE_TERMINATED_BY_USER);
 	}
 	return(AT_BLE_SUCCESS);
 }
@@ -555,7 +554,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	/** Undefined event received  */
 	case AT_BLE_UNDEFINED_EVENT:
 	{
-		DBG_LOG("BLE-Manager:Undefined Event=0x%X", events);
+		DBG_LOG_DEV("BLE-Manager:Undefined Event=0x%X", events);
 	}
 	break;
 	
@@ -922,7 +921,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	
 	default:
 	{
-		DBG_LOG("BLE-Manager:Unknown Event=0x%X", events);
+		DBG_LOG_DEV("BLE-Manager:Unknown Event=0x%X", events);
 	}
 	break;		
 	}

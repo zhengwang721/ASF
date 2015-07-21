@@ -1,9 +1,9 @@
 /**
 * \file
 *
-* \brief Proximity Monitor Profile Application declarations
+* \brief Link Loss Service Application declarations
 *
-* Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+* Copyright (c) 2015 Atmel Corporation. All rights reserved.
 *
 * \asf_license_start
 *
@@ -44,52 +44,55 @@
 * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
 */
 
-#ifndef __BLE_UTILS_H__
-#define __BLE_UTILS_H__
+#ifndef __CURRENT_TIME_H__
+#define __CURRENT_TIME_H__
 
-#include <asf.h>
+#include "ble_manager.h"
 
-#define BLE_CENTRAL					(0x01)
-#define BLE_PERIPHERAL				(0x02)
-#define BLE_CENTRAL_AND_PERIPHERAL	(0x03)
-#define BLE_OBSERVER				(0x04)
-#define BLE_BROADCASTER				(0x05)
+/* Link Loss Alert length of data to read */
+#define CTS_READ_LENGTH                         (20)
 
-#define DBG_LOG_CONT	printf
+/* Link Loss read offset length*/
+#define CTS_READ_OFFSET                         (0)
 
-#define DBG_LOG		    printf("\r\n");\
-						printf
-						
+/* Link Loss invalid character handler*/
+#define CTS_INVALID_CHAR_HANDLE					(0)
 
+#define CTS_CLIENT_CHAR_DESCRIPTOR              (0x2902)
 
-#define UNUSED1(x) (void)(x)
-#define UNUSED2(x,y) (void)(x),(void)(y)
-#define UNUSED3(x,y,z) (void)(x),(void)(y),(void)(z)
-#define UNUSED4(a,x,y,z) (void)(a),(void)(x),(void)(y),(void)(z)
-#define UNUSED5(a,b,x,y,z) (void)(a),(void)(b),(void)(x),(void)(y),(void)(z)
-
-#define VA_NUM_ARGS_IMPL(_1,_2,_3,_4,_5, N,...) N
-#define VA_NUM_ARGS(...) VA_NUM_ARGS_IMPL(__VA_ARGS__, 5, 4, 3, 2, 1)
-
-#define ALL_UNUSED_IMPL_(nargs) UNUSED ## nargs
-#define ALL_UNUSED_IMPL(nargs) ALL_UNUSED_IMPL_(nargs)
-#define ALL_UNUSED(...) ALL_UNUSED_IMPL( VA_NUM_ARGS(__VA_ARGS__))(__VA_ARGS__ )
-
-#define DBG_LOG_DEV		ALL_UNUSED
-
-						
-#define IEEE11073_EXPONENT						(0xFF000000)
-
-#define IEEE754_MANTISA(val)					((uint32_t)(val * 10))
-
-#define IEEE754_TO_IEEE11073_FLOAT(f_val)		(IEEE11073_EXPONENT | \
-												IEEE754_MANTISA(f_val))
-
-static inline uint32_t convert_ieee754_ieee11073_float(float f_val)
+typedef struct gatt_cts_handler
 {
-	uint32_t ieee11073_float;
-	ieee11073_float = IEEE754_TO_IEEE11073_FLOAT(f_val);
-	return (ieee11073_float);
-}
+	at_ble_handle_t start_handle;
+	at_ble_handle_t end_handle;
+	at_ble_handle_t char_handle;
+	at_ble_status_t char_discovery;
+	uint8_t *char_data;
+}gatt_cts_handler_t;
 
-#endif /*__BLE_UTILS_H__*/
+/**@brief Send the Read request to link loss handler
+ * Read value will be reported via @ref AT_BLE_CHARACTERISTIC_READ_RESPONSE
+ *event
+ *
+ * @param[in] conn_handle handle of the connection
+ * @param[in] char_handle handle of the characteristic
+ * @return @ref AT_BLE_SUCCESS operation completed successfully
+ * @return @ref AT_BLE_INVALID_PARAM Invalid arguments.
+ * @return @ref AT_BLE_FAILURE Generic error.
+ */
+at_ble_status_t tis_current_time_read(at_ble_handle_t conn_handle,
+		at_ble_handle_t char_handle);
+
+/**@brief Read Link Loss Alert Value
+ *
+ * @param[in] read_value read response data available form
+ *at_ble_characteristic_read_response_t
+ * @return Link Loss Alert level .
+ * @return LLS_READ_RESP_INVALID if value are other than alert levels
+ */
+int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *read_resp,
+		gatt_cts_handler_t *cts_handler);
+
+void current_time_read_char(void);
+
+
+#endif /*__CURRENT_TIME_H__*/

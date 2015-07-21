@@ -1,9 +1,9 @@
 /**
 * \file
 *
-* \brief Proximity Monitor Profile Application declarations
+* \brief Current Time Service
 *
-* Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+* Copyright (c) 2015 Atmel Corporation. All rights reserved.
 *
 * \asf_license_start
 *
@@ -23,7 +23,7 @@
 *    from this software without specific prior written permission.
 *
 * 4. This software may only be redistributed and used in connection with an
-*    Atmel microcontroller product.
+*    Atmel micro controller product.
 *
 * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
 * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -44,52 +44,57 @@
 * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
 */
 
-#ifndef __BLE_UTILS_H__
-#define __BLE_UTILS_H__
+/**
+* \mainpage
+* \section preface Preface
+* This is the reference manual for the Current Time Service
+*/
+/*- Includes ---------------------------------------------------------------*/
 
-#include <asf.h>
-
-#define BLE_CENTRAL					(0x01)
-#define BLE_PERIPHERAL				(0x02)
-#define BLE_CENTRAL_AND_PERIPHERAL	(0x03)
-#define BLE_OBSERVER				(0x04)
-#define BLE_BROADCASTER				(0x05)
-
-#define DBG_LOG_CONT	printf
-
-#define DBG_LOG		    printf("\r\n");\
-						printf
-						
+#include <string.h>
+#include "at_ble_api.h"
+#include "current_time.h"
+#include "ble_manager.h"
+#include "ble_utils.h"
+#include "current_time.h"
 
 
-#define UNUSED1(x) (void)(x)
-#define UNUSED2(x,y) (void)(x),(void)(y)
-#define UNUSED3(x,y,z) (void)(x),(void)(y),(void)(z)
-#define UNUSED4(a,x,y,z) (void)(a),(void)(x),(void)(y),(void)(z)
-#define UNUSED5(a,b,x,y,z) (void)(a),(void)(b),(void)(x),(void)(y),(void)(z)
-
-#define VA_NUM_ARGS_IMPL(_1,_2,_3,_4,_5, N,...) N
-#define VA_NUM_ARGS(...) VA_NUM_ARGS_IMPL(__VA_ARGS__, 5, 4, 3, 2, 1)
-
-#define ALL_UNUSED_IMPL_(nargs) UNUSED ## nargs
-#define ALL_UNUSED_IMPL(nargs) ALL_UNUSED_IMPL_(nargs)
-#define ALL_UNUSED(...) ALL_UNUSED_IMPL( VA_NUM_ARGS(__VA_ARGS__))(__VA_ARGS__ )
-
-#define DBG_LOG_DEV		ALL_UNUSED
-
-						
-#define IEEE11073_EXPONENT						(0xFF000000)
-
-#define IEEE754_MANTISA(val)					((uint32_t)(val * 10))
-
-#define IEEE754_TO_IEEE11073_FLOAT(f_val)		(IEEE11073_EXPONENT | \
-												IEEE754_MANTISA(f_val))
-
-static inline uint32_t convert_ieee754_ieee11073_float(float f_val)
+at_ble_status_t tis_current_time_read(at_ble_handle_t conn_handle,
+		at_ble_handle_t char_handle)
 {
-	uint32_t ieee11073_float;
-	ieee11073_float = IEEE754_TO_IEEE11073_FLOAT(f_val);
-	return (ieee11073_float);
+	if (char_handle == CTS_INVALID_CHAR_HANDLE) 
+	{
+		return (AT_BLE_INVALID_HANDLE);
+	} 
+	else 
+	{
+		return (at_ble_characteristic_read(conn_handle,char_handle,CTS_READ_OFFSET,CTS_READ_LENGTH));
+	}
 }
 
-#endif /*__BLE_UTILS_H__*/
+int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *read_resp,
+		gatt_cts_handler_t *cts_handler)
+{
+	if (read_resp->char_handle == cts_handler->char_handle) 
+	{
+
+		const char *ptr[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
+		memcpy(cts_handler->char_data,&read_resp->char_value[CTS_READ_OFFSET],CTS_READ_LENGTH);
+		
+		DBG_LOG("Current Time:");		
+		
+		DBG_LOG_CONT("[DD:MM:YYYY]: %d-%d-%d [HH:MM:SS]: %d:%d:%d  Day:%s",
+		read_resp->char_value[3],
+		read_resp->char_value[2],
+		((uint16_t)read_resp->char_value[0] | (read_resp->char_value[1] <<8)),
+		read_resp->char_value[4],
+		read_resp->char_value[5],
+		read_resp->char_value[6],
+		ptr[read_resp->char_value[7]]
+		);
+				
+	}
+	return 0;
+}
+
+

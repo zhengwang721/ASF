@@ -1,0 +1,27 @@
+<asf xmlversion="1.0">
+	<project caption="TIME INFORMATION Application - SAM G55 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.time_information.samg55_xplained_pro" force-caption="true" force-description="true">
+		<info type="description" value="summary">
+		Time information Application for BLE stack.
+		</info>	
+		<require idref="thirdparty.wireless.ble_sdk.apps.time_information"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_sleepmgr.h"/>
+		<build type="header-file" value="conf_serialdrv.h"/>
+		<build type="header-file" value="conf_extint.h"/>
+		<build type="header-file" value="conf_timer.h"/>
+		<build type="header-file" value="conf_uart_serial.h"/>
+
+		<require idref="board.samg55_xplained_pro"/>
+  		<require idref="sam.drivers.pio"/>
+
+		<generator value="iarewarm"/>
+		<generator value="armgcc" />
+		<generator value="as5_arm" />
+  		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<config name="config.compiler.iarewarm.create_aux" value="no"/>
+		<config name="config.compiler.as5_arm.create_aux" value="no"/>
+		<device-support value="atsamg55j19"/>
+	</project>
+</asf>
