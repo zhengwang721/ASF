@@ -60,7 +60,7 @@ device_info_char_value_t char_value;
 
 
 /**@brief Initialize the dis service related information. */
-void dis_init_service(dis_gatt_service_handler_t *device_info_serv )
+void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
 {	
 	device_info_serv->serv_handle = 0;
 	device_info_serv->serv_uuid.type = AT_BLE_UUID_16;
@@ -300,7 +300,7 @@ at_ble_status_t dis_primary_service_define(dis_gatt_service_handler_t *dis_prima
 }
 
 /**@brief  Update the DIS characteristic value after defining the services using dis_primary_service_define*/
-at_ble_status_t dis_info_update(dis_gatt_service_handler_t *dis_serv , dis_info_type info_type, dis_info_data* info_data)
+at_ble_status_t dis_info_update(dis_gatt_service_handler_t *dis_serv , dis_info_type info_type, dis_info_data* info_data, at_ble_handle_t conn_handle)
 {
 	if (info_data->data_len > dis_serv->serv_chars[info_type].value_max_len)
 	{
@@ -314,9 +314,21 @@ at_ble_status_t dis_info_update(dis_gatt_service_handler_t *dis_serv , dis_info_
 	//updating the characteristic value
 	if ((at_ble_characteristic_value_set(dis_serv->serv_chars[info_type].char_val_handle, info_data->info_data,0 ,info_data->data_len)) != AT_BLE_SUCCESS){
 		DBG_LOG("updating the characteristic failed\r\n");
-		return AT_BLE_FAILURE;
 	} else {
-		DBG_LOG("updating the characteristic value is successfully");
-		return AT_BLE_SUCCESS;
+		if (dis_serv->serv_chars[info_type].properties == AT_BLE_CHAR_NOTIFY)
+		{
+			if((at_ble_notification_send(conn_handle, dis_serv->serv_chars[info_type].char_val_handle)) == AT_BLE_FAILURE) {
+				DBG_LOG("sending notification to the peer failed");
+			}
+			else {
+				DBG_LOG_DEV("sending notification to the peer successful");
+				return AT_BLE_SUCCESS;
+			}
+		}
+		else
+		{
+			return AT_BLE_SUCCESS;
+		}
 	}
+	return AT_BLE_FAILURE;
 }
