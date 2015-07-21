@@ -143,7 +143,7 @@ static inline void _system_clock_source_osc16m_freq_sel(void)
 
 	/* Switch to new frequency selection and enable OSC16M */
 	system_clock_source_osc16m_get_config_defaults(&osc16m_conf);
-	osc16m_conf.fsel      		= CONF_CLOCK_OSC16M_FREQ_SEL;
+	osc16m_conf.fsel            = CONF_CLOCK_OSC16M_FREQ_SEL;
 	osc16m_conf.on_demand       = 0;
 	osc16m_conf.run_in_standby  = CONF_CLOCK_OSC16M_RUN_IN_STANDBY;
 	system_clock_source_osc16m_set_config(&osc16m_conf);
@@ -555,7 +555,7 @@ void system_clock_source_dpll_set_config(
 enum status_code system_clock_source_write_calibration(
 		const enum system_clock_source clock_source,
 		const uint16_t calibration_value,
-		const uint8_t freq_select)
+		const uint8_t freq_range)
 {
 	switch (clock_source) {
 	case SYSTEM_CLOCK_SOURCE_OSC16M:

@@ -155,6 +155,58 @@
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samc21"/>
 	</module>
 
+	<module type="meta" id="sam0.drivers.system.clock.appnote_4" caption="SYSTEM - Clock Management Application Note For SAML22">
+		<info type="description" value="summary">
+			Driver for the SAM L21 Clock management units. Provides a unified
+			interface for the configuration and management of the various clocks
+			in the device, including the bus and generic peripheral clocks.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Clocks" />
+		</info>
+
+		<info type="appnote" value="AT13886"/>
+		<info type="keyword" value="pdf">
+			<keyword value="SYSTEM"/>
+			<keyword value="I/O"/>
+			<keyword value="Clock" />
+			<keyword value="GCLK" />
+			<keyword value="Generic Clock" />
+		</info>
+
+		<info type="description" value="pdf">
+			This document describes how to use the Clock and Generic Clock on
+			the SAM L22, both the ASF driver and the peripheral itself.
+		</info>
+
+		<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
+		<build type="doxygen-example-path" value="quick_start_gclk"/>
+		<build type="doxygen-example-path" value="quick_start_clock"/>
+		<build type="doxygen-quick-start" value="asfdoc_sam0_system_clock_exqsg"/>
+
+		<build type="include-path" value="."/>
+		<build type="include-path" value="clock_saml22/"/>
+
+		<build type="header-file" subtype="api" value="gclk.h"/>
+		<build type="header-file" subtype="api" value="clock.h"/>
+		<build type="header-file" value="clock_saml22/clock_feature.h"/>
+		<build type="header-file" value="clock_saml22/clock_config_check.h" />
+		<build type="c-source" value="clock_saml22/clock.c"/>
+		<build type="c-source" value="clock_saml22/gclk.c"/>
+
+		<build type="header-file" value="quick_start_gclk/qs_gclk_basic.h"/>
+		<build type="header-file" value="quick_start_clock/qs_clock_source.h"/>
+
+		<build type="module-config" subtype="path" value="clock_saml22/module_config"/>
+		<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
+
+		<require idref="sam0.drivers.system.interrupt"/>
+		<require idref="sam0.utils"/>
+
+		<device-support value="saml22"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-saml22"/>
+	</module>
+
 	<select-by-device id="sam0.drivers.system.clock" caption="SYSTEM - Clock Management">
 		<module type="driver" id="sam0.drivers.system.clock#samd20" caption="SYSTEM - Clock Management for SAMD20">
 			<info type="description" value="summary">
