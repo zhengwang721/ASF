@@ -63,6 +63,10 @@ typedef enum {
 
 #define PXP_ASCII_TO_DECIMAL_VALUE      ('0')
 
+#define PXP_DEVICE_RECONNECT            (0x01)
+#define PXP_DEVICE_SCAN_AGAIN           (0x02)
+
+
 /* *@brief Initializes Proximity profile
  * handler Pointer reference to respective variables
  *
