@@ -63,8 +63,8 @@
  * Add to the main application source file, outside of any functions:
  * 
  * \snippet qs_rtc_tamper_dma.c rtc_module_instance
- * \snippet qs_adc_dma_use.c dma_resource
- * \snippet qs_adc_dma_use.c transfer_descriptor
+ * \snippet qs_rtc_tamper_dma.c dma_resource
+ * \snippet qs_rtc_tamper_dma.c transfer_descriptor
  *
  * The following must be added to the user application:
  * Function for setting up the module:
