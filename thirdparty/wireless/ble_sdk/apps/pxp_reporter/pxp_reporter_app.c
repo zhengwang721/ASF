@@ -105,7 +105,7 @@ void app_pathloss_alert(uint8_t alert_val)
 			hw_timer_start(timer_interval);
 		}
 
-		else if (alert_val == IAS_MILD_ALERT)
+		else if (alert_val == IAS_MID_ALERT)
 		{
 			DBG_LOG("Pathloss : Mild Alert");
 			timer_interval = PL_INTERVAL_MEDIUM;
