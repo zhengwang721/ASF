@@ -384,6 +384,14 @@ typedef struct gatt_service_handler
 #define BLE_ADDITIONAL_ENCRYPTION_CHANGED_HANDLER				ble_dummy_handler
 #endif
 
+#ifndef BLE_DESCRIPTOR_FOUND_HANDLER
+#define BLE_DESCRIPTOR_FOUND_HANDLER							ble_dummy_handler
+#endif
+
+#ifndef BLE_NOTIFICATION_RECEIVED_HANDLER
+#define BLE_NOTIFICATION_RECEIVED_HANDLER						ble_dummy_handler
+#endif
+
 
 at_ble_status_t ble_set_device_name(uint8_t *name, uint8_t name_len);
 void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update);
