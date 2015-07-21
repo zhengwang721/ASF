@@ -454,6 +454,8 @@ typedef struct gatt_service_handler
 #define BLE_CHARACTERISTIC_FOUND_HANDLER						ble_dummy_handler
 #endif
 
+typedef void (*ble_gap_event_callback_t)(at_ble_handle_t);
+
 at_ble_status_t ble_set_device_name(uint8_t *name, uint8_t name_len);
 void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update);
 void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req);
@@ -479,5 +481,11 @@ void ble_discovery_complete_handler(at_ble_discovery_complete_t *discover_status
 void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect);
 at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle);
 void ble_connected_state_handler(at_ble_connected_t *conn_params);
+
+void register_ble_connected_event_cb(ble_gap_event_callback_t connected_cb_fn);
+
+void register_ble_disconnected_event_cb(ble_gap_event_callback_t disconnected_cb_fn);
+
+void register_ble_paired_event_cb(ble_gap_event_callback_t paired_cb_fn);
 
 #endif /*__BLE_MANAGER_H__*/

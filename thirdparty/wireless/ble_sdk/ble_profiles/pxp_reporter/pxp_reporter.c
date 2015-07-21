@@ -85,7 +85,7 @@ gatt_service_handler_t ias_handle;
 extern uint8_t pxp_led_state;
 
 /** @brief Scan response data*/
-uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
+uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
 
 /** @brief Alert value used for immediate alert service helps in pathloss */

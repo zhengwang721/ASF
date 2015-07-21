@@ -1,8 +1,7 @@
-
 /**
  * \file
  *
- * \brief Battery Service declarations
+ * \brief SAMG55 clock configuration.
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -45,54 +44,52 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-#ifndef __BATTERY_H__
-#define __BATTERY_H__
-
-#include "at_ble_api.h"
-#include "ble_manager.h"
-
-/** characteristic presentation format value */
-#define BAT_CHAR_PRESENTATION_FORMAT_VALUE 0x04
-
-/** @brief Characteristic presentation format exponent */
-#define BAT_CHAR_PRESENTATION_FORMAT_EXPONENT 0x00
-
-/** @brief Characteristic presentation format unit */
-#define BAT_CHAR_PRESENTATION_FORMAT_UNIT BAT_SERVICE_UUID
-
-/** @brief Characteristic presentation format namespace */
-#define BAT_CHAR_PRESENTATION_FORMAT_NAMESPACE 0x01
-
-/**  @brief Characteristic presentation format descriptor */
-#define BAT_CHAR_PRESENTATION_FORMAT_DESCRIPTOR 0x0000
-
-
-/**@brief Update the battery characteristic value after defining the services using bat_primary_service_define
- *
- * @param[in] battery_serv battery service instance
- * @param[in] char_data New battery level
- * @return @ref AT_BLE_SUCCESS operation completed successfully
- * @return @ref AT_BLE_FAILURE Generic error.
+/*
+ * ===== System Clock (MCK) Source Options 
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_RC
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_XTAL
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_BYPASS
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_8M_RC
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_16M_RC
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_24M_RC
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_XTAL
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_BYPASS
  */
-at_ble_status_t bat_update_char_value (gatt_service_handler_t *battery_serv , uint8_t char_data);
+#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
 
-/**@brief Battery service and characteristic initialization(Called only once by user).
- *
- * @param[in] battery_serv battery service instance
- *
- * @return none
+/*
+ *  ===== System Clock (MCK) Prescaler Options   (Fmck = Fsys / (SYSCLK_PRES))
  */
-void bat_init_service(gatt_service_handler_t *battery_serv, uint8_t *battery_value);
-
-/**@brief Register a battery service instance inside stack. 
- *
- * @param[in] battery_service battery service instance
- *
- * @return @ref AT_BLE_SUCCESS operation completed successfully
- * @return @ref AT_BLE_FAILURE Generic error.
+#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
+/*
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_4
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_8
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_16
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_32
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_64
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_3
  */
-at_ble_status_t bat_primary_service_define(gatt_service_handler_t *battery_service);
 
+/*
+ *  ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
+ *  Use mul and div effective values here.
+ */
+#define CONFIG_PLL0_SOURCE          PLL_SRC_SLCK_XTAL
+#define CONFIG_PLL0_MUL             3662
+#define CONFIG_PLL0_DIV             1
 
-#endif /* __BATTERY_H__ */
+/*
+ *  ===== Target frequency (System clock)
+ *  - External XTAL frequency: 32768Hz
+ *  - System clock source: SLCK XTAL
+ *  - System clock prescaler: 1 (divided by 1)
+ *  - PLLA source: SLCK_XTAL
+ *  - PLLA output: SLCK_XTAL * 3662 / 1
+ *  - System clock: SLCK_XTAL * 3662 / 1 / 1 = 120MHz
+ */
+
+#endif /* CONF_CLOCK_H_INCLUDED */
