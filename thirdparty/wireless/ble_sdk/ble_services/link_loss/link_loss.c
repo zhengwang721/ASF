@@ -55,7 +55,6 @@
 
 #include "link_loss.h"
 
-
 #if defined LLS_GATT_SERVER
 /****************************************************************************************
 *							        Globals	                                     		*
@@ -136,7 +135,6 @@ void init_linkloss_service(gatt_service_handler_t *linkloss_serv)
 /** @brief linkloss service definition
   * 
   */
-
 at_ble_status_t lls_primary_service_define(gatt_service_handler_t *lls_service)
 {
 	return(at_ble_primary_service_define(&lls_service->serv_uuid,
@@ -146,6 +144,9 @@ at_ble_status_t lls_primary_service_define(gatt_service_handler_t *lls_service)
 }
 
 
+/** @brief Setting the alert value of linkloss service
+  * 
+  */
 uint8_t lls_set_alert_value(at_ble_characteristic_changed_t *change_params, gatt_service_handler_t *lls_handler)
 {
 	if (change_params->char_handle == lls_handler->serv_chars.char_val_handle)

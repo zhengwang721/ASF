@@ -75,7 +75,6 @@ uint8_t timer_interval = LL_INTERVAL_SLOW;
 /**
 * \brief Timer callback handler called on timer expiry
 */
-
 void timer_callback_handler(void)
 {
 	
@@ -94,6 +93,13 @@ void timer_callback_handler(void)
 	
 }
 
+
+/**
+ * @brief Alerting function on link loss alert 
+ *
+ * @param[in] alert level of alert level characteristic of linkloss service
+ *
+ */
 void app_pathloss_alert(uint8_t alert_val)
 {
 	
@@ -122,6 +128,12 @@ void app_pathloss_alert(uint8_t alert_val)
 		} 
 }
 
+/**
+ * @brief Alerting function on link loss alert 
+ *
+ * @param[in] alert level of alert level characteristic of linkloss service
+ *
+ */
 void app_linkloss_alert(uint8_t alert_val)
 {
 				if (alert_val == LLS_NO_ALERT)
@@ -151,7 +163,6 @@ void app_linkloss_alert(uint8_t alert_val)
 /**
 * \brief Proximity Reporter Application main function
 */
-
 int main(void)
 {
 	at_ble_events_t event;

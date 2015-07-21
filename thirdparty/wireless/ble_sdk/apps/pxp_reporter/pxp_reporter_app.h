@@ -55,11 +55,12 @@
 *							        Macros	                                     		*
 ****************************************************************************************/
 
-
+// Interval of LED blinking(in ms) for various alert levels of link loss service
 #define LL_INTERVAL_SLOW			(3)
 #define LL_INTERVAL_MEDIUM			(2)
 #define LL_INTERVAL_FAST			(1)
 
+// Interval of LED blinking(in ms) for various alert levels of path loss service
 #define PL_INTERVAL_SLOW			(8)
 #define PL_INTERVAL_MEDIUM			(6)
 #define PL_INTERVAL_FAST			(4)
@@ -69,7 +70,20 @@
   */
 void timer_callback_handler(void);
 
+/**
+ * @brief Alerting function on link loss alert 
+ *
+ * @param[in] alert level of alert level characteristic of linkloss service
+ *
+ */
 void app_linkloss_alert(uint8_t alert_val);
+
+/**
+ * @brief Alerting function on path loss alert 
+ *
+ * @param[in] alert level of alert level characteristic of pathloss service
+ *
+ */
 void app_pathloss_alert(uint8_t alert_val);
 
 
