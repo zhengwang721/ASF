@@ -55,7 +55,7 @@
 #include "at_ble_api.h"
 #include "ble_manager.h"
 #include "ble_utils.h"
-#include "anp_client.h"
+#include "ancs_profile.h"
 #include "ancs.h"
 
 

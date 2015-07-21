@@ -1,9 +1,9 @@
 <asf xmlversion="1.0">
-	<project caption="Alert Notification Profile Application - SAM D21 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.anp_client.samd21_xplained_pro" force-caption="true" force-description="true">
+	<project caption="Alert Notification Profile Application - SAM D21 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.ancs.samd21_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
 		Apple Alert notification profile application for BLE stack.
 		</info>	
-		<require idref="thirdparty.wireless.ble_sdk.apps.anp_client"/>
+		<require idref="thirdparty.wireless.ble_sdk.apps.ancs"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>

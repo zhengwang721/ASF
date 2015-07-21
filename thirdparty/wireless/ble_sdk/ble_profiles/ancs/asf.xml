@@ -1,10 +1,10 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="thirdparty.wireless.ble_sdk.ble_profiles.anp_client" caption="COMPONENT - BLE_STACK API">
+	<module type="meta" id="thirdparty.wireless.ble_sdk.ble_profiles.ancs" caption="COMPONENT - BLE_STACK API">
 		<info type="description" value="summary">
 		</info>
 		<build type="include-path"  value="./"/>
-  		<build type="header-file"   value="anp_client.h"/>
-  		<build type="c-source"      value="anp_client.c"/>
+  		<build type="header-file"   value="ancs_profile.h"/>
+  		<build type="c-source"      value="ancs_profile.c"/>
   		<build type="define" name="ANP_CLIENT" value=""/>
   		<build type="define" name="ANP_GATT_CLIENT" value=""/>
 

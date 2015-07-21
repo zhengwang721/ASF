@@ -67,7 +67,7 @@
 #endif //(BLE_DEVICE_ROLE == BLE_OBSERVER)
 
 #if defined ANP_CLIENT
-#include "anp_client.h"
+#include "ancs_profile.h"
 #endif
 
 #define BLE_DEVICE_NAME				"ATMEL-DEV"
@@ -392,6 +392,9 @@ typedef struct gatt_service_handler
 #define BLE_NOTIFICATION_RECEIVED_HANDLER						ble_dummy_handler
 #endif
 
+#ifndef BLE_CHARACTERISTIC_READ_RESPONSE
+#define BLE_CHARACTERISTIC_READ_RESPONSE						ble_dummy_handler
+#endif
 
 at_ble_status_t ble_set_device_name(uint8_t *name, uint8_t name_len);
 void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update);

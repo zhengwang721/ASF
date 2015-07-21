@@ -200,8 +200,7 @@ uint8_t platform_event_wait(uint32_t timeout)
 {
 	uint8_t status = AT_BLE_SUCCESS;
 	if (ble_rx_state == BLE_EOF_STATE)
-	{
-		printf("\r\nMSG-ID:0x%X", ble_evt_frame.header.msg_id);
+	{		
 		platform_interface_callback((uint8_t *)&ble_evt_frame, (ble_evt_frame.header.payload_len + BLE_SERIAL_HEADER_LEN));
 		ble_rx_state = BLE_SOF_STATE;
 	}

@@ -179,7 +179,7 @@ int8_t txps_power_read_response(
 	int8_t tx_power = TXPS_INVALID_POWER_VALUE;
 	if (char_read_resp->char_handle == txps_handler->char_handle) {
 		tx_power = char_read_resp->char_value[TXPS_POWER_READ_OFFSET];
-		/* DBG_LOG("Tx Power of device is %02d dBm", tx_power); */
+		 DBG_LOG("Tx Power of device is %02d dBm", tx_power); 
 		memcpy(txps_handler->char_data,
 				&char_read_resp->char_value[
 					TXPS_POWER_READ_OFFSET],

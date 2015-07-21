@@ -1,18 +1,18 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="ALERT NOTIFICATION CLIENT APPLICATION" id="thirdparty.wireless.ble_sdk.apps.anp_client">
+	<module type="meta" caption="ALERT NOTIFICATION CLIENT APPLICATION" id="thirdparty.wireless.ble_sdk.apps.ancs">
 		<info type="description" value="summary">
 		ANP application for BLE stack
 		</info>
 		<build type="include-path" value="."/>
-		<build type="header-file" value="anp_client_app.h"/>
-		<build type="c-source" value="anp_client_app.c"/>
-		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_PERIPHERAL"/>
+		<build type="header-file" value="ancs_app.h"/>
+		<build type="c-source" value="ancs_app.c"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_CENTRAL_AND_PERIPHERAL"/>
 		<require idref="thirdparty.wireless.ble_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_sdk.inc"/>
 		<require idref="thirdparty.wireless.ble_sdk.src"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
-		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.anp_client"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.ancs"/>
 		<require idref="thirdparty.wireless.ble_sdk.ble_services.ancs"/>
 		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>
 		<require idref="thirdparty.wireless.ble_sdk.utils"/>

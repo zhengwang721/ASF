@@ -754,7 +754,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	  */
 	case AT_BLE_CHARACTERISTIC_READ_RESPONSE:
 	{
-		
+		BLE_CHARACTERISTIC_READ_RESPONSE((at_ble_characteristic_read_response_t *)event_params);
 	}
 	break;
 	

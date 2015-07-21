@@ -54,8 +54,8 @@
 #include "at_ble_api.h"
 #include "platform.h"
 #include "ble_manager.h"
-#include "anp_client.h"
-#include "anp_client_app.h"
+#include "ancs_profile.h"
+#include "ancs_app.h"
 
 
 int main(void)
