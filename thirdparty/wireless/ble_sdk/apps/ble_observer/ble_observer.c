@@ -88,26 +88,27 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 {
 	int8_t iterator;
 
-	DBG_LOG("%-40s", "\r\n\r\nadvertisement type:");
+	DBG_LOG("%-28s", "\r\n\r\nAdvertisement type");
+	DBG_LOG_CONT("    :  ");
 	switch (scan_info_data->type) {
 	case AT_BLE_ADV_TYPE_UNDIRECTED:
-		DBG_LOG_CONT("ADV_TYPE_UNDIRECTED");
+		DBG_LOG_CONT("ADV_IND");
 		break;
 
 	case AT_BLE_ADV_TYPE_DIRECTED:
-		DBG_LOG_CONT("ADV_TYPE_DIRECTED");
+		DBG_LOG_CONT("ADV_DIRECT_IND");
 		break;
 
 	case AT_BLE_ADV_TYPE_SCANNABLE_UNDIRECTED:
-		DBG_LOG_CONT("ADV_TYPE_SCANNABLE_UNDIRECTED");
+		DBG_LOG_CONT("ADV_SCANNABLE_UNDIRECTED");
 		break;
 
 	case AT_BLE_ADV_TYPE_NONCONN_UNDIRECTED:
-		DBG_LOG_CONT("ADV_TYPE_NONCONN_UNDIRECTED");
+		DBG_LOG_CONT("ADV_NONCONN_UNDIRECTED");
 		break;
 
 	case AT_BLE_ADV_TYPE_SCAN_RESPONSE:
-		DBG_LOG_CONT("ADV_TYPE_SCAN_RESPONSE");
+		DBG_LOG_CONT("ADV_SCAN_RESPONSE");
 		break;
 
 	default:
@@ -116,22 +117,23 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 	}
 
 	/*Device Adress Type */
-	DBG_LOG("%-40s", "\r\ndevice address type:");
+	DBG_LOG("%-28s", "Device address type");
+	DBG_LOG_CONT(":  ");
 	switch (scan_info_data->dev_addr.type) {
 	case AT_BLE_ADDRESS_PUBLIC:
-		DBG_LOG_CONT("AT_BLE_ADDRESS_PUBLIC");
+		DBG_LOG_CONT("PUBLIC_ADDRESS");
 		break;
 
 	case AT_BLE_ADDRESS_RANDOM_STATIC:
-		DBG_LOG_CONT("AT_BLE_ADDRESS_RANDOM_STATIC");
+		DBG_LOG_CONT("STATIC_RANDOM_ADDRESS");
 		break;
 
 	case AT_BLE_ADDRESS_RANDOM_PRIVATE_RESOLVABLE:
-		DBG_LOG_CONT("AT_BLE_ADDRESS_RANDOM_PRIVATE_RESOLVABLE");
+		DBG_LOG_CONT("RANDOM_RESOLVABLE_PRIVATE_ADDRESS");
 		break;
 
 	case AT_BLE_ADDRESS_RANDOM_PRIVATE_NON_RESOLVABLE:
-		DBG_LOG_CONT("AT_BLE_ADDRESS_RANDOM_PRIVATE_NON_RESOLVABLE");
+		DBG_LOG_CONT("RANDOM_NON_RESOLVABLE_PRIVATE_ADDRESS");
 		break;
 
 	default:
@@ -139,7 +141,8 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 	}
 
 	/*Device Address */
-	DBG_LOG("%-40s", "\r\ndevice address:");
+	DBG_LOG("%-28s", "Device address");
+	DBG_LOG_CONT(":  0x");
 	for (iterator = 5; iterator >= 0; iterator--) {
 		DBG_LOG_CONT("%02x", scan_info_data->dev_addr.addr[iterator]);
 	}
@@ -167,7 +170,8 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 			/*Adv type: Flags*/
 			case FLAGS:
 			{
-				DBG_LOG("%-40s", "\r\nThe flags are:");
+				DBG_LOG("%-28s", "Flags");
+				DBG_LOG_CONT(":  ");
 				if (LE_LIMITED_DISCOVERABLE_MODE &
 						*(adv_element_p->data)) {
 					DBG_LOG_CONT(
@@ -206,8 +210,9 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				uint8_t adv_type_size = adv_element_p->len;
 				/* actual size of the data */
 				adv_type_size -= 1;
-				DBG_LOG("%-40s",
-						"\r\nComplete_16bit_service_uuids:");
+				DBG_LOG("%-28s",
+						"Complete_16bit_service_uuids");
+				DBG_LOG_CONT(":  ");
 				while (adv_type_size) {
 					memcpy(&uuid_16, adv_element_p->data,
 							AT_BLE_UUID_16_LEN);
@@ -227,8 +232,9 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				uint8_t adv_type_size = adv_element_p->len;
 				/* actual size of the data */
 				adv_type_size -= 1;
-				DBG_LOG("%-40s",
-						"\r\nIncomplete_16bit_service_uuids:");
+				DBG_LOG("%-28s",
+						"Incomplete_16bit_service_uuids");
+				DBG_LOG_CONT(":  ");
 				while (adv_type_size) {
 					memcpy(&uuid_16, adv_element_p->data,
 							AT_BLE_UUID_16_LEN);
@@ -248,8 +254,9 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				uint8_t adv_type_size = adv_element_p->len;
 				/* actual size of the data */
 				adv_type_size -= 1;
-				DBG_LOG("%-40s",
-						"\r\nComplete_32bit_service_uuids:");
+				DBG_LOG("%-28s",
+						"Complete_32bit_service_uuids");
+				DBG_LOG_CONT(":  ");
 				while (adv_type_size) {
 					memcpy(&uuid_32, adv_element_p->data,
 							AT_BLE_UUID_32_LEN);
@@ -269,8 +276,8 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				uint8_t adv_type_size = adv_element_p->len;
 				/* actual size of the data */
 				adv_type_size -= 1;
-				DBG_LOG("%-40s",
-						"\r\nIncomplete_16bit_service_uuids:");
+				DBG_LOG("%-28s",
+						"Incomplete_16bit_service_uuids");
 				while (adv_type_size) {
 					memcpy(&uuid_32, adv_element_p->data,
 							AT_BLE_UUID_32_LEN);
@@ -290,8 +297,9 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				uint8_t adv_type_size = adv_element_p->len;
 				/* actual size of the data */
 				adv_type_size -= 1;
-				DBG_LOG("%-40s",
-						"\r\nComplete_128bit_service_uuids:");
+				DBG_LOG("%-28s",
+						"Complete_128bit_service_uuids");
+				DBG_LOG_CONT(":  ");
 				while (adv_type_size) {
 					memcpy(&uuid_128, adv_element_p->data,
 							AT_BLE_UUID_128);
@@ -316,8 +324,9 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				uint8_t adv_type_size = adv_element_p->len;
 				/* actual size of the data */
 				adv_type_size -= 1;
-				DBG_LOG("%-40s",
-						"\r\nComplete_128bit_service_uuids:");
+				DBG_LOG("%-28s",
+						"Complete_128bit_service_uuids");
+				DBG_LOG_CONT(":  ");
 				while (adv_type_size) {
 					memcpy(&uuid_128, adv_element_p->data,
 							AT_BLE_UUID_128);
@@ -341,7 +350,8 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				int8_t adv_type_size = adv_element_p->len;
 				/* actual size of the data */
 				adv_type_size -= 1;
-				DBG_LOG("%-40s", "\r\nShortend Local Name:");
+				DBG_LOG("%-28s", "Shortend Local Name");
+				DBG_LOG_CONT(":  ");
 				for (iterator = 0; iterator < adv_type_size;
 						iterator++) {
 					DBG_LOG_CONT("%c",
@@ -361,7 +371,8 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				int8_t adv_type_size = adv_element_p->len;
 				/* actual size of the data */
 				adv_type_size -= 1;
-				DBG_LOG("%-40s", "\r\nComplete Local Name :");
+				DBG_LOG("%-28s", "Complete Local Name");
+				DBG_LOG_CONT(":  ");
 				for (iterator = 0; iterator < adv_type_size;
 						iterator++) {
 					DBG_LOG_CONT("%c",
@@ -380,8 +391,9 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				int8_t adv_type_size = adv_element_p->len;
 				/* actual size of the data */
 				adv_type_size -= 1;
-				DBG_LOG("%-40s",
-						"\r\nManufacturer Specific Data:");
+				DBG_LOG("%-28s",
+						"Manufacturer Specific Data");
+				DBG_LOG_CONT(":  ");
 				for (iterator = 0; iterator < adv_type_size;
 						iterator++) {
 					DBG_LOG_CONT("0x%02x ",
@@ -402,7 +414,8 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				adv_type_size -= 1;
 				/* actual size of the data */
 				uint16_t appearance_t;
-				DBG_LOG("%-40s", "\r\nAppearance:");
+				DBG_LOG("%-28s", "Appearance");
+				DBG_LOG_CONT(":  ");
 
 				memcpy(&appearance_t, adv_element_p->data,
 						APPEARANCE_SIZE);
@@ -420,8 +433,8 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				adv_type_size -= 1;
 				/* actual size of the data */
 				uint16_t tx_power_level_t;
-				DBG_LOG("%-40s", "\r\ntx power level:");
-
+				DBG_LOG("%-28s", "Tx power level");
+				DBG_LOG_CONT(":  ");
 				memcpy(&tx_power_level_t, adv_element_p->data,
 						TX_POWER_LEVEL_SIZE);
 				DBG_LOG_CONT("0x%02x", tx_power_level_t);
@@ -438,7 +451,8 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				adv_type_size -= 1;
 				/* actual size of the data */
 				uint16_t adv_interval_t;
-				DBG_LOG("%-40s", "\r\nadv_interval_t:");
+				DBG_LOG("%-28s", "Advertisement Interval");
+				DBG_LOG_CONT(":  ");
 
 				memcpy(&adv_interval_t, adv_element_p->data,
 						ADV_INTERVAL_SIZE);
@@ -449,7 +463,7 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 			break;
 
 			default:
-				DBG_LOG_CONT("\r\nUnknown ad type");
+				DBG_LOG_CONT("Unknown ad type");
 			}
 			index += (adv_element_data.len + 1);
 			adv_element_data.len += 1;
