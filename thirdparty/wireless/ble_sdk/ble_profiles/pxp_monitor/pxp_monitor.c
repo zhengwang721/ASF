@@ -127,38 +127,6 @@ void pxp_monitor_init(void *param)
 at_ble_status_t pxp_monitor_connect_request(at_ble_scan_info_t *scan_buffer,
 uint8_t index)
 {
-	/* Stop the current scan active */
-	at_ble_scan_stop();
-	
-	/*Updating the index pointer to connect */
-	if(index == 0xFF)
-	{  /* from no device found event*/
-		do
-		{
-			DBG_LOG("Select [r] to scan again");
-			index = getchar();
-			DBG_LOG("%c", index);
-		} while (!(index == 'r'));
-	}
-	else
-	{   /* Successful device found event*/
-		do
-		{
-			DBG_LOG("Select Index to Connect or [r] to scan again");
-			index = getchar();
-			DBG_LOG("%c", index);
-		} while (!((index < ':') || (index == 'r') || (index >'0') ));
-	}
-	
-	
-	if(index == 'r')
-	{
-		gap_dev_scan();
-		return AT_BLE_SUCCESS;
-	}
-	
-	index -= PXP_ASCII_TO_DECIMAL_VALUE;
-
 	memcpy((uint8_t *)&pxp_reporter_address,
 	(uint8_t *)&scan_buffer[index].dev_addr,
 	sizeof(at_ble_addr_t));
@@ -187,47 +155,98 @@ uint8_t index)
 at_ble_status_t pxp_monitor_scan_data_handler(at_ble_scan_info_t *scan_buffer,
 uint8_t scanned_dev_count)
 {
+	uint8_t scan_device[MAX_SCAN_DEVICE];
+	uint8_t pxp_scan_device_count = 0;
 	scan_index = 0;
+	memset(scan_device, 0, MAX_SCAN_DEVICE);
 	if (scanned_dev_count) {
 		uint8_t index;
+		at_ble_uuid_t service_uuid;
 
-		for (index = 0; index < scanned_dev_count; index++) {
-			at_ble_uuid_t service_uuid;
-
+		for (index = 0; index < scanned_dev_count; index++) 
+		{			
+			/* Display only the connectible devices*/
+			if((scan_buffer[index].type == AT_BLE_ADV_TYPE_DIRECTED) || (scan_buffer[index].type == AT_BLE_ADV_TYPE_UNDIRECTED))
+			{				
+				scan_device[pxp_scan_device_count++] = index;
+			}
+		}
+		
+		if (pxp_scan_device_count)
+		{		
 			/* Service type to be searched */
 			service_uuid.type = AT_BLE_UUID_16;
 
 			/* Service UUID */
 			service_uuid.uuid[1] = (LINK_LOSS_SERVICE_UUID >> 8);
 			service_uuid.uuid[0] = (uint8_t)LINK_LOSS_SERVICE_UUID;
-
-			if (scan_info_parse(&scan_buffer[index], &service_uuid,
-			AD_TYPE_COMPLETE_LIST_UUID) ==
-			AT_BLE_SUCCESS) {
-				/* Device Service UUID  matched */
-				pxp_supp_scan_index[scan_index++] = index;
-			}
-		}
-
-		if (scan_index) {
-			/* Proximity supported device found*/
-			DBG_LOG("Proximity Profile supported device Index  ");
-			for (index = 0; index < scan_index; index++)
+			
+			for (index = 0; index < pxp_scan_device_count; index++)
 			{
-				DBG_LOG_CONT("%d ",
-				pxp_supp_scan_index[
-				index]);
-			}
+				DBG_LOG("Info: Device found address [%d]  0x%02X%02X%02X%02X%02X%02X ",
+				index,
+				scan_buffer[scan_device[index]].dev_addr.addr[5],
+				scan_buffer[scan_device[index]].dev_addr.addr[4],
+				scan_buffer[scan_device[index]].dev_addr.addr[3],
+				scan_buffer[scan_device[index]].dev_addr.addr[2],
+				scan_buffer[scan_device[index]].dev_addr.addr[1],
+				scan_buffer[scan_device[index]].dev_addr.addr[0]);
+				
+				if (scan_info_parse(&scan_buffer[scan_device[index]], &service_uuid,
+				AD_TYPE_COMPLETE_LIST_UUID) ==
+				AT_BLE_SUCCESS)
+				{
+					/* Device Service UUID  matched */
+					pxp_supp_scan_index[scan_index++] = index;
+					DBG_LOG_CONT("---PXP");
+				}
+			}			
 		}
-		else
+
+		if (!scan_index) 
 		{
 			DBG_LOG("Proximity Profile supported device not found ");
+		}		
+		
+		/* Stop the current scan active */
+		at_ble_scan_stop();
+		
+		/*Updating the index pointer to connect */
+		if(pxp_scan_device_count)
+		{  
+			/* Successful device found event*/
+			do
+			{
+				DBG_LOG("Select Index to Connect or [r] to scan again");
+				index = getchar();
+				DBG_LOG("%c", index);
+			} while (!((index < ':') || (index == 'r') || (index >'0') ));	
+			
+			if(index == 'r')
+			{
+				return gap_dev_scan();
+			}
+			else
+			{
+				index -= PXP_ASCII_TO_DECIMAL_VALUE;
+				return pxp_monitor_connect_request(scan_buffer,	scan_device[index]);
+			}			
 		}
-		return pxp_monitor_connect_request(scan_buffer,	pxp_supp_scan_index[0]);
-	}
-	else
-	{
-		/* Try for rescan */
+		else
+		{  
+			/* from no device found event*/
+			do
+			{
+				DBG_LOG("Select [r] to scan again");
+				index = getchar();
+				DBG_LOG("%c", index);
+			} while (!(index == 'r')); 
+			
+			if(index == 'r')
+			{
+				return gap_dev_scan();
+			}
+		}			
 	}
 
 	return AT_BLE_FAILURE;
@@ -474,12 +493,12 @@ at_ble_discovery_complete_t *discover_status)
 		else if(ias_handle.char_discovery==AT_BLE_INVALID_PARAM)
 		{
 			DBG_LOG("Immediate Alert Service not Available");
-			lls_handle.char_discovery = AT_BLE_INSUFF_RESOURCE;
+			ias_handle.char_discovery = AT_BLE_INSUFF_RESOURCE;
 		}
 
 #endif
 		
-		if((lls_handle.char_discovery == AT_BLE_INSUFF_RESOURCE) && (discover_char_flag))
+		if(lls_handle.char_discovery == AT_BLE_INSUFF_RESOURCE)
 		{
 			DBG_LOG("PROXIMITY PROFILE NOT SUPPORTED");
 			discover_char_flag = false;
