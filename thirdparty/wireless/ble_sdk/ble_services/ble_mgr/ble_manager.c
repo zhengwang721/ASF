@@ -345,15 +345,16 @@ void ble_connected_state_handler(at_ble_connected_t *conn_params)
 	
 	DBG_LOG("handle=0x%x status=%02X", conn_params->handle, conn_params->conn_status);
 
-	
-	if (at_ble_send_slave_sec_request(conn_params->handle,true,true) == AT_BLE_SUCCESS)
-	{
-		DBG_LOG("Slave security request successful");
-	}
-	else {
-		DBG_LOG("Slave security request failed");
-	}
-	
+	#if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)	
+		if (at_ble_send_slave_sec_request(conn_params->handle,true,true) == AT_BLE_SUCCESS)
+		{
+			DBG_LOG("Slave security request successful");
+		}
+		else {
+			DBG_LOG("Slave security request failed");
+		}
+	#endif	
+
 }
 
 void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect)

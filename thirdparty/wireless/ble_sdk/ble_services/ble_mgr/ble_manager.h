@@ -73,6 +73,7 @@
 static inline void ble_dummy_handler(void *param)
 {
 	UNUSED(param);
+	DBG_LOG("!!!!!!");
 }
 
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)) 
