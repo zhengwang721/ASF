@@ -355,7 +355,7 @@ at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 void ble_connected_state_handler(at_ble_connected_t *conn_params)
 {
 	memcpy(ble_connected_dev_info, (uint8_t *)conn_params, sizeof(at_ble_connected_t));
-	DBG_LOG("Bluetooth Device connected to a device with address 0x%02x%02x%02x%02x%02x%02x",
+	DBG_LOG("Connected to peer device with address 0x%02x%02x%02x%02x%02x%02x",
 	conn_params->peer_addr.addr[5],
 	conn_params->peer_addr.addr[4],
 	conn_params->peer_addr.addr[3],
