@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief Timer Driver Configuration Header
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,23 +40,15 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
+#ifndef CONF_TIMER_H_INCLUDED
+#define CONF_TIMER_H_INCLUDED
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#define TIMER                (TC0)
+#define TIMER_CHANNEL_ID     0
+#define ID_TC                (ID_TC0)
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+#define DEF_1MHZ			(1000000)
+#define DEF_120MHz			(120000000)
+#define TIMER_OVF_COUNT_1SEC	(DEF_120MHz/(128*65535))
 
-/* USART6 module is used in SYNC. mode. */
-#define CONF_BOARD_USART0
-
-
-/** Configure AT30TSE pins */
-#define CONF_BOARD_AT30TSE
-
-#define BOARD_FLEXCOM_TWI			FLEXCOM4
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif

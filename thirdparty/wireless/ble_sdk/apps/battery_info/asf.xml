@@ -1,21 +1,20 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="TIME INFORMATION PROFILE" id="thirdparty.wireless.ble_sdk.apps.time_information">
+	<module type="meta" caption="Battery Service Application" id="thirdparty.wireless.ble_sdk.apps.battery_info">
 		<info type="description" value="summary">
-		Time Information App for BLE stack
+		Battery Service Application for BLE stack
 		</info>
 		<build type="include-path" value="."/>
-		<build type="header-file" value="tip_app.h"/>
-		<build type="c-source" value="tip_app.c"/>
-		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_CENTRAL_AND_PERIPHERAL"/>
+		<build type="header-file" value="battery_info.h"/>
+		<build type="c-source" value="battery_info.c"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_PERIPHERAL"/>
 		<require idref="thirdparty.wireless.ble_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_sdk.inc"/>
 		<require idref="thirdparty.wireless.ble_sdk.src"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.battery"/>
 		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>
-		<require idref="thirdparty.wireless.ble_sdk.ble_services.current_time"/>
 		<require idref="thirdparty.wireless.ble_sdk.utils"/>
-		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.time_info"/>
 		<device-support-alias value="ble_stack_lib_support"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>

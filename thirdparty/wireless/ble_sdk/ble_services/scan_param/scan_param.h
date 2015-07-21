@@ -1,7 +1,8 @@
+
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief Scan Param Service declarations
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -44,19 +45,60 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+#ifndef __SCAN_PARAM_H__
+#define __SCAN_PARAM_H__
 
-/* USART6 module is used in SYNC. mode. */
-#define CONF_BOARD_USART0
+#include "at_ble_api.h"
+#include "ble_manager.h"
+
+/** scan interval value characteristic value initial and maximum length */
+#define SPS_CHAR_SCAN_INT_VALUE_INIT_VALUE		0x00
+#define SPS_CHAR_SCAN_INT_VALUE_MAX_VALUE		0x00
+
+/** scan refresh value characteristic value initial and maximum length */
+#define SPS_CHAR_SCAN_REFRESH_INIT_VALUE		0x00
+#define SPS_CHAR_SCAN_REFRESH_MAX_VALUE			0x00
+
+/** The type of the information*/
+typedef enum {
+	/* scan interval characteristic */
+	SPS_SCAN_INTERVAL,
+	/* scan refresh characteristic */
+	SPS_SCAN_REFRESH
+}sps_info_type;
+
+/** Configurable Client characteristic data for a given sps info type*/
+typedef struct{
+	uint16_t data_len;
+	uint8_t *info_data;
+}sps_info_data;
+
+/**@brief  Generic Function used to update the SPS info type during connection
+ *
+ * @param[in] sps_serv gatt service information
+ * @param[in] info_type @ref sps_info_type, specifies the characteristic
+ * @param[in] info_data @ref sps_info_data, holds the new data information
+ * @return none
+ */
+at_ble_status_t sps_info_update(sps_gatt_service_handler_t *dis_serv , sps_info_type info_type, sps_info_data* info_data);
+
+/**@brief Initialize the service with its included service, characteristics, and descriptors
+ *
+ * @param[in] sps_serv gatt service information
+ *
+ * @return none
+ */
+void sps_init_service(sps_gatt_service_handler_t *sps_serv);
+
+/**@brief defining a initialized service 
+ *
+ * @param[in] sps_service gatt service information
+ *
+ * @return @ref AT_BLE_SUCCESS operation completed successfully
+ * @return @ref AT_BLE_FAILURE Generic error.
+ */
+at_ble_status_t sps_primary_service_define(sps_gatt_service_handler_t *sps_service);
 
 
-/** Configure AT30TSE pins */
-#define CONF_BOARD_AT30TSE
-
-#define BOARD_FLEXCOM_TWI			FLEXCOM4
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* __SCAN_PARAM_H__ */

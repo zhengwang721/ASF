@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Proximity Reporter Declarations
+ * \brief Battery Information Service Declarations
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -45,46 +45,50 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
  *Support</a>
  */
-#ifndef __PXP_REPORTER_APP_H__
-#define __PXP_REPORTER_APP_H__
-
-#include "pxp_reporter.h"
-#include "ble_manager.h"
+#ifndef __BATTERY_INFO_H__
+#define __BATTERY_INFO_H__
 
 /****************************************************************************************
 *							        Macros	                                     		*
 ****************************************************************************************/
+/** @brief APP_BAS_FAST_ADV between 0x0020 and 0x4000 in 0.625 ms units (20ms to 10.24s). */
+#define APP_BAS_FAST_ADV				(100) //100 ms
 
-// Interval of LED blinking(in ms) for various alert levels of link loss service
-#define LL_INTERVAL_SLOW			(3)
-#define LL_INTERVAL_MEDIUM			(2)
-#define LL_INTERVAL_FAST			(1)
+/** @brief APP_BAS_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
+#define APP_BAS_ADV_TIMEOUT				(1000) // 100 Secs
 
-// Interval of LED blinking(in ms) for various alert levels of path loss service
-#define PL_INTERVAL_SLOW			(8)
-#define PL_INTERVAL_MEDIUM			(6)
-#define PL_INTERVAL_FAST			(4)
+/** @brief scan_resp_len is the length of the scan response data */
+#define SCAN_RESP_LEN					(10)
 
+/** @brief ADV_DATA_LEN */
+#define ADV_DATA_LEN					(18)
+
+/** @brief ADV_TYPE_LEN */
+#define ADV_TYPE_LEN					(0x01)
+
+/** @brief BAS_ADV_DATA_UUID_LEN the size of  BAS service uuid */
+#define BAS_ADV_DATA_UUID_LEN			(2)
+
+/** @brief BAS_ADV_DATA_UUID_TYPE the total sizeof BAS service uuid*/
+#define BAS_ADV_DATA_UUID_TYPE			(0x03)
+
+/** @brief BAS_ADV_DATA_NAME_LEN the  length of the device name */
+#define BAS_ADV_DATA_NAME_LEN			(9)
+
+/** @brief BAS_ADV_DATA_NAME_TYPE the gap ad data type */
+#define BAS_ADV_DATA_NAME_TYPE			(0x09)
+
+/* @brief BAS_ADV_DATA_NAME_DATA the actual name of device */
+#define BAS_ADV_DATA_NAME_DATA			("ATMEL-BAS")
 /** @brief Timer call back handler called on timer expiry
   *
   */
 void timer_callback_handler(void);
 
-/**
- * @brief Alerting function on link loss alert 
- *
- * @param[in] alert level of alert level characteristic of linkloss service
- *
- */
-void app_linkloss_alert(uint8_t alert_val);
+at_ble_status_t battery_service_advertise(void);
 
-/**
- * @brief Alerting function on path loss alert 
- *
- * @param[in] alert level of alert level characteristic of pathloss service
- *
- */
-void app_pathloss_alert(uint8_t alert_val);
+void ble_paired_app_event(at_ble_handle_t conn_handle);
 
+void ble_disconnected_app_event(at_ble_handle_t conn_handle);
 
-#endif /* __PXP_REPORTER_APP_H__ */
+#endif /* __BATTERY_INFO_H__ */

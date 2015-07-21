@@ -54,9 +54,6 @@
 ****************************************************************************************/
 #include "immediate_alert.h"
 
-
-
-
 #if defined IAS_GATT_SERVER
 /****************************************************************************************
 *							        Globals                                     		*
@@ -139,7 +136,9 @@ at_ble_status_t ias_primary_service_define(gatt_service_handler_t *ias_primary_s
 											&ias_primary_service->serv_chars, IAS_CHARACTERISTIC_COUNT));
 }
 
-
+/** @brief Setting Alert Level Value of immediate alert servcie
+  * 
+  */
 uint8_t ias_set_alert_value(at_ble_characteristic_changed_t *change_params, gatt_service_handler_t *ias_handler)
 {
 	if (change_params->char_handle == ias_handler->serv_chars.char_val_handle)

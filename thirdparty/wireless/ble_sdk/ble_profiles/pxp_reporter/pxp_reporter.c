@@ -46,7 +46,7 @@
  */
 
 /****************************************************************************************
-*							        Includes	                                     							*
+*							        Includes	                                     	*
 ****************************************************************************************/
 #include <asf.h>
 #include <string.h>
@@ -60,10 +60,6 @@
 #include "tx_power.h"
 
 #include "ble_utils.h"
-
-/****************************************************************************************
-*							        Macros	                                     		*
-****************************************************************************************/
 
 /****************************************************************************************
 *							        Globals	                                     		*
@@ -85,7 +81,7 @@ gatt_service_handler_t ias_handle;
 extern uint8_t pxp_led_state;
 
 /** @brief Scan response data*/
-uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
+uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
 
 /** @brief Alert value used for immediate alert service helps in pathloss */
@@ -94,6 +90,7 @@ uint8_t pathloss_alert_value = INVALID_IAS_PARAM ;
 /** @brief Alert value used for Linkloss service*/
 uint8_t linkloss_current_alert_level ;
 
+/** @brief Callback handlers for linkloss and pathloss */
 reporter_callback_t pathloss_cb;
 reporter_callback_t linkloss_cb;
 
@@ -102,24 +99,31 @@ reporter_callback_t linkloss_cb;
 ****************************************************************************************/
 
 /**
- * \Initializations of profile services based on pathloss option
+ * \brief Initializations of profile services based on pathloss option
 */
-
 void pxp_service_init(void)
 {
+	/** Initializing the mandatory linkloss service of proximity reporter*/
 	init_linkloss_service(&lls_handle);
 	
 	#if defined PATHLOSS	
+	/** Initializing the optional services for pathloss feature of proximity reporter*/
 	init_immediate_alert_service(&ias_handle);
 	init_tx_power_service(&txps_handle);	
 	#endif
 }
 
+/**
+ * \brief registering the path loss handler of the application
+*/
 void register_pathloss_handler(reporter_callback_t pathloss_fn)
 {
 	pathloss_cb = pathloss_fn;
 }
 
+/**
+ * \brief registering the linkloss handler of the appliation
+*/
 void register_linkloss_handler(reporter_callback_t linkloss_fn)
 {
 	linkloss_cb = linkloss_fn;
@@ -128,24 +132,21 @@ void register_linkloss_handler(reporter_callback_t linkloss_fn)
 /**
 * \Definition of profile services to the attribute data base based on pathloss
 */
-
 at_ble_status_t pxp_service_define (void)
 {
 	lls_primary_service_define(&lls_handle);
 	
 	#if defined PATHLOSS
-	// need to define the return type and put it into console
-	
 	ias_primary_service_define(&ias_handle);
 	txps_primary_service_define(&txps_handle);
 	#endif
 	
-	DBG_LOG("The link loss handle is %x",lls_handle.serv_handle);
+	DBG_LOG("The Supported Services in Proximity Reporter are:");
+	DBG_LOG("  -> Link Loss Service");
 	
 	#if defined PATHLOSS
-	
-	DBG_LOG("The immediate loss handle is %x",ias_handle.serv_handle);
-	DBG_LOG("The tx power handle is %x",txps_handle.serv_handle);
+	DBG_LOG("  -> Immediate Alert Service");
+	DBG_LOG("  -> Tx Power Service");
 	
 	#endif
 	
@@ -160,16 +161,7 @@ at_ble_status_t pxp_service_define (void)
 at_ble_status_t pxp_reporter_char_changed_handler(at_ble_characteristic_changed_t *char_handle)
 {
 	at_ble_characteristic_changed_t change_params;
-	
-	uint32_t index = 0;
-
 	memcpy((uint8_t *)&change_params, char_handle, sizeof(at_ble_characteristic_changed_t));
-
-	DBG_LOG("Characteristic 0x%x changed, new_value = ", change_params.char_handle);
-	for(index=0; index<change_params.char_len; index++)
-	{
-		DBG_LOG_CONT("0x%02x ", change_params.char_new_value[index]);
-	}	
 
 	linkloss_current_alert_level = lls_set_alert_value(&change_params,&lls_handle);
 	
@@ -206,7 +198,6 @@ at_ble_status_t pxp_reporter_connected_state_handler(at_ble_connected_t *conn_pa
 /**
 * \Pxp reporter disconnected state handler function called after
 */
-
 at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 {
 	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
@@ -218,7 +209,7 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 	}
 	else
 	{
-		DBG_LOG("BLE Started Adv");
+		DBG_LOG("Bluetooth Device is in Advertising Mode");
 	}
 	
 	//DBG_LOG("The linkloss value is %d",linkloss_current_alert_level);
@@ -230,7 +221,6 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 /**
 * \Pxp reporter advertisement initialization and adv start 
 */
-
 void pxp_reporter_adv(void)
 {
 	uint8_t idx = 0;
@@ -276,7 +266,7 @@ void pxp_reporter_adv(void)
 	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, APP_PXP_FAST_ADV, APP_PXP_ADV_TIMEOUT, 0) == AT_BLE_SUCCESS)
 	{
 		#ifdef DBG_LOG
-		DBG_LOG("BLE Started Adv");
+		DBG_LOG("Bluetooth device is in Advertising Mode");
 		#endif
 	}	
 	else
@@ -290,7 +280,6 @@ void pxp_reporter_adv(void)
 /**
 * \Pxp reporter Initialization which initializes service,defines and start adv
 */
-
 void pxp_reporter_init(void *param)
 {
 	/* pxp services initialization*/

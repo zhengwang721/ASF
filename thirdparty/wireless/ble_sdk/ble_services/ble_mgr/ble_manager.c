@@ -73,6 +73,10 @@
 
 at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
+ble_gap_event_callback_t ble_connected_cb = NULL;
+ble_gap_event_callback_t ble_disconnected_cb = NULL;
+ble_gap_event_callback_t ble_paired_cb = NULL;
+
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)|| (BLE_DEVICE_ROLE == BLE_OBSERVER))
 uint8_t scan_response_count = 0;
 at_ble_scan_info_t scan_info[MAX_SCAN_DEVICE];
@@ -352,7 +356,7 @@ at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 void ble_connected_state_handler(at_ble_connected_t *conn_params)
 {
 	memcpy(ble_connected_dev_info, (uint8_t *)conn_params, sizeof(at_ble_connected_t));
-	DBG_LOG("Device connected to 0x%02x%02x%02x%02x%02x%02x",
+	DBG_LOG("Connected to peer device with address 0x%02x%02x%02x%02x%02x%02x",
 	conn_params->peer_addr.addr[5],
 	conn_params->peer_addr.addr[4],
 	conn_params->peer_addr.addr[3],
@@ -360,16 +364,37 @@ void ble_connected_state_handler(at_ble_connected_t *conn_params)
 	conn_params->peer_addr.addr[1],
 	conn_params->peer_addr.addr[0]);
 	
-	DBG_LOG("handle=0x%x status=%02X", conn_params->handle, conn_params->conn_status);
-
 	#if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)	
 		ble_send_slave_sec_request(conn_params->handle);		
 	#endif
+	
+	if (ble_connected_cb != NULL)
+	{
+		ble_connected_cb(conn_params->handle);
+	}
+}
+
+void register_ble_connected_event_cb(ble_gap_event_callback_t connected_cb_fn)
+{
+	ble_connected_cb = connected_cb_fn;
+}
+
+void register_ble_disconnected_event_cb(ble_gap_event_callback_t disconnected_cb_fn)
+{
+	ble_disconnected_cb = disconnected_cb_fn;
+}
+
+void register_ble_paired_event_cb(ble_gap_event_callback_t paired_cb_fn)
+{
+	ble_paired_cb = paired_cb_fn;
 }
 
 void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect)
 {
-	
+	if (ble_disconnected_cb != NULL)
+	{
+		ble_disconnected_cb(disconnect->handle);
+	}
 	DBG_LOG("Device disconnected Reason:0x%02x Handle=0x%x", disconnect->reason, disconnect->handle);
 }
 
@@ -446,7 +471,7 @@ void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 		app_bond_info.ediv = rand()&0xffff;
 		app_bond_info.key_size = 16;
 		/* Send pairing response */
-		DBG_LOG("Sending pairing response handle=0x%x",	ble_connected_dev_info->handle);
+		DBG_LOG("Sending pairing response");
 		if(at_ble_authenticate(ble_connected_dev_info->handle, &features, &app_bond_info, NULL) != AT_BLE_SUCCESS)
 		{
 			features.bond = false;
@@ -461,7 +486,7 @@ void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 void ble_pair_key_request_handler (at_ble_pair_key_request_t *pair_key)
 {
 	/* Passkey has fixed value in this example MSB */
-	uint8_t passkey[6]={0,0,0,0,0,0};
+	uint8_t passkey[6]={1,2,3,4,5,6};
 	uint8_t passkey_ascii[6];
 	uint8_t i = 0;
 	
@@ -499,8 +524,10 @@ at_ble_status_t ble_pair_done_handler(at_ble_pair_done_t *pairing_params)
 		app_device_bond = true;
 		auth_info = pair_params.auth;
 		ble_connected_dev_info->handle = pair_params.handle;
-		
-		
+		if (ble_paired_cb != NULL)
+		{
+			ble_paired_cb(pair_params.handle);
+		}	
 	}
 	else
 	{
@@ -519,7 +546,11 @@ void ble_encryption_status_change_handler(at_ble_encryption_status_changed_t *en
 	{
 		DBG_LOG("Encryption completed successfully");
 			
-		ble_connected_dev_info->handle = enc_status.handle;			
+		ble_connected_dev_info->handle = enc_status.handle;	
+		if (ble_paired_cb != NULL)
+		{
+			ble_paired_cb(enc_status.handle);
+		}		
 	}
 	else
 	{

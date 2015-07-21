@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief SAMG55 clock configuration.
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -44,19 +44,52 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+/*
+ * ===== System Clock (MCK) Source Options 
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_RC
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_XTAL
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_BYPASS
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_8M_RC
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_16M_RC
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_24M_RC
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_XTAL
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_BYPASS
+ */
+#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
 
-/* USART6 module is used in SYNC. mode. */
-#define CONF_BOARD_USART0
+/*
+ *  ===== System Clock (MCK) Prescaler Options   (Fmck = Fsys / (SYSCLK_PRES))
+ */
+#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
+/*
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_4
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_8
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_16
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_32
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_64
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_3
+ */
 
+/*
+ *  ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
+ *  Use mul and div effective values here.
+ */
+#define CONFIG_PLL0_SOURCE          PLL_SRC_SLCK_XTAL
+#define CONFIG_PLL0_MUL             3662
+#define CONFIG_PLL0_DIV             1
 
-/** Configure AT30TSE pins */
-#define CONF_BOARD_AT30TSE
+/*
+ *  ===== Target frequency (System clock)
+ *  - External XTAL frequency: 32768Hz
+ *  - System clock source: SLCK XTAL
+ *  - System clock prescaler: 1 (divided by 1)
+ *  - PLLA source: SLCK_XTAL
+ *  - PLLA output: SLCK_XTAL * 3662 / 1
+ *  - System clock: SLCK_XTAL * 3662 / 1 / 1 = 120MHz
+ */
 
-#define BOARD_FLEXCOM_TWI			FLEXCOM4
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_CLOCK_H_INCLUDED */

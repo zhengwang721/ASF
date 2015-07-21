@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief Sleep manager configuration
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -43,20 +43,9 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#define CONFIG_SLEEPMGR_ENABLE
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
-
-/* USART6 module is used in SYNC. mode. */
-#define CONF_BOARD_USART0
-
-
-/** Configure AT30TSE pins */
-#define CONF_BOARD_AT30TSE
-
-#define BOARD_FLEXCOM_TWI			FLEXCOM4
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_H */

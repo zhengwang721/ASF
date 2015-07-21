@@ -1,7 +1,8 @@
+
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief Battery Service declarations
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -44,19 +45,54 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+#ifndef __BATTERY_H__
+#define __BATTERY_H__
 
-/* USART6 module is used in SYNC. mode. */
-#define CONF_BOARD_USART0
+#include "at_ble_api.h"
+#include "ble_manager.h"
+
+/** characteristic presentation format value */
+#define BAT_CHAR_PRESENTATION_FORMAT_VALUE 0x04
+
+/** @brief Characteristic presentation format exponent */
+#define BAT_CHAR_PRESENTATION_FORMAT_EXPONENT 0x00
+
+/** @brief Characteristic presentation format unit */
+#define BAT_CHAR_PRESENTATION_FORMAT_UNIT BAT_SERVICE_UUID
+
+/** @brief Characteristic presentation format namespace */
+#define BAT_CHAR_PRESENTATION_FORMAT_NAMESPACE 0x01
+
+/**  @brief Characteristic presentation format descriptor */
+#define BAT_CHAR_PRESENTATION_FORMAT_DESCRIPTOR 0x0000
 
 
-/** Configure AT30TSE pins */
-#define CONF_BOARD_AT30TSE
+/**@brief Update the battery characteristic value after defining the services using bat_primary_service_define
+ *
+ * @param[in] battery_serv battery service instance
+ * @param[in] char_data New battery level
+ * @return @ref AT_BLE_SUCCESS operation completed successfully
+ * @return @ref AT_BLE_FAILURE Generic error.
+ */
+at_ble_status_t bat_update_char_value (gatt_service_handler_t *battery_serv , uint8_t char_data);
 
-#define BOARD_FLEXCOM_TWI			FLEXCOM4
+/**@brief Battery service and characteristic initialization(Called only once by user).
+ *
+ * @param[in] battery_serv battery service instance
+ *
+ * @return none
+ */
+void bat_init_service(gatt_service_handler_t *battery_serv, uint8_t *battery_value);
 
-#endif /* CONF_BOARD_H_INCLUDED */
+/**@brief Register a battery service instance inside stack. 
+ *
+ * @param[in] battery_service battery service instance
+ *
+ * @return @ref AT_BLE_SUCCESS operation completed successfully
+ * @return @ref AT_BLE_FAILURE Generic error.
+ */
+at_ble_status_t bat_primary_service_define(gatt_service_handler_t *battery_service);
+
+
+#endif /* __BATTERY_H__ */

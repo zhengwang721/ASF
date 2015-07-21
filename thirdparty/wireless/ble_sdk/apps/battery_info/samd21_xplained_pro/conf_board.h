@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief SAM D21 Xplained Pro board configuration.
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -40,23 +40,8 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
-
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
-
-/* USART6 module is used in SYNC. mode. */
-#define CONF_BOARD_USART0
-
-
-/** Configure AT30TSE pins */
-#define CONF_BOARD_AT30TSE
-
-#define BOARD_FLEXCOM_TWI			FLEXCOM4
 
 #endif /* CONF_BOARD_H_INCLUDED */

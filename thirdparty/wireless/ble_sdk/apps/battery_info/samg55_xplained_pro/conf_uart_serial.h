@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief USART Serial Configuration
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -44,19 +44,18 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_USART_SERIAL_H_INCLUDED
+#define CONF_USART_SERIAL_H_INCLUDED
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   (115200UL)
+/** Character length setting */
+#define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
+/** Parity setting */
+#define CONF_UART_PARITY     US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
 
-/* USART6 module is used in SYNC. mode. */
-#define CONF_BOARD_USART0
-
-
-/** Configure AT30TSE pins */
-#define CONF_BOARD_AT30TSE
-
-#define BOARD_FLEXCOM_TWI			FLEXCOM4
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

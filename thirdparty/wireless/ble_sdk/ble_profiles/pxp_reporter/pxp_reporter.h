@@ -59,7 +59,7 @@
 /****************************************************************************************
 *							        Macros	                                     							*
 ****************************************************************************************/
-
+/** @brief PATHLOSS which defines if the user wants pathloss functionality*/
 #define PATHLOSS
 
 
@@ -105,6 +105,7 @@
 /* @brief PXP_ADV_DATA_NAME_DATA the actual name of device */
 #define PXP_ADV_DATA_NAME_DATA			("ATMEL-PXP")
 
+/* @brief call back handler type  */
 typedef void (*reporter_callback_t)(uint8_t);
 
 
@@ -192,7 +193,20 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect);
   */
 at_ble_status_t pxp_reporter_char_changed_handler(at_ble_characteristic_changed_t *char_handle);
 
+/**
+* @brief function which register the application alerting function for pathloss to the profile
+*
+* @param[in] call back function of the application for pathloss
+*
+*/
 void register_pathloss_handler(reporter_callback_t pathloss_fn);
+
+/**
+* @brief function which register the application alerting function for linkloss to the profile
+*
+* @param[in] call back function of the application for linkloss
+*
+*/
 void register_linkloss_handler(reporter_callback_t linkloss_fn);
 
 #endif
