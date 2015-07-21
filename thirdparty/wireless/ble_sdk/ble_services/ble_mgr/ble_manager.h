@@ -66,6 +66,10 @@
 #include "ble_observer.h"
 #endif //(BLE_DEVICE_ROLE == BLE_OBSERVER)
 
+#if defined ANP_CLIENT
+#include "anp_client.h"
+#endif
+
 #define BLE_DEVICE_NAME				"ATMEL-DEV"
 
 #define BLE_EVENT_TIMEOUT			(-1)
@@ -73,6 +77,15 @@
 static inline void ble_dummy_handler(void *param)
 {
 	UNUSED(param);
+	DBG_LOG("!:(:(");
+}
+
+static inline at_ble_status_t BLE_UNUSED2_VAR(void *param1_var, void *param2_var)
+{
+	UNUSED(param1_var);
+	UNUSED(param2_var);
+	DBG_LOG("!!:(");
+	return AT_BLE_SUCCESS;
 }
 
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)) 
@@ -198,7 +211,7 @@ typedef struct gatt_service_handler
 
 
 
-#if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)
+#if ((BLE_DEVICE_ROLE == BLE_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
 
 #if defined PROXIMITY_REPORTER
 #define BLE_PROFILE_INIT							pxp_reporter_init 
@@ -210,9 +223,14 @@ typedef struct gatt_service_handler
 #define BLE_CONN_PARAM_UPDATE_DONE					ble_conn_param_update
 #define	BLE_PAIR_REQUEST							ble_pair_request_handler
 #define BLE_PAIR_KEY_REQUEST						ble_pair_key_request_handler
-#define BLE_PAIR_DONE								ble_pair_done_handler
+
+#define BLE_PAIR_DONE(param)						ble_pair_done_handler(param);\
+													BLE_ADDITIONAL_PAIR_DONE_HANDLER(param);
+													
 #define BLE_ENCRYPTION_REQUEST						ble_encryption_request_handler
-#define BLE_ENCRYPTION_STATUS_CHANGED				ble_encryption_status_change_handler
+
+#define BLE_ENCRYPTION_STATUS_CHANGED(param)		ble_encryption_status_change_handler(param);\
+													BLE_ADDITIONAL_ENCRYPTION_CHANGED_HANDLER(param);
 #endif //(BLE_DEVICE_ROLE == BLE_PERIPHERAL)
 
 
@@ -230,6 +248,23 @@ typedef struct gatt_service_handler
 #define BLE_CHARACTERISTIC_READ_RESPONSE			pxp_monitor_characteristic_read_response
 #define BLE_CHARACTERISTIC_FOUND_HANDLER			pxp_monitor_characteristic_found_handler
 #endif //PROXIMITY_MONITOR
+
+#ifdef ANP_CLIENT
+#define BLE_PROFILE_INIT										anp_client_init
+#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER(param)			anp_client_connected_state_handler(param);
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER(param)		anp_client_disconnected_event_handler(param);
+#define BLE_CHARACTERISTIC_WRITE_RESPONSE						anp_client_write_response_handler
+#define BLE_CHARACTERISTIC_FOUND_HANDLER						anp_client_characteristic_found_handler
+#define BLE_NOTIFICATION_RECEIVED_HANDLER						anp_client_notification_handler
+#define BLE_DESCRIPTOR_FOUND_HANDLER							anp_client_descriptor_found_handler
+#define	BLE_CHARACTERISTIC_CHANGED								anp_client_char_changed_handler
+
+#define BLE_PRIMARY_SERVICE_FOUND_HANDLER						anp_client_service_found_handler
+#define BLE_DISCOVERY_COMPLETE_HANDLER							anp_client_discovery_complete_handler
+#define BLE_ADDITIONAL_PAIR_DONE_HANDLER(param)					anp_client_write_notification_handler(param)
+#define BLE_ADDITIONAL_ENCRYPTION_CHANGED_HANDLER(param)		anp_client_write_notification_handler(param)
+#endif /* ANP_CLIENT */
+
 #endif //((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
 
 /* Common functions */
@@ -329,16 +364,24 @@ typedef struct gatt_service_handler
 #define BLE_SCAN_REPORT_HANDLER								ble_dummy_handler
 #endif
 
-#ifndef BLE_SCAN_INFO_HANDLER
-#define BLE_SCAN_INFO_HANDLER								ble_dummy_handler
+#ifndef BLE_SCAN_DATA_HANDLER
+#define BLE_SCAN_DATA_HANDLER(x,y)								BLE_UNUSED2_VAR(x, &y)
 #endif
 
-#ifndef BLE_SCAN_DATA_HANDLER
-#define	BLE_SCAN_DATA_HANDLER								ble_dummy_handler
+#ifndef BLE_SCAN_INFO_HANDLER
+#define BLE_SCAN_INFO_HANDLER									ble_dummy_handler
 #endif
 
 #ifndef BLE_CHARACTERISTIC_WRITE_RESPONSE
-#define BLE_CHARACTERISTIC_WRITE_RESPONSE					ble_dummy_handler
+#define BLE_CHARACTERISTIC_WRITE_RESPONSE						ble_dummy_handler
+#endif
+
+#ifndef BLE_ADDITIONAL_PAIR_DONE_HANDLER
+#define BLE_ADDITIONAL_PAIR_DONE_HANDLER						ble_dummy_handler
+#endif
+
+#ifndef BLE_ADDITIONAL_ENCRYPTION_CHANGED_HANDLER
+#define BLE_ADDITIONAL_ENCRYPTION_CHANGED_HANDLER				ble_dummy_handler
 #endif
 
 
@@ -365,7 +408,7 @@ void ble_device_init(at_ble_addr_t *addr);
 void ble_event_manager(at_ble_events_t events , void *event_params);
 void ble_discovery_complete_handler(at_ble_discovery_complete_t *discover_status);
 void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect);
-
+at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle);
 void ble_connected_state_handler(at_ble_connected_t *conn_params);
 
 #endif /*__BLE_MANAGER_H__*/
