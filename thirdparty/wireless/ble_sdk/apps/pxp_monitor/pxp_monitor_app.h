@@ -57,6 +57,13 @@
 #include "timer_hw.h"
 #include "conf_extint.h"
 
+typedef enum pxp_current_alert
+{
+	PXP_NO_ALERT = 0,
+	PXP_MID_ALERT,
+	PXP_HIGH_ALERT
+}pxp_current_alert_t;
+
 /**@brief Proximity Application initialization
  * as part of it start the scanning process as defined with scan param
  */

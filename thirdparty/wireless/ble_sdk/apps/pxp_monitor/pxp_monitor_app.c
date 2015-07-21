@@ -86,6 +86,7 @@ extern gatt_ias_char_handler_t ias_handle;
 extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
 volatile bool app_timer_done = false;
+pxp_current_alert_t alert_level = PXP_NO_ALERT;
 
 /**@brief Check for Link Loss and Path Loss alert
  * check for Low Alert value if crossed write Low Alert value to Immediate Alert
@@ -106,16 +107,24 @@ void rssi_update(at_ble_handle_t conn_handle)
 	DBG_LOG("Rx power is %04d dBm", rssi_power);
 
 	/* if received rssi is above no alert zone and below high alert zone */
-	if ((rssi_power < PXP_LOW_ALERT_RANGE) &&
-			(rssi_power > PXP_HIGH_ALERT_RANGE)) {
-		ias_alert_level_write(conn_handle, ias_handle.char_handle,
-				IAS_MILD_ALERT);
-		DBG_LOG("LOW ALERT");
+	if ((rssi_power < PXP_LOW_ALERT_RANGE) && (rssi_power > PXP_HIGH_ALERT_RANGE))
+	{
+		if(!(alert_level==PXP_MID_ALERT))
+		{
+			ias_alert_level_write(conn_handle, ias_handle.char_handle,IAS_MID_ALERT);
+			alert_level = PXP_MID_ALERT;
+		}
+		DBG_LOG("MILD ALERT");
 	}
+
 	/* if received rssi is above no alert zone and below high alert zone */
-	else if (rssi_power < PXP_HIGH_ALERT_RANGE) {
-		ias_alert_level_write(conn_handle, ias_handle.char_handle,
-				IAS_HIGH_ALERT);
+	else if (rssi_power < PXP_HIGH_ALERT_RANGE)
+	{
+		if(!(alert_level == PXP_HIGH_ALERT))
+		{
+			ias_alert_level_write(conn_handle, ias_handle.char_handle,IAS_HIGH_ALERT);
+			alert_level=PXP_HIGH_ALERT;
+		}
 		DBG_LOG("HIGH ALERT");
 	}
 }

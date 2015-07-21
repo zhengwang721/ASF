@@ -68,7 +68,7 @@
 /* Immediate alert levels */
 typedef enum immediate_alert_level {
 	IAS_NO_ALERT,
-	IAS_MILD_ALERT,
+	IAS_MID_ALERT,
 	IAS_HIGH_ALERT
 } immediate_alert_level_t;
 
@@ -89,7 +89,7 @@ typedef enum immediate_alert_level {
 #define IAS_WRITE_LENGTH                        (1)
 
 /* Immediate alert write without response */
-#define IAS_WRITE_WITH_RESPONSE					        (false)
+#define IAS_WRITE_WITH_RESPONSE					(false)
 
 /* Perform the signed write  */
 #define IAS_NO_SIGNED_WRITE                     (false)
