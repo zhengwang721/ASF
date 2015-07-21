@@ -73,7 +73,7 @@ uint8_t timer_interval = LL_INTERVAL_SLOW;
 
 
 /**
-* \Timer callback handler called on timer expiry
+* \brief Timer callback handler called on timer expiry
 */
 
 void timer_callback_handler(void)
@@ -133,7 +133,7 @@ void app_linkloss_alert(uint8_t alert_val)
 				}
 				else if (alert_val == LLS_MILD_ALERT)
 				{
-					DBG_LOG("Link loss : Mid Alert  ");
+					DBG_LOG("Link loss : Mild Alert  ");
 					timer_interval = LL_INTERVAL_MEDIUM;
 					LED_On(LED0);
 					hw_timer_start(timer_interval);
@@ -149,7 +149,7 @@ void app_linkloss_alert(uint8_t alert_val)
 }
 
 /**
-* \Proximity Reporter Application main function
+* \brief Proximity Reporter Application main function
 */
 
 int main(void)
