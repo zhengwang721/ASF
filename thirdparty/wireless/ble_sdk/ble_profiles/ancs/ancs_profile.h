@@ -178,8 +178,8 @@ typedef enum
 	
 }ble_discovery_role;
 
-/**@brief time data structure */.
-typedef struct
+/**@brief time data structure */
+typedef struct time_val
 {
 	uint8_t timeval[8];
 	uint8_t dateval[10];
