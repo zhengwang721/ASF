@@ -47,8 +47,14 @@
 #ifndef __CURRENT_TIME_H__
 #define __CURRENT_TIME_H__
 
+/***********************************************************************************
+ *									Includes		                               *
+ **********************************************************************************/
 #include "ble_manager.h"
 
+/***********************************************************************************
+ *									Macros			                               *
+ **********************************************************************************/
 /* Link Loss Alert length of data to read */
 #define CTS_READ_LENGTH                         (20)
 
@@ -60,6 +66,9 @@
 
 #define CTS_CLIENT_CHAR_DESCRIPTOR              (0x2902)
 
+/***********************************************************************************
+ *									Types		                               *
+ **********************************************************************************/
 typedef struct gatt_cts_handler
 {
 	at_ble_handle_t start_handle;
@@ -69,7 +78,11 @@ typedef struct gatt_cts_handler
 	uint8_t *char_data;
 }gatt_cts_handler_t;
 
-/**@brief Send the Read request to link loss handler
+
+/***********************************************************************************
+ *									Functions		                               *
+ **********************************************************************************/
+/**@brief Send the Read request to the current time characteristic
  * Read value will be reported via @ref AT_BLE_CHARACTERISTIC_READ_RESPONSE
  *event
  *
@@ -82,17 +95,14 @@ typedef struct gatt_cts_handler
 at_ble_status_t tis_current_time_read(at_ble_handle_t conn_handle,
 		at_ble_handle_t char_handle);
 
-/**@brief Read Link Loss Alert Value
+/**@brief Read response handler for read response
  *
  * @param[in] read_value read response data available form
  *at_ble_characteristic_read_response_t
- * @return Link Loss Alert level .
+ * @return Current time value.
  * @return LLS_READ_RESP_INVALID if value are other than alert levels
  */
 int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *read_resp,
 		gatt_cts_handler_t *cts_handler);
-
-void current_time_read_char(void);
-
 
 #endif /*__CURRENT_TIME_H__*/

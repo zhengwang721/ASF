@@ -49,7 +49,9 @@
 * \section preface Preface
 * This is the reference manual for the Current Time Service
 */
-/*- Includes ---------------------------------------------------------------*/
+/***********************************************************************************
+ *									Includes		                               *
+ **********************************************************************************/
 
 #include <string.h>
 #include "at_ble_api.h"
@@ -58,6 +60,13 @@
 #include "ble_utils.h"
 #include "current_time.h"
 
+/***********************************************************************************
+ *									Implementations	                               *
+ **********************************************************************************/
+/**@brief Send the Read request to the current time characteristic
+ * Read value will be reported via @ref AT_BLE_CHARACTERISTIC_READ_RESPONSE
+ *event
+ */
 
 at_ble_status_t tis_current_time_read(at_ble_handle_t conn_handle,
 		at_ble_handle_t char_handle)
@@ -72,6 +81,8 @@ at_ble_status_t tis_current_time_read(at_ble_handle_t conn_handle,
 	}
 }
 
+/**@brief Read response handler for read response for time characteristic
+ */
 int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *read_resp,
 		gatt_cts_handler_t *cts_handler)
 {

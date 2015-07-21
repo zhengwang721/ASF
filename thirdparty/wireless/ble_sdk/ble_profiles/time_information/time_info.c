@@ -49,8 +49,9 @@
 * \section preface Preface
 * This is the reference manual for the Time Information Profile
 */
-/*- Includes ---------------------------------------------------------------*/
-
+/***********************************************************************************
+ *									Includes		                               *
+ **********************************************************************************/
 #include <string.h>
 #include "at_ble_api.h"
 #include "current_time.h"
@@ -63,24 +64,31 @@
 #include "current_time.h"
 #endif
 
+
+/***********************************************************************************
+ *									Globals			                               *
+ **********************************************************************************/
+
 #if defined CURRENT_TIME_SERVICE
+/**@brief CTS Characteristic Value array*/
 uint8_t cts_char_data[CTS_READ_LENGTH];
+/**@brief CTS Service Handle*/
 gatt_cts_handler_t cts_handle = {0, 0, 0, AT_BLE_INVALID_PARAM, NULL};
 #endif
 
-/*Scan Response packet*/
-static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 0x25, 0x75, 0x11, 0x6a, 0x7f, 0x7f};
 
+/**@breif Scan Response packet*/
+static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 0x25, 0x75, 0x11, 0x6a, 0x7f, 0x7f};
+/**@breif Peer Connected device info*/
 extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
-void time_info_init(void *param)
-{
-	#if defined CURRENT_TIME_SERVICE
-	cts_handle.char_data = cts_char_data;
-	#endif
-	time_info_adv();
-}
 
+/***********************************************************************************
+ *									Implementations	                               *
+ **********************************************************************************/
+/**
+ * @brief time info advertisement data and start of advertisement data
+ */
 void time_info_adv()
 {
 	uint8_t idx = 0;
@@ -111,10 +119,24 @@ void time_info_adv()
 	}
 	else
 	{
-		DBG_LOG("BLE Started Adv");
+		DBG_LOG("Device is in Advertising Mode");
 	}
 }
 
+/**
+ * @brief Time Information profile initilalizating and setting of device in advertising mode
+ */
+void time_info_init(void *param)
+{
+	#if defined CURRENT_TIME_SERVICE
+	cts_handle.char_data = cts_char_data;
+	#endif
+	time_info_adv();
+}
+
+/**
+ * @brief Discovering the services of time serverr
+ */
 at_ble_status_t time_info_service_discover(at_ble_connected_t *conn_params)
 {	
 	if (conn_params->conn_status != AT_BLE_SUCCESS)
@@ -133,6 +155,9 @@ at_ble_status_t time_info_service_discover(at_ble_connected_t *conn_params)
 	return AT_BLE_FAILURE;
 }
 
+/**
+ * @brief Handler for connection event 
+ */
 at_ble_status_t time_info_connected_state_handler(at_ble_connected_t *conn_params)
 {
 	at_ble_status_t discovery_status = AT_BLE_FAILURE;
@@ -153,6 +178,9 @@ at_ble_status_t time_info_connected_state_handler(at_ble_connected_t *conn_param
 	return discovery_status;
 }
 
+/**
+ * @brief Service found handler invoked by ble manager
+ */
 void time_info_service_found_handler(at_ble_primary_service_found_t * primary_service_params)
 {
 	at_ble_uuid_t *ctx_service_uuid;
@@ -179,6 +207,9 @@ void time_info_service_found_handler(at_ble_primary_service_found_t * primary_se
 	}
 }
 
+/**
+ * @brief Discovery Complete handler invoked by ble manager
+ */
 void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_status)
 {
 	bool discover_char_flag = true;
@@ -230,6 +261,9 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 	}
 }
 
+/**
+ * @brief time read response handler invoked by ble manager
+ */
 void time_info_characteristic_read_response(at_ble_characteristic_read_response_t *char_read_resp)
 {
 	
@@ -238,6 +272,9 @@ void time_info_characteristic_read_response(at_ble_characteristic_read_response_
 	#endif
 }
 
+/**
+ * @brief characteristic found handler invoked by ble manager
+ */
 void time_info_characteristic_found_handler(at_ble_characteristic_found_t *characteristic_found)
 {
 	uint16_t charac_16_uuid ;
@@ -258,6 +295,9 @@ void time_info_characteristic_found_handler(at_ble_characteristic_found_t *chara
 
 }
 
+/**
+ * @brief disconnected event handler invoked by ble manager
+ */
 void time_info_disconnected_event_handler(at_ble_disconnected_t *disconnect)
 {
 	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
@@ -270,7 +310,9 @@ void time_info_disconnected_event_handler(at_ble_disconnected_t *disconnect)
 		DBG_LOG("BLE Started Adv");
 	}	
 }
-
+/**
+ * @brief char changed handler invoked by ble manager
+ */
 void time_info_char_changed_handler(at_ble_characteristic_changed_t *characteristic_changed)
 {
 	uint32_t i = 0;

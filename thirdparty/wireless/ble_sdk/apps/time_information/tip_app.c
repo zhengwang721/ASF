@@ -49,8 +49,9 @@
  * \section preface Preface
  * This is the reference manual for the Time Information Profile Application
  */
-/*- Includes ---------------------------------------------------------------*/
-
+/***********************************************************************************
+ *									Includes		                               *
+ **********************************************************************************/
 #include <asf.h>
 #include "platform.h"
 #include "at_ble_api.h"
@@ -63,24 +64,37 @@
 #include "ble_utils.h"
 #include "current_time.h"
 
+/***********************************************************************************
+ *									Types			                               *
+ **********************************************************************************/
 extern gatt_cts_handler_t cts_handle;
 
 extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
 volatile bool button_pressed = false;
 
-
+/***********************************************************************************
+ *									Implementations                               *
+ **********************************************************************************/
+/**
+ * @brief Button Press Callback 
+ */
 void button_cb(void)
 {
  button_pressed = true;
 }
 
+/**
+ * @brief Timer Callback
+ */
 void timer_callback_handler(void)
 {
-	/* App timer callback */
+	/* Free to use for User Application */
 }
 
-
+/**
+ * @brief Main Function for Time Information Callback
+ */
 int main (void)
 {
 
@@ -91,13 +105,16 @@ int main (void)
 #elif SAM0
 	system_init();
 #endif
-
+	/* Initializing the console  */
 	serial_console_init();
 	
+	/* Initializing the button */
 	button_init();
 	
+	/* Initializing the hardware timer */
 	hw_timer_init();
 	
+	/*Registration of timer callback*/
 	hw_timer_register_callback(timer_callback_handler);
 	
 	/* initialize the BLE chip  and Set the device mac address */

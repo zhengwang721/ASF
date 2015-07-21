@@ -74,15 +74,19 @@ static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 0x28, 0x75
 /***********************************************************************************
  *									Implementation	                               *
  **********************************************************************************/
-
+/**
+ * @brief Initializing the info init
+ */
 void anp_info_init(void)
 {
 	memset((uint8_t *)&app_anp_info, 0, sizeof(app_anp_data_t));
 	app_anp_info.devicedb = FALSE;
 	app_anp_info.discover_role = DISCOVER_SERVICE;
-	//app_anp_info.dispinfo = FALSE;
 }
 
+/**
+ * @brief Triggers advertisements
+ */
 void anp_client_adv(void)
 {
 	uint8_t idx = 0;
@@ -139,7 +143,7 @@ void anp_client_connected_state_handler(at_ble_connected_t *params)
 }
 
 /**
- * @brief Disconnection handler invoked by ble manager
+ * @brief Discovery Complete handler invoked by ble manager
  */
 void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *params)
 {
