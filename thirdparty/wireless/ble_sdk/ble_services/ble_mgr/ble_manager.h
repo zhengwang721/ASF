@@ -56,17 +56,19 @@
 
 #if defined PROXIMITY_REPORTER
 #include "pxp_reporter.h"
-#endif
+#endif //PROXIMITY_REPORTER
 
 #if defined PROXIMITY_MONITOR
 #include "pxp_monitor.h"
-#endif
+#endif //PROXIMITY_MONITOR
 
 #if (BLE_DEVICE_ROLE == BLE_OBSERVER)
 #include "ble_observer.h"
-#endif
+#endif //(BLE_DEVICE_ROLE == BLE_OBSERVER)
 
 #define BLE_DEVICE_NAME				"ATMEL-DEV"
+
+#define BLE_EVENT_TIMEOUT			(-1)
 
 static inline void ble_dummy_handler(void *param)
 {
@@ -78,7 +80,7 @@ static inline void ble_dummy_handler(void *param)
 #define SCAN_INTERVAL				(96)              //Scan interval 30ms in term of 625us
 #define SCAN_WINDOW					(96)              //Scan window 30ms values in term of 625ms
 #define SCAN_TIMEOUT				(0x0000)          //Timeout  Scan time-out, 0x0000 disables time-out
-#endif
+#endif //((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)) 
 
 
 /* Observer related declarations */
@@ -132,38 +134,12 @@ typedef enum
 }gap_ad_type;
 
 #if (BLE_DEVICE_ROLE == BLE_OBSERVER)
-#define BLE_PROFILE_INIT									ble_dummy_handler
-#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER				ble_dummy_handler
-#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER			ble_dummy_handler
-#define BLE_CHARACTERISTIC_CHANGED							ble_dummy_handler
-#define BLE_CONN_PARAM_UPDATE_DONE							ble_dummy_handler
-#define	BLE_PAIR_REQUEST									ble_dummy_handler
-#define BLE_PAIR_KEY_REQUEST								ble_dummy_handler
-#define BLE_PAIR_DONE										ble_dummy_handler
-#define BLE_ENCRYPTION_REQUEST								ble_dummy_handler
-#define BLE_ENCRYPTION_STATUS_CHANGED						ble_dummy_handler
 #define BLE_SCAN_REPORT_HANDLER								ble_scan_report_handler
 #define BLE_SCAN_INFO_HANDLER(param)						ble_observer_scan_info_handler(param);\
 															ble_scan_info_handler(param);
 															
 #define	BLE_SCAN_DATA_HANDLER								ble_observer_scan_data_handler
-#endif
-
-#if (BLE_DEVICE_ROLE == BLE_BROADCASTER)
-#define BLE_PROFILE_INIT									ble_dummy_handler
-#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER				ble_dummy_handler
-#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER			ble_dummy_handler
-#define BLE_CHARACTERISTIC_CHANGED							ble_dummy_handler
-#define BLE_CONN_PARAM_UPDATE_DONE							ble_dummy_handler
-#define	BLE_PAIR_REQUEST									ble_dummy_handler
-#define BLE_PAIR_KEY_REQUEST								ble_dummy_handler
-#define BLE_PAIR_DONE										ble_dummy_handler
-#define BLE_ENCRYPTION_REQUEST								ble_dummy_handler
-#define BLE_ENCRYPTION_STATUS_CHANGED						ble_dummy_handler
-#define BLE_SCAN_REPORT_HANDLER								ble_dummy_handler
-#define BLE_SCAN_INFO_HANDLER								ble_dummy_handler
-#define	BLE_SCAN_DATA_HANDLER								ble_dummy_handler
-#endif
+#endif //(BLE_DEVICE_ROLE == BLE_OBSERVER)
 
 /* Service UUID's */
 
@@ -215,7 +191,7 @@ typedef struct gatt_service_handler
 #define GAP_CONNECT_PEER_COUNT			(1)
 #define GATT_DISCOVERY_STARTING_HANDLE	(0x0001)
 #define GATT_DISCOVERY_ENDING_HANDLE	(0xFFFF)
-#endif
+#endif //((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
 
 #define MAX_DEVICE_CONNECTED			(1)
 
@@ -229,7 +205,7 @@ typedef struct gatt_service_handler
 #define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER		pxp_reporter_connected_state_handler
 #define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER	pxp_disconnect_event_handler
 #define BLE_CHARACTERISTIC_CHANGED					pxp_reporter_char_changed_handler
-#endif		
+#endif	//PROXIMITY_REPORTER	
 
 #define BLE_CONN_PARAM_UPDATE_DONE					ble_conn_param_update
 #define	BLE_PAIR_REQUEST							ble_pair_request_handler
@@ -237,9 +213,7 @@ typedef struct gatt_service_handler
 #define BLE_PAIR_DONE								ble_pair_done_handler
 #define BLE_ENCRYPTION_REQUEST						ble_encryption_request_handler
 #define BLE_ENCRYPTION_STATUS_CHANGED				ble_encryption_status_change_handler
-#define BLE_SCAN_REPORT_HANDLER						ble_dummy_handler
-#define BLE_SCAN_INFO_HANDLER						ble_dummy_handler
-#endif
+#endif //(BLE_DEVICE_ROLE == BLE_PERIPHERAL)
 
 
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
@@ -255,10 +229,8 @@ typedef struct gatt_service_handler
 #define	BLE_SCAN_DATA_HANDLER						pxp_monitor_scan_data_handler
 #define BLE_CHARACTERISTIC_READ_RESPONSE			pxp_monitor_characteristic_read_response
 #define BLE_CHARACTERISTIC_FOUND_HANDLER			pxp_monitor_characteristic_found_handler
-#endif
-
-#define BLE_CHARACTERISTIC_WRITE_RESPONSE			ble_dummy_handler
-#endif
+#endif //PROXIMITY_MONITOR
+#endif //((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
 
 /* Common functions */
 #define BLE_CONNECTED_STATE_HANDLER(param)			ble_connected_state_handler(param);\
@@ -266,6 +238,109 @@ typedef struct gatt_service_handler
 
 #define BLE_DISCONNECTED_STATE_HANDLER(param)		ble_disconnected_state_handler(param);\
 													BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER(param);
+													
+
+
+#ifndef BLE_PROFILE_INIT
+#define BLE_PROFILE_INIT									ble_dummy_handler
+#endif
+
+#ifndef BLE_ADDITIONAL_CONNECTED_STATE_HANDLER
+#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER				ble_dummy_handler
+#endif
+
+#ifndef BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER			ble_dummy_handler
+#endif
+
+#ifndef BLE_CHARACTERISTIC_CHANGED
+#define BLE_CHARACTERISTIC_CHANGED							ble_dummy_handler
+#endif
+
+#ifndef BLE_CONN_PARAM_UPDATE_DONE
+#define BLE_CONN_PARAM_UPDATE_DONE							ble_dummy_handler
+#endif
+
+#ifndef BLE_PAIR_REQUEST
+#define	BLE_PAIR_REQUEST									ble_dummy_handler
+#endif
+
+#ifndef BLE_PAIR_KEY_REQUEST
+#define BLE_PAIR_KEY_REQUEST								ble_dummy_handler
+#endif
+
+#ifndef BLE_PAIR_DONE
+#define BLE_PAIR_DONE										ble_dummy_handler
+#endif
+ 
+#ifndef BLE_ENCRYPTION_REQUEST
+#define BLE_ENCRYPTION_REQUEST								ble_dummy_handler
+#endif
+
+#ifndef BLE_ENCRYPTION_STATUS_CHANGED
+#define BLE_ENCRYPTION_STATUS_CHANGED						ble_dummy_handler
+#endif
+													
+#ifndef BLE_CONN_PARAM_UPDATE_DONE
+#define BLE_CONN_PARAM_UPDATE_DONE							ble_dummy_handler
+#endif
+
+#ifndef	BLE_PROFILE_INIT
+#define BLE_PROFILE_INIT									ble_dummy_handler
+#endif
+
+#ifndef BLE_ADDITIONAL_CONNECTED_STATE_HANDLER
+#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER				ble_dummy_handler
+#endif
+
+#ifndef BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER			ble_dummy_handler
+#endif
+
+#ifndef BLE_CHARACTERISTIC_CHANGED
+#define BLE_CHARACTERISTIC_CHANGED							ble_dummy_handler
+#endif
+
+#ifndef BLE_CONN_PARAM_UPDATE_DONE
+#define BLE_CONN_PARAM_UPDATE_DONE							ble_dummy_handler
+#endif
+
+#ifndef BLE_PAIR_REQUEST
+#define	BLE_PAIR_REQUEST									ble_dummy_handler
+#endif
+
+#ifndef BLE_PAIR_KEY_REQUEST
+#define BLE_PAIR_KEY_REQUEST								ble_dummy_handler
+#endif
+
+#ifndef BLE_PAIR_DONE
+#define BLE_PAIR_DONE										ble_dummy_handler
+#endif
+
+#ifndef BLE_ENCRYPTION_REQUEST
+#define BLE_ENCRYPTION_REQUEST								ble_dummy_handler
+#endif
+
+#ifndef BLE_ENCRYPTION_STATUS_CHANGED
+#define BLE_ENCRYPTION_STATUS_CHANGED						ble_dummy_handler
+#endif
+
+#ifndef BLE_SCAN_REPORT_HANDLER
+#define BLE_SCAN_REPORT_HANDLER								ble_dummy_handler
+#endif
+
+#ifndef BLE_SCAN_INFO_HANDLER
+#define BLE_SCAN_INFO_HANDLER								ble_dummy_handler
+#endif
+
+#ifndef BLE_SCAN_DATA_HANDLER
+#define	BLE_SCAN_DATA_HANDLER								ble_dummy_handler
+#endif
+
+#ifndef BLE_CHARACTERISTIC_WRITE_RESPONSE
+#define BLE_CHARACTERISTIC_WRITE_RESPONSE					ble_dummy_handler
+#endif
+
 
 at_ble_status_t ble_set_device_name(uint8_t *name, uint8_t name_len);
 void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update);

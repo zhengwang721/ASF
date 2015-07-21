@@ -109,7 +109,7 @@ void rssi_update(at_ble_handle_t conn_handle)
 	if ((rssi_power < PXP_LOW_ALERT_RANGE) &&
 			(rssi_power > PXP_HIGH_ALERT_RANGE)) {
 		ias_alert_level_write(conn_handle, ias_handle.char_handle,
-				IAS_LOW_ALERT);
+				IAS_MILD_ALERT);
 		DBG_LOG("LOW ALERT");
 	}
 	/* if received rssi is above no alert zone and below high alert zone */

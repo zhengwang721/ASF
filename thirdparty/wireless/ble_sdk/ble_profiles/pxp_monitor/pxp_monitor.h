@@ -67,7 +67,7 @@ typedef enum {
  * handler Pointer reference to respective variables
  *
  */
-void pxp_monitor_init(void);
+void pxp_monitor_init(void *param);
 
 /**@brief Search for a given AD type in a buffer, received from advertising
  * packets

@@ -174,7 +174,7 @@ at_ble_status_t txps_power_read(at_ble_handle_t conn_handle,
  */
 int8_t txps_power_read_response(
 		at_ble_characteristic_read_response_t *char_read_resp,
-		gatt_char_handler_t *txps_handler)
+		gatt_txps_char_handler_t *txps_handler)
 {
 	int8_t tx_power = TXPS_INVALID_POWER_VALUE;
 	if (char_read_resp->char_handle == txps_handler->char_handle) {

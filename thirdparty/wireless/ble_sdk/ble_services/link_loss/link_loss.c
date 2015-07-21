@@ -216,7 +216,7 @@ at_ble_status_t lls_alert_level_read(at_ble_handle_t conn_handle,
  * @return LLS_READ_RESP_INVALID if value are other than alert levels
  */
 int8_t lls_alert_read_response(at_ble_characteristic_read_response_t *read_resp,
-		gatt_char_handler_t *lls_handler)
+		gatt_lls_char_handler_t *lls_handler)
 {
 	if (read_resp->char_handle == lls_handler->char_handle) {
 		memcpy(lls_handler->char_data,

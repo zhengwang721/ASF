@@ -78,14 +78,29 @@ uint8_t scan_response_count = 0;
 at_ble_scan_info_t scan_info[MAX_SCAN_DEVICE];
 #endif
 
-#if ((BLE_DEVICE_ROLE == BLE_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)|| (BLE_DEVICE_ROLE == BLE_OBSERVER))
+//#if ((BLE_DEVICE_ROLE == BLE_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)|| (BLE_DEVICE_ROLE == BLE_OBSERVER))
 at_ble_LTK_t app_bond_info;
 bool app_device_bond;
 uint8_t auth_info;
-#endif
+
+at_ble_events_t event;
+uint8_t params[AT_BLE_EVENT_PARAM_MAX_SIZE];
 
 static void ble_init(void);
 static void ble_set_address(at_ble_addr_t *addr);
+
+at_ble_status_t ble_event_task(void)
+{
+	if (platform_ble_event_data() == AT_BLE_SUCCESS) {
+		if (at_ble_event_get(&event, params,
+			BLE_EVENT_TIMEOUT) == AT_BLE_SUCCESS) {
+			ble_event_manager(event, params);
+			return AT_BLE_SUCCESS;
+		}
+	}
+
+	return AT_BLE_FAILURE;
+}
 
 void ble_device_init(at_ble_addr_t *addr)
 {
@@ -242,6 +257,78 @@ at_ble_status_t ble_scan_report_handler(at_ble_scan_report_t *scan_report)
 	return AT_BLE_FAILURE;
 }
 
+/* Parse the received adverting data for service and local name*/
+uint8_t scan_info_parse(at_ble_scan_info_t *scan_info_data,
+				at_ble_uuid_t *ble_service_uuid, uint8_t adv_type)
+{
+	if (scan_info_data->adv_data_len) {
+		uint8_t adv_data_size;
+		uint8_t index = 0;
+		volatile adv_element_t *adv_element_p;
+		volatile adv_element_t adv_element_data;
+
+		adv_data_size = scan_info_data->adv_data_len;
+		adv_element_data.len = 0;
+		while (adv_data_size) {
+			adv_element_data.len = scan_info_data->adv_data[index];
+			adv_element_data.type
+			= scan_info_data->adv_data[index + 1];
+			adv_element_data.data
+			= &scan_info_data->adv_data[index + 2];
+			adv_element_p = &adv_element_data;
+
+			if (adv_element_p->type == adv_type) {
+				/* passing the length of data type */
+				uint8_t adv_type_size = adv_element_p->len;
+				/* actual size of the data	*/
+				adv_type_size -= 1;
+				while (adv_type_size) {
+					volatile int cmp_status = -1;
+					if (ble_service_uuid->type ==
+					AT_BLE_UUID_16) {
+						cmp_status = memcmp(
+						adv_element_p->data, ble_service_uuid->uuid,
+						AT_BLE_UUID_16_LEN);
+						adv_element_p->data
+						+= AT_BLE_UUID_16_LEN;
+						adv_type_size
+						-= AT_BLE_UUID_16_LEN;
+					} else if (ble_service_uuid->type ==
+					AT_BLE_UUID_32) {
+						cmp_status = memcmp(
+						adv_element_p->data, ble_service_uuid->uuid,
+						AT_BLE_UUID_32_LEN);
+						adv_element_p->data
+						+= AT_BLE_UUID_32_LEN;
+						adv_type_size
+						-= AT_BLE_UUID_32_LEN;
+					} else if (ble_service_uuid->type ==
+					AT_BLE_UUID_128) {
+						cmp_status = memcmp(
+						adv_element_p->data, ble_service_uuid->uuid,
+						AT_BLE_UUID_128_LEN);
+						adv_element_p->data
+						+= AT_BLE_UUID_128_LEN;
+						adv_type_size
+						-= AT_BLE_UUID_32_LEN;
+					}
+
+					if (cmp_status == 0) {
+						return AT_BLE_SUCCESS;
+					}
+				}
+			}
+
+			index += (adv_element_data.len + 1);
+			adv_element_data.len += 1;
+			adv_data_size -= adv_element_data.len;
+		}
+	}
+
+	return AT_BLE_FAILURE;
+}
+
+
 
 void ble_connected_state_handler(at_ble_connected_t *conn_params)
 {
@@ -259,7 +346,7 @@ void ble_connected_state_handler(at_ble_connected_t *conn_params)
 	
 	if (at_ble_send_slave_sec_request(conn_params->handle,true,true) == AT_BLE_SUCCESS)
 	{
-		DBG_LOG("Slave security request successfull");
+		DBG_LOG("Slave security request successful");
 	}
 	else {
 		DBG_LOG("Slave security request failed");

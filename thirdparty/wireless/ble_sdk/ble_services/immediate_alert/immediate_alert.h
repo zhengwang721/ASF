@@ -50,8 +50,6 @@
 
 #include "ble_manager.h"
 
-#define IAS_GATT_SERVER
-
 /** @brief count of included service in immediate alert service
   * 
   */
