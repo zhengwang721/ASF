@@ -1,7 +1,7 @@
 /**
 * \file
 *
-* \brief Ble Manager
+* \brief BLE Manager
 *
 * Copyright (c) 2015 Atmel Corporation. All rights reserved.
 *
@@ -53,26 +53,28 @@
 
 #if defined LINK_LOSS_SERVICE
 	#include "link_loss.h"
-#endif
+#endif /* LINK_LOSS_SERVICE */
 
 #if defined IMMEDIATE_ALERT_SERVICE
 	#include "immediate_alert.h"
-#endif
+#endif /* IMMEDIATE_ALERT_SERVICE */
 
 #if defined TX_POWER_SERVICE	
 	#include "tx_power.h"
-#endif
+#endif /* TX_POWER_SERVICE */
 
 #if defined PROXIMITY_REPORTER
 	#include "pxp_reporter.h"
-#endif
+#endif /* PROXIMITY_REPORTER */
 
 #if defined PROXIMITY_MONITOR
 	#include "pxp_monitor.h"
-#endif
+#endif /* PROXIMITY_MONITOR */
 
+/** @brief information of the connected devices */
 at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
+/** @brief callbacks initialized with user provided callbacks */
 ble_gap_event_callback_t ble_connected_cb = NULL;
 ble_gap_event_callback_t ble_disconnected_cb = NULL;
 ble_gap_event_callback_t ble_paired_cb = NULL;
@@ -82,7 +84,6 @@ uint8_t scan_response_count = 0;
 at_ble_scan_info_t scan_info[MAX_SCAN_DEVICE];
 #endif
 
-//#if ((BLE_DEVICE_ROLE == BLE_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)|| (BLE_DEVICE_ROLE == BLE_OBSERVER))
 at_ble_LTK_t app_bond_info;
 bool app_device_bond;
 uint8_t auth_info;
@@ -90,9 +91,13 @@ uint8_t auth_info;
 at_ble_events_t event;
 uint8_t params[AT_BLE_EVENT_PARAM_MAX_SIZE];
 
+/** @brief initializes the platform */
 static void ble_init(void);
+
+/** @brief Set BLE Address, If address is NULL then it will use BD public address */
 static void ble_set_address(at_ble_addr_t *addr);
 
+/** @brief function to get event from stack */
 at_ble_status_t ble_event_task(void)
 {
 	if (platform_ble_event_data() == AT_BLE_SUCCESS) {
@@ -106,6 +111,7 @@ at_ble_status_t ble_event_task(void)
 	return AT_BLE_FAILURE;
 }
 
+/** @brief BLE device initialization */
 void ble_device_init(at_ble_addr_t *addr)
 {
 	char *dev_name = NULL;
@@ -121,6 +127,7 @@ void ble_device_init(at_ble_addr_t *addr)
 	BLE_PROFILE_INIT(NULL);
 }
 
+/** @brief set device name to BLE Device*/
 at_ble_status_t ble_set_device_name(uint8_t *name, uint8_t name_len)
 {
 	if ((name == NULL) || (name_len < 1))
@@ -203,6 +210,7 @@ static void ble_set_address(at_ble_addr_t *addr)
 }
 
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
+/** @brief request the peer device for connection */
 at_ble_status_t gap_dev_connect(at_ble_addr_t *dev_addr)
 {
 	at_ble_connection_params_t gap_conn_parameter;
@@ -217,6 +225,7 @@ at_ble_status_t gap_dev_connect(at_ble_addr_t *dev_addr)
 	return (at_ble_connect(dev_addr, GAP_CONNECT_PEER_COUNT, SCAN_INTERVAL, SCAN_WINDOW, &gap_conn_parameter));
 }
 
+/** @brief instructs device to start scanning */
 at_ble_status_t gap_dev_scan(void)
 {
 	/* Device Scan discover started*/
@@ -226,6 +235,7 @@ at_ble_status_t gap_dev_scan(void)
 	return(at_ble_scan_start(SCAN_INTERVAL, SCAN_WINDOW, SCAN_TIMEOUT, AT_BLE_SCAN_ACTIVE, AT_BLE_SCAN_GEN_DISCOVERY, false,true)) ;
 }
 
+/** @brief function handling scaned information */
 at_ble_status_t ble_scan_info_handler(at_ble_scan_info_t *scan_param)
 {
 	if(scan_response_count < MAX_SCAN_DEVICE)
@@ -250,6 +260,7 @@ at_ble_status_t ble_scan_info_handler(at_ble_scan_info_t *scan_param)
 	}
 }
 
+/** @brief function handles scan report */
 at_ble_status_t ble_scan_report_handler(at_ble_scan_report_t *scan_report)
 {
 	if (scan_report->status == AT_BLE_SUCCESS)
@@ -264,7 +275,7 @@ at_ble_status_t ble_scan_report_handler(at_ble_scan_report_t *scan_report)
 	return AT_BLE_FAILURE;
 }
 
-/* Parse the received adverting data for service and local name*/
+/* Parse the received advertising data for service and local name */
 uint8_t scan_info_parse(at_ble_scan_info_t *scan_info_data,
 				at_ble_uuid_t *ble_service_uuid, uint8_t adv_type)
 {
@@ -335,8 +346,9 @@ uint8_t scan_info_parse(at_ble_scan_info_t *scan_info_data,
 	return AT_BLE_FAILURE;
 }
 
-#endif //((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
+#endif /* ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER)) */
 
+/** @brief function to send slave security request */
 at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 {
 	if (at_ble_send_slave_sec_request(conn_handle, true, true) == AT_BLE_SUCCESS)
@@ -350,8 +362,7 @@ at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 	return AT_BLE_FAILURE;
 }
 
-
-
+/** @brief function to handle connected event received from stack */
 void ble_connected_state_handler(at_ble_connected_t *conn_params)
 {
 	memcpy(ble_connected_dev_info, (uint8_t *)conn_params, sizeof(at_ble_connected_t));
@@ -373,21 +384,25 @@ void ble_connected_state_handler(at_ble_connected_t *conn_params)
 	}
 }
 
+/** @brief function to register callback to be called when device gets connected */
 void register_ble_connected_event_cb(ble_gap_event_callback_t connected_cb_fn)
 {
 	ble_connected_cb = connected_cb_fn;
 }
 
+/** @brief function to register callback to be called when device gets disconnected */
 void register_ble_disconnected_event_cb(ble_gap_event_callback_t disconnected_cb_fn)
 {
 	ble_disconnected_cb = disconnected_cb_fn;
 }
 
+/** @brief function to register callback to be called when device gets paired */
 void register_ble_paired_event_cb(ble_gap_event_callback_t paired_cb_fn)
 {
 	ble_paired_cb = paired_cb_fn;
 }
 
+/** @brief function handles disconnection event received from stack */
 void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect)
 {
 	if (ble_disconnected_cb != NULL)
@@ -397,11 +412,13 @@ void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect)
 	DBG_LOG("Device disconnected Reason:0x%02x Handle=0x%x", disconnect->reason, disconnect->handle);
 }
 
+/** @brief connection update parameter function */
 void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update)
 {
 	DBG_LOG("AT_BLE_CONN_PARAM_UPDATE ");
 }
 
+/** @brief function handles pair request */
 void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 {
 	at_ble_pair_features_t features;
@@ -439,14 +456,12 @@ void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 	if(!app_device_bond)
 	{
 		/* Authentication requirement is bond and MITM*/
-		//features.desired_auth =  AT_BLE_MODE1_L1_NOAUTH_PAIR_ENC;
 		features.desired_auth =  AT_BLE_MODE1_L2_AUTH_PAIR_ENC;
 		features.bond = true;
 		features.mitm_protection = true;
 		features.oob_avaiable = false;
 		/* Device capabilities is display only , key will be generated
 		and displayed */
-		//features.io_cababilities = AT_BLE_IO_CAP_NO_INPUT_NO_OUTPUT;
 		
 		features.io_cababilities = AT_BLE_IO_CAP_DISPLAY_ONLY;
 		/* Distribution of LTK is required */
@@ -482,6 +497,7 @@ void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 	}
 }
 
+/** @brief function handles pair key request */
 void ble_pair_key_request_handler (at_ble_pair_key_request_t *pair_key)
 {
 	/* Passkey has fixed value in this example MSB */
@@ -503,7 +519,7 @@ void ble_pair_key_request_handler (at_ble_pair_key_request_t *pair_key)
 			passkey_ascii[i] = (passkey[i] + 48);
 		}
 		DBG_LOG("please enter the following pass-code on the other device:");
-		for(i=0; i<AT_BLE_PASSKEY_LEN ; i++)
+		for(i=0; i < AT_BLE_PASSKEY_LEN ; i++)
 		{
 			DBG_LOG_CONT("%c",passkey_ascii[i]);
 		}
@@ -512,6 +528,7 @@ void ble_pair_key_request_handler (at_ble_pair_key_request_t *pair_key)
 	
 }
 
+/** @brief function handles pair done event */
 at_ble_status_t ble_pair_done_handler(at_ble_pair_done_t *pairing_params)
 {
 	at_ble_pair_done_t pair_params;
@@ -536,6 +553,7 @@ at_ble_status_t ble_pair_done_handler(at_ble_pair_done_t *pairing_params)
 	return(AT_BLE_SUCCESS);
 }
 
+/** @brief function handles encryption status change */
 void ble_encryption_status_change_handler(at_ble_encryption_status_changed_t *encry_status)
 {
 	at_ble_encryption_status_changed_t enc_status;
@@ -557,6 +575,7 @@ void ble_encryption_status_change_handler(at_ble_encryption_status_changed_t *en
 	}	
 }
 
+/** @brief function handles encryption requests */
 void ble_encryption_request_handler (at_ble_encryption_request_t *encry_req)
 {
 	bool key_found = false;
@@ -957,4 +976,6 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	break;		
 	}
 }
+
+
 
