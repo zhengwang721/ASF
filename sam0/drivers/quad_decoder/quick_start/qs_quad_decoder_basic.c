@@ -45,7 +45,7 @@
  */
 #include <asf.h>
 
-volatile int16_t	qdec_axis_x,
+volatile uint16_t	qdec_axis_x,
 					qdec_axis_y,
 					qdec_axis_z;
 
@@ -107,8 +107,10 @@ int main(void)
 	while (true) {
 //! [main_loop]
 
-		/* Check irq status, if trigger irq, clear irq status and 
-		 * reset the quad decoder to reset counter */
+		/* Check interrupt status, the interrupt flag is set whenever the counter is 
+		 * greater than or equal to the lower threshold and less than or equal to the
+		 * higher threshold.
+		 */
 //! [get_irq]
 		staus = quad_decoder_get_irq_status();
 //! [get_irq]
