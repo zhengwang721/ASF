@@ -45,8 +45,8 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
  *Support</a>
  */
-#ifndef __BATTERY_INFO_H__
-#define __BATTERY_INFO_H__
+#ifndef __SCAN_PARAMETER_APP_H__
+#define __SCAN_PARAMETER_APP_H__
 
 /****************************************************************************************
 *							        Macros	                                     		*
@@ -92,4 +92,4 @@ void ble_paired_app_event(at_ble_handle_t conn_handle);
 
 void ble_disconnected_app_event(at_ble_handle_t conn_handle);
 
-#endif /* __BATTERY_INFO_H__ */
+#endif /* __SCAN_PARAMETER_APP_H__ */

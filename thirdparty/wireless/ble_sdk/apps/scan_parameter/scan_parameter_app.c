@@ -55,10 +55,10 @@
 #include "platform.h"
 #include "timer_hw.h"
 #include "ble_utils.h"
-#include "ble_manager.h"
-
 #include "scan_param.h"
+#include "ble_manager.h"
 #include "scan_parameter_app.h"
+
 
 /* === GLOBALS ============================================================ */
 
@@ -67,11 +67,13 @@
 /** @brief Scan response data*/
 uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 sps_gatt_service_handler_t sps_service_handler;
-sps_info_data scan_interval;
+uint16_t scan_interval_window;
+uint8_t scan_refresh;
 
 
 bool volatile timer_cb_done = false;
 uint8_t scan_interval_value = 0;
+at_ble_handle_t device_conn_handle; 
 
 /**
 * \Timer callback handler called on timer expiry
@@ -89,8 +91,6 @@ void timer_callback_handler(void)
 
 int main(void)
 {
-	
-	
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -112,7 +112,7 @@ int main(void)
 	ble_device_init(NULL);
 	
 	/* Initialize the battery service */
-	sps_init_service(&sps_service_handler);
+	sps_init_service(&sps_service_handler, &scan_interval_window, &scan_refresh);
 	
 	/* Define the primary service in the GATT server database */
 	sps_primary_service_define(&sps_service_handler);
@@ -138,7 +138,7 @@ int main(void)
 			scan_interval_value = (scan_interval_value % MAX_SPS_SCAN_REFRESH );
 			/* send the notification and Update the scan parameter */	
 			
-			if(sps_update_char_value(&sps_service_handler, &scan_interval_value, sps_service_handler.conn_handle) == AT_BLE_SUCCESS)
+			if(sps_scan_refresh_char_update(&sps_service_handler, scan_interval_value) == AT_BLE_SUCCESS)
 			{
 				DBG_LOG("Scan Interval Updated :%d", scan_interval_value);
 			}
@@ -190,7 +190,7 @@ void ble_paired_app_event(at_ble_handle_t conn_handle)
 {
 	timer_cb_done = false;
 	hw_timer_start(SCAN_PRAM_UPDATE_INTERVAL);
-	sps_service_handler.conn_handle=conn_handle;
+	device_conn_handle=conn_handle;
 	LED_On(LED0);
 }
 

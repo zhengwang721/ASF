@@ -52,14 +52,15 @@
 #include "at_ble_api.h"
 #include "ble_manager.h"
 
-/**@brief Scan parameter service UUID */
-#define SPS_SERVICE_UUID 0x1813
-
-/**@brief Scan interval characteristic uuid */
-#define SPS_CHAR_SCAN_INT_VALUE_UUID 0x2a4f
-
-/**@brief Scan refresh characteristic uuid */
-#define SPS_CHAR_SCAN_REFRESH_UUID 0x2a31
+typedef struct sps_gatt_service_handler
+{
+	/// service uuid
+	at_ble_uuid_t	serv_uuid;
+	/// service handle
+	at_ble_handle_t	serv_handle;
+	/// service characteristic
+	at_ble_characteristic_t	serv_chars[2];
+}sps_gatt_service_handler_t;
 
 /**@brief Function used to update the scan refresh characteristic value during connection
  *
@@ -78,7 +79,6 @@ at_ble_status_t sps_scan_refresh_char_update(sps_gatt_service_handler_t *sps_ser
  * @return none
  */
 void sps_init_service(sps_gatt_service_handler_t *sps_serv, uint16_t *scan_interval_window, uint8_t *scan_refresh);
-
 
 /**@brief defining a initialized service 
  *
