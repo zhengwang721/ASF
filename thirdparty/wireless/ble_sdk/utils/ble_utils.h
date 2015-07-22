@@ -67,9 +67,12 @@
 #define UNUSED3(x,y,z) (void)(x),(void)(y),(void)(z)
 #define UNUSED4(a,x,y,z) (void)(a),(void)(x),(void)(y),(void)(z)
 #define UNUSED5(a,b,x,y,z) (void)(a),(void)(b),(void)(x),(void)(y),(void)(z)
+#define UNUSED6(a,b,c,x,y,z) (void)(a),(void)(b),(void)(c),(void)(x),(void)(y),(void)(z)
+#define UNUSED7(a,b,c,d,x,y,z) (void)(a),(void)(b),(void)(c),(void)(d),(void)(x),(void)(y),(void)(z)
+#define UNUSED8(a,b,c,d,e,x,y,z) (void)(a),(void)(b),(void)(c),(void)(d),(void)(e),(void)(x),(void)(y),(void)(z)
 
-#define VA_NUM_ARGS_IMPL(_1,_2,_3,_4,_5, N,...) N
-#define VA_NUM_ARGS(...) VA_NUM_ARGS_IMPL(__VA_ARGS__, 5, 4, 3, 2, 1)
+#define VA_NUM_ARGS_IMPL(_1,_2,_3,_4,_5,_6,_7,_8, N,...) N
+#define VA_NUM_ARGS(...) VA_NUM_ARGS_IMPL(__VA_ARGS__, 8, 7, 6, 5, 4, 3, 2, 1)
 
 #define ALL_UNUSED_IMPL_(nargs) UNUSED ## nargs
 #define ALL_UNUSED_IMPL(nargs) ALL_UNUSED_IMPL_(nargs)

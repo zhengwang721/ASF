@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="thirdparty.wireless.ble_sdk.ble_services.device_info" caption="COMPONENT - BLE_STACK API">
+	<module type="meta" id="thirdparty.wireless.ble_sdk.ble_services.device_information" caption="COMPONENT - BLE_STACK API">
 		<info type="description" value="summary">
 		</info>
 		<build type="include-path"  value="./"/>

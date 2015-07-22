@@ -229,10 +229,10 @@ at_ble_status_t gap_dev_connect(at_ble_addr_t *dev_addr)
 at_ble_status_t gap_dev_scan(void)
 {
 	/* Device Scan discover started*/
-	DBG_LOG("Device discovery started");
+	DBG_LOG("Scanning...Please wait...");
 	/* make service discover counter to zero*/
 	scan_response_count = 0;
-	return(at_ble_scan_start(SCAN_INTERVAL, SCAN_WINDOW, SCAN_TIMEOUT, AT_BLE_SCAN_ACTIVE, AT_BLE_SCAN_GEN_DISCOVERY, false,true)) ;
+	return(at_ble_scan_start(SCAN_INTERVAL, SCAN_WINDOW, SCAN_TIMEOUT, SCAN_TYPE, AT_BLE_SCAN_GEN_DISCOVERY, false,true)) ;
 }
 
 /** @brief function handling scaned information */
@@ -242,14 +242,15 @@ at_ble_status_t ble_scan_info_handler(at_ble_scan_info_t *scan_param)
 	{
 		// store the advertising report data into scan_info[]
 		memcpy((uint8_t *)&scan_info[scan_response_count], scan_param, sizeof(at_ble_scan_info_t));
-		DBG_LOG("Info:Device found address [%d]  0x%02X%02X%02X%02X%02X%02X ",
-		scan_response_count++,
+		DBG_LOG_DEV("Info:Device found address [%d]  0x%02X%02X%02X%02X%02X%02X ",
+		scan_response_count,
 		scan_param->dev_addr.addr[5],
 		scan_param->dev_addr.addr[4],
 		scan_param->dev_addr.addr[3],
 		scan_param->dev_addr.addr[2],
 		scan_param->dev_addr.addr[1],
 		scan_param->dev_addr.addr[0]);
+		scan_response_count++;
 		return AT_BLE_SUCCESS;
 	}
 	else
@@ -366,7 +367,7 @@ at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 void ble_connected_state_handler(at_ble_connected_t *conn_params)
 {
 	memcpy(ble_connected_dev_info, (uint8_t *)conn_params, sizeof(at_ble_connected_t));
-	DBG_LOG("Bluetooth Device connected to a device with address 0x%02x%02x%02x%02x%02x%02x",
+	DBG_LOG("Connected to peer device with address 0x%02x%02x%02x%02x%02x%02x",
 	conn_params->peer_addr.addr[5],
 	conn_params->peer_addr.addr[4],
 	conn_params->peer_addr.addr[3],

@@ -1,8 +1,7 @@
-
 /**
  * \file
  *
- * \brief Scan Param Service declarations
+ * \brief SAM D21 Xplained Pro board configuration.
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -41,53 +40,8 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifndef __SCAN_PARAM_H__
-#define __SCAN_PARAM_H__
-
-#include "at_ble_api.h"
-#include "ble_manager.h"
-
-/**@brief Scan parameter service UUID */
-#define SPS_SERVICE_UUID 0x1813
-
-/**@brief Scan interval characteristic uuid */
-#define SPS_CHAR_SCAN_INT_VALUE_UUID 0x2a4f
-
-/**@brief Scan refresh characteristic uuid */
-#define SPS_CHAR_SCAN_REFRESH_UUID 0x2a31
-
-/**@brief Function used to update the scan refresh characteristic value during connection
- *
- * @param[in] sps_serv gatt service information
- * @param[in] info_data @ref sps_info_data, holds the new data information
- * @return none
- */
-at_ble_status_t sps_scan_refresh_char_update(sps_gatt_service_handler_t *sps_serv, uint8_t scan_refresh_value);
-
-/**@brief Initialize the service with its included service, characteristics, and descriptors
- *
- * @param[in] sps_serv gatt service information
- * @param[in] scan_interval_window used to know the gatt client scan interval window
- * @param[in] scan_refresh application uses to get the updated scan interval window of the gatt client
- *
- * @return none
- */
-void sps_init_service(sps_gatt_service_handler_t *sps_serv, uint16_t *scan_interval_window, uint8_t *scan_refresh);
-
-
-/**@brief defining a initialized service 
- *
- * @param[in] sps_service gatt service information
- *
- * @return @ref AT_BLE_SUCCESS operation completed successfully
- * @return @ref AT_BLE_FAILURE Generic error.
- */
-at_ble_status_t sps_primary_service_define(sps_gatt_service_handler_t *sps_service);
-
-
-#endif /* __SCAN_PARAM_H__ */
+#endif /* CONF_BOARD_H_INCLUDED */

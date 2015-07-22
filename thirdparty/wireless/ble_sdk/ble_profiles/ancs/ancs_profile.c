@@ -1,7 +1,7 @@
 /**
 * \file
 *
-* \brief Alert Notification Profile
+* \brief ANCS Profile
 *
 * Copyright (c) 2015 Atmel Corporation. All rights reserved.
 *
@@ -49,8 +49,9 @@
 * \section preface Preface
 * This is the reference manual for the Time Information Profile
 */
-/*- Includes ---------------------------------------------------------------*/
-
+/***********************************************************************************
+ *									Includes		                               *
+ **********************************************************************************/
 #include <string.h>
 #include "at_ble_api.h"
 #include "ble_manager.h"
@@ -58,24 +59,34 @@
 #include "ancs_profile.h"
 #include "ancs.h"
 
-
+/***********************************************************************************
+ *									Globals			                               *
+ **********************************************************************************/
 /*Profile Information*/
 app_anp_data_t app_anp_info;
-
 
 /*ANCS profile data*/
 ancs_prf_t ancs_data;
 
 static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 0x28, 0x75, 0x11, 0x6a, 0x7f, 0x7f};
 
+
+/***********************************************************************************
+ *									Implementation	                               *
+ **********************************************************************************/
+/**
+ * @brief Initializing the info init
+ */
 void anp_info_init(void)
 {
 	memset((uint8_t *)&app_anp_info, 0, sizeof(app_anp_data_t));
 	app_anp_info.devicedb = FALSE;
 	app_anp_info.discover_role = DISCOVER_SERVICE;
-	app_anp_info.dispinfo = FALSE;
 }
 
+/**
+ * @brief Triggers advertisements
+ */
 void anp_client_adv(void)
 {
 	uint8_t idx = 0;
@@ -96,21 +107,20 @@ void anp_client_adv(void)
 	{
 		DBG_LOG("adv set data not successful");
 	}
-	else {
-		DBG_LOG("adv set data successful");
-	}
 	
 	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
 	APP_ANP_FAST_ADV, APP_ANP_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
 	{
-		DBG_LOG("BLE: Failed to start advertisement");
+		DBG_LOG("Failed to start advertisement");
 	} else {
-		DBG_LOG("Started advertisement");
+		DBG_LOG("Device is in Advertising Mode");
 	}
 }
 
 
-
+/**
+ * @brief Connection handler invoked by ble manager
+ */
 void anp_client_connected_state_handler(at_ble_connected_t *params)
 {
 	at_ble_status_t status;
@@ -121,85 +131,77 @@ void anp_client_connected_state_handler(at_ble_connected_t *params)
 	
 	if(!app_anp_info.devicedb)
 	{		
-		DBG_LOG("BLE: Database discovery");
 		app_anp_info.discover_role = DISCOVER_SERVICE;			
 		/* Discover Remote Service by service UUID */
 		status = at_ble_primary_service_discover_by_uuid(app_anp_info.conn_params.handle,START_HANDLE, END_HANDLE, &ancs_data.ancs_serv.service_uuid);
 		if(status != AT_BLE_SUCCESS)
 		{
-			DBG_LOG("BLE: Failed to start service discovery. status = %d", status);
+			DBG_LOG("Failed to start service discovery. status = %d", status);
 		}		
 	}
 
 }
 
-
+/**
+ * @brief Discovery Complete handler invoked by ble manager
+ */
 void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *params)
 {
 		at_ble_discovery_complete_t discover_status;
 		memcpy((uint8_t *)&discover_status, params, sizeof(at_ble_discovery_complete_t));
-
-		
-		DBG_LOG("BLE: Discovery Complete  DiscoveryStatus 0x%02x DiscoveryRole 0x%02x",
-		discover_status.status,
-		app_anp_info.discover_role);
-		
 		
 		if(discover_status.status == AT_BLE_DISCOVERY_SUCCESS)
 		{
 			if(app_anp_info.discover_role == DISCOVER_SERVICE)
 			{
-				
-				DBG_LOG("BLE: Discover Characteristic");
-				
 				app_anp_info.discover_role = DISCOVER_CHARACTERISTIC;
 				
 				if(at_ble_characteristic_discover_all(app_anp_info.conn_params.handle, ancs_data.ancs_serv.start_handle, ancs_data.ancs_serv.end_handle) != AT_BLE_SUCCESS)
 				{
-					DBG_LOG("BLE: Fail to start discover characteristic");
+					DBG_LOG("Fail to start discover characteristic");
 				}
 			}
 			else if(app_anp_info.discover_role == DISCOVER_CHARACTERISTIC)
 			{
 				app_anp_info.discover_role = DISCOVER_DESCRIPTOR;
-				
-				DBG_LOG("BLE: Discover Descriptor");
-				
+	
 				if(at_ble_descriptor_discover_all(ancs_data.notification_source_char.conn_handle,(ancs_data.notification_source_char.value_handle+1), (ancs_data.data_source_char.char_handle-1)) != AT_BLE_SUCCESS)
 				{
-					DBG_LOG("BLE: Descriptor Discovery Failed");
+					DBG_LOG("Descriptor Discovery Failed");
 				}
 			}
 			else if(app_anp_info.discover_role == DISCOVER_DESCRIPTOR)
 			{
 				app_anp_info.discover_role = DISCOVER_IDLE;
-				
-				DBG_LOG("BLE: Database Discovery Completed");
-				
+
 				app_anp_info.devicedb = TRUE;
 				
 				if(at_ble_send_slave_sec_request(app_anp_info.conn_params.handle,TRUE,TRUE) != AT_BLE_SUCCESS)
 				{
-					DBG_LOG("BLE: Fail to start security procedure");
+					DBG_LOG("Fail to start security procedure");
 				}
-				
-				
+		
 			}
 		}
 }
 
+/**
+ * @brief Service found handler invoked by ble manager
+ */
 void anp_client_service_found_handler(at_ble_primary_service_found_t * params)
 {
 	memcpy((uint8_t *)&ancs_data.ancs_serv, params, sizeof(at_ble_primary_service_found_t));
 	
-	
-	DBG_LOG("BLE: Discover service Info:  ConnHandle 0x%02x : Start handle 0x%02x : End handle : 0x%02x",
+	DBG_LOG("Discover service Info:\r\n -->ConnHandle 0x%02xStart\r\n -->start handle 0x%02x\r\n -->End handle : 0x%02x",
 	ancs_data.ancs_serv.conn_handle,
 	ancs_data.ancs_serv.start_handle,
 	ancs_data.ancs_serv.end_handle);	
 }
 
 
+/**
+ * @brief characteristic found handler invoked by ble manager
+ */
 void anp_client_characteristic_found_handler(at_ble_characteristic_found_t *params)
 {
 	memcpy((uint8_t *)&app_anp_info.char_info, params, sizeof(at_ble_characteristic_found_t));
@@ -217,22 +219,21 @@ void anp_client_characteristic_found_handler(at_ble_characteristic_found_t *para
 		memcpy((uint8_t *)&ancs_data.data_source_char, &app_anp_info.char_info, sizeof(at_ble_characteristic_found_t));
 	}
 	
-		
-	DBG_LOG("BLE: Characteristic Info  ConnHandle 0x%02x : Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
+	DBG_LOG("Characteristic Info:\r\n -->ConnHandle: 0x%02x\r\n -->Char handle: 0x%02x\r\n -->Value handle: 0x%02x\r\n -->Properties: 0x%02x",
 	app_anp_info.char_info.conn_handle,
 	app_anp_info.char_info.char_handle,
 	app_anp_info.char_info.value_handle,
 	app_anp_info.char_info.properties);	
 }
 
+/**
+ * @brief disconnected event handler invoked by ble manager
+ */
 void anp_client_disconnected_event_handler(at_ble_disconnected_t *params)
 {
 	at_ble_disconnected_t disconnect;
 	memcpy((uint8_t *)&disconnect, params, sizeof(at_ble_disconnected_t));
 	app_anp_info.devicedb = FALSE;
-			
-	
-	DBG_LOG("BLE: Device disconnected Reason:0x%02x Handle=0x%x", disconnect.reason, disconnect.handle);
 	
 	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
 	APP_ANP_FAST_ADV, APP_ANP_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
@@ -241,46 +242,51 @@ void anp_client_disconnected_event_handler(at_ble_disconnected_t *params)
 	}
 	else
 	{
-		DBG_LOG("BLE Started Adv");
+		DBG_LOG("Device in Advertisement mode");
 	}
 			
 }
 
+/**
+ * @brief client descriptor found handler invoked by ble manager
+ */
 void anp_client_descriptor_found_handler(at_ble_descriptor_found_t *params)
 {
 		memcpy((uint8_t *)&ancs_data.notification_source_desc, params, sizeof(at_ble_descriptor_found_t));
 					
-	
-		DBG_LOG("BLE: Descriptor Info ConnHandle 0x%02x : Descriptor handle : 0x%02x",
+		DBG_LOG("Descriptor Info:\r\n -->ConnHandle: 0x%02x\r\n -->Descriptor handle : 0x%02x",
 					ancs_data.notification_source_desc.conn_handle,
 					ancs_data.notification_source_desc.desc_handle
 					);
 					
-		DBG_LOG("BLE: Descriptor 16bit UUID Value 0x%02x%02x",
+		DBG_LOG(" -->UUID: 0x%02x%02x",
 					ancs_data.notification_source_desc.desc_uuid.uuid[1],
 					ancs_data.notification_source_desc.desc_uuid.uuid[0]);
 }
 
+/**
+ * @brief char changed handler invoked by ble manager
+ */
 void anp_client_char_changed_handler(at_ble_characteristic_changed_t *params)
 {
 	at_ble_characteristic_changed_t change_params;
 	uint32_t i = 0;
 	
 	memcpy((uint8_t *)&change_params, params, sizeof(at_ble_characteristic_changed_t));
-
-	DBG_LOG("Characteristic 0x%x changed, new_value = ",
-	change_params.char_handle);
-	for(i=0; i<change_params.char_len; i++)
-	DBG_LOG_CONT("0x%02x ", change_params.char_new_value[i]);
 }
 
+/**
+ * @brief write response handler invoked by ble manager
+ */
 void anp_client_write_response_handler(at_ble_characteristic_write_response_t *params)
 {
 	at_ble_characteristic_write_response_t writersp;
 	memcpy((uint8_t *)&writersp, params, sizeof(at_ble_characteristic_write_response_t));
-	DBG_LOG("Write Response Conn_Handle:0x%02x char_handle:0x%02x status:0x%02x", writersp.conn_handle, writersp.char_handle, writersp.status);
 }
 
+/**
+ * @brief invoked by ble manager on recieving notification
+ */
 void anp_client_notification_handler(at_ble_notification_recieved_t *params)
 {
 	 at_ble_notification_recieved_t notif;
@@ -297,11 +303,14 @@ void anp_client_notification_handler(at_ble_notification_recieved_t *params)
 	 {
 		 if(notif.char_value[2] == CATEGORY_ID_INCOMINGCALL)
 		 {
-			 DBG_LOG("Alert Mode");
+			 DBG_LOG("Waiting for Alert");
 		 }
 	 }
 }
 
+/**
+ * @brief invoked by ble manager for setting the notification 
+ */
 void anp_client_write_notification_handler(void *param)
 {
 	uint8_t data[2] = {1, 0};
@@ -312,6 +321,9 @@ void anp_client_write_notification_handler(void *param)
 	UNUSED(param);
 }
 
+/**
+ * @brief invoked by ble manager for initializing the profro
+ */
 void anp_client_init( void *params)
 {
 	anp_info_init();

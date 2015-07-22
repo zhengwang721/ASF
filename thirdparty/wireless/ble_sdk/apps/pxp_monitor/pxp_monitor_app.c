@@ -113,8 +113,10 @@ void rssi_update(at_ble_handle_t conn_handle)
 		{
 			ias_alert_level_write(conn_handle, ias_handle.char_handle,IAS_MID_ALERT);
 			alert_level = PXP_MID_ALERT;
+			
 		}
 		DBG_LOG("MILD ALERT");
+		LED_Toggle(LED0);
 	}
 
 	/* if received rssi is above no alert zone and below high alert zone */
@@ -126,6 +128,11 @@ void rssi_update(at_ble_handle_t conn_handle)
 			alert_level=PXP_HIGH_ALERT;
 		}
 		DBG_LOG("HIGH ALERT");
+		LED_On(LED0);
+	}
+	else
+	{
+		LED_Off(LED0);
 	}
 }
 
@@ -140,9 +147,7 @@ void pxp_app_init(void)
 	scan_status = gap_dev_scan();
 
 	/* Check for scan status */
-	if (scan_status == AT_BLE_SUCCESS) {
-		DBG_LOG("Scanning process initiated");
-	} else if (scan_status == AT_BLE_INVALID_PARAM) {
+	if (scan_status == AT_BLE_INVALID_PARAM) {
 		DBG_LOG("Scan parameters are invalid");
 	} else if (scan_status == AT_BLE_FAILURE) {
 		DBG_LOG("Scanning Failed Generic error");

@@ -1,8 +1,7 @@
-
 /**
  * \file
  *
- * \brief Scan Param Service declarations
+ * \brief SAMG55 clock configuration.
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -45,49 +44,52 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-#ifndef __SCAN_PARAM_H__
-#define __SCAN_PARAM_H__
-
-#include "at_ble_api.h"
-#include "ble_manager.h"
-
-/**@brief Scan parameter service UUID */
-#define SPS_SERVICE_UUID 0x1813
-
-/**@brief Scan interval characteristic uuid */
-#define SPS_CHAR_SCAN_INT_VALUE_UUID 0x2a4f
-
-/**@brief Scan refresh characteristic uuid */
-#define SPS_CHAR_SCAN_REFRESH_UUID 0x2a31
-
-/**@brief Function used to update the scan refresh characteristic value during connection
- *
- * @param[in] sps_serv gatt service information
- * @param[in] info_data @ref sps_info_data, holds the new data information
- * @return none
+/*
+ * ===== System Clock (MCK) Source Options 
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_RC
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_XTAL
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_SLCK_BYPASS
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_8M_RC
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_16M_RC
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_24M_RC
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_XTAL
+ * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_MAINCK_BYPASS
  */
-at_ble_status_t sps_scan_refresh_char_update(sps_gatt_service_handler_t *sps_serv, uint8_t scan_refresh_value);
+#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLLACK
 
-/**@brief Initialize the service with its included service, characteristics, and descriptors
- *
- * @param[in] sps_serv gatt service information
- * @param[in] scan_interval_window used to know the gatt client scan interval window
- * @param[in] scan_refresh application uses to get the updated scan interval window of the gatt client
- *
- * @return none
+/*
+ *  ===== System Clock (MCK) Prescaler Options   (Fmck = Fsys / (SYSCLK_PRES))
  */
-void sps_init_service(sps_gatt_service_handler_t *sps_serv, uint16_t *scan_interval_window, uint8_t *scan_refresh);
-
-
-/**@brief defining a initialized service 
- *
- * @param[in] sps_service gatt service information
- *
- * @return @ref AT_BLE_SUCCESS operation completed successfully
- * @return @ref AT_BLE_FAILURE Generic error.
+#define CONFIG_SYSCLK_PRES          SYSCLK_PRES_1
+/*
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_2
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_4
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_8
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_16
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_32
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_64
+ * #define CONFIG_SYSCLK_PRES          SYSCLK_PRES_3
  */
-at_ble_status_t sps_primary_service_define(sps_gatt_service_handler_t *sps_service);
 
+/*
+ *  ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
+ *  Use mul and div effective values here.
+ */
+#define CONFIG_PLL0_SOURCE          PLL_SRC_SLCK_XTAL
+#define CONFIG_PLL0_MUL             3662
+#define CONFIG_PLL0_DIV             1
 
-#endif /* __SCAN_PARAM_H__ */
+/*
+ *  ===== Target frequency (System clock)
+ *  - External XTAL frequency: 32768Hz
+ *  - System clock source: SLCK XTAL
+ *  - System clock prescaler: 1 (divided by 1)
+ *  - PLLA source: SLCK_XTAL
+ *  - PLLA output: SLCK_XTAL * 3662 / 1
+ *  - System clock: SLCK_XTAL * 3662 / 1 / 1 = 120MHz
+ */
+
+#endif /* CONF_CLOCK_H_INCLUDED */

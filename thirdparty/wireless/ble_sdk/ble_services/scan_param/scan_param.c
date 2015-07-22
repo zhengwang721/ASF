@@ -66,21 +66,21 @@
 
 extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
-void sps_init_service(sps_gatt_service_handler_t *sps_serv)
+void sps_init_service(sps_gatt_service_handler_t *sps_serv, uint16_t *scan_interval_window, uint8_t *scan_refresh)
 {
 		sps_serv->serv_handle= 0;
 		sps_serv->serv_uuid.type= AT_BLE_UUID_16;
-		sps_serv->serv_uuid.uuid[0]= (uint8_t) SPS_SERVICE_UUID;
-		sps_serv->serv_uuid.uuid[1]= (uint8_t) (SPS_SERVICE_UUID >> 8);
+		sps_serv->serv_uuid.uuid[0]= SPS_SERVICE_UUID;
+		sps_serv->serv_uuid.uuid[1]= (SPS_SERVICE_UUID >> 8);
 		
 		sps_serv->serv_chars[0].char_val_handle = 0;          /* handle stored here */
 		sps_serv->serv_chars[0].uuid.type = AT_BLE_UUID_16;
-		sps_serv->serv_chars[0].uuid.uuid[0] = (uint8_t) SPS_CHAR_SCAN_INT_VALUE_UUID;          /* UUID : Tx Power Level */
-		sps_serv->serv_chars[0].uuid.uuid[1] = (uint8_t) (SPS_CHAR_SCAN_INT_VALUE_UUID >> 8);          /* UUID : Tx Power Level */
+		sps_serv->serv_chars[0].uuid.uuid[0] = SPS_CHAR_SCAN_INT_VALUE_UUID;          /* UUID : Scan Interval Value */
+		sps_serv->serv_chars[0].uuid.uuid[1] = (SPS_CHAR_SCAN_INT_VALUE_UUID >> 8);          /* UUID : Scan Interval Value */
 		sps_serv->serv_chars[0].properties = AT_BLE_CHAR_WRITE_WITHOUT_RESPONSE; /* Properties */
-		sps_serv->serv_chars[0].init_value = NULL;             /* value */
-		sps_serv->serv_chars[0].value_init_len = SPS_CHAR_SCAN_INT_VALUE_INIT_VALUE;
-		sps_serv->serv_chars[0].value_max_len = SPS_CHAR_SCAN_INT_VALUE_MAX_VALUE;
+		sps_serv->serv_chars[0].init_value = scan_interval_window;             /* value */
+		sps_serv->serv_chars[0].value_init_len = sizeof(uint16_t);
+		sps_serv->serv_chars[0].value_max_len =  sizeof(uint16_t);
 		sps_serv->serv_chars[0].value_permissions = AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR;   /* permissions */
 		sps_serv->serv_chars[0].user_desc = NULL;           /* user defined name */
 		sps_serv->serv_chars[0].user_desc_len = 0;
@@ -98,9 +98,9 @@ void sps_init_service(sps_gatt_service_handler_t *sps_serv)
 		sps_serv->serv_chars[1].uuid.uuid[0] = (uint8_t) SPS_CHAR_SCAN_REFRESH_UUID;          /* UUID : Tx Power Level */
 		sps_serv->serv_chars[1].uuid.uuid[1] = (uint8_t) (SPS_CHAR_SCAN_REFRESH_UUID >> 8);          /* UUID : Tx Power Level */
 		sps_serv->serv_chars[1].properties = AT_BLE_CHAR_NOTIFY; /* Properties */
-		sps_serv->serv_chars[1].init_value = NULL;             /* value */
-		sps_serv->serv_chars[1].value_init_len = SPS_CHAR_SCAN_REFRESH_INIT_VALUE;
-		sps_serv->serv_chars[1].value_max_len = SPS_CHAR_SCAN_REFRESH_INIT_VALUE;
+		sps_serv->serv_chars[1].init_value = scan_refresh;             /* value */
+		sps_serv->serv_chars[1].value_init_len = sizeof(uint8_t);
+		sps_serv->serv_chars[1].value_max_len =  sizeof(uint8_t);
 		sps_serv->serv_chars[1].value_permissions = AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR;   /* permissions */
 		sps_serv->serv_chars[1].user_desc = NULL;           /* user defined name */
 		sps_serv->serv_chars[1].user_desc_len = 0;
@@ -129,30 +129,32 @@ at_ble_status_t sps_primary_service_define(sps_gatt_service_handler_t *sps_servi
 	sps_service->serv_chars, 2));
 }
 
-/**@brief  Generic Function used to update the SPS info type during connection
+/**@brief Function used to update the scan refresh characteristic value during connection
  *
  * @param[in] sps_serv gatt service information
- * @param[in] info_type @ref dis_info_type, specifies the characteristic
  * @param[in] info_data @ref dis_info_data, holds the new data information
  * @return none
  */
-at_ble_status_t sps_info_update(sps_gatt_service_handler_t *sps_serv , sps_info_type info_type, sps_info_data* info_data)
+at_ble_status_t sps_scan_refresh_char_update(sps_gatt_service_handler_t *sps_serv ,uint8_t scan_refresh_value)
 {
-	if (info_data->data_len > sps_serv->serv_chars[info_type].value_max_len)
-	{
-		DBG_LOG("invalid length parameter");
-		return AT_BLE_FAILURE;
-	}
-	
 	//updating application data
-	memcpy(&(sps_serv->serv_chars[info_type].init_value), info_data->info_data,info_data->data_len);
+	sps_serv->serv_chars[1].init_value = info_data;
 	
 	//updating the att data base
-	if ((at_ble_characteristic_value_set(sps_serv->serv_chars[info_type].char_val_handle, info_data->info_data,0 ,info_data->data_len)) != AT_BLE_SUCCESS){
-		DBG_LOG("updating the characteristic value is successfully");
-		return AT_BLE_SUCCESS;
+	if ((at_ble_characteristic_value_set(sps_serv->serv_chars[1].char_val_handle, &info_data,0 ,sizeof(uint8_t))) != AT_BLE_SUCCESS){
+		DBG_LOG("updating the characteristic failed\r\n");
+		return AT_BLE_FAILURE;
 	} else {
-		DBG_LOG("updating the characteristic failed");
+		DBG_LOG("updating the characteristic value is successfully \n");
+		return AT_BLE_SUCCESS;
 	}
-	return AT_BLE_FAILURE;
+	
+	//sending notification to the peer about change in the scan parameters
+	if((at_ble_notification_send(ble_connected_dev_info[0].handle, sps_serv->serv_chars[1].char_val_handle)) == AT_BLE_FAILURE) {
+		DBG_LOG("sending notification to the peer failed");
+		return AT_BLE_FAILURE;
+	}
+	else {
+		DBG_LOG("sending notification to the peer successful");
+	}
 }

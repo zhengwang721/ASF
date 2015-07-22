@@ -1,7 +1,7 @@
 /**
 * \file
 *
-* \brief Proximity Reporter Profile Application
+* \brief ANCS Application
 *
 * Copyright (c) 2015 Atmel Corporation. All rights reserved.
 *
@@ -47,8 +47,6 @@
 /****************************************************************************************
 *							        Includes	                                     	*
 ****************************************************************************************/
-
-
 #include <asf.h>
 #include "console_serial.h"
 #include "at_ble_api.h"
@@ -77,9 +75,6 @@ int main(void)
 
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
-	
-	
-	DBG_LOG("Initializing ANP Client Application");
 	
 	/* Capturing the events  */
 	while(at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS)
