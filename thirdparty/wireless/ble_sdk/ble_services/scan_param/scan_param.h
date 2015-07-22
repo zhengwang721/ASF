@@ -60,6 +60,17 @@
 #define SPS_CHAR_SCAN_REFRESH_INIT_VALUE		0x00
 #define SPS_CHAR_SCAN_REFRESH_MAX_VALUE			0x00
 
+#define SPS_MAX_CHARACTER				(2)
+
+
+typedef struct sps_gatt_service_handler
+{
+	at_ble_uuid_t	serv_uuid;
+	at_ble_handle_t	serv_handle;
+	at_ble_characteristic_t	serv_chars[SPS_MAX_CHARACTER];
+	at_ble_handle_t conn_handle;
+}sps_gatt_service_handler_t;
+
 /** The type of the information*/
 typedef enum {
 	/* scan interval characteristic */
@@ -99,6 +110,8 @@ void sps_init_service(sps_gatt_service_handler_t *sps_serv);
  * @return @ref AT_BLE_FAILURE Generic error.
  */
 at_ble_status_t sps_primary_service_define(sps_gatt_service_handler_t *sps_service);
+
+at_ble_status_t sps_update_char_value (sps_gatt_service_handler_t *scan_param , uint8_t *char_data, at_ble_handle_t conn_handle);
 
 
 #endif /* __SCAN_PARAM_H__ */

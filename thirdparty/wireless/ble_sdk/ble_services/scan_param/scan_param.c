@@ -98,7 +98,7 @@ void sps_init_service(sps_gatt_service_handler_t *sps_serv)
 		sps_serv->serv_chars[1].uuid.uuid[0] = (uint8_t) SPS_CHAR_SCAN_REFRESH_UUID;          /* UUID : Tx Power Level */
 		sps_serv->serv_chars[1].uuid.uuid[1] = (uint8_t) (SPS_CHAR_SCAN_REFRESH_UUID >> 8);          /* UUID : Tx Power Level */
 		sps_serv->serv_chars[1].properties = AT_BLE_CHAR_NOTIFY; /* Properties */
-		sps_serv->serv_chars[1].init_value = NULL;             /* value */
+		sps_serv->serv_chars[1].init_value =NULL;             /* value */
 		sps_serv->serv_chars[1].value_init_len = SPS_CHAR_SCAN_REFRESH_INIT_VALUE;
 		sps_serv->serv_chars[1].value_max_len = SPS_CHAR_SCAN_REFRESH_INIT_VALUE;
 		sps_serv->serv_chars[1].value_permissions = AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR;   /* permissions */
@@ -155,4 +155,25 @@ at_ble_status_t sps_info_update(sps_gatt_service_handler_t *sps_serv , sps_info_
 		DBG_LOG("updating the characteristic failed");
 	}
 	return AT_BLE_FAILURE;
+}
+
+at_ble_status_t sps_update_char_value (sps_gatt_service_handler_t *scan_param , uint8_t *char_data, at_ble_handle_t conn_handle)
+{
+	/* Updating the att data base */
+	if ((at_ble_characteristic_value_set(scan_param->serv_chars[1].char_val_handle, char_data, 0 , sizeof(uint8_t))) == AT_BLE_FAILURE){
+		DBG_LOG("updating the characteristic failed");
+		return AT_BLE_FAILURE;
+		} else {
+		DBG_LOG_DEV("updating the characteristic value is successful");
+	}
+
+	/* sending notification to the peer about change in the scan refresh value */
+	if((at_ble_notification_send(conn_handle, scan_param->serv_chars[1].char_val_handle)) == AT_BLE_FAILURE) {
+		DBG_LOG("sending notification to the peer failed");
+		return AT_BLE_FAILURE;
+	}
+	else {
+		DBG_LOG_DEV("sending notification to the peer successful");
+		return AT_BLE_SUCCESS;
+	}
 }
