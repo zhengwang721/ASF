@@ -60,19 +60,23 @@ extern "C" {
  * @{
  */
 
-/** SLCD callback type. */
+/**
+ * \brief SLCD callback type
+ *
+ * Enum SLCD callback type. 
+ */
 enum slcd_callback_type {
-	/** Frame Counter 0 Overflow callback.*/
+	/** Frame Counter 0 Overflow callback */
 	SLCD_CALLBACK_FC0_OVERFLOW = 0,
-	/** Frame Counter 1 Overflow callback.*/
+	/** Frame Counter 1 Overflow callback */
 	SLCD_CALLBACK_FC1_OVERFLOW,
-	/** Frame Counter 2 Overflow callback.*/
+	/** Frame Counter 2 Overflow callback */
 	SLCD_CALLBACK_FC2_OVERFLOW,
-	/** VLCD Ready Toggle callback.*/
+	/** VLCD Ready Toggle callback */
 	SLCD_CALLBACK_VLCD_READY,
-	/** VLCD Status Toggle callback.*/
+	/** VLCD Status Toggle callback */
 	SLCD_CALLBACK_VLCD_TOGGLE,
-	/** Pump Run Status Toggle callback.*/
+	/** Pump Run Status Toggle callback */
 	SLCD_CALLBACK_PUMP_TOGGLE,
 };
 
@@ -95,7 +99,7 @@ enum status_code slcd_unregister_callback(
 	const enum slcd_callback_type type);
 
 /**
- * \brief Enable an SLCD callback.
+ * \brief Enable an SLCD callback
  *
  * \param[in] type Callback source type
  *
@@ -110,7 +114,7 @@ static inline void slcd_enable_callback(const enum slcd_callback_type type)
 }
 
 /**
- * \brief Disable an SLCD callback.
+ * \brief Disable an SLCD callback
  *
  * \param[in]  type Callback source type
  *
