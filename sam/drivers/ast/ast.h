@@ -287,7 +287,7 @@ struct ast_config {
 	/**
 	 * Mode: Calendar Mode:
 	 * \ref AST_CALENDAR_MODE or
-	 * Counter Mode: \ref AST_COUNTER_MODE.
+	 * Counter Mode: \ref AST_COUNTER_MODE
 	 */
 	ast_mode_t mode;
 	/** Oscillator type */
