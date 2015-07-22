@@ -233,7 +233,7 @@ typedef enum ast_mode {
 
 /** \ref ast_oscillator_type "AST Oscillator type". */
 typedef enum ast_oscillator_type {
-	/** System RC oscillator (RCSYS). */
+	/** System RC oscillator (RCSYS) */
 	AST_OSC_RC    = 0,
 	/** 32kHz oscillator (OSC32 or RC32) */
 	AST_OSC_32KHZ = 1,
