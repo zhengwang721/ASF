@@ -618,7 +618,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_TCC_GENERATE_DMA_TRIGGER</td>
- *    <td>SAML21</td>
+ *    <td>SAM L21/L22</td>
  *  </tr>
  * </table>
  *
@@ -685,15 +685,6 @@
  *     <td></td>
  *   </tr>
  * </table>
- *
- * <table>
- *  <tr>
- *    <td>FEATURE_TCC_GENERATE_DMA_TRIGGER</td>
- *    <td>SAML21/L22</td>
- *  </tr>
- * </table>
- * \note The specific features are only available in the driver when the
- * selected device supports those features.
  *
  * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d11 SAM D10/D11 TCC Feature List
  * For SAM D10/D11, the TCC features are:
