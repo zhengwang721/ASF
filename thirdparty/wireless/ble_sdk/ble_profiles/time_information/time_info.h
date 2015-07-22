@@ -90,7 +90,7 @@
 /**@brief Advertisement Name Type Length & data */
 #define TP_ADV_DATA_NAME_LEN						 (9)
 #define TP_ADV_DATA_NAME_TYPE						 (0x09)
-#define TP_ADV_DATA_NAME_DATA						 ("ATMEL_TIP")
+#define TP_ADV_DATA_NAME_DATA						 ("ATMEL-TIP")
 
 /***********************************************************************************
  *									Types			                               *

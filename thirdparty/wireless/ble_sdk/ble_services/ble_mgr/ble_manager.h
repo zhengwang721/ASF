@@ -56,26 +56,33 @@
 
 #if defined PROXIMITY_REPORTER
 #include "pxp_reporter.h"
+#define BLE_DEVICE_NAME				"ATMEL-PXP"
 #endif /* PROXIMITY_REPORTER */
 
 #if defined PROXIMITY_MONITOR
 #include "pxp_monitor.h"
+#define BLE_DEVICE_NAME				"ATMEL-MON"
 #endif /* PROXIMITY_MONITOR */
 
 #if (BLE_DEVICE_ROLE == BLE_OBSERVER)
 #include "ble_observer.h"
+#define BLE_DEVICE_NAME				"ATMEL-OBS"
 #endif /* BLE_DEVICE_ROLE == BLE_OBSERVER) */
 
 #if defined ANP_CLIENT
 #include "ancs_profile.h"
-#endif /* ANP_CLIENT */
+#define BLE_DEVICE_NAME				"ATMEL-ANCS"
+#endif /* ANCS_CLIENT */
 
 #if defined TIP_CLIENT
 #include "time_info.h"
+#define BLE_DEVICE_NAME				"ATMEL-TIP"
 #endif /* TIP_CLIENT */
 
 /** @brief default device name */
-#define BLE_DEVICE_NAME				"ATMEL-DEV"
+#ifndef BLE_DEVICE_NAME
+#define BLE_DEVICE_NAME				"ATMEL-BLE"
+#endif
 
 /** @brief event timeout */
 #define BLE_EVENT_TIMEOUT			(-1)
