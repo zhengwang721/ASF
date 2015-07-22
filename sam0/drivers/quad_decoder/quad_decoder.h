@@ -110,7 +110,7 @@ void quad_decoder_enable(enum quad_decoder_axis qdec);
 void quad_decoder_disable(enum quad_decoder_axis qdec);
 uint8_t quad_decoder_get_irq_status(void);
 void quad_decoder_clear_irq_status(enum quad_decoder_axis qdec);
-int16_t quad_decoder_get_counter(enum quad_decoder_axis qdec);
+uint16_t quad_decoder_get_counter(enum quad_decoder_axis qdec);
 void quad_decoder_reset(enum quad_decoder_axis qdec);
 
 #ifdef __cplusplus
