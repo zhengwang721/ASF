@@ -213,7 +213,7 @@ void slcd_disable(void)
  *
  * \return Enable status.
  * \retval true SLCD module is enabled
- * \retval true SLCD module is disabled
+ * \retval false SLCD module is disabled
  */
 
 bool slcd_is_enabled(void)

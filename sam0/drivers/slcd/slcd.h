@@ -404,7 +404,7 @@ static inline void slcd_disable_display(void)
  *
  *  \note It can be called only before the module is enabled.
  *
- *  \param[in] fc Frame coungter index.
+ *  \param[in] fc Frame coungter index
  */
 static inline void slcd_dma_display_memory_update_fc_sel(enum slcd_frame_counter fc)
 {
