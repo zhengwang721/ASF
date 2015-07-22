@@ -218,6 +218,7 @@ int main (void)
 	at_ble_events_t event;
 	uint8_t params[512];
 	at_ble_handle_t handle = 0;
+	bool temp_send_notification = false;
 
 #if SAMG55
 	/* Initialize the SAM system. */
@@ -417,8 +418,11 @@ int main (void)
 				
 				/* start the timer for next interval of  temperature send */
 				hw_timer_start(htp_data.measurement_interval);	
-				while(app_timer_done == false);				
-				htp_temperature_send(&htp_data);
+				while(app_timer_done == false);	
+				if (temp_send_notification)
+				{
+					htp_temperature_send(&htp_data);
+				}				
 				app_timer_done = false;		
 			}
 			break;
@@ -438,11 +442,16 @@ int main (void)
 			{
 				at_ble_htpt_cfg_indntf_ind_t htpt_cfg_indntf_ind_params;
 				memcpy((uint8_t *)&htpt_cfg_indntf_ind_params, params, sizeof(at_ble_htpt_cfg_indntf_ind_t));
-				DBG_LOG("HTP Cfg indication notification indication cfg_val=0x%x, char code=0x%x, conhdl=0x%x", htpt_cfg_indntf_ind_params.cfg_val,
-				htpt_cfg_indntf_ind_params.char_code, htpt_cfg_indntf_ind_params.conhdl);
-				if (htpt_cfg_indntf_ind_params.char_code == HTPT_TEMP_MEAS_CHAR &&  htpt_cfg_indntf_ind_params.cfg_val == 2)
+				DBG_LOG("HTP Cfg indication notification indication cfg_val=0x%x, char code=0x%x", htpt_cfg_indntf_ind_params.cfg_val,
+				htpt_cfg_indntf_ind_params.char_code);
+				if (htpt_cfg_indntf_ind_params.cfg_val == 2)
 				{
+					temp_send_notification = true;
 					htp_temperature_send(&htp_data);
+				}
+				else
+				{
+					temp_send_notification = false;
 				}				
 			}			
 			break;

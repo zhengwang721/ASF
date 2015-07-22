@@ -53,7 +53,9 @@
 
 #ifndef __ANP_CLIENT_H__
 #define __ANP_CLIENT_H__
-
+/***********************************************************************************
+ *									Macros			                               *
+ **********************************************************************************/
 /**@brief Advertisement Interval*/
 #define APP_ANP_FAST_ADV						(100) //100 ms
 
@@ -63,7 +65,7 @@
 /**@brief Scan Response length*/
 #define SCAN_RESP_LEN							(10)
 
-/**@brief UUID Type & Length*/
+/**@brief ADV type UUID Type & Length*/
 #define AD_TYPE_16BIT_UUID_LEN					(2)
 #define AD_TYPE_32BIT_UUID_LEN					(4)
 #define AD_TYPE_128BIT_UUID_LEN					(16)
@@ -116,7 +118,9 @@
 #define START_HANDLE							(0x0001)
 #define END_HANDLE								(0xffff)
 
-
+/***********************************************************************************
+ *									types			                               *
+ **********************************************************************************/
 /* Typedef for alert notification profile */
 typedef struct ancs_prf{
 	
@@ -154,6 +158,7 @@ typedef struct app_anp_data{
 	at_ble_descriptor_found_t ancs_desc;
 }app_anp_data_t;
 
+/**@brief type of attribute discovery */
 typedef enum
 {
 	/// Discovery Disable
@@ -173,7 +178,8 @@ typedef enum
 	
 }ble_discovery_role;
 
-typedef struct
+/**@brief time data structure */
+typedef struct time_val
 {
 	uint8_t timeval[8];
 	uint8_t dateval[10];
@@ -181,6 +187,9 @@ typedef struct
 	uint16_t year;
 }time_val_t;
 
+/***********************************************************************************
+ *									Funtions		                               *
+ **********************************************************************************/
 /**
  * @brief Initialize the profile specific information
  * 

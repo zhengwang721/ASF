@@ -147,64 +147,64 @@
 #define SYSTEM_ID_ORG_UNIQUE_ID			"\x00\x04\x25"
 
 /** @brief Macro used for updating manufacturing string after defining the service using dis_primary_service_define*/
-#define UPDATE_MANUFACTURER_STRING(ptr,info_data) do {  \
-	if ( (dis_info_update(ptr,DIS_MANUFACTURER_NAME,info_data)) != AT_BLE_SUCCESS) { \
+#define UPDATE_MANUFACTURER_STRING(ptr,info_data, conn_handle) do {  \
+	if ( (dis_info_update(ptr,DIS_MANUFACTURER_NAME,info_data, conn_handle)) != AT_BLE_SUCCESS) { \
 		DBG_LOG("Updating Manufacturer string failed");  \
 	}\
 } while (0)
 
 /** @brief Macro used for updating model number after defining the service using dis_primary_service_define*/
-#define UPDATE_MODEL_NUMBER(ptr,info_data) do {   \
-	if (dis_info_update(ptr,DIS_MODEL_NUMBER,info_data) != AT_BLE_SUCCESS) { \
+#define UPDATE_MODEL_NUMBER(ptr,info_data, conn_handle) do {   \
+	if (dis_info_update(ptr,DIS_MODEL_NUMBER,info_data, conn_handle) != AT_BLE_SUCCESS) { \
 		DBG_LOG("Updating model number failed");  \
 	}\
 } while (0)
 
 /** @brief Macro used for updating serial number after defining the service using dis_primary_service_define*/
-#define UPDATE_SERIAL_NUMBER(ptr,info_data) do{   \
-	if (dis_info_update(ptr,DIS_SERIAL_NUMBER,info_data) != AT_BLE_SUCCESS) { \
+#define UPDATE_SERIAL_NUMBER(ptr,info_data, conn_handle) do{   \
+	if (dis_info_update(ptr,DIS_SERIAL_NUMBER,info_data, conn_handle) != AT_BLE_SUCCESS) { \
 		DBG_LOG("Updating serial number failed");  \
 	}\
 } while (0)
 
 /** @brief Macro used for updating hardware revision after defining the service using dis_primary_service_define*/
-#define UPDATE_HARDWARE_REVISION(ptr,info_data) do{   \
-	if (dis_info_update(ptr,DIS_HARDWARE_REVISION,info_data) != AT_BLE_SUCCESS) { \
+#define UPDATE_HARDWARE_REVISION(ptr,info_data, conn_handle) do{   \
+	if (dis_info_update(ptr,DIS_HARDWARE_REVISION,info_data, conn_handle) != AT_BLE_SUCCESS) { \
 		DBG_LOG("Updating hardware revision failed");  \
 	}\
 } while (0)
 
 /** @brief Macro used for updating firmware revision after defining the service using dis_primary_service_define*/
-#define UPDATE_FIRMWARE_REVISION(ptr,info_data) do{   \
-	if (dis_info_update(ptr,DIS_FIRMWARE_REVISION,info_data) != AT_BLE_SUCCESS) { \
+#define UPDATE_FIRMWARE_REVISION(ptr,info_data, conn_handle) do{   \
+	if (dis_info_update(ptr,DIS_FIRMWARE_REVISION,info_data, conn_handle) != AT_BLE_SUCCESS) { \
 		DBG_LOG("Updating firmware revision failed");  \
 	}\
 } while (0)
 
 /** @brief Macro used for updating software revision after defining the service using dis_primary_service_define*/
-#define UPDATE_SOFTWARE_REVISION(ptr,info_data) do{   \
-	if (dis_info_update(ptr,DIS_SOFTWARE_REVISION,info_data) != AT_BLE_SUCCESS) { \
+#define UPDATE_SOFTWARE_REVISION(ptr,info_data, conn_handle) do{   \
+	if (dis_info_update(ptr,DIS_SOFTWARE_REVISION,info_data, conn_handle) != AT_BLE_SUCCESS) { \
 		DBG_LOG("Updating software revision failed");  \
 	}\
 } while (0)
 
 /** @brief Macro used for updating system ID after defining the service using dis_primary_service_define*/
-#define UPDATE_SYSTEM_ID(ptr,info_data) do {   \
-	if (dis_info_update(ptr,DIS_SYSTEM_ID,info_data) != AT_BLE_SUCCESS) { \
+#define UPDATE_SYSTEM_ID(ptr,info_data, conn_handle) do {   \
+	if (dis_info_update(ptr,DIS_SYSTEM_ID,info_data, conn_handle) != AT_BLE_SUCCESS) { \
 		DBG_LOG("Updating system id failed");  \
 	}\
 } while (0)
 
 /** @brief Macro used for updating PnP ID after defining the service using dis_primary_service_define*/
-#define UPDATE_PNP_ID(ptr,info_data) do {   \
-	if (dis_info_update(ptr,DIS_PNP_ID,info_data) != AT_BLE_SUCCESS) { \
+#define UPDATE_PNP_ID(ptr,info_data, conn_handle) do {   \
+	if (dis_info_update(ptr,DIS_PNP_ID,info_data, conn_handle) != AT_BLE_SUCCESS) { \
 		DBG_LOG("Updating PnP ID failed");  \
 	}\
 } while (0)
 
 /** @brief Macro used for updating IEEE regulatory certification data list after defining the service using dis_primary_service_define*/
-#define UPDATE_IEEE_REG_CERT_DATA_LIST(ptr,info_data) do {   \
-	if (dis_info_update(ptr,DIS_IEEE_REG_CERT_DATA_LIST,info_data) != AT_BLE_SUCCESS) { \
+#define UPDATE_IEEE_REG_CERT_DATA_LIST(ptr,info_data, conn_handle) do {   \
+	if (dis_info_update(ptr,DIS_IEEE_REG_CERT_DATA_LIST,info_data, conn_handle) != AT_BLE_SUCCESS) { \
 		DBG_LOG("Updating IEEE regulatory certification data list failed");  \
 	}\
 } while (0)
@@ -242,6 +242,15 @@ typedef enum {
 /****************************************************************************************
 *							        Structures                                     							*
 ****************************************************************************************/
+
+
+typedef struct dis_gatt_service_handler
+{
+		at_ble_uuid_t	serv_uuid;
+		at_ble_handle_t	serv_handle;
+		at_ble_characteristic_t	serv_chars[DIS_TOTAL_CHARATERISTIC_NUM];	
+}dis_gatt_service_handler_t;
+
 
 /** @brief system ID characteristic value information */
 typedef struct{
@@ -305,7 +314,7 @@ typedef struct{
  * @return @ref AT_BLE_SUCCESS operation completed successfully .
  * @return @ref AT_BLE_FAILURE Generic error.
  */
-at_ble_status_t dis_info_update(dis_gatt_service_handler_t *dis_serv , dis_info_type info_type, dis_info_data* info_data);
+at_ble_status_t dis_info_update(dis_gatt_service_handler_t *dis_serv , dis_info_type info_type, dis_info_data* info_data, at_ble_handle_t conn_handle);
 
 
 /**@brief DIS service and characteristic initialization(Called only once by user).
