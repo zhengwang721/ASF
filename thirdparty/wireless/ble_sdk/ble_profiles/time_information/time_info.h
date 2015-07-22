@@ -88,9 +88,9 @@
 #define TP_ADV_DATA_APPEARANCE_DATA					("\x00\x01")
 
 /**@brief Advertisement Name Type Length & data */
-#define TP_ADV_DATA_NAME_LEN						 (9)
+#define TP_ADV_DATA_NAME_LEN						 (6)
 #define TP_ADV_DATA_NAME_TYPE						 (0x09)
-#define TP_ADV_DATA_NAME_DATA						 ("ATMEL-TIP")
+#define TP_ADV_DATA_NAME_DATA						 ("AT-TIP")
 
 /***********************************************************************************
  *									Types			                               *

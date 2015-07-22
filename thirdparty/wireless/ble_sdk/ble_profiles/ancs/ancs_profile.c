@@ -270,7 +270,6 @@ void anp_client_descriptor_found_handler(at_ble_descriptor_found_t *params)
 void anp_client_char_changed_handler(at_ble_characteristic_changed_t *params)
 {
 	at_ble_characteristic_changed_t change_params;
-	uint32_t i = 0;
 	
 	memcpy((uint8_t *)&change_params, params, sizeof(at_ble_characteristic_changed_t));
 }

@@ -77,9 +77,9 @@
 #define ANP_ADV_DATA_APPEARANCE_DATA			("\x00\x40")
 
 /**@brief Advertisement Name Type Length & data */
-#define ANP_ADV_DATA_NAME_LEN					(9)
+#define ANP_ADV_DATA_NAME_LEN					(6)
 #define ANP_ADV_DATA_NAME_TYPE					(0x09)
-#define ANP_ADV_DATA_NAME_DATA					("ATMEL-ANS")
+#define ANP_ADV_DATA_NAME_DATA					("AT-ANS")
 
 /**@brief ANCS Service Solicitation Info*/
 #define ANP_SOLICITATION_LEN					   (16)
