@@ -262,7 +262,7 @@ typedef enum ast_interrupt_source {
 	AST_INTERRUPT_CLKREADY,
 } ast_interrupt_source_t;
 
-/** \ref ast_wakeup_source "AST wake-up source" */
+/** \ref ast_wakeup_source "AST wake-up source". */
 typedef enum ast_wakeup_source {
 	/** Alarm wake-up source */
 	AST_WAKEUP_ALARM = 0,
