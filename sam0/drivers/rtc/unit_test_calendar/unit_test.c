@@ -73,6 +73,8 @@
  *  - SAM L21 Xplained Pro board
  *  - SAM R21 Xplained Pro board
  *  - SAM DA1 Xplained Pro board
+ *  - SAM C21 Xplained Pro board
+ *  - SAM D20 Xplained Pro board
  *
  * \section asfdoc_sam0_rtc_unit_test_setup Setup
  *
@@ -203,7 +205,8 @@ static void run_rtc_calendar_test(const struct test_case *test)
 	/* calendar year mask alarm match test */
     	calendar_time.year   = 2014;
     	rtc_calendar_set_time(&rtc_inst, &calendar_time);
-	delay_s(3);
+	delay_s(5);
+        
 	result = rtc_calendar_is_alarm_match(&rtc_inst,0);
 	test_assert_true(test, result ==  true,
 		"RTC calendar alarm match test failed");
@@ -246,7 +249,7 @@ static void run_rtc_calendar_interrupt_test(const struct test_case *test)
 	rtc_calendar_enable(&rtc_inst);
 
 
-	delay_s(3);
+	delay_s(5);
 	test_assert_true(test,interrupt_flag == true ,
 			"RTC calendar interrupt test failed");
 
@@ -276,7 +279,7 @@ int main(void)
 			NULL,
 			run_rtc_calendar_test,
 			NULL,
-			"Testing RTC calendar calendar");
+			"Testing RTC calendar");
 	DEFINE_TEST_CASE(rtc_calendar_interrupt_test,
 			NULL,
 			run_rtc_calendar_interrupt_test,

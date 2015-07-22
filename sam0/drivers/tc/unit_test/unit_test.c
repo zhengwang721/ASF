@@ -75,12 +75,11 @@
  *
  * \section appdoc_sam0_tc_unit_test_setup Setup
  * The following connections has to be made using wires:
- *  - \b SAM D20 Xplained Pro:EXTINT 0 (PA16, EXT2 pin 17) <-----> TC0 WO1 (PA05, EXT1 pin 15)
- *  - \b SAM D21 Xplained Pro:EXTINT 0 (PB00, EXT1 pin 3) <-----> TC4 WO1 (PB09, EXT1 pin 13)
+ *  - \b SAM D21/D20 Xplained Pro:EXTINT 0 (PB00, EXT1 pin 3) <-----> TC4 WO1 (PB09, EXT1 pin 13)
  *  - \b SAM R21 Xplained Pro:EXTINT 0 (PA16, EXT2 pin 11) <-----> TC4 WO1 (PA23, EXT1 pin 10)
- *  - \b SAM L21 Xplained Pro:EXTINT 0 (PB00, EXT3 pin 3) <-----> TC0 WO1 (PB12, EXT2 pin 7)
+ *  - \b SAM L21 Xplained Pro:EXTINT 0 (PB00, EXT3 pin 3) <-----> TC0 WO1 (PB09, EXT1 pin 13)
  *  - \b SAM DA1 Xplained Pro:EXTINT 0 (PA16, EXT2 pin 17) <-----> TC4 WO1 (PB09, EXT1 pin 13)
- *  - \b SAM C21 Xplained Pro:EXTINT 0 (PB16, EXT2 pin 9) <-----> TC0 WO0 (PB12, EXT1 pin 7)
+ *  - \b SAM C21 Xplained Pro:EXTINT 0 (PB16, EXT2 pin 9) <-----> TC0 WO0 (PB09, EXT1 pin 3)
  *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a
@@ -397,12 +396,12 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 #if SAML21
 	frequency_output = system_clock_source_get_hz(SYSTEM_CLOCK_SOURCE_OSC16M)/ (0x03FF+1);
 	/* This value is depend on the WaveGeneration Mode */
-	duty_output = (uint32_t)(tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_1]) * 200 \
+	duty_output = (uint32_t)(tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_1]) * 100 \
 					/ tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_0];
 #elif SAMC21
 	frequency_output = system_clock_source_get_hz(SYSTEM_CLOCK_SOURCE_OSC48M)/ (0x03FF+1);
 	/* This value is depend on the WaveGeneration Mode */
-	duty_output = (uint32_t)(tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_1]) * 200 \
+	duty_output = (uint32_t)(tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_1]) * 100 \
 					/ tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_0];
 #else
 	frequency_output = system_clock_source_get_hz(SYSTEM_CLOCK_SOURCE_OSC8M)/ (0x03FF+1);

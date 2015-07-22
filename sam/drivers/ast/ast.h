@@ -50,8 +50,9 @@
 /**
  * \defgroup asfdoc_sam_drivers_ast_group SAM4L Asynchronous Timer (AST) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
- * and management of the device's Asynchronous Timer functionality.
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
+ * an interface for the configuration and management of the device's 
+ * Asynchronous Timer functionality.
  *
  * The Asynchronous Timer can generate periodic interrupts and peripheral events
  * from output from the prescaler, as well as alarm interrupts and peripheral
@@ -172,7 +173,7 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond */
 
-/** Timeout to prevent code hang in clock initialization */
+/** Timeout to prevent code hang in clock initialization. */
 #define AST_POLL_TIMEOUT 10000
 
 /** \name Predefined PSEL Values
@@ -494,7 +495,7 @@ void ast_disable_event(Ast *ast, ast_event_source_t source);
  * This is a list of the available Quick Start Guides (QSGs) and example
  * applications for \ref asfdoc_sam_drivers_ast_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  *  - \subpage asfdoc_sam_drivers_ast_qsg
@@ -508,6 +509,11 @@ void ast_disable_event(Ast *ast, ast_event_source_t source);
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+  *	<tr>
+ *		<td>42283B</td>
+ *		<td>07/2015</td>
+ *		<td>Updated title of application note and added list of supported devices</td>
  *	</tr>
  *	<tr>
  *		<td>42283A</td>
@@ -523,9 +529,9 @@ void ast_disable_event(Ast *ast, ast_event_source_t source);
  *
  * This is the quick start guide for the \ref asfdoc_sam_drivers_ast_group, with
  * step-by-step instructions on how to configure and use the driver for
- * a specific use case.The code examples can be copied into e.g. the main
- * application loop or any other function that will need to control the
- * AST module.
+ * a specific use case.The code examples can be copied into the main 
+ * application loop or any other function that will need to control 
+ * the AST module.
  *
  * \section asfdoc_sam_drivers_ast_qsg_use_cases Use Cases
  * - \ref asfdoc_sam_drivers_ast_qsg_basic
