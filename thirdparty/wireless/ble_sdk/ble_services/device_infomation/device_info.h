@@ -135,7 +135,7 @@
 #define DIS_CHAR_IEEE_REG_CERT_DATA_LIST_MAX_LEN	0x0a
 
 /** @brief PnP ID characteristic value configure by user*/
-#define PNP_ID_VENDOR_ID_SOURCE		0x11
+#define PNP_ID_VENDOR_ID_SOURCE		0x01
 #define PNP_ID_VENDOR_ID			0x2222
 #define PNP_ID_PRODUCT_ID			0x3333
 #define PNP_ID_PRODUCT_VERSION		0x4444
@@ -260,6 +260,8 @@ typedef struct{
 	uint8_t org_unique_id[3];
 }system_id_char_value_t;
 
+COMPILER_PACK_SET(1)
+
 /** @brief pnp characteristic value information */
 typedef struct {
 	/// vendor id source
@@ -271,6 +273,8 @@ typedef struct {
 	/// product version
 	uint16_t product_version;
 }pnp_id_char_value_t;
+
+COMPILER_PACK_RESET()
 
 /** @brief characteristic value information */
 typedef struct {

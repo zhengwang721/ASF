@@ -532,6 +532,9 @@ typedef struct gatt_service_handler
 /* Typedef for GAP event callbacks */
 typedef void (*ble_gap_event_callback_t)(at_ble_handle_t);
 
+/* Typedef for characteristic value changed event callback */
+typedef at_ble_status_t (*ble_characteristic_changed_callback_t)(at_ble_characteristic_changed_t *);
+
 /** @brief function to set the device name.
   *
   * @param[in] name name of the device.
@@ -754,5 +757,14 @@ void register_ble_disconnected_event_cb(ble_gap_event_callback_t disconnected_cb
   *
   */
 void register_ble_paired_event_cb(ble_gap_event_callback_t paired_cb_fn);
+
+/** @brief Register callback function, to be triggered when characteristic value is changed.
+  * 
+  * @param[in]  function called when characteristic value is changed.
+  *
+  * @return none.
+  *
+  */
+void register_ble_characteristic_changed_cb(ble_characteristic_changed_callback_t char_changed_cb_fn);
 
 #endif /*__BLE_MANAGER_H__*/

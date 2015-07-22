@@ -62,7 +62,7 @@
 
 /* === GLOBALS ============================================================ */
 
-#define SCAN_PRAM_UPDATE_INTERVAL	(3) //1 second
+#define SCAN_PRAM_UPDATE_INTERVAL	(5) //5 second
 
 /** @brief Scan response data*/
 uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
@@ -72,7 +72,7 @@ uint8_t scan_refresh;
 
 
 bool volatile timer_cb_done = false;
-uint8_t scan_interval_value = 0;
+uint8_t scan_interval_value = 1;
 at_ble_handle_t device_conn_handle; 
 
 /**
@@ -126,6 +126,9 @@ int main(void)
 	
 	/* Register callback for disconnected event */
 	register_ble_disconnected_event_cb(ble_disconnected_app_event);
+	
+	/* Register callback for characteristic changed event */
+	register_ble_characteristic_changed_cb(sps_char_changed_cb);
 	
 	/* Capturing the events  */ 
 	while (1) {
@@ -188,7 +191,7 @@ at_ble_status_t sps_service_advertise(void)
 
 void ble_paired_app_event(at_ble_handle_t conn_handle)
 {
-	timer_cb_done = false;
+	timer_cb_done = true;
 	hw_timer_start(SCAN_PRAM_UPDATE_INTERVAL);
 	device_conn_handle=conn_handle;
 	LED_On(LED0);
@@ -200,4 +203,20 @@ void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 	hw_timer_stop();
 	sps_service_advertise();
 	LED_Off(LED0);
+}
+
+/**
+* \Service Characteristic change handler function
+*/
+at_ble_status_t sps_char_changed_cb(at_ble_characteristic_changed_t *char_handle)
+{
+	at_ble_characteristic_changed_t change_params;
+	memcpy((uint8_t *)&change_params, char_handle, sizeof(at_ble_characteristic_changed_t));
+	
+	if(sps_service_handler.serv_chars[0].char_val_handle == change_params.char_handle)
+	{
+		memcpy(sps_service_handler.serv_chars[0].init_value, change_params.char_new_value, change_params.char_len);
+		DBG_LOG("gatt client scan interval window changed to %d",*change_params.char_new_value);
+	}
+	return AT_BLE_SUCCESS;
 }

@@ -141,12 +141,11 @@ at_ble_status_t sps_scan_refresh_char_update(sps_gatt_service_handler_t *sps_ser
 	sps_serv->serv_chars[1].init_value = &scan_refresh_value;
 	
 	//updating the att data base
-	if ((at_ble_characteristic_value_set(sps_serv->serv_chars[1].char_val_handle, &scan_refresh_value,0 ,sizeof(uint8_t))) != AT_BLE_SUCCESS){
+	if ((at_ble_characteristic_value_set(sps_serv->serv_chars[1].char_val_handle, &scan_refresh_value,0 ,sizeof(uint8_t))) == AT_BLE_SUCCESS){
+		DBG_LOG("updating the characteristic value is successful \n");
+	} else {
 		DBG_LOG("updating the characteristic failed\r\n");
 		return AT_BLE_FAILURE;
-	} else {
-		DBG_LOG("updating the characteristic value is successfully \n");
-		return AT_BLE_SUCCESS;
 	}
 	
 	//sending notification to the peer about change in the scan parameters
@@ -156,5 +155,7 @@ at_ble_status_t sps_scan_refresh_char_update(sps_gatt_service_handler_t *sps_ser
 	}
 	else {
 		DBG_LOG("sending notification to the peer successful");
+		return AT_BLE_SUCCESS;
 	}
+	return AT_BLE_FAILURE;
 }

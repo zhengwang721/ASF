@@ -78,6 +78,7 @@ at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 ble_gap_event_callback_t ble_connected_cb = NULL;
 ble_gap_event_callback_t ble_disconnected_cb = NULL;
 ble_gap_event_callback_t ble_paired_cb = NULL;
+ble_characteristic_changed_callback_t ble_char_changed_cb = NULL;
 
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)|| (BLE_DEVICE_ROLE == BLE_OBSERVER))
 uint8_t scan_response_count = 0;
@@ -401,6 +402,12 @@ void register_ble_disconnected_event_cb(ble_gap_event_callback_t disconnected_cb
 void register_ble_paired_event_cb(ble_gap_event_callback_t paired_cb_fn)
 {
 	ble_paired_cb = paired_cb_fn;
+}
+
+/** @brief function to register callback to be called when AT_BLE_CHARACTERISTIC_CHANGED event triggered from stack */
+void register_ble_characteristic_changed_cb(ble_characteristic_changed_callback_t char_changed_cb_fn)
+{
+	ble_char_changed_cb = char_changed_cb_fn;
 }
 
 /** @brief function handles disconnection event received from stack */
@@ -859,6 +866,10 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	  */
 	case AT_BLE_CHARACTERISTIC_CHANGED:
 	{
+		if(ble_char_changed_cb != NULL)
+		{
+			ble_char_changed_cb((at_ble_characteristic_changed_t *)event_params);
+		}
 		BLE_CHARACTERISTIC_CHANGED((at_ble_characteristic_changed_t *)event_params);
 	}
 	break;
