@@ -349,16 +349,16 @@ enum lin_master_cmd {
  */
 enum lin_master_header_delay {
 	/** Delay between break and sync transmission is 1 bit time.
-		Delay between sync and ID transmission is 1 bit time */
+		Delay between sync and ID transmission is 1 bit time. */
 	LIN_MASTER_HEADER_DELAY_0 = SERCOM_USART_CTRLC_HDRDLY(0x0),
 	/** Delay between break and sync transmission is 4 bit time.
-		Delay between sync and ID transmission is 4 bit time */
+		Delay between sync and ID transmission is 4 bit time. */
 	LIN_MASTER_HEADER_DELAY_1 = SERCOM_USART_CTRLC_HDRDLY(0x01),
 	/** Delay between break and sync transmission is 8 bit time.
-		Delay between sync and ID transmission is 4 bit time */
+		Delay between sync and ID transmission is 4 bit time. */
 	LIN_MASTER_HEADER_DELAY_2 = SERCOM_USART_CTRLC_HDRDLY(0x02),
 	/** Delay between break and sync transmission is 14 bit time.
-		Delay between sync and ID transmission is 4 bit time */
+		Delay between sync and ID transmission is 4 bit time. */
 	LIN_MASTER_HEADER_DELAY_3 = SERCOM_USART_CTRLC_HDRDLY(0x03),
 };
 
@@ -522,10 +522,10 @@ enum usart_callback {
  */
 enum usart_dataorder {
 	/** The MSB will be shifted out first during transmission,
-	 *  and shifted in first during reception */
+	 *  and shifted in first during reception. */
 	USART_DATAORDER_MSB = 0,
 	/** The LSB will be shifted out first during transmission,
-	 *  and shifted in first during reception */
+	 *  and shifted in first during reception. */
 	USART_DATAORDER_LSB = SERCOM_USART_CTRLA_DORD,
 };
 
@@ -548,15 +548,15 @@ enum usart_transfer_mode {
  */
 enum usart_parity {
 	/** For odd parity checking, the parity bit will be set if number of
-	 *  ones being transferred is even */
+	 *  ones being transferred is even. */
 	USART_PARITY_ODD  = SERCOM_USART_CTRLB_PMODE,
 
 	/** For even parity checking, the parity bit will be set if number of
-	 *  ones being received is odd */
+	 *  ones being received is odd. */
 	USART_PARITY_EVEN = 0,
 
 	/** No parity checking will be executed, and there will be no parity bit
-	 *  in the received frame */
+	 *  in the received frame. */
 	USART_PARITY_NONE = 0xFF,
 };
 
@@ -757,7 +757,7 @@ struct usart_config {
 	bool immediate_buffer_overflow_notification;
 #endif
 #ifdef FEATURE_USART_IRDA
-	/** Enable IrDA encoding format. */
+	/** Enable IrDA encoding format */
 	bool encoding_format_enable;
 	/** The minimum pulse length that is required for a pulse to be accepted by the IrDA receiver */
 	uint8_t receive_pulse_length;
@@ -1330,11 +1330,11 @@ static inline void lin_master_send_cmd(
 }
 
 /**
- * \brief Get LIN transmission status.
+ * \brief Get LIN transmission status
  *
  * Get LIN transmission status.
  *
- * \param[in]  module Pointer to USART software instance struct.
+ * \param[in]  module Pointer to USART software instance struct
  *
  * \return Status of LIN master transmission.
  * \retval true   Data transmission completed
