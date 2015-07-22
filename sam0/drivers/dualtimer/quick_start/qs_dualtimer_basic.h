@@ -72,14 +72,23 @@
  * -# Initialize the DUALTIMER configuration struct with the module's default values.
  *    \snippet qs_dualtimer_basic.c setup_dualtimer_2
  *
+ * -# Change configurations as desired.
+ *    \snippet qs_dualtimer_basic.c setup_dualtimer_3
+ 
  * -# Configure the DUALTIMER module with the desired settings.
- *    \snippet qs_dualtimer_basic.c setup_timer_3
+ *    \snippet qs_dualtimer_basic.c setup_timer_4
+ *
+ * -# Change configurations as desired.
+ *    \snippet qs_dualtimer_basic.c setup_dualtimer_5
+ *
+ * -# Configure the DUALTIMER module with the desired settings.
+ *    \snippet qs_dualtimer_basic.c setup_timer_6
  *
  * -# Set the DUALTIMER module timer1 enable.
- *    \snippet qs_dualtimer_basic.c setup_dualtimer1_enable
+ *    \snippet qs_dualtimer_basic.c setup_dualtimer_7
  *
  * -# Set the DUALTIMER module timer2 enable.
- *    \snippet qs_dualtimer_basic.c setup_dualtimer2_enable
+ *    \snippet qs_dualtimer_basic.c setup_dualtimer_8
  *
  *
  * \section asfdoc_sam0_dualtimer_basic_use_case_basic_implement Implementation

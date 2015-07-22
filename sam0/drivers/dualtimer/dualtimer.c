@@ -57,25 +57,15 @@
  */
 void dualtimer_get_config_defaults(struct dualtimer_config *config)
 {
-	config->counter_mode[0] = DUALTIMER_COUNTER_WRAPPING;
-	config->counter_mode[1] = DUALTIMER_COUNTER_WRAPPING;
+	config->counter_mode = DUALTIMER_PERIODIC_MODE;
 	
-	config->counter_size[0] = DUALTIMER_COUNTER_SIZE_32BIT;
-	config->counter_size[1] = DUALTIMER_COUNTER_SIZE_32BIT;
+	config->counter_size = DUALTIMER_COUNTER_SIZE_32BIT;
 
-	config->clock_prescaler[0] = DUALTIMER_CLOCK_PRESCALER_DIV1;
-	config->clock_prescaler[1] = DUALTIMER_CLOCK_PRESCALER_DIV1;
-
-	config->timer_mode[0] = DUALTIMER_PERIODIC_MODE;
-	config->timer_mode[1] = DUALTIMER_PERIODIC_MODE;
-
-	config->interrup_enable[0] = false;
-	config->interrup_enable[1] = false;
+	config->clock_prescaler = DUALTIMER_CLOCK_PRESCALER_DIV1;
 	
-	config->load_value[0] = CONF_DUALTIMER_TIMER1_LOAD;
-	config->load_value[1] = CONF_DUALTIMER_TIMER2_LOAD;
+	config->interrup_enable = false;
 	
-	config->integration_test_enable = false;
+	config->load_value = 0;
 }
 
 /**
@@ -84,33 +74,36 @@ void dualtimer_get_config_defaults(struct dualtimer_config *config)
  * Initializes the Dualtimer module, based on the given
  * configuration values.
  *
+ * \param[in]     timer        Timer1/Timer2
  * \param[in]     config       Pointer to the Dualtimer configuration options struct
  *
  * \return Status of the initialization procedure.
  */
-void dualtimer_init(const struct dualtimer_config *config)
+void dualtimer_init(enum dualtimer_timer timer, const struct dualtimer_config *config)
 {
-	DUALTIMER0->TIMER1CONTROL.reg = 
-			DUALTIMER_TIMER1CONTROL_ONE_SHOT_COUNT(config->counter_mode[0]) |
-			DUALTIMER_TIMER1CONTROL_TIMER_SIZE(config->counter_size[0]) |
-			DUALTIMER_TIMER1CONTROL_TIMERPRE(config->clock_prescaler[0]) |
-			DUALTIMER_TIMER1CONTROL_TIMER_MODE(config->timer_mode[0]);
-	if (config->interrup_enable[0]) {
-		DUALTIMER0->TIMER1CONTROL.reg |= DUALTIMER_TIMER1CONTROL_INTERRUPT_ENABLE;
-	}
-	DUALTIMER0->TIMER1LOAD.reg = config->load_value[0];
+	uint8_t regval = 0;
 	
-	DUALTIMER0->TIMER2CONTROL.reg = 
-			DUALTIMER_TIMER2CONTROL_ONE_SHOT_COUNT(config->counter_mode[1]) |
-			DUALTIMER_TIMER2CONTROL_TIMER_SIZE(config->counter_size[1]) |
-			DUALTIMER_TIMER2CONTROL_TIMERPRE(config->clock_prescaler[1]) |
-			DUALTIMER_TIMER2CONTROL_TIMER_MODE(config->timer_mode[1]);
-	if (config->interrup_enable[1]) {
-		DUALTIMER0->TIMER2CONTROL.reg |= DUALTIMER_TIMER2CONTROL_INTERRUPT_ENABLE;
+	if (config->counter_mode == DUALTIMER_ONE_SHOT_MODE) {
+		regval = DUALTIMER_TIMER1CONTROL_ONE_SHOT_COUNT_1;
+	} else if (config->counter_mode == DUALTIMER_FREE_RUNNING_MODE) {
+		regval = DUALTIMER_TIMER1CONTROL_TIMER_MODE_0;
+	} else if (config->counter_mode == DUALTIMER_PERIODIC_MODE) {
+		regval = DUALTIMER_TIMER1CONTROL_TIMER_MODE_1;
 	}
-	DUALTIMER0->TIMER2LOAD.reg = config->load_value[1];
+
+	regval |= DUALTIMER_TIMER1CONTROL_TIMER_SIZE(config->counter_size) |
+			DUALTIMER_TIMER1CONTROL_TIMERPRE(config->clock_prescaler);
+	if (config->interrup_enable) {
+		regval |= DUALTIMER_TIMER1CONTROL_INTERRUPT_ENABLE;
+	}
 	
-	DUALTIMER0->TIMERITCR.reg = config->integration_test_enable;
+	if (timer == DUALTIMER_TIMER1) {
+		DUALTIMER0->TIMER1CONTROL.reg = regval;
+		DUALTIMER0->TIMER1LOAD.reg = config->load_value;
+	} else {
+		DUALTIMER0->TIMER2CONTROL.reg = regval;
+		DUALTIMER0->TIMER2LOAD.reg = config->load_value;
+	}
 }
 
 /**

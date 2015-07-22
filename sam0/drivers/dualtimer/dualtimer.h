@@ -47,7 +47,6 @@
 #define DUALTIMER_H_INCLUDED
 
 #include <compiler.h>
-#include "conf_board.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -63,13 +62,15 @@ enum dualtimer_timer {
 /**
  * \brief Specifies if the counter is 16-bit, or 32-bit.
  *
- * This enum specifies counter with one-shot or wrapping counter mode.
+ * This enum specifies counter with one-shot, free running or periodic counter mode.
  */
 enum dualtimer_counter_mode {
-	/** Counter in wrapping mode */
-	DUALTIMER_COUNTER_WRAPPING = 0,
 	/** Counter in one-shot mode */
-	DUALTIMER_COUNTER_ONE_SHOT,
+	DUALTIMER_ONE_SHOT_MODE = 0,
+	/** Counter is in free-running mode */
+	DUALTIMER_FREE_RUNNING_MODE,
+	/** Counter is in periodic mode */
+	DUALTIMER_PERIODIC_MODE,
 };
 
 /**
@@ -101,18 +102,6 @@ enum dualtimer_clock_prescaler {
 };
 
 /**
- * \brief Specifies if the counter is free-running mode or periodic mode.
- *
- * This enum specifies counter with one-shot or wrapping counter mode.
- */
-enum dualtimer_timer_mode {
-	/** Counter is in free-running mode */
-	DUALTIMER_FREE_RUNNING_MODE = 0,
-	/** Counter is in periodic mode */
-	DUALTIMER_PERIODIC_MODE,
-};
-
-/**
  * \brief Dualtimer configuration structure.
  *
  * Configuration struct for Dualtimer instance. This structure should be
@@ -121,23 +110,19 @@ enum dualtimer_timer_mode {
  */
 struct dualtimer_config {
 	/** Selects one-shot or wrapping counter mode */
-	enum dualtimer_counter_mode counter_mode[2];
+	enum dualtimer_counter_mode counter_mode;
 	/** Selects 16-bit or 32- bit counter size */
-	enum dualtimer_clock_prescaler counter_size[2];
+	enum dualtimer_clock_prescaler counter_size;
 	/** Selects the prescaler value */
-	enum dualtimer_clock_prescaler clock_prescaler[2];
-	/** Selects free-running mode or periodic mode */
-	enum dualtimer_timer_mode timer_mode[2];
+	enum dualtimer_clock_prescaler clock_prescaler;
 	/** Enable the interrupt */
-	bool interrup_enable[2];
+	bool interrup_enable;
 	/** Counter load value */
-	uint32_t load_value[2];
-	/** Enable integration test */
-	bool integration_test_enable;
+	uint32_t load_value;
 };
 
 void dualtimer_get_config_defaults(struct dualtimer_config *config);
-void dualtimer_init(const struct dualtimer_config *config);
+void dualtimer_init(enum dualtimer_timer timer, const struct dualtimer_config *config);
 uint32_t dualtimer_get_current_value(enum dualtimer_timer timer);
 void dualtimer_set_load_value(enum dualtimer_timer timer,
 		uint32_t value);

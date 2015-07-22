@@ -55,16 +55,32 @@ void configure_dualtimer(void);
 
 void configure_dualtimer(void)
 {
-	//! [setup_dualtimer_1]
+//! [setup_dualtimer_1]
 	struct dualtimer_config config_dualtimer;
-	//! [setup_dualtimer_1]
-	//! [setup_dualtimer_2]
+//! [setup_dualtimer_1]
+//! [setup_dualtimer_2]
 	dualtimer_get_config_defaults(&config_dualtimer);
-	//! [setup_dualtimer_2]
-	
-	//! [setup_dualtimer_3]
-	dualtimer_init(&config_dualtimer);
-	//! [setup_dualtimer_3]
+//! [setup_dualtimer_2]
+//! [setup_dualtimer_3]
+	config_dualtimer.load_value = CONF_DUALTIMER_TIMER1_LOAD;
+//! [setup_dualtimer_3]
+//! [setup_dualtimer_4]
+	dualtimer_init(DUALTIMER_TIMER1, &config_dualtimer);
+//! [setup_dualtimer_4]
+//! [setup_dualtimer_5]
+	config_dualtimer.load_value = CONF_DUALTIMER_TIMER2_LOAD;
+//! [setup_dualtimer_5]
+//! [setup_dualtimer_6]
+	dualtimer_init(DUALTIMER_TIMER2, &config_dualtimer);
+//! [setup_dualtimer_6]
+
+
+//! [setup_dualtimer_7]
+	dualtimer_enable(DUALTIMER_TIMER1);
+//! [setup_dualtimer_7]
+//! [setup_dualtimer_8]
+	dualtimer_enable(DUALTIMER_TIMER2);
+//! [setup_dualtimer_8]
 }
 //! [setup]
 
@@ -77,14 +93,6 @@ int main(void)
 //! [dualtimer_config]
 	configure_dualtimer();
 //! [dualtimer_config]
-
-//! [dualtimer1_enable]
-	dualtimer_enable(DUALTIMER_TIMER1);
-//! [dualtimer1_enable]
-
-//! [dualtimer2_enable]
-	dualtimer_enable(DUALTIMER_TIMER2);
-//! [dualtimer2_enable]
 
 //! [setup_init]
 	
