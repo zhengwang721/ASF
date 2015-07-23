@@ -68,7 +68,7 @@
 /* PXP Application LED State */
 bool pxp_led_state = true;
 /** @brief Timer interval for timer used for led blinking */
-uint8_t timer_interval = LL_INTERVAL_SLOW;
+uint8_t timer_interval = INIT_TIMER_INTERVAL;
 
 
 
@@ -156,8 +156,7 @@ void app_linkloss_alert(uint8_t alert_val)
 					timer_interval = LL_INTERVAL_FAST;
 					LED_On(LED0);
 					hw_timer_start(timer_interval);
-				}
-		
+				}	
 }
 
 /**

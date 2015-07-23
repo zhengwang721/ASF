@@ -55,15 +55,16 @@
 *							        Macros	                                     		*
 ****************************************************************************************/
 
+// Initial timer value
+#define INIT_TIMER_INTERVAL			(3)
+
 // Interval of LED blinking(in ms) for various alert levels of link loss service
-#define LL_INTERVAL_SLOW			(3)
 #define LL_INTERVAL_MEDIUM			(2)
 #define LL_INTERVAL_FAST			(1)
 
 // Interval of LED blinking(in ms) for various alert levels of path loss service
-#define PL_INTERVAL_SLOW			(8)
-#define PL_INTERVAL_MEDIUM			(6)
-#define PL_INTERVAL_FAST			(4)
+#define PL_INTERVAL_MEDIUM			(5)
+#define PL_INTERVAL_FAST			(3)
 
 /** @brief Timer call back handler called on timer expiry
   *
