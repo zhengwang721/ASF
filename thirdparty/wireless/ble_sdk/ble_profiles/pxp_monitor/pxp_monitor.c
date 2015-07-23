@@ -77,9 +77,11 @@ at_ble_addr_t pxp_reporter_address;
 uint8_t pxp_supp_scan_index[MAX_SCAN_DEVICE];
 uint8_t scan_index = 0;
 
+
 extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 extern uint8_t scan_response_count;
-extern bool app_timer_done;
+
+volatile bool pxp_connect_request_flag = false;
 
 #if defined TX_POWER_SERVICE
 gatt_txps_char_handler_t txps_handle =
@@ -136,6 +138,8 @@ uint8_t index)
 
 	if (gap_dev_connect(&pxp_reporter_address) == AT_BLE_SUCCESS) {
 		DBG_LOG("PXP Connect request sent");
+		pxp_connect_request_flag = true;
+		hw_timer_start(PXP_CONNECT_REQ_INTERVAL);
 		return AT_BLE_SUCCESS;
 		} else {
 		DBG_LOG("PXP Connect request send failed");
@@ -224,7 +228,7 @@ uint8_t scanned_dev_count)
 				DBG_LOG("Select Index to Connect or [r] to scan again");
 				index = getchar();
 				DBG_LOG("%c", index);
-			} while (!((index < ':') || (index == 'r') || (index >'0') ));	
+			} while (!(((index <= '9') && (index >='0')) || (index == 'r')));	
 			
 			if(index == 'r')
 			{
@@ -284,7 +288,9 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 	{
 		if (gap_dev_connect(&pxp_reporter_address) == AT_BLE_SUCCESS)
 		{
-			DBG_LOG("PXP Re-Connect request sent");
+			DBG_LOG("PXP Re-Connect request sent");		
+			pxp_connect_request_flag = true;
+			hw_timer_start(PXP_CONNECT_REQ_INTERVAL);
 			return AT_BLE_SUCCESS;
 		}
 		else
@@ -315,6 +321,11 @@ at_ble_status_t pxp_monitor_connected_state_handler(
 at_ble_connected_t *conn_params)
 {
 	at_ble_status_t discovery_status = AT_BLE_FAILURE;
+	
+	hw_timer_stop();
+	pxp_connect_request_flag = false;
+	
+	DBG_LOG_DEV("%d",conn_params->conn_status);
 	if (conn_params->conn_status == AT_BLE_SUCCESS) {
 		discovery_status = at_ble_primary_service_discover_all(
 		ble_connected_dev_info[0].handle,

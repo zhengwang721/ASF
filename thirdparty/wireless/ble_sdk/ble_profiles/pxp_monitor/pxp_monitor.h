@@ -66,6 +66,8 @@ typedef enum {
 #define PXP_DEVICE_RECONNECT            (0x01)
 #define PXP_DEVICE_SCAN_AGAIN           (0x02)
 
+#define PXP_CONNECT_REQ_INTERVAL        (20)
+
 
 /* *@brief Initializes Proximity profile
  * handler Pointer reference to respective variables
