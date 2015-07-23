@@ -13,6 +13,8 @@
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
+		<config name="config.compiler.iarewarm.dlib" value="full"/>
+		
 		<device-support value="atsaml22n18a"/>
 	</project>
 </asf>
