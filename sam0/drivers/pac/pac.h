@@ -47,7 +47,7 @@
 #define PAC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_pac_group Introduction
+ * \defgroup asfdoc_sam0_pac_group SAM Peripheral Access Controller (PAC) Driver
  *
  * This driver for Atmel&reg; | SMART ARM&reg;-based microcontroller provides 
  * an interface for the locking and unlocking of peripheral registers within 
