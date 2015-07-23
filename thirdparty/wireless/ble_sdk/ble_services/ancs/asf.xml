@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="thirdparty.wireless.ble_sdk.ble_services.ancs" caption="COMPONENT - BLE_STACK API">
+	<module type="component" id="thirdparty.wireless.ble_sdk.ble_services.ancs" caption="BLE Alert Notification Services">
 		<info type="description" value="summary">
 		</info>
 		<build type="include-path"  value="./"/>

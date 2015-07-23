@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="thirdparty.wireless.ble_sdk.ble_profiles.pxp_reporter" caption="COMPONENT - BLE_STACK API">
+	<module type="component" id="thirdparty.wireless.ble_sdk.ble_profiles.pxp_reporter" caption="BLE-Proximity Reporter Profile">
 		<info type="description" value="summary">
 		</info>
 		<build type="include-path"  value="./"/>

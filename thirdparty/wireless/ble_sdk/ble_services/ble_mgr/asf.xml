@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="thirdparty.wireless.ble_sdk.ble_services.ble_manager" caption="COMPONENT - BLE_STACK API">
+	<module type="component" id="thirdparty.wireless.ble_sdk.ble_services.ble_manager" caption="BLE-Event Manager">
 		<info type="description" value="summary">
 		</info>
 		<build type="include-path"  value="./"/>
