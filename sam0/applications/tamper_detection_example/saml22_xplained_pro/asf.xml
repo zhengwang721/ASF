@@ -1,0 +1,24 @@
+<asf xmlversion="1.0">
+	<project caption="SAM L22 Tamper Detection Example" id="sam0.applications.tamper_detection_example.saml22_xplained_pro">
+		<info type="gui-flag" value="move-to-root"/>
+		<require idref="board.saml22_xplained_pro"/>
+		<require idref="sam0.applications.tamper_detection_example"/>
+		<config name="config.common2.services.delay" value="cycle"/>			
+		<config name="config.sam0.drivers.sercom.usart" value="polled"/>		
+		<config name="config.sam0.drivers.slcd" value="polling"/>			
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_slcd.h"/>	
+		<build type="header-file" value="conf_dma.h"/>
+		<build type="header-file" value="conf_rtc.h"/>
+		<build type="header-file" value="conf_rwwee.h"/>
+		<build type="header-file" value="conf_sleepmgr.h"/>
+		<build type="header-file" value="conf_example.h"/>	
+		<build type="define" name="__SAML22N18A__" value=""/>		
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<device-support value="atsaml22n18a"/>
+	</project>
+</asf>
