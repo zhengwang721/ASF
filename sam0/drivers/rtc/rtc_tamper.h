@@ -48,13 +48,6 @@
 #define RTC_TAMPER_H_INCLUDED
 
 /**
- * \if RTC_COUNT_CALLBACK_MODE
- *  \addtogroup asfdoc_sam0_rtc_count_group
- * \endif
- * \if RTC_CALENDAR_CALLBACK_MODE
- *  \addtogroup asfdoc_sam0_rtc_calendar_group
- * \endif
- * @{
  *
  * \section asfdoc_sam0_rtc_tamper_detect RTC Tamper Detect
  * The RTC provides several selectable polarity external inputs (INn) that can be
@@ -74,6 +67,14 @@
  * depends on whether the debouncer operates synchronously or asynchronously, 
  * and whether majority detection is enabled or not. Details refer to the section
  * "Tamper Detection" of datasheet.
+ * \if RTC_COUNT_CALLBACK_MODE
+ *  \addtogroup asfdoc_sam0_rtc_count_group
+ * \else
+ * \if RTC_CALENDAR_CALLBACK_MODE
+ *  \addtogroup asfdoc_sam0_rtc_calendar_group
+ * \endif
+ * \endif
+ * @{
  */
 
 #if defined(FEATURE_RTC_TAMPER_DETECTION) || defined(__DOXYGEN__)

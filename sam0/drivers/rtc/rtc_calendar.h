@@ -1368,7 +1368,6 @@ void rtc_tamper_get_stamp (struct rtc_module *const module,
  * \if RTC_CALENDAR_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_rtc_calendar_callback_use_case
  * \endif
- *  - \subpage asfdoc_sam0_rtc_tamper_dma_use_case
  *
  * \page asfdoc_sam0_rtc_calendar_document_revision_history Document Revision History
  *

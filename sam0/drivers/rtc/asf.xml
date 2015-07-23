@@ -249,7 +249,6 @@
 
 		<build type="header-file" value="quick_start_calendar/qs_rtc_calendar_basic.h"/>
 		<build type="header-file" value="quick_start_calendar_callback/qs_rtc_calendar_callback.h"/>
-		<build type="header-file" value="quick_start_tamper_dma/qs_rtc_tamper_dma.h"/>
 
 		<build type="define" name="RTC_CALENDAR_ASYNC" value="true"/>
 		<build type="doxygen-enable-section" value="RTC_CALENDAR_CALLBACK_MODE"/>

@@ -230,7 +230,7 @@
  * and slower when given a negative correction value.
  *
  *
- * \subsection asfdoc_sam0_rtc_calendar_module_overview_tamper_detect RTC Tamper Detect
+ * \subsection asfdoc_sam0_rtc_count_module_overview_tamper_detect RTC Tamper Detect
  * \section asfdoc_sam0_rtc_count_special_considerations Special Considerations
  * see \ref asfdoc_sam0_rtc_tamper_detect
  *
