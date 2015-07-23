@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="Simple Broadcaster application - SAM G55 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.simple_broadcaster.samg55_xplained_pro" force-caption="true" force-description="true">
+	<project caption="Simple Broadcaster Application - SAM G55 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.simple_broadcaster.samg55_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		Simple Broadcaster application for BLE stack.
+		Simple Broadcaster Application for BLE stack.
 		</info>	
 		<require idref="thirdparty.wireless.ble_sdk.apps.simple_broadcaster"/>
 		<build type="include-path" value="."/>

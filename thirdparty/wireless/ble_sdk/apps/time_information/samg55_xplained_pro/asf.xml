@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="TIME INFORMATION Application - SAM G55 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.time_information.samg55_xplained_pro" force-caption="true" force-description="true">
+	<project caption="Time Information Application - SAM G55 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.time_information.samg55_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		Time information Application for BLE stack.
+		Time Information Application for BLE stack.
 		</info>	
 		<require idref="thirdparty.wireless.ble_sdk.apps.time_information"/>
 		<build type="include-path" value="."/>

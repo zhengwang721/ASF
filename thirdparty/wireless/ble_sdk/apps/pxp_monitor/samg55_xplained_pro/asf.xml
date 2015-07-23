@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="PROXIMITY MONITOR APPLICATION - SAM G55 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.pxp_monitor.samg55_xplained_pro" force-caption="true" force-description="true">
+	<project caption="Proximity Monitor Application - SAM G55 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.pxp_monitor.samg55_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		Proximity Monitor application for BLE stack.
+		Proximity Monitor Application for BLE stack.
 		</info>	
 		<require idref="thirdparty.wireless.ble_sdk.apps.pxp_monitor"/>
 		<build type="include-path" value="."/>

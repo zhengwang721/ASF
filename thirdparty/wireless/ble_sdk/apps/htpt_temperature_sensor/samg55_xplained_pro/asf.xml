@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="HTPT Temperature Sensor application - SAM G55 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.htpt_temperature_sensor.samg55_xplained_pro" force-caption="true" force-description="true">
+	<project caption="HTP - Temperature Sensor Application - SAM G55 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.htpt_temperature_sensor.samg55_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		HTPT Temperature Sensor application for BLE stack.
+		HTP - Temperature Sensor Application for BLE stack.
 		</info>	
 		<require idref="thirdparty.wireless.ble_sdk.apps.htpt_temperature_sensor"/>
 		<build type="include-path" value="."/>
