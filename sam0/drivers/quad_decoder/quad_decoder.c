@@ -55,8 +55,8 @@
  *
  * The default configuration is as follows:
  *  \li Select input clock as 26MHz 
- *  \li Set counter upper threshold as 32768
- *  \li Set counter lower threshold as 32767
+ *  \li Set counter upper threshold as 32767
+ *  \li Set counter lower threshold as -32768
  *  \li Set pinmux_pad[0] as 0
  *  \li Set pinmux_pad[1] as 0
  *
@@ -65,8 +65,8 @@
 void quad_decoder_get_config_defaults(struct quad_decoder_config *config)
 {
 	config->clock_sel = QDEC_CLK_INPUT_0;
-	config->threshold_upper = 32768;
-	config->threshold_lower = 32767;
+	config->threshold_upper = 32767;
+	config->threshold_lower = -32768;
 	config->pinmux_pad[0] = 0;
 	config->pinmux_pad[1] = 0;
 }

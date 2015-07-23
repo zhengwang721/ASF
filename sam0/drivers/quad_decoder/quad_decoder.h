@@ -93,9 +93,9 @@ struct quad_decoder_config {
 	/** Quad Decoder Source Clock Frequency Select */
 	enum quad_decoder_clock_input clock_sel; 
 	/** Upper Threshold of counter for Quad Decoder */
-	uint16_t threshold_upper;
+	int16_t threshold_upper;
 	/** Lower Threshold of counter for Quad Decoder */
-	uint16_t threshold_lower;
+	int16_t threshold_lower;
 	/** Dec_in_a pinmux */
 	/** Dec_in_b pinmux */
 	uint32_t pinmux_pad[2];
