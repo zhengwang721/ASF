@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="BLE OBSERVER APPLICATION - SAM D21 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.ble_observer.samd21_xplained_pro" force-caption="true" force-description="true">
+	<project caption="BLE-Observer Application - SAM D21 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.ble_observer.samd21_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		BLE OBSERVER application for BLE stack.
+		BLE-Observer Application for BLE stack.
 		</info>	
 		<require idref="thirdparty.wireless.ble_sdk.apps.ble_observer"/>
 		<build type="include-path" value="."/>

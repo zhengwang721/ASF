@@ -108,7 +108,10 @@ void pxp_monitor_init(void *param)
 	UNUSED(param);
 	lls_handle.char_data = lls_char_data;
 	ias_handle.char_data = ias_char_data;
-	txps_handle.char_data = tx_power_char_data;
+	txps_handle.char_data = tx_power_char_data;	
+	DBG_LOG("High Alert RSSI range: %ddBm and above", (PXP_HIGH_ALERT_RANGE-1));
+	DBG_LOG("Mild Alert RSSI range: %ddBm to %ddBm", PXP_LOW_ALERT_RANGE, PXP_HIGH_ALERT_RANGE);
+	DBG_LOG("No Alert RSSI range:   %ddBm and below", (PXP_LOW_ALERT_RANGE+1));
 }
 
 /**@brief Connect to a peer device
@@ -158,9 +161,10 @@ uint8_t scanned_dev_count)
 	uint8_t scan_device[MAX_SCAN_DEVICE];
 	uint8_t pxp_scan_device_count = 0;
 	scan_index = 0;
+	uint8_t index;
 	memset(scan_device, 0, MAX_SCAN_DEVICE);
 	if (scanned_dev_count) {
-		uint8_t index;
+		
 		at_ble_uuid_t service_uuid;
 
 		for (index = 0; index < scanned_dev_count; index++) 
@@ -318,7 +322,7 @@ at_ble_connected_t *conn_params)
 		GATT_DISCOVERY_ENDING_HANDLE);
 
 		if (discovery_status == AT_BLE_SUCCESS) {
-			DBG_LOG("GATT Discovery request started ");
+			DBG_LOG_DEV("GATT Discovery request started ");
 			} else {
 			DBG_LOG("GATT Discovery request failed");
 		}
@@ -355,9 +359,10 @@ at_ble_primary_service_found_t *primary_service_params)
 				= primary_service_params->start_handle;
 				lls_handle.end_handle
 				= primary_service_params->end_handle;
-				DBG_LOG("link loss service discovered  %04X %04X",
+				DBG_LOG("link loss service discovered");
+				DBG_LOG_DEV("%04X %04X",
 				primary_service_params->start_handle,
-				primary_service_params->end_handle);
+				primary_service_params->end_handle);				
 				lls_handle.char_discovery=AT_BLE_SUCCESS;
 			}
 			break;
@@ -369,9 +374,10 @@ at_ble_primary_service_found_t *primary_service_params)
 				= primary_service_params->start_handle;
 				ias_handle.end_handle
 				= primary_service_params->end_handle;
-				DBG_LOG("Immediate Alert service discovered %04X %04X ",
+				DBG_LOG("Immediate Alert service discovered");
+				DBG_LOG_DEV(" %04X %04X ",
 				primary_service_params->start_handle,
-				primary_service_params->end_handle);
+				primary_service_params->end_handle);				
 				ias_handle.char_discovery=AT_BLE_SUCCESS;
 			}
 			break;
@@ -383,7 +389,8 @@ at_ble_primary_service_found_t *primary_service_params)
 				= primary_service_params->start_handle;
 				txps_handle.end_handle
 				= primary_service_params->end_handle;
-				DBG_LOG("Tx power service discovered  %04X %04X",
+				DBG_LOG("Tx power service discovered");
+				DBG_LOG_DEV("%04X %04X",
 				primary_service_params->start_handle,
 				primary_service_params->end_handle);
 				txps_handle.char_discovery=AT_BLE_SUCCESS;
@@ -423,7 +430,7 @@ at_ble_discovery_complete_t *discover_status)
 			txps_handle.end_handle) ==
 			AT_BLE_SUCCESS)
 			{
-				DBG_LOG("Tx Characteristic Discovery Started");
+				DBG_LOG_DEV("Tx Characteristic Discovery Started");
 			}
 			else
 			{
@@ -450,7 +457,7 @@ at_ble_discovery_complete_t *discover_status)
 			lls_handle.end_handle) ==
 			AT_BLE_SUCCESS) 
 			{
-				DBG_LOG(
+				DBG_LOG_DEV(
 				"Link Loss Characteristic Discovery Started");
 			} 
 			else 
@@ -480,7 +487,7 @@ at_ble_discovery_complete_t *discover_status)
 			ias_handle.end_handle) ==
 			AT_BLE_SUCCESS) 
 			{
-				DBG_LOG(
+				DBG_LOG_DEV(
 				"Immediate Characteristic Discovery Started");
 				} else {
 				ias_handle.char_discovery = AT_BLE_FAILURE;
@@ -507,7 +514,7 @@ at_ble_discovery_complete_t *discover_status)
 		
 		if (discover_char_flag)
 		{
-			DBG_LOG("GATT characteristic discovery completed");
+			DBG_LOG_DEV("GATT characteristic discovery completed");
 			#if defined LINK_LOSS_SERVICE
 			/* set link loss profile to high alert upon connection */
 			if (!(lls_alert_level_write(ble_connected_dev_info[0].
@@ -571,7 +578,7 @@ at_ble_characteristic_found_t *characteristic_found)
 
 	if (charac_16_uuid == TX_POWER_LEVEL_CHAR_UUID) {
 		txps_handle.char_handle = characteristic_found->value_handle;
-		DBG_LOG("Tx power characteristics %04X",
+		DBG_LOG_DEV("Tx power characteristics %04X",
 		txps_handle.char_handle);
 		} else if ((charac_16_uuid == ALERT_LEVEL_CHAR_UUID)) {
 		if ((characteristic_found->char_handle >
@@ -580,12 +587,12 @@ at_ble_characteristic_found_t *characteristic_found)
 		lls_handle.end_handle)) {
 			lls_handle.char_handle
 			= characteristic_found->value_handle;
-			DBG_LOG("link loss characteristics %04X",
+			DBG_LOG_DEV("link loss characteristics %04X",
 			lls_handle.char_handle);
 			} else {
 			ias_handle.char_handle
 			= characteristic_found->value_handle;
-			DBG_LOG("Immediate alert characteristics %04X",
+			DBG_LOG_DEV("Immediate alert characteristics %04X",
 			ias_handle.char_handle);
 		}
 	}

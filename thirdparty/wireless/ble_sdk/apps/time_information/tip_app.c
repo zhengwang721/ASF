@@ -117,21 +117,22 @@ int main (void)
 	/*Registration of timer callback*/
 	hw_timer_register_callback(timer_callback_handler);
 	
+	DBG_LOG("Time Profile Application");
+	
 	/* initialize the BLE chip  and Set the device mac address */
 	ble_device_init(NULL);
-	
-	DBG_LOG("Time Profile Application");
 	
 	while(1)
 	{
 		ble_event_task();
 		if (button_pressed)
 		{
-			button_pressed = false;
+			delay_ms(200);
 			if(tis_current_time_read( ble_connected_dev_info[0].handle, cts_handle.char_handle ) == AT_BLE_SUCCESS)
 			{
 				LED_Toggle(LED0);
 			}
+			button_pressed = false;
 		}
 	}
 }
