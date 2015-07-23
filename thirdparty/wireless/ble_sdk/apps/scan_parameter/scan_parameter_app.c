@@ -143,7 +143,7 @@ int main(void)
 			
 			if(sps_scan_refresh_char_update(&sps_service_handler, scan_interval_value) == AT_BLE_SUCCESS)
 			{
-				DBG_LOG("Scan Interval Updated :%d", scan_interval_value);
+				DBG_LOG("Scan Refresh Characteristic Value Updated :%d", scan_interval_value);
 			}
 			scan_interval_value++;
 		}

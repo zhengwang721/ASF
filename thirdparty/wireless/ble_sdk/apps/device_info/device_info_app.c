@@ -1,7 +1,7 @@
 /**
 * \file
 *
-* \brief Battery Information Service - Application
+* \brief Device Information Service - Application
 *
 * Copyright (c) 2015 Atmel Corporation. All rights reserved.
 *
