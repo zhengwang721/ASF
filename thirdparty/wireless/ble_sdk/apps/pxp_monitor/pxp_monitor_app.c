@@ -130,9 +130,14 @@ void rssi_update(at_ble_handle_t conn_handle)
 		DBG_LOG("HIGH ALERT");
 		LED_On(LED0);
 	}
-	else
-	{
-		LED_Off(LED0);
+	 else {
+		if (!(alert_level == PXP_NO_ALERT)) {
+			ias_alert_level_write(conn_handle,
+					ias_handle.char_handle,
+					IAS_NO_ALERT);
+			alert_level = PXP_NO_ALERT;
+			LED_Off(LED0);
+		}
 	}
 }
 

@@ -231,23 +231,23 @@ uint8_t scanned_dev_count)
 				index -= PXP_ASCII_TO_DECIMAL_VALUE;
 				return pxp_monitor_connect_request(scan_buffer,	scan_device[index]);
 			}			
-		}
-		else
-		{  
-			/* from no device found event*/
-			do
-			{
-				DBG_LOG("Select [r] to scan again");
-				index = getchar();
-				DBG_LOG("%c", index);
-			} while (!(index == 'r')); 
-			
-			if(index == 'r')
-			{
-				return gap_dev_scan();
-			}
 		}			
 	}
+	else
+	{  
+		/* from no device found event*/
+		do
+		{
+			DBG_LOG("Select [r] to scan again");
+			index = getchar();
+			DBG_LOG("%c", index);
+		} while (!(index == 'r')); 
+		
+		if(index == 'r')
+		{
+			return gap_dev_scan();
+		}
+	}		
 
 	return AT_BLE_FAILURE;
 }
