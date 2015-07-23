@@ -57,12 +57,11 @@
 #include "timer_hw.h"
 #include "conf_extint.h"
 
-typedef enum pxp_current_alert
-{
+typedef enum pxp_current_alert {
 	PXP_NO_ALERT = 0,
 	PXP_MID_ALERT,
 	PXP_HIGH_ALERT
-}pxp_current_alert_t;
+} pxp_current_alert_t;
 
 /**@brief Proximity Application initialization
  * as part of it start the scanning process as defined with scan param
@@ -76,7 +75,7 @@ void pxp_app_init(void);
 void timer_callback_handler(void);
 
 /**@brief Check for Link Loss and Path Loss alert
- * check for Low Alert value if the exceeds the rssi range, write 
+ * check for Low Alert value if the exceeds the rssi range, write
  * Low Alert value to Immediate Alert Service
  *           High Alert value if crossed, write High Alert value to IAS service
  *
