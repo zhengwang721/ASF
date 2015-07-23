@@ -295,8 +295,8 @@ void dualtimer_integration_test_disable(void)
  *
  * Disable the Dualtimer module integration test mode
  *
- * \param[in]     timer        Value output on TIMINT1
- * \param[in]     timer        Value output on TIMINT2
+ * \param[in]     timer1        Value output on TIMINT1
+ * \param[in]     timer2        Value output on TIMINT2
  */
 void dualtimer_integration_test_set_interrupt(
 		bool timer1, bool timer2)
