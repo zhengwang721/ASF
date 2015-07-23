@@ -47,12 +47,12 @@
 #define PAC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_pac_group  SAM Peripheral Access Controller Driver (PAC)
+ * \defgroup asfdoc_sam0_pac_group Introduction
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the locking and
- * unlocking of peripheral registers within the device. When a peripheral is
- * locked, accidental writes to the peripheral will be blocked and a CPU
- * exception will be raised.
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontroller provides 
+ * an interface for the locking and unlocking of peripheral registers within 
+ * the device. When a peripheral is locked, accidental writes to the peripheral 
+ * will be blocked and a CPU exception will be raised.
  *
  * The following peripherals are used by this module:
  *  - PAC (Peripheral Access Controller)
@@ -104,7 +104,7 @@
  * attempting to lock a peripheral that is currently locked will generate a
  * CPU exception. This implies that the implementer must keep
  * strict control over the peripheral's lock-state before modifying them. With
- * this added safety, the probability of stopping run-away code increases as
+ * this added safety, the probability of stopping runaway code increases as
  * the program pointer can be caught inside the exception handler, and necessary
  * countermeasures can be initiated. The implementer should also consider using
  * sanity checks after an unlock has been performed to further increase the
@@ -120,20 +120,20 @@
  *		subgraph cluster_a {
  *			style="filled, dotted";
  *			coler=lightgray;
- *			init [label="Initialize Peripheral", shape=box];
- *			lock [label="Lock peripheral", shape=box];
+ *			init [label="Initialize Peripheral", shape=box, fontname=areal];
+ *			lock [label="Lock peripheral", shape=box, fontname=areal];
  *			label="Initialization and code";
  *			init -> lock;
  *		}
  *		subgraph cluster_b {
  *			cli [label="Disable global interrupts", shape=box,
- *				style=dotted];
- *			unlock [label="Unlock peripheral", shape=box];
- *			sanity [label="Sanity Check", shape=box, style=dotted];
- *			modify [label="Modify peripheral", shape=box];
- *			lock2 [label="Lock peripheral", shape=box];
+ *				style=dotted, fontname=areal];
+ *			unlock [label="Unlock peripheral", shape=box, fontname=areal];
+ *			sanity [label="Sanity Check", shape=box, style=dotted, fontname=areal];
+ *			modify [label="Modify peripheral", shape=box, fontname=areal];
+ *			lock2 [label="Lock peripheral", shape=box, fontname=areal];
  *			sei [label="Enable global interrupts", shape=box
- *				style=dotted];
+ *				style=dotted, fontname=areal];
 *
  *			label="Peripheral Modification";
  *			cli -> unlock;
@@ -144,7 +144,7 @@
  *		}
  *		lock -> cli [label=
  *			"Other initialization\n and enable interrupts if applicable"
- *				, style=dotted];
+ *				, style=dotted, fontname=areal];
  *	}
  * \enddot
  *
@@ -167,12 +167,12 @@
  *	digraph enabled_interrupt {
  *		subgraph cluster_0{
  *			label="Main routine";
- *			{node [style="filled", color=black, fillcolor=white]
+ *			{node [style="filled", color=black, fillcolor=white, fontname=areal]
  *			init [label="Initialize and lock peripherals", shape=box];
  *			main_unlock [label="Unlock peripheral",	shape=box,
  *				fillcolor=green];
  *			main_modify [label="Modify peripheral", shape=box];}
- *			main_lock [label="Lock peripheral", shape=box];
+ *			main_lock [label="Lock peripheral", shape=box, fontname=areal];
  *			init -> main_unlock [label="User code"];
  *			main_unlock -> main_modify;
  *			main_modify -> main_lock [style=dotted];
@@ -180,14 +180,14 @@
  *		subgraph cluster_1 {
  *			label="Interrupt handler";
  *			int_unlock [label="Unlock peripheral", shape=box,
- *				style=filled, fillcolor=red];
- *			int_modify [label="Modify peripheral", shape=box];
- *			int_lock [label="Lock peripheral", shape=box];
- *			int_unlock -> int_modify [style=dotted];
- *			int_modify -> int_lock [style=dotted];
+ *				style=filled, fillcolor=red, fontname=areal];
+ *			int_modify [label="Modify peripheral", shape=box, fontname=areal];
+ *			int_lock [label="Lock peripheral", shape=box, fontname=areal];
+ *			int_unlock -> int_modify [style=dotted, fontname=areal];
+ *			int_modify -> int_lock [style=dotted, fontname=areal];
  *		}
- *		exception [label="Exception", shape=box, style=filled, fillcolor=red];
- *		main_modify -> int_unlock [label=" Interrupt"];
+ *		exception [label="Exception", shape=box, style=filled, fillcolor=red, fontname=areal];
+ *		main_modify -> int_unlock [label=" Interrupt", fontname=areal];
  *		int_unlock -> exception;
  *		exception -> exception;
  *	}
@@ -195,12 +195,12 @@
  *
  * \subsection asfdoc_sam0_pac_code_run_away Run-away Code
  * Run-away code can be caused by the MCU being operated outside its
- * specification, faulty code or EMI issues. If a run-away code occurs, it is
+ * specification, faulty code or EMI issues. If a runaway code occurs, it is
  * favorable to catch the issue as soon as possible. With a correct
- * implementation of the PAC, the run-away code can potentially be stopped.
+ * implementation of the PAC, the runaway code can potentially be stopped.
  *
  * A graphical example showing how a PAC implementation will behave for
- * different circumstances of run-away code in shown in
+ * different circumstances of runaway code in shown in
  * \ref asfdoc_sam0_pac_code_runaway_diagram "the first" and
  * \ref asfdoc_sam0_pac_code_runaway_diagram2 "second figures below".
  *
@@ -210,8 +210,8 @@
  *	   subgraph cluster_away1{
  *		rankdir=TB;
  *		color=white;
- *		runaway1 [label="Run-away code", shape=box];
- *		node [shape=plaintext];
+ *		runaway1 [label="Run-away code", shape=box, fontname=areal];
+ *		node [shape=plaintext, fontname=areal, fontname=areal];
  *		program1 [label=<
  *			<table>
  *				<tr>
@@ -269,9 +269,9 @@
  *		}
  *	   subgraph cluster_away2{
  *		rankdir=TB;
- *		runaway2 [label="Run-away code", shape=box];
+ *		runaway2 [label="Run-away code", shape=box, fontname=areal];
  *		color=white;
- *		node [shape=plaintext];
+ *		node [shape=plaintext, fontname=areal, fontname=areal];
  *		program2 [label=<
  *			<table>
  *				<tr>
@@ -335,9 +335,9 @@
  *	digraph run_away2 {
  *	   subgraph cluster_away3{
  *		rankdir=TB;
- *		runaway3 [label="Run-away code", shape=box];
+ *		runaway3 [label="Run-away code", shape=box, fontname=areal];
  *		color=white;
- *		node [shape=plaintext];
+ *		node [shape=plaintext, fontname=areal, fontname=areal];
  *		program3 [label=<
  *			<table>
  *				<tr>
@@ -395,9 +395,9 @@
  *		}
  *	subgraph cluster_away4 {
  *		rankdir=TB;
- *		runaway4 [label="Run-away code", shape=box];
+ *		runaway4 [label="Run-away code", shape=box, fontname=areal];
  *		color=white;
- *		node [shape=plaintext];
+ *		node [shape=plaintext, fontname=areal, fontname=areal];
  *		program4 [label=<
  *			<table>
  *				<tr>
@@ -457,16 +457,16 @@
  * \enddot
  *
  * In the example, green indicates that the command is allowed, red indicates
- * where the run-away code will be caught, and the arrow where the run-away
+ * where the runaway code will be caught, and the arrow where the runaway
  * code enters the application. In special circumstances, like example 4
- * above, the run-away code will not be caught. However, the protection scheme
+ * above, the runaway code will not be caught. However, the protection scheme
  * will greatly enhance peripheral configuration security from being affected by
- * run-away code.
+ * runaway code.
  *
  * \subsubsection asfdoc_sam0_pac_bitwise_code Key-Argument
- * To protect the module functions against run-away code themselves, a key
+ * To protect the module functions against runaway code themselves, a key
  * is required as one of the input arguments. The key-argument will make sure
- * that run-away code entering the function without a function call will be
+ * that runaway code entering the function without a function call will be
  * rejected before inflicting any damage. The argument is simply set to be
  * the bitwise inverse of the module flag, i.e.
  *
@@ -487,7 +487,7 @@
  * \subsection asfdoc_sam0_pac_no_inline Use of __no_inline
  * Using the function attribute \c __no_inline will ensure that there will only be
  * one copy of each functions in the PAC driver API in the application. This will
- * lower the likelihood that run-away code will hit any of these functions.
+ * lower the likelihood that runaway code will hit any of these functions.
  *
  * \subsection asfdoc_sam0_pac_module_overview_physical Physical Connection
  *
@@ -500,21 +500,21 @@
  *	nodesep = .05;
  *	rankdir=LR;
  *
- *	ahb [label="Peripheral bus", shape=ellipse, style=filled, fillcolor=lightgray];
+ *	ahb [label="Peripheral bus", shape=ellipse, style=filled, fillcolor=lightgray, fontname=areal];
  *	pac [label="<f0>PAC|<f1>Lock|<f2>Open|<f3>Open",
- *		 height=2.5, shape=record, width=.1];
- *	per1 [label="Peripheral1", shape=ellipse, style=filled, fillcolor=lightgray];
- *	per2 [label="Peripheral2", shape=ellipse, style=filled, fillcolor=lightgray];
- *	per3 [label="Peripheral3", shape=ellipse, style=filled, fillcolor=lightgray];
+ *		 height=2.5, shape=record, width=.1, fontname=areal];
+ *	per1 [label="Peripheral1", shape=ellipse, style=filled, fillcolor=lightgray, fontname=areal];
+ *	per2 [label="Peripheral2", shape=ellipse, style=filled, fillcolor=lightgray, fontname=areal];
+ *	per3 [label="Peripheral3", shape=ellipse, style=filled, fillcolor=lightgray, fontname=areal];
  *	edge [dir="both"];
- *	ahb -> pac:f1 [label="Read/Write"];
- *	ahb -> pac:f2 [label="Read/Write"];
- *	ahb -> pac:f3 [label="Read/Write"];
+ *	ahb -> pac:f1 [label="Read/Write", fontname=areal];
+ *	ahb -> pac:f2 [label="Read/Write", fontname=areal];
+ *	ahb -> pac:f3 [label="Read/Write", fontname=areal];
  *	edge [dir="back"];
- *	pac:f1 -> per1 [label="Read"];
+ *	pac:f1 -> per1 [label="Read", fontname=areal];
  *	edge [dir="both"];
- *	pac:f2 -> per2 [label="Read/Write"];
- *	pac:f3 -> per3 [label="Read/Write"];
+ *	pac:f2 -> per2 [label="Read/Write", fontname=areal];
+ *	pac:f3 -> per3 [label="Read/Write", fontname=areal];
  *	{rank=same; per1 per2 per3 }
  * }
  * \enddot
@@ -541,8 +541,8 @@
  *	   subgraph cluster_read1{
  *		rankdir=TB;
  *		color=white;
- *		runaway1 [label="Run-away code\nwith peripheral unlocked", shape=box];
- *		node [shape=plaintext];
+ *		runaway1 [label="Run-away code\nwith peripheral unlocked", shape=box, fontname=areal];
+ *		node [shape=plaintext, fontname=areal, fontname=areal];
  *		program1 [label=<
  *			<table>
  *				<tr>
@@ -589,8 +589,8 @@
  *	   subgraph cluster_read2{
  *		rankdir=TB;
  *		color=white;
- *		runaway2 [label="Run-away code\nwith peripheral unlocked", shape=box];
- *		node [shape=plaintext];
+ *		runaway2 [label="Run-away code\nwith peripheral unlocked", shape=box, fontname=areal];
+ *		node [shape=plaintext, fontname=Areal];
  *		program2 [label=<
  *			<table>
  *				<tr>
@@ -634,8 +634,8 @@
  *	}
  * \enddot
  *
- * In the left figure above, one can see the run-away code continues as all
- * illegal operations are conditional. On the right side figure, the run-away
+ * In the left figure above, one can see the runaway code continues as all
+ * illegal operations are conditional. On the right side figure, the runaway
  * code is caught as it tries to unlock the peripheral.
  *
  * \section asfdoc_sam0_pac_extra_info Extra Information
@@ -843,7 +843,7 @@ static inline void system_pac_disable_event(void)
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_pac_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_pac_basic_use_case
@@ -860,113 +860,89 @@ static inline void system_pac_disable_event(void)
  *		<th>Non-write protected register</th>
  *	</tr>
  *	<tr>
- *		<td>AC</td>
+ *		<td rowspan ="4">AC</td>
  *		<td>INTFLAG</td>
  *	</tr>
  *	<tr>
- *		<td></td>
  *		<td>STATUSA</td>
  *	</tr>
  *	<tr>
- *		<td></td>
  *		<td>STATUSB</td>
  *	</tr>
  *	<tr>
- *		<td></td>
  *		<td>STATUSC</td>
  *	</tr>
- *	<tr><td colspan="2"/></tr>
  *	<tr>
- *		<td>ADC</td>
+ *		<td rowspan ="3">ADC</td>
  *		<td>INTFLAG</td>
  *	</tr>
  *	<tr>
- *		<td></td>
  *		<td>STATUS</td>
  *	</tr>
  *	<tr>
- *		<td></td>
  *		<td>RESULT</td>
  *	</tr>
- *	<tr><td colspan="2"/></tr>
  *	<tr>
- *		<td>EVSYS</td>
+ *		<td rowspan ="2">EVSYS</td>
  *		<td>INTFLAG</td>
  *	</tr>
  *	<tr>
- *		<td></td>
  *		<td>CHSTATUS</td>
  *	</tr>
- *	<tr><td colspan="2"/></tr>
  *	<tr>
- *		<td>NVMCTRL</td>
+ *		<td rowspan ="2">NVMCTRL</td>
  *		<td>INTFLAG</td>
  *	</tr>
  *	<tr>
- *		<td></td>
  *		<td>STATUS</td>
  *	</tr>
- *	<tr><td colspan="2"/></tr>
  *	<tr>
  *		<td>PM</td>
  *		<td>INTFLAG</td>
  *	</tr>
- *	<tr><td colspan="2"/></tr>
  *	<tr>
  *		<td>PORT</td>
  *		<td>N/A</td>
  *	</tr>
- *	<tr><td colspan="2"/></tr>
  *	<tr>
- *		<td>RTC</td>
+ *		<td rowspan ="3">RTC</td>
  *		<td>INTFLAG</td>
  *	</tr>
  *	<tr>
- *		<td></td>
  *		<td>READREQ</td>
  *	</tr>
  *	<tr>
- *		<td></td>
  *		<td>STATUS</td>
  *	</tr>
- *	<tr><td colspan="2"/></tr>
  *	<tr>
  *		<td>SYSCTRL</td>
  *		<td>INTFLAG</td>
  *	</tr>
- *	<tr><td colspan="2"/></tr>
  *	<tr>
- *		<td>SERCOM</td>
- *		<td>INTFALG</td>
+ *		<td rowspan ="3">SERCOM</td>
+ *		<td>INTFLAG</td>
  *	</tr>
  *	<tr>
- *		<td></td>
  *		<td>STATUS</td>
  *	</tr>
  *	<tr>
- *		<td></td>
  *		<td>DATA</td>
  *	</tr>
- *	<tr><td colspan="2"/></tr>
  *	<tr>
- *		<td>TC</td>
+ *		<td rowspan ="2">TC</td>
  *		<td>INTFLAG</td>
  *	</tr>
  *	<tr>
- *		<td></td>
  *		<td>STATUS</td>
  *	</tr>
- *	<tr><td colspan="2"/></tr>
  *	<tr>
- *		<td>WDT</td>
+ *		<td rowspan ="3">WDT</td>
  *		<td>INTFLAG</td>
  *	</tr>
  *	<tr>
- *		<td></td>
  *		<td>STATUS</td>
  *	</tr>
  *	<tr>
- *		<td></td>
  *		<td>(CLEAR)</td>
  *	</tr>
  * </table>
@@ -981,18 +957,18 @@ static inline void system_pac_disable_event(void)
  *	</tr>
  *	<tr>
  *		<td>42107F</td>
- *		<td>06/2015</td>
- *		<td>Added support for SAML21, SAMC21, and SAMDAx</td>
+ *		<td>07/2015</td>
+ *		<td>Added support for SAM L21, SAM C21, and SAM DAx</td>
  *	</tr>
  *	<tr>
  *		<td>42107E</td>
  *		<td>12/2014</td>
- *		<td>Added support for SAMR21 and SAMD10/D11</td>
+ *		<td>Added support for SAM R21 and SAM D10/D11</td>
  *	</tr>
  *	<tr>
  *		<td>42107D</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAMD21</td>
+ *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
  *		<td>42107C</td>
