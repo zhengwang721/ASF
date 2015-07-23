@@ -5,7 +5,8 @@
 		<require idref="sam0.applications.tamper_detection_example"/>
 		<config name="config.common2.services.delay" value="cycle"/>			
 		<config name="config.sam0.drivers.sercom.usart" value="polled"/>		
-		<config name="config.sam0.drivers.slcd" value="polling"/>			
+		<config name="config.sam0.drivers.slcd" value="polling"/>
+		<config name="config.sam0.drivers.rtc" value="calendar_callback"/>		
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>

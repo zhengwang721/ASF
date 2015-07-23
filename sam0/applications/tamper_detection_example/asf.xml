@@ -11,19 +11,18 @@
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="c-source" value="main.c"/>
 		<build type="include-path" value="."/>
-		<build type="module-config" subtype="required-header-file" value="conf_example.h"/>	
 		<require idref="sam0.drivers.rtc"/>				
 		<require idref="sam0.drivers.tcc"/>
 		<require idref="sam0.drivers.port"/>
 		<require idref="sam0.drivers.dma"/>
 		<require idref="sam0.drivers.system"/>		
-		<require idref="sam0.drivers.sercom"/>
-		<require idref="sam0.drivers.nvm"/>	
+		<require idref="sam0.drivers.sercom.usart"/>
+		<require idref="sam0.services.rww_eeprom_emulator"/>	
 		<require idref="sam0.drivers.slcd"/>	
 		<require idref="common2.services.delay"/>				
-        <require idref="common.services.sleepmgr"/>
+        <require idref="common.services.basic.sleepmgr"/>
 		<require idref="sam0.utils.stdio"/>
 		<require idref="sam0.utils.stdio.stdio_serial"/>		
-		<device-support value="samL22n18a"/>
+		<device-support value="atsaml22n18a"/>
 	</module>
 </asf>
