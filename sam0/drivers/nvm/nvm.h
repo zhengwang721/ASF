@@ -276,6 +276,7 @@ extern "C" {
 #if defined(SAMD21E15L) || defined(SAMD21E16L) || defined(__SAMD21E15L__) || defined(__SAMD21E16L__) \
 	|| defined(SAMD21E15B) || defined(SAMD21E16B) || defined(__SAMD21E15B__) || defined(__SAMD21E16B__) \
 	|| defined(SAMD21E15BU) || defined(SAMD21E16BU) || defined(__SAMD21E15BU__) || defined(__SAMD21E16BU__) \
+	|| defined(SAMD21G15L) || defined(SAMD21G16L) || defined(__SAMD21G15L__) || defined(__SAMD21G16L__) \
 	|| defined(SAMD21G15B) || defined(SAMD21G16B) || defined(__SAMD21G15B__) || defined(__SAMD21G16B__) \
 	|| defined(SAMD21J15B) || defined(SAMD21J16B) || defined(__SAMD21J15B__) || defined(__SAMD21J16B__)
 
