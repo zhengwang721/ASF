@@ -200,6 +200,8 @@ at_ble_status_t pxp_reporter_connected_state_handler(at_ble_connected_t *conn_pa
 */
 at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 {
+	linkloss_cb(linkloss_current_alert_level);
+	
 	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
 	APP_PXP_FAST_ADV, APP_PXP_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
 	{
@@ -211,10 +213,6 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 	{
 		DBG_LOG("Bluetooth Device is in Advertising Mode");
 	}
-	
-	//DBG_LOG("The linkloss value is %d",linkloss_current_alert_level);
-	linkloss_cb(linkloss_current_alert_level);
-
 	return AT_BLE_SUCCESS;
 }
 
