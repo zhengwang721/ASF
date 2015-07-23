@@ -108,26 +108,6 @@ static uint32_t _pwm_reg_sample_method(enum pwm_device_select device_select, boo
 /**
  * \internal Get the register configuration values by PWM device
  */
-static uint32_t _pwm_reg_use_old_pwm(enum pwm_device_select device_select, bool value)
-{
-	switch (device_select) {
-		case PWM1:
-			return LPMCU_MISC_REGS_PWM_1_CONTROL_USE_OLD_PWM(value);
-		case PWM2:
-			return LPMCU_MISC_REGS_PWM_2_CONTROL_USE_OLD_PWM(value);
-		case PWM3:
-			return LPMCU_MISC_REGS_PWM_3_CONTROL_USE_OLD_PWM(value);
-		case PWM4:
-			return LPMCU_MISC_REGS_PWM_4_CONTROL_USE_OLD_PWM(value);
-
-		default:
-			return 0;
-	}
-}
-
-/**
- * \internal Get the register configuration values by PWM device
- */
 static uint32_t _pwm_reg_period(enum pwm_device_select device_select, enum pwm_period value)
 {
 	switch (device_select) {
@@ -148,57 +128,27 @@ static uint32_t _pwm_reg_period(enum pwm_device_select device_select, enum pwm_p
 /**
  * \internal Get the register configuration values by PWM device
  */
-static uint32_t _pwm_reg_agcdata_in(enum pwm_device_select device_select, uint32_t value)
+static uint32_t _pwm_reg_agcdata_in(
+				enum pwm_device_select device_select, \
+				bool agcdata_format, \
+				uint8_t duty_cycle)
 {
-	switch (device_select) {
-		case PWM1:
-			return LPMCU_MISC_REGS_PWM_1_CONTROL_AGCDATA_IN(value);
-		case PWM2:
-			return LPMCU_MISC_REGS_PWM_2_CONTROL_AGCDATA_IN(value);
-		case PWM3:
-			return LPMCU_MISC_REGS_PWM_3_CONTROL_AGCDATA_IN(value);
-		case PWM4:
-			return LPMCU_MISC_REGS_PWM_4_CONTROL_AGCDATA_IN(value);
+	int32_t agcdata_in;
 
-		default:
-			return 0;
+	if (agcdata_format) {
+		agcdata_in = (uint16_t)((1024 * duty_cycle) / 100);
+	} else {
+		agcdata_in = (int16_t)((1024 * duty_cycle) / 100 - 512);
 	}
-}
-
-/**
- * \internal Get the register configuration values by PWM device
- */
-static uint32_t _pwm_reg_use_agcupdate(enum pwm_device_select device_select)
-{
 	switch (device_select) {
 		case PWM1:
-			return LPMCU_MISC_REGS_PWM_1_CONTROL_USE_AGCUPDATE;
+			return LPMCU_MISC_REGS_PWM_1_CONTROL_AGCDATA_IN(agcdata_in);
 		case PWM2:
-			return LPMCU_MISC_REGS_PWM_2_CONTROL_USE_AGCUPDATE;
+			return LPMCU_MISC_REGS_PWM_2_CONTROL_AGCDATA_IN(agcdata_in);
 		case PWM3:
-			return LPMCU_MISC_REGS_PWM_3_CONTROL_USE_AGCUPDATE;
+			return LPMCU_MISC_REGS_PWM_3_CONTROL_AGCDATA_IN(agcdata_in);
 		case PWM4:
-			return LPMCU_MISC_REGS_PWM_4_CONTROL_USE_AGCUPDATE;
-
-		default:
-			return 0;
-	}
-}
-
-/**
- * \internal Get the register configuration values by PWM device
- */
-static uint32_t _pwm_reg_agcupdate(enum pwm_device_select device_select)
-{
-	switch (device_select) {
-		case PWM1:
-			return LPMCU_MISC_REGS_PWM_1_CONTROL_AGCUPDATE;
-		case PWM2:
-			return LPMCU_MISC_REGS_PWM_2_CONTROL_AGCUPDATE;
-		case PWM3:
-			return LPMCU_MISC_REGS_PWM_3_CONTROL_AGCUPDATE;
-		case PWM4:
-			return LPMCU_MISC_REGS_PWM_4_CONTROL_AGCUPDATE;
+			return LPMCU_MISC_REGS_PWM_4_CONTROL_AGCDATA_IN(agcdata_in);
 
 		default:
 			return 0;
@@ -249,11 +199,8 @@ void pwm_get_config_defaults(struct pwm_config *const config)
 	config->output_polarity = false;
 	config->agcdata_format = false;
 	config->sample_method = PWM_SAMPLE_METHOD_0;
-	config->use_old = false;
 	config->period = PWM_PERIOD_4;
-	config->agcdata_in = 50;
-	config->use_agcupdate = false;
-	config->agc_update = false;
+	config->duty_cycle = 50;
 	config->clock_select = PWM_CLOCK_SELECT_26_0;
 	config->pinmux_pad = 0;
 }
@@ -265,40 +212,44 @@ void pwm_get_config_defaults(struct pwm_config *const config)
  * of setting.
  *
  * \param[in]   device_select   PWM device
- * \param[in]   agcdata_in      Agc value from AGC. This value specifies the
- *                              duty cycle in 2th complement form centered around
- *                              the zero.
+ * \param[in]   duty_cycle      This value specifies the duty cycle(%).
  */
-void pwm_set_agcdata_in(enum pwm_device_select device_select, \
-					int32_t agcdata_in)
+void pwm_set_duty_cycle(enum pwm_device_select device_select, \
+					uint8_t duty_cycle)
 {
-	uint32_t reg_value;
-	
-	reg_value = _pwm_reg_agcdata_in(device_select, agcdata_in);
+	bool agcdata_format;
 	
 	switch(device_select) {
 		case PWM1:
+			agcdata_format = LPMCU_MISC_REGS0->PWM_1_CONTROL.bit.AGCDATA_FMT;
 			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg &= \
 					~LPMCU_MISC_REGS_PWM_1_CONTROL_AGCDATA_IN_Msk;
-			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg |= reg_value;
+			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg |= \
+					_pwm_reg_agcdata_in(device_select, agcdata_format, duty_cycle);
 			break;
 
 		case PWM2:
+			agcdata_format = LPMCU_MISC_REGS0->PWM_2_CONTROL.bit.AGCDATA_FMT;
 			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg &= \
 					~LPMCU_MISC_REGS_PWM_2_CONTROL_AGCDATA_IN_Msk;
-			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg = reg_value;
+			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg |= \
+					_pwm_reg_agcdata_in(device_select, agcdata_format, duty_cycle);
 			break;
 
 		case PWM3:
+			agcdata_format = LPMCU_MISC_REGS0->PWM_3_CONTROL.bit.AGCDATA_FMT;
 			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg &= \
 					~LPMCU_MISC_REGS_PWM_3_CONTROL_AGCDATA_IN_Msk;
-			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg = reg_value;
+			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg |= \
+					_pwm_reg_agcdata_in(device_select, agcdata_format, duty_cycle);
 			break;
 
 		case PWM4:
+			agcdata_format = LPMCU_MISC_REGS0->PWM_4_CONTROL.bit.AGCDATA_FMT;
 			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg &= \
 					~LPMCU_MISC_REGS_PWM_4_CONTROL_AGCDATA_IN_Msk;
-			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg = reg_value;
+			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg |= \
+					_pwm_reg_agcdata_in(device_select, agcdata_format, duty_cycle);
 			break;
 	}
 }
@@ -332,19 +283,19 @@ void pwm_set_period(enum pwm_device_select device_select, \
 		case PWM2:
 			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg &= \
 					~LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_PERIOD_Msk;
-			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg = reg_value;
+			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg |= reg_value;
 			break;
 
 		case PWM3:
 			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg &= \
 					~LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_PERIOD_Msk;
-			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg = reg_value;
+			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg |= reg_value;
 			break;
 
 		case PWM4:
 			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg &= \
 					~LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_PERIOD_Msk;
-			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg = reg_value;
+			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg |= reg_value;
 			break;
 	}
 }
@@ -379,8 +330,7 @@ enum status_code pwm_init(enum pwm_device_select device_select, \
 		reg_value |= _pwm_reg_agcdata_fmt(device_select);
 	}
 
-	reg_value |= _pwm_reg_sample_method(device_select, config->sample_method) | \
-				_pwm_reg_use_old_pwm(device_select, config->use_old);
+	reg_value |= _pwm_reg_sample_method(device_select, config->sample_method);
 
 	/* If period > 8 will be set to 4 as default. */
 	if (config->period > PWM_PERIOD_8) {
@@ -388,15 +338,8 @@ enum status_code pwm_init(enum pwm_device_select device_select, \
 	} else {
 		reg_value |= _pwm_reg_period(device_select, config->period);
 	}
-	reg_value |= _pwm_reg_agcdata_in(device_select, config->agcdata_in);
-
-	if (config->use_agcupdate) {
-		reg_value |= _pwm_reg_use_agcupdate(device_select);
-	}
-
-	if (config->agc_update) {
-		reg_value |= _pwm_reg_agcupdate(device_select);
-	}
+	reg_value |= _pwm_reg_agcdata_in(device_select, config->agcdata_format, \
+									config->duty_cycle);
 
 	reg_value |= _pwm_reg_clock_sel(device_select, config->clock_select);
 
