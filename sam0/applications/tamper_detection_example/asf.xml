@@ -21,9 +21,9 @@
 		<require idref="sam0.drivers.nvm"/>	
 		<require idref="sam0.drivers.slcd"/>	
 		<require idref="common2.services.delay"/>				
-        <require idref="common.services.serial"/>
-		<require idref="common.services.sleepmgr"/>
+        <require idref="common.services.sleepmgr"/>
 		<require idref="sam0.utils.stdio"/>
+		<require idref="sam0.utils.stdio.stdio_serial"/>		
 		<device-support value="samL22n18a"/>
 	</module>
 </asf>
