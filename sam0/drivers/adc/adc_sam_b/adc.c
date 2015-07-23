@@ -73,12 +73,12 @@ void adc_get_config_defaults(struct adc_config *const config)
 	config->reference = ADC_REFERENCE_VBATT_2;
 	config->internal_vref = ADC_INTERNAL_VREF_0_7;
 	config->input_channel = ADC_INPUT_CH_GPIO_MS1;
-	config->channel_selection = ADC_CH_SELECTION_MODE_EXTERNAL;
+	config->channel_mode = ADC_CH_MODE_ASSIGN;
 	config->input_dynamic_range = ADC_INPUT_DYNAMIC_RANGE_2;
 	config->bias_current = ADC_BIAS_CURRENT_0;
 	config->invert_clock = false;
 	config->frac_part = 0;
-	config->int_part = 1;
+	config->int_part = 10;
 }
 
 /**
@@ -109,7 +109,7 @@ void adc_init(struct adc_config *config)
 	reg_value |= AON_GP_REGS_RF_PMU_REGS_1_SADC_REF_SEL(config->reference) | \
 				AON_GP_REGS_RF_PMU_REGS_1_SADC_BIAS_RES_CTRL(config->internal_vref);
 
-	if (config->channel_selection == ADC_CH_SELECTION_MODE_EXTERNAL) {
+	if (config->channel_mode == ADC_CH_MODE_ASSIGN) {
 		reg_value |= AON_GP_REGS_RF_PMU_REGS_1_SADC_CHN_CTRL_1 | \
 					AON_GP_REGS_RF_PMU_REGS_1_SADC_CHN_SEL(config->input_channel);
 		if (config->input_channel <= ADC_INPUT_CH_GPIO_MS4) {
@@ -117,7 +117,7 @@ void adc_init(struct adc_config *config)
 			AON_GP_REGS0->MS_GPIO_MODE.reg = \
 					AON_GP_REGS_MS_GPIO_MODE_ANALOG_ENABLE_(config->input_channel);
 		}
-	} else if (config->channel_selection == ADC_CH_SELECTION_INTERANL_0_3) {
+	} else if (config->channel_mode == ADC_CH_MODE_CH0_TO_CH3) {
 		/* Config GPIO_MS1 ~ GPIO_MS4 pin */
 		AON_GP_REGS0->MS_GPIO_MODE.reg = AON_GP_REGS_MS_GPIO_MODE_MASK;
 	}
@@ -154,7 +154,8 @@ void adc_enable(void)
 			
 	/* Enable ADC module */
 	AON_GP_REGS0->AON_PMU_CTRL.reg |= \
-			AON_GP_REGS_AON_PMU_CTRL_PMU_SENS_ADC_EN;
+			AON_GP_REGS_AON_PMU_CTRL_PMU_SENS_ADC_EN | \
+			AON_GP_REGS_AON_PMU_CTRL_PMU_BGR_EN;
 }
 
 /**
@@ -171,7 +172,8 @@ void adc_disable(void)
 			
 	/* Disable ADC module */
 	AON_GP_REGS0->AON_PMU_CTRL.reg &= \
-			~AON_GP_REGS_AON_PMU_CTRL_PMU_SENS_ADC_EN;
+			~(AON_GP_REGS_AON_PMU_CTRL_PMU_SENS_ADC_EN | \
+			AON_GP_REGS_AON_PMU_CTRL_PMU_BGR_EN);
 }
 
 /**
@@ -199,7 +201,7 @@ void adc_reset(void)
  * \retval STATUS_OK           The result was retrieved successfully
  * \retval STATUS_BUSY         A conversion result was not ready
  */
-enum status_code adc_read(uint8_t input_channel, uint16_t *result)
+enum status_code adc_read(enum adc_input_channel input_channel, uint16_t *result)
 						
 {
 	Assert(result);

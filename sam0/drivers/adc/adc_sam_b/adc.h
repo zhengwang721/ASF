@@ -207,23 +207,16 @@ enum adc_input_channel {
 /**
  * \brief ADC input channel time multiplexing selection mode enum
  *
- * Enum for the possible input channel time multiplexing selections mode for
- * the ADC.
+ * Enum for the possible channel time multiplexing mode for the ADC.
  *
  */
-enum adc_channel_selection {
-	/** 
-	 * Select internal input channels
-	 * time multiplexing be between channel 0 ~ channel 3
-	 */
-	ADC_CH_SELECTION_INTERANL_0_3,
-	/** 
-	 * Select internal input channels
-	 * time multiplexing be between channel 4 ~ channel 7
-	 */
-	ADC_CH_SELECTION_MODE_INTERANL_4_7,
-	/** Select one external input channels using /ref adc_input_channel */
-	ADC_CH_SELECTION_MODE_EXTERNAL,
+enum adc_channel_mode {
+	/** Input channels time multiplexing be between channel 0 to channel 3 */
+	ADC_CH_MODE_CH0_TO_CH3,
+	/** Input channels time multiplexing be between channel 4 to channel 7 */
+	ADC_CH_MODE_CH4_TO_CH7,
+	/** Assign a specific input channel using \ref adc_input_channel */
+	ADC_CH_MODE_ASSIGN,
 };
 
 /**
@@ -276,7 +269,7 @@ struct adc_config {
 	/** Input channel */
 	enum adc_input_channel input_channel;
 	/** Input channel selection */
-	enum adc_channel_selection channel_selection;
+	enum adc_channel_mode channel_mode;
 	/** Input channel time multiplexing selection mode */
 	enum adc_input_dynamic_range input_dynamic_range;
 	/** Comparator biasing current selection */
@@ -314,7 +307,7 @@ void adc_reset(void);
 /** \name Read Result
  * @{
  */
-enum status_code adc_read(uint8_t input_channel, uint16_t *result);
+enum status_code adc_read(enum adc_input_channel input_channel, uint16_t *result);
 /** @}*/
 
 /** @}*/
