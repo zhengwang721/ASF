@@ -243,6 +243,8 @@ void dualtimer_clear_interrupt_status(enum dualtimer_timer timer)
  */
 void dualtimer_enable(enum dualtimer_timer timer)
 {
+	LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |= 
+			LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_DUALTIMER_CLK_EN;
 	if (timer == DUALTIMER_TIMER1) {
 		DUALTIMER0->TIMER1CONTROL.reg |= DUALTIMER_TIMER1CONTROL_TIMER_ENABLE;
 	} else {
@@ -259,6 +261,8 @@ void dualtimer_enable(enum dualtimer_timer timer)
  */
 void dualtimer_disable(enum dualtimer_timer timer)
 {
+	LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg &= 
+			~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_DUALTIMER_CLK_EN;
 	if (timer == DUALTIMER_TIMER1) {
 		DUALTIMER0->TIMER1CONTROL.reg &= ~DUALTIMER_TIMER1CONTROL_TIMER_ENABLE;
 	} else {

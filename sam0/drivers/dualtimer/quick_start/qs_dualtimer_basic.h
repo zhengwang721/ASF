@@ -82,7 +82,7 @@
  *    \snippet qs_dualtimer_basic.c setup_dualtimer_5
  *
  * -# Configure the DUALTIMER module with the desired settings.
- *    \snippet qs_dualtimer_basic.c setup_timer_6
+ *    \snippet qs_dualtimer_basic.c setup_dualtimer_6
  *
  * -# Set the DUALTIMER module timer1 enable.
  *    \snippet qs_dualtimer_basic.c setup_dualtimer_7
@@ -108,8 +108,8 @@
  *
  * -# Get the dualtimer2 raw interrupt status.
  *    \snippet qs_dualtimer_basic.c timer2_interrupt
- * -# Clear the dualtimer1 interrupt status.
+ * -# Clear the dualtimer2 interrupt status.
  *    \snippet qs_dualtimer_basic.c timer2_interrupt_clr
  * -# Plus the dualtimer_counter2.
- *    \snippet qs_dualtimer_basic.c counter1
+ *    \snippet qs_dualtimer_basic.c counter2
  */

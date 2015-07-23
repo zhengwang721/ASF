@@ -112,7 +112,7 @@ struct dualtimer_config {
 	/** Selects one-shot or wrapping counter mode */
 	enum dualtimer_counter_mode counter_mode;
 	/** Selects 16-bit or 32- bit counter size */
-	enum dualtimer_clock_prescaler counter_size;
+	enum dualtimer_counter_size counter_size;
 	/** Selects the prescaler value */
 	enum dualtimer_clock_prescaler clock_prescaler;
 	/** Enable the interrupt */
