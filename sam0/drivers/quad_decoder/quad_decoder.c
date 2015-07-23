@@ -215,7 +215,7 @@ void quad_decoder_clear_irq_status(enum quad_decoder_axis qdec)
  *
  * \return The current counter of quad decoder instance
  */
-uint16_t quad_decoder_get_counter(enum quad_decoder_axis qdec)
+int16_t quad_decoder_get_counter(enum quad_decoder_axis qdec)
 {
 	switch (qdec) {
 	case QDEC_AXIS_X:
