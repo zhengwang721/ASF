@@ -184,14 +184,14 @@ int main(void)
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);
 	
+	DBG_LOG("Initializing Proximity Reporter Application");
+	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 	
 	register_pathloss_handler(app_pathloss_alert);
 	register_linkloss_handler(app_linkloss_alert);
-	
-	DBG_LOG("Initializing Proximity Reporter Application");
-	
+		
 	/* Capturing the events  */ 
 	while(at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS)
 	{

@@ -192,7 +192,7 @@ void anp_client_service_found_handler(at_ble_primary_service_found_t * params)
 {
 	memcpy((uint8_t *)&ancs_data.ancs_serv, params, sizeof(at_ble_primary_service_found_t));
 	
-	DBG_LOG("Discover service Info:\r\n -->ConnHandle 0x%02xStart\r\n -->start handle 0x%02x\r\n -->End handle : 0x%02x",
+	DBG_LOG_DEV("Discover service Info:\r\n -->ConnHandle 0x%02x\r\n -->start handle 0x%02x\r\n -->End handle : 0x%02x",
 	ancs_data.ancs_serv.conn_handle,
 	ancs_data.ancs_serv.start_handle,
 	ancs_data.ancs_serv.end_handle);	
@@ -254,12 +254,12 @@ void anp_client_descriptor_found_handler(at_ble_descriptor_found_t *params)
 {
 		memcpy((uint8_t *)&ancs_data.notification_source_desc, params, sizeof(at_ble_descriptor_found_t));
 					
-		DBG_LOG("Descriptor Info:\r\n -->ConnHandle: 0x%02x\r\n -->Descriptor handle : 0x%02x",
+		DBG_LOG_DEV("Descriptor Info:\r\n -->ConnHandle: 0x%02x\r\n -->Descriptor handle : 0x%02x",
 					ancs_data.notification_source_desc.conn_handle,
 					ancs_data.notification_source_desc.desc_handle
 					);
 					
-		DBG_LOG(" -->UUID: 0x%02x%02x",
+		DBG_LOG_DEV(" -->UUID: 0x%02x%02x",
 					ancs_data.notification_source_desc.desc_uuid.uuid[1],
 					ancs_data.notification_source_desc.desc_uuid.uuid[0]);
 }

@@ -233,7 +233,7 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				/* actual size of the data */
 				adv_type_size -= 1;
 				DBG_LOG("%-28s",
-						"Incomplete_16bit_service_uuids");
+						"Incomplete_16bit_serv_uuids");
 				DBG_LOG_CONT(":  ");
 				while (adv_type_size) {
 					memcpy(&uuid_16, adv_element_p->data,
@@ -277,7 +277,7 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				/* actual size of the data */
 				adv_type_size -= 1;
 				DBG_LOG("%-28s",
-						"Incomplete_16bit_service_uuids");
+						"Incomplete_16bit_serv_uuids");
 				while (adv_type_size) {
 					memcpy(&uuid_32, adv_element_p->data,
 							AT_BLE_UUID_32_LEN);
@@ -298,7 +298,7 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				/* actual size of the data */
 				adv_type_size -= 1;
 				DBG_LOG("%-28s",
-						"Complete_128bit_service_uuids");
+						"Complete_128bit_service_uuid");
 				DBG_LOG_CONT(":  ");
 				while (adv_type_size) {
 					memcpy(&uuid_128, adv_element_p->data,
@@ -325,7 +325,7 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				/* actual size of the data */
 				adv_type_size -= 1;
 				DBG_LOG("%-28s",
-						"Complete_128bit_service_uuids");
+						"InComplete_128bit_serv_uuids");
 				DBG_LOG_CONT(":  ");
 				while (adv_type_size) {
 					memcpy(&uuid_128, adv_element_p->data,
@@ -463,7 +463,7 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 			break;
 
 			default:
-				DBG_LOG_CONT("Unknown ad type");
+				DBG_LOG("Unknown ad type");
 			}
 			index += (adv_element_data.len + 1);
 			adv_element_data.len += 1;
