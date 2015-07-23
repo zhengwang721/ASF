@@ -3,6 +3,7 @@
 		<info type="description" value="summary">
 		SAMB11 Peripheral instance definitions.
 		</info>
+		<build type="header-file" value="aon_sleep_timer0.h"/>
 		<build type="header-file" value="arm_bpu0.h"/>
 		<build type="header-file" value="arm_dwt0.h"/>
 		<build type="header-file" value="arm_rom0.h"/>
