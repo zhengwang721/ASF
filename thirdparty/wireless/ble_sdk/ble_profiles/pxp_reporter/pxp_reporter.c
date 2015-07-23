@@ -160,10 +160,17 @@ at_ble_status_t pxp_service_define (void)
 */
 at_ble_status_t pxp_reporter_char_changed_handler(at_ble_characteristic_changed_t *char_handle)
 {
+	int temp_val;
 	at_ble_characteristic_changed_t change_params;
 	memcpy((uint8_t *)&change_params, char_handle, sizeof(at_ble_characteristic_changed_t));
 
-	linkloss_current_alert_level = lls_set_alert_value(&change_params,&lls_handle);
+	
+	temp_val = lls_set_alert_value(&change_params,&lls_handle);
+	
+	if (temp_val != INVALID_LLS_PARAM)
+	{
+		linkloss_current_alert_level = temp_val;
+	}
 	
 	pathloss_alert_value		 = ias_set_alert_value(&change_params,&ias_handle);
 	
@@ -182,14 +189,24 @@ at_ble_status_t pxp_reporter_char_changed_handler(at_ble_characteristic_changed_
 at_ble_status_t pxp_reporter_connected_state_handler(at_ble_connected_t *conn_params)
 {
 
-		at_ble_status_t status;
+	at_ble_status_t status;
 	hw_timer_stop();
 	LED_Off(LED0);
 	pxp_led_state = 0;
-	if ( (status = at_ble_tx_power_set(conn_params->handle, DEFAULT_TX_PWR_VALUE)) != AT_BLE_SUCCESS) 
+	if ((status = at_ble_tx_power_set(conn_params->handle, DEFAULT_TX_PWR_VALUE)) != AT_BLE_SUCCESS) 
 	{
 		DBG_LOG("Setting tx power value failed:reason %x",status);
 		return AT_BLE_FAILURE;
+	}
+	
+	if ((status = at_ble_characteristic_value_get(lls_handle.serv_chars.char_val_handle,&linkloss_current_alert_level,0,sizeof(int8_t),sizeof(int8_t))))
+	{
+		DBG_LOG("Read of alert value for link loss service failed:reason %x",status);
+	}
+	
+	if ((status = at_ble_characteristic_value_get(ias_handle.serv_chars.char_val_handle,&pathloss_alert_value,0,sizeof(int8_t),sizeof(int8_t))))
+	{
+		DBG_LOG("Read of alert value for Immediate alert service failed:reason %x",status);
 	}
 	
 	return AT_BLE_SUCCESS;
