@@ -104,7 +104,7 @@ void rssi_update(at_ble_handle_t conn_handle)
 	 *device/handle*/
 	rssi_power = at_ble_rx_power_get(conn_handle);
 
-	DBG_LOG("Rx power is %04d dBm", rssi_power);
+	DBG_LOG("Rx Power(RSSI):%04d dBm", rssi_power);
 
 	/* if received rssi is above no alert zone and below high alert zone */
 	if ((rssi_power < PXP_LOW_ALERT_RANGE) && (rssi_power > PXP_HIGH_ALERT_RANGE))
@@ -115,11 +115,10 @@ void rssi_update(at_ble_handle_t conn_handle)
 			alert_level = PXP_MID_ALERT;
 			
 		}
-		DBG_LOG("MILD ALERT");
+		DBG_LOG_CONT("---Mild Alert!");
 		LED_Toggle(LED0);
 	}
-
-	/* if received rssi is above no alert zone and below high alert zone */
+	/* if received rssi is above mild alert zone */
 	else if (rssi_power < PXP_HIGH_ALERT_RANGE)
 	{
 		if(!(alert_level == PXP_HIGH_ALERT))
@@ -127,17 +126,19 @@ void rssi_update(at_ble_handle_t conn_handle)
 			ias_alert_level_write(conn_handle, ias_handle.char_handle,IAS_HIGH_ALERT);
 			alert_level=PXP_HIGH_ALERT;
 		}
-		DBG_LOG("HIGH ALERT");
+		DBG_LOG_CONT("---High Alert!!!");
 		LED_On(LED0);
 	}
+	/* if received rssi is below mild alert zone */
 	 else {
 		if (!(alert_level == PXP_NO_ALERT)) {
 			ias_alert_level_write(conn_handle,
 					ias_handle.char_handle,
-					IAS_NO_ALERT);
+					IAS_NO_ALERT);			
 			alert_level = PXP_NO_ALERT;
 			LED_Off(LED0);
 		}
+		DBG_LOG_CONT("---No Alert");
 	}
 }
 

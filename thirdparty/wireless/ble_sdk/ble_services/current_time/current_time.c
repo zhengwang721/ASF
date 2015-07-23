@@ -94,7 +94,7 @@ int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *rea
 		
 		DBG_LOG("Current Time:");		
 		
-		DBG_LOG_CONT("[DD:MM:YYYY]: %d-%d-%d [HH:MM:SS]: %d:%d:%d  Day:%s",
+		DBG_LOG_CONT("[DD:MM:YYYY]: %02d-%02d-%02d [HH:MM:SS]: %02d:%02d:%02d  Day:%s",
 		read_resp->char_value[3],
 		read_resp->char_value[2],
 		((uint16_t)read_resp->char_value[0] | (read_resp->char_value[1] <<8)),
