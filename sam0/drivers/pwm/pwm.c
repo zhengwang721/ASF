@@ -136,9 +136,9 @@ static uint32_t _pwm_reg_agcdata_in(
 	int32_t agcdata_in;
 
 	if (agcdata_format) {
-		agcdata_in = (uint16_t)((1024 * duty_cycle) / 100);
-	} else {
 		agcdata_in = (int16_t)((1024 * duty_cycle) / 100 - 512);
+	} else {
+		agcdata_in = (uint16_t)((1024 * duty_cycle) / 100);
 	}
 	switch (device_select) {
 		case PWM1:
