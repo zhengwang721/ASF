@@ -47,13 +47,13 @@
 #define NVM_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_nvm_group SAM Non-Volatile Memory Driver (NVM)
+ * \defgroup asfdoc_sam0_nvm_group SAM Non-Volatile Memory (NVM) Driver 
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
- * and management of non-volatile memories within the device, for partitioning,
- * erasing, reading, and writing of data.
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
+ * an interface for the configuration and management of non-volatile memories 
+ * within the device, for partitioning, erasing, reading, and writing of data.
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  *  - NVM (Non-Volatile Memory)
  *
  * The following devices can use this module:
@@ -314,9 +314,9 @@ extern "C" {
 enum nvm_error {
 	/** No errors. */
 	NVM_ERROR_NONE = 0,
-	/** Lock error, a locked region was attempted accessed. */
+	/** Lock error, a locked region was attempted accessed */
 	NVM_ERROR_LOCK = NVMCTRL_STATUS_NVME | NVMCTRL_STATUS_LOCKE,
-	/** Program error, invalid command was executed. */
+	/** Program error, invalid command was executed */
 	NVM_ERROR_PROG = NVMCTRL_STATUS_NVME | NVMCTRL_STATUS_PROGE,
 };
 
@@ -324,10 +324,10 @@ enum nvm_error {
  * \brief NVM controller commands.
  */
 enum nvm_command {
-	/** Erases the addressed memory row. */
+	/** Erases the addressed memory row */
 	NVM_COMMAND_ERASE_ROW                  = NVMCTRL_CTRLA_CMD_ER,
 
-	/** Write the contents of the page buffer to the addressed memory page. */
+	/** Write the contents of the page buffer to the addressed memory page */
 	NVM_COMMAND_WRITE_PAGE                 = NVMCTRL_CTRLA_CMD_WP,
 
 	/** Erases the addressed auxiliary memory row.
@@ -344,38 +344,38 @@ enum nvm_command {
 	NVM_COMMAND_WRITE_AUX_ROW              = NVMCTRL_CTRLA_CMD_WAP,
 
 	/** Locks the addressed memory region, preventing further modifications
-	 *  until the region is unlocked or the device is erased.
+	 *  until the region is unlocked or the device is erased
 	 */
 	NVM_COMMAND_LOCK_REGION                = NVMCTRL_CTRLA_CMD_LR,
 
 	/** Unlocks the addressed memory region, allowing the region contents to be
-	 *  modified.
+	 *  modified
 	 */
 	NVM_COMMAND_UNLOCK_REGION              = NVMCTRL_CTRLA_CMD_UR,
 
 	/** Clears the page buffer of the NVM controller, resetting the contents to
-	 *  all zero values.
+	 *  all zero values
 	 */
 	NVM_COMMAND_PAGE_BUFFER_CLEAR          = NVMCTRL_CTRLA_CMD_PBC,
 
 	/** Sets the device security bit, disallowing the changing of lock bits and
-	 *  auxiliary row data until a chip erase has been performed.
+	 *  auxiliary row data until a chip erase has been performed
 	 */
 	NVM_COMMAND_SET_SECURITY_BIT           = NVMCTRL_CTRLA_CMD_SSB,
 
 	/** Enter power reduction mode in the NVM controller to reduce the power
-	 *  consumption of the system.
+	 *  consumption of the system
 	 */
 	NVM_COMMAND_ENTER_LOW_POWER_MODE       = NVMCTRL_CTRLA_CMD_SPRM,
 
 	/** Exit power reduction mode in the NVM controller to allow other NVM
-	 *  commands to be issued.
+	 *  commands to be issued
 	 */
 	NVM_COMMAND_EXIT_LOW_POWER_MODE        = NVMCTRL_CTRLA_CMD_CPRM,
 #ifdef FEATURE_NVM_RWWEE
-	/** Read while write(RWW) EEPROM area erase row. */
+	/** Read while write(RWW) EEPROM area erase row */
 	NVM_COMMAND_RWWEE_ERASE_ROW            = NVMCTRL_CTRLA_CMD_RWWEEER,
-	/** RWW EEPROM write page. */
+	/** RWW EEPROM write page */
 	NVM_COMMAND_RWWEE_WRITE_PAGE           = NVMCTRL_CTRLA_CMD_RWWEEWP,
 #endif
 };
@@ -387,11 +387,11 @@ enum nvm_command {
  * device is in sleep.
  */
 enum nvm_sleep_power_mode {
-	/** NVM controller exits low-power mode on first access after sleep. */
+	/** NVM controller exits low-power mode on first access after sleep */
 	NVM_SLEEP_POWER_MODE_WAKEONACCESS  = NVMCTRL_CTRLB_SLEEPPRM_WAKEONACCESS_Val,
-	/** NVM controller exits low-power mode when the device exits sleep mode. */
+	/** NVM controller exits low-power mode when the device exits sleep mode */
 	NVM_SLEEP_POWER_MODE_WAKEUPINSTANT = NVMCTRL_CTRLB_SLEEPPRM_WAKEUPINSTANT_Val,
-	/** Power reduction mode in the NVM controller disabled. */
+	/** Power reduction mode in the NVM controller disabled */
 	NVM_SLEEP_POWER_MODE_ALWAYS_AWAKE  = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val,
 };
 
@@ -407,12 +407,12 @@ enum nvm_cache_readmode {
 	 */
 	NVM_CACHE_READMODE_NO_MISS_PENALTY,
 	/** Reduces power consumption of the cache system, but inserts a
-	 *  wait state each time there is a cache miss.
+	 *  wait state each time there is a cache miss
 	 */
 	NVM_CACHE_READMODE_LOW_POWER,
 	/** The cache system ensures that a cache hit or miss takes the same
 	 *  amount of time, determined by the number of programmed flash
-	 *  wait states.
+	 *  wait states
 	 */
 	NVM_CACHE_READMODE_DETERMINISTIC,
 };
@@ -435,13 +435,13 @@ struct nvm_config {
 	 */
 	bool manual_page_write;
 	/** Number of wait states to insert when reading from flash, to prevent
-	 *  invalid data from being read at high clock frequencies.
+	 *  invalid data from being read at high clock frequencies
 	 */
 	uint8_t wait_states;
 
 	/**
 	 * Setting this to true will disable the pre-fetch cache in front of the
-	 * NVM controller.
+	 * NVM controller
 	 */
 	bool disable_cache;
 #if (SAMC20) || (SAMC21)
@@ -453,7 +453,7 @@ struct nvm_config {
 	bool disable_rww_cache;
 #endif
 	/**
-	 * Select the mode for  how the cache will pre-fetch data from the flash.
+	 * Select the mode for  how the cache will pre-fetch data from the flash
 	 */
 	enum nvm_cache_readmode cache_readmode;
 };
@@ -464,18 +464,18 @@ struct nvm_config {
  * Structure containing the memory layout parameters of the NVM module.
  */
 struct nvm_parameters {
-	/** Number of bytes per page. */
+	/** Number of bytes per page */
 	uint8_t  page_size;
-	/** Number of pages in the main array. */
+	/** Number of pages in the main array */
 	uint16_t nvm_number_of_pages;
 	/** Size of the emulated EEPROM memory section configured in the NVM
-	 *  auxiliary memory space. */
+	 *  auxiliary memory space */
 	uint32_t eeprom_number_of_pages;
 	/** Size of the Bootloader memory section configured in the NVM auxiliary
-	 *  memory space. */
+	 *  memory space */
 	uint32_t bootloader_number_of_pages;
 #ifdef FEATURE_NVM_RWWEE
-	/** Number of pages in read while write EEPROM(RWWEE) emulation area. */
+	/** Number of pages in read while write EEPROM(RWWEE) emulation area */
 	uint16_t rww_eeprom_number_of_pages;
 #endif
 };
@@ -487,21 +487,21 @@ struct nvm_parameters {
  *
  */
 enum nvm_bootloader_size {
-	/** Boot Loader Size is 32768 Bytes. */
+	/** Boot Loader Size is 32768 bytes */
 	NVM_BOOTLOADER_SIZE_128,
-	/** Boot Loader Size is 16384 Bytes. */
+	/** Boot Loader Size is 16384 bytes */
 	NVM_BOOTLOADER_SIZE_64,
-	/** Boot Loader Size is 8192 Bytes. */
+	/** Boot Loader Size is 8192 bytes */
 	NVM_BOOTLOADER_SIZE_32,
-	/** Boot Loader Size is 4096 Bytes. */
+	/** Boot Loader Size is 4096 bytes */
 	NVM_BOOTLOADER_SIZE_16,
-	/** Boot Loader Size is 2048 Bytes. */
+	/** Boot Loader Size is 2048 bytes */
 	NVM_BOOTLOADER_SIZE_8,
-	/** Boot Loader Size is 1024 Bytes. */
+	/** Boot Loader Size is 1024 bytes */
 	NVM_BOOTLOADER_SIZE_4,
-	/** Boot Loader Size is 512 Bytes. */
+	/** Boot Loader Size is 512 bytes */
 	NVM_BOOTLOADER_SIZE_2,
-	/** Boot Loader Size is 0 Bytes. */
+	/** Boot Loader Size is 0 bytes */
 	NVM_BOOTLOADER_SIZE_0,
 };
 
@@ -512,21 +512,21 @@ enum nvm_bootloader_size {
  *
  */
 enum nvm_eeprom_emulator_size {
-	/** EEPROM Size for EEPROM emulation is 16384 bytes. */
+	/** EEPROM Size for EEPROM emulation is 16384 bytes */
 	NVM_EEPROM_EMULATOR_SIZE_16384,
-	/** EEPROM Size for EEPROM emulation is 8192 bytes. */
+	/** EEPROM Size for EEPROM emulation is 8192 bytes */
 	NVM_EEPROM_EMULATOR_SIZE_8192,
-	/** EEPROM Size for EEPROM emulation is 4096 bytes. */
+	/** EEPROM Size for EEPROM emulation is 4096 bytes */
 	NVM_EEPROM_EMULATOR_SIZE_4096,
-	/** EEPROM Size for EEPROM emulation is 2048 bytes. */
+	/** EEPROM Size for EEPROM emulation is 2048 bytes */
 	NVM_EEPROM_EMULATOR_SIZE_2048,
-	/** EEPROM Size for EEPROM emulation is 1024 bytes. */
+	/** EEPROM Size for EEPROM emulation is 1024 bytes */
 	NVM_EEPROM_EMULATOR_SIZE_1024,
-	/** EEPROM Size for EEPROM emulation is 512 bytes. */
+	/** EEPROM Size for EEPROM emulation is 512 bytes */
 	NVM_EEPROM_EMULATOR_SIZE_512,
-	/** EEPROM Size for EEPROM emulation is 256 bytes. */
+	/** EEPROM Size for EEPROM emulation is 256 bytes */
 	NVM_EEPROM_EMULATOR_SIZE_256,
-	/** EEPROM Size for EEPROM emulation is 0 bytes. */
+	/** EEPROM Size for EEPROM emulation is 0 bytes */
 	NVM_EEPROM_EMULATOR_SIZE_0,
 };
 
@@ -537,11 +537,11 @@ enum nvm_eeprom_emulator_size {
  *
  */
 enum nvm_bod33_action {
-	/** No action. */
+	/** No action */
 	NVM_BOD33_ACTION_NONE,
-	/** The BOD33 generates a reset. */
+	/** The BOD33 generates a reset */
 	NVM_BOD33_ACTION_RESET,
-	/** The BOD33 generates an interrupt. */
+	/** The BOD33 generates an interrupt */
 	NVM_BOD33_ACTION_INTERRUPT,
 };
 
@@ -553,11 +553,11 @@ enum nvm_bod33_action {
  *
  */
 enum nvm_bod12_action {
-	/** No action. */
+	/** No action */
 	NVM_BOD12_ACTION_NONE,
-	/** The BOD12 generates a reset. */
+	/** The BOD12 generates a reset */
 	NVM_BOD12_ACTION_RESET,
-	/** The BOD12 generates an interrupt. */
+	/** The BOD12 generates an interrupt */
 	NVM_BOD12_ACTION_INTERRUPT,
 };
 #endif
@@ -569,29 +569,29 @@ enum nvm_bod12_action {
  *
  */
 enum nvm_wdt_window_timeout {
-	/** 8 clock cycles. */
+	/** 8 clock cycles */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_8,
-	/** 16 clock cycles. */
+	/** 16 clock cycles */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_16,
-	/** 32 clock cycles. */
+	/** 32 clock cycles */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_32,
-	/** 64 clock cycles. */
+	/** 64 clock cycles */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_64,
-	/** 128 clock cycles. */
+	/** 128 clock cycles */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_128,
-	/** 256 clock cycles. */
+	/** 256 clock cycles */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_256,
-	/** 512 clock cycles. */
+	/** 512 clock cycles */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_512,
-	/** 1024 clock cycles. */
+	/** 1024 clock cycles */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_1024,
-	/** 2048 clock cycles. */
+	/** 2048 clock cycles */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_2048,
-	/** 4096 clock cycles. */
+	/** 4096 clock cycles */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_4096,
-	/** 8192 clock cycles. */
+	/** 8192 clock cycles */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_8192,
-	/** 16384 clock cycles. */
+	/** 16384 clock cycles */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_16384,
 };
 
@@ -603,29 +603,29 @@ enum nvm_wdt_window_timeout {
  *
  */
 enum nvm_wdt_early_warning_offset {
-	/** 8 clock cycles. */
+	/** 8 clock cycles */
 	NVM_WDT_EARLY_WARNING_OFFSET_8,
-	/** 16 clock cycles. */
+	/** 16 clock cycles */
 	NVM_WDT_EARLY_WARNING_OFFSET_16,
-	/** 32 clock cycles. */
+	/** 32 clock cycles */
 	NVM_WDT_EARLY_WARNING_OFFSET_32,
-	/** 64 clock cycles. */
+	/** 64 clock cycles */
 	NVM_WDT_EARLY_WARNING_OFFSET_64,
-	/** 128 clock cycles. */
+	/** 128 clock cycles */
 	NVM_WDT_EARLY_WARNING_OFFSET_128,
-	/** 256 clock cycles. */
+	/** 256 clock cycles */
 	NVM_WDT_EARLY_WARNING_OFFSET_256,
-	/** 512 clock cycles. */
+	/** 512 clock cycles */
 	NVM_WDT_EARLY_WARNING_OFFSET_512,
-	/** 1024 clock cycles. */
+	/** 1024 clock cycles */
 	NVM_WDT_EARLY_WARNING_OFFSET_1024,
-	/** 2048 clock cycles. */
+	/** 2048 clock cycles */
 	NVM_WDT_EARLY_WARNING_OFFSET_2048,
-	/** 4096 clock cycles. */
+	/** 4096 clock cycles */
 	NVM_WDT_EARLY_WARNING_OFFSET_4096,
-	/** 8192 clock cycles. */
+	/** 8192 clock cycles */
 	NVM_WDT_EARLY_WARNING_OFFSET_8192,
-	/** 16384 clock cycles. */
+	/** 16384 clock cycles */
 	NVM_WDT_EARLY_WARNING_OFFSET_16384,
 };
 
@@ -636,51 +636,51 @@ enum nvm_wdt_early_warning_offset {
  * which contain the fuse settings.
  */
 struct nvm_fusebits {
-	/** Bootloader size. */
+	/** Bootloader size */
 	enum nvm_bootloader_size          bootloader_size;
-	/** EEPROM emulation area size. */
+	/** EEPROM emulation area size */
 	enum nvm_eeprom_emulator_size     eeprom_size;
 #if (SAMC20) || (SAMC21)
-	/** BODVDD Threshold level at power on. */
+	/** BODVDD Threshold level at power on */
 	uint8_t                           bodvdd_level;
-	/** BODVDD Enable at power on. */
+	/** BODVDD Enable at power on */
 	bool                              bodvdd_enable;
-	/** BODVDD Action at power on. */
+	/** BODVDD Action at power on */
 	enum nvm_bod33_action             bodvdd_action;
-	/* BODVDD Hysteresis at power on*/
+	/* BODVDD Hysteresis at power on */
 	bool                              bodvdd_hysteresis;
 #else
-	/** BOD33 Threshold level at power on. */
+	/** BOD33 Threshold level at power on */
 	uint8_t                           bod33_level;
-	/** BOD33 Enable at power on. */
+	/** BOD33 Enable at power on */
 	bool                              bod33_enable;
-	/** BOD33 Action at power on. */
+	/** BOD33 Action at power on */
 	enum nvm_bod33_action             bod33_action;
-	/* BOD33 Hysteresis at power on*/
+	/* BOD33 Hysteresis at power on */
 	bool                              bod33_hysteresis;
 #endif
-	/** WDT Enable at power on. */
+	/** WDT Enable at power on */
 	bool                              wdt_enable;
-	/** WDT Always-on at power on. */
+	/** WDT Always-on at power on */
 	bool                              wdt_always_on;
-	/** WDT Period at power on. */
+	/** WDT Period at power on */
 	uint8_t                           wdt_timeout_period;
-	/** WDT Window mode time-out at power on. */
+	/** WDT Window mode time-out at power on */
 	enum nvm_wdt_window_timeout       wdt_window_timeout;
-	/** WDT Early warning interrupt time offset at power on. */
+	/** WDT Early warning interrupt time offset at power on */
 	enum nvm_wdt_early_warning_offset wdt_early_warning_offset;
-	/** WDT Window mode enabled at power on. */
+	/** WDT Window mode enabled at power on */
 	bool                              wdt_window_mode_enable_at_poweron;
-	/** NVM Lock bits. */
+	/** NVM Lock bits */
 	uint16_t                          lockbits;
 #ifdef FEATURE_BOD12
-	/** BOD12 Threshold level at power on. */
+	/** BOD12 Threshold level at power on */
 	uint8_t                           bod12_level;
-	/** BOD12 Enable at power on. */
+	/** BOD12 Enable at power on */
 	bool                              bod12_enable;
-	/** BOD12 Action at power on. */
+	/** BOD12 Action at power on */
 	enum nvm_bod12_action             bod12_action;
-	/* BOD12 Hysteresis at power on*/
+	/* BOD12 Hysteresis at power on */
 	bool                              bod12_hysteresis;
 #endif
 };
@@ -895,7 +895,7 @@ static inline enum nvm_error nvm_get_error(void)
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_nvm_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_nvm_basic_use_case
