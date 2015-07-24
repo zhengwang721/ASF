@@ -3,6 +3,7 @@
 		<info type="description" value="summary">
 		SAMB11 component definitions.
 		</info>
+		<build type="header-file" value="aon_gp_regs.h"/>
 		<build type="header-file" value="arm_bpu.h"/>
 		<build type="header-file" value="arm_dwt.h"/>
 		<build type="header-file" value="arm_rom.h"/>

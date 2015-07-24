@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Header file for SAMB11G18A
+ * \brief Header file for ATSAMB11G18A
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,7 @@
 #ifndef _SAMB11G18A_
 #define _SAMB11G18A_
 
-/**
- * \ingroup SAMB11_definitions
- * \addtogroup SAMB11G18A_definitions SAMB11G18A definitions
+/** \addtogroup SAMB11G18A_definitions SAMB11G18A definitions
  * This file defines all structures and symbols for SAMB11G18A:
  *   - registers and bitfields
  *   - peripheral base address
@@ -94,35 +92,31 @@ typedef enum IRQn
 {
 /******  CORTEX-M0 Processor Exceptions Numbers ******************************/
   NonMaskableInt_IRQn       = -14, /**< 2   Non Maskable Interrupt               */
-  HardFault_IRQn            = -13, /**< 3   Cortex-M4 Hard Fault Interrupt       */
-  MemoryManagement_IRQn     = -12, /**< 4   Cortex-M4 Memory Management Interrupt  */
-  BusFault_IRQn             = -11, /**< 5   Cortex-M4 Bus Fault Interrupt        */
-  UsageFault_IRQn           = -10, /**< 6   Cortex-M4 Usage Fault Interrupt      */
-  SVCall_IRQn               = -5 , /**< 11  Cortex-M4 SV Call Interrupt          */
-  DebugMonitor_IRQn         = -4 , /**< 12  Cortex-M4 Debug Monitor Interrupt    */
-  PendSV_IRQn               = -2 , /**< 14  Cortex-M4 Pend SV Interrupt          */
-  SysTick_IRQn              = -1 , /**< 15  Cortex-M4 System Tick Interrupt      */
-/******  SAMB11 specific Interrupt Numbers ***********************************/
-  UART0_RX_IRQn             = 0  , /**< 0   Not present in SAMB11 (UART)        */
-  UART0_TX_IRQn             = 1  , /**< 1   Not present in SAMB11 (UART)        */
-  UART1_RX_IRQn             = 2  , /**< 2   Not present in SAMB11 (UART)        */
-  UART1_TX_IRQn             = 3  , /**< 3   Not present in SAMB11 (UART)        */
-  SPI0_RX_IRQn              = 4  , /**< 4   Not present in SAMB11 (SPI)         */
-  SPI0_TX_IRQn              = 5  , /**< 5   Not present in SAMB11 (SPI)         */
-  SPI1_RX_IRQn              = 6  , /**< 6   Not present in SAMB11 (SPI)         */
-  SPI1_TX_IRQn              = 7  , /**< 7   Not present in SAMB11 (SPI)         */
-  I2C0_RX_IRQn              = 8  , /**< 8   Not present in SAMB11 (I2C)         */
-  I2C0_TX_IRQn              = 9  , /**< 9   Not present in SAMB11 (I2C)         */
-  I2C1_RX_IRQn              = 10 , /**< 10  Not present in SAMB11 (I2C)         */
-  I2C1_TX_IRQn              = 11 , /**< 11  Not present in SAMB11 (I2C)         */
-  WDT0_IRQn                 = 12 , /**< 12  Not present in SAMB11 (WDT)         */
-  WDT1_IRQn                 = 13 , /**< 13  Not present in SAMB11 (WDT)         */
-  DUALTIMER0_IRQn           = 14 , /**< 14  Not present in SAMB11 (DUALTIMER)   */
-  PROV_DMA_CTRL0_IRQn       = 15 , /**< 15  Not present in SAMB11 (PROV_DMA_CTRL) */
-  GPIO0_IRQn                = 23 , /**< 23  Not present in SAMB11 (GPIO)        */
-  GPIO1_IRQn                = 24 , /**< 24  Not present in SAMB11 (GPIO)        */
-  GPIO2_IRQn                = 25 , /**< 25  Not present in SAMB11 (GPIO)        */
-  TIMER0_IRQn               = 26 , /**< 26  Not present in SAMB11 (TIMER)       */
+  HardFault_IRQn            = -13, /**< 3   Hard Fault Interrupt                 */
+  SVCall_IRQn               = -5 , /**< 11  SV Call Interrupt                    */
+  PendSV_IRQn               = -2 , /**< 14  Pend SV Interrupt                    */
+  SysTick_IRQn              = -1 , /**< 15  System Tick Interrupt                */
+/******  SAMB11G18A specific Interrupt Numbers ***********************************/
+  UART0_RX_IRQn             = 0  , /**< 0   Not present in SAMB11G18A (UART)    */
+  UART0_TX_IRQn             = 1  , /**< 1   Not present in SAMB11G18A (UART)    */
+  UART1_RX_IRQn             = 2  , /**< 2   Not present in SAMB11G18A (UART)    */
+  UART1_TX_IRQn             = 3  , /**< 3   Not present in SAMB11G18A (UART)    */
+  SPI0_RX_IRQn              = 4  , /**< 4   Not present in SAMB11G18A (SPI)     */
+  SPI0_TX_IRQn              = 5  , /**< 5   Not present in SAMB11G18A (SPI)     */
+  SPI1_RX_IRQn              = 6  , /**< 6   Not present in SAMB11G18A (SPI)     */
+  SPI1_TX_IRQn              = 7  , /**< 7   Not present in SAMB11G18A (SPI)     */
+  I2C0_RX_IRQn              = 8  , /**< 8   Not present in SAMB11G18A (I2C)     */
+  I2C0_TX_IRQn              = 9  , /**< 9   Not present in SAMB11G18A (I2C)     */
+  I2C1_RX_IRQn              = 10 , /**< 10  Not present in SAMB11G18A (I2C)     */
+  I2C1_TX_IRQn              = 11 , /**< 11  Not present in SAMB11G18A (I2C)     */
+  WDT0_IRQn                 = 12 , /**< 12  Not present in SAMB11G18A (WDT)     */
+  WDT1_IRQn                 = 13 , /**< 13  Not present in SAMB11G18A (WDT)     */
+  DUALTIMER0_IRQn           = 14 , /**< 14  Not present in SAMB11G18A (DUALTIMER) */
+  PROV_DMA_CTRL0_IRQn       = 15 , /**< 15  Not present in SAMB11G18A (PROV_DMA_CTRL) */
+  GPIO0_IRQn                = 23 , /**< 23  Not present in SAMB11G18A (GPIO)    */
+  GPIO1_IRQn                = 24 , /**< 24  Not present in SAMB11G18A (GPIO)    */
+  GPIO2_IRQn                = 25 , /**< 25  Not present in SAMB11G18A (GPIO)    */
+  TIMER0_IRQn               = 26 , /**< 26  Not present in SAMB11G18A (TIMER)   */
 
   PERIPH_COUNT_IRQn        = 27  /**< Number of peripheral IDs */
 } IRQn_Type;
@@ -135,37 +129,37 @@ typedef struct _DeviceVectors
   /* Cortex-M handlers */
   void* pfnReset_Handler;                        /* 0   Reset handler                        */
   void* pfnNonMaskableInt_Handler;               /* 2   Non Maskable Interrupt               */
-  void* pfnHardFault_Handler;                    /* 3   Cortex-M4 Hard Fault Interrupt       */
-  void* pfnMemoryManagement_Handler;             /* 4   Cortex-M4 Memory Management Interrupt  */
-  void* pfnBusFault_Handler;                     /* 5   Cortex-M4 Bus Fault Interrupt        */
-  void* pfnUsageFault_Handler;                   /* 6   Cortex-M4 Usage Fault Interrupt      */
+  void* pfnHardFault_Handler;                    /* 3   Hard Fault Interrupt                 */
+  void* pfnReservedM12;
+  void* pfnReservedM11;
+  void* pfnReservedM10;
   void* pfnReservedM9;
   void* pfnReservedM8;
   void* pfnReservedM7;
   void* pfnReservedM6;
-  void* pfnSVCall_Handler;                       /* 11  Cortex-M4 SV Call Interrupt          */
-  void* pfnDebugMonitor_Handler;                 /* 12  Cortex-M4 Debug Monitor Interrupt    */
+  void* pfnSVCall_Handler;                       /* 11  SV Call Interrupt                    */
+  void* pfnReservedM4;
   void* pfnReservedM3;
-  void* pfnPendSV_Handler;                       /* 14  Cortex-M4 Pend SV Interrupt          */
-  void* pfnSysTick_Handler;                      /* 15  Cortex-M4 System Tick Interrupt      */
+  void* pfnPendSV_Handler;                       /* 14  Pend SV Interrupt                    */
+  void* pfnSysTick_Handler;                      /* 15  System Tick Interrupt                */
 
   /* Peripheral handlers */
-  void* pfnUART0_RX_Handler;                     /* 0   Not present in SAMB11 (UART)   */
-  void* pfnUART0_TX_Handler;                     /* 1   Not present in SAMB11 (UART)   */
-  void* pfnUART1_RX_Handler;                     /* 2   Not present in SAMB11 (UART)   */
-  void* pfnUART1_TX_Handler;                     /* 3   Not present in SAMB11 (UART)   */
-  void* pfnSPI0_RX_Handler;                      /* 4   Not present in SAMB11 (SPI)    */
-  void* pfnSPI0_TX_Handler;                      /* 5   Not present in SAMB11 (SPI)    */
-  void* pfnSPI1_RX_Handler;                      /* 6   Not present in SAMB11 (SPI)    */
-  void* pfnSPI1_TX_Handler;                      /* 7   Not present in SAMB11 (SPI)    */
-  void* pfnI2C0_RX_Handler;                      /* 8   Not present in SAMB11 (I2C)    */
-  void* pfnI2C0_TX_Handler;                      /* 9   Not present in SAMB11 (I2C)    */
-  void* pfnI2C1_RX_Handler;                      /* 10  Not present in SAMB11 (I2C)    */
-  void* pfnI2C1_TX_Handler;                      /* 11  Not present in SAMB11 (I2C)    */
-  void* pfnWDT0_Handler;                         /* 12  Not present in SAMB11 (WDT)    */
-  void* pfnWDT1_Handler;                         /* 13  Not present in SAMB11 (WDT)    */
-  void* pfnDUALTIMER0_Handler;                   /* 14  Not present in SAMB11 (DUALTIMER) */
-  void* pfnPROV_DMA_CTRL0_Handler;               /* 15  Not present in SAMB11 (PROV_DMA_CTRL) */
+  void* pfnUART0_RX_Handler;                     /* 0   Not present in SAMB11G18A (UART) */
+  void* pfnUART0_TX_Handler;                     /* 1   Not present in SAMB11G18A (UART) */
+  void* pfnUART1_RX_Handler;                     /* 2   Not present in SAMB11G18A (UART) */
+  void* pfnUART1_TX_Handler;                     /* 3   Not present in SAMB11G18A (UART) */
+  void* pfnSPI0_RX_Handler;                      /* 4   Not present in SAMB11G18A (SPI) */
+  void* pfnSPI0_TX_Handler;                      /* 5   Not present in SAMB11G18A (SPI) */
+  void* pfnSPI1_RX_Handler;                      /* 6   Not present in SAMB11G18A (SPI) */
+  void* pfnSPI1_TX_Handler;                      /* 7   Not present in SAMB11G18A (SPI) */
+  void* pfnI2C0_RX_Handler;                      /* 8   Not present in SAMB11G18A (I2C) */
+  void* pfnI2C0_TX_Handler;                      /* 9   Not present in SAMB11G18A (I2C) */
+  void* pfnI2C1_RX_Handler;                      /* 10  Not present in SAMB11G18A (I2C) */
+  void* pfnI2C1_TX_Handler;                      /* 11  Not present in SAMB11G18A (I2C) */
+  void* pfnWDT0_Handler;                         /* 12  Not present in SAMB11G18A (WDT) */
+  void* pfnWDT1_Handler;                         /* 13  Not present in SAMB11G18A (WDT) */
+  void* pfnDUALTIMER0_Handler;                   /* 14  Not present in SAMB11G18A (DUALTIMER) */
+  void* pfnPROV_DMA_CTRL0_Handler;               /* 15  Not present in SAMB11G18A (PROV_DMA_CTRL) */
   void* pfnReserved16;
   void* pfnReserved17;
   void* pfnReserved18;
@@ -173,10 +167,10 @@ typedef struct _DeviceVectors
   void* pfnReserved20;
   void* pfnReserved21;
   void* pfnReserved22;
-  void* pfnGPIO0_Handler;                        /* 23  Not present in SAMB11 (GPIO)   */
-  void* pfnGPIO1_Handler;                        /* 24  Not present in SAMB11 (GPIO)   */
-  void* pfnGPIO2_Handler;                        /* 25  Not present in SAMB11 (GPIO)   */
-  void* pfnTIMER0_Handler;                       /* 26  Not present in SAMB11 (TIMER)  */
+  void* pfnGPIO0_Handler;                        /* 23  Not present in SAMB11G18A (GPIO) */
+  void* pfnGPIO1_Handler;                        /* 24  Not present in SAMB11G18A (GPIO) */
+  void* pfnGPIO2_Handler;                        /* 25  Not present in SAMB11G18A (GPIO) */
+  void* pfnTIMER0_Handler;                       /* 26  Not present in SAMB11G18A (TIMER) */
   void* pfnReserved27;
 } DeviceVectors;
 
@@ -184,11 +178,7 @@ typedef struct _DeviceVectors
 void Reset_Handler        ( void );
 void NonMaskableInt_Handler ( void );
 void HardFault_Handler    ( void );
-void MemoryManagement_Handler ( void );
-void BusFault_Handler     ( void );
-void UsageFault_Handler   ( void );
 void SVCall_Handler       ( void );
-void DebugMonitor_Handler ( void );
 void PendSV_Handler       ( void );
 void SysTick_Handler      ( void );
 
@@ -247,6 +237,8 @@ void TIMER0_Handler      ( void );
 #include "component/spi.h"
 #include "component/wdt.h"
 #include "component/lpmcu_misc_regs.h"
+//#include "component/aon_sleep_timer.h"
+#include "component/aon_gp_regs.h"
 #include "component/gpio.h"
 #include "component/spi_flash.h"
 #include "component/arm_sysctrl.h"
@@ -271,6 +263,8 @@ void TIMER0_Handler      ( void );
 #include "instance/wdt0.h"
 #include "instance/wdt1.h"
 #include "instance/lpmcu_misc_regs0.h"
+//#include "instance/aon_sleep_timer0.h"
+#include "instance/aon_gp_regs0.h"
 #include "instance/gpio0.h"
 #include "instance/gpio1.h"
 #include "instance/gpio2.h"
@@ -286,10 +280,9 @@ void TIMER0_Handler      ( void );
 /* ************************************************************************** */
 /*   BASE ADDRESS DEFINITIONS FOR SAMB11G18A */
 /* ************************************************************************** */
-
 /** \addtogroup SAMB11G18A_base Peripheral Base Address Definitions 
- * @{*/
-
+ *  @{
+ */
 
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 #define TIMER0                 (0x40000000UL)                 /**< \brief (TIMER0    ) Base Address */
@@ -304,6 +297,8 @@ void TIMER0_Handler      ( void );
 #define WDT0                   (0x40008000UL)                 /**< \brief (WDT0      ) Base Address */
 #define WDT1                   (0x40009000UL)                 /**< \brief (WDT1      ) Base Address */
 #define LPMCU_MISC_REGS0       (0x4000B000UL)                 /**< \brief (LPMCU_MISC_REGS0) Base Address */
+#define AON_SLEEP_TIMER0       (0x4000D000UL)                 /**< \brief (AON_SLEEP_TIMER0) Base Address */
+#define AON_GP_REGS0           (0x4000F000UL)                 /**< \brief (AON_GP_REGS0) Base Address */
 #define GPIO0                  (0x40010000UL)                 /**< \brief (GPIO0     ) Base Address */
 #define GPIO1                  (0x40011000UL)                 /**< \brief (GPIO1     ) Base Address */
 #define GPIO2                  (0x40013000UL)                 /**< \brief (GPIO2     ) Base Address */
@@ -348,6 +343,14 @@ void TIMER0_Handler      ( void );
 #define LPMCU_MISC_REGS0       ((LpmcuMiscRegs *)0x4000b000UL) /**< \brief (LPMCU_MISC_REGS0) Base Address */
 #define LPMCU_MISC_REGS_INST_NUM 1
 #define LPMCU_MISC_REGS_INSTS  { LPMCU_MISC_REGS0 }
+
+#define AON_SLEEP_TIMER0       ((Aon_Sleep_Timer *)0x4000d000UL) /**< \brief (AON_SLEEP_TIMER0) Base Address */
+#define AON_SLEEP_TIMER_INST_NUM 1
+#define AON_SLEEP_TIMER_INSTS  { AON_SLEEP_TIMER0 }
+
+#define AON_GP_REGS0           ((AonGpRegs *)0x4000f000UL)  /**< \brief (AON_GP_REGS0) Base Address */
+#define AON_GP_REGS_INST_NUM   1
+#define AON_GP_REGS_INSTS      { AON_GP_REGS0 }
 
 #define GPIO0                  ((Gpio *)0x40010000UL)         /**< \brief (GPIO0     ) Base Address */
 #define GPIO1                  ((Gpio *)0x40011000UL)         /**< \brief (GPIO1     ) Base Address */
@@ -410,4 +413,4 @@ void TIMER0_Handler      ( void );
 }
 #endif
 
-#endif /* _SAMB11_ */
+#endif /* _SAMB11G18A_ */
