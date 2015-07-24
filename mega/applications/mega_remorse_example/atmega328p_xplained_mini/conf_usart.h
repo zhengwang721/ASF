@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ATMEGA328P_XPLAINED_PRO board LEDs support package.
+ * \brief USART configuration file
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,34 +44,16 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef _LED_H_
-#define _LED_H_
+#ifndef CONF_USART_H
+#define CONF_USART_H
 
-#include "gpio.h"
+//! \note Baud rate
+#define CONF_BAUDRATE   9600
+//! \note Character length
+#define CONF_CHARLENGTH USART_CHSIZE_8BIT_gc
+//! \note Parity checking
+#define CONF_PARITY     USART_PMODE_DISABLED_gc
+//! \note Stop bits
+#define CONF_STOPBITS   false
 
- 
-/*! \brief Turns off the specified LEDs.
- *
- * \param led_gpio LED to turn off (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_Off(led_gpio)     gpio_set_pin_low(led_gpio)
-
-/*! \brief Turns on the specified LEDs.
- *
- * \param led_gpio LED to turn on (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_On(led_gpio)      gpio_set_pin_high(led_gpio)
-
-/*! \brief Toggles the specified LEDs.
- *
- * \param led_gpio LED to toggle (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_Toggle(led_gpio)  gpio_toggle_pin(led_gpio)
-
-#endif /* _LED_H_ */
+#endif

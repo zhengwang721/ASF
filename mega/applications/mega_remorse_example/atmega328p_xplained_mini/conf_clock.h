@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ATMEGA328P_XPLAINED_PRO board LEDs support package.
+ * \brief Atmega328p Xplained Mini Example
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -43,35 +43,24 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-#ifndef _LED_H_
-#define _LED_H_
+/* ===== System Clock Source Options */
+#define BOARD_EXTERNAL_CLK    16000000UL
 
-#include "gpio.h"
+/* ===== System Clock Source Options */
+#define SYSCLK_SRC_RC16MHZ    0
+#define SYSCLK_SRC_RC128KHZ   1
+#define SYSCLK_SRC_TRS16MHZ   2
+#define SYSCLK_SRC_RC32KHZ    3
+#define SYSCLK_SRC_XOC16MHZ   4
+#define SYSCLK_SRC_EXTERNAL   5
 
- 
-/*! \brief Turns off the specified LEDs.
- *
- * \param led_gpio LED to turn off (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_Off(led_gpio)     gpio_set_pin_low(led_gpio)
+#define SYSCLK_SOURCE         SYSCLK_SRC_EXTERNAL
 
-/*! \brief Turns on the specified LEDs.
- *
- * \param led_gpio LED to turn on (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_On(led_gpio)      gpio_set_pin_high(led_gpio)
+/* ===== System Clock Bus Division Options */
 
-/*! \brief Toggles the specified LEDs.
- *
- * \param led_gpio LED to toggle (LEDx_GPIO).
- *
- * \note The pins of the specified LEDs are set to GPIO output mode.
- */
-#define LED_Toggle(led_gpio)  gpio_toggle_pin(led_gpio)
+#define CONFIG_SYSCLK_PSDIV         SYSCLK_PSDIV_1
 
-#endif /* _LED_H_ */
+#endif /* CONF_CLOCK_H_INCLUDED */

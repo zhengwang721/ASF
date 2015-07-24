@@ -1,0 +1,15 @@
+<asf xmlversion="1.0">
+	<module type="application" id="mega.applications.mega_remorse_example" caption="megaAVR remorse example">
+		<info type="description" value="summary">
+		This application shows remorse by usart and tc
+		</info>
+		<build type="c-source" value="mega_remorse_example.c"/>
+		<build type="module-config" subtype="required-header-file" value="conf_usart.h"/>
+		<build type="module-config" subtype="required-header-file" value="conf_clock.h"/>
+		<build type="include-path" value="."/>
+		<require idref="mega.utils"/>
+		<require idref="mega.drivers.usart"/>
+		<device-support value="mega"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>
