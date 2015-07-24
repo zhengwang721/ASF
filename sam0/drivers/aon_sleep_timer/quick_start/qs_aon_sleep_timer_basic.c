@@ -49,13 +49,13 @@ static void delay(uint32_t cycles)
 {
 	volatile uint32_t i = 0;
 	
-	for (i=0; i < cycles*100; i++) {
+	for (i=0; i < cycles; i++) {
 		__NOP();
 	}
 }
 
 //! [setup]
-void configure_gpio_pins(void)
+static void configure_gpio_pins(void)
 {
 //! [setup_1]
 	struct gpio_config config_gpio_pin;
@@ -64,18 +64,11 @@ void configure_gpio_pins(void)
 	gpio_get_config_defaults(&config_gpio_pin);
 //! [setup_2]
 //! [setup_3]
-	config_gpio_pin.direction  = GPIO_PIN_DIR_INPUT;
-	config_gpio_pin.input_pull = GPIO_PIN_PULL_UP;
+	config_gpio_pin.direction = GPIO_PIN_DIR_OUTPUT;
 //! [setup_3]
 //! [setup_4]
-	gpio_pin_set_config(BUTTON_0_PIN, &config_gpio_pin);
-//! [setup_4]
-//! [setup_5]
-	config_gpio_pin.direction = GPIO_PIN_DIR_OUTPUT;
-//! [setup_5]
-//! [setup_6]
 	gpio_pin_set_config(LED_0_PIN, &config_gpio_pin);
-//! [setup_6]
+//! [setup_4]
 }
 //! [setup]
 
@@ -103,22 +96,18 @@ int main(void)
 //! [main_1]
 		delay(1000000);
 //! [main_2]
-		while (aon_sleep_timer_sleep_timer_active());
+		while (!aon_sleep_timer_sleep_timer_active());
 //! [main_2]
 //! [main_3]
 		aon_sleep_timer_sleep_request();
 //! [main_3]
 //! [main_4]
-		asm volatile ("wfi");
+		gpio_pin_set_output_level(LED_0_PIN, false);
 //! [main_4]
-		/* ensure sleep request propagation to flash. */
 //! [main_5]
+		asm volatile ("wfi");
 		asm volatile ("nop");
 //! [main_5]
-//! [main_6]
-		gpio_pin_set_output_level(LED_0_PIN, false);
-//! [main_6]
 	}
 //! [main_imp]
-#endif
 }

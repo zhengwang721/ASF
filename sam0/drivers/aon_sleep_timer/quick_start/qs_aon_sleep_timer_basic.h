@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM DUALTIMER Driver Quick Start for SAMB11
+ * \brief SAM AON Sleep Timer Driver Quick Start for SAMB11
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -45,62 +45,59 @@
  */
 
 /**
- * \page asfdoc_sam0_dualtimer_basic_use_case Quick Start Guide for DUALTIMER - Basic
+ * \page asfdoc_sam0_aon_sleep_timer_basic_use_case Quick Start Guide for AON Sleep Timer - Basic
  *
- * In this use case, the DUALTIMER module is configured for two general downward timer.
+ * In this use case, the AON Sleep Timer module is configured for wakeup MCU.
  *
- * \section asfdoc_sam0_dualtimer_basic_use_case_setup Setup
+ * \section asfdoc_sam0_aon_sleep_timer_basic_use_case_setup Setup
  *
- * \subsection asfdoc_sam0_dualtimer_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_sam0_aon_sleep_timer_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_sam0_dualtimer_basic_use_case_setup_code Code
+ * \subsection asfdoc_sam0_aon_sleep_timer_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
- * \snippet qs_dualtimer_basic.c setup
+ * \snippet qs_aon_sleep_timer_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
- * \snippet qs_dualtimer_basic.c setup_init
+ * \snippet qs_aon_sleep_timer_basic.c setup_init
  *
- * \subsection asfdoc_sam0_dualtimer_basic_use_case_setup_flow Workflow
- * -# Create a new function \c configure_dualtimer(), which will be used to configure
- *    the DUALTIMER peripheral.
- *    \snippet qs_dualtimer_basic.c setup_dualtimer_init
+ * \subsection asfdoc_sam0_aon_sleep_timer_basic_use_case_setup_flow Workflow
+ * -# Create a new function \c configure_gpio_pins(), which will be used to configure
+ *    the GPIO peripheral.
+ *    \snippet qs_aon_sleep_timer_basic.c gpio_init
  *
- * -# Create a DUALTIMER module configuration struct, which can be filled out to
- *    adjust the configuration of a physical DUALTIMER peripheral.
- *    \snippet qs_dualtimer_basic.c setup_dualtimer_1
- * -# Initialize the DUALTIMER configuration struct with the module's default values.
- *    \snippet qs_dualtimer_basic.c setup_dualtimer_2
+ * -# Create a GPIO module configuration struct, which can be filled out to
+ *    adjust the configuration of a physical GPIO peripheral.
+ *    \snippet qs_aon_sleep_timer_basic.c setup_1
+ * -# Initialize the GPIO configuration struct with the module's default values.
+ *    \snippet qs_aon_sleep_timer_basic.c setup_2
  *
- * -# Configure the DUALTIMER module with the desired settings.
- *    \snippet qs_dualtimer_basic.c setup_timer_3
+ * -# Configure the GPIO module with the desired settings.
+ *    \snippet qs_aon_sleep_timer_basic.c setup_3
  *
- * -# Set the DUALTIMER module timer1 enable.
- *    \snippet qs_dualtimer_basic.c setup_dualtimer1_enable
+ * -# Set the GPIO module enable.
+ *    \snippet qs_aon_sleep_timer_basic.c setup_4
  *
- * -# Set the DUALTIMER module timer2 enable.
- *    \snippet qs_dualtimer_basic.c setup_dualtimer2_enable
+ * -# Initial the AON Sleep Timer module.
+ *    \snippet qs_aon_sleep_timer_basic.c timer_init
  *
- *
- * \section asfdoc_sam0_dualtimer_basic_use_case_basic_implement Implementation
+ * \section asfdoc_sam0_aon_sleep_timer_basic_use_case_basic_implement Implementation
  * Add the following to \c main().
- * \snippet qs_dualtimer_basic.c main_imp
+ * \snippet qs_aon_sleep_timer_basic.c main_imp
  *
- * \subsection asfdoc_sam0_dualtimer_basic_use_case_basic_workflow Workflow
- * -# Start an infinite loop, to get timer1/timer2 counter.
- *    \snippet qs_dualtimer_basic.c main_loop
+ * \subsection asfdoc_sam0_aon_sleep_timer_basic_use_case_basic_workflow Workflow
+ * -# Start an infinite loop.
+ *    \snippet qs_aon_sleep_timer_basic.c main_loop
  *
- * -# Get the dualtimer1 raw interrupt status.
- *    \snippet qs_dualtimer_basic.c timer1_interrupt
- * -# Clear the dualtimer1 interrupt status.
- *    \snippet qs_dualtimer_basic.c timer1_interrupt_clr
- * -# Plus the dualtimer_counter1.
- *    \snippet qs_dualtimer_basic.c counter1
+ * -# Turn the activity status LED on.
+ *    \snippet qs_aon_sleep_timer_basic.c main_1
+ * -# Waiting for AON Sleep Timer active.
+ *    \snippet qs_aon_sleep_timer_basic.c main_2
+ * -# Send sleep request.
+ *    \snippet qs_aon_sleep_timer_basic.c main_3
+ * -# Turn the activity status LED off.
+ *    \snippet qs_aon_sleep_timer_basic.c main_4
  *
- * -# Get the dualtimer2 raw interrupt status.
- *    \snippet qs_dualtimer_basic.c timer2_interrupt
- * -# Clear the dualtimer1 interrupt status.
- *    \snippet qs_dualtimer_basic.c timer2_interrupt_clr
- * -# Plus the dualtimer_counter2.
- *    \snippet qs_dualtimer_basic.c counter1
+ * -# Waiting for interrupt to wakeup MCU.
+ *    \snippet qs_aon_sleep_timer_basic.c main_5
  */
