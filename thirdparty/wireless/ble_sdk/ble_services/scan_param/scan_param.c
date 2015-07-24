@@ -79,8 +79,8 @@ void sps_init_service(sps_gatt_service_handler_t *sps_serv, uint16_t *scan_inter
 		sps_serv->serv_chars[0].uuid.uuid[1] = (SPS_CHAR_SCAN_INT_VALUE_UUID >> 8);          /* UUID : Scan Interval Value */
 		sps_serv->serv_chars[0].properties = AT_BLE_CHAR_WRITE_WITHOUT_RESPONSE; /* Properties */
 		sps_serv->serv_chars[0].init_value = (uint8_t *)scan_interval_window;             /* value */
-		sps_serv->serv_chars[0].value_init_len = sizeof(uint16_t);
-		sps_serv->serv_chars[0].value_max_len =  sizeof(uint16_t);
+		sps_serv->serv_chars[0].value_init_len = (sizeof(uint16_t) * 2);
+		sps_serv->serv_chars[0].value_max_len =  (sizeof(uint16_t) * 2);
 		sps_serv->serv_chars[0].value_permissions = AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR;   /* permissions */
 		sps_serv->serv_chars[0].user_desc = NULL;           /* user defined name */
 		sps_serv->serv_chars[0].user_desc_len = 0;
@@ -141,21 +141,17 @@ at_ble_status_t sps_scan_refresh_char_update(sps_gatt_service_handler_t *sps_ser
 	sps_serv->serv_chars[1].init_value = &scan_refresh_value;
 	
 	//updating the att data base
-	if ((at_ble_characteristic_value_set(sps_serv->serv_chars[1].char_val_handle, &scan_refresh_value,0 ,sizeof(uint8_t))) == AT_BLE_SUCCESS){
-		DBG_LOG("updating the characteristic value is successful \n");
-	} else {
-		DBG_LOG("updating the characteristic failed\r\n");
+	if ((at_ble_characteristic_value_set(sps_serv->serv_chars[1].char_val_handle, &scan_refresh_value,0 ,sizeof(uint8_t))) != AT_BLE_SUCCESS)
+	{
+		DBG_LOG("Updating scan refresh characteristic failed\r\n");
 		return AT_BLE_FAILURE;
-	}
+	} 
 	
 	//sending notification to the peer about change in the scan parameters
 	if((at_ble_notification_send(ble_connected_dev_info[0].handle, sps_serv->serv_chars[1].char_val_handle)) == AT_BLE_FAILURE) {
 		DBG_LOG("sending notification to the peer failed");
 		return AT_BLE_FAILURE;
 	}
-	else {
-		DBG_LOG("sending notification to the peer successful");
-		return AT_BLE_SUCCESS;
-	}
+	
 	return AT_BLE_FAILURE;
 }

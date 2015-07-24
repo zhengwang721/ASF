@@ -223,14 +223,16 @@ uint8_t scanned_dev_count)
 		if(pxp_scan_device_count)
 		{  
 			/* Successful device found event*/
+			uint8_t deci_index = pxp_scan_device_count;
+			deci_index+=PXP_ASCII_TO_DECIMAL_VALUE;
 			do
 			{
-				DBG_LOG("Select Index to Connect or [r] to scan again");
+				DBG_LOG("Select Index number to Connect or [s] to scan");
 				index = getchar();
 				DBG_LOG("%c", index);
-			} while (!(((index <= '9') && (index >='0')) || (index == 'r')));	
+			} while (!(((index < (deci_index)) && (index >='0')) || (index == 's')));	
 			
-			if(index == 'r')
+			if(index == 's')
 			{
 				return gap_dev_scan();
 			}
@@ -246,12 +248,12 @@ uint8_t scanned_dev_count)
 		/* from no device found event*/
 		do
 		{
-			DBG_LOG("Select [r] to scan again");
+			DBG_LOG("Select [s] to scan again");
 			index = getchar();
 			DBG_LOG("%c", index);
-		} while (!(index == 'r')); 
+		} while (!(index == 's')); 
 		
-		if(index == 'r')
+		if(index == 's')
 		{
 			return gap_dev_scan();
 		}
@@ -278,13 +280,12 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 	hw_timer_stop();
 	do
 	{
-		DBG_LOG("Select [1] to Reconnect or [2] Scan Again");
+		DBG_LOG("Select [r] to Reconnect or [s] Scan");
 		index_value = getchar();
-		index_value -= PXP_ASCII_TO_DECIMAL_VALUE;
-		DBG_LOG("%d", index_value);
-	}	while (!((index_value==PXP_DEVICE_RECONNECT) || (index_value == PXP_DEVICE_SCAN_AGAIN)));
+		DBG_LOG("%c", index_value);
+	}	while (!((index_value == 'r') || (index_value == 's')));
 	
-	if(index_value == PXP_DEVICE_RECONNECT)
+	if(index_value == 'r')
 	{
 		if (gap_dev_connect(&pxp_reporter_address) == AT_BLE_SUCCESS)
 		{
@@ -298,7 +299,7 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 			DBG_LOG("PXP Re-Connect request send failed");
 		}
 	}
-	else if(index_value == PXP_DEVICE_SCAN_AGAIN)
+	else if(index_value == 's')
 	{
 		return gap_dev_scan();
 	}

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Battery Information Service Declarations
+ * \brief Scan Parameter Service Declarations
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *

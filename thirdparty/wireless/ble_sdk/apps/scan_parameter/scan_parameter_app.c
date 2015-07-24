@@ -67,7 +67,7 @@
 /** @brief Scan response data*/
 uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 sps_gatt_service_handler_t sps_service_handler;
-uint16_t scan_interval_window;
+uint16_t scan_interval_window[2];
 uint8_t scan_refresh;
 
 
@@ -112,7 +112,7 @@ int main(void)
 	ble_device_init(NULL);
 	
 	/* Initialize the battery service */
-	sps_init_service(&sps_service_handler, &scan_interval_window, &scan_refresh);
+	sps_init_service(&sps_service_handler, scan_interval_window, &scan_refresh);
 	
 	/* Define the primary service in the GATT server database */
 	sps_primary_service_define(&sps_service_handler);
@@ -143,7 +143,7 @@ int main(void)
 			
 			if(sps_scan_refresh_char_update(&sps_service_handler, scan_interval_value) == AT_BLE_SUCCESS)
 			{
-				DBG_LOG("Scan Refresh Characteristic Value Updated :%d", scan_interval_value);
+				DBG_LOG("Scan Refresh Characteristic Value: %d", scan_interval_value);
 			}
 			scan_interval_value++;
 		}
@@ -216,7 +216,9 @@ at_ble_status_t sps_char_changed_cb(at_ble_characteristic_changed_t *char_handle
 	if(sps_service_handler.serv_chars[0].char_val_handle == change_params.char_handle)
 	{
 		memcpy(sps_service_handler.serv_chars[0].init_value, change_params.char_new_value, change_params.char_len);
-		DBG_LOG("gatt client scan interval window changed to %d",*change_params.char_new_value);
+		DBG_LOG("New scan interval window parameter");
+		DBG_LOG("Scan Interval 0x%02x",change_params.char_new_value[0]);
+		DBG_LOG("Scan Window   0x%02x",change_params.char_new_value[1]);
 	}
 	return AT_BLE_SUCCESS;
 }

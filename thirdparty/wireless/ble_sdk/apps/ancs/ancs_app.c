@@ -72,7 +72,8 @@ int main(void)
 	/* Initialize serial console */
 	serial_console_init();
 	
-
+	DBG_LOG("ANCS Application");
+	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 	

@@ -367,23 +367,31 @@ at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 /** @brief function to handle connected event received from stack */
 void ble_connected_state_handler(at_ble_connected_t *conn_params)
 {
+	
 	memcpy(ble_connected_dev_info, (uint8_t *)conn_params, sizeof(at_ble_connected_t));
-	DBG_LOG("Connected to peer device with address 0x%02x%02x%02x%02x%02x%02x",
-	conn_params->peer_addr.addr[5],
-	conn_params->peer_addr.addr[4],
-	conn_params->peer_addr.addr[3],
-	conn_params->peer_addr.addr[2],
-	conn_params->peer_addr.addr[1],
-	conn_params->peer_addr.addr[0]);
-	
-	#if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)	
-		ble_send_slave_sec_request(conn_params->handle);		
-	#endif
-	
-	if (ble_connected_cb != NULL)
+	if (conn_params->conn_status == AT_BLE_SUCCESS)
 	{
-		ble_connected_cb(conn_params->handle);
-	}
+		DBG_LOG("Connected to peer device with address 0x%02x%02x%02x%02x%02x%02x",
+		conn_params->peer_addr.addr[5],
+		conn_params->peer_addr.addr[4],
+		conn_params->peer_addr.addr[3],
+		conn_params->peer_addr.addr[2],
+		conn_params->peer_addr.addr[1],
+		conn_params->peer_addr.addr[0]);
+		
+		#if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)
+		ble_send_slave_sec_request(conn_params->handle);
+		#endif
+		
+		if (ble_connected_cb != NULL)
+		{
+			ble_connected_cb(conn_params->handle);
+		}
+	} 
+	else
+	{
+		DBG_LOG("Device Connection Failed");
+	}	
 }
 
 /** @brief function to register callback to be called when device gets connected */

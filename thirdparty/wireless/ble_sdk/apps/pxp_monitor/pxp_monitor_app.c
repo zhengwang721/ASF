@@ -109,7 +109,7 @@ void rssi_update(at_ble_handle_t conn_handle)
 
 	/* if received rssi is above no alert zone and below high alert zone */
 	if ((rssi_power <= PXP_LOW_ALERT_RANGE) &&
-			(rssi_power > PXP_HIGH_ALERT_RANGE)) {
+			(rssi_power >= PXP_HIGH_ALERT_RANGE)) {
 		if (!(alert_level == PXP_MID_ALERT)) {
 			ias_alert_level_write(conn_handle,
 					ias_handle.char_handle,
@@ -121,7 +121,7 @@ void rssi_update(at_ble_handle_t conn_handle)
 		LED_Toggle(LED0);
 	}
 	/* if received rssi is above mild alert zone */
-	else if (rssi_power <= PXP_HIGH_ALERT_RANGE) {
+	else if (rssi_power < PXP_HIGH_ALERT_RANGE) {
 		if (!(alert_level == PXP_HIGH_ALERT)) {
 			ias_alert_level_write(conn_handle,
 					ias_handle.char_handle,
