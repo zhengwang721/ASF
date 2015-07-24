@@ -531,7 +531,7 @@ enum status_code events_trigger(struct events_resource *resource);
  * \param[in] resource Pointer to an \ref events_resource struct
  *
  * \return The ready status of users connected to an event channel.
- * \retval true  All users connect to event channel is ready to handle incmming events
+ * \retval true  All users connect to event channel is ready to handle incoming events
  * \retval false One or more users connect to event channel is not ready to handle incoming events
  */
 bool events_is_users_ready(struct events_resource *resource);
