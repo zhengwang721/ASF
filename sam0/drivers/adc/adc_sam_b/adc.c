@@ -118,9 +118,14 @@ void adc_init(struct adc_config *config)
 					AON_GP_REGS_MS_GPIO_MODE_ANALOG_ENABLE_(config->input_channel);
 		}
 	} else if (config->channel_mode == ADC_CH_MODE_CH0_TO_CH3) {
+		/* Input channels time multiplexing is between channel 0 to channel 3 */
 		/* Config GPIO_MS1 ~ GPIO_MS4 pin */
 		AON_GP_REGS0->MS_GPIO_MODE.reg = AON_GP_REGS_MS_GPIO_MODE_MASK;
+	} else if (config->channel_mode == ADC_CH_MODE_CH4_TO_CH7) {
+		/* Input channels time multiplexing is between channel 4 to channel 7 */
+		reg_value |= AON_GP_REGS_RF_PMU_REGS_1_SADC_CHN_SEL(0x4);
 	}
+
 	reg_value |= AON_GP_REGS_RF_PMU_REGS_1_CODE_IN(config->input_dynamic_range) | \
 				AON_GP_REGS_RF_PMU_REGS_1_SADC_LP_CTRL(config->bias_current);
 	
