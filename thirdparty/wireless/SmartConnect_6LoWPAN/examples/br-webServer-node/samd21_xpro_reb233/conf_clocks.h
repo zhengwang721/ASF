@@ -47,7 +47,11 @@
 
 /* System clock bus configuration */
 #  define CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT     false
+#if(F_CPU==48000000ul)
 #  define CONF_CLOCK_FLASH_WAIT_STATES            2
+#else
+#  define CONF_CLOCK_FLASH_WAIT_STATES            0	
+#endif	
 #  define CONF_CLOCK_CPU_DIVIDER                  SYSTEM_MAIN_CLOCK_DIV_1
 #  define CONF_CLOCK_APBA_DIVIDER                 SYSTEM_MAIN_CLOCK_DIV_1
 #  define CONF_CLOCK_APBB_DIVIDER                 SYSTEM_MAIN_CLOCK_DIV_1
