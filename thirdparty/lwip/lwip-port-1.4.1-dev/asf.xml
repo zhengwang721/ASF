@@ -1,0 +1,18 @@
+<asf xmlversion="1.0">
+	<module type="service" id="thirdparty.lwip-port.141-dev" caption="lwIP v141 port to FreeRTOS.">
+		<info type="description" value="summary">
+		This lwIP port uses FreeRTOS.
+		</info>
+		<info type="gui-flag" value="hidden"/>
+		<build type="module-config" subtype="path" value="sam/module_config"/>
+		<build type="header-file" subtype="api" value="sam/include/arch/cc.h"/>
+		<build type="header-file" subtype="api" value="sam/include/arch/perf.h"/>
+		<build type="header-file" subtype="api" value="sam/include/arch/sys_arch.h"/>
+		<build type="include-path" value="sam/include"/>
+		<build type="c-source" value="sam/sys_arch.c"/>
+		<device-support value="sam3"/>
+		<device-support value="sam4"/>
+		<device-support value="samg"/>
+		<generator value="doxygen-module" default-mcu="unspecified-sam4s"/>
+	</module>
+</asf>

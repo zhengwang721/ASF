@@ -1,0 +1,25 @@
+<asf xmlversion="1.0">
+	<select-by-device id="thirdparty.lwip.tinyservices" caption="Tiny DNS/DHCP Services for lwIP">
+		<info type="description" value="summary">
+			Minimal DNS/DHCP services implementation for lwIP network stack.
+		</info>
+		<module type="service" id="thirdparty.lwip.tinyservices#0" caption="Tiny DNS/DHCP Services for lwIP - SAM4S/SAMG53/SAMG55 implementation">
+			<build type="include-path" value="."/>
+			<build type="c-source" value="tinydhcpserver.c"/>
+			<build type="c-source" value="tinyservices.c"/>
+			<build type="header-file" value="tinyservices.h"/>
+			<build type="header-file" value="wifi_private.h"/>
+
+			<build type="module-config" subtype="required-header-file" value="conf_tinyservices.h"/>
+			<build type="module-config" subtype="path" value="module_config"/>
+			<build type="doxygen-entry-point" value="winc1500_group"/>
+			<build type="doxygen-quick-start" value="winc1500_quickstart"/>
+			<device-support value="sam4s"/>
+			<device-support value="samg53"/>
+			<device-support value="samg55"/>
+			<require idref="thirdparty.lwip.141-dev"/>
+
+			<generator value="doxygen-module" default-mcu="unspecified-sam4s"/>
+		</module>
+	</select-by-device>
+</asf>

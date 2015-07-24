@@ -1,0 +1,197 @@
+<asf xmlversion="1.0">
+	<module type="service" id="thirdparty.lwip.141-dev" caption="lwIP TCP/IP Stack v141">
+		<info type="keyword" value="technology">
+			<keyword value="Communication"/>
+		</info>
+		<info type="description" value="summary">
+		lwIP is a light-weight implementation of the TCP/IP protocol suite.
+		lwIP has been ported to AVR UC3 and SAM device family. The network stack can be run either with or without FreeRTOS.
+		For more information on lwIP, check lwip.wikia.com/wiki/LwIP_Wiki.
+		</info>
+		<info type="gui-flag" value="hidden"/>
+		<build type="module-config" subtype="required-header-file" value="lwipopts.h"/>
+		<build type="module-config" subtype="path" value="module_config/"/>
+
+		<build type="distribute" subtype="file" value="../CHANGELOG"/>
+		<build type="distribute" subtype="file" value="../FILES"/>
+		<build type="distribute" subtype="file" value="../README"/>
+		<build type="distribute" subtype="file" value="../FILES"/>
+		<build type="distribute" subtype="file" value="FILES"/>
+		<build type="distribute" subtype="file" value="./netif/FILES"/>
+		<build type="distribute" subtype="file" value="../doc/contrib.txt"/>
+		<build type="distribute" subtype="file" value="../doc/FILES"/>
+		<build type="distribute" subtype="file" value="../doc/rawapi.txt"/>
+		<build type="distribute" subtype="file" value="../doc/savannah.txt"/>
+		<build type="distribute" subtype="file" value="../doc/snmp_agent.txt"/>
+		<build type="distribute" subtype="file" value="../doc/sys_arch.txt"/>
+		<build type="distribute" subtype="license" value="../COPYING" />
+		<build type="distribute" value="core/ipv6/README"/>
+		<build type="distribute" value="netif/FILES"/>	
+		<build type="distribute" value="netif/ppp/PPPD_FOLLOWUP"/>
+		<build type="distribute" value="netif/ppp/polarssl/README"/>
+
+		<build type="c-source" value="api/api_lib.c"/>
+		<build type="c-source" value="api/api_msg.c"/>
+		<build type="c-source" value="api/err.c"/>
+		<build type="c-source" value="api/netbuf.c"/>
+		<build type="c-source" value="api/netdb.c"/>
+		<build type="c-source" value="api/netifapi.c"/>
+		<build type="c-source" value="api/pppapi.c"/>
+		<build type="c-source" value="api/sockets.c"/>
+		<build type="c-source" value="api/tcpip.c"/>
+		<build type="c-source" value="core/def.c"/>
+		<build type="c-source" value="core/dhcp.c"/>
+		<build type="c-source" value="core/dns.c"/>
+		<build type="c-source" value="core/inet_chksum.c"/>
+		<build type="c-source" value="core/init.c"/>
+		<build type="c-source" value="core/mem.c"/>
+		<build type="c-source" value="core/memp.c"/>
+		<build type="c-source" value="core/netif.c"/>
+		<build type="c-source" value="core/pbuf.c"/>
+		<build type="c-source" value="core/raw.c"/>
+		<build type="c-source" value="core/stats.c"/>
+		<build type="c-source" value="core/sys.c"/>
+		<build type="c-source" value="core/tcp.c"/>
+		<build type="c-source" value="core/tcp_in.c"/>
+		<build type="c-source" value="core/tcp_out.c"/>
+		<build type="c-source" value="core/timers.c"/>
+		<build type="c-source" value="core/udp.c"/>
+		<build type="c-source" value="core/ipv4/autoip.c"/>
+		<build type="c-source" value="core/ipv4/icmp.c"/>
+		<build type="c-source" value="core/ipv4/igmp.c"/>
+		<build type="c-source" value="core/ipv4/ip4.c"/>
+		<build type="c-source" value="core/ipv4/ip4_addr.c"/>
+		<build type="c-source" value="core/ipv4/ip_frag.c"/>
+		<build type="c-source" value="core/ipv6/dhcp6.c"/>
+		<build type="c-source" value="core/ipv6/ethip6.c"/>
+		<build type="c-source" value="core/ipv6/icmp6.c"/>
+		<build type="c-source" value="core/ipv6/inet6.c"/>
+		<build type="c-source" value="core/ipv6/ip6.c"/>
+		<build type="c-source" value="core/ipv6/ip6_addr.c"/>
+		<build type="c-source" value="core/ipv6/ip6_frag.c"/>
+		<build type="c-source" value="core/ipv6/mld6.c"/>
+		<build type="c-source" value="core/ipv6/nd6.c"/>
+		<build type="c-source" value="core/snmp/asn1_dec.c"/>
+		<build type="c-source" value="core/snmp/asn1_enc.c"/>
+		<build type="c-source" value="core/snmp/mib2.c"/>
+		<build type="c-source" value="core/snmp/mib_structs.c"/>
+		<build type="c-source" value="core/snmp/msg_in.c"/>
+		<build type="c-source" value="core/snmp/msg_out.c"/>
+		<build type="c-source" value="netif/etharp.c"/>
+		<build type="c-source" value="netif/ethernetif.c"/>
+		<build type="c-source" value="netif/slipif.c"/>
+		<build type="c-source" value="netif/ppp/auth.c"/>
+		<build type="c-source" value="netif/ppp/ccp.c"/>
+		<build type="c-source" value="netif/ppp/chap-md5.c"/>
+		<build type="c-source" value="netif/ppp/chap-new.c"/>
+		<build type="c-source" value="netif/ppp/chap_ms.c"/>
+		<build type="c-source" value="netif/ppp/demand.c"/>
+		<build type="c-source" value="netif/ppp/eap.c"/>
+		<build type="c-source" value="netif/ppp/ecp.c"/>
+		<build type="c-source" value="netif/ppp/eui64.c"/>
+		<build type="c-source" value="netif/ppp/fsm.c"/>
+		<build type="c-source" value="netif/ppp/ipcp.c"/>
+		<build type="c-source" value="netif/ppp/ipv6cp.c"/>
+		<build type="c-source" value="netif/ppp/lcp.c"/>
+		<build type="c-source" value="netif/ppp/magic.c"/>
+		<build type="c-source" value="netif/ppp/multilink.c"/>
+		<build type="c-source" value="netif/ppp/ppp.c"/>
+		<build type="c-source" value="netif/ppp/pppcrypt.c"/>
+		<build type="c-source" value="netif/ppp/pppoe.c"/>
+		<build type="c-source" value="netif/ppp/pppol2tp.c"/>
+		<build type="c-source" value="netif/ppp/upap.c"/>
+		<build type="c-source" value="netif/ppp/utils.c"/>
+		<build type="c-source" value="netif/ppp/vj.c"/>
+		<build type="c-source" value="netif/ppp/polarssl/des.c"/>
+		<build type="c-source" value="netif/ppp/polarssl/md4.c"/>
+		<build type="c-source" value="netif/ppp/polarssl/md5.c"/>
+		<build type="c-source" value="netif/ppp/polarssl/sha1.c"/>
+		<build type="header-file" value="include/lwip/api.h"/>
+		<build type="header-file" value="include/lwip/api_msg.h"/>
+		<build type="header-file" value="include/lwip/arch.h"/>
+		<build type="header-file" value="include/lwip/autoip.h"/>
+		<build type="header-file" value="include/lwip/debug.h"/>
+		<build type="header-file" value="include/lwip/def.h"/>
+		<build type="header-file" value="include/lwip/dhcp.h"/>
+		<build type="header-file" value="include/lwip/dhcp6.h"/>
+		<build type="header-file" value="include/lwip/dns.h"/>
+		<build type="header-file" value="include/lwip/err.h"/>
+		<build type="header-file" value="include/lwip/ethip6.h"/>
+		<build type="header-file" value="include/lwip/icmp.h"/>
+		<build type="header-file" value="include/lwip/icmp6.h"/>
+		<build type="header-file" value="include/lwip/igmp.h"/>
+		<build type="header-file" value="include/lwip/inet.h"/>
+		<build type="header-file" value="include/lwip/inet6.h"/>
+		<build type="header-file" value="include/lwip/inet_chksum.h"/>
+		<build type="header-file" value="include/lwip/init.h"/>
+		<build type="header-file" value="include/lwip/ip.h"/>
+		<build type="header-file" value="include/lwip/ip4.h"/>
+		<build type="header-file" value="include/lwip/ip4_addr.h"/>
+		<build type="header-file" value="include/lwip/ip6.h"/>
+		<build type="header-file" value="include/lwip/ip6_addr.h"/>
+		<build type="header-file" value="include/lwip/ip6_frag.h"/>
+		<build type="header-file" value="include/lwip/ip_addr.h"/>
+		<build type="header-file" value="include/lwip/ip_frag.h"/>
+		<build type="header-file" value="include/lwip/mem.h"/>
+		<build type="header-file" value="include/lwip/memp.h"/>
+		<build type="header-file" value="include/lwip/memp_std.h"/>
+		<build type="header-file" value="include/lwip/mld6.h"/>
+		<build type="header-file" value="include/lwip/nd6.h"/>
+		<build type="header-file" value="include/lwip/netbuf.h"/>
+		<build type="header-file" value="include/lwip/netdb.h"/>
+		<build type="header-file" value="include/lwip/netif.h"/>
+		<build type="header-file" value="include/lwip/netifapi.h"/>
+		<build type="header-file" value="include/lwip/opt.h"/>
+		<build type="header-file" value="include/lwip/pbuf.h"/>
+		<build type="header-file" value="include/lwip/pppapi.h"/>
+		<build type="header-file" value="include/lwip/raw.h"/>
+		<build type="header-file" value="include/lwip/sio.h"/>
+		<build type="header-file" value="include/lwip/snmp.h"/>
+		<build type="header-file" value="include/lwip/snmp_asn1.h"/>
+		<build type="header-file" value="include/lwip/snmp_msg.h"/>
+		<build type="header-file" value="include/lwip/snmp_structs.h"/>
+		<build type="header-file" value="include/lwip/sockets.h"/>
+		<build type="header-file" value="include/lwip/stats.h"/>
+		<build type="header-file" value="include/lwip/sys.h"/>
+		<build type="header-file" value="include/lwip/tcp.h"/>
+		<build type="header-file" value="include/lwip/tcpip.h"/>
+		<build type="header-file" value="include/lwip/tcp_impl.h"/>
+		<build type="header-file" value="include/lwip/timers.h"/>
+		<build type="header-file" value="include/lwip/udp.h"/>
+		<build type="header-file" value="include/netif/etharp.h"/>
+		<build type="header-file" value="include/netif/slipif.h"/>
+		<build type="header-file" value="include/netif/ppp/ccp.h"/>
+		<build type="header-file" value="include/netif/ppp/chap-md5.h"/>
+		<build type="header-file" value="include/netif/ppp/chap-new.h"/>
+		<build type="header-file" value="include/netif/ppp/chap_ms.h"/>
+		<build type="header-file" value="include/netif/ppp/eap.h"/>
+		<build type="header-file" value="include/netif/ppp/ecp.h"/>
+		<build type="header-file" value="include/netif/ppp/eui64.h"/>
+		<build type="header-file" value="include/netif/ppp/fsm.h"/>
+		<build type="header-file" value="include/netif/ppp/ipcp.h"/>
+		<build type="header-file" value="include/netif/ppp/ipv6cp.h"/>
+		<build type="header-file" value="include/netif/ppp/lcp.h"/>
+		<build type="header-file" value="include/netif/ppp/magic.h"/>
+		<build type="header-file" value="include/netif/ppp/ppp.h"/>
+		<build type="header-file" value="include/netif/ppp/pppcrypt.h"/>
+		<build type="header-file" value="include/netif/ppp/pppdebug.h"/>
+		<build type="header-file" value="include/netif/ppp/pppoe.h"/>
+		<build type="header-file" value="include/netif/ppp/pppol2tp.h"/>
+		<build type="header-file" value="include/netif/ppp/ppp_impl.h"/>
+		<build type="header-file" value="include/netif/ppp/upap.h"/>
+		<build type="header-file" value="include/netif/ppp/vj.h"/>
+		<build type="header-file" value="include/netif/ppp/polarssl/des.h"/>
+		<build type="header-file" value="include/netif/ppp/polarssl/md4.h"/>
+		<build type="header-file" value="include/netif/ppp/polarssl/md5.h"/>
+		<build type="header-file" value="include/netif/ppp/polarssl/sha1.h"/>
+		<build type="header-file" value="include/posix/netdb.h"/>
+		<build type="header-file" value="include/posix/sys/socket.h"/>
+
+		<build type="include-path" value="include"/>
+		<build type="include-path" value="include/lwip"/>
+		<require idref="thirdparty.lwip-port.141-dev"/>
+		<device-support value="sam3"/>
+		<device-support value="sam4"/>
+		<generator value="doxygen-module" default-mcu="unspecified-sam4s"/>
+	</module>
+</asf>
