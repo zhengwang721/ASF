@@ -82,17 +82,17 @@
  *
  * The Non-Volatile Memory (NVM) module provides an interface to the device's
  * Non-Volatile Memory controller, so that memory pages can be written, read,
- * erased and reconfigured in a standardized manner.
+ * erased, and reconfigured in a standardized manner.
  *
  * \subsection asfdoc_sam0_nvm_features Driver Feature Macro Definition
  * <table>
  *  <tr>
- *    <th>Driver Feature Macro</th>
+ *    <th>Driver feature macro</th>
  *    <th>Supported devices</th>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_NVM_RWWEE</td>
- *    <td>SAML21, SAMD21-64K, SAMDAx, SAMC20/C21</td>
+ *    <td>SAM L21, SAM D21-64K, SAM DAx, SAM C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_BOD12</td>
@@ -157,7 +157,7 @@
  * pages in the NVM memory space are available via the \ref nvm_get_parameters()
  * function.
  *
- * A NVM page number and address can be computed via the following equations:
+ * An NVM page number and address can be computed via the following equations:
  *
  * \f[ PageNum = (RowNum \times 4) + PagePosInRow \f]
  * \f[ PageAddr = PageNum \times PageSize \f]
@@ -170,7 +170,7 @@
  * \dot
  * digraph row_layout {
  *  size="4,4"
- *  node [shape=plaintext]
+ *  node [shape=plaintext, fontname=areal]
  *  row [label=<
  *   <table border="0" cellborder="1" cellspacing="0">
  *    <tr>
@@ -236,7 +236,7 @@
  * wait states when the CPU is running at high frequencies.
  *
  * \subsection asfdoc_sam0_nvm_special_consideration_security_bit Security Bit
- * The User Row in the Auxiliary Space Cannot be read or written when
+ * The User Row in the Auxiliary Space cannot be read or written when
  * the Security Bit is set. The Security Bit can be set by using passing
  * \ref NVM_COMMAND_SET_SECURITY_BIT to the \ref nvm_execute_command() function,
  * or it will be set if one tries to access a locked region. See
@@ -387,9 +387,9 @@ enum nvm_command {
  * device is in sleep.
  */
 enum nvm_sleep_power_mode {
-	/** NVM controller exits low power mode on first access after sleep. */
+	/** NVM controller exits low-power mode on first access after sleep. */
 	NVM_SLEEP_POWER_MODE_WAKEONACCESS  = NVMCTRL_CTRLB_SLEEPPRM_WAKEONACCESS_Val,
-	/** NVM controller exits low power mode when the device exits sleep mode. */
+	/** NVM controller exits low-power mode when the device exits sleep mode. */
 	NVM_SLEEP_POWER_MODE_WAKEUPINSTANT = NVMCTRL_CTRLB_SLEEPPRM_WAKEUPINSTANT_Val,
 	/** Power reduction mode in the NVM controller disabled. */
 	NVM_SLEEP_POWER_MODE_ALWAYS_AWAKE  = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val,
@@ -441,13 +441,13 @@ struct nvm_config {
 
 	/**
 	 * Setting this to true will disable the pre-fetch cache in front of the
-	 * nvm controller.
+	 * NVM controller.
 	 */
 	bool disable_cache;
 #if (SAMC20) || (SAMC21)
 	/**
 	 * Setting this to true will disable the pre-fetch RWW cache in front of the
-	 * nvm controller.
+	 * NVM controller.
 	 * If RWW cache is enabled, NVM cache will also be enabled.
 	 */
 	bool disable_rww_cache;
@@ -699,7 +699,7 @@ struct nvm_fusebits {
  * user application.
  *
  * The default configuration is as follows:
- *  \li Power reduction mode enabled after sleep until first NVM access
+ *  \li Power reduction mode enabled after sleep mode until first NVM access
  *  \li Automatic page write mode disabled
  *  \li Number of FLASH wait states left unchanged
  *
@@ -877,7 +877,7 @@ static inline enum nvm_error nvm_get_error(void)
  *		<td>Added functions to read/write fuse settings</td>
  *	</tr>
  *	<tr>
- *		<td>Added support for nvm cache configuration</td>
+ *		<td>Added support for NVM cache configuration</td>
  *	</tr>
  *	<tr>
  *		<td>Updated initialization function to also enable the digital interface
@@ -910,8 +910,8 @@ static inline enum nvm_error nvm_get_error(void)
  *	</tr>
  *	<tr>
  *		<td>42114E</td>
- *		<td>06/2015</td>
- *		<td>Added support for SAML21, SAMC21 and SAMDAx</td>
+ *		<td>08/2015</td>
+ *		<td>Added support for SAM L21, SAM C21 and SAM DAx</td>
  *	</tr> 
  *	<tr>
  *		<td>42114D</td>
@@ -921,7 +921,7 @@ static inline enum nvm_error nvm_get_error(void)
  *	<tr>
  *		<td>42114C</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAMD21</td>
+ *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
  *		<td>42114B</td>
