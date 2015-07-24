@@ -55,7 +55,7 @@
 #include "asf.h"
 #include "mqtt.h"
 #include "adc.h"
-
+#include "battery-sensor.h"
 #define SEND_INTERVAL		(60 * CLOCK_SECOND)
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
@@ -70,9 +70,14 @@ static char str_topic_sensor[30];
 static char str_topic_led[30];
 static char app_buffer[128];
 
+#if XPRO_IO1
 /* IO1-XPro Board details */
 static char temp_str[8];
 static char light_str[8];
+#else
+static char batt_str[8];
+static const struct sensors_sensor *battery = NULL;
+#endif
 static char mac_adr_str[18];
 static uint16_t nodeid;
 
@@ -229,11 +234,16 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
 {
     PROCESS_BEGIN();
 	static unsigned long  timestmp;
-	volatile uint16_t light;
 	volatile uip_ds6_addr_t *lladdr;
+	#if XPRO_IO1
+	volatile uint16_t light;
+	#else
+	volatile uint16_t battery_v;
+	#endif
   // ("%s%x%s%x","Node id: ",ipaddr," Count: ",count)
 
-  
+ 
+  //}
 
   timestmp = clock_time();
 
@@ -271,23 +281,36 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
 
   mqtt_set_last_will(&conn, str_topic_state, "offline", MQTT_QOS_LEVEL_0);
   
-  /* IO1 Xpro Board initilization */
+
   static struct etimer et;
   etimer_set(&et, CLOCK_SECOND);
-  at30tse_init();
-  volatile uint16_t thigh = 0;
-  thigh = at30tse_read_register(AT30TSE_THIGH_REG,
-  AT30TSE_NON_VOLATILE_REG, AT30TSE_THIGH_REG_SIZE);
-   volatile uint16_t tlow = 0;
-   tlow = at30tse_read_register(AT30TSE_TLOW_REG,
-   AT30TSE_NON_VOLATILE_REG, AT30TSE_TLOW_REG_SIZE);
-   at30tse_write_config_register(
-   AT30TSE_CONFIG_RES(AT30TSE_CONFIG_RES_12_bit));
-  //etimer_set(&periodic_timer, CLOCK_SECOND*20);8
-   /* To keep compiler happy */
-   thigh = thigh;
-   tlow = tlow;
-   temp_C = at30tse_read_temperature();
+  
+  #if XPRO_IO1
+	/* IO1 Xpro Board initilization */
+  
+  
+	at30tse_init();
+	volatile uint16_t thigh = 0;
+	thigh = at30tse_read_register(AT30TSE_THIGH_REG,
+	AT30TSE_NON_VOLATILE_REG, AT30TSE_THIGH_REG_SIZE);
+	volatile uint16_t tlow = 0;
+	tlow = at30tse_read_register(AT30TSE_TLOW_REG,
+	AT30TSE_NON_VOLATILE_REG, AT30TSE_TLOW_REG_SIZE);
+	at30tse_write_config_register(
+	AT30TSE_CONFIG_RES(AT30TSE_CONFIG_RES_12_bit));
+	//etimer_set(&periodic_timer, CLOCK_SECOND*20);8
+	/* To keep compiler happy */
+	thigh = thigh;
+	tlow = tlow;
+	temp_C = at30tse_read_temperature();
+   
+   #else
+	
+	battery = sensors_find(BATTERY_SENSOR);
+	
+	battery_sensor_init();
+	
+	#endif
   
   /* Reconnect from here */
 
@@ -364,7 +387,7 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
 
 		// get timestamp
 		timestmp = clock_time();
-		
+#if XPRO_IO1		
 		// read temperature sensor
 		temp_C = at30tse_read_temperature();	// Measure temp ( result in deg C
 		// convert to Fahrenheit
@@ -392,7 +415,17 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
 		mac_adr_str,"\x22}");        
         //sprintf(app_buffer,"%s%s%s%s","temp: ",temp_str);
 		printf("\r\nAPP - Sending Light sensor value %s Temp sensor value %s app buffer size %d\n",light_str,temp_str,strlen(app_buffer));
-
+#else
+		if(battery != NULL)
+		battery_v = battery->value(0);
+		sprintf (batt_str, "%d", battery_v);	
+		sprintf(app_buffer,"%s%lu%s%s%s%s%s","{\x22timestamp\x22: \x22",timestmp,
+			"\x22,\x22SENS_BATTERY\x22: \x22",
+			batt_str,"\x22,\x22sender_id\x22: \x22",
+		mac_adr_str,"\x22}");
+		printf("\r\nAPP - Sending Battery sensor value %s  app buffer size %d\n",batt_str,strlen(app_buffer));
+#endif		
+		
         mqtt_publish(&conn,
                NULL,
                str_topic_sensor,
@@ -401,6 +434,7 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
                MQTT_QOS_LEVEL_0,
                MQTT_RETAIN_OFF);
         etimer_restart(&light_sense_timer);
+		
       }
     }
   }

@@ -76,7 +76,7 @@
 #include "ledctrl.h"
 #endif
 
-//SENSORS(&button_sensor);
+
 /*---------------------------------------------------------------------------*/
 #define _DEBUG_ 0
 #if _DEBUG_

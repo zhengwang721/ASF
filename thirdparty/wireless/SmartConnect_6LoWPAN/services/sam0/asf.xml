@@ -5,6 +5,7 @@
 			
 			</info>
 			<build type="c-source"      value="button-sensor.c"/>
+			<build type="c-source"      value="battery-sensor.c"/>
 			<build type="c-source"      value="watchdog.c"/>
 			<build type="c-source"      value="flash.c"/>
 			<build type="c-source"      value="leds-arch.c"/>
