@@ -51,19 +51,19 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_events_group SAM Event System Driver (EVENTS)
+ * \defgroup asfdoc_sam0_events_group SAM Event System (EVENTS) Driver 
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
- * and management of the device's peripheral event resources and users within
- * the device, including enabling and disabling of peripheral source selection
- * and synchronization of clock domains between various modules. The following API
- * modes is covered by this manual:
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
+ * an interface for the configuration and management of the device's peripheral 
+ * event resources and users within the device, including enabling and disabling 
+ * of peripheral source selection and synchronization of clock domains between 
+ * various modules. The following API modes is covered by this manual:
  *  - Polled API
  * \if EVENTS_INTERRUPT_HOOK_MODE
  *  - Interrupt hook API
  * \endif
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  * - EVSYS (Event System Management)
  *
  * The following devices can use this module:
@@ -93,7 +93,7 @@ extern "C" {
  * Peripherals within the SAM devices are capable of generating two types of
  * actions in response to given stimulus; set a register flag for later
  * intervention by the CPU (using interrupt or polling methods), or generate
- * event signals which can be internally routed directly to other
+ * event signals, which can be internally routed directly to other
  * peripherals within the device. The use of events allows for direct actions
  * to be performed in one peripheral in response to a stimulus in another
  * without CPU intervention. This can lower the overall power consumption of the
@@ -139,7 +139,7 @@ extern "C" {
  * The Event module in each device consists of several channels, which can be
  * freely linked to an event generator (i.e. a peripheral within the device
  * that is capable of generating events). Each channel can be individually
- * configured to select the generator peripheral, signal path and edge detection
+ * configured to select the generator peripheral, signal path, and edge detection
  * applied to the input event signal, before being passed to any event user(s).
  *
  * Event channels can support multiple users within the device in a standardized
@@ -350,7 +350,7 @@ enum events_path_selection {
 /**
  * \brief Events configuration struct.
  *
- * This events configuration struct is used to configure each of the channels.
+ * This event configuration struct is used to configure each of the channels.
  *
  */
 struct events_config {
@@ -480,9 +480,9 @@ enum status_code events_allocate(struct events_resource *resource, struct events
 enum status_code events_attach_user(struct events_resource *resource, uint8_t user_id);
 
 /**
- * \brief Detach an user peripheral from the event channel.
+ * \brief Detach a user peripheral from the event channel.
  *
- * Deattach an user peripheral from the event channels so it does not receive any more events.
+ * Deattach a user peripheral from the event channels so it does not receive any more events.
  *
  * \param[in] resource Pointer to an \ref event_resource struct instance
  * \param[in] user_id  A number identifying the user peripheral found in the device header file
@@ -495,7 +495,7 @@ enum status_code events_detach_user(struct events_resource *resource, uint8_t us
 /**
  * \brief Check if a channel is busy.
  *
- * Check if a channel is busy, a channels stays busy until all users connected to the channel
+ * Check if a channel is busy, a channel stays busy until all users connected to the channel
  * has handled an event.
  *
  * \param[in] resource Pointer to a \ref events_resource struct instance
@@ -526,18 +526,18 @@ enum status_code events_trigger(struct events_resource *resource);
 /**
  * \brief Check if all users connected to the channel is ready.
  *
- * Check if all users connected to the channel is ready to handle incomming events.
+ * Check if all users connected to the channel is ready to handle incoming events.
  *
  * \param[in] resource Pointer to an \ref events_resource struct
  *
  * \return The ready status of users connected to an event channel.
- * \retval true  All users connect to event channel is ready handle incomming events
- * \retval false One or more users connect to event channel is not ready to handle incomming events
+ * \retval true  All users connect to event channel is ready to handle incmming events
+ * \retval false One or more users connect to event channel is not ready to handle incoming events
  */
 bool events_is_users_ready(struct events_resource *resource);
 
 /**
- * \brief Check if event is detected on event channel.
+ * \brief Check if an event is detected on the event channel.
  *
  * Check if an event has been detected on the channel.
  *
@@ -553,8 +553,6 @@ bool events_is_detected(struct events_resource *resource);
 
 /**
  * \brief Check if there has been an overrun situation on this channel.
- *
- * Check if there has been an overrun situation on this channel.
  *
  * \note This function will clear the event overrun detected interrupt flag.
  *
@@ -576,7 +574,7 @@ bool events_is_overrun(struct events_resource *resource);
  * \return Status of channel release procedure.
  * \retval STATUS_OK                  No error was detected when channel was released
  * \retval STATUS_BUSY                One or more event users have not processed the last event
- * \retval STATUS_ERR_NOT_INITIALIZED Channel not allocated, and can derfor not be released
+ * \retval STATUS_ERR_NOT_INITIALIZED Channel not allocated, and can therefore not be released
  */
 enum status_code events_release(struct events_resource *resource);
 
@@ -667,7 +665,7 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset);
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_events_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  * - \subpage asfdoc_sam0_events_basic_use_case
@@ -685,19 +683,19 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset);
  *  </tr>
  *  <tr>
  *      <td>42108F</td>
- *      <td>06/2015</td>
- *      <td>Added support for SAML21, SAMDAx and SAMC20/C21.</td>
+ *      <td>08/2015</td>
+ *      <td>Added support for SAM L21, SAM DAx and SAM C20/C21.</td>
  *  </tr>
  *  <tr>
  *      <td>42108E</td>
  *      <td>12/2014</td>
  *      <td>Added support for interrupt hook mode.
- *         Added support for SAMR21 and SAMD10/D11</td>
+ *         Added support for SAM R21 and SAM D10/D11</td>
  *  </tr>
  *  <tr>
  *      <td>42108D</td>
  *      <td>01/2014</td>
- *      <td>Update to support SAMD21 and corrected documentation typos.</td>
+ *      <td>Update to support SAM D21 and corrected documentation typos.</td>
  *  </tr>
  *  <tr>
  *      <td>42108C</td>

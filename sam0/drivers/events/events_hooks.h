@@ -73,7 +73,7 @@ enum events_interrupt_source {
 };
 
 /**
- * \brief Initializes a interrupt hook for insertion in the event interrupt hook queue.
+ * \brief Initializes an interrupt hook for insertion in the event interrupt hook queue.
  *
  * Initializes a hook structure so it is ready for insertion in the interrupt hook queue.
  *
@@ -110,7 +110,7 @@ enum status_code events_add_hook(struct events_resource *resource, struct events
  *
  * \return Status of the removal procedure.
  * \retval STATUS_OK Removal of hook went successful
- * \retval STATUS_ERR_NO_MEMORY There is no hooks instances in the event driver interrupt hook list
+ * \retval STATUS_ERR_NO_MEMORY There are no hooks instances in the event driver interrupt hook list
  * \retval STATUS_ERR_NOT_FOUND Interrupt hook not found in the event drivers interrupt hook list
  *
  */
