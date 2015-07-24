@@ -96,7 +96,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_BOD12</td>
- *    <td>SAML21</td>
+ *    <td>SAM L21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -423,7 +423,7 @@ enum nvm_cache_readmode {
  * Configuration structure for the NVM controller within the device.
  */
 struct nvm_config {
-	/** Power reduction mode during device sleep. */
+	/** Power reduction mode during device sleep */
 	enum nvm_sleep_power_mode sleep_power_mode;
 	/** Manual write mode; if enabled, pages loaded into the NVM buffer will
 	 *  not be written until a separate write command is issued. If disabled,
@@ -916,7 +916,7 @@ static inline enum nvm_error nvm_get_error(void)
  *	<tr>
  *		<td>42114D</td>
  *		<td>12/2014</td>
- *		<td>Added support for SAMR21 and SAMD10/D11</td>
+ *		<td>Added support for SAM R21 and SAM D10/D11</td>
  *	</tr>
  *	<tr>
  *		<td>42114C</td>
