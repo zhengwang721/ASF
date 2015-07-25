@@ -135,6 +135,16 @@ sint8 os_m2m_wifi_connect(char *pcSsid, uint8 u8SsidLen, uint8 u8SecType, void *
 	return params.dispatch.retval;
 }
 
+static void os_m2m_wifi_disconnect_imp(void)
+{
+	m2m_wifi_disconnect();
+}
+
+void os_m2m_wifi_disconnect(void)
+{
+	os_hook_dispatch_no_wait((tcpip_callback_fn)os_m2m_wifi_disconnect_imp, 0);
+}
+
 struct connect_ap_params {
 	struct params_dispatch dispatch;
 	tstrM2MAPConfig *ap;
@@ -161,6 +171,26 @@ sint8 os_m2m_wifi_enable_ap(tstrM2MAPConfig *ap)
 	}
 	delay_ms(200);
 	return params.dispatch.retval;
+}
+
+static void os_m2m_wifi_request_scan_imp(uint8 *p)
+{
+	m2m_wifi_request_scan((uint8)p);
+}
+
+void os_m2m_wifi_request_scan(uint8 p)
+{
+	os_hook_dispatch_no_wait((tcpip_callback_fn)os_m2m_wifi_request_scan_imp, (void *)p);
+}
+
+static void os_m2m_wifi_req_scan_result_imp(uint8 *p)
+{
+	m2m_wifi_req_scan_result((uint8)p);
+}
+
+void os_m2m_wifi_req_scan_result(uint8 p)
+{
+	os_hook_dispatch_no_wait((tcpip_callback_fn)os_m2m_wifi_req_scan_result_imp, (void *)p);
 }
 
 sint8 m2m_wifi_request_callback_ex(m2m_wifi_callback_t callback, void *arg)

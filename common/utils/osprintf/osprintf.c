@@ -47,7 +47,7 @@
 #include "FreeRTOS.h"
 #include "osprintf.h"
 
-static xSemaphoreHandle trace_lock;
+xSemaphoreHandle trace_lock;
 
 void osprintf_init(void)
 {
@@ -102,3 +102,12 @@ void osprint_hex_array(uint8_t *p, int sz)
 	xSemaphoreGive(trace_lock);
 }
  
+void osprint_sem_take(void)
+{
+	xSemaphoreTake(trace_lock, portMAX_DELAY);
+}
+
+void osprint_sem_give(void)
+{
+	xSemaphoreGive(trace_lock);
+}

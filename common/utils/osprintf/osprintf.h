@@ -53,4 +53,7 @@ void osprintf(const char *fmt, ...) __attribute__ ((format (gnu_printf, 1, 0)));
 void osprint(const char *s);
 void osprint_hex_array(uint8_t *p, int sz);
 
+void osprint_sem_take(void);
+void osprint_sem_give(void);
+
 #endif /* OSPRINTF_H_INCLUDED */

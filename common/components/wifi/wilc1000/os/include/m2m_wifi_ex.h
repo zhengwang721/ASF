@@ -49,7 +49,10 @@ typedef void (*m2m_wifi_callback_t)(void *arg);
 
 sint8 os_m2m_wifi_init(tstrWifiInitParam *param);
 sint8 os_m2m_wifi_connect(char *pcSsid, uint8 u8SsidLen, uint8 u8SecType, void *pvAuthInfo, uint16 u16Ch);
+void os_m2m_wifi_disconnect(void);
 sint8 os_m2m_wifi_enable_ap(tstrM2MAPConfig *ap);
+void os_m2m_wifi_request_scan(uint8 p);
+void os_m2m_wifi_req_scan_result(uint8 p);
 sint8 m2m_wifi_request_callback_ex(m2m_wifi_callback_t callback, void *arg);
 sint8 m2m_wifi_request_dhcp_client_ex(void);
 sint8 m2m_wifi_enable_ap_ex(CONST tstrM2MAPConfig* pstrM2MAPConfig);
@@ -68,14 +71,11 @@ sint8 m2m_wifi_set_mac_address_ex(uint8 addr[6]);
 #define m2m_wifi_wps_ex						m2m_wifi_wps
 #define m2m_wifi_wps_disable_ex				m2m_wifi_wps_disable 
 #define m2m_wifi_p2p_ex						m2m_wifi_p2p
-#define m2m_wifi_p2p_disconnect_ex			m2m_wifi_p2p_disconnect
 #define m2m_wifi_set_static_ip_ex			m2m_wifi_set_static_ip
 #define m2m_wifi_request_dhcp_server_ex		m2m_wifi_request_dhcp_server
 #define m2m_wifi_set_scan_options_ex		m2m_wifi_set_scan_options
 #define m2m_wifi_set_scan_region_ex			m2m_wifi_set_scan_region
-#define m2m_wifi_request_scan_ex			m2m_wifi_request_scan
 #define m2m_wifi_get_num_ap_found_ex		m2m_wifi_get_num_ap_found
-#define m2m_wifi_req_scan_result_ex			m2m_wifi_req_scan_result
 #define m2m_wifi_req_curr_rssi_ex			m2m_wifi_req_curr_rssi
 #define m2m_wifi_get_otp_mac_address_ex		m2m_wifi_get_otp_mac_address
 #define m2m_wifi_get_mac_address_ex			m2m_wifi_get_mac_address
