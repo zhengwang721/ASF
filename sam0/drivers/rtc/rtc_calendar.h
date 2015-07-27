@@ -47,9 +47,9 @@
 #define RTC_CALENDAR_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_rtc_calendar_group SAM RTC Calendar Driver (RTC CAL)
+ * \defgroup asfdoc_sam0_rtc_calendar_group SAM RTC Calendar (RTC CAL) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the device's Real Time Clock functionality in Calendar
  * operating mode, for the configuration and retrieval of the current time and
  * date as maintained by the RTC module. The following driver API modes are
@@ -894,6 +894,13 @@ enum status_code rtc_calendar_frequency_correction(
 /** \name Time and Alarm Management
  * @{
  */
+uint32_t rtc_calendar_time_to_register_value(
+		struct rtc_module *const module,
+		const struct rtc_calendar_time *const time);
+void rtc_calendar_register_value_to_time(
+		struct rtc_module *const module,
+		const uint32_t register_value,
+		struct rtc_calendar_time *const time);
 
 void rtc_calendar_set_time(
 		struct rtc_module *const module,
@@ -1361,7 +1368,6 @@ void rtc_tamper_get_stamp (struct rtc_module *const module,
  * \if RTC_CALENDAR_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_rtc_calendar_callback_use_case
  * \endif
- *  - \subpage asfdoc_sam0_rtc_tamper_dma_use_case
  *
  * \page asfdoc_sam0_rtc_calendar_document_revision_history Document Revision History
  *
