@@ -678,17 +678,17 @@ static inline void extint_nmi_clear_detected(
  *  <tr>
  *      <td>E</td>
  *      <td>08/2015</td>
- *      <td>Added support for SAM L21, SAM C21, and SAM DAx.</td>
+ *      <td>Added support for SAM L21, SAM C21, and SAM DAx</td>
  *  </tr>
  *  <tr>
  *      <td>D</td>
  *      <td>12/2014</td>
- *      <td>Added support for SAM R21 and SAM D10/D11.</td>
+ *      <td>Added support for SAM R21 and SAM D10/D11</td>
  *  </tr>
  *  <tr>
  *      <td>C</td>
  *      <td>01/2014</td>
- *      <td>Added support for SAM D21.</td>
+ *      <td>Added support for SAM D21</td>
  *  </tr>
  *  <tr>
  *      <td>B</td>
