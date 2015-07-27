@@ -48,18 +48,19 @@
 #define SPI_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_sercom_spi_group SAM Serial Peripheral Interface Driver (SERCOM SPI)
+ * \defgroup asfdoc_sam0_sercom_spi_group SAM Serial Peripheral Interface (SERCOM SPI) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
- * and management of the SERCOM module in its SPI mode to transfer SPI  data
- * frames. The following driver API modes are covered by this manual:
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
+ * an interface for the configuration and management of the SERCOM module in 
+ * its SPI mode to transfer SPI  data frames. The following driver API modes 
+ * are covered by this manual:
  *
  * - Polled APIs
  * \if SPI_CALLBACK_MODE
  * - Callback APIs
  * \endif
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  * - SERCOM (Serial Communication Interface)
  *
  * The following devices can use this module:
@@ -132,20 +133,20 @@
  * \dot
  * digraph spi_slaves_par {
  *   subgraph cluster_spi_master {
- *    shift_reg [label="Shift register", shape=box];
- *    mosi_m [label="MOSI", shape=none];
- *    miso_m [label="MISO", shape=none];
- *    sck_m [label="SCK", shape=none];
- *    ss_m [label="GPIO pin", shape=none];
+ *    shift_reg [label="Shift register", shape=box, fontname=arial];
+ *    mosi_m [label="MOSI", shape=none, fontname=arial];
+ *    miso_m [label="MISO", shape=none, fontname=arial];
+ *    sck_m [label="SCK", shape=none, fontname=arial];
+ *    ss_m [label="GPIO pin", shape=none, fontname=arial];
  *    {rank=same; mosi_m miso_m sck_m ss_m}
  *    label="SPI Master";
  *   }
  *   subgraph cluster_spi_slave {
- *    mosi_s [label="MOSI", shape=none];
- *    miso_s [label="MISO", shape=none];
- *    sck_s [label="SCK", shape=none];
- *    ss_s [label="SS", shape=none];
- *    shift_reg_s [label="Shift register", shape=box];
+ *    mosi_s [label="MOSI", shape=none, fontname=arial];
+ *    miso_s [label="MISO", shape=none, fontname=arial];
+ *    sck_s [label="SCK", shape=none, fontname=arial];
+ *    ss_s [label="SS", shape=none, fontname=arial];
+ *    shift_reg_s [label="Shift register", shape=box, fontname=arial];
  *    {rank=same; mosi_s miso_s sck_s ss_s}
  *    label="SPI Slave";
  *    rankdir=LR;
@@ -388,29 +389,29 @@ extern "C" {
  */
 #  if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAML21) || (SAMDA1) || \
 		(SAMC20) || (SAMC21) || defined(__DOXYGEN__)
-/** SPI slave select low detection. */
+/** SPI slave select low detection */
 #  define FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
-/** Slave select can be controlled by hardware. */
+/** Slave select can be controlled by hardware */
 #  define FEATURE_SPI_HARDWARE_SLAVE_SELECT
-/** SPI with error detect feature. */
+/** SPI with error detect feature */
 #  define FEATURE_SPI_ERROR_INTERRUPT
-/** SPI sync scheme version 2. */
+/** SPI sync scheme version 2 */
 #  define FEATURE_SPI_SYNC_SCHEME_VERSION_2
 #  endif
 /*@}*/
 
 #  ifndef PINMUX_DEFAULT
-/** Default pinmux. */
+/** Default pinmux */
 #  define PINMUX_DEFAULT 0
 #  endif
 
 #  ifndef PINMUX_UNUSED
-/** Unused pinmux. */
+/** Unused pinmux */
 #  define PINMUX_UNUSED 0xFFFFFFFF
 #  endif
 
 #  ifndef SPI_TIMEOUT
-/** SPI timeout value. */
+/** SPI timeout value */
 #  define SPI_TIMEOUT 10000
 #  endif
 
@@ -425,29 +426,29 @@ extern "C" {
  *
  */
 enum spi_callback {
-	/** Callback for buffer transmitted. */
+	/** Callback for buffer transmitted */
 	SPI_CALLBACK_BUFFER_TRANSMITTED,
-	/** Callback for buffer received. */
+	/** Callback for buffer received */
 	SPI_CALLBACK_BUFFER_RECEIVED,
-	/** Callback for buffers transceived. */
+	/** Callback for buffers transceived */
 	SPI_CALLBACK_BUFFER_TRANSCEIVED,
-	/** Callback for error. */
+	/** Callback for error */
 	SPI_CALLBACK_ERROR,
 	/**
 	* Callback for transmission ended by master before entire buffer was
-	* read or written from slave.
+	* read or written from slave
 	*/
 	SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE,
 #  ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
-	/** Callback for  slave select low. */
+	/** Callback for  slave select low */
 	SPI_CALLBACK_SLAVE_SELECT_LOW,
 #  endif
 #  ifdef FEATURE_SPI_ERROR_INTERRUPT
-	/** Callback for combined error happen. */
+	/** Callback for combined error happen */
 	SPI_CALLBACK_COMBINED_ERROR,
 #  endif
 #  if !defined(__DOXYGEN__)
-	/** Number of available callbacks. */
+	/** Number of available callbacks */
 	SPI_CALLBACK_N,
 #  endif
 };
@@ -459,11 +460,11 @@ enum spi_callback {
  * \internal SPI transfer directions
  */
 enum _spi_direction {
-	/** Transfer direction is read. */
+	/** Transfer direction is read */
 	SPI_DIRECTION_READ,
-	/** Transfer direction is write. */
+	/** Transfer direction is write */
 	SPI_DIRECTION_WRITE,
-	/** Transfer direction is read and write. */
+	/** Transfer direction is read and write */
 	SPI_DIRECTION_BOTH,
 	/** No transfer. */
 	SPI_DIRECTION_IDLE,
@@ -480,22 +481,22 @@ enum _spi_direction {
 enum spi_interrupt_flag {
 	/**
 	 * This flag is set when the contents of the data register has been moved
-	 * to the shift register and the data register is ready for new data.
+	 * to the shift register and the data register is ready for new data
 	 */
 	SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY = SERCOM_SPI_INTFLAG_DRE,
 	/**
 	 * This flag is set when the contents of the shift register has been
-	 * shifted out.
+	 * shifted out
 	 */
 	SPI_INTERRUPT_FLAG_TX_COMPLETE         = SERCOM_SPI_INTFLAG_TXC,
-	/** This flag is set when data has been shifted into the data register. */
+	/** This flag is set when data has been shifted into the data register */
 	SPI_INTERRUPT_FLAG_RX_COMPLETE         = SERCOM_SPI_INTFLAG_RXC,
 #  ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
-	/** This flag is set when slave select low.  */
+	/** This flag is set when slave select low  */
 	SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW         = SERCOM_SPI_INTFLAG_SSL,
 #  endif
 #  ifdef FEATURE_SPI_ERROR_INTERRUPT
-	/** This flag is set when combined error happen. */
+	/** This flag is set when combined error happen */
 	SPI_INTERRUPT_FLAG_COMBINED_ERROR         = SERCOM_SPI_INTFLAG_ERROR,
 #  endif
 };
@@ -506,13 +507,13 @@ enum spi_interrupt_flag {
  * SPI transfer mode.
  */
 enum spi_transfer_mode {
-	/** Mode 0. Leading edge: rising, sample. Trailing edge: falling, setup. */
+	/** Mode 0. Leading edge: rising, sample. Trailing edge: falling, setup */
 	SPI_TRANSFER_MODE_0 = 0,
-	/** Mode 1. Leading edge: rising, setup. Trailing edge: falling, sample. */
+	/** Mode 1. Leading edge: rising, setup. Trailing edge: falling, sample */
 	SPI_TRANSFER_MODE_1 = SERCOM_SPI_CTRLA_CPHA,
-	/** Mode 2. Leading edge: falling, sample. Trailing edge: rising, setup. */
+	/** Mode 2. Leading edge: falling, sample. Trailing edge: rising, setup */
 	SPI_TRANSFER_MODE_2 = SERCOM_SPI_CTRLA_CPOL,
-	/** Mode 3. Leading edge: falling, setup. Trailing edge: rising, sample. */
+	/** Mode 3. Leading edge: falling, setup. Trailing edge: rising, sample */
 	SPI_TRANSFER_MODE_3 = SERCOM_SPI_CTRLA_CPHA | SERCOM_SPI_CTRLA_CPOL,
 };
 
@@ -522,9 +523,9 @@ enum spi_transfer_mode {
  * Frame format for slave mode.
  */
 enum spi_frame_format {
-	/** SPI frame. */
+	/** SPI frame */
 	SPI_FRAME_FORMAT_SPI_FRAME      = SERCOM_SPI_CTRLA_FORM(0),
-	/** SPI frame with address. */
+	/** SPI frame with address */
 	SPI_FRAME_FORMAT_SPI_FRAME_ADDR = SERCOM_SPI_CTRLA_FORM(2),
 };
 
@@ -542,67 +543,67 @@ enum spi_frame_format {
  * various MUX setting options.
  */
 enum spi_signal_mux_setting {
-	/** SPI MUX combination A. DOPO: 0x0, DIPO: 0x0. */
+	/** SPI MUX combination A. DOPO: 0x0, DIPO: 0x0 */
 	SPI_SIGNAL_MUX_SETTING_A =
 			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX combination B. DOPO: 0x0, DIPO: 0x1. */
+	/** SPI MUX combination B. DOPO: 0x0, DIPO: 0x1 */
 	SPI_SIGNAL_MUX_SETTING_B =
 			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX combination C. DOPO: 0x0, DIPO: 0x2. */
+	/** SPI MUX combination C. DOPO: 0x0, DIPO: 0x2 */
 	SPI_SIGNAL_MUX_SETTING_C =
 			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX combination D. DOPO: 0x0, DIPO: 0x3. */
+	/** SPI MUX combination D. DOPO: 0x0, DIPO: 0x3 */
 	SPI_SIGNAL_MUX_SETTING_D =
 			(0x0 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX combination E. DOPO: 0x1, DIPO: 0x0. */
+	/** SPI MUX combination E. DOPO: 0x1, DIPO: 0x0 */
 	SPI_SIGNAL_MUX_SETTING_E =
 			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX combination F. DOPO: 0x1, DIPO: 0x1. */
+	/** SPI MUX combination F. DOPO: 0x1, DIPO: 0x1 */
 	SPI_SIGNAL_MUX_SETTING_F =
 			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX combination G. DOPO: 0x1, DIPO: 0x2. */
+	/** SPI MUX combination G. DOPO: 0x1, DIPO: 0x2 */
 	SPI_SIGNAL_MUX_SETTING_G =
 			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX combination H. DOPO: 0x1, DIPO: 0x3. */
+	/** SPI MUX combination H. DOPO: 0x1, DIPO: 0x3 */
 	SPI_SIGNAL_MUX_SETTING_H =
 			(0x1 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX combination I. DOPO: 0x2, DIPO: 0x0. */
+	/** SPI MUX combination I. DOPO: 0x2, DIPO: 0x0 */
 	SPI_SIGNAL_MUX_SETTING_I =
 			(0x2 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX combination J. DOPO: 0x2, DIPO: 0x1. */
+	/** SPI MUX combination J. DOPO: 0x2, DIPO: 0x1 */
 	SPI_SIGNAL_MUX_SETTING_J =
 			(0x2 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX combination K. DOPO: 0x2, DIPO: 0x2. */
+	/** SPI MUX combination K. DOPO: 0x2, DIPO: 0x2 */
 	SPI_SIGNAL_MUX_SETTING_K =
 			(0x2 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX combination L. DOPO: 0x2, DIPO: 0x3. */
+	/** SPI MUX combination L. DOPO: 0x2, DIPO: 0x3 */
 	SPI_SIGNAL_MUX_SETTING_L =
 			(0x2 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX combination M. DOPO: 0x3, DIPO: 0x0. */
+	/** SPI MUX combination M. DOPO: 0x3, DIPO: 0x0 */
 	SPI_SIGNAL_MUX_SETTING_M =
 			(0x3 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x0 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX combination N. DOPO: 0x3, DIPO: 0x1. */
+	/** SPI MUX combination N. DOPO: 0x3, DIPO: 0x1 */
 	SPI_SIGNAL_MUX_SETTING_N =
 			(0x3 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x1 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX combination O. DOPO: 0x3, DIPO: 0x2. */
+	/** SPI MUX combination O. DOPO: 0x3, DIPO: 0x2 */
 	SPI_SIGNAL_MUX_SETTING_O =
 			(0x3 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x2 << SERCOM_SPI_CTRLA_DIPO_Pos),
-	/** SPI MUX combination P. DOPO: 0x3, DIPO: 0x3.*/
+	/** SPI MUX combination P. DOPO: 0x3, DIPO: 0x3 */
 	SPI_SIGNAL_MUX_SETTING_P =
 			(0x3 << SERCOM_SPI_CTRLA_DOPO_Pos) |
 			(0x3 << SERCOM_SPI_CTRLA_DIPO_Pos),
@@ -621,12 +622,12 @@ enum spi_addr_mode {
 	SPI_ADDR_MODE_MASK      = SERCOM_SPI_CTRLB_AMODE(0),
 	/**
 	 * The slave responds to the two unique addresses in \c address and
-	 * \c address_mask in the \ref spi_config struct.
+	 * \c address_mask in the \ref spi_config struct
 	 */
 	SPI_ADDR_MODE_UNIQUE    = SERCOM_SPI_CTRLB_AMODE(1),
 	/**
 	 * The slave responds to the range of addresses between and including \c address
-	 * and \c address_mask in the \ref spi_config struct.
+	 * and \c address_mask in the \ref spi_config struct
 	 */
 	SPI_ADDR_MODE_RANGE     = SERCOM_SPI_CTRLB_AMODE(2),
 };
@@ -637,9 +638,9 @@ enum spi_addr_mode {
  * SPI mode selection.
  */
 enum spi_mode {
-	/** Master mode. */
+	/** Master mode */
 	SPI_MODE_MASTER         = 1,
-	/** Slave mode. */
+	/** Slave mode */
 	SPI_MODE_SLAVE          = 0,
 };
 
@@ -650,9 +651,9 @@ enum spi_mode {
  *
  */
 enum spi_data_order {
-	/** The LSB of the data is transmitted first. */
+	/** The LSB of the data is transmitted first */
 	SPI_DATA_ORDER_LSB      = SERCOM_SPI_CTRLA_DORD,
-	/** The MSB of the data is transmitted first. */
+	/** The MSB of the data is transmitted first */
 	SPI_DATA_ORDER_MSB      = 0,
 };
 
@@ -663,21 +664,21 @@ enum spi_data_order {
  *
  */
 enum spi_character_size {
-	/** 8-bit character. */
+	/** 8-bit character */
 	SPI_CHARACTER_SIZE_8BIT = SERCOM_SPI_CTRLB_CHSIZE(0),
-	/** 9-bit character. */
+	/** 9-bit character */
 	SPI_CHARACTER_SIZE_9BIT = SERCOM_SPI_CTRLB_CHSIZE(1),
 };
 
 #  if SPI_CALLBACK_MODE == true
-/** Prototype for the device instance. */
+/** Prototype for the device instance */
 struct spi_module;
 
-/** Type of the callback functions. */
+/** Type of the callback functions */
 typedef void (*spi_callback_t)(struct spi_module *const module);
 
 #  if !defined(__DOXYGEN__)
-/** Prototype for the interrupt handler. */
+/** Prototype for the interrupt handler */
 extern void _spi_interrupt_handler(uint8_t instance);
 #  endif
 #  endif
@@ -693,41 +694,41 @@ extern void _spi_interrupt_handler(uint8_t instance);
  */
 struct spi_module {
 #  if !defined(__DOXYGEN__)
-	/** SERCOM hardware module. */
+	/** SERCOM hardware module */
 	Sercom *hw;
-	/** Module lock. */
+	/** Module lock */
 	volatile bool locked;
 	/** SPI mode. */
 	enum spi_mode mode;
-	/** SPI character size. */
+	/** SPI character size */
 	enum spi_character_size character_size;
-	/** Receiver enabled. */
+	/** Receiver enabled */
 	bool receiver_enabled;
 #  ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
-	/** Enable Hardware Slave Select. */
+	/** Enable Hardware Slave Select */
 	bool master_slave_select_enable;
 #  endif
 #  if SPI_CALLBACK_MODE == true
-	/** Direction of transaction. */
+	/** Direction of transaction */
 	volatile enum _spi_direction dir;
-	/** Array to store callback function pointers in. */
+	/** Array to store callback function pointers in */
 	spi_callback_t callback[SPI_CALLBACK_N];
-	/** Buffer pointer to where the next received character will be put. */
+	/** Buffer pointer to where the next received character will be put */
 	volatile uint8_t *rx_buffer_ptr;
-	/** Buffer pointer to where the next character will be transmitted from.
+	/** Buffer pointer to where the next character will be transmitted from
 	**/
 	volatile uint8_t *tx_buffer_ptr;
-	/** Remaining characters to receive. */
+	/** Remaining characters to receive */
 	volatile uint16_t remaining_rx_buffer_length;
-	/** Remaining dummy characters to send when reading. */
+	/** Remaining dummy characters to send when reading */
 	volatile uint16_t remaining_dummy_buffer_length;
-	/** Remaining characters to transmit. */
+	/** Remaining characters to transmit */
 	volatile uint16_t remaining_tx_buffer_length;
-	/** Bit mask for callbacks registered. */
+	/** Bit mask for callbacks registered */
 	uint8_t registered_callback;
-	/** Bit mask for callbacks enabled. */
+	/** Bit mask for callbacks enabled */
 	uint8_t enabled_callback;
-	/** Holds the status of the ongoing or last operation. */
+	/** Holds the status of the ongoing or last operation */
 	volatile enum status_code status;
 #  endif
 #  endif
@@ -741,11 +742,11 @@ struct spi_module {
  * \ref spi_select_slave.
  */
 struct spi_slave_inst {
-	/** Pin to use as slave select. */
+	/** Pin to use as slave select */
 	uint8_t ss_pin;
-	/** Address recognition enabled in slave device. */
+	/** Address recognition enabled in slave device */
 	bool address_enabled;
-	/** Address of slave device. */
+	/** Address of slave device */
 	uint8_t address;
 };
 
@@ -755,11 +756,11 @@ struct spi_slave_inst {
  * SPI Peripheral slave configuration structure.
  */
 struct spi_slave_inst_config {
-	/** Pin to use as slave select. */
+	/** Pin to use as slave select */
 	uint8_t ss_pin;
-	/** Enable address. */
+	/** Enable address */
 	bool address_enabled;
-	/** Address of slave. */
+	/** Address of slave */
 	uint8_t address;
 };
 
@@ -769,7 +770,7 @@ struct spi_slave_inst_config {
  * SPI Master configuration structure.
  */
 struct spi_master_config {
-	/** Baud rate. */
+	/** Baud rate */
 	uint32_t baudrate;
 };
 
@@ -779,15 +780,15 @@ struct spi_master_config {
  * SPI slave configuration structure.
  */
 struct spi_slave_config {
-	/** Frame format. */
+	/** Frame format */
 	enum spi_frame_format frame_format;
-	/** Address mode. */
+	/** Address mode */
 	enum spi_addr_mode address_mode;
-	/** Address. */
+	/** Address */
 	uint8_t address;
-	/** Address mask. */
+	/** Address mask */
 	uint8_t address_mask;
-	/** Preload data to the shift register while SS is high. */
+	/** Preload data to the shift register while SS is high */
 	bool preload_enable;
 };
 
@@ -799,44 +800,44 @@ struct spi_slave_config {
  * modified by the user application.
  */
 struct spi_config {
-	/** SPI mode. */
+	/** SPI mode */
 	enum spi_mode mode;
-	/** Data order. */
+	/** Data order */
 	enum spi_data_order data_order;
-	/** Transfer mode. */
+	/** Transfer mode */
 	enum spi_transfer_mode transfer_mode;
-	/** MUX setting. */
+	/** MUX setting */
 	enum spi_signal_mux_setting mux_setting;
-	/** SPI character size. */
+	/** SPI character size */
 	enum spi_character_size character_size;
-	/** Enabled in sleep modes. */
+	/** Enabled in sleep modes */
 	bool run_in_standby;
-	/** Enable receiver. */
+	/** Enable receiver */
 	bool receiver_enable;
 #  ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
-	/** Enable Slave Select Low Detect. */
+	/** Enable Slave Select Low Detect */
 	bool select_slave_low_detect_enable;
 #  endif
 #  ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
-	/** Enable Master Slave Select. */
+	/** Enable Master Slave Select */
 	bool master_slave_select_enable;
 #  endif
-	/** Union for slave or master specific configuration. */
+	/** Union for slave or master specific configuration */
 	union {
-		/** Slave specific configuration. */
+		/** Slave specific configuration */
 		struct spi_slave_config slave;
-		/** Master specific configuration. */
+		/** Master specific configuration */
 		struct spi_master_config master;
 	} mode_specific;
-	/** GCLK generator to use as clock source. */
+	/** GCLK generator to use as clock source */
 	enum gclk_generator generator_source;
-	/** PAD0 pinmux. */
+	/** PAD0 pinmux */
 	uint32_t pinmux_pad0;
-	/** PAD1 pinmux. */
+	/** PAD1 pinmux */
 	uint32_t pinmux_pad1;
-	/** PAD2 pinmux. */
+	/** PAD2 pinmux */
 	uint32_t pinmux_pad2;
-	/** PAD3 pinmux. */
+	/** PAD3 pinmux */
 	uint32_t pinmux_pad3;
 };
 
@@ -1445,7 +1446,7 @@ enum status_code spi_select_slave(
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_sercom_spi_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  * - \subpage asfdoc_sam0_sercom_spi_master_basic_use
@@ -1770,27 +1771,27 @@ enum status_code spi_select_slave(
   *		<th>Comments</td>
   *	</tr>
   *	<tr>
-  *		<td>E</td>
+  *		<td>42115E</td>
   *		<td>06/2015</td>
-  *		<td>Add SAM L21, SAMDAx and SAMC21 support.</td>
+  *		<td>Add SAM L21, SAMDAx and SAMC21 support</td>
   *	</tr>
   *	<tr>
-  *		<td>D</td>
+  *		<td>42115D</td>
   *		<td>12/2014</td>
-  *		<td>Add SAM R21/D10/D11 support.</td>
+  *		<td>Add SAM R21/D10/D11 support</td>
   *	</tr>
   *	<tr>
-  *		<td>C</td>
+  *		<td>42115C</td>
   *		<td>01/2014</td>
-  *		<td>Add SAM D21 support.</td>
+  *		<td>Add SAM D21 support</td>
   *	</tr>
   *	<tr>
-  *		<td>B</td>
+  *		<td>42115B</td>
   *		<td>11/2013</td>
-  *		<td>Replaced the pad multiplexing documentation with a condensed table.</td>
+  *		<td>Replaced the pad multiplexing documentation with a condensed table</td>
   *	</tr>
   *	<tr>
-  *		<td>A</td>
+  *		<td>42115A</td>
   *		<td>06/2013</td>
   *		<td>Initial release</td>
   *	</tr>
