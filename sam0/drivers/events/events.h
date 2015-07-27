@@ -365,7 +365,7 @@ struct events_config {
 #if (SAML21) || (SAMC20) || (SAMC21)
 	/** Run in standby mode for the channel */
 	bool                       run_in_standby;
-	/** Run On Demand. */
+	/** Run On Demand */
 	bool                       on_demand;
 #endif
 };
