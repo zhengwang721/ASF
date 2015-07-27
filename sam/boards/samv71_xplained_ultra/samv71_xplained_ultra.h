@@ -389,7 +389,7 @@
 #define PIN_PWM_LED1_CHANNEL PWM_CHANNEL_1
 
 /*----------------------------------------------------------------------------*/
-/* GMAC HW configurations */
+/** GMAC HW configurations */
 #define BOARD_GMAC_PHY_ADDR 1
 
 #define PIN_GMAC_RESET_MASK   PIO_PC10
@@ -405,7 +405,11 @@
 						 PIO_PD6A_GRX1 | PIO_PD7A_GRXER | PIO_PD8A_GMDC | \
 						 PIO_PD9A_GMDIO)
 
-
+/** Board configuration of the AT24MAC EEPROM */
+#define BOARD_AT24MAC_TWIHS_INSTANCE      TWIHS0
+#define BOARD_AT24MAC_ADDRESS             (0xAE >> 1)
+#define BOARD_CLK_TWIHS_EEPROM            0
+#define BOARD_CLK_TWIHS_MUX_EEPROM        0
 
 
 /*----------------------------------------------------------------------------*/
