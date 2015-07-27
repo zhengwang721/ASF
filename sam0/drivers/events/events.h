@@ -322,13 +322,13 @@ extern "C" {
  *
  */
 enum events_edge_detect {
-	/** No event output. */
+	/** No event output */
 	EVENTS_EDGE_DETECT_NONE,
-	/** Event on rising edge. */
+	/** Event on rising edge */
 	EVENTS_EDGE_DETECT_RISING,
-	/** Event on falling edge. */
+	/** Event on falling edge */
 	EVENTS_EDGE_DETECT_FALLING,
-	/** Event on both edges. */
+	/** Event on both edges */
 	EVENTS_EDGE_DETECT_BOTH,
 };
 
@@ -339,11 +339,11 @@ enum events_edge_detect {
  *
  */
 enum events_path_selection {
-	/** Select the synchronous path for this event channel. */
+	/** Select the synchronous path for this event channel */
 	EVENTS_PATH_SYNCHRONOUS,
-	/** Select the resynchronizer path for this event channel. */
+	/** Select the resynchronizer path for this event channel */
 	EVENTS_PATH_RESYNCHRONIZED,
-	/** Select the asynchronous path for this event channel. */
+	/** Select the asynchronous path for this event channel */
 	EVENTS_PATH_ASYNCHRONOUS,
 };
 
@@ -354,16 +354,16 @@ enum events_path_selection {
  *
  */
 struct events_config {
-	/** Select edge detection mode. */
+	/** Select edge detection mode */
 	enum events_edge_detect    edge_detect;
-	/** Select events channel path. */
+	/** Select events channel path */
 	enum events_path_selection path;
-	/** Set event generator for the channel. */
+	/** Set event generator for the channel */
 	uint8_t                    generator;
-	/** Clock source for the event channel. */
+	/** Clock source for the event channel */
 	uint8_t                    clock_source;
 #if (SAML21) || (SAMC20) || (SAMC21)
-	/** Run in standby mode for the channel. */
+	/** Run in standby mode for the channel */
 	bool                       run_in_standby;
 	/** Run On Demand. */
 	bool                       on_demand;
@@ -414,9 +414,9 @@ struct events_config {
  */
 struct events_resource {
 #if !defined(__DOXYGEN__)
-	/** Channel allocated for the event resource. */
+	/** Channel allocated for the event resource */
 	uint8_t channel;
-	/** Channel setting in CHANNEL register. */
+	/** Channel setting in CHANNEL register */
 	uint32_t channel_reg;
 #endif
 };
@@ -431,11 +431,11 @@ typedef void (*events_interrupt_hook)(struct events_resource *resource);
  *
  */
 struct events_hook {
-	/** Event resource. */
+	/** Event resource */
 	struct events_resource *resource;
-	/** Event hook function. */
+	/** Event hook function */
 	events_interrupt_hook hook_func;
-	/** Next event hook. */
+	/** Next event hook */
 	struct events_hook *next;
 };
 #endif
@@ -684,18 +684,18 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset);
  *  <tr>
  *      <td>42108F</td>
  *      <td>08/2015</td>
- *      <td>Added support for SAM L21, SAM DAx and SAM C20/C21.</td>
+ *      <td>Added support for SAM L21, SAM DAx and SAM C20/C21</td>
  *  </tr>
  *  <tr>
  *      <td>42108E</td>
  *      <td>12/2014</td>
  *      <td>Added support for interrupt hook mode.
- *         Added support for SAM R21 and SAM D10/D11</td>
+ *         Added support for SAM R21 and SAM D10/D11.</td>
  *  </tr>
  *  <tr>
  *      <td>42108D</td>
  *      <td>01/2014</td>
- *      <td>Update to support SAM D21 and corrected documentation typos.</td>
+ *      <td>Update to support SAM D21 and corrected documentation typos</td>
  *  </tr>
  *  <tr>
  *      <td>42108C</td>
@@ -706,7 +706,7 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset);
  *  <tr>
  *      <td>42108B</td>
  *      <td>06/2013</td>
- *      <td>Corrected documentation typos.</td>
+ *      <td>Corrected documentation typos</td>
  *  </tr>
  *  <tr>
  *      <td>42108A</td>
