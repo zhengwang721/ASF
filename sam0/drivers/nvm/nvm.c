@@ -227,6 +227,8 @@ enum status_code nvm_execute_command(
 
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
+		/* restore the setting */
+		nvm_module->CTRLB.reg = temp;
 		return STATUS_BUSY;
 	}
 
@@ -238,6 +240,8 @@ enum status_code nvm_execute_command(
 
 			/* Auxiliary space cannot be accessed if the security bit is set */
 			if (nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
+				/* restore the setting */
+				nvm_module->CTRLB.reg = temp;
 				return STATUS_ERR_IO;
 			}
 
@@ -267,6 +271,8 @@ enum status_code nvm_execute_command(
 			break;
 
 		default:
+			/* restore the setting */
+			nvm_module->CTRLB.reg = temp;
 			return STATUS_ERR_INVALID_ARG;
 	}
 
