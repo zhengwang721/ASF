@@ -87,7 +87,7 @@
  * \subsection asfdoc_sam0_nvm_features Driver Feature Macro Definition
  * <table>
  *  <tr>
- *    <th>Driver feature macro</th>
+ *    <th>Driver Feature Macro</th>
  *    <th>Supported devices</th>
  *  </tr>
  *  <tr>
@@ -113,7 +113,7 @@
  * \dot
  * digraph memory_layout {
  *  size="5,5"
- *  node [shape=plaintext]
+ *  node [shape=plaintext, fontname=arial]
  *  memory [label=<
  *   <table border="0" cellborder="1" cellspacing="0" >
  *    <tr>
@@ -284,13 +284,13 @@ extern "C" {
 #endif
 
 /**
- * Define NVM features set according to different device family
+ * Define NVM features set according to different device family.
  * @{
 */
 #if (SAML21) || (SAMDA1) || (SAMC20) || (SAMC21) || defined(SAMD21_64K) || defined(__DOXYGEN__)
-/** Read while write EEPROM emulation feature. */
 #  define FEATURE_NVM_RWWEE
 #endif
+/** Read while write EEPROM emulation feature. */ 	
 #if (SAML21) || defined(__DOXYGEN__)
 #define FEATURE_BOD12
 #endif
@@ -312,7 +312,7 @@ extern "C" {
  * controller after a command is issued.
  */
 enum nvm_error {
-	/** No errors. */
+	/** No errors */
 	NVM_ERROR_NONE = 0,
 	/** Lock error, a locked region was attempted accessed */
 	NVM_ERROR_LOCK = NVMCTRL_STATUS_NVME | NVMCTRL_STATUS_LOCKE,
