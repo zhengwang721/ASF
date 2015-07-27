@@ -55,17 +55,17 @@ extern "C" {
 
 /**
  * \if (I2C_MASTER_MODE && I2C_SLAVE_MODE)
- *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C Driver (SERCOM I2C)
+ *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C (SERCOM I2C) Driver
  * \elseif I2C_MASTER_MODE
- *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C Master Mode Driver (SERCOM I2C)
+ *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C Master Mode (SERCOM I2C) Driver
  * \elseif I2C_SLAVE_MODE
- *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C Slave Mode Driver (SERCOM I2C)
+ *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C Slave Mode (SERCOM I2C) Driver
  * \endif
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
- * and management of the device's SERCOM I<SUP>2</SUP>C module, for the transfer
- * of data via an I<SUP>2</SUP>C bus. The following driver API modes are covered
- * by this manual:
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
+ * an interface for the configuration and management of the device's SERCOM 
+ * I<SUP>2</SUP>C module, for the transfer of data via an I<SUP>2</SUP>C bus. 
+ * The following driver API modes are covered by this manual:
  *
  * \if I2C_MASTER_MODE
  * - Master Mode Polled APIs
@@ -335,7 +335,7 @@ extern "C" {
  *
  * \anchor asfdoc_sam0_sercom_i2c_sleep_modes_table
  * <table>
- *   <caption>I<SUP>2</SUP>C Standby Operations</caption>
+ *   <caption>I2C Standby Operations</caption>
  *   <tr>
  *      <th>Run in standby</th>
  *      <th>Slave</th>
@@ -402,13 +402,13 @@ extern "C" {
  */
 #if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAMDA1) || \
 	(SAMC20) || (SAMC21) || defined(__DOXYGEN__)
-/** Fast mode plus and high speed support. */
+/** Fast mode plus and high speed support */
 #  define FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
-/** 10-bit address support. */
+/** 10-bit address support */
 #  define FEATURE_I2C_10_BIT_ADDRESS
-/** SCL stretch mode support. */
+/** SCL stretch mode support */
 #  define FEATURE_I2C_SCL_STRETCH_MODE
-/** SCL extend timeout support. */
+/** SCL extend timeout support */
 #  define FEATURE_I2C_SCL_EXTEND_TIMEOUT
 #  define FEATURE_I2C_DMA_SUPPORT
 #endif
@@ -420,9 +420,9 @@ extern "C" {
  * For slave: direction of request from master.
  */
 enum i2c_transfer_direction {
-	/** Master write operation is in progress. */
+	/** Master write operation is in progress */
 	I2C_TRANSFER_WRITE = 0,
-	/** Master read operation is in progress. */
+	/** Master read operation is in progress */
 	I2C_TRANSFER_READ  = 1,
 };
 
@@ -514,7 +514,7 @@ enum i2c_transfer_direction {
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_sercom_i2c_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  * \if I2C_MASTER_MODE
@@ -541,30 +541,30 @@ enum i2c_transfer_direction {
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>E</td>
- *		<td>06/2015</td>
- *		<td>Added SAM L21, SAMDAx and SAMC21 support.</td>
+ *		<td>42116E</td>
+ *		<td>08/2015</td>
+ *		<td>Added SAM L21, SAM DAx and SAM C21 support</td>
  *	</tr>
  *	<tr>
- *		<td>D</td>
+ *		<td>42116D</td>
  *		<td>12/2014</td>
- *		<td>Added 10-bit addressing and high speed support in SAM D21
+ *		<td>Added 10-bit addressing and high speed support in SAM D21.
  *		    Added SAM R21/D10/D11 support.</td>
  *	</tr>
  *	<tr>
- *		<td>C</td>
+ *		<td>42116C</td>
  *		<td>01/2014</td>
- *		<td>Added the SAM D21 to the application note.</td>
+ *		<td>Added the SAM D21 to the application note</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
+ *		<td>42116B</td>
  *		<td>06/2013</td>
  *		<td>Corrected documentation typos. Updated I<SUP>2</SUP>C Bus State Diagram.</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42116A</td>
  *		<td>06/2013</td>
- *		<td>Initial release.</td>
+ *		<td>Initial release</td>
  *	</tr>
  * </table>
  */
