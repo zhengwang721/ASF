@@ -1,9 +1,48 @@
-/*
- * example.h
+/**
+ * \file
  *
- * Created: 16-07-2015 03:12:10
- *  Author: sivashankari.selvara
- */ 
+ * \brief SAM RTC Calendar Callback Quick Start
+ *
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 #ifndef EXAMPLE_H
 #define EXAMPLE_H
@@ -116,65 +155,65 @@ void enable_tamper(void);
 /*lookup table with segment values for displaying different character in LCD */
 uint16_t DIGI_LUT[] = {
 	
-	0b0000000000000000, //32 - Space
-	0b0000000000000000, //33 - !
-	0b0000000000000000, //34 - "
-	0b0000000000000000, //35 - #
-	0b0000000000000000, //36 - $
-	0b0000000000000000, //37 - %
-	0b0000000000000000, //38 - &
-	0b0000000000000000, //39 - '
-	0b0000000000000000, //40 - (
-	0b0000000000000000, //41 - )
-	0b1001100111011001, //42 - *
-	0b1000000110000001, //43 - +
-	0b0000000000000000, //44 - ,
-	0b0000000100000000, //45 - -
-	0b0000000000000000, //46 - .
-	0b0000100000010000, //47 - /
-	0b0010111001110100, //48 - 0
-	0b0000010001000000, //49 - 1
-	0b0010001111000100, //50 - 2
-	0b0010010111000100, //51 - 3
-	0b0000010111100000, //52 - 4
-	0b0010010110100100, //53 - 5
-	0b0010011110100100, //54 - 6
-	0b0000010001000100, //55 - 7
-	0b0010011111100100, //56 - 8
-	0b0010010111100100, //57 - 9
-	0b0000000000000000, //58 - :
-	0b0000000000000000, //59 - ;
-	0b0001000000010000, //60 - <
-	0b0000000000000000, //61 - =
-	0b0000100000001000, //62 - >
-	0b0000000000000000, //63 - ?
-	0b0000000000000000, //64 - @
-	0b0000011111100100, //65 - A
-	0b1010010101000101, //66 - B
-	0b0010001000100100, //67 - C
-	0b1010010001000101, //68 - D
-	0b0010001110100100, //69 - E
-	0b0000001110100100, //70 - F
-	0b0010011100100100, //71 - G
-	0b0000011111100000, //72 - H
-	0b1010000000000101, //73 - I
-	0b0010011001000000, //74 - J
-	0b0001001010110000, //75 - K
-	0b0010001000100000, //76 - L
-	0b0000011001111000, //77 - M
-	0b0001011001101000, //78 - N
-	0b0010011001100100, //79 - O
-	0b0000001111100100, //80 - P
-	0b0011011001100100, //81 - Q
-	0b0001001111100100, //82 - R
-	0b0010010110100100, //83 - S
-	0b1000000000000101, //84 - T
-	0b0010011001100000, //85 - U
-	0b0000101000110000, //86 - V
-	0b0001111001100000, //87 - W
-	0b0001100000011000, //88 - X
-	0b1000000000011000, //89 - Y
-	0b0010100000010100, //90 - Z
+	0x0000, //32 - Space
+	0x0000, //33 - !
+	0x0000, //34 - "
+	0x0000, //35 - #
+	0x0000, //36 - $
+	0x0000, //37 - %
+	0x0000, //38 - &
+	0x0000, //39 - '
+	0x0000, //40 - (
+	0x0000, //41 - )
+	0x99D9, //42 - *
+	0x8181, //43 - +
+	0x0000, //44 - ,
+	0x0100, //45 - -
+	0x0000, //46 - .
+	0x0810, //47 - /
+	0x2E74, //48 - 0
+	0x0440, //49 - 1
+	0x23C4, //50 - 2
+	0x25C4, //51 - 3
+	0x05E0, //52 - 4
+	0x25A4, //53 - 5
+	0x27A4, //54 - 6
+	0x0444, //55 - 7
+	0x27E4, //56 - 8
+	0x25E4, //57 - 9
+	0x0000, //58 - :
+	0x0000, //59 - ;
+	0x1010, //60 - <
+	0x0000, //61 - =
+	0x0808, //62 - >
+	0x0000, //63 - ?
+	0x0000, //64 - @
+	0x07E4, //65 - A
+	0xA545, //66 - B
+	0x2224, //67 - C
+	0xA445, //68 - D
+	0x23A4, //69 - E
+	0x03A4, //70 - F
+	0x2724, //71 - G
+	0x07E0, //72 - H
+	0xA005, //73 - I
+	0x2640, //74 - J
+	0x12B0, //75 - K
+	0x2220, //76 - L
+	0x0678, //77 - M
+	0x1668, //78 - N
+	0x2664, //79 - O
+	0x03E4, //80 - P
+	0x3664, //81 - Q
+	0x13E4, //82 - R
+	0x25A4, //83 - S
+	0x8005, //84 - T
+	0x2660, //85 - U
+	0x0A30, //86 - V
+	0x1E60, //87 - W
+	0x1818, //88 - X
+	0x8018, //89 - Y
+	0x2814, //90 - Z
 
 };
 
