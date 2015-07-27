@@ -31,7 +31,7 @@
 			<build type="header-file" subtype="api" value="usart_mega.h"/>
 			<build type="include-path" value="."/>
 
-			<device-support value="mega"/>
+			<device-support value="megax8"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="mega.utils"/>
 			<require idref="mega.drivers.ioport"/>

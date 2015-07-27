@@ -9,7 +9,7 @@
 		<build type="include-path" value="."/>
 		<require idref="mega.utils"/>
 		<require idref="mega.drivers.usart"/>
-		<device-support value="mega"/>
+		<device-support value="megax8"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
