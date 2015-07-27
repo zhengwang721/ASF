@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USART driver for AVR MEGA.
+ * \brief USART driver for AVR MEGA_XX8.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
