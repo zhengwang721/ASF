@@ -45,7 +45,7 @@
  */
 #include <asf.h>
 
-uint32_t dualtimer_counter1, dualtimer_counter2;
+
 
 //! [setup]
 //! [setup_dualtimer_init]
@@ -58,36 +58,37 @@ void configure_dualtimer(void)
 //! [setup_dualtimer_1]
 	struct dualtimer_config config_dualtimer;
 //! [setup_dualtimer_1]
+
 //! [setup_dualtimer_2]
 	dualtimer_get_config_defaults(&config_dualtimer);
 //! [setup_dualtimer_2]
 //! [setup_dualtimer_3]
-	config_dualtimer.load_value = CONF_DUALTIMER_TIMER1_LOAD;
+	config_dualtimer.timer1.load_value = CONF_DUALTIMER_TIMER1_LOAD;
 //! [setup_dualtimer_3]
 //! [setup_dualtimer_4]
-	dualtimer_init(DUALTIMER_TIMER1, &config_dualtimer);
+	config_dualtimer.timer2.load_value = CONF_DUALTIMER_TIMER2_LOAD;
 //! [setup_dualtimer_4]
+
 //! [setup_dualtimer_5]
-	config_dualtimer.load_value = CONF_DUALTIMER_TIMER2_LOAD;
+	dualtimer_init(&config_dualtimer);
 //! [setup_dualtimer_5]
+
+	if (config_dualtimer.timer1.timer_enable)
 //! [setup_dualtimer_6]
-	dualtimer_init(DUALTIMER_TIMER2, &config_dualtimer);
+		dualtimer_enable(DUALTIMER_TIMER1);
 //! [setup_dualtimer_6]
 
-
+	if (config_dualtimer.timer2.timer_enable)
 //! [setup_dualtimer_7]
-	dualtimer_enable(DUALTIMER_TIMER1);
+		dualtimer_enable(DUALTIMER_TIMER2);
 //! [setup_dualtimer_7]
-//! [setup_dualtimer_8]
-	dualtimer_enable(DUALTIMER_TIMER2);
-//! [setup_dualtimer_8]
 }
 //! [setup]
 
 int main(void)
 {
 //! [setup_init]
-
+	volatile uint32_t dualtimer_counter1 = 0, dualtimer_counter2 = 0;
 	//system_init();
 	
 //! [dualtimer_config]

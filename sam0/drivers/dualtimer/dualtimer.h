@@ -52,11 +52,32 @@
 extern "C" {
 #endif
 
+/**
+ * \brief Specifies the timer1 or timer2.
+ *
+ * This enum specifies duatimer timer1 or timer2.
+ */
 enum dualtimer_timer {
 	/** Dualtimer timer1 */
 	DUALTIMER_TIMER1 = 0,
 	/** Dualtimer timer2 */
 	DUALTIMER_TIMER2,
+};
+
+/**
+ * \brief DUALTIMER module clock input.
+ *
+ * DUALTIMER module clock.
+ */
+enum dualtimer_clock_input {
+	/** source from clock input 0 26MHz*/
+	DUALTIMER_CLK_INPUT_0	= 0,
+	/** source from clock input 1 13MHz */
+	DUALTIMER_CLK_INPUT_1,
+	/** source from clock input 2 6.5MHz*/
+	DUALTIMER_CLK_INPUT_2,
+	/** source from clock input 3 3MHz*/
+	DUALTIMER_CLK_INPUT_3,
 };
 
 /**
@@ -102,13 +123,13 @@ enum dualtimer_clock_prescaler {
 };
 
 /**
- * \brief Dualtimer configuration structure.
+ * \brief Dualtimer private configuration structure.
  *
- * Configuration struct for Dualtimer instance. This structure should be
- * initialized by the \ref dualtimer_get_config_defaults function before being
- * modified by the user application.
+ * Private configuration struct for Dualtimer instance. 
  */
-struct dualtimer_config {
+struct dualtimer_private_config {
+	/** Enable timer */
+	bool timer_enable;
 	/** Selects one-shot or wrapping counter mode */
 	enum dualtimer_counter_mode counter_mode;
 	/** Selects 16-bit or 32- bit counter size */
@@ -121,8 +142,26 @@ struct dualtimer_config {
 	uint32_t load_value;
 };
 
+/**
+ * \brief Dualtimer configuration structure.
+ *
+ * Configuration struct for Dualtimer instance. This structure should be
+ * initialized by the \ref dualtimer_get_config_defaults function before being
+ * modified by the user application.
+ */
+struct dualtimer_config {
+	/** Timer1 private configuration */
+	struct dualtimer_private_config timer1;
+	/** Timer2 private configuration */
+	struct dualtimer_private_config timer2;
+	/** Selects Dualtimer clock frequency */
+	enum dualtimer_clock_input clock_source;
+	/** Enable integration test */
+	bool integration_test_enable;
+};
+
 void dualtimer_get_config_defaults(struct dualtimer_config *config);
-void dualtimer_init(enum dualtimer_timer timer, const struct dualtimer_config *config);
+void dualtimer_init(const struct dualtimer_config *config);
 uint32_t dualtimer_get_current_value(enum dualtimer_timer timer);
 void dualtimer_set_load_value(enum dualtimer_timer timer,
 		uint32_t value);

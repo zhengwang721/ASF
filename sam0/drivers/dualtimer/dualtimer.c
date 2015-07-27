@@ -57,15 +57,26 @@
  */
 void dualtimer_get_config_defaults(struct dualtimer_config *config)
 {
-	config->counter_mode = DUALTIMER_PERIODIC_MODE;
+	config->timer1.timer_enable = true;
+	config->timer2.timer_enable = true;
 	
-	config->counter_size = DUALTIMER_COUNTER_SIZE_32BIT;
+	config->timer1.counter_mode = DUALTIMER_PERIODIC_MODE;
+	config->timer2.counter_mode = DUALTIMER_PERIODIC_MODE;
+	
+	config->timer1.counter_size = DUALTIMER_COUNTER_SIZE_32BIT;
+	config->timer2.counter_size = DUALTIMER_COUNTER_SIZE_32BIT;
 
-	config->clock_prescaler = DUALTIMER_CLOCK_PRESCALER_DIV1;
+	config->timer1.clock_prescaler = DUALTIMER_CLOCK_PRESCALER_DIV1;
+	config->timer2.clock_prescaler = DUALTIMER_CLOCK_PRESCALER_DIV1;
 	
-	config->interrup_enable = false;
+	config->timer1.interrup_enable = false;
+	config->timer2.interrup_enable = false;
 	
-	config->load_value = 0;
+	config->timer1.load_value = 0;
+	config->timer2.load_value = 0;
+	
+	config->clock_source = DUALTIMER_CLK_INPUT_0;
+	config->integration_test_enable = false;
 }
 
 /**
@@ -74,35 +85,66 @@ void dualtimer_get_config_defaults(struct dualtimer_config *config)
  * Initializes the Dualtimer module, based on the given
  * configuration values.
  *
- * \param[in]     timer        Timer1/Timer2
  * \param[in]     config       Pointer to the Dualtimer configuration options struct
  *
  * \return Status of the initialization procedure.
  */
-void dualtimer_init(enum dualtimer_timer timer, const struct dualtimer_config *config)
+void dualtimer_init(const struct dualtimer_config *config)
 {
 	uint8_t regval = 0;
 	
-	if (config->counter_mode == DUALTIMER_ONE_SHOT_MODE) {
-		regval = DUALTIMER_TIMER1CONTROL_ONE_SHOT_COUNT_1;
-	} else if (config->counter_mode == DUALTIMER_FREE_RUNNING_MODE) {
-		regval = DUALTIMER_TIMER1CONTROL_TIMER_MODE_0;
-	} else if (config->counter_mode == DUALTIMER_PERIODIC_MODE) {
-		regval = DUALTIMER_TIMER1CONTROL_TIMER_MODE_1;
+	/* Global reset */
+	LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg &=
+			~LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_DUALTIMER_RSTN;
+	LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg |=
+			LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_DUALTIMER_RSTN;
+
+	/* Timer1 config */
+	if (config->timer1.timer_enable) {
+		if (config->timer1.counter_mode == DUALTIMER_ONE_SHOT_MODE) {
+			regval = DUALTIMER_TIMER1CONTROL_ONE_SHOT_COUNT_1;
+		} else if (config->timer1.counter_mode == DUALTIMER_FREE_RUNNING_MODE) {
+			regval = DUALTIMER_TIMER1CONTROL_TIMER_MODE_0;
+		} else if (config->timer1.counter_mode == DUALTIMER_PERIODIC_MODE) {
+			regval = DUALTIMER_TIMER1CONTROL_TIMER_MODE_1;
+		}
+		regval |= DUALTIMER_TIMER1CONTROL_TIMER_SIZE(config->timer1.counter_size) |
+				DUALTIMER_TIMER1CONTROL_TIMERPRE(config->timer1.clock_prescaler);
+		if (config->timer1.interrup_enable) {
+			regval |= DUALTIMER_TIMER1CONTROL_INTERRUPT_ENABLE;
+		}
+		DUALTIMER0->TIMER1LOAD.reg = config->timer1.load_value;
+		DUALTIMER0->TIMER1CONTROL.reg = regval;
+		LPMCU_MISC_REGS0->DUALTIMER_CTRL.reg |= LPMCU_MISC_REGS_DUALTIMER_CTRL_CNTR_1_ENABLE;
 	}
 
-	regval |= DUALTIMER_TIMER1CONTROL_TIMER_SIZE(config->counter_size) |
-			DUALTIMER_TIMER1CONTROL_TIMERPRE(config->clock_prescaler);
-	if (config->interrup_enable) {
-		regval |= DUALTIMER_TIMER1CONTROL_INTERRUPT_ENABLE;
+	/* Timer2 config */
+	if (config->timer2.timer_enable) {
+		if (config->timer2.counter_mode == DUALTIMER_ONE_SHOT_MODE) {
+			regval = DUALTIMER_TIMER2CONTROL_ONE_SHOT_COUNT_1;
+		} else if (config->timer2.counter_mode == DUALTIMER_FREE_RUNNING_MODE) {
+			regval = DUALTIMER_TIMER2CONTROL_TIMER_MODE_0;
+		} else if (config->timer2.counter_mode == DUALTIMER_PERIODIC_MODE) {
+			regval = DUALTIMER_TIMER2CONTROL_TIMER_MODE_1;
+		}
+		regval |= DUALTIMER_TIMER2CONTROL_TIMER_SIZE(config->timer2.counter_size) |
+				DUALTIMER_TIMER2CONTROL_TIMERPRE(config->timer2.clock_prescaler);
+		if (config->timer2.interrup_enable) {
+			regval |= DUALTIMER_TIMER2CONTROL_INTERRUPT_ENABLE;
+		}
+		DUALTIMER0->TIMER2LOAD.reg = config->timer2.load_value;
+		DUALTIMER0->TIMER2CONTROL.reg = regval;
+		LPMCU_MISC_REGS0->DUALTIMER_CTRL.reg |= LPMCU_MISC_REGS_DUALTIMER_CTRL_CNTR_2_ENABLE;
 	}
 	
-	if (timer == DUALTIMER_TIMER1) {
-		DUALTIMER0->TIMER1CONTROL.reg = regval;
-		DUALTIMER0->TIMER1LOAD.reg = config->load_value;
-	} else {
-		DUALTIMER0->TIMER2CONTROL.reg = regval;
-		DUALTIMER0->TIMER2LOAD.reg = config->load_value;
+	/* Common config */
+	if (config->timer1.timer_enable || config->timer2.timer_enable) {
+		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |=
+				LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_DUALTIMER_CLK_EN;
+		LPMCU_MISC_REGS0->LPMCU_CONTROL.bit.DUALTIMER_CLK_SEL = config->clock_source;	
+		if (config->integration_test_enable) {
+			DUALTIMER0->TIMERITCR.reg = 1;
+		}
 	}
 }
 
@@ -243,8 +285,6 @@ void dualtimer_clear_interrupt_status(enum dualtimer_timer timer)
  */
 void dualtimer_enable(enum dualtimer_timer timer)
 {
-	LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |= 
-			LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_DUALTIMER_CLK_EN;
 	if (timer == DUALTIMER_TIMER1) {
 		DUALTIMER0->TIMER1CONTROL.reg |= DUALTIMER_TIMER1CONTROL_TIMER_ENABLE;
 	} else {
@@ -261,8 +301,6 @@ void dualtimer_enable(enum dualtimer_timer timer)
  */
 void dualtimer_disable(enum dualtimer_timer timer)
 {
-	LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg &= 
-			~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_DUALTIMER_CLK_EN;
 	if (timer == DUALTIMER_TIMER1) {
 		DUALTIMER0->TIMER1CONTROL.reg &= ~DUALTIMER_TIMER1CONTROL_TIMER_ENABLE;
 	} else {
