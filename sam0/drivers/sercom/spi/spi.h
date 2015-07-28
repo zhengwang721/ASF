@@ -102,7 +102,7 @@
  * \subsection asfdoc_sam0_sercom_spi_module_features Driver Feature Macro Definition
  * <table>
  *  <tr>
- *    <th>Driver Feature Macro</th>
+ *    <th>Driver feature macro</th>
  *    <th>Supported devices</th>
  *  </tr>
  *  <tr>
@@ -327,7 +327,7 @@
  *   <tr>
  *      <td> false </td>
  *      <td> Disabled, all reception is dropped </td>
- *      <td> GCLK disabled when master is idle, wake on transmit complete </td>
+ *      <td> GCLK is disabled when master is idle, wake on transmit complete </td>
  *   </tr>
  *   <tr>
  *      <td> true </td>
@@ -435,7 +435,7 @@ enum spi_callback {
 	/** Callback for error */
 	SPI_CALLBACK_ERROR,
 	/**
-	* Callback for transmission ended by master before entire buffer was
+	* Callback for transmission ended by master before the entire buffer was
 	* read or written from slave
 	*/
 	SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE,
@@ -1462,7 +1462,7 @@ enum status_code spi_select_slave(
   * \page asfdoc_sam0_sercom_spi_mux_settings MUX Settings
   *
   * The following lists the possible internal SERCOM module pad function
-  * assignments, for the four SERCOM pads in both SPI Master, and SPI Slave
+  * assignments for the four SERCOM pads in both SPI Master and SPI Slave
   * modes. They are combinations of DOPO and DIPO in CTRLA. 
   * Note that this is in addition to the physical GPIO pin MUX of the device,
   * and can be used in conjunction to optimize the serial data pin-out.
@@ -1772,7 +1772,7 @@ enum status_code spi_select_slave(
   *	</tr>
   *	<tr>
   *		<td>42115E</td>
-  *		<td>06/2015</td>
+  *		<td>08/2015</td>
   *		<td>Add SAM L21, SAMDAx and SAMC21 support</td>
   *	</tr>
   *	<tr>
