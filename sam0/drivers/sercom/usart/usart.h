@@ -87,7 +87,7 @@
  *
  * \section asfdoc_sam0_sercom_usart_overview Module Overview
  *
- * This driver will use one (or more) SERCOM interfaces on the system
+ * This driver will use one (or more) SERCOM interface(s) on the system
  * and configure it to run as a USART interface in either synchronous
  * or asynchronous mode.
  *
@@ -219,8 +219,8 @@
  * Parity can be enabled to detect if a transmission was in error. This is done
  * by counting the number of "1" bits in the frame. When using Even parity the
  * parity bit will be set if the total number of "1"s in the frame are an even
- * number. If using Odd parity the parity bit will be set if the total number
- * of "1"s are Odd.
+ * number. If using odd parity the parity bit will be set if the total number
+ * of "1"s are odd.
  *
  * When receiving a character the receiver will count the number of "1"s in the
  * frame and give an error if the received frame and parity bit disagree.
@@ -281,21 +281,21 @@ extern "C" {
  */
 #if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || \
 	(SAMDA1) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
-/** Usart sync scheme version 2 */
+/** USART sync scheme version 2 */
 #  define FEATURE_USART_SYNC_SCHEME_V2
-/** Usart over sampling */
+/** USART oversampling */
 #  define FEATURE_USART_OVER_SAMPLE
-/** Usart hardware control flow */
+/** USART hardware control flow */
 #  define FEATURE_USART_HARDWARE_FLOW_CONTROL
 /** IrDA mode */
 #  define FEATURE_USART_IRDA
 /** LIN slave mode */
 #  define FEATURE_USART_LIN_SLAVE
-/** Usart collision detection */
+/** USART collision detection */
 #  define FEATURE_USART_COLLISION_DECTION
-/** Usart start frame detection */
+/** USART start frame detection */
 #  define FEATURE_USART_START_FRAME_DECTION
-/** Usart start buffer overflow notification */
+/** USART start buffer overflow notification */
 #  define FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
 #endif
 
@@ -423,7 +423,7 @@ enum usart_callback {
 /**
  * \brief USART Data Order enum
  *
- * The data order decides which of MSB or LSB is shifted out first when data is
+ * The data order decides which or MSB or LSB is shifted out first when data is
  * transferred.
  */
 enum usart_dataorder {
@@ -665,7 +665,7 @@ struct usart_config {
 #ifdef FEATURE_USART_IRDA
 	/** Enable IrDA encoding format */
 	bool encoding_format_enable;
-	/** The minimum pulse length that is required for a pulse to be accepted by the IrDA receiver */
+	/** The minimum pulse length required for a pulse to be accepted by the IrDA receiver */
 	uint8_t receive_pulse_length;
 #endif
 #ifdef FEATURE_USART_LIN_SLAVE
@@ -723,34 +723,34 @@ struct usart_config {
 	enum gclk_generator generator_source;
 	/** PAD0 pinmux.
 	 *
-	 * If current USARTx has several alternative multiplexing I/O pin for PAD0, then
+	 * If current USARTx has several alternative multiplexing I/O pins for PAD0, then
 	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD0
-	 * function. Make sure other alternative multiplexing I/O associated current
-	 * USARTx PAD0 is not setup usart function.
+	 * function. Make sure that no other alternative multiplexing I/O is associated 
+	 * with the same USARTx PAD0.
 	 */
 	uint32_t pinmux_pad0;
 	/** PAD1 pinmux.
 	 *
-	 * If current USARTx has several alternative multiplexing I/O pin for PAD1, then
+	 * If current USARTx has several alternative multiplexing I/O pins for PAD1, then
 	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD1
-	 * function. Make sure other alternative multiplexing I/O associated current
-	 * USARTx PAD1 is not setup usart function.
+	 * function. Make sure that no other alternative multiplexing I/O is associated 
+	 * with the same USARTx PAD1.
 	 */
 	uint32_t pinmux_pad1;
 	/** PAD2 pinmux.
 	 *
-	 * If current USARTx has several alternative multiplexing I/O pin for PAD2, then
+	 * If current USARTx has several alternative multiplexing I/O pins for PAD2, then
 	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD2
-	 * function. Make sure other alternative multiplexing I/O associated current
-	 * USARTx PAD2 is not setup usart function.
+	 * function. Make sure that no other alternative multiplexing I/O is associated 
+	 * with the same USARTx PAD2.
 	 */
 	uint32_t pinmux_pad2;
 	/** PAD3 pinmux.
 	 *
-	 * If current USARTx has several alternative multiplexing I/O pin for PAD3, then
+	 * If current USARTx has several alternative multiplexing I/O pins for PAD3, then
 	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD3
-	 * function. Make sure other alternative multiplexing I/O associated current
-	 * USARTx PAD3 is not setup usart function.
+	 * function. Make sure that no other alternative multiplexing I/O is associated 
+	 * with the same USARTx PAD3.
 	 */
 	uint32_t pinmux_pad3;
 };
@@ -885,7 +885,7 @@ static inline void usart_unlock(struct usart_module *const module)
  *
  * Return peripheral synchronization status. If doing a non-blocking
  * implementation this function can be used to check the sync state and hold of
- * any new actions until sync is complete. If this functions is not run; the
+ * any new actions until sync is complete. If this function is not run; the
  * functions will block until the sync has completed.
  *
  * \param[in]  module  Pointer to peripheral module
