@@ -135,7 +135,7 @@
  *
  * \subsection asfdoc_sam0_rtc_calendar_module_overview_alarms Alarms and Overflow
  * The RTC has up to four independent hardware alarms that can be configured by the user
- * application. These alarms will will be triggered on match with the current
+ * application. These alarms will be triggered on match with the current
  * clock value, and can be set up to trigger an interrupt, event, or both. The
  * RTC can also be configured to clear the clock value on alarm match, resetting
  * the clock to the original start time.
@@ -1259,10 +1259,10 @@ static inline uint32_t rtc_read_general_purpose_reg(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAM C21.</td>
+ *		<td>Added support for SAM C21</td>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAM L21.</td>
+ *		<td>Added support for SAM L21</td>
  *	</tr>
  *	<tr>
  *		<td>
