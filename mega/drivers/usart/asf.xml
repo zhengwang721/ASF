@@ -19,7 +19,7 @@
 			<require idref="mega.drivers.ioport"/>
 			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
 		</module>
-		<module type="driver" id="mega.drivers.usart#mega" caption="USART - Universal Synchronous/Asynchronous Receiver/Transmitter">
+		<module type="driver" id="mega.drivers.usart#megax8" caption="USART - Universal Synchronous/Asynchronous Receiver/Transmitter">
 			<info type="description" value="summary">
 			Mega Driver for the Universal Synchronous and Asynchronous Serial Receiver and Transmitter (USART).
 			Provides functions for configuring and using the USART in RS232 and SPI mode.

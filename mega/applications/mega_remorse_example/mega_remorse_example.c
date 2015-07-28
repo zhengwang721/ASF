@@ -39,8 +39,45 @@
  *
  * \asf_license_stop
  *
- * This version of Remorse is a polling implemenation, and implemented
- * as only one self contained file.
+ */
+/**
+ * \mainpage MEGA Remorse Example
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails appdoc_preface
+ *
+ *
+ * \page appdoc_preface Overview
+ * This application remorse your input and output it through usart.
+ */
+
+/**
+ * \page appdoc_main MEGA Remorse Example
+ *
+ * Overview:
+ * - \ref appdoc_mega_remorse_app_intro
+ * - \ref appdoc_mega_remorse_app_usage
+ * - \ref appdoc_mega_remorse_app_compinfo
+ * - \ref appdoc_mega_remorse_app_contactinfo
+ *
+ * \section appdoc_mega_remorse_app_intro Introduction
+ * This application remorse your input and output it through usart.
+ *
+ * This application has been tested on following boards:
+ * - ATmega328p Xplained Mini
+ *
+ * \section appdoc_mega_remorse_app_usage Usage
+ * The application uses usart to receive input and output remorse result, 
+ * once you input through usart, remorse result will output though usart,
+ * if you press the button more than 4s, remorse will restart,
+ * led will blink in remorse.
+ *
+ * \section appdoc_mega_remorse_app_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for MEGA.
+ * Other compilers may or may not work.
+ *
+ * \section appdoc_mega_remorse_app_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
