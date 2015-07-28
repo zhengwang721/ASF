@@ -53,7 +53,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_interrupt_group SAM System Interrupt (SYSTEM INTERRUPT) Driver
  *
- * "This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
  * an interface for the configuration and management of internal software and 
  * hardware interrupts/exceptions.
  *
