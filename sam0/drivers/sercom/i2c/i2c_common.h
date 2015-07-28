@@ -55,11 +55,11 @@ extern "C" {
 
 /**
  * \if (I2C_MASTER_MODE && I2C_SLAVE_MODE)
- *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C Driver (SERCOM I2C)
+ *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C (SERCOM I2C) Driver
  * \elseif I2C_MASTER_MODE
- *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C Master Mode Driver (SERCOM I2C)
+ *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C Master Mode (SERCOM I2C) Driver
  * \elseif I2C_SLAVE_MODE
- *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C Slave Mode Driver (SERCOM I2C)
+ *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C Slave Mode (SERCOM I2C) Driver
  * \endif
  *
  * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
@@ -162,7 +162,7 @@ extern "C" {
  * replaced with a constant current source.
  *
  * \anchor asfdoc_sam0_sercom_i2c_bus_topology_figure
- * \image html bus_topology.svg "I<SUP>2</SUP>C Bus Topology" Width=100%
+ * \image html bus_topology.svg "I2C Bus Topology" Width=100%
  *
  * \subsection asfdoc_sam0_sercom_i2c_transactions Transactions
  * The I<SUP>2</SUP>C standard defines three fundamental transaction formats:
@@ -548,8 +548,8 @@ enum i2c_transfer_direction {
  *	<tr>
  *		<td>D</td>
  *		<td>12/2014</td>
- *		<td>Added 10-bit addressing and high speed support in SAM D21
- *		    Added SAM R21/D10/D11 suppor.</td>
+ *		<td>Added 10-bit addressing and high speed support in SAM D21.
+ *		    Added SAM R21/D10/D11 support.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>
