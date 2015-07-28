@@ -194,6 +194,10 @@
 /** Constant RX_ENABLE for sub-register @ref SR_RX_PDT_DIS in register RX_SYN */
 #define RX_ENABLE                       (0)
 
+#define SR_MAX_FRAME_RETRIES   0x2C, 0xF0, 4
+
+#define  SR_MAX_CSMA_RETRIES	   0x2C, 0X0E, 1	
+   
 /* datasheet 6.3, SPI access and first SPI byte */
 /* 
  * Following Atmel nomenclature,

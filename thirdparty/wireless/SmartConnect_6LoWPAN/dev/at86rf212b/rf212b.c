@@ -58,6 +58,7 @@ static void radiocore_hard_recovery(void);
 static void rf_generate_random_seed(void);
 static void flush_buffer(void);
 static uint8_t flag_transmit = 0;
+static uint8_t ack_status = 0;
 static volatile int radio_is_on = 0;
 static volatile int pending_frame = 0;
 static volatile int sleep_on = 0;
@@ -234,7 +235,15 @@ system_interrupt_enable_global();
   //temp = rf212_arch_read_reg(RF212_REG_TRX_CTRL_2);
   trx_reg_write(RF212_REG_TRX_CTRL_2, RF212_REG_TRX_CTRL_2_CONF);
   trx_reg_write(RF212_REG_IRQ_MASK,        RF212_REG_IRQ_MASK_CONF);
-  
+#if HW_CSMA_FRAME_RETRIES
+  trx_bit_write(SR_MAX_FRAME_RETRIES, 3);
+  trx_bit_write(SR_MAX_CSMA_RETRIES, 4);
+#else  
+  trx_bit_write(SR_MAX_FRAME_RETRIES, 0);
+  trx_bit_write(SR_MAX_CSMA_RETRIES, 7);
+#endif  
+  SetPanId(IEEE802154_CONF_PANID);
+  SetIEEEAddr(node_mac);  
   rf_generate_random_seed();
   /* start the radio process */
   process_start(&rf212_radio_process, NULL);
@@ -417,6 +426,9 @@ rf212_transmit(unsigned short payload_len)
   /* perform transmission */
   ENERGEST_OFF(ENERGEST_TYPE_LISTEN);
   ENERGEST_ON(ENERGEST_TYPE_TRANSMIT);
+#if NULLRDC_CONF_802154_AUTOACK_HW
+  RF212_COMMAND(TRXCMD_TX_ARET_ON);
+#endif  
   RF212_COMMAND(TRXCMD_TX_START);
   flag_transmit=1;
   BUSYWAIT_UNTIL(RF212_STATUS() == STATE_BUSY_TX, RTIMER_SECOND/2000);
@@ -428,6 +440,7 @@ rf212_transmit(unsigned short payload_len)
   #endif
   ENERGEST_OFF(ENERGEST_TYPE_TRANSMIT);
   ENERGEST_ON(ENERGEST_TYPE_LISTEN);
+#if !NULLRDC_CONF_802154_AUTOACK_HW  
   if(RF212_STATUS() != STATE_PLL_ON) {
     /* something has failed */
     printf("RF212: radio fatal err after tx\n");
@@ -435,8 +448,25 @@ rf212_transmit(unsigned short payload_len)
 	return RADIO_TX_ERR;
   }
  // printf("#RTIMER_SECOND");
- PRINTF("RF212: tx ok\n");
   RF212_COMMAND(TRXCMD_RX_ON);
+#else
+	BUSYWAIT_UNTIL(ack_status == 1, 10 * RTIMER_SECOND/1000);
+	if((ack_status))
+	{
+	//	printf("\r\nrf233 sent\r\n ");
+		ack_status=0;
+	//	printf("\nACK received");
+		return RADIO_TX_OK;
+	}
+	else
+	{
+	//	printf("\nNOACK received");		
+		return RADIO_TX_NOACK;
+	}
+	
+#endif  
+
+ PRINTF("RF212: tx ok\n");
   return RADIO_TX_OK;
 }
 void
@@ -768,6 +798,12 @@ rf212_interrupt_poll(void)
 		 {
 			 flag_transmit=0;
 			 interrupt_callback_in_progress = 0;
+			 #if NULLRDC_CONF_802154_AUTOACK_HW
+			//printf("Status %x",trx_reg_read(RF233_REG_TRX_STATE) & TRX_STATE_TRAC_STATUS);
+			if(!(trx_reg_read(RF233_REG_TRX_STATE) & TRX_STATE_TRAC_STATUS))
+			ack_status = 1;
+			 RF233_COMMAND(TRXCMD_RX_AACK_ON);
+			 #endif			 
 			 return 0;
 		 }
   if(interrupt_callback_in_progress) {
@@ -823,6 +859,8 @@ rf212_interrupt_poll(void)
   interrupt_callback_in_progress = 0;
   return 0;
 }
+
+#if !NULLRDC_CONF_802154_AUTOACK_HW
 /*---------------------------------------------------------------------------*/
 /* 
  * Hard, brute reset of radio core and re-init due to it being in unknown,
@@ -835,6 +873,7 @@ radiocore_hard_recovery(void)
 	printf("hardcore recovery\n");//
   rf212_init();
 }
+#endif
 /*---------------------------------------------------------------------------*/
 /* 
  * Crude way of flushing the Tx/Rx FIFO: write the first byte as 0, indicating

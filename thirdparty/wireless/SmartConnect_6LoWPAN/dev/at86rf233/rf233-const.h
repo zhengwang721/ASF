@@ -58,8 +58,12 @@
 	#define RX_ENABLE   (0)
 	/** Access parameters for sub-register RND_VALUE in register @ref RG_PHY_RSSI */
 	#define SR_RND_VALUE   0x06, 0x60, 5	
-    #define TRX_STATE_TRAC_STATUS     (0xE0)  /* result of transaction in extended mode */
+	
     #define SR_MAX_FRAME_RETRIES   0x2C, 0xF0, 4
+	
+    #define  SR_MAX_CSMA_RETRIES	   0x2C, 0X0E, 1
+		
+    #define TRX_STATE_TRAC_STATUS     (0xE0)  /* result of transaction in extended mode */
     #define TRAC_SUCCESS              (0 << 5)
     #define TRAC_SUCCESS_DATA_PENDING (1 << 5)
     #define TRAC_SUCCESS_WAIT_FOR_ACK (2 << 5)

@@ -81,6 +81,8 @@
 #include "system_interrupt.h"
 #if SAMD
 #include "node-id-samd21.h"
+#else
+uint8_t *edbg_eui_read_eui64(void);
 #endif
 #define RF233_STATUS()                    rf233_status()
 /*---------------------------------------------------------------------------*/
@@ -93,6 +95,7 @@ static void radiocore_hard_recovery(void);
 static void rf_generate_random_seed(void);
 static void flush_buffer(void);
 static uint8_t flag_transmit = 0;
+static uint8_t ack_status = 0;
 static volatile int radio_is_on = 0;
 static volatile int pending_frame = 0;
 static volatile int sleep_on = 0;
@@ -268,11 +271,21 @@ rf233_init(void)
   trx_reg_write(RF233_REG_TRX_CTRL_2,      RF233_REG_TRX_CTRL_2_CONF);
   trx_reg_write(RF233_REG_IRQ_MASK,        RF233_REG_IRQ_MASK_CONF);
   // trx_reg_write(0x17, 0x02);
+#if HW_CSMA_FRAME_RETRIES
+  trx_bit_write(SR_MAX_FRAME_RETRIES, 3);
+  trx_bit_write(SR_MAX_CSMA_RETRIES, 4);
+#else  
   trx_bit_write(SR_MAX_FRAME_RETRIES, 0);
+  trx_bit_write(SR_MAX_CSMA_RETRIES, 7);
+#endif  
   SetPanId(IEEE802154_CONF_PANID);
+  
+  rf_generate_random_seed();
+  
  #if SAMD
   SetIEEEAddr(node_mac);
 #else
+  eui64 = edbg_eui_read_eui64();
   SetIEEEAddr(eui64);
 #endif
 
@@ -281,7 +294,6 @@ rf233_init(void)
 	  regtemp =trx_reg_read(0x24+i);
   }
 
-  rf_generate_random_seed();
   /* 11_09_rel */
   trx_reg_write(RF233_REG_TRX_RPC,0xFF); /* Enable RPC feature by default */
   // regtemp = trx_reg_read(RF233_REG_PHY_TX_PWR);
@@ -498,6 +510,21 @@ rf233_transmit(unsigned short payload_len)
     return RADIO_TX_ERR;
   }
   RF233_COMMAND(TRXCMD_RX_ON);
+#else
+	BUSYWAIT_UNTIL(ack_status == 1, 10 * RTIMER_SECOND/1000);
+	if((ack_status))
+	{
+	//	printf("\r\nrf233 sent\r\n ");
+		ack_status=0;
+	//	printf("\nACK received");
+		return RADIO_TX_OK;
+	}
+	else
+	{
+	//	printf("\nNOACK received");		
+		return RADIO_TX_NOACK;
+	}
+	
 #endif
 
   PRINTF("RF233: tx ok\n");
@@ -907,6 +934,9 @@ rf233_interrupt_poll(void)
 			 flag_transmit=0;
 			 interrupt_callback_in_progress = 0;
 			 #if NULLRDC_CONF_802154_AUTOACK_HW
+			//printf("Status %x",trx_reg_read(RF233_REG_TRX_STATE) & TRX_STATE_TRAC_STATUS);
+			if(!(trx_reg_read(RF233_REG_TRX_STATE) & TRX_STATE_TRAC_STATUS))
+			ack_status = 1;
 			 RF233_COMMAND(TRXCMD_RX_AACK_ON);
 			 #endif
 			 return 0;
