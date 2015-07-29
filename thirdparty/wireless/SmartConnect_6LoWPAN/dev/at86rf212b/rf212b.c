@@ -58,7 +58,9 @@ static void radiocore_hard_recovery(void);
 static void rf_generate_random_seed(void);
 static void flush_buffer(void);
 static uint8_t flag_transmit = 0;
+#if NULLRDC_CONF_802154_AUTOACK_HW
 static uint8_t ack_status = 0;
+#endif
 static volatile int radio_is_on = 0;
 static volatile int pending_frame = 0;
 static volatile int sleep_on = 0;

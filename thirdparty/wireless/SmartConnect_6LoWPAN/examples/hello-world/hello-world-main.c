@@ -126,7 +126,7 @@ void configure_wdt_callbacks(void);
 #if BOARD == SAMR21_XPLAINED_PRO
 uint8_t *edbg_eui_read_eui64(void);
 #endif
-uint8_t *eui64;
+
 
 
 uint8_t	sent_packets=0;
