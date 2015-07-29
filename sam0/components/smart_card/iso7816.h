@@ -3,7 +3,7 @@
  *
  * \brief Smart Card Standard ISO7816 driver.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -61,13 +61,13 @@
 
 void iso7816_init(struct usart_module *const module, uint32_t pin_rst, \
 				uint32_t clock_get_hz);
-uint16_t iso7816_xfr_block_tpdu_t0(const uint16_t *p_apdu, uint16_t *p_message,
+uint16_t iso7816_xfr_block_tpdu_t0(const uint8_t *p_apdu, uint8_t *p_message,
 				uint16_t us_length);
-void iso7816_data_block_atr(uint16_t *p_atr, uint8_t *p_length);
+void iso7816_data_block_atr(uint8_t *p_atr, uint8_t *p_length);
 bool iso7816_get_reset_statuts(void);
 void iso7816_cold_reset(void);
 void iso7816_warm_reset(void);
-void iso7816_decode_atr(uint16_t *p_atr);
+void iso7816_decode_atr(uint8_t *p_atr);
 
 #endif /* ISO7816_H_INCLUDED */
 

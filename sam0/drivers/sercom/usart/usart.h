@@ -428,14 +428,19 @@ enum iso7816_inhibit_nack {
  *
  * The value of ISO7816 disable successive receive NACK.
  */
-enum iso7816_dis_suc_nack {
+enum iso7816_successive_recv_nack {
 	/** The successive receive NACK is enable. */
-	ISO7816_DIS_SUC_NACK_DISABLE = (0x0ul << SERCOM_USART_CTRLC_INACK_Pos),
+	ISO7816_SUCCESSIVE_RECV_NACK_DISABLE = (0x0ul << SERCOM_USART_CTRLC_INACK_Pos),
 	/** The successive receive NACK is disable. */
-	ISO7816_DIS_SUC_NACK_ENABLE = SERCOM_USART_CTRLC_DSNACK,
+	ISO7816_SUCCESSIVE_RECV_NACK_ENABLE = SERCOM_USART_CTRLC_DSNACK,
 };
 
-struct iso7816_opt_t {
+/**
+ * \brief ISO7816 configuration struct
+ *
+ * Configuration options for ISO7816.
+ */
+struct iso7816_config_t {
 	/* ISO7816 mode enable */
 	bool enabled;
 	/* ISO7816 protocol type */
@@ -456,7 +461,7 @@ struct iso7816_opt_t {
 	 * a NACK on the ISO line. As soon as this value is reached, no additional
 	 * NACK is sent on the ISO line. The ITERATION flag is asserted.
 	 */
-	enum iso7816_dis_suc_nack dis_suc_nack;
+	enum iso7816_successive_recv_nack successive_recv_nack;
 	/* Max number of repetitions */
 	uint32_t max_iterations;
 };
@@ -777,7 +782,7 @@ struct usart_config {
 #endif
 #ifdef FEATURE_USART_ISO7816
 	/** Enable ISO7816 for smart card interfacing. */
-	struct iso7816_opt_t iso7816_opt;
+	struct iso7816_config_t iso7816_config;
 #endif
 #ifdef FEATURE_USART_RS485
 	/** RS485 guard time. */
@@ -1094,12 +1099,12 @@ static inline void usart_get_config_defaults(
 	config->receive_pulse_length                    = 19;
 #endif
 #ifdef FEATURE_USART_ISO7816
-	config->iso7816_opt.enabled                     = false;
-	config->iso7816_opt.guard_time                  = ISO7816_GUARD_TIME_2_BIT;
-	config->iso7816_opt.protocol_t                  = ISO7816_PROTOCOL_T_0;
-	config->iso7816_opt.inhibit_nack                = ISO7816_INHIBIT_NACK_DISABLE;
-	config->iso7816_opt.dis_suc_nack                = ISO7816_DIS_SUC_NACK_DISABLE;
-	config->iso7816_opt.max_iterations              = 3;
+	config->iso7816_config.enabled                  = false;
+	config->iso7816_config.guard_time               = ISO7816_GUARD_TIME_2_BIT;
+	config->iso7816_config.protocol_t               = ISO7816_PROTOCOL_T_0;
+	config->iso7816_config.inhibit_nack             = ISO7816_INHIBIT_NACK_DISABLE;
+	config->iso7816_config.successive_recv_nack     = ISO7816_SUCCESSIVE_RECV_NACK_DISABLE;
+	config->iso7816_config.max_iterations           = 7;
 #endif
 #ifdef FEATURE_USART_COLLISION_DECTION
 	config->collision_detection_enable              = false;

@@ -86,7 +86,7 @@
  *
  * \section appdoc_sam0_smart_card_setup Hardware Setup
  * The Smart Card Xplained Pro extension board must be connected to extension
- * header on the SAM L22 Xplained Pro.
+ * header 3 on the SAM L22 Xplained Pro.
  *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a
@@ -106,7 +106,7 @@
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
- 
+
 #include <asf.h>
 #include <stdio_serial.h>
 #include <string.h>
@@ -128,11 +128,11 @@ static struct usart_module cdc_uart_module, usart_instance;
 #define CMD2_LEN                5
 #define CMD3_LEN                7
 /* Test command #1. */
-const uint16_t test_cmd1[CMD1_LEN] = {0x00, 0x10, 0x00, 0x00};
+const uint8_t test_cmd1[CMD1_LEN] = {0x00, 0x10, 0x00, 0x00};
 /* Test command #2. */
-const uint16_t test_cmd2[CMD2_LEN] = {0x00, 0x20, 0x00, 0x00, 0x02};
+const uint8_t test_cmd2[CMD2_LEN] = {0xa0, 0xa4, 0x00, 0x00, 0x02};//{0x00, 0x20, 0x00, 0x00, 0x02};
 /* Test command #3. */
-const uint16_t test_cmd3[CMD3_LEN] = {0x00, 0x30, 0x00, 0x00, 0x02, 0x0A, 0x0B};
+const uint8_t test_cmd3[CMD3_LEN] = {0x00, 0x30, 0x00, 0x00, 0x02, 0x0A, 0x0B};
 
 /**
  * \brief Initialize the USART for the example.
@@ -155,19 +155,46 @@ static void cdc_uart_init(void)
 }
 
 /**
+ * \brief Detect smart card.
+ */
+static void smart_card_detect(void)
+{
+	struct port_config pin_conf;
+
+	port_get_config_defaults(&pin_conf);
+
+	/* Config smart card detect */
+	pin_conf.direction = PORT_PIN_DIR_INPUT;
+	port_pin_set_config(CONF_ISO7816_PIN_DET, &pin_conf);
+
+	if(port_pin_get_input_level(CONF_ISO7816_PIN_DET) == false) {
+		printf("-Warning- Please insert Smart card. \r\n");
+	}
+	while (port_pin_get_input_level(CONF_ISO7816_PIN_DET) == false) {
+		/* Wait insert smart card */
+	}
+
+	printf("-I- Smart card is detected. To begin testing... \r\n");
+}
+
+/**
  * \brief Initialize the ISO7816 for smart card.
  */
 static void smart_card_init(void)
 {
 	struct port_config pin_conf;
-	
+
 	port_get_config_defaults(&pin_conf);
 	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
 	port_pin_set_config(CONF_ISO7816_PIN_RST, &pin_conf);
 	port_pin_set_output_level(CONF_ISO7816_PIN_RST, false);
-	
-	struct usart_config usart_conf;	
-	
+
+	/* Config smart card vcc enable */
+	port_pin_set_config(CONF_ISO7816_PIN_VCC, &pin_conf);
+	port_pin_set_output_level(CONF_ISO7816_PIN_VCC, true);
+
+	struct usart_config usart_conf;
+
 	/* Configure USART for output */
 	usart_get_config_defaults(&usart_conf);
 	usart_conf.mux_setting            = CONF_ISO7816_MUX_SETTING;
@@ -176,13 +203,23 @@ static void smart_card_init(void)
 	usart_conf.pinmux_pad2            = CONF_ISO7816_PINMUX_PAD2;
 	usart_conf.pinmux_pad3            = CONF_ISO7816_PINMUX_PAD3;
 	usart_conf.baudrate               = CONF_ISO7816_BAUDRATE;
-	usart_conf.iso7816_opt.enabled    = true;
-	usart_conf.iso7816_opt.guard_time = ISO7816_GUARD_TIME_5_BIT;
-	
+	usart_conf.iso7816_config.enabled    = true;
+	usart_conf.iso7816_config.guard_time = ISO7816_GUARD_TIME_2_BIT;
+
 	usart_init(&usart_instance, CONF_ISO7816_USART, &usart_conf);
-	
+
 	iso7816_init(&usart_instance, CONF_ISO7816_PIN_RST, \
-				system_clock_source_get_hz(usart_conf.generator_source));
+				system_gclk_chan_get_hz(usart_conf.generator_source));
+
+	/* Config pinmux as smart card clock */
+	struct system_pinmux_config pin_clk_conf;
+	system_pinmux_get_config_defaults(&pin_clk_conf);
+	pin_clk_conf.direction = PORT_PIN_DIR_OUTPUT;
+	pin_clk_conf.input_pull = SYSTEM_PINMUX_PIN_PULL_NONE;
+	pin_clk_conf.mux_position = PINMUX_PA15H_GCLK_IO1 & 0xFFFF;
+	system_pinmux_pin_set_config(PINMUX_PA15H_GCLK_IO1 >> 16, &pin_clk_conf);
+
+	usart_enable(&usart_instance);
 }
 
 /**
@@ -191,7 +228,7 @@ static void smart_card_init(void)
  */
 static void send_receive_cmd(void)
 {
-	uint16_t uc_message[MAX_ANSWER_SIZE];
+	uint8_t uc_message[MAX_ANSWER_SIZE];
 	uint8_t  uc_size;
 	uint16_t uc_key;
 	uint8_t  uc_command;
@@ -206,24 +243,24 @@ static void send_receive_cmd(void)
 	puts("-I- The following three commands can be sent:\r\n");
 	puts("  1. ");
 	for (i=0; i < CMD1_LEN; i++) {
-		printf("0x%04X ", test_cmd1[i]);
+		printf("0x%02X ", test_cmd1[i]);
 	}
 	puts("\r\n  2. ");
-	
+
 	for (i=0; i < CMD2_LEN; i++) {
-		printf("0x%04X ", test_cmd2[i]);
+		printf("0x%02X ", test_cmd2[i]);
 	}
 	puts("\r\n  3. ");
 
 	for (i=0; i < CMD3_LEN; i++) {
-		printf("0x%04X ", test_cmd3[i]);
+		printf("0x%02X ", test_cmd3[i]);
 	}
-	
+
 	/* Get user input. */
 	uc_key = 0;
 	while (uc_key != 'q') {
 		puts("\r\nChoice ? (q to quit): ");
-		while (usart_read_wait(&usart_instance, &uc_key)) {
+		while (usart_read_wait(&cdc_uart_module, &uc_key)) {
 		}
 		printf("%c\r\n", uc_key);
 		uc_command = (uint8_t)uc_key - '0';
@@ -233,7 +270,7 @@ static void send_receive_cmd(void)
 		if (uc_command == 1) {
 			puts("-I- Sending test command #1 : ");
 			for (i = 0; i < CMD1_LEN; i++) {
-				printf("0x%04X ", test_cmd1[i]);
+				printf("0x%02X ", test_cmd1[i]);
 			}
 			puts("...");
 			uc_size = iso7816_xfr_block_tpdu_t0(test_cmd1, uc_message, CMD1_LEN);
@@ -241,7 +278,7 @@ static void send_receive_cmd(void)
 			if (uc_command == 2) {
 				puts("-I- Sending test command #2 : ");
 				for (i = 0; i < CMD2_LEN; i++) {
-					printf("0x%04X ", test_cmd2[i]);
+					printf("0x%02X ", test_cmd2[i]);
 				}
 				puts("...");
 				uc_size = iso7816_xfr_block_tpdu_t0(test_cmd2, uc_message, CMD2_LEN);
@@ -249,7 +286,7 @@ static void send_receive_cmd(void)
 				if (uc_command == 3) {
 					puts("-I- Sending test command #3 : ");
 					for (i = 0; i < CMD3_LEN; i++) {
-						printf("0x%04X ", test_cmd3[i]);
+						printf("0x%02X ", test_cmd3[i]);
 					}
 					puts("...");
 					uc_size = iso7816_xfr_block_tpdu_t0(test_cmd3, uc_message, CMD3_LEN);
@@ -261,43 +298,56 @@ static void send_receive_cmd(void)
 		if (uc_size > 0) {
 			puts("Answer: ");
 			for (i=0; i < uc_size; i++) {
-				printf("0x%04X ", uc_message[i]);
+				printf("0x%02X ", uc_message[i]);
 			}
 		}
 	}
+	puts("Please waiting ... \r\n");
+	port_pin_set_output_level(CONF_ISO7816_PIN_VCC, false);
 
-	puts("Quitting ...\r\n");
+	puts("The smart card can now be safely removed. \r\n");
 }
 
 int main(void)
 {
-	uint16_t p_atr[MAX_ATR_SIZE];
+	uint8_t p_atr[MAX_ATR_SIZE];
 	uint8_t  uc_size;
+	uint16_t i;
 
 	/* Init system. */
 	system_init();
 	/* Module configuration. */
 	cdc_uart_init();
-	smart_card_init();
 
 	/* Output example information. */
-	printf("%s", STRING_HEADER);
-	
-	/* Configure IT on Smart Card. */
-	printf("-I- Smart card detection not supported.\r\n");
-	
+	printf("%s \r\n", STRING_HEADER);
+
+	/* Smart card detect and receive respond. */
+	smart_card_detect();
+
+	/* Smart card init. */
+	smart_card_init();
+
 	/* Smart card warm reset. */
 	iso7816_warm_reset();
-	
+
 	memset(p_atr, 0, sizeof(p_atr));
 	iso7816_data_block_atr(p_atr, &uc_size);
-	
+
+	if (uc_size != 0) {
+		puts("Reset respond: ");
+		for(i = 0; i < uc_size; i++) {
+			printf("0x%02X ", p_atr[i]);
+		}
+		puts("\r\n");
+	}
+
 	/* Decode ATR. */
 	iso7816_decode_atr(p_atr);
-	
+
 	/* Allow user to send some commands. */
 	send_receive_cmd();
-	
+
 	while (1) {
 		/* Infinite loop */
 	}

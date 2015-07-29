@@ -94,20 +94,22 @@ volatile uint32_t iso7816_gs_frequency;
  * \retval STATUS_ERR_TIMEOUT       If operation was not completed, due to USART
  *                                  module timing out
  */
-static enum status_code iso7816_get_char(uint16_t *p_char_received)
+static enum status_code iso7816_get_char(uint8_t *p_char_received)
 {
 	uint32_t ul_timeout = 0;
+	uint16_t ul_data;
 
 	if (iso7816_usart_status == ISO7816_USART_SEND) {
 		iso7816_usart_status = ISO7816_USART_RCV;
 	}
 
 	/* Wait USART ready for reception. */
-	while (usart_read_wait(iso7816_usart_module, p_char_received) != STATUS_OK) {
+	while (usart_read_wait(iso7816_usart_module, &ul_data) != STATUS_OK) {
 		if (ul_timeout++ > RX_TIMEOUT * (iso7816_gs_frequency / 1000000)) {
 			return STATUS_ERR_TIMEOUT;
 		}
 	}
+	*p_char_received = ul_data & 0xFF;
 
 	/* Return status. */
 	return STATUS_OK;
@@ -121,7 +123,7 @@ static enum status_code iso7816_get_char(uint16_t *p_char_received)
  *
  * \return Status of the operation.
  */
-static enum status_code iso7816_send_char(uint16_t uc_char)
+static enum status_code iso7816_send_char(uint8_t uc_char)
 {
 	uint32_t ul_status;
 
@@ -163,14 +165,14 @@ static void iso7816_icc_power_off(void)
  *
  * \return Message index.
  */
-uint16_t iso7816_xfr_block_tpdu_t0(const uint16_t *p_apdu,
-		uint16_t *p_message, uint16_t us_length)
+uint16_t iso7816_xfr_block_tpdu_t0(const uint8_t *p_apdu,
+		uint8_t *p_message, uint16_t us_length)
 {
 	uint16_t us_ne_nc;
 	uint16_t us_apdu_index = 4;
 	uint16_t us_message_index = 0;
 	uint8_t  uc_sw1 = 0;
-	uint16_t uc_proc_byte;
+	uint8_t uc_proc_byte;
 	uint8_t  uc_cmd_case;
 
 	iso7816_send_char(p_apdu[0]); /* CLA */
@@ -270,7 +272,7 @@ uint16_t iso7816_xfr_block_tpdu_t0(const uint16_t *p_apdu,
  * \param[in] p_atr    Pointer to ATR buffer.
  * \param[in] p_length Pointer for store the ATR length.
  */
-void iso7816_data_block_atr(uint16_t *p_atr, uint8_t *p_length)
+void iso7816_data_block_atr(uint8_t *p_atr, uint8_t *p_length)
 {
 	uint32_t i;
 	uint32_t j;
@@ -280,6 +282,7 @@ void iso7816_data_block_atr(uint16_t *p_atr, uint8_t *p_length)
 
 	/* Read ATR TS. */
 	iso7816_get_char(&p_atr[0]);
+
 	/* Read ATR T0. */
 	iso7816_get_char(&p_atr[1]);
 	uc_value = p_atr[1] & 0xF0;
@@ -334,7 +337,7 @@ void iso7816_cold_reset(void)
 	uint32_t i;
 	uint16_t ul_data;
 
-	/* tb: wait 400 cycles */
+	/* Tb: wait 400 cycles */
 	for (i = 0; i < (RST_WAIT_TIME * (iso7816_gs_frequency / 1000000)); i++) {
 	}
 
@@ -352,7 +355,7 @@ void iso7816_warm_reset(void)
 
 	iso7816_icc_power_off();
 
-	/* tb: wait 400 cycles. */
+	/* Tb: wait 400 cycles. */
 	for (i = 0; i < (RST_WAIT_TIME * (iso7816_gs_frequency / 1000000)); i++) {
 	}
 
@@ -365,7 +368,7 @@ void iso7816_warm_reset(void)
  *
  * \param[in] p_atr Pinter on ATR buffer.
  */
-void iso7816_decode_atr(uint16_t *p_atr)
+void iso7816_decode_atr(uint8_t *p_atr)
 {
 	uint32_t i;
 	uint32_t j;
@@ -413,7 +416,7 @@ void iso7816_init(struct usart_module *const module, uint32_t pin_rst, \
 {
 	Assert(module);
 	Assert(module->hw);
-	
+
 	iso7816_usart_module = module;
 	iso7816_pin_rst       = pin_rst;
 	iso7816_gs_frequency  = clock_get_hz;
