@@ -1,10 +1,9 @@
 /**
- *
  * \file
  *
- * \brief lwIP abstraction layer for SAM.
+ * \brief USART Serial Configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,25 +40,15 @@
  * \asf_license_stop
  *
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
-#ifndef __ARCH_SYS_ARCH_H__
-#define __ARCH_SYS_ARCH_H__
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "semphr.h"
+#define CONF_STDIO_USART_MODULE		CONSOLE_UART
+#define CONF_STDIO_BAUDRATE			115200
+#define CONF_STDIO_PARITY			UART_MR_PAR_NO
 
-
-typedef xSemaphoreHandle sys_sem_t;
-typedef xQueueHandle sys_mutex_t;
-typedef xQueueHandle sys_mbox_t;
-typedef xTaskHandle sys_thread_t;
-
-#define SYS_MBOX_NULL (xQueueHandle)0
-#define SYS_SEM_NULL  (xSemaphoreHandle)0
-
-typedef unsigned long int sys_prot_t;
-
-#endif /* __ARCH_SYS_ARCH_H__ */
-
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

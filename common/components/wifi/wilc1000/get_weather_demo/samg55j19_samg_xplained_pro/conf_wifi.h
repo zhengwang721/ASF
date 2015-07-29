@@ -95,8 +95,8 @@ extern "C" {
    ---------------------------------
 */
 
-#define CONF_WIFI_PIN_RESET				IOPORT_CREATE_PIN(PIOA, 24)
-#define CONF_WIFI_PIN_CHIP_ENABLE		IOPORT_CREATE_PIN(PIOA, 6)
+#define CONF_WIFI_PIN_RESET				IOPORT_CREATE_PIN(PIOA, 26)
+#define CONF_WIFI_PIN_CHIP_ENABLE		IOPORT_CREATE_PIN(PIOA, 29)
 #define CONF_WIFI_PIN_WAKE				IOPORT_CREATE_PIN(PIOA, 25)
 
 /*
@@ -108,8 +108,8 @@ extern "C" {
 #define CONF_WIFI_USE_SPI				(1)
 
 /** SPI pin and instance settings. */
-#define CONF_WIFI_SPI					SPI
-#define CONF_WIFI_SPI_ID				ID_SPI
+#define CONF_WIFI_SPI					EXT1_SPI_MODULE
+#define CONF_WIFI_SPI_ID				ID_SPI5
 #define CONF_WIFI_SPI_MISO_GPIO			SPI_MISO_GPIO
 #define CONF_WIFI_SPI_MISO_FLAGS		SPI_MISO_FLAGS
 #define CONF_WIFI_SPI_MOSI_GPIO			SPI_MOSI_GPIO
@@ -117,7 +117,7 @@ extern "C" {
 #define CONF_WIFI_SPI_CLK_GPIO			SPI_SPCK_GPIO
 #define CONF_WIFI_SPI_CLK_FLAGS			SPI_SPCK_FLAGS
 #define CONF_WIFI_SPI_CS_GPIO			SPI_NPCS0_GPIO
-#define CONF_WIFI_SPI_CS_FLAGS			PIO_OUTPUT_1
+#define CONF_WIFI_SPI_CS_FLAGS			SPI_NPCS0_FLAGS
 #define CONF_WIFI_SPI_NPCS				(0)
 
 /** SPI delay before SPCK and between consecutive transfer. */
@@ -125,10 +125,10 @@ extern "C" {
 #define CONF_WIFI_SPI_DLYBCT 			(0)
 
 /** SPI interrupt pin. */
-#define CONF_WIFI_SPI_INT_PIN			IOPORT_CREATE_PIN(PIOA, 1)
+#define CONF_WIFI_SPI_INT_PIN			IOPORT_CREATE_PIN(PIOA, 24)
 #define CONF_WIFI_SPI_INT_PIO			PIOA
 #define CONF_WIFI_SPI_INT_PIO_ID		ID_PIOA
-#define CONF_WIFI_SPI_INT_MASK			(1 << 1)
+#define CONF_WIFI_SPI_INT_MASK			PIO_PA24
 /** Highest INT priority that can call FreeRTOS FromISR() functions. */
 #define CONF_WIFI_SPI_INT_PRIORITY		(configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY)
 
@@ -137,7 +137,7 @@ extern "C" {
 #define CONF_WIFI_SPI_PHA				(1)
 
 /** SPI clock. */
-#define CONF_WIFI_SPI_CLOCK				(60000000)
+#define CONF_WIFI_SPI_CLOCK				(48000000)
 
 /*
    ---------------------------------

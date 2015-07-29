@@ -85,10 +85,10 @@ typedef u32_t mem_ptr_t;
 #define PACK_STRUCT_FIELD(x) x
 #elif defined (__GNUC__)
     /* Setup PACKing macros for GCC Tools */
-#define PACK_STRUCT_BEGIN
+#define PACK_STRUCT_BEGIN  _Pragma("GCC diagnostic ignored \"-Wpacked\"")
 #define PACK_STRUCT_STRUCT __attribute__ ((packed))
 #define PACK_STRUCT_END
-#define PACK_STRUCT_FIELD(x) x
+#define PACK_STRUCT_FIELD(x) _Pragma("GCC diagnostic ignored \"-Wattributes\"") x
 #else
 #error "This compiler does not support."
 #endif

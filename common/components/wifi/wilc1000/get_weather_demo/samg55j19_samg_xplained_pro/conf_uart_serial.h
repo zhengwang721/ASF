@@ -1,10 +1,9 @@
 /**
- *
  * \file
  *
- * \brief lwIP abstraction layer for SAM.
+ * \brief USART Serial Configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -23,9 +22,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -42,24 +38,18 @@
  *
  */
 
-#ifndef __ARCH_SYS_ARCH_H__
-#define __ARCH_SYS_ARCH_H__
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "semphr.h"
+/** UART Interface */
+#define CONF_UART				CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE		(115200UL)
+/** Character length setting */
+#define CONF_UART_CHAR_LENGTH	US_MR_CHRL_8_BIT
+/** Parity setting */
+#define CONF_UART_PARITY		US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_UART_STOP_BITS		US_MR_NBSTOP_1_BIT
 
-
-typedef xSemaphoreHandle sys_sem_t;
-typedef xQueueHandle sys_mutex_t;
-typedef xQueueHandle sys_mbox_t;
-typedef xTaskHandle sys_thread_t;
-
-#define SYS_MBOX_NULL (xQueueHandle)0
-#define SYS_SEM_NULL  (xSemaphoreHandle)0
-
-typedef unsigned long int sys_prot_t;
-
-#endif /* __ARCH_SYS_ARCH_H__ */
-
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

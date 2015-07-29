@@ -173,22 +173,22 @@ sint8 os_m2m_wifi_enable_ap(tstrM2MAPConfig *ap)
 	return params.dispatch.retval;
 }
 
-static void os_m2m_wifi_request_scan_imp(uint8 *p)
+static void os_m2m_wifi_request_scan_imp(uint32 *p)
 {
-	m2m_wifi_request_scan((uint8)p);
+	m2m_wifi_request_scan((uint8)((uint32)p));
 }
 
-void os_m2m_wifi_request_scan(uint8 p)
+void os_m2m_wifi_request_scan(uint32 p)
 {
 	os_hook_dispatch_no_wait((tcpip_callback_fn)os_m2m_wifi_request_scan_imp, (void *)p);
 }
 
-static void os_m2m_wifi_req_scan_result_imp(uint8 *p)
+static void os_m2m_wifi_req_scan_result_imp(uint32 *p)
 {
-	m2m_wifi_req_scan_result((uint8)p);
+	m2m_wifi_req_scan_result((uint8)((uint32)p));
 }
 
-void os_m2m_wifi_req_scan_result(uint8 p)
+void os_m2m_wifi_req_scan_result(uint32 p)
 {
 	os_hook_dispatch_no_wait((tcpip_callback_fn)os_m2m_wifi_req_scan_result_imp, (void *)p);
 }

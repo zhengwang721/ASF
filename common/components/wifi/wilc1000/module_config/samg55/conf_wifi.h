@@ -59,6 +59,10 @@ extern "C" {
    ---------------------------------
 */
 
+// Select WILC firmware to use.
+#define CONF_WILC_USE_REV_A
+//#define CONF_WILC_USE_REV_B
+
 // SSID and pass-phrase of the network to connect to.
 #define CONF_WLAN_SSID					"ATSC24TIBO"
 #define CONF_WLAN_AUTH					M2M_WIFI_SEC_WPA_PSK

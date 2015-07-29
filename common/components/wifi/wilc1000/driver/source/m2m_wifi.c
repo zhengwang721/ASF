@@ -222,7 +222,7 @@ static void m2m_wifi_cb(uint8 u8OpCode, uint16 u16DataSize, uint32 u32Addr)
 	{
 		if(hif_receive(u32Addr, rx_buf ,sizeof(tstrM2mIpRsvdPkt), 0) == M2M_SUCCESS)
 		{
-			tstrM2mIpRsvdPkt * pstrM2MIpRxPkt = (tstrM2mIpRsvdPkt*)rx_buf;
+			tstrM2mIpRsvdPkt *pstrM2MIpRxPkt = (void *)rx_buf;
 			tstrM2mIpCtrlBuf  strM2mIpCtrlBuf;
 			uint16 u16Offset = pstrM2MIpRxPkt->u16PktOffset;
 			#ifdef M2M_WILC1000
@@ -1134,12 +1134,12 @@ sint8 m2m_wifi_download_cert(uint8* pCertData,uint32 u32CertSize)
 			u32ChunkSize = u32CertSize;
 
 		u32TempSize =  (u32OrigCertSize&0xffff)|(u32ChunkSize<<16);
-		m2m_memcpy(pChunk,&pCertData[u32OrigCertSize-u32CertSize],u32ChunkSize);
-		s8Ret = hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_CERT_ADD_CHUNK,(uint8*)&u32TempSize,sizeof(u32CertSize),
-		pChunk, u32ChunkSize,sizeof(u32CertSize));
+		m2m_memcpy((uint8*)pChunk,&pCertData[u32OrigCertSize-u32CertSize],u32ChunkSize);
+		hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_CERT_ADD_CHUNK,(uint8*)&u32TempSize,sizeof(u32CertSize),
+				(uint8*)pChunk, u32ChunkSize,sizeof(u32CertSize));
 		u32CertSize -= u32ChunkSize;
 	}
-	hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_CERT_DOWNLOAD_DONE,NULL,0,NULL, 0,0);	
+	return hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_CERT_DOWNLOAD_DONE,NULL,0,NULL, 0,0);	
 }
 #endif
 #if defined(M2M_WILC1000) && defined(CONCURRENT_INTERFACES)

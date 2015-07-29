@@ -71,16 +71,29 @@
 		<build type="c-source" value="core/ipv6/ip6_frag.c"/>
 		<build type="c-source" value="core/ipv6/mld6.c"/>
 		<build type="c-source" value="core/ipv6/nd6.c"/>
-		<build type="c-source" value="core/snmp/asn1_dec.c"/>
+		<build type="header-file" value="include/lwip/snmp.h"/>
+		<build type="header-file" value="include/lwip/snmp_msg.h"/>
+		<build type="header-file" value="include/lwip/snmp_structs.h"/>
+<!--		<build type="c-source" value="core/snmp/asn1_dec.c"/>
 		<build type="c-source" value="core/snmp/asn1_enc.c"/>
 		<build type="c-source" value="core/snmp/mib2.c"/>
 		<build type="c-source" value="core/snmp/mib_structs.c"/>
 		<build type="c-source" value="core/snmp/msg_in.c"/>
 		<build type="c-source" value="core/snmp/msg_out.c"/>
+		<build type="header-file" value="include/lwip/snmp_asn1.h"/> -->
 		<build type="c-source" value="netif/etharp.c"/>
 		<build type="c-source" value="netif/ethernetif.c"/>
 		<build type="c-source" value="netif/slipif.c"/>
-		<build type="c-source" value="netif/ppp/auth.c"/>
+		<build type="header-file" value="include/netif/ppp/pppoe.h"/>
+		<build type="header-file" value="include/netif/ppp/ppp_impl.h"/>
+		<build type="header-file" value="include/netif/ppp/ppp.h"/>
+		<build type="header-file" value="include/netif/ppp/pppdebug.h"/>
+		<build type="header-file" value="include/netif/ppp/pppol2tp.h"/>
+
+
+
+
+<!--		<build type="c-source" value="netif/ppp/auth.c"/>
 		<build type="c-source" value="netif/ppp/ccp.c"/>
 		<build type="c-source" value="netif/ppp/chap-md5.c"/>
 		<build type="c-source" value="netif/ppp/chap-new.c"/>
@@ -106,6 +119,25 @@
 		<build type="c-source" value="netif/ppp/polarssl/md4.c"/>
 		<build type="c-source" value="netif/ppp/polarssl/md5.c"/>
 		<build type="c-source" value="netif/ppp/polarssl/sha1.c"/>
+		<build type="header-file" value="include/netif/ppp/ccp.h"/>
+		<build type="header-file" value="include/netif/ppp/chap-md5.h"/>
+		<build type="header-file" value="include/netif/ppp/chap-new.h"/>
+		<build type="header-file" value="include/netif/ppp/chap_ms.h"/>
+		<build type="header-file" value="include/netif/ppp/eap.h"/>
+		<build type="header-file" value="include/netif/ppp/ecp.h"/>
+		<build type="header-file" value="include/netif/ppp/eui64.h"/>
+		<build type="header-file" value="include/netif/ppp/fsm.h"/>
+		<build type="header-file" value="include/netif/ppp/ipcp.h"/>
+		<build type="header-file" value="include/netif/ppp/ipv6cp.h"/>
+		<build type="header-file" value="include/netif/ppp/lcp.h"/>
+		<build type="header-file" value="include/netif/ppp/magic.h"/>
+		<build type="header-file" value="include/netif/ppp/pppcrypt.h"/>
+		<build type="header-file" value="include/netif/ppp/upap.h"/>
+		<build type="header-file" value="include/netif/ppp/vj.h"/>
+		<build type="header-file" value="include/netif/ppp/polarssl/des.h"/>
+		<build type="header-file" value="include/netif/ppp/polarssl/md4.h"/>
+		<build type="header-file" value="include/netif/ppp/polarssl/md5.h"/>
+		<build type="header-file" value="include/netif/ppp/polarssl/sha1.h"/> -->
 		<build type="header-file" value="include/lwip/api.h"/>
 		<build type="header-file" value="include/lwip/api_msg.h"/>
 		<build type="header-file" value="include/lwip/arch.h"/>
@@ -146,10 +178,6 @@
 		<build type="header-file" value="include/lwip/pppapi.h"/>
 		<build type="header-file" value="include/lwip/raw.h"/>
 		<build type="header-file" value="include/lwip/sio.h"/>
-		<build type="header-file" value="include/lwip/snmp.h"/>
-		<build type="header-file" value="include/lwip/snmp_asn1.h"/>
-		<build type="header-file" value="include/lwip/snmp_msg.h"/>
-		<build type="header-file" value="include/lwip/snmp_structs.h"/>
 		<build type="header-file" value="include/lwip/sockets.h"/>
 		<build type="header-file" value="include/lwip/stats.h"/>
 		<build type="header-file" value="include/lwip/sys.h"/>
@@ -160,38 +188,14 @@
 		<build type="header-file" value="include/lwip/udp.h"/>
 		<build type="header-file" value="include/netif/etharp.h"/>
 		<build type="header-file" value="include/netif/slipif.h"/>
-		<build type="header-file" value="include/netif/ppp/ccp.h"/>
-		<build type="header-file" value="include/netif/ppp/chap-md5.h"/>
-		<build type="header-file" value="include/netif/ppp/chap-new.h"/>
-		<build type="header-file" value="include/netif/ppp/chap_ms.h"/>
-		<build type="header-file" value="include/netif/ppp/eap.h"/>
-		<build type="header-file" value="include/netif/ppp/ecp.h"/>
-		<build type="header-file" value="include/netif/ppp/eui64.h"/>
-		<build type="header-file" value="include/netif/ppp/fsm.h"/>
-		<build type="header-file" value="include/netif/ppp/ipcp.h"/>
-		<build type="header-file" value="include/netif/ppp/ipv6cp.h"/>
-		<build type="header-file" value="include/netif/ppp/lcp.h"/>
-		<build type="header-file" value="include/netif/ppp/magic.h"/>
-		<build type="header-file" value="include/netif/ppp/ppp.h"/>
-		<build type="header-file" value="include/netif/ppp/pppcrypt.h"/>
-		<build type="header-file" value="include/netif/ppp/pppdebug.h"/>
-		<build type="header-file" value="include/netif/ppp/pppoe.h"/>
-		<build type="header-file" value="include/netif/ppp/pppol2tp.h"/>
-		<build type="header-file" value="include/netif/ppp/ppp_impl.h"/>
-		<build type="header-file" value="include/netif/ppp/upap.h"/>
-		<build type="header-file" value="include/netif/ppp/vj.h"/>
-		<build type="header-file" value="include/netif/ppp/polarssl/des.h"/>
-		<build type="header-file" value="include/netif/ppp/polarssl/md4.h"/>
-		<build type="header-file" value="include/netif/ppp/polarssl/md5.h"/>
-		<build type="header-file" value="include/netif/ppp/polarssl/sha1.h"/>
 		<build type="header-file" value="include/posix/netdb.h"/>
 		<build type="header-file" value="include/posix/sys/socket.h"/>
-
 		<build type="include-path" value="include"/>
 		<build type="include-path" value="include/lwip"/>
 		<require idref="thirdparty.lwip-port.141-dev"/>
 		<device-support value="sam3"/>
 		<device-support value="sam4"/>
+		<device-support value="samg"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam4s"/>
 	</module>
 </asf>

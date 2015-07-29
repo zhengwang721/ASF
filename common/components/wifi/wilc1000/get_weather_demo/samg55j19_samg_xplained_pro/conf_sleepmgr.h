@@ -1,10 +1,9 @@
 /**
- *
  * \file
  *
- * \brief lwIP abstraction layer for SAM.
+ * \brief Chip-specific sleep manager configuration
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,25 +40,13 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-#ifndef __ARCH_SYS_ARCH_H__
-#define __ARCH_SYS_ARCH_H__
+// Sleep manager options
+#define CONFIG_SLEEPMGR_ENABLE
 
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "semphr.h"
-
-
-typedef xSemaphoreHandle sys_sem_t;
-typedef xQueueHandle sys_mutex_t;
-typedef xQueueHandle sys_mbox_t;
-typedef xTaskHandle sys_thread_t;
-
-#define SYS_MBOX_NULL (xQueueHandle)0
-#define SYS_SEM_NULL  (xSemaphoreHandle)0
-
-typedef unsigned long int sys_prot_t;
-
-#endif /* __ARCH_SYS_ARCH_H__ */
-
+#endif /* CONF_SLEEPMGR_H */

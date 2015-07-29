@@ -461,7 +461,12 @@ void* linux_wlan_malloc(uint32_t sz);
 #include <linux/kernel.h>
 #include <linux/slab.h> 
 #endif
-#include "driver/include/wifi_firmware.h"
+
+#ifdef CONF_WILC_USE_REV_A
+#include "driver/include/wifi_firmware_1000a.h"
+#else
+#include "driver/include/wifi_firmware_1000b.h"
+#endif
 
 sint8 firmware_download(void)
 {

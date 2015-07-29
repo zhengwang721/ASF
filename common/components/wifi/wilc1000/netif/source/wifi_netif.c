@@ -190,7 +190,6 @@ void winc_rx_callback(uint8 msg_type, void * msg, void *ctrl_buf)
 			if (ctrl->u8IfcId == 1) {
 				//osprintf("<- STA %x\n", winc_netif_sta.ip_addr.addr);
 				if (ERR_OK != winc_netif_sta.input(rx_first, &winc_netif_sta)) {
-					osprintf("full raoul\n");
 					pbuf_free(rx_first);
 				}
 			}

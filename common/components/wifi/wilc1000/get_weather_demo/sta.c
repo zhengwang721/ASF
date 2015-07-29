@@ -164,7 +164,7 @@ static void wifi_cb(uint8 msg_type, void *msg)
 
 		case M2M_WIFI_REQ_DHCP_CONF : {
 			tstrM2MIPConfig2 *strIpConfig = msg;
-			uint16_t *a = (uint16_t *)strIpConfig->u8StaticIPv6;
+			uint16_t *a = (void *)strIpConfig->u8StaticIPv6;
 			osprintf("wifi_cb: STA M2M_WIFI_REQ_DHCP_CONF\n");
 			osprintf("wifi_cb: STA IPv4 addr: %d.%d.%d.%d\n", strIpConfig->u8StaticIP[0], strIpConfig->u8StaticIP[1],
 					strIpConfig->u8StaticIP[2], strIpConfig->u8StaticIP[3]);

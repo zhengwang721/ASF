@@ -1,10 +1,9 @@
 /**
- *
  * \file
  *
- * \brief lwIP abstraction layer for SAM.
+ * \brief Spi Master configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,24 +41,24 @@
  *
  */
 
-#ifndef __ARCH_SYS_ARCH_H__
-#define __ARCH_SYS_ARCH_H__
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "semphr.h"
+/* Possibility to change low-level configurations here */
 
+//! Default Config Spi Master Delay BCS
+#define CONFIG_SPI_MASTER_DELAY_BCS            0
 
-typedef xSemaphoreHandle sys_sem_t;
-typedef xQueueHandle sys_mutex_t;
-typedef xQueueHandle sys_mbox_t;
-typedef xTaskHandle sys_thread_t;
+//! Default Config Spi Master Bits per Transfer Definition
+#define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8
 
-#define SYS_MBOX_NULL (xQueueHandle)0
-#define SYS_SEM_NULL  (xSemaphoreHandle)0
+//! Default Config Spi Master Delay BCT
+#define CONFIG_SPI_MASTER_DELAY_BCT            0
 
-typedef unsigned long int sys_prot_t;
+//! Default Config Spi Master Delay BS
+#define CONFIG_SPI_MASTER_DELAY_BS             0
 
-#endif /* __ARCH_SYS_ARCH_H__ */
+//! Default Config Spi Master Dummy Field
+#define CONFIG_SPI_MASTER_DUMMY                0xFF
 
+#endif /* CONF_SPI_MASTER_H_INCLUDED */
