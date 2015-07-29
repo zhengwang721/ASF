@@ -56,7 +56,7 @@ slcd_callback_t slcd_callback_pointer[SLCD_CALLBACK_TYPE_NUM];
 
 
 /**
- * \brief Registers a callback.
+ * \brief Registers a callback
  *
  * Registers a callback function which is implemented by the user.
  *
@@ -84,7 +84,7 @@ enum status_code slcd_register_callback(
 }
 
 /**
- * \brief Unregisters a callback.
+ * \brief Unregisters a callback
  *
  * Unregisters a callback function implemented by the user.
  *

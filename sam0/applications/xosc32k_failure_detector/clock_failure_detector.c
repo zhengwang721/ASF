@@ -84,7 +84,7 @@
  *
  * \section appdoc_sam0_xosc32k_fail_detect_usageinfo Usage
  * Connect an oscilloscope to the pin:
- * - SAM L22 Xplained Pro: PA20
+ * - SAM L22 Xplained Pro: PA15
  * - SAM C21 Xplained Pro: PA16
  * 
  * Run the example application, then press and hold the board button to turn 
@@ -178,6 +178,9 @@ static void sim_xosc32k_failure(bool connection)
 			OSC32KCTRL->XOSC32K.bit.XTALEN = 0;
 		}
 		OSC32KCTRL->XOSC32K.bit.EN32K = 0;
+#if (SAML22)
+		system_clock_source_xosc32k_set_switch_back();
+#endif
 	}
 	return;
 }

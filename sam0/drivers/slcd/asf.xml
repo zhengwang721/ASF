@@ -57,6 +57,8 @@
 			<build type="module-config" subtype="required-header-file" value="conf_slcd.h"/>
 			<build type="doxygen-entry-point" value="asfdoc_sam0_drivers_slcd_group"/>
 			<build type="doxygen-quick-start" value="asfdoc_sam0_drivers_slcd_exqsg"/>
+			<build type="doxygen-example-path" value="quick_start"/>
+			<build type="header-file" value="quick_start/quick_start.h" />
 
 			<device-support value="saml22"/>
 			<require idref="sam0.utils" />

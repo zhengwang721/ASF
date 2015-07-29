@@ -75,6 +75,7 @@
  *  - SAM L22 Xplained Pro board
  *  - SAM R21 Xplained Pro board
  *  - SAM DA1 Xplained Pro board
+ *  - SAM C21 Xplained Pro board
  *
  * \section asfdoc_sam0_i2c_unit_test_setup Setup
  * The following connections has to be made using wires:
@@ -90,6 +91,9 @@
  * - SAM R21 Xplained Pro board
  *  - \b PA16 (EXT1 PIN11) <-----> PB02 (EXT1 PIN17) 
  *  - \b PA17 (EXT1 PIN12) <-----> PB03 (EXT1 PIN15)
+ * - SAM C21 Xplained Pro board
+ *  - \b PA12 (EXT2 PIN11) <-----> PA22 (EXT2 PIN13) 
+ *  - \b PA13 (EXT2 PIN12) <-----> PA23 (EXT2 PIN14)
  *
  * To run the test:
  *  - Connect the supported Xplained Pro board to the computer using a

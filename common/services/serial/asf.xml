@@ -80,6 +80,10 @@
 			<device-support value="samg51"/>
 			<device-support value="samg53"/>
 			<device-support value="samg54"/>
+			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="sams70"/>
+			<device-support value="same70"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
 		<module type="service" id="common.services.basic.serial#3" caption="USART - Serial interface - SAM implementation for devices with only USART">

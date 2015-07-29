@@ -108,7 +108,7 @@
 #endif
 
 /**
- * \brief Initializes SLCD configurations struct to defaults.
+ * \brief Initializes SLCD configurations struct to defaults
  *
  * Initailizes SLCD configuration struct to predefined safe default settings.
  *
@@ -129,7 +129,7 @@ void slcd_get_config_defaults(struct slcd_config *config)
 }
 
 /**
- * \brief Initialize SLCD module.
+ * \brief Initialize SLCD module
  *
  * \param[in] config  Pointer to an SLCD configuration structure
  *
@@ -166,9 +166,7 @@ enum status_code slcd_init(struct slcd_config *const config)
   					| (config->enable_ext_bias << SLCD_CTRLB_EXTBIAS_Pos);
 
 
-	SLCD->CTRLC.reg |= SLCD_CTRLC_LPPM(CONF_SLCD_POWER_MODE);
-	while (slcd_get_vlcd_ready_status()) {
-   	}
+    SLCD->CTRLC.reg |= SLCD_CTRLC_LPPM(CONF_SLCD_POWER_MODE) | SLCD_CTRLC_CTST(0x0F);
 
 	SLCD->LPENL.reg = CONF_SLCD_PIN_L_MASK & SLCD_LPENL_MASK;
 	SLCD->LPENH.reg = CONF_SLCD_PIN_H_MASK & SLCD_LPENH_MASK;
@@ -177,7 +175,7 @@ enum status_code slcd_init(struct slcd_config *const config)
 }
 
 /**
- * \brief Enables the SLCD module.
+ * \brief Enables the SLCD module
  *
  * Enables the SLCD module once it has been configured, ready for use. Most
  * module configuration parameters cannot be altered while the module is enabled.
@@ -190,10 +188,13 @@ void slcd_enable(void)
 	while (slcd_is_syncing()) {
 		/* Wait for synchronization */
 	}
+
+	while (!slcd_get_vlcd_ready_status()) {
+   	}
 }
 
 /**
- * \brief Disables the SLCD module.
+ * \brief Disables the SLCD module
  *
  * Disables the SLCD module.
  */
@@ -206,13 +207,13 @@ void slcd_disable(void)
 }
 
 /**
- * \brief Check if SLCD module is enabled or not.
+ * \brief Check if SLCD module is enabled or not
  *
  * Check if SLCD module is enabled or not.
  *
  * \return Enable status.
  * \retval true SLCD module is enabled
- * \retval true SLCD module is disabled
+ * \retval false SLCD module is disabled
  */
 
 bool slcd_is_enabled(void)
@@ -221,7 +222,7 @@ bool slcd_is_enabled(void)
 }
 
 /**
- * \brief Reset the SLCD module.
+ * \brief Reset the SLCD module
  *
  * Reset the SLCD module.
  */
@@ -235,7 +236,7 @@ void slcd_reset(void)
 }
 
 /**
- * \brief Set the SLCD fine contrast.
+ * \brief Set the SLCD fine contrast
  *
  * The LCD contrast is defined by the value of VLCD voltage. The higher is the
  * VLCD voltage, the higher is the contrast. The software contrast adjustment
@@ -247,8 +248,8 @@ void slcd_reset(void)
  * \param[in] contrast Contrast value
  *
  * \return Status of set contrast.
- * \retval STATUS_OK SLCD contrast set successful.
- * \retval STATUS_ERR_INVALID_ARG  SLCD is not working in internal supply mode.
+ * \retval STATUS_OK SLCD contrast set successful
+ * \retval STATUS_ERR_INVALID_ARG  SLCD is not working in internal supply mode
  */
 enum status_code slcd_set_contrast(uint8_t contrast)
 {
@@ -266,7 +267,7 @@ enum status_code slcd_set_contrast(uint8_t contrast)
 }
 
 /**
- * \brief Initializes SLCD blink configurations struct to defaults.
+ * \brief Initializes SLCD blink configurations struct to defaults
  *
  * Initailizes SLCD blink configuration struct to predefined safe default settings.
  *
@@ -279,12 +280,10 @@ void slcd_blink_get_config_defaults(struct slcd_blink_config *blink_config)
 
 	blink_config->fc = SLCD_FRAME_COUNTER_0;
 	blink_config->blink_all_seg = true;
-	blink_config->blink_seg0_mask = 0;
-	blink_config->blink_seg1_mask = 0;
 }
 
 /**
- * \brief Set SLCD blink mode.
+ * \brief Set SLCD blink mode
  *
  * Set SLCD blink mode.
  *
@@ -303,15 +302,91 @@ enum status_code  slcd_blink_set_config(struct slcd_blink_config *const blink_co
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	SLCD->BCFG.reg = (!(blink_config->blink_all_seg) << SLCD_BCFG_MODE_Pos)
-					| SLCD_BCFG_FCS(blink_config->fc)
-					| SLCD_BCFG_BSS0(blink_config->blink_seg0_mask)
-					| SLCD_BCFG_BSS1(blink_config->blink_seg1_mask);
+	SLCD->BCFG.bit.MODE = (!(blink_config->blink_all_seg) << SLCD_BCFG_MODE_Pos);
+	SLCD->BCFG.bit.FCS	= SLCD_BCFG_FCS(blink_config->fc);
 	return STATUS_OK;
 }
 
 /**
- * \brief Enable the specified pixel/segment in the SLCD display memory.
+ * \brief Start an SLCD pixel/segment blinking
+ *
+ * \param[in] pix_com Pixel/segment COM coordinate
+ * \param[in] pix_seg Pixel/segment SEG coordinate (range 0 to 1 inclusive)
+ */
+void slcd_set_blink_pixel(
+		uint8_t pix_com,
+		uint8_t pix_seg)
+{
+	/* Validate parameters. */
+	Assert(pix_seg<=1);
+	
+	if (pix_seg == 0) {
+		SLCD->BCFG.reg |= SLCD_BCFG_BSS0(1 << pix_com);
+	}
+
+	if (pix_seg == 1) {
+		SLCD->BCFG.reg |= SLCD_BCFG_BSS1(1 << pix_com);
+	}
+}
+
+/**
+ * \brief Stop a specified SLCD pixel/segment from blinking
+ *
+ * \param[in] pix_com Pixel/segment COM coordinate
+ * \param[in] pix_seg Pixel/segment SEG coordinate (range 0 to 1 inclusive)
+ */
+void slcd_clear_blink_pixel(
+		uint8_t pix_com,
+		uint8_t pix_seg)
+{
+	/* Validate parameters. */
+	Assert(pix_seg<=1);
+	
+	if (pix_seg == 0) {
+		SLCD->BCFG.reg &= ~ SLCD_BCFG_BSS0(1 << pix_com);
+	}
+
+	if (pix_seg == 1) {
+		SLCD->BCFG.reg &= ~ SLCD_BCFG_BSS1(1 << pix_com);
+	}
+}
+
+/**
+ * \brief Stop all SLCD pixels/segments from blinking
+ */
+void slcd_clear_blink_all_pixel(void)
+{
+	SLCD->BCFG.bit.BSS0 = 0;
+	SLCD->BCFG.bit.BSS1 = 0;
+}
+
+
+/**
+ * \brief Set all bits in the SLCD display memory high
+ */
+void slcd_set_display_memory(void)
+{
+	SLCD->SDATAH0.reg = SLCD_SDATAH0_MASK;
+	SLCD->SDATAL0.reg = SLCD_SDATAL0_MASK;
+	SLCD->SDATAH1.reg = SLCD_SDATAH1_MASK;
+	SLCD->SDATAL1.reg = SLCD_SDATAL1_MASK;
+	SLCD->SDATAH2.reg = SLCD_SDATAH2_MASK;
+	SLCD->SDATAL2.reg = SLCD_SDATAL2_MASK;
+	SLCD->SDATAH3.reg = SLCD_SDATAH3_MASK;
+	SLCD->SDATAL3.reg = SLCD_SDATAL3_MASK;
+	SLCD->SDATAH4.reg = SLCD_SDATAH4_MASK;
+	SLCD->SDATAL4.reg = SLCD_SDATAL4_MASK;
+	SLCD->SDATAH5.reg = SLCD_SDATAH5_MASK;
+	SLCD->SDATAL5.reg = SLCD_SDATAL5_MASK;
+	SLCD->SDATAH6.reg = SLCD_SDATAH6_MASK;
+	SLCD->SDATAL6.reg = SLCD_SDATAL6_MASK;
+	SLCD->SDATAH7.reg = SLCD_SDATAH7_MASK;
+	SLCD->SDATAL7.reg = SLCD_SDATAL7_MASK;
+}
+
+
+/**
+ * \brief Enable the specified pixel/segment in the SLCD display memory
  *
  * \param[in] pix_com Pixel/segment COM coordinate,within [0-7]
  * \param[in] pix_seg Pixel/segment SEG coordinate within [0-43]
@@ -386,7 +461,7 @@ enum status_code  slcd_blink_set_config(struct slcd_blink_config *const blink_co
 }
 
 /**
- * \brief Disable the specified pixel/segment in the SLCD display memory.
+ * \brief Disable the specified pixel/segment in the SLCD display memory
  *
  * \param[in] pix_com Pixel/segment COM coordinate
  * \param[in] pix_seg Pixel/segment SEG coordinate
@@ -459,11 +534,11 @@ enum status_code  slcd_blink_set_config(struct slcd_blink_config *const blink_co
 }
 
 /**
- * \brief Set the specified segment in the SLCD display memory.
+ * \brief Set the specified segment in the SLCD display memory
  *
  * \param[in] pix_seg Pixel/segment SEG coordinate
- * \param[in] byte_offset Byte offset in display memory,
- * \param[in] seg_mask Byte offset in display memory,
+ * \param[in] byte_offset Byte offset in display memory
+ * \param[in] seg_mask Byte offset in display memory
  */
 void slcd_set_seg_data(uint8_t seg_data,uint8_t byte_offset,uint8_t seg_mask)
 {
@@ -481,7 +556,7 @@ void slcd_set_seg_data(uint8_t seg_data,uint8_t byte_offset,uint8_t seg_mask)
 }
 
 /**
- * \brief Initializes SLCD Automated Character configurations struct to defaults.
+ * \brief Initializes SLCD Automated Character configurations struct to defaults
  *
  * Initailizes SLCD Automated Character configuration struct to predefined safe default settings.
  *
@@ -493,7 +568,7 @@ void slcd_automated_char_get_config_default(
 {
 	Assert(config);
 
-	config->order = SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_LEFT;
+	config->order = SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_RIGHT;
 	config->fc = SLCD_FRAME_COUNTER_0;
 	config->mode = SLCD_AUTOMATED_CHAR_SEQ;
 	config->seg_line_num = 0;
@@ -507,9 +582,9 @@ void slcd_automated_char_get_config_default(
 }
 
 /**
- * \brief Set SLCD Automated Character.
+ * \brief Set SLCD automated character
  *
- * Set Automated Character mode.
+ * Set automated character mode.
  *
  *  \note SLCD automated character mode cannot be set while module or
  * automated character is enabled.
@@ -542,7 +617,7 @@ enum status_code slcd_automated_char_set_config(
 }
 
 /**
- * \brief Set SLCD Character Mapping.
+ * \brief Set SLCD character mapping
  *
  * Set Character mode amd SEG line per digit.
  *
@@ -559,7 +634,7 @@ void slcd_character_map_set(
 }
 
 /**
- * \brief Write segments data to display memory in character mode.
+ * \brief Write segments data to display memory in character mode
  *
  * \param[in] seg_data Pixel/segment data
  * \param[in] data_mask Segments data mask
@@ -580,7 +655,7 @@ void slcd_character_write_data(uint8_t com_line_index,
 }
 
 /**
- * \brief Initializes circular shift configurations struct to defaults.
+ * \brief Initializes circular shift configurations struct to defaults
  *
  * Initailizes circular shift configuration struct to predefined safe default settings.
  *
@@ -599,7 +674,7 @@ void slcd_circular_shift_get_config_defaults(
 }
 
 /**
- * \brief Set SLCD circular shift.
+ * \brief Set SLCD circular shift
  *
  * Set circular shift mode.
  *

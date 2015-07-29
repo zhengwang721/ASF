@@ -380,7 +380,7 @@ enum lin_master_break_length {
 #endif
 #ifdef FEATURE_USART_ISO7816
 /**
- * \brief ISO7816 protocol type.
+ * \brief ISO7816 Protocol Type.
  *
  * ISO7816 protocol type.
  */
@@ -436,9 +436,9 @@ enum iso7816_successive_recv_nack {
 };
 
 /**
- * \brief ISO7816 configuration struct
+ * \brief ISO7816 Configuration Struct
  *
- * Configuration options for ISO7816.
+ * ISO7816 configuration structure.
  */
 struct iso7816_config_t {
 	/* ISO7816 mode enable */
