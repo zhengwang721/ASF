@@ -55,6 +55,50 @@ static void delay_cycle(uint32_t cycles)
 	}
 }
 
+
+/**
+ * \internal Get the set or clear status
+ */
+static enum aon_sleep_timer_status_code _aon_sleep_timer_get_reload_status(void)
+{
+	uint32_t regval = AON_SLEEP_TIMER0->CONTROL.bit.SLP_TIMER_CLK_RELOAD_DLY;
+	
+	switch (regval) {
+	case 0:
+		return AON_SLEEP_TIMER_CLEAR_COMPLETE;
+	case 1:
+		return AON_SLEEP_TIMER_SET_PROCESS;
+	case 2:
+		return AON_SLEEP_TIMER_CLEAR_PROCESS;
+	case 3:
+		return AON_SLEEP_TIMER_SET_COMPLETE;
+	default:
+		return AON_SLEEP_TIMER_CLEAR_ERR;
+	}
+}
+
+/**
+ * \internal Get the set or clear status
+ */
+static enum aon_sleep_timer_status_code _aon_sleep_timer_get_single_status(void)
+{
+	uint32_t regval = AON_SLEEP_TIMER0->CONTROL.bit.SLP_TIMER_SINGLE_COUNT_ENABLE_DLY;
+	
+	switch (regval) {
+	case 0:
+		return AON_SLEEP_TIMER_CLEAR_COMPLETE;
+	case 2:
+		return AON_SLEEP_TIMER_SET_PROCESS;
+	case 4:
+		return AON_SLEEP_TIMER_CLEAR_PROCESS;
+	case 7:
+		return AON_SLEEP_TIMER_SET_COMPLETE;
+	default:
+		return AON_SLEEP_TIMER_CLEAR_ERR;
+	}
+}
+
+
 /**
  * \brief Initializes AON Sleep Timer module instance.
  *
@@ -70,7 +114,8 @@ void aon_sleep_timer_init(enum aon_sleep_timer_wakeup wakeup,
 		enum aon_sleep_timer_mode mode, uint32_t counter)
 {
 	uint32_t aon_st_ctrl = 0;
-	
+
+	(*(volatile uint32_t *)(0x4000E00C)) = 0;
 	if (wakeup == AON_SLEEP_TIMER_WAKEUP_EN) {
 		/* Enable ARM wakeup */
 		(*(volatile uint32_t *)(0x4000E00C)) = 1;
@@ -90,19 +135,18 @@ void aon_sleep_timer_init(enum aon_sleep_timer_wakeup wakeup,
 	AON_SLEEP_TIMER0->SINGLE_COUNT_DURATION.reg = counter;
 	if (mode == AON_SLEEP_TIMER_RELOAD_MODE) {
 		/* Reload counter will start here */
-		AON_SLEEP_TIMER0->CONTROL.reg |= AON_SLEEP_TIMER_CONTROL_RELOAD_ENABLE;
+		AON_SLEEP_TIMER0->CONTROL.reg = AON_SLEEP_TIMER_CONTROL_RELOAD_ENABLE;
 	} else {
 		/* Single counter will start here */
-		AON_SLEEP_TIMER0->CONTROL.reg |= AON_SLEEP_TIMER_CONTROL_SINGLE_COUNT_ENABLE;
+		AON_SLEEP_TIMER0->CONTROL.reg = AON_SLEEP_TIMER_CONTROL_SINGLE_COUNT_ENABLE;
 	}
 	
 	aon_st_ctrl = AON_SLEEP_TIMER0->CONTROL.reg;
 	if (mode == AON_SLEEP_TIMER_SINGLE_MODE) {
-		while ((aon_st_ctrl & AON_SLEEP_TIMER_CONTROL_SLP_TIMER_SINGLE_COUNT_ENABLE_DLY_Msk)
-				!= AON_SLEEP_TIMER_CONTROL_SLP_TIMER_SINGLE_COUNT_ENABLE_DLY_Msk) {
-			aon_st_ctrl = AON_SLEEP_TIMER0->CONTROL.reg;
-		}
+		while (_aon_sleep_timer_get_single_status() != AON_SLEEP_TIMER_SET_COMPLETE);
 		AON_SLEEP_TIMER0->CONTROL.reg = 0;
+	} else {
+		while (_aon_sleep_timer_get_reload_status() != AON_SLEEP_TIMER_SET_COMPLETE);
 	}
 }
 
@@ -113,10 +157,14 @@ void aon_sleep_timer_init(enum aon_sleep_timer_wakeup wakeup,
  */
 void aon_sleep_tiemer_disable(void)
 {
+	uint32_t regval;
+	
 	AON_SLEEP_TIMER0->SINGLE_COUNT_DURATION.reg = 0;
-	AON_SLEEP_TIMER0->CONTROL.reg &= ~AON_SLEEP_TIMER_CONTROL_RELOAD_ENABLE;
-	AON_SLEEP_TIMER0->CONTROL.reg &= ~AON_SLEEP_TIMER_CONTROL_SINGLE_COUNT_ENABLE;
-
+	regval = AON_SLEEP_TIMER0->CONTROL.reg;
+	regval &= ~AON_SLEEP_TIMER_CONTROL_RELOAD_ENABLE;
+	regval &= ~AON_SLEEP_TIMER_CONTROL_SINGLE_COUNT_ENABLE;
+	AON_SLEEP_TIMER0->CONTROL.reg = regval;
+	
 	while ((AON_SLEEP_TIMER0->CONTROL.reg & 
 			AON_SLEEP_TIMER_CONTROL_SLP_TIMER_SINGLE_COUNT_ENABLE_DLY_Msk)
 			!= AON_SLEEP_TIMER_CONTROL_SLP_TIMER_SINGLE_COUNT_ENABLE_DLY_Msk) {
@@ -130,16 +178,7 @@ void aon_sleep_tiemer_disable(void)
  */
 uint32_t aon_sleep_timer_get_current_value(void)
 {
-	/* AON ST needs to be ongoing in order to get a correct value */
-	uint32_t aon_v1 = LPMCU_MISC_REGS0->AON_SLEEP_TIMER_COUNTER.reg;
-	uint32_t aon_v2 = LPMCU_MISC_REGS0->AON_SLEEP_TIMER_COUNTER.reg;
-
-	while(aon_v1 != aon_v2) {
-		aon_v2 = LPMCU_MISC_REGS0->AON_SLEEP_TIMER_COUNTER.reg;
-		aon_v1 = LPMCU_MISC_REGS0->AON_SLEEP_TIMER_COUNTER.reg;
-	}
-
-	return aon_v2;
+	return AON_SLEEP_TIMER0->CURRENT_COUNT_VALUE.reg;
 }
 
 /**
@@ -172,22 +211,4 @@ bool aon_sleep_timer_sleep_timer_not_active(void)
 void aon_sleep_timer_clear_interrup(void)
 {
 	AON_SLEEP_TIMER0->CONTROL.reg |= AON_SLEEP_TIMER_CONTROL_IRQ_CLEAR;
-}
-
-/**
- * \brief Sleep Request 1 from the ARM to the AON Power Sequencer.
- */
-void aon_sleep_timer_sleep_request(void)
-{
-	LPMCU_MISC_REGS0->ARM_SLEEP_WAKEUP_CTRL.bit.SLEEP_1 |=
-			LPMCU_MISC_REGS_ARM_SLEEP_WAKEUP_CTRL_SLEEP_1; 
-}
-
-/**
- * \brief Wakeup Request from the ARM to the AON Power Sequencer.
- */
-void aon_sleep_timer_wakeup_request(void)
-{
-	LPMCU_MISC_REGS0->ARM_SLEEP_WAKEUP_CTRL.bit.WAKEUP |=
-			LPMCU_MISC_REGS_ARM_SLEEP_WAKEUP_CTRL_WAKEUP;
 }

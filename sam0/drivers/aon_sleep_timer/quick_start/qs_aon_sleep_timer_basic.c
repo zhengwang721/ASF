@@ -44,31 +44,26 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
-
-static void delay(uint32_t cycles)
-{
-	volatile uint32_t i = 0;
-	
-	for (i=0; i < cycles; i++) {
-		__NOP();
-	}
-}
+#include "conf_quick_start.h"
 
 //! [setup]
 static void configure_gpio_pins(void)
 {
-//! [setup_1]
+	//! [setup_1]
 	struct gpio_config config_gpio_pin;
-//! [setup_1]
-//! [setup_2]
+	//! [setup_1]
+	//! [setup_2]
 	gpio_get_config_defaults(&config_gpio_pin);
-//! [setup_2]
-//! [setup_3]
+	//! [setup_2]
+	//! [setup_3]
 	config_gpio_pin.direction = GPIO_PIN_DIR_OUTPUT;
-//! [setup_3]
-//! [setup_4]
+	//! [setup_3]
+	//! [setup_4]
 	gpio_pin_set_config(LED_0_PIN, &config_gpio_pin);
-//! [setup_4]
+	//! [setup_4]
+	//! [setup_5]	
+	gpio_pin_set_output_level(LED_0_PIN, false);
+	//! [setup_5]
 }
 //! [setup]
 
@@ -82,32 +77,22 @@ int main(void)
 //! [gpio_init]
 //! [timer_init]
 	aon_sleep_timer_init(AON_SLEEP_TIMER_WAKEUP_EN,
-			AON_SLEEP_TIMER_RELOAD_MODE, CONF_AON_SLEEP_RELOAD_COUNTER);
+			AON_SLEEP_TIMER_SINGLE_MODE, CONF_AON_SLEEP_RELOAD_COUNTER);
 //! [timer_init]
-
-//! [setup_init]
-	
+//! [timer_active]
+	while(!aon_sleep_timer_sleep_timer_active());
+//! [timer_active]
+//! [timer_value]
+	while (aon_sleep_timer_get_current_value());
+//! [timer_value]
+//! [led_off]
+	gpio_pin_set_output_level(LED_0_PIN, true);
+//! [led_off]
 //! [main_imp]
 //! [main_loop]
 	while (true) {
 //! [main_loop]
-//! [main_1]
-		gpio_pin_set_output_level(LED_0_PIN, true);
-//! [main_1]
-		delay(1000000);
-//! [main_2]
-		while (!aon_sleep_timer_sleep_timer_active());
-//! [main_2]
-//! [main_3]
-		aon_sleep_timer_sleep_request();
-//! [main_3]
-//! [main_4]
-		gpio_pin_set_output_level(LED_0_PIN, false);
-//! [main_4]
-//! [main_5]
-		asm volatile ("wfi");
-		asm volatile ("nop");
-//! [main_5]
+
 	}
 //! [main_imp]
 }

@@ -78,8 +78,20 @@
  * -# Set the GPIO module enable.
  *    \snippet qs_aon_sleep_timer_basic.c setup_4
  *
+ * -# Set the LED on.
+ *    \snippet qs_aon_sleep_timer_basic.c setup_5
+ *
  * -# Initial the AON Sleep Timer module.
  *    \snippet qs_aon_sleep_timer_basic.c timer_init
+ *
+ * -# Waiting for the AON Sleep Timer module active.
+ *    \snippet qs_aon_sleep_timer_basic.c timer_active
+ *
+ * -# Waiting for the AON Sleep Timer module current counter down to 0.
+ *    \snippet qs_aon_sleep_timer_basic.c timer_value
+ *
+ * -# Turn the activity status LED off.
+ *    \snippet qs_aon_sleep_timer_basic.c led_off
  *
  * \section asfdoc_sam0_aon_sleep_timer_basic_use_case_basic_implement Implementation
  * Add the following to \c main().
@@ -89,15 +101,4 @@
  * -# Start an infinite loop.
  *    \snippet qs_aon_sleep_timer_basic.c main_loop
  *
- * -# Turn the activity status LED on.
- *    \snippet qs_aon_sleep_timer_basic.c main_1
- * -# Waiting for AON Sleep Timer active.
- *    \snippet qs_aon_sleep_timer_basic.c main_2
- * -# Send sleep request.
- *    \snippet qs_aon_sleep_timer_basic.c main_3
- * -# Turn the activity status LED off.
- *    \snippet qs_aon_sleep_timer_basic.c main_4
- *
- * -# Waiting for interrupt to wakeup MCU.
- *    \snippet qs_aon_sleep_timer_basic.c main_5
  */

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM Always ON Sleep Timer Driver for SAMB11
+ * \brief AON Sleep Timer Quick Start configuration
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,64 +40,10 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
-#ifndef AON_SLEEP_TIMER_H_INCLUDED
-#define AON_SLEEP_TIMER_H_INCLUDED
 
-#include <compiler.h>
+#ifndef CONF_QUICK_START_H_INCLUDED
+#define CONF_QUICK_START_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define CONF_AON_SLEEP_RELOAD_COUNTER      320000    /* About 10s */
 
-/**
- * \brief Status code is description of AON Sleep Timer
- * current set or clear operation status.
- */
-enum aon_sleep_timer_status_code {
-	AON_SLEEP_TIMER_SET_COMPLETE = 0,
-	AON_SLEEP_TIMER_CLEAR_COMPLETE,
-	AON_SLEEP_TIMER_SET_PROCESS,
-	AON_SLEEP_TIMER_CLEAR_PROCESS,
-	AON_SLEEP_TIMER_CLEAR_ERR,
-};
-
-/**
- * \brief Specifies the counter mode is reload or single mode.
- *
- * This enum specifies counter with reload or single mode.
- */
-enum aon_sleep_timer_mode {
-	/** Counter in reload mode */
-	AON_SLEEP_TIMER_RELOAD_MODE = 0,
-	/** Counter in single mode */
-	AON_SLEEP_TIMER_SINGLE_MODE,
-};
-
-/**
- * \brief Enable or disable ARM wakeup.
- *
- * This enum specifies ARM wakeup enable or disable.
- */
-enum aon_sleep_timer_wakeup {
-	/** ARM wakeup disable */
-	AON_SLEEP_TIMER_WAKEUP_EN = 0,
-	/** ARM wakeup disable */
-	AON_SLEEP_TIMER_WAKEUP_DIS,
-};
-
-void aon_sleep_timer_init(enum aon_sleep_timer_wakeup wakeup,
-		enum aon_sleep_timer_mode mode, uint32_t counter);
-void aon_sleep_tiemer_disable(void);
-uint32_t aon_sleep_timer_get_current_value(void);
-void aon_sleep_timer_clear_interrup(void);
-bool aon_sleep_timer_sleep_timer_active(void);
-bool aon_sleep_timer_sleep_timer_not_active(void);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+#endif /* CONF_QUICK_START_H_INCLUDED */
