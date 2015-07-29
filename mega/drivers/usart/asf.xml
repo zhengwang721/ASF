@@ -17,7 +17,7 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="mega.utils"/>
 			<require idref="mega.drivers.ioport"/>
-			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
+			<generator value="doxygen-module" default-mcu="megarf"/>
 		</module>
 		<module type="driver" id="mega.drivers.usart#megax8" caption="USART - Universal Synchronous/Asynchronous Receiver/Transmitter">
 			<info type="description" value="summary">
@@ -35,7 +35,7 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="mega.utils"/>
 			<require idref="mega.drivers.ioport"/>
-			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
+			<generator value="doxygen-module" default-mcu="megax8"/>
 		</module>
 	</select-by-device>
 </asf>

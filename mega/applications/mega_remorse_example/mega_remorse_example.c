@@ -269,7 +269,7 @@ int main (void)
 
 	/* set up the system 100Hz timer */
 	/* Set CTC compare value to 10ms @ 8Mhz Clock (Mode 4) */
-	OCR1A	= 20000;							
+	OCR1A   = 20000;							
 	/* Configure timer 1 for CTC mode (Mode 4) */
 	TCCR1B	|= (1 << WGM12);	
 	/* Enable interrupt on compare match */
@@ -296,7 +296,7 @@ int main (void)
 		/* reset watchdog */
 		remorse_restart = false;
 		/* reinitialize watchdog timer */
-		remorse_wd_cnt = 0;					
+		remorse_wd_cnt  = 0;					
 
 		/* check watchdog */
 		while (!remorse_restart) {
@@ -346,8 +346,9 @@ int main (void)
 static int bsp_tty_putchar(char c, FILE *stream)
 {
 	// handle linefeed - carriage return
-	if (c == '\n')								
+	if (c == '\n') {							
 		bsp_tty_putchar('\r', stream);
+	}
 	
 	while (!usart_data_register_is_empty(&USART0)) {
 		// Do nothing until UDR is ready for more data to be written to it
@@ -603,12 +604,10 @@ static void morse_poll (void)
 			if (duration <= (2 * DOT_TIME_IN_TICKS)) {
 				morse_code = (morse_code << 1) | 1;
 				morse_code_len++;
-
 				rng_buf_put (morse_rx_ring_id, " .", 2);
 			} else if (duration <= (5 * DOT_TIME_IN_TICKS)) {
 				morse_code = (morse_code << 1) | 0;
 				morse_code_len++;
-
 				rng_buf_put (morse_rx_ring_id, " -", 2);
 			}
 		}
@@ -706,8 +705,8 @@ void rng_flush (RING_ID ring_id)
 
 int rng_buf_get (RING_ID rng_id, char *buffer, int maxbytes)
 {
-	int bytesgot = 0;
-	int p_to_buf = rng_id->p_to_buf;
+	int bytesgot  = 0;
+	int p_to_buf  = rng_id->p_to_buf;
 	int bytes2;
 	int p_rng_tmp = 0;
 
@@ -721,7 +720,7 @@ int rng_buf_get (RING_ID rng_id, char *buffer, int maxbytes)
 		/* p_to_buf has wrapped around.  Grab chars up to the end of the
 		 * buffer, then wrap around if we need to. */
 
-		bytesgot = min (maxbytes, rng_id->buf_size - rng_id->p_from_buf);
+		bytesgot  = min (maxbytes, rng_id->buf_size - rng_id->p_from_buf);
 		memcpy (buffer, &rng_id->buf [rng_id->p_from_buf], bytesgot);
 		p_rng_tmp = rng_id->p_from_buf + bytesgot;
 

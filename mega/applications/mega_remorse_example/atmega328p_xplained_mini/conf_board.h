@@ -47,6 +47,4 @@
 #ifndef _CONF_BOARD_H
 #define _CONF_BOARD_H
 
-#define CONF_BOARD_ENABLE_USART0
-
 #endif  // _CONF_BOARD_H

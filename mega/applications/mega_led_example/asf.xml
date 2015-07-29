@@ -1,14 +1,14 @@
 <asf xmlversion="1.0">
-	<module type="application" id="mega.applications.mega328p_led_example" caption="megaAVR led example">
+	<module type="application" id="mega.applications.mega_led_example" caption="megaAVR led example">
 		<info type="description" value="summary">
 		This application show how to toggle led0 buy button on mega328p.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="I/O"/>
 		</info>
-		<build type="c-source" value="mega328p_led_example.c"/>
+		<build type="c-source" value="mega_led_example.c"/>
 		<require idref="mega.utils"/>
-		<device-support value="atmega328p"/>
+		<device-support value="mega"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
