@@ -250,6 +250,25 @@
 /* PWM4 signal: PWM4 on gpio_pin mux 1 and MEGAMUX 15 */
 #define PINMUX_MEGAMUX_SEL15_PWM4_PIN(gpio_pin)       ((gpio_pin << 16) | (MEGAMUX_SEL15_PWM_4 << 8) | 1)
 
+/* ========== GPIO definition for QUAD DECODER peripheral ========== */
+/* QDEC signal: QDEC X IN A on gpio_pin mux 1 and MEGAMUX 29 */
+#define PINMUX_MEGAMUX_SEL29_QDEC_X_A_PIN(gpio_pin)   ((gpio_pin << 16) | (MEGAMUX_SEL29_QUAD_DEC_X_IN_A << 8) | 1)
+
+/* QDEC signal: QDEC X IN B on gpio_pin mux 1 and MEGAMUX 30 */
+#define PINMUX_MEGAMUX_SEL30_QDEC_X_B_PIN(gpio_pin)   ((gpio_pin << 16) | (MEGAMUX_SEL30_QUAD_DEC_X_IN_B << 8) | 1)
+
+/* QDEC signal: QDEC Y IN A on gpio_pin mux 1 and MEGAMUX 31 */
+#define PINMUX_MEGAMUX_SEL31_QDEC_Y_A_PIN(gpio_pin)   ((gpio_pin << 16) | (MEGAMUX_SEL31_QUAD_DEC_Y_IN_A << 8) | 1)
+
+/* QDEC signal: QDEC Y IN A on gpio_pin mux 1 and MEGAMUX 32 */
+#define PINMUX_MEGAMUX_SEL32_QDEC_Y_B_PIN(gpio_pin)   ((gpio_pin << 16) | (MEGAMUX_SEL32_QUAD_DEC_Y_IN_B << 8) | 1)
+
+/* QDEC signal: QDEC Z IN A on gpio_pin mux 1 and MEGAMUX 33 */
+#define PINMUX_MEGAMUX_SEL33_QDEC_Z_A_PIN(gpio_pin)   ((gpio_pin << 16) | (MEGAMUX_SEL33_QUAD_DEC_Z_IN_A << 8) | 1)
+
+/* QDEC signal: QDEC Z IN B on gpio_pin mux 1 and MEGAMUX 34 */
+#define PINMUX_MEGAMUX_SEL34_QDEC_Z_B_PIN(gpio_pin)   ((gpio_pin << 16) | (MEGAMUX_SEL34_QUAD_DEC_Z_IN_B << 8) | 1)
+
 /* ========== GPIO definition for UART peripheral ========== */
 #define PIN_LP_GPIO_2_MUX2_UART0_RXD		2L              /**< \brief UART0 signal: RXD on LP_GPIO_2 mux 2 */
 #define MUX_LP_GPIO_2_MUX2_UART0_RXD		2L
