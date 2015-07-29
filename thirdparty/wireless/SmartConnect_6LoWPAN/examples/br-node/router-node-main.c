@@ -120,7 +120,9 @@ extern void configure_tc3(void);
 void watchdog_early_warning_callback(void);
 void configure_gclock_generator(void);
 void configure_wdt_callbacks(void);
-
+#if BOARD == SAMR21_XPLAINED_PRO
+uint8_t *edbg_eui_read_eui64(void);
+#endif
 
 
 
@@ -185,15 +187,14 @@ main(int argc, char *argv[])
   
   printf("\r\n\n\n\n Starting the SmartConnect-6LoWPAN \r\n Platform : Atmel IoT device \r\n");
   print_reset_causes();
-#if SAMR21 
-  eui64 = edbg_eui_read_eui64();
-#endif
-
-  set_link_addr();
-
-  random_init(node_id);
-
   netstack_init();
+#if BOARD == SAMR21_XPLAINED_PRO
+  eui64 = edbg_eui_read_eui64();
+  SetIEEEAddr(eui64);
+#else
+  SetIEEEAddr(node_mac);
+#endif
+  set_link_addr();  
   rf_set_channel(RF_CHANNEL);
   printf("\r\n Configured RF channel: %d\r\n", rf_get_channel());
   leds_off(LEDS_ALL);

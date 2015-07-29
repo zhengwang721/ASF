@@ -70,11 +70,14 @@
 /* radio driver blocks until ACK is received */
 #define NULLRDC_CONF_ACK_WAIT_TIME          (50 * RTIMER_SECOND/1000)
 
-#define NULLRDC_CONF_802154_AUTOACK         1
-#define NULLRDC_CONF_SEND_802154_ACK        1
-#define NULLRDC_CONF_802154_AUTOACK_HW      0
+#define NULLRDC_CONF_802154_AUTOACK         0
+#define NULLRDC_CONF_SEND_802154_ACK        0
+#define NULLRDC_CONF_802154_AUTOACK_HW      1
+#define HW_CSMA_FRAME_RETRIES 1
 
-#define NETSTACK_CONF_MAC   csma_driver
+#undef NETSTACK_CONF_MAC
+#define NETSTACK_CONF_MAC   nullmac_driver
+
 
 #define NETSTACK_CONF_FRAMER                framer_802154
 
