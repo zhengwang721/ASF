@@ -182,13 +182,11 @@ static bool _mx25v_is_flash_busy(void)
 {
 	uint8_t mx25_status;
 
-	while (1) {
-		mx25v_read_status(&mx25_status);
-		if (mx25_status & MX25V_STATUS_WIP) {
-			return true;
-		} else {
-			return false;
-		}
+	mx25v_read_status(&mx25_status);
+	if (mx25_status & MX25V_STATUS_WIP) {
+		return true;
+	} else {
+		return false;
 	}
 }
 
@@ -241,6 +239,7 @@ enum status_code mx25v_init(struct mx25v_spi_config *const config)
 	struct spi_config spi_conf;
 
 	spi_get_config_defaults(&spi_conf);
+	spi_conf.transfer_mode = config->spi_transfer_mode;
 	spi_conf.mode_specific.master.baudrate = config->spi_baudrate;
 	spi_conf.mux_setting = MX25V_SPI_MUX_SETTING;
 	spi_conf.pinmux_pad0 = MX25V_SPI_PINMUX_SI;
@@ -435,7 +434,7 @@ enum status_code mx25v_read_buffer(uint32_t address, void *data, uint32_t length
 
 	Assert(data);
 
-	if ((address + length) >= MX25V_FLASH_SIZE) {
+	if ((address + length) > MX25V_FLASH_SIZE) {
 		return STATUS_ERR_INVALID_ARG;
 	}
 
@@ -483,7 +482,7 @@ enum status_code mx25v_write_buffer(uint32_t address, const void *data, uint32_t
 
 	Assert(data);
 
-	if ((address + length) >= MX25V_FLASH_SIZE) {
+	if ((address + length) > MX25V_FLASH_SIZE) {
 		return STATUS_ERR_INVALID_ARG;
 	}
 

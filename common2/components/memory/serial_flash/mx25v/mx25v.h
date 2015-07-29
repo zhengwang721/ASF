@@ -140,8 +140,8 @@ extern "C" {
 
 /** SPI interface configuration for Serial Flash. */
 struct mx25v_spi_config {
-	/** SPI Mode 0 and Mode 3 are supported */
-	enum spi_transfer_mode spi_mode;
+	/** SPI transfer mode: Mode 0 and Mode 3 are supported */
+	enum spi_transfer_mode spi_transfer_mode;
 	/** SPI baudrate of serial clock */
 	uint32_t spi_baudrate;
 };
@@ -179,7 +179,7 @@ struct mx25v_id {
 static inline void mx25v_spi_get_config_defaults(
 		struct mx25v_spi_config *const config)
 {
-	config->spi_mode = SPI_TRANSFER_MODE_0;
+	config->spi_transfer_mode = SPI_TRANSFER_MODE_0;
 	config->spi_baudrate = 100000;
 }
 
