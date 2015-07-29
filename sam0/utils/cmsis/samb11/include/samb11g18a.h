@@ -413,8 +413,4 @@ void TIMER0_Handler      ( void );
 }
 #endif
 
-<<<<<<< HEAD
 #endif /* _SAMB11G18A_ */
-=======
-#endif /* _SAMB11G18A_ */
->>>>>>> 6b6d9118d1b2178203740a3d265f6e290c9a5029
