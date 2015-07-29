@@ -62,6 +62,21 @@
  * \snippet qs_dualtimer_basic.c setup_init
  *
  * \subsection asfdoc_sam0_dualtimer_basic_use_case_setup_flow Workflow
+ * -# Create a new function \c configure_uart(), which will be used to configure
+ *    the UART peripheral.
+ *    \snippet qs_dualtimer_basic.c configure_uart
+ * -# Create a UART module instance struct.
+ *    \snippet qs_dualtimer_basic.c module_inst
+ * -# Create a UART module configuration struct, which can be filled out to
+ *    adjust the configuration of a physical UART peripheral.
+ *    \snippet qs_dualtimer_basic.c setup_uart_1
+ * -# Initialize the UART configuration struct with the module's default values.
+ *    \snippet qs_dualtimer_basic.c setup_uart_2
+ * -# Change configurations uart as desired.
+ *    \snippet qs_dualtimer_basic.c setup_uart_3
+ * -# Change configurations uart as desired.
+ *    \snippet qs_dualtimer_basic.c setup_uart_4
+ *
  * -# Create a new function \c configure_dualtimer(), which will be used to configure
  *    the DUALTIMER peripheral.
  *    \snippet qs_dualtimer_basic.c setup_dualtimer_init
@@ -100,13 +115,13 @@
  *    \snippet qs_dualtimer_basic.c timer1_interrupt
  * -# Clear the dualtimer1 interrupt status.
  *    \snippet qs_dualtimer_basic.c timer1_interrupt_clr
- * -# Plus the dualtimer_counter1.
- *    \snippet qs_dualtimer_basic.c counter1
+ * -# Print the time1 trigger.
+ *    \snippet qs_dualtimer_basic.c print_timer1
  *
  * -# Get the dualtimer2 raw interrupt status.
  *    \snippet qs_dualtimer_basic.c timer2_interrupt
  * -# Clear the dualtimer2 interrupt status.
  *    \snippet qs_dualtimer_basic.c timer2_interrupt_clr
- * -# Plus the dualtimer_counter2.
- *    \snippet qs_dualtimer_basic.c counter2
+ * -# Print the timer2 trigger.
+ *    \snippet qs_dualtimer_basic.c print_timer2
  */

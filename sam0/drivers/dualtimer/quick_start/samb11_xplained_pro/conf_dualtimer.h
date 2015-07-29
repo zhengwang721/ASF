@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM B11 Xplained Pro board configuration.
+ * \brief DUALTIMER Quick Start configuration
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -40,10 +40,11 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#ifndef CONF_QUICK_START_H_INCLUDED
+#define CONF_QUICK_START_H_INCLUDED
+
+#define CONF_DUALTIMER_TIMER1_LOAD    26000000
+#define CONF_DUALTIMER_TIMER2_LOAD    (2*CONF_DUALTIMER_TIMER1_LOAD)
+
+#endif /* CONF_QUICK_START_H_INCLUDED */

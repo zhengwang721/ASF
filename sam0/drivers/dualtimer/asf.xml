@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.dualtimer" caption="DUALTIMER - Dualtimer for SAMB11">
 		<info type="keyword" value="technology">
-			<keyword value="Dualtimer"/>
+			<keyword value="TIMER"/>
 		</info>
 
 		<info type="appnote" value="ATxxxxx"/>

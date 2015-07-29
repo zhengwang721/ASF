@@ -76,7 +76,6 @@ void dualtimer_get_config_defaults(struct dualtimer_config *config)
 	config->timer2.load_value = 0;
 	
 	config->clock_source = DUALTIMER_CLK_INPUT_0;
-	config->integration_test_enable = false;
 }
 
 /**
@@ -141,10 +140,7 @@ void dualtimer_init(const struct dualtimer_config *config)
 	if (config->timer1.timer_enable || config->timer2.timer_enable) {
 		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |=
 				LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_DUALTIMER_CLK_EN;
-		LPMCU_MISC_REGS0->LPMCU_CONTROL.bit.DUALTIMER_CLK_SEL = config->clock_source;	
-		if (config->integration_test_enable) {
-			DUALTIMER0->TIMERITCR.reg = 1;
-		}
+		LPMCU_MISC_REGS0->LPMCU_CONTROL.bit.DUALTIMER_CLK_SEL = config->clock_source;
 	}
 }
 
@@ -155,7 +151,7 @@ void dualtimer_init(const struct dualtimer_config *config)
  *
  * \retval Timer1/Timer2 current value
  */
-uint32_t dualtimer_get_current_value(enum dualtimer_timer timer)
+uint32_t dualtimer_get_value(enum dualtimer_timer timer)
 {
 	if (timer == DUALTIMER_TIMER1) {
 		return DUALTIMER0->TIMER1VALUE.reg;
@@ -168,63 +164,40 @@ uint32_t dualtimer_get_current_value(enum dualtimer_timer timer)
  * \brief Set Dualtimer module timer1/timer2 load value.
  *
  * \param[in]     timer        Timer1/Timer2
+ * \param[in]     cur_bg       Current/Background
  * \param[in]     value        Load value
  */
-void dualtimer_set_load_value(enum dualtimer_timer timer,
-		uint32_t value)
+void dualtimer_set_counter(enum dualtimer_timer timer,
+		enum dualtimer_set_register cur_bg, uint32_t value)
 {
 	if (timer == DUALTIMER_TIMER1) {
-		DUALTIMER0->TIMER1LOAD.reg = value;
+		if (cur_bg == DUALTIMER_SET_CURRUNT_REG) {
+			DUALTIMER0->TIMER1LOAD.reg;
+		} else {
+			DUALTIMER0->TIMER1BGLOAD.reg;
+		}
 	} else {
-		DUALTIMER0->TIMER2LOAD.reg = value;
+		if (cur_bg == DUALTIMER_SET_CURRUNT_REG) {
+			DUALTIMER0->TIMER2LOAD.reg;
+			} else {
+			DUALTIMER0->TIMER2BGLOAD.reg;
+		}
 	}
 }
 
 /**
- * \brief Get Dualtimer module timer1/timer2 load value.
+ * \brief Get Dualtimer module timer1/timer2 raw interrupt status
  *
  * \param[in]     timer        Timer1/Timer2
  *
- * \retval Timer1/Timer2 load value
+ * \retval The raw interrupt status of timer1/timer2
  */
-uint32_t dualtimer_get_load_value(enum dualtimer_timer timer)
+uint8_t dualtimer_get_status(enum dualtimer_timer timer)
 {
 	if (timer == DUALTIMER_TIMER1) {
-		return DUALTIMER0->TIMER1LOAD.reg;
+		return DUALTIMER0->TIMER1RIS.reg;
 	} else {
-		return DUALTIMER0->TIMER2LOAD.reg;
-	}
-}
-
-/**
- * \brief Set Dualtimer module timer1/timer2 background load value.
- *
- * \param[in]     timer        Timer1/Timer2
- * \param[in]     value        Background load value
- */
-void dualtimer_set_bg_load_value(enum dualtimer_timer timer,
-		uint32_t value)
-{
-	if (timer == DUALTIMER_TIMER1) {
-		DUALTIMER0->TIMER1BGLOAD.reg = value;
-	} else {
-		DUALTIMER0->TIMER2BGLOAD.reg = value;
-	}
-}
-
-/**
- * \brief Get Dualtimer module timer1/timer2 background load value.
- *
- * \param[in]     timer        Timer1/Timer2
- *
- * \retval Timer1/Timer2 background load value
- */
-uint32_t dualtimer_get_bg_load_value(enum dualtimer_timer timer)
-{
-	if (timer == DUALTIMER_TIMER1) {
-		return DUALTIMER0->TIMER1BGLOAD.reg;
-	} else {
-		return DUALTIMER0->TIMER2BGLOAD.reg;
+		return DUALTIMER0->TIMER2RIS.reg;
 	}
 }
 
@@ -241,22 +214,6 @@ uint8_t dualtimer_get_interrupt_status(enum dualtimer_timer timer)
 		return DUALTIMER0->TIMER1MIS.reg;
 	} else {
 		return DUALTIMER0->TIMER2MIS.reg;
-	}
-}
-
-/**
- * \brief Get Dualtimer module timer1/timer2 raw interrupt status
- *
- * \param[in]     timer        Timer1/Timer2
- *
- * \retval The raw interrupt status of timer1/timer2
- */
-uint8_t dualtimer_get_interrupt_status_raw(enum dualtimer_timer timer)
-{
-	if (timer == DUALTIMER_TIMER1) {
-		return DUALTIMER0->TIMER1RIS.reg;
-	} else {
-		return DUALTIMER0->TIMER2RIS.reg;
 	}
 }
 
@@ -305,51 +262,5 @@ void dualtimer_disable(enum dualtimer_timer timer)
 		DUALTIMER0->TIMER1CONTROL.reg &= ~DUALTIMER_TIMER1CONTROL_TIMER_ENABLE;
 	} else {
 		DUALTIMER0->TIMER2CONTROL.reg &= ~DUALTIMER_TIMER2CONTROL_TIMER_ENABLE;
-	}
-}
-
-/**
- * \brief Enable Dualtimer module integration test mode
- *
- * Enable the Dualtimer module integration test mode
- */
-void dualtimer_integration_test_enable(void)
-{
-	DUALTIMER0->TIMERITCR.reg = true;
-}
-
-/**
- * \brief Disable Dualtimer module integration test mode
- *
- * Disable the Dualtimer module integration test mode
- */
-void dualtimer_integration_test_disable(void)
-{
-	DUALTIMER0->TIMERITCR.reg = false;
-}
-
-/**
- * \brief Disable Dualtimer module integration test mode
- *
- * Disable the Dualtimer module integration test mode
- *
- * \param[in]     timer1        Value output on TIMINT1
- * \param[in]     timer2        Value output on TIMINT2
- */
-void dualtimer_integration_test_set_interrupt(
-		bool timer1, bool timer2)
-{
-	if (timer1 && timer2) {
-		DUALTIMER0->TIMERITOP.reg =
-				DUALTIMER_TIMERITOP_INT_TEST_TIMINT1_VALUE |
-				DUALTIMER_TIMERITOP_INT_TEST_TIMING2_VALUE;
-	} else if (timer1 && (!timer2)) {
-		DUALTIMER0->TIMERITOP.reg =
-				DUALTIMER_TIMERITOP_INT_TEST_TIMINT1_VALUE;
-	} else if ((!timer1) && timer2) {
-		DUALTIMER0->TIMERITOP.reg =
-				DUALTIMER_TIMERITOP_INT_TEST_TIMING2_VALUE;
-	} else {
-		DUALTIMER0->TIMERITOP.reg = 0;
 	}
 }

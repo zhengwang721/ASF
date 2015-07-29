@@ -44,16 +44,41 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
+#include <string.h>
+#include "conf_dualtimer.h"
 
+#define PRINTF(s)   uart_write_buffer_wait(&uart_instance, (const uint8_t *)s, strlen(s))
 
+//! [module_inst]
+struct uart_module uart_instance;
+//! [module_inst]
 
 //! [setup]
-//! [setup_dualtimer_init]
-void configure_dualtimer(void);
-//! [setup_dualtimer_init]
+static void configure_uart(void)
+{
+//! [setup_uart_1]
+	struct uart_config config_uart;
+//! [setup_uart_1]
+//! [setup_uart_2]
+	uart_get_config_defaults(&config_uart);
+//! [setup_uart_2]
 
+//! [setup_uart_3]
+	config_uart.baud_rate = 38400;
+	config_uart.pinmux_pad[0] = EDBG_CDC_SERCOM_PINMUX_PAD0;
+	config_uart.pinmux_pad[1] = EDBG_CDC_SERCOM_PINMUX_PAD1;
+	config_uart.pinmux_pad[2] = EDBG_CDC_SERCOM_PINMUX_PAD2;
+	config_uart.pinmux_pad[3] = EDBG_CDC_SERCOM_PINMUX_PAD3;
+//! [setup_uart_3]
 
-void configure_dualtimer(void)
+//! [setup_uart_4]
+	while (uart_init(&uart_instance,
+	EDBG_CDC_MODULE, &config_uart) != STATUS_OK) {
+	}
+//! [setup_uart_4]
+}
+
+static void configure_dualtimer(void)
 {
 //! [setup_dualtimer_1]
 	struct dualtimer_config config_dualtimer;
@@ -88,13 +113,13 @@ void configure_dualtimer(void)
 int main(void)
 {
 //! [setup_init]
-	volatile uint32_t dualtimer_counter1 = 0, dualtimer_counter2 = 0;
 	//system_init();
-	
+//! [uart_config]	
+	configure_uart();
+//! [uart_config]
 //! [dualtimer_config]
 	configure_dualtimer();
 //! [dualtimer_config]
-
 //! [setup_init]
 	
 //! [main_imp]
@@ -102,24 +127,24 @@ int main(void)
 	while (true) {
 //! [main_loop]
 //! [timer1_interrupt]
-		if (dualtimer_get_interrupt_status_raw(DUALTIMER_TIMER1)) {
+		if (dualtimer_get_status(DUALTIMER_TIMER1)) {
 //! [timer1_interrupt]
 //! [timer1_interrupt_clr]
 			dualtimer_clear_interrupt_status(DUALTIMER_TIMER1);
 //! [timer1_interrupt_clr]
-//! [counter1]
-			dualtimer_counter1++;
-//! [counter1]
+//! [print_timer1]
+			PRINTF("Timer1 trigger\r\n");
+//! [print_timer1]
 		}
 //! [timer2_interrupt]
-		if (dualtimer_get_interrupt_status_raw(DUALTIMER_TIMER2)) {
+		if (dualtimer_get_status(DUALTIMER_TIMER2)) {
 //! [timer2_interrupt]
 //! [timer2_interrupt_clr]
 			dualtimer_clear_interrupt_status(DUALTIMER_TIMER2);
 //! [timer2_interrupt_clr]
-//! [counter2]
-			dualtimer_counter2++;
-//! [counter2]
+//! [print_timer2]
+			PRINTF("Timer2 trigger\r\n");
+//! [print_timer2]
 		}
 	}
 //! [main_imp]

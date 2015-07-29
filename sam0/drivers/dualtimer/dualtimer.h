@@ -123,6 +123,21 @@ enum dualtimer_clock_prescaler {
 };
 
 /**
+ * \brief Dualtimer set counter.
+ *
+ * This enum is used to choose set the load register or 
+ * background load register. The difference to set load 
+ * register is that writes to background register do not
+ * cause the counter to immediately restart from the new value.
+ */
+enum dualtimer_set_register {
+	/** Set current counter */
+	DUALTIMER_SET_CURRUNT_REG = 0,
+	/** Set background counter */
+	DUALTIMER_SET_BG_REG,
+};
+
+/**
  * \brief Dualtimer private configuration structure.
  *
  * Private configuration struct for Dualtimer instance. 
@@ -156,28 +171,18 @@ struct dualtimer_config {
 	struct dualtimer_private_config timer2;
 	/** Selects Dualtimer clock frequency */
 	enum dualtimer_clock_input clock_source;
-	/** Enable integration test */
-	bool integration_test_enable;
 };
 
 void dualtimer_get_config_defaults(struct dualtimer_config *config);
 void dualtimer_init(const struct dualtimer_config *config);
-uint32_t dualtimer_get_current_value(enum dualtimer_timer timer);
-void dualtimer_set_load_value(enum dualtimer_timer timer,
-		uint32_t value);
-uint32_t dualtimer_get_load_value(enum dualtimer_timer timer);
-void dualtimer_set_bg_load_value(enum dualtimer_timer timer,
-		uint32_t value);
-uint32_t dualtimer_get_bg_load_value(enum dualtimer_timer timer);
-uint8_t dualtimer_get_interrupt_status_raw(enum dualtimer_timer timer);
+uint32_t dualtimer_get_value(enum dualtimer_timer timer);
+void dualtimer_set_counter(enum dualtimer_timer timer,
+		enum dualtimer_set_register cur_bg, uint32_t value);
+uint8_t dualtimer_get_status(enum dualtimer_timer timer);
 uint8_t dualtimer_get_interrupt_status(enum dualtimer_timer timer);
 void dualtimer_clear_interrupt_status(enum dualtimer_timer timer);
 void dualtimer_enable(enum dualtimer_timer timer);
 void dualtimer_disable(enum dualtimer_timer timer);
-void dualtimer_integration_test_enable(void);
-void dualtimer_integration_test_disable(void);
-void dualtimer_integration_test_set_interrupt(
-		bool timer1, bool timer2);
 
 #ifdef __cplusplus
 }
