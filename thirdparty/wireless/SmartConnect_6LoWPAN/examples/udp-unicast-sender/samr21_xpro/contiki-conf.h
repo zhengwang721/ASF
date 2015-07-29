@@ -103,7 +103,7 @@
 
 #define RIMESTATS_CONF_ENABLED 1
 
-#define RF_CHANNEL                            26
+#define RF_CHANNEL                            11
 
 #define IEEE802154_CONF_PANID                 0xABCD
 

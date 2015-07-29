@@ -79,11 +79,6 @@
 #include "rf233.h"
 #include "delay.h"
 #include "system_interrupt.h"
-#if SAMD
-#include "node-id-samd21.h"
-#else
-uint8_t *edbg_eui_read_eui64(void);
-#endif
 #define RF233_STATUS()                    rf233_status()
 /*---------------------------------------------------------------------------*/
 PROCESS(rf233_radio_process, "RF233 radio driver");
@@ -99,9 +94,7 @@ static uint8_t ack_status = 0;
 static volatile int radio_is_on = 0;
 static volatile int pending_frame = 0;
 static volatile int sleep_on = 0;
-void SetPanId(uint16_t panId);
-void SetShortAddr(uint16_t addr);
-void SetIEEEAddr(uint8_t *ieee_addr);
+
 /*---------------------------------------------------------------------------*/
 int rf233_init(void);
 int rf233_prepare(const void *payload, unsigned short payload_len);
@@ -282,13 +275,6 @@ rf233_init(void)
   
   rf_generate_random_seed();
   
- #if SAMD
-  SetIEEEAddr(node_mac);
-#else
-  eui64 = edbg_eui_read_eui64();
-  SetIEEEAddr(eui64);
-#endif
-
   for(uint8_t i=0;i<8;i++)
   {
 	  regtemp =trx_reg_read(0x24+i);

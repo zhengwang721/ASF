@@ -119,7 +119,9 @@ extern void configure_tc3(void);
 void watchdog_early_warning_callback(void);
 void configure_gclock_generator(void);
 void configure_wdt_callbacks(void);
-
+#if BOARD == SAMR21_XPLAINED_PRO
+uint8_t *edbg_eui_read_eui64(void);
+#endif
 
 
 
@@ -186,6 +188,13 @@ main(int argc, char *argv[])
   print_reset_causes();
 
   netstack_init();
+  
+#if BOARD == SAMR21_XPLAINED_PRO
+eui64 = edbg_eui_read_eui64();
+SetIEEEAddr(eui64);
+#else
+SetIEEEAddr(node_mac);
+#endif
 
   set_link_addr();
 

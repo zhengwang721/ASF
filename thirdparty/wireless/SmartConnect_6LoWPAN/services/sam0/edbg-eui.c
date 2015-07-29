@@ -36,6 +36,13 @@
 
 #include "asf.h"
 
+#if _DEBUG_
+#include <stdio.h>
+#define PRINTF(...) printf(__VA_ARGS__)
+#else
+#define PRINTF(...)
+#endif
+
 
   /*
     4.3.1 Information Interface
@@ -127,12 +134,12 @@ edbg_eui_read_eui64(void)
 	    edbg_status = i2c_master_write_packet_wait_no_stop(&i2c_master_instance, &packet);
 	    if(edbg_status==STATUS_ERR_BAD_ADDRESS)
 		{
-		printf("I2C Slave Not Available");
+		PRINTF("I2C Slave Not Available");
 		random_mac_address = true;
 	    break;
 		}
 		if(timeout++ == TIMEOUT) {
-		printf("Timeout 1\n");
+		PRINTF("Timeout 1\n");
 		random_mac_address = true;		
 		break;
 		}
@@ -146,13 +153,13 @@ edbg_eui_read_eui64(void)
 	  edbg_status = i2c_master_read_packet_wait(&i2c_master_instance, &packet) ;
 	    if(edbg_status==STATUS_ERR_BAD_ADDRESS)
 	    {			
-			printf("I2C Slave Not Available");
+			PRINTF("I2C Slave Not Available");
 			random_mac_address = true;	
 		    break;
 	    }
 		if(timeout++ == TIMEOUT) {
 			random_mac_address = true;	
-			printf("Timeout 2\n");
+			PRINTF("Timeout 2\n");
 			break;
 		}		
   } while (edbg_status!=STATUS_OK && edbg_status!=0xFF);

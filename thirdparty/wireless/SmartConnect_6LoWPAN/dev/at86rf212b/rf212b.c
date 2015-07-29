@@ -243,7 +243,6 @@ system_interrupt_enable_global();
   trx_bit_write(SR_MAX_CSMA_RETRIES, 7);
 #endif  
   SetPanId(IEEE802154_CONF_PANID);
-  SetIEEEAddr(node_mac);  
   rf_generate_random_seed();
   /* start the radio process */
   process_start(&rf212_radio_process, NULL);

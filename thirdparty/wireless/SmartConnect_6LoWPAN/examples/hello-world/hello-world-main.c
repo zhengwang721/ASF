@@ -1,4 +1,4 @@
-﻿/**
+/**
 * Copyright (c) 2015 Atmel Corporation and 2012 – 2013, Thingsquare, http://www.thingsquare.com/. All rights reserved. 
 *  
 * Redistribution and use in source and binary forms, with or without 
@@ -123,7 +123,10 @@ void watchdog_early_warning_callback(void);
 void configure_gclock_generator(void);
 void configure_wdt_callbacks(void);
 
-
+#if BOARD == SAMR21_XPLAINED_PRO
+uint8_t *edbg_eui_read_eui64(void);
+#endif
+uint8_t *eui64;
 
 
 uint8_t	sent_packets=0;
@@ -186,6 +189,12 @@ main(int argc, char *argv[])
   printf("\r\n\n\n\n Starting the SmartConnect-6LoWPAN \r\n Platform : Atmel IoT device \r\n");
   print_reset_causes();
   netstack_init();
+#if BOARD == SAMR21_XPLAINED_PRO
+  eui64 = edbg_eui_read_eui64();
+  SetIEEEAddr(eui64);
+#else
+  SetIEEEAddr(node_mac);  
+#endif  
   set_link_addr();  
   rf_set_channel(RF_CHANNEL);
   printf("\r\n Configured RF channel: %d\r\n", rf_get_channel());
