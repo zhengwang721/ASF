@@ -141,7 +141,7 @@
 			<build type="module-config" subtype="required-header-file" value="conf_spi_master.h"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="mega.drivers.spi"/>
-			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
+			<generator value="doxygen-module" default-mcu="unspecified-megarf"/>
 		</module>
 	</select-by-device>
 
