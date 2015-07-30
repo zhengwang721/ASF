@@ -50,51 +50,8 @@ static void delay_cycle(uint32_t cycles)
 {
 	volatile uint32_t i = 0;
 	
-	for (i=0; i < cycles*100; i++) {
-		__NOP();
-	}
-}
-
-
-/**
- * \internal Get the set or clear status
- */
-static enum aon_sleep_timer_status_code _aon_sleep_timer_get_reload_status(void)
-{
-	uint32_t regval = AON_SLEEP_TIMER0->CONTROL.bit.SLP_TIMER_CLK_RELOAD_DLY;
-	
-	switch (regval) {
-	case 0:
-		return AON_SLEEP_TIMER_CLEAR_COMPLETE;
-	case 1:
-		return AON_SLEEP_TIMER_SET_PROCESS;
-	case 2:
-		return AON_SLEEP_TIMER_CLEAR_PROCESS;
-	case 3:
-		return AON_SLEEP_TIMER_SET_COMPLETE;
-	default:
-		return AON_SLEEP_TIMER_CLEAR_ERR;
-	}
-}
-
-/**
- * \internal Get the set or clear status
- */
-static enum aon_sleep_timer_status_code _aon_sleep_timer_get_single_status(void)
-{
-	uint32_t regval = AON_SLEEP_TIMER0->CONTROL.bit.SLP_TIMER_SINGLE_COUNT_ENABLE_DLY;
-	
-	switch (regval) {
-	case 0:
-		return AON_SLEEP_TIMER_CLEAR_COMPLETE;
-	case 2:
-		return AON_SLEEP_TIMER_SET_PROCESS;
-	case 4:
-		return AON_SLEEP_TIMER_CLEAR_PROCESS;
-	case 7:
-		return AON_SLEEP_TIMER_SET_COMPLETE;
-	default:
-		return AON_SLEEP_TIMER_CLEAR_ERR;
+	for (i = 0; i < cycles*100; i++) {
+		asm volatile ("nop");
 	}
 }
 
@@ -111,7 +68,7 @@ static enum aon_sleep_timer_status_code _aon_sleep_timer_get_single_status(void)
 void aon_sleep_timer_get_config_defaults(struct aon_sleep_timer_config *config)
 {
 	/* Default configuration values */
-	config->wakeup = AON_SLEEP_TIMER_WAKEUP_DIS;
+	config->wakeup = AON_SLEEP_TIMER_WAKEUP_EN;
 	config->mode = AON_SLEEP_TIMER_SINGLE_MODE;
 	config->counter = 32000;
 }
@@ -136,11 +93,11 @@ void aon_sleep_timer_init(const struct aon_sleep_timer_config *config)
 	}
 	
 	aon_st_ctrl = AON_SLEEP_TIMER0->CONTROL.reg;
-	while (aon_st_ctrl & ((1UL<<31) -1)) {
+	while (aon_st_ctrl & ((1UL << 31) - 1)) {
 		AON_SLEEP_TIMER0->CONTROL.reg = 0;
 		delay_cycle(3);
 		while (aon_st_ctrl & ((config->mode == AON_SLEEP_TIMER_RELOAD_MODE) ?
-				(1<<9) : (1<<14))) {
+				(1 << 9) : (1 << 14))) {
 			aon_st_ctrl = AON_SLEEP_TIMER0->CONTROL.reg;
 		}
 		aon_st_ctrl = AON_SLEEP_TIMER0->CONTROL.reg;
@@ -157,10 +114,11 @@ void aon_sleep_timer_init(const struct aon_sleep_timer_config *config)
 	
 	aon_st_ctrl = AON_SLEEP_TIMER0->CONTROL.reg;
 	if (config->mode == AON_SLEEP_TIMER_SINGLE_MODE) {
-		while (_aon_sleep_timer_get_single_status() != AON_SLEEP_TIMER_SET_COMPLETE);
+		while ((AON_SLEEP_TIMER0->CONTROL.reg & 
+				AON_SLEEP_TIMER_CONTROL_SLP_TIMER_SINGLE_COUNT_ENABLE_DLY_Msk)
+				!= AON_SLEEP_TIMER_CONTROL_SLP_TIMER_SINGLE_COUNT_ENABLE_DLY_Msk) {
+		}
 		AON_SLEEP_TIMER0->CONTROL.reg = 0;
-	} else {
-		while (_aon_sleep_timer_get_reload_status() != AON_SLEEP_TIMER_SET_COMPLETE);
 	}
 }
 
@@ -169,7 +127,7 @@ void aon_sleep_timer_init(const struct aon_sleep_timer_config *config)
  *
  * AON Sleep Timer module instance disable.
  */
-void aon_sleep_tiemer_disable(void)
+void aon_sleep_timer_disable(void)
 {
 	uint32_t regval;
 	
@@ -204,17 +162,6 @@ bool aon_sleep_timer_sleep_timer_active(void)
 {
 	return AON_SLEEP_TIMER0->CONTROL.bit.SLEEP_TIMER_ACTIVE;
 }
-
-/**
- * \brief If AON Sleep Timer is not active
- *
- * \return Not active status of the AON Sleep Timer.
- */
-bool aon_sleep_timer_sleep_timer_not_active(void)
-{
-	return AON_SLEEP_TIMER0->CONTROL.bit.SLEEP_TIMER_NOT_ACTIVE;
-}
-
 
 /**
  * \brief Clear AON Sleep Timer module instance interrupt.

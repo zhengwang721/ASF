@@ -53,18 +53,6 @@ extern "C" {
 #endif
 
 /**
- * \brief Status code is description of AON Sleep Timer
- * current set or clear operation status.
- */
-enum aon_sleep_timer_status_code {
-	AON_SLEEP_TIMER_SET_COMPLETE = 0,
-	AON_SLEEP_TIMER_CLEAR_COMPLETE,
-	AON_SLEEP_TIMER_SET_PROCESS,
-	AON_SLEEP_TIMER_CLEAR_PROCESS,
-	AON_SLEEP_TIMER_CLEAR_ERR,
-};
-
-/**
  * \brief Specifies the counter mode is reload or single mode.
  *
  * This enum specifies counter with reload or single mode.
@@ -105,11 +93,10 @@ struct aon_sleep_timer_config {
 
 void aon_sleep_timer_get_config_defaults(struct aon_sleep_timer_config *config);
 void aon_sleep_timer_init(const struct aon_sleep_timer_config *config);
-void aon_sleep_tiemer_disable(void);
+void aon_sleep_timer_disable(void);
 uint32_t aon_sleep_timer_get_current_value(void);
 void aon_sleep_timer_clear_interrup(void);
 bool aon_sleep_timer_sleep_timer_active(void);
-bool aon_sleep_timer_sleep_timer_not_active(void);
 
 #ifdef __cplusplus
 }
