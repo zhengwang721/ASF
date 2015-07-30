@@ -87,21 +87,23 @@ static void configure_wdt(void)
 int main(void)
 {
 	uint32_t current_value;
-	uint16_t i;
+	uint16_t i, j;
 
 	//system_init();
 
 	//! [setup_init]
 	configure_gpio();
+	for(i = 0; i < 5; i++) {
+		gpio_pin_toggle_output_level(LED_0_PIN);
+		for (j = 0; j < 5000; j++) {
+			/* Delay time */
+		}
+	}
 	configure_wdt();
 	//! [setup_init]
 
-
 	//! [main]
 	//! [main_1]
-	for(i = 0; i < 5; i++) {
-		gpio_pin_toggle_output_level(LED_0_PIN);
-	}
 	gpio_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
 	//! [main_1]
 	//! [main_2]
