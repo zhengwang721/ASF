@@ -114,24 +114,7 @@ void usart_init_spi(USART_t *usart, const usart_spi_options_t *opt)
 
 	usart_enable_module_clock(usart);
 	usart_set_mode(usart, USART_CMODE_MSPI_gc);
-	port_pin_t sck_pin;
 
-#ifdef USARTA0
-	if ((uintptr_t)usart == (uintptr_t)&UCSR0A) {
-		sck_pin = IOPORT_CREATE_PIN(PORTE, 2);
-		ioport_configure_port_pin(ioport_pin_to_port(sck_pin),
-				ioport_pin_to_mask(sck_pin),
-				IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH );
-	}
-#endif
-#ifdef USARTA1
-	if ((uintptr_t)usart == (uintptr_t)&UCSR1A) {
-		sck_pin = IOPORT_CREATE_PIN(PORTD, 5);
-		ioport_configure_port_pin(ioport_pin_to_port(sck_pin),
-				ioport_pin_to_mask(sck_pin),
-				IOPORT_DIR_OUTPUT | IOPORT_INIT_HIGH );
-	}
-#endif
 	if (opt->spimode == 1 || opt->spimode == 3) {
 		usart->UCSRnC |= USART_UCPHA_bm;
 	} else {

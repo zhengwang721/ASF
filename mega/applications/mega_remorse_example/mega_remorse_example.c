@@ -563,7 +563,7 @@ static void morse_poll (void)
 
 	/* shift in the current state of the button */
 
-	button_hist = (button_hist<<1) | !ioport_get_pin_level(GPIO_PUSH_BUTTON_0) | 0xf0;
+	button_hist = (button_hist<<1) | (!ioport_get_pin_level(GPIO_PUSH_BUTTON_0)) | 0xf0;
 	// all samples are button down
 	if (button_hist == 0xff) {
 		// light the LED for user feedback
