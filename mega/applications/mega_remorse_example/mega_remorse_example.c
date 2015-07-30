@@ -252,10 +252,10 @@ int main (void)
 	char rc;
 
 	/* set up the IO pins */
-	board_init();							
+	board_init();
 
 	/* start with the LED off */
-	LED_Off(LED0);									
+	LED_Off(LED0);
 
 	/* set and enable usart */
 	const usart_rs232_options_t options ={
@@ -265,17 +265,16 @@ int main (void)
 		.stopbits   = CONF_STOPBITS
 	};
 	usart_init_rs232(&USART0, &options);
-					
 
 	/* set up the system 100Hz timer */
 	/* Set CTC compare value to 10ms @ 8Mhz Clock (Mode 4) */
-	OCR1A   = 20000;							
+	OCR1A   = 20000;
 	/* Configure timer 1 for CTC mode (Mode 4) */
-	TCCR1B	|= (1 << WGM12);	
+	TCCR1B |= (1 << WGM12);
 	/* Enable interrupt on compare match */
-	TIMSK1	|= (1 << OCIE1A);	
+	TIMSK1 |= (1 << OCIE1A);
 	/* set prescaler to 8 and starts the timer */
-	TCCR1B	|= (1 << CS11);					
+	TCCR1B |= (1 << CS11);
 
 	/* initialize ring buffers */
 	morse_rx_ring_id = rng_init (&morse_rx_ring, MORSE_RX_BUF_SIZE, morse_rx_buf);
@@ -284,37 +283,37 @@ int main (void)
 	sei(); 
 
 	/* attach the serial port to stdio streams */
-	stdout	= &tty_console;
-	stdin	= &tty_console;
-	stderr	= &tty_console;
+	stdout = &tty_console;
+	stdin  = &tty_console;
+	stderr = &tty_console;
 
 	/* encode/decode the user input to/from morse code */
 	/* loop forever (timeouts restart here) */
 	for (;;) {
 		/* print out some instructions */
-		remorse_instructions ();				
+		remorse_instructions ();
 		/* reset watchdog */
 		remorse_restart = false;
 		/* reinitialize watchdog timer */
-		remorse_wd_cnt  = 0;					
+		remorse_wd_cnt  = 0;
 
 		/* check watchdog */
 		while (!remorse_restart) {
 			/* non-blocking in this application */
-			rc = getchar ();					
+			rc = getchar ();
 
 			/* process input from serial line */
 			/* check if a character available */
 			if (!ferror(stdin)) {
 				// reinitialize watchdog timer
 				remorse_wd_cnt = 0;
-				// echo the morse code on console			
+				// echo the morse code on console
 				morse_fmtchar (rc);
 				// encode the character to morse led
-				fputc (rc, &tty_morse);		
+				fputc (rc, &tty_morse);
 			} else {
 				// no input, clear error
-				clearerr (&tty_console);		
+				clearerr (&tty_console);
 			}
 
 			/* process input from morse decoder */
@@ -322,12 +321,12 @@ int main (void)
 			// was a morse character available?
 			if (!ferror(&tty_morse)) {
 				// reinitialize watchdog timer
-				remorse_wd_cnt = 0;	
-				// print the character to console		
-				putchar (rc);					
+				remorse_wd_cnt = 0;
+				// print the character to console
+				putchar (rc);
 			} else {
 				// no input, clear error
-				clearerr (&tty_morse);		
+				clearerr (&tty_morse);
 			}
 		}   
 	} 
@@ -346,7 +345,7 @@ int main (void)
 static int bsp_tty_putchar(char c, FILE *stream)
 {
 	// handle linefeed - carriage return
-	if (c == '\n') {							
+	if (c == '\n') {
 		bsp_tty_putchar('\r', stream);
 	}
 	
@@ -355,9 +354,9 @@ static int bsp_tty_putchar(char c, FILE *stream)
 	};
 
 	// transmit character
-	usart_put(&USART0, c);									
+	usart_put(&USART0, c);
 	// transmit success
-	return (0);									
+	return (0);
 }
 
 /**
@@ -370,14 +369,14 @@ static int bsp_tty_putchar(char c, FILE *stream)
 static int bsp_tty_getchar(FILE *stream)
 {
 	if (!usart_rx_is_complete(&USART0)) {
-		// No character available, so we return error	
+		// No character available, so we return error
 		return (_FDEV_ERR);
 	}	
 
 	// Record the fact that we have received input
 	user_input = true;
-	// Return the received character	
-	return usart_get(&USART0);							
+	// Return the received character
+	return usart_get(&USART0);
 }
 
 /**
@@ -401,17 +400,17 @@ static int bsp_morse_putchar(char c, FILE *stream)
 		while (mask != 0) {
 			if (morse_ascii_tbl[index][1] & mask) {
 				// DIT
-				LED_On(LED0);	
+				LED_On(LED0);
 				// DIT length is one unit
-				_delay_ms (DOT_TIME_IN_MS);	
+				_delay_ms (DOT_TIME_IN_MS);
 			} else {
 				// DASH
 				LED_On(LED0);
-				// DASH length is three units				
-				_delay_ms (3 * DOT_TIME_IN_MS);	
+				// DASH length is three units
+				_delay_ms (3 * DOT_TIME_IN_MS);
 			}
 			// DIT or DASH is finished
-			LED_Off(LED0);							
+			LED_Off(LED0);
 
 			// Delay between parts of same letter is one unit
 			_delay_ms (DOT_TIME_IN_MS);
@@ -422,7 +421,7 @@ static int bsp_morse_putchar(char c, FILE *stream)
 		_delay_ms (2 * DOT_TIME_IN_MS);
 	}
 	// transmit success
-	return (0);								
+	return (0);
 }
 
 /**
@@ -437,10 +436,10 @@ static int bsp_morse_getchar(FILE *stream)
 
 	if (rng_buf_get (morse_rx_ring_id, &morse_char, 1) == 1){
 		// return next character
-		return (morse_char);					
+		return (morse_char);
 	}
 	// No character available, so we return error
-	return (_FDEV_ERR);							
+	return (_FDEV_ERR);
 }
 
 /**
@@ -488,7 +487,7 @@ static char morse_parse (uint8_t pattern, int len)
 	}
 	/* pattern not found! */
 	// return asterix as error indicator (not a morse character)
-	return ('*');					
+	return ('*');
 }
 
 /**
@@ -514,8 +513,8 @@ static void remorse_instructions (void)
 		morse_fmtchar ('L'); fputc ('L', &tty_morse);
 	}
 	// prompt for serial input
-	printf_P (PSTR("\n-> "));					
-	}
+	printf_P (PSTR("\n-> "));
+}
 
 /**
  * Interrupt Service Routines
@@ -530,13 +529,13 @@ static void remorse_instructions (void)
 ISR(TIMER1_COMPA_vect)
 {
 	// always advance remorse tick count
-	++remorse_tick_cnt;							
+	++remorse_tick_cnt;
 	// fire watchdog on timeout
-	if (++remorse_wd_cnt > REMORSE_TIMEOUT)	{	
+	if (++remorse_wd_cnt > REMORSE_TIMEOUT)	{
 		remorse_restart = true;
 	}
 	// poll for morse input
-	morse_poll ();								
+	morse_poll ();
 }
 
 /**
@@ -545,14 +544,22 @@ ISR(TIMER1_COMPA_vect)
 
 static void morse_poll (void)
 {
-	static uint8_t	morse_code      = 0;		// built up morse code input
-	static uint8_t	morse_code_len  = 0;		// morse code length
-	static uint8_t	button_hist     = 0;		// 8 sample button history
-	static bool     button_down     = false;	// current state of button
-	static uint32_t	tick_down       = 0;		// tick when button released
-	static uint32_t	tick_up	        = 0;		// tick when button pressed
-	static uint32_t	duration        = 0;		// ticks with button down
-	static uint32_t	space           = 0;		// ticks with button up
+	// built up morse code input
+	static uint8_t	morse_code      = 0;
+	// morse code length
+	static uint8_t	morse_code_len  = 0;
+	// 8 sample button history
+	static uint8_t	button_hist     = 0;
+	// current state of button
+	static bool button_down         = false;
+	// tick when button released
+	static uint32_t	tick_down       = 0;
+	// tick when button pressed
+	static uint32_t	tick_up	        = 0;
+	// ticks with button down
+	static uint32_t	duration        = 0;
+	// ticks with button up
+	static uint32_t	space           = 0;
 
 	/* shift in the current state of the button */
 
@@ -561,15 +568,15 @@ static void morse_poll (void)
 	if (button_hist == 0xff) {
 		// light the LED for user feedback
 		LED_On(LED0);
-		// we have interaction	
-		user_input = true;						
+		// we have interaction
+		user_input = true;
 
 		// are we changing state?
 		if (!button_down) {
 			// set debounced button state
 			button_down = true;
 			// timestamp the button press
-			tick_down   = remorse_tick_cnt;		
+			tick_down   = remorse_tick_cnt;
 		}
 
 		duration = remorse_tick_cnt - tick_down;
@@ -578,28 +585,28 @@ static void morse_poll (void)
 		if (duration > REMORSE_RESTART)	{
 			// erase current code
 			morse_code_len = 0;
-			// erase last code			
-			morse_code     = 0;			
+			// erase last code
+			morse_code     = 0;
 			// flush the morse input ring
-			rng_flush (morse_rx_ring_id);	
+			rng_flush (morse_rx_ring_id);
 			// start from begining
 			user_input    = false;
 			// RESTART REMORSE
-			remorse_restart = true;			
+			remorse_restart = true;
 		}
-	} else if (button_hist == 0xf0)	{
+	} else if (button_hist == 0xf0){
 		// all samples are button up
 		if (button_down) {
 			// turn off LED between morse keys
-			LED_Off(LED0);							
+			LED_Off(LED0);
 			// set debounced button state
 			button_down = false;
 			// timestamp button release
-			tick_up	    = remorse_tick_cnt;		
+			tick_up     = remorse_tick_cnt;
 
 			/* emit the right code based on click duration */
 
-			duration = tick_up - tick_down;	
+			duration = tick_up - tick_down;
 
 			if (duration <= (2 * DOT_TIME_IN_TICKS)) {
 				morse_code = (morse_code << 1) | 1;
@@ -634,9 +641,9 @@ static void morse_poll (void)
 		rng_buf_put (morse_rx_ring_id, &morse_char, 1);
 		rng_buf_put (morse_rx_ring_id, "]", 1);
 		// get ready for next letter
-		morse_code_len	= 0;	
+		morse_code_len = 0;
 		// erase last code
-		morse_code      = 0;					
+		morse_code     = 0;
 	} else if (space == (10 * DOT_TIME_IN_TICKS)) {
 		// word separator
 		rng_buf_put (morse_rx_ring_id, " [ ]", 4);
@@ -663,13 +670,13 @@ static void morse_poll (void)
 RING_ID rng_init (RING * p_ring, int nbytes, char *buffer)
 {
 	/* RING_ID is simply a pointer to RING */
-	RING_ID ring_id = p_ring;		
+	RING_ID ring_id = p_ring;
 
 	/* bump number of bytes requested because ring buffer algorithm
 	 * always leaves at least one empty byte in buffer */
 
 	ring_id->buf_size = nbytes + 1;
-	ring_id->buf	  = buffer;
+	ring_id->buf  = buffer;
 
 	rng_flush (ring_id);
 
@@ -902,7 +909,7 @@ void rng_put_ahead (RING_ID ring_id, char byte, int offset)
  * the ring buffer with rng_put_ahead().
  *
  * \param[in] ring_id  ring buffer to be advanced
- * \param[in] n	       number of bytes ahead to move input pointer
+ * \param[in] n        number of bytes ahead to move input pointer
  */
 
 void rng_move_ahead (RING_ID ring_id, int n)
