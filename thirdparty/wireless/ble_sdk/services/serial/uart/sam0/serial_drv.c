@@ -57,7 +57,7 @@ static void serial_drv_write_cb(struct usart_module *const usart_module);
 
 
 /* === GLOBALS ========================================================== */
-static struct usart_module usart_instance;
+struct usart_module usart_instance;
 
 ser_fifo_desc_t ble_usart_tx_fifo;
 uint8_t ble_usart_tx_buf[BLE_MAX_TX_PAYLOAD_SIZE];

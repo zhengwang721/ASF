@@ -1,0 +1,23 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="BLE DTM APPLICATION" id="thirdparty.wireless.ble_sdk.apps.ble_dtm">
+		<info type="description" value="summary">
+		BLE DTM
+		</info>
+		<build type="c-source" value="main.c"/>
+		<require idref="thirdparty.wireless.ble_sdk.lib"/>
+		<require idref="thirdparty.wireless.ble_sdk.inc"/>
+		<require idref="thirdparty.wireless.ble_sdk.src"/>
+		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
+		<require idref="thirdparty.wireless.ble_sdk.services.serial_bridge"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		
+		<info type="keyword" value="technology">
+			<keyword value="Wireless"/>
+			<keyword value="Communication"/>
+			<keyword value="BLE"/>
+			<keyword value="Bluetooth"/>
+		</info>
+
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>
