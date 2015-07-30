@@ -17,6 +17,6 @@
 		<device-support value="samv71"/>
 		<device-support value="same70"/>
 		<device-support value="sams70"/>
-		<generator value="doxygen-module" default-mcu="unspecified-sam3x"/>
+		<generator value="doxygen-module" default-mcu="unspecified-samv71"/>
 	</module>
 </asf>
