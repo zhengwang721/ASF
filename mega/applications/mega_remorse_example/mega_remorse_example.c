@@ -103,13 +103,13 @@
  */
 typedef struct {
 	/** Offset from start of buffer where to write next. */
-	int 	p_to_buf;
+	int  p_to_buf;
 	/** Offset from start of buffer where to read next. */
-	int 	p_from_buf;
+	int  p_from_buf;
 	/** Size of ring in bytes. */
-	int 	buf_size;
+	int  buf_size;
 	/** Pointer to start of buffer. */
-	char *	buf;
+	char *buf;
 	} RING;
 
 typedef RING *RING_ID;
@@ -545,21 +545,21 @@ ISR(TIMER1_COMPA_vect)
 static void morse_poll (void)
 {
 	// built up morse code input
-	static uint8_t	morse_code      = 0;
+	static uint8_t  morse_code      = 0;
 	// morse code length
-	static uint8_t	morse_code_len  = 0;
+	static uint8_t  morse_code_len  = 0;
 	// 8 sample button history
-	static uint8_t	button_hist     = 0;
+	static uint8_t  button_hist     = 0;
 	// current state of button
-	static bool button_down         = false;
+	static bool     button_down     = false;
 	// tick when button released
-	static uint32_t	tick_down       = 0;
+	static uint32_t tick_down       = 0;
 	// tick when button pressed
-	static uint32_t	tick_up	        = 0;
+	static uint32_t tick_up         = 0;
 	// ticks with button down
-	static uint32_t	duration        = 0;
+	static uint32_t duration        = 0;
 	// ticks with button up
-	static uint32_t	space           = 0;
+	static uint32_t space           = 0;
 
 	/* shift in the current state of the button */
 
