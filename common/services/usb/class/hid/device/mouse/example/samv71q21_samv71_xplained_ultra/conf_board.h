@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Main functions for USB host mouse example
+ * \brief Board configuration
  *
- * Copyright (C) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,68 +44,10 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#include <asf.h>
-#include "conf_usb_host.h"
-#include "ui.h"
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/*! \brief Main function. Execution starts here.
- */
-int main(void)
-{
-#if SAMD21 || SAML21 || SAMDA1
-	system_init();
-#else
-	sysclk_init();
-	board_init();
-#endif
-	irq_initialize_vectors();
-	cpu_irq_enable();
+// USB pins are used
+#define CONF_BOARD_USB_PORT
 
-	// Initialize the sleep manager
-	sleepmgr_init();
-
-	ui_init();
-
-	// Start USB host stack
-	uhc_start();
-
-	// The USB management is entirely managed by interrupts.
-	// As a consequence, the user application does only have to play with the power modes.
-	while (true) {
-		//sleepmgr_enter_sleep();
-	}
-}
-
-
-/**
- * \mainpage ASF USB host HID mouse
- *
- * \section intro Introduction
- * This example shows how to implement a USB host HID mouse
- * on Atmel MCU with USB module.
- * The application note AVR4953 provides information about this implementation.
- *
- * \section startup Startup
- * After loading firmware, connect the board (EVKxx,Xplain,...) to a USB device mouse.
- *
- * \copydoc UI
- *
- * \section example About example
- *
- * The example uses the following module groups:
- * - Basic modules:
- *   Startup, board, clock, interrupt, power management
- * - USB host stack and HID modules:
- *   <br>services/usb/
- *   <br>services/usb/uhc/
- *   <br>services/usb/class/hid/
- *   <br>services/usb/class/hid/host/mouse/
- * - Specific implementation:
- *    - main.c,
- *      <br>initializes clock
- *      <br>initializes interrupt
- *      <br>manages UI
- *    - specific implementation for each target "./examples/product_board/":
- *       - conf_foo.h   configuration of each module
- *       - ui.c        implement of user's interface (buttons, leds)
- */
+#endif /* CONF_BOARD_H_INCLUDED */
