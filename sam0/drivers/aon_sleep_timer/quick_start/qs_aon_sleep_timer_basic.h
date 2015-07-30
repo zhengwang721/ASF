@@ -81,14 +81,31 @@
  * -# Set the LED on.
  *    \snippet qs_aon_sleep_timer_basic.c setup_5
  *
- * -# Initial the AON Sleep Timer module.
+ * -# Create a new function \c configure_aon_sleep_timer(), which will be used to configure
+ *    the AON Sleep Timer peripheral.
  *    \snippet qs_aon_sleep_timer_basic.c timer_init
+ *
+ * -# Create a AON Sleep Timer module configuration struct, which can be filled out to
+ *    adjust the configuration of a physical  AON Sleep Timer peripheral.
+ *    \snippet qs_aon_sleep_timer_basic.c setup_6
+ *
+ * -# Initialize the  AON Sleep Timer configuration struct with the module's default values.
+ *    \snippet qs_aon_sleep_timer_basic.c setup_7
+ *
+ * -# Configure the AON Sleep Timer module with the desired settings.
+ *    \snippet qs_aon_sleep_timer_basic.c setup_8
+ *
+ * -# Initialize and enable the AON Sleep Timer module.
+ *    \snippet qs_aon_sleep_timer_basic.c setup_9
+ *
+ * -# Enable the AON Sleep Timer interrupt.
+ *    \snippet qs_aon_sleep_timer_basic.c setup_10
  *
  * -# Waiting for the AON Sleep Timer module active.
  *    \snippet qs_aon_sleep_timer_basic.c timer_active
  *
- * -# Waiting for the AON Sleep Timer module current counter down to 0.
- *    \snippet qs_aon_sleep_timer_basic.c timer_value
+ * -# Waiting for the AON Sleep Timer interrupt.
+ *    \snippet qs_aon_sleep_timer_basic.c wait_wfi
  *
  * -# Turn the activity status LED off.
  *    \snippet qs_aon_sleep_timer_basic.c led_off

@@ -5,7 +5,7 @@
 		<require idref="sam0.drivers.aon_sleep_timer.quick_start"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
-		<build type="header-file" value="conf_quick_start.h"/>
+		<build type="header-file" value="conf_aon_sleep_timer.h"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>

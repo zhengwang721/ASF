@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM DUALTIMER Driver for SAMB11
+ * \brief SAM AON Sleep Timer Driver for SAMB11
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -98,6 +98,23 @@ static enum aon_sleep_timer_status_code _aon_sleep_timer_get_single_status(void)
 	}
 }
 
+/**
+ * \brief Initializes config with predefined default values.
+ *
+ * This function will initialize a given AON Sleep Timer configuration structure to
+ * a set of known default values. This function should be called on
+ * any new instance of the configuration structures before being
+ * modified by the user application.
+ *
+ * \param[out]  config  Pointer to a AON Sleep Timer module configuration structure to set
+ */
+void aon_sleep_timer_get_config_defaults(struct aon_sleep_timer_config *config)
+{
+	/* Default configuration values */
+	config->wakeup = AON_SLEEP_TIMER_WAKEUP_DIS;
+	config->mode = AON_SLEEP_TIMER_SINGLE_MODE;
+	config->counter = 32000;
+}
 
 /**
  * \brief Initializes AON Sleep Timer module instance.
@@ -105,18 +122,15 @@ static enum aon_sleep_timer_status_code _aon_sleep_timer_get_single_status(void)
  * Initializes the AON Sleep Timer module, based on the parameters,
  * and start timer.
  *
- * \param[in]     wakeup       Enable/disable ARM wakeup
- * \param[in]     mode         Reload or single
- * \param[in]     counter      Interval counter
+ * \param[in]     config       Pointer to the AON Sleep Timer configuration options struct
  *
  */
-void aon_sleep_timer_init(enum aon_sleep_timer_wakeup wakeup,
-		enum aon_sleep_timer_mode mode, uint32_t counter)
+void aon_sleep_timer_init(const struct aon_sleep_timer_config *config)
 {
 	uint32_t aon_st_ctrl = 0;
 
 	(*(volatile uint32_t *)(0x4000E00C)) = 0;
-	if (wakeup == AON_SLEEP_TIMER_WAKEUP_EN) {
+	if (config->wakeup == AON_SLEEP_TIMER_WAKEUP_EN) {
 		/* Enable ARM wakeup */
 		(*(volatile uint32_t *)(0x4000E00C)) = 1;
 	}
@@ -125,15 +139,15 @@ void aon_sleep_timer_init(enum aon_sleep_timer_wakeup wakeup,
 	while (aon_st_ctrl & ((1UL<<31) -1)) {
 		AON_SLEEP_TIMER0->CONTROL.reg = 0;
 		delay_cycle(3);
-		while (aon_st_ctrl & ((mode == AON_SLEEP_TIMER_RELOAD_MODE) ?
+		while (aon_st_ctrl & ((config->mode == AON_SLEEP_TIMER_RELOAD_MODE) ?
 				(1<<9) : (1<<14))) {
 			aon_st_ctrl = AON_SLEEP_TIMER0->CONTROL.reg;
 		}
 		aon_st_ctrl = AON_SLEEP_TIMER0->CONTROL.reg;
 	}
 	
-	AON_SLEEP_TIMER0->SINGLE_COUNT_DURATION.reg = counter;
-	if (mode == AON_SLEEP_TIMER_RELOAD_MODE) {
+	AON_SLEEP_TIMER0->SINGLE_COUNT_DURATION.reg = config->counter;
+	if (config->mode == AON_SLEEP_TIMER_RELOAD_MODE) {
 		/* Reload counter will start here */
 		AON_SLEEP_TIMER0->CONTROL.reg = AON_SLEEP_TIMER_CONTROL_RELOAD_ENABLE;
 	} else {
@@ -142,7 +156,7 @@ void aon_sleep_timer_init(enum aon_sleep_timer_wakeup wakeup,
 	}
 	
 	aon_st_ctrl = AON_SLEEP_TIMER0->CONTROL.reg;
-	if (mode == AON_SLEEP_TIMER_SINGLE_MODE) {
+	if (config->mode == AON_SLEEP_TIMER_SINGLE_MODE) {
 		while (_aon_sleep_timer_get_single_status() != AON_SLEEP_TIMER_SET_COMPLETE);
 		AON_SLEEP_TIMER0->CONTROL.reg = 0;
 	} else {

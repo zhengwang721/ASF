@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM TIMER Driver Quick Start for SAMB11
+ * \brief SAM AON Sleep Timer Driver Quick Start for SAMB11
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,26 +44,46 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
-#include "conf_quick_start.h"
+#include "conf_aon_sleep_timer.h"
 
 //! [setup]
 static void configure_gpio_pins(void)
 {
-	//! [setup_1]
+//! [setup_1]
 	struct gpio_config config_gpio_pin;
-	//! [setup_1]
-	//! [setup_2]
+//! [setup_1]
+//! [setup_2]
 	gpio_get_config_defaults(&config_gpio_pin);
-	//! [setup_2]
-	//! [setup_3]
+//! [setup_2]
+//! [setup_3]
 	config_gpio_pin.direction = GPIO_PIN_DIR_OUTPUT;
-	//! [setup_3]
-	//! [setup_4]
+//! [setup_3]
+//! [setup_4]
 	gpio_pin_set_config(LED_0_PIN, &config_gpio_pin);
-	//! [setup_4]
-	//! [setup_5]	
+//! [setup_4]
+//! [setup_5]	
 	gpio_pin_set_output_level(LED_0_PIN, false);
-	//! [setup_5]
+//! [setup_5]
+}
+
+static void configure_aon_sleep_timer(void)
+{
+//! [setup_6]
+	struct aon_sleep_timer_config config_aon_sleep_timer;
+//! [setup_6]
+//! [setup_7]
+	aon_sleep_timer_get_config_defaults(&config_aon_sleep_timer);
+//! [setup_7]
+//! [setup_8]
+	config_aon_sleep_timer.counter = CONF_AON_SLEEP_COUNTER;
+//! [setup_8]
+//! [setup_9]
+	aon_sleep_timer_init(&config_aon_sleep_timer);
+//! [setup_9]
+//! [setup_10]	
+	/* AON_SLEEP_TIMER_IRQn is not defined in sam.h now */
+	NVIC_EnableIRQ(27);
+//! [setup_10]
 }
 //! [setup]
 
@@ -76,15 +96,15 @@ int main(void)
 	configure_gpio_pins();
 //! [gpio_init]
 //! [timer_init]
-	aon_sleep_timer_init(AON_SLEEP_TIMER_WAKEUP_EN,
-			AON_SLEEP_TIMER_SINGLE_MODE, CONF_AON_SLEEP_RELOAD_COUNTER);
+	configure_aon_sleep_timer();
 //! [timer_init]
 //! [timer_active]
 	while(!aon_sleep_timer_sleep_timer_active());
 //! [timer_active]
-//! [timer_value]
-	while (aon_sleep_timer_get_current_value());
-//! [timer_value]
+//! [wait_wfi]
+	asm volatile ("wfi");
+	asm volatile ("nop");
+//! [wait_wfi]
 //! [led_off]
 	gpio_pin_set_output_level(LED_0_PIN, true);
 //! [led_off]

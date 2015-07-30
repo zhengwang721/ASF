@@ -88,8 +88,23 @@ enum aon_sleep_timer_wakeup {
 	AON_SLEEP_TIMER_WAKEUP_DIS,
 };
 
-void aon_sleep_timer_init(enum aon_sleep_timer_wakeup wakeup,
-		enum aon_sleep_timer_mode mode, uint32_t counter);
+/**
+ *  \brief AON Sleep Timer configuration structure.
+ *
+ *  Configuration structure for a AON Sleep Timer instance. This structure should be
+ *  initialized by the \ref aon_sleep_timer_get_config_defaults() function before being
+ *  modified by the user application.
+ */
+struct aon_sleep_timer_config {
+	/** Enable or disable ARM wakeup */
+	enum aon_sleep_timer_wakeup wakeup;
+	/** Counter is reload or single mode */
+	enum aon_sleep_timer_mode mode;
+	uint32_t counter;
+};
+
+void aon_sleep_timer_get_config_defaults(struct aon_sleep_timer_config *config);
+void aon_sleep_timer_init(const struct aon_sleep_timer_config *config);
 void aon_sleep_tiemer_disable(void);
 uint32_t aon_sleep_timer_get_current_value(void);
 void aon_sleep_timer_clear_interrup(void);
