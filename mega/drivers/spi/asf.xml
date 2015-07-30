@@ -13,6 +13,6 @@
 		<build type="doxygen-entry-point" value="group_megarf_drivers_spi"/>
 		<device-support value="megarf"/>
 		<require idref="mega.utils"/>
-		<generator value="doxygen-module" default-mcu="unspecified-mega"/>
+		<generator value="doxygen-module" default-mcu="unspecified-megarf"/>
 	</module>
 </asf>
