@@ -106,17 +106,17 @@ typedef struct {
 	int 	p_to_buf;
 	/** Offset from start of buffer where to read next. */
 	int 	p_from_buf;
-	/** Size of ring in bytes. */	
+	/** Size of ring in bytes. */
 	int 	buf_size;
 	/** Pointer to start of buffer. */
-	char *	buf;		
+	char *	buf;
 	} RING;
 
 typedef RING *RING_ID;
 
 /* defines */
-#define DOT_TIME_IN_TICKS    (25)	
-#define DOT_TIME_IN_MS       (DOT_TIME_IN_TICKS * 10.0)	
+#define DOT_TIME_IN_TICKS    (25)
+#define DOT_TIME_IN_MS       (DOT_TIME_IN_TICKS * 10.0)
 #define BAUD_PRESCALE        (((F_CPU / (USART_BAUDRATE * 16UL))) - 1)
 /* the clock basis for polling and sequencing */
 #define REMORSE_CLK_HZ       (100)
@@ -125,7 +125,7 @@ typedef RING *RING_ID;
 /* remorse will restart if button held this long */
 #define	REMORSE_RESTART      (400)
 /* ring buffer for decoded morse code */
-#define MORSE_RX_BUF_SIZE    (32)				
+#define MORSE_RX_BUF_SIZE    (32)
 
 /* macros */
 #define min(a,b)                \
@@ -139,83 +139,83 @@ typedef RING *RING_ID;
 /* buffer for morse characters read */
 static char                  morse_rx_buf[MORSE_RX_BUF_SIZE + 1]; 
 /* morse receive buffer ring */
-static RING                  morse_rx_ring;	
+static RING                  morse_rx_ring;
 /* morse receive buffer ring id */
-static RING_ID               morse_rx_ring_id;	
+static RING_ID               morse_rx_ring_id;
 /* Instructions print out until first character received */
 static bool                  user_input = false;
 /* incremented on each clock tick */
-static volatile uint32_t     remorse_tick_cnt;	
+static volatile uint32_t     remorse_tick_cnt;
 /* reset to zero after each user input output */
 static volatile uint32_t     remorse_wd_cnt;
 /* set by watchdog to true to restart application */
-static volatile bool         remorse_restart;	
+static volatile bool         remorse_restart;
 
 const uint8_t morse_ascii_tbl[][2] = {
-	/* Morse Hex	A	M	Morse Code		Binary		ASCII	Notes */
-	{6, 0x14},	//	!	!	– · – · – –    	010100		33	33	Exclamation mark [!]
-	{6, 0x2D},	//	"	"	· – · · – ·    	101101		34	34	Quotation mark ["]
-	{8, 0xFF},	//	#	ERR	· · · · · · · ·	11111111	35	ERR	Hash mark [#]
-	{7, 0x76},	//	$	$	· · · – · · –  	1110110		36	36	Dollar sign [$]
-	{8, 0xFF},	//	%	ERR	· · · · · · · ·	11111111	37	ERR	Percent [%]
-	{5, 0x17},	//	&	&	· – · · ·      	10111		38	38	Ampersand [&], Wait
-	{6, 0x21},	//	'	'	· – – – – ·    	100001		39	39	Apostrophe [']
-	{5, 0x09},	//	(	(	– · – – ·      	01001		40	40	Parenthesis open [(]
-	{6, 0x12},	//	)	)	– · – – · –    	010010		41	41	Parenthesis close [)]
-	{8, 0xFF},	//	*	ERR	· · · · · · · ·	11111111	42	69	Asterix [*]
-	{5, 0x15},	//	+	+	· – · – ·      	10101		43	43	Plus [+]
-	{6, 0x0C},	//	,	,	– – · · – –    	001100		44	44	Comma [,]
-	{6, 0x1E},	//	-	-	– · · · · –    	011110		45	45	Hyphen, Minus [-]
-	{6, 0x2A},	//	.	.	· – · – · –    	101010		46	46	Period [.]
-	{5, 0x0D},	//	/	/	– · · – ·      	01101		47	47	Slash [/], Fraction bar
-	{5, 0x00},	//	0	0	– – – – –      	00000		48	48	
-	{5, 0x10},	//	1	1	· – – – –      	10000		49	49	
-	{5, 0x18},	//	2	2	· · – – –      	11000		50	50	
-	{5, 0x1C},	//	3	3	· · · – –      	11100		51	51	
-	{5, 0x1E},	//	4	4	· · · · –      	11110		52	52	
-	{5, 0x1F},	//	5	5	· · · · ·      	11111		53	53	
-	{5, 0x0F},	//	6	6	– · · · ·      	01111		54	54	
-	{5, 0x07},	//	7	7	– – · · ·      	00111		55	55	
-	{5, 0x03},	//	8	8	– – – · ·      	00011		56	56	
-	{5, 0x01},	//	9	9	– – – – ·      	00001		57	57	
-	{6, 0x07},	//	:	:	– – – · · ·    	000111		58	58	Colon [:]
-	{6, 0x15},	//	;	;	– · – · – ·    	010101		59	59	Semicolon [;]
-	{8, 0xFF},	//	<	ERR	· · · · · · · ·	11111111	60	ERR	Less Than [<]
-	{5, 0x0E},	//	=	=	– · · · –      	01110		61	61	Double dash [=]
-	{8, 0xFF},	//	>	ERR	· · · · · · · ·	11111111	62	ERR	Greather Than [<]
-	{6, 0x33},	//	?	?	· · – – · ·    	110011		63	63	Question mark [?]
-	{6, 0x25},	//	@	@	· – – · – ·    	100101		64	64	At sign [@]
-	{2, 0x02},	//	A	A	· –            	10			65	65	
-	{4, 0x07},	//	B	B	– · · ·        	0111		66	66	
-	{4, 0x05},	//	C	C	– · – ·        	0101		67	67	
-	{3, 0x03},	//	D	D	– · ·          	011			68	68	
-	{1, 0x01},	//	E	E	·              	1			69	69	
-	{4, 0x0D},	//	F	F	· · – ·        	1101		70	70	
-	{3, 0x01},	//	G	G	– – ·          	001			71	71	
-	{4, 0x0F},	//	H	H	· · · ·        	1111		72	72	
-	{2, 0x03},	//	I	I	· ·            	11			73	73	
-	{4, 0x08},	//	J	J	· – – –        	1000		74	74	
-	{3, 0x02},	//	K	K	– · –          	010			75	75	
-	{4, 0x0B},	//	L	L	· – · ·        	1011		76	76	
-	{2, 0x00},	//	M	M	– –            	00			77	77	
-	{2, 0x01},	//	N	N	– ·            	01			78	78	
-	{3, 0x00},	//	O	O	– – –          	000			79	79	
-	{4, 0x09},	//	P	P	· – – ·        	1001		80	80	
-	{4, 0x02},	//	Q	Q	– – · –        	0010		81	81	
-	{3, 0x05},	//	R	R	· – ·          	101			82	82	
-	{3, 0x07},	//	S	S	· · ·          	111			83	83	
-	{1, 0x00},	//	T	T	–              	0			84	84	
-	{3, 0x06},	//	U	U	· · –          	110			85	85	
-	{4, 0x0E},	//	V	V	· · · –        	1110		86	86	
-	{3, 0x04},	//	W	W	· – –          	100			87	87	
-	{4, 0x06},	//	X	X	– · · –        	0110		88	88	
-	{4, 0x04},	//	Y	Y	– · – –        	0100		89	89	
-	{4, 0x03},	//	Z	Z	– – · ·        	0011		90	90	
-	{8, 0xFF},	//	[	ERR	· · · · · · · ·	11111111	91	ERR	Open Bracket [[]
-	{8, 0xFF},	//	\	ERR	· · · · · · · ·	11111111	92	ERR	Backslash [\]
-	{8, 0xFF},	//	]	ERR	· · · · · · · ·	11111111	93	ERR	Close Bracket []]
-	{8, 0xFF},	//	^	ERR	· · · · · · · ·	11111111	94	ERR	Circumflex [^]
-	{6, 0x32}	//	_	_	· · – – · –    	110010		95	95	Underscore [_]
+	/* Morse Hex  A M    Morse Code      Binary  ASCII   Notes */
+	{6, 0x14}, // ! !   – · – · – –     010100   33 33  Exclamation mark [!]
+	{6, 0x2D}, // " "   · – · · – ·     101101   34 34  Quotation mark ["]
+	{8, 0xFF}, // # ERR · · · · · · · · 11111111 35 ERR Hash mark [#]
+	{7, 0x76}, // $ $   · · · – · · –   1110110  36 36  Dollar sign [$]
+	{8, 0xFF}, // % ERR · · · · · · · · 11111111 37 ERR Percent [%]
+	{5, 0x17}, // & &   · – · · ·       10111    38 38  Ampersand [&], Wait
+	{6, 0x21}, // ' '   · – – – – ·     100001   39 39  Apostrophe [']
+	{5, 0x09}, // ( (   – · – – ·       01001    40 40  Parenthesis open [(]
+	{6, 0x12}, // ) )   – · – – · –     010010   41 41  Parenthesis close [)]
+	{8, 0xFF}, // * ERR · · · · · · · · 11111111 42 69  Asterix [*]
+	{5, 0x15}, // + +   · – · – ·       10101    43 43  Plus [+]
+	{6, 0x0C}, // , ,   – – · · – –     001100   44 44  Comma [,]
+	{6, 0x1E}, // - -   – · · · · –     011110   45 45  Hyphen, Minus [-]
+	{6, 0x2A}, // . .   · – · – · –     101010   46 46  Period [.]
+	{5, 0x0D}, // / /   – · · – ·       01101    47 47  Slash [/], Fraction bar
+	{5, 0x00}, // 0 0   – – – – –       00000    48 48
+	{5, 0x10}, // 1 1   · – – – –       10000    49 49
+	{5, 0x18}, // 2 2   · · – – –       11000    50 50
+	{5, 0x1C}, // 3 3   · · · – –       11100    51 51
+	{5, 0x1E}, // 4 4   · · · · –       11110    52 52
+	{5, 0x1F}, // 5 5   · · · · ·       11111    53 53
+	{5, 0x0F}, // 6 6   – · · · ·       01111    54 54
+	{5, 0x07}, // 7 7   – – · · ·       00111    55 55
+	{5, 0x03}, // 8 8   – – – · ·       00011    56 56
+	{5, 0x01}, // 9 9   – – – – ·       00001    57 57
+	{6, 0x07}, // : :   – – – · · ·     000111   58 58  Colon [:]
+	{6, 0x15}, // ; ;   – · – · – ·     010101   59 59  Semicolon [;]
+	{8, 0xFF}, // < ERR · · · · · · · · 11111111 60 ERR Less Than [<]
+	{5, 0x0E}, // = =   – · · · –       01110    61 61  Double dash [=]
+	{8, 0xFF}, // > ERR · · · · · · · · 11111111 62 ERR Greather Than [<]
+	{6, 0x33}, // ? ?   · · – – · ·     110011   63 63  Question mark [?]
+	{6, 0x25}, // @ @   · – – · – ·     100101   64 64  At sign [@]
+	{2, 0x02}, // A A   · –             10       65 65
+	{4, 0x07}, // B B   – · · ·         0111     66 66
+	{4, 0x05}, // C C   – · – ·         0101     67 67
+	{3, 0x03}, // D D   – · ·           011      68 68
+	{1, 0x01}, // E E   ·               1        69 69
+	{4, 0x0D}, // F F   · · – ·         1101     70 70
+	{3, 0x01}, // G G   – – ·           001      71 71
+	{4, 0x0F}, // H H   · · · ·         1111     72 72
+	{2, 0x03}, // I I   · ·             11       73 73
+	{4, 0x08}, // J J   · – – –         1000     74 74
+	{3, 0x02}, // K K   – · –           010      75 75
+	{4, 0x0B}, // L L   · – · ·         1011     76 76
+	{2, 0x00}, // M M   – –             00       77 77
+	{2, 0x01}, // N N   – ·             01       78 78
+	{3, 0x00}, // O O   – – –           000      79 79
+	{4, 0x09}, // P P   · – – ·         1001     80 80
+	{4, 0x02}, // Q Q   – – · –         0010     81 81
+	{3, 0x05}, // R R   · – ·           101      82 82
+	{3, 0x07}, // S S   · · ·           111      83 83
+	{1, 0x00}, // T T   –               0        84 84 
+	{3, 0x06}, // U U   · · –           110      85 85
+	{4, 0x0E}, // V V   · · · –         1110     86 86
+	{3, 0x04}, // W W   · – –           100      87 87
+	{4, 0x06}, // X X   – · · –         0110     88 88
+	{4, 0x04}, // Y Y   – · – –         0100     89 89
+	{4, 0x03}, // Z Z   – – · ·         0011     90 90 
+	{8, 0xFF}, // [ ERR · · · · · · · · 11111111 91 ERR Open Bracket [[]
+	{8, 0xFF}, // \ ERR · · · · · · · · 11111111 92 ERR Backslash [\]
+	{8, 0xFF}, // ] ERR · · · · · · · · 11111111 93 ERR Close Bracket []]
+	{8, 0xFF}, // ^ ERR · · · · · · · · 11111111 94 ERR Circumflex [^]
+	{6, 0x32}  // _ _   · · – – · –     110010   95 95  Underscore [_]
 };
 
 /* forward declarations */
