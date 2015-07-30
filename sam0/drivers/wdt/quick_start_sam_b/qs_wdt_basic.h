@@ -47,7 +47,6 @@
  * In this use case, the Watchdog module is configured for:
  *   \li Load register value
  *   \li Enable reset output
- *   \li Disable interrupt output
  *   \li Open write access
  *
  *
@@ -98,12 +97,10 @@
  *    \snippet qs_wdt_basic.c main_2
  * -# Test to see if the board button is currently being pressed.
  *    \snippet qs_wdt_basic.c main_3
- * -# If the button is pressed, turn on the board LED.
- *    \snippet qs_wdt_basic.c main_4
  * -# Read the Watchdog current count value.
- *    \snippet qs_wdt_basic.c main_5
+ *    \snippet qs_wdt_basic.c main_4
  * -# Reload the Watchdog count value.
- *    \snippet qs_wdt_basic.c main_6
+ *    \snippet qs_wdt_basic.c main_5
  */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>

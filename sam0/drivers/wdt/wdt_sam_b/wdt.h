@@ -112,18 +112,6 @@ extern "C" {
 #define WDT_WRITE_ACCESS_KEY    0x1ACCE551
 
 /**
- * \brief Watchdog Timer write access enum.
- *
- * Enum for the possible write access settings of the Watchdog timer module.
- */
-enum wdt_write_access {
-	/** Write access to all other registers is enabled */
-	WDT_WRITE_ACCESS_ENABLE = 0,
-	/** Write access to all other registers is disabled */
-	WDT_WRITE_ACCESS_DISABLE,
-};
-
-/**
  * \brief Watchdog Timer configuration structure.
  *
  *  Configuration structure for a Watchdog Timer instance. This
@@ -135,10 +123,8 @@ struct wdt_config {
 	uint32_t load_value;
 	/** Enable reset output */
 	bool enable_reset;
-	/** Enable interrupt output */
-	bool enable_interrupt;
 	/** Enable write access */
-	enum wdt_write_access write_access;
+	bool write_access;
 };
 
 /**
@@ -167,12 +153,9 @@ enum status_code wdt_set_config(struct wdt_module *const module, Wdt * const hw,
 /** @} */
 
 /**
- * \name Disable and reset
+ * \name Reset
  * @{
  */
-void wdt_disable_clock(struct wdt_module *const module);
-void wdt_disable_reset_output(struct wdt_module *const module);
-void wdt_disable_interrupt_output(struct wdt_module *const module);
 void wdt_reset(struct wdt_module *const module);
 /** @} */
 
@@ -180,29 +163,19 @@ void wdt_reset(struct wdt_module *const module);
  * \name Get and Clear status
  * @{
  */
+uint8_t wdt_get_interrupt_status(struct wdt_module *const module);
 uint8_t wdt_get_status(struct wdt_module *const module);
-uint8_t wdt_get_status_raw(struct wdt_module *const module);
 void wdt_clear_status(struct wdt_module *const module);
 /** @} */
 
 /**
- * \name Judge lock and Reload count value
+ * \name Reload and get count value
  * @{
  */
-bool wdt_is_locked(struct wdt_module *const module);
-enum status_code wdt_reload_count(struct wdt_module *const module, \
+enum status_code wdt_set_reload_count(struct wdt_module *const module, \
 			uint32_t load_value);
 void wdt_get_current_count(struct wdt_module *const module, \
 			uint32_t * count_value);
-/** @} */
-
-/**
- * \name Intergration Test Opearation
- * @{
- */
-void wdt_integration_test_enable(void);
-void wdt_integration_test_disable(void);
-void wdt_integration_test_set(bool interrupt_output, bool reset_output);
 /** @} */
 
 /** @} */

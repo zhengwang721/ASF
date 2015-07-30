@@ -48,6 +48,6 @@
 #define CONF_BOARD_H_INCLUDED
 
 #define CONF_WDT_MODULE           WDT0
-#define CONF_WDT_LOAD_VALUE       0x1FFF
+#define CONF_WDT_LOAD_VALUE       0x1FFFFFFF
 
 #endif /* CONF_BOARD_H_INCLUDED */

@@ -50,6 +50,19 @@ struct wdt_module wdt_instance;
 //! [module_inst]
 
 //! [setup]
+static void configure_gpio(void)
+{
+	struct gpio_config config_gpio;
+
+	gpio_get_config_defaults(&config_gpio);
+	
+	gpio_pin_set_config(BUTTON_0_PIN, &config_gpio);
+
+	config_gpio.direction  = GPIO_PIN_DIR_OUTPUT;
+	config_gpio.input_pull = GPIO_PIN_PULL_NONE;
+	gpio_pin_set_config(LED_0_PIN, &config_gpio);
+}
+
 static void configure_wdt(void)
 {
 	/* Create a new configuration structure for the Watchdog settings and fill
@@ -74,15 +87,21 @@ static void configure_wdt(void)
 int main(void)
 {
 	uint32_t current_value;
+	uint16_t i;
 
 	//system_init();
 
 	//! [setup_init]
+	configure_gpio();
 	configure_wdt();
 	//! [setup_init]
 
+
 	//! [main]
 	//! [main_1]
+	for(i = 0; i < 5; i++) {
+		gpio_pin_toggle_output_level(LED_0_PIN);
+	}
 	gpio_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
 	//! [main_1]
 	//! [main_2]
@@ -93,14 +112,11 @@ int main(void)
 		if (gpio_pin_get_input_level(BUTTON_0_PIN) == false) {
 		//! [main_3]
 		//! [main_4]
-			gpio_pin_toggle_output_level(LED_0_PIN);
+			wdt_get_current_count(&wdt_instance, &current_value);
 		//! [main_4]
 		//! [main_5]
-			wdt_get_current_count(&wdt_instance, &current_value);
+			wdt_set_reload_count(&wdt_instance, CONF_WDT_LOAD_VALUE);
 		//! [main_5]
-		//! [main_6]
-			wdt_reload_count(&wdt_instance, CONF_WDT_LOAD_VALUE);
-		//! [main_6]
 		}
 	}
 	//! [main]
