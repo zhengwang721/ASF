@@ -117,9 +117,10 @@ int main (void)
 	/* Initialize serial bridge */
 	serial_bridge_init();
 	
-	/* application task */
+	/* Task hadle in while loop */
 	while(1)
 	{
+		/* Serial bridge task */ 
 		serial_bridge_task();
 	}
 }

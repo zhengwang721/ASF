@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="BLE DTM - SAM D21 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.ble_dtm.samd21_xplained_pro" force-caption="true" force-description="true">
+	<project caption="BLE Direct Test Mode[DTM] - SAM D21 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.ble_dtm.samd21_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		BLE DTM
+		BLE Direct Test Mode[DTM] Application
 		</info>	
 		<require idref="thirdparty.wireless.ble_sdk.apps.ble_dtm"/>
 		<build type="include-path" value="."/>

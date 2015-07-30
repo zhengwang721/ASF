@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="BLE DTM APPLICATION" id="thirdparty.wireless.ble_sdk.apps.ble_dtm">
+	<module type="meta" caption="BLE Direct Test Mode[DTM] Application" id="thirdparty.wireless.ble_sdk.apps.ble_dtm">
 		<info type="description" value="summary">
-		BLE DTM
+		BLE Direct Test Mode[DTM] Application
 		</info>
 		<build type="c-source" value="main.c"/>
 		<require idref="thirdparty.wireless.ble_sdk.lib"/>
