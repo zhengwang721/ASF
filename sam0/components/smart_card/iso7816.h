@@ -58,7 +58,6 @@
 #define ISO7816_USART_SEND      0
 #define ISO7816_USART_RCV       1
 
-
 void iso7816_init(struct usart_module *const module, uint32_t pin_rst, \
 				uint32_t clock_get_hz);
 uint16_t iso7816_xfr_block_tpdu_t0(const uint8_t *p_apdu, uint8_t *p_message,
@@ -67,7 +66,6 @@ void iso7816_data_block_atr(uint8_t *p_atr, uint8_t *p_length);
 bool iso7816_get_reset_statuts(void);
 void iso7816_cold_reset(void);
 void iso7816_warm_reset(void);
-void iso7816_decode_atr(uint8_t *p_atr);
 
 #endif /* ISO7816_H_INCLUDED */
 
