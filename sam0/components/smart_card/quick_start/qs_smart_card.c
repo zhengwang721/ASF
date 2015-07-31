@@ -130,9 +130,9 @@ static struct usart_module cdc_uart_module, usart_instance;
 /* Test command #1. */
 const uint8_t test_cmd1[CMD1_LEN] = {0x00, 0x10, 0x00, 0x00};
 /* Test command #2. */
-const uint8_t test_cmd2[CMD2_LEN] = {0xA0, 0xA4, 0x00, 0x00, 0x02, 0x7F, 0x20};//{0x00, 0x20, 0x00, 0x00, 0x02};
+const uint8_t test_cmd2[CMD2_LEN] = {0xA0, 0xA4, 0x00, 0x00, 0x02, 0x7F, 0x20};
 /* Test command #3. */
-const uint8_t test_cmd3[CMD3_LEN] = {0xA0, 0xA4, 0x00, 0x00, 0x02, 0x6F, 0x07};//{0x00, 0x30, 0x00, 0x00, 0x02, 0x0A, 0x0B};
+const uint8_t test_cmd3[CMD3_LEN] = {0xA0, 0xA4, 0x00, 0x00, 0x02, 0x6F, 0x07};
 
 /**
  * \brief Initialize the USART for the example.
@@ -218,7 +218,7 @@ static void smart_card_init(void)
 	/* Config pinmux as smart card clock */
 	struct system_pinmux_config pin_clk_conf;
 	system_pinmux_get_config_defaults(&pin_clk_conf);
-	pin_clk_conf.direction = PORT_PIN_DIR_OUTPUT;
+	pin_clk_conf.direction = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
 	pin_clk_conf.input_pull = SYSTEM_PINMUX_PIN_PULL_NONE;
 	pin_clk_conf.mux_position = PINMUX_PA15H_GCLK_IO1 & 0xFFFF;
 	system_pinmux_pin_set_config(PINMUX_PA15H_GCLK_IO1 >> 16, &pin_clk_conf);
@@ -299,11 +299,13 @@ static void send_receive_cmd(void)
 	   }
 
 		/* Output smart card answer. */
+		puts("Answer: ");
 		if (uc_size > 0) {
-			puts("Answer: ");
 			for (i=0; i < uc_size; i++) {
 				printf("0x%02X ", uc_message[i]);
 			}
+		} else {
+			puts("Receive error! \r\n");
 		}
 	}
 	puts("Please waiting ... \r\n");

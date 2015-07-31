@@ -63,8 +63,6 @@ extern "C" {
 #define CASE2           2
 #define CASE3           3
 
-
-
 /** NULL byte to restart byte procedure. */
 #define ISO_NULL_VAL    0x60
 
@@ -117,7 +115,6 @@ static enum status_code iso7816_get_char(uint8_t *p_char_received)
 	return STATUS_OK;
 }
 
-
 /**
  * \brief Send a char to ISO7816.
  *
@@ -127,7 +124,7 @@ static enum status_code iso7816_get_char(uint8_t *p_char_received)
  */
 static enum status_code iso7816_send_char(uint8_t uc_char)
 {
-	uint32_t ul_status;
+	enum status_code ul_status;
 
 	if (iso7816_usart_status == ISO7816_USART_RCV) {
 		iso7816_usart_status = ISO7816_USART_SEND;
@@ -140,7 +137,6 @@ static enum status_code iso7816_send_char(uint8_t uc_char)
 	/* Return status. */
 	return (ul_status);
 }
-
 
 /**
  * \brief ISO7816 ICC power on.
@@ -172,6 +168,9 @@ static void iso7816_icc_power_off(void)
 uint16_t iso7816_xfr_block_tpdu_t0(const uint8_t *p_apdu,
 		uint8_t *p_message, uint16_t us_length)
 {
+	Assert(p_apdu);
+	Assert(p_message);
+
 	uint16_t us_ne_nc;
 	uint16_t us_apdu_index = 4;
 	uint16_t us_message_index = 0;
@@ -179,16 +178,19 @@ uint16_t iso7816_xfr_block_tpdu_t0(const uint8_t *p_apdu,
 	uint8_t uc_proc_byte;
 	uint8_t uc_cmd_case;
 	uint8_t message_p3;
-	
-	if (us_length == 4) {
+
+	if (us_length < 4) {
+		us_message_index = 0;
+		return us_message_index;
+	} else if (us_length == 4) {
 		message_p3 = 0;
 	} else {
 		message_p3 = p_apdu[4];
 	}
-	iso7816_send_char(p_apdu[0]); /* CLA */
-	iso7816_send_char(p_apdu[1]); /* INS */
-	iso7816_send_char(p_apdu[2]); /* P1 */
-	iso7816_send_char(p_apdu[3]); /* P2 */
+	iso7816_send_char(p_apdu[0]);  /* CLA */
+	iso7816_send_char(p_apdu[1]);  /* INS */
+	iso7816_send_char(p_apdu[2]);  /* P1 */
+	iso7816_send_char(p_apdu[3]);  /* P2 */
 	iso7816_send_char(message_p3); /* P3 */
 
 	/* Handle the four structures of command APDU. */
@@ -284,6 +286,8 @@ uint16_t iso7816_xfr_block_tpdu_t0(const uint8_t *p_apdu,
  */
 void iso7816_data_block_atr(uint8_t *p_atr, uint8_t *p_length)
 {
+	Assert(p_atr);
+
 	uint32_t i;
 	uint32_t j;
 	uint8_t uc_value;
@@ -345,13 +349,11 @@ bool iso7816_get_reset_statuts(void)
 void iso7816_cold_reset(void)
 {
 	uint32_t i;
-	uint16_t ul_data;
 
 	/* Tb: wait 400 cycles */
 	for (i = 0; i < (RST_WAIT_TIME * (iso7816_gs_frequency / 1000000)); i++) {
 	}
 
-	usart_read_wait(iso7816_usart_module, &ul_data);
 	iso7816_icc_power_on();
 }
 
@@ -361,7 +363,6 @@ void iso7816_cold_reset(void)
 void iso7816_warm_reset(void)
 {
 	uint32_t i;
-	uint16_t ul_data;
 
 	iso7816_icc_power_off();
 
@@ -369,7 +370,6 @@ void iso7816_warm_reset(void)
 	for (i = 0; i < (RST_WAIT_TIME * (iso7816_gs_frequency / 1000000)); i++) {
 	}
 
-	usart_read_wait(iso7816_usart_module, &ul_data);
 	iso7816_icc_power_on();
 }
 
@@ -386,10 +386,10 @@ void iso7816_init(struct usart_module *const module, uint32_t pin_rst, \
 	Assert(module);
 	Assert(module->hw);
 
-	iso7816_usart_module = module;
+	iso7816_usart_module  = module;
 	iso7816_pin_rst       = pin_rst;
 	iso7816_gs_frequency  = clock_get_hz;
-	
+
 	usart_disable_transceiver(iso7816_usart_module, USART_TRANSCEIVER_TX);
 	usart_enable_transceiver(iso7816_usart_module, USART_TRANSCEIVER_RX);
 }
