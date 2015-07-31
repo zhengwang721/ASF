@@ -70,10 +70,12 @@ enum aon_sleep_timer_mode {
  * This enum specifies ARM wakeup enable or disable.
  */
 enum aon_sleep_timer_wakeup {
-	/** ARM wakeup disable */
-	AON_SLEEP_TIMER_WAKEUP_EN = 0,
-	/** ARM wakeup disable */
-	AON_SLEEP_TIMER_WAKEUP_DIS,
+	/** Wakeup disable */
+	AON_SLEEP_TIMER_WAKEUP_DIS = 0,
+	/** ARM wakeup */
+	AON_SLEEP_TIMER_WAKEUP_ARM,
+	/** ARM and blue-tooth wakeup */
+	AON_SLEEP_TIMER_WAKEUP_ARM_BLE,
 };
 
 /**

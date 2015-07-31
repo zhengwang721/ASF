@@ -68,7 +68,7 @@ static void delay_cycle(uint32_t cycles)
 void aon_sleep_timer_get_config_defaults(struct aon_sleep_timer_config *config)
 {
 	/* Default configuration values */
-	config->wakeup = AON_SLEEP_TIMER_WAKEUP_EN;
+	config->wakeup = AON_SLEEP_TIMER_WAKEUP_ARM;
 	config->mode = AON_SLEEP_TIMER_SINGLE_MODE;
 	config->counter = 32000;
 }
@@ -85,6 +85,16 @@ void aon_sleep_timer_get_config_defaults(struct aon_sleep_timer_config *config)
 void aon_sleep_timer_init(const struct aon_sleep_timer_config *config)
 {
 	uint32_t aon_st_ctrl = 0;
+	
+	AON_PWR_SEQ0->AON_ST_WAKEUP_CTRL.reg = AON_PWR_SEQ_AON_ST_WAKEUP_CTRL_RESETVALUE;
+	if (config->wakeup == AON_SLEEP_TIMER_WAKEUP_ARM_BLE) {
+		AON_PWR_SEQ0->AON_ST_WAKEUP_CTRL.reg |= 
+				AON_PWR_SEQ_AON_ST_WAKEUP_CTRL_ARM_ENABLE |
+				AON_PWR_SEQ_AON_ST_WAKEUP_CTRL_BLE_ENABLE;
+	} else if (config->wakeup == AON_SLEEP_TIMER_WAKEUP_ARM) {
+		AON_PWR_SEQ0->AON_ST_WAKEUP_CTRL.reg |=
+				AON_PWR_SEQ_AON_ST_WAKEUP_CTRL_ARM_ENABLE;
+	}
 	
 	aon_st_ctrl = AON_SLEEP_TIMER0->CONTROL.reg;
 	while (aon_st_ctrl & ((1UL << 31) - 1)) {
