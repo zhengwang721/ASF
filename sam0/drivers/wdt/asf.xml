@@ -80,5 +80,45 @@
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
+
+		<module type="driver" id="sam0.drivers.wdt#samb" caption="WDT - Watchdog Timer (Polled APIs) for SAMB">
+			<info type="keyword" value="technology">
+				<keyword value="Timers" />
+				<keyword value="Clocks" />
+				<keyword value="CPU" />
+			</info>
+
+			<info type="appnote" value="ATxxxxx"/>
+			<info type="keyword" value="pdf">
+				<keyword value="WDT"/>
+				<keyword value="Watchdog Timer"/>
+			</info>
+
+			<info type="description" value="pdf">
+				This document describes how to use the Watchdog Timer on the
+				SAMB, both the ASF driver and the peripheral itself.
+			</info>
+
+			<build type="include-path" value="."/>
+
+			<build type="c-source" value="wdt_sam_b/wdt.c"/>
+			<build type="header-file" subtype="api" value="wdt_sam_b/wdt.h"/>
+
+			<build type="define" name="WDT_CALLBACK_MODE" value="false"/>
+			<build type="doxygen-enable-section" value="DEVICE_SAMB11_SUPPORT"/>
+
+			<build type="header-file" value="quick_start_sam_b/qs_wdt_basic.h"/>
+
+			<build type="doxygen-entry-point" value="asfdoc_samb_wdt_group"/>
+			<build type="doxygen-example-path" value="quick_start_sam_b"/>
+			<build type="doxygen-quick-start" value="asfdoc_samb_wdt_exqsg"/>
+
+			<device-support value="samb"/>
+
+			<require idref="sam0.utils"/>
+			<require idref="sam0.drivers.gpio"/>
+
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
+		</module>
 	</select-by-config>
 </asf>
