@@ -4,16 +4,20 @@
 		SAMB11 Peripheral instance definitions.
 		</info>
 		<build type="header-file" value="aon_gp_regs0.h"/>
+		<build type="header-file" value="aon_pwr_seq0.h"/>
+		<build type="header-file" value="aon_sleep_timer0.h"/>
 		<build type="header-file" value="arm_bpu0.h"/>
 		<build type="header-file" value="arm_dwt0.h"/>
 		<build type="header-file" value="arm_rom0.h"/>
 		<build type="header-file" value="arm_sysctrl0.h"/>
 		<build type="header-file" value="dualtimer0.h"/>
+		<build type="header-file" value="efuse_misc_regs0.h"/>
 		<build type="header-file" value="gpio0.h"/>
 		<build type="header-file" value="gpio1.h"/>
 		<build type="header-file" value="gpio2.h"/>
 		<build type="header-file" value="i2c0.h"/>
 		<build type="header-file" value="i2c1.h"/>
+		<build type="header-file" value="lp_clk_cal_regs0.h"/>
 		<build type="header-file" value="lpmcu_misc_regs0.h"/>
 		<build type="header-file" value="prov_dma_ctrl0.h"/>
 		<build type="header-file" value="spi_flash0.h"/>

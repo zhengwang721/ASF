@@ -179,7 +179,7 @@ typedef union {
 
 #define SPI_FLASH_DIRECTION_MASK              0x00ul    /**< \brief (SPI_FLASH_DIRECTION) Register MASK */
 
-/* -------- SPI_FLASH_IRQ_STATUS : (SPI_FLASH Offset: 0x18) (R/W  8) IRQ Status (Read or Write 0 to bit to clear) -------- */
+/* -------- SPI_FLASH_IRQ_STATUS : (SPI_FLASH Offset: 0x18) (/W  8) IRQ Status (Write 0 to bit to clear, Read clears interupts) -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
@@ -191,8 +191,8 @@ typedef union {
 } SPI_FLASH_IRQ_STATUS_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define SPI_FLASH_IRQ_STATUS_OFFSET           0x18           /**<  \brief (SPI_FLASH_IRQ_STATUS offset) IRQ Status (Read or Write 0 to bit to clear) */
-#define SPI_FLASH_IRQ_STATUS_RESETVALUE       0x00ul         /**<  \brief (SPI_FLASH_IRQ_STATUS reset_value) IRQ Status (Read or Write 0 to bit to clear) */
+#define SPI_FLASH_IRQ_STATUS_OFFSET           0x18           /**<  \brief (SPI_FLASH_IRQ_STATUS offset) IRQ Status (Write 0 to bit to clear, Read clears interupts) */
+#define SPI_FLASH_IRQ_STATUS_RESETVALUE       0x00ul         /**<  \brief (SPI_FLASH_IRQ_STATUS reset_value) IRQ Status (Write 0 to bit to clear, Read clears interupts) */
 
 #define SPI_FLASH_IRQ_STATUS_FLASH_TRANS_DONE_Pos 0  /**< \brief (SPI_FLASH_IRQ_STATUS) Current Flash Transaction Done        */
 #define SPI_FLASH_IRQ_STATUS_FLASH_TRANS_DONE (0x1ul << SPI_FLASH_IRQ_STATUS_FLASH_TRANS_DONE_Pos)  
@@ -358,7 +358,7 @@ typedef struct {  /* SPI Flash Controller */
   __IO SPI_FLASH_CMD_BUFFER1_Type     CMD_BUFFER1;    /**< \brief Offset: 0x10 (R/W  32) Command Buffer 1 (Bytes 7 - 4) */
   __IO SPI_FLASH_DIRECTION_Type       DIRECTION;      /**< \brief Offset: 0x14 (R/W   8) Read/Write bit for Bytes 7 - 0 */
        RoReg8                         Reserved2[0x3];
-  __IO SPI_FLASH_IRQ_STATUS_Type      IRQ_STATUS;     /**< \brief Offset: 0x18 (R/W   8) IRQ Status (Read or Write 0 to bit to clear) */
+  __O  SPI_FLASH_IRQ_STATUS_Type      IRQ_STATUS;     /**< \brief Offset: 0x18 ( /W   8) IRQ Status (Write 0 to bit to clear, Read clears interupts) */
        RoReg8                         Reserved3[0x3];
   __IO SPI_FLASH_DMA_START_ADDRESS_Type DMA_START_ADDRESS; /**< \brief Offset: 0x1C (R/W  32) DMA Starting Address */
   __IO SPI_FLASH_CONFIG_Type          CONFIG;         /**< \brief Offset: 0x20 (R/W  16) SPI Flash Configuration */

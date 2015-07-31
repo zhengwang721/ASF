@@ -74,7 +74,7 @@
 #define REG_I2C1_I2C_STATUS          (*(RoReg8 *)0x40003428U) /**< \brief (I2C1) Status of I2C Module.  */
 #define REG_I2C1_TX_INTERRUPT_MASK   (*(RwReg8 *)0x4000342cU) /**< \brief (I2C1) Enable or Disable the generation of interrupts by the tx_status register.  */
 #define REG_I2C1_RX_INTERRUPT_MASK   (*(RwReg8 *)0x40003430U) /**< \brief (I2C1) Enable or Disable the generation of interrupts by the rx_status register.  */
-#define REG_I2C1_I2C_FLUSH           (*(RoReg8 *)0x40003434U) /**< \brief (I2C1) Writing to this address  flushes the contents of both the Tx and Rx FIFOs. The value written has no effect. Flushing the Tx FIFO will abort ongoing transactions when the current byte has been transmitted.  */
+#define REG_I2C1_I2C_FLUSH           (*(WoReg8 *)0x40003434U) /**< \brief (I2C1) Writing to this address  flushes the contents of both the Tx and Rx FIFOs. The value written has no effect. Flushing the Tx FIFO will abort ongoing transactions when the current byte has been transmitted.  */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMB11_I2C1_INSTANCE_ */

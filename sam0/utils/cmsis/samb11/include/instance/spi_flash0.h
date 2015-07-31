@@ -52,7 +52,7 @@
 #define REG_SPI_FLASH0_CMD_BUFFER0         (0x4001200cU) /**< \brief (SPI_FLASH0) Command Buffer 0 (Bytes 3 - 0) */
 #define REG_SPI_FLASH0_CMD_BUFFER1         (0x40012010U) /**< \brief (SPI_FLASH0) Command Buffer 1 (Bytes 7 - 4) */
 #define REG_SPI_FLASH0_DIRECTION           (0x40012014U) /**< \brief (SPI_FLASH0) Read/Write bit for Bytes 7 - 0 */
-#define REG_SPI_FLASH0_IRQ_STATUS          (0x40012018U) /**< \brief (SPI_FLASH0) IRQ Status (Read or Write 0 to bit to clear) */
+#define REG_SPI_FLASH0_IRQ_STATUS          (0x40012018U) /**< \brief (SPI_FLASH0) IRQ Status (Write 0 to bit to clear, Read clears interupts) */
 #define REG_SPI_FLASH0_DMA_START_ADDRESS   (0x4001201cU) /**< \brief (SPI_FLASH0) DMA Starting Address */
 #define REG_SPI_FLASH0_CONFIG              (0x40012020U) /**< \brief (SPI_FLASH0) SPI Flash Configuration */
 #define REG_SPI_FLASH0_TX_CONTROL          (0x40012024U) /**< \brief (SPI_FLASH0) TX Control */
@@ -64,7 +64,7 @@
 #define REG_SPI_FLASH0_CMD_BUFFER0         (*(RwReg  *)0x4001200cU) /**< \brief (SPI_FLASH0) Command Buffer 0 (Bytes 3 - 0) */
 #define REG_SPI_FLASH0_CMD_BUFFER1         (*(RwReg  *)0x40012010U) /**< \brief (SPI_FLASH0) Command Buffer 1 (Bytes 7 - 4) */
 #define REG_SPI_FLASH0_DIRECTION           (*(RwReg8 *)0x40012014U) /**< \brief (SPI_FLASH0) Read/Write bit for Bytes 7 - 0 */
-#define REG_SPI_FLASH0_IRQ_STATUS          (*(RwReg8 *)0x40012018U) /**< \brief (SPI_FLASH0) IRQ Status (Read or Write 0 to bit to clear) */
+#define REG_SPI_FLASH0_IRQ_STATUS          (*(WoReg8 *)0x40012018U) /**< \brief (SPI_FLASH0) IRQ Status (Write 0 to bit to clear, Read clears interupts) */
 #define REG_SPI_FLASH0_DMA_START_ADDRESS   (*(RwReg  *)0x4001201cU) /**< \brief (SPI_FLASH0) DMA Starting Address */
 #define REG_SPI_FLASH0_CONFIG              (*(RwReg16*)0x40012020U) /**< \brief (SPI_FLASH0) SPI Flash Configuration */
 #define REG_SPI_FLASH0_TX_CONTROL          (*(RwReg16*)0x40012024U) /**< \brief (SPI_FLASH0) TX Control */
