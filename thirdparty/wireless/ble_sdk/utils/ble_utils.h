@@ -60,8 +60,6 @@
 #define DBG_LOG		    printf("\r\n");\
 						printf
 						
-
-
 #define UNUSED1(x) (void)(x)
 #define UNUSED2(x,y) (void)(x),(void)(y)
 #define UNUSED3(x,y,z) (void)(x),(void)(y),(void)(z)

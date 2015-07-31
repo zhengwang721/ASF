@@ -1,59 +1,47 @@
 /**
- * \file
+ ****************************************************************************************
  *
- * \brief Health  Atmel BLE Api for Applications
+ * @file at_ble_api.h
+ *
+ * @brief Atmel BLE API for Applications
  *
  * This module contains the public API and the necessary enumerations and structures that are required for 
  * BLE Application Developers using Atmel BLE SDK
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
- * \asf_license_start
+ *  Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions are met:
  *
- * \page License
+ *  1. Redistributions of source code must retain the above copyright notice, this
+ *  list of conditions and the following disclaimer.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ *  2. Redistributions in binary form must reproduce the above copyright notice,
+ *  this list of conditions and the following disclaimer in the documentation
+ *  and/or other materials provided with the distribution.
  *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ *  3. The name of Atmel may not be used to endorse or promote products derived from this software 
+ *  without specific prior written permission.
  *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ *  4. This software may only be redistributed and used in connection with an Atmel microcontroller product.
  *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
+  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+ *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL 
+ *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+ *  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+ *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
+ *  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+ *  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ ****************************************************************************************
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
-
-
 #ifndef __AT_BLE_API_H__
 #define __AT_BLE_API_H__
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "profiles.h"
+
 /****************************************************************************************
 *							        Macros	                                     							*
 ****************************************************************************************/
@@ -762,6 +750,16 @@ typedef enum
     HTPT_CFG_MEAS_INTV_IND      = (1 << 2),
 }at_ble_htpt_ntf_ind_cfg;
 
+
+/**@brief Service type
+*/
+typedef enum{
+	/// Secondary service
+	SECONDARY_SVC=0,
+	/// Primary service
+	PRIMAR_SVC=1
+}at_ble_svc_type;
+
 /****************************************************************************************
 *							        Structures                                     							*
 ****************************************************************************************/
@@ -887,6 +885,38 @@ typedef struct
 	at_ble_char_presentation_t* presentation_format; /**< Characteristic presentation format, this value will be stored in the relevant descriptor, if no presentation format is necessary set to NULL */
 
 }at_ble_characteristic_t;
+
+typedef struct{
+	uint16_t desc_val_length;/**< Descriptor value length */
+	at_ble_attr_permissions_t perm;/**< Descriptor permissions */
+	at_ble_uuid_t uuid; /**< Descriptor UUID */
+	at_ble_handle_t handle;/**< Descriptor handler, it is responsibility of atmel ble api's to fill this field */
+}generic_Att_Desc;
+
+typedef struct{
+	at_ble_handle_t char_val_handle; /**< Here the stack will store the char. value handle for future use */
+	at_ble_uuid_t uuid; /**< Characteristic UUID */
+	at_ble_char_properties_t properties; /**< Characteristic properties, values for Client Characteristic Configuration Descriptor and Server Characteristic Configuration Descriptor will be decided from this value*/
+	
+	uint8_t* init_value; /**< initial value of this characteristic  */
+	uint16_t value_init_len; /**< initial value length */
+	uint16_t value_max_len; /**< maximum possible length of the char. value */
+	at_ble_attr_permissions_t value_permissions; /**< Value permissions */ //TODO: can this value be deduced from properties field ?
+	
+	uint8_t* user_desc; /**< a user friendly description, this value will be stored in the relevant descriptor, if no user description is desired set to NULL */
+	uint16_t user_desc_len; /**< the user friendly description length, this value will be stored in the relevant descriptor, if no user description is desired set to 0*/
+	uint16_t user_desc_max_len; /**< Maximum possible length for the user friendly description, this value will be stored in the relevant descriptor, if no user description is desired set to 0 */
+	at_ble_attr_permissions_t user_desc_permissions;
+	at_ble_attr_permissions_t client_config_permissions;
+	at_ble_attr_permissions_t server_config_permissions;
+	at_ble_handle_t user_desc_handle;
+	at_ble_handle_t client_config_handle;
+	at_ble_handle_t server_config_handle;
+	
+	at_ble_char_presentation_t* presentation_format; /**< Characteristic presentation format, this value will be stored in the relevant descriptor, if no presentation format is necessary set to NULL */
+	generic_Att_Desc * DescList;  /**< Field for list of extra descriptors  */
+	uint16_t DescCount;/**< Count of the extra descriptors*/
+}at_ble_characteristic_gen_t;
 
 /** @brief Service Definition
 */
@@ -1218,7 +1248,7 @@ typedef struct
 	uint8_t status;
 }at_ble_prf_server_error_ind_t;
 /// Time profile information
-typedef struct at_ble_prf_date_time
+typedef struct 
 {
 	/// year time element
 	uint16_t year;
@@ -1634,7 +1664,6 @@ at_ble_status_t at_ble_connection_param_update(at_ble_handle_t handle,
 
 /**@brief Reply to connection parameters update request @ref AT_BLE_CONN_PARAM_UPDATE_REQUEST
   *
-  
   * @param[in] conn_handle handle of the connection to be updated
   * @param[in] connection_params new parameters to be used
   *
@@ -2015,6 +2044,26 @@ at_ble_status_t at_ble_characteristic_reliable_write_cancel(at_ble_handle_t conn
 
 @{
 */
+	 /**@brief Defines a new service either primary or secondary along with its included services and characteristics
+	  *
+	  * @param[in] uuid The secondary service UUID
+	  * @param[out] service_handle the Service handle will be returned here 
+	  * @param[in] included_service_list an array of included service references
+	  * @param[in] included_service_count number of elements in included_service_list
+	  * @param[in, out] charactristic_list an array of characteristics included in the service, this array is update with respective characteristics handles.
+	  * @param[in] charactristic_count number of elements in charactristic_list
+	  * @param[in] svc_type a variable to differentiate between primary service and secondary @ref at_ble_svc_type
+	  * @note
+	  * - Secondary Services are only relevant in the context of the entity that references them, 
+	  * It is therefore forbidden to add a secondary service declaration that is not referenced by another service later in the ATT table
+	  *
+	  * @return @ref AT_BLE_SUCCESS operation completed successfully
+	  * @return @ref AT_BLE_INSUFF_RESOURCE not enough memory to complete operation
+	  * @return @ref AT_BLE_FAILURE Generic error.
+	  */
+at_ble_status_t  at_ble_service_define(at_ble_uuid_t* uuid, at_ble_handle_t* service_handle,
+								at_ble_included_service_t * included_service_list, uint16_t included_service_count,
+								at_ble_characteristic_gen_t * charactristic_list, uint16_t charactristic_count, at_ble_svc_type svc_type);
 
  /**@brief Defines a new Primary service along with its included services and characteristics
   *
@@ -2080,6 +2129,32 @@ at_ble_status_t at_ble_characteristic_value_set(at_ble_handle_t handle, uint8_t*
   * @return @ref AT_BLE_FAILURE Generic error.
   */
 at_ble_status_t at_ble_characteristic_value_get(at_ble_handle_t handle, uint8_t* value, uint16_t offset, uint16_t len, uint16_t actual_read_len);
+ /**@brief Sets A Descriptor value
+  *
+  * @param[in] handle Descriptor value handle
+  * @param[in] value new value
+  * @param[in] len Value length, in bytes
+  *
+  * @return @ref AT_BLE_SUCCESS operation completed successfully
+  * @return @ref AT_BLE_INVALID_HANDLE invalid handle 
+  * @return @ref AT_BLE_FAILURE Generic error.
+  */
+
+  at_ble_status_t at_ble_descriptor_value_set(at_ble_handle_t handle,
+	  uint8_t* value, uint16_t len);
+
+  /**@brief Reads A Descriptor value
+   *
+   * @param[in] handle Characteristic value handle
+   * @param[out] value read value will be returned here
+   * @param[out] len Read length, in bytes
+   *
+   * @return @ref AT_BLE_SUCCESS operation completed successfully
+   * @return @ref AT_BLE_INVALID_HANDLE invalid handle 
+   * @return @ref AT_BLE_FAILURE Generic error.
+   */
+at_ble_status_t at_ble_descriptor_value_get(at_ble_handle_t handle, 
+		  uint8_t* value, uint16_t *len);
 
  /**@brief Sends a Notification
   *
@@ -2279,6 +2354,37 @@ at_ble_status_t at_ble_htpt_meas_intv_update(uint16_t meas_intv);
 
 /** @}*/
 
+/* utility functions, might be removed later*/
+static uint8_t at_ble_uuid_type2len(at_ble_uuid_type_t type)
+{
+	switch(type)
+	{
+	case AT_BLE_UUID_16 : 
+		return AT_BLE_UUID_16_LEN;
+		
+	case AT_BLE_UUID_32 : 
+		return AT_BLE_UUID_32_LEN;
+		
+	default:
+	case AT_BLE_UUID_128 : 
+		return AT_BLE_UUID_128_LEN;
+	}
+}
 
+static at_ble_uuid_type_t at_ble_uuid_len2type(uint8_t len)
+{
+	switch(len)
+	{
+	case AT_BLE_UUID_16_LEN: 
+		return AT_BLE_UUID_16;
+		
+	case AT_BLE_UUID_32_LEN : 
+		return AT_BLE_UUID_32;
+		
+	default:
+	case AT_BLE_UUID_128_LEN : 
+		return AT_BLE_UUID_128;
+	}
+}
 
 #endif //__AT_BLE_API_H__

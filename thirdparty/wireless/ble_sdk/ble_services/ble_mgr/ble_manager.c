@@ -71,6 +71,10 @@
 	#include "pxp_monitor.h"
 #endif /* PROXIMITY_MONITOR */
 
+#if defined HID_DEVICE
+	#include "hid_device.h"
+#endif /*HID_DEVICE*/	
+
 /** @brief information of the connected devices */
 at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
@@ -353,7 +357,11 @@ uint8_t scan_info_parse(at_ble_scan_info_t *scan_info_data,
 /** @brief function to send slave security request */
 at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 {
-	if (at_ble_send_slave_sec_request(conn_handle, true, true) == AT_BLE_SUCCESS)
+#if defined HID_SERVICE
+	if (at_ble_send_slave_sec_request(conn_handle, false, false) == AT_BLE_SUCCESS)
+#else
+    if (at_ble_send_slave_sec_request(conn_handle, true, true) == AT_BLE_SUCCESS)
+#endif	
 	{
 		DBG_LOG_DEV("Slave security request successful");
 		return AT_BLE_SUCCESS;
@@ -379,9 +387,11 @@ void ble_connected_state_handler(at_ble_connected_t *conn_params)
 		conn_params->peer_addr.addr[1],
 		conn_params->peer_addr.addr[0]);
 		
-		#if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)
+		DBG_LOG("Connection Handle %d", conn_params->handle);
+		
+#if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)
 		ble_send_slave_sec_request(conn_params->handle);
-		#endif
+#endif
 		
 		if (ble_connected_cb != NULL)
 		{
@@ -472,14 +482,23 @@ void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 	if(!app_device_bond)
 	{
 		/* Authentication requirement is bond and MITM*/
-		features.desired_auth =  AT_BLE_MODE1_L2_AUTH_PAIR_ENC;
+#if defined HID_SERVICE
+		features.desired_auth = AT_BLE_NO_SEC;
+		features.bond = false;
+		features.mitm_protection = false;
+#else
+		 features.desired_auth =  AT_BLE_MODE1_L2_AUTH_PAIR_ENC;
 		features.bond = true;
 		features.mitm_protection = true;
+#endif		
 		features.oob_avaiable = false;
 		/* Device capabilities is display only , key will be generated
 		and displayed */
 		
-		features.io_cababilities = AT_BLE_IO_CAP_DISPLAY_ONLY;
+		//features.io_cababilities = AT_BLE_IO_CAP_DISPLAY_ONLY;
+		
+		features.io_cababilities = AT_BLE_IO_CAP_NO_INPUT_NO_OUTPUT;
+		
 		/* Distribution of LTK is required */
 		features.initiator_keys =   AT_BLE_KEY_DIST_ENC;
 		features.responder_keys =   AT_BLE_KEY_DIST_ENC;
