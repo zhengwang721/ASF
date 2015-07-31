@@ -5,6 +5,7 @@
 			This example demonstrates how to configure and use the S25FL1XX FLASH.
 			</info>
 			<build type="c-source" value="s25fl1xx_example.c"/>
+			<build type="header-file" value="getting_started_hex.h"/>
 			<build type="include-path" value="."/>
 			<device-support value="samv70"/>
 			<device-support value="samv71"/>

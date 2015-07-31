@@ -202,15 +202,29 @@
 #define MACRONIX_SPI_FLASH               0xC2
 #define SST_SPI_FLASH                    0xBF
 
+enum block_size {
+	SIZE_4K = 0,
+	SIZE_8K,
+	SIZE_16K,
+	SIZE_32K,
+	SIZE_64K,
+	SIZE_128K,
+	SIZE_256K,
+	SIZE_512K,
+	SIZE_1M,
+	SIZE_2M
+};
+
 /*----------------------------------------------------------------------------
  *        Exported functions
  *----------------------------------------------------------------------------*/
 enum status_code s25fl1xx_initialize(Qspi *qspi, struct qspi_config_t *mode_config, uint32_t use_default_config);
 uint32_t s25fl1xx_read_jedec_id(struct qspid_t *qspid);
 void s25fl1xx_soft_reset(struct qspid_t *qspid);
-uint8_t s25fl1xx_unprotect(struct qspid_t *qspid);
-uint8_t s25fl1xx_data_unprotect(struct qspid_t *qspid);
 uint8_t s25fl1xx_protect(struct qspid_t *qspid);
+uint8_t s25fl1xx_unprotect(struct qspid_t *qspid);
+uint8_t s25fl1xx_data_protect(struct qspid_t *qspid, bool dir, enum block_size protect_size);
+uint8_t s25fl1xx_data_unprotect(struct qspid_t *qspid);
 void s25fl1xx_set_quad_mode(struct qspid_t *qspid, uint8_t mode);
 void s25fl1xx_enable_wrap(struct qspid_t *qspid, uint8_t byte_align);
 void s25fl1xx_set_read_latency_control(struct qspid_t *qspid, uint8_t latency);

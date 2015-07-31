@@ -513,6 +513,41 @@ void s25fl1xx_soft_reset(struct qspid_t *qspid)
 }
 
 /**
+ * \brief Unprotected the contents of the serial flash device.
+ *
+ * \param qspid  Pointer to an S25FL1 driver instance.
+ *
+ * \return 0 if the device has been protected; otherwise returns
+ * S25FL1D_ERROR_PROTECTED.
+ */
+uint8_t s25fl1xx_protect(struct qspid_t *qspid)
+{
+	uint8_t status[3];
+	/* Get the status register value to check the current protection */
+	status[0]= s25fl1xx_read_status1(qspid);
+	status[1]= s25fl1xx_read_status2(qspid);
+	status[2]= s25fl1xx_read_status3(qspid);
+
+	/* Check if sector protection registers are locked */
+	if ((status[0] & STATUS_SPRL) == STATUS_SPRL_LOCKED) {
+		return 0;
+	}
+
+	status[0] |= (STATUS_SWP | STATUS_SPRL);
+	s25fl1xx_write_status(qspid, status);
+
+	/* Check the new status */
+	status[0] = s25fl1xx_read_status(qspid);
+	if ((status[0] & (STATUS_SPRL | STATUS_SWP)) != (STATUS_SPRL | STATUS_SWP)) {
+		puts("\r-E Lock protection failed!\n");
+		return ERROR_PROTECTED;
+	}
+	else {
+		return 0;
+	}
+}
+
+/**
  * \brief Unprotected the control bits of the serial flash device.
  *
  * \param qspid  Pointer to an S25FL1 qspid_t struct.
@@ -554,6 +589,52 @@ uint8_t s25fl1xx_unprotect(struct qspid_t *qspid)
 }
 
 /**
+ * \brief Protect the contents of the serial flash device.
+ *
+ * \param qspid  Pointer to an S25FL1 qspid_t struct.
+ * \param dir  Data protect direction.
+ * \param size  Data size to be protect.
+ *
+ * \return 0 if the device has been unprotected; otherwise returns
+ * S25FL1D_ERROR_PROTECTED.
+ */
+uint8_t s25fl1xx_data_protect(struct qspid_t *qspid, bool dir, enum block_size protect_size)
+{
+	uint8_t status[3];
+	uint32_t mask = (dir << 5);
+	uint32_t bp_value = 0;
+	if(protect_size >= SIZE_64K) {
+		mask |= (1 << 6);
+		mask |= ((protect_size - SIZE_32K) << 2);
+	} else {
+		mask |= (protect_size << 2);
+	}
+	
+	/* Get the status register value to check the current protection */
+	status[0]= s25fl1xx_read_status1(qspid);
+	status[1]= s25fl1xx_read_status2(qspid);
+	status[2]= s25fl1xx_read_status3(qspid);
+      
+	if ((status[0] & mask) == mask) {
+		/* Protection already enabled */
+		return 0;
+	}
+
+	status[0] = mask;
+	s25fl1xx_write_status(qspid, status);
+
+	/* Check the new status */
+	status[0] = s25fl1xx_read_status(qspid);
+	if ((status[0] & mask) != mask) {
+		puts("\r-E Protect Block Failed!\n");
+		return ERROR_PROTECTED;
+	}
+	else {
+		return 0;
+	}
+}
+
+/**
  * \brief Unprotected the contents of the serial flash device.
  *
  * \param qspid  Pointer to an S25FL1 qspid_t struct.
@@ -580,41 +661,6 @@ uint8_t s25fl1xx_data_unprotect(struct qspid_t *qspid)
 	status[0] = s25fl1xx_read_status(qspid);
 	if (status[0] & CHIP_PROTECT_Msk) {
 		puts("\r-E Unlock Block Failed!\n");
-		return ERROR_PROTECTED;
-	}
-	else {
-		return 0;
-	}
-}
-
-/**
- * \brief Unprotected the contents of the serial flash device.
- *
- * \param qspid  Pointer to an S25FL1 driver instance.
- *
- * \return 0 if the device has been protected; otherwise returns
- * S25FL1D_ERROR_PROTECTED.
- */
-uint8_t s25fl1xx_protect(struct qspid_t *qspid)
-{
-	uint8_t status[3];
-	/* Get the status register value to check the current protection */
-	status[0]= s25fl1xx_read_status1(qspid);
-	status[1]= s25fl1xx_read_status2(qspid);
-	status[2]= s25fl1xx_read_status3(qspid);
-
-	/* Check if sector protection registers are locked */
-	if ((status[0] & STATUS_SPRL) == STATUS_SPRL_LOCKED) {
-		return 0;
-	}
-
-	status[0] |= (STATUS_SWP | STATUS_SPRL);
-	s25fl1xx_write_status(qspid, status);
-
-	/* Check the new status */
-	status[0] = s25fl1xx_read_status(qspid);
-	if ((status[0] & (STATUS_SPRL | STATUS_SWP)) != (STATUS_SPRL | STATUS_SWP)) {
-		puts("\r-E Lock protection failed!\n");
 		return ERROR_PROTECTED;
 	}
 	else {
