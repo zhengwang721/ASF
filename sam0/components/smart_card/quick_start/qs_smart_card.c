@@ -125,14 +125,14 @@ static struct usart_module cdc_uart_module, usart_instance;
 #define MAX_ATR_SIZE            55
 
 #define CMD1_LEN                4
-#define CMD2_LEN                5
+#define CMD2_LEN                7
 #define CMD3_LEN                7
 /* Test command #1. */
 const uint8_t test_cmd1[CMD1_LEN] = {0x00, 0x10, 0x00, 0x00};
 /* Test command #2. */
-const uint8_t test_cmd2[CMD2_LEN] = {0xa0, 0xa4, 0x00, 0x00, 0x02};//{0x00, 0x20, 0x00, 0x00, 0x02};
+const uint8_t test_cmd2[CMD2_LEN] = {0xA0, 0xA4, 0x00, 0x00, 0x02, 0x7F, 0x20};//{0x00, 0x20, 0x00, 0x00, 0x02};
 /* Test command #3. */
-const uint8_t test_cmd3[CMD3_LEN] = {0x00, 0x30, 0x00, 0x00, 0x02, 0x0A, 0x0B};
+const uint8_t test_cmd3[CMD3_LEN] = {0xA0, 0xA4, 0x00, 0x00, 0x02, 0x6F, 0x07};//{0x00, 0x30, 0x00, 0x00, 0x02, 0x0A, 0x0B};
 
 /**
  * \brief Initialize the USART for the example.
@@ -197,13 +197,17 @@ static void smart_card_init(void)
 
 	/* Configure USART for output */
 	usart_get_config_defaults(&usart_conf);
-	usart_conf.mux_setting            = CONF_ISO7816_MUX_SETTING;
-	usart_conf.pinmux_pad0            = CONF_ISO7816_PINMUX_PAD0;
-	usart_conf.pinmux_pad1            = CONF_ISO7816_PINMUX_PAD1;
-	usart_conf.pinmux_pad2            = CONF_ISO7816_PINMUX_PAD2;
-	usart_conf.pinmux_pad3            = CONF_ISO7816_PINMUX_PAD3;
-	usart_conf.baudrate               = CONF_ISO7816_BAUDRATE;
+	usart_conf.mux_setting               = CONF_ISO7816_MUX_SETTING;
+	usart_conf.pinmux_pad0               = CONF_ISO7816_PINMUX_PAD0;
+	usart_conf.pinmux_pad1               = CONF_ISO7816_PINMUX_PAD1;
+	usart_conf.pinmux_pad2               = CONF_ISO7816_PINMUX_PAD2;
+	usart_conf.pinmux_pad3               = CONF_ISO7816_PINMUX_PAD3;
 	usart_conf.iso7816_config.enabled    = true;
+	usart_conf.iso7816_config.protocol_t = ISO7816_PROTOCOL_T_0;
+	usart_conf.transfer_mode             = USART_TRANSFER_SYNCHRONOUSLY;
+	usart_conf.baudrate                  = CONF_ISO7816_BAUDRATE;
+	usart_conf.parity                    = USART_PARITY_EVEN;
+	usart_conf.generator_source          = GCLK_GENERATOR_1;
 	usart_conf.iso7816_config.guard_time = ISO7816_GUARD_TIME_2_BIT;
 
 	usart_init(&usart_instance, CONF_ISO7816_USART, &usart_conf);
@@ -341,9 +345,6 @@ int main(void)
 		}
 		puts("\r\n");
 	}
-
-	/* Decode ATR. */
-	iso7816_decode_atr(p_atr);
 
 	/* Allow user to send some commands. */
 	send_receive_cmd();

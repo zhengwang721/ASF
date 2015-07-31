@@ -445,6 +445,8 @@ struct iso7816_config_t {
 	bool enabled;
 	/** ISO7816 protocol type */
 	enum iso7816_protocol_type protocol_t;
+	/** Enable inverse transmission and reception */
+	bool enable_inverse;
 	/** Guard time, which lasts two bit times */
 	enum iso7816_guard_time guard_time;
 	/**
@@ -538,7 +540,7 @@ enum usart_transfer_mode {
 	/** Transfer of data is done synchronously */
 	USART_TRANSFER_SYNCHRONOUSLY = (SERCOM_USART_CTRLA_CMODE),
 	/** Transfer of data is done asynchronously */
-	USART_TRANSFER_ASYNCHRONOUSLY = 0
+	USART_TRANSFER_ASYNCHRONOUSLY = (0x0ul << SERCOM_USART_CTRLA_CMODE_Pos),
 };
 
 /**
@@ -1102,6 +1104,7 @@ static inline void usart_get_config_defaults(
 	config->iso7816_config.enabled                  = false;
 	config->iso7816_config.guard_time               = ISO7816_GUARD_TIME_2_BIT;
 	config->iso7816_config.protocol_t               = ISO7816_PROTOCOL_T_0;
+	config->iso7816_config.enable_inverse           = false;
 	config->iso7816_config.inhibit_nack             = ISO7816_INHIBIT_NACK_DISABLE;
 	config->iso7816_config.successive_recv_nack     = ISO7816_SUCCESSIVE_RECV_NACK_DISABLE;
 	config->iso7816_config.max_iterations           = 7;

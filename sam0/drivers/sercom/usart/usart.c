@@ -203,6 +203,9 @@ static enum status_code _usart_set_config(
 #ifdef FEATURE_USART_ISO7816
 	if(config->iso7816_config.enabled) {
 		ctrla |= SERCOM_USART_CTRLA_FORM(0x07);
+		if (config->iso7816_config.enable_inverse) {
+			ctrla |= SERCOM_USART_CTRLA_TXINV | SERCOM_USART_CTRLA_RXINV;
+		}
 		ctrlb |=  USART_CHARACTER_SIZE_8BIT;
 		
 		switch(config->iso7816_config.protocol_t) {
