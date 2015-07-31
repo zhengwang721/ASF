@@ -85,12 +85,6 @@ void aon_sleep_timer_get_config_defaults(struct aon_sleep_timer_config *config)
 void aon_sleep_timer_init(const struct aon_sleep_timer_config *config)
 {
 	uint32_t aon_st_ctrl = 0;
-
-	(*(volatile uint32_t *)(0x4000E00C)) = 0;
-	if (config->wakeup == AON_SLEEP_TIMER_WAKEUP_EN) {
-		/* Enable ARM wakeup */
-		(*(volatile uint32_t *)(0x4000E00C)) = 1;
-	}
 	
 	aon_st_ctrl = AON_SLEEP_TIMER0->CONTROL.reg;
 	while (aon_st_ctrl & ((1UL << 31) - 1)) {
@@ -103,12 +97,17 @@ void aon_sleep_timer_init(const struct aon_sleep_timer_config *config)
 		aon_st_ctrl = AON_SLEEP_TIMER0->CONTROL.reg;
 	}
 	
-	AON_SLEEP_TIMER0->SINGLE_COUNT_DURATION.reg = config->counter;
 	if (config->mode == AON_SLEEP_TIMER_RELOAD_MODE) {
 		/* Reload counter will start here */
+#ifndef CHIPVERSION_B0
+		(*(volatile uint32_t *)(0x4000D008)) = config->counter;
+#else
+		AON_SLEEP_TIMER0->SINGLE_COUNT_DURATION.reg = config->counter;
+#endif
 		AON_SLEEP_TIMER0->CONTROL.reg = AON_SLEEP_TIMER_CONTROL_RELOAD_ENABLE;
 	} else {
 		/* Single counter will start here */
+		AON_SLEEP_TIMER0->SINGLE_COUNT_DURATION.reg = config->counter;
 		AON_SLEEP_TIMER0->CONTROL.reg = AON_SLEEP_TIMER_CONTROL_SINGLE_COUNT_ENABLE;
 	}
 	

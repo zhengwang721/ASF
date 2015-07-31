@@ -3093,11 +3093,10 @@ typedef union {
     uint32_t OUTPUT_POLARITY:1;         /*!< bit:      1  1 to inverse the polarity                */
     uint32_t AGCDATA_FMT:1;             /*!< bit:      2  AGC data format                          */
     uint32_t SAMPLE_METHOD:1;           /*!< bit:      3  Sample Method                            */
-    uint32_t USE_OLD_PWM:1;             /*!< bit:      4  PWM Option                               */
+    uint32_t :1;                        /*!< bit:      4  Reserved                                 */
     uint32_t PWM_PERIOD:4;              /*!< bit:   5..8  programmable PWM update period           */
     uint32_t AGCDATA_IN:10;             /*!< bit:  9..18  agc value from AGC                       */
-    uint32_t USE_AGCUPDATE:1;           /*!< bit:     19  Use agcupdate                            */
-    uint32_t AGCUPDATE:1;               /*!< bit:     20  agcupdate                                */
+    uint32_t :2;                        /*!< bit: 19..20  Reserved                                 */
     uint32_t CLOCK_SEL:2;               /*!< bit: 21..22  PWM Source Clock Frequency Select        */
     uint32_t :9;                        /*!< bit: 23..31  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
@@ -3121,23 +3120,12 @@ typedef union {
   #define LPMCU_MISC_REGS_PWM_1_CONTROL_SAMPLE_METHOD_1_Val        0X1ul  /**< \brief (LPMCU_MISC_REGS_PWM_1_CONTROL) Samples at PWM period but will lose LSBs if less than 1024  */
 #define LPMCU_MISC_REGS_PWM_1_CONTROL_SAMPLE_METHOD_0    (LPMCU_MISC_REGS_PWM_1_CONTROL_SAMPLE_METHOD_0_Val << LPMCU_MISC_REGS_PWM_1_CONTROL_SAMPLE_METHOD_Pos)
 #define LPMCU_MISC_REGS_PWM_1_CONTROL_SAMPLE_METHOD_1    (LPMCU_MISC_REGS_PWM_1_CONTROL_SAMPLE_METHOD_1_Val << LPMCU_MISC_REGS_PWM_1_CONTROL_SAMPLE_METHOD_Pos)
-#define LPMCU_MISC_REGS_PWM_1_CONTROL_USE_OLD_PWM_Pos 4  /**< \brief (LPMCU_MISC_REGS_PWM_1_CONTROL) PWM Option                   */
-#define LPMCU_MISC_REGS_PWM_1_CONTROL_USE_OLD_PWM_Msk (0x1ul << LPMCU_MISC_REGS_PWM_1_CONTROL_USE_OLD_PWM_Pos)
-#define LPMCU_MISC_REGS_PWM_1_CONTROL_USE_OLD_PWM(value) (LPMCU_MISC_REGS_PWM_1_CONTROL_USE_OLD_PWM_Msk & ((value) << LPMCU_MISC_REGS_PWM_1_CONTROL_USE_OLD_PWM_Pos))  
-  #define LPMCU_MISC_REGS_PWM_1_CONTROL_USE_OLD_PWM_0_Val        0X0ul  /**< \brief (LPMCU_MISC_REGS_PWM_1_CONTROL) New PWM  */
-  #define LPMCU_MISC_REGS_PWM_1_CONTROL_USE_OLD_PWM_1_Val        0X1ul  /**< \brief (LPMCU_MISC_REGS_PWM_1_CONTROL) Old PWM  */
-#define LPMCU_MISC_REGS_PWM_1_CONTROL_USE_OLD_PWM_0    (LPMCU_MISC_REGS_PWM_1_CONTROL_USE_OLD_PWM_0_Val << LPMCU_MISC_REGS_PWM_1_CONTROL_USE_OLD_PWM_Pos)
-#define LPMCU_MISC_REGS_PWM_1_CONTROL_USE_OLD_PWM_1    (LPMCU_MISC_REGS_PWM_1_CONTROL_USE_OLD_PWM_1_Val << LPMCU_MISC_REGS_PWM_1_CONTROL_USE_OLD_PWM_Pos)
 #define LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_PERIOD_Pos 5  /**< \brief (LPMCU_MISC_REGS_PWM_1_CONTROL) programmable PWM update period */
 #define LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_PERIOD_Msk (0xFul << LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_PERIOD_Pos)
 #define LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_PERIOD(value) (LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_PERIOD_Msk & ((value) << LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_PERIOD_Pos))  
 #define LPMCU_MISC_REGS_PWM_1_CONTROL_AGCDATA_IN_Pos 9  /**< \brief (LPMCU_MISC_REGS_PWM_1_CONTROL) agc value from AGC           */
 #define LPMCU_MISC_REGS_PWM_1_CONTROL_AGCDATA_IN_Msk (0x3FFul << LPMCU_MISC_REGS_PWM_1_CONTROL_AGCDATA_IN_Pos)
 #define LPMCU_MISC_REGS_PWM_1_CONTROL_AGCDATA_IN(value) (LPMCU_MISC_REGS_PWM_1_CONTROL_AGCDATA_IN_Msk & ((value) << LPMCU_MISC_REGS_PWM_1_CONTROL_AGCDATA_IN_Pos))  
-#define LPMCU_MISC_REGS_PWM_1_CONTROL_USE_AGCUPDATE_Pos 19  /**< \brief (LPMCU_MISC_REGS_PWM_1_CONTROL) Use agcupdate                */
-#define LPMCU_MISC_REGS_PWM_1_CONTROL_USE_AGCUPDATE (0x1ul << LPMCU_MISC_REGS_PWM_1_CONTROL_USE_AGCUPDATE_Pos)  
-#define LPMCU_MISC_REGS_PWM_1_CONTROL_AGCUPDATE_Pos 20  /**< \brief (LPMCU_MISC_REGS_PWM_1_CONTROL) agcupdate                    */
-#define LPMCU_MISC_REGS_PWM_1_CONTROL_AGCUPDATE (0x1ul << LPMCU_MISC_REGS_PWM_1_CONTROL_AGCUPDATE_Pos)  
 #define LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL_Pos 21  /**< \brief (LPMCU_MISC_REGS_PWM_1_CONTROL) PWM Source Clock Frequency Select */
 #define LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL_Msk (0x3ul << LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL_Pos)
 #define LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL(value) (LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL_Msk & ((value) << LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL_Pos))  
@@ -3149,7 +3137,7 @@ typedef union {
 #define LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL_1    (LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL_1_Val << LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL_Pos)
 #define LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL_2    (LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL_2_Val << LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL_Pos)
 #define LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL_3    (LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL_3_Val << LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL_Pos)
-#define LPMCU_MISC_REGS_PWM_1_CONTROL_MASK    0x7FFFFFul    /**< \brief (LPMCU_MISC_REGS_PWM_1_CONTROL) Register MASK */
+#define LPMCU_MISC_REGS_PWM_1_CONTROL_MASK    0x67FFEFul    /**< \brief (LPMCU_MISC_REGS_PWM_1_CONTROL) Register MASK */
 
 /* -------- LPMCU_MISC_REGS_PWM_2_CONTROL : (LPMCU_MISC_REGS Offset: 0x164) (R/W  32) PWM 2 Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -3159,11 +3147,10 @@ typedef union {
     uint32_t OUTPUT_POLARITY:1;         /*!< bit:      1  1 to inverse the polarity                */
     uint32_t AGCDATA_FMT:1;             /*!< bit:      2  AGC data format                          */
     uint32_t SAMPLE_METHOD:1;           /*!< bit:      3  Sample Method                            */
-    uint32_t USE_OLD_PWM:1;             /*!< bit:      4  PWM Option                               */
+    uint32_t :1;                        /*!< bit:      4  Reserved                                 */
     uint32_t PWM_PERIOD:4;              /*!< bit:   5..8  programmable PWM update period           */
     uint32_t AGCDATA_IN:10;             /*!< bit:  9..18  agc value from AGC                       */
-    uint32_t USE_AGCUPDATE:1;           /*!< bit:     19  Use agcupdate                            */
-    uint32_t AGCUPDATE:1;               /*!< bit:     20  agcupdate                                */
+    uint32_t :2;                        /*!< bit: 19..20  Reserved                                 */
     uint32_t CLOCK_SEL:2;               /*!< bit: 21..22  PWM Source Clock Frequency Select        */
     uint32_t :9;                        /*!< bit: 23..31  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
@@ -3187,23 +3174,12 @@ typedef union {
   #define LPMCU_MISC_REGS_PWM_2_CONTROL_SAMPLE_METHOD_1_Val        0X1ul  /**< \brief (LPMCU_MISC_REGS_PWM_2_CONTROL) Samples at PWM period but will lose LSBs if less than 1024  */
 #define LPMCU_MISC_REGS_PWM_2_CONTROL_SAMPLE_METHOD_0    (LPMCU_MISC_REGS_PWM_2_CONTROL_SAMPLE_METHOD_0_Val << LPMCU_MISC_REGS_PWM_2_CONTROL_SAMPLE_METHOD_Pos)
 #define LPMCU_MISC_REGS_PWM_2_CONTROL_SAMPLE_METHOD_1    (LPMCU_MISC_REGS_PWM_2_CONTROL_SAMPLE_METHOD_1_Val << LPMCU_MISC_REGS_PWM_2_CONTROL_SAMPLE_METHOD_Pos)
-#define LPMCU_MISC_REGS_PWM_2_CONTROL_USE_OLD_PWM_Pos 4  /**< \brief (LPMCU_MISC_REGS_PWM_2_CONTROL) PWM Option                   */
-#define LPMCU_MISC_REGS_PWM_2_CONTROL_USE_OLD_PWM_Msk (0x1ul << LPMCU_MISC_REGS_PWM_2_CONTROL_USE_OLD_PWM_Pos)
-#define LPMCU_MISC_REGS_PWM_2_CONTROL_USE_OLD_PWM(value) (LPMCU_MISC_REGS_PWM_2_CONTROL_USE_OLD_PWM_Msk & ((value) << LPMCU_MISC_REGS_PWM_2_CONTROL_USE_OLD_PWM_Pos))  
-  #define LPMCU_MISC_REGS_PWM_2_CONTROL_USE_OLD_PWM_0_Val        0X0ul  /**< \brief (LPMCU_MISC_REGS_PWM_2_CONTROL) New PWM  */
-  #define LPMCU_MISC_REGS_PWM_2_CONTROL_USE_OLD_PWM_1_Val        0X1ul  /**< \brief (LPMCU_MISC_REGS_PWM_2_CONTROL) Old PWM  */
-#define LPMCU_MISC_REGS_PWM_2_CONTROL_USE_OLD_PWM_0    (LPMCU_MISC_REGS_PWM_2_CONTROL_USE_OLD_PWM_0_Val << LPMCU_MISC_REGS_PWM_2_CONTROL_USE_OLD_PWM_Pos)
-#define LPMCU_MISC_REGS_PWM_2_CONTROL_USE_OLD_PWM_1    (LPMCU_MISC_REGS_PWM_2_CONTROL_USE_OLD_PWM_1_Val << LPMCU_MISC_REGS_PWM_2_CONTROL_USE_OLD_PWM_Pos)
 #define LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_PERIOD_Pos 5  /**< \brief (LPMCU_MISC_REGS_PWM_2_CONTROL) programmable PWM update period */
 #define LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_PERIOD_Msk (0xFul << LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_PERIOD_Pos)
 #define LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_PERIOD(value) (LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_PERIOD_Msk & ((value) << LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_PERIOD_Pos))  
 #define LPMCU_MISC_REGS_PWM_2_CONTROL_AGCDATA_IN_Pos 9  /**< \brief (LPMCU_MISC_REGS_PWM_2_CONTROL) agc value from AGC           */
 #define LPMCU_MISC_REGS_PWM_2_CONTROL_AGCDATA_IN_Msk (0x3FFul << LPMCU_MISC_REGS_PWM_2_CONTROL_AGCDATA_IN_Pos)
 #define LPMCU_MISC_REGS_PWM_2_CONTROL_AGCDATA_IN(value) (LPMCU_MISC_REGS_PWM_2_CONTROL_AGCDATA_IN_Msk & ((value) << LPMCU_MISC_REGS_PWM_2_CONTROL_AGCDATA_IN_Pos))  
-#define LPMCU_MISC_REGS_PWM_2_CONTROL_USE_AGCUPDATE_Pos 19  /**< \brief (LPMCU_MISC_REGS_PWM_2_CONTROL) Use agcupdate                */
-#define LPMCU_MISC_REGS_PWM_2_CONTROL_USE_AGCUPDATE (0x1ul << LPMCU_MISC_REGS_PWM_2_CONTROL_USE_AGCUPDATE_Pos)  
-#define LPMCU_MISC_REGS_PWM_2_CONTROL_AGCUPDATE_Pos 20  /**< \brief (LPMCU_MISC_REGS_PWM_2_CONTROL) agcupdate                    */
-#define LPMCU_MISC_REGS_PWM_2_CONTROL_AGCUPDATE (0x1ul << LPMCU_MISC_REGS_PWM_2_CONTROL_AGCUPDATE_Pos)  
 #define LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL_Pos 21  /**< \brief (LPMCU_MISC_REGS_PWM_2_CONTROL) PWM Source Clock Frequency Select */
 #define LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL_Msk (0x3ul << LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL_Pos)
 #define LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL(value) (LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL_Msk & ((value) << LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL_Pos))  
@@ -3215,7 +3191,7 @@ typedef union {
 #define LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL_1    (LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL_1_Val << LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL_Pos)
 #define LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL_2    (LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL_2_Val << LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL_Pos)
 #define LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL_3    (LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL_3_Val << LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL_Pos)
-#define LPMCU_MISC_REGS_PWM_2_CONTROL_MASK    0x7FFFFFul    /**< \brief (LPMCU_MISC_REGS_PWM_2_CONTROL) Register MASK */
+#define LPMCU_MISC_REGS_PWM_2_CONTROL_MASK    0x67FFEFul    /**< \brief (LPMCU_MISC_REGS_PWM_2_CONTROL) Register MASK */
 
 /* -------- LPMCU_MISC_REGS_PWM_3_CONTROL : (LPMCU_MISC_REGS Offset: 0x168) (R/W  32) PWM 3 Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -3225,11 +3201,10 @@ typedef union {
     uint32_t OUTPUT_POLARITY:1;         /*!< bit:      1  1 to inverse the polarity                */
     uint32_t AGCDATA_FMT:1;             /*!< bit:      2  AGC data format                          */
     uint32_t SAMPLE_METHOD:1;           /*!< bit:      3  Sample Method                            */
-    uint32_t USE_OLD_PWM:1;             /*!< bit:      4  PWM Option                               */
+    uint32_t :1;                        /*!< bit:      4  Reserved                                 */
     uint32_t PWM_PERIOD:4;              /*!< bit:   5..8  programmable PWM update period           */
     uint32_t AGCDATA_IN:10;             /*!< bit:  9..18  agc value from AGC                       */
-    uint32_t USE_AGCUPDATE:1;           /*!< bit:     19  Use agcupdate                            */
-    uint32_t AGCUPDATE:1;               /*!< bit:     20  agcupdate                                */
+    uint32_t :2;                        /*!< bit: 19..20  Reserved                                 */
     uint32_t CLOCK_SEL:2;               /*!< bit: 21..22  PWM Source Clock Frequency Select        */
     uint32_t :9;                        /*!< bit: 23..31  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
@@ -3253,23 +3228,12 @@ typedef union {
   #define LPMCU_MISC_REGS_PWM_3_CONTROL_SAMPLE_METHOD_1_Val        0X1ul  /**< \brief (LPMCU_MISC_REGS_PWM_3_CONTROL) Samples at PWM period but will lose LSBs if less than 1024  */
 #define LPMCU_MISC_REGS_PWM_3_CONTROL_SAMPLE_METHOD_0    (LPMCU_MISC_REGS_PWM_3_CONTROL_SAMPLE_METHOD_0_Val << LPMCU_MISC_REGS_PWM_3_CONTROL_SAMPLE_METHOD_Pos)
 #define LPMCU_MISC_REGS_PWM_3_CONTROL_SAMPLE_METHOD_1    (LPMCU_MISC_REGS_PWM_3_CONTROL_SAMPLE_METHOD_1_Val << LPMCU_MISC_REGS_PWM_3_CONTROL_SAMPLE_METHOD_Pos)
-#define LPMCU_MISC_REGS_PWM_3_CONTROL_USE_OLD_PWM_Pos 4  /**< \brief (LPMCU_MISC_REGS_PWM_3_CONTROL) PWM Option                   */
-#define LPMCU_MISC_REGS_PWM_3_CONTROL_USE_OLD_PWM_Msk (0x1ul << LPMCU_MISC_REGS_PWM_3_CONTROL_USE_OLD_PWM_Pos)
-#define LPMCU_MISC_REGS_PWM_3_CONTROL_USE_OLD_PWM(value) (LPMCU_MISC_REGS_PWM_3_CONTROL_USE_OLD_PWM_Msk & ((value) << LPMCU_MISC_REGS_PWM_3_CONTROL_USE_OLD_PWM_Pos))  
-  #define LPMCU_MISC_REGS_PWM_3_CONTROL_USE_OLD_PWM_0_Val        0X0ul  /**< \brief (LPMCU_MISC_REGS_PWM_3_CONTROL) New PWM  */
-  #define LPMCU_MISC_REGS_PWM_3_CONTROL_USE_OLD_PWM_1_Val        0X1ul  /**< \brief (LPMCU_MISC_REGS_PWM_3_CONTROL) Old PWM  */
-#define LPMCU_MISC_REGS_PWM_3_CONTROL_USE_OLD_PWM_0    (LPMCU_MISC_REGS_PWM_3_CONTROL_USE_OLD_PWM_0_Val << LPMCU_MISC_REGS_PWM_3_CONTROL_USE_OLD_PWM_Pos)
-#define LPMCU_MISC_REGS_PWM_3_CONTROL_USE_OLD_PWM_1    (LPMCU_MISC_REGS_PWM_3_CONTROL_USE_OLD_PWM_1_Val << LPMCU_MISC_REGS_PWM_3_CONTROL_USE_OLD_PWM_Pos)
 #define LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_PERIOD_Pos 5  /**< \brief (LPMCU_MISC_REGS_PWM_3_CONTROL) programmable PWM update period */
 #define LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_PERIOD_Msk (0xFul << LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_PERIOD_Pos)
 #define LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_PERIOD(value) (LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_PERIOD_Msk & ((value) << LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_PERIOD_Pos))  
 #define LPMCU_MISC_REGS_PWM_3_CONTROL_AGCDATA_IN_Pos 9  /**< \brief (LPMCU_MISC_REGS_PWM_3_CONTROL) agc value from AGC           */
 #define LPMCU_MISC_REGS_PWM_3_CONTROL_AGCDATA_IN_Msk (0x3FFul << LPMCU_MISC_REGS_PWM_3_CONTROL_AGCDATA_IN_Pos)
 #define LPMCU_MISC_REGS_PWM_3_CONTROL_AGCDATA_IN(value) (LPMCU_MISC_REGS_PWM_3_CONTROL_AGCDATA_IN_Msk & ((value) << LPMCU_MISC_REGS_PWM_3_CONTROL_AGCDATA_IN_Pos))  
-#define LPMCU_MISC_REGS_PWM_3_CONTROL_USE_AGCUPDATE_Pos 19  /**< \brief (LPMCU_MISC_REGS_PWM_3_CONTROL) Use agcupdate                */
-#define LPMCU_MISC_REGS_PWM_3_CONTROL_USE_AGCUPDATE (0x1ul << LPMCU_MISC_REGS_PWM_3_CONTROL_USE_AGCUPDATE_Pos)  
-#define LPMCU_MISC_REGS_PWM_3_CONTROL_AGCUPDATE_Pos 20  /**< \brief (LPMCU_MISC_REGS_PWM_3_CONTROL) agcupdate                    */
-#define LPMCU_MISC_REGS_PWM_3_CONTROL_AGCUPDATE (0x1ul << LPMCU_MISC_REGS_PWM_3_CONTROL_AGCUPDATE_Pos)  
 #define LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL_Pos 21  /**< \brief (LPMCU_MISC_REGS_PWM_3_CONTROL) PWM Source Clock Frequency Select */
 #define LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL_Msk (0x3ul << LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL_Pos)
 #define LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL(value) (LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL_Msk & ((value) << LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL_Pos))  
@@ -3281,7 +3245,7 @@ typedef union {
 #define LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL_1    (LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL_1_Val << LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL_Pos)
 #define LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL_2    (LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL_2_Val << LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL_Pos)
 #define LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL_3    (LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL_3_Val << LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL_Pos)
-#define LPMCU_MISC_REGS_PWM_3_CONTROL_MASK    0x7FFFFFul    /**< \brief (LPMCU_MISC_REGS_PWM_3_CONTROL) Register MASK */
+#define LPMCU_MISC_REGS_PWM_3_CONTROL_MASK    0x67FFEFul    /**< \brief (LPMCU_MISC_REGS_PWM_3_CONTROL) Register MASK */
 
 /* -------- LPMCU_MISC_REGS_PWM_4_CONTROL : (LPMCU_MISC_REGS Offset: 0x16c) (R/W  32) PWM 4 Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -3291,11 +3255,10 @@ typedef union {
     uint32_t OUTPUT_POLARITY:1;         /*!< bit:      1  1 to inverse the polarity                */
     uint32_t AGCDATA_FMT:1;             /*!< bit:      2  AGC data format                          */
     uint32_t SAMPLE_METHOD:1;           /*!< bit:      3  Sample Method                            */
-    uint32_t USE_OLD_PWM:1;             /*!< bit:      4  PWM Option                               */
+    uint32_t :1;                        /*!< bit:      4  Reserved                                 */
     uint32_t PWM_PERIOD:4;              /*!< bit:   5..8  programmable PWM update period           */
     uint32_t AGCDATA_IN:10;             /*!< bit:  9..18  agc value from AGC                       */
-    uint32_t USE_AGCUPDATE:1;           /*!< bit:     19  Use agcupdate                            */
-    uint32_t AGCUPDATE:1;               /*!< bit:     20  agcupdate                                */
+    uint32_t :2;                        /*!< bit: 19..20  Reserved                                 */
     uint32_t CLOCK_SEL:2;               /*!< bit: 21..22  PWM Source Clock Frequency Select        */
     uint32_t :9;                        /*!< bit: 23..31  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
@@ -3319,23 +3282,12 @@ typedef union {
   #define LPMCU_MISC_REGS_PWM_4_CONTROL_SAMPLE_METHOD_1_Val        0X1ul  /**< \brief (LPMCU_MISC_REGS_PWM_4_CONTROL) Samples at PWM period but will lose LSBs if less than 1024  */
 #define LPMCU_MISC_REGS_PWM_4_CONTROL_SAMPLE_METHOD_0    (LPMCU_MISC_REGS_PWM_4_CONTROL_SAMPLE_METHOD_0_Val << LPMCU_MISC_REGS_PWM_4_CONTROL_SAMPLE_METHOD_Pos)
 #define LPMCU_MISC_REGS_PWM_4_CONTROL_SAMPLE_METHOD_1    (LPMCU_MISC_REGS_PWM_4_CONTROL_SAMPLE_METHOD_1_Val << LPMCU_MISC_REGS_PWM_4_CONTROL_SAMPLE_METHOD_Pos)
-#define LPMCU_MISC_REGS_PWM_4_CONTROL_USE_OLD_PWM_Pos 4  /**< \brief (LPMCU_MISC_REGS_PWM_4_CONTROL) PWM Option                   */
-#define LPMCU_MISC_REGS_PWM_4_CONTROL_USE_OLD_PWM_Msk (0x1ul << LPMCU_MISC_REGS_PWM_4_CONTROL_USE_OLD_PWM_Pos)
-#define LPMCU_MISC_REGS_PWM_4_CONTROL_USE_OLD_PWM(value) (LPMCU_MISC_REGS_PWM_4_CONTROL_USE_OLD_PWM_Msk & ((value) << LPMCU_MISC_REGS_PWM_4_CONTROL_USE_OLD_PWM_Pos))  
-  #define LPMCU_MISC_REGS_PWM_4_CONTROL_USE_OLD_PWM_0_Val        0X0ul  /**< \brief (LPMCU_MISC_REGS_PWM_4_CONTROL) New PWM  */
-  #define LPMCU_MISC_REGS_PWM_4_CONTROL_USE_OLD_PWM_1_Val        0X1ul  /**< \brief (LPMCU_MISC_REGS_PWM_4_CONTROL) Old PWM  */
-#define LPMCU_MISC_REGS_PWM_4_CONTROL_USE_OLD_PWM_0    (LPMCU_MISC_REGS_PWM_4_CONTROL_USE_OLD_PWM_0_Val << LPMCU_MISC_REGS_PWM_4_CONTROL_USE_OLD_PWM_Pos)
-#define LPMCU_MISC_REGS_PWM_4_CONTROL_USE_OLD_PWM_1    (LPMCU_MISC_REGS_PWM_4_CONTROL_USE_OLD_PWM_1_Val << LPMCU_MISC_REGS_PWM_4_CONTROL_USE_OLD_PWM_Pos)
 #define LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_PERIOD_Pos 5  /**< \brief (LPMCU_MISC_REGS_PWM_4_CONTROL) programmable PWM update period */
 #define LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_PERIOD_Msk (0xFul << LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_PERIOD_Pos)
 #define LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_PERIOD(value) (LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_PERIOD_Msk & ((value) << LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_PERIOD_Pos))  
 #define LPMCU_MISC_REGS_PWM_4_CONTROL_AGCDATA_IN_Pos 9  /**< \brief (LPMCU_MISC_REGS_PWM_4_CONTROL) agc value from AGC           */
 #define LPMCU_MISC_REGS_PWM_4_CONTROL_AGCDATA_IN_Msk (0x3FFul << LPMCU_MISC_REGS_PWM_4_CONTROL_AGCDATA_IN_Pos)
 #define LPMCU_MISC_REGS_PWM_4_CONTROL_AGCDATA_IN(value) (LPMCU_MISC_REGS_PWM_4_CONTROL_AGCDATA_IN_Msk & ((value) << LPMCU_MISC_REGS_PWM_4_CONTROL_AGCDATA_IN_Pos))  
-#define LPMCU_MISC_REGS_PWM_4_CONTROL_USE_AGCUPDATE_Pos 19  /**< \brief (LPMCU_MISC_REGS_PWM_4_CONTROL) Use agcupdate                */
-#define LPMCU_MISC_REGS_PWM_4_CONTROL_USE_AGCUPDATE (0x1ul << LPMCU_MISC_REGS_PWM_4_CONTROL_USE_AGCUPDATE_Pos)  
-#define LPMCU_MISC_REGS_PWM_4_CONTROL_AGCUPDATE_Pos 20  /**< \brief (LPMCU_MISC_REGS_PWM_4_CONTROL) agcupdate                    */
-#define LPMCU_MISC_REGS_PWM_4_CONTROL_AGCUPDATE (0x1ul << LPMCU_MISC_REGS_PWM_4_CONTROL_AGCUPDATE_Pos)  
 #define LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL_Pos 21  /**< \brief (LPMCU_MISC_REGS_PWM_4_CONTROL) PWM Source Clock Frequency Select */
 #define LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL_Msk (0x3ul << LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL_Pos)
 #define LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL(value) (LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL_Msk & ((value) << LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL_Pos))  
@@ -3347,7 +3299,7 @@ typedef union {
 #define LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL_1    (LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL_1_Val << LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL_Pos)
 #define LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL_2    (LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL_2_Val << LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL_Pos)
 #define LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL_3    (LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL_3_Val << LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL_Pos)
-#define LPMCU_MISC_REGS_PWM_4_CONTROL_MASK    0x7FFFFFul    /**< \brief (LPMCU_MISC_REGS_PWM_4_CONTROL) Register MASK */
+#define LPMCU_MISC_REGS_PWM_4_CONTROL_MASK    0x67FFEFul    /**< \brief (LPMCU_MISC_REGS_PWM_4_CONTROL) Register MASK */
 
 /* -------- LPMCU_MISC_REGS_MBIST_DUAL_STATUS : (LPMCU_MISC_REGS Offset: 0x170) (R/  32) Reflects the status of MBIST from lpmcu and btmcu -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

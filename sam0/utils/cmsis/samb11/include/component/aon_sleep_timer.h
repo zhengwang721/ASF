@@ -47,9 +47,11 @@
 /* ========================================================================== */
 /**  SOFTWARE API DEFINITION FOR AON_SLEEP_TIMER */
 /* ========================================================================== */
-/** \addtogroup SAMB11_AON_SLEEP_TIMER AON_SLEEP_TIMER */
+/** \addtogroup SAMB11_AON_SLEEP_TIMER Always On Sleep Timer */
 /*@{*/
 
+#define AON_SLEEP_TIMER_AONST1234
+#define REV_AON_SLEEP_TIMER              0x100
 
 /* -------- AON_SLEEP_TIMER_CONTROL : (AON_SLEEP_TIMER Offset: 0x00) (R/W  32) Control for the Always On Sleep Timer -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -124,7 +126,7 @@ typedef union {
 
 /** \brief AON_SLEEP_TIMER hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef struct {  /* AON_SLEEP_TIMER */
+typedef struct {  /* Always On Sleep Timer */
   __IO AON_SLEEP_TIMER_CONTROL_Type   CONTROL;        /**< \brief Offset: 0x00 (R/W  32) Control for the Always On Sleep Timer */
   __IO AON_SLEEP_TIMER_SINGLE_COUNT_DURATION_Type SINGLE_COUNT_DURATION; /**< \brief Offset: 0x04 (R/W  32) Count for the single count AND reload */
        RoReg8                         Reserved1[0x4];
