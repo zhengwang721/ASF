@@ -486,19 +486,17 @@ void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 		features.desired_auth = AT_BLE_NO_SEC;
 		features.bond = false;
 		features.mitm_protection = false;
+		features.io_cababilities = AT_BLE_IO_CAP_NO_INPUT_NO_OUTPUT;
 #else
-		 features.desired_auth =  AT_BLE_MODE1_L2_AUTH_PAIR_ENC;
+		features.desired_auth =  AT_BLE_MODE1_L2_AUTH_PAIR_ENC;
 		features.bond = true;
 		features.mitm_protection = true;
-#endif		
-		features.oob_avaiable = false;
 		/* Device capabilities is display only , key will be generated
 		and displayed */
-		
-		//features.io_cababilities = AT_BLE_IO_CAP_DISPLAY_ONLY;
-		
-		features.io_cababilities = AT_BLE_IO_CAP_NO_INPUT_NO_OUTPUT;
-		
+		features.io_cababilities = AT_BLE_IO_CAP_DISPLAY_ONLY;
+#endif		
+		features.oob_avaiable = false;
+			
 		/* Distribution of LTK is required */
 		features.initiator_keys =   AT_BLE_KEY_DIST_ENC;
 		features.responder_keys =   AT_BLE_KEY_DIST_ENC;

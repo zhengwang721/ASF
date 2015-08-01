@@ -1,0 +1,25 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="HID Mouse Application" id="thirdparty.wireless.ble_sdk.apps.hid_device_mouse">
+		<info type="description" value="summary">
+		HID mouse application for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="hid_mouse_app.h"/>
+		<build type="c-source" value="hid_mouse_app.c"/>
+        <build type="define" name="BLE_DEVICE_ROLE" value="BLE_PERIPHERAL"/>
+		<require idref="thirdparty.wireless.ble_sdk.lib"/>
+		<require idref="thirdparty.wireless.ble_sdk.inc"/>
+		<require idref="thirdparty.wireless.ble_sdk.src"/>
+		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
+		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.hid_device"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.hid"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.device_information"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.battery"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.scan_param"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>
+		<require idref="thirdparty.wireless.ble_sdk.utils"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>
