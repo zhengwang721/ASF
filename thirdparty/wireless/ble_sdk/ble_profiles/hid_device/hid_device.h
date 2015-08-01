@@ -252,7 +252,7 @@ uint8_t hid_prf_conf(hid_prf_info_t *ref);
 
 /** @brief HID device profile initialization function 
  */
-void hid_prf_init(void);
+void hid_prf_init(void *param);
 
 /** @brief HID device disconnected handler function
   * 

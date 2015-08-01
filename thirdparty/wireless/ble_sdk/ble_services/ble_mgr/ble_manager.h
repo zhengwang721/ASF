@@ -282,9 +282,6 @@ typedef enum
 /** HID Control Point UUID. */
 #define HID_UUID_CHAR_HID_CONTROL_POINT		     (0x2A4C)
 
-
-
-
 /* All GAP Connection Parameter defined */
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
 /** minimum connection interval */
@@ -322,7 +319,7 @@ typedef enum
 #if ((BLE_DEVICE_ROLE == BLE_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
 
 #if defined HID_DEVICE
-#define BLE_PROFILE_INIT									hid_prf_init(); \
+#define BLE_PROFILE_INIT(param)								hid_prf_init(param); \
 															hid_prf_dev_adv();
 #define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER(param)	hid_prf_disconnect_event_handler(param);
 

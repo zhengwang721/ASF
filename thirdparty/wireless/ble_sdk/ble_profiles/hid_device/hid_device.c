@@ -78,7 +78,7 @@ uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0,
 /**
 * \HID device profile initialization function
 */
-void hid_prf_init(void)
+void hid_prf_init(void *param)
 {   
 	uint8_t serv_num = 0;
 	uint16_t serv_handle = 0;
@@ -112,6 +112,8 @@ void hid_prf_init(void)
 	
 	/* Define the primary service in the GATT server database */
 	dis_primary_service_define(&device_info_serv);
+	
+	UNUSED(param);
 }
 
 /**

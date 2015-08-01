@@ -133,13 +133,13 @@ static uint8_t hid_app_keyb_report_map[] =
 /* Callback called when host change the control point value */
 void hid_prf_control_point_ntf_cb(hid_control_mode_ntf_t *hid_control_point_value_t)
 {
-	DBG_APP_LOG("Control Point Notification Callback :: Service Instance %d Control Value %d", hid_control_point_value_t->serv_inst, hid_control_point_value_t->control_value);
+	DBG_LOG_DEV("Control Point Notification Callback :: Service Instance %d Control Value %d", hid_control_point_value_t->serv_inst, hid_control_point_value_t->control_value);
 }
 
 /* Callback called when host change the protocol mode value */
 void hid_prf_protocol_mode_ntf_cb(hid_proto_mode_ntf_t *protocol_mode)
 {
-	DBG_APP_LOG("Protocol Mode Notification Callback :: Service Instance %d  New Protocol Mode  %d  Connection Handle %d", protocol_mode->serv_inst, protocol_mode->mode, protocol_mode->conn_handle);
+	DBG_LOG_DEV("Protocol Mode Notification Callback :: Service Instance %d  New Protocol Mode  %d  Connection Handle %d", protocol_mode->serv_inst, protocol_mode->mode, protocol_mode->conn_handle);
 }
 
 /* Callback called when host enable/disable the notification for boot report (Mouse/Keyboard)
@@ -148,13 +148,13 @@ void hid_prf_protocol_mode_ntf_cb(hid_proto_mode_ntf_t *protocol_mode)
 */
 void hid_prf_boot_ntf_cb(hid_boot_ntf_t *boot_ntf_info_t)
 {
-	DBG_APP_LOG("Boot Notification Callback :: Service Instance %d  Boot Value  %d  Notification(Enable/Disable) %d", boot_ntf_info_t->serv_inst, boot_ntf_info_t->boot_value, boot_ntf_info_t->ntf_conf);
+	DBG_LOG_DEV("Boot Notification Callback :: Service Instance %d  Boot Value  %d  Notification(Enable/Disable) %d", boot_ntf_info_t->serv_inst, boot_ntf_info_t->boot_value, boot_ntf_info_t->ntf_conf);
 }
 
 /* Callback called when host enable/disable the notification for report (Mouse/Keyboard) */
 void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info)
 {
-	DBG_APP_LOG("Report Notification Callback Service Instance %d  Report ID  %d  Notification(Enable/Disable) %d Connection Handle %d", report_info->serv_inst, report_info->report_ID, report_info->ntf_conf, report_info->conn_handle);
+	DBG_LOG_DEV("Report Notification Callback Service Instance %d  Report ID  %d  Notification(Enable/Disable) %d Connection Handle %d", report_info->serv_inst, report_info->report_ID, report_info->ntf_conf, report_info->conn_handle);
     report_ntf_info.serv_inst = report_info->serv_inst;
 	report_ntf_info.report_ID = report_info->report_ID;
 	report_ntf_info.ntf_conf = report_info->ntf_conf;
@@ -164,13 +164,17 @@ void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info)
 /* Callback called when user press the button for writing new characteristic value */
 void button_cb(void)
 {
-	hw_timer_start(0);
+	key_status = 1;
+	
+	if(!report_ntf_info.ntf_conf)
+	{
+		DBG_LOG("HID device not configured for reports");
+	}
 }
 
 void timer_callback_handler(void)
 {
-	hw_timer_stop();
-	key_status = 1;
+ /* Application can use this for application timer events */	
 }
 
 /* Initialize the application information for HID profile*/
@@ -196,11 +200,11 @@ void hid_keyboard_app_init(void)
 	
 	if(hid_prf_conf(&hid_prf_data)==HID_PRF_SUCESS)
 	{
-		DBG_APP_LOG("HID Profile Configured");
+		DBG_LOG("HID Profile Configured");
 	}
 	else
 	{
-		DBG_APP_LOG("HID Profile Configuration Failed");
+		DBG_LOG("HID Profile Configuration Failed");
 	}
 }
 
@@ -225,7 +229,7 @@ int main(void )
 	hw_timer_init();
 	hw_timer_register_callback(timer_callback_handler);
 	
-	DBG_APP_LOG("Initializing HID Keyboard Application");
+	DBG_LOG("Initializing HID Keyboard Application");
 	
 	/* Initialize the profile based on user input */
 	hid_keyboard_app_init();
@@ -245,8 +249,9 @@ int main(void )
 		ble_event_task();
 		
 		/* Check for key status */
-		if(key_status)
+		if(key_status && report_ntf_info.ntf_conf)
 		{
+			delay_ms(KEY_PAD_DEBOUNCE_TIME);
 			if((keyb_id == 0) || (keyb_id == 6))
 			{
 				app_keyb_report[0] = 0x02;

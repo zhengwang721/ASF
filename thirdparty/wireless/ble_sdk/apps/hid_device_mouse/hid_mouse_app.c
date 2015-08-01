@@ -101,12 +101,12 @@ uint8_t cnt = 0;
 uint8_t mouse_pos = MOUSE_RIGHT_MOVEMENT;
 
 /* Mouse report info*/
-static const uint8_t hid_app_mouse_report_map[] =
+static uint8_t hid_app_mouse_report_map[] =
 {
 	0x05, 0x01,	/* Usage Page (Generic Desktop),       */
 	0x09, 0x02,	/* Usage (Mouse),                      */
 	0xA1, 0x01,	/*  Collection (Application),          */
-	//0x85, 0x01, /*  REPORT ID (1) - MANDATORY		  */
+	0x85, 0x01, /*  REPORT ID (1) - MANDATORY		  */
 	0x09, 0x01,	/*   Usage (Pointer),                  */
 	0xA1, 0x00,	/*  Collection (Physical),             */
 	0x05, 0x09,	/*     Usage Page (Buttons),           */
@@ -134,30 +134,30 @@ static const uint8_t hid_app_mouse_report_map[] =
 };
 
 /* Callback called when host change the control point value */
-void hid_prf_control_point_ntf_cb(hid_control_mode_ntf_t *hid_control_point_value)
+void hid_prf_control_point_ntf_cb(hid_control_mode_ntf_t *hid_control_point_value_t)
 {
-	DBG_APP_LOG("Control Point Notification Callback :: Service Instance %d Control Value %d", hid_control_point_value->serv_inst, hid_control_point_value->control_value);
+	DBG_LOG_DEV("Control Point Notification Callback :: Service Instance %d Control Value %d", hid_control_point_value_t->serv_inst, hid_control_point_value_t->control_value);
 }
 
 /* Callback called when host change the protocol mode value */
 void hid_prf_protocol_mode_ntf_cb(hid_proto_mode_ntf_t *protocol_mode)
 {
-	DBG_APP_LOG("Protocol Mode Notification Callback :: Service Instance %d  New Protocol Mode  %d  Connection Handle %d", protocol_mode->serv_inst, protocol_mode->mode, protocol_mode->conn_handle);
+	DBG_LOG_DEV("Protocol Mode Notification Callback :: Service Instance %d  New Protocol Mode  %d  Connection Handle %d", protocol_mode->serv_inst, protocol_mode->mode, protocol_mode->conn_handle);
 }
 
 /* Callback called when host enable/disable the notification for boot report (Mouse/Keyboard)
    Mouse Boot Value 4
    Keyboard Boot Value 6
 */
-void hid_prf_boot_ntf_cb(hid_boot_ntf_t *boot_ntf_info)
+void hid_prf_boot_ntf_cb(hid_boot_ntf_t *boot_ntf_info_t)
 {
-	DBG_APP_LOG("Boot Notification Callback :: Service Instance %d  Boot Value  %d  Notification(Enable/Disable) %d", boot_ntf_info->serv_inst, boot_ntf_info->boot_value, boot_ntf_info->ntf_conf);
+	DBG_LOG_DEV("Boot Notification Callback :: Service Instance %d  Boot Value  %d  Notification(Enable/Disable) %d", boot_ntf_info_t->serv_inst, boot_ntf_info_t->boot_value, boot_ntf_info_t->ntf_conf);
 }
 
 /* Callback called when host enable/disable the notification for report (Mouse/Keyboard) */
 void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info)
 {
-	DBG_APP_LOG("Report Notification Callback Service Instance %d  Report ID  %d  Notification(Enable/Disable) %d Connection Handle %d", report_info->serv_inst, report_info->report_ID, report_info->ntf_conf, report_info->conn_handle);
+	DBG_LOG_DEV("Report Notification Callback Service Instance %d  Report ID  %d  Notification(Enable/Disable) %d Connection Handle %d", report_info->serv_inst, report_info->report_ID, report_info->ntf_conf, report_info->conn_handle);
     report_ntf_info.serv_inst = report_info->serv_inst;
 	report_ntf_info.report_ID = report_info->report_ID;
 	report_ntf_info.ntf_conf = report_info->ntf_conf;
@@ -167,22 +167,25 @@ void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info)
 /* Callback called when user press the button for writing new characteristic value */
 void button_cb(void)
 {
-	hw_timer_start(1);
+	if(!mouse_status)
+	{
+		mouse_status = 1;
+	}
+	
+	if(!report_ntf_info.ntf_conf)
+	{
+		DBG_LOG("HID device not configured for reports");
+	}
 }
 
 void timer_callback_handler(void)
 {
-	hw_timer_stop();
-	if(!mouse_status)
-	{
-	   mouse_status = 1;
-	}
+	/* Application can use this for application timer events */
 }
 
 /* Initialize the application information for HID profile*/
-void hid_app_init(void)
+void hid_mouse_app_init(void)
 {
-	uint8_t status;
 	hid_prf_data.hid_serv_instance = 1;
 	hid_prf_data.hid_device = HID_MOUSE_MODE; 
 	hid_prf_data.protocol_mode = HID_REPORT_PROTOCOL_MODE; 
@@ -192,9 +195,9 @@ void hid_app_init(void)
 	hid_prf_data.report_id[0] = 1;  
 	hid_prf_data.report_type[0] = INPUT_REPORT;  
 	
-	hid_prf_data.report_val[0] = &app_mouse_report;	
+	hid_prf_data.report_val[0] = &app_mouse_report[0];	
 	hid_prf_data.report_len[0] = sizeof(app_mouse_report);
-	hid_prf_data.report_map_info.report_map = &hid_app_mouse_report_map;
+	hid_prf_data.report_map_info.report_map = hid_app_mouse_report_map;
 	hid_prf_data.report_map_info.report_map_len = sizeof(hid_app_mouse_report_map);
 	hid_prf_data.hid_device_info.bcd_hid = 0x0111;        
 	hid_prf_data.hid_device_info.bcountry_code = 0x00;
@@ -202,11 +205,11 @@ void hid_app_init(void)
 	
 	if(hid_prf_conf(&hid_prf_data)==HID_PRF_SUCESS)
 	{
-		DBG_APP_LOG("HID Profile Configured");
+		DBG_LOG("HID Profile Configured");
 	}
 	else
 	{
-		DBG_APP_LOG("HID Profile Configuration Failed");
+		DBG_LOG("HID Profile Configuration Failed");
 	}
 }
 
@@ -225,11 +228,7 @@ bool hid_mouse_move(int8_t pos, uint8_t index_report)
 
 int main(void )
 {
-	at_ble_events_t event;
-	uint8_t params[EVENT_MAX_PARAM_LENGTH];
-	at_ble_addr_t dev_addr = {AT_BLE_ADDRESS_PUBLIC,
-		{0x13, 0x18, 0x11, 0x6a, 0x7f, 0x7f} };
-	
+		
 #if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -248,13 +247,13 @@ int main(void )
 	hw_timer_init();
 	hw_timer_register_callback(timer_callback_handler);
 	
-	DBG_APP_LOG("Initializing HID Mouse Application");
+	DBG_LOG("Initializing HID Mouse Application");
 	
 	/* Initialize the profile based on user input */
-	hid_app_init();
+	hid_mouse_app_init();
 	
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(&dev_addr);
+	ble_device_init(NULL);
 	
 	/* Register the notification handler */
 	notify_report_ntf_handler(hid_prf_report_ntf_cb);
@@ -268,8 +267,10 @@ int main(void )
 		ble_event_task();
 		
 		/* Check for key status */
-		if(mouse_status)
+		if(mouse_status && report_ntf_info.ntf_conf)
 		{
+			delay_ms(KEY_PAD_DEBOUNCE_TIME);
+			
 			switch(mouse_pos)
 			{
 				case MOUSE_RIGHT_MOVEMENT:
@@ -278,7 +279,7 @@ int main(void )
 					{
 						++cnt;
 						app_mouse_report[2] = 0;
-						DBG_APP_LOG("Mouse Right Movement");
+						DBG_LOG("Mouse Right Movement");
 						if(cnt == 5)
 						{
 							mouse_pos = MOUSE_DOWN_MOVEMENT;
@@ -294,7 +295,7 @@ int main(void )
 					{
 						++cnt;
 						app_mouse_report[2] = 0;
-						DBG_APP_LOG("Mouse Left  Movement");
+						DBG_LOG("Mouse Left  Movement");
 						if(cnt == 5)
 						{
 							mouse_pos = MOUSE_UP_MOVEMENT;
@@ -310,7 +311,7 @@ int main(void )
 					{
 						++cnt;
 						app_mouse_report[1] = 0;
-						DBG_APP_LOG("Mouse UP    Movement");
+						DBG_LOG("Mouse UP    Movement");
 						if(cnt == 5)
 						{
 							mouse_pos = MOUSE_RIGHT_MOVEMENT;
@@ -327,7 +328,7 @@ int main(void )
 					{
 						++cnt;
 						app_mouse_report[1] = 0;
-						DBG_APP_LOG("Mouse Down  Movement");
+						DBG_LOG("Mouse Down  Movement");
 						if(cnt == 5)
 						{
 							mouse_pos = MOUSE_LEFT_MOVEMENT;
@@ -337,9 +338,10 @@ int main(void )
 				}
 				break;
 			}
-			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, report_ntf_info.report_ID, &app_mouse_report, sizeof(app_mouse_report));
+			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, report_ntf_info.report_ID, app_mouse_report, sizeof(app_mouse_report));
 			mouse_status = 0;			
     	}
+	
 	}
 
 	return 0;

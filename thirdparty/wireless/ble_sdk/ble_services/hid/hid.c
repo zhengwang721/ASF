@@ -548,7 +548,7 @@ void hid_boot_keyboardreport_update(at_ble_handle_t conn_handle, uint8_t serv_in
 	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_boot_keyboard_in_report->client_config_handle, &value, 0, sizeof(uint16_t), sizeof(uint16_t));
 	if (status != AT_BLE_SUCCESS)
 	{
-		DBG_LOG_DEV_DEV("at_ble_characteristic_value_get value get failed");
+		DBG_LOG_DEV("at_ble_characteristic_value_get value get failed");
 	}
 	//If Notification Enabled
 	if(value == 1)

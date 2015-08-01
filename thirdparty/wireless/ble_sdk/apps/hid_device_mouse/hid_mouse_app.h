@@ -53,14 +53,10 @@
 /****************************************************************************************
 *							        Macros	                                     							*
 ****************************************************************************************/
-#define DBG_APP_LOG		    printf("\r\n");\
-							printf
-
-/** @brief Maximum length of event parameters */
-#define EVENT_MAX_PARAM_LENGTH 512
-
 /** @brief Mouse movement pixel position */
 #define MOUSE_MOVEMENT_POS 10
+
+#define KEY_PAD_DEBOUNCE_TIME	(200)
 
 /****************************************************************************************
 *							        Enumerations	                                   	*
@@ -80,9 +76,19 @@ typedef enum
 *							        Function                                     		*
 ****************************************************************************************/
 /** @brief Initialize the hid profile based on user input */
-void hid_app_init(void);
+void hid_mouse_app_init(void);
 
 /** @brief Timer callback handler */
 void timer_callback_handler(void);
+
+void hid_prf_control_point_ntf_cb(hid_control_mode_ntf_t *hid_control_point_value);
+
+void hid_prf_protocol_mode_ntf_cb(hid_proto_mode_ntf_t *protocol_mode);
+
+void hid_prf_boot_ntf_cb(hid_boot_ntf_t *boot_ntf_info);
+
+void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info);
+
+bool hid_mouse_move(int8_t pos, uint8_t index_report);
 
 #endif /*__HID_DEVICE_APP_H__*/
