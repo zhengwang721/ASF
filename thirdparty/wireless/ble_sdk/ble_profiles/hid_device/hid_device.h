@@ -56,10 +56,10 @@
 //#define DBG_PRF_LOG
 
 /** @brief Enable by user for mouse application : Configure by user. */
-//#define ADV_DATA_APPEARANCE_DATA (0x03C2)  //Mouse
+#define ADV_DATA_APPEARANCE_DATA (0x03C2)  //Mouse
 
 /** @brief Enable by user for keyboard application : Configure by user. */
-#define ADV_DATA_APPEARANCE_DATA (0x03C1)    //Keyboard
+//#define ADV_DATA_APPEARANCE_DATA (0x03C1)    //Keyboard
 
 /** @brief Number of Report : Configure by user. */
 #define HID_NUM_OF_REPORT             (1)
@@ -71,10 +71,10 @@
 //#define BOOT_MODE             
 
 /** @brief Enable the macro for mouse device : Configure by user. */
-//#define HID_MOUSE_DEVICE
+#define HID_MOUSE_DEVICE
 
 /** @brief Enable the macro for Keyboard device : Configure by user. */
-#define HID_KEYBOARD_DEVICE
+//#define HID_KEYBOARD_DEVICE
 
 /** @brief HID Max Service Instance. */
 #define HID_MAX_SERV_INST              (2)
