@@ -55,7 +55,7 @@
 ****************************************************************************************/
 
 /** HID Report Characteristic UUID. */
-#define HID_REPORT_REF_DESC					(0x2908)
+
 
 
 /****************************************************************************************
@@ -73,6 +73,9 @@ typedef enum
 	
 	/// HID Service Registration Failed
 	HID_SERV_REG_FAILED,
+	
+	/// HID Report ID Not Found
+	HID_INVALID_INST = 0xFF 
 	
 }hid_serv_status;
 
@@ -266,4 +269,5 @@ void hid_boot_mousereport_update(at_ble_handle_t conn_handle, uint8_t serv_inst,
   */
 void hid_boot_keyboardreport_update(at_ble_handle_t conn_handle, uint8_t serv_inst, uint8_t *bootreport, uint16_t len);
 
+uint8_t hid_get_reportchar(uint16_t handle, uint8_t serv, uint8_t reportid);
 #endif /*__HID_H__*/

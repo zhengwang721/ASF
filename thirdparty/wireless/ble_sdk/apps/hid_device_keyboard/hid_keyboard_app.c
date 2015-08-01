@@ -52,8 +52,6 @@
  * This is the reference manual for the HID Keyboard Device Profile Application declarations
  */
 /*- Includes -----------------------------------------------------------------------*/
-#define DEBUG_LOG
-
 #include <asf.h>
 #include "platform.h"
 #include "at_ble_api.h"
@@ -97,7 +95,7 @@ uint8_t app_keyb_report[8] = {0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00};
 uint8_t key_status = 0;	
 
 /* keyboard report */
-static const uint8_t hid_app_keyb_report_map[] =
+static uint8_t hid_app_keyb_report_map[] =
 {
    0x05, 0x01,		/* Usage Page (Generic Desktop)      */
    0x09, 0x06,		/* Usage (Keyboard)                  */
@@ -133,9 +131,9 @@ static const uint8_t hid_app_keyb_report_map[] =
 };
 
 /* Callback called when host change the control point value */
-void hid_prf_control_point_ntf_cb(hid_control_mode_ntf_t *hid_control_point_value)
+void hid_prf_control_point_ntf_cb(hid_control_mode_ntf_t *hid_control_point_value_t)
 {
-	DBG_APP_LOG("Control Point Notification Callback :: Service Instance %d Control Value %d", hid_control_point_value->serv_inst, hid_control_point_value->control_value);
+	DBG_APP_LOG("Control Point Notification Callback :: Service Instance %d Control Value %d", hid_control_point_value_t->serv_inst, hid_control_point_value_t->control_value);
 }
 
 /* Callback called when host change the protocol mode value */
@@ -148,9 +146,9 @@ void hid_prf_protocol_mode_ntf_cb(hid_proto_mode_ntf_t *protocol_mode)
    Mouse Boot Value 4
    Keyboard Boot Value 6
 */
-void hid_prf_boot_ntf_cb(hid_boot_ntf_t *boot_ntf_info)
+void hid_prf_boot_ntf_cb(hid_boot_ntf_t *boot_ntf_info_t)
 {
-	DBG_APP_LOG("Boot Notification Callback :: Service Instance %d  Boot Value  %d  Notification(Enable/Disable) %d", boot_ntf_info->serv_inst, boot_ntf_info->boot_value, boot_ntf_info->ntf_conf);
+	DBG_APP_LOG("Boot Notification Callback :: Service Instance %d  Boot Value  %d  Notification(Enable/Disable) %d", boot_ntf_info_t->serv_inst, boot_ntf_info_t->boot_value, boot_ntf_info_t->ntf_conf);
 }
 
 /* Callback called when host enable/disable the notification for report (Mouse/Keyboard) */
@@ -176,9 +174,9 @@ void timer_callback_handler(void)
 }
 
 /* Initialize the application information for HID profile*/
-void hid_app_init(void)
+void hid_keyboard_app_init(void)
 {
-	uint8_t status;
+	
 	hid_prf_data.hid_serv_instance = 1;
 	hid_prf_data.hid_device = HID_KEYBOARD_MODE; 
 	hid_prf_data.protocol_mode = HID_REPORT_PROTOCOL_MODE; 
@@ -188,9 +186,9 @@ void hid_app_init(void)
 	hid_prf_data.report_id[0] = 1;  
 	hid_prf_data.report_type[0] = INPUT_REPORT;  
 	
-	hid_prf_data.report_val[0] = &app_keyb_report;	
+	hid_prf_data.report_val[0] = &app_keyb_report[0];	
 	hid_prf_data.report_len[0] = sizeof(app_keyb_report);
-	hid_prf_data.report_map_info.report_map = &hid_app_keyb_report_map;
+	hid_prf_data.report_map_info.report_map = hid_app_keyb_report_map;
 	hid_prf_data.report_map_info.report_map_len = sizeof(hid_app_keyb_report_map);
 	hid_prf_data.hid_device_info.bcd_hid = 0x0111;        
 	hid_prf_data.hid_device_info.bcountry_code = 0x00;
@@ -202,17 +200,13 @@ void hid_app_init(void)
 	}
 	else
 	{
-		DBG_APP_LOG("HID Profile Configured Fail");
+		DBG_APP_LOG("HID Profile Configuration Failed");
 	}
 }
 
 int main(void )
 {
-	at_ble_events_t event;
-	uint8_t params[EVENT_MAX_PARAM_LENGTH];
-	at_ble_addr_t dev_addr = {AT_BLE_ADDRESS_PUBLIC,
-		{0x12, 0x18, 0x11, 0x6a, 0x7f, 0x7f} };
-	
+
 #if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -234,10 +228,10 @@ int main(void )
 	DBG_APP_LOG("Initializing HID Keyboard Application");
 	
 	/* Initialize the profile based on user input */
-	hid_app_init();
+	hid_keyboard_app_init();
 	
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(&dev_addr);
+	ble_device_init(NULL);
 	
 	/* Register the notification handler */
 	notify_report_ntf_handler(hid_prf_report_ntf_cb);
@@ -263,10 +257,10 @@ int main(void )
 			}
 			
 			app_keyb_report[2] = keyb_disp[keyb_id];
-			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, report_ntf_info.report_ID, &app_keyb_report, sizeof(app_keyb_report));
+			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, report_ntf_info.report_ID, app_keyb_report, sizeof(app_keyb_report));
 			
 			app_keyb_report[2] = 0x00;
-			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, report_ntf_info.report_ID, &app_keyb_report, sizeof(app_keyb_report));	
+			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, report_ntf_info.report_ID, app_keyb_report, sizeof(app_keyb_report));	
 			
 			key_status = 0;
 			

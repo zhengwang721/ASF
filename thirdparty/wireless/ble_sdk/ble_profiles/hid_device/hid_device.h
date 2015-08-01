@@ -235,7 +235,7 @@ typedef struct
 typedef void (*report_ntf_callback_t)(hid_report_ntf_t *);
 typedef void (*boot_ntf_callback_t)(hid_boot_ntf_t *);
 typedef void (*protocol_mode_ntf_callback_t)(hid_proto_mode_ntf_t *);
-typedef void (*control_point_ntf_callback_t)(hid_proto_mode_ntf_t *);
+typedef void (*control_point_ntf_callback_t)(hid_control_mode_ntf_t *);
 
 /****************************************************************************************
 *                                       Functions                                       *
@@ -252,7 +252,7 @@ uint8_t hid_prf_conf(hid_prf_info_t *ref);
 
 /** @brief HID device profile initialization function 
  */
-void hid_prf_init();
+void hid_prf_init(void);
 
 /** @brief HID device disconnected handler function
   * 

@@ -257,6 +257,7 @@ typedef enum
 #define SPS_CHAR_SCAN_INT_VALUE_UUID 			(0x2A4F)														
 #define DIS_CHAR_PNP_ID_UUID					(0x2A50)
 
+#define HID_REPORT_REF_DESC						(0x2908)
 /** HID Protocol Mode Characteristic UUID. */
 #define HID_UUID_CHAR_PROTOCOL_MODE				(0x2A4E)
 
@@ -321,12 +322,9 @@ typedef enum
 #if ((BLE_DEVICE_ROLE == BLE_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
 
 #if defined HID_DEVICE
-#define BLE_PROFILE_INIT						hid_prf_init(); \
-												hid_prf_dev_adv();
-#define BLE_CONNECTED_STATE_HANDLER(param)		ble_connected_state_handler(param);
-
-#define BLE_DISCONNECTED_STATE_HANDLER(param)	ble_disconnected_state_handler(param);\
-												hid_prf_disconnect_event_handler(param);
+#define BLE_PROFILE_INIT									hid_prf_init(); \
+															hid_prf_dev_adv();
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER(param)	hid_prf_disconnect_event_handler(param);
 
 #define BLE_CHARACTERISTIC_CHANGED				hid_prf_char_changed_handler
 #endif
@@ -568,9 +566,8 @@ typedef struct gatt_service_handler
 	at_ble_handle_t	serv_handle;
 	at_ble_characteristic_gen_t	serv_chars[HID_CHARACTERISTIC_NUM];
 	generic_Att_Desc serv_desc[HID_NUM_OF_REPORT];   /*Report descriptor*/
-	//hid_report_ref_t serv_desc[HID_NUM_OF_REPORT];
 }gatt_service_handler_t;
-generic_Att_Desc report_desc[HID_NUM_OF_REPORT];
+
 
 #else
 typedef struct gatt_service_handler

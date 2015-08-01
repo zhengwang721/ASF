@@ -2353,38 +2353,4 @@ at_ble_status_t at_ble_htpt_meas_intv_update(uint16_t meas_intv);
 
 
 /** @}*/
-
-/* utility functions, might be removed later*/
-static uint8_t at_ble_uuid_type2len(at_ble_uuid_type_t type)
-{
-	switch(type)
-	{
-	case AT_BLE_UUID_16 : 
-		return AT_BLE_UUID_16_LEN;
-		
-	case AT_BLE_UUID_32 : 
-		return AT_BLE_UUID_32_LEN;
-		
-	default:
-	case AT_BLE_UUID_128 : 
-		return AT_BLE_UUID_128_LEN;
-	}
-}
-
-static at_ble_uuid_type_t at_ble_uuid_len2type(uint8_t len)
-{
-	switch(len)
-	{
-	case AT_BLE_UUID_16_LEN: 
-		return AT_BLE_UUID_16;
-		
-	case AT_BLE_UUID_32_LEN : 
-		return AT_BLE_UUID_32;
-		
-	default:
-	case AT_BLE_UUID_128_LEN : 
-		return AT_BLE_UUID_128;
-	}
-}
-
 #endif //__AT_BLE_API_H__
