@@ -300,13 +300,21 @@ static void rf_generate_random_seed(void)
 
 	do 
 	{
-		/* Ensure that PLL has locked and receive mode is reached. */
 		trx_reg_write(RF212_REG_TRX_STATE, TRXCMD_TRX_OFF);
+		
+	} while (TRXCMD_TRX_OFF != rf212_status());
+
+	do
+	{
+		/* Ensure that PLL has locked and receive mode is reached. */
 		trx_reg_write(RF212_REG_TRX_STATE, TRXCMD_PLL_ON);
+		
+	} while (TRXCMD_PLL_ON != rf212_status());
+	do
+	{
 		trx_reg_write(RF212_REG_TRX_STATE, TRXCMD_RX_ON);
 		
-	} while (TRXCMD_RX_ON != rf212_status());
-
+	} while (TRXCMD_RX_ON != rf212_status());	
 
 	/* Ensure that register bit RX_PDT_DIS is set to 0. */
 	trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE);
@@ -745,6 +753,44 @@ rf212_off(void)
   off();
   return 0;
 }
+
+
+void SetIEEEAddr(uint8_t *ieee_addr)
+{
+	uint8_t *ptr_to_reg = ieee_addr;
+	//for (uint8_t i = 0; i < 8; i++) {
+	trx_reg_write((0x2b), *ptr_to_reg);
+	ptr_to_reg++;
+	trx_reg_write((0x2a), *ptr_to_reg);
+	ptr_to_reg++;
+	trx_reg_write((0x29), *ptr_to_reg);
+	ptr_to_reg++;
+	trx_reg_write((0x28), *ptr_to_reg);
+	ptr_to_reg++;
+	trx_reg_write((0x27), *ptr_to_reg);
+	ptr_to_reg++;
+	trx_reg_write((0x26), *ptr_to_reg);
+	ptr_to_reg++;
+	trx_reg_write((0x25), *ptr_to_reg);
+	ptr_to_reg++;
+	trx_reg_write((0x24), *ptr_to_reg);
+	ptr_to_reg++;
+	//}
+}
+void SetPanId(uint16_t panId)
+{
+	uint8_t *d = (uint8_t *)&panId;
+
+	trx_reg_write(0x22, d[0]);
+	trx_reg_write(0x23, d[1]);
+}
+void SetShortAddr(uint16_t addr)
+{
+	uint8_t *d = (uint8_t *)&addr;
+	trx_reg_write(0x20, d[0]);
+	trx_reg_write(0x21, d[1]);
+}
+
 /*---------------------------------------------------------------------------*/
 /* switch the radio on */
 static int
@@ -833,9 +879,9 @@ rf212_interrupt_poll(void)
 			 interrupt_callback_in_progress = 0;
 			 #if NULLRDC_CONF_802154_AUTOACK_HW
 			//printf("Status %x",trx_reg_read(RF233_REG_TRX_STATE) & TRX_STATE_TRAC_STATUS);
-			if(!(trx_reg_read(RF233_REG_TRX_STATE) & TRX_STATE_TRAC_STATUS))
+			if(!(trx_reg_read(RF212_REG_TRX_STATE) & TRX_STATE_TRAC_STATUS))
 			ack_status = 1;
-			 RF233_COMMAND(TRXCMD_RX_AACK_ON);
+			 RF212_COMMAND(TRXCMD_RX_AACK_ON);
 			 #endif			 
 			 return 0;
 		 }
