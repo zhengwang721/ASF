@@ -165,11 +165,6 @@ void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info)
 void button_cb(void)
 {
 	key_status = 1;
-	
-	if(!report_ntf_info.ntf_conf)
-	{
-		DBG_LOG("HID device not configured for reports");
-	}
 }
 
 void timer_callback_handler(void)
@@ -249,7 +244,7 @@ int main(void )
 		ble_event_task();
 		
 		/* Check for key status */
-		if(key_status && report_ntf_info.ntf_conf)
+		if(key_status)
 		{
 			delay_ms(KEY_PAD_DEBOUNCE_TIME);
 			if((keyb_id == 0) || (keyb_id == 6))
