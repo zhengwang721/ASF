@@ -89,7 +89,7 @@ int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *rea
 	if (read_resp->char_handle == cts_handler->char_handle) 
 	{
 
-		const char *ptr[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
+		const char *ptr[] = {"NUL","MON","TUE","WED","THU","FRI","SAT","SUN"};
 		memcpy(cts_handler->char_data,&read_resp->char_value[CTS_READ_OFFSET],CTS_READ_LENGTH);
 		
 		DBG_LOG("Current Time:");		

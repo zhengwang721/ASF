@@ -195,7 +195,7 @@ void hid_mouse_app_init(void)
 	hid_prf_data.report_id[0] = 1;  
 	hid_prf_data.report_type[0] = INPUT_REPORT;  
 	
-	hid_prf_data.report_val[0] = &app_mouse_report[0];	
+	hid_prf_data.report_val[0] = (uint8_t *)&app_mouse_report[0];	
 	hid_prf_data.report_len[0] = sizeof(app_mouse_report);
 	hid_prf_data.report_map_info.report_map = hid_app_mouse_report_map;
 	hid_prf_data.report_map_info.report_map_len = sizeof(hid_app_mouse_report_map);
@@ -338,7 +338,7 @@ int main(void )
 				}
 				break;
 			}
-			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, report_ntf_info.report_ID, app_mouse_report, sizeof(app_mouse_report));
+			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, report_ntf_info.report_ID, (uint8_t *)app_mouse_report, sizeof(app_mouse_report));
 			mouse_status = 0;			
     	}
 	
