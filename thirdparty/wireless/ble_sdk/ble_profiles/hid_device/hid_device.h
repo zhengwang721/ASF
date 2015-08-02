@@ -53,28 +53,11 @@
 *							        Macros	                                     		*
 ****************************************************************************************/
 
-//#define DBG_PRF_LOG
-
-/** @brief Enable by user for mouse application : Configure by user. */
-//#define ADV_DATA_APPEARANCE_DATA (0x03C2)  //Mouse
-
-/** @brief Enable by user for keyboard application : Configure by user. */
-#define ADV_DATA_APPEARANCE_DATA (0x03C1)    //Keyboard
-
 /** @brief Number of Report : Configure by user. */
-#define HID_NUM_OF_REPORT             (1)
+#define HID_NUM_OF_REPORT              (1)
 
 /** @brief HID Service Instance : Configure by user. */
-#define HID_SERV_INST                  (1)
-
-/** @brief Enable the macro for device(mouse/keyboard) in boot mode : Configure by user. */
-//#define BOOT_MODE             
-
-/** @brief Enable the macro for mouse device : Configure by user. */
-//#define HID_MOUSE_DEVICE
-
-/** @brief Enable the macro for Keyboard device : Configure by user. */
-#define HID_KEYBOARD_DEVICE
+#define HID_SERV_INST                  (1) 
 
 /** @brief HID Max Service Instance. */
 #define HID_MAX_SERV_INST              (2)
@@ -87,6 +70,8 @@
 
 /** @brief Number of characteristic for HID. */
 #if defined HID_MOUSE_DEVICE
+/** @brief Enable by user for mouse application : Configure by user. */
+#define ADV_DATA_APPEARANCE_DATA      (0x03C2)  //Mouse
 #if defined BOOT_MODE
 #define HID_CHARACTERISTIC_NUM        (HID_DEFAULT_CHARACTERISITC_NUM + 1)
 #else
@@ -95,6 +80,8 @@
 #endif
 
 #if defined HID_KEYBOARD_DEVICE
+/** @brief Enable by user for keyboard application : Configure by user. */
+#define ADV_DATA_APPEARANCE_DATA 	  (0x03C1)    //Keyboard
 #if defined BOOT_MODE
 #define HID_CHARACTERISTIC_NUM        (HID_DEFAULT_CHARACTERISITC_NUM + 2)
 #else
