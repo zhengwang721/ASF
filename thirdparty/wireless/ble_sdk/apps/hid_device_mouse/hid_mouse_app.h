@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief HID Keyboard Device Profile Application declarations
+ * \brief HID Mouse Device Profile Application declarations
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
