@@ -87,7 +87,9 @@
 PROCESS(rf212_radio_process, "RF212 radio driver");
 static int  on(void);
 static int  off(void);
+#if !NULLRDC_CONF_802154_AUTOACK_HW
 static void radiocore_hard_recovery(void);
+#endif
 static void rf_generate_random_seed(void);
 static void flush_buffer(void);
 static uint8_t flag_transmit = 0;
@@ -412,8 +414,13 @@ memcpy(&data[1],payload,templen);
 
   /* check that the FIFO is clear to access */
   radio_status = rf212_status();
-  if(radio_status == STATE_BUSY_RX || radio_status == STATE_BUSY_TX) {
-    PRINTF("RF212: TRX buffer unavailable: prep when %s\n", radio_status == STATE_BUSY_RX ? "rx" : "tx");
+  #if NULLRDC_CONF_802154_AUTOACK_HW
+  if(radio_status == STATE_BUSY_RX_AACK || radio_status == STATE_BUSY_TX_ARET) {
+	  PRINTF("RF212B: TRX buffer unavailable: prep when %s\n", radio_status == STATE_BUSY_RX_AACK ? "rx" : "tx");
+  #else
+   if(radio_status == STATE_BUSY_RX || radio_status == STATE_BUSY_TX) {
+	   PRINTF("RF212B: TRX buffer unavailable: prep when %s\n", radio_status == STATE_BUSY_RX? "rx" : "tx");
+  #endif
     return RADIO_TX_ERR;
   }
 
@@ -436,7 +443,11 @@ rf212_transmit(unsigned short payload_len)
 
   /* prepare for TX */
   status_now = rf212_status();
+  #if NULLRDC_CONF_802154_AUTOACK_HW
+  if(status_now == STATE_BUSY_RX_AACK || status_now == STATE_BUSY_TX_ARET) {
+  #else
   if(status_now == STATE_BUSY_RX || status_now == STATE_BUSY_TX) {
+  #endif
     PRINTF("RF212: collision, was receiving\n");
     /* NOTE: to avoid loops */
     return RADIO_TX_ERR;
@@ -472,6 +483,8 @@ rf212_transmit(unsigned short payload_len)
 #endif  
   RF212_COMMAND(TRXCMD_TX_START);
   flag_transmit=1;
+
+#if !NULLRDC_CONF_802154_AUTOACK_HW  
   BUSYWAIT_UNTIL(RF212_STATUS() == STATE_BUSY_TX, RTIMER_SECOND/2000);
   BUSYWAIT_UNTIL(RF212_STATUS() != STATE_BUSY_TX, 10 * RTIMER_SECOND/1000);
   #if (DATA_RATE==BPSK_20||BPSK_40||OQPSK_SIN_RC_100)
@@ -479,6 +492,7 @@ rf212_transmit(unsigned short payload_len)
   BUSYWAIT_UNTIL(RF212_STATUS() != STATE_BUSY_TX, 10 * RTIMER_SECOND/1000);
   BUSYWAIT_UNTIL(RF212_STATUS() != STATE_BUSY_TX, 10 * RTIMER_SECOND/1000);
   #endif
+#endif  
   ENERGEST_OFF(ENERGEST_TYPE_TRANSMIT);
   ENERGEST_ON(ENERGEST_TYPE_LISTEN);
 #if !NULLRDC_CONF_802154_AUTOACK_HW  
@@ -692,7 +706,11 @@ rf212_channel_clear(void)
   if(was_off) {
     RF212_COMMAND(TRXCMD_TRX_OFF);
   }
-
+  #if NULLRDC_CONF_802154_AUTOACK_HW 
+  else{
+	  RF212_COMMAND(TRXCMD_RX_AACK_ON);
+  }
+  #endif
   /* check CCA */
   if((regsave & TRX_CCA_DONE) && (regsave & TRX_CCA_STATUS)) {
     PRINTF("RF212: CCA 1\n");
@@ -710,11 +728,18 @@ rf212_channel_clear(void)
 static int
 rf212_receiving_packet(void)
 {
-  if(rf212_status() == STATE_BUSY_RX) {
-    PRINTF("RF212: Receiving frame\n");
+  uint8_t trx_state;
+  trx_state=rf212_status();
+  #if NULLRDC_CONF_802154_AUTOACK_HW
+  if(trx_state == STATE_BUSY_RX_AACK) {
+  #else 
+  if(trx_state == STATE_BUSY_RX) {
+  #endif
+  
+    PRINTF("RF22B: Receiving frame\n");
     return 1;
   }
-  PRINTF("RF212: not Receiving frame\n");
+  PRINTF("RF212B: not Receiving frame\n");
   return 0;
 }
 /*---------------------------------------------------------------------------*/
@@ -797,14 +822,22 @@ static int
 on(void)
 {
   uint8_t state_now = RF212_STATUS();
-  if(state_now != STATE_PLL_ON && state_now != STATE_TRX_OFF) {
+  if(state_now != STATE_PLL_ON && state_now != STATE_TRX_OFF 
+#if NULLRDC_CONF_802154_AUTOACK_HW
+  && state_now != STATE_TX_ARET_ON
+#endif
+  ) {
     /* fail, we need the radio transceiver to be in either of those states */
     return -1;
   }
 
   /* go to RX_ON state */
   ENERGEST_ON(ENERGEST_TYPE_LISTEN);
-  RF212_COMMAND(TRXCMD_RX_ON);
+  #if NULLRDC_CONF_802154_AUTOACK_HW
+  RF212_COMMAND(TRXCMD_RX_AACK_ON);
+  #else
+  RF212_COMMAND(TRXCMD_RX_ON); 
+  #endif
   radio_is_on = 1;
   return 0;
 }
@@ -813,7 +846,11 @@ on(void)
 static int
 off(void)
 {
-  if(RF212_STATUS() != STATE_RX_ON) {
+  #if NULLRDC_CONF_802154_AUTOACK_HW
+  if(rf212_status() != STATE_RX_AACK_ON ) {
+  #else
+  if(rf212_status() != STATE_RX_ON) {
+  #endif
     /* fail, we need the radio transceiver to be in this state */
     return -1;
   }
