@@ -1,12 +1,13 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="HID KEYBOARD APPLICATION" id="thirdparty.wireless.ble_sdk.apps.hid_device_keyboard">
+	<module type="meta" caption="BLE-HID Keyboard Application" id="thirdparty.wireless.ble_sdk.apps.hid_device_keyboard">
 		<info type="description" value="summary">
-		HID keyboard application for BLE stack
+		BLE-HID Keyboard Application for BLE stack
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="hid_keyboard_app.h"/>
 		<build type="c-source" value="hid_keyboard_app.c"/>
         <build type="define" name="BLE_DEVICE_ROLE" value="BLE_PERIPHERAL"/>
+        <build type="define" name="HID_KEYBOARD_DEVICE" value=""/>
 		<require idref="thirdparty.wireless.ble_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_sdk.inc"/>
 		<require idref="thirdparty.wireless.ble_sdk.src"/>

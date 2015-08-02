@@ -56,8 +56,12 @@
 
 #if defined HID_DEVICE
 #include "hid_device.h"
-#define BLE_DEVICE_NAME				"ATMEL-HID"
-#define HID_SERVICE
+#ifdef HID_KEYBOARD_DEVICE
+#define BLE_DEVICE_NAME				"ATMEL-HIDK"
+#endif
+#ifdef HID_MOUSE_DEVICE
+#define BLE_DEVICE_NAME				"ATMEL-HIDM"
+#endif
 #endif /* HID_DEVICE */
 
 #if defined PROXIMITY_REPORTER

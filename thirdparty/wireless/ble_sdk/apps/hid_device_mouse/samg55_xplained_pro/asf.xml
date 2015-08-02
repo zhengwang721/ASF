@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="HID Mouse Application - SAM G55 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.hid_device_mouse.samg55_xplained_pro" force-caption="true" force-description="true">
+	<project caption="BLE-HID Mouse Application - SAM G55 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.hid_device_mouse.samg55_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		HID mouse application for BLE stack.
+		BLE-HID Mouse Application for BLE stack.
 		</info>	
 		<require idref="thirdparty.wireless.ble_sdk.apps.hid_device_mouse"/>
 		<build type="include-path" value="."/>
