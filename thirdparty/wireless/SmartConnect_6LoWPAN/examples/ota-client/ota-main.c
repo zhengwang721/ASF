@@ -132,10 +132,9 @@ main(int argc, char *argv[])
 {
   SCB->VTOR = ((uint32_t) (0x2000) & SCB_VTOR_TBLOFF_Msk);
 
-  /* init system: clocks, board etc */
-
-  system_init();
   node_id_restore();
+  /* init system: clocks, board etc */
+  system_init();
   sio2host_init();
 
   leds_init();

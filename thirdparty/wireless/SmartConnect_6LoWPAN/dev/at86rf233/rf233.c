@@ -304,15 +304,23 @@ static void rf_generate_random_seed(void)
 	 */
 	ENTER_TRX_REGION();
 
-	do 
+	do
+	{
+		trx_reg_write(RF233_REG_TRX_STATE, TRXCMD_TRX_OFF);
+		
+	} while (TRXCMD_TRX_OFF != rf233_status());
+
+	do
 	{
 		/* Ensure that PLL has locked and receive mode is reached. */
-		trx_reg_write(RF233_REG_TRX_STATE, TRXCMD_TRX_OFF);
 		trx_reg_write(RF233_REG_TRX_STATE, TRXCMD_PLL_ON);
+		
+	} while (TRXCMD_PLL_ON != rf233_status());
+	do
+	{
 		trx_reg_write(RF233_REG_TRX_STATE, TRXCMD_RX_ON);
 		
 	} while (TRXCMD_RX_ON != rf233_status());
-
 
 	/* Ensure that register bit RX_PDT_DIS is set to 0. */
 	trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE);
