@@ -50,7 +50,7 @@
 
 #ifndef RF_CHANNEL
 #define RF_CHANNEL                            1
-#define DATA_RATE BPSK_40
+#define DATA_RATE OQPSK_SIN_250
 #endif
 
 #define IEEE802154_CONF_PANID                 0xABCD
