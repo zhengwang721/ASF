@@ -14,9 +14,6 @@
 
 		<build type="doxygen-entry-point" value="asfdoc_sam_drivers_xdmac_group"/>
 
-		<build type="doxygen-example-path" value="example"/>
-		<build type="header-file" value="example/xdmac_example.h"/>
-		
 		<device-support value="samv71"/>
 		<device-support value="samv70"/>
 		<device-support value="same70"/>

@@ -44,6 +44,51 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
+/**
+ * \mainpage SAM Extensible Direct Memory Access Controller Example - memory to memory transfer
+ *
+ * \section Purpose
+ * This example demonstrates how to configure and use XDMA controller
+ * for memory to memory data buffer transfers.
+ *
+ * \section Requirements
+ * This example can be used with SAM evaluation kits that have a XDMA
+ * Controller.
+ *
+ * \section Description
+ * This example transfers data in one RAM buffer to another RAM buffer.
+ * It uses single block with multiple microblock transfer with interrupt mode.
+ * After transfer is done, the transferred data will be verified.
+ *
+ * \section Main Files
+ * - xdmac.c: Direct Memory Access Controller driver
+ * - xdmac.h: Direct Memory Access Controller driver header file
+ * - xdmac_example.c: Direct Memory Access Controller example application
+ *
+ * \section Compilation Information
+ * This software is written for GNU GCC and IAR Embedded Workbench&reg;
+ * for Atmel&reg;. Other compilers may or may not work.
+ *
+ * \section Usage
+ * -# Build the program and download it into the evaluation board.
+ * -# On the computer, open and configure a terminal application
+ *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
+ *   - 115200 baud
+ *   - 8 bits of data
+ *   - No parity
+ *   - 1 stop bit
+ *   - No flow control
+ * -# Start the application.
+ * -# In the terminal window, the following text should appear.
+ *    (values depend on the board and the chip used):
+ *    \code
+ *     -- XDMAC Example --
+ *     -- xxxxxx-xx
+ *     -- Compiled: xxx xx xxxx xx:xx:xx --
+ *
+ *     > Test OK. \endcode
+ */
+
 #include <asf.h>
 #include <conf_board.h>
 #include <conf_clock.h>

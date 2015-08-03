@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief XDMAC (XDMA Controller) driver example for SAM.
+ * \brief SAM D20 Xplained Pro test configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,52 +44,15 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef XDMAC_EXAMPLE_H_INCLUDED
-#define XDMAC_EXAMPLE_H_INCLUDED
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-/**
- * \mainpage SAM Extensible Direct Memory Access Controller Example - memory to memory transfer
- *
- * \section Purpose
- * This example demonstrates how to configure and use XDMA controller
- * for memory to memory data buffer transfers.
- *
- * \section Requirements
- * This example can be used with SAM evaluation kits that have a XDMA
- * Controller.
- *
- * \section Description
- * This example transfers data in one RAM buffer to another RAM buffer.
- * It uses single block with multiple microblock transfer with interrupt mode.
- * After transfer is done, the transferred data will be verified.
- *
- * \section Main Files
- * - xdmac.c: Direct Memory Access Controller driver
- * - xdmac.h: Direct Memory Access Controller driver header file
- * - xdmac_example.c: Direct Memory Access Controller example application
- *
- * \section Compilation Information
- * This software is written for GNU GCC and IAR Embedded Workbench&reg;
- * for Atmel&reg;. Other compilers may or may not work.
- *
- * \section Usage
- * -# Build the program and download it into the evaluation board.
- * -# On the computer, open and configure a terminal application
- *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
- *   - 115200 baud
- *   - 8 bits of data
- *   - No parity
- *   - 1 stop bit
- *   - No flow control
- * -# Start the application.
- * -# In the terminal window, the following text should appear.
- *    (values depend on the board and the chip used):
- *    \code
- *     -- XDMAC Example --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *
- *     > Test OK. \endcode
- */
- 
- #endif /* XDMAC_EXAMPLE_H_INCLUDED */
+#define CONF_STDIO_USART          EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE       38400
+
+#endif /* CONF_TEST_H_INCLUDED */
