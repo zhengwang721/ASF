@@ -182,10 +182,6 @@ rf_set_channel(uint8_t ch)
   /*if(ch > 10 || ch < 1) {
     return -1;
   }*/
-  temp = trx_reg_read(RF212_REG_TRX_CTRL_2);
-//  temp &=~ 0x3f;//channel page
-  temp |=0x0c;
-  //rf212_arch_write_reg(RF212_REG_TRX_CTRL_2, temp);
  // rf212_arch_write_reg(RF212_REG_CC_CTRL_1, 0x00);
   /* read-modify-write to conserve other settings */
   temp = trx_reg_read(RF212_REG_PHY_CC_CCA);
