@@ -1,8 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="Smart Connect 6LoWPAN - MQTT Example SAM R21 Xplained Pro" id="thirdparty.wireless.smartconnect_6lowpan.examples.mqtt-example.samr21xpro" force-caption="true" force-description="true">
+	<project caption="Smart Connect 6LoWPAN - Proximetry Application SAM R21 Xplained Pro" id="thirdparty.wireless.smartconnect_6lowpan.examples.proximetry.samr21xpro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		      MQTT example demonstrates the stack ability to communicate to the MQTT host configured and establish the MQTT connection,
-          for SAM R21 Xplained Pro.
+		      Proximetry Example application demonstrates the ability of the Stack to integrate with Atmel Cloud Proximetry Solution.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
@@ -15,9 +14,10 @@
 		<build type="header-file" value="project-conf.h"/>
 		<build type="header-file" value="contiki-conf.h"/>
 		<build type="header-file" value="platform-conf.h"/>
+		<build type="header-file" value="conf_agent_app.h"/>
+		<build type="header-file" value="conf_logging.h"/>
 		<config name="config.sam0.drivers.sercom.spi" value="polled"/>
 		<config name="config.sam0.drivers.sercom.usart" value="callback"/>
-		<config name="config.sam0.drivers.adc" value="polled"/>
 		<require idref="board.samr21_xplained_pro"/>
 		<require idref="common2.services.delay"/>
 		<require idref="sam0.drivers.wdt"/>
@@ -29,10 +29,12 @@
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.dev.at86rf233"/>
 		<require idref="config.thirdparty.wireless.smartconnect_6lowpan.services.sam0"/>
 		<require idref="thirdparty.wireless.smartconnect_6lowpan.services.timer.sam0"/>
-		<require idref="thirdparty.wireless.smartconnect_6lowpan.examples.mqtt-example"/>
-		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.mqtt.mqtt_samr21"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.proximetry-agent.agent"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.proximetry-agent.agent-sdk"/>
+		<require idref="config.thirdparty.wireless.smartconnect_6lowpan.services.sam0"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.examples.proximetry"/>
 	    <build type="doxygen-entry-point" value="group_contiki"/>
-		<toolchain-config name="armgcc.compiler.miscellaneous.OtherFlags" value="-std=gnu99 -Wstrict-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal   -Wbad-function-cast -Wwrite-strings -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wnested-externs -Wlong-long -Wunreachable-code " toolchain="armgcc" />
+		<toolchain-config name="armgcc.compiler.miscellaneous.OtherFlags" value="-std=gnu99 -Wstrict-prototypes  -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal   -Wbad-function-cast -Wwrite-strings -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wnested-externs -Wlong-long -Wunreachable-code " toolchain="armgcc" />
 		<config name="config.compiler.armgcc.optimization" value="high" />
 		<generator value="as5_arm" />
 		<generator value="armgcc" />

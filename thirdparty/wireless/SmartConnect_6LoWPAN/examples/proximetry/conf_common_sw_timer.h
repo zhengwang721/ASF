@@ -1,7 +1,7 @@
 /**
- * \file
+ * \file *********************************************************************
  *
- * \brief AT30TSE75X Temperature sensor driver configuration file.
+ * \brief USART Serial configuration
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -38,15 +38,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#ifndef CONF_AT30TSE75X_H_INCLUDED
-#define CONF_AT30TSE75X_H_INCLUDED
 
-#include <board.h>
+#ifndef CONF_COMMON_SW_TIMER_H_INCLUDED
+#define CONF_COMMON_SW_TIMER_H_INCLUDED
 
-#define AT30TSE_SERCOM      EXT1_I2C_MODULE
-#define AT30TSE_PINMUX_PAD0 EXT1_I2C_SERCOM_PINMUX_PAD0
-#define AT30TSE_PINMUX_PAD1 EXT1_I2C_SERCOM_PINMUX_PAD1
+#include "app_config.h"
 
-#endif /* CONF_AT30TSE75X_H_INCLUDED */
+/*! \name Configuration
+ */
+/* ! @{ */
+#define TOTAL_NUMBER_OF_SW_TIMERS     (TOTAL_NUMBER_OF_TIMERS)
+/* ! @} */
+
+#endif /* CONF_COMMON_SW_TIMER_H_INCLUDED */
