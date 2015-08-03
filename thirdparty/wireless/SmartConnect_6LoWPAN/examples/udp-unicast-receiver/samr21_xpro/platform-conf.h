@@ -72,9 +72,9 @@ void
 clock_adjust_ticks(clock_time_t howmany);
 
 
-#include "rf233.h"
-#define MULTICHAN_CONF_SET_CHANNEL(x)     rf_set_channel(x)
-#define MULTICHAN_CONF_READ_RSSI(x)       0
+//#include "rf233.h"
+//#define MULTICHAN_CONF_SET_CHANNEL(x)     rf_set_channel(x)
+//#define MULTICHAN_CONF_READ_RSSI(x)       0
 
 /*---------------------------------------------------------------------------*/
 #define EXT_HEADER_1   1
