@@ -97,6 +97,7 @@ uint8_t*  edbg_eui_read_eui64(void);
 #define SLAVE_ADDRESS 0x28
 
 #define TIMEOUT 1000
+#define SLAVE_WAIT_TIMEOUT 10
 struct i2c_master_module i2c_master_instance;
 
 /* Must read out the full 256 bytes of memory from the EDBG, otherwise
@@ -108,7 +109,7 @@ uint8_t readbuf[LEN_EUI];
 uint8_t *
 edbg_eui_read_eui64(void)
 {
-  int timeout = 0;
+  int timeout,timeout2 = 0;
   bool random_mac_address = false;
   uint8_t edbg_status = 0xFF;
   struct i2c_master_config config_i2c_master;
@@ -134,9 +135,12 @@ edbg_eui_read_eui64(void)
 	    edbg_status = i2c_master_write_packet_wait_no_stop(&i2c_master_instance, &packet);
 	    if(edbg_status==STATUS_ERR_BAD_ADDRESS)
 		{
-		PRINTF("I2C Slave Not Available");
-		random_mac_address = true;
-	    break;
+			if(timeout2++ == SLAVE_WAIT_TIMEOUT)
+			{				
+				PRINTF("I2C Slave Not Available");
+				random_mac_address = true;
+				break;
+			}
 		}
 		if(timeout++ == TIMEOUT) {
 		PRINTF("Timeout 1\n");
