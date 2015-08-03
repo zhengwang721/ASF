@@ -16,7 +16,6 @@
 		<build type="header-file" value="conf_rwwee.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="header-file" value="conf_example.h"/>	
-		<build type="define" name="__SAML22N18A__" value=""/>		
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>

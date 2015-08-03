@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM RTC Calendar Callback Quick Start
+ * \brief SAML22 RTC Tamper Detection Example
  *
- * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -79,6 +79,21 @@
 /* error message on SLCD during wake mode*/
 #define ERROR_STRING                  "TAMPR"
 
+/*segment for PM display*/
+#define SEGMENT_FOR_PM                 3
+
+/*segment for AM display*/
+#define SEGMENT_FOR_AM                 2
+
+/*segment for colon display*/
+#define SEGMENT_FOR_COLON              1
+
+/*common terminal for colon display*/
+#define COM_FOR_COLON                  3
+
+/*common terminal for colon display*/
+#define COM_FOR_TIME                   0
+
 /*macros for different user input*/
 #define DISABLE_TAMPER                'a'
 #define ENABLE_TAMPER_IN_WAKE_MODE    'b'
@@ -105,6 +120,9 @@
 
 /*maximum entries stored on RWW EEPROM section*/
 #define MAXIMUM_ENTRIES_STORED         128
+
+/*alarm time in seconds after tamper detection*/
+#define SET_ALARM_TIME                 4
 
 /*enum for defining mode*/
 enum 
@@ -214,9 +232,5 @@ uint16_t DIGI_LUT[] = {
 	0x1818, //88 - X
 	0x8018, //89 - Y
 	0x2814, //90 - Z
-
 };
-
-
-
 #endif
