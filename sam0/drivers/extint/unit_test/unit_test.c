@@ -74,16 +74,14 @@
  *
  * \section appdoc_sam0_extint_unit_test_setup Setup
  * The following connections has to be made using wires:
- * - SAM D20 Xplained Pro
- *  - EXT1 \b Pin 9 (PB04) <-----> Pin 10 (PB05)
- * - SAM D21/DA1 Xplained Pro
+ * - SAM D21/DA1/D20 Xplained Pro
  *  - EXT1 \b Pin 9 (PB04) <-----> Pin 11 (PA08)
  * - SAM R21 Xplained Pro
  *  - EXT1 \b Pin 3 (PA06) <-----> EXT3 Pin 10 (PA08)
  * - SAM L21 Xplained Pro
  *  - EXT1 \b Pin 9 (PB04) <-----> EXT3 Pin 5 (PB30)
  * - SAM C21 Xplained Pro
- *  - EXT1 \b Pin 9 (PB14) <-----> Pin 11 (PA12)
+ *  - EXT1 \b Pin 9 (PB14) <-----> EXT1 Pin 10 (PB15)
  *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a
