@@ -49,6 +49,7 @@
 
 #include "compiler.h"
 #include "system_samv71.h"
+#include "pio.h"
 
 /*----------------------------------------------------------------------------*/
 /**
@@ -360,5 +361,57 @@
 #define BOARD_CLK_TWIHS_EEPROM            0
 #define BOARD_CLK_TWIHS_MUX_EEPROM        0
 
+/** EBI pins configuration for LCD */
+/** LCD reset pin */
+#define PIN_EBI_RESET_MASK	  PIO_PC13
+#define PIN_EBI_RESET_PIO	  PIOC
+#define PIN_EBI_RESET_TYPE    PIO_OUTPUT_1
+#define PIN_EBI_RESET_ATTRI   PIO_DEFAULT
+
+/** LCD command/data select pin */
+#define PIN_EBI_CDS_MASK	  PIO_PC30
+#define PIN_EBI_CDS_PIO		  PIOC
+#define PIN_EBI_CDS_TYPE	  PIO_OUTPUT_1
+#define PIN_EBI_CDS_ATTRI	  PIO_DEFAULT
+
+/** LCD data pin */
+#define PIN_EBI_DATAL_MASK     0xFF
+#define PIN_EBI_DATAL_PIO	   PIOC
+#define PIN_EBI_DATAL_TYPE	   PIO_PERIPH_A
+#define PIN_EBI_DATAL_ATTRI    PIO_PULLUP
+
+#define PIN_EBI_DATAH_0_MASK   0x3F
+#define PIN_EBI_DATAH_0_PIO	   PIOE
+#define PIN_EBI_DATAH_0_TYPE   PIO_PERIPH_A
+#define PIN_EBI_DATAH_0_ATTRI  PIO_PULLUP
+
+#define PIN_EBI_DATAH_1_MASK   (PIO_PA15A_D14|PIO_PA16A_D15)
+#define PIN_EBI_DATAH_1_PIO	   PIOA
+#define PIN_EBI_DATAH_1_TYPE   PIO_PERIPH_A
+#define PIN_EBI_DATAH_1_ATTRI  PIO_PULLUP
+
+/** LCD WE pin */
+#define PIN_EBI_NWE_MASK   PIO_PC8A_NWE
+#define PIN_EBI_NWE_PIO	   PIOC
+#define PIN_EBI_NWE_TYPE   PIO_PERIPH_A
+#define PIN_EBI_NWE_ATTRI  PIO_PULLUP
+
+/** LCD RD pin */
+#define PIN_EBI_NRD_MASK   PIO_PC11A_NRD
+#define PIN_EBI_NRD_PIO	   PIOC
+#define PIN_EBI_NRD_TYPE   PIO_PERIPH_A
+#define PIN_EBI_NRD_ATTRI  PIO_PULLUP
+
+/** LCD CS pin (NCS3) */
+#define PIN_EBI_CS_MASK   PIO_PD19A_NCS3
+#define PIN_EBI_CS_PIO	  PIOD
+#define PIN_EBI_CS_TYPE   PIO_PERIPH_A
+#define PIN_EBI_CS_ATTRI  PIO_PULLUP
+
+/** Back-light pin definition. */
+#define PIN_EBI_BACKLIGHT_MASK   PIO_PC9B_TIOB7
+#define PIN_EBI_BACKLIGHT_PIO	  PIOC
+#define PIN_EBI_BACKLIGHT_TYPE   PIO_PERIPH_B
+#define PIN_EBI_BACKLIGHT_ATTRI  PIO_DEFAULT
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAMV71_XLTRA_H_ */
