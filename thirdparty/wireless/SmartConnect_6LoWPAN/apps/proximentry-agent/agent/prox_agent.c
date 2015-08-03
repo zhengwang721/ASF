@@ -30,7 +30,7 @@
 
 #include "conf_agent_app.h"
 #include "prox_agent.h"
-#include "samr21_sensors.h"
+#include "sam0_sensors.h"
 #include "diagnostic_button.h"
 
 /* Static variables */
@@ -333,7 +333,7 @@ static int update_agent_params(void)
 	snprintf(_rf_channel,sizeof(_rf_channel),"%d",rf_get_channel());
 	snprintf(_node_id,sizeof(_node_id),"%X",get_nodeid());
 	snprintf(_pan_id,sizeof(_pan_id),"%X", IEEE802154_CONF_PANID);
-	_aes_enc = (THSQ_CONF_NETSTACK) & (THSQ_CONF_AES);
+	_aes_enc = 0;
 	ipv6_addr_to_str(_6lowpan_glb_ipv6, &uip_ds6_get_global(-1)->ipaddr);
 	ipv6_addr_to_str(_6lowpan_ll_ipv6, &uip_ds6_get_link_local(-1)->ipaddr);
 

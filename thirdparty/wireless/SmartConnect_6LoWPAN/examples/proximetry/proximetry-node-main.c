@@ -72,7 +72,7 @@
 #include "misc.h"
 #include "settings.h"
 
-#include "samr21_sensors.h"
+#include "sam0_sensors.h"
 
 /*---------------------------------------------------------------------------*/
 #define _DEBUG_ 0

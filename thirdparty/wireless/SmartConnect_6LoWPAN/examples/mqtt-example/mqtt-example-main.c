@@ -132,9 +132,10 @@ uint8_t *edbg_eui_read_eui64(void);
 int
 main(int argc, char *argv[])
 {
-  node_id_restore();
+ node_id_restore();
   /* init system: clocks, board etc */
   system_init();
+   
   sio2host_init();
 
   leds_init();
@@ -151,6 +152,7 @@ main(int argc, char *argv[])
   #else
   clock_init();
   #endif
+
 
   process_init();
   ctimer_init();
