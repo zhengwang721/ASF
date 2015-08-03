@@ -43,12 +43,12 @@
 //static int first_init = 0;
 //static struct adc_module adc_instance;
 void sam0_sensors_init(void);
-/* This defines the set of sensors used in the SAM0 X-plained boards. */
+/* This defines the set of sensors used in the SAMD20/D21/R21 Xplained boards. */
 
 SENSORS(&button_sensor,&battery_sensor);
 /*---------------------------------------------------------------------------*/
 /**
- * \brief      Initiate the sensors and ADC on the SAM D20 X-plained board.
+ * \brief      Initiate the sensors and ADC on the SAM D20/D21/R21 X-plained board.
  */
 void
 sam0_sensors_init(void)
