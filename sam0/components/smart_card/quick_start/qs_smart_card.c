@@ -88,6 +88,8 @@
  * The Smart Card Xplained Pro extension board must be connected to extension
  * header 3 on the SAM L22 Xplained Pro.
  *
+ * This example uses the SIM smart card to test.
+ *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a
  *    micro USB cable.
@@ -124,15 +126,15 @@ static struct usart_module cdc_uart_module, usart_instance;
 /* Maximum ATR uc_size in bytes. */
 #define MAX_ATR_SIZE            55
 
-#define CMD1_LEN                4
+#define CMD1_LEN                7
 #define CMD2_LEN                7
-#define CMD3_LEN                7
+#define CMD3_LEN                4
 /* Test command #1. */
-const uint8_t test_cmd1[CMD1_LEN] = {0x00, 0x10, 0x00, 0x00};
+const uint8_t test_cmd1[CMD1_LEN] = {0xA0, 0xA4, 0x00, 0x00, 0x02, 0x7F, 0x20};
 /* Test command #2. */
-const uint8_t test_cmd2[CMD2_LEN] = {0xA0, 0xA4, 0x00, 0x00, 0x02, 0x7F, 0x20};
+const uint8_t test_cmd2[CMD2_LEN] = {0xA0, 0xA4, 0x00, 0x00, 0x02, 0x6F, 0x07};
 /* Test command #3. */
-const uint8_t test_cmd3[CMD3_LEN] = {0xA0, 0xA4, 0x00, 0x00, 0x02, 0x6F, 0x07};
+const uint8_t test_cmd3[CMD3_LEN] = {0x00, 0x10, 0x00, 0x00};
 
 /**
  * \brief Initialize the USART for the example.

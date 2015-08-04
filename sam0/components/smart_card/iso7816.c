@@ -238,6 +238,7 @@ uint16_t iso7816_xfr_block_tpdu_t0(const uint8_t *p_apdu,
 		else if (((uc_proc_byte & 0xF0) == 0x60) ||
 				((uc_proc_byte & 0xF0) == 0x90)) {
 			uc_sw1 = 1;
+			break;
 		}
 		/* Handle INS. */
 		else if (p_apdu[1] == uc_proc_byte) {
