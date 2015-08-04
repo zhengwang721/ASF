@@ -47,14 +47,11 @@
 #include <string.h>
 #include <conf_mcan.h>
 
-//! [module_var]
-
-//! [module_inst]
+/* module_inst */
 static struct can_module can_instance;
-//! [module_inst]
 
 
-//! [can_filter_setting]
+/* can_filter_setting */
 #define CAN_RX_STANDARD_FILTER_INDEX_0    0
 #define CAN_RX_STANDARD_FILTER_INDEX_1    1
 #define CAN_RX_STANDARD_FILTER_ID_0     0x45A
@@ -65,25 +62,19 @@ static struct can_module can_instance;
 #define CAN_RX_EXTENDED_FILTER_ID_0     0x100000A5
 #define CAN_RX_EXTENDED_FILTER_ID_0_BUFFER_INDEX     1
 #define CAN_RX_EXTENDED_FILTER_ID_1     0x10000096
-//! [can_filter_setting]
 
-//! [can_transfer_message_setting]
+/* can_transfer_message_setting */
 #define CAN_TX_BUFFER_INDEX    0
 static uint8_t tx_message_0[CONF_CAN_ELEMENT_DATA_SIZE];
 static uint8_t tx_message_1[CONF_CAN_ELEMENT_DATA_SIZE];
-//! [can_transfer_message_setting]
 
-//! [can_receive_message_setting]
+
+/* can_receive_message_setting */
 static volatile uint32_t standard_receive_index = 0;
 static volatile uint32_t extended_receive_index = 0;
 static struct can_rx_element_fifo_0 rx_element_fifo_0;
 static struct can_rx_element_fifo_1 rx_element_fifo_1;
 static struct can_rx_element_buffer rx_element_buffer;
-//! [can_receive_message_setting]
-
-//! [module_var]
-
-//! [setup]
 
 /**
  * \brief Configure UART console.
@@ -92,13 +83,13 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-	#ifdef CONF_UART_CHAR_LENGTH
+#ifdef CONF_UART_CHAR_LENGTH
 		.charlength = CONF_UART_CHAR_LENGTH,
-	#endif
+#endif
 		.paritytype = CONF_UART_PARITY,
-	#ifdef CONF_UART_STOP_BITS
+#ifdef CONF_UART_STOP_BITS
 		.stopbits = CONF_UART_STOP_BITS,
-	#endif
+#endif
 	};
 
 	/* Configure console UART. */
@@ -106,7 +97,10 @@ static void configure_console(void)
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
-//! [can_init_setup]
+/**
+ * \brief CAN module initialization.
+ *
+ */
 static void configure_can(void)
 {
 	uint32_t i;
@@ -129,9 +123,11 @@ static void configure_can(void)
 	can_enable_interrupt(&can_instance, CAN_FORMAT_ERROR | CAN_ACKNOWLEDGE_ERROR 
 			| CAN_BUS_OFF);
 }
-//! [can_init_setup]
 
-//! [can_receive_filter_setup]
+/**
+ * \brief set receive standard CAN ID, dedicated buffer
+ *
+ */
 static void can_set_standard_filter_0(void)
 {
 	struct can_standard_message_filter_element sd_filter;
@@ -147,6 +143,10 @@ static void can_set_standard_filter_0(void)
 	can_enable_interrupt(&can_instance, CAN_RX_BUFFER_NEW_MESSAGE);
 }
 
+/**
+ * \brief set receive standard CAN ID,FIFO buffer.
+ *
+ */
 static void can_set_standard_filter_1(void)
 {
 	struct can_standard_message_filter_element sd_filter;
@@ -159,6 +159,10 @@ static void can_set_standard_filter_1(void)
 	can_enable_interrupt(&can_instance, CAN_RX_FIFO_0_NEW_MESSAGE);
 }
 
+/**
+ * \brief set receive extended CAN ID, dedicated buffer
+ *
+ */
 static void can_set_extended_filter_0(void)
 {
 	struct can_extended_message_filter_element et_filter;
@@ -174,6 +178,10 @@ static void can_set_extended_filter_0(void)
 	can_enable_interrupt(&can_instance, CAN_RX_BUFFER_NEW_MESSAGE);
 }
 
+/**
+ * \brief set receive extended CAN ID,FIFO buffer.
+ *
+ */
 static void can_set_extended_filter_1(void)
 {
 	struct can_extended_message_filter_element et_filter;
@@ -186,9 +194,12 @@ static void can_set_extended_filter_1(void)
 	can_enable_interrupt(&can_instance, CAN_RX_FIFO_1_NEW_MESSAGE);
 }
 
-//! [can_receive_filter_setup]
-
-//! [can_transfer_message_setup]
+/**
+ * \brief send standard CAN message,
+ *
+ *\param id_value standard CAN ID
+ *\param *data  content to be sent
+ */
 static void can_send_standard_message(uint32_t id_value, uint8_t *data)
 {
 	uint32_t i;
@@ -207,6 +218,12 @@ static void can_send_standard_message(uint32_t id_value, uint8_t *data)
 	can_tx_transfer_request(&can_instance, 1 << CAN_TX_BUFFER_INDEX);
 }
 
+/**
+ * \brief send standard CAN message in fd mode,
+ *
+ *\param id_value standard CAN ID
+ *\param *data  content to be sent
+ */
 static void can_fd_send_standard_message(uint32_t id_value, uint8_t *data)
 {
 	uint32_t i;
@@ -226,6 +243,12 @@ static void can_fd_send_standard_message(uint32_t id_value, uint8_t *data)
 	can_tx_transfer_request(&can_instance, 1 << CAN_TX_BUFFER_INDEX);
 }
 
+/**
+ * \brief send extended CAN message,
+ *
+ *\param id_value extended CAN ID
+ *\param *data  content to be sent
+ */
 static void can_fd_send_extended_message(uint32_t id_value, uint8_t *data)
 {
 	uint32_t i;
@@ -247,9 +270,10 @@ static void can_fd_send_extended_message(uint32_t id_value, uint8_t *data)
 	can_tx_transfer_request(&can_instance, 1 << CAN_TX_BUFFER_INDEX);
 }
 
-//! [can_transfer_message_setup]
-
-//! [can_interrupt_handler]
+/**
+ * \brief Interrupt handler for MCAN,
+ *   inlcuding RX,TX,ERROR and so on processes.
+ */
 void MCAN1_Handler(void)
 {
 	volatile uint32_t status, i, rx_buffer_index;
@@ -332,9 +356,10 @@ void MCAN1_Handler(void)
 		configure_can();
 	}
 }
-//! [can_interrupt_handler]
 
-//! [user_menu]
+/**
+ * \brief display configuration menu.
+ */
 static void display_menu(void)
 {
 	printf("Menu :\r\n"
@@ -350,31 +375,21 @@ static void display_menu(void)
 			"  a: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7. \r\n"
 			"  h: Display menu \r\n\r\n");
 }
-//! [user_menu]
-
-//! [setup]
 
 int main(void)
 {
 	uint8_t key;
 
-//! [setup_init]
+
 	sysclk_init();
 	board_init();
 	configure_console();
-//! [setup_init]
 
-//! [main_setup]
-
-//! [configure_can]
 	configure_can();
-//! [configure_can]
-
-//! [display_user_menu]
 	display_menu();
-//! [display_user_menu]
 
-//! [main_loop]
+
+
 	while(1) {
 		scanf("%c", (char *)&key);
 
@@ -432,7 +447,5 @@ int main(void)
 			break;
 		}
 	}
-//! [main_loop]
 
-//! [main_setup]
 }

@@ -50,6 +50,7 @@
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
+/** Enable CAN module. */
 #define CONF_BOARD_CAN0
 #define CONF_BOARD_CAN1
 

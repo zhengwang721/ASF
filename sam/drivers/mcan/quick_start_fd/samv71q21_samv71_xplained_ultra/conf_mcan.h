@@ -50,27 +50,40 @@
  * Below is the message RAM setting, it will be stored in the system RAM.
  * Please adjust the message size according to your application.
  */
-#define CONF_CAN0_RX_FIFO_0_NUM         4            /* Range: 1..64 */ 
-#define CONF_CAN0_RX_FIFO_1_NUM         4            /* Range: 1..64 */ 
-#define CONF_CAN0_RX_BUFFER_NUM         4            /* Range: 1..64 */ 
-#define CONF_CAN0_TX_BUFFER_NUM         2            /* Range: 1..16 */
-#define CONF_CAN0_TX_FIFO_QUEUE_NUM     2            /* Range: 1..16 */
-#define CONF_CAN0_TX_EVENT_FIFO         4            /* Range: 1..32 */
+/** Range: 1..64 */
+#define CONF_CAN0_RX_FIFO_0_NUM         4
+/** Range: 1..64 */
+#define CONF_CAN0_RX_FIFO_1_NUM         4
+/** Range: 1..64 */
+#define CONF_CAN0_RX_BUFFER_NUM         4
+/** Range: 1..16 */
+#define CONF_CAN0_TX_BUFFER_NUM         2
+/** Range: 1..16 */
+#define CONF_CAN0_TX_FIFO_QUEUE_NUM     2
+/** Range: 1..32 */
+#define CONF_CAN0_TX_EVENT_FIFO         4
+/** Range: 1..128 */
+#define CONF_CAN0_RX_STANDARD_ID_FILTER_NUM     4
+/** Range: 1..64 */
+#define CONF_CAN0_RX_EXTENDED_ID_FILTER_NUM     2
+/** Range: 1..64 */
+#define CONF_CAN1_RX_FIFO_0_NUM         4
+/** Range: 1..64 */
+#define CONF_CAN1_RX_FIFO_1_NUM         4
+/** Range: 1..64 */
+#define CONF_CAN1_RX_BUFFER_NUM         4
+/** Range: 1..16 */
+#define CONF_CAN1_TX_BUFFER_NUM         2
+/** Range: 1..16 */
+#define CONF_CAN1_TX_FIFO_QUEUE_NUM     2
+/** Range: 1..32 */
+#define CONF_CAN1_TX_EVENT_FIFO         4
+/** Range: 1..128 */
+#define CONF_CAN1_RX_STANDARD_ID_FILTER_NUM     4
+/** Range: 1..64 */
+#define CONF_CAN1_RX_EXTENDED_ID_FILTER_NUM     2
 
-#define CONF_CAN0_RX_STANDARD_ID_FILTER_NUM     4    /* Range: 1..128 */
-#define CONF_CAN0_RX_EXTENDED_ID_FILTER_NUM     2    /* Range: 1..64 */
-
-#define CONF_CAN1_RX_FIFO_0_NUM         4            /* Range: 1..64 */ 
-#define CONF_CAN1_RX_FIFO_1_NUM         4            /* Range: 1..64 */ 
-#define CONF_CAN1_RX_BUFFER_NUM         4            /* Range: 1..64 */ 
-#define CONF_CAN1_TX_BUFFER_NUM         2            /* Range: 1..16 */
-#define CONF_CAN1_TX_FIFO_QUEUE_NUM     2            /* Range: 1..16 */
-#define CONF_CAN1_TX_EVENT_FIFO         4            /* Range: 1..32 */
-
-#define CONF_CAN1_RX_STANDARD_ID_FILTER_NUM     4    /* Range: 1..128 */
-#define CONF_CAN1_RX_EXTENDED_ID_FILTER_NUM     2    /* Range: 1..64 */
-
-/* The value should be 8/12/16/20/24/32/48/64. */
+/** The value should be 8/12/16/20/24/32/48/64. */
 #define CONF_CAN_ELEMENT_DATA_SIZE         64
 
 /*
@@ -79,13 +92,13 @@
  * time quanta is 30MHz / (2+1) =  10MHz. And each bit is (3+10+7) = 20 time
  * quanta which means the bit rate is 10MHz/20=500KHz.
  */
-/* Nominal bit Baud Rate Prescaler */
+/** Nominal bit Baud Rate Prescaler */
 #define CONF_CAN_NBTP_NBRP_VALUE    2
-/* Nominal bit (Re)Synchronization Jump Width */
+/** Nominal bit (Re)Synchronization Jump Width */
 #define CONF_CAN_NBTP_NSJW_VALUE    3
-/* Nominal bit Time segment before sample point */
+/** Nominal bit Time segment before sample point */
 #define CONF_CAN_NBTP_NTSEG1_VALUE  10
-/* Nominal bit Time segment after sample point */
+/** Nominal bit Time segment after sample point */
 #define CONF_CAN_NBTP_NTSEG2_VALUE  7
 
 /*
@@ -94,13 +107,13 @@
  * time quanta is 30MHz / (0+1) =  30MHz. And each bit is (3+9+3) = 16 time
  * quanta which means the bit rate is 30MHz/15=2MHz.
  */
-/* Data bit Baud Rate Prescaler */
+/** Data bit Baud Rate Prescaler */
 #define CONF_CAN_FBTP_FBRP_VALUE    0
-/* Data bit (Re)Synchronization Jump Width */
+/** Data bit (Re)Synchronization Jump Width */
 #define CONF_CAN_FBTP_FSJW_VALUE    3
-/* Data bit Time segment before sample point */
+/** Data bit Time segment before sample point */
 #define CONF_CAN_FBTP_FTSEG1_VALUE  9
-/* Data bit Time segment after sample point */
+/** Data bit Time segment after sample point */
 #define CONF_CAN_FBTP_FTSEG2_VALUE  3
 
 #endif

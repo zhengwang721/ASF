@@ -195,7 +195,7 @@ static void _can_set_configuration(Mcan *hw, struct can_config *config)
 	if (config->tx_queue_mode) {
 		hw->MCAN_TXBC |= MCAN_TXBC_TFQM;
 	}
-	
+
 	hw->MCAN_TXEFC |= MCAN_TXEFC_EFWM(config->tx_event_fifo_watermark);
 }
 
@@ -225,7 +225,7 @@ void can_init(struct can_module *const module_inst, Mcan *hw,
 
 	pmc_switch_pck_to_pllack(PMC_PCK_5, PMC_PCK_PRES(9));
 	pmc_enable_pck(PMC_PCK_5);
-	
+
 	/* Enable peripheral clock */
 	_can_enable_peripheral_clock(module_inst);
 
@@ -320,7 +320,7 @@ void can_disable_sleep_mode(struct can_module *const module_inst)
 {
 	/* Enable peripheral clock */
 	_can_enable_peripheral_clock(module_inst);
-	
+
 	module_inst->hw->MCAN_CCCR &= ~MCAN_CCCR_CSR;
 	while ((module_inst->hw->MCAN_CCCR & MCAN_CCCR_CSA));
 }
