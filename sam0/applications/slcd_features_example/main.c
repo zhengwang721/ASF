@@ -44,9 +44,6 @@
  * Include header files for all drivers that have been imported from
  * Atmel Software Framework (ASF).
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
  /**
  * \mainpage
  * \section intro Introduction
@@ -116,7 +113,6 @@ static struct usart_module usart_instance;
 
 /* Segment LCD1 Xplained Pro look-up table */
 uint16_t DIGI_LUT[] = {
-/*  0x0000,     -npd0mkeclifbjh0ag              */
 /*  0x0000,     -m0dnlcekjbfiga0h               */
 	0x0000, /* 0b0000000000000000, - 32 - Space */
 	0x0000, /* 0b0000000000000000, - 33 - !     */
@@ -374,7 +370,7 @@ static void configure_console(void)
 {
 	struct usart_config config_usart;
 	usart_get_config_defaults(&config_usart);
-	config_usart.baudrate    = 9600;
+	config_usart.baudrate    = 115200;
 	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
 	config_usart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
 	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
