@@ -37,7 +37,7 @@
 #define __CONTIKI_CONF_H__
 
 #include "thsq-conf-const.h"
-#include "samd21_xplained_pro.h"
+#include "samr21_xplained_pro.h"
 #ifdef INCLUDE_SUBPLATFORM_CONF
 #include "subplatform-conf.h"
 #else /* INCLUDE_SUBPLATFORM_CONF */
@@ -46,17 +46,17 @@
 /************************************************************************/
 /* Radio configuration                                                  */
 /************************************************************************/
-#include "rf212b.h"
+#include "rf233.h"
 
 #ifndef RF_CHANNEL
-#define RF_CHANNEL                            1
+#define RF_CHANNEL                            11
 #define DATA_RATE OQPSK_SIN_250
 #endif
 
 #define IEEE802154_CONF_PANID                 0xABCD
 
 #ifndef NETSTACK_CONF_RADIO
-#define NETSTACK_CONF_RADIO                   rf212_radio_driver
+#define NETSTACK_CONF_RADIO                   rf233_radio_driver
 #endif
 
 #define NETSTACK_RADIO_MAX_PAYLOAD_LEN        125
