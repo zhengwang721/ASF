@@ -441,7 +441,7 @@ struct can_extended_message_filter_element {
  *  - CAN (Control Area Network)
  *
  * The following devices can use this module:
- *  - SAM C21
+ *  - SAMV71
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_can_prerequisites
@@ -522,9 +522,6 @@ enum can_nonmatching_frames_action {
 	/** Reject. */
 	CAN_NONMATCHING_FRAMES_REJECT,
 };
-
-/* PCK5 ID */
-#define PMC_PCK_5               5
 
 /**
  * \brief CAN software device instance structure.

@@ -48,8 +48,8 @@
 #include "pmc.h"
 #include <string.h>
 
-/* Instance for GCLK setting. */
-//struct system_pck_chan_config gclk_chan_conf;
+/* PCK5 ID,assigned to MCAN module */
+#define PMC_PCK_5               5
 
 /* Message ram definition. */
 COMPILER_ALIGNED(4)
