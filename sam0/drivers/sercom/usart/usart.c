@@ -121,11 +121,16 @@ static enum status_code _usart_set_config(
 
 	transfer_mode = (uint32_t)config->transfer_mode;
 #ifdef FEATURE_USART_ISO7816
-	if(config->iso7816_opt.enabled) {
-		transfer_mode = config->iso7816_opt.protocol_t;
+	if(config->iso7816_config.enabled) {
+		transfer_mode = config->iso7816_config.protocol_t;
 	}
 #endif
 	/* Get baud value from mode and clock */
+#ifdef FEATURE_USART_ISO7816
+	if(config->iso7816_config.enabled) {
+		baud = config->baudrate;
+	} else {
+#endif
 	switch (transfer_mode)
 	{
 		case USART_TRANSFER_SYNCHRONOUSLY:
@@ -155,6 +160,9 @@ static enum status_code _usart_set_config(
 		/* Abort */
 		return status_code;
 	}
+#ifdef FEATURE_USART_ISO7816
+	}
+#endif
 
 #ifdef FEATURE_USART_IRDA
 	if(config->encoding_format_enable) {
@@ -193,18 +201,20 @@ static enum status_code _usart_set_config(
 			(config->transmitter_enable << SERCOM_USART_CTRLB_TXEN_Pos);
 
 #ifdef FEATURE_USART_ISO7816
-	if(config->iso7816_opt.enabled) {
-		ctrla |= SERCOM_USART_CTRLA_FORM(0x07) | \
-				SERCOM_USART_CTRLA_RXINV | SERCOM_USART_CTRLA_TXINV;
-		ctrlb |=  SERCOM_USART_CTRLB_PMODE | USART_CHARACTER_SIZE_8BIT;
+	if(config->iso7816_config.enabled) {
+		ctrla |= SERCOM_USART_CTRLA_FORM(0x07);
+		if (config->iso7816_config.enable_inverse) {
+			ctrla |= SERCOM_USART_CTRLA_TXINV | SERCOM_USART_CTRLA_RXINV;
+		}
+		ctrlb |=  USART_CHARACTER_SIZE_8BIT;
 		
-		switch(config->iso7816_opt.protocol_t) {
+		switch(config->iso7816_config.protocol_t) {
 			case ISO7816_PROTOCOL_T_0:
 				ctrlb |= (uint32_t)config->stopbits;	
-				ctrlc |= SERCOM_USART_CTRLC_GTIME(config->iso7816_opt.guard_time) | \
-						(config->iso7816_opt.inhibit_nack) | \
-						(config->iso7816_opt.dis_suc_nack) | \
-						SERCOM_USART_CTRLC_MAXITER(config->iso7816_opt.max_iterations);
+				ctrlc |= SERCOM_USART_CTRLC_GTIME(config->iso7816_config.guard_time) | \
+						(config->iso7816_config.inhibit_nack) | \
+						(config->iso7816_config.successive_recv_nack) | \
+						SERCOM_USART_CTRLC_MAXITER(config->iso7816_config.max_iterations);
 				break;	
 			case ISO7816_PROTOCOL_T_1:
 				ctrlb |= USART_STOPBITS_1;
@@ -261,8 +271,18 @@ static enum status_code _usart_set_config(
 	usart_hw->CTRLA.reg = ctrla;
 
 #ifdef FEATURE_USART_RS485
-	usart_hw->CTRLC.reg &= ~(SERCOM_USART_CTRLC_GTIME(0x7));
-	usart_hw->CTRLC.reg |= SERCOM_USART_CTRLC_GTIME(config->rs485_guard_time);
+	if ((usart_hw->CTRLA.reg & SERCOM_USART_CTRLA_FORM_Msk) != \
+		SERCOM_USART_CTRLA_FORM(0x07)) {
+		usart_hw->CTRLC.reg &= ~(SERCOM_USART_CTRLC_GTIME(0x7));
+		usart_hw->CTRLC.reg |= SERCOM_USART_CTRLC_GTIME(config->rs485_guard_time);
+	}
+#endif
+
+#ifdef FEATURE_USART_ISO7816
+	if(config->iso7816_config.enabled) {
+		_usart_wait_for_sync(module);
+		usart_hw->CTRLC.reg = ctrlc;
+	}
 #endif
 
 	return STATUS_OK;
@@ -376,7 +396,7 @@ enum status_code usart_init(
 	module->start_frame_detection_enabled = config->start_frame_detection_enable;
 #endif
 #ifdef FEATURE_USART_ISO7816
-	module->iso7816_mode_enabled = config->iso7816_opt.enabled;
+	module->iso7816_mode_enabled = config->iso7816_config.enabled;
 #endif
 	/* Set configuration according to the config struct */
 	status_code = _usart_set_config(module, config);
