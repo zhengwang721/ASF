@@ -66,9 +66,9 @@
 #define LCD_BACKLIGHT_ON               LED_Off(LED_0_PIN)
 
 /*maximum characters displayed on LCD */
-#define SLCD1_MAX_CHAR                 5
+#define XPRO_LCD_MAX_CHAR                 5
 /*the alpha-numerical character starts with segment 4*/
-#define SLCD1_TXT_SEG_INDEX_S          4
+#define XPRO_LCD_TXT_SEG_INDEX_S          4
 
 /*frame count overflow value*/
 #define FRAME_COUNT_OVERFLOW           0x2
@@ -93,6 +93,12 @@
 
 /*common terminal for colon display*/
 #define COM_FOR_TIME                   0
+
+/*segment line number*/
+#define SEGMENT_LINE_NUMBER            3
+
+/*segment length for a character*/
+#define SEGMENT_LENGTH                 4
 
 /*macros for different user input*/
 #define DISABLE_TAMPER                'a'
@@ -138,8 +144,8 @@ static void configure_usart(void);
 static void display_menu(void);
 void lcd_init(void);
 static void config_slcd(void);
-status_code_genare_t slcd1_init(void);
-void slcd1_show_text(const char *data);
+status_code_genare_t xpro_lcd_init(void);
+void xpro_lcd_show_text(const char *data);
 void lcd_display_time(void);
 
 /*Function prototypes for DMA */

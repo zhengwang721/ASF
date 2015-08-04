@@ -80,6 +80,10 @@
  * This application has been tested on following board:
  * - SAM L22 Xplained Pro
  *
+ *\section deviceinfo Device Information
+ * SEGMENT LCD1 Xplained Pro extension board connected to SAM L22 Xplained Pro
+ * board.
+ *
  * \section appdoc_sam0_tamper_detection_example_setup Hardware Setup
  * This application use user switch SW0 on SAM L22 Xplained Pro board as tamper
  * input source. No hardware setup is required for testing this project.
@@ -153,11 +157,12 @@ volatile uint32_t buffer_rtc_tamper;
 /*index which stores the number tamper occurrence in the emulated EEPROM*/
 volatile uint16_t memory_index;
 
-/*
-* Function Name : rtc_tamper_callback
-* Function Description : Perform action to be done when tamper occurs
-* Arguments : None
-* Returns : None
+/**
+* \brief tamper callback function for tamper occurrence.
+*
+* This function sets alarm after 5 seconds, enables timer for SLCD back light
+* toggle and set the tamper_flag 
+*
 */
 void rtc_tamper_callback(void)
 {
@@ -197,11 +202,11 @@ void rtc_tamper_callback(void)
 	tamper_flag = true;
 }
 
-/*
-* Function Name : rtc_match_callback
-* Function Description : Perform action to be done when alarm occurs
-* Arguments : None
-* Returns : None
+/**
+* \brief alarm callback function
+*
+* This function clears the SLCD display and back light toggling
+*
 */
 void rtc_match_callback(void)
 {
@@ -218,11 +223,14 @@ void rtc_match_callback(void)
 	tcc_disable(&tcc_instance);
 }
 
-/*
-* Function Name : configure_tamper_capture_mode
-* Function Description : Configure the RTC tamper detection in capture mode
-* Arguments : None
-* Returns : None
+/**
+* \brief Configure tamper detection in capture mode
+*
+* This function configures the tamper detection in capture mode and starts the
+* DMA transfer to read the timestamp register
+*
+* \note This function disables RTC, configures tamper in capture mode and
+* enables the RTC
 */
 void configure_tamper_capture_mode(void)
 {
@@ -274,11 +282,11 @@ void configure_tamper_capture_mode(void)
 	printf("\r\nTamper enabled in CAPTURE mode\r\n");
 }
 
-/*
-* Function Name : configure_tamper_wake_mode
-* Function Description : Configure the RTC tamper detection in wake mode
-* Arguments : None
-* Returns : None
+/**
+* \brief Configure tamper detection in wake mode
+*
+* \note This function disables RTC, configures tamper in wake mode and
+* enables the RTC
 */
 void configure_tamper_wake_mode(void)
 {
@@ -312,11 +320,10 @@ void configure_tamper_wake_mode(void)
 	printf("\r\nTamper enabled in WAKE mode\r\n");
 }
 
-/*
-* Function Name : configure_tamper_off_mode
-* Function Description : Configure the RTC tamper in capture mode
-* Arguments : None
-* Returns : None
+/**
+* \brief Disable tamper detection
+*
+* \note This function disables RTC, disables tamper and enables the RTC
 */
 void configure_tamper_off_mode(void)
 {
@@ -352,11 +359,8 @@ void configure_tamper_off_mode(void)
 	LCD_BACKLIGHT_OFF;
 }
 
-/*
-* Function Name : configure_rtc_calender_time
-* Function Description : Set the given time in the clock register
-* Arguments : None
-* Returns : None
+/**
+* \brief Configure RTC calender time
 */
 void configure_rtc_calender_time(void)
 {
@@ -374,11 +378,11 @@ void configure_rtc_calender_time(void)
 	rtc_calendar_set_time(&rtc_instance, &time);
 }
 
-/*
-* Function Name : configure_rtc_calender
-* Function Description : Configure the RTC in calender mode
-* Arguments : None
-* Returns : None
+/**
+* \brief Configure RTC in calendar mode
+*
+* This function configures the RTC in calendar mode with alarm enabled
+*
 */
 void configure_rtc_calendar(void)
 {
@@ -402,11 +406,8 @@ void configure_rtc_calendar(void)
 	rtc_calendar_enable(&rtc_instance);
 }
 
-/*
-* Function Name : configure_rtc_callbacks
-* Function Description : Configure RTC callback for tamper and alarm function
-* Arguments : None
-* Returns : None
+/**
+* \brief Configure RTC callback for tamper and alarm function
 */
 void configure_rtc_callbacks(void)
 {
@@ -419,11 +420,8 @@ void configure_rtc_callbacks(void)
 	&rtc_instance, rtc_match_callback, RTC_CALENDAR_CALLBACK_ALARM_0);
 }
 
-/*
-* Function Name : tcc_callback_to_toggle_led
-* Function Description : TCC callback function for toggling LED
-* Arguments : structure which defines timer module
-* Returns : None
+/**
+* \brief Configure TCC callback
 */
 void tcc_callback_to_toggle_led(struct tcc_module *const module_inst)
 {
@@ -431,12 +429,10 @@ void tcc_callback_to_toggle_led(struct tcc_module *const module_inst)
 	port_pin_toggle_output_level(LED0_PIN);
 }
 
-/*
-* Function Name : configure_tcc
-* Function Description : Configure the TCC for SLCD back light blinking
-* Arguments : None
-* Returns : None
+/**
+* \brief Configure the TCC for SLCD back light blinking
 */
+
 void configure_tcc(void)
 {
 	struct tcc_config config_tcc;
@@ -452,11 +448,8 @@ void configure_tcc(void)
 	tcc_init(&tcc_instance, TCC0, &config_tcc);
 }
 
-/*
-* Function Name : configure_tcc_callbacks
-* Function Description : Configure and enables the TCC callback
-* Arguments : None
-* Returns : None
+/**
+* \brief Configure and enable TCC callback
 */
 void configure_tcc_callbacks(void)
 {
@@ -469,11 +462,8 @@ void configure_tcc_callbacks(void)
 }
 
 
-/*
-* Function Name : config_slcd
-* Function Description : Pinmux configuration for SLCD pins
-* Arguments : None
-* Returns : None
+/**
+* \brief Pinmux configuration for SLCD pins
 */
 static void config_slcd(void)
 {
@@ -573,13 +563,15 @@ static void config_slcd(void)
 	#endif
 }
 
-/*
-* Function Name : slcd1_init
-* Function Description : Initializes the SLCD
-* Arguments : None
-* Returns : Status of initialization
+/**
+* \brief Initialize the SLCD Glass component.
+*
+* This function initializes the LCD driver to control the LCD glass.
+* It perform LCD module initialization according to the XPRO_LCD
+* characteristics.
+*
 */
-status_code_genare_t slcd1_init(void)
+status_code_genare_t xpro_lcd_init(void)
 {
 	/* configure SLCD */
 	struct slcd_config config;
@@ -601,11 +593,8 @@ status_code_genare_t slcd1_init(void)
 	return STATUS_OK;
 }
 
-/*
-* Function Name : lcd_init
-* Function Description : Initializes the SLCD with some basic configuration
-* Arguments : None
-* Returns : None
+/**
+* \brief Initializes the SLCD
 */
 void lcd_init(void)
 {
@@ -614,7 +603,7 @@ void lcd_init(void)
 	config_slcd();
 
 	/*initialize slcd*/
-	slcd1_init();
+	xpro_lcd_init();
 
 	/*enable slcd*/
 	slcd_enable();
@@ -623,8 +612,8 @@ void lcd_init(void)
 	slcd_clear_display_memory();
 
 	/*Set the connected pixels*/
-	for(com = 0; com <= 3; com++){
-		for (seg = 0; seg <= 23; seg++){
+	for(com = 0; com <= 3; com++) {
+		for (seg = 0; seg <= 23; seg++) {
 			slcd_set_pixel(com, seg);
 			delay_ms(10);
 		}
@@ -635,31 +624,30 @@ void lcd_init(void)
 	LCD_BACKLIGHT_OFF;
 }
 
-/*
-* Function Name : slcd1_show_text
-* Function Description : Displays the string on the SLCD
-* Arguments : String to be displayed on SLCD
-* Returns : None
+/**
+* \brief Displays the string on the SLCD screen
+*
+* \param *data  string to be displayed on the SLCD.
+*
 */
-void slcd1_show_text(const char *data)
+void xpro_lcd_show_text(const char *data)
 {
 	Assert(data);
 	uint32_t len = (uint32_t)strlen((char *) data);
 
-	len = (len > SLCD1_MAX_CHAR) ? SLCD1_MAX_CHAR : len;
+	len = (len > XPRO_LCD_MAX_CHAR) ? XPRO_LCD_MAX_CHAR : len;
 
-	slcd_character_map_set(SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_RIGHT, 3);
-	for(uint32_t i = 0 ; *data != '\0' ; i++){
-		slcd_character_write_data(0,SLCD1_TXT_SEG_INDEX_S+i*4,
-		DIGI_LUT[*(data++) - 32],0x4002);
+	slcd_character_map_set(SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_RIGHT,
+	SEGMENT_LINE_NUMBER);
+	for(uint32_t i = 0 ; *data != '\0' ; i++) {
+		slcd_character_write_data(SET_TO_ZERO,
+		XPRO_LCD_TXT_SEG_INDEX_S+i*SEGMENT_LENGTH,
+		DIGI_LUT[*(data++) - 32], 0x4002);
 	}
 }
 
-/*
-* Function Name : lcd_display_time
-* Function Description : Displays the tamper occurrence time on SLCD
-* Arguments : None
-* Returns : None
+/**
+* \brief Displays the tamper occurrence time on SLCD
 */
 void lcd_display_time(void)
 {
@@ -667,7 +655,7 @@ void lcd_display_time(void)
 	snprintf(time_value,sizeof(time_value),"%02d%02d ", tamper_time.hour,
 			tamper_time.minute);
 	/*checks whether time is AM or PM*/
-	if(tamper_time.pm){
+	if(tamper_time.pm) {
 		/*displays PM on SLCD*/
 		slcd_set_pixel(COM_FOR_TIME, SEGMENT_FOR_PM);
 	} else {
@@ -677,18 +665,15 @@ void lcd_display_time(void)
 	/*Displays colon(:) on SLCD*/
 	slcd_set_pixel(COM_FOR_COLON, SEGMENT_FOR_COLON);
 	/*displays the tamper time on SLCD*/
-	slcd1_show_text(time_value);
+	xpro_lcd_show_text(time_value);
 	/*writes the tamper time to RWW EEPROM memory*/
 }
 
-/*
-* Function Name : config_DMA
-* Function Description : Configure the DMA to trigger memory to memory transfer
-* on tamper occurrence
-* Arguments : None
-* Returns : None
+/**
+* \brief Config DMA to make register-to-register transfer copying the
+* timestamp value. 
 */
-void config_dma(void)			
+void config_dma(void)
 {
 	/*setup_dma_resource*/
 	configure_dma_resource(&example_resource);
@@ -700,11 +685,8 @@ void config_dma(void)
 	dma_add_descriptor(&example_resource, &example_descriptor);
 }
 
-/*
-* Function Name : setup_transfer_descriptor
-* Function Description : Setup the DMA transfer descriptor
-* Arguments : DMA transfer descriptor
-* Returns : None
+/**
+* \brief configure DMA transfer descriptor.
 */
 void setup_transfer_descriptor(DmacDescriptor *descriptor )
 {
@@ -726,11 +708,8 @@ void setup_transfer_descriptor(DmacDescriptor *descriptor )
 	dma_descriptor_create(descriptor, &descriptor_config);
 }
 
-/*
-* Function Name : configure_dma_resource
-* Function Description : configures the DMA resource
-* Arguments : DMA resource structure
-* Returns : None
+/**
+* \brief configure DMA resource.
 */
 void configure_dma_resource(struct dma_resource *resource)
 {
@@ -745,11 +724,8 @@ void configure_dma_resource(struct dma_resource *resource)
 	dma_allocate(resource, &config);
 }
 
-/*
-* Function Name : configure_usart
-* Function Description : Configures the USART
-* Arguments : None
-* Returns : None
+/**
+* \brief Configure usart
 */
 static void configure_usart(void)
 {
@@ -765,12 +741,10 @@ static void configure_usart(void)
 	usart_enable(&usart_instance);
 }
 
-/*
-* Function Name :  display_menu
-* Function Description : Display menu printed on the terminal window
-* Arguments : None
-* Returns : None
+/**
+* \brief Display menu on the terminal window.
 */
+
 static void display_menu(void)
 {
 	printf("\n\r");
@@ -788,11 +762,8 @@ static void display_menu(void)
 	printf(">> ");
 }
 
-/*
-* Function Name : configure_eeeprom
-* Function Description : Configure the EEPROM
-* Arguments : None
-* Returns : None
+/**
+* \brief Configure eeprom
 */
 void configure_eeprom(void)
 {
@@ -800,11 +771,11 @@ void configure_eeprom(void)
 	enum status_code error_code = rww_eeprom_emulator_init();
 
 	/*check_init_ok*/
-	if (error_code == STATUS_ERR_NO_MEMORY){
-		while (true){
+	if (error_code == STATUS_ERR_NO_MEMORY) {
+		while (true) {
 			/* No EEPROM section has been set in the device's fuses */
 		}
-	}/*check_re-init*/ else if (error_code != STATUS_OK){
+	} else if (error_code != STATUS_OK) {
 		/* Erase the emulated EEPROM memory (assume it is unformatted or
 		* irrecoverably corrupt) */
 		rww_eeprom_emulator_erase_memory();
@@ -815,18 +786,15 @@ void configure_eeprom(void)
 #if (SAMD21) || (SAMDA1)
 	void SYSCTRL_Handler(void)
 	{
-		if (SYSCTRL->INTFLAG.reg & SYSCTRL_INTFLAG_BOD33DET){
+		if (SYSCTRL->INTFLAG.reg & SYSCTRL_INTFLAG_BOD33DET) {
 			SYSCTRL->INTFLAG.reg |= SYSCTRL_INTFLAG_BOD33DET;
 			rww_eeprom_emulator_commit_page_buffer();
 		}
 	}
 #endif
 
-/*
-* Function Name : configure_bod
-* Function Description : Configures BOD
-* Arguments : None
-* Returns : None
+/**
+* \brief Configure BOD
 */
 static void configure_bod(void)
 {
@@ -844,11 +812,8 @@ static void configure_bod(void)
 	#endif
 }
 
-/*
-* Function Name : write_tamper_data
-* Function Description : writes the timestamp value to the RWW EEPROM memory
-* Arguments : None
-* Returns : None
+/**
+* \brief writes the timestamp value to RWW EEPROM once the tamper occurs.
 */
 void write_tamper_data(void)
 {
@@ -857,7 +822,7 @@ void write_tamper_data(void)
 	/*RWW EEPRM read memory index*/
 	rww_eeprom_emulator_read_buffer(SET_TO_ZERO, (uint8_t *)&memory_index,
 			LENGTH_OF_MEMORY_INDEX);
-	if(memory_index<MAXIMUM_ENTRIES_STORED){
+	if(memory_index<MAXIMUM_ENTRIES_STORED) {
 		off_set = (memory_index*LENGTH_OF_TIME_STRUCT) + LENGTH_OF_MEMORY_INDEX;
 		/*RWW EEPRM write page buffer*/
 		rww_eeprom_emulator_write_buffer(off_set, (const uint8_t *)&tamper_time,
@@ -875,12 +840,11 @@ void write_tamper_data(void)
 	}
 }
 
-/*
-* Function Name : read_tamper_history
-* Function Description : reads the timestamp value stored in the RWW EEPROM
-* memory
-* Arguments : None
-* Returns : None
+/**
+* \brief  Reads the timestamp value stored in the RWW EEPROM
+*
+* This function disables the tamper detection during read operation
+*
 */
 void read_tamper_history(void)
 {
@@ -897,12 +861,12 @@ void read_tamper_history(void)
 	/*RWW EEPRM read memory index*/
 	rww_eeprom_emulator_read_buffer(SET_TO_ZERO, (uint8_t *)&memory_index,
 	LENGTH_OF_MEMORY_INDEX);
-	if(memory_index == SET_TO_ZERO){
+	if(memory_index == SET_TO_ZERO) {
 		printf("\r\n No Tamper History available\r\n");
 	} else {
 		printf("\r\nTamper Detection Disabled\r\n");
 		printf("\r\nShowing tamper History:\r\n");
-		for(uint8_t i = 0; i<memory_index; i++){
+		for(uint8_t i = 0; i<memory_index; i++) {
 			/*RWW EEPRM read page buffer*/
 			rww_eeprom_emulator_read_buffer(read_off_set,(uint8_t *)&read_time,
 			LENGTH_OF_TIME_STRUCT);
@@ -915,12 +879,8 @@ void read_tamper_history(void)
 	enable_tamper();
 }
 
-/*
-* Function Name : erase_tamper_history
-* Function Description : erases the timestamp value stored in the RWW EEPROM
-* memory
-* Arguments : None
-* Returns : None
+/**
+* \brief  Erase entire RWW EEPROM section.
 */
 void erase_tamper_history (void)
 {
@@ -929,19 +889,19 @@ void erase_tamper_history (void)
 	/*initialize memory buffer*/
 	memory_index = SET_TO_ZERO;
 	/*RWW EEPRM write page buffer*/
-	rww_eeprom_emulator_write_buffer(SET_TO_ZERO,(const uint8_t *)&memory_index,
-			LENGTH_OF_MEMORY_INDEX);
+	rww_eeprom_emulator_write_buffer(SET_TO_ZERO,
+	(const uint8_t *)&memory_index, LENGTH_OF_MEMORY_INDEX);
 	/*RWW EEPRM commit page buffer*/
 	rww_eeprom_emulator_commit_page_buffer();
 	printf("\r\nTamper History erased\r\n");
 }
 
-/*
-* Function Name : memory_index_init
-* Function Description : configures the memory_index during the startup
-* memory
-* Arguments : None
-* Returns : None
+/**
+* \brief  Configures the RWW EEPROM memory during the startup
+*
+* This function will assign the first two bytes of RWW EEPROM as memory index
+* representing number of entries stored and initializes the memory index
+* 
 */
 void memory_index_init(void)
 {
@@ -949,7 +909,7 @@ void memory_index_init(void)
 	rww_eeprom_emulator_read_buffer(SET_TO_ZERO, (uint8_t *)&memory_index,
 	LENGTH_OF_MEMORY_INDEX);
 
-	if(memory_index == EEPROM_EMPTY_CHAR){
+	if(memory_index == EEPROM_EMPTY_CHAR) {
 		/*initialize memory index*/
 		memory_index = SET_TO_ZERO;
 		/*RWW EEPRM write page buffer*/
@@ -960,41 +920,31 @@ void memory_index_init(void)
 	}
 }
 
-/*
-* Function Name : enable_tamper
-* Function Description : configures the tamper in previous enabled mode after
-*                        read operation
-* Arguments : None
-* Returns : None
+/**
+* \brief  Enables tamper after read operation
+*
+* This function enables the tamper in previous operating mode after read 
+* operation
+*
 */
 void enable_tamper(void)
 {
 	/*checks whether previous mode is capture mode*/
 	if(previous_mode == SET_TO_CAPTURE)
-	/*enable tamper in capture mode*/
-	configure_tamper_capture_mode();
-	
+		/*enable tamper in capture mode*/
+		configure_tamper_capture_mode();
+
 	/*checks whether previous mode is wake mode*/
 	if(previous_mode == SET_TO_WAKE)
-	/*enable tamper in wake mode*/
-	configure_tamper_wake_mode();
+		/*enable tamper in wake mode*/
+		configure_tamper_wake_mode();
 }
 
-/*
-* Function Name : main
-* Function Description : Detect the tamper in the configured mode.
-* Records the tamper history on RWW EEPROM memory
-* Displays the tamper history on user request
-* Erase the tamper history on user request
-* memory
-* Arguments : None
-* Returns : None
-*/
 int main(void)
 {
 	/*initialize the key input from user*/
 	uint16_t key = 0;
-	
+
 	/*system_init*/
 	system_init();
 
@@ -1035,10 +985,9 @@ int main(void)
 	display_menu();
 
 	/* while*/
-	while (1)
-	{
+	while (1) {
 		/*checks whether key is pressed*/
-		if(!usart_read_wait(&usart_instance, &key)){
+		if(!usart_read_wait(&usart_instance, &key)) {
 			printf("\r\nKey Entered: %c\r\n", key);
 			switch (key) {
 			case DISABLE_TAMPER:
@@ -1079,9 +1028,9 @@ int main(void)
 			}
 		}
 		/*checks for the tamper occurrence*/
-		if(tamper_flag == true){
+		if(tamper_flag == true) {
 			/*checks whether capture or wake mode*/
-			if(mode == SET_TO_CAPTURE){
+			if(mode == SET_TO_CAPTURE) {
 				rtc_tamper_get_stamp(&rtc_instance, &tamper_time);
 				printf("\r\nTamper occurred at[HH:MM:SS] = [%02d:%02d:%02d]%s\r\n",
 					   tamper_time.hour, tamper_time.minute, tamper_time.second,
@@ -1093,7 +1042,7 @@ int main(void)
 			} else {
 				printf("\r\nTamper occurred.\n\r");
 				/*displays the tamper error message on SLCD*/
-				slcd1_show_text(ERROR_STRING);
+				xpro_lcd_show_text(ERROR_STRING);
 				/*clear tamper flag*/
 				tamper_flag = false;
 			}
