@@ -329,11 +329,14 @@ PROCESS_THREAD(mqtt_example_process, ev, data)
 		sprintf (batt_str, "%d", battery_v);
 		temp.sensor_value*=100;
 		sprintf(temp_str, "%d.%d", ((int)temp.sensor_value/100), ((int)temp.sensor_value%100));
-			
-		sprintf(app_buffer,"%s%lu%s%s%s%s%s%s%s","{\x22timestamp\x22: \x22",timestmp,
-			"\x22,\x22SENS_BATTERY\x22: \x22",
-			batt_str,"\x22,\x22SENS_TEMPERATURE\x22: \x22", temp_str, "\x22,\x22sender_id\x22: \x22",
-		mac_adr_str,"\x22}");
+		
+		/* 
+		* \" is escape sequence for Double Quotes.
+		*/	
+		sprintf(app_buffer,"%s%lu%s%s%s%s%s%s%s","{\"timestamp\": \"",timestmp,
+			"\",\"BATTERY\": \"",
+			batt_str,"\",\"TEMP\": \"", temp_str, "\",\"sender_id\": \"",
+		mac_adr_str,"\"}");
 		printf("\r\nAPP - Sending Battery sensor value %s Temp Sensor value %s  app buffer size %d\n",batt_str, temp_str, strlen(app_buffer));
 	
 		

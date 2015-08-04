@@ -101,7 +101,9 @@ extern void configure_tc3(void);
 
 uint8_t	sent_packets=0;
 bool    ready_to_send_new_packet=true; //rtc
+#if BOARD == SAMR21_XPLAINED_PRO
 uint8_t *edbg_eui_read_eui64(void);
+#endif
 
 /*---------------------------------------------------------------------------*/
 
@@ -127,14 +129,11 @@ uint16_t get_nodeid(void)
 int
 main(void)
 {
-  /* init system: clocks, board etc */
-
-  system_init();
+	
   node_id_restore();
+  /* init system: clocks, board etc */
+  system_init();
   sio2host_init();
-  #if SAMR21
-  eui64 = edbg_eui_read_eui64();
-  #endif
 
   system_interrupt_enable_global();
 
@@ -150,10 +149,11 @@ main(void)
   clock_init();
   #endif
 
+
+  process_init();
   ctimer_init();
 
   rtimer_init();
-  process_init();
   process_start(&etimer_process, NULL);
 
   /* Set MAC address and node ID */
@@ -165,12 +165,16 @@ main(void)
   printf("\r\n\n\n\n Starting the SmartConnect-6LoWPAN \r\n Platform : Atmel IoT device \r\n");
   print_reset_causes();
 
-  set_link_addr();
-
-  random_init(node_id);
-
-
   netstack_init();
+  
+  #if BOARD == SAMR21_XPLAINED_PRO
+  eui64 = edbg_eui_read_eui64();
+  SetIEEEAddr(eui64);
+  #else
+  SetIEEEAddr(node_mac);
+  #endif
+
+  set_link_addr();
   rf_set_channel(RF_CHANNEL);
   printf("\r\n Configured RF channel: %d\r\n", rf_get_channel());
   energest_init();
