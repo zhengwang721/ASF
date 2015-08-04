@@ -23,8 +23,9 @@
 #include "contiki-conf.h"
 
 static bool save_settings_f = false;
+#if 0
 static bool save_settings(void);
-
+#endif
 
 static inline uint32_t ip_int(uint8_t a, uint8_t b, uint8_t c, uint8_t d)
 {
@@ -188,7 +189,7 @@ agent_settings_t *get_settings(void)
 	}
 	return global_settings_loaded ? &global_settings : NULL;
 }
-
+#if 0
 /**
  * @brief Stores Agent config
  *
@@ -206,7 +207,7 @@ static bool save_settings(void)
 
 	return !store_settings_to_eeprom(settings);
 }
-
+#endif
 /**
  * @brief Save setting request
  */

@@ -109,7 +109,7 @@ uint8_t readbuf[LEN_EUI];
 uint8_t *
 edbg_eui_read_eui64(void)
 {
-  int timeout,timeout2 = 0;
+  int timeout=0,timeout2 = 0;
   bool random_mac_address = false;
   uint8_t edbg_status = 0xFF;
   struct i2c_master_config config_i2c_master;
