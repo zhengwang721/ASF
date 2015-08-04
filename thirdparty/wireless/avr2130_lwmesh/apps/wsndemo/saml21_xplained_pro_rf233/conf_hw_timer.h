@@ -1,9 +1,9 @@
 /**
- * \file main.c
+ * \file *********************************************************************
  *
- * \brief  Main of WSNDemo application
+ * \brief HW Timer Configuration.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,32 +40,14 @@
  * \asf_license_stop
  */
 
-/**
- * \page license License
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
+#ifndef CONF_HW_TIMER_H_INCLUDED
+#define CONF_HW_TIMER_H_INCLUDED
+
+/*! \name Configuration
  */
+/* ! @{ */
+#define TIMER                (TC3)
+#define TIMER_CHANNEL_ID     0
+/* ! @} */
 
- #include "wsndemo.h"
- #include "asf.h"
-
-int main(void)
-{
-	irq_initialize_vectors();
-
-	#if SAMD || SAMR21 || SAML21
-	system_init();
-	delay_init();
-	#else
-	sysclk_init();
-	board_init();
-	#endif
-
-	wsndemo_init();
-	cpu_irq_enable();
-
-	while (1) {
-		wsndemo_task();
-	}
-}
+#endif /* CONF_HW_TIMER_H_INCLUDED */

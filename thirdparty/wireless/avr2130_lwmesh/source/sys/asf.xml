@@ -29,7 +29,9 @@
 	<device-support value="samd21"/>
 	<device-support value="samr21"/>
 	<device-support value="sam4e"/>
-	<device-support value="sam4s"/>	<device-support value="sam4l"/>
+	<device-support value="sam4s"/>	
+	<device-support value="sam4l"/>
+	<device-support value="saml21"/>
 </device-alias-map>
 
 <device-alias-map name="avr2130_lwmesh_spi_support">
@@ -38,6 +40,7 @@
 	<device-support value="samd20"/>
 	<device-support value="samd21"/>
 	<device-support value="samr21"/>
+	<device-support value="saml21"/>
 	<device-support value="sam4l"/>
 	<device-support value="sam4e"/>
 	<device-support value="sam4s"/>

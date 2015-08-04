@@ -565,32 +565,6 @@ void system_board_init(void);
 #define AT86RFX_IRQ_CHAN       EXT1_IRQ_INPUT
 #define AT86RFX_IRQ_PINMUX     EXT1_IRQ_PINMUX
 
-#else
-/** \name 802.15.4 TRX Interface definitions for EXT2
- * @{
- */
-#define AT86RFX_SPI                  EXT2_SPI_MODULE
-#define AT86RFX_RST_PIN              EXT2_PIN_7
-#define AT86RFX_MISC_PIN             EXT2_PIN_12
-#define AT86RFX_IRQ_PIN              EXT2_PIN_9
-#define AT86RFX_SLP_PIN              EXT2_PIN_10
-#define AT86RFX_SPI_CS               EXT2_PIN_15
-#define AT86RFX_SPI_MOSI             EXT2_PIN_16
-#define AT86RFX_SPI_MISO             EXT2_PIN_17
-#define AT86RFX_SPI_SCK              EXT2_PIN_18
-#define AT86RFX_CSD                  EXT2_PIN_5
-#define AT86RFX_CPS                  EXT2_PIN_8
-#define AT86RFX_SPI_SERCOM_MUX_SETTING   EXT2_SPI_SERCOM_MUX_SETTING
-#define AT86RFX_SPI_SERCOM_PINMUX_PAD0   EXT2_SPI_SERCOM_PINMUX_PAD0
-#define AT86RFX_SPI_SERCOM_PINMUX_PAD1   PINMUX_UNUSED
-#define AT86RFX_SPI_SERCOM_PINMUX_PAD2   EXT2_SPI_SERCOM_PINMUX_PAD2
-#define AT86RFX_SPI_SERCOM_PINMUX_PAD3   EXT2_SPI_SERCOM_PINMUX_PAD3
-
-#define AT86RFX_IRQ_CHAN       EXT2_IRQ_INPUT
-#define AT86RFX_IRQ_PINMUX     EXT2_IRQ_PINMUX
-
-
-
 #endif
 /** Enables the transceiver main interrupt. */
 #define ENABLE_TRX_IRQ()     \

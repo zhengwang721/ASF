@@ -1,9 +1,9 @@
 /**
- * \file main.c
+ * \file
  *
- * \brief  Main of WSNDemo application
+ * \brief SAM RTC Driver Configuration Header
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,34 +38,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
-
-/**
- * \page license License
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
- #include "wsndemo.h"
- #include "asf.h"
+#ifndef CONF_RTC_H_INCLUDED
+#define CONF_RTC_H_INCLUDED
 
-int main(void)
-{
-	irq_initialize_vectors();
+/** Select RTC clock. Use 1.024kHz from 32kHz internal ULP oscillator(OSCULP32K)
+ *  for RTC clock.
+ */
+#  define RTC_CLOCK_SOURCE    RTC_CLOCK_SELECTION_OSC1K
 
-	#if SAMD || SAMR21 || SAML21
-	system_init();
-	delay_init();
-	#else
-	sysclk_init();
-	board_init();
-	#endif
-
-	wsndemo_init();
-	cpu_irq_enable();
-
-	while (1) {
-		wsndemo_task();
-	}
-}
+#endif

@@ -1,9 +1,9 @@
 /**
- * \file main.c
+ * \file
  *
- * \brief  Main of WSNDemo application
+ * \brief SAM L21 External Interrupt Driver Configuration Header
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,34 +38,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
-
-/**
- * \page license License
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
- #include "wsndemo.h"
- #include "asf.h"
+#  define EXTINT_CLOCK_SELECTION   EXTINT_CLK_GCLK
+#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
 
-int main(void)
-{
-	irq_initialize_vectors();
 
-	#if SAMD || SAMR21 || SAML21
-	system_init();
-	delay_init();
-	#else
-	sysclk_init();
-	board_init();
-	#endif
-
-	wsndemo_init();
-	cpu_irq_enable();
-
-	while (1) {
-		wsndemo_task();
-	}
-}
+#endif

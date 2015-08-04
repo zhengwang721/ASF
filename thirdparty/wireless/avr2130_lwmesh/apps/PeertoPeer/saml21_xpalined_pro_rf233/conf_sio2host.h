@@ -1,9 +1,9 @@
 /**
- * \file main.c
+ * \file conf_sio2host.h
  *
- * \brief  Main of WSNDemo application
+ * \brief Serial Input & Output configuration
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,32 +40,22 @@
  * \asf_license_stop
  */
 
-/**
- * \page license License
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
+/** Since MCPS.DATA.indication requires max no of bytes of around 150 bytes than
+ *all other primitives,the Maximum Buffer size is kept as 156 bytes */
+ #define SERIAL_RX_BUF_SIZE_HOST    156
 
- #include "wsndemo.h"
- #include "asf.h"
+#define USART_HOST                 EDBG_CDC_MODULE
+#define HOST_SERCOM_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define HOST_SERCOM_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define HOST_SERCOM_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define HOST_SERCOM_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define HOST_SERCOM_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+/** Baudrate setting */
+#define USART_HOST_BAUDRATE        38400
 
-int main(void)
-{
-	irq_initialize_vectors();
-
-	#if SAMD || SAMR21 || SAML21
-	system_init();
-	delay_init();
-	#else
-	sysclk_init();
-	board_init();
-	#endif
-
-	wsndemo_init();
-	cpu_irq_enable();
-
-	while (1) {
-		wsndemo_task();
-	}
-}
+#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(3, USART_HOST_ISR_VECT); \
+	USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC; \
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM3);
+#endif /* CONF_SIO2HOST_H_INCLUDED */
