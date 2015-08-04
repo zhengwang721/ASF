@@ -18,6 +18,7 @@
 				<require idref="sam0.drivers.tc"/>
   
 				<device-support value="samd21"/>
+				<device-support value="saml21"/>
 			</module>
 			<module type="meta" id="thirdparty.wireless.ble_sdk.services.timer#timer#1"     caption="Timer">
 				<info type="description" value="summary">

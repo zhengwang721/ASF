@@ -651,7 +651,7 @@ void htp_init_defaults(htp_app_t *htp_temp)
 void htp_temperature_send(htp_app_t *htp_temp)
 {
 	at_ble_prf_date_time_t timestamp;
-#if SAMD21
+#if SAMD21 || SAML21
 	float temperature;
 	/* Read Temperature Value from IO1 Xplained Pro */
 	temperature = at30tse_read_temperature();	 

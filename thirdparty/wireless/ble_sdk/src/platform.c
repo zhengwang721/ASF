@@ -140,7 +140,7 @@ void start_timer(uint32_t timeout)
 	uint32_t main_clk  = sysclk_get_cpu_hz();
 #endif
 
-#if SAMD21
+#if SAMD21 || SAML21
 	uint32_t main_clk  = system_gclk_gen_get_hz(0);
 #endif
 	double ctr = 1.0;

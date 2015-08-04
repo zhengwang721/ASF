@@ -9,6 +9,7 @@
 	</module>
  
  <device-alias-map name="ble_stack_lib_support">
+ 		<device-support value="saml21"/>
 		<device-support value="samd21"/>
 		<device-support value="atsamg55j19"/>
 	</device-alias-map>
