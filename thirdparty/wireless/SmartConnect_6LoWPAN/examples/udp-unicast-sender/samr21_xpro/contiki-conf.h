@@ -89,7 +89,7 @@
 #error "Please note HWACK should be enabled only when MAC is NULLMAC and RDC is NULLRDC"
 #endif
 
-/* 
+/* l
  * For ContikiMAC Channel Check rate has to be defined.
  * Values allowed for NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE are 2,4,8
  */
