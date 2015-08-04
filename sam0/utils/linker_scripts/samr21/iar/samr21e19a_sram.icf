@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Top header file for SAMR21
+ * \brief Linker script for running in internal SRAM on the SAMR21E19A
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -41,30 +41,33 @@
  *
  */
 
-#ifndef _SAMR21_
-#define _SAMR21_
+/*###ICF### Section handled by ICF editor, don't touch! ****/
+/*-Editor annotation file-*/
+/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\cortex_v1_0.xml" */
+/*-Specials-*/
+define symbol __ICFEDIT_intvec_start__        = 0x20000000;
+/*-Memory Regions-*/
+define symbol __ICFEDIT_region_RAM_start__    = 0x20000000;
+define symbol __ICFEDIT_region_RAM_end__      = 0x20007FFF;
+/*-Sizes-*/
+if (!isdefinedsymbol(__ICFEDIT_size_cstack__)) {
+  define symbol __ICFEDIT_size_cstack__    = 0x2000;
+}
+if (!isdefinedsymbol(__ICFEDIT_size_heap__)) {
+  define symbol __ICFEDIT_size_heap__      = 0x0;
+}
+/**** End of ICF editor section. ###ICF###*/
 
-/**
- * \defgroup SAMR21_definitions SAMR21 Device Definitions
- * \brief SAMR21 CMSIS Definitions.
- */
+define memory mem with size = 4G;
+define region RAM_region    = mem:[from __ICFEDIT_region_RAM_start__ to __ICFEDIT_region_RAM_end__];
 
-#if   defined(__SAMR21E16A__) || defined(__ATSAMR21E16A__)
-  #include "samr21e16a.h"
-#elif defined(__SAMR21E17A__) || defined(__ATSAMR21E17A__)
-  #include "samr21e17a.h"
-#elif defined(__SAMR21E18A__) || defined(__ATSAMR21E18A__)
-  #include "samr21e18a.h"
-#elif defined(__SAMR21E19A__) || defined(__ATSAMR21E19A__)
-  #include "samr21e19a.h"
-#elif defined(__SAMR21G16A__) || defined(__ATSAMR21G16A__)
-  #include "samr21g16a.h"
-#elif defined(__SAMR21G17A__) || defined(__ATSAMR21G17A__)
-  #include "samr21g17a.h"
-#elif defined(__SAMR21G18A__) || defined(__ATSAMR21G18A__)
-  #include "samr21g18a.h"
-#else
-  #error Library does not support the specified device.
-#endif
+define block CSTACK with alignment = 8, size = __ICFEDIT_size_cstack__ { };
+define block HEAP   with alignment = 8, size = __ICFEDIT_size_heap__   { };
 
-#endif /* _SAMR21_ */
+initialize by copy with packing=none { readwrite };
+do not initialize  { section .noinit };
+
+place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };
+place in RAM_region                           { readonly };
+place in RAM_region                           { readwrite };
+place at end of RAM_region                    { block CSTACK, block HEAP };
