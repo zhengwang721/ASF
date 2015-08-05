@@ -325,7 +325,7 @@ void TIMER0_Handler      ( void );
 #define DUALTIMER_INST_NUM     1
 #define DUALTIMER_INSTS        { DUALTIMER0 }
 
-#define PROV_DMA_CTRL0         ((Prov_Dma_Ctrl *)0x40002000UL) /**< \brief (PROV_DMA_CTRL0) Base Address */
+#define PROV_DMA_CTRL0         ((ProvDmaCtrl *)0x40002000UL) /**< \brief (PROV_DMA_CTRL0) Base Address */
 #define PROV_DMA_CTRL_INST_NUM 1
 #define PROV_DMA_CTRL_INSTS    { PROV_DMA_CTRL0 }
 
