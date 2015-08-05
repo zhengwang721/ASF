@@ -1,7 +1,9 @@
 /**
  * \file
  *
- * \brief Top header file for SAMR21
+ * \brief ATMEGA328P Xplained mini board init.
+ *
+ * To use this board, define BOARD=ATMEGA328P_XPLAINED_MINI.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -40,31 +42,21 @@
  * \asf_license_stop
  *
  */
-
-#ifndef _SAMR21_
-#define _SAMR21_
-
-/**
- * \defgroup SAMR21_definitions SAMR21 Device Definitions
- * \brief SAMR21 CMSIS Definitions.
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#include <board.h>
+#include <compiler.h>
+#include <conf_board.h>
+#include "gpio.h"
+#include "led.h"
 
-#if   defined(__SAMR21E16A__) || defined(__ATSAMR21E16A__)
-  #include "samr21e16a.h"
-#elif defined(__SAMR21E17A__) || defined(__ATSAMR21E17A__)
-  #include "samr21e17a.h"
-#elif defined(__SAMR21E18A__) || defined(__ATSAMR21E18A__)
-  #include "samr21e18a.h"
-#elif defined(__SAMR21E19A__) || defined(__ATSAMR21E19A__)
-  #include "samr21e19a.h"
-#elif defined(__SAMR21G16A__) || defined(__ATSAMR21G16A__)
-  #include "samr21g16a.h"
-#elif defined(__SAMR21G17A__) || defined(__ATSAMR21G17A__)
-  #include "samr21g17a.h"
-#elif defined(__SAMR21G18A__) || defined(__ATSAMR21G18A__)
-  #include "samr21g18a.h"
-#else
-  #error Library does not support the specified device.
-#endif
-
-#endif /* _SAMR21_ */
+void board_init(void)
+{
+	/* On board LED initialization */
+	ioport_configure_pin(LED0, IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);
+		
+	/* On board Switch initialization */
+	ioport_configure_pin(GPIO_PUSH_BUTTON_0,	
+	IOPORT_DIR_INPUT | IOPORT_PULL_UP);
+}

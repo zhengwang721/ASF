@@ -1,7 +1,12 @@
 /**
  * \file
  *
- * \brief Top header file for SAMR21
+ * \brief ATMEGA328P_XPLAINED_MINI board header file.
+ *
+ * This file contains definitions and services related to the features of the
+ * Xplained Mini board.
+ *
+ * To use this board, define BOARD= ATMEGA328P_XPLAINED_MINI.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -40,31 +45,36 @@
  * \asf_license_stop
  *
  */
-
-#ifndef _SAMR21_
-#define _SAMR21_
-
-/**
- * \defgroup SAMR21_definitions SAMR21 Device Definitions
- * \brief SAMR21 CMSIS Definitions.
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#ifndef _ATMEGA328P_XPLAINED_MINI_
+#define _ATMEGA328P_XPLAINED_MINI_
+#include "compiler.h"
 
-#if   defined(__SAMR21E16A__) || defined(__ATSAMR21E16A__)
-  #include "samr21e16a.h"
-#elif defined(__SAMR21E17A__) || defined(__ATSAMR21E17A__)
-  #include "samr21e17a.h"
-#elif defined(__SAMR21E18A__) || defined(__ATSAMR21E18A__)
-  #include "samr21e18a.h"
-#elif defined(__SAMR21E19A__) || defined(__ATSAMR21E19A__)
-  #include "samr21e19a.h"
-#elif defined(__SAMR21G16A__) || defined(__ATSAMR21G16A__)
-  #include "samr21g16a.h"
-#elif defined(__SAMR21G17A__) || defined(__ATSAMR21G17A__)
-  #include "samr21g17a.h"
-#elif defined(__SAMR21G18A__) || defined(__ATSAMR21G18A__)
-  #include "samr21g18a.h"
-#else
-  #error Library does not support the specified device.
-#endif
+# include "led.h"
 
-#endif /* _SAMR21_ */
+#define MCU_SOC_NAME        "ATMEGA328P"
+#define BOARD_NAME          "ATMEGA328P_XPLAINED_MINI"
+
+
+#define LED0_GPIO                       IOPORT_CREATE_PIN(PORTB, 5)
+#define LED0                            LED0_GPIO
+
+//! Number of LEDs.
+#define LED_COUNT                       1
+
+#define GPIO_PUSH_BUTTON_0              IOPORT_CREATE_PIN(PORTB, 7)
+
+//! \name Communication interfaces
+//@{
+#define TWID_SDA                        IOPORT_CREATE_PIN(PORTC, 4)
+#define TWID_SCL                        IOPORT_CREATE_PIN(PORTC, 5)
+#define USART_RX                        IOPORT_CREATE_PIN(PORTD, 0)
+#define USART_TX                        IOPORT_CREATE_PIN(PORTD, 1)
+#define SPI_SS_A                        IOPORT_CREATE_PIN(PORTB, 2)
+#define SPI_MOSI                        IOPORT_CREATE_PIN(PORTB, 3)
+#define SPI_MISO                        IOPORT_CREATE_PIN(PORTB, 4)
+#define SPI_SCK                         IOPORT_CREATE_PIN(PORTB, 5)
+//@}
+#endif  /* _ATMEGA328P_XPLAINED_MINI_ */
