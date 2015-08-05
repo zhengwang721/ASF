@@ -75,6 +75,8 @@
 			<build type="distribute" subtype="file" value="firmware/Tools/serial_bridge/samw25_xplained_pro_serial_bridge.elf"/>
 
 			<!-- Device support -->
+			<device-support value="sam4s"/>
+			<device-support value="sam4e"/>
 			<device-support value="samg53"/>
 			<device-support value="samg55"/>
 			<device-support value="samd21"/>
