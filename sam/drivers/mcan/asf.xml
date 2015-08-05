@@ -23,8 +23,6 @@
 
 		<build type="module-config" subtype="required-header-file" value="conf_mcan.h"/>
 		<build type="module-config" subtype="path" value="module_config"/>
-		<build type="header-file" value="quick_start/qs_mcan_basic.h"/>
-		<build type="header-file" value="quick_start_fd/qs_mcan_fd.h"/>
 
 		<build type="doxygen-example-path" value="quick_start"/>
 		<build type="doxygen-example-path" value="quick_start_fd"/>
