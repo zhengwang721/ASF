@@ -41,15 +41,10 @@
 #ifndef CONF_USART_SERIAL_H
 #define CONF_USART_SERIAL_H
 
-/** UART Interface */
-#define CONF_UART				CONSOLE_UART
-/** Baudrate setting */
-#define CONF_UART_BAUDRATE		(115200UL)
-/** Character length setting */
-#define CONF_UART_CHAR_LENGTH	US_MR_CHRL_8_BIT
-/** Parity setting */
-#define CONF_UART_PARITY		US_MR_PAR_NO
-/** Stop bits setting */
-#define CONF_UART_STOP_BITS		US_MR_NBSTOP_1_BIT
+#define CONF_STDIO_USART_MODULE	CONSOLE_UART
+#define CONF_STDIO_BAUDRATE		115200
+#define CONF_STDIO_CHAR_LENGTH	US_MR_CHRL_8_BIT
+#define CONF_STDIO_PARITY       US_MR_PAR_NO
+#define CONF_STDIO_STOP_BITS    US_MR_NBSTOP_1_BIT
 
 #endif/* CONF_USART_SERIAL_H_INCLUDED */
