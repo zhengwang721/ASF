@@ -163,31 +163,21 @@ void config_per_test_parameters(void)
 		= default_trx_config_params.retry_enabled = false;
 
 #if (ANTENNA_DIVERSITY == 1)
-#if (TAL_TYPE == AT86RF233)
+#if (TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2)
 	/* Disable antenna diversity by default. */
 	curr_trx_config_params.antenna_diversity
-		= default_trx_config_params.antenna_diversity = false;
+		= default_trx_config_params.antenna_diversity = ENABLE_ANTENNA_DIVERSITY;
 	curr_trx_config_params.antenna_selected
 		= default_trx_config_params.antenna_selected
-				= ANT_CTRL_1;
+				= ANT_SELECTED;
 
 	/* This is required for set default config request command to set the
 	 * config parameters to their defaults */
 	/* Disable antenna diversity by default */
 	/* Enable A1/X2 */
-	tal_ant_div_config(ANT_DIVERSITY_DISABLE, ANT_CTRL_1); /* Enable A1/X2
-	                                                       **/
-
-#else
-	curr_trx_config_params.antenna_diversity
-		= default_trx_config_params.antenna_diversity = true;
-	curr_trx_config_params.antenna_selected
-		= default_trx_config_params.antenna_selected
-				= ANT_CTRL_0;
-
-	/* Enable Antenna Diversity*/
-	tal_ant_div_config(ANT_DIVERSITY_ENABLE, ANTENNA_DEFAULT);
-#endif /* end of (TAL_TYPE == AT86RF233) */
+	tal_ant_div_config(ENABLE_ANTENNA_DIVERSITY, ANT_SELECTED); /* Enable A1/X2
+                                                       **/
+#endif                                                      
 #endif
 
 #if (TAL_TYPE != AT86RF230B)
@@ -242,7 +232,7 @@ void config_per_test_parameters(void)
 
 	curr_trx_config_params.channel_page
 		= default_trx_config_params.channel_page
-				= TAL_CURRENT_PAGE_DEFAULT;
+				= DEFAULT_PAGE;
 	pib_value.pib_value_8bit = default_trx_config_params.channel_page;
 	tal_pib_set(phyCurrentPage, &pib_value);
 
@@ -272,21 +262,13 @@ void config_per_test_parameters(void)
 
 		/* Set the config parameters on peer node */
 #if (ANTENNA_DIVERSITY == 1)
-#if (TAL_TYPE == AT86RF233)
+#if (TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2)
 		curr_trx_config_params.antenna_diversity_on_peer
 			= default_trx_config_params.
-				antenna_diversity_on_peer = false;
+				antenna_diversity_on_peer = ENABLE_ANTENNA_DIVERSITY;
 		curr_trx_config_params.antenna_selected_on_peer
 			= default_trx_config_params.
-				antenna_selected_on_peer = ANT_CTRL_1;
-
-#else
-		curr_trx_config_params.antenna_diversity_on_peer
-			= default_trx_config_params.
-				antenna_diversity_on_peer = true;
-		curr_trx_config_params.antenna_selected_on_peer
-			= default_trx_config_params.
-				antenna_selected_on_peer = ANT_CTRL_0;
+				antenna_selected_on_peer = ANT_SELECTED;
 #endif /* End of #if(TAL_TYPE == AT86RF233) */
 #endif /* End of #if (ANTENNA_DIVERSITY == 1) */
 	}
