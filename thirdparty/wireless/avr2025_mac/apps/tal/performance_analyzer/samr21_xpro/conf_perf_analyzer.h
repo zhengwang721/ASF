@@ -44,7 +44,7 @@
 #define CONF_PERF_ANALYZER_H_INCLUDED
 
 
-#define DEFAULT_CHANNEL         (1)
+#define DEFAULT_CHANNEL         (21)
 
 #define DEFAULT_PAGE            (0)
 
