@@ -53,6 +53,7 @@
 # include "tal.h"
 #include "string.h"
 # include "app_config.h"
+#include "user_interface.h"
 #include "conf_perf_analyzer.h"
 
 /**
@@ -74,7 +75,7 @@
 
 /* === Macros =============================================================== */
 /* Version of the software */
-#define FIRMWARE_VERSION   3.0f
+#define FIRMWARE_VERSION   3.2
 
 /* Frame overhead due to selected address scheme incl. FCS */
 #if (DST_PAN_ID == SRC_PAN_ID)
