@@ -82,6 +82,12 @@ static struct can_standard_message_filter_element can1_rx_standard_filter[CONF_C
 COMPILER_ALIGNED(4)
 static struct can_extended_message_filter_element can1_rx_extended_filter[CONF_CAN1_RX_EXTENDED_ID_FILTER_NUM];
 
+/**
+ * \brief initialize CAN memory .
+ *
+ * \param hw  Base address of the MCAN
+ *
+ */
 static void _can_message_memory_init(Mcan *hw)
 {
 	if (hw == MCAN0) {
@@ -137,6 +143,13 @@ static void _can_message_memory_init(Mcan *hw)
 	}
 }
 
+/**
+ * \brief set default configuration when initialization.
+ *
+ * \param hw  Base address of the MCAN
+ *
+ * \param config  default configuration parameters.
+ */
 static void _can_set_configuration(Mcan *hw, struct can_config *config)
 {
 	/* Timing setting. */
@@ -199,6 +212,12 @@ static void _can_set_configuration(Mcan *hw, struct can_config *config)
 	hw->MCAN_TXEFC |= MCAN_TXEFC_EFWM(config->tx_event_fifo_watermark);
 }
 
+/**
+ * \brief enable can module clock.
+ *
+ * \param module_inst  MCAN instance
+ *
+ */
 static void _can_enable_peripheral_clock(struct can_module *const module_inst)
 {
 	if (module_inst->hw == MCAN0) {
@@ -210,6 +229,15 @@ static void _can_enable_peripheral_clock(struct can_module *const module_inst)
 	}
 }
 
+/**
+ * \brief initialize can module.
+ *
+ * \param module_inst  MCAN instance
+ *
+ * \param hw  Base address of MCAN.
+ *
+ * \param config default configuration .
+ */
 void can_init(struct can_module *const module_inst, Mcan *hw,
 		struct can_config *config)
 {
@@ -245,6 +273,12 @@ void can_init(struct can_module *const module_inst, Mcan *hw,
 	hw->MCAN_TXBCIE = 0xFFFFFFFFul;
 }
 
+/**
+ * \brief start can module after initialization.
+ *
+ * \param module_inst  MCAN instance
+ *
+ */
 void can_start(struct can_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR &= ~MCAN_CCCR_INIT;
@@ -252,6 +286,12 @@ void can_start(struct can_module *const module_inst)
 	while (module_inst->hw->MCAN_CCCR & MCAN_CCCR_INIT);
 }
 
+/**
+ * \brief stop can module when bus off occurs
+ *
+ * \param module_inst  MCAN instance
+ *
+ */
 void can_stop(struct can_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR |= MCAN_CCCR_INIT;
@@ -259,6 +299,12 @@ void can_stop(struct can_module *const module_inst)
 	while (!(module_inst->hw->MCAN_CCCR & MCAN_CCCR_INIT));
 }
 
+/**
+ * \brief switch can module into fd mode.
+ *
+ * \param module_inst  MCAN instance
+ *
+ */
 void can_enable_fd_mode(struct can_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR |= MCAN_CCCR_INIT;
@@ -270,11 +316,23 @@ void can_enable_fd_mode(struct can_module *const module_inst)
 	module_inst->hw->MCAN_CCCR |= MCAN_CCCR_CMR(MCAN_CCCR_CMR_FD_BITRATE_SWITCH);
 }
 
+/**
+ * \brief disable fd mode of can module.
+ *
+ * \param module_inst  MCAN instance
+ *
+ */
 void can_disable_fd_mode(struct can_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR &= MCAN_CCCR_CME(MCAN_CCCR_CME_ISO11898_1);
 }
 
+/**
+ * \brief enable restricted mode of can module.
+ *
+ * \param module_inst  MCAN instance
+ *
+ */
 void can_enable_restricted_operation_mode(
 		struct can_module *const module_inst)
 {
@@ -286,12 +344,24 @@ void can_enable_restricted_operation_mode(
 	module_inst->hw->MCAN_CCCR |= MCAN_CCCR_ASM;
 }
 
+/**
+ * \brief disable restricted mode of can module.
+ *
+ * \param module_inst  MCAN instance
+ *
+ */
 void can_disable_restricted_operation_mode(
 		struct can_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR &= ~MCAN_CCCR_ASM;
 }
 
+/**
+ * \brief enable bus monitor mode of can module.
+ *
+ * \param module_inst  MCAN instance
+ *
+ */
 void can_enable_bus_monitor_mode(struct can_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR |= MCAN_CCCR_INIT;
@@ -302,11 +372,23 @@ void can_enable_bus_monitor_mode(struct can_module *const module_inst)
 	module_inst->hw->MCAN_CCCR |= MCAN_CCCR_MON;
 }
 
+/**
+ * \brief disable bus monitor mode of can module.
+ *
+ * \param module_inst  MCAN instance
+ *
+ */
 void can_disable_bus_monitor_mode(struct can_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR &= ~MCAN_CCCR_MON;
 }
 
+/**
+ * \brief enable sleep mode of can module.
+ *
+ * \param module_inst  MCAN instance
+ *
+ */
 void can_enable_sleep_mode(struct can_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR |= MCAN_CCCR_CSR;
@@ -316,6 +398,12 @@ void can_enable_sleep_mode(struct can_module *const module_inst)
 	while (!(module_inst->hw->MCAN_CCCR & MCAN_CCCR_CSA));
 }
 
+/**
+ * \brief disable sleep mode of can module.
+ *
+ * \param module_inst  MCAN instance
+ *
+ */
 void can_disable_sleep_mode(struct can_module *const module_inst)
 {
 	/* Enable peripheral clock */
@@ -325,6 +413,12 @@ void can_disable_sleep_mode(struct can_module *const module_inst)
 	while ((module_inst->hw->MCAN_CCCR & MCAN_CCCR_CSA));
 }
 
+/**
+ * \brief enable test mode of can module.
+ *
+ * \param module_inst  MCAN instance
+ *
+ */
 void can_enable_test_mode(struct can_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR |= MCAN_CCCR_INIT;
@@ -336,11 +430,28 @@ void can_enable_test_mode(struct can_module *const module_inst)
 	module_inst->hw->MCAN_TEST |= MCAN_TEST_LBCK;
 }
 
+/**
+ * \brief disable test mode of can module.
+ *
+ * \param module_inst  MCAN instance
+ *
+ */
 void can_disable_test_mode(struct can_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR &= ~MCAN_CCCR_TEST;
 }
 
+/**
+ * \brief set standard receive CAN ID.
+ *
+ * \param module_inst  MCAN instance
+ *
+ * \param sd_filter  structure of CAN ID
+ *
+ * \param index  CAN messages memory index for different CAN ID
+ *
+ * \return status code.
+ */
 enum status_code can_set_rx_standand_filter(
 		struct can_module *const module_inst,
 		struct can_standard_message_filter_element *sd_filter, uint32_t index)
@@ -355,6 +466,17 @@ enum status_code can_set_rx_standand_filter(
 	return ERR_INVALID_ARG;
 }
 
+/**
+ * \brief set extended receive CAN ID.
+ *
+ * \param module_inst  MCAN instance
+ *
+ * \param sd_filter  structure of extended CAN ID
+ *
+ * \param index  CAN messages memory index for different CAN ID
+ *
+ * \return status code.
+ */
 enum status_code can_set_rx_extended_filter(
 		struct can_module *const module_inst,
 		struct can_extended_message_filter_element *et_filter, uint32_t index)
@@ -371,6 +493,17 @@ enum status_code can_set_rx_extended_filter(
 	return ERR_INVALID_ARG;
 }
 
+/**
+ * \brief get dedicated rx buffer element .
+ *
+ * \param module_inst  MCAN instance
+ *
+ * \param rx_element  structure of element
+ *
+ * \param index  CAN messages memory index for receiving CAN ID
+ *
+ * \return status code.
+ */
 enum status_code can_get_rx_buffer_element(
 		struct can_module *const module_inst,
 		struct can_rx_element_buffer *rx_element, uint32_t index)
@@ -385,6 +518,17 @@ enum status_code can_get_rx_buffer_element(
 	return ERR_INVALID_ARG;
 }
 
+/**
+ * \brief get FIFO rx buffer element .
+ *
+ * \param module_inst  MCAN instance
+ *
+ * \param rx_element  structure of element
+ *
+ * \param index  CAN messages memory index for receiving CAN ID
+ *
+ * \return status code.
+ */
 enum status_code can_get_rx_fifo_0_element(
 		struct can_module *const module_inst,
 		struct can_rx_element_fifo_0 *rx_element, uint32_t index)
@@ -399,6 +543,17 @@ enum status_code can_get_rx_fifo_0_element(
 	return ERR_INVALID_ARG;
 }
 
+/**
+ * \brief get FIFO rx buffer element .
+ *
+ * \param module_inst  MCAN instance
+ *
+ * \param rx_element  structure of element
+ *
+ * \param index  CAN messages memory index for receiving CAN ID
+ *
+ * \return status code.
+ */
 enum status_code can_get_rx_fifo_1_element(
 		struct can_module *const module_inst,
 		struct can_rx_element_fifo_1 *rx_element, uint32_t index)
@@ -413,6 +568,17 @@ enum status_code can_get_rx_fifo_1_element(
 	return ERR_INVALID_ARG;
 }
 
+/**
+ * \brief set dedicated transmit buffer element .
+ *
+ * \param module_inst  MCAN instance
+ *
+ * \param tx_element  structure of element
+ *
+ * \param index  CAN messages memory index for transmitting CAN ID
+ *
+ * \return status code.
+ */
 enum status_code can_set_tx_buffer_element(
 		struct can_module *const module_inst,
 		struct can_tx_element *tx_element, uint32_t index)
@@ -436,6 +602,17 @@ enum status_code can_set_tx_buffer_element(
 	return ERR_INVALID_ARG;
 }
 
+/**
+ * \brief set FIFO transmit buffer element .
+ *
+ * \param module_inst  MCAN instance
+ *
+ * \param tx_element  structure of element
+ *
+ * \param index  CAN messages memory index for transmitting CAN ID
+ *
+ * \return status code.
+ */
 enum status_code can_get_tx_event_fifo_element(
 		struct can_module *const module_inst,
 		struct can_tx_event_element *tx_event_element, uint32_t index)
