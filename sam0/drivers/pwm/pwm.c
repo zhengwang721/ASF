@@ -136,9 +136,9 @@ static uint32_t _pwm_reg_agcdata_in(
 	int32_t agcdata_in;
 
 	if (agcdata_format) {
-		agcdata_in = (int16_t)((1024 * duty_cycle) / 100 - 512);
-	} else {
 		agcdata_in = (uint16_t)((1024 * duty_cycle) / 100);
+	} else {
+		agcdata_in = (int16_t)((1024 * duty_cycle) / 100 - 512);
 	}
 	switch (device_select) {
 		case PWM1:
@@ -361,6 +361,10 @@ enum status_code pwm_init(enum pwm_device_select device_select, \
 			break;
 	}
 
+	struct gpio_config config_gpio;
+	gpio_get_config_defaults(&config_gpio);
+	config_gpio.direction = GPIO_PIN_DIR_OUTPUT;
+	gpio_pin_set_config(config->pinmux_pad >> 16, &config_gpio);
 	gpio_pinmux_cofiguration(config->pinmux_pad >> 16, \
 							(uint16_t)(config->pinmux_pad));
 

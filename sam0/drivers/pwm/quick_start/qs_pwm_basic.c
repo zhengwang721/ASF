@@ -57,15 +57,15 @@ static void configure_pwm(void)
 //! [setup_2]
 
 //! [setup_3]
-	config_pwm.pinmux_pad = PWM_OUT_MUX;
+	config_pwm.pinmux_pad = CONF_PWM_OUT_MUX;
 //! [setup_3]
 
 //! [setup_4]
-	pwm_init(PWM1, &config_pwm);
+	pwm_init(CONF_PWM, &config_pwm);
 //! [setup_4]
 
 //! [setup_5]
-	pwm_enable(PWM1);
+	pwm_enable(CONF_PWM);
 //! [setup_5]
 }
 //! [setup]
