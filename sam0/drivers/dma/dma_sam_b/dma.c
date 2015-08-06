@@ -168,7 +168,7 @@ static void _dma_release_channel(uint8_t channel)
  *  \li Disable destination high priority
  *  \li Set destination high priority channel as 0
  *  \li Disable the joint mode
- *  \li Disable the endion swap
+ *  \li Disable the endian swap
  * \param[out] config Pointer to the configuration
  *
  */
