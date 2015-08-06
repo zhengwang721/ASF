@@ -54,17 +54,15 @@
  * modified by the user application.
  *
  * The default configuration is as follows:
- *  \li Timer interrupt set as enable
- *  \li Select external input as clock set as disable
- *  \li Select external input as enable set as disable
+ *  \li Timer interrupt set as disable
+ *  \li Set relaod value as 0
  *
  * \param[out]  config  Pointer to a TIMER module configuration structure to set
  */
 void timer_get_config_defaults(struct timer_config *config)
 {
-	config->interrupt_enable = TIMER_CTRL_INTERRUPT_ENABLE;
-	config->external_input_enable = 0;
-	config->interrupt_enable = 0;
+	config->reload_value = 0;
+	config->interrupt_enable = false;
 }
 
 /**
@@ -79,9 +77,8 @@ void timer_get_config_defaults(struct timer_config *config)
  */
 void timer_init(const struct timer_config *config)
 {
-	TIMER0->CTRL.reg = config->interrupt_enable
-		| config->external_input_clock
-		| config->interrupt_enable;
+	TIMER0->CTRL.reg = config->interrupt_enable << TIMER_CTRL_INTERRUPT_ENABLE_Pos;
+	TIMER0->RELOAD.reg = config->reload_value;
 }
 
 /**

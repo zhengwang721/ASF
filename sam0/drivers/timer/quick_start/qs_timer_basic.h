@@ -90,11 +90,11 @@
  *
  * -# Configure the TIMER module with the desired settings.
  *    \snippet qs_timer_basic.c setup_timer_3
- * -# Set the TIMER module reload value.
- *    \snippet qs_timer_basic.c setup_timer_value
+ * -# Configure TIMER module with the initialized configuration struct.
+ *    \snippet qs_timer_basic.c setup_timer_4
  *
  * -# Set the TIMER module enable.
- *    \snippet qs_timer_basic.c setup_timer_enable
+ *    \snippet qs_timer_basic.c setup_timer_5
  *
  * \section asfdoc_sam0_timer_basic_use_case_use_main Use Case
  *
@@ -105,9 +105,8 @@
  * \subsection asfdoc_sam0_timer_basic_use_case_flow Workflow
  * -# Read in the current timer interrupt status.
  *    \snippet qs_timer_basic.c main_loop_1
- * -# Clear the timer interrupt status.
- *    \snippet qs_timer_basic.c main_loop_2
+ *
  * -# Write the inverted pin level state to LED pin, which has been configured as
  *    an output in the use-case setup code.
- *    \snippet qs_timer_basic.c main_loop_3
+ *    \snippet qs_timer_basic.c main_loop_2
  */

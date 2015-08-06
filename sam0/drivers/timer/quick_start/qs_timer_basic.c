@@ -45,7 +45,7 @@
  */
 #include <asf.h>
 
-#define TIMER_RELOAD_VALUE		1000000
+#define TIMER_RELOAD_VALUE		1300000
 
 //! [setup]
 //! [setup_gpio_init]
@@ -74,50 +74,46 @@ void configure_gpio_pins(void)
 
 void configure_timer(void)
 {
-	//! [setup_timer_1]
+//! [setup_timer_1]
 	struct timer_config config_timer;
-	//! [setup_timer_1]
-	//! [setup_timer_2]
+//! [setup_timer_1]
+//! [setup_timer_2]
 	timer_get_config_defaults(&config_timer);
-	//! [setup_timer_2]
-	
-	//! [setup_timer_3]
+//! [setup_timer_2]
+//! [setup_timer_3]
+	config_timer.reload_value = TIMER_RELOAD_VALUE;
+//! [setup_timer_3]
+//! [setup_timer_4]
 	timer_init(&config_timer);
-	//! [setup_timer_3]
+//! [setup_timer_4]
+//! [setup_timer_5]
+	timer_enable();
+//! [setup_timer_5]
 }
 //! [setup]
-
 int main(void)
 {
-	//! [setup_init]	
+	volatile uint32_t counter;
+	
+//! [setup_init]	
 	//system_init();
-
+	
 	configure_gpio_pins();
 
 	configure_timer();
 
-	//! [setup_timer_value]
-	timer_set_value(TIMER_RELOAD_VALUE);
-	//! [setup_timer_value]
+//! [setup_init]
 	
-	//! [setup_timer_enable]
-	timer_enable();
-	//! [setup_timer_enable]
-	//! [setup_init]
-	
-	//! [main_loop]
+//! [main_loop]
 	while (true) {
-		//! [main_loop_1]
-		if (timer_get_interrupt_status()) {
-		//! [main_loop_1]
-			//! [main_loop_2]
-			timer_clear_interrupt_status();
-			//! [main_loop_2]
-			
-			//! [main_loop_3]
+//! [main_loop_1]
+		counter = timer_get_value();
+//! [main_loop_1]
+		if (!counter) {
+//! [main_loop_2]
 			gpio_pin_toggle_output_level(LED_0_PIN);
-			//! [main_loop_3]
+//! [main_loop_2]
 		}
 	}
-	//! [main_loop]
+//! [main_loop]
 }
