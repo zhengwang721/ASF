@@ -43,48 +43,48 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_CAN_H_INCLUDED
-#define CONF_CAN_H_INCLUDED
+#ifndef CONF_MCAN_H_INCLUDED
+#define CONF_MCAN_H_INCLUDED
 
 /*
  * Below is the message RAM setting, it will be stored in the system RAM.
  * Please adjust the message size according to your application.
  */
 /** Range: 1..64 */
-#define CONF_CAN0_RX_FIFO_0_NUM         4
+#define CONF_MCAN0_RX_FIFO_0_NUM         4
 /** Range: 1..64 */
-#define CONF_CAN0_RX_FIFO_1_NUM         4
+#define CONF_MCAN0_RX_FIFO_1_NUM         4
 /** Range: 1..64 */
-#define CONF_CAN0_RX_BUFFER_NUM         4
+#define CONF_MCAN0_RX_BUFFER_NUM         4
 /** Range: 1..16 */
-#define CONF_CAN0_TX_BUFFER_NUM         2
+#define CONF_MCAN0_TX_BUFFER_NUM         2
 /** Range: 1..16 */
-#define CONF_CAN0_TX_FIFO_QUEUE_NUM     2
+#define CONF_MCAN0_TX_FIFO_QUEUE_NUM     2
 /** Range: 1..32 */
-#define CONF_CAN0_TX_EVENT_FIFO         4
+#define CONF_MCAN0_TX_EVENT_FIFO         4
 /** Range: 1..128 */
-#define CONF_CAN0_RX_STANDARD_ID_FILTER_NUM     4
+#define CONF_MCAN0_RX_STANDARD_ID_FILTER_NUM     4
 /** Range: 1..64 */
-#define CONF_CAN0_RX_EXTENDED_ID_FILTER_NUM     2
+#define CONF_MCAN0_RX_EXTENDED_ID_FILTER_NUM     2
 /** Range: 1..64 */
-#define CONF_CAN1_RX_FIFO_0_NUM         4
+#define CONF_MCAN1_RX_FIFO_0_NUM         4
 /** Range: 1..64 */
-#define CONF_CAN1_RX_FIFO_1_NUM         4
+#define CONF_MCAN1_RX_FIFO_1_NUM         4
 /** Range: 1..64 */
-#define CONF_CAN1_RX_BUFFER_NUM         4
+#define CONF_MCAN1_RX_BUFFER_NUM         4
 /** Range: 1..16 */
-#define CONF_CAN1_TX_BUFFER_NUM         2
+#define CONF_MCAN1_TX_BUFFER_NUM         2
 /** Range: 1..16 */
-#define CONF_CAN1_TX_FIFO_QUEUE_NUM     2
+#define CONF_MCAN1_TX_FIFO_QUEUE_NUM     2
 /** Range: 1..32 */
-#define CONF_CAN1_TX_EVENT_FIFO         4
+#define CONF_MCAN1_TX_EVENT_FIFO         4
 /** Range: 1..128 */
-#define CONF_CAN1_RX_STANDARD_ID_FILTER_NUM     4
+#define CONF_MCAN1_RX_STANDARD_ID_FILTER_NUM     4
 /** Range: 1..64 */
-#define CONF_CAN1_RX_EXTENDED_ID_FILTER_NUM     2
+#define CONF_MCAN1_RX_EXTENDED_ID_FILTER_NUM     2
 
 /** The value should be 8/12/16/20/24/32/48/64. */
-#define CONF_CAN_ELEMENT_DATA_SIZE         64
+#define CONF_MCAN_ELEMENT_DATA_SIZE         64
 
 /*
  * The setting of the nominal bit rate is based on the PCK5 which is 30M which you can
@@ -93,13 +93,13 @@
  * quanta which means the bit rate is 10MHz/20=500KHz.
  */
 /** Nominal bit Baud Rate Prescaler */
-#define CONF_CAN_NBTP_NBRP_VALUE    2
+#define CONF_MCAN_NBTP_NBRP_VALUE    2
 /** Nominal bit (Re)Synchronization Jump Width */
-#define CONF_CAN_NBTP_NSJW_VALUE    3
+#define CONF_MCAN_NBTP_NSJW_VALUE    3
 /** Nominal bit Time segment before sample point */
-#define CONF_CAN_NBTP_NTSEG1_VALUE  10
+#define CONF_MCAN_NBTP_NTSEG1_VALUE  10
 /** Nominal bit Time segment after sample point */
-#define CONF_CAN_NBTP_NTSEG2_VALUE  7
+#define CONF_MCAN_NBTP_NTSEG2_VALUE  7
 
 /*
  * The setting of the data bit rate is based on the PCK5 which is 30M which you can
@@ -108,12 +108,12 @@
  * quanta which means the bit rate is 30MHz/15=2MHz.
  */
 /** Data bit Baud Rate Prescaler */
-#define CONF_CAN_FBTP_FBRP_VALUE    0
+#define CONF_MCAN_FBTP_FBRP_VALUE    0
 /** Data bit (Re)Synchronization Jump Width */
-#define CONF_CAN_FBTP_FSJW_VALUE    3
+#define CONF_MCAN_FBTP_FSJW_VALUE    3
 /** Data bit Time segment before sample point */
-#define CONF_CAN_FBTP_FTSEG1_VALUE  9
+#define CONF_MCAN_FBTP_FTSEG1_VALUE  9
 /** Data bit Time segment after sample point */
-#define CONF_CAN_FBTP_FTSEG2_VALUE  3
+#define CONF_MCAN_FBTP_FTSEG2_VALUE  3
 
 #endif

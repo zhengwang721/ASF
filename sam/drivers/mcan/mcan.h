@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM Control Area Network (CAN) Low Level Driver
+ * \brief SAM Control Area Network (MCAN) Low Level Driver
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,8 +44,8 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CAN_H_INCLUDED
-#define CAN_H_INCLUDED
+#ifndef MCAN_H_INCLUDED
+#define MCAN_H_INCLUDED
 
 #include <compiler.h>
 #include <conf_mcan.h>
@@ -55,7 +55,7 @@
  * @{
  */
 
-/* -------- CAN_RX_ELEMENT_R0 : (CAN RX element: 0x00) (R/W 32) Rx Element R0 Configuration -------- */
+/* -------- MCAN_RX_ELEMENT_R0 : (MCAN RX element: 0x00) (R/W 32) Rx Element R0 Configuration -------- */
 typedef union {
 	struct {
 		/* bit:  0..28  Identifier */
@@ -69,19 +69,19 @@ typedef union {
 	} bit;
 	/* Type used for register access */
 	uint32_t reg;
-} CAN_RX_ELEMENT_R0_Type;
+} MCAN_RX_ELEMENT_R0_Type;
 
-#define CAN_RX_ELEMENT_R0_ID_Pos          0
-#define CAN_RX_ELEMENT_R0_ID_Msk          (0x1FFFFFFFul << CAN_RX_ELEMENT_R0_ID_Pos)
-#define CAN_RX_ELEMENT_R0_ID(value)       ((CAN_RX_ELEMENT_R0_ID_Msk & ((value) << CAN_RX_ELEMENT_R0_ID_Pos)))
-#define CAN_RX_ELEMENT_R0_RTR_Pos         29
-#define CAN_RX_ELEMENT_R0_RTR             (0x1ul << CAN_RX_ELEMENT_R0_RTR_Pos)
-#define CAN_RX_ELEMENT_R0_XTD_Pos         30
-#define CAN_RX_ELEMENT_R0_XTD             (0x1ul << CAN_RX_ELEMENT_R0_XTD_Pos)
-#define CAN_RX_ELEMENT_R0_ESI_Pos         31
-#define CAN_RX_ELEMENT_R0_ESI             (0x1ul << CAN_RX_ELEMENT_R0_ESI_Pos)
+#define MCAN_RX_ELEMENT_R0_ID_Pos          0
+#define MCAN_RX_ELEMENT_R0_ID_Msk          (0x1FFFFFFFul << MCAN_RX_ELEMENT_R0_ID_Pos)
+#define MCAN_RX_ELEMENT_R0_ID(value)       ((MCAN_RX_ELEMENT_R0_ID_Msk & ((value) << MCAN_RX_ELEMENT_R0_ID_Pos)))
+#define MCAN_RX_ELEMENT_R0_RTR_Pos         29
+#define MCAN_RX_ELEMENT_R0_RTR             (0x1ul << MCAN_RX_ELEMENT_R0_RTR_Pos)
+#define MCAN_RX_ELEMENT_R0_XTD_Pos         30
+#define MCAN_RX_ELEMENT_R0_XTD             (0x1ul << MCAN_RX_ELEMENT_R0_XTD_Pos)
+#define MCAN_RX_ELEMENT_R0_ESI_Pos         31
+#define MCAN_RX_ELEMENT_R0_ESI             (0x1ul << MCAN_RX_ELEMENT_R0_ESI_Pos)
 
-/* -------- CAN_RX_ELEMENT_R1 : (CAN RX element: 0x01) (R/W 32) Rx Element R1 Configuration -------- */
+/* -------- MCAN_RX_ELEMENT_R1 : (MCAN RX element: 0x01) (R/W 32) Rx Element R1 Configuration -------- */
 typedef union {
 	struct {
 		/* bit: 0..15   Rx Timestamp */
@@ -101,52 +101,52 @@ typedef union {
 	} bit;
 	 /* Type used for register access */
 	uint32_t reg;
-} CAN_RX_ELEMENT_R1_Type;
+} MCAN_RX_ELEMENT_R1_Type;
 
-#define CAN_RX_ELEMENT_R1_RXTS_Pos        0
-#define CAN_RX_ELEMENT_R1_RXTS_Msk        (0xFFFFul << CAN_RX_ELEMENT_R1_RXTS_Pos)
-#define CAN_RX_ELEMENT_R1_RXTS(value)     ((CAN_RX_ELEMENT_R1_RXTS_Msk & ((value) << CAN_RX_ELEMENT_R1_RXTS_Pos)))
-#define CAN_RX_ELEMENT_R1_DLC_Pos         16
-#define CAN_RX_ELEMENT_R1_DLC_Msk         (0xFul << CAN_RX_ELEMENT_R1_DLC_Pos)
-#define CAN_RX_ELEMENT_R1_DLC(value)      ((CAN_RX_ELEMENT_R1_DLC_Msk & ((value) << CAN_RX_ELEMENT_R1_DLC_Pos)))
-#define CAN_RX_ELEMENT_R1_BRS_Pos         20
-#define CAN_RX_ELEMENT_R1_BRS             (0x1ul << CAN_RX_ELEMENT_R1_BRS_Pos)
-#define CAN_RX_ELEMENT_R1_FDF_Pos         21
-#define CAN_RX_ELEMENT_R1_FDF             (0x1ul << CAN_RX_ELEMENT_R1_FDF_Pos)
-#define CAN_RX_ELEMENT_R1_FIDX_Pos        24
-#define CAN_RX_ELEMENT_R1_FIDX_Msk        (0x7Ful << CAN_RX_ELEMENT_R1_FIDX_Pos)
-#define CAN_RX_ELEMENT_R1_FIDX(value)     ((CAN_RX_ELEMENT_R1_FIDX_Msk & ((value) << CAN_RX_ELEMENT_R1_FIDX_Pos)))
-#define CAN_RX_ELEMENT_R1_ANMF_Pos        31
-#define CAN_RX_ELEMENT_R1_ANMF            (0x1ul << CAN_RX_ELEMENT_R1_ANMF_Pos)
+#define MCAN_RX_ELEMENT_R1_RXTS_Pos        0
+#define MCAN_RX_ELEMENT_R1_RXTS_Msk        (0xFFFFul << MCAN_RX_ELEMENT_R1_RXTS_Pos)
+#define MCAN_RX_ELEMENT_R1_RXTS(value)     ((MCAN_RX_ELEMENT_R1_RXTS_Msk & ((value) << MCAN_RX_ELEMENT_R1_RXTS_Pos)))
+#define MCAN_RX_ELEMENT_R1_DLC_Pos         16
+#define MCAN_RX_ELEMENT_R1_DLC_Msk         (0xFul << MCAN_RX_ELEMENT_R1_DLC_Pos)
+#define MCAN_RX_ELEMENT_R1_DLC(value)      ((MCAN_RX_ELEMENT_R1_DLC_Msk & ((value) << MCAN_RX_ELEMENT_R1_DLC_Pos)))
+#define MCAN_RX_ELEMENT_R1_BRS_Pos         20
+#define MCAN_RX_ELEMENT_R1_BRS             (0x1ul << MCAN_RX_ELEMENT_R1_BRS_Pos)
+#define MCAN_RX_ELEMENT_R1_FDF_Pos         21
+#define MCAN_RX_ELEMENT_R1_FDF             (0x1ul << MCAN_RX_ELEMENT_R1_FDF_Pos)
+#define MCAN_RX_ELEMENT_R1_FIDX_Pos        24
+#define MCAN_RX_ELEMENT_R1_FIDX_Msk        (0x7Ful << MCAN_RX_ELEMENT_R1_FIDX_Pos)
+#define MCAN_RX_ELEMENT_R1_FIDX(value)     ((MCAN_RX_ELEMENT_R1_FIDX_Msk & ((value) << MCAN_RX_ELEMENT_R1_FIDX_Pos)))
+#define MCAN_RX_ELEMENT_R1_ANMF_Pos        31
+#define MCAN_RX_ELEMENT_R1_ANMF            (0x1ul << MCAN_RX_ELEMENT_R1_ANMF_Pos)
 
 /**
- * \brief CAN receive element structure for buffer.
+ * \brief MCAN receive element structure for buffer.
  */
-struct can_rx_element_buffer {
-	__IO CAN_RX_ELEMENT_R0_Type R0;
-	__IO CAN_RX_ELEMENT_R1_Type R1;
-	uint8_t data[CONF_CAN_ELEMENT_DATA_SIZE];
+struct mcan_rx_element_buffer {
+	__IO MCAN_RX_ELEMENT_R0_Type R0;
+	__IO MCAN_RX_ELEMENT_R1_Type R1;
+	uint8_t data[CONF_MCAN_ELEMENT_DATA_SIZE];
 };
 
 /**
- * \brief CAN receive element structure for FIFO 0.
+ * \brief MCAN receive element structure for FIFO 0.
  */
-struct can_rx_element_fifo_0 {
-	__IO CAN_RX_ELEMENT_R0_Type R0;
-	__IO CAN_RX_ELEMENT_R1_Type R1;
-	uint8_t data[CONF_CAN_ELEMENT_DATA_SIZE];
+struct mcan_rx_element_fifo_0 {
+	__IO MCAN_RX_ELEMENT_R0_Type R0;
+	__IO MCAN_RX_ELEMENT_R1_Type R1;
+	uint8_t data[CONF_MCAN_ELEMENT_DATA_SIZE];
 };
 
 /**
- * \brief CAN receive element structure for FIFO 1.
+ * \brief MCAN receive element structure for FIFO 1.
  */
-struct can_rx_element_fifo_1 {
-	__IO CAN_RX_ELEMENT_R0_Type R0;
-	__IO CAN_RX_ELEMENT_R1_Type R1;
-	uint8_t data[CONF_CAN_ELEMENT_DATA_SIZE];
+struct mcan_rx_element_fifo_1 {
+	__IO MCAN_RX_ELEMENT_R0_Type R0;
+	__IO MCAN_RX_ELEMENT_R1_Type R1;
+	uint8_t data[CONF_MCAN_ELEMENT_DATA_SIZE];
 };
 
-/* -------- CAN_TX_ELEMENT_T0 : (CAN TX element: 0x00) (R/W 32) Tx Element T0 Configuration -------- */
+/* -------- MCAN_TX_ELEMENT_T0 : (MCAN TX element: 0x00) (R/W 32) Tx Element T0 Configuration -------- */
 typedef union {
 	struct {
 		/* bit:  0..28  Identifier */
@@ -160,22 +160,22 @@ typedef union {
 	} bit;
 	/* Type used for register access */
   uint32_t reg;
-} CAN_TX_ELEMENT_T0_Type;
+} MCAN_TX_ELEMENT_T0_Type;
 
-#define CAN_TX_ELEMENT_T0_EXTENDED_ID_Pos          0
-#define CAN_TX_ELEMENT_T0_EXTENDED_ID_Msk          (0x1FFFFFFFul << CAN_TX_ELEMENT_T0_EXTENDED_ID_Pos)
-#define CAN_TX_ELEMENT_T0_EXTENDED_ID(value)       ((CAN_TX_ELEMENT_T0_EXTENDED_ID_Msk & ((value) << CAN_TX_ELEMENT_T0_EXTENDED_ID_Pos)))
-#define CAN_TX_ELEMENT_T0_STANDARD_ID_Pos          18
-#define CAN_TX_ELEMENT_T0_STANDARD_ID_Msk          (0x7FFul << CAN_TX_ELEMENT_T0_STANDARD_ID_Pos)
-#define CAN_TX_ELEMENT_T0_STANDARD_ID(value)       ((CAN_TX_ELEMENT_T0_STANDARD_ID_Msk & ((value) << CAN_TX_ELEMENT_T0_STANDARD_ID_Pos)))
-#define CAN_TX_ELEMENT_T0_RTR_Pos         29
-#define CAN_TX_ELEMENT_T0_RTR             (0x1ul << CAN_TX_ELEMENT_T0_RTR_Pos)
-#define CAN_TX_ELEMENT_T0_XTD_Pos         30
-#define CAN_TX_ELEMENT_T0_XTD             (0x1ul << CAN_TX_ELEMENT_T0_XTD_Pos)
-#define CAN_TX_ELEMENT_T0_ESI_Pos         31
-#define CAN_TX_ELEMENT_T0_ESI             (0x1ul << CAN_TX_ELEMENT_T0_ESI_Pos)
+#define MCAN_TX_ELEMENT_T0_EXTENDED_ID_Pos          0
+#define MCAN_TX_ELEMENT_T0_EXTENDED_ID_Msk          (0x1FFFFFFFul << MCAN_TX_ELEMENT_T0_EXTENDED_ID_Pos)
+#define MCAN_TX_ELEMENT_T0_EXTENDED_ID(value)       ((MCAN_TX_ELEMENT_T0_EXTENDED_ID_Msk & ((value) << MCAN_TX_ELEMENT_T0_EXTENDED_ID_Pos)))
+#define MCAN_TX_ELEMENT_T0_STANDARD_ID_Pos          18
+#define MCAN_TX_ELEMENT_T0_STANDARD_ID_Msk          (0x7FFul << MCAN_TX_ELEMENT_T0_STANDARD_ID_Pos)
+#define MCAN_TX_ELEMENT_T0_STANDARD_ID(value)       ((MCAN_TX_ELEMENT_T0_STANDARD_ID_Msk & ((value) << MCAN_TX_ELEMENT_T0_STANDARD_ID_Pos)))
+#define MCAN_TX_ELEMENT_T0_RTR_Pos         29
+#define MCAN_TX_ELEMENT_T0_RTR             (0x1ul << MCAN_TX_ELEMENT_T0_RTR_Pos)
+#define MCAN_TX_ELEMENT_T0_XTD_Pos         30
+#define MCAN_TX_ELEMENT_T0_XTD             (0x1ul << MCAN_TX_ELEMENT_T0_XTD_Pos)
+#define MCAN_TX_ELEMENT_T0_ESI_Pos         31
+#define MCAN_TX_ELEMENT_T0_ESI             (0x1ul << MCAN_TX_ELEMENT_T0_ESI_Pos)
 
-/* -------- CAN_TX_ELEMENT_T1 : (CAN TX element: 0x01) (R/W 32) Tx Element T1 Configuration -------- */
+/* -------- MCAN_TX_ELEMENT_T1 : (MCAN TX element: 0x01) (R/W 32) Tx Element T1 Configuration -------- */
 typedef union {
 	struct {
 		/* bit: 0..15   Reserved */
@@ -191,49 +191,49 @@ typedef union {
 	} bit;
 	/* Type used for register access */
 	uint32_t reg;
-} CAN_TX_ELEMENT_T1_Type;
+} MCAN_TX_ELEMENT_T1_Type;
 
-#define CAN_TX_ELEMENT_T1_DLC_Pos         16
-#define CAN_TX_ELEMENT_T1_DLC_Msk         (0xFul << CAN_TX_ELEMENT_T1_DLC_Pos)
-#define CAN_TX_ELEMENT_T1_DLC(value)      ((CAN_TX_ELEMENT_T1_DLC_Msk & ((value) << CAN_TX_ELEMENT_T1_DLC_Pos)))
-/**< \brief (CAN_RXESC) 8 byte data field */
-#define CAN_TX_ELEMENT_T1_DLC_DATA8_Val        0x8ul
-/**< \brief (CAN_RXESC) 12 byte data field */
-#define CAN_TX_ELEMENT_T1_DLC_DATA12_Val       0x9ul
-/**< \brief (CAN_RXESC) 16 byte data field */
-#define CAN_TX_ELEMENT_T1_DLC_DATA16_Val       0xAul
-/**< \brief (CAN_RXESC) 20 byte data field */
-#define CAN_TX_ELEMENT_T1_DLC_DATA20_Val       0xBul
-/**< \brief (CAN_RXESC) 24 byte data field */
-#define CAN_TX_ELEMENT_T1_DLC_DATA24_Val       0xCul
-/**< \brief (CAN_RXESC) 32 byte data field */
-#define CAN_TX_ELEMENT_T1_DLC_DATA32_Val       0xDul
-/**< \brief (CAN_RXESC) 48 byte data field */
-#define CAN_TX_ELEMENT_T1_DLC_DATA48_Val       0xEul
-/**< \brief (CAN_RXESC) 64 byte data field */
-#define CAN_TX_ELEMENT_T1_DLC_DATA64_Val       0xFul
-#define CAN_TX_ELEMENT_T1_BRS_Pos         20
-#define CAN_TX_ELEMENT_T1_BRS             (0x1ul << CAN_TX_ELEMENT_T1_BRS_Pos)
-#define CAN_TX_ELEMENT_T1_FDF_Pos         21
-#define CAN_TX_ELEMENT_T1_FDF             (0x1ul << CAN_TX_ELEMENT_T1_FDF_Pos)
-#define CAN_TX_ELEMENT_T1_EFC_Pos         23
-#define CAN_TX_ELEMENT_T1_EFC             (0x1ul << CAN_TX_ELEMENT_T1_EFC_Pos)
-#define CAN_TX_ELEMENT_T1_MM_Pos          24
-#define CAN_TX_ELEMENT_T1_MM_Msk          (0xFFul << CAN_TX_ELEMENT_T1_MM_Pos)
-#define CAN_TX_ELEMENT_T1_MM(value)       ((CAN_TX_ELEMENT_T1_MM_Msk & ((value) << CAN_TX_ELEMENT_T1_MM_Pos)))
+#define MCAN_TX_ELEMENT_T1_DLC_Pos         16
+#define MCAN_TX_ELEMENT_T1_DLC_Msk         (0xFul << MCAN_TX_ELEMENT_T1_DLC_Pos)
+#define MCAN_TX_ELEMENT_T1_DLC(value)      ((MCAN_TX_ELEMENT_T1_DLC_Msk & ((value) << MCAN_TX_ELEMENT_T1_DLC_Pos)))
+/**< \brief (MCAN_RXESC) 8 byte data field */
+#define MCAN_TX_ELEMENT_T1_DLC_DATA8_Val        0x8ul
+/**< \brief (MCAN_RXESC) 12 byte data field */
+#define MCAN_TX_ELEMENT_T1_DLC_DATA12_Val       0x9ul
+/**< \brief (MCAN_RXESC) 16 byte data field */
+#define MCAN_TX_ELEMENT_T1_DLC_DATA16_Val       0xAul
+/**< \brief (MCAN_RXESC) 20 byte data field */
+#define MCAN_TX_ELEMENT_T1_DLC_DATA20_Val       0xBul
+/**< \brief (MCAN_RXESC) 24 byte data field */
+#define MCAN_TX_ELEMENT_T1_DLC_DATA24_Val       0xCul
+/**< \brief (MCAN_RXESC) 32 byte data field */
+#define MCAN_TX_ELEMENT_T1_DLC_DATA32_Val       0xDul
+/**< \brief (MCAN_RXESC) 48 byte data field */
+#define MCAN_TX_ELEMENT_T1_DLC_DATA48_Val       0xEul
+/**< \brief (MCAN_RXESC) 64 byte data field */
+#define MCAN_TX_ELEMENT_T1_DLC_DATA64_Val       0xFul
+#define MCAN_TX_ELEMENT_T1_BRS_Pos         20
+#define MCAN_TX_ELEMENT_T1_BRS             (0x1ul << MCAN_TX_ELEMENT_T1_BRS_Pos)
+#define MCAN_TX_ELEMENT_T1_FDF_Pos         21
+#define MCAN_TX_ELEMENT_T1_FDF             (0x1ul << MCAN_TX_ELEMENT_T1_FDF_Pos)
+#define MCAN_TX_ELEMENT_T1_EFC_Pos         23
+#define MCAN_TX_ELEMENT_T1_EFC             (0x1ul << MCAN_TX_ELEMENT_T1_EFC_Pos)
+#define MCAN_TX_ELEMENT_T1_MM_Pos          24
+#define MCAN_TX_ELEMENT_T1_MM_Msk          (0xFFul << MCAN_TX_ELEMENT_T1_MM_Pos)
+#define MCAN_TX_ELEMENT_T1_MM(value)       ((MCAN_TX_ELEMENT_T1_MM_Msk & ((value) << MCAN_TX_ELEMENT_T1_MM_Pos)))
 
 /**
- * \brief CAN transfer element structure.
+ * \brief MCAN transfer element structure.
  *
  *  Common element structure for transfer buffer and FIFO/QUEUE.
  */
-struct can_tx_element {
-	__IO CAN_TX_ELEMENT_T0_Type T0;
-	__IO CAN_TX_ELEMENT_T1_Type T1;
-	uint8_t data[CONF_CAN_ELEMENT_DATA_SIZE];
+struct mcan_tx_element {
+	__IO MCAN_TX_ELEMENT_T0_Type T0;
+	__IO MCAN_TX_ELEMENT_T1_Type T1;
+	uint8_t data[CONF_MCAN_ELEMENT_DATA_SIZE];
 };
 
-/* -------- CAN_TX_EVENT_ELEMENT_E0 : (CAN TX event element: 0x00) (R/W 32) Tx Event Element E0 Configuration -------- */
+/* -------- MCAN_TX_EVENT_ELEMENT_E0 : (MCAN TX event element: 0x00) (R/W 32) Tx Event Element E0 Configuration -------- */
 typedef union {
 	struct {
 		/* bit: 0..28  Identifier */
@@ -247,19 +247,19 @@ typedef union {
 	} bit;
 	/* Type used for register access */
 	uint32_t reg;
-} CAN_TX_EVENT_ELEMENT_E0_Type;
+} MCAN_TX_EVENT_ELEMENT_E0_Type;
 
-#define CAN_TX_EVENT_ELEMENT_E0_ID_Pos          0
-#define CAN_TX_EVENT_ELEMENT_E0_ID_Msk          (0x1FFFFFFFul << CAN_TX_EVENT_ELEMENT_E0_ID_Pos)
-#define CAN_TX_EVENT_ELEMENT_E0_ID(value)       ((CAN_TX_EVENT_ELEMENT_E0_ID_Msk & ((value) << CAN_TX_EVENT_ELEMENT_E0_ID_Pos)))
-#define CAN_TX_EVENT_ELEMENT_E0_RTR_Pos         29
-#define CAN_TX_EVENT_ELEMENT_E0_RTR             (0x1ul << CAN_TX_EVENT_ELEMENT_E0_RTR_Pos)
-#define CAN_TX_EVENT_ELEMENT_E0_XTD_Pos         30
-#define CAN_TX_EVENT_ELEMENT_E0_XTD             (0x1ul << CAN_TX_EVENT_ELEMENT_E0_XTD_Pos)
-#define CAN_TX_EVENT_ELEMENT_E0_ESI_Pos         31
-#define CAN_TX_EVENT_ELEMENT_E0_ESI             (0x1ul << CAN_TX_EVENT_ELEMENT_E0_ESI_Pos)
+#define MCAN_TX_EVENT_ELEMENT_E0_ID_Pos          0
+#define MCAN_TX_EVENT_ELEMENT_E0_ID_Msk          (0x1FFFFFFFul << MCAN_TX_EVENT_ELEMENT_E0_ID_Pos)
+#define MCAN_TX_EVENT_ELEMENT_E0_ID(value)       ((MCAN_TX_EVENT_ELEMENT_E0_ID_Msk & ((value) << MCAN_TX_EVENT_ELEMENT_E0_ID_Pos)))
+#define MCAN_TX_EVENT_ELEMENT_E0_RTR_Pos         29
+#define MCAN_TX_EVENT_ELEMENT_E0_RTR             (0x1ul << MCAN_TX_EVENT_ELEMENT_E0_RTR_Pos)
+#define MCAN_TX_EVENT_ELEMENT_E0_XTD_Pos         30
+#define MCAN_TX_EVENT_ELEMENT_E0_XTD             (0x1ul << MCAN_TX_EVENT_ELEMENT_E0_XTD_Pos)
+#define MCAN_TX_EVENT_ELEMENT_E0_ESI_Pos         31
+#define MCAN_TX_EVENT_ELEMENT_E0_ESI             (0x1ul << MCAN_TX_EVENT_ELEMENT_E0_ESI_Pos)
 
-/* -------- CAN_TX_EVENT_ELEMENT_E1 : (CAN TX event element: 0x01) (R/W 32) Tx Event Element E1 Configuration -------- */
+/* -------- MCAN_TX_EVENT_ELEMENT_E1 : (MCAN TX event element: 0x01) (R/W 32) Tx Event Element E1 Configuration -------- */
 typedef union {
 	struct {
 		/* bit: 0..15   Tx Timestamp */
@@ -277,36 +277,36 @@ typedef union {
 	} bit;
 	/* Type used for register access */
 	uint32_t reg;
-} CAN_TX_EVENT_ELEMENT_E1_Type;
+} MCAN_TX_EVENT_ELEMENT_E1_Type;
 
-#define CAN_TX_EVENT_ELEMENT_E1_TXTS_Pos        0
-#define CAN_TX_EVENT_ELEMENT_E1_TXTS_Msk        (0xFFFFul << CAN_TX_EVENT_ELEMENT_E1_TXTS_Pos)
-#define CAN_TX_EVENT_ELEMENT_E1_TXTS(value)     ((CAN_TX_EVENT_ELEMENT_E1_TXTS_Msk & ((value) << CAN_TX_EVENT_ELEMENT_E1_TXTS_Pos)))
-#define CAN_TX_EVENT_ELEMENT_E1_DLC_Pos         16
-#define CAN_TX_EVENT_ELEMENT_E1_DLC_Msk         (0xFul << CAN_TX_EVENT_ELEMENT_E1_DLC_Pos)
-#define CAN_TX_EVENT_ELEMENT_E1_DLC(value)      ((CAN_TX_EVENT_ELEMENT_E1_DLC_Msk & ((value) << CAN_TX_EVENT_ELEMENT_E1_DLC_Pos)))
-#define CAN_TX_EVENT_ELEMENT_E1_BRS_Pos         20
-#define CAN_TX_EVENT_ELEMENT_E1_BRS             (0x1ul << CAN_TX_EVENT_ELEMENT_E1_BRS_Pos)
-#define CAN_TX_EVENT_ELEMENT_E1_FDF_Pos         21
-#define CAN_TX_EVENT_ELEMENT_E1_FDF             (0x1ul << CAN_TX_EVENT_ELEMENT_E1_FDF_Pos)
-#define CAN_TX_EVENT_ELEMENT_E1_ET_Pos          22
-#define CAN_TX_EVENT_ELEMENT_E1_ET_Msk          (0x3ul << CAN_TX_EVENT_ELEMENT_E1_ET_Pos)
-#define CAN_TX_EVENT_ELEMENT_E1_ET(value)       ((CAN_TX_EVENT_ELEMENT_E1_ET_Msk & ((value) << CAN_TX_EVENT_ELEMENT_E1_ET_Pos)))
-#define CAN_TX_EVENT_ELEMENT_E1_MM_Pos          24
-#define CAN_TX_EVENT_ELEMENT_E1_MM_Msk          (0xFFul << CAN_TX_EVENT_ELEMENT_E1_MM_Pos)
-#define CAN_TX_EVENT_ELEMENT_E1_MM(value)       ((CAN_TX_EVENT_ELEMENT_E1_MM_Msk & ((value) << CAN_TX_EVENT_ELEMENT_E1_MM_Pos)))
+#define MCAN_TX_EVENT_ELEMENT_E1_TXTS_Pos        0
+#define MCAN_TX_EVENT_ELEMENT_E1_TXTS_Msk        (0xFFFFul << MCAN_TX_EVENT_ELEMENT_E1_TXTS_Pos)
+#define MCAN_TX_EVENT_ELEMENT_E1_TXTS(value)     ((MCAN_TX_EVENT_ELEMENT_E1_TXTS_Msk & ((value) << MCAN_TX_EVENT_ELEMENT_E1_TXTS_Pos)))
+#define MCAN_TX_EVENT_ELEMENT_E1_DLC_Pos         16
+#define MCAN_TX_EVENT_ELEMENT_E1_DLC_Msk         (0xFul << MCAN_TX_EVENT_ELEMENT_E1_DLC_Pos)
+#define MCAN_TX_EVENT_ELEMENT_E1_DLC(value)      ((MCAN_TX_EVENT_ELEMENT_E1_DLC_Msk & ((value) << MCAN_TX_EVENT_ELEMENT_E1_DLC_Pos)))
+#define MCAN_TX_EVENT_ELEMENT_E1_BRS_Pos         20
+#define MCAN_TX_EVENT_ELEMENT_E1_BRS             (0x1ul << MCAN_TX_EVENT_ELEMENT_E1_BRS_Pos)
+#define MCAN_TX_EVENT_ELEMENT_E1_FDF_Pos         21
+#define MCAN_TX_EVENT_ELEMENT_E1_FDF             (0x1ul << MCAN_TX_EVENT_ELEMENT_E1_FDF_Pos)
+#define MCAN_TX_EVENT_ELEMENT_E1_ET_Pos          22
+#define MCAN_TX_EVENT_ELEMENT_E1_ET_Msk          (0x3ul << MCAN_TX_EVENT_ELEMENT_E1_ET_Pos)
+#define MCAN_TX_EVENT_ELEMENT_E1_ET(value)       ((MCAN_TX_EVENT_ELEMENT_E1_ET_Msk & ((value) << MCAN_TX_EVENT_ELEMENT_E1_ET_Pos)))
+#define MCAN_TX_EVENT_ELEMENT_E1_MM_Pos          24
+#define MCAN_TX_EVENT_ELEMENT_E1_MM_Msk          (0xFFul << MCAN_TX_EVENT_ELEMENT_E1_MM_Pos)
+#define MCAN_TX_EVENT_ELEMENT_E1_MM(value)       ((MCAN_TX_EVENT_ELEMENT_E1_MM_Msk & ((value) << MCAN_TX_EVENT_ELEMENT_E1_MM_Pos)))
 
 /**
- * \brief CAN transfer event  FIFO element structure.
+ * \brief MCAN transfer event  FIFO element structure.
  *
  *  Common element structure for transfer event FIFO.
  */
-struct can_tx_event_element {
-	__IO CAN_TX_EVENT_ELEMENT_E0_Type E0;
-	__IO CAN_TX_EVENT_ELEMENT_E1_Type E1;
+struct mcan_tx_event_element {
+	__IO MCAN_TX_EVENT_ELEMENT_E0_Type E0;
+	__IO MCAN_TX_EVENT_ELEMENT_E1_Type E1;
 };
 
-/* -------- CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0 : (CAN standard message ID filter element: 0x00) (R/W 32) Standard Message ID Filter Element S0 Configuration -------- */
+/* -------- MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0 : (MCAN standard message ID filter element: 0x00) (R/W 32) Standard Message ID Filter Element S0 Configuration -------- */
 typedef union {
 	struct {
 		/* bit: 0..10   Standard Filter ID 2 */
@@ -322,42 +322,42 @@ typedef union {
 	} bit;
 	/* Type used for register access */
 	uint32_t reg;
-} CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_Type;
+} MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_Type;
 
-#define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Pos          0
-#define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Msk          (0x7FFul << CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Pos)
-#define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2(value)       ((CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Msk & ((value) << CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Pos)))
-#define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1_Pos          16
-#define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1_Msk          (0x7FFul << CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1_Pos)
-#define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1(value)       ((CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1_Msk & ((value) << CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1_Pos)))
-#define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Pos           27
-#define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Msk           (0x7ul << CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Pos)
-#define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(value)        ((CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Msk & ((value) << CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Pos)))
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_DISABLE_Val     0
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF0M_Val       1
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF1M_Val       2
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_REJECT_Val      3
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIORITY_Val    4
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIF0M_Val      5
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIF1M_Val      6
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STRXBUF_Val     7
-#define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Pos            30
-#define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Msk            (0x3ul << CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Pos)
-#define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT(value)         ((CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Msk & ((value) << CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Pos)))
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_RANGE          CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT(0)
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_DUAL           CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT(1)
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_CLASSIC        CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT(2)
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Pos          0
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Msk          (0x7FFul << MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Pos)
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2(value)       ((MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Msk & ((value) << MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Pos)))
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1_Pos          16
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1_Msk          (0x7FFul << MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1_Pos)
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1(value)       ((MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1_Msk & ((value) << MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1_Pos)))
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Pos           27
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Msk           (0x7ul << MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Pos)
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(value)        ((MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Msk & ((value) << MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Pos)))
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_DISABLE_Val     0
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF0M_Val       1
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF1M_Val       2
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_REJECT_Val      3
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIORITY_Val    4
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIF0M_Val      5
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIF1M_Val      6
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STRXBUF_Val     7
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Pos            30
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Msk            (0x3ul << MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Pos)
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT(value)         ((MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Msk & ((value) << MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Pos)))
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_RANGE          MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT(0)
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_DUAL           MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT(1)
+#define MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_CLASSIC        MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT(2)
 
 /**
- * \brief CAN standard message ID filter element structure.
+ * \brief MCAN standard message ID filter element structure.
  *
  *  Common element structure for standard message ID filter element.
  */
-struct can_standard_message_filter_element {
-	__IO CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_Type S0;
+struct mcan_standard_message_filter_element {
+	__IO MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_Type S0;
 };
 
-/* -------- CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0 : (CAN extended message ID filter element: 0x00) (R/W 32) Extended Message ID Filter Element F0 Configuration -------- */
+/* -------- MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0 : (MCAN extended message ID filter element: 0x00) (R/W 32) Extended Message ID Filter Element F0 Configuration -------- */
 typedef union {
 	struct {
 		/* bit: 0..28   Extended Filter ID 1 */
@@ -367,24 +367,24 @@ typedef union {
 	} bit;
 	/* Type used for register access */
 	uint32_t reg;
-} CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_Type;
+} MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_Type;
 
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1_Pos          0
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1_Msk          (0x1FFFFFFFul << CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1_Pos)
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1(value)       ((CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1_Msk & ((value) << CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1_Pos)))
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Pos           29
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Msk           (0x7ul << CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Pos)
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(value)        ((CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Msk & ((value) << CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Pos)))
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_DISABLE_Val       0
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF0M_Val         1
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF1M_Val         2
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_REJECT_Val        3
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIORITY_Val      4
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIF0M_Val        5
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIF1M_Val        6
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STRXBUF_Val       7
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1_Pos          0
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1_Msk          (0x1FFFFFFFul << MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1_Pos)
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1(value)       ((MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1_Msk & ((value) << MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1_Pos)))
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Pos           29
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Msk           (0x7ul << MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Pos)
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(value)        ((MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Msk & ((value) << MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Pos)))
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_DISABLE_Val       0
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF0M_Val         1
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF1M_Val         2
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_REJECT_Val        3
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIORITY_Val      4
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIF0M_Val        5
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIF1M_Val        6
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STRXBUF_Val       7
 
-/* -------- CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1 : (CAN extended message ID filter element: 0x01) (R/W 32) Extended Message ID Filter Element F1 Configuration -------- */
+/* -------- MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1 : (MCAN extended message ID filter element: 0x01) (R/W 32) Extended Message ID Filter Element F1 Configuration -------- */
 typedef union {
 	struct {
 		/* bit: 0..28  Extended Filter ID 2 */
@@ -396,32 +396,32 @@ typedef union {
 	} bit;
 	/* Type used for register access */
 	uint32_t reg;
-} CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_Type;
+} MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_Type;
 
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Pos          0
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Msk          (0x1FFFFFFFul << CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Pos)
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2(value)       ((CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Msk & ((value) << CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Pos)))
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_Pos            30
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_Msk            (0x3ul << CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_Pos)
-#define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(value)         ((CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_Msk & ((value) << CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_Pos)))
-#define   CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_RANGEM       CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(0)
-#define   CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_DUAL         CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(1)
-#define   CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_CLASSIC      CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(2)
-#define   CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_RANGE        CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(3)
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Pos          0
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Msk          (0x1FFFFFFFul << MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Pos)
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2(value)       ((MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Msk & ((value) << MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Pos)))
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_Pos            30
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_Msk            (0x3ul << MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_Pos)
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(value)         ((MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_Msk & ((value) << MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_Pos)))
+#define   MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_RANGEM       MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(0)
+#define   MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_DUAL         MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(1)
+#define   MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_CLASSIC      MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(2)
+#define   MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_RANGE        MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(3)
 
 /**
- * \brief CAN extended message ID filter element structure.
+ * \brief MCAN extended message ID filter element structure.
  *
  *  Common element structure for extended message ID filter element.
  */
-struct can_extended_message_filter_element {
-	__IO CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_Type F0;
-	__IO CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_Type F1;
+struct mcan_extended_message_filter_element {
+	__IO MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_Type F0;
+	__IO MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_Type F1;
 };
 /** @} */
 
 /**
- * \defgroup asfdoc_sam0_can_group SAM Control Area Network (CAN) Low Level Driver
+ * \defgroup asfdoc_sam0_mcan_group SAM Control Area Network (MCAN) Low Level Driver
  *
  * This driver for Atmel® | SMART SAM devices provides an low level
  * interface for the configuration and management of the device's
@@ -435,7 +435,7 @@ struct can_extended_message_filter_element {
  * For storage of Rx/Tx messages and for storage of the filter configuration,
  * a message RAM is needed to the CAN module. In this driver, the message RAM
  * is static allocated, the related setting is defined and can be changed in
- * the module configuration file "conf_can.h".
+ * the module configuration file "conf_mcan.h".
  *
  * The following peripherals are used by this module:
  *  - CAN (Control Area Network)
@@ -444,46 +444,46 @@ struct can_extended_message_filter_element {
  *  - SAMV71
  *
  * The outline of this documentation is as follows:
- *  - \ref asfdoc_sam0_can_prerequisites
- *  - \ref asfdoc_sam0_can_module_overview
- *  - \ref asfdoc_sam0_can_special_considerations
- *  - \ref asfdoc_sam0_can_extra_info
- *  - \ref asfdoc_sam0_can_examples
- *  - \ref asfdoc_sam0_can_api_overview
+ *  - \ref asfdoc_sam0_mcan_prerequisites
+ *  - \ref asfdoc_sam0_mcan_module_overview
+ *  - \ref asfdoc_sam0_mcan_special_considerations
+ *  - \ref asfdoc_sam0_mcan_extra_info
+ *  - \ref asfdoc_sam0_mcan_examples
+ *  - \ref asfdoc_sam0_mcan_api_overview
  *
  *
- * \section asfdoc_sam0_can_prerequisites Prerequisites
+ * \section asfdoc_sam0_mcan_prerequisites Prerequisites
  *
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_sam0_can_module_overview Module Overview
+ * \section asfdoc_sam0_mcan_module_overview Module Overview
  *
  * This driver provides an interface for the Control Area Network Controller
  * functions on the device.
  *
  *
- * \section asfdoc_sam0_can_special_considerations Special Considerations
+ * \section asfdoc_sam0_mcan_special_considerations Special Considerations
  *
  * There are no special considerations for this module.
  *
  *
- * \section asfdoc_sam0_can_extra_info Extra Information
+ * \section asfdoc_sam0_mcan_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_can_extra. This includes:
- *  - \ref asfdoc_sam0_can_extra_acronyms
- *  - \ref asfdoc_sam0_can_extra_dependencies
- *  - \ref asfdoc_sam0_can_extra_errata
- *  - \ref asfdoc_sam0_can_extra_history
+ * For extra information see \ref asfdoc_sam0_mcan_extra. This includes:
+ *  - \ref asfdoc_sam0_mcan_extra_acronyms
+ *  - \ref asfdoc_sam0_mcan_extra_dependencies
+ *  - \ref asfdoc_sam0_mcan_extra_errata
+ *  - \ref asfdoc_sam0_mcan_extra_history
  *
  *
- * \section asfdoc_sam0_can_examples Examples
+ * \section asfdoc_sam0_mcan_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_sam0_can_exqsg.
+ * \ref asfdoc_sam0_mcan_exqsg.
  *
  *
- * \section asfdoc_sam0_can_api_overview API Overview
+ * \section asfdoc_sam0_mcan_api_overview API Overview
  * @{
  */
 
@@ -499,22 +499,22 @@ extern "C" {
 /**
  * \brief Can time out modes.
  */
-enum can_timeout_mode {
+enum mcan_timeout_mode {
 	/** Continuous operation. */
-	CAN_TIMEOUT_CONTINUES = MCAN_TOCC_TOS_CONTINUOUS,
+	MCAN_TIMEOUT_CONTINUES = MCAN_TOCC_TOS_CONTINUOUS,
 	/** Timeout controlled by TX Event FIFO. */
-	CAN_TIMEOUT_TX_EVEN_FIFO = MCAN_TOCC_TOS_TX_EV_TIMEOUT,
+	MCAN_TIMEOUT_TX_EVEN_FIFO = MCAN_TOCC_TOS_TX_EV_TIMEOUT,
 	/** Timeout controlled by Rx FIFO 0. */
-	CAN_TIMEOUT_RX_FIFO_0 = MCAN_TOCC_TOS_RX0_EV_TIMEOUT,
+	MCAN_TIMEOUT_RX_FIFO_0 = MCAN_TOCC_TOS_RX0_EV_TIMEOUT,
 	/** Timeout controlled by Rx FIFO 1. */
-	CAN_TIMEOUT_RX_FIFO_1 = MCAN_TOCC_TOS_RX1_EV_TIMEOUT,
+	MCAN_TIMEOUT_RX_FIFO_1 = MCAN_TOCC_TOS_RX1_EV_TIMEOUT,
 };
 
 
 /**
  * \brief Can nonmatching frames action.
  */
-enum can_nonmatching_frames_action {
+enum mcan_nonmatching_frames_action {
 	/** Accept in Rx FIFO 0. */
 	CAN_NONMATCHING_FRAMES_FIFO_0,
 	/** Accept in Rx FIFO 1. */
@@ -524,31 +524,30 @@ enum can_nonmatching_frames_action {
 };
 
 /**
- * \brief CAN software device instance structure.
+ * \brief MCAN software device instance structure.
  *
- * CAN software instance structure, used to retain software state information
+ * MCAN software instance structure, used to retain software state information
  * of an associated hardware module instance.
  *
  * \note The fields of this structure should not be altered by the user
  *       application; they are reserved for module-internal use only.
  */
-struct can_module {
+struct mcan_module {
 #if !defined(__DOXYGEN__)
-	/** Pointer to CAN hardware module. */
+	/** Pointer to MCAN hardware module. */
 	Mcan *hw;
 #endif
 };
 
 /**
- * \brief CAN configuration structure.
+ * \brief MCAN configuration structure.
  *
- * Configuration structure for an CAN instance. This structure should be
- * initialized by the \ref can_get_config_defaults()
+ * Configuration structure for an MCAN instance. This structure should be
+ * initialized by the \ref mcan_get_config_defaults()
  * function before being modified by the user application.
  */
-struct can_config {
-	/** GCLK generator used to clock the peripheral. */
-	/** CAN run in standby control. */
+struct mcan_config {
+	/** MCAN run in standby control. */
 	bool run_in_standby;
 	/** Start value of the Message RAM Watchdog Counter */
 	uint8_t watchdog_configuration;
@@ -569,7 +568,7 @@ struct can_config {
 	/** Timeout Period. */
 	uint16_t timeout_period;
 	/** Timeout Mode. */
-	enum can_timeout_mode timeout_mode;
+	enum mcan_timeout_mode timeout_mode;
 	/** Timeout enable. */
 	bool timeout_enable;
 	/** Transmitter Delay Compensation Offset : 0x0-0x7F */
@@ -577,9 +576,9 @@ struct can_config {
 	/** Transmitter Delay Compensation Filter Window Length : 0x0-0x7F */
 	uint8_t delay_compensation_filter_window_length;
 	/** Nonmatching frames action for standard frames. */
-	enum can_nonmatching_frames_action nonmatching_frames_action_standard;
+	enum mcan_nonmatching_frames_action nonmatching_frames_action_standard;
 	/** Nonmatching frames action for extended frames. */
-	enum can_nonmatching_frames_action nonmatching_frames_action_extended;
+	enum mcan_nonmatching_frames_action nonmatching_frames_action_extended;
 	/** Reject Remote Standard Frames. */
 	bool remote_frames_standard_reject;
 	/** Reject Remote Extended Frames. */
@@ -601,14 +600,13 @@ struct can_config {
 };
 
 /**
- * \brief Initializes an CAN configuration structure to defaults
+ * \brief Initializes an MCAN configuration structure to defaults
  *
- * Initializes a given CAN configuration struct to a set of known default
+ * Initializes a given MCAN configuration struct to a set of known default
  * values. This function should be called on any new instance of the
  * configuration struct before being modified by the user application.
  *
  * The default configuration is as follows:
- *  \li GCLK generator 8 (GCLK main) clock source
  *  \li Not run in standby mode
  *  \li Disable Watchdog
  *  \li Transmit pause enabled
@@ -638,8 +636,8 @@ struct can_config {
  * \param[out] config  Pointer to configuration struct to initialize to
  *                     default values
  */
-static inline void can_get_config_defaults(
-		struct can_config *const config)
+static inline void mcan_get_config_defaults(
+		struct mcan_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(config);
@@ -655,7 +653,7 @@ static inline void can_get_config_defaults(
 	config->clock_stop_acknowledge = false;
 	config->timestamp_prescaler = 0;
 	config->timeout_period = 0xFFFF;
-	config->timeout_mode = CAN_TIMEOUT_CONTINUES;
+	config->timeout_mode = MCAN_TIMEOUT_CONTINUES;
 	config->timeout_enable = false;
 	config->delay_compensation_offset = 0;
 	config->delay_compensation_filter_window_length = 0;
@@ -672,124 +670,33 @@ static inline void can_get_config_defaults(
 	config->tx_event_fifo_watermark = 0;
 }
 
+void mcan_init(struct mcan_module *const module_inst, Mcan *hw,
+		struct mcan_config *config);
+void mcan_start(struct mcan_module *const module_inst);
+void mcan_stop(struct mcan_module *const module_inst);
+void mcan_enable_fd_mode(struct mcan_module *const module_inst);
+void mcan_disable_fd_mode(struct mcan_module *const module_inst);
+void mcan_enable_restricted_operation_mode(
+		struct mcan_module *const module_inst);
+void mcan_disable_restricted_operation_mode(
+		struct mcan_module *const module_inst);
 
-/**
- * \brief Initializes CAN module.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in]  hw          Pointer to the CAN module instance
- * \param[in]  config      Pointer to the configuration struct
- */
-void can_init(struct can_module *const module_inst, Mcan *hw,
-		struct can_config *config);
-
-/**
- * \brief Start CAN module communication.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- */
-void can_start(struct can_module *const module_inst);
-
-/**
- * \brief Stop CAN module communication.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- */
-void can_stop(struct can_module *const module_inst);
-
-/**
- * \brief Enable CAN FD mode.
- *
- * \note This function will set the CCCR.INIT bit, can_start() is needed to
- * restart the communication.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- */
-void can_enable_fd_mode(struct can_module *const module_inst);
-
-/**
- * \brief Disable CAN FD mode.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- */
-void can_disable_fd_mode(struct can_module *const module_inst);
-
-/**
- * \brief Enable CAN restricted operation mode.
- *
- * \note This function will set the CCCR.INIT bit, can_start() is needed to
- * restart the communication.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- */
-void can_enable_restricted_operation_mode(
-		struct can_module *const module_inst);
-
-/**
- * \brief Disable CAN restricted operation mode.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- */
-void can_disable_restricted_operation_mode(
-		struct can_module *const module_inst);
-
-/**
- * \brief Enable CAN bus monitor mode.
- *
- * \note This function will set the CCCR.INIT bit, can_start() is needed to
- * restart the communication.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- */
-void can_enable_bus_monitor_mode(struct can_module *const module_inst);
-
-/**
- * \brief Disable CAN bus monitor mode.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- */
-void can_disable_bus_monitor_mode(struct can_module *const module_inst);
-
-/**
- * \brief Enable CAN sleep mode.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- */
-void can_enable_sleep_mode(struct can_module *const module_inst);
-
-/**
- * \brief Disable CAN sleep mode.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- */
-void can_disable_sleep_mode(struct can_module *const module_inst);
-
-/**
- * \brief Enable CAN test mode.
- *
- * \note This function will set the CCCR.INIT bit, can_start() is needed to
- * restart the communication.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- */
-void can_enable_test_mode(struct can_module *const module_inst);
-
-/**
- * \brief Disable CAN test mode.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- */
-void can_disable_test_mode(struct can_module *const module_inst);
+void mcan_enable_bus_monitor_mode(struct mcan_module *const module_inst);
+void mcan_disable_bus_monitor_mode(struct mcan_module *const module_inst);
+void mcan_enable_sleep_mode(struct mcan_module *const module_inst);
+void mcan_disable_sleep_mode(struct mcan_module *const module_inst);
+void mcan_enable_test_mode(struct mcan_module *const module_inst);
+void mcan_disable_test_mode(struct mcan_module *const module_inst);
 
 /**
  * \brief Can read timestamp count value.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  *
  * \return Timestamp count value.
  */
-static inline uint16_t can_read_timestamp_count_value(
-		struct can_module *const module_inst)
+static inline uint16_t mcan_read_timestamp_count_value(
+		struct mcan_module *const module_inst)
 {
 	return module_inst->hw->MCAN_TSCV;
 }
@@ -797,12 +704,12 @@ static inline uint16_t can_read_timestamp_count_value(
 /**
  * \brief Can read timeout  count value.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  *
  * \return Timeout count value.
  */
-static inline uint16_t can_read_timeout_count_value(
-		struct can_module *const module_inst)
+static inline uint16_t mcan_read_timeout_count_value(
+		struct mcan_module *const module_inst)
 {
 	return module_inst->hw->MCAN_TOCV;
 }
@@ -810,12 +717,12 @@ static inline uint16_t can_read_timeout_count_value(
 /**
  * \brief Can read error count.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  *
  * \return Error count value.
  */
-static inline uint32_t can_read_error_count(
-		struct can_module *const module_inst)
+static inline uint32_t mcan_read_error_count(
+		struct mcan_module *const module_inst)
 {
 	return module_inst->hw->MCAN_ECR;
 }
@@ -823,12 +730,12 @@ static inline uint32_t can_read_error_count(
 /**
  * \brief Can read protocol status.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  *
  * \return protocol status value.
  */
-static inline uint32_t can_read_protocal_status(
-		struct can_module *const module_inst)
+static inline uint32_t mcan_read_protocal_status(
+		struct mcan_module *const module_inst)
 {
 	return module_inst->hw->MCAN_PSR;
 }
@@ -843,12 +750,12 @@ static inline uint32_t can_read_protocal_status(
 /**
  * \brief Read high priority message status.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  *
  * \return High priority message status value.
  */
-static inline uint32_t can_read_high_priority_message_status(
-		struct can_module *const module_inst)
+static inline uint32_t mcan_read_high_priority_message_status(
+		struct mcan_module *const module_inst)
 {
 	return module_inst->hw->MCAN_HPMS;
 }
@@ -856,7 +763,7 @@ static inline uint32_t can_read_high_priority_message_status(
 /**
  * \brief Get Rx buffer status.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  * \param[in] index  Index offset in Rx buffer
  *
  * \return Rx buffer status value.
@@ -864,8 +771,8 @@ static inline uint32_t can_read_high_priority_message_status(
  *  \retval true Rx Buffer updated from new message.
  *  \retval false Rx Buffer not updated.
  */
-static inline bool can_rx_get_buffer_status(
-		struct can_module *const module_inst, uint32_t index)
+static inline bool mcan_rx_get_buffer_status(
+		struct mcan_module *const module_inst, uint32_t index)
 {
 	if (index < 32) {
 		if (module_inst->hw->MCAN_NDAT1 & (1 << index)) {
@@ -886,12 +793,12 @@ static inline bool can_rx_get_buffer_status(
 /**
  * \brief Clear Rx buffer status.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  * \param[in] index  Index offset in Rx buffer
  *
  */
-static inline void can_rx_clear_buffer_status(
-		struct can_module *const module_inst, uint32_t index)
+static inline void mcan_rx_clear_buffer_status(
+		struct mcan_module *const module_inst, uint32_t index)
 {
 	if (index < 32) {
 		module_inst->hw->MCAN_NDAT1 |= (1 << index);
@@ -904,13 +811,13 @@ static inline void can_rx_clear_buffer_status(
 /**
  * \brief Get Rx FIFO status.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  * \param[in] fifo_number  Rx FIFO 0 or 1
  *
  * \return Rx FIFO status value.
  */
-static inline uint32_t can_rx_get_fifo_status(
-		struct can_module *const module_inst, bool fifo_number)
+static inline uint32_t mcan_rx_get_fifo_status(
+		struct mcan_module *const module_inst, bool fifo_number)
 {
 	if (!fifo_number) {
 		return module_inst->hw->MCAN_RXF0S;
@@ -922,12 +829,12 @@ static inline uint32_t can_rx_get_fifo_status(
 /**
  * \brief Set Rx acknowledge.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  * \param[in] fifo_number  Rx FIFO 0 or 1
  * \param[in] index  Index offset in FIFO
  */
-static inline void can_rx_fifo_acknowledge(
-		struct can_module *const module_inst, bool fifo_number, uint32_t index)
+static inline void mcan_rx_fifo_acknowledge(
+		struct mcan_module *const module_inst, bool fifo_number, uint32_t index)
 {
 	if (!fifo_number) {
 		module_inst->hw->MCAN_RXF0A = MCAN_RXF0A_F0AI(index);
@@ -947,31 +854,19 @@ static inline void can_rx_fifo_acknowledge(
  *
  * \param[out] sd_filter  Pointer to standard filter element struct to initialize to default values
  */
-static inline void can_get_standard_message_filter_element_default(
-		struct can_standard_message_filter_element *sd_filter)
+static inline void mcan_get_standard_message_filter_element_default(
+		struct mcan_standard_message_filter_element *sd_filter)
 {
-	sd_filter->S0.reg = CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Msk |
-			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1(0) |
-			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(
-			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF0M_Val) |
-			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_CLASSIC;
+	sd_filter->S0.reg = MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Msk |
+			MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1(0) |
+			MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(
+			MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF0M_Val) |
+			MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_CLASSIC;
 }
 
-/**
- * \brief Set the standard message filter.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] sd_filter  Pointer to standard filter element struct
- * \param[in] index  Index offset in standard filter element
- *
- *  \return Status of the result.
- *
- *  \retval STATUS_OK   Set the correct standard message filter.
- *  \retval STATUS_ERR_INVALID_ARG The parameter is not correct.
- */
-enum status_code can_set_rx_standand_filter(
-		struct can_module *const module_inst,
-		struct can_standard_message_filter_element *sd_filter, uint32_t index);
+enum status_code mcan_set_rx_standand_filter(
+		struct mcan_module *const module_inst,
+		struct mcan_standard_message_filter_element *sd_filter, uint32_t index);
 
 /**
  * \brief Get the extended message filter default value.
@@ -984,96 +879,41 @@ enum status_code can_set_rx_standand_filter(
  *
  * \param[out] et_filter  Pointer to extended filter element struct to initialize to default values
  */
-static inline void can_get_extended_message_filter_element_default(
-		struct can_extended_message_filter_element *et_filter)
+static inline void mcan_get_extended_message_filter_element_default(
+		struct mcan_extended_message_filter_element *et_filter)
 {
-	et_filter->F0.reg = CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1(0) |
-			CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(
-			CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF1M_Val);
-	et_filter->F1.reg = CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Msk |
-			CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_CLASSIC;
+	et_filter->F0.reg = MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1(0) |
+			MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(
+			MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF1M_Val);
+	et_filter->F1.reg = MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Msk |
+			MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_CLASSIC;
 }
 
-/**
- * \brief Set the extended message filter.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] et_filter  Pointer to extended filter element struct
- * \param[in] index  Index offset in extended filter element
- *
- *  \return Status of the result.
- *
- *  \retval STATUS_OK   Set the correct extended message filter.
- *  \retval STATUS_ERR_INVALID_ARG The parameter is not correct.
- */
-enum status_code can_set_rx_extended_filter(
-		struct can_module *const module_inst,
-		struct can_extended_message_filter_element *et_filter, uint32_t index);
+enum status_code mcan_set_rx_extended_filter(
+		struct mcan_module *const module_inst,
+		struct mcan_extended_message_filter_element *et_filter, uint32_t index);
 
-/**
- * \brief Get the pointer to the receive buffer element.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] rx_element  Pointer to receive buffer element
- * \param[in] index  Index offset in receive buffer
- *
- *  \return Status of the result.
- *
- *  \retval STATUS_OK   Get the correct pointer to the receive buffer element.
- *  \retval STATUS_ERR_INVALID_ARG The parameter is not correct.
- */
-enum status_code can_get_rx_buffer_element(
-		struct can_module *const module_inst,
-		struct can_rx_element_buffer *rx_element, uint32_t index);
+enum status_code mcan_get_rx_buffer_element(
+		struct mcan_module *const module_inst,
+		struct mcan_rx_element_buffer *rx_element, uint32_t index);
 
-/**
- * \brief Get the pointer to the receive FIFO 0 element.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] rx_element  Pointer to receive FIFO 0
- * \param[in] index  Index offset in receive FIFO 0
- *
- *  \return Status of the result.
- *
- *  \retval STATUS_OK   Get the correct pointer to the receive FIFO 0 element.
- *  \retval STATUS_ERR_INVALID_ARG The parameter is not correct.
- */
-enum status_code can_get_rx_fifo_0_element(
-		struct can_module *const module_inst,
-		struct can_rx_element_fifo_0 *rx_element, uint32_t index);
+enum status_code mcan_get_rx_fifo_0_element(
+		struct mcan_module *const module_inst,
+		struct mcan_rx_element_fifo_0 *rx_element, uint32_t index);
 
-/**
- * \brief Get the pointer to the receive FIFO 1 element.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] rx_element  Pointer to receive FIFO 1
- * \param[in] index  Index offset in receive FIFO 1
- *
- *  \return Status of the result.
- *
- *  \retval STATUS_OK   Get the correct pointer to the receive FIFO 1 element.
- *  \retval STATUS_ERR_INVALID_ARG The parameter is not correct.
- */
-enum status_code can_get_rx_fifo_1_element(
-		struct can_module *const module_inst,
-		struct can_rx_element_fifo_1 *rx_element, uint32_t index);
-
-/** @} */
-
-/**
- * \name Tx Handling
- * @{
- */
+enum status_code mcan_get_rx_fifo_1_element(
+		struct mcan_module *const module_inst,
+		struct mcan_rx_element_fifo_1 *rx_element, uint32_t index);
 
 /**
  * \brief Get Tx FIFO/Queue status.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  *
  * \return Tx FIFO/Queue status value.
  */
-static inline uint32_t can_tx_get_fifo_queue_status(
-		struct can_module *const module_inst)
+static inline uint32_t mcan_tx_get_fifo_queue_status(
+		struct mcan_module *const module_inst)
 {
 	return module_inst->hw->MCAN_TXFQS;
 }
@@ -1081,12 +921,12 @@ static inline uint32_t can_tx_get_fifo_queue_status(
 /**
  * \brief Get Tx buffer request pending status.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  *
  * \return Bit mask of Tx buffer request pending status value.
  */
-static inline uint32_t can_tx_get_pending_status(
-		struct can_module *const module_inst)
+static inline uint32_t mcan_tx_get_pending_status(
+		struct mcan_module *const module_inst)
 {
 	return module_inst->hw->MCAN_TXBRP;
 }
@@ -1094,7 +934,7 @@ static inline uint32_t can_tx_get_pending_status(
 /**
  * \brief Tx buffer add transfer request.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  * \param[in] trig_mask  The mask value to trigger transfer buffer
  *
  *  \return Status of the result.
@@ -1102,8 +942,8 @@ static inline uint32_t can_tx_get_pending_status(
  *  \retval STATUS_OK   Set the transfer request.
  *  \retval STATUS_ERR_BUSY The module is in configuration.
  */
-static inline enum status_code can_tx_transfer_request(
-		struct can_module *const module_inst, uint32_t trig_mask)
+static inline enum status_code mcan_tx_transfer_request(
+		struct mcan_module *const module_inst, uint32_t trig_mask)
 {
 	if (module_inst->hw->MCAN_CCCR & MCAN_CCCR_CCE) {
 		return ERR_BUSY;
@@ -1115,7 +955,7 @@ static inline enum status_code can_tx_transfer_request(
 /**
  * \brief Set Tx Queue operation.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  * \param[in] trig_mask  The mask value to cancel transfer buffer
  *
  *  \return Status of the result.
@@ -1123,8 +963,8 @@ static inline enum status_code can_tx_transfer_request(
  *  \retval STATUS_OK   Set the transfer request.
  *  \retval STATUS_BUSY The module is in configuration.
  */
-static inline enum status_code can_tx_cancel_request(
-		struct can_module *const module_inst, uint32_t trig_mask)
+static inline enum status_code mcan_tx_cancel_request(
+		struct mcan_module *const module_inst, uint32_t trig_mask)
 {
 	if (module_inst->hw->MCAN_CCCR & MCAN_CCCR_CCE) {
 		return STATUS_ERR_BUSY;
@@ -1136,12 +976,12 @@ static inline enum status_code can_tx_cancel_request(
 /**
  * \brief Get Tx transmission status.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  *
  * \return Bit mask of Tx transmission status value.
  */
-static inline uint32_t can_tx_get_transmission_status(
-		struct can_module *const module_inst)
+static inline uint32_t mcan_tx_get_transmission_status(
+		struct mcan_module *const module_inst)
 {
 	return module_inst->hw->MCAN_TXBTO;
 }
@@ -1149,12 +989,12 @@ static inline uint32_t can_tx_get_transmission_status(
 /**
  * \brief Get Tx cancellation status.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  *
  * \return Bit mask of Tx cancellation status value.
  */
-static inline uint32_t can_tx_get_cancellation_status(
-		struct can_module *const module_inst)
+static inline uint32_t mcan_tx_get_cancellation_status(
+		struct mcan_module *const module_inst)
 {
 	return module_inst->hw->MCAN_TXBCF;
 }
@@ -1162,12 +1002,12 @@ static inline uint32_t can_tx_get_cancellation_status(
 /**
  * \brief Get Tx event FIFO status.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  *
  * \return Tx event FIFO status value.
  */
-static inline uint32_t can_tx_get_event_fifo_status(
-		struct can_module *const module_inst)
+static inline uint32_t mcan_tx_get_event_fifo_status(
+		struct mcan_module *const module_inst)
 {
 	return module_inst->hw->MCAN_TXEFS;
 }
@@ -1175,11 +1015,11 @@ static inline uint32_t can_tx_get_event_fifo_status(
 /**
  * \brief Set Tx Queue operation.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  * \param[in] index  Index for the transfer FIFO
  */
-static inline void can_tx_event_fifo_acknowledge(
-		struct can_module *const module_inst, uint32_t index)
+static inline void mcan_tx_event_fifo_acknowledge(
+		struct mcan_module *const module_inst, uint32_t index)
 {
 	module_inst->hw->MCAN_TXEFA = MCAN_TXEFA_EFAI(index);
 }
@@ -1192,172 +1032,141 @@ static inline void can_tx_event_fifo_acknowledge(
  *  \li Transmit data frame
  *  \li ID = 0x0ul
  *  \li Store Tx events
- *  \li Frame transmitted in Classic CAN format
+ *  \li Frame transmitted in Classic MCAN format
  *  \li Data Length Code is 8
  *
  * \param[out] tx_element  Pointer to transfer element struct to initialize to default values
  */
-static inline void can_get_tx_buffer_element_defaults(
-		struct can_tx_element *tx_element)
+static inline void mcan_get_tx_buffer_element_defaults(
+		struct mcan_tx_element *tx_element)
 {
 	tx_element->T0.reg = 0;
-	tx_element->T1.reg = CAN_TX_ELEMENT_T1_EFC |
-			CAN_TX_ELEMENT_T1_DLC(CAN_TX_ELEMENT_T1_DLC_DATA8_Val);
+	tx_element->T1.reg = MCAN_TX_ELEMENT_T1_EFC |
+			MCAN_TX_ELEMENT_T1_DLC(MCAN_TX_ELEMENT_T1_DLC_DATA8_Val);
 }
 
-/**
- * \brief Set the transfer buffer element.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] tx_element  Pointer to transfer element struct
- * \param[in] index  Index for the transfer buffer
- *
- *  \return Status of the result.
- *
- *  \retval STATUS_OK   Set the correct transfer buffer element.
- *  \retval STATUS_ERR_INVALID_ARG The parameter is not correct.
- */
-enum status_code can_set_tx_buffer_element(
-		struct can_module *const module_inst,
-		struct can_tx_element *tx_element, uint32_t index);
+enum status_code mcan_set_tx_buffer_element(
+		struct mcan_module *const module_inst,
+		struct mcan_tx_element *tx_element, uint32_t index);
 
-/**
- * \brief Get the pointer to the transfer event FIFO element.
- *
- * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] tx_event_element  Pointer to transfer event element
- * \param[in] index  Index offset in transfer event FIFO
- *
- *  \return Status of the result.
- *
- *  \retval STATUS_OK   Get the correct pointer to the transfer event FIFO element.
- *  \retval STATUS_ERR_INVALID_ARG The parameter is not correct.
- */
-enum status_code can_get_tx_event_fifo_element(
-		struct can_module *const module_inst,
-		struct can_tx_event_element *tx_event_element, uint32_t index);
-
-/** @} */
-
-/**
- * \name Interrupt Handling
- * @{
- */
+enum status_code mcan_get_tx_event_fifo_element(
+		struct mcan_module *const module_inst,
+		struct mcan_tx_event_element *tx_event_element, uint32_t index);
 
 /**
  * \brief Can module interrupt source.
  *
  * Enum for the interrupt source.
  */
-enum can_interrupt_source {
+enum mcan_interrupt_source {
 	/** Rx FIFO 0 New Message Interrupt Enable. */
-	CAN_RX_FIFO_0_NEW_MESSAGE = MCAN_IE_RF0NE,
+	MCAN_RX_FIFO_0_NEW_MESSAGE = MCAN_IE_RF0NE,
 	/** Rx FIFO 0 Watermark Reached Interrupt Enable. */
-	CAN_RX_FIFO_0_WATERMARK = MCAN_IE_RF0WE,
+	MCAN_RX_FIFO_0_WATERMARK = MCAN_IE_RF0WE,
 	/** Rx FIFO 0 Full Interrupt Enable. */
-	CAN_RX_FIFO_0_FULL = MCAN_IE_RF0FE,
+	MCAN_RX_FIFO_0_FULL = MCAN_IE_RF0FE,
 	/** Rx FIFO 0 Message Lost Interrupt Enable. */
-	CAN_RX_FIFO_0_LOST_MESSAGE = MCAN_IE_RF0LE,
+	MCAN_RX_FIFO_0_LOST_MESSAGE = MCAN_IE_RF0LE,
 	/** Rx FIFO 1 New Message Interrupt Enable. */
-	CAN_RX_FIFO_1_NEW_MESSAGE = MCAN_IE_RF1NE,
+	MCAN_RX_FIFO_1_NEW_MESSAGE = MCAN_IE_RF1NE,
 	/** Rx FIFO 1 Watermark Reached Interrupt Enable. */
-	CAN_RX_FIFO_1_WATERMARK = MCAN_IE_RF1WE,
+	MCAN_RX_FIFO_1_WATERMARK = MCAN_IE_RF1WE,
 	/** Rx FIFO 1 Full Interrupt Enable. */
-	CAN_RX_FIFO_1_FULL = MCAN_IE_RF1FE,
+	MCAN_RX_FIFO_1_FULL = MCAN_IE_RF1FE,
 	/** Rx FIFO 1 Message Lost Interrupt Enable. */
-	CAN_RX_FIFO_1_MESSAGE_LOST = MCAN_IE_RF1LE,
+	MCAN_RX_FIFO_1_MESSAGE_LOST = MCAN_IE_RF1LE,
 	/** High Priority Message Interrupt Enable. */
-	CAN_RX_HIGH_PRIORITY_MESSAGE = MCAN_IE_HPME,
+	MCAN_RX_HIGH_PRIORITY_MESSAGE = MCAN_IE_HPME,
 	/**  Transmission Completed Interrupt Enable. */
-	CAN_TIMESTAMP_COMPLETE = MCAN_IE_TCE,
+	MCAN_TIMESTAMP_COMPLETE = MCAN_IE_TCE,
 	/** Transmission Cancellation Finished Interrupt Enable. */
-	CAN_TX_CANCELLATION_FINISH = MCAN_IE_TCFE,
+	MCAN_TX_CANCELLATION_FINISH = MCAN_IE_TCFE,
 	/** Tx FIFO Empty Interrupt Enable. */
-	CAN_TX_FIFO_EMPTY = MCAN_IE_TFEE,
+	MCAN_TX_FIFO_EMPTY = MCAN_IE_TFEE,
 	/** Tx Event FIFO New Entry Interrupt Enable. */
-	CAN_TX_EVENT_FIFO_NEW_ENTRY = MCAN_IE_TEFNE,
+	MCAN_TX_EVENT_FIFO_NEW_ENTRY = MCAN_IE_TEFNE,
 	/** Tx Event FIFO Watermark Reached Interrupt Enable. */
-	CAN_TX_EVENT_FIFO_WATERMARK = MCAN_IE_TEFWE,
+	MCAN_TX_EVENT_FIFO_WATERMARK = MCAN_IE_TEFWE,
 	/** Tx Event FIFO Full Interrupt Enable. */
-	CAN_TX_EVENT_FIFO_FULL = MCAN_IE_TEFFE,
+	MCAN_TX_EVENT_FIFO_FULL = MCAN_IE_TEFFE,
 	/** Tx Event FIFO Element Lost Interrupt Enable. */
-	CAN_TX_EVENT_FIFO_ELEMENT_LOST = MCAN_IE_TEFLE,
+	MCAN_TX_EVENT_FIFO_ELEMENT_LOST = MCAN_IE_TEFLE,
 	/** Timestamp Wraparound Interrupt Enable. */
-	CAN_TIMESTAMP_WRAPAROUND = MCAN_IE_TSWE,
+	MCAN_TIMESTAMP_WRAPAROUND = MCAN_IE_TSWE,
 	/** Message RAM Access Failure Interrupt Enable. */
-	CAN_MESSAGE_RAM_ACCESS_FAILURE = MCAN_IE_MRAFE,
+	MCAN_MESSAGE_RAM_ACCESS_FAILURE = MCAN_IE_MRAFE,
 	/** Timeout Occurred Interrupt Enable. */
-	CAN_TIMEOUT_OCCURRED = MCAN_IE_TOOE,
+	MCAN_TIMEOUT_OCCURRED = MCAN_IE_TOOE,
 	/** Message stored to Dedicated Rx Buffer Interrupt Enable. */
-	CAN_RX_BUFFER_NEW_MESSAGE = MCAN_IE_DRXE,
+	MCAN_RX_BUFFER_NEW_MESSAGE = MCAN_IE_DRXE,
 	/** Error Logging Overflow Interrupt Enable. */
-	CAN_ERROR_LOGGING_OVERFLOW = MCAN_IE_ELOE,
+	MCAN_ERROR_LOGGING_OVERFLOW = MCAN_IE_ELOE,
 	/** Error Passive Interrupt Enable. */
-	CAN_ERROR_PASSIVE = MCAN_IE_EPE,
+	MCAN_ERROR_PASSIVE = MCAN_IE_EPE,
 	/** Warning Status Interrupt Enable. */
-	CAN_WARNING_STATUS = MCAN_IE_EWE,
+	MCAN_WARNING_STATUS = MCAN_IE_EWE,
 	/** Bus_Off Status Interrupt Enable. */
-	CAN_BUS_OFF = MCAN_IE_BOE,
+	MCAN_BUS_OFF = MCAN_IE_BOE,
 	/** Watchdog Interrupt  Enable. */
-	CAN_WATCHDOG = MCAN_IE_WDIE,
+	MCAN_WATCHDOG = MCAN_IE_WDIE,
 	/**CRC Error Interrupt Enable */
-	CAN_CRC_ERROR = MCAN_IE_CRCEE,
+	MCAN_CRC_ERROR = MCAN_IE_CRCEE,
 	/** Bit Error Interrupt  Enable. */
-	CAN_BIT_ERROR = MCAN_IE_BEE,
+	MCAN_BIT_ERROR = MCAN_IE_BEE,
 	/** Acknowledge Error Interrupt Enable . */
-	CAN_ACKNOWLEDGE_ERROR = MCAN_IE_ACKEE,
+	MCAN_ACKNOWLEDGE_ERROR = MCAN_IE_ACKEE,
 	/** Format Error Interrupt Enable */
-	CAN_FORMAT_ERROR = MCAN_IE_FOEE,
+	MCAN_FORMAT_ERROR = MCAN_IE_FOEE,
 	/** Stuff Error Interrupt Enable */
-	CAN_STUFF_ERROR = MCAN_IE_STEE
+	MCAN_STUFF_ERROR = MCAN_IE_STEE
 };
 
 /**
- * \brief Enable CAN interrupt.
+ * \brief Enable MCAN interrupt.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  * \param[in] source  Interrupt source type
  */
-static inline void can_enable_interrupt(struct can_module *const module_inst,
-		const enum can_interrupt_source source)
+static inline void mcan_enable_interrupt(struct mcan_module *const module_inst,
+		const enum mcan_interrupt_source source)
 {
 	module_inst->hw->MCAN_IE |= source;
 }
 
 /**
- * \brief Disable CAN interrupt.
+ * \brief Disable MCAN interrupt.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  * \param[in] source  Interrupt source type
  */
-static inline void can_disable_interrupt(struct can_module *const module_inst,
-		const enum can_interrupt_source source)
+static inline void mcan_disable_interrupt(struct mcan_module *const module_inst,
+		const enum mcan_interrupt_source source)
 {
 	module_inst->hw->MCAN_IE &= ~source;
 }
 
 /**
- * \brief Get CAN interrupt status.
+ * \brief Get MCAN interrupt status.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  */
-static inline uint32_t can_read_interrupt_status(
-		struct can_module *const module_inst)
+static inline uint32_t mcan_read_interrupt_status(
+		struct mcan_module *const module_inst)
 {
 	return module_inst->hw->MCAN_IR;
 }
 
 /**
- * \brief Clear CAN interrupt status.
+ * \brief Clear MCAN interrupt status.
  *
- * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] module_inst  Pointer to the MCAN software instance struct
  * \param[in] source  Interrupt source type
  *
  * \return Bit mask of interrupt status value.
  */
-static inline void can_clear_interrupt_status(
-		struct can_module *const module_inst,
-		const enum can_interrupt_source source)
+static inline void mcan_clear_interrupt_status(
+		struct mcan_module *const module_inst,
+		const enum mcan_interrupt_source source)
 {
 	module_inst->hw->MCAN_IR = source;
 }
@@ -1373,9 +1182,9 @@ static inline void can_clear_interrupt_status(
 /** @} */
 
 /**
- * \page asfdoc_sam0_can_extra Extra Information for CAN Driver
+ * \page asfdoc_sam0_mcan_extra Extra Information for MCAN Driver
  *
- * \section asfdoc_sam0_can_extra_acronyms Acronyms
+ * \section asfdoc_sam0_mcan_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -1385,7 +1194,7 @@ static inline void can_clear_interrupt_status(
  *		<th>Description</th>
  *	</tr>
  *  <tr>
- *		<td>CAN</td>
+ *		<td>MCAN</td>
  *		<td>Control Area Network (CAN) Controller</td>
  *	</tr>
  *  <tr>
@@ -1395,15 +1204,15 @@ static inline void can_clear_interrupt_status(
  * </table>
  *
  *
- * \section asfdoc_sam0_can_extra_dependencies Dependencies
+ * \section asfdoc_sam0_mcan_extra_dependencies Dependencies
  * This driver has no dependencies.
  *
  *
- * \section asfdoc_sam0_can_extra_errata Errata
+ * \section asfdoc_sam0_mcan_extra_errata Errata
  * There are no errata related to this driver.
  *
  *
- * \section asfdoc_sam0_can_extra_history Module History
+ * \section asfdoc_sam0_mcan_extra_history Module History
  * An overview of the module history is presented in the table below, with
  * details on the enhancements and fixes made to the module since its first
  * release. The current version of this corresponds to the newest version in
@@ -1420,19 +1229,19 @@ static inline void can_clear_interrupt_status(
  */
 
 /**
- * \page asfdoc_sam0_can_exqsg Examples for CAN Driver
+ * \page asfdoc_sam0_mcan_exqsg Examples for CAN Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_sam0_can_group. QSGs are simple examples with
+ * applications for \ref asfdoc_sam0_mcan_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that QSGs mcan be compiled as a standalone application or be
  * added to the user application.
  *
- *  - \subpage asfdoc_sam0_can_basic_use_case
+ *  - \subpage asfdoc_sam0_mcan_basic_use_case
  *
- *  - \subpage asfdoc_sam0_can_fd_use_case
+ *  - \subpage asfdoc_sam0_mcan_fd_use_case
  *
- * \page asfdoc_sam0_can_document_revision_history Document Revision History
+ * \page asfdoc_sam0_mcan_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

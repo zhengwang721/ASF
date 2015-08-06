@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM Control Area Network (CAN) Low Level Driver
+ * \brief SAM Control Area Network (MCAN) Low Level Driver
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -53,75 +53,75 @@
 
 /* Message ram definition. */
 COMPILER_ALIGNED(4)
-static struct can_rx_element_buffer can0_rx_buffer[CONF_CAN0_RX_BUFFER_NUM];
+static struct mcan_rx_element_buffer mcan0_rx_buffer[CONF_MCAN0_RX_BUFFER_NUM];
 COMPILER_ALIGNED(4)
-static struct can_rx_element_fifo_0 can0_rx_fifo_0[CONF_CAN0_RX_FIFO_0_NUM];
+static struct mcan_rx_element_fifo_0 mcan0_rx_fifo_0[CONF_MCAN0_RX_FIFO_0_NUM];
 COMPILER_ALIGNED(4)
-static struct can_rx_element_fifo_1 can0_rx_fifo_1[CONF_CAN0_RX_FIFO_1_NUM];
+static struct mcan_rx_element_fifo_1 mcan0_rx_fifo_1[CONF_MCAN0_RX_FIFO_1_NUM];
 COMPILER_ALIGNED(4)
-static struct can_tx_element can0_tx_buffer[CONF_CAN0_TX_BUFFER_NUM + CONF_CAN0_TX_FIFO_QUEUE_NUM];
+static struct mcan_tx_element mcan0_tx_buffer[CONF_MCAN0_TX_BUFFER_NUM + CONF_MCAN0_TX_FIFO_QUEUE_NUM];
 COMPILER_ALIGNED(4)
-static struct can_tx_event_element can0_tx_event_fifo[CONF_CAN0_TX_EVENT_FIFO];
+static struct mcan_tx_event_element mcan0_tx_event_fifo[CONF_MCAN0_TX_EVENT_FIFO];
 COMPILER_ALIGNED(4)
-static struct can_standard_message_filter_element can0_rx_standard_filter[CONF_CAN0_RX_STANDARD_ID_FILTER_NUM];
+static struct mcan_standard_message_filter_element mcan0_rx_standard_filter[CONF_MCAN0_RX_STANDARD_ID_FILTER_NUM];
 COMPILER_ALIGNED(4)
-static struct can_extended_message_filter_element can0_rx_extended_filter[CONF_CAN0_RX_EXTENDED_ID_FILTER_NUM];
+static struct mcan_extended_message_filter_element mcan0_rx_extended_filter[CONF_MCAN0_RX_EXTENDED_ID_FILTER_NUM];
 
 COMPILER_ALIGNED(4)
-static struct can_rx_element_buffer can1_rx_buffer[CONF_CAN1_RX_BUFFER_NUM];
+static struct mcan_rx_element_buffer mcan1_rx_buffer[CONF_MCAN1_RX_BUFFER_NUM];
 COMPILER_ALIGNED(4)
-static struct can_rx_element_fifo_0 can1_rx_fifo_0[CONF_CAN1_RX_FIFO_0_NUM];
+static struct mcan_rx_element_fifo_0 mcan1_rx_fifo_0[CONF_MCAN1_RX_FIFO_0_NUM];
 COMPILER_ALIGNED(4)
-static struct can_rx_element_fifo_1 can1_rx_fifo_1[CONF_CAN1_RX_FIFO_1_NUM];
+static struct mcan_rx_element_fifo_1 mcan1_rx_fifo_1[CONF_MCAN1_RX_FIFO_1_NUM];
 COMPILER_ALIGNED(4)
-static struct can_tx_element can1_tx_buffer[CONF_CAN1_TX_BUFFER_NUM + CONF_CAN1_TX_FIFO_QUEUE_NUM];
+static struct mcan_tx_element mcan1_tx_buffer[CONF_MCAN1_TX_BUFFER_NUM + CONF_MCAN1_TX_FIFO_QUEUE_NUM];
 COMPILER_ALIGNED(4)
-static struct can_tx_event_element can1_tx_event_fifo[CONF_CAN1_TX_EVENT_FIFO];
+static struct mcan_tx_event_element mcan1_tx_event_fifo[CONF_MCAN1_TX_EVENT_FIFO];
 COMPILER_ALIGNED(4)
-static struct can_standard_message_filter_element can1_rx_standard_filter[CONF_CAN1_RX_STANDARD_ID_FILTER_NUM];
+static struct mcan_standard_message_filter_element mcan1_rx_standard_filter[CONF_MCAN1_RX_STANDARD_ID_FILTER_NUM];
 COMPILER_ALIGNED(4)
-static struct can_extended_message_filter_element can1_rx_extended_filter[CONF_CAN1_RX_EXTENDED_ID_FILTER_NUM];
+static struct mcan_extended_message_filter_element mcan1_rx_extended_filter[CONF_MCAN1_RX_EXTENDED_ID_FILTER_NUM];
 
 /**
- * \brief initialize CAN memory .
+ * \brief initialize MCAN memory .
  *
  * \param hw  Base address of the MCAN
  *
  */
-static void _can_message_memory_init(Mcan *hw)
+static void _mcan_message_memory_init(Mcan *hw)
 {
 	if (hw == MCAN0) {
-		hw->MCAN_SIDFC = (uint32_t)can0_rx_standard_filter |
-				MCAN_SIDFC_LSS(CONF_CAN0_RX_STANDARD_ID_FILTER_NUM);
-		hw->MCAN_XIDFC = (uint32_t)can0_rx_extended_filter |
-				MCAN_XIDFC_LSE(CONF_CAN0_RX_EXTENDED_ID_FILTER_NUM);
-		hw->MCAN_RXF0C = (uint32_t)can0_rx_fifo_0 |
-				MCAN_RXF0C_F0S(CONF_CAN0_RX_FIFO_0_NUM);
-		hw->MCAN_RXF1C = (uint32_t)can0_rx_fifo_1 |
-				MCAN_RXF1C_F1S(CONF_CAN0_RX_FIFO_1_NUM);
-		hw->MCAN_RXBC = (uint32_t)can0_rx_buffer |
-				MCAN_RXF0C_F0S(CONF_CAN0_RX_BUFFER_NUM);
-		hw->MCAN_TXBC = (uint32_t)can0_tx_buffer |
-				MCAN_TXBC_NDTB(CONF_CAN0_TX_BUFFER_NUM) |
-				MCAN_TXBC_TFQS(CONF_CAN0_TX_FIFO_QUEUE_NUM);
-		hw->MCAN_TXEFC = (uint32_t)can0_tx_event_fifo |
-				MCAN_TXEFC_EFS(CONF_CAN0_TX_EVENT_FIFO);
+		hw->MCAN_SIDFC = (uint32_t)mcan0_rx_standard_filter |
+				MCAN_SIDFC_LSS(CONF_MCAN0_RX_STANDARD_ID_FILTER_NUM);
+		hw->MCAN_XIDFC = (uint32_t)mcan0_rx_extended_filter |
+				MCAN_XIDFC_LSE(CONF_MCAN0_RX_EXTENDED_ID_FILTER_NUM);
+		hw->MCAN_RXF0C = (uint32_t)mcan0_rx_fifo_0 |
+				MCAN_RXF0C_F0S(CONF_MCAN0_RX_FIFO_0_NUM);
+		hw->MCAN_RXF1C = (uint32_t)mcan0_rx_fifo_1 |
+				MCAN_RXF1C_F1S(CONF_MCAN0_RX_FIFO_1_NUM);
+		hw->MCAN_RXBC = (uint32_t)mcan0_rx_buffer |
+				MCAN_RXF0C_F0S(CONF_MCAN0_RX_BUFFER_NUM);
+		hw->MCAN_TXBC = (uint32_t)mcan0_tx_buffer |
+				MCAN_TXBC_NDTB(CONF_MCAN0_TX_BUFFER_NUM) |
+				MCAN_TXBC_TFQS(CONF_MCAN0_TX_FIFO_QUEUE_NUM);
+		hw->MCAN_TXEFC = (uint32_t)mcan0_tx_event_fifo |
+				MCAN_TXEFC_EFS(CONF_MCAN0_TX_EVENT_FIFO);
 	} else if (hw == MCAN1) {
-		hw->MCAN_SIDFC = (uint32_t)can1_rx_standard_filter |
-				MCAN_SIDFC_LSS(CONF_CAN1_RX_STANDARD_ID_FILTER_NUM);
-		hw->MCAN_XIDFC = (uint32_t)can1_rx_extended_filter |
-				MCAN_XIDFC_LSE(CONF_CAN1_RX_EXTENDED_ID_FILTER_NUM);
-		hw->MCAN_RXF0C = (uint32_t)can1_rx_fifo_0 |
-				MCAN_RXF0C_F0S(CONF_CAN1_RX_FIFO_0_NUM);
-		hw->MCAN_RXF1C = (uint32_t)can1_rx_fifo_1 |
-				MCAN_RXF1C_F1S(CONF_CAN1_RX_FIFO_1_NUM);
-		hw->MCAN_RXBC = (uint32_t)can1_rx_buffer |
-				MCAN_RXF0C_F0S(CONF_CAN1_RX_BUFFER_NUM);
-		hw->MCAN_TXBC = (uint32_t)can1_tx_buffer |
-				MCAN_TXBC_NDTB(CONF_CAN1_TX_BUFFER_NUM) |
-				MCAN_TXBC_TFQS(CONF_CAN1_TX_FIFO_QUEUE_NUM);
-		hw->MCAN_TXEFC = (uint32_t)can1_tx_event_fifo |
-				MCAN_TXEFC_EFS(CONF_CAN1_TX_EVENT_FIFO);
+		hw->MCAN_SIDFC = (uint32_t)mcan1_rx_standard_filter |
+				MCAN_SIDFC_LSS(CONF_MCAN1_RX_STANDARD_ID_FILTER_NUM);
+		hw->MCAN_XIDFC = (uint32_t)mcan1_rx_extended_filter |
+				MCAN_XIDFC_LSE(CONF_MCAN1_RX_EXTENDED_ID_FILTER_NUM);
+		hw->MCAN_RXF0C = (uint32_t)mcan1_rx_fifo_0 |
+				MCAN_RXF0C_F0S(CONF_MCAN1_RX_FIFO_0_NUM);
+		hw->MCAN_RXF1C = (uint32_t)mcan1_rx_fifo_1 |
+				MCAN_RXF1C_F1S(CONF_MCAN1_RX_FIFO_1_NUM);
+		hw->MCAN_RXBC = (uint32_t)mcan1_rx_buffer |
+				MCAN_RXF0C_F0S(CONF_MCAN1_RX_BUFFER_NUM);
+		hw->MCAN_TXBC = (uint32_t)mcan1_tx_buffer |
+				MCAN_TXBC_NDTB(CONF_MCAN1_TX_BUFFER_NUM) |
+				MCAN_TXBC_TFQS(CONF_MCAN1_TX_FIFO_QUEUE_NUM);
+		hw->MCAN_TXEFC = (uint32_t)mcan1_tx_event_fifo |
+				MCAN_TXEFC_EFS(CONF_MCAN1_TX_EVENT_FIFO);
 	}
 
 	/**
@@ -130,16 +130,16 @@ static void _can_message_memory_init(Mcan *hw)
 	 * To simplify the calculation, seperate to two group 8/12/16/20/24 which
 	 * increased with 4 and 32/48/64 which increased with 16.
 	 */
-	if (CONF_CAN_ELEMENT_DATA_SIZE <= 24) {
-		hw->MCAN_RXESC = MCAN_RXESC_RBDS((CONF_CAN_ELEMENT_DATA_SIZE - 8) / 4) |
-				MCAN_RXESC_F0DS((CONF_CAN_ELEMENT_DATA_SIZE - 8) / 4) |
-				MCAN_RXESC_F1DS((CONF_CAN_ELEMENT_DATA_SIZE - 8) / 4);
-		hw->MCAN_TXESC = MCAN_TXESC_TBDS((CONF_CAN_ELEMENT_DATA_SIZE - 8) / 4);
+	if (CONF_MCAN_ELEMENT_DATA_SIZE <= 24) {
+		hw->MCAN_RXESC = MCAN_RXESC_RBDS((CONF_MCAN_ELEMENT_DATA_SIZE - 8) / 4) |
+				MCAN_RXESC_F0DS((CONF_MCAN_ELEMENT_DATA_SIZE - 8) / 4) |
+				MCAN_RXESC_F1DS((CONF_MCAN_ELEMENT_DATA_SIZE - 8) / 4);
+		hw->MCAN_TXESC = MCAN_TXESC_TBDS((CONF_MCAN_ELEMENT_DATA_SIZE - 8) / 4);
 	} else {
-		hw->MCAN_RXESC = MCAN_RXESC_RBDS((CONF_CAN_ELEMENT_DATA_SIZE - 32) / 16 + 5) |
-				MCAN_RXESC_F0DS((CONF_CAN_ELEMENT_DATA_SIZE - 32) / 16 + 5) |
-				MCAN_RXESC_F1DS((CONF_CAN_ELEMENT_DATA_SIZE - 32) / 16 + 5);
-		hw->MCAN_TXESC = MCAN_TXESC_TBDS((CONF_CAN_ELEMENT_DATA_SIZE - 32) / 16 + 5);
+		hw->MCAN_RXESC = MCAN_RXESC_RBDS((CONF_MCAN_ELEMENT_DATA_SIZE - 32) / 16 + 5) |
+				MCAN_RXESC_F0DS((CONF_MCAN_ELEMENT_DATA_SIZE - 32) / 16 + 5) |
+				MCAN_RXESC_F1DS((CONF_MCAN_ELEMENT_DATA_SIZE - 32) / 16 + 5);
+		hw->MCAN_TXESC = MCAN_TXESC_TBDS((CONF_MCAN_ELEMENT_DATA_SIZE - 32) / 16 + 5);
 	}
 }
 
@@ -147,20 +147,19 @@ static void _can_message_memory_init(Mcan *hw)
  * \brief set default configuration when initialization.
  *
  * \param hw  Base address of the MCAN
- *
  * \param config  default configuration parameters.
  */
-static void _can_set_configuration(Mcan *hw, struct can_config *config)
+static void _mcan_set_configuration(Mcan *hw, struct mcan_config *config)
 {
 	/* Timing setting. */
-	hw->MCAN_BTP = MCAN_BTP_BRP(CONF_CAN_NBTP_NBRP_VALUE) |
-			MCAN_BTP_SJW(CONF_CAN_NBTP_NSJW_VALUE) |
-			MCAN_BTP_TSEG1(CONF_CAN_NBTP_NTSEG1_VALUE) |
-			MCAN_BTP_TSEG2(CONF_CAN_NBTP_NTSEG2_VALUE);
-	hw->MCAN_FBTP = MCAN_FBTP_FBRP(CONF_CAN_FBTP_FBRP_VALUE) |
-			MCAN_FBTP_FSJW(CONF_CAN_FBTP_FSJW_VALUE) |
-			MCAN_FBTP_FTSEG1(CONF_CAN_FBTP_FTSEG1_VALUE) |
-			MCAN_FBTP_FTSEG2(CONF_CAN_FBTP_FTSEG2_VALUE) |
+	hw->MCAN_BTP = MCAN_BTP_BRP(CONF_MCAN_NBTP_NBRP_VALUE) |
+			MCAN_BTP_SJW(CONF_MCAN_NBTP_NSJW_VALUE) |
+			MCAN_BTP_TSEG1(CONF_MCAN_NBTP_NTSEG1_VALUE) |
+			MCAN_BTP_TSEG2(CONF_MCAN_NBTP_NTSEG2_VALUE);
+	hw->MCAN_FBTP = MCAN_FBTP_FBRP(CONF_MCAN_FBTP_FBRP_VALUE) |
+			MCAN_FBTP_FSJW(CONF_MCAN_FBTP_FSJW_VALUE) |
+			MCAN_FBTP_FTSEG1(CONF_MCAN_FBTP_FTSEG1_VALUE) |
+			MCAN_FBTP_FTSEG2(CONF_MCAN_FBTP_FTSEG2_VALUE) |
 			MCAN_FBTP_TDC |
 			MCAN_FBTP_TDCO(config->delay_compensation_offset);
 
@@ -218,7 +217,7 @@ static void _can_set_configuration(Mcan *hw, struct can_config *config)
  * \param module_inst  MCAN instance
  *
  */
-static void _can_enable_peripheral_clock(struct can_module *const module_inst)
+static void _mcan_enable_peripheral_clock(struct mcan_module *const module_inst)
 {
 	if (module_inst->hw == MCAN0) {
 		/* Turn on the digital interface clock. */
@@ -233,13 +232,11 @@ static void _can_enable_peripheral_clock(struct can_module *const module_inst)
  * \brief initialize can module.
  *
  * \param module_inst  MCAN instance
- *
  * \param hw  Base address of MCAN.
- *
  * \param config default configuration .
  */
-void can_init(struct can_module *const module_inst, Mcan *hw,
-		struct can_config *config)
+void mcan_init(struct mcan_module *const module_inst, Mcan *hw,
+		struct mcan_config *config)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -255,17 +252,17 @@ void can_init(struct can_module *const module_inst, Mcan *hw,
 	pmc_enable_pck(PMC_PCK_5);
 
 	/* Enable peripheral clock */
-	_can_enable_peripheral_clock(module_inst);
+	_mcan_enable_peripheral_clock(module_inst);
 
 
 	/* Configuration Change Enable. */
 	hw->MCAN_CCCR |= MCAN_CCCR_CCE;
 
 	/* Initialize the message memory address. */
-	_can_message_memory_init(hw);
+	_mcan_message_memory_init(hw);
 
 	/* Set the configuration. */
-	_can_set_configuration(hw, config);
+	_mcan_set_configuration(hw, config);
 
 	/* Enable the interrupt setting which no need change. */
 	hw->MCAN_ILE = MCAN_ILE_EINT0 | MCAN_ILE_EINT1;
@@ -279,7 +276,7 @@ void can_init(struct can_module *const module_inst, Mcan *hw,
  * \param module_inst  MCAN instance
  *
  */
-void can_start(struct can_module *const module_inst)
+void mcan_start(struct mcan_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR &= ~MCAN_CCCR_INIT;
 	/* Wait for the sync. */
@@ -287,12 +284,12 @@ void can_start(struct can_module *const module_inst)
 }
 
 /**
- * \brief stop can module when bus off occurs
+ * \brief stop mcan module when bus off occurs
  *
  * \param module_inst  MCAN instance
  *
  */
-void can_stop(struct can_module *const module_inst)
+void mcan_stop(struct mcan_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR |= MCAN_CCCR_INIT;
 	/* Wait for the sync. */
@@ -300,12 +297,12 @@ void can_stop(struct can_module *const module_inst)
 }
 
 /**
- * \brief switch can module into fd mode.
+ * \brief switch mcan module into fd mode.
  *
  * \param module_inst  MCAN instance
  *
  */
-void can_enable_fd_mode(struct can_module *const module_inst)
+void mcan_enable_fd_mode(struct mcan_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR |= MCAN_CCCR_INIT;
 	/* Wait for the sync. */
@@ -317,24 +314,24 @@ void can_enable_fd_mode(struct can_module *const module_inst)
 }
 
 /**
- * \brief disable fd mode of can module.
+ * \brief disable fd mode of mcan module.
  *
  * \param module_inst  MCAN instance
  *
  */
-void can_disable_fd_mode(struct can_module *const module_inst)
+void mcan_disable_fd_mode(struct mcan_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR &= MCAN_CCCR_CME(MCAN_CCCR_CME_ISO11898_1);
 }
 
 /**
- * \brief enable restricted mode of can module.
+ * \brief enable restricted mode of mcan module.
  *
  * \param module_inst  MCAN instance
  *
  */
-void can_enable_restricted_operation_mode(
-		struct can_module *const module_inst)
+void mcan_enable_restricted_operation_mode(
+		struct mcan_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR |= MCAN_CCCR_INIT;
 	/* Wait for the sync. */
@@ -345,24 +342,24 @@ void can_enable_restricted_operation_mode(
 }
 
 /**
- * \brief disable restricted mode of can module.
+ * \brief disable restricted mode of mcan module.
  *
  * \param module_inst  MCAN instance
  *
  */
-void can_disable_restricted_operation_mode(
-		struct can_module *const module_inst)
+void mcan_disable_restricted_operation_mode(
+		struct mcan_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR &= ~MCAN_CCCR_ASM;
 }
 
 /**
- * \brief enable bus monitor mode of can module.
+ * \brief enable bus monitor mode of mcan module.
  *
  * \param module_inst  MCAN instance
  *
  */
-void can_enable_bus_monitor_mode(struct can_module *const module_inst)
+void mcan_enable_bus_monitor_mode(struct mcan_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR |= MCAN_CCCR_INIT;
 	/* Wait for the sync. */
@@ -373,23 +370,23 @@ void can_enable_bus_monitor_mode(struct can_module *const module_inst)
 }
 
 /**
- * \brief disable bus monitor mode of can module.
+ * \brief disable bus monitor mode of mcan module.
  *
  * \param module_inst  MCAN instance
  *
  */
-void can_disable_bus_monitor_mode(struct can_module *const module_inst)
+void mcan_disable_bus_monitor_mode(struct mcan_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR &= ~MCAN_CCCR_MON;
 }
 
 /**
- * \brief enable sleep mode of can module.
+ * \brief enable sleep mode of mcan module.
  *
  * \param module_inst  MCAN instance
  *
  */
-void can_enable_sleep_mode(struct can_module *const module_inst)
+void mcan_enable_sleep_mode(struct mcan_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR |= MCAN_CCCR_CSR;
 	/* Wait for the sync. */
@@ -399,27 +396,27 @@ void can_enable_sleep_mode(struct can_module *const module_inst)
 }
 
 /**
- * \brief disable sleep mode of can module.
+ * \brief disable sleep mode of mcan module.
  *
  * \param module_inst  MCAN instance
  *
  */
-void can_disable_sleep_mode(struct can_module *const module_inst)
+void mcan_disable_sleep_mode(struct mcan_module *const module_inst)
 {
 	/* Enable peripheral clock */
-	_can_enable_peripheral_clock(module_inst);
+	_mcan_enable_peripheral_clock(module_inst);
 
 	module_inst->hw->MCAN_CCCR &= ~MCAN_CCCR_CSR;
 	while ((module_inst->hw->MCAN_CCCR & MCAN_CCCR_CSA));
 }
 
 /**
- * \brief enable test mode of can module.
+ * \brief enable test mode of mcan module.
  *
  * \param module_inst  MCAN instance
  *
  */
-void can_enable_test_mode(struct can_module *const module_inst)
+void mcan_enable_test_mode(struct mcan_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR |= MCAN_CCCR_INIT;
 	/* Wait for the sync. */
@@ -431,12 +428,12 @@ void can_enable_test_mode(struct can_module *const module_inst)
 }
 
 /**
- * \brief disable test mode of can module.
+ * \brief disable test mode of mcan module.
  *
  * \param module_inst  MCAN instance
  *
  */
-void can_disable_test_mode(struct can_module *const module_inst)
+void mcan_disable_test_mode(struct mcan_module *const module_inst)
 {
 	module_inst->hw->MCAN_CCCR &= ~MCAN_CCCR_TEST;
 }
@@ -445,22 +442,19 @@ void can_disable_test_mode(struct can_module *const module_inst)
  * \brief set standard receive CAN ID.
  *
  * \param module_inst  MCAN instance
- *
  * \param sd_filter  structure of CAN ID
- *
  * \param index  CAN messages memory index for different CAN ID
- *
  * \return status code.
  */
-enum status_code can_set_rx_standand_filter(
-		struct can_module *const module_inst,
-		struct can_standard_message_filter_element *sd_filter, uint32_t index)
+enum status_code mcan_set_rx_standand_filter(
+		struct mcan_module *const module_inst,
+		struct mcan_standard_message_filter_element *sd_filter, uint32_t index)
 {
 	if (module_inst->hw == MCAN0) {
-		can0_rx_standard_filter[index].S0.reg = sd_filter->S0.reg;
+		mcan0_rx_standard_filter[index].S0.reg = sd_filter->S0.reg;
 		return STATUS_OK;
 	} else if (module_inst->hw == MCAN1) {
-		can1_rx_standard_filter[index].S0.reg = sd_filter->S0.reg;
+		mcan1_rx_standard_filter[index].S0.reg = sd_filter->S0.reg;
 		return STATUS_OK;
 	}
 	return ERR_INVALID_ARG;
@@ -470,24 +464,21 @@ enum status_code can_set_rx_standand_filter(
  * \brief set extended receive CAN ID.
  *
  * \param module_inst  MCAN instance
- *
  * \param sd_filter  structure of extended CAN ID
- *
  * \param index  CAN messages memory index for different CAN ID
- *
  * \return status code.
  */
-enum status_code can_set_rx_extended_filter(
-		struct can_module *const module_inst,
-		struct can_extended_message_filter_element *et_filter, uint32_t index)
+enum status_code mcan_set_rx_extended_filter(
+		struct mcan_module *const module_inst,
+		struct mcan_extended_message_filter_element *et_filter, uint32_t index)
 {
 	if (module_inst->hw == MCAN0) {
-		can0_rx_extended_filter[index].F0.reg = et_filter->F0.reg;
-		can0_rx_extended_filter[index].F1.reg = et_filter->F1.reg;
+		mcan0_rx_extended_filter[index].F0.reg = et_filter->F0.reg;
+		mcan0_rx_extended_filter[index].F1.reg = et_filter->F1.reg;
 		return STATUS_OK;
 	} else if (module_inst->hw == MCAN1) {
-		can1_rx_extended_filter[index].F0.reg = et_filter->F0.reg;
-		can1_rx_extended_filter[index].F1.reg = et_filter->F1.reg;
+		mcan1_rx_extended_filter[index].F0.reg = et_filter->F0.reg;
+		mcan1_rx_extended_filter[index].F1.reg = et_filter->F1.reg;
 		return STATUS_OK;
 	}
 	return ERR_INVALID_ARG;
@@ -497,22 +488,19 @@ enum status_code can_set_rx_extended_filter(
  * \brief get dedicated rx buffer element .
  *
  * \param module_inst  MCAN instance
- *
  * \param rx_element  structure of element
- *
  * \param index  CAN messages memory index for receiving CAN ID
- *
  * \return status code.
  */
-enum status_code can_get_rx_buffer_element(
-		struct can_module *const module_inst,
-		struct can_rx_element_buffer *rx_element, uint32_t index)
+enum status_code mcan_get_rx_buffer_element(
+		struct mcan_module *const module_inst,
+		struct mcan_rx_element_buffer *rx_element, uint32_t index)
 {
 	if (module_inst->hw == MCAN0) {
-		memcpy(rx_element, &can0_rx_buffer[index], sizeof(struct can_rx_element_buffer));
+		memcpy(rx_element, &mcan0_rx_buffer[index], sizeof(struct mcan_rx_element_buffer));
 		return STATUS_OK;
 	} else if (module_inst->hw == MCAN1) {
-		memcpy(rx_element, &can1_rx_buffer[index], sizeof(struct can_rx_element_buffer));
+		memcpy(rx_element, &mcan1_rx_buffer[index], sizeof(struct mcan_rx_element_buffer));
 		return STATUS_OK;
 	}
 	return ERR_INVALID_ARG;
@@ -522,22 +510,19 @@ enum status_code can_get_rx_buffer_element(
  * \brief get FIFO rx buffer element .
  *
  * \param module_inst  MCAN instance
- *
  * \param rx_element  structure of element
- *
  * \param index  CAN messages memory index for receiving CAN ID
- *
  * \return status code.
  */
-enum status_code can_get_rx_fifo_0_element(
-		struct can_module *const module_inst,
-		struct can_rx_element_fifo_0 *rx_element, uint32_t index)
+enum status_code mcan_get_rx_fifo_0_element(
+		struct mcan_module *const module_inst,
+		struct mcan_rx_element_fifo_0 *rx_element, uint32_t index)
 {
 	if (module_inst->hw == MCAN0) {
-		memcpy(rx_element, &can0_rx_fifo_0[index], sizeof(struct can_rx_element_buffer));
+		memcpy(rx_element, &mcan0_rx_fifo_0[index], sizeof(struct mcan_rx_element_buffer));
 		return STATUS_OK;
 	} else if (module_inst->hw == MCAN1) {
-		memcpy(rx_element, &can1_rx_fifo_0[index], sizeof(struct can_rx_element_buffer));
+		memcpy(rx_element, &mcan1_rx_fifo_0[index], sizeof(struct mcan_rx_element_buffer));
 		return STATUS_OK;
 	}
 	return ERR_INVALID_ARG;
@@ -547,22 +532,19 @@ enum status_code can_get_rx_fifo_0_element(
  * \brief get FIFO rx buffer element .
  *
  * \param module_inst  MCAN instance
- *
  * \param rx_element  structure of element
- *
  * \param index  CAN messages memory index for receiving CAN ID
- *
  * \return status code.
  */
-enum status_code can_get_rx_fifo_1_element(
-		struct can_module *const module_inst,
-		struct can_rx_element_fifo_1 *rx_element, uint32_t index)
+enum status_code mcan_get_rx_fifo_1_element(
+		struct mcan_module *const module_inst,
+		struct mcan_rx_element_fifo_1 *rx_element, uint32_t index)
 {
 	if (module_inst->hw == MCAN0) {
-		memcpy(rx_element, &can0_rx_fifo_1[index], sizeof(struct can_rx_element_buffer));
+		memcpy(rx_element, &mcan0_rx_fifo_1[index], sizeof(struct mcan_rx_element_buffer));
 		return STATUS_OK;
 	} else if (module_inst->hw == MCAN1) {
-		memcpy(rx_element, &can1_rx_fifo_1[index], sizeof(struct can_rx_element_buffer));
+		memcpy(rx_element, &mcan1_rx_fifo_1[index], sizeof(struct mcan_rx_element_buffer));
 		return STATUS_OK;
 	}
 	return ERR_INVALID_ARG;
@@ -572,30 +554,27 @@ enum status_code can_get_rx_fifo_1_element(
  * \brief set dedicated transmit buffer element .
  *
  * \param module_inst  MCAN instance
- *
  * \param tx_element  structure of element
- *
  * \param index  CAN messages memory index for transmitting CAN ID
- *
  * \return status code.
  */
-enum status_code can_set_tx_buffer_element(
-		struct can_module *const module_inst,
-		struct can_tx_element *tx_element, uint32_t index)
+enum status_code mcan_set_tx_buffer_element(
+		struct mcan_module *const module_inst,
+		struct mcan_tx_element *tx_element, uint32_t index)
 {
 	uint32_t i;
 	if (module_inst->hw == MCAN0) {
-		can0_tx_buffer[index].T0.reg = tx_element->T0.reg;
-		can0_tx_buffer[index].T1.reg = tx_element->T1.reg;
-		for (i = 0; i < CONF_CAN_ELEMENT_DATA_SIZE; i++) {
-			can0_tx_buffer[index].data[i] = tx_element->data[i];
+		mcan0_tx_buffer[index].T0.reg = tx_element->T0.reg;
+		mcan0_tx_buffer[index].T1.reg = tx_element->T1.reg;
+		for (i = 0; i < CONF_MCAN_ELEMENT_DATA_SIZE; i++) {
+			mcan0_tx_buffer[index].data[i] = tx_element->data[i];
 		}
 		return STATUS_OK;
 	} else if (module_inst->hw == MCAN1) {
-		can1_tx_buffer[index].T0.reg = tx_element->T0.reg;
-		can1_tx_buffer[index].T1.reg = tx_element->T1.reg;
-		for (i = 0; i < CONF_CAN_ELEMENT_DATA_SIZE; i++) {
-			can1_tx_buffer[index].data[i] = tx_element->data[i];
+		mcan1_tx_buffer[index].T0.reg = tx_element->T0.reg;
+		mcan1_tx_buffer[index].T1.reg = tx_element->T1.reg;
+		for (i = 0; i < CONF_MCAN_ELEMENT_DATA_SIZE; i++) {
+			mcan1_tx_buffer[index].data[i] = tx_element->data[i];
 		}
 		return STATUS_OK;
 	}
@@ -606,24 +585,21 @@ enum status_code can_set_tx_buffer_element(
  * \brief set FIFO transmit buffer element .
  *
  * \param module_inst  MCAN instance
- *
  * \param tx_element  structure of element
- *
  * \param index  CAN messages memory index for transmitting CAN ID
- *
  * \return status code.
  */
-enum status_code can_get_tx_event_fifo_element(
-		struct can_module *const module_inst,
-		struct can_tx_event_element *tx_event_element, uint32_t index)
+enum status_code mcan_get_tx_event_fifo_element(
+		struct mcan_module *const module_inst,
+		struct mcan_tx_event_element *tx_event_element, uint32_t index)
 {
 	if (module_inst->hw == MCAN0) {
-		tx_event_element->E0.reg = can0_tx_event_fifo[index].E0.reg;
-		tx_event_element->E1.reg = can0_tx_event_fifo[index].E1.reg;
+		tx_event_element->E0.reg = mcan0_tx_event_fifo[index].E0.reg;
+		tx_event_element->E1.reg = mcan0_tx_event_fifo[index].E1.reg;
 		return STATUS_OK;
 	} else if (module_inst->hw == MCAN1) {
-		tx_event_element->E0.reg = can1_tx_event_fifo[index].E0.reg;
-		tx_event_element->E1.reg = can1_tx_event_fifo[index].E1.reg;
+		tx_event_element->E0.reg = mcan1_tx_event_fifo[index].E0.reg;
+		tx_event_element->E1.reg = mcan1_tx_event_fifo[index].E1.reg;
 		return STATUS_OK;
 	}
 	return ERR_INVALID_ARG;

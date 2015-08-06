@@ -124,18 +124,18 @@ void board_init(void)
 
 
 #ifdef CONF_BOARD_CAN0
-/* Configure the CAN0 TX and RX pins. */
-ioport_set_pin_peripheral_mode(PIN_CAN0_RX_IDX, PIN_CAN0_RX_FLAGS);
-ioport_set_pin_peripheral_mode(PIN_CAN0_TX_IDX, PIN_CAN0_TX_FLAGS);
-/* Configure the transiver0 RS & EN pins. */
-ioport_set_pin_dir(PIN_CAN0_TR_RS_IDX, IOPORT_DIR_OUTPUT);
-ioport_set_pin_dir(PIN_CAN0_TR_EN_IDX, IOPORT_DIR_OUTPUT);
+	/* Configure the CAN0 TX and RX pins. */
+	ioport_set_pin_peripheral_mode(PIN_CAN0_RX_IDX, PIN_CAN0_RX_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_CAN0_TX_IDX, PIN_CAN0_TX_FLAGS);
+	/* Configure the transiver0 RS & EN pins. */
+	ioport_set_pin_dir(PIN_CAN0_TR_RS_IDX, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(PIN_CAN0_TR_EN_IDX, IOPORT_DIR_OUTPUT);
 #endif
 
 #ifdef CONF_BOARD_CAN1
-/* Configure the CAN1 TX and RX pin. */
-ioport_set_pin_peripheral_mode(PIN_CAN1_RX_IDX, PIN_CAN1_RX_FLAGS);
-ioport_set_pin_peripheral_mode(PIN_CAN1_TX_IDX, PIN_CAN1_TX_FLAGS);
+	/* Configure the CAN1 TX and RX pin. */
+	ioport_set_pin_peripheral_mode(PIN_CAN1_RX_IDX, PIN_CAN1_RX_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_CAN1_TX_IDX, PIN_CAN1_TX_FLAGS);
 
 #endif
 
@@ -159,31 +159,28 @@ ioport_set_pin_peripheral_mode(PIN_CAN1_TX_IDX, PIN_CAN1_TX_FLAGS);
 
 
 #ifdef CONF_BOARD_USART_RXD
-/* Configure USART RXD pin */
-ioport_set_pin_peripheral_mode(USART0_RXD_GPIO,
-USART0_RXD_FLAGS);
+	/* Configure USART RXD pin */
+	ioport_set_pin_peripheral_mode(USART0_RXD_GPIO, USART0_RXD_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_USART_TXD
-/* Configure USART TXD pin */
-ioport_set_pin_peripheral_mode(USART0_TXD_GPIO,
-USART0_TXD_FLAGS);
+	/* Configure USART TXD pin */
+	ioport_set_pin_peripheral_mode(USART0_TXD_GPIO, USART0_TXD_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_USART_SCK
-/* Configure USART synchronous communication SCK pin */
-ioport_set_pin_peripheral_mode(PIN_USART0_SCK_IDX,PIN_USART0_SCK_FLAGS);
+	/* Configure USART synchronous communication SCK pin */
+	ioport_set_pin_peripheral_mode(PIN_USART0_SCK_IDX, PIN_USART0_SCK_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_USART_CTS
-/* Configure USART synchronous communication CTS pin */
-ioport_set_pin_peripheral_mode(PIN_USART0_CTS_IDX,PIN_USART0_CTS_FLAGS);
+	/* Configure USART synchronous communication CTS pin */
+	ioport_set_pin_peripheral_mode(PIN_USART0_CTS_IDX,PIN_USART0_CTS_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_USART_RTS
-/* Configure USART RTS pin */
-ioport_set_pin_peripheral_mode(PIN_USART0_RTS_IDX,
-PIN_USART0_RTS_FLAGS);
+	/* Configure USART RTS pin */
+	ioport_set_pin_peripheral_mode(PIN_USART0_RTS_IDX, PIN_USART0_RTS_FLAGS);
 #endif
 
 }

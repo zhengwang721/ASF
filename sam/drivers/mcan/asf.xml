@@ -7,28 +7,14 @@
 		<info type="keyword" value="technology">
 			<keyword value="Communication" />
 		</info>
-		<info type="appnote" value="ATxxxxx"/>
-		<info type="keyword" value="pdf">
-			<keyword value="MCAN"/>
-			<keyword value="Control Area Network"/>
-		</info>
-
-		<info type="description" value="pdf">
-			This application note describes how to use the ASF driver for interfacing the CAN on the SAM.
-		</info>
-
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="mcan.h"/>
 		<build type="c-source" value="mcan.c"/>
-
 		<build type="module-config" subtype="required-header-file" value="conf_mcan.h"/>
 		<build type="module-config" subtype="path" value="module_config"/>
-
-		<build type="doxygen-example-path" value="quick_start"/>
-		<build type="doxygen-example-path" value="quick_start_fd"/>
 		<build type="doxygen-entry-point" value="asfdoc_sam_mcan_group"/>
 		<build type="doxygen-quick-start" value="asfdoc_sam_mcan_exqsg"/>
-
+		
 		<device-support value="same70"/>	
 		<device-support value="samv70"/>
 		<device-support value="samv71"/>

@@ -327,7 +327,7 @@
 /** AFEC channel for potentiometer */
 #define AFEC_CHANNEL_POTENTIOMETER  AFEC_CHANNEL_0
 
-#define CAN_MODULE              MCAN1
+#define MCAN_MODULE              MCAN1
 /*----------------------------------------------------------------------------*/
 /**
  * \page samv71_xpro_CAN "SAMV71-XPRO - CAN"
