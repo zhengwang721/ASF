@@ -476,7 +476,10 @@ int main(void)
 	DEFINE_TEST_ARRAY(i2c_tests) = {
 		&i2c_init_test,
 		&i2c_master_transfer_test,
+                /* samc21 cpu clock is too low for full speed test*/
+#if (!SAMC21)
 		&i2c_full_speed_test,
+#endif
 	};
 
 	/* Define the test suite */
