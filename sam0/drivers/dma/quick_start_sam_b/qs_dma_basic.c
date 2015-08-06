@@ -98,6 +98,7 @@ static void setup_transfer_descriptor(struct dma_descriptor *descriptor )
 //! [setup]
 int main(void)
 {
+	bool passed;
 	//! [sample_resource]
 	struct dma_resource example_resource;
 	//! [sample_resource]
@@ -135,7 +136,12 @@ int main(void)
 		/* Wait for transfer done */
 	}
 	//! [main_2]
-
+	passed = false;
+	//! [main_3]
+	if (!memcmp(source_memory, destination_memory, sizeof(source_memory))) {
+		passed = true;
+	}
+	//! [main_3]
 	while (true) {
 		/* Nothing to do */
 	}

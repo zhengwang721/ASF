@@ -149,12 +149,26 @@ static void _dma_release_channel(uint8_t channel)
  * modified by the user application.
  *
  * The default configuration is as follows:
- *  \li Software trigger is used as the transfer trigger
- *  \li Priority level 0
- *  \li Only software/event trigger
- *  \li Requires a trigger for each transaction
- *  \li No event input /output
- *  \li DMA channel is disabled during sleep mode (if has the feature)
+ *  \li Set source max burst number as 1
+ *  \li Set source tokens as 1
+ *  \li Set source tokens as 1
+ *  \li Set source peripheral as memory
+ *  \li Set source peripheral delay as 0
+ *  \li Disable source top priority
+ *  \li Set source top priority channel as 0
+ *  \li Disable source high priority
+ *  \li Set source high priority channel as 0
+ *  \li Set destination max burst number as 1
+ *  \li Set destination tokens as 1
+ *  \li Set destination tokens as 1
+ *  \li Set destination peripheral as memory
+ *  \li Set destination peripheral delay as 0
+ *  \li Disable destination top priority
+ *  \li Set destination top priority channel as 0
+ *  \li Disable destination high priority
+ *  \li Set destination high priority channel as 0
+ *  \li Disable the joint mode
+ *  \li Disable the endion swap
  * \param[out] config Pointer to the configuration
  *
  */

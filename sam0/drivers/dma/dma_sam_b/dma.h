@@ -3,7 +3,7 @@
  *
  * \brief SAM Direct Memory Access Controller Driver
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -479,18 +479,13 @@ static inline enum status_code dma_get_job_status(struct dma_resource *resource)
  * modified by the user application.
  *
  * The default configuration is as follows:
- *  \li Set the descriptor as valid
- *  \li Disable event output
- *  \li No block action
+ *  \li Set the read start address as 0
+ *  \li Set the write start address as 0
+ *  \li Set buffer size as 1
  *  \li Set beat size as byte
- *  \li Enable source increment
- *  \li Enable destination increment
- *  \li Step size is applied to the destination address
- *  \li Address increment is beat size multiplied by 1
- *  \li Default transfer size is set to 0
- *  \li Default source address is set to NULL
- *  \li Default destination address is set to NULL
- *  \li Default next descriptor not available
+ *  \li Enable the interrupt
+ *  \li Enable the channel stops when buffer done
+ *  \li Set next command address to 0
  * \param[out] config Pointer to the configuration
  *
  */

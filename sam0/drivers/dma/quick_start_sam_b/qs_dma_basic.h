@@ -3,7 +3,7 @@
  *
  * \brief SAM Direct Memory Access Controller(DMAC) Driver Quick Start
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -149,4 +149,6 @@
  *
  * -# Waiting for the setting of the transfer done flag.
  *    \snippet qs_dma_basic.c main_2
+  * -# Compare the value of source and destination.
+  *    \snippet qs_dma_basic.c main_3
  */
