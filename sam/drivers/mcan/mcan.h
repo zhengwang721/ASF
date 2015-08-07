@@ -404,10 +404,10 @@ typedef union {
 #define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_Pos            30
 #define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_Msk            (0x3ul << MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_Pos)
 #define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(value)         ((MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_Msk & ((value) << MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_Pos)))
-#define   MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_RANGEM       MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(0)
-#define   MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_DUAL         MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(1)
-#define   MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_CLASSIC      MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(2)
-#define   MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_RANGE        MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(3)
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_RANGEM       MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(0)
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_DUAL         MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(1)
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_CLASSIC      MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(2)
+#define MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_RANGE        MCAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT(3)
 
 /**
  * \brief MCAN extended message ID filter element structure.
@@ -516,11 +516,11 @@ enum mcan_timeout_mode {
  */
 enum mcan_nonmatching_frames_action {
 	/** Accept in Rx FIFO 0. */
-	CAN_NONMATCHING_FRAMES_FIFO_0,
+	MCAN_NONMATCHING_FRAMES_FIFO_0,
 	/** Accept in Rx FIFO 1. */
-	CAN_NONMATCHING_FRAMES_FIFO_1,
+	MCAN_NONMATCHING_FRAMES_FIFO_1,
 	/** Reject. */
-	CAN_NONMATCHING_FRAMES_REJECT,
+	MCAN_NONMATCHING_FRAMES_REJECT,
 };
 
 /**
@@ -657,8 +657,8 @@ static inline void mcan_get_config_defaults(
 	config->timeout_enable = false;
 	config->delay_compensation_offset = 0;
 	config->delay_compensation_filter_window_length = 0;
-	config->nonmatching_frames_action_standard = CAN_NONMATCHING_FRAMES_REJECT;
-	config->nonmatching_frames_action_extended = CAN_NONMATCHING_FRAMES_REJECT;
+	config->nonmatching_frames_action_standard = MCAN_NONMATCHING_FRAMES_REJECT;
+	config->nonmatching_frames_action_extended = MCAN_NONMATCHING_FRAMES_REJECT;
 	config->remote_frames_standard_reject = true;
 	config->remote_frames_extended_reject = true;
 	config->extended_id_mask = 0x1FFFFFFF;

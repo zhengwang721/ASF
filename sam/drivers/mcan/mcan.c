@@ -444,6 +444,7 @@ void mcan_disable_test_mode(struct mcan_module *const module_inst)
  * \param module_inst  MCAN instance
  * \param sd_filter  structure of CAN ID
  * \param index  CAN messages memory index for different CAN ID
+ *
  * \return status code.
  */
 enum status_code mcan_set_rx_standand_filter(
@@ -466,6 +467,7 @@ enum status_code mcan_set_rx_standand_filter(
  * \param module_inst  MCAN instance
  * \param sd_filter  structure of extended CAN ID
  * \param index  CAN messages memory index for different CAN ID
+ *
  * \return status code.
  */
 enum status_code mcan_set_rx_extended_filter(
@@ -490,6 +492,7 @@ enum status_code mcan_set_rx_extended_filter(
  * \param module_inst  MCAN instance
  * \param rx_element  structure of element
  * \param index  CAN messages memory index for receiving CAN ID
+ *
  * \return status code.
  */
 enum status_code mcan_get_rx_buffer_element(
@@ -512,6 +515,7 @@ enum status_code mcan_get_rx_buffer_element(
  * \param module_inst  MCAN instance
  * \param rx_element  structure of element
  * \param index  CAN messages memory index for receiving CAN ID
+ *
  * \return status code.
  */
 enum status_code mcan_get_rx_fifo_0_element(
@@ -534,6 +538,7 @@ enum status_code mcan_get_rx_fifo_0_element(
  * \param module_inst  MCAN instance
  * \param rx_element  structure of element
  * \param index  CAN messages memory index for receiving CAN ID
+ *
  * \return status code.
  */
 enum status_code mcan_get_rx_fifo_1_element(
@@ -556,6 +561,7 @@ enum status_code mcan_get_rx_fifo_1_element(
  * \param module_inst  MCAN instance
  * \param tx_element  structure of element
  * \param index  CAN messages memory index for transmitting CAN ID
+ *
  * \return status code.
  */
 enum status_code mcan_set_tx_buffer_element(
@@ -587,6 +593,7 @@ enum status_code mcan_set_tx_buffer_element(
  * \param module_inst  MCAN instance
  * \param tx_element  structure of element
  * \param index  CAN messages memory index for transmitting CAN ID
+ *
  * \return status code.
  */
 enum status_code mcan_get_tx_event_fifo_element(
