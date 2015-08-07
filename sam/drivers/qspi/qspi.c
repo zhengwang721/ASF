@@ -64,6 +64,12 @@
  * @{
  */
 
+static void my_memcpy(uint8_t* dest, uint8_t* source, uint32_t count)
+{
+    while (count--) {
+		*dest++ = *source++;
+	}
+}
 
 /**
  * \brief Ends ongoing transfer by releasing CS of QSPI peripheral.
@@ -285,8 +291,8 @@ void qspi_get_config_default(struct qspi_config_t * qspi_config)
 	qspi_config->delay_between_ct = 0;
 	qspi_config->clock_polarity = 0;
 	qspi_config->clock_phase = 0;
-	qspi_config->baudrate = 1000000;
-	qspi_config->transfer_delay = 0x40;
+	qspi_config->baudrate = 50000000;
+	qspi_config->transfer_delay = 0;
 	qspi_config->scrambling_en = false;
 	qspi_config->scrambling_random_value_dis = false;
 	qspi_config->scrambling_user_key = 0;
@@ -325,7 +331,6 @@ enum status_code qspi_read(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes)
 			} else {
 				if(num_of_attempt > 0xFFFF) {
 					status = ERR_TIMEOUT;
-					puts(" SPI Read Error \n\r");
 					break;
 				} else {
 					status = STATUS_ERR_BUSY;
@@ -334,7 +339,7 @@ enum status_code qspi_read(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes)
 			}
 		}
 	} else {
-		/* dummy read  and write to discard  first bytes recveived and start receiving new data*/
+		/* Dummy read  and write to discard  first bytes received and start receiving new data */
 		dummy = qspi_read_spi(qspi);
 		qspi_write_spi(qspi, dummy);
 		for(; num_of_bytes_read < num_of_bytes;) {
@@ -352,7 +357,6 @@ enum status_code qspi_read(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes)
 			} else {
 				if(num_of_attempt > 0xFFFF) {
 					status = ERR_TIMEOUT;
-					puts(" SPI MultiRead Error \n\r");
 					break;
 				} else {
 					status = STATUS_ERR_BUSY;
@@ -398,7 +402,6 @@ enum status_code qspi_write(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes
 				num_of_attempt++;
 				if(num_of_attempt > 0xFFFF) {
 					status = ERR_TIMEOUT;
-					puts(" SPI Write Error \n\r");
 					break;
 				}
 			}
@@ -421,7 +424,6 @@ enum status_code qspi_write(Qspi *qspi, uint16_t *us_data, uint32_t num_of_bytes
 				num_of_attempt++;
 				if(num_of_attempt > 0xFFFF) {
 					status = ERR_TIMEOUT;
-					puts(" SPI Multi Write Error \n\r");
 					break;
 				}
 			}
@@ -497,18 +499,18 @@ enum status_code qspi_flash_execute_command(struct qspid_t *qspid, enum qspi_acc
 		qspi_set_instruction_code(qspid->qspi_hw, command);
 		qspi_set_instruction_frame(qspid->qspi_hw, *frame);
 
-		/** to synchronize system bus accesses */
+		/* To synchronize system bus accesses */
 		qspi_get_inst_frame(qspid->qspi_hw);
-		memcpy(buffer.data_rx , qspi_buffer,  buffer.rx_data_size);
+		my_memcpy(buffer.data_rx , qspi_buffer,  buffer.rx_data_size);
 	} else if (read_write == QSPI_WRITE_ACCESS) {
 		assert(buffer.tx_data_size);
 
 		qspi_set_instruction_code(qspid->qspi_hw, command);
 		qspi_set_instruction_frame(qspid->qspi_hw, *frame);
-		/** to synchronize system bus accesses */
+		/* To synchronize system bus accesses */
 		qspi_get_inst_frame(qspid->qspi_hw);
 
-		memcpy(qspi_buffer, buffer.data_tx, buffer.tx_data_size);
+		my_memcpy(qspi_buffer, buffer.data_tx, buffer.tx_data_size);
 	}
 
 	if (read_write == QSPI_READ_ACCESS || read_write == QSPI_WRITE_ACCESS) {
@@ -516,7 +518,7 @@ enum status_code qspi_flash_execute_command(struct qspid_t *qspid, enum qspi_acc
 		__ISB();
 		qspi_end_transfer(qspid->qspi_hw);
 	}
-	/** poll CR reg to know status if instruction has end */
+	/* Poll CR reg to know status if instruction has end */
 	while(!(qspid->qspi_hw->QSPI_SR & QSPI_SR_INSTRE));
 	frame->inst_frame.val = 0;
 
@@ -549,20 +551,20 @@ enum status_code qspi_flash_access_memory(struct qspid_t *qspid, enum qspi_acces
 		qspi_set_scrambling_mode(qspid->qspi_hw, scramble_flag, 1);
 	}
 	qspi_set_instruction_frame(qspid->qspi_hw, *frame);
-	/** to synchronize system bus accesses */
+	/* To synchronize system bus accesses */
 	qspi_get_inst_frame(qspid->qspi_hw);
 	frame->inst_frame.val = 0;
 
 	if (read_write == QSPI_WRITE_ACCESS) {
-		memcpy(qspi_mem, buffer->data_tx , buffer->tx_data_size);
+		my_memcpy(qspi_mem, buffer->data_tx , buffer->tx_data_size);
 	} else {
-		memcpy(buffer->data_rx, qspi_mem, buffer->rx_data_size);
+		my_memcpy(buffer->data_rx, qspi_mem, buffer->rx_data_size);
 	}
 	__DSB();
 	__ISB();
-	/** End transmission after all data has been sent */
+	/* End transmission after all data has been sent */
 	qspi_end_transfer(qspid->qspi_hw);
-	/** poll CR reg to know status if instruction has end */
+	/* Poll CR reg to know status if instruction has end */
 	while(!(qspid->qspi_hw->QSPI_SR & QSPI_SR_INSTRE));
 
 	status = STATUS_OK;

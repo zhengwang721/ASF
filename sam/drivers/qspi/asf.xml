@@ -21,7 +21,7 @@
 			<device-support value="sams70q"/>
 			<require idref="sam.utils"/>
 			<require idref="common.services.basic.clock"/>
-			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
+			<generator value="doxygen-module" default-mcu="unspecified-samv71"/>
 		</module>
 	</select-by-device>
 </asf>

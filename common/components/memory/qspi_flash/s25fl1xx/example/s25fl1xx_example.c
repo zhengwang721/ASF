@@ -86,6 +86,7 @@
 
 #include "asf.h"
 #include "conf_board.h"
+#include "getting_started_hex.h"
 #include "s25fl1xx.h"
 
 #define STRING_EOL    "\r"
@@ -93,25 +94,11 @@
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
-/* Clock polarity. */
-#define QSPI_CLK_POLARITY         0
-
-/* Clock phase. */
-#define QSPI_CLK_PHASE            0
-
-/* Delay before SPCK. */
-#define QSPI_DLYBS                0x40
-
-/* Delay between consecutive transfers. */
-#define QSPI_DLYBCT               0x10
-
 struct qspid_t g_qspid = {QSPI, 0, 0, 0};
 
 struct qspi_config_t mode_config = {0, false, false, 0, 0, 0, 0, 0, 0, 0, 0, false, false, 0};
 
-uint8_t buffercode[] = {
-	#include "getting_started_hex.h"
-};
+#define WRITE_SIZE  sizeof(buffercode)
 
 /**
  *  \brief Configure the console uart.
@@ -145,7 +132,7 @@ int main(void)
 	uint32_t (*__start_new)(void);
 	uint32_t buffer[4];
 
-	uint8_t *memory;
+	uint8_t *memory = (uint8_t *)QSPIMEM_ADDR;
 	enum status_code status = STATUS_OK;
 
 	/* Initialize the system */
@@ -172,44 +159,35 @@ int main(void)
 		}
 	}
 
-
-	/* enable quad mode */
+	/* Enable quad mode */
 	s25fl1xx_set_quad_mode(&g_qspid, 1);
 
-	/* Unlock block protection */
-	s25fl1xx_unprotect(&g_qspid);
-	s25fl1xx_data_unprotect(&g_qspid);
-
-	/* erase entire chip  */
-	s25fl1xx_erase_chip(&g_qspid);
+	/* Erase entire chip  */
+	s25fl1xx_erase_64k_block(&g_qspid, 0);
 
 	/* Flash the code to QSPI flash */
-	puts("Writing to Memory\n");
+	puts("Writing to Memory\r\n");
 
-	s25fl1xx_write(&g_qspid, (uint32_t *)buffercode, sizeof(buffercode), 0, 0);
+	s25fl1xx_write(&g_qspid, (uint32_t *)buffercode, WRITE_SIZE, 0, 0);
 
-	/* Lock block protection */
-	s25fl1xx_protect(&g_qspid);
+	printf("\rExample code written 0x%x bytes to Memory\r\n", sizeof(buffercode));
 
-	printf("\rExample code written 0x%x bytes to Memory\r", sizeof(buffercode));
-
-	puts("Verifying \r");
+	puts("Verifying \r\n");
 	/* Start continuous read mode to enter in XIP mode*/
 	s25fl1xx_read_quad_io(&g_qspid, buffer, sizeof(buffer), 0, 1, 0);
 
-	memory = (uint8_t *)QSPIMEM_ADDR;
-	for (idx = 0; idx < sizeof(buffercode); idx++) {
-		if(*memory == buffercode[idx]) {
+	for (idx = 0; idx < WRITE_SIZE; idx++) {
+		if(*(memory) == buffercode[idx]) {
 			memory++;
 		} else {
 			mem_verified = 1;
-			printf("\nData does not match at 0x%x \r", (int)memory);
+			printf("\nData does not match at 0x%x \r\n", (int)memory);
 			break;
 		}
 	}
 	if (!mem_verified) {
-		puts("Everything is OK \r");
-		/* set PC and SP */
+		puts("Everything is OK \r\n");
+		/* Set PC and SP */
 		__start_new = (uint32_t(*) (void)) buffer[1];
 		__start_sp = buffer[0];
 
@@ -221,5 +199,6 @@ int main(void)
 		__start_new();
 	}
 
+	puts("Verified failed \r\n");
 	while(1);
 }

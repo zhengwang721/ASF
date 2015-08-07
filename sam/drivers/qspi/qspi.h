@@ -87,33 +87,33 @@ struct qspi_inst_frame_t {
 	union _qspiinst_frame {
 		uint32_t val;
 		struct _qspiinst_frame_bitmap {
-					/** Width of QSPI Addr , inst data */
+					/* Width of QSPI Addr , inst data */
 			uint32_t b_width:3,
-					/** Reserved */
+					/* Reserved */
 					reserved0:1,
-					/** Enable Inst */
+					/* Enable Inst */
 					b_inst_en:1,
-					/** Enable Address */
+					/* Enable Address */
 					b_addr_en:1,
-					/** Enable Option */
+					/* Enable Option */
 					b_opt_en:1,
 					/** Enable Data */
 					b_data_en:1,
-					/** Option Length */
+					/* Option Length */
 					b_opt_len:2,
-					/** Addrs Length */
+					/* Addrs Length */
 					b_addr_len:1,
-					/** Option Length */
+					/* Option Length */
 					reserved1:1,
-					/** Transfer type */
+					/* Transfer type */
 					b_tfr_type:2,
-					/** Continoues read mode */
+					/* Continoues read mode */
 					b_continues_read:1,
-					/** Reserved*/
+					/* Reserved*/
 					reserved2:1,
-					/**< Unicast hash match */
+					/*< Unicast hash match */
 					b_dummy_cycles:5,
-					/** Reserved */
+					/* Reserved */
 					reserved3:11;
 		} bm;
 	} inst_frame;
@@ -124,13 +124,13 @@ struct qspi_inst_frame_t {
  * \brief Qspi buffer structure
  */
 struct qspi_buffer_t {
-	/** Tx buffer size */
+	/* Tx buffer size */
 	uint32_t tx_data_size;
-	/** Rx buffer size */
+	/* Rx buffer size */
 	uint32_t rx_data_size;
-	/** Tx buffer */
+	/* Tx buffer */
 	uint32_t *data_tx;
-	/** Rx buffer */
+	/* Rx buffer */
 	uint32_t *data_rx;
 };
 
@@ -138,9 +138,9 @@ struct qspi_buffer_t {
  * \brief Qspi command structure
  */
 struct qspi_mem_cmd_t {
-	/** Qspi instruction code */
+	/* Qspi instruction code */
 	uint8_t instruction;
-	/** Qspi option code */
+	/* Qspi option code */
 	uint8_t option;
 };
 
@@ -148,13 +148,13 @@ struct qspi_mem_cmd_t {
  * \brief Qspi driver structure
  */
 struct qspid_t {
-	/** QSPI Hw instance */
+	/* QSPI Hw instance */
 	Qspi *qspi_hw;
-	/** Qspi command structure */
+	/* Qspi command structure */
 	struct qspi_mem_cmd_t qspi_command;
-	/** Qspi buffer */
+	/* Qspi buffer */
 	struct qspi_buffer_t qspi_buffer;
-	/** Qspi QSPI mode Frame register informations */
+	/* Qspi QSPI mode Frame register informations */
 	struct qspi_inst_frame_t *qspi_frame;
 };
 
@@ -162,33 +162,33 @@ struct qspid_t {
  * \brief Qspi config structure
  */
 struct qspi_config_t {
-	/** Qspi serial memory mode */
+	/* Qspi serial memory mode */
 	enum qspi_run_mode  serial_memory_mode;
-	/** Local loop back enable */
+	/* Local loop back enable */
 	bool loopback_en;
-	/** Wait data read for transfer */
+	/* Wait data read for transfer */
 	bool wait_data_for_transfer;
-	/** Chip select mode */
+	/* Chip select mode */
 	enum qspi_cs_mode csmode;
-	/** Numbers of bits per transfer */
+	/* Numbers of bits per transfer */
 	uint32_t bits_per_transfer;
-	/** Minimum inactive QCS delay */
+	/* Minimum inactive QCS delay */
 	uint32_t min_delay_qcs;
-	/** Delay between consecutive transfers */
+	/* Delay between consecutive transfers */
 	uint32_t delay_between_ct;
-	/** Qspi clock polarity */
+	/* Qspi clock polarity */
 	uint32_t clock_polarity;
-	/** Qspi clock phase */
+	/* Qspi clock phase */
 	uint32_t clock_phase;
-	/** Qspi baudrate(Hz) */
+	/* Qspi baudrate(Hz) */
 	uint32_t baudrate;
-	/** Qspi transfer delay */
+	/* Qspi transfer delay */
 	uint32_t transfer_delay;
-	/** Scrambling/unscrambling enable */
+	/* Scrambling/unscrambling enable */
 	bool scrambling_en;
-	/** Scrambling/unscrambling random value disable */
+	/* Scrambling/unscrambling random value disable */
 	bool scrambling_random_value_dis;
-	/** Scrambling user key */
+	/* Scrambling user key */
 	uint32_t scrambling_user_key;
 };
 
@@ -196,11 +196,11 @@ struct qspi_config_t {
  * \brief Qspi access modes
  */
 enum qspi_access {
-	/** Cmd access */
+	/* Cmd access */
 	QSPI_CMD_ACCESS  = 0,
-	/** Read access */
+	/* Read access */
 	QSPI_READ_ACCESS,
-	/** Write access */
+	/* Write access */
 	QSPI_WRITE_ACCESS
 };
 
@@ -317,8 +317,8 @@ static inline void qspi_set_clock_phase(Qspi *qspi, uint32_t phase)
  * \brief Set qspi clock baudrate.
  *
  * \param qspi  Pointer to a Qspi instance.
- * \param baudrate   Baudrate to be set.
- * \return status Baudrate set result.
+ * \param baudrate   Baud rate to be set.
+ * \return status Baud rate set result.
  */
 static inline enum status_code qspi_set_baudrate(Qspi *qspi, uint32_t baudrate)
 {
@@ -460,9 +460,9 @@ enum status_code qspi_flash_access_memory(struct qspid_t *qspid, enum qspi_acces
 /// @endcond
 
 /**
- * \page sam_spi_quickstart Quickstart guide for SAM QSPI driver
+ * \page sam_spi_quickstart Quick start guide for SAM QSPI driver
  *
- * This is the quickstart guide for the \ref spi_group "SAM QSPI driver",
+ * This is the quick start guide for the \ref spi_group "SAM QSPI driver",
  * with step-by-step instructions on how to configure and use the driver in a
  * selection of use cases.
  *

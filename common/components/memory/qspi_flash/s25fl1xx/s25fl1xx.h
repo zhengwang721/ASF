@@ -184,8 +184,6 @@
 #define READ_ARRAY_DUAL_IO               0xBB
 /** Fast Read array  command code. */
 #define READ_ARRAY_QUAD_IO               0xEB
-/** Continuous Read Mode Reset command code. */
-#define CONTINOUS_READ_MODE_RESET        0xEB
 /** Deep power-down command code. */
 #define DEEP_PDOWN                       0xB9
 /** Resume from deep power-down command code. */
@@ -195,7 +193,7 @@
 /** Read manufacturer and device ID command code. */
 #define READ_JEDEC_ID                    0x9F
 
-/** SPI Flash Manufacturer JEDEC ID */
+/** QSPI Flash Manufacturer JEDEC ID */
 #define ATMEL_SPI_FLASH                  0x1F
 #define ST_SPI_FLASH                     0x20
 #define WINBOND_SPI_FLASH                0xEF
@@ -231,7 +229,7 @@ void s25fl1xx_set_read_latency_control(struct qspid_t *qspid, uint8_t latency);
 uint8_t s25fl1xx_erase_chip(struct qspid_t *qspid);
 uint8_t s25fl1xx_erase_sector(struct qspid_t *qspid, uint32_t address);
 uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address);
-uint8_t s25fl1xx_write(struct qspid_t *qspid, uint32_t *pData, uint32_t size, uint32_t address, uint8_t secure);
+uint8_t s25fl1xx_write(struct qspid_t *qspid, uint32_t *pdata, uint32_t size, uint32_t address, uint8_t secure);
 uint8_t s25fl1xx_read(struct qspid_t *qspid, uint32_t *data,  uint32_t size, uint32_t address);
 uint8_t s25fl1xx_read_dual(struct qspid_t *qspid, uint32_t *data, uint32_t size, uint32_t address);
 uint8_t s25fl1xx_read_quad(struct qspid_t *qspid, uint32_t *data, uint32_t size, uint32_t address);

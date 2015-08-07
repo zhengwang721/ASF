@@ -23,7 +23,7 @@
  *    from this software without specific prior written permission.
  *
  * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
+ *    Atmel micro controller product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -42,10 +42,10 @@
  */
 
 /**
- * \addtogroup at25d_module S25FL1 driver
- * \ingroup lib_spiflash
- * The S25FL1 serial dataflash driver is based on the corresponding S25FL1 SPI driver.
- * A S25FL1 instance has to be initialized using the Dataflash levle function
+ * \add to group at25d_module S25FL1 driver
+ * \in group lib_spiflash
+ * The S25FL1 serial data flash driver is based on the corresponding S25FL1 SPI driver.
+ * A S25FL1 instance has to be initialized using the data flash level function
  * S25FL1D_Configure(). S25FL1 Dataflash can be automatically detected using
  * the S25FL1D_FindDevice() function. Then S25FL1 dataflash operations such as
  * read, write and erase DF can be launched using s25fl1xx_send_command function
@@ -59,7 +59,7 @@
  * <li> Erases all chip using S25FL1D_EraseBlock().</li>
  * <li> Erases a specified block using S25FL1D_EraseBlock().</li>
  * <li> Poll until the S25fl1 has completed of corresponding operations using
- * s25fl1xx_is_busy(qspid).</li>
+ * s25fl1xx_wait_memory_access_end(qspid).</li>
  * <li> Retrieves and returns the S25fl1 current using s25fl1xx_read_status(qspid).</li>
  * </ul>
  *
@@ -70,7 +70,7 @@
 /**
  * \file
  *
- * Implementation for the S25FL1 Serialflash driver.
+ * Implementation for the S25FL1 serial flash driver.
  *
  */
 
@@ -109,7 +109,6 @@ struct qspi_inst_frame_t *mem;
 enum status_code s25fl1xx_initialize(Qspi *qspi, struct qspi_config_t *mode_config, uint32_t use_default_config)
 {
 	enum status_code status = STATUS_OK;
-	puts("-I- Initialize S25FL1xx.\r");
 
 	dev = (struct qspi_inst_frame_t *)malloc (sizeof(struct qspi_inst_frame_t));
 	memset(dev, 0, sizeof(struct qspi_inst_frame_t));
@@ -145,7 +144,7 @@ static void s25fl1xx_exec_command(struct qspid_t *qspid, uint8_t instr, uint32_t
 	qspid->qspi_buffer.data_tx = tx_data;
 	qspid->qspi_buffer.data_rx = rx_data;
 
-	/** to prevent unaligned access */
+	/** To prevent unaligned access */
 	if((size % sizeof(uint32_t)) && size > 1) {
 		size += (sizeof(uint32_t) - (size % sizeof(uint32_t)));
 	}
@@ -163,39 +162,6 @@ static void s25fl1xx_exec_command(struct qspid_t *qspid, uint8_t instr, uint32_t
 		qspid->qspi_buffer.rx_data_size = size;
 	}
 	qspi_flash_execute_command(qspid, read_write);
-}
-
-/**
- * \brief Read/write data from serial flash memory.
- *
- * \param qspid  Pointer to an S25FL1 qspid_t struct..
- * \param instr Instruction to be execute.
- * \param addr  Address to send frame.
- * \param tx_data  Data buffer to send data.
- * \param rx_data  Data buffer to receive data.
- * \param read_write  Read/write access.
- * \param size  Data size to be read/write.
- * \param secure  Enable or disable scramble on QSPI.
- */
-static void s25fl1xx_memory_access(struct qspid_t *qspid, uint8_t instr, uint32_t addr, uint32_t *tx_data, uint32_t *rx_data, enum qspi_access read_write, uint32_t size, uint8_t secure)
-{
-	qspid->qspi_command.instruction = instr;
-	qspid->qspi_buffer.data_tx = tx_data;
-	qspid->qspi_buffer.data_rx = rx_data;
-	mem->addr= addr;
-	mem->inst_frame.bm.b_inst_en = 1;
-	mem->inst_frame.bm.b_data_en = 1;
-	mem->inst_frame.bm.b_addr_en = 1;
-	qspid->qspi_frame = mem;
-
-	if (read_write == QSPI_WRITE_ACCESS) {
-		mem->inst_frame.bm.b_tfr_type = (QSPI_IFR_TFRTYP_TRSFR_WRITE_MEMORY >> QSPI_IFR_TFRTYP_Pos);
-		qspid->qspi_buffer.tx_data_size = size;
-	} else {
-		mem->inst_frame.bm.b_tfr_type = (QSPI_IFR_TFRTYP_TRSFR_READ_MEMORY >> QSPI_IFR_TFRTYP_Pos);
-		qspid->qspi_buffer.rx_data_size = size;
-	}
-	qspi_flash_access_memory(qspid, read_write, secure);
 }
 
 /**
@@ -255,7 +221,7 @@ static uint32_t s25fl1xx_read_status(struct qspid_t *qspid)
  *
  * \param qspid  Pointer to an S25FL1 qspid_t struct.
  */
-static void s25fl1xx_is_busy(struct qspid_t *qspid)
+static void s25fl1xx_wait_memory_access_end(struct qspid_t *qspid)
 {
 	while(s25fl1xx_read_status1(qspid) & STATUS_RDYBSY);
 }
@@ -287,6 +253,39 @@ static void s25fl1xx_disable_write(struct qspid_t *qspid)
 		s25fl1xx_exec_command(qspid, WRITE_DISABLE, 0, 0, QSPI_CMD_ACCESS, 0);
 		status = s25fl1xx_read_status1(qspid);
 	}
+}
+
+/**
+ * \brief Read/write data from serial flash memory.
+ *
+ * \param qspid  Pointer to an S25FL1 qspid_t struct..
+ * \param instr Instruction to be execute.
+ * \param addr  Address to send frame.
+ * \param tx_data  Data buffer to send data.
+ * \param rx_data  Data buffer to receive data.
+ * \param read_write  Read/write access.
+ * \param size  Data size to be read/write.
+ * \param secure  Enable or disable scramble on QSPI.
+ */
+static void s25fl1xx_memory_access(struct qspid_t *qspid, uint8_t instr, uint32_t addr, uint32_t *tx_data, uint32_t *rx_data, enum qspi_access read_write, uint32_t size, uint8_t secure)
+{
+	qspid->qspi_command.instruction = instr;
+	qspid->qspi_buffer.data_tx = tx_data;
+	qspid->qspi_buffer.data_rx = rx_data;
+	mem->addr= addr;
+	mem->inst_frame.bm.b_inst_en = 1;
+	mem->inst_frame.bm.b_data_en = 1;
+	mem->inst_frame.bm.b_addr_en = 1;
+	qspid->qspi_frame = mem;
+
+	if (read_write == QSPI_WRITE_ACCESS) {
+		mem->inst_frame.bm.b_tfr_type = (QSPI_IFR_TFRTYP_TRSFR_WRITE_MEMORY >> QSPI_IFR_TFRTYP_Pos);
+		qspid->qspi_buffer.tx_data_size = size;
+	} else {
+		mem->inst_frame.bm.b_tfr_type = (QSPI_IFR_TFRTYP_TRSFR_READ_MEMORY >> QSPI_IFR_TFRTYP_Pos);
+		qspid->qspi_buffer.rx_data_size = size;
+	}
+	qspi_flash_access_memory(qspid, read_write, secure);
 }
 
 /**
@@ -539,7 +538,6 @@ uint8_t s25fl1xx_protect(struct qspid_t *qspid)
 	/* Check the new status */
 	status[0] = s25fl1xx_read_status(qspid);
 	if ((status[0] & (STATUS_SPRL | STATUS_SWP)) != (STATUS_SPRL | STATUS_SWP)) {
-		puts("\r-E Lock protection failed!\n");
 		return ERROR_PROTECTED;
 	}
 	else {
@@ -580,7 +578,6 @@ uint8_t s25fl1xx_unprotect(struct qspid_t *qspid)
 	/* Check the new status */
 	status[0] = s25fl1xx_read_status1(qspid);
 	if (status[0] & (STATUS_SPRL | STATUS_SWP)) {
-		puts("\r-E Unlock Failed!\n");
 		return ERROR_PROTECTED;
 	}
 	else {
@@ -602,19 +599,18 @@ uint8_t s25fl1xx_data_protect(struct qspid_t *qspid, bool dir, enum block_size p
 {
 	uint8_t status[3];
 	uint32_t mask = (dir << 5);
-	uint32_t bp_value = 0;
 	if(protect_size >= SIZE_64K) {
 		mask |= (1 << 6);
 		mask |= ((protect_size - SIZE_32K) << 2);
 	} else {
 		mask |= (protect_size << 2);
 	}
-	
+
 	/* Get the status register value to check the current protection */
 	status[0]= s25fl1xx_read_status1(qspid);
 	status[1]= s25fl1xx_read_status2(qspid);
 	status[2]= s25fl1xx_read_status3(qspid);
-      
+
 	if ((status[0] & mask) == mask) {
 		/* Protection already enabled */
 		return 0;
@@ -626,7 +622,6 @@ uint8_t s25fl1xx_data_protect(struct qspid_t *qspid, bool dir, enum block_size p
 	/* Check the new status */
 	status[0] = s25fl1xx_read_status(qspid);
 	if ((status[0] & mask) != mask) {
-		puts("\r-E Protect Block Failed!\n");
 		return ERROR_PROTECTED;
 	}
 	else {
@@ -660,7 +655,6 @@ uint8_t s25fl1xx_data_unprotect(struct qspid_t *qspid)
 	/* Check the new status */
 	status[0] = s25fl1xx_read_status(qspid);
 	if (status[0] & CHIP_PROTECT_Msk) {
-		puts("\r-E Unlock Block Failed!\n");
 		return ERROR_PROTECTED;
 	}
 	else {
@@ -678,14 +672,11 @@ uint8_t s25fl1xx_data_unprotect(struct qspid_t *qspid)
  */
 uint8_t s25fl1xx_erase_chip(struct qspid_t *qspid)
 {
-	char wait_ch[4] = {'\\','|','/','-' };
 	uint8_t i=0;
 	uint8_t status = STATUS_RDYBSY;
 	uint8_t chip_status= s25fl1xx_read_status1(qspid);
 
 	if(chip_status & CHIP_PROTECT_Msk) {
-		puts(" -E  Chip is is_protected \n\r");
-		printf(" -I  Flash Status Register 1 is %x\n\r", chip_status);
 		return 1;
 	} else {
 		s25fl1xx_enable_write(qspid);
@@ -693,12 +684,10 @@ uint8_t s25fl1xx_erase_chip(struct qspid_t *qspid)
 
 		while(status & STATUS_RDYBSY) {
 			delay_ms(200);
-			printf("Erasing flash memory %c\r", wait_ch[i]);
 			i++;
 			status = s25fl1xx_read_status1(qspid);
 			i = i % 4;
 		}
-		puts("\rErasing flash memory done..... 100%\n\r");
 		return 0;
 	}
 }
@@ -718,12 +707,10 @@ uint8_t s25fl1xx_erase_sector(struct qspid_t *qspid,uint32_t address)
 	/* Check that the flash is ready and unprotected */
 	status = s25fl1xx_read_status1(qspid);
 	if ((status & STATUS_RDYBSY) != STATUS_RDYBSY_READY) {
-		printf(" -E  %s : Flash busy\n\r", __FUNCTION__);
 		return ERROR_BUSY;
 	}
 	else if (status & BLOCK_PROTECT_Msk) {
 		if(s25fl1xx_check_protected_addr(status, address)) {
-			printf(" -E  %s : Flash addr is protected\n\r", __FUNCTION__);
 			return ERROR_PROTECTED;
 		}
 	}
@@ -737,7 +724,7 @@ uint8_t s25fl1xx_erase_sector(struct qspid_t *qspid,uint32_t address)
 	s25fl1xx_exec_command(qspid, BLOCK_ERASE_4K, 0, 0, QSPI_CMD_ACCESS, 0);
 
 	/* Wait for transfer to finish */
-	s25fl1xx_is_busy(qspid);
+	s25fl1xx_wait_memory_access_end(qspid);
 
 	return 0;
 }
@@ -758,11 +745,9 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
 	/* Check that the flash is ready and unprotected */
 	status = s25fl1xx_read_status(qspid);
 	if ((status & STATUS_RDYBSY) != STATUS_RDYBSY_READY) {
-		printf(" -E  S25FL1D_EraseBlock : Flash busy\n\r");
 		return ERROR_BUSY;
 	}
 	else if ((status & STATUS_SWP) != STATUS_SWP_PROTNONE) {
-		printf(" -E  EraseBlock : Flash protected\n\r");
 		return ERROR_PROTECTED;
 	}
 
@@ -775,7 +760,7 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
 	s25fl1xx_exec_command(qspid, BLOCK_ERASE_64K, 0, 0, QSPI_CMD_ACCESS, 0);
 
 	/* Wait for transfer to finish */
-	s25fl1xx_is_busy(qspid);
+	s25fl1xx_wait_memory_access_end(qspid);
 
 	return 0;
 }
@@ -794,7 +779,7 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
  * \return 0 if successful; otherwise, returns ERROR_PROGRAM is there has
  * been an error during the data programming.
  */
- uint8_t s25fl1xx_write(struct qspid_t *qspid, uint32_t *pData, uint32_t size, uint32_t address, uint8_t secure)
+ uint8_t s25fl1xx_write(struct qspid_t *qspid, uint32_t *pdata, uint32_t size, uint32_t address, uint8_t secure)
 {
 	uint32_t i = 0;
 
@@ -802,26 +787,32 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
 	uint32_t  number_of_writes = (size >> 8);
 	uint32_t addr = address;
 
-	/** if less than page size */
+	/** If less than page size */
 	if(number_of_writes == 0) {
 		s25fl1xx_enable_write(qspid);
-		s25fl1xx_memory_access(qspid, BYTE_PAGE_PROGRAM , addr, pData, 0,  QSPI_WRITE_ACCESS, size, secure);
+		s25fl1xx_wait_memory_access_end(qspid);
+		s25fl1xx_memory_access(qspid, BYTE_PAGE_PROGRAM , addr, pdata, 0,  QSPI_WRITE_ACCESS, size, secure);
+		s25fl1xx_wait_memory_access_end(qspid);
+		s25fl1xx_disable_write(qspid);
 	} else {
-		/** multiple page */
+		/** Multiple page */
 		for(i=0; i< number_of_writes; i++) {
 			s25fl1xx_enable_write(qspid);
-			s25fl1xx_memory_access(qspid, BYTE_PAGE_PROGRAM , addr, pData, 0, QSPI_WRITE_ACCESS, PAGE_SIZE, secure);
-			s25fl1xx_is_busy(qspid);
-			pData += (PAGE_SIZE >> 2);
+			s25fl1xx_wait_memory_access_end(qspid);
+			s25fl1xx_memory_access(qspid, BYTE_PAGE_PROGRAM , addr, pdata, 0, QSPI_WRITE_ACCESS, PAGE_SIZE, secure);
+			s25fl1xx_wait_memory_access_end(qspid);
+			s25fl1xx_disable_write(qspid);
+			pdata += (PAGE_SIZE >> 2);
 			addr += PAGE_SIZE;
 		}
 		if(size % PAGE_SIZE) {
 			s25fl1xx_enable_write(qspid);
-			s25fl1xx_memory_access(qspid, BYTE_PAGE_PROGRAM , addr, pData, 0, QSPI_WRITE_ACCESS, (size - (number_of_writes * PAGE_SIZE)), secure);
-			s25fl1xx_is_busy(qspid);
+			s25fl1xx_wait_memory_access_end(qspid);
+			s25fl1xx_memory_access(qspid, BYTE_PAGE_PROGRAM , addr, pdata, 0, QSPI_WRITE_ACCESS, (size - (number_of_writes * PAGE_SIZE)), secure);
+			s25fl1xx_wait_memory_access_end(qspid);
+			s25fl1xx_disable_write(qspid);
 		}
 	}
-	s25fl1xx_disable_write(qspid);
 	return 0;
 }
 
