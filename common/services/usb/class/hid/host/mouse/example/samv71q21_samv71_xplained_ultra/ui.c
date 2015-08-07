@@ -48,11 +48,11 @@
 
 /* Wakeup pin is RIGHT CLICK (fast wakeup 14) */
 #define  RESUME_PMC_FSTT (PMC_FSMR_FSTT14)
-#define  RESUME_PIN      (GPIO_PUSH_BUTTON_2)
-#define  RESUME_PIO      (PIN_PUSHBUTTON_2_PIO)
-#define  RESUME_PIO_ID   (PIN_PUSHBUTTON_2_ID)
-#define  RESUME_PIO_MASK (PIN_PUSHBUTTON_2_MASK)
-#define  RESUME_PIO_ATTR (PIN_PUSHBUTTON_2_ATTR)
+#define  RESUME_PIN      (GPIO_PUSH_BUTTON_1)
+#define  RESUME_PIO      (PIN_PUSHBUTTON_1_PIO)
+#define  RESUME_PIO_ID   (PIN_PUSHBUTTON_1_ID)
+#define  RESUME_PIO_MASK (PIN_PUSHBUTTON_1_MASK)
+#define  RESUME_PIO_ATTR (PIN_PUSHBUTTON_1_ATTR)
 
 /**
  * \name Internal routines to manage asynchronous interrupt pin change
@@ -285,5 +285,5 @@ void ui_uhi_hid_mouse_move(int8_t x, int8_t y, int8_t scroll)
  * - Led 0 is on when the mouse move or button is pressed
  * - SW0 allows to enter the device in suspend mode with remote
  *   wakeup feature authorized
- * - Only SW1 can be used to wakeup USB device in suspend mode
+ * - SW0 can be used to wakeup USB device in suspend mode
  */

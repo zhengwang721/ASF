@@ -316,6 +316,52 @@ static void udd_sleep_mode(bool b_idle)
 
 //@}
 
+/**
+ * \name VBus monitor routine
+ */
+//@{
+#if OTG_VBUS_IO
+
+# if !defined(UDD_NO_SLEEP_MGR) && !defined(USB_VBUS_WKUP)
+/* Lock to SLEEPMGR_SLEEP_WFI if VBus not connected */
+static bool b_vbus_sleep_lock = false;
+/**
+ * Lock sleep mode for VBus PIO pin change detection
+ */
+static void udd_vbus_monitor_sleep_mode(bool b_lock)
+{
+	if (b_lock && !b_vbus_sleep_lock) {
+		b_vbus_sleep_lock = true;
+		sleepmgr_lock_mode(SLEEPMGR_SLEEP_WFI);
+	}
+	if (!b_lock && b_vbus_sleep_lock) {
+		b_vbus_sleep_lock = false;
+		sleepmgr_unlock_mode(SLEEPMGR_SLEEP_WFI);
+	}
+}
+# else
+#  define udd_vbus_monitor_sleep_mode(lock)
+# endif
+
+/**
+ * USB VBus pin change handler
+ */
+static void udd_vbus_handler(uint32_t id, uint32_t mask)
+{
+	/* PIO interrupt status has been cleared, just detect level */
+	bool b_vbus_high = Is_otg_vbus_high();
+	if (b_vbus_high) {
+		udd_vbus_monitor_sleep_mode(false);
+		udd_attach();
+	} else {
+		udd_vbus_monitor_sleep_mode(true);
+		udd_detach();
+	}
+	UDC_VBUS_EVENT(b_vbus_high);
+}
+
+#endif
+//@}
 
 /**
  * \name Control endpoint low level management routine.
@@ -622,7 +668,11 @@ udd_interrupt_sof_end:
 
 bool udd_include_vbus_monitoring(void)
 {
+#if OTG_VBUS_IO
 	return true;
+#else
+	return false;
+#endif
 }
 
 
@@ -645,11 +695,18 @@ void udd_enable(void)
 	/* Enable peripheral clock for USBHS */
 	pmc_enable_periph_clk(ID_USBHS);
 
-	//otg_unfreeze_clock();
-	// ID pin not used then force device mode
+#if (OTG_ID_IO) && (defined UHD_ENABLE)
+	// Check that the device mode is selected by ID pin
+	if (!Is_otg_id_device()) {
+		cpu_irq_restore(flags);
+		return; // Device is not the current mode
+	}
+#else
 	//otg_force_device_mode();
+	// ID pin not used then force device mode
 	USBHS->USBHS_CTRL = USBHS_CTRL_UIMOD_DEVICE;
-	
+#endif
+
 	sysclk_enable_usb();
 
 	// Here, only the device mode is possible, then link USBHS interrupt to UDD interrupt
@@ -676,6 +733,7 @@ void udd_enable(void)
 #endif
 #endif // USB_DEVICE_LOW_SPEED
 
+	otg_unfreeze_clock();
 	// Check USB clock
 	while (!Is_otg_clock_usable());
 
@@ -697,7 +755,19 @@ void udd_enable(void)
 	}
 #endif
 
+#if OTG_VBUS_IO
+	/* Initialize VBus monitor */
+	otg_vbus_init(udd_vbus_handler);
+	udd_vbus_monitor_sleep_mode(true);
+	/* Force VBus interrupt when VBus is always high
+	 * This is possible due to a short timing between a Host mode stop/start.
+	 */
+	if (Is_otg_vbus_high()) {
+		udd_vbus_handler(USB_VBUS_PIO_ID, USB_VBUS_PIO_MASK);
+	}
+#else
 	udd_attach();
+#endif
 
 	cpu_irq_restore(flags);
 }
@@ -708,9 +778,19 @@ void udd_disable(void)
 	irqflags_t flags;
 
 #ifdef UHD_ENABLE
+# if OTG_ID_IO
+	if (Is_otg_id_host()) {
+		// Freeze clock to switch mode
+		otg_freeze_clock();
+		udd_detach();
+		otg_disable();
+		return; // Host mode running, ignore UDD disable
+	}
+# else
 	if (Is_otg_host_mode_forced()) {
 		return; // Host mode running, ignore UDD disable
 	}
+#endif
 #endif
 
 	flags = cpu_irq_save();

@@ -84,7 +84,7 @@
 // Use div effective value here.
 //#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL0
 #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_UPLL
-#define CONFIG_USBCLK_DIV           1
+#define CONFIG_USBCLK_DIV           10
 
 // ===== Target frequency (Processor clock)
 // - XTAL frequency: 12MHz

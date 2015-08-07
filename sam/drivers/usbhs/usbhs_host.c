@@ -261,6 +261,54 @@ static void uhd_sleep_mode(enum uhd_usbhs_state_enum new_state)
 #endif // UHD_NO_SLEEP_MGR
 //@}
 
+#if OTG_ID_IO
+/**
+ * USB ID pin change handler
+ */
+static void otg_id_handler(uint32_t id, uint32_t mask)
+{
+	if (Is_otg_id_device()) {
+		uhc_stop(false);
+		UHC_MODE_CHANGE(false);
+		otg_force_device_mode();
+		udc_start();
+		dbg_print("\r\nudc_start ");
+	} else {
+		udc_stop();
+		UHC_MODE_CHANGE(true);
+		otg_force_host_mode();
+		uhc_start();
+		dbg_print("\r\nuhc_start ");
+	}
+}
+#endif
+
+#if OTG_VBUS_IO
+/**
+ * USB VBus pin change handler
+ */
+static void uhd_vbus_handler(uint32_t id, uint32_t mask)
+{
+	if (Is_otg_vbus_high()) {
+		otg_unfreeze_clock();
+		/* Freeze USB clock to use wakeup interrupt
+		 * to detect connection.
+		 * After detection of wakeup interrupt,
+		 * the clock is unfreeze to have the true
+		 * connection interrupt.
+		 */
+		uhd_enable_wakeup_interrupt();
+		otg_freeze_clock();
+		uhd_sleep_mode(UHD_STATE_DISCONNECT);
+		UHC_VBUS_CHANGE(true);
+	} else {
+		otg_unfreeze_clock();
+		otg_freeze_clock();
+		uhd_sleep_mode(UHD_STATE_NO_VBUS);
+		UHC_VBUS_CHANGE(false);
+	}
+}
+#endif
 
 //! State of USBHS OTG initialization
 static bool otg_initialized = false;
@@ -463,8 +511,26 @@ bool otg_dual_enable(void)
 	NVIC_EnableIRQ((IRQn_Type) ID_USBHS);
 	pmc_set_fast_startup_input(PMC_FSMR_USBAL);
 
-	//uhd_sleep_mode(UHD_STATE_OFF);
+#if OTG_ID_IO
+	otg_id_init(otg_id_handler);
+	if (Is_otg_id_device()) {
+		otg_force_device_mode();
+		uhd_sleep_mode(UHD_STATE_WAIT_ID_HOST);
+		UHC_MODE_CHANGE(false);
+		udc_start();
+	} else {
+		otg_force_host_mode();
+		UHC_MODE_CHANGE(true);
+		uhc_start();
+	}
+
+	// End of host or device startup,
+	// the current mode selected is already started now
+	return true; // ID pin management has been enabled
+#else
+	uhd_sleep_mode(UHD_STATE_OFF);
 	return false; // ID pin management has not been enabled
+#endif	
 }
 
 
@@ -479,13 +545,15 @@ void otg_dual_disable(void)
 	pmc_clr_fast_startup_input(PMC_FSMR_USBAL);
 
 	otg_unfreeze_clock();
-
+# if OTG_ID_IO
+	otg_id_interrupt_disable();
+# endif
 	otg_freeze_clock();
 	otg_disable();
 
 	sysclk_disable_usb();
 	pmc_disable_periph_clk(ID_USBHS);
-	//uhd_sleep_mode(UHD_STATE_OFF);
+	uhd_sleep_mode(UHD_STATE_OFF);
 }
 
 
@@ -497,28 +565,13 @@ void uhd_enable(void)
 	// To avoid USB interrupt before end of initialization
 	flags = cpu_irq_save();
 
-	//if (otg_dual_enable()) {
+	if (otg_dual_enable()) {
 		// The current mode has been started by otg_dual_enable()
-		//cpu_irq_restore(flags);
-		//return;
-	//}
+		cpu_irq_restore(flags);
+		return;
+	}
 	pmc_enable_periph_clk(ID_USBHS);
-
-	//USBHS->USBHS_CTRL = USBHS_CTRL_UIMOD_HOST;
-
-	/* Disable FS USB clock*/
-	PMC->PMC_SCDR = PMC_SCDR_USBCLK;
-
-	/* Enable PLL 480 MHz */
-	PMC->CKGR_UCKR = CKGR_UCKR_UPLLEN | CKGR_UCKR_UPLLCOUNT(0xF);    
-	/* Wait that PLL is considered locked by the PMC */
-	while( !(PMC->PMC_SR & PMC_SR_LOCKU) );
-
-	/* USB clock register: USB Clock Input is UTMI PLL */
-	PMC->PMC_USB = (PMC_USB_USBS | PMC_USB_USBDIV(1 - 1) );
-
-	PMC->PMC_SCER = PMC_SCER_USBCLK;
-	
+	sysclk_enable_usb();
 
 	// Always authorize asynchronous USB interrupts to exit of sleep mode
 	// For SAM USB wake up device except BACKUP mode
@@ -526,15 +579,19 @@ void uhd_enable(void)
 	NVIC_EnableIRQ((IRQn_Type) ID_USBHS);
 	pmc_set_fast_startup_input(PMC_FSMR_USBAL);
 
-	//uhd_sleep_mode(UHD_STATE_OFF);
+	uhd_sleep_mode(UHD_STATE_OFF);
 
-	//sysclk_enable_usb();
-	ioport_set_pin_dir(PIO_PC9_IDX, IOPORT_DIR_INPUT);
 
-	ioport_set_pin_dir(PIO_PC16_IDX, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(PIO_PC16_IDX, IOPORT_PIN_LEVEL_HIGH);
+#if OTG_ID_IO
+	// Check that the host mode is selected by ID pin
+	if (Is_otg_id_device()) {
+		cpu_irq_restore(flags);
+		return; // Host is not the current mode
+	}
+#else	
 	// ID pin not used then force host mode
 	otg_force_host_mode();
+#endif
 
 	// Enable USB hardware
 	otg_enable();
@@ -542,7 +599,7 @@ void uhd_enable(void)
 #ifndef USB_HOST_HS_SUPPORT
 	uhd_disable_high_speed_mode();
 #endif
-
+	USBHS->USBHS_HSTCTRL |= USBHS_HSTCTRL_SPDCONF_LOW_POWER;
 	uhd_ctrl_request_first = NULL;
 	uhd_ctrl_request_last = NULL;
 	uhd_ctrl_request_timeout = 0;
@@ -559,22 +616,28 @@ void uhd_enable(void)
 			| USBHS_HSTICR_HSOFIC  | USBHS_HSTICR_HWUPIC
 			| USBHS_HSTICR_RSMEDIC | USBHS_HSTICR_RSTIC
 			| USBHS_HSTICR_RXRSMIC;
-	__DSB();
-	__ISB();
-	USBHS->USBHS_CTRL |= (1<<8);
-	//uhd_sleep_mode(UHD_STATE_NO_VBUS);
-	//uhd_enable_vbus();
 
+# if OTG_VBUS_IO
+	otg_vbus_init(uhd_vbus_handler);
+	/* Force VBus interrupt when VBus is always high
+	 * This is possible due to a short timing between a Host mode stop/start.
+	 */
+	if (Is_otg_vbus_high()) {
+		uhd_vbus_handler(USB_VBUS_PIO_ID, USB_VBUS_PIO_MASK);
+		otg_unfreeze_clock();
+	}
+# else
 	USBHS->USBHS_HSTIER = USBHS_HSTIER_HWUPIES;
-	//uhd_sleep_mode(UHD_STATE_DISCONNECT);
-	ioport_set_pin_level(PIO_PC16_IDX, IOPORT_PIN_LEVEL_LOW);
+	uhd_sleep_mode(UHD_STATE_DISCONNECT);
+#endif
+
 	// Enable main control interrupt
 	// Connection, SOF and reset
-	USBHS->USBHS_HSTIER = USBHS_HSTICR_DCONNIC | USBHS_HSTICR_HSOFIC
-				| USBHS_HSTICR_RSTIC;
+	USBHS->USBHS_HSTIER = USBHS_HSTIER_DCONNIES | USBHS_HSTIER_HSOFIES
+				| USBHS_HSTIER_RSTIES;
 
 	otg_freeze_clock();
-	//uhd_sleep_mode(UHD_STATE_NO_VBUS);
+	uhd_sleep_mode(UHD_STATE_NO_VBUS);
 
 	cpu_irq_restore(flags);
 }
@@ -599,6 +662,17 @@ void uhd_disable(bool b_id_stop)
 	uhd_disable_vbus();
 	uhc_notify_connection(false);
 	otg_freeze_clock();
+
+#if OTG_ID_IO
+	if (!b_id_stop) {
+		// Freeze clock to switch mode
+		otg_freeze_clock();
+		otg_disable();
+		otg_initialized = false; // Need re-initialize
+		uhd_sleep_mode(UHD_STATE_WAIT_ID_HOST);
+		return; // No need to disable host, it is done automatically by hardware
+	}
+#endif
 
 	flags = cpu_irq_save();
 	otg_dual_disable();
@@ -679,7 +753,7 @@ void uhd_resume(void)
 	otg_unfreeze_clock();
 	uhd_enable_sof();
 	uhd_send_resume();
-	//uhd_sleep_mode(UHD_STATE_IDLE);
+	uhd_sleep_mode(UHD_STATE_IDLE);
 }
 
 bool uhd_ep0_alloc(usb_add_t add, uint8_t ep_size)
@@ -1059,7 +1133,7 @@ static void uhd_interrupt(void)
 		USBHS->USBHS_HSTIDR = USBHS_HSTIDR_HWUPIEC
 				| USBHS_HSTIDR_RSMEDIEC
 				| USBHS_HSTIDR_RXRSMIEC;
-		//uhd_sleep_mode(UHD_STATE_DISCONNECT);
+		uhd_sleep_mode(UHD_STATE_DISCONNECT);
 		uhd_ack_connection();
 		uhd_enable_connection_int();
 		uhd_suspend_start = 0;
@@ -1073,16 +1147,28 @@ static void uhd_interrupt(void)
 		uhd_ack_disconnection();
 		uhd_enable_disconnection_int();
 		uhd_enable_sof();
-		//uhd_sleep_mode(UHD_STATE_IDLE);
+		uhd_sleep_mode(UHD_STATE_IDLE);
 		uhd_suspend_start = 0;
 		uhd_resume_start = 0;
 		uhc_notify_connection(true);
 		return;
 	}
 
-	// Check USB clock ready after asynchronous interrupt
-	while (!Is_otg_clock_usable());
-	otg_unfreeze_clock();
+	
+
+      /* If Wakeup interrupt is enabled and triggered and connection intterupt is enabled  */
+	if(Is_uhd_wakeup() && Is_uhd_connection_int_enabled()) {
+		 // Check USB clock ready after asynchronous interrupt
+		while (!Is_otg_clock_usable());
+		otg_unfreeze_clock();
+		// Here the wakeup interrupt has been used to detect connection
+		// with an asynchrone interrupt
+		USBHS->USBHS_HSTIDR = USBHS_HSTIDR_HWUPIEC;
+		uhd_sleep_mode(UHD_STATE_IDLE);
+		uhd_enable_vbus(); // enable VBUS
+		uhd_sleep_mode(UHD_STATE_DISCONNECT);
+		UHC_VBUS_CHANGE(true); 
+	}
 
 	if (Is_uhd_wakeup_interrupt_enabled() && (Is_uhd_wakeup() ||
 			Is_uhd_downstream_resume() || Is_uhd_upstream_resume())) {

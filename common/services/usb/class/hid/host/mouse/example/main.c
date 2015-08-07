@@ -72,7 +72,7 @@ int main(void)
 	// The USB management is entirely managed by interrupts.
 	// As a consequence, the user application does only have to play with the power modes.
 	while (true) {
-		//sleepmgr_enter_sleep();
+		sleepmgr_enter_sleep();
 	}
 }
 
