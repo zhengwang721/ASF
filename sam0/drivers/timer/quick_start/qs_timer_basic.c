@@ -45,7 +45,7 @@
  */
 #include <asf.h>
 
-#define TIMER_RELOAD_VALUE		1300000
+#define TIMER_RELOAD_VALUE		26000000
 
 //! [setup]
 //! [setup_gpio_init]
@@ -93,26 +93,26 @@ void configure_timer(void)
 //! [setup]
 int main(void)
 {
-	volatile uint32_t counter;
-	
 //! [setup_init]	
 	//system_init();
 	
 	configure_gpio_pins();
 
 	configure_timer();
-
+	
 //! [setup_init]
 	
 //! [main_loop]
 	while (true) {
 //! [main_loop_1]
-		counter = timer_get_value();
+		if (timer_get_interrupt_status()) {
 //! [main_loop_1]
-		if (!counter) {
 //! [main_loop_2]
+			timer_clear_interrupt_status();
+//! [main_loop_2]
+//! [main_loop_3]
 			gpio_pin_toggle_output_level(LED_0_PIN);
-//! [main_loop_2]
+//! [main_loop_3]
 		}
 	}
 //! [main_loop]

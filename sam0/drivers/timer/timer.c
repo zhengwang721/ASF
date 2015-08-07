@@ -62,7 +62,7 @@
 void timer_get_config_defaults(struct timer_config *config)
 {
 	config->reload_value = 0;
-	config->interrupt_enable = false;
+	config->interrupt_enable = true;
 }
 
 /**

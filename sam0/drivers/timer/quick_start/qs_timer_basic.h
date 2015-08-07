@@ -106,7 +106,10 @@
  * -# Read in the current timer interrupt status.
  *    \snippet qs_timer_basic.c main_loop_1
  *
+ * -# Clear in the timer interrupt status.
+ *    \snippet qs_timer_basic.c main_loop_2
+ *
  * -# Write the inverted pin level state to LED pin, which has been configured as
  *    an output in the use-case setup code.
- *    \snippet qs_timer_basic.c main_loop_2
+ *    \snippet qs_timer_basic.c main_loop_3
  */
