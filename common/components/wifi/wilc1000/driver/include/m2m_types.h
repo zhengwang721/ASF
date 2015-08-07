@@ -76,7 +76,7 @@ MACROS
 */
 
 
-#define M2M_FIRMWARE_VERSION_MINOR_NO					(1)
+#define M2M_FIRMWARE_VERSION_MINOR_NO					(2)
 /*!< Firmware Minor release version number.
 */
 
@@ -97,7 +97,7 @@ MACROS
 /*!< Driver Minor release version number.
 */
 
-#define M2M_DRIVER_VERSION_PATCH_NO						(11)
+#define M2M_DRIVER_VERSION_PATCH_NO						(12)
 /*!< Driver patch release version number.
 */
 
@@ -1298,8 +1298,11 @@ typedef struct{
 	*/
 	sint8		s8RSSI;
 	/*!< RSSI.
+	*/	
+	uint16	u16SeqNo;
+		/*!< Frame Seq Number.
 	*/
-	uint8	__PAD24__[3];
+	uint8	__PAD24__[1];
 	/*!< Padding bytes for forcing 4-byte alignment
 	*/
 }tstrM2MWifiRxPacketInfo;
