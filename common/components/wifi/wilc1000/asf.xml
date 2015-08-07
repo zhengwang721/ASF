@@ -83,7 +83,7 @@
 			<build type="include-path" value="netif/source"/> -->
 			<build type="c-source" value="netif/source/wifi_netif.c"/>
 <!--			<build type="include-path" value="netif/include"/> -->
-			<build type="c-source" value="netif/include/wifi_netif.h"/>
+			<build type="header-file" value="netif/include/wifi_netif.h"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_wifi.h"/>
 			<build type="module-config" subtype="path" value="module_config/sam4s"/>
@@ -181,7 +181,7 @@
 			<build type="include-path" value="netif/source"/> -->
 			<build type="c-source" value="netif/source/wifi_netif.c"/>
 <!--			<build type="include-path" value="netif/include"/> -->
-			<build type="c-source" value="netif/include/wifi_netif.h"/>
+			<build type="header-file" value="netif/include/wifi_netif.h"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_wifi.h"/>
 			<build type="module-config" subtype="path" value="module_config/samg53"/>
@@ -279,7 +279,7 @@
 			<build type="include-path" value="netif/source"/> -->
 			<build type="c-source" value="netif/source/wifi_netif.c"/>
 <!--			<build type="include-path" value="netif/include"/> -->
-			<build type="c-source" value="netif/include/wifi_netif.h"/>
+			<build type="header-file" value="netif/include/wifi_netif.h"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_wifi.h"/>
 			<build type="module-config" subtype="path" value="module_config/samg55"/>
