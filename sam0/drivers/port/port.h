@@ -760,27 +760,27 @@ static inline enum status_code port_input_event_set_config(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>E</td>
+ *		<td>42113E</td>
  *		<td>08/2015</td>
- *		<td>Added input event feature and support for SAM L21, SAM C21, and SAM DAx.</td>
+ *		<td>Added input event feature and support for SAM L21, SAM C21, and SAM DAx</td>
  *	</tr>
  *	<tr>
- *		<td>D</td>
+ *		<td>42113D</td>
  *		<td>12/2014</td>
- *		<td>Added support for SAM R21 and SAM D10/D11.</td>
+ *		<td>Added support for SAM R21 and SAM D10/D11</td>
  *	</tr>
  *	<tr>
- *		<td>C</td>
+ *		<td>42113C</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAM D21.</td>
+ *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
+ *		<td>42113B</td>
  *		<td>06/2013</td>
- *		<td>Corrected documentation typos.</td>
+ *		<td>Corrected documentation typos</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42113A</td>
  *		<td>06/2013</td>
  *		<td>Initial release</td>
  *	</tr>
