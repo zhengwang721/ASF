@@ -131,9 +131,37 @@ extern "C" {
 /** Flash page mask */
 #define FLASH_PAGE_MASK         0xFFFF00
 
-/** Memory base address */
-#define AHB_DATA_MEM_BASE       0x10000000
-#define GET_AHB_ADDRESS(x)      ((AHB_DATA_MEM_BASE + (unsigned long)x))
+/** SPI flash write enable */
+#define SPI_FLASH_CMD_WRITE_ENABLE      0x06
+/** SPI flash write disable */
+#define SPI_FLASH_CMD_WRITE_DISABLE     0x04
+/** SPI flash read identification */
+#define SPI_FLASH_CMD_READ_ID           0x9F
+/** SPI flash read status register */
+#define SPI_FLASH_CMD_READ_STATUS       0x05
+/** SPI flash write status register */
+#define SPI_FLASH_CMD_WRITE_STATUS      0x01
+/** SPI flash read data bytes */
+#define SPI_FLASH_CMD_READ_DATA         0x03
+/** SPI flash read data bytes at higher speed */
+#define SPI_FLASH_CMD_READ_HIGH_SPEED   0x0B
+/** SPI flash page program */
+#define SPI_FLASH_CMD_PAGE_PROGRAM      0x02
+/** SPI flash sector erase */
+#define SPI_FLASH_CMD_SECTOR_ERASE      0x20
+/** SPI flash bulk erase */
+#define SPI_FLASH_CMD_BULK_ERASE        0xC7
+/** SPI flash deep power-down */
+#define SPI_FLASH_CMD_ENTER_LOW_POWER   0xB9
+/** SPI flash release from deep power down */
+#define SPI_FLASH_CMD_LEAVE_LOW_POWER   0xAB
+
+/** SPI flash direction: send command */
+#define SPI_FLASH_DIRECTION_CMD         0x01
+/** SPI flash direction: program or erase */
+#define SPI_FLASH_DIRECTION_PRO         0x0F
+/** SPI flash direction: read data */
+#define SPI_FLASH_DIRECTION_READ        0x1F
 
 /**
 @defgroup spi-flash-drv SPI FLASH Driver API
