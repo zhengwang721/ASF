@@ -261,7 +261,7 @@ enum system_pinmux_pin_sample {
 /**
  * \brief Port pin configuration structure.
  *
- * Configuration structure for a port pin instance. This structure should be
+ * Configuration structure for a port pin instance. This structure should
  * be initialized by the \ref system_pinmux_get_config_defaults() function 
  * before being modified by the user application.
  */
