@@ -1,0 +1,22 @@
+<asf xmlversion="1.0">
+	<project caption="BLE Direct Test Mode[DTM] - SAM L21 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.ble_dtm.saml21_xplained_pro" force-caption="true" force-description="true">
+		<info type="description" value="summary">
+		BLE Direct Test Mode[DTM] Application
+		</info>	
+		<require idref="thirdparty.wireless.ble_sdk.apps.ble_dtm"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_serialdrv.h"/>
+		<build type="header-file" value="conf_serialbridge.h"/>
+		<build type="header-file" value="conf_console.h"/>
+  
+		<require idref="board.saml21_xplained_pro"/>
+		
+		<generator value="iarewarm"/>
+		<generator value="armgcc" />
+		<generator value="as5_arm" />
+		<generator value="doxygen"/>
+		<device-support value="atsaml21j18a"/>
+	</project>
+</asf>
