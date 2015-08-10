@@ -17,6 +17,7 @@
 				<build type="module-config" subtype="path" value="module_config"/>
 
 				<device-support value="samd21"/>
+				<device-support value="saml21"/>
 			</module>
    <module type="meta" id="thirdparty.wireless.ble_sdk.services.serial_bridge#1"     caption="uart">
 				<info type="description" value="summary">
