@@ -138,7 +138,7 @@
 #define PNP_ID_VENDOR_ID_SOURCE		0x01
 #define PNP_ID_VENDOR_ID			0x2222
 #define PNP_ID_PRODUCT_ID			0x3333
-#define PNP_ID_PRODUCT_VERSION		0x4444
+#define PNP_ID_PRODUCT_VERSION		0x0001
 
 /** @brief system ID characteristic default values */
 #define SYSTEM_ID_MANUFACTURER_ID_LEN	0x05

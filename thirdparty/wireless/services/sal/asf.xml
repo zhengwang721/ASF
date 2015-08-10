@@ -19,6 +19,7 @@
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="saml21"/>
 			<device-support value="sam4e"/>
 			<device-support value="sam4s"/>
 		</module>
@@ -50,6 +51,7 @@
 		<device-support value="samd20"/>
 		<device-support value="samd21"/>
 		<device-support value="samr21"/>
+		<device-support value="saml21"/>
 	</module>
 	<module type="meta" id="thirdparty.wireless.common_services.sal.inc" caption="SAL">
 		<info type="description" value="summary">

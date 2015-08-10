@@ -16,5 +16,13 @@
             <build type="library" subtype="user" value="samg55/gcc/libble_sdk.a" toolchain="armgcc"/>
             <device-support value="atsamg55j19"/>
         </module>
+        <module type="meta" id="thirdparty.wireless.ble_sdk.lib#3" caption="BLE SDK Lib for atsaml21j18a">
+            <info type="description" value="summary">
+            BLE SDK library for ATSAML21J18A controller
+            </info>
+            <build type="library" subtype="user" value="saml21/iar/libble_sdk.a" toolchain="iarewarm"/>
+            <build type="library" subtype="user" value="saml21/gcc/libble_sdk.a" toolchain="armgcc"/>
+            <device-support value="atsaml21j18a"/>
+        </module>
     </select-by-device>
 </asf>

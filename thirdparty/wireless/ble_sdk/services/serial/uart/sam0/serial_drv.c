@@ -74,15 +74,15 @@ uint8_t configure_serial_drv(void)
 {
 	struct usart_config config_usart;
 	usart_get_config_defaults(&config_usart);
-	config_usart.baudrate = 115200;
-	config_usart.generator_source = GCLK_GENERATOR_0;
-	config_usart.mux_setting = USART_RX_1_TX_0_XCK_1;
-	config_usart.pinmux_pad0 = PINMUX_PB08D_SERCOM4_PAD0;
-	config_usart.pinmux_pad1 = PINMUX_PB09D_SERCOM4_PAD1;
-	config_usart.pinmux_pad2 = PINMUX_UNUSED;
-	config_usart.pinmux_pad3 = PINMUX_UNUSED;
+	config_usart.baudrate = CONF_BLE_BAUDRATE;
+	config_usart.generator_source = CONF_BLE_UART_CLOCK;
+	config_usart.mux_setting = CONF_BLE_MUX_SETTING;
+	config_usart.pinmux_pad0 = CONF_BLE_PINMUX_PAD0;
+	config_usart.pinmux_pad1 = CONF_BLE_PINMUX_PAD1;
+	config_usart.pinmux_pad2 = CONF_BLE_PINMUX_PAD2;
+	config_usart.pinmux_pad3 = CONF_BLE_PINMUX_PAD3;
 
-	while (usart_init(&usart_instance, SERCOM4, &config_usart) != STATUS_OK);
+	while (usart_init(&usart_instance, CONF_BLE_USART_MODULE, &config_usart) != STATUS_OK);
 
 	usart_enable(&usart_instance);
 	

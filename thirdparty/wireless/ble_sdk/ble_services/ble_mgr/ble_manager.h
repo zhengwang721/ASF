@@ -54,6 +54,16 @@
 #include "ble_utils.h"
 #include "platform.h"
 
+#if defined HID_DEVICE
+#include "hid_device.h"
+#ifdef HID_KEYBOARD_DEVICE
+#define BLE_DEVICE_NAME				"ATMEL-HIDK"
+#endif
+#ifdef HID_MOUSE_DEVICE
+#define BLE_DEVICE_NAME				"ATMEL-HIDM"
+#endif
+#endif /* HID_DEVICE */
+
 #if defined PROXIMITY_REPORTER
 #include "pxp_reporter.h"
 #define BLE_DEVICE_NAME				"ATMEL-PXP"
@@ -217,8 +227,12 @@ typedef enum
 /** battery service uuid */
 #define BAT_SERVICE_UUID 						(0x180F)
 
+/** HID Service UUID. */
+#define HID_SERV_UUID							(0x1812)
+
 /** Scan param service uuid */
 #define SPS_SERVICE_UUID 						(0x1813)
+
 
 /* Characteristics UUID's */
 /* Alert Level Characteristic UUID */
@@ -247,7 +261,30 @@ typedef enum
 #define SPS_CHAR_SCAN_INT_VALUE_UUID 			(0x2A4F)														
 #define DIS_CHAR_PNP_ID_UUID					(0x2A50)
 
+#define HID_REPORT_REF_DESC						(0x2908)
+/** HID Protocol Mode Characteristic UUID. */
+#define HID_UUID_CHAR_PROTOCOL_MODE				(0x2A4E)
 
+/** HID Protocol Mode Characteristic UUID. */
+#define HID_UUID_CHAR_REPORT_MAP				(0x2A4B)
+
+/** HID Report Characteristic UUID. */
+#define HID_UUID_CHAR_REPORT					(0x2A4D)
+
+/** HID Boot Keyboard Input Report UUID. */
+#define HID_UUID_CHAR_BOOT_KEY_INPUT_REPORT		(0x2A22)
+
+/** HID Boot Keyboard Output Report UUID. */
+#define HID_UUID_CHAR_BOOT_KEY_OUTPUT_REPORT    (0x2A32)
+
+/** HID Boot Mouse Input Report UUID. */
+#define HID_UUID_CHAR_BOOT_MOUSE_INPUT_REPORT    (0x2A33)
+
+/** HID Information UUID. */
+#define HID_UUID_CHAR_HID_INFORMATION		     (0x2A4A)
+
+/** HID Control Point UUID. */
+#define HID_UUID_CHAR_HID_CONTROL_POINT		     (0x2A4C)
 
 /* All GAP Connection Parameter defined */
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
@@ -284,6 +321,14 @@ typedef enum
 
 
 #if ((BLE_DEVICE_ROLE == BLE_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
+
+#if defined HID_DEVICE
+#define BLE_PROFILE_INIT(param)								hid_prf_init(param); \
+															hid_prf_dev_adv();
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER(param)	hid_prf_disconnect_event_handler(param);
+
+#define BLE_CHARACTERISTIC_CHANGED				hid_prf_char_changed_handler
+#endif
 
 #if defined PROXIMITY_REPORTER
 #define BLE_PROFILE_INIT							pxp_reporter_init 
@@ -515,6 +560,17 @@ typedef struct adv_element
 
 /** @brief GATT services handles
 */
+#if defined HID_SERVICE
+typedef struct gatt_service_handler
+{
+	at_ble_uuid_t	serv_uuid;
+	at_ble_handle_t	serv_handle;
+	at_ble_characteristic_gen_t	serv_chars[HID_CHARACTERISTIC_NUM];
+	generic_Att_Desc serv_desc[HID_NUM_OF_REPORT];   /*Report descriptor*/
+}gatt_service_handler_t;
+
+
+#else
 typedef struct gatt_service_handler
 {
 	/// service uuid
@@ -524,6 +580,7 @@ typedef struct gatt_service_handler
 	/// service characteristic
 	at_ble_characteristic_t	serv_chars;
 }gatt_service_handler_t;
+#endif
 
 /****************************************************************************************
 *                                       Functions                                       *

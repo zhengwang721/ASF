@@ -17,6 +17,7 @@
 				<require idref="sam0.utils.stdio.stdio_serial"/>
 
 				<device-support value="samd21"/>
+				<device-support value="saml21"/>
 			</module>
    <module type="meta" id="thirdparty.wireless.ble_sdk.services.console#1"     caption="console">
 				<info type="description" value="summary">

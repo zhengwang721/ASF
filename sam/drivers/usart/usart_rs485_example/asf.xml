@@ -38,5 +38,26 @@
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<info type="gui-flag" value="move-to-root"/>
 		</module>
+		<module type="application" id="sam.drivers.usart.usart_rs485_example#2" caption="USART RS485 Example">
+			<info type="description" value="summary">
+			This example uses USART driver to demonstrates the RS485 mode.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+			<build type="c-source" value="usart_rs485_example_samv71.c"/>
+			<build type="include-path" value="."/>
+			<device-support value="same70"/>	
+			<device-support value="samv70"/>
+			<device-support value="samv71"/>
+			<device-support value="sams70"/>
+			<require idref="sam.drivers.pio"/>
+			<require idref="sam.drivers.pmc"/>
+			<require idref="sam.drivers.usart"/>
+			<require idref="sam.drivers.tc"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
+		</module>		
 	</select-by-device>
 </asf>
