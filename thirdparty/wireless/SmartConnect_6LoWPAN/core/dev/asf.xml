@@ -71,7 +71,7 @@
 			<build type="header-file"   value="spi.h"/>
 			<build type="header-file"   value="button-sensor.h"/>
 			<build type="header-file"   value="battery-sensor.h"/>
-			<build type="header-file"   value="eeprom.h"/>
+			<!-- <build type="header-file"   value="eeprom.h"/> -->
 			<build type="header-file"   value="radio.h"/>
 			<build type="header-file"   value="radio-sensor.h"/>
 			<build type="header-file"   value="watchdog.h"/>
