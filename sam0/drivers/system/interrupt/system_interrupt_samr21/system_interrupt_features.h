@@ -79,7 +79,7 @@
  * SAM R21 device.
  */
 #if defined(__DOXYGEN__)
-/** \note The actual enumeration name is "system_interrupt_vector" */
+/** \note The actual enumeration name is "system_interrupt_vector". */
 enum system_interrupt_vector_samr21 {
 #else
 enum system_interrupt_vector {
