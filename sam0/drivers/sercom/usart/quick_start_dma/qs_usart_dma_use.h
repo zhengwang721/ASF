@@ -55,7 +55,7 @@
  *    - SAM L21 Xplained Pro
  *    - SAM C21 Xplained Pro
  *
- * This quick start will receiving eight bytes of data from PC terminal and transmit back the string
+ * This quick start will receive eight bytes of data from the PC terminal and transmit back the string
  * to the terminal through DMA. In this use case the USART will be configured with the following
  * settings:
  * - Asynchronous mode

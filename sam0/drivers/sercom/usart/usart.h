@@ -217,7 +217,7 @@
  *
  * \subsection asfdoc_sam0_sercom_usart_parity Parity
  * Parity can be enabled to detect if a transmission was in error. This is done
- * by counting the number of "1" bits in the frame. When using Even parity the
+ * by counting the number of "1" bits in the frame. When using even parity the
  * parity bit will be set if the total number of "1"s in the frame are an even
  * number. If using odd parity the parity bit will be set if the total number
  * of "1"s are odd.
@@ -281,28 +281,28 @@ extern "C" {
  */
 #if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || \
 	(SAMDA1) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
-/** USART sync scheme version 2 */
+/** USART sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2
-/** USART oversampling */
+/** USART oversampling. */
 #  define FEATURE_USART_OVER_SAMPLE
-/** USART hardware control flow */
+/** USART hardware control flow. */
 #  define FEATURE_USART_HARDWARE_FLOW_CONTROL
-/** IrDA mode */
+/** IrDA mode. */
 #  define FEATURE_USART_IRDA
-/** LIN slave mode */
+/** LIN slave mode. */
 #  define FEATURE_USART_LIN_SLAVE
-/** USART collision detection */
+/** USART collision detection. */
 #  define FEATURE_USART_COLLISION_DECTION
-/** USART start frame detection */
+/** USART start frame detection. */
 #  define FEATURE_USART_START_FRAME_DECTION
-/** USART start buffer overflow notification */
+/** USART start buffer overflow notification. */
 #  define FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
 #endif
 
 #if (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
-/** LIN master mode */
+/** LIN master mode. */
 #define FEATURE_USART_LIN_MASTER
-/** RS485 mode */
+/** RS485 mode. */
 #  define FEATURE_USART_RS485
 #endif
 /*@}*/
@@ -423,7 +423,7 @@ enum usart_callback {
 /**
  * \brief USART Data Order enum
  *
- * The data order decides which or MSB or LSB is shifted out first when data is
+ * The data order decides which MSB or LSB is shifted out first when data is
  * transferred.
  */
 enum usart_dataorder {
@@ -719,7 +719,7 @@ struct usart_config {
 	uint32_t ext_clock_freq;
 	/** If true the USART will be kept running in Standby sleep mode */
 	bool run_in_standby;
-	/** GCLK generator source. */
+	/** GCLK generator source */
 	enum gclk_generator generator_source;
 	/** PAD0 pinmux.
 	 *
@@ -894,7 +894,7 @@ static inline void usart_unlock(struct usart_module *const module)
  *
  * \retval true   Peripheral is busy syncing
  * \retval false  Peripheral is not busy syncing and can be read/written without
- *                stalling the bus.
+ *                stalling the bus
  */
 static inline bool usart_is_syncing(
 		const struct usart_module *const module)
