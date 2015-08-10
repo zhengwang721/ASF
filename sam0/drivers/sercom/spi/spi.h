@@ -389,29 +389,29 @@ extern "C" {
  */
 #  if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAML21) || (SAMDA1) || \
 		(SAMC20) || (SAMC21) || defined(__DOXYGEN__)
-/** SPI slave select low detection */
+/** SPI slave select low detection. */
 #  define FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
-/** Slave select can be controlled by hardware */
+/** Slave select can be controlled by hardware. */
 #  define FEATURE_SPI_HARDWARE_SLAVE_SELECT
-/** SPI with error detect feature */
+/** SPI with error detect feature. */
 #  define FEATURE_SPI_ERROR_INTERRUPT
-/** SPI sync scheme version 2 */
+/** SPI sync scheme version 2. */
 #  define FEATURE_SPI_SYNC_SCHEME_VERSION_2
 #  endif
 /*@}*/
 
 #  ifndef PINMUX_DEFAULT
-/** Default pinmux */
+/** Default pinmux. */
 #  define PINMUX_DEFAULT 0
 #  endif
 
 #  ifndef PINMUX_UNUSED
-/** Unused pinmux */
+/** Unused pinmux. */
 #  define PINMUX_UNUSED 0xFFFFFFFF
 #  endif
 
 #  ifndef SPI_TIMEOUT
-/** SPI timeout value */
+/** SPI timeout value. */
 #  define SPI_TIMEOUT 10000
 #  endif
 
@@ -466,7 +466,7 @@ enum _spi_direction {
 	SPI_DIRECTION_WRITE,
 	/** Transfer direction is read and write */
 	SPI_DIRECTION_BOTH,
-	/** No transfer. */
+	/** No transfer */
 	SPI_DIRECTION_IDLE,
 };
 #  endif
@@ -698,7 +698,7 @@ struct spi_module {
 	Sercom *hw;
 	/** Module lock */
 	volatile bool locked;
-	/** SPI mode. */
+	/** SPI mode */
 	enum spi_mode mode;
 	/** SPI character size */
 	enum spi_character_size character_size;
@@ -1773,7 +1773,7 @@ enum status_code spi_select_slave(
   *	<tr>
   *		<td>42115E</td>
   *		<td>08/2015</td>
-  *		<td>Add SAM L21, SAMDAx and SAMC21 support</td>
+  *		<td>Add SAM L21, SAM DAx and SAM C21 support</td>
   *	</tr>
   *	<tr>
   *		<td>42115D</td>
