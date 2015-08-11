@@ -12,7 +12,6 @@
 		<build type="header-file" value="conf_hw_timer.h"/>
 		<build type="header-file" value="conf_sio2host.h"/>
 		<build type="header-file" value="conf_trx_access.h"/>
-		<build type="header-file" value="conf_at30tse75x.h"/>
 		<build type="header-file" value="project-conf.h"/>
 		<build type="header-file" value="contiki-conf.h"/>
 		<build type="header-file" value="platform-conf.h"/>

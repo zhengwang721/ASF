@@ -507,7 +507,11 @@
 
 /** TC Instance MAX ID Number. */
 #if SAMD20E || SAMD21G || SAMD21E || SAMR21
-#define TC_INST_MAX_ID  5
+#  if SAMD21GXXL
+#    define TC_INST_MAX_ID  7
+#  else
+#    define TC_INST_MAX_ID  5
+#  endif
 #elif SAML21 || SAMC20 || SAMC21
 #define TC_INST_MAX_ID  4
 #elif SAML22

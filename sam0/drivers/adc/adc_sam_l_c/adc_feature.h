@@ -112,14 +112,14 @@ enum adc_reference {
 	/** External reference A */
 	ADC_REFERENCE_AREFA   = ADC_REFCTRL_REFSEL_AREFA,
 #if (SAML21)
-	/** External reference B. */
+	/** External reference B */
 	ADC_REFERENCE_AREFB   = ADC_REFCTRL_REFSEL_AREFB,
 #endif
 #if (SAMC20) || (SAMC21)
-	/** DAC. */
+	/** DAC */
 	ADC_REFERENCE_DAC     = ADC_REFCTRL_REFSEL_DAC,
 #endif
-	/** VDDANA. */
+	/** VDDANA */
 	ADC_REFERENCE_INTVCC2 = ADC_REFCTRL_REFSEL_INTVCC2,
 };
 
@@ -244,7 +244,7 @@ enum adc_positive_input {
 	/** ADC11 pin */
 	ADC_POSITIVE_INPUT_PIN11         = ADC_INPUTCTRL_MUXPOS_AIN11,
 #if !(SAMC20) && !(SAMC21)
-	/** ADC12 pin. */
+	/** ADC12 pin */
 	ADC_POSITIVE_INPUT_PIN12         = ADC_INPUTCTRL_MUXPOS_AIN12,
 	/** ADC13 pin */
 	ADC_POSITIVE_INPUT_PIN13         = ADC_INPUTCTRL_MUXPOS_AIN13,
@@ -273,19 +273,19 @@ enum adc_positive_input {
 	/** Temperature reference. */
 	ADC_POSITIVE_INPUT_TEMP          = ADC_INPUTCTRL_MUXPOS_TEMP,
 #endif
-	/** Bandgap voltage. */
+	/** Bandgap voltage */
 	ADC_POSITIVE_INPUT_BANDGAP       = ADC_INPUTCTRL_MUXPOS_BANDGAP,
 	/** 1/4 scaled core supply */
 	ADC_POSITIVE_INPUT_SCALEDCOREVCC = ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC,
 	/** 1/4 scaled I/O supply */
 	ADC_POSITIVE_INPUT_SCALEDIOVCC   = ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC,
 #if !(SAML22)
-	/** DAC input. */
+	/** DAC input */
 	ADC_POSITIVE_INPUT_DAC           = ADC_INPUTCTRL_MUXPOS_DAC,
 #endif
 
 #if (SAML21)
-	/** SCALEDVBAT. */
+	/** SCALEDVBAT */
 	ADC_POSITIVE_INPUT_SCALEDVBAT    = ADC_INPUTCTRL_MUXPOS_SCALEDVBAT,
 	/** OPAMP01 */
 	ADC_POSITIVE_INPUT_OPAMP01       = ADC_INPUTCTRL_MUXPOS_OPAMP01,
@@ -293,7 +293,7 @@ enum adc_positive_input {
 	ADC_POSITIVE_INPUT_OPAMP2        = ADC_INPUTCTRL_MUXPOS_OPAMP2,
 #endif
 #if (SAML22)
-	/** SCALEDVBAT. */
+	/** SCALEDVBAT */
 	ADC_POSITIVE_INPUT_SCALEDVBAT    = ADC_INPUTCTRL_MUXPOS_SCALEDVBAT,
 	/** CTAT. */
 	ADC_POSITIVE_INPUT_CTAT          = ADC_INPUTCTRL_MUXPOS_CTAT,
@@ -320,12 +320,12 @@ enum adc_negative_input {
 	/** ADC5 pin */
 	ADC_NEGATIVE_INPUT_PIN5          = ADC_INPUTCTRL_MUXNEG_AIN5,
 #if !(SAMC20) && !(SAMC21)
-	/** ADC6 pin. */
+	/** ADC6 pin */
 	ADC_NEGATIVE_INPUT_PIN6          = ADC_INPUTCTRL_MUXNEG_AIN6,
 	/** ADC7 pin */
 	ADC_NEGATIVE_INPUT_PIN7          = ADC_INPUTCTRL_MUXNEG_AIN7,
 #endif
-	/** Internal ground. */
+	/** Internal ground */
 	ADC_NEGATIVE_INPUT_GND           = ADC_INPUTCTRL_MUXNEG(0x18u),
 };
 
@@ -429,9 +429,9 @@ enum adc_oversampling_and_decimation {
  * Enum for the trigger selection in dual mode.
  */
 enum adc_dual_mode_trigger_selection {
-	/** Start event or software trigger will start a conversion on both ADCs. */
+	/** Start event or software trigger will start a conversion on both ADCs */
 	ADC_DUAL_MODE_BOTH         = ADC_CTRLC_DUALSEL_BOTH,
-	/** START event or software trigger will alternately start a conversion on ADC0 and ADC1. */
+	/** START event or software trigger will alternatingly start a conversion on ADC0 and ADC1 */
 	ADC_DUAL_MODE_INTERLEAVE   = ADC_CTRLC_DUALSEL_INTERLEAVE,
 };
 #endif

@@ -148,6 +148,7 @@ extern "C" {
 #define SAMC21_XPLAINED_PRO        80  //!< SAM C21 Xplained Pro board.
 #define SAMV71_XPLAINED_ULTRA      81  //!< SAMV71 Xplained Ultra board.
 #define SAML22_XPLAINED_PRO        86  //!< SAM L22 Xplained Pro board.
+#define ATMEGA328P_XPLAINED_MINI   82  //!< ATMEGA328P Xplained MINI board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices.
 #define AVR_SIMULATOR_UC3          98  //!< Simulator for the AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -349,6 +350,8 @@ extern "C" {
 #elif BOARD == USER_BOARD
   // User-reserved area: #include the header file of your board here (if any).
 #  include "user_board.h"
+#elif BOARD == ATMEGA328P_XPLAINED_MINI
+#  include "atmega328p_xplained_mini/atmega328p_xplained_mini.h"
 #elif BOARD == DUMMY_BOARD
 #  include "dummy/dummy_board.h"
 #else

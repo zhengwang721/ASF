@@ -1,0 +1,33 @@
+ <asf xmlversion="1.0">
+ 
+	<module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.apps.proximetry-agent.agent" caption="TBA">
+				<info type="description" value="summary">
+			
+				</info>
+				<build type="c-source"      value="diagnostic_button.c"/>
+				<build type="c-source"      value="misc.c"/>
+				<build type="c-source"      value="prox_agent.c"/>
+				<build type="c-source"      value="settings.c"/>
+				<build type="c-source"      value="settings_eeprom.c"/>
+				<build type="header-file"      value="diagnostic_button.h"/>
+				<build type="header-file"      value="misc.h"/>
+				<build type="header-file"      value="prox_agent.h"/>
+				<build type="header-file"      value="settings.h"/>
+				<build type="header-file"      value="settings_eeprom.h"/>
+				<build type="header-file"      value="common.h"/>
+				<build type="include-path" value="."/>
+				<require idref="thirdparty.wireless.smartconnect_6lowpan.core.sys"/>
+                <require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64-addr"/>
+                <require idref="thirdparty.wireless.smartconnect_6lowpan.apps.simple-rpl"/>
+				<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.proximetry-agent.agent-sdk"/>
+				<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ipv6"/>
+				<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ip"/>
+				<require idref="config.thirdparty.wireless.smartconnect_6lowpan.services.sam0"/>
+				<device-support value="sam0"/>		
+				<build type="doxygen-entry-point" value="group_contiki_apps"/>	
+				<info type="keyword" value="technology">
+					<keyword value="Wireless"/>
+					<keyword value="Communication"/>
+				</info>
+        </module>       
+</asf>
