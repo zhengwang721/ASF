@@ -68,7 +68,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -676,28 +676,28 @@ static inline void extint_nmi_clear_detected(
  *      <th>Comments</td>
  *  </tr>
  *  <tr>
- *      <td>E</td>
+ *      <td>42112E</td>
  *      <td>08/2015</td>
  *      <td>Added support for SAM L21, SAM C21, and SAM DAx</td>
  *  </tr>
  *  <tr>
- *      <td>D</td>
+ *      <td>42112D</td>
  *      <td>12/2014</td>
  *      <td>Added support for SAM R21 and SAM D10/D11</td>
  *  </tr>
  *  <tr>
- *      <td>C</td>
+ *      <td>42112C</td>
  *      <td>01/2014</td>
  *      <td>Added support for SAM D21</td>
  *  </tr>
  *  <tr>
- *      <td>B</td>
+ *      <td>42112B</td>
  *      <td>06/2013</td>
  *      <td>Added additional documentation on the event system. Corrected
  *          documentation typos.</td>
  *  </tr>
  *  <tr>
- *      <td>A</td>
+ *      <td>42112A</td>
  *      <td>06/2013</td>
  *      <td>Initial release</td>
  *  </tr>
