@@ -70,7 +70,7 @@ bool pxp_led_state = true;
 /** @brief Timer interval for timer used for led blinking */
 uint8_t timer_interval = INIT_TIMER_INTERVAL;
 
-
+uint8_t att_db_data[1024];
 
 /**
 * \brief Timer callback handler called on timer expiry
@@ -166,7 +166,16 @@ int main(void)
 {
 	at_ble_events_t event;
 	uint8_t params[AT_BLE_EVENT_PARAM_MAX_SIZE];	
-	
+		at_ble_init_config_t pf_cfg;
+		platform_config busConfig;
+
+		/*Memory allocation required by GATT Server DB*/
+		pf_cfg.memPool.memSize = sizeof(att_db_data);
+		pf_cfg.memPool.memStartAdd = (uint8_t *)att_db_data;
+		/*Bus configuration*/
+		busConfig.bus_type = UART;
+		pf_cfg.plf_config = &busConfig;
+
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -187,7 +196,7 @@ int main(void)
 	DBG_LOG("Initializing Proximity Reporter Application");
 	
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL);
+	ble_device_init(NULL,&pf_cfg);
 	
 	register_pathloss_handler(app_pathloss_alert);
 	register_linkloss_handler(app_linkloss_alert);
