@@ -114,6 +114,9 @@ status_t brd_adv_init(void)
 
 int main(void)
 {
+	at_ble_init_config_t pf_cfg;
+	platform_config busConfig;
+	
 #if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -126,9 +129,17 @@ int main(void)
 	serial_console_init();
 
 	DBG_LOG("Initializing Broadcaster Application");
+	
+	/*Memory allocation required by GATT Server DB*/
+	pf_cfg.memPool.memSize = 0;
+	pf_cfg.memPool.memStartAdd = NULL;
+	
+	/*Bus configuration*/
+	busConfig.bus_type = UART;
+	pf_cfg.plf_config = &busConfig;
 
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL);
+	ble_device_init(NULL, &pf_cfg);
 
 	brd_adv_init();
 
