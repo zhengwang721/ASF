@@ -102,6 +102,8 @@ static uint8_t adv_data[] = {0x1a, 0xff, 0x4c, 0x00, 0x02, 0x15, 0x21, 0x8A,
 static uint8_t scan_rsp_data[] = {0x11, 0x07, 0x1b, 0xc5, 0xd5, 0xa5, 0x02, 0x00,
 	                              0x37, 0xaa, 0xe3, 0x11, 0x2a, 0xdc, 0x00, 0xcd,
                                   0x30, 0x57};
+								  
+uint8_t db_mem[1024] = {0};								  
 
 /* service UUID definition */
 static at_ble_uuid_t service_uuid = {AT_BLE_UUID_128 ,
@@ -119,11 +121,11 @@ static at_ble_characteristic_t chars[] = {
 			AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR, /* permissions */
 
 			NULL, 0, 0, /* user defined name */
+			NULL, /* presentation format */
 			AT_BLE_ATTR_NO_PERMISSIONS,
 			AT_BLE_ATTR_NO_PERMISSIONS,
 			AT_BLE_ATTR_NO_PERMISSIONS,
 			0,0,0, /* Handles */
-			NULL /* presentation format */
 	},
 			
 	{
@@ -135,11 +137,11 @@ static at_ble_characteristic_t chars[] = {
 			AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR, /* permissions */
 
 			NULL, 0, 0, /* user defined name */
+			NULL, /* presentation format */
 			AT_BLE_ATTR_NO_PERMISSIONS,
 			AT_BLE_ATTR_NO_PERMISSIONS,
 			AT_BLE_ATTR_NO_PERMISSIONS,
 			0,0,0, /* Handles */
-			NULL /* presentation format */
 	}
 };
 
@@ -213,26 +215,25 @@ static void ble_data_sent_confim(void)
 /* Initialize the BLE */
 static void ble_init(void)
 {
-	uint8_t port = 74;
-	uint32_t chip_id;
+	at_ble_init_config_t pf_cfg;
+	platform_config busConfig;
 	
 	/* Initialize the platform */
 	DBG_LOG("Initializing BTLC1000");
 	
+	/*Memory allocation required by GATT Server DB*/
+	pf_cfg.memPool.memSize = sizeof(db_mem);
+	pf_cfg.memPool.memStartAdd = &(db_mem[0]);
+	
+	/*Bus configuration*/
+	busConfig.bus_type = UART;
+	pf_cfg.plf_config = &busConfig;
+	
 	/* Init BLE device */
-	if(at_ble_init(&port) != AT_BLE_SUCCESS)
+	if(at_ble_init(&pf_cfg) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("BTLC1000 Initialization failed");
 	}
-	
-	/* read BLE device chip id */
-	if(at_ble_chip_id_get(&chip_id) != AT_BLE_SUCCESS)
-	{
-		DBG_LOG("Failed to get the BTLC1000 chip id");
-	}
-	
-	DBG_LOG("BLE-chip id:0x%02X%02X%02X%02X", (uint8_t)(chip_id >> 24), (uint8_t)(chip_id >> 16), 
-											(uint8_t)(chip_id >> 8), ((uint8_t)chip_id));
 }
 
 static void beacon_init(void)
