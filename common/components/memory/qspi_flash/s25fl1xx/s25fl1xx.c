@@ -272,7 +272,7 @@ static void s25fl1xx_memory_access(struct qspid_t *qspid, uint8_t instr, uint32_
 	qspid->qspi_command.instruction = instr;
 	qspid->qspi_buffer.data_tx = tx_data;
 	qspid->qspi_buffer.data_rx = rx_data;
-	mem->addr= addr;
+	mem->addr = addr;
 	mem->inst_frame.bm.b_inst_en = 1;
 	mem->inst_frame.bm.b_data_en = 1;
 	mem->inst_frame.bm.b_addr_en = 1;
@@ -282,6 +282,7 @@ static void s25fl1xx_memory_access(struct qspid_t *qspid, uint8_t instr, uint32_
 		mem->inst_frame.bm.b_tfr_type = (QSPI_IFR_TFRTYP_TRSFR_WRITE_MEMORY >> QSPI_IFR_TFRTYP_Pos);
 		qspid->qspi_buffer.tx_data_size = size;
 	} else {
+		mem->addr += 1;
 		mem->inst_frame.bm.b_tfr_type = (QSPI_IFR_TFRTYP_TRSFR_READ_MEMORY >> QSPI_IFR_TFRTYP_Pos);
 		qspid->qspi_buffer.rx_data_size = size;
 	}
@@ -952,3 +953,34 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
 	return 0;
 }
 
+/**
+ * \brief Issue 'CContinuous Read Mode' command, the device can return to normal
+ * SPI command mode, in which all commands can be accepts.
+ *
+ * \param qspid  Pointer to an S25FL1 qspid_t struct.
+ */
+void s25fl1xx_continous_read_mode_reset(struct qspid_t *qspid)
+{
+	s25fl1xx_exec_command(qspid, CONT_MODE_RESET, 0, 0, QSPI_CMD_ACCESS, 0);
+}
+
+/**
+ * \brief Reads data from the specified address on the serial flash.
+ *
+ * \param qspid  Pointer to an S25FL1 qspid_t struct.
+ */
+void s25fl1xx_enter_continous_read_mode(struct qspid_t *qspid)
+{
+	uint32_t data;
+	mem->inst_frame.bm.b_opt_len= (QSPI_IFR_OPTL_OPTION_4BIT >> QSPI_IFR_OPTL_Pos);
+	qspid->qspi_command.option = 0x02;
+	mem->inst_frame.bm.b_continues_read = 1;
+	mem->inst_frame.bm.b_dummy_cycles = 5;
+	mem->inst_frame.bm.b_opt_en = 1;
+	mem->inst_frame.bm.b_width = QSPI_IFR_WIDTH_QUAD_IO;
+
+	s25fl1xx_memory_access(qspid, READ_ARRAY_QUAD_IO , 0, 0, &data, QSPI_READ_ACCESS, 1, 0);
+
+	mem->inst_frame.bm.b_opt_en = 0;
+	mem->inst_frame.bm.b_continues_read  = 0;
+}

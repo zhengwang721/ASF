@@ -192,6 +192,8 @@
 #define MANUFACTURER_DEVICE_ID           0x90
 /** Read manufacturer and device ID command code. */
 #define READ_JEDEC_ID                    0x9F
+/** Continuous Read Mode Reset command code. */
+#define CONT_MODE_RESET                  0xFF
 
 /** QSPI Flash Manufacturer JEDEC ID */
 #define ATMEL_SPI_FLASH                  0x1F
@@ -237,6 +239,8 @@ uint8_t s25fl1xx_read_dual_io(struct qspid_t *qspid, uint32_t *data, uint32_t si
 								   uint8_t cont_mode, uint8_t secure);
 uint8_t s25fl1xx_read_quad_io(struct qspid_t *qspid, uint32_t *data, uint32_t size, uint32_t address,
 								   uint8_t cont_mode, uint8_t secure);
+void s25fl1xx_continous_read_mode_reset(struct qspid_t *qspid);
+void s25fl1xx_enter_continous_read_mode(struct qspid_t *qspid);
 
 #endif // #ifndef S25FL1_H
 

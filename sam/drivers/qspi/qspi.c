@@ -64,10 +64,19 @@
  * @{
  */
 
-static void my_memcpy(uint8_t* dest, uint8_t* source, uint32_t count)
+#define __IAR_PROJECT__  (!(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)))
+
+/**
+ * \brief Memory copy function.
+ *
+ * \param dst  Pointer to destination buffer.
+ * \param src  Pointer to source buffer.
+ * \param count  Bytes to be copied.
+ */
+static void _qspi_memcpy(uint8_t* dst, uint8_t* src, uint32_t count)
 {
     while (count--) {
-		*dest++ = *source++;
+		*dst++ = *src++;
 	}
 }
 
@@ -501,7 +510,11 @@ enum status_code qspi_flash_execute_command(struct qspid_t *qspid, enum qspi_acc
 
 		/* To synchronize system bus accesses */
 		qspi_get_inst_frame(qspid->qspi_hw);
-		my_memcpy(buffer.data_rx , qspi_buffer,  buffer.rx_data_size);
+#if __IAR_PROJECT__
+		memcpy((uint8_t *)buffer.data_rx , (uint8_t *)qspi_buffer,  buffer.rx_data_size);
+#else
+		_qspi_memcpy((uint8_t *)buffer.data_rx , (uint8_t *)qspi_buffer,  buffer.rx_data_size);
+#endif
 	} else if (read_write == QSPI_WRITE_ACCESS) {
 		assert(buffer.tx_data_size);
 
@@ -509,8 +522,11 @@ enum status_code qspi_flash_execute_command(struct qspid_t *qspid, enum qspi_acc
 		qspi_set_instruction_frame(qspid->qspi_hw, *frame);
 		/* To synchronize system bus accesses */
 		qspi_get_inst_frame(qspid->qspi_hw);
-
-		my_memcpy(qspi_buffer, buffer.data_tx, buffer.tx_data_size);
+#if __IAR_PROJECT__
+		memcpy((uint8_t *)qspi_buffer, (uint8_t *)buffer.data_tx, buffer.tx_data_size);
+#else
+		_qspi_memcpy((uint8_t *)qspi_buffer, (uint8_t *)buffer.data_tx, buffer.tx_data_size);
+#endif
 	}
 
 	if (read_write == QSPI_READ_ACCESS || read_write == QSPI_WRITE_ACCESS) {
@@ -556,9 +572,17 @@ enum status_code qspi_flash_access_memory(struct qspid_t *qspid, enum qspi_acces
 	frame->inst_frame.val = 0;
 
 	if (read_write == QSPI_WRITE_ACCESS) {
-		my_memcpy(qspi_mem, buffer->data_tx , buffer->tx_data_size);
+#if __IAR_PROJECT__
+		memcpy((uint8_t *)qspi_mem, (uint8_t *)buffer->data_tx , buffer->tx_data_size);
+#else
+		_qspi_memcpy((uint8_t *)qspi_mem, (uint8_t *)buffer->data_tx , buffer->tx_data_size);
+#endif
 	} else {
-		my_memcpy(buffer->data_rx, qspi_mem, buffer->rx_data_size);
+#if __IAR_PROJECT__
+		memcpy((uint8_t *)buffer->data_rx, (uint8_t *)qspi_mem, buffer->rx_data_size);
+#else
+		_qspi_memcpy((uint8_t *)buffer->data_rx, (uint8_t *)qspi_mem, buffer->rx_data_size);
+#endif
 	}
 	__DSB();
 	__ISB();

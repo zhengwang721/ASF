@@ -100,6 +100,23 @@
 #define USART1_TXD_GPIO   PIO_PB4_IDX
 #define USART1_TXD_FLAGS  IOPORT_MODE_MUX_D
 
+/** USART0 pins definitions, PB0,PB1. */
+#define USART0_RXD_GPIO   PIO_PB0_IDX
+#define USART0_RXD_FLAGS  IOPORT_MODE_MUX_C
+#define USART0_TXD_GPIO   PIO_PB1_IDX
+#define USART0_TXD_FLAGS  IOPORT_MODE_MUX_C
+
+#define PIN_USART0_SCK_IDX    (PIO_PB13_IDX)
+#define PIN_USART0_SCK_FLAGS  (IOPORT_MODE_MUX_C)
+
+/** USART0 pin CTS */
+#define PIN_USART0_CTS_IDX    (PIO_PB2_IDX)
+#define PIN_USART0_CTS_FLAGS  (IOPORT_MODE_MUX_C)
+
+/** USART0 pin RTS */
+#define PIN_USART0_RTS_IDX    (PIO_PB3_IDX)
+#define PIN_USART0_RTS_FLAGS  (IOPORT_MODE_MUX_C)
+
 
 //! \name LED definitions
 //@{
@@ -324,6 +341,57 @@
 /** AFEC channel for potentiometer */
 #define AFEC_CHANNEL_POTENTIOMETER  AFEC_CHANNEL_0
 
+#define MCAN_MODULE              MCAN1
+/*----------------------------------------------------------------------------*/
+/**
+ * \page samv71_xpro_CAN "SAMV71-XPRO - CAN"
+ * This page lists definitions related to CAN0 and CAN1.
+ *
+ * CAN
+ * - \ref PIN_CAN0_TRANSCEIVER_RXEN
+ * - \ref PIN_CAN0_TRANSCEIVER_RS
+ * - \ref PIN_CAN0_TXD
+ * - \ref PIN_CAN0_RXD
+ * - \ref PINS_CAN0
+ *
+ * - \ref PIN_CAN1_TRANSCEIVER_RXEN
+ * - \ref PIN_CAN1_TRANSCEIVER_RS
+ * - \ref PIN_CAN1_TXD
+ * - \ref PIN_CAN1_RXD
+ * - \ref PINS_CAN1
+ */
+/** CAN0 transceiver PIN RS. */
+#define PIN_CAN0_TR_RS_IDX        PIO_PE0_IDX
+#define PIN_CAN0_TR_RS_FLAGS      IOPORT_DIR_OUTPUT
+
+/** CAN0 transceiver PIN EN. */
+#define PIN_CAN0_TR_EN_IDX        PIO_PE1_IDX
+#define PIN_CAN0_TR_EN_FLAGS      IOPORT_DIR_OUTPUT
+
+/** CAN0 PIN RX. */
+#define PIN_CAN0_RX_IDX           PIO_PB3_IDX
+#define PIN_CAN0_RX_FLAGS         IOPORT_MODE_MUX_A
+
+/** CAN0 PIN TX. */
+#define PIN_CAN0_TX_IDX           PIO_PB2_IDX
+#define PIN_CAN0_TX_FLAGS         IOPORT_MODE_MUX_A
+
+/** CAN1 transceiver PIN RS. */
+#define PIN_CAN1_TR_RS_IDX        PIO_PE2_IDX
+#define PIN_CAN1_TR_RS_FLAGS      IOPORT_DIR_OUTPUT
+
+/** CAN1 transceiver PIN EN. */
+#define PIN_CAN1_TR_EN_IDX        PIO_PE3_IDX
+#define PIN_CAN1_TR_EN_FLAGS      IOPORT_DIR_OUTPUT
+
+/** CAN1 PIN RX. */
+#define PIN_CAN1_RX_IDX           PIO_PC12_IDX
+#define PIN_CAN1_RX_FLAGS         IOPORT_MODE_MUX_C
+
+/** CAN1 PIN TX. */
+#define PIN_CAN1_TX_IDX           PIO_PC14_IDX
+#define PIN_CAN1_TX_FLAGS         IOPORT_MODE_MUX_C
+
 /** PWM LED0 pin definitions. */
 #define PIN_PWM_LED0_GPIO    PIO_PA23_IDX
 #define PIN_PWM_LED0_FLAGS   (IOPORT_MODE_MUX_B)
@@ -333,6 +401,30 @@
 #define PIN_PWM_LED1_GPIO    PIO_PA24_IDX
 #define PIN_PWM_LED1_FLAGS   (IOPORT_MODE_MUX_B)
 #define PIN_PWM_LED1_CHANNEL PWM_CHANNEL_1
+
+/*----------------------------------------------------------------------------*/
+/** GMAC HW configurations */
+#define BOARD_GMAC_PHY_ADDR 1
+
+#define PIN_GMAC_RESET_MASK   PIO_PC10
+#define PIN_GMAC_RESET_PIO    PIOC
+#define PIN_GMAC_INT_MASK     PIO_PA19
+#define PIN_GMAC_INT_PIO      PIOA
+#define PIN_GMAC_SIGDET_MASK  PIO_PA29
+#define PIN_GMAC_SIGDET_PIO   PIOA
+#define PIN_GMAC_PERIPH  PIO_PERIPH_A
+#define PIN_GMAC_PIO     PIOD
+#define PIN_GMAC_MASK   (PIO_PD0A_GTXCK | PIO_PD1A_GTXEN | PIO_PD2A_GTX0 | \
+						 PIO_PD3A_GTX1 | PIO_PD4A_GRXDV | PIO_PD5A_GRX0 |  \
+						 PIO_PD6A_GRX1 | PIO_PD7A_GRXER | PIO_PD8A_GMDC | \
+						 PIO_PD9A_GMDIO)
+
+/** Board configuration of the AT24MAC EEPROM */
+#define BOARD_AT24MAC_TWIHS_INSTANCE      TWIHS0
+#define BOARD_AT24MAC_ADDRESS             (0xAE >> 1)
+#define BOARD_CLK_TWIHS_EEPROM            0
+#define BOARD_CLK_TWIHS_MUX_EEPROM        0
+
 
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAMV71_XLTRA_H_ */
