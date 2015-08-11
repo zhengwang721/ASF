@@ -359,11 +359,11 @@ enum system_clock_freq {
  */
 enum system_clock_resource {
 	/** Use 26MHz Crystal Oscillator XO as ARM clock */
-	CLOCK_RESOURCE_XO_26MHZ,
+	CLOCK_RESOURCE_XO_26_MHZ,
 	/** Use either LP 2MHz clock */
-	CLOCK_RESOURCE_LP_2MHZ,
+	CLOCK_RESOURCE_LP_2_MHZ,
 	/** 26MHz integrated RC Oscillator */
-	CLOCK_RESOURCE_RC_26MHZ,
+	CLOCK_RESOURCE_RC_26_MHZ,
 };
 
 /**
@@ -374,11 +374,11 @@ enum system_clock_resource {
  */
 enum system_clock_aon_resource {
 	/** OSC 2MHz */
-	CLOCK_AON_RESOURCE_2MHZ,
+	CLOCK_AON_RESOURCE_2_MHZ,
 	/** OSC 2MHz/64 = 31.25KHz */
-	CLOCK_AON_RESOURCE_31_25KHZ,
+	CLOCK_AON_RESOURCE_31_25_KHZ,
 	/** RTC XO 32.768KHz */
-	CLOCK_AON_RESOURCE_32_768KHZ,
+	CLOCK_AON_RESOURCE_32_768_KHZ,
 	/** Use default clock */
 	CLOCK_AON_DEFAULT,
 };

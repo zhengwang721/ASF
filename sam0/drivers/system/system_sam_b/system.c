@@ -64,14 +64,14 @@ enum status_code system_clock_config(enum system_clock_resource resoure, \
 				enum system_clock_freq freq)
 {
 	switch (resoure) {
-		case CLOCK_RESOURCE_XO_26MHZ:
+		case CLOCK_RESOURCE_XO_26_MHZ:
 			LPMCU_MISC_REGS0->LPMCU_CONTROL.reg |= \
 					LPMCU_MISC_REGS_LPMCU_CONTROL_USE_BT26M_CLK | \
 					LPMCU_MISC_REGS_LPMCU_CONTROL_USE_ARM_LP_CLK;
 			system_clock_value = 26000000;
 			break;
 
-		case CLOCK_RESOURCE_LP_2MHZ:
+		case CLOCK_RESOURCE_LP_2_MHZ:
 			LPMCU_MISC_REGS0->LPMCU_CONTROL.reg |= \
 					LPMCU_MISC_REGS_LPMCU_CONTROL_USE_ARM_LP_CLK;
 			LPMCU_MISC_REGS0->LPMCU_CONTROL.reg &= \
@@ -81,7 +81,7 @@ enum status_code system_clock_config(enum system_clock_resource resoure, \
 			system_clock_value = 2000000;
 			break;
 
-		case CLOCK_RESOURCE_RC_26MHZ:
+		case CLOCK_RESOURCE_RC_26_MHZ:
 			LPMCU_MISC_REGS0->LPMCU_CONTROL.reg &= \
 					~(LPMCU_MISC_REGS_LPMCU_CONTROL_USE_BT26M_CLK | \
 					LPMCU_MISC_REGS_LPMCU_CONTROL_USE_ARM_LP_CLK);
@@ -1416,13 +1416,13 @@ enum status_code system_clock_aon_config( \
 	switch (peripheral_aon) {
 		case PERIPHERAL_AON_SLEEP_TIMER:
 			switch (aon_resource) {
-				case CLOCK_AON_RESOURCE_31_25KHZ:
+				case CLOCK_AON_RESOURCE_31_25_KHZ:
 					AON_GP_REGS0->AON_MISC_CTRL.reg |= \
 						AON_GP_REGS_AON_MISC_CTRL_USE_RTC_32KHZ_CLK_SLEEP_TIMER;
 					AON_GP_REGS0->AON_MISC_CTRL.reg &= \
 						~AON_GP_REGS_AON_MISC_CTRL_USE_EXT_32KHZ_CLK_SLEEP_TIMER;
 				break;
-				case CLOCK_AON_RESOURCE_32_768KHZ:
+				case CLOCK_AON_RESOURCE_32_768_KHZ:
 					AON_GP_REGS0->AON_MISC_CTRL.reg &= \
 						~AON_GP_REGS_AON_MISC_CTRL_USE_RTC_32KHZ_CLK_SLEEP_TIMER;
 					AON_GP_REGS0->AON_MISC_CTRL.reg |= \
@@ -1438,7 +1438,7 @@ enum status_code system_clock_aon_config( \
 		break;
 
 		case PERIPHERAL_AON_POWER_SEQUENCER:
-			if (aon_resource == CLOCK_AON_RESOURCE_2MHZ) {
+			if (aon_resource == CLOCK_AON_RESOURCE_2_MHZ) {
 				AON_GP_REGS0->AON_MISC_CTRL.reg |= \
 					AON_GP_REGS_AON_MISC_CTRL_USE_RTC_AON_PWR_SEQ_CLK;
 				AON_GP_REGS0->AON_MISC_CTRL.reg |= \
@@ -1452,7 +1452,7 @@ enum status_code system_clock_aon_config( \
 		break;
 
 		case PERIPHERAL_AON_PD:
-			if (aon_resource == CLOCK_AON_RESOURCE_2MHZ) {
+			if (aon_resource == CLOCK_AON_RESOURCE_2_MHZ) {
 				AON_GP_REGS0->AON_MISC_CTRL.reg |= \
 					AON_GP_REGS_AON_MISC_CTRL_USE_OSC2M_AS_TB_CLK;
 			} else if (aon_resource == CLOCK_AON_DEFAULT) {
