@@ -116,6 +116,58 @@
 extern "C" {
 #endif
 
+
+/* ISR RAM table address, definition from rom code, */
+#define ISR_RAM_MAP_START_ADDRESS	(0x10000000)
+/* ISR initialization status located in offset 0, definition from rom code*/
+#define ISR_RAM_MAP_INITIALIZED (0x20101985)
+
+/**
+ * \brief ISR RAM table index
+ *
+ * Enum for the index of the ISR in RAm.
+ *
+ */
+enum ram_isr_table_index {
+	RAM_ISR_TABLE_RESET_INDEX            = 1,
+	RAM_ISR_TABLE_NMI_INDEX              = 2,
+	RAM_ISR_TABLE_HARDFAULT_INDEX        = 3,
+	RAM_ISR_TABLE_SVC_INDEX              = 11,
+	RAM_ISR_TABLE_PENDSV_INDEX           = 14,
+	RAM_ISR_TABLE_SYSTICK_INDEX          = 15,
+	RAM_ISR_TABLE_UARTRX0_INDEX          = 16,
+	RAM_ISR_TABLE_UARTTX0_INDEX          = 17,
+	RAM_ISR_TABLE_UARTRX1_INDEX          = 18,
+	RAM_ISR_TABLE_UARTTX1_INDEX          = 19,
+	RAM_ISR_TABLE_SPIRX0_INDEX           = 20,
+	RAM_ISR_TABLE_SPITX0_INDEX           = 21,
+	RAM_ISR_TABLE_DMA_INDEX              = 22,
+	RAM_ISR_TABLE_PORT0_COMB_INDEX       = 23,
+	RAM_ISR_TABLE_PORT1_COMB_INDEX       = 24,
+	RAM_ISR_TABLE_TIMER0_INDEX           = 25,
+	RAM_ISR_TABLE_DUALTIMER_INDEX        = 26,
+	RAM_ISR_TABLE_SPIRX1_INDEX           = 27,
+	RAM_ISR_TABLE_SPITX1_INDEX           = 28,
+	RAM_ISR_TABLE_I2CRX0_INDEX           = 29,
+	RAM_ISR_TABLE_I2CTX0_INDEX           = 30,
+	RAM_ISR_TABLE_PORT0_0_INDEX          = 32,
+	RAM_ISR_TABLE_PORT0_1_INDEX          = 33,
+	RAM_ISR_TABLE_PORT0_2_INDEX          = 34,
+	RAM_ISR_TABLE_PORT0_3_INDEX          = 35,
+	RAM_ISR_TABLE_BLE_LP_RESET_INDEX     = 36,
+	RAM_ISR_TABLE_BLE_CORE_RESET_INDEX   = 37,
+	RAM_ISR_TABLE_CALIBRATION_DONE_INDEX = 38,
+	RAM_ISR_TABLE_SECURITY_INDEX         = 39,
+	RAM_ISR_TABLE_BLE_FE_INDEX           = 40,
+	RAM_ISR_TABLE_SXPLL_NEED_RESET_INDEX = 41,
+	RAM_ISR_TABLE_EXT_COMB_INDEX         = 42,
+	RAM_ISR_TABLE_AON_SLEEP_TIMER_INDEX  = 43,
+	RAM_ISR_TABLE_BLE_OSC_EN_INDEX       = 44,
+	RAM_ISR_TABLE_BLE_WAKEUP_LP_INDEX    = 45,
+	RAM_ISR_TABLE_RXTX_SEQ_SLEEP_INDEX   = 46,
+	RAM_ISR_TABLE_BLE_CORE_INDEX         = 47,
+};
+
 /**
  * \brief SYSTEM peripheral enum
  *
@@ -290,13 +342,13 @@ enum system_peripheral_aon {
  */
 enum system_clock_freq {
 	/** 26MHz */
-	CLOCK_FREQ_26,
+	CLOCK_FREQ_26_MHZ,
 	/** 13MHz */
-	CLOCK_FREQ_13,
+	CLOCK_FREQ_13_MHZ,
 	/** 6.5MHz */
-	CLOCK_FREQ_6_5,
+	CLOCK_FREQ_6_5_MHZ,
 	/** 3.25MHz */
-	CLOCK_FREQ_3_25,
+	CLOCK_FREQ_3_25_MHZ,
 };
 
 /**
@@ -307,11 +359,11 @@ enum system_clock_freq {
  */
 enum system_clock_resource {
 	/** Use 26MHz Crystal Oscillator XO as ARM clock */
-	CLOCK_RESOURCE_XO_26MHZ,
+	CLOCK_RESOURCE_XO_26_MHZ,
 	/** Use either LP 2MHz clock */
-	CLOCK_RESOURCE_LP_2MHZ,
+	CLOCK_RESOURCE_LP_2_MHZ,
 	/** 26MHz integrated RC Oscillator */
-	CLOCK_RESOURCE_INTEGRATED_26MHZ,
+	CLOCK_RESOURCE_RC_26_MHZ,
 };
 
 /**
@@ -322,11 +374,11 @@ enum system_clock_resource {
  */
 enum system_clock_aon_resource {
 	/** OSC 2MHz */
-	CLOCK_AON_RESOURCE_2MHZ,
+	CLOCK_AON_RESOURCE_2_MHZ,
 	/** OSC 2MHz/64 = 31.25KHz */
-	CLOCK_AON_RESOURCE_31_25KHZ,
+	CLOCK_AON_RESOURCE_31_25_KHZ,
 	/** RTC XO 32.768KHz */
-	CLOCK_AON_RESOURCE_32_768KHZ,
+	CLOCK_AON_RESOURCE_32_768_KHZ,
 	/** Use default clock */
 	CLOCK_AON_DEFAULT,
 };
@@ -497,6 +549,7 @@ struct system_calibration_config {
 enum status_code system_clock_config( \
 				enum system_clock_resource resoure, \
 				enum system_clock_freq freq);
+uint32_t system_clock_get_value(void);
 enum status_code system_clock_peripheral_enable(enum system_peripheral peripheral);
 enum status_code system_clock_peripheral_disable(enum system_peripheral peripheral);
 enum status_code system_clock_peripheral_freq_config( \
@@ -511,6 +564,15 @@ enum status_code system_clock_peripheral_freq_config( \
  */
 void system_global_reset(void);
 enum status_code system_peripheral_reset(enum system_peripheral peripheral);
+/** @} */
+
+/**
+ * \name System ISR register and unregister
+ * @{
+ */
+void system_register_isr(enum ram_isr_table_index isr_index,
+		uint32_t isr_address);
+void system_unregister_isr(enum ram_isr_table_index isr_index);
 /** @} */
 
 /**
