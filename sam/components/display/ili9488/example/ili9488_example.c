@@ -3,7 +3,7 @@
  *
  * \brief lcd controller ili9488 example.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,7 +51,7 @@
  *
  * \section Requirements
  *
- * This package can be used with SAM3S, SAM3S-EK2 and SAM4S evaluation kits.
+ * This package can be used with samv71_xplained_ultra evaluation kits.
  *
  * \section Description
  *
@@ -76,11 +76,6 @@
 
 /* Chip select number to be set */
 #define ILI9488_LCD_CS      3
-
-/** Demo image height. */
-#define DEMO_IMAGE_HEIGHT    62
-/** Demo image width. */
-#define DEMO_IMAGE_WIDTH     101
 
 #define COLOR_CONVERT       RGB_24_TO_RGB565
 
@@ -187,7 +182,6 @@ int main(void)
 	smc_set_cycle_timing(SMC, ILI9488_LCD_CS, SMC_CYCLE_NWE_CYCLE(0xA)
 			| SMC_CYCLE_NRD_CYCLE(0xA));
 
-
 #if !defined(SAM4S)
 	smc_set_mode(SMC, ILI9488_LCD_CS, SMC_MODE_READ_MODE
 			| SMC_MODE_WRITE_MODE
@@ -210,29 +204,26 @@ int main(void)
 	/* Initialize LCD */
 	ili9488_init(&g_ili9488_display_opt);
 	
-	/* Turn on LCD */
-	//ili9488_display_on();
-
 	/* Draw text, image and basic shapes on the LCD */
 	ili9488_set_foreground_color(COLOR_CONVERT(COLOR_WHITE));
-	ili9488_draw_filled_rectangle(0, 0, ILI9488_LCD_WIDTH,ILI9488_LCD_HEIGHT);
+	ili9488_draw_filled_rectangle(0, 0, ILI9488_LCD_WIDTH-1,ILI9488_LCD_HEIGHT-1);
 	
-	ili9488_set_foreground_color(COLOR_CONVERT(COLOR_RED));
-	ili9488_draw_filled_rectangle(0, 0, 300,ILI9488_LCD_HEIGHT);
-	//ili9488_draw_string(10, 20, (uint8_t *)"ili9488_lcd example");
-	//ili9488_draw_pixel(0, 0);
+	/* enable partial mode when draw line or circle. */
+	ili9488_write_register(ILI9488_CMD_PARTIAL_MODE_ON, 0, 0);
 	
-#if 0
+	ili9488_set_foreground_color(COLOR_CONVERT(COLOR_BLACK));
+	ili9488_draw_string(10, 20, (uint8_t *)"ili9488_lcd example");
+	wait(1000);
+	
 	ili9488_set_foreground_color(COLOR_RED);
 	ili9488_draw_circle(60, 160, 40);
 	ili9488_set_foreground_color(COLOR_GREEN);
 	ili9488_draw_circle(120, 160, 40);
 	ili9488_set_foreground_color(COLOR_BLUE);
 	ili9488_draw_circle(180, 160, 40);
-
-	ili9488_set_foreground_color(COLOR_VIOLET);
-	ili9488_draw_line(0, 0, 240, 320);
-#endif
+	
+	ili9488_set_foreground_color(COLOR_CONVERT(COLOR_VIOLET));
+	ili9488_draw_line(0, 0, ILI9488_LCD_WIDTH-1, ILI9488_LCD_HEIGHT-1);
 	
 	while(1) {
 

@@ -3,7 +3,7 @@
  *
  * \brief API driver for ILI9488 TFT display component.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -107,18 +107,16 @@ typedef int16_t gfx_coord_t;
 #define ILI9488_FLIP_X 1
 /** Bit mask for flipping Y for ili9488_set_orientation() */
 #define ILI9488_FLIP_Y 2
-/** Bit mask for swapping X and Y for ili9488_set_orientation() */
-#define ILI9488_SWITCH_XY 4
 
 /** Height of display using swapped X/Y orientation */
-#define ILI9488_SWITCH_XY_HEIGHT 240
+#define ILI9488_SWITCH_XY_HEIGHT 480
 
 /** Width of display using swapped X/Y orientation */
 #define ILI9488_SWITCH_XY_WIDTH  320
 
 /* ILI9488 screen size */
-#define ILI9488_LCD_WIDTH  480
-#define ILI9488_LCD_HEIGHT 320
+#define ILI9488_LCD_WIDTH  320
+#define ILI9488_LCD_HEIGHT 480
 /* ILI9488 ID code */
 #define ILI9488_DEVICE_CODE (0x9488u)
 
@@ -229,438 +227,35 @@ typedef int16_t gfx_coord_t;
 #define get_16b_to_24b(x)           (((union_type*)&(x))->byte.byte_24)
 #define get_24b_to_32b(x)           (((union_type*)&(x))->byte.byte_32)
 
-
-
-/* ILI9488 LCD Registers */
-
-/* Driver Code Read */
-#define ILI9488_DEVICE_CODE_REG (0x00u)
-
-/* -------- ILI9488_START_OSC_CTRL : (Offset: 0x00) Start Oscillator Control -------- */
-#define ILI9488_START_OSC_CTRL    (0x00u)
-#define ILI9488_START_OSC_CTRL_EN (0x1u << 0)
-
-/* -------- ILI9488_DRIVER_OUTPUT_CTRL1 : (Offset: 0x01) Driver Output Control 1 -------- */
-#define ILI9488_DRIVER_OUTPUT_CTRL1    (0x01u)
-#define ILI9488_DRIVER_OUTPUT_CTRL1_SS (0x1u << 8)
-#define ILI9488_DRIVER_OUTPUT_CTRL1_SM (0x1u << 10)
-
-/* -------- ILI9488_LCD_DRIVING_CTRL : (Offset: 0x02) LCD Driving Control -------- */
-#define ILI9488_LCD_DRIVING_CTRL       (0x02u)
-#define ILI9488_LCD_DRIVING_CTRL_EOR   (0x1u << 8)
-#define ILI9488_LCD_DRIVING_CTRL_BC0   (0x1u << 9)
-#define ILI9488_LCD_DRIVING_CTRL_BIT10 (0x1u << 10)
-
-/* -------- ILI9488_ENTRY_MODE : (Offset: 0x03) Entry Mode -------- */
-#define ILI9488_ENTRY_MODE           (0x03u)
-#define ILI9488_ENTRY_MODE_AM        (0x1u << 3)
-#define ILI9488_ENTRY_MODE_ID_POS     4
-#define ILI9488_ENTRY_MODE_ID_MSK    (0x3u << ILI9488_ENTRY_MODE_ID_POS)
-#define ILI9488_ENTRY_MODE_ID(value) ((ILI9488_ENTRY_MODE_ID_MSK & ((value) << ILI9488_ENTRY_MODE_ID_POS)))
-#define ILI9488_ENTRY_MODE_ORG       (0x1u << 7)
-#define ILI9488_ENTRY_MODE_HWM       (0x1u << 9)
-#define ILI9488_ENTRY_MODE_BGR       (0x1u << 12)
-#define ILI9488_ENTRY_MODE_DFM       (0x1u << 14)
-#define ILI9488_ENTRY_MODE_TRI       (0x1u << 15)
-
-/* -------- ILI9488_RESIZE_CTRL : (Offset: 0x04) Resize Control -------- */
-#define ILI9488_RESIZE_CTRL            (0x04u)
-#define ILI9488_RESIZE_CTRL_RSZ_POS     0
-#define ILI9488_RESIZE_CTRL_RSZ_MSK    (0x3u << ILI9488_RESIZE_CTRL_RSZ_POS)
-#define ILI9488_RESIZE_CTRL_RSZ(value) ((ILI9488_RESIZE_CTRL_RSZ_MSK & ((value) << ILI9488_RESIZE_CTRL_RSZ_POS)))
-#define ILI9488_RESIZE_CTRL_RCH_POS     4
-#define ILI9488_RESIZE_CTRL_RCH_MSK    (0x3u << ILI9488_RESIZE_CTRL_RCH_POS)
-#define ILI9488_RESIZE_CTRL_RCH(value) ((ILI9488_RESIZE_CTRL_RCH_MSK & ((value) << ILI9488_RESIZE_CTRL_RCH_POS)))
-#define ILI9488_RESIZE_CTRL_RCV_POS     8
-#define ILI9488_RESIZE_CTRL_RCV_MSK    (0x3u << ILI9488_RESIZE_CTRL_RCV_POS)
-#define ILI9488_RESIZE_CTRL_RCV(value) ((ILI9488_RESIZE_CTRL_RCV_MSK & ((value) << ILI9488_RESIZE_CTRL_RCV_POS)))
-
-/* -------- ILI9488_DISP_CTRL1 : (Offset: 0x07) Display Control 1 -------- */
-#define ILI9488_DISP_CTRL1             (0x07u)
-#define ILI9488_DISP_CTRL1_D_POS        0
-#define ILI9488_DISP_CTRL1_D_MSK       (0x3u << ILI9488_DISP_CTRL1_D_POS)
-#define ILI9488_DISP_CTRL1_D(value)    ((ILI9488_DISP_CTRL1_D_MSK & ((value) << ILI9488_DISP_CTRL1_D_POS)))
-#define ILI9488_DISP_CTRL1_CL          (0x1u << 3)
-#define ILI9488_DISP_CTRL1_DTE         (0x1u << 4)
-#define ILI9488_DISP_CTRL1_GON         (0x1u << 5)
-#define ILI9488_DISP_CTRL1_BASEE       (0x1u << 8)
-#define ILI9488_DISP_CTRL1_PTDE_POS     12
-#define ILI9488_DISP_CTRL1_PTDE_MSK    (0x3u << ILI9488_DISP_CTRL1_PTDE_POS)
-#define ILI9488_DISP_CTRL1_PTDE(value) ((ILI9488_DISP_CTRL1_PTDE_MSK & ((value) << ILI9488_DISP_CTRL1_PTDE_POS)))
-
-/* -------- ILI9488_DISP_CTRL2 : (Offset: 0x08) Display Control 2 -------- */
-#define ILI9488_DISP_CTRL2           (0x08u)
-#define ILI9488_DISP_CTRL2_BP_POS     0
-#define ILI9488_DISP_CTRL2_BP_MSK    (0xfu << ILI9488_DISP_CTRL2_BP_POS)
-#define ILI9488_DISP_CTRL2_BP(value) ((ILI9488_DISP_CTRL2_BP_MSK & ((value) << ILI9488_DISP_CTRL2_BP_POS)))
-#define ILI9488_DISP_CTRL2_FP_POS     8
-#define ILI9488_DISP_CTRL2_FP_MSK    (0xfu << ILI9488_DISP_CTRL2_FP_POS)
-#define ILI9488_DISP_CTRL2_FP(value) ((ILI9488_DISP_CTRL2_FP_MSK & ((value) << ILI9488_DISP_CTRL2_FP_POS)))
-
-/* -------- ILI9488_DISP_CTRL3 : (Offset: 0x09) Display Control 3 -------- */
-#define ILI9488_DISP_CTRL3            (0x09u)
-#define ILI9488_DISP_CTRL3_ISC_POS     0
-#define ILI9488_DISP_CTRL3_ISC_MSK    (0xfu << ILI9488_DISP_CTRL3_ISC_POS)
-#define ILI9488_DISP_CTRL3_ISC(value) ((ILI9488_DISP_CTRL3_ISC_MSK & ((value) << ILI9488_DISP_CTRL3_ISC_POS)))
-#define ILI9488_DISP_CTRL3_PTG_POS     4
-#define ILI9488_DISP_CTRL3_PTG_MSK    (0x3u << ILI9488_DISP_CTRL3_PTG_POS)
-#define ILI9488_DISP_CTRL3_PTG(value) ((ILI9488_DISP_CTRL3_PTG_MSK & ((value) << ILI9488_DISP_CTRL3_PTG_POS)))
-#define ILI9488_DISP_CTRL3_PTS_POS     8
-#define ILI9488_DISP_CTRL3_PTS_MSK    (0x7u << ILI9488_DISP_CTRL3_PTS_POS)
-#define ILI9488_DISP_CTRL3_PTS(value) ((ILI9488_DISP_CTRL3_PTS_MSK & ((value) << ILI9488_DISP_CTRL3_PTS_POS)))
-
-/* -------- ILI9488_DISP_CTRL4 : (Offset: 0x0A) Display Control 4 -------- */
-#define ILI9488_DISP_CTRL4            (0x0Au)
-#define ILI9488_DISP_CTRL4_FMI_POS     0
-#define ILI9488_DISP_CTRL4_FMI_MSK    (0x7u << ILI9488_DISP_CTRL4_FMI_POS)
-#define ILI9488_DISP_CTRL4_FMI(value) ((ILI9488_DISP_CTRL4_FMI_MSK & ((value) << ILI9488_DISP_CTRL4_FMI_POS)))
-#define ILI9488_DISP_CTRL4_FMARKOE    (0x1u << 3)
-
-/* -------- ILI9488_RGB_DISP_INTERFACE_CTRL1 : (Offset: 0x0C) RGB Display Interface Control 1 -------- */
-#define ILI9488_RGB_DISP_INTERFACE_CTRL1            (0x0Cu)
-#define ILI9488_RGB_DISP_INTERFACE_CTRL1_RIM_POS     0
-#define ILI9488_RGB_DISP_INTERFACE_CTRL1_RIM_MSK    (0x3u << ILI9488_RGB_DISP_INTERFACE_CTRL1_RIM_POS)
-#define ILI9488_RGB_DISP_INTERFACE_CTRL1_RIM(value) ((ILI9488_RGB_DISP_INTERFACE_CTRL1_RIM_MSK & ((value) << ILI9488_RGB_DISP_INTERFACE_CTRL1_RIM_POS)))
-#define ILI9488_RGB_DISP_INTERFACE_CTRL1_DM0        (0x1u << 4)
-#define ILI9488_RGB_DISP_INTERFACE_CTRL1_DM1        (0x1u << 5)
-#define ILI9488_RGB_DISP_INTERFACE_CTRL1_DM_POS      4
-#define ILI9488_RGB_DISP_INTERFACE_CTRL1_DM_MSK     (0x3u << ILI9488_RGB_DISP_INTERFACE_CTRL1_DM_POS)
-#define ILI9488_RGB_DISP_INTERFACE_CTRL1_DM(value)  ((ILI9488_RGB_DISP_INTERFACE_CTRL1_DM_MSK & ((value) << ILI9488_RGB_DISP_INTERFACE_CTRL1_DM_POS)))
-#define ILI9488_RGB_DISP_INTERFACE_CTRL1_RM         (0x1u << 8)
-#define ILI9488_RGB_DISP_INTERFACE_CTRL1_ENC_POS     12
-#define ILI9488_RGB_DISP_INTERFACE_CTRL1_ENC_MSK    (0x7u << ILI9488_RGB_DISP_INTERFACE_CTRL1_ENC_POS)
-#define ILI9488_RGB_DISP_INTERFACE_CTRL1_ENC(value) ((ILI9488_RGB_DISP_INTERFACE_CTRL1_ENC_MSK & ((value) <ILI9488_RGB_DISP_INTERFACE_CTRL1_ENC_POS)))
-
-/* -------- ILI9488_FRAME_MAKER_POS : (Offset: 0x0D) Frame Maker Position -------- */
-#define ILI9488_FRAME_MAKER_POS            (0x0Du)
-#define ILI9488_FRAME_MAKER_POS_FMP_POS     0
-#define ILI9488_FRAME_MAKER_POS_FMP_MSK    (0x1ffu << ILI9488_FRAME_MAKER_POS_FMP_POS)
-#define ILI9488_FRAME_MAKER_POS_FMP(value) ((ILI9488_FRAME_MAKER_POS_FMP_MSK & ((value) << ILI9488_FRAME_MAKER_POS_FMP_POS)))
-
-/* -------- ILI9488_RGB_DISP_INTERFACE_CTRL2 : (Offset: 0x0F) RGB Display Interface Control 2 -------- */
-#define ILI9488_RGB_DISP_INTERFACE_CTRL2      (0x0Fu)
-#define ILI9488_RGB_DISP_INTERFACE_CTRL2_EPL  (0x1u << 0)
-#define ILI9488_RGB_DISP_INTERFACE_CTRL2_DPL  (0x1u << 1)
-#define ILI9488_RGB_DISP_INTERFACE_CTRL2_HSPL (0x1u << 3)
-#define ILI9488_RGB_DISP_INTERFACE_CTRL2_VSPL (0x1u << 4)
-
-/* -------- ILI9488_POWER_CTRL1 : (Offset: 0x10) Power Control 1 -------- */
-#define ILI9488_POWER_CTRL1           (0x10u)
-#define ILI9488_POWER_CTRL1_STB       (0x1u << 0)
-#define ILI9488_POWER_CTRL1_SLP       (0x1u << 1)
-#define ILI9488_POWER_CTRL1_DSTB      (0x1u << 2)
-#define ILI9488_POWER_CTRL1_AP_POS     4
-#define ILI9488_POWER_CTRL1_AP_MSK    (0x7u << ILI9488_POWER_CTRL1_AP_POS)
-#define ILI9488_POWER_CTRL1_AP(value) ((ILI9488_POWER_CTRL1_AP_MSK & ((value) << ILI9488_POWER_CTRL1_AP_POS)))
-#define ILI9488_POWER_CTRL1_APE       (0x1u << 7)
-#define ILI9488_POWER_CTRL1_BT_POS     8
-#define ILI9488_POWER_CTRL1_BT_MSK    (0x7u << ILI9488_POWER_CTRL1_BT_POS)
-#define ILI9488_POWER_CTRL1_BT(value) ((ILI9488_POWER_CTRL1_BT_MSK & ((value) << ILI9488_POWER_CTRL1_BT_POS)))
-#define ILI9488_POWER_CTRL1_SAP       (0x1u << 12)
-
-/* -------- ILI9488_POWER_CTRL2 : (Offset: 0x11) Power Control 2 -------- */
-#define ILI9488_POWER_CTRL2            (0x11u)
-#define ILI9488_POWER_CTRL2_VC_POS      0
-#define ILI9488_POWER_CTRL2_VC_MSK     (0x7u << ILI9488_POWER_CTRL2_VC_POS)
-#define ILI9488_POWER_CTRL2_VC(value)  ((ILI9488_POWER_CTRL2_VC_MSK & ((value) << ILI9488_POWER_CTRL2_VC_POS)))
-#define ILI9488_POWER_CTRL2_DC0_POS     4
-#define ILI9488_POWER_CTRL2_DC0_MSK    (0x7u << ILI9488_POWER_CTRL2_DC0_POS)
-#define ILI9488_POWER_CTRL2_DC0(value) ((ILI9488_POWER_CTRL2_DC0_MSK & ((value) << ILI9488_POWER_CTRL2_DC0_POS)))
-#define ILI9488_POWER_CTRL2_DC1_POS     8
-#define ILI9488_POWER_CTRL2_DC1_MSK    (0x7u << ILI9488_POWER_CTRL2_DC1_POS)
-#define ILI9488_POWER_CTRL2_DC1(value) ((ILI9488_POWER_CTRL2_DC1_MSK & ((value) << ILI9488_POWER_CTRL2_DC1_POS)))
-
-/* -------- ILI9488_POWER_CTRL3 : (Offset: 0x12) Power Control 3 -------- */
-#define ILI9488_POWER_CTRL3            (0x12u)
-#define ILI9488_POWER_CTRL3_VRH_POS     0
-#define ILI9488_POWER_CTRL3_VRH_MSK    (0xfu << ILI9488_POWER_CTRL3_VRH_POS)
-#define ILI9488_POWER_CTRL3_VRH(value) ((ILI9488_POWER_CTRL3_VRH_MSK & ((value) << ILI9488_POWER_CTRL3_VRH_POS)))
-#define ILI9488_POWER_CTRL3_PON        (0x1u << 4)
-#define ILI9488_POWER_CTRL3_VCIRE      (0x1u << 7)
-
-/* -------- ILI9488_POWER_CTRL4 : (Offset: 0x13) Power Control 4 -------- */
-#define ILI9488_POWER_CTRL4            (0x13u)
-#define ILI9488_POWER_CTRL4_VDV_POS     8
-#define ILI9488_POWER_CTRL4_VDV_MSK    (0x1fu << ILI9488_POWER_CTRL4_VDV_POS)
-#define ILI9488_POWER_CTRL4_VDV(value) ((ILI9488_POWER_CTRL4_VDV_MSK & ((value) << ILI9488_POWER_CTRL4_VDV_POS)))
-
-/* -------- ILI9488_HORIZONTAL_GRAM_ADDR_SET : (Offset: 0x20) Horizontal GRAM Address Set -------- */
-#define ILI9488_HORIZONTAL_GRAM_ADDR_SET           (0x20u)
-#define ILI9488_HORIZONTAL_GRAM_ADDR_SET_AD_POS     0
-#define ILI9488_HORIZONTAL_GRAM_ADDR_SET_AD_MSK    (0xffu << ILI9488_HORIZONTAL_GRAM_ADDR_SET_AD_POS)
-#define ILI9488_HORIZONTAL_GRAM_ADDR_SET_AD(value) ((ILI9488_HORIZONTAL_GRAM_ADDR_SET_AD_MSK & ((value) << ILI9488_HORIZONTAL_GRAM_ADDR_SET_AD_POS)))
-
-/* -------- ILI9488_VERTICAL_GRAM_ADDR_SET : (Offset: 0x21) Vertical  GRAM Address Set -------- */
-#define ILI9488_VERTICAL_GRAM_ADDR_SET           (0x21u)
-#define ILI9488_VERTICAL_GRAM_ADDR_SET_AD_POS     0
-#define ILI9488_VERTICAL_GRAM_ADDR_SET_AD_MSK    (0xffu << ILI9488_VERTICAL_GRAM_ADDR_SET_AD_POS)
-#define ILI9488_VERTICAL_GRAM_ADDR_SET_AD(value) ((ILI9488_VERTICAL_GRAM_ADDR_SET_AD_MSK & ((value) << ILI9488_VERTICAL_GRAM_ADDR_SET_AD_POS)))
-
-/* -------- ILI9488_GRAM_DATA_REG : (Offset: 0x22) GRAM Data Register -------- */
-#define ILI9488_GRAM_DATA_REG (0x22u)
-
-/* -------- ILI9488_POWER_CTRL7 : (Offset: 0x29) Power Control 7 -------- */
-#define ILI9488_POWER_CTRL7            (0x29u)
-#define ILI9488_POWER_CTRL7_VCM_POS     0
-#define ILI9488_POWER_CTRL7_VCM_MSK    (0x3fu << ILI9488_POWER_CTRL7_VCM_POS)
-#define ILI9488_POWER_CTRL7_VCM(value) ((ILI9488_POWER_CTRL7_VCM_MSK & ((value) << ILI9488_POWER_CTRL7_VCM_POS)))
-
-/* -------- ILI9488_FRAME_RATE_AND_COLOR_CTRL : (Offset: 0x2B) Frame Rate and Color Control -------- */
-#define ILI9488_FRAME_RATE_AND_COLOR_CTRL            (0x2Bu)
-#define ILI9488_FRAME_RATE_AND_COLOR_CTRL_FRS_POS     0
-#define ILI9488_FRAME_RATE_AND_COLOR_CTRL_FRS_MSK    (0xfu << ILI9488_FRAME_RATE_AND_COLOR_CTRL_FRS_POS)
-#define ILI9488_FRAME_RATE_AND_COLOR_CTRL_FRS(value) ((ILI9488_FRAME_RATE_AND_COLOR_CTRL_FRS_MSK & ((value) << ILI9488_FRAME_RATE_AND_COLOR_CTRL_FRS_POS)))
-
-/* -------- ILI9488_GAMMA_CTRL1 : (Offset: 0x30) Gamma Control 1 -------- */
-#define ILI9488_GAMMA_CTRL1            (0x30u)
-#define ILI9488_GAMMA_CTRL1_KP0_POS     0
-#define ILI9488_GAMMA_CTRL1_KP0_MSK    (0x7u << ILI9488_GAMMA_CTRL1_KP0_POS)
-#define ILI9488_GAMMA_CTRL1_KP0(value) ((ILI9488_GAMMA_CTRL1_KP0_MSK & ((value) << ILI9488_GAMMA_CTRL1_KP0_POS)))
-#define ILI9488_GAMMA_CTRL1_KP1_POS     8
-#define ILI9488_GAMMA_CTRL1_KP1_MSK    (0x7u << ILI9488_GAMMA_CTRL1_KP1_POS)
-#define ILI9488_GAMMA_CTRL1_KP1(value) ((ILI9488_GAMMA_CTRL1_KP1_MSK & ((value) << ILI9488_GAMMA_CTRL1_KP1_POS)))
-
-/* -------- ILI9488_GAMMA_CTRL2 : (Offset: 0x31) Gamma Control 2 -------- */
-#define ILI9488_GAMMA_CTRL2            (0x31u)
-#define ILI9488_GAMMA_CTRL2_KP2_POS     0
-#define ILI9488_GAMMA_CTRL2_KP2_MSK    (0x7u << ILI9488_GAMMA_CTRL2_KP2_POS)
-#define ILI9488_GAMMA_CTRL2_KP2(value) ((ILI9488_GAMMA_CTRL2_KP2_MSK & ((value) << ILI9488_GAMMA_CTRL2_KP2_POS)))
-#define ILI9488_GAMMA_CTRL2_KP3_POS     8
-#define ILI9488_GAMMA_CTRL2_KP3_MSK    (0x7u << ILI9488_GAMMA_CTRL2_KP3_POS)
-#define ILI9488_GAMMA_CTRL2_KP3(value) ((ILI9488_GAMMA_CTRL2_KP3_MSK & ((value) << ILI9488_GAMMA_CTRL2_KP3_POS)))
-
-/* -------- ILI9488_GAMMA_CTRL3 : (Offset: 0x32) Gamma Control 3 -------- */
-#define ILI9488_GAMMA_CTRL3            (0x32u)
-#define ILI9488_GAMMA_CTRL3_KP4_POS     0
-#define ILI9488_GAMMA_CTRL3_KP4_MSK    (0x7u << ILI9488_GAMMA_CTRL3_KP4_POS)
-#define ILI9488_GAMMA_CTRL3_KP4(value) ((ILI9488_GAMMA_CTRL3_KP4_MSK & ((value) << ILI9488_GAMMA_CTRL3_KP4_POS)))
-#define ILI9488_GAMMA_CTRL3_KP5_POS     8
-#define ILI9488_GAMMA_CTRL3_KP5_MSK    (0x7u << ILI9488_GAMMA_CTRL3_KP5_POS)
-#define ILI9488_GAMMA_CTRL3_KP5(value) ((ILI9488_GAMMA_CTRL3_KP5_MSK & ((value) << ILI9488_GAMMA_CTRL3_KP5_POS)))
-
-/* -------- ILI9488_GAMMA_CTRL4 : (Offset: 0x35) Gamma Control 4 -------- */
-#define ILI9488_GAMMA_CTRL4            (0x35u)
-#define ILI9488_GAMMA_CTRL4_RP0_POS     0
-#define ILI9488_GAMMA_CTRL4_RP0_MSK    (0x7u << ILI9488_GAMMA_CTRL4_RP0_POS)
-#define ILI9488_GAMMA_CTRL4_RP0(value) ((ILI9488_GAMMA_CTRL4_RP0_MSK & ((value) << ILI9488_GAMMA_CTRL4_RP0_POS)))
-#define ILI9488_GAMMA_CTRL4_RP1_POS     8
-#define ILI9488_GAMMA_CTRL4_RP1_MSK    (0x7u << ILI9488_GAMMA_CTRL4_RP1_POS)
-#define ILI9488_GAMMA_CTRL4_RP1(value) ((ILI9488_GAMMA_CTRL4_RP1_MSK & ((value) << ILI9488_GAMMA_CTRL4_RP1_POS)))
-
-/* -------- ILI9488_GAMMA_CTRL5 : (Offset: 0x36) Gamma Control 5 -------- */
-#define ILI9488_GAMMA_CTRL5             (0x36u)
-#define ILI9488_GAMMA_CTRL5_VRP0_POS     0
-#define ILI9488_GAMMA_CTRL5_VRP0_MSK    (0xfu << ILI9488_GAMMA_CTRL5_VRP0_POS)
-#define ILI9488_GAMMA_CTRL5_VRP0(value) ((ILI9488_GAMMA_CTRL5_VRP0_MSK & ((value) << ILI9488_GAMMA_CTRL5_VRP0_POS)))
-#define ILI9488_GAMMA_CTRL5_VRP1_POS     8
-#define ILI9488_GAMMA_CTRL5_VRP1_MSK    (0x1fu << ILI9488_GAMMA_CTRL5_VRP1_POS)
-#define ILI9488_GAMMA_CTRL5_VRP1(value) ((ILI9488_GAMMA_CTRL5_VRP1_MSK & ((value) << ILI9488_GAMMA_CTRL5_VRP1_POS)))
-
-/* -------- ILI9488_GAMMA_CTRL6 : (Offset: 0x37) Gamma Control 6 -------- */
-#define ILI9488_GAMMA_CTRL6            (0x37u)
-#define ILI9488_GAMMA_CTRL6_KN0_POS     0
-#define ILI9488_GAMMA_CTRL6_KN0_MSK    (0x7u << ILI9488_GAMMA_CTRL6_KN0_POS)
-#define ILI9488_GAMMA_CTRL6_KN0(value) ((ILI9488_GAMMA_CTRL6_KN0_MSK & ((value) << ILI9488_GAMMA_CTRL6_KN0_POS)))
-#define ILI9488_GAMMA_CTRL6_KN1_POS     8
-#define ILI9488_GAMMA_CTRL6_KN1_MSK    (0x7u << ILI9488_GAMMA_CTRL6_KN1_POS)
-#define ILI9488_GAMMA_CTRL6_KN1(value) ((ILI9488_GAMMA_CTRL6_KN1_MSK & ((value) << ILI9488_GAMMA_CTRL6_KN1_POS)))
-
-/* -------- ILI9488_GAMMA_CTRL7 : (Offset: 0x38) Gamma Control 7 -------- */
-#define ILI9488_GAMMA_CTRL7            (0x38u)
-#define ILI9488_GAMMA_CTRL7_KN2_POS     0
-#define ILI9488_GAMMA_CTRL7_KN2_MSK    (0x7u << ILI9488_GAMMA_CTRL7_KN2_POS)
-#define ILI9488_GAMMA_CTRL7_KN2(value) ((ILI9488_GAMMA_CTRL7_KN2_MSK & ((value) << ILI9488_GAMMA_CTRL7_KN2_POS)))
-#define ILI9488_GAMMA_CTRL7_KN3_POS     8
-#define ILI9488_GAMMA_CTRL7_KN3_MSK    (0x7u << ILI9488_GAMMA_CTRL7_KN3_POS)
-#define ILI9488_GAMMA_CTRL7_KN3(value) ((ILI9488_GAMMA_CTRL7_KN3_MSK & ((value) << ILI9488_GAMMA_CTRL7_KN3_POS)))
-
-/* -------- ILI9488_GAMMA_CTRL8 : (Offset: 0x39) Gamma Control 8 -------- */
-#define ILI9488_GAMMA_CTRL8            (0x39u)
-#define ILI9488_GAMMA_CTRL8_KN4_POS     0
-#define ILI9488_GAMMA_CTRL8_KN4_MSK    (0x7u << ILI9488_GAMMA_CTRL8_KN4_POS)
-#define ILI9488_GAMMA_CTRL8_KN4(value) ((ILI9488_GAMMA_CTRL8_KN4_MSK & ((value) << ILI9488_GAMMA_CTRL8_KN4_POS)))
-#define ILI9488_GAMMA_CTRL8_KN5_POS     8
-#define ILI9488_GAMMA_CTRL8_KN5_MSK    (0x7u << ILI9488_GAMMA_CTRL8_KN5_POS)
-#define ILI9488_GAMMA_CTRL8_KN5(value) ((ILI9488_GAMMA_CTRL8_KN5_MSK & ((value) << ILI9488_GAMMA_CTRL8_KN5_POS)))
-
-/* -------- ILI9488_GAMMA_CTRL9 : (Offset: 0x3C) Gamma Control 9 -------- */
-#define ILI9488_GAMMA_CTRL9            (0x3Cu)
-#define ILI9488_GAMMA_CTRL9_RN0_POS     0
-#define ILI9488_GAMMA_CTRL9_RN0_MSK    (0x7u << ILI9488_GAMMA_CTRL9_RN0_POS)
-#define ILI9488_GAMMA_CTRL9_RN0(value) ((ILI9488_GAMMA_CTRL9_RN0_MSK & ((value) << ILI9488_GAMMA_CTRL9_RN0_POS)))
-#define ILI9488_GAMMA_CTRL9_RN1_POS     8
-#define ILI9488_GAMMA_CTRL9_RN1_MSK    (0x7u << ILI9488_GAMMA_CTRL9_RN1_POS)
-#define ILI9488_GAMMA_CTRL9_RN1(value) ((ILI9488_GAMMA_CTRL9_RN1_MSK & ((value) << ILI9488_GAMMA_CTRL9_RN1_POS)))
-
-/* -------- ILI9488_GAMMA_CTRL10 : (Offset: 0x3D) Gamma Control 10 -------- */
-#define ILI9488_GAMMA_CTRL10             (0x3Du)
-#define ILI9488_GAMMA_CTRL10_VRN0_POS     0
-#define ILI9488_GAMMA_CTRL10_VRN0_MSK    (0xfu << ILI9488_GAMMA_CTRL10_VRN0_POS)
-#define ILI9488_GAMMA_CTRL10_VRN0(value) ((ILI9488_GAMMA_CTRL10_VRN0_MSK & ((value) << ILI9488_GAMMA_CTRL10_VRN0_POS)))
-#define ILI9488_GAMMA_CTRL10_VRN1_POS     8
-#define ILI9488_GAMMA_CTRL10_VRN1_MSK    (0x1fu << ILI9488_GAMMA_CTRL10_VRN1_POS)
-#define ILI9488_GAMMA_CTRL10_VRN1(value) ((ILI9488_GAMMA_CTRL10_VRN1_MSK & ((value) << ILI9488_GAMMA_CTRL10_VRN1_POS)))
-
-/* -------- ILI9488_HORIZONTAL_ADDR_START : (Offset: 0x50) Horizontal Address Start Position -------- */
-#define ILI9488_HORIZONTAL_ADDR_START            (0x50u)
-#define ILI9488_HORIZONTAL_ADDR_START_HSA_POS     0
-#define ILI9488_HORIZONTAL_ADDR_START_HSA_MSK    (0xffu << ILI9488_HORIZONTAL_ADDR_START_HSA_POS)
-#define ILI9488_HORIZONTAL_ADDR_START_HSA(value) ((ILI9488_HORIZONTAL_ADDR_START_HSA_MSK & ((value) << ILI9488_HORIZONTAL_ADDR_START_HSA_POS)))
-
-/* -------- ILI9488_HORIZONTAL_ADDR_END : (Offset: 0x51) Horizontal Address End Position -------- */
-#define ILI9488_HORIZONTAL_ADDR_END            (0x51u)
-#define ILI9488_HORIZONTAL_ADDR_END_HEA_POS     0
-#define ILI9488_HORIZONTAL_ADDR_END_HEA_MSK    (0xffu << ILI9488_HORIZONTAL_ADDR_END_HEA_POS)
-#define ILI9488_HORIZONTAL_ADDR_END_HEA(value) ((ILI9488_HORIZONTAL_ADDR_END_HEA_MSK & ((value) << ILI9488_HORIZONTAL_ADDR_END_HEA_POS)))
-
-/* -------- ILI9488_VERTICAL_ADDR_START : (Offset: 0x52) Vertical Address Start Position -------- */
-#define ILI9488_VERTICAL_ADDR_START            (0x52u)
-#define ILI9488_VERTICAL_ADDR_START_VSA_POS     0
-#define ILI9488_VERTICAL_ADDR_START_VSA_MSK    (0x1ffu << ILI9488_VERTICAL_ADDR_START_VSA_POS)
-#define ILI9488_VERTICAL_ADDR_START_VSA(value) ((ILI9488_VERTICAL_ADDR_START_VSA_MSK & ((value) << ILI9488_VERTICAL_ADDR_START_VSA_POS)))
-
-/* -------- ILI9488_VERTICAL_ADDR_END : (Offset: 0x53) Vertical Address End Position -------- */
-#define ILI9488_VERTICAL_ADDR_END            (0x53u)
-#define ILI9488_VERTICAL_ADDR_END_VEA_POS     0
-#define ILI9488_VERTICAL_ADDR_END_VEA_MSK    (0x1ffu << ILI9488_VERTICAL_ADDR_END_VEA_POS)
-#define ILI9488_VERTICAL_ADDR_END_VEA(value) ((ILI9488_VERTICAL_ADDR_END_VEA_MSK & ((value) << ILI9488_VERTICAL_ADDR_END_VEA_POS)))
-
-/* -------- ILI9488_DRIVER_OUTPUT_CTRL2 : (Offset: 0x60) Driver Output Control 2 -------- */
-#define ILI9488_DRIVER_OUTPUT_CTRL2            (0x60u)
-#define ILI9488_DRIVER_OUTPUT_CTRL2_SCN_POS     0
-#define ILI9488_DRIVER_OUTPUT_CTRL2_SCN_MSK    (0x3fu << ILI9488_DRIVER_OUTPUT_CTRL2_SCN_POS)
-#define ILI9488_DRIVER_OUTPUT_CTRL2_SCN(value) ((ILI9488_DRIVER_OUTPUT_CTRL2_SCN_MSK & ((value) << ILI9488_DRIVER_OUTPUT_CTRL2_SCN_POS)))
-#define ILI9488_DRIVER_OUTPUT_CTRL2_NL_POS      8
-#define ILI9488_DRIVER_OUTPUT_CTRL2_NL_MSK     (0x3fu << ILI9488_DRIVER_OUTPUT_CTRL2_NL_POS)
-#define ILI9488_DRIVER_OUTPUT_CTRL2_NL(value)  ((ILI9488_DRIVER_OUTPUT_CTRL2_NL_MSK & ((value) << ILI9488_DRIVER_OUTPUT_CTRL2_NL_POS)))
-#define ILI9488_DRIVER_OUTPUT_CTRL2_GS         (0x1u << 15)
-
-/* -------- ILI9488_BASE_IMG_DISP_CTRL : (Offset: 0x61) Base Image Display Control -------- */
-#define ILI9488_BASE_IMG_DISP_CTRL     (0x61u)
-#define ILI9488_BASE_IMG_DISP_CTRL_REV (0x1u << 0)
-#define ILI9488_BASE_IMG_DISP_CTRL_VLE (0x1u << 1)
-#define ILI9488_BASE_IMG_DISP_CTRL_NDL (0x1u << 2)
-
-/* -------- ILI9488_VERTICAL_SCROLL_CTRL : (Offset: 0x6A) Vertical Scroll Control -------- */
-#define ILI9488_VERTICAL_SCROLL_CTRL           (0x6Au)
-#define ILI9488_VERTICAL_SCROLL_CTRL_VL_POS     0
-#define ILI9488_VERTICAL_SCROLL_CTRL_VL_MSK    (0x1ffu << ILI9488_VERTICAL_SCROLL_CTRL_VL_POS)
-#define ILI9488_VERTICAL_SCROLL_CTRL_VL(value) ((ILI9488_VERTICAL_SCROLL_CTRL_VL_MSK & ((value) << ILI9488_VERTICAL_SCROLL_CTRL_VL_POS)))
-
-/* -------- ILI9488_PARTIAL_IMG1_DISP_POS : (Offset: 0x80) Partial Image 1 Display Position -------- */
-#define ILI9488_PARTIAL_IMG1_DISP_POS              (0x80u)
-#define ILI9488_PARTIAL_IMG1_DISP_POS_PTDP0_POS     0
-#define ILI9488_PARTIAL_IMG1_DISP_POS_PTDP0_MSK    (0x1ffu << ILI9488_PARTIAL_IMG1_DISP_POS_PTDP0_POS)
-#define ILI9488_PARTIAL_IMG1_DISP_POS_PTDP0(value) ((ILI9488_PARTIAL_IMG1_DISP_POS_PTDP0_MSK & ((value) << ILI9488_PARTIAL_IMG1_DISP_POS_PTDP0_POS)))
-
-/* -------- ILI9488_PARTIAL_IMG1_AREA_START_LINE : (Offset: 0x81) Partial Image 1 Area (Start Line) -------- */
-#define ILI9488_PARTIAL_IMG1_AREA_START_LINE              (0x81u)
-#define ILI9488_PARTIAL_IMG1_AREA_START_LINE_PTSA0_POS     0
-#define ILI9488_PARTIAL_IMG1_AREA_START_LINE_PTSA0_MSK    (0x1ffu << ILI9488_PARTIAL_IMG1_AREA_START_LINE_PTSA0_POS)
-#define ILI9488_PARTIAL_IMG1_AREA_START_LINE_PTSA0(value) ((ILI9488_PARTIAL_IMG1_AREA_START_LINE_PTSA0_MSK & ((value) << ILI9488_PARTIAL_IMG1_AREA_START_LINE_PTSA0_POS)))
-
-/* -------- ILI9488_PARTIAL_IMG1_AREA_END_LINE : (Offset: 0x82) Partial Image 1 Area (End Line) -------- */
-#define ILI9488_PARTIAL_IMG1_AREA_END_LINE              (0x82u)
-#define ILI9488_PARTIAL_IMG1_AREA_END_LINE_PTEA0_POS     0
-#define ILI9488_PARTIAL_IMG1_AREA_END_LINE_PTEA0_MSK    (0x1ffu << ILI9488_PARTIAL_IMG1_AREA_END_LINE_PTEA0_POS)
-#define ILI9488_PARTIAL_IMG1_AREA_END_LINE_PTEA0(value) ((ILI9488_PARTIAL_IMG1_AREA_END_LINE_PTEA0_MSK & ((value) << ILI9488_PARTIAL_IMG1_AREA_END_LINE_PTEA0_POS)))
-
-/* -------- ILI9488_PARTIAL_IMG2_DISP_POS : (Offset: 0x83) Partial Image 2 Display Position -------- */
-#define ILI9488_PARTIAL_IMG2_DISP_POS              (0x83u)
-#define ILI9488_PARTIAL_IMG2_DISP_POS_PTDP1_POS     0
-#define ILI9488_PARTIAL_IMG2_DISP_POS_PTDP1_MSK    (0x1ffu << ILI9488_PARTIAL_IMG2_DISP_POS_PTDP1_POS)
-#define ILI9488_PARTIAL_IMG2_DISP_POS_PTDP1(value) ((ILI9488_PARTIAL_IMG2_DISP_POS_PTDP1_MSK & ((value) << ILI9488_PARTIAL_IMG2_DISP_POS_PTDP1_POS)))
-
-/* -------- ILI9488_PARTIAL_IMG2_AREA_START_LINE : (Offset: 0x84) Partial Image 2 Area (Start Line) -------- */
-#define ILI9488_PARTIAL_IMG2_AREA_START_LINE              (0x84u)
-#define ILI9488_PARTIAL_IMG2_AREA_START_LINE_PTSA1_POS     0
-#define ILI9488_PARTIAL_IMG2_AREA_START_LINE_PTSA1_MSK    (0x1ffu << ILI9488_PARTIAL_IMG2_AREA_START_LINE_PTSA1_POS)
-#define ILI9488_PARTIAL_IMG2_AREA_START_LINE_PTSA1(value) ((ILI9488_PARTIAL_IMG2_AREA_START_LINE_PTSA1_MSK & ((value) << ILI9488_PARTIAL_IMG2_AREA_START_LINE_PTSA1_POS)))
-
-/* -------- ILI9488_PARTIAL_IMG2_AREA_END_LINE : (Offset: 0x85) Partial Image 2 Area (End Line) -------- */
-#define ILI9488_PARTIAL_IMG2_AREA_END_LINE              (0x85u)
-#define ILI9488_PARTIAL_IMG2_AREA_END_LINE_PTEA1_POS     0
-#define ILI9488_PARTIAL_IMG2_AREA_END_LINE_PTEA1_MSK    (0x1ffu << ILI9488_PARTIAL_IMG2_AREA_END_LINE_PTEA1_POS)
-#define ILI9488_PARTIAL_IMG2_AREA_END_LINE_PTEA1(value) ((ILI9488_PARTIAL_IMG2_AREA_END_LINE_PTEA1_MSK & ((value) << ILI9488_PARTIAL_IMG2_AREA_END_LINE_PTEA1_POS)))
-
-/* -------- ILI9488_PANEL_INTERFACE_CTRL1 : (Offset: 0x90) Panel Interface Control 1 -------- */
-#define ILI9488_PANEL_INTERFACE_CTRL1             (0x90u)
-#define ILI9488_PANEL_INTERFACE_CTRL1_RTNI_POS     0
-#define ILI9488_PANEL_INTERFACE_CTRL1_RTNI_MSK    (0x1fu << ILI9488_PANEL_INTERFACE_CTRL1_RTNI_POS)
-#define ILI9488_PANEL_INTERFACE_CTRL1_RTNI(value) ((ILI9488_PANEL_INTERFACE_CTRL1_RTNI_MSK & ((value) << ILI9488_PANEL_INTERFACE_CTRL1_RTNI_POS)))
-#define ILI9488_PANEL_INTERFACE_CTRL1_DIVI_POS     8
-#define ILI9488_PANEL_INTERFACE_CTRL1_DIVI_MSK    (0x3u << ILI9488_PANEL_INTERFACE_CTRL1_DIVI_POS)
-#define ILI9488_PANEL_INTERFACE_CTRL1_DIVI(value) ((ILI9488_PANEL_INTERFACE_CTRL1_DIVI_MSK & ((value) << ILI9488_PANEL_INTERFACE_CTRL1_DIVI_POS)))
-
-/* -------- ILI9488_PANEL_INTERFACE_CTRL2 : (Offset: 0x92) Panel Interface Control 2 -------- */
-#define ILI9488_PANEL_INTERFACE_CTRL2             (0x92u)
-#define ILI9488_PANEL_INTERFACE_CTRL2_NOWI_POS     8
-#define ILI9488_PANEL_INTERFACE_CTRL2_NOWI_MSK    (0x7u << ILI9488_PANEL_INTERFACE_CTRL2_NOWI_POS)
-#define ILI9488_PANEL_INTERFACE_CTRL2_NOWI(value) ((ILI9488_PANEL_INTERFACE_CTRL2_NOWI_MSK & ((value) << ILI9488_PANEL_INTERFACE_CTRL2_NOWI_POS)))
-
-/* -------- ILI9488_PANEL_INTERFACE_CTRL4 : (Offset: 0x95) Panel Interface Control 4 -------- */
-#define ILI9488_PANEL_INTERFACE_CTRL4             (0x95u)
-#define ILI9488_PANEL_INTERFACE_CTRL4_RTNE_POS     0
-#define ILI9488_PANEL_INTERFACE_CTRL4_RTNE_MSK    (0x3fu << ILI9488_PANEL_INTERFACE_CTRL4_RTNE_POS)
-#define ILI9488_PANEL_INTERFACE_CTRL4_RTNE(value) ((ILI9488_PANEL_INTERFACE_CTRL4_RTNE_MSK & ((value) << ILI9488_PANEL_INTERFACE_CTRL4_RTNE_POS)))
-#define ILI9488_PANEL_INTERFACE_CTRL4_DIVE_POS     8
-#define ILI9488_PANEL_INTERFACE_CTRL4_DIVE_MSK    (0x3u << ILI9488_PANEL_INTERFACE_CTRL4_DIVE_POS)
-#define ILI9488_PANEL_INTERFACE_CTRL4_DIVE(value) ((ILI9488_PANEL_INTERFACE_CTRL4_DIVE_MSK & ((value) << ILI9488_PANEL_INTERFACE_CTRL4_DIVE_POS)))
-
-/* -------- ILI9488_OTP_VCM_PROG_CTRL : (Offset: 0xA1) OTP VCM Programming Control -------- */
-#define ILI9488_OTP_VCM_PROG_CTRL                (0xA1u)
-#define ILI9488_OTP_VCM_PROG_CTRL_VCM_OTP_POS     0
-#define ILI9488_OTP_VCM_PROG_CTRL_VCM_OTP_MSK    (0x3fu << ILI9488_OTP_VCM_PROG_CTRL_VCM_OTP_POS)
-#define ILI9488_OTP_VCM_PROG_CTRL_VCM_OTP(value) ((ILI9488_OTP_VCM_PROG_CTRL_VCM_OTP_MSK & ((value) << ILI9488_OTP_VCM_PROG_CTRL_VCM_OTP_POS)))
-#define ILI9488_OTP_VCM_PROG_CTRL_OTP_PGM_EN     (0x1u << 11)
-
-/* -------- ILI9488_OTP_VCM_STATUS_AND_ENABLE : (Offset: 0xA2) OTP VCM Status and Enable -------- */
-#define ILI9488_OTP_VCM_STATUS_AND_ENABLE                (0xA2u)
-#define ILI9488_OTP_VCM_STATUS_AND_ENABLE_VCM_EN         (0x1u << 0)
-#define ILI9488_OTP_VCM_STATUS_AND_ENABLE_VCM_D_POS       8
-#define ILI9488_OTP_VCM_STATUS_AND_ENABLE_VCM_D_MSK      (0x3fu << ILI9488_OTP_VCM_STATUS_AND_ENABLE_VCM_D_POS)
-#define ILI9488_OTP_VCM_STATUS_AND_ENABLE_VCM_D(value)   ((ILI9488_OTP_VCM_STATUS_AND_ENABLE_VCM_D_MSK & ((value) << ILI9488_OTP_VCM_STATUS_AND_ENABLE_VCM_D_POS)))
-#define ILI9488_OTP_VCM_STATUS_AND_ENABLE_PGM_CNT_POS     14
-#define ILI9488_OTP_VCM_STATUS_AND_ENABLE_PGM_CNT_MSK    (0x3u << ILI9488_OTP_VCM_STATUS_AND_ENABLE_PGM_CNT_POS)
-#define ILI9488_OTP_VCM_STATUS_AND_ENABLE_PGM_CNT(value) ((ILI9488_OTP_VCM_STATUS_AND_ENABLE_PGM_CNT_MSK & ((value) << IILI9488_OTP_VCM_STATUS_AND_ENABLE_PGM_CNT_POS)))
-
-/* -------- ILI9488_OTP_PROG_ID_KEY : (Offset: 0xA5) OTP Programming ID Key -------- */
-#define ILI9488_OTP_PROG_ID_KEY            (0xA5u)
-#define ILI9488_OTP_PROG_ID_KEY_KEY_POS     0
-#define ILI9488_OTP_PROG_ID_KEY_KEY_MSK    (0xffffu << ILI9488_OTP_PROG_ID_KEY_KEY_POS)
-#define ILI9488_OTP_PROG_ID_KEY_KEY(value) ((ILI9488_OTP_PROG_ID_KEY_KEY_MSK & ((value) << ILI9488_OTP_PROG_ID_KEY_KEY_POS)))
-
-/* Define EBI access for ILI9488 8-bit System Interface.*/
-#if defined(BOARD_ILI9488_ADDR) && defined (BOARD_ILI9488_RS)
+/* Define EBI access for ILI9488 16-bit System Interface.*/
+#if defined(BOARD_ILI9488_ADDR)
 	static inline void LCD_IR(uint8_t lcd_index)
 	{
 		*((volatile uint8_t *)(BOARD_ILI9488_ADDR)) = lcd_index; /* ILI9488 index register address */
 	}
 	static inline void LCD_WD(uint16_t lcd_data)
 	{
-		*((volatile uint16_t *)((BOARD_ILI9488_ADDR) | (0))) = lcd_data;
+		*(volatile uint16_t *)(BOARD_ILI9488_ADDR) = lcd_data;
 	}
 	static inline void LCD_MULTI_WD(uint16_t *lcd_data, uint32_t size)
 	{
-		volatile uint16_t * ptr = (volatile uint16_t *)((BOARD_ILI9488_ADDR) | (0));
+		volatile uint16_t * ptr = (volatile uint16_t *)(BOARD_ILI9488_ADDR);
 
-		while(size) {
-			*ptr = *lcd_data++;
-			--size;
+		while(size--) {
+			*ptr++ = *lcd_data++;
 		}
 
 	}
 	static inline uint16_t LCD_RD(void)
 	{
-		return *((volatile uint16_t *)((BOARD_ILI9488_ADDR) | (0)));
+		return *(volatile uint16_t *)(BOARD_ILI9488_ADDR);
 	}
 	static inline void LCD_MULTI_RD(uint32_t *pbuffer, uint32_t size)
 	{
-		uint32_t i;
 		volatile uint32_t *ptr = (volatile uint32_t *)BOARD_ILI9488_ADDR;
 		
-		for(i = 0; i < size; i++) {
-			pbuffer[i] = ptr[i];
+		while(size--) {
+			*pbuffer++ = *ptr++;
 		}
 	}
 #else
@@ -775,11 +370,8 @@ void ili9488_display_off(void);
 void ili9488_set_foreground_color(ili9488_color_t ul_color);
 void ili9488_fill(ili9488_color_t ul_color);
 void ili9488_set_cursor_position(uint16_t us_x, uint16_t us_y);
-void ili9488_scroll (int32_t ul_lines);
-void ili9488_enable_scroll (void);
-void ili9488_disable_scroll(void);
-void ili9488_set_display_direction(enum ili9488_display_direction e_dd,
-		enum ili9488_shift_direction e_shd, enum ili9488_scan_direction e_scd);
+void ili9488_scroll(uint32_t ul_tfa, uint32_t ul_lines, uint32_t ul_bfa);
+void ili9488_set_scroll_address(uint32_t ul_vsp);
 uint32_t ili9488_draw_pixel(uint32_t ul_x, uint32_t ul_y);
 ili9488_color_t ili9488_get_pixel(uint32_t ul_x, uint32_t ul_y);
 void ili9488_draw_line(uint32_t ul_x1, uint32_t ul_y1,
@@ -795,18 +387,13 @@ void ili9488_draw_prepare(uint32_t ul_x, uint32_t ul_y, uint32_t ul_width,
 void ili9488_draw_string(uint32_t ul_x, uint32_t ul_y, const uint8_t *p_str);
 void ili9488_draw_pixmap(uint32_t ul_x, uint32_t ul_y, uint32_t ul_width,
 		uint32_t ul_height, const ili9488_color_t *p_ul_pixmap);
-void ili9488_set_top_left_limit(ili9488_coord_t x, ili9488_coord_t y);
-void ili9488_set_bottom_right_limit(ili9488_coord_t x, ili9488_coord_t y);
-void ili9488_set_limits(ili9488_coord_t start_x, ili9488_coord_t start_y,
-		ili9488_coord_t end_x, ili9488_coord_t end_y);
 ili9488_color_t ili9488_read_gram(void);
 void ili9488_write_gram(ili9488_color_t color);
-void ili9488_copy_pixels_to_screen(const ili9488_color_t *pixels, uint32_t count);
-void ili9488_copy_raw_pixel_24bits_to_screen(const uint8_t *raw_pixels, uint32_t count);
-void ili9488_duplicate_pixel(const ili9488_color_t color, uint32_t count);
-void ili9488_copy_pixels_from_screen(ili9488_color_t *pixels, uint32_t count);
 void ili9488_set_orientation(uint8_t flags);
-
+void ili9488_write_register(uint8_t uc_reg, uint16_t *us_data, uint32_t size);
+void ili9488_delay(uint32_t ul_ms);
+void ili9488_write_brightness(uint16_t us_value);
+uint32_t ili9488_read_brightness(void);
 /// @cond 0
 /**INDENT-OFF**/
 #ifdef __cplusplus

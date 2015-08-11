@@ -3,7 +3,7 @@
  *
  * \brief ILI9488 configuration.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -56,7 +56,6 @@
 	#warning The ILI9488 EBI configuration does not exist in the board definition file. Using default settings.
 
 	#define BOARD_ILI9488_ADDR     0x63000000 /* The base address, depends on which SMC chip select is used by ILI9488. */
-	#define BOARD_ILI9488_RS       3 << 1 /* Register select (1 << 1) */
 
 #endif
 
