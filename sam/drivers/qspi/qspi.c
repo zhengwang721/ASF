@@ -64,7 +64,7 @@
  * @{
  */
 
-#define __IAR_PROJECT__  (!(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)))
+//#define __IAR_PROJECT__  (!(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)))
 
 /**
  * \brief Memory copy function.

@@ -161,8 +161,52 @@ int main(void)
 
 	/* Enable quad mode */
 	s25fl1xx_set_quad_mode(&g_qspid, 1);
-
+	
+#if 0
 	/* Erase entire chip  */
+	s25fl1xx_erase_64k_block(&g_qspid, 0);
+
+	/* Flash the code to QSPI flash */
+	puts("Writing to Memory\r\n");
+
+	s25fl1xx_write(&g_qspid, (uint32_t *)buffercode, WRITE_SIZE, 0, 0);
+
+	printf("\rExample code written 0x%x bytes to Memory\r\n", WRITE_SIZE);
+
+	puts("Verifying \r\n");
+	s25fl1xx_read(&g_qspid, buffer, sizeof(buffer), 0);
+	/* Start continuous read mode to enter in XIP mode*/
+	s25fl1xx_enter_continous_read_mode(&g_qspid);
+
+	for (idx = 0; idx < WRITE_SIZE; idx++) {
+		if(*(memory) == buffercode[idx]) {
+			memory++;
+		} else {
+			mem_verified = 1;
+			printf("\nData does not match at 0x%x \r\n", (int)memory);
+			break;
+		}
+	}
+#else
+	for (uint32_t i = 1; i <= 16; i = i + 1) {
+		//if ((i == 3) || (i == 7) || (i == 11) || (i == 15)) {
+			// Will enter UsageFault_Handler() when write size in these case. Skip.
+		//	continue;	
+		//}
+		printf("QSPI wr_size = %d\n\r", i);
+		//S25FL1D_EraseSector(0);
+		s25fl1xx_erase_sector(&g_qspid, 0);
+		s25fl1xx_read(&g_qspid, buffer, sizeof(buffer), 0);
+		//S25FL1D_Write((uint32_t *)pBuffercode, i, 0, 0);
+		s25fl1xx_write(&g_qspid, (uint32_t *)buffercode, i, 0, 0);
+		s25fl1xx_read(&g_qspid, buffer, sizeof(buffer), 0);
+		//s25fl1xx_read_quad_io(&g_qspid, buffer, sizeof(buffer), 0, 1, 0 );
+		//s25fl1xx_continous_read_mode_reset(&g_qspid);
+		printf("QSPI bbbb\n\r");
+	}
+#endif
+
+	/* Erase 64K bytes of chip  */
 	s25fl1xx_erase_64k_block(&g_qspid, 0);
 
 	/* Flash the code to QSPI flash */
