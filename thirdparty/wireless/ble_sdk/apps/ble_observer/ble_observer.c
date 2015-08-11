@@ -146,7 +146,10 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 	for (iterator = 5; iterator >= 0; iterator--) {
 		DBG_LOG_CONT("%02x", scan_info_data->dev_addr.addr[iterator]);
 	}
-
+	
+	DBG_LOG("%-28s", "RSSI");
+	DBG_LOG_CONT(":  %d",scan_info_data->rssi);
+	
 	if (scan_info_data->adv_data_len) {
 		uint8_t adv_data_size;
 		uint8_t index = 0;
@@ -483,6 +486,16 @@ int main(void )
 {
 	at_ble_events_t event;
 	uint8_t params[512];
+	
+	at_ble_init_config_t pf_cfg;
+	platform_config busConfig;
+
+	/*Memory allocation required by GATT Server DB*/
+	pf_cfg.memPool.memSize = 0;
+	pf_cfg.memPool.memStartAdd = NULL;
+	/*Bus configuration*/
+	busConfig.bus_type = UART;
+	pf_cfg.plf_config = &busConfig;
 
 	#if SAMG55
 	/* Initialize the SAM system. */
@@ -496,7 +509,7 @@ int main(void )
 	serial_console_init();
 
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL);
+	ble_device_init(NULL,&pf_cfg);
 	
 	/* observer init */
 	ble_observer_init();
