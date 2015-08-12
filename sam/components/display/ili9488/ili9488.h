@@ -94,7 +94,6 @@ typedef struct _rgb{
 	uint8_t r;
 }sBGR;
 
-#define ILI9488_EBIMODE        1
 /** This macro generates a 16-bit native color for the display from a
  *  24-bit RGB value.
  */
@@ -107,12 +106,6 @@ typedef int16_t gfx_coord_t;
 #define ILI9488_FLIP_X 1
 /** Bit mask for flipping Y for ili9488_set_orientation() */
 #define ILI9488_FLIP_Y 2
-
-/** Height of display using swapped X/Y orientation */
-#define ILI9488_SWITCH_XY_HEIGHT 480
-
-/** Width of display using swapped X/Y orientation */
-#define ILI9488_SWITCH_XY_WIDTH  320
 
 /* ILI9488 screen size */
 #define ILI9488_LCD_WIDTH  320

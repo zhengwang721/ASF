@@ -79,7 +79,6 @@
 
 #define COLOR_CONVERT       RGB_24_TO_RGB565
 
-#define LCD_MODE            ILI9488_EBIMODE
 struct ili9488_opt_t g_ili9488_display_opt;
 
 /** Tick Counter in unit of ms. */

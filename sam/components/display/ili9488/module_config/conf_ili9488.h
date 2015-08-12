@@ -51,7 +51,7 @@
 
 #include "board.h"
 
-#if !defined(BOARD_ILI9488_ADDR) || !defined(BOARD_ILI9488_RS)
+#if !defined(BOARD_ILI9488_ADDR)
 
 	#warning The ILI9488 EBI configuration does not exist in the board definition file. Using default settings.
 

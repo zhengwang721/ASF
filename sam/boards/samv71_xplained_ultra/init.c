@@ -48,6 +48,7 @@
 #include "board.h"
 #include "conf_board.h"
 #include "ioport.h"
+#include "pio.h"
 
 /**
  * \brief Set peripheral mode for IOPORT pins.
