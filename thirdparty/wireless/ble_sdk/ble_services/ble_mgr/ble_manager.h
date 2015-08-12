@@ -596,6 +596,9 @@ typedef void (*ble_gap_event_callback_t)(at_ble_handle_t);
 /* Typedef for characteristic value changed event callback */
 typedef at_ble_status_t (*ble_characteristic_changed_callback_t)(at_ble_characteristic_changed_t *);
 
+/* Typedef for notification confirmed event callback */
+typedef void (*ble_notification_confirmed_callback_t)(uint8_t);
+
 /** @brief function to set the device name.
   *
   * @param[in] name name of the device.
