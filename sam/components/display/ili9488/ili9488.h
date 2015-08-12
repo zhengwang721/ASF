@@ -77,9 +77,9 @@ typedef union _union_type
 	}half_word;
 }union_type;
 
-/** Bit mask for flipping X for ili9488_set_orientation() */
+/** Bit mask for flipping X for ili9488_set_display_mirror() */
 #define ILI9488_FLIP_X 1
-/** Bit mask for flipping Y for ili9488_set_orientation() */
+/** Bit mask for flipping Y for ili9488_set_display_mirror() */
 #define ILI9488_FLIP_Y 2
 
 /* ILI9488 screen size */
@@ -314,8 +314,9 @@ enum ili9488_display_direction{
 	PORTRAIT   = 1
 };
 
+
 uint32_t ili9488_init(struct ili9488_opt_t *p_opt);
-void ili9488_setdisplaylandscape( uint8_t dwRGB, uint8_t LandscapeMode);
+void ili9488_set_display_direction(enum ili9488_display_direction direction);
 void ili9488_set_window( uint16_t dwX, uint16_t dwY, uint16_t dwWidth, uint16_t dwHeight );
 void ili9488_display_on(void);
 void ili9488_display_off(void);
@@ -339,9 +340,7 @@ void ili9488_draw_prepare(uint32_t ul_x, uint32_t ul_y, uint32_t ul_width,
 void ili9488_draw_string(uint32_t ul_x, uint32_t ul_y, const uint8_t *p_str);
 void ili9488_draw_pixmap(uint32_t ul_x, uint32_t ul_y, uint32_t ul_width,
 		uint32_t ul_height, const ili9488_color_t *p_ul_pixmap);
-ili9488_color_t ili9488_read_gram(void);
-void ili9488_write_gram(ili9488_color_t color);
-void ili9488_set_orientation(uint8_t flags);
+void ili9488_set_display_mirror(uint8_t flags);
 void ili9488_write_register(uint8_t uc_reg, uint16_t *us_data, uint32_t size);
 void ili9488_delay(uint32_t ul_ms);
 void ili9488_write_brightness(uint16_t us_value);

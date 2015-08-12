@@ -496,25 +496,16 @@ static void ili9488_check_box_coordinates(uint32_t *p_ul_x1, uint32_t *p_ul_y1,
 }
 /**
  * \brief ILI9488 configure landscape.
-
- * \Param dwRGB RGB mode.
+ *
  * \Param LandscaprMode Landscape Mode.
  */
-void ili9488_setdisplaylandscape( uint8_t dwRGB, uint8_t LandscapeMode )
+void ili9488_set_display_direction(enum ili9488_display_direction direction )
 {
 	uint16_t value;
-	if(LandscapeMode) {
-		if(dwRGB) {
-			value = 0xE8;
-		} else {
-			value = 0xE0;
-		}
+	if(direction) {
+		value = 0xE8;
 	} else {
-		if(dwRGB) {
-			value = 0x48;
-		} else {
-			value = 0x40;
-		}
+		value = 0x48;
 	}
 	ili9488_write_register(ILI9488_CMD_MEMORY_ACCESS_CONTROL, &value, 1);
 }
@@ -603,7 +594,7 @@ uint32_t ili9488_init(struct ili9488_opt_t *p_opt)
 	ili9488_display_on();
 	ili9488_delay(100);
 
-	ili9488_setdisplaylandscape(1, 0);
+	ili9488_set_display_direction(LANDSCAPE);
 	ili9488_delay(100);
 
 	ili9488_set_window(0, 0,p_opt->ul_width,p_opt->ul_height);
@@ -1124,38 +1115,6 @@ void ili9488_draw_pixmap(uint32_t ul_x, uint32_t ul_y, uint32_t ul_width,
 }
 
 /**
- * \brief Read a single color from the graphical memory
- *
- * Use this function to read a color from the graphical memory of the
- * controller.
- *
- * Limits have to be set prior to calling this function, e.g.:
- * \code
-	ili9488_set_top_left_limit(0, 0);
-	ili9488_set_bottom_right_limit(320, 240);
-	...
-\endcode
- *
- * \retval ili9488_color_t The read color pixel
- */
-ili9488_color_t ili9488_read_gram(void)
-{
-	uint32_t value[2];
-	ili9488_color_t color;
-
-	pio_clear(PIN_EBI_CDS_PIO, PIN_EBI_CDS_MASK);
-	LCD_IR(0);
-	LCD_IR(ILI9488_CMD_MEMORY_READ);
-
-	pio_set(PIN_EBI_CDS_PIO, PIN_EBI_CDS_MASK);
-	LCD_MULTI_RD(value, 2);
-
-	/* The first data is dummy*/
-	color = value[1];
-	return color;
-}
-
-/**
  * \brief Sets the orientation of the display data
  *
  * Configures the display for a given orientation, including mirroring and/or
@@ -1163,7 +1122,7 @@ ili9488_color_t ili9488_read_gram(void)
  *
  * \param flags Orientation flags to use, see \ref ILI9488_FLIP_X, \ref ILI9488_FLIP_Y.
  */
-void ili9488_set_orientation(uint8_t flags)
+void ili9488_set_display_mirror(uint8_t flags)
 {
 	uint32_t cnt = 0;
 	uint16_t buf[3];
