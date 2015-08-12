@@ -68,13 +68,9 @@
 /**INDENT-ON**/
 /// @endcond
 
-extern void wait(uint32_t);
 /* Pixel cache used to speed up communication */
 #define LCD_DATA_CACHE_SIZE ILI9488_LCD_WIDTH
 static ili9488_color_t g_ul_pixel_cache[LCD_DATA_CACHE_SIZE];
-
-static volatile ili9488_coord_t limit_start_x, limit_start_y;
-static volatile ili9488_coord_t limit_end_x, limit_end_y;
 
 /* Global variable describing the font size used by the driver */
 const struct ili9488_font gfont = {10, 14};
@@ -282,16 +278,16 @@ const uint8_t p_uc_charset10x14[] = {
 /**
  * \brief Read 32 bit data.
  */
-static uint32_t ili9488_lcd_get_16(uint32_t uc_reg)
+static uint32_t ili9488_lcd_get_16(void)
 {
 	uint32_t readbuf[5];
 	uint32_t *ptr, i;
 	uint32_t shift_cnt = 2;
 	uint32_t chipid = 0;
 	uint32_t retval = 0;
-	
+
 	pio_set(PIN_EBI_CDS_PIO, PIN_EBI_CDS_MASK);
-    LCD_MULTI_RD(readbuf, 5);
+	LCD_MULTI_RD(readbuf, 5);
 	ptr = &readbuf[1];
 	for(i = 1; i < 4; i++) {
 		chipid |= (*ptr &0xFF)<< (shift_cnt << 3);
@@ -335,7 +331,7 @@ static void ili9488_write_ram(ili9488_color_t ul_color)
 static void ili9488_write_ram_buffer(const ili9488_color_t *p_ul_buf, uint32_t ul_size)
 {
 	uint32_t ul_addr;
-	
+
 	for (ul_addr = 0; ul_addr < (ul_size - ul_size % 8); ul_addr += 8) {
 		ili9488_write_ram(p_ul_buf[ul_addr]);
 		ili9488_write_ram(p_ul_buf[ul_addr + 1]);
@@ -361,13 +357,13 @@ static void ili9488_write_ram_buffer(const ili9488_color_t *p_ul_buf, uint32_t u
  void ili9488_write_register(uint8_t uc_reg, uint16_t *us_data, uint32_t size)
 {
 	volatile uint32_t i;
-	
+
 	/* CDS pin is set low level when writing command*/
 	pio_clear(PIN_EBI_CDS_PIO, PIN_EBI_CDS_MASK);
 	LCD_IR(0);
 	LCD_IR(uc_reg);
 	for(i = 0; i<0xF; i++);
-	
+
 	if(size == 0) {
 		return;
 	}
@@ -385,12 +381,12 @@ static void ili9488_write_ram_buffer(const ili9488_color_t *p_ul_buf, uint32_t u
 static void ili9488_read_ram_prepare(void)
 {
 	volatile uint32_t i;
-		
+
 	pio_clear(PIN_EBI_CDS_PIO, PIN_EBI_CDS_MASK);
 	LCD_IR(0);
 	LCD_IR(ILI9488_CMD_MEMORY_READ); /* Write Data to GRAM (R2Eh) */
 	for(i = 0; i<0xF; i++);
-	
+
 }
 /**
  * \brief Read data to LCD GRAM.
@@ -405,18 +401,18 @@ static uint32_t ili9488_read_ram(void)
 	uint32_t value[2];
 	uint32_t color = 0;
 	uint8_t  tmp[2];
-	
+
 	pio_clear(PIN_EBI_CDS_PIO, PIN_EBI_CDS_MASK);
 	LCD_IR(0);
 	LCD_IR(ILI9488_CMD_MEMORY_READ);
-	
+
 	pio_set(PIN_EBI_CDS_PIO, PIN_EBI_CDS_MASK);
 	LCD_MULTI_RD(value, 2);
-	
+
 	/* The first data is dummy*/
 	tmp[0] = (uint8_t)((value[1] >> 8) & 0xFFu);
 	tmp[1] = (uint8_t)(value[1] & 0xFFu);
-	
+
 	/* Convert RGB565 to RGB888 */
 	/* For BGR format */
 	color = ((tmp[0] & 0xF8)) |  /* R */
@@ -441,7 +437,7 @@ static uint32_t ili9488_read_register(uint8_t uc_reg)
 	LCD_IR(uc_reg);
 	for(i = 0; i<0xF; i++);
 
-	return ili9488_lcd_get_16(uc_reg);
+	return ili9488_lcd_get_16();
 }
 
 /**
@@ -500,6 +496,7 @@ static void ili9488_check_box_coordinates(uint32_t *p_ul_x1, uint32_t *p_ul_y1,
 }
 /**
  * \brief ILI9488 configure landscape.
+
  * \Param dwRGB RGB mode.
  * \Param LandscaprMode Landscape Mode.
  */
@@ -524,6 +521,7 @@ void ili9488_setdisplaylandscape( uint8_t dwRGB, uint8_t LandscapeMode )
 
 /**
  * \brief ILI9488 configure window.
+
  * \Param dwX X start position.
  * \Param dwX Y start position.
  * \Param dwWidth  Width of window.
@@ -534,10 +532,7 @@ void ili9488_set_window(uint16_t dwX, uint16_t dwY, uint16_t dwWidth, uint16_t d
 	uint16_t ColStart, ColEnd, RowStart, RowEnd;
 	uint32_t cnt = 0;
 	uint16_t buf[4];
-	
-	//gwCanvasMaxWidth = dwWidth;
-	//gwCanvasMaxHeight = dwHeight;
-	
+
 	cnt = sizeof(buf)/sizeof(uint16_t);
 
 	ColStart  =  dwX ;
@@ -577,41 +572,39 @@ uint32_t ili9488_init(struct ili9488_opt_t *p_opt)
 {
 	uint16_t param;
 	uint32_t chipid;
-	
+
 	ili9488_write_register(ILI9488_CMD_SOFTWARE_RESET, 0x0000, 0);
-	wait(200);
-	
+	ili9488_delay(200);
+
 	ili9488_write_register(ILI9488_CMD_SLEEP_OUT, 0x0000, 0);
-	wait(200);
-	
+	ili9488_delay(200);
+
 	/** read chipid */
 	chipid = ili9488_read_register(ILI9488_CMD_READ_ID4);
 	if (chipid != ILI9488_DEVICE_CODE) {
-		printf( "Read ILI9488 chip ID (0x%04x) error, skip initialization.\r\n",
-		(unsigned int)chipid ) ;
-		return 1 ;
+		return 1;
 	}
 
 	/** make it tRGB and reverse the column order */
 	param = 0x48;
 	ili9488_write_register(ILI9488_CMD_MEMORY_ACCESS_CONTROL, &param, 1);
-	wait(100);
-	
+	ili9488_delay(100);
+
 	param = 0x04;
 	ili9488_write_register(ILI9488_CMD_CABC_CONTROL_9, &param, 1);
-	wait(100);
+	ili9488_delay(100);
 	/** Set ILI9488 Pixel Format in SMC mode.*/
 	param = 0x05;
 	ili9488_write_register(ILI9488_CMD_COLMOD_PIXEL_FORMAT_SET, &param, 1);
-	wait(100);
+	ili9488_delay(100);
 	ili9488_write_register(ILI9488_CMD_NORMAL_DISP_MODE_ON, 0, 0);
-	wait(100);
-	//ili9488_write_register(ILI9488_CMD_DISPLAY_ON, 0, 0);
+	ili9488_delay(100);
+
 	ili9488_display_on();
-	wait(100);
-	
+	ili9488_delay(100);
+
 	ili9488_setdisplaylandscape(1, 0);
-	wait(100);
+	ili9488_delay(100);
 
 	ili9488_set_window(0, 0,p_opt->ul_width,p_opt->ul_height);
 	ili9488_set_foreground_color(p_opt->foreground_color);
@@ -714,13 +707,13 @@ void ili9488_scroll(uint32_t ul_tfa, uint32_t ul_lines, uint32_t ul_bfa)
 
 	uint16_t buf[6];
 	cnt = sizeof(buf)/sizeof(uint16_t);
-	
+
 	buf[0] = get_8b_to_16b(ul_tfa);
 	buf[1] = get_0b_to_8b(ul_tfa);
-	
+
 	buf[2] = get_8b_to_16b(ul_lines);
 	buf[3] = get_0b_to_8b(ul_lines);
-	
+
 	buf[4] = get_8b_to_16b(ul_bfa);
 	buf[5] = get_0b_to_8b(ul_bfa);
 	ili9488_write_register(ILI9488_CMD_VERT_SCROLL_DEFINITION, buf, cnt);
@@ -737,7 +730,7 @@ void ili9488_set_scroll_address(uint32_t ul_vsp)
 
 	uint16_t buf[2];
 	cnt = sizeof(buf)/sizeof(uint16_t);
-	
+
 	buf[0] = get_8b_to_16b(ul_vsp);
 	buf[1] = get_0b_to_8b(ul_vsp);
 	ili9488_write_register(ILI9488_CMD_VERT_SCROLL_DEFINITION, buf, cnt);
@@ -1149,14 +1142,14 @@ ili9488_color_t ili9488_read_gram(void)
 {
 	uint32_t value[2];
 	ili9488_color_t color;
-	
+
 	pio_clear(PIN_EBI_CDS_PIO, PIN_EBI_CDS_MASK);
 	LCD_IR(0);
 	LCD_IR(ILI9488_CMD_MEMORY_READ);
-	
+
 	pio_set(PIN_EBI_CDS_PIO, PIN_EBI_CDS_MASK);
 	LCD_MULTI_RD(value, 2);
-	
+
 	/* The first data is dummy*/
 	color = value[1];
 	return color;
@@ -1175,13 +1168,13 @@ void ili9488_set_orientation(uint8_t flags)
 	uint32_t cnt = 0;
 	uint16_t buf[3];
 	cnt = sizeof(buf)/sizeof(uint16_t);
-	
+
 	buf[0] = 0x2;
 	buf[1] = 0x2;
 	buf[2] = 0x3B;
 
 	buf[1] |= (flags & ILI9488_FLIP_X ? (buf[1] | (1 << 6)) : 0);
-	buf[1] |= (flags & ILI9488_FLIP_Y ? (buf[1] | (1 << 5)): 0);
+	buf[1] |= (flags & ILI9488_FLIP_Y ? (buf[1] | (1 << 5)) : 0);
 
 	ili9488_write_register(ILI9488_CMD_DISPLAY_FUNCTION_CONTROL, buf, cnt);
 }
@@ -1207,15 +1200,15 @@ uint32_t ili9488_read_brightness(void)
 {
 	uint32_t value[2];
 	uint32_t brightness;
-	
+
 	pio_clear(PIN_EBI_CDS_PIO, PIN_EBI_CDS_MASK);
 	LCD_IR(0);
 	LCD_IR(ILI9488_CMD_READ_DISPLAY_BRIGHTNESS);
 	/* The first data is dummy*/
-	
+
 	pio_set(PIN_EBI_CDS_PIO, PIN_EBI_CDS_MASK);
 	LCD_MULTI_RD(value, 2);
-	
+
 	brightness = value[1];
 	return brightness;
 }

@@ -181,18 +181,12 @@ int main(void)
 	smc_set_cycle_timing(SMC, ILI9488_LCD_CS, SMC_CYCLE_NWE_CYCLE(0xA)
 			| SMC_CYCLE_NRD_CYCLE(0xA));
 
-#if !defined(SAM4S)
-	smc_set_mode(SMC, ILI9488_LCD_CS, SMC_MODE_READ_MODE
-			| SMC_MODE_WRITE_MODE
-			| SMC_MODE_DBW_8_BIT);
-#else
+
 	smc_set_mode(SMC, ILI9488_LCD_CS, SMC_MODE_READ_MODE
 			| SMC_MODE_WRITE_MODE
 			| SMC_MODE_DBW_16_BIT
 			| SMC_MODE_EXNW_MODE_DISABLED
 			| SMC_MODE_TDF_CYCLES(0xF));
-#endif
-
 
 	/* Initialize display parameter */
 	g_ili9488_display_opt.ul_width = ILI9488_LCD_WIDTH;

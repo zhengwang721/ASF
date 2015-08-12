@@ -62,10 +62,6 @@
 /** Type define for an integer type large enough to store a pixel color. */
 typedef uint32_t ili9488_color_t;
 
-/** Type define for an integer type large enough to store a pixel coordinate.
- */
-typedef int16_t ili9488_coord_t;
-
 typedef union _union_type
 {
 	uint32_t value;
@@ -80,27 +76,6 @@ typedef union _union_type
 		uint16_t half_word_h;
 	}half_word;
 }union_type;
-
-typedef struct _rect{
-	uint32_t x;
-	uint32_t y;
-	uint32_t width;
-	uint32_t height;
-}rect;
-
-typedef struct _rgb{
-	uint8_t b;
-	uint8_t g;
-	uint8_t r;
-}sBGR;
-
-/** This macro generates a 16-bit native color for the display from a
- *  24-bit RGB value.
- */
-#define ILI9488_COLOR(r, g, b) ((r<<16) | (g << 8) | b)
-
-typedef ili9488_color_t gfx_color_t;
-typedef int16_t gfx_coord_t;
 
 /** Bit mask for flipping X for ili9488_set_orientation() */
 #define ILI9488_FLIP_X 1
@@ -337,22 +312,6 @@ struct ili9488_font{
 enum ili9488_display_direction{
 	LANDSCAPE  = 0,
 	PORTRAIT   = 1
-};
-
-/**
- * Shift direction option
- */
-enum ili9488_shift_direction{
-	H_INCREASE  = 0,
-	H_DECREASE  = 1
-};
-
-/**
- * Scan direction option
- */
-enum ili9488_scan_direction{
-	V_INCREASE  = 0,
-	V_DEREASE   = 1
 };
 
 uint32_t ili9488_init(struct ili9488_opt_t *p_opt);
