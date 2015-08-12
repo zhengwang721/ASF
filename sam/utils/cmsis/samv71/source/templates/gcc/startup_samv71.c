@@ -55,113 +55,6 @@ extern uint32_t _ezero;
 extern uint32_t _sstack;
 extern uint32_t _estack;
 
-#define MPU_DEFAULT_ITCM_REGION           ( 1 )
-#define MPU_DEFAULT_IFLASH_REGION         ( 2 )
-#define MPU_DEFAULT_DTCM_REGION           ( 3 )
-#define MPU_DEFAULT_PRAM_REGION           ( 4 )
-#define MPU_DEFAULT_UPRAM_REGION          ( 5 )
-#define MPU_PERIPHERALS_REGION            ( 6 )
-#define MPU_DEFAULT_SDRAM_REGION          ( 7 )
-#define MPU_USBHSRAM_REGION               ( 8 )
-#define MPU_QSPIMEM_REGION                ( 9 )
-
-#define MPU_ENABLE                      ( 0x1 )
-#define MPU_BGENABLE                    ( 0x1 << 2 )
-/************** USBHS_RAM region macros ******************/
-
-#define USBHSRAM_START_ADDRESS                  0xA0100000UL
-#define USBHSRAM_END_ADDRESS                    0xA0200000UL
-
-/******* Ext-SRAM memory macros ***************************/
-
-#define SDRAM_START_ADDRESS                     0x70000000UL
-#define SDRAM_END_ADDRESS                       0x7FFFFFFFUL
-/**************** DTCM  *******************************/
-#define DTCM_START_ADDRESS                  0x20000000UL
-#define DTCM_END_ADDRESS                    0x20400000UL
-
-
-/******* SRAM memory macros ***************************/
-
-#define SRAM_START_ADDRESS                  0x20400000UL
-#define SRAM_END_ADDRESS                    0x2045FFFFUL
-#define SRAM_HALF                           ((SRAM_END_ADDRESS - SRAM_START_ADDRESS) >>1)
-
-
-#define SRAM_PRIVILEGE_START_ADDRESS        (SRAM_START_ADDRESS)
-#define SRAM_PRIVILEGE_END_ADDRESS          (SRAM_START_ADDRESS + 0x3FFFF)
-
-#define SRAM_UNPRIVILEGE_START_ADDRESS      (SRAM_PRIVILEGE_END_ADDRESS + 1)
-#define SRAM_UNPRIVILEGE_END_ADDRESS        (SRAM_END_ADDRESS)
-
-/************** Peripherials memory region macros ********/
-
-#define PERIPHERALS_START_ADDRESS               0x40000000UL
-#define PERIPHERALS_END_ADDRESS                 0x400E2000UL
-
-#define UART_REGION_START_ADDRESS               0x400E1C00UL
-#define UART_REGION_END_ADDRESS                 0x400E2000UL
-
-/************** Peripherials memory region macros ********/
-
-#define PERIPHERALS_START_ADDRESS               0x40000000UL
-#define PERIPHERALS_END_ADDRESS                 0x400E2000UL
-/********* IFLASH memory macros *********************/
-#define ITCM_START_ADDRESS                  0x00000000UL
-#define ITCM_END_ADDRESS                    0x00400000UL
-#define IFLASH_START_ADDRESS                0x00400000UL
-#define IFLASH_END_ADDRESS                  0x00600000UL
-#define IFLASH_HALF                         ((IFLASH_END_ADDRESS - IFLASH_START_ADDRESS) >> 1)
-
-#define IFLASH_PRIVILEGE_START_ADDRESS      (IFLASH_START_ADDRESS)
-#define IFLASH_PRIVILEGE_END_ADDRESS        (IFLASH_START_ADDRESS + IFLASH_HALF)
-
-#define SRAM_UNCACHEABLE_START_ADDRESS      (SRAM_PRIVILEGE_END_ADDRESS + 1)
-#define SRAM_UNCACHEABLE_END_ADDRESS        (SRAM_END_ADDRESS)
-
-#define IFLASH_UNPRIVILEGE_START_ADDRESS    (IFLASH_START_ADDRESS + IFLASH_HALF + 1)
-#define IFLASH_UNPRIVILEGE_END_ADDRESS      (IFLASH_END_ADDRESS)
-/************** QSPI region macros ******************/
-
-#define QSPI_START_ADDRESS                      0x80000000UL
-#define QSPI_END_ADDRESS                        0x9fffffffUL
-
-
-#define MPU_REGION_VALID                    ( 0x10 )
-#define MPU_REGION_ENABLE                   ( 0x01 )
-#define MPU_REGION_DISABLE                  ( 0x0  )
-
-#define MPU_REGION_BUFFERABLE               ( 0x01 << 16 )
-#define MPU_REGION_CACHEABLE                ( 0x01 << 17 )
-#define MPU_REGION_SHAREABLE                ( 0x01 << 18 )
-
-#define MPU_REGION_EXECUTE_NEVER            ( 0x01 << MPU_RASR_XN_Pos )
-
-#define MPU_AP_NO_ACCESS                    ( 0x00 << MPU_RASR_AP_Pos )
-#define MPU_AP_PRIVILEGED_READ_WRITE        ( 0x01 << MPU_RASR_AP_Pos )
-#define MPU_AP_UNPRIVILEGED_READONLY        ( 0x02 << MPU_RASR_AP_Pos )
-#define MPU_AP_FULL_ACCESS                  ( 0x03 << MPU_RASR_AP_Pos )
-#define MPU_AP_RES                          ( 0x04 << MPU_RASR_AP_Pos )
-#define MPU_AP_PRIVILEGED_READONLY          ( 0x05 << MPU_RASR_AP_Pos )
-#define MPU_AP_READONLY                     ( 0x06 << MPU_RASR_AP_Pos )
-#define MPU_AP_READONLY2                    ( 0x07 << MPU_RASR_AP_Pos )
-
-#define MPU_TEX_B001                        ( 0x01 << MPU_RASR_TEX_Pos )
-#define MPU_TEX_NON_CACHE                   ( 0x04 << MPU_RASR_TEX_Pos )
-#define MPU_TEX_WRITE_BACK_ALLOCATE         ( 0x05 << MPU_RASR_TEX_Pos )
-#define MPU_TEX_WRITE_THROUGH               ( 0x06 << MPU_RASR_TEX_Pos )
-#define MPU_TEX_WRITE_BACK_NOALLOCATE       ( 0x07 << MPU_RASR_TEX_Pos )
-
-#define DISABLE   0
-#define ENABLE    1
-#define DISABLED  0
-#define ENABLED   1
-#define OFF       0
-#define ON        1
-#define FALSE     0
-#define TRUE      1
-#define STRONGLY_ORDERED_SHAREABLE_TYPE     (( 0x00 << MPU_RASR_TEX_Pos ) | ( DISABLE << MPU_RASR_C_Pos ) | ( DISABLE << MPU_RASR_B_Pos ))     // DO not care //
-
 /** \cond DOXYGEN_SHOULD_SKIP_THIS */
 int main(void);
 /** \endcond */
@@ -399,49 +292,12 @@ const DeviceVectors exception_table = {
 };
 
 /**
- * \brief Calculate region size for the RASR.
- */
-uint32_t MPU_CalMPURegionSize( uint32_t dwActualSizeInBytes )
-{
-    uint32_t dwRegionSize = 32;
-    uint32_t dwReturnValue = 4;
-
-    while( dwReturnValue < 31 )
-    {
-        if( dwActualSizeInBytes <= dwRegionSize )
-        {
-            break;
-        }
-        else
-        {
-            dwReturnValue++;
-        }
-
-        dwRegionSize <<= 1;
-    }
-
-    return ( dwReturnValue << 1 );
-}
-
-void MPU_SetRegion( uint32_t dwRegionBaseAddr, uint32_t dwRegionAttr )
-{
-    *(unsigned int *)0xe000ed9c = dwRegionBaseAddr;//MPU->RBAR
-    *(unsigned int *)0xe000eda0 = dwRegionAttr;//MPU->RASR
-}
-void MPU_Enable( uint32_t dwMPUEnable )
-{
-    *(unsigned int *)0xe000ed94 = dwMPUEnable ;//MPU->CTRL
-}
-
-/**
  * \brief This is the code that gets called on processor reset.
  * To initialize the device, and call the main() routine.
  */
 void Reset_Handler(void)
 {
         uint32_t *pSrc, *pDest;
-        uint32_t dwRegionBaseAddr;
-        uint32_t dwRegionAttr;
 
         /* Initialize the relocate segment */
         pSrc = &_etext;
@@ -464,34 +320,6 @@ void Reset_Handler(void)
 
         /* Initialize the C library */
         __libc_init_array();
-
-#if 1
-		__DMB();
-		dwRegionBaseAddr =
-        QSPI_START_ADDRESS |
-        MPU_REGION_VALID |
-        MPU_QSPIMEM_REGION;              //8
-
-		dwRegionAttr =
-			MPU_AP_FULL_ACCESS |
-			STRONGLY_ORDERED_SHAREABLE_TYPE |
-			//MPU_REGION_CACHEABLE |
-			MPU_REGION_SHAREABLE |
-			MPU_CalMPURegionSize(QSPI_END_ADDRESS - QSPI_START_ADDRESS) |
-			MPU_REGION_ENABLE;
-
-		MPU_SetRegion( dwRegionBaseAddr, dwRegionAttr);
-
-		/* Enable the memory management fault , Bus Fault, Usage Fault exception */
-		SCB->SHCSR |= (SCB_SHCSR_MEMFAULTENA_Msk | SCB_SHCSR_BUSFAULTENA_Msk | SCB_SHCSR_USGFAULTENA_Msk);
-
-		/* Enable the MPU region */
-		MPU_Enable( MPU_ENABLE | MPU_BGENABLE );
-
-		__DSB();
-		__ISB();
-
-#endif
 
         /* Branch to main function */
         main();

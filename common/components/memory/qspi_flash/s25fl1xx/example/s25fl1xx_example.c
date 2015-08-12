@@ -162,31 +162,6 @@ int main(void)
 	/* Enable quad mode */
 	s25fl1xx_set_quad_mode(&g_qspid, 1);
 
-	/* Erase 64K flash  */
-	s25fl1xx_erase_64k_block(&g_qspid, 0);
-
-	/* Flash the code to QSPI flash */
-	puts("Writing to Memory\r\n");
-
-	s25fl1xx_write(&g_qspid, (uint32_t *)buffercode, WRITE_SIZE, 0, 0);
-
-	printf("\rExample code written 0x%x bytes to Memory\r\n", WRITE_SIZE);
-
-	puts("Verifying \r\n");
-	s25fl1xx_read(&g_qspid, buffer, sizeof(buffer), 0);
-	/* Start continuous read mode to enter in XIP mode*/
-	s25fl1xx_enter_continous_read_mode(&g_qspid);
-
-	for (idx = 0; idx < WRITE_SIZE; idx++) {
-		if(*(memory) == buffercode[idx]) {
-			memory++;
-		} else {
-			mem_verified = 1;
-			printf("\nData does not match at 0x%x \r\n", (int)memory);
-			break;
-		}
-	}
-
 	/* Erase 64K bytes of chip  */
 	s25fl1xx_erase_64k_block(&g_qspid, 0);
 
