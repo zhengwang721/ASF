@@ -196,4 +196,4 @@ void mpu_disable_region(void);
 uint32_t mpu_cal_mpu_region_size(uint32_t dw_actual_size_in_bytes);
 void mpu_update_regions(uint32_t dw_region_num, uint32_t dw_region_base_addr, uint32_t dw_region_attr);
 
-#endif /* #ifndef _MMU_H_ */
+#endif /* #ifndef _MPU_H_ */
