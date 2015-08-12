@@ -58,147 +58,147 @@
  *----------------------------------------------------------------------------*/
 
 /** Device is protected, operation cannot be carried out. */
-#define QSPI_ERROR_PROTECTED                  1
+#define S25FL1XX_ERROR_PROTECTED                  1
 /** Device is busy executing a command. */
-#define QSPI_ERROR_BUSY                       2
+#define S25FL1XX_ERROR_BUSY                       2
 /** There was a problem while trying to program page data. */
-#define QSPI_ERROR_PROGRAM                    3
+#define S25FL1XX_ERROR_PROGRAM                    3
 /** There was an SPI communication error. */
-#define QSPI_ERROR_SPI                        4
+#define S25FL1XX_ERROR_SPI                        4
 
 /** Device ready/busy status bit. */
-#define QSPI_STATUS_RDYBSY                    (1 << 0)
+#define S25FL1XX_STATUS_RDYBSY                    (1 << 0)
 /** Device is ready. */
-#define QSPI_STATUS_RDYBSY_READY              (0 << 0)
+#define S25FL1XX_STATUS_RDYBSY_READY              (0 << 0)
 /** Device is busy with internal operations. */
-#define QSPI_STATUS_RDYBSY_BUSY               (1 << 0)
+#define S25FL1XX_STATUS_RDYBSY_BUSY               (1 << 0)
 /** Write enable latch status bit. */
-#define QSPI_STATUS_WEL                       (1 << 1)
+#define S25FL1XX_STATUS_WEL                       (1 << 1)
 /** Device is not write enabled. */
-#define QSPI_STATUS_WEL_DISABLED              (0 << 1)
+#define S25FL1XX_STATUS_WEL_DISABLED              (0 << 1)
 /** Device is write enabled. */
-#define QSPI_STATUS_WEL_ENABLED               (1 << 1)
+#define S25FL1XX_STATUS_WEL_ENABLED               (1 << 1)
 /** Software protection status bit-field. */
-#define QSPI_STATUS_SWP                       (3 << 2)
+#define S25FL1XX_STATUS_SWP                       (3 << 2)
 /** All sectors are software protected. */
-#define QSPI_STATUS_SWP_PROTALL               (3 << 2)
+#define S25FL1XX_STATUS_SWP_PROTALL               (3 << 2)
 /** Some sectors are software protected. */
-#define QSPI_STATUS_SWP_PROTSOME              (1 << 2)
+#define S25FL1XX_STATUS_SWP_PROTSOME              (1 << 2)
 /** No sector is software protected. */
-#define QSPI_STATUS_SWP_PROTNONE              (0 << 2)
+#define S25FL1XX_STATUS_SWP_PROTNONE              (0 << 2)
 /** Write protect pin status bit. */
-#define QSPI_STATUS_WPP                       (1 << 4)
+#define S25FL1XX_STATUS_WPP                       (1 << 4)
 /** Write protect signal is not asserted. */
-#define QSPI_STATUS_WPP_NOTASSERTED           (0 << 4)
+#define S25FL1XX_STATUS_WPP_NOTASSERTED           (0 << 4)
 /** Write protect signal is asserted. */
-#define QSPI_STATUS_WPP_ASSERTED              (1 << 4)
+#define S25FL1XX_STATUS_WPP_ASSERTED              (1 << 4)
 /** Erase/program error bit. */
-#define QSPI_STATUS_EPE                       (1 << 5)
+#define S25FL1XX_STATUS_EPE                       (1 << 5)
 /** Erase or program operation was successful. */
-#define QSPI_STATUS_EPE_SUCCESS               (0 << 5)
+#define S25FL1XX_STATUS_EPE_SUCCESS               (0 << 5)
 /** Erase or program error detected. */
-#define QSPI_STATUS_EPE_ERROR                 (1 << 5)
+#define S25FL1XX_STATUS_EPE_ERROR                 (1 << 5)
 /** Sector protection registers locked bit. */
-#define QSPI_STATUS_SPRL                      (1 << 7)
+#define S25FL1XX_STATUS_SPRL                      (1 << 7)
 /** Sector protection registers are unlocked. */
-#define QSPI_STATUS_SPRL_UNLOCKED             (0 << 7)
+#define S25FL1XX_STATUS_SPRL_UNLOCKED             (0 << 7)
 /** Sector protection registers are locked. */
-#define QSPI_STATUS_SPRL_LOCKED               (1 << 7)
+#define S25FL1XX_STATUS_SPRL_LOCKED               (1 << 7)
 /** Quad enable bit */
-#define QSPI_STATUS_QUAD_ENABLE               (1 << 1)
+#define S25FL1XX_STATUS_QUAD_ENABLE               (1 << 1)
 /** Quad enable bit */
-#define QSPI_STATUS_WRAP_ENABLE               (0 << 4)
+#define S25FL1XX_STATUS_WRAP_ENABLE               (0 << 4)
 /** Latency control bits */
-#define QSPI_STATUS_LATENCY_CTRL              (0xF << 0)
-#define QSPI_STATUS_WRAP_BYTE                 (1 << 5)
-#define QSPI_BLOCK_PROTECT_Msk                (7 << 2)
-#define QSPI_TOP_BTM_PROTECT_Msk              (1 << 5)
-#define QSPI_SEC_PROTECT_Msk                  (1 << 6)
-#define QSPI_CHIP_PROTECT_Msk                 (0x1F << 2)
+#define S25FL1XX_STATUS_LATENCY_CTRL              (0xF << 0)
+#define S25FL1XX_STATUS_WRAP_BYTE                 (1 << 5)
+#define S25FL1XX_BLOCK_PROTECT_Msk                (7 << 2)
+#define S25FL1XX_TOP_BTM_PROTECT_Msk              (1 << 5)
+#define S25FL1XX_SEC_PROTECT_Msk                  (1 << 6)
+#define S25FL1XX_CHIP_PROTECT_Msk                 (0x1F << 2)
 
 /** Sequential program mode command code 1. */
-#define QSPI_SEQUENTIAL_PROGRAM_1             0xAD
+#define S25FL1XX_SEQUENTIAL_PROGRAM_1             0xAD
 /** Sequential program mode command code 2. */
-#define QSPI_SEQUENTIAL_PROGRAM_2             0xAF
+#define S25FL1XX_SEQUENTIAL_PROGRAM_2             0xAF
 /** Protect sector command code. */
-#define QSPI_PROTECT_SECTOR                   0x36
+#define S25FL1XX_PROTECT_SECTOR                   0x36
 /** Unprotected sector command code. */
-#define QSPI_UNPROTECT_SECTOR                 0x39
+#define S25FL1XX_UNPROTECT_SECTOR                 0x39
 /** Read sector protection registers command code. */
-#define QSPI_READ_SECTOR_PROT                 0x3C
+#define S25FL1XX_READ_SECTOR_PROT                 0x3C
 /** Resume from deep power-down command code. */
-#define QSPI_SOFT_RESET_ENABLE                0x66
+#define S25FL1XX_SOFT_RESET_ENABLE                0x66
 /** Resume from deep power-down command code. */
-#define QSPI_SOFT_RESET                       0x99
+#define S25FL1XX_SOFT_RESET                       0x99
 /** Read status register command code. */
-#define QSPI_READ_STATUS_1                    0x05
+#define S25FL1XX_READ_STATUS_1                    0x05
 /** Read status register command code. */
-#define QSPI_READ_STATUS_2                    0x35
+#define S25FL1XX_READ_STATUS_2                    0x35
 /** Read status register command code. */
-#define QSPI_READ_STATUS_3                    0x33
+#define S25FL1XX_READ_STATUS_3                    0x33
 /** Write enable command code. */
-#define QSPI_WRITE_ENABLE                     0x06
+#define S25FL1XX_WRITE_ENABLE                     0x06
 /** Write Enable for Volatile Status Register. */
-#define QSPI_WRITE_ENABLE_FOR_VOLATILE_STATUS 0x50
+#define S25FL1XX_WRITE_ENABLE_FOR_VOLATILE_STATUS 0x50
 /** Write disable command code. */
-#define QSPI_WRITE_DISABLE                    0x04
+#define S25FL1XX_WRITE_DISABLE                    0x04
 /** Write status register command code. */
-#define QSPI_WRITE_STATUS                     0x01
+#define S25FL1XX_WRITE_STATUS                     0x01
 /** Resume from deep power-down command code. */
-#define QSPI_WRAP_ENABLE                      0x77
+#define S25FL1XX_WRAP_ENABLE                      0x77
 /** Byte/page program command code. */
-#define QSPI_BYTE_PAGE_PROGRAM                0x02
+#define S25FL1XX_BYTE_PAGE_PROGRAM                0x02
 /** Block erase command code (4K block). */
-#define QSPI_BLOCK_ERASE_4K                   0x20
+#define S25FL1XX_BLOCK_ERASE_4K                   0x20
 /** Block erase command code (32K block). */
-#define QSPI_BLOCK_ERASE_32K                  0x52
+#define S25FL1XX_BLOCK_ERASE_32K                  0x52
 /** Block erase command code (64K block). */
-#define QSPI_BLOCK_ERASE_64K                  0xD8
+#define S25FL1XX_BLOCK_ERASE_64K                  0xD8
 /** Chip erase command code 1. */
-#define QSPI_CHIP_ERASE_1                     0x60
+#define S25FL1XX_CHIP_ERASE_1                     0x60
 /** Chip erase command code 2. */
-#define QSPI_CHIP_ERASE_2                     0xC7
+#define S25FL1XX_CHIP_ERASE_2                     0xC7
 /** Read array (low frequency) command code. */
-#define QSPI_READ_ARRAY_LF                    0x03
+#define S25FL1XX_READ_ARRAY_LF                    0x03
 /** Read array command code. */
-#define QSPI_READ_ARRAY                       0x0B
+#define S25FL1XX_READ_ARRAY                       0x0B
 /** Fast Read array  command code. */
-#define QSPI_READ_ARRAY_DUAL                  0x3B
+#define S25FL1XX_READ_ARRAY_DUAL                  0x3B
 /** Fast Read array  command code. */
-#define QSPI_READ_ARRAY_QUAD                  0x6B
+#define S25FL1XX_READ_ARRAY_QUAD                  0x6B
 /** Fast Read array  command code. */
-#define QSPI_READ_ARRAY_DUAL_IO               0xBB
+#define S25FL1XX_READ_ARRAY_DUAL_IO               0xBB
 /** Fast Read array  command code. */
-#define QSPI_READ_ARRAY_QUAD_IO               0xEB
+#define S25FL1XX_READ_ARRAY_QUAD_IO               0xEB
 /** Deep power-down command code. */
-#define QSPI_DEEP_PDOWN                       0xB9
+#define S25FL1XX_DEEP_PDOWN                       0xB9
 /** Resume from deep power-down command code. */
-#define QSPI_RES_DEEP_PDOWN                   0xAB
+#define S25FL1XX_RES_DEEP_PDOWN                   0xAB
 /** Manufacturer/ Device ID command code. */
-#define QSPI_MANUFACTURER_DEVICE_ID           0x90
+#define S25FL1XX_MANUFACTURER_DEVICE_ID           0x90
 /** Read manufacturer and device ID command code. */
-#define QSPI_READ_JEDEC_ID                    0x9F
+#define S25FL1XX_READ_JEDEC_ID                    0x9F
 /** Continuous Read Mode Reset command code. */
-#define QSPI_CONT_MODE_RESET                  0xFF
+#define S25FL1XX_CONT_MODE_RESET                  0xFF
 
 /** QSPI Flash Manufacturer JEDEC ID */
-#define QSPI_ATMEL_SPI_FLASH                  0x1F
-#define QSPI_ST_SPI_FLASH                     0x20
-#define QSPI_WINBOND_SPI_FLASH                0xEF
-#define QSPI_MACRONIX_SPI_FLASH               0xC2
-#define QSPI_SST_SPI_FLASH                    0xBF
+#define S25FL1XX_ATMEL_SPI_FLASH                  0x1F
+#define S25FL1XX_ST_SPI_FLASH                     0x20
+#define S25FL1XX_WINBOND_SPI_FLASH                0xEF
+#define S25FL1XX_MACRONIX_SPI_FLASH               0xC2
+#define S25FL1XX_SST_SPI_FLASH                    0xBF
 
 enum block_size {
-	SIZE_4K = 0,
-	SIZE_8K,
-	SIZE_16K,
-	SIZE_32K,
-	SIZE_64K,
-	SIZE_128K,
-	SIZE_256K,
-	SIZE_512K,
-	SIZE_1M,
-	SIZE_2M
+	S25FL1XX_SIZE_4K = 0,
+	S25FL1XX_SIZE_8K,
+	S25FL1XX_SIZE_16K,
+	S25FL1XX_SIZE_32K,
+	S25FL1XX_SIZE_64K,
+	S25FL1XX_SIZE_128K,
+	S25FL1XX_SIZE_256K,
+	S25FL1XX_SIZE_512K,
+	S25FL1XX_SIZE_1M,
+	S25FL1XX_SIZE_2M
 };
 
 /*----------------------------------------------------------------------------

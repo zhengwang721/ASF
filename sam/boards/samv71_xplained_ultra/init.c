@@ -104,10 +104,11 @@
  *	0xE0000000- 0xFFFFFFFF System           -                  -
  */
 
+#ifdef CONF_BOARD_CONFIG_MPU_AT_INIT
 /**
  * \brief Set up a memory region.
  */
-void _setup_memory_region( void )
+static void _setup_memory_region( void )
 {
 
 	uint32_t dw_region_base_addr;
@@ -325,11 +326,12 @@ void _setup_memory_region( void )
 					| SCB_SHCSR_USGFAULTENA_Msk);
 
 	/* Enable the MPU region */
-	mup_enable( MPU_ENABLE | MPU_PRIVDEFENA);
+	mpu_enable( MPU_ENABLE | MPU_PRIVDEFENA);
 
 	__DSB();
 	__ISB();
 }
+#endif
 
 void board_init(void)
 {
@@ -435,6 +437,8 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_USART0_RTS_IDX, PIN_USART0_RTS_FLAGS);
 #endif
 
+#ifdef CONF_BOARD_CONFIG_MPU_AT_INIT
 	_setup_memory_region();
+#endif
 
 }

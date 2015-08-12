@@ -15,7 +15,6 @@
 		<device-support value="same70"/>
 		<device-support value="sams70"/>
 		<require idref="sam.drivers.qspi"/>
-		<require idref="sam.drivers.mpu"/>
 		<require idref="common.services.delay"/>
 		<generator value="doxygen-module" default-mcu="unspecified-samv71"/>
 	</module>

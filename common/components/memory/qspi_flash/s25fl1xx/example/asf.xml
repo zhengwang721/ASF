@@ -12,7 +12,6 @@
 			<device-support value="same70"/>
 			<device-support value="sams70"/>
 			<require idref="sam.drivers.qspi"/>
-			<require idref="sam.drivers.mpu"/>
 			<require idref="common.components.memory.qspi_flash.s25fl1xx"/>
 			<require idref="sam.drivers.uart"/>
 			<require idref="sam.utils.syscalls"/>

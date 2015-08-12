@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMV71-XULTRA board mpu config.
+ * \brief SAMV70/SAMV71/SAME70/SAMS70-XULTRA board mpu config.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -189,7 +189,7 @@
 /*----------------------------------------------------------------------------
  *        Export functions
  *----------------------------------------------------------------------------*/
-void mup_enable(uint32_t dw_mpu_enable);
+void mpu_enable(uint32_t dw_mpu_enable);
 void mpu_set_region(uint32_t dw_region_base_addr, uint32_t dw_region_attr);
 void mpu_set_region_num(uint32_t dw_region_num);
 void mpu_disable_region(void);

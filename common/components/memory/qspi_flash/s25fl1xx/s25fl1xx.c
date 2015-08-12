@@ -173,7 +173,7 @@ static void s25fl1xx_exec_command(struct qspid_t *qspid, uint8_t instr, uint32_t
 static uint8_t s25fl1xx_read_status1(struct qspid_t *qspid)
 {
 	uint8_t status;
-	s25fl1xx_exec_command(qspid, QSPI_READ_STATUS_1, 0, (uint32_t *)(&status), QSPI_READ_ACCESS, 1);
+	s25fl1xx_exec_command(qspid, S25FL1XX_READ_STATUS_1, 0, (uint32_t *)(&status), QSPI_READ_ACCESS, 1);
 	return status;
 }
 
@@ -186,7 +186,7 @@ static uint8_t s25fl1xx_read_status1(struct qspid_t *qspid)
 static uint8_t s25fl1xx_read_status2(struct qspid_t *qspid)
 {
 	uint8_t status;
-	s25fl1xx_exec_command(qspid, QSPI_READ_STATUS_2, 0, (uint32_t *)&status, QSPI_READ_ACCESS, 1);
+	s25fl1xx_exec_command(qspid, S25FL1XX_READ_STATUS_2, 0, (uint32_t *)&status, QSPI_READ_ACCESS, 1);
 	return status;
 }
 
@@ -199,7 +199,7 @@ static uint8_t s25fl1xx_read_status2(struct qspid_t *qspid)
 static uint8_t s25fl1xx_read_status3(struct qspid_t *qspid)
 {
 	uint8_t status;
-	s25fl1xx_exec_command(qspid, QSPI_READ_STATUS_3, 0, (uint32_t *)&status, QSPI_READ_ACCESS, 1);
+	s25fl1xx_exec_command(qspid, S25FL1XX_READ_STATUS_3, 0, (uint32_t *)&status, QSPI_READ_ACCESS, 1);
 	return status;
 }
 
@@ -223,7 +223,7 @@ static uint32_t s25fl1xx_read_status(struct qspid_t *qspid)
  */
 static void s25fl1xx_wait_memory_access_end(struct qspid_t *qspid)
 {
-	while(s25fl1xx_read_status1(qspid) & QSPI_STATUS_RDYBSY);
+	while(s25fl1xx_read_status1(qspid) & S25FL1XX_STATUS_RDYBSY);
 }
 
 /**
@@ -234,8 +234,8 @@ static void s25fl1xx_wait_memory_access_end(struct qspid_t *qspid)
 static void s25fl1xx_enable_write(struct qspid_t *qspid)
 {
 	uint8_t status = 0;
-	while(!(status & QSPI_STATUS_WEL)) {
-		s25fl1xx_exec_command(qspid, QSPI_WRITE_ENABLE, 0, 0, QSPI_CMD_ACCESS, 0);
+	while(!(status & S25FL1XX_STATUS_WEL)) {
+		s25fl1xx_exec_command(qspid, S25FL1XX_WRITE_ENABLE, 0, 0, QSPI_CMD_ACCESS, 0);
 		status = s25fl1xx_read_status1(qspid);
 	}
 }
@@ -249,8 +249,8 @@ static void s25fl1xx_disable_write(struct qspid_t *qspid)
 {
 	uint8_t status;
 	status = s25fl1xx_read_status1(qspid);
-	while((status & QSPI_STATUS_WEL) != 0) {
-		s25fl1xx_exec_command(qspid, QSPI_WRITE_DISABLE, 0, 0, QSPI_CMD_ACCESS, 0);
+	while((status & S25FL1XX_STATUS_WEL) != 0) {
+		s25fl1xx_exec_command(qspid, S25FL1XX_WRITE_DISABLE, 0, 0, QSPI_CMD_ACCESS, 0);
 		status = s25fl1xx_read_status1(qspid);
 	}
 }
@@ -298,7 +298,7 @@ static void s25fl1xx_memory_access(struct qspid_t *qspid, uint8_t instr, uint32_
 static void s25fl1xx_write_status(struct qspid_t *qspid, uint8_t *status)
 {
 	s25fl1xx_enable_write(qspid);
-	s25fl1xx_exec_command(qspid, QSPI_WRITE_STATUS, (uint32_t *)status, 0, QSPI_WRITE_ACCESS, 3);
+	s25fl1xx_exec_command(qspid, S25FL1XX_WRITE_STATUS, (uint32_t *)status, 0, QSPI_WRITE_ACCESS, 3);
 	s25fl1xx_disable_write(qspid);
 }
 
@@ -311,7 +311,7 @@ static void s25fl1xx_write_status(struct qspid_t *qspid, uint8_t *status)
 static void s25fl1xx_write_volatile_status(struct qspid_t *qspid, uint8_t *status)
 {
 	s25fl1xx_exec_command(qspid, 0x50, 0, 0 , QSPI_CMD_ACCESS, 0);
-	s25fl1xx_exec_command(qspid, QSPI_WRITE_STATUS, (uint32_t *)status, 0 , QSPI_WRITE_ACCESS, 3);
+	s25fl1xx_exec_command(qspid, S25FL1XX_WRITE_STATUS, (uint32_t *)status, 0 , QSPI_WRITE_ACCESS, 3);
 	s25fl1xx_disable_write(qspid);
 }
 
@@ -324,14 +324,14 @@ static void s25fl1xx_write_volatile_status(struct qspid_t *qspid, uint8_t *statu
  */
 static uint8_t s25fl1xx_check_protected_addr(uint8_t status1, uint32_t addr)
 {
-  const uint32_t addr_ump = (status1 & QSPI_SEC_PROTECT_Msk) ? 0x001000UL : 0x010000UL;
+  const uint32_t addr_ump = (status1 & S25FL1XX_SEC_PROTECT_Msk) ? 0x001000UL : 0x010000UL;
   static uint8_t is_protected = 0;
 
-  const uint8_t block_bits = ((status1 & QSPI_BLOCK_PROTECT_Msk) >> 2);
+  const uint8_t block_bits = ((status1 & S25FL1XX_BLOCK_PROTECT_Msk) >> 2);
 
   switch(block_bits) {
 	case 1:
-	if (status1 & QSPI_TOP_BTM_PROTECT_Msk) {
+	if (status1 & S25FL1XX_TOP_BTM_PROTECT_Msk) {
 		if((addr > 0x000000) && (addr < (0x000000 + addr_ump - 1))) {
 			is_protected = 1;
 		}
@@ -343,7 +343,7 @@ static uint8_t s25fl1xx_check_protected_addr(uint8_t status1, uint32_t addr)
 	break;
 
   case 2:
-	if (status1 & QSPI_TOP_BTM_PROTECT_Msk) {
+	if (status1 & S25FL1XX_TOP_BTM_PROTECT_Msk) {
 		if((addr > 0x000000) && (addr < (0x000000 + (2* addr_ump)- 1))) {
 			is_protected = 1;
 		}
@@ -355,7 +355,7 @@ static uint8_t s25fl1xx_check_protected_addr(uint8_t status1, uint32_t addr)
 	break;
 
   case 3:
-	if (status1 & QSPI_TOP_BTM_PROTECT_Msk) {
+	if (status1 & S25FL1XX_TOP_BTM_PROTECT_Msk) {
 		if((addr > 0x000000) && (addr < (0x000000 + (4 * addr_ump) - 1))) {
 			is_protected = 1;
 		}
@@ -367,7 +367,7 @@ static uint8_t s25fl1xx_check_protected_addr(uint8_t status1, uint32_t addr)
 	break;
 
   case 4:
-	if (status1 & QSPI_TOP_BTM_PROTECT_Msk) {
+	if (status1 & S25FL1XX_TOP_BTM_PROTECT_Msk) {
 		if((addr > 0x000000) && (addr < (0x000000 + (8 * addr_ump) - 1))) {
 			is_protected = 1;
 		}
@@ -379,8 +379,8 @@ static uint8_t s25fl1xx_check_protected_addr(uint8_t status1, uint32_t addr)
 	break;
 
   case 5:
-	if(!(status1 & QSPI_SEC_PROTECT_Msk)) {
-		if (status1 & QSPI_TOP_BTM_PROTECT_Msk) {
+	if(!(status1 & S25FL1XX_SEC_PROTECT_Msk)) {
+		if (status1 & S25FL1XX_TOP_BTM_PROTECT_Msk) {
 			if((addr > 0x000000) && (addr < (0x000000 + (16 * addr_ump) - 1))) {
 				is_protected = 1;
 			}
@@ -393,8 +393,8 @@ static uint8_t s25fl1xx_check_protected_addr(uint8_t status1, uint32_t addr)
 	break;
 
   case 6:
-	if(!(status1 & QSPI_SEC_PROTECT_Msk)) {
-		if (status1 & QSPI_TOP_BTM_PROTECT_Msk) {
+	if(!(status1 & S25FL1XX_SEC_PROTECT_Msk)) {
+		if (status1 & S25FL1XX_TOP_BTM_PROTECT_Msk) {
 			if((addr > 0x000000) && (addr < (0x000000 + (32 * addr_ump) - 1))) {
 				is_protected = 1;
 			}
@@ -415,7 +415,7 @@ static uint8_t s25fl1xx_check_protected_addr(uint8_t status1, uint32_t addr)
 uint32_t s25fl1xx_read_jedec_id(struct qspid_t *qspid)
 {
 	static uint32_t id;
-	s25fl1xx_exec_command(qspid, QSPI_READ_JEDEC_ID, 0, &id, QSPI_READ_ACCESS, 3);
+	s25fl1xx_exec_command(qspid, S25FL1XX_READ_JEDEC_ID, 0, &id, QSPI_READ_ACCESS, 3);
 	return id;
 }
 
@@ -435,15 +435,15 @@ void s25fl1xx_set_quad_mode(struct qspid_t *qspid, uint8_t mode)
 	status[2] = s25fl1xx_read_status3(qspid);
 
 	if(mode) {
-		while(!(status[1] & QSPI_STATUS_QUAD_ENABLE)) {
-			status[1] |= QSPI_STATUS_QUAD_ENABLE;
+		while(!(status[1] & S25FL1XX_STATUS_QUAD_ENABLE)) {
+			status[1] |= S25FL1XX_STATUS_QUAD_ENABLE;
 			s25fl1xx_write_status(qspid, status);
 			status[1] = s25fl1xx_read_status2(qspid);
 			delay_ms(50);
 		}
 	} else {
-		while((status[1] & QSPI_STATUS_QUAD_ENABLE)) {
-			status[1] &= (~QSPI_STATUS_QUAD_ENABLE)  ;
+		while((status[1] & S25FL1XX_STATUS_QUAD_ENABLE)) {
+			status[1] &= (~S25FL1XX_STATUS_QUAD_ENABLE)  ;
 			s25fl1xx_write_status(qspid, status);
 			status[1] = s25fl1xx_read_status2(qspid);
 			delay_ms(50);
@@ -469,7 +469,7 @@ void s25fl1xx_enable_wrap(struct qspid_t *qspid, uint8_t byte_align)
 	status[2] |= (byte_align << 5);
 
 	dev->inst_frame.bm.b_dummy_cycles = 24;
-	s25fl1xx_exec_command(qspid, QSPI_WRAP_ENABLE,(uint32_t *)&status[2], 0,  QSPI_WRITE_ACCESS, 1);
+	s25fl1xx_exec_command(qspid, S25FL1XX_WRAP_ENABLE,(uint32_t *)&status[2], 0,  QSPI_WRITE_ACCESS, 1);
 
 	s25fl1xx_write_volatile_status(qspid, status);
 	status[2] = s25fl1xx_read_status3(qspid);
@@ -494,7 +494,7 @@ void s25fl1xx_set_read_latency_control(struct qspid_t *qspid, uint8_t latency)
 	status[2] |= latency;
 
 	qspid->qspi_buffer.data_tx = (uint32_t *)&status[2];
-	while((status[2] & QSPI_STATUS_LATENCY_CTRL) != latency) {
+	while((status[2] & S25FL1XX_STATUS_LATENCY_CTRL) != latency) {
 		s25fl1xx_write_volatile_status(qspid, status);
 		status[2] = s25fl1xx_read_status3(qspid);
 		delay_ms(50);
@@ -508,8 +508,8 @@ void s25fl1xx_set_read_latency_control(struct qspid_t *qspid, uint8_t latency)
  */
 void s25fl1xx_soft_reset(struct qspid_t *qspid)
 {
-	s25fl1xx_exec_command(qspid, QSPI_SOFT_RESET_ENABLE,0, 0,  QSPI_CMD_ACCESS, 0);
-	s25fl1xx_exec_command(qspid, QSPI_SOFT_RESET, 0, 0, QSPI_CMD_ACCESS, 0);
+	s25fl1xx_exec_command(qspid, S25FL1XX_SOFT_RESET_ENABLE,0, 0,  QSPI_CMD_ACCESS, 0);
+	s25fl1xx_exec_command(qspid, S25FL1XX_SOFT_RESET, 0, 0, QSPI_CMD_ACCESS, 0);
 }
 
 /**
@@ -529,17 +529,17 @@ uint8_t s25fl1xx_protect(struct qspid_t *qspid)
 	status[2]= s25fl1xx_read_status3(qspid);
 
 	/* Check if sector protection registers are locked */
-	if ((status[0] & QSPI_STATUS_SPRL) == QSPI_STATUS_SPRL_LOCKED) {
+	if ((status[0] & S25FL1XX_STATUS_SPRL) == S25FL1XX_STATUS_SPRL_LOCKED) {
 		return 0;
 	}
 
-	status[0] |= (QSPI_STATUS_SWP | QSPI_STATUS_SPRL);
+	status[0] |= (S25FL1XX_STATUS_SWP | S25FL1XX_STATUS_SPRL);
 	s25fl1xx_write_status(qspid, status);
 
 	/* Check the new status */
 	status[0] = s25fl1xx_read_status(qspid);
-	if ((status[0] & (QSPI_STATUS_SPRL | QSPI_STATUS_SWP)) != (QSPI_STATUS_SPRL | QSPI_STATUS_SWP)) {
-		return QSPI_ERROR_PROTECTED;
+	if ((status[0] & (S25FL1XX_STATUS_SPRL | S25FL1XX_STATUS_SWP)) != (S25FL1XX_STATUS_SPRL | S25FL1XX_STATUS_SWP)) {
+		return S25FL1XX_ERROR_PROTECTED;
 	}
 	else {
 		return 0;
@@ -562,15 +562,15 @@ uint8_t s25fl1xx_unprotect(struct qspid_t *qspid)
 	status[0]= s25fl1xx_read_status1(qspid);
 	status[1]= s25fl1xx_read_status2(qspid);
 	status[2]= s25fl1xx_read_status3(qspid);
-	if ((status[0] & QSPI_STATUS_SWP) == QSPI_STATUS_SWP_PROTNONE) {
+	if ((status[0] & S25FL1XX_STATUS_SWP) == S25FL1XX_STATUS_SWP_PROTNONE) {
 		/* Protection already disabled */
 		return 0;
 	}
 
-	status[0] &= (~QSPI_STATUS_SWP);
+	status[0] &= (~S25FL1XX_STATUS_SWP);
 	/* Check if sector protection registers are locked */
-	if ((status[0] & QSPI_STATUS_SPRL) == QSPI_STATUS_SPRL_LOCKED) {
-		status[0] &= (~QSPI_STATUS_SPRL);
+	if ((status[0] & S25FL1XX_STATUS_SPRL) == S25FL1XX_STATUS_SPRL_LOCKED) {
+		status[0] &= (~S25FL1XX_STATUS_SPRL);
 		/* Unprotected sector protection registers by writing the status reg. */
 		s25fl1xx_write_status(qspid, status);
 	}
@@ -578,8 +578,8 @@ uint8_t s25fl1xx_unprotect(struct qspid_t *qspid)
 
 	/* Check the new status */
 	status[0] = s25fl1xx_read_status1(qspid);
-	if (status[0] & (QSPI_STATUS_SPRL | QSPI_STATUS_SWP)) {
-		return QSPI_ERROR_PROTECTED;
+	if (status[0] & (S25FL1XX_STATUS_SPRL | S25FL1XX_STATUS_SWP)) {
+		return S25FL1XX_ERROR_PROTECTED;
 	}
 	else {
 		return 0;
@@ -600,9 +600,9 @@ uint8_t s25fl1xx_data_protect(struct qspid_t *qspid, bool dir, enum block_size p
 {
 	uint8_t status[3];
 	uint32_t mask = (dir << 5);
-	if(protect_size >= SIZE_64K) {
+	if(protect_size >= S25FL1XX_SIZE_64K) {
 		mask |= (1 << 6);
-		mask |= ((protect_size - SIZE_32K) << 2);
+		mask |= ((protect_size - S25FL1XX_SIZE_32K) << 2);
 	} else {
 		mask |= (protect_size << 2);
 	}
@@ -623,7 +623,7 @@ uint8_t s25fl1xx_data_protect(struct qspid_t *qspid, bool dir, enum block_size p
 	/* Check the new status */
 	status[0] = s25fl1xx_read_status(qspid);
 	if ((status[0] & mask) != mask) {
-		return QSPI_ERROR_PROTECTED;
+		return S25FL1XX_ERROR_PROTECTED;
 	}
 	else {
 		return 0;
@@ -645,18 +645,18 @@ uint8_t s25fl1xx_data_unprotect(struct qspid_t *qspid)
 	status[0]= s25fl1xx_read_status1(qspid);
 	status[1]= s25fl1xx_read_status2(qspid);
 	status[2]= s25fl1xx_read_status3(qspid);
-	if (!(status[0] & QSPI_CHIP_PROTECT_Msk)) {
+	if (!(status[0] & S25FL1XX_CHIP_PROTECT_Msk)) {
 		/* Protection already disabled */
 		return 0;
 	}
 
-	status[0] &= (~QSPI_CHIP_PROTECT_Msk);
+	status[0] &= (~S25FL1XX_CHIP_PROTECT_Msk);
 	s25fl1xx_write_status(qspid, status);
 
 	/* Check the new status */
 	status[0] = s25fl1xx_read_status(qspid);
-	if (status[0] & QSPI_CHIP_PROTECT_Msk) {
-		return QSPI_ERROR_PROTECTED;
+	if (status[0] & S25FL1XX_CHIP_PROTECT_Msk) {
+		return S25FL1XX_ERROR_PROTECTED;
 	}
 	else {
 		return 0;
@@ -674,16 +674,16 @@ uint8_t s25fl1xx_data_unprotect(struct qspid_t *qspid)
 uint8_t s25fl1xx_erase_chip(struct qspid_t *qspid)
 {
 	uint8_t i=0;
-	uint8_t status = QSPI_STATUS_RDYBSY;
+	uint8_t status = S25FL1XX_STATUS_RDYBSY;
 	uint8_t chip_status= s25fl1xx_read_status1(qspid);
 
-	if(chip_status & QSPI_CHIP_PROTECT_Msk) {
+	if(chip_status & S25FL1XX_CHIP_PROTECT_Msk) {
 		return 1;
 	} else {
 		s25fl1xx_enable_write(qspid);
-		s25fl1xx_exec_command(qspid, QSPI_CHIP_ERASE_2, 0, 0, QSPI_CMD_ACCESS, 0);
+		s25fl1xx_exec_command(qspid, S25FL1XX_CHIP_ERASE_2, 0, 0, QSPI_CMD_ACCESS, 0);
 
-		while(status & QSPI_STATUS_RDYBSY) {
+		while(status & S25FL1XX_STATUS_RDYBSY) {
 			delay_ms(200);
 			i++;
 			status = s25fl1xx_read_status1(qspid);
@@ -707,12 +707,12 @@ uint8_t s25fl1xx_erase_sector(struct qspid_t *qspid,uint32_t address)
 	uint8_t status;
 	/* Check that the flash is ready and unprotected */
 	status = s25fl1xx_read_status1(qspid);
-	if ((status & QSPI_STATUS_RDYBSY) != QSPI_STATUS_RDYBSY_READY) {
-		return QSPI_ERROR_BUSY;
+	if ((status & S25FL1XX_STATUS_RDYBSY) != S25FL1XX_STATUS_RDYBSY_READY) {
+		return S25FL1XX_ERROR_BUSY;
 	}
-	else if (status & QSPI_BLOCK_PROTECT_Msk) {
+	else if (status & S25FL1XX_BLOCK_PROTECT_Msk) {
 		if(s25fl1xx_check_protected_addr(status, address)) {
-			return QSPI_ERROR_PROTECTED;
+			return S25FL1XX_ERROR_PROTECTED;
 		}
 	}
 
@@ -722,7 +722,7 @@ uint8_t s25fl1xx_erase_sector(struct qspid_t *qspid,uint32_t address)
 	dev->addr = address;
 	dev->inst_frame.bm.b_addr_en = 1;
 	/* Start the block erase command */
-	s25fl1xx_exec_command(qspid, QSPI_BLOCK_ERASE_4K, 0, 0, QSPI_CMD_ACCESS, 0);
+	s25fl1xx_exec_command(qspid, S25FL1XX_BLOCK_ERASE_4K, 0, 0, QSPI_CMD_ACCESS, 0);
 
 	/* Wait for transfer to finish */
 	s25fl1xx_wait_memory_access_end(qspid);
@@ -745,11 +745,11 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
 
 	/* Check that the flash is ready and unprotected */
 	status = s25fl1xx_read_status(qspid);
-	if ((status & QSPI_STATUS_RDYBSY) != QSPI_STATUS_RDYBSY_READY) {
-		return QSPI_ERROR_BUSY;
+	if ((status & S25FL1XX_STATUS_RDYBSY) != S25FL1XX_STATUS_RDYBSY_READY) {
+		return S25FL1XX_ERROR_BUSY;
 	}
-	else if ((status & QSPI_STATUS_SWP) != QSPI_STATUS_SWP_PROTNONE) {
-		return QSPI_ERROR_PROTECTED;
+	else if ((status & S25FL1XX_STATUS_SWP) != S25FL1XX_STATUS_SWP_PROTNONE) {
+		return S25FL1XX_ERROR_PROTECTED;
 	}
 
 	/* Enable critical write operation */
@@ -758,7 +758,7 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
 	dev->addr = address;
 	dev->inst_frame.bm.b_addr_en = 1;
 	/* Start the block erase command */
-	s25fl1xx_exec_command(qspid, QSPI_BLOCK_ERASE_64K, 0, 0, QSPI_CMD_ACCESS, 0);
+	s25fl1xx_exec_command(qspid, S25FL1XX_BLOCK_ERASE_64K, 0, 0, QSPI_CMD_ACCESS, 0);
 
 	/* Wait for transfer to finish */
 	s25fl1xx_wait_memory_access_end(qspid);
@@ -792,7 +792,7 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
 	if(number_of_writes == 0) {
 		s25fl1xx_enable_write(qspid);
 		s25fl1xx_wait_memory_access_end(qspid);
-		s25fl1xx_memory_access(qspid, QSPI_BYTE_PAGE_PROGRAM , addr, pdata, 0,  QSPI_WRITE_ACCESS, size, secure);
+		s25fl1xx_memory_access(qspid, S25FL1XX_BYTE_PAGE_PROGRAM , addr, pdata, 0,  QSPI_WRITE_ACCESS, size, secure);
 		s25fl1xx_wait_memory_access_end(qspid);
 		s25fl1xx_disable_write(qspid);
 	} else {
@@ -800,7 +800,7 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
 		for(i=0; i< number_of_writes; i++) {
 			s25fl1xx_enable_write(qspid);
 			s25fl1xx_wait_memory_access_end(qspid);
-			s25fl1xx_memory_access(qspid, QSPI_BYTE_PAGE_PROGRAM , addr, pdata, 0, QSPI_WRITE_ACCESS, PAGE_SIZE, secure);
+			s25fl1xx_memory_access(qspid, S25FL1XX_BYTE_PAGE_PROGRAM , addr, pdata, 0, QSPI_WRITE_ACCESS, PAGE_SIZE, secure);
 			s25fl1xx_wait_memory_access_end(qspid);
 			s25fl1xx_disable_write(qspid);
 			pdata += (PAGE_SIZE >> 2);
@@ -809,7 +809,7 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
 		if(size % PAGE_SIZE) {
 			s25fl1xx_enable_write(qspid);
 			s25fl1xx_wait_memory_access_end(qspid);
-			s25fl1xx_memory_access(qspid, QSPI_BYTE_PAGE_PROGRAM , addr, pdata, 0, QSPI_WRITE_ACCESS, (size - (number_of_writes * PAGE_SIZE)), secure);
+			s25fl1xx_memory_access(qspid, S25FL1XX_BYTE_PAGE_PROGRAM , addr, pdata, 0, QSPI_WRITE_ACCESS, (size - (number_of_writes * PAGE_SIZE)), secure);
 			s25fl1xx_wait_memory_access_end(qspid);
 			s25fl1xx_disable_write(qspid);
 		}
@@ -835,7 +835,7 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
 	uint8_t secure = 0;
 
 	data_rx = malloc(size);
-	s25fl1xx_memory_access(qspid, QSPI_READ_ARRAY , address, 0, (uint32_t *)data_rx, QSPI_READ_ACCESS, (size + dummy_read), secure);
+	s25fl1xx_memory_access(qspid, S25FL1XX_READ_ARRAY , address, 0, (uint32_t *)data_rx, QSPI_READ_ACCESS, (size + dummy_read), secure);
 	memcpy(data, data_rx , size);
 
 	data_rx = NULL;
@@ -860,7 +860,7 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
 	mem->inst_frame.bm.b_dummy_cycles = 8;
 	mem->inst_frame.bm.b_width = QSPI_IFR_WIDTH_DUAL_OUTPUT;
 
-	s25fl1xx_memory_access(qspid, QSPI_READ_ARRAY_DUAL , address, 0, data, QSPI_READ_ACCESS, size, secure);
+	s25fl1xx_memory_access(qspid, S25FL1XX_READ_ARRAY_DUAL , address, 0, data, QSPI_READ_ACCESS, size, secure);
 
 	return 0;
 }
@@ -880,7 +880,7 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
 	uint8_t secure = 0;
 	mem->inst_frame.bm.b_dummy_cycles  = 8;
 	mem->inst_frame.bm.b_width = QSPI_IFR_WIDTH_QUAD_OUTPUT;
-	s25fl1xx_memory_access(qspid, QSPI_READ_ARRAY_QUAD,  address, 0, data, QSPI_READ_ACCESS, size, secure);
+	s25fl1xx_memory_access(qspid, S25FL1XX_READ_ARRAY_QUAD,  address, 0, data, QSPI_READ_ACCESS, size, secure);
 
 	return 0;
 }
@@ -911,7 +911,7 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
 
 	mem->inst_frame.bm.b_width = QSPI_IFR_WIDTH_DUAL_IO;
 
-	s25fl1xx_memory_access(qspid, QSPI_READ_ARRAY_DUAL_IO , address, 0, data, QSPI_READ_ACCESS, size, secure);
+	s25fl1xx_memory_access(qspid, S25FL1XX_READ_ARRAY_DUAL_IO , address, 0, data, QSPI_READ_ACCESS, size, secure);
 
 	mem->inst_frame.bm.b_opt_en = 0;
 	mem->inst_frame.bm.b_continues_read  = 0;
@@ -945,7 +945,7 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
 
 	mem->inst_frame.bm.b_width = QSPI_IFR_WIDTH_QUAD_IO;
 
-	s25fl1xx_memory_access(qspid, QSPI_READ_ARRAY_QUAD_IO , address, 0, data, QSPI_READ_ACCESS, size, secure);
+	s25fl1xx_memory_access(qspid, S25FL1XX_READ_ARRAY_QUAD_IO , address, 0, data, QSPI_READ_ACCESS, size, secure);
 
 	mem->inst_frame.bm.b_opt_en = 0;
 	mem->inst_frame.bm.b_continues_read  = 0;
@@ -961,7 +961,7 @@ uint8_t s25fl1xx_erase_64k_block(struct qspid_t *qspid, uint32_t address)
  */
 void s25fl1xx_continous_read_mode_reset(struct qspid_t *qspid)
 {
-	s25fl1xx_exec_command(qspid, QSPI_CONT_MODE_RESET, 0, 0, QSPI_CMD_ACCESS, 0);
+	s25fl1xx_exec_command(qspid, S25FL1XX_CONT_MODE_RESET, 0, 0, QSPI_CMD_ACCESS, 0);
 }
 
 /**
@@ -979,7 +979,7 @@ void s25fl1xx_enter_continous_read_mode(struct qspid_t *qspid)
 	mem->inst_frame.bm.b_opt_en = 1;
 	mem->inst_frame.bm.b_width = QSPI_IFR_WIDTH_QUAD_IO;
 
-	s25fl1xx_memory_access(qspid, QSPI_READ_ARRAY_QUAD_IO , 0, 0, &data, QSPI_READ_ACCESS, 1, 0);
+	s25fl1xx_memory_access(qspid, S25FL1XX_READ_ARRAY_QUAD_IO , 0, 0, &data, QSPI_READ_ACCESS, 1, 0);
 
 	mem->inst_frame.bm.b_opt_en = 0;
 	mem->inst_frame.bm.b_continues_read  = 0;
