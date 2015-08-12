@@ -62,7 +62,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -762,7 +762,7 @@ static inline enum status_code port_input_event_set_config(
  *	<tr>
  *		<td>42113E</td>
  *		<td>08/2015</td>
- *		<td>Added input event feature and support for SAM L21, SAM C21, and SAM DAx</td>
+ *		<td>Added input event feature and support for SAM L21, SAM C21, and SAM DA1</td>
  *	</tr>
  *	<tr>
  *		<td>42113D</td>
