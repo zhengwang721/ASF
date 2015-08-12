@@ -69,7 +69,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -163,7 +163,7 @@
  *
  * \f[ f_{PERIODIC}=\frac{f_{ASY}}{2^{n+3}} \f]
  *
- * Where \f$f_{ASY}\f$ refers to the \e asynchronous clock set up in the RTC
+ * Where \f$f_{ASY}\f$ refers to the \e asynchronous clock is set up in the RTC
  * module configuration. The \b n parameter is the event source generator index
  * of the RTC module. If the asynchronous clock is operated at the recommended
  * frequency of 1KHz, the formula results in the values shown in
@@ -274,9 +274,9 @@
  * digraph clocking_scheme {
  *     rankdir=LR;
  *     GCLK [shape="record", label="<f0> GCLK | <f1> RTC_GCLK",
- *         bgcolor="lightgray", style="filled", fontname=areal];
- *     RTCPRE [shape="record" label="<f0> RTC | <f1> RTC PRESCALER", fontname=areal];
- *     RTC [shape="record", label="<f0> RTC | <f1> RTC CLOCK", fontname=areal];
+ *         bgcolor="lightgray", style="filled", fontname="areal"];
+ *     RTCPRE [shape="record" label="<f0> RTC | <f1> RTC PRESCALER", fontname="areal"];
+ *     RTC [shape="record", label="<f0> RTC | <f1> RTC CLOCK", fontname="areal"];
  *
  *     GCLK:f1 -> RTCPRE:f1;
  *     RTCPRE:f1 -> RTC:f1;
@@ -689,7 +689,7 @@ struct rtc_count_config {
 	/** Select the operation mode of the RTC */
 	enum rtc_count_mode mode;
 	/** If true, clears the counter value on compare match. Only available
-	 *  whilst running in 32-bit mode */
+	 *  whilst running in 32-bit mode. */
 	bool clear_on_match;
 #ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
 	/** Continuously update the counter value so no synchronization is
@@ -704,7 +704,7 @@ struct rtc_count_config {
 #endif
 
 	/** Array of Compare values. Not all Compare values are available in 32-bit
-	 *  mode */
+	 *  mode. */
 	uint32_t compare_values[RTC_NUM_OF_COMP16];
 };
 
@@ -720,7 +720,7 @@ struct rtc_count_config {
  *  Initializes the configuration structure to default values. This
  *  function should be called at the start of any RTC initialization.
  *
- *  The default configuration is:
+ *  The default configuration is as follows:
  *  - Input clock divided by a factor of 1024
  *  - RTC in 32-bit mode
  *  - Clear on compare match off
@@ -1188,28 +1188,28 @@ static inline uint32_t rtc_read_general_purpose_reg(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>E</td>
+ *		<td>42111E</td>
  *		<td>08/2015</td>
- *		<td>Added support for SAM L21, SAM C21, and SAM DAx</td>
+ *		<td>Added support for SAM L21, SAM C21, and SAM DA1</td>
  *	</tr>
  *	<tr>
- *		<td>D</td>
+ *		<td>42111D</td>
  *		<td>12/2014</td>
  *		<td>Added support for SAM R21 and SAM D10/D11</td>
  *	</tr>
  *	<tr>
- *		<td>C</td>
+ *		<td>42111C</td>
  *		<td>01/2014</td>
  *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
+ *		<td>42111B</td>
  *		<td>06/2013</td>
  *		<td>Added additional documentation on the event system. Corrected
  *          documentation typos.</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42111A</td>
  *		<td>06/2013</td>
  *		<td>Initial release</td>
  *	</tr>
