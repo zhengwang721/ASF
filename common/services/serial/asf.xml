@@ -179,7 +179,7 @@
 			<build type="doxygen-entry-point" value="serial_group"/>
 			<build type="doxygen-quick-start" value="serial_quickstart"/>
 			<require idref="sam0.utils"/>
-			<require idref="samb.drivers.uart"/>
+			<require idref="sam0.drivers.uart"/>
 			<device-support value="samb"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samb11"/>
 		</module>

@@ -22,6 +22,7 @@
 
 			<device-support value="samb11"/>
 			<require idref="sam0.utils"/>
+			<require idref="sam0.drivers.system"/>
 			<require idref="sam0.drivers.gpio"/>
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
