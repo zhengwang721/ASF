@@ -70,7 +70,7 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM DA0/DA1
+ *  - Atmel | SMART SAM DA1
  * \endif
  *
  * The outline of this documentation is as follows:
@@ -1102,9 +1102,9 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *	</tr>
  * \if DEVICE_SAML21_SUPPORT
   *	<tr>
- *		<td>B</td>
- *		<td>05/2015</td>
- *		<td>Added support for SAML22.</td>
+ *		<td>42451B</td>
+ *		<td>08/2015</td>
+ *		<td>Added support for SAM L22</td>
  *	</tr>
  *  <tr>
  *      <td>42451A</td>

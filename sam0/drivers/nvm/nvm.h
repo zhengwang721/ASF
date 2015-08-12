@@ -61,7 +61,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -92,7 +92,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_NVM_RWWEE</td>
- *    <td>SAML21, SAML22, SAMD21-64K, SAMDAx, SAMC20/C21</td>
+ *    <td>SAM L21/L22, SAM D21-64K, SAM DA1, SAM C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_BOD12</td>
@@ -912,7 +912,7 @@ static inline enum nvm_error nvm_get_error(void)
  *	<tr>
  *		<td>42114E</td>
  *		<td>08/2015</td>
- *		<td>Added support for SAM L21, SAM C21 and SAM DAx</td>
+ *		<td>Added support for SAM L21/L22, SAM C21 and SAM DA1</td>
  *	</tr> 
  *	<tr>
  *		<td>42114D</td>

@@ -61,7 +61,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -94,7 +94,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_PORT_INPUT_EVENT</td>
- *    <td>SAML21/L22/C20/C21</td>
+ *    <td>SAM L21/L22/C20/C21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -761,7 +761,7 @@ static inline enum status_code port_input_event_set_config(
  *	<tr>
  *		<td>E</td>
  *		<td>06/2015</td>
- *		<td>Added input event feature and support for SAML21, SAML22,  SAMC21, and SAMDAx.</td>
+ *		<td>Added input event feature and support for SAM L21, SAM L22,  SAM C21, and SAM DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

@@ -49,7 +49,8 @@
 /**
  * \defgroup asfdoc_sam0_ac_group SAM Analog Comparator (AC) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers
+ * provides an interface for the configuration
  * and management of the device's Analog Comparator functionality, for the
  * comparison of analog voltages against a known reference voltage to determine
  * its relative level. The following driver API modes are covered by this
@@ -67,7 +68,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -492,7 +493,7 @@ enum ac_chan_neg_mux {
 	AC_CHAN_NEG_MUX_BANDGAP    = AC_COMPCTRL_MUXNEG_BANDGAP,
 #if !(SAML22)
 	/**
-	 * For SAM D20/D21/D10/D11/R21/DAx:
+	 * For SAM D20/D21/D10/D11/R21/DA1:
 	 *     Negative comparator input is connected to the channel's internal DAC
 	 *     channel 0 output.
 	 * For SAM L21/C20/C21:

@@ -68,7 +68,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -111,27 +111,27 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PERIODIC_INT</td>
- *    <td>SAML21/L22/C20/C21</td>
+ *    <td>SAM L21/L22/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PRESCALER_OFF</td>
- *    <td>SAML21/L22/C20/C21</td>
+ *    <td>SAM L21/L22/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CLOCK_SELECTION</td>
- *    <td>SAML21/L22/C20/C21</td>
+ *    <td>SAM L21/L22/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_GENERAL_PURPOSE_REG</td>
- *    <td>SAML21/L22</td>
+ *    <td>SAM L21/L22</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
- *    <td>SAM D20, SAM D21, SAM R21, SAM D10, SAM D11, SAM DAx</td>
+ *    <td>SAM D20, SAM D21, SAM R21, SAM D10, SAM D11, SAM DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_TAMPER_DETECTION</td>
- *    <td>SAML22</td>
+ *    <td>SAM L22</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -240,7 +240,7 @@
  * \f[ [YEAR_{START}, YEAR_{START}+64] \f]
  *
  * \subsection asfdoc_sam0_rtc_calendar_special_considerations_clock Clock Setup
- * \subsubsection asfdoc_sam0_rtc_calendar_clock_samd_r SAM D20/D21/R21/D10/D11/DAx Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_calendar_clock_samd_r SAM D20/D21/R21/D10/D11/DA1 Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32KHz RC-oscillator with a prescaler of 32, giving a
@@ -814,7 +814,7 @@ static inline void rtc_calendar_get_time_defaults(
  *  - Events off
  *  - Alarms set to January 1. 2000, 00:00:00
  *  - Alarm will match on second, minute, hour, day, month, and year
- *  - Clock read synchronization is enabled for SAML22
+ *  - Clock read synchronization is enabled for SAM L22
  *
  *  \param[out] config  Configuration structure to be initialized to default
  *                      values
@@ -1380,7 +1380,7 @@ void rtc_tamper_get_stamp (struct rtc_module *const module,
  *	<tr>
  *		<td>42126E</td>
  *		<td>08/2015</td>
- *		<td>Added support for SAM L21/L22, SAM C21, and SAM DAx</td>
+ *		<td>Added support for SAM L21/L22, SAM C21, and SAM DA1</td>
  *	</tr>
  *	<tr>
  *		<td>42126D</td>

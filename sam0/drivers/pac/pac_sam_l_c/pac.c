@@ -1,11 +1,7 @@
 /**
  * \file
  *
-<<<<<<< HEAD:sam0/drivers/pac/pac_sam_l/pac.c
- * \brief SAM L21/L22 Peripheral Access Controller Driver
-=======
  * \brief SAM Peripheral Access Controller Driver
->>>>>>> d04cd8133e12e2b3c617ba2b1500a63dd02c1d22:sam0/drivers/pac/pac_sam_l_c/pac.c
  *
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *

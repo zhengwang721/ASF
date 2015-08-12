@@ -62,7 +62,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -982,7 +982,7 @@ static inline void system_pac_disable_event(void)
  *	<tr>
  *		<td>42107F</td>
  *		<td>06/2015</td>
- *		<td>Added support for SAML21, SAMC21, and SAMDAx</td>
+ *		<td>Added support for SAM L21/L22, SAM C21, and SAM DA1</td>
  *	</tr>
  *	<tr>
  *		<td>42107E</td>

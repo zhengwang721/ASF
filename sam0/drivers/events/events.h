@@ -71,7 +71,7 @@ extern "C" {
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -684,7 +684,7 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset);
  *  <tr>
  *      <td>42108F</td>
  *      <td>08/2015</td>
- *      <td>Added support for SAM L21/L22, SAM DAx and SAM C20/C21</td>
+ *      <td>Added support for SAM L21/L22, SAM DA1 and SAM C20/C21</td>
  *  </tr>
  *  <tr>
  *      <td>42108E</td>
