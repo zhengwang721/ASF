@@ -60,6 +60,15 @@ int main(void)
 {
 	at_ble_events_t event;
 	uint8_t params[EVENT_MAX_PARAM_LENGTH];
+	at_ble_init_config_t pf_cfg;
+	platform_config busConfig;
+
+	/*Memory allocation required by GATT Server DB*/
+	pf_cfg.memPool.memSize = 0;
+	pf_cfg.memPool.memStartAdd = NULL;
+	/*Bus configuration*/
+	busConfig.bus_type = UART;
+	pf_cfg.plf_config = &busConfig;
 	
 	#if SAMG55
 	/* Initialize the SAM system. */
@@ -75,7 +84,7 @@ int main(void)
 	DBG_LOG("ANCS Application");
 	
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL);
+	ble_device_init(NULL,&pf_cfg);
 	
 	/* Capturing the events  */
 	while(at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS)
