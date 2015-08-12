@@ -265,7 +265,7 @@ struct i2c_master_config {
 	/** Baud rate (in KHz) for I<SUP>2</SUP>C operations in
 	 * High-speed mode, \ref i2c_master_baud_rate */
 	uint32_t baud_rate_high_speed;
-	/** Transfer speed mode. */
+	/** Transfer speed mode */
 	enum i2c_master_transfer_speed transfer_speed;
 #endif
 	/** GCLK generator to use as clock source */
