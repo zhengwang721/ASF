@@ -46,48 +46,104 @@
 
 #include "uart.h"
 
-/* The calibration should be removed lately. */
-#define REG_READ_32(addr)					(*(volatile unsigned int*)(addr))
-#define REG_WRITE_32(addr,val)				(*(volatile unsigned int*)(addr) = val)
-static uint32_t calibrate_clk(void)
+struct uart_module *_uart_instances[UART_INST_NUM];
+
+static void uart_rx0_isr_handler(void)
 {
-	uint32_t clock;
-	uint32_t u32calib;
-	uint32_t u32orig_calib;
+	struct uart_module *module = _uart_instances[0];
+	/* get interrupt flags and mask out enabled callbacks */
+	uint32_t flags = module->hw->RECEIVE_STATUS.reg;
+	if (flags & UART_RECEIVE_STATUS_RX_FIFO_NOT_EMPTY) {
+		if ((module->callback_enable_mask & (1 << UART_RX_FIFO_NOT_EMPTY)) &&
+			(module->callback_reg_mask & (1 << UART_RX_FIFO_NOT_EMPTY))) {
+			(module->callback[UART_RX_FIFO_NOT_EMPTY])(module);
+		}
 
-	REG_WRITE_32(0x4000c000, 0x0);  // GYR
-	REG_WRITE_32(0x4000B018, REG_READ_32(0x4000B018) | (1<<2)); // must have two steps since there is a sequence
-	REG_WRITE_32(0x4000B018, REG_READ_32(0x4000B018) | (1<<3));
+	}
+	if (flags & UART_RECEIVE_STATUS_FIFO_OVERRUN) {
+		if ((module->callback_enable_mask & (1 << UART_RX_FIFO_OVERRUN)) &&
+			(module->callback_reg_mask & (1 << UART_RX_FIFO_OVERRUN))) {
+			(module->callback[UART_RX_FIFO_OVERRUN])(module);
+		}
 
+	}
+}
 
-	//REG_WRITE_32(0x4000f404, REG_READ_32(0x4000f404) | (1<<8));
-	REG_WRITE_32(0x4000c000, REG_READ_32(0x4000c000) | (1<<7));
+static void uart_tx0_isr_handler(void)
+{
+	struct uart_module *module = _uart_instances[0];
+	/* get interrupt flags and mask out enabled callbacks */
+	uint32_t flags = module->hw->TRANSMIT_STATUS.reg;
+	if (flags & UART_TRANSMIT_STATUS_TX_FIFO_NOT_FULL) {
+		if ((module->callback_enable_mask & (1 << UART_TX_FIFO_NOT_FULL)) &&
+			(module->callback_reg_mask & (1 << UART_TX_FIFO_NOT_FULL))) {
+			(module->callback[UART_TX_FIFO_NOT_FULL])(module);
+		}
 
+	}
+	if (flags & UART_TRANSMIT_STATUS_TX_FIFO_EMPTY) {
+		if ((module->callback_enable_mask & (1 << UART_TX_FIFO_EMPTY)) &&
+			(module->callback_reg_mask & (1 << UART_TX_FIFO_EMPTY))) {
+			(module->callback[UART_TX_FIFO_EMPTY])(module);
+		}
 
-	while((REG_READ_32(0x4000c000) & (1<<7))!=0);
-	u32orig_calib = REG_READ_32(0x4000c010) & ~(1<<15);
+	}
+	if (flags & UART_TRANSMIT_STATUS_CTS_ACTIVE) {
+		if ((module->callback_enable_mask & (1 << UART_CTS_ACTIVE)) &&
+			(module->callback_reg_mask & (1 << UART_CTS_ACTIVE))) {
+			(module->callback[UART_CTS_ACTIVE])(module);
+		}
 
-	REG_WRITE_32(0x4000B018, REG_READ_32(0x4000B018) & (~(1<<3))); // must have two steps since there is a sequence
-	REG_WRITE_32(0x4000B018, REG_READ_32(0x4000B018) & ~((1<<2)));
+	}
+}
 
-	//REG_WRITE_32(0x4000f404, REG_READ_32(0x4000f404) & ~(1<<8));
+static void uart_rx1_isr_handler(void)
+{
+	struct uart_module *module = _uart_instances[1];
+	/* get interrupt flags and mask out enabled callbacks */
+	uint32_t flags = module->hw->RECEIVE_STATUS.reg;
+	if (flags & UART_RECEIVE_STATUS_RX_FIFO_NOT_EMPTY) {
+		if ((module->callback_enable_mask & (1 << UART_RX_FIFO_NOT_EMPTY)) &&
+			(module->callback_reg_mask & (1 << UART_RX_FIFO_NOT_EMPTY))) {
+			(module->callback[UART_RX_FIFO_NOT_EMPTY])(module);
+		}
 
+	}
+	if (flags & UART_RECEIVE_STATUS_FIFO_OVERRUN) {
+		if ((module->callback_enable_mask & (1 << UART_RX_FIFO_OVERRUN)) &&
+			(module->callback_reg_mask & (1 << UART_RX_FIFO_OVERRUN))) {
+			(module->callback[UART_RX_FIFO_OVERRUN])(module);
+		}
 
-	/*UART Calibration*/
-	REG_WRITE_32(0x4000c000, REG_READ_32(0x4000c000) | (1<<7));
+	}
+}
 
-	while((REG_READ_32(0x4000c000) & (1<<7))!=0);
+static void uart_tx1_isr_handler(void)
+{
+	struct uart_module *module = _uart_instances[1];
+	/* get interrupt flags and mask out enabled callbacks */
+	uint32_t flags = module->hw->TRANSMIT_STATUS.reg;
+	if (flags & UART_TRANSMIT_STATUS_TX_FIFO_NOT_FULL) {
+		if ((module->callback_enable_mask & (1 << UART_TX_FIFO_NOT_FULL)) &&
+			(module->callback_reg_mask & (1 << UART_TX_FIFO_NOT_FULL))) {
+			(module->callback[UART_TX_FIFO_NOT_FULL])(module);
+		}
 
-	//REG_WRITE_32(0x4000f044, (REG_READ_32(0x4000c010)));
+	}
+	if (flags & UART_TRANSMIT_STATUS_TX_FIFO_EMPTY) {
+		if ((module->callback_enable_mask & (1 << UART_TX_FIFO_EMPTY)) &&
+			(module->callback_reg_mask & (1 << UART_TX_FIFO_EMPTY))) {
+			(module->callback[UART_TX_FIFO_EMPTY])(module);
+		}
 
-	REG_WRITE_32(0x4000c010, (REG_READ_32(0x4000c010) & ~(1<<15)));
+	}
+	if (flags & UART_TRANSMIT_STATUS_CTS_ACTIVE) {
+		if ((module->callback_enable_mask & (1 << UART_CTS_ACTIVE)) &&
+			(module->callback_reg_mask & (1 << UART_CTS_ACTIVE))) {
+			(module->callback[UART_CTS_ACTIVE])(module);
+		}
 
-	//	while((REG_READ_32(0x4000c010) & (1<<15))!=1);
-	REG_WRITE_32(0x4000f404, REG_READ_32(0x4000f404) & ~(1<<8));		
-
-	u32calib = REG_READ_32(0x4000c010) & ~(1<<15);
-	clock = ((26000000/u32orig_calib)*u32calib);
-	return clock;
+	}
 }
 
 static void uart_set_baudrate(struct uart_module *const module,
@@ -99,7 +155,7 @@ static void uart_set_baudrate(struct uart_module *const module,
 	uint32_t diff;
 	uint8_t i = 0;
 
-	clock = calibrate_clk();
+	clock = system_clock_get_value();
 	integerpart = clock / baud_rate;
 	diff = clock - (baud_rate * integerpart);
 	i = 0;
@@ -170,6 +226,24 @@ enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 
 	/* Assign module pointer to software instance struct */
 	module->hw = hw;
+
+	if (hw == UART0) {
+		system_peripheral_reset(PERIPHERAL_UART0_CORE);
+		system_peripheral_reset(PERIPHERAL_UART0_IF);
+		system_clock_peripheral_enable(PERIPHERAL_UART0_CORE);
+		system_clock_peripheral_enable(PERIPHERAL_UART0_IF);
+		_uart_instances[0] = module;
+		system_register_isr(RAM_ISR_TABLE_UARTRX0_INDEX, (uint32_t)uart_rx0_isr_handler);
+		system_register_isr(RAM_ISR_TABLE_UARTTX0_INDEX, (uint32_t)uart_tx0_isr_handler);
+	} else if (hw == UART1) {
+		system_peripheral_reset(PERIPHERAL_UART1_CORE);
+		system_peripheral_reset(PERIPHERAL_UART1_IF);
+		system_clock_peripheral_enable(PERIPHERAL_UART1_CORE);
+		system_clock_peripheral_enable(PERIPHERAL_UART1_IF);
+		_uart_instances[1] = module;
+		system_register_isr(RAM_ISR_TABLE_UARTRX1_INDEX, (uint32_t)uart_rx1_isr_handler);
+		system_register_isr(RAM_ISR_TABLE_UARTTX1_INDEX, (uint32_t)uart_tx1_isr_handler);
+	}
 
 	/* Set the pinmux for this UART module. */
 	if(config->flow_control) {
@@ -328,5 +402,126 @@ enum status_code uart_read_buffer_wait(struct uart_module *const module,
 		uart_read_wait(module, rx_data++);
 	
 	return STATUS_OK;
+}
+
+/**
+ * \brief Registers a callback
+ *
+ * Registers a callback function which is implemented by the user.
+ *
+ * \note The callback must be enabled by \ref uart_enable_callback,
+ *       in order for the interrupt handler to call it when the conditions for
+ *       the callback type are met.
+ *
+ * \param[in]  module         Pointer to UART software instance struct
+ * \param[in]  callback_func  Pointer to callback function
+ * \param[in]  callback_type  Callback type given by an enum
+ *
+ */
+void uart_register_callback(struct uart_module *const module,
+		uart_callback_t callback_func,
+		enum uart_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(callback_func);
+
+	/* Register callback function */
+	module->callback[callback_type] = callback_func;
+	/* Set the bit corresponding to the callback_type */
+	module->callback_reg_mask |= (1 << callback_type);
+}
+
+/**
+ * \brief Unregisters a callback
+ *
+ * Unregisters a callback function which is implemented by the user.
+ *
+ * \param[in,out]  module         Pointer to UART software instance struct
+ * \param[in]      callback_type  Callback type given by an enum
+ *
+ */
+void uart_unregister_callback(struct uart_module *module,
+		enum uart_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	/* Unregister callback function */
+	module->callback[callback_type] = NULL;
+	/* Clear the bit corresponding to the callback_type */
+	module->callback_reg_mask &= ~(1 << callback_type);
+}
+
+/**
+ * \brief Enables callback
+ *
+ * Enables the callback function registered by the \ref usart_register_callback.
+ * The callback function will be called from the interrupt handler when the
+ * conditions for the callback type are met.
+ *
+ * \param[in]  module         Pointer to UART software instance struct
+ * \param[in]  callback_type  Callback type given by an enum
+ */
+void uart_enable_callback(struct uart_module *const module,
+		enum uart_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	/* Enable callback */
+	module->callback_enable_mask |= (1 << callback_type);
+
+	if (callback_type == UART_TX_FIFO_NOT_FULL) {
+		module->hw->TX_INTERRUPT_MASK.reg|= UART_TX_INTERRUPT_MASK_TX_FIFO_NOT_FULL_MASK;
+	}
+	if (callback_type == UART_TX_FIFO_EMPTY) {
+		module->hw->TX_INTERRUPT_MASK.reg |= UART_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
+	}
+	if (callback_type == UART_RX_FIFO_NOT_EMPTY) {
+		module->hw->RX_INTERRUPT_MASK.reg |= UART_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK;
+	}
+	if (callback_type == UART_RX_FIFO_OVERRUN) {
+		module->hw->RX_INTERRUPT_MASK.reg |= UART_RX_INTERRUPT_MASK_FIFO_OVERRUN_MASK;
+	}
+	if (callback_type == UART_CTS_ACTIVE) {
+		module->hw->TX_INTERRUPT_MASK.reg |= UART_TX_INTERRUPT_MASK_CTS_ACTIVE_MASK;
+	}
+}
+
+/**
+ * \brief Disable callback
+ *
+ * Disables the callback function registered by the \ref usart_register_callback,
+ * and the callback will not be called from the interrupt routine.
+ *
+ * \param[in]  module         Pointer to UART software instance struct
+ * \param[in]  callback_type  Callback type given by an enum
+ */
+void uart_disable_callback(struct uart_module *const module,
+		enum uart_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	/* Disable callback */
+	module->callback_enable_mask &= ~(1 << callback_type);
+
+	if (callback_type == UART_TX_FIFO_NOT_FULL) {
+		module->hw->TX_INTERRUPT_MASK.reg &= ~UART_TX_INTERRUPT_MASK_TX_FIFO_NOT_FULL_MASK;
+	}
+	if (callback_type == UART_TX_FIFO_EMPTY) {
+		module->hw->TX_INTERRUPT_MASK.reg &= ~UART_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
+	}
+	if (callback_type == UART_RX_FIFO_NOT_EMPTY) {
+		module->hw->RX_INTERRUPT_MASK.reg &= ~UART_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK;
+	}
+	if (callback_type == UART_RX_FIFO_OVERRUN) {
+		module->hw->RX_INTERRUPT_MASK.reg &= ~UART_RX_INTERRUPT_MASK_FIFO_OVERRUN_MASK;
+	}
+	if (callback_type == UART_CTS_ACTIVE) {
+		module->hw->TX_INTERRUPT_MASK.reg &= ~UART_TX_INTERRUPT_MASK_CTS_ACTIVE_MASK;
+	}
+
 }
 

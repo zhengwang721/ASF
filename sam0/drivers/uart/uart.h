@@ -49,6 +49,7 @@
 #define UART_H_INCLUDED
 
 #include <compiler.h>
+#include <system.h>
 #include <gpio.h>
 
 #ifdef __cplusplus
@@ -95,7 +96,42 @@ enum uart_parity_selection{
 	UART_MARK_PARITY
 };
 
- /**
+/**
+ * \brief UART module instance
+ *
+ * Forward Declaration for the device instance.
+ */
+struct uart_module;
+
+/**
+ * \brief UART callback type
+ *
+ * Type of the callback functions.
+ */
+typedef void (*uart_callback_t)(struct uart_module *const module);
+
+/**
+ * \brief UART Callback enum
+ *
+ * Callbacks for the UART driver.
+ */
+enum uart_callback {
+	/** Callback for TX FIFO not full. */
+	UART_TX_FIFO_NOT_FULL,
+	/** Callback for TX FIFO empty. */
+	UART_TX_FIFO_EMPTY,
+	/** Callback for RX FIFO not empty. */
+	UART_RX_FIFO_NOT_EMPTY,
+	/** Callback for RX FIFO overrun. */
+	UART_RX_FIFO_OVERRUN,
+	/** Callback for CTS active. */
+	UART_CTS_ACTIVE,
+	/** Number of available callbacks. */
+	UART_CALLBACK_N,
+};
+
+
+/**
  * \brief Configuration structure for the UART module
  *
  * This is the configuration structure for the UART Module in SAMB11. It
@@ -131,6 +167,12 @@ struct uart_module {
 #if !defined(__DOXYGEN__)
 	/** Pointer to the hardware instance. */
 	Uart *hw;
+	/** Array to store callback function pointers in. */
+	uart_callback_t callback[UART_CALLBACK_N];
+	/** Bit mask for callbacks registered. */
+	uint8_t callback_reg_mask;
+	/** Bit mask for callbacks enabled. */
+	uint8_t callback_enable_mask;
 #endif
 };
 
@@ -151,6 +193,15 @@ enum status_code uart_write_buffer_wait(struct uart_module *const module,
 		const uint8_t *tx_data, uint32_t length);
 enum status_code uart_read_buffer_wait(struct uart_module *const module,
 		uint8_t *rx_data, uint16_t length);
+void uart_register_callback(struct uart_module *const module,
+		uart_callback_t callback_func,
+		enum uart_callback callback_type);
+void uart_unregister_callback(struct uart_module *module,
+		enum uart_callback callback_type);
+void uart_enable_callback(struct uart_module *const module,
+		enum uart_callback callback_type);
+void uart_disable_callback(struct uart_module *const module,
+		enum uart_callback callback_type);
 
 /** @}*/
 
