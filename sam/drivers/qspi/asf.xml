@@ -11,14 +11,10 @@
 			<build type="header-file" subtype="api" value="qspi.h"/>
 			<build type="include-path" value="."/>
 			<build type="doxygen-entry-point" value="sam_drivers_qspi_group"/>
-			<device-support value="samv71n"/>
-			<device-support value="samv71q"/>
-			<device-support value="samv70n"/>
-			<device-support value="samv70q"/>
-			<device-support value="same70n"/>
-			<device-support value="same70q"/>
-			<device-support value="sams70n"/>
-			<device-support value="sams70q"/>
+			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="same70"/>
+			<device-support value="sams70"/>
 			<require idref="sam.utils"/>
 			<require idref="common.services.basic.clock"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samv71"/>
