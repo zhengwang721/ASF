@@ -133,20 +133,20 @@
  * \dot
  * digraph spi_slaves_par {
  *   subgraph cluster_spi_master {
- *    shift_reg [label="Shift register", shape=box, fontname="arial"];
- *    mosi_m [label="MOSI", shape=none, fontname="arial"];
- *    miso_m [label="MISO", shape=none, fontname="arial"];
- *    sck_m [label="SCK", shape=none, fontname="arial"];
- *    ss_m [label="GPIO pin", shape=none, fontname="arial"];
+ *    shift_reg [label="Shift register", shape=box];
+ *    mosi_m [label="MOSI", shape=none];
+ *    miso_m [label="MISO", shape=none];
+ *    sck_m [label="SCK", shape=none];
+ *    ss_m [label="GPIO pin", shape=none];
  *    {rank=same; mosi_m miso_m sck_m ss_m}
  *    label="SPI Master";
  *   }
  *   subgraph cluster_spi_slave {
- *    mosi_s [label="MOSI", shape=none, fontname="arial"];
- *    miso_s [label="MISO", shape=none, fontname="arial"];
- *    sck_s [label="SCK", shape=none, fontname="arial"];
- *    ss_s [label="SS", shape=none, fontname="arial"];
- *    shift_reg_s [label="Shift register", shape=box, fontname="arial"];
+ *    mosi_s [label="MOSI", shape=none];
+ *    miso_s [label="MISO", shape=none];
+ *    sck_s [label="SCK", shape=none];
+ *    ss_s [label="SS", shape=none];
+ *    shift_reg_s [label="Shift register", shape=box];
  *    {rank=same; mosi_s miso_s sck_s ss_s}
  *    label="SPI Slave";
  *    rankdir=LR;
