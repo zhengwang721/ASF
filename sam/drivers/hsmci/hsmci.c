@@ -106,6 +106,13 @@
 #  ifndef CONF_HSMCI_DMA_CHANNEL
 #    define CONF_HSMCI_DMA_CHANNEL 0
 #  endif
+#elif (SAMV70 || SAMV71 || SAME70 || SAMS70)
+  // XDMAC is used for transfer
+#  include "xdmac.h"
+#  define XDMAC_HW_ID_HSMCI    0
+#  ifndef CONF_HSMCI_XDMAC_CHANNEL
+#    define CONF_HSMCI_XDMAC_CHANNEL 0
+#  endif
 #else
 #  error Not supported device
 #endif
@@ -892,3 +899,132 @@ bool hsmci_wait_end_of_write_blocks(void)
 	return true;
 }
 #endif // HSMCI_MR_PDCMODE
+
+#ifdef HSMCI_MR_XDMACMODE
+bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
+{
+	uint32_t nb_data;
+
+	nb_data = nb_block * hsmci_block_size;
+	Assert(nb_data <= (((uint32_t)hsmci_block_size * hsmci_nb_block) - hsmci_transfert_pos));
+	Assert(nb_data <= (PERIPH_RCR_RXCTR_Msk >> PERIPH_RCR_RXCTR_Pos));
+
+	// Handle unaligned memory address
+	if (((uint32_t)dest & 0x3) || (hsmci_block_size & 0x3)) {
+		HSMCI->HSMCI_MR |= HSMCI_MR_FBYTE;
+		} else {
+		HSMCI->HSMCI_MR &= ~HSMCI_MR_FBYTE;
+	}
+
+	// Configure PDC transfer
+	HSMCI->HSMCI_RPR = (uint32_t)dest;
+	HSMCI->HSMCI_RCR = (HSMCI->HSMCI_MR & HSMCI_MR_FBYTE) ?
+	nb_data : nb_data / 4;
+	HSMCI->HSMCI_RNCR = 0;
+	// Start transfer
+	HSMCI->HSMCI_PTCR = HSMCI_PTCR_RXTEN;
+	hsmci_transfert_pos += nb_data;
+	return true;
+}
+
+bool hsmci_wait_end_of_read_blocks(void)
+{
+	uint32_t sr;
+	// Wait end of transfer
+	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
+	do {
+		sr = HSMCI->HSMCI_SR;
+		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
+		HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
+			hsmci_debug("%s: PDC sr 0x%08x error\n\r",
+			__func__, sr);
+			HSMCI->HSMCI_PTCR = HSMCI_PTCR_RXTDIS | HSMCI_PTCR_TXTDIS;
+			hsmci_reset();
+			return false;
+		}
+
+	} while (!(sr & HSMCI_SR_RXBUFF));
+
+	if (hsmci_transfert_pos < ((uint32_t)hsmci_block_size * hsmci_nb_block)) {
+		return true;
+	}
+	// It is the last transfer, then wait command completed
+	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
+	do {
+		sr = HSMCI->HSMCI_SR;
+		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
+		HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
+			hsmci_debug("%s: PDC sr 0x%08x last transfer error\n\r",
+			__func__, sr);
+			hsmci_reset();
+			return false;
+		}
+	} while (!(sr & HSMCI_SR_XFRDONE));
+	return true;
+}
+
+bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
+{
+	uint32_t nb_data;
+
+	nb_data = nb_block * hsmci_block_size;
+	Assert(nb_data <= (((uint32_t)hsmci_block_size * hsmci_nb_block) - hsmci_transfert_pos));
+	Assert(nb_data <= (PERIPH_TCR_TXCTR_Msk >> PERIPH_TCR_TXCTR_Pos));
+
+	// Handle unaligned memory address
+	if (((uint32_t)src & 0x3) || (hsmci_block_size & 0x3)) {
+		HSMCI->HSMCI_MR |= HSMCI_MR_FBYTE;
+		} else {
+		HSMCI->HSMCI_MR &= ~HSMCI_MR_FBYTE;
+	}
+
+	// Configure PDC transfer
+	HSMCI->HSMCI_TPR = (uint32_t)src;
+	HSMCI->HSMCI_TCR = (HSMCI->HSMCI_MR & HSMCI_MR_FBYTE) ?
+	nb_data : nb_data / 4;
+	HSMCI->HSMCI_TNCR = 0;
+	// Start transfer
+	HSMCI->HSMCI_PTCR = HSMCI_PTCR_TXTEN;
+	hsmci_transfert_pos += nb_data;
+	return true;
+}
+
+bool hsmci_wait_end_of_write_blocks(void)
+{
+	uint32_t sr;
+
+	// Wait end of transfer
+	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
+	do {
+		sr = HSMCI->HSMCI_SR;
+		if (sr &
+		(HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
+		HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
+			hsmci_debug("%s: PDC sr 0x%08x error\n\r",
+			__func__, sr);
+			hsmci_reset();
+			HSMCI->HSMCI_PTCR = HSMCI_PTCR_RXTDIS | HSMCI_PTCR_TXTDIS;
+			return false;
+		}
+	} while (!(sr & HSMCI_SR_TXBUFE));
+
+
+	if (hsmci_transfert_pos < ((uint32_t)hsmci_block_size * hsmci_nb_block)) {
+		return true;
+	}
+	// It is the last transfer, then wait command completed
+	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
+	do {
+		sr = HSMCI->HSMCI_SR;
+		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
+		HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
+			hsmci_debug("%s: PDC sr 0x%08x last transfer error\n\r",
+			__func__, sr);
+			hsmci_reset();
+			return false;
+		}
+	} while (!(sr & HSMCI_SR_NOTBUSY));
+	Assert(HSMCI->HSMCI_SR & HSMCI_SR_FIFOEMPTY);
+	return true;
+}
+#endif // HSMCI_MR_XDMACMODE

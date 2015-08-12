@@ -411,6 +411,29 @@
 #define BOARD_CLK_TWIHS_EEPROM            0
 #define BOARD_CLK_TWIHS_MUX_EEPROM        0
 
+/** HSMCI pins definition. */
+/*! Number of slot connected on HSMCI interface */
+#define SD_MMC_HSMCI_MEM_CNT      1
+#define SD_MMC_HSMCI_SLOT_0_SIZE  4
+#define PINS_HSMCI   {0x3fUL << 26, PIOA, ID_PIOA, PIO_PERIPH_C, PIO_PULLUP}
+/** HSMCI MCCDA pin definition. */
+#define PIN_HSMCI_MCCDA_GPIO            (PIO_PA28_IDX)
+#define PIN_HSMCI_MCCDA_FLAGS           (IOPORT_MODE_MUX_C)
+/** HSMCI MCCK pin definition. */
+#define PIN_HSMCI_MCCK_GPIO             (PIO_PA25_IDX)
+#define PIN_HSMCI_MCCK_FLAGS            (IOPORT_MODE_MUX_C)
+/** HSMCI MCDA0 pin definition. */
+#define PIN_HSMCI_MCDA0_GPIO            (PIO_PA30_IDX)
+#define PIN_HSMCI_MCDA0_FLAGS           (IOPORT_MODE_MUX_C)
+/** HSMCI MCDA1 pin definition. */
+#define PIN_HSMCI_MCDA1_GPIO            (PIO_PA31_IDX)
+#define PIN_HSMCI_MCDA1_FLAGS           (IOPORT_MODE_MUX_C)
+/** HSMCI MCDA2 pin definition. */
+#define PIN_HSMCI_MCDA2_GPIO            (PIO_PA26_IDX)
+#define PIN_HSMCI_MCDA2_FLAGS           (IOPORT_MODE_MUX_C)
+/** HSMCI MCDA3 pin definition. */
+#define PIN_HSMCI_MCDA3_GPIO            (PIO_PA27_IDX)
+#define PIN_HSMCI_MCDA3_FLAGS           (IOPORT_MODE_MUX_C)
 
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAMV71_XLTRA_H_ */
