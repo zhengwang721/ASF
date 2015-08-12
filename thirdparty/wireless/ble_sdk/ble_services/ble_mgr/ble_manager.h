@@ -522,6 +522,10 @@ typedef enum
 #define BLE_NOTIFICATION_RECEIVED_HANDLER						ble_dummy_handler
 #endif
 
+#ifndef BLE_NOTIFICATION_CONFIRMED_HANDLER
+#define BLE_NOTIFICATION_CONFIRMED_HANDLER						ble_dummy_handler
+#endif
+
 #ifndef BLE_CHARACTERISTIC_READ_RESPONSE
 #define BLE_CHARACTERISTIC_READ_RESPONSE						ble_dummy_handler
 #endif
@@ -734,11 +738,12 @@ at_ble_status_t ble_event_task(void);
 /** @brief function sets both device address and device name which are exposed to all other devices.
   *
   * @param[in] addr address to be set as a device address.
+  * @param[in] args configuration required for initialization.
   *
   * @return none.
   *
   */
-void ble_device_init(at_ble_addr_t *addr);
+void ble_device_init(at_ble_addr_t *addr, at_ble_init_config_t * args);
 
 /** @brief function handling all the events from the stack, responsible
   * for calling the respective functions initialized for the events.

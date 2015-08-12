@@ -83,6 +83,7 @@ ble_gap_event_callback_t ble_connected_cb = NULL;
 ble_gap_event_callback_t ble_disconnected_cb = NULL;
 ble_gap_event_callback_t ble_paired_cb = NULL;
 ble_characteristic_changed_callback_t ble_char_changed_cb = NULL;
+ble_notification_confirmed_callback_t ble_notif_conf_cb = NULL;
 
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)|| (BLE_DEVICE_ROLE == BLE_OBSERVER))
 uint8_t scan_response_count = 0;
@@ -117,14 +118,14 @@ at_ble_status_t ble_event_task(void)
 }
 
 /** @brief BLE device initialization */
-void ble_device_init(at_ble_addr_t *addr)
+void ble_device_init(at_ble_addr_t *addr, at_ble_init_config_t * args)
 {
 	char *dev_name = NULL;
-	ble_init();
+	ble_init((at_ble_init_config_t *)args);
 	ble_set_address(addr);
 	
 	dev_name = (char *)BLE_DEVICE_NAME;
-	if (ble_set_device_name((uint8_t *)dev_name, strlen(dev_name)) != AT_BLE_SUCCESS)
+	if (at_ble_device_name_set((uint8_t *)dev_name, strlen(dev_name)) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("Device name set failed");
 	}
@@ -143,30 +144,16 @@ at_ble_status_t ble_set_device_name(uint8_t *name, uint8_t name_len)
 }
 
 /* Initialize the BLE */
-static void ble_init(void)
+static void ble_init(at_ble_init_config_t * args)
 {
-	uint8_t port = 74;
-	uint32_t chip_id;
-	
 	/* Initialize the platform */
 	DBG_LOG("Initializing BTLC1000");
 	
 	/* Init BLE device */
-	if(at_ble_init(&port) != AT_BLE_SUCCESS)
+	if(at_ble_init((at_ble_init_config_t *)args) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("BTLC1000 Initialization failed");
 	}
-	
-	/* read BLE device chip id */
-	if(at_ble_chip_id_get(&chip_id) != AT_BLE_SUCCESS)
-	{
-		DBG_LOG("Failed to get the BTLC1000 chip id");
-	}
-	
-	DBG_LOG("BLE-chip id:0x%02X%02X%02X%02X", (uint8_t)(chip_id >> 24),
-	(uint8_t)(chip_id >> 16),
-	(uint8_t)(chip_id >> 8),
-	(uint8_t)(chip_id));
 }
 
 
@@ -428,6 +415,13 @@ void register_ble_characteristic_changed_cb(ble_characteristic_changed_callback_
 	ble_char_changed_cb = char_changed_cb_fn;
 }
 
+/** @brief function to register callback to be called when notification pdu send over the air, this callback called by profile or service */
+void register_ble_notification_confirmed_cb(ble_notification_confirmed_callback_t notif_conf_cb_fn)
+{
+	ble_notif_conf_cb = notif_conf_cb_fn;
+}
+
+
 /** @brief function handles disconnection event received from stack */
 void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect)
 {
@@ -659,6 +653,15 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	}
 	break;
 	
+	/** Advertising report received if error has occurred or timeout happened.
+	* Refer to @ref at_ble_adv_report_t
+	*/
+	case AT_BLE_ADV_REPORT:
+	{
+		
+	}
+	break;
+	
 	/** Used random address. \n
 	 *	Refer to at_ble_rand_addr_changed_t
 	 */
@@ -822,15 +825,6 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	}
 	break;
 	
-	/** Characteristic read by UUID procedure is done. \n
-	 *	Refer to at_ble_characteristic_read_response_t
-	 */
-	case AT_BLE_CHARACTERISTIC_READ_BY_UUID_RESPONSE:
-	{
-		
-	}
-	break;
-	
 	 /** Characteristic read procedure is done. \n
 	  * Refer to @ref at_ble_characteristic_read_response_t
 	  */
@@ -866,7 +860,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 		BLE_NOTIFICATION_RECEIVED_HANDLER((at_ble_notification_recieved_t *)event_params);
 	}
 	break;
-	
+		
 	 /** An Indication is received. \n
 	  * Refer to @ref at_ble_indication_recieved_t
 	  */
@@ -877,8 +871,20 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	break;
 	
 	/* GATT Server events */
+	/** Confirmation of notification packet send over the air. \n
+	  * Refer to @ref at_ble_cmd_complete_event_t
+	*/
+	case AT_BLE_NOTIFICATION_CONFIRMED:
+	{
+		BLE_NOTIFICATION_CONFIRMED_HANDLER(event_params->status);
+		if(ble_notif_conf_cb != NULL)
+		{
+			ble_notif_conf_cb(event_params->status);
+		}
+	}
+	break;
 	 /** The peer confirmed that it has received an Indication. \n
-	  * Refer to @ref at_ble_indication_confirmed_t
+	  * Refer to @ref at_ble_cmd_complete_event_t
 	  */
 	case AT_BLE_INDICATION_CONFIRMED:
 	{
