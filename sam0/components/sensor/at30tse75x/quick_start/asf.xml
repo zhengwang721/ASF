@@ -8,5 +8,6 @@
 		<build type="include-path" value="."/>
 		<require idref="sam0.components.sensor.at30tse75x"/>
 		<device-support value="sam0"/>
+		<device-support value="samb"/>
 	</module>
 </asf>

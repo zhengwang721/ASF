@@ -48,8 +48,12 @@
 #define AT30TSE75X_H_INCLUDED
 
 #include <compiler.h>
+#  if (!SAMB11)
 #include <i2c_common.h>
 #include <i2c_master.h>
+#  else
+#include <i2c.h>
+#  endif
 
 /* Temperature sensor configuration file */
 #include "conf_at30tse75x.h"
