@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Scan Parameter Service Declarations
+ * \brief Scan Parameters Service Declarations
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -93,5 +93,7 @@ void ble_paired_app_event(at_ble_handle_t conn_handle);
 void ble_disconnected_app_event(at_ble_handle_t conn_handle);
 
 at_ble_status_t sps_char_changed_cb(at_ble_characteristic_changed_t *char_handle);
+
+void sps_notification_confirmed_cb(at_ble_status_t notification_status);
 
 #endif /* __SCAN_PARAMETER_APP_H__ */

@@ -66,8 +66,12 @@
 
 /** @brief Scan response data*/
 uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
+	
+uint8_t db_mem[1024] = {0};
+bat_gatt_service_handler_t bas_service_handler;
 
-bool volatile timer_cb_done = false; 
+bool volatile timer_cb_done = false;
+bool volatile flag = true;
 
 /**
 * \Timer callback handler called on timer expiry
@@ -86,7 +90,9 @@ void timer_callback_handler(void)
 int main(void)
 {
 	uint8_t battery_level = BATTERY_MAX_LEVEL;	
-	gatt_service_handler_t bas_service_handler;
+	at_ble_init_config_t pf_cfg;
+	platform_config busConfig;
+	
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -104,8 +110,16 @@ int main(void)
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);
 	
+	/*Memory allocation required by GATT Server DB*/
+	pf_cfg.memPool.memSize = sizeof(db_mem);
+	pf_cfg.memPool.memStartAdd = &(db_mem[0]);
+	
+	/*Bus configuration*/
+	busConfig.bus_type = UART;
+	pf_cfg.plf_config = &busConfig;
+	
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL);
+	ble_device_init(NULL, &pf_cfg);
 	
 	/* Initialize the battery service */
 	bat_init_service(&bas_service_handler, &battery_level);
@@ -123,6 +137,12 @@ int main(void)
 	/* Register callback for disconnected event */
 	register_ble_disconnected_event_cb(ble_disconnected_app_event);
 	
+	/* Register callback for notification confirmed event */
+	register_ble_notification_confirmed_cb(ble_notification_confirmed_app_event);
+	
+	/* Register callback for characteristic changed event */
+	register_ble_characteristic_changed_cb(ble_char_changed_app_event);
+	
 	/* Capturing the events  */ 
 	while (1) {
 		/* BLE Event Task */
@@ -132,9 +152,12 @@ int main(void)
 			timer_cb_done = false;			
 			battery_level = (battery_level % BATTERY_MAX_LEVEL);
 			/* send the notification and Update the battery level  */			
-			if(bat_update_char_value(&bas_service_handler, battery_level) == AT_BLE_SUCCESS)
-			{
-				DBG_LOG("Battery Level:%d%%", battery_level);
+			if(flag){
+				if(bat_update_char_value(&bas_service_handler, battery_level) == AT_BLE_SUCCESS)
+				{
+					flag = false;
+					DBG_LOG("Battery Level:%d%%", battery_level);
+				}
 			}
 			battery_level++;
 		}
@@ -191,4 +214,18 @@ void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 	timer_cb_done = false;
 	hw_timer_stop();
 	battery_service_advertise();
+}
+
+void ble_notification_confirmed_app_event(at_ble_status_t notification_status)
+{
+	if(!notification_status)
+	{
+		flag = true;
+		DBG_LOG("sending notification to the peer success");				
+	}
+}
+
+at_ble_status_t ble_char_changed_app_event(at_ble_characteristic_changed_t *char_handle)
+{
+	bat_char_changed_event(&bas_service_handler, char_handle);
 }

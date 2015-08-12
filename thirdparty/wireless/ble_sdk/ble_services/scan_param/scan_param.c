@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Scan Param service
+ * \brief Scan Parameters service
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -65,6 +65,8 @@
  */
 
 extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
+
+bool volatile sps_notification_flag = false;
 
 void sps_init_service(sps_gatt_service_handler_t *sps_serv, uint16_t *scan_interval_window, uint8_t *scan_refresh)
 {
@@ -141,17 +143,42 @@ at_ble_status_t sps_scan_refresh_char_update(sps_gatt_service_handler_t *sps_ser
 	sps_serv->serv_chars[1].init_value = &scan_refresh_value;
 	
 	//updating the att data base
-	if ((at_ble_characteristic_value_set(sps_serv->serv_chars[1].char_val_handle, &scan_refresh_value,0 ,sizeof(uint8_t))) != AT_BLE_SUCCESS)
+	if ((at_ble_characteristic_value_set(sps_serv->serv_chars[1].char_val_handle, &scan_refresh_value, sizeof(uint8_t))) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("Updating scan refresh characteristic failed\r\n");
 		return AT_BLE_FAILURE;
 	} 
 	
 	//sending notification to the peer about change in the scan parameters
-	if((at_ble_notification_send(ble_connected_dev_info[0].handle, sps_serv->serv_chars[1].char_val_handle)) == AT_BLE_FAILURE) {
-		DBG_LOG("sending notification to the peer failed");
-		return AT_BLE_FAILURE;
+	if(sps_notification_flag){
+		if((at_ble_notification_send(ble_connected_dev_info[0].handle, sps_serv->serv_chars[1].char_val_handle)) == AT_BLE_FAILURE) {
+			DBG_LOG("sending notification failed");
+			return AT_BLE_FAILURE;
+		}
 	}
 	
 	return AT_BLE_FAILURE;
+}
+
+at_ble_status_t	sps_char_changed_event(sps_gatt_service_handler_t *sps_service_handler, at_ble_characteristic_changed_t *char_handle)
+{
+	at_ble_characteristic_changed_t change_params;
+	memcpy((uint8_t *)&change_params, char_handle, sizeof(at_ble_characteristic_changed_t));
+	
+	if(sps_service_handler.serv_chars[0].char_val_handle == change_params.char_handle)
+	{
+		memcpy(sps_service_handler.serv_chars[0].init_value, change_params.char_new_value, change_params.char_len);
+		DBG_LOG("New scan interval window parameter");
+		DBG_LOG("Scan Interval 0x%02x",change_params.char_new_value[0]);
+		DBG_LOG("Scan Window   0x%02x",change_params.char_new_value[1]);
+	}
+	
+	if(sps_service_handler->serv_chars[0].client_config_handle == change_params.char_handle)
+	{
+		if(change_params.char_new_value[0])
+		{
+			sps_notification_flag = true;
+		}
+	}
+	return AT_BLE_SUCCESS;	
 }

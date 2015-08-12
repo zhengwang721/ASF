@@ -2,7 +2,7 @@
 /**
  * \file
  *
- * \brief Scan Param Service declarations
+ * \brief Scan Parameters Service declarations
  *
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
