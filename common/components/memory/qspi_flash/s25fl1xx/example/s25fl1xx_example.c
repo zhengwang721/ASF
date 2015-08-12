@@ -161,9 +161,8 @@ int main(void)
 
 	/* Enable quad mode */
 	s25fl1xx_set_quad_mode(&g_qspid, 1);
-	
-#if 0
-	/* Erase entire chip  */
+
+	/* Erase 64K flash  */
 	s25fl1xx_erase_64k_block(&g_qspid, 0);
 
 	/* Flash the code to QSPI flash */
@@ -187,24 +186,6 @@ int main(void)
 			break;
 		}
 	}
-#else
-	for (uint32_t i = 1; i <= 16; i = i + 1) {
-		//if ((i == 3) || (i == 7) || (i == 11) || (i == 15)) {
-			// Will enter UsageFault_Handler() when write size in these case. Skip.
-		//	continue;	
-		//}
-		printf("QSPI wr_size = %d\n\r", i);
-		//S25FL1D_EraseSector(0);
-		s25fl1xx_erase_sector(&g_qspid, 0);
-		s25fl1xx_read(&g_qspid, buffer, sizeof(buffer), 0);
-		//S25FL1D_Write((uint32_t *)pBuffercode, i, 0, 0);
-		s25fl1xx_write(&g_qspid, (uint32_t *)buffercode, i, 0, 0);
-		s25fl1xx_read(&g_qspid, buffer, sizeof(buffer), 0);
-		//s25fl1xx_read_quad_io(&g_qspid, buffer, sizeof(buffer), 0, 1, 0 );
-		//s25fl1xx_continous_read_mode_reset(&g_qspid);
-		printf("QSPI bbbb\n\r");
-	}
-#endif
 
 	/* Erase 64K bytes of chip  */
 	s25fl1xx_erase_64k_block(&g_qspid, 0);
