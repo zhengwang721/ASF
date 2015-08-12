@@ -82,18 +82,18 @@ extern "C" {
  * \note Should only be cleared internally by driver.
  */
 #define I2C_SLAVE_STATUS_ADDRESS_MATCH     (1UL << 0)
-/** Data Ready */
+/** Data Ready. */
 #define I2C_SLAVE_STATUS_DATA_READY        (1UL << 1)
-/** Stop Received */
+/** Stop Received. */
 #define I2C_SLAVE_STATUS_STOP_RECEIVED     (1UL << 2)
-/** Clock Hold
+/** Clock Hold.
  * \note Cannot be cleared, only valid when I2C_SLAVE_STATUS_ADDRESS_MATCH is
  * set.
  */
 #define I2C_SLAVE_STATUS_CLOCK_HOLD        (1UL << 3)
-/** SCL Low Timeout */
+/** SCL Low Timeout. */
 #define I2C_SLAVE_STATUS_SCL_LOW_TIMEOUT   (1UL << 4)
-/** Repeated Start
+/** Repeated Start.
  * \note Cannot be cleared, only valid when I2C_SLAVE_STATUS_ADDRESS_MATCH is
  * set.
  */
@@ -102,9 +102,9 @@ extern "C" {
  * \note Cannot be cleared.
  */
 #define I2C_SLAVE_STATUS_RECEIVED_NACK     (1UL << 6)
-/** Transmit Collision */
+/** Transmit Collision. */
 #define I2C_SLAVE_STATUS_COLLISION         (1UL << 7)
-/** Bus error */
+/** Bus error. */
 #define I2C_SLAVE_STATUS_BUS_ERROR         (1UL << 8)
 
 /** @} */
