@@ -166,8 +166,8 @@ int main(void)
 {
 	at_ble_events_t event;
 	uint8_t params[AT_BLE_EVENT_PARAM_MAX_SIZE];	
-		at_ble_init_config_t pf_cfg;
-		platform_config busConfig;
+	at_ble_init_config_t pf_cfg;
+	platform_config busConfig;
 
 		/*Memory allocation required by GATT Server DB*/
 		pf_cfg.memPool.memSize = sizeof(att_db_data);

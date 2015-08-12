@@ -148,7 +148,7 @@ typedef struct ancs_prf{
 typedef struct app_anp_data{
 	/** To check the service discovery status */
 	uint8_t devicedb;
-	/** To check the type of discovery */
+	///** To check the type of discovery */
 	uint8_t discover_role;
 	/** Connection related information*/
 	at_ble_connected_t conn_params;
