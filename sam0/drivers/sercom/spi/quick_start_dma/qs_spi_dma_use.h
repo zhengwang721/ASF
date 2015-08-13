@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21/R21/L21/DA1/C21 Quick Start Guide for Using SPI driver with DMA
+ * \brief SAM D21/R21/L21/L22/DA1/C21 Quick Start Guide for Using SPI driver with DMA
  *
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -48,6 +48,7 @@
  *    - SAM D21 Xplained Pro
  *    - SAM R21 Xplained Pro
  *    - SAM L21 Xplained Pro
+ *    - SAM L22 Xplained Pro
  *    - SAM DA1 Xplained Pro
  *    - SAM C21 Xplained Pro
  *
@@ -95,6 +96,11 @@
  *  - \b DO/DI: EXT1 PIN16 (PA06) <--> EXT1 PIN11 (PA08)
  *  - \b DI/DO: EXT1 PIN17 (PA04) <--> EXT2 PIN03 (PA10)
  *  - \b SCK:   EXT1 PIN18 (PA07) <--> EXT2 PIN04 (PA11)
+ * - SAM L22 Xplained Pro.
+ *  - \b SS_0:  EXT1 PIN15 (PB21) <--> EXT2 PIN15 (PA17)
+ *  - \b DO/DI: EXT1 PIN16 (PB00) <--> EXT2 PIN17 (PA16)
+ *  - \b DI/DO: EXT1 PIN17 (PB02) <--> EXT2 PIN16 (PA18)
+ *  - \b SCK:   EXT1 PIN18 (PB01) <--> EXT2 PIN18 (PA19)
  * - SAM C21 Xplained Pro.
  *  - \b SS_0:  EXT1 PIN15 (PA17) <--> EXT2 PIN15 (PB03)
  *  - \b DO/DI: EXT1 PIN16 (PA18) <--> EXT2 PIN17 (PB02)
@@ -118,7 +124,15 @@
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_master
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_slave
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
+<<<<<<< HEAD
  * For SAM DA1 Xplained Pro:
+=======
+  * For SAML22 Xplained Pro:
+ * \snippet saml22_xplained_pro/conf_quick_start.h definition_master
+ * \snippet saml22_xplained_pro/conf_quick_start.h definition_slave
+ * \snippet saml22_xplained_pro/conf_quick_start.h definition_peripheral_trigger
+ * For SAMDA1 Xplained Pro:
+>>>>>>> origin/master
  * \snippet samda1_xplained_pro/conf_quick_start.h definition_master
  * \snippet samda1_xplained_pro/conf_quick_start.h definition_slave
  * \snippet samda1_xplained_pro/conf_quick_start.h definition_peripheral_trigger
