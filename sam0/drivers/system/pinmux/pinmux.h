@@ -645,17 +645,17 @@ void system_pinmux_group_set_output_drive(
  *	<tr>
  *		<td>42121F</td>
  *		<td>08/2015</td>
- *		<td>Add support for SAM L21, SAM DAx, and SAM C20/C21</td>
+ *		<td>Added support for SAM L21, SAM DA1, and SAM C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>42121E</td>
  *		<td>12/2014</td>
- *		<td>Add support for SAM R21 and SAM D10/D11</td>
+ *		<td>Added support for SAM R21 and SAM D10/D11</td>
  *	</tr>
  *	<tr>
  *		<td>42121D</td>
  *		<td>01/2014</td>
- *		<td>Add support for SAM D21</td>
+ *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
  *		<td>42121C</td>

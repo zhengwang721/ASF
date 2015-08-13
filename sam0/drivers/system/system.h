@@ -58,12 +58,13 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_system_group SAM System Driver (SYSTEM)
+ * \defgroup asfdoc_sam0_system_group SAM System (SYSTEM) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
- * and management of the device's system relation functionality, necessary for
- * the basic device operation. This is not limited to a single peripheral, but
- * extends across multiple hardware peripherals.
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
+ * an interface for the configuration and management of the device's system 
+ * relation functionality, necessary for the basic device operation. This is 
+ * not limited to a single peripheral, but extends across multiple hardware 
+ * peripherals.
  *
  * The following peripherals are used by this module:
  * \if DEVICE_SAML21_SYSTEM_SUPPORT
@@ -577,7 +578,7 @@ void system_init(void);
  * This is a list of the available Quick Start Guides (QSGs) and example
  * applications. QSGs are simple examples with step-by-step instructions to 
  * configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  * \if DEVICE_SAML21_SYSTEM_SUPPORT
@@ -682,41 +683,41 @@ void system_init(void);
  *  </tr>
  * \if DEVICE_SAML21_SYSTEM_SUPPORT
  *  <tr>
- *      <td>A</td>
+ *      <td>42449A</td>
  *      <td>04/2015</td>
- *      <td>Initial release.</td>
+ *      <td>Initial release</td>
  * </tr>
  * \endif
  * \if DEVICE_SAMC21_SYSTEM_SUPPORT
  *  <tr>
- *      <td>A</td>
+ *      <td>42449A</td>
  *      <td>06/2015</td>
- *      <td>Initial release.</td>
+ *      <td>Initial release</td>
  * </tr>
  * \endif
  * \if DEVICE_SAMD21_SYSTEM_SUPPORT
  *  <tr>
- *      <td>E</td>
+ *      <td>42449E</td>
  *      <td>04/2015</td>
- *      <td>Added support for SAMDAx.</td>
+ *      <td>Added support for SAMDA1</td>
  * </tr>
  *  <tr>
- *      <td>D</td>
+ *      <td>42449D</td>
  *      <td>12/2014</td>
- *      <td>Added support for SAMR21 and SAMD10/D11.</td>
+ *      <td>Added support for SAMR21 and SAMD10/D11</td>
  * </tr>
  * <tr>
- *      <td>C</td>
+ *      <td>42449C</td>
  *      <td>01/2014</td>
- *      <td>Added support for SAMD21.</td>
+ *      <td>Added support for SAMD21</td>
  *  </tr>
  *  <tr>
- *      <td>B</td>
+ *      <td>42449B</td>
  *      <td>06/2013</td>
- *      <td>Corrected documentation typos.</td>
+ *      <td>Corrected documentation typos</td>
  *  </tr>
  *  <tr>
- *      <td>A</td>
+ *      <td>42449A</td>
  *      <td>06/2013</td>
  *      <td>Initial release</td>
  *  </tr>
