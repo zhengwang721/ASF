@@ -1733,14 +1733,9 @@ static inline void tc_clear_status(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>G</td>
+ *		<td>F</td>
  *		<td>08/2015</td>
  *		<td>Added support for SAM C21 and SAM L22</td>
- *	</tr>
- *	<tr>
- *		<td>F</td>
- *		<td>12/2014</td>
- *		<td>Added support for SAM C21</td>
  *	</tr>
  *	<tr>
  *		<td>E</td>
