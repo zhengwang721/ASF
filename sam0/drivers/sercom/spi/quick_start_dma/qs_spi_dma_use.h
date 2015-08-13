@@ -124,15 +124,11 @@
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_master
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_slave
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
-<<<<<<< HEAD
- * For SAM DA1 Xplained Pro:
-=======
-  * For SAML22 Xplained Pro:
+ * For SAML22 Xplained Pro:
  * \snippet saml22_xplained_pro/conf_quick_start.h definition_master
  * \snippet saml22_xplained_pro/conf_quick_start.h definition_slave
  * \snippet saml22_xplained_pro/conf_quick_start.h definition_peripheral_trigger
- * For SAMDA1 Xplained Pro:
->>>>>>> origin/master
+ * For SAM DA1 Xplained Pro:
  * \snippet samda1_xplained_pro/conf_quick_start.h definition_master
  * \snippet samda1_xplained_pro/conf_quick_start.h definition_slave
  * \snippet samda1_xplained_pro/conf_quick_start.h definition_peripheral_trigger
