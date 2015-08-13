@@ -52,6 +52,8 @@
 extern "C" {
 #endif
 
+typedef void (*dualtimer_callback_t)(void);
+
 /**
  * \brief Specifies the timer1 or timer2.
  *
@@ -183,7 +185,10 @@ uint8_t dualtimer_get_interrupt_status(enum dualtimer_timer timer);
 void dualtimer_clear_interrupt_status(enum dualtimer_timer timer);
 void dualtimer_enable(enum dualtimer_timer timer);
 void dualtimer_disable(enum dualtimer_timer timer);
-
+void dualtimer_register_callback(enum dualtimer_timer timer, dualtimer_callback_t fun);
+void dualtimer_unregister_callback(enum dualtimer_timer timer);
+void dualtimer_isr_handler(void);
+ 
 #ifdef __cplusplus
 }
 #endif

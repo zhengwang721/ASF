@@ -44,6 +44,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
+#include <stdio_serial.h>
 #include <string.h>
 #include "conf_dualtimer.h"
 
@@ -52,6 +53,18 @@
 //! [module_inst]
 struct uart_module uart_instance;
 //! [module_inst]
+
+//! [callback_funcs]
+static void dualtimer_callback1(void)
+{
+	printf("Timer1 trigger\r\n");
+}
+
+static void dualtimer_callback2(void)
+{
+	printf("Timer2 trigger\r\n");
+}
+//! [callback_funcs]
 
 //! [setup]
 static void configure_uart(void)
@@ -62,7 +75,6 @@ static void configure_uart(void)
 //! [setup_uart_2]
 	uart_get_config_defaults(&config_uart);
 //! [setup_uart_2]
-
 //! [setup_uart_3]
 	config_uart.baud_rate = 38400;
 	config_uart.pinmux_pad[0] = EDBG_CDC_SERCOM_PINMUX_PAD0;
@@ -70,12 +82,15 @@ static void configure_uart(void)
 	config_uart.pinmux_pad[2] = EDBG_CDC_SERCOM_PINMUX_PAD2;
 	config_uart.pinmux_pad[3] = EDBG_CDC_SERCOM_PINMUX_PAD3;
 //! [setup_uart_3]
-
 //! [setup_uart_4]
+	stdio_serial_init(&uart_instance, EDBG_CDC_MODULE, &config_uart);
+//! [setup_uart_4]
+//! [setup_uart_5]
 	while (uart_init(&uart_instance,
-	EDBG_CDC_MODULE, &config_uart) != STATUS_OK) {
+			EDBG_CDC_MODULE, &config_uart) != STATUS_OK) {
 	}
-//! [setup_uart_4]
+//! [setup_uart_5]
+
 }
 
 static void configure_dualtimer(void)
@@ -108,23 +123,40 @@ static void configure_dualtimer(void)
 		dualtimer_enable(DUALTIMER_TIMER2);
 //! [setup_dualtimer_7]
 }
+
+static void configure_dualtimer_callback(void)
+{
+	//! [setup_register_callback]
+	dualtimer_register_callback(DUALTIMER_TIMER1, dualtimer_callback1);
+	dualtimer_register_callback(DUALTIMER_TIMER2, dualtimer_callback2);
+	//! [setup_register_callback]
+	//! [setup_register_isr]
+	system_register_isr(RAM_ISR_TABLE_DUALTIMER_INDEX, (uint32_t)dualtimer_isr_handler);
+	//! [setup_register_isr]
+	
+	/* For A4, timer0 IRQ is 14 */
+	//! [enable_IRQ]
+	NVIC_EnableIRQ(10);
+	//! [enable_IRQ]
+}
 //! [setup]
 
 int main(void)
 {
 //! [setup_init]
-	//system_init();
-//! [uart_config]	
+	system_clock_config(CLOCK_RESOURCE_RC_26_MHZ, CLOCK_FREQ_26_MHZ);
+	
 	configure_uart();
-//! [uart_config]
-//! [dualtimer_config]
+
 	configure_dualtimer();
-//! [dualtimer_config]
+
+	configure_dualtimer_callback();
 //! [setup_init]
 	
 //! [main_imp]
 //! [main_loop]
 	while (true) {
+		#if 0
 //! [main_loop]
 //! [timer1_interrupt]
 		if (dualtimer_get_status(DUALTIMER_TIMER1)) {
@@ -146,6 +178,7 @@ int main(void)
 			PRINTF("Timer2 trigger\r\n");
 //! [print_timer2]
 		}
+		#endif
 	}
 //! [main_imp]
 }

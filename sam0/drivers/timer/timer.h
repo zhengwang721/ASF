@@ -52,6 +52,8 @@
 extern "C" {
 #endif
 
+typedef void (*timer_callback_t)(void);
+
 /**
  * \brief TIMER configuration structure.
  *
@@ -73,6 +75,9 @@ uint32_t timer_get_interrupt_status(void);
 void timer_clear_interrupt_status(void);
 void timer_enable(void);
 void timer_disable(void);
+void timer_register_callback(timer_callback_t fun);
+void timer_unregister_callback(void);
+void timer_isr_handler(void);
 
 #ifdef __cplusplus
 }

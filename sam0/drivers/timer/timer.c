@@ -140,3 +140,45 @@ void timer_disable(void)
 {
 	TIMER0->CTRL.reg &= (~TIMER_CTRL_ENABLE);
 }
+
+timer_callback_t timer_callback;
+
+/**
+ * \brief Registers a callback.
+ *
+ * Registers and enable a callback function which is implemented by the user.
+ *
+ * \param[in]     callback_func Pointer to callback function
+ */
+void timer_register_callback(timer_callback_t fun)
+{
+	timer_callback = fun; 
+}
+
+/**
+ * \brief Unregisters a callback.
+ *
+ * Unregisters and disable a callback function implemented by the user.
+ *
+ */
+void timer_unregister_callback(void)
+{
+	timer_callback = NULL; 
+}
+
+/**
+ * \brief Timer ISR handler.
+ *
+ * Timer ISR handler.
+ *
+ */
+void timer_isr_handler(void)
+{
+	if (timer_get_interrupt_status()) {
+		timer_clear_interrupt_status();
+		
+		if (timer_callback) {
+			timer_callback();
+		}
+	}
+}

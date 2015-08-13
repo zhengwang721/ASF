@@ -69,8 +69,8 @@ void dualtimer_get_config_defaults(struct dualtimer_config *config)
 	config->timer1.clock_prescaler = DUALTIMER_CLOCK_PRESCALER_DIV1;
 	config->timer2.clock_prescaler = DUALTIMER_CLOCK_PRESCALER_DIV1;
 	
-	config->timer1.interrup_enable = false;
-	config->timer2.interrup_enable = false;
+	config->timer1.interrup_enable = true;
+	config->timer2.interrup_enable = true;
 	
 	config->timer1.load_value = 0;
 	config->timer2.load_value = 0;
@@ -262,5 +262,58 @@ void dualtimer_disable(enum dualtimer_timer timer)
 		DUALTIMER0->TIMER1CONTROL.reg &= ~DUALTIMER_TIMER1CONTROL_TIMER_ENABLE;
 	} else {
 		DUALTIMER0->TIMER2CONTROL.reg &= ~DUALTIMER_TIMER2CONTROL_TIMER_ENABLE;
+	}
+}
+
+dualtimer_callback_t dualtimer_callback_timer1;
+dualtimer_callback_t dualtimer_callback_timer2;
+/**
+ * \brief Registers a callback.
+ *
+ * Registers and enable a callback function which is implemented by the user.
+ *
+ * \param[in]     callback_func Pointer to callback function
+ */
+void dualtimer_register_callback(enum dualtimer_timer timer, dualtimer_callback_t fun)
+{
+	if (timer == DUALTIMER_TIMER1) {
+		dualtimer_callback_timer1 = fun;
+	} else {
+		dualtimer_callback_timer2 = fun;
+	}
+}
+
+/**
+ * \brief Unregisters a callback.
+ *
+ * Unregisters and disable a callback function implemented by the user.
+ *
+ */
+void dualtimer_unregister_callback(enum dualtimer_timer timer)
+{
+	if (timer == DUALTIMER_TIMER1) {
+		dualtimer_callback_timer1 = NULL;
+		} else {
+		dualtimer_callback_timer2 = NULL;
+	}
+}
+
+/**
+ * \brief Dualtimer ISR handler.
+ *
+ * Daultimer ISR handler.
+ *
+ */
+void dualtimer_isr_handler(void)
+{
+	if (dualtimer_get_interrupt_status(DUALTIMER_TIMER1)) {
+		dualtimer_clear_interrupt_status(DUALTIMER_TIMER1);
+		if (dualtimer_callback_timer1)
+			dualtimer_callback_timer1();
+	}
+	if (dualtimer_get_interrupt_status(DUALTIMER_TIMER2)) {
+		dualtimer_clear_interrupt_status(DUALTIMER_TIMER2);
+		if (dualtimer_callback_timer2)
+			dualtimer_callback_timer2();
 	}
 }

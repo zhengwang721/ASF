@@ -9,6 +9,8 @@
 		<require idref="sam0.drivers.dualtimer"/>
 		<require idref="sam0.drivers.uart"/>
 		<require idref="sam0.utils"/>
+		<require idref="sam0.utils.stdio"/>
+		<require idref="sam0.utils.stdio.stdio_serial"/>
 		<device-support value="samb11"/>
 	</module>
 </asf>
