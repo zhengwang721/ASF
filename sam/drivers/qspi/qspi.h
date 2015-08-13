@@ -44,8 +44,8 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef QQSPI_H_INCLUDED
-#define QQSPI_H_INCLUDED
+#ifndef QSPI_H_INCLUDED
+#define QSPI_H_INCLUDED
 
 #include "compiler.h"
 #include "string.h"
