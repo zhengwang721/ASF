@@ -425,7 +425,6 @@
 			<toolchain-config name="armgcc.linker.general.NoStartupOrDefaultLibs" value="False" toolchain="armgcc"/>
 			<toolchain-config name="armgcc.linker.general.DoNotUseDefaultLibraries" value="False" toolchain="armgcc"/>
 			<toolchain-config name="armgcc.linker.general.DoNotUseStandardStartFiles" value="False" toolchain="armgcc"/>
-			<toolchain-config name="armgcc.linker.general.UseNewlibNano" value="True" toolchain="armgcc"/>
 		</module>
 	</select-by-device>
 </asf>

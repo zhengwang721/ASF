@@ -46,65 +46,7 @@
 
 #include <system.h>
 
-/**
- * \internal
- * Dummy initialization function, used as a weak alias target for the various
- * init functions called by \ref system_init().
- */
-void _system_dummy_init(void);
-void _system_dummy_init(void)
-{
-	return;
-}
-
-#if !defined(__DOXYGEN__)
-#  if defined(__GNUC__)
-void system_clock_init(void) WEAK __attribute__((alias("_system_dummy_init")));
-void system_board_init(void) WEAK __attribute__((alias("_system_dummy_init")));
-void _system_events_init(void) WEAK __attribute__((alias("_system_dummy_init")));
-void _system_extint_init(void) WEAK __attribute__((alias("_system_dummy_init")));
-#  elif defined(__ICCARM__)
-void system_clock_init(void);
-void system_board_init(void);
-void _system_events_init(void);
-void _system_extint_init(void);
-#    pragma weak system_clock_init=_system_dummy_init
-#    pragma weak system_board_init=_system_dummy_init
-#    pragma weak _system_events_init=_system_dummy_init
-#    pragma weak _system_extint_init=_system_dummy_init
-#  endif
-#endif
-
-///**
- //* \brief Initialize system
- //*
- //* This function will call the various initialization functions within the
- //* system namespace. If a given optional system module is not available, the
- //* associated call will effectively be a NOP (No Operation).
- //*
- //* Currently the following initialization functions are supported:
- //*  - System clock initialization (via the SYSTEM CLOCK sub-module)
- //*  - Board hardware initialization (via the Board module)
- //*  - Event system driver initialization (via the EVSYS module)
- //*  - External Interrupt driver initialization (via the EXTINT module)
- //*/
-//void system_init(void)
-//{
-	///* Configure GCLK and clock sources according to conf_clocks.h */
-	//system_clock_init();
-//
-	///* Initialize board hardware */
-	//system_board_init();
-//
-	///* Initialize EVSYS hardware */
-	//_system_events_init();
-//
-	///* Initialize External hardware */
-	//_system_extint_init();
-	//
-	///* Initialize DIVAS hardware */
-	//_system_divas_init();
-//}
+uint32_t system_clock_value;
 
 /**
  * \brief System clock config
@@ -122,23 +64,28 @@ enum status_code system_clock_config(enum system_clock_resource resoure, \
 				enum system_clock_freq freq)
 {
 	switch (resoure) {
-		case CLOCK_RESOURCE_XO_26MHZ:
+		case CLOCK_RESOURCE_XO_26_MHZ:
 			LPMCU_MISC_REGS0->LPMCU_CONTROL.reg |= \
 					LPMCU_MISC_REGS_LPMCU_CONTROL_USE_BT26M_CLK | \
 					LPMCU_MISC_REGS_LPMCU_CONTROL_USE_ARM_LP_CLK;
+			system_clock_value = 26000000;
 			break;
 
-		case CLOCK_RESOURCE_LP_2MHZ:
+		case CLOCK_RESOURCE_LP_2_MHZ:
 			LPMCU_MISC_REGS0->LPMCU_CONTROL.reg |= \
 					LPMCU_MISC_REGS_LPMCU_CONTROL_USE_ARM_LP_CLK;
+			LPMCU_MISC_REGS0->LPMCU_CONTROL.reg &= \
+					~LPMCU_MISC_REGS_LPMCU_CONTROL_USE_BT26M_CLK;
 			AON_GP_REGS0->AON_PMU_CTRL.reg |= \
 					AON_GP_REGS_AON_PMU_CTRL_PMU_2MHZ_CLK_EN;
+			system_clock_value = 2000000;
 			break;
 
-		case CLOCK_RESOURCE_INTEGRATED_26MHZ:
+		case CLOCK_RESOURCE_RC_26_MHZ:
 			LPMCU_MISC_REGS0->LPMCU_CONTROL.reg &= \
 					~(LPMCU_MISC_REGS_LPMCU_CONTROL_USE_BT26M_CLK | \
 					LPMCU_MISC_REGS_LPMCU_CONTROL_USE_ARM_LP_CLK);
+			system_clock_value = 26000000;
 			break;
 
 		default:
@@ -151,6 +98,18 @@ enum status_code system_clock_config(enum system_clock_resource resoure, \
 		LPMCU_MISC_REGS_LPMCU_CONTROL_LPMCU_CLK_SEL(freq);
 
 	return STATUS_OK;
+}
+
+/**
+ * \brief Get the system clock value
+ *
+ * Use this function to get system clock value.
+ *
+ * \return system clock value.
+ */
+uint32_t system_clock_get_value(void)
+{
+	return system_clock_value;
 }
 
 /**
@@ -756,19 +715,19 @@ enum status_code system_clock_peripheral_freq_config( \
 			LPMCU_MISC_REGS0->LPMCU_CONTROL.reg &= \
 					~LPMCU_MISC_REGS_LPMCU_CONTROL_SPIFLASH_CLKSEL_Msk;
 			switch (freq) {
-				case CLOCK_FREQ_26:
+				case CLOCK_FREQ_26_MHZ:
 					LPMCU_MISC_REGS0->LPMCU_CONTROL.reg |= \
 						LPMCU_MISC_REGS_LPMCU_CONTROL_SPIFLASH_CLKSEL_3;
 					break;
-				case CLOCK_FREQ_13:
+				case CLOCK_FREQ_13_MHZ:
 					LPMCU_MISC_REGS0->LPMCU_CONTROL.reg |= \
 						LPMCU_MISC_REGS_LPMCU_CONTROL_SPIFLASH_CLKSEL_2;
 					break;
-				case CLOCK_FREQ_6_5:
+				case CLOCK_FREQ_6_5_MHZ:
 					LPMCU_MISC_REGS0->LPMCU_CONTROL.reg |= \
 						LPMCU_MISC_REGS_LPMCU_CONTROL_SPIFLASH_CLKSEL_1;
 				break;
-				case CLOCK_FREQ_3_25:
+				case CLOCK_FREQ_3_25_MHZ:
 					LPMCU_MISC_REGS0->LPMCU_CONTROL.reg |= \
 						LPMCU_MISC_REGS_LPMCU_CONTROL_SPIFLASH_CLKSEL_0;
 				break;
@@ -1175,6 +1134,38 @@ enum status_code system_peripheral_reset(enum system_peripheral peripheral)
 }
 
 /**
+ * \brief Register the ISR
+ *
+ * Use this function to register a ISR to the RAM table.
+ *
+ * \param[in] isr_index Index of the ISR
+ * \param[in] isr_address Address of the ISR
+ *
+ */
+void system_register_isr(enum ram_isr_table_index isr_index,
+		uint32_t isr_address)
+{
+	uint32_t *temp;
+	temp = (uint32_t *)(isr_index * 4 + ISR_RAM_MAP_START_ADDRESS);
+	*temp = isr_address;
+}
+
+/**
+ * \brief Unregister the ISR
+ *
+ * Use this function to unregister a ISR to the RAM table.
+ *
+ * \param[in] isr_index Index of the ISR
+ *
+ */
+void system_unregister_isr(enum ram_isr_table_index isr_index)
+{
+	uint32_t *temp;
+	temp = (uint32_t *)(isr_index * 4 + ISR_RAM_MAP_START_ADDRESS);
+	*temp = 0;
+}
+
+/**
  * \brief Initializes an system calibration configuration structure to default values
  *
  * This function will initialize a given system calibration configuration
@@ -1425,13 +1416,13 @@ enum status_code system_clock_aon_config( \
 	switch (peripheral_aon) {
 		case PERIPHERAL_AON_SLEEP_TIMER:
 			switch (aon_resource) {
-				case CLOCK_AON_RESOURCE_31_25KHZ:
+				case CLOCK_AON_RESOURCE_31_25_KHZ:
 					AON_GP_REGS0->AON_MISC_CTRL.reg |= \
 						AON_GP_REGS_AON_MISC_CTRL_USE_RTC_32KHZ_CLK_SLEEP_TIMER;
 					AON_GP_REGS0->AON_MISC_CTRL.reg &= \
 						~AON_GP_REGS_AON_MISC_CTRL_USE_EXT_32KHZ_CLK_SLEEP_TIMER;
 				break;
-				case CLOCK_AON_RESOURCE_32_768KHZ:
+				case CLOCK_AON_RESOURCE_32_768_KHZ:
 					AON_GP_REGS0->AON_MISC_CTRL.reg &= \
 						~AON_GP_REGS_AON_MISC_CTRL_USE_RTC_32KHZ_CLK_SLEEP_TIMER;
 					AON_GP_REGS0->AON_MISC_CTRL.reg |= \
@@ -1447,7 +1438,7 @@ enum status_code system_clock_aon_config( \
 		break;
 
 		case PERIPHERAL_AON_POWER_SEQUENCER:
-			if (aon_resource == CLOCK_AON_RESOURCE_2MHZ) {
+			if (aon_resource == CLOCK_AON_RESOURCE_2_MHZ) {
 				AON_GP_REGS0->AON_MISC_CTRL.reg |= \
 					AON_GP_REGS_AON_MISC_CTRL_USE_RTC_AON_PWR_SEQ_CLK;
 				AON_GP_REGS0->AON_MISC_CTRL.reg |= \
@@ -1461,7 +1452,7 @@ enum status_code system_clock_aon_config( \
 		break;
 
 		case PERIPHERAL_AON_PD:
-			if (aon_resource == CLOCK_AON_RESOURCE_2MHZ) {
+			if (aon_resource == CLOCK_AON_RESOURCE_2_MHZ) {
 				AON_GP_REGS0->AON_MISC_CTRL.reg |= \
 					AON_GP_REGS_AON_MISC_CTRL_USE_OSC2M_AS_TB_CLK;
 			} else if (aon_resource == CLOCK_AON_DEFAULT) {
