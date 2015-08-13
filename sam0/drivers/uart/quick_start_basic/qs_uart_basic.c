@@ -62,7 +62,7 @@ void configure_uart(void)
 //! [setup_config_defaults]
 
 //! [setup_change_config]
-	config_uart.baud_rate = 9600;
+	config_uart.baud_rate = 38400;
 	config_uart.pinmux_pad[0] = EDBG_CDC_SERCOM_PINMUX_PAD0;
 	config_uart.pinmux_pad[1] = EDBG_CDC_SERCOM_PINMUX_PAD1;
 	config_uart.pinmux_pad[2] = EDBG_CDC_SERCOM_PINMUX_PAD2;
@@ -79,7 +79,7 @@ void configure_uart(void)
 
 int main(void)
 {
-//	system_init();
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 
 //! [setup_init]
 	configure_uart();
