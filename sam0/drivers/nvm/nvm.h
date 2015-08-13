@@ -60,8 +60,8 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM L21/L22
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -92,7 +92,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_NVM_RWWEE</td>
- *    <td>SAM L21, SAM D21-64K, SAM DAx, SAM C20/C21</td>
+ *    <td>SAM L21/L22, SAM D21-64K, SAM DA1, SAM C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_BOD12</td>
@@ -288,10 +288,10 @@ extern "C" {
  * Define NVM features set according to different device family.
  * @{
 */
-#if (SAML21) || (SAMDA1) || (SAMC20) || (SAMC21) || defined(SAMD21_64K) || defined(__DOXYGEN__)
+#if (SAML21) || (SAML22) || (SAMDA1) || (SAMC20) || (SAMC21) || defined(SAMD21_64K) || defined(__DOXYGEN__)
+/** Read while write EEPROM emulation feature. */
 #  define FEATURE_NVM_RWWEE
 #endif
-/** Read while write EEPROM emulation feature. */ 	
 #if (SAML21) || defined(__DOXYGEN__)
 #define FEATURE_BOD12
 #endif
@@ -912,7 +912,7 @@ static inline enum nvm_error nvm_get_error(void)
  *	<tr>
  *		<td>42114E</td>
  *		<td>08/2015</td>
- *		<td>Added support for SAM L21, SAM C21 and SAM DAx</td>
+ *		<td>Added support for SAM L21/L22, SAM C21 and SAM DA1</td>
  *	</tr> 
  *	<tr>
  *		<td>42114D</td>
