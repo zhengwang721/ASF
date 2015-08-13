@@ -208,11 +208,11 @@ int main(void)
 	ili9488_draw_string(10, 20, (uint8_t *)"ili9488_lcd example");
 	wait(1000);
 	
-	ili9488_set_foreground_color(COLOR_RED);
+	ili9488_set_foreground_color(COLOR_CONVERT(COLOR_RED));
 	ili9488_draw_circle(60, 160, 40);
-	ili9488_set_foreground_color(COLOR_GREEN);
+	ili9488_set_foreground_color(COLOR_CONVERT(COLOR_GREEN));
 	ili9488_draw_circle(120, 160, 40);
-	ili9488_set_foreground_color(COLOR_BLUE);
+	ili9488_set_foreground_color(COLOR_CONVERT(COLOR_BLUE));
 	ili9488_draw_circle(180, 160, 40);
 	
 	ili9488_set_foreground_color(COLOR_CONVERT(COLOR_VIOLET));

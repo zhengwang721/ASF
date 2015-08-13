@@ -323,8 +323,8 @@ void ili9488_display_off(void);
 void ili9488_set_foreground_color(ili9488_color_t ul_color);
 void ili9488_fill(ili9488_color_t ul_color);
 void ili9488_set_cursor_position(uint16_t us_x, uint16_t us_y);
-void ili9488_scroll(uint32_t ul_tfa, uint32_t ul_lines, uint32_t ul_bfa);
-void ili9488_set_scroll_address(uint32_t ul_vsp);
+void ili9488_scroll(uint16_t ul_tfa, uint16_t ul_lines, uint16_t ul_bfa);
+void ili9488_set_scroll_address(uint16_t ul_vsp);
 uint32_t ili9488_draw_pixel(uint32_t ul_x, uint32_t ul_y);
 ili9488_color_t ili9488_get_pixel(uint32_t ul_x, uint32_t ul_y);
 void ili9488_draw_line(uint32_t ul_x1, uint32_t ul_y1,

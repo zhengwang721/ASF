@@ -513,37 +513,37 @@ void ili9488_set_display_direction(enum ili9488_display_direction direction )
 /**
  * \brief ILI9488 configure window.
 
- * \Param dwX X start position.
- * \Param dwX Y start position.
- * \Param dwWidth  Width of window.
- * \Param dwHeight Height of window.
+ * \Param x start position.
+ * \Param y start position.
+ * \Param width  Width of window.
+ * \Param height Height of window.
  */
-void ili9488_set_window(uint16_t dwX, uint16_t dwY, uint16_t dwWidth, uint16_t dwHeight )
+void ili9488_set_window(uint16_t x, uint16_t y, uint16_t width, uint16_t height )
 {
-	uint16_t ColStart, ColEnd, RowStart, RowEnd;
+	uint16_t col_start, col_end, row_start, row_end;
 	uint32_t cnt = 0;
 	uint16_t buf[4];
 
 	cnt = sizeof(buf)/sizeof(uint16_t);
 
-	ColStart  =  dwX ;
-	ColEnd    =  dwWidth + dwX;
+	col_start  =  x ;
+	col_end    =  width + x;
 
-	RowStart = dwY ;
-	RowEnd   = dwHeight + dwY;
+	row_start = y ;
+	row_end   = height + y;
 
-	buf[0] = get_8b_to_16b(ColStart);
-	buf[1] = get_0b_to_8b(ColStart);
-	buf[2] = get_8b_to_16b(ColEnd);
-	buf[3] = get_0b_to_8b(ColEnd);
+	buf[0] = get_8b_to_16b(col_start);
+	buf[1] = get_0b_to_8b(col_start);
+	buf[2] = get_8b_to_16b(col_end);
+	buf[3] = get_0b_to_8b(col_end);
 	ili9488_write_register(ILI9488_CMD_COLUMN_ADDRESS_SET, (uint16_t*)buf, cnt);
 	ili9488_write_register(ILI9488_CMD_NOP, 0, 0);
 
 	/* Set Horizontal Address End Position */
-	buf[0] = get_8b_to_16b(RowStart);
-	buf[1] = get_0b_to_8b(RowStart);
-	buf[2] = get_8b_to_16b(RowEnd);
-	buf[3] = get_0b_to_8b(RowEnd);
+	buf[0] = get_8b_to_16b(row_start);
+	buf[1] = get_0b_to_8b(row_start);
+	buf[2] = get_8b_to_16b(row_end);
+	buf[3] = get_0b_to_8b(row_end);
 	ili9488_write_register(ILI9488_CMD_PAGE_ADDRESS_SET, (uint16_t*)buf, cnt);
 	ili9488_write_register(ILI9488_CMD_NOP, 0, 0);
 }
@@ -553,7 +553,7 @@ void ili9488_set_window(uint16_t dwX, uint16_t dwY, uint16_t dwWidth, uint16_t d
  *
  * \note Make sure below works have been done before calling ili9488_init()\n
  * 1. ILI9488 related Pins have been initialized correctly. \n
- * 2. SMC has been configured correctly for access ILI9488 (8-bit system interface for now). \n
+ * 2. SMC has been configured correctly for access ILI9488 (16-bit system interface for now). \n
  *
  * \param p_opt pointer to ILI9488 option structure.
  *
@@ -691,22 +691,24 @@ void ili9488_set_cursor_position(uint16_t x, uint16_t y)
  *
  * \param ul_tfa  Top Fixed Area in number of lines from the top of the frame memory.
  * \param ul_lines number of lines to scroll.
+ * \param ul_bfa  bottom Fixed Area in number of lines from the bottom of the frame memory.
  */
-void ili9488_scroll(uint32_t ul_tfa, uint32_t ul_lines, uint32_t ul_bfa)
+void ili9488_scroll(uint16_t ul_tfa, uint16_t ul_vsa, uint16_t ul_bfa)
 {
 	uint32_t cnt = 0;
-
 	uint16_t buf[6];
+
 	cnt = sizeof(buf)/sizeof(uint16_t);
 
 	buf[0] = get_8b_to_16b(ul_tfa);
 	buf[1] = get_0b_to_8b(ul_tfa);
 
-	buf[2] = get_8b_to_16b(ul_lines);
-	buf[3] = get_0b_to_8b(ul_lines);
+	buf[2] = get_8b_to_16b(ul_vsa);
+	buf[3] = get_0b_to_8b(ul_vsa);
 
 	buf[4] = get_8b_to_16b(ul_bfa);
 	buf[5] = get_0b_to_8b(ul_bfa);
+	
 	ili9488_write_register(ILI9488_CMD_VERT_SCROLL_DEFINITION, buf, cnt);
 }
 
@@ -715,7 +717,7 @@ void ili9488_scroll(uint32_t ul_tfa, uint32_t ul_lines, uint32_t ul_bfa)
  *
  * \param ul_vsp Vertical Scrolling Start Address
  */
-void ili9488_set_scroll_address(uint32_t ul_vsp)
+void ili9488_set_scroll_address(uint16_t ul_vsp)
 {
 	uint32_t cnt = 0;
 
@@ -724,7 +726,7 @@ void ili9488_set_scroll_address(uint32_t ul_vsp)
 
 	buf[0] = get_8b_to_16b(ul_vsp);
 	buf[1] = get_0b_to_8b(ul_vsp);
-	ili9488_write_register(ILI9488_CMD_VERT_SCROLL_DEFINITION, buf, cnt);
+	ili9488_write_register(ILI9488_CMD_VERT_SCROLL_START_ADDRESS, buf, cnt);
 }
 
 /**
