@@ -94,6 +94,6 @@ void ble_disconnected_app_event(at_ble_handle_t conn_handle);
 
 at_ble_status_t sps_char_changed_cb(at_ble_characteristic_changed_t *char_handle);
 
-void sps_notification_confirmed_cb(at_ble_status_t notification_status);
+void sps_notification_confirmed_cb(uint8_t notification_status);
 
 #endif /* __SCAN_PARAMETER_APP_H__ */

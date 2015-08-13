@@ -89,5 +89,6 @@ void sps_init_service(sps_gatt_service_handler_t *sps_serv, uint16_t *scan_inter
  */
 at_ble_status_t sps_primary_service_define(sps_gatt_service_handler_t *sps_service);
 
+at_ble_status_t	sps_char_changed_event(sps_gatt_service_handler_t *sps_service_handler, at_ble_characteristic_changed_t *char_handle);
 
 #endif /* __SCAN_PARAM_H__ */

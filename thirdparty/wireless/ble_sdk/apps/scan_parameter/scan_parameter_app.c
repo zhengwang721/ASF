@@ -233,7 +233,7 @@ at_ble_status_t sps_char_changed_cb(at_ble_characteristic_changed_t *char_handle
 	sps_char_changed_event(&sps_service_handler, char_handle);
 }
 
-void sps_notification_confirmed_cb(at_ble_status_t notification_status)
+void sps_notification_confirmed_cb(uint8_t notification_status)
 {
 	if(!notification_status)
 	{

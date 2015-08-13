@@ -58,6 +58,7 @@
 /** characteristics of the device information service */
 device_info_char_value_t char_value;
 
+bool volatile dis_notification_flag = false;
 
 /**@brief Initialize the dis service related information. */
 void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
@@ -312,10 +313,10 @@ at_ble_status_t dis_info_update(dis_gatt_service_handler_t *dis_serv , dis_info_
 	memcpy(&(dis_serv->serv_chars[info_type].init_value), info_data->info_data,info_data->data_len);
 	
 	//updating the characteristic value
-	if ((at_ble_characteristic_value_set(dis_serv->serv_chars[info_type].char_val_handle, info_data->info_data,0 ,info_data->data_len)) != AT_BLE_SUCCESS){
+	if ((at_ble_characteristic_value_set(dis_serv->serv_chars[info_type].char_val_handle, info_data->info_data, info_data->data_len)) != AT_BLE_SUCCESS){
 		DBG_LOG("updating the characteristic failed\r\n");
 	} else {
-		if (dis_serv->serv_chars[info_type].properties == AT_BLE_CHAR_NOTIFY)
+		if (dis_serv->serv_chars[info_type].properties == AT_BLE_CHAR_NOTIFY && dis_notification_flag)
 		{
 			if((at_ble_notification_send(conn_handle, dis_serv->serv_chars[info_type].char_val_handle)) == AT_BLE_FAILURE) {
 				DBG_LOG("sending notification to the peer failed");
@@ -331,4 +332,19 @@ at_ble_status_t dis_info_update(dis_gatt_service_handler_t *dis_serv , dis_info_
 		}
 	}
 	return AT_BLE_FAILURE;
+}
+
+at_ble_status_t dis_char_changed_event(dis_gatt_service_handler_t *dis_serv, at_ble_characteristic_changed_t *char_handle)
+{
+	at_ble_characteristic_changed_t change_params;
+	memcpy((uint8_t *)&change_params, char_handle, sizeof(at_ble_characteristic_changed_t));
+	
+	if(dis_serv->serv_chars.client_config_handle == change_params.char_handle)
+	{
+		if(change_params.char_new_value[0])
+		{
+			dis_notification_flag = true;
+		}
+	}
+	return AT_BLE_SUCCESS;
 }

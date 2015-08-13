@@ -216,7 +216,7 @@ void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 	battery_service_advertise();
 }
 
-void ble_notification_confirmed_app_event(at_ble_status_t notification_status)
+void ble_notification_confirmed_app_event(uint8_t notification_status)
 {
 	if(!notification_status)
 	{
