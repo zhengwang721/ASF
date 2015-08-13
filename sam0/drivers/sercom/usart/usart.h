@@ -67,7 +67,7 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
@@ -99,35 +99,35 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_SYNC_SCHEME_V2</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_OVER_SAMPLE</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_HARDWARE_FLOW_CONTROL</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IRDA</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_LIN_SLAVE</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_COLLISION_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_START_FRAME_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION</td>
- *    <td>SAM D21/R21/D10/D11/L21/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_RS485</td>
@@ -135,7 +135,7 @@
  *  </tr>
  * <tr>
  *    <td>FEATURE_USART_LIN_MASTER</td>
- *    <td>SAM C20/C21</td>
+ *    <td>SAM L22/C20/C21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -280,8 +280,8 @@ extern "C" {
  * @{
  */
 #if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || \
-	(SAMDA1) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
-/** USART sync scheme version 2. */
+	(SAML22) ||(SAMDA1) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
+/** Usart sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2
 /** USART oversampling. */
 #  define FEATURE_USART_OVER_SAMPLE
@@ -299,9 +299,15 @@ extern "C" {
 #  define FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
 #endif
 
+#if (SAML22) || defined(__DOXYGEN__)
+/** ISO7816 for smart card interfacing. */
+#define FEATURE_USART_ISO7816
+#endif
 #if (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** LIN master mode. */
 #define FEATURE_USART_LIN_MASTER
+#endif
+#if (SAML22) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** RS485 mode. */
 #  define FEATURE_USART_RS485
 #endif
@@ -309,7 +315,7 @@ extern "C" {
 
 #ifdef FEATURE_USART_LIN_MASTER
 /**
- * \brief LIN Node Type.
+ * \brief LIN node type
  *
  * LIN node type.
  */
@@ -323,7 +329,7 @@ enum lin_node_type {
 };
 
 /**
- * \brief LIN Master Command Enum.
+ * \brief LIN master command enum
  *
  * LIN master command enum.
  */
@@ -335,7 +341,7 @@ enum lin_master_cmd {
 };
 
 /**
- * \brief LIN Master Header Delay.
+ * \brief LIN master header delay
  *
  * LIN master header delay between break and sync transmission,
  * and between the sync and identifier (ID) fields.
@@ -357,7 +363,7 @@ enum lin_master_header_delay {
 };
 
 /**
- * \brief LIN Master Break Length.
+ * \brief LIN master break length
  *
  * Length of the break field transmitted when in LIN master mode
  */
@@ -370,6 +376,96 @@ enum lin_master_break_length {
 	LIN_MASTER_BREAK_LENGTH_21_BIT = SERCOM_USART_CTRLC_BRKLEN(0x2),
 	/** Break field transmission is 26 bit times */
 	LIN_MASTER_BREAK_LENGTH_26_BIT = SERCOM_USART_CTRLC_BRKLEN(0x3),
+};
+#endif
+#ifdef FEATURE_USART_ISO7816
+/**
+ * \brief ISO7816 protocol type
+ *
+ * ISO7816 protocol type.
+ */
+enum iso7816_protocol_type {
+	/** ISO7816 protocol type 0 */
+	ISO7816_PROTOCOL_T_0 = SERCOM_USART_CTRLA_CMODE,
+	/** ISO7816 protocol type 1 */
+	ISO7816_PROTOCOL_T_1 = (0x0ul << SERCOM_USART_CTRLA_CMODE_Pos),
+};
+
+/**
+ * \brief ISO7816 guard time
+ *
+ * The value of ISO7816 guard time.
+ */
+enum iso7816_guard_time {
+	/** The guard time is 2-bit times */
+	ISO7816_GUARD_TIME_2_BIT = 2,
+	/** The guard time is 3-bit times */
+	ISO7816_GUARD_TIME_3_BIT,
+	/** The guard time is 4-bit times */
+	ISO7816_GUARD_TIME_4_BIT,
+	/** The guard time is 5-bit times */
+	ISO7816_GUARD_TIME_5_BIT,
+	/** The guard time is 6-bit times */
+	ISO7816_GUARD_TIME_6_BIT,
+	/** The guard time is 7-bit times */
+	ISO7816_GUARD_TIME_7_BIT,
+};
+
+/**
+ * \brief ISO7816 receive NACK inhibit
+ *
+ * The value of ISO7816 receive NACK inhibit.
+ */
+enum iso7816_inhibit_nack {
+	/** The NACK is generated */
+	ISO7816_INHIBIT_NACK_DISABLE = (0x0ul << SERCOM_USART_CTRLC_INACK_Pos),
+	/** The NACK is not generated */
+	ISO7816_INHIBIT_NACK_ENABLE = SERCOM_USART_CTRLC_INACK,
+};
+
+/**
+ * \brief ISO7816 disable successive receive NACK
+ *
+ * The value of ISO7816 disable successive receive NACK.
+ */
+enum iso7816_successive_recv_nack {
+	/** The successive receive NACK is enable. */
+	ISO7816_SUCCESSIVE_RECV_NACK_DISABLE = (0x0ul << SERCOM_USART_CTRLC_INACK_Pos),
+	/** The successive receive NACK is disable. */
+	ISO7816_SUCCESSIVE_RECV_NACK_ENABLE = SERCOM_USART_CTRLC_DSNACK,
+};
+
+/**
+ * \brief ISO7816 configuration struct
+ *
+ * ISO7816 configuration structure.
+ */
+struct iso7816_config_t {
+	/* ISO7816 mode enable */
+	bool enabled;
+	/** ISO7816 protocol type */
+	enum iso7816_protocol_type protocol_t;
+	/** Enable inverse transmission and reception */
+	bool enable_inverse;
+	/** Guard time, which lasts two bit times */
+	enum iso7816_guard_time guard_time;
+	/**
+	 * Inhibit Non Acknowledge:
+	 *   - 0: the NACK is generated;
+	 *   - 1: the NACK is not generated.
+	 */
+	enum iso7816_inhibit_nack inhibit_nack;
+	/**
+	 * Disable successive NACKs.
+	 *  - 0: NACK is sent on the ISO line as soon as a parity error occurs
+	 * in the received character. Successive parity errors are counted up to
+	 * the value in the max_iterations field. These parity errors generate
+	 * a NACK on the ISO line. As soon as this value is reached, no additional
+	 * NACK is sent on the ISO line. The ITERATION flag is asserted.
+	 */
+	enum iso7816_successive_recv_nack successive_recv_nack;
+	/* Max number of repetitions */
+	uint32_t max_iterations;
 };
 #endif
 
@@ -390,7 +486,7 @@ enum lin_master_break_length {
 
 #if USART_CALLBACK_MODE == true
 /**
- * \brief USART Callback enum
+ * \brief USART callback enum
  *
  * Callbacks for the Asynchronous USART driver.
  */
@@ -444,7 +540,7 @@ enum usart_transfer_mode {
 	/** Transfer of data is done synchronously */
 	USART_TRANSFER_SYNCHRONOUSLY = (SERCOM_USART_CTRLA_CMODE),
 	/** Transfer of data is done asynchronously */
-	USART_TRANSFER_ASYNCHRONOUSLY = 0
+	USART_TRANSFER_ASYNCHRONOUSLY = (0x0ul << SERCOM_USART_CTRLA_CMODE_Pos),
 };
 
 /**
@@ -686,6 +782,10 @@ struct usart_config {
 	/** Enable start of frame dection */
 	bool start_frame_detection_enable;
 #endif
+#ifdef FEATURE_USART_ISO7816
+	/** Enable ISO7816 for smart card interfacing */
+	struct iso7816_config_t iso7816_config;
+#endif
 #ifdef FEATURE_USART_RS485
 	/** RS485 guard time */
 	enum rs485_guard_time rs485_guard_time;
@@ -799,6 +899,10 @@ struct usart_module {
 #ifdef FEATURE_USART_START_FRAME_DECTION
 	/** Start of frame dection enabled */
 	bool start_frame_detection_enabled;
+#endif
+#ifdef FEATURE_USART_ISO7816
+	/** ISO7816 mode enable */
+	bool iso7816_mode_enabled;
 #endif
 #  if USART_CALLBACK_MODE == true
 	/** Array to store callback function pointers in */
@@ -987,17 +1091,26 @@ static inline void usart_get_config_defaults(
 #endif
 
 #ifdef FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
-	config->immediate_buffer_overflow_notification      = false;
+	config->immediate_buffer_overflow_notification  = false;
 #endif
 #ifdef FEATURE_USART_START_FRAME_DECTION
-	config->start_frame_detection_enable                = false;
+	config->start_frame_detection_enable            = false;
 #endif
 #ifdef FEATURE_USART_IRDA
-	config->encoding_format_enable                      = false;
-	config->receive_pulse_length                        = 19;
+	config->encoding_format_enable                  = false;
+	config->receive_pulse_length                    = 19;
+#endif
+#ifdef FEATURE_USART_ISO7816
+	config->iso7816_config.enabled                  = false;
+	config->iso7816_config.guard_time               = ISO7816_GUARD_TIME_2_BIT;
+	config->iso7816_config.protocol_t               = ISO7816_PROTOCOL_T_0;
+	config->iso7816_config.enable_inverse           = false;
+	config->iso7816_config.inhibit_nack             = ISO7816_INHIBIT_NACK_DISABLE;
+	config->iso7816_config.successive_recv_nack     = ISO7816_SUCCESSIVE_RECV_NACK_DISABLE;
+	config->iso7816_config.max_iterations           = 7;
 #endif
 #ifdef FEATURE_USART_COLLISION_DECTION
-	config->collision_detection_enable                  = false;
+	config->collision_detection_enable              = false;
 #endif
 #ifdef FEATURE_USART_RS485
 	config->rs485_guard_time = RS485_GUARD_TIME_0_BIT;
@@ -1208,8 +1321,8 @@ static inline void usart_disable_transceiver(
  *
  * Sending LIN command.
  *
- * \param[in]  module Pointer to USART software instance struct.
- * \param[in]  cmd  Cammand type.
+ * \param[in]  module Pointer to USART software instance struct
+ * \param[in]  cmd  Cammand type
  */
 static inline void lin_master_send_cmd(
 		struct usart_module *const module,
@@ -1221,11 +1334,11 @@ static inline void lin_master_send_cmd(
 }
 
 /**
- * \brief Get LIN transmission status.
+ * \brief Get LIN transmission status
  *
  * Get LIN transmission status.
  *
- * \param[in]  module Pointer to USART software instance struct.
+ * \param[in]  module Pointer to USART software instance struct
  *
  * \return Status of LIN master transmission.
  * \retval true   Data transmission completed
@@ -1303,13 +1416,17 @@ static inline bool lin_master_transmission_status(struct usart_module *const mod
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
-  *	<tr>
+ *	<tr>
  *		<td>Added new feature as below:
+ *          \li ISO7816
+ *	</tr>
+ *	<tr>
+ *		<td>Added new features as below:
  *          \li LIN master
  *          \li RS485
  *	</tr>
  *	<tr>
- *		<td>Added new feature as below:
+ *		<td>Added new features as below:
  *          \li Oversample
  *          \li Buffer overflow notification
  *          \li Irda
@@ -1442,17 +1559,17 @@ static inline bool lin_master_transmission_status(struct usart_module *const mod
  *	<tr>
  *		<td>42118F</td>
  *		<td>08/2015</td>
- *		<td>Add support for SAM L21, SAM DA1, and SAM C20/C21</td>
+ *		<td>Added support for SAM L21/L22, SAM DA1, and SAM C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>42118E</td>
  *		<td>12/2014</td>
- *		<td>Add support for SAM R21 and SAM D10/D11</td>
+ *		<td>Added support for SAM R21 and SAM D10/D11</td>
  *	</tr>
  *	<tr>
  *		<td>42118D</td>
  *		<td>01/2014</td>
- *		<td>Add support for SAM D21</td>
+ *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
  *		<td>42118C</td>

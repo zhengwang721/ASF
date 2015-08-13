@@ -53,6 +53,7 @@
  *    - SAM D11 Xplained Pro
  *    - SAM DA1 Xplained Pro
  *    - SAM L21 Xplained Pro
+ *    - SAM L22 Xplained Pro
  *    - SAM C21 Xplained Pro
  *
  * This quick start will receive eight bytes of data from the PC terminal and transmit back the string
