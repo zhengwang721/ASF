@@ -15,6 +15,7 @@
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 		</module>
 		<module type="driver" id="sam0.drivers.aes#callback" caption="AES - Advanced Encryption Standard Module">
 			<info type="keyword" value="technology">
@@ -29,6 +30,7 @@
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 		</module>
 	</select-by-config>
 	<module type="meta" id="sam0.drivers.aes.appnote" caption="AES - Advanced Encryption Standard Module">
@@ -43,7 +45,7 @@
 			</info>
 			<info type="description" value="pdf">
 				This application note describes how to use the ASF driver for
-				interfacing to the AES module on SAM L21.
+				interfacing to the AES module on SAM L21/L22.
 			</info>
 
 			<build type="c-source" value="aes.c"/>
@@ -63,6 +65,7 @@
 			<build type="header-file" value="quick_start_dma/quick_start_dma.h" />
 
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
 			<generator value="doxygen-module-v2" default-mcu="unspecified-saml21"/>

@@ -64,6 +64,7 @@
 			<build type="include-path" value="ac_sam_l_c"/>
 			<build type="c-source" value="ac_sam_l_c/ac.c"/>
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 			<device-support value="samc20"/>
 			<device-support value="samc21"/>
 		</module>

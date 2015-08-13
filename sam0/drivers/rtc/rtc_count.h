@@ -68,7 +68,7 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
@@ -114,23 +114,27 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PERIODIC_INT</td>
- *    <td>SAM L21/C20/C21</td>
+ *    <td>SAM L21/L22</C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PRESCALER_OFF</td>
- *    <td>SAM L21/C20/C21</td>
+ *    <td>SAM L21/L22</C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CLOCK_SELECTION</td>
- *    <td>SAM L21/C20/C21</td>
+ *    <td>SAM L21/L22</C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_GENERAL_PURPOSE_REG</td>
- *    <td>SAM L21</td>
+ *    <td>SAM L21/L22</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
- *    <td>SAM D20, SAM D21, SAM R21, SAM D10, SAM D11, SAM DAx</td>
+ *    <td>SAM D20, SAM D21, SAM R21, SAM D10, SAM D11, SAM DA1</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_RTC_TAMPER_DETECTION</td>
+ *    <td>SAM L22</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -226,10 +230,13 @@
  * and slower when given a negative correction value.
  *
  *
+ * \subsection asfdoc_sam0_rtc_count_module_overview_tamper_detect RTC Tamper Detect
  * \section asfdoc_sam0_rtc_count_special_considerations Special Considerations
+ * see \ref asfdoc_sam0_rtc_tamper_detect
+ *
  *
  * \subsection asfdoc_sam0_rtc_count_special_considerations_clock Clock Setup
- * \subsubsection asfdoc_sam0_rtc_count_clock_samd_r SAM D20/D21/R21/D10/D11/DA0/DA1 Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_count_clock_samd_r SAM D20/D21/R21/D10/D11/DA1 Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32KHz RC-oscillator with a prescaler of 32, giving a
@@ -364,8 +371,8 @@ extern "C" {
  * Define port features set according to different device family.
  * @{
 */
-#if (SAML21) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
-/** RTC periodic interval interrupt */
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
+/** RTC periodic interval interrupt. */
 #  define FEATURE_RTC_PERIODIC_INT
 /** RTC prescaler is off */
 #  define FEATURE_RTC_PRESCALER_OFF
@@ -379,6 +386,12 @@ extern "C" {
 /** RTC continuously updated */
 #  define FEATURE_RTC_CONTINUOUSLY_UPDATED
 #endif
+
+#if (SAML22) || defined(__DOXYGEN__)
+/** RTC tamper detection. */
+#  define FEATURE_RTC_TAMPER_DETECTION
+#endif
+
 /*@}*/
 
 #ifdef FEATURE_RTC_CLOCK_SELECTION
@@ -520,7 +533,12 @@ enum rtc_count_callback {
 	RTC_COUNT_CALLBACK_COMPARE_5,
 #  endif
 
-	/** Callback for  overflow */
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Callback for tamper */
+	RTC_COUNT_CALLBACK_TAMPER,
+#endif
+
+	/** Callback for overflow */
 	RTC_COUNT_CALLBACK_OVERFLOW,
 #  if !defined(__DOXYGEN__)
 	/** Total number of callbacks */
@@ -556,6 +574,12 @@ enum rtc_count_callback {
 	/** Callback for compare channel 5 */
 	RTC_COUNT_CALLBACK_COMPARE_5,
 #  endif
+
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Callback for tamper */
+	RTC_COUNT_CALLBACK_TAMPER,
+#endif
+
 	/** Callback for overflow */
 	RTC_COUNT_CALLBACK_OVERFLOW,
 #  if !defined(__DOXYGEN__)
@@ -650,6 +674,12 @@ struct rtc_count_events {
 	/** Generate an output event periodically at a binary division of the RTC
 	 *  counter frequency */
 	bool generate_event_on_periodic[8];
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Generate an output event on every tamper input */
+	bool generate_event_on_tamper;
+	/** Tamper input event and capture the COUNT value */
+	bool on_event_to_tamper;
+#endif
 };
 
 #if !defined(__DOXYGEN__)
@@ -689,14 +719,14 @@ struct rtc_count_config {
 	/** Select the operation mode of the RTC */
 	enum rtc_count_mode mode;
 	/** If true, clears the counter value on compare match. Only available
-	 *  whilst running in 32-bit mode. */
+	 *  whilst running in 32-bit mode */
 	bool clear_on_match;
 #ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
 	/** Continuously update the counter value so no synchronization is
 	 *  needed for reading */
 	bool continuously_update;
 #endif
-#if (SAML21) || (SAMC20) || (SAMC21)
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21)
 	/** Enable count read synchronization. The COUNT value requires
 	 * synchronization when reading. Disabling the synchronization 
 	 * will prevent the COUNT value from displaying the current value. */
@@ -704,7 +734,7 @@ struct rtc_count_config {
 #endif
 
 	/** Array of Compare values. Not all Compare values are available in 32-bit
-	 *  mode. */
+	 *  mode */
 	uint32_t compare_values[RTC_NUM_OF_COMP16];
 };
 
@@ -727,7 +757,7 @@ struct rtc_count_config {
  *  - Continuously sync count register off
  *  - No event source on
  *  - All compare values equal 0
- *  - Count read synchronization is disabled for SAML21
+ *  - Count read synchronization is enabled for SAM L22
  *
  *  \param[out] config  Configuration structure to be initialized to default
  *                      values.
@@ -746,8 +776,8 @@ static inline void rtc_count_get_config_defaults(
 #ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
 	config->continuously_update = false;
 #endif
-#if (SAML21)
-	config->enable_read_sync = false;
+#if (SAML22)
+	config->enable_read_sync    = true;
 #endif
 
 	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
@@ -984,7 +1014,19 @@ static inline void rtc_count_enable_events(
 		}
 	}
 
-	/* Enable given event(s) */
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/* Check if the user has requested a tamper event output. */
+	if (events->generate_event_on_tamper) {
+		event_mask |= RTC_MODE0_EVCTRL_TAMPEREO;
+	}
+
+	/* Check if the user has requested a tamper event input. */
+	if (events->on_event_to_tamper) {
+		event_mask |= RTC_MODE0_EVCTRL_TAMPEVEI;
+	}
+#endif
+
+	/* Enable given event(s). */
 	rtc_module->MODE0.EVCTRL.reg |= event_mask;
 }
 
@@ -1030,7 +1072,19 @@ static inline void rtc_count_disable_events(
 		}
 	}
 
-	/* Disable given event(s) */
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/* Check if the user has requested a tamper event output. */
+	if (events->generate_event_on_tamper) {
+		event_mask |= RTC_MODE0_EVCTRL_TAMPEREO;
+	}
+
+	/* Check if the user has requested a tamper event input. */
+	if (events->on_event_to_tamper) {
+		event_mask |= RTC_MODE0_EVCTRL_TAMPEVEI;
+	}
+#endif
+
+	/* Disable given event(s). */
 	rtc_module->MODE0.EVCTRL.reg &= ~event_mask;
 }
 
@@ -1090,6 +1144,19 @@ static inline uint32_t rtc_read_general_purpose_reg(
 /** @} */
 #endif
 
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+#include "rtc_tamper.h"
+/**
+ * \brief Get the tamper stamp value.
+ *
+ * \param[in,out] module  Pointer to the software instance struct
+ *
+ * \return The current tamper stamp value as a 32-bit unsigned integer.
+ */
+uint32_t rtc_tamper_get_stamp (struct rtc_module *const module);
+#endif
+
+
 /** @} */
 
 #ifdef __cplusplus
@@ -1147,17 +1214,22 @@ static inline uint32_t rtc_read_general_purpose_reg(
  *		<td>Added support for SAM C21</td>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAM L21</td>
+ *		<td>Added support for SAM L21/L22</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for RTC tamper feature</td>
  *	</tr>
  *	<tr>
  *		<td>
- *          Added support for SAM D21 and added driver instance parameter to all
- *          API function calls, except get_config_defaults
+ *          Added driver instance parameter to all API function calls, except
+ *          get_config_defaults
  *      </td>
  *	</tr>
  *	<tr>
- *		<td>Updated initialization function to also enable the digital interface
- *          clock to the module if it is disabled</td>
+ *		<td>
+ *			Updated initialization function to also enable the digital interface
+ *          clock to the module if it is disabled
+ *		</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
@@ -1178,6 +1250,7 @@ static inline uint32_t rtc_read_general_purpose_reg(
  * \if RTC_COUNT_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_rtc_count_callback_use_case
  * \endif
+ *  - \subpage asfdoc_sam0_rtc_tamper_dma_use_case
  *
  * \page asfdoc_sam0_rtc_count_document_revision_history Document Revision History
  *
@@ -1190,7 +1263,7 @@ static inline uint32_t rtc_read_general_purpose_reg(
  *	<tr>
  *		<td>42111E</td>
  *		<td>08/2015</td>
- *		<td>Added support for SAM L21, SAM C21, and SAM DA1</td>
+ *		<td>Added support for SAM L21/L22, SAM C21, and SAM DA1</td>
  *	</tr>
  *	<tr>
  *		<td>42111D</td>

@@ -13,6 +13,7 @@
             <info type="description" value="summary">
             ATMegaRFR2 Transceiver Abstraction Layer
             </info>
+			<info type="gui-flag" value="hidden"/>
             <require idref="config.thirdparty.wireless.avr2025_mac.source.tal.atmegarfr2"/>
             <device-support value="atmega256rfr2"/>
             <device-support value="atmega2564rfr2"/>
@@ -22,6 +23,7 @@
             <info type="description" value="summary">
             ATMegaRFA1 Transceiver Abstraction Layer
             </info>
+			<info type="gui-flag" value="hidden"/>
             <require idref="config.thirdparty.wireless.avr2025_mac.source.tal.atmegarfa1"/>
             <device-support value="atmega128rfa1"/>
             <build type="doxygen-entry-point" value="group_tal_rfa1"/>
