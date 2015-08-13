@@ -158,7 +158,7 @@ void Dummy_Handler(void);
 #pragma location = ".intvec"
 const DeviceVectors __vector_table = {
         (void*) __sfe("CSTACK"),
-
+        
         .pfnReset_Handler      = (void*) Reset_Handler,
         .pfnNMI_Handler        = (void*) NMI_Handler,
         .pfnHardFault_Handler  = (void*) HardFault_Handler,
