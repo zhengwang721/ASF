@@ -16,6 +16,7 @@
 			<build type="c-source" value="init.c"/>
 			<require idref="common.services.ioport"/>
 			<require idref="sam.drivers.mpu"/>
+			<require idref="sam.drivers.pio"/>			
 		</module>
 	</select-by-config>
 
