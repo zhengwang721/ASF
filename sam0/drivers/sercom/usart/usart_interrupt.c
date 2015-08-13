@@ -203,7 +203,7 @@ void usart_unregister_callback(
 }
 
 /**
- * \brief Asynchronous write a data
+ * \brief Asynchronous write a single char
  *
  * Sets up the driver to write the data given. If registered and enabled,
  * a callback function will be called when the transmit is completed.
@@ -236,7 +236,7 @@ enum status_code usart_write_job(
 }
 
 /**
- * \brief Asynchronous read a data
+ * \brief Asynchronous read a single char
  *
  * Sets up the driver to read data from the USART module to the data
  * pointer given. If registered and enabled, a callback will be called

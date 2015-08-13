@@ -61,8 +61,8 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM L21/L22
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -686,8 +686,8 @@ __no_inline enum status_code system_peripheral_unlock(
 		const uint32_t key);
 /** @}  */
 
-#if (SAML21) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
-/** \name APIs available for SAM L21/C20/C21.
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
+/** \name APIs available for SAM L21/L22/C20/C21.
  * @{
  */
 __no_inline enum status_code system_peripheral_lock_always(
@@ -958,7 +958,7 @@ static inline void system_pac_disable_event(void)
  *	<tr>
  *		<td>42107F</td>
  *		<td>07/2015</td>
- *		<td>Added support for SAM L21, SAM C21, and SAM DAx</td>
+ *		<td>Added support for SAM L21/L22, SAM C21, and SAM DA1</td>
  *	</tr>
  *	<tr>
  *		<td>42107E</td>
