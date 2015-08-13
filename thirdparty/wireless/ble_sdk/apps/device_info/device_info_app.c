@@ -62,10 +62,14 @@
 /* === GLOBALS ============================================================ */
 /** @brief Scan response data*/
 uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
+	
+uint8_t db_mem[1024] = {0};	
 
 bool volatile timer_cb_done = false; 
 
 uint8_t fw_version[10];
+
+bool volatile flag = true;
 
 at_ble_handle_t dis_conn_handle;
 
@@ -86,6 +90,9 @@ void timer_callback_handler(void)
 int main(void)
 {
 	dis_gatt_service_handler_t dis_service_handler;
+	at_ble_init_config_t pf_cfg;
+	platform_config busConfig;
+	
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -103,8 +110,16 @@ int main(void)
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);
 	
+	/*Memory allocation required by GATT Server DB*/
+	pf_cfg.memPool.memSize = sizeof(db_mem);
+	pf_cfg.memPool.memStartAdd = &(db_mem[0]);
+	
+	/*Bus configuration*/
+	busConfig.bus_type = UART;
+	pf_cfg.plf_config = &busConfig;
+	
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL);
+	ble_device_init(NULL, &pf_cfg);
 	
 	/* Initialize the dis */
 	dis_init_service(&dis_service_handler);
@@ -137,7 +152,10 @@ int main(void)
 			fw_version[9] = (fw_update % 10)+'0';
 			fw_info_data.info_data = (uint8_t *)fw_version;
 			fw_info_data.data_len = 10;
-			UPDATE_FIRMWARE_REVISION(&dis_service_handler, &fw_info_data, dis_conn_handle);
+			if(flag){
+				UPDATE_FIRMWARE_REVISION(&dis_service_handler, &fw_info_data, dis_conn_handle);
+				flag = false;
+			}
 			fw_update++;
 			DBG_LOG("Updating Firmware to ver:%s", fw_version);
 		}
@@ -197,4 +215,18 @@ void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 	timer_cb_done = false;
 	LED_Off(LED0);
 	device_information_advertise();
+}
+
+void ble_notification_confirmed_app_event(uint8_t notification_status)
+{
+	if(!notification_status)
+	{
+		flag = true;
+		DBG_LOG("sending notification to the peer success");
+	}
+}
+
+at_ble_status_t ble_char_changed_app_event(at_ble_characteristic_changed_t *char_handle)
+{
+	dis_char_changed_event(&dis_service_handler, char_handle);
 }

@@ -199,12 +199,12 @@ at_ble_status_t pxp_reporter_connected_state_handler(at_ble_connected_t *conn_pa
 		return AT_BLE_FAILURE;
 	}
 	
-	if ((status = at_ble_characteristic_value_get(lls_handle.serv_chars.char_val_handle,&linkloss_current_alert_level,0,sizeof(int8_t),sizeof(int8_t))))
+	if ((status = at_ble_characteristic_value_get(lls_handle.serv_chars.char_val_handle,&linkloss_current_alert_level,sizeof(int8_t))))
 	{
 		DBG_LOG("Read of alert value for link loss service failed:reason %x",status);
 	}
 	
-	if ((status = at_ble_characteristic_value_get(ias_handle.serv_chars.char_val_handle,&pathloss_alert_value,0,sizeof(int8_t),sizeof(int8_t))))
+	if ((status = at_ble_characteristic_value_get(ias_handle.serv_chars.char_val_handle,&pathloss_alert_value,sizeof(int8_t))))
 	{
 		DBG_LOG("Read of alert value for Immediate alert service failed:reason %x",status);
 	}
@@ -300,7 +300,7 @@ void pxp_reporter_init(void *param)
 	/* pxp services initialization*/
 	pxp_service_init();
 	
-	/* pxp services definition    */
+	/* pxp services definition		*/
 	pxp_service_define();
 	
 	/* pxp services advertisement */

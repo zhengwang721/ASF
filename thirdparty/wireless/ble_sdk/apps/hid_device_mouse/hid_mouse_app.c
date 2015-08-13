@@ -69,6 +69,9 @@
 
 /* =========================== GLOBALS ============================================================ */
 
+/* Memory allocated for database */
+uint8_t	au8DbMem[1024]	= {0};
+
 /* Control point notification structure */
 hid_control_mode_ntf_t hid_control_point_value; 
 
@@ -164,6 +167,12 @@ void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info)
 	report_ntf_info.conn_handle = report_info->conn_handle;
 }
 
+/* Callback called when report send over the air */
+void hid_notification_confirmed_cb(uint8_t status)
+{
+	DBG_LOG_DEV("Mouse report send to host status %d", status);
+}
+
 /* Callback called when user press the button for writing new characteristic value */
 void button_cb(void)
 {
@@ -228,6 +237,16 @@ bool hid_mouse_move(int8_t pos, uint8_t index_report)
 
 int main(void )
 {
+	at_ble_init_config_t pf_cfg;
+	platform_config busConfig;
+	
+	/*Memory allocation for DB*/
+	pf_cfg.memPool.memSize 		= sizeof(au8DbMem);
+	pf_cfg.memPool.memStartAdd 	= &(au8DbMem[0]);
+	
+	/*Bus configuration*/
+	busConfig.bus_type = UART;
+	pf_cfg.plf_config = &busConfig;
 		
 #if SAMG55
 	/* Initialize the SAM system. */
@@ -253,9 +272,10 @@ int main(void )
 	hid_mouse_app_init();
 	
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL);
+	ble_device_init(NULL, &pf_cfg);
 	
 	/* Register the notification handler */
+	register_ble_notification_confirmed_cb(hid_notification_confirmed_cb);
 	notify_report_ntf_handler(hid_prf_report_ntf_cb);
 	notify_boot_ntf_handler(hid_prf_boot_ntf_cb);
 	notify_protocol_mode_handler(hid_prf_protocol_mode_ntf_cb);

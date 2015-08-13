@@ -522,6 +522,10 @@ typedef enum
 #define BLE_NOTIFICATION_RECEIVED_HANDLER						ble_dummy_handler
 #endif
 
+#ifndef BLE_NOTIFICATION_CONFIRMED_HANDLER
+#define BLE_NOTIFICATION_CONFIRMED_HANDLER						ble_dummy_handler
+#endif
+
 #ifndef BLE_CHARACTERISTIC_READ_RESPONSE
 #define BLE_CHARACTERISTIC_READ_RESPONSE						ble_dummy_handler
 #endif
@@ -563,13 +567,10 @@ typedef struct adv_element
 #if defined HID_SERVICE
 typedef struct gatt_service_handler
 {
-	at_ble_uuid_t	serv_uuid;
-	at_ble_handle_t	serv_handle;
-	at_ble_characteristic_gen_t	serv_chars[HID_CHARACTERISTIC_NUM];
-	generic_Att_Desc serv_desc[HID_NUM_OF_REPORT];   /*Report descriptor*/
+	at_ble_service_t		  serv;
+	at_ble_chr_t		      serv_chars[HID_CHARACTERISTIC_NUM];
+	at_ble_generic_att_desc_t serv_desc[HID_NUM_OF_REPORT];   /*Report descriptor*/
 }gatt_service_handler_t;
-
-
 #else
 typedef struct gatt_service_handler
 {
@@ -591,6 +592,9 @@ typedef void (*ble_gap_event_callback_t)(at_ble_handle_t);
 
 /* Typedef for characteristic value changed event callback */
 typedef at_ble_status_t (*ble_characteristic_changed_callback_t)(at_ble_characteristic_changed_t *);
+
+/* Typedef for notification confirmed event callback */
+typedef void (*ble_notification_confirmed_callback_t)(uint8_t);
 
 /** @brief function to set the device name.
   *
@@ -734,11 +738,12 @@ at_ble_status_t ble_event_task(void);
 /** @brief function sets both device address and device name which are exposed to all other devices.
   *
   * @param[in] addr address to be set as a device address.
+  * @param[in] args configuration required for initialization.
   *
   * @return none.
   *
   */
-void ble_device_init(at_ble_addr_t *addr);
+void ble_device_init(at_ble_addr_t *addr, at_ble_init_config_t * args);
 
 /** @brief function handling all the events from the stack, responsible
   * for calling the respective functions initialized for the events.

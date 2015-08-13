@@ -1,7 +1,7 @@
 /**
 * \file
 *
-* \brief Scan Information Service - Application
+* \brief Scan parameters Service - Application
 *
 * Copyright (c) 2015 Atmel Corporation. All rights reserved.
 *
@@ -69,9 +69,11 @@ uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0,
 sps_gatt_service_handler_t sps_service_handler;
 uint16_t scan_interval_window[2];
 uint8_t scan_refresh;
-
+uint8_t db_mem[1024] = {0};
 
 bool volatile timer_cb_done = false;
+bool volatile flag = true;
+
 uint8_t scan_interval_value = 1;
 at_ble_handle_t device_conn_handle; 
 
@@ -91,6 +93,9 @@ void timer_callback_handler(void)
 
 int main(void)
 {
+	at_ble_init_config_t pf_cfg;
+	platform_config busConfig;
+	
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -108,8 +113,16 @@ int main(void)
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);
 	
+	/*Memory allocation required by GATT Server DB*/
+	pf_cfg.memPool.memSize = sizeof(db_mem);
+	pf_cfg.memPool.memStartAdd = &(db_mem[0]);
+	
+	/*Bus configuration*/
+	busConfig.bus_type = UART;
+	pf_cfg.plf_config = &busConfig;
+	
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL);
+	ble_device_init(NULL, &pf_cfg);
 	
 	/* Initialize the battery service */
 	sps_init_service(&sps_service_handler, scan_interval_window, &scan_refresh);
@@ -130,6 +143,9 @@ int main(void)
 	/* Register callback for characteristic changed event */
 	register_ble_characteristic_changed_cb(sps_char_changed_cb);
 	
+	/* Register callback for notification confirmed event */
+	register_ble_notification_confirmed_cb(sps_notification_confirmed_cb);
+	
 	/* Capturing the events  */ 
 	while (1) {
 		/* BLE Event Task */
@@ -141,9 +157,13 @@ int main(void)
 			scan_interval_value = (scan_interval_value % MAX_SPS_SCAN_REFRESH );
 			/* send the notification and Update the scan parameter */	
 			
-			if(sps_scan_refresh_char_update(&sps_service_handler, scan_interval_value) == AT_BLE_SUCCESS)
+			if(flag)
 			{
-				DBG_LOG("Scan Refresh Characteristic Value: %d", scan_interval_value);
+				if(sps_scan_refresh_char_update(&sps_service_handler, scan_interval_value) == AT_BLE_SUCCESS)
+				{
+					flag = false;				
+					DBG_LOG("Scan Refresh Characteristic Value: %d", scan_interval_value);
+				}
 			}
 			scan_interval_value++;
 		}
@@ -210,15 +230,14 @@ void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 */
 at_ble_status_t sps_char_changed_cb(at_ble_characteristic_changed_t *char_handle)
 {
-	at_ble_characteristic_changed_t change_params;
-	memcpy((uint8_t *)&change_params, char_handle, sizeof(at_ble_characteristic_changed_t));
-	
-	if(sps_service_handler.serv_chars[0].char_val_handle == change_params.char_handle)
+	sps_char_changed_event(&sps_service_handler, char_handle);
+}
+
+void sps_notification_confirmed_cb(uint8_t notification_status)
+{
+	if(!notification_status)
 	{
-		memcpy(sps_service_handler.serv_chars[0].init_value, change_params.char_new_value, change_params.char_len);
-		DBG_LOG("New scan interval window parameter");
-		DBG_LOG("Scan Interval 0x%02x",change_params.char_new_value[0]);
-		DBG_LOG("Scan Window   0x%02x",change_params.char_new_value[1]);
+		flag = true;
+		DBG_LOG("sending notification to the peer success");
 	}
-	return AT_BLE_SUCCESS;
 }
