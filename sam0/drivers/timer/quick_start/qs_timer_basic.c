@@ -95,9 +95,6 @@ static void configure_timer_callback(void)
 	//! [setup_register_callback]
 	timer_register_callback(timer_callback);
 	//! [setup_register_callback]
-	//! [setup_register_isr]
-	system_register_isr(RAM_ISR_TABLE_TIMER0_INDEX, (uint32_t)timer_isr_handler);
-	//! [setup_register_isr]
 	
 	/* For A4, timer0 IRQ is 9 */
 	//! [enable_IRQ]
@@ -109,7 +106,7 @@ static void configure_timer_callback(void)
 int main(void)
 {
 //! [setup_init]
-	system_clock_config(CLOCK_RESOURCE_RC_26_MHZ, CLOCK_FREQ_26_MHZ);
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 	
 	configure_gpio_pins();
 

@@ -47,6 +47,7 @@
 #define DUALTIMER_H_INCLUDED
 
 #include <compiler.h>
+#include <system.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -187,8 +188,6 @@ void dualtimer_enable(enum dualtimer_timer timer);
 void dualtimer_disable(enum dualtimer_timer timer);
 void dualtimer_register_callback(enum dualtimer_timer timer, dualtimer_callback_t fun);
 void dualtimer_unregister_callback(enum dualtimer_timer timer);
-void dualtimer_isr_handler(void);
- 
 #ifdef __cplusplus
 }
 #endif

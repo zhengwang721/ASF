@@ -45,6 +45,7 @@
  */
 #include "aon_sleep_timer.h"
 
+static aon_sleep_timer_callback_t aon_sleep_timer_callback;
 
 static void delay_cycle(uint32_t cycles)
 {
@@ -71,6 +72,96 @@ void aon_sleep_timer_get_config_defaults(struct aon_sleep_timer_config *config)
 	config->wakeup = AON_SLEEP_TIMER_WAKEUP_ARM;
 	config->mode = AON_SLEEP_TIMER_SINGLE_MODE;
 	config->counter = 32000;
+}
+
+/**
+ * \brief Disable AON Sleep Timer module instance.
+ *
+ * AON Sleep Timer module instance disable.
+ */
+void aon_sleep_timer_disable(void)
+{
+	uint32_t regval;
+	
+	AON_SLEEP_TIMER0->SINGLE_COUNT_DURATION.reg = 0;
+	regval = AON_SLEEP_TIMER0->CONTROL.reg;
+	regval &= ~AON_SLEEP_TIMER_CONTROL_RELOAD_ENABLE;
+	regval &= ~AON_SLEEP_TIMER_CONTROL_SINGLE_COUNT_ENABLE;
+	AON_SLEEP_TIMER0->CONTROL.reg = regval;
+	
+	while ((AON_SLEEP_TIMER0->CONTROL.reg & 
+			AON_SLEEP_TIMER_CONTROL_SLP_TIMER_SINGLE_COUNT_ENABLE_DLY_Msk)
+			!= AON_SLEEP_TIMER_CONTROL_SLP_TIMER_SINGLE_COUNT_ENABLE_DLY_Msk) {
+	}
+}
+
+/**
+ * \brief Get AON Sleep Timer module instance current value.
+ *
+ * \retval Current value
+ */
+uint32_t aon_sleep_timer_get_current_value(void)
+{
+	return AON_SLEEP_TIMER0->CURRENT_COUNT_VALUE.reg;
+}
+
+/**
+ * \brief If AON Sleep Timer is active
+ *
+ * \return Active status of the AON Sleep Timer.
+ */
+bool aon_sleep_timer_sleep_timer_active(void)
+{
+	return AON_SLEEP_TIMER0->CONTROL.bit.SLEEP_TIMER_ACTIVE;
+}
+
+/**
+ * \brief Clear AON Sleep Timer module instance interrupt.
+ *
+ * This flag will be cleared automatically once the IRQ 
+ * has been seen on the sleep clock.
+ */
+void aon_sleep_timer_clear_interrup(void)
+{
+	AON_SLEEP_TIMER0->CONTROL.reg |= AON_SLEEP_TIMER_CONTROL_IRQ_CLEAR;
+}
+
+/**
+ * \brief Registers a callback.
+ *
+ * Registers and enable a callback function which is implemented by the user.
+ *
+ * \param[in]     callback_func Pointer to callback function
+ */
+void aon_sleep_timer_register_callback(aon_sleep_timer_callback_t fun)
+{
+	aon_sleep_timer_callback = fun;
+}
+
+/**
+ * \brief Unregisters a callback.
+ *
+ * Unregisters and disable a callback function implemented by the user.
+ *
+ */
+void aon_sleep_timer_unregister_callback(void)
+{
+	aon_sleep_timer_callback = NULL;
+}
+
+/**
+ * \brief Timer ISR handler.
+ *
+ * Timer ISR handler.
+ *
+ */
+static void aon_sleep_timer_isr_handler(void)
+{
+	aon_sleep_timer_clear_interrup();
+		
+	if (aon_sleep_timer_callback) {
+		aon_sleep_timer_callback();
+	}
 }
 
 /**
@@ -129,56 +220,7 @@ void aon_sleep_timer_init(const struct aon_sleep_timer_config *config)
 		}
 		AON_SLEEP_TIMER0->CONTROL.reg = 0;
 	}
-}
-
-/**
- * \brief Disable AON Sleep Timer module instance.
- *
- * AON Sleep Timer module instance disable.
- */
-void aon_sleep_timer_disable(void)
-{
-	uint32_t regval;
 	
-	AON_SLEEP_TIMER0->SINGLE_COUNT_DURATION.reg = 0;
-	regval = AON_SLEEP_TIMER0->CONTROL.reg;
-	regval &= ~AON_SLEEP_TIMER_CONTROL_RELOAD_ENABLE;
-	regval &= ~AON_SLEEP_TIMER_CONTROL_SINGLE_COUNT_ENABLE;
-	AON_SLEEP_TIMER0->CONTROL.reg = regval;
-	
-	while ((AON_SLEEP_TIMER0->CONTROL.reg & 
-			AON_SLEEP_TIMER_CONTROL_SLP_TIMER_SINGLE_COUNT_ENABLE_DLY_Msk)
-			!= AON_SLEEP_TIMER_CONTROL_SLP_TIMER_SINGLE_COUNT_ENABLE_DLY_Msk) {
-	}
-}
-
-/**
- * \brief Get AON Sleep Timer module instance current value.
- *
- * \retval Current value
- */
-uint32_t aon_sleep_timer_get_current_value(void)
-{
-	return AON_SLEEP_TIMER0->CURRENT_COUNT_VALUE.reg;
-}
-
-/**
- * \brief If AON Sleep Timer is active
- *
- * \return Active status of the AON Sleep Timer.
- */
-bool aon_sleep_timer_sleep_timer_active(void)
-{
-	return AON_SLEEP_TIMER0->CONTROL.bit.SLEEP_TIMER_ACTIVE;
-}
-
-/**
- * \brief Clear AON Sleep Timer module instance interrupt.
- *
- * This flag will be cleared automatically once the IRQ 
- * has been seen on the sleep clock.
- */
-void aon_sleep_timer_clear_interrup(void)
-{
-	AON_SLEEP_TIMER0->CONTROL.reg |= AON_SLEEP_TIMER_CONTROL_IRQ_CLEAR;
+	aon_sleep_timer_callback = NULL;
+	system_register_isr(RAM_ISR_TABLE_AON_SLEEP_TIMER_INDEX, (uint32_t)aon_sleep_timer_isr_handler);
 }

@@ -57,12 +57,12 @@ struct uart_module uart_instance;
 //! [callback_funcs]
 static void dualtimer_callback1(void)
 {
-	printf("Timer1 trigger\r\n");
+	puts("Timer1 trigger\r\n");
 }
 
 static void dualtimer_callback2(void)
 {
-	printf("Timer2 trigger\r\n");
+	puts("Timer2 trigger\r\n");
 }
 //! [callback_funcs]
 
@@ -76,7 +76,7 @@ static void configure_uart(void)
 	uart_get_config_defaults(&config_uart);
 //! [setup_uart_2]
 //! [setup_uart_3]
-	config_uart.baud_rate = 38400;
+	config_uart.baud_rate     = CONF_DUALTIMER_UART_BAUD;
 	config_uart.pinmux_pad[0] = EDBG_CDC_SERCOM_PINMUX_PAD0;
 	config_uart.pinmux_pad[1] = EDBG_CDC_SERCOM_PINMUX_PAD1;
 	config_uart.pinmux_pad[2] = EDBG_CDC_SERCOM_PINMUX_PAD2;
@@ -130,9 +130,6 @@ static void configure_dualtimer_callback(void)
 	dualtimer_register_callback(DUALTIMER_TIMER1, dualtimer_callback1);
 	dualtimer_register_callback(DUALTIMER_TIMER2, dualtimer_callback2);
 	//! [setup_register_callback]
-	//! [setup_register_isr]
-	system_register_isr(RAM_ISR_TABLE_DUALTIMER_INDEX, (uint32_t)dualtimer_isr_handler);
-	//! [setup_register_isr]
 	
 	/* For A4, timer0 IRQ is 14 */
 	//! [enable_IRQ]
@@ -144,7 +141,7 @@ static void configure_dualtimer_callback(void)
 int main(void)
 {
 //! [setup_init]
-	system_clock_config(CLOCK_RESOURCE_RC_26_MHZ, CLOCK_FREQ_26_MHZ);
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 	
 	configure_uart();
 
@@ -156,29 +153,8 @@ int main(void)
 //! [main_imp]
 //! [main_loop]
 	while (true) {
-		#if 0
 //! [main_loop]
-//! [timer1_interrupt]
-		if (dualtimer_get_status(DUALTIMER_TIMER1)) {
-//! [timer1_interrupt]
-//! [timer1_interrupt_clr]
-			dualtimer_clear_interrupt_status(DUALTIMER_TIMER1);
-//! [timer1_interrupt_clr]
-//! [print_timer1]
-			PRINTF("Timer1 trigger\r\n");
-//! [print_timer1]
-		}
-//! [timer2_interrupt]
-		if (dualtimer_get_status(DUALTIMER_TIMER2)) {
-//! [timer2_interrupt]
-//! [timer2_interrupt_clr]
-			dualtimer_clear_interrupt_status(DUALTIMER_TIMER2);
-//! [timer2_interrupt_clr]
-//! [print_timer2]
-			PRINTF("Timer2 trigger\r\n");
-//! [print_timer2]
-		}
-		#endif
+
 	}
 //! [main_imp]
 }

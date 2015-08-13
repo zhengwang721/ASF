@@ -47,6 +47,7 @@
 #define TIMER_H_INCLUDED
 
 #include <compiler.h>
+#include <system.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -77,7 +78,6 @@ void timer_enable(void);
 void timer_disable(void);
 void timer_register_callback(timer_callback_t fun);
 void timer_unregister_callback(void);
-void timer_isr_handler(void);
 
 #ifdef __cplusplus
 }

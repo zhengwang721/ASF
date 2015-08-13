@@ -45,6 +45,7 @@
  */
 #include "timer.h"
 
+static timer_callback_t timer_callback;
 /**
  * \brief Initializes config with predefined default values.
  *
@@ -65,21 +66,6 @@ void timer_get_config_defaults(struct timer_config *config)
 	config->interrupt_enable = true;
 }
 
-/**
- * \brief Initializes TIMER0 module instance.
- *
- * Initializes the TIMER0 module, based on the given
- * configuration values.
- *
- * \param[in]     config       Pointer to the TIMER configuration options struct
- *
- * \return Status of the initialization procedure.
- */
-void timer_init(const struct timer_config *config)
-{
-	TIMER0->CTRL.reg = config->interrupt_enable << TIMER_CTRL_INTERRUPT_ENABLE_Pos;
-	TIMER0->RELOAD.reg = config->reload_value;
-}
 
 /**
  * \brief Get TIMER0 module current value.
@@ -141,8 +127,6 @@ void timer_disable(void)
 	TIMER0->CTRL.reg &= (~TIMER_CTRL_ENABLE);
 }
 
-timer_callback_t timer_callback;
-
 /**
  * \brief Registers a callback.
  *
@@ -172,7 +156,7 @@ void timer_unregister_callback(void)
  * Timer ISR handler.
  *
  */
-void timer_isr_handler(void)
+static void timer_isr_handler(void)
 {
 	if (timer_get_interrupt_status()) {
 		timer_clear_interrupt_status();
@@ -181,4 +165,23 @@ void timer_isr_handler(void)
 			timer_callback();
 		}
 	}
+}
+
+/**
+ * \brief Initializes TIMER0 module instance.
+ *
+ * Initializes the TIMER0 module, based on the given
+ * configuration values.
+ *
+ * \param[in]     config       Pointer to the TIMER configuration options struct
+ *
+ * \return Status of the initialization procedure.
+ */
+void timer_init(const struct timer_config *config)
+{
+	TIMER0->CTRL.reg = config->interrupt_enable << TIMER_CTRL_INTERRUPT_ENABLE_Pos;
+	TIMER0->RELOAD.reg = config->reload_value;
+	
+	timer_callback = NULL;
+	system_register_isr(RAM_ISR_TABLE_TIMER0_INDEX, (uint32_t)timer_isr_handler);
 }
