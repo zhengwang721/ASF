@@ -50,10 +50,10 @@
 /**
  * \defgroup asfdoc_sam0_sdadc_group SAM Sigma-Delta Analog-to-Digital Converter (SDADC) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
- * and management of the device's Configurable Custom Logic functionality.
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
+ * and management of the device's SDADC functionality.
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  *  - SDADC (Sigma-Delta Analog-to-Digital Converter)
  *
  * The following devices can use this module:
@@ -83,10 +83,10 @@
  * The SDADC provides up to 16-bit resolution at about 1000 samples per second (1KSPS)
  * and sized 24 bits signed result to handle filtering and gain correction without overflow.
  * The SDADC measurements can be started by either application software or an incoming
- * event from another peripheral in the device. 
- * 
+ * event from another peripheral in the device.
+ *
  * The conversion is performed on a full range between 0V and the reference voltage.
- * Both internal and external reference voltages can be selected, reference range
+ * Both internal and external reference voltages can be selected. The reference range
  * must be set to match the voltage of the reference used. Analog inputs between
  * these voltages convert to values based on a linear conversion.
  *
@@ -100,18 +100,18 @@
  * CLK_SDADC/4, the reduction comes from the phase generator between the prescaler
  * and the SDADC.
  *
- * OSR is the Over Sampling Ratio which can be modified to change the output data
+ * OSR is the Over Sampling Ratio, which can be modified to change the output data
  * rate. The conversion time depends on the selected OSR and the sampling frequency
  * of the SDADC.
  * The conversion time can be described with:
  * \f[
  * t_{SAMPLE} = \frac {22 + 3 \times OSR} {CLK \_ SDADC \_ FS}
  * \f]
- * -# Initialization of the SDADC (22 sigma-delta samples)
- * -# Filling of the decimation filter (3*OSR sigma-delta samples)
+ * -# Initialization of the SDADC (22 sigma-delta samples).
+ * -# Filling of the decimation filter (3*OSR sigma-delta samples).
  *
  * \subsection asfdoc_sam0_sdadc_module_overview_offset_corr Gain and Offset Correction
- * A specific offset, gain and shift can be applied to each source of the SDADC
+ * A specific offset, gain, and shift can be applied to each source of the SDADC
  * by performing the following operation:
  * \f[
  * Data = (Data_{0} + OFFSET) \times \frac {GAIN}{2^{SHIFT}}
@@ -264,7 +264,7 @@ enum sdadc_reference_range {
 /**
  * \brief SDADC over sampling ratio enum.
  *
- * Enum for the over sampling ratio which change the output data rate.
+ * Enum for the over sampling ratio, which change the output data rate.
  *
  */
 enum sdadc_over_sampling_ratio {
@@ -492,7 +492,7 @@ enum status_code sdadc_init(
  *  \li Div 2 clock prescaler
  *  \li Over Sampling Ratio is 64
  *  \li Skip 0 samples
- *  \li Mux input on SDADC AIN1
+ *  \li MUX input on SDADC AIN1
  *  \li All events (input and generation) disabled
  *  \li Free running disabled
  *  \li Run in standby disabled
@@ -546,7 +546,7 @@ static inline void sdadc_get_config_defaults(struct sdadc_config *const config)
  *
  * \return Bitmask of \c SDADC_STATUS_* flags.
  *
- * \retval SDADC_STATUS_RESULT_READY  SDADC Result is ready to be read
+ * \retval SDADC_STATUS_RESULT_READY  SDADC result is ready to be read
  * \retval SDADC_STATUS_WINDOW        SDADC has detected a value inside the set
  *                                  window range
  * \retval SDADC_STATUS_OVERRUN       SDADC result has overrun
@@ -628,7 +628,7 @@ static inline void sdadc_clear_status(
  *
  * \param[in]   module_inst   Pointer to the SDADC software instance struct
  * \param[out]  seq_state     Identifies the last conversion done in the sequence
- * 
+ *
  * \return Status of the SDADC sequence conversion.
  *
  * \retval true  When the sequence start
@@ -745,7 +745,7 @@ static inline enum status_code sdadc_disable(
 /**
  * \brief Resets the SDADC module.
  *
- * Resets an SDADC module, clearing all module state and registers to their
+ * Resets an SDADC module, clearing all module state, and registers to their
  * default values.
  *
  * \param[in] module_inst  Pointer to the SDADC software instance struct
@@ -776,7 +776,7 @@ static inline enum status_code sdadc_reset(
  * \brief Enables an SDADC event input or output.
  *
  *  Enables one or more input or output events to or from the SDADC module. See
- *  \ref sdadc_events "here" for a list of events this module supports.
+ *  \ref sdadc_events for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.
  *
@@ -813,7 +813,7 @@ static inline void sdadc_enable_events(
  * \brief Disables an SDADC event input or output.
  *
  *  Disables one or more input or output events to or from the SDADC module. See
- *  \ref sdadc_events "here" for a list of events this module supports.
+ *  \ref sdadc_events for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.
  *
@@ -992,7 +992,7 @@ static inline void sdadc_set_window_mode(
  * Sets the MUX SDADC input pin selection.
  *
  * \param[in] module_inst     Pointer to the SDADC software instance struct
- * \param[in] mux_input       Mux input pin
+ * \param[in] mux_input       MUX input pin
  */
 static inline void sdadc_set_mux_input(
 		struct sdadc_module *const module_inst,
@@ -1141,8 +1141,8 @@ static inline void sdadc_disable_interrupt(struct sdadc_module *const module_ins
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
- *		<td>06/2015</td>
+ *		<td>42496A</td>
+ *		<td>08/2015</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>

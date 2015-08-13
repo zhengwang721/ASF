@@ -61,8 +61,8 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM L21/L22
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * Physically, the modules are interconnected within the device as shown in the
@@ -645,7 +645,7 @@ void system_pinmux_group_set_output_drive(
  *	<tr>
  *		<td>42121F</td>
  *		<td>08/2015</td>
- *		<td>Added support for SAM L21, SAM DA1, and SAM C20/C21</td>
+ *		<td>Added support for SAM L21/L22, SAM DA1, and SAM C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>42121E</td>

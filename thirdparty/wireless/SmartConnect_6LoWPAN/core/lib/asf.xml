@@ -19,7 +19,7 @@
 			<build type="c-source"      value="random.c"/>
 			<build type="c-source"      value="ringbuf.c"/>
 			<build type="c-source"      value="sensors.c"/>
-			<build type="c-source"      value="settings.c"/>
+			<!-- <build type="c-source"      value="settings.c"/> -->
 			<build type="c-source"      value="trickle-timer.c"/>
 			<build type="header-file"   value="assert.h"/>
 			<build type="header-file"   value="crc16.h"/>
@@ -35,7 +35,7 @@
 			<build type="header-file"   value="random.h"/>
 			<build type="header-file"   value="ringbuf.h"/>
 			<build type="header-file"   value="sensors.h"/>
-			<build type="header-file"   value="settings.h"/>
+			<!-- <build type="header-file"   value="settings.h"/> -->
 			<build type="header-file"   value="trickle-timer.h"/>
 			<build type="include-path" value="."/>
             <device-support value="sam0"/>		
