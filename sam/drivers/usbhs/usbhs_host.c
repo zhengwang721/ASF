@@ -530,7 +530,7 @@ bool otg_dual_enable(void)
 #else
 	uhd_sleep_mode(UHD_STATE_OFF);
 	return false; // ID pin management has not been enabled
-#endif	
+#endif
 }
 
 
@@ -588,7 +588,7 @@ void uhd_enable(void)
 		cpu_irq_restore(flags);
 		return; // Host is not the current mode
 	}
-#else	
+#else
 	// ID pin not used then force host mode
 	otg_force_host_mode();
 #endif
@@ -1154,7 +1154,7 @@ static void uhd_interrupt(void)
 		return;
 	}
 
-	
+
 
       /* If Wakeup interrupt is enabled and triggered and connection intterupt is enabled  */
 	if(Is_uhd_wakeup() && Is_uhd_connection_int_enabled()) {
@@ -1167,7 +1167,7 @@ static void uhd_interrupt(void)
 		uhd_sleep_mode(UHD_STATE_IDLE);
 		uhd_enable_vbus(); // enable VBUS
 		uhd_sleep_mode(UHD_STATE_DISCONNECT);
-		UHC_VBUS_CHANGE(true); 
+		UHC_VBUS_CHANGE(true);
 	}
 
 	if (Is_uhd_wakeup_interrupt_enabled() && (Is_uhd_wakeup() ||
@@ -1192,7 +1192,7 @@ static void uhd_interrupt(void)
 		}
 		// Wait 50ms before restarting transfer
 		uhd_resume_start = 50;
-		//uhd_sleep_mode(UHD_STATE_IDLE);
+		uhd_sleep_mode(UHD_STATE_IDLE);
 		return;
 	}
 
@@ -1238,7 +1238,7 @@ static void uhd_delayed_suspend(void)
 				|USBHS_HSTIER_RXRSMIES;
 
 		otg_freeze_clock();
-		//uhd_sleep_mode(UHD_STATE_SUSPEND);
+		uhd_sleep_mode(UHD_STATE_SUSPEND);
 	}
 }
 static void uhd_delayed_resume(void)

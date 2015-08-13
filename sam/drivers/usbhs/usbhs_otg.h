@@ -187,9 +187,6 @@ void otg_dual_disable(void);
 #define otg_unfreeze_clock()                (Clr_bits(USBHS->USBHS_CTRL, USBHS_CTRL_FRZCLK))
 #define Is_otg_clock_frozen()               (Tst_bits(USBHS->USBHS_CTRL, USBHS_CTRL_FRZCLK))
 
- //! @name USBHS OTG hardware protocol
-//! These macros manages the hardware OTG protocol
-//! @{
    //! Enables RDERR interrupt
 #define otg_enable_rderr_interrupt()          (Set_bits(USBHS->USBHS_CTRL, USBHS_CTRL_RDERRE))
   //! Disables RDERR interrupt
