@@ -153,12 +153,12 @@
  * \anchor asfdoc_sam0_system_pinmux_intconnections
  * \dot
  * digraph overview {
- *   node [label="Port Pad" shape=square, fontname=arial] pad;
+ *   node [label="Port Pad" shape=square] pad;
  *
  *   subgraph driver {
- *     node [label="Peripheral MUX" shape=trapezium, fontname=arial] pinmux;
- *     node [label="GPIO Module" shape=ellipse shape=ellipse style=filled fillcolor=lightgray, fontname=arial] gpio;
- *     node [label="Other Peripheral Modules" shape=ellipse style=filled fillcolor=lightgray, fontname=arial] peripherals;
+ *     node [label="Peripheral MUX" shape=trapezium] pinmux;
+ *     node [label="GPIO Module" shape=ellipse shape=ellipse style=filled fillcolor=lightgray] gpio;
+ *     node [label="Other Peripheral Modules" shape=ellipse style=filled fillcolor=lightgray] peripherals;
  *   }
  *
  *   pinmux -> gpio;
