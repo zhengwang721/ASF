@@ -120,20 +120,20 @@
  *		subgraph cluster_a {
  *			style="filled, dotted";
  *			coler=lightgray;
- *			init [label="Initialize Peripheral", shape=box, fontname=areal];
- *			lock [label="Lock peripheral", shape=box, fontname=areal];
+ *			init [label="Initialize Peripheral", shape=box];
+ *			lock [label="Lock peripheral", shape=box];
  *			label="Initialization and code";
  *			init -> lock;
  *		}
  *		subgraph cluster_b {
  *			cli [label="Disable global interrupts", shape=box,
- *				style=dotted, fontname=areal];
- *			unlock [label="Unlock peripheral", shape=box, fontname=areal];
- *			sanity [label="Sanity Check", shape=box, style=dotted, fontname=areal];
- *			modify [label="Modify peripheral", shape=box, fontname=areal];
- *			lock2 [label="Lock peripheral", shape=box, fontname=areal];
+ *				style=dotted];
+ *			unlock [label="Unlock peripheral", shape=box];
+ *			sanity [label="Sanity Check", shape=box, style=dotted];
+ *			modify [label="Modify peripheral", shape=box];
+ *			lock2 [label="Lock peripheral", shape=box];
  *			sei [label="Enable global interrupts", shape=box
- *				style=dotted, fontname=areal];
+ *				style=dotted];
 *
  *			label="Peripheral Modification";
  *			cli -> unlock;
@@ -144,7 +144,7 @@
  *		}
  *		lock -> cli [label=
  *			"Other initialization\n and enable interrupts if applicable"
- *				, style=dotted, fontname=areal];
+ *				, style=dotted];
  *	}
  * \enddot
  *
@@ -167,12 +167,12 @@
  *	digraph enabled_interrupt {
  *		subgraph cluster_0{
  *			label="Main routine";
- *			{node [style="filled", color=black, fillcolor=white, fontname=areal]
+ *			{node [style="filled", color=black, fillcolor=white]
  *			init [label="Initialize and lock peripherals", shape=box];
  *			main_unlock [label="Unlock peripheral",	shape=box,
  *				fillcolor=green];
  *			main_modify [label="Modify peripheral", shape=box];}
- *			main_lock [label="Lock peripheral", shape=box, fontname=areal];
+ *			main_lock [label="Lock peripheral", shape=box];
  *			init -> main_unlock [label="User code"];
  *			main_unlock -> main_modify;
  *			main_modify -> main_lock [style=dotted];
@@ -180,14 +180,14 @@
  *		subgraph cluster_1 {
  *			label="Interrupt handler";
  *			int_unlock [label="Unlock peripheral", shape=box,
- *				style=filled, fillcolor=red, fontname=areal];
- *			int_modify [label="Modify peripheral", shape=box, fontname=areal];
- *			int_lock [label="Lock peripheral", shape=box, fontname=areal];
- *			int_unlock -> int_modify [style=dotted, fontname=areal];
- *			int_modify -> int_lock [style=dotted, fontname=areal];
+ *				style=filled, fillcolor=red];
+ *			int_modify [label="Modify peripheral", shape=box];
+ *			int_lock [label="Lock peripheral", shape=box];
+ *			int_unlock -> int_modify [style=dotted];
+ *			int_modify -> int_lock [style=dotted];
  *		}
- *		exception [label="Exception", shape=box, style=filled, fillcolor=red, fontname=areal];
- *		main_modify -> int_unlock [label=" Interrupt", fontname=areal];
+ *		exception [label="Exception", shape=box, style=filled, fillcolor=red];
+ *		main_modify -> int_unlock [label=" Interrupt"];
  *		int_unlock -> exception;
  *		exception -> exception;
  *	}
@@ -210,8 +210,8 @@
  *	   subgraph cluster_away1{
  *		rankdir=TB;
  *		color=white;
- *		runaway1 [label="Run-away code", shape=box, fontname=areal];
- *		node [shape=plaintext, fontname=areal, fontname=areal];
+ *		runaway1 [label="Run-away code", shape=box];
+ *		node [shape=plaintext];
  *		program1 [label=<
  *			<table>
  *				<tr>
@@ -269,9 +269,9 @@
  *		}
  *	   subgraph cluster_away2{
  *		rankdir=TB;
- *		runaway2 [label="Run-away code", shape=box, fontname=areal];
+ *		runaway2 [label="Run-away code", shape=box];
  *		color=white;
- *		node [shape=plaintext, fontname=areal, fontname=areal];
+ *		node [shape=plaintext];
  *		program2 [label=<
  *			<table>
  *				<tr>
@@ -335,9 +335,9 @@
  *	digraph run_away2 {
  *	   subgraph cluster_away3{
  *		rankdir=TB;
- *		runaway3 [label="Run-away code", shape=box, fontname=areal];
+ *		runaway3 [label="Run-away code", shape=box];
  *		color=white;
- *		node [shape=plaintext, fontname=areal, fontname=areal];
+ *		node [shape=plaintext];
  *		program3 [label=<
  *			<table>
  *				<tr>
@@ -395,9 +395,9 @@
  *		}
  *	subgraph cluster_away4 {
  *		rankdir=TB;
- *		runaway4 [label="Run-away code", shape=box, fontname=areal];
+ *		runaway4 [label="Run-away code", shape=box];
  *		color=white;
- *		node [shape=plaintext, fontname=areal, fontname=areal];
+ *		node [shape=plaintext];
  *		program4 [label=<
  *			<table>
  *				<tr>
@@ -500,21 +500,21 @@
  *	nodesep = .05;
  *	rankdir=LR;
  *
- *	ahb [label="Peripheral bus", shape=ellipse, style=filled, fillcolor=lightgray, fontname=areal];
+ *	ahb [label="Peripheral bus", shape=ellipse, style=filled, fillcolor=lightgray];
  *	pac [label="<f0>PAC|<f1>Lock|<f2>Open|<f3>Open",
- *		 height=2.5, shape=record, width=.1, fontname=areal];
- *	per1 [label="Peripheral1", shape=ellipse, style=filled, fillcolor=lightgray, fontname=areal];
- *	per2 [label="Peripheral2", shape=ellipse, style=filled, fillcolor=lightgray, fontname=areal];
- *	per3 [label="Peripheral3", shape=ellipse, style=filled, fillcolor=lightgray, fontname=areal];
+ *		 height=2.5, shape=record, width=.1];
+ *	per1 [label="Peripheral1", shape=ellipse, style=filled, fillcolor=lightgray];
+ *	per2 [label="Peripheral2", shape=ellipse, style=filled, fillcolor=lightgray];
+ *	per3 [label="Peripheral3", shape=ellipse, style=filled, fillcolor=lightgray];
  *	edge [dir="both"];
- *	ahb -> pac:f1 [label="Read/Write", fontname=areal];
- *	ahb -> pac:f2 [label="Read/Write", fontname=areal];
- *	ahb -> pac:f3 [label="Read/Write", fontname=areal];
+ *	ahb -> pac:f1 [label="Read/Write"];
+ *	ahb -> pac:f2 [label="Read/Write"];
+ *	ahb -> pac:f3 [label="Read/Write"];
  *	edge [dir="back"];
- *	pac:f1 -> per1 [label="Read", fontname=areal];
+ *	pac:f1 -> per1 [label="Read"];
  *	edge [dir="both"];
- *	pac:f2 -> per2 [label="Read/Write", fontname=areal];
- *	pac:f3 -> per3 [label="Read/Write", fontname=areal];
+ *	pac:f2 -> per2 [label="Read/Write"];
+ *	pac:f3 -> per3 [label="Read/Write"];
  *	{rank=same; per1 per2 per3 }
  * }
  * \enddot
@@ -541,8 +541,8 @@
  *	   subgraph cluster_read1{
  *		rankdir=TB;
  *		color=white;
- *		runaway1 [label="Run-away code\nwith peripheral unlocked", shape=box, fontname=areal];
- *		node [shape=plaintext, fontname=areal, fontname=areal];
+ *		runaway1 [label="Run-away code\nwith peripheral unlocked", shape=box];
+ *		node [shape=plaintext];
  *		program1 [label=<
  *			<table>
  *				<tr>
@@ -589,7 +589,7 @@
  *	   subgraph cluster_read2{
  *		rankdir=TB;
  *		color=white;
- *		runaway2 [label="Run-away code\nwith peripheral unlocked", shape=box, fontname=areal];
+ *		runaway2 [label="Run-away code\nwith peripheral unlocked", shape=box];
  *		node [shape=plaintext, fontname=Areal];
  *		program2 [label=<
  *			<table>
