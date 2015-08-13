@@ -68,7 +68,7 @@
 /* =========================== GLOBALS ============================================================ */
 
 /* Memory allocated for database */
-uint8_t	au8DbMem[1024]	= {0}; //B0
+uint8_t	au8DbMem[1024]	= {0}; 
 
 /* Control point notification structure */
 hid_control_mode_ntf_t hid_control_point_value; 
@@ -164,6 +164,12 @@ void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info)
 	report_ntf_info.conn_handle = report_info->conn_handle;
 }
 
+/* Callback called when report send over the air */
+void hid_notification_confirmed_cb(uint8_t status)
+{
+	DBG_LOG_DEV("Keyboard report send to host status %d", status);
+}
+
 /* Callback called when user press the button for writing new characteristic value */
 void button_cb(void)
 {
@@ -208,8 +214,8 @@ void hid_keyboard_app_init(void)
 
 int main(void )
 {
-    at_ble_init_config_t pf_cfg;  //B0
-    platform_config busConfig;    //B0
+    at_ble_init_config_t pf_cfg;  
+    platform_config busConfig;    
 	
 	/*Memory allocation for DB*/
 	pf_cfg.memPool.memSize 		= sizeof(au8DbMem);
@@ -247,6 +253,7 @@ int main(void )
 	ble_device_init(NULL, &pf_cfg);
 	
 	/* Register the notification handler */
+	register_ble_notification_confirmed_cb(hid_notification_confirmed_cb);
 	notify_report_ntf_handler(hid_prf_report_ntf_cb);
 	notify_boot_ntf_handler(hid_prf_boot_ntf_cb);
 	notify_protocol_mode_handler(hid_prf_protocol_mode_ntf_cb);
