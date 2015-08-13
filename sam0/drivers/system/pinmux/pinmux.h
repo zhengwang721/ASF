@@ -62,7 +62,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * Physically, the modules are interconnected within the device as shown in the
@@ -98,7 +98,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SYSTEM_PINMUX_DRIVE_STRENGTH</td>
- *    <td>SAML21, SAMC20/C21</td>
+ *    <td>SAM L21, SAM C20/C21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -645,28 +645,28 @@ void system_pinmux_group_set_output_drive(
  *	</tr>
  *	<tr>
  *		<td>F</td>
- *		<td>06/2015</td>
- *		<td>Add support for SAML21, SAMDAx, and SAMC20/C21.</td>
+ *		<td>08/2015</td>
+ *		<td>Add support for SAM L21/L22, SAMDA1, and SAM C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>E</td>
  *		<td>12/2014</td>
- *		<td>Add support for SAMR21 and SAMD10/D11.</td>
+ *		<td>Add support for SAM R21 and SAM D10/D11</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
  *		<td>01/2014</td>
- *		<td>Add support for SAMD21.</td>
+ *		<td>Add support for SAM D21</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>
  *		<td>09/2013</td>
- *		<td>Fixed incorrect documentation for the device pin sampling mode.</td>
+ *		<td>Fixed incorrect documentation for the device pin sampling mode</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>
  *		<td>06/2013</td>
- *		<td>Corrected documentation typos.</td>
+ *		<td>Corrected documentation typos</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

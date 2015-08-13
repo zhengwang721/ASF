@@ -68,7 +68,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -99,35 +99,35 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_SYNC_SCHEME_V2</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_OVER_SAMPLE</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_HARDWARE_FLOW_CONTROL</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IRDA</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_LIN_SLAVE</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_COLLISION_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_START_FRAME_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_RS485</td>
@@ -363,7 +363,7 @@ enum lin_master_header_delay {
 };
 
 /**
- * \brief LIN master break length.
+ * \brief LIN master break length
  *
  * Length of the break field transmitted when in LIN master mode
  */
@@ -1558,28 +1558,28 @@ static inline bool lin_master_transmission_status(struct usart_module *const mod
  *	</tr>
  *	<tr>
  *		<td>42118F</td>
- *		<td>06/2015</td>
- *		<td>Add support for SAML21/L22, SAMDAx, and SAMC20/C21.</td>
+ *		<td>08/2015</td>
+ *		<td>Add support for SAM L21/L22, SAM DA1, and SAM C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>42118E</td>
  *		<td>12/2014</td>
- *		<td>Add support for SAMR21 and SAMD10/D11.</td>
+ *		<td>Add support for SAM R21 and SAM D10/D11</td>
  *	</tr>
  *	<tr>
  *		<td>42118D</td>
  *		<td>01/2014</td>
- *		<td>Add support for SAMD21.</td>
+ *		<td>Add support for SAM D21</td>
  *	</tr>
  *	<tr>
  *		<td>42118C</td>
  *		<td>10/2013</td>
- *		<td>Replaced the pad multiplexing documentation with a condensed table.</td>
+ *		<td>Replaced the pad multiplexing documentation with a condensed table</td>
  *	</tr>
  *	<tr>
  *		<td>42118B</td>
  *		<td>06/2013</td>
- *		<td>Corrected documentation typos.</td>
+ *		<td>Corrected documentation typos</td>
  *	</tr>
  *	<tr>
  *		<td>42118A</td>

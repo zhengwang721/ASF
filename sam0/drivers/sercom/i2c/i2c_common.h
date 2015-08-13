@@ -88,7 +88,7 @@ extern "C" {
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -121,19 +121,19 @@ extern "C" {
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED</td>
- *		<td>SAM D21/R21/D10/D11/L21/L22/DAx/C20/C21</td>
+ *		<td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_10_BIT_ADDRESS</td>
- *		<td>SAM D21/R21/D10/D11/L21/L22/DAx/C20/C21</td>
+ *		<td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_SCL_STRETCH_MODE</td>
- *		<td>SAM D21/R21/D10/D11/L21/L22/DAx/C20/C21</td>
+ *		<td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_SCL_EXTEND_TIMEOUT</td>
- *		<td>SAM D21/R21/D10/D11/L21/L22/DAx/C20/C21</td>
+ *		<td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
  *	</tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -542,29 +542,29 @@ enum i2c_transfer_direction {
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>06/2015</td>
- *		<td>Added SAM L21, SAMDAx and SAMC21 support.</td>
+ *		<td>08/2015</td>
+ *		<td>Added SAM L21/L22, SAMDA1 and SAMC21 support</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
  *		<td>12/2014</td>
  *		<td>Added 10-bit addressing and high speed support in SAM D21
- *		    Added SAM R21/D10/D11 support.</td>
+ *		    Added SAM R21/D10/D11 support</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>
  *		<td>01/2014</td>
- *		<td>Added the SAM D21 to the application note.</td>
+ *		<td>Added the SAM D21 to the application note</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>
  *		<td>06/2013</td>
- *		<td>Corrected documentation typos. Updated I<SUP>2</SUP>C Bus State Diagram.</td>
+ *		<td>Corrected documentation typos. Updated I<SUP>2</SUP>C Bus State Diagram</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>
  *		<td>06/2013</td>
- *		<td>Initial release.</td>
+ *		<td>Initial release</td>
  *	</tr>
  * </table>
  */

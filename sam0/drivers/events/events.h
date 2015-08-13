@@ -682,9 +682,14 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset);
  *      <th>Comments</td>
  *  </tr>
  *  <tr>
+ *      <td>42108G</td>
+ *      <td>08/2015</td>
+ *      <td>Added support for SAM L22</td>
+ *  </tr>
+ *  <tr>
  *      <td>42108F</td>
  *      <td>08/2015</td>
- *      <td>Added support for SAM L21/L22, SAM DA1 and SAM C20/C21</td>
+ *      <td>Added support for SAM L21, SAM DA1 and SAM C20/C21</td>
  *  </tr>
  *  <tr>
  *      <td>42108E</td>

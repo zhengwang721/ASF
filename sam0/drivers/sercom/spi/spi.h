@@ -67,8 +67,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -107,19 +106,19 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_SLAVE_SELECT_LOW_DETECT</td>
- *    <td>SAM D21/R21/D10/D11/L21/L21/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L21/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_HARDWARE_SLAVE_SELECT</td>
- *    <td>SAM D21/R21/D10/D11/L21/L21/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L21/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_ERROR_INTERRUPT</td>
- *    <td>SAM D21/R21/D10/D11/L21/L21/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L21/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_SYNC_SCHEME_VERSION_2</td>
- *    <td>SAM D21/R21/D10/D11/L21/L21/DAx/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L21/DA1/C20/C21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -1772,23 +1771,23 @@ enum status_code spi_select_slave(
   *	</tr>
   *	<tr>
   *		<td>E</td>
-  *		<td>06/2015</td>
-  *		<td>Add SAM L21, SAMDAx and SAMC21 support.</td>
+  *		<td>08/2015</td>
+  *		<td>Add SAM L21/L22, SAM DA1 and SAM C21 support</td>
   *	</tr>
   *	<tr>
   *		<td>D</td>
   *		<td>12/2014</td>
-  *		<td>Add SAM R21/D10/D11 support.</td>
+  *		<td>Add SAM R21/D10/D11 support</td>
   *	</tr>
   *	<tr>
   *		<td>C</td>
   *		<td>01/2014</td>
-  *		<td>Add SAM D21 support.</td>
+  *		<td>Add SAM D21 support</td>
   *	</tr>
   *	<tr>
   *		<td>B</td>
   *		<td>11/2013</td>
-  *		<td>Replaced the pad multiplexing documentation with a condensed table.</td>
+  *		<td>Replaced the pad multiplexing documentation with a condensed table</td>
   *	</tr>
   *	<tr>
   *		<td>A</td>

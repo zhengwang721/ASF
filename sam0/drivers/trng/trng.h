@@ -437,6 +437,11 @@ static inline enum status_code trng_read(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>42444B</td>
+ *		<td>08/2015</td>
+ *		<td>Added support for SAM L22</td>
+ *	</tr>
+ *	<tr>
  *		<td>42444A</td>
  *		<td>06/2015</td>
  *		<td>Initial document release</td>

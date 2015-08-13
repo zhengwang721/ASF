@@ -282,7 +282,7 @@
 
 			<module type="driver" id="sam0.drivers.system.interrupt#samdax" caption="SYSTEM - Interrupt Driver">
 				<info type="description" value="summary">
-					Driver for the SAM DAx Interrupt System. Provides a unified
+					Driver for the SAM DA1 Interrupt System. Provides a unified
 					interface for the configuration and management interrupts within
 					the device, including the enabling, disabling and entering, leaving
 					of critical sections.

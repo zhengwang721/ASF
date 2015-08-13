@@ -478,6 +478,11 @@ void ccl_lut_disable(const enum ccl_lut_id number);
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>42448B</td>
+ *		<td>08/2015</td>
+ *		<td>Add support for SAM L22</td>
+ *	</tr>
+ *	<tr>
  *		<td>42448A</td>
  *		<td>06/2015</td>
  *		<td>Initial document release</td>

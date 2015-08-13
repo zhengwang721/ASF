@@ -616,6 +616,11 @@ static inline void bod12_clear_detected(void)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>42453B</td>
+ *		<td>08/2015</td>
+ *		<td>Added support for SAM L22</td>
+ *	</tr>
+ *	<tr>
  *		<td>42453A</td>
  *		<td>06/2015</td>
  *		<td>Initial document release</td>

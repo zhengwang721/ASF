@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_tc_group SAM Timer/Counter Driver (TC)
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the timer modules within the device, for waveform
  * generation and timing operations. The following driver API modes are covered
  * by this manual:
@@ -69,7 +69,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -117,27 +117,27 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_TC_DOUBLE_BUFFERED</td>
- *    <td>SAML21/L22/C20/C21</td>
+ *    <td>SAM L21/L22/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_TC_SYNCBUSY_SCHEME_VERSION_2</td>
- *    <td>SAML21/L22/C20/C21</td>
+ *    <td>SAM L21/L22/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_TC_STAMP_PW_CAPTURE</td>
- *    <td>SAML21/L22/C20/C21</td>
+ *    <td>SAM L21/L22/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_TC_READ_SYNC</td>
- *    <td>SAML21/L22/C20/C21</td>
+ *    <td>SAM L21/L22/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_TC_IO_CAPTURE</td>
- *    <td>SAML21/L22/C20/C21</td>
+ *    <td>SAM L21/L22/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_TC_GENERATE_DMA_TRIGGER</td>
- *    <td>SAML21/L22</td>
+ *    <td>SAM L21/L22</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -233,7 +233,7 @@
  *   </tr>
  * </table>
  *
- * In SAMD10/D11, odd numbered TC modules (e.g. TC1) can be configured as 32-bit
+ * In SAM D10/D11, odd numbered TC modules (e.g. TC1) can be configured as 32-bit
  * counters. The even numbered(e.g. TC2) counters will act as slaves to the odd
  * numbered masters.
  *
@@ -886,7 +886,7 @@ struct tc_config {
 	enum tc_reload_action reload_action;
 
 	/** Specifies which channel(s) to invert the waveform on.
-		For SAML21/L22/C20/C21, it's also used to invert IO input pin. */
+		For SAM L21/L22/C20/C21, it's also used to invert IO input pin. */
 	uint8_t waveform_invert_output;
 
 	/** Specifies which channel(s) to enable channel capture
@@ -1030,10 +1030,10 @@ static inline bool tc_is_syncing(
  *  \li Normal frequency wave generation
  *  \li GCLK reload action
  *  \li Don't run in standby
- *  \li Don't run on demand for SAML21/L22/C20/C21
+ *  \li Don't run on demand for SAM L21/L22/C20/C21
  *  \li No inversion of waveform output
  *  \li No capture enabled
- *  \li No I/O capture enabled for SAML21/L22/C20/C21
+ *  \li No I/O capture enabled for SAM L21/L22/C20/C21
  *  \li No event input enabled
  *  \li Count upward
  *  \li Don't perform one-shot operations
@@ -1733,30 +1733,35 @@ static inline void tc_clear_status(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>G</td>
+ *		<td>08/2015</td>
+ *		<td>Added support for SAM C21 and SAM L22</td>
+ *	</tr>
+ *	<tr>
  *		<td>F</td>
  *		<td>12/2014</td>
- *		<td>Added support for SAMC21.</td>
+ *		<td>Added support for SAM C21</td>
  *	</tr>
  *	<tr>
  *		<td>E</td>
  *		<td>04/2015</td>
- *		<td>Added support for SAML21 and SAMDAx.</td>
+ *		<td>Added support for SAM L21 and SAM DA1</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
  *		<td>12/2014</td>
  *		<td>Added timer use case.
- *		    Added support for SAMR21 and SAMD10/D11.</td>
+ *		    Added support for SAM R21 and SAM D10/D11</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAMD21.</td>
+ *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>
  *		<td>06/2013</td>
- *		<td>Corrected documentation typos.</td>
+ *		<td>Corrected documentation typos</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

@@ -695,6 +695,11 @@ static inline void aes_gcm_set_gf_multiplication(struct aes_module *const module
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *      <td>42445B</td>
+ *		<td>08/2015</td>
+ *		<td>Added support for SAM L22</td>
+ *	</tr>
+ *	<tr>
  *      <td>42445A</td>
  *		<td>06/2015</td>
  *		<td>Initial release</td>

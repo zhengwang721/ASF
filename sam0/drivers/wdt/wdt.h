@@ -67,7 +67,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -162,7 +162,7 @@
  * }
  * \enddot
  *
- * \note Watchdog Counter of SAML21/L22 is \a not provided by GCLK, but it uses an
+ * \note Watchdog Counter of SAM L21/L22 is \a not provided by GCLK, but it uses an
  *       internal 1KHz OSCULP32K output clock.
  *
  * \section asfdoc_sam0_wdt_special_considerations Special Considerations
@@ -471,29 +471,24 @@ void wdt_reset_count(void);
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>F</td>
- *		<td>01/2015</td>
- *		<td>Added SAMC21 support.</td>
- *	</tr>
- *	<tr>
  *		<td>E</td>
- *		<td>04/2015</td>
- *		<td>Added SAML21 and SAMDAx support.</td>
+ *		<td>08/2015</td>
+ *		<td>Added support for SAM L21/L22, SAM DA1, and SAM C20/C2</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
  *		<td>12/2014</td>
- *		<td>Added SAMR21 and SAMD10/D11 support.</td>
+ *		<td>Added SAMR21 and SAMD10/D11 support</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>
  *		<td>01/2014</td>
- *		<td>Add SAMD21 support.</td>
+ *		<td>Add SAMD21 support</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>
  *		<td>06/2013</td>
- *		<td>Corrected documentation typos.</td>
+ *		<td>Corrected documentation typos</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>
