@@ -57,7 +57,7 @@
  *
  * \section Description
  * This program plays sound from PC via Line-In. The audio stream is
- * sent through the SSC interface connected to the on-board WM8904, enabling 
+ * sent through the SSC interface connected to the on-board WM8904, enabling
  * the sound to be audible using a pair of headphones.
  *
  * The code can be roughly broken down as follows:
@@ -108,14 +108,14 @@ extern "C" {
 #define BITS_BY_SLOT            (16)
 
 /** Micro-block length for single transfer  */
-#define MICROBLOCK_LEN       0x1000
+#define MICROBLOCK_LEN          0x1000
 
 /** XDMA channel used in this example. */
 #define XDMA_CH_SSC_RX    0
 #define XDMA_CH_SSC_TX    1
 
 /** XDMA Descriptor */
-#define TOTAL_BUFFERS    4
+#define TOTAL_BUFFERS     4
 
 /** */
 static lld_view1 linklist_write[TOTAL_BUFFERS];
@@ -203,9 +203,9 @@ static void configure_ssc(void)
 
 static void configure_xdma(void)
 {
-    uint16_t *src;
-    uint8_t i;
-    
+	uint16_t *src;
+	uint8_t i;
+
 	xdmac_channel_config_t xdmac_channel_cfg = {0};
 
 	/* Initialize and enable DMA controller */
@@ -222,24 +222,24 @@ static void configure_xdma(void)
 								| XDMAC_CC_SAM_FIXED_AM
 								| XDMAC_CC_DAM_INCREMENTED_AM
 								| XDMAC_CC_PERID(33);
- 	xdmac_configure_transfer(XDMAC, XDMA_CH_SSC_RX, &xdmac_channel_cfg);
+	xdmac_configure_transfer(XDMAC, XDMA_CH_SSC_RX, &xdmac_channel_cfg);
 
 	/* Initialize linked list descriptor */
-    src = &AudioBuffer[0];
-    for(i = 0; i < TOTAL_BUFFERS; i++) {
+	src = &AudioBuffer[0];
+	for(i = 0; i < TOTAL_BUFFERS; i++) {
 	    linklist_read[i].mbr_ubc = XDMAC_UBC_NVIEW_NDV1
 									| XDMAC_UBC_NDE_FETCH_EN
 									| XDMAC_UBC_NSEN_UPDATED
 									| XDMAC_CUBC_UBLEN(MICROBLOCK_LEN);
-	    linklist_read[i].mbr_sa  = (uint32_t)&(SSC->SSC_RHR);
-	    linklist_read[i].mbr_da = (uint32_t)(src);
-	    if ( i == (TOTAL_BUFFERS - 1)) {
+		linklist_read[i].mbr_sa  = (uint32_t)&(SSC->SSC_RHR);
+		linklist_read[i].mbr_da = (uint32_t)(src);
+		if ( i == (TOTAL_BUFFERS - 1)) {
 		    linklist_read[i].mbr_nda = (uint32_t)&linklist_read[0];
-	    } else {
-		    linklist_read[i].mbr_nda = (uint32_t)&linklist_read[i + 1];
-	    }
-	    src += MICROBLOCK_LEN ;
-    }
+		} else {
+			linklist_read[i].mbr_nda = (uint32_t)&linklist_read[i + 1];
+		}
+		src += MICROBLOCK_LEN ;
+	}
 
 	xdmac_channel_set_descriptor_control(XDMAC, XDMA_CH_SSC_RX, XDMAC_CNDC_NDVIEW_NDV1 |
 										XDMAC_CNDC_NDE_DSCR_FETCH_EN |
@@ -250,7 +250,7 @@ static void configure_xdma(void)
 	xdmac_enable_interrupt(XDMAC, XDMA_CH_SSC_RX);
 	xdmac_channel_enable_interrupt(XDMAC, XDMA_CH_SSC_RX, XDMAC_CIE_LIE);
 
-    xdmac_channel_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
+	xdmac_channel_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
 								| XDMAC_CC_MBSIZE_SINGLE
 								| XDMAC_CC_DSYNC_MEM2PER
 								| XDMAC_CC_CSIZE_CHK_1
@@ -260,23 +260,23 @@ static void configure_xdma(void)
 								| XDMAC_CC_SAM_INCREMENTED_AM
 								| XDMAC_CC_DAM_FIXED_AM
 								| XDMAC_CC_PERID(32);
-    xdmac_configure_transfer(XDMAC, XDMA_CH_SSC_TX, &xdmac_channel_cfg);
+	xdmac_configure_transfer(XDMAC, XDMA_CH_SSC_TX, &xdmac_channel_cfg);
 
-    src = &AudioBuffer[0];
+	src = &AudioBuffer[0];
 	for(i = 0; i < TOTAL_BUFFERS; i++) {
 	    linklist_write[i].mbr_ubc = XDMAC_UBC_NVIEW_NDV1
 									| XDMAC_UBC_NDE_FETCH_EN
 									| XDMAC_UBC_NSEN_UPDATED
 									| XDMAC_CUBC_UBLEN(MICROBLOCK_LEN);
-	    linklist_write[i].mbr_sa = (uint32_t)(src);
-	    linklist_write[i].mbr_da = (uint32_t)&(SSC->SSC_THR);
-	    if ( i == (TOTAL_BUFFERS - 1 )) {
+		linklist_write[i].mbr_sa = (uint32_t)(src);
+		linklist_write[i].mbr_da = (uint32_t)&(SSC->SSC_THR);
+		if ( i == (TOTAL_BUFFERS - 1 )) {
 		    linklist_write[i].mbr_nda = (uint32_t)&linklist_write[0];
-	    } else {
+		} else {
 		    linklist_write[i].mbr_nda = (uint32_t)&linklist_write[i+1];
-	    }
-	    src += MICROBLOCK_LEN;
-    }
+		}
+		src += MICROBLOCK_LEN;
+	}
 
 	xdmac_channel_set_descriptor_control(XDMAC, XDMA_CH_SSC_TX, XDMAC_CNDC_NDVIEW_NDV1
 										| XDMAC_CNDC_NDE_DSCR_FETCH_EN
@@ -305,44 +305,60 @@ static void configure_codec(void)
 		while(1);
 	}
 
-	wm8904_write_register(WM8904_BIAS_CONTROL_0, 0x0008);
-	wm8904_write_register(WM8904_VMID_CONTROL_0, 0x0047);
+	wm8904_write_register(WM8904_BIAS_CONTROL_0, WM8904_ISEL_HP_BIAS);
+	wm8904_write_register(WM8904_VMID_CONTROL_0, WM8904_VMID_BUF_ENA |
+							WM8904_VMID_RES_FAST | WM8904_VMID_ENA);
 	delay_ms(5);
-	wm8904_write_register(WM8904_VMID_CONTROL_0, 0x0043);
-	wm8904_write_register(WM8904_BIAS_CONTROL_0, 0x0009);
-	wm8904_write_register(WM8904_POWER_MANAGEMENT_0, 0x0003);
-	wm8904_write_register(WM8904_POWER_MANAGEMENT_2, 0x0003);
-	wm8904_write_register(WM8904_DAC_DIGITAL_1, 0x0000);
+	wm8904_write_register(WM8904_VMID_CONTROL_0, WM8904_VMID_BUF_ENA |
+							WM8904_VMID_RES_NORMAL | WM8904_VMID_ENA);
+	wm8904_write_register(WM8904_BIAS_CONTROL_0, WM8904_ISEL_HP_BIAS | WM8904_BIAS_ENA);
+	wm8904_write_register(WM8904_POWER_MANAGEMENT_0, WM8904_INL_ENA | WM8904_INR_ENA);
+	wm8904_write_register(WM8904_POWER_MANAGEMENT_2, WM8904_HPL_PGA_ENA | WM8904_HPR_PGA_ENA);
+	wm8904_write_register(WM8904_DAC_DIGITAL_1, WM8904_DEEMPH(0));
 	wm8904_write_register(WM8904_ANALOGUE_OUT12_ZC, 0x0000);
-	wm8904_write_register(WM8904_CHARGE_PUMP_0, 0x0001);
-	wm8904_write_register(WM8904_CLASS_W_0, 0x0001);
+	wm8904_write_register(WM8904_CHARGE_PUMP_0, WM8904_CP_ENA);
+	wm8904_write_register(WM8904_CLASS_W_0, WM8904_CP_DYN_PWR);
 	wm8904_write_register(WM8904_FLL_CONTROL_1, 0x0000);
-	wm8904_write_register(WM8904_FLL_CONTROL_2, 0x0704);
-	wm8904_write_register(WM8904_FLL_CONTROL_3, 0x8000);
-	wm8904_write_register(WM8904_FLL_CONTROL_4, 0x1760);
-	wm8904_write_register(WM8904_FLL_CONTROL_1, 0x0005);
+	wm8904_write_register(WM8904_FLL_CONTROL_2, WM8904_FLL_OUTDIV(7)| WM8904_FLL_FRATIO(4));
+	wm8904_write_register(WM8904_FLL_CONTROL_3, WM8904_FLL_K(0x8000));
+	wm8904_write_register(WM8904_FLL_CONTROL_4, WM8904_FLL_N(0xBB));
+	wm8904_write_register(WM8904_FLL_CONTROL_1, WM8904_FLL_FRACN_ENA | WM8904_FLL_ENA);
 	delay_ms(5);
-	wm8904_write_register(WM8904_CLOCK_RATES_1, 0x0C05);
+	wm8904_write_register(WM8904_CLOCK_RATES_1, WM8904_CLK_SYS_RATE(3) | WM8904_SAMPLE_RATE(5));
 	wm8904_write_register(WM8904_CLOCK_RATES_0, 0x0000);
-	wm8904_write_register(WM8904_CLOCK_RATES_2, 0x4006);
-	wm8904_write_register(WM8904_AUDIO_INTERFACE_1, 0x0042);
-	wm8904_write_register(WM8904_AUDIO_INTERFACE_2, 0x0008);
-	wm8904_write_register(WM8904_AUDIO_INTERFACE_3, 0x0820);
-	wm8904_write_register(WM8904_POWER_MANAGEMENT_6, 0x000F);
+	wm8904_write_register(WM8904_CLOCK_RATES_2, 
+						WM8904_SYSCLK_SRC | WM8904_CLK_SYS_ENA | WM8904_CLK_DSP_ENA);
+	wm8904_write_register(WM8904_AUDIO_INTERFACE_1, WM8904_BCLK_DIR | WM8904_AIF_FMT_I2S);
+	wm8904_write_register(WM8904_AUDIO_INTERFACE_2, WM8904_BCLK_DIV(8));
+	wm8904_write_register(WM8904_AUDIO_INTERFACE_3, WM8904_LRCLK_DIR | WM8904_LRCLK_RATE(0x20));
+	wm8904_write_register(WM8904_POWER_MANAGEMENT_6, 
+						WM8904_DACL_ENA | WM8904_DACR_ENA | 
+						WM8904_ADCL_ENA | WM8904_ADCR_ENA);
 	delay_ms(5);
-	wm8904_write_register(WM8904_ANALOGUE_LEFT_INPUT_0, 0x0010);
-	wm8904_write_register(WM8904_ANALOGUE_RIGHT_INPUT_0, 0x0010);
-	wm8904_write_register(WM8904_ANALOGUE_LEFT_INPUT_1, 0x0044);
-	wm8904_write_register(WM8904_ANALOGUE_RIGHT_INPUT_1, 0x0044);
-	wm8904_write_register(WM8904_ANALOGUE_HP_0, 0x0011);
-	wm8904_write_register(WM8904_ANALOGUE_HP_0, 0x0033);
-	wm8904_write_register(WM8904_DC_SERVO_0, 0x000F);
-	wm8904_write_register(WM8904_DC_SERVO_1, 0x00F0);
+	wm8904_write_register(WM8904_ANALOGUE_LEFT_INPUT_0, WM8904_LIN_VOL(0x10));
+	wm8904_write_register(WM8904_ANALOGUE_RIGHT_INPUT_0, WM8904_RIN_VOL(0x10));
+	wm8904_write_register(WM8904_ANALOGUE_LEFT_INPUT_1, WM8904_INL_CM_ENA | WM8904_L_IP_SEL_P_IN2L);
+	wm8904_write_register(WM8904_ANALOGUE_RIGHT_INPUT_1, WM8904_INR_CM_ENA | WM8904_R_IP_SEL_P_IN2L);
+	wm8904_write_register(WM8904_ANALOGUE_HP_0, 
+						WM8904_HPL_ENA | WM8904_HPR_ENA);
+	wm8904_write_register(WM8904_ANALOGUE_HP_0, 
+						WM8904_HPL_ENA_DLY | WM8904_HPL_ENA |
+						WM8904_HPR_ENA_DLY | WM8904_HPR_ENA);
+	wm8904_write_register(WM8904_DC_SERVO_0, 
+						WM8904_DCS_ENA_CHAN_3 | WM8904_DCS_ENA_CHAN_2 |
+						WM8904_DCS_ENA_CHAN_1 | WM8904_DCS_ENA_CHAN_0);
+	wm8904_write_register(WM8904_DC_SERVO_1, 
+						WM8904_DCS_TRIG_STARTUP_3 | WM8904_DCS_TRIG_STARTUP_2 |
+						WM8904_DCS_TRIG_STARTUP_1 | WM8904_DCS_TRIG_STARTUP_0);
 	delay_ms(100);
-	wm8904_write_register(WM8904_ANALOGUE_HP_0, 0x0077);
-	wm8904_write_register(WM8904_ANALOGUE_HP_0, 0x00FF);
-	wm8904_write_register(WM8904_ANALOGUE_OUT1_LEFT, 0x00B9);
-	wm8904_write_register(WM8904_ANALOGUE_OUT1_RIGHT, 0x00B9);
+	wm8904_write_register(WM8904_ANALOGUE_HP_0, 
+						WM8904_HPL_ENA_OUTP | WM8904_HPL_ENA_DLY | WM8904_HPL_ENA | 
+						WM8904_HPR_ENA_OUTP | WM8904_HPR_ENA_DLY | WM8904_HPR_ENA);
+	wm8904_write_register(WM8904_ANALOGUE_HP_0, 
+						WM8904_HPL_RMV_SHORT | WM8904_HPL_ENA_OUTP | WM8904_HPL_ENA_DLY | WM8904_HPL_ENA | 
+						WM8904_HPR_RMV_SHORT | WM8904_HPR_ENA_OUTP | WM8904_HPR_ENA_DLY | WM8904_HPR_ENA);
+	wm8904_write_register(WM8904_ANALOGUE_OUT1_LEFT, WM8904_HPOUT_VU | WM8904_HPOUTL_VOL(0x39));
+	wm8904_write_register(WM8904_ANALOGUE_OUT1_RIGHT, WM8904_HPOUT_VU | WM8904_HPOUTR_VOL(0x39));
 	delay_ms(100);
 }
 
@@ -356,14 +372,14 @@ int main(void)
 	configure_console();
 	printf(STRING_HEADER);
 
-	/* Initialize WM8904 */
-	if (wm8904_init() != TWIHS_SUCCESS) {
+	/* Initialize WM8904 TWI interface*/
+	if (wm8904_twi_init() != TWIHS_SUCCESS) {
 		printf("-E-\tWM8904 initialization failed.\r");
 		while (1) {
 			/* Capture error */
 		}
 	}
-	
+
 	/* Configure CODEC */
 	configure_codec();
 
@@ -373,12 +389,12 @@ int main(void)
 	/* Configure XDMA */
 	configure_xdma();
 
-    /* Enable the DAC master clock */
+	/* Enable the DAC master clock */
 	pmc_pck_set_prescaler(PMC_PCK_2, PMC_MCKR_PRES_CLK_1);
 	pmc_pck_set_source(PMC_PCK_2, PMC_MCKR_CSS_SLOW_CLK);
 	pmc_enable_pck(PMC_PCK_2);
 
-    /* Start playing */
+	/* Start playing */
 	ssc_enable_rx(SSC);
 	xdmac_channel_enable(XDMAC, XDMA_CH_SSC_RX);
 	delay_ms(300);

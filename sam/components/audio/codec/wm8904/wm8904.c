@@ -107,7 +107,7 @@ uint16_t wm8904_read_register(uint8_t uc_register_address)
  *
  * \retun TWIHS_SUCCESS if initialization is complete, error code otherwise.
  */
-uint32_t wm8904_init(void)
+uint32_t wm8904_twi_init(void)
 {
 	pio_configure_pin(WM8904_TK_PIO, WM8904_TK_FLAGS);
 	pio_configure_pin(WM8904_TF_PIO, WM8904_TF_FLAGS);
