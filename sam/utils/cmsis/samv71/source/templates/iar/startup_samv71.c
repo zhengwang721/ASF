@@ -294,8 +294,6 @@ const DeviceVectors __vector_table = {
 int __low_level_init(void)
 {
         uint32_t *pSrc = __section_begin(".intvec");
-        uint32_t dwRegionBaseAddr;
-        uint32_t dwRegionAttr;
 
         SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
 

@@ -473,7 +473,7 @@ void s25fl1xx_enable_wrap(struct qspid_t *qspid, uint8_t byte_align)
 
 	s25fl1xx_write_volatile_status(qspid, status);
 	status[2] = s25fl1xx_read_status3(qspid);
-	delay_ms(50);
+	while(!(status[2] & 0x10));
 }
 
 /**
