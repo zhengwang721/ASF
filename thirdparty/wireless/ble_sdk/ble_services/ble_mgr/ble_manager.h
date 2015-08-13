@@ -567,13 +567,10 @@ typedef struct adv_element
 #if defined HID_SERVICE
 typedef struct gatt_service_handler
 {
-	at_ble_uuid_t	serv_uuid;
-	at_ble_handle_t	serv_handle;
-	at_ble_characteristic_gen_t	serv_chars[HID_CHARACTERISTIC_NUM];
-	generic_Att_Desc serv_desc[HID_NUM_OF_REPORT];   /*Report descriptor*/
+	at_ble_service_t		  serv;
+	at_ble_chr_t		      serv_chars[HID_CHARACTERISTIC_NUM];
+	at_ble_generic_att_desc_t serv_desc[HID_NUM_OF_REPORT];   /*Report descriptor*/
 }gatt_service_handler_t;
-
-
 #else
 typedef struct gatt_service_handler
 {

@@ -59,7 +59,7 @@
 #include "ble_manager.h"
 #include "hid.h"
 
-generic_Att_Desc report_desc[HID_NUM_OF_REPORT];
+at_ble_generic_att_desc_t report_desc[HID_NUM_OF_REPORT];
 gatt_service_handler_t hid_inst[HID_MAX_SERV_INST];
 hid_serv_t hid_serv_inst[HID_MAX_SERV_INST];   /**< HID service instance. */
 uint8_t ctrl_point[0];
@@ -100,83 +100,170 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 {
 	uint8_t id = 0;
 	
+	/* Configure the HID service type */
+	hid_inst[servinst].serv.type = PRIMARY_SERVICE;
+	
+	/* Configure the HID service permission */
+	hid_inst[servinst].serv.perm = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+	
+	/* Configure the HID service handle */
+	hid_inst[servinst].serv.handle = 0;
+	
 	/* Configure HID Service */
-	hid_inst[servinst].serv_uuid.type = AT_BLE_UUID_16;
-	hid_inst[servinst].serv_uuid.uuid[0] = (uint8_t) HID_SERV_UUID;
-	hid_inst[servinst].serv_uuid.uuid[1] = (uint8_t) (HID_SERV_UUID>>8);	
+	hid_inst[servinst].serv.uuid.type = AT_BLE_UUID_16;
+	hid_inst[servinst].serv.uuid.uuid[0] = (uint8_t) HID_SERV_UUID;
+	hid_inst[servinst].serv.uuid.uuid[1] = (uint8_t) (HID_SERV_UUID>>8);	
+	
+	/* Configure HID include service list */
+	hid_inst[servinst].serv.inc_list = NULL;
+	
+	/* Configure the HID include service count */
+	hid_inst[servinst].serv.included_count = 0;
 	
 	/*Map the service UUID instance*/
-	hid_serv_inst[servinst].hid_dev_serv_uuid = &hid_inst[servinst].serv_uuid;
-	
-	hid_inst[servinst].serv_handle = 0;
+	hid_serv_inst[servinst].hid_dev_serv_uuid = &hid_inst[servinst].serv.uuid;
 	
 	/*Map the service UUID instance*/
-	hid_serv_inst[servinst].hid_dev_serv_handle = &hid_inst[servinst].serv_handle;
+	hid_serv_inst[servinst].hid_dev_serv_handle = &hid_inst[servinst].serv.handle;
 	
-	/*Configure HID Protocol Mode Characteristic*/
-    hid_inst[servinst].serv_chars[0].uuid.type = AT_BLE_UUID_16;
-	hid_inst[servinst].serv_chars[0].uuid.uuid[0] =(uint8_t) HID_UUID_CHAR_PROTOCOL_MODE;
-	hid_inst[servinst].serv_chars[0].uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_PROTOCOL_MODE >> 8);
-	hid_inst[servinst].serv_chars[0].properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_WRITE_WITHOUT_RESPONSE);
-	hid_inst[servinst].serv_chars[0].init_value = mode;
-	hid_inst[servinst].serv_chars[0].value_init_len = sizeof(uint8_t);
-	hid_inst[servinst].serv_chars[0].value_max_len = sizeof(uint8_t);
-	hid_inst[servinst].serv_chars[0].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
-	hid_inst[servinst].serv_chars[0].DescList = NULL;
-	hid_inst[servinst].serv_chars[0].DescCount = 0;
+	/*Configure HID Protocol Mode Characteristic : Value related info*/
+    hid_inst[servinst].serv_chars[0].char_val.handle = 0;
+	hid_inst[servinst].serv_chars[0].char_val.uuid.type = AT_BLE_UUID_16;
+	hid_inst[servinst].serv_chars[0].char_val.uuid.uuid[0] =(uint8_t) HID_UUID_CHAR_PROTOCOL_MODE;
+	hid_inst[servinst].serv_chars[0].char_val.uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_PROTOCOL_MODE >> 8);
+	hid_inst[servinst].serv_chars[0].char_val.properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_WRITE_WITHOUT_RESPONSE);
+	hid_inst[servinst].serv_chars[0].char_val.init_value = mode;
+	hid_inst[servinst].serv_chars[0].char_val.len = sizeof(uint8_t);
+	hid_inst[servinst].serv_chars[0].char_val.permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
 	
-    /*Map the device protocol mode chatacteristic*/
+	/*Configure HID Protocol Mode Characteristic : user descriptor related info */
+	hid_inst[servinst].serv_chars[0].user_desc.user_description = NULL;
+	hid_inst[servinst].serv_chars[0].user_desc.len = 0;
+	hid_inst[servinst].serv_chars[0].user_desc.handle = 0;
+	hid_inst[servinst].serv_chars[0].user_desc.permissions = AT_BLE_ATTR_NO_PERMISSIONS;
+	
+	/*Configure HID Protocol Mode Characteristic : presentation format related info */
+	hid_inst[servinst].serv_chars[0].presentation_format = NULL;
+	
+	/*Configure HID Protocol Mode Characteristic : client config descriptor related info */
+	hid_inst[servinst].serv_chars[0].client_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
+	hid_inst[servinst].serv_chars[0].client_config_desc.handle = 0;
+	
+	/*Configure HID Protocol Mode Characteristic : server config descriptor related info */
+	hid_inst[servinst].serv_chars[0].server_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
+	hid_inst[servinst].serv_chars[0].server_config_desc.handle = 0;
+	
+	/*Configure HID Protocol Mode Characteristic : generic descriptor related info */
+	hid_inst[servinst].serv_chars[0].additional_desc_list = NULL;
+	
+	/*Configure HID Protocol Mode Characteristic : count of generic descriptor */
+	hid_inst[servinst].serv_chars[0].additional_desc_count = 0;
+	
+    /*Map the device protocol mode characteristic*/
 	hid_serv_inst[servinst].hid_dev_proto_mode_char = &hid_inst[servinst].serv_chars[0];
-
-	/*Configure HID Report Map Characteristic*/
-	hid_inst[servinst].serv_chars[1].uuid.type = AT_BLE_UUID_16;
-	hid_inst[servinst].serv_chars[1].uuid.uuid[0] =(uint8_t) HID_UUID_CHAR_REPORT_MAP;
-	hid_inst[servinst].serv_chars[1].uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_REPORT_MAP >> 8);
-	hid_inst[servinst].serv_chars[1].properties = AT_BLE_CHAR_READ;
-	hid_inst[servinst].serv_chars[1].value_permissions = AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR;
-	hid_inst[servinst].serv_chars[1].DescList = NULL;
-	hid_inst[servinst].serv_chars[1].DescCount = 0;
 	
-	/*Map the device protocol mode chatacteristic*/
+	/*Configure HID Report Map Characteristic : Value related info*/
+	hid_inst[servinst].serv_chars[1].char_val.handle = 0;
+	hid_inst[servinst].serv_chars[1].char_val.uuid.type = AT_BLE_UUID_16;
+	hid_inst[servinst].serv_chars[1].char_val.uuid.uuid[0] =(uint8_t) HID_UUID_CHAR_REPORT_MAP;
+	hid_inst[servinst].serv_chars[1].char_val.uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_REPORT_MAP >> 8);
+	hid_inst[servinst].serv_chars[1].char_val.properties = AT_BLE_CHAR_READ;
+	hid_inst[servinst].serv_chars[1].char_val.permissions = AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR;
+	
+	/*Configure HID Report Map Characteristic : user descriptor related info */
+	hid_inst[servinst].serv_chars[1].user_desc.user_description = NULL;
+	hid_inst[servinst].serv_chars[1].user_desc.len = 0;
+	hid_inst[servinst].serv_chars[1].user_desc.handle = 0;
+	hid_inst[servinst].serv_chars[1].user_desc.permissions = AT_BLE_ATTR_NO_PERMISSIONS;
+	
+	/*Configure HID Report Map Characteristic : presentation format related info */
+	hid_inst[servinst].serv_chars[1].presentation_format = NULL;
+	
+	/*Configure HID Report Map Characteristic : client config descriptor related info */
+	hid_inst[servinst].serv_chars[1].client_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
+	hid_inst[servinst].serv_chars[1].client_config_desc.handle = 0;
+	
+	/*Configure HID Report Map Characteristic : server config descriptor related info */
+	hid_inst[servinst].serv_chars[1].server_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
+	hid_inst[servinst].serv_chars[1].server_config_desc.handle = 0;
+	
+	/*Configure HID Report Map Characteristic : generic descriptor related info */
+	hid_inst[servinst].serv_chars[1].additional_desc_list = NULL;
+	
+	/*Configure HID Report Map Characteristic : count of generic descriptor */
+	hid_inst[servinst].serv_chars[1].additional_desc_count = 0;
+	
+	/*Map the device Report Map characteristic*/
 	hid_serv_inst[servinst].hid_dev_report_map_char = &hid_inst[servinst].serv_chars[1];
 	
 	/*Configure number of HID report*/
 	for(id = 1; id <= report_num; ++id)
 	{
-		/*Configure HID Report Characteristic*/
-		hid_inst[servinst].serv_chars[id + 1].uuid.type = AT_BLE_UUID_16;
-		hid_inst[servinst].serv_chars[id + 1].uuid.uuid[0] = (uint8_t)HID_UUID_CHAR_REPORT;
-		hid_inst[servinst].serv_chars[id + 1].uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_REPORT >> 8);
-		hid_inst[servinst].serv_chars[id + 1].init_value = (uint8_t *)((report_val[id-1]));
-		hid_inst[servinst].serv_chars[id + 1].value_init_len = report_len[id-1];
-		hid_inst[servinst].serv_chars[id + 1].value_max_len =  report_len[id-1];
 		
+		/*Configure HID Report Characteristic : Value related info*/
+		hid_inst[servinst].serv_chars[id + 1].char_val.handle = 0;
+		hid_inst[servinst].serv_chars[id + 1].char_val.uuid.type = AT_BLE_UUID_16;
+		hid_inst[servinst].serv_chars[id + 1].char_val.uuid.uuid[0] =(uint8_t) HID_UUID_CHAR_REPORT;
+		hid_inst[servinst].serv_chars[id + 1].char_val.uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_REPORT >> 8);
+		hid_inst[servinst].serv_chars[id + 1].char_val.init_value = report_len[id-1];
+		hid_inst[servinst].serv_chars[id + 1].char_val.len = report_len[id-1];
+			
 		if(report_type[id-1] == INPUT_REPORT)
 		{
-			hid_inst[servinst].serv_chars[id + 1].properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_NOTIFY);
-			hid_inst[servinst].serv_chars[id + 1].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR);
+			hid_inst[servinst].serv_chars[id + 1].char_val.properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_NOTIFY);
+			hid_inst[servinst].serv_chars[id + 1].char_val.permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR);
+			
+			/*Configure HID Report Characteristic : client config descriptor related info */
+			hid_inst[servinst].serv_chars[id + 1].client_config_desc.perm = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+			hid_inst[servinst].serv_chars[id + 1].client_config_desc.handle = 0;
 		}
 		else if(report_type[id-1] == OUTPUT_REPORT)
 		{
-			hid_inst[servinst].serv_chars[id + 1].properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_WRITE_WITHOUT_RESPONSE|AT_BLE_CHAR_WRITE);
-			hid_inst[servinst].serv_chars[id + 1].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+			hid_inst[servinst].serv_chars[id + 1].char_val.properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_WRITE_WITHOUT_RESPONSE|AT_BLE_CHAR_WRITE);
+			hid_inst[servinst].serv_chars[id + 1].char_val.permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+			
+			/*Configure HID Report Characteristic : client config descriptor related info */
+			hid_inst[servinst].serv_chars[id + 1].client_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
+			hid_inst[servinst].serv_chars[id + 1].client_config_desc.handle = 0;
 		}
 		else if(report_type[id-1] == FEATURE_REPORT)
 		{
-			hid_inst[servinst].serv_chars[id + 1].properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_WRITE);
-			hid_inst[servinst].serv_chars[id + 1].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
-  	    }
+			hid_inst[servinst].serv_chars[id + 1].char_val.properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_WRITE);
+			hid_inst[servinst].serv_chars[id + 1].char_val.permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+  			
+			/*Configure HID Report Characteristic : client config descriptor related info */
+			hid_inst[servinst].serv_chars[id + 1].client_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
+			hid_inst[servinst].serv_chars[id + 1].client_config_desc.handle = 0; 
+		}
+		  
+		/*Configure HID Report Characteristic : user descriptor related info */
+		hid_inst[servinst].serv_chars[id + 1].user_desc.user_description = NULL;
+		hid_inst[servinst].serv_chars[id + 1].user_desc.len = 0;
+		hid_inst[servinst].serv_chars[id + 1].user_desc.handle = 0;
+		hid_inst[servinst].serv_chars[id + 1].user_desc.permissions = AT_BLE_ATTR_NO_PERMISSIONS;
+				
+		/*Configure HID Report Characteristic : presentation format related info */
+		hid_inst[servinst].serv_chars[id + 1].presentation_format = NULL;  
 		
-		hid_inst[servinst].serv_desc[id - 1].handle   =  0;
+		/*Configure HID Report Map Characteristic : server config descriptor related info */
+		hid_inst[servinst].serv_chars[id + 1].server_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
+		hid_inst[servinst].serv_chars[id + 1].server_config_desc.handle = 0;
+		
+		/* Configure HID Report Reference Descriptor*/
 		hid_inst[servinst].serv_desc[id - 1].desc_val_length = (sizeof(uint8_t)*2);
 		hid_inst[servinst].serv_desc[id - 1].perm = AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR;
 		hid_inst[servinst].serv_desc[id - 1].uuid.type = AT_BLE_UUID_16;
 		hid_inst[servinst].serv_desc[id - 1].uuid.uuid[0] =(uint8_t) HID_REPORT_REF_DESC;
 		hid_inst[servinst].serv_desc[id - 1].uuid.uuid[1] = (uint8_t)(HID_REPORT_REF_DESC >> 8);
+		hid_inst[servinst].serv_desc[id - 1].handle   =  0;
+				
 		
-		hid_inst[servinst].serv_chars[id + 1].DescList = &hid_inst[servinst].serv_desc[id - 1];
-		hid_inst[servinst].serv_chars[id + 1].DescCount = 1;
-	
+		/*Configure HID Report Characteristic : generic descriptor related info */
+		hid_inst[servinst].serv_chars[id + 1].additional_desc_list = &hid_inst[servinst].serv_desc[id - 1];
+		
+		/*Configure HID Report Characteristic : count of generic descriptor */
+		hid_inst[servinst].serv_chars[id + 1].additional_desc_count = 1;
+			
 		/*Map the report characteristic*/
 		hid_serv_inst[servinst].hid_dev_report_val_char[id-1] = &hid_inst[servinst].serv_chars[id + 1];
 		
@@ -188,19 +275,40 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 	{
 #ifdef HID_MOUSE_DEVICE
 
-         /*Configure HID Boot Mouse Input Report Characteristic*/
-        hid_inst[servinst].serv_chars[id].uuid.type = AT_BLE_UUID_16;
-		hid_inst[servinst].serv_chars[id].uuid.uuid[0] =(uint8_t) HID_UUID_CHAR_BOOT_MOUSE_INPUT_REPORT;
-		hid_inst[servinst].serv_chars[id].uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_BOOT_MOUSE_INPUT_REPORT>>8);
-        hid_inst[servinst].serv_chars[id].init_value = NULL;
-        hid_inst[servinst].serv_chars[id].value_init_len = 0;
-        hid_inst[servinst].serv_chars[id].value_max_len = 0;
-        hid_inst[servinst].serv_chars[id].properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_NOTIFY);
-        hid_inst[servinst].serv_chars[id].value_permissions = AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR;
-		hid_inst[servinst].serv_chars[id].DescList = NULL;
-		hid_inst[servinst].serv_chars[id].DescCount = 0;
-		
-		/*Map the device protocol mode chatacteristic*/
+		/*Configure HID Boot Mouse Input Report Characteristic : Value related info*/
+		hid_inst[servinst].serv_chars[id].char_val.handle = 0;
+		hid_inst[servinst].serv_chars[id].char_val.uuid.type = AT_BLE_UUID_16;
+		hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[0] =(uint8_t) HID_UUID_CHAR_BOOT_MOUSE_INPUT_REPORT;
+		hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_BOOT_MOUSE_INPUT_REPORT >> 8);
+		hid_inst[servinst].serv_chars[id].char_val.init_value = NULL;
+		hid_inst[servinst].serv_chars[id].char_val.len = 0;
+		hid_inst[servinst].serv_chars[id].char_val.properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_NOTIFY);
+		hid_inst[servinst].serv_chars[id].char_val.permissions = AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR;
+
+        /*Configure HID Boot Mouse Input Report Characteristic : user descriptor related info */
+        hid_inst[servinst].serv_chars[id].user_desc.user_description = NULL;
+        hid_inst[servinst].serv_chars[id].user_desc.len = 0;
+        hid_inst[servinst].serv_chars[id].user_desc.handle = 0;
+        hid_inst[servinst].serv_chars[id].user_desc.permissions = AT_BLE_ATTR_NO_PERMISSIONS;
+        
+        /*Configure HID Boot Mouse Input Report Characteristic : presentation format related info */
+        hid_inst[servinst].serv_chars[id].presentation_format = NULL;
+        
+        /*Configure HID Boot Mouse Input Report Characteristic : client config descriptor related info */
+        hid_inst[servinst].serv_chars[id].client_config_desc.perm = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+        hid_inst[servinst].serv_chars[id].client_config_desc.handle = 0;
+        
+        /*Configure HID Boot Mouse Input Report Characteristic : server config descriptor related info */
+        hid_inst[servinst].serv_chars[id].server_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
+        hid_inst[servinst].serv_chars[id].server_config_desc.handle = 0;
+        
+        /*Configure HID Boot Mouse Input Report Characteristic : generic descriptor related info */
+        hid_inst[servinst].serv_chars[id].additional_desc_list = NULL;
+        
+        /*Configure HID Boot Mouse Input Report Characteristic : count of generic descriptor */
+        hid_inst[servinst].serv_chars[id].additional_desc_count = 0;
+         
+		/*Map the boot mouse input report characteristic*/
 		hid_serv_inst[servinst].hid_dev_boot_mouse_in_report = &hid_inst[servinst].serv_chars[id];
 		id++;
 #endif
@@ -209,73 +317,163 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 	{
 #ifdef HID_KEYBOARD_DEVICE
 
-         /*Configure HID Boot Mouse Input Report Characteristic*/
-		 hid_inst[servinst].serv_chars[id].uuid.type = AT_BLE_UUID_16;
-		 hid_inst[servinst].serv_chars[id].uuid.uuid[0] = (uint8_t)HID_UUID_CHAR_BOOT_KEY_OUTPUT_REPORT;
-		 hid_inst[servinst].serv_chars[id].uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_BOOT_KEY_OUTPUT_REPORT>>8);
-		 hid_inst[servinst].serv_chars[id].init_value = NULL;
-		 hid_inst[servinst].serv_chars[id].value_init_len = 0;
-		 hid_inst[servinst].serv_chars[id].value_max_len = 0;
-		 hid_inst[servinst].serv_chars[id].properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_WRITE_WITHOUT_RESPONSE|AT_BLE_CHAR_WRITE);
-		 hid_inst[servinst].serv_chars[id].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
-		 hid_inst[servinst].serv_chars[id].DescList = NULL;
-		 hid_inst[servinst].serv_chars[id].DescCount = 0;
-		 
-		 /*Map the device protocol mode characteristic*/
+        /*Configure HID Boot Keyboard Output Report Characteristic : Value related info*/
+		hid_inst[servinst].serv_chars[id].char_val.handle = 0;
+		hid_inst[servinst].serv_chars[id].char_val.uuid.type = AT_BLE_UUID_16;
+		hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[0] =(uint8_t) HID_UUID_CHAR_BOOT_KEY_OUTPUT_REPORT;
+		hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_BOOT_KEY_OUTPUT_REPORT >> 8);
+		hid_inst[servinst].serv_chars[id].char_val.init_value = NULL;
+		hid_inst[servinst].serv_chars[id].char_val.len = 0;
+		hid_inst[servinst].serv_chars[id].char_val.properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_WRITE_WITHOUT_RESPONSE|AT_BLE_CHAR_WRITE);
+		hid_inst[servinst].serv_chars[id].char_val.permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+
+		/*Configure HID Boot Keyboard Output Report Characteristic : user descriptor related info */
+		hid_inst[servinst].serv_chars[id].user_desc.user_description = NULL;
+		hid_inst[servinst].serv_chars[id].user_desc.len = 0;
+		hid_inst[servinst].serv_chars[id].user_desc.handle = 0;
+		hid_inst[servinst].serv_chars[id].user_desc.permissions = AT_BLE_ATTR_NO_PERMISSIONS;
+		
+		/*Configure HID Boot Keyboard Output Report Characteristic : presentation format related info */
+		hid_inst[servinst].serv_chars[id].presentation_format = NULL;
+		
+		/*Configure HID Boot Keyboard Output Report Characteristic : client config descriptor related info */
+		hid_inst[servinst].serv_chars[id].client_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
+		hid_inst[servinst].serv_chars[id].client_config_desc.handle = 0;
+		
+		/*Configure HID Boot Keyboard Output Report Characteristic : server config descriptor related info */
+		hid_inst[servinst].serv_chars[id].server_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
+		hid_inst[servinst].serv_chars[id].server_config_desc.handle = 0;
+		
+		/*Configure HID Boot Keyboard Output Report Characteristic : generic descriptor related info */
+		hid_inst[servinst].serv_chars[id].additional_desc_list = NULL;
+		
+		/*Configure HID Boot Keyboard Output Report Characteristic : count of generic descriptor */
+		hid_inst[servinst].serv_chars[id].additional_desc_count = 0;
+
+		 /*Map the keyboard output report characteristic*/
 		 hid_serv_inst[servinst].hid_dev_boot_keyboard_out_report = &hid_inst[servinst].serv_chars[id];
 		 
 		 id++;
 		 
-		/*Configure HID Boot Keyboard Output Report Characteristic*/
-		 hid_inst[servinst].serv_chars[id].uuid.type = AT_BLE_UUID_16;
-		 hid_inst[servinst].serv_chars[id].uuid.uuid[0] = (uint8_t)HID_UUID_CHAR_BOOT_KEY_INPUT_REPORT;
-		 hid_inst[servinst].serv_chars[id].uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_BOOT_KEY_INPUT_REPORT>>8);
-		 hid_inst[servinst].serv_chars[id].init_value = NULL;
-		 hid_inst[servinst].serv_chars[id].value_init_len = 0;
-		 hid_inst[servinst].serv_chars[id].value_max_len = 0;
-		 hid_inst[servinst].serv_chars[id].properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_NOTIFY);
-		 hid_inst[servinst].serv_chars[id].value_permissions = AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR;
-		 hid_inst[servinst].serv_chars[id].DescList = NULL;
-		 hid_inst[servinst].serv_chars[id].DescCount = 0;
+		 /*Configure HID Boot Keyboard Input Report Characteristic : Value related info*/
+		 hid_inst[servinst].serv_chars[id].char_val.handle = 0;
+		 hid_inst[servinst].serv_chars[id].char_val.uuid.type = AT_BLE_UUID_16;
+		 hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[0] =(uint8_t) HID_UUID_CHAR_BOOT_KEY_INPUT_REPORT;
+		 hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_BOOT_KEY_INPUT_REPORT >> 8);
+		 hid_inst[servinst].serv_chars[id].char_val.init_value = NULL;
+		 hid_inst[servinst].serv_chars[id].char_val.len = 0;
+		 hid_inst[servinst].serv_chars[id].char_val.properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_NOTIFY);
+		 hid_inst[servinst].serv_chars[id].char_val.permissions = AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR;
+
+		 /*Configure HID Boot Keyboard Input Report Characteristic : user descriptor related info */
+		 hid_inst[servinst].serv_chars[id].user_desc.user_description = NULL;
+		 hid_inst[servinst].serv_chars[id].user_desc.len = 0;
+		 hid_inst[servinst].serv_chars[id].user_desc.handle = 0;
+		 hid_inst[servinst].serv_chars[id].user_desc.permissions = AT_BLE_ATTR_NO_PERMISSIONS;
 		 
-		 /*Map the device protocol mode characteristic*/
+		 /*Configure HID Boot Keyboard Input Report Characteristic : presentation format related info */
+		 hid_inst[servinst].serv_chars[id].presentation_format = NULL;
+		 
+		 /*Configure HID Boot Keyboard Input Report Characteristic : client config descriptor related info */
+		 hid_inst[servinst].serv_chars[id].client_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
+		 hid_inst[servinst].serv_chars[id].client_config_desc.handle = 0;
+		 
+		 /*Configure HID Boot Keyboard Input Report Characteristic : server config descriptor related info */
+		 hid_inst[servinst].serv_chars[id].server_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
+		 hid_inst[servinst].serv_chars[id].server_config_desc.handle = 0;
+		 
+		 /*Configure HID Boot Keyboard Input Report Characteristic : generic descriptor related info */
+		 hid_inst[servinst].serv_chars[id].additional_desc_list = NULL;
+		 
+		 /*Configure HID Boot Keyboard Input Report Characteristic : count of generic descriptor */
+		 hid_inst[servinst].serv_chars[id].additional_desc_count = 0;
+		 
+		 /*Map the keyboard input report characteristic*/
 		 hid_serv_inst[servinst].hid_dev_boot_keyboard_in_report = &hid_inst[servinst].serv_chars[id];
 		 
 		 id++;
 #endif
 	}
  
-    /*Configure HID Information Characteristic*/
-    hid_inst[servinst].serv_chars[id].uuid.type = AT_BLE_UUID_16;
-	hid_inst[servinst].serv_chars[id].uuid.uuid[0] = (uint8_t)HID_UUID_CHAR_HID_INFORMATION;
-	hid_inst[servinst].serv_chars[id].uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_HID_INFORMATION>>8);
-    hid_inst[servinst].serv_chars[id].init_value = (uint8_t*)info;
-    hid_inst[servinst].serv_chars[id].value_init_len = sizeof(hid_info_t);
-    hid_inst[servinst].serv_chars[id].value_max_len = sizeof(hid_info_t);
-    hid_inst[servinst].serv_chars[id].properties = AT_BLE_CHAR_READ;
-    hid_inst[servinst].serv_chars[id].value_permissions = AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR;
-	hid_inst[servinst].serv_chars[id].DescList = NULL;
-	hid_inst[servinst].serv_chars[id].DescCount = 0;
+    /*Configure HID Information Characteristic : Value related info*/
+    hid_inst[servinst].serv_chars[id].char_val.handle = 0;
+    hid_inst[servinst].serv_chars[id].char_val.uuid.type = AT_BLE_UUID_16;
+    hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[0] =(uint8_t) HID_UUID_CHAR_HID_INFORMATION;
+    hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_HID_INFORMATION >> 8);
+    hid_inst[servinst].serv_chars[id].char_val.init_value = (uint8_t*)info;
+    hid_inst[servinst].serv_chars[id].char_val.len = sizeof(hid_info_t);
+    hid_inst[servinst].serv_chars[id].char_val.properties = AT_BLE_CHAR_READ;
+    hid_inst[servinst].serv_chars[id].char_val.permissions = AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR;
+
+    /*Configure HID Information Characteristic : user descriptor related info */
+    hid_inst[servinst].serv_chars[id].user_desc.user_description = NULL;
+    hid_inst[servinst].serv_chars[id].user_desc.len = 0;
+    hid_inst[servinst].serv_chars[id].user_desc.handle = 0;
+    hid_inst[servinst].serv_chars[id].user_desc.permissions = AT_BLE_ATTR_NO_PERMISSIONS;
+    
+    /*Configure HID Information Characteristic : presentation format related info */
+    hid_inst[servinst].serv_chars[id].presentation_format = NULL;
+    
+    /*Configure HID Information Characteristic : client config descriptor related info */
+    hid_inst[servinst].serv_chars[id].client_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
+    hid_inst[servinst].serv_chars[id].client_config_desc.handle = 0;
+    
+    /*Configure HID Information Characteristic : server config descriptor related info */
+    hid_inst[servinst].serv_chars[id].server_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
+    hid_inst[servinst].serv_chars[id].server_config_desc.handle = 0;
+    
+    /*Configure HID Information Characteristic : generic descriptor related info */
+    hid_inst[servinst].serv_chars[id].additional_desc_list = NULL;
+    
+    /*Configure HID Information Characteristic : count of generic descriptor */
+    hid_inst[servinst].serv_chars[id].additional_desc_count = 0;
 	
 	/*Map the HID Information characteristic*/
 	hid_serv_inst[servinst].hid_dev_info = &hid_inst[servinst].serv_chars[id];
 	
 	id++;
 	
-	/*Configure HID Control Point Characteristic*/
-	hid_inst[servinst].serv_chars[id].uuid.type = AT_BLE_UUID_16;
-	hid_inst[servinst].serv_chars[id].uuid.uuid[0] = (uint8_t)HID_UUID_CHAR_HID_CONTROL_POINT;
-	hid_inst[servinst].serv_chars[id].uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_HID_CONTROL_POINT>>8);
-	hid_inst[servinst].serv_chars[id].init_value = (uint8_t*)&ctrl_point;
-	hid_inst[servinst].serv_chars[id].value_init_len = sizeof(uint8_t);
-	hid_inst[servinst].serv_chars[id].value_max_len = sizeof(uint8_t);
-	hid_inst[servinst].serv_chars[id].properties = AT_BLE_CHAR_WRITE_WITHOUT_RESPONSE;
-	hid_inst[servinst].serv_chars[id].value_permissions = AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR;
-	hid_inst[servinst].serv_chars[id].DescList = NULL;
-	hid_inst[servinst].serv_chars[id].DescCount = 0;
+	/*Configure HID Control Point Characteristic : Value related info*/
+	hid_inst[servinst].serv_chars[id].char_val.handle = 0;
+	hid_inst[servinst].serv_chars[id].char_val.uuid.type = AT_BLE_UUID_16;
+	hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[0] =(uint8_t) HID_UUID_CHAR_HID_CONTROL_POINT;
+	hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_HID_CONTROL_POINT >> 8);
+	hid_inst[servinst].serv_chars[id].char_val.init_value = (uint8_t*)&ctrl_point;
+	hid_inst[servinst].serv_chars[id].char_val.len = sizeof(uint8_t);
+	hid_inst[servinst].serv_chars[id].char_val.properties = AT_BLE_CHAR_WRITE_WITHOUT_RESPONSE;
+	hid_inst[servinst].serv_chars[id].char_val.permissions = AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR;
+
+	/*Configure HID Control Point Characteristic : user descriptor related info */
+	hid_inst[servinst].serv_chars[id].user_desc.user_description = NULL;
+	hid_inst[servinst].serv_chars[id].user_desc.len = 0;
+	hid_inst[servinst].serv_chars[id].user_desc.handle = 0;
+	hid_inst[servinst].serv_chars[id].user_desc.permissions = AT_BLE_ATTR_NO_PERMISSIONS;
 	
+	/*Configure HID Control Point Characteristic : presentation format related info */
+	hid_inst[servinst].serv_chars[id].presentation_format = NULL;
+	
+	/*Configure HID Control Point Characteristic : client config descriptor related info */
+	hid_inst[servinst].serv_chars[id].client_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
+	hid_inst[servinst].serv_chars[id].client_config_desc.handle = 0;
+	
+	/*Configure HID Control Point Characteristic : server config descriptor related info */
+	hid_inst[servinst].serv_chars[id].server_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
+	hid_inst[servinst].serv_chars[id].server_config_desc.handle = 0;
+	
+	/*Configure HID Control Point Characteristic : generic descriptor related info */
+	hid_inst[servinst].serv_chars[id].additional_desc_list = NULL;
+	
+	/*Configure HID Control Point Characteristic : count of generic descriptor */
+	hid_inst[servinst].serv_chars[id].additional_desc_count = 0;
+
 	/*Map the HID Information characteristic*/
 	hid_serv_inst[servinst].hid_control_point = &hid_inst[servinst].serv_chars[id];
+	
+	/* Configure HID characteristic list */
+	hid_inst[servinst].serv.char_list =  hid_inst[servinst].serv_chars;
+	
+	/* Configure the HID characteristic count */
+	hid_inst[servinst].serv.char_count = HID_CHARACTERISTIC_NUM;
 }
 
 /**
@@ -283,9 +481,10 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 */
 void hid_serv_report_map(uint8_t servinst, uint8_t *report_info, uint16_t len)
 {
-	hid_inst[servinst].serv_chars[1].init_value = report_info;
-	hid_serv_inst[servinst].hid_dev_report_map_char->value_init_len = len;
-	hid_serv_inst[servinst].hid_dev_report_map_char->value_max_len = len;
+	hid_inst[servinst].serv_chars[1].char_val.init_value = report_info;
+	hid_inst[servinst].serv_chars[1].char_val.len = len;
+	hid_serv_inst[servinst].hid_dev_report_map_char->char_val.init_value = report_info;
+	hid_serv_inst[servinst].hid_dev_report_map_char->char_val.len = len;
 }
 
 /**
@@ -299,22 +498,20 @@ uint16_t hid_service_dbreg(uint8_t inst, uint8_t *report_type, uint8_t *report_i
 	
 	DBG_LOG_DEV("Number of characteristic %d", HID_CHARACTERISTIC_NUM);
 	
-	if( at_ble_service_define(&hid_inst[inst].serv_uuid, &hid_inst[inst].serv_handle, NULL, 0, hid_inst[inst].serv_chars, HID_CHARACTERISTIC_NUM, PRIMAR_SVC) == AT_BLE_SUCCESS)
+	if( at_ble_service_define(&serv) == AT_BLE_SUCCESS)
 	{
 		
 		DBG_LOG_DEV("Define service handle %d", hid_inst[inst].serv_handle);
-		DBG_LOG_DEV("Report Reference descriptor handle %d", hid_serv_inst[inst].hid_dev_report_val_char[0]->DescList->handle);
-
+		
 		for(; id<report_num; id++)
 		{
 			DBG_LOG_DEV("Report Reference descriptor ID = %d :: Type = %d", report_id[id], report_type[id]);
 			descval[0] = report_id[id];
 			descval[1] = report_type[id];
-			if(at_ble_descriptor_value_set(hid_serv_inst[inst].hid_dev_report_val_char[id]->DescList->handle, descval, 2) == AT_BLE_SUCCESS)
+			if(at_ble_descriptor_value_set(hid_serv_inst[inst].hid_dev_report_val_char[id]->additional_desc_list->handle, descval, 2) == AT_BLE_SUCCESS)
 			{
 				DBG_LOG_DEV("Descriptor Value set successfully");
 			}
-			id++;	
 		}
 		
 		return hid_inst[inst].serv_handle;
@@ -337,8 +534,8 @@ uint8_t hid_serv_get_instance(uint16_t handle)
 	
 	for(; id<HID_MAX_SERV_INST; id++)
 	{
-		DBG_LOG_DEV("hid_serv_get_instance : Service Handle %d  Characteristic Handle %d", *(hid_serv_inst[id].hid_dev_serv_handle), hid_serv_inst[id].hid_control_point->char_val_handle);
-		if((handle > *(hid_serv_inst[id].hid_dev_serv_handle)) && (handle <= hid_serv_inst[id].hid_control_point->char_val_handle))
+		DBG_LOG_DEV("hid_serv_get_instance : Service Handle %d  Characteristic Handle %d", *(hid_serv_inst[id].hid_dev_serv_handle), hid_serv_inst[id].hid_control_point->char_val.handle);
+		if((handle > *(hid_serv_inst[id].hid_dev_serv_handle)) && (handle <= hid_serv_inst[id].hid_control_point->char_val.handle))
 		{
 			DBG_LOG_DEV("hid_serv_get_instance : Service Handle %d", id);
 			return id;
@@ -355,24 +552,24 @@ uint8_t hid_ntf_instance(uint8_t serv_num, uint16_t char_handle)
 	uint8_t id = 0;
 	
 	DBG_LOG_DEV("hid_ntf_instance : Search Handle %d", char_handle);
-	DBG_LOG_DEV("hid_ntf_instance : Protocol Mode Handle %d", hid_serv_inst[serv_num].hid_dev_proto_mode_char->char_val_handle);
+	DBG_LOG_DEV("hid_ntf_instance : Protocol Mode Handle %d", hid_serv_inst[serv_num].hid_dev_proto_mode_char->char_val.handle);
 
-	if(hid_serv_inst[serv_num].hid_dev_proto_mode_char->char_val_handle == char_handle)
+	if(hid_serv_inst[serv_num].hid_dev_proto_mode_char->char_val.handle == char_handle)
 	{
 		return PROTOCOL_MODE;
 	}
 		
 	for(; id<HID_NUM_OF_REPORT; id++)
 	{
-		DBG_LOG_DEV("hid_ntf_instance : Report Handle %d", hid_serv_inst[serv_num].hid_dev_report_val_char[id]->char_val_handle);
-		if(char_handle == hid_serv_inst[serv_num].hid_dev_report_val_char[id]->char_val_handle)
+		DBG_LOG_DEV("hid_ntf_instance : Report Handle %d", hid_serv_inst[serv_num].hid_dev_report_val_char[id]->char_val.handle);
+		if(char_handle == hid_serv_inst[serv_num].hid_dev_report_val_char[id]->char_val.handle)
 		{
 			return CHAR_REPORT;
 		}
 	
-		DBG_LOG_DEV("hid_ntf_instance : Report CCD Handle %d",hid_serv_inst[serv_num].hid_dev_report_val_char[id]->client_config_handle);
+		DBG_LOG_DEV("hid_ntf_instance : Report CCD Handle %d",hid_serv_inst[serv_num].hid_dev_report_val_char[id]->client_config_desc.handle);
 
-		if(char_handle == hid_serv_inst[serv_num].hid_dev_report_val_char[id]->client_config_handle)
+		if(char_handle == hid_serv_inst[serv_num].hid_dev_report_val_char[id]->client_config_desc.handle)
 		{
 		   return CHAR_REPORT_CCD;
 		}
@@ -381,24 +578,24 @@ uint8_t hid_ntf_instance(uint8_t serv_num, uint16_t char_handle)
 		
 #ifdef HID_KEYBOARD_DEVICE
 
-	DBG_LOG_DEV("hid_ntf_instance : Boot Keyboard Handle %d", hid_serv_inst[serv_num].hid_dev_boot_keyboard_in_report->char_val_handle);
+	DBG_LOG_DEV("hid_ntf_instance : Boot Keyboard Handle %d", hid_serv_inst[serv_num].hid_dev_boot_keyboard_in_report->char_val.handle);
 
-	if(hid_serv_inst[serv_num].hid_dev_boot_keyboard_in_report->char_val_handle == char_handle)
+	if(hid_serv_inst[serv_num].hid_dev_boot_keyboard_in_report->char_val.handle == char_handle)
 	{
 		return BOOT_KEY_INPUT_REPORT;
 	}
 #endif
 
 #ifdef HID_MOUSE_DEVICE
-	DBG_LOG_DEV("hid_ntf_instance : Boot Mouse Handle %d", hid_serv_inst[serv_num].hid_dev_boot_mouse_in_report->char_val_handle);
-	if(hid_serv_inst[serv_num].hid_dev_boot_mouse_in_report->char_val_handle == char_handle)
+	DBG_LOG_DEV("hid_ntf_instance : Boot Mouse Handle %d", hid_serv_inst[serv_num].hid_dev_boot_mouse_in_report->char_val.handle);
+	if(hid_serv_inst[serv_num].hid_dev_boot_mouse_in_report->char_val.handle == char_handle)
 	{
 		return BOOT_MOUSE_INPUT_REPORT;
 	}
 #endif
 
-	DBG_LOG_DEV("hid_ntf_instance : Control Point Handle %d", hid_serv_inst[serv_num].hid_control_point->char_val_handle);
-	if(hid_serv_inst[serv_num].hid_control_point->char_val_handle == char_handle)
+	DBG_LOG_DEV("hid_ntf_instance : Control Point Handle %d", hid_serv_inst[serv_num].hid_control_point->char_val.handle);
+	if(hid_serv_inst[serv_num].hid_control_point->char_val.handle == char_handle)
 	{
 		return CONTROL_POINT;
 	}
@@ -419,11 +616,11 @@ uint8_t hid_get_reportid(uint8_t serv, uint16_t handle, uint8_t reportnum)
 	
 	for(id = 0; id <= reportnum; id++)
 	{
-		DBG_LOG_DEV("id %d Search Handle %d, CCD Handle %d", id, handle, hid_serv_inst[serv].hid_dev_report_val_char[id]->client_config_handle);
-		if(handle == hid_serv_inst[serv].hid_dev_report_val_char[id]->client_config_handle)
+		DBG_LOG_DEV("id %d Search Handle %d, CCD Handle %d", id, handle, hid_serv_inst[serv].hid_dev_report_val_char[id]->client_config_desc.handle);
+		if(handle == hid_serv_inst[serv].hid_dev_report_val_char[id]->client_config_desc.handle)
 		{
-			DBG_LOG_DEV("Inside hid_get_reportid : Report ID Descriptor Handle %d :: id %d :: serv %d", hid_serv_inst[serv].hid_dev_report_val_char[id]->DescList->handle, id, serv);
-			status = at_ble_descriptor_value_get(hid_serv_inst[serv].hid_dev_report_val_char[id]->DescList->handle, descval, &len);
+			DBG_LOG_DEV("Inside hid_get_reportid : Report ID Descriptor Handle %d :: id %d :: serv %d", hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, id, serv);
+			status = at_ble_descriptor_value_get(hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, descval, &len);
 			if (status != AT_BLE_SUCCESS)
 			{
 				DBG_LOG_DEV("decriptor value get failed");
@@ -449,8 +646,8 @@ uint8_t hid_get_reportchar(uint16_t handle, uint8_t serv, uint8_t reportid)
 
 	for(id = 0; id <= HID_NUM_OF_REPORT; id++)
 	{
-		DBG_LOG_DEV("Inside hid_get_reportchar : Report ID Descriptor Handle %d :: id %d :: serv %d", hid_serv_inst[serv].hid_dev_report_val_char[id]->DescList->handle, id, serv);
-		status = at_ble_descriptor_value_get(hid_serv_inst[serv].hid_dev_report_val_char[id]->DescList->handle, descval, &len);
+		DBG_LOG_DEV("Inside hid_get_reportchar : Report ID Descriptor Handle %d :: id %d :: serv %d", hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, id, serv);
+		status = at_ble_descriptor_value_get(hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, descval, &len);
 		if (status != AT_BLE_SUCCESS)
 		{
 			DBG_LOG_DEV("decriptor value get failed");
@@ -477,7 +674,7 @@ void hid_serv_report_update(uint16_t conn_handle, uint8_t serv_inst, uint8_t rep
 	id = hid_get_reportchar(conn_handle, serv_inst, reportid);
 
 	DBG_LOG_DEV("hid_serv_report_update : Report Characteristic ID %d", id);
-	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->client_config_handle, &value, 0, sizeof(uint16_t), sizeof(uint16_t));
+	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->client_config_desc.handle, &value, 0, sizeof(uint16_t), sizeof(uint16_t));
 	if (status != AT_BLE_SUCCESS)
 	{
 		DBG_LOG_DEV("decriptor value get failed");
@@ -487,11 +684,11 @@ void hid_serv_report_update(uint16_t conn_handle, uint8_t serv_inst, uint8_t rep
 	//If Notification Enabled
 	if(value == 1)
 	{
-		if((status = at_ble_characteristic_value_set(hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->char_val_handle, report, 0, len))==AT_BLE_SUCCESS)
+		if((status = at_ble_characteristic_value_set(hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->char_val.handle, report, 0, len))==AT_BLE_SUCCESS)
 		{
 			DBG_LOG_DEV("hid_serv_report_update : Notify Value : conn_handle %d", conn_handle);
 			//Need to check for connection handle
-			status = at_ble_notification_send(conn_handle, hid_serv_inst[serv_inst].hid_dev_report_val_char[0]->char_val_handle);	
+			status = at_ble_notification_send(conn_handle, hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->char_val.handle);	
 			if (status != AT_BLE_SUCCESS)
 			{
 				DBG_LOG_DEV("decriptor value get failed");
@@ -514,7 +711,7 @@ void hid_boot_mousereport_update(at_ble_handle_t conn_handle, uint8_t serv_inst,
 #ifdef HID_MOUSE_DEVICE	
 	uint8_t value = 0;
 	uint8_t status;
-	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_boot_mouse_in_report->client_config_handle, &value, 0, sizeof(uint16_t), sizeof(uint16_t));
+	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_boot_mouse_in_report->client_config_desc.handle, &value, 0, sizeof(uint16_t), sizeof(uint16_t));
 	if (status != AT_BLE_SUCCESS)
 	{
 		DBG_LOG_DEV("charactertistic  value get failed");
@@ -522,13 +719,13 @@ void hid_boot_mousereport_update(at_ble_handle_t conn_handle, uint8_t serv_inst,
 	//If Notification Enabled
 	if(value == 1)
 	{
-		status = at_ble_characteristic_value_set(hid_serv_inst[serv_inst].hid_dev_boot_mouse_in_report->char_val_handle, bootreport, 0, len);
+		status = at_ble_characteristic_value_set(hid_serv_inst[serv_inst].hid_dev_boot_mouse_in_report->char_val.handle, bootreport, 0, len);
 		if (status != AT_BLE_SUCCESS)
 		{
 			DBG_LOG_DEV("decriptor value get failed");
 		}
 		//Need to check for connection handle
-		status = at_ble_notification_send(conn_handle, hid_serv_inst[serv_inst].hid_dev_boot_mouse_in_report->char_val_handle);
+		status = at_ble_notification_send(conn_handle, hid_serv_inst[serv_inst].hid_dev_boot_mouse_in_report->char_val.handle);
 		if (status != AT_BLE_SUCCESS)
 		{
 			DBG_LOG_DEV("decriptor value get failed");
@@ -545,7 +742,7 @@ void hid_boot_keyboardreport_update(at_ble_handle_t conn_handle, uint8_t serv_in
 #ifdef HID_KEYBOARD_DEVICE	
 	at_ble_status_t status;
 	uint8_t value = 0;
-	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_boot_keyboard_in_report->client_config_handle, &value, 0, sizeof(uint16_t), sizeof(uint16_t));
+	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_boot_keyboard_in_report->client_config_desc.handle, &value, 0, sizeof(uint16_t), sizeof(uint16_t));
 	if (status != AT_BLE_SUCCESS)
 	{
 		DBG_LOG_DEV("at_ble_characteristic_value_get value get failed");
@@ -553,13 +750,13 @@ void hid_boot_keyboardreport_update(at_ble_handle_t conn_handle, uint8_t serv_in
 	//If Notification Enabled
 	if(value == 1)
 	{
-		status = at_ble_characteristic_value_set(hid_serv_inst[serv_inst].hid_dev_boot_keyboard_in_report->char_val_handle, bootreport, 0, len);
+		status = at_ble_characteristic_value_set(hid_serv_inst[serv_inst].hid_dev_boot_keyboard_in_report->char_val.handle, bootreport, 0, len);
 		if (status != AT_BLE_SUCCESS)
 		{
 			DBG_LOG_DEV("at_ble_characteristic_value_set value get failed");
 		}
 		//Need to check for connection handle
-		status = at_ble_notification_send(conn_handle, hid_serv_inst[serv_inst].hid_dev_boot_keyboard_in_report->char_val_handle);
+		status = at_ble_notification_send(conn_handle, hid_serv_inst[serv_inst].hid_dev_boot_keyboard_in_report->char_val.handle);
 		if (status != AT_BLE_SUCCESS)
 		{
 			DBG_LOG_DEV("at_ble_characteristic_value_set value get failed");

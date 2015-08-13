@@ -67,6 +67,9 @@
 
 /* =========================== GLOBALS ============================================================ */
 
+/* Memory allocated for database */
+uint8_t	au8DbMem[1024]	= {0}; //B0
+
 /* Control point notification structure */
 hid_control_mode_ntf_t hid_control_point_value; 
 
@@ -205,7 +208,17 @@ void hid_keyboard_app_init(void)
 
 int main(void )
 {
-
+    at_ble_init_config_t pf_cfg;  //B0
+    platform_config busConfig;    //B0
+	
+	/*Memory allocation for DB*/
+	pf_cfg.memPool.memSize 		= sizeof(au8DbMem);
+	pf_cfg.memPool.memStartAdd 	= &(au8DbMem[0]);
+	
+	/*Bus configuration*/
+	busConfig.bus_type = UART;
+	pf_cfg.plf_config = &busConfig;
+	
 #if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -230,7 +243,8 @@ int main(void )
 	hid_keyboard_app_init();
 	
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL);
+	
+	ble_device_init(NULL, &pf_cfg);
 	
 	/* Register the notification handler */
 	notify_report_ntf_handler(hid_prf_report_ntf_cb);
