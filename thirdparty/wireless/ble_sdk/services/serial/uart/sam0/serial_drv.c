@@ -118,11 +118,12 @@ uint16_t serial_drv_send(uint8_t* data, uint16_t len)
   return STATUS_OK;
 }
 
+extern void platform_process_rxdata(uint32_t t_rx_data);
 static void serial_drv_read_cb(struct usart_module *const module)
 {
 	 do
-	 {
-		 ser_fifo_push_uint8(&ble_usart_rx_fifo, (uint8_t)rx_data);
+	 {		 
+		 platform_process_rxdata((uint8_t)rx_data);
 	 }while(serial_read_byte(&rx_data) == STATUS_BUSY);
  
 	 //call callback

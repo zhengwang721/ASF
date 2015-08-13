@@ -56,6 +56,8 @@ uint8_t ble_usart_tx_buf[BLE_MAX_TX_PAYLOAD_SIZE];
 ser_fifo_desc_t ble_usart_rx_fifo;
 uint8_t ble_usart_rx_buf[BLE_MAX_TX_PAYLOAD_SIZE];
 
+extern void platform_process_rxdata(uint32_t t_rx_data);
+
 /* === TYPES =============================================================== */
 
 /* === MACROS ============================================================== */
@@ -122,7 +124,7 @@ void BLE_UART_Handler(void)
 		uint32_t rx_data = 0;
 		if (usart_read(BLE_UART, &rx_data) == 0)
 		{
-			ser_fifo_push_uint8(&ble_usart_rx_fifo, rx_data);
+			platform_process_rxdata(rx_data);
 		}
 	}
 	

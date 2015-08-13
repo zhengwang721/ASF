@@ -52,14 +52,15 @@
 /*- Includes ---------------------------------------------------------------*/
 
 #include <asf.h>
+#include "profiles.h"
 #include "platform.h"
 #include "at_ble_api.h"
 #include "htpt_app.h"
-#include "profiles.h"
 #include "console_serial.h"
 #include "timer_hw.h"
 #include "conf_extint.h"
 #include "conf_serialdrv.h"
+#include "at_ble_trace.h"
 
 
 /* Initialize the BLE */
@@ -76,11 +77,13 @@ static void ble_device_disconnected_ind(void);
 /* BLE data send event confirmation */
 static void ble_data_sent_confim(void);
 
-/* Set BLE Address, If address is NULL then it will use BD public address */
-static void ble_set_address(at_ble_addr_t *addr);
-
 /* Update temperature type and location */
 static void update_temperature_type_location(void);
+
+void htpt_set_advertisement_data(void);
+
+
+void ble_device_config(at_ble_addr_t *addr);
 
 static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
@@ -93,55 +96,7 @@ htp_app_t htp_data;
 volatile bool app_timer_done = false;
 volatile bool button_pressed = false;
 
-/* Set BLE Address, If address is NULL then it will use BD public address */
-static void ble_set_address(at_ble_addr_t *addr)
-{
-	if (addr == NULL)
-	{
-		at_ble_addr_t address;
-		
-		/* get BD address from BLE device */
-		if(at_ble_addr_get(&address) != AT_BLE_SUCCESS)
-		{
-			DBG_LOG("BD address get failed");
-		}
-		
-		/* Update the Address in scan response data*/
-		memcpy(&scan_rsp_data[4], &address.addr, 6);
-		
-		/* set the BD address */
-		if(at_ble_addr_set(&address) != AT_BLE_SUCCESS)
-		{
-			DBG_LOG("BD address set failed");
-		}
-		
-		DBG_LOG("BD Address:0x%02X%02X%02X%02X%02X%02X, Address Type:%d",
-				address.addr[5],
-				address.addr[4],
-				address.addr[3],
-				address.addr[2],
-				address.addr[1],
-				address.addr[0], address.type);
-	}
-	else
-	{
-		/* Update the Address in scan response data*/
-		memcpy(&scan_rsp_data[4], addr->addr, 6);
-		
-		/* set the given BD address */
-		if(at_ble_addr_set(addr) != AT_BLE_SUCCESS)
-		{
-			DBG_LOG("BD address set failed");
-		}		
-		DBG_LOG("BD Address:0x%02X%02X%02X%02X%02X%02X, Address Type:%d",
-				addr->addr[5],
-				addr->addr[4],
-				addr->addr[3],
-				addr->addr[2],
-				addr->addr[1],
-				addr->addr[0], addr->type);
-	}	
-}
+at_ble_handle_t htpt_conn_handle;
 
 /* BLE connected event indication */
 static void ble_device_connected_ind(void)
@@ -166,36 +121,36 @@ static void ble_data_sent_confim(void)
 
 /* Initialize the BLE */
 static void ble_init(void)
-{
-	uint8_t port = 74;
-	uint32_t chip_id;
+{	
+	at_ble_init_config_t pf_cfg;
+	platform_config busConfig;
+	
+	/*Memory allocation required by GATT Server DB*/
+	pf_cfg.memPool.memSize = 0;
+	pf_cfg.memPool.memStartAdd = NULL;
+	/*Bus configuration*/
+	busConfig.bus_type = UART;
+	pf_cfg.plf_config = &busConfig;
 	
 	/* Initialize the platform */
 	DBG_LOG("Initializing BTLC1000");
 	
+	/*Trace Logs*/
+	trace_register_printFn((void *)&printf);
+	trace_set_level(TRACE_LVL_ALL);
+	
 	/* Init BLE device */
-	if(at_ble_init(&port) != AT_BLE_SUCCESS)
+	if(at_ble_init(&pf_cfg) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("BTLC1000 Initialization failed");
 	}
-	
-	/* read BLE device chip id */
-	if(at_ble_chip_id_get(&chip_id) != AT_BLE_SUCCESS)
-	{
-		DBG_LOG("Failed to get the BTLC1000 chip id");
-	}
-	
-	DBG_LOG("BLE-chip id:0x%02X%02X%02X%02X", (uint8_t)(chip_id >> 24),
-											(uint8_t)(chip_id >> 16),
-											(uint8_t)(chip_id >> 8),
-											(uint8_t)(chip_id));
 }
 
 void htp_init(void)
 {
 	/* Initialize the htp_data to default value */
 	htp_init_defaults(&htp_data);
-
+	
 	/* Register the Initialized value into htp profile */
 	if(at_ble_htpt_create_db(
 							htp_data.optional,
@@ -203,13 +158,125 @@ void htp_init(void)
 							htp_data.min_measurement_intv,
 							htp_data.max_meaurement_intv,
 							htp_data.measurement_interval,
-							htp_data.security_lvl
-							) != AT_BLE_SUCCESS)
+							htp_data.security_lvl,
+							&htpt_conn_handle) != AT_BLE_SUCCESS)
 	{
 		/* Failed to create HTP data base */
 		DBG_LOG("HTP Data Base creation failed");
 		while(1);
 	}
+	htpt_set_advertisement_data();
+}
+
+void ble_device_config(at_ble_addr_t *addr)
+{
+	at_ble_dev_config_t stDevConfig;
+	at_ble_addr_t address = {AT_BLE_ADDRESS_PUBLIC, {0xAB, 0xCD, 0xEF, 0xAB, 0xCD, 0xEF}};
+	at_ble_status_t enuStatus;
+	
+	
+	if (addr == NULL)
+	{
+		/* get BD address from BLE device */
+		if(at_ble_addr_get(&address) != AT_BLE_SUCCESS)
+		{
+			DBG_LOG("BD address get failed");
+		}
+		
+		/* Update the Address in scan response data*/
+		memcpy(&scan_rsp_data[4], &address.addr, 6);
+		
+		/* set the BD address */
+		if(at_ble_addr_set(&address) != AT_BLE_SUCCESS)
+		{
+			DBG_LOG("BD address set failed");
+		}
+		
+		DBG_LOG("BD Address:0x%02X%02X%02X%02X%02X%02X, Address Type:%d",
+		address.addr[5],
+		address.addr[4],
+		address.addr[3],
+		address.addr[2],
+		address.addr[1],
+		address.addr[0], address.type);
+	}
+	else
+	{
+		/* Update the Address in scan response data*/
+		memcpy(&scan_rsp_data[4], addr->addr, 6);
+		
+		/* set the given BD address */
+		if(at_ble_addr_set(addr) != AT_BLE_SUCCESS)
+		{
+			DBG_LOG("BD address set failed");
+		}
+		DBG_LOG("BD Address:0x%02X%02X%02X%02X%02X%02X, Address Type:%d",
+		addr->addr[5],
+		addr->addr[4],
+		addr->addr[3],
+		addr->addr[2],
+		addr->addr[1],
+		addr->addr[0], addr->type);
+	}
+	
+	
+		
+	//Set device configuration
+	////Device role
+	stDevConfig.role = AT_BLE_ROLE_ALL;
+	////device renew duration
+	stDevConfig.renew_dur = AT_RENEW_DUR_VAL_MIN;
+	////device address type
+	stDevConfig.address = address;
+	////Attributes
+	stDevConfig.att_cfg.b2NamePerm = AT_BLE_WRITE_DISABLE;
+	stDevConfig.att_cfg.b2AppearancePerm = AT_BLE_WRITE_DISABLE;
+	stDevConfig.att_cfg.b1EnableSpcs = 0;
+	stDevConfig.att_cfg.b1EnableServiceChanged = 0;
+	stDevConfig.att_cfg.b2Rfu = AT_BLE_WRITE_DISABLE;
+	////Handles
+	stDevConfig.gap_start_hdl = AT_BLE_AUTO_ALLOC_HANDLE;
+	stDevConfig.gatt_start_hdl = AT_BLE_AUTO_ALLOC_HANDLE;
+	////MTU
+	stDevConfig.max_mtu = AT_MTU_VAL_RECOMMENDED;
+	
+	enuStatus = at_ble_set_dev_config(&stDevConfig);
+	UNUSED(enuStatus);
+}
+
+void htpt_set_advertisement_data(void)
+{
+	uint8_t idx = 0;
+	uint8_t adv_data[HT_ADV_DATA_NAME_LEN + HT_ADV_DATA_APPEARANCE_LEN + HT_ADV_DATA_UUID_LEN + 3*2];
+	
+	/* Prepare ADV Data */
+	adv_data[idx++] = HT_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
+	adv_data[idx++] = HT_ADV_DATA_UUID_TYPE;
+	memcpy(&adv_data[idx], HT_ADV_DATA_UUID_DATA, HT_ADV_DATA_UUID_LEN);				
+	idx += HT_ADV_DATA_UUID_LEN;
+	
+	adv_data[idx++] = HT_ADV_DATA_APPEARANCE_LEN + ADV_TYPE_LEN;
+	adv_data[idx++] = HT_ADV_DATA_APPEARANCE_TYPE;
+	memcpy(&adv_data[idx], HT_ADV_DATA_APPEARANCE_DATA, HT_ADV_DATA_APPEARANCE_LEN);
+	idx += HT_ADV_DATA_APPEARANCE_LEN;
+	
+	adv_data[idx++] = HT_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
+	adv_data[idx++] = HT_ADV_DATA_NAME_TYPE;
+	memcpy(&adv_data[idx], HT_ADV_DATA_NAME_DATA, HT_ADV_DATA_NAME_LEN);
+	idx += HT_ADV_DATA_NAME_LEN;			
+	
+	
+	at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN);
+	
+	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 
+	                   APP_HT_FAST_ADV, APP_HT_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
+	{
+		DBG_LOG("BLE advertisement start failed");
+	}
+	else
+	{
+		DBG_LOG("BLE started LE advertisement");
+	}							
 }
 
 
@@ -250,15 +317,15 @@ int main (void)
 	hw_timer_register_callback(timer_callback_handler);	
 	
 	/* initialize the ble chip */
-	ble_init();
+	ble_init();	
 	
-	/* set its own public address */
-	ble_set_address(NULL);
+	ble_device_config(NULL);
 	
 	/* Initialize the htp profile */
-	htp_init();
+	htp_init();	
 	
 	DBG_LOG("HTP Initialization completed. Waiting for Event");
+	
 	
 	while(at_ble_event_get(&event, params, 0xFFFFFFFF) == AT_BLE_SUCCESS)
 	{
@@ -338,44 +405,33 @@ int main (void)
 			/** Inform APP of database creation status */
 			case AT_BLE_HTPT_CREATE_DB_CFM:	
 			{
-				uint8_t idx = 0;
-				uint8_t adv_data[HT_ADV_DATA_NAME_LEN + HT_ADV_DATA_APPEARANCE_LEN + HT_ADV_DATA_UUID_LEN + 3*2];
+					at_ble_htpt_create_db_cfm_t create_db_params;
+					
+					memcpy((uint8_t *)&create_db_params, params, sizeof(at_ble_htpt_create_db_cfm_t));
+					
+					// start advertising
+					DBG_LOG("Creating HTP DB: SUCCESS: Status=0x%x", create_db_params.status);			
+			}
+			break;
+			
+			case AT_BLE_MTU_CHANGED_INDICATION:
+			{
+				at_ble_mtu_changed_ind_t at_ble_mtu_changed_ind;
+				memcpy((uint8_t *)&at_ble_mtu_changed_ind, params, sizeof(at_ble_mtu_changed_ind_t));
+				DBG_LOG("MTU Value Changed:%d", at_ble_mtu_changed_ind.mtu_value);
+			}
+			break;
+			
+			case AT_BLE_HTPT_ENABLE_RSP:
+			{				
+				at_ble_htpt_enable_rsp_t at_ble_htpt_enable_rsp;
+					
+				memcpy((uint8_t *)&at_ble_htpt_enable_rsp, params, sizeof(at_ble_htpt_enable_rsp_t));
 				
-				at_ble_htpt_create_db_cfm_t create_db_params;
-				
-				memcpy((uint8_t *)&create_db_params, params, sizeof(at_ble_htpt_create_db_cfm_t));
-								
-				// start advertising
-				DBG_LOG("Creating HTP DB: SUCCESS: Status=0x%x", create_db_params.status);
-				
-				/* Prepare ADV Data */
-				adv_data[idx++] = HT_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
-				adv_data[idx++] = HT_ADV_DATA_UUID_TYPE;
-				memcpy(&adv_data[idx], HT_ADV_DATA_UUID_DATA, HT_ADV_DATA_UUID_LEN);				
-				idx += HT_ADV_DATA_UUID_LEN;
-				
-				adv_data[idx++] = HT_ADV_DATA_APPEARANCE_LEN + ADV_TYPE_LEN;
-				adv_data[idx++] = HT_ADV_DATA_APPEARANCE_TYPE;
-				memcpy(&adv_data[idx], HT_ADV_DATA_APPEARANCE_DATA, HT_ADV_DATA_APPEARANCE_LEN);
-				idx += HT_ADV_DATA_APPEARANCE_LEN;
-				
-				adv_data[idx++] = HT_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
-				adv_data[idx++] = HT_ADV_DATA_NAME_TYPE;
-				memcpy(&adv_data[idx], HT_ADV_DATA_NAME_DATA, HT_ADV_DATA_NAME_LEN);
-				idx += HT_ADV_DATA_NAME_LEN;			
-				
-				
-				at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN);
-				
-				if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 
-				                   APP_HT_FAST_ADV, APP_HT_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
+				if (!(at_ble_htpt_enable_rsp.status == AT_BLE_SUCCESS))
 				{
-					DBG_LOG("BLE advertisement start failed");
-				}
-				else
-				{
-					DBG_LOG("BLE started LE advertisement");
-				}							
+					DBG_LOG("HTPT Enable Failed");
+				}					
 			}
 			break;
 			
@@ -409,9 +465,6 @@ int main (void)
 			{
 				at_ble_htpt_temp_send_cfm_t htpt_send_temp_cfm_params;
 				memcpy((uint8_t *)&htpt_send_temp_cfm_params, params, sizeof(at_ble_htpt_temp_send_cfm_t));
-				DBG_LOG("HTP Temperature Send Confirm: cfm_type=0x%x, conhdl=0x%x, status=0x%x,",
-					htpt_send_temp_cfm_params.cfm_type, htpt_send_temp_cfm_params.conhdl,
-					htpt_send_temp_cfm_params.status);
 				
 				/* Temperature sent confirmation */
 				ble_data_sent_confim();
@@ -441,17 +494,17 @@ int main (void)
 			case AT_BLE_HTPT_CFG_INDNTF_IND:
 			{
 				at_ble_htpt_cfg_indntf_ind_t htpt_cfg_indntf_ind_params;
-				memcpy((uint8_t *)&htpt_cfg_indntf_ind_params, params, sizeof(at_ble_htpt_cfg_indntf_ind_t));
-				DBG_LOG("HTP Cfg indication notification indication cfg_val=0x%x, char code=0x%x", htpt_cfg_indntf_ind_params.cfg_val,
-				htpt_cfg_indntf_ind_params.char_code);
-				if (htpt_cfg_indntf_ind_params.cfg_val == 2)
+				memcpy((uint8_t *)&htpt_cfg_indntf_ind_params, params, sizeof(at_ble_htpt_cfg_indntf_ind_t));				
+				if (htpt_cfg_indntf_ind_params.ntf_ind_cfg == 1)
 				{
+					DBG_LOG("Started HTP Temperature Notification");
 					temp_send_notification = true;
 					htp_temperature_send(&htp_data);
 				}
 				else
 				{
 					temp_send_notification = false;
+					DBG_LOG("HTP Temperature Notification Stopped");
 				}				
 			}			
 			break;
@@ -639,7 +692,7 @@ void htp_init_defaults(htp_app_t *htp_temp)
 	/* Initialize to default temperature value  and htp parameters*/
 	htp_temp->measurement_interval = 1; 
 	htp_temp->temperature = 3700;
-	htp_temp->temperature_type = HTP_TYPE_BODY;
+	htp_temp->temperature_type = HTP_TYPE_ARMPIT;
 	htp_temp->max_meaurement_intv = 30;
 	htp_temp->min_measurement_intv = 1;
 	htp_temp->security_lvl = HTPT_UNAUTH;
@@ -664,6 +717,12 @@ void htp_temperature_send(htp_app_t *htp_temp)
 	at30tse_read_temperature(&temperature);
 #endif	
 
+	if(button_pressed)
+	{
+		update_temperature_type_location();
+		button_pressed = false;
+	}
+
 	if (htp_temp->flags & HTPT_FLAG_FAHRENHEIT)
 	{
 		temperature = (((temperature * 9.0)/5.0) + 32.0);
@@ -675,19 +734,24 @@ void htp_temperature_send(htp_app_t *htp_temp)
 	timestamp.month = 8;
 	timestamp.sec = 36;
 	timestamp.year = 15;
-	
-	if(button_pressed)
-	{
-		update_temperature_type_location();
-		button_pressed = false;
-	}
-	
-	at_ble_htpt_temp_send(convert_ieee754_ieee11073_float((float)temperature),
+		
+	if(at_ble_htpt_temp_send(convert_ieee754_ieee11073_float((float)temperature),
 	                     &timestamp,
 						 htp_temp->flags,
 						 htp_temp->temperature_type,
 						 STABLE_TEMPERATURE_VAL
-						 );
+						 ) == AT_BLE_SUCCESS)
+						 {
+							 if (htp_temp->flags & HTPT_FLAG_FAHRENHEIT)
+							 {
+								 DBG_LOG("Temperature: %0.1f Fahrenheit", temperature);
+							 }
+							 else
+							 {
+								DBG_LOG("Temperature: %0.1f Deg Celsius", temperature);
+							 }
+							 
+						 }
 }
 
 void button_cb(void)

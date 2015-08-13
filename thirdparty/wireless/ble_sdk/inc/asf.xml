@@ -3,9 +3,11 @@
 		<info type="description" value="summary">
 		</info>
 		<build type="include-path"  value="./"/>
-  <build type="header-file"   value="at_ble_api.h"/>
-  <build type="header-file"   value="platform.h"/>
-  <build type="header-file"   value="profiles.h"/>
+  		<build type="header-file"   value="at_ble_api.h"/>
+  		<build type="header-file"   value="platform.h"/>
+  		<build type="header-file"   value="profiles.h"/>
+  		<build type="header-file"   value="at_ble_errno.h"/>
+  		<build type="header-file"   value="at_ble_trace.h"/>
 
 		<build type="doxygen-entry-point" value="ble_stack_group"/>
 		<device-support-alias value="ble_stack_lib_support"/>

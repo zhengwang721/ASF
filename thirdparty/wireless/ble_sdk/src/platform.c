@@ -50,6 +50,15 @@
 #include "serial_drv.h"
 #include "serial_fifo.h"
 
+uint8_t bus_type = UART;
+
+volatile enum tenuTransportState slave_state = PLATFORM_TRANSPORT_SLAVE_DISCONNECTED;
+#define GTL_EIF_CONNECT_REQ	0xA5
+#define GTL_EIF_CONNECT_RESP 0x5A
+#define BTLC1000_STARTUP_DELAY (1500)
+
+extern volatile bool button_pressed;
+
 static volatile uint32_t cmd_cmpl_flag = 0;
 static volatile uint32_t event_flag = 0;
 
@@ -60,7 +69,13 @@ extern ser_fifo_desc_t ble_usart_rx_fifo;
 
 #define BLE_SERIAL_HEADER_LEN (0x09)
 
-
+typedef enum {
+	BLE_IDLE_STATE = 0,
+	BLE_SOF_STATE,
+	BLE_HEADER_STATE,
+	BLE_PAYLOAD_STATE,
+	BLE_EOF_STATE
+}ble_serial_state_t;
 
 COMPILER_PACK_SET(1)	
 typedef struct ble_event_header{
@@ -90,18 +105,36 @@ uint16_t rx_buf_idx;
 #endif
 
 static uint32_t timer_done(void);
+void platform_process_rxdata(uint32_t t_rx_data);
 
 at_ble_status_t platform_init(void* platform_params)
 {	
-	ble_configure_control_pin();	
-	configure_serial_drv();
-        /* Keep compiler happy */
-        platform_params = platform_params;
-	return AT_BLE_SUCCESS;
+	platform_config	*cfg = (platform_config *)platform_params;
+	ble_configure_control_pin();
+	
+	delay_ms(BTLC1000_STARTUP_DELAY);
+	DBG_LOG_BLE("\r\nCalibrate using J-Link then Press SW0 on board");
+	
+	while(button_pressed == false);
+	button_pressed = false;
+	
+	if (cfg->bus_type == UART)
+	{
+		configure_serial_drv();
+		bus_type = UART;
+		DBG_LOG_BLE("\r\nCalibration done\r\n");
+		return AT_BLE_SUCCESS;
+	}
+	return AT_BLE_INVALID_PARAM;
+	
 }
 
-void platform_interface_send(uint8_t* data, uint32_t len)
+int platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t len)
 {
+	if (if_type != UART)
+	{
+		return -1;
+	}
 #ifdef BLE_DBG_ENABLE
 	uint32_t i;
 
@@ -119,11 +152,31 @@ void platform_interface_send(uint8_t* data, uint32_t len)
 	}
 #endif
 	serial_drv_send(data, len);	
+	return STATUS_OK;
 }
 
 void platform_cmd_cmpl_signal()
 {
 	cmd_cmpl_flag = 1;
+}
+
+int platform_interface_recv(uint8_t if_type, uint8_t* data, uint32_t len)
+{
+	if (if_type == UART)
+	{
+		return STATUS_OK;
+	}
+	return -1;	
+}
+
+int platform_interface_send_sleep(void)
+{
+	return 0;
+}
+
+int platform_interface_send_wakeup(void)
+{
+	return 0;
 }
 
 uint32_t ticks = 0;
@@ -162,6 +215,25 @@ static uint32_t timer_done(void)
 	return --ticks; 
 }
 
+void platform_process_rxdata(uint32_t t_rx_data)
+{
+	if(slave_state == PLATFORM_TRANSPORT_SLAVE_CONNECTED)
+	{
+		ser_fifo_push_uint8(&ble_usart_rx_fifo, (uint8_t)t_rx_data);
+	}			
+	else if(slave_state == PLATFORM_TRANSPORT_SLAVE_PATCH_DOWNLOAD)
+	{
+		fw_patch_download_cb((uint8_t*)&t_rx_data, 1);
+	}
+	else if(slave_state == PLATFORM_TRANSPORT_SLAVE_DISCONNECTED)
+	{
+		if(t_rx_data == GTL_EIF_CONNECT_RESP)
+		{
+			slave_state = PLATFORM_TRANSPORT_SLAVE_PATCH_DOWNLOAD;
+		}				
+	}
+}
+
 void platform_cmd_cmpl_wait(bool* timeout)
 {
 	uint32_t t_rx_data;
@@ -170,8 +242,8 @@ void platform_cmd_cmpl_wait(bool* timeout)
 	do 
 	{
 		if(ser_fifo_pull_uint8(&ble_usart_rx_fifo, (uint8_t *)&t_rx_data) == SER_FIFO_OK)
-		{
-			platform_interface_callback((uint8_t *)&t_rx_data, 1);
+		{			
+			platform_interface_callback((uint8_t*)&t_rx_data, 1);
 		}
 	}while((cmd_cmpl_flag != 1) && (timer_done()>0));
 
@@ -213,7 +285,7 @@ uint8_t platform_event_wait(uint32_t timeout)
 		{
 			if(ser_fifo_pull_uint8(&ble_usart_rx_fifo, (uint8_t *)&t_rx_data) == SER_FIFO_OK)
 			{
-				platform_interface_callback((uint8_t *)&t_rx_data, 1);
+				platform_interface_callback((uint8_t*)&t_rx_data, 1);
 			}
 		}while((event_flag != 1) && (timer_done()>0));
 		if (event_flag == 1)
@@ -297,6 +369,12 @@ at_ble_status_t platform_ble_event_data(void)
 		}	
 	}
 	return AT_BLE_FAILURE;
+}
+
+uint8_t platform_sleep(uint32_t sleepms)
+{
+	delay_ms(sleepms);
+	return true;
 }
 
 void serial_rx_callback(void) {}

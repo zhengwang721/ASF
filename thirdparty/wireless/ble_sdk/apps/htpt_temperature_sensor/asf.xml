@@ -11,7 +11,7 @@
 		<require idref="thirdparty.wireless.ble_sdk.src"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
-		<device-support-alias value="ble_stack_lib_support"/>
+		<device-support-alias value="ble_stack_lib_support"/>		
 		<info type="keyword" value="technology">
 			<keyword value="Wireless"/>
 			<keyword value="Communication"/>

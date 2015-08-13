@@ -71,8 +71,8 @@ void serial_tx_callback(void);
 
 #define SERIAL_DRV_RX_CB serial_rx_callback
 #define SERIAL_DRV_TX_CB serial_tx_callback
-#define SERIAL_DRV_TX_CB_ENABLE  true
-#define SERIAL_DRV_RX_CB_ENABLE  true
+#define SERIAL_DRV_TX_CB_ENABLE  false
+#define SERIAL_DRV_RX_CB_ENABLE  false
 
 #define BLE_MAX_TX_PAYLOAD_SIZE 256
 #define BLE_MAX_RX_PAYLOAD_SIZE 256
