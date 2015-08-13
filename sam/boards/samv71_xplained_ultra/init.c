@@ -49,6 +49,8 @@
 #include "conf_board.h"
 #include "ioport.h"
 #include "pio.h"
+#include "mpu.h"
+
 
 /**
  * \brief Set peripheral mode for IOPORT pins.
@@ -88,6 +90,250 @@
 		ioport_set_pin_mode(pin, mode);\
 		ioport_set_pin_sense_mode(pin, sense);\
 	} while (0)
+
+
+
+/**
+ *	Default memory map
+ *	Address range        Memory region      Memory type   Shareability  Cache policy
+ *	0x00000000- 0x1FFFFFFF Code             Normal        Non-shareable  WT
+ *	0x20000000- 0x3FFFFFFF SRAM             Normal        Non-shareable  WBWA
+ *	0x40000000- 0x5FFFFFFF Peripheral       Device        Non-shareable  -
+ *	0x60000000- 0x7FFFFFFF RAM              Normal        Non-shareable  WBWA
+ *	0x80000000- 0x9FFFFFFF RAM              Normal        Non-shareable  WT
+ *	0xA0000000- 0xBFFFFFFF Device           Device        Shareable
+ *	0xC0000000- 0xDFFFFFFF Device           Device        Non Shareable
+ *	0xE0000000- 0xFFFFFFFF System           -                  -
+ */
+
+#ifdef CONF_BOARD_CONFIG_MPU_AT_INIT
+/**
+ * \brief Set up a memory region.
+ */
+static void _setup_memory_region( void )
+{
+
+	uint32_t dw_region_base_addr;
+	uint32_t dw_region_attr;
+
+	__DMB();
+
+/**
+ *	ITCM memory region --- Normal
+ *	START_Addr:-  0x00000000UL
+ *	END_Addr:-    0x00400000UL
+ */
+	dw_region_base_addr =
+		ITCM_START_ADDRESS |
+		MPU_REGION_VALID |
+		MPU_DEFAULT_ITCM_REGION;
+
+	dw_region_attr =
+		MPU_AP_PRIVILEGED_READ_WRITE |
+		mpu_cal_mpu_region_size(ITCM_END_ADDRESS - ITCM_START_ADDRESS) |
+		MPU_REGION_ENABLE;
+
+	mpu_set_region( dw_region_base_addr, dw_region_attr);
+
+/**
+ *	Internal flash memory region --- Normal read-only
+ *	(update to Strongly ordered in write accesses)
+ *	START_Addr:-  0x00400000UL
+ *	END_Addr:-    0x00600000UL
+ */
+
+	dw_region_base_addr =
+		IFLASH_START_ADDRESS |
+		MPU_REGION_VALID |
+		MPU_DEFAULT_IFLASH_REGION;
+
+	dw_region_attr =
+		MPU_AP_READONLY |
+		INNER_NORMAL_WB_NWA_TYPE( NON_SHAREABLE ) |
+		mpu_cal_mpu_region_size(IFLASH_END_ADDRESS - IFLASH_START_ADDRESS) |
+		MPU_REGION_ENABLE;
+
+	mpu_set_region( dw_region_base_addr, dw_region_attr);
+
+/**
+ *	DTCM memory region --- Normal
+ *	START_Addr:-  0x20000000L
+ *	END_Addr:-    0x20400000UL
+ */
+
+	/* DTCM memory region */
+	dw_region_base_addr =
+		DTCM_START_ADDRESS |
+		MPU_REGION_VALID |
+		MPU_DEFAULT_DTCM_REGION;
+
+	dw_region_attr =
+		MPU_AP_PRIVILEGED_READ_WRITE |
+		mpu_cal_mpu_region_size(DTCM_END_ADDRESS - DTCM_START_ADDRESS) |
+		MPU_REGION_ENABLE;
+
+	mpu_set_region( dw_region_base_addr, dw_region_attr);
+
+/**
+ *	SRAM Cacheable memory region --- Normal
+ *	START_Addr:-  0x20400000UL
+ *	END_Addr:-    0x2043FFFFUL
+ */
+	/* SRAM memory  region */
+	dw_region_base_addr =
+		SRAM_FIRST_START_ADDRESS |
+		MPU_REGION_VALID |
+		MPU_DEFAULT_SRAM_REGION_1;
+
+	dw_region_attr =
+		MPU_AP_FULL_ACCESS    |
+		INNER_NORMAL_WB_NWA_TYPE( NON_SHAREABLE ) |
+		mpu_cal_mpu_region_size(SRAM_FIRST_END_ADDRESS - SRAM_FIRST_START_ADDRESS)
+		| MPU_REGION_ENABLE;
+
+	mpu_set_region( dw_region_base_addr, dw_region_attr);
+
+
+/**
+ *	Internal SRAM second partition memory region --- Normal
+ *	START_Addr:-  0x20440000UL
+ *	END_Addr:-    0x2045FFFFUL
+ */
+	/* SRAM memory region */
+	dw_region_base_addr =
+		SRAM_SECOND_START_ADDRESS |
+		MPU_REGION_VALID |
+		MPU_DEFAULT_SRAM_REGION_2;
+
+	dw_region_attr =
+		MPU_AP_FULL_ACCESS    |
+		INNER_NORMAL_WB_NWA_TYPE( NON_SHAREABLE ) |
+		mpu_cal_mpu_region_size(SRAM_SECOND_END_ADDRESS - SRAM_SECOND_START_ADDRESS) |
+		MPU_REGION_ENABLE;
+
+	mpu_set_region( dw_region_base_addr, dw_region_attr);
+
+#ifdef MPU_HAS_NOCACHE_REGION
+	dw_region_base_addr =
+        SRAM_NOCACHE_START_ADDRESS |
+        MPU_REGION_VALID |
+        MPU_NOCACHE_SRAM_REGION;
+
+    dw_region_attr =
+        MPU_AP_FULL_ACCESS    |
+        INNER_OUTER_NORMAL_NOCACHE_TYPE( SHAREABLE ) |
+        mpu_cal_mpu_region_size(NOCACHE_SRAM_REGION_SIZE) |
+        MPU_REGION_ENABLE;
+
+    mpu_set_region( dw_region_base_addr, dw_region_attr);
+#endif
+
+/**
+ *	Peripheral memory region --- DEVICE Shareable
+ *	START_Addr:-  0x40000000UL
+ *	END_Addr:-    0x5FFFFFFFUL
+ */
+	dw_region_base_addr =
+		PERIPHERALS_START_ADDRESS |
+		MPU_REGION_VALID |
+		MPU_PERIPHERALS_REGION;
+
+	dw_region_attr = MPU_AP_FULL_ACCESS |
+		MPU_REGION_EXECUTE_NEVER |
+		SHAREABLE_DEVICE_TYPE |
+		mpu_cal_mpu_region_size(PERIPHERALS_END_ADDRESS - PERIPHERALS_START_ADDRESS)
+		|MPU_REGION_ENABLE;
+
+	mpu_set_region( dw_region_base_addr, dw_region_attr);
+
+
+/**
+ *	External EBI memory  memory region --- Strongly Ordered
+ *	START_Addr:-  0x60000000UL
+ *	END_Addr:-    0x6FFFFFFFUL
+ */
+	dw_region_base_addr =
+		EXT_EBI_START_ADDRESS |
+		MPU_REGION_VALID |
+		MPU_EXT_EBI_REGION;
+
+	dw_region_attr =
+		MPU_AP_FULL_ACCESS |
+		/* External memory Must be defined with 'Device' or 'Strongly Ordered' attribute for write accesses (AXI) */
+		STRONGLY_ORDERED_SHAREABLE_TYPE |
+		mpu_cal_mpu_region_size(EXT_EBI_END_ADDRESS - EXT_EBI_START_ADDRESS) |
+		MPU_REGION_ENABLE;
+
+	mpu_set_region( dw_region_base_addr, dw_region_attr);
+
+/**
+ *	SDRAM cacheable memory region --- Normal
+ *	START_Addr:-  0x70000000UL
+ *	END_Addr:-    0x7FFFFFFFUL
+ */
+	dw_region_base_addr =
+		SDRAM_START_ADDRESS |
+		MPU_REGION_VALID |
+		MPU_DEFAULT_SDRAM_REGION;
+
+	dw_region_attr =
+		MPU_AP_FULL_ACCESS    |
+		INNER_NORMAL_WB_RWA_TYPE( SHAREABLE ) |
+		mpu_cal_mpu_region_size(SDRAM_END_ADDRESS - SDRAM_START_ADDRESS) |
+		MPU_REGION_ENABLE;
+
+	mpu_set_region( dw_region_base_addr, dw_region_attr);
+
+/**
+ *	QSPI memory region --- Strongly ordered
+ *	START_Addr:-  0x80000000UL
+ *	END_Addr:-    0x9FFFFFFFUL
+ */
+	dw_region_base_addr =
+		QSPI_START_ADDRESS |
+		MPU_REGION_VALID |
+		MPU_QSPIMEM_REGION;
+
+	dw_region_attr =
+		MPU_AP_FULL_ACCESS |
+		STRONGLY_ORDERED_SHAREABLE_TYPE |
+		mpu_cal_mpu_region_size(QSPI_END_ADDRESS - QSPI_START_ADDRESS) |
+		MPU_REGION_ENABLE;
+
+	mpu_set_region( dw_region_base_addr, dw_region_attr);
+
+
+/**
+ *	USB RAM Memory region --- Device
+ *	START_Addr:-  0xA0100000UL
+ *	END_Addr:-    0xA01FFFFFUL
+ */
+	dw_region_base_addr =
+		USBHSRAM_START_ADDRESS |
+		MPU_REGION_VALID |
+		MPU_USBHSRAM_REGION;
+
+	dw_region_attr =
+		MPU_AP_FULL_ACCESS |
+		MPU_REGION_EXECUTE_NEVER |
+		SHAREABLE_DEVICE_TYPE |
+		mpu_cal_mpu_region_size(USBHSRAM_END_ADDRESS - USBHSRAM_START_ADDRESS) |
+		MPU_REGION_ENABLE;
+
+	mpu_set_region( dw_region_base_addr, dw_region_attr);
+
+
+	/* Enable the memory management fault , Bus Fault, Usage Fault exception */
+	SCB->SHCSR |= (SCB_SHCSR_MEMFAULTENA_Msk | SCB_SHCSR_BUSFAULTENA_Msk
+					| SCB_SHCSR_USGFAULTENA_Msk);
+
+	/* Enable the MPU region */
+	mpu_enable( MPU_ENABLE | MPU_PRIVDEFENA);
+
+	__DSB();
+	__ISB();
+}
+#endif
 
 void board_init(void)
 {
@@ -148,6 +394,15 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(SPI0_SPCK_GPIO, SPI0_SPCK_FLAGS);
 #endif
 
+#ifdef CONF_BOARD_QSPI
+	ioport_set_pin_peripheral_mode(QSPI_QSCK_GPIO, QSPI_QSCK_FLAGS);
+	ioport_set_pin_peripheral_mode(QSPI_QCS_GPIO, QSPI_QCS_FLAGS);
+	ioport_set_pin_peripheral_mode(QSPI_QIO0_GPIO, QSPI_QIO0_FLAGS);
+	ioport_set_pin_peripheral_mode(QSPI_QIO1_GPIO, QSPI_QIO1_FLAGS);
+	ioport_set_pin_peripheral_mode(QSPI_QIO2_GPIO, QSPI_QIO2_FLAGS);
+	ioport_set_pin_peripheral_mode(QSPI_QIO3_GPIO, QSPI_QIO3_FLAGS);
+#endif
+
 #ifdef CONF_BOARD_PWM_LED0
 	/* Configure PWM LED0 pin */
 	ioport_set_pin_peripheral_mode(PIN_PWM_LED0_GPIO, PIN_PWM_LED0_FLAGS);
@@ -196,6 +451,11 @@ void board_init(void)
 	pio_configure(PIN_EBI_CS_PIO, PIN_EBI_CS_TYPE, PIN_EBI_CS_MASK, PIN_EBI_CS_ATTRI);
 	pio_configure(PIN_EBI_BACKLIGHT_PIO, PIN_EBI_BACKLIGHT_TYPE, PIN_EBI_BACKLIGHT_MASK, PIN_EBI_BACKLIGHT_ATTRI);
 	pio_set(PIN_EBI_BACKLIGHT_PIO, PIN_EBI_BACKLIGHT_MASK);
+#endif
+
+#ifdef CONF_BOARD_CONFIG_MPU_AT_INIT
+	_setup_memory_region();
+
 #endif
 
 }
