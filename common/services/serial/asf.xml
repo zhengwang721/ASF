@@ -151,7 +151,7 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="mega.drivers.usart"/>
 			<device-support value="megarf"/>
-			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
+			<generator value="doxygen-module" default-mcu="unspecified-megarf"/>
 		</module>
 		<module type="service" id="common.services.basic.serial#6" caption="USART - Serial interface- SAM implementation for devices with only USART">
 			<info type="keyword" value="technology">
