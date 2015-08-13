@@ -67,7 +67,7 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
@@ -288,8 +288,8 @@ struct extint_chan_conf {
 	uint32_t gpio_pin_mux;
 	/** Internal pull to enable on the input pin */
 	enum extint_pull gpio_pin_pull;
-#if (SAML21) || (SAMC20) || (SAMC21)
-	/** Enable asynchronous edge detection */
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21)
+	/** Enable asynchronous edge detection. */
 	bool enable_async_edge_detection;
 #else
 	/** Wake up the device if the channel interrupt fires during sleep mode */
@@ -334,8 +334,8 @@ struct extint_nmi_conf {
 	 *  detection modes for NMIs.
 	 */
 	enum extint_detect detection_criteria;
-#if (SAML21) || (SAMC20) || (SAMC21)
-	/** Enable asynchronous edge detection */
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21)
+	/** Enable asynchronous edge detection. */
 	bool enable_async_edge_detection;
 #endif
 };
@@ -473,7 +473,7 @@ static inline void extint_nmi_get_config_defaults(
 	config->gpio_pin_pull       = EXTINT_PULL_UP;
 	config->filter_input_signal = false;
 	config->detection_criteria  = EXTINT_DETECT_FALLING;
-#if (SAML21) || (SAMC20) || (SAMC21)
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21)
 	 config->enable_async_edge_detection = false;
 #endif
 
@@ -678,7 +678,7 @@ static inline void extint_nmi_clear_detected(
  *  <tr>
  *      <td>42112E</td>
  *      <td>08/2015</td>
- *      <td>Added support for SAM L21, SAM C21, and SAM DAx</td>
+ *      <td>Added support for SAM L21, SAM L22, SAM C21, and SAM DAx</td>
  *  </tr>
  *  <tr>
  *      <td>42112D</td>

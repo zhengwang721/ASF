@@ -49,6 +49,7 @@
  *    - SAM D21 Xplained Pro
  *    - SAM R21 Xplained Pro
  *    - SAM L21 Xplained Pro
+ *    - SAM L22 Xplained Pro
  *    - SAM DA1 Xplained Pro
  *    - SAM C21 Xplained Pro
  *
