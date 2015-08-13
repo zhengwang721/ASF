@@ -66,6 +66,18 @@ struct spi_module spi_slave_instance;
 //! [setup]
 
 //! [configure_spi]
+static void configure_gpio(void)
+{
+	struct gpio_config config_gpio;
+	
+	gpio_get_config_defaults(&config_gpio);
+	
+	/* Configure LEDs as outputs, turn them off */
+	config_gpio.direction = GPIO_PIN_DIR_OUTPUT;
+	gpio_pin_set_config(LED_0_PIN, &config_gpio);
+	gpio_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+}
+
 void configure_spi_slave(void)
 {
 //! [config]
@@ -78,12 +90,27 @@ void configure_spi_slave(void)
 //! [conf_spi_slave_instance]
 	config_spi_slave.mode = SPI_MODE_SLAVE;
 //! [conf_spi_slave_instance]
-//! [conf_preload]
-	config_spi_slave.mode_specific.slave.preload_enable = true;
-//! [conf_preload]
-
+//! [transfer_mode]
+	config_spi_slave.transfer_mode = CONF_SPI_TRANSFER_MODE;
+//! [transfer_mode]
+	/* Configure pad 0 */
+//! [sck]
+	config_spi_slave.pinmux_pad[0] = CONF_SPI_PINMUX_SCK;
+//! [sck]
+	/* Configure pad 1 */
+//! [mosi]
+	config_spi_slave.pinmux_pad[1] = CONF_SPI_PINMUX_MOSI;
+//! [mosi]
+	/* Configure pad 2 */
+//! [ssn]
+	config_spi_slave.pinmux_pad[2] = CONF_SPI_PINMUX_SSN;
+//! [ssn]
+	/* Configure pad 3 */
+//! [miso]
+	config_spi_slave.pinmux_pad[3] = CONF_SPI_PINMUX_MISO;
+//! [miso]
 //! [init]
-	spi_init(&spi_slave_instance, &config_spi_slave);
+	spi_init(&spi_slave_instance, CONF_SPI, &config_spi_slave);
 //! [init]
 
 //! [enable]
@@ -100,16 +127,18 @@ int main(void)
 	
 	/* Initialize system */
 //! [system_init]
-	//system_init();
+	system_clock_config(CLOCK_RESOURCE_XO_26MHZ, CLOCK_FREQ_26);
 //! [system_init]
 
 //! [run_config]
+	configure_gpio();
 	configure_spi_slave();
 //! [run_config]
 //! [main_start]
 
 //! [main_use_case]
 //! [read]
+	memset(buffer_rx, 0x0, BUF_LENGTH);
 	while(spi_read_buffer_wait(&spi_slave_instance, buffer_rx, BUF_LENGTH,
 		0x00) != STATUS_OK) {
 		/* Wait for transfer from the master */

@@ -76,7 +76,7 @@
  * \snippet qs_spi_master_basic.c dev_inst
  * A globally available peripheral slave software device instance struct.
  * \snippet qs_spi_master_basic.c slave_dev_inst
- * A function for configuring the SPI.
+ * A function for configuring the GPIO and SPI.
  * \snippet qs_spi_master_basic.c configure_spi
  *
  * Add to user application \c main().
@@ -95,10 +95,22 @@
  *      \snippet qs_spi_master_basic.c slave_dev_inst
  *   -# Get default peripheral slave configuration.
  *      \snippet qs_spi_master_basic.c slave_conf_defaults
+ *   -# Set Slave Select pin.
+ *      \snippet qs_spi_master_basic.c ss_pin
  *   -# Initialize peripheral slave software instance with configuration.
  *      \snippet qs_spi_master_basic.c slave_init
  *   -# Get default configuration to edit.
  *      \snippet qs_spi_master_basic.c conf_defaults
+ *   -# Set transfer mode 0.
+ *      \snippet qs_spi_master_basic.c transfer_mode
+ *   -# Set pinmux for pad 0 (SCK).
+ *      \snippet qs_spi_master_basic.c sck
+ *   -# Set pinmux for pad 1 (data out (MOSI))
+ *      \snippet qs_spi_master_basic.c mosi
+ *   -# Set pinmux for pad 2 as unused, so the pin can be used for other purposes.
+ *      \snippet qs_spi_master_basic.c ssn
+ *   -# Set pinmux for pad 3 (data in (MISO)).
+ *      \snippet qs_spi_master_basic.c miso
  *   -# Initialize SPI module with configuration.
  *      \snippet qs_spi_master_basic.c init
  *   -# Enable SPI module.

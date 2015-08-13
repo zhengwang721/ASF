@@ -90,10 +90,16 @@
  *      \snippet qs_spi_slave_basic.c conf_defaults
  *   -# Set the SPI in slave mode.
  *      \snippet qs_spi_slave_basic.c conf_spi_slave_instance
- *   -# Enable preloading of shift register.
- *      \snippet qs_spi_slave_basic.c conf_preload
- *   -# Set frame format to SPI frame.
- *      \snippet qs_spi_slave_basic.c conf_format
+ *   -# Set transfer mode 0.
+ *      \snippet qs_spi_master_basic.c transfer_mode
+ *   -# Set pinmux for pad 0 (SCK).
+ *      \snippet qs_spi_master_basic.c sck
+ *   -# Set pinmux for pad 1 (data out (MOSI))
+ *      \snippet qs_spi_master_basic.c mosi
+ *   -# Set pinmux for pad 2 (SSN).
+ *      \snippet qs_spi_master_basic.c ssn
+ *   -# Set pinmux for pad 3 (data in (MISO)).
+ *      \snippet qs_spi_master_basic.c miso
  *   -# Initialize SPI module with configuration.
  *      \snippet qs_spi_slave_basic.c init
  *   -# Enable SPI module.

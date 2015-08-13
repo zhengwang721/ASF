@@ -50,7 +50,7 @@
 #define BUF_LENGTH 20
 //! [buf_length]
 //! [slave_select_pin]
-#define SLAVE_SELECT_PIN
+#define SLAVE_SELECT_PIN  CONF_PIN_SPI_SSN
 //! [slave_select_pin]
 //! [buffer]
 static uint8_t buffer[BUF_LENGTH] = {
@@ -68,6 +68,22 @@ struct spi_slave_inst slave;
 //! [setup]
 
 //! [configure_spi]
+static void configure_gpio(void)
+{
+	struct gpio_config config_gpio;
+	
+	gpio_get_config_defaults(&config_gpio);
+	/* Set buttons as inputs */
+	config_gpio.direction = GPIO_PIN_DIR_INPUT;
+	config_gpio.input_pull = GPIO_PIN_PULL_UP;
+	gpio_pin_set_config(BUTTON_0_PIN, &config_gpio);
+	
+	/* Configure LEDs as outputs, turn them off */
+	config_gpio.direction = GPIO_PIN_DIR_OUTPUT;
+	gpio_pin_set_config(LED_0_PIN, &config_gpio);
+	gpio_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+}
+
 static void configure_spi_master(void)
 {
 //! [config]
@@ -80,6 +96,9 @@ static void configure_spi_master(void)
 //! [slave_conf_defaults]
 	spi_slave_inst_get_config_defaults(&slave_dev_config);
 //! [slave_conf_defaults]
+//! [ss_pin]
+	slave_dev_config.ss_pin = SLAVE_SELECT_PIN;
+//! [ss_pin]
 //! [slave_init]
 	spi_attach_slave(&slave, &slave_dev_config);
 //! [slave_init]
@@ -87,8 +106,27 @@ static void configure_spi_master(void)
 //! [conf_defaults]
 	spi_get_config_defaults(&config_spi_master);
 //! [conf_defaults]
+//! [transfer_mode]
+	config_spi_master.transfer_mode = CONF_SPI_TRANSFER_MODE;
+//! [transfer_mode]
+	/* Configure pad 0 */
+//! [sck]
+	config_spi_master.pinmux_pad[0] = CONF_SPI_PINMUX_SCK;
+//! [sck]
+	/* Configure pad 1 */
+//! [mosi]
+	config_spi_master.pinmux_pad[1] = CONF_SPI_PINMUX_MOSI;
+//! [mosi]
+	/* Configure pad 2 */
+//! [ssn]
+	config_spi_master.pinmux_pad[2] = PINMUX_UNUSED;
+//! [ssn]
+	/* Configure pad 3 */
+//! [miso]
+	config_spi_master.pinmux_pad[3] = CONF_SPI_PINMUX_MISO;
+//! [miso]
 //! [init]
-	spi_init(&spi_master_instance, &config_spi_master);
+	spi_init(&spi_master_instance, CONF_SPI, &config_spi_master);
 //! [init]
 
 //! [enable]
@@ -102,9 +140,10 @@ int main(void)
 {
 //! [main_setup]
 //! [system_init]
-	//system_init();
+	system_clock_config(CLOCK_RESOURCE_XO_26MHZ, CLOCK_FREQ_26);
 //! [system_init]
 //! [run_config]
+	configure_gpio();
 	configure_spi_master();
 //! [run_config]
 //! [main_setup]
