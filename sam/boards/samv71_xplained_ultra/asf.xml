@@ -18,6 +18,7 @@
 			<require idref="common.services.ioport"/>
 			<require idref="common.services.basic.gpio"/>
 			<require idref="sam.drivers.mpu"/>
+			<require idref="sam.drivers.pio"/>			
 		</module>
 	</select-by-config>
 

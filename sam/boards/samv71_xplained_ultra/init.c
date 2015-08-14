@@ -48,7 +48,9 @@
 #include "board.h"
 #include "conf_board.h"
 #include "ioport.h"
+#include "pio.h"
 #include "mpu.h"
+
 
 /**
  * \brief Set peripheral mode for IOPORT pins.
@@ -424,7 +426,7 @@ void board_init(void)
 
 #ifdef CONF_BOARD_USART_SCK
 	/* Configure USART synchronous communication SCK pin */
-	ioport_set_pin_peripheral_mode(PIN_USART0_SCK_IDX, PIN_USART0_SCK_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_USART0_SCK_IDX,PIN_USART0_SCK_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_USART_CTS
@@ -437,8 +439,23 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_USART0_RTS_IDX, PIN_USART0_RTS_FLAGS);
 #endif
 
+#ifdef CONF_BOARD_ILI9488
+/**LCD pin configure on EBI*/
+	pio_configure(PIN_EBI_RESET_PIO, PIN_EBI_RESET_TYPE, PIN_EBI_RESET_MASK, PIN_EBI_RESET_ATTRI);
+	pio_configure(PIN_EBI_CDS_PIO, PIN_EBI_CDS_TYPE, PIN_EBI_CDS_MASK, PIN_EBI_CDS_ATTRI);
+	pio_configure(PIN_EBI_DATAL_PIO, PIN_EBI_DATAL_TYPE, PIN_EBI_DATAL_MASK, PIN_EBI_DATAL_ATTRI);
+	pio_configure(PIN_EBI_DATAH_0_PIO, PIN_EBI_DATAH_0_TYPE, PIN_EBI_DATAH_0_MASK, PIN_EBI_DATAH_0_ATTRI);
+	pio_configure(PIN_EBI_DATAH_1_PIO, PIN_EBI_DATAH_1_TYPE, PIN_EBI_DATAH_1_MASK, PIN_EBI_DATAH_1_ATTRI);
+	pio_configure(PIN_EBI_NWE_PIO, PIN_EBI_NWE_TYPE, PIN_EBI_NWE_MASK, PIN_EBI_NWE_ATTRI);
+	pio_configure(PIN_EBI_NRD_PIO, PIN_EBI_NRD_TYPE, PIN_EBI_NRD_MASK, PIN_EBI_NRD_ATTRI);
+	pio_configure(PIN_EBI_CS_PIO, PIN_EBI_CS_TYPE, PIN_EBI_CS_MASK, PIN_EBI_CS_ATTRI);
+	pio_configure(PIN_EBI_BACKLIGHT_PIO, PIN_EBI_BACKLIGHT_TYPE, PIN_EBI_BACKLIGHT_MASK, PIN_EBI_BACKLIGHT_ATTRI);
+	pio_set(PIN_EBI_BACKLIGHT_PIO, PIN_EBI_BACKLIGHT_MASK);
+#endif
+
 #ifdef CONF_BOARD_CONFIG_MPU_AT_INIT
 	_setup_memory_region();
+
 #endif
 
 }
