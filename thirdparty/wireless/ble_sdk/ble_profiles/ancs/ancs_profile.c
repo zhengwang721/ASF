@@ -184,7 +184,7 @@ void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *params)
 			//}
 		//}
 		//
-		if(discover_status.status == AT_BLE_DISCOVERY_SUCCESS)
+		if(discover_status.status == AT_BLE_SUCCESS)
 		{
 			if(discover_status.operation == AT_BLE_DISC_BY_UUID_SVC)
 			{	
@@ -200,7 +200,7 @@ void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *params)
 					DBG_LOG("Descriptor Discovery Failed");
 				}
 			}
-			else if(discover_status.opertaion == AT_BLE_DISC_DESC_CHAR)
+			else if(discover_status.operation == AT_BLE_DISC_DESC_CHAR)
 			{
 				app_anp_info.devicedb = TRUE;
 				

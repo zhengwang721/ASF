@@ -63,9 +63,9 @@
 #define SCAN_RESP_LEN								(10)
 
 /**@brief ADV UUID Type & Length*/
-#define AD_TYPE_16BIT_UUID_LEN						 (2)
-#define AD_TYPE_32BIT_UUID_LEN						 (4)
-#define AD_TYPE_128BIT_UUID_LEN						 (16)
+#define AD_TYPE_16BIT_UUID_LEN						(2)
+#define AD_TYPE_32BIT_UUID_LEN						(4)
+#define AD_TYPE_128BIT_UUID_LEN						(16)
 
 /**@brief Time Profile type, UUid & Length */
 #define ADV_TYPE_LEN								(0x01)
@@ -88,33 +88,17 @@
 #define TP_ADV_DATA_APPEARANCE_DATA					("\x00\x01")
 
 /**@brief Advertisement Name Type Length & data */
-#define TP_ADV_DATA_NAME_LEN						 (6)
-#define TP_ADV_DATA_NAME_TYPE						 (0x09)
-#define TP_ADV_DATA_NAME_DATA						 ("AT-TIP")
+#define TP_ADV_DATA_NAME_LEN						(9)
+#define TP_ADV_DATA_NAME_TYPE						(0x09)
+#define TP_ADV_DATA_NAME_DATA						("ATMEL-TIP")
 
 /***********************************************************************************
  *									Types			                               *
  **********************************************************************************/
-/** @brief Type of attribute discovery */
-typedef enum
-{
-	/// Discovery Disable
-	DISCOVER_IDLE = 0,
-	/// Discover Service
-	DISCOVER_SERVICE,
-	/// Discover Include Service
-	DISCOVER_INCLUDE_SERVICE,
-	
-	/// Discover Characteristic
-	DISCOVER_CHARACTERISTIC,
-	
-	/// Discover Descriptor
-	DISCOVER_DESCRIPTOR,
-	
-}at_ble_discovery_role;
+
 
 /***********************************************************************************
- *									Fucntions		                               *
+ *									Functions		                               *
  **********************************************************************************/
 /**
  * @brief Initialize the Time information Profile
@@ -156,6 +140,7 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
  * \note Called by the ble_manager after receiving read response event
  */
 void time_info_characteristic_read_response(at_ble_characteristic_read_response_t *char_read_resp);
+
 /**
  * @brief Handler for characteristic found event
  * @param[in] characteristic found event parameter containing details like characteristic handle,uuid
@@ -187,6 +172,27 @@ void time_info_char_changed_handler(at_ble_characteristic_changed_t *characteris
  * @brief setting time profile advertisement data and triggering of advertisment
  */
 void time_info_adv(void);
+
+/**
+ * @brief Handler for descriptor found event
+ * @param[in] descriptor found event parameter containing details like characteristic handle,uuid
+ * \note Called by the ble_manager after receiving characteristic found event
+ */
+void time_info_descriptor_found_handler(at_ble_descriptor_found_t *descriptor_found);
+
+/**
+ * @brief Handler for write notification found event
+ * @param[in] descriptor found event parameter containing details like characteristic handle,uuid
+ * \note Called by the ble_manager after receiving characteristic found event
+ */
+void time_info_write_notification_handler(void *param);
+
+/**
+ * @brief Handler for notification received found event
+ * @param[in] descriptor found event parameter containing details like characteristic handle,uuid
+ * \note Called by the ble_manager after receiving characteristic found event
+ */
+void time_info_notification_handler(at_ble_notification_recieved_t *char_read_resp);
 
 
 #endif /* __TIME_INFO_H__ */

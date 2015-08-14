@@ -63,17 +63,39 @@
 /***********************************************************************************
  *									Implementations	                               *
  **********************************************************************************/
+
+at_ble_status_t tis_current_time_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti)
+{
+	uint8_t desc_data[3] = {1, 0, 0};
+		
+	if(desc_handle == CTS_INVALID_CHAR_HANDLE)
+	{
+		return (AT_BLE_INVALID_STATE);
+	}
+	else
+	{
+		if(noti == true)
+		{
+			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_data[0],false, true));
+		}
+		else if(noti == false)
+		{
+			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_data[1],false, true));
+		}
+	}
+	return 0;
+}
+
 /**@brief Send the Read request to the current time characteristic
  * Read value will be reported via @ref AT_BLE_CHARACTERISTIC_READ_RESPONSE
  *event
  */
-
 at_ble_status_t tis_current_time_read(at_ble_handle_t conn_handle,
 		at_ble_handle_t char_handle)
 {
 	if (char_handle == CTS_INVALID_CHAR_HANDLE) 
 	{
-		return (AT_BLE_INVALID_HANDLE);
+		return (AT_BLE_INVALID_STATE);
 	} 
 	else 
 	{
@@ -86,24 +108,45 @@ at_ble_status_t tis_current_time_read(at_ble_handle_t conn_handle,
 int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *read_resp,
 		gatt_cts_handler_t *cts_handler)
 {
-	if (read_resp->char_handle == cts_handler->char_handle) 
+	if(read_resp->status != AT_BLE_SUCCESS)
 	{
+		return read_resp->status;
+	}
+	else
+	{
+		if (read_resp->char_handle == cts_handler->curr_char_handle) 
+		{
+			const char *ptr[] = {"Unknown","MON","TUE","WED","THU","FRI","SAT","SUN"};
+		
+			DBG_LOG("Current Time:");		
+		
+			DBG_LOG_CONT("[DD:MM:YYYY]: %02d-%02d-%02d [HH:MM:SS]: %02d:%02d:%02d  Day:%s",
+			read_resp->char_value[3],
+			read_resp->char_value[2],
+			((uint16_t)read_resp->char_value[0] | (read_resp->char_value[1] <<8)),
+			read_resp->char_value[4],
+			read_resp->char_value[5],
+			read_resp->char_value[6],
+			ptr[read_resp->char_value[7]]
+			);				
+		}
+	
+		if (read_resp->char_handle == cts_handler->lti_char_handle)
+		{
+			const char *dst_ptr[] = {"Standard Time", 0, "Haft An Hour Daylight Time", 0,"Daylight Time",0,0,0,"Double Daylight Time" };
 
-		const char *ptr[] = {"NUL","MON","TUE","WED","THU","FRI","SAT","SUN"};
-		memcpy(cts_handler->char_data,&read_resp->char_value[CTS_READ_OFFSET],CTS_READ_LENGTH);
-		
-		DBG_LOG("Current Time:");		
-		
-		DBG_LOG_CONT("[DD:MM:YYYY]: %02d-%02d-%02d [HH:MM:SS]: %02d:%02d:%02d  Day:%s",
-		read_resp->char_value[3],
-		read_resp->char_value[2],
-		((uint16_t)read_resp->char_value[0] | (read_resp->char_value[1] <<8)),
-		read_resp->char_value[4],
-		read_resp->char_value[5],
-		read_resp->char_value[6],
-		ptr[read_resp->char_value[7]]
-		);
-				
+			DBG_LOG("Time Zone %02d",(int8_t)read_resp->char_value[0]);
+			DBG_LOG("DST Offset %02d  %s",read_resp->char_value[1],dst_ptr[read_resp->char_value[1]]);
+		}
+	
+		if (read_resp->char_handle == cts_handler->rti_char_handle)
+		{
+			const char *time_ptr[] = {"Unknown", "Network Time Protocol", "GPS", "Radio Time Signal","Manual", "Atomic Clock", "Cellular Network"};
+			DBG_LOG("Time Source = %d %s",read_resp->char_value[0],time_ptr[read_resp->char_value[0]]);
+			DBG_LOG("Accuracy    = %02d",read_resp->char_value[1]);
+			DBG_LOG("Day  Since Update = %02d",read_resp->char_value[2]);
+			DBG_LOG("Hour Since Update = %02d",read_resp->char_value[3]);
+		}
 	}
 	return 0;
 }

@@ -137,6 +137,7 @@ void init_linkloss_service(gatt_service_handler_t *linkloss_serv)
   */
 at_ble_status_t lls_primary_service_define(gatt_service_handler_t *lls_service)
 {
+	
 	return(at_ble_primary_service_define(&lls_service->serv_uuid,
 											&lls_service->serv_handle,
 											NULL, LLS_INCLUDED_SERVICE_COUNT,  
@@ -200,7 +201,7 @@ at_ble_status_t lls_alert_level_read(at_ble_handle_t conn_handle,
 		at_ble_handle_t char_handle)
 {
 	if (char_handle == LLS_INVALID_CHAR_HANDLE) {
-		return (AT_BLE_INVALID_HANDLE);
+		return (AT_BLE_ATT_INVALID_HANDLE);
 	} else {
 		return (at_ble_characteristic_read(conn_handle,
 		       char_handle,

@@ -134,7 +134,13 @@ void register_linkloss_handler(reporter_callback_t linkloss_fn)
 */
 at_ble_status_t pxp_service_define (void)
 {
-	lls_primary_service_define(&lls_handle);
+	at_ble_status_t status;
+	
+	status = lls_primary_service_define(&lls_handle);
+	
+	DBG_LOG("Defining LLS service Status %d", status);
+
+
 	
 	#if defined PATHLOSS
 	ias_primary_service_define(&ias_handle);
@@ -193,11 +199,11 @@ at_ble_status_t pxp_reporter_connected_state_handler(at_ble_connected_t *conn_pa
 	hw_timer_stop();
 	LED_Off(LED0);
 	pxp_led_state = 0;
-	if ((status = at_ble_tx_power_set(conn_params->handle, DEFAULT_TX_PWR_VALUE)) != AT_BLE_SUCCESS) 
-	{
-		DBG_LOG("Setting tx power value failed:reason %x",status);
-		return AT_BLE_FAILURE;
-	}
+	//if ((status = at_ble_tx_power_set(conn_params->handle, DEFAULT_TX_PWR_VALUE)) != AT_BLE_SUCCESS) 
+	//{
+		//DBG_LOG("Setting tx power value failed:reason %x",status);
+		//return AT_BLE_FAILURE;
+	//}
 	
 	if ((status = at_ble_characteristic_value_get(lls_handle.serv_chars.char_val_handle,&linkloss_current_alert_level,sizeof(int8_t))))
 	{
@@ -232,6 +238,7 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 	}
 	return AT_BLE_SUCCESS;
 }
+
 
 /**
 * \Pxp reporter advertisement initialization and adv start 
@@ -297,12 +304,24 @@ void pxp_reporter_adv(void)
 */
 void pxp_reporter_init(void *param)
 {
-	/* pxp services initialization*/
-	pxp_service_init();
 	
+	DBG_LOG_DEV("PXP Reporter Profile Init");
+	
+	/* pxp services initialization*/
+	pxp_service_init();	
+	
+	DBG_LOG_DEV("PXP Reporter Service Init Pass");
+
 	/* pxp services definition		*/
-	pxp_service_define();
+	pxp_service_define();	
+	
+	DBG_LOG_DEV("PXP Reporter Service Define Pass");
+	
+	DBG_LOG_DEV("PXP Adv packet Set");
+
 	
 	/* pxp services advertisement */
 	pxp_reporter_adv();
+	
+
 }

@@ -1,7 +1,7 @@
 /**
 * \file
 *
-* \brief Link Loss Service Application declarations
+* \brief Current Time Service Application declarations
 *
 * Copyright (c) 2015 Atmel Corporation. All rights reserved.
 *
@@ -58,6 +58,8 @@
 /* Link Loss Alert length of data to read */
 #define CTS_READ_LENGTH                         (20)
 
+#define CTS_DESCRIPTOR_LENGTH                   (2)
+
 /* Link Loss read offset length*/
 #define CTS_READ_OFFSET                         (0)
 
@@ -73,9 +75,19 @@ typedef struct gatt_cts_handler
 {
 	at_ble_handle_t start_handle;
 	at_ble_handle_t end_handle;
-	at_ble_handle_t char_handle;
 	at_ble_status_t char_discovery;
-	uint8_t *char_data;
+	at_ble_status_t desc_discovery;
+	
+	at_ble_handle_t curr_char_handle;
+	uint8_t *curr_char_data;
+	at_ble_handle_t curr_desc_handle;
+	
+	at_ble_handle_t lti_char_handle;
+	uint8_t *lti_char_data;
+	
+	at_ble_handle_t rti_char_handle;
+	uint8_t *rti_char_data;
+	
 }gatt_cts_handler_t;
 
 
@@ -104,5 +116,17 @@ at_ble_status_t tis_current_time_read(at_ble_handle_t conn_handle,
  */
 int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *read_resp,
 		gatt_cts_handler_t *cts_handler);
+	
+	
+/**@brief write notification handler for Current Time Service
+ *
+ * @param[in] conn_handle read response data available form
+ * @param[in] desc_handle read response data available form
+ * @param[in] noti read response data available form
+ *at_ble_characteristic_read_response_t
+ * @return Current time value.
+ * @return LLS_READ_RESP_INVALID if value are other than alert levels
+ */		
+at_ble_status_t tis_current_time_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti);
 
 #endif /*__CURRENT_TIME_H__*/

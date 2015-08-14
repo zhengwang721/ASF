@@ -18,6 +18,7 @@
 
 		<require idref="sam0.drivers.sercom.usart"/>
 		
+		
 		<generator value="iarewarm"/>
 		<generator value="armgcc" />
 		<generator value="as5_arm" />

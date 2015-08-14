@@ -103,7 +103,7 @@ void rssi_update(at_ble_handle_t conn_handle)
 
 	/* Get the Received signal strength intensity of the connect
 	*device/handle*/
-	rssi_power = at_ble_rx_power_get(conn_handle);
+	//rssi_power = at_ble_rx_power_get(conn_handle);
 
 	DBG_LOG("Rx Power(RSSI):%04d dBm", rssi_power);
 
@@ -217,7 +217,7 @@ int main(void)
 				} else {
 					DBG_LOG(
 							"Unable to connect with device. Reseting the device");
-					ble_device_init(NULL);
+					ble_device_init(NULL,&pf_cfg);
 					pxp_app_init();
 				}
 			} else {

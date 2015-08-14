@@ -69,10 +69,20 @@
 #define BLE_DEVICE_NAME				"ATMEL-PXP"
 #endif /* PROXIMITY_REPORTER */
 
+#if defined HR_SENSOR
+#include "hr_sensor.h"
+#define BLE_DEVICE_NAME				"ATMEL-HR"
+#endif
+
 #if defined PROXIMITY_MONITOR
 #include "pxp_monitor.h"
 #define BLE_DEVICE_NAME				"ATMEL-MON"
 #endif /* PROXIMITY_MONITOR */
+
+#if defined BLP_SENSOR
+#include "blp_sensor.h"
+#define BLE_DEVICE_NAME				"ATMEL-BLP"
+#endif /* Blood_Pressure_Sensor*/
 
 #if (BLE_DEVICE_ROLE == BLE_OBSERVER)
 #include "ble_observer.h"
@@ -88,6 +98,11 @@
 #include "time_info.h"
 #define BLE_DEVICE_NAME				"ATMEL-TIP"
 #endif /* TIP_CLIENT */
+
+#if defined FIND_ME_TARGET
+#include "find_me_target.h"
+#define BLE_DEVICE_NAME				"ATMEL-FMP"
+#endif /* PROXIMITY_REPORTER */
 
 /** @brief default device name */
 #ifndef BLE_DEVICE_NAME
@@ -221,6 +236,12 @@ typedef enum
 /* Current time service UUID */
 #define CURRENT_TIME_SERVICE_UUID				(0x1805)
 
+/* Reference Time Update service UUID */
+#define REFERENCE_TIME_SERVICE_UUID				(0x1806)
+
+/* Next DST Change service UUID */
+#define NEXT_DST_SERVICE_UUID					(0x1807)
+
 /* device information service uuid */
 #define DIS_SERVICE_UUID 						(0x180A)
 
@@ -255,6 +276,22 @@ typedef enum
 #define DIS_CHAR_IEEE_REG_CERT_DATA_LIST_UUID	(0x2A2A)
 /* Current Time char UUID */
 #define CURRENT_TIME_CHAR_UUID					(0x2A2B)
+
+/* Local Time Information char UUID */
+#define LOCAL_TIME_CHAR_UUID					(0x2A0F)
+
+/* Reference Time Information char UUID */
+#define REF_TIME_CHAR_UUID						(0x2A14)
+
+/* Time with DST char UUID */
+#define TIME_WITH_DST_CHAR_UUID					(0x2A11)
+
+/* Time Update Control Point char UUID */
+#define TIME_UPDATE_CP_CHAR_UUID				(0x2A16)
+
+/* Time Update State char UUID */
+#define TIME_UPDATE_STATE_CHAR_UUID				(0x2A17)
+
 /** scan refresh characteristic uuid */
 #define SPS_CHAR_SCAN_REFRESH_UUID 				(0x2A31)
 /** scan interval characteristic uuid */
@@ -337,6 +374,30 @@ typedef enum
 #define BLE_CHARACTERISTIC_CHANGED					pxp_reporter_char_changed_handler
 #endif	/* PROXIMITY_REPORTER	 */
 
+#if defined BLP_SENSOR
+#define BLE_PROFILE_INIT							blp_sensor_init
+#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER		blp_sensor_connected_state_handler
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER	blp_sensor_disconnect_event_handler
+#define BLE_CHARACTERISTIC_CHANGED					blp_sensor_char_changed_handler
+#define BLE_NOTIFICATION_CONFIRMED_HANDLER			blp_notification_confirmation_handler
+#endif 
+
+#if defined HR_SENSOR
+
+#define BLE_PROFILE_INIT							hr_sensor_init
+#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER		hr_sensor_connected_state_handler
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER	hr_sensor_disconnect_event_handler
+#define BLE_CHARACTERISTIC_CHANGED					hr_sensor_char_changed_handler
+#define BLE_NOTIFICATION_CONFIRMED_HANDLER			hr_notification_confirmation_handler
+#endif	/* HR_SENSOR*/
+
+#if defined FIND_ME_TARGET
+#define BLE_PROFILE_INIT							fmp_target_init
+#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER		fmp_target_connected_state_handler
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER	fmp_target_disconnect_event_handler
+#define BLE_CHARACTERISTIC_CHANGED					fmp_target_char_changed_handler
+#endif	/* FIND_ME */
+
 #define BLE_CONN_PARAM_UPDATE_DONE					ble_conn_param_update
 #define	BLE_PAIR_REQUEST							ble_pair_request_handler
 #define BLE_PAIR_KEY_REQUEST						ble_pair_key_request_handler
@@ -405,7 +466,9 @@ typedef enum
 
 #define BLE_DISCONNECTED_STATE_HANDLER(param)		ble_disconnected_state_handler(param);\
 													BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER(param);
-													
+
+#define BLE_EVENT_PARAM_MAX_SIZE					512
+
 #ifndef BLE_PROFILE_INIT
 #define BLE_PROFILE_INIT										ble_dummy_handler
 #endif
@@ -594,7 +657,7 @@ typedef void (*ble_gap_event_callback_t)(at_ble_handle_t);
 typedef at_ble_status_t (*ble_characteristic_changed_callback_t)(at_ble_characteristic_changed_t *);
 
 /* Typedef for notification confirmed event callback */
-typedef void (*ble_notification_confirmed_callback_t)(uint8_t);
+typedef void (*ble_notification_confirmed_callback_t)(at_ble_cmd_complete_event_t *);
 
 /** @brief function to set the device name.
   *
@@ -743,7 +806,7 @@ at_ble_status_t ble_event_task(void);
   * @return none.
   *
   */
-void ble_device_init(at_ble_addr_t *addr, at_ble_init_config_t * args);
+void ble_device_init(at_ble_addr_t *addr);
 
 /** @brief function handling all the events from the stack, responsible
   * for calling the respective functions initialized for the events.
@@ -829,4 +892,5 @@ void register_ble_paired_event_cb(ble_gap_event_callback_t paired_cb_fn);
   */
 void register_ble_characteristic_changed_cb(ble_characteristic_changed_callback_t char_changed_cb_fn);
 
+void register_ble_notification_confirmed_cb(ble_notification_confirmed_callback_t notif_conf_cb_fn);
 #endif /*__BLE_MANAGER_H__*/

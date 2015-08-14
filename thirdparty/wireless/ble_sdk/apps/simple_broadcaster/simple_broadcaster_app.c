@@ -71,6 +71,8 @@ uint8_t adv_type = ADV_TYPE_NONCONN_UNDIRECTED;
  * default. */
 data_type_t data_type = ADVERTISEMENT_DATA;
 
+volatile bool button_pressed = false;
+
 /* BLE device advertisement in broadcast mode indicator */
 static void ble_device_broadcaster_ind(void)
 {
@@ -125,6 +127,9 @@ int main(void)
 	system_init();
 #endif
 
+	/* Initialize the button */
+	button_init();
+
 	/* Initialize serial console */
 	serial_console_init();
 
@@ -139,7 +144,7 @@ int main(void)
 	pf_cfg.plf_config = &busConfig;
 
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL, &pf_cfg);
+	ble_device_init(NULL);
 
 	brd_adv_init();
 
@@ -191,7 +196,7 @@ void brd_start_broadcast(void)
 	if ((status
 				= at_ble_adv_start(adv_type,
 					AT_BLE_ADV_GEN_DISCOVERABLE,
-					NULL, AT_BLE_ADV_FP_FILTER_CONNREQ,
+					NULL, AT_BLE_ADV_FP_ANY,
 					APP_BROADCAST_FAST_ADV,
 					APP_BROADCAST_ADV_TIMEOUT,
 					0)) != AT_BLE_SUCCESS) {
@@ -655,4 +660,9 @@ status_t brd_set_advertisement_data(adv_data_type_t adv_data_type,
 	break;
 	}
 	return STATUS_SUCCESS;
+}
+
+void button_cb(void)
+{
+	button_pressed = true;
 }

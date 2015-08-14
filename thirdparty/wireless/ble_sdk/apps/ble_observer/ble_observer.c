@@ -57,10 +57,15 @@
 #include "platform.h"
 #include "timer_hw.h"
 #include "at_ble_api.h"
+#include "conf_extint.h"
 #include "console_serial.h"
 #include "ble_observer.h"
 #include "ble_utils.h"
 #include "ble_manager.h"
+
+
+
+volatile bool button_pressed = false;
 
 /*Function Definitions */
 
@@ -482,6 +487,11 @@ at_ble_status_t ble_observer_scan_data_handler(at_ble_scan_info_t *scan_info_dat
 	return AT_BLE_SUCCESS;
 }
 
+void button_cb(void)
+{
+	button_pressed = true;
+}
+
 int main(void )
 {
 	at_ble_events_t event;
@@ -505,6 +515,9 @@ int main(void )
 	system_init();
 	#endif
 
+	/* Initialize the button */
+	button_init();
+	
 	/* Initialize serial console */
 	serial_console_init();
 

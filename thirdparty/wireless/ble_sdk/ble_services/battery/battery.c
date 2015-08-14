@@ -153,6 +153,7 @@ at_ble_status_t bat_update_char_value (bat_gatt_service_handler_t *battery_serv 
 			return AT_BLE_SUCCESS;
 		}
 	}
+	return AT_BLE_SUCCESS;
 }
 
 at_ble_status_t bat_char_changed_event(bat_gatt_service_handler_t *battery_serv, at_ble_characteristic_changed_t *char_handle)

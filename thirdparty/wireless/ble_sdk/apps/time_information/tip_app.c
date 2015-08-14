@@ -63,11 +63,18 @@
 #include "ble_manager.h"
 #include "ble_utils.h"
 #include "current_time.h"
+#include "next_dst.h"
+#include "reference_time.h"
+
 
 /***********************************************************************************
  *									Types			                               *
  **********************************************************************************/
 extern gatt_cts_handler_t cts_handle;
+
+extern gatt_dst_handler_t dst_handle;
+
+extern gatt_rtu_handler_t rtu_handle;
 
 extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
@@ -97,6 +104,8 @@ void timer_callback_handler(void)
  */
 int main (void)
 {
+	at_ble_init_config_t pf_cfg;
+	platform_config busConfig;
 
 #if SAMG55
 	/* Initialize the SAM system. */
@@ -119,8 +128,16 @@ int main (void)
 	
 	DBG_LOG("Time Profile Application");
 	
+	/*Memory allocation required by GATT Server DB*/
+	pf_cfg.memPool.memSize = 0;
+	pf_cfg.memPool.memStartAdd = NULL;
+	
+	/*Bus configuration*/
+	busConfig.bus_type = UART;
+	pf_cfg.plf_config = &busConfig;
+	
 	/* initialize the BLE chip  and Set the device mac address */
-	ble_device_init(NULL);
+	ble_device_init(NULL, &pf_cfg);
 	
 	while(1)
 	{
@@ -128,9 +145,30 @@ int main (void)
 		if (button_pressed)
 		{
 			delay_ms(200);
-			if(tis_current_time_read( ble_connected_dev_info[0].handle, cts_handle.char_handle ) == AT_BLE_SUCCESS)
+			if(tis_current_time_read( ble_connected_dev_info[0].handle, cts_handle.curr_char_handle ) == AT_BLE_SUCCESS)
 			{
 				LED_Toggle(LED0);
+			}
+			if(tis_current_time_read( ble_connected_dev_info[0].handle, cts_handle.lti_char_handle ) == AT_BLE_SUCCESS)
+			{
+				DBG_LOG("Local Time info request success");
+			}
+			if(tis_current_time_read( ble_connected_dev_info[0].handle, cts_handle.rti_char_handle ) == AT_BLE_SUCCESS)
+			{
+				DBG_LOG("Reference Time info request success");
+			}
+			if(tis_dst_change_read( ble_connected_dev_info[0].handle, dst_handle.dst_char_handle ) == AT_BLE_SUCCESS)
+			{
+				DBG_LOG("Dst read request success");
+			}
+			if(tis_rtu_update_read( ble_connected_dev_info[0].handle, rtu_handle.tp_control_char_handle, 20) == AT_BLE_SUCCESS)
+			{
+				DBG_LOG("RTU control point request success");
+			}
+			
+			if(tis_rtu_update_read( ble_connected_dev_info[0].handle, rtu_handle.tp_state_char_handle, 20 ) == AT_BLE_SUCCESS)
+			{
+				DBG_LOG("RTU state request success");
 			}
 			button_pressed = false;
 		}

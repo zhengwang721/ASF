@@ -55,12 +55,15 @@
 #include "platform.h"
 #include "pxp_reporter.h"
 #include "timer_hw.h"
+#include "conf_extint.h"
 #include "ble_utils.h"
 #include "pxp_reporter_app.h"
 #include "ble_manager.h"
 #include "immediate_alert.h"
 #include "link_loss.h"
 #include "tx_power.h"
+#include "at_ble_errno.h"
+#include "at_ble_trace.h"
 
 
 
@@ -69,8 +72,7 @@
 bool pxp_led_state = true;
 /** @brief Timer interval for timer used for led blinking */
 uint8_t timer_interval = INIT_TIMER_INTERVAL;
-
-uint8_t att_db_data[1024];
+volatile bool button_pressed = false;
 
 /**
 * \brief Timer callback handler called on timer expiry
@@ -91,6 +93,11 @@ void timer_callback_handler(void)
 		hw_timer_start(timer_interval);
 	}
 	
+}
+
+void button_cb(void)
+{
+	button_pressed = true;
 }
 
 
@@ -164,18 +171,6 @@ void app_linkloss_alert(uint8_t alert_val)
 */
 int main(void)
 {
-	at_ble_events_t event;
-	uint8_t params[AT_BLE_EVENT_PARAM_MAX_SIZE];	
-	at_ble_init_config_t pf_cfg;
-	platform_config busConfig;
-
-		/*Memory allocation required by GATT Server DB*/
-		pf_cfg.memPool.memSize = sizeof(att_db_data);
-		pf_cfg.memPool.memStartAdd = (uint8_t *)att_db_data;
-		/*Bus configuration*/
-		busConfig.bus_type = UART;
-		pf_cfg.plf_config = &busConfig;
-
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -183,6 +178,9 @@ int main(void)
 	#elif SAM0
 	system_init();
 	#endif
+	
+	/* Initialize the button */
+	button_init();
 	
 	/* Initialize serial console */
 	serial_console_init();
@@ -196,15 +194,16 @@ int main(void)
 	DBG_LOG("Initializing Proximity Reporter Application");
 	
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL,&pf_cfg);
+	ble_device_init(NULL);
+	DBG_LOG("Proximity Reporter Initializing Completed");
 	
 	register_pathloss_handler(app_pathloss_alert);
 	register_linkloss_handler(app_linkloss_alert);
 		
 	/* Capturing the events  */ 
-	while(at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS)
+	while(1)
 	{
-		ble_event_manager(event, params);
+		ble_event_task();
 	}
 	
 	return 0;

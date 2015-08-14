@@ -49,27 +49,24 @@
 ****************************************************************************************/
 #include <asf.h>
 #include "console_serial.h"
+#include "conf_extint.h"
 #include "at_ble_api.h"
 #include "platform.h"
 #include "ble_manager.h"
 #include "ancs_profile.h"
 #include "ancs_app.h"
+#include "at_ble_errno.h"
+#include "at_ble_trace.h"
 
+volatile bool button_pressed = false;
+
+void button_cb(void)
+{
+	button_pressed = true;
+}
 
 int main(void)
-{
-	at_ble_events_t event;
-	uint8_t params[EVENT_MAX_PARAM_LENGTH];
-	at_ble_init_config_t pf_cfg;
-	platform_config busConfig;
-
-	/*Memory allocation required by GATT Server DB*/
-	pf_cfg.memPool.memSize = 0;
-	pf_cfg.memPool.memStartAdd = NULL;
-	/*Bus configuration*/
-	busConfig.bus_type = UART;
-	pf_cfg.plf_config = &busConfig;
-	
+{	
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -78,18 +75,21 @@ int main(void)
 	system_init();
 	#endif
 	
+	/* Initialize the button */
+	button_init();
+	
 	/* Initialize serial console */
 	serial_console_init();
 	
 	DBG_LOG("ANCS Application");
 	
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL,&pf_cfg);
+	ble_device_init(NULL);
 	
 	/* Capturing the events  */
-	while(at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS)
+	while(1)
 	{
-		ble_event_manager(event, params);
+		ble_event_task();
 	}
 	
 	return 0;
