@@ -144,7 +144,7 @@ int main(void)
 	pf_cfg.plf_config = &busConfig;
 
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL, &pf_cfg);
+	ble_device_init(NULL);
 
 	brd_adv_init();
 
@@ -196,7 +196,7 @@ void brd_start_broadcast(void)
 	if ((status
 				= at_ble_adv_start(adv_type,
 					AT_BLE_ADV_GEN_DISCOVERABLE,
-					NULL, AT_BLE_ADV_FP_FILTER_CONNREQ,
+					NULL, AT_BLE_ADV_FP_ANY,
 					APP_BROADCAST_FAST_ADV,
 					APP_BROADCAST_ADV_TIMEOUT,
 					0)) != AT_BLE_SUCCESS) {
