@@ -95,10 +95,10 @@ bool app_device_bond;
 uint8_t auth_info;
 
 at_ble_events_t event;
-uint8_t params[AT_BLE_EVENT_PARAM_MAX_SIZE];
+uint8_t params[BLE_EVENT_PARAM_MAX_SIZE];
 
 /** @brief initializes the platform */
-static void ble_init(void);
+static void ble_init(at_ble_init_config_t * args);
 
 /** @brief Set BLE Address, If address is NULL then it will use BD public address */
 static void ble_set_address(at_ble_addr_t *addr);
@@ -876,10 +876,12 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	*/
 	case AT_BLE_NOTIFICATION_CONFIRMED:
 	{
-		BLE_NOTIFICATION_CONFIRMED_HANDLER(event_params->status);
+		//at_ble_cmd_complete_event_t params;
+		//memcpy(&params,event_params,sizeof(at_ble_cmd_complete_event_t));	
+		BLE_NOTIFICATION_CONFIRMED_HANDLER(((at_ble_cmd_complete_event_t *) event_params)->status);
 		if(ble_notif_conf_cb != NULL)
 		{
-			ble_notif_conf_cb(event_params->status);
+			ble_notif_conf_cb(((at_ble_cmd_complete_event_t *) event_params)->status);
 		}
 	}
 	break;

@@ -193,11 +193,11 @@ at_ble_status_t pxp_reporter_connected_state_handler(at_ble_connected_t *conn_pa
 	hw_timer_stop();
 	LED_Off(LED0);
 	pxp_led_state = 0;
-	if ((status = at_ble_tx_power_set(conn_params->handle, DEFAULT_TX_PWR_VALUE)) != AT_BLE_SUCCESS) 
-	{
-		DBG_LOG("Setting tx power value failed:reason %x",status);
-		return AT_BLE_FAILURE;
-	}
+	//if ((status = at_ble_tx_power_set(conn_params->handle, DEFAULT_TX_PWR_VALUE)) != AT_BLE_SUCCESS) 
+	//{
+		//DBG_LOG("Setting tx power value failed:reason %x",status);
+		//return AT_BLE_FAILURE;
+	//}
 	
 	if ((status = at_ble_characteristic_value_get(lls_handle.serv_chars.char_val_handle,&linkloss_current_alert_level,sizeof(int8_t))))
 	{

@@ -488,14 +488,14 @@ int main(void )
 	uint8_t params[512];
 	
 	at_ble_init_config_t pf_cfg;
-	platform_config busConfig;
+	//platform_config busConfig;
 
 	/*Memory allocation required by GATT Server DB*/
 	pf_cfg.memPool.memSize = 0;
 	pf_cfg.memPool.memStartAdd = NULL;
 	/*Bus configuration*/
-	busConfig.bus_type = UART;
-	pf_cfg.plf_config = &busConfig;
+//	busConfig.bus_type = UART;
+	//pf_cfg.plf_config = &busConfig;
 
 	#if SAMG55
 	/* Initialize the SAM system. */

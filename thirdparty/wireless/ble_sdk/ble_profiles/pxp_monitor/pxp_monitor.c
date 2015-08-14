@@ -432,7 +432,7 @@ void pxp_monitor_discovery_complete_handler(
 at_ble_discovery_complete_t *discover_status)
 {
 	bool discover_char_flag = true;
-	if (discover_status->status == AT_BLE_DISCOVERY_SUCCESS) {
+	if (discover_status->status == AT_BLE_SUCCESS) {
 		#if defined TX_POWER_SERVICE
 		if ((txps_handle.char_discovery == AT_BLE_SUCCESS) && (discover_char_flag))
 		{
@@ -454,7 +454,7 @@ at_ble_discovery_complete_t *discover_status)
 		else if (txps_handle.char_discovery == AT_BLE_INVALID_PARAM)
 		{
 			DBG_LOG("Tx Power Service not Found");
-			txps_handle.char_discovery = AT_BLE_INSUFF_RESOURCE;
+			txps_handle.char_discovery = AT_BLE_INVALID_STATE;
 			discover_char_flag = false;
 		}
 
@@ -484,7 +484,7 @@ at_ble_discovery_complete_t *discover_status)
 		else if(lls_handle.char_discovery==AT_BLE_INVALID_PARAM)
 		{
 			DBG_LOG("Link Loss Service not Available");
-			lls_handle.char_discovery = AT_BLE_INSUFF_RESOURCE;
+			lls_handle.char_discovery = AT_BLE_INVALID_STATE;
 		}
 
 		#endif
@@ -512,12 +512,12 @@ at_ble_discovery_complete_t *discover_status)
 		else if(ias_handle.char_discovery==AT_BLE_INVALID_PARAM)
 		{
 			DBG_LOG("Immediate Alert Service not Available");
-			ias_handle.char_discovery = AT_BLE_INSUFF_RESOURCE;
+			ias_handle.char_discovery = AT_BLE_INVALID_STATE;
 		}
 
 #endif
 		
-		if(lls_handle.char_discovery == AT_BLE_INSUFF_RESOURCE)
+		if(lls_handle.char_discovery == AT_BLE_INVALID_STATE)
 		{
 			DBG_LOG("PROXIMITY PROFILE NOT SUPPORTED");
 			discover_char_flag = false;

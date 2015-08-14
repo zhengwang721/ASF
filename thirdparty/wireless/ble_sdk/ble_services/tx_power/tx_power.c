@@ -157,7 +157,7 @@ at_ble_status_t txps_power_read(at_ble_handle_t conn_handle,
 		at_ble_handle_t char_handle)
 {
 	if (char_handle == TXPS_INVALID_CHAR_HANDLE) {
-		return (AT_BLE_INVALID_HANDLE);
+		return (AT_BLE_ATT_INVALID_HANDLE);
 	} else {
 		return (at_ble_characteristic_read(conn_handle, char_handle,
 		       TXPS_POWER_READ_OFFSET,

@@ -69,10 +69,20 @@
 #define BLE_DEVICE_NAME				"ATMEL-PXP"
 #endif /* PROXIMITY_REPORTER */
 
+#if defined HR_SENSOR
+#include "hr_sensor.h"
+#define BLE_DEVICE_NAME				"ATMEL-HR"
+#endif
+
 #if defined PROXIMITY_MONITOR
 #include "pxp_monitor.h"
 #define BLE_DEVICE_NAME				"ATMEL-MON"
 #endif /* PROXIMITY_MONITOR */
+
+#if defined BLP_SENSOR
+#include "blp_sensor.h"
+#define BLE_DEVICE_NAME				"ATMEL-BLP"
+#endif /* Blood_Pressure_Sensor*/
 
 #if (BLE_DEVICE_ROLE == BLE_OBSERVER)
 #include "ble_observer.h"
@@ -337,6 +347,23 @@ typedef enum
 #define BLE_CHARACTERISTIC_CHANGED					pxp_reporter_char_changed_handler
 #endif	/* PROXIMITY_REPORTER	 */
 
+#if defined BLP_SENSOR
+#define BLE_PROFILE_INIT							blp_sensor_init
+#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER		blp_sensor_connected_state_handler
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER	blp_sensor_disconnect_event_handler
+#define BLE_CHARACTERISTIC_CHANGED					blp_sensor_char_changed_handler
+#define BLE_NOTIFICATION_CONFIRMED_HANDLER			blp_notification_confirmation_handler
+#endif 
+
+#if defined HR_SENSOR
+
+#define BLE_PROFILE_INIT							hr_sensor_init
+#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER		hr_sensor_connected_state_handler
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER	hr_sensor_disconnect_event_handler
+#define BLE_CHARACTERISTIC_CHANGED					hr_sensor_char_changed_handler
+#define BLE_NOTIFICATION_CONFIRMED_HANDLER			hr_notification_confirmation_handler
+#endif	/* HR_SENSOR*/
+
 #define BLE_CONN_PARAM_UPDATE_DONE					ble_conn_param_update
 #define	BLE_PAIR_REQUEST							ble_pair_request_handler
 #define BLE_PAIR_KEY_REQUEST						ble_pair_key_request_handler
@@ -405,7 +432,9 @@ typedef enum
 
 #define BLE_DISCONNECTED_STATE_HANDLER(param)		ble_disconnected_state_handler(param);\
 													BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER(param);
-													
+
+#define BLE_EVENT_PARAM_MAX_SIZE					512
+
 #ifndef BLE_PROFILE_INIT
 #define BLE_PROFILE_INIT										ble_dummy_handler
 #endif
@@ -829,4 +858,5 @@ void register_ble_paired_event_cb(ble_gap_event_callback_t paired_cb_fn);
   */
 void register_ble_characteristic_changed_cb(ble_characteristic_changed_callback_t char_changed_cb_fn);
 
+void register_ble_notification_confirmed_cb(ble_notification_confirmed_callback_t notif_conf_cb_fn);
 #endif /*__BLE_MANAGER_H__*/
