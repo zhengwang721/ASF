@@ -165,9 +165,9 @@ at_ble_status_t	sps_char_changed_event(sps_gatt_service_handler_t *sps_service_h
 	at_ble_characteristic_changed_t change_params;
 	memcpy((uint8_t *)&change_params, char_handle, sizeof(at_ble_characteristic_changed_t));
 	
-	if(sps_service_handler.serv_chars[0].char_val_handle == change_params.char_handle)
+	if(sps_service_handler->serv_chars[0].char_val_handle == change_params.char_handle)
 	{
-		memcpy(sps_service_handler.serv_chars[0].init_value, change_params.char_new_value, change_params.char_len);
+		memcpy(sps_service_handler->serv_chars[0].init_value, change_params.char_new_value, change_params.char_len);
 		DBG_LOG("New scan interval window parameter");
 		DBG_LOG("Scan Interval 0x%02x",change_params.char_new_value[0]);
 		DBG_LOG("Scan Window   0x%02x",change_params.char_new_value[1]);

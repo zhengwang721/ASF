@@ -61,7 +61,7 @@
 #include "ble_utils.h"
 
 /* 100 ms */
-#define APP_BROADCAST_FAST_ADV                  (200)
+#define APP_BROADCAST_FAST_ADV                  (160)
 
 /* 100 Secs */
 #define APP_BROADCAST_ADV_TIMEOUT               (1000)

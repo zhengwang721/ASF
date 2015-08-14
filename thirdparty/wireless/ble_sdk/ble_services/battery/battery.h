@@ -67,7 +67,7 @@
 /**  @brief Characteristic presentation format descriptor */
 #define BAT_CHAR_PRESENTATION_FORMAT_DESCRIPTOR 0x0000
 
-typedef struct gatt_service_handler
+typedef struct bat_gatt_service_handler
 {
 	/// service uuid
 	at_ble_uuid_t	serv_uuid;

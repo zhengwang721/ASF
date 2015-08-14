@@ -14,6 +14,8 @@
 		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
 		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>
 		<require idref="thirdparty.wireless.ble_sdk.ble_services.current_time"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.next_dst"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.reference_time"/>
 		<require idref="thirdparty.wireless.ble_sdk.utils"/>
 		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.time_info"/>
 		<device-support-alias value="ble_stack_lib_support"/>

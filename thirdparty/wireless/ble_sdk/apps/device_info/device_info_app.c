@@ -57,6 +57,7 @@
 #include "device_info_app.h"
 #include "timer_hw.h"
 #include "ble_utils.h"
+#include "conf_extint.h"
 #include "ble_manager.h"
 
 /* === GLOBALS ============================================================ */
@@ -72,6 +73,10 @@ uint8_t fw_version[10];
 bool volatile flag = true;
 
 at_ble_handle_t dis_conn_handle;
+
+dis_gatt_service_handler_t dis_service_handler;
+
+volatile bool button_pressed = false;
 
 /**
 * \Timer callback handler called on timer expiry
@@ -89,7 +94,6 @@ void timer_callback_handler(void)
 
 int main(void)
 {
-	dis_gatt_service_handler_t dis_service_handler;
 	at_ble_init_config_t pf_cfg;
 	platform_config busConfig;
 	
@@ -100,6 +104,9 @@ int main(void)
 	#elif SAM0
 	system_init();
 	#endif
+	
+	/* Initialize the button */
+	button_init();
 	
 	/* Initialize serial console */
 	serial_console_init();
@@ -228,5 +235,10 @@ void ble_notification_confirmed_app_event(uint8_t notification_status)
 
 at_ble_status_t ble_char_changed_app_event(at_ble_characteristic_changed_t *char_handle)
 {
-	dis_char_changed_event(&dis_service_handler, char_handle);
+	return dis_char_changed_event(&dis_service_handler, char_handle);
+}
+
+void button_cb(void)
+{
+	button_pressed = true;
 }

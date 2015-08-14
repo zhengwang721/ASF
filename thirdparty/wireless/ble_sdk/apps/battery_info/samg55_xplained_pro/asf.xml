@@ -14,11 +14,15 @@
 		<build type="header-file" value="conf_timer.h"/>
   
 		<require idref="board.samg55_xplained_pro"/>
+		<require idref="sam.drivers.pio"/>
 		
 		<generator value="iarewarm"/>
 		<generator value="armgcc" />
 		<generator value="as5_arm" />
 		<generator value="doxygen"/>
+		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<config name="config.compiler.iarewarm.create_aux" value="no"/>
+		<config name="config.compiler.as5_arm.create_aux" value="no"/>
 		<device-support value="atsamg55j19"/>
 	</project>
 </asf>
