@@ -55,6 +55,7 @@
 #include "platform.h"
 #include "timer_hw.h"
 #include "ble_utils.h"
+#include "conf_extint.h"
 #include "scan_param.h"
 #include "ble_manager.h"
 #include "scan_parameter_app.h"
@@ -75,7 +76,9 @@ bool volatile timer_cb_done = false;
 bool volatile flag = true;
 
 uint8_t scan_interval_value = 1;
-at_ble_handle_t device_conn_handle; 
+at_ble_handle_t device_conn_handle;
+
+volatile bool button_pressed = false; 
 
 /**
 * \Timer callback handler called on timer expiry
@@ -104,6 +107,9 @@ int main(void)
 	system_init();
 	#endif
 	
+	/* Initialize the button */
+	button_init();
+	
 	/* Initialize serial console */
 	serial_console_init();
 	
@@ -124,7 +130,7 @@ int main(void)
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL, &pf_cfg);
 	
-	/* Initialize the battery service */
+	/* Initialize the scan parameter service */
 	sps_init_service(&sps_service_handler, scan_interval_window, &scan_refresh);
 	
 	/* Define the primary service in the GATT server database */
@@ -230,7 +236,7 @@ void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 */
 at_ble_status_t sps_char_changed_cb(at_ble_characteristic_changed_t *char_handle)
 {
-	sps_char_changed_event(&sps_service_handler, char_handle);
+	return sps_char_changed_event(&sps_service_handler, char_handle);
 }
 
 void sps_notification_confirmed_cb(uint8_t notification_status)
@@ -240,4 +246,9 @@ void sps_notification_confirmed_cb(uint8_t notification_status)
 		flag = true;
 		DBG_LOG("sending notification to the peer success");
 	}
+}
+
+void button_cb(void)
+{
+	button_pressed = true;
 }

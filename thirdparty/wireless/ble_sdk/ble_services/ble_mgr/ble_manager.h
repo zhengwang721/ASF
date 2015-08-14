@@ -236,6 +236,12 @@ typedef enum
 /* Current time service UUID */
 #define CURRENT_TIME_SERVICE_UUID				(0x1805)
 
+/* Reference Time Update service UUID */
+#define REFERENCE_TIME_SERVICE_UUID				(0x1806)
+
+/* Next DST Change service UUID */
+#define NEXT_DST_SERVICE_UUID					(0x1807)
+
 /* device information service uuid */
 #define DIS_SERVICE_UUID 						(0x180A)
 
@@ -270,6 +276,22 @@ typedef enum
 #define DIS_CHAR_IEEE_REG_CERT_DATA_LIST_UUID	(0x2A2A)
 /* Current Time char UUID */
 #define CURRENT_TIME_CHAR_UUID					(0x2A2B)
+
+/* Local Time Information char UUID */
+#define LOCAL_TIME_CHAR_UUID					(0x2A0F)
+
+/* Reference Time Information char UUID */
+#define REF_TIME_CHAR_UUID						(0x2A14)
+
+/* Time with DST char UUID */
+#define TIME_WITH_DST_CHAR_UUID					(0x2A11)
+
+/* Time Update Control Point char UUID */
+#define TIME_UPDATE_CP_CHAR_UUID				(0x2A16)
+
+/* Time Update State char UUID */
+#define TIME_UPDATE_STATE_CHAR_UUID				(0x2A17)
+
 /** scan refresh characteristic uuid */
 #define SPS_CHAR_SCAN_REFRESH_UUID 				(0x2A31)
 /** scan interval characteristic uuid */

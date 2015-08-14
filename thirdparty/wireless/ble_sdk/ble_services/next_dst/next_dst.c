@@ -1,7 +1,7 @@
 /**
 * \file
 *
-* \brief Current Time Service
+* \brief Next DST Change Service
 *
 * Copyright (c) 2015 Atmel Corporation. All rights reserved.
 *
@@ -47,7 +47,7 @@
 /**
 * \mainpage
 * \section preface Preface
-* This is the reference manual for the Current Time Service
+* This is the reference manual for the Next DST Change Service
 */
 /***********************************************************************************
  *									Includes		                               *
@@ -55,58 +55,35 @@
 
 #include <string.h>
 #include "at_ble_api.h"
-#include "current_time.h"
 #include "ble_manager.h"
 #include "ble_utils.h"
-#include "current_time.h"
+#include "next_dst.h"
 
 /***********************************************************************************
  *									Implementations	                               *
  **********************************************************************************/
-
-at_ble_status_t tis_current_time_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti)
-{
-	uint8_t desc_data[3] = {1, 0, 0};
-		
-	if(desc_handle == CTS_INVALID_CHAR_HANDLE)
-	{
-		return (AT_BLE_INVALID_STATE);
-	}
-	else
-	{
-		if(noti == true)
-		{
-			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_data[0],false, true));
-		}
-		else if(noti == false)
-		{
-			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_data[1],false, true));
-		}
-	}
-	return 0;
-}
-
-/**@brief Send the Read request to the current time characteristic
+/**@brief Send the Read request to the DST change characteristic
  * Read value will be reported via @ref AT_BLE_CHARACTERISTIC_READ_RESPONSE
  *event
  */
-at_ble_status_t tis_current_time_read(at_ble_handle_t conn_handle,
+
+at_ble_status_t tis_dst_change_read(at_ble_handle_t conn_handle,
 		at_ble_handle_t char_handle)
 {
-	if (char_handle == CTS_INVALID_CHAR_HANDLE) 
+	if (char_handle == DST_INVALID_CHAR_HANDLE) 
 	{
 		return (AT_BLE_INVALID_STATE);
 	} 
 	else 
 	{
-		return (at_ble_characteristic_read(conn_handle,char_handle,CTS_READ_OFFSET,CTS_READ_LENGTH));
+		return (at_ble_characteristic_read(conn_handle,char_handle,DST_READ_OFFSET,DST_READ_LENGTH));
 	}
 }
 
-/**@brief Read response handler for read response for time characteristic
+/**@brief Read response handler for read response for dst change characteristic
  */
-int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *read_resp,
-		gatt_cts_handler_t *cts_handler)
+int8_t tis_dst_change_read_response(at_ble_characteristic_read_response_t *read_resp,
+		gatt_dst_handler_t *dst_handler)
 {
 	if(read_resp->status != AT_BLE_SUCCESS)
 	{
@@ -114,38 +91,17 @@ int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *rea
 	}
 	else
 	{
-		if (read_resp->char_handle == cts_handler->curr_char_handle) 
+		if (read_resp->char_handle == dst_handler->dst_char_handle) 
 		{
-			const char *ptr[] = {"Unknown","MON","TUE","WED","THU","FRI","SAT","SUN"};
-		
-			DBG_LOG("Current Time:");		
-		
-			DBG_LOG_CONT("[DD:MM:YYYY]: %02d-%02d-%02d [HH:MM:SS]: %02d:%02d:%02d  Day:%s",
+			DBG_LOG("DST Time is Time:");		
+			DBG_LOG_CONT("[DD:MM:YYYY]: %02d-%02d-%02d [HH:MM:SS]: %02d:%02d:%02d  DST Offset is :%02d",
 			read_resp->char_value[3],
 			read_resp->char_value[2],
 			((uint16_t)read_resp->char_value[0] | (read_resp->char_value[1] <<8)),
 			read_resp->char_value[4],
 			read_resp->char_value[5],
 			read_resp->char_value[6],
-			ptr[read_resp->char_value[7]]
-			);				
-		}
-	
-		if (read_resp->char_handle == cts_handler->lti_char_handle)
-		{
-			const char *dst_ptr[] = {"Standard Time", 0, "Haft An Hour Daylight Time", 0,"Daylight Time",0,0,0,"Double Daylight Time" };
-
-			DBG_LOG("Time Zone %02d",(int8_t)read_resp->char_value[0]);
-			DBG_LOG("DST Offset %02d  %s",read_resp->char_value[1],dst_ptr[read_resp->char_value[1]]);
-		}
-	
-		if (read_resp->char_handle == cts_handler->rti_char_handle)
-		{
-			const char *time_ptr[] = {"Unknown", "Network Time Protocol", "GPS", "Radio Time Signal","Manual", "Atomic Clock", "Cellular Network"};
-			DBG_LOG("Time Source = %d %s",read_resp->char_value[0],time_ptr[read_resp->char_value[0]]);
-			DBG_LOG("Accuracy    = %02d",read_resp->char_value[1]);
-			DBG_LOG("Day  Since Update = %02d",read_resp->char_value[2]);
-			DBG_LOG("Hour Since Update = %02d",read_resp->char_value[3]);
+			read_resp->char_value[7]);
 		}
 	}
 	return 0;

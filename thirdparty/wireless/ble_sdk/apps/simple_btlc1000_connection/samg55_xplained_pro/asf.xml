@@ -10,8 +10,10 @@
   		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="header-file" value="conf_serialdrv.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
+		<build type="header-file" value="conf_extint.h"/>
   
 		<require idref="board.samg55_xplained_pro"/>
+		<require idref="sam.drivers.pio"/>
 		
 		<generator value="iarewarm"/>
 		<generator value="armgcc" />

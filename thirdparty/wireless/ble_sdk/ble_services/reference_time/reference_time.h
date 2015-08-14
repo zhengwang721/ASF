@@ -1,7 +1,7 @@
 /**
 * \file
 *
-* \brief Current Time Service Application declarations
+* \brief Link Loss Service Application declarations
 *
 * Copyright (c) 2015 Atmel Corporation. All rights reserved.
 *
@@ -44,8 +44,8 @@
 * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
 */
 
-#ifndef __CURRENT_TIME_H__
-#define __CURRENT_TIME_H__
+#ifndef __REFERENCE_TIME_H__
+#define __REFERENCE_TIME_H__
 
 /***********************************************************************************
  *									Includes		                               *
@@ -55,40 +55,32 @@
 /***********************************************************************************
  *									Macros			                               *
  **********************************************************************************/
-/* Link Loss Alert length of data to read */
-#define CTS_READ_LENGTH                         (20)
 
-#define CTS_DESCRIPTOR_LENGTH                   (2)
+#define RTU_TP_CP_READ_LENGTH							(20)
+
+#define RTU_TP_STATE_READ_LENGTH						(2)
 
 /* Link Loss read offset length*/
-#define CTS_READ_OFFSET                         (0)
+#define RTU_READ_OFFSET									(0)
 
-/* Link Loss invalid character handler*/
-#define CTS_INVALID_CHAR_HANDLE					(0)
-
-#define CTS_CLIENT_CHAR_DESCRIPTOR              (0x2902)
+/* Reference Time Update invalid character handler*/
+#define RTU_INVALID_CHAR_HANDLE							(0)
 
 /***********************************************************************************
  *									Types		                               *
  **********************************************************************************/
-typedef struct gatt_cts_handler
+typedef struct gatt_rtu_handler
 {
 	at_ble_handle_t start_handle;
 	at_ble_handle_t end_handle;
 	at_ble_status_t char_discovery;
-	at_ble_status_t desc_discovery;
-	
-	at_ble_handle_t curr_char_handle;
-	uint8_t *curr_char_data;
-	at_ble_handle_t curr_desc_handle;
-	
-	at_ble_handle_t lti_char_handle;
-	uint8_t *lti_char_data;
-	
-	at_ble_handle_t rti_char_handle;
-	uint8_t *rti_char_data;
-	
-}gatt_cts_handler_t;
+	/* Time Update Control Point */
+	at_ble_handle_t tp_control_char_handle;
+	uint8_t *tp_control_char_data;
+	/* Time Update State */
+	at_ble_handle_t tp_state_char_handle;
+	uint8_t *tp_state_char_data;
+}gatt_rtu_handler_t;
 
 
 /***********************************************************************************
@@ -104,8 +96,8 @@ typedef struct gatt_cts_handler
  * @return @ref AT_BLE_INVALID_PARAM Invalid arguments.
  * @return @ref AT_BLE_FAILURE Generic error.
  */
-at_ble_status_t tis_current_time_read(at_ble_handle_t conn_handle,
-		at_ble_handle_t char_handle);
+at_ble_status_t tis_rtu_update_read(at_ble_handle_t conn_handle,
+		at_ble_handle_t char_handle, uint16_t length);
 
 /**@brief Read response handler for read response
  *
@@ -114,19 +106,7 @@ at_ble_status_t tis_current_time_read(at_ble_handle_t conn_handle,
  * @return Current time value.
  * @return LLS_READ_RESP_INVALID if value are other than alert levels
  */
-int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *read_resp,
-		gatt_cts_handler_t *cts_handler);
-	
-	
-/**@brief write notification handler for Current Time Service
- *
- * @param[in] conn_handle read response data available form
- * @param[in] desc_handle read response data available form
- * @param[in] noti read response data available form
- *at_ble_characteristic_read_response_t
- * @return Current time value.
- * @return LLS_READ_RESP_INVALID if value are other than alert levels
- */		
-at_ble_status_t tis_current_time_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti);
+int8_t tis_rtu_update_read_response(at_ble_characteristic_read_response_t *read_resp,
+		gatt_rtu_handler_t *rtu_handler);
 
-#endif /*__CURRENT_TIME_H__*/
+#endif /* __REFERENCE_TIME_H__ */

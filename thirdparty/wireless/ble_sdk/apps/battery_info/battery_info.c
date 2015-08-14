@@ -58,6 +58,7 @@
 #include "ble_utils.h"
 #include "battery_info.h"
 #include "ble_manager.h"
+#include "conf_extint.h"
 
 /* === GLOBALS ============================================================ */
 
@@ -72,6 +73,7 @@ bat_gatt_service_handler_t bas_service_handler;
 
 bool volatile timer_cb_done = false;
 bool volatile flag = true;
+volatile bool button_pressed = false;
 
 /**
 * \Timer callback handler called on timer expiry
@@ -100,6 +102,9 @@ int main(void)
 	#elif SAM0
 	system_init();
 	#endif
+	
+	/* Initialize the button */
+	button_init();
 	
 	/* Initialize serial console */
 	serial_console_init();
@@ -227,5 +232,10 @@ void ble_notification_confirmed_app_event(uint8_t notification_status)
 
 at_ble_status_t ble_char_changed_app_event(at_ble_characteristic_changed_t *char_handle)
 {
-	bat_char_changed_event(&bas_service_handler, char_handle);
+	return bat_char_changed_event(&bas_service_handler, char_handle);
+}
+
+void button_cb(void)
+{
+	button_pressed = true;
 }

@@ -9,8 +9,10 @@
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_serialdrv.h"/>
 		<build type="header-file" value="conf_console.h"/>
+		<build type="header-file" value="conf_extint.h"/>
   
 		<require idref="board.samd21_xplained_pro"/>
+		<require idref="sam0.drivers.extint"/>
 		
 		<generator value="iarewarm"/>
 		<generator value="armgcc" />
