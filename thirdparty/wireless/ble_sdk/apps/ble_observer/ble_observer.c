@@ -494,19 +494,6 @@ void button_cb(void)
 
 int main(void )
 {
-	at_ble_events_t event;
-	uint8_t params[512];
-	
-	at_ble_init_config_t pf_cfg;
-	platform_config busConfig;
-
-	/*Memory allocation required by GATT Server DB*/
-	pf_cfg.memPool.memSize = 0;
-	pf_cfg.memPool.memStartAdd = NULL;
-	/*Bus configuration*/
-	busConfig.bus_type = UART;
-	pf_cfg.plf_config = &busConfig;
-
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -522,14 +509,14 @@ int main(void )
 	serial_console_init();
 
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL,&pf_cfg);
+	ble_device_init(NULL);
 	
 	/* observer init */
 	ble_observer_init();
 	
 	/* Receiving events */
-	while (at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS) {
-		ble_event_manager(event, params);
+	while (1) {
+		ble_event_task();
 	}
 
 	return 0;
