@@ -103,11 +103,7 @@ static inline void usart_serial_getchar(
 		struct uart_module *const module,
 		uint8_t *c)
 {
-	uint16_t temp = 0;
-
-	while(STATUS_OK != uart_read_wait(module, &temp));
-
-	*c = temp;
+	while(STATUS_OK != uart_read_wait(module, c));
 }
 
 /**

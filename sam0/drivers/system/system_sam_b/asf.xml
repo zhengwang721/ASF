@@ -1,0 +1,40 @@
+<asf xmlversion="1.0">
+	<module type="driver" id="sam0.drivers.system.system_sam_b" caption="SYSTEM - Clock Management for SAMB11">
+		<info type="description" value="summary">
+			Driver for the SAM PWM module. Provides a unified interface for
+			the configuration and management of the physical device PWM pins,
+			including input/output state control.
+		</info>
+
+		<info type="keyword" value="technology">
+			<keyword value="I/O" />
+			<keyword value="CPU" />
+			<keyword value="Clocks" />
+		</info>
+
+		<info type="appnote" value="ATxxxxx"/>
+		<info type="keyword" value="pdf">
+			<keyword value="I/O" />
+			<keyword value="CPU" />
+			<keyword value="Clocks" />
+		</info>
+
+		<info type="description" value="pdf">
+			This document describes how to use the SYSTEM Controller on the
+			SAMB11, both the ASF driver and the peripheral itself.
+		</info>
+
+		<build type="include-path" value="."/>
+		<build type="header-file" subtype="api" value="system.h"/>
+		<build type="c-source" value="system.c"/>
+
+		<build type="doxygen-entry-point" value="asfdoc_samb_system_group"/>
+		<build type="doxygen-quick-start" value="asfdoc_samb_system_exqsg"/>
+
+		<device-support value="samb11"/>
+
+		<require idref="sam0.utils"/>
+
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
+	</module>
+</asf>
