@@ -3,7 +3,6 @@
 		<info type="gui-flag" value="move-to-root"/>
 		<require idref="board.samb11_xplained_pro"/>
 		<require idref="sam0.drivers.i2c.quick_start_master"/>
-		<require idref="sam0.drivers.system.system_sam_b"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_i2c.h"/>

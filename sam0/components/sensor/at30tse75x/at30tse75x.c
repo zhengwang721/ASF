@@ -64,6 +64,7 @@ void at30tse_init(void)
 
 	/* Change buffer timeout to something longer. */
 	conf.buffer_timeout = 10000;
+
 	conf.pinmux_pad0 = AT30TSE_PINMUX_PAD0;
 	conf.pinmux_pad1 = AT30TSE_PINMUX_PAD1;
 

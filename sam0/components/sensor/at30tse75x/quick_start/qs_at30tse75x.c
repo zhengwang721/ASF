@@ -55,11 +55,8 @@ int main(void)
 //! [init]
 	/* Init system. */
 //! [system_init]
-#if (SAMB11)
-	system_clock_config(CLOCK_RESOURCE_RC_26_MHZ, CLOCK_FREQ_26_MHZ);
-#else
 	system_init();
-#endif
+
 //! [system_init]
 	/* Configure device and enable. */
 //! [temp_init]
