@@ -744,11 +744,11 @@ void htp_temperature_send(htp_app_t *htp_temp)
 						 {
 							 if (htp_temp->flags & HTPT_FLAG_FAHRENHEIT)
 							 {
-								 DBG_LOG("Temperature: %0.1f Fahrenheit", temperature);
+								 DBG_LOG("Temperature: %d Fahrenheit", (uint16_t)temperature);
 							 }
 							 else
 							 {
-								DBG_LOG("Temperature: %0.1f Deg Celsius", temperature);
+								DBG_LOG("Temperature: %d Deg Celsius", (uint16_t)temperature);
 							 }
 							 
 						 }

@@ -19,7 +19,7 @@
 		<config name="config.sam0.drivers.sercom.i2c.master" value="polled"/>
 		<require idref="sam0.drivers.extint"/>
 		<config name="config.sam0.drivers.tc" value="callback"/>  
-		<build type="linker-config" value="-u _printf_float" toolchain="armgcc"/>
+		<!-- <build type="linker-config" subtype="flags" value="-u _printf_float" toolchain="armgcc"/> -->
 
 		<require idref="sam0.drivers.sercom.usart"/>
 		
