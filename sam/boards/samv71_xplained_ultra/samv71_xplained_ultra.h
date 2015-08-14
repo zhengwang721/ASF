@@ -324,6 +324,20 @@
 #define SPI0_SPCK_GPIO    PIO_PD22_IDX
 #define SPI0_SPCK_FLAGS  (IOPORT_MODE_MUX_B)
 
+/** QSPI pins definition */
+#define QSPI_QSCK_GPIO    PIO_PA14_IDX
+#define QSPI_QSCK_FLAGS   (IOPORT_MODE_MUX_A)
+#define QSPI_QCS_GPIO     PIO_PA11_IDX
+#define QSPI_QCS_FLAGS    (IOPORT_MODE_MUX_A)
+#define QSPI_QIO0_GPIO    PIO_PA13_IDX
+#define QSPI_QIO0_FLAGS   (IOPORT_MODE_MUX_A)
+#define QSPI_QIO1_GPIO    PIO_PA12_IDX
+#define QSPI_QIO1_FLAGS   (IOPORT_MODE_MUX_A)
+#define QSPI_QIO2_GPIO    PIO_PA17_IDX
+#define QSPI_QIO2_FLAGS   (IOPORT_MODE_MUX_A)
+#define QSPI_QIO3_GPIO    PIO_PD31_IDX
+#define QSPI_QIO3_FLAGS   (IOPORT_MODE_MUX_A)
+
 /** AFEC channel for potentiometer */
 #define AFEC_CHANNEL_POTENTIOMETER  AFEC_CHANNEL_0
 
@@ -411,6 +425,45 @@
 #define BOARD_CLK_TWIHS_EEPROM            0
 #define BOARD_CLK_TWIHS_MUX_EEPROM        0
 
+/*! \name GPIO Connections of VBUS monitoring
+ */
+//! @{
+#define USB_VBUS_FLAGS         (PIO_INPUT | PIO_PULLUP)
+#define USB_VBUS_PIN             PIO_PC9_IDX  /* As IO pin input */
+#define USB_VBUS_PIO_ID       ID_PIOC
+#define USB_VBUS_PIO_MASK  PIO_PC9 
+//! @}
+
+/*! \name GPIO Connections of ID detecting
+ */
+//! @{
+#define USB_ID_FLAGS             (PIO_INPUT | PIO_PULLUP)
+#define USB_ID_PIN               PIO_PC16_IDX /* As IO pin input */
+#define USB_ID_PIO_ID         ID_PIOC
+#define USB_ID_PIO_MASK    PIO_PC16
+//! @}
+
+/** WM8904 Slave address */
+#define WM8904_SLAVE_ADDRESS        (0x34 >> 1)
+
+/** TWI interface for WM8904 */
+#define WM8904_TWIHS  TWIHS0
+
+/** WM8904 pins definition */
+#define WM8904_TK_PIO       PIO_PB1_IDX
+#define WM8904_TK_FLAGS     PIO_PERIPH_D
+#define WM8904_TF_PIO       PIO_PB0_IDX
+#define WM8904_TF_FLAGS     PIO_PERIPH_D
+#define WM8904_TD_PIO       PIO_PD26_IDX
+#define WM8904_TD_FLAGS     PIO_PERIPH_B
+#define WM8904_RK_PIO       PIO_PA22_IDX
+#define WM8904_RK_FLAGS     PIO_PERIPH_A
+#define WM8904_RF_PIO       PIO_PD24_IDX
+#define WM8904_RF_FLAGS     PIO_PERIPH_B
+#define WM8904_RD_PIO       PIO_PA10_IDX
+#define WM8904_RD_FLAGS     PIO_PERIPH_C
+#define WM8904_PCK2_PIO     PIO_PA18_IDX
+#define WM8904_PCK2_FLAGS   PIO_PERIPH_B
 
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAMV71_XLTRA_H_ */
