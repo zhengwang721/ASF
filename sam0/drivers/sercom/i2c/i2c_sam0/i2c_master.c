@@ -245,8 +245,10 @@ enum status_code i2c_master_init(
 	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
 	uint32_t pm_index, gclk_index; 
 
-#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21)
-#if (SAML21)
+#if (SAML22) || (SAMC20)
+	pm_index     = sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
+	gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
+#elif (SAML21)
 	if (sercom_index == 5) {
 		pm_index     = MCLK_APBDMASK_SERCOM5_Pos;
 		gclk_index   = SERCOM5_GCLK_ID_CORE;
@@ -254,22 +256,17 @@ enum status_code i2c_master_init(
 		pm_index     = sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
 		gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
 	}
-#else
-	pm_index     = sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
-	gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
-#endif
-#else
-#if (SAMC21)
+#elif (SAMC21)
         pm_index     = sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
         if (sercom_index == 5) 
-          gclk_index   = SERCOM5_GCLK_ID_CORE;
+		gclk_index   = SERCOM5_GCLK_ID_CORE;
         else
-          gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
+		gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
 #else          
 	pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
 	gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
 #endif
-#endif
+
 	
 	/* Turn on module in PM */
 #if (SAML21)
