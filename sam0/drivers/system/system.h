@@ -690,27 +690,32 @@ void system_init(void);
  * \endif
  * \if DEVICE_SAMD21_SYSTEM_SUPPORT
  *  <tr>
- *      <td>42120E</td>
- *      <td>04/2015</td>
+ *      <td>42121F</td>
+ *      <td>08/2015</td>
  *      <td>Added support for SAM DA1</td>
  * </tr>
  *  <tr>
- *      <td>42120D</td>
+ *      <td>42121E</td>
  *      <td>12/2014</td>
  *      <td>Added support for SAM R21 and SAM D10/D11</td>
  * </tr>
  * <tr>
- *      <td>42120C</td>
+ *      <td>42121D</td>
  *      <td>01/2014</td>
  *      <td>Added support for SAM D21</td>
  *  </tr>
+  * <tr>
+ *      <td>42121C</td>
+ *      <td>09/2013</td>
+ *      <td>Fixed incorrect documentation for the device pin sampling mode</td>
+ *  </tr>
  *  <tr>
- *      <td>42120B</td>
+ *      <td>42121B</td>
  *      <td>06/2013</td>
  *      <td>Corrected documentation typos</td>
  *  </tr>
  *  <tr>
- *      <td>42120A</td>
+ *      <td>42121A</td>
  *      <td>06/2013</td>
  *      <td>Initial document release</td>
  *  </tr>
