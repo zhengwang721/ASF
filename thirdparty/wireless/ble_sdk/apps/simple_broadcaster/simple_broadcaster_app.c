@@ -116,10 +116,7 @@ status_t brd_adv_init(void)
 
 int main(void)
 {
-	at_ble_init_config_t pf_cfg;
-	platform_config busConfig;
-	
-#if SAMG55
+	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();

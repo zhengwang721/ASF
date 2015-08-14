@@ -89,6 +89,13 @@ extern bool pxp_connect_request_flag;
 volatile bool app_timer_done = false;
 pxp_current_alert_t alert_level = PXP_NO_ALERT;
 
+volatile bool button_pressed = false;
+
+void button_cb(void)
+{
+	button_pressed = true;
+}
+
 /**@brief Check for Link Loss and Path Loss alert
 * check for Low Alert value if crossed write Low Alert value to Immediate Alert
 *Service. High Alert value if crossed write High Alert value to IAS service
@@ -163,17 +170,7 @@ void pxp_app_init(void)
 }
 
 int main(void)
-{
-	at_ble_init_config_t pf_cfg;
-	platform_config busConfig;
-
-	/*Memory allocation required by GATT Server DB*/
-	pf_cfg.memPool.memSize = 0;
-	pf_cfg.memPool.memStartAdd = NULL;
-	/*Bus configuration*/
-	busConfig.bus_type = UART;
-	pf_cfg.plf_config = &busConfig;
-	
+{	
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -192,7 +189,7 @@ int main(void)
 	hw_timer_register_callback(timer_callback_handler);
 
 	/* initialize the BLE chip  and Set the device mac address */
-	ble_device_init(NULL,&pf_cfg);
+	ble_device_init(NULL);
 
 	DBG_LOG("Initializing Proximity Monitor Application");
 
@@ -217,7 +214,7 @@ int main(void)
 				} else {
 					DBG_LOG(
 							"Unable to connect with device. Reseting the device");
-					ble_device_init(NULL,&pf_cfg);
+					ble_device_init(NULL);
 					pxp_app_init();
 				}
 			} else {
