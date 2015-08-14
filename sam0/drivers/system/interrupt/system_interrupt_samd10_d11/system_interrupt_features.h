@@ -76,7 +76,7 @@
  * \brief Table of possible system interrupt/exception vector numbers.
  *
  * Table of all possible interrupt and exception vector indexes within the
- * SAM D1x device.
+ * SAM D10/D11 device.
  */
 #if defined(__DOXYGEN__)
 /** \note The actual enumeration name is "system_interrupt_vector". */

@@ -76,7 +76,7 @@
  * \brief Table of possible system interrupt/exception vector numbers.
  *
  * Table of all possible interrupt and exception vector indexes within the
- * SAM DAx device. Check peripherals configuration in SAM DAx datasheet for
+ * SAM DA1 device. Check peripherals configuration in SAM DA1 datasheet for
  * available vector index for specific device.
  *
  */
