@@ -99,6 +99,11 @@
 #define BLE_DEVICE_NAME				"ATMEL-TIP"
 #endif /* TIP_CLIENT */
 
+#if defined FIND_ME_TARGET
+#include "find_me_target.h"
+#define BLE_DEVICE_NAME				"ATMEL-FMP"
+#endif /* PROXIMITY_REPORTER */
+
 /** @brief default device name */
 #ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-BLE"
@@ -363,6 +368,13 @@ typedef enum
 #define BLE_CHARACTERISTIC_CHANGED					hr_sensor_char_changed_handler
 #define BLE_NOTIFICATION_CONFIRMED_HANDLER			hr_notification_confirmation_handler
 #endif	/* HR_SENSOR*/
+
+#if defined FIND_ME_TARGET
+#define BLE_PROFILE_INIT							fmp_target_init
+#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER		fmp_target_connected_state_handler
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER	fmp_target_disconnect_event_handler
+#define BLE_CHARACTERISTIC_CHANGED					fmp_target_char_changed_handler
+#endif	/* FIND_ME */
 
 #define BLE_CONN_PARAM_UPDATE_DONE					ble_conn_param_update
 #define	BLE_PAIR_REQUEST							ble_pair_request_handler
