@@ -590,7 +590,7 @@
  *		rankdir=TB;
  *		color=white;
  *		runaway2 [label="Run-away code\nwith peripheral unlocked", shape=box];
- *		node [shape=plaintext, fontname=Areal];
+ *		node [shape=plaintext];
  *		program2 [label=<
  *			<table>
  *				<tr>
@@ -860,89 +860,113 @@ static inline void system_pac_disable_event(void)
  *		<th>Non-write protected register</th>
  *	</tr>
  *	<tr>
- *		<td rowspan ="4">AC</td>
+ *		<td>AC</td>
  *		<td>INTFLAG</td>
  *	</tr>
  *	<tr>
+ *		<td></td>
  *		<td>STATUSA</td>
  *	</tr>
  *	<tr>
+ *		<td></td>
  *		<td>STATUSB</td>
  *	</tr>
  *	<tr>
+ *		<td></td>
  *		<td>STATUSC</td>
  *	</tr>
+ *	<tr><td colspan="2"/></tr>
  *	<tr>
- *		<td rowspan ="3">ADC</td>
+ *		<td>ADC</td>
  *		<td>INTFLAG</td>
  *	</tr>
  *	<tr>
+ *		<td></td>
  *		<td>STATUS</td>
  *	</tr>
  *	<tr>
+ *		<td></td>
  *		<td>RESULT</td>
  *	</tr>
+ *	<tr><td colspan="2"/></tr>
  *	<tr>
- *		<td rowspan ="2">EVSYS</td>
+ *		<td>EVSYS</td>
  *		<td>INTFLAG</td>
  *	</tr>
  *	<tr>
+ *		<td></td>
  *		<td>CHSTATUS</td>
  *	</tr>
+ *	<tr><td colspan="2"/></tr>
  *	<tr>
- *		<td rowspan ="2">NVMCTRL</td>
+ *		<td>NVMCTRL</td>
  *		<td>INTFLAG</td>
  *	</tr>
  *	<tr>
+ *		<td></td>
  *		<td>STATUS</td>
  *	</tr>
+ *	<tr><td colspan="2"/></tr>
  *	<tr>
  *		<td>PM</td>
  *		<td>INTFLAG</td>
  *	</tr>
+ *	<tr><td colspan="2"/></tr>
  *	<tr>
  *		<td>PORT</td>
  *		<td>N/A</td>
  *	</tr>
+ *	<tr><td colspan="2"/></tr>
  *	<tr>
- *		<td rowspan ="3">RTC</td>
+ *		<td>RTC</td>
  *		<td>INTFLAG</td>
  *	</tr>
  *	<tr>
+ *		<td></td>
  *		<td>READREQ</td>
  *	</tr>
  *	<tr>
+ *		<td></td>
  *		<td>STATUS</td>
  *	</tr>
+ *	<tr><td colspan="2"/></tr>
  *	<tr>
  *		<td>SYSCTRL</td>
  *		<td>INTFLAG</td>
  *	</tr>
+ *	<tr><td colspan="2"/></tr>
  *	<tr>
- *		<td rowspan ="3">SERCOM</td>
- *		<td>INTFLAG</td>
+ *		<td>SERCOM</td>
+ *		<td>INTFALG</td>
  *	</tr>
  *	<tr>
+ *		<td></td>
  *		<td>STATUS</td>
  *	</tr>
  *	<tr>
+ *		<td></td>
  *		<td>DATA</td>
  *	</tr>
+ *	<tr><td colspan="2"/></tr>
  *	<tr>
- *		<td rowspan ="2">TC</td>
+ *		<td>TC</td>
  *		<td>INTFLAG</td>
  *	</tr>
  *	<tr>
+ *		<td></td>
  *		<td>STATUS</td>
  *	</tr>
+ *	<tr><td colspan="2"/></tr>
  *	<tr>
- *		<td rowspan ="3">WDT</td>
+ *		<td>WDT</td>
  *		<td>INTFLAG</td>
  *	</tr>
  *	<tr>
+ *		<td></td>
  *		<td>STATUS</td>
  *	</tr>
  *	<tr>
+ *		<td></td>
  *		<td>(CLEAR)</td>
  *	</tr>
  * </table>
