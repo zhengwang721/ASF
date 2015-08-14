@@ -130,7 +130,6 @@ void ble_device_init(at_ble_addr_t *addr)
 	char *dev_name = NULL;
 	
 #if defined ATT_DB_MEMORY
-	DBG_LOG("The size is %d ",sizeof(att_db_data));
 	pf_cfg.memPool.memSize = sizeof(att_db_data);
 	pf_cfg.memPool.memStartAdd = &att_db_data[0];
 #else
@@ -143,6 +142,7 @@ void ble_device_init(at_ble_addr_t *addr)
 	
 	ble_init(&pf_cfg);
 	
+
 	DBG_LOG("ble_init done");
 	
 	ble_set_address(addr);	
@@ -181,7 +181,6 @@ static void ble_init(at_ble_init_config_t * args)
 	{
 		DBG_LOG("BTLC1000 Initialization failed");
 	}
-	DBG_LOG_DEV("Init Done");
 }
 
 
