@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief SAMV71-XPLAINED-ULTRA board configuration.
+ *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -38,36 +40,14 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
-/*###ICF### Section handled by ICF editor, don't touch! ****/
-/*-Editor annotation file-*/
-/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\cortex_v1_0.xml" */
-/*-Specials-*/
-define symbol __ICFEDIT_intvec_start__     = 0x00400000;
-/*-Memory Regions-*/
-define symbol __ICFEDIT_region_RAM_start__ = 0x20400000;
-define symbol __ICFEDIT_region_RAM_end__   = 0x20460000 -1;
-define symbol __ICFEDIT_region_ROM_start__ = 0x00400000;
-define symbol __ICFEDIT_region_ROM_end__   = 0x00500000 -1;
-/*-Sizes-*/
-if (!isdefinedsymbol(__ICFEDIT_size_cstack__)) {
-define symbol __ICFEDIT_size_cstack__        = 0x2000;
-}
-if (!isdefinedsymbol(__ICFEDIT_size_heap__)) {
-define symbol __ICFEDIT_size_heap__          = 0x200;
-}
-/**** End of ICF editor section. ###ICF###*/
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-define memory mem with size = 4G;
-define region RAM_region    = mem:[from __ICFEDIT_region_RAM_start__ to __ICFEDIT_region_RAM_end__];
-define region ROM_region    = mem:[from __ICFEDIT_region_ROM_start__ to __ICFEDIT_region_ROM_end__];
+/* Configure UART pins */
+#define CONF_BOARD_UART_CONSOLE
 
-define block CSTACK with alignment = 8, size = __ICFEDIT_size_cstack__ { };
-define block HEAP   with alignment = 8, size = __ICFEDIT_size_heap__   { };
-
-initialize by copy { readwrite };
-do not initialize  { section .noinit };
-
-place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };
-place in ROM_region                           { readonly };
-place in RAM_region                           { readwrite, block CSTACK, block HEAP };
+#endif /* CONF_BOARD_H_INCLUDED */
