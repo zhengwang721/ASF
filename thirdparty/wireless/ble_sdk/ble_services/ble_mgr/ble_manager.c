@@ -75,6 +75,10 @@
 	#include "hid_device.h"
 #endif /*HID_DEVICE*/	
 
+#if defined ATT_DB_MEMORY
+uint8_t att_db_data[1024];
+#endif
+
 /** @brief information of the connected devices */
 at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
@@ -118,18 +122,32 @@ at_ble_status_t ble_event_task(void)
 }
 
 /** @brief BLE device initialization */
-void ble_device_init(at_ble_addr_t *addr, at_ble_init_config_t * args)
+void ble_device_init(at_ble_addr_t *addr)
 {
+	at_ble_init_config_t pf_cfg;
+	platform_config busConfig;
 	char *dev_name = NULL;
-	ble_init((at_ble_init_config_t *)args);
-	ble_set_address(addr);
 	
+#if defined ATT_DB_MEMORY
+	pf_cfg.memPool.memSize = sizeof(att_db_data);
+	pf_cfg.memPool.memStartAdd = att_db_data;
+#else
+	pf_cfg.memPool.memSize = 0;
+	pf_cfg.memPool.memStartAdd = NULL;
+#endif
+	/*Bus configuration*/
+	busConfig.bus_type = UART;
+	pf_cfg.plf_config = &busConfig;	
+	
+	ble_init(&pf_cfg);
+	
+	ble_set_address(addr);	
 	dev_name = (char *)BLE_DEVICE_NAME;
-	if (at_ble_device_name_set((uint8_t *)dev_name, strlen(dev_name)) != AT_BLE_SUCCESS)
+	if (ble_set_device_name((uint8_t *)dev_name, strlen(dev_name)) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("Device name set failed");
 	}
-	
+		
 	BLE_PROFILE_INIT(NULL);
 }
 
@@ -150,20 +168,23 @@ static void ble_init(at_ble_init_config_t * args)
 	DBG_LOG("Initializing BTLC1000");
 	
 	/* Init BLE device */
-	if(at_ble_init((at_ble_init_config_t *)args) != AT_BLE_SUCCESS)
+	if(at_ble_init(args) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("BTLC1000 Initialization failed");
 	}
+	DBG_LOG_DEV("Init Done");
 }
 
 
 /* Set BLE Address, If address is NULL then it will use BD public address */
 static void ble_set_address(at_ble_addr_t *addr)
 {
+	at_ble_dev_config_t stDevConfig;
+	at_ble_addr_t address = {AT_BLE_ADDRESS_PUBLIC, {0xAB, 0xCD, 0xEF, 0xAB, 0xCD, 0xEF}};
+	at_ble_status_t enuStatus;
+	
 	if (addr == NULL)
-	{
-		at_ble_addr_t address;
-		
+	{		
 		/* get BD address from BLE device */
 		if(at_ble_addr_get(&address) != AT_BLE_SUCCESS)
 		{
@@ -199,6 +220,28 @@ static void ble_set_address(at_ble_addr_t *addr)
 		addr->addr[1],
 		addr->addr[0], addr->type);
 	}
+	
+	//Set device configuration
+	////Device role
+	stDevConfig.role = AT_BLE_ROLE_ALL;
+	////device renew duration
+	stDevConfig.renew_dur = AT_RENEW_DUR_VAL_MIN;
+	////device address type
+	stDevConfig.address = address;
+	////Attributes
+	stDevConfig.att_cfg.b2NamePerm = AT_BLE_WRITE_DISABLE;
+	stDevConfig.att_cfg.b2AppearancePerm = AT_BLE_WRITE_DISABLE;
+	stDevConfig.att_cfg.b1EnableSpcs = 0;
+	stDevConfig.att_cfg.b1EnableServiceChanged = 0;
+	stDevConfig.att_cfg.b2Rfu = AT_BLE_WRITE_DISABLE;
+	////Handles
+	stDevConfig.gap_start_hdl = AT_BLE_AUTO_ALLOC_HANDLE;
+	stDevConfig.gatt_start_hdl = AT_BLE_AUTO_ALLOC_HANDLE;
+	////MTU
+	stDevConfig.max_mtu = AT_MTU_VAL_RECOMMENDED;
+	
+	enuStatus = at_ble_set_dev_config(&stDevConfig);
+	UNUSED(enuStatus);
 }
 
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
@@ -876,12 +919,10 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	*/
 	case AT_BLE_NOTIFICATION_CONFIRMED:
 	{
-		//at_ble_cmd_complete_event_t params;
-		//memcpy(&params,event_params,sizeof(at_ble_cmd_complete_event_t));	
-		BLE_NOTIFICATION_CONFIRMED_HANDLER(((at_ble_cmd_complete_event_t *) event_params)->status);
-		if(ble_notif_conf_cb != NULL)
+		BLE_NOTIFICATION_CONFIRMED_HANDLER((at_ble_cmd_complete_event_t *) event_params);
+		if(ble_notif_conf_cb)
 		{
-			ble_notif_conf_cb(((at_ble_cmd_complete_event_t *) event_params)->status);
+			ble_notif_conf_cb((at_ble_cmd_complete_event_t *) event_params);
 		}
 	}
 	break;
