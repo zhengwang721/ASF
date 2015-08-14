@@ -55,6 +55,7 @@
 #include "platform.h"
 #include "at_ble_api.h"
 #include "console_serial.h"
+#include "conf_extint.h"
 
 /* Beacon identifier value */
 #define BEACON_IDENTIFIER (0x46)
@@ -103,7 +104,9 @@ static uint8_t scan_rsp_data[] = {0x11, 0x07, 0x1b, 0xc5, 0xd5, 0xa5, 0x02, 0x00
 	                              0x37, 0xaa, 0xe3, 0x11, 0x2a, 0xdc, 0x00, 0xcd,
                                   0x30, 0x57};
 								  
-uint8_t db_mem[1024] = {0};								  
+uint8_t db_mem[1024] = {0};	
+	
+volatile bool button_pressed = false;							  
 
 /* service UUID definition */
 static at_ble_uuid_t service_uuid = {AT_BLE_UUID_128 ,
@@ -282,6 +285,9 @@ int main (void)
 	system_init();
 #endif
 
+	/* Initialize the button */
+	button_init();
+	
 	/* Initialize serial console */
 	serial_console_init();
 	
@@ -358,4 +364,9 @@ int main (void)
 			break;
 		}
 	}
+}
+
+void button_cb(void)
+{
+	button_pressed = true;
 }
