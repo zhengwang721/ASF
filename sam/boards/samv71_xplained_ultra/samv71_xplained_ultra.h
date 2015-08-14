@@ -425,6 +425,7 @@
 #define BOARD_CLK_TWIHS_EEPROM            0
 #define BOARD_CLK_TWIHS_MUX_EEPROM        0
 
+
 /** EBI pins configuration for LCD */
 /** LCD reset pin */
 #define PIN_EBI_RESET_MASK	  PIO_PC13
@@ -477,6 +478,47 @@
 #define PIN_EBI_BACKLIGHT_PIO	  PIOC
 #define PIN_EBI_BACKLIGHT_TYPE   PIO_PERIPH_B
 #define PIN_EBI_BACKLIGHT_ATTRI  PIO_DEFAULT
+
+/*! \name GPIO Connections of VBUS monitoring
+ */
+//! @{
+#define USB_VBUS_FLAGS         (PIO_INPUT | PIO_PULLUP)
+#define USB_VBUS_PIN             PIO_PC9_IDX  /* As IO pin input */
+#define USB_VBUS_PIO_ID       ID_PIOC
+#define USB_VBUS_PIO_MASK  PIO_PC9 
+//! @}
+
+/*! \name GPIO Connections of ID detecting
+ */
+//! @{
+#define USB_ID_FLAGS             (PIO_INPUT | PIO_PULLUP)
+#define USB_ID_PIN               PIO_PC16_IDX /* As IO pin input */
+#define USB_ID_PIO_ID         ID_PIOC
+#define USB_ID_PIO_MASK    PIO_PC16
+//! @}
+
+/** WM8904 Slave address */
+#define WM8904_SLAVE_ADDRESS        (0x34 >> 1)
+
+/** TWI interface for WM8904 */
+#define WM8904_TWIHS  TWIHS0
+
+/** WM8904 pins definition */
+#define WM8904_TK_PIO       PIO_PB1_IDX
+#define WM8904_TK_FLAGS     PIO_PERIPH_D
+#define WM8904_TF_PIO       PIO_PB0_IDX
+#define WM8904_TF_FLAGS     PIO_PERIPH_D
+#define WM8904_TD_PIO       PIO_PD26_IDX
+#define WM8904_TD_FLAGS     PIO_PERIPH_B
+#define WM8904_RK_PIO       PIO_PA22_IDX
+#define WM8904_RK_FLAGS     PIO_PERIPH_A
+#define WM8904_RF_PIO       PIO_PD24_IDX
+#define WM8904_RF_FLAGS     PIO_PERIPH_B
+#define WM8904_RD_PIO       PIO_PA10_IDX
+#define WM8904_RD_FLAGS     PIO_PERIPH_C
+#define WM8904_PCK2_PIO     PIO_PA18_IDX
+#define WM8904_PCK2_FLAGS   PIO_PERIPH_B
+
 
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAMV71_XLTRA_H_ */
