@@ -65,6 +65,7 @@
 
 #if defined PROXIMITY_REPORTER
 	#include "pxp_reporter.h"
+	#define ATT_DB_MEMORY 1
 #endif /* PROXIMITY_REPORTER */
 
 #if defined PROXIMITY_MONITOR
@@ -129,8 +130,9 @@ void ble_device_init(at_ble_addr_t *addr)
 	char *dev_name = NULL;
 	
 #if defined ATT_DB_MEMORY
+	DBG_LOG("The size is %d ",sizeof(att_db_data));
 	pf_cfg.memPool.memSize = sizeof(att_db_data);
-	pf_cfg.memPool.memStartAdd = att_db_data;
+	pf_cfg.memPool.memStartAdd = &att_db_data[0];
 #else
 	pf_cfg.memPool.memSize = 0;
 	pf_cfg.memPool.memStartAdd = NULL;
@@ -141,11 +143,18 @@ void ble_device_init(at_ble_addr_t *addr)
 	
 	ble_init(&pf_cfg);
 	
+	DBG_LOG("ble_init done");
+	
 	ble_set_address(addr);	
+	
 	dev_name = (char *)BLE_DEVICE_NAME;
 	if (ble_set_device_name((uint8_t *)dev_name, strlen(dev_name)) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("Device name set failed");
+	}
+	else
+	{
+		DBG_LOG("Device name set passed");
 	}
 		
 	BLE_PROFILE_INIT(NULL);

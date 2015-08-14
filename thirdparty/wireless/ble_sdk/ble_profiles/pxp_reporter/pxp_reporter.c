@@ -134,7 +134,12 @@ void register_linkloss_handler(reporter_callback_t linkloss_fn)
 */
 at_ble_status_t pxp_service_define (void)
 {
-	lls_primary_service_define(&lls_handle);
+	at_ble_status_t status;
+	
+	status = lls_primary_service_define(&lls_handle);
+	
+	DBG_LOG("Defining LLS service Status %d", status);
+
 
 	
 	#if defined PATHLOSS
@@ -299,12 +304,18 @@ void pxp_reporter_adv(void)
 */
 void pxp_reporter_init(void *param)
 {
+	
 	DBG_LOG_DEV("PXP Reporter Profile Init");
+	
 	/* pxp services initialization*/
 	pxp_service_init();	
 	
+	DBG_LOG_DEV("PXP Reporter Service Init Pass");
+
 	/* pxp services definition		*/
 	pxp_service_define();	
+	
+	DBG_LOG_DEV("PXP Reporter Service Define Pass");
 	
 	DBG_LOG_DEV("PXP Adv packet Set");
 
