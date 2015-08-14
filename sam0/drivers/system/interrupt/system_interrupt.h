@@ -64,8 +64,8 @@ extern "C" {
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM L21/L22
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -397,17 +397,17 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *	<tr>
  *		<td>42122E</td>
  *		<td>08/2015</td>
- *		<td>Add support for SAM L21, SAM DAx, and SAM C20/C21</td>
+ *		<td>Added support for SAM L21/L22, SAM DA1, and SAM C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>42122D</td>
  *		<td>12/2014</td>
- *		<td>Add support for SAM R21 and SAM D10/D11</td>
+ *		<td>Added support for SAM R21 and SAM D10/D11</td>
  *	</tr>
  *	<tr>
  *		<td>42122C</td>
  *		<td>01/2014</td>
- *		<td>Add support for SAM D21</td>
+ *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
  *		<td>42122B</td>
