@@ -635,7 +635,7 @@ typedef void (*ble_gap_event_callback_t)(at_ble_handle_t);
 typedef at_ble_status_t (*ble_characteristic_changed_callback_t)(at_ble_characteristic_changed_t *);
 
 /* Typedef for notification confirmed event callback */
-typedef void (*ble_notification_confirmed_callback_t)(uint8_t);
+typedef void (*ble_notification_confirmed_callback_t)(at_ble_cmd_complete_event_t *);
 
 /** @brief function to set the device name.
   *
@@ -784,7 +784,7 @@ at_ble_status_t ble_event_task(void);
   * @return none.
   *
   */
-void ble_device_init(at_ble_addr_t *addr, at_ble_init_config_t * args);
+void ble_device_init(at_ble_addr_t *addr);
 
 /** @brief function handling all the events from the stack, responsible
   * for calling the respective functions initialized for the events.
