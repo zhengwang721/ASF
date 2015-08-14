@@ -3,7 +3,7 @@
  *
  * \brief AT30TSE75X driver
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,7 +44,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#include <at30tse75x.h>
+#include "at30tse75x.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -62,14 +62,12 @@ void at30tse_init(void)
 	struct i2c_master_config conf;
 	i2c_master_get_config_defaults(&conf);
 
-	/* Change buffer timeout to something longer. */
-	conf.buffer_timeout = 10000;
 	conf.pinmux_pad0 = AT30TSE_PINMUX_PAD0;
 	conf.pinmux_pad1 = AT30TSE_PINMUX_PAD1;
 
 	/* Initialize and enable device with config. */
-	i2c_master_init(&dev_inst_at30tse75x, AT30TSE_SERCOM, &conf);
-	i2c_master_enable(&dev_inst_at30tse75x);
+	i2c_master_init(&dev_inst_at30tse75x, &conf);
+	i2c_enable(&dev_inst_at30tse75x);
 }
 
 /**
@@ -96,12 +94,9 @@ void at30tse_eeprom_write(uint8_t *data, uint8_t length, uint8_t word_addr, uint
 
 	/* Set up TWI transfer */
     struct i2c_master_packet packet = {
-		.address     = AT30TSE758_EEPROM_TWI_ADDR | ((0x30 & page)>>4),
+		.address     = AT30TSE758_EEPROM_TWI_ADDR | (page >> 4),
 		.data_length = length+1,
 		.data        = buffer,
-		.ten_bit_address = false,
-		.high_speed      = false,
-		.hs_master_code  = 0x0,
 	};
 	/* Do the transfer */
     i2c_master_write_packet_wait(&dev_inst_at30tse75x, &packet);
@@ -126,21 +121,15 @@ void at30tse_eeprom_read(uint8_t *data, uint8_t length, uint8_t word_addr, uint8
 
 	/* Set up internal EEPROM addr write */
     struct i2c_master_packet addr_transfer = {
-		.address     = AT30TSE758_EEPROM_TWI_ADDR | ( (0x30 & page) >> 4 ),
+		.address     = AT30TSE758_EEPROM_TWI_ADDR | (page >> 4),
 		.data_length = 1,
 		.data        = buffer,
-		.ten_bit_address = false,
-		.high_speed      = false,
-		.hs_master_code  = 0x0,
 	};
 	/* Reading sequence */
     struct i2c_master_packet read_transfer = {
-		.address     = AT30TSE758_EEPROM_TWI_ADDR | ( (0x30 & page) >> 4 ),
+		.address     = AT30TSE758_EEPROM_TWI_ADDR | (page >> 4),
 		.data_length = length,
 		.data        = data,
-		.ten_bit_address = false,
-		.high_speed      = false,
-		.hs_master_code  = 0x0,
 	};
 
 	/* Do the transfer */
@@ -161,9 +150,6 @@ void at30tse_set_register_pointer(uint8_t reg, uint8_t reg_type)
 		.address     = AT30TSE_TEMPERATURE_TWI_ADDR,
 		.data_length = 1,
 		.data        = buffer,
-		.ten_bit_address = false,
-		.high_speed      = false,
-		.hs_master_code  = 0x0,
 	};
 	/* Do the transfer */
     i2c_master_write_packet_wait(&dev_inst_at30tse75x, &transfer);
@@ -189,18 +175,12 @@ uint16_t at30tse_read_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size)
 		.address     = AT30TSE_TEMPERATURE_TWI_ADDR,
 		.data_length = 1,
 		.data        = buffer,
-		.ten_bit_address = false,
-		.high_speed      = false,
-		.hs_master_code  = 0x0,
 	};
 	/* Read data */
     struct i2c_master_packet read_transfer = {
 		.address     = AT30TSE_TEMPERATURE_TWI_ADDR,
 		.data_length = reg_size,
 		.data        = buffer,
-		.ten_bit_address = false,
-		.high_speed      = false,
-		.hs_master_code  = 0x0,
 	};
 	/* Do the transfer */
 	i2c_master_write_packet_wait_no_stop(&dev_inst_at30tse75x, &write_transfer);
@@ -229,9 +209,6 @@ void at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, uin
 		.address     = AT30TSE_TEMPERATURE_TWI_ADDR,
 		.data_length = 1 + reg_size,
 		.data        = data,
-		.ten_bit_address = false,
-		.high_speed      = false,
-		.hs_master_code  = 0x0,
 	};
 	/* Do the transfer */
 	i2c_master_write_packet_wait(&dev_inst_at30tse75x, &transfer);
@@ -258,7 +235,7 @@ void at30tse_write_config_register(uint16_t value)
  *
  * \return Temperature data.
  */
-double at30tse_read_temperature()
+double at30tse_read_temperature(void)
 {
 	/* Read the 16-bit temperature register. */
 	uint16_t data = at30tse_read_register(AT30TSE_TEMPERATURE_REG,

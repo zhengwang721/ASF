@@ -48,11 +48,10 @@
 #define AT30TSE75X_H_INCLUDED
 
 #include <compiler.h>
-#include <i2c_common.h>
-#include <i2c_master.h>
+#include <i2c.h>
 
 /* Temperature sensor configuration file */
-#include "conf_at30tse75x.h"
+#include "conf_board.h"
 
 /**
  * \defgroup asfdoc_sam0_at30tse75x_group AT30TSE75X Temperature Sensor
@@ -74,10 +73,10 @@
 extern "C" {
 #endif
 
-#define AT30TSE_TEMPERATURE_TWI_ADDR	0x4F //0b1001111
-#define AT30TSE758_EEPROM_TWI_ADDR		0x54 //0b1010100
-#define AT30TSE754_EEPROM_TWI_ADDR		0x56 //0b1010110
-#define AT30TSE752_EEPROM_TWI_ADDR		0x57 //0b1010111
+#define AT30TSE_TEMPERATURE_TWI_ADDR	0x48 //0b1001000
+#define AT30TSE758_EEPROM_TWI_ADDR		0x50 //0b1010000
+#define AT30TSE754_EEPROM_TWI_ADDR		0x50 //0b1010000
+#define AT30TSE752_EEPROM_TWI_ADDR		0x50 //0b1010000
 
 #define AT30TSE_TEMPERATURE_REG			0x00
 #define AT30TSE_TEMPERATURE_REG_SIZE	2
