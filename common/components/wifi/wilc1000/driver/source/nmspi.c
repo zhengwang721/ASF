@@ -93,7 +93,11 @@ uint8 	gu8Crc_off	=			0;
 #define DATA_PKT_SZ_1K			1024
 #define DATA_PKT_SZ_4K			(4 * 1024)
 #define DATA_PKT_SZ_8K			(8 * 1024)
+#ifdef SAMG55
+#define DATA_PKT_SZ				DATA_PKT_SZ_1K
+#else
 #define DATA_PKT_SZ				DATA_PKT_SZ_8K
+#endif
 
 static sint8 nmi_spi_read(uint8* b, uint16 sz)                                 
 {
@@ -184,13 +188,6 @@ static uint8 crc7(uint8 crc, const uint8 *buffer, uint32 len)
 #define CMD_SINGLE_WRITE		0xc9
 #define CMD_SINGLE_READ			0xca
 #define CMD_RESET				0xcf
-
-#define DATA_PKT_SZ_256 		256
-#define DATA_PKT_SZ_512			512
-#define DATA_PKT_SZ_1K			1024
-#define DATA_PKT_SZ_4K			(4 * 1024)
-#define DATA_PKT_SZ_8K			(8 * 1024)
-#define DATA_PKT_SZ				DATA_PKT_SZ_8K
 
 static sint8 spi_cmd(uint8 cmd, uint32 adr, uint32 u32data, uint32 sz,uint8 clockless)
 {
