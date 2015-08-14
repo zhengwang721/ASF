@@ -137,6 +137,7 @@ void init_linkloss_service(gatt_service_handler_t *linkloss_serv)
   */
 at_ble_status_t lls_primary_service_define(gatt_service_handler_t *lls_service)
 {
+	
 	return(at_ble_primary_service_define(&lls_service->serv_uuid,
 											&lls_service->serv_handle,
 											NULL, LLS_INCLUDED_SERVICE_COUNT,  
