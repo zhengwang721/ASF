@@ -8,6 +8,7 @@
 		<build type="c-source" value="hid_mouse_app.c"/>
         <build type="define" name="BLE_DEVICE_ROLE" value="BLE_PERIPHERAL"/>
         <build type="define" name="HID_MOUSE_DEVICE" value=""/>
+        <build type="define" name="ATT_DB_MEMORY" value=""/>
 		<require idref="thirdparty.wireless.ble_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_sdk.inc"/>
 		<require idref="thirdparty.wireless.ble_sdk.src"/>
