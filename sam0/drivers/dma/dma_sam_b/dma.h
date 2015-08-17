@@ -304,12 +304,11 @@ extern "C" {
  */
 
 #include <compiler.h>
-#include "dma.h"
+#include <system.h>
+#include "conf_dma.h"
 
 /** DMA invalid channel number. */
 #define DMA_INVALID_CHANNEL        0xff
-
-extern uint8_t g_chan_interrupt_flag[];
 
 /** DMA peripheral index */
 enum dma_peripheral_index {
@@ -444,10 +443,22 @@ struct dma_resource_config {
 	enum dma_endian_swap swap;
 };
 
+
+
+
+/** Forward definition of the DMA resource. */
+struct dma_resource;
+/** Type definition for a DMA resource callback function. */
+typedef void (*dma_callback_t)(struct dma_resource *const resource);
+
 /** Structure for DMA transfer resource. */
 struct dma_resource {
 	/** Allocated DMA channel ID. */
 	uint8_t channel_id;
+	/** Array of callback functions for DMA transfer job. */
+	dma_callback_t callback[DMA_CALLBACK_N];
+	/** Bit mask for enabled callbacks. */
+	uint8_t callback_enable;
 	/** Status of the last job. */
 	volatile enum status_code job_status;
 	/** Transferred data size. */
@@ -455,7 +466,6 @@ struct dma_resource {
 	/** DMA transfer descriptor. */
 	struct dma_descriptor* descriptor;
 };
-
 
 /**
  * \brief Get DMA resource status.
@@ -469,6 +479,75 @@ static inline enum status_code dma_get_job_status(struct dma_resource *resource)
 	return resource->job_status;
 }
 
+/**
+ * \brief Enable a callback function for a dedicated DMA resource.
+ *
+ * \param[in] resource Pointer to the DMA resource
+ * \param[in] type Callback function type
+ *
+ */
+static inline void dma_enable_callback(struct dma_resource *resource,
+		enum dma_callback_type type)
+{
+	resource->callback_enable |= 1 << type;
+	*(uint32_t*)(PROV_DMA_CTRL0->CH0_INT_ENABLE_REG.reg + 0x100*resource->channel_id) |=
+			(1 << type);
+}
+
+/**
+ * \brief Disable a callback function for a dedicated DMA resource.
+ *
+ * \param[in] resource Pointer to the DMA resource
+ * \param[in] type Callback function type
+ *
+ */
+static inline void dma_disable_callback(struct dma_resource *resource,
+		enum dma_callback_type type)
+{
+	resource->callback_enable &= ~(1 << type);
+	*(uint32_t*)(PROV_DMA_CTRL0->CH0_INT_CLEAR_REG.reg + 0x100*resource->channel_id) = 
+			(1 << type);
+}
+
+/**
+ * \brief Register a callback function for a dedicated DMA resource.
+ *
+ * There are three types of callback functions, which can be registered:
+ * - Callback for transfer complete
+ * - Callback for transfer error
+ * - Callback for channel suspend
+ *
+ * \param[in] resource Pointer to the DMA resource
+ * \param[in] callback Pointer to the callback function
+ * \param[in] type Callback function type
+ *
+ */
+static inline void dma_register_callback(struct dma_resource *resource,
+		dma_callback_t callback, enum dma_callback_type type)
+{
+	resource->callback[type] = callback;
+}
+
+/**
+ * \brief Unregister a callback function for a dedicated DMA resource.
+ *
+ * There are three types of callback functions:
+ * - Callback for transfer complete
+ * - Callback for transfer error
+ * - Callback for channel suspend
+ *
+ * The application can unregister any of the callback functions which
+ * are already registered and are no longer needed.
+ *
+ * \param[in] resource Pointer to the DMA resource
+ * \param[in] type Callback function type
+ *
+ */
+static inline void dma_unregister_callback(struct dma_resource *resource,
+		enum dma_callback_type type)
+{
+	resource->callback[type] = NULL;
+}
 
 /**
  * \brief Initializes DMA transfer configuration with predefined default values.

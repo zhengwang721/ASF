@@ -46,7 +46,6 @@
 
 #include <string.h>
 #include "dma.h"
-#include "conf_dma.h"
 
 //#include "clock.h"
 //#include "system_interrupt.h"
@@ -66,12 +65,14 @@ struct _dma_module _dma_inst = {
 /** Internal DMA resource pool. */
 static struct dma_resource* _dma_active_resource[CONF_MAX_USED_CHANNEL_NUM];
 
-static uint32_t get_channel_reg_val(uint8_t channel, uint32_t reg){
+static uint32_t get_channel_reg_val(uint8_t channel, uint32_t reg)
+{
 	return *(uint32_t*)(reg + 0x100*channel);
 }
 
-static void set_channel_reg_val(uint8_t channel, uint32_t reg, uint32_t val){
-	*(volatile uint32_t*)(reg + 0x100*channel) = val;
+static void set_channel_reg_val(uint8_t channel, uint32_t reg, uint32_t val)
+{
+	*(uint32_t*)(reg + 0x100*channel) = val;
 }
 
 uint8_t dma_get_status(uint8_t channel)
@@ -212,7 +213,7 @@ void dma_get_config_defaults(struct dma_resource_config *config)
  * \brief Configure the DMA resource.
  *
  * \param[in]  dma_resource Pointer to a DMA resource instance
- * \param[out] resource_config Configurations of the DMA resource
+ * \param[out] config Configurations of the DMA resource
  *
  */
 static void _dma_set_config(struct dma_resource *resource,
@@ -250,56 +251,12 @@ static void _dma_set_config(struct dma_resource *resource,
 			PROV_DMA_CTRL_CORE_PRIORITY_WR_PRIO_HIGH_NUM(config->des.proi_high_index) |
 			(PROV_DMA_CTRL_CORE_PRIORITY_WR_PRIO_HIGH << config->des.eanble_proi_high);
 	set_channel_reg_val(resource->channel_id, (uint32_t)&PROV_DMA_CTRL0->CORE_PRIORITY.reg, regval);
-}
-
-/**
- * \brief Allocate a DMA with configurations.
- *
- * This function will allocate a proper channel for a DMA transfer request.
- *
- * \param[in,out]  dma_resource Pointer to a DMA resource instance
- * \param[in] transfer_config Configurations of the DMA transfer
- *
- * \return Status of the allocation procedure.
- *
- * \retval STATUS_OK The DMA resource was allocated successfully
- * \retval STATUS_ERR_NOT_FOUND DMA resource allocation failed
- */
-enum status_code dma_allocate(struct dma_resource *resource,
-		struct dma_resource_config *config)
-{
-	uint8_t new_channel;
-
-	if (!_dma_inst._dma_init) {
-		/* Perform a reset before enable DMA controller */
-		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg &=
-				~LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_DMA_CONTROLLER_RSTN;
-		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg |=
-				LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_DMA_CONTROLLER_RSTN;
-
-		_dma_inst._dma_init = true;
-	}
-	if (resource->channel_id >= CONF_MAX_USED_CHANNEL_NUM) {
-		return STATUS_ERR_NOT_FOUND;
-	}
-
-	new_channel = _dma_find_first_free_channel_and_allocate();
-	/* If no channel available, return not found */
-	if (new_channel == DMA_INVALID_CHANNEL) {
-		return STATUS_ERR_NOT_FOUND;
-	}
 	
-	/* Set the channel */
-	resource->channel_id = new_channel;
-	/* Configure the DMA control,channel registers and descriptors here */
-	_dma_set_config(resource, config);
-	
-	resource->descriptor = NULL;
-
-	/* Log the DMA resource into the internal DMA resource pool */
-	_dma_active_resource[resource->channel_id] = resource;
-
-	return STATUS_OK;
+	/* Initial the global variety */
+	for (int i = 0; i < DMA_CALLBACK_N; i++) {
+		resource->callback[i] = NULL;
+	}
+	resource->callback_enable = 0;
 }
 
 /**
@@ -352,9 +309,7 @@ enum status_code dma_free(struct dma_resource *resource)
 enum status_code dma_add_descriptor(struct dma_resource *resource,
 		struct dma_descriptor *descriptor)
 {
-	struct dma_descriptor* desc;
-	
-	desc = resource->descriptor;
+	struct dma_descriptor *desc = resource->descriptor;
 
 	/* Check if channel is busy */
 	if (dma_get_job_status(resource) == STATUS_BUSY) {
@@ -416,7 +371,7 @@ enum status_code dma_start_transfer_job(struct dma_resource *resource)
 	}
 
 	/* Enable DMA interrupt */
-	NVIC_EnableIRQ(PROV_DMA_CTRL0_IRQn);
+	//NVIC_EnableIRQ(6);
 
 	/* Set the interrupt flag */
 	regval = PROV_DMA_CTRL_CH0_INT_ENABLE_REG_MASK & DMA_CALLBACK_TRANSFER_DONE;
@@ -424,14 +379,161 @@ enum status_code dma_start_transfer_job(struct dma_resource *resource)
 	/* Set job status */
 	resource->job_status = STATUS_BUSY;
 
-	/* Set channel x descriptor 0 to the descriptor base address */
-	//memcpy(&descriptor_section[resource->channel_id], resource->descriptor,
-						//sizeof(descriptor_section[0]));
-
 	/* Enable the transfer channel */
 	set_channel_reg_val(resource->channel_id, (uint32_t)&PROV_DMA_CTRL0->CH0_CH_ENABLE_REG.reg, 1);
 	/* Start the transfer channel */
 	set_channel_reg_val(resource->channel_id, (uint32_t)&PROV_DMA_CTRL0->CH0_CH_START_REG.reg, 1);
+
+	return STATUS_OK;
+}
+/**
+ * \brief Get the channel index
+ *
+ * \param[in]  channel  Channel active
+ *
+ */
+static uint8_t get_channel_index(uint8_t channel)
+{
+	uint8_t index = 0;
+
+	channel = channel & 0x0f;
+	do {
+		channel = channel >> 1;
+		index++;
+	} while (channel);
+	
+	return (index - 1);
+}
+
+/**
+ * \brief DMA interrupt service routine.
+ *
+ */
+static void dma_isr_handler( void )
+{
+	uint8_t active_channel;
+	uint8_t channel_index;
+	struct dma_resource *resource;
+	uint8_t isr;
+	uint8_t isr_flag = 0;
+
+	/* Get active channel */
+	active_channel =  PROV_DMA_CTRL0->CORE_INT_STATUS.reg & 
+			PROV_DMA_CTRL_CORE_INT_STATUS_CHANNEL__Msk;
+				
+	do {
+		channel_index = get_channel_index(active_channel);
+		/* Get active DMA resource based on channel */
+		resource = _dma_active_resource[channel_index];
+		isr = get_channel_reg_val(resource->channel_id, (uint32_t)PROV_DMA_CTRL0->CH0_INT_STATUS_REG.reg);
+		/* Calculate block transfer size of the DMA transfer */
+		resource->transfered_size = get_channel_reg_val(resource->channel_id, (uint32_t)PROV_DMA_CTRL0->CH0_COUNT_REG.reg);
+
+		/* DMA channel interrupt handler */
+		if (isr & DMA_CALLBACK_TRANSFER_DONE) {
+			/* Transfer complete flag */
+			isr_flag = DMA_CALLBACK_TRANSFER_DONE;
+			/* Set job status */
+			resource->job_status = STATUS_OK;
+		} else if (isr & DMA_CALLBACK_READ_ERR) {
+			/* Read error flag */
+			isr_flag = DMA_CALLBACK_READ_ERR;
+			/* Set I/O ERROR status */
+			resource->job_status = STATUS_ERR_IO;
+		} else if (isr & DMA_CALLBACK_WRITE_ERR) {
+			/* Write error flag */
+			isr_flag = DMA_CALLBACK_WRITE_ERR;
+			/* Set I/O ERROR status */
+			resource->job_status = STATUS_ERR_IO;
+		} else if (isr & DMA_CALLBACK_FIFO_OVERFLOW) {
+			/* Overflow flag */
+			isr_flag = DMA_CALLBACK_FIFO_OVERFLOW;
+			/* Set I/O ERROR status */
+			resource->job_status = STATUS_ERR_IO;
+		} else if (isr & DMA_CALLBACK_FIFO_UNDERFLOW) {
+			/* Underflow flag */
+			isr_flag = DMA_CALLBACK_FIFO_UNDERFLOW;
+			/* Set I/O ERROR status */
+			resource->job_status = STATUS_ERR_IO;
+		} else if (isr & DMA_CALLBACK_READ_TIMEOUT) {
+			/* Read timeout flag */
+			isr_flag = DMA_CALLBACK_READ_TIMEOUT;
+			/* Set I/O ERROR status */
+			resource->job_status = STATUS_ERR_IO;
+		} else if (isr & DMA_CALLBACK_WRITE_TIMEOUT) {
+			/* Write timeout flag */
+			isr_flag = DMA_CALLBACK_WRITE_TIMEOUT;
+			/* Set I/O ERROR status */
+			resource->job_status = STATUS_ERR_IO;
+		} else if (isr & DMA_CALLBACK_WDT_TRIGGER) {
+			/* Watchdog error flag */
+			isr_flag = DMA_CALLBACK_WDT_TRIGGER;
+			/* Set I/O ERROR status */
+			resource->job_status = STATUS_ERR_IO;
+		}
+		
+		if (isr_flag) {
+			/* Clear the watch dog error flag */
+			set_channel_reg_val(resource->channel_id, PROV_DMA_CTRL0->CH0_INT_CLEAR_REG.reg, 1<<isr_flag);
+			/* Execute the callback function */
+			if ((resource->callback_enable & (1<<isr_flag)) &&
+					(resource->callback[isr_flag])) {
+				resource->callback[isr_flag](resource);
+			}
+		}
+		active_channel &= ~(1<<isr_flag);
+	} while (active_channel);
+	
+	NVIC_ClearPendingIRQ(PROV_DMA_CTRL0_IRQn);
+}
+
+/**
+ * \brief Allocate a DMA with configurations.
+ *
+ * This function will allocate a proper channel for a DMA transfer request.
+ *
+ * \param[in,out]  dma_resource Pointer to a DMA resource instance
+ * \param[in] transfer_config Configurations of the DMA transfer
+ *
+ * \return Status of the allocation procedure.
+ *
+ * \retval STATUS_OK The DMA resource was allocated successfully
+ * \retval STATUS_ERR_NOT_FOUND DMA resource allocation failed
+ */
+enum status_code dma_allocate(struct dma_resource *resource,
+		struct dma_resource_config *config)
+{
+	uint8_t new_channel;
+
+	if (!_dma_inst._dma_init) {
+		/* Perform a reset before enable DMA controller */
+		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg &=
+				~LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_DMA_CONTROLLER_RSTN;
+		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg |=
+				LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_DMA_CONTROLLER_RSTN;
+		system_register_isr(RAM_ISR_TABLE_DMA_INDEX, (uint32_t)dma_isr_handler);
+		NVIC_EnableIRQ(6);
+		_dma_inst._dma_init = true;
+	}
+	if (resource->channel_id >= CONF_MAX_USED_CHANNEL_NUM) {
+		return STATUS_ERR_NOT_FOUND;
+	}
+
+	new_channel = _dma_find_first_free_channel_and_allocate();
+	/* If no channel available, return not found */
+	if (new_channel == DMA_INVALID_CHANNEL) {
+		return STATUS_ERR_NOT_FOUND;
+	}
+	
+	/* Set the channel */
+	resource->channel_id = new_channel;
+	/* Configure the DMA control,channel registers and descriptors here */
+	_dma_set_config(resource, config);
+	
+	resource->descriptor = NULL;
+
+	/* Log the DMA resource into the internal DMA resource pool */
+	_dma_active_resource[resource->channel_id] = resource;
 
 	return STATUS_OK;
 }

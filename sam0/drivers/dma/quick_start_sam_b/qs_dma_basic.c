@@ -44,6 +44,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
+#include <string.h>
 
 //! [setup]
 //! [transfer_length]
@@ -58,9 +59,20 @@ static uint8_t source_memory[DATA_LENGTH];
 static uint8_t destination_memory[DATA_LENGTH];
 //! [destination_memory]
 
+//! [transfer_done_flag]
+static volatile bool transfer_is_done = false;
+//! [transfer_done_flag]
+
 //! [transfer_descriptor]
 struct dma_descriptor example_descriptor;
 //! [transfer_descriptor]
+
+//! [_transfer_done]
+static void transfer_done(struct dma_resource* const resource )
+{
+	transfer_is_done = true;
+}
+//! [_transfer_done]
 
 //! [config_dma_resource]
 static void configure_dma_resource(struct dma_resource *resource)
@@ -118,6 +130,15 @@ int main(void)
 	dma_add_descriptor(&example_resource, &example_descriptor);
 	//! [add_descriptor_to_dma_resource]
 
+	//! [setup_callback_register]
+	dma_register_callback(&example_resource, transfer_done,
+			DMA_CALLBACK_TRANSFER_DONE);
+	//! [setup_callback_register]
+
+	//! [setup_enable_callback]
+	dma_enable_callback(&example_resource, DMA_CALLBACK_TRANSFER_DONE);
+	//! [setup_enable_callback]
+	
 	//! [setup_source_memory_content]
 	for (uint32_t i = 0; i < DATA_LENGTH; i++) {
 		source_memory[i] = i;
@@ -132,12 +153,14 @@ int main(void)
 	//! [main_1]
 	
 	//! [main_2]
-	while (!dma_get_status(example_resource.channel_id)) {
+	transfer_is_done = false;
+	while (!transfer_is_done) {
 		/* Wait for transfer done */
 	}
 	//! [main_2]
-	passed = false;
+
 	//! [main_3]
+	passed = false;
 	if (!memcmp(source_memory, destination_memory, sizeof(source_memory))) {
 		passed = true;
 	}
@@ -145,6 +168,6 @@ int main(void)
 	while (true) {
 		/* Nothing to do */
 	}
-
+	UNUSED(passed);
 	//! [main]
 }
