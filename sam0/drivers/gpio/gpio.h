@@ -108,6 +108,7 @@
  */
 
 #include <compiler.h>
+#include "system.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -162,6 +163,38 @@ enum gpio_pinmux_sel {
 };
 
 /**
+ * \brief GPIO module instance
+ *
+ * Forward Declaration for the device instance.
+ */
+struct gpio_module;
+
+/**
+ * \brief GPIO callback type
+ *
+ * Type of the callback functions.
+ */
+typedef void (*gpio_callback_t)(void);
+
+/**
+ * \brief GPIO Callback enum
+ *
+ * Callbacks for the GPIO driver.
+ */
+enum gpio_callback {
+	/** Callback for low level */
+	GPIO_CALLBACK_LOW,
+	/** Callback for high level */
+	GPIO_CALLBACK_HIGH,
+	/** Callback for rising edge */
+	GPIO_CALLBACK_RISING,
+	/** Callback for falling edge */
+	GPIO_CALLBACK_FALLING,
+	/** Number of available callbacks */
+	GPIO_CALLBACK_N,
+};
+
+/**
  *  \brief GPIO pin configuration structure.
  *
  *  Configuration structure for a GPIO pin instance. This structure should be
@@ -180,6 +213,28 @@ struct gpio_config {
 	 *  \note All other configurations will be ignored, the pin will be disabled
 	 */
 	bool powersave;
+};
+
+/**
+ * \brief GPIO driver software device instance structure.
+ *
+ * GPIO driver software instance structure, used to retain software
+ * state information of an associated hardware module instance.
+ *
+ * \note The fields of this structure should not be altered by the user
+ *       application; they are reserved for module-internal use only.
+ */
+struct gpio_module {
+#if !defined(__DOXYGEN__)
+	/** Pointer to the hardware instance. */
+	Gpio *hw;
+	/** Array to store callback function pointers in. */
+	gpio_callback_t callback[16];
+	/** Bit mask for callbacks registered. */
+	uint16_t callback_reg_mask;
+	/** Bit mask for callbacks enabled. */
+	uint16_t callback_enable_mask;
+#endif
 };
 
 /**
@@ -212,6 +267,18 @@ void gpio_pin_toggle_output_level(const uint8_t gpio_pin);
  * @{
  */
 void gpio_pinmux_cofiguration(const uint8_t gpio_pin, uint16_t pinmux_sel);
+/** @}*/
+
+/** \name GPIO callback config
+ * @{
+ */
+void gpio_register_callback(uint8_t gpio_pin, gpio_callback_t callback_func, \
+				enum gpio_callback callback_type);
+void gpio_unregister_callback(uint8_t gpio_pin, gpio_callback_t callback_func, \
+				enum gpio_callback callback_type);
+void gpio_enable_callback(uint8_t gpio_pin);
+void gpio_disable_callback(uint8_t gpio_pin);
+void gpio_init(void);
 /** @}*/
 
 /** @}*/

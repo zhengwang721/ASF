@@ -53,6 +53,7 @@
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.gpio"/>
+			<require idref="sam0.drivers.system.system_sam_b"/>
 			<require idref="sam0.drivers.adc.samb"/>
 		</module>
 	</select-by-config>
@@ -256,6 +257,7 @@
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.gpio"/>
+			<require idref="sam0.drivers.system.system_sam_b"/>
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
 	</module>

@@ -112,6 +112,7 @@ extern "C" {
 
 #include <compiler.h>
 #include "adc.h"
+#include "system.h"
 
 /**
  * \brief ADC internal reference voltage level enum
@@ -167,6 +168,7 @@ enum adc_reference {
 	ADC_REFERENCE_INTERNAL_IR,
 	/**  VBATT/2 reference. */
 	ADC_REFERENCE_VBATT_2,
+#ifdef CHIPVERSION_B0
 	/** GPIO_MS1 reference. */
 	ADC_REFERENCE_GPIO_MS1,
 	/** GPIO_MS2 reference. */
@@ -177,6 +179,7 @@ enum adc_reference {
 	ADC_REFERENCE_GPIO_MS4,
 	/** VBATTERY reference. */
 	ADC_REFERENCE_VBATT,
+#endif
 };
 
 /**
@@ -194,6 +197,7 @@ enum adc_input_channel {
 	ADC_INPUT_CH_GPIO_MS3,
 	/** GPIO_MS4 input */
 	ADC_INPUT_CH_GPIO_MS4,
+#ifdef CHIPVERSION_B0
 	/** On chip temperature measurement input */
 	ADC_INPUT_CH_TEMPERATURE,
 	/** VBATT divided by 4 voltage level */
@@ -202,6 +206,16 @@ enum adc_input_channel {
 	ADC_INPUT_CH_LPD0_LDO,
 	/**  ADC reference voltage level */
 	ADC_INPUT_CH_VREF,
+#else
+	/** On chip temperature measurement input */
+	ADC_INPUT_CH_TEMPERATURE,
+	/** Reference buffer voltage */
+	ADC_INPUT_VREF,
+	/** VDD voltage */
+	ADC_INPUT_AVDD,
+	/** Vss voltage */
+	ADC_INPUT_VSS,
+#endif
 };
 
 /**

@@ -127,7 +127,7 @@ int main(void)
 	
 	/* Initialize system */
 //! [system_init]
-	system_clock_config(CLOCK_RESOURCE_XO_26MHZ, CLOCK_FREQ_26);
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 //! [system_init]
 
 //! [run_config]
