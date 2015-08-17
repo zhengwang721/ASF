@@ -48,19 +48,19 @@
 #define USART_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_sercom_usart_group SAM Serial USART Driver (SERCOM USART)
+ * \defgroup asfdoc_sam0_sercom_usart_group SAM Serial USART (SERCOM USART) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
- * and management of the SERCOM module in its USART mode to transfer or receive
- * USART data frames. The following driver API modes are covered by this
- * manual:
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
+ * an interface for the configuration and management of the SERCOM module in 
+ * its USART mode to transfer or receive USART data frames. The following driver 
+ * API modes are covered by this manual:
  *
  *  - Polled APIs
  * \if USART_CALLBACK_MODE
  *  - Callback APIs
  * \endif
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  * - SERCOM (Serial Communication Interface)
  *
  * The following devices can use this module:
@@ -87,7 +87,7 @@
  *
  * \section asfdoc_sam0_sercom_usart_overview Module Overview
  *
- * This driver will use one (or more) SERCOM interfaces on the system
+ * This driver will use one (or more) SERCOM interface(s) on the system
  * and configure it to run as a USART interface in either synchronous
  * or asynchronous mode.
  *
@@ -217,10 +217,10 @@
  *
  * \subsection asfdoc_sam0_sercom_usart_parity Parity
  * Parity can be enabled to detect if a transmission was in error. This is done
- * by counting the number of "1" bits in the frame. When using Even parity the
+ * by counting the number of "1" bits in the frame. When using even parity the
  * parity bit will be set if the total number of "1"s in the frame are an even
- * number. If using Odd parity the parity bit will be set if the total number
- * of "1"s are Odd.
+ * number. If using odd parity the parity bit will be set if the total number
+ * of "1"s are odd.
  *
  * When receiving a character the receiver will count the number of "1"s in the
  * frame and give an error if the received frame and parity bit disagree.
@@ -283,19 +283,19 @@ extern "C" {
 	(SAML22) ||(SAMDA1) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** Usart sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2
-/** Usart over sampling. */
+/** USART oversampling. */
 #  define FEATURE_USART_OVER_SAMPLE
-/** Usart hardware control flow. */
+/** USART hardware control flow. */
 #  define FEATURE_USART_HARDWARE_FLOW_CONTROL
 /** IrDA mode. */
 #  define FEATURE_USART_IRDA
 /** LIN slave mode. */
 #  define FEATURE_USART_LIN_SLAVE
-/** Usart collision detection. */
+/** USART collision detection. */
 #  define FEATURE_USART_COLLISION_DECTION
-/** Usart start frame detection. */
+/** USART start frame detection. */
 #  define FEATURE_USART_START_FRAME_DECTION
-/** Usart start buffer overflow notification. */
+/** USART start buffer overflow notification. */
 #  define FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
 #endif
 
@@ -470,17 +470,17 @@ struct iso7816_config_t {
 #endif
 
 #ifndef PINMUX_DEFAULT
-/** Default pinmux. */
+/** Default pinmux */
 #  define PINMUX_DEFAULT 0
 #endif
 
 #ifndef PINMUX_UNUSED
-/** Unused pinmux. */
+/** Unused pinmux */
 #  define PINMUX_UNUSED 0xFFFFFFFF
 #endif
 
 #ifndef USART_TIMEOUT
-/** USART timeout value. */
+/** USART timeout value */
 #  define USART_TIMEOUT 0xFFFF
 #endif
 
@@ -519,15 +519,15 @@ enum usart_callback {
 /**
  * \brief USART Data Order enum
  *
- * The data order decides which of MSB or LSB is shifted out first when data is
+ * The data order decides which MSB or LSB is shifted out first when data is
  * transferred.
  */
 enum usart_dataorder {
 	/** The MSB will be shifted out first during transmission,
-	 *  and shifted in first during reception. */
+	 *  and shifted in first during reception */
 	USART_DATAORDER_MSB = 0,
 	/** The LSB will be shifted out first during transmission,
-	 *  and shifted in first during reception. */
+	 *  and shifted in first during reception */
 	USART_DATAORDER_LSB = SERCOM_USART_CTRLA_DORD,
 };
 
@@ -550,15 +550,15 @@ enum usart_transfer_mode {
  */
 enum usart_parity {
 	/** For odd parity checking, the parity bit will be set if number of
-	 *  ones being transferred is even. */
+	 *  ones being transferred is even */
 	USART_PARITY_ODD  = SERCOM_USART_CTRLB_PMODE,
 
 	/** For even parity checking, the parity bit will be set if number of
-	 *  ones being received is odd. */
+	 *  ones being received is odd */
 	USART_PARITY_EVEN = 0,
 
 	/** No parity checking will be executed, and there will be no parity bit
-	 *  in the received frame. */
+	 *  in the received frame */
 	USART_PARITY_NONE = 0xFF,
 };
 
@@ -761,7 +761,7 @@ struct usart_config {
 #ifdef FEATURE_USART_IRDA
 	/** Enable IrDA encoding format */
 	bool encoding_format_enable;
-	/** The minimum pulse length that is required for a pulse to be accepted by the IrDA receiver */
+	/** The minimum pulse length required for a pulse to be accepted by the IrDA receiver */
 	uint8_t receive_pulse_length;
 #endif
 #ifdef FEATURE_USART_LIN_SLAVE
@@ -823,34 +823,34 @@ struct usart_config {
 	enum gclk_generator generator_source;
 	/** PAD0 pinmux.
 	 *
-	 * If current USARTx has several alternative multiplexing I/O pin for PAD0, then
+	 * If current USARTx has several alternative multiplexing I/O pins for PAD0, then
 	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD0
-	 * function. Make sure other alternative multiplexing I/O associated current
-	 * USARTx PAD0 is not setup usart function.
+	 * function. Make sure that no other alternative multiplexing I/O is associated 
+	 * with the same USARTx PAD0.
 	 */
 	uint32_t pinmux_pad0;
 	/** PAD1 pinmux.
 	 *
-	 * If current USARTx has several alternative multiplexing I/O pin for PAD1, then
+	 * If current USARTx has several alternative multiplexing I/O pins for PAD1, then
 	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD1
-	 * function. Make sure other alternative multiplexing I/O associated current
-	 * USARTx PAD1 is not setup usart function.
+	 * function. Make sure that no other alternative multiplexing I/O is associated 
+	 * with the same USARTx PAD1.
 	 */
 	uint32_t pinmux_pad1;
 	/** PAD2 pinmux.
 	 *
-	 * If current USARTx has several alternative multiplexing I/O pin for PAD2, then
+	 * If current USARTx has several alternative multiplexing I/O pins for PAD2, then
 	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD2
-	 * function. Make sure other alternative multiplexing I/O associated current
-	 * USARTx PAD2 is not setup usart function.
+	 * function. Make sure that no other alternative multiplexing I/O is associated 
+	 * with the same USARTx PAD2.
 	 */
 	uint32_t pinmux_pad2;
 	/** PAD3 pinmux.
 	 *
-	 * If current USARTx has several alternative multiplexing I/O pin for PAD3, then
+	 * If current USARTx has several alternative multiplexing I/O pins for PAD3, then
 	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD3
-	 * function. Make sure other alternative multiplexing I/O associated current
-	 * USARTx PAD3 is not setup usart function.
+	 * function. Make sure that no other alternative multiplexing I/O is associated 
+	 * with the same USARTx PAD3.
 	 */
 	uint32_t pinmux_pad3;
 };
@@ -989,7 +989,7 @@ static inline void usart_unlock(struct usart_module *const module)
  *
  * Return peripheral synchronization status. If doing a non-blocking
  * implementation this function can be used to check the sync state and hold of
- * any new actions until sync is complete. If this functions is not run; the
+ * any new actions until sync is complete. If this function is not run; the
  * functions will block until the sync has completed.
  *
  * \param[in]  module  Pointer to peripheral module
@@ -998,7 +998,7 @@ static inline void usart_unlock(struct usart_module *const module)
  *
  * \retval true   Peripheral is busy syncing
  * \retval false  Peripheral is not busy syncing and can be read/written without
- *                stalling the bus.
+ *                stalling the bus
  */
 static inline bool usart_is_syncing(
 		const struct usart_module *const module)
@@ -1024,7 +1024,7 @@ static inline bool usart_is_syncing(
 static inline void _usart_wait_for_sync(
 		const struct usart_module *const module)
 {
-	/* Sanity check. */
+	/* Sanity check */
 	Assert(module);
 
 	while (usart_is_syncing(module)) {
@@ -1456,7 +1456,7 @@ static inline bool lin_master_transmission_status(struct usart_module *const mod
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_sercom_usart_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  * - \subpage asfdoc_sam0_sercom_usart_basic_use_case
@@ -1559,17 +1559,17 @@ static inline bool lin_master_transmission_status(struct usart_module *const mod
  *	<tr>
  *		<td>42118F</td>
  *		<td>08/2015</td>
- *		<td>Add support for SAM L21/L22, SAM DA1, and SAM C20/C21</td>
+ *		<td>Added support for SAM L21/L22, SAM DA1, and SAM C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>42118E</td>
  *		<td>12/2014</td>
- *		<td>Add support for SAM R21 and SAM D10/D11</td>
+ *		<td>Added support for SAM R21 and SAM D10/D11</td>
  *	</tr>
  *	<tr>
  *		<td>42118D</td>
  *		<td>01/2014</td>
- *		<td>Add support for SAM D21</td>
+ *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
  *		<td>42118C</td>

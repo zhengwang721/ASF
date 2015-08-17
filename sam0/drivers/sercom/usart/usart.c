@@ -303,7 +303,7 @@ static enum status_code _usart_set_config(
  * \retval STATUS_OK                       The initialization was successful
  * \retval STATUS_BUSY                     The USART module is busy
  *                                         resetting
- * \retval STATUS_ERR_DENIED               The USART have not been disabled in
+ * \retval STATUS_ERR_DENIED               The USART has not been disabled in
  *                                         advance of initialization
  * \retval STATUS_ERR_INVALID_ARG          The configuration struct contains
  *                                         invalid configuration
