@@ -251,7 +251,6 @@ static void _dma_set_config(struct dma_resource *resource,
 			PROV_DMA_CTRL_CORE_PRIORITY_WR_PRIO_HIGH_NUM(config->des.proi_high_index) |
 			(PROV_DMA_CTRL_CORE_PRIORITY_WR_PRIO_HIGH << config->des.eanble_proi_high);
 	set_channel_reg_val(resource->channel_id, (uint32_t)&PROV_DMA_CTRL0->CORE_PRIORITY.reg, regval);
-	
 	/* Initial the global variety */
 	for (int i = 0; i < DMA_CALLBACK_N; i++) {
 		resource->callback[i] = NULL;
@@ -358,7 +357,7 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  */
 enum status_code dma_start_transfer_job(struct dma_resource *resource)
 {
-	uint32_t regval;
+	volatile uint32_t regval;
 
 	/* Check if resource was busy */
 	if (resource->job_status == STATUS_BUSY) {
@@ -372,9 +371,12 @@ enum status_code dma_start_transfer_job(struct dma_resource *resource)
 
 	/* Enable DMA interrupt */
 	//NVIC_EnableIRQ(6);
-
+	
+	/* Clear the interrupt flag */
+	regval = get_channel_reg_val(resource->channel_id, (uint32_t)&PROV_DMA_CTRL0->CH0_INT_STATUS_REG.reg);
+	set_channel_reg_val(resource->channel_id, (uint32_t)&PROV_DMA_CTRL0->CH0_INT_CLEAR_REG.reg, regval);
 	/* Set the interrupt flag */
-	regval = PROV_DMA_CTRL_CH0_INT_ENABLE_REG_MASK & DMA_CALLBACK_TRANSFER_DONE;
+	regval = PROV_DMA_CTRL_CH0_INT_ENABLE_REG_MASK & resource->callback_enable;
 	set_channel_reg_val(resource->channel_id, (uint32_t)&PROV_DMA_CTRL0->CH0_INT_ENABLE_REG.reg, regval);
 	/* Set job status */
 	resource->job_status = STATUS_BUSY;
@@ -425,56 +427,56 @@ static void dma_isr_handler( void )
 		channel_index = get_channel_index(active_channel);
 		/* Get active DMA resource based on channel */
 		resource = _dma_active_resource[channel_index];
-		isr = get_channel_reg_val(resource->channel_id, (uint32_t)PROV_DMA_CTRL0->CH0_INT_STATUS_REG.reg);
+		isr = get_channel_reg_val(resource->channel_id, (uint32_t)&PROV_DMA_CTRL0->CH0_INT_STATUS_REG.reg);
 		/* Calculate block transfer size of the DMA transfer */
-		resource->transfered_size = get_channel_reg_val(resource->channel_id, (uint32_t)PROV_DMA_CTRL0->CH0_COUNT_REG.reg);
+		resource->transfered_size = get_channel_reg_val(resource->channel_id, (uint32_t)&PROV_DMA_CTRL0->CH0_COUNT_REG.reg);
 
 		/* DMA channel interrupt handler */
-		if (isr & DMA_CALLBACK_TRANSFER_DONE) {
+		if (isr & (1 << DMA_CALLBACK_TRANSFER_DONE)) {
 			/* Transfer complete flag */
 			isr_flag = DMA_CALLBACK_TRANSFER_DONE;
 			/* Set job status */
 			resource->job_status = STATUS_OK;
-		} else if (isr & DMA_CALLBACK_READ_ERR) {
+		} else if (isr & (1 << DMA_CALLBACK_READ_ERR)) {
 			/* Read error flag */
 			isr_flag = DMA_CALLBACK_READ_ERR;
 			/* Set I/O ERROR status */
 			resource->job_status = STATUS_ERR_IO;
-		} else if (isr & DMA_CALLBACK_WRITE_ERR) {
+		} else if (isr & (1 << DMA_CALLBACK_WRITE_ERR)) {
 			/* Write error flag */
 			isr_flag = DMA_CALLBACK_WRITE_ERR;
 			/* Set I/O ERROR status */
 			resource->job_status = STATUS_ERR_IO;
-		} else if (isr & DMA_CALLBACK_FIFO_OVERFLOW) {
+		} else if (isr & (1 << DMA_CALLBACK_FIFO_OVERFLOW)) {
 			/* Overflow flag */
 			isr_flag = DMA_CALLBACK_FIFO_OVERFLOW;
 			/* Set I/O ERROR status */
 			resource->job_status = STATUS_ERR_IO;
-		} else if (isr & DMA_CALLBACK_FIFO_UNDERFLOW) {
+		} else if (isr & (1 << DMA_CALLBACK_FIFO_UNDERFLOW)) {
 			/* Underflow flag */
 			isr_flag = DMA_CALLBACK_FIFO_UNDERFLOW;
 			/* Set I/O ERROR status */
 			resource->job_status = STATUS_ERR_IO;
-		} else if (isr & DMA_CALLBACK_READ_TIMEOUT) {
+		} else if (isr & (1 << DMA_CALLBACK_READ_TIMEOUT)) {
 			/* Read timeout flag */
 			isr_flag = DMA_CALLBACK_READ_TIMEOUT;
 			/* Set I/O ERROR status */
 			resource->job_status = STATUS_ERR_IO;
-		} else if (isr & DMA_CALLBACK_WRITE_TIMEOUT) {
+		} else if (isr & (1 << DMA_CALLBACK_WRITE_TIMEOUT)) {
 			/* Write timeout flag */
 			isr_flag = DMA_CALLBACK_WRITE_TIMEOUT;
 			/* Set I/O ERROR status */
 			resource->job_status = STATUS_ERR_IO;
-		} else if (isr & DMA_CALLBACK_WDT_TRIGGER) {
+		} else if (isr & (1 << DMA_CALLBACK_WDT_TRIGGER)) {
 			/* Watchdog error flag */
 			isr_flag = DMA_CALLBACK_WDT_TRIGGER;
 			/* Set I/O ERROR status */
 			resource->job_status = STATUS_ERR_IO;
 		}
 		
-		if (isr_flag) {
+		if (isr) {
 			/* Clear the watch dog error flag */
-			set_channel_reg_val(resource->channel_id, PROV_DMA_CTRL0->CH0_INT_CLEAR_REG.reg, 1<<isr_flag);
+			set_channel_reg_val(resource->channel_id, (uint32_t)&PROV_DMA_CTRL0->CH0_INT_CLEAR_REG.reg, 1<<isr_flag);
 			/* Execute the callback function */
 			if ((resource->callback_enable & (1<<isr_flag)) &&
 					(resource->callback[isr_flag])) {
@@ -483,8 +485,8 @@ static void dma_isr_handler( void )
 		}
 		active_channel &= ~(1<<isr_flag);
 	} while (active_channel);
-	
-	NVIC_ClearPendingIRQ(PROV_DMA_CTRL0_IRQn);
+	/* For A4, DMA IRQ is 6 */
+	NVIC_ClearPendingIRQ(6);
 }
 
 /**
@@ -512,7 +514,7 @@ enum status_code dma_allocate(struct dma_resource *resource,
 		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg |=
 				LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_DMA_CONTROLLER_RSTN;
 		system_register_isr(RAM_ISR_TABLE_DMA_INDEX, (uint32_t)dma_isr_handler);
-		NVIC_EnableIRQ(6);
+		
 		_dma_inst._dma_init = true;
 	}
 	if (resource->channel_id >= CONF_MAX_USED_CHANNEL_NUM) {

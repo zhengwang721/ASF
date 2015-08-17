@@ -105,19 +105,35 @@ static void setup_transfer_descriptor(struct dma_descriptor *descriptor )
 	descriptor->write_start_addr = (uint32_t)destination_memory;
 	//! [setup_6]
 }
-//! [setup_dma_transfer_descriptor]
+
+static void configure_dualtimer_callback(struct dma_resource *resource)
+{
+	//! [setup_callback_register]
+	dma_register_callback(resource, transfer_done,
+			DMA_CALLBACK_TRANSFER_DONE);
+	//! [setup_callback_register]
+	
+	//! [setup_enable_callback]
+	dma_enable_callback(resource, DMA_CALLBACK_TRANSFER_DONE);
+	//! [setup_enable_callback]
+	
+	/* For A4, DMA IRQ is 6 */
+	//! [enable_IRQ]
+	NVIC_EnableIRQ(6);
+	//! [enable_IRQ]
+}
 
 //! [setup]
 int main(void)
 {
-	bool passed;
+//! [setup_init]
+	volatile bool passed;
 	//! [sample_resource]
 	struct dma_resource example_resource;
 	//! [sample_resource]
 
-	//system_init();
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 
-	//! [setup_init]
 	//! [setup_dma_resource]
 	configure_dma_resource(&example_resource);
 	//! [setup_dma_resource]
@@ -129,16 +145,11 @@ int main(void)
 	//! [add_descriptor_to_dma_resource]
 	dma_add_descriptor(&example_resource, &example_descriptor);
 	//! [add_descriptor_to_dma_resource]
-
-	//! [setup_callback_register]
-	dma_register_callback(&example_resource, transfer_done,
-			DMA_CALLBACK_TRANSFER_DONE);
-	//! [setup_callback_register]
-
-	//! [setup_enable_callback]
-	dma_enable_callback(&example_resource, DMA_CALLBACK_TRANSFER_DONE);
-	//! [setup_enable_callback]
 	
+	//! [setup_callback]
+	configure_dualtimer_callback(&example_resource);
+	//! [setup_callback]
+
 	//! [setup_source_memory_content]
 	for (uint32_t i = 0; i < DATA_LENGTH; i++) {
 		source_memory[i] = i;

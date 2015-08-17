@@ -490,8 +490,6 @@ static inline void dma_enable_callback(struct dma_resource *resource,
 		enum dma_callback_type type)
 {
 	resource->callback_enable |= 1 << type;
-	*(uint32_t*)(PROV_DMA_CTRL0->CH0_INT_ENABLE_REG.reg + 0x100*resource->channel_id) |=
-			(1 << type);
 }
 
 /**
@@ -505,8 +503,6 @@ static inline void dma_disable_callback(struct dma_resource *resource,
 		enum dma_callback_type type)
 {
 	resource->callback_enable &= ~(1 << type);
-	*(uint32_t*)(PROV_DMA_CTRL0->CH0_INT_CLEAR_REG.reg + 0x100*resource->channel_id) = 
-			(1 << type);
 }
 
 /**
@@ -617,7 +613,6 @@ enum status_code dma_free(struct dma_resource *resource);
 uint8_t dma_get_status(uint8_t channel);
 uint8_t dma_get_interrupt_status(uint8_t channel);
 void dma_clear_interrupt_status(uint8_t channel, uint8_t flag);
-
 /** @} */
 
 /**
