@@ -52,15 +52,20 @@
 #include <stddef.h>
 #include "at_ble_api.h"
 #include "ble_utils.h"
-#include "platform.h"
 
 #if defined HID_DEVICE
 #include "hid_device.h"
 #ifdef HID_KEYBOARD_DEVICE
 #define BLE_DEVICE_NAME				"ATMEL-HIDK"
+#define BLE_MITM_REQ				(false)
+#define BLE_BOND_REQ				(false)
+#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
+#define BLE_IO_CAPABALITIES			(AT_BLE_IO_CAP_NO_INPUT_NO_OUTPUT)
 #endif
 #ifdef HID_MOUSE_DEVICE
 #define BLE_DEVICE_NAME				"ATMEL-HIDM"
+#define BLE_MITM_REQ				(false)
+#define BLE_BOND_REQ				(false)
 #endif
 #endif /* HID_DEVICE */
 
@@ -144,6 +149,28 @@ static inline at_ble_status_t BLE_UNUSED2_VAR(void *param1_var, void *param2_var
 #define APPEARANCE_SIZE					2
 #define TX_POWER_LEVEL_SIZE				1
 #define ADV_INTERVAL_SIZE				2
+
+#ifndef BLE_MITM_REQ
+#define BLE_MITM_REQ	(true)
+#endif
+
+#ifndef BLE_BOND_REQ
+#define BLE_BOND_REQ	(true)
+#endif
+
+#ifndef	BLE_AUTHENTICATION_LEVEL
+#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_MODE1_L2_AUTH_PAIR_ENC)
+#endif
+
+#ifndef	BLE_IO_CAPABALITIES
+#define BLE_IO_CAPABALITIES			(AT_BLE_IO_CAP_DISPLAY_ONLY)
+#endif
+
+#ifndef BLE_OOB_REQ
+#define BLE_OOB_REQ		(false)
+#endif
+
+
 
 /** @brief Gap Advertisement Types */
 typedef enum
@@ -632,6 +659,10 @@ typedef enum
 
 #ifndef BLE_CHARACTERISTIC_FOUND_HANDLER
 #define BLE_CHARACTERISTIC_FOUND_HANDLER						ble_dummy_handler
+#endif
+
+#ifndef AT_BLE_MTU_CHANGED_INDICATION_HANDLER					
+#define AT_BLE_MTU_CHANGED_INDICATION_HANDLER					ble_dummy_handler
 #endif
 
 /****************************************************************************************

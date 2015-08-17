@@ -50,6 +50,7 @@
 #include "at_ble_api.h"
 #include "ble_manager.h"
 #include "ble_utils.h"
+#include "platform.h"
 
 #if defined LINK_LOSS_SERVICE
 	#include "link_loss.h"
@@ -97,7 +98,7 @@ at_ble_scan_info_t scan_info[MAX_SCAN_DEVICE];
 
 at_ble_LTK_t app_bond_info;
 bool app_device_bond;
-uint8_t auth_info;
+at_ble_auth_t auth_info;
 
 at_ble_events_t event;
 uint8_t params[BLE_EVENT_PARAM_MAX_SIZE];
@@ -111,13 +112,13 @@ static void ble_set_address(at_ble_addr_t *addr);
 /** @brief function to get event from stack */
 at_ble_status_t ble_event_task(void)
 {
-	if (platform_ble_event_data() == AT_BLE_SUCCESS) {
+	//if (platform_ble_event_data() == AT_BLE_SUCCESS) {
 		if (at_ble_event_get(&event, params,
-			BLE_EVENT_TIMEOUT) == AT_BLE_SUCCESS) {
+		BLE_EVENT_TIMEOUT) == AT_BLE_SUCCESS) {
 			ble_event_manager(event, params);
 			return AT_BLE_SUCCESS;
 		}
-	}
+	//}
 
 	return AT_BLE_FAILURE;
 }
@@ -142,19 +143,12 @@ void ble_device_init(at_ble_addr_t *addr)
 	
 	ble_init(&pf_cfg);
 	
-
-	DBG_LOG("ble_init done");
-	
 	ble_set_address(addr);	
 	
 	dev_name = (char *)BLE_DEVICE_NAME;
 	if (ble_set_device_name((uint8_t *)dev_name, strlen(dev_name)) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("Device name set failed");
-	}
-	else
-	{
-		DBG_LOG("Device name set passed");
 	}
 		
 	BLE_PROFILE_INIT(NULL);
@@ -395,18 +389,15 @@ uint8_t scan_info_parse(at_ble_scan_info_t *scan_info_data,
 /** @brief function to send slave security request */
 at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 {
-#if defined HID_SERVICE
-	if (at_ble_send_slave_sec_request(conn_handle, false, false) == AT_BLE_SUCCESS)
-#else
-    if (at_ble_send_slave_sec_request(conn_handle, true, true) == AT_BLE_SUCCESS)
-#endif	
+    if (at_ble_send_slave_sec_request(conn_handle, BLE_MITM_REQ, BLE_BOND_REQ) == AT_BLE_SUCCESS)
+    {
+	    DBG_LOG_DEV("Slave security request successful");
+	    return AT_BLE_SUCCESS;
+    }
+    else
 	{
-		DBG_LOG_DEV("Slave security request successful");
-		return AT_BLE_SUCCESS;
-	}
-	else {
-		DBG_LOG("Slave security request failed");
-	}
+	    DBG_LOG("Slave security request failed");
+    }
 	return AT_BLE_FAILURE;
 }
 
@@ -493,54 +484,26 @@ void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update)
 void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 {
 	at_ble_pair_features_t features;
-	uint8_t i = 0;
-	char bond;
+	uint8_t idx = 0;
 	
-	DBG_LOG("Remote device request pairing");
+	DBG_LOG("Peer device request pairing");
 	
 	/* Check if we are already bonded (Only one bonded connection is supported
 	in this example)*/
 	if(app_device_bond)
 	{
-		DBG_LOG("Bound relation exists with previously peer device");
-		DBG_LOG("To remove existing bonding information and accept pairing request from peer device press y else press n : ");
-		do
-		{
-			bond = 'y';
-			if((bond == 'Y') || (bond == 'y'))
-			{
-				app_device_bond = false;
-				break;
-			}
-			else if ((bond == 'N') || (bond == 'n'))
-			{
-				DBG_LOG("Pairing failed");
-				break;
-			}
-			else
-			{
-				DBG_LOG("Wrong value entered please try again");
-			}
-		}while(app_device_bond);
+		DBG_LOG("Bonding information exists with peer device...Removing Bonding information");
+		app_device_bond = false;
 	}
 	
 	if(!app_device_bond)
 	{
 		/* Authentication requirement is bond and MITM*/
-#if defined HID_SERVICE
-		features.desired_auth = AT_BLE_NO_SEC;
-		features.bond = false;
-		features.mitm_protection = false;
-		features.io_cababilities = AT_BLE_IO_CAP_NO_INPUT_NO_OUTPUT;
-#else
-		features.desired_auth =  AT_BLE_MODE1_L2_AUTH_PAIR_ENC;
-		features.bond = true;
-		features.mitm_protection = true;
-		/* Device capabilities is display only , key will be generated
-		and displayed */
-		features.io_cababilities = AT_BLE_IO_CAP_DISPLAY_ONLY;
-#endif		
-		features.oob_avaiable = false;
+		features.desired_auth = BLE_AUTHENTICATION_LEVEL;
+		features.bond = BLE_BOND_REQ;
+		features.mitm_protection = BLE_MITM_REQ;
+		features.io_cababilities = BLE_IO_CAPABALITIES;	
+		features.oob_avaiable = BLE_OOB_REQ;
 			
 		/* Distribution of LTK is required */
 		features.initiator_keys =   AT_BLE_KEY_DIST_ENC;
@@ -549,15 +512,15 @@ void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 		features.min_key_size = 16;
 		
 		/* Generate LTK */
-		for(i=0; i<8; i++)
+		for(idx=0; idx<8; idx++)
 		{
-			app_bond_info.key[i] = rand()&0x0f;
-			app_bond_info.nb[i] = rand()&0x0f;
+			app_bond_info.key[idx] = rand()&0x0f;
+			app_bond_info.nb[idx] = rand()&0x0f;
 		}
 		
-		for(i=8 ; i<16 ;i++)
+		for(idx=8 ; idx<16 ;idx++)
 		{
-			app_bond_info.key[i] = rand()&0x0f;
+			app_bond_info.key[idx] = rand()&0x0f;
 		}
 		
 		app_bond_info.ediv = rand()&0xffff;
@@ -568,9 +531,11 @@ void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 		{
 			features.bond = false;
 			features.mitm_protection = false;
-			DBG_LOG(" != AT_BLE_SUCCESS ");
-			at_ble_authenticate(ble_connected_dev_info->handle, &features, NULL, NULL);
-			
+			DBG_LOG("BLE Authentication Failed..Retrying without mitm without bond");
+			if(!(at_ble_authenticate(ble_connected_dev_info->handle, &features, NULL, NULL) == AT_BLE_SUCCESS))
+			{
+				DBG_LOG("BLE Authentication Retry Failed");
+			}			
 		}
 	}
 }
@@ -580,30 +545,41 @@ void ble_pair_key_request_handler (at_ble_pair_key_request_t *pair_key)
 {
 	/* Passkey has fixed value in this example MSB */
 	uint8_t passkey[6]={1,2,3,4,5,6};
-	uint8_t passkey_ascii[6];
-	uint8_t i = 0;
-	
+	uint8_t idx = 0;
 	at_ble_pair_key_request_t pair_key_request;
+	
+	
 	memcpy((uint8_t *)&pair_key_request, pair_key, sizeof(at_ble_pair_key_request_t));
-	DBG_LOG_DEV("passkey_type 0x%02X ",pair_key_request.passkey_type);	
-	DBG_LOG_DEV("type 0x%02X ",pair_key_request.type);
 	
 	/* Display passkey */
-	if(pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_DISPLAY)
+	if((pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_DISPLAY) &&
+	   (pair_key_request.type == AT_BLE_PAIR_PASSKEY))
 	{
+		DBG_LOG("Please Enter the following Pass-code(on other Device):");
 		/* Convert passkey to ASCII format */
-		for(i=0; i<AT_BLE_PASSKEY_LEN ; i++)
+		for(idx=0; idx<AT_BLE_PASSKEY_LEN; idx++)
 		{
-			passkey_ascii[i] = (passkey[i] + 48);
-		}
-		DBG_LOG("please enter the following pass-code on the other device:");
-		for(i=0; i < AT_BLE_PASSKEY_LEN ; i++)
+			passkey[idx] = (passkey[idx] + '0');
+			DBG_LOG_CONT("%c",passkey[idx]);
+		}		
+		
+		if(!(at_ble_pair_key_reply(pair_key_request.handle, pair_key_request.type, passkey)) == AT_BLE_SUCCESS)
 		{
-			DBG_LOG_CONT("%c",passkey_ascii[i]);
+			DBG_LOG("Pair-key reply failed");
 		}
-		at_ble_pair_key_reply(pair_key_request.handle,pair_key_request.type,passkey_ascii);
 	}
-	
+	else 
+	{
+		if(pair_key_request.type == AT_BLE_PAIR_OOB)
+		{
+			DBG_LOG("OOB Feature Not supported");
+		}
+		
+		if (pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_ENTRY)
+		{
+			DBG_LOG("Passkey Entry Not supported");
+		}
+	}	
 }
 
 /** @brief function handles pair done event */
@@ -625,8 +601,11 @@ at_ble_status_t ble_pair_done_handler(at_ble_pair_done_t *pairing_params)
 	}
 	else
 	{
-		DBG_LOG("Pairing failed");
-		at_ble_disconnect(ble_connected_dev_info->handle, AT_BLE_TERMINATED_BY_USER);
+		DBG_LOG("Pairing failed...Disconnecting");
+		if(!(at_ble_disconnect(ble_connected_dev_info->handle, AT_BLE_TERMINATED_BY_USER) == AT_BLE_SUCCESS))
+		{
+			DBG_LOG("Disconnect Request Failed");
+		}
 	}
 	return(AT_BLE_SUCCESS);
 }
@@ -668,17 +647,24 @@ void ble_encryption_request_handler (at_ble_encryption_request_t *encry_req)
 		key_found = true;
 	}
 
-	at_ble_encryption_request_reply(ble_connected_dev_info->handle,auth_info ,key_found,app_bond_info);
+	if(!(at_ble_encryption_request_reply(ble_connected_dev_info->handle,auth_info ,key_found,app_bond_info) == AT_BLE_SUCCESS))
+	{
+		DBG_LOG("Encryption Request Reply Failed");
+	}
+	else
+	{
+		DBG_LOG_DEV("Encryption Request Reply");
+	}
 }
 
 
 
 void ble_event_manager(at_ble_events_t events, void *event_params)
 {
+	DBG_LOG("Event:%d", event);
 	switch(events)
-	{
-		
-		/* GAP events */
+	{		
+	 /* GAP events */
 	/** Undefined event received  */
 	case AT_BLE_UNDEFINED_EVENT:
 	{
@@ -1056,6 +1042,10 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	}
 	break;
 	
+	case AT_BLE_MTU_CHANGED_INDICATION:
+	{
+		AT_BLE_MTU_CHANGED_INDICATION_HANDLER((at_ble_mtu_changed_ind_t *) event_params);
+	}	
 	
 	case AT_BLE_DEVICE_READY:
 	{
