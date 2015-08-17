@@ -132,13 +132,7 @@ int main(void)
 
 	DBG_LOG("Initializing Broadcaster Application");
 	
-	/*Memory allocation required by GATT Server DB*/
-	pf_cfg.memPool.memSize = 0;
-	pf_cfg.memPool.memStartAdd = NULL;
-	
-	/*Bus configuration*/
-	busConfig.bus_type = UART;
-	pf_cfg.plf_config = &busConfig;
+
 
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
