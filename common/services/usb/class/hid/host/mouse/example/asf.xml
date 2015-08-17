@@ -17,6 +17,10 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4l"/>
 			<device-support value="samg55"/>
+			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="sams70"/>
+			<device-support value="same70"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.services.basic.sleepmgr"/>
 			<require idref="common.services.usb.class.host"/>
