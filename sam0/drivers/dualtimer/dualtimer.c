@@ -78,9 +78,6 @@ void dualtimer_get_config_defaults(struct dualtimer_config *config)
 	config->timer2.load_value = 0;
 	
 	config->clock_source = DUALTIMER_CLK_INPUT_0;
-	
-	dualtimer_callback_timer1 = NULL;
-	dualtimer_callback_timer2 = NULL;
 }
 
 
@@ -291,6 +288,9 @@ void dualtimer_init(const struct dualtimer_config *config)
 	}
 	
 	system_register_isr(RAM_ISR_TABLE_DUALTIMER_INDEX, (uint32_t)dualtimer_isr_handler);
+	
+	dualtimer_callback_timer1 = NULL;
+	dualtimer_callback_timer2 = NULL;
 }
 
 /**
