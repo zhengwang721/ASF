@@ -47,6 +47,7 @@
 #include <stdio_serial.h>
 #include <string.h>
 #include "conf_dualtimer.h"
+#include "conf_uart_serial.h"
 
 #define PRINTF(s)   uart_write_buffer_wait(&uart_instance, (const uint8_t *)s, strlen(s))
 
@@ -76,21 +77,15 @@ static void configure_uart(void)
 	uart_get_config_defaults(&config_uart);
 //! [setup_uart_2]
 //! [setup_uart_3]
-	config_uart.baud_rate     = CONF_DUALTIMER_UART_BAUD;
-	config_uart.pinmux_pad[0] = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	config_uart.pinmux_pad[1] = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	config_uart.pinmux_pad[2] = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	config_uart.pinmux_pad[3] = EDBG_CDC_SERCOM_PINMUX_PAD3;
+	config_uart.baud_rate     = CONF_STDIO_BAUDRATE;
+	config_uart.pinmux_pad[0] = CONF_STDIO_PINMUX_PAD0;
+	config_uart.pinmux_pad[1] = CONF_STDIO_PINMUX_PAD1;
+	config_uart.pinmux_pad[2] = CONF_STDIO_PINMUX_PAD2;
+	config_uart.pinmux_pad[3] = CONF_STDIO_PINMUX_PAD3;
 //! [setup_uart_3]
 //! [setup_uart_4]
-	stdio_serial_init(&uart_instance, EDBG_CDC_MODULE, &config_uart);
+	stdio_serial_init(&uart_instance, CONF_STDIO_USART_MODULE, &config_uart);
 //! [setup_uart_4]
-//! [setup_uart_5]
-	while (uart_init(&uart_instance,
-			EDBG_CDC_MODULE, &config_uart) != STATUS_OK) {
-	}
-//! [setup_uart_5]
-
 }
 
 static void configure_dualtimer(void)
