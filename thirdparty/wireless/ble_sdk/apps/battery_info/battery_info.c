@@ -92,8 +92,7 @@ void timer_callback_handler(void)
 int main(void)
 {
 	uint8_t battery_level = BATTERY_MAX_LEVEL;	
-	at_ble_init_config_t pf_cfg;
-	platform_config busConfig;
+
 	
 	#if SAMG55
 	/* Initialize the SAM system. */
@@ -115,16 +114,10 @@ int main(void)
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);
 	
-	/*Memory allocation required by GATT Server DB*/
-	pf_cfg.memPool.memSize = sizeof(db_mem);
-	pf_cfg.memPool.memStartAdd = &(db_mem[0]);
 	
-	/*Bus configuration*/
-	busConfig.bus_type = UART;
-	pf_cfg.plf_config = &busConfig;
 	
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL, &pf_cfg);
+	ble_device_init(NULL);
 	
 	/* Initialize the battery service */
 	bat_init_service(&bas_service_handler, &battery_level);

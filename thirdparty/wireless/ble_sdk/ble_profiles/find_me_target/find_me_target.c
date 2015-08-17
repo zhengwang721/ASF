@@ -192,7 +192,7 @@ at_ble_status_t fmp_target_connected_state_handler(
 				= at_ble_characteristic_value_get(ias_handle.
 					serv_chars.char_val_handle,
 					&immediate_alert_value,
-					sizeof(int8_t)) {
+					sizeof(int8_t)))) {
 		DBG_LOG(
 				"Read of alert value for Immediate alert service failed:reason %x",
 				status);

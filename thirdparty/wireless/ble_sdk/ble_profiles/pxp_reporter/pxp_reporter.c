@@ -137,16 +137,26 @@ at_ble_status_t pxp_service_define (void)
 	if (!(lls_primary_service_define(&lls_handle) == AT_BLE_SUCCESS))
 	{
 		DBG_LOG("LLS Service Define Failed");
+	} else
+	{
+		DBG_LOG("lls handle %d",lls_handle.serv_handle);
 	}
 		
 	#if defined PATHLOSS
 	if (!(ias_primary_service_define(&ias_handle) == AT_BLE_SUCCESS))
 	{
 		DBG_LOG("IAS Service Define Failed");
+	} else
+	{
+	DBG_LOG("ias handle %d",ias_handle.serv_handle);
 	}
+	
 	if (!(txps_primary_service_define(&txps_handle) == AT_BLE_SUCCESS))
 	{
 		DBG_LOG("TXPS Service Define Failed");
+	} else 
+	{
+		DBG_LOG("tx handle %d",txps_handle.serv_handle);
 	}
 	#endif
 	

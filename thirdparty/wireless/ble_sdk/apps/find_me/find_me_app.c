@@ -49,12 +49,14 @@
 /****************************************************************************************
 *							        Includes	                                     	*
 ****************************************************************************************/
-
+#include "asf.h"
 #include "console_serial.h"
 #include "platform.h"
 #include "timer_hw.h"
-
+#include "conf_extint.h"
 #include "ble_manager.h"
+#include "at_ble_errno.h"
+#include "at_ble_trace.h"
 #include "immediate_alert.h"
 #include "find_me_app.h"
 
@@ -68,6 +70,13 @@ volatile bool app_timer_done = false;
 static uint8_t timer_interval = INIT_TIMER_INTERVAL;
 
 uint8_t db_mem[1024];
+
+volatile bool button_pressed = false;
+
+void button_cb(void)
+{
+	button_pressed = true;
+}
 
 /**
  * \brief Timer callback handler
@@ -112,16 +121,6 @@ void app_immediate_alert(uint8_t alert_val)
  */
 int main(void)
 {
-		at_ble_init_config_t pf_cfg;
-		platform_config busConfig;
-
-		/*Memory allocation required by GATT Server DB*/
-		pf_cfg.memPool.memSize = sizeof(db_mem);
-		pf_cfg.memPool.memStartAdd = (uint8_t *)db_mem;
-		/*Bus configuration*/
-		busConfig.bus_type = UART;
-		pf_cfg.plf_config = &busConfig;
-		
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -129,6 +128,8 @@ int main(void)
 	#elif SAM0
 	system_init();
 	#endif
+	
+	button_init();
 
 	/* Initialize serial console */
 	serial_console_init();
