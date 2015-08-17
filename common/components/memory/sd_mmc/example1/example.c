@@ -68,7 +68,7 @@
  * The example outputs the information through the standard output (stdio).
  * To know the output used on the board, look in the conf_example.h file
  * and connect a terminal to the correct stdio port.
- * 
+ *
  * While using SAM4L Xplained Pro or SAM4L8 Xplained Pro, please attach IO1
  * Xplained Pro extension board to EXT1.
  *
@@ -174,6 +174,27 @@ static uint8_t buf_test[TEST_MEM_ACCESS_SIZE];
 static uint8_t buf_cia[TEST_CIA_SIZE];
 //! @}
 
+/**
+ *  \brief Configure the Console UART.
+ */
+static void configure_console(void)
+{
+	const usart_serial_options_t uart_serial_options = {
+		.baudrate = CONF_TEST_BAUDRATE,
+#ifdef CONF_TEST_CHARLENGTH
+		.charlength = CONF_TEST_CHARLENGTH,
+#endif
+		.paritytype = CONF_TEST_PARITY,
+#ifdef CONF_TEST_STOPBITS
+		.stopbits = CONF_TEST_STOPBITS,
+#endif
+	};
+
+	/* Configure console UART. */
+	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
+	stdio_serial_init(CONF_TEST_USART, &uart_serial_options);
+}
+
 static void main_display_info_card(uint8_t slot);
 static void main_test_memory(uint8_t slot);
 static void main_test_sdio(uint8_t slot);
@@ -189,19 +210,12 @@ int main(void)
 	uint8_t slot = 0;
 	sd_mmc_err_t err;
 
-	const usart_serial_options_t usart_serial_options = {
-		.baudrate   = CONF_TEST_BAUDRATE,
-		.charlength = CONF_TEST_CHARLENGTH,
-		.paritytype = CONF_TEST_PARITY,
-		.stopbits   = CONF_TEST_STOPBITS,
-	};
-
 	irq_initialize_vectors();
 	cpu_irq_enable();
 
 	sysclk_init();
 	board_init();
-	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
+	configure_console();
 
 	time_tick_init();
 
@@ -214,7 +228,11 @@ int main(void)
 		if (slot == sd_mmc_nb_slot()) {
 			slot = 0;
 		}
-		printf("Please plug an SD, MMC or SDIO card in slot %d.\n\r", slot+1);
+
+		err = sd_mmc_check(slot);
+		if(err) {
+			printf("Please plug an SD, MMC or SDIO card in slot %d.\n\r", slot+1);
+		}
 
 		// Wait for a card and ready
 		do {
@@ -224,14 +242,13 @@ int main(void)
 					&& (SD_MMC_OK != err)) {
 				printf("Card install FAILED\n\r");
 				printf("Please unplug and re-plug the card.\n\r");
-				while (SD_MMC_ERR_NO_CARD != sd_mmc_check(slot)) {
-				}
+				while (SD_MMC_ERR_NO_CARD != sd_mmc_check(slot));
 			}
 		} while (SD_MMC_OK != err);
-	
+
 		// Display basic card information
 		main_display_info_card(slot);
-	
+
 		/* Test the card */
 		if (sd_mmc_get_type(slot) & CARD_TYPE_SDIO) {
 			// Test CIA of SDIO card
@@ -240,7 +257,7 @@ int main(void)
 		if (sd_mmc_get_type(slot) & (CARD_TYPE_SD | CARD_TYPE_MMC)) {
 			// SD/MMC Card R/W
 			main_test_memory(slot);
-		}	
+		}
 
 		printf("Test finished, please unplugged the card.\n\r");
 		while (SD_MMC_OK == sd_mmc_check(slot)) {
@@ -328,7 +345,7 @@ static void main_test_memory(uint8_t slot)
 		if (SD_MMC_OK != sd_mmc_wait_end_of_read_blocks(false)) {
 			printf("[FAIL]\n\r");
 			return;
-		}		
+		}
 	}
 	time_ms = time_tick_calc_delay(tick_start, time_tick_get());
 	if (time_ms) { // Valid time_ms
@@ -341,7 +358,7 @@ static void main_test_memory(uint8_t slot)
 		printf("Card is write protected [WRITE TEST SKIPPED]\n\r");
 		return;
 	}
-	
+
 	// Fill buffer with a pattern
 	for (i = 0; i < (TEST_MEM_ACCESS_SIZE / sizeof(uint32_t)); i++) {
 		((uint32_t*)buf_test)[i] = TEST_FILL_VALUE_U32;

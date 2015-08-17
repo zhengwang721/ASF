@@ -421,7 +421,7 @@
 #define PIN_HSMCI_MCCDA_FLAGS           (IOPORT_MODE_MUX_C)
 /** HSMCI MCCK pin definition. */
 #define PIN_HSMCI_MCCK_GPIO             (PIO_PA25_IDX)
-#define PIN_HSMCI_MCCK_FLAGS            (IOPORT_MODE_MUX_C)
+#define PIN_HSMCI_MCCK_FLAGS            (IOPORT_MODE_MUX_D)
 /** HSMCI MCDA0 pin definition. */
 #define PIN_HSMCI_MCDA0_GPIO            (PIO_PA30_IDX)
 #define PIN_HSMCI_MCDA0_FLAGS           (IOPORT_MODE_MUX_C)
@@ -434,6 +434,15 @@
 /** HSMCI MCDA3 pin definition. */
 #define PIN_HSMCI_MCDA3_GPIO            (PIO_PA27_IDX)
 #define PIN_HSMCI_MCDA3_FLAGS           (IOPORT_MODE_MUX_C)
+
+/** SD/MMC card detect pin definition. */
+//#define PIN_HSMCI_CD                    {PIO_PD18, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP}
+//#define SD_MMC_0_CD_GPIO                (PIO_PD18_IDX)
+//#define SD_MMC_0_CD_PIO_ID              ID_PIOC
+//#define SD_MMC_0_CD_FLAGS               (IOPORT_MODE_PULLUP)
+//#define SD_MMC_0_CD_DETECT_VALUE        0
+
+//#define SD_MMC_HSMCI_SLOT_0_SIZE        1
 
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAMV71_XLTRA_H_ */

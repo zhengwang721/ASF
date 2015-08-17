@@ -59,7 +59,7 @@ void xdmac_configure_transfer(Xdmac *xdmac,
 	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
 	Assert(cfg);
-	
+
 	xdmac_channel_get_interrupt_status( xdmac, channel_num);
 	xdmac_channel_set_source_addr(xdmac, channel_num, cfg->mbr_sa);
 	xdmac_channel_set_destination_addr(xdmac, channel_num, cfg->mbr_da);

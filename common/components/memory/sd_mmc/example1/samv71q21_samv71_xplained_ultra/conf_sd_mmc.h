@@ -52,7 +52,7 @@
 
 #define CONF_BOARD_SD_MMC_HSMCI
 
-#define HSMCI_MR_XDMACMODE
+#define HSMCI_DMA_XDMACMODE
 
 /* Define it to enable the SDIO support */
 #define SDIO_SUPPORT_ENABLE

@@ -149,6 +149,10 @@ static void hsmci_reset(void)
 #ifdef HSMCI_SR_DMADONE
 	HSMCI->HSMCI_DMA = 0;
 #endif
+
+#ifdef HSMCI_DMA_XDMACMODE
+	HSMCI->HSMCI_DMA = 0;
+#endif
 	// Enable the HSMCI
 	HSMCI->HSMCI_CR = HSMCI_CR_PWSEN | HSMCI_CR_MCIEN;
 }
@@ -161,7 +165,7 @@ static void hsmci_reset(void)
  */
 static void hsmci_set_speed(uint32_t speed, uint32_t mck)
 {
-#if (SAM4E)
+#if (SAM4E || SAMV70 || SAMV71 || SAME70 || SAMS70)
 	uint32_t clkdiv = 0;
 	uint32_t clkodd = 0;
 	// clock divider, represent (((clkdiv << 1) + clkodd) + 2)
@@ -312,6 +316,10 @@ void hsmci_init(void)
 	pmc_enable_periph_clk(ID_DMAC);
 #endif
 
+#ifdef HSMCI_DMA_XDMACMODE
+	pmc_enable_periph_clk(ID_XDMAC);
+#endif
+
 	// Set the Data Timeout Register to 2 Mega Cycles
 	HSMCI->HSMCI_DTOR = HSMCI_DTOR_DTOMUL_1048576 | HSMCI_DTOR_DTOCYC(2);
 	// Set Completion Signal Timeout to 2 Mega Cycles
@@ -417,9 +425,15 @@ bool hsmci_send_cmd(sdmmc_cmd_def_t cmd, uint32_t arg)
 	// Disable DMA for HSMCI
 	HSMCI->HSMCI_DMA = 0;
 #endif
+
 #ifdef HSMCI_MR_PDCMODE
 	// Disable PDC for HSMCI
 	HSMCI->HSMCI_MR &= ~HSMCI_MR_PDCMODE;
+#endif
+
+#ifdef HSMCI_DMA_XDMACMODE
+	//Disable XDMAC for HSMCI
+	HSMCI->HSMCI_DMA &= (~HSMCI_DMA_DMAEN);
 #endif
 	HSMCI->HSMCI_BLKR = 0;
 	return hsmci_send_cmd_execute(0, cmd, arg);
@@ -469,6 +483,16 @@ bool hsmci_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg, uint16_t block_size, ui
 		// Disable PDC for HSMCI
 		HSMCI->HSMCI_MR &= ~HSMCI_MR_PDCMODE;
 	}
+#endif
+
+#ifdef HSMCI_DMA_XDMACMODE
+	if (access_block) {
+		// Enable PDC for HSMCI
+		HSMCI->HSMCI_DMA |= HSMCI_DMA_DMAEN;
+	} else {
+		// Disable PDC for HSMCI
+		HSMCI->HSMCI_DMA = 0;
+}
 #endif
 
 	// Enabling Read/Write Proof allows to stop the HSMCI Clock during
@@ -900,30 +924,49 @@ bool hsmci_wait_end_of_write_blocks(void)
 }
 #endif // HSMCI_MR_PDCMODE
 
-#ifdef HSMCI_MR_XDMACMODE
+#ifdef HSMCI_DMA_XDMACMODE
 bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 {
-	uint32_t nb_data;
+	xdmac_channel_config_t  p_cfg;
+	uint32_t cfg, nb_data;
+	bool transfert_byte;
 
 	nb_data = nb_block * hsmci_block_size;
+	transfert_byte = ((HSMCI->HSMCI_MR & HSMCI_MR_FBYTE) || (((uint32_t)dest & 0x3) > 0)) ? 1 : 0;
+
 	Assert(nb_data <= (((uint32_t)hsmci_block_size * hsmci_nb_block) - hsmci_transfert_pos));
-	Assert(nb_data <= (PERIPH_RCR_RXCTR_Msk >> PERIPH_RCR_RXCTR_Pos));
+	Assert(nb_data <= (transfert_byte ?
+	HSMCI_DMA_CHKSIZE_Msk >> HSMCI_DMA_CHKSIZE_Pos :
+	((HSMCI_DMA_CHKSIZE_Msk >> HSMCI_DMA_CHKSIZE_Pos) * 4)));
 
-	// Handle unaligned memory address
-	if (((uint32_t)dest & 0x3) || (hsmci_block_size & 0x3)) {
-		HSMCI->HSMCI_MR |= HSMCI_MR_FBYTE;
+	/** Microblock Control Member. */
+	p_cfg.mbr_ubc = nb_data;
+	/** Source Address Member. */
+	p_cfg.mbr_sa = (uint32_t)&(HSMCI->HSMCI_RDR);
+	/** Destination Address Member. */
+	p_cfg.mbr_da = (uint32_t)dest;
+	/** Configuration Register. */
+	p_cfg.mbr_cfg = XDMAC_CC_TYPE | XDMAC_CC_MBSIZE(3) | XDMAC_CC_DSYNC_PER2MEM |
+					XDMAC_CC_PROT_UNSEC | XDMAC_CC_SWREQ_SWR_CONNECTED | XDMAC_CC_MEMSET_NORMAL_MODE |
+					XDMAC_CC_CSIZE_CHK_16 | XDMAC_CC_DWIDTH_WORD | XDMAC_CC_SIF_AHB_IF0 |
+					XDMAC_CC_DIF_AHB_IF0 | XDMAC_CC_SAM_FIXED_AM | XDMAC_CC_DAM_FIXED_AM;
+	/** Block Control Member. */
+	p_cfg.mbr_bc = nb_block;
+	/** Data Stride Member. */
+	if(transfert_byte) {
+		p_cfg.mbr_ds = XDMAC_CC_MBSIZE_SINGLE;
 		} else {
-		HSMCI->HSMCI_MR &= ~HSMCI_MR_FBYTE;
+		p_cfg.mbr_ds = XDMAC_CC_MBSIZE_SIXTEEN;
 	}
+	/** Source Microblock Stride Member. */
+	p_cfg.mbr_sus = 0;
+	/** Destination Microblock Stride Member. */
+	p_cfg.mbr_dus = 0;
 
-	// Configure PDC transfer
-	HSMCI->HSMCI_RPR = (uint32_t)dest;
-	HSMCI->HSMCI_RCR = (HSMCI->HSMCI_MR & HSMCI_MR_FBYTE) ?
-	nb_data : nb_data / 4;
-	HSMCI->HSMCI_RNCR = 0;
-	// Start transfer
-	HSMCI->HSMCI_PTCR = HSMCI_PTCR_RXTEN;
+	xdmac_configure_transfer(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, &p_cfg);
+	xdmac_channel_enable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 	hsmci_transfert_pos += nb_data;
+
 	return true;
 }
 
@@ -931,33 +974,24 @@ bool hsmci_wait_end_of_read_blocks(void)
 {
 	uint32_t sr;
 	// Wait end of transfer
-	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
+	// Note: no need of timeout, because it is include in HSMCI
 	do {
 		sr = HSMCI->HSMCI_SR;
 		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
-		HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
-			hsmci_debug("%s: PDC sr 0x%08x error\n\r",
-			__func__, sr);
-			HSMCI->HSMCI_PTCR = HSMCI_PTCR_RXTDIS | HSMCI_PTCR_TXTDIS;
+				HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
+			hsmci_debug("%s: DMA sr 0x%08x error\n\r",
+					__func__, sr);
 			hsmci_reset();
+			// Disable XDMAC
+			xdmac_channel_disable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 			return false;
 		}
-
-	} while (!(sr & HSMCI_SR_RXBUFF));
-
-	if (hsmci_transfert_pos < ((uint32_t)hsmci_block_size * hsmci_nb_block)) {
-		return true;
-	}
-	// It is the last transfer, then wait command completed
-	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
-	do {
-		sr = HSMCI->HSMCI_SR;
-		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
-		HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
-			hsmci_debug("%s: PDC sr 0x%08x last transfer error\n\r",
-			__func__, sr);
-			hsmci_reset();
-			return false;
+		if (((uint32_t)hsmci_block_size * hsmci_nb_block) > hsmci_transfert_pos) {
+			// It is not the end of all transfers
+			// then just wait end of XDMAC
+			if (sr & HSMCI_SR_XFRDONE) {
+				return true;
+			}
 		}
 	} while (!(sr & HSMCI_SR_XFRDONE));
 	return true;
@@ -965,66 +999,77 @@ bool hsmci_wait_end_of_read_blocks(void)
 
 bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 {
-	uint32_t nb_data;
+
+	xdmac_channel_config_t  p_cfg;
+	uint32_t cfg, nb_data;
+	bool transfert_byte;
 
 	nb_data = nb_block * hsmci_block_size;
+	transfert_byte = ((HSMCI->HSMCI_MR & HSMCI_MR_FBYTE) || (((uint32_t)src & 0x3) > 0)) ? 1 : 0;
+
 	Assert(nb_data <= (((uint32_t)hsmci_block_size * hsmci_nb_block) - hsmci_transfert_pos));
-	Assert(nb_data <= (PERIPH_TCR_TXCTR_Msk >> PERIPH_TCR_TXCTR_Pos));
+	Assert(nb_data <= (transfert_byte ?
+	HSMCI_DMA_CHKSIZE_Msk >> HSMCI_DMA_CHKSIZE_Pos :
+	((HSMCI_DMA_CHKSIZE_Msk >> HSMCI_DMA_CHKSIZE_Pos) * 4)));
 
-	// Handle unaligned memory address
-	if (((uint32_t)src & 0x3) || (hsmci_block_size & 0x3)) {
-		HSMCI->HSMCI_MR |= HSMCI_MR_FBYTE;
+	/** Microblock Control Member. */
+	p_cfg.mbr_ubc = nb_data;
+	/** Source Address Member. */
+	p_cfg.mbr_sa = (uint32_t)&(HSMCI->HSMCI_TDR);
+	/** Destination Address Member. */
+	p_cfg.mbr_da = (uint32_t)src;
+	/** Configuration Register. */
+	p_cfg.mbr_cfg = XDMAC_CC_TYPE | XDMAC_CC_MBSIZE(3) | XDMAC_CC_DSYNC_PER2MEM |
+	XDMAC_CC_PROT_UNSEC | XDMAC_CC_SWREQ_HWR_CONNECTED | XDMAC_CC_MEMSET_NORMAL_MODE |
+	XDMAC_CC_CSIZE_CHK_16 | XDMAC_CC_DWIDTH_WORD | XDMAC_CC_SIF_AHB_IF0 |
+	XDMAC_CC_DIF_AHB_IF0 | XDMAC_CC_SAM_FIXED_AM | XDMAC_CC_DAM_FIXED_AM;
+	/** Block Control Member. */
+	p_cfg.mbr_bc = nb_block;
+	/** Data Stride Member. */
+	if(transfert_byte) {
+		p_cfg.mbr_ds = XDMAC_CC_MBSIZE_SINGLE;
 		} else {
-		HSMCI->HSMCI_MR &= ~HSMCI_MR_FBYTE;
+		p_cfg.mbr_ds = XDMAC_CC_MBSIZE_SIXTEEN;
 	}
+	/** Source Microblock Stride Member. */
+	p_cfg.mbr_sus = 0;
+	/** Destination Microblock Stride Member. */
+	p_cfg.mbr_dus = 0;
 
-	// Configure PDC transfer
-	HSMCI->HSMCI_TPR = (uint32_t)src;
-	HSMCI->HSMCI_TCR = (HSMCI->HSMCI_MR & HSMCI_MR_FBYTE) ?
-	nb_data : nb_data / 4;
-	HSMCI->HSMCI_TNCR = 0;
-	// Start transfer
-	HSMCI->HSMCI_PTCR = HSMCI_PTCR_TXTEN;
+	xdmac_configure_transfer(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, &p_cfg);
+	xdmac_channel_enable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 	hsmci_transfert_pos += nb_data;
+
 	return true;
 }
 
 bool hsmci_wait_end_of_write_blocks(void)
 {
 	uint32_t sr;
-
 	// Wait end of transfer
 	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
 	do {
 		sr = HSMCI->HSMCI_SR;
-		if (sr &
-		(HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
-		HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
-			hsmci_debug("%s: PDC sr 0x%08x error\n\r",
-			__func__, sr);
+		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
+				HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
+			hsmci_debug("%s: DMA sr 0x%08x error\n\r",
+					__func__, sr);
 			hsmci_reset();
-			HSMCI->HSMCI_PTCR = HSMCI_PTCR_RXTDIS | HSMCI_PTCR_TXTDIS;
+			// Disable XDMAC
+			xdmac_channel_disable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);;
 			return false;
 		}
-	} while (!(sr & HSMCI_SR_TXBUFE));
-
-
-	if (hsmci_transfert_pos < ((uint32_t)hsmci_block_size * hsmci_nb_block)) {
-		return true;
-	}
-	// It is the last transfer, then wait command completed
-	// Note: no need of timeout, because it is include in HSMCI, see DTOE bit.
-	do {
-		sr = HSMCI->HSMCI_SR;
-		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
-		HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
-			hsmci_debug("%s: PDC sr 0x%08x last transfer error\n\r",
-			__func__, sr);
-			hsmci_reset();
-			return false;
+		if (((uint32_t)hsmci_block_size * hsmci_nb_block) > hsmci_transfert_pos) {
+			// It is not the end of all transfers
+			// then just wait end of XDMAC
+			if (sr & HSMCI_SR_XFRDONE) {
+				return true;
+			}
 		}
 	} while (!(sr & HSMCI_SR_NOTBUSY));
 	Assert(HSMCI->HSMCI_SR & HSMCI_SR_FIFOEMPTY);
+	Assert(!xdmac_channel_is_enable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL));
 	return true;
+
 }
-#endif // HSMCI_MR_XDMACMODE
+#endif // HSMCI_DMA_XDMACMODE
