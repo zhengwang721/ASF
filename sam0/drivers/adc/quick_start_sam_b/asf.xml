@@ -7,6 +7,8 @@
 		<build type="c-source" value="qs_adc_basic.c"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.adc"/>
+		<require idref="sam0.drivers.gpio"/>
+		<require idref="sam0.drivers.system.system_sam_b"/>
 		<device-support value="samb"/>
 	</module>
 </asf>

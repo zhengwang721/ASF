@@ -54,5 +54,15 @@
 
 #  define SPI_CALLBACK_MODE          false
 
+#  define CONF_SPI_TRANSFER_MODE     SPI_TRANSFER_MODE_0
+
+#  define CONF_SPI                   SPI0
+#  define CONF_SPI_PINMUX_SCK        PINMUX_LP_GPIO_10_MUX2_SPI0_SCK
+#  define CONF_SPI_PINMUX_MOSI       PINMUX_LP_GPIO_11_MUX2_SPI0_MOSI
+#  define CONF_SPI_PINMUX_SSN        PINMUX_UNUSED
+#  define CONF_SPI_PINMUX_MISO       PINMUX_LP_GPIO_13_MUX2_SPI0_MISO
+
+#  define CONF_PIN_SPI_SSN           PIN_LP_GPIO_12
+
 #endif /* CONF_SPI_H_INCLUDED */
 
