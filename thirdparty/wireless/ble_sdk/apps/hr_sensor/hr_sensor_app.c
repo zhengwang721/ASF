@@ -94,6 +94,8 @@ bool inc_changer = true;/*!< to alter the direction of increments of hr*/
 bool reverse = false;/*!< Used to change the hr zones in reverse order*/
 
 bool notification_confirm_flag = true;
+
+volatile bool button_pressed = false;
 /****************************************************************************************
 *							        Functions											*
 ****************************************************************************************/
@@ -153,11 +155,14 @@ void app_state_handler(bool state)
 	}
 }
 
+
+
 /**
  * @brief Button Press Callback
  */
 void button_cb(void)
 {
+	button_pressed = true;
 	if (app_state) {
 		DBG_LOG("Going to disconnect ");
 		disconnect_flag = true;
@@ -461,16 +466,6 @@ void timer_callback_handler(void)
  */
 int main(void)
 {
-	at_ble_init_config_t pf_cfg;
-	platform_config busConfig;
-	
-	/*Memory allocation required by GATT Server DB*/
-	pf_cfg.memPool.memSize = sizeof(db_mem);
-	pf_cfg.memPool.memStartAdd = (uint8_t *)db_mem;
-	/*Bus configuration*/
-	busConfig.bus_type = UART;
-	pf_cfg.plf_config = &busConfig;
-		
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -494,7 +489,7 @@ int main(void)
 	DBG_LOG("Initializing Heart Rate Sensor Application");
 
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL,&pf_cfg);
+	ble_device_init(NULL);
 
 	/* Registering the app_notification_handler with the profile */
 	register_hr_notification_handler(app_notification_handler);

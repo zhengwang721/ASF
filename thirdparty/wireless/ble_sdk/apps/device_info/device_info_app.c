@@ -50,6 +50,7 @@
 
 
 #include <asf.h>
+#include "conf_extint.h"
 #include "console_serial.h"
 #include "at_ble_api.h"
 #include "platform.h"
@@ -57,7 +58,7 @@
 #include "device_info_app.h"
 #include "timer_hw.h"
 #include "ble_utils.h"
-#include "conf_extint.h"
+
 #include "ble_manager.h"
 
 /* === GLOBALS ============================================================ */
@@ -94,9 +95,6 @@ void timer_callback_handler(void)
 
 int main(void)
 {
-	at_ble_init_config_t pf_cfg;
-	platform_config busConfig;
-	
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -117,16 +115,8 @@ int main(void)
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);
 	
-	/*Memory allocation required by GATT Server DB*/
-	pf_cfg.memPool.memSize = sizeof(db_mem);
-	pf_cfg.memPool.memStartAdd = &(db_mem[0]);
-	
-	/*Bus configuration*/
-	busConfig.bus_type = UART;
-	pf_cfg.plf_config = &busConfig;
-	
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL, &pf_cfg);
+	ble_device_init(NULL);
 	
 	/* Initialize the dis */
 	dis_init_service(&dis_service_handler);

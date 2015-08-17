@@ -4,6 +4,7 @@
 		Simple BTLC1000 Connection application for BLE stack
 		</info>
 		<build type="c-source" value="main.c"/>
+		<build type="define" name="ATT_DB_MEMORY" value="1"/>
 		<require idref="thirdparty.wireless.ble_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_sdk.inc"/>
 		<require idref="thirdparty.wireless.ble_sdk.src"/>
