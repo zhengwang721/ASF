@@ -47,10 +47,13 @@
 #define TIMER_H_INCLUDED
 
 #include <compiler.h>
+#include <system.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef void (*timer_callback_t)(void);
 
 /**
  * \brief TIMER configuration structure.
@@ -60,12 +63,9 @@ extern "C" {
  * modified by the user application.
  */
 struct timer_config {
-	/** Select external input as enable  */
-	uint8_t external_input_enable;
-	/** Select external input as clock */
-	uint8_t external_input_clock;
+	uint32_t reload_value;
 	/** Enable timer interrupt */
-	uint8_t interrupt_enable;
+	bool interrupt_enable;
 };
 
 void timer_get_config_defaults(struct timer_config *config);
@@ -76,6 +76,8 @@ uint32_t timer_get_interrupt_status(void);
 void timer_clear_interrupt_status(void);
 void timer_enable(void);
 void timer_disable(void);
+void timer_register_callback(timer_callback_t fun);
+void timer_unregister_callback(void);
 
 #ifdef __cplusplus
 }

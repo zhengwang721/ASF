@@ -47,10 +47,13 @@
 #define AON_SLEEP_TIMER_H_INCLUDED
 
 #include <compiler.h>
+#include <system.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef void (*aon_sleep_timer_callback_t)(void);
 
 /**
  * \brief Specifies the counter mode is reload or single mode.
@@ -99,6 +102,8 @@ void aon_sleep_timer_disable(void);
 uint32_t aon_sleep_timer_get_current_value(void);
 void aon_sleep_timer_clear_interrup(void);
 bool aon_sleep_timer_sleep_timer_active(void);
+void aon_sleep_timer_register_callback(aon_sleep_timer_callback_t fun);
+void aon_sleep_timer_unregister_callback(void);
 
 #ifdef __cplusplus
 }

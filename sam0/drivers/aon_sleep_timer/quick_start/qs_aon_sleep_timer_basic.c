@@ -47,6 +47,13 @@
 #include "conf_aon_sleep_timer.h"
 
 //! [setup]
+
+//! [callback_funcs]
+static void aon_sleep_timer_callback(void)
+{
+	gpio_pin_set_output_level(LED_0_PIN, true);
+}
+
 static void configure_gpio_pins(void)
 {
 //! [setup_1]
@@ -85,34 +92,45 @@ static void configure_aon_sleep_timer(void)
 	NVIC_EnableIRQ(27);
 //! [setup_10]
 }
+
+static void configure_aon_sleep_timer_callback(void)
+{
+	//! [setup_register_callback]
+	aon_sleep_timer_register_callback(aon_sleep_timer_callback);
+	//! [setup_register_callback]
+	
+	/* For A4, timer0 IRQ is 9 */
+	//! [enable_IRQ]
+	NVIC_EnableIRQ(9);
+	//! [enable_IRQ]
+}
+
 //! [setup]
 
 int main(void)
 {
-//! [setup_init]
+	//! [setup_init]
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 
-	//system_init();
-//! [gpio_init]	
 	configure_gpio_pins();
-//! [gpio_init]
-//! [timer_init]
+
 	configure_aon_sleep_timer();
-//! [timer_init]
-//! [timer_active]
+	
+	configure_aon_sleep_timer_callback();
+	//! [setup_init]
+
+	//! [timer_active]
 	while(!aon_sleep_timer_sleep_timer_active());
-//! [timer_active]
-//! [wait_wfi]
+	//! [timer_active]
+	//! [wait_wfi]
 	asm volatile ("wfi");
 	asm volatile ("nop");
-//! [wait_wfi]
-//! [led_off]
-	gpio_pin_set_output_level(LED_0_PIN, true);
-//! [led_off]
-//! [main_imp]
-//! [main_loop]
-	while (true) {
-//! [main_loop]
+	//! [wait_wfi]
 
+	//! [main_imp]
+	//! [main_loop]
+	while (true) {
+	//! [main_loop]
 	}
-//! [main_imp]
+	//! [main_imp]
 }
