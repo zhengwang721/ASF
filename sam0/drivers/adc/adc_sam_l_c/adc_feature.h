@@ -480,7 +480,7 @@ struct adc_correction_config {
 	 * This value defines how the ADC conversion result is compensated for gain
 	 * error before written to the result register. This is a fractional value,
 	 * 1-bit integer plus an 11-bit fraction, therefore
-	 * 1/2 ≤ gain_correction < 2. Valid \c gain_correction values ranges from
+	 * 1/2 <= gain_correction < 2. Valid \c gain_correction values ranges from
 	 * \c 0b010000000000 to \c 0b111111111111.
 	 */
 	uint16_t gain_correction;
@@ -709,7 +709,7 @@ static inline void adc_get_sequence_status(
  * \param[in] master_inst  Pointer to the master ADC software instance struct
  * \param[in] slave_inst   Pointer to the slave ADC software instance struct
  * \param[in] dualsel      Dual mode trigger selection
- *                         
+ *
  */
 static inline void adc_set_master_slave_mode(
 		struct adc_module *const master_inst,
@@ -719,10 +719,10 @@ static inline void adc_set_master_slave_mode(
 	/* Sanity check arguments */
 	Assert(master_inst);
 	Assert(slave_inst);
-	
+
 	slave_inst->hw->CTRLA.reg |= ADC_CTRLA_SLAVEEN;
 	master_inst->hw->CTRLC.reg |= dualsel;
-			
+
 };
 #endif
 /** @} */
