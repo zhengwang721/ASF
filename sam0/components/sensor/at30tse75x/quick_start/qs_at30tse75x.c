@@ -57,6 +57,7 @@ int main(void)
 //! [system_init]
 	system_init();
 //! [system_init]
+
 	/* Configure device and enable. */
 //! [temp_init]
 	at30tse_init();
