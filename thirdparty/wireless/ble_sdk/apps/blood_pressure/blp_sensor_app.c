@@ -62,6 +62,8 @@
 /****************************************************************************************
 *							        Globals												*
 ****************************************************************************************/
+volatile bool button_pressed = false;
+
 bool units = APP_DEFAULT_VAL;
 /** flag to send notifications */
 bool notification_flag = APP_DEFAULT_VAL;
@@ -560,6 +562,8 @@ void app_indication_handler(bool enable)
  */
 void button_cb(void)
 {
+	button_pressed = true;
+	
 	/** For changing the units for each button press*/
 	units = !units;
 	
@@ -588,15 +592,6 @@ void timer_callback_handler(void)
  */
 int main(void)
 {
-	at_ble_init_config_t pf_cfg;
-	platform_config busConfig;
-		
-	/*Memory allocation required by GATT Server DB*/
-	pf_cfg.memPool.memSize = sizeof(db_mem);
-	pf_cfg.memPool.memStartAdd = (uint8_t *)db_mem;
-	/*Bus configuration*/
-	busConfig.bus_type = UART;
-	pf_cfg.plf_config = &busConfig;
 	
 	#if SAMG55
 	/* Initialize the SAM system. */
@@ -636,7 +631,7 @@ int main(void)
 	register_ble_notification_confirmed_cb(app_notification_confirmation_handler);
 	
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL,&pf_cfg);
+	ble_device_init(NULL);
 
 	/* Capturing the events  */
 	while (1) {

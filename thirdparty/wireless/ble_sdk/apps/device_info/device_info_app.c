@@ -95,6 +95,7 @@ void timer_callback_handler(void)
 
 int main(void)
 {
+	at_ble_status_t status;
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -122,7 +123,10 @@ int main(void)
 	dis_init_service(&dis_service_handler);
 	
 	/* Define the primary service in the GATT server database */
-	dis_primary_service_define(&dis_service_handler);
+	if ((status = dis_primary_service_define(&dis_service_handler)) == AT_BLE_FAILURE)
+	{
+		DBG_LOG("Device Information Service definition failed,reason %x",status);
+	}
 	
 	DBG_LOG("Initializing Device Information Service Application");
 	

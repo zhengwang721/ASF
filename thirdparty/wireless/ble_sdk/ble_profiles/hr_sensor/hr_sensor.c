@@ -300,7 +300,7 @@ void hr_sensor_adv(void)
 void hr_sensor_service_define(void)
 {
 	at_ble_status_t status;
-	uint8_t data;
+
 	if ((status = hr_primary_service_define(&hr_service_handler)) !=
 			AT_BLE_SUCCESS) {
 		DBG_LOG("Heart Rate Service definition Failed,reason: %x",
@@ -312,13 +312,7 @@ void hr_sensor_service_define(void)
 		DBG_LOG("Dis Service definition failed,reason: %x", status);
 	}
 
-	if ((status
-				= at_ble_characteristic_value_get(
-					hr_service_handler.serv_chars
-					[0].char_val_handle, &data, 1
-					)) != AT_BLE_SUCCESS) {
-		DBG_LOG("get value for notification failed,reason %x", status);
-	}
+	
 }
 
 /**
