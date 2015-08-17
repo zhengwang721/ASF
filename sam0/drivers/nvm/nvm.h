@@ -285,7 +285,7 @@ extern "C" {
 #endif
 
 /**
- * Define NVM features set according to different device family.
+ * Define NVM features set according to the different device families.
  * @{
 */
 #if (SAML21) || (SAML22) || (SAMDA1) || (SAMC20) || (SAMC21) || defined(SAMD21_64K) || defined(__DOXYGEN__)
@@ -374,7 +374,7 @@ enum nvm_command {
 	 */
 	NVM_COMMAND_EXIT_LOW_POWER_MODE        = NVMCTRL_CTRLA_CMD_CPRM,
 #ifdef FEATURE_NVM_RWWEE
-	/** Read while write(RWW) EEPROM area erase row */
+	/** Read while write (RWW) EEPROM area erase row */
 	NVM_COMMAND_RWWEE_ERASE_ROW            = NVMCTRL_CTRLA_CMD_RWWEEER,
 	/** RWW EEPROM write page */
 	NVM_COMMAND_RWWEE_WRITE_PAGE           = NVMCTRL_CTRLA_CMD_RWWEEWP,
@@ -476,7 +476,7 @@ struct nvm_parameters {
 	 *  memory space */
 	uint32_t bootloader_number_of_pages;
 #ifdef FEATURE_NVM_RWWEE
-	/** Number of pages in read while write EEPROM(RWWEE) emulation area */
+	/** Number of pages in read while write EEPROM (RWWEE) emulation area */
 	uint16_t rww_eeprom_number_of_pages;
 #endif
 };
@@ -912,7 +912,7 @@ static inline enum nvm_error nvm_get_error(void)
  *	<tr>
  *		<td>42114E</td>
  *		<td>08/2015</td>
- *		<td>Added support for SAM L21/L22, SAM C21 and SAM DA1</td>
+ *		<td>Added support for SAM L21/L22, SAM C21, and SAM DA1</td>
  *	</tr> 
  *	<tr>
  *		<td>42114D</td>
