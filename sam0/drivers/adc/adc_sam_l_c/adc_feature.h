@@ -56,7 +56,7 @@ extern "C" {
 #endif
 
 /*@{*/
-#if (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
+#if (SAML22) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** Output Driver Strength Selection feature support. */
 #  define FEATURE_ADC_SUPPORT_MASTER_SLAVE
 #endif
@@ -260,7 +260,8 @@ enum adc_positive_input {
 	ADC_POSITIVE_INPUT_PIN18         = ADC_INPUTCTRL_MUXPOS_AIN18,
 	/** ADC19 pin */
 	ADC_POSITIVE_INPUT_PIN19         = ADC_INPUTCTRL_MUXPOS_AIN19,
-	/** ADC20 pin */
+#if !(SAML22)
+	/** ADC20 pin. */
 	ADC_POSITIVE_INPUT_PIN20         = ADC_INPUTCTRL_MUXPOS_AIN20,
 	/** ADC21 pin */
 	ADC_POSITIVE_INPUT_PIN21         = ADC_INPUTCTRL_MUXPOS_AIN21,
@@ -268,7 +269,8 @@ enum adc_positive_input {
 	ADC_POSITIVE_INPUT_PIN22         = ADC_INPUTCTRL_MUXPOS_AIN22,
 	/** ADC23 pin */
 	ADC_POSITIVE_INPUT_PIN23         = ADC_INPUTCTRL_MUXPOS_AIN23,
-	/** Temperature reference */
+#endif
+	/** Temperature reference. */
 	ADC_POSITIVE_INPUT_TEMP          = ADC_INPUTCTRL_MUXPOS_TEMP,
 #endif
 	/** Bandgap voltage */
@@ -277,15 +279,24 @@ enum adc_positive_input {
 	ADC_POSITIVE_INPUT_SCALEDCOREVCC = ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC,
 	/** 1/4 scaled I/O supply */
 	ADC_POSITIVE_INPUT_SCALEDIOVCC   = ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC,
+#if !(SAML22)
 	/** DAC input */
 	ADC_POSITIVE_INPUT_DAC           = ADC_INPUTCTRL_MUXPOS_DAC,
-#if !(SAMC20) && !(SAMC21)
+#endif
+
+#if (SAML21)
 	/** SCALEDVBAT */
 	ADC_POSITIVE_INPUT_SCALEDVBAT    = ADC_INPUTCTRL_MUXPOS_SCALEDVBAT,
 	/** OPAMP01 */
 	ADC_POSITIVE_INPUT_OPAMP01       = ADC_INPUTCTRL_MUXPOS_OPAMP01,
 	/** OPAMP02 */
 	ADC_POSITIVE_INPUT_OPAMP2        = ADC_INPUTCTRL_MUXPOS_OPAMP2,
+#endif
+#if (SAML22)
+	/** SCALEDVBAT */
+	ADC_POSITIVE_INPUT_SCALEDVBAT    = ADC_INPUTCTRL_MUXPOS_SCALEDVBAT,
+	/** CTAT. */
+	ADC_POSITIVE_INPUT_CTAT          = ADC_INPUTCTRL_MUXPOS_CTAT,
 #endif
 };
 

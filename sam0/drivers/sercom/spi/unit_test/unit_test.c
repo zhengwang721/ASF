@@ -76,6 +76,7 @@
  *  - SAM D21 Xplained Pro board
  *  - SAM R21 Xplained Pro board
  *  - SAM L21 Xplained Pro board
+ *  - SAM L22 Xplained Pro board
  *  - SAM DA1 Xplained Pro board
  *  - SAM C21 Xplained Pro board
  *
@@ -96,6 +97,11 @@
  *  - \b SS_0:  EXT2 PIN15 (PA17) <--> EXT3 PIN15 (PB17)
  *  - \b DI/DO: EXT2 PIN14 (PA18) <--> EXT3 PIN16 (PB22)
  *  - \b SCK:   EXT2 PIN13 (PA19) <--> EXT3 PIN18 (PB23)
+ * - SAM L22 Xplained Pro.
+ *  - \b SS_0:  EXT1 PIN15 (PB21) <--> EXT2 PIN15 (PA17)
+ *  - \b DO/DI: EXT1 PIN16 (PB00) <--> EXT2 PIN17 (PA16)
+ *  - \b DI/DO: EXT1 PIN17 (PB02) <--> EXT2 PIN16 (PA18)
+ *  - \b SCK:   EXT1 PIN18 (PB01) <--> EXT2 PIN18 (PA19)
  * - SAM C21 Xplained Pro.
  *  - \b SS_0:  EXT1 PIN15 (PA17) <--> EXT2 PIN15 (PB03)
  *  - \b DO/DI: EXT1 PIN16 (PA18) <--> EXT2 PIN17 (PB02)
