@@ -56,7 +56,6 @@ int main(void)
 	/* Init system. */
 //! [system_init]
 	system_init();
-
 //! [system_init]
 	/* Configure device and enable. */
 //! [temp_init]
