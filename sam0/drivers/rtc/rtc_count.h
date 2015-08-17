@@ -50,18 +50,18 @@
 /**
  * \defgroup asfdoc_sam0_rtc_count_group SAM RTC Count (RTC COUNT) Driver
  *
- * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
- * and management of the device's Real Time Clock functionality in Count
- * operating mode, for the configuration and retrieval of the current RTC
- * counter value. The following driver API modes are covered by this
- * manual:
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
+ * an interface for the configuration and management of the device's Real Time 
+ * Clock functionality in Count operating mode, for the configuration and 
+ * retrieval of the current RTC counter value. The following driver API modes 
+ * are covered by this manual:
  *
  *  - Polled APIs
  * \if RTC_COUNT_CALLBACK_MODE
  *  - Callback APIs
  * \endif
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  *  - RTC (Real Time Clock)
  *
  * The following devices can use this module:
@@ -69,7 +69,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -114,27 +114,27 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PERIODIC_INT</td>
- *    <td>SAML21/L22</C20/C21</td>
+ *    <td>SAM L21/L22</C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PRESCALER_OFF</td>
- *    <td>SAML21/L22</C20/C21</td>
+ *    <td>SAM L21/L22</C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CLOCK_SELECTION</td>
- *    <td>SAML21/L22</C20/C21</td>
+ *    <td>SAM L21/L22</C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_GENERAL_PURPOSE_REG</td>
- *    <td>SAML21/L22</td>
+ *    <td>SAM L21/L22</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
- *    <td>SAMD20, SAMD21, SAMR21, SAMD10, SAMD11, SAMDAx</td>
+ *    <td>SAM D20, SAM D21, SAM R21, SAM D10, SAM D11, SAM DA1</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_TAMPER_DETECTION</td>
- *    <td>SAML22</td>
+ *    <td>SAM L22</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -167,7 +167,7 @@
  *
  * \f[ f_{PERIODIC}=\frac{f_{ASY}}{2^{n+3}} \f]
  *
- * Where \f$f_{ASY}\f$ refers to the \e asynchronous clock set up in the RTC
+ * Where \f$f_{ASY}\f$ refers to the \e asynchronous clock is set up in the RTC
  * module configuration. The \b n parameter is the event source generator index
  * of the RTC module. If the asynchronous clock is operated at the recommended
  * frequency of 1KHz, the formula results in the values shown in
@@ -206,7 +206,7 @@
  * </table>
  *
  * \note The connection of events between modules requires the use of the
- *       \ref asfdoc_sam0_events_group "SAM Event System Driver (EVENTS)"
+ *       \ref asfdoc_sam0_events_group "SAM Event System (EVENTS) Driver"
  *       to route output event of one module to the the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
@@ -236,7 +236,7 @@
  *
  *
  * \subsection asfdoc_sam0_rtc_count_special_considerations_clock Clock Setup
- * \subsubsection asfdoc_sam0_rtc_count_clock_samd_r SAM D20/D21/R21/D10/D11/DAx Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_count_clock_samd_r SAM D20/D21/R21/D10/D11/DA1 Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32KHz RC-oscillator with a prescaler of 32, giving a
@@ -291,15 +291,15 @@
  * \enddot
  *
  * \subsubsection asfdoc_sam0_rtc_count_clock_saml SAM L21/C20/C21 Clock Setup
- * The RTC clock can be selected from OSC32K,XOSC32K or OSCULP32K , and a 32KHz
+ * The RTC clock can be selected from OSC32K, XOSC32K or OSCULP32K, and a 32KHz
  * or 1KHz oscillator clock frequency is required. This clock must be
  * configured and enabled in the 32KHz oscillator controller before using the RTC.
  *
- * The table below lists the available RTC clock \ref asfdoc_sam0_rtc_count_rtc_clk
+ * The table below lists the available RTC clock \ref asfdoc_sam0_rtc_count_rtc_clk.
  *
  * \anchor asfdoc_sam0_rtc_count_rtc_clk
  * <table>
- *   <caption>RTC clocks source</caption>
+ *   <caption>RTC Clocks Source</caption>
  *   <tr>
  *     <th>RTC clock frequency</th>
  *     <th>Clock source</th>
@@ -368,22 +368,22 @@ extern "C" {
 #endif
 
 /**
- * Define port features set according to different device family
+ * Define port features set according to different device family.
  * @{
 */
 #if (SAML21) || (SAML22) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** RTC periodic interval interrupt. */
 #  define FEATURE_RTC_PERIODIC_INT
-/** RTC prescaler is off. */
+/** RTC prescaler is off */
 #  define FEATURE_RTC_PRESCALER_OFF
-/** RTC clock selection. */
+/** RTC clock selection */
 #  define FEATURE_RTC_CLOCK_SELECTION
 #  if !(SAMC20) && !(SAMC21)
-/** General purpose registers. */
+/** General purpose registers */
 #  define FEATURE_RTC_GENERAL_PURPOSE_REG
 #  endif
 #else
-/** RTC continuously updated. */
+/** RTC continuously updated */
 #  define FEATURE_RTC_CONTINUOUSLY_UPDATED
 #endif
 
@@ -448,7 +448,7 @@ enum rtc_count_compare {
 	/** Compare channel 2 */
 	RTC_COUNT_COMPARE_2 = 2,
 #endif
-#if (RTC_NUM_OF_COMP16 > 3) || defined(__DOXYGEN__)
+#if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
 	/** Compare channel 3 */
 	RTC_COUNT_COMPARE_3 = 3,
 #endif
@@ -602,7 +602,7 @@ typedef void (*rtc_count_callback_t)(void);
  */
 enum rtc_count_prescaler {
 	/** RTC prescaler is off, and the input clock frequency is
-	prescaled by a factor of 1. */
+	prescaled by a factor of 1 */
 	RTC_COUNT_PRESCALER_OFF      = RTC_MODE0_CTRLA_PRESCALER_OFF,
 	/** RTC input clock frequency is prescaled by a factor of 1 */
 	RTC_COUNT_PRESCALER_DIV_1    = RTC_MODE0_CTRLA_PRESCALER_DIV1,
@@ -757,7 +757,7 @@ struct rtc_count_config {
  *  - Continuously sync count register off
  *  - No event source on
  *  - All compare values equal 0
- *  - Count read synchronization is enabled for SAML22
+ *  - Count read synchronization is enabled for SAM L22
  *
  *  \param[out] config  Configuration structure to be initialized to default
  *                      values.
@@ -800,17 +800,17 @@ void rtc_count_disable(struct rtc_module *const module);
 uint8_t _rtc_get_inst_index(
 		Rtc *const hw)
 {
-	/* List of available RTC modules. */
+	/* List of available RTC modules */
 	static Rtc *const rtc_modules[RTC_INST_NUM] = RTC_INSTS;
 
-	/* Find index for RTC instance. */
+	/* Find index for RTC instance */
 	for (uint32_t i = 0; i < RTC_INST_NUM; i++) {
 		if (hw == rtc_modules[i]) {
 			return i;
 		}
 	}
 
-	/* Invalid data given. */
+	/* Invalid data given */
 	Assert(false);
 	return 0;
 }
@@ -916,10 +916,10 @@ static inline void rtc_count_clear_overflow(struct rtc_module *const module)
  * \param[in,out]  module  RTC hardware module
  * \param[in]  n  RTC periodic interval interrupt
  *
- * \return periodic interval interrupt state of the RTC module.
+ * \return Periodic interval interrupt state of the RTC module.
  *
  * \retval true   RTC periodic interval interrupt occurs
- * \retval false  RTC periodic interval interrupt dosen't occurs
+ * \retval false  RTC periodic interval interrupt doesn't occur
  */
 static inline bool rtc_count_is_periodic_interval(struct rtc_module *const module,
 										enum rtc_count_periodic_interval n)
@@ -973,7 +973,7 @@ enum status_code rtc_count_clear_compare_match(
  */
 
 /**
- * \brief Enables a RTC event output.
+ * \brief Enables an RTC event output.
  *
  *  Enables one or more output events from the RTC module. See
  *  \ref rtc_count_events for a list of events this module supports.
@@ -995,19 +995,19 @@ static inline void rtc_count_enable_events(
 
 	uint32_t event_mask = 0;
 
-	/* Check if the user has requested an overflow event. */
+	/* Check if the user has requested an overflow event */
 	if (events->generate_event_on_overflow) {
 		event_mask |= RTC_MODE0_EVCTRL_OVFEO;
 	}
 
-	/* Check if the user has requested any compare events. */
+	/* Check if the user has requested any compare events */
 	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
 		if (events->generate_event_on_compare[i]) {
 			event_mask |= RTC_MODE0_EVCTRL_CMPEO(1 << i);
 		}
 	}
 
-	/* Check if the user has requested any periodic events. */
+	/* Check if the user has requested any periodic events */
 	for (uint8_t i = 0; i < 8; i++) {
 		if (events->generate_event_on_periodic[i]) {
 			event_mask |= RTC_MODE0_EVCTRL_PEREO(1 << i);
@@ -1031,7 +1031,7 @@ static inline void rtc_count_enable_events(
 }
 
 /**
- * \brief Disables a RTC event output.
+ * \brief Disables an RTC event output.
  *
  *  Disabled one or more output events from the RTC module. See
  *  \ref rtc_count_events for a list of events this module supports.
@@ -1053,19 +1053,19 @@ static inline void rtc_count_disable_events(
 
 	uint32_t event_mask = 0;
 
-	/* Check if the user has requested an overflow event. */
+	/* Check if the user has requested an overflow event */
 	if (events->generate_event_on_overflow) {
 		event_mask |= RTC_MODE0_EVCTRL_OVFEO;
 	}
 
-	/* Check if the user has requested any compare events. */
+	/* Check if the user has requested any compare events */
 	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
 		if (events->generate_event_on_compare[i]) {
 			event_mask |= RTC_MODE0_EVCTRL_CMPEO(1 << i);
 		}
 	}
 
-	/* Check if the user has requested any periodic events. */
+	/* Check if the user has requested any periodic events */
 	for (uint8_t i = 0; i < 8; i++) {
 		if (events->generate_event_on_periodic[i]) {
 			event_mask |= RTC_MODE0_EVCTRL_PEREO(1 << i);
@@ -1210,15 +1210,26 @@ uint32_t rtc_tamper_get_stamp (struct rtc_module *const module);
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
+ *	<tr>
+ *		<td>Added support for SAM C21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for SAM L21/L22</td>
+ *	</tr>
+ *	<tr>
  *		<td>Added support for RTC tamper feature</td>
  *	</tr>
  *	<tr>
- *		<td>Added driver instance parameter to all API function calls, except
- *          get_config_defaults</td>
+ *		<td>
+ *          Added driver instance parameter to all API function calls, except
+ *          get_config_defaults
+ *      </td>
  *	</tr>
  *	<tr>
- *		<td>Updated initialization function to also enable the digital interface
- *          clock to the module if it is disabled</td>
+ *		<td>
+ *			Updated initialization function to also enable the digital interface
+ *          clock to the module if it is disabled
+ *		</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
@@ -1250,28 +1261,28 @@ uint32_t rtc_tamper_get_stamp (struct rtc_module *const module);
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>42111DE</td>
+ *		<td>42111E</td>
  *		<td>08/2015</td>
- *		<td>Added support for SAML21/L22, SAMC21, and SAMDAx</td>
+ *		<td>Added support for SAM L21/L22, SAM C21, and SAM DA1</td>
  *	</tr>
  *	<tr>
- *		<td>42111DD</td>
+ *		<td>42111D</td>
  *		<td>12/2014</td>
- *		<td>Added support for SAMR21 and SAMD10/D11</td>
+ *		<td>Added support for SAM R21 and SAM D10/D11</td>
  *	</tr>
  *	<tr>
- *		<td>42111DC</td>
+ *		<td>42111C</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAMD21</td>
+ *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
- *		<td>42111DB</td>
+ *		<td>42111B</td>
  *		<td>06/2013</td>
  *		<td>Added additional documentation on the event system. Corrected
  *          documentation typos.</td>
  *	</tr>
  *	<tr>
- *		<td>42111DA</td>
+ *		<td>42111A</td>
  *		<td>06/2013</td>
  *		<td>Initial release</td>
  *	</tr>

@@ -286,9 +286,9 @@
  * digraph clocking_scheme {
  *     rankdir=LR;
  *     GCLK [shape="record", label="<f0> GCLK | <f1> RTC_GCLK",
- *         bgcolor="lightgray", style="filled", fontname=arial];
- *     RTCPRE [shape="record" label="<f0> RTC | <f1> RTC PRESCALER", fontname=arial];
- *     RTC [shape="record", label="<f0> RTC | <f1> RTC CLOCK", fontname=arial];
+ *         bgcolor="lightgray", style="filled"];
+ *     RTCPRE [shape="record" label="<f0> RTC | <f1> RTC PRESCALER"];
+ *     RTC [shape="record", label="<f0> RTC | <f1> RTC CLOCK"];
  *
  *     GCLK:f1 -> RTCPRE:f1;
  *     RTCPRE:f1 -> RTC:f1;
