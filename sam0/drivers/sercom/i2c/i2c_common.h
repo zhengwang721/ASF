@@ -543,18 +543,18 @@ enum i2c_transfer_direction {
  *	<tr>
  *		<td>42116E</td>
  *		<td>08/2015</td>
- *		<td>Added SAM L21/L22, SAM DA1 and SAM C21 support</td>
+ *		<td>Added support for SAM L21/L22, SAM DA1 and SAM C21</td>
  *	</tr>
  *	<tr>
  *		<td>42116D</td>
  *		<td>12/2014</td>
- *		<td>Added 10-bit addressing and high speed support in SAM D21.
- *		    Added SAM R21/D10/D11 support.</td>
+ *		<td>Added support for 10-bit addressing and high speed in SAM D21.
+ *		    Added support for SAM R21, and SAM D10/D11.</td>
  *	</tr>
  *	<tr>
  *		<td>42116C</td>
  *		<td>01/2014</td>
- *		<td>Added the SAM D21 to the application note</td>
+ *		<td>Added support for the SAM D21 to the application note</td>
  *	</tr>
  *	<tr>
  *		<td>42116B</td>
