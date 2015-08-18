@@ -19,6 +19,7 @@
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
 
+			<device-support value="saml22" />
 			<device-support value="samc20" />
 			<device-support value="samc21" />
 		</module>
@@ -39,6 +40,7 @@
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
 
+			<device-support value="saml22" />
 			<device-support value="samc20" />
 			<device-support value="samc21" />
 		</module>
@@ -69,6 +71,7 @@
 		<build type="doxygen-entry-point" value="asfdoc_sam0_freqm_group"/>
 		<build type="doxygen-quick-start" value="asfdoc_sam0_freqm_exqsg"/>
 
+		<device-support value="saml22"/>
 		<device-support value="samc20" />
 		<device-support value="samc21"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samc21"/>
