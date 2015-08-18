@@ -484,6 +484,7 @@
 //! @{
 #define USB_VBUS_FLAGS         (PIO_INPUT | PIO_PULLUP)
 #define USB_VBUS_PIN             PIO_PC9_IDX  /* As IO pin input */
+#define USB_VBUS_PIN_IRQn ( PIOC_IRQn)
 #define USB_VBUS_PIO_ID       ID_PIOC
 #define USB_VBUS_PIO_MASK  PIO_PC9 
 //! @}
@@ -493,6 +494,7 @@
 //! @{
 #define USB_ID_FLAGS             (PIO_INPUT | PIO_PULLUP)
 #define USB_ID_PIN               PIO_PC16_IDX /* As IO pin input */
+#define USB_ID_PIN_IRQn     (PIOC_IRQn)
 #define USB_ID_PIO_ID         ID_PIOC
 #define USB_ID_PIO_MASK    PIO_PC16
 //! @}

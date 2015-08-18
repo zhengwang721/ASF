@@ -49,9 +49,5 @@
 
 /* Configure USB pins */
 #define CONF_BOARD_USB_PORT
-/* Enable USB VBUS detect */
-//#define CONF_BOARD_USB_VBUS_DETECT
-/* ID detect enabled */
-#define CONF_BOARD_USB_ID_DETECT
 
 #endif /* CONF_BOARD_H_INCLUDED */

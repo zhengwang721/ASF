@@ -47,11 +47,10 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
+/* Configure UART pins */
+#define CONF_BOARD_UART_CONSOLE
+
 /* Configure USB pins */
 #define CONF_BOARD_USB_PORT
-/* Enable USB VBUS detect */
-//#define CONF_BOARD_USB_VBUS_DETECT
-/* ID detect enabled */
-#define CONF_BOARD_USB_ID_DETECT
 
 #endif /* CONF_BOARD_H_INCLUDED */

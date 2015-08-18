@@ -45,9 +45,6 @@
  */
 
 #include <asf.h>
-#include "conf_board.h"
-#include "conf_usb_host.h"
-#include "conf_usb.h"
 
 /* Wakeup pin is SW0 (fast wakeup 14) */
 #define  RESUME_PMC_FSTT (PMC_FSMR_FSTT14)
@@ -57,16 +54,11 @@
 #define  RESUME_PIO_MASK (PIN_PUSHBUTTON_1_MASK)
 #define  RESUME_PIO_ATTR (PIN_PUSHBUTTON_1_ATTR)
 
-/*! Current USB mode */
-static bool ui_b_host_mode = false;
-
 /**
  * \name Internal routines to manage asynchronous interrupt pin change
  * This interrupt is connected to a switch and allows to wakeup CPU in low sleep
  * mode.
- * In USB device mode, this wakeup the USB host via a upstream resume.
- * In USB host mode, this wakeup the USB devices connected via a downstream
- * resume.
+ * This wakeup the USB devices connected via a downstream resume.
  * @{
  */
 static void ui_enable_asynchronous_interrupt(void);
@@ -79,20 +71,11 @@ static void ui_disable_asynchronous_interrupt(void);
 static void ui_wakeup_handler(uint32_t id, uint32_t mask)
 {
 	if (RESUME_PIO_ID == id && RESUME_PIO_MASK == mask) {
-		if (ui_b_host_mode) {
-			if (!uhc_is_suspend()) {
-				/* USB is not in suspend mode
-				 *  Let's interrupt enable. */
-				return;
-			}
-
+		if (uhc_is_suspend()) {
 			ui_disable_asynchronous_interrupt();
 
-			/* Wakeup the devices connected */
-			pmc_wait_wakeup_clocks_restore(uhc_resume);
-		} else {
-			/* In device mode, wakeup the USB host. */
-			pmc_wait_wakeup_clocks_restore(udc_remotewakeup);
+			/* Wakeup host and device */
+			uhc_resume();
 		}
 	}
 }
@@ -103,10 +86,10 @@ static void ui_wakeup_handler(uint32_t id, uint32_t mask)
 static void ui_enable_asynchronous_interrupt(void)
 {
 	/* Enable interrupt for button pin */
-	pio_get_interrupt_status(RESUME_PIO);
-	pio_enable_pin_interrupt(RESUME_PIN);
-	/* Enable fast wakeup for button pin */
-	pmc_set_fast_startup_input(RESUME_PMC_FSTT);
+	pio_get_interrupt_status(PIOB);
+	pio_enable_pin_interrupt(GPIO_PUSH_BUTTON_2);
+	/* Enable fastwakeup for button pin */
+	pmc_set_fast_startup_input(PMC_FSMR_FSTT14);
 }
 
 /**
@@ -115,10 +98,10 @@ static void ui_enable_asynchronous_interrupt(void)
 static void ui_disable_asynchronous_interrupt(void)
 {
 	/* Disable interrupt for button pin */
-	pio_disable_pin_interrupt(RESUME_PIN);
-	pio_get_interrupt_status(RESUME_PIO);
-	/* Enable fast wakeup for button pin */
-	pmc_clr_fast_startup_input(RESUME_PMC_FSTT);
+	pio_disable_pin_interrupt(GPIO_PUSH_BUTTON_2);
+	pio_get_interrupt_status(PIOB);
+	/* Enable fastwakeup for button pin */
+	pmc_clr_fast_startup_input(PMC_FSMR_FSTT14);
 }
 
 /*! @} */
@@ -130,14 +113,19 @@ static void ui_disable_asynchronous_interrupt(void)
 void ui_init(void)
 {
 	/* Enable PIO clock for button inputs */
-	pmc_enable_periph_clk(RESUME_PIO_ID);
+	pmc_enable_periph_clk(ID_PIOB);
 	pmc_enable_periph_clk(ID_PIOE);
 	/* Set handler for wakeup */
 	pio_handler_set(RESUME_PIO, RESUME_PIO_ID, RESUME_PIO_MASK,
 			RESUME_PIO_ATTR, ui_wakeup_handler);
 	/* Enable IRQ for button (PIOB) */
 	NVIC_EnableIRQ((IRQn_Type)RESUME_PIO_ID);
+	/* Enable interrupt for button pin */
+	pio_get_interrupt_status(RESUME_PIO);
 	pio_configure_pin(RESUME_PIN, RESUME_PIO_ATTR);
+	pio_enable_pin_interrupt(RESUME_PIN);
+	/* Enable fastwakeup for button pin */
+	pmc_set_fast_startup_input(RESUME_PMC_FSTT);
 
 	/* Initialize LEDs */
 	LED_Off(LED0);
@@ -146,13 +134,8 @@ void ui_init(void)
 
 void ui_usb_mode_change(bool b_host_mode)
 {
+	UNUSED(b_host_mode);
 	ui_init();
-	ui_b_host_mode = b_host_mode;
-	if (b_host_mode) {
-		LED_On(LED1);
-	} else {
-		LED_Off(LED1);
-	}
 }
 
 /*! @} */
@@ -163,63 +146,87 @@ void ui_usb_mode_change(bool b_host_mode)
  */
 
 /*! Status of device enumeration */
-static uhc_enum_status_t ui_host_enum_status = UHC_ENUM_DISCONNECT;
-/*! Manages device mouse moving */
-static int8_t ui_host_x, ui_host_y, ui_host_scroll;
+static uhc_enum_status_t ui_enum_status = UHC_ENUM_DISCONNECT;
+/*! Blink frequency depending on device speed */
+static uint16_t ui_device_speed_blink;
+/*! Status of the MSC test */
+static bool ui_test_done;
+/*! Result of the MSC test */
+static bool ui_test_result;
 
-void ui_host_vbus_change(bool b_vbus_present)
+void ui_usb_vbus_change(bool b_vbus_present)
 {
-	UNUSED(b_vbus_present);
-}
-
-void ui_host_vbus_error(void)
-{
-}
-
-void ui_host_connection_event(uhc_device_t *dev, bool b_present)
-{
-	(void)dev;
-	if (b_present) {
+	if (b_vbus_present) {
 		LED_On(LED1);
 	} else {
 		LED_Off(LED1);
-		ui_host_enum_status = UHC_ENUM_DISCONNECT;
 	}
 }
 
-void ui_host_enum_event(uhc_device_t *dev, uhc_enum_status_t status)
+void ui_usb_vbus_error(void)
 {
-	(void)dev;
-	ui_host_enum_status = status;
-	if (ui_host_enum_status == UHC_ENUM_SUCCESS) {
-		ui_host_x = 0, ui_host_y = 0, ui_host_scroll = 0;
+}
+
+void ui_usb_connection_event(uhc_device_t *dev, bool b_present)
+{
+	UNUSED(dev);
+	if (b_present) {
+		LED_On(LED1);
+	} else {
+		LED_Off(LED0);
+		LED_Off(LED1);
+		ui_enum_status = UHC_ENUM_DISCONNECT;
 	}
 }
 
-void ui_host_wakeup_event(void)
+void ui_usb_enum_event(uhc_device_t *dev, uhc_enum_status_t status)
+{
+	UNUSED(dev);
+	ui_enum_status = status;
+	switch (dev->speed) {
+	case UHD_SPEED_HIGH:
+		ui_device_speed_blink = 250;
+		break;
+
+	case UHD_SPEED_FULL:
+		ui_device_speed_blink = 500;
+		break;
+
+	case UHD_SPEED_LOW:
+	default:
+		ui_device_speed_blink = 1000;
+		break;
+	}
+	ui_test_done = false;
+}
+
+void ui_usb_wakeup_event(void)
 {
 	ui_disable_asynchronous_interrupt();
 }
 
-void ui_host_sof_event(void)
+void ui_usb_sof_event(void)
 {
 	bool b_btn_state;
-	static bool btn_suspend_and_remotewakeup = false;
+	static bool btn_suspend = false;
 	static uint16_t counter_sof = 0;
 
-	if (ui_host_enum_status == UHC_ENUM_SUCCESS) {
+	if (ui_enum_status == UHC_ENUM_SUCCESS) {
 		/* Display device enumerated and in active mode */
-		if (++counter_sof == 500) {
+		if (++counter_sof > ui_device_speed_blink) {
 			counter_sof = 0;
 			LED_Toggle(LED0);
+			if (ui_test_done && !ui_test_result) {
+				/* Test fail then blink led */
+				LED_Toggle(LED1);
+			}
 		}
-
 		/* Scan button to enter in suspend mode and remote wakeup */
 		b_btn_state = (!gpio_pin_is_high(GPIO_PUSH_BUTTON_1)) ?
 				true : false;
-		if (b_btn_state != btn_suspend_and_remotewakeup) {
+		if (b_btn_state != btn_suspend) {
 			/* Button have changed */
-			btn_suspend_and_remotewakeup = b_btn_state;
+			btn_suspend = b_btn_state;
 			if (b_btn_state) {
 				/* Button has been pressed */
 				LED_Off(LED0);
@@ -229,125 +236,46 @@ void ui_host_sof_event(void)
 				return;
 			}
 		}
-
-		/* Power on a LED when the mouse move */
-		if (!ui_host_x && !ui_host_y && !ui_host_scroll) {
-			LED_Off(LED1);
-		} else {
-			ui_host_x = ui_host_y = ui_host_scroll = 0;
-			LED_On(LED1);
-		}
 	}
 }
 
-static void ui_host_hid_mouse_btn(bool b_state)
+void ui_test_flag_reset(void)
 {
-	static uint8_t nb_down = 0;
-	if (b_state) {
-		nb_down++;
-	} else {
-		nb_down--;
-	}
+	ui_test_done = false;
+	LED_Off(LED1);
+}
 
-	if (nb_down) {
+void ui_test_finish(bool b_success)
+{
+	ui_test_done = true;
+	ui_test_result = b_success;
+	if (b_success) {
 		LED_On(LED1);
-	} else {
-		LED_Off(LED1);
 	}
-}
-
-void ui_host_hid_mouse_btn_left(bool b_state)
-{
-	ui_host_hid_mouse_btn(b_state);
-}
-
-void ui_host_hid_mouse_btn_right(bool b_state)
-{
-	ui_host_hid_mouse_btn(b_state);
-}
-
-void ui_host_hid_mouse_btn_middle(bool b_state)
-{
-	ui_host_hid_mouse_btn(b_state);
-}
-
-void ui_host_hid_mouse_move(int8_t x, int8_t y, int8_t scroll)
-{
-	ui_host_x = x;
-	ui_host_y = y;
-	ui_host_scroll = scroll;
 }
 
 /*! @} */
 
-/**
- * \name Device mode user interface functions
- * @{
- */
-#define  MOUSE_MOVE_RANGE  3
-static bool ui_device_b_mouse_enable = false;
-
-void ui_device_suspend_action(void)
-{
-	ui_init();
-}
-
-void ui_device_resume_action(void)
+/*! \name Callback to show the MSC read and write access
+ *  @{ */
+void ui_start_read(void)
 {
 	LED_On(LED1);
 }
 
-void ui_device_remotewakeup_enable(void)
+void ui_stop_read(void)
 {
-	ui_enable_asynchronous_interrupt();
+	LED_Off(LED1);
 }
 
-void ui_device_remotewakeup_disable(void)
+void ui_start_write(void)
 {
-	ui_disable_asynchronous_interrupt();
+	LED_On(LED1);
 }
 
-bool ui_device_mouse_enable(void)
+void ui_stop_write(void)
 {
-	ui_device_b_mouse_enable = true;
-	return true;
-}
-
-void ui_device_mouse_disable(void)
-{
-	ui_device_b_mouse_enable = false;
-}
-
-void ui_device_sof_action(void)
-{
-	uint16_t framenumber;
-	static uint8_t cpt_sof = 0;
-
-	if (!ui_device_b_mouse_enable) {
-		return;
-	}
-
-	framenumber = udd_get_frame_number();
-	if ((framenumber % 1000) == 0) {
-		LED_On(LED0);
-	}
-
-	if ((framenumber % 1000) == 500) {
-		LED_Off(LED0);
-	}
-
-	/* Scan process running each 2ms */
-	cpt_sof++;
-	if (2 > cpt_sof) {
-		return;
-	}
-
-	cpt_sof = 0;
-
-	/* Look touch sensor activity for the X and Y events */
-	if (!gpio_pin_is_high(GPIO_PUSH_BUTTON_1)) {
-		udi_hid_mouse_moveX(-MOUSE_MOVE_RANGE);
-	}
+	LED_Off(LED1);
 }
 
 /*! @} */
@@ -355,21 +283,17 @@ void ui_device_sof_action(void)
 /**
  * \defgroup UI User Interface
  *
- * Human interface on SAM3X_EK :
- * - Led 1 is on in host mode (when USB OTG cable is pluged)
- * - device mode:
- *   - Led 1 is on when USB line is in IDLE mode, and off in SUSPEND
- *     mode
- *   - Led 0 blinks when USB Host have checked and enabled HID mouse
- *     interface
- *   - Mouse buttons are not linked.
- *   - The SW0 are used to move mouse on the axis X.
- * - host mode:
- *   - Led 1 is continuously on when a device is connected
- *   - Led 0 blinks when the device is enumerated and USB in idle mode
- *   - Led 1 is on when a HID mouse button is pressed
- *   - Led 1 is on when the mouse move
+ * Human interface on SAMV71-Xplained-Ultra :
+ * - Led 1 is on when Vbus is generated
+ * - Led 1 is continuously on when a device is connected
+ * - Led 0 blinks when the device is enumerated and USB in idle mode
+ *   - The blink is slow (1s) with low speed device
+ *   - The blink is normal (0.5s) with full speed device
+ *   - The blink is fast (0.25s) with high speed device
+ * - Led 1 is on when a read or write access is on going
+ * - Led 1 is on when a LUN test is success
+ * - Led 1 blinks when a LUN test is unsuccess
  * - SW0 allows to enter the device in suspend mode with remote
- *   wakeup feature authorized
+ *   wakeup feature autorized
  * - Only SW0 can be used to wakeup USB device in suspend mode
  */

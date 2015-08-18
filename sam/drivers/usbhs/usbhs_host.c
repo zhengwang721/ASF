@@ -270,15 +270,13 @@ static void otg_id_handler(uint32_t id, uint32_t mask)
 	if (Is_otg_id_device()) {
 		uhc_stop(false);
 		UHC_MODE_CHANGE(false);
-		otg_force_device_mode();
+		USBHS->USBHS_CTRL = USBHS_CTRL_UIMOD_DEVICE;
 		udc_start();
-		dbg_print("\r\nudc_start ");
 	} else {
 		udc_stop();
 		UHC_MODE_CHANGE(true);
 		otg_force_host_mode();
 		uhc_start();
-		dbg_print("\r\nuhc_start ");
 	}
 }
 #endif
@@ -502,8 +500,8 @@ bool otg_dual_enable(void)
 	otg_initialized = true;
 
 	//* Enable USB hardware clock
-	sysclk_enable_usb();
 	pmc_enable_periph_clk(ID_USBHS);
+	sysclk_enable_usb();
 
 	// Always authorize asynchronous USB interrupts to exit of sleep mode
 	// For SAM USB wake up device except BACKUP mode
@@ -514,7 +512,7 @@ bool otg_dual_enable(void)
 #if OTG_ID_IO
 	otg_id_init(otg_id_handler);
 	if (Is_otg_id_device()) {
-		otg_force_device_mode();
+		USBHS->USBHS_CTRL = USBHS_CTRL_UIMOD_DEVICE;
 		uhd_sleep_mode(UHD_STATE_WAIT_ID_HOST);
 		UHC_MODE_CHANGE(false);
 		udc_start();
