@@ -257,10 +257,11 @@ enum status_code i2c_master_init(
 	}
 #elif (SAMC21)
 	pm_index     = sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
-	if (sercom_index == 5)
+	if (sercom_index == 5) {
 		gclk_index   = SERCOM5_GCLK_ID_CORE;
-	else
+	} else {
 		gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
+	}
 #else
 	pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
 	gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
