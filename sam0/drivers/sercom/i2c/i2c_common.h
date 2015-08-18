@@ -549,7 +549,7 @@ enum i2c_transfer_direction {
  *		<td>42116D</td>
  *		<td>12/2014</td>
  *		<td>Added 10-bit addressing and high speed support in SAM D21.
- *		    Added SAM R21/D10/D11 support</td>
+ *		    Added SAM R21/D10/D11 support.</td>
  *	</tr>
  *	<tr>
  *		<td>42116C</td>
@@ -559,7 +559,7 @@ enum i2c_transfer_direction {
  *	<tr>
  *		<td>42116B</td>
  *		<td>06/2013</td>
- *		<td>Corrected documentation typos. Updated I<SUP>2</SUP>C Bus State Diagram</td>
+ *		<td>Corrected documentation typos. Updated I<SUP>2</SUP>C Bus State Diagram.</td>
  *	</tr>
  *	<tr>
  *		<td>42116A</td>
