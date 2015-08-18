@@ -554,7 +554,7 @@ enum i2c_transfer_direction {
  *	<tr>
  *		<td>42117C</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAM D21 to the application note</td>
+ *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
  *		<td>42117B</td>
