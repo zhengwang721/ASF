@@ -35,6 +35,7 @@
 		<device-support value="saml21"/>
 		<device-support value="samg55"/>
 		<device-support value="samda1"/>
+		<device-support value="saml22"/>
 	</module>
 
 	<select-by-device id="common.drivers.usb.device" caption="USB Device">
@@ -135,6 +136,7 @@
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
 			<device-support value="samda1"/>
+			<device-support value="saml22"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samd21"/>
 		</module>
 		<module type="driver" id="common.drivers.usb.device#8" caption="USB Device - SAM UHDP implementation">
