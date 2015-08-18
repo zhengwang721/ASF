@@ -82,7 +82,12 @@
  *
  * \section appdoc_sam0_spi_unit_test_setup Setup
  * The following connections has to be made using wires:
- * -SAM D21/DA1/D20 Xplained Pro
+ * -SAM D20 Xplained Pro
+ *  - \b SCK:   EXT3 PIN15 (PB23) <--> EXT2 PIN15 (PA17)
+ *  - \b SS_0:  EXT3 PIN16 (PB17) <--> EXT2 PIN16 (PA18)
+ *  - \b DI/DO: EXT3 PIN17 (PB16) <--> EXT2 PIN17 (PA16)
+ *  - \b DO/DI: EXT3 PIN18 (PB22) <--> EXT2 PIN18 (PA19)
+ * -SAM D21/DA1 Xplained Pro
  *  - \b SCK:   EXT3 PIN15 (PB17) <--> EXT2 PIN15 (PA17)
  *  - \b SS_0:  EXT3 PIN16 (PB22) <--> EXT2 PIN16 (PA18)
  *  - \b DI/DO: EXT3 PIN17 (PB16) <--> EXT2 PIN17 (PA16)
