@@ -534,7 +534,7 @@ enum i2c_transfer_direction {
  *
  * \page asfdoc_sam0_sercom_i2c_document_revision_history Document Revision History
  *
- * \if I2C_MASTER_MODE || I2C_MASTER_CALLBACK_MODE
+ * \if (I2C_MASTER_MODE || I2C_MASTER_CALLBACK_MODE)
  * <table>
  *	<tr>
  *		<th>Doc. Rev.</td>
