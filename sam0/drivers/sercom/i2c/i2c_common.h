@@ -62,9 +62,9 @@ extern "C" {
  *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C Slave Mode (SERCOM I2C) Driver
  * \endif
  *
- * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
- * an interface for the configuration and management of the device's SERCOM 
- * I<SUP>2</SUP>C module, for the transfer of data via an I<SUP>2</SUP>C bus. 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides
+ * an interface for the configuration and management of the device's SERCOM
+ * I<SUP>2</SUP>C module, for the transfer of data via an I<SUP>2</SUP>C bus.
  * The following driver API modes are covered by this manual:
  *
  * \if I2C_MASTER_MODE
@@ -335,7 +335,7 @@ extern "C" {
  *
  * \anchor asfdoc_sam0_sercom_i2c_sleep_modes_table
  * <table>
- *   <caption>I<SUP>2</SUP>C Standby Operations</caption>
+ *   <caption>I2C Standby Operations</caption>
  *   <tr>
  *      <th>Run in standby</th>
  *      <th>Slave</th>
@@ -541,28 +541,48 @@ enum i2c_transfer_direction {
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ * \if I2C_MASTER_MODE || I2C_MASTER_CALLBACK_MODE
  *		<td>42117E</td>
+ * \else
+ *		<td>42116E</td>
+ * \endif
  *		<td>08/2015</td>
  *		<td>Added support for SAM L21/L22, SAM DA1 and SAM C21</td>
  *	</tr>
  *	<tr>
+ * \if I2C_MASTER_MODE || I2C_MASTER_CALLBACK_MODE
  *		<td>42117D</td>
+ * \else
+ *		<td>42116D</td>
+ * \endif
  *		<td>12/2014</td>
  *		<td>Added support for 10-bit addressing and high speed in SAM D21.
  *		    Added support for SAM R21 and SAM D10/D11.</td>
  *	</tr>
  *	<tr>
+ * \if I2C_MASTER_MODE || I2C_MASTER_CALLBACK_MODE
  *		<td>42117C</td>
+ * \else
+ *		<td>42116C</td>
+ * \endif
  *		<td>01/2014</td>
  *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
+ * \if I2C_MASTER_MODE || I2C_MASTER_CALLBACK_MODE
  *		<td>42117B</td>
+ * \else
+ *		<td>42116B</td>
+ * \endif
  *		<td>06/2013</td>
- *		<td>Corrected documentation typos. Updated I<SUP>2</SUP>C Bus State Diagram</td>
+ *		<td>Corrected documentation typos. Updated I<SUP>2</SUP>C Bus State Diagram.</td>
  *	</tr>
  *	<tr>
+ * \if I2C_MASTER_MODE || I2C_MASTER_CALLBACK_MODE
  *		<td>42117A</td>
+ * \else
+ *		<td>42116A</td>
+ * \endif
  *		<td>06/2013</td>
  *		<td>Initial release</td>
  *	</tr>
