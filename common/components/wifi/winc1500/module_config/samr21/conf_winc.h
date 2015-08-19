@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief This module contains NMC1500 BSP APIs declarations.
+ * \brief WINC1500 configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -38,74 +38,62 @@
  * \asf_license_stop
  *
  */
-/**@defgroup  BSPDefine Defines
- * @ingroup nm_bsp
- * @{
- */
-#ifndef _NM_BSP_INTERNAL_H_
-#define _NM_BSP_INTERNAL_H_
 
+#ifndef CONF_WINC_H_INCLUDED
+#define CONF_WINC_H_INCLUDED
 
-
-#ifdef WIN32
-#include "nm_bsp_win32.h"
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#ifdef __K20D50M__
-#include "nm_bsp_k20d50m.h"
+#include "board.h"
+
+/*
+   ---------------------------------
+   ---------- PIN settings ---------
+   ---------------------------------
+*/
+
+#define CONF_WINC_PIN_RESET				PIN_PA13
+#define CONF_WINC_PIN_CHIP_ENABLE		PIN_PA23
+#define CONF_WINC_PIN_WAKE				PIN_PA28
+
+/*
+   ---------------------------------
+   ---------- SPI settings ---------
+   ---------------------------------
+*/
+
+#define CONF_WINC_USE_SPI				(1)
+
+/** SPI pin and instance settings. */
+#define CONF_WINC_SPI_MODULE			EXT1_SPI_MODULE
+#define CONF_WINC_SPI_SERCOM_MUX		EXT1_SPI_SERCOM_MUX_SETTING
+#define CONF_WINC_SPI_PINMUX_PAD0		EXT1_SPI_SERCOM_PINMUX_PAD0 /* in */
+#define CONF_WINC_SPI_PINMUX_PAD1		PINMUX_UNUSED /* cs driven from software */
+#define CONF_WINC_SPI_PINMUX_PAD2		EXT1_SPI_SERCOM_PINMUX_PAD2 /* out */
+#define CONF_WINC_SPI_PINMUX_PAD3		EXT1_SPI_SERCOM_PINMUX_PAD3 /* sck */
+#define CONF_WINC_SPI_CS_PIN			EXT1_PIN_SPI_SS_0
+
+/** SPI interrupt pin. */
+#define CONF_WINC_SPI_INT_PIN			EXT1_IRQ_PIN
+#define CONF_WINC_SPI_INT_MUX			EXT1_IRQ_MUX
+#define CONF_WINC_SPI_INT_EIC			(6)
+
+/** SPI clock. */
+#define CONF_WINC_SPI_CLOCK				(12000000)
+
+/*
+   ---------------------------------
+   --------- Debug Options ---------
+   ---------------------------------
+*/
+
+#define CONF_WINC_DEBUG					(1)
+#define CONF_WINC_PRINTF				printf
+
+#ifdef __cplusplus
+}
 #endif
 
-#ifdef __MSP430FR5739__
-#include "bsp_msp430fr5739.h"
-#endif
-
-#ifdef _FREESCALE_MCF51CN128_
-#include "bsp/include/nm_bsp_mcf51cn128.h"
-#endif
-
-#ifdef __MCF964548__
-#include "bsp/include/nm_bsp_mc96f4548.h"
-#endif
-
-#ifdef __APP_APS3_CORTUS__
-#include "nm_bsp_aps3_cortus.h"
-#endif
-
-#if (defined __SAMR21G18A__)
-#include "bsp/include/nm_bsp_samr21.h"
-#endif
-
-#if (defined __SAML21J18A__) || (defined __SAML21J18B__)
-#include "bsp/include/nm_bsp_saml21.h"
-#endif
-
-#if (defined __SAMD21J18A__) || (defined __SAMD21G18A__)
-#include "bsp/include/nm_bsp_samd21.h"
-#endif
-
-#if (defined __SAM4S16C__) || (defined __SAM4SD32C__)
-#include "bsp/include/nm_bsp_sam4s.h"
-#endif
-
-#ifdef __SAMG53N19__
-#include "bsp/include/nm_bsp_samg53.h"
-#endif
-
-#ifdef __SAMG55J19__
-#include "bsp/include/nm_bsp_samg55.h"
-#endif
-
-#ifdef CORTUS_APP
-#include "crt_iface.h"
-#endif
-
-#ifdef NRF51
-#include "nm_bsp_nrf51822.h"
-#endif
-
-#ifdef _ARDUINO_UNO_
-#include "bsp/include/nm_bsp_arduino_uno.h"
-#endif
-
-
-#endif //_NM_BSP_INTERNAL_H_
+#endif /* CONF_WINC_H_INCLUDED */

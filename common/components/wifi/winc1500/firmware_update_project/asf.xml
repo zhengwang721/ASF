@@ -14,6 +14,7 @@
 			<build type="distribute" subtype="file" value="samg53_xplained_pro_firmware_update.bat"/>
 			<build type="distribute" subtype="file" value="samg55_xplained_pro_firmware_update.bat"/>
 			<build type="distribute" subtype="file" value="samd21_xplained_pro_firmware_update.bat"/>
+			<build type="distribute" subtype="file" value="samr21_xplained_pro_firmware_update.bat"/>
 			<build type="distribute" subtype="file" value="samw25_xplained_pro_firmware_update.bat"/>
 			<build type="include-path" value="doc"/>
 			<build type="distribute" subtype="file" value="doc/Atmel-AN004-Firmware-Update-Procedure-for-WINC1500-WiFi-Module-using-a-SAM-Xplained-Pro.pdf"/>
@@ -72,6 +73,7 @@
 			<build type="distribute" subtype="file" value="firmware/Tools/serial_bridge/samg53_xplained_pro_serial_bridge.elf"/>
 			<build type="distribute" subtype="file" value="firmware/Tools/serial_bridge/samg55_xplained_pro_serial_bridge.elf"/>
 			<build type="distribute" subtype="file" value="firmware/Tools/serial_bridge/samd21_xplained_pro_serial_bridge.elf"/>
+			<build type="distribute" subtype="file" value="firmware/Tools/serial_bridge/samr21_xplained_pro_serial_bridge.elf"/>
 			<build type="distribute" subtype="file" value="firmware/Tools/serial_bridge/samw25_xplained_pro_serial_bridge.elf"/>
 
 			<!-- Device support -->
@@ -80,6 +82,7 @@
 			<device-support value="samg53"/>
 			<device-support value="samg55"/>
 			<device-support value="samd21"/>
+			<device-support value="samr21"/>
 
 			<!-- Required modules -->
 			<info type="gui-flag" value="move-to-root"/>

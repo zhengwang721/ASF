@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief This module contains NMC1500 BSP APIs declarations.
+ * \brief This module contains SAMR21 BSP APIs declarations.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -38,74 +38,15 @@
  * \asf_license_stop
  *
  */
-/**@defgroup  BSPDefine Defines
- * @ingroup nm_bsp
- * @{
- */
-#ifndef _NM_BSP_INTERNAL_H_
-#define _NM_BSP_INTERNAL_H_
 
+#ifndef _NM_BSP_SAMR21_H_
+#define _NM_BSP_SAMR21_H_
 
+#include "conf_winc.h"
 
-#ifdef WIN32
-#include "nm_bsp_win32.h"
-#endif
+#define NM_EDGE_INTERRUPT		(1)
 
-#ifdef __K20D50M__
-#include "nm_bsp_k20d50m.h"
-#endif
+#define NM_DEBUG				CONF_WINC_DEBUG
+#define NM_BSP_PRINTF			CONF_WINC_PRINTF
 
-#ifdef __MSP430FR5739__
-#include "bsp_msp430fr5739.h"
-#endif
-
-#ifdef _FREESCALE_MCF51CN128_
-#include "bsp/include/nm_bsp_mcf51cn128.h"
-#endif
-
-#ifdef __MCF964548__
-#include "bsp/include/nm_bsp_mc96f4548.h"
-#endif
-
-#ifdef __APP_APS3_CORTUS__
-#include "nm_bsp_aps3_cortus.h"
-#endif
-
-#if (defined __SAMR21G18A__)
-#include "bsp/include/nm_bsp_samr21.h"
-#endif
-
-#if (defined __SAML21J18A__) || (defined __SAML21J18B__)
-#include "bsp/include/nm_bsp_saml21.h"
-#endif
-
-#if (defined __SAMD21J18A__) || (defined __SAMD21G18A__)
-#include "bsp/include/nm_bsp_samd21.h"
-#endif
-
-#if (defined __SAM4S16C__) || (defined __SAM4SD32C__)
-#include "bsp/include/nm_bsp_sam4s.h"
-#endif
-
-#ifdef __SAMG53N19__
-#include "bsp/include/nm_bsp_samg53.h"
-#endif
-
-#ifdef __SAMG55J19__
-#include "bsp/include/nm_bsp_samg55.h"
-#endif
-
-#ifdef CORTUS_APP
-#include "crt_iface.h"
-#endif
-
-#ifdef NRF51
-#include "nm_bsp_nrf51822.h"
-#endif
-
-#ifdef _ARDUINO_UNO_
-#include "bsp/include/nm_bsp_arduino_uno.h"
-#endif
-
-
-#endif //_NM_BSP_INTERNAL_H_
+#endif /* _NM_BSP_SAMR21_H_ */
