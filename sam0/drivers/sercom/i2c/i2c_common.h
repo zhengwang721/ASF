@@ -534,6 +534,7 @@ enum i2c_transfer_direction {
  *
  * \page asfdoc_sam0_sercom_i2c_document_revision_history Document Revision History
  *
+ * \if I2C_MASTER_MODE || I2C_MASTER_CALLBACK_MODE
  * <table>
  *	<tr>
  *		<th>Doc. Rev.</td>
@@ -541,52 +542,68 @@ enum i2c_transfer_direction {
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- * \if I2C_MASTER_MODE || I2C_MASTER_CALLBACK_MODE
  *		<td>42117E</td>
- * \else
- *		<td>42116E</td>
- * \endif
  *		<td>08/2015</td>
  *		<td>Added support for SAM L21/L22, SAM DA1 and SAM C21</td>
  *	</tr>
  *	<tr>
- * \if I2C_MASTER_MODE || I2C_MASTER_CALLBACK_MODE
  *		<td>42117D</td>
- * \else
- *		<td>42116D</td>
- * \endif
  *		<td>12/2014</td>
  *		<td>Added support for 10-bit addressing and high speed in SAM D21.
  *		    Added support for SAM R21 and SAM D10/D11.</td>
  *	</tr>
  *	<tr>
- * \if I2C_MASTER_MODE || I2C_MASTER_CALLBACK_MODE
  *		<td>42117C</td>
- * \else
- *		<td>42116C</td>
- * \endif
  *		<td>01/2014</td>
  *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
- * \if I2C_MASTER_MODE || I2C_MASTER_CALLBACK_MODE
  *		<td>42117B</td>
- * \else
- *		<td>42116B</td>
- * \endif
  *		<td>06/2013</td>
  *		<td>Corrected documentation typos. Updated I<SUP>2</SUP>C Bus State Diagram.</td>
  *	</tr>
  *	<tr>
- * \if I2C_MASTER_MODE || I2C_MASTER_CALLBACK_MODE
  *		<td>42117A</td>
- * \else
- *		<td>42116A</td>
- * \endif
  *		<td>06/2013</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
+ * \else
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>42116E</td>
+ *		<td>08/2015</td>
+ *		<td>Added support for SAM L21/L22, SAM DA1 and SAM C21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>42116D</td>
+ *		<td>12/2014</td>
+ *		<td>Added support for 10-bit addressing and high speed in SAM D21.
+ *		    Added support for SAM R21 and SAM D10/D11.</td>
+ *	</tr>
+ *	<tr>
+
+ *		<td>42116C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAM D21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>42116B</td>
+ *		<td>06/2013</td>
+ *		<td>Corrected documentation typos. Updated I<SUP>2</SUP>C Bus State Diagram.</td>
+ *	</tr>
+ *	<tr>
+ *		<td>42116A</td>
+ *		<td>06/2013</td>
+ *		<td>Initial release</td>
+ *	</tr>
+ * </table>
+ *\endif
  */
 
 #endif /* I2C_COMMON_H_INCLUDED */
