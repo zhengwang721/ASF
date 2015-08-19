@@ -57,13 +57,13 @@
 #elif (SAM4E)
 # define MAX_PERIPH_ID    47
 #elif (SAMV71)
-# define MAX_PERIPH_ID    60
+# define MAX_PERIPH_ID    64
 #elif (SAMV70)
-# define MAX_PERIPH_ID    60
+# define MAX_PERIPH_ID    64
 #elif (SAME70)
-# define MAX_PERIPH_ID    60
+# define MAX_PERIPH_ID    64
 #elif (SAMS70)
-# define MAX_PERIPH_ID    60
+# define MAX_PERIPH_ID    64
 #elif (SAM4N)
 # define MAX_PERIPH_ID    31
 #elif (SAM4C || SAM4CM || SAM4CP)
