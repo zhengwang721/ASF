@@ -111,8 +111,7 @@ extern "C" {
 #endif
 
 #include <compiler.h>
-#include "adc.h"
-#include "system.h"
+#include <system_samb11.h>
 
 /**
  * \brief ADC internal reference voltage level enum

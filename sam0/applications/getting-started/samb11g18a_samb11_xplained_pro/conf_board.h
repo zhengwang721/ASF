@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM TIMER Driver for SAMB11
+ * \brief SAM B11 Xplained Pro board configuration.
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,44 +43,7 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef TIMER_H_INCLUDED
-#define TIMER_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include <compiler.h>
-#include <system_samb11.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef void (*timer_callback_t)(void);
-
-/**
- * \brief TIMER configuration structure.
- *
- * Configuration struct for a TIMER instance. This structure should be
- * initialized by the \ref timer_get_config_defaults function before being
- * modified by the user application.
- */
-struct timer_config {
-	uint32_t reload_value;
-	/** Enable timer interrupt */
-	bool interrupt_enable;
-};
-
-void timer_get_config_defaults(struct timer_config *config);
-void timer_init(const struct timer_config *config);
-uint32_t timer_get_value(void);
-void timer_set_value(uint32_t value);
-uint32_t timer_get_interrupt_status(void);
-void timer_clear_interrupt_status(void);
-void timer_enable(void);
-void timer_disable(void);
-void timer_register_callback(timer_callback_t fun);
-void timer_unregister_callback(void);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+#endif /* CONF_BOARD_H_INCLUDED */

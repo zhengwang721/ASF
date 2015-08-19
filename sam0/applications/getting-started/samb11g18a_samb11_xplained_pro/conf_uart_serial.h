@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM TIMER Driver for SAMB11
+ * \brief SAMB11 UART configuration.
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -43,44 +43,17 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef TIMER_H_INCLUDED
-#define TIMER_H_INCLUDED
 
-#include <compiler.h>
-#include <system_samb11.h>
+#ifndef CONF_UART_SERIAL_H
+#define CONF_UART_SERIAL_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef void (*timer_callback_t)(void);
-
-/**
- * \brief TIMER configuration structure.
- *
- * Configuration struct for a TIMER instance. This structure should be
- * initialized by the \ref timer_get_config_defaults function before being
- * modified by the user application.
- */
-struct timer_config {
-	uint32_t reload_value;
-	/** Enable timer interrupt */
-	bool interrupt_enable;
-};
-
-void timer_get_config_defaults(struct timer_config *config);
-void timer_init(const struct timer_config *config);
-uint32_t timer_get_value(void);
-void timer_set_value(uint32_t value);
-uint32_t timer_get_interrupt_status(void);
-void timer_clear_interrupt_status(void);
-void timer_enable(void);
-void timer_disable(void);
-void timer_register_callback(timer_callback_t fun);
-void timer_unregister_callback(void);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+#include <board.h>
+//! [conf_uart_serial_settings]
+#define CONF_STDIO_USART_MODULE  EDBG_CDC_MODULE
+#define CONF_STDIO_PINMUX_PAD0   EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1   EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2   EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3   EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE      38400
+//! [conf_uart_serial_settings]
+#endif // CONF_UART_SERIAL_H

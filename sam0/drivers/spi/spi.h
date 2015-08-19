@@ -52,7 +52,7 @@
 #include <compiler.h>
 #include <conf_spi.h>
 #include <gpio.h>
-#include <system.h>
+#include <system_samb11.h>
 
 #  if SPI_CALLBACK_MODE == true
 //#  include <_interrupt.h>

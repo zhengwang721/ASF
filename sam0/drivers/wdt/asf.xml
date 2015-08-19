@@ -101,8 +101,8 @@
 
 			<build type="include-path" value="."/>
 
-			<build type="c-source" value="wdt_sam_b/wdt.c"/>
-			<build type="header-file" subtype="api" value="wdt_sam_b/wdt.h"/>
+			<build type="c-source" value="wdt_samb11.c"/>
+			<build type="header-file" subtype="api" value="wdt_samb11.h"/>
 
 			<build type="define" name="WDT_CALLBACK_MODE" value="false"/>
 			<build type="doxygen-enable-section" value="DEVICE_SAMB11_SUPPORT"/>
@@ -116,6 +116,7 @@
 			<device-support value="samb"/>
 
 			<require idref="sam0.utils"/>
+			<require idref="sam0.drivers.system"/>
 			<require idref="sam0.drivers.gpio"/>
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>

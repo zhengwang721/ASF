@@ -44,7 +44,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#include <system.h>
+#include "system_samb11.h"
 
 uint32_t system_clock_value;
 

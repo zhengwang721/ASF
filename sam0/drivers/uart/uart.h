@@ -49,7 +49,7 @@
 #define UART_H_INCLUDED
 
 #include <compiler.h>
-#include <system.h>
+#include <system_samb11.h>
 #include <gpio.h>
 
 #ifdef __cplusplus

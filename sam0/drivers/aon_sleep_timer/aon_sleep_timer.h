@@ -47,7 +47,7 @@
 #define AON_SLEEP_TIMER_H_INCLUDED
 
 #include <compiler.h>
-#include <system.h>
+#include <system_samb11.h>
 
 #ifdef __cplusplus
 extern "C" {

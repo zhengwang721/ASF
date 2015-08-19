@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM TIMER Driver for SAMB11
+ * \brief Example configuration.
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,44 +43,12 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef TIMER_H_INCLUDED
-#define TIMER_H_INCLUDED
+#ifndef CONF_EXAMPLE
+#define CONF_EXAMPLE
 
-#include <compiler.h>
-#include <system_samb11.h>
+/* About 10S */
+#define CONF_TIMER_RELOAD_VALUE	   260000000
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define CONF_DELAY_VALUE	   200
 
-typedef void (*timer_callback_t)(void);
-
-/**
- * \brief TIMER configuration structure.
- *
- * Configuration struct for a TIMER instance. This structure should be
- * initialized by the \ref timer_get_config_defaults function before being
- * modified by the user application.
- */
-struct timer_config {
-	uint32_t reload_value;
-	/** Enable timer interrupt */
-	bool interrupt_enable;
-};
-
-void timer_get_config_defaults(struct timer_config *config);
-void timer_init(const struct timer_config *config);
-uint32_t timer_get_value(void);
-void timer_set_value(uint32_t value);
-uint32_t timer_get_interrupt_status(void);
-void timer_clear_interrupt_status(void);
-void timer_enable(void);
-void timer_disable(void);
-void timer_register_callback(timer_callback_t fun);
-void timer_unregister_callback(void);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+#endif /* CONF_EXAMPLE */

@@ -104,6 +104,7 @@
  */
 
 #include <compiler.h>
+#include <system.h>
 
 #ifdef __cplusplus
 extern "C" {
