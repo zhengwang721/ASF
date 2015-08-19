@@ -123,5 +123,39 @@
 			<require idref="thirdparty.lwip.version"/>
 			<info type="gui-flag" value="move-to-root"/>
 		</module>
+		<module type="application" id="thirdparty.lwip.raw_basic_http_example#samv71" caption="lwIP TCP/IP Stack basic HTTP example using Raw API">
+			<info type="description" value="summary">
+				Basic HTTP web server using the lwIP TCP/IP stack Raw API in standalone mode (i.e. without RTOS support).
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+			<build type="include-path" value="."/>
+			<build type="include-path" value="network"/>
+			<build type="include-path" value="network/httpserver"/>
+			<build type="c-source" value="raw_http_basic_example.c"/>
+			<build type="c-source" value="network/ethernet.c"/>
+			<build type="header-file" value="network/ethernet.h"/>
+			<build type="c-source" value="network/timer_mgt.c"/>
+			<build type="header-file" value="network/timer_mgt.h"/>
+			<build type="c-source" value="network/httpserver/fs.c"/>
+			<build type="header-file" value="network/httpserver/fs.h"/>
+			<build type="c-source" value="network/httpserver/fsdata.c"/>
+			<build type="header-file" value="network/httpserver/fsdata.h"/>
+			<build type="c-source" value="network/httpserver/httpd.c"/>
+			<build type="header-file" value="network/httpserver/httpd.h"/>
+			<device-support value="same70"/>	
+			<device-support value="samv70"/>
+			<device-support value="samv71"/>
+			<device-support value="sams70"/>
+			<require idref="sam.utils.cmsis.samv71.source.template"/>
+			<require idref="sam.components.ethernet_phy.ksz8061rnb"/>
+			<require idref="sam.drivers.uart"/>
+			<require idref="common.services.ioport"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="common.utils.stdio.stdio_serial"/>
+			<require idref="thirdparty.lwip.version"/>
+			<info type="gui-flag" value="move-to-root"/>
+		</module>
 	</select-by-device>
 </asf>
