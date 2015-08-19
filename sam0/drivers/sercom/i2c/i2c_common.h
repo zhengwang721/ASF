@@ -587,7 +587,6 @@ enum i2c_transfer_direction {
  *		    Added support for SAM R21 and SAM D10/D11.</td>
  *	</tr>
  *	<tr>
-
  *		<td>42116C</td>
  *		<td>01/2014</td>
  *		<td>Added support for SAM D21</td>
