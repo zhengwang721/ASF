@@ -105,6 +105,8 @@ uint32_t timer_get_interrupt_status(void)
 void timer_clear_interrupt_status(void)
 {
 	TIMER0->INTSTATUSCLEAR.reg = 1;
+	/* Wait for operation finish */
+	while (TIMER0->INTSTATUSCLEAR.reg);
 }
 
 /**

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM B11 Xplained Pro board configuration.
+ * \brief SAMB11 UART configuration.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,9 +43,17 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_TIMER_H_INCLUDED
-#define CONF_TIMER_H_INCLUDED
 
-#define CONF_TIMER_RELOAD_VALUE	   26000000
+#ifndef CONF_UART_SERIAL_H
+#define CONF_UART_SERIAL_H
 
-#endif /* CONF_TIMER_H_INCLUDED */
+#include <board.h>
+//! [conf_uart_serial_settings]
+#define CONF_STDIO_USART_MODULE  EDBG_CDC_MODULE
+#define CONF_STDIO_PINMUX_PAD0   EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1   EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2   EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3   EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE      38400
+//! [conf_uart_serial_settings]
+#endif // CONF_UART_SERIAL_H

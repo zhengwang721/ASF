@@ -80,7 +80,7 @@ static void configure_timer(void)
 	timer_get_config_defaults(&config_timer);
 //! [setup_timer_2]
 //! [setup_timer_3]
-	config_timer.reload_value = TIMER_RELOAD_VALUE;
+	config_timer.reload_value = CONF_TIMER_RELOAD_VALUE;
 //! [setup_timer_3]
 //! [setup_timer_4]
 	timer_init(&config_timer);

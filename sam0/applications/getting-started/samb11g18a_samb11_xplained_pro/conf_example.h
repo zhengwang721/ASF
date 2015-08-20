@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM B11 Xplained Pro board configuration.
+ * \brief Example configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -43,9 +43,12 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_TIMER_H_INCLUDED
-#define CONF_TIMER_H_INCLUDED
+#ifndef CONF_EXAMPLE
+#define CONF_EXAMPLE
 
-#define CONF_TIMER_RELOAD_VALUE	   26000000
+/* About 10S */
+#define CONF_TIMER_RELOAD_VALUE	   260000000
 
-#endif /* CONF_TIMER_H_INCLUDED */
+#define CONF_DELAY_VALUE	   200
+
+#endif /* CONF_EXAMPLE */
