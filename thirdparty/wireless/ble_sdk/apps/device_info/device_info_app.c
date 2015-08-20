@@ -65,13 +65,9 @@
 /** @brief Scan response data*/
 uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 	
-uint8_t db_mem[1024] = {0};	
-
 bool volatile timer_cb_done = false; 
 
 uint8_t fw_version[10];
-
-bool volatile flag = true;
 
 at_ble_handle_t dis_conn_handle;
 
@@ -123,7 +119,7 @@ int main(void)
 	dis_init_service(&dis_service_handler);
 	
 	/* Define the primary service in the GATT server database */
-	if ((status = dis_primary_service_define(&dis_service_handler)) == AT_BLE_FAILURE)
+	if ((status = dis_primary_service_define(&dis_service_handler)) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("Device Information Service definition failed,reason %x",status);
 	}
@@ -153,10 +149,7 @@ int main(void)
 			fw_version[9] = (fw_update % 10)+'0';
 			fw_info_data.info_data = (uint8_t *)fw_version;
 			fw_info_data.data_len = 10;
-			if(flag){
-				UPDATE_FIRMWARE_REVISION(&dis_service_handler, &fw_info_data, dis_conn_handle);
-				flag = false;
-			}
+			UPDATE_FIRMWARE_REVISION(&dis_service_handler, &fw_info_data, dis_conn_handle);
 			fw_update++;
 			DBG_LOG("Updating Firmware to ver:%s", fw_version);
 		}
@@ -216,20 +209,6 @@ void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 	timer_cb_done = false;
 	LED_Off(LED0);
 	device_information_advertise();
-}
-
-void ble_notification_confirmed_app_event(uint8_t notification_status)
-{
-	if(!notification_status)
-	{
-		flag = true;
-		DBG_LOG("sending notification to the peer success");
-	}
-}
-
-at_ble_status_t ble_char_changed_app_event(at_ble_characteristic_changed_t *char_handle)
-{
-	return dis_char_changed_event(&dis_service_handler, char_handle);
 }
 
 void button_cb(void)

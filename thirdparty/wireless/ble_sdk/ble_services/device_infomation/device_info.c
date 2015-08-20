@@ -60,6 +60,7 @@ device_info_char_value_t char_value;
 
 bool volatile dis_notification_flag[DIS_TOTAL_CHARATERISTIC_NUM] = {false};
 
+
 /**@brief Initialize the dis service related information. */
 void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
 {	
@@ -195,9 +196,9 @@ void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
 	//Characteristic Info for Software  Revision
 	device_info_serv->serv_chars[5].char_val_handle = 0;          /* handle stored here */
 	device_info_serv->serv_chars[5].uuid.type = AT_BLE_UUID_16;
-	device_info_serv->serv_chars[5].uuid.uuid[0] = (uint8_t) DIS_CHAR_SOFTWARE_REVISION_UUID;          /* UUID : Software Revision */
-	device_info_serv->serv_chars[5].uuid.uuid[1] = (uint8_t) (DIS_CHAR_SOFTWARE_REVISION_UUID >> 8);          /* UUID : Software Revision */
-	device_info_serv->serv_chars[5].properties = AT_BLE_CHAR_READ; /* Properties */
+	device_info_serv->serv_chars[5].uuid.uuid[0] = (uint8_t) DIS_CHAR_SOFTWARE_REVISION_UUID;          /* uuid : software revision */
+	device_info_serv->serv_chars[5].uuid.uuid[1] = (uint8_t) (DIS_CHAR_SOFTWARE_REVISION_UUID >> 8);          /* uuid : software revision */
+	device_info_serv->serv_chars[5].properties = AT_BLE_CHAR_READ; /* properties */
 	
 	memcpy(char_value.default_software_revision,DEFAULT_SOFTWARE_REVISION,DIS_CHAR_SOFTWARE_REVISION_INIT_LEN);
 	device_info_serv->serv_chars[5].init_value = char_value.default_software_revision;
@@ -316,38 +317,7 @@ at_ble_status_t dis_info_update(dis_gatt_service_handler_t *dis_serv , dis_info_
 	if ((at_ble_characteristic_value_set(dis_serv->serv_chars[info_type].char_val_handle, info_data->info_data, info_data->data_len)) != AT_BLE_SUCCESS){
 		DBG_LOG("updating the characteristic failed\r\n");
 	} else {
-		if (dis_serv->serv_chars[info_type].properties == AT_BLE_CHAR_NOTIFY && dis_notification_flag[info_type])
-		{
-			if((at_ble_notification_send(conn_handle, dis_serv->serv_chars[info_type].char_val_handle)) == AT_BLE_FAILURE) {
-				DBG_LOG("sending notification to the peer failed");
-			}
-			else {
-				DBG_LOG_DEV("sending notification to the peer successful");
-				return AT_BLE_SUCCESS;
-			}
-		}
-		else
-		{
-			return AT_BLE_SUCCESS;
-		}
+		return AT_BLE_SUCCESS;
 	}
 	return AT_BLE_FAILURE;
-}
-
-at_ble_status_t dis_char_changed_event(dis_gatt_service_handler_t *dis_serv, at_ble_characteristic_changed_t *char_handle)
-{
-	uint8_t charidx;
-	at_ble_characteristic_changed_t change_params;
-	memcpy((uint8_t *)&change_params, char_handle, sizeof(at_ble_characteristic_changed_t));
-	
-	for(charidx = 0; charidx<DIS_TOTAL_CHARATERISTIC_NUM; charidx++){
-		if(dis_serv->serv_chars[charidx].client_config_handle == change_params.char_handle)
-		{
-			if(change_params.char_new_value[0])
-			{
-				dis_notification_flag[charidx] = true;
-			}
-		}
-	}
-	return AT_BLE_SUCCESS;
 }

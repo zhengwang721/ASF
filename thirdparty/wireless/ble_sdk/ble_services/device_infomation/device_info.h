@@ -338,16 +338,6 @@ void dis_init_service(dis_gatt_service_handler_t *device_info_serv );
  */
 at_ble_status_t dis_primary_service_define(dis_gatt_service_handler_t *dis_primary_service);
 
-/**@brief function to check the client characteristic configuration value. 
- *
- * @param[in] dis_serv device information service instance
- * @param[in] char_handle characteristic changed @ref at_ble_characteristic_changed_t
- *
- * @return @ref AT_BLE_SUCCESS operation completed successfully
- * @return @ref AT_BLE_FAILURE Generic error.
- */
-at_ble_status_t dis_char_changed_event(dis_gatt_service_handler_t *dis_serv, at_ble_characteristic_changed_t *char_handle);
-
 #endif /*__DEVICE_INFO_H__*/
 
 
