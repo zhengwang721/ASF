@@ -144,7 +144,6 @@ static enum status_code _spi_set_config(
 
 	spi_cfg.reg = 0;
 	module->mode  = config->mode;
-	module->receiver_enabled = config->receiver_enable;
 
 #if CONF_SPI_MASTER_ENABLE == true
 	/* Find baud value and write it */
@@ -304,8 +303,6 @@ void spi_get_config_defaults(
 	config->mode             = SPI_MODE_MASTER;
 	config->data_order       = SPI_DATA_ORDER_MSB;
 	config->transfer_mode    = SPI_TRANSFER_MODE_0;
-	//config->run_in_standby   = 0;
-	config->receiver_enable  = true;
 	config->clock_source     = SPI_CLK_INPUT_0;
 	config->clock_divider    = 129;
 
@@ -411,6 +408,18 @@ enum status_code spi_init(
 
 	spi_reset(module);	
 	_spi_clock_enable(module);
+	
+#if SPI_CALLBACK_MODE == true
+	if (module->hw == SPI0) {
+		_spi_instances[0] = module;
+		system_register_isr(RAM_ISR_TABLE_SPIRX0_INDEX, (uint32_t)spi_rx0_isr_handler);
+		system_register_isr(RAM_ISR_TABLE_SPITX0_INDEX, (uint32_t)spi_tx0_isr_handler);
+	} else if (module->hw == SPI1) {
+		_spi_instances[1] = module;
+		system_register_isr(RAM_ISR_TABLE_SPIRX1_INDEX, (uint32_t)spi_rx1_isr_handler);
+		system_register_isr(RAM_ISR_TABLE_SPITX1_INDEX, (uint32_t)spi_tx1_isr_handler);
+	}
+#endif
 
 	//Program the pinmux.
 	struct gpio_config config_gpio;
@@ -451,7 +460,6 @@ enum status_code spi_init(
 #if SPI_CALLBACK_MODE == true
 	/* Temporary variables */
 	uint8_t i;
-	uint8_t instance_index;
 
 	/* Initialize parameters */
 	for (i = 0; i < SPI_CALLBACK_N; i++) {
@@ -466,13 +474,6 @@ enum status_code spi_init(
 	module->status                     = STATUS_OK;
 	module->dir                        = SPI_DIRECTION_IDLE;
 	module->locked                     = 0;
-	/*
-	 * Set interrupt handler and register SPI software module struct in
-	 * look-up table
-	 */
-	if ((config->mode == SPI_MODE_SLAVE) || (config->receiver_enable)) {
-		//Enable RX interrupt for this SPI module. Todo.
-	}
 #endif
 
 	/* Write configuration to module and return status code */
@@ -496,10 +497,13 @@ void spi_enable(struct spi_module *const module)
 	Spi *const spi_module = (module->hw);
 
 #if SPI_CALLBACK_MODE == true
-	if((uint32_t)spi_module == SPI0)
+	if(spi_module == SPI0) {
 		NVIC_EnableIRQ(SPI0_RX_IRQn);
-	else if((uint32_t)spi_module == SPI1)
+		NVIC_EnableIRQ(SPI0_TX_IRQn);
+	} else if(spi_module == SPI1) {
 		NVIC_EnableIRQ(SPI1_RX_IRQn);
+		NVIC_EnableIRQ(SPI1_TX_IRQn);
+	}
 #endif
 
 	/* Enable SPI */
@@ -518,10 +522,13 @@ void spi_disable(struct spi_module *const module)
 	Spi *const spi_module = (module->hw);
 
 #  if SPI_CALLBACK_MODE == true
-	if((uint32_t)spi_module == SPI0)
+	if(spi_module == SPI0) {
 		NVIC_DisableIRQ(SPI0_RX_IRQn);
-	else if((uint32_t)spi_module == SPI1)
+		NVIC_DisableIRQ(SPI0_TX_IRQn);
+	} else if(spi_module == SPI1) {
 		NVIC_DisableIRQ(SPI1_RX_IRQn);
+		NVIC_DisableIRQ(SPI1_TX_IRQn);
+	}
 #  endif
 
 	/* Disable SPI */

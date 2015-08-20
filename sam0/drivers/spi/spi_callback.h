@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM B11 SPI configuration
+ * \brief SAM Serial Peripheral Interface Driver
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,23 +44,67 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
+#ifndef SPI_CALLBACK_H_INCLUDED
+#define SPI_CALLBACK_H_INCLUDED
 
-#ifndef CONF_SPI_H_INCLUDED
-#  define CONF_SPI_H_INCLUDED
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#  define CONF_SPI_MASTER_ENABLE     true
-#  define CONF_SPI_SLAVE_ENABLE      false
-#  define CONF_SPI_TIMEOUT           10000
+/**
+ * \addtogroup asfdoc_sam0_sercom_spi_group
+ *
+ * @{
+ */
+#include "spi.h"
 
-#  define CONF_SPI_TRANSFER_MODE     SPI_TRANSFER_MODE_0
+/**
+ * \name Callback Management
+ * @{
+ */
+void spi_register_callback(
+		struct spi_module *const module,
+		spi_callback_t callback_func,
+		enum spi_callback callback_type);
 
-#  define CONF_SPI                   SPI0
-#  define CONF_SPI_PINMUX_SCK        PINMUX_LP_GPIO_10_MUX2_SPI0_SCK
-#  define CONF_SPI_PINMUX_MOSI       PINMUX_LP_GPIO_11_MUX2_SPI0_MOSI
-#  define CONF_SPI_PINMUX_SSN        PINMUX_UNUSED
-#  define CONF_SPI_PINMUX_MISO       PINMUX_LP_GPIO_13_MUX2_SPI0_MISO
+void spi_unregister_callback(
+		struct spi_module *module,
+		enum spi_callback callback_type);
+		
+void spi_enable_callback(
+		struct spi_module *const module,
+		enum spi_callback callback_type);
+		
+void spi_disable_callback(
+		struct spi_module *const module,
+		enum spi_callback callback_type);
+/** @} */
 
-#  define CONF_PIN_SPI_SSN           PIN_LP_GPIO_12
+/**
+ * \name Writing and Reading
+ * @{
+ */
+enum status_code spi_write_buffer_job(
+		struct spi_module *const module,
+		uint8_t *tx_data,
+		uint16_t length);
+enum status_code spi_read_buffer_job(
+		struct spi_module *const module,
+		uint8_t *rx_data,
+		uint16_t length,
+		uint16_t dummy);
+enum status_code spi_transceive_buffer_job(
+		struct spi_module *const module,
+		uint8_t *tx_data,
+		uint8_t *rx_data,
+		uint16_t length);
+/** @} */
 
-#endif /* CONF_SPI_H_INCLUDED */
+/** @}*/
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif	//SPI_H_INCLUDED
 

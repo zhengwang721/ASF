@@ -1,10 +1,10 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam0.drivers.spi.quick_start_slave" caption="Quick Start for the SAM SPI Driver for SAMB11 (Slave Polled)">
+	<module type="application" id="sam0.drivers.spi.quick_start_slave_callback" caption="Quick Start for the SAM SPI Driver for SAMB11 (Slave Callback)">
 		<info type="description" value="summary">
-		Quick start guide for the SPI interface module demonstrating module configuration for slave in polled mode.
+		Quick start guide for the SPI interface module demonstrating module configuration for slave in callback mode.
 		</info>
 		<info type="gui-flag" value="move-to-root"/>
-		<build type="c-source" value="qs_spi_slave_basic.c"/>
+		<build type="c-source" value="qs_spi_slave_callback.c"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.spi"/>
 		<require idref="sam0.drivers.gpio"/>
