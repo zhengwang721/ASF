@@ -136,8 +136,8 @@ extern "C" {
 #define CONF_WIFI_SPI_POL				(0)
 #define CONF_WIFI_SPI_PHA				(1)
 
-/** SPI clock. */
-#define CONF_WIFI_SPI_CLOCK				(48000000)
+/** SPI clock: (sysclk_get_cpu_hz() / CONF_WIFI_SPI_CLOCK). Beware of integer division. */
+#define CONF_WIFI_SPI_CLOCK				(38000000)
 
 /*
    ---------------------------------
