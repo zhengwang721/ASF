@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief I2C Driver for SAMB11
+ * \brief I2C Driver for Master SAMB11
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,23 +44,25 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef I2C_H_INCLUDED
-#define I2C_H_INCLUDED
+#ifndef I2C_MASTER_H_INCLUDED
+#define I2C_MASTER_H_INCLUDED
 
-#include <stdint.h>
-#include <string.h>
+//#include <stdint.h>
+//#include <string.h>
 #include <compiler.h>
-#include <conf_i2c.h>
+#include <system.h>
 #include <gpio.h>
+#include "i2c_common.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define I2C_WRITE_TO_SLAVE      0
-#define I2C_READ_FROM_SLAVE     1
-
-#define I2C_MASTER_CALLBACK_MODE     (0)
+/**
+ * \addtogroup asfdoc_sam0_i2c_group
+ *
+ * @{
+ */
 
 /** \brief I2C Core index
  *
@@ -124,24 +126,10 @@ enum i2c_master_callback {
 	I2C_MASTER_CALLBACK_WRITE_COMPLETE = 0,
 	/** Callback for packet read complete. */
 	I2C_MASTER_CALLBACK_READ_COMPLETE  = 1,
-	/** Callback for error. */
-	I2C_MASTER_CALLBACK_ERROR          = 2,
 #  if !defined(__DOXYGEN__)
 	/** Total number of callbacks. */
-	_I2C_MASTER_CALLBACK_N             = 3,
+	_I2C_MASTER_CALLBACK_N             = 2,
 #  endif
-};
-
-/** \brief Transfer direction
- *
- * For master: transfer direction or setting direction bit in address.
- * For slave: direction of request from master.
- */
-enum i2c_transfer_direction {
-	/** Master write operation is in progress. */
-	I2C_TRANSFER_WRITE = 0,
-	/** Master read operation is in progress. */
-	I2C_TRANSFER_READ  = 1,
 };
 
 #  if !defined(__DOXYGEN__)
@@ -195,24 +183,6 @@ struct i2c_master_module {
 #endif
 };
 
-
-/**
- * \brief I2C module clock input 
- *
- * I2C module clock.
- *
- */
-enum i2c_clock_input {
-	/** source from clock input 0 26MHz*/
-	I2C_CLK_INPUT_0	= 0,
-	/** source from clock input 1 13MHz */
-	I2C_CLK_INPUT_1,
-	/** source from clock input 2 6.5MHz*/
-	I2C_CLK_INPUT_2,
-	/** source from clock input 3 3MHz*/
-	I2C_CLK_INPUT_3,
-};
-
 /**
  * \brief Configuration structure for the I<SUP>2</SUP>C Master device
  *
@@ -228,11 +198,13 @@ struct i2c_master_config {
 	 * standard-mode, Fast-mode,
 	 * \ref i2c_master_baud_rate. */
 	uint32_t baud_rate;
-	/** CLOCK INPUT   to use as clock source. */
+	/** CLOCK INPUT to use as clock source. */
 	enum i2c_clock_input clock_source;
+	/** Divide ratio used to generate the sck clock */
+	uint16_t clock_divider;
 	/** PAD0 (SDA) pinmux. */
-	/** PAD1 (SCL) pinmux. */
 	uint32_t pinmux_pad0;
+	/** PAD1 (SCL) pinmux. */
 	uint32_t pinmux_pad1;
 };
 
@@ -242,17 +214,6 @@ struct i2c_master_config {
 @{
 */
 
-void i2c_enable(const struct i2c_master_module *const module);
-
-void i2c_disable(const struct i2c_master_module *const module);
-
-void i2c_reset(struct i2c_master_module *const module);
-
-enum status_code i2c_lock(struct i2c_master_module *const module);
-
-void i2c_unlock(struct i2c_master_module *const module);
-
-#  if CONF_I2C_MASTER_ENABLE == true
 void i2c_master_get_config_defaults(
 		struct i2c_master_config *const config);
 
@@ -294,60 +255,6 @@ enum status_code i2c_master_read_byte(
 enum status_code i2c_master_write_byte(
 		struct i2c_master_module *const module,
 		uint8_t byte);
-
-#  endif
-
-/**
- * \brief Disable driver instance
- *
- * This function disable driver instance
- *
- * \param[in,out] module Pointer to the driver instance to disable
- *
- */
-static inline void _i2c_disable(I2C *const i2c_module)
-{
-	if (i2c_module == NULL)
-		return;
-	i2c_module->I2C_MODULE_ENABLE.reg = 0;
-}
-
-/**
- * \brief Enable driver instance
- *
- * This function enable driver instance
- *
- * \param[in,out] module Pointer to the driver instance to enable
- *
- */
-static inline void _i2c_enable(I2C *const i2c_module)
-{
-	if (i2c_module == NULL)
-		return;
-	i2c_module->I2C_MODULE_ENABLE.reg= (1 << I2C_I2C_MODULE_ENABLE_ENABLE_Pos);
-}
-
-/**
- * \brief Returns the activity status of the module
- *
- * Returns the activity status of the module.
- *
- * \param[in]  module  Pointer to software module structure
- *
- * \return Status of the synchronization.
- * \retval true   Module is active 
- * \retval false  Module is not active
- */
-static inline bool i2c_is_active (
-		const struct i2c_master_module *const module)
-{
-	/* Sanity check. */
-	Assert(module);
-	Assert(module->hw);
-
-	I2C *const i2c_hw = (module->hw);
-	return (i2c_hw->I2C_STATUS.bit.I2C_ACTIVE);
-}
 
 /** @} */
 

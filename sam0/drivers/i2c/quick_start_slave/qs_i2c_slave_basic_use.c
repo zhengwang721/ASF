@@ -66,79 +66,54 @@ static uint8_t read_buffer[DATA_LENGTH];
 
 /* Init software module. */
 //! [dev_inst]
-struct i2c_master_module i2c_master_instance;
+struct i2c_slave_module i2c_slave_instance;
 //! [dev_inst]
 
-void configure_i2c_master(void);
-
 //! [initialize_i2c]
-void configure_i2c_master(void)
+static void configure_i2c_slave(void)
 {
 	/* Initialize config structure and software module. */
 	//! [init_conf]
-	struct i2c_master_config config_i2c_master;
-	i2c_master_get_config_defaults(&config_i2c_master);
+	struct i2c_slave_config config_i2c_slave;
+	i2c_slave_get_config_defaults(&config_i2c_slave);
 	//! [init_conf]
 
 	/* Initialize and enable device with config, and enable i2c. */
 	//! [init_module]
-	i2c_master_init(&i2c_master_instance, &config_i2c_master);
+	i2c_slave_init(&i2c_slave_instance, &config_i2c_slave);
 	//! [init_module]
 }
 //! [initialize_i2c]
 
 int main(void)
 {
+	enum i2c_slave_direction dir = 0;
+	
 	//! [init]
 	system_clock_config(CLOCK_RESOURCE_RC_26_MHZ, CLOCK_FREQ_26_MHZ);
-	/* Configure device and enable. */
-	//! [config]
-	configure_i2c_master();
-	//! [config]
+	
+	configure_i2c_slave();
 
-	/* Timeout counter. */
-	//! [timeout_counter]
-	uint16_t timeout = 0;
-	//! [timeout_counter]
-
-	/* Init i2c packet. */
 	//! [packet]
-	struct i2c_master_packet packet = {
-		.address     = SLAVE_ADDRESS,
+	struct i2c_slave_packet packet = {
 		.data_length = DATA_LENGTH,
 		.data        = write_buffer,
 	};
 	//! [packet]
 	//! [init]
-
-	//! [main]
-	/* Write buffer to slave until success. */
-	//! [write_packet]
-	while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) !=
-			STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			break;
-		}
-	}
-	//! [write_packet]
-
-	/* Read from slave until success. */
-	//! [read_packet]
-	packet.data = read_buffer;
-	while (i2c_master_read_packet_wait(&i2c_master_instance, &packet) !=
-			STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			break;
-		}
-	}
-	//! [read_packet]
-
-	//! [main]
-
+	
+	//! [while]
 	while (true) {
-		/* Infinite loop */
+		//! [get_dir]
+		dir = i2c_slave_get_direction_wait(&i2c_slave_instance);
+		//! [get_dir]
+		if (dir == I2C_SLAVE_DIRECTION_READ) {
+			packet.data = read_buffer;
+			i2c_slave_read_packet_wait(&i2c_slave_instance, &packet);
+		} else if (dir == I2C_SLAVE_DIRECTION_WRITE) {
+			packet.data = write_buffer;
+			i2c_slave_write_packet_wait(&i2c_slave_instance, &packet);
+		}
 	}
-
+	//! [while]
 }
