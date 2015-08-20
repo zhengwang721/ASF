@@ -53,7 +53,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_clock_group SAM System Clock Management (SYSTEM CLOCK) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks, and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection, and
@@ -947,11 +947,13 @@ uint32_t system_clock_source_get_hz(
 static inline void system_main_clock_set_failure_detect(
 		const bool enable)
 {
+#ifdef  MCLK_CTRLA_CFDEN
 	if (enable) {
 		MCLK->CTRLA.reg |=  MCLK_CTRLA_CFDEN;
 	} else {
 		MCLK->CTRLA.reg &= ~MCLK_CTRLA_CFDEN;
 	}
+#endif
 }
 
 /**

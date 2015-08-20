@@ -22,7 +22,7 @@
 
 		<device-support value="samd"/>
 		<device-support value="samr"/>
-		<device-support value="saml"/>
+		<device-support value="saml21"/>
 	</module>
 	<module type="application" id="sam0.applications.clock_fail_detector" caption="CLOCK Failure Detector Example">
 		<info type="description" value="summary">
@@ -42,5 +42,6 @@
 		<require idref="sam0.drivers.system"/>
 
 		<device-support value="samc"/>
+		<device-support value="saml22"/>
 	</module>
 </asf>

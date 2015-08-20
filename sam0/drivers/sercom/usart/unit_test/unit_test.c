@@ -75,19 +75,20 @@
  *  - SAM D21 Xplained Pro board
  *  - SAM R21 Xplained Pro board
  *  - SAM L21 Xplained Pro board
+ *  - SAM L22 Xplained Pro board
  *  - SAM DA1 Xplained Pro board
  *  - SAM C21 Xplained Pro board
  *
  * \section appdoc_sam0_usart_unit_test_setup Setup
  * The following connections has to be made using wires:
- * - SAM D20 Xplained Pro board
- *  - \b TX/RX: EXT1 PIN17 (PA04) <--> EXT1 PIN13 (PB09)
- * - SAM D21/DA1 Xplained Pro board
+ * - SAM D21/DA1/D20 Xplained Pro board
  *  - \b TX/RX: EXT2 PIN17 (PA16) <--> EXT3 PIN17 (PB16)
  * - SAM R21 Xplained Pro board
  *  - \b TX/RX: EXT1 PIN11 (PA16) <--> EXT1 PIN17 (PB02)
  * - SAM L21 Xplained Pro board
  *  - \b TX/RX: EXT2 PIN3  (PA10) <--> EXT2 PIN8  (PB13)
+ * - SAM L22 Xplained Pro board
+ *  - \b TX/RX: EXT1 PIN13  (PA23) <--> EXT3 PIN3  (PA06)
  * - SAM C21 Xplained Pro board
  *  - \b TX/RX: EXT1 PIN11 (PA12) <--> EXT2 PIN4  (PA09)
  *

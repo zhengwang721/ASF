@@ -6,6 +6,7 @@
 		<build type="header-file" value="samr21e16a.h"/>
 		<build type="header-file" value="samr21e17a.h"/>
 		<build type="header-file" value="samr21e18a.h"/>
+		<build type="header-file" value="samr21e19a.h"/>
 		<build type="header-file" value="samr21g16a.h"/>
 		<build type="header-file" value="samr21g17a.h"/>
 		<build type="header-file" value="samr21g18a.h"/>

@@ -1,0 +1,28 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.applications.tamper_detection_example" caption="SAM L22 TAMPER DETECTION EXAMPLE">
+		<info type="description" value="summary">
+		Example application for ATSAML22N18A Tamper detection feature of RTC module demonstrating various modes of tamper detection, DMA operation on tamper occurrence in capture mode, error messages on SLCD and storing the tamper occurrence time in NVM
+		</info>
+
+		<info type="keyword" value="technology">
+			<keyword value="Tamper"/>
+		</info>
+
+		<info type="gui-flag" value="move-to-root"/>
+		<build type="c-source" value="main.c"/>
+		<build type="include-path" value="."/>
+		<require idref="sam0.drivers.rtc"/>				
+		<require idref="sam0.drivers.tcc"/>
+		<require idref="sam0.drivers.port"/>
+		<require idref="sam0.drivers.dma"/>
+		<require idref="sam0.drivers.system"/>		
+		<require idref="sam0.drivers.sercom.usart"/>
+		<require idref="sam0.services.rww_eeprom_emulator"/>	
+		<require idref="sam0.drivers.slcd"/>	
+		<require idref="common2.services.delay"/>				
+        <require idref="common.services.basic.sleepmgr"/>
+		<require idref="sam0.utils.stdio"/>
+		<require idref="sam0.utils.stdio.stdio_serial"/>		
+		<device-support value="atsaml22n18a"/>
+	</module>
+</asf>
