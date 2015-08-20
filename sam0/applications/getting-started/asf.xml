@@ -23,7 +23,7 @@
 				The Getting Started example will help new users get familiar with SAM Xplained Pro.
 			</info>
 			<device-support value="samb"/>
-			<build type="c-source" value="main_samb11.c"/>
+			<build type="c-source" value="main_sam_b.c"/>
 			<build type="include-path" value="."/>
 			<require idref="sam0.drivers.gpio"/>
 			<require idref="sam0.drivers.timer"/>

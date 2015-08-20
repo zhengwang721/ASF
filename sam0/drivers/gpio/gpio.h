@@ -108,7 +108,7 @@
  */
 
 #include <compiler.h>
-#include <system_samb11.h>
+#include <system_sam_b.h>
 
 #ifdef __cplusplus
 extern "C" {

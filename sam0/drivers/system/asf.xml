@@ -118,7 +118,7 @@
 	</module>
 
 	<select-by-device id="sam0.drivers.system" caption="SYSTEM - Core System Driver">
-		<module type="driver" id="sam0.drivers.system#0" caption="SYSTEM - Core System Driver">
+		<module type="driver" id="sam0.drivers.system#sam0" caption="SYSTEM - Core System Driver">
 			<info type="description" value="summary">
 				Driver for the SAM core system modules. Provides a unified
 				interface for the configuration and management of the core device
@@ -146,7 +146,7 @@
 			<device-support value="sam0"/>
 		</module>
 
-		<module type="driver" id="sam0.drivers.system#1" caption="SYSTEM - Core System Driver for SAMB">
+		<module type="driver" id="sam0.drivers.system#samb" caption="SYSTEM - Core System Driver for SAMB">
 			<info type="description" value="summary">
 				Driver for the SAMB core system modules. Provides a unified
 				interface for the configuration and management of the core device
@@ -160,8 +160,8 @@
 			</info>
 
 			<build type="include-path" value="."/>
-			<build type="header-file" subtype="api" value="system_samb11.h"/>
-			<build type="c-source" value="system_samb11.c"/>
+			<build type="header-file" subtype="api" value="system_sam_b.h"/>
+			<build type="c-source" value="system_sam_b.c"/>
 
 			<require idref="sam0.utils"/>
 			<device-support value="samb"/>
