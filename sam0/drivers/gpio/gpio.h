@@ -108,7 +108,7 @@
  */
 
 #include <compiler.h>
-#include "system.h"
+#include <system_sam_b.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -272,9 +272,9 @@ void gpio_pinmux_cofiguration(const uint8_t gpio_pin, uint16_t pinmux_sel);
 /** \name GPIO callback config
  * @{
  */
-void gpio_register_callback(uint8_t gpio_pin, gpio_callback_t callback_func, \
+void gpio_register_callback(uint8_t gpio_pin, gpio_callback_t callback_func,
 				enum gpio_callback callback_type);
-void gpio_unregister_callback(uint8_t gpio_pin, gpio_callback_t callback_func, \
+void gpio_unregister_callback(uint8_t gpio_pin,
 				enum gpio_callback callback_type);
 void gpio_enable_callback(uint8_t gpio_pin);
 void gpio_disable_callback(uint8_t gpio_pin);

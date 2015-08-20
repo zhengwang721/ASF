@@ -1,12 +1,11 @@
 <asf xmlversion="1.0">
-	<project caption="Quick Start for the SAM B11 DUALTIMER driver" id="sam0.drivers.dualtimer.quick_start.samb11_xplained_pro">
+	<project caption="Exapmle for the AT30TSE75X EEPROM and Temperature Sensor Component" id="common2.components.memory.eeprom.at30tse75x.example.samb11_xplained_pro">
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="."/>
-		<build type="header-file" value="conf_dualtimer.h"/>
 		<build type="header-file" value="conf_board.h"/>
-		<build type="header-file" value="conf_uart_serial.h"/>
+		<build type="header-file" value="conf_i2c.h"/>
 		<require idref="board.samb11_xplained_pro"/>
-		<require idref="sam0.drivers.dualtimer.quick_start"/>
+		<require idref="common2.components.memory.eeprom.at30tse75x.example"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>

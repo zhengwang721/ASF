@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM TIMER Driver Quick Start for SAMB11
+ * \brief SAM B11 Xplained Pro board configuration.
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,81 +43,9 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include <asf.h>
-#include "conf_timer.h"
+#ifndef CONF_TIMER_H_INCLUDED
+#define CONF_TIMER_H_INCLUDED
 
-//! [setup]
-//! [callback_funcs]
-static void timer_callback(void)
-{
-	gpio_pin_toggle_output_level(LED_0_PIN);
-}
+#define CONF_TIMER_RELOAD_VALUE	   26000000
 
-//! [callback_funcs]
-static void configure_gpio_pins(void)
-{
-//! [setup_gpio_1]
-	struct gpio_config config_gpio_pin;
-//! [setup_gpio_1]
-//! [setup_gpio_2]
-	gpio_get_config_defaults(&config_gpio_pin);
-//! [setup_gpio_2]
-
-//! [setup_gpio_3]
-	config_gpio_pin.direction = GPIO_PIN_DIR_OUTPUT;
-//! [setup_gpio_3]
-//! [setup_gpio_4]
-	gpio_pin_set_config(LED_0_PIN, &config_gpio_pin);
-//! [setup_gpio_4]
-}
-
-static void configure_timer(void)
-{
-//! [setup_timer_1]
-	struct timer_config config_timer;
-//! [setup_timer_1]
-//! [setup_timer_2]
-	timer_get_config_defaults(&config_timer);
-//! [setup_timer_2]
-//! [setup_timer_3]
-	config_timer.reload_value = CONF_TIMER_RELOAD_VALUE;
-//! [setup_timer_3]
-//! [setup_timer_4]
-	timer_init(&config_timer);
-//! [setup_timer_4]
-//! [setup_timer_5]
-	timer_enable();
-//! [setup_timer_5]
-}
-
-static void configure_timer_callback(void)
-{
-	//! [setup_register_callback]
-	timer_register_callback(timer_callback);
-	//! [setup_register_callback]
-	
-	/* For A4, timer0 IRQ is 9 */
-	//! [enable_IRQ]
-	NVIC_EnableIRQ(9);
-	//! [enable_IRQ]
-}
-
-//! [setup]
-int main(void)
-{
-//! [setup_init]
-	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
-	
-	configure_gpio_pins();
-
-	configure_timer();
-	
-	configure_timer_callback();
-//! [setup_init]
-	
-//! [main_loop]
-	while (true) {
-		
-	}
-//! [main_loop]
-}
+#endif /* CONF_TIMER_H_INCLUDED */

@@ -106,6 +106,9 @@ static void configure_spi_master(void)
 //! [transfer_mode]
 	config_spi_master.transfer_mode = CONF_SPI_TRANSFER_MODE;
 //! [transfer_mode]
+//! [clock_divider]
+	config_spi_master.clock_divider = 154;
+//! [clock_divider]
 	/* Configure pad 0 */
 //! [sck]
 	config_spi_master.pinmux_pad[0] = CONF_SPI_PINMUX_SCK;

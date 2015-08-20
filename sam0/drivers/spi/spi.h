@@ -52,7 +52,7 @@
 #include <compiler.h>
 #include <conf_spi.h>
 #include <gpio.h>
-#include <system.h>
+#include <system_sam_b.h>
 
 #ifdef __cplusplus
 extern "C" {

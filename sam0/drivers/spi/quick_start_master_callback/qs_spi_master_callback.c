@@ -106,6 +106,9 @@ static void configure_spi_master(void)
 //! [conf_defaults]
 	spi_get_config_defaults(&config_spi_master);
 //! [conf_defaults]
+//! [clock_divider]
+	config_spi_master.clock_divider = 154;
+//! [clock_divider]
 //! [transfer_mode]
 	config_spi_master.transfer_mode = CONF_SPI_TRANSFER_MODE;
 //! [transfer_mode]

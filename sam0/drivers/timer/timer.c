@@ -45,6 +45,7 @@
  */
 #include "timer.h"
 
+static timer_callback_t timer_callback;
 /**
  * \brief Initializes config with predefined default values.
  *
@@ -54,35 +55,17 @@
  * modified by the user application.
  *
  * The default configuration is as follows:
- *  \li Timer interrupt set as enable
- *  \li Select external input as clock set as disable
- *  \li Select external input as enable set as disable
+ *  \li Timer interrupt set as disable
+ *  \li Set relaod value as 0
  *
  * \param[out]  config  Pointer to a TIMER module configuration structure to set
  */
 void timer_get_config_defaults(struct timer_config *config)
 {
-	config->interrupt_enable = TIMER_CTRL_INTERRUPT_ENABLE;
-	config->external_input_enable = 0;
-	config->interrupt_enable = 0;
+	config->reload_value = 0;
+	config->interrupt_enable = true;
 }
 
-/**
- * \brief Initializes TIMER0 module instance.
- *
- * Initializes the TIMER0 module, based on the given
- * configuration values.
- *
- * \param[in]     config       Pointer to the TIMER configuration options struct
- *
- * \return Status of the initialization procedure.
- */
-void timer_init(const struct timer_config *config)
-{
-	TIMER0->CTRL.reg = config->interrupt_enable
-		| config->external_input_clock
-		| config->interrupt_enable;
-}
 
 /**
  * \brief Get TIMER0 module current value.
@@ -122,6 +105,8 @@ uint32_t timer_get_interrupt_status(void)
 void timer_clear_interrupt_status(void)
 {
 	TIMER0->INTSTATUSCLEAR.reg = 1;
+	/* Wait for operation finish */
+	while (TIMER0->INTSTATUSCLEAR.reg);
 }
 
 /**
@@ -142,4 +127,63 @@ void timer_enable(void)
 void timer_disable(void)
 {
 	TIMER0->CTRL.reg &= (~TIMER_CTRL_ENABLE);
+}
+
+/**
+ * \brief Registers a callback.
+ *
+ * Registers and enable a callback function which is implemented by the user.
+ *
+ * \param[in]     callback_func Pointer to callback function
+ */
+void timer_register_callback(timer_callback_t fun)
+{
+	timer_callback = fun; 
+}
+
+/**
+ * \brief Unregisters a callback.
+ *
+ * Unregisters and disable a callback function implemented by the user.
+ *
+ */
+void timer_unregister_callback(void)
+{
+	timer_callback = NULL; 
+}
+
+/**
+ * \brief Timer ISR handler.
+ *
+ * Timer ISR handler.
+ *
+ */
+static void timer_isr_handler(void)
+{
+	if (timer_get_interrupt_status()) {
+		timer_clear_interrupt_status();
+		
+		if (timer_callback) {
+			timer_callback();
+		}
+	}
+}
+
+/**
+ * \brief Initializes TIMER0 module instance.
+ *
+ * Initializes the TIMER0 module, based on the given
+ * configuration values.
+ *
+ * \param[in]     config       Pointer to the TIMER configuration options struct
+ *
+ * \return Status of the initialization procedure.
+ */
+void timer_init(const struct timer_config *config)
+{
+	TIMER0->CTRL.reg = config->interrupt_enable << TIMER_CTRL_INTERRUPT_ENABLE_Pos;
+	TIMER0->RELOAD.reg = config->reload_value;
+	
+	timer_callback = NULL;
+	system_register_isr(RAM_ISR_TABLE_TIMER0_INDEX, (uint32_t)timer_isr_handler);
 }

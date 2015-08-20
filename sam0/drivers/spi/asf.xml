@@ -18,7 +18,8 @@
 
 			<build type="doxygen-entry-point" value="asfdoc_samb_drivers_spi_group"/>
 			<require idref="sam0.utils" />
-			<require idref="sam0.drivers.system.system_sam_b" />
+			<require idref="sam0.drivers.gpio" />
+			<require idref="sam0.drivers.system" />
 			<device-support value="samb"/>
 		</module>
 		<module type="driver" id="sam0.drivers.spi#callback" caption="SPI - Serial Peripheral Interface (Callback APIs)">
@@ -35,7 +36,8 @@
 
 			<build type="doxygen-entry-point" value="asfdoc_samb_drivers_aes_group"/>
 			<require idref="sam0.utils" />
-			<require idref="sam0.drivers.system.system_sam_b" />
+			<require idref="sam0.drivers.gpio" />
+			<require idref="sam0.drivers.system" />
 			<device-support value="samb"/>
 		</module>
 	</select-by-config>
