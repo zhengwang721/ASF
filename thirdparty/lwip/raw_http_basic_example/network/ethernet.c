@@ -60,10 +60,10 @@
 # include "ksz8851snl.h"
 # include "ksz8851snl_reg.h"
 # include "netif/sam0_spi_ksz8851snl.h"
-#elif (SAMV70 || SAMV71 || SAME70 || SAMS70)
+#elif (SAMV71 || SAME70)
 # include "ethernet_phy.h"
 # include "gmac.h"
-# include "netif/sam4e_gmac.h"
+# include "netif/samv71_gmac.h"
 #else
 # error Unsupported chip type
 #endif

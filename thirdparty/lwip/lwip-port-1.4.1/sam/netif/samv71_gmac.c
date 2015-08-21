@@ -3,7 +3,7 @@
  *
  * \brief GMAC (Gigabit MAC) driver for lwIP.
  *
- * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -336,7 +336,6 @@ static void gmac_low_level_init(struct netif *netif)
 
 	/* Clear interrupts. */
 	gmac_get_interrupt_status(GMAC);
-	
 
 	/* Enable the copy of data into the buffers
 	   ignore broadcasts, and not copy FCS. */
@@ -345,7 +344,7 @@ static void gmac_low_level_init(struct netif *netif)
 
 	/* Set RX buffer size to 1536. */
 	gmac_set_rx_bufsize(GMAC, 0x18);
-	
+
 	/* Clear interrupts */
 	gmac_get_priority_interrupt_status(GMAC, GMAC_QUE_2);
 	gmac_get_priority_interrupt_status(GMAC, GMAC_QUE_1);
@@ -354,7 +353,7 @@ static void gmac_low_level_init(struct netif *netif)
 	gmac_set_tx_priority_queue(GMAC, (uint32_t)&gs_tx_desc_null, GMAC_QUE_1);
 	gmac_set_rx_priority_queue(GMAC, (uint32_t)&gs_rx_desc_null, GMAC_QUE_2);
 	gmac_set_rx_priority_queue(GMAC, (uint32_t)&gs_rx_desc_null, GMAC_QUE_1);
-	
+
 	gmac_rx_init(&gs_gmac_dev);
 	gmac_tx_init(&gs_gmac_dev);
 
@@ -365,7 +364,7 @@ static void gmac_low_level_init(struct netif *netif)
 
 	/* Set up the interrupts for transmission and errors. */
 	gmac_enable_interrupt(GMAC, GMAC_INT_GROUP);
-	
+
 
 	/* Set GMAC address. */
 	gmac_set_address(GMAC, 0, netif->hwaddr);

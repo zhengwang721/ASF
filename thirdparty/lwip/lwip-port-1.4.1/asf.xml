@@ -150,7 +150,7 @@
 			<info type="gui-flag" value="hidden"/>
 			<build type="header-file" subtype="api" value="sam/include/arch/cc.h"/>
 			<build type="header-file" subtype="api" value="sam/include/arch/perf.h"/>
-			<build type="header-file" subtype="api" value="sam/include/netif/sam4e_gmac.h"/>
+			<build type="header-file" subtype="api" value="sam/include/netif/samv71_gmac.h"/>
 			<build type="include-path" value="sam/include"/>
 			<build type="include-path" value="sam/include/netif"/>
 			<build type="c-source" value="sam/netif/samv71_gmac.c"/>
