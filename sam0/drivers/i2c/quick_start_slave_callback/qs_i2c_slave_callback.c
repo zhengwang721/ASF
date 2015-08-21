@@ -80,7 +80,8 @@ static void i2c_read_request_callback(
 
 	/* Write buffer to master */
 	//! [write_packet]
-	i2c_slave_write_packet_job(module, &packet);
+	if (i2c_slave_write_packet_job(module, &packet) != STATUS_OK) {
+	}
 	//! [write_packet]
 }
 //! [read_request]
@@ -142,15 +143,21 @@ static void configure_i2c_slave_callbacks(void)
 	i2c_slave_enable_callback(&i2c_slave_instance,
 			I2C_SLAVE_CALLBACK_WRITE_REQUEST);
 	//![reg_en_i2c_callback]
+	NVIC_EnableIRQ(13);
+	NVIC_EnableIRQ(14);
 }
 //! [setup_i2c_callback]
 
 int main(void)
 {
-	//system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 
 	//! [run_initialize_i2c]
-	/* Configure device and enable. */
+	/* Initial the . */
+	for (int i = 0; i < DATA_LENGTH; i++) {
+		read_buffer[i] = 0;
+		write_buffer[i] = i;
+	}
 	//! [config]
 	configure_i2c_slave();
 	//! [config]
@@ -158,7 +165,6 @@ int main(void)
 	configure_i2c_slave_callbacks();
 	//! [config_callback]
 	//! [run_initialize_i2c]
-
 	//! [while]
 	while (true) {
 		/* Infinite loop while waiting for I2C master interaction */

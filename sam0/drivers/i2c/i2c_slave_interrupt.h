@@ -134,52 +134,6 @@ enum status_code i2c_slave_write_packet_job(
 		struct i2c_slave_module *const module,
 		struct i2c_slave_packet *const packet);
 
-/**
- * \brief Cancels any currently ongoing operation
- *
- * Terminates the running transfer operation.
- *
- * \param[in,out] module  Pointer to software module structure
- */
-static inline void i2c_slave_cancel_job(
-		struct i2c_slave_module *const module)
-{
-	/* Sanity check. */
-	Assert(module);
-	Assert(module->hw);
-
-	/* Set buffer to 0. */
-	module->buffer_remaining = 0;
-	module->buffer_length = 0;
-}
-
-/**
- * \brief Gets status of ongoing job
- *
- * Will return the status of the ongoing job, or the error that occurred
- * in the last transfer operation.
- * The status will be cleared when starting a new job.
- *
- * \param[in,out] module Pointer to software module structure
- *
- * \return                      Status of job.
- * \retval STATUS_OK            No error has occurred
- * \retval STATUS_BUSY          Transfer is in progress
- * \retval STATUS_ERR_IO        A collision, timeout or bus error happened in
- *                              the last transfer
- * \retval STATUS_ERR_TIMEOUT   A timeout occurred
- * \retval STATUS_ERR_OVERFLOW  Data from master overflows receive buffer
- */
-static inline enum status_code i2c_slave_get_job_status(
-		struct i2c_slave_module *const module)
-{
-	/* Check sanity. */
-	Assert(module);
-	Assert(module->hw);
-
-	/* Return current status code. */
-	return module->status;
-}
 
 /** @} */
 

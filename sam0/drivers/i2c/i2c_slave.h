@@ -108,11 +108,6 @@ enum i2c_slave_callback {
 	I2C_SLAVE_CALLBACK_WRITE_REQUEST,
 	/** Callback for error. */
 	I2C_SLAVE_CALLBACK_ERROR,
-	/**
-	 * Callback for error in last transfer. Discovered on a new address
-	 * interrupt.
-	 */
-	I2C_SLAVE_CALLBACK_ERROR_LAST_TRANSFER,
 #  if !defined(__DOXYGEN__)
 	/** Total number of callbacks. */
 	_I2C_SLAVE_CALLBACK_N,
@@ -143,6 +138,19 @@ enum i2c_slave_direction {
 	I2C_SLAVE_DIRECTION_NONE,
 };
 
+#  if I2C_SLAVE_CALLBACK_MODE == true
+struct i2c_slave_buf {
+	/** The total number of bytes to transfer. */
+	volatile uint16_t buffer_length;
+	/**
+	 * Counter used for bytes left to send in write and to count number of
+	 * obtained bytes in read.
+	 */
+	uint16_t buffer_remaining;
+	/** Data buffer for packet write and read. */
+	volatile uint8_t *buffer;
+};
+#  endif
 
 /**
  * \brief I<SUP>2</SUP>C Slave driver software device instance structure.
@@ -168,15 +176,8 @@ struct i2c_slave_module {
 	volatile uint8_t registered_callback;
 	/** Mask for enabled callbacks. */
 	volatile uint8_t enabled_callback;
-	/** The total number of bytes to transfer. */
-	volatile uint16_t buffer_length;
-	/**
-	 * Counter used for bytes left to send in write and to count number of
-	 * obtained bytes in read.
-	 */
-	uint16_t buffer_remaining;
-	/** Data buffer for packet write and read. */
-	volatile uint8_t *buffer;
+	struct i2c_slave_buf rx;
+	struct i2c_slave_buf tx;
 	/** Save direction of request from master. 1 = read, 0 = write. */
 	volatile enum i2c_transfer_direction transfer_direction;
 	/** Status for status read back in error callback. */

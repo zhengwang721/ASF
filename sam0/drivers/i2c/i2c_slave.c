@@ -45,6 +45,9 @@
  */
 
 #include "i2c_slave.h"
+#if I2C_SLAVE_CALLBACK_MODE == true
+#include "i2c_slave_interrupt.h"
+#endif
 
 void i2c_slave_get_config_defaults(
 		struct i2c_slave_config *const config)
@@ -83,9 +86,15 @@ static enum status_code _i2c_slave_set_config(
 	/* Find and set baudrate. */
 	i2c_module->CLOCK_SOURCE_SELECT.reg = config->clock_source;
 	i2c_module->I2C_CLK_DIVIDER.reg = I2C_I2C_CLK_DIVIDER_I2C_DIVIDE_RATIO(config->clock_divider);
+	/* I2C slave address */
+	i2c_module->I2C_SLAVE_ADDRESS.reg = I2C_I2C_SLAVE_ADDRESS_ADDRESS(config->address);
 	/* I2C slave mode */
 	i2c_module->I2C_MASTER_MODE.reg = I2C_I2C_MASTER_MODE_MASTER_ENABLE_0;
-
+#if I2C_SLAVE_CALLBACK_MODE == true
+	i2c_module->I2C_FLUSH.reg = 1;
+	i2c_module->RX_INTERRUPT_MASK.reg = I2C_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK;
+	i2c_module->TX_INTERRUPT_MASK.reg = I2C_TX_INTERRUPT_MASK_TX_FIFO_NOT_FULL_MASK;
+#endif
 	return status;
 }
 
@@ -138,21 +147,21 @@ enum status_code i2c_slave_init(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-#if I2C_MASTER_CALLBACK_MODE == true
+#if I2C_SLAVE_CALLBACK_MODE == true
 
 	/* Initialize values in module. */
 	module->registered_callback = 0;
 	module->enabled_callback = 0;
-	module->buffer_length = 0;
-	module->buffer_remaining = 0;
+	module->rx.buffer_length = 0;
+	module->rx.buffer_remaining = 0;
+	module->rx.buffer = NULL;
+	module->tx.buffer_length = 0;
+	module->tx.buffer_remaining = 0;
+	module->tx.buffer = NULL;
 	module->status = STATUS_OK;
-	module->buffer = NULL;
-	
 	_i2c_instances = (void*)module;
 	system_register_isr(RAM_ISR_TABLE_I2CRX0_INDEX, (uint32_t)_i2c_slave_rx_isr_handler);
 	system_register_isr(RAM_ISR_TABLE_I2CTX0_INDEX, (uint32_t)_i2c_slave_tx_isr_handler);
-	NVIC_EnableIRQ(13);
-	NVIC_EnableIRQ(14);
 #endif
 
 	i2c_enable(i2c_module);
