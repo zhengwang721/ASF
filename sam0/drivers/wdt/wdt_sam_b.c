@@ -43,7 +43,35 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include "wdt.h"
+#include "wdt_sam_b.h"
+
+struct wdt_module *_wdt_instances[WDT_INST_NUM];
+
+static void wdt_isr_handler(void)
+{
+	struct wdt_module *module = NULL;
+	
+	if (WDT0->WDOGMIS.reg) {
+		module = _wdt_instances[0];
+		if (!(module->hw->WDOGCONTROL.reg & WDT_WDOGCONTROL_RESEN)) {
+			module->hw->WDOGINTCLR.reg = 0x01;
+		}
+		if ((module->callback_enable_mask & (1 << WDT_CALLBACK_EARLY_WARNING)) &&
+			(module->callback_reg_mask & (1 << WDT_CALLBACK_EARLY_WARNING))) {
+			(module->callback[WDT_CALLBACK_EARLY_WARNING])();
+		}
+	}
+	if (WDT1->WDOGMIS.reg) {
+		module = _wdt_instances[1];
+		if (!(module->hw->WDOGCONTROL.reg & WDT_WDOGCONTROL_RESEN)) {
+			module->hw->WDOGINTCLR.reg = 0x01;
+		}
+		if ((module->callback_enable_mask & (1 << WDT_CALLBACK_EARLY_WARNING)) &&
+			(module->callback_reg_mask & (1 << WDT_CALLBACK_EARLY_WARNING))) {
+			(module->callback[WDT_CALLBACK_EARLY_WARNING])();
+		}
+	}
+}
 
 /**
  * \brief Initializes a Watchdog Timer configuration structure to defaults.
@@ -119,11 +147,15 @@ enum status_code wdt_set_config(struct wdt_module *const module, Wdt * const hw,
 		module->hw->WDOGLOCK.reg = WDT_WDOGLOCK_ENABLE_STATUS;
 	}
 	
+	system_register_isr(RAM_ISR_TABLE_NMI_INDEX, (uint32_t)wdt_isr_handler);
+	
 	/* Enable WDT clock */
 	if (module->hw == WDT0) {
+		_wdt_instances[0] = module;
 		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |= \
 				LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_WATCHDOG_0_CLK_EN;
 	} else if (module->hw == WDT1) {
+		_wdt_instances[1] = module;
 		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |= \
 				LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_WATCHDOG_1_CLK_EN;
 	}
@@ -228,4 +260,92 @@ void wdt_get_current_count(struct wdt_module *const module, \
 			uint32_t * count_value)
 {
 	*count_value = module->hw->WDOGVALUE.reg;
+}
+
+/**
+ * \brief Registers a callback
+ *
+ * Registers a callback function which is implemented by the user.
+ *
+ * \note The callback must be enabled by \ref wdt_enable_callback,
+ *       in order for the interrupt handler to call it when the conditions for
+ *       the callback type are met.
+ *
+ * \param[in]  module         Pointer to WDT software instance struct
+ * \param[in]  callback_func  Pointer to callback function
+ * \param[in]  callback_type  Callback type given by an enum
+ *
+ */
+void wdt_register_callback(struct wdt_module *const module,
+		wdt_callback_t callback_func,
+		enum wdt_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(callback_func);
+
+	/* Register callback function */
+	module->callback[callback_type] = callback_func;
+	/* Set the bit corresponding to the callback_type */
+	module->callback_reg_mask |= (1 << callback_type);
+}
+
+/**
+ * \brief Unregisters a callback
+ *
+ * Unregisters a callback function which is implemented by the user.
+ *
+ * \param[in,out]  module         Pointer to WDT software instance struct
+ * \param[in]      callback_type  Callback type given by an enum
+ *
+ */
+void wdt_unregister_callback(struct wdt_module *module,
+		enum wdt_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	/* Unregister callback function */
+	module->callback[callback_type] = NULL;
+	/* Clear the bit corresponding to the callback_type */
+	module->callback_reg_mask &= ~(1 << callback_type);
+}
+
+/**
+ * \brief Enables callback
+ *
+ * Enables the callback function registered by the \ref usart_register_callback.
+ * The callback function will be called from the interrupt handler when the
+ * conditions for the callback type are met.
+ *
+ * \param[in]  module         Pointer to WDT software instance struct
+ * \param[in]  callback_type  Callback type given by an enum
+ */
+void wdt_enable_callback(struct wdt_module *const module,
+		enum wdt_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	/* Enable callback */
+	module->callback_enable_mask |= (1 << callback_type);
+}
+
+/**
+ * \brief Disable callback
+ *
+ * Disables the callback function registered by the \ref usart_register_callback,
+ * and the callback will not be called from the interrupt routine.
+ *
+ * \param[in]  module         Pointer to WDT software instance struct
+ * \param[in]  callback_type  Callback type given by an enum
+ */
+void wdt_disable_callback(struct wdt_module *const module,
+		enum wdt_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	/* Disable callback */
+	module->callback_enable_mask &= ~(1 << callback_type);
 }
