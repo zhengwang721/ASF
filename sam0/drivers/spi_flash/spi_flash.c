@@ -52,12 +52,10 @@
  */
 static void spi_flash_write_enable(void)
 {
-	SPI_FLASH0->TRANSACTION_CTRL.reg = SPI_FLASH_TRANSACTION_CTRL_CMD_COUNT(0) | \
-									SPI_FLASH_TRANSACTION_CTRL_WDATA_COUNT(0);
 	SPI_FLASH0->READ_CTRL.reg = SPI_FLASH_READ_CTRL_RDATA_COUNT(0);
-	SPI_FLASH0->CMD_BUFFER0.reg = 0x06;
-	SPI_FLASH0->DIRECTION.reg = 0x01;
-	SPI_FLASH0->DMA_START_ADDRESS.reg = SPI_FLASH_DMA_START_ADDRESS_MASK;
+	SPI_FLASH0->CMD_BUFFER0.reg = SPI_FLASH_CMD_WRITE_ENABLE;
+	SPI_FLASH0->DIRECTION.reg = SPI_FLASH_DIRECTION_CMD;
+	SPI_FLASH0->DMA_START_ADDRESS.reg = SPI_FLASH_DMA_START_ADDRESS_RESETVALUE;
 
 	SPI_FLASH0->TRANSACTION_CTRL.reg = \
 			SPI_FLASH_TRANSACTION_CTRL_FLASH_TRANS_START | \
@@ -76,11 +74,9 @@ static void spi_flash_write_enable(void)
  */
 static void spi_flash_write_disable(void)
 {
-	SPI_FLASH0->TRANSACTION_CTRL.reg = SPI_FLASH_TRANSACTION_CTRL_CMD_COUNT(0) | \
-									SPI_FLASH_TRANSACTION_CTRL_WDATA_COUNT(0);
 	SPI_FLASH0->READ_CTRL.reg = SPI_FLASH_READ_CTRL_RDATA_COUNT(0);
-	SPI_FLASH0->CMD_BUFFER0.reg = 0x04;
-	SPI_FLASH0->DIRECTION.reg = 0x01;
+	SPI_FLASH0->CMD_BUFFER0.reg = SPI_FLASH_CMD_WRITE_DISABLE;
+	SPI_FLASH0->DIRECTION.reg = SPI_FLASH_DIRECTION_CMD;
 	SPI_FLASH0->DMA_START_ADDRESS.reg = SPI_FLASH_DMA_START_ADDRESS_MASK;
 
 	SPI_FLASH0->TRANSACTION_CTRL.reg = \
@@ -104,10 +100,10 @@ static uint8_t spi_flash_read_status_reg(void)
 {
 	volatile uint32_t status_value;
 
-	SPI_FLASH0->READ_CTRL.reg |= SPI_FLASH_READ_CTRL_RDATA_COUNT(0x01);
-	SPI_FLASH0->CMD_BUFFER0.reg = 0x05;
-	SPI_FLASH0->DIRECTION.reg = 0x01;
-	SPI_FLASH0->DMA_START_ADDRESS.reg = GET_AHB_ADDRESS(&status_value);
+	SPI_FLASH0->READ_CTRL.reg = SPI_FLASH_READ_CTRL_RDATA_COUNT(0x01);
+	SPI_FLASH0->CMD_BUFFER0.reg = SPI_FLASH_CMD_READ_STATUS;
+	SPI_FLASH0->DIRECTION.reg = SPI_FLASH_DIRECTION_CMD;
+	SPI_FLASH0->DMA_START_ADDRESS.reg = (uint32_t)&status_value;
 
 	SPI_FLASH0->TRANSACTION_CTRL.reg = \
 			SPI_FLASH_TRANSACTION_CTRL_FLASH_TRANS_START | \
@@ -136,14 +132,14 @@ static void spi_flash_page_program(uint32_t flash_addr, uint32_t memory_addr, ui
 	
 	spi_flash_write_enable();
 
-	cmd[0] = 0x02;
+	cmd[0] = SPI_FLASH_CMD_PAGE_PROGRAM;
 	cmd[1] = (unsigned char) (flash_addr >> 16);
 	cmd[2] = (unsigned char) (flash_addr >> 8);
 	cmd[3] = (unsigned char) (flash_addr);
 
 	SPI_FLASH0->READ_CTRL.reg = SPI_FLASH_READ_CTRL_RDATA_COUNT(0x0);
 	SPI_FLASH0->CMD_BUFFER0.reg = cmd[0] | (cmd[1] << 8) | (cmd[2] << 16) | (cmd[3] << 24);
-	SPI_FLASH0->DIRECTION.reg = 0x0F;
+	SPI_FLASH0->DIRECTION.reg = SPI_FLASH_DIRECTION_PRO;
 	SPI_FLASH0->DMA_START_ADDRESS.reg = memory_addr;
 
 	SPI_FLASH0->TRANSACTION_CTRL.reg = \
@@ -159,7 +155,10 @@ static void spi_flash_page_program(uint32_t flash_addr, uint32_t memory_addr, ui
 	/* add additional read_status_reg before the while this gives the flash
 	 * memory time to update the registers.
 	 */
-	spi_flash_read_status_reg();
+	for(uint16_t i = 0; i < 0xFFFF; i++)	{
+		/* Waiting... */
+	}
+	//spi_flash_read_status_reg();
 	while(spi_flash_read_status_reg() & 0x01);
 	spi_flash_write_disable();
 }
@@ -191,10 +190,10 @@ uint32_t spi_flash_read_id(void)
 {
 	volatile uint32_t register_value;
 
-	SPI_FLASH0->READ_CTRL.reg |= SPI_FLASH_READ_CTRL_RDATA_COUNT(0x04);
-	SPI_FLASH0->CMD_BUFFER0.reg = 0x9F;
-	SPI_FLASH0->DIRECTION.reg = 0x01;
-	SPI_FLASH0->DMA_START_ADDRESS.reg = GET_AHB_ADDRESS(&register_value);
+	SPI_FLASH0->READ_CTRL.reg = SPI_FLASH_READ_CTRL_RDATA_COUNT(0x04);
+	SPI_FLASH0->CMD_BUFFER0.reg = SPI_FLASH_CMD_READ_ID;
+	SPI_FLASH0->DIRECTION.reg = SPI_FLASH_DIRECTION_CMD;
+	SPI_FLASH0->DMA_START_ADDRESS.reg = (uint32_t)&register_value;
 
 	SPI_FLASH0->TRANSACTION_CTRL.reg = \
 			SPI_FLASH_TRANSACTION_CTRL_FLASH_TRANS_START | \
@@ -230,10 +229,10 @@ void spi_flash_read(void *read_buf, uint32_t flash_addr, uint32_t size)
 		}
 	}
 
-	memory_addr = GET_AHB_ADDRESS((unsigned long)read_buf);
+	memory_addr = (unsigned long)read_buf;
 
 	/* Perform read operation. */
-	cmd[0] = 0x0B;
+	cmd[0] = SPI_FLASH_CMD_READ_HIGH_SPEED;
 	cmd[1] = (unsigned char) (flash_addr >> 16);
 	cmd[2] = (unsigned char) (flash_addr >> 8);
 	cmd[3] = (unsigned char) (flash_addr);
@@ -241,13 +240,17 @@ void spi_flash_read(void *read_buf, uint32_t flash_addr, uint32_t size)
 
 	SPI_FLASH0->READ_CTRL.reg = SPI_FLASH_READ_CTRL_RDATA_COUNT(size);
 	SPI_FLASH0->CMD_BUFFER0.reg = cmd[0] | (cmd[1] << 8) | (cmd[2] << 16) | (cmd[3] << 24);
-	SPI_FLASH0->DIRECTION.reg = 0x1F;
+	SPI_FLASH0->CMD_BUFFER1.reg = cmd[4];
+	SPI_FLASH0->DIRECTION.reg = SPI_FLASH_DIRECTION_READ;
 	SPI_FLASH0->DMA_START_ADDRESS.reg = memory_addr;
 
 	SPI_FLASH0->TRANSACTION_CTRL.reg = \
 			SPI_FLASH_TRANSACTION_CTRL_FLASH_TRANS_START | \
 			SPI_FLASH_TRANSACTION_CTRL_CMD_COUNT(0x05);
 
+	for (i = 0; i < 0xFF; i++) {
+		/* Waiting...*/
+	}
 	while ((SPI_FLASH0->IRQ_STATUS.bit.FLASH_TRANS_DONE != \
 			SPI_FLASH_IRQ_STATUS_FLASH_TRANS_DONE) && \
 			(spi_flash_read_status_reg() & 0x01)){
@@ -271,11 +274,14 @@ int8_t spi_flash_write(void *write_buf, uint32_t flash_addr, uint32_t size)
 	uint32_t    offset;
 	uint32_t    memory_addr;
 
+	for (uint32_t i = 0; i < 0x1FFFF; i++) {
+		/* Waiting...*/
+	}
 	if((write_buf != NULL) && (size != 0)) {
 		/* Ensure the write size does not exceed the flash limit. */
 		if((flash_addr + size) <= FLASH_MEMORY_SIZE) {
 			/* Get the destination buffer Address. */
-			memory_addr = GET_AHB_ADDRESS((unsigned long)write_buf);
+			memory_addr = (unsigned long)write_buf;
 			/* Perform read operation. */
 			offset = flash_addr % FLASH_PAGE_SIZE;
 
@@ -317,7 +323,7 @@ static void spi_flash_sector_erase(uint32_t flash_addr)
 {
 	uint8_t cmd[8] = {0,};
 
-	cmd[0] = 0x20;
+	cmd[0] = SPI_FLASH_CMD_SECTOR_ERASE;
 	cmd[1] = (char)(flash_addr >> 16);
 	cmd[2] = (char)(flash_addr >> 8);
 	cmd[3] = (char)(flash_addr);
@@ -325,9 +331,9 @@ static void spi_flash_sector_erase(uint32_t flash_addr)
 	spi_flash_write_enable();
 	spi_flash_read_status_reg();
 
-	SPI_FLASH0->READ_CTRL.reg |= SPI_FLASH_READ_CTRL_RDATA_COUNT(0x0);
+	SPI_FLASH0->READ_CTRL.reg = SPI_FLASH_READ_CTRL_RDATA_COUNT(0x0);
 	SPI_FLASH0->CMD_BUFFER0.reg = cmd[0] | (cmd[1] << 8) | (cmd[2] << 16) | (cmd[3] << 24);
-	SPI_FLASH0->DIRECTION.reg = 0x0F;
+	SPI_FLASH0->DIRECTION.reg = SPI_FLASH_DIRECTION_PRO;
 	SPI_FLASH0->DMA_START_ADDRESS.reg = 0x0;
 
 	SPI_FLASH0->TRANSACTION_CTRL.reg = \
@@ -386,9 +392,9 @@ unsigned char spi_flash_erase(uint32_t start_offset, uint32_t size)
 */
 void spi_flash_enter_low_power_mode(void)
 {
-	SPI_FLASH0->READ_CTRL.reg |= SPI_FLASH_READ_CTRL_RDATA_COUNT(0x0);
-	SPI_FLASH0->CMD_BUFFER0.reg = 0xB9;
-	SPI_FLASH0->DIRECTION.reg = 0x01;
+	SPI_FLASH0->READ_CTRL.reg = SPI_FLASH_READ_CTRL_RDATA_COUNT(0x0);
+	SPI_FLASH0->CMD_BUFFER0.reg = SPI_FLASH_CMD_ENTER_LOW_POWER;
+	SPI_FLASH0->DIRECTION.reg = SPI_FLASH_DIRECTION_CMD;
 	SPI_FLASH0->DMA_START_ADDRESS.reg = 0x0;
 
 	SPI_FLASH0->TRANSACTION_CTRL.reg = \
@@ -408,9 +414,9 @@ void spi_flash_enter_low_power_mode(void)
 */
 void spi_flash_leave_low_power_mode(void)
 {
-	SPI_FLASH0->READ_CTRL.reg |= SPI_FLASH_READ_CTRL_RDATA_COUNT(0x0);
-	SPI_FLASH0->CMD_BUFFER0.reg = 0xAB;
-	SPI_FLASH0->DIRECTION.reg = 0x01;
+	SPI_FLASH0->READ_CTRL.reg = SPI_FLASH_READ_CTRL_RDATA_COUNT(0x0);
+	SPI_FLASH0->CMD_BUFFER0.reg = SPI_FLASH_CMD_LEAVE_LOW_POWER;
+	SPI_FLASH0->DIRECTION.reg = SPI_FLASH_DIRECTION_CMD;
 	SPI_FLASH0->DMA_START_ADDRESS.reg = 0x0;
 
 	SPI_FLASH0->TRANSACTION_CTRL.reg = \

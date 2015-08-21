@@ -60,10 +60,63 @@
  * \retval false  Module synchronization is not ongoing
  *
  */
-static inline bool _spi_is_active(
-		Spi *const spi_module)
+static bool _spi_is_active(Spi *const spi_module)
 {
+	Assert(spi_module);
+	
 	return spi_module->SPI_BUS_STATUS.bit.SPI_ACTIVE;
+}
+
+/**
+ * \internal Enable SPI clock.
+ *
+ * This function will enable SPI clock.
+ *
+ * \param[in]  module  Pointer to the software instance struct
+ */
+static void _spi_clock_enable(struct spi_module *const module)
+{
+	Assert(module);
+	
+	Spi *const spi_module = (module->hw);
+	
+	if (spi_module == (void *)SPI0) {
+		system_clock_peripheral_enable(PERIPHERAL_SPI0_SCK_CLK);
+		system_clock_peripheral_enable(PERIPHERAL_SPI0_SCK_PHASE);
+		system_clock_peripheral_enable(PERIPHERAL_SPI0_IF);
+		system_clock_peripheral_enable(PERIPHERAL_SPI0_CORE);
+	} else if (spi_module == (void *)SPI1) {
+		system_clock_peripheral_enable(PERIPHERAL_SPI1_SCK_CLK);
+		system_clock_peripheral_enable(PERIPHERAL_SPI1_SCK_PHASE);
+		system_clock_peripheral_enable(PERIPHERAL_SPI1_IF);
+		system_clock_peripheral_enable(PERIPHERAL_SPI1_CORE);
+	}
+}
+
+/**
+ * \internal Disable SPI clock.
+ *
+ * This function will disable SPI clock.
+ *
+ * \param[in]  module  Pointer to the software instance struct
+ */
+static void _spi_clock_disable(struct spi_module *const module)
+{
+	Assert(module);
+	
+	Spi *const spi_module = (module->hw);
+	
+	if (spi_module == (void *)SPI0) {
+		system_clock_peripheral_disable(PERIPHERAL_SPI0_SCK_CLK);
+		system_clock_peripheral_disable(PERIPHERAL_SPI0_SCK_PHASE);
+		system_clock_peripheral_disable(PERIPHERAL_SPI0_IF);
+		system_clock_peripheral_disable(PERIPHERAL_SPI0_CORE);
+	} else if (spi_module == (void *)SPI1) {
+		system_clock_peripheral_disable(PERIPHERAL_SPI1_SCK_CLK);
+		system_clock_peripheral_disable(PERIPHERAL_SPI1_SCK_PHASE);
+		system_clock_peripheral_disable(PERIPHERAL_SPI1_IF);
+		system_clock_peripheral_disable(PERIPHERAL_SPI1_CORE);
+	}
 }
 
 /**
@@ -83,6 +136,9 @@ static enum status_code _spi_set_config(
 		struct spi_module *const module,
 		const struct spi_config *const config)
 {
+	Assert(module);
+	Assert(config);
+	
 	SPI_SPI_CONFIGURATION_Type spi_cfg;
 	Spi *const spi_module = (module->hw);
 
@@ -93,10 +149,10 @@ static enum status_code _spi_set_config(
 #if CONF_SPI_MASTER_ENABLE == true
 	/* Find baud value and write it */
 	if (config->mode == SPI_MODE_MASTER) {
-		// This divider value needs to be based on baud rate. For now we will use the 1 for testing.
 		spi_module->SPI_CLK_DIVIDER.reg = config->clock_divider;
 	}
 #endif
+
 	/* Set data order */
 	spi_cfg.bit.LSB_FIRST_ENABLE = config->data_order;
 	/* Set clock polarity and clock phase */
@@ -122,17 +178,7 @@ static enum status_code _spi_set_config(
 			break;
 	}
 	spi_module->SPI_CONFIGURATION.reg = spi_cfg.reg;
-#if 0
-	//clear all spi RX status bits before enabling it.
-	while(spi_module->RECEIVE_STATUS.reg != 0) {
-		dummy = spi_module->RECEIVE_DATA.reg;
-	}
 
-	// Write a dummy byte
-	spi_module->TRANSMIT_DATA.reg = 0x0;
-#endif
-	//Enable SPI
-	spi_module->SPI_MODULE_ENABLE.reg = SPI_SPI_MODULE_ENABLE_ENABLE;
 	return STATUS_OK;
 }
 
@@ -154,6 +200,8 @@ static enum status_code _spi_set_config(
 static inline bool _spi_is_write_complete(
 		Spi *const spi_module)
 {
+	Assert(spi_module);
+	
 	/* Check interrupt flag */
 	return (spi_module->TRANSMIT_STATUS.bit.TX_FIFO_EMPTY);
 }
@@ -173,6 +221,8 @@ static inline bool _spi_is_write_complete(
 static inline bool _spi_is_ready_to_write(
 		Spi *const spi_module)
 {
+	Assert(spi_module);
+	
 	/* Check interrupt flag */
 	return (spi_module->TRANSMIT_STATUS.bit.TX_FIFO_NOT_FULL);
 }
@@ -191,6 +241,8 @@ static inline bool _spi_is_ready_to_write(
 static inline bool _spi_is_ready_to_read(
 		Spi *const spi_module)
 {
+	Assert(spi_module);
+	
 	/* Check interrupt flag */
 	return (spi_module->RECEIVE_STATUS.bit.RX_FIFO_NOT_EMPTY);
 }
@@ -235,58 +287,32 @@ void spi_slave_inst_get_config_defaults(
  *  \li Character size 8 bit
  *  \li Not enabled in sleep mode
  *  \li Receiver enabled
- *  \li Baudrate 1300000
+ *  \li Baudrate 50000
  *  \li Default pinmux settings for all pads
  *  \li Clock source 0 (26MHz)
- *  \li	Clock divider 4 (Formula: baud_rate = ((clock input freq/clock_divider+1)/4))
+ *  \li	Clock divider  (Formula: baud_rate = ((clock input freq/clock_divider+1)/2))
  *                                  (For Example: if clock source is CLOCK_INPUT_0 then
- *                                  ((26000000/(4+1))/4) = 1300000 bps)
+ *                                  ((26000000/(129+1))/2) = 100000 bps)
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
 void spi_get_config_defaults(
 		struct spi_config *const config)
 {
-	Spi *spi_module = (Spi *)(SPI0);
-	/* Default configuration values */
-	if((spi_module->SPI_MODULE_ENABLE.reg == 0) && (spi_module->SPI_CLK_DIVIDER.reg == 0)) {
-		config->core_idx = SPI_CORE1;
-	} else {
-		spi_module = (Spi *)(SPI1);
-		if((spi_module->SPI_MODULE_ENABLE.reg == 0) && (spi_module->SPI_CLK_DIVIDER.reg == 0)) {
-			config->core_idx = SPI_CORE2;
-		} else {
-			config->core_idx = SPI_CORE_MAX;
-			return;
-		}
-	}
+	Assert(config);
+	
 	config->mode             = SPI_MODE_MASTER;
 	config->data_order       = SPI_DATA_ORDER_MSB;
 	config->transfer_mode    = SPI_TRANSFER_MODE_0;
 	//config->run_in_standby   = 0;
 	config->receiver_enable  = true;
 	config->clock_source     = SPI_CLK_INPUT_0;
-	config->clock_divider    = 4;
+	config->clock_divider    = 129;
 
-	/* Clear mode specific config */
-	memset(&(config->mode_specific), 0, sizeof(config->mode_specific));
-
-	/* Master config defaults */
-	config->mode_specific.master.baudrate = ((260000000/config->clock_divider)/4);
-
-	/* pinmux config defaults  Upper 16 bits inform the GPIO number and lower 16 bits for pinmux selection*/
-	if(config->core_idx == SPI_CORE1){
-		config->pinmux_pad[0] = PINMUX_LP_GPIO_10_MUX2_SPI0_SCK;
-		config->pinmux_pad[1] = PINMUX_LP_GPIO_11_MUX2_SPI0_MOSI;
-		config->pinmux_pad[2] = PINMUX_LP_GPIO_12_MUX2_SPI0_SSN;
-		config->pinmux_pad[3] = PINMUX_LP_GPIO_13_MUX2_SPI0_MISO;
-	}
-	else {
-		config->pinmux_pad[0] = PINMUX_LP_GPIO_2_MUX4_SPI0_SCK;
-		config->pinmux_pad[1] = PINMUX_LP_GPIO_3_MUX4_SPI0_MOSI;
-		config->pinmux_pad[2] = PINMUX_LP_GPIO_4_MUX4_SPI0_SSN;
-		config->pinmux_pad[3] = PINMUX_LP_GPIO_5_MUX4_SPI0_MISO;
-	}
+	config->pinmux_pad[0] = PINMUX_LP_GPIO_10_MUX2_SPI0_SCK;
+	config->pinmux_pad[1] = PINMUX_LP_GPIO_11_MUX2_SPI0_MOSI;
+	config->pinmux_pad[2] = PINMUX_LP_GPIO_12_MUX2_SPI0_SSN;
+	config->pinmux_pad[3] = PINMUX_LP_GPIO_13_MUX2_SPI0_MISO;
 };
 
 /**
@@ -311,6 +337,11 @@ void spi_attach_slave(
 	slave->address_enabled = config->address_enabled;
 	slave->address         = config->address;
 
+	struct gpio_config config_gpio;
+	gpio_get_config_defaults(&config_gpio);
+	config_gpio.direction = GPIO_PIN_DIR_OUTPUT;
+	gpio_pin_set_config(slave->ss_pin, &config_gpio);	
+	
 	gpio_pin_set_output_level(slave->ss_pin, true);
 }
 
@@ -331,29 +362,12 @@ void spi_reset(struct spi_module *const module)
 	spi_disable(module);
 
 	/* Software reset the module */
-	/* Assert Reset to SPI0 cores. */
 	if(spi_module == (void *)SPI0) {
-		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg &= \
-								~(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_SPI0_CORE_RSTN | \
-								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_SPI0_IF_RSTN);
-	}
-	/* Assert Reset to SPI1 cores. */
-	if(spi_module == (void *)SPI1) {
-		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg &= \
-								~(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_SPI1_CORE_RSTN | \
-								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_SPI1_IF_RSTN);
-	}
-	/* Clear Reset to SPI0 cores. */
-	if(spi_module == (void *)SPI0) {
-		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |= \
-								(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_SPI0_CORE_RSTN | \
-								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_SPI0_IF_RSTN);
-	}
-	/* Clear Reset to SPI1 cores. */
-	if(spi_module == (void *)SPI1) {
-		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |= \
-								(LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_SPI1_CORE_RSTN | \
-								LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_CORTUS_SPI1_IF_RSTN);
+		system_peripheral_reset(PERIPHERAL_SPI0_CORE);
+		system_peripheral_reset(PERIPHERAL_SPI0_IF);
+	} else if (spi_module == (void *)SPI1) {
+		system_peripheral_reset(PERIPHERAL_SPI1_CORE);
+		system_peripheral_reset(PERIPHERAL_SPI1_IF);
 	}
 }
 
@@ -375,20 +389,18 @@ void spi_reset(struct spi_module *const module)
  */
 enum status_code spi_init(
 		struct spi_module *const module,
+		Spi *const hw,
 		const struct spi_config *const config)
 {
-
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(hw);
+	Assert(config);
+	
 	uint8_t idx;
-	uint8_t pinnum = 0;
-
+	
 	/* Initialize device instance */
-	if(config->core_idx == SPI_CORE1) {
-		module->hw = (void *)SPI0;
-	} else if(config->core_idx == SPI_CORE2) {
-		module->hw = (void *)SPI1;
-	} else {
-		return STATUS_ERR_INVALID_ARG;
-	}
+	module->hw = hw;
 
 	Spi *const spi_module = (module->hw);
 
@@ -397,19 +409,26 @@ enum status_code spi_init(
 		spi_module->SPI_MODULE_ENABLE.reg = (0x0ul << SPI_SPI_MODULE_ENABLE_ENABLE_Pos);
 	}
 
-	spi_reset(module);
+	spi_reset(module);	
+	_spi_clock_enable(module);
 
 	//Program the pinmux.
-
+	struct gpio_config config_gpio;
+	gpio_get_config_defaults(&config_gpio);
+	
 	/* Set the pinmux for this spi module. */
 	for(idx = 0; idx < 4; idx++) {
-		gpio_pinmux_cofiguration(config->pinmux_pad[idx]>>16, \
-								(uint16_t)(config->pinmux_pad[idx] & 0xFFFF));
+		if (config->pinmux_pad[idx] != PINMUX_UNUSED) {
+			if (config->mode == SPI_MODE_MASTER) {
+				config_gpio.direction = GPIO_PIN_DIR_OUTPUT;
+			} else if (config->mode == SPI_MODE_SLAVE) {
+				config_gpio.direction = GPIO_PIN_DIR_INPUT;
+			}
+			gpio_pin_set_config(config->pinmux_pad[idx]>>16, &config_gpio);
+			gpio_pinmux_cofiguration(config->pinmux_pad[idx]>>16, \
+						(uint16_t)(config->pinmux_pad[idx] & 0xFFFF));
+		}
 	}
-
-	/* Setting the default value for SS- PIN. */
-	pinnum = (config->pinmux_pad[2] >> 16) & 0xFF;
-	gpio_pin_set_output_level(pinnum, true);
 
 	/* Set up the input clock & divider for the module */
 	spi_module->CLOCK_SOURCE_SELECT.reg = config->clock_source;
@@ -478,9 +497,9 @@ void spi_enable(struct spi_module *const module)
 
 #if SPI_CALLBACK_MODE == true
 	if((uint32_t)spi_module == SPI0)
-		NVIC_EnableIRQ(SPIRX0_IRQn);
+		NVIC_EnableIRQ(SPI0_RX_IRQn);
 	else if((uint32_t)spi_module == SPI1)
-		NVIC_EnableIRQ(SPIRX1_IRQn);
+		NVIC_EnableIRQ(SPI1_RX_IRQn);
 #endif
 
 	/* Enable SPI */
@@ -500,13 +519,14 @@ void spi_disable(struct spi_module *const module)
 
 #  if SPI_CALLBACK_MODE == true
 	if((uint32_t)spi_module == SPI0)
-		NVIC_DisableIRQ(SPIRX0_IRQn);
+		NVIC_DisableIRQ(SPI0_RX_IRQn);
 	else if((uint32_t)spi_module == SPI1)
-		NVIC_DisableIRQ(SPIRX1_IRQn);
+		NVIC_DisableIRQ(SPI1_RX_IRQn);
 #  endif
 
 	/* Disable SPI */
 	spi_module->SPI_MODULE_ENABLE.reg = (0x0ul << SPI_SPI_MODULE_ENABLE_ENABLE_Pos);
+	_spi_clock_disable(module);
 }
 
 /**
@@ -667,60 +687,60 @@ enum status_code spi_read(
  */
 enum status_code spi_transceive_buffer_wait(
 		struct spi_module *const module,
-		uint8_t *pu8tx_data,
-		uint8_t *pu8rx_data,
+		uint8_t *tx_data,
+		uint8_t *rx_data,
 		uint16_t length)
 {
 	Spi *spi_module = module->hw;
-	uint8_t u8dummy = 0;
-	uint8_t u8skipmosi = 0;
-	uint8_t u8skipmiso = 0;
-	uint8_t u8status;
-	uint16_t u16transferlen = 0;
+	uint8_t dummy = 0;
+	uint8_t skip_mosi = 0;
+	uint8_t skip_miso = 0;
+	uint8_t status;
+	uint16_t transfer_len = 0;
 
 	if(spi_module == 0) {
 		return STATUS_ERR_NOT_INITIALIZED;
 	}
-	if(!pu8tx_data) {
-		pu8tx_data = &u8dummy;
-		*pu8tx_data = module->tx_dummy_byte;
-		u8skipmosi = 1;
-	} else if(!pu8rx_data) {
-		pu8rx_data = &u8dummy;
-		u8skipmiso = 1;
+	if(!tx_data) {
+		tx_data = &dummy;
+		*tx_data = module->tx_dummy_byte;
+		skip_mosi = 1;
+	} else if(!rx_data) {
+		rx_data = &dummy;
+		skip_miso = 1;
 	} else if(length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	//Check for Idle
+	/* Check for Idle */
 	do {
-		u8status = _spi_is_active(spi_module);
-	}while(u8status);
+		status = _spi_is_active(spi_module);
+	}while(status);
 
-	// Clear all status registers
+	/* Clear all status registers */
 	spi_module->RECEIVE_STATUS.reg;
 	spi_module->TRANSMIT_STATUS.reg;
 
-	//Start transfer
-	while(u16transferlen < length) {
-		//Write data to MOSI
-		//tx_data = *pu8tx_data;
+	/* Start transfer */
+	while(transfer_len < length) {
+		/* Write data to MOSI */
 		while(!_spi_is_ready_to_write(spi_module));
-		spi_module->TRANSMIT_DATA.reg = *pu8tx_data;
-		//Read data shifted from MISO
+		spi_module->TRANSMIT_DATA.reg = *tx_data;
+		/* Read data shifted from MISO */
 		while(!_spi_is_ready_to_read(spi_module));
-		*pu8rx_data = spi_module->RECEIVE_DATA.reg;
-		//rx_fifo_not_empty = 0;
-		u16transferlen++;
-		if(!u8skipmosi)
-			pu8tx_data++;
-		if(!u8skipmiso)
-			pu8rx_data++;
+		*rx_data = spi_module->RECEIVE_DATA.reg;
+		transfer_len++;
+		if (!skip_mosi) {
+			tx_data++;
+		}
+		if (!skip_miso) {
+			rx_data++;
+		}
 	}
-	//check TXFIFO is empty
+	/* check TXFIFO is empty */
 	do {
-		u8status = _spi_is_write_complete(spi_module);
-	}while(!u8status);
+		status = _spi_is_write_complete(spi_module);
+	}while(!status);
 
 	return STATUS_OK;
 
@@ -826,9 +846,11 @@ enum status_code spi_select_slave(
 		bool select)
 {
 	uint8_t gpio_num = slave->ss_pin;
-	if(select) { // ASSERT Slave select pin
+	if(select) {
+		/* ASSERT Slave select pin */
 		gpio_pin_set_output_level(gpio_num, false);
-	} else {			 // DEASSERT Slave select pin
+	} else {
+		/* DEASSERT Slave select pin */
 		gpio_pin_set_output_level(gpio_num, true);
 	}
 

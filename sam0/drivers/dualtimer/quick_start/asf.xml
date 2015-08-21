@@ -7,8 +7,8 @@
 		<build type="c-source" value="qs_dualtimer_basic.c"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.dualtimer"/>
-		<require idref="sam0.drivers.uart"/>
 		<require idref="sam0.utils"/>
+		<require idref="sam0.utils.stdio.stdio_serial"/>
 		<device-support value="samb11"/>
 	</module>
 </asf>

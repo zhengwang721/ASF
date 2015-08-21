@@ -50,14 +50,14 @@
 /**
  * \defgroup asfdoc_sam0_ccl_group SAM Configurable Custom Logic (CCL) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the device's Configurable Custom Logic functionality.
  *
  * The following peripheral is used by this module:
  *  - CCL (Configurable Custom Logic)
  *
  * The following devices can use this module:
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM C20/C21
  *
  * The outline of this documentation is as follows:
@@ -79,7 +79,7 @@
  * This driver provides an interface for the Configurable Custom Logic
  * functions on the device.
  *
- * The Configurable Custom Logic (CCL) contains programmable logic 
+ * The Configurable Custom Logic (CCL) contains programmable logic
  * which can be connected to the device pins, events, or internal peripherals.
  *
  * Each LUT consists of three inputs, a truth table and optional synchronizer,
@@ -476,6 +476,11 @@ void ccl_lut_disable(const enum ccl_lut_id number);
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>42448B</td>
+ *		<td>08/2015</td>
+ *		<td>Add support for SAM L22</td>
  *	</tr>
  *	<tr>
  *		<td>42448A</td>

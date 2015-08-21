@@ -46,6 +46,12 @@
 #include <gpio.h>
 
 /**
+ * \internal
+ * Internal driver device instance struct.
+ */
+struct gpio_module _gpio_instances[2];
+
+/**
  *  \brief Initializes a gpio pin/group configuration structure to defaults.
  *
  *  Initializes a given gpio pin/group configuration structure to a set of
@@ -129,7 +135,7 @@ enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
 				case GPIO_PIN_PULL_DOWN:
 					/* Set R-Type */
 					LPMCU_MISC_REGS0->RTYPE_PAD_0.reg |= (1 << gpio_pin);
-					/* Sete REN */
+					/* Set REN */
 					LPMCU_MISC_REGS0->PULL_ENABLE.reg &= ~(1 << gpio_pin);
 					break;
 #endif	//CHIPVERSION_B0
@@ -291,6 +297,216 @@ void gpio_pinmux_cofiguration(const uint8_t gpio_pin, uint16_t pinmux_sel)
 			}
 		}
 	}
+}
+
+/**
+ * \brief Registers a callback
+ *
+ * Registers a callback function which is implemented by the user.
+ *
+ * \note The callback must be enabled by \ref gpio_enable_callback,
+ *       in order for the interrupt handler to call it when the conditions for
+ *       the callback type are met.
+ *
+ * \param[in]  gpio_pin       GPIO pin number
+ * \param[in]  callback_func  Pointer to callback function
+ * \param[in]  callback_type  Callback type given by an enum
+ *
+ */
+void gpio_register_callback(uint8_t gpio_pin, gpio_callback_t callback_func,
+				enum gpio_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(callback_func);
+	Assert(gpio_pin < 24);
 	
+	uint8_t gpio_port = 0;
+	
+	if (gpio_pin < 16) {
+		gpio_port = 0;
+	} else if (gpio_pin < 24) {
+		gpio_port = 1;
+	}
+	switch (callback_type) {
+		case GPIO_CALLBACK_LOW:
+			_gpio_instances[gpio_port].hw->INTTYPECLR.reg |= 1 << (gpio_pin % 16);
+			_gpio_instances[gpio_port].hw->INTPOLCLR.reg |= 1 << (gpio_pin % 16);
+			break;
+			
+		case GPIO_CALLBACK_HIGH:
+			_gpio_instances[gpio_port].hw->INTTYPECLR.reg |= 1 << (gpio_pin % 16);
+			_gpio_instances[gpio_port].hw->INTPOLSET.reg |= 1 << (gpio_pin % 16);
+			break;
+			
+		case GPIO_CALLBACK_RISING:
+			_gpio_instances[gpio_port].hw->INTTYPESET.reg |= 1 << (gpio_pin % 16);
+			_gpio_instances[gpio_port].hw->INTPOLSET.reg |= 1 << (gpio_pin % 16);
+			break;
+			
+		case GPIO_CALLBACK_FALLING:
+			_gpio_instances[gpio_port].hw->INTTYPESET.reg |= 1 << (gpio_pin % 16);
+			_gpio_instances[gpio_port].hw->INTPOLCLR.reg |= (1 << (gpio_pin % 16));
+			break;
+			
+		case GPIO_CALLBACK_N:
+			break;
+	}
+	/* Register callback function */
+	_gpio_instances[gpio_port].callback[gpio_pin % 16] = callback_func;
+	/* Set the bit corresponding to the gpio pin */
+	_gpio_instances[gpio_port].callback_reg_mask |= (1 << (gpio_pin % 16));
+}
+
+/**
+ * \brief Unregisters a callback
+ *
+ * Unregisters a callback function which is implemented by the user.
+ *
+ *
+ * \param[in]  gpio_pin       GPIO pin number
+ * \param[in]  callback_func  Pointer to callback function
+ * \param[in]  callback_type  Callback type given by an enum
+ *
+ */
+void gpio_unregister_callback(uint8_t gpio_pin,
+				enum gpio_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(callback_func);
+	Assert(gpio_pin < 24);
+	
+	uint8_t gpio_port = 0;
+	
+	if (gpio_pin < 16) {
+		gpio_port = 0;
+	} else if (gpio_pin < 24) {
+		gpio_port = 1;
+	}
+
+	/* Unregister callback function */
+	_gpio_instances[gpio_port].callback[gpio_pin % 16] = NULL;
+	/* Set the bit corresponding to the gpio pin */
+	_gpio_instances[gpio_port].callback_reg_mask &= ~(1 << (gpio_pin % 16));
+}
+
+/**
+ * \brief Enables callback
+ *
+ * Enables the callback function registered by the \ref usart_register_callback.
+ * The callback function will be called from the interrupt handler when the
+ * conditions for the callback type are met.
+ *
+ * \param[in]  module         Pointer to GPIO software instance struct
+ * \param[in]  callback_type  Callback type given by an enum
+ */
+void gpio_enable_callback(uint8_t gpio_pin)
+{
+	Assert(gpio_pin < 24);
+	
+	uint8_t gpio_port = 0;
+	
+	if (gpio_pin < 16) {
+		gpio_port = 0;
+	} else if (gpio_pin < 24) {
+		gpio_port = 1;
+	}
+
+	/* Enable callback */
+	_gpio_instances[gpio_port].callback_enable_mask |= (1 << (gpio_pin % 16));
+	_gpio_instances[gpio_port].hw->INTENSET.reg |= (1 << (gpio_pin % 16));
+}
+
+/**
+ * \brief Disables callback
+ *
+ * Disables the callback function registered by the \ref usart_register_callback.
+ * The callback function will not be called from the interrupt handler.
+ *
+ * \param[in]  module         Pointer to GPIO software instance struct
+ * \param[in]  callback_type  Callback type given by an enum
+ */
+void gpio_disable_callback(uint8_t gpio_pin)
+{
+	Assert(gpio_pin < 24);
+	
+	uint8_t gpio_port = 0;
+	
+	if (gpio_pin < 16) {
+		gpio_port = 0;
+	} else if (gpio_pin < 24) {
+		gpio_port = 1;
+	}
+
+	/* Enable callback */
+	_gpio_instances[gpio_port].callback_enable_mask &= ~(1 << (gpio_pin % 16));
+	_gpio_instances[gpio_port].hw->INTENCLR.reg |= (1 << (gpio_pin % 16));
+}
+
+/**
+ * \internal GPIO port0 isr handler.
+ *
+ * This function will enter interrupt.
+ *
+ */
+static void gpio_port0_isr_handler(void)
+{
+	uint32_t flag = _gpio_instances[0].hw->INTSTATUSCLEAR.reg;
+	
+	for (uint8_t i = 0; i < 16; i++){
+		if (flag & (1 << i)) {
+			/* Clear interrupt flag */
+			_gpio_instances[0].hw->INTSTATUSCLEAR.reg |= (1 << i);
+			if ((_gpio_instances[0].callback_enable_mask & (1 << i)) && \
+			(_gpio_instances[0].callback_reg_mask & (1 << i)))
+			_gpio_instances[0].callback[i]();
+			break;
+		}
+	}
+}
+
+/**
+ * \internal GPIO port1 isr handler.
+ *
+ * This function will enter interrupt.
+ *
+ */
+static void gpio_port1_isr_handler(void)
+{
+	uint32_t flag = _gpio_instances[1].hw->INTSTATUSCLEAR.reg;
+	
+	for (uint8_t i = 0; i < 16; i++){
+		if (flag & (1 << i)) {
+			/* Clear interrupt flag */
+			_gpio_instances[1].hw->INTSTATUSCLEAR.reg |= (1 << i);
+			if ((_gpio_instances[1].callback_enable_mask & (1 << i)) && \
+			(_gpio_instances[1].callback_reg_mask & (1 << i))) {
+				_gpio_instances[1].callback[i]();
+				break;
+			}
+		}
+	}
+}
+
+/**
+ * \internal GPIO callback init.
+ *
+ * This function will init GPIO callback.
+ *
+ */
+void gpio_init(void)
+{
+	uint8_t i, j;
+	
+	for(i = 0; i < 2; i++) {
+		for(j = 0; j < 16; j++) {
+			_gpio_instances[i].callback[j] = NULL;
+		}
+		_gpio_instances[i].callback_enable_mask = 0;
+		_gpio_instances[i].callback_reg_mask = 0;
+	}
+	_gpio_instances[0].hw = (void *)GPIO0;
+	_gpio_instances[1].hw = (void *)GPIO1;
+	system_register_isr(RAM_ISR_TABLE_PORT0_COMB_INDEX, (uint32_t)gpio_port0_isr_handler);
+	system_register_isr(RAM_ISR_TABLE_PORT1_COMB_INDEX, (uint32_t)gpio_port1_isr_handler);
 }
 

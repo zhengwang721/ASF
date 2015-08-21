@@ -44,18 +44,17 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
-
-#define TIMER_RELOAD_VALUE		1000000
+#include "conf_timer.h"
 
 //! [setup]
-//! [setup_gpio_init]
-void configure_gpio_pins(void);
-//! [setup_gpio_init]
-//! [setup_timer_init]
-void configure_timer(void);
-//! [setup_timer_init]
+//! [callback_funcs]
+static void timer_callback(void)
+{
+	gpio_pin_toggle_output_level(LED_0_PIN);
+}
 
-void configure_gpio_pins(void)
+//! [callback_funcs]
+static void configure_gpio_pins(void)
 {
 //! [setup_gpio_1]
 	struct gpio_config config_gpio_pin;
@@ -72,52 +71,53 @@ void configure_gpio_pins(void)
 //! [setup_gpio_4]
 }
 
-void configure_timer(void)
+static void configure_timer(void)
 {
-	//! [setup_timer_1]
+//! [setup_timer_1]
 	struct timer_config config_timer;
-	//! [setup_timer_1]
-	//! [setup_timer_2]
+//! [setup_timer_1]
+//! [setup_timer_2]
 	timer_get_config_defaults(&config_timer);
-	//! [setup_timer_2]
-	
-	//! [setup_timer_3]
+//! [setup_timer_2]
+//! [setup_timer_3]
+	config_timer.reload_value = CONF_TIMER_RELOAD_VALUE;
+//! [setup_timer_3]
+//! [setup_timer_4]
 	timer_init(&config_timer);
-	//! [setup_timer_3]
+//! [setup_timer_4]
+//! [setup_timer_5]
+	timer_enable();
+//! [setup_timer_5]
 }
-//! [setup]
 
+static void configure_timer_callback(void)
+{
+	//! [setup_register_callback]
+	timer_register_callback(timer_callback);
+	//! [setup_register_callback]
+	
+	/* For A4, timer0 IRQ is 9 */
+	//! [enable_IRQ]
+	NVIC_EnableIRQ(9);
+	//! [enable_IRQ]
+}
+
+//! [setup]
 int main(void)
 {
-	//! [setup_init]	
-	//system_init();
-
+//! [setup_init]
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
+	
 	configure_gpio_pins();
 
 	configure_timer();
-
-	//! [setup_timer_value]
-	timer_set_value(TIMER_RELOAD_VALUE);
-	//! [setup_timer_value]
 	
-	//! [setup_timer_enable]
-	timer_enable();
-	//! [setup_timer_enable]
-	//! [setup_init]
+	configure_timer_callback();
+//! [setup_init]
 	
-	//! [main_loop]
+//! [main_loop]
 	while (true) {
-		//! [main_loop_1]
-		if (timer_get_interrupt_status()) {
-		//! [main_loop_1]
-			//! [main_loop_2]
-			timer_clear_interrupt_status();
-			//! [main_loop_2]
-			
-			//! [main_loop_3]
-			gpio_pin_toggle_output_level(LED_0_PIN);
-			//! [main_loop_3]
-		}
+		
 	}
-	//! [main_loop]
+//! [main_loop]
 }

@@ -4,6 +4,7 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_dualtimer.h"/>
 		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_uart_serial.h"/>
 		<require idref="board.samb11_xplained_pro"/>
 		<require idref="sam0.drivers.dualtimer.quick_start"/>
 		<generator value="iarewarm"/>

@@ -1,0 +1,13 @@
+<asf xmlversion="1.0">
+	<project id="common.applications.user_application.samv71_xplained_ultra" caption="SAMV71 Xplained Ultra template project" type="template">
+		<device-support value="atsamv71q21"/>
+		<require idref="common.applications.user_application"/>
+		<require idref="board.samv71_xplained_ultra"/>
+		<info type="gui-flag" value="move-to-root"/>
+		<build type="include-path" value="config"/>
+		<build type="header-file" value="config/conf_board.h"/>
+		<build type="header-file" value="config/conf_clock.h"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+	</project>
+</asf>

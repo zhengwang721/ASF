@@ -46,8 +46,10 @@
 #include <asf.h>
 
 //! [buffer]
-uint32_t read_buf[FLASH_PAGE_SIZE];
-uint32_t write_buf[FLASH_PAGE_SIZE];
+#define len_buf    FLASH_PAGE_SIZE
+
+uint8_t read_buf[len_buf];
+uint8_t write_buf[len_buf];
 //! [buffer]
 
 int main(void)
@@ -59,7 +61,7 @@ int main(void)
 
 //! [setup_init]
 //!   [setup_1]
-	for (i = 0; i < FLASH_PAGE_SIZE; i++) {
+	for (i = 0; i < len_buf; i++) {
 		write_buf[i] = i;
 	}
 //!   [setup_1]
@@ -70,7 +72,7 @@ int main(void)
 
 //! [main_use_case]
 //!   [main_1]
-	while(spi_flash_erase((unsigned long)FLASH_NVDS_START_ADDRESS, FLASH_PAGE_SIZE)) {
+	while(spi_flash_erase((unsigned long)FLASH_NVDS_START_ADDRESS, len_buf)) {
 		gpio_pin_toggle_output_level(LED_0_PIN);
 		/* Add a short delay to see LED toggle */
 		delay = 600000;
@@ -82,13 +84,14 @@ int main(void)
 //!  [main_2]
 	spi_flash_read((unsigned char *)read_buf, \
 				(unsigned long)FLASH_NVDS_START_ADDRESS, \
-				FLASH_PAGE_SIZE);
+				len_buf);
 //!  [main_2]
 
 //!  [main_3]
-	for (i = 0; i < FLASH_PAGE_SIZE; i++) {
-		if(read_buf[i] != 0xFFFFFFFF) {
+	for (i = 0; i < len_buf; i++) {
+		if(read_buf[i] != 0xFF) {
 			while(1) {
+				read_buf[i] = read_buf[i];
 				gpio_pin_toggle_output_level(LED_0_PIN);
 				/* Add a short delay to see LED toggle */
 				delay = 600000;
@@ -102,17 +105,17 @@ int main(void)
 //!  [main_4]
 	spi_flash_write((unsigned char *)write_buf, \
 				(unsigned long)FLASH_NVDS_START_ADDRESS, \
-				FLASH_PAGE_SIZE);
+				len_buf);
 //!  [main_4]
 
 //!  [main_5]
 	spi_flash_read((unsigned char *)read_buf, \
 				(unsigned long)FLASH_NVDS_START_ADDRESS, \
-				FLASH_PAGE_SIZE);
+				len_buf);
 //!  [main_5]
 
 //!  [main_6]
-	for (i = 0; i < FLASH_PAGE_SIZE; i++) {
+	for (i = 0; i < len_buf; i++) {
 		if(read_buf[i] != write_buf[i]) {
 			while(1) {
 				gpio_pin_toggle_output_level(LED_0_PIN);

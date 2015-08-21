@@ -379,7 +379,7 @@ void TIMER0_Handler      ( void );
 #define GPIO_INST_NUM          3
 #define GPIO_INSTS             { GPIO0, GPIO1, GPIO2 }
 
-#define SPI_FLASH0             ((Spi_Flash *)0x40012000UL)    /**< \brief (SPI_FLASH0) Base Address */
+#define SPI_FLASH0             ((SpiFlash *)0x40012000UL)    /**< \brief (SPI_FLASH0) Base Address */
 #define SPI_FLASH_INST_NUM     1
 #define SPI_FLASH_INSTS        { SPI_FLASH0 }
 

@@ -35,6 +35,7 @@
 		<device-support value="samb11"/>
 
 		<require idref="sam0.utils"/>
+		<require idref="sam0.drivers.system"/>
 
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
 	</module>

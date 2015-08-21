@@ -52,6 +52,7 @@
 #include <compiler.h>
 #include <conf_spi.h>
 #include <gpio.h>
+#include <system_sam_b.h>
 
 #  if SPI_CALLBACK_MODE == true
 //#  include <_interrupt.h>
@@ -70,18 +71,10 @@ extern "C" {
 #  define SPI_TIMEOUT 10000
 #  endif
 
-/** \brief SPI Core index
- *
- * Index to select spcific SPI module from available list.
- */
-enum spi_core_idx {
-	SPI_CORE1 = 1,
-	SPI_CORE2,
-	SPI_CORE_MAX,
-};
-
-/** Prototype for the device instance */
-struct spi_module;
+#  ifndef PINMUX_UNUSED
+/** Unused pinmux. */
+#  define PINMUX_UNUSED 0xFFFFFFFF
+#  endif
 
 #  if SPI_CALLBACK_MODE == true
 
@@ -269,30 +262,6 @@ struct spi_slave_inst_config {
 };
 
 /**
- * \brief SPI Master configuration structure
- *
- * SPI Master configuration structure
- */
-struct spi_master_config {
-	/** Baud rate */
-	uint32_t baudrate;
-};
-
-/**
- * \brief SPI slave configuration structure
- *
- * SPI slave configuration structure
- */
-struct spi_slave_config {
-	/** Address */
-	uint8_t address;
-	/** Address mask */
-	uint8_t address_mask;
-	/** Preload data to the shift register while SS is high */
-	bool preload_enable;
-};
-
-/**
  * \brief SPI configuration structure
  *
  * Configuration structure for an SPI instance. This structure should be
@@ -300,8 +269,8 @@ struct spi_slave_config {
  * modified by the user application.
  */
 struct spi_config {
-	/** Core Index */
-	enum spi_core_idx core_idx;
+	///** Core Index */
+	//enum spi_core_idx core_idx;
 	/** SPI mode */
 	enum spi_mode mode;
 	/** Data order */
@@ -312,13 +281,6 @@ struct spi_config {
 	//uint8_t run_in_standby;
 	/** Enable receiver */
 	bool receiver_enable;
-	/** Union for slave or master specific configuration */
-	union {
-		/** Slave specific configuration */
-		struct spi_slave_config slave;
-		/** Master specific configuration */
-		struct spi_master_config master;
-	} mode_specific;
 	/** clock source to use */
 	enum spi_clock_input clock_source;
 	/** clock divider value to use*/
@@ -341,6 +303,7 @@ struct spi_config {
 
 enum status_code spi_init(
 		struct spi_module *const module,
+		Spi *const hw,
 		const struct spi_config *const config);
 
 void spi_reset(struct spi_module *const module);

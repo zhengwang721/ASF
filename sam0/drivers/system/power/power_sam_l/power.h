@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM L21 Power functionality
+ * \brief SAM L21/L22 Power functionality
  *
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
@@ -107,6 +107,7 @@ enum system_ram_back_bias_mode {
 	SYSTEM_RAM_BACK_BIAS_OFF,
 };
 
+#if SAML21
 /**
  * \brief Linked power domain.
  *
@@ -125,6 +126,22 @@ enum system_linked_power_domain {
 	SYSTEM_LINKED_POWER_DOMAIN_PD012     = PM_STDBYCFG_LINKPD_PD012_Val,
 };
 
+#if (SAML21XXXB)
+/**
+ * \brief VREG switching mode.
+ *
+ * List of VREG switching modes.
+ */
+enum system_vreg_switch_mode {
+	/** Automatic mode. */
+	SYSTEM_SYSTEM_VREG_SWITCH_AUTO = 0,
+	/** Performance oriented. */
+	SYSTEM_SYSTEM_VREG_SWITCH_PERFORMANCE,
+	/** Low Power consumption oriented. */
+	SYSTEM_SYSTEM_VREG_SWITCH_LP,
+};
+#endif
+
 /**
  * \brief Power domain.
  *
@@ -142,6 +159,23 @@ enum system_power_domain {
 	/** All power domains are forced ACTIVE */
 	SYSTEM_POWER_DOMAIN_PD012   = PM_STDBYCFG_PDCFG_PD012_Val,
 };
+#endif
+
+#if SAML22
+/**
+ * \brief Voltage Regulator switch in Standby mode.
+ *
+ */
+enum system_vreg_switch_mode {
+	/** Automatic mode. */
+	SYSTEM_VREG_SWITCH_AUTO        = PM_STDBYCFG_VREGSMOD_AUTO_Val,
+	/** Performance oriented. */
+	SYSTEM_VREG_SWITCH_PERFORMANCE = PM_STDBYCFG_VREGSMOD_PERFORMANCE_Val,
+	/** Low Power consumption oriented. */
+	SYSTEM_VREG_SWITCH_LP          = PM_STDBYCFG_VREGSMOD_LP_Val,
+};
+
+#endif
 
 /**
  * \brief Voltage regulator.
@@ -245,17 +279,27 @@ enum system_backup_pin {
  * Configuration structure for standby mode.
  */
 struct system_standby_config {
-	/** Power domain */
+#if SAML21
+	/** Power domain. */
 	enum system_power_domain  power_domain;
 	/** Enable dynamic power gating for power domain 0 */
 	bool enable_dpgpd0;
 	/** Enable dynamic power gating for power domain 1 */
 	bool enable_dpgpd1;
-	/** Automatic VREG switching disable */
+#if (SAML21XXXA)
+	/** Automatic VREG switching disable. */
 	bool disable_avregsd;
+#else
+	/** VREG switching mode */
+	enum system_vreg_switch_mode vregs_mode;
+#endif
 	/** Linked power domain */
 	enum system_linked_power_domain linked_power_domain;
-	/** Back bias for HMCRAMCHS */
+#elif SAML22
+	/** Regulator switch mode in standby. */
+	enum system_vreg_switch_mode vreg_switch_mode;
+#endif
+	/** Back bias for HMCRAMCHS. */
 	enum system_ram_back_bias_mode hmcramchs_back_bias;
 	/** Back bias for HMCRAMCLP */
 	enum system_ram_back_bias_mode hmcramclp_back_bias;
@@ -277,6 +321,10 @@ struct system_voltage_regulator_config {
 	enum system_voltage_regulator_sel  regulator_sel;
 	/** Low power efficiency */
 	enum system_voltage_regulator_low_power_efficiency low_power_efficiency;
+#if SAML22
+	/** Run in standby in performance level 0. */
+	bool run_in_standby_pl0;
+#endif
 };
 
 /**
@@ -291,6 +339,10 @@ struct system_voltage_references_config {
 	bool on_demand;
 	/** Run in standby */
 	bool run_in_standby;
+#if SAML22
+	/** Temperature Sensor Selection. */
+	bool temperature_sensor_sel;
+#endif
 };
 
 /**
@@ -332,6 +384,9 @@ static inline void system_voltage_regulator_get_config_defaults(
 	config->run_in_standby       = false;
 	config->regulator_sel        = SYSTEM_VOLTAGE_REGULATOR_LDO;
 	config->low_power_efficiency = SYSTEM_VOLTAGE_REGULATOR_LOW_POWER_EFFICIENCY_DEFAULT;
+#if SAML22
+	config->run_in_standby_pl0   = false;
+#endif
 }
 
 /**
@@ -350,7 +405,12 @@ static inline void system_voltage_regulator_set_config(
 	SUPC->VREG.bit.VSVSTEP  = config->voltage_scale_step;
 	SUPC->VREG.bit.RUNSTDBY = config->run_in_standby;
 	SUPC->VREG.bit.SEL      = config->regulator_sel;
+#if (SAML21XXXB)
 	SUPC->VREG.bit.LPEFF    = config->low_power_efficiency;
+#endif
+#if SAML22
+	SUPC->VREG.bit.STDBYPL0 = config->run_in_standby_pl0;
+#endif
 	while(!(SUPC->STATUS.reg & SUPC_STATUS_VREGRDY)) {
 		;
 	}
@@ -402,6 +462,9 @@ static inline void system_voltage_reference_get_config_defaults(
 	config->sel            = SYSTEM_VOLTAGE_REFERENCE_1V0;
 	config->on_demand      = false;
 	config->run_in_standby = false;
+#if SAML22
+	config->temperature_sensor_sel = false;
+#endif
 }
 
 /**
@@ -419,6 +482,9 @@ static inline void system_voltage_reference_set_config(
 	SUPC->VREF.bit.SEL      = config->sel;
 	SUPC->VREF.bit.ONDEMAND = config->on_demand;
 	SUPC->VREF.bit.RUNSTDBY = config->run_in_standby;
+#if SAML22
+	SUPC->VREF.bit.TSSEL    = config->temperature_sensor_sel;
+#endif
 }
 
 /**
@@ -743,6 +809,12 @@ static inline enum status_code system_switch_performance_level(
 		return STATUS_OK;
 	}
 
+#if SAML22
+	if (PM->PLCFG.reg & PM_PLCFG_PLDIS) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+#endif
+
 	/* Clear performance level status */
 	PM->INTFLAG.reg = PM_INTFLAG_PLRDY;
 
@@ -755,6 +827,28 @@ static inline enum status_code system_switch_performance_level(
 	}
 	return STATUS_OK;
 }
+
+#if SAML22
+/**
+ * \brief Enable performance level switch.
+ *
+ * Enable performance level switch.
+ */
+static inline void system_performance_level_enable(void)
+{
+	PM->PLCFG.reg &= ~PM_PLCFG_PLDIS;
+}
+
+/**
+ * \brief Disable performance level switch.
+ *
+ * Disable performance level switch.
+ */
+static inline void system_performance_level_disable(void)
+{
+	PM->PLCFG.reg |= PM_PLCFG_PLDIS;
+}
+#endif
 
 /**
  * \brief Get performance level.
@@ -816,11 +910,19 @@ static inline void system_standby_get_config_defaults(
 		struct system_standby_config *const config)
 {
 	Assert(config);
+#if SAML21
 	config->power_domain        = SYSTEM_POWER_DOMAIN_DEFAULT;
 	config->enable_dpgpd0       = false;
 	config->enable_dpgpd1       = false;
+#if (SAML21XXXB)
+	config->vregs_mode          = SYSTEM_SYSTEM_VREG_SWITCH_AUTO;
+#else
 	config->disable_avregsd     = false;
+#endif
 	config->linked_power_domain = SYSTEM_LINKED_POWER_DOMAIN_DEFAULT;
+#elif SAML22
+	config->vreg_switch_mode    = SYSTEM_VREG_SWITCH_AUTO;
+#endif
 	config->hmcramchs_back_bias = SYSTEM_RAM_BACK_BIAS_RETENTION;
 	config->hmcramclp_back_bias = SYSTEM_RAM_BACK_BIAS_RETENTION;
 }
@@ -837,13 +939,22 @@ static inline void system_standby_set_config(
 		struct system_standby_config *const config)
 {
 	Assert(config);
+#if SAML21
 	PM->STDBYCFG.reg = PM_STDBYCFG_PDCFG(config->power_domain)
 					 | (config->enable_dpgpd0 << PM_STDBYCFG_DPGPD0_Pos)
 					 | (config->enable_dpgpd1 << PM_STDBYCFG_DPGPD1_Pos)
+#if (SAML21XXXB)
+					 | PM_STDBYCFG_VREGSMOD(config->vregs_mode)
+#else
 					 | (config->disable_avregsd << PM_STDBYCFG_AVREGSD_Pos)
+#endif
 					 | PM_STDBYCFG_LINKPD(config->linked_power_domain)
 					 | PM_STDBYCFG_BBIASHS(config->hmcramchs_back_bias)
 					 | PM_STDBYCFG_BBIASLP(config->hmcramclp_back_bias);
+#elif SAML22
+	PM->STDBYCFG.reg = PM_STDBYCFG_VREGSMOD(config->vreg_switch_mode) |
+					 PM_STDBYCFG_BBIASHS(config->hmcramchs_back_bias);
+#endif
 }
 
 /**

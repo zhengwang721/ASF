@@ -4,6 +4,7 @@
 		<device-support value="samd21"/>
 		<device-support value="samr21"/>
 		<device-support value="saml21"/>
+		<device-support value="saml22"/>
 		<device-support value="samda1"/>
 		<device-support value="samc21"/>
 		<device-support value="samc20"/>
@@ -73,6 +74,10 @@
 			<device-support value="sam3"/>
 			<device-support value="sam4"/>
 			<device-support value="samg"/>
+			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="sams70"/>
+			<device-support value="same70"/>
 			<require idref="sam.utils"/>
 			<build type="doxygen-entry-point" value="group_sam_utils"/>
 		</module>
