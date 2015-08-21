@@ -147,11 +147,11 @@ static void _spi_read_dummy(
 void spi_rx0_isr_handler(void)
 {
 	struct spi_module *module = _spi_instances[0];
-	
+
 	/* get interrupt flags and mask out enabled callbacks */
 	uint32_t flags = module->hw->RECEIVE_STATUS.reg;
 	flags &= module->hw->RX_INTERRUPT_MASK.reg;
-	
+
 	if (flags & SPI_RECEIVE_STATUS_RX_FIFO_NOT_EMPTY) {
 		if (module->hw->RECEIVE_STATUS.reg & SPI_RECEIVE_STATUS_FIFO_OVERRUN) {
 			if (module->dir != SPI_DIRECTION_WRITE) {
@@ -161,7 +161,7 @@ void spi_rx0_isr_handler(void)
 				/* End transaction */
 				module->dir = SPI_DIRECTION_IDLE;
 
-				module->hw->RX_INTERRUPT_MASK.reg &= 
+				module->hw->RX_INTERRUPT_MASK.reg &=
 					~(SPI_RX_INTERRUPT_MASK_FIFO_OVERRUN_MASK |
 					SPI_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK);
 				/* Run callback if registered and enabled */
@@ -225,11 +225,11 @@ void spi_rx0_isr_handler(void)
 void spi_tx0_isr_handler(void)
 {
 	struct spi_module *module = _spi_instances[0];
-	
+
 	/* get interrupt flags and mask out enabled callbacks */
 	uint32_t flags = module->hw->TRANSMIT_STATUS.reg;
 	flags &= module->hw->TX_INTERRUPT_MASK.reg;
-	
+
 	if (flags & SPI_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_1) {
 #  if CONF_SPI_MASTER_ENABLE == true
 		if ((module->mode == SPI_MODE_MASTER) &&
@@ -264,7 +264,7 @@ void spi_tx0_isr_handler(void)
 	}
 	if (flags & SPI_TRANSMIT_STATUS_TX_FIFO_EMPTY) {
 		if (module->dir == SPI_DIRECTION_WRITE) {
-			if ((module->enabled_callback & (1 << SPI_CALLBACK_BUFFER_TRANSMITTED)) && 
+			if ((module->enabled_callback & (1 << SPI_CALLBACK_BUFFER_TRANSMITTED)) &&
 				(module->registered_callback & (1 << SPI_CALLBACK_BUFFER_TRANSMITTED))) {
 					module->status = STATUS_OK;
 					/* Disable interrupt */
@@ -293,11 +293,11 @@ void spi_tx0_isr_handler(void)
 void spi_rx1_isr_handler(void)
 {
 	struct spi_module *module = _spi_instances[1];
-	
+
 	/* get interrupt flags and mask out enabled callbacks */
 	uint32_t flags = module->hw->RECEIVE_STATUS.reg;
 	flags &= module->hw->RX_INTERRUPT_MASK.reg;
-	
+
 	if (flags & SPI_RECEIVE_STATUS_RX_FIFO_NOT_EMPTY) {
 		if (module->hw->RECEIVE_STATUS.reg & SPI_RECEIVE_STATUS_FIFO_OVERRUN) {
 			if (module->dir != SPI_DIRECTION_WRITE) {
@@ -366,11 +366,11 @@ void spi_rx1_isr_handler(void)
 void spi_tx1_isr_handler(void)
 {
 	struct spi_module *module = _spi_instances[1];
-	
+
 	/* get interrupt flags and mask out enabled callbacks */
 	uint32_t flags = module->hw->TRANSMIT_STATUS.reg;
 	flags &= module->hw->TX_INTERRUPT_MASK.reg;
-	
+
 	if (flags & SPI_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_1) {
 #  if CONF_SPI_MASTER_ENABLE == true
 		if ((module->mode == SPI_MODE_MASTER) &&
@@ -584,7 +584,7 @@ static void _spi_read_buffer(
 	Spi *const hw = module->hw;
 
 	hw->RX_INTERRUPT_MASK.reg = SPI_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK;
-		
+
 #if CONF_SPI_MASTER_ENABLE == true
 	hw->TX_INTERRUPT_MASK.reg = SPI_TX_INTERRUPT_MASK_TX_FIFO_NOT_FULL_MASK;
 #endif
@@ -617,7 +617,7 @@ static void _spi_transceive_buffer(
 	module->status = STATUS_BUSY;
 
 	module->dir = SPI_DIRECTION_BOTH;
-	
+
 	if (module->hw == SPI0) {
 		flag_direction_both[0] = false;
 	} else if (module->hw == SPI1) {

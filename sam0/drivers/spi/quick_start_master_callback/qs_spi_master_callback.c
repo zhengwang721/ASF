@@ -71,13 +71,13 @@ volatile bool transrev_complete_spi_master = false;
 static void configure_gpio(void)
 {
 	struct gpio_config config_gpio;
-	
+
 	gpio_get_config_defaults(&config_gpio);
 	/* Set buttons as inputs */
 	config_gpio.direction = GPIO_PIN_DIR_INPUT;
 	config_gpio.input_pull = GPIO_PIN_PULL_UP;
 	gpio_pin_set_config(BUTTON_0_PIN, &config_gpio);
-	
+
 	/* Configure LEDs as outputs, turn them off */
 	config_gpio.direction = GPIO_PIN_DIR_OUTPUT;
 	gpio_pin_set_config(LED_0_PIN, &config_gpio);

@@ -70,11 +70,11 @@ void spi_register_callback(
 void spi_unregister_callback(
 		struct spi_module *module,
 		enum spi_callback callback_type);
-		
+
 void spi_enable_callback(
 		struct spi_module *const module,
 		enum spi_callback callback_type);
-		
+
 void spi_disable_callback(
 		struct spi_module *const module,
 		enum spi_callback callback_type);

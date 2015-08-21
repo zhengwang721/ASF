@@ -90,9 +90,9 @@ static void configure_spi_slave_callbacks(void)
 static void configure_gpio(void)
 {
 	struct gpio_config config_gpio;
-	
+
 	gpio_get_config_defaults(&config_gpio);
-	
+
 	/* Configure LEDs as outputs, turn them off */
 	config_gpio.direction = GPIO_PIN_DIR_OUTPUT;
 	gpio_pin_set_config(LED_0_PIN, &config_gpio);
@@ -149,7 +149,7 @@ int main(void)
 //! [main_start]
 	uint8_t result = 0;
 	uint16_t i = 0;
-	
+
 	/* Initialize system */
 //! [system_init]
 	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
@@ -186,7 +186,7 @@ int main(void)
 //! [compare]
 //! [inf_loop]
 	while (true) {
-		/* Infinite loop */		
+		/* Infinite loop */
 		if (result) {
 			gpio_pin_toggle_output_level(LED_0_PIN);
 			/* Add a short delay to see LED toggle */

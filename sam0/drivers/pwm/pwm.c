@@ -44,6 +44,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include "pwm.h"
+#include "system_sam_b.h"
 
 /**
  * \internal Get the register configuration values by PWM device
@@ -218,7 +219,7 @@ void pwm_set_duty_cycle(enum pwm_device_select device_select, \
 					uint8_t duty_cycle)
 {
 	bool agcdata_format;
-	
+
 	switch(device_select) {
 		case PWM1:
 			agcdata_format = LPMCU_MISC_REGS0->PWM_1_CONTROL.bit.AGCDATA_FMT;
@@ -267,12 +268,12 @@ void pwm_set_period(enum pwm_device_select device_select, \
 					enum pwm_period period)
 {
 	uint32_t reg_value;
-	
+
 	if (period > PWM_PERIOD_8) {
 		reg_value = PWM_PERIOD_4;
 	}
 	reg_value = _pwm_reg_period(device_select, period);
-	
+
 	switch(device_select) {
 		case PWM1:
 			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg &= \
@@ -382,26 +383,22 @@ void pwm_enable(enum pwm_device_select device_select)
 {
 	switch (device_select) {
 		case PWM1:
-			LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg |= \
-									LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_PWM_1_CLK_EN;
+			system_clock_peripheral_enable(PERIPHERAL_PWM1);
 			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg |= LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_EN;
 			break;
 
 		case PWM2:
-			LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg |= \
-									LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_PWM_2_CLK_EN;
+			system_clock_peripheral_enable(PERIPHERAL_PWM2);
 			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg |= LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_EN;
 			break;
 
 		case PWM3:
-			LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg |= \
-									LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_PWM_3_CLK_EN;
+			system_clock_peripheral_enable(PERIPHERAL_PWM3);
 			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg |= LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_EN;
 			break;
 
 		case PWM4:
-			LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg |= \
-									LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_PWM_4_CLK_EN;
+			system_clock_peripheral_enable(PERIPHERAL_PWM4);
 			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg |= LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_EN;
 			break;
 	}
@@ -418,26 +415,22 @@ void pwm_disable(enum pwm_device_select device_select)
 {
 	switch (device_select) {
 		case PWM1:
-			LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg &= \
-									~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_PWM_1_CLK_EN;
+			system_clock_peripheral_disable(PERIPHERAL_PWM1);
 			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg &= ~LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_EN;
 			break;
 
 		case PWM2:
-			LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg &= \
-									~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_PWM_2_CLK_EN;
+			system_clock_peripheral_disable(PERIPHERAL_PWM2);
 			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg &= ~LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_EN;
 			break;
 
 		case PWM3:
-			LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg &= \
-									~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_PWM_3_CLK_EN;
+			system_clock_peripheral_disable(PERIPHERAL_PWM3);
 			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg &= ~LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_EN;
 			break;
 
 		case PWM4:
-			LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg &= \
-									~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_PWM_4_CLK_EN;
+			system_clock_peripheral_disable(PERIPHERAL_PWM4);
 			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg &= ~LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_EN;
 			break;
 	}
@@ -454,23 +447,19 @@ void pwm_reset(enum pwm_device_select device_select)
 {
 	switch (device_select) {
 		case PWM1:
-			LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |= \
-									LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_PWM_1_RSTN;
+			system_peripheral_reset(PERIPHERAL_PWM1);
 			break;
 
 		case PWM2:
-			LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |= \
-									LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_PWM_2_RSTN;
+			system_peripheral_reset(PERIPHERAL_PWM2);
 			break;
 
 		case PWM3:
-			LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |= \
-									LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_PWM_3_RSTN;
+			system_peripheral_reset(PERIPHERAL_PWM3);
 			break;
 
 		case PWM4:
-			LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |= \
-									LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_PWM_4_RSTN;
+			system_peripheral_reset(PERIPHERAL_PWM4);
 			break;
 	}
 }

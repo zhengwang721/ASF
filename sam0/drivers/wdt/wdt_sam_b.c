@@ -152,12 +152,10 @@ enum status_code wdt_set_config(struct wdt_module *const module, Wdt * const hw,
 	/* Enable WDT clock */
 	if (module->hw == WDT0) {
 		_wdt_instances[0] = module;
-		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |= \
-				LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_WATCHDOG_0_CLK_EN;
+		system_clock_peripheral_enable(PERIPHERAL_WDT0);
 	} else if (module->hw == WDT1) {
 		_wdt_instances[1] = module;
-		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |= \
-				LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_WATCHDOG_1_CLK_EN;
+		system_clock_peripheral_enable(PERIPHERAL_WDT1);
 	}
 
 	return STATUS_OK;
@@ -173,11 +171,9 @@ enum status_code wdt_set_config(struct wdt_module *const module, Wdt * const hw,
 void wdt_reset(struct wdt_module *const module)
 {
 	if (module->hw == WDT0) {
-		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |= \
-				LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_WATCHDOG_0_RSTN;
+		system_peripheral_reset(PERIPHERAL_WDT0);
 	} else if (module->hw == WDT1) {
-		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |= \
-				LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_WATCHDOG_0_RSTN;
+		system_peripheral_reset(PERIPHERAL_WDT1);
 	}
 }
 

@@ -77,11 +77,11 @@
  *
  * PWM is a flexible fully configurable module which has the following features:
  *  - 4 independent configurable pulse width modulator (PWM) blocks.
- *  - It can be connected to an external on board low pass filter to produce 
+ *  - It can be connected to an external on board low pass filter to produce
  *    different analog control voltages depending on the configured duty cycle.
  *  - The base frequency of PWM block is the XO clock (26MHz) or the RC oscillator.
  *  - Different duty cycles could be obtained ( from 1/1024 to 1023/1024)
- *  - The frequency of the PWM pulse is programmable in steps according 
+ *  - The frequency of the PWM pulse is programmable in steps according
  *    to the following relation:
  * \f[
  *    f_{PWM} =  frac{f_({PWM_{base}})} {(64 \times 2^i )}           i = 0 ~ 8

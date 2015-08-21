@@ -63,7 +63,7 @@
 static bool _spi_is_active(Spi *const spi_module)
 {
 	Assert(spi_module);
-	
+
 	return spi_module->SPI_BUS_STATUS.bit.SPI_ACTIVE;
 }
 
@@ -77,9 +77,9 @@ static bool _spi_is_active(Spi *const spi_module)
 static void _spi_clock_enable(struct spi_module *const module)
 {
 	Assert(module);
-	
+
 	Spi *const spi_module = (module->hw);
-	
+
 	if (spi_module == (void *)SPI0) {
 		system_clock_peripheral_enable(PERIPHERAL_SPI0_SCK_CLK);
 		system_clock_peripheral_enable(PERIPHERAL_SPI0_SCK_PHASE);
@@ -103,9 +103,9 @@ static void _spi_clock_enable(struct spi_module *const module)
 static void _spi_clock_disable(struct spi_module *const module)
 {
 	Assert(module);
-	
+
 	Spi *const spi_module = (module->hw);
-	
+
 	if (spi_module == (void *)SPI0) {
 		system_clock_peripheral_disable(PERIPHERAL_SPI0_SCK_CLK);
 		system_clock_peripheral_disable(PERIPHERAL_SPI0_SCK_PHASE);
@@ -138,7 +138,7 @@ static enum status_code _spi_set_config(
 {
 	Assert(module);
 	Assert(config);
-	
+
 	SPI_SPI_CONFIGURATION_Type spi_cfg;
 	Spi *const spi_module = (module->hw);
 
@@ -200,7 +200,7 @@ static inline bool _spi_is_write_complete(
 		Spi *const spi_module)
 {
 	Assert(spi_module);
-	
+
 	/* Check interrupt flag */
 	return (spi_module->TRANSMIT_STATUS.bit.TX_FIFO_EMPTY);
 }
@@ -221,7 +221,7 @@ static inline bool _spi_is_ready_to_write(
 		Spi *const spi_module)
 {
 	Assert(spi_module);
-	
+
 	/* Check interrupt flag */
 	return (spi_module->TRANSMIT_STATUS.bit.TX_FIFO_NOT_FULL);
 }
@@ -241,7 +241,7 @@ static inline bool _spi_is_ready_to_read(
 		Spi *const spi_module)
 {
 	Assert(spi_module);
-	
+
 	/* Check interrupt flag */
 	return (spi_module->RECEIVE_STATUS.bit.RX_FIFO_NOT_EMPTY);
 }
@@ -299,7 +299,7 @@ void spi_get_config_defaults(
 		struct spi_config *const config)
 {
 	Assert(config);
-	
+
 	config->mode             = SPI_MODE_MASTER;
 	config->data_order       = SPI_DATA_ORDER_MSB;
 	config->transfer_mode    = SPI_TRANSFER_MODE_0;
@@ -337,8 +337,8 @@ void spi_attach_slave(
 	struct gpio_config config_gpio;
 	gpio_get_config_defaults(&config_gpio);
 	config_gpio.direction = GPIO_PIN_DIR_OUTPUT;
-	gpio_pin_set_config(slave->ss_pin, &config_gpio);	
-	
+	gpio_pin_set_config(slave->ss_pin, &config_gpio);
+
 	gpio_pin_set_output_level(slave->ss_pin, true);
 }
 
@@ -393,9 +393,9 @@ enum status_code spi_init(
 	Assert(module);
 	Assert(hw);
 	Assert(config);
-	
+
 	uint8_t idx;
-	
+
 	/* Initialize device instance */
 	module->hw = hw;
 
@@ -406,9 +406,9 @@ enum status_code spi_init(
 		spi_module->SPI_MODULE_ENABLE.reg = (0x0ul << SPI_SPI_MODULE_ENABLE_ENABLE_Pos);
 	}
 
-	spi_reset(module);	
+	spi_reset(module);
 	_spi_clock_enable(module);
-	
+
 #if SPI_CALLBACK_MODE == true
 	if (module->hw == SPI0) {
 		_spi_instances[0] = module;
@@ -424,7 +424,7 @@ enum status_code spi_init(
 	//Program the pinmux.
 	struct gpio_config config_gpio;
 	gpio_get_config_defaults(&config_gpio);
-	
+
 	/* Set the pinmux for this spi module. */
 	for(idx = 0; idx < 4; idx++) {
 		if (config->pinmux_pad[idx] != PINMUX_UNUSED) {

@@ -114,7 +114,7 @@
  *    \snippet qs_spi_slave_basic.c read
  * -# Compare the received data with the transmitted data from SPI master.
  *    \snippet qs_spi_slave_basic.c compare
- * -# Infinite loop. If the data is matched, LED0 will flash slowly. Otherwise, 
+ * -# Infinite loop. If the data is matched, LED0 will flash slowly. Otherwise,
  *    LED will flash quickly.
  *    \snippet qs_spi_slave_basic.c inf_loop
  */
