@@ -591,13 +591,16 @@ void uhd_enable(void)
 	otg_force_host_mode();
 #endif
 
+	ioport_set_pin_dir(USB_ID_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(USB_ID_PIN, IOPORT_PIN_LEVEL_HIGH);
 	// Enable USB hardware
 	otg_enable();
 
 #ifndef USB_HOST_HS_SUPPORT
-	uhd_disable_high_speed_mode();
-#endif
+	USBHS->USBHS_HSTCTRL &= ~USBHS_HSTCTRL_SPDCONF_Msk;
 	USBHS->USBHS_HSTCTRL |= USBHS_HSTCTRL_SPDCONF_LOW_POWER;
+#endif
+
 	uhd_ctrl_request_first = NULL;
 	uhd_ctrl_request_last = NULL;
 	uhd_ctrl_request_timeout = 0;
@@ -628,7 +631,7 @@ void uhd_enable(void)
 	USBHS->USBHS_HSTIER = USBHS_HSTIER_HWUPIES;
 	uhd_sleep_mode(UHD_STATE_DISCONNECT);
 #endif
-
+	ioport_set_pin_level(USB_ID_PIN, IOPORT_PIN_LEVEL_LOW);
 	// Enable main control interrupt
 	// Connection, SOF and reset
 	USBHS->USBHS_HSTIER = USBHS_HSTIER_DCONNIES | USBHS_HSTIER_HSOFIES
@@ -1134,10 +1137,16 @@ static void uhd_interrupt(void)
 		uhd_sleep_mode(UHD_STATE_DISCONNECT);
 		uhd_ack_connection();
 		uhd_enable_connection_int();
+		uhd_ack_wakeup();
+		uhd_enable_wakeup_interrupt();
+		//uhd_enable_vbus(); // enable VBUS
+	#ifdef USB_HOST_HS_SUPPORT
+		//uhd_enable_high_speed_mode();
+	#endif
 		uhd_suspend_start = 0;
 		uhd_resume_start = 0;
 		uhc_notify_connection(false);
-		return;
+		//return;
 	}
 	if (Is_uhd_connection() && Is_uhd_connection_int_enabled()) {
 		uhd_ack_connection();
@@ -1149,10 +1158,8 @@ static void uhd_interrupt(void)
 		uhd_suspend_start = 0;
 		uhd_resume_start = 0;
 		uhc_notify_connection(true);
-		return;
+		//return;
 	}
-
-
 
       /* If Wakeup interrupt is enabled and triggered and connection intterupt is enabled  */
 	if(Is_uhd_wakeup() && Is_uhd_connection_int_enabled()) {
@@ -1162,7 +1169,7 @@ static void uhd_interrupt(void)
 		// Here the wakeup interrupt has been used to detect connection
 		// with an asynchrone interrupt
 		USBHS->USBHS_HSTIDR = USBHS_HSTIDR_HWUPIEC;
-		uhd_sleep_mode(UHD_STATE_IDLE);
+		//uhd_sleep_mode(UHD_STATE_IDLE);
 		uhd_enable_vbus(); // enable VBUS
 		uhd_sleep_mode(UHD_STATE_DISCONNECT);
 		UHC_VBUS_CHANGE(true);
@@ -1191,7 +1198,7 @@ static void uhd_interrupt(void)
 		// Wait 50ms before restarting transfer
 		uhd_resume_start = 50;
 		uhd_sleep_mode(UHD_STATE_IDLE);
-		return;
+		//return;
 	}
 
 	Assert(false); // Interrupt event no managed
