@@ -86,12 +86,12 @@ void gpio_get_config_defaults(struct gpio_config *const config)
  *  \param[in] gpio_pin  Index of the GPIO pin to configure.
  *  \param[in] config    Configuration settings for the pin.
  *
- * 	\return Status of initialization.
- * 	\retval STATUS_OK                       gpio configured correctly
- * 	\retval STATUS_ERR_INVALID_ARG          Invalid gpio number, Certain gpios
+ *  \return Status of initialization.
+ *  \retval STATUS_OK                       gpio configured correctly
+ *  \retval STATUS_ERR_INVALID_ARG          Invalid gpio number, Certain gpios
  *                                          are used by FW and not allowed to change.
- * 	\retval STATUS_RESOURCE_NOT_AVAILABLE   Requested gpio is already in use.
- * 	\retval STATUS_ERR_INVALID_ARG          Invalid pull-up/pull-down configuration.
+ *  \retval STATUS_RESOURCE_NOT_AVAILABLE   Requested gpio is already in use.
+ *  \retval STATUS_ERR_INVALID_ARG          Invalid pull-up/pull-down configuration.
  *
  */
 enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
@@ -138,7 +138,7 @@ enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
 					/* Set REN */
 					LPMCU_MISC_REGS0->PULL_ENABLE.reg &= ~(1 << gpio_pin);
 					break;
-#endif	//CHIPVERSION_B0
+#endif //CHIPVERSION_B0
 				default:
 					status = STATUS_ERR_INVALID_ARG;
 					break;

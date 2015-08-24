@@ -47,7 +47,7 @@
 #define GPIO_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_gpio_group SAM GPIO Driver (GPIO)
+ * \defgroup asfdoc_samb_gpio_group SAM GPIO Driver (GPIO)
  *
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for the
  * configuration and management of the device's General Purpose Input/Output
@@ -60,20 +60,20 @@
  *  - Atmel | SMART SAM B11
  *
  * The outline of this documentation is as follows:
- *  - \ref asfdoc_sam0_gpio_prerequisites
- *  - \ref asfdoc_sam0_gpio_module_overview
- *  - \ref asfdoc_sam0_gpio_special_considerations
- *  - \ref asfdoc_sam0_gpio_extra_info
- *  - \ref asfdoc_sam0_gpio_examples
- *  - \ref asfdoc_sam0_gpio_api_overview
+ *  - \ref asfdoc_samb_gpio_prerequisites
+ *  - \ref asfdoc_samb_gpio_module_overview
+ *  - \ref asfdoc_samb_gpio_special_considerations
+ *  - \ref asfdoc_samb_gpio_extra_info
+ *  - \ref asfdoc_samb_gpio_examples
+ *  - \ref asfdoc_samb_gpio_api_overview
  *
  *
- * \section asfdoc_sam0_gpio_prerequisites Prerequisites
+ * \section asfdoc_samb_gpio_prerequisites Prerequisites
  *
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_sam0_gpio_module_overview Module Overview
+ * \section asfdoc_samb_gpio_module_overview Module Overview
  *
  * The device GPIO module provides an interface between the user application
  * logic and external hardware peripherals, when general pin state manipulation
@@ -81,29 +81,52 @@
  * pin input samplers and output drivers, so that pins can be read from or
  * written to for general purpose external hardware control.
  *
+ * There are the different peripheral functions that are Software selectable
+ * on a per pin basis. This allows for maximum flexibility of mapping desired
+ * interfaces on GPIO pins. MUX1 option allows for any MEGAMUX option to be
+ * assigned to a GPIO.
  *
- * \section asfdoc_sam0_gpio_special_considerations Special Considerations
+ * An example is to illustrate the available options for pin LP_GPIO_3, depending
+ * on the pin-MUX option selected:
+ * - MUX0: the pin will function as bit 3 of the GPIO bus and is controlled by
+ *         the GPIO controller in the ARM subsystem
+ * - MUX1: any option from the MEGAMUX table can be selected, for example it
+ *         can be a quad_dec, pwm, or any of the other functions listed in the
+ *         MEGAMUX table
+ * - MUX2: the pin will function as UART1 TXD; this can be also achieved with
+ *         the MUX1 option via MEGAMUX, but the MUX2 option allows a shortcut
+ *         for the recommended pinout
+ * - MUX3: this option is not used and thus defaults to the GPIO option (same
+ *         as MUX0)
+ * - MUX4: the pin will function as SPI1 MOSI (this option is not available
+ *         through MEGAMUX)
+ * - MUX5: the pin will function as SPI0 MOSI (this option is not available
+ *         through MEGAMUX)
+ * - MUX6: the pin will function as SPI FLASH SCK (this option is not available
+ *         through MEGAMUX)
+ * - MUX7: the pin will function as bit 3 of the test output bus, giving access
+ *         to various debug signals
  *
- * The SAM gpio pin input sampler can be disabled when the pin is configured
- * in pure output mode to save power; reading the pin state of a pin configured
- * in output-only mode will read the logical output state that was last set.
+ * \section asfdoc_samb_gpio_special_considerations Special Considerations
  *
- * \section asfdoc_sam0_gpio_extra_info Extra Information
+ * There are no prerequisites for this module.
  *
- * For extra information, see \ref asfdoc_sam0_gpio_extra. This includes:
- *  - \ref asfdoc_sam0_gpio_extra_acronyms
- *  - \ref asfdoc_sam0_gpio_extra_dependencies
- *  - \ref asfdoc_sam0_gpio_extra_errata
- *  - \ref asfdoc_sam0_gpio_extra_history
+ * \section asfdoc_samb_gpio_extra_info Extra Information
+ *
+ * For extra information, see \ref asfdoc_samb_gpio_extra. This includes:
+ *  - \ref asfdoc_samb_gpio_extra_acronyms
+ *  - \ref asfdoc_samb_gpio_extra_dependencies
+ *  - \ref asfdoc_samb_gpio_extra_errata
+ *  - \ref asfdoc_samb_gpio_extra_history
  *
  *
- * \section asfdoc_sam0_gpio_examples Examples
+ * \section asfdoc_samb_gpio_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_sam0_gpio_exqsg.
+ * \ref asfdoc_samb_gpio_exqsg.
  *
  *
- * \section asfdoc_sam0_gpio_api_overview API Overview
+ * \section asfdoc_samb_gpio_api_overview API Overview
  * @{
  */
 
@@ -152,13 +175,21 @@ enum gpio_pin_pull {
  *  Enum for the pinmux settings of the GPIO pin configuration.
  */
 enum gpio_pinmux_sel {
+	/** PINMUX selection 0 */
 	GPIO_PINMUX_SEL_0 = 0,
+	/** PINMUX selection 1 */
 	GPIO_PINMUX_SEL_1,
+	/** PINMUX selection 2 */
 	GPIO_PINMUX_SEL_2,
+	/** PINMUX selection 3 */
 	GPIO_PINMUX_SEL_3,
+	/** PINMUX selection 4 */
 	GPIO_PINMUX_SEL_4,
+	/** PINMUX selection 5 */
 	GPIO_PINMUX_SEL_5,
+	/** PINMUX selection 6 */
 	GPIO_PINMUX_SEL_6,
+	/** PINMUX selection 7 */
 	GPIO_PINMUX_SEL_7,
 };
 
@@ -289,9 +320,9 @@ void gpio_init(void);
 
 
 /**
- * \page asfdoc_sam0_gpio_extra Extra Information for GPIO Driver
+ * \page asfdoc_samb_gpio_extra Extra Information for GPIO Driver
  *
- * \section asfdoc_sam0_gpio_extra_acronyms Acronyms
+ * \section asfdoc_samb_gpio_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -307,15 +338,15 @@ void gpio_init(void);
  * </table>
  *
  *
- * \section asfdoc_sam0_gpio_extra_dependencies Dependencies
+ * \section asfdoc_samb_gpio_extra_dependencies Dependencies
  * There are no dependencies related to this driver.
  *
  *
- * \section asfdoc_sam0_gpio_extra_errata Errata
+ * \section asfdoc_samb_gpio_extra_errata Errata
  * There are no errata related to this driver.
  *
  *
- * \section asfdoc_sam0_gpio_extra_history Module History
+ * \section asfdoc_samb_gpio_extra_history Module History
  * An overview of the module history is presented in the table below, with
  * details on the enhancements and fixes made to the module since its first
  * release. The current version of this corresponds to the newest version in
@@ -326,26 +357,23 @@ void gpio_init(void);
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added input event feature</td>
- *	</tr>
- *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */
 
 /**
- * \page asfdoc_sam0_gpio_exqsg Examples for GPIO Driver
+ * \page asfdoc_samb_gpio_exqsg Examples for GPIO Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_sam0_gpio_group. QSGs are simple examples with
+ * applications for \ref asfdoc_samb_gpio_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
- *  - \subpage asfdoc_sam0_gpio_basic_use_case
+ *  - \subpage asfdoc_samb_gpio_basic_use_case
  *
- * \page asfdoc_sam0_gpio_document_revision_history Document Revision History
+ * \page asfdoc_samb_gpio_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>
@@ -355,7 +383,7 @@ void gpio_init(void);
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>06/2013</td>
+ *		<td>09/2013</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
