@@ -141,57 +141,6 @@ enum status_code i2c_master_write_packet_job_no_stop(
 		struct i2c_master_module *const module,
 		struct i2c_master_packet *const packet);
 
-/**
- * \brief Cancel any currently ongoing operation
- *
- * Terminates the running transfer operation.
- *
- * \param[in,out] module  Pointer to software module structure
- */
-static inline void i2c_master_cancel_job(
-		struct i2c_master_module *const module)
-{
-	/* Sanity check. */
-	Assert(module);
-	Assert(module->hw);
-
-	/* Set buffer to 0. */
-	module->buffer_remaining = 0;
-	/* Update status*/
-	module->status = STATUS_ABORTED;
-}
-
-/**
- * \brief Get status from ongoing job
- *
- * Will return the status of a transfer operation.
- *
- * \param[in] module  Pointer to software module structure
- *
- * \return Last status code from transfer operation.
- * \retval STATUS_OK                    No error has occurred
- * \retval STATUS_BUSY                  If transfer is in progress
- * \retval STATUS_BUSY                  If master module is busy
- * \retval STATUS_ERR_DENIED            If error on bus
- * \retval STATUS_ERR_PACKET_COLLISION  If arbitration is lost
- * \retval STATUS_ERR_BAD_ADDRESS       If slave is busy, or no slave
- *                                      acknowledged the address
- * \retval STATUS_ERR_TIMEOUT           If timeout occurred
- * \retval STATUS_ERR_OVERFLOW          If slave did not acknowledge last sent
- *                                      data, indicating that slave does not
- *                                      want more data and was not able to read
- */
-static inline enum status_code i2c_master_get_job_status(
-		struct i2c_master_module *const module)
-{
-	/* Check sanity. */
-	Assert(module);
-	Assert(module->hw);
-
-	/* Return current status code. */
-	return module->status;
-}
-
 /** @} */
 
 /** @} */

@@ -79,6 +79,9 @@ static void i2c_read_request_callback(
 	//! [packet_write]
 
 	/* Write buffer to master */
+	//! [flush_fifo]
+	i2c_slave_flush_fifo(module->hw);
+	//! [flush_fifo]
 	//! [write_packet]
 	if (i2c_slave_write_packet_job(module, &packet) != STATUS_OK) {
 	}
@@ -90,13 +93,16 @@ static void i2c_read_request_callback(
 static void i2c_write_request_callback(
 		struct i2c_slave_module *const module)
 {
-	/* Init i2c packet. */
+	/* Initial i2c packet. */
 	//! [packet_read]
 	packet.data_length = DATA_LENGTH;
 	packet.data        = read_buffer;
 	//! [packet_read]
 
 	/* Read buffer from master */
+	//! [interrupt]
+	i2c_slave_tx_interrupt(module->hw, false);
+	//! [interrupt]
 	//! [read_packet]
 	if (i2c_slave_read_packet_job(module, &packet) != STATUS_OK) {
 	}
@@ -104,6 +110,27 @@ static void i2c_write_request_callback(
 }
 //! [write_request]
 
+//! [read_complete]
+static void i2c_write_complete_callback(
+		struct i2c_slave_module *const module)
+{
+	//! [interrupt]
+	i2c_slave_rx_interrupt(module->hw, false);
+	i2c_slave_tx_interrupt(module->hw, true);
+	//! [interrupt]
+}
+//! [read_complete]
+
+//! [write_complete]
+static void i2c_read_complete_callback(
+		struct i2c_slave_module *const module)
+{
+	//! [interrupt]
+	i2c_slave_tx_interrupt(module->hw, false);
+	i2c_slave_rx_interrupt(module->hw, true);
+	//! [interrupt]
+}
+//! [write_complete]
 //! [initialize_i2c]
 static void configure_i2c_slave(void)
 {
@@ -114,14 +141,14 @@ static void configure_i2c_slave(void)
 	//! [init_conf]
 	/* Change address and address_mode. */
 	//! [conf_changes]
-	config_i2c_slave.address      = SLAVE_ADDRESS;
+	config_i2c_slave.address = SLAVE_ADDRESS;
 	//! [conf_changes]
 	/* Initialize and enable device with config. */
 	//! [init_module]
-	while(i2c_slave_init(&i2c_slave_instance, &config_i2c_slave)     \
+	while(i2c_slave_init(&i2c_slave_instance, &config_i2c_slave)
 			!= STATUS_OK);
 	//! [init_module]
-
+	
 	//! [enable_module]
 	i2c_enable(i2c_slave_instance.hw);
 	//! [enable_module]
@@ -137,14 +164,24 @@ static void configure_i2c_slave_callbacks(void)
 			I2C_SLAVE_CALLBACK_READ_REQUEST);
 	i2c_slave_enable_callback(&i2c_slave_instance,
 			I2C_SLAVE_CALLBACK_READ_REQUEST);
-
 	i2c_slave_register_callback(&i2c_slave_instance, i2c_write_request_callback,
 			I2C_SLAVE_CALLBACK_WRITE_REQUEST);
 	i2c_slave_enable_callback(&i2c_slave_instance,
 			I2C_SLAVE_CALLBACK_WRITE_REQUEST);
+	i2c_slave_register_callback(&i2c_slave_instance, i2c_write_complete_callback,
+			I2C_SLAVE_CALLBACK_WRITE_COMPLETE);
+	i2c_slave_enable_callback(&i2c_slave_instance,
+			I2C_SLAVE_CALLBACK_WRITE_COMPLETE);
+	i2c_slave_register_callback(&i2c_slave_instance, i2c_read_complete_callback,
+			I2C_SLAVE_CALLBACK_READ_COMPLETE);
+	i2c_slave_enable_callback(&i2c_slave_instance,
+			I2C_SLAVE_CALLBACK_READ_COMPLETE);
 	//![reg_en_i2c_callback]
+	//! [interrupt]
+	i2c_slave_rx_interrupt(i2c_slave_instance.hw, true);
 	NVIC_EnableIRQ(13);
 	NVIC_EnableIRQ(14);
+	//! [interrupt]
 }
 //! [setup_i2c_callback]
 

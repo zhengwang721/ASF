@@ -111,6 +111,10 @@ static void configure_i2c_callbacks(void)
 	i2c_master_enable_callback(&i2c_master_instance,
 			I2C_MASTER_CALLBACK_WRITE_COMPLETE);
 	//! [callback_en]
+	//! [nvic_en]
+	NVIC_EnableIRQ(13);
+	NVIC_EnableIRQ(14);
+	//! [nvic_en]
 }
 //! [setup_callback]
 
@@ -128,10 +132,12 @@ int main(void)
 	//! [run_initialize_i2c]
 
 	/* Init i2c packet. */
+	//! [init_buf]
 	for (int i = 0; i < DATA_LENGTH; i++) {
 		wr_buffer[i] = i;
 		rd_buffer[i] = 0;
 	}
+	//! [init_buf]
 	//! [write_packet]
 	wr_packet.address     = SLAVE_ADDRESS;
 	wr_packet.data_length = DATA_LENGTH;

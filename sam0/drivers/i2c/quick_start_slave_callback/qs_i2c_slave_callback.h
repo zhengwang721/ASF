@@ -42,19 +42,19 @@
  */
 
 /**
- * \page asfdoc_sam0_sercom_i2c_slave_callback_use_case Quick Start Guide for SERCOM I2C Slave - Callback
+ * \page asfdoc_sam0_i2c_slave_callback_use_case Quick Start Guide for I2C Slave - Callback
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Slave mode
  *  - 100KHz operation speed
  *  - Not operational in standby
  *
- * \section asfdoc_sam0_sercom_i2c_slave_callback_use_case_prereq Prerequisites
- * The device must be connected to an I<SUP>2</SUP>C master.
+ * \section asfdoc_sam0_i2c_slave_callback_use_case_prereq Prerequisites
+ * The device must be connected to an I<SUP>2</SUP>C slave.
  *
- * \section asfdoc_sam0_sercom_i2c_slave_callback_use_case_setup_code Setup
+ * \section asfdoc_sam0_i2c_slave_callback_use_case_setup_code Setup
  *
- * \subsection asfdoc_sam0_sercom_i2c_slave_callback_use_setup_code Code
+ * \subsection asfdoc_sam0_i2c_slave_callback_use_setup_code Code
  * The following must be added to the user application:
  *
  * A sample buffer to write from, a sample buffer to read to and length of buffers:
@@ -72,10 +72,10 @@
  * Function for setting up the module:
  * \snippet qs_i2c_slave_callback.c initialize_i2c
  *
- * Callback function for read request from a master:
+ * Callback function for read request from a slave:
  * \snippet qs_i2c_slave_callback.c read_request
  *
- * Callback function for write request from a master:
+ * Callback function for write request from a slave:
  * \snippet qs_i2c_slave_callback.c write_request
  *
  * Function for setting up the callback functionality of the driver:
@@ -84,7 +84,7 @@
  * Add to user application \c main():
  * \snippet qs_i2c_slave_callback.c run_initialize_i2c
  *
- * \subsection asfdoc_sam0_sercom_i2c_slave_callback_use_setup_workflow Workflow
+ * \subsection asfdoc_sam0_i2c_slave_callback_use_setup_workflow Workflow
  * -# Configure and enable module.
  *    \snippet qs_i2c_slave_callback.c config
  *   -# Create and initialize configuration structure.
@@ -97,32 +97,32 @@
  *      \snippet qs_i2c_slave_callback.c enable_module
  * -# Register and enable callback functions.
  *    \snippet qs_i2c_slave_callback.c config_callback
- *   -# Register and enable callbacks for read and write requests from master.
+ *   -# Register and enable callbacks for read and write requests from slave.
  *      \snippet qs_i2c_slave_callback.c reg_en_i2c_callback
  *
- * \section asfdoc_sam0_sercom_i2c_slave_callback_use_implementation Implementation
- * \subsection asfdoc_sam0_sercom_i2c_slave_callback_use_implementation_code Code
+ * \section asfdoc_sam0_i2c_slave_callback_use_implementation Implementation
+ * \subsection asfdoc_sam0_i2c_slave_callback_use_implementation_code Code
  * Add to user application \c main():
  * \snippet qs_i2c_slave_callback.c while
  * \subsection i2c_slave_callback_use_implementation_workflow Workflow
- * -# Infinite while loop, while waiting for interaction from master.
+ * -# Infinite while loop, while waiting for interaction from slave.
  *    \snippet qs_i2c_slave_callback.c while
  *
- * \section asfdoc_sam0_sercom_i2c_slave_callback_use_callback Callback
+ * \section asfdoc_sam0_i2c_slave_callback_use_callback Callback
  * When an address packet is received, one of the callback functions will be
   * called, depending on the DIR bit in the received packet.
  *
- * \subsection asfdoc_sam0_sercom_i2c_slave_callback_use_callback_workflow Workflow
+ * \subsection asfdoc_sam0_i2c_slave_callback_use_callback_workflow Workflow
  * - Read request callback:
- *  -# Length of buffer and buffer to be sent to master is initialized.
+ *  -# Length of buffer and buffer to be sent to slave is initialized.
  *     \snippet qs_i2c_slave_callback.c packet_write
- *  -# Write packet to master.
+ *  -# Write packet to slave.
  *     \snippet qs_i2c_slave_callback.c write_packet
  *
  * - Write request callback:
- *  -# Length of buffer and buffer to be read from master is initialized.
+ *  -# Length of buffer and buffer to be read from slave is initialized.
  *     \snippet qs_i2c_slave_callback.c packet_read
- *  -# Read packet from master.
+ *  -# Read packet from slave.
  *     \snippet qs_i2c_slave_callback.c read_packet
  */
 /*

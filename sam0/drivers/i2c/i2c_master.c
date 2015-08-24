@@ -49,48 +49,64 @@
 #  include "i2c_master_interrupt.h"
 #endif
 
+/**
+ * \brief Gets the I<SUP>2</SUP>C master default configurations
+ *
+ * Use to initialize the configuration structure to known default values.
+ *
+ * The default configuration is as follows:
+ * - I2C core I2C_CORE1
+ * - Baudrate 100KHz
+ * - Clock sourc I2C_CLK_INPUT_3
+ * - Clock divider = 0x10
+ * - Pinmux pad0 PINMUX_LP_GPIO_8_MUX2_I2C0_SDA
+ * - Pinmux pad1 PINMUX_LP_GPIO_9_MUX2_I2C0_SCK
+ *
+ * \param[out] config  Pointer to configuration structure to be initiated
+ */
 void i2c_master_get_config_defaults(
 		struct i2c_master_config *const config)
 {
-	config->core_idx        = I2C_CORE1;
-	config->baud_rate       = I2C_MASTER_BAUD_RATE_100KHZ;
+	/* Sanity check */
+	Assert(config);
+	
+	config->i2c_core        = I2C_CORE1;
 	config->clock_source    = I2C_CLK_INPUT_3;
 	config->clock_divider   = 0x10;
 	config->pinmux_pad0     = PINMUX_LP_GPIO_8_MUX2_I2C0_SDA;
 	config->pinmux_pad1     = PINMUX_LP_GPIO_9_MUX2_I2C0_SCK;
 }
 
+#if !defined(__DOXYGEN__)
 /**
  * \internal Sets configurations to module
  *
  * \param[out] module  Pointer to software module structure
  * \param[in]  config  Configuration structure with configurations to set
  *
- * \return Status of setting configuration.
- * \retval STATUS_OK                        If module was configured correctly
- * \retval STATUS_ERR_ALREADY_INITIALIZED   If setting other GCLK generator than
- *                                          previously set
- * \retval STATUS_ERR_BAUDRATE_UNAVAILABLE  If given baud rate is not compatible
- *                                          with set GCLK frequency
  */
-static enum status_code _i2c_master_set_config(
+void _i2c_master_set_config(
 		struct i2c_master_module *const module,
 		const struct i2c_master_config *const config)
 {
+	/* Sanity check */
+	Assert(module);
+	Assert(module->hw);
+	Assert(config);
+	
 	enum status_code status = STATUS_OK;
 	I2C *const i2c_module = (module->hw);
 
 	/* Set the pinmux for this i2c module. */
 	gpio_pinmux_cofiguration(config->pinmux_pad0>>16, (uint16_t)(config->pinmux_pad0 & 0xFFFF));
 	gpio_pinmux_cofiguration(config->pinmux_pad1>>16, (uint16_t)(config->pinmux_pad1 & 0xFFFF));
-									
-	/* Find and set baudrate. */
+	/* Set clock. */
 	i2c_module->CLOCK_SOURCE_SELECT.reg = config->clock_source;
 	i2c_module->I2C_CLK_DIVIDER.reg = I2C_I2C_CLK_DIVIDER_I2C_DIVIDE_RATIO(config->clock_divider);
+	/* Enable master mode. */
 	i2c_module->I2C_MASTER_MODE.reg = I2C_I2C_MASTER_MODE_MASTER_ENABLE_1;
-
-	return status;
 }
+#endif /* __DOXYGEN__ */
 
 /**
  * \brief Initializes the requested I<SUP>2</SUP>C hardware module
@@ -112,28 +128,35 @@ enum status_code i2c_master_init(
 		struct i2c_master_module *const module,
 		const struct i2c_master_config *const config)
 {
+	/* Sanity check */
+	Assert(module);
+	Assert(module->hw);
+	Assert(config);
+	
+	I2C *const i2c_module = module->hw;
+
 	/* Sanity check arguments. */
 	if ((module == NULL) || (config == NULL))
 		return STATUS_ERR_INVALID_ARG;
 
 	/* Initialize software module */
-	if (config->core_idx == I2C_CORE1) {
+	if (config->i2c_core == I2C_CORE1) {
 		module->hw = (void *)I2C0;
 	}
 #ifdef CHIPVERSION_B0
-	else if (config->core_idx == I2C_CORE2) {
+	else if (config->i2c_core == I2C_CORE2) {
 		module->hw = (void *)I2C1;
 	}
 #endif  /* CHIPVERSION_B0 */
 	else {
 		return STATUS_ERR_INVALID_ARG;
 	}
-	I2C *const i2c_module = (module->hw);
+
 	i2c_disable(i2c_module);
-	if (config->core_idx == I2C_CORE1)
+	if (config->i2c_core == I2C_CORE1)
 		system_peripheral_reset(PERIPHERAL_I2C0_CORE);
 #ifdef CHIPVERSION_B0
-	else if (config->core_idx == I2C_CORE2) {
+	else if (config->i2c_core == I2C_CORE2) {
 		system_peripheral_reset(PERIPHERAL_I2C1_CORE);
 	}
 #endif  /* CHIPVERSION_B0 */
@@ -144,17 +167,15 @@ enum status_code i2c_master_init(
 #if I2C_MASTER_CALLBACK_MODE == true
 	/* Initialize values in module. */
 	module->registered_callback = 0;
-	module->enabled_callback = 0;
-	module->buffer_length = 0;
-	module->buffer_remaining = 0;
-	module->status = STATUS_OK;
-	module->buffer = NULL;
-	
+	module->enabled_callback    = 0;
+	module->buffer_length       = 0;
+	module->buffer_remaining    = 0;
+	module->status              = STATUS_OK;
+	module->buffer              = NULL;
+
 	_i2c_instances = (void*)module;
 	system_register_isr(RAM_ISR_TABLE_I2CRX0_INDEX, (uint32_t)_i2c_master_isr_handler);
 	system_register_isr(RAM_ISR_TABLE_I2CTX0_INDEX, (uint32_t)_i2c_master_isr_handler);
-	NVIC_EnableIRQ(13);
-	NVIC_EnableIRQ(14);
 #endif
 
 	/* Set config and return status. */
@@ -163,10 +184,6 @@ enum status_code i2c_master_init(
 
 	return STATUS_OK;
 }
-
-
-#if !defined(__DOXYGEN__)
-#endif /* __DOXYGEN__ */
 
 /**
  * \internal
@@ -183,39 +200,42 @@ enum status_code i2c_master_init(
  * \retval STATUS_ERR_PACKET_COLLISION  If arbitration is lost
  * \retval STATUS_ERR_BAD_ADDRESS       If slave is busy, or no slave
  *                                      acknowledged the address
- *
  */
 static enum status_code _i2c_master_read_packet(
 		struct i2c_master_module *const module,
 		struct i2c_master_packet *const packet)
 {
+	/* Sanity check */
+	Assert(module);
+	Assert(module->hw);
+	Assert(config);
+	
+	uint16_t counter = 0;
+	uint32_t status  = 0;
+	I2C *const i2c_module    = (module->hw);
+	uint16_t length = packet->data_length;
 
-	I2C *const i2c_module = (module->hw);
-	uint16_t i = 0;
-	uint32_t cfg = 0;
-	uint32_t status = 0;
-
-	/* Return value. */
-	uint16_t tmp_data_length = packet->data_length;
+	if (length == 0) {
+		return STATUS_ERR_INVALID_ARG;
+	}
 
 	i2c_wait_for_idle(i2c_module);
 
 	/* Flush the FIFO */
 	i2c_module->I2C_FLUSH.reg = 1;
 
-	/* Enable I2C on bus (start condition) */
+	/* Enable I2C on bus (start condition). */
 	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
-
-	/* Address I2C slave in case of Master mode enabled */
-	cfg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 | (packet->address << 1) | I2C_TRANSFER_READ;
-	i2c_module->TRANSMIT_DATA.reg = cfg;
+	/* Address I2C slave in case of Master mode enabled. */
+	i2c_module->TRANSMIT_DATA.reg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 |
+			(packet->address << 1) | I2C_TRANSFER_READ;
 	do {
 		status = i2c_module->RECEIVE_STATUS.reg;
 		if (status & I2C_RECEIVE_STATUS_RX_FIFO_NOT_EMPTY)
-			packet->data[i++] = i2c_module->RECEIVE_DATA.reg;
-	} while (i < tmp_data_length); 
+			packet->data[counter++] = i2c_module->RECEIVE_DATA.reg;
+	} while (counter < length); 
 
-	/* Now check whether the core has sent the data out and its good to free the bus. */
+	/* Now check whether the core has sent the data out and free the bus. */
 	while (!(status & I2C_TRANSMIT_STATUS_TX_FIFO_EMPTY)) {
 		status = i2c_module->TRANSMIT_STATUS.reg;
 	}
@@ -330,13 +350,16 @@ static enum status_code _i2c_master_write_packet(
 		struct i2c_master_module *const module,
 		struct i2c_master_packet *const packet)
 {
+	/* Sanity check */
+	Assert(module);
+	Assert(module->hw);
+	Assert(packet);
+	
 	I2C *const i2c_module = (module->hw);
-	uint16_t i      = 0;
-	uint32_t cfg    = 0;
-	uint32_t status = 0;
+	uint16_t counter = 0;
+	uint32_t status  = 0;
 
-	/* Return value */
-	uint16_t tmp_data_length = packet->data_length;
+	uint16_t length = packet->data_length;
 
 	i2c_wait_for_idle(i2c_module);
 
@@ -347,16 +370,16 @@ static enum status_code _i2c_master_write_packet(
 	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
 
 	/* Address I2C slave in case of Master mode enabled */
-	cfg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 | ((packet->address) << 1) | I2C_TRANSFER_WRITE;
-	i2c_module->TRANSMIT_DATA.reg = cfg;
+	i2c_module->TRANSMIT_DATA.reg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 | 
+			((packet->address) << 1) | I2C_TRANSFER_WRITE;
 	do {
 		status = i2c_module->TRANSMIT_STATUS.reg;
 		if (status & I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_Msk) {
-			i2c_module->TRANSMIT_DATA.reg = packet->data[i++];
+			i2c_module->TRANSMIT_DATA.reg = packet->data[counter++];
 		}
-	} while (i < tmp_data_length); 
+	} while (counter < length); 
 
-	/* Now check whether the core has sent the data out and its good to free the bus */
+	/* Now check whether the core has sent the data out and free the bus */
 	while (!(status & I2C_TRANSMIT_STATUS_TX_FIFO_EMPTY)) {
 			status = i2c_module->TRANSMIT_STATUS.reg;
 	}
@@ -391,7 +414,7 @@ enum status_code i2c_master_write_packet_wait(
 		struct i2c_master_module *const module,
 		struct i2c_master_packet *const packet)
 {
-	/* Sanity check */
+	/* Sanity check arguments. */
 	Assert(module);
 	Assert(module->hw);
 	Assert(packet);
@@ -400,7 +423,7 @@ enum status_code i2c_master_write_packet_wait(
 		return STATUS_ERR_INVALID_ARG;
 	}
 #if I2C_MASTER_CALLBACK_MODE == true
-	/* Check if the I2C module is busy with a job */
+	/* Check if the I2C module is busy with a job. */
 	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
 	}
@@ -470,6 +493,10 @@ enum status_code i2c_master_write_packet_wait_no_stop(
  */
 void i2c_master_send_stop(struct i2c_master_module *const module)
 {
+	/* Sanity check */
+	Assert(module);
+	Assert(module->hw);
+	
 	I2C *const i2c_module = (module->hw);
 
 	/* Send stop command */
@@ -543,7 +570,8 @@ enum status_code i2c_master_write_address(
 	/* Write byte to slave. */
 	i2c_wait_for_idle(i2c_module);
 
-	i2c_module->TRANSMIT_DATA.reg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 | (address << 1) | command;
+	i2c_module->TRANSMIT_DATA.reg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 | 
+			(address << 1) | command;
 
 	return STATUS_OK;
 }

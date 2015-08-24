@@ -46,7 +46,7 @@
 
 #include "i2c_master_interrupt.h"
 
- void *_i2c_instances;
+void *_i2c_instances;
 
 /**
  * \internal
@@ -95,7 +95,7 @@ static void _i2c_master_write(struct i2c_master_module *const module)
 	i2c_module->TRANSMIT_DATA.reg = module->buffer[buffer_index];
 	
 	if (module->buffer_remaining <= 0) {
-		i2c_module->TX_INTERRUPT_MASK.reg = I2C_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK_Pos;
+		i2c_module->TX_INTERRUPT_MASK.reg = I2C_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
 	}
 }
 
@@ -147,7 +147,7 @@ void i2c_master_unregister_callback(
 	/* Sanity check */
 	Assert(module);
 	Assert(module->hw);
-
+	
 	/* Register callback */
 	module->callbacks[callback_type] = NULL;
 
@@ -173,6 +173,7 @@ static enum status_code _i2c_master_read_packet(
 	/* Sanity check */
 	Assert(module);
 	Assert(module->hw);
+	Assert(packet);
 
 	I2C *const i2c_module = module->hw;
 
@@ -185,9 +186,10 @@ static enum status_code _i2c_master_read_packet(
 	/* Enable I2C on bus (start condition) */
 	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
 	/* Set address and direction bit. Will send start command on bus */
-	i2c_module->TRANSMIT_DATA.reg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 | (packet->address << 1) | module->transfer_direction;
+	i2c_module->TRANSMIT_DATA.reg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 |
+			(packet->address << 1) | module->transfer_direction;
 	/* Enable interrupts */
-	i2c_module->RX_INTERRUPT_MASK.bit.RX_FIFO_NOT_EMPTY_MASK = 1;
+	i2c_module->RX_INTERRUPT_MASK.reg = I2C_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK;
 	
 	return STATUS_OK;
 }
@@ -281,6 +283,7 @@ static enum status_code _i2c_master_write_packet(
 	/* Sanity check */
 	Assert(module);
 	Assert(module->hw);
+	Assert(packet);
 
 	I2C *const i2c_module = module->hw;
 
@@ -293,9 +296,11 @@ static enum status_code _i2c_master_write_packet(
 	/* Enable I2C on bus (start condition) */
 	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
 	/* Set address and direction bit, will send start command on bus */
-	i2c_module->TRANSMIT_DATA.reg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 | (packet->address << 1) | module->transfer_direction;
+	i2c_module->TRANSMIT_DATA.reg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 |
+			(packet->address << 1) | module->transfer_direction;
 	/* Enable interrupts */
-	i2c_module->TX_INTERRUPT_MASK.bit.TX_FIFO_NOT_FULL_MASK = 1;
+	i2c_module->TX_INTERRUPT_MASK.reg = I2C_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
+
 	return STATUS_OK;
 }
 

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM B11 I2C Master Quick Start Guide
+ * \brief SAM B11 I2C Slave Quick Start Guide
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -59,11 +59,6 @@ static uint8_t read_buffer[DATA_LENGTH];
 #define SLAVE_ADDRESS 0x12
 //! [address]
 
-/* Number of times to try to send packet if failed. */
-//! [timeout]
-#define TIMEOUT 1000
-//! [timeout]
-
 /* Init software module. */
 //! [dev_inst]
 struct i2c_slave_module i2c_slave_instance;
@@ -77,17 +72,27 @@ static void configure_i2c_slave(void)
 	struct i2c_slave_config config_i2c_slave;
 	i2c_slave_get_config_defaults(&config_i2c_slave);
 	//! [init_conf]
-
+	/* Change address and address_mode. */
+	//! [conf_changes]
+	config_i2c_slave.address = SLAVE_ADDRESS;
+	//! [conf_changes]
 	/* Initialize and enable device with config, and enable i2c. */
 	//! [init_module]
-	i2c_slave_init(&i2c_slave_instance, &config_i2c_slave);
+	while(i2c_slave_init(&i2c_slave_instance, &config_i2c_slave)     \
+			!= STATUS_OK);
 	//! [init_module]
+	//! [enable_module]
+	i2c_enable(i2c_slave_instance.hw);
+	//! [enable_module]
+	//! [enable_interurpt]
+	i2c_slave_rx_interrupt(i2c_slave_instance.hw, true);
+	i2c_slave_tx_interrupt(i2c_slave_instance.hw, true);
+	//! [enable_interurpt]
 }
 //! [initialize_i2c]
 
 int main(void)
 {
-	enum i2c_slave_direction dir = 0;
 	
 	//! [init]
 	system_clock_config(CLOCK_RESOURCE_RC_26_MHZ, CLOCK_FREQ_26_MHZ);
@@ -100,20 +105,19 @@ int main(void)
 		.data        = write_buffer,
 	};
 	//! [packet]
+	//! [buffer]
+	for (int i = 0; i < DATA_LENGTH; i++) {
+		write_buffer[i] = i;
+		read_buffer[i] = 0;
+	}
+	//! [buffer]
 	//! [init]
-	
 	//! [while]
 	while (true) {
-		//! [get_dir]
-		dir = i2c_slave_get_direction_wait(&i2c_slave_instance);
-		//! [get_dir]
-		if (dir == I2C_SLAVE_DIRECTION_READ) {
-			packet.data = read_buffer;
-			i2c_slave_read_packet_wait(&i2c_slave_instance, &packet);
-		} else if (dir == I2C_SLAVE_DIRECTION_WRITE) {
-			packet.data = write_buffer;
-			i2c_slave_write_packet_wait(&i2c_slave_instance, &packet);
-		}
+		packet.data = read_buffer;
+		i2c_slave_read_packet_wait(&i2c_slave_instance, &packet);
+		packet.data = write_buffer;
+		i2c_slave_write_packet_wait(&i2c_slave_instance, &packet);
 	}
 	//! [while]
 }

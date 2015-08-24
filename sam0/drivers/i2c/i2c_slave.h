@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief I2C Driver for Slave SAMB11
+ * \brief I2C Slave Driver for SAMB11
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -138,20 +138,6 @@ enum i2c_slave_direction {
 	I2C_SLAVE_DIRECTION_NONE,
 };
 
-#  if I2C_SLAVE_CALLBACK_MODE == true
-struct i2c_slave_buf {
-	/** The total number of bytes to transfer. */
-	volatile uint16_t buffer_length;
-	/**
-	 * Counter used for bytes left to send in write and to count number of
-	 * obtained bytes in read.
-	 */
-	uint16_t buffer_remaining;
-	/** Data buffer for packet write and read. */
-	volatile uint8_t *buffer;
-};
-#  endif
-
 /**
  * \brief I<SUP>2</SUP>C Slave driver software device instance structure.
  *
@@ -176,8 +162,15 @@ struct i2c_slave_module {
 	volatile uint8_t registered_callback;
 	/** Mask for enabled callbacks. */
 	volatile uint8_t enabled_callback;
-	struct i2c_slave_buf rx;
-	struct i2c_slave_buf tx;
+	/** The total number of bytes to transfer. */
+	volatile uint16_t buffer_length;
+	/**
+	 * Counter used for bytes left to send in write and to count number of
+	 * obtained bytes in read.
+	 */
+	uint16_t buffer_remaining;
+	/** Data buffer for packet write and read. */
+	volatile uint8_t *buffer;
 	/** Save direction of request from master. 1 = read, 0 = write. */
 	volatile enum i2c_transfer_direction transfer_direction;
 	/** Status for status read back in error callback. */
@@ -226,8 +219,6 @@ enum status_code i2c_slave_write_packet_wait(
 enum status_code i2c_slave_read_packet_wait(
 		struct i2c_slave_module *const module,
 		struct i2c_slave_packet *const packet);
-enum i2c_slave_direction i2c_slave_get_direction_wait(
-		struct i2c_slave_module *const module);
 
 /** @} */
 

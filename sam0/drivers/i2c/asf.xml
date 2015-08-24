@@ -12,7 +12,6 @@
 
 			<build type="include-path" value="."/>
 			<build type="c-source" value="i2c_master.c"/>
-			<build type="c-source" value="i2c_common.c"/>
 			<build type="header-file" subtype="api" value="i2c_master.h"/>
 			<build type="header-file" subtype="api" value="i2c_common.h"/>
 
@@ -22,7 +21,7 @@
 
 			<device-support value="samb"/>
 			<require idref="sam0.utils"/>
-			<require idref="sam0.drivers.system.system_sam_b"/>
+			<require idref="sam0.drivers.system"/>
 			<require idref="sam0.drivers.gpio"/>
 		</module>
 		<module type="driver" id="sam0.drivers.i2c.master#callback" caption="I2C - Master Mode I2C (Callback APIs)">
@@ -33,7 +32,6 @@
 			<build type="include-path" value="." />
 			<build type="c-source" value="i2c_master.c"/>
 			<build type="c-source" value="i2c_master_interrupt.c"/>
-			<build type="c-source" value="i2c_common.c"/>
 			<build type="header-file" subtype="api" value="i2c_master.h"/>
 			<build type="header-file" subtype="api" value="i2c_master_interrupt.h"/>
 			<build type="header-file" subtype="api" value="i2c_common.h"/>
@@ -45,7 +43,7 @@
 
 			<device-support value="samb"/>
 			<require idref="sam0.utils"/>
-			<require idref="sam0.drivers.system.system_sam_b"/>
+			<require idref="sam0.drivers.system"/>
 			<require idref="sam0.drivers.gpio"/>
 		</module>
 	</select-by-config>
@@ -62,7 +60,6 @@
 
 			<build type="include-path" value="."/>
 			<build type="c-source" value="i2c_slave.c"/>
-			<build type="c-source" value="i2c_common.c"/>
 			<build type="header-file" subtype="api" value="i2c_slave.h"/>
 			<build type="header-file" subtype="api" value="i2c_common.h"/>
 
@@ -72,7 +69,7 @@
 
 			<device-support value="samb"/>
 			<require idref="sam0.utils"/>
-			<require idref="sam0.drivers.system.system_sam_b"/>
+			<require idref="sam0.drivers.system"/>
 			<require idref="sam0.drivers.gpio"/>
 		</module>
 		<module type="driver" id="sam0.drivers.i2c.slave#callback" caption="I2C - Slave Mode I2C (Callback APIs)">
@@ -83,7 +80,6 @@
 			<build type="include-path" value="." />
 			<build type="c-source" value="i2c_slave.c"/>
 			<build type="c-source" value="i2c_slave_interrupt.c"/>
-			<build type="c-source" value="i2c_common.c"/>
 			<build type="header-file" subtype="api" value="i2c_slave.h"/>
 			<build type="header-file" subtype="api" value="i2c_slave_interrupt.h"/>
 			<build type="header-file" subtype="api" value="i2c_common.h"/>
@@ -95,7 +91,7 @@
 
 			<device-support value="samb"/>
 			<require idref="sam0.utils"/>
-			<require idref="sam0.drivers.system.system_sam_b"/>
+			<require idref="sam0.drivers.system"/>
 			<require idref="sam0.drivers.gpio"/>
 		</module>
 	</select-by-config>

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 I2C Slave Interrupt Driver
+ * \brief SAM B11 I2C Master Interrupt Driver
  *
- * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -57,13 +57,17 @@ void *_i2c_instances;
 static void _i2c_slave_read(
 		struct i2c_slave_module *const module)
 {
+	/* Sanity check */
+	Assert(module);
+	Assert(module->hw);
+	
 	I2C *const i2c_module = module->hw;
 
 	/* Read byte from master and put in buffer. */
-	*(module->rx.buffer++) = i2c_module->RECEIVE_DATA.reg;
+	*(module->buffer++) = i2c_module->RECEIVE_DATA.reg;
 
 	/*Decrement remaining buffer length */
-	module->rx.buffer_remaining--;
+	module->buffer_remaining--;
 }
 
 /**
@@ -75,13 +79,17 @@ static void _i2c_slave_read(
 static void _i2c_slave_write(
 		struct i2c_slave_module *const module)
 {
+	/* Sanity check */
+	Assert(module);
+	Assert(module->hw);
+	
 	I2C *const i2c_module = module->hw;
 
 	/* Write byte from buffer to master */
-	i2c_module->TRANSMIT_DATA.reg = *(module->tx.buffer++);
+	i2c_module->TRANSMIT_DATA.reg = *(module->buffer++);
 
 	/*Decrement remaining buffer length */
-	module->tx.buffer_remaining--;
+	module->buffer_remaining--;
 }
 
 /**
@@ -165,19 +173,19 @@ enum status_code i2c_slave_read_packet_job(
 	I2C *const i2c_module = module->hw;
 	
 	/* Check if the I2C module is busy doing async operation. */
-	if (module->rx.buffer_remaining > 0) {
+	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
 	}
 
 	/* Save packet to software module. */
-	module->rx.buffer           = packet->data;
-	module->rx.buffer_remaining = packet->data_length;
-	module->rx.buffer_length    = packet->data_length;
-	module->status              = STATUS_BUSY;
+	module->buffer           = packet->data;
+	module->buffer_remaining = packet->data_length;
+	module->buffer_length    = packet->data_length;
+	module->status           = STATUS_BUSY;
 
 	/* Enable interrupts */
-	i2c_module->RX_INTERRUPT_MASK.bit.RX_FIFO_NOT_EMPTY_MASK = 1;
-	/* Read will begin when master initiates the transfer */
+	i2c_slave_rx_interrupt(i2c_module, true);
+
 	return STATUS_OK;
 }
 
@@ -208,19 +216,19 @@ enum status_code i2c_slave_write_packet_job(
 	
 	I2C *const i2c_module = module->hw;
 	
-	if (module->tx.buffer_remaining > 0) {
+	if (module->buffer_remaining > 0) {
 		return STATUS_BUSY;
 	}
 
 	/* Save packet to software module. */
-	module->tx.buffer           = packet->data;
-	module->tx.buffer_remaining = packet->data_length;
-	module->tx.buffer_length    = packet->data_length;
-	module->status			    = STATUS_BUSY;
+	module->buffer           = packet->data;
+	module->buffer_remaining = packet->data_length;
+	module->buffer_length    = packet->data_length;
+	module->status			 = STATUS_BUSY;
 
 	/* Enable interrupts */
-	i2c_module->TX_INTERRUPT_MASK.bit.TX_FIFO_NOT_FULL_MASK = 1;
-	i2c_module->RX_INTERRUPT_MASK.bit.NAK_MASK = 1;
+	i2c_slave_tx_interrupt(i2c_module, true);
+
 	return STATUS_OK;
 }
 
@@ -244,7 +252,7 @@ void _i2c_slave_rx_isr_handler(void)
 			module->enabled_callback & module->registered_callback;
 
 	if (i2c_module->RECEIVE_STATUS.reg & I2C_RECEIVE_STATUS_RX_FIFO_NOT_EMPTY) {
-		if (!module->rx.buffer_length && (module->rx.buffer_length == module->rx.buffer_remaining)) {
+		if (!module->buffer_length && (module->buffer_length == module->buffer_remaining)) {
 			module->transfer_direction = I2C_TRANSFER_WRITE;
 			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_REQUEST)) {
 				/* Write to master complete */
@@ -252,12 +260,12 @@ void _i2c_slave_rx_isr_handler(void)
 			}
 		} 
 		/* Continue buffer write/read */
-		if (module->rx.buffer_length > 0 && module->rx.buffer_remaining > 0) {
+		if (module->buffer_length > 0 && module->buffer_remaining > 0) {
 				_i2c_slave_read(module);
 		}
-		if (!module->rx.buffer_remaining) {
+		if (!module->buffer_remaining) {
 			module->status = STATUS_OK;
-			module->rx.buffer_length = 0;
+			module->buffer_length = 0;
 			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE)) {
 				/* Write to master complete */
 				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
@@ -265,7 +273,7 @@ void _i2c_slave_rx_isr_handler(void)
 		}
 	}
 	if ((i2c_module->RECEIVE_STATUS.reg & I2C_RECEIVE_STATUS_NAK) &&
-		module->transfer_direction == I2C_TRANSFER_READ) {
+			module->transfer_direction == I2C_TRANSFER_READ) {
 		/* Received NAK, master received completed. */
 		i2c_module->RX_INTERRUPT_MASK.bit.NAK_MASK = 0;
 		if (callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE)) {
@@ -289,7 +297,7 @@ void _i2c_slave_tx_isr_handler(void)
 	uint8_t callback_mask =
 			module->enabled_callback & module->registered_callback;
 	
-	if (!module->tx.buffer_length && (module->tx.buffer_length == module->tx.buffer_remaining)) {
+	if (!module->buffer_length && (module->buffer_length == module->buffer_remaining)) {
 		/* First timer interrupt */
 		module->transfer_direction = I2C_TRANSFER_READ;
 		if (callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST)) {
@@ -297,12 +305,12 @@ void _i2c_slave_tx_isr_handler(void)
 			module->callbacks[I2C_SLAVE_CALLBACK_READ_REQUEST](module);
 		}
 	} 
-	if (module->tx.buffer_length > 0 && module->tx.buffer_remaining > 0) {
+	if (module->buffer_length > 0 && module->buffer_remaining > 0) {
 		_i2c_slave_write(module);
 	}
-	if (!module->tx.buffer_remaining) {
+	if (!module->buffer_remaining) {
 		module->status = STATUS_OK;
-		module->tx.buffer_length = 0;
+		module->buffer_length = 0;
 		i2c_module->RX_INTERRUPT_MASK.bit.NAK_MASK = 0;
 		if (callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE)) {
 			module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);

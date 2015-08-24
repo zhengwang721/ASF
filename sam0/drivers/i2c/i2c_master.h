@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief I2C Driver for Master SAMB11
+ * \brief SAMB11 I2C Master Interrupt Driver
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -47,8 +47,6 @@
 #ifndef I2C_MASTER_H_INCLUDED
 #define I2C_MASTER_H_INCLUDED
 
-//#include <stdint.h>
-//#include <string.h>
 #include <compiler.h>
 #include <system.h>
 #include <gpio.h>
@@ -82,11 +80,11 @@ enum i2c_core_idx {
  * Structure to be used when transferring I<SUP>2</SUP>C master packets.
  */
 struct i2c_master_packet {
-	/** Address to slave device.  */
+	/** Address to slave device */
 	uint16_t address;
-	/** Length of data array. */
+	/** Length of data array */
 	uint16_t data_length;
-	/** Data array containing all data to be transferred. */
+	/** Data array containing all data to be transferred */
 	uint8_t *data;
 };
 
@@ -95,9 +93,9 @@ struct i2c_master_packet {
  * Flags used when reading or setting interrupt flags.
  */
 enum i2c_master_interrupt_flag {
-	/** Interrupt flag used for write. */
+	/** Interrupt flag used for write */
 	I2C_MASTER_INTERRUPT_WRITE = 0,
-	/** Interrupt flag used for read. */
+	/** Interrupt flag used for read */
 	I2C_MASTER_INTERRUPT_READ  = 1,
 };
 
@@ -108,9 +106,9 @@ enum i2c_master_interrupt_flag {
  *
  */
 enum i2c_master_baud_rate {
-	/** Baud rate at 100KHz (Standard-mode). */
+	/** Baud rate at 100KHz (Standard-mode) */
 	I2C_MASTER_BAUD_RATE_100KHZ = 100,
-	/** Baud rate at 400KHz (Fast-mode). */
+	/** Baud rate at 400KHz (Fast-mode) */
 	I2C_MASTER_BAUD_RATE_400KHZ = 400,
 };
 
@@ -122,12 +120,12 @@ enum i2c_master_baud_rate {
  * The available callback types for the I<SUP>2</SUP>C master module.
  */
 enum i2c_master_callback {
-	/** Callback for packet write complete. */
+	/** Callback for packet write complete */
 	I2C_MASTER_CALLBACK_WRITE_COMPLETE = 0,
-	/** Callback for packet read complete. */
+	/** Callback for packet read complete */
 	I2C_MASTER_CALLBACK_READ_COMPLETE  = 1,
 #  if !defined(__DOXYGEN__)
-	/** Total number of callbacks. */
+	/** Total number of callbacks */
 	_I2C_MASTER_CALLBACK_N             = 2,
 #  endif
 };
@@ -153,31 +151,31 @@ typedef void (*i2c_master_callback_t)(
  */
 struct i2c_master_module {
 #if !defined(__DOXYGEN__)
-	/** Hardware instance initialized for the struct. */
+	/** Hardware instance initialized for the struct */
 	void *hw;
-	/** Module lock. */
+	/** Module lock */
 	volatile bool locked;
-	/** If true, stop condition will be sent after a read/write. */
+	/** If true, stop condition will be sent after a read/write */
 	bool no_stop;
 #  if I2C_MASTER_CALLBACK_MODE == true
-	/** Pointers to callback functions. */
+	/** Pointers to callback functions */
 	volatile i2c_master_callback_t callbacks[_I2C_MASTER_CALLBACK_N];
-	/** Mask for registered callbacks. */
+	/** Mask for registered callbacks */
 	volatile uint8_t registered_callback;
-	/** Mask for enabled callbacks. */
+	/** Mask for enabled callbacks */
 	volatile uint8_t enabled_callback;
-	/** The total number of bytes to transfer. */
+	/** The total number of bytes to transfer */
 	volatile uint16_t buffer_length;
 	/**
 	 * Counter used for bytes left to send in write and to count number of
-	 * obtained bytes in read.
+	 * obtained bytes in read
 	 */
 	volatile uint16_t buffer_remaining;
-	/** Data buffer for packet write and read. */
+	/** Data buffer for packet write and read */
 	volatile uint8_t *buffer;
-	/** Save direction of async request. 1 = read, 0 = write. */
+	/** Save direction of async request. 1 = read, 0 = write */
 	volatile enum i2c_transfer_direction transfer_direction;
-	/** Status for status read back in error callback. */
+	/** Status for status read back in error callback */
 	volatile enum status_code status;
 #  endif
 #endif
@@ -193,11 +191,7 @@ struct i2c_master_module {
  */
 struct i2c_master_config {
 	/** I2C core index **/
-	enum i2c_core_idx core_idx;
-	/** Baud rate (in KHz) for I<SUP>2</SUP>C operations in
-	 * standard-mode, Fast-mode,
-	 * \ref i2c_master_baud_rate. */
-	uint32_t baud_rate;
+	enum i2c_core_idx i2c_core;
 	/** CLOCK INPUT to use as clock source. */
 	enum i2c_clock_input clock_source;
 	/** Divide ratio used to generate the sck clock */
