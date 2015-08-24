@@ -37,6 +37,7 @@
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 			<device-support value="samda1"/>
 			<device-support value="samc20"/>
 			<device-support value="samc21"/>
@@ -48,14 +49,14 @@
 		</module>
 		<module type="driver" id="sam0.drivers.dma#1" caption="DMAC - Direct Memory Access Controller">
 			<info type="keyword" value="technology">
-				<keyword value="DMA" />
-				<keyword value="DMAC"/>
-				<keyword value="Direct Memory Access"/>
+				<keyword value="Memory" />
 			</info>
 
 			<info type="appnote" value="ATxxxxx"/>
 			<info type="keyword" value="pdf">
-				<keyword value="DMA"/>
+				<keyword value="DMA" />
+				<keyword value="DMAC"/>
+				<keyword value="Direct Memory Access"/>
 			</info>
 
 			<info type="description" value="pdf">
@@ -65,8 +66,8 @@
 
 			<build type="include-path" value="."/>
 
-			<build type="c-source" value="dma_sam_b/dma.c"/>
-			<build type="header-file" subtype="api" value="dma_sam_b/dma.h"/>
+			<build type="c-source" value="dma_sam_b.c"/>
+			<build type="header-file" subtype="api" value="dma_sam_b.h"/>
 
 			<build type="define" name="DMA_CALLBACK_MODE" value="false"/>
 			<build type="doxygen-enable-section" value="DEVICE_SAMB11_SUPPORT"/>

@@ -304,7 +304,7 @@ extern "C" {
  */
 
 #include <compiler.h>
-#include <system.h>
+#include <system_sam_b.h>
 #include "conf_dma.h"
 
 /** DMA invalid channel number. */

@@ -45,7 +45,7 @@
  */
 
 #include <string.h>
-#include "dma.h"
+#include "dma_sam_b.h"
 
 //#include "clock.h"
 //#include "system_interrupt.h"
@@ -181,9 +181,9 @@ void dma_get_config_defaults(struct dma_resource_config *config)
 	config->src.enable_inc_addr = true;
 	config->src.periph = 0;
 	config->src.periph_delay = 0;
-	config->src.eanble_proi_top = false;
+	config->src.enable_proi_top = false;
 	config->src.proi_top_index = 0;
-	config->src.eanble_proi_high = false;
+	config->src.enable_proi_high = false;
 	config->src.proi_high_index = 0;
 	/* DMA destination configuration */
 	config->des.max_burst = 1;
@@ -191,9 +191,9 @@ void dma_get_config_defaults(struct dma_resource_config *config)
 	config->des.enable_inc_addr = true;
 	config->des.periph = 0;
 	config->des.periph_delay = 0;
-	config->des.eanble_proi_top = false;
+	config->des.enable_proi_top = false;
 	config->des.proi_top_index = 0;
-	config->des.eanble_proi_high = false;
+	config->des.enable_proi_high = false;
 	config->des.proi_high_index = 0;
 	/* DMA channel configuration */
 	config->enable_joint_mode = false;
@@ -243,13 +243,13 @@ static void _dma_set_config(struct dma_resource *resource,
 	set_channel_reg_val(resource->channel_id, (uint32_t)&PROV_DMA_CTRL0->CH0_STATIC_REG4.reg, regval);
 	/* Priority channels configuration */
 	regval = PROV_DMA_CTRL_CORE_PRIORITY_RD_PRIO_TOP_NUM(config->src.proi_top_index) |
-			(PROV_DMA_CTRL_CORE_PRIORITY_RD_PRIO_TOP << config->src.eanble_proi_top) |
+			(PROV_DMA_CTRL_CORE_PRIORITY_RD_PRIO_TOP << config->src.enable_proi_top) |
 			PROV_DMA_CTRL_CORE_PRIORITY_RD_PRIO_HIGH_NUM(config->src.proi_high_index) |
-			(PROV_DMA_CTRL_CORE_PRIORITY_RD_PRIO_HIGH << config->src.eanble_proi_high) |
+			(PROV_DMA_CTRL_CORE_PRIORITY_RD_PRIO_HIGH << config->src.enable_proi_high) |
 			PROV_DMA_CTRL_CORE_PRIORITY_WR_PRIO_TOP_NUM(config->des.proi_top_index) |
-			(PROV_DMA_CTRL_CORE_PRIORITY_WR_PRIO_TOP << config->des.eanble_proi_top) |
+			(PROV_DMA_CTRL_CORE_PRIORITY_WR_PRIO_TOP << config->des.enable_proi_top) |
 			PROV_DMA_CTRL_CORE_PRIORITY_WR_PRIO_HIGH_NUM(config->des.proi_high_index) |
-			(PROV_DMA_CTRL_CORE_PRIORITY_WR_PRIO_HIGH << config->des.eanble_proi_high);
+			(PROV_DMA_CTRL_CORE_PRIORITY_WR_PRIO_HIGH << config->des.enable_proi_high);
 	set_channel_reg_val(resource->channel_id, (uint32_t)&PROV_DMA_CTRL0->CORE_PRIORITY.reg, regval);
 	/* Initial the global variety */
 	for (int i = 0; i < DMA_CALLBACK_N; i++) {
