@@ -509,10 +509,7 @@ enum status_code dma_allocate(struct dma_resource *resource,
 
 	if (!_dma_inst._dma_init) {
 		/* Perform a reset before enable DMA controller */
-		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg &=
-				~LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_DMA_CONTROLLER_RSTN;
-		LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg |=
-				LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_DMA_CONTROLLER_RSTN;
+		system_peripheral_reset(PERIPHERAL_DMA);
 		system_register_isr(RAM_ISR_TABLE_DMA_INDEX, (uint32_t)dma_isr_handler);
 		
 		_dma_inst._dma_init = true;

@@ -106,7 +106,7 @@ static void setup_transfer_descriptor(struct dma_descriptor *descriptor )
 	//! [setup_6]
 }
 
-static void configure_dualtimer_callback(struct dma_resource *resource)
+static void configure_dma_callback(struct dma_resource *resource)
 {
 	//! [setup_callback_register]
 	dma_register_callback(resource, transfer_done,
@@ -147,7 +147,7 @@ int main(void)
 	//! [add_descriptor_to_dma_resource]
 	
 	//! [setup_callback]
-	configure_dualtimer_callback(&example_resource);
+	configure_dma_callback(&example_resource);
 	//! [setup_callback]
 
 	//! [setup_source_memory_content]

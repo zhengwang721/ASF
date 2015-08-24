@@ -424,11 +424,11 @@ struct dma_config {
 	 */
 	uint8_t periph_delay;
 	/** Top priority enable */
-	bool eanble_proi_top;
+	bool enable_proi_top;
 	/** Top priority channel index */
 	uint8_t proi_top_index;
 	/** High priority enable */
-	bool eanble_proi_high;
+	bool enable_proi_high;
 	/** High priority channel index */
 	uint8_t proi_high_index;
 };
