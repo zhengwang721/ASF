@@ -110,6 +110,7 @@ int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *rea
 {
 	if(read_resp->status != AT_BLE_SUCCESS)
 	{
+		DBG_LOG("read response received failed 0x%02x",read_resp->status);
 		return read_resp->status;
 	}
 	else

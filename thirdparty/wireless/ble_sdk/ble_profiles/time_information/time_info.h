@@ -62,24 +62,25 @@
 /**@brief Scan Response length*/
 #define SCAN_RESP_LEN								(10)
 
-/**@brief ADV UUID Type & Length*/
-#define AD_TYPE_16BIT_UUID_LEN						(2)
-#define AD_TYPE_32BIT_UUID_LEN						(4)
-#define AD_TYPE_128BIT_UUID_LEN						(16)
-
 /**@brief Time Profile type, UUid & Length */
 #define ADV_TYPE_LEN								(0x01)
 #define TP_ADV_DATA_UUID_LEN						(2)
 #define TP_ADV_DATA_16BIT_UUID_LEN					(2)
-#define TP_ADV_DATA_128BIT_UUID_LEN					(16)
-#define TP_GAP_UUID_CTS_DATA						("\x00\x18")
+
+#define CT_ADV_DATA_UUID_LEN						(0x02)
+#define NEXT_DST_ADV_DATA_UUID_LEN					(0x02)
+#define REF_TIM_ADV_DATA_UUID_LEN					(0x02)
 
 /**@brief TIP Service Solicitation Info*/
 #define TP_ADV_DATA_SERVSOLICITATION_16UUID_TYPE	(0x14)
 #define TP_ADV_DATA_SERVSOLICITATION_128UUID_TYPE	(0x15)
 
-/**@brief Current Time Service UUId  */
+/**@brief Current Time Service UUId for Android */
 #define TP_ADV_DATA_UUID_TYPE						(0x03)
+
+/**@brief Current Time Service UUId for iOS  */
+//#define TP_ADV_DATA_UUID_TYPE						(0x14)
+
 #define TP_ADV_DATA_UUID_CTS_DATA					("\x05\x18")
 
 /**@brief Appearance type & Length */
@@ -91,6 +92,8 @@
 #define TP_ADV_DATA_NAME_LEN						(9)
 #define TP_ADV_DATA_NAME_TYPE						(0x09)
 #define TP_ADV_DATA_NAME_DATA						("ATMEL-TIP")
+
+#define AT_BLE_DISCOVER_SUCCESS						(10)
 
 /***********************************************************************************
  *									Types			                               *
@@ -194,5 +197,9 @@ void time_info_write_notification_handler(void *param);
  */
 void time_info_notification_handler(at_ble_notification_recieved_t *char_read_resp);
 
+typedef void (*bonding_complete_t)(bool flag);
 
+void time_info_encryption_status_changed_handler(at_ble_encryption_status_changed_t *param);
+void time_info_pair_done_handler(at_ble_pair_done_t *pair_done_param);
+void time_info_register_bonding_callback(bonding_complete_t bonding_complete_cb);
 #endif /* __TIME_INFO_H__ */

@@ -66,6 +66,27 @@
  * Read value will be reported via @ref AT_BLE_CHARACTERISTIC_READ_RESPONSE
  *event
  */
+at_ble_status_t tis_rtu_update_write(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti)
+{
+	uint8_t desc_data[3] = {0x01,0,0};
+	uint8_t control_data = 0x02;
+	if(desc_handle == RTU_INVALID_CHAR_HANDLE)
+	{
+		return (AT_BLE_INVALID_STATE);
+	}
+	else
+	{
+		if(noti == true)
+		{
+			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 1, &control_data,false, false));
+		}
+		else if(noti == false)
+		{
+			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 1, &desc_data[0],false, false));
+		}
+	}
+	return 0;
+}
 
 at_ble_status_t tis_rtu_update_read(at_ble_handle_t conn_handle,
 		at_ble_handle_t char_handle, uint16_t length)

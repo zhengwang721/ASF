@@ -76,6 +76,7 @@
 /***********************************************************************************
  *									Globals			                               *
  **********************************************************************************/
+bonding_complete_t bonding_cb = NULL;
 
 #if defined CURRENT_TIME_SERVICE
 /**@brief CTS Characteristic Value array*/
@@ -85,7 +86,7 @@ uint8_t lti_char_data[CTS_READ_LENGTH];
 /**@brief CTS Characteristic Value array*/
 uint8_t rti_char_data[CTS_READ_LENGTH];
 /**@brief CTS Service Handle*/
-gatt_cts_handler_t cts_handle = {0, 0, 0, 0, AT_BLE_INVALID_PARAM, NULL, AT_BLE_INVALID_PARAM, AT_BLE_INVALID_PARAM, NULL, AT_BLE_INVALID_PARAM, NULL};
+gatt_cts_handler_t cts_handle = {0, 0, AT_BLE_INVALID_PARAM, AT_BLE_INVALID_PARAM, 0, NULL, 0, 0, NULL, 0, NULL};
 #endif
 
 #if defined NEXT_DST_SERVICE
@@ -103,7 +104,7 @@ uint8_t tp_control_char_data[RTU_TP_CP_READ_LENGTH];
 uint8_t tp_state_char_data[RTU_TP_CP_READ_LENGTH];
 
 /**@brief Reference Time Update Service Handle*/
-gatt_rtu_handler_t rtu_handle = {0, 0, 0, AT_BLE_INVALID_PARAM, NULL, AT_BLE_INVALID_PARAM, NULL};
+gatt_rtu_handler_t rtu_handle = {0, 0, AT_BLE_INVALID_PARAM, 0, NULL, 0, NULL};
 #endif
 
 /**@breif Scan Response packet*/
@@ -111,6 +112,14 @@ static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 0x25, 0x75
 /**@breif Peer Connected device info*/
 extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
+volatile bool current_time_char_found = false;
+volatile bool local_time_char_found = false;
+volatile bool ref_time_char_found = false;
+volatile bool time_with_dst_char_found = false;
+volatile bool time_update_cp_char_found = false;
+volatile bool time_update_state_char_found = false;
+volatile bool Desc_found = false;
+//volatile uint8_t char_found_flag = false;
 
 /***********************************************************************************
  *									Implementations	                               *
@@ -120,24 +129,35 @@ extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
  */
 void time_info_adv()
 {
+	/* memory allocation for advertisement data*/
 	uint8_t idx = 0;
-	uint8_t adv_data[TP_ADV_DATA_NAME_LEN + TP_ADV_DATA_APPEARANCE_LEN + TP_ADV_DATA_UUID_LEN + 3*2];
+	uint8_t adv_data[TP_ADV_DATA_NAME_LEN + TP_ADV_DATA_APPEARANCE_LEN + (2*2)];
 	
 	// Prepare ADV Data
-	adv_data[idx++] = TP_ADV_DATA_APPEARANCE_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = TP_ADV_DATA_APPEARANCE_TYPE;
-	memcpy(&adv_data[idx], TP_ADV_DATA_APPEARANCE_DATA, TP_ADV_DATA_APPEARANCE_LEN);
-	idx += TP_ADV_DATA_APPEARANCE_LEN;
+	adv_data[idx++] = CT_ADV_DATA_UUID_LEN + NEXT_DST_ADV_DATA_UUID_LEN + REF_TIM_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
+	adv_data[idx++] = TP_ADV_DATA_UUID_TYPE;
 	
+#ifdef CURRENT_TIME_SERVICE
+	/* Appending the UUID */
+	adv_data[idx++] = (uint8_t)CURRENT_TIME_SERVICE_UUID;
+	adv_data[idx++] = (uint8_t)(CURRENT_TIME_SERVICE_UUID >> 8);
+#endif /*CURRENT_TIME_SERVICE*/
+	
+#ifdef REFERENCE_TIME_SERVICE
+	adv_data[idx++] = (uint8_t)REFERENCE_TIME_SERVICE_UUID;
+	adv_data[idx++] = (uint8_t)(REFERENCE_TIME_SERVICE_UUID >> 8);
+#endif /*REFERENCE_TIME_SERVICE*/
+
+#ifdef NEXT_DST_SERVICE
+	adv_data[idx++] = (uint8_t)NEXT_DST_SERVICE_UUID;
+	adv_data[idx++] = (uint8_t)(NEXT_DST_SERVICE_UUID >> 8);
+#endif /*NEXT_DST_SERVICE*/
+
 	adv_data[idx++] = TP_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
 	adv_data[idx++] = TP_ADV_DATA_NAME_TYPE;
 	memcpy(&adv_data[idx], TP_ADV_DATA_NAME_DATA, TP_ADV_DATA_NAME_LEN);
 	idx += TP_ADV_DATA_NAME_LEN;
 	
-	adv_data[idx++] = TP_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = TP_ADV_DATA_SERVSOLICITATION_16UUID_TYPE;
-	memcpy(&adv_data[idx], TP_ADV_DATA_UUID_CTS_DATA, TP_ADV_DATA_UUID_LEN);
-	idx += TP_ADV_DATA_16BIT_UUID_LEN;
 	
 	at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN);
 	
@@ -247,7 +267,9 @@ void time_info_service_found_handler(at_ble_primary_service_found_t * primary_se
 			{
 				dst_handle.start_handle = primary_service_params->start_handle;
 				dst_handle.end_handle = primary_service_params->end_handle;
-				DBG_LOG_DEV("Next DST Change Service discovered  %04X %04X", dst_handle.start_handle, dst_handle.end_handle);
+				DBG_LOG("Next DST Change Service discovered");
+				//DBG_LOG_DEV("Next DST Change Service discovered  %04X %04X", dst_handle.start_handle, dst_handle.end_handle);
+				//DBG_LOG_DEV("UUID : 0x%02X%02X",primary_service_params->service_uuid.uuid[1],primary_service_params->service_uuid.uuid[0]);
 				dst_handle.char_discovery = AT_BLE_SUCCESS;
 			}
 			break;
@@ -257,7 +279,9 @@ void time_info_service_found_handler(at_ble_primary_service_found_t * primary_se
 			{
 				rtu_handle.start_handle = primary_service_params->start_handle;
 				rtu_handle.end_handle = primary_service_params->end_handle;
-				DBG_LOG_DEV("Reference time update service discovered  %04X %04X", rtu_handle.start_handle, rtu_handle.end_handle);
+				DBG_LOG_DEV("Reference time update service discovered");
+				//DBG_LOG_DEV("Reference time update service discovered  %04X %04X", rtu_handle.start_handle, rtu_handle.end_handle);
+				//DBG_LOG_DEV("UUID : 0x%02X%02X",primary_service_params->service_uuid.uuid[1],primary_service_params->service_uuid.uuid[0]);
 				rtu_handle.char_discovery = AT_BLE_SUCCESS;
 			}
 			break;
@@ -274,7 +298,8 @@ void time_info_service_found_handler(at_ble_primary_service_found_t * primary_se
 void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_status)
 {
 	bool discover_char_flag = true;
-	if (discover_status->status == AT_BLE_SUCCESS)
+	DBG_LOG("discovery complete status %d", discover_status->status);
+	if (discover_status->status == AT_BLE_DISCOVER_SUCCESS)
 	{
 		#if defined CURRENT_TIME_SERVICE
 		if ((cts_handle.char_discovery == AT_BLE_SUCCESS) && (discover_char_flag))
@@ -284,6 +309,7 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 			cts_handle.start_handle,
 			cts_handle.end_handle) == AT_BLE_SUCCESS)
 			{
+				discover_char_flag = false;
 				DBG_LOG_DEV("CTS Characteristic Discovery Started");
 			}
 			else
@@ -291,7 +317,7 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 				DBG_LOG_DEV("CTS Characteristic Discovery Failed");
 			}
 			cts_handle.char_discovery = AT_BLE_FAILURE;
-			discover_char_flag = false;
+			//discover_char_flag = false;
 		}
 		else if (cts_handle.char_discovery == AT_BLE_INVALID_PARAM)
 		{
@@ -307,6 +333,7 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 			cts_handle.start_handle,
 			cts_handle.end_handle) == AT_BLE_SUCCESS)
 			{
+				discover_char_flag = false;
 				DBG_LOG_DEV("CTS Descriptors Discovery Started");
 			}
 			else
@@ -314,7 +341,7 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 				DBG_LOG_DEV("CTS Descriptors Discovery Failed");
 			}
 			cts_handle.desc_discovery = AT_BLE_FAILURE;
-			discover_char_flag = false;
+			//discover_char_flag = false;
 		}
 		
 		else if (cts_handle.char_discovery == AT_BLE_INVALID_PARAM)
@@ -334,6 +361,7 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 			dst_handle.start_handle,
 			dst_handle.end_handle) == AT_BLE_SUCCESS)
 			{
+				discover_char_flag = false;
 				DBG_LOG_DEV("DST Characteristic Discovery Started");
 			}
 			else
@@ -341,7 +369,7 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 				DBG_LOG_DEV("DST Characteristic Discovery Failed");
 			}
 			dst_handle.char_discovery = AT_BLE_FAILURE;
-			discover_char_flag = false;
+			//discover_char_flag = false;
 		}
 		
 		else if (dst_handle.char_discovery == AT_BLE_INVALID_PARAM)
@@ -360,6 +388,7 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 			rtu_handle.start_handle,
 			rtu_handle.end_handle) == AT_BLE_SUCCESS)
 			{
+				discover_char_flag = false;
 				DBG_LOG_DEV("RTU Characteristic Discovery Started");
 			}
 			else
@@ -367,7 +396,7 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 				DBG_LOG_DEV("RTU Characteristic Discovery Failed");
 			}
 			rtu_handle.char_discovery = AT_BLE_FAILURE;
-			discover_char_flag = false;
+			//discover_char_flag = false;
 		}
 		
 		else if (rtu_handle.char_discovery == AT_BLE_INVALID_PARAM)
@@ -412,9 +441,11 @@ void time_info_descriptor_found_handler(at_ble_descriptor_found_t *descriptor_fo
 	 if(desc_16_uuid == CTS_CLIENT_CHAR_DESCRIPTOR)
 	 {
 		 cts_handle.curr_desc_handle = descriptor_found->desc_handle;
-		 DBG_LOG_DEV("Current Time Descriptor %04X",cts_handle.curr_desc_handle);
-		 DBG_LOG_DEV("Descriptor Info ConnHandle 0x%02x : Descr Handle 0x%02x",descriptor_found->conn_handle,descriptor_found->desc_handle);
-		 DBG_LOG_DEV("UUID : 0x%02X%02X",descriptor_found->desc_uuid.uuid[1],descriptor_found->desc_uuid.uuid[0]);
+		 Desc_found = true;
+		 DBG_LOG_DEV("Current Time Descriptor");
+		 //DBG_LOG_DEV("Current Time Descriptor %04X",cts_handle.curr_desc_handle);
+		 //DBG_LOG_DEV("Descriptor Info ConnHandle 0x%02x : Descr Handle 0x%02x",descriptor_found->conn_handle,descriptor_found->desc_handle);
+		 //DBG_LOG_DEV("UUID : 0x%02X%02X",descriptor_found->desc_uuid.uuid[1],descriptor_found->desc_uuid.uuid[0]);
 	 }
 	
 }
@@ -430,6 +461,7 @@ void time_info_characteristic_found_handler(at_ble_characteristic_found_t *chara
 	
 	if(charac_16_uuid == CURRENT_TIME_CHAR_UUID)
 	{
+		current_time_char_found = true;
 		cts_handle.curr_char_handle = characteristic_found->value_handle;
 		DBG_LOG_DEV("current time characteristics %04X",cts_handle.curr_char_handle);
 		DBG_LOG_DEV("Characteristic Info ConnHandle 0x%02x : Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
@@ -441,6 +473,7 @@ void time_info_characteristic_found_handler(at_ble_characteristic_found_t *chara
 	
 	if(charac_16_uuid == LOCAL_TIME_CHAR_UUID)
 	{
+		local_time_char_found = true;
 		cts_handle.lti_char_handle = characteristic_found->value_handle;
 		DBG_LOG_DEV("Local time characteristics %04X",cts_handle.lti_char_handle);
 		DBG_LOG_DEV("Characteristic Info ConnHandle 0x%02x : Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
@@ -452,6 +485,7 @@ void time_info_characteristic_found_handler(at_ble_characteristic_found_t *chara
 	
 	if(charac_16_uuid == REF_TIME_CHAR_UUID)
 	{
+		ref_time_char_found = true;
 		cts_handle.rti_char_handle = characteristic_found->value_handle;
 		DBG_LOG_DEV("Reference time characteristics %04X",cts_handle.rti_char_handle);
 		DBG_LOG_DEV("Characteristic Info ConnHandle 0x%02x : Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
@@ -463,6 +497,7 @@ void time_info_characteristic_found_handler(at_ble_characteristic_found_t *chara
 	
 	if(charac_16_uuid == TIME_WITH_DST_CHAR_UUID)
 	{
+		time_with_dst_char_found = true;
 		dst_handle.dst_char_handle = characteristic_found->value_handle;
 		DBG_LOG_DEV("Time with DST characteristics %04X",dst_handle.dst_char_handle);
 		DBG_LOG_DEV("Characteristic Info ConnHandle 0x%02x : Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
@@ -474,6 +509,7 @@ void time_info_characteristic_found_handler(at_ble_characteristic_found_t *chara
 
 	if(charac_16_uuid == TIME_UPDATE_CP_CHAR_UUID)
 	{
+		time_update_cp_char_found = true;
 		rtu_handle.tp_control_char_handle = characteristic_found->value_handle;
 		DBG_LOG_DEV("Time with DST characteristics %04X",rtu_handle.tp_control_char_handle);
 		DBG_LOG_DEV("Characteristic Info ConnHandle 0x%02x : Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
@@ -485,6 +521,7 @@ void time_info_characteristic_found_handler(at_ble_characteristic_found_t *chara
 	
 	if(charac_16_uuid == TIME_UPDATE_STATE_CHAR_UUID)
 	{
+		time_update_state_char_found = true;
 		rtu_handle.tp_state_char_handle = characteristic_found->value_handle;
 		DBG_LOG_DEV("Time with DST characteristics %04X",rtu_handle.tp_state_char_handle);
 		DBG_LOG_DEV("Characteristic Info ConnHandle 0x%02x : Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
@@ -543,6 +580,18 @@ void time_info_notification_handler(at_ble_notification_recieved_t *noti_read_re
  */
 void time_info_disconnected_event_handler(at_ble_disconnected_t *disconnect)
 {
+	cts_handle.char_discovery = AT_BLE_INVALID_PARAM;
+	cts_handle.desc_discovery = AT_BLE_INVALID_PARAM;
+	dst_handle.char_discovery = AT_BLE_INVALID_PARAM;
+	rtu_handle.char_discovery = AT_BLE_INVALID_PARAM;
+	current_time_char_found = false;
+	local_time_char_found = false;
+	ref_time_char_found = false;
+	time_with_dst_char_found = false;
+	time_update_cp_char_found = false;
+	time_update_state_char_found = false;
+	Desc_found = false;
+	
 	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
 	APP_TP_FAST_ADV, APP_TP_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
 	{
@@ -572,16 +621,38 @@ void time_info_char_changed_handler(at_ble_characteristic_changed_t *characteris
  */
 void time_info_write_notification_handler(void *param)
 {
-			
-	if(!(tis_current_time_noti(ble_connected_dev_info[0].handle,cts_handle.curr_desc_handle,false) == AT_BLE_SUCCESS))
+	//DBG_LOG("desc handles%d",cts_handle.curr_desc_handle);
+	if(Desc_found)
 	{
-		DBG_LOG("Fail to set Current Time descriptor 0");
-	}
-	
-	if(!(tis_current_time_noti(ble_connected_dev_info[0].handle,cts_handle.curr_desc_handle,true) == AT_BLE_SUCCESS))
-	{
-		DBG_LOG("Fail to set Current Time descriptor 1");
-	}
-	
+		if(!(tis_current_time_noti(ble_connected_dev_info[0].handle,cts_handle.curr_desc_handle,false) == AT_BLE_SUCCESS))
+		{
+			DBG_LOG("Fail to set Current Time descriptor 0");
+		}
+		if(!(tis_current_time_noti(ble_connected_dev_info[0].handle,cts_handle.curr_desc_handle,true) == AT_BLE_SUCCESS))
+		{
+			DBG_LOG("Fail to set Current Time descriptor 1");
+		}
+	}		
 	UNUSED(param);
+}
+
+void time_info_register_bonding_callback(bonding_complete_t bonding_complete_cb)
+{
+	bonding_cb = bonding_complete_cb;
+}
+
+void time_info_pair_done_handler(at_ble_pair_done_t *pair_done_param)
+{
+	if(bonding_cb)
+	{
+		bonding_cb(true);		
+	}
+}
+
+void time_info_encryption_status_changed_handler(at_ble_encryption_status_changed_t *param)
+{
+	if(bonding_cb)
+	{
+		bonding_cb(true);
+	}
 }
