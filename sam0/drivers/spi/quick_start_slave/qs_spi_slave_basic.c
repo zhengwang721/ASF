@@ -53,10 +53,7 @@ void configure_spi_slave(void);
 //! [buf_length]
 
 //! [buffer]
-static uint8_t buffer_expect[BUF_LENGTH] = {
-		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
-		 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13
-};
+static uint8_t buffer_expect[BUF_LENGTH];
 static uint8_t buffer_rx[BUF_LENGTH] = {0x00};
 //! [buffer]
 
@@ -69,9 +66,9 @@ struct spi_module spi_slave_instance;
 static void configure_gpio(void)
 {
 	struct gpio_config config_gpio;
-	
+
 	gpio_get_config_defaults(&config_gpio);
-	
+
 	/* Configure LEDs as outputs, turn them off */
 	config_gpio.direction = GPIO_PIN_DIR_OUTPUT;
 	gpio_pin_set_config(LED_0_PIN, &config_gpio);
@@ -93,6 +90,9 @@ void configure_spi_slave(void)
 //! [transfer_mode]
 	config_spi_slave.transfer_mode = CONF_SPI_TRANSFER_MODE;
 //! [transfer_mode]
+//! [clock_divider]
+	config_spi_slave.clock_divider = 154;
+//! [clock_divider]
 	/* Configure pad 0 */
 //! [sck]
 	config_spi_slave.pinmux_pad[0] = CONF_SPI_PINMUX_SCK;
@@ -124,10 +124,15 @@ int main(void)
 {
 //! [main_start]
 	uint8_t result = 0;
-	
+	uint16_t i = 0;
+
 	/* Initialize system */
 //! [system_init]
 	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
+	for (i = 0; i < BUF_LENGTH; i++) {
+		buffer_expect[i] = i;
+		buffer_rx[i] = 0;
+	}
 //! [system_init]
 
 //! [run_config]
@@ -145,7 +150,7 @@ int main(void)
 	}
 //! [read]
 //! [compare]
-	for (uint8_t i = 0; i < BUF_LENGTH; i++) {
+	for (i = 0; i < BUF_LENGTH; i++) {
 		if(buffer_rx[i] != buffer_expect[i]) {
 			result++;
 		}
@@ -153,7 +158,7 @@ int main(void)
 //! [compare]
 //! [inf_loop]
 	while (true) {
-		/* Infinite loop */		
+		/* Infinite loop */
 		if (result) {
 			gpio_pin_toggle_output_level(LED_0_PIN);
 			/* Add a short delay to see LED toggle */

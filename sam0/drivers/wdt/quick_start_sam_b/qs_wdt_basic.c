@@ -50,6 +50,11 @@ struct wdt_module wdt_instance;
 //! [module_inst]
 
 //! [setup]
+static void watchdog_early_warning_callback(void)
+{
+	gpio_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+}
+
 static void configure_gpio(void)
 {
 	struct gpio_config config_gpio;
@@ -75,6 +80,7 @@ static void configure_wdt(void)
 	//! [setup_2]
 	//! [setup_3]
 	config_wdt.load_value = CONF_WDT_LOAD_VALUE;
+	config_wdt.enable_reset = true;
 	//! [setup_3]
 
 	/* Initialize and enable the Watchdog with the user settings */
@@ -82,6 +88,19 @@ static void configure_wdt(void)
 	wdt_set_config(&wdt_instance, CONF_WDT_MODULE, &config_wdt);
 	//! [setup_4]
 }
+
+static void configure_wdt_callback(void)
+{
+	//! [setup_5]
+	wdt_register_callback(&wdt_instance, watchdog_early_warning_callback,
+			WDT_CALLBACK_EARLY_WARNING);
+	//! [setup_5]
+
+	//! [setup_6]
+	wdt_enable_callback(&wdt_instance, WDT_CALLBACK_EARLY_WARNING);
+	//! [setup_6]
+}
+//! [setup]
 //! [setup]
 
 int main(void)
@@ -89,7 +108,7 @@ int main(void)
 	uint32_t current_value;
 	uint16_t i, j;
 
-	//system_init();
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 
 	//! [setup_init]
 	configure_gpio();
@@ -100,11 +119,12 @@ int main(void)
 		}
 	}
 	configure_wdt();
+	configure_wdt_callback();
 	//! [setup_init]
 
 	//! [main]
 	//! [main_1]
-	gpio_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+	gpio_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
 	//! [main_1]
 	//! [main_2]
 	while (true) {

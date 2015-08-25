@@ -65,7 +65,7 @@ static enum status_code _adc_gpio_ms_enable(enum adc_input_channel channel)
 			AON_GP_REGS0->MS_GPIO_MODE.reg |= \
 				AON_GP_REGS_MS_GPIO_MODE_ANALOG_ENABLE_47;
 		break;
-		
+
 		default:
 			return STATUS_ERR_INVALID_ARG;
 	}
@@ -120,15 +120,15 @@ void adc_init(struct adc_config *config)
 {
 	/* Sanity check arguments */
 	Assert(config);
-	
+
 	uint32_t reg_value = 0;
-	
+
 	if (config->invert_clock) {
 		LPMCU_MISC_REGS0->SENS_ADC_CLK_CTRL.reg = LPMCU_MISC_REGS_SENS_ADC_CLK_CTRL_INVERT;
 	} else {
-		LPMCU_MISC_REGS0->SENS_ADC_CLK_CTRL.reg &= ~LPMCU_MISC_REGS_SENS_ADC_CLK_CTRL_MASK; 
+		LPMCU_MISC_REGS0->SENS_ADC_CLK_CTRL.reg &= ~LPMCU_MISC_REGS_SENS_ADC_CLK_CTRL_MASK;
 	}
-	
+
 	/* Setting ADC clock */
 	LPMCU_MISC_REGS0->SENS_ADC_CLK_CTRL.reg |= \
 			LPMCU_MISC_REGS_SENS_ADC_CLK_CTRL_FRAC_PART(config->frac_part) | \
@@ -163,7 +163,7 @@ void adc_init(struct adc_config *config)
 
 	reg_value |= AON_GP_REGS_RF_PMU_REGS_1_CODE_IN(config->input_dynamic_range) | \
 				AON_GP_REGS_RF_PMU_REGS_1_SADC_LP_CTRL(config->bias_current);
-	
+
 	/* Here need to modify the register name */
 	AON_GP_REGS0->RF_PMU_REGS_1.reg = reg_value;
 }
@@ -190,7 +190,7 @@ void adc_enable(void)
 {
 	///* Enable ADC clock */
 	system_clock_peripheral_enable(PERIPHERAL_ADC);
-			
+
 	/* Enable ADC module */
 	AON_GP_REGS0->AON_PMU_CTRL.reg &= \
 		~AON_GP_REGS_AON_PMU_CTRL_PMU_SENS_ADC_RST;
@@ -209,11 +209,10 @@ void adc_enable(void)
  *
  */
 void adc_disable(void)
-{	
+{
 	/* Disable ADC clock */
-	LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_1.reg &= \
-			~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_1_SENS_ADC_CLK_EN;
-			
+	system_clock_peripheral_disable(PERIPHERAL_ADC);
+
 	/* Disable ADC module */
 	AON_GP_REGS0->AON_PMU_CTRL.reg &= \
 			~(AON_GP_REGS_AON_PMU_CTRL_PMU_SENS_ADC_EN | \
@@ -229,8 +228,7 @@ void adc_disable(void)
 void adc_reset(void)
 {
 	/* Reset ADC module */
-	AON_GP_REGS0->AON_PMU_CTRL.reg |= \
-		AON_GP_REGS_AON_PMU_CTRL_PMU_SENS_ADC_RST;
+	system_peripheral_reset(PERIPHERAL_ADC);
 }
 
 /**
@@ -246,26 +244,26 @@ void adc_reset(void)
  * \retval STATUS_BUSY         A conversion result was not ready
  */
 enum status_code adc_read(enum adc_input_channel input_channel, uint16_t *result)
-						
+
 {
 	Assert(result);
-	
+
 	/* The transition of the ADC_DONE signal from LO to HI indicates that the
 	 * ADC conversion is done. */
 	while (adc_get_status() & LPMCU_MISC_REGS_SENS_ADC_RAW_STATUS_ADC_DONE) {
 		/* Waiting... */
 	}
-	
+
 	while(!(adc_get_status() & LPMCU_MISC_REGS_SENS_ADC_RAW_STATUS_ADC_DONE)) {
 		/* Waiting... */
 	}
-	
+
 	switch (input_channel) {
 		case ADC_INPUT_CH_GPIO_MS1:
 		case ADC_INPUT_CH_TEMPERATURE:
 			*result = LPMCU_MISC_REGS0->SENS_ADC_CH0_DATA.reg;
 			break;
-				
+
 		case ADC_INPUT_CH_GPIO_MS2:
 #ifdef CHIPVERSION_B0
 		case ADC_INPUT_CH_VBATT_4:
@@ -274,7 +272,7 @@ enum status_code adc_read(enum adc_input_channel input_channel, uint16_t *result
 #endif
 			*result = LPMCU_MISC_REGS0->SENS_ADC_CH1_DATA.reg;
 			break;
-				
+
 		case ADC_INPUT_CH_GPIO_MS3:
 #ifdef CHIPVERSION_B0
 		case ADC_INPUT_CH_LPD0_LDO:
@@ -283,7 +281,7 @@ enum status_code adc_read(enum adc_input_channel input_channel, uint16_t *result
 #endif
 			*result = LPMCU_MISC_REGS0->SENS_ADC_CH2_DATA.reg;
 			break;
-				
+
 		case ADC_INPUT_CH_GPIO_MS4:
 #ifdef CHIPVERSION_B0
 		case ADC_INPUT_CH_VREF:

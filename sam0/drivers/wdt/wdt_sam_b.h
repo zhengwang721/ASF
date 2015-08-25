@@ -112,6 +112,21 @@ extern "C" {
 
 #define WDT_WRITE_ACCESS_KEY    0x1ACCE551
 
+struct wdt_module;
+/** Type definition for a WDT module callback function. */
+typedef void (*wdt_callback_t)(void);
+
+/** Enum for the possible callback types for the WDT module. */
+enum wdt_callback
+{
+	/** Callback type for when an early warning callback from the WDT module
+	 *  is issued.
+	 */
+	WDT_CALLBACK_EARLY_WARNING,
+	/** Number of available callbacks. */
+	WDT_CALLBACK_N,
+};
+
 /**
  * \brief Watchdog Timer configuration structure.
  *
@@ -141,6 +156,12 @@ struct wdt_module {
 #if !defined(__DOXYGEN__)
 	/** Pointer to the hardware instance. */
 	Wdt *hw;
+	/** Array to store callback function pointers in. */
+	wdt_callback_t callback[WDT_CALLBACK_N];
+	/** Bit mask for callbacks registered. */
+	uint8_t callback_reg_mask;
+	/** Bit mask for callbacks enabled. */
+	uint8_t callback_enable_mask;
 #endif
 };
 
@@ -177,6 +198,21 @@ enum status_code wdt_set_reload_count(struct wdt_module *const module, \
 			uint32_t load_value);
 void wdt_get_current_count(struct wdt_module *const module, \
 			uint32_t * count_value);
+/** @} */
+
+/**
+ * \name Callback
+ * @{
+ */
+void wdt_register_callback(struct wdt_module *const module,
+		wdt_callback_t callback_func,
+		enum wdt_callback callback_type);
+void wdt_unregister_callback(struct wdt_module *module,
+		enum wdt_callback callback_type);
+void wdt_enable_callback(struct wdt_module *module,
+		enum wdt_callback callback_type);
+void wdt_disable_callback(struct wdt_module *const module,
+		enum wdt_callback callback_type);
 /** @} */
 
 /** @} */

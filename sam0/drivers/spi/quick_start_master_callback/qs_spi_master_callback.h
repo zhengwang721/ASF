@@ -45,77 +45,91 @@
  */
 
 /**
- * \page asfdoc_sam0_spi_slave_basic_use Quick Start Guide for SPI Slave - Polled
+ * \page asfdoc_sam0_spi_master_basic_use Quick Start Guide for SPI Master - Polled
  *
  * In this use case, the SPI on extension header of the Xplained Pro board
  * will configured with the following settings:
- * - Slave mode enabled
- * - Preloading of shift register enabled
+ * - Master Mode enabled
  * - MSB of the data is transmitted first
  * - Transfer mode 0
  * - 8-bit character size
  * - Not enabled in sleep mode
+ * - Baudrate 100000
  *
  *
- * \section asfdoc_sam0_spi_slave_basic_use_setup Setup
+ * \section asfdoc_sam0_spi_master_basic_use_setup Setup
  *
- * \subsection asfdoc_sam0_spi_slave_basic_use_prereq Prerequisites
- * The device must be connected to a SPI master which must read from the device.
+ * \subsection asfdoc_sam0_spi_master_basic_use_prereq Prerequisites
+ * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_sam0_spi_slave_basic_use_setup_code Code
- * The following must be added to the user application source file, outside
- * any functions:
+ * \subsection asfdoc_sam0_spi_master_basic_use_setup_code Code
+ * The following must be added to the user application:
  *
  * A sample buffer to send via SPI.
- * \snippet qs_spi_slave_basic.c buffer
+ * \snippet qs_spi_master_basic.c buffer
  * Number of entries in the sample buffer.
- * \snippet qs_spi_slave_basic.c buf_length
+ * \snippet qs_spi_master_basic.c buf_length
+ * GPIO pin to use as Slave Select.
+ * \snippet qs_spi_master_basic.c slave_select_pin
  * A globally available software device instance struct to store the SPI driver
  * state while it is in use.
- * \snippet qs_spi_slave_basic.c dev_inst
- * A function for configuring the SPI.
- * \snippet qs_spi_slave_basic.c configure_spi
+ * \snippet qs_spi_master_basic.c dev_inst
+ * A globally available peripheral slave software device instance struct.
+ * \snippet qs_spi_master_basic.c slave_dev_inst
+ * A function for configuring the GPIO and SPI.
+ * \snippet qs_spi_master_basic.c configure_spi
  *
  * Add to user application \c main().
- * \snippet qs_spi_slave_basic.c main_start
+ * \snippet qs_spi_master_basic.c main_setup
  *
- * \subsection asfdoc_sam0_spi_slave_basic_use_workflow Workflow
+ * \section asfdoc_sam0_spi_master_basic_use_workflow Workflow
  * -# Initialize system.
- *    \snippet qs_spi_slave_basic.c system_init
+ *    \snippet qs_spi_master_basic.c system_init
  * -# Setup the SPI.
- *    \snippet qs_spi_slave_basic.c run_config
+ *    \snippet qs_spi_master_basic.c run_config
  *   -# Create configuration struct.
- *      \snippet qs_spi_slave_basic.c config
+ *      \snippet qs_spi_master_basic.c config
+ *   -# Create peripheral slave configuration struct.
+ *      \snippet qs_spi_master_basic.c slave_config
+ *   -# Create peripheral slave software device instance struct.
+ *      \snippet qs_spi_master_basic.c slave_dev_inst
+ *   -# Get default peripheral slave configuration.
+ *      \snippet qs_spi_master_basic.c slave_conf_defaults
+ *   -# Set Slave Select pin.
+ *      \snippet qs_spi_master_basic.c ss_pin
+ *   -# Initialize peripheral slave software instance with configuration.
+ *      \snippet qs_spi_master_basic.c slave_init
  *   -# Get default configuration to edit.
- *      \snippet qs_spi_slave_basic.c conf_defaults
- *   -# Set the SPI in slave mode.
- *      \snippet qs_spi_slave_basic.c conf_spi_slave_instance
+ *      \snippet qs_spi_master_basic.c conf_defaults
  *   -# Set transfer mode 0.
  *      \snippet qs_spi_master_basic.c transfer_mode
  *   -# Set pinmux for pad 0 (SCK).
  *      \snippet qs_spi_master_basic.c sck
  *   -# Set pinmux for pad 1 (data out (MOSI))
  *      \snippet qs_spi_master_basic.c mosi
- *   -# Set pinmux for pad 2 (SSN).
+ *   -# Set pinmux for pad 2 as unused, so the pin can be used for other purposes.
  *      \snippet qs_spi_master_basic.c ssn
  *   -# Set pinmux for pad 3 (data in (MISO)).
  *      \snippet qs_spi_master_basic.c miso
  *   -# Initialize SPI module with configuration.
- *      \snippet qs_spi_slave_basic.c init
+ *      \snippet qs_spi_master_basic.c init
  *   -# Enable SPI module.
- *      \snippet qs_spi_slave_basic.c enable
+ *      \snippet qs_spi_master_basic.c enable
  *
- * \section asfdoc_sam0_spi_slave_basic_use_case Use Case
- * \subsection asfdoc_sam0_spi_slave_basic_use_case_code Code
+ * \section asfdoc_sam0_spi_master_basic_use_case Use Case
+ * \subsection asfdoc_sam0_spi_master_basic_use_case_code Code
  * Add the following to your user application \c main().
- * \snippet qs_spi_slave_basic.c main_use_case
- * \subsection asfdoc_sam0_spi_slave_basic_use_case_workflow Workflow
- * -# Read data from SPI master.
- *    \snippet qs_spi_slave_basic.c read
- * -# Compare the received data with the transmitted data from SPI master.
- *    \snippet qs_spi_slave_basic.c compare
- * -# Infinite loop. If the data is matched, LED0 will flash slowly. Otherwise,
- *    LED will flash quickly.
- *    \snippet qs_spi_slave_basic.c inf_loop
+ * \snippet qs_spi_master_basic.c main_use_case
+ * \subsection asfdoc_sam0_spi_master_basic_use_case_workflow Workflow
+ * -# Select slave.
+ *    \snippet qs_spi_master_basic.c select_slave
+ * -# Write buffer to SPI slave.
+ *    \snippet qs_spi_master_basic.c write
+ * -# Deselect slave.
+ *    \snippet qs_spi_master_basic.c deselect_slave
+ * -# Light up.
+ *    \snippet qs_spi_master_basic.c light_up
+ * -# Infinite loop.
+ *    \snippet qs_spi_master_basic.c inf_loop
  */
 
