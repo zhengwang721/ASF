@@ -81,9 +81,6 @@
 /* @brief BAS_ADV_DATA_NAME_DATA the actual name of device */
 #define SPS_ADV_DATA_NAME_DATA			("ATMEL-DEV")
 
-#define MAX_SPS_SCAN_REFRESH            (2)
-
-
 void timer_callback_handler(void);
 
 at_ble_status_t sps_service_advertise(void);
@@ -94,6 +91,6 @@ void ble_disconnected_app_event(at_ble_handle_t conn_handle);
 
 at_ble_status_t sps_char_changed_cb(at_ble_characteristic_changed_t *char_handle);
 
-void sps_notification_confirmed_cb(uint8_t notification_status);
+void sps_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_status);
 
 #endif /* __SCAN_PARAMETER_APP_H__ */

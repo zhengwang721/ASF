@@ -81,10 +81,12 @@ typedef struct bat_gatt_service_handler
  *
  * @param[in] battery_serv battery service instance
  * @param[in] char_data New battery level
+ * @param[in] flag flag to track the notification sent 
+ *
  * @return @ref AT_BLE_SUCCESS operation completed successfully
  * @return @ref AT_BLE_FAILURE Generic error.
  */
-at_ble_status_t bat_update_char_value (bat_gatt_service_handler_t *battery_serv , uint8_t char_data);
+at_ble_status_t bat_update_char_value (bat_gatt_service_handler_t *battery_serv , uint8_t char_data, bool volatile *flag);
 
 /**@brief Battery service and characteristic initialization(Called only once by user).
  *
@@ -107,10 +109,11 @@ at_ble_status_t bat_primary_service_define(bat_gatt_service_handler_t *battery_s
  *
  * @param[in] battery_service battery service instance
  * @param[in] char_handle characteristic changed @ref at_ble_characteristic_changed_t
+ * @param[in] flag flag to track the notification sent 
  *
  * @return @ref AT_BLE_SUCCESS operation completed successfully
  * @return @ref AT_BLE_FAILURE Generic error.
  */
-at_ble_status_t bat_char_changed_event(bat_gatt_service_handler_t *battery_service, at_ble_characteristic_changed_t *char_handle);
+at_ble_status_t bat_char_changed_event(bat_gatt_service_handler_t *battery_service, at_ble_characteristic_changed_t *char_handle, bool volatile *flag);
 
 #endif /* __BATTERY_H__ */

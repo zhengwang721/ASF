@@ -51,5 +51,6 @@
 #include "at_ble_api.h"
 
 void timer_callback_handler(void);
+void app_bonding_cb(bool flag);
 
 #endif /* __TIP_APP_H__ */

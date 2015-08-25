@@ -68,6 +68,8 @@ extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
 bool volatile sps_notification_flag = false;
 
+/**@brief Initialize the service with its included service, characteristics, and descriptors
+ */
 void sps_init_service(sps_gatt_service_handler_t *sps_serv, uint16_t *scan_interval_window, uint8_t *scan_refresh)
 {
 		sps_serv->serv_handle= 0;
@@ -117,11 +119,6 @@ void sps_init_service(sps_gatt_service_handler_t *sps_serv, uint16_t *scan_inter
 }
 
 /**@brief defining a initialized service 
- *
- * @param[in] scan param gatt service information
- *
- * @return @ref AT_BLE_SUCCESS operation completed successfully
- * @return @ref AT_BLE_FAILURE Generic error.
  */
 at_ble_status_t sps_primary_service_define(sps_gatt_service_handler_t *sps_service)
 {
@@ -132,12 +129,8 @@ at_ble_status_t sps_primary_service_define(sps_gatt_service_handler_t *sps_servi
 }
 
 /**@brief Function used to update the scan refresh characteristic value during connection
- *
- * @param[in] sps_serv gatt service information
- * @param[in] info_data @ref dis_info_data, holds the new data information
- * @return none
  */
-at_ble_status_t sps_scan_refresh_char_update(sps_gatt_service_handler_t *sps_serv ,uint8_t scan_refresh_value)
+at_ble_status_t sps_scan_refresh_char_update(sps_gatt_service_handler_t *sps_serv ,uint8_t scan_refresh_value, bool volatile *flag)
 {
 	//updating application data
 	sps_serv->serv_chars[1].init_value = &scan_refresh_value;
@@ -155,29 +148,54 @@ at_ble_status_t sps_scan_refresh_char_update(sps_gatt_service_handler_t *sps_ser
 			DBG_LOG("sending notification failed");
 			return AT_BLE_FAILURE;
 		}
+		else 
+		{
+			DBG_LOG_DEV("sending notification successful");
+			*flag = false;
+			return AT_BLE_SUCCESS;
+		}
 	}
 	
 	return AT_BLE_FAILURE;
 }
 
-at_ble_status_t	sps_char_changed_event(sps_gatt_service_handler_t *sps_service_handler, at_ble_characteristic_changed_t *char_handle)
+/**@brief function to check the client characteristic configuration value. 
+ */
+at_ble_status_t	sps_char_changed_event(sps_gatt_service_handler_t *sps_service_handler, at_ble_characteristic_changed_t *char_handle, bool volatile *flag)
 {
 	at_ble_characteristic_changed_t change_params;
+	uint16_t scan_interval_window[2];
 	memcpy((uint8_t *)&change_params, char_handle, sizeof(at_ble_characteristic_changed_t));
 	
 	if(sps_service_handler->serv_chars[0].char_val_handle == change_params.char_handle)
 	{
 		memcpy(sps_service_handler->serv_chars[0].init_value, change_params.char_new_value, change_params.char_len);
+		memcpy(&scan_interval_window[0], &change_params.char_new_value[0], sizeof(uint16_t));
+		memcpy(&scan_interval_window[1], &change_params.char_new_value[2], sizeof(uint16_t));		
 		DBG_LOG("New scan interval window parameter");
-		DBG_LOG("Scan Interval 0x%02x",change_params.char_new_value[0]);
-		DBG_LOG("Scan Window   0x%02x",change_params.char_new_value[1]);
+		DBG_LOG("Scan Interval %d ms",scan_interval_window[0]);
+		DBG_LOG("Scan Window   %d ms",scan_interval_window[1]);
 	}
 	
-	if(sps_service_handler->serv_chars[0].client_config_handle == change_params.char_handle)
+	if(sps_service_handler->serv_chars[1].client_config_handle == change_params.char_handle)
 	{
 		if(change_params.char_new_value[0])
 		{
 			sps_notification_flag = true;
+			if((at_ble_notification_send(ble_connected_dev_info[0].handle, sps_service_handler->serv_chars[1].char_val_handle)) == AT_BLE_FAILURE) {
+				DBG_LOG("sending notification failed");
+				return AT_BLE_FAILURE;
+			}
+			else
+			{
+				DBG_LOG_DEV("sending notification successful");
+				*flag = false;
+				return AT_BLE_SUCCESS;
+			}
+		}
+		else
+		{
+			sps_notification_flag = false;
 		}
 	}
 	return AT_BLE_SUCCESS;	
