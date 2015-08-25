@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Linker script for running in internal FLASH on the SAMDA1J16A
+ * \brief SAM DA1 Xplained Pro board configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -40,37 +40,11 @@
  * \asf_license_stop
  *
  */
+ /*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
-/*###ICF### Section handled by ICF editor, don't touch! ****/
-/*-Editor annotation file-*/
-/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\cortex_v1_0.xml" */
-/*-Specials-*/
-define symbol __ICFEDIT_intvec_start__ = 0x00002000;
-/*-Memory Regions-*/
-define symbol __ICFEDIT_region_RAM_start__ = 0x20000000;
-define symbol __ICFEDIT_region_RAM_end__   = 0x20001FFF;
-define symbol __ICFEDIT_region_ROM_start__ = 0x00002000;
-define symbol __ICFEDIT_region_ROM_end__   = 0x0000FFFF;
-/*-Sizes-*/
-if (!isdefinedsymbol(__ICFEDIT_size_cstack__)) {
-define symbol __ICFEDIT_size_cstack__ = 0x800;
-}
-if (!isdefinedsymbol(__ICFEDIT_size_heap__)) {
-define symbol __ICFEDIT_size_heap__ = 0x0;
-}
-/**** End of ICF editor section. ###ICF###*/
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-define memory mem with size = 4G;
-define region RAM_region    = mem:[from __ICFEDIT_region_RAM_start__ to __ICFEDIT_region_RAM_end__];
-define region ROM_region    = mem:[from __ICFEDIT_region_ROM_start__ to __ICFEDIT_region_ROM_end__];
-
-define block CSTACK with alignment = 8, size = __ICFEDIT_size_cstack__ { };
-define block HEAP   with alignment = 8, size = __ICFEDIT_size_heap__   { };
-
-initialize by copy { readwrite };
-do not initialize  { section .noinit };
-
-place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };
-place in ROM_region                           { readonly };
-place in RAM_region                           { readwrite };
-place at end of RAM_region                    { block CSTACK, block HEAP };
+#endif /* CONF_BOARD_H_INCLUDED */

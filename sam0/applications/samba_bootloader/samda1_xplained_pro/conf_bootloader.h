@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Linker script for running in internal FLASH on the SAMDA1J16A
+ * \brief Bootloader specific configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -40,37 +40,30 @@
  * \asf_license_stop
  *
  */
+ /*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
-/*###ICF### Section handled by ICF editor, don't touch! ****/
-/*-Editor annotation file-*/
-/* IcfEditorFile="$TOOLKIT_DIR$\config\ide\IcfEditor\cortex_v1_0.xml" */
-/*-Specials-*/
-define symbol __ICFEDIT_intvec_start__ = 0x00002000;
-/*-Memory Regions-*/
-define symbol __ICFEDIT_region_RAM_start__ = 0x20000000;
-define symbol __ICFEDIT_region_RAM_end__   = 0x20001FFF;
-define symbol __ICFEDIT_region_ROM_start__ = 0x00002000;
-define symbol __ICFEDIT_region_ROM_end__   = 0x0000FFFF;
-/*-Sizes-*/
-if (!isdefinedsymbol(__ICFEDIT_size_cstack__)) {
-define symbol __ICFEDIT_size_cstack__ = 0x800;
-}
-if (!isdefinedsymbol(__ICFEDIT_size_heap__)) {
-define symbol __ICFEDIT_size_heap__ = 0x0;
-}
-/**** End of ICF editor section. ###ICF###*/
+#ifndef CONF_BOOTLOADER_H_INCLUDED
+#define CONF_BOOTLOADER_H_INCLUDED
 
-define memory mem with size = 4G;
-define region RAM_region    = mem:[from __ICFEDIT_region_RAM_start__ to __ICFEDIT_region_RAM_end__];
-define region ROM_region    = mem:[from __ICFEDIT_region_ROM_start__ to __ICFEDIT_region_ROM_end__];
+#include "conf_board.h"
 
-define block CSTACK with alignment = 8, size = __ICFEDIT_size_cstack__ { };
-define block HEAP   with alignment = 8, size = __ICFEDIT_size_heap__   { };
+#define APP_START_ADDRESS          0x00002000
+#define BOOT_LED                   LED0_PIN
+#define BOOT_LOAD_PIN              SW0_PIN
+#define GPIO_BOOT_PIN_MASK         (1U << (BOOT_LOAD_PIN & 0x1F))
 
-initialize by copy { readwrite };
-do not initialize  { section .noinit };
+#define BOOT_USART_MODULE          EDBG_CDC_MODULE
+#define BOOT_USART_BAUDRATE        115200
+#define BOOT_USART_MUX_SETTINGS    USART_RX_1_TX_0_XCK_1
+#define BOOT_USART_PAD0            EDBG_CDC_SERCOM_PINMUX_PAD0
+#define BOOT_USART_PAD1            EDBG_CDC_SERCOM_PINMUX_PAD1
+#define BOOT_USART_GCLK_SOURCE     GCLK_GENERATOR_0
 
-place at address mem:__ICFEDIT_intvec_start__ { readonly section .intvec };
-place in ROM_region                           { readonly };
-place in RAM_region                           { readwrite };
-place at end of RAM_region                    { block CSTACK, block HEAP };
+#define APP_START_PAGE             (APP_START_ADDRESS / FLASH_PAGE_SIZE)
+
+/* DEBUG LED output enable/disable */
+#define DEBUG_ENABLE               false
+
+#endif /* CONF_BOOTLOADER_H_INCLUDED */
