@@ -81,7 +81,7 @@ void serial_tx_callback(void);
 /* Set BLE Wakeup pin to be low */
 static inline bool ble_wakeup_pin_level(void)
 {
-	port_pin_get_output_level(BTLC1000_WAKEUP_PIN);
+	return (port_pin_get_output_level(BTLC1000_WAKEUP_PIN));
 }
 
 /* Set BLE Wakeup pin to be low */
