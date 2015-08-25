@@ -184,7 +184,7 @@ void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *params)
 			//}
 		//}
 		//
-		if(discover_status.status == AT_BLE_SUCCESS)
+		if(discover_status.status == AT_DISCOVER_SUCCESS)
 		{
 			if(discover_status.operation == AT_BLE_DISC_BY_UUID_SVC)
 			{	
