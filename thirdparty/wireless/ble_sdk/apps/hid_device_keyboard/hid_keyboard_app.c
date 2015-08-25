@@ -67,8 +67,7 @@
 
 /* =========================== GLOBALS ============================================================ */
 
-/* Memory allocated for database */
-uint8_t	au8DbMem[1024]	= {0}; 
+volatile bool button_pressed = false;
 
 /* Control point notification structure */
 hid_control_mode_ntf_t hid_control_point_value; 
@@ -165,14 +164,15 @@ void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info)
 }
 
 /* Callback called when report send over the air */
-void hid_notification_confirmed_cb(uint8_t status)
+void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_status)
 {
-	DBG_LOG_DEV("Keyboard report send to host status %d", status);
+	DBG_LOG_DEV("Keyboard report send to host status %d", notification_status->status);
 }
 
 /* Callback called when user press the button for writing new characteristic value */
 void button_cb(void)
 {
+	button_pressed = true;
 	key_status = 1;
 }
 
@@ -214,16 +214,6 @@ void hid_keyboard_app_init(void)
 
 int main(void )
 {
-    at_ble_init_config_t pf_cfg;  
-    platform_config busConfig;    
-	
-	/*Memory allocation for DB*/
-	pf_cfg.memPool.memSize 		= sizeof(au8DbMem);
-	pf_cfg.memPool.memStartAdd 	= &(au8DbMem[0]);
-	
-	/*Bus configuration*/
-	busConfig.bus_type = UART;
-	pf_cfg.plf_config = &busConfig;
 	
 #if SAMG55
 	/* Initialize the SAM system. */
@@ -250,7 +240,7 @@ int main(void )
 	
 	/* initialize the ble chip  and Set the device mac address */
 	
-	ble_device_init(NULL, &pf_cfg);
+	ble_device_init(NULL);
 	
 	/* Register the notification handler */
 	register_ble_notification_confirmed_cb(hid_notification_confirmed_cb);

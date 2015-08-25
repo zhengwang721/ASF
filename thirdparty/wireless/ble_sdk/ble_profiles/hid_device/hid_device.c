@@ -82,7 +82,7 @@ void hid_prf_init(void *param)
 {   
 	uint8_t serv_num = 0;
 	uint16_t serv_handle = 0;
-	dis_gatt_service_handler_t device_info_serv;
+	//dis_gatt_service_handler_t device_info_serv;
 	for(; serv_num<HID_MAX_SERV_INST; serv_num++)
 	{
 		if(hid_prf_dataref[serv_num] != NULL)
@@ -108,10 +108,10 @@ void hid_prf_init(void *param)
 	}
 	
 	/* Initialize the dis */
-	dis_init_service(&device_info_serv);
+	//dis_init_service(&device_info_serv);
 	
 	/* Define the primary service in the GATT server database */
-	dis_primary_service_define(&device_info_serv);
+	//dis_primary_service_define(&device_info_serv);
 	
 	UNUSED(param);
 }

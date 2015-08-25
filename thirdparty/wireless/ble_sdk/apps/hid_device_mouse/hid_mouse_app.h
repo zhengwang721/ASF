@@ -91,4 +91,6 @@ void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info);
 
 bool hid_mouse_move(int8_t pos, uint8_t index_report);
 
+void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_status);
+
 #endif /*__HID_DEVICE_APP_H__*/
