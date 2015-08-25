@@ -603,6 +603,7 @@ static inline void dma_reset_descriptor(struct dma_resource *resource)
 	resource->descriptor = NULL;
 }
 
+void dma_global_init(void);
 void dma_get_config_defaults(struct dma_resource_config *config);
 enum status_code dma_allocate(struct dma_resource *resource,
 		struct dma_resource_config *config);

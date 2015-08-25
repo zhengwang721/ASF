@@ -1,30 +1,32 @@
 <asf xmlversion="1.0">
-		<module type="driver" id="sam0.drivers.uart" caption="UART - Universal Asynchronous Receiver/Transmitter interface (Polled APIs)">
-			<info type="keyword" value="technology">
-				<keyword value="Communication"/>
-			</info>
+	<module type="driver" id="sam0.drivers.uart" caption="UART - Universal Asynchronous Receiver/Transmitter interface (Polled APIs)">
+		<info type="keyword" value="technology">
+			<keyword value="Communication"/>
+		</info>
 
-			<info type="appnote" value="ATxxxxx"/>
-			<info type="keyword" value="pdf">
-				<keyword value="UART"/>
-				<keyword value="I/O"/>
-				<keyword value="Universal Asynchronous Receiver/Transmitter Interface"/>
-			</info>
-			
-			<build type="include-path" value="."/>
-			<build type="c-source" value="uart.c"/>
-			<build type="header-file" subtype="api" value="uart.h"/>
-			<build type="header-file" value="quick_start_basic/qs_uart_basic.h"/>
+		<info type="appnote" value="ATxxxxx"/>
+		<info type="keyword" value="pdf">
+			<keyword value="UART"/>
+			<keyword value="I/O"/>
+			<keyword value="Universal Asynchronous Receiver/Transmitter Interface"/>
+		</info>
+		
+		<build type="include-path" value="."/>
+		<build type="c-source" value="uart.c"/>
+		<build type="header-file" subtype="api" value="uart.h"/>
+		<build type="header-file" value="quick_start_basic/qs_uart_basic.h"/>
+		<build type="header-file" value="quick_start_dma/qs_uart_dma_use.h" />
 
-			<build type="doxygen-entry-point" value="asfdoc_sam0_uart_group"/>
-			<build type="doxygen-example-path" value="quick_start_basic"/>
-			<build type="doxygen-quick-start" value="asfdoc_sam0_uart_exqsg"/>
+		<build type="doxygen-entry-point" value="asfdoc_sam0_uart_group"/>
+		<build type="doxygen-example-path" value="quick_start_basic"/>
+		<build type="doxygen-quick-start" value="asfdoc_sam0_uart_exqsg"/>
+		<build type="doxygen-example-path" value="quick_start_dma"/>
+		
+		<device-support value="samb11"/>
+		<require idref="sam0.utils"/>
+		<require idref="sam0.drivers.system"/>
+		<require idref="sam0.drivers.gpio"/>
 
-			<device-support value="samb11"/>
-			<require idref="sam0.utils"/>
-			<require idref="sam0.drivers.system"/>
-			<require idref="sam0.drivers.gpio"/>
-
-			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
-		</module>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
+	</module>
 </asf>

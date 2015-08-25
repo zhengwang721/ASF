@@ -179,7 +179,7 @@ void dma_get_config_defaults(struct dma_resource_config *config)
 	config->src.max_burst = 1;
 	config->src.tokens = 1;
 	config->src.enable_inc_addr = true;
-	config->src.periph = 0;
+	config->src.periph = MEMORY_DMA_PERIPHERAL;
 	config->src.periph_delay = 0;
 	config->src.enable_proi_top = false;
 	config->src.proi_top_index = 0;
@@ -189,7 +189,7 @@ void dma_get_config_defaults(struct dma_resource_config *config)
 	config->des.max_burst = 1;
 	config->des.tokens = 1;
 	config->des.enable_inc_addr = true;
-	config->des.periph = 0;
+	config->des.periph = MEMORY_DMA_PERIPHERAL;
 	config->des.periph_delay = 0;
 	config->des.enable_proi_top = false;
 	config->des.proi_top_index = 0;
@@ -198,15 +198,17 @@ void dma_get_config_defaults(struct dma_resource_config *config)
 	/* DMA channel configuration */
 	config->enable_joint_mode = false;
 	config->swap = DMA_ENDIAN_NO_SWAP;
-	
+}
+
+void dma_global_init(void)
+{
 	/* Clear global variety */
 	_dma_inst._dma_init = false;
 	_dma_inst.allocated_channels = 0;
 	_dma_inst.free_channels = CONF_MAX_USED_CHANNEL_NUM;
 	for (int i=0; i<CONF_MAX_USED_CHANNEL_NUM; i++) {
-		 _dma_active_resource[i] = NULL;
+		_dma_active_resource[i] = NULL;
 	}
-	
 }
 
 /**
@@ -513,9 +515,6 @@ enum status_code dma_allocate(struct dma_resource *resource,
 		system_register_isr(RAM_ISR_TABLE_DMA_INDEX, (uint32_t)dma_isr_handler);
 		
 		_dma_inst._dma_init = true;
-	}
-	if (resource->channel_id >= CONF_MAX_USED_CHANNEL_NUM) {
-		return STATUS_ERR_NOT_FOUND;
 	}
 
 	new_channel = _dma_find_first_free_channel_and_allocate();
