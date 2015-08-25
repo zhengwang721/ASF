@@ -65,6 +65,8 @@
 *							        Globals		
 *                                       *
 ****************************************************************************************/
+volatile bool button_pressed = false;
+
 volatile bool app_state = 0 ; /*!< flag to represent the application state*/
 
 volatile bool start_advertisement = 0; /*!< flag to start advertisement*/
@@ -74,8 +76,6 @@ volatile bool notification_flag = false; /*!< flag to start notification*/
 volatile bool disconnect_flag = false;	/*!< flag for disconnection*/
 
 volatile bool hr_initializer_flag = 1; /*!< flag for initialization of hr for each category*/
-
-uint8_t db_mem[1024];
 
 uint8_t second_counter = 0;	/*!< second_counter to count the time*/
 
@@ -93,23 +93,9 @@ bool inc_changer = true;/*!< to alter the direction of increments of hr*/
 
 bool reverse = false;/*!< Used to change the hr zones in reverse order*/
 
-bool notification_confirm_flag = true;
-
-volatile bool button_pressed = false;
 /****************************************************************************************
 *							        Functions											*
 ****************************************************************************************/
-
-/** @brief notification confirmation handler function called by the ble manager
- *	@param[in] at_ble_status_t gives the status notification has been sent in air.
- */
-void app_notification_confirmation_handler(uint8_t status)
-{
-		if (status == AT_BLE_SUCCESS)
-		{
-			notification_confirm_flag = true;
-		} 
-}
 
 /** @brief notification handler function called by the profile
  *	@param[in] notification_enable which will tell the state of the
@@ -145,6 +131,8 @@ void app_state_handler(bool state)
 	app_state = state;
 	if (app_state == false) {
 		hw_timer_stop();
+		energy_expended_val = 0;
+		second_counter = 0;
 		notification_flag = false;
 		LED_Off(LED0);
 		DBG_LOG("Press button to advertise");
@@ -155,14 +143,17 @@ void app_state_handler(bool state)
 	}
 }
 
-
-
 /**
  * @brief Button Press Callback
  */
 void button_cb(void)
 {
-	button_pressed = true;
+	if (button_pressed == false)
+	{
+		button_pressed = true;
+		return;
+	}
+	
 	if (app_state) {
 		DBG_LOG("Going to disconnect ");
 		disconnect_flag = true;
@@ -180,7 +171,7 @@ void button_cb(void)
  *  rr interval values, two rr interval values will be sent in every
  *notification
  */
-bool hr_measurment_send(void)
+void hr_measurment_send(void)
 {
 	uint8_t hr_data[HR_CHAR_VALUE_LEN];
 	uint8_t idx = 0;
@@ -225,11 +216,13 @@ bool hr_measurment_send(void)
 			idx += 2;
 			rr_interval_value += 200;
 		}
-
+	
+		#if defined PTS
 		if (energy_expended_val == ENERGY_RESET) {
 			energy_expended_val += energy_incrementor;
 			DBG_LOG("Energy Expended : 0 KJ");
 		}
+		#endif 
 	} else {
 		/* flags */
 		hr_data[idx++]
@@ -247,8 +240,6 @@ bool hr_measurment_send(void)
 
 		memcpy(&hr_data[idx], &energy_expended_val, 2);
 		idx += 2;
-		energy_expended_val += energy_incrementor;
-
 		/* RR Interval values(2) */
 		if (rr_interval_value < (uint16_t)RR_VALUE_MAX) {
 			DBG_LOG_CONT("\tRR Values:(%d,%d) msec",
@@ -274,6 +265,7 @@ bool hr_measurment_send(void)
 		}
 
 		DBG_LOG("Energy Expended :%d KJ", energy_expended_val);
+		energy_expended_val += energy_incrementor;
 	}
 
 	if (activity == 0) {
@@ -292,7 +284,7 @@ bool hr_measurment_send(void)
 		DBG_LOG("\n");
 	}
 
-	return hr_sensor_send_notification(hr_data, idx);
+	hr_sensor_send_notification(hr_data, idx);
 }
 
 /** @brief heart_rate_value_init will initializes the heart rate values
@@ -499,9 +491,6 @@ int main(void)
 
 	/* Registering the app_state_handler with the profile */
 	register_hr_state_handler(app_state_handler);
-	
-	/* Registering the notification handler with the ble_manager*/
-	register_ble_notification_confirmed_cb(app_notification_confirmation_handler);
 
 	/* Capturing the events  */
 	while (1) {
@@ -515,14 +504,9 @@ int main(void)
 
 		/* Flag to start notification */
 		if (notification_flag) {
-			if (notification_confirm_flag)
-			{
-				LED_Toggle(LED0);
-				if (hr_measurment_send())
-				{
-					notification_confirm_flag = false;
-				}
-			}
+			LED_Toggle(LED0);
+			hr_measurment_send();
+			notification_flag = false;
 		}
 
 		/* Flag to disconnect with the peer device */

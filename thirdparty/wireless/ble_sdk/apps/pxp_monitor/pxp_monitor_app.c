@@ -179,6 +179,8 @@ int main(void)
 	system_init();
 	#endif
 
+	button_init();
+	
 	/* Initialize serial console */
 	serial_console_init();
 

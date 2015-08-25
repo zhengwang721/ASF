@@ -170,7 +170,8 @@ void app_notification_handler(bool enable);
  */
 void app_indication_handler(bool enable);
 
-/** @brief notification confirmation handler function called by the ble manager
- *	@param[in] at_ble_status_t gives the status notification has been sent in air.
+/**
+ * @brief app_connected_state profile notifies the application about state
+ * @param[in] connected
  */
-void app_notification_confirmation_handler(uint8_t status);
+void app_connected_state(bool connected);

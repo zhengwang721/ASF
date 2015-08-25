@@ -96,7 +96,8 @@ typedef void (*blp_notification_callback_t)(bool);
 /* @brief call back handler type  */
 typedef void (*blp_indication_callback_t)(bool);
 
-
+/* @brief connected callback */
+typedef void (*connected_callback_t) (bool);
 
 /****************************************************************************************
 *							        Function Prototypes	                                *                                                        *
@@ -131,13 +132,6 @@ void blp_sensor_adv(void);
  */
 
 void blp_sensor_send_notification(uint8_t *hr_data, uint8_t length);
-
-/** @brief blp_notification_confirmation_handler called on notification confirmation
- *  event by the ble manager
- *	@param[in] at_ble_status_t AT_BLE_SUCCESS on success AT_BLE_FAILURE on failure
- *called
- */
-void blp_notification_confirmation_handler(uint8_t status);
 
 /** @brief blp_sensor_send_indication adds the new characteristic value and
  * sends the indication
@@ -185,5 +179,18 @@ at_ble_status_t blp_sensor_disconnect_event_handler(
  */
 at_ble_status_t blp_sensor_connected_state_handler(
 		at_ble_connected_t *conn_params);
+
+/**
+ * @brief register the call back for application state
+ * @param[in]
+ * @return none
+ */
+void register_connected_callback(connected_callback_t app_connected_cb);
+
+/** @brief blp_notification_confirmation_handler called by ble manager 
+ *	to give the status of notification sent
+ *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
+ */	
+void blp_notification_confirmation_handler(at_ble_cmd_complete_event_t *params);
 
 #endif /*__BLP_SENSOR_H__ */

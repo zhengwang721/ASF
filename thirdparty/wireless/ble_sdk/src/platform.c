@@ -284,7 +284,7 @@ uint8_t platform_event_wait(uint32_t timeout)
 		do
 		{
 			if(ser_fifo_pull_uint8(&ble_usart_rx_fifo, (uint8_t *)&t_rx_data) == SER_FIFO_OK)
-			{
+			{	
 				platform_interface_callback((uint8_t*)&t_rx_data, 1);
 			}
 		}while((event_flag != 1) && (timer_done()>0));

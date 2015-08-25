@@ -506,8 +506,8 @@ typedef enum
 
 #define BLE_PRIMARY_SERVICE_FOUND_HANDLER						anp_client_service_found_handler
 #define BLE_DISCOVERY_COMPLETE_HANDLER							anp_client_discovery_complete_handler
-#define BLE_ADDITIONAL_PAIR_DONE_HANDLER(param)					anp_client_write_notification_handler(param)
-#define BLE_ADDITIONAL_ENCRYPTION_CHANGED_HANDLER(param)		anp_client_write_notification_handler(param)
+#define BLE_ADDITIONAL_PAIR_DONE_HANDLER(param)					anp_client_security_done_handler(param)
+#define BLE_ADDITIONAL_ENCRYPTION_CHANGED_HANDLER(param)		anp_client_security_done_handler(param)
 #endif /* ANP_CLIENT */
 
 #endif /* ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)) */

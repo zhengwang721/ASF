@@ -149,7 +149,7 @@ void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *params)
 {
 		at_ble_discovery_complete_t discover_status;
 		memcpy((uint8_t *)&discover_status, params, sizeof(at_ble_discovery_complete_t));
-		//
+		
 		//if(discover_status.status == AT_BLE_DISCOVERY_SUCCESS)
 		//{
 			//if(app_anp_info.discover_role == DISCOVER_SERVICE)
@@ -175,7 +175,7 @@ void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *params)
 				//app_anp_info.discover_role = DISCOVER_IDLE;
 //
 				//app_anp_info.devicedb = TRUE;
-				//
+				//DBG_LOG("Slave security request");
 				//if(at_ble_send_slave_sec_request(app_anp_info.conn_params.handle,TRUE,TRUE) != AT_BLE_SUCCESS)
 				//{
 					//DBG_LOG("Fail to start security procedure");
@@ -183,11 +183,14 @@ void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *params)
 		//
 			//}
 		//}
-		//
+		DBG_LOG("service discovery completed operation is %x status %x ",discover_status.operation
+		,discover_status.status);
+		
 		if(discover_status.status == AT_BLE_SUCCESS)
 		{
 			if(discover_status.operation == AT_BLE_DISC_BY_UUID_SVC)
 			{	
+				DBG_LOG("invoking characteristic discovery");
 				if(at_ble_characteristic_discover_all(app_anp_info.conn_params.handle, ancs_data.ancs_serv.start_handle, ancs_data.ancs_serv.end_handle) != AT_BLE_SUCCESS)
 				{
 					DBG_LOG("Fail to start discover characteristic");
@@ -195,6 +198,7 @@ void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *params)
 			}
 			else if(discover_status.operation == AT_BLE_DISC_ALL_CHAR)
 			{
+				DBG_LOG("invoking descriptor discovery");
 				if(at_ble_descriptor_discover_all(ancs_data.notification_source_char.conn_handle,(ancs_data.notification_source_char.value_handle+1), (ancs_data.data_source_char.char_handle-1)) != AT_BLE_SUCCESS)
 				{
 					DBG_LOG("Descriptor Discovery Failed");
@@ -203,7 +207,7 @@ void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *params)
 			else if(discover_status.operation == AT_BLE_DISC_DESC_CHAR)
 			{
 				app_anp_info.devicedb = TRUE;
-				
+				DBG_LOG("Going to debug state");
 				if(at_ble_send_slave_sec_request(app_anp_info.conn_params.handle,TRUE,TRUE) != AT_BLE_SUCCESS)
 				{
 					DBG_LOG("Fail to start security procedure");
