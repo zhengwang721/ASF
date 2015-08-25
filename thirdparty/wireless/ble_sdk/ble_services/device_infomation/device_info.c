@@ -63,7 +63,7 @@ bool volatile dis_notification_flag[DIS_TOTAL_CHARATERISTIC_NUM] = {false};
 
 /**@brief Initialize the dis service related information. */
 void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
-{	
+{
 	device_info_serv->serv_handle = 0;
 	device_info_serv->serv_uuid.type = AT_BLE_UUID_16;
 	device_info_serv->serv_uuid.uuid[0] = (uint8_t) DIS_SERVICE_UUID;

@@ -56,6 +56,7 @@ volatile enum tenuTransportState slave_state = PLATFORM_TRANSPORT_SLAVE_DISCONNE
 #define GTL_EIF_CONNECT_REQ	0xA5
 #define GTL_EIF_CONNECT_RESP 0x5A
 #define BTLC1000_STARTUP_DELAY (1500)
+#define BTLC1000_WAKEUP_DELAY (5)
 
 extern volatile bool button_pressed;
 
@@ -68,6 +69,12 @@ extern ser_fifo_desc_t ble_usart_rx_fifo;
 #define BLE_SERIAL_START_BYTE (0x05)
 
 #define BLE_SERIAL_HEADER_LEN (0x09)
+
+/** data transmitted done interrupt event flag */
+volatile bool tx_done = false;				//	TX Transfer complete flag
+volatile uint8_t data_received = 0;			//	RX data received flag
+
+volatile bool ble_init_done = false;
 
 typedef enum {
 	BLE_IDLE_STATE = 0,
@@ -151,6 +158,12 @@ int platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t len)
 		
 	}
 #endif
+	
+	if ((ble_init_done) && (!ble_wakeup_pin_level()))
+	{
+		ble_wakeup_pin_set_low();
+		delay_ms(BTLC1000_WAKEUP_DELAY);
+	}
 	serial_drv_send(data, len);	
 	return STATUS_OK;
 }
@@ -238,7 +251,7 @@ void platform_cmd_cmpl_wait(bool* timeout)
 {
 	uint32_t t_rx_data;
 	
-	start_timer(4000);
+	start_timer(10000);
 	do 
 	{
 		if(ser_fifo_pull_uint8(&ble_usart_rx_fifo, (uint8_t *)&t_rx_data) == SER_FIFO_OK)
@@ -263,7 +276,7 @@ void platform_cmd_cmpl_wait(bool* timeout)
 	}
 }
 
-void platform_event_signal()
+void platform_event_signal(void)
 {
 	event_flag = 1;
 }
@@ -377,9 +390,19 @@ uint8_t platform_sleep(uint32_t sleepms)
 	return true;
 }
 
-void serial_rx_callback(void) {}
+void serial_rx_callback(void) 
+{
+	
+}
 
-void serial_tx_callback(void){}
+void serial_tx_callback(void)
+{
+	tx_done = true;
+	if (ble_init_done)
+	{
+		ble_wakeup_pin_set_low();
+	}	
+}
 
 
 
