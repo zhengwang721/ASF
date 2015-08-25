@@ -6,7 +6,6 @@
 		<require idref="board.samb11_xplained_pro"/>
 		<require idref="sam0.drivers.adc.quick_start_sam_b"/>
 		<config name="config.sam0.drivers.adc" value="samb"/>
-		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<device-support value="atsamb11g18a"/>

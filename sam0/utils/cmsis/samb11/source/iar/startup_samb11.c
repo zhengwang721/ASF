@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief gcc starttup file for SAMC20
+ * \brief gcc starttup file for SAMB11
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

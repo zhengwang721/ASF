@@ -5,7 +5,6 @@
 		<require idref="sam0.drivers.quad_decoder.quick_start"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
-		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<device-support value="atsamb11g18a"/>
