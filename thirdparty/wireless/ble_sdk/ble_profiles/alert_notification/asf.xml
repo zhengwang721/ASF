@@ -1,0 +1,13 @@
+<asf xmlversion="1.0">
+	<module type="component" id="thirdparty.wireless.ble_sdk.ble_profiles.alert_notification" caption="BLE-Alert Notification Profile">
+		<info type="description" value="summary">
+		</info>
+		<build type="include-path"  value="./"/>
+  		<build type="header-file"   value="alert_notification_profile.h"/>
+  		<build type="c-source"      value="alert_notification_profile.c"/>
+  		<build type="define" name="ANP_SIG_CLIENT" value=""/>
+  		<build type="define" name="ANP_SIG_GATT_CLIENT" value=""/>
+		<build type="doxygen-entry-point" value="ble_stack_group"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+	</module>
+ </asf>

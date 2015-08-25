@@ -62,7 +62,7 @@ uint16_t blp_measurement_value = DEFAULT_VALUE;
 uint8_t intermediate_cuff_pressure_value = DEFAULT_VALUE;
 
 /** initial blood pressure feature value */
-uint16_t blood_pressure_feature_value;
+uint16_t blood_pressure_feature_value = 0xffff;
 
 
 
@@ -258,7 +258,6 @@ uint8_t blp_char_change_handler(blp_gatt_service_handler_t *blp_primary_service,
 	{
 		//DBG_LOG("Blp char changed handler the value is %d ",params->char_new_value[0]);
 		if (params->char_new_value[0] == BLP_INDICATION) {
-			DBG_LOG("Indication");
 			return BLP_INDICATION_ENABLE;
 		} else if (params->char_new_value[0] == false) {
 			return BLP_INDICATION_DISABLE;

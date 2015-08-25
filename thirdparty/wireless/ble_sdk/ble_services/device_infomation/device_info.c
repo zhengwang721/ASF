@@ -63,7 +63,7 @@ bool volatile dis_notification_flag[DIS_TOTAL_CHARATERISTIC_NUM] = {false};
 
 /**@brief Initialize the dis service related information. */
 void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
-{	
+{
 	device_info_serv->serv_handle = 0;
 	device_info_serv->serv_uuid.type = AT_BLE_UUID_16;
 	device_info_serv->serv_uuid.uuid[0] = (uint8_t) DIS_SERVICE_UUID;
@@ -194,101 +194,101 @@ void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
 	device_info_serv->serv_chars[4].presentation_format = NULL;       /* presentation format */
 	
 	//Characteristic Info for Software  Revision
-	device_info_serv->serv_chars[5].char_val_handle = 0;          /* handle stored here */
-	device_info_serv->serv_chars[5].uuid.type = AT_BLE_UUID_16;
-	device_info_serv->serv_chars[5].uuid.uuid[0] = (uint8_t) DIS_CHAR_SOFTWARE_REVISION_UUID;          /* uuid : software revision */
-	device_info_serv->serv_chars[5].uuid.uuid[1] = (uint8_t) (DIS_CHAR_SOFTWARE_REVISION_UUID >> 8);          /* uuid : software revision */
-	device_info_serv->serv_chars[5].properties = AT_BLE_CHAR_READ; /* properties */
-	
-	memcpy(char_value.default_software_revision,DEFAULT_SOFTWARE_REVISION,DIS_CHAR_SOFTWARE_REVISION_INIT_LEN);
-	device_info_serv->serv_chars[5].init_value = char_value.default_software_revision;
-	
-	device_info_serv->serv_chars[5].value_init_len = DIS_CHAR_SOFTWARE_REVISION_INIT_LEN;
-	device_info_serv->serv_chars[5].value_max_len = DIS_CHAR_SOFTWARE_REVISION_MAX_LEN;
-	device_info_serv->serv_chars[5].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
-	device_info_serv->serv_chars[5].user_desc = NULL;           /* user defined name */
-	device_info_serv->serv_chars[5].user_desc_len = 0;
-	device_info_serv->serv_chars[5].user_desc_max_len = 0;
-	device_info_serv->serv_chars[5].user_desc_permissions = AT_BLE_ATTR_NO_PERMISSIONS;             /*user description permissions*/
-	device_info_serv->serv_chars[5].client_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*client config permissions*/
-	device_info_serv->serv_chars[5].server_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*server config permissions*/
-	device_info_serv->serv_chars[5].user_desc_handle = 0;             /*user desc handles*/
-	device_info_serv->serv_chars[5].client_config_handle = 0;         /*client config handles*/
-	device_info_serv->serv_chars[5].server_config_handle = 0;         /*server config handles*/
-	device_info_serv->serv_chars[5].presentation_format = NULL;       /* presentation format */
-	
-	//Characteristic Info for SystemID  Number
-	device_info_serv->serv_chars[6].char_val_handle = 0;          /* handle stored here */
-	device_info_serv->serv_chars[6].uuid.type = AT_BLE_UUID_16;
-	device_info_serv->serv_chars[6].uuid.uuid[0] = (uint8_t) DIS_CHAR_SYSTEM_ID_UUID;          /* UUID : Software Revision */
-	device_info_serv->serv_chars[6].uuid.uuid[1] = (uint8_t) (DIS_CHAR_SYSTEM_ID_UUID >> 8);          /* UUID : Software Revision */
-	device_info_serv->serv_chars[6].properties = AT_BLE_CHAR_READ; /* Properties */
-	
-	memcpy(char_value.default_system_id.manufacturer_id, SYSTEM_ID_MANUFACTURER_ID, SYSTEM_ID_MANUFACTURER_ID_LEN);
-	memcpy(char_value.default_system_id.org_unique_id, SYSTEM_ID_ORG_UNIQUE_ID, SYSTEM_ID_ORG_UNIQUE_ID_LEN);
-	device_info_serv->serv_chars[6].init_value = (uint8_t *) &char_value.default_system_id;					/*Initial Value*/
-	
-	device_info_serv->serv_chars[6].value_init_len = DIS_CHAR_SYSTEM_ID_INIT_LEN;
-	device_info_serv->serv_chars[6].value_max_len = DIS_CHAR_SYSTEM_ID_MAX_LEN;
-	device_info_serv->serv_chars[6].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
-	device_info_serv->serv_chars[6].user_desc = NULL;           /* user defined name */
-	device_info_serv->serv_chars[6].user_desc_len = 0;
-	device_info_serv->serv_chars[6].user_desc_max_len = 0;
-	device_info_serv->serv_chars[6].user_desc_permissions = AT_BLE_ATTR_NO_PERMISSIONS;             /*user description permissions*/
-	device_info_serv->serv_chars[6].client_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*client config permissions*/
-	device_info_serv->serv_chars[6].server_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*server config permissions*/
-	device_info_serv->serv_chars[6].user_desc_handle = 0;             /*user desc handles*/
-	device_info_serv->serv_chars[6].client_config_handle = 0;         /*client config handles*/
-	device_info_serv->serv_chars[6].server_config_handle = 0;         /*server config handles*/
-	device_info_serv->serv_chars[6].presentation_format = NULL;       /* presentation format */
-	
-	//Characteristic Info for PnP ID 
-	device_info_serv->serv_chars[7].char_val_handle = 0;          /* handle stored here */
-	device_info_serv->serv_chars[7].uuid.type = AT_BLE_UUID_16;
-	device_info_serv->serv_chars[7].uuid.uuid[0] = (uint8_t) DIS_CHAR_PNP_ID_UUID;          /* UUID : Software Revision */
-	device_info_serv->serv_chars[7].uuid.uuid[1] = (uint8_t) (DIS_CHAR_PNP_ID_UUID >> 8);          /* UUID : Software Revision */
-	device_info_serv->serv_chars[7].properties = AT_BLE_CHAR_READ; /* Properties */
-	
-	char_value.default_pnp_id.vendor_id_source = PNP_ID_VENDOR_ID_SOURCE;					/*characteristic value initialization */
-	char_value.default_pnp_id.vendor_id = PNP_ID_VENDOR_ID;
-	char_value.default_pnp_id.product_id= PNP_ID_PRODUCT_ID;
-	char_value.default_pnp_id.product_version= PNP_ID_PRODUCT_VERSION;
-	device_info_serv->serv_chars[7].init_value = (uint8_t *) &char_value.default_pnp_id;					/*Initial Value*/
-	
-	device_info_serv->serv_chars[7].value_init_len = DIS_CHAR_PNP_ID_INIT_LEN;
-	device_info_serv->serv_chars[7].value_max_len = DIS_CHAR_PNP_ID_MAX_LEN;
-	device_info_serv->serv_chars[7].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
-	device_info_serv->serv_chars[7].user_desc = NULL;           /* user defined name */
-	device_info_serv->serv_chars[7].user_desc_len = 0;
-	device_info_serv->serv_chars[7].user_desc_max_len = 0;
-	device_info_serv->serv_chars[7].user_desc_permissions = AT_BLE_ATTR_NO_PERMISSIONS;             /*user description permissions*/
-	device_info_serv->serv_chars[7].client_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*client config permissions*/
-	device_info_serv->serv_chars[7].server_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*server config permissions*/
-	device_info_serv->serv_chars[7].user_desc_handle = 0;             /*user desc handles*/
-	device_info_serv->serv_chars[7].client_config_handle = 0;         /*client config handles*/
-	device_info_serv->serv_chars[7].server_config_handle = 0;         /*server config handles*/
-	device_info_serv->serv_chars[7].presentation_format = NULL;       /* presentation format */
-	
-	//Characteristic Info for IEEE 11073-20601 Regulatory Certification Data List
-	device_info_serv->serv_chars[8].char_val_handle = 0;          /* handle stored here */
-	device_info_serv->serv_chars[8].uuid.type = AT_BLE_UUID_16;
-	device_info_serv->serv_chars[8].uuid.uuid[0] = (uint8_t) DIS_CHAR_IEEE_REG_CERT_DATA_LIST_UUID;          /* UUID : Software Revision */
-	device_info_serv->serv_chars[8].uuid.uuid[1] = (uint8_t) (DIS_CHAR_IEEE_REG_CERT_DATA_LIST_UUID >> 8);          /* UUID : Software Revision */
-	device_info_serv->serv_chars[8].properties = AT_BLE_CHAR_READ; /* Properties */
-	device_info_serv->serv_chars[8].init_value = char_value.ieee_reg_cert_data_list;					/*Initial Value*/
-	device_info_serv->serv_chars[8].value_init_len = DIS_CHAR_IEEE_REG_CERT_DATA_LIST_INIT_LEN;
-	device_info_serv->serv_chars[8].value_max_len = DIS_CHAR_IEEE_REG_CERT_DATA_LIST_MAX_LEN;
-	device_info_serv->serv_chars[8].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
-	device_info_serv->serv_chars[8].user_desc = NULL;           /* user defined name */
-	device_info_serv->serv_chars[8].user_desc_len = 0;
-	device_info_serv->serv_chars[8].user_desc_max_len = 0;
-	device_info_serv->serv_chars[8].user_desc_permissions = AT_BLE_ATTR_NO_PERMISSIONS;             /*user description permissions*/
-	device_info_serv->serv_chars[8].client_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*client config permissions*/
-	device_info_serv->serv_chars[8].server_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*server config permissions*/
-	device_info_serv->serv_chars[8].user_desc_handle = 0;             /*user desc handles*/
-	device_info_serv->serv_chars[8].client_config_handle = 0;         /*client config handles*/
-	device_info_serv->serv_chars[8].server_config_handle = 0;         /*server config handles*/
-	device_info_serv->serv_chars[8].presentation_format = NULL;       /* presentation format */
+	//device_info_serv->serv_chars[5].char_val_handle = 0;          /* handle stored here */
+	//device_info_serv->serv_chars[5].uuid.type = AT_BLE_UUID_16;
+	//device_info_serv->serv_chars[5].uuid.uuid[0] = (uint8_t) DIS_CHAR_SOFTWARE_REVISION_UUID;          /* uuid : software revision */
+	//device_info_serv->serv_chars[5].uuid.uuid[1] = (uint8_t) (DIS_CHAR_SOFTWARE_REVISION_UUID >> 8);          /* uuid : software revision */
+	//device_info_serv->serv_chars[5].properties = AT_BLE_CHAR_READ; /* properties */
+	//
+	//memcpy(char_value.default_software_revision,DEFAULT_SOFTWARE_REVISION,DIS_CHAR_SOFTWARE_REVISION_INIT_LEN);
+	//device_info_serv->serv_chars[5].init_value = char_value.default_software_revision;
+	//
+	//device_info_serv->serv_chars[5].value_init_len = DIS_CHAR_SOFTWARE_REVISION_INIT_LEN;
+	//device_info_serv->serv_chars[5].value_max_len = DIS_CHAR_SOFTWARE_REVISION_MAX_LEN;
+	//device_info_serv->serv_chars[5].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+	//device_info_serv->serv_chars[5].user_desc = NULL;           /* user defined name */
+	//device_info_serv->serv_chars[5].user_desc_len = 0;
+	//device_info_serv->serv_chars[5].user_desc_max_len = 0;
+	//device_info_serv->serv_chars[5].user_desc_permissions = AT_BLE_ATTR_NO_PERMISSIONS;             /*user description permissions*/
+	//device_info_serv->serv_chars[5].client_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*client config permissions*/
+	//device_info_serv->serv_chars[5].server_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*server config permissions*/
+	//device_info_serv->serv_chars[5].user_desc_handle = 0;             /*user desc handles*/
+	//device_info_serv->serv_chars[5].client_config_handle = 0;         /*client config handles*/
+	//device_info_serv->serv_chars[5].server_config_handle = 0;         /*server config handles*/
+	//device_info_serv->serv_chars[5].presentation_format = NULL;       /* presentation format */
+	//
+	////Characteristic Info for SystemID  Number
+	//device_info_serv->serv_chars[6].char_val_handle = 0;          /* handle stored here */
+	//device_info_serv->serv_chars[6].uuid.type = AT_BLE_UUID_16;
+	//device_info_serv->serv_chars[6].uuid.uuid[0] = (uint8_t) DIS_CHAR_SYSTEM_ID_UUID;          /* UUID : Software Revision */
+	//device_info_serv->serv_chars[6].uuid.uuid[1] = (uint8_t) (DIS_CHAR_SYSTEM_ID_UUID >> 8);          /* UUID : Software Revision */
+	//device_info_serv->serv_chars[6].properties = AT_BLE_CHAR_READ; /* Properties */
+	//
+	//memcpy(char_value.default_system_id.manufacturer_id, SYSTEM_ID_MANUFACTURER_ID, SYSTEM_ID_MANUFACTURER_ID_LEN);
+	//memcpy(char_value.default_system_id.org_unique_id, SYSTEM_ID_ORG_UNIQUE_ID, SYSTEM_ID_ORG_UNIQUE_ID_LEN);
+	//device_info_serv->serv_chars[6].init_value = (uint8_t *) &char_value.default_system_id;					/*Initial Value*/
+	//
+	//device_info_serv->serv_chars[6].value_init_len = DIS_CHAR_SYSTEM_ID_INIT_LEN;
+	//device_info_serv->serv_chars[6].value_max_len = DIS_CHAR_SYSTEM_ID_MAX_LEN;
+	//device_info_serv->serv_chars[6].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+	//device_info_serv->serv_chars[6].user_desc = NULL;           /* user defined name */
+	//device_info_serv->serv_chars[6].user_desc_len = 0;
+	//device_info_serv->serv_chars[6].user_desc_max_len = 0;
+	//device_info_serv->serv_chars[6].user_desc_permissions = AT_BLE_ATTR_NO_PERMISSIONS;             /*user description permissions*/
+	//device_info_serv->serv_chars[6].client_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*client config permissions*/
+	//device_info_serv->serv_chars[6].server_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*server config permissions*/
+	//device_info_serv->serv_chars[6].user_desc_handle = 0;             /*user desc handles*/
+	//device_info_serv->serv_chars[6].client_config_handle = 0;         /*client config handles*/
+	//device_info_serv->serv_chars[6].server_config_handle = 0;         /*server config handles*/
+	//device_info_serv->serv_chars[6].presentation_format = NULL;       /* presentation format */
+	//
+	////Characteristic Info for PnP ID 
+	//device_info_serv->serv_chars[7].char_val_handle = 0;          /* handle stored here */
+	//device_info_serv->serv_chars[7].uuid.type = AT_BLE_UUID_16;
+	//device_info_serv->serv_chars[7].uuid.uuid[0] = (uint8_t) DIS_CHAR_PNP_ID_UUID;          /* UUID : Software Revision */
+	//device_info_serv->serv_chars[7].uuid.uuid[1] = (uint8_t) (DIS_CHAR_PNP_ID_UUID >> 8);          /* UUID : Software Revision */
+	//device_info_serv->serv_chars[7].properties = AT_BLE_CHAR_READ; /* Properties */
+	//
+	//char_value.default_pnp_id.vendor_id_source = PNP_ID_VENDOR_ID_SOURCE;					/*characteristic value initialization */
+	//char_value.default_pnp_id.vendor_id = PNP_ID_VENDOR_ID;
+	//char_value.default_pnp_id.product_id= PNP_ID_PRODUCT_ID;
+	//char_value.default_pnp_id.product_version= PNP_ID_PRODUCT_VERSION;
+	//device_info_serv->serv_chars[7].init_value = (uint8_t *) &char_value.default_pnp_id;					/*Initial Value*/
+	//
+	//device_info_serv->serv_chars[7].value_init_len = DIS_CHAR_PNP_ID_INIT_LEN;
+	//device_info_serv->serv_chars[7].value_max_len = DIS_CHAR_PNP_ID_MAX_LEN;
+	//device_info_serv->serv_chars[7].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+	//device_info_serv->serv_chars[7].user_desc = NULL;           /* user defined name */
+	//device_info_serv->serv_chars[7].user_desc_len = 0;
+	//device_info_serv->serv_chars[7].user_desc_max_len = 0;
+	//device_info_serv->serv_chars[7].user_desc_permissions = AT_BLE_ATTR_NO_PERMISSIONS;             /*user description permissions*/
+	//device_info_serv->serv_chars[7].client_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*client config permissions*/
+	//device_info_serv->serv_chars[7].server_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*server config permissions*/
+	//device_info_serv->serv_chars[7].user_desc_handle = 0;             /*user desc handles*/
+	//device_info_serv->serv_chars[7].client_config_handle = 0;         /*client config handles*/
+	//device_info_serv->serv_chars[7].server_config_handle = 0;         /*server config handles*/
+	//device_info_serv->serv_chars[7].presentation_format = NULL;       /* presentation format */
+	//
+	////Characteristic Info for IEEE 11073-20601 Regulatory Certification Data List
+	//device_info_serv->serv_chars[8].char_val_handle = 0;          /* handle stored here */
+	//device_info_serv->serv_chars[8].uuid.type = AT_BLE_UUID_16;
+	//device_info_serv->serv_chars[8].uuid.uuid[0] = (uint8_t) DIS_CHAR_IEEE_REG_CERT_DATA_LIST_UUID;          /* UUID : Software Revision */
+	//device_info_serv->serv_chars[8].uuid.uuid[1] = (uint8_t) (DIS_CHAR_IEEE_REG_CERT_DATA_LIST_UUID >> 8);          /* UUID : Software Revision */
+	//device_info_serv->serv_chars[8].properties = AT_BLE_CHAR_READ; /* Properties */
+	//device_info_serv->serv_chars[8].init_value = char_value.ieee_reg_cert_data_list;					/*Initial Value*/
+	//device_info_serv->serv_chars[8].value_init_len = DIS_CHAR_IEEE_REG_CERT_DATA_LIST_INIT_LEN;
+	//device_info_serv->serv_chars[8].value_max_len = DIS_CHAR_IEEE_REG_CERT_DATA_LIST_MAX_LEN;
+	//device_info_serv->serv_chars[8].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+	//device_info_serv->serv_chars[8].user_desc = NULL;           /* user defined name */
+	//device_info_serv->serv_chars[8].user_desc_len = 0;
+	//device_info_serv->serv_chars[8].user_desc_max_len = 0;
+	//device_info_serv->serv_chars[8].user_desc_permissions = AT_BLE_ATTR_NO_PERMISSIONS;             /*user description permissions*/
+	//device_info_serv->serv_chars[8].client_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*client config permissions*/
+	//device_info_serv->serv_chars[8].server_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*server config permissions*/
+	//device_info_serv->serv_chars[8].user_desc_handle = 0;             /*user desc handles*/
+	//device_info_serv->serv_chars[8].client_config_handle = 0;         /*client config handles*/
+	//device_info_serv->serv_chars[8].server_config_handle = 0;         /*server config handles*/
+	//device_info_serv->serv_chars[8].presentation_format = NULL;       /* presentation format */
 }
 
 /**@brief Register a dis service instance inside stack. */

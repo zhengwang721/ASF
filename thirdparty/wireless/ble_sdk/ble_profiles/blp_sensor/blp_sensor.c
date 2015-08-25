@@ -69,7 +69,7 @@ uint8_t scan_rsp_data[SCAN_RESP_LEN]
 	= {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
 /** @brief device information service handler **/
-dis_gatt_service_handler_t dis_service_handler;
+//dis_gatt_service_handler_t dis_service_handler;
 
 /** @brief blood pressure measurement service handler **/
 blp_gatt_service_handler_t blp_service_handler;
@@ -80,6 +80,8 @@ blp_notification_callback_t notification_cb;
 
 blp_indication_callback_t	indication_cb;
 
+connected_callback_t connected_cb;
+
 
 /** @brief contains the connection handle functions **/
 at_ble_handle_t connection_handle;
@@ -87,6 +89,16 @@ at_ble_handle_t connection_handle;
 /****************************************************************************************
 *							        Implementations										*
 ****************************************************************************************/
+
+/**
+ * @brief register the call back for notification of ringer setting
+ * @param[in]
+ * @return none
+ */
+void register_connected_callback(connected_callback_t app_connected_cb)
+{
+	connected_cb = app_connected_cb ;
+}
 
 /** @brief register_blp_notification_handler registers the notification handler
  * passed by the application
@@ -110,19 +122,18 @@ void register_blp_indication_handler(
 {
 		indication_cb = blp_indication_handler;
 }
-	
-/** @brief blp_notification_confirmation_handler called on notification confirmation
- *  event by the ble manager
- *	@param[in] at_ble_status_t AT_BLE_SUCCESS on success AT_BLE_FAILURE on failure
- *called
- */
-void blp_notification_confirmation_handler(uint8_t status)
+
+/** @brief blp_notification_confirmation_handler called by ble manager 
+ *	to give the status of notification sent
+ *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
+ */	
+void blp_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
 {
-	if (status == AT_BLE_SUCCESS)
+	if (params->status == AT_BLE_SUCCESS)
 	{
-		DBG_LOG_DEV("Notification confirmation successful");
-	} else { 
-		DBG_LOG_DEV("Notification confirmation failure");
+		DBG_LOG_DEV("Notification Successfully sent over the air");
+	} else {
+		DBG_LOG_DEV("Sending Notification over the air failed");
 	}
 }
 
@@ -139,7 +150,7 @@ void blp_sensor_send_notification(uint8_t *blp_data, uint8_t length)
 	if ((status
 				= at_ble_characteristic_value_set(
 					blp_service_handler.serv_chars
-					[0].char_val_handle, blp_data,
+					[1].char_val_handle, blp_data,
 					length)) != AT_BLE_SUCCESS) {
 		DBG_LOG("Write value for notification failed,reason %x",
 				status);
@@ -198,7 +209,6 @@ at_ble_status_t blp_sensor_char_changed_handler(
 		at_ble_characteristic_changed_t *char_handle)
 {
 	uint8_t action_event;
-	DBG_LOG("blp_char_changed");
 	at_ble_characteristic_changed_t change_params;
 	memcpy((uint8_t *)&change_params, char_handle,
 			sizeof(at_ble_characteristic_changed_t));
@@ -208,10 +218,21 @@ at_ble_status_t blp_sensor_char_changed_handler(
 
 	if ((action_event == BLP_NOTIFICATION_ENABLE) ||
 			(action_event == BLP_NOTIFICATION_DISABLE)) {
-		notification_cb(action_event);
+		if (action_event == BLP_NOTIFICATION_ENABLE)
+		{
+			notification_cb(true);	
+		} else if (action_event == BLP_NOTIFICATION_DISABLE){
+			notification_cb(false);
+		}
 	} else if ((action_event == BLP_INDICATION_ENABLE) ||
 			(action_event == BLP_INDICATION_DISABLE)) {
-		indication_cb(action_event);
+		if (action_event == BLP_INDICATION_ENABLE)
+		{
+			indication_cb(true);
+		} else if (action_event == BLP_INDICATION_DISABLE) {
+			indication_cb(false);
+		}
+		
 	}
 
 	return AT_BLE_SUCCESS;
@@ -226,6 +247,7 @@ at_ble_status_t blp_sensor_disconnect_event_handler(
 		at_ble_disconnected_t *disconnect)
 {
 	blp_sensor_adv();
+	connected_cb(0);
 	return AT_BLE_SUCCESS;
 }
 
@@ -237,8 +259,10 @@ at_ble_status_t blp_sensor_disconnect_event_handler(
 at_ble_status_t blp_sensor_connected_state_handler(
 		at_ble_connected_t *conn_params)
 {
+	connected_cb(1);
 	connection_handle = (at_ble_handle_t)conn_params->handle;
 		return AT_BLE_SUCCESS;
+	
 }
 
 
@@ -309,12 +333,17 @@ void blp_sensor_service_define(void)
 		DBG_LOG("Blood Pressure Service definition Failed,reason: %x",
 				status);
 	}
+	
+	//DBG_LOG("The blp service handle is %x ",blp_service_handler.serv_handle);
+	//DBG_LOG("The char handles are %x",blp_service_handler.serv_chars[0].char_val_handle);
+	//DBG_LOG("The char handles are %x",blp_service_handler.serv_chars[1].char_val_handle);
+	//DBG_LOG("The char handles are %x",blp_service_handler.serv_chars[2].char_val_handle);
 
-	if ((status = dis_primary_service_define(&dis_service_handler)) !=
-			AT_BLE_SUCCESS) {
-		DBG_LOG("Dis Service definition failed,reason: %x", status);
-	}
-
+	//if ((status = dis_primary_service_define(&dis_service_handler)) !=
+			//AT_BLE_SUCCESS) {
+		//DBG_LOG("Dis Service definition failed,reason: %x", status);
+	//}
+	
 }
 
 /**
@@ -324,7 +353,7 @@ void blp_sensor_service_init(void)
 {
 	blp_init_service(&blp_service_handler);
 
-	dis_init_service(&dis_service_handler);
+	//dis_init_service(&dis_service_handler);
 }
 
 /** @brief blp_sensor_init initializes and defines the services of the hr profile

@@ -151,10 +151,13 @@ static void serial_drv_write_cb(struct usart_module *const usart_module)
 		g_txdata = txdata;
 		while(STATUS_OK != usart_write_job(&usart_instance, &g_txdata));
 	}
+	else
+	{
+		#if SERIAL_DRV_TX_CB_ENABLE == true
+			SERIAL_DRV_TX_CB();
+		#endif
+	}	
 	
-	#if SERIAL_DRV_TX_CB_ENABLE == true
-		SERIAL_DRV_TX_CB();
-	#endif
 }
 
 

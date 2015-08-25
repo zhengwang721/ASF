@@ -127,11 +127,6 @@ void timer_callback_handler(void);
  */
 void app_notification_handler(uint8_t notification_enable);
 
-/** @brief notification confirmation handler function called by the ble manager
- *	@param[in] at_ble_status_t gives the status notification has been sent in air.
- */
-void app_notification_confirmation_handler(uint8_t status);
-
 /** @brief energy expended handler called by profile to reset the energy values
  *
  */
@@ -150,8 +145,8 @@ void app_state_handler(bool state);
 void heart_rate_value_init(void );
 
 /** @brief hr_measurment_send sends the notifications after adding the hr values
- *	@return returns 1 on success 0 on failure
+ *
  */
-bool hr_measurment_send(void);
+void hr_measurment_send(void);
 
 #endif /* __HR_SENSOR_APP_H__ */
