@@ -195,7 +195,7 @@ enum status_code nvm_execute_command(
 		const uint32_t address,
 		const uint32_t parameter)
 {
-	uint32_t temp;
+	uint32_t ctrlb_bak;
 
 	/* Check that the address given is valid  */
 	if (address > ((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)
@@ -213,13 +213,13 @@ enum status_code nvm_execute_command(
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
 
-	/* turn off cache before issuing flash commands */
-	temp = nvm_module->CTRLB.reg;
+	/* Turn off cache before issuing flash commands */
+	ctrlb_bak = nvm_module->CTRLB.reg;
 #if (SAMC20) || (SAMC21)
-	nvm_module->CTRLB.reg = ((temp &(~(NVMCTRL_CTRLB_CACHEDIS(0x2)))) 
+	nvm_module->CTRLB.reg = ((ctrlb_bak &(~(NVMCTRL_CTRLB_CACHEDIS(0x2)))) 
 							| NVMCTRL_CTRLB_CACHEDIS(0x1));
 #else
-	nvm_module->CTRLB.reg = temp | NVMCTRL_CTRLB_CACHEDIS;
+	nvm_module->CTRLB.reg = ctrlb_bak | NVMCTRL_CTRLB_CACHEDIS;
 #endif
 
 	/* Clear error flags */
@@ -227,6 +227,8 @@ enum status_code nvm_execute_command(
 
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
+		/* Restore the setting */
+		nvm_module->CTRLB.reg = ctrlb_bak;
 		return STATUS_BUSY;
 	}
 
@@ -238,6 +240,8 @@ enum status_code nvm_execute_command(
 
 			/* Auxiliary space cannot be accessed if the security bit is set */
 			if (nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
+				/* Restore the setting */
+				nvm_module->CTRLB.reg = ctrlb_bak;
 				return STATUS_ERR_IO;
 			}
 
@@ -267,6 +271,8 @@ enum status_code nvm_execute_command(
 			break;
 
 		default:
+			/* Restore the setting */
+			nvm_module->CTRLB.reg = ctrlb_bak;
 			return STATUS_ERR_INVALID_ARG;
 	}
 
@@ -277,8 +283,8 @@ enum status_code nvm_execute_command(
 	while (!nvm_is_ready()) {
 	}
 
-	/* restore the setting */
-	nvm_module->CTRLB.reg = temp;
+	/* Restore the setting */
+	nvm_module->CTRLB.reg = ctrlb_bak;
 
 	return STATUS_OK;
 }
