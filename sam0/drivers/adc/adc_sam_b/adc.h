@@ -224,12 +224,12 @@ enum adc_input_channel {
  *
  */
 enum adc_channel_mode {
-	/** 
+	/**
 	 * Input channels time multiplexing is between channel 0 to channel 3.
 	 * In this mode, ADC input channel selection is invalid.
 	 */
 	ADC_CH_MODE_CH0_TO_CH3,
-	/** 
+	/**
 	 * Input channels time multiplexing is between channel 4 to channel 7.
 	 * In this mode, ADC input channel selection is invalid.
 	 */

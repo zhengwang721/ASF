@@ -129,7 +129,7 @@ static uint8_t spi_flash_read_status_reg(void)
 static void spi_flash_page_program(uint32_t flash_addr, uint32_t memory_addr, uint16_t size)
 {
 	unsigned char cmd[8];
-	
+
 	spi_flash_write_enable();
 
 	cmd[0] = SPI_FLASH_CMD_PAGE_PROGRAM;
@@ -151,7 +151,7 @@ static void spi_flash_page_program(uint32_t flash_addr, uint32_t memory_addr, ui
 			SPI_FLASH_IRQ_STATUS_FLASH_TRANS_DONE) {
 		/* Wait for current flash transaction done. */
 	}
-	
+
 	/* add additional read_status_reg before the while this gives the flash
 	 * memory time to update the registers.
 	 */

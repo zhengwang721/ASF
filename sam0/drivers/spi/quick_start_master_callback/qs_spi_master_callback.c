@@ -62,6 +62,9 @@ struct spi_module spi_master_instance;
 //! [slave_dev_inst]
 struct spi_slave_inst slave;
 //! [slave_dev_inst]
+//! [var]
+volatile bool transrev_complete_spi_master = false;
+//! [var]
 //! [setup]
 
 //! [configure_spi]
@@ -103,12 +106,12 @@ static void configure_spi_master(void)
 //! [conf_defaults]
 	spi_get_config_defaults(&config_spi_master);
 //! [conf_defaults]
-//! [transfer_mode]
-	config_spi_master.transfer_mode = CONF_SPI_TRANSFER_MODE;
-//! [transfer_mode]
 //! [clock_divider]
 	config_spi_master.clock_divider = 154;
 //! [clock_divider]
+//! [transfer_mode]
+	config_spi_master.transfer_mode = CONF_SPI_TRANSFER_MODE;
+//! [transfer_mode]
 	/* Configure pad 0 */
 //! [sck]
 	config_spi_master.pinmux_pad[0] = CONF_SPI_PINMUX_SCK;
@@ -136,6 +139,28 @@ static void configure_spi_master(void)
 }
 //! [configure_spi]
 
+//! [callback]
+static void callback_spi_master(struct spi_module *const module)
+{
+	//! [callback_var]
+	transrev_complete_spi_master = true;
+	//! [callback_var]
+}
+//! [callback]
+
+//! [conf_callback]
+static void configure_spi_master_callbacks(void)
+{
+	//! [reg_callback]
+	spi_register_callback(&spi_master_instance, callback_spi_master,
+			SPI_CALLBACK_BUFFER_TRANSMITTED);
+	//! [reg_callback]
+	//! [en_callback]
+	spi_enable_callback(&spi_master_instance, SPI_CALLBACK_BUFFER_TRANSMITTED);
+	//! [en_callback]
+}
+//! [conf_callback]
+
 int main(void)
 {
 //! [main_setup]
@@ -149,6 +174,9 @@ int main(void)
 	configure_gpio();
 	configure_spi_master();
 //! [run_config]
+//! [run_callback_config]
+	configure_spi_master_callbacks();
+//! [run_callback_config]
 //! [main_setup]
 
 //! [main_use_case]
@@ -160,8 +188,14 @@ int main(void)
 			spi_select_slave(&spi_master_instance, &slave, true);
 			//! [select_slave]
 			//! [write]
-			spi_write_buffer_wait(&spi_master_instance, buffer, BUF_LENGTH);
+			spi_write_buffer_job(&spi_master_instance, buffer, BUF_LENGTH);
 			//! [write]
+			//! [wait]
+			while (!transrev_complete_spi_master) {
+				/* Wait for write complete */
+			}
+			transrev_complete_spi_master = false;
+			//! [wait]
 			//! [deselect_slave]
 			spi_select_slave(&spi_master_instance, &slave, false);
 			//! [deselect_slave]

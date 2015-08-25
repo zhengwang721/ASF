@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM B11 SPI configuration
+ * \brief SAM B11 Direct Memory Access Driver Configuration Header
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,23 +44,9 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
+#ifndef CONF_DMA_H_INCLUDED
+#define CONF_DMA_H_INCLUDED
 
-#ifndef CONF_SPI_H_INCLUDED
-#  define CONF_SPI_H_INCLUDED
+#  define CONF_MAX_USED_CHANNEL_NUM     1
 
-#  define CONF_SPI_MASTER_ENABLE     true
-#  define CONF_SPI_SLAVE_ENABLE      false
-#  define CONF_SPI_TIMEOUT           10000
-
-#  define CONF_SPI_TRANSFER_MODE     SPI_TRANSFER_MODE_0
-
-#  define CONF_SPI                   SPI0
-#  define CONF_SPI_PINMUX_SCK        PINMUX_LP_GPIO_10_MUX2_SPI0_SCK
-#  define CONF_SPI_PINMUX_MOSI       PINMUX_LP_GPIO_11_MUX2_SPI0_MOSI
-#  define CONF_SPI_PINMUX_SSN        PINMUX_UNUSED
-#  define CONF_SPI_PINMUX_MISO       PINMUX_LP_GPIO_13_MUX2_SPI0_MISO
-
-#  define CONF_PIN_SPI_SSN           PIN_LP_GPIO_12
-
-#endif /* CONF_SPI_H_INCLUDED */
-
+#endif
