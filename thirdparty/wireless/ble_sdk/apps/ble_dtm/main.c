@@ -58,6 +58,7 @@
 #include "serial_fifo.h"
 #include "conf_serialdrv.h"
 #include "serial_bridge.h"
+#include "conf_extint.h"
 			
 /* Initialize the BLE */
 static void ble_init(void);
@@ -66,6 +67,8 @@ static void ble_dtm_init(void);
 
 /* Critical Alert for BLE Failures */
 static void ble_critical_alert(void);
+
+volatile bool button_pressed = false;
 
 /* Alert the user when something is failed */
 static void ble_critical_alert(void)
@@ -79,13 +82,26 @@ static void ble_critical_alert(void)
 	}
 }
 
+void button_cb(void)
+{
+	button_pressed = true;
+}
+
 /* Initialize the BLE */
 static void ble_init(void)
 {
-	uint8_t port = 74;
+	at_ble_init_config_t pf_cfg;
+	platform_config busConfig;
+	
+	/*Memory allocation required by GATT Server DB*/
+	pf_cfg.memPool.memSize = 0;
+	pf_cfg.memPool.memStartAdd = NULL;
+	/*Bus configuration*/
+	busConfig.bus_type = UART;
+	pf_cfg.plf_config = &busConfig;
 	
 	/* Init BLE device */
-	if(at_ble_init(&port) != AT_BLE_SUCCESS)
+	if(at_ble_init(&pf_cfg) != AT_BLE_SUCCESS)
 	{
 		ble_critical_alert();
 	}
@@ -110,8 +126,11 @@ int main (void)
 #elif SAM0
 	system_init();
 #endif	
+
+	/* Button Init */
+	button_init();
 	
-	/* Initialize the Beacon advertisement */
+	/* DTM Initialization */
 	ble_dtm_init();
 	
 	/* Initialize serial bridge */

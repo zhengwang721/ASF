@@ -52,6 +52,8 @@
 #include "ble_utils.h"
 #include "platform.h"
 
+extern volatile bool ble_init_done;
+
 #if defined LINK_LOSS_SERVICE
 	#include "link_loss.h"
 #endif /* LINK_LOSS_SERVICE */
@@ -78,7 +80,7 @@
 #endif /*HID_DEVICE*/	
 
 #if defined ATT_DB_MEMORY
-uint8_t att_db_data[1024];
+uint8_t att_db_data[250];
 #endif
 
 /** @brief information of the connected devices */
@@ -131,8 +133,8 @@ void ble_device_init(at_ble_addr_t *addr)
 	char *dev_name = NULL;
 	
 #if defined ATT_DB_MEMORY
-	pf_cfg.memPool.memSize = sizeof(att_db_data);
-	pf_cfg.memPool.memStartAdd = &att_db_data[0];
+	pf_cfg.memPool.memSize = 1000;
+	pf_cfg.memPool.memStartAdd = att_db_data;
 #else
 	pf_cfg.memPool.memSize = 0;
 	pf_cfg.memPool.memStartAdd = NULL;

@@ -112,7 +112,7 @@ int ser_fifo_init(ser_fifo_desc_t *ser_fifo_desc, void *buffer, uint16_t size);
  *
  *  \return The number of used elements.
  */
-static inline uint8_t ser_fifo_get_used_size(ser_fifo_desc_t *ser_fifo_desc)
+static inline uint16_t ser_fifo_get_used_size(ser_fifo_desc_t *ser_fifo_desc)
 {
         uint16_t read_index;
         read_index = ser_fifo_desc->read_index;

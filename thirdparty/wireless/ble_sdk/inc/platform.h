@@ -99,10 +99,6 @@ typedef struct {
 	uint8_t bus_info;
 }platform_config;
 
-#ifdef NEW_EVT_HANDLER
-/** data transmitted done interrupt event flag */
-extern volatile uint8_t tx_done;
-#endif	//NEW_EVT_HANDLER
 typedef struct{
 	uint8_t (*wr_api32) (uint32_t memAddr,uint32_t* data,uint8_t size);
 	uint8_t (*wr_api32_reset) (uint32_t memAddr,uint32_t* data,uint8_t size);
@@ -179,6 +175,7 @@ int platform_interface_recv(uint8_t if_type, uint8_t* data, uint32_t len);
 void platform_interface_callback(uint8_t* data, uint32_t len);
 
 void fw_patch_download_cb(uint8_t *pu8data, uint8_t length);
+at_ble_status_t patch_init(void);
 
  /**@ingroup platform_group_functions
   * @brief fires the comand-complete signal
@@ -210,7 +207,8 @@ void platform_event_signal(void);
   *
   */
 uint8_t platform_event_wait(uint32_t timeout);
-void fw_led(bool tempo);
+
+uint8_t platform_sleep(uint32_t sleepms);
 
  /** @brief receives the bytes from platform driver
   *  @note more details at the platform porting guide
@@ -219,8 +217,6 @@ void fw_led(bool tempo);
   *
   */
 at_ble_status_t platform_ble_event_data(void);
-
-uint8_t platform_sleep(uint32_t sleepms);
 
  /** @}*/
 
