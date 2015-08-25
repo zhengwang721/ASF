@@ -66,9 +66,11 @@ typedef struct sps_gatt_service_handler
  *
  * @param[in] sps_serv gatt service information
  * @param[in] info_data @ref sps_info_data, holds the new data information
+ * @param[in] flag flag to track the notification sent
+ *
  * @return none
  */
-at_ble_status_t sps_scan_refresh_char_update(sps_gatt_service_handler_t *sps_serv, uint8_t scan_refresh_value);
+at_ble_status_t sps_scan_refresh_char_update(sps_gatt_service_handler_t *sps_serv, uint8_t scan_refresh_value, bool volatile *flag);
 
 /**@brief Initialize the service with its included service, characteristics, and descriptors
  *
@@ -89,6 +91,15 @@ void sps_init_service(sps_gatt_service_handler_t *sps_serv, uint16_t *scan_inter
  */
 at_ble_status_t sps_primary_service_define(sps_gatt_service_handler_t *sps_service);
 
-at_ble_status_t	sps_char_changed_event(sps_gatt_service_handler_t *sps_service_handler, at_ble_characteristic_changed_t *char_handle);
+/**@brief function to check the client characteristic configuration value. 
+ *
+ * @param[in] sps_service_handler scan parameters service instance
+ * @param[in] char_handle characteristic changed @ref at_ble_characteristic_changed_t
+ * @param[in] flag flag to track the notification sent 
+ *
+ * @return @ref AT_BLE_SUCCESS operation completed successfully
+ * @return @ref AT_BLE_FAILURE Generic error.
+ */
+at_ble_status_t	sps_char_changed_event(sps_gatt_service_handler_t *sps_service_handler, at_ble_characteristic_changed_t *char_handle, bool volatile *flag);
 
 #endif /* __SCAN_PARAM_H__ */
