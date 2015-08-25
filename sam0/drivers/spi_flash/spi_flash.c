@@ -155,7 +155,7 @@ static void spi_flash_page_program(uint32_t flash_addr, uint32_t memory_addr, ui
 	/* add additional read_status_reg before the while this gives the flash
 	 * memory time to update the registers.
 	 */
-	for(uint16_t i = 0; i < 0xFFFF; i++)	{
+	for(uint16_t i = 0; i < 0xFFFF; i++) {
 		/* Waiting... */
 	}
 	//spi_flash_read_status_reg();

@@ -27,9 +27,9 @@
 
 		<build type="header-file" value="quick_start/qs_pwm_basic.h"/>
 
-		<build type="doxygen-entry-point" value="asfdoc_sam0_pwm_group"/>
+		<build type="doxygen-entry-point" value="asfdoc_samb_pwm_group"/>
 		<build type="doxygen-example-path" value="quick_start"/>
-		<build type="doxygen-quick-start" value="asfdoc_sam0_pwm_exqsg"/>
+		<build type="doxygen-quick-start" value="asfdoc_samb_pwm_exqsg"/>
 
 		<device-support value="samb11"/>
 

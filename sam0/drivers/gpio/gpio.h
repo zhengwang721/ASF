@@ -159,12 +159,12 @@ enum gpio_pin_dir {
  *  structure, to indicate the type of logic level pull the pin should use.
  */
 enum gpio_pin_pull {
-	/** No logical pull should be applied to the pin. */
+	/** No logical pull should be applied to the pin */
 	GPIO_PIN_PULL_NONE,
-	/** Pin should be pulled up when idle. */
+	/** Pin should be pulled up when idle */
 	GPIO_PIN_PULL_UP ,
 #ifdef CHIPVERSION_B0
-	/** Pin should be pulled down when idle.*/
+	/** Pin should be pulled down when idle */
 	GPIO_PIN_PULL_DOWN,
 #endif
 };
@@ -233,10 +233,10 @@ enum gpio_callback {
  *  modified by the user application.
  */
 struct gpio_config {
-	/** GPIO buffer input/output direction. */
+	/** GPIO buffer input/output direction */
 	enum gpio_pin_dir  direction;
 
-	/** GPIO pull-up/pull-down for input pins. */
+	/** GPIO pull-up/pull-down for input pins */
 	enum gpio_pin_pull input_pull;
 
 	/** Enable lowest possible powerstate on the pin
@@ -257,22 +257,16 @@ struct gpio_config {
  */
 struct gpio_module {
 #if !defined(__DOXYGEN__)
-	/** Pointer to the hardware instance. */
+	/** Pointer to the hardware instance */
 	Gpio *hw;
-	/** Array to store callback function pointers in. */
+	/** Array to store callback function pointers in */
 	gpio_callback_t callback[16];
-	/** Bit mask for callbacks registered. */
+	/** Bit mask for callbacks registered */
 	uint16_t callback_reg_mask;
-	/** Bit mask for callbacks enabled. */
+	/** Bit mask for callbacks enabled */
 	uint16_t callback_enable_mask;
 #endif
 };
-
-/**
-@defgroup gpio-drv GPIO Driver API
-
-@{
-*/
 
 /** \name Configuration and initialization
  * @{
@@ -383,7 +377,7 @@ void gpio_init(void);
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>09/2013</td>
+ *		<td>09/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

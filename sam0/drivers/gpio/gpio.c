@@ -364,7 +364,6 @@ void gpio_register_callback(uint8_t gpio_pin, gpio_callback_t callback_func,
  *
  *
  * \param[in]  gpio_pin       GPIO pin number
- * \param[in]  callback_func  Pointer to callback function
  * \param[in]  callback_type  Callback type given by an enum
  *
  */
@@ -392,12 +391,11 @@ void gpio_unregister_callback(uint8_t gpio_pin,
 /**
  * \brief Enables callback
  *
- * Enables the callback function registered by the \ref usart_register_callback.
+ * Enables the callback function registered by the \ref gpio_register_callback.
  * The callback function will be called from the interrupt handler when the
  * conditions for the callback type are met.
  *
- * \param[in]  module         Pointer to GPIO software instance struct
- * \param[in]  callback_type  Callback type given by an enum
+ * \param[in]  gpio_pin   GPIO pin
  */
 void gpio_enable_callback(uint8_t gpio_pin)
 {
@@ -422,8 +420,7 @@ void gpio_enable_callback(uint8_t gpio_pin)
  * Disables the callback function registered by the \ref usart_register_callback.
  * The callback function will not be called from the interrupt handler.
  *
- * \param[in]  module         Pointer to GPIO software instance struct
- * \param[in]  callback_type  Callback type given by an enum
+ * \param[in]  gpio_pin   GPIO pin
  */
 void gpio_disable_callback(uint8_t gpio_pin)
 {

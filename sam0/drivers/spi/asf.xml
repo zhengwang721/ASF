@@ -19,10 +19,10 @@
 			<build type="module-config" subtype="path" value="module_config"/>
 			<build type="module-config" subtype="required-header-file" value="conf_spi.h"/>
 
-			<build type="doxygen-entry-point" value="asfdoc_sam0_spi_group"/>
+			<build type="doxygen-entry-point" value="asfdoc_samb_spi_group"/>
 			<build type="doxygen-example-path" value="quick_start_master"/>
 			<build type="doxygen-example-path" value="quick_start_slave"/>
-			<build type="doxygen-quick-start" value="asfdoc_sam0_spi_exqsg"/>
+			<build type="doxygen-quick-start" value="asfdoc_samb_spi_exqsg"/>
 
 			<device-support value="samb11"/>
 			<require idref="sam0.utils"/>

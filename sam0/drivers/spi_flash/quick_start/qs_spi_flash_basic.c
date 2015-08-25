@@ -75,7 +75,7 @@ int main(void)
 	while(spi_flash_erase((unsigned long)FLASH_NVDS_START_ADDRESS, len_buf)) {
 		gpio_pin_toggle_output_level(LED_0_PIN);
 		/* Add a short delay to see LED toggle */
-		delay = 600000;
+		delay = 30000;
 		while(delay--) {
 		}
 	}
@@ -94,7 +94,7 @@ int main(void)
 				read_buf[i] = read_buf[i];
 				gpio_pin_toggle_output_level(LED_0_PIN);
 				/* Add a short delay to see LED toggle */
-				delay = 600000;
+				delay = 30000;
 				while(delay--) {
 				}
 			}
@@ -120,7 +120,7 @@ int main(void)
 			while(1) {
 				gpio_pin_toggle_output_level(LED_0_PIN);
 				/* Add a short delay to see LED toggle */
-				delay = 600000;
+				delay = 30000;
 				while(delay--) {
 				}
 			}
@@ -132,7 +132,7 @@ int main(void)
 	while (true) {
 		gpio_pin_toggle_output_level(LED_0_PIN);
 		/* Add a short delay to see LED toggle */
-		delay = 30000;
+		delay = 600000;
 		while(delay--) {
 		}
 	}
