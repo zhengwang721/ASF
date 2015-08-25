@@ -147,13 +147,13 @@ static void configure_usart(void)
 //! [setup_set_config]
 
 //! [enable_interrupt]
-	uart_instance.hw->TX_INTERRUPT_MASK.reg|= UART_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
+	uart_instance.hw->TX_INTERRUPT_MASK.reg |= UART_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
 //! [enable_interrupt]
 }
 //! [setup_usart]
 
 //! [setup_callback]
-static void configure_callback(void)
+static void configure_dma_callback(void)
 {
 //! [setup_callback_register]
 	dma_register_callback(&uart_dma_resource_tx, transfer_done_tx, DMA_CALLBACK_TRANSFER_DONE);
@@ -199,7 +199,7 @@ int main(void)
 //! [add_descriptor_to_resource]
 
 //! [configure_callback]
-	configure_callback();
+	configure_dma_callback();
 //! [configure_callback]
 	
 	transfer_done_flag = false;
