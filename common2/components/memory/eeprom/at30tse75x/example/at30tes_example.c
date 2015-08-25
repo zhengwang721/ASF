@@ -81,7 +81,7 @@
 #define NB_PAGE 16
 #define NB_BYTE 16
 
-volatile uint8_t rx_buffer[NB_BYTE], tx_buffer[NB_BYTE];
+static uint8_t rx_buffer[NB_BYTE], tx_buffer[NB_BYTE];
 
 static void delay(uint32_t count)
 {

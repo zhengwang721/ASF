@@ -7,7 +7,6 @@
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<require idref="board.samb11_xplained_pro"/>
 		<require idref="sam0.drivers.dualtimer.quick_start"/>
-		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<device-support value="atsamb11g18a"/>
