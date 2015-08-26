@@ -112,7 +112,6 @@ void wdt_get_config_defaults(struct wdt_config *const config)
  *
  * \retval STATUS_OK            The initialization was successful
  * \retval STATUS_ERR_BAD_DATA  If the value isn't available
- * \retval STATUS_ERR_DENIED    If write access is disable
  */
 enum status_code wdt_set_config(struct wdt_module *const module, Wdt * const hw,
 		const struct wdt_config *const config)
@@ -249,7 +248,7 @@ enum status_code wdt_set_reload_count(struct wdt_module *const module, uint32_t 
  * Get the current count value of the running Watchdog Timer.
  *
  * \param[in]      module       Pointer to the software instance struct
- * \param[in/out]  count_value  Pointer to store the current count value
+ * \param[in,out]  count_value  Pointer to store the current count value
  *
  */
 void wdt_get_current_count(struct wdt_module *const module, \

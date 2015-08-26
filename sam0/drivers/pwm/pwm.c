@@ -185,15 +185,15 @@ static uint32_t _pwm_reg_clock_sel(enum pwm_device_select device_select, enum pw
  *  user application.
  *
  *  The default configuration is as follows:
- *   \li 1 not to inverse the polarity
+ *   \li Not to inverse the polarity
  *   \li Sample method 0
- *   \li Use new pwm
  *   \li PWM period is 4
  *   \li Duty cycle is 50%
  *   \li No use agcupdate
  *   \li Clock is 26MHz
+ *   \li Pinmux pad 0
  *
- *  \param[out] config  Configuration structure to initialize to default values.
+ *  \param[out] config  Configuration structure to initialize to default values
  */
 void pwm_get_config_defaults(struct pwm_config *const config)
 {
@@ -213,7 +213,7 @@ void pwm_get_config_defaults(struct pwm_config *const config)
  * of setting.
  *
  * \param[in]   device_select   PWM device
- * \param[in]   duty_cycle      This value specifies the duty cycle(%).
+ * \param[in]   duty_cycle      This value specifies the duty cycle(%)
  */
 void pwm_set_duty_cycle(enum pwm_device_select device_select, \
 					uint8_t duty_cycle)

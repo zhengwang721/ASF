@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM SPI Quick Start for SAMB11
+ * \brief SAM SPI Quick Start for SAMB
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -45,7 +45,7 @@
  */
 
 /**
- * \page asfdoc_sam0_spi_slave_basic_use Quick Start Guide for SPI Slave - Polled
+ * \page asfdoc_samb_spi_slave_basic_use Quick Start Guide for SPI Slave - Polled
  *
  * In this use case, the SPI on extension header of the Xplained Pro board
  * will configured with the following settings:
@@ -57,12 +57,12 @@
  * - Not enabled in sleep mode
  *
  *
- * \section asfdoc_sam0_spi_slave_basic_use_setup Setup
+ * \section asfdoc_samb_spi_slave_basic_use_setup Setup
  *
- * \subsection asfdoc_sam0_spi_slave_basic_use_prereq Prerequisites
+ * \subsection asfdoc_samb_spi_slave_basic_use_prereq Prerequisites
  * The device must be connected to a SPI master which must read from the device.
  *
- * \subsection asfdoc_sam0_spi_slave_basic_use_setup_code Code
+ * \subsection asfdoc_samb_spi_slave_basic_use_setup_code Code
  * The following must be added to the user application source file, outside
  * any functions:
  *
@@ -73,17 +73,21 @@
  * A globally available software device instance struct to store the SPI driver
  * state while it is in use.
  * \snippet qs_spi_slave_basic.c dev_inst
+ * A function for configuring the GPIO.
+ * \snippet qs_spi_slave_basic.c configure_gpio
  * A function for configuring the SPI.
  * \snippet qs_spi_slave_basic.c configure_spi
  *
  * Add to user application \c main().
  * \snippet qs_spi_slave_basic.c main_start
  *
- * \subsection asfdoc_sam0_spi_slave_basic_use_workflow Workflow
+ * \subsection asfdoc_samb_spi_slave_basic_use_workflow Workflow
  * -# Initialize system.
  *    \snippet qs_spi_slave_basic.c system_init
+ * -# Setup the GPIO.
+ *    \snippet qs_spi_slave_basic.c run_config_gpio
  * -# Setup the SPI.
- *    \snippet qs_spi_slave_basic.c run_config
+ *    \snippet qs_spi_slave_basic.c run_config_spi
  *   -# Create configuration struct.
  *      \snippet qs_spi_slave_basic.c config
  *   -# Get default configuration to edit.
@@ -105,11 +109,11 @@
  *   -# Enable SPI module.
  *      \snippet qs_spi_slave_basic.c enable
  *
- * \section asfdoc_sam0_spi_slave_basic_use_case Use Case
- * \subsection asfdoc_sam0_spi_slave_basic_use_case_code Code
+ * \section asfdoc_samb_spi_slave_basic_use_case Use Case
+ * \subsection asfdoc_samb_spi_slave_basic_use_case_code Code
  * Add the following to your user application \c main().
  * \snippet qs_spi_slave_basic.c main_use_case
- * \subsection asfdoc_sam0_spi_slave_basic_use_case_workflow Workflow
+ * \subsection asfdoc_samb_spi_slave_basic_use_case_workflow Workflow
  * -# Read data from SPI master.
  *    \snippet qs_spi_slave_basic.c read
  * -# Compare the received data with the transmitted data from SPI master.

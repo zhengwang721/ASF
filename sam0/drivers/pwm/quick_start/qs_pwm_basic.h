@@ -45,33 +45,33 @@
  */
 
 /**
- * \page asfdoc_sam0_pwm_basic_use_case Quick Start Guide for PWM - Basic
+ * \page asfdoc_samb_pwm_basic_use_case Quick Start Guide for PWM - Basic
  *
  * In this use case, the PWM module is configured for:
  *   \li 1 not to inverse the polarity
  *   \li Sample method 0
- *   \li Use new pwm
  *   \li PWM period is 4
  *   \li Duty cycle is 50%
  *   \li No use agcupdate
  *   \li Clock is 26MHz
+ *   \li Pinmux pad
  *
  * This use case sets up the PWM to configure the PWM output on a physical device
  * pin (LED pin).
  *
- * \section asfdoc_sam0_pwm_basic_use_case_setup Setup
+ * \section asfdoc_samb_pwm_basic_use_case_setup Setup
  *
- * \subsection asfdoc_sam0_pwm_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_samb_pwm_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_sam0_pwm_basic_use_case_setup_code Code
+ * \subsection asfdoc_samb_pwm_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_pwm_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_pwm_basic.c setup_init
  *
- * \subsection asfdoc_sam0_pwm_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_samb_pwm_basic_use_case_setup_flow Workflow
  * -# Create a PWM module pin configuration struct, which can be filled out to
  *    adjust the configuration of a single pwm.
  *    \snippet qs_pwm_basic.c setup_1
@@ -88,13 +88,13 @@
  * -# Enable the PWM module to start and begin PWM signal generation.
  *    \snippet qs_pwm_basic.c setup_5
  *
- * \section asfdoc_sam0_pwm_basic_use_case_use_main Use Case
+ * \section asfdoc_samb_pwm_basic_use_case_use_main Use Case
  *
- * \subsection asfdoc_sam0_pwm_basic_use_case_code Code
+ * \subsection asfdoc_samb_pwm_basic_use_case_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_pwm_basic.c main
  *
- * \subsection asfdoc_sam0_pwm_basic_use_case_flow Workflow
+ * \subsection asfdoc_samb_pwm_basic_use_case_flow Workflow
  * -# Enter an infinite loop while the PWM wave is generated via the PWM module.
  *    \snippet qs_pwm_basic.c main
  */

@@ -10,12 +10,6 @@
 			<keyword value="I/O" />
 		</info>
 
-		<info type="appnote" value="ATxxxxx"/>
-		<info type="keyword" value="pdf">
-			<keyword value="I/O"/>
-			<keyword value="PWM"/>
-		</info>
-
 		<info type="description" value="pdf">
 			This document describes how to use the PWM Controller on the
 			SAMB11, both the ASF driver and the peripheral itself.

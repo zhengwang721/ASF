@@ -47,7 +47,7 @@
 #define PWM_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_pwm_group SAM Pulse Width Modulation Driver (PWM)
+ * \defgroup asfdoc_samb_pwm_group SAM Pulse Width Modulation Driver (PWM)
  *
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for the
  * configuration and management of the device's Pulse Width Modulation Module
@@ -60,41 +60,44 @@
  *  - Atmel | SMART SAM B11
  *
  * The outline of this documentation is as follows:
- *  - \ref asfdoc_sam0_pwm_prerequisites
- *  - \ref asfdoc_sam0_pwm_module_overview
- *  - \ref asfdoc_sam0_pwm_special_considerations
- *  - \ref asfdoc_sam0_pwm_extra_info
- *  - \ref asfdoc_sam0_pwm_examples
- *  - \ref asfdoc_sam0_pwm_api_overview
+ *  - \ref asfdoc_samb_pwm_prerequisites
+ *  - \ref asfdoc_samb_pwm_module_overview
+ *  - \ref asfdoc_samb_pwm_special_considerations
+ *  - \ref asfdoc_samb_pwm_extra_info
+ *  - \ref asfdoc_samb_pwm_examples
+ *  - \ref asfdoc_samb_pwm_api_overview
  *
  *
- * \section asfdoc_sam0_pwm_prerequisites Prerequisites
+ * \section asfdoc_samb_pwm_prerequisites Prerequisites
  *
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_sam0_pwm_module_overview Module Overview
+ * \section asfdoc_samb_pwm_module_overview Module Overview
  *
  * PWM is a flexible fully configurable module which has the following features:
  *  - 4 independent configurable pulse width modulator (PWM) blocks.
  *  - It can be connected to an external on board low pass filter to produce
  *    different analog control voltages depending on the configured duty cycle.
  *  - The base frequency of PWM block is the XO clock (26MHz) or the RC oscillator.
- *  - Different duty cycles could be obtained ( from 1/1024 to 1023/1024)
+ *  - Different duty cycles could be obtained
  *  - The frequency of the PWM pulse is programmable in steps according
  *    to the following relation:
  * \f[
- *    f_{PWM} =  frac{f_({PWM_{base}})} {(64 \times 2^i )}           i = 0 ~ 8
+ *    f_{PWM} = \frac{f_{PWM_{base}}} {64 \times 2^i}
+ * \f]
+ * \f[
+ *   i = 0 - 8
  * \f]
  *
- * f<SUB>PWM<SUB><SUB>base<SUB> can be selected to have different values
+ * f<SUB>PWM</SUB><SUB>base</SUB> can be selected to have different values
  * according to the following table. Minimum and maximum fre-quencies supported
  * for each clock selection is listed in the table as well.
  *
  * <table>
  *  <caption>Frequency support</caption>
  *  <tr>
- *    <th>f<SUB>PWM<SUB><SUB>base<SUB></th>
+ *    <th>f<SUB>PWM</SUB><SUB>base</SUB></th>
  *    <th>Maximum frequency</th>
  *    <th>Minimum frequency</th>
  *  </tr>
@@ -120,26 +123,26 @@
  *  </tr>
  * </table>
  *
- * \section asfdoc_sam0_pwm_special_considerations Special Considerations
+ * \section asfdoc_samb_pwm_special_considerations Special Considerations
  *
  * There are no prerequisites for this module.
  *
- * \section asfdoc_sam0_pwm_extra_info Extra Information
+ * \section asfdoc_samb_pwm_extra_info Extra Information
  *
- * For extra information, see \ref asfdoc_sam0_pwm_extra. This includes:
- *  - \ref asfdoc_sam0_pwm_extra_acronyms
- *  - \ref asfdoc_sam0_pwm_extra_dependencies
- *  - \ref asfdoc_sam0_pwm_extra_errata
- *  - \ref asfdoc_sam0_pwm_extra_history
+ * For extra information, see \ref asfdoc_samb_pwm_extra. This includes:
+ *  - \ref asfdoc_samb_pwm_extra_acronyms
+ *  - \ref asfdoc_samb_pwm_extra_dependencies
+ *  - \ref asfdoc_samb_pwm_extra_errata
+ *  - \ref asfdoc_samb_pwm_extra_history
  *
  *
- * \section asfdoc_sam0_pwm_examples Examples
+ * \section asfdoc_samb_pwm_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_sam0_pwm_exqsg.
+ * \ref asfdoc_samb_pwm_exqsg.
  *
  *
- * \section asfdoc_sam0_pwm_api_overview API Overview
+ * \section asfdoc_samb_pwm_api_overview API Overview
  * @{
  */
 
@@ -156,9 +159,13 @@ extern "C" {
  *  Enum for the possible settings of pwm device configuration.
  */
 enum pwm_device_select {
+	/** PWM module 1 */
 	PWM1 = 1,
+	/** PWM module 2 */
 	PWM2,
+	/** PWM module 3 */
 	PWM3,
+	/** PWM module 4 */
 	PWM4,
 };
 
@@ -232,19 +239,13 @@ struct pwm_config {
 	enum pwm_sample_method sample_method;
 	/** Programmable PWM update period */
 	enum pwm_period period;
-	/** This value specifies the duty cycle(%). */
+	/** This value specifies the duty cycle(%) */
 	uint8_t duty_cycle;
 	/** PWM Source Clock Frequency Select */
 	enum pwm_clock_select clock_select;
 	/** PWM PAD pinmux */
 	uint32_t pinmux_pad;
 };
-
-/**
-@defgroup pwm-drv PWM Driver API
-
-@{
-*/
 
 /** \name Configuration and initialization
  * @{
@@ -279,9 +280,9 @@ void pwm_reset(enum pwm_device_select device_select);
 
 
 /**
- * \page asfdoc_sam0_pwm_extra Extra Information for PWM Driver
+ * \page asfdoc_samb_pwm_extra Extra Information for PWM Driver
  *
- * \section asfdoc_sam0_pwm_extra_acronyms Acronyms
+ * \section asfdoc_samb_pwm_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -297,54 +298,54 @@ void pwm_reset(enum pwm_device_select device_select);
  * </table>
  *
  *
- * \section asfdoc_sam0_pwm_extra_dependencies Dependencies
+ * \section asfdoc_samb_pwm_extra_dependencies Dependencies
  * There are no dependencies related to this driver.
  *
  *
- * \section asfdoc_sam0_pwm_extra_errata Errata
+ * \section asfdoc_samb_pwm_extra_errata Errata
  * There are no errata related to this driver.
  *
  *
- * \section asfdoc_sam0_pwm_extra_history Module History
+ * \section asfdoc_samb_pwm_extra_history Module History
  * An overview of the module history is presented in the table below, with
  * details on the enhancements and fixes made to the module since its first
  * release. The current version of this corresponds to the newest version in
  * the table.
  *
  * <table>
- *	<tr>
- *		<th>Changelog</th>
- *	</tr>
- *	<tr>
- *		<td>Initial Release</td>
- *	</tr>
+ *  <tr>
+ *      <th>Changelog</th>
+ *  </tr>
+ *  <tr>
+ *      <td>Initial Release</td>
+ *  </tr>
  * </table>
  */
 
 /**
- * \page asfdoc_sam0_pwm_exqsg Examples for PWM Driver
+ * \page asfdoc_samb_pwm_exqsg Examples for PWM Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_sam0_pwm_group. QSGs are simple examples with
+ * applications for \ref asfdoc_samb_pwm_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
- *  - \subpage asfdoc_sam0_pwm_basic_use_case
+ *  - \subpage asfdoc_samb_pwm_basic_use_case
  *
- * \page asfdoc_sam0_pwm_document_revision_history Document Revision History
+ * \page asfdoc_samb_pwm_document_revision_history Document Revision History
  *
  * <table>
- *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
- *	</tr>
- *	<tr>
- *		<td>A</td>
- *		<td>06/2015</td>
- *		<td>Initial release</td>
- *	</tr>
+ *  <tr>
+ *    <th>Doc. Rev.</td>
+ *    <th>Date</td>
+ *    <th>Comments</td>
+ *  </tr>
+ *  <tr>
+ *    <td>A</td>
+ *    <td>09/2015</td>
+ *    <td>Initial release</td>
+ *  </tr>
  * </table>
  */
 

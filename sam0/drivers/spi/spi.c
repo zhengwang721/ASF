@@ -129,7 +129,7 @@ static void _spi_clock_disable(struct spi_module *const module)
  * \param[in]  config  Pointer to the configuration struct
  *
  * \return The status of the configuration
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided
  * \retval STATUS_OK               If the configuration was written
  */
 static enum status_code _spi_set_config(
@@ -293,7 +293,7 @@ void spi_slave_inst_get_config_defaults(
  *                                  (For Example: if clock source is CLOCK_INPUT_0 then
  *                                  ((26000000/(129+1))/2) = 100000 bps)
  *
- * \param[out] config  Configuration structure to initialize to default values
+ * \param[in,out] config  Configuration structure to initialize to default values
  */
 void spi_get_config_defaults(
 		struct spi_config *const config)
@@ -379,10 +379,10 @@ void spi_reset(struct spi_module *const module)
  * \param[in]   config  Pointer to the config struct
  *
  * \return Status of the initialization
- * \retval STATUS_OK               Module initiated correctly.
- * \retval STATUS_ERR_DENIED       If module is enabled.
- * \retval STATUS_BUSY             If module is busy resetting.
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_OK               Module initiated correctly
+ * \retval STATUS_ERR_DENIED       If module is enabled
+ * \retval STATUS_BUSY             If module is busy resetting
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided
  */
 enum status_code spi_init(
 		struct spi_module *const module,
@@ -546,17 +546,14 @@ void spi_disable(struct spi_module *const module)
  * that, e.g., transactions by different services will not interfere with each
  * other.
  *
- * \param[in,out] module Pointer to the driver instance to lock.
+ * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked.
- * \retval STATUS_BUSY if the module was already locked.
+ * \retval STATUS_OK   If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 enum status_code spi_lock(struct spi_module *const module)
 {
 	enum status_code status;
-
-	//DISABLE_GLOBAL INTERRUPTS
-	//system_interrupt_enter_critical_section();
 
 	if (module->locked) {
 		status = STATUS_BUSY;
@@ -564,8 +561,6 @@ enum status_code spi_lock(struct spi_module *const module)
 		module->locked = true;
 		status = STATUS_OK;
 	}
-
-	//system_interrupt_leave_critical_section();
 
 	return status;
 }
@@ -578,8 +573,8 @@ enum status_code spi_lock(struct spi_module *const module)
  *
  * \param[in,out] module Pointer to the driver instance to lock.
  *
- * \retval STATUS_OK if the module was locked.
- * \retval STATUS_BUSY if the module was already locked.
+ * \retval STATUS_OK   If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 void spi_unlock(struct spi_module *const module)
 {
@@ -683,9 +678,9 @@ enum status_code spi_read(
  *       this function.
  *
  * \param[in] module    Pointer to the software instance struct
- * \param[in] tx_data   Pointer containing the data to be transmitted.
+ * \param[in] tx_data   Pointer containing the data to be transmitted
+ * \param[in] length    Length of data to be read
  * \param[out] rx_data  Pointer to store the received data
- * \param[in] length    length of data to be read.
  *
  * \returns Status of the read operation.
  * \retval STATUS_OK            If data was read
@@ -763,7 +758,7 @@ enum status_code spi_transceive_buffer_wait(
  *       this function.
  *
  * \param[in] module    Pointer to the software instance struct
- * \param[in] tx_data   Pointer containing the data to be transmitted.
+ * \param[in] tx_data   Pointer containing the data to be transmitted
  * \param[out] rx_data  Pointer to store the received data
  *
  * \returns Status of the read operation.
@@ -789,9 +784,9 @@ enum status_code spi_transceive_wait(
  *       this function.
  *
  * \param[in] module    Pointer to the software instance struct
+ * \param[in] length    Length of data to be read
+ * \param[in] dummy     Dummy byte to be sent on bus when reading data
  * \param[out] rx_data  Pointer to store the received data
- * \param[in] length    length of data to be read.
- * \param[in] dummy     dummy byte to be sent on bus when reading data.
  *
  * \returns Status of the read operation.
  * \retval STATUS_OK            If data was read
@@ -817,8 +812,8 @@ enum status_code spi_read_buffer_wait(
  *       this function.
  *
  * \param[in] module    Pointer to the software instance struct
- * \param[out] tx_data  Pointer to buffer to be transmitted
  * \param[in] length    length of data to be read
+ * \param[out] tx_data  Pointer to buffer to be transmitted
  *
  * \returns Status of the read operation.
  * \retval STATUS_OK            If data was read
@@ -839,13 +834,13 @@ enum status_code spi_write_buffer_wait(
  * This function will assert or deassert the SS of the requested slave device.
  *
  * \param[in] module    Pointer to the software instance struct
- * \param[in] slave     Pointer containing slave instance.
- * \param[in] select    Bool to select the salve or deselect.
+ * \param[in] slave     Pointer containing slave instance
+ * \param[in] select    Bool to select the salve or deselect
  *
  * \returns Status of the slave select operation.
  *
- * \retval STATUS_OK                If SS pin is a valid one and selected/deselected.
- * \retval STATUS_ERR_INVALID_ARG   Invalid SS pin.
+ * \retval STATUS_OK                If SS pin is a valid one and selected/deselected
+ * \retval STATUS_ERR_INVALID_ARG   Invalid SS pin
  */
 enum status_code spi_select_slave(
 		struct spi_module *const module,

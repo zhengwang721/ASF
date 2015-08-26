@@ -88,12 +88,6 @@
 				<keyword value="CPU" />
 			</info>
 
-			<info type="appnote" value="ATxxxxx"/>
-			<info type="keyword" value="pdf">
-				<keyword value="WDT"/>
-				<keyword value="Watchdog Timer"/>
-			</info>
-
 			<info type="description" value="pdf">
 				This document describes how to use the Watchdog Timer on the
 				SAMB, both the ASF driver and the peripheral itself.
@@ -104,13 +98,13 @@
 			<build type="c-source" value="wdt_sam_b.c"/>
 			<build type="header-file" subtype="api" value="wdt_sam_b.h"/>
 
-			<build type="define" name="WDT_CALLBACK_MODE" value="false"/>
 			<build type="doxygen-enable-section" value="DEVICE_SAMB11_SUPPORT"/>
 
 			<build type="header-file" value="quick_start_sam_b/qs_wdt_basic.h"/>
 
 			<build type="doxygen-entry-point" value="asfdoc_samb_wdt_group"/>
 			<build type="doxygen-example-path" value="quick_start_sam_b"/>
+			<build type="doxygen-image-path" value="docimg"/>
 			<build type="doxygen-quick-start" value="asfdoc_samb_wdt_exqsg"/>
 
 			<device-support value="samb"/>

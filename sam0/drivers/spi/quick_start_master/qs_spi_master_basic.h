@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM SPI Quick Start for SAMB11
+ * \brief SAM SPI Quick Start for SAMB
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -45,7 +45,7 @@
  */
 
 /**
- * \page asfdoc_sam0_spi_master_basic_use Quick Start Guide for SPI Master - Polled
+ * \page asfdoc_samb_spi_master_basic_use Quick Start Guide for SPI Master - Polled
  *
  * In this use case, the SPI on extension header of the Xplained Pro board
  * will configured with the following settings:
@@ -54,15 +54,15 @@
  * - Transfer mode 0
  * - 8-bit character size
  * - Not enabled in sleep mode
- * - Baudrate 100000
+ * - Baudrate
  *
  *
- * \section asfdoc_sam0_spi_master_basic_use_setup Setup
+ * \section asfdoc_samb_spi_master_basic_use_setup Setup
  *
- * \subsection asfdoc_sam0_spi_master_basic_use_prereq Prerequisites
+ * \subsection asfdoc_samb_spi_master_basic_use_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_sam0_spi_master_basic_use_setup_code Code
+ * \subsection asfdoc_samb_spi_master_basic_use_setup_code Code
  * The following must be added to the user application:
  *
  * A sample buffer to send via SPI.
@@ -76,17 +76,21 @@
  * \snippet qs_spi_master_basic.c dev_inst
  * A globally available peripheral slave software device instance struct.
  * \snippet qs_spi_master_basic.c slave_dev_inst
- * A function for configuring the GPIO and SPI.
+ * A function for configuring the GPIO.
+ * \snippet qs_spi_master_basic.c configure_gpio
+ * A function for configuring the SPI.
  * \snippet qs_spi_master_basic.c configure_spi
  *
  * Add to user application \c main().
  * \snippet qs_spi_master_basic.c main_setup
  *
- * \section asfdoc_sam0_spi_master_basic_use_workflow Workflow
+ * \section asfdoc_samb_spi_master_basic_use_workflow Workflow
  * -# Initialize system.
  *    \snippet qs_spi_master_basic.c system_init
- * -# Setup the SPI.
- *    \snippet qs_spi_master_basic.c run_config
+ * -# Setup GPIO.
+ *    \snippet qs_spi_master_basic.c run_config_gpio 
+ * -# Setup SPI.
+ *    \snippet qs_spi_master_basic.c run_config_spi
  *   -# Create configuration struct.
  *      \snippet qs_spi_master_basic.c config
  *   -# Create peripheral slave configuration struct.
@@ -103,6 +107,8 @@
  *      \snippet qs_spi_master_basic.c conf_defaults
  *   -# Set transfer mode 0.
  *      \snippet qs_spi_master_basic.c transfer_mode
+ *   -# Set clock divider.
+ *      \snippet qs_spi_master_basic.c clock_divider
  *   -# Set pinmux for pad 0 (SCK).
  *      \snippet qs_spi_master_basic.c sck
  *   -# Set pinmux for pad 1 (data out (MOSI))
@@ -116,11 +122,11 @@
  *   -# Enable SPI module.
  *      \snippet qs_spi_master_basic.c enable
  *
- * \section asfdoc_sam0_spi_master_basic_use_case Use Case
- * \subsection asfdoc_sam0_spi_master_basic_use_case_code Code
+ * \section asfdoc_samb_spi_master_basic_use_case Use Case
+ * \subsection asfdoc_samb_spi_master_basic_use_case_code Code
  * Add the following to your user application \c main().
  * \snippet qs_spi_master_basic.c main_use_case
- * \subsection asfdoc_sam0_spi_master_basic_use_case_workflow Workflow
+ * \subsection asfdoc_samb_spi_master_basic_use_case_workflow Workflow
  * -# Select slave.
  *    \snippet qs_spi_master_basic.c select_slave
  * -# Write buffer to SPI slave.
