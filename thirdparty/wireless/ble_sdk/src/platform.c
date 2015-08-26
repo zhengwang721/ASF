@@ -158,12 +158,14 @@ int platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t len)
 		
 	}
 #endif
-	
+
+#if defined	ENABLE_POWER_SAVE	
 	if ((ble_init_done) && (!ble_wakeup_pin_level()))
 	{
 		ble_wakeup_pin_set_high();
 		delay_ms(BTLC1000_WAKEUP_DELAY);
 	}
+#endif //ENABLE_POWER_SAVE
 	serial_drv_send(data, len);	
 	return STATUS_OK;
 }
@@ -400,7 +402,9 @@ void serial_tx_callback(void)
 	tx_done = true;
 	if (ble_init_done)
 	{
+		#if defined ENABLE_POWER_SAVE
 		ble_wakeup_pin_set_low();
+		#endif //ENABLE_POWER_SAVE
 	}	
 }
 
