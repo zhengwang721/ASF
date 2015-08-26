@@ -161,7 +161,7 @@ int platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t len)
 	
 	if ((ble_init_done) && (!ble_wakeup_pin_level()))
 	{
-		ble_wakeup_pin_set_low();
+		ble_wakeup_pin_set_high();
 		delay_ms(BTLC1000_WAKEUP_DELAY);
 	}
 	serial_drv_send(data, len);	
