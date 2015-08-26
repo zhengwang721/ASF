@@ -68,5 +68,6 @@ void hid_prf_control_point_ntf_cb(hid_control_mode_ntf_t *hid_control_point_valu
 void hid_prf_protocol_mode_ntf_cb(hid_proto_mode_ntf_t *protocol_mode);
 
 void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info);
+void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_status);
 
 #endif /*__HID_DEVICE_APP_H__*/

@@ -70,12 +70,11 @@ uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0,
 sps_gatt_service_handler_t sps_service_handler;
 uint16_t scan_interval_window[2];
 uint8_t scan_refresh;
-uint8_t db_mem[1024] = {0};
 
 bool volatile timer_cb_done = false;
 bool volatile flag = true;
 
-uint8_t scan_interval_value = 1;
+uint8_t scan_refresh_value = 0;
 at_ble_handle_t device_conn_handle;
 
 volatile bool button_pressed = false; 
@@ -150,18 +149,12 @@ int main(void)
 		{
 			timer_cb_done = false;
 			LED_Toggle(LED0);
-			scan_interval_value = (scan_interval_value % MAX_SPS_SCAN_REFRESH );
 			/* send the notification and Update the scan parameter */	
 			
-			if(flag)
+			if(sps_scan_refresh_char_update(&sps_service_handler, scan_refresh_value, &flag) == AT_BLE_SUCCESS)
 			{
-				if(sps_scan_refresh_char_update(&sps_service_handler, scan_interval_value) == AT_BLE_SUCCESS)
-				{
-					flag = false;				
-					DBG_LOG("Scan Refresh Characteristic Value: %d", scan_interval_value);
-				}
+				DBG_LOG("Scan Refresh Characteristic Value: %d", scan_refresh_value);
 			}
-			scan_interval_value++;
 		}
 	}	
 	return 0;
@@ -226,12 +219,12 @@ void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 */
 at_ble_status_t sps_char_changed_cb(at_ble_characteristic_changed_t *char_handle)
 {
-	return sps_char_changed_event(&sps_service_handler, char_handle);
+	return sps_char_changed_event(&sps_service_handler, char_handle, &flag);
 }
 
-void sps_notification_confirmed_cb(uint8_t notification_status)
+void sps_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_status)
 {
-	if(!notification_status)
+	if(!notification_status->status)
 	{
 		flag = true;
 		DBG_LOG("sending notification to the peer success");

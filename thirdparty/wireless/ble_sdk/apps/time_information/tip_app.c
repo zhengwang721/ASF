@@ -56,6 +56,7 @@
 #include "platform.h"
 #include "at_ble_api.h"
 #include "tip_app.h"
+#include "time_info.h"
 #include "profiles.h"
 #include "console_serial.h"
 #include "timer_hw.h"
@@ -79,6 +80,16 @@ extern gatt_rtu_handler_t rtu_handle;
 extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
 volatile bool button_pressed = false;
+volatile bool bonding_flag = false;
+
+volatile bool notification_flag = false;
+
+extern volatile bool current_time_char_found;
+extern volatile bool local_time_char_found;
+extern volatile bool ref_time_char_found;
+extern volatile bool time_with_dst_char_found;
+extern volatile bool time_update_cp_char_found;
+extern volatile bool time_update_state_char_found;
 
 /***********************************************************************************
  *									Implementations                               *
@@ -105,6 +116,7 @@ void timer_callback_handler(void)
 int main (void)
 {
 
+	//bool event = true;
 #if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -124,6 +136,8 @@ int main (void)
 	/*Registration of timer callback*/
 	hw_timer_register_callback(timer_callback_handler);
 	
+	//time_info_register_bonding_callback(app_bonding_cb);
+	
 	DBG_LOG("Time Profile Application");
 
 	
@@ -136,34 +150,96 @@ int main (void)
 		if (button_pressed)
 		{
 			delay_ms(200);
-			if(tis_current_time_read( ble_connected_dev_info[0].handle, cts_handle.curr_char_handle ) == AT_BLE_SUCCESS)
+			if(current_time_char_found)
 			{
-				LED_Toggle(LED0);
+				if(tis_current_time_read( ble_connected_dev_info[0].handle, cts_handle.curr_char_handle) == AT_BLE_SUCCESS)
+				{
+					LED_Toggle(LED0);
+					DBG_LOG("CurrentTime info request success");
+				}
 			}
-			if(tis_current_time_read( ble_connected_dev_info[0].handle, cts_handle.lti_char_handle ) == AT_BLE_SUCCESS)
+			if(local_time_char_found)
 			{
-				DBG_LOG("Local Time info request success");
+				if(tis_current_time_read( ble_connected_dev_info[0].handle, cts_handle.lti_char_handle ) == AT_BLE_SUCCESS)
+				{
+					DBG_LOG("Local Time info request success");
+				}	
 			}
-			if(tis_current_time_read( ble_connected_dev_info[0].handle, cts_handle.rti_char_handle ) == AT_BLE_SUCCESS)
+			if(ref_time_char_found)
 			{
-				DBG_LOG("Reference Time info request success");
+				if(tis_current_time_read( ble_connected_dev_info[0].handle, cts_handle.rti_char_handle ) == AT_BLE_SUCCESS)
+				{
+					DBG_LOG("Reference Time info request success");
+				}
 			}
-			if(tis_dst_change_read( ble_connected_dev_info[0].handle, dst_handle.dst_char_handle ) == AT_BLE_SUCCESS)
+			if(time_with_dst_char_found)
 			{
-				DBG_LOG("Dst read request success");
+				if(tis_dst_change_read( ble_connected_dev_info[0].handle, dst_handle.dst_char_handle ) == AT_BLE_SUCCESS)
+				{
+					DBG_LOG("Dst read request success");
+				}
 			}
-			if(tis_rtu_update_read( ble_connected_dev_info[0].handle, rtu_handle.tp_control_char_handle, 20) == AT_BLE_SUCCESS)
+			if(time_update_cp_char_found)
 			{
-				DBG_LOG("RTU control point request success");
+				if(tis_rtu_update_read( ble_connected_dev_info[0].handle, rtu_handle.tp_control_char_handle, 20) == AT_BLE_SUCCESS)
+				{
+					DBG_LOG("RTU control point request success");
+				}
 			}
-			
-			if(tis_rtu_update_read( ble_connected_dev_info[0].handle, rtu_handle.tp_state_char_handle, 20 ) == AT_BLE_SUCCESS)
+			if(time_update_state_char_found)
 			{
-				DBG_LOG("RTU state request success");
+				if(tis_rtu_update_read( ble_connected_dev_info[0].handle, rtu_handle.tp_state_char_handle, 20 ) == AT_BLE_SUCCESS)
+				{
+					DBG_LOG("RTU state request success");
+				}
 			}
 			button_pressed = false;
+			/* code for pts */
+			//if(event)
+			//{
+				//if(!(tis_rtu_update_write(ble_connected_dev_info[0].handle,rtu_handle.tp_control_char_handle,true) == AT_BLE_SUCCESS))
+				//{
+					//DBG_LOG("Fail to write Time Update control point");
+				//}
+				//event = false;
+			//}
+			//else
+			//{
+				//if(!(tis_rtu_update_write(ble_connected_dev_info[0].handle,rtu_handle.tp_control_char_handle,false) == AT_BLE_SUCCESS))
+				//{
+					//DBG_LOG("Fail to write Time Update control point");
+				//}
+				//event = true;
+			//}
+			//bonding_flag = false;
 		}
+		/* code used for notifications enabling and disabling on button press */
+		//if(button_pressed)
+		//{
+			//if(notification_flag)
+			//{
+				//DBG_LOG("User enabled notification");
+				//if(!(tis_current_time_noti(ble_connected_dev_info[0].handle,cts_handle.curr_desc_handle,true) == AT_BLE_SUCCESS))
+				//{
+					//DBG_LOG("Fail to set Current Time descriptor 1");
+				//}
+				//notification_flag = false;
+			//}
+			//else
+			//{
+				//DBG_LOG("User disabled notification");				
+				//if(!(tis_current_time_noti(ble_connected_dev_info[0].handle,cts_handle.curr_desc_handle,false) == AT_BLE_SUCCESS))
+				//{
+					//DBG_LOG("Fail to set Current Time descriptor 0");
+				//}
+				//notification_flag = true;
+			//}
+			//button_pressed = false;
+		//}
 	}
 }
 
-
+//void app_bonding_cb(bool flag)
+//{
+	//bonding_flag = flag;
+//}			

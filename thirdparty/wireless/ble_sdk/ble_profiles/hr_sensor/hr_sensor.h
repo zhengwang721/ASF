@@ -157,7 +157,7 @@ bool hr_sensor_send_notification(uint8_t *hr_data, uint8_t length);
  *	@param[in] at_ble_status_t AT_BLE_SUCCESS on success AT_BLE_FAILURE on failure
  *called
  */
-void hr_notification_confirmation_handler(uint8_t status);
+void hr_notification_confirmation_handler(at_ble_cmd_complete_event_t * params);
 
 /** @brief register_hr_notification_handler registers the notification handler
  * passed by the application

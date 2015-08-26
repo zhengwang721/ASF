@@ -214,6 +214,7 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 			case COMPLETE_LIST_16BIT_SERV_UUIDS:
 			{
 				uint16_t uuid_16;
+				uint16_t temp_uuid16;
 				/* passing the length of data type */
 				uint8_t adv_type_size = adv_element_p->len;
 				/* actual size of the data */
@@ -222,8 +223,9 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 						"Complete_16bit_service_uuids");
 				DBG_LOG_CONT(":  ");
 				while (adv_type_size) {
-					memcpy(&uuid_16, adv_element_p->data,
+					memcpy(&temp_uuid16, adv_element_p->data,
 							AT_BLE_UUID_16_LEN);
+					uuid_16 = ((temp_uuid16 << 8) | (temp_uuid16 >> 8));
 					adv_element_p->data
 						+= AT_BLE_UUID_16_LEN;
 					adv_type_size -= AT_BLE_UUID_16_LEN;
@@ -236,6 +238,7 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 			case INCOMPLETE_LIST_16BIT_SERV_UUIDS:
 			{
 				uint16_t uuid_16;
+				uint16_t temp_uuid16;				
 				/* passing the length of data type */
 				uint8_t adv_type_size = adv_element_p->len;
 				/* actual size of the data */
@@ -244,8 +247,9 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 						"Incomplete_16bit_serv_uuids");
 				DBG_LOG_CONT(":  ");
 				while (adv_type_size) {
-					memcpy(&uuid_16, adv_element_p->data,
+					memcpy(&temp_uuid16, adv_element_p->data,
 							AT_BLE_UUID_16_LEN);
+					uuid_16 = ((temp_uuid16 << 8) | (temp_uuid16 >> 8));
 					adv_element_p->data
 						+= AT_BLE_UUID_16_LEN;
 					adv_type_size -= AT_BLE_UUID_16_LEN;
@@ -391,6 +395,7 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				adv_element_p->data += adv_type_size;
 				adv_type_size = 0;
 			}
+			break;
 
 			/*Adv type: Manufacturer Specific data*/
 			case MANUFACTURER_SPECIFIC_DATA:
@@ -412,6 +417,7 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				adv_element_p->data += adv_type_size;
 				adv_type_size = 0;
 			}
+			break;			
 
 			/*Adv type: Appearance*/
 			case APPEARANCE:

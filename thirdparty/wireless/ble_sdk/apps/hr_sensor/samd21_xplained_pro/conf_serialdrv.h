@@ -71,12 +71,18 @@ void serial_tx_callback(void);
 
 #define SERIAL_DRV_RX_CB serial_rx_callback
 #define SERIAL_DRV_TX_CB serial_tx_callback
-#define SERIAL_DRV_TX_CB_ENABLE  false
-#define SERIAL_DRV_RX_CB_ENABLE  false
+#define SERIAL_DRV_TX_CB_ENABLE  true
+#define SERIAL_DRV_RX_CB_ENABLE  true
 
 #define BLE_MAX_TX_PAYLOAD_SIZE 256
 #define BLE_MAX_RX_PAYLOAD_SIZE 256
 
+
+/* Set BLE Wakeup pin to be low */
+static inline bool ble_wakeup_pin_level(void)
+{
+	return (port_pin_get_output_level(BTLC1000_WAKEUP_PIN));
+}
 
 /* Set BLE Wakeup pin to be low */
 static inline void ble_wakeup_pin_set_low(void)

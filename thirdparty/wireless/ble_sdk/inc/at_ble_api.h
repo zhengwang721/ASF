@@ -244,190 +244,190 @@ typedef enum
  */
 typedef enum{
 	/* GAP events */
-	/** Undefined event received  */
+	/** Undefined event received0  */
 	AT_BLE_UNDEFINED_EVENT,
 	/** Scan info needs to be delivered either adv data or scan response data. \n
 	 * Refer to @ref at_ble_scan_info_t
 	 */
 	AT_BLE_SCAN_INFO, 
-	/** Scan report received at the end of scan period if @ref AT_BLE_SCAN_GEN_DISCOVERY or @ref AT_BLE_SCAN_LIM_DISCOVERY are used. \n
+	/**1 Scan report received at the end of scan period if @ref AT_BLE_SCAN_GEN_DISCOVERY or @ref AT_BLE_SCAN_LIM_DISCOVERY are used. \n
 	 * Refer to @ref at_ble_scan_report_t
 	 */
 	AT_BLE_SCAN_REPORT,
-	/** Advertising report received if error has occurred or timeout happened.
+	/**2 Advertising report received if error has occurred or timeout happened.
 	* Refer to @ref at_ble_adv_report_t
 	*/
 	AT_BLE_ADV_REPORT,
-	/** Used random address. \n
+	/** 3Used random address. \n
 	 *	Refer to @ref at_ble_rand_addr_changed_t
 	 */
 	AT_BLE_RAND_ADDR_CHANGED,
-	/** connected to a peer device. \n
+	/** 4connected to a peer device. \n
 	 *	Refer to at_ble_connected_t
 	 */
 	AT_BLE_CONNECTED, 
-	/** peer device connection terminated. \n
+	/** 5peer device connection terminated. \n
 	 *	Refer to @ref at_ble_disconnected_t and @ref at_ble_disconnect_reason_t for reason of disconnection.
 	 *  If returned reason is not one of @ref at_ble_disconnect_reason_t, so check for error code @ref at_ble_status_t
 	 */
 	AT_BLE_DISCONNECTED, 
-	 /** connection parameters updated. It is requires to call @ref at_ble_conn_update_reply function to send response back if needed.\n
+	 /** 6connection parameters updated. It is requires to call @ref at_ble_conn_update_reply function to send response back if needed.\n
 	  * Refer to @ref at_ble_conn_param_update_done_t
 	  */
 	AT_BLE_CONN_PARAM_UPDATE_DONE,
-	 /** peer device asks for connection parameters update. \n
+	 /** 7peer device asks for connection parameters update. \n
 	 *	Refer to at_ble_conn_param_update_request_t
 	 */
 	AT_BLE_CONN_PARAM_UPDATE_REQUEST,
-	 /** reported RX power value. \n
+	 /** 8reported RX power value. \n
 	 *	Refer to at_ble_rx_power_value_t
 	 */
 	AT_BLE_RX_POWER_VALUE,
-	/** Pairing procedure is completed. \n
+	/** 9Pairing procedure is completed. \n
 	 *	Refer to at_ble_pair_done_t
 	 */
 	AT_BLE_PAIR_DONE, 
-	/** A central device asks for Pairing. \n
+	/** 10A central device asks for Pairing. \n
 	 * Refer to at_ble_pair_request_t 
 	 */
 	AT_BLE_PAIR_REQUEST, 
-	/** Slave security request. \n
+	/** 11Slave security request. \n
 	 *	Refer to at_ble_slave_sec_request_t
 	 */
 	AT_BLE_SLAVE_SEC_REQUEST,
-	/** A passkey or OOB data is requested as part of pairing procedure. \n
+	/** 12A passkey or OOB data is requested as part of pairing procedure. \n
 	 * Refer to @ref at_ble_pair_key_request_t 
 	 */
 	AT_BLE_PAIR_KEY_REQUEST, 
-	/** Encryption is requested by a master device. \n
+	/** 13Encryption is requested by a master device. \n
 	 *	Refer to at_ble_encryption_request_t
 	 */
 	AT_BLE_ENCRYPTION_REQUEST, 
-	/** Encryption status changed. \n
+	/** 14Encryption status changed. \n
 	 *	Refer to at_ble_encryption_status_changed_t
 	 */
 	AT_BLE_ENCRYPTION_STATUS_CHANGED, 
-	/** Resolve random address status. \n
+	/** 15Resolve random address status. \n
 	 *	Refer to at_ble_resolv_rand_addr_status_t
 	 */
 	AT_BLE_RESOLV_RAND_ADDR_STATUS,
-	/** Signature counters new values indication
+	/** 16Signature counters new values indication
 	 *	Refer to at_ble_sign_counter_t
 	 */
 	AT_BLE_SIGN_COUNTERS_IND,
-	/** peer attribute info received
+	/** 17peer attribute info received
 	  * Refer to @ref at_ble_peer_att_info_ind_t
 	  */
 	AT_BLE_PEER_ATT_INFO_IND,
-	/** peer device channel map received
+	/** 18peer device channel map received
 	  * Refer to @ref at_ble_channel_map_t
 	  */
 	AT_BLE_CON_CHANNEL_MAP_IND,
-	/* GATT Client events */
+	/* 19GATT Client events */
 	/** A primary service is found. \n
 	 * Refer to @ref at_ble_primary_service_found_t
 	 */
 	AT_BLE_PRIMARY_SERVICE_FOUND, 
-	/** An included service is found . \n
+	/** 20An included service is found . \n
 	 * Refer to @ref at_ble_included_service_found_t
 	 */
 	AT_BLE_INCLUDED_SERVICE_FOUND, 
-	/** A Characteristic is found. \n 
+	/** 21A Characteristic is found. \n 
 	 * Refer to @ref at_ble_characteristic_found_t
 	 */
 	AT_BLE_CHARACTERISTIC_FOUND, 
-	 /** A descriptor is found. \n
+	 /** 22A descriptor is found. \n
 	  * Refer to @ref at_ble_descriptor_found_t
 	  */
 	AT_BLE_DESCRIPTOR_FOUND,
-	/** A discover operation has completed. \n
+	/** 23A discover operation has completed. \n
 	 * Refer to @ref at_ble_discovery_complete_t
 	 */
 	AT_BLE_DISCOVERY_COMPLETE, 
-	 /** Characteristic read procedure is done. \n
+	 /** 24Characteristic read procedure is done. \n
 	  * Refer to @ref at_ble_characteristic_read_response_t
 	  */
 	AT_BLE_CHARACTERISTIC_READ_RESPONSE,
-	/** Characteristic read by UUID procedure is done. \n
+	/** 25Characteristic read by UUID procedure is done. \n
 	 *  Legacy event use AT_BLE_CHARACTERISTIC_READ_RESPONSE
 	 *	Refer to at_ble_characteristic_read_response_t
 	 */
 	AT_BLE_CHARACTERISTIC_READ_BY_UUID_RESPONSE = AT_BLE_CHARACTERISTIC_READ_RESPONSE, 
 
-	/** Characteristic multiple read procedure is done. \n
+	/** 26Characteristic multiple read procedure is done. \n
 	  * Legacy event use AT_BLE_CHARACTERISTIC_READ_RESPONSE
 	  * Refer to @ref at_ble_characteristic_read_response_t
 	  */
 	AT_BLE_CHARACTERISTIC_READ_MULTIBLE_RESPONSE,
-	/** Characteristic write procedure is done. \n
+	/** 27Characteristic write procedure is done. \n
 	  * Refer to @ref at_ble_characteristic_write_response_t
 	  */
 	AT_BLE_CHARACTERISTIC_WRITE_RESPONSE, 
-	/** A Notification is received. \n
+	/** 28A Notification is received. \n
 	  * Refer to @ref at_ble_notification_recieved_t
 	  */
 	AT_BLE_NOTIFICATION_RECIEVED, 
-	 /** An Indication is received. \n
+	 /**29 An Indication is received. \n
 	  * Refer to @ref at_ble_indication_recieved_t
 	  */
 	AT_BLE_INDICATION_RECIEVED,
-	/* GATT Server events */
+	/* 301GATT Server events */
 	/** The firmware confirmed that an Notification PDU has been sent over the air. \n
 	  * Refer to @ref at_ble_indication_confirmed_t
 	  */
 	AT_BLE_NOTIFICATION_CONFIRMED,
-	 /** The peer confirmed that it has received an Indication. \n
+	 /** 31The peer confirmed that it has received an Indication. \n
 	  * Refer to @ref at_ble_indication_confirmed_t
 	  */
 	AT_BLE_INDICATION_CONFIRMED,
-	/** The peer has changed a characteristic value. \n
+	/** 32The peer has changed a characteristic value. \n
 	  * Refer to @ref at_ble_characteristic_changed_t
 	  */
 	AT_BLE_CHARACTERISTIC_CHANGED, 
-	/** The peer has confirmed that it has received the service changed notification. \n
+	/**33 The peer has confirmed that it has received the service changed notification. \n
 	  * Refer to @ref at_ble_service_changed_notification_confirmed_t
 	  */
 	AT_BLE_SERVICE_CHANGED_NOTIFICATION_CONFIRMED, 
-	/** The peer asks for a write Authorization. \n
+	/** 34The peer asks for a write Authorization. \n
 	  * Refer to @ref at_ble_write_authorize_request_t
 	  */
 	AT_BLE_WRITE_AUTHORIZE_REQUEST, 
-	/**  peer sends an indication of the new MTU. \n
+	/** 35 peer sends an indication of the new MTU. \n
 	  * Refer to @ref at_ble_mtu_changed_ind_t
 	  */
 	AT_BLE_MTU_CHANGED_INDICATION,
-	/** MTU Exchange completed. \n
+	/** 36MTU Exchange completed. \n
 	 * Refer to @ref at_ble_cmd_complete_event_t
 	 */
 	AT_BLE_MTU_CHANGED_CMD_COMPLETE,
-	/** write command complete. \n
+	/**37 write command complete. \n
 	 * Refer to @ref at_ble_cmd_complete_event_t
 	 */
 	AT_BLE_CHARACTERISTIC_WRITE_CMD_CMP,
-	 /** The peer asks for a read Authorization. \n
+	 /** 38The peer asks for a read Authorization. \n
 	  * Refer to @ref at_ble_read_authorize_request_t
 	  */
 	AT_BLE_READ_AUTHORIZE_REQUEST,
-	/* L2CAP events */
+	/* 39L2CAP events */
 	/** An L2CAP packet received from a registered custom CID. \n
 	  * Refer to @ref at_ble_l2cap_rx_t
 	  */
 	AT_BLE_L2CAP_RX,
 
-	/* Credit based connection events */
+	/* 40Credit based connection events */
 	/** Connection request is received from server. \n 
 	 * Refer to 
 	 */
 	AT_BLE_LECB_CONN_REQ,
-	/** Peer connected successfully. \n*/
+	/** 41Peer connected successfully. \n*/
 	AT_BLE_LECB_CONNECTED,
-	/** Peer disconnected. \n */
+	/** 42Peer disconnected. \n */
 	AT_BLE_LECB_DISCONNECTED,
-	/** Indication when peer device added credit. \n*/
+	/** 43Indication when peer device added credit. \n*/
 	AT_BLE_LECB_ADD_CREDIT_IND,
-	/** Response from local device to data send command. \n*/
+	/** 44Response from local device to data send command. \n*/
 	AT_BLE_LECB_SEND_RESP,
-	/** Data received from peer device. \n*/
+	/** 45Data received from peer device. \n*/
 	AT_BLE_LECB_DATA_RECIEVED,
 
 
@@ -436,45 +436,45 @@ typedef enum{
 	  * Refer to @ref at_ble_htpt_create_db_cfm_t
 	  */
 	AT_BLE_HTPT_CREATE_DB_CFM, 
-	/** Error indication to APP. \n
+	/** 46Error indication to APP. \n
 	  * Refer to @ref at_ble_prf_server_error_ind_t
 	  */
 	AT_BLE_HTPT_ERROR_IND,
-	/** Automatically sent to the APP after a disconnection with the peer device to confirm disabled profile. \n
+	/** 47Automatically sent to the APP after a disconnection with the peer device to confirm disabled profile. \n
 	  * Refer to @ref at_ble_htpt_disable_ind_t
 	  */
 	AT_BLE_HTPT_DISABLE_IND,
-	/** Temperature value confirm to APP. \n
+	/** 48Temperature value confirm to APP. \n
 	  * Refer to @ref at_ble_htpt_temp_send_cfm_t
 	  */
 	AT_BLE_HTPT_TEMP_SEND_CFM,
-	/** Inform APP of new measurement interval value. \n
+	/** 49Inform APP of new measurement interval value. \n
 	  * Refer to @ref at_ble_htpt_meas_intv_chg_ind_t
 	  */
 	AT_BLE_HTPT_MEAS_INTV_CHG_IND,
-	/** Inform APP of new configuration value. \n
+	/** 50Inform APP of new configuration value. \n
 	  * Refer to @ref at_ble_htpt_cfg_indntf_ind_t
 	  */
 	AT_BLE_HTPT_CFG_INDNTF_IND,
 
-	/** HTPT profile enable confirmation. \n
+	/** 51HTPT profile enable confirmation. \n
 	  * Refer to @ref at_ble_htpt_enable_rsp_t
 	  */
 	AT_BLE_HTPT_ENABLE_RSP, 
-	/** Response to APP for measurement interval update request. \n
+	/** 52Response to APP for measurement interval update request. \n
 	  * Refer to @ref at_ble_htpt_meas_intv_upd_rsp_t
 	  */
 	AT_BLE_HTPT_MEAS_INTV_UPD_RSP,
-	/** Inform APP of new measurement interval value requested by a peer device. \n
+	/** 53Inform APP of new measurement interval value requested by a peer device. \n
 	  * Refer to @ref at_ble_htpt_meas_intv_chg_req_t
 	  */
 	AT_BLE_HTPT_MEAS_INTV_CHG_REQ,
-	/* DTM events */
+	/* 54DTM events */
 	/** inform app about DTM command test status*/
 	AT_BLE_LE_TEST_STATUS,
-	/** inform app about the RX packets report */
+	/** 55inform app about the RX packets report */
 	AT_BLE_LE_PACKET_REPORT,
-	/* Custom user defined events */
+	/* 56Custom user defined events */
 	/** A user-defined event is delivered to the system */
 	AT_BLE_CUSTOM_EVENT,
 	

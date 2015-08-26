@@ -64,6 +64,7 @@
 
 #define BATTERY_UPDATE_INTERVAL	(1) //1 second
 #define BATTERY_MAX_LEVEL		(100)
+#define BATTERY_MIN_LEVEL		(0)
 
 /** @brief Scan response data*/
 uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
@@ -71,7 +72,7 @@ uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0,
 uint8_t db_mem[1024] = {0};
 bat_gatt_service_handler_t bas_service_handler;
 
-bool volatile timer_cb_done = false;
+bool volatile timer_cb_done = true;
 bool volatile flag = true;
 volatile bool button_pressed = false;
 
@@ -91,8 +92,8 @@ void timer_callback_handler(void)
 
 int main(void)
 {
-	uint8_t battery_level = BATTERY_MAX_LEVEL;	
-
+	uint8_t battery_level = BATTERY_MIN_LEVEL;	
+	uint8_t status;
 	
 	#if SAMG55
 	/* Initialize the SAM system. */
@@ -123,7 +124,10 @@ int main(void)
 	bat_init_service(&bas_service_handler, &battery_level);
 	
 	/* Define the primary service in the GATT server database */
-	bat_primary_service_define(&bas_service_handler);
+	if((status = bat_primary_service_define(&bas_service_handler))!= AT_BLE_SUCCESS)
+	{
+		DBG_LOG("defining battery service failed %d", status);
+	}
 	
 	DBG_LOG("Initializing Battery Service Application");
 	
@@ -148,16 +152,29 @@ int main(void)
 		if (timer_cb_done)
 		{
 			timer_cb_done = false;			
-			battery_level = (battery_level % BATTERY_MAX_LEVEL);
 			/* send the notification and Update the battery level  */			
 			if(flag){
-				if(bat_update_char_value(&bas_service_handler, battery_level) == AT_BLE_SUCCESS)
+				if(bat_update_char_value(&bas_service_handler, battery_level, &flag) == AT_BLE_SUCCESS)
 				{
-					flag = false;
 					DBG_LOG("Battery Level:%d%%", battery_level);
 				}
+				if(battery_level == BATTERY_MAX_LEVEL)
+				{
+					flag = false;
+				}
+				else if(battery_level == BATTERY_MIN_LEVEL)
+				{
+					flag = true;
+				}
+				if(flag)
+				{
+					battery_level++;
+				}
+				else
+				{
+					battery_level--;
+				}
 			}
-			battery_level++;
 		}
 	}	
 	return 0;
@@ -210,13 +227,14 @@ void ble_paired_app_event(at_ble_handle_t conn_handle)
 void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 {
 	timer_cb_done = false;
+	flag = true;
 	hw_timer_stop();
 	battery_service_advertise();
 }
 
-void ble_notification_confirmed_app_event(uint8_t notification_status)
+void ble_notification_confirmed_app_event(at_ble_cmd_complete_event_t *notification_status)
 {
-	if(!notification_status)
+	if(!notification_status->status)
 	{
 		flag = true;
 		DBG_LOG("sending notification to the peer success");				
@@ -225,7 +243,7 @@ void ble_notification_confirmed_app_event(uint8_t notification_status)
 
 at_ble_status_t ble_char_changed_app_event(at_ble_characteristic_changed_t *char_handle)
 {
-	return bat_char_changed_event(&bas_service_handler, char_handle);
+	return bat_char_changed_event(&bas_service_handler, char_handle, &flag);
 }
 
 void button_cb(void)

@@ -114,6 +114,11 @@
 #define BLE_DEVICE_NAME				"ATMEL-ANP"
 #endif /* ANP_SIG_CLIENT */
 
+#if defined PAS_CLIENT
+#include "pas_client.h"
+#define BLE_DEVICE_NAME				"ATMEL-PAS"
+#endif /* PAS_CLIENT */
+
 /** @brief default device name */
 #ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-BLE"
@@ -506,9 +511,24 @@ typedef enum
 
 #define BLE_PRIMARY_SERVICE_FOUND_HANDLER						anp_client_service_found_handler
 #define BLE_DISCOVERY_COMPLETE_HANDLER							anp_client_discovery_complete_handler
-#define BLE_ADDITIONAL_PAIR_DONE_HANDLER(param)					anp_client_write_notification_handler(param)
-#define BLE_ADDITIONAL_ENCRYPTION_CHANGED_HANDLER(param)		anp_client_write_notification_handler(param)
+#define BLE_ADDITIONAL_PAIR_DONE_HANDLER(param)					anp_client_security_done_handler(param)
+#define BLE_ADDITIONAL_ENCRYPTION_CHANGED_HANDLER(param)		anp_client_security_done_handler(param)
 #endif /* ANP_CLIENT */
+#ifdef PAS_CLIENT
+#define BLE_PROFILE_INIT										pas_client_init
+#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER(param)			pas_client_service_discovery(param);
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER(param)		pas_client_disconnected_event_handler(param);
+#define BLE_CHARACTERISTIC_WRITE_RESPONSE						pas_client_char_write_response_handler
+#define BLE_CHARACTERISTIC_READ_RESPONSE						pas_client_char_read_response_handler
+#define BLE_CHARACTERISTIC_FOUND_HANDLER						pas_client_characteristic_found_handler
+#define BLE_NOTIFICATION_RECEIVED_HANDLER						pas_client_notification_handler
+#define BLE_DESCRIPTOR_FOUND_HANDLER							pas_client_descriptor_found_handler
+
+#define BLE_PRIMARY_SERVICE_FOUND_HANDLER						pas_client_service_found_handler
+#define BLE_DISCOVERY_COMPLETE_HANDLER							pas_client_discovery_complete_handler
+#define BLE_ADDITIONAL_PAIR_DONE_HANDLER(param)					pas_client_write_notifications(param)
+#define BLE_ADDITIONAL_ENCRYPTION_CHANGED_HANDLER(param)		pas_client_write_notifications(param)
+#endif /* PAS_CLIENT */
 
 #endif /* ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)) */
 
