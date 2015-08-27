@@ -81,48 +81,73 @@
 #define NB_PAGE 16
 #define NB_BYTE 16
 
-uint8_t rx[NB_BYTE], tx[NB_BYTE];
+static uint8_t rx_buffer[NB_BYTE], tx_buffer[NB_BYTE];
 
-static void delay(int32_t count)
+static void delay(uint32_t count)
 {
-	for (int32_t i = 0; i < count; i++) {
-		for (int32_t j = 0; j < 100; j++)
+	for (uint32_t i = 0; i < count; i++) {
+		for (uint32_t j = 0; j < 100; j++)
 			asm volatile ("nop");
 	}
 }
 
 int main(void)
 {
-	volatile double temper;
-	volatile bool passed;
+	volatile double temper_value;
+	volatile bool data_check_status1, data_check_status2;
 	uint32_t i;
 
 	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 
-	memset(tx, 0xFF, NB_BYTE);
-	
 	/* Initialize AT30TS(E)75x */
 	at30tse_init();
-	
+
+	/* First round data check */
+	for (i = 0; i < NB_BYTE; i++) {
+		tx_buffer[i] = i;
+	}
+
 	/* Write pages in EEPROM */
 	for (i = 0; i < NB_PAGE; i++) {
-		tx[NB_PAGE - 1] = i;
-		at30tse_eeprom_write(tx, NB_BYTE, 0, i);
+		at30tse_eeprom_write(tx_buffer, NB_BYTE, 0, i);
 		delay(100);
 	}
 
-	passed = true;
+	data_check_status1 = true;
 	
 	/* Read each page in EEPROM and compare them */
 	for (i = 0; i < NB_PAGE; i++) {
-		memset(rx, 0, NB_BYTE);
-		at30tse_eeprom_read(rx, NB_BYTE, 0, i);
-		if (memcmp(tx, rx, NB_BYTE - 1) || (rx[NB_PAGE - 1] != i)) {
-			passed = false;
+		memset(rx_buffer, 0, NB_BYTE);
+		at30tse_eeprom_read(rx_buffer, NB_BYTE, 0, i);
+		if (memcmp(tx_buffer, rx_buffer, NB_BYTE)) {
+			data_check_status1 = false;
 			break;
 		}
 	}
+
+	/* Second round data check */
+	for (i = 0; i < NB_BYTE; i++) {
+		tx_buffer[i] = NB_BYTE - i;
+	}
+
+	/* Write pages in EEPROM */
+	for (i = 0; i < NB_PAGE; i++) {
+		at30tse_eeprom_write(tx_buffer, NB_BYTE, 0, i);
+		delay(100);
+	}
+
+	data_check_status2 = true;
 	
+	/* Read each page in EEPROM and compare them */
+	for (i = 0; i < NB_PAGE; i++) {
+		memset(rx_buffer, 0, NB_BYTE);
+		at30tse_eeprom_read(rx_buffer, NB_BYTE, 0, i);
+		if (memcmp(tx_buffer, rx_buffer, NB_BYTE)) {
+			data_check_status2 = false;
+			break;
+		}
+	}
+
 	/* Read thigh and tlow */
 	volatile uint16_t thigh = 0;
 	thigh = at30tse_read_register(AT30TSE_THIGH_REG,
@@ -138,10 +163,12 @@ int main(void)
 
 	while (1) {
 		/* Read current temperature. */
-		temper = at30tse_read_temperature();
+		temper_value = at30tse_read_temperature();
 	}
-	UNUSED(passed);
-	UNUSED(temper);
+
+	UNUSED(data_check_status1);
+	UNUSED(data_check_status2);
+	UNUSED(temper_value);
 	UNUSED(tlow);
 	UNUSED(thigh);
 }

@@ -85,7 +85,7 @@ void i2c_master_get_config_defaults(
  * \param[in]  config  Configuration structure with configurations to set
  *
  */
-void _i2c_master_set_config(
+static void _i2c_master_set_config(
 		struct i2c_master_module *const module,
 		const struct i2c_master_config *const config)
 {
@@ -179,8 +179,7 @@ enum status_code i2c_master_init(
 #endif
 
 	/* Set config and return status. */
-	if(_i2c_master_set_config(module, config) != STATUS_OK)
-		return STATUS_ERR_NOT_INITIALIZED;
+	_i2c_master_set_config(module, config);
 
 	return STATUS_OK;
 }

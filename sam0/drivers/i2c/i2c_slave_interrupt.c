@@ -272,8 +272,8 @@ void _i2c_slave_rx_isr_handler(void)
 			}
 		}
 	}
-	if ((i2c_module->RECEIVE_STATUS.reg & I2C_RECEIVE_STATUS_NAK) &&
-			module->transfer_direction == I2C_TRANSFER_READ) {
+	if ((i2c_module->RECEIVE_STATUS.reg & I2C_RECEIVE_STATUS_NAK)) { //&&
+			//module->transfer_direction == I2C_TRANSFER_READ) {
 		/* Received NAK, master received completed. */
 		i2c_module->RX_INTERRUPT_MASK.bit.NAK_MASK = 0;
 		if (callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE)) {

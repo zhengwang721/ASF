@@ -10,5 +10,6 @@
 		<require idref="sam0.drivers.extint"/>
 		<require idref="common2.services.delay"/>
 		<device-support value="saml21"/>
+		<device-support value="saml22"/>
 	</module>
 </asf>

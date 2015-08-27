@@ -47,8 +47,6 @@
 #ifndef I2C_SLAVE_H_INCLUDED
 #define I2C_SLAVE_H_INCLUDED
 
-#include <system.h>
-#include <gpio.h>
 #include "i2c_common.h"
 
 #ifdef __cplusplus
@@ -189,7 +187,7 @@ struct i2c_slave_module {
  */
 struct i2c_slave_config {
 	/** I2C core index **/
-	enum i2c_core_idx core_idx;
+	enum i2c_core_idx i2c_core;
 	/** Timeout to wait for master in polled functions. */
 	uint16_t buffer_timeout;
 	/** Address or upper limit of address range. */

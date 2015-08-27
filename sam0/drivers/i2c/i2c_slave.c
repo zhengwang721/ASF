@@ -69,7 +69,7 @@ void i2c_slave_get_config_defaults(
 	/* Sanity check */
 	Assert(config);
 	
-	config->core_i2c        = I2C_CORE1;
+	config->i2c_core        = I2C_CORE1;
 	config->clock_source    = I2C_CLK_INPUT_3;
 	config->clock_divider   = 0x10;
 	config->pinmux_pad0   = PINMUX_LP_GPIO_8_MUX2_I2C0_SDA;
@@ -97,14 +97,14 @@ static enum status_code _i2c_slave_set_config(
 	Assert(module);
 	Assert(module->hw);
 	Assert(config);
-	
+
 	enum status_code status = STATUS_OK;
 	I2C *const i2c_module = (module->hw);
 
 	/* Set the pinmux for this i2c module. */
 	gpio_pinmux_cofiguration(config->pinmux_pad0>>16, (uint16_t)(config->pinmux_pad0 & 0xFFFF));
 	gpio_pinmux_cofiguration(config->pinmux_pad1>>16, (uint16_t)(config->pinmux_pad1 & 0xFFFF));
-									
+
 	/* Find and set baudrate. */
 	i2c_module->CLOCK_SOURCE_SELECT.reg = config->clock_source;
 	i2c_module->I2C_CLK_DIVIDER.reg = I2C_I2C_CLK_DIVIDER_I2C_DIVIDE_RATIO(config->clock_divider);
@@ -256,16 +256,16 @@ enum status_code i2c_slave_write_packet_wait(
 	uint16_t i = 0;
 	uint32_t status = 0;
 	uint16_t length = packet->data_length;
-	
+
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
-	
+
 	i2c_wait_for_idle(i2c_module);
 	
 	/* Flush the FIFO */
 	i2c_module->I2C_FLUSH.reg = 1;
-	
+
 	do {
 		status = i2c_module->TRANSMIT_STATUS.reg;
 		if (status & I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_Msk) {

@@ -14,7 +14,7 @@
 		</module>
 		<module type="application" id="common.applications.user_application.xplained_pro2#samb" caption="User application template for Xplained Pro">
 			<device-support value="samb"/>
-			<build type="c-source" value="main.c"/>
+			<build type="c-source" value="main_sam_b.c"/>
 			<require idref="common.boards"/>
 			<info type="description" value="summary">
 				This user application template contains the bare minimum of files needed to

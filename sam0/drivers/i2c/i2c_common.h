@@ -47,6 +47,8 @@
 #define I2C_COMMON_H_INCLUDED
 
 #include <compiler.h>
+#include <system_sam_b.h>
+#include <gpio.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -439,6 +441,7 @@ static inline void i2c_disable(I2C *const i2c_module)
 
 static inline void i2c_slave_flush_fifo(I2C *const i2c_module)
 {
+	i2c_wait_for_idle(i2c_module);
 	i2c_module->I2C_FLUSH.reg = 1;
 }
 

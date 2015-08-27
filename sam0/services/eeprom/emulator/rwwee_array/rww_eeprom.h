@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_rww_eeprom_group SAM Read While Write EEPROM (RWW EEPROM) Emulator Service
  *
- * This driver for Atmel&reg; | SMART SAM provides an RWW emulated EEPROM
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an RWW emulated EEPROM
  * memory area, for the storage and retrieval of user-application
  * configuration data into and out of non-volatile memory. The main array
  * can therefore run code while EEPROM data is written.
@@ -58,10 +58,10 @@
  *  - NVM (Non-Volatile Memory Controller)
  *
  * The following devices can use this module:
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM D21
  *  - Atmel | SMART SAM C20/C21
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rww_eeprom_prerequisites
@@ -543,6 +543,11 @@ enum status_code rww_eeprom_emulator_read_buffer(
  *		<th>Doc. Rev.</th>
  *		<th>Date</th>
  *		<th>Comments</th>
+ *	</tr>
+ *	<tr>
+ *		<td>42447B</td>
+ *		<td>08/2015</td>
+ *		<td>Added support for SAM L22, SAM DA1 and SAM C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>42447A</td>

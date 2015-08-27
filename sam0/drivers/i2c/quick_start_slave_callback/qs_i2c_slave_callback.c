@@ -51,9 +51,9 @@ static struct i2c_slave_packet packet;
 //! [packet]
 
 //! [packet_data]
-#define DATA_LENGTH 10
+#define DATA_LENGTH 8
 static uint8_t write_buffer[DATA_LENGTH] = {
-		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
+		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07
 };
 static uint8_t read_buffer [DATA_LENGTH];
 //! [packet_data]
@@ -79,9 +79,6 @@ static void i2c_read_request_callback(
 	//! [packet_write]
 
 	/* Write buffer to master */
-	//! [flush_fifo]
-	i2c_slave_flush_fifo(module->hw);
-	//! [flush_fifo]
 	//! [write_packet]
 	if (i2c_slave_write_packet_job(module, &packet) != STATUS_OK) {
 	}

@@ -84,13 +84,17 @@ void configure_i2c_master(void)
 	//! [init_module]
 	i2c_master_init(&i2c_master_instance, &config_i2c_master);
 	//! [init_module]
+	
+	//! [enable_module]
+	i2c_enable(i2c_master_instance.hw);
+	//! [enable_module]
 }
 //! [initialize_i2c]
 
 int main(void)
 {
 	//! [init]
-	system_clock_config(CLOCK_RESOURCE_RC_26_MHZ, CLOCK_FREQ_26_MHZ);
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 	/* Configure device and enable. */
 	//! [config]
 	configure_i2c_master();

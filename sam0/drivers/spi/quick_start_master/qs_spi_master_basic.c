@@ -53,10 +53,7 @@
 #define SLAVE_SELECT_PIN  CONF_PIN_SPI_SSN
 //! [slave_select_pin]
 //! [buffer]
-static uint8_t buffer[BUF_LENGTH] = {
-		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
-		0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13
-};
+static uint8_t buffer[BUF_LENGTH];
 //! [buffer]
 
 //! [dev_inst]
@@ -71,13 +68,13 @@ struct spi_slave_inst slave;
 static void configure_gpio(void)
 {
 	struct gpio_config config_gpio;
-	
+
 	gpio_get_config_defaults(&config_gpio);
 	/* Set buttons as inputs */
 	config_gpio.direction = GPIO_PIN_DIR_INPUT;
 	config_gpio.input_pull = GPIO_PIN_PULL_UP;
 	gpio_pin_set_config(BUTTON_0_PIN, &config_gpio);
-	
+
 	/* Configure LEDs as outputs, turn them off */
 	config_gpio.direction = GPIO_PIN_DIR_OUTPUT;
 	gpio_pin_set_config(LED_0_PIN, &config_gpio);
@@ -109,6 +106,9 @@ static void configure_spi_master(void)
 //! [transfer_mode]
 	config_spi_master.transfer_mode = CONF_SPI_TRANSFER_MODE;
 //! [transfer_mode]
+//! [clock_divider]
+	config_spi_master.clock_divider = 154;
+//! [clock_divider]
 	/* Configure pad 0 */
 //! [sck]
 	config_spi_master.pinmux_pad[0] = CONF_SPI_PINMUX_SCK;
@@ -141,6 +141,9 @@ int main(void)
 //! [main_setup]
 //! [system_init]
 	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
+	for (uint16_t i = 0; i < BUF_LENGTH; i++) {
+		buffer[i] = i;
+	}
 //! [system_init]
 //! [run_config]
 	configure_gpio();

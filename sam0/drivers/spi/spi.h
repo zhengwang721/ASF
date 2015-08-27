@@ -52,11 +52,7 @@
 #include <compiler.h>
 #include <conf_spi.h>
 #include <gpio.h>
-#include <system.h>
-
-#  if SPI_CALLBACK_MODE == true
-//#  include <_interrupt.h>
-#  endif
+#include <system_sam_b.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -77,9 +73,10 @@ extern "C" {
 #  endif
 
 #  if SPI_CALLBACK_MODE == true
-
+/** Prototype for the device instance. */
+struct spi_module;
 /** Type of the callback functions */
-typedef void (*spi_callback_t)(const struct spi_module *const module);
+typedef void (*spi_callback_t)(struct spi_module *const module);
 
 /**
  * \brief SPI Callback enum
@@ -91,13 +88,13 @@ typedef void (*spi_callback_t)(const struct spi_module *const module);
  *
  */
 enum spi_callback {
-	/** Callback for buffer transmitted */
+	/** Callback for buffer transmitted. */
 	SPI_CALLBACK_BUFFER_TRANSMITTED,
-	/** Callback for buffer received */
+	/** Callback for buffer received. */
 	SPI_CALLBACK_BUFFER_RECEIVED,
-	/** Callback for buffers transceived */
+	/** Callback for buffers transceived. */
 	SPI_CALLBACK_BUFFER_TRANSCEIVED,
-	/** Callback for error */
+	/** Callback for error. */
 	SPI_CALLBACK_ERROR,
 #  if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
@@ -107,8 +104,11 @@ enum spi_callback {
 
 #  if !defined(__DOXYGEN__)
 /** Prototype for the interrupt handler */
-extern void _spi_interrupt_handler(uint8_t instance);
-
+extern struct spi_module *_spi_instances[SPI_INST_NUM];
+extern void spi_rx0_isr_handler(void);
+extern void spi_tx0_isr_handler(void);
+extern void spi_rx1_isr_handler(void);
+extern void spi_tx1_isr_handler(void);
 /**
  * \brief SPI transfer directions
  */
@@ -196,15 +196,13 @@ enum spi_clock_input {
 struct spi_module {
 #  if !defined(__DOXYGEN__)
 	/** Hardware module */
-	void *hw;
+	Spi *hw;
 	/** Module lock */
 	volatile uint8_t locked;
 	/** SPI mode */
 	enum spi_mode mode;
 	/** Transmit dummy data when receiving*/
 	uint8_t tx_dummy_byte;
-	/** Receiver enabled */
-	uint8_t receiver_enabled;
 #if SPI_CALLBACK_MODE == true
 	/** Direction of transaction */
 	volatile enum _spi_direction dir;
@@ -269,18 +267,12 @@ struct spi_slave_inst_config {
  * modified by the user application.
  */
 struct spi_config {
-	///** Core Index */
-	//enum spi_core_idx core_idx;
 	/** SPI mode */
 	enum spi_mode mode;
 	/** Data order */
 	enum spi_data_order data_order;
 	/** Transfer mode */
 	enum spi_transfer_mode transfer_mode;
-	/** Enabled in sleep modes */
-	//uint8_t run_in_standby;
-	/** Enable receiver */
-	bool receiver_enable;
 	/** clock source to use */
 	enum spi_clock_input clock_source;
 	/** clock divider value to use*/

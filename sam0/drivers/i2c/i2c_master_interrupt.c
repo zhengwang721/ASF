@@ -382,7 +382,7 @@ void _i2c_master_isr_handler(void)
 {
 	/* Get software module for callback handling */
 	struct i2c_master_module *module =
-			(struct i2c_master_module*)i2c_instances;
+			(struct i2c_master_module*)_i2c_instances;
 
 	Assert(module);
 
@@ -408,7 +408,7 @@ void _i2c_master_isr_handler(void)
 			/* Send stop condition */
 			i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_0;
 		} 
-		
+
 		if (callback_mask & (1 << I2C_MASTER_CALLBACK_WRITE_COMPLETE)) {
 			module->callbacks[I2C_MASTER_CALLBACK_WRITE_COMPLETE](module);
 		}
@@ -428,7 +428,7 @@ void _i2c_master_isr_handler(void)
 			(module->transfer_direction == I2C_TRANSFER_READ)) {
 		/* Disable read interrupt flag */
 		i2c_module->RX_INTERRUPT_MASK.reg = 0;
-		
+
 		module->buffer_length = 0;
 		module->status        = STATUS_OK;
 

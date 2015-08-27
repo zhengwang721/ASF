@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMB11 I2C Master Interrupt Driver
+ * \brief I2C Master Driver for SAMB11
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -48,8 +48,6 @@
 #define I2C_MASTER_H_INCLUDED
 
 #include <compiler.h>
-#include <system.h>
-#include <gpio.h>
 #include "i2c_common.h"
 
 #ifdef __cplusplus

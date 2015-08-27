@@ -1,34 +1,86 @@
 <asf xmlversion="1.0">
-		<module type="driver" id="sam0.drivers.spi" caption="SPI - Serial Peripheral Interface (Polled APIs)">
+	<select-by-config id="sam0.drivers.spi" name="config.sam0.drivers.spi" caption="SPI - Serial Peripheral Interface" default="callback">
+		<info type="description" value="summary">
+			Driver for the SAM SPI module. Provides a unified interface
+			for the configuration and management of the module
+			in SPI mode.
+		</info>
+
+		<module type="driver" id="sam0.drivers.spi#polled" caption="SPI - Serial Peripheral Interface (Polled APIs)">
 			<info type="keyword" value="technology">
 				<keyword value="Communication"/>
 			</info>
-
-			<info type="appnote" value="ATxxxxx"/>
-			<info type="keyword" value="pdf">
-				<keyword value="SPI"/>
-				<keyword value="I/O"/>
-				<keyword value="Serial Peripheral Interface Bus"/>
-			</info>
-
+			<build type="include-path" value="."/>
 			<build type="c-source" value="spi.c"/>
 			<build type="header-file" subtype="api" value="spi.h"/>
-			<build type="header-file" value="quick_start_slave/qs_spi_slave_basic.h"/>
-			<build type="header-file" value="quick_start_master/qs_spi_master_basic.h"/>
-			<build type="include-path" value="."/>
-			<build type="module-config" subtype="path" value="module_config"/>
-			<build type="module-config" subtype="required-header-file" value="conf_spi.h"/>
 
-			<build type="doxygen-entry-point" value="asfdoc_sam0_spi_group"/>
-			<build type="doxygen-example-path" value="quick_start_master"/>
-			<build type="doxygen-example-path" value="quick_start_slave"/>
-			<build type="doxygen-quick-start" value="asfdoc_sam0_spi_exqsg"/>
+			<build type="define" name="SPI_CALLBACK_MODE" value="false"/>
 
-			<device-support value="samb11"/>
-			<require idref="sam0.utils"/>
-			<require idref="sam0.drivers.gpio"/>
-			<require idref="sam0.drivers.system.system_sam_b"/>
-
-			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
+			<build type="doxygen-entry-point" value="asfdoc_samb_drivers_spi_group"/>
+			<require idref="sam0.utils" />
+			<require idref="sam0.drivers.gpio" />
+			<require idref="sam0.drivers.system" />
+			<device-support value="samb"/>
 		</module>
+		<module type="driver" id="sam0.drivers.spi#callback" caption="SPI - Serial Peripheral Interface (Callback APIs)">
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+			<build type="include-path" value="."/>
+			<build type="c-source" value="spi.c"/>
+			<build type="c-source" value="spi_callback.c"/>
+			<build type="header-file" subtype="api" value="spi.h"/>
+			<build type="header-file" subtype="api" value="spi_callback.h"/>
+
+			<build type="define" name="SPI_CALLBACK_MODE" value="true"/>
+
+			<build type="doxygen-entry-point" value="asfdoc_samb_drivers_aes_group"/>
+			<require idref="sam0.utils" />
+			<require idref="sam0.drivers.gpio" />
+			<require idref="sam0.drivers.system" />
+			<device-support value="samb"/>
+		</module>
+	</select-by-config>
+
+	<module type="meta" id="sam0.drivers.spi.appnote" caption="SPI - Serial Peripheral Interface">
+		<info type="keyword" value="technology">
+			<keyword value="Cryptography"/>
+		</info>
+
+		<info type="appnote" value="ATxxxxx"/>
+		<info type="keyword" value="pdf">
+			<keyword value="SPI"/>
+			<keyword value="I/O"/>
+			<keyword value="Serial Communication"/>
+			<keyword value="Serial Peripheral Interface Bus"/>
+		</info>
+		<info type="description" value="pdf">
+			This document describes how to use the Serial Peripheral
+			Interface in master mode on the SAM, both the ASF driver
+			and the peripheral itself.
+		</info>
+
+		<build type="c-source" value="spi.c"/>
+		<build type="c-source" value="spi_callback.c"/>
+		<build type="header-file" subtype="api" value="spi.h"/>
+		<build type="header-file" subtype="api" value="spi_callback.h"/>
+		<build type="header-file" value="quick_start_master/qs_spi_master_basic.h"/>
+		<build type="header-file" value="quick_start_slave/qs_spi_slave_basic.h"/>
+		<build type="header-file" value="quick_start_master_callback/qs_spi_master_callback.h"/>
+		<build type="header-file" value="quick_start_slave_callback/qs_spi_slave_callback.h"/>
+		<build type="include-path" value="."/>
+
+		<build type="doxygen-entry-point" value="asfdoc_samb_drivers_spi_group"/>
+		<build type="doxygen-quick-start" value="asfdoc_samb_drivers_spi_exqsg"/>
+
+		<build type="doxygen-example-path" value="quick_start_master"/>
+		<build type="doxygen-example-path" value="quick_start_slave"/>
+		<build type="doxygen-example-path" value="quick_start_master_callback"/>
+		<build type="doxygen-example-path" value="quick_start_slave_callback"/>
+
+		<device-support value="samb"/>
+		<require idref="sam0.utils" />
+		<require idref="sam0.drivers.system" />
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
+	</module>
 </asf>

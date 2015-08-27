@@ -47,9 +47,9 @@
 #include <asf.h>
 
 //! [packet_data]
-#define DATA_LENGTH 10
+#define DATA_LENGTH 8
 static uint8_t write_buffer[DATA_LENGTH] = {
-		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
+		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07
 };
 
 static uint8_t read_buffer[DATA_LENGTH];
@@ -95,7 +95,7 @@ int main(void)
 {
 	
 	//! [init]
-	system_clock_config(CLOCK_RESOURCE_RC_26_MHZ, CLOCK_FREQ_26_MHZ);
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 	
 	configure_i2c_slave();
 

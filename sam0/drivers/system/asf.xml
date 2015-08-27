@@ -1,4 +1,4 @@
-﻿<asf xmlversion="1.0">
+<asf xmlversion="1.0">
 	<module type="meta" id="sam0.drivers.system.appnote_1" caption="SYSTEM - Core System Driver For SAM D20/D21/R21/D10/D11/DA0/DA1">
 		<info type="description" value="summary">
 			Driver for the SAM D20/D21/R21/D10/D11/DA0/DA1 core system modules. Provides a unified
@@ -117,43 +117,6 @@
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samc21"/>
 	</module>
 
-	<module type="meta" id="sam0.drivers.system.appnote_4" caption="SYSTEM - Core System Driver For SAM B11">
-		<info type="description" value="summary">
-			Driver for the SAM B11 core system modules. Provides a unified
-			interface for the configuration and management of the core device
-			functionality required for a functional system.
-		</info>
-		<info type="keyword" value="technology">
-			<keyword value="I/O" />
-			<keyword value="CPU" />
-			<keyword value="Clocks" />
-		</info>
-
-		<info type="appnote" value="ATxxxxx"/>
-		<info type="keyword" value="pdf">
-			<keyword value="SYSTEM"/>
-			<keyword value="I/O"/>
-			<keyword value="CPU"/>
-			<keyword value="Clocks"/>
-		</info>
-
-		<info type="description" value="pdf">
-			This document describes how to use the core system modules on the
-			SAM B11, both the ASF driver and the peripheral itself.
-		</info>
-		<build type="include-path" value="."/>
-		<build type="include-path" value="system_sam_b/"/>
-		<build type="header-file" subtype="api" value="system_sam_b/system.h"/>
-		<build type="c-source" value="system_sam_b/system.c"/>
-		<build type="doxygen-entry-point" value="asfdoc_samb_system_group"/>
-		<build type="doxygen-quick-start" value="asfdoc_samb_system_group"/>
-
-		<require idref="sam0.utils"/>
-
-		<device-support value="samb11"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
-	</module>
-
 	<select-by-device id="sam0.drivers.system" caption="SYSTEM - Core System Driver">
 		<module type="driver" id="sam0.drivers.system#sam0" caption="SYSTEM - Core System Driver">
 			<info type="description" value="summary">
@@ -197,10 +160,10 @@
 			</info>
 
 			<build type="include-path" value="."/>
-			<build type="header-file" subtype="api" value="system_sam_b/system.h"/>
-			<build type="c-source" value="system_sam_b/system.c"/>
+			<build type="header-file" subtype="api" value="system_sam_b.h"/>
+			<build type="c-source" value="system_sam_b.c"/>
 
-			<require idref="sam0.drivers.system.system_sam_b"/>
+			<require idref="sam0.utils"/>
 			<device-support value="samb"/>
 		</module>
 	</select-by-device>

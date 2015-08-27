@@ -66,6 +66,10 @@
 			<device-support value="sam4cm"/>
 			<device-support value="sam4cp"/>
 			<device-support value="samg"/>
+			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="sams70"/>
+			<device-support value="same70"/>
 			<require idref="sam.drivers.pmc"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
@@ -142,6 +146,7 @@
 			<build type="module-config" subtype="path" value="saml/module_config"/>
 			<build type="doxygen-entry-point" value="sleepmgr_group"/>
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 			<require idref="sam0.drivers.system"/>
 			<generator value="doxygen-module" default-mcu="unspecified-saml21"/>
 		</module>

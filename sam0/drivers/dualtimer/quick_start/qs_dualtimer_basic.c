@@ -49,8 +49,6 @@
 #include "conf_dualtimer.h"
 #include "conf_uart_serial.h"
 
-#define PRINTF(s)   uart_write_buffer_wait(&uart_instance, (const uint8_t *)s, strlen(s))
-
 //! [module_inst]
 struct uart_module uart_instance;
 //! [module_inst]

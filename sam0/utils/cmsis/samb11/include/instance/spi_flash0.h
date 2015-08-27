@@ -71,4 +71,10 @@
 #define REG_SPI_FLASH0_STATUS              (*(RoReg16*)0x40012028U) /**< \brief (SPI_FLASH0) Misc Status */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
+/* ========== Instance Parameter definitions for SPI_FLASH0 peripheral ========== */
+#define SPI_FLASH0_FLASH_SIZE                    131072    
+#define SPI_FLASH0_ADDRESS_SPACE_REF             extflash  
+#define SPI_FLASH0_PAGES                         2048      
+#define SPI_FLASH0_PAGE_SIZE                     64        
+
 #endif /* _SAMB11_SPI_FLASH0_INSTANCE_ */

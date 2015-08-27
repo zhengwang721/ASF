@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_dac_group SAM Digital-to-Analog (DAC) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the conversion of
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the conversion of
  * digital values to analog voltage. The following driver API modes are covered
  * by this manual:
  *

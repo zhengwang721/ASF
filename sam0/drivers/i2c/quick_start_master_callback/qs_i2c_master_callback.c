@@ -155,7 +155,6 @@ int main(void)
 	
 	//! [while]
 	while (true) {
-		
 	}
 	//! [while]
 }
