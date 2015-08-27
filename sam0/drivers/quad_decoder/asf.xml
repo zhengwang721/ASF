@@ -20,9 +20,9 @@
 
 		<build type="header-file" value="quick_start/qs_quad_decoder_basic.h"/>
 
-		<build type="doxygen-entry-point" value="asfdoc_sam0_quad_decoder_group"/>
+		<build type="doxygen-entry-point" value="asfdoc_samb_quad_decoder_group"/>
 		<build type="doxygen-example-path" value="quick_start"/>
-		<build type="doxygen-quick-start" value="asfdoc_sam0_quad_decoder_exqsg"/>
+		<build type="doxygen-quick-start" value="asfdoc_samb_quad_decoder_exqsg"/>
 
 		<device-support value="samb"/>
 		<require idref="sam0.utils"/>
