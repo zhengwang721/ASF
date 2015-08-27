@@ -678,29 +678,6 @@ static inline void xdmac_channel_set_destination_microblock_stride(Xdmac *xdmac,
 	xdmac->XDMAC_CHID[channel_num].XDMAC_CDUS = XDMAC_CDUS_DUBS(dubs);
 }
 
-/**
- * \brief Check if the specified XDMAC Channel is enabled.
- *
- * \param[in] xdmac Module hardware register base address pointer
- * \param[in] channel XDMAC Channel number (range 0 to 3)
- *
- * \return The XDMAC Channel's enable/disable status.
- * \retval 0 XDMAC Channel is disabled
- * \retval 1 XDMAC Channel is enabled
- */
-static inline uint32_t xdmac_channel_is_enable(Xdmac *xdmac, uint32_t channel)
-{
-	/* Validate parameters. */
-	Assert(xdmac);
-	Assert(channel<=23);
-
-	if (xdmac->XDMAC_GS & (1 << channel)) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
 void xdmac_configure_transfer(Xdmac *xdmac, uint32_t channel_num,
 		xdmac_channel_config_t *p_cfg);
 
