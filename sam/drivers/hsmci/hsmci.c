@@ -1094,4 +1094,4 @@ bool hsmci_wait_end_of_write_blocks(void)
 
 	return true;
 }
-#endif // HSMCI_DMA_XDMACMODE
+#endif // HSMCI_DMA_DMAEN
