@@ -56,7 +56,7 @@
  *  \li Comparator biasing current selection
  *  \li No invert ADC clock
  *  \li Fractional part for the clock divider is 0
- *  \li Integer part for the clock divider is 1
+ *  \li Integer part for the clock divider is 0x12
  *
  * \section asfdoc_samb_adc_basic_use_case_setup Setup
  *

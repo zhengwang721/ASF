@@ -63,6 +63,9 @@
 		<build type="header-file" value="quick_start_slave_callback/qs_spi_slave_callback.h"/>
 		<build type="include-path" value="."/>
 
+		<build type="define" name="SPI_CALLBACK_MODE" value="true"/>
+		<build type="doxygen-enable-section" value="SPI_CALLBACK_MODE"/>
+
 		<build type="doxygen-entry-point" value="asfdoc_samb_drivers_spi_group"/>
 		<build type="doxygen-image-path" value="docimg"/>
 		<build type="doxygen-quick-start" value="asfdoc_samb_drivers_spi_exqsg"/>

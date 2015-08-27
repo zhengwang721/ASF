@@ -40,12 +40,12 @@
 			<require idref="sam0.drivers.adc.callback"/>
 		</module>
 
-		<module type="driver" id="sam0.drivers.adc#samb" caption="ADC - Analog-to-Digital Converter for SAMB(Polled APIs)">
+		<module type="driver" id="sam0.drivers.adc#samb" caption="ADC - Analog-to-Digital Converter for SAMB">
 			<info type="keyword" value="technology">
 				<keyword value="Analog Conversion"/>
 			</info>
 
-			<build type="header-file" subtype="api" value="adc_sam_b/adc.h"/>
+			<build type="header-file" subtype="api" value="adc_sam_b.h"/>
 			<build type="include-path" value="."/>
 			<build type="define" name="ADC_CALLBACK_MODE" value="false"/>
 			<build type="doxygen-entry-point" value="asfdoc_samb_adc_group"/>
@@ -115,8 +115,8 @@
 		<module type="meta" id="sam0.drivers.adc.samb#sam_b" caption="ADC - Analog-to-Digital Converter for SAMB">
 			<build type="include-path" value="." />
 			<build type="include-path" value="adc_sam_b"/>
-			<build type="c-source" value="adc_sam_b/adc.c"/>
-			<build type="header-file" value="adc_sam_b/adc.h"/>
+			<build type="c-source" value="adc_sam_b/adc_sam_b.c"/>
+			<build type="header-file" value="adc_sam_b.h"/>
 
 			<device-support value="samb11"/>
 		</module>
@@ -229,14 +229,6 @@
 				<keyword value="Analog Conversion"/>
 			</info>
 
-			<info type="appnote" value="ATxxxxx"/>
-			<info type="keyword" value="pdf">
-				<keyword value="ADC"/>
-				<keyword value="I/O"/>
-				<keyword value="Analog to Digital Converter"/>
-				<keyword value="Analog Conversion"/>
-			</info>
-
 			<info type="description" value="pdf">
 				This document describes how to use the Analog-to-Digital
 				Converter on the SAMB, both the ASF driver and the
@@ -245,18 +237,16 @@
 
 			<build type="include-path" value="."/>
 			<build type="include-path" value="adc_sam_b"/>
-			<build type="c-source" value="adc_sam_b/adc.c"/>
-			<build type="header-file" subtype="api" value="adc_sam_b/adc.h"/>
+			<build type="c-source" value="adc_sam_b/adc_sam_b.c"/>
+			<build type="header-file" subtype="api" value="adc_sam_b.h"/>
 			<build type="header-file" value="quick_start_sam_b/qs_adc_basic.h"/>
 
-			<build type="doxygen-example-path" value="quick_start"/>
+			<build type="doxygen-example-path" value="quick_start_sam_b"/>
 			<build type="doxygen-entry-point" value="asfdoc_samb_adc_group"/>
+			<build type="doxygen-image-path" value="docimg"/>
 			<build type="doxygen-quick-start" value="asfdoc_samb_adc_exqsg"/>
 
-			<build type="define" name="ADC_CALLBACK_MODE" value="false"/>
-			<build type="doxygen-enable-section" value="DEVICE_SAMB11_SUPPORT"/>
-
-			<device-support value="samb11"/>
+			<device-support value="samb"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.gpio"/>
