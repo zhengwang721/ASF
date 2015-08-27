@@ -1011,13 +1011,15 @@ bool hsmci_wait_end_of_read_blocks(void)
 
 bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 {
-	xdmac_channel_config_t p_cfg;
+	xdmac_channel_config_t p_cfg = {0, 0, 0, 0, 0, 0, 0, 0};
 	uint32_t nb_data;
 	uint16_t i;
 	uint32_t descriptor_control = 0;
 
 	Assert(nb_block);
 	Assert(dest);
+
+	xdmac_channel_disable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 
 	nb_data = nb_block * hsmci_block_size;
 
@@ -1035,11 +1037,9 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 
 	for ( i = 0; i < nb_block; i++) {
 		xdmac_link_list[i].mbr_ubc = XDMAC_UBC_NVIEW_NDV1
-									| (( i == nb_block - 1) ? 0: XDMAC_UBC_NDE_FETCH_EN)
 									| XDMAC_UBC_NDEN_UPDATED
 									| (nb_data / 4);
-		xdmac_link_list[i].mbr_sa  = (uint32_t)(((uint8_t *)src + i * hsmci_block_size));
-		//xdmac_link_list[i].mbr_sa  = (uint32_t)src;
+		xdmac_link_list[i].mbr_sa  = (uint32_t)((((uint8_t *)src) + i * hsmci_block_size));
 		xdmac_link_list[i].mbr_da = (uint32_t)&(HSMCI->HSMCI_FIFO[i]);
 
 		if ( i == nb_block - 1) {
@@ -1055,6 +1055,10 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 						| XDMAC_CNDC_NDSUP_SRC_PARAMS_UPDATED
 						| XDMAC_CNDC_NDDUP_DST_PARAMS_UPDATED;
 	xdmac_channel_set_descriptor_control(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, descriptor_control);
+
+	xdmac_channel_disable_interrupt(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, 0xFF);
+	xdmac_channel_enable_interrupt(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, XDMAC_CIE_LIE);
+	xdmac_enable_interrupt(XDMAC, XDMAC_GIE_IE0);
 
 	xdmac_channel_enable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 	hsmci_transfert_pos += nb_data;

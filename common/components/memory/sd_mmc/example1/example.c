@@ -166,7 +166,6 @@
 //! Buffer used by read/write tests
 COMPILER_WORD_ALIGNED
 static uint8_t buf_test[TEST_MEM_ACCESS_SIZE];
-static uint8_t test_buf[1024];
 
 //! Read and write test length of CIA in bytes
 #define TEST_CIA_SIZE           (0x16)
@@ -332,7 +331,6 @@ static void main_test_memory(uint8_t slot)
 	// Read the last block
 	puts("    Read... \r\n");
 
-#if 1
 	tick_start = time_tick_get();
 	if (SD_MMC_OK != sd_mmc_init_read_blocks(slot,
 			last_blocks_addr,
@@ -425,21 +423,17 @@ static void main_test_memory(uint8_t slot)
 		}
 		// Check the unique value of the area
 		if (((uint32_t*)buf_test)[0] != nb_trans) {
-			printf("err nb_trans = %d\r\n", (int)nb_trans);
 			puts("Check [FAIL]\n\r");
 			return;
 		}
 		// Check buffer
 		for (i = 1; i < (TEST_MEM_ACCESS_SIZE / sizeof(uint32_t)); i++) {
 			if (((uint32_t*)buf_test)[i] != TEST_FILL_VALUE_U32) {
-				printf("err nb_trans = %d\r\n", (int)nb_trans);
-				printf("err i = %d\r\n", (int)i);
 				puts("Check [FAIL]\n\r");
 				return;
 			}
 		}
 	}
-#endif
 	puts("[OK]\n\r");
 }
 
