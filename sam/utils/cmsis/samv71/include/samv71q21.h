@@ -56,7 +56,7 @@
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 #include <stdint.h>
@@ -82,7 +82,7 @@ typedef enum IRQn
   PendSV_IRQn           = -2,  /**< 14 Cortex-M7 Pend SV Interrupt           */
   SysTick_IRQn          = -1,  /**< 15 Cortex-M7 System Tick Interrupt       */
 /******  SAMV71Q21 specific Interrupt Numbers *********************************/
-  
+
   SUPC_IRQn            =  0, /**<  0 SAMV71Q21 Supply Controller (SUPC) */
   RSTC_IRQn            =  1, /**<  1 SAMV71Q21 Reset Controller (RSTC) */
   RTC_IRQn             =  2, /**<  2 SAMV71Q21 Real Time Clock (RTC) */
@@ -149,7 +149,7 @@ typedef struct _DeviceVectors
 {
   /* Stack pointer */
   void* pvStack;
-  
+
   /* Cortex-M handlers */
   void* pfnReset_Handler;
   void* pfnNMI_Handler;
@@ -307,7 +307,7 @@ void WDT_Handler        ( void );
 void XDMAC_Handler      ( void );
 
 /**
- * \brief Configuration of the Cortex-M7 Processor and Core Peripherals 
+ * \brief Configuration of the Cortex-M7 Processor and Core Peripherals
  */
 
 #define __CM7_REV              0x0000 /**< SAMV71Q21 core revision number ([15:8] revision number, [7:0] patch number) */
@@ -661,6 +661,7 @@ void XDMAC_Handler      ( void );
 #define EBI_CS2_ADDR  (0x62000000u) /**< EBI Chip Select 2 base address */
 #define EBI_CS3_ADDR  (0x63000000u) /**< EBI Chip Select 3 base address */
 #define SDRAM_CS_ADDR (0x70000000u) /**< SDRAM Chip Select base address */
+#define USBHS_RAM_ADDR (0xA0100000u) /**< USB Interface RAM base address */
 
 /* ************************************************************************** */
 /*   MISCELLANEOUS DEFINITIONS FOR SAMV71Q21 */
