@@ -109,7 +109,7 @@ enum status_code nvm_set_config(
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
 
-#if (SAML21) || (SAMC20) || (SAMC21)
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21)
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, MCLK_APBBMASK_NVMCTRL);
 #else
@@ -273,7 +273,7 @@ enum status_code nvm_execute_command(
 	/* Set command */
 	nvm_module->CTRLA.reg = command | NVMCTRL_CTRLA_CMDEX_KEY;
 
-	/* Wait for the nvm controller to become ready */
+	/* Wait for the NVM controller to become ready */
 	while (!nvm_is_ready()) {
 	}
 
@@ -403,11 +403,11 @@ enum status_code nvm_update_buffer(
  *       row should be erased (via \ref nvm_erase_row()) before attempting to
  *       write new data to the page.
  *
- * \note For SAMD21 RWW devices, see \c SAMD21_64K, command \c NVM_COMMAND_RWWEE_WRITE_PAGE
+ * \note For SAM D21 RWW devices, see \c SAMD21_64K, command \c NVM_COMMAND_RWWEE_WRITE_PAGE
  * must be executed before any other commands after writing a page,
  * refer to errata 13588.
  *
- * \note If manual write mode is enable, write command must be executed after
+ * \note If manual write mode is enabled, the write command must be executed after
  * this function, otherwise the data will not write to NVM from page buffer.
  *
  * \return Status of the attempt to write a page.
@@ -672,7 +672,7 @@ enum status_code nvm_erase_row(
 /**
  * \brief Reads the parameters of the NVM controller.
  *
- * Retrieves the page size, number of pages and other configuration settings
+ * Retrieves the page size, number of pages, and other configuration settings
  * of the NVM region.
  *
  * \param[out] parameters    Parameter structure, which holds page size and
@@ -792,7 +792,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 			((raw_user_row[0] & NVMCTRL_FUSES_EEPROM_SIZE_Msk)
 			>> NVMCTRL_FUSES_EEPROM_SIZE_Pos);
 
-#if (SAML21)
+#if (SAML21) || (SAML22)
 	fusebits->bod33_level = (uint8_t)
 			((raw_user_row[0] & FUSES_BOD33USERLEVEL_Msk)
 			>> FUSES_BOD33USERLEVEL_Pos);
@@ -899,7 +899,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->wdt_timeout_period = (uint8_t)
 			((raw_user_row[0] & WDT_FUSES_PER_Msk) >> WDT_FUSES_PER_Pos);
 
-#if (SAML21) || (SAMC20) || (SAMC21)
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21)
 	fusebits->wdt_window_timeout = (enum nvm_wdt_window_timeout)
 			((raw_user_row[1] & WDT_FUSES_WINDOW_Msk) >> WDT_FUSES_WINDOW_Pos);
 #else
@@ -998,7 +998,7 @@ enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
 	fusebits[0] &= (~NVMCTRL_FUSES_EEPROM_SIZE_Msk);
 	fusebits[0] |= NVMCTRL_FUSES_EEPROM_SIZE(fb->eeprom_size);
 
-#if (SAML21)
+#if (SAML21) || (SAML22)
 	fusebits[0] &= (~FUSES_BOD33USERLEVEL_Msk);
 	fusebits[0] |= FUSES_BOD33USERLEVEL(fb->bod33_level);
 
@@ -1061,7 +1061,7 @@ enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
 	fusebits[0] &= (~WDT_FUSES_PER_Msk);
 	fusebits[0] |= fb->wdt_timeout_period << WDT_FUSES_PER_Pos;
 
-#if (SAML21) || (SAMC20) || (SAMC21)
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21)
 	fusebits[1] &= (~WDT_FUSES_WINDOW_Msk);
 	fusebits[1] |= fb->wdt_window_timeout << WDT_FUSES_WINDOW_Pos;
 #else

@@ -55,13 +55,14 @@
 			<device-support value="samd11"/>
 			<device-support value="samda1"/>
 		</module>
-		<module type="meta" id="sam0.drivers.adc.polled#sam_l" caption="ADC - Analog-to-Digital Converter">
+		<module type="meta" id="sam0.drivers.adc.polled#sam_l_c" caption="ADC - Analog-to-Digital Converter">
 			<build type="include-path" value="." />
 			<build type="include-path" value="adc_sam_l_c"/>
 			<build type="c-source" value="adc_sam_l_c/adc.c"/>
 			<build type="header-file" value="adc_sam_l_c/adc_feature.h"/>
 
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 			<device-support value="samc20"/>
 			<device-support value="samc21"/>
 		</module>
@@ -82,7 +83,7 @@
 			<device-support value="samd11"/>
 			<device-support value="samda1"/>
 		</module>
-		<module type="meta" id="sam0.drivers.adc.callback#sam_l" caption="ADC - Analog-to-Digital Converter">
+		<module type="meta" id="sam0.drivers.adc.callback#sam_l_c" caption="ADC - Analog-to-Digital Converter">
 			<build type="include-path" value="." />
 			<build type="include-path" value="adc_sam_l_c"/>
 			<build type="c-source" value="adc_sam_l_c/adc.c"/>
@@ -90,6 +91,7 @@
 			<build type="header-file" value="adc_sam_l_c/adc_feature.h"/>
 
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 			<device-support value="samc20"/>
 			<device-support value="samc21"/>
 		</module>
@@ -147,7 +149,7 @@
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
-	<module type="meta" id="sam0.drivers.adc.appnote_sam_l" caption="ADC - Analog-to-Digital Converter">
+	<module type="meta" id="sam0.drivers.adc.appnote_sam_l_c" caption="ADC - Analog-to-Digital Converter">
 		<info type="keyword" value="technology">
 				<keyword value="Analog Conversion"/>
 			</info>
@@ -189,6 +191,7 @@
 			<build type="doxygen-enable-section" value="DEVICE_SAML21_SUPPORT"/>
 
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 			<device-support value="samc20"/>
 			<device-support value="samc21"/>
 

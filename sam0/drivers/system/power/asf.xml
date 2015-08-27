@@ -40,6 +40,7 @@
 			<require idref="sam0.utils"/>
 
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 		</module>
 		<module type="driver" id="sam0.drivers.system.power#sam_c" caption="SYSTEM - Power Management for SAM C20/C21">
 			<info type="description" value="summary">

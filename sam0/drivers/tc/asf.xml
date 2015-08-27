@@ -66,6 +66,7 @@
 			<build type="c-source" value="tc_sam_l_c/tc.c"/>
 
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 			<device-support value="samc20"/>
 			<device-support value="samc21"/>
 		</module>

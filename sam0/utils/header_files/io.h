@@ -82,6 +82,10 @@
 #  include "saml21.h"
 #endif
 
+#if (SAML22)
+#  include "saml22.h"
+#endif
+
 #if (SAMDA1)
 #  include "samda1.h"
 #endif
