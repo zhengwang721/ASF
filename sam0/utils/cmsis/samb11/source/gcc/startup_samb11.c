@@ -55,6 +55,7 @@ int main(void);
 /** \endcond */
 
 void __libc_init_array(void);
+void app_entry(void);
 
 /**
  * \brief This is the code that gets called on processor reset.

@@ -1,12 +1,6 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.timer" caption="TIMER - Timer for SAMB11">
 		<info type="keyword" value="technology">
-			<keyword value="Timer"/>
-		</info>
-
-		<info type="appnote" value="ATxxxxx"/>
-		<info type="keyword" value="pdf">
-			<keyword value="I/O"/>
 			<keyword value="Timers"/>
 		</info>
 
