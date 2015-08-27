@@ -448,9 +448,6 @@
 /** HSMCI MCDA3 pin definition. */
 #define PIN_HSMCI_MCDA3_GPIO            (PIO_PA27_IDX)
 #define PIN_HSMCI_MCDA3_FLAGS           (IOPORT_MODE_MUX_C)
-/** HSMCI DETECH pin definition. */
-#define SD_MMC_0_CD_GPIO                (PIO_PD18_IDX)
-#define SD_MMC_0_CD_DETECT_VALUE        0
 
 /** EBI pins configuration for LCD */
 /** LCD reset pin */
