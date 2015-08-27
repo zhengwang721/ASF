@@ -74,7 +74,8 @@ extern ser_fifo_desc_t ble_usart_rx_fifo;
 volatile bool tx_done = false;				//	TX Transfer complete flag
 volatile uint8_t data_received = 0;			//	RX data received flag
 
-volatile bool ble_init_done = false;
+volatile bool init_done = false;
+volatile int ext_wakeup_state = 1;
 
 typedef enum {
 	BLE_IDLE_STATE = 0,
@@ -103,7 +104,7 @@ volatile ble_serial_state_t ble_rx_state = BLE_SOF_STATE;
 
 ble_event_frame_t ble_evt_frame;
 
-//#define BLE_DBG_ENABLE
+#define BLE_DBG_ENABLE
 #define DBG_LOG_BLE		printf
 
 #ifdef BLE_DBG_ENABLE
@@ -142,6 +143,7 @@ int platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t len)
 	{
 		return -1;
 	}
+   
 #ifdef BLE_DBG_ENABLE
 	uint32_t i;
 
@@ -160,7 +162,11 @@ int platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t len)
 #endif
 
 #if defined	ENABLE_POWER_SAVE	
-	if ((ble_init_done) && (!ble_wakeup_pin_level()))
+	 if(init_done)
+	 {
+		 ext_wakeup_state++;
+	 }
+	if ((init_done) && (!ble_wakeup_pin_level()))
 	{
 		ble_wakeup_pin_set_high();
 		delay_ms(BTLC1000_WAKEUP_DELAY);
@@ -400,13 +406,46 @@ void serial_rx_callback(void)
 void serial_tx_callback(void)
 {
 	tx_done = true;
-	if (ble_init_done)
-	{
-		#if defined ENABLE_POWER_SAVE
-		ble_wakeup_pin_set_low();
-		#endif //ENABLE_POWER_SAVE
+	
+#if defined ENABLE_POWER_SAVE
+	if (init_done)
+	{		
+		if(bus_type == UART)
+		{
+			if(ext_wakeup_state > 0)
+			ext_wakeup_state--;
+			if(ext_wakeup_state == 0)			  
+			;//ble_wakeup_pin_set_low();
+		}
 	}	
+#endif
+
 }
+
+ void platform_wakeup(void)
+ {
+	 //ble_wakeup_pin_set_high();
+ }
+ 
+ void platform_set_sleep(void)
+ {
+	 //ble_wakeup_pin_set_low();
+ }
+ 
+ void platform_enter_critical_section(void)
+ {
+	 
+ }
+ 
+ void platform_leave_critical_section(void)
+ {
+	 
+ }
+ 
+ void platform_stop_timer(void)
+ {
+	 
+ }
 
 
 

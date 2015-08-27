@@ -52,7 +52,7 @@
 #include "ble_utils.h"
 #include "platform.h"
 
-extern volatile bool ble_init_done;
+extern volatile bool init_done;
 
 #if defined LINK_LOSS_SERVICE
 	#include "link_loss.h"
@@ -80,7 +80,7 @@ extern volatile bool ble_init_done;
 #endif /*HID_DEVICE*/	
 
 #if defined ATT_DB_MEMORY
-uint8_t att_db_data[250];
+uint8_t att_db_data[1000];
 #endif
 
 /** @brief information of the connected devices */
@@ -145,13 +145,15 @@ void ble_device_init(at_ble_addr_t *addr)
 	
 	ble_init(&pf_cfg);
 	
+	init_done = true;
+	
 	ble_set_address(addr);	
 	
-	dev_name = (char *)BLE_DEVICE_NAME;
-	if (ble_set_device_name((uint8_t *)dev_name, strlen(dev_name)) != AT_BLE_SUCCESS)
-	{
-		DBG_LOG("Device name set failed");
-	}
+	//dev_name = (char *)BLE_DEVICE_NAME;
+	//if (ble_set_device_name((uint8_t *)dev_name, strlen(dev_name)) != AT_BLE_SUCCESS)
+	//{
+		//DBG_LOG("Device name set failed");
+	//}
 		
 	BLE_PROFILE_INIT(NULL);
 }

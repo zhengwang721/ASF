@@ -219,5 +219,11 @@ uint8_t platform_sleep(uint32_t sleepms);
 at_ble_status_t platform_ble_event_data(void);
 
  /** @}*/
+ 
+void platform_stop_timer(void);
+void platform_wakeup(void);
+void platform_set_sleep(void);
+void platform_enter_critical_section(void);
+void platform_leave_critical_section(void);
 
 #endif // __PLATFORM_H__

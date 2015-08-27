@@ -114,7 +114,7 @@
 #define DIS_CHAR_FIRMWARE_REIVSION_MAX_LEN		0x14
 
 /** @brief number of device information service characteristics */
-#define DIS_TOTAL_CHARATERISTIC_NUM             0x05
+#define DIS_TOTAL_CHARATERISTIC_NUM             0x09
 
 /** @brief system id characteristic initial length*/
 #define DIS_CHAR_SYSTEM_ID_INIT_LEN sizeof(system_id_char_value_t)
