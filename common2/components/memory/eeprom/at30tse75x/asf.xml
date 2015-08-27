@@ -10,7 +10,7 @@
 		<build type="header-file" value="at30tse75x.h"/>
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="common2_components_memory_eeprom_at30tse75x_group"/>
-		<require idref="sam0.drivers.i2c"/>
+		<require idref="sam0.drivers.i2c.master"/>
 		<device-support value="samb"/>
 		<generator value="doxygen-module" default-mcu="unspecified-samb11"/>
 	</module>

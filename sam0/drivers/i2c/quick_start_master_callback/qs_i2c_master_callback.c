@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief SAM B11 I2C Master Quick Start Guide
+ * \brief SAM B11 I2C Master Quick Start Guide with Callbacks
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,106 +41,120 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-
 #include <asf.h>
 
 //! [packet_data]
-#define DATA_LENGTH 10
-static uint8_t write_buffer[DATA_LENGTH] = {
-		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
+#define DATA_LENGTH 8
+
+static uint8_t wr_buffer[DATA_LENGTH] = {
+	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07
 };
 
-static uint8_t read_buffer[DATA_LENGTH];
+static uint8_t rd_buffer[DATA_LENGTH];
 //! [packet_data]
 
 //! [address]
 #define SLAVE_ADDRESS 0x12
 //! [address]
 
-/* Number of times to try to send packet if failed. */
-//! [timeout]
-#define TIMEOUT 1000
-//! [timeout]
+//! [packet_glob]
+struct i2c_master_packet wr_packet;
+struct i2c_master_packet rd_packet;
+//! [packet_glob]
 
-/* Init software module. */
+/* Init software module instance. */
 //! [dev_inst]
 struct i2c_master_module i2c_master_instance;
 //! [dev_inst]
 
-void configure_i2c_master(void);
+//! [callback_func]
+static void i2c_write_complete_callback(
+		struct i2c_master_module *const module)
+{
+	/* Initiate new packet read */
+	//! [read_next]
+	i2c_master_read_packet_job(&i2c_master_instance,&rd_packet);
+	//! [read_next]
+}
+//! [callback_func]
 
 //! [initialize_i2c]
-void configure_i2c_master(void)
+static void configure_i2c(void)
 {
-	/* Initialize config structure and software module. */
+	/* Initialize config structure and software module */
 	//! [init_conf]
 	struct i2c_master_config config_i2c_master;
 	i2c_master_get_config_defaults(&config_i2c_master);
 	//! [init_conf]
 
-	/* Initialize and enable device with config, and enable i2c. */
+	/* Initialize and enable device with config */
 	//! [init_module]
-	i2c_master_init(&i2c_master_instance, &config_i2c_master);
+	while(i2c_master_init(&i2c_master_instance, &config_i2c_master)     \
+			!= STATUS_OK);
 	//! [init_module]
-	
+
 	//! [enable_module]
 	i2c_enable(i2c_master_instance.hw);
 	//! [enable_module]
 }
 //! [initialize_i2c]
 
+//! [setup_callback]
+static void configure_i2c_callbacks(void)
+{
+	/* Register callback function. */
+	//! [callback_reg]
+	i2c_master_register_callback(&i2c_master_instance, i2c_write_complete_callback,
+			I2C_MASTER_CALLBACK_WRITE_COMPLETE);
+	//! [callback_reg]
+	//! [callback_en]
+	i2c_master_enable_callback(&i2c_master_instance,
+			I2C_MASTER_CALLBACK_WRITE_COMPLETE);
+	//! [callback_en]
+	//! [nvic_en]
+	NVIC_EnableIRQ(13);
+	NVIC_EnableIRQ(14);
+	//! [nvic_en]
+}
+//! [setup_callback]
+
 int main(void)
 {
-	//! [init]
-	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
-	/* Configure device and enable. */
-	//! [config]
-	configure_i2c_master();
-	//! [config]
 
-	/* Timeout counter. */
-	//! [timeout_counter]
-	uint16_t timeout = 0;
-	//! [timeout_counter]
+	//! [run_initialize_i2c]
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
+	//! [config]
+	configure_i2c();
+	//! [config]
+	//! [config_callback]
+	configure_i2c_callbacks();
+	//! [config_callback]
+	//! [run_initialize_i2c]
 
 	/* Init i2c packet. */
-	//! [packet]
-	struct i2c_master_packet packet = {
-		.address     = SLAVE_ADDRESS,
-		.data_length = DATA_LENGTH,
-		.data        = write_buffer,
-	};
-	//! [packet]
-	//! [init]
-
-	//! [main]
-	/* Write buffer to slave until success. */
-	//! [write_packet]
-	while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) !=
-			STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			break;
-		}
+	//! [init_buf]
+	for (int i = 0; i < DATA_LENGTH; i++) {
+		wr_buffer[i] = i;
+		rd_buffer[i] = 0;
 	}
+	//! [init_buf]
 	//! [write_packet]
-
-	/* Read from slave until success. */
+	wr_packet.address     = SLAVE_ADDRESS;
+	wr_packet.data_length = DATA_LENGTH;
+	wr_packet.data        = wr_buffer;
+	//! [write_packet]
 	//! [read_packet]
-	packet.data = read_buffer;
-	while (i2c_master_read_packet_wait(&i2c_master_instance, &packet) !=
-			STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			break;
-		}
-	}
+	rd_packet.address     = SLAVE_ADDRESS;
+	rd_packet.data_length = DATA_LENGTH;
+	rd_packet.data        = rd_buffer;
 	//! [read_packet]
 
-	//! [main]
-
+	//! [write_packet]
+	i2c_master_write_packet_job(&i2c_master_instance, &wr_packet);
+	//! [write_packet]
+	
+	//! [while]
 	while (true) {
-		/* Infinite loop */
 	}
-
+	//! [while]
 }
