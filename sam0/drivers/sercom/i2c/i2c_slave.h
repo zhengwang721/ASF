@@ -460,7 +460,7 @@ static void _i2c_slave_wait_for_sync(
  * \internal Workaround for errata 13574
  * Instead set ACK/NACK of CTRLB
  *
- * This errata exist in part revisions of SAMD20/D21/D09
+ * This errata exist in part revisions of SAM D20/D21/D09
  * D10/D11/L21/L22/DA1/C20/C21, but workaround can be works in all
  * revision of those device. As this function operation
  * should be use less cpu time as possible, so caller
@@ -508,7 +508,7 @@ static inline void _i2c_slave_set_ctrlb_ackact(
  * \internal Workaround for SAM0 errata 13574,
  * instead Set CMD3 of CTRLB
  *
- * This errata exist in part revisions of SAMD20/D21/D09
+ * This errata exist in part revisions of SAM D20/D21/D09
  * D10/D11/L21/DA1/C20/C21, but workaround can be works in all
  * revision of those device. As this function operation
  * should be use less cpu time as possible, so caller
