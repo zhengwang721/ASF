@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM UART Quick Start
+ * \brief SAM UART Quick Start for SAMB11
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -40,38 +40,50 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
- * \page asfdoc_sam0_uart_basic_use_case Quick Start Guide for UART - Basic
+ * \page asfdoc_samb_uart_basic_use_case Quick Start Guide for UART - Basic
  *
- * This quick start will echo back characters typed into the terminal. In this
+ * This quick start will show how to use both polled and callback interfaces.
+ * It will echo back characters typed into the terminal. In this
  * use case the UART will be configured with the following settings:
  * - Asynchronous mode
  * - 9600 Baudrate
  * - 8-bits, No Parity and one Stop Bit
  * - TX and RX enabled and connected to the Xplained Pro Embedded Debugger virtual COM port
  *
- * \section asfdoc_sam0_uart_basic_use_case_setup Setup
+ * \section asfdoc_samb_uart_basic_use_case_setup Setup
  *
- * \subsection asfdoc_sam0_uart_basic_use_case_prereq Prerequisites
+ * \subsection asfdoc_samb_uart_basic_use_case_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_sam0_uart_basic_use_case_setup_code Code
+ * \subsection asfdoc_samb_uart_basic_use_case_setup_code Code
  * Add to the main application source file, outside of any functions:
  * \snippet qs_uart_basic_use.c module_inst
+ * \snippet qs_uart_basic_use.c variable_inst
  *
  * Copy-paste the following setup code to your user application:
+ * \snippet qs_uart_basic_use.c callback_functions
  * \snippet qs_uart_basic_use.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_uart_basic_use.c setup_init
  *
- * \subsection asfdoc_sam0_uart_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_samb_uart_basic_use_case_setup_flow Workflow
  * -# Create a module software instance structure for the UART module to store
  *    the UART driver state while it is in use.
  *    \snippet qs_uart_basic_use.c module_inst
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
+ *
+ * -# Create some global variables.
+ *    \snippet qs_uart_basic_use.c variable_inst
+ *
+ * -# Create the callback functions.
+ *    \snippet qs_uart_basic_use.c callback_functions
  *
  * -# Configure the UART module.
  *  -# Create a UART module configuration struct, which can be filled out to
@@ -90,16 +102,21 @@
  *     driver is busy until the configuration is stressfully set.
  *     \snippet qs_uart_basic_use.c setup_set_config
  *
- * \section asfdoc_sam0_uart_basic_use_case_main Use Case
+ * \section asfdoc_samb_uart_basic_use_case_main Use Case
  *
- * \subsection asfdoc_sam0_uart_basic_use_case_main_code Code
+ * \subsection asfdoc_samb_uart_basic_use_case_main_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_uart_basic_use.c main
  *
- * \subsection asfdoc_sam0_uart_basic_use_case_main_flow Workflow
+ * \subsection asfdoc_samb_uart_basic_use_case_main_flow Workflow
  * -# Send a string to the UART to show the demo is running, blocking until
  *    all characters have been sent.
- *    \snippet qs_uart_basic_use.c main_send_string
+ *    \snippet qs_uart_basic_use.c main_send_string1
+ * -# Send the information to the UART and get the user input.
+ *    \snippet qs_uart_basic_use.c test_callback_functions
+ * -# Send a string to the UART to show enter the while loop, blocking until
+ *    all characters have been sent.
+ *    \snippet qs_uart_basic_use.c main_send_string2
  * -# Enter an infinite loop to continuously echo received values on the UART.
  *    \snippet qs_uart_basic_use.c main_loop
  * -# Perform a blocking read of the UART, storing the received character into

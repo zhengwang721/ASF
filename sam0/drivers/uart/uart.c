@@ -1,71 +1,133 @@
 /**
-* \file
-*
-* \brief UART Driver
-*
-* Copyright (C) 2015 Atmel Corporation. All rights reserved.
-*
-* \asf_license_start
-*
-* \page License
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*
-* 1. Redistributions of source code must retain the above copyright notice,
-*    this list of conditions and the following disclaimer.
-*
-* 2. Redistributions in binary form must reproduce the above copyright notice,
-*    this list of conditions and the following disclaimer in the documentation
-*    and/or other materials provided with the distribution.
-*
-* 3. The name of Atmel may not be used to endorse or promote products derived
-*    from this software without specific prior written permission.
-*
-* 4. This software may only be redistributed and used in connection with an
-*    Atmel microcontroller product.
-*
-* THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
-* EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
-* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
-* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-* POSSIBILITY OF SUCH DAMAGE.
-*
-* \asf_license_stop
-*
-*/
+ * \file
+ *
+ * \brief SAM UART Driver for SAMB11
+ *
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
 /*
-* Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
-*/
-
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #include "uart.h"
 
+/**
+ * \internal
+ * Internal driver device instance struct.
+ */
 struct uart_module *_uart_instances[UART_INST_NUM];
+
+/**
+ * \internal
+ * Writes a character from the TX buffer to the Data register.
+ *
+ * \param[in,out]  module  Pointer to UART software instance struct
+ */
+static void _uart_write(struct uart_module *const module)
+{
+	/* Pointer to the hardware module instance */
+	Uart *const uart_hw = module->hw;
+
+	/* Write value will be at least 8-bits long */
+	uint8_t data_to_send = *(module->tx_buffer_ptr);
+	/* Increment 8-bit pointer */
+	(module->tx_buffer_ptr)++;
+
+	/* Write the data to send*/
+	uart_hw->TRANSMIT_DATA.reg = data_to_send & UART_TRANSMIT_DATA_MASK;
+
+	/* Decrement remaining buffer length */
+	(module->remaining_tx_buffer_length)--;
+}
+
+/**
+ * \internal
+ * Reads a character from the Data register to the RX buffer.
+ *
+ * \param[in,out]  module  Pointer to UART software instance struct
+ */
+static void _uart_read(
+		struct uart_module *const module)
+{
+	/* Pointer to the hardware module instance */
+	Uart *const uart_hw = module->hw;
+
+	uint16_t received_data = (uart_hw->RECEIVE_DATA.reg & UART_RECEIVE_DATA_MASK);
+
+	/* Read value will be at least 8-bits long */
+	*(module->rx_buffer_ptr) = received_data;
+	/* Increment 8-bit pointer */
+	module->rx_buffer_ptr += 1;
+
+	/* Decrement length of the remaining buffer */
+	module->remaining_rx_buffer_length--;
+}
 
 static void uart_rx0_isr_handler(void)
 {
 	struct uart_module *module = _uart_instances[0];
 	/* get interrupt flags and mask out enabled callbacks */
 	uint32_t flags = module->hw->RECEIVE_STATUS.reg;
-	if (flags & UART_RECEIVE_STATUS_RX_FIFO_NOT_EMPTY) {
-		if ((module->callback_enable_mask & (1 << UART_RX_FIFO_NOT_EMPTY)) &&
-			(module->callback_reg_mask & (1 << UART_RX_FIFO_NOT_EMPTY))) {
-			(module->callback[UART_RX_FIFO_NOT_EMPTY])(module);
-		}
-
-	}
 	if (flags & UART_RECEIVE_STATUS_FIFO_OVERRUN) {
+		/* Store the error code */
+		module->status = STATUS_ERR_OVERFLOW;
+		/* Disable interrupt */
+		module->hw->RX_INTERRUPT_MASK.reg &=
+			~(UART_RX_INTERRUPT_MASK_FIFO_OVERRUN_MASK |
+			SPI_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK);
 		if ((module->callback_enable_mask & (1 << UART_RX_FIFO_OVERRUN)) &&
 			(module->callback_reg_mask & (1 << UART_RX_FIFO_OVERRUN))) {
 			(module->callback[UART_RX_FIFO_OVERRUN])(module);
 		}
-
+		/* Flush */
+		uint8_t flush = module->hw->RECEIVE_DATA.reg;
+		UNUSED(flush);
+	}
+	if (flags & UART_RECEIVE_STATUS_RX_FIFO_NOT_EMPTY) {
+		_uart_read(module);
+		if (module->remaining_rx_buffer_length == 0) {
+			if ((module->callback_enable_mask & (1 << UART_RX_COMPLETE)) &&
+				(module->callback_reg_mask & (1 << UART_RX_COMPLETE))) {
+				module->status = STATUS_OK;
+				module->hw->RX_INTERRUPT_MASK.reg &=
+					~(UART_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK);
+				(module->callback[UART_RX_COMPLETE])(module);
+			}
+		}
 	}
 }
 
@@ -75,16 +137,22 @@ static void uart_tx0_isr_handler(void)
 	/* get interrupt flags and mask out enabled callbacks */
 	uint32_t flags = module->hw->TRANSMIT_STATUS.reg;
 	if (flags & UART_TRANSMIT_STATUS_TX_FIFO_NOT_FULL) {
-		if ((module->callback_enable_mask & (1 << UART_TX_FIFO_NOT_FULL)) &&
-			(module->callback_reg_mask & (1 << UART_TX_FIFO_NOT_FULL))) {
-			(module->callback[UART_TX_FIFO_NOT_FULL])(module);
+		_uart_write(module);
+		if (module->remaining_tx_buffer_length == 0) {
+			module->hw->TX_INTERRUPT_MASK.reg &=
+					~UART_TX_INTERRUPT_MASK_TX_FIFO_NOT_FULL_MASK;
+			module->hw->TX_INTERRUPT_MASK.reg |=
+					UART_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
 		}
-
 	}
 	if (flags & UART_TRANSMIT_STATUS_TX_FIFO_EMPTY) {
-		if ((module->callback_enable_mask & (1 << UART_TX_FIFO_EMPTY)) &&
-			(module->callback_reg_mask & (1 << UART_TX_FIFO_EMPTY))) {
-			(module->callback[UART_TX_FIFO_EMPTY])(module);
+		if ((module->callback_enable_mask & (1 << UART_TX_COMPLETE)) &&
+			(module->callback_reg_mask & (1 << UART_TX_COMPLETE))) {
+			module->status = STATUS_OK;
+			/* Disable interrupt */
+			module->hw->TX_INTERRUPT_MASK.reg &=
+				~UART_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
+			(module->callback[UART_TX_COMPLETE])(module);
 		}
 
 	}
@@ -102,19 +170,32 @@ static void uart_rx1_isr_handler(void)
 	struct uart_module *module = _uart_instances[1];
 	/* get interrupt flags and mask out enabled callbacks */
 	uint32_t flags = module->hw->RECEIVE_STATUS.reg;
-	if (flags & UART_RECEIVE_STATUS_RX_FIFO_NOT_EMPTY) {
-		if ((module->callback_enable_mask & (1 << UART_RX_FIFO_NOT_EMPTY)) &&
-			(module->callback_reg_mask & (1 << UART_RX_FIFO_NOT_EMPTY))) {
-			(module->callback[UART_RX_FIFO_NOT_EMPTY])(module);
-		}
-
-	}
 	if (flags & UART_RECEIVE_STATUS_FIFO_OVERRUN) {
+		/* Store the error code */
+		module->status = STATUS_ERR_OVERFLOW;
+		/* Disable interrupt */
+		module->hw->RX_INTERRUPT_MASK.reg &=
+			~(UART_RX_INTERRUPT_MASK_FIFO_OVERRUN_MASK |
+			SPI_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK);
 		if ((module->callback_enable_mask & (1 << UART_RX_FIFO_OVERRUN)) &&
 			(module->callback_reg_mask & (1 << UART_RX_FIFO_OVERRUN))) {
 			(module->callback[UART_RX_FIFO_OVERRUN])(module);
 		}
-
+		/* Flush */
+		uint8_t flush = module->hw->RECEIVE_DATA.reg;
+		UNUSED(flush);
+	}
+	if (flags & UART_RECEIVE_STATUS_RX_FIFO_NOT_EMPTY) {
+		_uart_read(module);
+		if (module->remaining_rx_buffer_length == 0) {
+			if ((module->callback_enable_mask & (1 << UART_RX_COMPLETE)) &&
+				(module->callback_reg_mask & (1 << UART_RX_COMPLETE))) {
+				module->status = STATUS_OK;
+				module->hw->RX_INTERRUPT_MASK.reg &=
+					~(UART_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK);
+				(module->callback[UART_RX_COMPLETE])(module);
+			}
+		}
 	}
 }
 
@@ -124,16 +205,22 @@ static void uart_tx1_isr_handler(void)
 	/* get interrupt flags and mask out enabled callbacks */
 	uint32_t flags = module->hw->TRANSMIT_STATUS.reg;
 	if (flags & UART_TRANSMIT_STATUS_TX_FIFO_NOT_FULL) {
-		if ((module->callback_enable_mask & (1 << UART_TX_FIFO_NOT_FULL)) &&
-			(module->callback_reg_mask & (1 << UART_TX_FIFO_NOT_FULL))) {
-			(module->callback[UART_TX_FIFO_NOT_FULL])(module);
+		_uart_write(module);
+		if (module->remaining_tx_buffer_length == 0) {
+			module->hw->TX_INTERRUPT_MASK.reg &=
+					~UART_TX_INTERRUPT_MASK_TX_FIFO_NOT_FULL_MASK;
+			module->hw->TX_INTERRUPT_MASK.reg |=
+					UART_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
 		}
-
 	}
 	if (flags & UART_TRANSMIT_STATUS_TX_FIFO_EMPTY) {
-		if ((module->callback_enable_mask & (1 << UART_TX_FIFO_EMPTY)) &&
-			(module->callback_reg_mask & (1 << UART_TX_FIFO_EMPTY))) {
-			(module->callback[UART_TX_FIFO_EMPTY])(module);
+		if ((module->callback_enable_mask & (1 << UART_TX_COMPLETE)) &&
+			(module->callback_reg_mask & (1 << UART_TX_COMPLETE))) {
+			module->status = STATUS_OK;
+			/* Disable interrupt */
+			module->hw->TX_INTERRUPT_MASK.reg &=
+				~UART_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
+			(module->callback[UART_TX_COMPLETE])(module);
 		}
 
 	}
@@ -235,6 +322,8 @@ enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 		_uart_instances[0] = module;
 		system_register_isr(RAM_ISR_TABLE_UARTRX0_INDEX, (uint32_t)uart_rx0_isr_handler);
 		system_register_isr(RAM_ISR_TABLE_UARTTX0_INDEX, (uint32_t)uart_tx0_isr_handler);
+		NVIC_EnableIRQ(UART0_RX_IRQn);
+		NVIC_EnableIRQ(UART0_TX_IRQn);
 	} else if (hw == UART1) {
 		system_peripheral_reset(PERIPHERAL_UART1_CORE);
 		system_peripheral_reset(PERIPHERAL_UART1_IF);
@@ -243,6 +332,8 @@ enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 		_uart_instances[1] = module;
 		system_register_isr(RAM_ISR_TABLE_UARTRX1_INDEX, (uint32_t)uart_rx1_isr_handler);
 		system_register_isr(RAM_ISR_TABLE_UARTTX1_INDEX, (uint32_t)uart_tx1_isr_handler);
+		NVIC_EnableIRQ(UART0_RX_IRQn);
+		NVIC_EnableIRQ(UART0_TX_IRQn);
 	}
 
 	/* Set the pinmux for this UART module. */
@@ -472,18 +563,6 @@ void uart_enable_callback(struct uart_module *const module,
 	/* Enable callback */
 	module->callback_enable_mask |= (1 << callback_type);
 
-	if (callback_type == UART_TX_FIFO_NOT_FULL) {
-		module->hw->TX_INTERRUPT_MASK.reg|= UART_TX_INTERRUPT_MASK_TX_FIFO_NOT_FULL_MASK;
-	}
-	if (callback_type == UART_TX_FIFO_EMPTY) {
-		module->hw->TX_INTERRUPT_MASK.reg |= UART_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
-	}
-	if (callback_type == UART_RX_FIFO_NOT_EMPTY) {
-		module->hw->RX_INTERRUPT_MASK.reg |= UART_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK;
-	}
-	if (callback_type == UART_RX_FIFO_OVERRUN) {
-		module->hw->RX_INTERRUPT_MASK.reg |= UART_RX_INTERRUPT_MASK_FIFO_OVERRUN_MASK;
-	}
 	if (callback_type == UART_CTS_ACTIVE) {
 		module->hw->TX_INTERRUPT_MASK.reg |= UART_TX_INTERRUPT_MASK_CTS_ACTIVE_MASK;
 	}
@@ -507,21 +586,139 @@ void uart_disable_callback(struct uart_module *const module,
 	/* Disable callback */
 	module->callback_enable_mask &= ~(1 << callback_type);
 
-	if (callback_type == UART_TX_FIFO_NOT_FULL) {
-		module->hw->TX_INTERRUPT_MASK.reg &= ~UART_TX_INTERRUPT_MASK_TX_FIFO_NOT_FULL_MASK;
-	}
-	if (callback_type == UART_TX_FIFO_EMPTY) {
-		module->hw->TX_INTERRUPT_MASK.reg &= ~UART_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
-	}
-	if (callback_type == UART_RX_FIFO_NOT_EMPTY) {
-		module->hw->RX_INTERRUPT_MASK.reg &= ~UART_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK;
-	}
-	if (callback_type == UART_RX_FIFO_OVERRUN) {
-		module->hw->RX_INTERRUPT_MASK.reg &= ~UART_RX_INTERRUPT_MASK_FIFO_OVERRUN_MASK;
-	}
 	if (callback_type == UART_CTS_ACTIVE) {
 		module->hw->TX_INTERRUPT_MASK.reg &= ~UART_TX_INTERRUPT_MASK_CTS_ACTIVE_MASK;
 	}
 
+}
+
+/**
+ * \internal
+ * Starts write of a buffer with a given length
+ *
+ * \param[in]  module   Pointer to UART software instance struct
+ * \param[in]  tx_data  Pointer to data to be transmitted
+ * \param[in]  length   Length of data buffer
+ *
+ */
+static void _uart_write_buffer(
+		struct uart_module *const module,
+		uint8_t *tx_data,
+		uint16_t length)
+{
+	Assert(module);
+	Assert(tx_data);
+
+	/* Write parameters to the device instance */
+	module->remaining_tx_buffer_length = length;
+	module->tx_buffer_ptr = tx_data;
+	module->status = STATUS_BUSY;
+
+	module->hw->TX_INTERRUPT_MASK.reg = UART_TX_INTERRUPT_MASK_TX_FIFO_NOT_FULL_MASK;
+}
+
+/**
+ * \internal
+ * Setup UART to read a buffer with a given length
+ *
+ * \param[in]  module   Pointer to UART software instance struct
+ * \param[in]  rx_data  Pointer to data to be received
+ * \param[in]  length   Length of data buffer
+ *
+ */
+static void _uart_read_buffer(
+		struct uart_module *const module,
+		uint8_t *rx_data,
+		uint16_t length)
+{
+	Assert(module);
+	Assert(rx_data);
+
+	/* Set length for the buffer and the pointer, and let
+	 * the interrupt handler do the rest */
+	module->remaining_rx_buffer_length = length;
+	module->rx_buffer_ptr = rx_data;
+	module->status = STATUS_BUSY;
+
+	module->hw->RX_INTERRUPT_MASK.reg = UART_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK;
+}
+
+/**
+ * \brief Asynchronous buffer write
+ *
+ * Sets up the driver to write to the UART from a given buffer. If registered
+ * and enabled, a callback function will be called when the write is finished.
+ *
+ * \param[in]  module   Pointer to UART software instance struct
+ * \param[out] tx_data  Pointer to data buffer to receive
+ * \param[in]  length   Data buffer length
+ *
+ * \returns Status of the write request operation.
+ * \retval STATUS_OK               If the operation completed successfully
+ * \retval STATUS_ERR_BUSY         If the UART was already busy with a write
+ *                                 operation
+ * \retval STATUS_ERR_INVALID_ARG  If requested write length was zero
+ */
+enum status_code uart_write_buffer_job(struct uart_module *const module,
+		uint8_t *tx_data, uint32_t length)
+{
+	Assert(module);
+	Assert(tx_data);
+
+	if (length == 0) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	/* Check if the UART is busy transmitting or slave waiting for TXC*/
+	if (module->status == STATUS_BUSY) {
+		return STATUS_BUSY;
+	}
+
+	/* Issue internal write */
+	_uart_write_buffer(module, tx_data, length);
+
+	return STATUS_OK;
+}
+
+/**
+ * \brief Asynchronous buffer read
+ *
+ * Sets up the driver to read from the UART to a given buffer. If registered
+ * and enabled, a callback function will be called when the read is finished.
+ *
+ * \note If address matching is enabled for the slave, the first character
+ *       received and placed in the RX buffer will be the address.
+ *
+ * \param[in]  module   Pointer to UART software instance struct
+ * \param[out] rx_data  Pointer to data buffer to receive
+ * \param[in]  length   Data buffer length
+ * \param[in]  dummy    Dummy character to send when reading in master mode
+ *
+ * \returns Status of the operation.
+ * \retval  STATUS_OK               If the operation completed successfully
+ * \retval  STATUS_ERR_BUSY         If the UART was already busy with a read
+ *                                  operation
+ * \retval  STATUS_ERR_DENIED       If the receiver is not enabled
+ * \retval  STATUS_ERR_INVALID_ARG  If requested read length was zero
+ */
+enum status_code uart_read_buffer_job(struct uart_module *const module,
+		uint8_t *rx_data, uint16_t length)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(rx_data);
+
+	if (length == 0) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	/* Check if the UART is busy transmitting or slave waiting for TXC*/
+	if (module->status == STATUS_BUSY) {
+		return STATUS_BUSY;
+	}
+
+	/* Issue internal read */
+	_uart_read_buffer(module, rx_data, length);
+	return STATUS_OK;
 }
 

@@ -68,6 +68,8 @@
 
 			<build type="c-source" value="dma_sam_b.c"/>
 			<build type="header-file" subtype="api" value="dma_sam_b.h"/>
+			<build type="module-config" subtype="required-header-file" value="conf_dma.h"/>
+			<build type="module-config" subtype="path" value="module_config"/>
 
 			<build type="define" name="DMA_CALLBACK_MODE" value="false"/>
 			<build type="doxygen-enable-section" value="DEVICE_SAMB11_SUPPORT"/>
