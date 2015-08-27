@@ -1139,14 +1139,14 @@ static void uhd_interrupt(void)
 		uhd_enable_connection_int();
 		uhd_ack_wakeup();
 		uhd_enable_wakeup_interrupt();
-		//uhd_enable_vbus(); // enable VBUS
 	#ifdef USB_HOST_HS_SUPPORT
-		//uhd_enable_high_speed_mode();
+		USBHS->USBHS_HSTCTRL &= ~USBHS_HSTCTRL_SPDCONF_Msk;
+		USBHS->USBHS_HSTCTRL |= USBHS_HSTCTRL_SPDCONF_NORMAL;
 	#endif
 		uhd_suspend_start = 0;
 		uhd_resume_start = 0;
 		uhc_notify_connection(false);
-		//return;
+		return;
 	}
 	if (Is_uhd_connection() && Is_uhd_connection_int_enabled()) {
 		uhd_ack_connection();
@@ -1158,7 +1158,7 @@ static void uhd_interrupt(void)
 		uhd_suspend_start = 0;
 		uhd_resume_start = 0;
 		uhc_notify_connection(true);
-		//return;
+		return;
 	}
 
       /* If Wakeup interrupt is enabled and triggered and connection intterupt is enabled  */
@@ -1198,7 +1198,7 @@ static void uhd_interrupt(void)
 		// Wait 50ms before restarting transfer
 		uhd_resume_start = 50;
 		uhd_sleep_mode(UHD_STATE_IDLE);
-		//return;
+		return;
 	}
 
 	Assert(false); // Interrupt event no managed
