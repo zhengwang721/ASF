@@ -2138,4 +2138,68 @@ sd_mmc_err_t sdio_write_extended(uint8_t slot, uint8_t func_num, uint32_t addr,
 }
 #endif // SDIO_SUPPORT_ENABLE
 
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+void test_read_single_block_without_dma(void *dest, uint32_t addr) {
+	uint32_t *tmpdest = dest;
+	uint32_t nb_data;
+	uint32_t numbers_words_to_be_read;
+	uint32_t sr;
+	nb_data = 1 * SD_MMC_BLOCK_SIZE;
+	/** Reset the DMAEN bit */
+	HSMCI->HSMCI_DMA &= ~HSMCI_DMA_DMAEN;
+	/** Set the block length (in bytes) */
+	HSMCI->HSMCI_BLKR = (nb_data << 16);
+	/** Set the block count (if necessary) */
+	HSMCI->HSMCI_BLKR |= (1 << 0);
+	/** Send READ_SINGLE_BLOCK command(1) */
+	hsmci_adtc_start(SDMMC_CMD17_READ_SINGLE_BLOCK, addr, SD_MMC_BLOCK_SIZE, 1, false);
+	numbers_words_to_be_read = nb_data/4;
+
+	while(numbers_words_to_be_read > 0) {
+		sr = HSMCI->HSMCI_SR;
+
+		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
+			return;
+		}
+
+		if (sr & HSMCI_SR_RXRDY) {
+			*tmpdest = HSMCI->HSMCI_RDR;
+			tmpdest++;
+			numbers_words_to_be_read --;
+		}
+	}
+}
+
+void test_write_single_block_without_dma(void *dest, uint32_t addr) {
+	uint32_t *tmpdest = dest;
+	uint32_t nb_data;
+	uint32_t numbers_words_to_be_read;
+	uint32_t sr;
+	nb_data = 1 * SD_MMC_BLOCK_SIZE;
+	/** Reset the DMAEN bit */
+	HSMCI->HSMCI_DMA &= ~HSMCI_DMA_DMAEN;
+	/** Set the block length (in bytes) */
+	HSMCI->HSMCI_BLKR = (nb_data << 16);
+	/** Set the block count (if necessary) */
+	HSMCI->HSMCI_BLKR |= (1 << 0);
+	/** Send READ_SINGLE_BLOCK command(1) */
+	hsmci_adtc_start(SDMMC_CMD24_WRITE_BLOCK, addr, SD_MMC_BLOCK_SIZE, 1, false);
+	numbers_words_to_be_read = nb_data/4;
+
+	while(numbers_words_to_be_read > 0) {
+		sr = HSMCI->HSMCI_SR;
+
+		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
+			return;
+		}
+
+		if (sr & HSMCI_SR_TXRDY) {
+			HSMCI->HSMCI_TDR = *tmpdest;
+			tmpdest++;
+			numbers_words_to_be_read --;
+		}
+	}
+}
+#endif
+
 //! @}

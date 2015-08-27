@@ -52,13 +52,16 @@
 
 #define CONF_BOARD_SD_MMC_HSMCI
 
-#define HSMCI_DMA_XDMACMODE
+//#define HSMCI_DMA_XDMACMODE
 
 /* Define it to enable the SDIO support */
 #define SDIO_SUPPORT_ENABLE
 
+#define CONF_BOARD_CONFIG_MPU_AT_INIT
+
 /* Define it to enable the debug trace to the current standard output (stdio) */
-#define SD_MMC_DEBUG
+//#define SD_MMC_DEBUG
+//#define HSMCI_DEBUG
 
 #endif /* CONF_SD_MMC_H_INCLUDED */
 

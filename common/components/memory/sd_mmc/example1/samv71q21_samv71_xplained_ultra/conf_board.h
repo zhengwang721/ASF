@@ -47,12 +47,14 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
+#define CONF_BOARD_CONFIG_MPU_AT_INIT
+
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
 /** Enable SD MMC interface pins through HSMCI */
 #define CONF_BOARD_SD_MMC_HSMCI
 
-#define CONF_HSMCI_XDMAC_CHANNEL  0
+#define CONF_HSMCI_XDMAC_CHANNEL  XDAMC_CHANNEL_HWID_HSMCI
 
 #endif /* CONF_BOARD_H_INCLUDED */

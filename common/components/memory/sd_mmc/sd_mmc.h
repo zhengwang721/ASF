@@ -114,6 +114,8 @@ typedef uint8_t card_version_t; //!< Type of card version
 
 //! This SD MMC stack uses the maximum block size autorized (512 bytes)
 #define SD_MMC_BLOCK_SIZE          512
+/** Micro-block length for single transfer  */
+#define MICROBLOCK_LEN             16
 
 /**
  * \brief Initialize the SD/MMC stack and low level driver required
@@ -303,6 +305,11 @@ sd_mmc_err_t sdio_read_extended(uint8_t slot, uint8_t func_num, uint32_t addr,
 sd_mmc_err_t sdio_write_extended(uint8_t slot, uint8_t func_num, uint32_t addr,
 		uint8_t inc_addr, uint8_t *src, uint16_t size);
 #endif // SDIO_SUPPORT_ENABLE
+
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+void test_read_single_block_without_dma(void *dest, uint32_t addr);
+void test_write_single_block_without_dma(void *dest, uint32_t addr);
+#endif
 
 /** @} */
 

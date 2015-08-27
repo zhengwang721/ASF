@@ -448,15 +448,9 @@
 /** HSMCI MCDA3 pin definition. */
 #define PIN_HSMCI_MCDA3_GPIO            (PIO_PA27_IDX)
 #define PIN_HSMCI_MCDA3_FLAGS           (IOPORT_MODE_MUX_C)
-
-/** SD/MMC card detect pin definition. */
-//#define PIN_HSMCI_CD                    {PIO_PD18, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP}
-//#define SD_MMC_0_CD_GPIO                (PIO_PD18_IDX)
-//#define SD_MMC_0_CD_PIO_ID              ID_PIOC
-//#define SD_MMC_0_CD_FLAGS               (IOPORT_MODE_PULLUP)
-//#define SD_MMC_0_CD_DETECT_VALUE        0
-
-//#define SD_MMC_HSMCI_SLOT_0_SIZE        1
+/** HSMCI DETECH pin definition. */
+#define SD_MMC_0_CD_GPIO                (PIO_PD18_IDX)
+#define SD_MMC_0_CD_DETECT_VALUE        0
 
 /** EBI pins configuration for LCD */
 /** LCD reset pin */
@@ -517,7 +511,7 @@
 #define USB_VBUS_FLAGS         (PIO_INPUT | PIO_PULLUP)
 #define USB_VBUS_PIN             PIO_PC9_IDX  /* As IO pin input */
 #define USB_VBUS_PIO_ID       ID_PIOC
-#define USB_VBUS_PIO_MASK  PIO_PC9 
+#define USB_VBUS_PIO_MASK  PIO_PC9
 //! @}
 
 /*! \name GPIO Connections of ID detecting
