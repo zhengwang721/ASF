@@ -44,17 +44,16 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef ADC_H_INCLUDED
-#define ADC_H_INCLUDED
+#ifndef ADC_SAM_B_H_INCLUDED
+#define ADC_SAM_B_H_INCLUDED
 
 /**
  * \defgroup asfdoc_samb_adc_group SAM Analog-to-Digital Converter (ADC) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
- * and management of the device's Analog-to-Digital Converter functionality, for
- * the conversion of analog voltages into a corresponding digital form.
- * The following driver Application Programming Interface (API) modes are covered by this manual:
- * - Polled APIs
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the
+ * configuration and management of the device's Analog-to-Digital Converter
+ * functionality, for the conversion of analog voltages into a corresponding
+ * digital form.
  *
  * The following peripheral is used by this module:
  *  - ADC (Analog-to-Digital Converter)
@@ -82,9 +81,46 @@
  * functions on the device, to convert analog voltages to a corresponding
  * digital value. The ADC has up to 12-bit resolution.
  *
+ * \subsection asfdoc_samb_adc_module_overview_prescaler Sample Clock Prescaler
+ * \f[
+ *      F_{clk} = N + 2 \times {(throughput\_frequency)}
+ * \f]
+ * \f[
+ *      (N = ADC resolution)
+ * \f]
+ *
+ * Example: For throughput of 100KS/s use sampling clock (Fclk=1.3MHz)
+ *
+ * \subsection asfdoc_samb_adc_module_overview_resolution ADC Resolution
+ * There are two ADC resolution of operation:
+ * - \b High Resolution (11-bit)
+ *
+ *   Set the reference voltage to half the supply voltage or below. In this
+ *   mode the input signal dynamic range equals twice the reference voltage.
+ *
+ *   Example: If supply voltage =3V and reference voltage= 1.4V, input signal
+ *   dynamic range can be from ground to 2*reference voltage (0~2.8V).
+ * - \b Medium Resolution (10-bit)
+ *
+ *   Set the reference voltage to any value below supply voltage (up to
+ *   supply voltage - 300mV) and in this condition the input dynamic range is
+ *   from zero to reference voltage.
+ *
+ *   Example: If supply voltage =3V and reference voltage= 2.7V, input signal
+ *   dynamic range can be from ground to reference voltage (0~2.7V).
+ *
+ * \subsection asfdoc_samb_adc_module_overview_conversion Channel Modes
+ * There are two modes for input channel selection:
+ * - Either to assign a specific input channel
+ * - Time domain multiplexing between 4 input channels
+ *   - Channel1 to channel4
+ *   - channel5 to channel8
  *
  * \section asfdoc_samb_adc_special_considerations Special Considerations
- *
+ * An integrated analog temperature sensor is available for use with the ADC.
+ * The internal specific voltage can also be measured by the ADC. For internal
+ * ADC inputs, the internal source(s) may need to be manually enabled by the
+ * user application before they can be measured.
  *
  *
  * \section asfdoc_samb_adc_extra_info Extra Information
@@ -161,22 +197,22 @@ enum adc_internal_vref {
  *
  */
 enum adc_reference {
-	/** Internal form buffer reference. */
+	/** Internal form buffer reference */
 	ADC_REFERENCE_INTERNAL_BUF = 0,
-	/** Internal from IxR reference. */
+	/** Internal from IxR reference */
 	ADC_REFERENCE_INTERNAL_IR,
-	/**  VBATT/2 reference. */
+	/**  VBATT/2 reference */
 	ADC_REFERENCE_VBATT_2,
 #ifdef CHIPVERSION_B0
-	/** GPIO_MS1 reference. */
+	/** GPIO_MS1 reference */
 	ADC_REFERENCE_GPIO_MS1,
-	/** GPIO_MS2 reference. */
+	/** GPIO_MS2 reference */
 	ADC_REFERENCE_GPIO_MS2,
-	/** GPIO_MS3 reference. */
+	/** GPIO_MS3 reference */
 	ADC_REFERENCE_GPIO_MS3,
-	/** GPIO_MS4 reference. */
+	/** GPIO_MS4 reference */
 	ADC_REFERENCE_GPIO_MS4,
-	/** VBATTERY reference. */
+	/** VBATTERY reference */
 	ADC_REFERENCE_VBATT,
 #endif
 };
@@ -301,12 +337,6 @@ struct adc_config {
 	uint16_t int_part;
 };
 
-/**
-@defgroup adc-drv ADC Driver API
-
-@{
-*/
-
 /** \name Configuration, initialization and get status
  * @{
  */
@@ -334,8 +364,6 @@ enum status_code adc_read(enum adc_input_channel input_channel, uint16_t *result
 #ifdef __cplusplus
 }
 #endif
-
-/** @} */
 
 
 /**
@@ -402,10 +430,10 @@ enum status_code adc_read(enum adc_input_channel input_channel, uint16_t *result
  *	</tr>
  *  <tr>
  *      <td>A</td>
- *      <td>07/2015</td>
+ *      <td>09/2015</td>
  *      <td>Initial document release</td>
  * </tr>
  * </table>
  */
 
-#endif /* ADC_H_INCLUDED */
+#endif /* ADC_SAM_B_H_INCLUDED */

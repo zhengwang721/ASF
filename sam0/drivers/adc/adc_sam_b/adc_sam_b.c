@@ -44,7 +44,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#include "adc.h"
+#include "adc_sam_b.h"
 
 static enum status_code _adc_gpio_ms_enable(enum adc_input_channel channel)
 {

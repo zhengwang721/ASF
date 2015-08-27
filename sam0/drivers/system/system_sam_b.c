@@ -1415,25 +1415,21 @@ enum status_code system_clock_aon_config( \
 {
 	switch (peripheral_aon) {
 		case PERIPHERAL_AON_SLEEP_TIMER:
-			switch (aon_resource) {
-				case CLOCK_AON_RESOURCE_31_25_KHZ:
+			if (aon_resource == CLOCK_AON_RESOURCE_31_25_KHZ) {
 					AON_GP_REGS0->AON_MISC_CTRL.reg |= \
 						AON_GP_REGS_AON_MISC_CTRL_USE_RTC_32KHZ_CLK_SLEEP_TIMER;
 					AON_GP_REGS0->AON_MISC_CTRL.reg &= \
 						~AON_GP_REGS_AON_MISC_CTRL_USE_EXT_32KHZ_CLK_SLEEP_TIMER;
-				break;
-				case CLOCK_AON_RESOURCE_32_768_KHZ:
+			} else if (aon_resource == CLOCK_AON_RESOURCE_32_768_KHZ) {
 					AON_GP_REGS0->AON_MISC_CTRL.reg &= \
 						~AON_GP_REGS_AON_MISC_CTRL_USE_RTC_32KHZ_CLK_SLEEP_TIMER;
 					AON_GP_REGS0->AON_MISC_CTRL.reg |= \
 						AON_GP_REGS_AON_MISC_CTRL_USE_EXT_32KHZ_CLK_SLEEP_TIMER;
-				break;
-				case CLOCK_AON_DEFAULT:
+			} else if (aon_resource == CLOCK_AON_DEFAULT) {
 					AON_GP_REGS0->AON_MISC_CTRL.reg &= \
 						~AON_GP_REGS_AON_MISC_CTRL_USE_RTC_32KHZ_CLK_SLEEP_TIMER;
 					AON_GP_REGS0->AON_MISC_CTRL.reg &= \
 						~AON_GP_REGS_AON_MISC_CTRL_USE_EXT_32KHZ_CLK_SLEEP_TIMER;
-				break;
 			}
 		break;
 
