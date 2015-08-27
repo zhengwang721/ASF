@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="SAM4 DSP Variance Example for SAMV71-Xplained-Ultra" id="sam.utils.cmsis.dsp_lib.examples.arm_variance_example.samv71_xplained_ultra">
+	<project caption="SAM DSP Variance Example for SAMV71-Xplained-Ultra" id="sam.utils.cmsis.dsp_lib.examples.arm_variance_example.samv71_xplained_ultra">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
