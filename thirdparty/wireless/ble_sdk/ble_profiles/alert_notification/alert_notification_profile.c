@@ -261,7 +261,7 @@ void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *discover
 				DBG_LOG_DEV("GATT characteristic discovery completed");
 				if(ble_send_slave_sec_request(ble_connected_dev_info[0].handle) == AT_BLE_SUCCESS)
 				{
-					DBG_LOG_DEV("Successfully send Slave Security Request");
+					DBG_LOG_DEV("Sending slave security request");
 				}
 				else
 				{
@@ -304,7 +304,7 @@ void anp_client_service_found_handler(at_ble_primary_service_found_t * primary_s
 void anp_client_characteristic_found_handler(at_ble_characteristic_found_t *characteristic_found)
 {
 	uint16_t charac_16_uuid;
-	DBG_LOG("The characteristic type is %d",characteristic_found->char_uuid.type);
+	DBG_LOG_DEV("The characteristic type is %d",characteristic_found->char_uuid.type);
 	
 	charac_16_uuid = (uint16_t)((characteristic_found->char_uuid.uuid[0]) | \
 	(characteristic_found->char_uuid.uuid[1] << 8));
@@ -391,7 +391,7 @@ void anp_client_descriptor_found_handler(at_ble_descriptor_found_t *descriptor_f
 {
 		uint16_t desc_16_uuid;
 		at_ble_status_t desc_found = AT_BLE_FAILURE;
-		DBG_LOG("anp_client_descriptor_found_handler");
+		DBG_LOG_DEV("anp_client_descriptor_found_handler %d value is %x",descriptor_found->desc_uuid.type,descriptor_found->desc_uuid.uuid);
 		if(descriptor_found->desc_uuid.type == AT_BLE_UUID_16)
 		{
 			desc_16_uuid = (uint16_t)((descriptor_found->desc_uuid.uuid[0]) | \
@@ -401,13 +401,13 @@ void anp_client_descriptor_found_handler(at_ble_descriptor_found_t *descriptor_f
 			{
 				if((descriptor_found->desc_handle > anp_handle.new_alert_char_handle ) && (descriptor_found->desc_handle < (anp_handle.new_alert_char_handle+2)))
 				{
-					DBG_LOG("\r\nClient Characteristics Configuration Descriptor for new alert found ");
+					DBG_LOG("\r\nClient Characteristics Configuration Descriptor for new alert found handle %x",descriptor_found->desc_handle);
 					anp_handle.new_alert_desc_handle = descriptor_found->desc_handle;
 					
 				}
 				else if((descriptor_found->desc_handle > anp_handle.unread_alert_char_handle) && (descriptor_found->desc_handle < (anp_handle.unread_alert_char_handle+2)))
 				{
-					DBG_LOG("\r\nClient Characteristics Configuration Descriptor for unread alert status found ");
+					DBG_LOG("\r\nClient Characteristics Configuration Descriptor for unread alert status found handle %x ",descriptor_found->desc_handle);
 					anp_handle.unread_alert_desc_handle = descriptor_found->desc_handle;
 				}
 				
@@ -418,11 +418,11 @@ void anp_client_descriptor_found_handler(at_ble_descriptor_found_t *descriptor_f
 		
 		if(desc_found == AT_BLE_SUCCESS)
 		{
-			DBG_LOG("Descriptor Info:\r\n -->ConnHandle: 0x%02x\r\n -->Descriptor handle : 0x%02x",
+			DBG_LOG_DEV("Descriptor Info:\r\n -->ConnHandle: 0x%02x\r\n -->Descriptor handle : 0x%02x",
 					descriptor_found->conn_handle,
 					descriptor_found->desc_handle);
 					
-			DBG_LOG(" -->UUID: 0x%02x%02x",
+			DBG_LOG_DEV(" -->UUID: 0x%02x%02x",
 					descriptor_found->desc_uuid.uuid[1],
 					descriptor_found->desc_uuid.uuid[0]);
 		}
@@ -443,19 +443,6 @@ void anp_client_disconnected_event_handler(at_ble_disconnected_t *params)
 	{
 		DBG_LOG("Device in Advertisement mode");
 	}
-}
-
-/**
- * @brief char changed handler invoked by ble manager
- */
-void anp_client_char_changed_handler(at_ble_characteristic_changed_t *characteristic_changed)
-{
-	uint32_t i = 0;
-	DBG_LOG("Characteristic 0x%x changed, new_value = ",
-	characteristic_changed->char_handle);
-	for(i=0; i<characteristic_changed->char_len; i++)
-	DBG_LOG("0x%02x ", characteristic_changed->char_new_value[i]);
-	DBG_LOG("\n");
 }
 
 /**
@@ -482,13 +469,8 @@ void anp_client_write_response_handler(at_ble_characteristic_write_response_t *p
  */
 void anp_client_notification_handler(at_ble_notification_recieved_t *noti_read_resp)
 {
-	 at_ble_characteristic_read_response_t char_read_resp;
-	 char_read_resp.char_handle = noti_read_resp->char_handle;
-	 char_read_resp.char_len = noti_read_resp->char_len;
-	 memcpy( &char_read_resp.char_value, noti_read_resp->char_value, char_read_resp.char_len);
-	 
 	 #if defined ANS_CLIENT_SERVICE
-		anp_alert_read_response(&char_read_resp,&anp_handle);
+		anp_alert_notify_response(noti_read_resp,&anp_handle);
 	 #endif
 }
 
@@ -499,31 +481,31 @@ void anp_client_security_done_handler(void *param)
 {		
 	if(anp_alert_read(ble_connected_dev_info[0].handle,anp_handle.supp_new_char_handle) == AT_BLE_SUCCESS)
 	{
-		DBG_LOG("Support New Alert info request success");
+		DBG_LOG_DEV("Support New Alert info request success");
 		LED_Toggle(LED0);
 	}
 	if(anp_alert_read( ble_connected_dev_info[0].handle, anp_handle.new_alert_char_handle ) == AT_BLE_SUCCESS)
 	{
-		DBG_LOG("New Alert request success");
+		DBG_LOG_DEV("New Alert request success");
 	}
 	if(anp_alert_read( ble_connected_dev_info[0].handle, anp_handle.supp_unread_char_handle) == AT_BLE_SUCCESS)
 	{
-		DBG_LOG("Support Unread Alert info request success");
+		DBG_LOG_DEV("Support Unread Alert info request success");
 	}
 	if(anp_alert_read( ble_connected_dev_info[0].handle, anp_handle.unread_alert_char_handle) == AT_BLE_SUCCESS)
 	{
-		DBG_LOG("Unread Alert info request success");
+		DBG_LOG_DEV("Unread Alert info request success");
 	}
-	
+		
 	/* to enable the new alert and unread alert descriptor*/
 	if(!(anp_alert_noti(ble_connected_dev_info[0].handle,anp_handle.new_alert_desc_handle,true) == AT_BLE_SUCCESS))
 	{
-		DBG_LOG("Fail to set new alert descriptor 1");
+		DBG_LOG_DEV("Fail to set new alert descriptor 1");
 	}
 	
 	if(!(anp_alert_noti(ble_connected_dev_info[0].handle,anp_handle.unread_alert_desc_handle,true) == AT_BLE_SUCCESS))
 	{
-		DBG_LOG("Fail to set unread alert descriptor 1");
+		DBG_LOG_DEV("Fail to set unread alert descriptor 1");
 	}	
 	UNUSED(param);
 }
