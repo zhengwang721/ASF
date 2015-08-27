@@ -65,7 +65,7 @@
  * \subsection asfdoc_samb_wdt_basic_use_case_setup_flow Workflow
  * -# Create a module software instance structure for the WDT module to store
  *    the WDT driver state while it is in use.
- *    \snippet qs_wdt_basic_use.c module_inst
+ *    \snippet qs_wdt_basic.c module_inst
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
@@ -83,6 +83,12 @@
  *    \snippet qs_wdt_basic.c setup_3
  * -# Setup the WDT hardware module with the requested settings.
  *    \snippet qs_wdt_basic.c setup_4
+ * -# Register and enable the Early Warning callback handler.
+ *  -# Register the user-provided Early Warning callback function with the
+ *     driver, so that it will be run when an Early Warning condition occurs.
+ *     \snippet qs_wdt_basic.c setup_5
+ *  -# Enable the Early Warning callback so that it will generate callbacks.
+ *     \snippet qs_wdt_basic.c setup_6
  *
  * \section asfdoc_samb_wdt_basic_use_case Use Case
  *

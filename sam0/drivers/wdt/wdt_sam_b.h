@@ -43,8 +43,8 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef WDT_H_INCLUDED
-#define WDT_H_INCLUDED
+#ifndef WDT_SAM_B_H_INCLUDED
+#define WDT_SAM_B_H_INCLUDED
 
 /**
  * \defgroup asfdoc_samb_wdt_group SAM Watchdog Driver (WDT)
@@ -54,10 +54,7 @@
  * disabling, and kicking within the device. The following driver API modes are
  * covered by this manual:
  *
- *  - Polled APIs
- * \if WDT_CALLBACK_MODE
  *  - Callback APIs
- * \endif
  *
  * The following peripherals are used by this module:
  *  - WDT (Watchdog Timer)
@@ -80,10 +77,24 @@
  *
  *
  * \section asfdoc_samb_wdt_module_overview Module Overview
+ * The watchdog module is based on a 32-bit down-counter that is initialized
+ * from the Reload Register. The watchdog module generates a regular interrupt,
+ * depending on a programmed value. The counter decrements by one on each
+ * positive clock edge of clock when the clock is enable. The watchdog monitors
+ * the interrupt and asserts a reset request signal when the counter reaches 0,
+ * and the counter is stopped. On the next enabled clock edge, the counter is
+ * reloaded from the WDT load Register and the countdown sequence continues. If
+ * the interrupt is not cleared by the time the counter next reaches 0, the
+ * watchdog module reasserts the reset signal.
  *
+ * A simplified block diagram of the WDT can be seen in
+ * \ref asfdoc_samb_wdt_module_block_diagram "the figure below".
+ *
+ * \anchor asfdoc_samb_wdt_module_block_diagram
+ * \image html wdt_block_diagram.svg "WDT Block Diagram"
  *
  * \section asfdoc_samb_wdt_special_considerations Special Considerations
- *
+ * There are no prerequisites for this module.
  *
  * \section asfdoc_samb_wdt_extra_info Extra Information
  *
@@ -119,11 +130,12 @@ typedef void (*wdt_callback_t)(void);
 /** Enum for the possible callback types for the WDT module. */
 enum wdt_callback
 {
-	/** Callback type for when an early warning callback from the WDT module
-	 *  is issued.
+	/** 
+	 * Callback type for when an early warning callback from the WDT module
+	 * is issued
 	 */
 	WDT_CALLBACK_EARLY_WARNING,
-	/** Number of available callbacks. */
+	/** Number of available callbacks */
 	WDT_CALLBACK_N,
 };
 
@@ -154,13 +166,13 @@ struct wdt_config {
  */
 struct wdt_module {
 #if !defined(__DOXYGEN__)
-	/** Pointer to the hardware instance. */
+	/** Pointer to the hardware instance */
 	Wdt *hw;
-	/** Array to store callback function pointers in. */
+	/** Array to store callback function pointers in */
 	wdt_callback_t callback[WDT_CALLBACK_N];
-	/** Bit mask for callbacks registered. */
+	/** Bit mask for callbacks registered */
 	uint8_t callback_reg_mask;
-	/** Bit mask for callbacks enabled. */
+	/** Bit mask for callbacks enabled */
 	uint8_t callback_enable_mask;
 #endif
 };
@@ -286,7 +298,7 @@ void wdt_disable_callback(struct wdt_module *const module,
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>07/2015</td>
+ *		<td>09/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

@@ -5,13 +5,6 @@
 			<keyword value="Memory" />
 		</info>
 
-		<info type="appnote" value="ATxxxxx"/>
-		<info type="keyword" value="pdf">
-			<keyword value="SPI"/>
-			<keyword value="Flash"/>
-			<keyword value="Serial Peripheral Interface Bus Flash"/>
-		</info>
-
 		<info type="description" value="pdf">
 			This document describes how to use the SPI flash Controller on the
 			SAMB11, both the ASF driver and the peripheral itself.
@@ -23,9 +16,9 @@
 
 		<build type="header-file" value="quick_start/qs_spi_flash_basic.h"/>
 
-		<build type="doxygen-entry-point" value="asfdoc_sam0_spi_flash_group"/>
+		<build type="doxygen-entry-point" value="asfdoc_samb_spi_flash_group"/>
 		<build type="doxygen-example-path" value="quick_start"/>
-		<build type="doxygen-quick-start" value="asfdoc_sam0_spi_flash_exqsg"/>
+		<build type="doxygen-quick-start" value="asfdoc_samb_spi_flash_exqsg"/>
 
 		<device-support value="samb11"/>
 

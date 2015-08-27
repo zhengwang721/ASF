@@ -45,7 +45,7 @@
  */
 
 /**
- * \page asfdoc_sam0_gpio_basic_use_case Quick Start Guide for GPIO - Basic
+ * \page asfdoc_samb_gpio_basic_use_case Quick Start Guide for GPIO - Basic
  *
  * In this use case, the GPIO module is configured for:
  *  \li One pin in input mode, with pull-up enabled
@@ -55,19 +55,19 @@
  * an input, and mirrors the opposite logical state on a pin configured as an
  * output.
  *
- * \section asfdoc_sam0_gpio_basic_use_case_setup Setup
+ * \section asfdoc_samb_gpio_basic_use_case_setup Setup
  *
- * \subsection asfdoc_sam0_gpio_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_samb_gpio_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_sam0_gpio_basic_use_case_setup_code Code
+ * \subsection asfdoc_samb_gpio_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_gpio_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_gpio_basic.c setup_init
  *
- * \subsection asfdoc_sam0_gpio_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_samb_gpio_basic_use_case_setup_flow Workflow
  * -# Create a GPIO module pin configuration struct, which can be filled out to
  *    adjust the configuration of a single gpio pin.
  *    \snippet qs_gpio_basic.c setup_1
@@ -92,13 +92,13 @@
  *    the output driver on the pin.
  *    \snippet qs_gpio_basic.c setup_6
  *
- * \section asfdoc_sam0_gpio_basic_use_case_use_main Use Case
+ * \section asfdoc_samb_gpio_basic_use_case_use_main Use Case
  *
- * \subsection asfdoc_sam0_gpio_basic_use_case_code Code
+ * \subsection asfdoc_samb_gpio_basic_use_case_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_gpio_basic.c main
  *
- * \subsection asfdoc_sam0_gpio_basic_use_case_flow Workflow
+ * \subsection asfdoc_samb_gpio_basic_use_case_flow Workflow
  * -# Read in the current input sampler state of push button pin, which has been
  *    configured as an input in the use-case setup code.
  *    \snippet qs_gpio_basic.c main_1

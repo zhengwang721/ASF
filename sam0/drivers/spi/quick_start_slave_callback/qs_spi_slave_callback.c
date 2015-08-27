@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM SPI Quick Start for SAMB11
+ * \brief SAM SPI Quick Start for SAMB
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -86,7 +86,7 @@ static void configure_spi_slave_callbacks(void)
 }
 //! [conf_callback]
 
-//! [configure_spi]
+//! [configure_gpio]
 static void configure_gpio(void)
 {
 	struct gpio_config config_gpio;
@@ -98,7 +98,9 @@ static void configure_gpio(void)
 	gpio_pin_set_config(LED_0_PIN, &config_gpio);
 	gpio_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
 }
+//! [configure_gpio]
 
+//! [configure_spi]
 static void configure_spi_slave(void)
 {
 //! [config]
@@ -159,10 +161,12 @@ int main(void)
 	}
 //! [system_init]
 
-//! [run_config]
+//! [run_config_gpio]
 	configure_gpio();
+//! [run_config_gpio]
+//! [run_config_spi]
 	configure_spi_slave();
-//! [run_config]
+//! [run_config_spi]
 //! [run_callback_config]
 	configure_spi_slave_callbacks();
 //! [run_callback_config]

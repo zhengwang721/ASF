@@ -45,7 +45,7 @@
  */
 
 /**
- * \page asfdoc_sam0_spi_flash_basic_use_case Quick Start Guide for SPI-Flash - Basic
+ * \page asfdoc_samb_spi_flash_basic_use_case Quick Start Guide for SPI-Flash - Basic
  *
  * In this use case, the SPI-Flash module is configured for:
  *  \li Spi flash initial.
@@ -53,12 +53,12 @@
  * This use case sets up the SPI-Flash to erase, write and read flash data via
  * defualt spi-flash gpio configration.
  *
- * \section asfdoc_sam0_spi_flash_basic_use_case_setup Setup
+ * \section asfdoc_samb_spi_flash_basic_use_case_setup Setup
  *
- * \subsection asfdoc_sam0_spi_flash_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_samb_spi_flash_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_sam0_spi_flash_basic_use_case_setup_code Code
+ * \subsection asfdoc_samb_spi_flash_basic_use_case_setup_code Code
  * The following must be added to the user application source file, outside
  * any functions:
  * Read and write buffer to operate spi-flash.
@@ -67,19 +67,19 @@
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_spi_flash_basic.c setup_init
  *
- * \subsection asfdoc_sam0_spi_flash_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_samb_spi_flash_basic_use_case_setup_flow Workflow
  * -# Initialize write buffer with default values.
  *    \snippet qs_spi_flash_basic.c setup_1
  * -# Initialize spi-flash and enable.
  *    \snippet qs_spi_flash_basic.c setup_2
  *
- * \section asfdoc_sam0_spi_flash_basic_use_case_use_main Use Case
+ * \section asfdoc_samb_spi_flash_basic_use_case_use_main Use Case
  *
- * \subsection asfdoc_sam0_spi_flash_basic_use_case_code Code
+ * \subsection asfdoc_samb_spi_flash_basic_use_case_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_spi_flash_basic.c main_use_case
  *
- * \subsection asfdoc_sam0_spi_flash_basic_use_case_flow Workflow
+ * \subsection asfdoc_samb_spi_flash_basic_use_case_flow Workflow
  * -# Erase spi-flash designated area. If failure, LED will flash quickly. If
  *    successful, it will continue.
  *    \snippet qs_spi_flash_basic.c main_1

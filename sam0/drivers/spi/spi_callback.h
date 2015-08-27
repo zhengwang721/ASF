@@ -52,10 +52,11 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_sam0_sercom_spi_group
+ * \addtogroup asfdoc_samb_drivers_spi_group
  *
  * @{
  */
+
 #include "spi.h"
 
 /**
@@ -100,8 +101,7 @@ enum status_code spi_transceive_buffer_job(
 		uint16_t length);
 /** @} */
 
-/** @}*/
-
+/** @} */
 #ifdef __cplusplus
 }
 #endif

@@ -47,13 +47,6 @@
 			<keyword value="Cryptography"/>
 		</info>
 
-		<info type="appnote" value="ATxxxxx"/>
-		<info type="keyword" value="pdf">
-			<keyword value="SPI"/>
-			<keyword value="I/O"/>
-			<keyword value="Serial Communication"/>
-			<keyword value="Serial Peripheral Interface Bus"/>
-		</info>
 		<info type="description" value="pdf">
 			This document describes how to use the Serial Peripheral
 			Interface in master mode on the SAM, both the ASF driver
@@ -71,6 +64,7 @@
 		<build type="include-path" value="."/>
 
 		<build type="doxygen-entry-point" value="asfdoc_samb_drivers_spi_group"/>
+		<build type="doxygen-image-path" value="docimg"/>
 		<build type="doxygen-quick-start" value="asfdoc_samb_drivers_spi_exqsg"/>
 
 		<build type="doxygen-example-path" value="quick_start_master"/>

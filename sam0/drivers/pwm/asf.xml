@@ -10,12 +10,6 @@
 			<keyword value="I/O" />
 		</info>
 
-		<info type="appnote" value="ATxxxxx"/>
-		<info type="keyword" value="pdf">
-			<keyword value="I/O"/>
-			<keyword value="PWM"/>
-		</info>
-
 		<info type="description" value="pdf">
 			This document describes how to use the PWM Controller on the
 			SAMB11, both the ASF driver and the peripheral itself.
@@ -27,9 +21,9 @@
 
 		<build type="header-file" value="quick_start/qs_pwm_basic.h"/>
 
-		<build type="doxygen-entry-point" value="asfdoc_sam0_pwm_group"/>
+		<build type="doxygen-entry-point" value="asfdoc_samb_pwm_group"/>
 		<build type="doxygen-example-path" value="quick_start"/>
-		<build type="doxygen-quick-start" value="asfdoc_sam0_pwm_exqsg"/>
+		<build type="doxygen-quick-start" value="asfdoc_samb_pwm_exqsg"/>
 
 		<device-support value="samb11"/>
 

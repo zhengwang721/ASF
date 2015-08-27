@@ -47,7 +47,7 @@
 #define SPI_FLASH_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_spi_flash_group SAM SPI Flash Driver (SPI Flash)
+ * \defgroup asfdoc_samb_spi_flash_group SAM SPI Flash Driver (SPI Flash)
  *
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for the
  * configuration and management of the device's SPI Flash functionality. The
@@ -60,44 +60,73 @@
  *  - Atmel | SMART SAM B11
  *
  * The outline of this documentation is as follows:
- *  - \ref asfdoc_sam0_spi_flash_prerequisites
- *  - \ref asfdoc_sam0_spi_flash_module_overview
- *  - \ref asfdoc_sam0_spi_flash_special_considerations
- *  - \ref asfdoc_sam0_spi_flash_extra_info
- *  - \ref asfdoc_sam0_spi_flash_examples
- *  - \ref asfdoc_sam0_spi_flash_api_overview
+ *  - \ref asfdoc_samb_spi_flash_prerequisites
+ *  - \ref asfdoc_samb_spi_flash_module_overview
+ *  - \ref asfdoc_samb_spi_flash_special_considerations
+ *  - \ref asfdoc_samb_spi_flash_extra_info
+ *  - \ref asfdoc_samb_spi_flash_examples
+ *  - \ref asfdoc_samb_spi_flash_api_overview
  *
  *
- * \section asfdoc_sam0_spi_flash_prerequisites Prerequisites
+ * \section asfdoc_samb_spi_flash_prerequisites Prerequisites
  *
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_sam0_spi_flash_module_overview Module Overview
+ * \section asfdoc_samb_spi_flash_module_overview Module Overview
  * The AHB SPI-Flash Controller is used to access the internal stacked FLASH
  * memory to access various instruction/data code needed for storing
  * application code, code patches, and OTA images.
  *
+ * The table above describes the stacked SPI Flash memory organization and layout.
+ * Boot up, the ROM boot loader starts loading different sections of from the
+ * flash by first reading the flash header to figure out the locations and sizes
+ * for different sections, then copying the sections one by one into their
+ * respective memory regions. The header and all sections have CRC calculated
+ * for integrity check. If CRC fails, section will not be loaded into RAM.
  *
- * \section asfdoc_sam0_spi_flash_special_considerations Special Considerations
+ * <table>
+ *  <tr>
+ *    <th>SPI flash memory address</th>
+ *    <th>Function description</th>
+ *  </tr>
+ *  <tr>
+ *    <td>0x0000 ~ 0x0FFF</td>
+ *    <td>Flash Header</td>
+ *  </tr>
+ *  <tr>
+ *    <td>0x1000 ~ End of patch section (according to patch size)</td>
+ *    <td>Patch image section</td>
+ *  </tr>
+ *  <tr>
+ *    <td>User App Start Section ~ User App End Section <=254KB</td>
+ *    <td>USER APP</td>
+ *  </tr>
+ *  <tr>
+ *    <td>NVDS 4KB</td>
+ *    <td>NVDS</td>
+ *  </tr>
+ * </table>
+ *
+ * \section asfdoc_samb_spi_flash_special_considerations Special Considerations
  * There are no prerequisites for this module.
  *
- * \section asfdoc_sam0_spi_flash_extra_info Extra Information
+ * \section asfdoc_samb_spi_flash_extra_info Extra Information
  *
- * For extra information, see \ref asfdoc_sam0_spi_flash_extra. This includes:
- *  - \ref asfdoc_sam0_spi_flash_extra_acronyms
- *  - \ref asfdoc_sam0_spi_flash_extra_dependencies
- *  - \ref asfdoc_sam0_spi_flash_extra_errata
- *  - \ref asfdoc_sam0_spi_flash_extra_history
+ * For extra information, see \ref asfdoc_samb_spi_flash_extra. This includes:
+ *  - \ref asfdoc_samb_spi_flash_extra_acronyms
+ *  - \ref asfdoc_samb_spi_flash_extra_dependencies
+ *  - \ref asfdoc_samb_spi_flash_extra_errata
+ *  - \ref asfdoc_samb_spi_flash_extra_history
  *
  *
- * \section asfdoc_sam0_spi_flash_examples Examples
+ * \section asfdoc_samb_spi_flash_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_sam0_spi_flash_exqsg.
+ * \ref asfdoc_samb_spi_flash_exqsg.
  *
  *
- * \section asfdoc_sam0_spi_flash_api_overview API Overview
+ * \section asfdoc_samb_spi_flash_api_overview API Overview
  * @{
  */
 
@@ -163,21 +192,22 @@ extern "C" {
 /** SPI flash direction: read data */
 #define SPI_FLASH_DIRECTION_READ        0x1F
 
-/**
-@defgroup spi-flash-drv SPI FLASH Driver API
-
-@{
-*/
-
+/** \name SPI flash callback config
+ * @{
+ */
 void spi_flash_init(void) ;
+/** @}*/
+
+/** \name SPI flash read/write/erase operation
+ * @{
+ */
 uint32_t spi_flash_read_id(void);
 void spi_flash_read(void *read_buf, uint32_t flash_addr, uint32_t size);
 int8_t spi_flash_write(void *write_buf, uint32_t flash_addr, uint32_t size);
 uint8_t spi_flash_erase(uint32_t start_offset, uint32_t size);
 void spi_flash_enter_low_power_mode(void);
 void spi_flash_leave_low_power_mode(void);
-
-/** @} */
+/** @}*/
 
 /** @}*/
 
@@ -187,9 +217,9 @@ void spi_flash_leave_low_power_mode(void);
 
 
 /**
- * \page asfdoc_sam0_spi_flash_extra Extra Information for SPI Flash Driver
+ * \page asfdoc_samb_spi_flash_extra Extra Information for SPI Flash Driver
  *
- * \section asfdoc_sam0_spi_flash_extra_acronyms Acronyms
+ * \section asfdoc_samb_spi_flash_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -200,20 +230,20 @@ void spi_flash_leave_low_power_mode(void);
  *	</tr>
  *	<tr>
  *		<td>SPI Flash</td>
- *		<td>General Purpose Input/Output</td>
+ *		<td>Serial Peripheral Interface Flash</td>
  *	</tr>
  * </table>
  *
  *
- * \section asfdoc_sam0_spi_flash_extra_dependencies Dependencies
+ * \section asfdoc_samb_spi_flash_extra_dependencies Dependencies
  * There are no dependencies related to this driver.
  *
  *
- * \section asfdoc_sam0_spi_flash_extra_errata Errata
+ * \section asfdoc_samb_spi_flash_extra_errata Errata
  * There are no errata related to this driver.
  *
  *
- * \section asfdoc_sam0_spi_flash_extra_history Module History
+ * \section asfdoc_samb_spi_flash_extra_history Module History
  * An overview of the module history is presented in the table below, with
  * details on the enhancements and fixes made to the module since its first
  * release. The current version of this corresponds to the newest version in
@@ -230,17 +260,17 @@ void spi_flash_leave_low_power_mode(void);
  */
 
 /**
- * \page asfdoc_sam0_spi_flash_exqsg Examples for SPI Flash Driver
+ * \page asfdoc_samb_spi_flash_exqsg Examples for SPI Flash Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_sam0_spi_flash_group. QSGs are simple examples with
+ * applications for \ref asfdoc_samb_spi_flash_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
- *  - \subpage asfdoc_sam0_spi_flash_use_case
+ *  - \subpage asfdoc_samb_spi_flash_basic_use_case
  *
- * \page asfdoc_sam0_spi_flash_document_revision_history Document Revision History
+ * \page asfdoc_samb_spi_flash_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>
@@ -250,7 +280,7 @@ void spi_flash_leave_low_power_mode(void);
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>06/2015</td>
+ *		<td>09/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
