@@ -344,6 +344,7 @@ static void spi_xdmac_configure(Spi *const pspi)
 				XDMAC_CC_PERID(SPI0_XDMAC_RX_CH_NUM);
 
 		xdmac_rx_cfg.mbr_bc = 0;
+		xdmac_tx_cfg.mbr_ds =  0;
 		xdmac_rx_cfg.mbr_sus = 0;
 		xdmac_rx_cfg.mbr_dus =0;
 
@@ -396,6 +397,8 @@ void XDMAC_Handler(void)
 	if(	g_uc_role == SLAVE_MODE) {
 		if (dma_status & XDMAC_CIS_BIS) {
 			printf(" %s\n\r", rx_buffer);
+			/** re-configure receiver for next reception*/
+			spi_xdmac_configure(SPI0);
 		}
 	}
 	else {
