@@ -27,7 +27,7 @@
 		<build type="doxygen-enable-section" value="DAC_DMA_USE_MODE_SELECTION"/>
 
 		<require idref="sam0.drivers.ac.appnote"/>
-		<require idref="sam0.drivers.adc.appnote_sam_l"/>
+		<require idref="sam0.drivers.adc.appnote_sam_l_c"/>
 		<require idref="sam0.drivers.aes.appnote"/>
 		<require idref="sam0.drivers.bod.appnote.sam_l"/>
 		<require idref="sam0.drivers.ccl"/>
