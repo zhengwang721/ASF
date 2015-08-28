@@ -54,18 +54,19 @@
 #include "conf_board.h"
 
 /**
- * \defgroup asfdoc_sam0_at30tse75x_group AT30TSE75X Temperature Sensor
- * This driver provides API for AT30TSE75X temperature sensor through
- * I2C interface.
+ * \defgroup asfdoc_samb_at30tse75x_group AT30TSE75X Digital Temperature
+ * Sensor with Nonvolatile Registers and Serial EEPROM.
+ * This driver provides API for AT30TSE75X temperature sensor and EEPROM
+ * through I2C interface.
  *
- * See \ref asfdoc_sam0_at30tse75x_qs.
+ * See \ref asfdoc_samb_at30tse75x_qs.
  *
  *
- * \section asfdoc_sam0_at30tse75x_dependencies Dependencies
+ * \section asfdoc_samb_at30tse75x_dependencies Dependencies
  * This driver depends on the following module:
- * - \ref asfdoc_sam0_i2c_group "SAM D20/D21 I2C master"
+ * - \ref asfdoc_samb_i2c_group "SAM B11 I2C master"
  *
- * \section asfdoc_sam0_at30tse75x_api_overview API Overview
+ * \section asfdoc_samb_at30tse75x_api_overview API Overview
  * @{
  */
 

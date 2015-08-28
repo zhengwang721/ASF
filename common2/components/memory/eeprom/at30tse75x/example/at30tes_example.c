@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief AT30TS(E)75x Temperature Sensor Example.
+ * \brief AT30TS(E)75x EEPROM and Temperature Sensor Example.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage AT30TS(E)75x Temperature Sensor Example
+ * \page asfdoc_samb_at30tse75x_qs AT30TS(E)75x EEPROM and Temperature Sensor Example
  *
  * \section Purpose
  *
