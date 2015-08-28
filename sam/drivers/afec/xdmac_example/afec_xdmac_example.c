@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief AFEC temperature sensor example for SAM.
+ * \brief AFEC XDMAC example for SAM.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -47,7 +47,11 @@
  * \section Purpose
  *
  * The example demonstrates how to use the temperature sensor
- * feature inside the microcontroller.
+ * feature inside the microcontroller. The RAW data of temperature sampled by 
+ * AFEC is taken by XDMAC and converted to temperature value ,which is output 
+ * to terminal console.  Three columns will be output to console, first column 
+ * is AFEC channel,for temperature sensor on SAMV71,it's channel 11, the second column 
+ * is RAW data sampled, the third column is converted temperature value.
  *
  * \section Requirements
  *
@@ -228,15 +232,15 @@ static void afec_callback(void)
 	uint32_t i;
 	uint32_t ch;
 	uint32_t voltage;
-	int32_t ul_temp;
+	int32_t temp;
 
 	printf("\n\rCH  AFE   temperature \n\r");
 	for ( i = 0; i < BUFFER_SIZE; i++ ) {
 		ch = (afec_buf[i] & AFEC_LCDR_CHNB_Msk ) >> AFEC_LCDR_CHNB_Pos;
 		voltage = (afec_buf[i] & 0xFFFF) * VOLT_REF / MAX_DIGITAL;
-		ul_temp = (voltage - 720)  * 100 / 233 + 27;
+		temp = ((int)voltage - 720)  * 100 / 233 + 27;
 		printf("%02u  %04x  %04d\n\r" ,(unsigned int)ch,
-			(unsigned int)(afec_buf[i]& 0xFFFF) , (int)ul_temp);
+			(unsigned int)(afec_buf[i]& 0xFFFF) , (int)temp);
 	}
 }
 
@@ -300,8 +304,8 @@ int main(void)
 	afec_channel_enable(AFEC0, AFEC_TEMPERATURE_SENSOR);
 
 
-while(1) {
-	;
+	while(1) {
+		;
 	}
 
 }

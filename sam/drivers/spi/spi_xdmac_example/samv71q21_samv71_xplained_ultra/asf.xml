@@ -6,7 +6,6 @@
 		<build type="header-file" value="conf_spi_example.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<require idref="sam.drivers.spi.xdmac_example"/>
-		<require idref="sam.drivers.xdmac"/>
 		<require idref="sam.utils.cmsis.samv71.source.template"/>
 		<require idref="board.samv71_xplained_ultra"/>
 		<generator value="iarewarm"/>
