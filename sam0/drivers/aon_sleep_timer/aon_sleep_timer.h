@@ -46,6 +46,58 @@
 #ifndef AON_SLEEP_TIMER_H_INCLUDED
 #define AON_SLEEP_TIMER_H_INCLUDED
 
+/**
+ * \defgroup asfdoc_samb_aon_sleep_timer_group SAM AON SLEEP TIMER
+ *
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the
+ * configuration and management of the device's TIMER functionality.
+ *
+ * The following peripherals are used by this module:
+ *  - AON SLEEP TIMER
+ *
+ * The following devices can use this module:
+ *  - Atmel | SMART SAM B11
+ *
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samb_aon_sleep_timer_prerequisites
+ *  - \ref asfdoc_samb_aon_sleep_timer_module_overview
+ *  - \ref asfdoc_samb_aon_sleep_timer_special_considerations
+ *  - \ref asfdoc_samb_aon_sleep_timer_extra_info
+ *  - \ref asfdoc_samb_aon_sleep_timer_examples
+ *  - \ref asfdoc_samb_aon_sleep_timer_api_overview
+ *
+ *
+ * \section asfdoc_samb_aon_sleep_timer_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_samb_aon_sleep_timer_module_overview Module Overview
+ *
+ *
+ * \section asfdoc_samb_aon_sleep_timer_special_considerations Special Considerations
+ *
+ * There are no prerequisites for this module.
+ *
+ * \section asfdoc_samb_aon_sleep_timer_extra_info Extra Information
+ *
+ * For extra information, see \ref asfdoc_samb_aon_sleep_timer_extra. This includes:
+ *  - \ref asfdoc_samb_aon_sleep_timer_extra_acronyms
+ *  - \ref asfdoc_samb_aon_sleep_timer_extra_dependencies
+ *  - \ref asfdoc_samb_aon_sleep_timer_extra_errata
+ *  - \ref asfdoc_samb_aon_sleep_timer_extra_history
+ *
+ *
+ * \section asfdoc_samb_aon_sleep_timer_examples Examples
+ *
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_samb_aon_sleep_timer_exqsg.
+ *
+ *
+ * \section asfdoc_samb_aon_sleep_timer_api_overview API Overview
+ * @{
+ */
+
 #include <compiler.h>
 #include <system_sam_b.h>
 
@@ -53,6 +105,7 @@
 extern "C" {
 #endif
 
+/** Type definition for a AON SLEEP TIMER module callback function. */
 typedef void (*aon_sleep_timer_callback_t)(void);
 
 /**
@@ -93,20 +146,108 @@ struct aon_sleep_timer_config {
 	enum aon_sleep_timer_wakeup wakeup;
 	/** Counter is reload or single mode */
 	enum aon_sleep_timer_mode mode;
+	/** Counter value */
 	uint32_t counter;
 };
 
+/**
+ * \name Configuration and Initialization
+ * @{
+ */
 void aon_sleep_timer_get_config_defaults(struct aon_sleep_timer_config *config);
 void aon_sleep_timer_init(const struct aon_sleep_timer_config *config);
 void aon_sleep_timer_disable(void);
+/** @} */
+
+/**
+ * \name Get value
+ * @{
+ */
 uint32_t aon_sleep_timer_get_current_value(void);
+/** @} */
+
+/**
+ * \name Callback
+ * @{
+ */
 void aon_sleep_timer_clear_interrup(void);
 bool aon_sleep_timer_sleep_timer_active(void);
 void aon_sleep_timer_register_callback(aon_sleep_timer_callback_t fun);
 void aon_sleep_timer_unregister_callback(void);
+/** @} */
+
+/** @}*/
 
 #ifdef __cplusplus
 }
 #endif
+
+/**
+ * \page asfdoc_samb_aon_sleep_timer_extra Extra Information for TIMER Driver
+ *
+ * \section asfdoc_samb_aon_sleep_timer_extra_acronyms Acronyms
+ * Below is a table listing the acronyms used in this module, along with their
+ * intended meanings.
+ * <table>
+ *	<tr>
+ *		<th>Acronym</th>
+ *		<th>Description</th>
+ *	</tr>
+ *	<tr>
+ *		<td>AON SLEEP TIMER</td>
+ *		<td>    </td>
+ *	</tr>
+ * </table>
+ *
+ * \section asfdoc_samb_aon_sleep_timer_extra_dependencies Dependencies
+ * There are no dependencies related to this driver.
+ *
+ *
+ * \section asfdoc_samb_aon_sleep_timer_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samb_aon_sleep_timer_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
+ *
+ * <table>
+ *  <tr>
+ *      <th>Changelog</th>
+ *  </tr>
+ *  <tr>
+ *      <td>Initial Release</td>
+ *  </tr>
+ * </table>
+ */
+
+/**
+ * \page asfdoc_samb_aon_sleep_timer_exqsg Examples for AON SLEEP TIMER Driver
+ *
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samb_aon_sleep_timer_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
+ *
+ *  - \subpage asfdoc_samb_aon_sleep_timer_basic_use_case
+ *
+ * \page asfdoc_samb_aon_sleep_timer_document_revision_history Document Revision History
+ *
+ * <table>
+ *  <tr>
+ *    <th>Doc. Rev.</td>
+ *    <th>Date</td>
+ *    <th>Comments</td>
+ *  </tr>
+ *  <tr>
+ *    <td>A</td>
+ *    <td>09/2015</td>
+ *    <td>Initial release</td>
+ *  </tr>
+ * </table>
+ */
 
 #endif

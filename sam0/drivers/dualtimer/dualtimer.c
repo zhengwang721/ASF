@@ -61,22 +61,22 @@ void dualtimer_get_config_defaults(struct dualtimer_config *config)
 {
 	config->timer1.timer_enable = true;
 	config->timer2.timer_enable = true;
-	
+
 	config->timer1.counter_mode = DUALTIMER_PERIODIC_MODE;
 	config->timer2.counter_mode = DUALTIMER_PERIODIC_MODE;
-	
+
 	config->timer1.counter_size = DUALTIMER_COUNTER_SIZE_32BIT;
 	config->timer2.counter_size = DUALTIMER_COUNTER_SIZE_32BIT;
 
 	config->timer1.clock_prescaler = DUALTIMER_CLOCK_PRESCALER_DIV1;
 	config->timer2.clock_prescaler = DUALTIMER_CLOCK_PRESCALER_DIV1;
-	
+
 	config->timer1.interrup_enable = true;
 	config->timer2.interrup_enable = true;
-	
+
 	config->timer1.load_value = 0;
 	config->timer2.load_value = 0;
-	
+
 	config->clock_source = DUALTIMER_CLK_INPUT_0;
 }
 
@@ -235,7 +235,7 @@ static void dualtimer_isr_handler(void)
 void dualtimer_init(const struct dualtimer_config *config)
 {
 	uint8_t regval = 0;
-	
+
 	/* Global reset */
 	LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg &=
 			~LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_DUALTIMER_RSTN;
@@ -279,16 +279,16 @@ void dualtimer_init(const struct dualtimer_config *config)
 		DUALTIMER0->TIMER2CONTROL.reg = regval;
 		LPMCU_MISC_REGS0->DUALTIMER_CTRL.reg |= LPMCU_MISC_REGS_DUALTIMER_CTRL_CNTR_2_ENABLE;
 	}
-	
+
 	/* Common config */
 	if (config->timer1.timer_enable || config->timer2.timer_enable) {
 		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |=
 				LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_DUALTIMER_CLK_EN;
 		LPMCU_MISC_REGS0->LPMCU_CONTROL.bit.DUALTIMER_CLK_SEL = config->clock_source;
 	}
-	
+
 	system_register_isr(RAM_ISR_TABLE_DUALTIMER_INDEX, (uint32_t)dualtimer_isr_handler);
-	
+
 	dualtimer_callback_timer1 = NULL;
 	dualtimer_callback_timer2 = NULL;
 }

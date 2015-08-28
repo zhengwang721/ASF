@@ -52,8 +52,8 @@ static void timer_callback(void)
 {
 	gpio_pin_toggle_output_level(LED_0_PIN);
 }
-
 //! [callback_funcs]
+
 static void configure_gpio_pins(void)
 {
 //! [setup_gpio_1]
@@ -101,23 +101,28 @@ static void configure_timer_callback(void)
 	NVIC_EnableIRQ(9);
 	//! [enable_IRQ]
 }
-
 //! [setup]
+
 int main(void)
 {
 //! [setup_init]
 	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
-	
-	configure_gpio_pins();
 
+//! [config_gpio]
+	configure_gpio_pins();
+//! [config_gpio]
+
+//! [config_timer]
 	configure_timer();
-	
+//! [config_timer]
+
+//! [config_timer_callback]
 	configure_timer_callback();
+//! [config_timer_callback]
 //! [setup_init]
 	
 //! [main_loop]
 	while (true) {
-		
 	}
 //! [main_loop]
 }

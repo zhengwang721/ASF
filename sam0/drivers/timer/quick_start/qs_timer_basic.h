@@ -45,7 +45,7 @@
  */
 
 /**
- * \page asfdoc_sam0_timer_basic_use_case Quick Start Guide for TIMER - Basic
+ * \page asfdoc_samb_timer_basic_use_case Quick Start Guide for TIMER - Basic
  *
  * In this use case, the TIMER module is configured for general downward timer.
  * The TIMER module will be set up as follows:
@@ -53,23 +53,25 @@
  * - Disable external input as clock
  * - Enable interrupt
  *
- * \section asfdoc_sam0_timer_basic_use_case_setup Setup
+ * \section asfdoc_samb_timer_basic_use_case_setup Setup
  *
- * \subsection asfdoc_sam0_timer_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_samb_timer_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_sam0_timer_basic_use_case_setup_code Code
+ * \subsection asfdoc_samb_timer_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_timer_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_timer_basic.c setup_init
  *
- * \subsection asfdoc_sam0_timer_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_samb_timer_basic_use_case_setup_flow Workflow
  * -# Create a new function \c configure_gpio_pins(), which will be used to configure
  *    the GPIO peripheral.
+ *    \snippet qs_timer_basic.c config_gpio
  * -# Create a new function \c configure_timer(), which will be used to configure
  *    the TIMER peripheral.
+ *    \snippet qs_timer_basic.c config_timer
  * -# Create a GPIO module pin configuration struct, which can be filled out to
  *    adjust the configuration of a single gpio pin.
  *    \snippet qs_timer_basic.c setup_gpio_1
@@ -96,20 +98,10 @@
  * -# Set the TIMER module enable.
  *    \snippet qs_timer_basic.c setup_timer_5
  *
- * \section asfdoc_sam0_timer_basic_use_case_use_main Use Case
+ * \section asfdoc_samb_timer_basic_use_case_use_main Use Case
  *
- * \subsection asfdoc_sam0_timer_basic_use_case_code Code
+ * \subsection asfdoc_samb_timer_basic_use_case_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_timer_basic.c main_loop
  *
- * \subsection asfdoc_sam0_timer_basic_use_case_flow Workflow
- * -# Read in the current timer interrupt status.
- *    \snippet qs_timer_basic.c main_loop_1
- *
- * -# Clear in the timer interrupt status.
- *    \snippet qs_timer_basic.c main_loop_2
- *
- * -# Write the inverted pin level state to LED pin, which has been configured as
- *    an output in the use-case setup code.
- *    \snippet qs_timer_basic.c main_loop_3
  */

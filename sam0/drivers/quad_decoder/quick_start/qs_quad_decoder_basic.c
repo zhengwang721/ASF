@@ -49,10 +49,8 @@ volatile int16_t	qdec_axis_x,
 					qdec_axis_y,
 					qdec_axis_z;
 
-void configure_quad_decoder(void);
-
 //! [setup]
-void configure_quad_decoder(void)
+static void configure_quad_decoder(void)
 {
 //! [set_conf]
 	struct quad_decoder_config config_quad_decoder;
@@ -95,7 +93,7 @@ void configure_quad_decoder(void)
 int main(void)
 {
 //! [add_main]
-	uint8_t staus;
+	uint8_t status;
 	//system_init();
 
 	configure_quad_decoder();
@@ -107,25 +105,25 @@ int main(void)
 	while (true) {
 //! [main_loop]
 
-		/* Check irq status, if trigger irq, clear irq status and 
+		/* Check irq status, if trigger irq, clear irq status and
 		 * reset the quad decoder to reset counter */
 //! [get_irq]
-		staus = quad_decoder_get_irq_status();
+		status = quad_decoder_get_irq_status();
 //! [get_irq]
 //! [ckeck_status]
-		if (staus & LPMCU_MISC_REGS_QUAD_DEC_IRQS_QUAD_DEC_1_IRQ) {
+		if (status & LPMCU_MISC_REGS_QUAD_DEC_IRQS_QUAD_DEC_1_IRQ) {
 //! [ckeck_status]
 //! [clear_status]
 			quad_decoder_clear_irq_status(QDEC_AXIS_X);
 //! [clear_status]
 		}
-		if (staus & LPMCU_MISC_REGS_QUAD_DEC_IRQS_QUAD_DEC_2_IRQ) {
+		if (status & LPMCU_MISC_REGS_QUAD_DEC_IRQS_QUAD_DEC_2_IRQ) {
 			quad_decoder_clear_irq_status(QDEC_AXIS_Y);
 		}
-		if (staus & LPMCU_MISC_REGS_QUAD_DEC_IRQS_QUAD_DEC_3_IRQ) {
+		if (status & LPMCU_MISC_REGS_QUAD_DEC_IRQS_QUAD_DEC_3_IRQ) {
 			quad_decoder_clear_irq_status(QDEC_AXIS_Z);
 		}
-		
+
 //! [get_counter]
 		/* Get x,y,z axis current counter */
 		qdec_axis_x = quad_decoder_get_counter(QDEC_AXIS_X);

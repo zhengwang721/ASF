@@ -15,9 +15,9 @@
 
 		<build type="header-file" value="quick_start/qs_aon_sleep_timer_basic.h"/>
 
-		<build type="doxygen-entry-point" value="asfdoc_sam0_aon_sleep_timer_group"/>
+		<build type="doxygen-entry-point" value="asfdoc_samb_aon_sleep_timer_group"/>
 		<build type="doxygen-example-path" value="quick_start"/>
-		<build type="doxygen-quick-start" value="asfdoc_sam0_aon_sleep_timer_exqsg"/>
+		<build type="doxygen-quick-start" value="asfdoc_samb_aon_sleep_timer_exqsg"/>
 
 		<device-support value="samb"/>
 		<require idref="sam0.utils"/>

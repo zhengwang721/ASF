@@ -45,24 +45,24 @@
  */
 
 /**
- * \page asfdoc_sam0_quad_decoder_use_case Quick Start Guide for QUAD DECODER - Basic
+ * \page asfdoc_samb_quad_decoder_basic_use_case Quick Start Guide for QUAD DECODER - Basic
  *
  * In this use case, the QUAD DECODER module is configured for quad decoder.
  *
- * \section asfdoc_sam0_quad_decoder_basic_use_case_setup Setup
+ * \section asfdoc_samb_quad_decoder_basic_use_case_setup Setup
  *
- * \subsection asfdoc_sam0_quad_decoder_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_samb_quad_decoder_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_sam0_quad_decoder_basic_use_case_setup_code Code
+ * \subsection asfdoc_samb_quad_decoder_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_quad_decoder_basic.c setup
  *
- * \subsection asfdoc_sam0_quad_decoder_use_case_main_code Add to Main
+ * \subsection asfdoc_samb_quad_decoder_use_case_main_code Add to Main
  * Add the following to \c main().
  * \snippet qs_quad_decoder_basic.c add_main
  *
- * \subsection asfdoc_sam0_quad_decoder_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_samb_quad_decoder_basic_use_case_setup_flow Workflow
  * -# Make configuration structure.
  *    \snippet qs_quad_decoder_basic.c set_conf
  *
@@ -93,11 +93,11 @@
  * -# Enable module.
  *    \snippet qs_quad_decoder_basic.c enable_qdec
  *
- * \section asfdoc_sam0_quad_decoder_basic_use_case_basic_implement Implementation
+ * \section asfdoc_samb_quad_decoder_basic_use_case_basic_implement Implementation
  * Add the following to \c main().
  * \snippet qs_quad_decoder_basic.c main_imp
  *
- * \subsection asfdoc_sam0_quad_decoder_basic_use_case_basic_workflow Workflow
+ * \subsection asfdoc_samb_quad_decoder_basic_use_case_basic_workflow Workflow
  * -# Start an infinite loop, to continuously get quad decoder counter.
  *    \snippet qs_quad_decoder_basic.c main_loop
  *

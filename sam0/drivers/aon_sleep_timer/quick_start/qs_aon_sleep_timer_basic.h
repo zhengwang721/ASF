@@ -45,60 +45,60 @@
  */
 
 /**
- * \page asfdoc_sam0_aon_sleep_timer_basic_use_case Quick Start Guide for AON Sleep Timer - Basic
+ * \page asfdoc_samb_aon_sleep_timer_basic_use_case Quick Start Guide for AON Sleep Timer - Basic
  *
  * In this use case, the AON Sleep Timer module is configured for wakeup MCU.
  *
- * \section asfdoc_sam0_aon_sleep_timer_basic_use_case_setup Setup
+ * \section asfdoc_samb_aon_sleep_timer_basic_use_case_setup Setup
  *
- * \subsection asfdoc_sam0_aon_sleep_timer_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_samb_aon_sleep_timer_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_sam0_aon_sleep_timer_basic_use_case_setup_code Code
+ * \subsection asfdoc_samb_aon_sleep_timer_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_aon_sleep_timer_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_aon_sleep_timer_basic.c setup_init
  *
- * \subsection asfdoc_sam0_aon_sleep_timer_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_samb_aon_sleep_timer_basic_use_case_setup_flow Workflow
  * -# Create a new function \c configure_gpio_pins(), which will be used to configure
  *    the GPIO peripheral.
- *    \snippet qs_aon_sleep_timer_basic.c gpio_init
+ *    \snippet qs_aon_sleep_timer_basic.c config_gpio
  *
- * -# Create a GPIO module configuration struct, which can be filled out to
- *    adjust the configuration of a physical GPIO peripheral.
+ *   -# Create a GPIO module configuration struct, which can be filled out to
+ *      adjust the configuration of a physical GPIO peripheral.
  *    \snippet qs_aon_sleep_timer_basic.c setup_1
- * -# Initialize the GPIO configuration struct with the module's default values.
+ *   -# Initialize the GPIO configuration struct with the module's default values.
  *    \snippet qs_aon_sleep_timer_basic.c setup_2
  *
- * -# Configure the GPIO module with the desired settings.
+ *   -# Configure the GPIO module with the desired settings.
  *    \snippet qs_aon_sleep_timer_basic.c setup_3
  *
- * -# Set the GPIO module enable.
+ *   -# Set the GPIO module enable.
  *    \snippet qs_aon_sleep_timer_basic.c setup_4
  *
- * -# Set the LED on.
+ *   -# Set the LED on.
  *    \snippet qs_aon_sleep_timer_basic.c setup_5
  *
  * -# Create a new function \c configure_aon_sleep_timer(), which will be used to configure
  *    the AON Sleep Timer peripheral.
- *    \snippet qs_aon_sleep_timer_basic.c timer_init
+ *    \snippet qs_aon_sleep_timer_basic.c config_timer
  *
- * -# Create a AON Sleep Timer module configuration struct, which can be filled out to
- *    adjust the configuration of a physical  AON Sleep Timer peripheral.
+ *   -# Create a AON Sleep Timer module configuration struct, which can be filled out to
+ *      adjust the configuration of a physical  AON Sleep Timer peripheral.
  *    \snippet qs_aon_sleep_timer_basic.c setup_6
  *
- * -# Initialize the  AON Sleep Timer configuration struct with the module's default values.
+ *   -# Initialize the  AON Sleep Timer configuration struct with the module's default values.
  *    \snippet qs_aon_sleep_timer_basic.c setup_7
  *
- * -# Configure the AON Sleep Timer module with the desired settings.
+ *   -# Configure the AON Sleep Timer module with the desired settings.
  *    \snippet qs_aon_sleep_timer_basic.c setup_8
  *
- * -# Initialize and enable the AON Sleep Timer module.
+ *   -# Initialize and enable the AON Sleep Timer module.
  *    \snippet qs_aon_sleep_timer_basic.c setup_9
  *
- * -# Enable the AON Sleep Timer interrupt.
+ *   -# Enable the AON Sleep Timer interrupt.
  *    \snippet qs_aon_sleep_timer_basic.c setup_10
  *
  * -# Waiting for the AON Sleep Timer module active.
@@ -107,14 +107,12 @@
  * -# Waiting for the AON Sleep Timer interrupt.
  *    \snippet qs_aon_sleep_timer_basic.c wait_wfi
  *
- * -# Turn the activity status LED off.
- *    \snippet qs_aon_sleep_timer_basic.c led_off
  *
- * \section asfdoc_sam0_aon_sleep_timer_basic_use_case_basic_implement Implementation
+ * \section asfdoc_samb_aon_sleep_timer_basic_use_case_basic_implement Implementation
  * Add the following to \c main().
  * \snippet qs_aon_sleep_timer_basic.c main_imp
  *
- * \subsection asfdoc_sam0_aon_sleep_timer_basic_use_case_basic_workflow Workflow
+ * \subsection asfdoc_samb_aon_sleep_timer_basic_use_case_basic_workflow Workflow
  * -# Start an infinite loop.
  *    \snippet qs_aon_sleep_timer_basic.c main_loop
  *

@@ -54,7 +54,7 @@
  * modified by the user application.
  *
  * The default configuration is as follows:
- *  \li Select input clock as 26MHz 
+ *  \li Select input clock as 26MHz
  *  \li Set counter upper threshold as 32767
  *  \li Set counter lower threshold as -32768
  *  \li Set pinmux_pad[0] as 0
@@ -118,21 +118,21 @@ void quad_decoder_enable(enum quad_decoder_axis qdec)
 {
 	switch (qdec) {
 	case QDEC_AXIS_X:
-		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |= 
+		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |=
 				LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_QUAD_DEC_1_CLK_EN;
-		LPMCU_MISC_REGS0->QUAD_DEC_1_CTRL.reg |= 
+		LPMCU_MISC_REGS0->QUAD_DEC_1_CTRL.reg |=
 				LPMCU_MISC_REGS_QUAD_DEC_1_CTRL_ENABLE;
 		break;
 	case QDEC_AXIS_Y:
-		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |= 
+		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |=
 				LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_QUAD_DEC_2_CLK_EN;
-		LPMCU_MISC_REGS0->QUAD_DEC_2_CTRL.reg |= 
+		LPMCU_MISC_REGS0->QUAD_DEC_2_CTRL.reg |=
 				LPMCU_MISC_REGS_QUAD_DEC_2_CTRL_ENABLE;
 		break;
 	case QDEC_AXIS_Z:
-		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |= 
+		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |=
 				LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_QUAD_DEC_3_CLK_EN;
-		LPMCU_MISC_REGS0->QUAD_DEC_3_CTRL.reg |= 
+		LPMCU_MISC_REGS0->QUAD_DEC_3_CTRL.reg |=
 				LPMCU_MISC_REGS_QUAD_DEC_3_CTRL_ENABLE;
 		break;
 	}
@@ -149,21 +149,21 @@ void quad_decoder_disable(enum quad_decoder_axis qdec)
 {
 	switch (qdec) {
 	case QDEC_AXIS_X:
-		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg &= 
+		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg &=
 				~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_QUAD_DEC_1_CLK_EN;
-		LPMCU_MISC_REGS0->QUAD_DEC_1_CTRL.reg &= 
+		LPMCU_MISC_REGS0->QUAD_DEC_1_CTRL.reg &=
 				~LPMCU_MISC_REGS_QUAD_DEC_1_CTRL_ENABLE;
 		break;
 	case QDEC_AXIS_Y:
-		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg &= 
+		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg &=
 				~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_QUAD_DEC_2_CLK_EN;
-		LPMCU_MISC_REGS0->QUAD_DEC_2_CTRL.reg &= 
+		LPMCU_MISC_REGS0->QUAD_DEC_2_CTRL.reg &=
 				~LPMCU_MISC_REGS_QUAD_DEC_2_CTRL_ENABLE;
 		break;
 	case QDEC_AXIS_Z:
-		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg &= 
+		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg &=
 				~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_QUAD_DEC_3_CLK_EN;
-		LPMCU_MISC_REGS0->QUAD_DEC_3_CTRL.reg &= 
+		LPMCU_MISC_REGS0->QUAD_DEC_3_CTRL.reg &=
 				~LPMCU_MISC_REGS_QUAD_DEC_3_CTRL_ENABLE;
 		break;
 	}
@@ -174,7 +174,7 @@ void quad_decoder_disable(enum quad_decoder_axis qdec)
  *
  * Get the IRQ status of quad decoders
  *
- * \return The IRQ status of quad decoders 
+ * \return The IRQ status of quad decoders
  */
 uint8_t quad_decoder_get_irq_status(void)
 {
@@ -192,15 +192,15 @@ void quad_decoder_clear_irq_status(enum quad_decoder_axis qdec)
 {
 	switch (qdec) {
 	case QDEC_AXIS_X:
-		LPMCU_MISC_REGS0->QUAD_DEC_1_CTRL.reg |= 
+		LPMCU_MISC_REGS0->QUAD_DEC_1_CTRL.reg |=
 				LPMCU_MISC_REGS_QUAD_DEC_1_CTRL_CLR_IRQ;
 		break;
 	case QDEC_AXIS_Y:
-		LPMCU_MISC_REGS0->QUAD_DEC_2_CTRL.reg |= 
+		LPMCU_MISC_REGS0->QUAD_DEC_2_CTRL.reg |=
 				LPMCU_MISC_REGS_QUAD_DEC_2_CTRL_CLR_IRQ;
 		break;
 	case QDEC_AXIS_Z:
-		LPMCU_MISC_REGS0->QUAD_DEC_3_CTRL.reg |= 
+		LPMCU_MISC_REGS0->QUAD_DEC_3_CTRL.reg |=
 				LPMCU_MISC_REGS_QUAD_DEC_3_CTRL_CLR_IRQ;
 		break;
 	}
@@ -231,7 +231,7 @@ int16_t quad_decoder_get_counter(enum quad_decoder_axis qdec)
 /**
  * \brief Resets the QUAD DECODER module
  *
- * This function will reset the QUAD DECODER module to its 
+ * This function will reset the QUAD DECODER module to its
  * power on default values and disable it.
  *
  * \param[in]     qdec         Axis(x,y,z) of QUAD DECODER instance
