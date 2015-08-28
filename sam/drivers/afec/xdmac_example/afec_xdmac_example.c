@@ -123,7 +123,7 @@ COMPILER_ALIGNED(8)
 static uint32_t afec_buf[BUFFER_SIZE];
 
 #define STRING_EOL    "\r"
-#define STRING_HEADER "-- AFEC Temperature Sensor Example --\r\n" \
+#define STRING_HEADER "-- AFEC XDMAC Example --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 

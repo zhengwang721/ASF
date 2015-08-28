@@ -156,7 +156,7 @@ static xdmac_channel_config_t xdmac_tx_cfg,xdmac_rx_cfg;
 static uint32_t gs_ul_spi_clock = 500000;
 
 #define STRING_EOL    "\r"
-#define STRING_HEADER "--Spi Example --\r\n" \
+#define STRING_HEADER "--Spi XDMAC Example --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
@@ -380,6 +380,12 @@ static void spi_xdmac_configure(Spi *const pspi)
  */
 static void spi_set_clock_configuration(uint8_t configuration)
 {
+	spi_disable_xdmac();
+	NVIC_ClearPendingIRQ(SPI_IRQn);
+	NVIC_DisableIRQ(SPI_IRQn);
+	NVIC_SetPriority(SPI_IRQn, 0);
+	NVIC_EnableIRQ(SPI_IRQn);
+	
 	gs_ul_spi_clock = gs_ul_clock_configurations[configuration];
 	printf("Setting SPI clock #%lu ... \n\r", (unsigned long)gs_ul_spi_clock);
 	spi_master_initialize();
