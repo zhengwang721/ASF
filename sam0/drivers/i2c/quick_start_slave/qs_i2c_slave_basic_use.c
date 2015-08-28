@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM B11 I2C Master Quick Start Guide
+ * \brief SAM B11 I2C Slave Quick Start Guide
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -47,9 +47,9 @@
 #include <asf.h>
 
 //! [packet_data]
-#define DATA_LENGTH 10
+#define DATA_LENGTH 8
 static uint8_t write_buffer[DATA_LENGTH] = {
-		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
+		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07
 };
 
 static uint8_t read_buffer[DATA_LENGTH];
@@ -59,90 +59,65 @@ static uint8_t read_buffer[DATA_LENGTH];
 #define SLAVE_ADDRESS 0x12
 //! [address]
 
-/* Number of times to try to send packet if failed. */
-//! [timeout]
-#define TIMEOUT 1000
-//! [timeout]
-
 /* Init software module. */
 //! [dev_inst]
-struct i2c_master_module i2c_master_instance;
+struct i2c_slave_module i2c_slave_instance;
 //! [dev_inst]
 
-void configure_i2c_master(void);
-
 //! [initialize_i2c]
-void configure_i2c_master(void)
+static void configure_i2c_slave(void)
 {
 	/* Initialize config structure and software module. */
 	//! [init_conf]
-	struct i2c_master_config config_i2c_master;
-	i2c_master_get_config_defaults(&config_i2c_master);
+	struct i2c_slave_config config_i2c_slave;
+	i2c_slave_get_config_defaults(&config_i2c_slave);
 	//! [init_conf]
-
+	/* Change address and address_mode. */
+	//! [conf_changes]
+	config_i2c_slave.address = SLAVE_ADDRESS;
+	//! [conf_changes]
 	/* Initialize and enable device with config, and enable i2c. */
 	//! [init_module]
-	i2c_master_init(&i2c_master_instance, &config_i2c_master);
+	while(i2c_slave_init(&i2c_slave_instance, &config_i2c_slave)     \
+			!= STATUS_OK);
 	//! [init_module]
-	
 	//! [enable_module]
-	i2c_enable(i2c_master_instance.hw);
+	i2c_enable(i2c_slave_instance.hw);
 	//! [enable_module]
+	//! [enable_interurpt]
+	i2c_slave_rx_interrupt(i2c_slave_instance.hw, true);
+	i2c_slave_tx_interrupt(i2c_slave_instance.hw, true);
+	//! [enable_interurpt]
 }
 //! [initialize_i2c]
 
 int main(void)
 {
+	
 	//! [init]
 	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
-	/* Configure device and enable. */
-	//! [config]
-	configure_i2c_master();
-	//! [config]
+	
+	configure_i2c_slave();
 
-	/* Timeout counter. */
-	//! [timeout_counter]
-	uint16_t timeout = 0;
-	//! [timeout_counter]
-
-	/* Init i2c packet. */
 	//! [packet]
-	struct i2c_master_packet packet = {
-		.address     = SLAVE_ADDRESS,
+	struct i2c_slave_packet packet = {
 		.data_length = DATA_LENGTH,
 		.data        = write_buffer,
 	};
 	//! [packet]
+	//! [buffer]
+	for (int i = 0; i < DATA_LENGTH; i++) {
+		write_buffer[i] = i;
+		read_buffer[i] = 0;
+	}
+	//! [buffer]
 	//! [init]
-
-	//! [main]
-	/* Write buffer to slave until success. */
-	//! [write_packet]
-	while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) !=
-			STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			break;
-		}
-	}
-	//! [write_packet]
-
-	/* Read from slave until success. */
-	//! [read_packet]
-	packet.data = read_buffer;
-	while (i2c_master_read_packet_wait(&i2c_master_instance, &packet) !=
-			STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			break;
-		}
-	}
-	//! [read_packet]
-
-	//! [main]
-
+	//! [while]
 	while (true) {
-		/* Infinite loop */
+		packet.data = read_buffer;
+		i2c_slave_read_packet_wait(&i2c_slave_instance, &packet);
+		packet.data = write_buffer;
+		i2c_slave_write_packet_wait(&i2c_slave_instance, &packet);
 	}
-
+	//! [while]
 }

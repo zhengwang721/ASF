@@ -1,10 +1,9 @@
-
 /**
  * \file
  *
- * \brief SAM B11 I2C configuration
+ * \brief SAM B11 Xplained Pro board configuration.
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,13 +44,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifndef CONF_I2C_H_INCLUDED
-#  define CONF_I2C_H_INCLUDED
-
-#  define CONF_I2C_MASTER_ENABLE     true
-#  define CONF_I2C_SLAVE_ENABLE      false
-
-#  define I2C_CALLBACK_MODE          false
-
-#endif /* CONF_I2C_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

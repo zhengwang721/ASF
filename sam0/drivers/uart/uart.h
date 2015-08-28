@@ -48,6 +48,62 @@
 #ifndef UART_H_INCLUDED
 #define UART_H_INCLUDED
 
+/**
+ * \defgroup asfdoc_samb_uart_group SAM UART Driver (UART)
+ *
+ * This driver for Atmel&reg; | SMART SAM devices provides an interface for the
+ * configuration and management of the device's Universal Asynchronous
+ * Receiver/Transmitter (UART) interfaces functionality.
+ *
+ * The following peripherals are used by this module:
+ *  - UART (Universal Asynchronous Receiver/Transmitter)
+ *
+ * The following devices can use this module:
+ *  - Atmel | SMART SAM B11
+ *
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_samb_uart_prerequisites
+ *  - \ref asfdoc_samb_uart_module_overview
+ *  - \ref asfdoc_samb_uart_special_considerations
+ *  - \ref asfdoc_samb_uart_extra_info
+ *  - \ref asfdoc_samb_uart_examples
+ *  - \ref asfdoc_samb_uart_api_overview
+ *
+ *
+ * \section asfdoc_samb_uart_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_samb_uart_module_overview Module Overview
+ *
+ * The device UART module provides an interface between the user application
+ * logic and hardware peripheral. This driver provides an easy-to-use interface
+ * to transfer and receive data.
+ *
+ * \section asfdoc_samb_uart_special_considerations Special Considerations
+ *
+ * There are no prerequisites for this module.
+ *
+ * \section asfdoc_samb_uart_extra_info Extra Information
+ *
+ * For extra information, see \ref asfdoc_samb_uart_extra. This includes:
+ *  - \ref asfdoc_samb_uart_extra_acronyms
+ *  - \ref asfdoc_samb_uart_extra_dependencies
+ *  - \ref asfdoc_samb_uart_extra_errata
+ *  - \ref asfdoc_samb_uart_extra_history
+ *
+ *
+ * \section asfdoc_samb_uart_examples Examples
+ *
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_samb_uart_exqsg.
+ *
+ *
+ * \section asfdoc_samb_uart_api_overview API Overview
+ * @{
+ */
+
 #include <compiler.h>
 #include <system_sam_b.h>
 #include <gpio.h>
@@ -117,15 +173,13 @@ typedef void (*uart_callback_t)(struct uart_module *const module);
  */
 enum uart_callback {
 	/** Callback for TX FIFO not full. */
-	UART_TX_FIFO_NOT_FULL,
-	/** Callback for TX FIFO empty. */
-	UART_TX_FIFO_EMPTY,
-	/** Callback for RX FIFO not empty. */
-	UART_RX_FIFO_NOT_EMPTY,
-	/** Callback for RX FIFO overrun. */
-	UART_RX_FIFO_OVERRUN,
+	UART_TX_COMPLETE,
 	/** Callback for CTS active. */
 	UART_CTS_ACTIVE,
+	/** Callback for RX FIFO overrun. */
+	UART_RX_COMPLETE,
+	/** Callback for RX FIFO overrun. */
+	UART_RX_FIFO_OVERRUN,
 	/** Number of available callbacks. */
 	UART_CALLBACK_N,
 };
@@ -164,27 +218,36 @@ struct uart_config{
  *       application; they are reserved for module-internal use only.
  */
 struct uart_module {
-#if !defined(__DOXYGEN__)
 	/** Pointer to the hardware instance. */
 	Uart *hw;
 	/** Array to store callback function pointers in. */
 	uart_callback_t callback[UART_CALLBACK_N];
+	/** Buffer pointer to where the next received character will be put */
+	volatile uint8_t *rx_buffer_ptr;
+	/** Buffer pointer to where the next character will be transmitted from
+	**/
+	volatile uint8_t *tx_buffer_ptr;
+	/** Remaining characters to receive */
+	volatile uint16_t remaining_rx_buffer_length;
+	/** Remaining characters to transmit */
+	volatile uint16_t remaining_tx_buffer_length;
 	/** Bit mask for callbacks registered. */
 	uint8_t callback_reg_mask;
 	/** Bit mask for callbacks enabled. */
 	uint8_t callback_enable_mask;
-#endif
+	/** Holds the status of the ongoing or last operation */
+	volatile enum status_code status;
 };
 
-/**
-@defgroup uart-drv UART Driver API
+/** \name Configuration and initialization
+ * @{
+ */
 
-@{
-*/
 
 void uart_get_config_defaults(struct uart_config *const config);
 enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 		const struct uart_config *const config);
+/** @} */
 enum status_code uart_write_wait(struct uart_module *const module,
 		const uint8_t tx_data);
 enum status_code uart_read_wait(struct uart_module *const module,
@@ -193,6 +256,13 @@ enum status_code uart_write_buffer_wait(struct uart_module *const module,
 		const uint8_t *tx_data, uint32_t length);
 enum status_code uart_read_buffer_wait(struct uart_module *const module,
 		uint8_t *rx_data, uint16_t length);
+enum status_code uart_write_buffer_job(struct uart_module *const module,
+		uint8_t *tx_data, uint32_t length);
+enum status_code uart_read_buffer_job(struct uart_module *const module,
+		uint8_t *rx_data, uint16_t length);
+/** \name UART callback config
+ * @{
+ */
 void uart_register_callback(struct uart_module *const module,
 		uart_callback_t callback_func,
 		enum uart_callback callback_type);
@@ -208,5 +278,77 @@ void uart_disable_callback(struct uart_module *const module,
 #ifdef __cplusplus
 }
 #endif
+
+
+/**
+ * \page asfdoc_samb_uart_extra Extra Information for UART Driver
+ *
+ * \section asfdoc_samb_uart_extra_acronyms Acronyms
+ * Below is a table listing the acronyms used in this module, along with their
+ * intended meanings.
+ *
+ * <table>
+ *	<tr>
+ *		<th>Acronym</th>
+ *		<th>Description</th>
+ *	</tr>
+ *	<tr>
+ *		<td>UART</td>
+ *		<td>Universal Asynchronous Receiver/Transmitter</td>
+ *	</tr>
+ * </table>
+ *
+ *
+ * \section asfdoc_samb_uart_extra_dependencies Dependencies
+ * There are no dependencies related to this driver.
+ *
+ *
+ * \section asfdoc_samb_uart_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_samb_uart_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
+ *
+ * <table>
+ *	<tr>
+ *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Initial Release</td>
+ *	</tr>
+ * </table>
+ */
+
+/**
+ * \page asfdoc_samb_uart_exqsg Examples for UART Driver
+ *
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_samb_uart_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
+ *
+ *  - \subpage asfdoc_samb_uart_basic_use_case
+ *  - \subpage asfdoc_samb_uart_dma_use_case
+ *
+ * \page asfdoc_samb_uart_document_revision_history Document Revision History
+ *
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>A</td>
+ *		<td>09/2015</td>
+ *		<td>Initial release</td>
+ *	</tr>
+ * </table>
+ */
 
 #endif

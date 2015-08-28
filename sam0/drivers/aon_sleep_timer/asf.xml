@@ -1,12 +1,6 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.aon_sleep_timer" caption="Aon Sleep Timer - Always-on Sleep Timer for SAMB11">
 		<info type="keyword" value="technology">
-			<keyword value="AON Sleep Timer"/>
-		</info>
-
-		<info type="appnote" value="ATxxxxx"/>
-		<info type="keyword" value="pdf">
-			<keyword value="I/O"/>
 			<keyword value="Timers"/>
 		</info>
 

@@ -133,7 +133,7 @@ static void configure_usart(void)
 //! [setup_config_defaults]
 
 //! [setup_change_config]
-	config_uart.baud_rate = 9600;
+	config_uart.baud_rate = 38400;
 	config_uart.pinmux_pad[0] = EDBG_CDC_SERCOM_PINMUX_PAD0;
 	config_uart.pinmux_pad[1] = EDBG_CDC_SERCOM_PINMUX_PAD1;
 	config_uart.pinmux_pad[2] = EDBG_CDC_SERCOM_PINMUX_PAD2;

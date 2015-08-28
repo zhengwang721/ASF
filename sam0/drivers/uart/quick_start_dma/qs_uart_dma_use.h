@@ -45,7 +45,7 @@
  */
 
 /**
- * \page asfdoc_sam0_uart_dma_use_case Quick Start Guide for Using DMA with UART
+ * \page asfdoc_samb_uart_dma_use_case Quick Start Guide for Using DMA with UART
  *
  * The supported board list:
  *    - SAM B11 Xplained Pro
@@ -58,9 +58,9 @@
  * - 8-bits, No Parity and one Stop Bit
  * - TX and RX enabled and connected to the Xplained Pro Embedded Debugger virtual COM port
  *
- * \section asfdoc_sam0_uart_dma_use_case_setup Setup
+ * \section asfdoc_samb_uart_dma_use_case_setup Setup
  *
- * \subsection asfdoc_sam0_uart_dma_use_case_prereq Prerequisites
+ * \subsection asfdoc_samb_uart_dma_use_case_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
  * \subsection asfdoc_uart_dma_use_case_setup_code Code
@@ -76,9 +76,9 @@
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_uart_dma_use.c setup_init
  *
- * \subsection asfdoc_sam0_uart_dma_use_case_setup_flow Workflow
+ * \subsection asfdoc_samb_uart_dma_use_case_setup_flow Workflow
  *
- * \subsubsection asfdoc_sam0_uart_dma_use_case_setup_flow_inst Create variables
+ * \subsubsection asfdoc_samb_uart_dma_use_case_setup_flow_inst Create variables
  * -# Create a module software instance structure for the UART module to store
  *    the UART driver state while it is in use.
  *    \snippet qs_uart_dma_use.c module_inst
@@ -96,7 +96,7 @@
  * -# Create DMA transfer descriptors for RX/TX.
  *    \snippet qs_uart_dma_use.c transfer_descriptor
  *
- * \subsubsection asfdoc_sam0_uart_dma_use_case_setup_flow_uart Configure the UART
+ * \subsubsection asfdoc_samb_uart_dma_use_case_setup_flow_uart Configure the UART
  * -# Create a UART module configuration struct, which can be filled out to
  *    adjust the configuration of a physical UART peripheral.
  *    \snippet qs_uart_dma_use.c setup_config
@@ -115,7 +115,7 @@
  * -# Enable the UART module.
  *    \snippet qs_uart_dma_use.c setup_enable
  *
- * \subsubsection asfdoc_sam0_uart_dma_use_case_setup_flow_dma Configure DMA
+ * \subsubsection asfdoc_samb_uart_dma_use_case_setup_flow_dma Configure DMA
  * -# Create a callback function of receiver done.
  *    \snippet qs_uart_dma_use.c transfer_done_rx
  *
@@ -196,13 +196,13 @@
  * -# Create the DMA transfer descriptor.
  *    \snippet qs_uart_dma_use.c setup_tx_8
  *
- * \section asfdoc_sam0_uart_dma_use_case_main Use Case
+ * \section asfdoc_samb_uart_dma_use_case_main Use Case
  *
- * \subsection asfdoc_sam0_uart_dma_use_case_main_code Code
+ * \subsection asfdoc_samb_uart_dma_use_case_main_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_uart_dma_use.c main
  *
- * \subsection asfdoc_sam0_uart_dma_use_case_main_flow Workflow
+ * \subsection asfdoc_samb_uart_dma_use_case_main_flow Workflow
  * -# Wait for receiving data.
  *    \snippet qs_uart_dma_use.c main_1
  *

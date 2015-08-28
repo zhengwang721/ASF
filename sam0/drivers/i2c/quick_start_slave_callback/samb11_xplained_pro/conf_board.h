@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief GCC entry point for SAMB11 projects. To be scheduled to run as a task in the BLE OS
+ * \brief SAM B11 Xplained Pro board configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -40,52 +40,11 @@
  * \asf_license_stop
  *
  */
-#define DONT_USE_CMSIS_INIT
-#include "samb11.h"
-
-/* Initialize segments */
-extern uint32_t _etext;
-extern uint32_t _srelocate;
-extern uint32_t _erelocate;
-extern uint32_t _szero;
-extern uint32_t _ezero;
-
-/** \cond DOXYGEN_SHOULD_SKIP_THIS */
-int main(void);
-/** \endcond */
-
-void __libc_init_array(void);
-void app_entry(void);
-
-/**
- * \brief This is the code that gets called on processor reset.
- * To initialize the device, and call the main() routine.
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-void app_entry(void)
-{
-    uint32_t *pSrc, *pDest;
 
-    /* Initialize the relocate segment */
-    pSrc = &_etext;
-    pDest = &_srelocate;
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-    if (pSrc != pDest) {
-        for (; pDest < &_erelocate;) {
-            *pDest++ = *pSrc++;
-        }
-    }
-
-    /* Clear the zero segment */
-    for (pDest = &_szero; pDest < &_ezero;) {
-        *pDest++ = 0;
-    }
-
-    /* Initialize the C library */
-    __libc_init_array();
-
-    /* Branch to main function */
-    main();
-
-    /* return to BLE OS*/
-    return;
-}
+#endif /* CONF_BOARD_H_INCLUDED */

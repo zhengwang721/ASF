@@ -45,14 +45,30 @@
  */
 #include <asf.h>
 
-void configure_uart(void);
-
 //! [module_inst]
 struct uart_module uart_instance;
 //! [module_inst]
 
+//! [variable_inst]
+static uint8_t string_input[8];
+volatile static bool read_complete_flag = false;
+volatile static bool write_complete_flag = false;
+//! [variable_inst]
+
+//! [callback_functions]
+static void uart_read_complete_callback(struct uart_module *const module)
+{
+	read_complete_flag = true;
+}
+
+static void uart_write_complete_callback(struct uart_module *const module)
+{
+	write_complete_flag = true;
+}
+//! [callback_functions]
+
 //! [setup]
-void configure_uart(void)
+static void configure_uart(void)
 {
 //! [setup_config]
 	struct uart_config config_uart;
@@ -86,14 +102,36 @@ int main(void)
 //! [setup_init]
 
 //! [main]
-//! [main_send_string]
-	uint8_t string[] = "Hello World!\r\n";
-	uart_write_buffer_wait(&uart_instance, string, sizeof(string));
-//! [main_send_string]
+//! [main_send_string1]
+	uint8_t string1[] = " Hello World!\r\n";
+	uart_write_buffer_wait(&uart_instance, string1, sizeof(string1));
+//! [main_send_string1]
+
+//! [test_callback_functions]
+	uint8_t string3[] = " Test callback functions, please input 8 number or character!\r\n";
+	uart_register_callback(&uart_instance, uart_write_complete_callback,
+		UART_TX_COMPLETE);
+	uart_enable_callback(&uart_instance, UART_TX_COMPLETE);
+	uart_write_buffer_job(&uart_instance, string3, sizeof(string3));
+	while (!write_complete_flag);
+
+	uart_register_callback(&uart_instance, uart_read_complete_callback,
+		UART_RX_COMPLETE);
+	uart_enable_callback(&uart_instance, UART_RX_COMPLETE);
+	uart_read_buffer_job(&uart_instance, string_input, sizeof(string_input));
+	while (!read_complete_flag);
+
+	uint8_t string4[] = " Data received: ";
+	uart_write_buffer_wait(&uart_instance, string4, sizeof(string4));
+	uart_write_buffer_wait(&uart_instance, string_input, sizeof(string_input));
+//! [test_callback_functions]
 
 //! [main_rec_var]
 	uint8_t temp;
 //! [main_rec_var]
+
+	uint8_t string2[] = "\r\n Enter while loop, echo back your input!\r\n";
+	uart_write_buffer_wait(&uart_instance, string2, sizeof(string2));
 
 //! [main_loop]
 	while (true) {
