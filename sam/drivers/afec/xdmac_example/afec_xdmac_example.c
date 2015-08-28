@@ -47,10 +47,10 @@
  * \section Purpose
  *
  * The example demonstrates how to use the temperature sensor
- * feature inside the microcontroller. The RAW data of temperature sampled by 
- * AFEC is taken by XDMAC and converted to temperature value ,which is output 
- * to terminal console.  Three columns will be output to console, first column 
- * is AFEC channel,for temperature sensor on SAMV71,it's channel 11, the second column 
+ * feature inside the microcontroller. The RAW data of temperature sampled by
+ * AFEC is taken by XDMAC and converted to temperature value ,which is output
+ * to terminal console.  Three columns will be output to console, first column
+ * is AFEC channel,for temperature sensor on SAMV71,it's channel 11, the second column
  * is RAW data sampled, the third column is converted temperature value.
  *
  * \section Requirements
@@ -121,10 +121,6 @@ static xdmac_channel_config_t xdmac_channel_cfg;
 
 COMPILER_ALIGNED(8)
 static uint32_t afec_buf[BUFFER_SIZE];
-
-/** AFEC transfer complete callback. */
-typedef void (*afecallback)(void) ;
-afecallback callback;
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- AFEC Temperature Sensor Example --\r\n" \
@@ -274,24 +270,16 @@ int main(void)
 
 	struct afec_ch_config afec_ch_cfg;
 	afec_ch_get_config_defaults(&afec_ch_cfg);
-#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
+
 	afec_ch_cfg.gain = AFEC_GAINVALUE_0;
-#endif
+
 	afec_ch_set_config(AFEC0, AFEC_TEMPERATURE_SENSOR, &afec_ch_cfg);
 
-#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
 	/*
 	 * Because the internal ADC offset is 0x200, it should cancel it and shift
 	 * down to 0.
 	 */
 	afec_channel_set_analog_offset(AFEC0, AFEC_TEMPERATURE_SENSOR, 0x200);
-#else
-	/*
-	 * Because the internal ADC offset is 0x800, it should cancel it and shift
-	 * down to 0.
-	 */
-	afec_channel_set_analog_offset(AFEC0, AFEC_TEMPERATURE_SENSOR, 0x800);
-#endif
 
 	struct afec_temp_sensor_config afec_temp_sensor_cfg;
 
@@ -301,7 +289,6 @@ int main(void)
 
 	afec_xdmac_configure(AFEC0);
 
-	callback = afec_callback;
 	afec_channel_enable(AFEC0, AFEC_TEMPERATURE_SENSOR);
 
 
