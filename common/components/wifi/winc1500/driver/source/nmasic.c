@@ -44,14 +44,14 @@
 #include "bsp/include/nm_bsp.h"
 #include "driver/source/nmasic.h"
 
-#define NMI_GLB_RESET_0 (NMI_PERIPH_REG_BASE + 0x400)
-#define NMI_INTR_REG_BASE (NMI_PERIPH_REG_BASE+0xa00)
-#define NMI_PIN_MUX_0 (NMI_PERIPH_REG_BASE + 0x408)
-#define NMI_INTR_ENABLE (NMI_INTR_REG_BASE)
-#define GET_UINT32(X,Y) (X[0+Y] + ((uint32)X[1+Y]<<8) + ((uint32)X[2+Y]<<16) +((uint32)X[3+Y]<<24))
+#define NMI_GLB_RESET_0				(NMI_PERIPH_REG_BASE + 0x400)
+#define NMI_INTR_REG_BASE			(NMI_PERIPH_REG_BASE + 0xa00)
+#define NMI_PIN_MUX_0				(NMI_PERIPH_REG_BASE + 0x408)
+#define NMI_INTR_ENABLE				(NMI_INTR_REG_BASE)
+#define GET_UINT32(X,Y)				(X[0+Y] + ((uint32)X[1+Y]<<8) + ((uint32)X[2+Y]<<16) +((uint32)X[3+Y]<<24))
 
-#define TIMEOUT				(2000)
-#define M2M_DISABLE_PS        0xD0UL
+#define TIMEOUT						(2000)
+#define M2M_DISABLE_PS				 0xD0UL
 
 static uint32 clk_status_reg_adr = 0xf; /* Assume initially it is B0 chip */
 
@@ -395,11 +395,6 @@ sint8 chip_reset_and_cpu_halt(void)
 		ret += nm_write_reg(NMI_GLB_RESET_0, reg);
 		ret += nm_read_reg_with_ret(NMI_GLB_RESET_0, &reg);
 	}
-#if 0
-	reg |= (1ul << 10);
-	ret += nm_write_reg(NMI_GLB_RESET_0, reg);
-	ret += nm_read_reg_with_ret(NMI_GLB_RESET_0, &reg);
-#endif
 	nm_write_reg(BOOTROM_REG,0);
 	nm_write_reg(NMI_STATE_REG,0);
 	nm_write_reg(NMI_REV_REG,0);
@@ -424,6 +419,7 @@ sint8 wait_for_bootrom(uint8 arg)
 {
 	sint8 ret = M2M_SUCCESS;
 	uint32 reg = 0, cnt = 0;
+	uint32 u32GpReg1 = 0;
 
 	reg = 0;
 	while(1) {
@@ -453,20 +449,22 @@ sint8 wait_for_bootrom(uint8 arg)
 			}
 		}
 	}
-
+	
 	if(2 == arg) {
 		nm_write_reg(NMI_REV_REG, M2M_ATE_FW_START_VALUE);
+	}else if(3 == arg){
+		u32GpReg1 = rHAVE_ETHERNET_MODE_BIT;
 	} else {
 		/*bypass this step*/
 	}
 
 	if(REV(nmi_get_chipid()) == REV_3A0)
 	{
-		chip_apply_conf(rHAVE_USE_PMU_BIT);
+		chip_apply_conf(u32GpReg1 | rHAVE_USE_PMU_BIT);
 	}
 	else
 	{
-		chip_apply_conf(0);
+		chip_apply_conf(u32GpReg1);
 	}
 	
 	nm_write_reg(BOOTROM_REG,M2M_START_FIRMWARE);
@@ -636,9 +634,14 @@ sint8 nmi_get_otp_mac_address(uint8 *pu8MacAddr,  uint8 * pu8IsValid)
 	sint8 ret;
 	uint32	u32RegValue;
 	uint8	mac[6];
+	tstrGpRegs strgp = {0};
 
-	ret = nm_read_reg_with_ret(rNMI_GP_REG_0, &u32RegValue);
+	ret = nm_read_reg_with_ret(rNMI_GP_REG_2, &u32RegValue);
 	if(ret != M2M_SUCCESS) goto _EXIT_ERR;
+
+	ret = nm_read_block(u32RegValue|0x30000,(uint8*)&strgp,sizeof(tstrGpRegs));
+	if(ret != M2M_SUCCESS) goto _EXIT_ERR;
+	u32RegValue = strgp.u32Mac_efuse_mib;
 
 	if(!EFUSED_MAC(u32RegValue)) {
 		M2M_DBG("Default MAC\n");
@@ -648,7 +651,7 @@ sint8 nmi_get_otp_mac_address(uint8 *pu8MacAddr,  uint8 * pu8IsValid)
 
 	M2M_DBG("OTP MAC\n");
 	u32RegValue >>=16;
-	nm_read_block(u32RegValue|0x30000, mac, 6);
+	ret = nm_read_block(u32RegValue|0x30000, mac, 6);
 	m2m_memcpy(pu8MacAddr,mac,6);
 	if(pu8IsValid) *pu8IsValid = 1;
 	return ret;
@@ -663,12 +666,17 @@ sint8 nmi_get_mac_address(uint8 *pu8MacAddr)
 	sint8 ret;
 	uint32	u32RegValue;
 	uint8	mac[6];
+	tstrGpRegs strgp = {0};
 
-	ret = nm_read_reg_with_ret(rNMI_GP_REG_0, &u32RegValue);
+	ret = nm_read_reg_with_ret(rNMI_GP_REG_2, &u32RegValue);
 	if(ret != M2M_SUCCESS) goto _EXIT_ERR;
 
+	ret = nm_read_block(u32RegValue|0x30000,(uint8*)&strgp,sizeof(tstrGpRegs));
+	if(ret != M2M_SUCCESS) goto _EXIT_ERR;
+	u32RegValue = strgp.u32Mac_efuse_mib;
+
 	u32RegValue &=0x0000ffff;
-	nm_read_block(u32RegValue|0x30000, mac, 6);
+	ret = nm_read_block(u32RegValue|0x30000, mac, 6);
 	m2m_memcpy(pu8MacAddr, mac, 6);
 
 	return ret;

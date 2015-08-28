@@ -389,15 +389,15 @@ static sint8 spi_flash_pp(uint32 u32Offset, uint8 *pu8Buf, uint16 u16Sz)
 	uint8 tmp;
 	spi_flash_write_enable();
 	/* use shared packet memory as temp mem */
-	ret = nm_write_block(HOST_SHARE_MEM_BASE, pu8Buf, u16Sz);
-	ret = spi_flash_page_program(HOST_SHARE_MEM_BASE, u32Offset, u16Sz);
-	if(M2M_SUCCESS != ret) goto ERR;
+	ret += nm_write_block(HOST_SHARE_MEM_BASE, pu8Buf, u16Sz);
+	ret += spi_flash_page_program(HOST_SHARE_MEM_BASE, u32Offset, u16Sz);
+	ret += spi_flash_read_status_reg(&tmp);
 	do
 	{
-		if(ret == M2M_ERR_BUS_FAIL) goto ERR;
-	}
-	while((ret = spi_flash_read_status_reg(&tmp))& 0x01);
-	ret = spi_flash_write_disable();
+		if(ret != M2M_SUCCESS) goto ERR;
+		ret += spi_flash_read_status_reg(&tmp);
+	}while(tmp & 0x01);
+	ret += spi_flash_write_disable();
 ERR:
 	return ret;
 }

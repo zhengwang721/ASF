@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<select-by-device id="common.components.wifi.winc1500.firmware_update_project">
-		<module type="application" id="common.components.wifi.winc1500.firmware_update_project#0" caption="WINC1500 Firmware Update Project (v19.3.0)">
+		<module type="application" id="common.components.wifi.winc1500.firmware_update_project#0" caption="WINC1500 Firmware Update Project (v19.4.0)">
 			<!-- Summary Description -->
 			<info type="description" value="summary">
 				This project includes tools and documentation to update the WINC1500 Wi-Fi module firmware, root certificates and gain values.
@@ -27,11 +27,12 @@
 			<build type="include-path" value="firmware/firmware"/>
 			<build type="distribute" subtype="file" value="firmware/firmware/m2m_aio_2b0.bin"/>
 			<build type="distribute" subtype="file" value="firmware/firmware/m2m_aio_3a0.bin"/>
-			<build type="include-path" value="firmware/firmware/wifi_v111"/>
-			<build type="include-path" value="firmware/firmware/wifi_v111/ASIC_2B0"/>
-			<build type="distribute" subtype="file" value="firmware/firmware/wifi_v111/ASIC_2B0/wifi_firmware.bin"/>
-			<build type="include-path" value="firmware/firmware/wifi_v111/ASIC_3A0"/>
-			<build type="distribute" subtype="file" value="firmware/firmware/wifi_v111/ASIC_3A0/wifi_firmware.bin"/>
+
+			<build type="include-path" value="firmware/provisioning_webpage"/>
+			<build type="distribute" subtype="file" value="firmware/provisioning_webpage/default.html"/>
+			<build type="distribute" subtype="file" value="firmware/provisioning_webpage/favicon.ico"/>
+			<build type="distribute" subtype="file" value="firmware/provisioning_webpage/logo.png"/>
+			<build type="distribute" subtype="file" value="firmware/provisioning_webpage/style.css"/>
 
 			<build type="include-path" value="firmware/ota_firmware"/>
 			<build type="distribute" subtype="file" value="firmware/ota_firmware/m2m_ota_2b0.bin"/>
@@ -50,6 +51,12 @@
 			<build type="include-path" value="firmware/Tools/gain_builder/gain_sheets"/>
 			<build type="distribute" subtype="file" value="firmware/Tools/gain_builder/gain_sheets/default_gain_setting.csv"/>
 			<build type="distribute" subtype="file" value="firmware/Tools/gain_builder/gain_sheets/samw25_gain_setting.csv"/>
+
+			<build type="include-path" value="firmware/Tools/image_builder"/>
+			<build type="include-path" value="firmware/Tools/image_builder/debug"/>
+			<build type="distribute" subtype="file" value="firmware/Tools/image_builder/debug/generate_ate_image.bat"/>
+			<build type="distribute" subtype="file" value="firmware/Tools/image_builder/debug/generate_normal_image.bat"/>
+			<build type="distribute" subtype="file" value="firmware/Tools/image_builder/debug/generate_ota_image.bat"/>
 
 			<build type="include-path" value="firmware/Tools/image_downloader"/>
 			<build type="include-path" value="firmware/Tools/image_downloader/debug_uart"/>

@@ -55,9 +55,6 @@
 *	@brief	Get Firmware version info
 *	@param [out]	M2mRev
 *			    pointer holds address of structure "tstrM2mRev" that contains the firmware version parameters
-				
-*   @author		Ahmad.Mohammad.Yahya
-*   @date		27 MARCH 2013
 *	@version	1.0
 */
 sint8 nm_get_firmware_info(tstrM2mRev* M2mRev)
@@ -90,7 +87,125 @@ sint8 nm_get_firmware_info(tstrM2mRev* M2mRev)
 	}
 	return ret;
 }
+/**
+*	@fn		nm_get_firmware_info(tstrM2mRev* M2mRev)
+*	@brief	Get Firmware version info
+*	@param [out]	M2mRev
+*			    pointer holds address of structure "tstrM2mRev" that contains the firmware version parameters
+*	@version	1.0
+*/
+sint8 nm_get_firmware_full_info(tstrM2mRev* pstrRev)
+{
+	uint16  curr_drv_ver, min_req_drv_ver,curr_firm_ver;
+	uint32	reg = 0;
+	sint8	ret = M2M_SUCCESS;
+	tstrGpRegs strgp = {0};
 
+	m2m_memset((uint8*)pstrRev,0,sizeof(tstrM2mRev));
+	ret = nm_read_reg_with_ret(rNMI_GP_REG_2, &reg);
+	if(ret == M2M_SUCCESS)
+	{
+		if(reg != 0)
+		{
+			ret = nm_read_block(reg|0x30000,(uint8*)&strgp,sizeof(tstrGpRegs));
+			if(ret == M2M_SUCCESS)
+			{
+				reg = strgp.u32Firmware_Ota_rev;
+				reg &= 0x0000ffff;
+				if(reg != 0)
+				{
+					ret = nm_read_block(reg|0x30000,(uint8*)pstrRev,sizeof(tstrM2mRev));
+					if(ret == M2M_SUCCESS)
+					{
+						curr_firm_ver   = M2M_MAKE_VERSION(pstrRev->u8FirmwareMajor, pstrRev->u8FirmwareMinor,pstrRev->u8FirmwarePatch);
+						curr_drv_ver    = M2M_MAKE_VERSION(M2M_DRIVER_VERSION_MAJOR_NO, M2M_DRIVER_VERSION_MINOR_NO, M2M_DRIVER_VERSION_PATCH_NO);
+						min_req_drv_ver = M2M_MAKE_VERSION(pstrRev->u8DriverMajor, pstrRev->u8DriverMinor,pstrRev->u8DriverPatch);
+						if((curr_firm_ver == 0)||(min_req_drv_ver == 0)||(min_req_drv_ver == 0)){
+							ret = M2M_ERR_FAIL;
+							goto EXIT;
+						}
+						if(curr_drv_ver <  min_req_drv_ver) {
+							/*The current driver version should be larger or equal 
+							than the min driver that the current firmware support  */
+							ret = M2M_ERR_FW_VER_MISMATCH;
+							goto EXIT;
+						}
+						if(curr_drv_ver >  curr_firm_ver) {
+							/*The current driver should be equal or less than the firmware version*/
+							ret = M2M_ERR_FW_VER_MISMATCH;
+							goto EXIT;
+						}
+					}
+				}else {
+					ret = M2M_ERR_FAIL;
+				}
+			}
+		}else{
+			ret = M2M_ERR_FAIL;
+		}
+	}
+EXIT:
+	return ret;
+}
+/**
+*	@fn		nm_get_ota_firmware_info(tstrM2mRev* pstrRev)
+*	@brief	Get Firmware version info
+*	@param [out]	M2mRev
+*			    pointer holds address of structure "tstrM2mRev" that contains the firmware version parameters
+			
+*	@version	1.0
+*/
+sint8 nm_get_ota_firmware_info(tstrM2mRev* pstrRev)
+{
+	uint16  curr_drv_ver, min_req_drv_ver,curr_firm_ver;
+	uint32	reg = 0;
+	sint8	ret;
+	tstrGpRegs strgp = {0};
+
+	m2m_memset((uint8*)pstrRev,0,sizeof(tstrM2mRev));
+	ret = nm_read_reg_with_ret(rNMI_GP_REG_2, &reg);
+	if(ret == M2M_SUCCESS)
+	{
+		if(reg != 0)
+		{
+			ret = nm_read_block(reg|0x30000,(uint8*)&strgp,sizeof(tstrGpRegs));
+			if(ret == M2M_SUCCESS)
+			{
+				reg = strgp.u32Firmware_Ota_rev;
+				reg >>= 16;
+				if(reg != 0)
+				{
+					ret = nm_read_block(reg|0x30000,(uint8*)pstrRev,sizeof(tstrM2mRev));
+					if(ret == M2M_SUCCESS)
+					{
+						curr_firm_ver   = M2M_MAKE_VERSION(pstrRev->u8FirmwareMajor, pstrRev->u8FirmwareMinor,pstrRev->u8FirmwarePatch);
+						curr_drv_ver    = M2M_MAKE_VERSION(M2M_DRIVER_VERSION_MAJOR_NO, M2M_DRIVER_VERSION_MINOR_NO, M2M_DRIVER_VERSION_PATCH_NO);
+						min_req_drv_ver = M2M_MAKE_VERSION(pstrRev->u8DriverMajor, pstrRev->u8DriverMinor,pstrRev->u8DriverPatch);
+						if((curr_firm_ver == 0)||(min_req_drv_ver == 0)||(min_req_drv_ver == 0)){
+							ret = M2M_ERR_FAIL;
+							goto EXIT;
+						}
+						if(curr_drv_ver <  min_req_drv_ver) {
+							/*The current driver version should be larger or equal 
+							than the min driver that the current firmware support  */
+							ret = M2M_ERR_FW_VER_MISMATCH;
+						}
+						if(curr_drv_ver >  curr_firm_ver) {
+							/*The current driver should be equal or less than the firmware version*/
+							ret = M2M_ERR_FW_VER_MISMATCH;
+						}
+					}
+				}else{
+					ret = M2M_ERR_FAIL;
+				}
+			}
+		}else{
+			ret = M2M_ERR_FAIL;
+		}
+	}
+EXIT:
+	return ret;
+}
 
 
 
@@ -113,6 +228,12 @@ sint8 nm_drv_init_download_mode()
 		M2M_ERR("[nmi start]: fail init bus\n");
 		goto ERR1;
 	}
+
+	/**
+		reset the chip and halt the cpu in case of no wait efuse is set.
+	*/
+	chip_reset_and_cpu_halt();
+
 
 
 #ifdef CONF_WINC_USE_SPI
@@ -141,14 +262,15 @@ ERR1:
 */
 sint8 nm_drv_init(void * arg)
 {
-	tstrM2mRev strtmp;
 	sint8 ret = M2M_SUCCESS;
 	uint8 u8Mode = M2M_WIFI_MODE_NORMAL;
 	
 	if(NULL != arg) {
 		if(M2M_WIFI_MODE_CONFIG == *((uint8 *)arg)) {
 			u8Mode = M2M_WIFI_MODE_CONFIG;
-		} else {
+		}else if(M2M_WIFI_ETHERNET_MODE == *((uint8 *)arg)) {
+			u8Mode = M2M_WIFI_ETHERNET_MODE;	
+		}else {
 			/*continue running*/
 		}
 	} else {
@@ -217,18 +339,6 @@ sint8 nm_drv_init(void * arg)
 		goto ERR2;
 	}
 	
-	ret = nm_get_firmware_info(&strtmp);
-
-	M2M_INFO("Firmware ver   : %u.%u.%u\n", strtmp.u8FirmwareMajor, strtmp.u8FirmwareMinor, strtmp.u8FirmwarePatch);
-	M2M_INFO("Min driver ver : %u.%u.%u\n", strtmp.u8DriverMajor, strtmp.u8DriverMinor, strtmp.u8DriverPatch);
-	M2M_INFO("Curr driver ver: %u.%u.%u\n", M2M_DRIVER_VERSION_MAJOR_NO, M2M_DRIVER_VERSION_MINOR_NO, M2M_DRIVER_VERSION_PATCH_NO);
-
-	if(strtmp.u8FirmwareMajor != M2M_DRIVER_VERSION_MAJOR_NO
-			|| strtmp.u8FirmwareMinor != M2M_DRIVER_VERSION_MINOR_NO)
-	{
-		ret = M2M_ERR_FW_VER_MISMATCH;
-		M2M_ERR("Firmware version mismatch!\n");
-	}
 	return ret;
 ERR2:
 	nm_bus_iface_deinit();
