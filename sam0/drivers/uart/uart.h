@@ -287,6 +287,8 @@ void uart_enable_receive_dma(struct uart_module *const module);
 void uart_disable_receive_dma(struct uart_module *const module);
 /** @}*/
 
+/** @}*/
+
 #ifdef __cplusplus
 }
 #endif
