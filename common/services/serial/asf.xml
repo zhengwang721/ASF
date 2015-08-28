@@ -185,7 +185,6 @@
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.uart"/>
 			<device-support value="samb"/>
-			<generator value="doxygen-module" default-mcu="unspecified-samb11"/>
 		</module>
 	</select-by-device>
 </asf>

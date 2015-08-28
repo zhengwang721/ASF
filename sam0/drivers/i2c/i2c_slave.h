@@ -148,7 +148,7 @@ enum i2c_slave_direction {
 struct i2c_slave_module {
 #if !defined(__DOXYGEN__)
 	/** Hardware instance initialized for the struct. */
-	void *hw;
+	I2C *hw;
 	/** Module lock. */
 	volatile bool locked;
 	/** Timeout value for polled functions. */
