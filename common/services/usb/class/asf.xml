@@ -41,6 +41,7 @@
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
 			<device-support value="samda1"/>
+			<device-support value="saml22"/>
 			<device-support value="samv71"/>
 			<device-support value="samv70"/>
 			<device-support value="sams70"/>
@@ -81,6 +82,7 @@
 			<device-support value="sam4c32e"/>
 			<device-support value="saml21"/>
 			<device-support value="samda1"/>
+			<device-support value="saml22"/>
 			<device-support value="samv71"/>
 			<device-support value="samv70"/>
 			<device-support value="sams70"/>
@@ -128,6 +130,7 @@
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
 			<device-support value="samda1"/>
+			<device-support value="saml22"/>
 			<device-support value="samv71"/>
 			<device-support value="samv70"/>
 			<device-support value="sams70"/>
@@ -193,6 +196,7 @@
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
 			<device-support value="samda1"/>
+			<device-support value="saml22"/>
 			<device-support value="samv71"/>
 			<device-support value="samv70"/>
 			<device-support value="sams70"/>
@@ -235,6 +239,7 @@
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
 			<device-support value="samda1"/>
+			<device-support value="saml22"/>
 			<device-support value="samv71"/>
 			<device-support value="samv70"/>
 			<device-support value="sams70"/>
@@ -277,6 +282,7 @@
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
 			<device-support value="samda1"/>
+			<device-support value="saml22"/>
 			<device-support value="samv71"/>
 			<device-support value="samv70"/>
 			<device-support value="sams70"/>
@@ -318,6 +324,7 @@
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
+			<device-support value="saml22"/>
 			<device-support value="samv71"/>
 			<device-support value="samv70"/>
 			<device-support value="sams70"/>
@@ -359,6 +366,7 @@
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
 			<device-support value="samda1"/>
+			<device-support value="saml22"/>
 			<device-support value="samv71"/>
 			<device-support value="samv70"/>
 			<device-support value="sams70"/>
@@ -399,6 +407,7 @@
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
 			<device-support value="samda1"/>
+			<device-support value="saml22"/>
 			<device-support value="samv71"/>
 			<device-support value="samv70"/>
 			<device-support value="sams70"/>
@@ -440,6 +449,7 @@
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
 			<device-support value="samda1"/>
+			<device-support value="saml22"/>
 			<device-support value="samv71"/>
 			<device-support value="samv70"/>
 			<device-support value="sams70"/>

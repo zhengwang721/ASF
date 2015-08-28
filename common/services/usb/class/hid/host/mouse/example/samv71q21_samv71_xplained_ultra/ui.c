@@ -205,7 +205,7 @@ void ui_usb_sof_event(void)
 		/* Display device enumerated and in active mode */
 		if (++counter_sof > ui_device_speed_blink) {
 			counter_sof = 0;
-			LED_Toggle(LED1);
+			LED_Toggle(LED0);
 		}
 
 		/* Scan button to enter in suspend mode and remote wakeup */
@@ -216,7 +216,7 @@ void ui_usb_sof_event(void)
 			btn_suspend_and_remotewakeup = b_btn_state;
 			if (b_btn_state) {
 				/* Button has been pressed */
-				LED_Off(LED0);
+				LED_Off(LED1);
 				ui_enable_asynchronous_interrupt();
 				uhc_suspend(true);
 				return;
@@ -225,10 +225,10 @@ void ui_usb_sof_event(void)
 
 		/* Power on a LED when the mouse move */
 		if (!ui_x && !ui_y && !ui_scroll) {
-			LED_Off(LED0);
+			LED_Off(LED1);
 		} else {
 			ui_x = ui_y = ui_scroll = 0;
-			LED_On(LED0);
+			LED_On(LED1);
 		}
 	}
 }
@@ -243,9 +243,9 @@ static void ui_uhi_hid_mouse_btn(bool b_state)
 	}
 
 	if (nb_down) {
-		LED_On(LED0);
+		LED_On(LED1);
 	} else {
-		LED_Off(LED0);
+		LED_Off(LED1);
 	}
 }
 
@@ -278,11 +278,11 @@ void ui_uhi_hid_mouse_move(int8_t x, int8_t y, int8_t scroll)
  *
  * Human interface on SAMV71-Xplained-Ultra :
  * - Led 1 is continuously on when a device is connected
- * - Led 1 blinks when a HID mouse is enumerated and USB in idle mode
+ * - Led 0 blinks when a HID mouse is enumerated and USB in idle mode
  *   - The blink is slow (1s) with low speed device
  *   - The blink is normal (0.5s) with full speed device
  *   - The blink is fast (0.25s) with high speed device
- * - Led 0 is on when the mouse move or button is pressed
+ * - Led 1 is on when the mouse move or button is pressed
  * - SW0 allows to enter the device in suspend mode with remote
  *   wakeup feature authorized
  * - SW0 can be used to wakeup USB device in suspend mode

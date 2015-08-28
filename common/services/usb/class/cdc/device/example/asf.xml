@@ -106,6 +106,7 @@
 			<device-support value="samr21"/>
 			<device-support value="saml21"/>
 			<device-support value="samda1"/>
+			<device-support value="saml22"/>
 			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.services.usb.class.cdc.device.example#4" caption="USB Device CDC Example">
