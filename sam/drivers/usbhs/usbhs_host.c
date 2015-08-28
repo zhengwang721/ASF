@@ -270,15 +270,13 @@ static void otg_id_handler(uint32_t id, uint32_t mask)
 	if (Is_otg_id_device()) {
 		uhc_stop(false);
 		UHC_MODE_CHANGE(false);
-		otg_force_device_mode();
+		USBHS->USBHS_CTRL = USBHS_CTRL_UIMOD_DEVICE;
 		udc_start();
-		dbg_print("\r\nudc_start ");
 	} else {
 		udc_stop();
 		UHC_MODE_CHANGE(true);
 		otg_force_host_mode();
 		uhc_start();
-		dbg_print("\r\nuhc_start ");
 	}
 }
 #endif
@@ -502,8 +500,8 @@ bool otg_dual_enable(void)
 	otg_initialized = true;
 
 	//* Enable USB hardware clock
-	sysclk_enable_usb();
 	pmc_enable_periph_clk(ID_USBHS);
+	sysclk_enable_usb();
 
 	// Always authorize asynchronous USB interrupts to exit of sleep mode
 	// For SAM USB wake up device except BACKUP mode
@@ -514,7 +512,7 @@ bool otg_dual_enable(void)
 #if OTG_ID_IO
 	otg_id_init(otg_id_handler);
 	if (Is_otg_id_device()) {
-		otg_force_device_mode();
+		USBHS->USBHS_CTRL = USBHS_CTRL_UIMOD_DEVICE;
 		uhd_sleep_mode(UHD_STATE_WAIT_ID_HOST);
 		UHC_MODE_CHANGE(false);
 		udc_start();
@@ -581,7 +579,6 @@ void uhd_enable(void)
 
 	uhd_sleep_mode(UHD_STATE_OFF);
 
-
 #if OTG_ID_IO
 	// Check that the host mode is selected by ID pin
 	if (Is_otg_id_device()) {
@@ -597,9 +594,10 @@ void uhd_enable(void)
 	otg_enable();
 
 #ifndef USB_HOST_HS_SUPPORT
-	uhd_disable_high_speed_mode();
-#endif
+	USBHS->USBHS_HSTCTRL &= ~USBHS_HSTCTRL_SPDCONF_Msk;
 	USBHS->USBHS_HSTCTRL |= USBHS_HSTCTRL_SPDCONF_LOW_POWER;
+#endif
+
 	uhd_ctrl_request_first = NULL;
 	uhd_ctrl_request_last = NULL;
 	uhd_ctrl_request_timeout = 0;
@@ -1136,6 +1134,12 @@ static void uhd_interrupt(void)
 		uhd_sleep_mode(UHD_STATE_DISCONNECT);
 		uhd_ack_connection();
 		uhd_enable_connection_int();
+		uhd_ack_wakeup();
+		uhd_enable_wakeup_interrupt();
+	#ifdef USB_HOST_HS_SUPPORT
+		USBHS->USBHS_HSTCTRL &= ~USBHS_HSTCTRL_SPDCONF_Msk;
+		USBHS->USBHS_HSTCTRL |= USBHS_HSTCTRL_SPDCONF_NORMAL;
+	#endif
 		uhd_suspend_start = 0;
 		uhd_resume_start = 0;
 		uhc_notify_connection(false);
@@ -1154,8 +1158,6 @@ static void uhd_interrupt(void)
 		return;
 	}
 
-
-
       /* If Wakeup interrupt is enabled and triggered and connection intterupt is enabled  */
 	if(Is_uhd_wakeup() && Is_uhd_connection_int_enabled()) {
 		 // Check USB clock ready after asynchronous interrupt
@@ -1164,7 +1166,7 @@ static void uhd_interrupt(void)
 		// Here the wakeup interrupt has been used to detect connection
 		// with an asynchrone interrupt
 		USBHS->USBHS_HSTIDR = USBHS_HSTIDR_HWUPIEC;
-		uhd_sleep_mode(UHD_STATE_IDLE);
+		//uhd_sleep_mode(UHD_STATE_IDLE);
 		uhd_enable_vbus(); // enable VBUS
 		uhd_sleep_mode(UHD_STATE_DISCONNECT);
 		UHC_VBUS_CHANGE(true);

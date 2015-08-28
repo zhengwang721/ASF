@@ -691,21 +691,8 @@ void udd_enable(void)
 	}
 #else
 	// SINGLE DEVICE MODE INITIALIZATION
-
 	/* Enable peripheral clock for USBHS */
 	pmc_enable_periph_clk(ID_USBHS);
-
-#if (OTG_ID_IO) && (defined UHD_ENABLE)
-	// Check that the device mode is selected by ID pin
-	if (!Is_otg_id_device()) {
-		cpu_irq_restore(flags);
-		return; // Device is not the current mode
-	}
-#else
-	//otg_force_device_mode();
-	// ID pin not used then force device mode
-	USBHS->USBHS_CTRL = USBHS_CTRL_UIMOD_DEVICE;
-#endif
 
 	sysclk_enable_usb();
 
@@ -718,6 +705,16 @@ void udd_enable(void)
 	pmc_set_fast_startup_input(PMC_FSMR_USBAL);
 #endif
 
+#if (OTG_ID_IO) && (defined UHD_ENABLE)
+	// Check that the device mode is selected by ID pin
+	if (!Is_otg_id_device()) {
+		cpu_irq_restore(flags);
+		return; // Device is not the current mode
+	}
+#else
+	// ID pin not used then force device mode
+	USBHS->USBHS_CTRL = USBHS_CTRL_UIMOD_DEVICE;
+#endif
 	// Enable USB hardware
 	otg_enable();
 
