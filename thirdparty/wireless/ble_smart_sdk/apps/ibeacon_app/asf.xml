@@ -1,0 +1,19 @@
+<asf xmlversion="1.0">
+	<project caption="iBeacon APPLICATION - SAMB11" id="thirdparty.wireless.ble_smart_sdk.apps.ibeacon_app" force-caption="true" force-description="true">
+		<info type="description" value="summary">
+		iBEACON APPLICATION for SAMB11 BLE SMART 
+		</info>	
+		<build type="include-path" value="."/>
+		<build type="c-source" value="app.c"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.lib"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.inc"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.src"/>
+		<!--require idref="thirdparty.wireless.ble_smart_sdk.services"/-->
+		
+		<generator value="iarewarm"/>
+		<generator value="armgcc" />
+		<generator value="as5_arm" />
+		<generator value="doxygen"/>
+		<device-support value="atsamb11g18a"/>
+	</project>
+</asf>

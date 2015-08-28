@@ -1,0 +1,12 @@
+<asf xmlversion="1.0">
+	<module type="meta" id="thirdparty.wireless.ble_smart_sdk.lib" caption="BLE SMART SDK Lib">
+            <info type="description" value="summary">
+            BLE SMART SDK library
+            </info>
+	    <!--
+            <build type="library" subtype="user" value="samd21/iar/libble_sdk.a" toolchain="iarewarm"/>
+            <build type="library" subtype="user" value="samd21/gcc/libble_sdk.a" toolchain="armgcc"/>
+		-->
+            <device-support value="atsamb11g18a"/>
+        </module>
+</asf>

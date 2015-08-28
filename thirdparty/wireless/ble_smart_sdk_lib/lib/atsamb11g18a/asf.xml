@@ -1,0 +1,31 @@
+<asf xmlversion="1.0">
+	<project caption="ATSAMB11G18A" id="thirdparty.wireless.ble_smart_sdk_lib.lib.atsamb11g18a">
+		<info type="description" value="summary">
+		BLE - Stack support for ATSAMB11G18A
+		</info>
+		<build type="include-path" value="."/>
+		
+		<require idref="thirdparty.wireless.ble_smart_sdk_lib.lib"/>
+		<require idref="board.dummy.sam0"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc" />
+		<generator value="as5_arm" />
+		<!-- <generator value="doxygen"/> -->
+		<device-support value="atsamb11g18a"/>
+	</project>
+	<module type="service" id="thirdparty.wireless.ble_smart_sdk_lib.lib.atsamb11g18a.lib" caption="COMPONENT - BLE LIB">
+		<info type="description" value="summary">
+		</info>
+		<build type="library" subtype="user" value="iar/libble-smart-sdk.r90" toolchain="iarew"/>
+		<build type="library" subtype="user" value="gcc/libble-smart-sdk.a" toolchain="avrgcc"/>
+
+		<build type="doxygen-entry-point" value="ble_smart_stack_group"/>
+		
+		<generator value="iarewarm"/>
+		<generator value="armgcc" />
+		<generator value="as5_arm" />
+		<!-- <generator value="doxygen"/> -->
+		<device-support value="atsamb11g18a"/>
+		
+	</module>
+</asf>

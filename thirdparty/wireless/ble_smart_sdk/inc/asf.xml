@@ -1,0 +1,19 @@
+<asf xmlversion="1.0">
+	<module type="meta" id="thirdparty.wireless.ble_smart_sdk.inc" caption="COMPONENT - BLE_SMART_STACK API">
+		<info type="description" value="summary">
+		</info>
+		<build type="include-path"  value="./"/>
+  <build type="header-file"   value="at_ble_api.h"/>
+  <build type="header-file"   value="i2c.h"/>
+  <build type="header-file"   value="platform_drv.h"/>
+  <build type="header-file"   value="port.h"/>
+  <build type="header-file"   value="spi.h"/>
+  <build type="header-file"   value="spi_flash.h"/>
+  <build type="header-file"   value="uart.h"/>
+
+		<build type="doxygen-entry-point" value="ble_smart_stack_group"/>
+		<device-support-alias value="ble_smart_stack_lib_support"/>
+		
+	</module>
+ 
+</asf>

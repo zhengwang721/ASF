@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+	<module type="meta" id="thirdparty.wireless.ble_smart_sdk_lib.platform" caption="COMPONENT - BLE_SMART_STACK">
+		<info type="description" value="summary">
+		</info>
+
+		<build type="c-source"      value="interface.c"/>
+
+		<build type="include-path"  value="."/>
+  		<build type="header-file"   value="interface.h"/>
+  		<build type="header-file"   value="ke_msg.h"/>  		
+
+		<build type="doxygen-entry-point" value="ble_stack_group"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		
+	</module>
+</asf>
