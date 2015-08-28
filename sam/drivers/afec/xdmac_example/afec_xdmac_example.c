@@ -208,22 +208,6 @@ static void afec_xdmac_configure(Afec *const afec)
 }
 
 /**
- * \brief XDMAC interrupt handler.
- */
-void XDMAC_Handler(void)
-{
-	uint32_t dma_status;
-
-	dma_status = xdmac_channel_get_interrupt_status(XDMAC, XDMAC_CH);
-
-	if (dma_status & XDMAC_CIS_BIS) {
-		if(callback) {
-			callback();
-		}
-	}
-}
-
-/**
  *  \brief Callback function for AFE interrupt
  *
  */
@@ -239,8 +223,25 @@ static void afec_callback(void)
 		ch = (afec_buf[i] & AFEC_LCDR_CHNB_Msk ) >> AFEC_LCDR_CHNB_Pos;
 		voltage = (afec_buf[i] & 0xFFFF) * VOLT_REF / MAX_DIGITAL;
 		temp = ((int)voltage - 720)  * 100 / 233 + 27;
-		printf("%02u  %04x  %04d\n\r" ,(unsigned int)ch,
-			(unsigned int)(afec_buf[i]& 0xFFFF) , (int)temp);
+		if(ch == AFEC_TEMPERATURE_SENSOR) {
+			printf("%02u  %04x  %04d\n\r" ,(unsigned int)ch,
+					(unsigned int)(afec_buf[i]& 0xFFFF) , (int)temp);
+		}
+
+	}
+}
+
+/**
+ * \brief XDMAC interrupt handler.
+ */
+void XDMAC_Handler(void)
+{
+	uint32_t dma_status;
+
+	dma_status = xdmac_channel_get_interrupt_status(XDMAC, XDMAC_CH);
+
+	if (dma_status & XDMAC_CIS_BIS) {
+		afec_callback();
 	}
 }
 
