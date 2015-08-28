@@ -399,7 +399,12 @@ void XDMAC_Handler(void)
 	if(	g_uc_role == SLAVE_MODE) {
 		if (dma_status & XDMAC_CIS_BIS) {
 			printf(" %s\n\r", rx_buffer);
+			
+			spi_disable(SPI0);
+			NVIC_ClearPendingIRQ(XDMAC_IRQn);
+			NVIC_DisableIRQ(XDMAC_IRQn);
 			/** re-configure receiver for next reception*/
+			spi_slave_initialize();
 			spi_xdmac_configure(SPI0);
 		}
 	}
