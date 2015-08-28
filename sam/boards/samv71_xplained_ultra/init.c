@@ -464,8 +464,6 @@ void board_init(void)
 	pio_set(PIN_EBI_BACKLIGHT_PIO, PIN_EBI_BACKLIGHT_MASK);
 #endif
 
-#ifdef CONF_BOARD_CONFIG_MPU_AT_INIT
-	_setup_memory_region();
 #if (defined CONF_BOARD_USB_PORT)
 # if defined(CONF_BOARD_USB_VBUS_DETECT)
 	ioport_set_pin_dir(USB_VBUS_PIN, IOPORT_DIR_INPUT);
