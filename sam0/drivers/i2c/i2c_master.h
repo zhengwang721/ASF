@@ -150,7 +150,7 @@ typedef void (*i2c_master_callback_t)(
 struct i2c_master_module {
 #if !defined(__DOXYGEN__)
 	/** Hardware instance initialized for the struct */
-	void *hw;
+	I2C *hw;
 	/** Module lock */
 	volatile bool locked;
 	/** If true, stop condition will be sent after a read/write */

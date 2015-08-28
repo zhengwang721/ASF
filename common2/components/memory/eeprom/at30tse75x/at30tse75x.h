@@ -48,7 +48,7 @@
 #define AT30TSE75X_H_INCLUDED
 
 #include <compiler.h>
-#include <i2c.h>
+#include <i2c_master.h>
 
 /* Temperature sensor configuration file */
 #include "conf_board.h"

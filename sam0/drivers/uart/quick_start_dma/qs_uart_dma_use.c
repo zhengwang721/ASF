@@ -77,7 +77,7 @@ static void transfer_done_tx(struct dma_resource* const resource )
 
 static void delay(void)
 {
-	for (int i = 0; i < 100000; i++)
+	for (int i = 0; i < 3000000; i++)
 		asm("nop");
 }
 
@@ -147,7 +147,7 @@ static void configure_usart(void)
 //! [setup_set_config]
 
 //! [enable_interrupt]
-	uart_instance.hw->TX_INTERRUPT_MASK.reg |= UART_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
+	uart_enable_transmit_dma(&uart_instance);
 //! [enable_interrupt]
 }
 //! [setup_usart]

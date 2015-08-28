@@ -239,15 +239,17 @@ struct uart_module {
 	volatile enum status_code status;
 };
 
-/** \name Configuration and initialization
+/** \name UART Configuration and initialization
  * @{
  */
-
-
 void uart_get_config_defaults(struct uart_config *const config);
 enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 		const struct uart_config *const config);
 /** @} */
+
+/** \name UART read and write functions
+ * @{
+ */
 enum status_code uart_write_wait(struct uart_module *const module,
 		const uint8_t tx_data);
 enum status_code uart_read_wait(struct uart_module *const module,
@@ -260,6 +262,8 @@ enum status_code uart_write_buffer_job(struct uart_module *const module,
 		uint8_t *tx_data, uint32_t length);
 enum status_code uart_read_buffer_job(struct uart_module *const module,
 		uint8_t *rx_data, uint16_t length);
+/** @} */
+
 /** \name UART callback config
  * @{
  */
@@ -272,7 +276,15 @@ void uart_enable_callback(struct uart_module *const module,
 		enum uart_callback callback_type);
 void uart_disable_callback(struct uart_module *const module,
 		enum uart_callback callback_type);
+/** @}*/
 
+/** \name UART DAM enable/disable functions
+ * @{
+ */
+void uart_enable_transmit_dma(struct uart_module *const module);
+void uart_disable_transmit_dma(struct uart_module *const module);
+void uart_enable_receive_dma(struct uart_module *const module);
+void uart_disable_receive_dma(struct uart_module *const module);
 /** @}*/
 
 #ifdef __cplusplus
