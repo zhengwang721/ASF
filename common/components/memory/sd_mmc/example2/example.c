@@ -132,7 +132,8 @@ int main(void)
 			if (CTRL_FAIL == status) {
 				printf("Card install FAIL\n\r");
 				printf("Please unplug and re-plug the card.\n\r");
-				while (CTRL_NO_PRESENT != sd_mmc_check(0));
+				while (CTRL_NO_PRESENT != sd_mmc_check(0)) {
+				}
 			}
 		} while (CTRL_GOOD != status);
 

@@ -114,8 +114,6 @@ typedef uint8_t card_version_t; //!< Type of card version
 
 //! This SD MMC stack uses the maximum block size autorized (512 bytes)
 #define SD_MMC_BLOCK_SIZE          512
-/** Micro-block length for single transfer  */
-#define MICROBLOCK_LEN             16
 
 /**
  * \brief Initialize the SD/MMC stack and low level driver required

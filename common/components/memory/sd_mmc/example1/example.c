@@ -228,11 +228,7 @@ int main(void)
 		if (slot == sd_mmc_nb_slot()) {
 			slot = 0;
 		}
-
-		err = sd_mmc_check(slot);
-		if(err) {
-			printf("Please plug an SD, MMC or SDIO card in slot %d.\n\r", slot+1);
-		}
+		printf("Please plug an SD, MMC or SDIO card in slot %d.\n\r", slot+1);
 
 		// Wait for a card and ready
 		do {
