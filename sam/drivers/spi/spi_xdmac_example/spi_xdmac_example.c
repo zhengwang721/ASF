@@ -61,14 +61,14 @@
  *
  * This example shows control of the SPI, and how to configure and
  * transfer data with SPI through XDMAC. By default, example runs in SPI slave mode,
- * waiting SPI slave & UART inputs.
+ * waiting SPI slave & COM port inputs.
  *
  * The code can be roughly broken down as follows:
  *
  * \par Usage
  *
  * -# Compile the application.
- * -# Connect the UART port of the evaluation board to the computer and open
+ * -# Connect the COM port of the evaluation board to the computer and open
  * it in a terminal.
  *    - Settings: 115200 bauds, 8 bits, 1 stop bit, no parity, no flow control.
  * -# Download the program into the evaluation board and run it.
