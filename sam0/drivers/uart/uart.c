@@ -732,8 +732,10 @@ void uart_enable_transmit_dma(struct uart_module *const module)
 	/* Sanity check arguments */
 	Assert(module);
 
+	/* DMA need the interrupt signal to trigger */
 	module->hw->TX_INTERRUPT_MASK.reg |= UART_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
 
+	/* Disable NVIC to avoid trigger the CPU interrupt */
 	if (module->hw == UART0) {
 		NVIC_DisableIRQ(UART0_TX_IRQn);
 	} else if (module->hw == UART1) {
@@ -753,6 +755,7 @@ void uart_disable_transmit_dma(struct uart_module *const module)
 
 	module->hw->TX_INTERRUPT_MASK.reg &= ~UART_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
 
+	/* Enable NVIC to restore the callback functions */
 	if (module->hw == UART0) {
 		NVIC_EnableIRQ(UART0_TX_IRQn);
 	} else if (module->hw == UART1) {
@@ -770,8 +773,10 @@ void uart_enable_receive_dma(struct uart_module *const module)
 	/* Sanity check arguments */
 	Assert(module);
 
+	/* DMA need the interrupt signal to trigger */
 	module->hw->RX_INTERRUPT_MASK.reg |= UART_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK;
 
+	/* Disable NVIC to avoid trigger the CPU interrupt */
 	if (module->hw == UART0) {
 		NVIC_DisableIRQ(UART0_TX_IRQn);
 	} else if (module->hw == UART1) {
@@ -791,6 +796,7 @@ void uart_disable_receive_dma(struct uart_module *const module)
 
 	module->hw->RX_INTERRUPT_MASK.reg &= ~UART_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK;
 
+	/* Enable NVIC to restore the callback functions */
 	if (module->hw == UART0) {
 		NVIC_EnableIRQ(UART0_TX_IRQn);
 	} else if (module->hw == UART1) {
