@@ -53,6 +53,7 @@ static void aon_sleep_timer_callback(void)
 {
 	gpio_pin_set_output_level(LED_0_PIN, true);
 }
+//! [callback_funcs]
 
 static void configure_gpio_pins(void)
 {
@@ -68,7 +69,7 @@ static void configure_gpio_pins(void)
 //! [setup_4]
 	gpio_pin_set_config(LED_0_PIN, &config_gpio_pin);
 //! [setup_4]
-//! [setup_5]	
+//! [setup_5]
 	gpio_pin_set_output_level(LED_0_PIN, false);
 //! [setup_5]
 }
@@ -87,7 +88,7 @@ static void configure_aon_sleep_timer(void)
 //! [setup_9]
 	aon_sleep_timer_init(&config_aon_sleep_timer);
 //! [setup_9]
-//! [setup_10]	
+//! [setup_10]
 	/* AON_SLEEP_TIMER_IRQn is not defined in sam.h now */
 	NVIC_EnableIRQ(27);
 //! [setup_10]
@@ -98,7 +99,7 @@ static void configure_aon_sleep_timer_callback(void)
 	//! [setup_register_callback]
 	aon_sleep_timer_register_callback(aon_sleep_timer_callback);
 	//! [setup_register_callback]
-	
+
 	/* For A4, timer0 IRQ is 9 */
 	//! [enable_IRQ]
 	NVIC_EnableIRQ(9);
@@ -112,10 +113,14 @@ int main(void)
 	//! [setup_init]
 	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 
+	//! [config_gpio]
 	configure_gpio_pins();
+	//! [config_gpio]
 
+	//! [config_timer]
 	configure_aon_sleep_timer();
-	
+	//! [config_timer]
+
 	configure_aon_sleep_timer_callback();
 	//! [setup_init]
 
@@ -130,7 +135,8 @@ int main(void)
 	//! [main_imp]
 	//! [main_loop]
 	while (true) {
-	//! [main_loop]
+
 	}
+	//! [main_loop]
 	//! [main_imp]
 }

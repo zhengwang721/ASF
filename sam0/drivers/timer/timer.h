@@ -174,6 +174,16 @@ void timer_unregister_callback(void);
  * \section asfdoc_samb_timer_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
+ * <table>
+ *	<tr>
+ *		<th>Acronym</th>
+ *		<th>Description</th>
+ *	</tr>
+ *	<tr>
+ *		<td>TIMER</td>
+ *		<td>Timer</td>
+ *	</tr>
+ * </table>
  *
  * \section asfdoc_samb_timer_extra_dependencies Dependencies
  * There are no dependencies related to this driver.

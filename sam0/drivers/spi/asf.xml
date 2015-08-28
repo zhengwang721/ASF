@@ -40,7 +40,9 @@
 
 			<build type="define" name="SPI_CALLBACK_MODE" value="true"/>
 
-			<build type="doxygen-entry-point" value="asfdoc_samb_drivers_aes_group"/>
+			<build type="doxygen-enable-section" value="SPI_CALLBACK_MODE"/>
+			<build type="doxygen-entry-point" value="asfdoc_samb_drivers_spi_group"/>
+
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.gpio" />
 			<require idref="sam0.drivers.system" />

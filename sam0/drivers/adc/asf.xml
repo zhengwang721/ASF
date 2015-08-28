@@ -212,7 +212,6 @@
 
 			<build type="define" name="ADC_CALLBACK_MODE" value="true"/>
 			<build type="doxygen-enable-section" value="ADC_CALLBACK_MODE"/>
-			<build type="doxygen-enable-section" value="DEVICE_SAML21_SUPPORT"/>
 
 			<device-support value="saml21"/>
 			<device-support value="saml22"/>
@@ -243,7 +242,6 @@
 
 			<build type="doxygen-example-path" value="quick_start_sam_b"/>
 			<build type="doxygen-entry-point" value="asfdoc_samb_adc_group"/>
-			<build type="doxygen-image-path" value="docimg"/>
 			<build type="doxygen-quick-start" value="asfdoc_samb_adc_exqsg"/>
 
 			<device-support value="samb"/>

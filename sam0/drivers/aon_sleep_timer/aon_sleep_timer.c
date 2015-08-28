@@ -50,7 +50,7 @@ static aon_sleep_timer_callback_t aon_sleep_timer_callback;
 static void delay_cycle(uint32_t cycles)
 {
 	volatile uint32_t i = 0;
-	
+
 	for (i = 0; i < cycles*100; i++) {
 		asm volatile ("nop");
 	}
@@ -82,14 +82,14 @@ void aon_sleep_timer_get_config_defaults(struct aon_sleep_timer_config *config)
 void aon_sleep_timer_disable(void)
 {
 	uint32_t regval;
-	
+
 	AON_SLEEP_TIMER0->SINGLE_COUNT_DURATION.reg = 0;
 	regval = AON_SLEEP_TIMER0->CONTROL.reg;
 	regval &= ~AON_SLEEP_TIMER_CONTROL_RELOAD_ENABLE;
 	regval &= ~AON_SLEEP_TIMER_CONTROL_SINGLE_COUNT_ENABLE;
 	AON_SLEEP_TIMER0->CONTROL.reg = regval;
-	
-	while ((AON_SLEEP_TIMER0->CONTROL.reg & 
+
+	while ((AON_SLEEP_TIMER0->CONTROL.reg &
 			AON_SLEEP_TIMER_CONTROL_SLP_TIMER_SINGLE_COUNT_ENABLE_DLY_Msk)
 			!= AON_SLEEP_TIMER_CONTROL_SLP_TIMER_SINGLE_COUNT_ENABLE_DLY_Msk) {
 	}
@@ -118,7 +118,7 @@ bool aon_sleep_timer_sleep_timer_active(void)
 /**
  * \brief Clear AON Sleep Timer module instance interrupt.
  *
- * This flag will be cleared automatically once the IRQ 
+ * This flag will be cleared automatically once the IRQ
  * has been seen on the sleep clock.
  */
 void aon_sleep_timer_clear_interrup(void)
@@ -158,7 +158,7 @@ void aon_sleep_timer_unregister_callback(void)
 static void aon_sleep_timer_isr_handler(void)
 {
 	aon_sleep_timer_clear_interrup();
-		
+
 	if (aon_sleep_timer_callback) {
 		aon_sleep_timer_callback();
 	}
@@ -176,17 +176,17 @@ static void aon_sleep_timer_isr_handler(void)
 void aon_sleep_timer_init(const struct aon_sleep_timer_config *config)
 {
 	uint32_t aon_st_ctrl = 0;
-	
+
 	AON_PWR_SEQ0->AON_ST_WAKEUP_CTRL.reg = AON_PWR_SEQ_AON_ST_WAKEUP_CTRL_RESETVALUE;
 	if (config->wakeup == AON_SLEEP_TIMER_WAKEUP_ARM_BLE) {
-		AON_PWR_SEQ0->AON_ST_WAKEUP_CTRL.reg |= 
+		AON_PWR_SEQ0->AON_ST_WAKEUP_CTRL.reg |=
 				AON_PWR_SEQ_AON_ST_WAKEUP_CTRL_ARM_ENABLE |
 				AON_PWR_SEQ_AON_ST_WAKEUP_CTRL_BLE_ENABLE;
 	} else if (config->wakeup == AON_SLEEP_TIMER_WAKEUP_ARM) {
 		AON_PWR_SEQ0->AON_ST_WAKEUP_CTRL.reg |=
 				AON_PWR_SEQ_AON_ST_WAKEUP_CTRL_ARM_ENABLE;
 	}
-	
+
 	aon_st_ctrl = AON_SLEEP_TIMER0->CONTROL.reg;
 	while (aon_st_ctrl & ((1UL << 31) - 1)) {
 		AON_SLEEP_TIMER0->CONTROL.reg = 0;
@@ -197,7 +197,7 @@ void aon_sleep_timer_init(const struct aon_sleep_timer_config *config)
 		}
 		aon_st_ctrl = AON_SLEEP_TIMER0->CONTROL.reg;
 	}
-	
+
 	if (config->mode == AON_SLEEP_TIMER_RELOAD_MODE) {
 		/* Reload counter will start here */
 #ifndef CHIPVERSION_B0
@@ -211,16 +211,16 @@ void aon_sleep_timer_init(const struct aon_sleep_timer_config *config)
 		AON_SLEEP_TIMER0->SINGLE_COUNT_DURATION.reg = config->counter;
 		AON_SLEEP_TIMER0->CONTROL.reg = AON_SLEEP_TIMER_CONTROL_SINGLE_COUNT_ENABLE;
 	}
-	
+
 	aon_st_ctrl = AON_SLEEP_TIMER0->CONTROL.reg;
 	if (config->mode == AON_SLEEP_TIMER_SINGLE_MODE) {
-		while ((AON_SLEEP_TIMER0->CONTROL.reg & 
+		while ((AON_SLEEP_TIMER0->CONTROL.reg &
 				AON_SLEEP_TIMER_CONTROL_SLP_TIMER_SINGLE_COUNT_ENABLE_DLY_Msk)
 				!= AON_SLEEP_TIMER_CONTROL_SLP_TIMER_SINGLE_COUNT_ENABLE_DLY_Msk) {
 		}
 		AON_SLEEP_TIMER0->CONTROL.reg = 0;
 	}
-	
+
 	aon_sleep_timer_callback = NULL;
 	system_register_isr(RAM_ISR_TABLE_AON_SLEEP_TIMER_INDEX, (uint32_t)aon_sleep_timer_isr_handler);
 }

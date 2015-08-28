@@ -54,15 +54,19 @@ struct uart_module uart_instance;
 //! [module_inst]
 
 //! [callback_funcs]
+//! [print_timer1]
 static void dualtimer_callback1(void)
 {
 	puts("Timer1 trigger\r\n");
 }
+//! [print_timer1]
 
+//! [print_timer2]
 static void dualtimer_callback2(void)
 {
 	puts("Timer2 trigger\r\n");
 }
+//! [print_timer2]
 //! [callback_funcs]
 
 //! [setup]
@@ -123,7 +127,7 @@ static void configure_dualtimer_callback(void)
 	dualtimer_register_callback(DUALTIMER_TIMER1, dualtimer_callback1);
 	dualtimer_register_callback(DUALTIMER_TIMER2, dualtimer_callback2);
 	//! [setup_register_callback]
-	
+
 	/* For A4, timer0 IRQ is 14 */
 	//! [enable_IRQ]
 	NVIC_EnableIRQ(10);
@@ -135,19 +139,22 @@ int main(void)
 {
 //! [setup_init]
 	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
-	
+//! [config_uart]
 	configure_uart();
-
+//! [config_uart]
+//! [config_dualtimer]
 	configure_dualtimer();
-
+//! [config_dualtimer]
+//! [config_callback]
 	configure_dualtimer_callback();
+//! [config_callback]
 //! [setup_init]
-	
+
 //! [main_imp]
 //! [main_loop]
 	while (true) {
-//! [main_loop]
 
 	}
+//! [main_loop]
 //! [main_imp]
 }
