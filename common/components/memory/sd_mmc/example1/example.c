@@ -68,7 +68,7 @@
  * The example outputs the information through the standard output (stdio).
  * To know the output used on the board, look in the conf_example.h file
  * and connect a terminal to the correct stdio port.
- *
+ * 
  * While using SAM4L Xplained Pro or SAM4L8 Xplained Pro, please attach IO1
  * Xplained Pro extension board to EXT1.
  *
@@ -222,7 +222,7 @@ int main(void)
 	// Initialize SD MMC stack
 	sd_mmc_init();
 
-	puts("\x0C\n\r-- SD/MMC/SDIO Card Example --\n\r");
+	printf("\x0C\n\r-- SD/MMC/SDIO Card Example --\n\r");
 	printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
 	while (1) {
 		if (slot == sd_mmc_nb_slot()) {
@@ -236,15 +236,16 @@ int main(void)
 			if ((SD_MMC_ERR_NO_CARD != err)
 					&& (SD_MMC_INIT_ONGOING != err)
 					&& (SD_MMC_OK != err)) {
-				puts("Card install FAILED\n\r");
-				puts("Please unplug and re-plug the card.\n\r");
-				while (SD_MMC_ERR_NO_CARD != sd_mmc_check(slot));
+				printf("Card install FAILED\n\r");
+				printf("Please unplug and re-plug the card.\n\r");
+				while (SD_MMC_ERR_NO_CARD != sd_mmc_check(slot)) {
+				}
 			}
 		} while (SD_MMC_OK != err);
-
+	
 		// Display basic card information
 		main_display_info_card(slot);
-
+	
 		/* Test the card */
 		if (sd_mmc_get_type(slot) & CARD_TYPE_SDIO) {
 			// Test CIA of SDIO card
@@ -253,13 +254,12 @@ int main(void)
 		if (sd_mmc_get_type(slot) & (CARD_TYPE_SD | CARD_TYPE_MMC)) {
 			// SD/MMC Card R/W
 			main_test_memory(slot);
-		}
+		}	
 
-		puts("Test finished, please unplugged the card.\n\r");
+		printf("Test finished, please unplugged the card.\n\r");
 		while (SD_MMC_OK == sd_mmc_check(slot)) {
 		}
 		slot++;
-		while(1);
 	}
 }
 
@@ -272,31 +272,31 @@ int main(void)
  */
 static void main_display_info_card(uint8_t slot)
 {
-	puts("Card information:\n\r");
+	printf("Card information:\n\r");
 
-	puts("    ");
+	printf("    ");
 	switch (sd_mmc_get_type(slot)) {
 	case CARD_TYPE_SD | CARD_TYPE_HC:
-		puts("SDHC");
+		printf("SDHC");
 		break;
 	case CARD_TYPE_SD:
-		puts("SD");
+		printf("SD");
 		break;
 	case CARD_TYPE_MMC | CARD_TYPE_HC:
-		puts("MMC High Density");
+		printf("MMC High Density");
 		break;
 	case CARD_TYPE_MMC:
-		puts("MMC");
+		printf("MMC");
 		break;
 	case CARD_TYPE_SDIO:
-		puts("SDIO\n\r");
+		printf("SDIO\n\r");
 		return;
 	case CARD_TYPE_SD_COMBO:
-		puts("SD COMBO");
+		printf("SD COMBO");
 		break;
 	case CARD_TYPE_UNKNOWN:
 	default:
-		puts("Unknow\n\r");
+		printf("Unknow\n\r");
 		return;
 	}
 	printf("\n\r    %d MB\n\r", (uint16_t)(sd_mmc_get_capacity(slot)/1024));
@@ -309,68 +309,63 @@ static void main_display_info_card(uint8_t slot)
  */
 static void main_test_memory(uint8_t slot)
 {
-	uint32_t last_blocks_addr, nb_trans;
+	uint32_t last_blocks_addr, i, nb_trans;
 	uint32_t tick_start, time_ms;
-	uint32_t i;
 
 	// Compute the last address
 	last_blocks_addr = sd_mmc_get_capacity(slot) *
 			(1024 / SD_MMC_BLOCK_SIZE);
 	if (last_blocks_addr < (TEST_MEM_START_OFFSET / 512lu)) {
-		puts("[Memory is too small.]\n\r");
+		printf("[Memory is too small.]\n\r");
 		return;
 	}
 	last_blocks_addr -= (TEST_MEM_START_OFFSET / SD_MMC_BLOCK_SIZE);
 
-	puts("Card R/W test:\n\r");
+	printf("Card R/W test:\n\r");
 
 	// Read the last block
-	puts("    Read... \r\n");
-
+	printf("    Read... ");
 	tick_start = time_tick_get();
 	if (SD_MMC_OK != sd_mmc_init_read_blocks(slot,
 			last_blocks_addr,
-			TEST_MEM_AREA_SIZE / SD_MMC_BLOCK_SIZE
-			)) {
-		puts("[FAIL]\n\r");
+			TEST_MEM_AREA_SIZE / SD_MMC_BLOCK_SIZE)) {
+		printf("[FAIL]\n\r");
 		return;
 	}
-
 	for (nb_trans = 0; nb_trans < (TEST_MEM_AREA_SIZE / TEST_MEM_ACCESS_SIZE);
 			nb_trans++) {
 		if (SD_MMC_OK != sd_mmc_start_read_blocks(buf_test,
 					TEST_MEM_ACCESS_SIZE / SD_MMC_BLOCK_SIZE)) {
-			puts("[FAIL]\n\r");
+			printf("[FAIL]\n\r");
 			return;
 		}
 		if (SD_MMC_OK != sd_mmc_wait_end_of_read_blocks(false)) {
-			puts("[FAIL]\n\r");
+			printf("[FAIL]\n\r");
 			return;
-		}
+		}		
 	}
-
 	time_ms = time_tick_calc_delay(tick_start, time_tick_get());
-	/** Valid time_ms */
-	if (time_ms) {
-		printf(" %d KBps ", (int)(((TEST_MEM_AREA_SIZE * 1000lu) / 1024lu) / time_ms));
+	if (time_ms) { // Valid time_ms
+		printf(" %d KBps ", (int)(((TEST_MEM_AREA_SIZE
+				* 1000lu) / 1024lu) / time_ms));
 	}
-	puts("[OK]\n\r");
+	printf("[OK]\n\r");
 
 	if (sd_mmc_is_write_protected(slot)) {
-		puts("Card is write protected [WRITE TEST SKIPPED]\n\r");
+		printf("Card is write protected [WRITE TEST SKIPPED]\n\r");
 		return;
 	}
-
+	
 	// Fill buffer with a pattern
 	for (i = 0; i < (TEST_MEM_ACCESS_SIZE / sizeof(uint32_t)); i++) {
 		((uint32_t*)buf_test)[i] = TEST_FILL_VALUE_U32;
 	}
 
-	puts("    Write pattern... ");
+	printf("    Write pattern... ");
 	if (SD_MMC_OK != sd_mmc_init_write_blocks(slot,
 			last_blocks_addr,
 			TEST_MEM_AREA_SIZE / SD_MMC_BLOCK_SIZE)) {
-		puts("[FAIL]\n\r");
+		printf("[FAIL]\n\r");
 		return;
 	}
 	tick_start = time_tick_get();
@@ -379,25 +374,26 @@ static void main_test_memory(uint8_t slot)
 		((uint32_t*)buf_test)[0] = nb_trans; // Unique value for each area
 		if (SD_MMC_OK != sd_mmc_start_write_blocks(buf_test,
 				TEST_MEM_ACCESS_SIZE / SD_MMC_BLOCK_SIZE)) {
-			puts("[FAIL]\n\r");
+			printf("[FAIL]\n\r");
 			return;
 		}
 		if (SD_MMC_OK != sd_mmc_wait_end_of_write_blocks(false)) {
-			puts("[FAIL]\n\r");
+			printf("[FAIL]\n\r");
 			return;
 		}
 	}
 	time_ms = time_tick_calc_delay(tick_start, time_tick_get());
 	if (time_ms) { // Valid time_ms
-		printf(" %d KBps ", (int)(((TEST_MEM_AREA_SIZE * 1000lu) / 1024lu) / time_ms));
+		printf(" %d KBps ", (int)(((TEST_MEM_AREA_SIZE
+				* 1000lu) / 1024lu) / time_ms));
 	}
-	puts("[OK]\n\r");
+	printf("[OK]\n\r");
 
-	puts("    Read and check pattern... ");
+	printf("    Read and check pattern... ");
 	if (SD_MMC_OK != sd_mmc_init_read_blocks(slot,
 			last_blocks_addr,
 			TEST_MEM_AREA_SIZE / SD_MMC_BLOCK_SIZE)) {
-		puts("Read [FAIL]\n\r");
+		printf("Read [FAIL]\n\r");
 		return;
 	}
 	for (nb_trans = 0; nb_trans < (TEST_MEM_AREA_SIZE / TEST_MEM_ACCESS_SIZE);
@@ -409,28 +405,27 @@ static void main_test_memory(uint8_t slot)
 		// Fill buffer
 		if (SD_MMC_OK != sd_mmc_start_read_blocks(buf_test,
 					TEST_MEM_ACCESS_SIZE / SD_MMC_BLOCK_SIZE)) {
-			puts("Read [FAIL]\n\r");
+			printf("Read [FAIL]\n\r");
 			return;
 		}
-
 		if (SD_MMC_OK != sd_mmc_wait_end_of_read_blocks(false)) {
-			puts("Read [FAIL]\n\r");
+			printf("Read [FAIL]\n\r");
 			return;
 		}
 		// Check the unique value of the area
 		if (((uint32_t*)buf_test)[0] != nb_trans) {
-			puts("Check [FAIL]\n\r");
+			printf("Check [FAIL]\n\r");
 			return;
 		}
 		// Check buffer
 		for (i = 1; i < (TEST_MEM_ACCESS_SIZE / sizeof(uint32_t)); i++) {
 			if (((uint32_t*)buf_test)[i] != TEST_FILL_VALUE_U32) {
-				puts("Check [FAIL]\n\r");
+				printf("Check [FAIL]\n\r");
 				return;
 			}
 		}
 	}
-	puts("[OK]\n\r");
+	printf("[OK]\n\r");
 }
 
 /**
@@ -448,39 +443,39 @@ static void main_test_sdio(uint8_t slot)
 	/*
 	 * Test with direct read and write command.
 	 */
-	puts("\n\r--- Test with direct read and write command of CIA:\n\r");
+	printf("\n\r--- Test with direct read and write command of CIA:\n\r");
 	/* Read */
 	for (i = 0; i < TEST_CIA_SIZE; i++) {
 		err = sdio_read_direct(slot, SDIO_CIA, i, &buf_cia[i]);
 		if (err) {
-			puts("Error: SDIO direct read failed.\n\r");
+			printf("Error: SDIO direct read failed.\n\r");
 			return;
 		}
 	}
 	main_dump_buffer(buf_cia, TEST_CIA_SIZE);
 
 	/* Write */
-	puts("Write 0x02 to IEN(CIA.4).\n\r");
+	printf("Write 0x02 to IEN(CIA.4).\n\r");
 	err = sdio_write_direct(slot, SDIO_CIA, SDIO_CCCR_IEN, 0x02);
 	if (err) {
-		puts("Error: SDIO direct write failed.\n\r");
+		printf("Error: SDIO direct write failed.\n\r");
 		return;
 	}
 
 	/* Check */
-	puts("Check IEN after write:");
+	printf("Check IEN after write:");
 	err = sdio_read_direct(slot, SDIO_CIA, SDIO_CCCR_IEN,
 			&buf_cia[SDIO_CCCR_IEN]);
 	if (err) {
-		puts("Error: SDIO direct read failed.\n\r");
+		printf("Error: SDIO direct read failed.\n\r");
 		return;
 	}
 
 	printf("0x%02x\n\r", buf_cia[SDIO_CCCR_IEN]);
 	if (0x02 == buf_cia[SDIO_CCCR_IEN]) {
-		puts("Test OK.\n\r");
+		printf("Test OK.\n\r");
 	} else {
-		puts("Test failed.\n\r");
+		printf("Test failed.\n\r");
 	}
 
 	/* Restore data to 0 */
@@ -492,42 +487,42 @@ static void main_test_sdio(uint8_t slot)
 	/*
 	 *  Test with extended read and write command.
 	 */
-	puts("\n\r--- Test with extended read and write command of CIA:\n\r");
+	printf("\n\r--- Test with extended read and write command of CIA:\n\r");
 	/* Read */
 	err = sdio_read_extended(slot, SDIO_CIA, 0, 1, &buf_cia[0],
 			TEST_CIA_SIZE);
 	if (err) {
-		puts("Error: SDIO extended read failed.\n\r");
+		printf("Error: SDIO extended read failed.\n\r");
 		return;
 	}
 
 	main_dump_buffer(buf_cia, TEST_CIA_SIZE);
 
 	/* Write */
-	puts("Modify Some R/W bytes for FN0 and write:\n\r");
+	printf("Modify Some R/W bytes for FN0 and write:\n\r");
 	buf_cia[SDIO_CCCR_IEN] = 0x3;
 	err = sdio_write_extended(slot, SDIO_CIA, SDIO_CCCR_IEN, 1,
 			&buf_cia[SDIO_CCCR_IEN], 1);
 	if (err) {
-		puts("Error: SDIO extended write failed.\n\r");
+		printf("Error: SDIO extended write failed.\n\r");
 		return;
 	}
 
 	/* Read and check */
-	puts("Check CIA after write:\n\r");
+	printf("Check CIA after write:\n\r");
 	err = sdio_read_extended(slot, SDIO_CIA, 0, 1, &buf_cia[0],
 			TEST_CIA_SIZE);
 	if (err) {
-		puts("Error: SDIO extended read failed.\n\r");
+		printf("Error: SDIO extended read failed.\n\r");
 		return;
 	}
 
 	main_dump_buffer(buf_cia, TEST_CIA_SIZE);
 
 	if (buf_cia[SDIO_CCCR_IEN] != 0x3) {
-		puts("CIA.4 Fail\n\r");
+		printf("CIA.4 Fail\n\r");
 	} else {
-		puts("Test OK\n\r");
+		printf("Test OK\n\r");
 	}
 
 	/* Restore data to 0 */
@@ -554,5 +549,5 @@ static void main_dump_buffer(uint8_t *data_buffer, uint32_t length)
 
 		printf(" %02x", data_buffer[i]);
 	}
-	puts("\n\r");
+	printf("\n\r");
 }
