@@ -166,22 +166,23 @@ static void afec_xdmac_configure(Afec *const afec)
 
 	/* Initialize channel config */
 	xdmac_channel_cfg.mbr_ubc = XDMAC_UBC_NVIEW_NDV0 |
-								 XDMAC_UBC_NDE_FETCH_DIS |
-								 XDMAC_UBC_NDEN_UPDATED |
-								 BUFFER_SIZE;
+		XDMAC_UBC_NDE_FETCH_DIS |
+		XDMAC_UBC_NDEN_UPDATED |
+		BUFFER_SIZE;
 
 	xdmac_channel_cfg.mbr_sa = (uint32_t)&(afec->AFEC_LCDR);
 	xdmac_channel_cfg.mbr_da = (uint32_t)afec_buf;
 	xdmac_channel_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN |
-								XDMAC_CC_MBSIZE_SINGLE |
-								XDMAC_CC_DSYNC_PER2MEM |
-								XDMAC_CC_CSIZE_CHK_1 |
-								XDMAC_CC_DWIDTH_WORD|
-								XDMAC_CC_SIF_AHB_IF1 |
-								XDMAC_CC_DIF_AHB_IF0 |
-								XDMAC_CC_SAM_FIXED_AM |
-								XDMAC_CC_DAM_INCREMENTED_AM |
-								XDMAC_CC_PERID(AFEC0_XDMAC_CH_NUM);
+		XDMAC_CC_MBSIZE_SINGLE |
+		XDMAC_CC_DSYNC_PER2MEM |
+		XDMAC_CC_CSIZE_CHK_1 |
+		XDMAC_CC_DWIDTH_WORD|
+		XDMAC_CC_SIF_AHB_IF1 |
+		XDMAC_CC_DIF_AHB_IF0 |
+		XDMAC_CC_SAM_FIXED_AM |
+		XDMAC_CC_DAM_INCREMENTED_AM |
+		XDMAC_CC_PERID(AFEC0_XDMAC_CH_NUM);
+
 	xdmac_channel_cfg.mbr_bc = 0;
 	xdmac_channel_cfg.mbr_ds =  0;
 	xdmac_channel_cfg.mbr_sus = 0;
@@ -193,11 +194,12 @@ static void afec_xdmac_configure(Afec *const afec)
 
 	xdmac_enable_interrupt(XDMAC, XDMAC_CH);
 	xdmaint =  (XDMAC_CIE_BIE   |
-				XDMAC_CIE_DIE   |
-				XDMAC_CIE_FIE   |
-				XDMAC_CIE_RBIE  |
-				XDMAC_CIE_WBIE  |
-				XDMAC_CIE_ROIE);
+		XDMAC_CIE_DIE   |
+		XDMAC_CIE_FIE   |
+		XDMAC_CIE_RBIE  |
+		XDMAC_CIE_WBIE  |
+		XDMAC_CIE_ROIE);
+
 	xdmac_channel_enable_interrupt(XDMAC, XDMAC_CH, xdmaint);
 	xdmac_channel_enable(XDMAC, XDMAC_CH);
 

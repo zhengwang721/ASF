@@ -271,25 +271,25 @@ static void configure_console(void)
  {
 	 uint32_t xdmaint;
 
-	 	xdmaint = (XDMAC_CIE_BIE |
-	 		XDMAC_CIE_DIE   |
-	 		XDMAC_CIE_FIE   |
-	 		XDMAC_CIE_RBIE  |
-	 		XDMAC_CIE_WBIE  |
-	 		XDMAC_CIE_ROIE);
+	xdmaint = (XDMAC_CIE_BIE |
+		XDMAC_CIE_DIE   |
+		XDMAC_CIE_FIE   |
+		XDMAC_CIE_RBIE  |
+		XDMAC_CIE_WBIE  |
+		XDMAC_CIE_ROIE);
 
- 		xdmac_channel_disable_interrupt(XDMAC, XDMAC_RX_CH, xdmaint);
- 		xdmac_channel_disable(XDMAC, XDMAC_RX_CH);
- 		xdmac_disable_interrupt(XDMAC, XDMAC_RX_CH);
+ 	xdmac_channel_disable_interrupt(XDMAC, XDMAC_RX_CH, xdmaint);
+ 	xdmac_channel_disable(XDMAC, XDMAC_RX_CH);
+ 	xdmac_disable_interrupt(XDMAC, XDMAC_RX_CH);
 
-		xdmac_channel_disable_interrupt(XDMAC, XDMAC_TX_CH, xdmaint);
-		xdmac_channel_disable(XDMAC, XDMAC_TX_CH);
-		xdmac_disable_interrupt(XDMAC, XDMAC_TX_CH);
+	xdmac_channel_disable_interrupt(XDMAC, XDMAC_TX_CH, xdmaint);
+	xdmac_channel_disable(XDMAC, XDMAC_TX_CH);
+	xdmac_disable_interrupt(XDMAC, XDMAC_TX_CH);
 
-		 NVIC_ClearPendingIRQ(XDMAC_IRQn);
-		 NVIC_DisableIRQ(XDMAC_IRQn);
+	NVIC_ClearPendingIRQ(XDMAC_IRQn);
+	NVIC_DisableIRQ(XDMAC_IRQn);
  }
- 
+
 /**
  * \brief configure xdmac for spi and ready to transfer/receive.
  *
@@ -310,67 +310,67 @@ static void spi_xdmac_configure(Spi *const pspi)
 		XDMAC_CIE_ROIE);
 
 		/* Initialize channel config for transmitter */
-		xdmac_tx_cfg.mbr_ubc = g_size;
+	xdmac_tx_cfg.mbr_ubc = g_size;
 
-		xdmac_tx_cfg.mbr_sa = (uint32_t)tx_buffer;
-		xdmac_tx_cfg.mbr_da = (uint32_t)&(pspi->SPI_TDR);
-		xdmac_tx_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN |
-				XDMAC_CC_MBSIZE_SINGLE |
-				XDMAC_CC_DSYNC_MEM2PER |
-				XDMAC_CC_CSIZE_CHK_1 |
-				XDMAC_CC_DWIDTH_BYTE |
-				XDMAC_CC_SIF_AHB_IF0 |
-				XDMAC_CC_DIF_AHB_IF1 |
-				XDMAC_CC_SAM_INCREMENTED_AM |
-				XDMAC_CC_DAM_FIXED_AM |
-				XDMAC_CC_PERID(SPI0_XDMAC_TX_CH_NUM);
+	xdmac_tx_cfg.mbr_sa = (uint32_t)tx_buffer;
+	xdmac_tx_cfg.mbr_da = (uint32_t)&(pspi->SPI_TDR);
+	xdmac_tx_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN |
+		XDMAC_CC_MBSIZE_SINGLE |
+		XDMAC_CC_DSYNC_MEM2PER |
+		XDMAC_CC_CSIZE_CHK_1 |
+		XDMAC_CC_DWIDTH_BYTE |
+		XDMAC_CC_SIF_AHB_IF0 |
+		XDMAC_CC_DIF_AHB_IF1 |
+		XDMAC_CC_SAM_INCREMENTED_AM |
+		XDMAC_CC_DAM_FIXED_AM |
+		XDMAC_CC_PERID(SPI0_XDMAC_TX_CH_NUM);
 
-		xdmac_tx_cfg.mbr_bc = 0;
-		xdmac_tx_cfg.mbr_ds =  0;
-		xdmac_tx_cfg.mbr_sus = 0;
-		xdmac_tx_cfg.mbr_dus = 0;
+	xdmac_tx_cfg.mbr_bc = 0;
+	xdmac_tx_cfg.mbr_ds =  0;
+	xdmac_tx_cfg.mbr_sus = 0;
+	xdmac_tx_cfg.mbr_dus = 0;
 
-		xdmac_configure_transfer(XDMAC, XDMAC_TX_CH, &xdmac_tx_cfg);
+	xdmac_configure_transfer(XDMAC, XDMAC_TX_CH, &xdmac_tx_cfg);
 
-		xdmac_channel_set_descriptor_control(XDMAC, XDMAC_TX_CH, 0);
-		xdmac_channel_enable_interrupt(XDMAC, XDMAC_TX_CH, xdmaint);
-		xdmac_channel_enable(XDMAC, XDMAC_TX_CH);
-		xdmac_enable_interrupt(XDMAC, XDMAC_TX_CH);
+	xdmac_channel_set_descriptor_control(XDMAC, XDMAC_TX_CH, 0);
+	xdmac_channel_enable_interrupt(XDMAC, XDMAC_TX_CH, xdmaint);
+	xdmac_channel_enable(XDMAC, XDMAC_TX_CH);
+	xdmac_enable_interrupt(XDMAC, XDMAC_TX_CH);
 
 		/* Initialize channel config for receiver */
-		xdmac_rx_cfg.mbr_ubc = g_size;
+	xdmac_rx_cfg.mbr_ubc = g_size;
 
-		xdmac_rx_cfg.mbr_da = (uint32_t)rx_buffer;
+	xdmac_rx_cfg.mbr_da = (uint32_t)rx_buffer;
 
-		xdmac_rx_cfg.mbr_sa = (uint32_t)&pspi->SPI_RDR;
-		xdmac_rx_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN |
-				XDMAC_CC_MBSIZE_SINGLE |
-				XDMAC_CC_DSYNC_PER2MEM |
-				XDMAC_CC_CSIZE_CHK_1 |
-				XDMAC_CC_DWIDTH_BYTE|
-				XDMAC_CC_SIF_AHB_IF1 |
-				XDMAC_CC_DIF_AHB_IF0 |
-				XDMAC_CC_SAM_FIXED_AM |
-				XDMAC_CC_DAM_INCREMENTED_AM |
-				XDMAC_CC_PERID(SPI0_XDMAC_RX_CH_NUM);
+	xdmac_rx_cfg.mbr_sa = (uint32_t)&pspi->SPI_RDR;
+	xdmac_rx_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN |
+		XDMAC_CC_MBSIZE_SINGLE |
+		XDMAC_CC_DSYNC_PER2MEM |
+		XDMAC_CC_CSIZE_CHK_1 |
+		XDMAC_CC_DWIDTH_BYTE|
+		XDMAC_CC_SIF_AHB_IF1 |
+		XDMAC_CC_DIF_AHB_IF0 |
+		XDMAC_CC_SAM_FIXED_AM |
+		XDMAC_CC_DAM_INCREMENTED_AM |
+		XDMAC_CC_PERID(SPI0_XDMAC_RX_CH_NUM);
 
-		xdmac_rx_cfg.mbr_bc = 0;
-		xdmac_tx_cfg.mbr_ds =  0;
-		xdmac_rx_cfg.mbr_sus = 0;
-		xdmac_rx_cfg.mbr_dus =0;
+	xdmac_rx_cfg.mbr_bc = 0;
+	xdmac_tx_cfg.mbr_ds =  0;
+	xdmac_rx_cfg.mbr_sus = 0;
+	xdmac_rx_cfg.mbr_dus =0;
 
-		xdmac_configure_transfer(XDMAC, XDMAC_RX_CH, &xdmac_rx_cfg);
+	xdmac_configure_transfer(XDMAC, XDMAC_RX_CH, &xdmac_rx_cfg);
 
-		xdmac_channel_set_descriptor_control(XDMAC, XDMAC_RX_CH, 0);
+	xdmac_channel_set_descriptor_control(XDMAC, XDMAC_RX_CH, 0);
 
-		xdmac_channel_enable_interrupt(XDMAC, XDMAC_RX_CH, xdmaint);
-		xdmac_channel_enable(XDMAC, XDMAC_RX_CH);
-		xdmac_enable_interrupt(XDMAC, XDMAC_RX_CH);
+	xdmac_channel_enable_interrupt(XDMAC, XDMAC_RX_CH, xdmaint);
+	xdmac_channel_enable(XDMAC, XDMAC_RX_CH);
+	xdmac_enable_interrupt(XDMAC, XDMAC_RX_CH);
 
-		/*Enable XDMAC interrupt */
-		NVIC_ClearPendingIRQ(XDMAC_IRQn);
-		NVIC_SetPriority( XDMAC_IRQn ,1);
-		NVIC_EnableIRQ(XDMAC_IRQn);
+	/*Enable XDMAC interrupt */
+	NVIC_ClearPendingIRQ(XDMAC_IRQn);
+	NVIC_SetPriority( XDMAC_IRQn ,1);
+	NVIC_EnableIRQ(XDMAC_IRQn);
 }
 
 /**
@@ -385,7 +385,7 @@ static void spi_set_clock_configuration(uint8_t configuration)
 	NVIC_DisableIRQ(SPI_IRQn);
 	NVIC_SetPriority(SPI_IRQn, 0);
 	NVIC_EnableIRQ(SPI_IRQn);
-	
+
 	gs_ul_spi_clock = gs_ul_clock_configurations[configuration];
 	printf("Setting SPI clock #%lu ... \n\r", (unsigned long)gs_ul_spi_clock);
 	spi_master_initialize();
