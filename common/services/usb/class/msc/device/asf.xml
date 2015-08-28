@@ -106,14 +106,11 @@
 		<device-support value="sam4c32e"/>
 		<device-support value="saml21"/>
 		<device-support value="samg55"/>
-<<<<<<< HEAD
+		<device-support value="saml22"/>
 		<device-support value="samv71"/>
 		<device-support value="samv70"/>
 		<device-support value="sams70"/>
 		<device-support value="same70"/>
-=======
-		<device-support value="saml22"/>
->>>>>>> 82066fad3f07bd0688a7703653aff84f161530cc
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>
 

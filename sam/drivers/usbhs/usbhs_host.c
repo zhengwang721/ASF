@@ -579,7 +579,6 @@ void uhd_enable(void)
 
 	uhd_sleep_mode(UHD_STATE_OFF);
 
-
 #if OTG_ID_IO
 	// Check that the host mode is selected by ID pin
 	if (Is_otg_id_device()) {
@@ -591,8 +590,6 @@ void uhd_enable(void)
 	otg_force_host_mode();
 #endif
 
-	ioport_set_pin_dir(USB_ID_PIN, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(USB_ID_PIN, IOPORT_PIN_LEVEL_HIGH);
 	// Enable USB hardware
 	otg_enable();
 
@@ -631,7 +628,7 @@ void uhd_enable(void)
 	USBHS->USBHS_HSTIER = USBHS_HSTIER_HWUPIES;
 	uhd_sleep_mode(UHD_STATE_DISCONNECT);
 #endif
-	ioport_set_pin_level(USB_ID_PIN, IOPORT_PIN_LEVEL_LOW);
+
 	// Enable main control interrupt
 	// Connection, SOF and reset
 	USBHS->USBHS_HSTIER = USBHS_HSTIER_DCONNIES | USBHS_HSTIER_HSOFIES
