@@ -149,11 +149,11 @@ void ble_device_init(at_ble_addr_t *addr)
 	
 	ble_set_address(addr);	
 	
-	//dev_name = (char *)BLE_DEVICE_NAME;
-	//if (ble_set_device_name((uint8_t *)dev_name, strlen(dev_name)) != AT_BLE_SUCCESS)
-	//{
-		//DBG_LOG("Device name set failed");
-	//}
+	dev_name = (char *)BLE_DEVICE_NAME;
+	if (ble_set_device_name((uint8_t *)dev_name, strlen(dev_name)) != AT_BLE_SUCCESS)
+	{
+		DBG_LOG("Device name set failed");
+	}
 		
 	BLE_PROFILE_INIT(NULL);
 }
