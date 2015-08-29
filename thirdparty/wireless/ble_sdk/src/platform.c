@@ -50,13 +50,14 @@
 #include "serial_drv.h"
 #include "serial_fifo.h"
 
-uint8_t bus_type = UART;
+uint8_t bus_type = AT_BLE_UART;
 
 volatile enum tenuTransportState slave_state = PLATFORM_TRANSPORT_SLAVE_DISCONNECTED;
 #define GTL_EIF_CONNECT_REQ	0xA5
 #define GTL_EIF_CONNECT_RESP 0x5A
 #define BTLC1000_STARTUP_DELAY (1500)
 #define BTLC1000_WAKEUP_DELAY (5)
+#define PLATFORM_EVT_WAIT_TIMEOUT (4000)
 
 extern volatile bool button_pressed;
 
@@ -74,7 +75,7 @@ extern ser_fifo_desc_t ble_usart_rx_fifo;
 volatile bool tx_done = false;				//	TX Transfer complete flag
 volatile uint8_t data_received = 0;			//	RX data received flag
 
-volatile bool init_done = false;
+volatile int init_done = false;
 volatile int ext_wakeup_state = 1;
 
 typedef enum {
@@ -126,10 +127,10 @@ at_ble_status_t platform_init(void* platform_params)
 	while(button_pressed == false);
 	button_pressed = false;
 	
-	if (cfg->bus_type == UART)
+	if (cfg->bus_type == AT_BLE_UART)
 	{
 		configure_serial_drv();
-		bus_type = UART;
+		bus_type = AT_BLE_UART;
 		DBG_LOG_BLE("\r\nCalibration done\r\n");
 		return AT_BLE_SUCCESS;
 	}
@@ -139,7 +140,7 @@ at_ble_status_t platform_init(void* platform_params)
 
 int platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t len)
 {
-	if (if_type != UART)
+	if (if_type != AT_BLE_UART)
 	{
 		return -1;
 	}
@@ -172,22 +173,26 @@ int platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t len)
 		delay_ms(BTLC1000_WAKEUP_DELAY);
 	}
 #endif //ENABLE_POWER_SAVE
+	delay_ms(5);
 	serial_drv_send(data, len);	
 	return STATUS_OK;
 }
 
-void platform_cmd_cmpl_signal()
+void platform_cmd_cmpl_signal(void)
 {
 	cmd_cmpl_flag = 1;
 }
 
 int platform_interface_recv(uint8_t if_type, uint8_t* data, uint32_t len)
 {
-	if (if_type == UART)
+	if (if_type == AT_BLE_UART)
 	{
 		return STATUS_OK;
 	}
-	return -1;	
+	else
+	{
+		return -1;	
+	}	
 }
 
 int platform_interface_send_sleep(void)
@@ -258,8 +263,7 @@ void platform_process_rxdata(uint32_t t_rx_data)
 void platform_cmd_cmpl_wait(bool* timeout)
 {
 	uint32_t t_rx_data;
-	
-	start_timer(10000);
+	start_timer(PLATFORM_EVT_WAIT_TIMEOUT);
 	do 
 	{
 		if(ser_fifo_pull_uint8(&ble_usart_rx_fifo, (uint8_t *)&t_rx_data) == SER_FIFO_OK)
@@ -289,6 +293,7 @@ void platform_event_signal(void)
 	event_flag = 1;
 }
 
+uint8_t platform_buf[10];
 uint8_t platform_event_wait(uint32_t timeout)
 {
 	uint8_t status = AT_BLE_SUCCESS;
@@ -300,13 +305,13 @@ uint8_t platform_event_wait(uint32_t timeout)
 	else
 	{
 		uint32_t t_rx_data;
-	
-		start_timer(timeout);
+	    start_timer(timeout);
 		do
 		{
 			if(ser_fifo_pull_uint8(&ble_usart_rx_fifo, (uint8_t *)&t_rx_data) == SER_FIFO_OK)
-			{	
-				platform_interface_callback((uint8_t*)&t_rx_data, 1);
+			{
+				 platform_buf[0] = (uint8_t)t_rx_data;
+				platform_interface_callback(platform_buf, 1);				
 			}
 		}while((event_flag != 1) && (timer_done()>0));
 		if (event_flag == 1)
@@ -410,7 +415,7 @@ void serial_tx_callback(void)
 #if defined ENABLE_POWER_SAVE
 	if (init_done)
 	{		
-		if(bus_type == UART)
+		if(bus_type == AT_BLE_UART)
 		{
 			if(ext_wakeup_state > 0)
 			ext_wakeup_state--;
@@ -424,20 +429,29 @@ void serial_tx_callback(void)
 
  void platform_wakeup(void)
  {
-	 //ble_wakeup_pin_set_high();
+	#if defined ENABLE_POWER_SAVE
+	 ble_wakeup_pin_set_high();
+   #endif
  }
  
  void platform_set_sleep(void)
  {
-	 //ble_wakeup_pin_set_low();
+	 #if defined ENABLE_POWER_SAVE
+		ble_wakeup_pin_set_low();
+	 #endif
  }
  
  void platform_enter_critical_section(void)
  {
-	 
+	 Disable_global_interrupt();
  }
  
  void platform_leave_critical_section(void)
+ {
+	 Enable_global_interrupt();
+ }
+ 
+ void platform_start_timer(uint32_t timeout)
  {
 	 
  }

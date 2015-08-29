@@ -229,7 +229,7 @@ static void ble_init(void)
 	pf_cfg.memPool.memStartAdd = &(db_mem[0]);
 	
 	/*Bus configuration*/
-	busConfig.bus_type = UART;
+	busConfig.bus_type = AT_BLE_UART;
 	pf_cfg.plf_config = &busConfig;
 	
 	/* Init BLE device */

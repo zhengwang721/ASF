@@ -80,7 +80,7 @@
  */
 enum interface_type {
 	/// UART Interface is used [Default]
-	UART = 1,
+	AT_BLE_UART = 1,
 	/// SPI interface is used
 	SPI
 };
@@ -219,7 +219,8 @@ uint8_t platform_sleep(uint32_t sleepms);
 at_ble_status_t platform_ble_event_data(void);
 
  /** @}*/
- 
+
+void platform_start_timer(uint32_t timeout); 
 void platform_stop_timer(void);
 void platform_wakeup(void);
 void platform_set_sleep(void);
