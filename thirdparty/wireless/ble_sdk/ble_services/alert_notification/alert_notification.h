@@ -95,10 +95,11 @@ typedef struct gatt_anp_handler
  */
 at_ble_status_t anp_alert_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti);
 
-int8_t anp_alert_read_response (at_ble_characteristic_read_response_t *read_resp, gatt_anp_handler_t *anp_handler);
+void anp_alert_read_response (at_ble_characteristic_read_response_t *read_resp, gatt_anp_handler_t *anp_handler);
 
 at_ble_status_t anp_alert_read(at_ble_handle_t conn_handle, at_ble_handle_t char_handle);
 
 at_ble_status_t anp_alert_write(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti);
+void anp_alert_notify_response (at_ble_notification_recieved_t *notify_resp, gatt_anp_handler_t *anp_handler);
 
 #endif /* __ALERT_NOTIFICATION_H__ */

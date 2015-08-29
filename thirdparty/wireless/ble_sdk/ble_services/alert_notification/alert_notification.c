@@ -83,7 +83,7 @@ at_ble_status_t anp_alert_write(at_ble_handle_t conn_handle,at_ble_handle_t desc
 
 at_ble_status_t anp_alert_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti)
 {
-	uint8_t desc_data[3] = {1, 0, 0};
+	uint16_t desc_value ;
 	
 	if(desc_handle == ANP_INVALID_CHAR_HANDLE)
 	{
@@ -93,11 +93,13 @@ at_ble_status_t anp_alert_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_
 	{
 		if(noti == true)
 		{
-			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_data[0],false, true));
+			desc_value = 1;
+			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_value,false, true));
 		}
 		else if(noti == false)
 		{
-			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_data[1],false, true));
+			desc_value = 0;
+			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_value,false, true));
 		}
 	}
 	return 0;
@@ -116,11 +118,8 @@ at_ble_status_t anp_alert_read(at_ble_handle_t conn_handle,at_ble_handle_t char_
 	return AT_BLE_ATT_INVALID_HANDLE;
 }
 
-int8_t anp_alert_read_response (at_ble_characteristic_read_response_t *read_resp, gatt_anp_handler_t *anp_handler)
+void anp_alert_read_response (at_ble_characteristic_read_response_t *read_resp, gatt_anp_handler_t *anp_handler)
 {
-	uint8_t idx;
-	uint8_t unread_alerts;
-	uint8_t new_alerts;
 	/* Supported New Alert Category */
 	if(read_resp->char_handle == anp_handler->supp_new_char_handle)
 	{
@@ -182,37 +181,7 @@ int8_t anp_alert_read_response (at_ble_characteristic_read_response_t *read_resp
 		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
 		DBG_LOG_DEV("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
 	}
-	/* New Alert Category */
-	if(read_resp->char_handle == anp_handler->new_alert_char_handle)
-	{
-		DBG_LOG_DEV("New Alert Characteristic read response %02x handler",read_resp->char_handle);
-		DBG_LOG_DEV("The length is %d",read_resp->char_len);
-		
-		if (read_resp->char_value[0] <= 7)
-		{
-			DBG_LOG("%s New Alert received",bitmask0[read_resp->char_value[0]]);
-		} else if (read_resp->char_value[1] > 7 && read_resp->char_value[1] <= 9) {
-			if (read_resp->char_value[1] == 8)
-			{
-				DBG_LOG("The New Alert is %s",bitmask1[read_resp->char_value[0]]);
-			} 
-			
-			if (read_resp->char_value[1] == 9)
-			{
-				DBG_LOG("The New Alert is %s",bitmask1[read_resp->char_value[1]]);
-			}
-		}
-		new_alerts = read_resp->char_value[1];
-		DBG_LOG("The no of New alerts %d",new_alerts);
-	
-		for (idx = 0; idx < read_resp->char_len - 3; idx++)
-		{
-			DBG_LOG_CONT("%c",read_resp->char_value[3+idx]);
-		}
-		
-		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
-		DBG_LOG_DEV("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
-	}
+
 	/* Supported Unread Alert Category */
 	if(read_resp->char_handle == anp_handler->supp_unread_char_handle)
 	{
@@ -272,41 +241,70 @@ int8_t anp_alert_read_response (at_ble_characteristic_read_response_t *read_resp
 		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
 		DBG_LOG_DEV("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
 	}
-	/* Unread Alert Status*/
-	if(read_resp->char_handle == anp_handler->unread_alert_char_handle)
-	{
-		DBG_LOG_DEV("Unread Alert Characteristic read response %02x handler",read_resp->char_handle);
-		DBG_LOG_DEV("The length is %d",read_resp->char_len);
-		if (read_resp->char_value[0] <= 7)
-		{
-			DBG_LOG("%s alert received",bitmask0[read_resp->char_value[0]]);
-			} else if (read_resp->char_value[1] > 7 && read_resp->char_value[1] <= 9){
-			if (read_resp->char_value[1] == 8)
-			{
-				DBG_LOG("The New Alert is %s",bitmask1[read_resp->char_value[0]]);
-			}
-			
-			if (read_resp->char_value[1] == 9)
-			{
-				DBG_LOG("The New Alert is %s",bitmask1[read_resp->char_value[1]]);
-			}
-		}
-		unread_alerts = read_resp->char_value[2];
-		DBG_LOG("The no of new alerts %d",unread_alerts);
 		
 		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
 		DBG_LOG_DEV("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
-	}
+
 	/* Alert Notification Control Point */
 	if(read_resp->char_handle == anp_handler->alert_np_char_handle)
 	{
-		DBG_LOG("Alert Notification Characteristic read response %02x handler",read_resp->char_handle);
-		DBG_LOG("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
-		DBG_LOG("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
+		DBG_LOG_DEV("Alert Notification Characteristic read response %02x handler",read_resp->char_handle);
+		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
+		DBG_LOG_DEV("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
 	}
-	return 0;
 }
 
 
 
-
+void anp_alert_notify_response (at_ble_notification_recieved_t *notify_resp, gatt_anp_handler_t *anp_handler)
+{
+	DBG_LOG_DEV("The length of notification received is %d",notify_resp->char_len);
+	
+	if (notify_resp->char_handle == anp_handler->new_alert_char_handle)
+	{
+		if (notify_resp->char_value[1] != 0)
+		{
+			DBG_LOG("New Alert received");
+			DBG_LOG("The no of new alerts are %d",notify_resp->char_value[1]);
+			DBG_LOG("The alert type is :");
+			
+			if (notify_resp->char_value[0] <= 7)
+			{
+				DBG_LOG("%s alert",bitmask0[(notify_resp->char_value[0])]);
+			}
+			
+			if (notify_resp->char_value[0] == 8)
+			{
+				DBG_LOG("%s alert",bitmask1[(notify_resp->char_value[0])]);
+			}
+			
+			if (notify_resp->char_value[0] == 9)
+			{
+				DBG_LOG("%s alert",bitmask1[(notify_resp->char_value[0])]);
+			}
+		}	
+	}	else if (notify_resp->char_handle == anp_handler->unread_alert_char_handle) {
+		
+		if (notify_resp->char_value[1] != 0)
+		{
+			DBG_LOG("Unread alert received");
+			DBG_LOG("The no of unread alerts are %d",notify_resp->char_value[1]);
+			DBG_LOG("The alert type is :");
+			
+			if (notify_resp->char_value[0] <= 7)
+			{
+				DBG_LOG("%s alert",bitmask0[(notify_resp->char_value[0])]);
+			}
+			
+			if (notify_resp->char_value[0] == 8)
+			{
+				DBG_LOG("%s alert",bitmask1[(notify_resp->char_value[0])]);
+			}
+			
+			if (notify_resp->char_value[0] == 9)
+			{
+				DBG_LOG("%s alert",bitmask1[(notify_resp->char_value[0])]);
+			}
+		}
+	}
+}
