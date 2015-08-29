@@ -65,6 +65,7 @@ typedef enum {
 
 #define PXP_CONNECT_REQ_INTERVAL        (20)
 
+#define DISCOVER_SUCCESS				(10)
 
 /* *@brief Initializes Proximity profile
  * handler Pointer reference to respective variables

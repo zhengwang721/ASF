@@ -375,7 +375,7 @@ at_ble_primary_service_found_t *primary_service_params)
 				DBG_LOG_DEV("%04X %04X",
 				primary_service_params->start_handle,
 				primary_service_params->end_handle);				
-				lls_handle.char_discovery=AT_BLE_SUCCESS;
+				lls_handle.char_discovery=DISCOVER_SUCCESS;
 			}
 			break;
 
@@ -390,7 +390,7 @@ at_ble_primary_service_found_t *primary_service_params)
 				DBG_LOG_DEV(" %04X %04X ",
 				primary_service_params->start_handle,
 				primary_service_params->end_handle);				
-				ias_handle.char_discovery=AT_BLE_SUCCESS;
+				ias_handle.char_discovery=DISCOVER_SUCCESS;
 			}
 			break;
 
@@ -405,7 +405,7 @@ at_ble_primary_service_found_t *primary_service_params)
 				DBG_LOG_DEV("%04X %04X",
 				primary_service_params->start_handle,
 				primary_service_params->end_handle);
-				txps_handle.char_discovery=AT_BLE_SUCCESS;
+				txps_handle.char_discovery=DISCOVER_SUCCESS;
 			}
 			break;
 
@@ -432,9 +432,10 @@ void pxp_monitor_discovery_complete_handler(
 at_ble_discovery_complete_t *discover_status)
 {
 	bool discover_char_flag = true;
-	if (discover_status->status == AT_BLE_SUCCESS) {
+	DBG_LOG_DEV("discover complete operation %d and %d",discover_status->operation,discover_status->status);
+	if (discover_status->status == DISCOVER_SUCCESS) {
 		#if defined TX_POWER_SERVICE
-		if ((txps_handle.char_discovery == AT_BLE_SUCCESS) && (discover_char_flag))
+		if ((txps_handle.char_discovery == DISCOVER_SUCCESS) && (discover_char_flag))
 		{
 			if (at_ble_characteristic_discover_all(
 			ble_connected_dev_info[0].handle,
@@ -461,7 +462,7 @@ at_ble_discovery_complete_t *discover_status)
 		#endif
 
 		#if defined LINK_LOSS_SERVICE
-		if ((lls_handle.char_discovery == AT_BLE_SUCCESS) &&
+		if ((lls_handle.char_discovery == DISCOVER_SUCCESS) &&
 		(discover_char_flag)) {
 			if (at_ble_characteristic_discover_all(
 			ble_connected_dev_info[0].handle,
@@ -490,7 +491,7 @@ at_ble_discovery_complete_t *discover_status)
 		#endif
 
 		#if defined IMMEDIATE_ALERT_SERVICE
-		if ((ias_handle.char_discovery == AT_BLE_SUCCESS) &&
+		if ((ias_handle.char_discovery == DISCOVER_SUCCESS) &&
 		(discover_char_flag)) 
 		{
 			if (at_ble_characteristic_discover_all(
@@ -565,7 +566,7 @@ at_ble_characteristic_read_response_t *char_read_resp)
 	#if defined LINK_LOSS_SERVICE
 	lls_alert_read_response(char_read_resp, &lls_handle);
 	#endif
-
+	DBG_LOG("Starting timer");
 	hw_timer_start(PXP_RSSI_UPDATE_INTERVAL);
 }
 
