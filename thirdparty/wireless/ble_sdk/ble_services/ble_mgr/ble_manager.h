@@ -490,7 +490,6 @@ typedef enum
 #define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER(param)			time_info_service_discover(param);
 #define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER(param)		time_info_disconnected_event_handler(param);
 #define BLE_CHARACTERISTIC_FOUND_HANDLER						time_info_characteristic_found_handler
-#define	BLE_CHARACTERISTIC_CHANGED								time_info_char_changed_handler
 
 #define BLE_PRIMARY_SERVICE_FOUND_HANDLER						time_info_service_found_handler
 #define BLE_DISCOVERY_COMPLETE_HANDLER							time_info_discovery_complete_handler
