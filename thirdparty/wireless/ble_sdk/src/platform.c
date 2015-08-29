@@ -122,16 +122,16 @@ at_ble_status_t platform_init(void* platform_params)
 	ble_configure_control_pin();
 	
 	delay_ms(BTLC1000_STARTUP_DELAY);
-	DBG_LOG_BLE("\r\nCalibrate using J-Link then Press SW0 on board");
-	
+	LED_On(LED0);
+
 	while(button_pressed == false);
 	button_pressed = false;
+	LED_Off(LED0);
 	
 	if (cfg->bus_type == AT_BLE_UART)
 	{
 		configure_serial_drv();
 		bus_type = AT_BLE_UART;
-		DBG_LOG_BLE("\r\nCalibration done\r\n");
 		return AT_BLE_SUCCESS;
 	}
 	return AT_BLE_INVALID_PARAM;
