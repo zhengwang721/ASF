@@ -391,7 +391,6 @@ void anp_client_descriptor_found_handler(at_ble_descriptor_found_t *descriptor_f
 {
 		uint16_t desc_16_uuid;
 		at_ble_status_t desc_found = AT_BLE_FAILURE;
-		DBG_LOG_DEV("anp_client_descriptor_found_handler %d value is %x",descriptor_found->desc_uuid.type,descriptor_found->desc_uuid.uuid);
 		if(descriptor_found->desc_uuid.type == AT_BLE_UUID_16)
 		{
 			desc_16_uuid = (uint16_t)((descriptor_found->desc_uuid.uuid[0]) | \
@@ -469,9 +468,9 @@ void anp_client_write_response_handler(at_ble_characteristic_write_response_t *p
  */
 void anp_client_notification_handler(at_ble_notification_recieved_t *noti_read_resp)
 {
-	 #if defined ANS_CLIENT_SERVICE
+#if defined ANS_CLIENT_SERVICE
 		anp_alert_notify_response(noti_read_resp,&anp_handle);
-	 #endif
+#endif
 }
 
 /**

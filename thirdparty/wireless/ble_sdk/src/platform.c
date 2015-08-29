@@ -105,7 +105,7 @@ volatile ble_serial_state_t ble_rx_state = BLE_SOF_STATE;
 
 ble_event_frame_t ble_evt_frame;
 
-#define BLE_DBG_ENABLE
+//#define BLE_DBG_ENABLE
 #define DBG_LOG_BLE		printf
 
 #ifdef BLE_DBG_ENABLE

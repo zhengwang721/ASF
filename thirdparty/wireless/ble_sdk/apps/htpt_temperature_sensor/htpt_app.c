@@ -129,7 +129,7 @@ static void ble_init(void)
 	pf_cfg.memPool.memSize = 0;
 	pf_cfg.memPool.memStartAdd = NULL;
 	/*Bus configuration*/
-	busConfig.bus_type = UART;
+	busConfig.bus_type = AT_BLE_UART;
 	pf_cfg.plf_config = &busConfig;
 	
 	/* Initialize the platform */
@@ -649,7 +649,7 @@ int main (void)
 				if(at_ble_encryption_request_reply(handle,
                                                                   auth_info,
                                                                   key_found,
-                                                                  app_bond_info) != AT_BLE_SUCCESS)
+                                                                  &app_bond_info) != AT_BLE_SUCCESS)
 				{
 					DBG_LOG("Encryption request reply failed");
 				}
