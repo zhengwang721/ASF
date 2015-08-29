@@ -100,11 +100,29 @@ typedef enum
 	///Message cannot be sent because connection lost. (disconnected)
 	AT_BLE_L2C_CONNECTION_LOST  = 0x30,
 	///Invalid PDU length exceed MTU
-	AT_BLE_L2C_INVALID_MTU_EXCEED  = 0x31,
-	///Invalid Channel ID
-	AT_BLE_L2C_INVALID_CID  = 0x32,
-	///Invalid PDU
-	AT_BLE_L2C_INVALID_PDU  = 0x33, 
+    AT_BLE_L2C_INVALID_MTU_EXCEED  = 0x31,
+    ///Invalid PDU length exceed MPS
+    AT_BLE_L2C_ERR_INVALID_MPS_EXCEED        = 0x32,
+    ///Invalid Channel ID
+    AT_BLE_L2C_INVALID_CID  = 0x33,
+    ///Invalid PDU
+    AT_BLE_L2C_INVALID_PDU  = 0x34,
+    /// Connection refused - no resources available
+    AT_BLE_L2C_ERR_NO_RES_AVAIL              = 0x35,
+    /// Connection refused - insufficient authentication
+    AT_BLE_L2C_ERR_INSUFF_AUTHEN             = 0x36,
+    /// Connection refused - insufficient authorization
+    AT_BLE_L2C_ERR_INSUFF_AUTHOR             = 0x37,
+    /// Connection refused - insufficient encryption key size
+    AT_BLE_L2C_ERR_INSUFF_ENC_KEY_SIZE       = 0x38,
+    /// Connection Refused - insufficient encryption
+    AT_BLE_L2C_ERR_INSUFF_ENC                = 0x39,
+    /// Connection refused - LE_PSM not supported
+    AT_BLE_L2C_ERR_LEPSM_NOT_SUPP            = 0x3A,
+    /// No more credit
+    AT_BLE_L2C_ERR_INSUFF_CREDIT              = 0x3B,
+    /// Command not understood by peer device
+    AT_BLE_L2C_ERR_NOT_UNDERSTOOD            = 0x3C,
 
 	///GAP Error Codes 
 	///Invalid parameters set

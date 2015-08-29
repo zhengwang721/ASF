@@ -240,249 +240,276 @@ typedef enum
     AT_BLE_ADV_CHNL_END
 }at_ble_adv_channel_map_t;
 
- /**@brief Events delivered from BLE stack to the application layer
- */
-typedef enum{
-	/* GAP events */
-	/** Undefined event received0  */
-	AT_BLE_UNDEFINED_EVENT,
-	/** Scan info needs to be delivered either adv data or scan response data. \n
-	 * Refer to @ref at_ble_scan_info_t
-	 */
-	AT_BLE_SCAN_INFO, 
-	/**1 Scan report received at the end of scan period if @ref AT_BLE_SCAN_GEN_DISCOVERY or @ref AT_BLE_SCAN_LIM_DISCOVERY are used. \n
-	 * Refer to @ref at_ble_scan_report_t
-	 */
-	AT_BLE_SCAN_REPORT,
-	/**2 Advertising report received if error has occurred or timeout happened.
-	* Refer to @ref at_ble_adv_report_t
-	*/
-	AT_BLE_ADV_REPORT,
-	/** 3Used random address. \n
-	 *	Refer to @ref at_ble_rand_addr_changed_t
-	 */
-	AT_BLE_RAND_ADDR_CHANGED,
-	/** 4connected to a peer device. \n
-	 *	Refer to at_ble_connected_t
-	 */
-	AT_BLE_CONNECTED, 
-	/** 5peer device connection terminated. \n
-	 *	Refer to @ref at_ble_disconnected_t and @ref at_ble_disconnect_reason_t for reason of disconnection.
-	 *  If returned reason is not one of @ref at_ble_disconnect_reason_t, so check for error code @ref at_ble_status_t
-	 */
-	AT_BLE_DISCONNECTED, 
-	 /** 6connection parameters updated. It is requires to call @ref at_ble_conn_update_reply function to send response back if needed.\n
-	  * Refer to @ref at_ble_conn_param_update_done_t
-	  */
-	AT_BLE_CONN_PARAM_UPDATE_DONE,
-	 /** 7peer device asks for connection parameters update. \n
-	 *	Refer to at_ble_conn_param_update_request_t
-	 */
-	AT_BLE_CONN_PARAM_UPDATE_REQUEST,
-	 /** 8reported RX power value. \n
-	 *	Refer to at_ble_rx_power_value_t
-	 */
-	AT_BLE_RX_POWER_VALUE,
-	/** 9Pairing procedure is completed. \n
-	 *	Refer to at_ble_pair_done_t
-	 */
-	AT_BLE_PAIR_DONE, 
-	/** 10A central device asks for Pairing. \n
-	 * Refer to at_ble_pair_request_t 
-	 */
-	AT_BLE_PAIR_REQUEST, 
-	/** 11Slave security request. \n
-	 *	Refer to at_ble_slave_sec_request_t
-	 */
-	AT_BLE_SLAVE_SEC_REQUEST,
-	/** 12A passkey or OOB data is requested as part of pairing procedure. \n
-	 * Refer to @ref at_ble_pair_key_request_t 
-	 */
-	AT_BLE_PAIR_KEY_REQUEST, 
-	/** 13Encryption is requested by a master device. \n
-	 *	Refer to at_ble_encryption_request_t
-	 */
-	AT_BLE_ENCRYPTION_REQUEST, 
-	/** 14Encryption status changed. \n
-	 *	Refer to at_ble_encryption_status_changed_t
-	 */
-	AT_BLE_ENCRYPTION_STATUS_CHANGED, 
-	/** 15Resolve random address status. \n
-	 *	Refer to at_ble_resolv_rand_addr_status_t
-	 */
-	AT_BLE_RESOLV_RAND_ADDR_STATUS,
-	/** 16Signature counters new values indication
-	 *	Refer to at_ble_sign_counter_t
-	 */
-	AT_BLE_SIGN_COUNTERS_IND,
-	/** 17peer attribute info received
-	  * Refer to @ref at_ble_peer_att_info_ind_t
-	  */
-	AT_BLE_PEER_ATT_INFO_IND,
-	/** 18peer device channel map received
-	  * Refer to @ref at_ble_channel_map_t
-	  */
-	AT_BLE_CON_CHANNEL_MAP_IND,
-	/* 19GATT Client events */
-	/** A primary service is found. \n
-	 * Refer to @ref at_ble_primary_service_found_t
-	 */
-	AT_BLE_PRIMARY_SERVICE_FOUND, 
-	/** 20An included service is found . \n
-	 * Refer to @ref at_ble_included_service_found_t
-	 */
-	AT_BLE_INCLUDED_SERVICE_FOUND, 
-	/** 21A Characteristic is found. \n 
-	 * Refer to @ref at_ble_characteristic_found_t
-	 */
-	AT_BLE_CHARACTERISTIC_FOUND, 
-	 /** 22A descriptor is found. \n
-	  * Refer to @ref at_ble_descriptor_found_t
-	  */
-	AT_BLE_DESCRIPTOR_FOUND,
-	/** 23A discover operation has completed. \n
-	 * Refer to @ref at_ble_discovery_complete_t
-	 */
-	AT_BLE_DISCOVERY_COMPLETE, 
-	 /** 24Characteristic read procedure is done. \n
-	  * Refer to @ref at_ble_characteristic_read_response_t
-	  */
-	AT_BLE_CHARACTERISTIC_READ_RESPONSE,
-	/** 25Characteristic read by UUID procedure is done. \n
-	 *  Legacy event use AT_BLE_CHARACTERISTIC_READ_RESPONSE
-	 *	Refer to at_ble_characteristic_read_response_t
-	 */
-	AT_BLE_CHARACTERISTIC_READ_BY_UUID_RESPONSE = AT_BLE_CHARACTERISTIC_READ_RESPONSE, 
 
-	/** 26Characteristic multiple read procedure is done. \n
-	  * Legacy event use AT_BLE_CHARACTERISTIC_READ_RESPONSE
-	  * Refer to @ref at_ble_characteristic_read_response_t
-	  */
-	AT_BLE_CHARACTERISTIC_READ_MULTIBLE_RESPONSE,
-	/** 27Characteristic write procedure is done. \n
-	  * Refer to @ref at_ble_characteristic_write_response_t
-	  */
-	AT_BLE_CHARACTERISTIC_WRITE_RESPONSE, 
-	/** 28A Notification is received. \n
-	  * Refer to @ref at_ble_notification_recieved_t
-	  */
-	AT_BLE_NOTIFICATION_RECIEVED, 
-	 /**29 An Indication is received. \n
-	  * Refer to @ref at_ble_indication_recieved_t
-	  */
-	AT_BLE_INDICATION_RECIEVED,
-	/* 301GATT Server events */
-	/** The firmware confirmed that an Notification PDU has been sent over the air. \n
-	  * Refer to @ref at_ble_indication_confirmed_t
-	  */
-	AT_BLE_NOTIFICATION_CONFIRMED,
-	 /** 31The peer confirmed that it has received an Indication. \n
-	  * Refer to @ref at_ble_indication_confirmed_t
-	  */
-	AT_BLE_INDICATION_CONFIRMED,
-	/** 32The peer has changed a characteristic value. \n
-	  * Refer to @ref at_ble_characteristic_changed_t
-	  */
-	AT_BLE_CHARACTERISTIC_CHANGED, 
-	/**33 The peer has confirmed that it has received the service changed notification. \n
-	  * Refer to @ref at_ble_service_changed_notification_confirmed_t
-	  */
-	AT_BLE_SERVICE_CHANGED_NOTIFICATION_CONFIRMED, 
-	/** 34The peer asks for a write Authorization. \n
-	  * Refer to @ref at_ble_write_authorize_request_t
-	  */
-	AT_BLE_WRITE_AUTHORIZE_REQUEST, 
-	/** 35 peer sends an indication of the new MTU. \n
-	  * Refer to @ref at_ble_mtu_changed_ind_t
-	  */
-	AT_BLE_MTU_CHANGED_INDICATION,
-	/** 36MTU Exchange completed. \n
-	 * Refer to @ref at_ble_cmd_complete_event_t
-	 */
-	AT_BLE_MTU_CHANGED_CMD_COMPLETE,
-	/**37 write command complete. \n
-	 * Refer to @ref at_ble_cmd_complete_event_t
-	 */
-	AT_BLE_CHARACTERISTIC_WRITE_CMD_CMP,
-	 /** 38The peer asks for a read Authorization. \n
-	  * Refer to @ref at_ble_read_authorize_request_t
-	  */
-	AT_BLE_READ_AUTHORIZE_REQUEST,
-	/* 39L2CAP events */
-	/** An L2CAP packet received from a registered custom CID. \n
-	  * Refer to @ref at_ble_l2cap_rx_t
-	  */
-	AT_BLE_L2CAP_RX,
+///TX Power levels
+typedef enum
+{
+    AT_BLE_TX_PWR_LVL_NEG_20_DB = 0x01,
+    AT_BLE_TX_PWR_LVL_NEG_14_DB = 0x02,
+    AT_BLE_TX_PWR_LVL_NEG_11_DB = 0x03,
+    AT_BLE_TX_PWR_LVL_NEG_09_DB = 0x04,
+    AT_BLE_TX_PWR_LVL_NEG_07_DB = 0x05,
+    AT_BLE_TX_PWR_LVL_NEG_06_DB = 0x06,
+    AT_BLE_TX_PWR_LVL_NEG_05_DB = 0x07,
+    AT_BLE_TX_PWR_LVL_NEG_04_DB = 0x08,
+    AT_BLE_TX_PWR_LVL_NEG_03_DB = 0x09,
+    AT_BLE_TX_PWR_LVL_NEG_02_DB = 0x0B,
+    AT_BLE_TX_PWR_LVL_NEG_01_DB = 0x0D,
+    AT_BLE_TX_PWR_LVL_ZERO_DB   = 0x11,
+    AT_BLE_TX_PWR_LVL_POS_01_DB = 0x15,
+    AT_BLE_TX_PWR_LVL_POS_02_DB = 0x20,
+    AT_BLE_TX_PWR_LVL_POS_03_DB = 0x3B
+} at_ble_tx_power_level_t;
 
-	/* 40Credit based connection events */
-	/** Connection request is received from server. \n 
-	 * Refer to 
-	 */
-	AT_BLE_LECB_CONN_REQ,
-	/** 41Peer connected successfully. \n*/
-	AT_BLE_LECB_CONNECTED,
-	/** 42Peer disconnected. \n */
-	AT_BLE_LECB_DISCONNECTED,
-	/** 43Indication when peer device added credit. \n*/
-	AT_BLE_LECB_ADD_CREDIT_IND,
-	/** 44Response from local device to data send command. \n*/
-	AT_BLE_LECB_SEND_RESP,
-	/** 45Data received from peer device. \n*/
-	AT_BLE_LECB_DATA_RECIEVED,
+/**@brief Events delivered from BLE stack to the application layer
+*/
+typedef enum
+{
+    /* GAP events */
+    /** Undefined event received  */
+    AT_BLE_UNDEFINED_EVENT,
+    /** Scan info needs to be delivered either adv data or scan response data. \n
+     * Refer to @ref at_ble_scan_info_t
+     */
+    AT_BLE_SCAN_INFO,
+    /** Scan report received at the end of scan period if @ref AT_BLE_SCAN_GEN_DISCOVERY or @ref AT_BLE_SCAN_LIM_DISCOVERY are used. \n
+     * Refer to @ref at_ble_scan_report_t
+     */
+    AT_BLE_SCAN_REPORT,
+    /** Advertising report received if error has occurred or timeout happened.
+    * Refer to @ref at_ble_adv_report_t
+    */
+    AT_BLE_ADV_REPORT,
+    /** Used random address. \n
+     *  Refer to @ref at_ble_rand_addr_changed_t
+     */
+    AT_BLE_RAND_ADDR_CHANGED,
+    /** connected to a peer device. \n
+     *  Refer to at_ble_connected_t
+     */
+    AT_BLE_CONNECTED,
+    /** peer device connection terminated. \n
+     *  Refer to @ref at_ble_disconnected_t and @ref at_ble_disconnect_reason_t for reason of disconnection.
+     *  If returned reason is not one of @ref at_ble_disconnect_reason_t, so check for error code @ref at_ble_status_t
+     */
+    AT_BLE_DISCONNECTED,
+    /** connection parameters updated. It is requires to call @ref at_ble_conn_update_reply function to send response back if needed.\n
+     * Refer to @ref at_ble_conn_param_update_done_t
+     */
+    AT_BLE_CONN_PARAM_UPDATE_DONE,
+    /** peer device asks for connection parameters update. \n
+    *  Refer to at_ble_conn_param_update_request_t
+    */
+    AT_BLE_CONN_PARAM_UPDATE_REQUEST,
+    /** Pairing procedure is completed. \n
+     *  Refer to at_ble_pair_done_t
+     */
+    AT_BLE_PAIR_DONE,
+    /** A central device asks for Pairing. \n
+     * Refer to at_ble_pair_request_t
+     */
+    AT_BLE_PAIR_REQUEST,
+    /** Slave security request. \n
+     *  Refer to at_ble_slave_sec_request_t
+     */
+    AT_BLE_SLAVE_SEC_REQUEST,
+    /** A passkey or OOB data is requested as part of pairing procedure. \n
+     * Refer to @ref at_ble_pair_key_request_t
+     */
+    AT_BLE_PAIR_KEY_REQUEST,
+    /** Encryption is requested by a master device. \n
+     *  Refer to at_ble_encryption_request_t
+     */
+    AT_BLE_ENCRYPTION_REQUEST,
+    /** Encryption status changed. \n
+     *  Refer to at_ble_encryption_status_changed_t
+     */
+    AT_BLE_ENCRYPTION_STATUS_CHANGED,
+    /** Resolve random address status. \n
+     *  Refer to at_ble_resolv_rand_addr_status_t
+     */
+    AT_BLE_RESOLV_RAND_ADDR_STATUS,
+    /** Signature counters new values indication
+     *  Refer to at_ble_sign_counter_t
+     */
+    AT_BLE_SIGN_COUNTERS_IND,
+    /** peer attribute info received
+      * Refer to @ref at_ble_peer_att_info_ind_t
+      */
+    AT_BLE_PEER_ATT_INFO_IND,
+    /** peer device channel map received
+      * Refer to @ref at_ble_channel_map_t
+      */
+    AT_BLE_CON_CHANNEL_MAP_IND,
+    /* GATT Client events */
+    /** A primary service is found. \n
+     * Refer to @ref at_ble_primary_service_found_t
+     */
+    AT_BLE_PRIMARY_SERVICE_FOUND,
+    /** An included service is found . \n
+     * Refer to @ref at_ble_included_service_found_t
+     */
+    AT_BLE_INCLUDED_SERVICE_FOUND,
+    /** A Characteristic is found. \n
+     * Refer to @ref at_ble_characteristic_found_t
+     */
+    AT_BLE_CHARACTERISTIC_FOUND,
+    /** A descriptor is found. \n
+     * Refer to @ref at_ble_descriptor_found_t
+     */
+    AT_BLE_DESCRIPTOR_FOUND,
+    /** A discover operation has completed. \n
+     * Refer to @ref at_ble_discovery_complete_t
+     */
+    AT_BLE_DISCOVERY_COMPLETE,
+    /** Characteristic read procedure is done. \n
+     * Refer to @ref at_ble_characteristic_read_response_t
+     */
+    AT_BLE_CHARACTERISTIC_READ_RESPONSE,
+    /** Characteristic read by UUID procedure is done. \n
+     *  Legacy event use AT_BLE_CHARACTERISTIC_READ_RESPONSE
+     *  Refer to at_ble_characteristic_read_response_t
+     */
+    AT_BLE_CHARACTERISTIC_READ_BY_UUID_RESPONSE = AT_BLE_CHARACTERISTIC_READ_RESPONSE,
+
+    /** Characteristic multiple read procedure is done. \n
+      * Legacy event use AT_BLE_CHARACTERISTIC_READ_RESPONSE
+      * Refer to @ref at_ble_characteristic_read_response_t
+      */
+    AT_BLE_CHARACTERISTIC_READ_MULTIBLE_RESPONSE,
+    /** Characteristic write procedure is done. \n
+      * Refer to @ref at_ble_characteristic_write_response_t
+      */
+    AT_BLE_CHARACTERISTIC_WRITE_RESPONSE,
+    /** A Notification is received. \n
+      * Refer to @ref at_ble_notification_recieved_t
+      */
+    AT_BLE_NOTIFICATION_RECIEVED,
+    /** An Indication is received. \n
+     * Refer to @ref at_ble_indication_recieved_t
+     */
+    AT_BLE_INDICATION_RECIEVED,
+    /* GATT Server events */
+    /** The firmware confirmed that an Notification PDU has been sent over the air. \n
+      * Refer to @ref at_ble_cmd_complete_event_t
+      */
+    AT_BLE_NOTIFICATION_CONFIRMED,
+    /** The peer confirmed that it has received an Indication. \n
+     * Refer to @ref at_ble_cmd_complete_event_t
+     */
+    AT_BLE_INDICATION_CONFIRMED,
+    /** The peer has changed a characteristic value. \n
+      * Refer to @ref at_ble_characteristic_changed_t
+      */
+    AT_BLE_CHARACTERISTIC_CHANGED,
+    /** The peer has confirmed that it has received the service changed notification. \n
+      * Refer to @ref at_ble_service_changed_notification_confirmed_t
+      */
+    AT_BLE_SERVICE_CHANGED_NOTIFICATION_CONFIRMED,
+    /** The peer asks for a write Authorization. \n
+      * Refer to @ref at_ble_write_authorize_request_t
+      */
+    AT_BLE_WRITE_AUTHORIZE_REQUEST,
+    /**  peer sends an indication of the new MTU. \n
+      * Refer to @ref at_ble_mtu_changed_ind_t
+      */
+    AT_BLE_MTU_CHANGED_INDICATION,
+    /** MTU Exchange completed. \n
+     * Refer to @ref at_ble_cmd_complete_event_t
+     */
+    AT_BLE_MTU_CHANGED_CMD_COMPLETE,
+    /** write command complete. \n
+     * Refer to @ref at_ble_cmd_complete_event_t
+     */
+    AT_BLE_CHARACTERISTIC_WRITE_CMD_CMP,
+    /** The peer asks for a read Authorization. \n
+     * Refer to @ref at_ble_read_authorize_request_t
+     */
+    AT_BLE_READ_AUTHORIZE_REQUEST,
+
+    /* L2CAP events */
+    /** Connection request is received from server. \n
+     * Refer to @ref at_ble_lecb_conn_req_t
+     */
+    AT_BLE_LECB_CONN_REQ,
+    /** Peer connected successfully. \n
+     * Refer to @ref at_ble_lecb_connected_t
+     */
+    AT_BLE_LECB_CONNECTED,
+    /** Peer disconnected. \n
+     * Refer to @ref at_ble_lecb_disconnected_t
+     */
+    AT_BLE_LECB_DISCONNECTED,
+    /** Indication when peer device added credit. \n
+     * Refer to @ref at_ble_lecb_add_credit_ind_t
+     */
+    AT_BLE_LECB_ADD_CREDIT_IND,
+    /** Response from local device to data send command. \n
+     * Refer to @ref at_ble_lecb_send_rsp_t
+     */
+    AT_BLE_LECB_SEND_RESP,
+    /** Data received from peer device. \n
+     * Refer to @ref at_ble_lecb_data_recv_t
+     */
+    AT_BLE_LECB_DATA_RECIEVED,
 
 
-	/* HTPT Health Thermometer Profile events */
-	/** Inform APP of database creation status. \n
-	  * Refer to @ref at_ble_htpt_create_db_cfm_t
-	  */
-	AT_BLE_HTPT_CREATE_DB_CFM, 
-	/** 46Error indication to APP. \n
-	  * Refer to @ref at_ble_prf_server_error_ind_t
-	  */
-	AT_BLE_HTPT_ERROR_IND,
-	/** 47Automatically sent to the APP after a disconnection with the peer device to confirm disabled profile. \n
-	  * Refer to @ref at_ble_htpt_disable_ind_t
-	  */
-	AT_BLE_HTPT_DISABLE_IND,
-	/** 48Temperature value confirm to APP. \n
-	  * Refer to @ref at_ble_htpt_temp_send_cfm_t
-	  */
-	AT_BLE_HTPT_TEMP_SEND_CFM,
-	/** 49Inform APP of new measurement interval value. \n
-	  * Refer to @ref at_ble_htpt_meas_intv_chg_ind_t
-	  */
-	AT_BLE_HTPT_MEAS_INTV_CHG_IND,
-	/** 50Inform APP of new configuration value. \n
-	  * Refer to @ref at_ble_htpt_cfg_indntf_ind_t
-	  */
-	AT_BLE_HTPT_CFG_INDNTF_IND,
+    /* HTPT Health Thermometer Profile events */
+    /** Inform APP of database creation status. \n
+      * Refer to @ref at_ble_htpt_create_db_cfm_t
+      */
+    AT_BLE_HTPT_CREATE_DB_CFM,
+    /** Error indication to APP. \n
+      * Refer to @ref at_ble_prf_server_error_ind_t
+      */
+    AT_BLE_HTPT_ERROR_IND,
+    /** Automatically sent to the APP after a disconnection with the peer device to confirm disabled profile. \n
+      * Refer to @ref at_ble_htpt_disable_ind_t
+      */
+    AT_BLE_HTPT_DISABLE_IND,
+    /** Temperature value confirm to APP. \n
+      * Refer to @ref at_ble_htpt_temp_send_cfm_t
+      */
+    AT_BLE_HTPT_TEMP_SEND_CFM,
+    /** Inform APP of new measurement interval value. \n
+      * Refer to @ref at_ble_htpt_meas_intv_chg_ind_t
+      */
+    AT_BLE_HTPT_MEAS_INTV_CHG_IND,
+    /** Inform APP of new configuration value. \n
+      * Refer to @ref at_ble_htpt_cfg_indntf_ind_t
+      */
+    AT_BLE_HTPT_CFG_INDNTF_IND,
 
-	/** 51HTPT profile enable confirmation. \n
-	  * Refer to @ref at_ble_htpt_enable_rsp_t
-	  */
-	AT_BLE_HTPT_ENABLE_RSP, 
-	/** 52Response to APP for measurement interval update request. \n
-	  * Refer to @ref at_ble_htpt_meas_intv_upd_rsp_t
-	  */
-	AT_BLE_HTPT_MEAS_INTV_UPD_RSP,
-	/** 53Inform APP of new measurement interval value requested by a peer device. \n
-	  * Refer to @ref at_ble_htpt_meas_intv_chg_req_t
-	  */
-	AT_BLE_HTPT_MEAS_INTV_CHG_REQ,
-	/* 54DTM events */
-	/** inform app about DTM command test status*/
-	AT_BLE_LE_TEST_STATUS,
-	/** 55inform app about the RX packets report */
-	AT_BLE_LE_PACKET_REPORT,
-	/* 56Custom user defined events */
-	/** A user-defined event is delivered to the system */
-	AT_BLE_CUSTOM_EVENT,
-	
-	AT_BLE_DEVICE_READY,
-	
-	AT_BLE_EVENT_MAX
+    /** HTPT profile enable confirmation. \n
+      * Refer to @ref at_ble_htpt_enable_rsp_t
+      */
+    AT_BLE_HTPT_ENABLE_RSP,
+    /** Response to APP for measurement interval update request. \n
+      * Refer to @ref at_ble_htpt_meas_intv_upd_rsp_t
+      */
+    AT_BLE_HTPT_MEAS_INTV_UPD_RSP,
+    /** Inform APP of new measurement interval value requested by a peer device. \n
+      * Refer to @ref at_ble_htpt_meas_intv_chg_req_t
+      */
+    AT_BLE_HTPT_MEAS_INTV_CHG_REQ,
+    /* DTM events */
+    /** inform app about DTM command test status
+     *  Refer to @ref at_ble_dtm_t
+     */
+    AT_BLE_LE_TEST_STATUS,
+    /** inform app about the RX packets report
+     *  Refer to @ref at_ble_dtm_t
+     */
+    AT_BLE_LE_PACKET_REPORT,
+    /* Custom user defined events */
+    /** A user-defined event is delivered to the system */
+    AT_BLE_CUSTOM_EVENT,
 
-}at_ble_events_t; 
+    AT_BLE_DEVICE_READY,
+
+    AT_BLE_EVENT_MAX
+
+} at_ble_events_t;
 
  /**@brief BLE can accept to kinds of addresses, either public or random addresses 
  */
@@ -1091,13 +1118,6 @@ enum dtm_op_codes
 /****************************************************************************************
 *							        Structures                                     		*
 ****************************************************************************************/
-/// Advertising channel Tx power level indication event
-typedef struct 
-{
-    /// Advertising channel Tx power level
-    int8_t     power_lvl;
-}at_ble_dev_adv_tx_power_ind_t;
-
 /**@brief Blue-tooth Low Energy address Type. */
 typedef struct
 {
@@ -1238,6 +1258,8 @@ typedef struct
 */
 typedef struct
 {
+    // Status
+    at_ble_status_t status;
     /// Connection handle
 	at_ble_handle_t conn_handle;
     /// 5-byte channel map array
@@ -1549,9 +1571,10 @@ typedef struct
 
 typedef struct
 {
-	at_ble_handle_t handle;
-	bool bond;
-	bool mitm_protection;
+    at_ble_handle_t handle;
+    at_ble_status_t status;
+    bool bond;
+    bool mitm_protection;
 
 }at_ble_slave_sec_request_t;
 
@@ -1596,8 +1619,8 @@ typedef struct
     /// GATT request type
 	uint8_t operation;
     /// Status of the request
-	uint8_t status;
-}at_ble_cmd_complete_event_t;
+    at_ble_status_t status;
+} at_ble_cmd_complete_event_t;
 
 typedef at_ble_cmd_complete_event_t at_ble_discovery_complete_t  ;
 
@@ -1744,24 +1767,15 @@ typedef struct
 
 typedef struct
 {
-	at_ble_handle_t conn_handle;
-	uint16_t cid;
-	uint16_t len;
-	uint8_t* data;
-
-}at_ble_l2cap_rx_t;
-
-/// Parameters of the @ref AT_BLE_LECB_CONN_REQ message
-typedef struct{    
-	/// LE Protocol/Service Multiplexer    
-	uint16_t le_psm;    
-	/// Destination Credit for the LE Credit Based Connection    
-	uint16_t dest_credit;    
-	/// Maximum SDU size    
-	uint16_t max_sdu;    
-	/// Destination CID    
-	uint16_t dest_cid;
-}at_ble_lecb_conn_req_t;
+    /// LE Protocol/Service Multiplexer
+    uint16_t le_psm;
+    /// Destination Credit for the LE Credit Based Connection
+    uint16_t dest_credit;
+    /// Maximum SDU size
+    uint16_t max_sdu;
+    /// Destination CID
+    uint16_t dest_cid;
+} at_ble_lecb_conn_req_t;
 
 
 /// Parameters of the @ref AT_BLE_LECB_CONNECTED message
@@ -2196,7 +2210,7 @@ at_ble_status_t at_ble_set_gap_deviceinfo(at_ble_gap_deviceinfo_t*  gap_devicein
 ///@cond IGNORE_DOXYGEN
 AT_BLE_API
 ///@endcond
-at_ble_status_t at_ble_gap_get_deviceinfo(uint16_t conn_handle, at_ble_gapc_get_info_cmd_t operation );
+at_ble_status_t at_ble_gap_get_peer_deviceinfo(uint16_t conn_handle, at_ble_gapc_get_info_cmd_t *operation);
 
 /** @ingroup gap_dev_config_group
   * @brief Set attribute permissions configuration (Device Appearance permissions, slave preferred connection parameters, 
@@ -2455,46 +2469,32 @@ AT_BLE_API
 ///@endcond 
 at_ble_status_t at_ble_adv_stop(void);
 
- /** @ingroup gap_adv_group
-  *@brief Set the Advertising transmission power
-  *
-  * @param[in] power    new TX power in dBm (accepted range -20 to 4 dBm)
-  *
-  * @warning Not Supported in release version 2.0
-  *
-  * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
-  */
-///@cond IGNORE_DOXYGEN 
-AT_BLE_API 
-///@endcond 
-at_ble_status_t at_ble_adv_set_tx_power(int8_t power);
-
- /** @ingroup gap_scan_group
-  *@brief Start scan operation
-  *
-  * While the scan operation is ongoing, the application will always receive @ref AT_BLE_SCAN_INFO
-  * event per found device. \n
-  * In case of using @ref AT_BLE_SCAN_GEN_DISCOVERY or @ref AT_BLE_SCAN_LIM_DISCOVERY, 
-  * also @ref AT_BLE_SCAN_REPORT event will be received at the end of scan process or error occurred when trying to start scanning procedure
-  *
-  * @param[in] interval Scan interval in 625us units, a value between @ref AT_BLE_ADV_INTERVAL_MIN and @ref AT_BLE_ADV_INTERVAL_MAX
-  * @param[in] window   Scan window in 625us units, value between @ref AT_BLE_SCAN_WINDOW_MIN and @ref AT_BLE_SCAN_INTERVAL_MAX
-  * @param[in] timeout Scan time-out, between 0x0001 and 0x028F in scale of Seconds, 0x0000 disables time-out.
-  * @param[in] type  Controls the type of scan to perform either Passive or Active @ref at_ble_scan_type_t for more details.
-  * @param[in] mode     Either General, Limited or Observer only, @ref at_ble_scan_mode_t for more details
-  * @param[in] filter_whitelist		If true, get scan results only from white-listed devices added by @ref at_ble_whitelist_add 
-  *									otherwise scan results will be got from any advertising device.
-  *									This filter should be used with @ref AT_BLE_ADV_GEN_DISCOVERABLE and @ref AT_BLE_ADV_LIM_DISCOVERABLE modes ONLY.
-  * @param[in] filter_dublicates   If true, scan event will be generated only once per device, if false multiple events will be issued
-  *
-  * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
-  */
-///@cond IGNORE_DOXYGEN 
-AT_BLE_API 
-///@endcond 
-at_ble_status_t at_ble_scan_start(uint16_t interval, uint16_t window, 
-	uint16_t timeout, at_ble_scan_type_t type ,at_ble_scan_mode_t mode,
-	bool filter_whitelist, bool filter_dublicates);
+/** @ingroup gap_scan_group
+ *@brief Start scan operation
+ *
+ * While the scan operation is ongoing, the application will always receive @ref AT_BLE_SCAN_INFO
+ * event per found device. \n
+ * In case of using @ref AT_BLE_SCAN_GEN_DISCOVERY or @ref AT_BLE_SCAN_LIM_DISCOVERY,
+ * also @ref AT_BLE_SCAN_REPORT event will be received at the end of scan process or error occurred when trying to start scanning procedure
+ *
+ * @param[in] interval Scan interval in 625us units, a value between @ref AT_BLE_ADV_INTERVAL_MIN and @ref AT_BLE_ADV_INTERVAL_MAX
+ * @param[in] window   Scan window in 625us units, value between @ref AT_BLE_SCAN_WINDOW_MIN and @ref AT_BLE_SCAN_INTERVAL_MAX
+ * @param[in] timeout Scan time-out, between 0x0001 and 0x028F in scale of Seconds, 0x0000 disables time-out.
+ * @param[in] type  Controls the type of scan to perform either Passive or Active @ref at_ble_scan_type_t for more details.
+ * @param[in] mode     Either General, Limited or Observer only, @ref at_ble_scan_mode_t for more details
+ * @param[in] filter_whitelist     If true, get scan results only from white-listed devices added by @ref at_ble_whitelist_add
+ *                                 otherwise scan results will be got from any advertising device.
+ *                                 This filter should be used with @ref AT_BLE_ADV_GEN_DISCOVERABLE and @ref AT_BLE_ADV_LIM_DISCOVERABLE modes ONLY.
+ * @param[in] filter_dublicates   If true, scan event will be generated only once per device, if false multiple events will be issued
+ *
+ * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
+ */
+///@cond IGNORE_DOXYGEN
+AT_BLE_API
+///@endcond
+at_ble_status_t at_ble_scan_start(uint16_t interval, uint16_t window,
+                                  uint16_t timeout, at_ble_scan_type_t type , at_ble_scan_mode_t mode,
+                                  bool filter_whitelist, bool filter_dublicates);
 
  /** @ingroup gap_scan_group
   *@brief Stops an ongoing scan operation
@@ -2567,11 +2567,11 @@ at_ble_status_t at_ble_connect_cancel(void);
  *
  * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
  */
-///@cond IGNORE_DOXYGEN 
-AT_BLE_API 
-///@endcond 
-at_ble_status_t at_ble_send_sec_config(at_ble_signature_info_t signature_info, at_ble_auth_t authen, bool service_changed);
- 
+///@cond IGNORE_DOXYGEN
+AT_BLE_API
+///@endcond
+at_ble_status_t at_ble_send_sec_config(at_ble_signature_info_t *signature_info, at_ble_auth_t authen, bool service_changed);
+
 /** @ingroup gap_dev_config_group
   * @brief Set device configuration
   *
@@ -2741,38 +2741,38 @@ AT_BLE_API
 ///@endcond 
 at_ble_status_t at_ble_pair_key_reply(at_ble_handle_t conn_handle, at_ble_pair_key_type_t type, uint8_t* key);
 
- /** @ingroup gap_sec_group
-  *@brief Starts encryption, once encryption starts @ref AT_BLE_ENCRYPTION_STATUS_CHANGED event is delivered
-  *
-  * @param[in] conn_handle handle of the connection to be updated
-  * @param[in] key LTK key used for encryption
-  * @param[in] auth authentication level , this information must be stored in device database
-  * after each pairing process @ref at_ble_pair_done_t
-  * 
-  * @note	
-  * - This procedure can be initiated only by master of the connection.
-  *
-  * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
-  */
-///@cond IGNORE_DOXYGEN 
-AT_BLE_API 
-///@endcond 
-at_ble_status_t at_ble_encryption_start(at_ble_handle_t conn_handle, at_ble_LTK_t key ,at_ble_auth_t auth);
+/** @ingroup gap_sec_group
+ *@brief Starts encryption, once encryption starts @ref AT_BLE_ENCRYPTION_STATUS_CHANGED event is delivered
+ *
+ * @param[in] conn_handle handle of the connection to be updated
+ * @param[in] key LTK key used for encryption
+ * @param[in] auth authentication level , this information must be stored in device database
+ * after each pairing process @ref at_ble_pair_done_t
+ *
+ * @note
+ * - This procedure can be initiated only by master of the connection.
+ *
+ * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
+ */
+///@cond IGNORE_DOXYGEN
+AT_BLE_API
+///@endcond
+at_ble_status_t at_ble_encryption_start(at_ble_handle_t conn_handle, at_ble_LTK_t *key , at_ble_auth_t auth);
 
- /** @ingroup gap_sec_group
-  *@brief Responds to encryption start request from master device @ref AT_BLE_ENCRYPTION_REQUEST, once encryption starts @ref AT_BLE_ENCRYPTION_STATUS_CHANGED event is delivered
-  *
-  * @param[in] conn_handle handle of the connection to be updated
-  * @param[in] key_found If true then a valid key is found in device database and will be used
-  * @param[in] auth authentication level 
-  * @param[in] key LTK key used for encryption
-  *
-  * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
-  */
-///@cond IGNORE_DOXYGEN 
-AT_BLE_API 
-///@endcond 
-at_ble_status_t at_ble_encryption_request_reply(at_ble_handle_t conn_handle, at_ble_auth_t auth, bool key_found, at_ble_LTK_t key);
+/** @ingroup gap_sec_group
+ *@brief Responds to encryption start request from master device @ref AT_BLE_ENCRYPTION_REQUEST, once encryption starts @ref AT_BLE_ENCRYPTION_STATUS_CHANGED event is delivered
+ *
+ * @param[in] conn_handle handle of the connection to be updated
+ * @param[in] key_found If true then a valid key is found in device database and will be used
+ * @param[in] auth authentication level
+ * @param[in] key LTK key used for encryption
+ *
+ * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
+ */
+///@cond IGNORE_DOXYGEN
+AT_BLE_API
+///@endcond
+at_ble_status_t at_ble_encryption_request_reply(at_ble_handle_t conn_handle, at_ble_auth_t auth, bool key_found, at_ble_LTK_t *key);
 
  /** @ingroup gap_addr_mgmt_group
   *@brief Handles request of resolving a resolvable random address ,@ref AT_BLE_RESOLV_RAND_ADDR_STATUS event is used to inform 
@@ -2793,34 +2793,29 @@ AT_BLE_API
 ///@endcond 
 at_ble_status_t at_ble_random_address_resolve(uint8_t nb_key, at_ble_addr_t* rand_addr, uint8_t* irk_key);
 
- /** @ingroup gap_misc_group
-  *@brief Sets TX power of a given connection
-  *
-  * @param[in] conn_handle handle of the connection 
-  * @param[in] power  TX power value in dBm (accepted range -20 to 4 dBm)
-  *
-  * @warning Not Supported in release version 2.0
-  *
-  * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
-  */
-///@cond IGNORE_DOXYGEN 
-AT_BLE_API 
-///@endcond 
-at_ble_status_t at_ble_tx_power_set(at_ble_handle_t conn_handle, float power);
+/** @ingroup gap_misc_group
+ *@brief Sets TX power value
+ *
+ * @param[in] power  TX power value @ref at_ble_tx_power_level_t
+ *
+ * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
+ */
+///@cond IGNORE_DOXYGEN
+AT_BLE_API
+///@endcond
+at_ble_status_t at_ble_tx_power_set(at_ble_tx_power_level_t power);
 
- /** @ingroup gap_misc_group
-  *@brief Gets TX power of a given connection
-  *
-  * @param[in] conn_handle handle of the connection 
-  *
-  * @warning Not Supported in release version 2.0
-  *
-  * @return TX power in dBm or -1 if failed.
-  */
-///@cond IGNORE_DOXYGEN 
-AT_BLE_API 
-///@endcond 
-float at_ble_tx_power_get(at_ble_handle_t conn_handle);
+/** @ingroup gap_misc_group
+ *@brief Gets TX power value
+ *
+ * @param[in] power TX power value @ref at_ble_tx_power_level_t
+ *
+ * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
+ */
+///@cond IGNORE_DOXYGEN
+AT_BLE_API
+///@endcond
+at_ble_status_t at_ble_tx_power_get(at_ble_tx_power_level_t *power);
 
  /** @ingroup gap_misc_group
   *@brief Gets RX power of a given connection
