@@ -140,7 +140,7 @@ void ble_device_init(at_ble_addr_t *addr)
 	pf_cfg.memPool.memStartAdd = NULL;
 #endif
 	/*Bus configuration*/
-	busConfig.bus_type = UART;
+	busConfig.bus_type = AT_BLE_UART;
 	pf_cfg.plf_config = &busConfig;	
 	
 	ble_init(&pf_cfg);
@@ -652,7 +652,7 @@ void ble_encryption_request_handler (at_ble_encryption_request_t *encry_req)
 		key_found = true;
 	}
 
-	if(!(at_ble_encryption_request_reply(ble_connected_dev_info->handle,auth_info ,key_found,app_bond_info) == AT_BLE_SUCCESS))
+	if(!(at_ble_encryption_request_reply(ble_connected_dev_info->handle,auth_info ,key_found, &app_bond_info) == AT_BLE_SUCCESS))
 	{
 		DBG_LOG("Encryption Request Reply Failed");
 	}
@@ -751,12 +751,14 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	
 	 /** reported RX power value. \n
 	 *	Refer to at_ble_rx_power_value_t
-	 */	 
+	 */
+#if 0	 	 
 	case AT_BLE_RX_POWER_VALUE:
 	{
 		
 	}
 	break;
+#endif	
 	
 	/** Pairing procedure is completed. \n
 	 *	Refer to at_ble_pair_done_t
@@ -978,11 +980,13 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	/** An L2CAP packet received from a registered custom CID. \n
 	  * Refer to @ref at_ble_l2cap_rx_t
 	  */
+#if 0	
 	case AT_BLE_L2CAP_RX:
 	{
 		
 	}
 	break;
+#endif	
 	
 	/* HTPT Health Thermometer Profile events */
 	/** Inform APP of database creation status. \n
