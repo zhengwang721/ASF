@@ -75,11 +75,13 @@
 #define TP_ADV_DATA_SERVSOLICITATION_16UUID_TYPE	(0x14)
 #define TP_ADV_DATA_SERVSOLICITATION_128UUID_TYPE	(0x15)
 
+#if defined TP_ANDROID
 /**@brief Current Time Service UUId for Android */
 #define TP_ADV_DATA_UUID_TYPE						(0x03)
-
+#else
 /**@brief Current Time Service UUId for iOS  */
-//#define TP_ADV_DATA_UUID_TYPE						(0x14)
+#define TP_ADV_DATA_UUID_TYPE						(0x14)
+#endif
 
 #define TP_ADV_DATA_UUID_CTS_DATA					("\x05\x18")
 
@@ -163,13 +165,6 @@ void time_info_service_found_handler(at_ble_primary_service_found_t * primary_se
  * \note Called by the ble_manager after receiving disconnection event
  */
 void time_info_disconnected_event_handler(at_ble_disconnected_t *disconnect);
-
-/**
- * @brief Handler for char changed handler 
- * @param[in] characteristic changed event parameter containing details like characteristic handle,value
- * \note Called by the ble_manager after receiving characteristic change event
- */
-void time_info_char_changed_handler(at_ble_characteristic_changed_t *characteristic_changed);
 
 /**
  * @brief setting time profile advertisement data and triggering of advertisment

@@ -104,7 +104,7 @@ void button_cb(void)
 */
 void rssi_update(at_ble_handle_t conn_handle)
 {
-	int8_t rssi_power = 0;
+	uint8_t rssi_power = 0;
 	at_ble_status_t status;
 	app_timer_done = false;
 
@@ -112,7 +112,7 @@ void rssi_update(at_ble_handle_t conn_handle)
 	*device/handle*/
 	if ((status = at_ble_rx_power_get(conn_handle,&rssi_power)) != AT_BLE_SUCCESS)
 	{
-		DBG_LOG("at_ble_rx_power_get failed,reason,",status);
+		DBG_LOG("at_ble_rx_power_get failed,reason %d",status);
 	}
 	
 

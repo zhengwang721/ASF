@@ -83,7 +83,7 @@ at_ble_status_t anp_alert_write(at_ble_handle_t conn_handle,at_ble_handle_t desc
 
 at_ble_status_t anp_alert_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti)
 {
-	uint16_t desc_value ;
+	uint8_t desc_value[2] ;
 	
 	if(desc_handle == ANP_INVALID_CHAR_HANDLE)
 	{
@@ -93,13 +93,15 @@ at_ble_status_t anp_alert_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_
 	{
 		if(noti == true)
 		{
-			desc_value = 1;
-			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_value,false, true));
+			desc_value[0] = 1;
+			desc_value[1] = 0;
+			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_value[0],false, true));
 		}
 		else if(noti == false)
 		{
-			desc_value = 0;
-			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_value,false, true));
+			desc_value[0] = 0;
+			desc_value[1] = 0;
+			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_value[0],false, true));
 		}
 	}
 	return 0;

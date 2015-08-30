@@ -167,6 +167,13 @@ uint16_t serial_drv_send(uint8_t* data, uint16_t len)
 	  while(ble_usart_tx_cmpl == false);
   }
   
+  if(ble_usart_tx_cmpl)
+  {
+	  #if SERIAL_DRV_TX_CB_ENABLE
+		  SERIAL_DRV_TX_CB();
+	  #endif		 
+  }
+  
   return STATUS_OK;
 }
 

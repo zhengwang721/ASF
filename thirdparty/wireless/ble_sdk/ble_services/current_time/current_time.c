@@ -117,7 +117,11 @@ int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *rea
 	{
 		if (read_resp->char_handle == cts_handler->curr_char_handle) 
 		{
-			const char *ptr[] = {"Unknown","MON","TUE","WED","THU","FRI","SAT","SUN"};
+			#if defined TP_ANDROID
+			const char *ptr[] = {"SUN","MON","TUE","WED","THU","FRI","SAT","UNKNOWN"};
+			#else
+			const char *ptr[] = {"UNKNOWN","MON","TUE","WED","THU","FRI","SAT","SUN"};
+			#endif
 		
 			DBG_LOG("Current Time:");		
 		
@@ -132,7 +136,7 @@ int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *rea
 			);				
 		}
 	
-		if (read_resp->char_handle == cts_handler->lti_char_handle)
+		else if (read_resp->char_handle == cts_handler->lti_char_handle)
 		{
 			const char *dst_ptr[] = {"Standard Time", 0, "Haft An Hour Daylight Time", 0,"Daylight Time",0,0,0,"Double Daylight Time" };
 
@@ -140,7 +144,7 @@ int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *rea
 			DBG_LOG("DST Offset %02d  %s",read_resp->char_value[1],dst_ptr[read_resp->char_value[1]]);
 		}
 	
-		if (read_resp->char_handle == cts_handler->rti_char_handle)
+		else if (read_resp->char_handle == cts_handler->rti_char_handle)
 		{
 			const char *time_ptr[] = {"Unknown", "Network Time Protocol", "GPS", "Radio Time Signal","Manual", "Atomic Clock", "Cellular Network"};
 			DBG_LOG("Time Source = %d %s",read_resp->char_value[0],time_ptr[read_resp->char_value[0]]);
