@@ -97,11 +97,28 @@ void app_alert_status_read(uint8_t *data, uint8_t len)
 {
 	uint8_t idx;
 	
-	DBG_LOG("read alert status value is");
-	for (idx = 0; idx < len; idx++)
+	DBG_LOG("Alert Status read:");
+	if (data[0] & 1)
 	{
-		DBG_LOG_CONT("%d ",data[idx]);
+		DBG_LOG("Ringer State Active");
+	} else {
+		DBG_LOG("Ringer State Inactive");
 	}
+	
+	if (data[0] & (1 << 1))
+	{
+		DBG_LOG("Vibrate State Active");
+	} else {
+		DBG_LOG("Vibrate State Inactive");
+	}
+	
+	if (data[0] & (1 << 1))
+	{
+		DBG_LOG("Display State Active");
+		} else {
+		DBG_LOG("Display State Inactive");
+	}
+	
 }
 
 /**
@@ -111,11 +128,13 @@ void app_alert_status_read(uint8_t *data, uint8_t len)
  */
 void app_ringer_setting_read(uint8_t *data, uint8_t len)
 {
-	uint8_t idx;
-	DBG_LOG("read ringer setting value is");
-	for (idx = 0; idx < len; idx++)
+	DBG_LOG("Alert setting read :");
+	if (data[0] == 0)
 	{
-		DBG_LOG_CONT("%d ",data[idx]);
+		DBG_LOG("Ringer Silent");
+	} else if (data[0] == 1)
+	{
+		DBG_LOG("Ringer Normal");
 	}
 }
 
@@ -126,11 +145,26 @@ void app_ringer_setting_read(uint8_t *data, uint8_t len)
  */
 void app_alert_status_notify(uint8_t *data, uint8_t len)
 {
-	uint8_t idx;
-	DBG_LOG("notified alert status value is");
-	for (idx = 0; idx < len; idx++)
+	DBG_LOG("Notified Alert Status :");
+	if (data[0] & 1)
 	{
-		DBG_LOG_CONT("%d ",data[idx]);
+		DBG_LOG("Ringer State Active");
+		} else {
+		DBG_LOG("Ringer State Inactive");
+	}
+	
+	if (data[0] & (1 << 1))
+	{
+		DBG_LOG("Vibrate State Active");
+		} else {
+		DBG_LOG("Vibrate State Inactive");
+	}
+	
+	if (data[0] & (1 << 1))
+	{
+		DBG_LOG("Display State Active");
+		} else {
+		DBG_LOG("Display State Inactive");
 	}
 }
 
@@ -141,11 +175,13 @@ void app_alert_status_notify(uint8_t *data, uint8_t len)
  */
 void app_ringer_setting_notify(uint8_t *data, uint8_t len)
 {
-	uint8_t idx;
-	DBG_LOG("notified alert status value is");
-	for (idx = 0; idx < len; idx++)
+	DBG_LOG("\r\nNotified Ringer setting :");
+	if (data[0] == 0)
 	{
-		DBG_LOG_CONT("%d ",data[idx]);
+		DBG_LOG("Ringer Silent");
+	} else if (data[0] == 1)
+	{
+		DBG_LOG("Ringer Normal");
 	}
 }
 
