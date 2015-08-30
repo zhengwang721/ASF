@@ -94,7 +94,7 @@ uint8_t keyb_id = 0;
 uint8_t app_keyb_report[8] = {0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00};	
 	
 /* Keyboard key status */
-uint8_t key_status = 0;	
+volatile uint8_t key_status = 0;	
 
 /* keyboard report */
 static uint8_t hid_app_keyb_report_map[] =
@@ -102,7 +102,7 @@ static uint8_t hid_app_keyb_report_map[] =
    0x05, 0x01,		/* Usage Page (Generic Desktop)      */
    0x09, 0x06,		/* Usage (Keyboard)                  */
    0xA1, 0x01,		/* Collection (Application)          */
-   0x85, 0x01,		/* REPORT ID (1) - MANDATORY         */ 
+   //0x85, 0x01,		/* REPORT ID (1) - MANDATORY         */ 
    0x05, 0x07,		/* Usage Page (Keyboard)             */
    0x19, 224,		/* Usage Minimum (224)               */
    0x29, 231,		/* Usage Maximum (231)               */
@@ -172,8 +172,17 @@ void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_sta
 /* Callback called when user press the button for writing new characteristic value */
 void button_cb(void)
 {
-	button_pressed = true;
-	key_status = 1;
+	if(!button_pressed)
+	{
+		DBG_LOG("Button Pressed for calibration");
+		button_pressed = true;	
+	}
+	else
+	{
+		button_pressed = true;
+		key_status = 1;
+		DBG_LOG("Button Pressed for Sending Report %d", key_status);
+	}
 }
 
 void timer_callback_handler(void)
@@ -252,11 +261,14 @@ int main(void )
 	/* Capturing the events  */
 	while(1)
 	{
+		//DBG_LOG("Wait for Event ....");
 		ble_event_task();
+		//DBG_LOG("Wait Complete for Event ....");
 		
 		/* Check for key status */
 		if(key_status)
 		{
+			DBG_LOG("Key Pressed...");
 			delay_ms(KEY_PAD_DEBOUNCE_TIME);
 			if((keyb_id == 0) || (keyb_id == 6))
 			{

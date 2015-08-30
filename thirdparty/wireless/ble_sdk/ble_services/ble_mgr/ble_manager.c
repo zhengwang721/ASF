@@ -117,6 +117,7 @@ at_ble_status_t ble_event_task(void)
 	if (platform_ble_event_data() == AT_BLE_SUCCESS) {
 		if (at_ble_event_get(&event, params,
 		BLE_EVENT_TIMEOUT) == AT_BLE_SUCCESS) {
+		//	1000) == AT_BLE_SUCCESS) {
 			ble_event_manager(event, params);
 			return AT_BLE_SUCCESS;
 		}
@@ -424,7 +425,7 @@ void ble_connected_state_handler(at_ble_connected_t *conn_params)
 		DBG_LOG("Connection Handle %d", conn_params->handle);
 		
 #if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)
-		//ble_send_slave_sec_request(conn_params->handle);
+		ble_send_slave_sec_request(conn_params->handle);
 #endif
 		
 		if (ble_connected_cb != NULL)
