@@ -93,6 +93,8 @@ bool inc_changer = true;/*!< to alter the direction of increments of hr*/
 
 bool reverse = false;/*!< Used to change the hr zones in reverse order*/
 
+bool advertisement_flag = false;
+
 /****************************************************************************************
 *							        Functions											*
 ****************************************************************************************/
@@ -131,15 +133,19 @@ void app_state_handler(bool state)
 	app_state = state;
 	if (app_state == false) {
 		hw_timer_stop();
-		energy_expended_val = 0;
-		second_counter = 0;
 		notification_flag = false;
+		energy_expended_val = ENERGY_EXP_NORMAL;
+		second_counter = 0;
+		reverse = 0 ;
+		hr_initializer_flag  = true;
+		heart_rate_value_init();
 		LED_Off(LED0);
 		DBG_LOG("Press button to advertise");
 	} else if (app_state == true) {
 		LED_On(LED0);
 		DBG_LOG(
 				"Enable the notification in app to listen heart rate or press the button to disconnect");
+				advertisement_flag = false;
 	}
 }
 
@@ -158,8 +164,14 @@ void button_cb(void)
 		DBG_LOG("Going to disconnect ");
 		disconnect_flag = true;
 	} else {
-		DBG_LOG("Going to advertisement");
-		start_advertisement = true;
+		
+		if (advertisement_flag == false)
+		{
+			DBG_LOG("Going to advertisement");
+			start_advertisement = true;
+			advertisement_flag = true;
+		}
+		
 	}
 }
 
@@ -437,7 +449,7 @@ void heart_rate_value_init(void )
 			hr_initializer_flag = true;
 		}
 	} else if (second_counter == TIME_FAST_RUNNING_LIMIT) {
-		second_counter = true;
+		second_counter = 0;
 		hr_initializer_flag = true;
 		reverse = !reverse;
 	}
