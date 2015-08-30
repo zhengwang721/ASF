@@ -680,6 +680,10 @@ typedef enum
 #define AT_BLE_MTU_CHANGED_INDICATION_HANDLER					ble_dummy_handler
 #endif
 
+#ifndef BLE_INDICATION_CONFIRMED_HANDLER
+#define BLE_INDICATION_CONFIRMED_HANDLER						ble_dummy_handler
+#endif
+
 /****************************************************************************************
 *							        Structures                                     		*
 ****************************************************************************************/
