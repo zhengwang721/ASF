@@ -175,3 +175,15 @@ void app_indication_handler(bool enable);
  * @param[in] connected
  */
 void app_connected_state(bool connected);
+
+/** @brief app_indication_confirmation_handler called by ble manager 
+ *	to give the status of notification sent
+ *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
+ */	
+void app_indication_confirmation_handler(at_ble_indication_confirmed_t *params);
+
+/** @brief app_notification_confirmation_handler called by ble manager 
+ *	to give the status of notification sent
+ *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
+ */	
+void app_notification_confirmation_handler(at_ble_cmd_complete_event_t *params);

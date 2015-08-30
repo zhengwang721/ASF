@@ -193,4 +193,11 @@ void register_connected_callback(connected_callback_t app_connected_cb);
  */	
 void blp_notification_confirmation_handler(at_ble_cmd_complete_event_t *params);
 
+/** @brief blp_indication_confirmation_handler called by ble manager 
+ *	to give the status of notification sent
+ *  @param[in] at_ble_indication_confirmed_t address of the cmd completion
+ */	
+void blp_indication_confirmation_handler(at_ble_indication_confirmed_t *params);
+
+
 #endif /*__BLP_SENSOR_H__ */

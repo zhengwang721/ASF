@@ -421,7 +421,7 @@ void pas_client_notification_handler(at_ble_notification_recieved_t *params)
 {
 	 at_ble_notification_recieved_t notification;
 	 memcpy((uint8_t *)&notification, params, sizeof(at_ble_notification_recieved_t));
-	 DBG_LOG("Notification received handle %x  ",notification.char_handle);
+	 DBG_LOG_DEV("Notification received handle %x  ",notification.char_handle);
 	 if (notification.char_handle == (pas_service_data.alert_status_char.char_handle + 1))
 	 {
 		 //Calling application notification handler for alert status characteristic
