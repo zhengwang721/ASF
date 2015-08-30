@@ -92,6 +92,7 @@ ble_gap_event_callback_t ble_disconnected_cb = NULL;
 ble_gap_event_callback_t ble_paired_cb = NULL;
 ble_characteristic_changed_callback_t ble_char_changed_cb = NULL;
 ble_notification_confirmed_callback_t ble_notif_conf_cb = NULL;
+ble_indication_confirmed_callback_t ble_indic_conf_cb = NULL;
 
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)|| (BLE_DEVICE_ROLE == BLE_OBSERVER))
 uint8_t scan_response_count = 0;
@@ -468,6 +469,11 @@ void register_ble_notification_confirmed_cb(ble_notification_confirmed_callback_
 	ble_notif_conf_cb = notif_conf_cb_fn;
 }
 
+/** @brief function to register callback to be called when indication pdu send over the air, this callback called by profile or service */
+void register_ble_indication_confirmed_cb(ble_indication_confirmed_callback_t indic_conf_cb_fn)
+{
+	ble_indic_conf_cb = indic_conf_cb_fn;
+}
 
 /** @brief function handles disconnection event received from stack */
 void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect)
@@ -932,7 +938,11 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	  */
 	case AT_BLE_INDICATION_CONFIRMED:
 	{
-		
+		BLE_INDICATION_CONFIRMED_HANDLER((at_ble_indication_confirmed_t *) event_params);
+		if(ble_indic_conf_cb)
+		{
+			ble_indic_conf_cb((at_ble_indication_confirmed_t *) event_params);
+		}
 	}
 	break;
 	
