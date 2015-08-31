@@ -153,7 +153,7 @@ static inline void sdram_enter_deep_power_down(void)
 	SDRAMC->SDRAMC_LPR |= SDRAMC_LPR_LPCB_DEEP_POWER_DOWN;
 }
 
-#if !(SAM3X)
+#if !(SAM3XA)
 /**
  * \brief Unaligned access is supported.
  */

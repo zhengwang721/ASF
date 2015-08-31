@@ -48,6 +48,6 @@
 #define CONF_WM8904_H_INCLUDED
 
 /** TWI Bus Clock 400kHz */
-#define TWI_WM8904_CLK     400000
+#define WM8904_TWIHS_CLK     400000
 
 #endif  /* CONF_WM8904_H_INCLUDED */

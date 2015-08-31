@@ -54,25 +54,25 @@
 #include <string.h>
 #include "pmc.h"
 #include "ethernet_phy.h"
-#include "netif/sam4e_gmac.h"
+#include "netif/samv71_gmac.h"
 #include "sysclk.h"
 #include "conf_eth.h"
 
 /** Network interface identifier. */
-#define IFNAME0								'e'
-#define IFNAME1								'n'
+#define IFNAME0               'e'
+#define IFNAME1               'n'
 
 /** Maximum transfer unit. */
-#define NET_MTU								1500
+#define NET_MTU               1500
 
 /** Network link speed. */
-#define NET_LINK_SPEED						100000000
+#define NET_LINK_SPEED        100000000
 
 #if NO_SYS == 0
 /* Interrupt priorities. (lowest value = highest priority) */
 /* ISRs using FreeRTOS *FromISR APIs must have priorities below or equal to */
 /* configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY. */
-#define INT_PRIORITY_GMAC					12
+#define INT_PRIORITY_GMAC     12
 
 /** The GMAC interrupts to enable */
 #define GMAC_INT_GROUP (GMAC_ISR_RCOMP | GMAC_ISR_ROVR | GMAC_ISR_HRESP | GMAC_ISR_TCOMP | GMAC_ISR_TUR | GMAC_ISR_TFC)

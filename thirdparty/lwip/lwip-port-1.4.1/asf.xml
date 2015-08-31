@@ -155,9 +155,7 @@
 			<build type="include-path" value="sam/include/netif"/>
 			<build type="c-source" value="sam/netif/samv71_gmac.c"/>
 			<device-support value="same70"/>	
-			<device-support value="samv70"/>
 			<device-support value="samv71"/>
-			<device-support value="sams70"/>
 			<require idref="sam.drivers.tc"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.components.ethernet_phy.ksz8061rnb"/>
