@@ -924,7 +924,7 @@ bool hsmci_wait_end_of_write_blocks(void)
 
 
 #ifdef HSMCI_DMA_DMAEN
-static lld_view1 xdmac_link_list[8];
+static lld_view1 *xdmac_link_list;
 bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 {
 	xdmac_channel_config_t p_cfg = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -934,6 +934,8 @@ bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 
 	Assert(nb_block);
 	Assert(dest);
+
+	xdmac_link_list = malloc(sizeof(lld_view1) * nb_block);
 
 	xdmac_channel_disable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 
@@ -955,8 +957,8 @@ bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 		xdmac_link_list[i].mbr_ubc = XDMAC_UBC_NVIEW_NDV1
 									| XDMAC_UBC_NDEN_UPDATED
 									| (nb_data / 4);
-		xdmac_link_list[i].mbr_sa  = (uint32_t)&(HSMCI->HSMCI_FIFO[i]);
-		xdmac_link_list[i].mbr_da = (uint32_t)dest;
+		xdmac_link_list[i].mbr_sa  = (uint32_t)&(HSMCI->HSMCI_FIFO[i % 256]);
+		xdmac_link_list[i].mbr_da = (uint32_t)((((uint8_t *)dest) + i * hsmci_block_size));
 		if ( i == nb_block - 1) {
 			xdmac_link_list[i].mbr_nda = 0;
 		} else {
@@ -1006,6 +1008,7 @@ bool hsmci_wait_end_of_read_blocks(void)
 			}
 		}
 	} while (!(sr & HSMCI_SR_XFRDONE));
+	free(xdmac_link_list);
 	return true;
 }
 
@@ -1018,6 +1021,8 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 
 	Assert(nb_block);
 	Assert(dest);
+
+	xdmac_link_list = malloc(sizeof(lld_view1) * nb_block);
 
 	xdmac_channel_disable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 
@@ -1040,7 +1045,7 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 									| XDMAC_UBC_NDEN_UPDATED
 									| (nb_data / 4);
 		xdmac_link_list[i].mbr_sa  = (uint32_t)((((uint8_t *)src) + i * hsmci_block_size));
-		xdmac_link_list[i].mbr_da = (uint32_t)&(HSMCI->HSMCI_FIFO[i]);
+		xdmac_link_list[i].mbr_da = (uint32_t)&(HSMCI->HSMCI_FIFO[i % 256]);
 
 		if ( i == nb_block - 1) {
 			xdmac_link_list[i].mbr_nda = 0;
@@ -1062,6 +1067,7 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 
 	xdmac_channel_enable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 	hsmci_transfert_pos += nb_data;
+	free(xdmac_link_list);
 	return true;
 }
 

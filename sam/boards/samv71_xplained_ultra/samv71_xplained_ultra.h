@@ -427,8 +427,10 @@
 
 /** HSMCI pins definition. */
 /*! Number of slot connected on HSMCI interface */
-#define SD_MMC_HSMCI_MEM_CNT      1
-#define SD_MMC_HSMCI_SLOT_0_SIZE  4
+#define SD_MMC_HSMCI_MEM_CNT            1
+#define SD_MMC_HSMCI_SLOT_0_SIZE        4
+#define SD_MMC_0_CD_GPIO                (PIO_PD18_IDX)
+#define SD_MMC_0_CD_DETECT_VALUE        0
 #define PINS_HSMCI   {0x3fUL << 26, PIOA, ID_PIOA, PIO_PERIPH_C, PIO_PULLUP}
 /** HSMCI MCCDA pin definition. */
 #define PIN_HSMCI_MCCDA_GPIO            (PIO_PA28_IDX)
@@ -448,6 +450,9 @@
 /** HSMCI MCDA3 pin definition. */
 #define PIN_HSMCI_MCDA3_GPIO            (PIO_PA27_IDX)
 #define PIN_HSMCI_MCDA3_FLAGS           (IOPORT_MODE_MUX_C)
+/** HSMCI DETECT pin definition. */
+#define PIN_HSMCI_DETECT_GPIO            (PIO_PD18_IDX)
+#define PIN_HSMCI_DETECT_FLAGS           (IOPORT_MODE_MUX_C)
 
 /** EBI pins configuration for LCD */
 /** LCD reset pin */
