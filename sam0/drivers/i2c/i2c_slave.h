@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief I2C Slave Driver for SAMB11
+ * \brief I2C Slave Driver for SAMB
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -54,7 +54,7 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_sam0_i2c_group
+ * \addtogroup asfdoc_samb_i2c_group
  *
  * @{
  *
@@ -65,10 +65,13 @@ extern "C" {
  * Some version of chip has multiple I2C modules.
  */
 enum i2c_core_idx {
+	/** I2C CORE1 */
 	I2C_CORE1 = 1,
 #ifdef CHIPVERSION_B0
+	/** I2C CORE2 */
 	I2C_CORE2,
 #endif      //CHIPVERSION_B0
+	/** I2C CORE MAX */
 	I2C_CORE_MAX,
 };
 
@@ -78,9 +81,9 @@ enum i2c_core_idx {
  * Structure to be used when transferring I<SUP>2</SUP>C slave packets.
  */
 struct i2c_slave_packet {
-	/** Length of data array. */
+	/** Length of data array */
 	uint16_t data_length;
-	/** Data array containing all data to be transferred. */
+	/** Data array containing all data to be transferred */
 	uint8_t *data;
 };
 
@@ -91,23 +94,23 @@ struct i2c_slave_packet {
  * The available callback types for the I<SUP>2</SUP>C slave.
  */
 enum i2c_slave_callback {
-	/** Callback for packet write complete. */
+	/** Callback for packet write complete */
 	I2C_SLAVE_CALLBACK_WRITE_COMPLETE,
-	/** Callback for packet read complete. */
+	/** Callback for packet read complete */
 	I2C_SLAVE_CALLBACK_READ_COMPLETE,
 	/**
 	 * Callback for read request from master - can be used to
-	 * issue a write.
+	 * issue a write
 	 */
 	I2C_SLAVE_CALLBACK_READ_REQUEST,
 	/**
-	 * Callback for write request from master - can be used to issue a read.
+	 * Callback for write request from master - can be used to issue a read
 	 */
 	I2C_SLAVE_CALLBACK_WRITE_REQUEST,
-	/** Callback for error. */
+	/** Callback for error */
 	I2C_SLAVE_CALLBACK_ERROR,
 #  if !defined(__DOXYGEN__)
-	/** Total number of callbacks. */
+	/** Total number of callbacks */
 	_I2C_SLAVE_CALLBACK_N,
 #  endif
 };
@@ -128,11 +131,11 @@ typedef void (*i2c_slave_callback_t)(
  * Enum for the direction of a request.
  */
 enum i2c_slave_direction {
-	/** Read. */
+	/** Read */
 	I2C_SLAVE_DIRECTION_READ,
-	/** Write. */
+	/** Write */
 	I2C_SLAVE_DIRECTION_WRITE,
-	/** No direction. */
+	/** No direction */
 	I2C_SLAVE_DIRECTION_NONE,
 };
 
@@ -147,31 +150,31 @@ enum i2c_slave_direction {
  */
 struct i2c_slave_module {
 #if !defined(__DOXYGEN__)
-	/** Hardware instance initialized for the struct. */
+	/** Hardware instance initialized for the struct */
 	void *hw;
-	/** Module lock. */
+	/** Module lock */
 	volatile bool locked;
-	/** Timeout value for polled functions. */
+	/** Timeout value for polled functions */
 	uint16_t buffer_timeout;
 #  if I2C_SLAVE_CALLBACK_MODE == true
-	/** Pointers to callback functions. */
+	/** Pointers to callback functions */
 	volatile i2c_slave_callback_t callbacks[_I2C_SLAVE_CALLBACK_N];
-	/** Mask for registered callbacks. */
+	/** Mask for registered callbacks */
 	volatile uint8_t registered_callback;
-	/** Mask for enabled callbacks. */
+	/** Mask for enabled callbacks */
 	volatile uint8_t enabled_callback;
-	/** The total number of bytes to transfer. */
+	/** The total number of bytes to transfer */
 	volatile uint16_t buffer_length;
 	/**
 	 * Counter used for bytes left to send in write and to count number of
-	 * obtained bytes in read.
+	 * obtained bytes in read
 	 */
 	uint16_t buffer_remaining;
-	/** Data buffer for packet write and read. */
+	/** Data buffer for packet write and read */
 	volatile uint8_t *buffer;
 	/** Save direction of request from master. 1 = read, 0 = write. */
 	volatile enum i2c_transfer_direction transfer_direction;
-	/** Status for status read back in error callback. */
+	/** Status for status read back in error callback */
 	volatile enum status_code status;
 #  endif
 #endif
@@ -186,19 +189,19 @@ struct i2c_slave_module {
  * \ref i2c_slave_get_config_defaults.
  */
 struct i2c_slave_config {
-	/** I2C core index **/
+	/** I2C core index */
 	enum i2c_core_idx i2c_core;
-	/** Timeout to wait for master in polled functions. */
+	/** Timeout to wait for master in polled functions */
 	uint16_t buffer_timeout;
-	/** Address or upper limit of address range. */
+	/** Address or upper limit of address range */
 	uint16_t address;
-	/** CLOCK INPUT to use as clock source. */
+	/** CLOCK INPUT to use as clock source */
 	enum i2c_clock_input clock_source;
 	/** Divide ratio used to generate the sck clock */
 	uint16_t clock_divider;
-	/** PAD0 (SDA) pinmux. */
+	/** PAD0 (SDA) pinmux */
 	uint32_t pinmux_pad0;
-	/** PAD1 (SCL) pinmux. */
+	/** PAD1 (SCL) pinmux */
 	uint32_t pinmux_pad1;
 };
 
