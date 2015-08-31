@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="sam0.applications.adc_configurations_example" caption="SAM D21 ADC Configurations Example">
 		<info type="description" value="summary">
-		Example application for SAM D11 ADC  configuration example features like Hardware Averaging, Oversampling, Calibration, Temperature sensor.
+		Example application for SAM D21 ADC  configuration example features like Hardware Averaging, Oversampling, Calibration, Temperature sensor.
 		</info>
 
 		<info type="keyword" value="technology">

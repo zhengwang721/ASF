@@ -358,20 +358,6 @@ void adc_calibration(void)
 
 }
 
-
-/*-----------------------------------------------------------------------------
- FUNCTION NAME			:	adc_temp_sensor
- 
- FUNCTION DESCRIPTION	:	This function enables the internal temperature
-							sensor for ADC input and displays the current room
-							temperature in serial console after the calculation
-							done using ADC result.
-														
- ARGUMENT TYPES			:   NONE	
- 
- RETURN TYPE			:	NONE 
------------------------------------------------------------------------------*/
-
 /**
 * \brief ADC internal TemperatureSensor mode.
 *
