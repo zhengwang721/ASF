@@ -50,10 +50,5 @@
 /** Configure UART on board */
 #define CONF_BOARD_UART_CONSOLE
 
-/** Configure PWM pins used to control LEDs on board */
-#define CONF_BOARD_PWM_LED0
-#define CONF_BOARD_PWM_LED1
-#define CONF_BOARD_QSPI
-#define CONF_BOARD_CONFIG_MPU_AT_INIT
 
 #endif /* CONF_BOARD_H */
