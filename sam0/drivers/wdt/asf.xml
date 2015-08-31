@@ -81,7 +81,7 @@
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 
-		<module type="driver" id="sam0.drivers.wdt#samb" caption="WDT - Watchdog Timer (Polled APIs) for SAMB">
+		<module type="driver" id="sam0.drivers.wdt#samb" caption="WDT - Watchdog Timer for SAMB">
 			<info type="keyword" value="technology">
 				<keyword value="Timers" />
 				<keyword value="Clocks" />
