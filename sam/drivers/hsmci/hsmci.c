@@ -935,7 +935,7 @@ bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 	Assert(nb_block);
 	Assert(dest);
 
-	xdmac_link_list = malloc(sizeof(lld_view1) * nb_block);
+	xdmac_link_list = (lld_view1*)malloc(sizeof(lld_view1) * nb_block);
 
 	xdmac_channel_disable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 
@@ -1022,7 +1022,7 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 	Assert(nb_block);
 	Assert(dest);
 
-	xdmac_link_list = malloc(sizeof(lld_view1) * nb_block);
+	xdmac_link_list = (lld_view1*)malloc(sizeof(lld_view1) * nb_block);
 
 	xdmac_channel_disable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 
