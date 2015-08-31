@@ -67,7 +67,7 @@ void at30tse_init(void)
 
 	/* Initialize and enable device with config. */
 	i2c_master_init(&dev_inst_at30tse75x, &conf);
-	i2c_enable(&dev_inst_at30tse75x);
+	i2c_enable(dev_inst_at30tse75x.hw);
 }
 
 /**

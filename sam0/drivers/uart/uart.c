@@ -332,8 +332,8 @@ enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 		_uart_instances[1] = module;
 		system_register_isr(RAM_ISR_TABLE_UARTRX1_INDEX, (uint32_t)uart_rx1_isr_handler);
 		system_register_isr(RAM_ISR_TABLE_UARTTX1_INDEX, (uint32_t)uart_tx1_isr_handler);
-		NVIC_EnableIRQ(UART0_RX_IRQn);
-		NVIC_EnableIRQ(UART0_TX_IRQn);
+		NVIC_EnableIRQ(UART1_RX_IRQn);
+		NVIC_EnableIRQ(UART1_TX_IRQn);
 	}
 
 	/* Set the pinmux for this UART module. */
@@ -496,103 +496,6 @@ enum status_code uart_read_buffer_wait(struct uart_module *const module,
 }
 
 /**
- * \brief Registers a callback
- *
- * Registers a callback function which is implemented by the user.
- *
- * \note The callback must be enabled by \ref uart_enable_callback,
- *       in order for the interrupt handler to call it when the conditions for
- *       the callback type are met.
- *
- * \param[in]  module         Pointer to UART software instance struct
- * \param[in]  callback_func  Pointer to callback function
- * \param[in]  callback_type  Callback type given by an enum
- *
- */
-void uart_register_callback(struct uart_module *const module,
-		uart_callback_t callback_func,
-		enum uart_callback callback_type)
-{
-	/* Sanity check arguments */
-	Assert(module);
-	Assert(callback_func);
-
-	/* Register callback function */
-	module->callback[callback_type] = callback_func;
-	/* Set the bit corresponding to the callback_type */
-	module->callback_reg_mask |= (1 << callback_type);
-}
-
-/**
- * \brief Unregisters a callback
- *
- * Unregisters a callback function which is implemented by the user.
- *
- * \param[in,out]  module         Pointer to UART software instance struct
- * \param[in]      callback_type  Callback type given by an enum
- *
- */
-void uart_unregister_callback(struct uart_module *module,
-		enum uart_callback callback_type)
-{
-	/* Sanity check arguments */
-	Assert(module);
-
-	/* Unregister callback function */
-	module->callback[callback_type] = NULL;
-	/* Clear the bit corresponding to the callback_type */
-	module->callback_reg_mask &= ~(1 << callback_type);
-}
-
-/**
- * \brief Enables callback
- *
- * Enables the callback function registered by the \ref usart_register_callback.
- * The callback function will be called from the interrupt handler when the
- * conditions for the callback type are met.
- *
- * \param[in]  module         Pointer to UART software instance struct
- * \param[in]  callback_type  Callback type given by an enum
- */
-void uart_enable_callback(struct uart_module *const module,
-		enum uart_callback callback_type)
-{
-	/* Sanity check arguments */
-	Assert(module);
-
-	/* Enable callback */
-	module->callback_enable_mask |= (1 << callback_type);
-
-	if (callback_type == UART_CTS_ACTIVE) {
-		module->hw->TX_INTERRUPT_MASK.reg |= UART_TX_INTERRUPT_MASK_CTS_ACTIVE_MASK;
-	}
-}
-
-/**
- * \brief Disable callback
- *
- * Disables the callback function registered by the \ref usart_register_callback,
- * and the callback will not be called from the interrupt routine.
- *
- * \param[in]  module         Pointer to UART software instance struct
- * \param[in]  callback_type  Callback type given by an enum
- */
-void uart_disable_callback(struct uart_module *const module,
-		enum uart_callback callback_type)
-{
-	/* Sanity check arguments */
-	Assert(module);
-
-	/* Disable callback */
-	module->callback_enable_mask &= ~(1 << callback_type);
-
-	if (callback_type == UART_CTS_ACTIVE) {
-		module->hw->TX_INTERRUPT_MASK.reg &= ~UART_TX_INTERRUPT_MASK_CTS_ACTIVE_MASK;
-	}
-
-}
-
-/**
  * \internal
  * Starts write of a buffer with a given length
  *
@@ -720,5 +623,184 @@ enum status_code uart_read_buffer_job(struct uart_module *const module,
 	/* Issue internal read */
 	_uart_read_buffer(module, rx_data, length);
 	return STATUS_OK;
+}
+
+/**
+ * \brief Registers a callback
+ *
+ * Registers a callback function which is implemented by the user.
+ *
+ * \note The callback must be enabled by \ref uart_enable_callback,
+ *       in order for the interrupt handler to call it when the conditions for
+ *       the callback type are met.
+ *
+ * \param[in]  module         Pointer to UART software instance struct
+ * \param[in]  callback_func  Pointer to callback function
+ * \param[in]  callback_type  Callback type given by an enum
+ *
+ */
+void uart_register_callback(struct uart_module *const module,
+		uart_callback_t callback_func,
+		enum uart_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(callback_func);
+
+	/* Register callback function */
+	module->callback[callback_type] = callback_func;
+	/* Set the bit corresponding to the callback_type */
+	module->callback_reg_mask |= (1 << callback_type);
+}
+
+/**
+ * \brief Unregisters a callback
+ *
+ * Unregisters a callback function which is implemented by the user.
+ *
+ * \param[in,out]  module         Pointer to UART software instance struct
+ * \param[in]      callback_type  Callback type given by an enum
+ *
+ */
+void uart_unregister_callback(struct uart_module *module,
+		enum uart_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	/* Unregister callback function */
+	module->callback[callback_type] = NULL;
+	/* Clear the bit corresponding to the callback_type */
+	module->callback_reg_mask &= ~(1 << callback_type);
+}
+
+/**
+ * \brief Enables callback
+ *
+ * Enables the callback function registered by the \ref usart_register_callback.
+ * The callback function will be called from the interrupt handler when the
+ * conditions for the callback type are met.
+ *
+ * \param[in]  module         Pointer to UART software instance struct
+ * \param[in]  callback_type  Callback type given by an enum
+ */
+void uart_enable_callback(struct uart_module *const module,
+		enum uart_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	/* Enable callback */
+	module->callback_enable_mask |= (1 << callback_type);
+
+	if (callback_type == UART_CTS_ACTIVE) {
+		module->hw->TX_INTERRUPT_MASK.reg |= UART_TX_INTERRUPT_MASK_CTS_ACTIVE_MASK;
+	}
+}
+
+/**
+ * \brief Disable callback
+ *
+ * Disables the callback function registered by the \ref usart_register_callback,
+ * and the callback will not be called from the interrupt routine.
+ *
+ * \param[in]  module         Pointer to UART software instance struct
+ * \param[in]  callback_type  Callback type given by an enum
+ */
+void uart_disable_callback(struct uart_module *const module,
+		enum uart_callback callback_type)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	/* Disable callback */
+	module->callback_enable_mask &= ~(1 << callback_type);
+
+	if (callback_type == UART_CTS_ACTIVE) {
+		module->hw->TX_INTERRUPT_MASK.reg &= ~UART_TX_INTERRUPT_MASK_CTS_ACTIVE_MASK;
+	}
+
+}
+
+/**
+ * \brief Enables UART transmit DMA
+ *
+ * \param[in]  module         Pointer to UART software instance struct
+ */
+void uart_enable_transmit_dma(struct uart_module *const module)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	/* DMA need the interrupt signal to trigger */
+	module->hw->TX_INTERRUPT_MASK.reg |= UART_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
+
+	/* Disable NVIC to avoid trigger the CPU interrupt */
+	if (module->hw == UART0) {
+		NVIC_DisableIRQ(UART0_TX_IRQn);
+	} else if (module->hw == UART1) {
+		NVIC_DisableIRQ(UART1_TX_IRQn);
+	}
+}
+
+/**
+ * \brief Disables UART transmit DMA
+ *
+ * \param[in]  module         Pointer to UART software instance struct
+ */
+void uart_disable_transmit_dma(struct uart_module *const module)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	module->hw->TX_INTERRUPT_MASK.reg &= ~UART_TX_INTERRUPT_MASK_TX_FIFO_EMPTY_MASK;
+
+	/* Enable NVIC to restore the callback functions */
+	if (module->hw == UART0) {
+		NVIC_EnableIRQ(UART0_TX_IRQn);
+	} else if (module->hw == UART1) {
+		NVIC_EnableIRQ(UART1_TX_IRQn);
+	}
+}
+
+/**
+ * \brief Enables UART receive DMA
+ *
+ * \param[in]  module         Pointer to UART software instance struct
+ */
+void uart_enable_receive_dma(struct uart_module *const module)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	/* DMA need the interrupt signal to trigger */
+	module->hw->RX_INTERRUPT_MASK.reg |= UART_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK;
+
+	/* Disable NVIC to avoid trigger the CPU interrupt */
+	if (module->hw == UART0) {
+		NVIC_DisableIRQ(UART0_TX_IRQn);
+	} else if (module->hw == UART1) {
+		NVIC_DisableIRQ(UART1_TX_IRQn);
+	}
+}
+
+/**
+ * \brief Disables UART receive DMA
+ *
+ * \param[in]  module         Pointer to UART software instance struct
+ */
+void uart_disable_receive_dma(struct uart_module *const module)
+{
+	/* Sanity check arguments */
+	Assert(module);
+
+	module->hw->RX_INTERRUPT_MASK.reg &= ~UART_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK;
+
+	/* Enable NVIC to restore the callback functions */
+	if (module->hw == UART0) {
+		NVIC_EnableIRQ(UART0_TX_IRQn);
+	} else if (module->hw == UART1) {
+		NVIC_EnableIRQ(UART1_TX_IRQn);
+	}
 }
 
