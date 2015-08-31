@@ -1,0 +1,77 @@
+<asf xmlversion="1.0">
+	<module type="meta" id="thirdparty.wireless.ble_smart_driver.driver_lib" caption="BLE SMART DRIVER CODE FILE">
+		<info type="description" value="summary">
+		</info>
+
+		<build type="c-source"      value="i2c/i2c_master.c"/>
+		<build type="c-source"      value="i2c/i2c_common.c"/>
+		<build type="c-source"      value="spi/spi.c"/>
+		<build type="c-source"      value="port/port.c"/>
+		<build type="c-source"      value="uart/uart.c"/>
+		<build type="c-source"      value="platform/platform_drv.c"/>
+		<build type="c-source"      value="platform/event_handler.c"/>
+		<build type="c-source"      value="spi_flash/spi_flash.c"/>
+		<build type="c-source"      value="timer/timer.c"/>
+  
+
+		<build type="include-path"  value="dma/"/>
+		<build type="include-path"  value="include/"/>
+		<build type="include-path"  value="i2c/"/>
+		<build type="include-path"  value="api_defs/"/>
+		<build type="include-path"  value="CMSDK_CM0/Include/"/>
+		<build type="include-path"  value="port/"/>
+		<build type="include-path"  value="spi/"/>
+		<build type="include-path"  value="uart/"/>
+		<build type="include-path"  value="include/reg/"/>
+		<build type="include-path"  value="platform/"/>
+		<build type="include-path"  value="CMSIS/Include/"/>
+
+
+		<build type="header-file"   value="api_defs/i2c.h"/>
+		<build type="header-file"   value="api_defs/platform_drv.h"/>
+		<build type="header-file"   value="api_defs/port.h"/>
+		<build type="header-file"   value="api_defs/spi.h"/>
+		<build type="header-file"   value="api_defs/spi_flash.h"/>
+		<build type="header-file"   value="api_defs/timer.h"/>
+		<build type="header-file"   value="api_defs/uart.h"/>
+
+		<build type="header-file"   value="CMSDK_CM0/Include/CMSDK_CM0.h"/>
+		<build type="header-file"   value="CMSDK_CM0/Include/CMSDK_driver.h"/>
+		<build type="header-file"   value="CMSDK_CM0/Include/system_CMSDK_CM0.h"/>
+
+		<build type="header-file"   value="CMSIS/Include/arm_common_tables.h"/>
+		<build type="header-file"   value="CMSIS/Include/arm_const_structs.h"/>
+		<build type="header-file"   value="CMSIS/Include/arm_math.h"/>
+		<build type="header-file"   value="CMSIS/Include/core_cm0.h"/>
+		<build type="header-file"   value="CMSIS/Include/core_cm0plus.h"/>
+		<build type="header-file"   value="CMSIS/Include/core_cm3.h"/>
+		<build type="header-file"   value="CMSIS/Include/core_cm4.h"/>
+		<build type="header-file"   value="CMSIS/Include/core_cm4_simd.h"/>
+		<build type="header-file"   value="CMSIS/Include/core_cmFunc.h"/>
+		<build type="header-file"   value="CMSIS/Include/core_cmInstr.h"/>
+		<build type="header-file"   value="CMSIS/Include/core_sc000.h"/>
+		<build type="header-file"   value="CMSIS/Include/core_sc300.h"/>
+
+		<build type="header-file"   value="dma/dma.h"/>
+		<build type="header-file"   value="dma/dma_if.h"/>
+
+		<build type="header-file"   value="i2c/i2c_common.h"/>
+		<build type="header-file"   value="i2c/i2c_hw.h"/>
+
+		<build type="header-file"   value="include/common.h"/>
+		<build type="header-file"   value="include/gpio.h"/>
+
+		<build type="header-file"   value="platform/event_handler.h"/>
+		<build type="header-file"   value="platform/ke_msg.h"/>
+
+		<build type="header-file"   value="spi/spi_common.h"/>
+		<build type="header-file"   value="spi/spi_hw.h"/>
+		
+		<build type="header-file"   value="uart/uart_hw.h"/>
+
+
+		<build type="doxygen-entry-point" value="ble_smart_stack_group"/>
+		<device-support-alias value="ble_smart_stack_lib_support"/>
+		
+	</module>
+</asf>

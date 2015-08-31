@@ -1,0 +1,11 @@
+<asf xmlversion="1.0">
+	<module type ="application" caption="Bluetool Low Energy Driver" id="thirdparty.wireless.ble_smart_driver.lib">
+		<info type="description" value="summary">
+		BLE SMART DRIVER 
+		</info>
+		<build type="include-path" value="."/>		
+ 		<require idref="thirdparty.wireless.ble_smart_driver"/>
+		<require idref="thirdparty.wireless.ble_smart_driver.driver_lib"/>
+		<device-support-alias value="ble_smart_stack_lib_support"/>
+	</module>
+</asf>

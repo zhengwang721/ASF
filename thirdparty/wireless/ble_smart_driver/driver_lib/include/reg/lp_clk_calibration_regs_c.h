@@ -1,0 +1,45 @@
+/* **************************** */
+#define LP_CLK_CALIBRATION_REGS_CONFIG_REG                                              (LP_CLK_CALIBRATION_REGS_BASE + 0x0)
+#define LP_CLK_CALIBRATION_REGS_CONFIG_REG_DEFAULT                                      0x0
+#define LP_CLK_CALIBRATION_REGS_CONFIG_REG_NUMBER_CALIB_CLKS                            (Bit0+Bit1+Bit2+Bit3)
+#define LP_CLK_CALIBRATION_REGS_CONFIG_REG_NUMBER_CALIB_CLKS_MASK                       (Bit3+Bit2+Bit1+Bit0)
+#define LP_CLK_CALIBRATION_REGS_CONFIG_REG_NUMBER_CALIB_CLKS_SHIFT                      (0)
+#define LP_CLK_CALIBRATION_REGS_CONFIG_REG_START_RTC_CALIB                              (Bit6)
+#define LP_CLK_CALIBRATION_REGS_CONFIG_REG_START_OSC_CALIB                              (Bit7)
+#define LP_CLK_CALIBRATION_REGS_CONFIG_REG_IRQ_CONTROL                                  (Bit14+Bit15)
+#define LP_CLK_CALIBRATION_REGS_CONFIG_REG_IRQ_CONTROL_MASK                             (Bit1+Bit0)
+#define LP_CLK_CALIBRATION_REGS_CONFIG_REG_IRQ_CONTROL_SHIFT                            (14)
+
+
+#define LP_CLK_CALIBRATION_REGS_CALIB_OSC_COUNT_REG                                     (LP_CLK_CALIBRATION_REGS_BASE + 0x4)
+#define LP_CLK_CALIBRATION_REGS_CALIB_OSC_COUNT_REG_DEFAULT                             0x8000
+#define LP_CLK_CALIBRATION_REGS_CALIB_OSC_COUNT_REG_CAL_FRAC_COUNT                      (Bit0+Bit1+Bit2+Bit3+Bit4+Bit5+Bit6+Bit7+Bit8+Bit9+Bit10+Bit11+Bit12+Bit13+Bit14)
+#define LP_CLK_CALIBRATION_REGS_CALIB_OSC_COUNT_REG_CAL_FRAC_COUNT_MASK                 (Bit14+Bit13+Bit12+Bit11+Bit10+Bit9+Bit8+Bit7+Bit6+Bit5+Bit4+Bit3+Bit2+Bit1+Bit0)
+#define LP_CLK_CALIBRATION_REGS_CALIB_OSC_COUNT_REG_CAL_FRAC_COUNT_SHIFT                (0)
+#define LP_CLK_CALIBRATION_REGS_CALIB_OSC_COUNT_REG_NO_CAL_IN_PROGRESS                  (Bit15)
+#define LP_CLK_CALIBRATION_REGS_CALIB_OSC_COUNT_REG_CAL_INT_COUNT                       (Bit16+Bit17+Bit18+Bit19+Bit20+Bit21+Bit22+Bit23+Bit24+Bit25+Bit26+Bit27+Bit28+Bit29+Bit30)
+#define LP_CLK_CALIBRATION_REGS_CALIB_OSC_COUNT_REG_CAL_INT_COUNT_MASK                  (Bit14+Bit13+Bit12+Bit11+Bit10+Bit9+Bit8+Bit7+Bit6+Bit5+Bit4+Bit3+Bit2+Bit1+Bit0)
+#define LP_CLK_CALIBRATION_REGS_CALIB_OSC_COUNT_REG_CAL_INT_COUNT_SHIFT                 (16)
+#define LP_CLK_CALIBRATION_REGS_CALIB_OSC_COUNT_REG_CAL_DONE                            (Bit31)
+
+
+#define LP_CLK_CALIBRATION_REGS_CALIB_RTC_COUNT_REG                                     (LP_CLK_CALIBRATION_REGS_BASE + 0x8)
+#define LP_CLK_CALIBRATION_REGS_CALIB_RTC_COUNT_REG_DEFAULT                             0x8000
+#define LP_CLK_CALIBRATION_REGS_CALIB_RTC_COUNT_REG_CAL_FRAC_COUNT                      (Bit0+Bit1+Bit2+Bit3+Bit4+Bit5+Bit6+Bit7+Bit8+Bit9+Bit10+Bit11+Bit12+Bit13+Bit14)
+#define LP_CLK_CALIBRATION_REGS_CALIB_RTC_COUNT_REG_CAL_FRAC_COUNT_MASK                 (Bit14+Bit13+Bit12+Bit11+Bit10+Bit9+Bit8+Bit7+Bit6+Bit5+Bit4+Bit3+Bit2+Bit1+Bit0)
+#define LP_CLK_CALIBRATION_REGS_CALIB_RTC_COUNT_REG_CAL_FRAC_COUNT_SHIFT                (0)
+#define LP_CLK_CALIBRATION_REGS_CALIB_RTC_COUNT_REG_NO_CAL_IN_PROGRESS                  (Bit15)
+#define LP_CLK_CALIBRATION_REGS_CALIB_RTC_COUNT_REG_CAL_INT_COUNT                       (Bit16+Bit17+Bit18+Bit19+Bit20+Bit21+Bit22+Bit23+Bit24+Bit25+Bit26+Bit27+Bit28+Bit29+Bit30)
+#define LP_CLK_CALIBRATION_REGS_CALIB_RTC_COUNT_REG_CAL_INT_COUNT_MASK                  (Bit14+Bit13+Bit12+Bit11+Bit10+Bit9+Bit8+Bit7+Bit6+Bit5+Bit4+Bit3+Bit2+Bit1+Bit0)
+#define LP_CLK_CALIBRATION_REGS_CALIB_RTC_COUNT_REG_CAL_INT_COUNT_SHIFT                 (16)
+#define LP_CLK_CALIBRATION_REGS_CALIB_RTC_COUNT_REG_CAL_DONE                            (Bit31)
+
+
+#define LP_CLK_CALIBRATION_REGS_CALIB_STATUS_REG                                        (LP_CLK_CALIBRATION_REGS_BASE + 0xc)
+#define LP_CLK_CALIBRATION_REGS_CALIB_STATUS_REG_DEFAULT                                0x0
+#define LP_CLK_CALIBRATION_REGS_CALIB_STATUS_REG_CALIBRATION_OSC_DONE                   (Bit0)
+#define LP_CLK_CALIBRATION_REGS_CALIB_STATUS_REG_CALIBRATION_RTC_DONE                   (Bit1)
+#define LP_CLK_CALIBRATION_REGS_CALIB_STATUS_REG_OSC_CAL_RUNNING                        (Bit4)
+#define LP_CLK_CALIBRATION_REGS_CALIB_STATUS_REG_RTC_CAL_RUNNING                        (Bit5)
+
+

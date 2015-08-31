@@ -1,0 +1,13 @@
+<asf xmlversion="1.0">
+	<module type="service" id="thirdparty.wireless.ble_smart_driver.lib.atsamb11g18a.lib" caption="COMPONENT - BLE SMART DRIVER LIB">
+		<info type="description" value="summary">
+		</info>
+		<build type="library" subtype="user" value="iar/libblesmart-driver.r90" toolchain="iarew"/>
+		<build type="library" subtype="user" value="gcc/libblesmart-driver.a" toolchain="avrgcc"/>
+
+		<build type="doxygen-entry-point" value="ble_smart_stack_group"/>
+		
+		<device-support value="atsamb11g18a"/>
+		
+	</module>
+</asf>
