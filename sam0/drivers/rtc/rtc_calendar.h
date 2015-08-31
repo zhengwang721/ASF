@@ -49,10 +49,10 @@
 /**
  * \defgroup asfdoc_sam0_rtc_calendar_group SAM RTC Calendar (RTC CAL) Driver
  *
- * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
- * an interface for the configuration and management of the device's Real Time 
- * Clock functionality in Calendar operating mode, for the configuration and 
- * retrieval of the current time and date as maintained by the RTC module. 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides
+ * an interface for the configuration and management of the device's Real Time
+ * Clock functionality in Calendar operating mode, for the configuration and
+ * retrieval of the current time and date as maintained by the RTC module.
   The following driver API modes are covered by this manual:
  *
  *  - Polled APIs
@@ -66,7 +66,7 @@
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D09/D10/D11
  *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
@@ -765,7 +765,7 @@ struct rtc_calendar_config {
 	uint16_t year_init_value;
 #if (SAML22)
 	/** Enable count read synchronization. The CLOCK value requires
-	 * synchronization when reading. Disabling the synchronization 
+	 * synchronization when reading. Disabling the synchronization
 	 * will prevent the CLOCK value from displaying the current value. */
 	bool enable_read_sync;
 #endif

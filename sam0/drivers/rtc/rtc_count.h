@@ -50,10 +50,10 @@
 /**
  * \defgroup asfdoc_sam0_rtc_count_group SAM RTC Count (RTC COUNT) Driver
  *
- * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
- * an interface for the configuration and management of the device's Real Time 
- * Clock functionality in Count operating mode, for the configuration and 
- * retrieval of the current RTC counter value. The following driver API modes 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides
+ * an interface for the configuration and management of the device's Real Time
+ * Clock functionality in Count operating mode, for the configuration and
+ * retrieval of the current RTC counter value. The following driver API modes
  * are covered by this manual:
  *
  *  - Polled APIs
@@ -67,7 +67,7 @@
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D09/D10/D11
  *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
@@ -728,7 +728,7 @@ struct rtc_count_config {
 #endif
 #if (SAML21) || (SAML22) || (SAMC20) || (SAMC21)
 	/** Enable count read synchronization. The COUNT value requires
-	 * synchronization when reading. Disabling the synchronization 
+	 * synchronization when reading. Disabling the synchronization
 	 * will prevent the COUNT value from displaying the current value. */
 	bool enable_read_sync;
 #endif
