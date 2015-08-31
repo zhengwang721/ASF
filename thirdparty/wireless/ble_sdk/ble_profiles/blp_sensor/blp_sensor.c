@@ -69,7 +69,7 @@ uint8_t scan_rsp_data[SCAN_RESP_LEN]
 	= {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
 /** @brief device information service handler **/
-//dis_gatt_service_handler_t dis_service_handler;
+dis_gatt_service_handler_t dis_service_handler;
 
 /** @brief blood pressure measurement service handler **/
 blp_gatt_service_handler_t blp_service_handler;
@@ -136,6 +136,21 @@ void blp_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
 		DBG_LOG_DEV("Sending Notification over the air failed");
 	}
 }
+
+/** @brief blp_indication_confirmation_handler called by ble manager 
+ *	to give the status of notification sent
+ *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
+ */	
+void blp_indication_confirmation_handler(at_ble_indication_confirmed_t *params)
+{
+	if (params->status == AT_BLE_SUCCESS)
+	{
+		DBG_LOG_DEV("Indication successfully sent over the air");
+	} else {
+		DBG_LOG_DEV("Sending Notification over the air failed");
+	}
+}
+
 
 /** @brief blp_sensor_send_notification adds the new characteristic value and
  * sends the notification
@@ -334,15 +349,10 @@ void blp_sensor_service_define(void)
 				status);
 	}
 	
-	//DBG_LOG("The blp service handle is %x ",blp_service_handler.serv_handle);
-	//DBG_LOG("The char handles are %x",blp_service_handler.serv_chars[0].char_val_handle);
-	//DBG_LOG("The char handles are %x",blp_service_handler.serv_chars[1].char_val_handle);
-	//DBG_LOG("The char handles are %x",blp_service_handler.serv_chars[2].char_val_handle);
-
-	//if ((status = dis_primary_service_define(&dis_service_handler)) !=
-			//AT_BLE_SUCCESS) {
-		//DBG_LOG("Dis Service definition failed,reason: %x", status);
-	//}
+	if ((status = dis_primary_service_define(&dis_service_handler)) !=
+			AT_BLE_SUCCESS) {
+		DBG_LOG("Dis Service definition failed,reason: %x", status);
+	}
 	
 }
 

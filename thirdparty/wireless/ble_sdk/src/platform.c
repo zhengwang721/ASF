@@ -122,16 +122,16 @@ at_ble_status_t platform_init(void* platform_params)
 	ble_configure_control_pin();
 	
 	delay_ms(BTLC1000_STARTUP_DELAY);
-	DBG_LOG_BLE("\r\nCalibrate using J-Link then Press SW0 on board");
-	
+	LED_On(LED0);
+
 	while(button_pressed == false);
 	button_pressed = false;
+	LED_Off(LED0);
 	
 	if (cfg->bus_type == AT_BLE_UART)
 	{
 		configure_serial_drv();
 		bus_type = AT_BLE_UART;
-		DBG_LOG_BLE("\r\nCalibration done\r\n");
 		return AT_BLE_SUCCESS;
 	}
 	return AT_BLE_INVALID_PARAM;
@@ -241,6 +241,7 @@ static uint32_t timer_done(void)
 	return --ticks; 
 }
 
+
 void platform_process_rxdata(uint32_t t_rx_data)
 {
 	if(slave_state == PLATFORM_TRANSPORT_SLAVE_CONNECTED)
@@ -297,6 +298,7 @@ uint8_t platform_buf[10];
 uint8_t platform_event_wait(uint32_t timeout)
 {
 	uint8_t status = AT_BLE_SUCCESS;
+	//DBG_LOG_BLE("\r\platform_event_wait\n");
 	if (ble_rx_state == BLE_EOF_STATE)
 	{		
 		platform_interface_callback((uint8_t *)&ble_evt_frame, (ble_evt_frame.header.payload_len + BLE_SERIAL_HEADER_LEN));
@@ -336,6 +338,7 @@ at_ble_status_t platform_ble_event_data(void)
 {
 	uint32_t t_rx_data = 0;
 	static uint16_t received_index = 0;
+	//DBG_LOG_BLE("\r\platform_ble_event_data\n");
 	if (ble_rx_state == BLE_EOF_STATE)
 	{
 		return AT_BLE_SUCCESS;

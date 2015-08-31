@@ -179,20 +179,20 @@ int main (void)
 					DBG_LOG("Dst read request success");
 				}
 			}
-			if(time_update_cp_char_found)
-			{
-				if(tis_rtu_update_read( ble_connected_dev_info[0].handle, rtu_handle.tp_control_char_handle, 20) == AT_BLE_SUCCESS)
-				{
-					DBG_LOG("RTU control point request success");
-				}
-			}
-			if(time_update_state_char_found)
-			{
-				if(tis_rtu_update_read( ble_connected_dev_info[0].handle, rtu_handle.tp_state_char_handle, 20 ) == AT_BLE_SUCCESS)
-				{
-					DBG_LOG("RTU state request success");
-				}
-			}
+			//if(time_update_cp_char_found)
+			//{
+				//if(tis_rtu_update_read( ble_connected_dev_info[0].handle, rtu_handle.tp_control_char_handle, 20) == AT_BLE_SUCCESS)
+				//{
+					//DBG_LOG("RTU control point request success");
+				//}
+			//}
+			//if(time_update_state_char_found)
+			//{
+				//if(tis_rtu_update_read( ble_connected_dev_info[0].handle, rtu_handle.tp_state_char_handle, 20 ) == AT_BLE_SUCCESS)
+				//{
+					//DBG_LOG("RTU state request success");
+				//}
+			//}
 			button_pressed = false;
 			/* code for pts */
 			//if(event)

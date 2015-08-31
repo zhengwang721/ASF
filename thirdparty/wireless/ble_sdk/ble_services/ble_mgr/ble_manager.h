@@ -419,6 +419,7 @@ typedef enum
 #define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER	blp_sensor_disconnect_event_handler
 #define BLE_CHARACTERISTIC_CHANGED					blp_sensor_char_changed_handler
 #define BLE_NOTIFICATION_CONFIRMED_HANDLER			blp_notification_confirmation_handler
+#define BLE_INDICATION_CONFIRMED_HANDLER			blp_indication_confirmation_handler
 #endif 
 
 #if defined HR_SENSOR
@@ -679,6 +680,10 @@ typedef enum
 #define AT_BLE_MTU_CHANGED_INDICATION_HANDLER					ble_dummy_handler
 #endif
 
+#ifndef BLE_INDICATION_CONFIRMED_HANDLER
+#define BLE_INDICATION_CONFIRMED_HANDLER						ble_dummy_handler
+#endif
+
 /****************************************************************************************
 *							        Structures                                     		*
 ****************************************************************************************/
@@ -728,6 +733,9 @@ typedef at_ble_status_t (*ble_characteristic_changed_callback_t)(at_ble_characte
 
 /* Typedef for notification confirmed event callback */
 typedef void (*ble_notification_confirmed_callback_t)(at_ble_cmd_complete_event_t *);
+
+/* Typedef for indication confirmed event callback */
+typedef void (*ble_indication_confirmed_callback_t)(at_ble_indication_confirmed_t *);
 
 /** @brief function to set the device name.
   *
@@ -963,4 +971,6 @@ void register_ble_paired_event_cb(ble_gap_event_callback_t paired_cb_fn);
 void register_ble_characteristic_changed_cb(ble_characteristic_changed_callback_t char_changed_cb_fn);
 
 void register_ble_notification_confirmed_cb(ble_notification_confirmed_callback_t notif_conf_cb_fn);
+
+void register_ble_indication_confirmed_cb(ble_indication_confirmed_callback_t indic_conf_cb_fn);
 #endif /*__BLE_MANAGER_H__*/
