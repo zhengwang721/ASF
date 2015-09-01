@@ -169,6 +169,7 @@
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="samc20"/>
 		</module>
+
 		<!-- SAML22 //-->
 		<module type="driver" id="sam0.utils#10" caption="SAM L22 compiler driver">
 			<info type="description" value="summary">
@@ -182,6 +183,21 @@
 			<require idref="sam0.utils.cmsis.saml22.source.template"/>
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="saml22"/>
-			</module>
+		</module>
+
+		<!-- SAMD09 //-->
+		<module type="driver" id="sam0.utils#11" caption="SAM D09 compiler driver">
+			<info type="description" value="summary">
+			Compiler abstraction layer and code utilities for SAMD09 devices. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
+			</info>
+			<require idref="sam0.utils.common"/>
+			<require idref="sam0.utils.cmsis.samd09.include"/>
+			<require idref="sam0.utils.cmsis.samd09.include.component"/>
+			<require idref="sam0.utils.cmsis.samd09.include.instance"/>
+			<require idref="sam0.utils.cmsis.samd09.include.pio"/>
+			<require idref="sam0.utils.cmsis.samd09.source.template"/>
+			<info type="gui-flag" value="hidden"/>
+			<device-support value="samd09"/>
+		</module>
 	</select-by-device>
 </asf>

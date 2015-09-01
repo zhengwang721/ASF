@@ -47,10 +47,10 @@
 #define NVM_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_nvm_group SAM Non-Volatile Memory (NVM) Driver 
+ * \defgroup asfdoc_sam0_nvm_group SAM Non-Volatile Memory (NVM) Driver
  *
- * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
- * an interface for the configuration and management of non-volatile memories 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides
+ * an interface for the configuration and management of non-volatile memories
  * within the device, for partitioning, erasing, reading, and writing of data.
  *
  * The following peripheral is used by this module:
@@ -59,7 +59,7 @@
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D09/D10/D11
  *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
@@ -913,7 +913,7 @@ static inline enum nvm_error nvm_get_error(void)
  *		<td>42114E</td>
  *		<td>08/2015</td>
  *		<td>Added support for SAM L21/L22, SAM C21, and SAM DA1</td>
- *	</tr> 
+ *	</tr>
  *	<tr>
  *		<td>42114D</td>
  *		<td>12/2014</td>

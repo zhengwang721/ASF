@@ -49,9 +49,9 @@
 /**
  * \defgroup asfdoc_sam0_system_pinmux_group SAM System Pin Multiplexer (SYSTEM PINMUX) Driver
  *
- * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
- * an interface for the configuration and management of the device's physical 
- * I/O Pins, to alter the direction and input/drive characteristics as well as 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides
+ * an interface for the configuration and management of the device's physical
+ * I/O Pins, to alter the direction and input/drive characteristics as well as
  * to configure the pin peripheral multiplexer selection.
  *
  * The following peripheral is used by this module:
@@ -60,7 +60,7 @@
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D09/D10/D11
  *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
@@ -262,7 +262,7 @@ enum system_pinmux_pin_sample {
  * \brief Port pin configuration structure.
  *
  * Configuration structure for a port pin instance. This structure should
- * be initialized by the \ref system_pinmux_get_config_defaults() function 
+ * be initialized by the \ref system_pinmux_get_config_defaults() function
  * before being modified by the user application.
  */
 struct system_pinmux_config {
