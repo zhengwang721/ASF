@@ -7,6 +7,8 @@
 		Driver for the AT30TSE75X EEPROM memory. It provides functions for initialization and read/write operations.
 		</info>
 		<build type="c-source" value="at30tse75x.c"/>
+
+		<build type="module-config" subtype="path" value="module_config"/>
 		<build type="header-file" subtype="api" value="at30tse75x.h"/>
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="asfdoc_samb_at30tse75x_group"/>

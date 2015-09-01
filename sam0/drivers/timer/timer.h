@@ -50,7 +50,7 @@
  * \defgroup asfdoc_samb_timer_group SAM TIMER
  *
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for the
- * configuration and management of the device's TIMER functionality.
+ * configuration and management of the device's basic Timer functionality.
  *
  * The following peripherals are used by this module:
  *  - TIMER
@@ -73,7 +73,25 @@
  *
  *
  * \section asfdoc_samb_timer_module_overview Module Overview
+ * This driver proiveds a basic timer for count, is a 32-bit
+ * down-counter with the following features:
  *
+ * - You can generate an interrupt request signal, TIMERINT,
+ * when the counter reaches 0.
+ 
+ * - The interrupt request is held until it is cleared by writing to the INTCLEAR Register.
+ *
+ * - You can use the zero to one transition of the external input signal, EXTIN, as a timer enable.
+ *
+ * - If the APB timer count reaches 0 and, at the same time, the software clears a previous
+ * interrupt status, the interrupt status is set to 1.
+ *
+ * - The external clock, EXTIN, must be slower than half of the peripheral clock because it is
+ * sampled by a double flip-flop and then goes through edge-detection logic when the
+ * external inputs act as a clock. 
+ *
+ * - A separate clock pin, PCLKG, for the APB register read or write logic that permits the
+ * clock to peripheral register logic to stop when there is no APB activity.
  *
  * \section asfdoc_samb_timer_special_considerations Special Considerations
  *

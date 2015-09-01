@@ -51,7 +51,7 @@
 #include <i2c_master.h>
 
 /* Temperature sensor configuration file */
-#include "conf_board.h"
+#include "conf_at30tse75x.h"
 
 /**
  * \defgroup asfdoc_samb_at30tse75x_group AT30TSE75X Digital Temperature

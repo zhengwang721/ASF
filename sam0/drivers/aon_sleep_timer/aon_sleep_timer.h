@@ -50,7 +50,8 @@
  * \defgroup asfdoc_samb_aon_sleep_timer_group SAM AON SLEEP TIMER
  *
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for the
- * configuration and management of the device's TIMER functionality.
+ * configuration and management of the device's Always-On Sleep Timer functionality,
+ * for the setup the period of wakeup the MCU from the sleep state.
  *
  * The following peripherals are used by this module:
  *  - AON SLEEP TIMER
@@ -73,7 +74,25 @@
  *
  *
  * \section asfdoc_samb_aon_sleep_timer_module_overview Module Overview
+ * This driver provides an interrupt for the MCU which in the sleep state
+ * when the timer counter is decline to 0.
  *
+ * \subsection asfdoc_samb_aon_sleep_timer_module_overview_wakeup_control Wakeup Control
+ * You can control wakeup domain, there'er three choices:
+ * - Disable wakeup
+ * - Wakeup arm
+ * - Wakeup arm and blue-tooth
+ *
+ * \subsection asfdoc_samb_aon_sleep_timer_module_overview_load_mode Counter Load Mode
+ * There are two counter load mode:
+ * - Single mode
+ *
+ *   The timer will trigger interrupt when the counter is decline to 0, then the counter is
+ *   always 0.
+ * - Reload mode
+ *
+ *   The timer will trigger interrupt when the counter is decline to 0, then the counter is
+ *   reload to the initial count.
  *
  * \section asfdoc_samb_aon_sleep_timer_special_considerations Special Considerations
  *
@@ -121,16 +140,16 @@ enum aon_sleep_timer_mode {
 };
 
 /**
- * \brief Enable or disable ARM wakeup.
+ * \brief Enable or disable arm wakeup.
  *
- * This enum specifies ARM wakeup enable or disable.
+ * This enum specifies arm wakeup enable or disable.
  */
 enum aon_sleep_timer_wakeup {
 	/** Wakeup disable */
 	AON_SLEEP_TIMER_WAKEUP_DIS = 0,
-	/** ARM wakeup */
+	/** Arm wakeup */
 	AON_SLEEP_TIMER_WAKEUP_ARM,
-	/** ARM and blue-tooth wakeup */
+	/** Arm and blue-tooth wakeup */
 	AON_SLEEP_TIMER_WAKEUP_ARM_BLE,
 };
 
@@ -142,7 +161,8 @@ enum aon_sleep_timer_wakeup {
  *  modified by the user application.
  */
 struct aon_sleep_timer_config {
-	/** Enable or disable ARM wakeup */
+	/** Enable wakeup arm or wakeup arm and blue-tooth 
+	  * or disable arm wakeup */
 	enum aon_sleep_timer_wakeup wakeup;
 	/** Counter is reload or single mode */
 	enum aon_sleep_timer_mode mode;

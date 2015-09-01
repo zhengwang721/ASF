@@ -73,7 +73,51 @@
  *
  *
  * \section asfdoc_samb_quad_decoder_module_overview Module Overview
+ * A Quadrature Decoder is used to decode the output of a Quadrature Encoder,
+ * it can be used for precision measurement of speed, acceleration, and position
+ * of a motor's rotor and with rotary knobs to determine user input. The SAMB11
+ * contains 3 Quadrature Decoder. Each one may be programmed independently.
+ * The Quadrature Decoder require initialization prior to being enabled. 
+ * Quadrature Decoder is a flexible fully configurable module which has the following features:
  *
+ *   - 3 independent configurable Quadrature Decoder blocks.
+ *
+ *   - 16-bits resolution counters.
+ *
+ *   - 16-bits resolution Lower and Upper threshold control values.
+ *
+ *   - Input clock selection (only for MP).
+ *
+ * \subsection asfdoc_samb_quad_decoder_module_overview_thresholds Setting Thresholds
+ * The Quadrature Decoder have lower and upper thresholds. These are used for interrupt
+ * generation. The interrupt is generated whenever the counter is greater than or equal
+ * to the higher threshold and less than or equal to the lower threshold. Setting each
+ * module Higher and Lower threshold values as described below:
+ *
+ * \anchor asfdoc_sam0_quad_decoder_thresholds
+ * <table>
+ *  <caption>Quad-Decoder Register Thresholds</caption>
+ *  <tr>
+ *    <th>Filed name</th>
+ *    <th>Bits range</th>
+ *    <th>Description</th>
+ *  </tr>
+ *  <tr>
+ *    <td>Upper</td>
+ *    <td>[15 : 0]</td>
+ *    <td>Upper threshold value</td>
+ *  </tr>
+ *  <tr>
+ *    <td>Lower</td>
+ *    <td>[31 : 16]</td>
+ *    <td>Lower threshold value</td>
+ *  </tr>
+ * </table>
+ *
+ * \subsection asfdoc_samb_quad_decoder_module_overview_clock Setting Clock
+ * The Quadrature Decoder have 4 different clock options to support different
+ * application requirements. The possible options are 26 MHz, 13 MHz, 6.5 MHz
+ * and 3.25 MHz This clock is used to sample the incoming Quad Decoder inputs.
  *
  * \section asfdoc_samb_quad_decoder_special_considerations Special Considerations
  *

@@ -3,6 +3,7 @@
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_at30tse75x.h"/>
 		<build type="header-file" value="conf_i2c.h"/>
 		<require idref="board.samb11_xplained_pro"/>
 		<require idref="common2.components.memory.eeprom.at30tse75x.example"/>
