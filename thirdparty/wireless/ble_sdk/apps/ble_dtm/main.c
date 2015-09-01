@@ -133,6 +133,8 @@ int main (void)
 	/* DTM Initialization */
 	ble_dtm_init();
 	
+	platform_wakeup();
+	
 	/* Initialize serial bridge */
 	serial_bridge_init();
 	
