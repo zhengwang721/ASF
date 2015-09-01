@@ -78,6 +78,27 @@
 #include <string.h>
 
 /**
+ *  \brief Configure the Console UART.
+ */
+static void configure_console(void)
+{
+	const usart_serial_options_t uart_serial_options = {
+		.baudrate = CONF_TEST_BAUDRATE,
+#ifdef CONF_TEST_CHARLENGTH
+		.charlength = CONF_TEST_CHARLENGTH,
+#endif
+		.paritytype = CONF_TEST_PARITY,
+#ifdef CONF_TEST_STOPBITS
+		.stopbits = CONF_TEST_STOPBITS,
+#endif
+	};
+
+	/* Configure console UART. */
+	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
+	stdio_serial_init(CONF_TEST_USART, &uart_serial_options);
+}
+
+/**
  * \brief Application entry point.
  *
  * \return Unused (ANSI-C compatibility).
@@ -90,19 +111,12 @@ int main(void)
 	FATFS fs;
 	FIL file_object;
 
-	const usart_serial_options_t usart_serial_options = {
-		.baudrate   = CONF_TEST_BAUDRATE,
-		.charlength = CONF_TEST_CHARLENGTH,
-		.paritytype = CONF_TEST_PARITY,
-		.stopbits   = CONF_TEST_STOPBITS,
-	};
-
 	irq_initialize_vectors();
 	cpu_irq_enable();
 
 	sysclk_init();
 	board_init();
-	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
+	configure_console();
 
 	/* Initialize SD MMC stack */
 	sd_mmc_init();

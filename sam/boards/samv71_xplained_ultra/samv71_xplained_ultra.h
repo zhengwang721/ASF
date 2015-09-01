@@ -425,6 +425,35 @@
 #define BOARD_CLK_TWIHS_EEPROM            0
 #define BOARD_CLK_TWIHS_MUX_EEPROM        0
 
+/** HSMCI pins definition. */
+/*! Number of slot connected on HSMCI interface */
+#define SD_MMC_HSMCI_MEM_CNT            1
+#define SD_MMC_HSMCI_SLOT_0_SIZE        4
+/** HSMCI MCCDA pin definition. */
+#define PIN_HSMCI_MCCDA_GPIO            (PIO_PA28_IDX)
+#define PIN_HSMCI_MCCDA_FLAGS           (IOPORT_MODE_MUX_C)
+/** HSMCI MCCK pin definition. */
+#define PIN_HSMCI_MCCK_GPIO             (PIO_PA25_IDX)
+#define PIN_HSMCI_MCCK_FLAGS            (IOPORT_MODE_MUX_D)
+/** HSMCI MCDA0 pin definition. */
+#define PIN_HSMCI_MCDA0_GPIO            (PIO_PA30_IDX)
+#define PIN_HSMCI_MCDA0_FLAGS           (IOPORT_MODE_MUX_C)
+/** HSMCI MCDA1 pin definition. */
+#define PIN_HSMCI_MCDA1_GPIO            (PIO_PA31_IDX)
+#define PIN_HSMCI_MCDA1_FLAGS           (IOPORT_MODE_MUX_C)
+/** HSMCI MCDA2 pin definition. */
+#define PIN_HSMCI_MCDA2_GPIO            (PIO_PA26_IDX)
+#define PIN_HSMCI_MCDA2_FLAGS           (IOPORT_MODE_MUX_C)
+/** HSMCI MCDA3 pin definition. */
+#define PIN_HSMCI_MCDA3_GPIO            (PIO_PA27_IDX)
+#define PIN_HSMCI_MCDA3_FLAGS           (IOPORT_MODE_MUX_C)
+
+/** SD/MMC card detect pin definition. */
+#define PIN_HSMCI_CD                    {PIO_PD18, PIOD, ID_PIOD, PIO_INPUT, PIO_PULLUP}
+#define SD_MMC_0_CD_GPIO                (PIO_PD18_IDX)
+#define SD_MMC_0_CD_PIO_ID              ID_PIOD
+#define SD_MMC_0_CD_FLAGS               (IOPORT_MODE_PULLUP)
+#define SD_MMC_0_CD_DETECT_VALUE        0
 
 /** EBI pins configuration for LCD */
 /** LCD reset pin */

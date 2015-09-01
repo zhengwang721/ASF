@@ -440,8 +440,19 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_USART0_RTS_IDX, PIN_USART0_RTS_FLAGS);
 #endif
 
+#ifdef CONF_BOARD_SD_MMC_HSMCI
+	/* Configure HSMCI pins */
+	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCCDA_GPIO, PIN_HSMCI_MCCDA_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCCK_GPIO, PIN_HSMCI_MCCK_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCDA0_GPIO, PIN_HSMCI_MCDA0_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCDA1_GPIO, PIN_HSMCI_MCDA1_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCDA2_GPIO, PIN_HSMCI_MCDA2_FLAGS);
+	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCDA3_GPIO, PIN_HSMCI_MCDA3_FLAGS);
+	ioport_set_pin_peripheral_mode(SD_MMC_0_CD_GPIO, SD_MMC_0_CD_FLAGS);
+#endif
+
 #ifdef CONF_BOARD_ILI9488
-/**LCD pin configure on EBI*/
+	/**LCD pin configure on EBI*/
 	pio_configure(PIN_EBI_RESET_PIO, PIN_EBI_RESET_TYPE, PIN_EBI_RESET_MASK, PIN_EBI_RESET_ATTRI);
 	pio_configure(PIN_EBI_CDS_PIO, PIN_EBI_CDS_TYPE, PIN_EBI_CDS_MASK, PIN_EBI_CDS_ATTRI);
 	pio_configure(PIN_EBI_DATAL_PIO, PIN_EBI_DATAL_TYPE, PIN_EBI_DATAL_MASK, PIN_EBI_DATAL_ATTRI);
