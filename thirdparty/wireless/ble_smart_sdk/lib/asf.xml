@@ -3,10 +3,11 @@
             <info type="description" value="summary">
             BLE SMART SDK library
             </info>
-	    <!--
-            <build type="library" subtype="user" value="samd21/iar/libble_sdk.a" toolchain="iarewarm"/>
-            <build type="library" subtype="user" value="samd21/gcc/libble_sdk.a" toolchain="armgcc"/>
-		-->
+            <build type="library" subtype="user" value="libBLE_SMART_DRIVER_LIB.a" toolchain="armgcc"/>
+            <build type="library" subtype="user" value="libBLE_SMART_DRIVER_LIB.a" toolchain="iarewarm"/>
+
+            <build type="library" subtype="user" value="libBLE_SMART_SDK_LIB_LIB.a" toolchain="armgcc"/>
+            <build type="library" subtype="user" value="libBLE_SMART_SDK_LIB_LIB.a" toolchain="iarewarm"/>
             <device-support value="atsamb11g18a"/>
         </module>
 </asf>

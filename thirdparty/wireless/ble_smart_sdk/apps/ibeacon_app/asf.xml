@@ -7,7 +7,7 @@
 		<build type="c-source" value="app.c"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.inc"/>
-		<require idref="thirdparty.wireless.ble_smart_sdk.src"/>
+		<!--require idref="thirdparty.wireless.ble_smart_sdk.src"/-->
 		<!--require idref="thirdparty.wireless.ble_smart_sdk.services"/-->
 		
 		<generator value="iarewarm"/>

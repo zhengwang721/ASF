@@ -7,6 +7,7 @@
 		
 		<require idref="thirdparty.wireless.ble_smart_driver.lib"/>
 		<!--require idref="board.dummy.sam0"/-->
+
 		<generator value="iarewarm"/>
 		<generator value="armgcc" />
 		<generator value="as5_arm" />
