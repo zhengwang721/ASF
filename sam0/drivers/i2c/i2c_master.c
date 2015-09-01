@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief I2C Master Driver for SAMB11
+ * \brief I2C Master Driver for SAMB
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *

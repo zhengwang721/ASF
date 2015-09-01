@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM B11 I2C Slave Quick Start Guide with Callbacks
+ * \brief I2C Slave Quick Start Guide with Callbacks for SAMB
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -42,19 +42,19 @@
  */
 
 /**
- * \page asfdoc_sam0_i2c_slave_callback_use_case Quick Start Guide for I2C Slave - Callback
+ * \page asfdoc_samb_i2c_slave_callback_use_case Quick Start Guide for I2C Slave - Callback
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Slave mode
  *  - 100KHz operation speed
  *  - Not operational in standby
  *
- * \section asfdoc_sam0_i2c_slave_callback_use_case_prereq Prerequisites
+ * \section asfdoc_samb_i2c_slave_callback_use_case_prereq Prerequisites
  * The device must be connected to an I<SUP>2</SUP>C slave.
  *
- * \section asfdoc_sam0_i2c_slave_callback_use_case_setup_code Setup
+ * \section asfdoc_samb_i2c_slave_callback_use_case_setup_code Setup
  *
- * \subsection asfdoc_sam0_i2c_slave_callback_use_setup_code Code
+ * \subsection asfdoc_samb_i2c_slave_callback_use_setup_code Code
  * The following must be added to the user application:
  *
  * A sample buffer to write from, a sample buffer to read to and length of buffers:
@@ -65,9 +65,6 @@
  *
  * Globally accessible module structure:
  * \snippet qs_i2c_slave_callback.c module
- *
- * Globally accessible packet:
- * \snippet qs_i2c_slave_callback.c packet
  *
  * Function for setting up the module:
  * \snippet qs_i2c_slave_callback.c initialize_i2c
@@ -84,7 +81,7 @@
  * Add to user application \c main():
  * \snippet qs_i2c_slave_callback.c run_initialize_i2c
  *
- * \subsection asfdoc_sam0_i2c_slave_callback_use_setup_workflow Workflow
+ * \subsection asfdoc_samb_i2c_slave_callback_use_setup_workflow Workflow
  * -# Configure and enable module.
  *    \snippet qs_i2c_slave_callback.c config
  *   -# Create and initialize configuration structure.
@@ -99,20 +96,19 @@
  *    \snippet qs_i2c_slave_callback.c config_callback
  *   -# Register and enable callbacks for read and write requests from slave.
  *      \snippet qs_i2c_slave_callback.c reg_en_i2c_callback
+ *   -# Enable callback.
+ *      \snippet qs_i2c_slave_callback.c interrupt
  *
- * \section asfdoc_sam0_i2c_slave_callback_use_implementation Implementation
- * \subsection asfdoc_sam0_i2c_slave_callback_use_implementation_code Code
+ * \section asfdoc_samb_i2c_slave_callback_use_implementation Implementation
+ * \subsection asfdoc_samb_i2c_slave_callback_use_implementation_code Code
  * Add to user application \c main():
  * \snippet qs_i2c_slave_callback.c while
- * \subsection i2c_slave_callback_use_implementation_workflow Workflow
- * -# Infinite while loop, while waiting for interaction from slave.
- *    \snippet qs_i2c_slave_callback.c while
  *
- * \section asfdoc_sam0_i2c_slave_callback_use_callback Callback
+ * \section asfdoc_samb_i2c_slave_callback_use_callback Callback
  * When an address packet is received, one of the callback functions will be
   * called, depending on the DIR bit in the received packet.
  *
- * \subsection asfdoc_sam0_i2c_slave_callback_use_callback_workflow Workflow
+ * \subsection asfdoc_samb_i2c_slave_callback_use_callback_workflow Workflow
  * - Read request callback:
  *  -# Length of buffer and buffer to be sent to slave is initialized.
  *     \snippet qs_i2c_slave_callback.c packet_write

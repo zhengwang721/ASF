@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM B11 I2C Master Quick Start Guide
+ * \brief I2C Master Quick Start Guide for SAMB
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -141,8 +141,9 @@ int main(void)
 
 	//! [main]
 
+	//! [main_loop]
 	while (true) {
 		/* Infinite loop */
 	}
-
+	//! [main_loop]
 }

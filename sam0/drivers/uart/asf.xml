@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.uart" caption="UART - Universal Asynchronous Receiver/Transmitter interface for SAMB11">
+	<module type="driver" id="sam0.drivers.uart" caption="UART - Universal Asynchronous Receiver/Transmitter interface for SAMB">
 		<info type="description" value="summary">
 			Driver for the SAM UART module. Provides a unified
 			interface for the configuration and management of the Uart module.
@@ -20,7 +20,7 @@
 		<build type="doxygen-quick-start" value="asfdoc_samb_uart_exqsg"/>
 		<build type="doxygen-example-path" value="quick_start_dma"/>
 
-		<device-support value="samb11"/>
+		<device-support value="samb"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system"/>
 		<require idref="sam0.drivers.gpio"/>
