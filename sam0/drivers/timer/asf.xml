@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.timer" caption="TIMER - Timer for SAMB11">
+	<module type="driver" id="sam0.drivers.timer" caption="TIMER - Timer for SAMB">
 		<info type="keyword" value="technology">
 			<keyword value="Timers"/>
 		</info>

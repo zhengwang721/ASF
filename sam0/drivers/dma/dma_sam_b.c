@@ -1,7 +1,7 @@
 /*
  * \file
  *
- * \brief SAM Direct Memory Access Controller Driver
+ * \brief Direct Memory Access Controller Driver for SAMB
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -46,9 +46,6 @@
 
 #include <string.h>
 #include "dma_sam_b.h"
-
-//#include "clock.h"
-//#include "system_interrupt.h"
 
 struct _dma_module {
 	volatile bool _dma_init;
@@ -152,7 +149,6 @@ static void _dma_release_channel(uint8_t channel)
  * The default configuration is as follows:
  *  \li Set source max burst number as 1
  *  \li Set source tokens as 1
- *  \li Set source tokens as 1
  *  \li Set source peripheral as memory
  *  \li Set source peripheral delay as 0
  *  \li Disable source top priority
@@ -160,7 +156,6 @@ static void _dma_release_channel(uint8_t channel)
  *  \li Disable source high priority
  *  \li Set source high priority channel as 0
  *  \li Set destination max burst number as 1
- *  \li Set destination tokens as 1
  *  \li Set destination tokens as 1
  *  \li Set destination peripheral as memory
  *  \li Set destination peripheral delay as 0
@@ -353,8 +348,8 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  *
  * \return Status of the transfer start procedure.
  *
- * \retval STATUS_OK The transfer was started successfully
- * \retval STATUS_BUSY The DMA resource was busy and the transfer was not started
+ * \retval STATUS_OK              The transfer was started successfully
+ * \retval STATUS_BUSY            The DMA resource was busy and the transfer was not started
  * \retval STATUS_ERR_INVALID_ARG Transfer size is 0 and transfer was not started
  */
 enum status_code dma_start_transfer_job(struct dma_resource *resource)

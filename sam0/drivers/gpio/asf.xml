@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.gpio" caption="GPIO - GPIO Pin Control for SAMB11">
+	<module type="driver" id="sam0.drivers.gpio" caption="GPIO - GPIO Pin Control for SAMB">
 		<info type="description" value="summary">
 			Driver for the SAM GPIO module. Provides a unified interface for
 			the configuration and management of the physical device GPIO pins,

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="driver" id="sam0.drivers.quad_decoder" caption="QUAD DECODER - QUAD DECODER for SAMB11">
+	<module type="driver" id="sam0.drivers.quad_decoder" caption="QUAD DECODER - QUAD DECODER for SAMB">
 		<info type="keyword" value="technology">
 			<keyword value="Digital Signal Processing"/>
 		</info>

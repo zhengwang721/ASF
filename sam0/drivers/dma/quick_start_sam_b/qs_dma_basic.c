@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM Direct Memory Access Controller(DMAC) Driver Quick Start
+ * \brief Direct Memory Access Controller(DMAC) Driver Quick Start for SAMB
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *

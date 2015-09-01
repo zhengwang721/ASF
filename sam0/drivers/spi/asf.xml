@@ -21,16 +21,16 @@
 
 			<build type="define" name="SPI_CALLBACK_MODE" value="false"/>
 
-			<require idref="sam0.utils" />
-			<require idref="sam0.drivers.gpio" />
-			<require idref="sam0.drivers.system" />
-			<device-support value="samb"/>
-
 			<build type="doxygen-entry-point" value="asfdoc_samb_drivers_spi_group"/>
 			<build type="doxygen-example-path" value="quick_start_master"/>
 			<build type="doxygen-example-path" value="quick_start_slave"/>
 			<build type="doxygen-image-path" value="docimg"/>
 			<build type="doxygen-quick-start" value="asfdoc_samb_drivers_spi_exqsg"/>
+
+			<require idref="sam0.utils" />
+			<require idref="sam0.drivers.gpio" />
+			<require idref="sam0.drivers.system" />
+			<device-support value="samb"/>
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
 		</module>
@@ -51,9 +51,6 @@
 			<build type="module-config" subtype="required-header-file" value="conf_spi.h"/>
 			<build type="module-config" subtype="path" value="module_config"/>
 
-			<build type="define" name="SPI_CALLBACK_MODE" value="true"/>
-			<build type="doxygen-enable-section" value="SPI_CALLBACK_MODE"/>
-
 			<build type="doxygen-entry-point" value="asfdoc_samb_drivers_spi_group"/>
 			<build type="doxygen-example-path" value="quick_start_master_callback"/>
 			<build type="doxygen-example-path" value="quick_start_slave_callback"/>
@@ -61,6 +58,9 @@
 			<build type="doxygen-example-path" value="quick_start_slave"/>
 			<build type="doxygen-image-path" value="docimg"/>
 			<build type="doxygen-quick-start" value="asfdoc_samb_drivers_spi_exqsg"/>
+
+			<build type="define" name="SPI_CALLBACK_MODE" value="true"/>
+			<build type="doxygen-enable-section" value="SPI_CALLBACK_MODE"/>
 
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.gpio" />
