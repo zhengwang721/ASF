@@ -928,8 +928,6 @@ bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 {
 	xdmac_channel_config_t p_cfg = {0, 0, 0, 0, 0, 0, 0, 0};
 	uint32_t nb_data;
-	uint16_t i;
-	uint32_t descriptor_control = 0;
 
 	Assert(nb_block);
 	Assert(dest);
@@ -952,9 +950,6 @@ bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 	p_cfg.mbr_sa = (uint32_t)&(HSMCI->HSMCI_FIFO[0]);
 	p_cfg.mbr_da = (uint32_t)dest;
 	xdmac_configure_transfer(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, &p_cfg);
-	xdmac_channel_disable_interrupt(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, 0xFF);
-	xdmac_channel_enable_interrupt(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, XDMAC_CIE_BIE);
-	xdmac_enable_interrupt(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 	xdmac_channel_enable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 	hsmci_transfert_pos += nb_data;
 	return true;
@@ -980,8 +975,8 @@ bool hsmci_wait_end_of_read_blocks(void)
 		if (((uint32_t)hsmci_block_size * hsmci_nb_block) > hsmci_transfert_pos) {
 			// It is not the end of all transfers
 			// then just wait end of DMA
-			dma_sr = xdmac_get_interrupt_status(XDMAC);
-			if (dma_sr & XDMAC_GIS_IS0) {
+			dma_sr = xdmac_channel_get_interrupt_status(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
+			if (dma_sr & XDMAC_CIS_BIS) {
 				return true;
 			}
 		}
@@ -993,8 +988,6 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 {
 	xdmac_channel_config_t p_cfg = {0, 0, 0, 0, 0, 0, 0, 0};
 	uint32_t nb_data;
-	uint16_t i;
-	uint32_t descriptor_control = 0;
 
 	Assert(nb_block);
 	Assert(dest);
@@ -1017,9 +1010,6 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 	p_cfg.mbr_sa = (uint32_t)src;
 	p_cfg.mbr_da = (uint32_t)&(HSMCI->HSMCI_FIFO[0]);
 	xdmac_configure_transfer(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, &p_cfg);
-	xdmac_channel_disable_interrupt(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, 0xFF);
-	xdmac_channel_enable_interrupt(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, XDMAC_CIE_BIE);
-	xdmac_enable_interrupt(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 	xdmac_channel_enable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 	hsmci_transfert_pos += nb_data;
 	return true;
@@ -1045,8 +1035,8 @@ bool hsmci_wait_end_of_write_blocks(void)
 		if (((uint32_t)hsmci_block_size * hsmci_nb_block) > hsmci_transfert_pos) {
 			// It is not the end of all transfers
 			// then just wait end of DMA
-			dma_sr = xdmac_get_interrupt_status(XDMAC);
-			if (dma_sr & XDMAC_GIS_IS0) {
+			dma_sr = xdmac_channel_get_interrupt_status(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
+			if (dma_sr & XDMAC_CIS_BIS) {
 				return true;
 			}
 		}
