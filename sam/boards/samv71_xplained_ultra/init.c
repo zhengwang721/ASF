@@ -448,7 +448,7 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCDA1_GPIO, PIN_HSMCI_MCDA1_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCDA2_GPIO, PIN_HSMCI_MCDA2_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_HSMCI_MCDA3_GPIO, PIN_HSMCI_MCDA3_FLAGS);
-	ioport_set_pin_peripheral_mode(PIN_HSMCI_DETECT_GPIO, PIN_HSMCI_DETECT_FLAGS);
+	ioport_set_pin_peripheral_mode(SD_MMC_0_CD_GPIO, SD_MMC_0_CD_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_ILI9488

@@ -924,7 +924,6 @@ bool hsmci_wait_end_of_write_blocks(void)
 
 
 #ifdef HSMCI_DMA_DMAEN
-static lld_view1 *xdmac_link_list;
 bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 {
 	xdmac_channel_config_t p_cfg = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -934,8 +933,6 @@ bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 
 	Assert(nb_block);
 	Assert(dest);
-
-	xdmac_link_list = (lld_view1*)malloc(sizeof(lld_view1) * nb_block);
 
 	xdmac_channel_disable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 
@@ -951,32 +948,13 @@ bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 					| XDMAC_CC_SAM_FIXED_AM
 					| XDMAC_CC_DAM_INCREMENTED_AM
 					| XDMAC_CC_PERID(CONF_HSMCI_XDMAC_CHANNEL);
+	p_cfg.mbr_ubc = nb_data / 4;
+	p_cfg.mbr_sa = (uint32_t)&(HSMCI->HSMCI_FIFO[0]);
+	p_cfg.mbr_da = (uint32_t)dest;
 	xdmac_configure_transfer(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, &p_cfg);
-
-	for ( i = 0; i < nb_block; i++) {
-		xdmac_link_list[i].mbr_ubc = XDMAC_UBC_NVIEW_NDV1
-									| XDMAC_UBC_NDEN_UPDATED
-									| (nb_data / 4);
-		xdmac_link_list[i].mbr_sa  = (uint32_t)&(HSMCI->HSMCI_FIFO[i % 256]);
-		xdmac_link_list[i].mbr_da = (uint32_t)((((uint8_t *)dest) + i * hsmci_block_size));
-		if ( i == nb_block - 1) {
-			xdmac_link_list[i].mbr_nda = 0;
-		} else {
-			xdmac_link_list[i].mbr_nda = (uint32_t)&xdmac_link_list[i + 1];
-		}
-	}
-	xdmac_channel_set_descriptor_addr(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, (uint32_t)&xdmac_link_list[0], 0);
-
-	descriptor_control = XDMAC_CNDC_NDVIEW_NDV1
-						| XDMAC_CNDC_NDE_DSCR_FETCH_EN
-						| XDMAC_CNDC_NDSUP_SRC_PARAMS_UPDATED
-						| XDMAC_CNDC_NDDUP_DST_PARAMS_UPDATED;
-	xdmac_channel_set_descriptor_control(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, descriptor_control);
-
 	xdmac_channel_disable_interrupt(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, 0xFF);
-	xdmac_channel_enable_interrupt(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, XDMAC_CIE_LIE);
-	xdmac_enable_interrupt(XDMAC, XDMAC_GIE_IE0);
-
+	xdmac_channel_enable_interrupt(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, XDMAC_CIE_BIE);
+	xdmac_enable_interrupt(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 	xdmac_channel_enable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 	hsmci_transfert_pos += nb_data;
 	return true;
@@ -1008,7 +986,6 @@ bool hsmci_wait_end_of_read_blocks(void)
 			}
 		}
 	} while (!(sr & HSMCI_SR_XFRDONE));
-	free(xdmac_link_list);
 	return true;
 }
 
@@ -1021,8 +998,6 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 
 	Assert(nb_block);
 	Assert(dest);
-
-	xdmac_link_list = (lld_view1*)malloc(sizeof(lld_view1) * nb_block);
 
 	xdmac_channel_disable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 
@@ -1038,36 +1013,15 @@ bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
 					| XDMAC_CC_SAM_INCREMENTED_AM
 					| XDMAC_CC_DAM_FIXED_AM
 					| XDMAC_CC_PERID(CONF_HSMCI_XDMAC_CHANNEL);
+	p_cfg.mbr_ubc = nb_data / 4;
+	p_cfg.mbr_sa = (uint32_t)src;
+	p_cfg.mbr_da = (uint32_t)&(HSMCI->HSMCI_FIFO[0]);
 	xdmac_configure_transfer(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, &p_cfg);
-
-	for ( i = 0; i < nb_block; i++) {
-		xdmac_link_list[i].mbr_ubc = XDMAC_UBC_NVIEW_NDV1
-									| XDMAC_UBC_NDEN_UPDATED
-									| (nb_data / 4);
-		xdmac_link_list[i].mbr_sa  = (uint32_t)((((uint8_t *)src) + i * hsmci_block_size));
-		xdmac_link_list[i].mbr_da = (uint32_t)&(HSMCI->HSMCI_FIFO[i % 256]);
-
-		if ( i == nb_block - 1) {
-			xdmac_link_list[i].mbr_nda = 0;
-		} else {
-			xdmac_link_list[i].mbr_nda = (uint32_t)&xdmac_link_list[i + 1];
-		}
-	}
-	xdmac_channel_set_descriptor_addr(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, (uint32_t)&xdmac_link_list[0], 0);
-
-	descriptor_control = XDMAC_CNDC_NDVIEW_NDV1
-						| XDMAC_CNDC_NDE_DSCR_FETCH_EN
-						| XDMAC_CNDC_NDSUP_SRC_PARAMS_UPDATED
-						| XDMAC_CNDC_NDDUP_DST_PARAMS_UPDATED;
-	xdmac_channel_set_descriptor_control(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, descriptor_control);
-
 	xdmac_channel_disable_interrupt(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, 0xFF);
-	xdmac_channel_enable_interrupt(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, XDMAC_CIE_LIE);
-	xdmac_enable_interrupt(XDMAC, XDMAC_GIE_IE0);
-
+	xdmac_channel_enable_interrupt(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, XDMAC_CIE_BIE);
+	xdmac_enable_interrupt(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 	xdmac_channel_enable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
 	hsmci_transfert_pos += nb_data;
-	free(xdmac_link_list);
 	return true;
 }
 
