@@ -54,8 +54,7 @@
 #include "conf_board.h"
 
 /**
- * \defgroup asfdoc_samb_at30tse75x_group AT30TSE75X Digital Temperature
- * Sensor with Nonvolatile Registers and Serial EEPROM.
+ * \defgroup asfdoc_samb_at30tse75x_group AT30TSE75X Digital Temperature Sensor and Serial EEPROM.
  * This driver provides API for AT30TSE75X temperature sensor and EEPROM
  * through I2C interface.
  *
