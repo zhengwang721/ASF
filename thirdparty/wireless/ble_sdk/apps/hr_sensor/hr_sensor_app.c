@@ -65,7 +65,7 @@
 *							        Globals		
 *                                       *
 ****************************************************************************************/
-volatile bool button_pressed = false;
+volatile bool button_pressed = false;	/*!< Used for patch download*/
 
 volatile bool app_state = 0 ; /*!< flag to represent the application state*/
 
@@ -93,12 +93,29 @@ bool inc_changer = true;/*!< to alter the direction of increments of hr*/
 
 bool reverse = false;/*!< Used to change the hr zones in reverse order*/
 
-bool advertisement_flag = false;
+bool advertisement_flag = false;/*!< advertisement flag to check if it is already in advertising*/
 
+bool notification_sent = true;/*!< To check if notification is sent succesfully over the air*/
 /****************************************************************************************
 *							        Functions											*
 ****************************************************************************************/
 
+/** @brief blp_notification_confirmation_handler called by ble manager 
+ *	to give the status of notification sent
+ *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
+ */	
+void app_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
+{
+	if (params->status == AT_BLE_SUCCESS)
+	{
+		DBG_LOG_DEV("App Notification Successfully sent over the air");
+		notification_sent = true;
+		
+	} else {
+		DBG_LOG_DEV("Sending Notification over the air failed");
+		notification_sent = false;
+	}
+}
 /** @brief notification handler function called by the profile
  *	@param[in] notification_enable which will tell the state of the
  *application
@@ -154,24 +171,18 @@ void app_state_handler(bool state)
  */
 void button_cb(void)
 {
-	if (button_pressed == false)
-	{
-		button_pressed = true;
-		return;
-	}
-	
-	if (app_state) {
-		DBG_LOG("Going to disconnect ");
-		disconnect_flag = true;
-	} else {
+	/* For patch download */
+	button_pressed = true; 
 		
+	if (app_state) { /* App is in connected state*/
+		disconnect_flag = true;
+	} else {		/* App is in disconnected state*/
+			
 		if (advertisement_flag == false)
-		{
-			DBG_LOG("Going to advertisement");
+		{			
 			start_advertisement = true;
 			advertisement_flag = true;
-		}
-		
+		}	
 	}
 }
 
@@ -187,7 +198,7 @@ void hr_measurment_send(void)
 {
 	uint8_t hr_data[HR_CHAR_VALUE_LEN];
 	uint8_t idx = 0;
-
+	
 	if (second_counter % 10) {
 		/* Flags */
 		hr_data[idx++] = (RR_INTERVAL_VALUE_PRESENT);
@@ -297,6 +308,7 @@ void hr_measurment_send(void)
 	}
 
 	hr_sensor_send_notification(hr_data, idx);
+
 }
 
 /** @brief heart_rate_value_init will initializes the heart rate values
@@ -498,6 +510,9 @@ int main(void)
 	/* Registering the app_notification_handler with the profile */
 	register_hr_notification_handler(app_notification_handler);
 
+	/* Register the notification confirmed call back with ble manager */
+	register_ble_notification_confirmed_cb(app_notification_confirmation_handler);
+	
 	/* Registering the app_reset_handler with the profile */
 	register_hr_reset_handler(app_reset_handler);
 
@@ -506,8 +521,6 @@ int main(void)
 
 	/* Capturing the events  */
 	while (1) {
-		ble_event_task();
-
 		/* Flag to start advertisement */
 		if (start_advertisement) {
 			hr_sensor_adv();
@@ -516,9 +529,12 @@ int main(void)
 
 		/* Flag to start notification */
 		if (notification_flag) {
-			LED_Toggle(LED0);
-			hr_measurment_send();
-			notification_flag = false;
+			if (notification_sent)
+			{
+				LED_Toggle(LED0);
+				hr_measurment_send();
+				notification_flag = false;
+			} 			
 		}
 
 		/* Flag to disconnect with the peer device */
@@ -527,7 +543,10 @@ int main(void)
 			app_state = false;
 			disconnect_flag = false;
 		}
+		ble_event_task();
 	}
+	
+	
 
 	return 0;
 }
