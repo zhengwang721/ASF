@@ -250,7 +250,7 @@ int main(void)
 		/* BLE Event Task */
 		ble_event_task();
 		
-		if (press_count == 1)
+		if (press_count == DEVICE_SILENT)
 		{
 			if (flag)
 			{
@@ -259,21 +259,21 @@ int main(void)
 				flag = 0;
 			}
 			
-		} else if (press_count == 2) {
+		} else if (press_count == DEVICE_MUTE) {
 			if (flag)
 			{
 				DBG_LOG("Device to Mute Once");
 				pas_client_write_ringer_control_point(2);
 				flag = 0;
 			}
-		} else if (press_count == 3) {
+		} else if (press_count == DEVICE_NORMAL) {
 			if (flag)
 			{
 				DBG_LOG("Device to cancel mute");
 				pas_client_write_ringer_control_point(3);
 				flag = 0;
 			}
-		} else if (press_count == 4) {
+		} else if (press_count == READ_REQUEST) {
 			if (flag)
 			{
 				DBG_LOG("reading the alert status and ringer setting");			

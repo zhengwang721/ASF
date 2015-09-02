@@ -54,6 +54,11 @@
 #define RINGER_SILENT				(0x0)
 #define RINGER_NORMAL				(0x1)
 
+#define DEVICE_SILENT				(1)
+#define DEVICE_MUTE					(2)
+#define DEVICE_NORMAL				(3)
+#define READ_REQUEST				(4)
+
 /****************************************************************************************
 *							        Function Prototype                                 	*
 ****************************************************************************************/
