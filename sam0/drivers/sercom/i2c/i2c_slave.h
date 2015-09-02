@@ -460,10 +460,10 @@ static void _i2c_slave_wait_for_sync(
  * \internal Workaround for errata 13574
  * Instead set ACK/NACK of CTRLB
  *
- * This errata exist in part revisions of SAM D20/D21
+ * This errata exist in part revisions of SAM D20/D21/D09
  * D10/D11/L21/L22/DA1/C20/C21, but workaround can be works in all
  * revision of those device. As this function operation
- * should be use less cpu time as possible, so caller 
+ * should be use less cpu time as possible, so caller
  * function can ignore to check revision number, and use
  * this workaround in all revision of those device.
  *
@@ -479,7 +479,8 @@ static inline void _i2c_slave_set_ctrlb_ackact(
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
-#if (SAMD20 || SAMD21 || SAMD10 || SAMD11 || SAML21 || SAMDA1 ||  SAML22 || SAMC20 || SAMC21)
+#if (SAMD20 || SAMD21 || SAMD09 || SAMD10 || SAMD11 || SAML21 || SAMDA1 ||  \
+		SAML22 || SAMC20 || SAMC21)
 	/* Workaround, Following two write are atomic */
 	system_interrupt_enter_critical_section();
 	i2c_hw->STATUS.reg = 0;
@@ -507,10 +508,10 @@ static inline void _i2c_slave_set_ctrlb_ackact(
  * \internal Workaround for SAM0 errata 13574,
  * instead Set CMD3 of CTRLB
  *
- * This errata exist in part revisions of SAM D20/D21
+ * This errata exist in part revisions of SAM D20/D21/D09
  * D10/D11/L21/DA1/C20/C21, but workaround can be works in all
  * revision of those device. As this function operation
- * should be use less cpu time as possible, so caller 
+ * should be use less cpu time as possible, so caller
  * function can ignore to check revision number, and use
  * this workaround in all revision of those device.
  *
@@ -524,7 +525,8 @@ static inline void _i2c_slave_set_ctrlb_cmd3(
 
 	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
 
-#if (SAMD20 || SAMD21 || SAMD10 || SAMD11 || SAML21 || SAML22 || SAMDA1 || SAMC20 || SAMC21)
+#if (SAMD20 || SAMD21 || SAMD09 || SAMD10 || SAMD11 || SAML21 || SAML22 || \
+		SAMDA1 || SAMC20 || SAMC21)
 	/* Workaround */
 	/*
 	 * Below code instead i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_CMD(0x3);

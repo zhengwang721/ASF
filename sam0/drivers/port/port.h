@@ -47,11 +47,11 @@
 #define PORT_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_port_group SAM Port (PORT) Driver 
+ * \defgroup asfdoc_sam0_port_group SAM Port (PORT) Driver
  *
- * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
- * an interface for the configuration and management of the device's General 
- * Purpose Input/Output (GPIO) pin functionality, for manual pin state reading 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides
+ * an interface for the configuration and management of the device's General
+ * Purpose Input/Output (GPIO) pin functionality, for manual pin state reading
  * and writing.
  *
  * The following peripheral is used by this module:
@@ -60,7 +60,7 @@
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D09/D10/D11
  *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21

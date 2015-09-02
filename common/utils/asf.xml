@@ -10,6 +10,7 @@
 		<device-support value="samc20"/>
 	</device-alias-map>
 	<device-alias-map name="sam0_limited">
+		<device-support value="samd09"/>
 		<device-support value="samd10"/>
 		<device-support value="samd11"/>
 	</device-alias-map>
