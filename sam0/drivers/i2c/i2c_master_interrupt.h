@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMB11 I2C Master Interrupt Driver
+ * \brief I2C Master Interrupt Driver for SAMB
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -54,7 +54,7 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_sam0_sercom_i2c_group
+ * \addtogroup asfdoc_samb_i2c_group
  * @{
  *
  */

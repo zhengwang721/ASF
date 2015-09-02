@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief I2C Master Driver for SAMB11
+ * \brief I2C Master Driver for SAMB
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -55,7 +55,7 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_sam0_i2c_group
+ * \addtogroup asfdoc_samb_i2c_group
  *
  * @{
  */
@@ -65,10 +65,13 @@ extern "C" {
  * Some version of chip has multiple I2C modules.
  */
 enum i2c_core_idx {
+	/** I2C CORE1 */
 	I2C_CORE1 = 1,
 #ifdef CHIPVERSION_B0
+	/** I2C CORE2 */
 	I2C_CORE2,
 #endif      //CHIPVERSION_B0
+	/** I2C CORE MAX */
 	I2C_CORE_MAX,
 };
 
@@ -188,23 +191,17 @@ struct i2c_master_module {
  * \ref i2c_master_get_config_defaults .
  */
 struct i2c_master_config {
-	/** I2C core index **/
+	/** I2C core index */
 	enum i2c_core_idx i2c_core;
-	/** CLOCK INPUT to use as clock source. */
+	/** CLOCK INPUT to use as clock source */
 	enum i2c_clock_input clock_source;
 	/** Divide ratio used to generate the sck clock */
 	uint16_t clock_divider;
-	/** PAD0 (SDA) pinmux. */
+	/** PAD0 (SDA) pinmux */
 	uint32_t pinmux_pad0;
-	/** PAD1 (SCL) pinmux. */
+	/** PAD1 (SCL) pinmux */
 	uint32_t pinmux_pad1;
 };
-
-/**
-@defgroup i2c-drv I2C Driver API
-
-@{
-*/
 
 void i2c_master_get_config_defaults(
 		struct i2c_master_config *const config);
@@ -249,8 +246,6 @@ enum status_code i2c_master_write_byte(
 		uint8_t byte);
 
 /** @} */
-
-/** @}*/
 
 #ifdef __cplusplus
 }

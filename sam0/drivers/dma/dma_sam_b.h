@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM Direct Memory Access Controller Driver
+ * \brief Direct Memory Access Controller Driver for SAMB
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -51,7 +51,7 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_dma_group SAM Direct Memory Access Controller Driver (DMAC)
+ * \defgroup asfdoc_samb_dma_group SAM Direct Memory Access Controller Driver (DMAC)
  *
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the Direct Memory Access Controller(DMAC) module within
@@ -67,20 +67,20 @@ extern "C" {
  *  - Atmel | SMART SAM B11
  *
  * The outline of this documentation is as follows:
- * - \ref asfdoc_sam0_dma_prerequisites
- * - \ref asfdoc_sam0_dma_module_overview
- * - \ref asfdoc_sam0_dma_special_considerations
- * - \ref asfdoc_sam0_dma_extra_info
- * - \ref asfdoc_sam0_dma_examples
- * - \ref asfdoc_sam0_dma_api_overview
+ * - \ref asfdoc_samb_dma_prerequisites
+ * - \ref asfdoc_samb_dma_module_overview
+ * - \ref asfdoc_samb_dma_special_considerations
+ * - \ref asfdoc_samb_dma_extra_info
+ * - \ref asfdoc_samb_dma_examples
+ * - \ref asfdoc_samb_dma_api_overview
  *
  *
- * \section asfdoc_sam0_dma_prerequisites Prerequisites
+ * \section asfdoc_samb_dma_prerequisites Prerequisites
  *
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_sam0_dma_module_overview Module Overview
+ * \section asfdoc_samb_dma_module_overview Module Overview
  *
  * SAM devices with DMAC enables high data transfer rates with minimum
  * CPU intervention and frees up CPU time. With access to all peripherals,
@@ -88,11 +88,9 @@ extern "C" {
  * It supports static and incremental addressing for both source and
  * destination.
  *
- * The DMAC when used with Event System or peripheral triggers, provides a
+ * The DMAC when used with peripheral triggers, provides a
  * considerable advantage by reducing the power consumption and performing
  * data transfer in the background.
- * For example if the ADC is configured to generate an event, it can trigger
- * the DMAC to transfer the data into another peripheral or into SRAM.
  * The CPU can remain in sleep during this time to reduce power consumption.
  *
  * <table>
@@ -105,12 +103,10 @@ extern "C" {
  *      <td>4</td>
  *    </tr>
  * </table>
- * The DMA channel operation can be suspended at any time by software, by events
- * from event system, or after selectable descriptor execution. The operation
- * can be resumed by software or by events from event system.
- * The DMAC driver for SAM supports four types of transfers such as
- * peripheral to peripheral, peripheral to memory, memory to peripheral, and
- * memory to memory.
+ * The DMA channel operation can be suspended at any time by software, 
+ * or after selectable descriptor execution. The DMAC driver for SAM 
+ * supports four types of transfers such as peripheral to peripheral,
+ * peripheral to memory, memory to peripheral, and memory to memory.
  *
  * The basic transfer unit is a beat which is defined as a single bus access.
  * There can be multiple beats in a single block transfer and multiple block
@@ -127,23 +123,24 @@ extern "C" {
  * is able to move a defined set of data from a source address to destination
  * address triggered by a transfer trigger. On the SAM devices there are 12
  * DMA resources available for allocation. Each of these DMA resources can trigger
- * interrupt callback routines and peripheral events.
- * The other main features are
+ * interrupt callback routines.
+ * The other main features are:
  *
  * - Selectable transfer trigger source
  *  - Software
- *  - Event System
  *  - Peripheral
- * - Event input and output is supported for the four lower channels
- * - Four level channel priority
- * - Optional interrupt generation on transfer complete, channel error or channel suspend
+ * - Tree level channel priority
+ *  - Normal level
+ *  - High level
+ *  - Top level
+ * - Optional interrupt generation on transfer complete, channel error
  * - Supports multi-buffer or circular buffer mode by linking multiple descriptors
  * - Beat size configurable as 8-bit, 16-bit, or 32-bit
  *
  * A simplified block diagram of the DMA Resource can be seen in
- * \ref asfdoc_sam0_dma_module_block_diagram "the figure below".
+ * \ref asfdoc_samb_dma_module_block_diagram "the figure below".
  *
- * \anchor asfdoc_sam0_dma_module_block_diagram
+ * \anchor asfdoc_samb_dma_module_block_diagram
  * \dot
  * digraph overview {
  * splines = false;
@@ -168,56 +165,14 @@ extern "C" {
  * }
  * \enddot
  *
- * \subsection asfdoc_sam0_dma_features Driver Feature Macro Definition
- * <table>
- *  <tr>
- *    <th>Driver Feature Macro</th>
- *    <th>Supported devices</th>
- *  </tr>
- *  <tr>
- *    <td>FEATURE_DMA_CHANNEL_STANDBY</td>
- *    <td>SAMB11</td>
- *  </tr>
- * </table>
- * \note The specific features are only available in the driver when the
- * selected device supports those features.
- *
- * \subsection asfdoc_sam0_dma_module_overview_dma_transf_term Terminology Used in DMAC Transfers
- *
- *   <table border="0" cellborder="1" cellspacing="0" >
- *    <tr>
- *        <th> Name </th> <th> Description </th>
- *    </tr>
- *    <tr>
- *     <td > Beat </td>
- *     <td > It is a single bus access by the DMAC.
- *           Configurable as 8-bit, 16-bit, or 32-bit
- *     </td>
- *    </tr>
- *    <tr>
- *     <td > Burst </td>
- *     <td> It is a transfer of n-beats (n=1,4,8,16).
- *          For the DMAC module in SAM, the burst size is one beat.
- *          Arbitration takes place each time a burst transfer is completed
- *     </td>
- *    </tr>
- *    <tr>
- *     <td > Block transfer </td>
- *     <td>  A single block transfer is a configurable number of (1 to 64k)
- *           beat transfers
- *     </td>
- *    </tr>
- *   </table>
- *
- * \subsection asfdoc_sam0_dma_module_overview_dma_channels DMA Channels
+ * \subsection asfdoc_samb_dma_module_overview_dma_channels DMA Channels
  * The DMAC in each device consists of several DMA channels, which
  * along with the transfer descriptors defines the data transfer properties.
  * - The transfer control descriptor defines the source and destination
  * addresses, source and destination address increment settings, the
- * block transfer count and event output condition selection
+ * block transfer count
  * - Dedicated channel registers control the peripheral trigger source,
- * trigger mode settings, event input actions, and channel priority level
- * settings
+ * trigger mode settings, and channel priority level settings
  *
  * With a successful DMA resource allocation, a dedicated
  * DMA channel will be assigned. The channel will be occupied until the
@@ -226,13 +181,12 @@ extern "C" {
  * When there are multiple channels with active requests, the arbiter prioritizes
  * the channels requesting access to the bus.
  *
- * \subsection asfdoc_sam0_dma_module_overview_dma_trigger DMA Triggers
+ * \subsection asfdoc_samb_dma_module_overview_dma_trigger DMA Triggers
  * DMA transfer can be started only when a DMA transfer request is acknowledged/granted by the arbiter. A
- * transfer request can be triggered from software, peripheral, or an event. There
+ * transfer request can be triggered from software, peripheral. There
  * are dedicated source trigger selections for each DMA channel usage.
-
  *
- * \subsection asfdoc_sam0_dma_module_overview_dma_transfer_descriptor DMA Transfer Descriptor
+ * \subsection asfdoc_samb_dma_module_overview_dma_transfer_descriptor DMA Transfer Descriptor
  * The transfer descriptor resides in the SRAM and
  * defines these channel properties.
  *   <table border="0" cellborder="1" cellspacing="0" >
@@ -240,19 +194,22 @@ extern "C" {
  *        <th> Field name </th> <th> Field width </th>
  *    </tr>
  *    <tr>
- *     <td > Descriptor Next Address </td> <td > 32 bits </td>
+ *     <td > Source Address </td> <td > 32 bits </td>
  *    </tr>
  *    <tr>
  *     <td > Destination Address </td> <td> 32 bits </td>
  *    </tr>
  *    <tr>
- *     <td > Source Address </td> <td> 32 bits </td>
+ *     <td > Block Transfer Counter </td> <td> 32 bits </td>
  *    </tr>
  *    <tr>
- *     <td > Block Transfer Counter </td> <td> 16 bits </td>
+ *     <td > Descriptor Next Address </td> <td> 30 bits </td>
  *    </tr>
  *    <tr>
- *     <td > Block Transfer Control </td> <td> 16 bits </td>
+ *     <td > Block Transfer Interrupt Control </td> <td> 1 bits </td>
+ *    </tr>
+ *    <tr>
+ *     <td > Block Transfer Stop Control </td> <td> 1 bits </td>
  *    </tr>
  *   </table>
  *
@@ -262,44 +219,35 @@ extern "C" {
  * descriptor already allocated to the DMA resource, the descriptor will
  * be linked to the next descriptor address.
  *
- * \subsection asfdoc_sam0_dma_module_overview_dma_output DMA Interrupts/Events
- * Both an interrupt callback and an peripheral event can be triggered by the
+ * \subsection asfdoc_samb_dma_module_overview_dma_output DMA Interrupts
+ * Both an interrupt callback and an peripheral can be triggered by the
  * DMA transfer. Three types of callbacks are supported by the DMA driver:
  * transfer complete, channel suspend, and transfer error. Each of these callback
  * types can be registered and enabled for each channel independently through
  * the DMA driver API.
  *
- * The DMAC module can also generate events on transfer complete. Event
- * generation is enabled through the DMA channel, event channel configuration,
- * and event user multiplexing is done through the events driver.
  *
- * The DMAC can generate events in the below cases:
- *
- * - When a block transfer is complete
- *
- * - When each beat transfer within a block transfer is complete
- *
- * \section asfdoc_sam0_dma_special_considerations Special Considerations
+ * \section asfdoc_samb_dma_special_considerations Special Considerations
  *
  * There are no special considerations for this module.
  *
  *
- * \section asfdoc_sam0_dma_extra_info Extra Information
+ * \section asfdoc_samb_dma_extra_info Extra Information
  *
- * For extra information, see \ref asfdoc_sam0_dma_extra. This includes:
- * - \ref asfdoc_sam0_dma_extra_acronyms
- * - \ref asfdoc_sam0_dma_extra_dependencies
- * - \ref asfdoc_sam0_dma_extra_errata
- * - \ref asfdoc_sam0_dma_extra_history
+ * For extra information, see \ref asfdoc_samb_dma_extra. This includes:
+ * - \ref asfdoc_samb_dma_extra_acronyms
+ * - \ref asfdoc_samb_dma_extra_dependencies
+ * - \ref asfdoc_samb_dma_extra_errata
+ * - \ref asfdoc_samb_dma_extra_history
  *
  *
- * \section asfdoc_sam0_dma_examples Examples
+ * \section asfdoc_samb_dma_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_sam0_dma_exqsg.
+ * \ref asfdoc_samb_dma_exqsg.
  *
  *
- * \section asfdoc_sam0_dma_api_overview API Overview
+ * \section asfdoc_samb_dma_api_overview API Overview
  * @{
  */
 
@@ -347,16 +295,24 @@ enum dma_peripheral_index {
 
 /** DMA channel index */
 enum dma_ch_index {
+	/** DMA channel 0 */
 	DMA_CHANNEL_0 = 0,
+	/** DMA channel 1 */
 	DMA_CHANNEL_1,
+	/** DMA channel 2 */
 	DMA_CHANNEL_2,
+	/** DMA channel 3 */
 	DMA_CHANNEL_3,
 };
 
 enum dma_endian_swap {
+	/** DMA endian no swap */
 	DMA_ENDIAN_NO_SWAP,
+	/** DMA endian 16-bit */
 	DMA_ENDIAN_SIZE_16,
+	/** DMA endian 32-bit */
 	DMA_ENDIAN_SIZE_32,
+	/** DMA endian 64-bit */
 	DMA_ENDIAN_SIZE_64,
 };
 
@@ -364,7 +320,7 @@ enum dma_endian_swap {
  * Callback types for DMA callback driver.
  */
 enum dma_callback_type {
-	/** Callback for transfer complete. */
+	/** Callback for transfer complete */
 	DMA_CALLBACK_TRANSFER_DONE,
 	/** AHB read slave error */
 	DMA_CALLBACK_READ_ERR,
@@ -380,7 +336,7 @@ enum dma_callback_type {
 	DMA_CALLBACK_WRITE_TIMEOUT,
 	/** Channel active but did not start a burst for 2048 cycles */
 	DMA_CALLBACK_WDT_TRIGGER,
-	/** Number of available callbacks. */
+	/** Number of available callbacks */
 	DMA_CALLBACK_N,
 };
 
@@ -433,7 +389,7 @@ struct dma_config {
 	uint8_t proi_high_index;
 };
 
-/** Structure for DMA transfer resource. */
+/** Structure for DMA transfer resource */
 struct dma_resource_config {
 	struct dma_config src;
 	struct dma_config des;
@@ -443,27 +399,24 @@ struct dma_resource_config {
 	enum dma_endian_swap swap;
 };
 
-
-
-
-/** Forward definition of the DMA resource. */
+/** Forward definition of the DMA resource */
 struct dma_resource;
-/** Type definition for a DMA resource callback function. */
+/** Type definition for a DMA resource callback function */
 typedef void (*dma_callback_t)(struct dma_resource *const resource);
 
-/** Structure for DMA transfer resource. */
+/** Structure for DMA transfer resource */
 struct dma_resource {
-	/** Allocated DMA channel ID. */
+	/** Allocated DMA channel ID */
 	uint8_t channel_id;
-	/** Array of callback functions for DMA transfer job. */
+	/** Array of callback functions for DMA transfer job */
 	dma_callback_t callback[DMA_CALLBACK_N];
-	/** Bit mask for enabled callbacks. */
+	/** Bit mask for enabled callbacks */
 	uint8_t callback_enable;
-	/** Status of the last job. */
+	/** Status of the last job */
 	volatile enum status_code job_status;
-	/** Transferred data size. */
+	/** Transferred data size */
 	uint32_t transfered_size;
-	/** DMA transfer descriptor. */
+	/** DMA transfer descriptor */
 	struct dma_descriptor* descriptor;
 };
 
@@ -617,9 +570,9 @@ void dma_clear_interrupt_status(uint8_t channel, uint8_t flag);
 /** @} */
 
 /**
- * \page asfdoc_sam0_dma_extra Extra Information for DMAC Driver
+ * \page asfdoc_samb_dma_extra Extra Information for DMAC Driver
  *
- * \section asfdoc_sam0_dma_extra_acronyms Acronyms
+ * \section asfdoc_samb_dma_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -643,17 +596,15 @@ void dma_clear_interrupt_status(uint8_t channel, uint8_t flag);
  * </table>
  *
  *
- * \section asfdoc_sam0_dma_extra_dependencies Dependencies
- * This driver has the following dependencies:
- *
- * - \ref asfdoc_sam0_system_clock_group "System Clock Driver"
+ * \section asfdoc_samb_dma_extra_dependencies Dependencies
+ * There are no dependencies related to this driver.
  *
  *
- * \section asfdoc_sam0_dma_extra_errata Errata
+ * \section asfdoc_samb_dma_extra_errata Errata
  * There are no errata related to this driver.
  *
  *
- * \section asfdoc_sam0_dma_extra_history Module History
+ * \section asfdoc_samb_dma_extra_history Module History
  * An overview of the module history is presented in the table below, with
  * details on the enhancements and fixes made to the module since its first
  * release. The current version of this corresponds to the newest version in
@@ -664,32 +615,25 @@ void dma_clear_interrupt_status(uint8_t channel, uint8_t flag);
  *     <th>Changelog</th>
  *   </tr>
  *   <tr>
- *     <td>Add SAM B11 support</td>
- *   </tr>
- *   <tr>
  *     <td>Initial Release</td>
  *   </tr>
  * </table>
  */
 
  /**
- * \page asfdoc_sam0_dma_exqsg Examples for DMAC Driver
+ * \page asfdoc_samb_dma_exqsg Examples for DMAC Driver
  *
  * This is a list of the available Quick Start Guides (QSGs) and example
- * applications for \ref asfdoc_sam0_dma_group. QSGs are simple examples with
+ * applications for \ref asfdoc_samb_dma_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
- * - \subpage asfdoc_sam0_dma_basic_use_case
+ * - \subpage asfdoc_samb_dma_basic_use_case
  *
  * \note More DMA usage examples are available in peripheral QSGs.
- * A quick start guide for TC/TCC
- * shows the usage of DMA event trigger; SERCOM SPI/USART/I<SUP>2</SUP>C has example for
- * DMA transfer from peripheral to memory or from memory to peripheral;
- * ADC/DAC shows peripheral to peripheral transfer.
  *
- * \page asfdoc_sam0_dma_document_revision_history Document Revision History
+ * \page asfdoc_samb_dma_document_revision_history Document Revision History
  *
  * <table>
  *    <tr>
@@ -699,7 +643,7 @@ void dma_clear_interrupt_status(uint8_t channel, uint8_t flag);
  *    </tr>
  *    <tr>
  *        <td>A</td>
- *        <td>08/2015</td>
+ *        <td>09/2015</td>
  *        <td>Initial release</td>
  *    </tr>
  * </table>

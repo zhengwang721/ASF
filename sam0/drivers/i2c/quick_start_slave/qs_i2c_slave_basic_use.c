@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM B11 I2C Slave Quick Start Guide
+ * \brief I2C Slave Quick Start Guide for SAMB
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
