@@ -64,10 +64,11 @@
 ****************************************************************************************/
 volatile bool button_pressed = false;
 
+/** flag to check if indication has been sent successfully over the air*/
 bool indication_sent = true;
-
+/** flag to check if notification has been sent successfully over the air*/
 bool notification_sent = true;
-
+/** Flag to change the events from mmgh to kpa and vice versa*/
 bool units = APP_DEFAULT_VAL;
 /** flag to send notifications */
 bool notification_flag = APP_DEFAULT_VAL;
@@ -80,6 +81,7 @@ volatile uint8_t timer_count = APP_DEFAULT_VAL;
 /** flag to send one notification for one second*/
 bool notify = 0;
 
+/** flag to check the app state*/
 bool app_state;
 
 /** flags for reversing the direction of characteristic*
@@ -512,9 +514,6 @@ void blp_char_indication(void)
 		}
 	}
 	
-		//DBG_LOG("Time: %d : %02d : %02d : %02d : %02d : %02d ",year,month,day
-		//,hour,min,sec);
-		//DBG_LOG("\n\n");
 	/** Appending User id */	
 	if (units)
 	{
@@ -696,12 +695,9 @@ void app_indication_handler(bool enable)
  */
 void button_cb(void)
 {
-	if (button_pressed == false)
-	{
-		button_pressed = true;
-		return;
-	}
-	
+	/* for patch download */
+	button_pressed = true;
+	/* App connected state*/
 	if (app_state)
 	{
 	
@@ -718,7 +714,6 @@ void button_cb(void)
 				timer_count = 0;
 				if (notification_flag)
 				{
-					/*start the timer and enable notifications and send indication and then stop the timer*/
 					DBG_LOG("\r\nStarted sending Interim Cuff Pressure Values");
 				}	
 			}

@@ -80,6 +80,7 @@ hr_notification_callback_t notification_cb;
 hr_reset_callback_t reset_cb;
 hr_state_callback_t state_cb;
 
+bool notification_confirm = true;
 /** @brief contains the connection handle functions **/
 at_ble_handle_t connection_handle;
 
@@ -141,14 +142,13 @@ void hr_notification_confirmation_handler(at_ble_cmd_complete_event_t * params)
 bool hr_sensor_send_notification(uint8_t *hr_data, uint8_t length)
 {
 	at_ble_status_t status;
-
 	/** Updating the new characteristic value */
 	if ((status
 				= at_ble_characteristic_value_set(
 					hr_service_handler.serv_chars
 					[0].char_val_handle, hr_data,
 					length)) != AT_BLE_SUCCESS) {
-		DBG_LOG("Write value for notification failed,reason %x",
+		DBG_LOG("Write value for notification failed,reason %d",
 				status);
 				return false;
 	}
@@ -160,7 +160,7 @@ bool hr_sensor_send_notification(uint8_t *hr_data, uint8_t length)
 						connection_handle,
 						hr_service_handler.serv_chars[0]
 						.char_val_handle))) {
-			DBG_LOG("Send notification failed,reason %x", status);
+			DBG_LOG("Send notification failed,reason %d", status);
 			return false;
 		}
 	}

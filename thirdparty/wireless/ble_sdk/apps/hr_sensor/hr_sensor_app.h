@@ -149,4 +149,9 @@ void heart_rate_value_init(void );
  */
 void hr_measurment_send(void);
 
+/** @brief blp_notification_confirmation_handler called by ble manager 
+ *	to give the status of notification sent
+ *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
+ */	
+void app_notification_confirmation_handler(at_ble_cmd_complete_event_t *params);
 #endif /* __HR_SENSOR_APP_H__ */
