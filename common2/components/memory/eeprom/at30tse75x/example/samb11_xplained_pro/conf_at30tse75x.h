@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM R21 Xplained Pro board configuration.
+ * \brief AT30TSE75X Temperature sensor driver configuration file.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -43,8 +43,12 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#ifndef CONF_AT30TSE75X_H_INCLUDED
+#define CONF_AT30TSE75X_H_INCLUDED
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#include <board.h>
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#define AT30TSE_PINMUX_PAD0 PINMUX_LP_GPIO_8_MUX2_I2C0_SDA
+#define AT30TSE_PINMUX_PAD1 PINMUX_LP_GPIO_9_MUX2_I2C0_SCK
+
+#endif /* CONF_AT30TSE75X_H_INCLUDED */

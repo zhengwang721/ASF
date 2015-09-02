@@ -73,7 +73,75 @@
  *
  *
  * \section asfdoc_samb_dualtimer_module_overview Module Overview
+ *  The dual-input timers module provides a set of timing and counting related functionality,
+ * and each timer could setup respective. The module can be configured to use an 16-,
+ * or 32-bit down-counter that can generate interrupts when they reach 0.
  *
+ * \subsection asfdoc_samb_dual_timer_module_overview_counter_mode Counter Mode
+ * For each timer, the following modes of operation are available:
+ * - One-shot timer mode
+ *
+ *   The counter generates an interrupt once. When the counter reaches 0,
+ *   it halts until you reprogram it. You can do this using one of the following:
+ *
+ *   1. Clearing the one-shot count bit in the control register, in which case the
+ *     count proceeds according to the selection of Free-running or Periodic mode.
+ *   
+ *   2. Writing a new value to the Load Value register.
+ * - Free-running Mode
+ *
+ *   The counter wraps after reaching its zero value, and continues to count down from
+ *   the maximum value. This is the default mode.
+ * - Periodic Mode
+ *
+ *   The counter generates an interrupt at a constant interval, reloading the original
+ *   value after wrapping past zero.
+ *
+ * \subsection asfdoc_samb_dual_timer_module_overview_counter_size Counter Size
+ * Each timer module can be configured in one of two different counter
+ * sizes; 16-, and 32-bit. The size of the counter determines the maximum
+ * value it can count to before an overflow occurs and the count is reset back
+ * to zero. \ref asfdoc_sam0_count_size_vs_top "The table below" shows the
+ * maximum values for each of the possible counter sizes.
+ *
+ * \anchor asfdoc_sam0_count_size_vs_top
+ * <table>
+ *  <caption>Timer Counter Sizes and Their Maximum Count Values</caption>
+ *  <tr>
+ *    <th>Counter size</th>
+ *    <th>Max. (hexadecimal)</th>
+ *    <th>Max. (decimal)</th>
+ *  </tr>
+ *  <tr>
+ *    <td>16-bit</td>
+ *    <td>0xFFFF</td>
+ *    <td>65,535</td>
+ *  </tr>
+ *  <tr>
+ *    <td>32-bit</td>
+ *    <td>0xFFFFFFFF</td>
+ *    <td>4,294,967,295</td>
+ *  </tr>
+ * </table>
+ *
+ * \subsection asfdoc_samb_dual_timer_module_overview_clock Clock Settings
+ *
+ * \subsubsection asfdoc_sam0_dual_timer_module_overview_clock_selection Clock Selection
+ * The timers contain the PCLK and TIMCLK clock inputs. PCLK is the main APB system
+ * clock, and is used by the register interface. TIMCLK is the input to the prescale
+ * units and the decrementing counters.
+ *
+ * This provision of two clock inputs enables the counters to continue to run while 
+ * the APB system is in a sleep state when PCLK is disabled. External system control
+ * logic must handle the changeover periods when PCLK is disabled and enabled to ensure
+ * that the PCLK and TIMCLK inputs are fed with synchronous signals when any register
+ * access is to occur.
+ *
+ * \subsubsection asfdoc_sam0_dual_timer_module_overview_clock_prescaler Prescaler
+ * Each timer module in the SAM B11 has its own individual clock prescaler, which can
+ * be used to divide the input clock frequency used in the counter. This prescaler
+ * only scales the clock used to provide clock pulses for the counter to count, the clock
+ * can be divide to 1, 16, or 256.
  *
  * \section asfdoc_samb_dualtimer_special_considerations Special Considerations
  *

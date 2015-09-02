@@ -62,26 +62,63 @@ struct _dma_module _dma_inst = {
 /** Internal DMA resource pool. */
 static struct dma_resource* _dma_active_resource[CONF_MAX_USED_CHANNEL_NUM];
 
+/**
+ * \brief Get the assigned channel DMA value.
+ *
+ * \param[in] channel DMA channel index
+ * \param[in] DMA register address
+ *
+ * \return The value of DMA register.
+ */
 static uint32_t get_channel_reg_val(uint8_t channel, uint32_t reg)
 {
 	return *(uint32_t*)(reg + 0x100*channel);
 }
 
+/**
+ * \brief Set the assigned channel DMA value.
+ *
+ * \param[in] channel DMA channel index
+ * \param[in] DMA register address
+ * \param[in] The value to be set
+ *
+ */
 static void set_channel_reg_val(uint8_t channel, uint32_t reg, uint32_t val)
 {
 	*(uint32_t*)(reg + 0x100*channel) = val;
 }
 
+/**
+ * \brief Get the DMA status.
+ *
+ * \param[in]  channel  DMA channel index
+ *
+ * \return The status of DMA
+ */
 uint8_t dma_get_status(uint8_t channel)
 {
 	return (uint8_t)get_channel_reg_val(channel, (uint32_t)&PROV_DMA_CTRL0->CH0_INT_RAWSTAT_REG.reg);
 }
 
+/**
+ * \brief Get the DMA interrupt status.
+ *
+ * \param[in]  channel  DMA channel index
+ *
+ * \return The interrupt of status DMA
+ */
 uint8_t dma_get_interrupt_status(uint8_t channel)
 {
 	return get_channel_reg_val(channel, (uint32_t)&PROV_DMA_CTRL0->CH0_INT_STATUS_REG.reg);
 }
 
+/**
+ * \brief Get the DMA interrupt status.
+ *
+ * \param[in]  channel  DMA channel index
+ * \param[in]  flag     The interrupt flag want to clear
+ *
+ */
 void dma_clear_interrupt_status(uint8_t channel, uint8_t flag)
 {
 	set_channel_reg_val(channel, (uint32_t)&PROV_DMA_CTRL0->CH0_INT_CLEAR_REG.reg, 1 << flag);
@@ -195,6 +232,11 @@ void dma_get_config_defaults(struct dma_resource_config *config)
 	config->swap = DMA_ENDIAN_NO_SWAP;
 }
 
+/**
+ * \brief Initial the DMA global variety.
+ *
+ * Initial the DMA global variety.
+ */
 void dma_global_init(void)
 {
 	/* Clear global variety */
@@ -348,8 +390,8 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  *
  * \return Status of the transfer start procedure.
  *
- * \retval STATUS_OK              The transfer was started successfully
- * \retval STATUS_BUSY            The DMA resource was busy and the transfer was not started
+ * \retval STATUS_OK The transfer was started successfully
+ * \retval STATUS_BUSY The DMA resource was busy and the transfer was not started
  * \retval STATUS_ERR_INVALID_ARG Transfer size is 0 and transfer was not started
  */
 enum status_code dma_start_transfer_job(struct dma_resource *resource)

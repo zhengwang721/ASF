@@ -27,8 +27,8 @@
 
 			<build type="doxygen-entry-point" value="asfdoc_samb_i2c_group"/>
 			<build type="doxygen-example-path" value="quick_start_master"/>
+			<build type="doxygen-image-path" value="docimg"/>
 			<build type="doxygen-quick-start" value="asfdoc_samb_i2c_exqsg"/>
-
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
 		</module>
 		<module type="driver" id="sam0.drivers.i2c.master#callback" caption="I2C - Master Mode I2C (Callback APIs)">
@@ -58,8 +58,8 @@
 			<build type="doxygen-entry-point" value="asfdoc_samb_i2c_group"/>
 			<build type="doxygen-example-path" value="quick_start_master"/>
 			<build type="doxygen-example-path" value="quick_start_master_callback"/>
+			<build type="doxygen-image-path" value="docimg"/>
 			<build type="doxygen-quick-start" value="asfdoc_samb_i2c_exqsg"/>
-
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
 		</module>
 	</select-by-config>
@@ -92,8 +92,8 @@
 
 			<build type="doxygen-entry-point" value="asfdoc_samb_i2c_group"/>
 			<build type="doxygen-example-path" value="quick_start_slave"/>
+			<build type="doxygen-image-path" value="docimg"/>
 			<build type="doxygen-quick-start" value="asfdoc_samb_i2c_exqsg"/>
-
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
 		</module>
 		<module type="driver" id="sam0.drivers.i2c.slave#callback" caption="I2C - Slave Mode I2C (Callback APIs)">
@@ -123,8 +123,8 @@
 			<build type="doxygen-entry-point" value="asfdoc_samb_i2c_group"/>
 			<build type="doxygen-example-path" value="quick_start_slave"/>
 			<build type="doxygen-example-path" value="quick_start_slave_callback"/>
+			<build type="doxygen-image-path" value="docimg"/>
 			<build type="doxygen-quick-start" value="asfdoc_samb_i2c_exqsg"/>
-
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
 		</module>
 	</select-by-config>

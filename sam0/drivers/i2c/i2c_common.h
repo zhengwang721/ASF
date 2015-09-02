@@ -100,6 +100,151 @@ extern "C" {
  *
  * \section asfdoc_samb_i2c_overview Module Overview
  *
+ * The outline of this section is as follows:
+ * - \ref asfdoc_samb_i2c_functional_desc
+ * - \ref asfdoc_samb_i2c_bus_topology
+ * - \ref asfdoc_samb_i2c_transactions
+ * - \ref asfdoc_samb_i2c_multi_master
+ * - \ref asfdoc_samb_i2c_bus_states
+ *
+ * \subsection asfdoc_samb_i2c_functional_desc Functional Description
+ * The I<SUP>2</SUP>C provides a simple two-wire bidirectional bus consisting of a
+ * wired-AND type serial clock line (SCL) and a wired-AND type serial data line
+ * (SDA).
+ *
+ * The I<SUP>2</SUP>C bus provides a simple, but efficient method of interconnecting
+ * multiple master and slave devices. An arbitration mechanism is provided for
+ * resolving bus ownership between masters, as only one master device may own
+ * the bus at any given time. The arbitration mechanism relies on the wired-AND
+ * connections to avoid bus drivers short-circuiting.
+ *
+ * A unique address is assigned to all slave devices connected to the bus. A
+ * device can contain both master and slave logic, and can emulate multiple
+ * slave devices by responding to more than one address.
+ *
+ * \subsection asfdoc_samb_i2c_bus_topology Bus Topology
+ * The I<SUP>2</SUP>C bus topology is illustrated in
+ * \ref asfdoc_samb_i2c_bus_topology_figure "the figure below". The pull-up
+ * resistors (Rs) will provide a high level on the bus lines when none of the
+ * I<SUP>2</SUP>C devices are driving the bus. These are optional, and can be
+ * replaced with a constant current source.
+ *
+ * \anchor asfdoc_samb_i2c_bus_topology_figure
+ * \image html bus_topology.svg "I2C Bus Topology" Width=100%
+ *
+ * \subsection asfdoc_samb_i2c_transactions Transactions
+ * The I<SUP>2</SUP>C standard defines three fundamental transaction formats:
+ * - Master Write
+ *   - The master transmits data packets to the slave after addressing it
+ * - Master Read
+ *   - The slave transmits data packets to the master after being addressed
+ * - Combined Read/Write
+ *   - A combined transaction consists of several write and read transactions
+ *
+ * A data transfer starts with the master issuing a \b Start condition on the
+ * bus, followed by the address of the slave together with a bit to indicate
+ * whether the master wants to read from or write to the slave.
+ * The addressed slave must respond to this by sending an \b ACK back to the
+ * master.
+ *
+ * After this, data packets are sent from the master or slave, according to the
+ * read/write bit. Each packet must be acknowledged (ACK) or not
+ * acknowledged (NACK) by the receiver.
+ *
+ * If a slave responds with a NACK, the master must assume that the slave
+ * cannot receive any more data and cancel the write operation.
+ *
+ * The master completes a transaction by issuing a \b Stop condition.
+ *
+ * A master can issue multiple \b Start conditions during a transaction; this
+ * is then called a \b Repeated \b Start condition.
+ *
+ * \subsubsection asfdoc_samb_i2c_address_packets Address Packets
+ * The slave address consists of seven bits. The 8<SUP>th</SUP> bit in the transfer
+ * determines the data direction (read or write). An address packet always
+ * succeeds a \b Start or \b Repeated \b Start condition. The 8<SUP>th</SUP> bit is handled
+ * in the driver, and the user will only have to provide the 7-bit address.
+ *
+ * \subsubsection asfdoc_samb_i2c_data_packets Data Packets
+ * Data packets are nine bits long, consisting of one 8-bit data byte, and an
+ * acknowledgement bit. Data packets follow either an address packet or another
+ * data packet on the bus.
+ *
+ * \subsubsection asfdoc_samb_i2c_trans_examples Transaction Examples
+ * The gray bits in the following examples are sent from master to slave, and
+ * the white bits are sent from slave to master.
+ * Example of a read transaction is shown in
+ * \ref asfdoc_samb_i2c_trans_examples_i2c_read "the figure below". Here, the
+ * master first issues a \b Start condition and gets ownership of the bus. An
+ * address packet with the direction flag set to read is then sent and
+ * acknowledged by the slave. Then the slave sends one data packet which is
+ * acknowledged by the master. The slave sends another packet, which is not
+ * acknowledged by the master and indicates that the master will terminate the
+ * transaction. In the end, the transaction is terminated by the master issuing
+ * a \b Stop condition.
+ *
+ * \anchor asfdoc_samb_i2c_trans_examples_i2c_read
+ * \image html i2c_read.svg "I2C Packet Read" Width=100%
+ *
+ * Example of a write transaction is shown in
+ * \ref asfdoc_samb_i2c_trans_examples_i2c_write "the figure below". Here, the
+ * master first issues a \b Start condition and gets ownership of the bus. An
+ * address packet with the dir flag set to write is then sent and acknowledged
+ * by the slave. Then the master sends two data packets, each acknowledged by
+ * the slave. In the end, the transaction is terminated by the master issuing
+ * a \b Stop condition.
+ *
+ * \anchor asfdoc_samb_i2c_trans_examples_i2c_write
+ * \image html i2c_write.svg "I2C Packet Write" Width=100%
+ *
+ * \subsubsection asfdoc_samb_i2c_repeated_start Repeated Start
+ * To issue a \b Repeated \b Start, the functions postfixed \c _no_stop must be
+ * used.
+ * These functions will not send a \b Stop condition when the transfer is done,
+ * thus the next transfer will start with a \b Repeated \b Start. To end the
+ * transaction, the functions without the \c _no_stop postfix must be used
+ * for the last read/write.
+ *
+ * \subsection asfdoc_samb_i2c_multi_master Multi Master
+ * In a multi master environment, arbitration of the bus is important, as only
+ * one master can own the bus at any point.
+ *
+ * \subsubsection asfdoc_samb_i2c_arbitration Arbitration
+ *
+ * \par Clock stretching
+ * The serial clock line is always driven by a master device. However, all
+ * devices connected to the bus are allowed stretch the low period of the clock
+ * to slow down the overall clock frequency or to insert wait states while
+ * processing data.
+ * Both master and slave can randomly stretch the clock, which will force the
+ * other device into a wait-state until the clock line goes high again.
+ *
+ * \par Arbitration on the data line
+ * If two masters start transmitting at the same time, they will both transmit
+ * until one master detects that the other master is pulling the data line low.
+ * When this is detected, the master not pulling the line low, will stop the
+ * transmission and wait until the bus is idle.
+ * As it is the master trying to contact the slave with the lowest address that
+ * will get the bus ownership, this will create an arbitration scheme always
+ * prioritizing the slaves with the lowest address in case of a bus collision.
+ *
+ * \subsubsection asfdoc_samb_i2c_clock_sync Clock Synchronization
+ * In situations where more than one master is trying to control the bus clock
+ * line at the same time, a clock synchronization algorithm based on the same
+ * principles used for clock stretching is necessary.
+ *
+ *
+ * \subsection asfdoc_samb_i2c_bus_states Bus States
+ * As the I<SUP>2</SUP>C bus is limited to one transaction at the time,
+ * a master that wants to perform a bus transaction must wait until the bus is
+ * free.
+ * Because of this, it is necessary for all masters in a multi-master system to
+ * know the current status of the bus to be able to avoid conflicts and to
+ * ensure data integrity.
+ * \li \b IDLE No activity on the bus (between a \b Stop and a new \b Start
+ * condition)
+ * \li \b BUSY If another master is driving the bus
+ *
  * \section asfdoc_samb_i2c_special_considerations Special Considerations
  *
  *
