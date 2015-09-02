@@ -66,7 +66,7 @@ extern "C" {
  * The following devices can use this module:
  *  - Atmel | SMART SAM D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D09/D10/D11
  *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
@@ -110,7 +110,7 @@ extern "C" {
  *      <td>12</td>
  *    </tr>
  *    <tr>
- *      <td>SAM D10/D11</td>
+ *      <td>SAM D09/D10/D11</td>
  *      <td>6</td>
  *    </tr>
  *    <tr>
