@@ -119,6 +119,11 @@
 #define BLE_DEVICE_NAME				"ATMEL-PAS"
 #endif /* PAS_CLIENT */
 
+#if defined CSC_DEVICE
+#include "cscp.h"
+#define BLE_DEVICE_NAME				"ATMEL-CSC"
+#endif /* CSC_DEVICE */
+
 /** @brief default device name */
 #ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-BLE"
@@ -293,6 +298,8 @@ typedef enum
 /** Scan param service uuid */
 #define SPS_SERVICE_UUID 						(0x1813)
 
+/** CSC Service UUID. */
+#define CSC_SERVICE_UUID				("\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd")
 
 /* Characteristics UUID's */
 /* Alert Level Characteristic UUID */
@@ -362,6 +369,9 @@ typedef enum
 /** HID Control Point UUID. */
 #define HID_UUID_CHAR_HID_CONTROL_POINT		     (0x2A4C)
 
+/** CSC Endpoint Characteristic UUID. */
+#define CSC_ENDPOINT_CHAR_UUID			("\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa1\xbb\x5a\xfd")
+
 /* All GAP Connection Parameter defined */
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
 /** minimum connection interval */
@@ -397,6 +407,25 @@ typedef enum
 
 
 #if ((BLE_DEVICE_ROLE == BLE_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
+
+#if defined CSC_DEVICE
+#define BLE_PROFILE_INIT(param)								csc_prf_init(param); \
+															csc_prf_dev_adv();
+															
+#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER				csc_prf_connected_state_handler
+#define BLE_CHARACTERISTIC_CHANGED							csc_prf_char_changed_handler
+#define BLE_PRIMARY_SERVICE_FOUND_HANDLER					csc_prf_service_found_handler
+#define BLE_CHARACTERISTIC_FOUND_HANDLER					csc_prf_characteristic_found_handler
+#define BLE_DESCRIPTOR_FOUND_HANDLER						csc_prf_descriptor_found_handler
+#define BLE_DISCOVERY_COMPLETE_HANDLER						csc_prf_discovery_complete_handler
+#define BLE_NOTIFICATION_RECEIVED_HANDLER					csc_prf_notification_handler
+#define BLE_ADDITIONAL_PAIR_DONE_HANDLER					csc_prf_write_notification_handler
+#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER(param)	csc_prf_disconnect_event_handler(param);
+#define BLE_ADDITIONAL_ENCRYPTION_CHANGED_HANDLER(param)    csc_prf_write_notification_handler(param);
+#define BLE_NOTIFICATION_CONFIRMED_HANDLER					csc_notification_confirmation_handler
+
+#endif
+
 
 #if defined HID_DEVICE
 #define BLE_PROFILE_INIT(param)								hid_prf_init(param); \

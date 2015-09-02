@@ -1,0 +1,25 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="CUSTOM SERIAL CHAT Application" id="thirdparty.wireless.ble_sdk.apps.custom_serial_chat">
+		<info type="description" value="summary">
+		Custom Serial Chat App for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="csc_app.h"/>
+		<build type="c-source" value="csc_app.c"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_CENTRAL_AND_PERIPHERAL"/>
+		<build type="define" name="CSC_DEVICE" value=""/>
+		<build type="define" name="ATT_DB_MEMORY" value=""/>
+		<require idref="thirdparty.wireless.ble_sdk.lib"/>
+		<require idref="thirdparty.wireless.ble_sdk.inc"/>
+		<require idref="thirdparty.wireless.ble_sdk.src"/>
+		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
+		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.cscp"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.cscs"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>
+		<require idref="thirdparty.wireless.addons.sio2host"/> 
+		<require idref="thirdparty.wireless.ble_sdk.utils"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

@@ -19,6 +19,7 @@
 				<device-support value="megarf"/>
 				<device-support value="sam3"/>
 				<device-support value="sam4"/>
+				<device-support value="samg"/>
 				<build type="doxygen-entry-point" value="group_sio2host_uart"/>
 			</module>
 			<module type="component" id="thirdparty.wireless.addons.sio2host#uart#sam0"     caption="Serial I/O - Host using UART">
@@ -69,6 +70,7 @@
             <device-support value="sam4s"/>
             <device-support value="sam4l"/>
             <device-support value="sam4e"/>
+			<device-support value="samg55"/>
 			<build type="doxygen-entry-point" value="group_sio2host_usb"/>
 		</module>
 		<module type="meta" id="thirdparty.wireless.addons.sio2host#usb-ftdi"     caption="Serial I/O - Host using USB-FTDI">
