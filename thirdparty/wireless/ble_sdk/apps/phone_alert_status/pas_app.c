@@ -62,17 +62,60 @@
 #include "pas_app.h"
 
 
-volatile bool button_pressed = false;
+volatile bool button_pressed = false;	/*!< For patch download*/
 
-volatile uint8_t press;
+volatile uint8_t press_count;		/*!< button press count*/
 
-volatile bool flag;
+volatile bool flag;					/*!< To send values once per button press*/
 
-volatile bool app_state;
+volatile bool app_state;			/*!< state of the app,true for connected false for disconnected*/
 
 /***********************************************************************************
  *									Implementations                               *
  **********************************************************************************/
+
+/**
+ * @brief display alert status info notifies the application about state
+ * @param[in] data
+ */
+void display_alert_status_info(uint8_t *data)
+{
+	if (data[0] & BIT0_MASK)
+	{
+		DBG_LOG("Ringer State Active");
+		} else {
+		DBG_LOG("Ringer State Inactive");
+	}
+	
+	if (data[0] & BIT1_MASK)
+	{
+		DBG_LOG("Vibrate State Active");
+		} else {
+		DBG_LOG("Vibrate State Inactive");
+	}
+	
+	if (data[0] & BIT2_MASK)
+	{
+		DBG_LOG("Display State Active");
+		} else {
+		DBG_LOG("Display State Inactive");
+	}
+}
+
+/**
+ * @brief display alert status info notifies the application about state
+ * @param[in] data
+ */
+void display_ringer_setting_info(uint8_t *data)
+{
+	if (data[0] == RINGER_SILENT)
+	{
+		DBG_LOG_CONT("Ringer Silent");
+	} else if (data[0] == RINGER_NORMAL)
+	{
+		DBG_LOG_CONT("Ringer Normal");
+	}	
+}
 
 /**
  * @brief app_connected_state profile notifies the application about state
@@ -84,7 +127,7 @@ void app_connected_state(bool connected)
 	if (app_state == false)
 	{
 		DBG_LOG("App disconnected");
-		press = 0;
+		press_count = 0;
 	}
 }
 
@@ -95,30 +138,9 @@ void app_connected_state(bool connected)
  */
 void app_alert_status_read(uint8_t *data, uint8_t len)
 {
-	uint8_t idx;
-	
 	DBG_LOG("Alert Status read:");
-	if (data[0] & 1)
-	{
-		DBG_LOG("Ringer State Active");
-	} else {
-		DBG_LOG("Ringer State Inactive");
-	}
-	
-	if (data[0] & (1 << 1))
-	{
-		DBG_LOG("Vibrate State Active");
-	} else {
-		DBG_LOG("Vibrate State Inactive");
-	}
-	
-	if (data[0] & (1 << 1))
-	{
-		DBG_LOG("Display State Active");
-		} else {
-		DBG_LOG("Display State Inactive");
-	}
-	
+	DBG_LOG_DEV("Length of the data is %d",len);
+	display_alert_status_info(data);
 }
 
 /**
@@ -129,13 +151,8 @@ void app_alert_status_read(uint8_t *data, uint8_t len)
 void app_ringer_setting_read(uint8_t *data, uint8_t len)
 {
 	DBG_LOG("Alert setting read :");
-	if (data[0] == 0)
-	{
-		DBG_LOG("Ringer Silent");
-	} else if (data[0] == 1)
-	{
-		DBG_LOG("Ringer Normal");
-	}
+	DBG_LOG_DEV("Length of the data is %d",len);
+	display_ringer_setting_info(data);
 }
 
 /**
@@ -146,26 +163,8 @@ void app_ringer_setting_read(uint8_t *data, uint8_t len)
 void app_alert_status_notify(uint8_t *data, uint8_t len)
 {
 	DBG_LOG("Notified Alert Status :");
-	if (data[0] & 1)
-	{
-		DBG_LOG("Ringer State Active");
-		} else {
-		DBG_LOG("Ringer State Inactive");
-	}
-	
-	if (data[0] & (1 << 1))
-	{
-		DBG_LOG("Vibrate State Active");
-		} else {
-		DBG_LOG("Vibrate State Inactive");
-	}
-	
-	if (data[0] & (1 << 1))
-	{
-		DBG_LOG("Display State Active");
-		} else {
-		DBG_LOG("Display State Inactive");
-	}
+	DBG_LOG_DEV("length of the data is %d",len);
+	display_alert_status_info(data);
 }
 
 /**
@@ -176,13 +175,8 @@ void app_alert_status_notify(uint8_t *data, uint8_t len)
 void app_ringer_setting_notify(uint8_t *data, uint8_t len)
 {
 	DBG_LOG("\r\nNotified Ringer setting :");
-	if (data[0] == 0)
-	{
-		DBG_LOG("Ringer Silent");
-	} else if (data[0] == 1)
-	{
-		DBG_LOG("Ringer Normal");
-	}
+	DBG_LOG_DEV("length of the data is %d",len);
+	display_ringer_setting_info(data);
 }
 
 /**
@@ -199,7 +193,7 @@ void button_cb(void)
 	{
 		DBG_LOG("button Pressed");
 		flag = 1;
-		press += 1;
+		press_count += 1;
 	}
 }
 
@@ -256,7 +250,7 @@ int main(void)
 		/* BLE Event Task */
 		ble_event_task();
 		
-		if (press == 1)
+		if (press_count == 1)
 		{
 			if (flag)
 			{
@@ -265,21 +259,21 @@ int main(void)
 				flag = 0;
 			}
 			
-		} else if (press == 2) {
+		} else if (press_count == 2) {
 			if (flag)
 			{
 				DBG_LOG("Device to Mute Once");
 				pas_client_write_ringer_control_point(2);
 				flag = 0;
 			}
-		} else if (press == 3) {
+		} else if (press_count == 3) {
 			if (flag)
 			{
 				DBG_LOG("Device to cancel mute");
 				pas_client_write_ringer_control_point(3);
 				flag = 0;
 			}
-		} else if (press == 4) {
+		} else if (press_count == 4) {
 			if (flag)
 			{
 				DBG_LOG("reading the alert status and ringer setting");			
@@ -292,7 +286,7 @@ int main(void)
 					{
 						DBG_LOG("reading alert status invocation failed");
 					}
-					press = 0;
+					press_count = 0;
 			}
 		}
 	}

@@ -44,9 +44,15 @@
 * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
 */
 
+/****************************************************************************************
+*							        Macros			                                 	*
+****************************************************************************************/
+#define BIT0_MASK					(0x1 << 0)
+#define BIT1_MASK					(0x1 << 1)
+#define BIT2_MASK					(0x1 << 2)
 
-
-
+#define RINGER_SILENT				(0x0)
+#define RINGER_NORMAL				(0x1)
 
 /****************************************************************************************
 *							        Function Prototype                                 	*
@@ -90,3 +96,15 @@ void app_ringer_setting_notify(uint8_t *data, uint8_t len);
  * @param[in] connected
  */
 void app_connected_state(bool connected);
+
+/**
+ * @brief display alert status info notifies the application about state
+ * @param[in] data
+ */
+void display_alert_status_info(uint8_t *data);
+
+/**
+ * @brief display alert status info notifies the application about state
+ * @param[in] data
+ */
+void display_ringer_setting_info(uint8_t *data);
