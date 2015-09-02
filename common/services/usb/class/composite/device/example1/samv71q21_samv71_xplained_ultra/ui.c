@@ -136,8 +136,6 @@ void ui_stop_write(void)
 
 void ui_process(uint16_t framenumber)
 {
-	bool b_btn_state;
-	static bool btn_left = false, btn_right = false;
 	static uint16_t cpt_sof = 0;
 
 	if ((framenumber % 1000) == 0) {

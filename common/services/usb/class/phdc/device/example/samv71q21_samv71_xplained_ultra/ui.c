@@ -80,7 +80,6 @@ void ui_process(uint16_t framenumber)
 	static uint8_t cpt_sof = 0;
 	bool b_btn_state;
 	static bool btn0_last_state = false;
-	static bool btn1_last_state = false;
 
 	if ((framenumber % 1000) == 0) {
 		LED_On(LED0);

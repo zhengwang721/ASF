@@ -110,13 +110,19 @@ int main(void)
 	FRESULT res;
 	FATFS fs;
 	FIL file_object;
+	const usart_serial_options_t usart_serial_options = {
+		.baudrate   = CONF_TEST_BAUDRATE,
+		.charlength = CONF_TEST_CHARLENGTH,
+		.paritytype = CONF_TEST_PARITY,
+		.stopbits   = CONF_TEST_STOPBITS,
+	};
 
 	irq_initialize_vectors();
 	cpu_irq_enable();
 
 	sysclk_init();
 	board_init();
-	configure_console();
+	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
 	/* Initialize SD MMC stack */
 	sd_mmc_init();

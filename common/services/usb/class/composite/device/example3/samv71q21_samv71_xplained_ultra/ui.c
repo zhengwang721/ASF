@@ -203,7 +203,7 @@ void ui_stop_write(void)
 void ui_process(uint16_t framenumber)
 {
 	bool b_btn_state, success;
-	static bool btn_last_state = false, btn_left = false, btn_right = false;
+	static bool btn_last_state = false;
 	static bool sequence_running = false;
 	static uint8_t u8_sequence_pos = 0;
 	uint8_t u8_value;

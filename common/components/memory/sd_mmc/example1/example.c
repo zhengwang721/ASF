@@ -174,27 +174,6 @@ static uint8_t buf_test[TEST_MEM_ACCESS_SIZE];
 static uint8_t buf_cia[TEST_CIA_SIZE];
 //! @}
 
-/**
- *  \brief Configure the Console UART.
- */
-static void configure_console(void)
-{
-	const usart_serial_options_t uart_serial_options = {
-		.baudrate = CONF_TEST_BAUDRATE,
-#ifdef CONF_TEST_CHARLENGTH
-		.charlength = CONF_TEST_CHARLENGTH,
-#endif
-		.paritytype = CONF_TEST_PARITY,
-#ifdef CONF_TEST_STOPBITS
-		.stopbits = CONF_TEST_STOPBITS,
-#endif
-	};
-
-	/* Configure console UART. */
-	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
-	stdio_serial_init(CONF_TEST_USART, &uart_serial_options);
-}
-
 static void main_display_info_card(uint8_t slot);
 static void main_test_memory(uint8_t slot);
 static void main_test_sdio(uint8_t slot);
@@ -209,13 +188,19 @@ int main(void)
 {
 	uint8_t slot = 0;
 	sd_mmc_err_t err;
+	const usart_serial_options_t usart_serial_options = {
+		.baudrate   = CONF_TEST_BAUDRATE,
+		.charlength = CONF_TEST_CHARLENGTH,
+		.paritytype = CONF_TEST_PARITY,
+		.stopbits   = CONF_TEST_STOPBITS,
+	};
 
 	irq_initialize_vectors();
 	cpu_irq_enable();
 
 	sysclk_init();
 	board_init();
-	configure_console();
+	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
 	time_tick_init();
 

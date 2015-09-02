@@ -81,7 +81,6 @@ void ui_process(uint16_t framenumber)
 {
 	bool b_btn_state;
 	static bool btn0_last_state = false;
-	static bool btn1_last_state = false;
 	static uint8_t cpt_sof = 0;
 
 	if ((framenumber % 1000) == 0) {

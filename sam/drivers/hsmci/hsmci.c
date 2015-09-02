@@ -149,8 +149,10 @@ static void hsmci_reset(void)
 #ifdef HSMCI_SR_DMADONE
 	HSMCI->HSMCI_DMA = 0;
 #endif
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
 #ifdef HSMCI_DMA_DMAEN
 	HSMCI->HSMCI_DMA = 0;
+#endif
 #endif
 	// Enable the HSMCI
 	HSMCI->HSMCI_CR = HSMCI_CR_PWSEN | HSMCI_CR_MCIEN;
@@ -315,9 +317,11 @@ void hsmci_init(void)
 	pmc_enable_periph_clk(ID_DMAC);
 #endif
 
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
 #ifdef HSMCI_DMA_DMAEN
 	// Enable clock for DMA controller
 	pmc_enable_periph_clk(ID_XDMAC);
+#endif
 #endif
 
 	// Set the Data Timeout Register to 2 Mega Cycles
@@ -429,9 +433,11 @@ bool hsmci_send_cmd(sdmmc_cmd_def_t cmd, uint32_t arg)
 	// Disable PDC for HSMCI
 	HSMCI->HSMCI_MR &= ~HSMCI_MR_PDCMODE;
 #endif
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
 #ifdef HSMCI_DMA_DMAEN
 	// Disable DMA for HSMCI
 	HSMCI->HSMCI_DMA = 0;
+#endif
 #endif
 	HSMCI->HSMCI_BLKR = 0;
 	return hsmci_send_cmd_execute(0, cmd, arg);
@@ -483,6 +489,7 @@ bool hsmci_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg, uint16_t block_size, ui
 	}
 #endif
 
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
 #ifdef HSMCI_DMA_DMAEN
 	if (access_block) {
 		// Enable DMA for HSMCI
@@ -492,7 +499,7 @@ bool hsmci_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg, uint16_t block_size, ui
 		HSMCI->HSMCI_DMA = 0;
 	}
 #endif
-
+#endif
 	// Enabling Read/Write Proof allows to stop the HSMCI Clock during
 	// read/write  access if the internal FIFO is full.
 	// This will guarantee data integrity, not bandwidth.
@@ -922,7 +929,7 @@ bool hsmci_wait_end_of_write_blocks(void)
 }
 #endif // HSMCI_MR_PDCMODE
 
-
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
 #ifdef HSMCI_DMA_DMAEN
 bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
 {
@@ -1045,3 +1052,4 @@ bool hsmci_wait_end_of_write_blocks(void)
 	return true;
 }
 #endif // HSMCI_DMA_DMAEN
+#endif
