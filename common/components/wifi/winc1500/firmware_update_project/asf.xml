@@ -54,6 +54,7 @@
 
 			<build type="include-path" value="firmware/Tools/image_builder"/>
 			<build type="include-path" value="firmware/Tools/image_builder/debug"/>
+			<build type="distribute" subtype="file" value="firmware/Tools/image_builder/debug/image_builder.exe"/>
 			<build type="distribute" subtype="file" value="firmware/Tools/image_builder/debug/generate_ate_image.bat"/>
 			<build type="distribute" subtype="file" value="firmware/Tools/image_builder/debug/generate_normal_image.bat"/>
 			<build type="distribute" subtype="file" value="firmware/Tools/image_builder/debug/generate_ota_image.bat"/>
