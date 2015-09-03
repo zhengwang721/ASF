@@ -10,7 +10,6 @@
 			<build type="include-path" value="."/>
 			<build type="c-source" value="main.c"/>
 			<build type="distribute" subtype="file" value="sam4s_xplained_pro_firmware_update.bat"/>
-			<build type="distribute" subtype="file" value="sam4e_xplained_pro_firmware_update.bat"/>
 			<build type="distribute" subtype="file" value="samg53_xplained_pro_firmware_update.bat"/>
 			<build type="distribute" subtype="file" value="samg55_xplained_pro_firmware_update.bat"/>
 			<build type="distribute" subtype="file" value="samd21_xplained_pro_firmware_update.bat"/>
@@ -76,7 +75,6 @@
 			<build type="distribute" subtype="file" value="firmware/Tools/root_certificate_downloader/debug_uart/RootCertDownload.bat"/>
 
 			<build type="include-path" value="firmware/Tools/serial_bridge"/>
-			<build type="distribute" subtype="file" value="firmware/Tools/serial_bridge/sam4e_xplained_pro_serial_bridge.elf"/>
 			<build type="distribute" subtype="file" value="firmware/Tools/serial_bridge/sam4s_xplained_pro_serial_bridge.elf"/>
 			<build type="distribute" subtype="file" value="firmware/Tools/serial_bridge/samg53_xplained_pro_serial_bridge.elf"/>
 			<build type="distribute" subtype="file" value="firmware/Tools/serial_bridge/samg55_xplained_pro_serial_bridge.elf"/>
@@ -85,7 +83,6 @@
 
 			<!-- Device support -->
 			<device-support value="sam4s"/>
-			<device-support value="sam4e"/>
 			<device-support value="samg53"/>
 			<device-support value="samg55"/>
 			<device-support value="samd21"/>
