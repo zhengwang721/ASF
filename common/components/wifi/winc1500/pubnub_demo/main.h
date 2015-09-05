@@ -48,10 +48,30 @@
 extern "C" {
 #endif
 
-/** Wi-Fi Settings */
-#define MAIN_WIFI_M2M_WLAN_SSID     "SSID" /* < Destination SSID */
-#define MAIN_WIFI_M2M_WLAN_AUTH     M2M_WIFI_SEC_WPA_PSK /* < Security manner */
-#define MAIN_WIFI_M2M_WLAN_PSK      "PASSWORD" /* < Password for Destination SSID */
+/** Use DEMO_ENABLE_WEB_PROVISIONING macro to enable/disable Wi-Fi web provisioning. */
+#define DEMO_ENABLE_WEB_PROVISIONING
+
+/** Provisioning method 1: Access point configuration. */
+#define DEMO_WLAN_AP_NAME                               "WINC1500_00:00"
+#define DEMO_WLAN_AP_CHANNEL                            1
+#define DEMO_WLAN_AP_WEP_INDEX                          0
+#define DEMO_WLAN_AP_WEP_SIZE                           WEP_40_KEY_STRING_SIZE
+#define DEMO_WLAN_AP_WEP_KEY                            "1234567890"
+#define DEMO_WLAN_AP_SECURITY                           M2M_WIFI_SEC_OPEN
+#define DEMO_WLAN_AP_MODE                               SSID_MODE_VISIBLE
+#define DEMO_WLAN_AP_DOMAIN_NAME                        "atmelconfig.com"
+#define DEMO_WLAN_AP_IP_ADDRESS                         {192, 168, 1, 1}
+/** Provisioning method 2: SSID and pass phrase of the AP to connect to. */
+#define DEMO_WLAN_SSID                                  "ATSC24TIBO"
+#define DEMO_WLAN_PSK                                   "atmel123"
+#define DEMO_WLAN_AUTH                                  M2M_WIFI_SEC_WPA_PSK
+
+/** PubNub Settings. */
+#define DEMO_PUBNUB_PUBLISH_KEY                         "demo"
+#define DEMO_PUBNUB_SUBSCRIBE_KEY                       "demo"
+#define DEMO_PUBNUB_CHANNEL						        "WINC1500_00:00"
+#define DEMO_PUBNUB_PUBLISH_INTERVAL                    (3000)
+#define DEMO_PUBNUB_SUBSCRIBE_INTERVAL                  (1000)
 
 #ifdef __cplusplus
 }
