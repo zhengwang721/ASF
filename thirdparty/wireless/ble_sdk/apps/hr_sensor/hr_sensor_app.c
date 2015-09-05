@@ -76,15 +76,13 @@ uint16_t energy_expended_val = ENERGY_EXP_NORMAL; /*!< to count the energy expen
 uint16_t energy_incrementor ;	/*!< energy incrementor for various heart rate values*/
 uint16_t heart_rate_value = HEART_RATE_MIN_NORM; /*!< to count the heart rate value*/
 uint16_t rr_interval_value = RR_VALUE_MIN; /*!< to count the rr interval value*/
-int8_t inc_changer = 1;/*!< to alter the direction of increments of hr*/
-bool reverse = false;/*!< Used to change the hr zones in reverse order*/
 uint8_t activity = 0; /*!< activiy which will determine the */
 uint8_t prev_activity = -1;/*!< previous activity */
+int8_t inc_changer	= 1;/*!< increment operator to change heart rate */
 int8_t time_operator ;/*!< operator to change the seconds */
 uint8_t hr_min_value;/*!<the minimum heart rate value*/
 uint8_t hr_max_value;/*!<the maximum heart rate value*/
-
-volatile bool button_pressed = false;
+volatile bool button_pressed = false;/*!<patch download*/
 /****************************************************************************************
 *							        Functions											*
 ****************************************************************************************/
@@ -354,10 +352,10 @@ void heart_rate_value_init(void )
  */
 void timer_callback_handler(void)
 {
-	if (second_counter == 0)
+	if (second_counter == START_OF_FIRST_ACTIVITY)
 	{
 		time_operator = 1;
-	} else if (second_counter == 200)
+	} else if (second_counter == END_OF_LAST_ACTIVITY)
 	{
 		time_operator = -1;
 	}
