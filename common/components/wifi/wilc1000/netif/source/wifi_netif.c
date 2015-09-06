@@ -176,6 +176,12 @@ void winc_rx_callback(uint8 msg_type, void * msg, void *ctrl_buf)
 		rem = ctrl->u16RemainigDataSize;
 		if (!rx_first) {
 			rx_first = rx_last = pbuf_alloc(PBUF_RAW, PBUF_POOL_BUFSIZE, PBUF_POOL);
+			if (rx_first == NULL) {
+				LINK_STATS_INC(link.memerr);
+				LINK_STATS_INC(link.drop);
+				m2m_wifi_set_receive_buffer_ex(rx_buf, sizeof(rx_buf));
+				return;
+			}
 			memcpy(((uint8_t *)rx_first->payload) + ETH_PAD_SIZE, rx_buf, sz);
 		}
 		p = pbuf_alloc(PBUF_RAW, PBUF_POOL_BUFSIZE, PBUF_POOL);
@@ -203,10 +209,13 @@ void winc_rx_callback(uint8 msg_type, void * msg, void *ctrl_buf)
 			rx_first = p;			
 		} else {
 			if (!p) {
-				pbuf_free(rx_first);
+				if (rx_first)
+					pbuf_free(rx_first);
 				rx_first = 0;
 				LINK_STATS_INC(link.memerr);
 				LINK_STATS_INC(link.drop);
+				m2m_wifi_set_receive_buffer_ex(rx_buf, sizeof(rx_buf));
+				return;
 			} else {
 				p->tot_len = rem;
 				rx_last->next = p;
