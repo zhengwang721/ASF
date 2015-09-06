@@ -470,7 +470,7 @@ enum status_code qspi_flash_access_memory(struct qspid_t *qspid, enum qspi_acces
  * steps for setup can be copied into a custom initialization function, while
  * the steps for usage can be copied into, e.g.the main application function.
  *
- * \section spi_basic_use_case Basic use case
+ * \section spi_basic_use_case Basic use case of the QSPI driver
  * In this basic use case, the QSPI module are configured for:
  * - SPI mode
  * - Serial Memory Mode

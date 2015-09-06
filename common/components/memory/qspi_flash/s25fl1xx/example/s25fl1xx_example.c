@@ -52,7 +52,7 @@
  *
  *  \par Requirements
  *
- *  This package can be used with SAMV7171 XPlAINED ULTRA.
+ *  This package can be used with SAMV71 XPlAINED ULTRA.
  *
  * \section Description
  *
@@ -68,7 +68,7 @@
  * -# Build the program and download it into the evaluation board.
  * -# On the computer, open and configure a terminal application
  *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
- *   - 115200 baud rate
+ *   - 115200 bauds
  *   - 8 bits of data
  *   - No parity
  *   - 1 stop bit
