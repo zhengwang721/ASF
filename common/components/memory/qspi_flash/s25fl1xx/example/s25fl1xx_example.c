@@ -50,13 +50,17 @@
  * This example shows how to configure the S25FL116K.
  * It will perform write and read operations to check the configuration.
  *
+ *  \par Requirements
+ *
+ *  This package can be used with SAMV7171 XPlAINED ULTRA.
+ *
  * \section Description
  *
- * An accurate one-to-one comparison is processed after the complete SDRAM
+ * An accurate one-to-one comparison is processed after the complete flash
  * configuration.
  *
- * \section compinfo Compilation Info
- * This software was written for the GNU GCC and IAR EWARM.
+ * \section Compilation Info
+ * This software was written for the GNU GCC.
  * Other compilers may or may not work.
  *
  * \section Usage
@@ -64,7 +68,7 @@
  * -# Build the program and download it into the evaluation board.
  * -# On the computer, open and configure a terminal application
  *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
- *   - 115200 bauds
+ *   - 115200 baud rate
  *   - 8 bits of data
  *   - No parity
  *   - 1 stop bit
