@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="ALERT NOTIFICATION PROFILE CLIENT APPLICATION" id="thirdparty.wireless.ble_sdk.apps.alert_notification">
+	<module type="meta" caption="Alert Notification Client Application" id="thirdparty.wireless.ble_sdk.apps.alert_notification">
 		<info type="description" value="summary">
-		Alert Notification Profile application for BLE stack
+		Alert Notification Client Application for BLE stack
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="alert_notificaition_app.h"/>

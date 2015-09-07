@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="ANCS APPLICATION" id="thirdparty.wireless.ble_sdk.apps.ancs">
+	<module type="meta" caption="ANCS Application" id="thirdparty.wireless.ble_sdk.apps.ancs">
 		<info type="description" value="summary">
 		ANCS application for BLE stack
 		</info>

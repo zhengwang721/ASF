@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="Alert Notification Application - SAM D21 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.ancs.samd21_xplained_pro" force-caption="true" force-description="true">
+	<project caption="ANCS Application - SAM D21 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.ancs.samd21_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		Alert Notification Application for BLE stack.
+		ANCS Application for BLE stack.
 		</info>	
 		<require idref="thirdparty.wireless.ble_sdk.apps.ancs"/>
 		<build type="include-path" value="."/>
