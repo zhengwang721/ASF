@@ -106,7 +106,7 @@ typedef u32_t mem_ptr_t;
 /* Debug facilities. LWIP_DEBUG must be defined to read output */
 #ifdef LWIP_DEBUG
 #define LWIP_PLATFORM_DIAG(x)   {osprintf x;}
-#define LWIP_PLATFORM_ASSERT(x) {osprintf("Assertion \"%s\" failed at line %d in %s\n", x, __LINE__, __FILE__); while(1);}
+#define LWIP_PLATFORM_ASSERT(x) {osprintf("Assertion \"%s\" failed at line %d in %s\r\n", x, __LINE__, __FILE__); while(1);}
 #else
 #define LWIP_PLATFORM_DIAG(x)   {;}
 #define LWIP_PLATFORM_ASSERT(x) {while (1);}
