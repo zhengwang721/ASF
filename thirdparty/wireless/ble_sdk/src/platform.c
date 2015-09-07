@@ -55,7 +55,7 @@ uint8_t bus_type = AT_BLE_UART;
 volatile enum tenuTransportState slave_state = PLATFORM_TRANSPORT_SLAVE_DISCONNECTED;
 #define GTL_EIF_CONNECT_REQ	0xA5
 #define GTL_EIF_CONNECT_RESP 0x5A
-#define BTLC1000_STARTUP_DELAY (1500)
+#define BTLC1000_STARTUP_DELAY (3500)
 #define BTLC1000_WAKEUP_DELAY (5)
 #define PLATFORM_EVT_WAIT_TIMEOUT (4000)
 
@@ -122,11 +122,6 @@ at_ble_status_t platform_init(void* platform_params)
 	ble_configure_control_pin();
 	
 	delay_ms(BTLC1000_STARTUP_DELAY);
-	LED_On(LED0);
-
-	while(button_pressed == false);
-	button_pressed = false;
-	LED_Off(LED0);
 	
 	if (cfg->bus_type == AT_BLE_UART)
 	{

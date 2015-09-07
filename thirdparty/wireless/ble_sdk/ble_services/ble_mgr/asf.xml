@@ -5,7 +5,6 @@
 		<build type="include-path"  value="./"/>
   		<build type="header-file"   value="ble_manager.h"/>
   		<build type="c-source"      value="ble_manager.c"/>
-		<build type="define" name="BLE_PERIPHERAL_PAIR_ENABLE" value="1"/>
 
 		<build type="doxygen-entry-point" value="ble_stack_group"/>
 		<device-support-alias value="ble_stack_lib_support"/>
