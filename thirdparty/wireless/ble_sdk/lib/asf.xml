@@ -2,27 +2,21 @@
 	<select-by-device id="thirdparty.wireless.ble_sdk.lib" caption="BLE - SDK Lib">        
 			<module type="meta" id="thirdparty.wireless.ble_sdk.lib#1" caption="BLE SDK Lib for atsamd21j18a">
             <info type="description" value="summary">
-            BLE SDK library for ATSAMD21J18A controller
+            BLE SDK library for CM0-Plus
             </info>
-            <build type="library" subtype="user" value="samd21/iar/libble_sdk.a" toolchain="iarewarm"/>
-            <build type="library" subtype="user" value="samd21/gcc/libble_sdk.a" toolchain="armgcc"/>
+            <build type="library" subtype="user" value="cm0p/iar/libble_sdk.a" toolchain="iarewarm"/>
+            <build type="library" subtype="user" value="cm0p/gcc/libble_sdk.a" toolchain="armgcc"/>
             <device-support value="atsamd21j18a"/>
+            <device-support value="atsaml21j18a"/>
+            <device-support value="atsaml21j18b"/>
         </module>
 			<module type="meta" id="thirdparty.wireless.ble_sdk.lib#2" caption="BLE SDK Lib for atsamg55j19">
             <info type="description" value="summary">
-            BLE SDK library for ATSAMG55J19 controller
+            BLE SDK library for CM4F
             </info>
-            <build type="library" subtype="user" value="samg55/iar/libble_sdk.a" toolchain="iarewarm"/>
-            <build type="library" subtype="user" value="samg55/gcc/libble_sdk.a" toolchain="armgcc"/>
+            <build type="library" subtype="user" value="cm4f/iar/libble_sdk.a" toolchain="iarewarm"/>
+            <build type="library" subtype="user" value="cm4f/gcc/libble_sdk.a" toolchain="armgcc"/>
             <device-support value="atsamg55j19"/>
-        </module>
-        <module type="meta" id="thirdparty.wireless.ble_sdk.lib#3" caption="BLE SDK Lib for atsaml21j18a">
-            <info type="description" value="summary">
-            BLE SDK library for ATSAML21J18A controller
-            </info>
-            <build type="library" subtype="user" value="saml21/iar/libble_sdk.a" toolchain="iarewarm"/>
-            <build type="library" subtype="user" value="saml21/gcc/libble_sdk.a" toolchain="armgcc"/>
-            <device-support value="atsaml21j18a"/>
         </module>
     </select-by-device>
 </asf>
