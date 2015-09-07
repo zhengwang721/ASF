@@ -50,9 +50,9 @@
  * This example shows how to configure the S25FL116K.
  * It will perform write and read operations to check the configuration.
  *
- *  \par Requirements
+ * \section Requirements
  *
- *  This package can be used with SAMV71 XPlAINED ULTRA.
+ * This package can be used with SAMV71 XPlAINED ULTRA.
  *
  * \section Description
  *
