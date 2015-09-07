@@ -425,14 +425,21 @@ void ble_connected_state_handler(at_ble_connected_t *conn_params)
 		
 		DBG_LOG("Connection Handle %d", conn_params->handle);
 		
-#if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)
-		ble_send_slave_sec_request(conn_params->handle);
-#endif
-		
 		if (ble_connected_cb != NULL)
 		{
 			ble_connected_cb(conn_params->handle);
 		}
+		
+#if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)
+	#if BLE_PERIPHERAL_PAIR_ENABLE
+		ble_send_slave_sec_request(conn_params->handle);		
+	#else
+		if (ble_paired_cb != NULL)
+		{
+			ble_paired_cb(conn_params->handle);
+		}
+	#endif
+#endif
 	} 
 	else
 	{
