@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="ALERT NOTIFICATION CLIENT APPLICATION" id="thirdparty.wireless.ble_sdk.apps.ancs">
+	<module type="meta" caption="ANCS APPLICATION" id="thirdparty.wireless.ble_sdk.apps.ancs">
 		<info type="description" value="summary">
-		ANP application for BLE stack
+		ANCS application for BLE stack
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="ancs_app.h"/>

@@ -492,6 +492,61 @@ void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update)
 	DBG_LOG("AT_BLE_CONN_PARAM_UPDATE ");
 }
 
+void ble_slave_security_handler(at_ble_slave_sec_request_t* slave_sec_req)
+{
+	at_ble_pair_features_t features;
+	uint8_t i = 0;
+	
+	if (app_device_bond)
+	{
+		app_device_bond = false;
+	}
+	
+	if(!app_device_bond)
+	{
+
+		features.desired_auth =  AT_BLE_MODE1_L2_AUTH_PAIR_ENC;
+		features.bond = slave_sec_req->bond;
+		features.mitm_protection = slave_sec_req->mitm_protection;
+		/* Device capabilities is display only , key will be generated
+		and displayed */
+		features.io_cababilities = AT_BLE_IO_CAP_KB_DISPLAY;
+
+		features.oob_avaiable = false;
+			
+		/* Distribution of LTK is required */
+		features.initiator_keys =   AT_BLE_KEY_DIST_ENC;
+		features.responder_keys =   AT_BLE_KEY_DIST_ENC;
+		features.max_key_size = 16;
+		features.min_key_size = 16;
+		
+		/* Generate LTK */
+		for(i=0; i<8; i++)
+		{
+			app_bond_info.key[i] = rand()&0x0f;
+			app_bond_info.nb[i] = rand()&0x0f;
+		}
+		
+		for(i=8 ; i<16 ;i++)
+		{
+			app_bond_info.key[i] = rand()&0x0f;
+		}
+		
+		app_bond_info.ediv = rand()&0xffff;
+		app_bond_info.key_size = 16;
+		/* Send pairing response */
+		DBG_LOG("Sending pairing response");
+		if(at_ble_authenticate(slave_sec_req->handle, &features, &app_bond_info, NULL) != AT_BLE_SUCCESS)
+		{
+			features.bond = false;
+			features.mitm_protection = false;
+			DBG_LOG(" != AT_BLE_SUCCESS ");
+			at_ble_authenticate(slave_sec_req->handle, &features, NULL, NULL);
+			
+		}
+	}
+}
+
 /** @brief function handles pair request */
 void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 {
@@ -790,7 +845,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	 */
 	case AT_BLE_SLAVE_SEC_REQUEST:
 	{
-		
+		BLE_SLAVE_SEC_REQUEST((at_ble_slave_sec_request_t *)event_params);
 	}
 	break;
 	

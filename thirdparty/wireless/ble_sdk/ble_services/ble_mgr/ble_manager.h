@@ -484,6 +484,8 @@ typedef enum
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL))
 #define BLE_SCAN_REPORT_HANDLER						ble_scan_report_handler
 #define BLE_SCAN_INFO_HANDLER						ble_scan_info_handler
+#define BLE_SLAVE_SEC_REQUEST						ble_slave_security_handler
+#define BLE_PAIR_KEY_REQUEST						ble_pair_key_request_handler
 
 /** @brief Function handlers for proximity monitor */
 #if defined PROXIMITY_MONITOR
@@ -713,6 +715,10 @@ typedef enum
 #define BLE_INDICATION_CONFIRMED_HANDLER						ble_dummy_handler
 #endif
 
+#ifndef BLE_SLAVE_SEC_REQUEST
+#define BLE_SLAVE_SEC_REQUEST									ble_dummy_handler
+#endif
+
 /****************************************************************************************
 *							        Structures                                     		*
 ****************************************************************************************/
@@ -794,6 +800,8 @@ void ble_conn_param_update(at_ble_conn_param_update_done_t *conn_param_update);
   *
   */
 void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req);
+
+void ble_slave_security_handler(at_ble_slave_sec_request_t* slave_sec_req);
 
 /** @brief function called when the AT_BLE_PAIR_KEY_REQUEST event is received from stack.
   *
