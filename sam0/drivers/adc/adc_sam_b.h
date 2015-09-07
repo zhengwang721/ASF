@@ -386,7 +386,7 @@ enum status_code adc_read(enum adc_input_channel input_channel, uint16_t *result
  *
  *
  * \section asfdoc_samb_adc_extra_dependencies Dependencies
- * There are no errata related to this driver.
+ * There are no dependencies related to this driver.
  *
  *
  * \section asfdoc_samb_adc_extra_errata Errata

@@ -1,11 +1,11 @@
 <asf xmlversion="1.0">
-	<select-by-config id="sam0.drivers.i2c.master" name="config.sam0.drivers.i2c.master" caption="I2C - Master Mode I2C" default="callback">
+	<select-by-config id="sam0.drivers.i2c.master" name="config.sam0.drivers.i2c.master" caption="I2C - Inter-Integrated Circuit for SAMB" default="callback">
 		<info type="description" value="summary">
 			Driver for the SAMB11 I2C module in Master Mode. Provides a
 			unified interface for the configuration and management of the
 			module in I2C mode.
 		</info>
-		<module type="driver" id="sam0.drivers.i2c.master#polled" caption="I2C - Master Mode I2C (Polled APIs)">
+		<module type="driver" id="sam0.drivers.i2c.master#polled" caption="I2C -Inter-Integrated Circuit for SAMB">
 			<info type="keyword" value="technology">
 				<keyword value="Communication"/>
 			</info>
@@ -31,7 +31,7 @@
 			<build type="doxygen-quick-start" value="asfdoc_samb_i2c_exqsg"/>
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
 		</module>
-		<module type="driver" id="sam0.drivers.i2c.master#callback" caption="I2C - Master Mode I2C (Callback APIs)">
+		<module type="driver" id="sam0.drivers.i2c.master#callback" caption="I2C - Inter-Integrated Circuit for SAMB">
 			<info type="keyword" value="technology">
 				<keyword value="Communication"/>
 			</info>
@@ -64,13 +64,13 @@
 		</module>
 	</select-by-config>
 
-	<select-by-config id="sam0.drivers.i2c.slave" name="config.sam0.drivers.i2c.slave" caption="I2C - Slave Mode I2C" default="callback">
+	<select-by-config id="sam0.drivers.i2c.slave" name="config.sam0.drivers.i2c.slave" caption="I2C - Inter-Integrated Circuit for SAMB" default="callback">
 		<info type="description" value="summary">
 			Driver for the SAMB11 I2C module in Slave Mode. Provides a
 			unified interface for the configuration and management of the
 			module in I2C mode.
 		</info>
-		<module type="driver" id="sam0.drivers.i2c.slave#polled" caption="I2C - Slave Mode I2C (Polled APIs)">
+		<module type="driver" id="sam0.drivers.i2c.slave#polled" caption="I2C - Inter-Integrated Circuit for SAMB">
 			<info type="keyword" value="technology">
 				<keyword value="Communication"/>
 			</info>
@@ -96,7 +96,7 @@
 			<build type="doxygen-quick-start" value="asfdoc_samb_i2c_exqsg"/>
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
 		</module>
-		<module type="driver" id="sam0.drivers.i2c.slave#callback" caption="I2C - Slave Mode I2C (Callback APIs)">
+		<module type="driver" id="sam0.drivers.i2c.slave#callback" caption="I2C - Inter-Integrated Circuit for SAMB">
 			<info type="keyword" value="technology">
 				<keyword value="Communication"/>
 			</info>

@@ -96,7 +96,7 @@
  *
  * \section asfdoc_samb_aon_sleep_timer_special_considerations Special Considerations
  *
- * There are no prerequisites for this module.
+ * There are no special considerations for this module.
  *
  * \section asfdoc_samb_aon_sleep_timer_extra_info Extra Information
  *

@@ -109,7 +109,7 @@
  * </table>
  *
  * \section asfdoc_samb_spi_flash_special_considerations Special Considerations
- * There are no prerequisites for this module.
+ * There are no special considerations for this module.
  *
  * \section asfdoc_samb_spi_flash_extra_info Extra Information
  *

@@ -121,7 +121,7 @@
  *
  * \section asfdoc_samb_quad_decoder_special_considerations Special Considerations
  *
- * There are no prerequisites for this module.
+ * There are no special considerations for this module.
  *
  * \section asfdoc_samb_quad_decoder_extra_info Extra Information
  *
