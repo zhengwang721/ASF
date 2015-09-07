@@ -50,6 +50,10 @@
  * This example shows how to configure the IS42S16100E.
  * It will perform write and read operations to check the configuration.
  *
+ *  \par Requirements
+ *
+ *  This package can be used with SAMV71 XPlAINED ULTRA.
+ *
  * \section Description
  *
  * An accurate one-to-one comparison is processed after the complete SDRAM

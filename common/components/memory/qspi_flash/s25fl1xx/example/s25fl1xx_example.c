@@ -50,13 +50,17 @@
  * This example shows how to configure the S25FL116K.
  * It will perform write and read operations to check the configuration.
  *
+ * \section Requirements
+ *
+ * This package can be used with SAMV71 XPlAINED ULTRA.
+ *
  * \section Description
  *
- * An accurate one-to-one comparison is processed after the complete SDRAM
+ * An accurate one-to-one comparison is processed after the complete flash
  * configuration.
  *
- * \section compinfo Compilation Info
- * This software was written for the GNU GCC and IAR EWARM.
+ * \section Compilation Info
+ * This software was written for the GNU GCC.
  * Other compilers may or may not work.
  *
  * \section Usage
