@@ -95,6 +95,10 @@
 #define ENERGY_EXP_RUNNING                                                      (40)
 #define ENERGY_EXP_FAST_RUNNING													(60)
 
+/**@brief time limit of last activity*/
+#define START_OF_FIRST_ACTIVITY													(0)
+#define END_OF_LAST_ACTIVITY													(200)
+
 /**@brief The maximum length of the hr measurement characteristic data*/
 #define HR_CHAR_VALUE_LEN                                                       (10)
 

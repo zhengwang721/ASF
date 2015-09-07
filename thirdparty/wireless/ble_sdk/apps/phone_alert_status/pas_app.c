@@ -89,9 +89,9 @@ void display_alert_status_info(uint8_t *data)
 	
 	if (data[0] & BIT1_MASK)
 	{
-		DBG_LOG("Vibrate State Active");
+		DBG_LOG("Vibration State Active");
 		} else {
-		DBG_LOG("Vibrate State Inactive");
+		DBG_LOG("Vibration State Inactive");
 	}
 	
 	if (data[0] & BIT2_MASK)
@@ -249,46 +249,42 @@ int main(void)
 	{
 		/* BLE Event Task */
 		ble_event_task();
-		
-		if (press_count == DEVICE_SILENT)
+		if (flag)
 		{
-			if (flag)
+			delay_ms(100);
+			if (press_count == DEVICE_SILENT)
 			{
 				DBG_LOG("Device to silent");
 				pas_client_write_ringer_control_point(1);
-				flag = 0;
-			}
-			
-		} else if (press_count == DEVICE_MUTE) {
-			if (flag)
-			{
+			} else if (press_count == DEVICE_MUTE) {
 				DBG_LOG("Device to Mute Once");
 				pas_client_write_ringer_control_point(2);
-				flag = 0;
-			}
-		} else if (press_count == DEVICE_NORMAL) {
-			if (flag)
-			{
+			} else if (press_count == DEVICE_NORMAL) {
 				DBG_LOG("Device to cancel mute");
 				pas_client_write_ringer_control_point(3);
-				flag = 0;
-			}
-		} else if (press_count == READ_REQUEST) {
-			if (flag)
+			} else if (press_count == READ_REQUEST)
 			{
-				DBG_LOG("reading the alert status and ringer setting");			
+				DBG_LOG("reading the alert status and ringer setting");
 				if ((status = pas_client_read_ringer_setting_char()) != AT_BLE_SUCCESS)
-					{
-						DBG_LOG("reading ringer control point invocation failed");
-					}
-						
+				{
+					DBG_LOG("reading ringer control point invocation failed");
+				}
+				
 				if ((status = pas_client_read_alert_status_char()) != AT_BLE_SUCCESS)
-					{
-						DBG_LOG("reading alert status invocation failed");
-					}
-					press_count = 0;
+				{
+					DBG_LOG("reading alert status invocation failed");
+				}	
 			}
+			
+			if (press_count == READ_REQUEST)
+			{
+				press_count = DEVICE_SILENT;
+			} else {
+				press_count++;
+			}
+			flag = false;
 		}
+	
 	}
 	return 0;
 }

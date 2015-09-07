@@ -74,6 +74,7 @@ bat_gatt_service_handler_t bas_service_handler;
 
 bool volatile timer_cb_done = true;
 bool volatile flag = true;
+bool volatile button_flag = true;
 volatile bool button_pressed = false;
 
 /**
@@ -160,13 +161,13 @@ int main(void)
 				}
 				if(battery_level == BATTERY_MAX_LEVEL)
 				{
-					flag = false;
+					button_flag = false;
 				}
 				else if(battery_level == BATTERY_MIN_LEVEL)
 				{
-					flag = true;
+					button_flag = true;
 				}
-				if(flag)
+				if(button_flag)
 				{
 					battery_level++;
 				}

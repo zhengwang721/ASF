@@ -65,57 +65,28 @@
 *							        Globals		
 *                                       *
 ****************************************************************************************/
-volatile bool button_pressed = false;	/*!< Used for patch download*/
-
 volatile bool app_state = 0 ; /*!< flag to represent the application state*/
-
 volatile bool start_advertisement = 0; /*!< flag to start advertisement*/
-
+bool advertisement_flag = false;/*!< to check if the device is in advertisement*/
 volatile bool notification_flag = false; /*!< flag to start notification*/
-
 volatile bool disconnect_flag = false;	/*!< flag for disconnection*/
-
 volatile bool hr_initializer_flag = 1; /*!< flag for initialization of hr for each category*/
-
 uint8_t second_counter = 0;	/*!< second_counter to count the time*/
-
-uint8_t activity = 0; /*!< activiy which will determine the */
-
 uint16_t energy_expended_val = ENERGY_EXP_NORMAL; /*!< to count the energy expended*/
-
 uint16_t energy_incrementor ;	/*!< energy incrementor for various heart rate values*/
-
 uint16_t heart_rate_value = HEART_RATE_MIN_NORM; /*!< to count the heart rate value*/
-
 uint16_t rr_interval_value = RR_VALUE_MIN; /*!< to count the rr interval value*/
-
-bool inc_changer = true;/*!< to alter the direction of increments of hr*/
-
-bool reverse = false;/*!< Used to change the hr zones in reverse order*/
-
-bool advertisement_flag = false;/*!< advertisement flag to check if it is already in advertising*/
-
-bool notification_sent = true;/*!< To check if notification is sent succesfully over the air*/
+uint8_t activity = 0; /*!< activiy which will determine the */
+uint8_t prev_activity = -1;/*!< previous activity */
+int8_t inc_changer	= 1;/*!< increment operator to change heart rate */
+int8_t time_operator ;/*!< operator to change the seconds */
+uint8_t hr_min_value;/*!<the minimum heart rate value*/
+uint8_t hr_max_value;/*!<the maximum heart rate value*/
+volatile bool button_pressed = false;/*!<patch download*/
 /****************************************************************************************
 *							        Functions											*
 ****************************************************************************************/
 
-/** @brief blp_notification_confirmation_handler called by ble manager 
- *	to give the status of notification sent
- *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
- */	
-void app_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
-{
-	if (params->status == AT_BLE_SUCCESS)
-	{
-		DBG_LOG_DEV("App Notification Successfully sent over the air");
-		notification_sent = true;
-		
-	} else {
-		DBG_LOG_DEV("Sending Notification over the air failed");
-		notification_sent = false;
-	}
-}
 /** @brief notification handler function called by the profile
  *	@param[in] notification_enable which will tell the state of the
  *application
@@ -149,18 +120,17 @@ void app_state_handler(bool state)
 {
 	app_state = state;
 	if (app_state == false) {
+		
 		hw_timer_stop();
 		notification_flag = false;
 		energy_expended_val = ENERGY_EXP_NORMAL;
 		second_counter = 0;
-		reverse = 0 ;
-		hr_initializer_flag  = true;
 		heart_rate_value_init();
 		LED_Off(LED0);
-		DBG_LOG("Press button to advertise");
+		DBG_LOG_DEV("Press button to advertise");
 	} else if (app_state == true) {
 		LED_On(LED0);
-		DBG_LOG(
+		DBG_LOG_DEV(
 				"Enable the notification in app to listen heart rate or press the button to disconnect");
 				advertisement_flag = false;
 	}
@@ -171,18 +141,19 @@ void app_state_handler(bool state)
  */
 void button_cb(void)
 {
-	/* For patch download */
-	button_pressed = true; 
-		
-	if (app_state) { /* App is in connected state*/
+	 button_pressed = true;
+	if (app_state) {
+		DBG_LOG_DEV("Going to disconnect ");
 		disconnect_flag = true;
-	} else {		/* App is in disconnected state*/
-			
+	} else {
+		
 		if (advertisement_flag == false)
-		{			
+		{
+			DBG_LOG_DEV("Going to advertisement");
 			start_advertisement = true;
 			advertisement_flag = true;
-		}	
+		}
+		
 	}
 }
 
@@ -198,17 +169,16 @@ void hr_measurment_send(void)
 {
 	uint8_t hr_data[HR_CHAR_VALUE_LEN];
 	uint8_t idx = 0;
-	
+
 	if (second_counter % 10) {
 		/* Flags */
 		hr_data[idx++] = (RR_INTERVAL_VALUE_PRESENT);
 		DBG_LOG("Heart Rate: %d bpm", heart_rate_value);
+		
+		heart_rate_value += (inc_changer);
 		/* Heart Rate Value 8bit*/
-		if (inc_changer) {
-			hr_data[idx++] = (uint8_t)heart_rate_value++;
-		} else {
-			hr_data[idx++] = (uint8_t)heart_rate_value--;
-		}
+		hr_data[idx++] = (uint8_t)heart_rate_value ;
+		
 
 		if (energy_expended_val == ENERGY_RESET) {
 			hr_data[0] = hr_data[0] | ENERGY_EXPENDED_FIELD_PRESENT;
@@ -255,12 +225,9 @@ void hr_measurment_send(void)
 		/* Heart Rate Value 8bit*/
 		DBG_LOG("Heart Rate: %d bpm", heart_rate_value);
 		/* Heart Rate Value 8bit*/
-		if (inc_changer) {
-			hr_data[idx++] = (uint8_t)heart_rate_value++;
-		} else {
-			hr_data[idx++] = (uint8_t)heart_rate_value--;
-		}
-
+		heart_rate_value += (inc_changer);
+		hr_data[idx++] = (uint8_t)heart_rate_value;
+		
 		memcpy(&hr_data[idx], &energy_expended_val, 2);
 		idx += 2;
 		/* RR Interval values(2) */
@@ -308,7 +275,6 @@ void hr_measurment_send(void)
 	}
 
 	hr_sensor_send_notification(hr_data, idx);
-
 }
 
 /** @brief heart_rate_value_init will initializes the heart rate values
@@ -318,153 +284,67 @@ void hr_measurment_send(void)
  */
 void heart_rate_value_init(void )
 {
-	if (second_counter < TIME_NORMAL_LIMIT) {
-		if (hr_initializer_flag) {
-			/** For incremental heart rate values*/
-			if (!reverse) {
-				activity = ACTIVITY_NORMAL;
-				heart_rate_value = HEART_RATE_MIN_NORM;
+	activity = second_counter / 40;
+
+	if (activity != prev_activity)
+	{		
+		switch(activity)
+		{
+			case ACTIVITY_NORMAL:
+			{
+				hr_min_value = HEART_RATE_MIN_NORM;
+				hr_max_value = HEART_RATE_MAX_NORM;
+				heart_rate_value = hr_min_value;
 				energy_incrementor = ENERGY_EXP_NORMAL;
-				inc_changer = 1; /*ascending */
-				hr_initializer_flag = false;
-			} else {
-				/** For Decremental heart rate values*/
-				activity = ACTIVITY_FAST_RUNNING;
-				heart_rate_value = HEART_RATE_MAX_FAST_RUNNING;
-				energy_incrementor = ENERGY_EXP_FAST_RUNNING;
-				inc_changer = false;        /* decending */
-				hr_initializer_flag = false;
 			}
-		}
-
-		if (second_counter == (TIME_NORMAL_LIMIT - 20)) {
-			inc_changer = false;
-			if (reverse) {
-				inc_changer = true;
-			}
-		}
-
-		if (second_counter == TIME_NORMAL_LIMIT - 1) {
-			hr_initializer_flag = true;
-		}
-	} else if (second_counter >= TIME_NORMAL_LIMIT && second_counter <
-			TIME_WALKING_LIMIT) {
-		if (hr_initializer_flag) {
-			if (!reverse) {
-				activity = ACTIVITY_WALKING;
-				heart_rate_value = HEART_RATE_MIN_WALKING;
+			break;
+			
+			case ACTIVITY_WALKING:
+			{
+				hr_min_value = HEART_RATE_MIN_WALKING;
+				hr_max_value = HEART_RATE_MAX_WALKING;
+				heart_rate_value = hr_min_value;
 				energy_incrementor = ENERGY_EXP_WALKING;
-				hr_initializer_flag = false;
-				inc_changer = 1;
-			} else {
-				activity = ACTIVITY_RUNNING;
-				heart_rate_value = HEART_RATE_MAX_RUNNING;
-				energy_incrementor = ENERGY_EXP_RUNNING;
-				hr_initializer_flag = false;
-				inc_changer = false;
 			}
-		}
-
-		if (second_counter == TIME_WALKING_LIMIT - 20) {
-			inc_changer = false;
-			if (reverse) {
-				inc_changer = true;
-			}
-		}
-
-		if (second_counter == TIME_WALKING_LIMIT - 1) {
-			hr_initializer_flag = true;
-		}
-	} else if (second_counter >= TIME_WALKING_LIMIT && second_counter <
-			TIME_BRISK_WALK_LIMIT) {
-		if (hr_initializer_flag) {
-			if (!reverse) {
-				activity = ACTIVITY_BRISK_WALKING;
-				heart_rate_value = HEART_RATE_MIN_BRISK_WALK;
+			break;
+			
+			case ACTIVITY_BRISK_WALKING:
+			{
+				hr_min_value = HEART_RATE_MIN_BRISK_WALK;
+				hr_max_value = HEART_RATE_MAX_BRISK_WALK;
+				heart_rate_value = hr_min_value;
 				energy_incrementor = ENERGY_EXP_BRISK_WALKING;
-				hr_initializer_flag = false;
-				inc_changer = 1;
-			} else {
-				activity = ACTIVITY_BRISK_WALKING;
-				heart_rate_value = HEART_RATE_MIN_BRISK_WALK;
-				energy_incrementor = ENERGY_EXP_BRISK_WALKING;
-				hr_initializer_flag = false;
-				inc_changer = false;
 			}
-		}
-
-		if (second_counter == TIME_BRISK_WALK_LIMIT - 20) {
-			inc_changer = false;
-			if (reverse) {
-				inc_changer = true;
-			}
-		}
-
-		if (second_counter == TIME_BRISK_WALK_LIMIT - 1) {
-			hr_initializer_flag = true;
-		}
-	} else if (second_counter >= TIME_BRISK_WALK_LIMIT && second_counter <
-			TIME_RUNNING_LIMIT) {
-		if (hr_initializer_flag) {
-			if (!reverse) {
-				activity = ACTIVITY_RUNNING;
-				heart_rate_value = HEART_RATE_MIN_RUNNING;
-				/* DBG_LOG("The user started Running"); */
+			break;
+			
+			case ACTIVITY_RUNNING:
+			{
+				hr_min_value = HEART_RATE_MIN_RUNNING;
+				hr_max_value = HEART_RATE_MAX_RUNNING;
+				heart_rate_value = hr_min_value;
 				energy_incrementor = ENERGY_EXP_RUNNING;
-				hr_initializer_flag = false;
-				inc_changer = true;
-			} else {
-				activity = ACTIVITY_WALKING;
-				heart_rate_value = HEART_RATE_MAX_WALKING;
-				energy_incrementor = ENERGY_EXP_WALKING;
-				hr_initializer_flag = false;
-				inc_changer = false;
 			}
-		}
-
-		if (second_counter == TIME_RUNNING_LIMIT - 20) {
-			inc_changer = false;
-			if (reverse) {
-				inc_changer = true;
-			}
-		}
-
-		if (second_counter == TIME_RUNNING_LIMIT - 1) {
-			hr_initializer_flag = 1;
-		}
-	} else if (second_counter >= TIME_RUNNING_LIMIT && second_counter <
-			TIME_FAST_RUNNING_LIMIT) {
-		if (hr_initializer_flag) {
-			if (!reverse) {
-				activity = ACTIVITY_FAST_RUNNING;
-				heart_rate_value = HEART_RATE_MIN_FAST_RUNNING;
+			break;
+			
+			case ACTIVITY_FAST_RUNNING:
+			{
+				hr_min_value = HEART_RATE_MIN_FAST_RUNNING;
+				hr_max_value = HEART_RATE_MAX_FAST_RUNNING;
+				heart_rate_value = hr_min_value;
 				energy_incrementor = ENERGY_EXP_FAST_RUNNING;
-				hr_initializer_flag = 0;
-				inc_changer = 1;
-			} else {
-				activity = ACTIVITY_NORMAL;
-				heart_rate_value = HEART_RATE_MAX_NORM;
-				energy_incrementor = ENERGY_EXP_NORMAL;
-				hr_initializer_flag = false;
-				inc_changer = false;
 			}
+			break;
 		}
-
-		if (second_counter == TIME_FAST_RUNNING_LIMIT - 20) {
-			inc_changer = false;
-			if (reverse) {
-				inc_changer = true;
-			}
-		}
-
-		if (second_counter == TIME_FAST_RUNNING_LIMIT - 1) {
-			hr_initializer_flag = true;
-		}
-	} else if (second_counter == TIME_FAST_RUNNING_LIMIT) {
-		second_counter = 0;
-		hr_initializer_flag = true;
-		reverse = !reverse;
+		prev_activity = activity;
 	}
+		if (heart_rate_value == hr_max_value)
+		{
+			inc_changer = -1;
+		} else if (heart_rate_value == hr_min_value)
+		{
+			inc_changer = 1;
+		}
+
 }
 
 /**
@@ -472,7 +352,16 @@ void heart_rate_value_init(void )
  */
 void timer_callback_handler(void)
 {
-	second_counter++;
+	if (second_counter == START_OF_FIRST_ACTIVITY)
+	{
+		time_operator = 1;
+	} else if (second_counter == END_OF_LAST_ACTIVITY)
+	{
+		time_operator = -1;
+	}
+	
+	second_counter += (time_operator);
+	
 	heart_rate_value_init();
 	notification_flag = true;
 }
@@ -510,9 +399,6 @@ int main(void)
 	/* Registering the app_notification_handler with the profile */
 	register_hr_notification_handler(app_notification_handler);
 
-	/* Register the notification confirmed call back with ble manager */
-	register_ble_notification_confirmed_cb(app_notification_confirmation_handler);
-	
 	/* Registering the app_reset_handler with the profile */
 	register_hr_reset_handler(app_reset_handler);
 
@@ -521,6 +407,8 @@ int main(void)
 
 	/* Capturing the events  */
 	while (1) {
+		ble_event_task();
+
 		/* Flag to start advertisement */
 		if (start_advertisement) {
 			hr_sensor_adv();
@@ -529,12 +417,9 @@ int main(void)
 
 		/* Flag to start notification */
 		if (notification_flag) {
-			if (notification_sent)
-			{
-				LED_Toggle(LED0);
-				hr_measurment_send();
-				notification_flag = false;
-			} 			
+			LED_Toggle(LED0);
+			hr_measurment_send();
+			notification_flag = false;
 		}
 
 		/* Flag to disconnect with the peer device */
@@ -543,10 +428,7 @@ int main(void)
 			app_state = false;
 			disconnect_flag = false;
 		}
-		ble_event_task();
 	}
 	
-	
-
 	return 0;
 }
