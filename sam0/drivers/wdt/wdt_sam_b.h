@@ -51,10 +51,7 @@
  *
  * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
  * and management of the device's Watchdog Timer module, including the enabling,
- * disabling, and kicking within the device. The following driver API modes are
- * covered by this manual:
- *
- *  - Callback APIs
+ * disabling, and kicking within the device.
  *
  * The following peripherals are used by this module:
  *  - WDT (Watchdog Timer)
@@ -94,7 +91,7 @@
  * \image html wdt_block_diagram.svg "WDT Block Diagram"
  *
  * \section asfdoc_samb_wdt_special_considerations Special Considerations
- * There are no prerequisites for this module.
+ * There are no special considerations for this module.
  *
  * \section asfdoc_samb_wdt_extra_info Extra Information
  *
@@ -254,7 +251,7 @@ void wdt_disable_callback(struct wdt_module *const module,
  *
  *
  * \section asfdoc_samb_wdt_extra_dependencies Dependencies
- * There are no errata related to this driver.
+ * There are no dependencies related to this driver.
  *
  *
  * \section asfdoc_samb_wdt_extra_errata Errata

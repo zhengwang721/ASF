@@ -189,29 +189,37 @@ extern "C" {
  * \subsection asfdoc_samb_dma_module_overview_dma_transfer_descriptor DMA Transfer Descriptor
  * The transfer descriptor resides in the SRAM and
  * defines these channel properties.
- *   <table border="0" cellborder="1" cellspacing="0" >
- *    <tr>
- *        <th> Field name </th> <th> Field width </th>
- *    </tr>
- *    <tr>
- *     <td > Source Address </td> <td > 32 bits </td>
- *    </tr>
- *    <tr>
- *     <td > Destination Address </td> <td> 32 bits </td>
- *    </tr>
- *    <tr>
- *     <td > Block Transfer Counter </td> <td> 32 bits </td>
- *    </tr>
- *    <tr>
- *     <td > Descriptor Next Address </td> <td> 30 bits </td>
- *    </tr>
- *    <tr>
- *     <td > Block Transfer Interrupt Control </td> <td> 1 bits </td>
- *    </tr>
- *    <tr>
- *     <td > Block Transfer Stop Control </td> <td> 1 bits </td>
- *    </tr>
- *   </table>
+ *
+ * <table>
+ *   <tr>
+ *     <th>Field name</th>
+ *     <th>Field width</th>
+ *   </tr>
+ *   <tr>
+ *     <td>Source Address</td>
+ *     <td>32 bits</td>
+ *   </tr>
+ *   <tr>
+ *     <td>Destination Address</td>
+ *     <td>32 bits</td>
+ *   </tr>
+ *   <tr>
+ *     <td>Block Transfer Counter</td>
+ *     <td>32 bits</td>
+ *   </tr>
+ *   <tr>
+ *     <td>Descriptor Next Address</td>
+ *     <td>30 bits</td>
+ *   </tr>
+ *   <tr>
+ *     <td>Block Transfer Interrupt</td>
+ *     <td>1 bit</td>
+ *   </tr>
+ *   <tr>
+ *     <td>Block Transfer Stop Control</td>
+ *     <td>1 bit</td>
+ *   </tr>
+ * </table>
  *
  * Before starting a transfer, at least one descriptor should be configured.
  * After a successful allocation of a DMA channel, the transfer descriptor can

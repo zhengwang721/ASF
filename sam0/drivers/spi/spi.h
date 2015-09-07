@@ -562,7 +562,7 @@ enum status_code spi_select_slave(
  * </table>
  *
  * \section asfdoc_samb_drivers_spi_extra_dependencies Dependencies
- * There are no errata related to this driver.
+ * There are no dependencies related to this driver.
  *
  *
  * \section asfdoc_samb_drivers_spi_extra_errata Errata
