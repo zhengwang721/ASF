@@ -347,6 +347,7 @@ at_ble_status_t csc_prf_disconnect_event_handler(at_ble_disconnected_t *disconne
 	{
 		DBG_LOG("Device Started Advertisement");
 	}
+	app_csc_info.devicedb = false;
 	return AT_BLE_SUCCESS;
 }
 

@@ -412,7 +412,7 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 		if (discover_char_flag)
 		{
 			DBG_LOG_DEV("GATT characteristic discovery completed");
-			delay_ms(1000);			
+			//delay_ms(3000);
 			if(ble_send_slave_sec_request(ble_connected_dev_info[0].handle) == AT_BLE_SUCCESS)
 			{
 				DBG_LOG_DEV("Successfully send Slave Security Request");
@@ -422,6 +422,10 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 				DBG_LOG("Fail to send Slave Security Request");
 			}
 		}
+	}
+	else 
+	{
+		DBG_LOG("discover complete failure %d",discover_status->status);
 	}
 }
 
@@ -611,8 +615,8 @@ void time_info_disconnected_event_handler(at_ble_disconnected_t *disconnect)
  */
 void time_info_write_notification_handler(void *param)
 {
+	/* To enable notification */
 	#if 0
-	DBG_LOG("desc handles%d",cts_handle.curr_desc_handle);
 	if(Desc_found)
 	{
 		if(!(tis_current_time_noti(ble_connected_dev_info[0].handle,cts_handle.curr_desc_handle,false) == AT_BLE_SUCCESS))

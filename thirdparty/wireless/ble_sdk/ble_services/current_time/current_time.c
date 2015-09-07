@@ -133,7 +133,8 @@ int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *rea
 			read_resp->char_value[5],
 			read_resp->char_value[6],
 			ptr[read_resp->char_value[7]]
-			);				
+			);
+			DBG_LOG_CONT("  Fraction:%02d",read_resp->char_value[8]);				
 		}
 	
 		else if (read_resp->char_handle == cts_handler->lti_char_handle)

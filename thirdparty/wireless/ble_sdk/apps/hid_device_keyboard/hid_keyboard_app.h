@@ -58,7 +58,7 @@
 /****************************************************************************************
 *							        Function                                     		*
 ****************************************************************************************/
-/** @brief Initialize the hid profile based on user input */
+/** @brief Initialize the hid profile */
 void hid_keyboard_app_init(void);
 
 /** @brief Timer callback handler */

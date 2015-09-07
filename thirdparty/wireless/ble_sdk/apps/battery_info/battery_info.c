@@ -72,9 +72,9 @@ uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0,
 uint8_t db_mem[1024] = {0};
 bat_gatt_service_handler_t bas_service_handler;
 
-bool volatile timer_cb_done = true;
+bool volatile timer_cb_done = false;
 bool volatile flag = true;
-bool volatile button_flag = true;
+bool volatile battery_flag = true;
 volatile bool button_pressed = false;
 
 /**
@@ -161,13 +161,13 @@ int main(void)
 				}
 				if(battery_level == BATTERY_MAX_LEVEL)
 				{
-					button_flag = false;
+					battery_flag = false;
 				}
 				else if(battery_level == BATTERY_MIN_LEVEL)
 				{
-					button_flag = true;
+					battery_flag = true;
 				}
-				if(button_flag)
+				if(battery_flag)
 				{
 					battery_level++;
 				}
