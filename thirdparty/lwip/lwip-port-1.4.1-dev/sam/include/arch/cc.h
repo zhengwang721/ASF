@@ -44,6 +44,7 @@
 #ifndef CC_H_INCLUDED
 #define CC_H_INCLUDED
 
+#include "opt.h"
 #include "osprintf.h"
 
 /* Define platform endianness */
