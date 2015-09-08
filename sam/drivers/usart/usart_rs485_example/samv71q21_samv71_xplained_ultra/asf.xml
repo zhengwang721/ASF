@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="USART RS485 Example for SAMV71-Xplained-Ultra" id="sam.drivers.usart.usart_rs485_example.samv71_xplained_ultra">
+	<project caption="USART RS485 Example on SAMV71-Xplained-Ultra" id="sam.drivers.usart.usart_rs485_example.samv71_xplained_ultra">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
