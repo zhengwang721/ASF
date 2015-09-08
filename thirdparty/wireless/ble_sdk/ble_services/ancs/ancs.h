@@ -43,6 +43,10 @@
 /*
 * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
 */
+
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> ANCS Service Configuration
+// =======================
 #ifndef __ANCS_H__
 #define __ANCS_H__
 
@@ -61,3 +65,6 @@ void ancs_init(ancs_prf_t *ancs_data);
 void ancs_enable(ancs_prf_t *anp_data, at_ble_handle_t handle);
 
 #endif /* __ANCS_H__ */
+// </h>
+
+// <<< end of configuration section >>>

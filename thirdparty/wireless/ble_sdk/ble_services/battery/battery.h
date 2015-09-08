@@ -45,6 +45,9 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Battery Service Configuration
+// =======================
 
 #ifndef __BATTERY_H__
 #define __BATTERY_H__
@@ -117,3 +120,6 @@ at_ble_status_t bat_primary_service_define(bat_gatt_service_handler_t *battery_s
 at_ble_status_t bat_char_changed_event(bat_gatt_service_handler_t *battery_service, at_ble_characteristic_changed_t *char_handle, bool volatile *flag);
 
 #endif /* __BATTERY_H__ */
+// </h>
+
+// <<< end of configuration section >>>

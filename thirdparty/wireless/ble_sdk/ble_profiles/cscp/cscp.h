@@ -45,6 +45,10 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
  *Support</a>
  */
+
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Custom Serial Chat Profile Configuration
+// =======================
 #ifndef __CSCP_H__
 #define __CSCP_H__
 #include "at_ble_api.h"
@@ -54,12 +58,24 @@
 ****************************************************************************************/
 
 /** @brief APP_SPOG_FAST_ADV between 0x0020 and 0x4000 in 0.625 ms units (20ms to 10.24s). */
+//	<o> Fast Advertisement Interval <100-1000:50>
+//	<i> Defines inteval of Fast advertisement in ms.
+//	<i> Default: 100
+//	<id> csc_fast_adv
 #define APP_CSC_FAST_ADV				(100) //100 ms
 
 /** @brief APP_SPOG_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
-#define APP_CSC_ADV_TIMEOUT			(1000) // 100 Secs
+//	<o> Advertisement Timeout <1000-10000:50>
+//	<i> Defines inteval at which advertisement timout in ms.
+//	<i> Default: 1000
+//	<id> csc_adv_timeout
+#define APP_CSC_ADV_TIMEOUT				(1000) // 100 Secs
 
 /** @brief scan_resp_len is the length of the scan response data */
+//	<o> Scan Response Buffer <1-20>
+//	<i> Defines size of buffer for scan response.
+//	<i> Default: 10
+//	<id> csc_scan_resp_len
 #define SCAN_RESP_LEN					(10)
 
 /** @brief Advertisement appearance type  */
@@ -72,7 +88,10 @@
 #define ADV_DATA_NAME_TYPE				(0x09)
 
 /** @brief Advertisement name */
-#define ADV_DATA_NAME_DATA				"AT-CSC"
+//	<s.9>	Advertising String
+//	<i>	String Descriptor describing in advertising packet.
+//	<id> cscp_adv_data_name_data
+#define ADV_DATA_NAME_DATA				("AT-CSC")
 
 /** @brief Advertisement type length */
 #define ADV_TYPE_LEN					(0x01)
@@ -241,3 +260,6 @@ void notify_recv_ntf_handler(recv_ntf_callback_t recv_ntf_fn);
 void csc_notification_confirmation_handler(at_ble_cmd_complete_event_t *params);
 
 #endif /*__CSC_H__*/
+// </h>
+
+// <<< end of configuration section >>>

@@ -44,6 +44,9 @@
 * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
 */
 
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Current Time Service Configuration
+// =======================
 #ifndef __CURRENT_TIME_H__
 #define __CURRENT_TIME_H__
 
@@ -56,11 +59,19 @@
  *									Macros			                               *
  **********************************************************************************/
 /* Link Loss Alert length of data to read */
+//  <o> Characteristics read Lenght <0-100>
+//  <i> Defines number of bytes to characteristics read length .
+//  <i> Default: 20
+//  <id> cts_read_length
 #define CTS_READ_LENGTH                         (20)
 
 #define CTS_DESCRIPTOR_LENGTH                   (2)
 
 /* Link Loss read offset length*/
+//  <o> Characteristics read Offset <0-100>
+//  <i> Defines offset value to read characteristics.
+//  <i> Default: 0
+//  <id> cts_read_offset
 #define CTS_READ_OFFSET                         (0)
 
 /* Link Loss invalid character handler*/
@@ -130,3 +141,6 @@ int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *rea
 at_ble_status_t tis_current_time_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti);
 
 #endif /*__CURRENT_TIME_H__*/
+// </h>
+
+// <<< end of configuration section >>>

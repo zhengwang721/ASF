@@ -46,6 +46,9 @@
  *Support</a>
  */
 
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Device Infomation Service Configuration
+// =======================
 #ifndef __DEVICE_INFO_H__
 #define __DEVICE_INFO_H__
 
@@ -60,25 +63,34 @@
 ****************************************************************************************/
 
 /** @brief User should set the default manufacturer name before calling dis_init_service API */
-#define DEFAULT_MANUFACTURER_NAME "ATMEL"
+//	<s.20>Manufacture Name
+//	<i> String Descriptor describing Manufacture Name.
+//	<id> default_manufacturer_name
+#define DEFAULT_MANUFACTURER_NAME					("ATMEL")
 
 /** @brief User should set the length based on DEFAULT_MANUFACTURER_NAME */
-#define DIS_CHAR_MANUFACTURER_NAME_INIT_LEN		0x05
+#define DIS_CHAR_MANUFACTURER_NAME_INIT_LEN			(0x05)
 
 /** @brief User can set the maximum length for manufacture name */
-#define DIS_CHAR_MANUFACTURER_NAME_MAX_LEN		0x14
+#define DIS_CHAR_MANUFACTURER_NAME_MAX_LEN			(0x14)
 
 /** @brief User should set the default model number before calling dis_init_service API */
-#define DEFAULT_MODEL_NUMBER	  				"BLE DEVICE"
+//	<s.20>Model Number
+//	<i>String Descriptor describing Model Number.
+//	<id> default_model_number
+#define DEFAULT_MODEL_NUMBER						("BLE DEVICE")
 
 /** @brief User should set the length based on DEFAULT_MODEL_NUMBER*/
-#define DIS_CHAR_MODEL_NUMBER_INIT_LEN			0x0a
+#define DIS_CHAR_MODEL_NUMBER_INIT_LEN				(0x0a)
 
 /** @brief User can set the maximum length for model number */
-#define DIS_CHAR_MODEL_NUMBER_MAX_LEN			0x14
+#define DIS_CHAR_MODEL_NUMBER_MAX_LEN				(0x14)
 
 /** @brief User should set the default serial number before calling dis_init_service API */
-#define DEFAULT_SERIAL_NUMBER	  				"BTLC1000/SAMB11"
+//  <s.20>Serial Number
+//  <i>String Descriptor describing Serial Number.
+//	<id> default_serial_number
+#define DEFAULT_SERIAL_NUMBER						("BTLC1000/SAMB11")
 
 /** @brief User should set the length based on  DEFAULT_SERIAL_NUMBER*/
 #define DIS_CHAR_SERIAL_NUMBER_INIT_LEN			0x0f
@@ -87,7 +99,10 @@
 #define DIS_CHAR_SERIAL_NUMBER_MAX_LEN			0x14
 
 /** @brief User should set the default hardware revision before calling dis_init_service API */
-#define DEFAULT_HARDWARE_REVISION "Rev A"
+//  <s.20>Hardware Revision
+//  <i>String Descriptor describing Hardware Revision.
+//	<id> default_hardware_revision
+#define DEFAULT_HARDWARE_REVISION					("Rev A")
 
 /** @brief User should set the length based on  DEFAULT_HARDWARE_REVISION*/
 #define DIS_CHAR_HARDWARE_REVISION_INIT_LEN		0x05
@@ -96,7 +111,10 @@
 #define DIS_CHAR_HARDWARE_REVISION_MAX_LEN		0x14
 
 /** @brief User should set the default software revision before calling dis_init_service API */
-#define DEFAULT_SOFTWARE_REVISION "SW_BETA"
+//  <s.20>Software Revision
+//  <i>String Descriptor describing Software Revision.
+//	<id> default_hardware_revision
+#define DEFAULT_SOFTWARE_REVISION					("SW_BETA")
 
 /** @brief User should set the length based on  DEFAULT_SOFTWARE_REVISION*/
 #define DIS_CHAR_SOFTWARE_REVISION_INIT_LEN		0x07
@@ -105,7 +123,10 @@
 #define DIS_CHAR_SOFTWARE_REVISION_MAX_LEN		0x14
 
 /** @brief User should set the default firmware revision before calling dis_init_service API */
-#define DEFAULT_FIRMWARE_REIVSION "FW_BETA"
+//  <s.20>Firmware Revision
+//  <i>String Descriptor describing Firmware Revision.
+//	<id> default_firmware_reivsion
+#define DEFAULT_FIRMWARE_REIVSION					("FW_BETA")
 
 /** @brief User should set the length based on  DEFAULT_FIRMWARE_REIVSION*/
 #define DIS_CHAR_FIRMWARE_REIVSION_INIT_LEN		0x07
@@ -339,5 +360,6 @@ void dis_init_service(dis_gatt_service_handler_t *device_info_serv );
 at_ble_status_t dis_primary_service_define(dis_gatt_service_handler_t *dis_primary_service);
 
 #endif /*__DEVICE_INFO_H__*/
+// </h>
 
-
+// <<< end of configuration section >>>

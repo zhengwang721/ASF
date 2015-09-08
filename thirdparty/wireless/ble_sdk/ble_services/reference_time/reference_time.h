@@ -44,6 +44,9 @@
 * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
 */
 
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Reference Time Update Service Configuration
+// =======================
 #ifndef __REFERENCE_TIME_H__
 #define __REFERENCE_TIME_H__
 
@@ -55,12 +58,19 @@
 /***********************************************************************************
  *									Macros			                               *
  **********************************************************************************/
-
+//  <o> Characteristics read Lenght <0-100>
+//  <i> Defines number of bytes to characteristics read length .
+//  <i> Default: 20
+//  <id> rtu_tp_cp_read_length
 #define RTU_TP_CP_READ_LENGTH							(20)
 
 #define RTU_TP_STATE_READ_LENGTH						(2)
 
 /* Link Loss read offset length*/
+//  <o> Characteristics read Offset <0-100>
+//  <i> Defines offset value to read characteristics.
+//  <i> Default: 0
+//  <id> rtu_read_offset
 #define RTU_READ_OFFSET									(0)
 
 /* Reference Time Update invalid character handler*/
@@ -113,3 +123,6 @@ int8_t tis_rtu_update_read_response(at_ble_characteristic_read_response_t *read_
 at_ble_status_t tis_rtu_update_write(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti);
 
 #endif /* __REFERENCE_TIME_H__ */
+// </h>
+
+// <<< end of configuration section >>>
