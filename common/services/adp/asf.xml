@@ -38,24 +38,6 @@
 			</module>
 		</select-by-device>
 
-		<select-by-device id="common.services.adp#twi">
-			<module type="service" id="common.services.adp#twi#0" caption="ADP - Atmel Data Protocol - SAM0 TWI implementation">
-				<require idref="common.services.adp.sam0"/>
-				<require idref="sam0.drivers.sercom.i2c.master"/>
-				<build type="c-source" value="sam0/adp_interface_twi.c"/>
-				<build type="define" name="ADC_CALLBACK_MODE" value="false"/>
-				<build type="define" name="ADP_MODE_TWI" value=""/>
-				<device-support value="sam0"/>
-			</module>
-			<module type="service" id="common.services.adp#twi#1" caption="ADP - Atmel Data Protocol - SAM TWI implementation">
-				<require idref="common.services.adp.sam"/>
-				<require idref="common.services.basic.twi"/>
-				<build type="c-source" value="sam/adp_interface_twi.c"/>
-				<build type="define" name="ADP_MODE_TWI" value=""/>
-				<device-support value="sam"/>
-			</module>
-		</select-by-device>
-
 	</select-by-config>
 
 	<module type="service" id="common.services.adp.terminal" caption="ADP terminal">
