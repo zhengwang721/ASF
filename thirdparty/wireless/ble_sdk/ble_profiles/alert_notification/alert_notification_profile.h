@@ -50,18 +50,34 @@
 * This is the reference manual for the Time Information Profile
 */
 
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Alert Notification Configuration
+// =======================
+
 #ifndef __ALERT_NOTIFICATION_PROFILE_H__
 #define __ALERT_NOTIFICATION_PROFILE_H__
 /***********************************************************************************
  *									Macros			                               *
  **********************************************************************************/
 /**@brief Advertisement Interval*/
+//	<o> Fast Advertisement Interval <100-1000:50>
+//	<i> Defines inteval of Fast advertisement in ms.
+//	<i> Default: 100
+//	<id> anp_app_anp_fast_adv
 #define APP_ANP_FAST_ADV							(100) //100 ms
 
 /**@brief Advertisement Timeout*/
+//	<o> Advertisement Timeout <1000-10000:50>
+//	<i> Defines inteval at which advertisement timout in ms.
+//	<i> Default: 1000
+//	<id> anp_app_anp_adv_timeout
 #define APP_ANP_ADV_TIMEOUT							(1000) // 100 Secs
 
 /**@brief Scan Response length*/
+//	<o> Scan Response Buffer <1-20>
+//	<i> Defines size of buffer for scan response.
+//	<i> Default: 10
+//	<id> anp_scan_resp_len
 #define SCAN_RESP_LEN								(10)
 
 #define ADV_TYPE_LEN								(0x01)
@@ -74,6 +90,9 @@
 /**@brief Advertisement Name Type Length & data */
 #define ANP_ADV_DATA_NAME_LEN						(9)
 #define ANP_ADV_DATA_NAME_TYPE						(0x09)
+//	<s.9>	Advertising String
+//	<i>	String Descriptor describing in advertising packet.
+//	<id> anp_adv_data_name_data
 #define ANP_ADV_DATA_NAME_DATA						("ATMEL-ANS")
 
 /**@brief ANCS Service Solicitation Info*/
@@ -219,3 +238,6 @@ void anp_client_disable_notification(void);
 void anp_client_security_done_handler(void *param);
 
 #endif /* __ALERT_NOTIFICATION_PROFILE_H__ */
+// </h>
+
+// <<< end of configuration section >>>

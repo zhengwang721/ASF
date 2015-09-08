@@ -46,6 +46,10 @@
  *Support</a>
  */
 
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Blood Pressure Profile Configuration
+// =======================
+
 #ifndef __BLP_SENSOR_H__
 #define __BLP_SENSOR_H__
 
@@ -54,13 +58,25 @@
 ****************************************************************************************/
 
 
-/** @brief APP_HR_SENSOR_FAST_ADV between 0x0020 and 0x4000 in 0.625 ms units (20ms to 10.24s). */
+/** @brief APP_BLP_SENSOR_FAST_ADV	 between 0x0020 and 0x4000 in 0.625 ms units (20ms to 10.24s). */
+//	<o> Fast Advertisement Interval <100-1000:50>
+//	<i> Defines inteval of Fast advertisement in ms.
+//	<i> Default: 100
+//	<id> blp_sensor_fast_adv
 #define BLP_SENSOR_FAST_ADV								(100) //100 ms
 
 /** @brief APP_HR_SENSOR_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
+//	<o> Advertisement Timeout <1000-10000:50>
+//	<i> Defines inteval at which advertisement timout in ms.
+//	<i> Default: 1000
+//	<id> blp_sensor_adv_timeout
 #define BLP_SENSOR_ADV_TIMEOUT							(1000) // 100 Secs
 
 /** @brief scan_resp_len is the length of the scan response data */
+//	<o> Scan Response Buffer <1-20>
+//	<i> Defines size of buffer for scan response.
+//	<i> Default: 10
+//	<id> blp_scan_resp_len
 #define SCAN_RESP_LEN									(10)
 	
 /** @brief ADV_DATA_LEN */
@@ -76,7 +92,7 @@
 #define BLP_SENSOR_ADV_DATA_COMP_16_UUID_TYPE			(0x03)
 
 /** @brief HR_SENSOR_ADV_DATA_UUID_LEN the total length for hr uuid and dis uuid */
-#define BLP_SENSOR_ADV_DATA_UUID_LEN						(4)
+#define BLP_SENSOR_ADV_DATA_UUID_LEN					(4)
 
 /** @brief DEVICE_INFORMATION_SERVICE_UUID **/
 #define DEVICE_INFORMATION_SERVICE_UUID					(0x180A)
@@ -85,9 +101,12 @@
 #define BLP_SENSOR_ADV_DATA_NAME_TYPE					(0x09)
 
 /** @brief BLP_SENSOR_ADV_DATA_NAME_LEN the  length of the device name */
-#define BLP_SENSOR_ADV_DATA_NAME_LEN						(9)
+#define BLP_SENSOR_ADV_DATA_NAME_LEN					(9)
 
 /* @brief BLP_ADV_DATA_NAME_DATA the actual name of device */
+//	<s.9>	Advertising String
+//	<i>	String Descriptor describing in advertising packet.
+//	<id> blp_sensor_adv_data_name_data
 #define BLP_SENSOR_ADV_DATA_NAME_DATA					("ATMEL-BLP")
 
 /* @brief call back handler type  */
@@ -201,3 +220,6 @@ void blp_indication_confirmation_handler(at_ble_indication_confirmed_t *params);
 
 
 #endif /*__BLP_SENSOR_H__ */
+// </h>
+
+// <<< end of configuration section >>>

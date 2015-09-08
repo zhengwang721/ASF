@@ -44,6 +44,9 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Time Profile Configuration
+// =======================
 #ifndef __TIME_INFO_H__
 #define __TIME_INFO_H__
 
@@ -56,10 +59,24 @@
  *									Macros			                               *
  **********************************************************************************/
 /**@brief Advertisement Interval*/
+//  <o> Fast Advertisement Interval <100-1000:50>
+//  <i> Defines inteval of Fast advertisement in ms.
+//  <i> Default: 100
+//  <id> tip_fast_adv
 #define APP_TP_FAST_ADV								(100)		//100 ms
+
 /**@brief Advertisement Timeout*/
+//  <o> Advertisement Timeout <1000-10000:50>
+//  <i> Defines inteval at which advertisement timout in ms.
+//  <i> Default: 1000
+//  <id> tip_adv_timeout
 #define APP_TP_ADV_TIMEOUT							(1000)		// 100 Secs
+
 /**@brief Scan Response length*/
+//  <o> Scan Response Buffer <1-20>
+//  <i> Defines size of buffer for scan response.
+//  <i> Default: 10
+//  <id> tip_scan_resp_len
 #define SCAN_RESP_LEN								(10)
 
 /**@brief Time Profile type, UUid & Length */
@@ -74,6 +91,11 @@
 /**@brief TIP Service Solicitation Info*/
 #define TP_ADV_DATA_SERVSOLICITATION_16UUID_TYPE	(0x14)
 #define TP_ADV_DATA_SERVSOLICITATION_128UUID_TYPE	(0x15)
+
+//	<q> TIP Profile for Andriod
+//	<i> Defines whether to support for Andriod or iOS
+//  <id> tip_andriod
+#define TIP_ANDRIOD 1
 
 #if defined TP_ANDROID
 /**@brief Current Time Service UUId for Android */
@@ -93,6 +115,9 @@
 /**@brief Advertisement Name Type Length & data */
 #define TP_ADV_DATA_NAME_LEN						(9)
 #define TP_ADV_DATA_NAME_TYPE						(0x09)
+//  <s.9> Advertising String
+//  <i> String Descriptor describing in advertising packet.
+//  <id> tip_adv_data_name_data
 #define TP_ADV_DATA_NAME_DATA						("ATMEL-TIP")
 
 #define AT_BLE_DISCOVER_SUCCESS						(10)
@@ -197,4 +222,8 @@ typedef void (*bonding_complete_t)(bool flag);
 void time_info_encryption_status_changed_handler(at_ble_encryption_status_changed_t *param);
 void time_info_pair_done_handler(at_ble_pair_done_t *pair_done_param);
 void time_info_register_bonding_callback(bonding_complete_t bonding_complete_cb);
+
 #endif /* __TIME_INFO_H__ */
+// </h>
+
+// <<< end of configuration section >>>

@@ -44,6 +44,10 @@
 * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
 */
 
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> BLE Event Management Configuration
+// =======================
+
 #ifndef __BLE_MANAGER_H__
 #define __BLE_MANAGER_H__
 
@@ -161,27 +165,27 @@ static inline at_ble_status_t BLE_UNUSED2_VAR(void *param1_var, void *param2_var
 #define ADV_INTERVAL_SIZE				2
 
 #ifndef BLE_MITM_REQ
-#define BLE_MITM_REQ	(true)
+#define BLE_MITM_REQ					(true)
 #endif
 
 #ifndef BLE_BOND_REQ
-#define BLE_BOND_REQ	(true)
+#define BLE_BOND_REQ					(true)
 #endif
 
 #ifndef BLE_PERIPHERAL_PAIR_ENABLE
-#define BLE_PERIPHERAL_PAIR_ENABLE	(false)
+#define BLE_PERIPHERAL_PAIR_ENABLE		(false)
 #endif
 
 #ifndef	BLE_AUTHENTICATION_LEVEL
-#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_MODE1_L2_AUTH_PAIR_ENC)
+#define BLE_AUTHENTICATION_LEVEL		(AT_BLE_MODE1_L2_AUTH_PAIR_ENC)
 #endif
 
 #ifndef	BLE_IO_CAPABALITIES
-#define BLE_IO_CAPABALITIES			(AT_BLE_IO_CAP_DISPLAY_ONLY)
+#define BLE_IO_CAPABALITIES				(AT_BLE_IO_CAP_DISPLAY_ONLY)
 #endif
 
 #ifndef BLE_OOB_REQ
-#define BLE_OOB_REQ		(false)
+#define BLE_OOB_REQ						(false)
 #endif
 
 
@@ -317,13 +321,21 @@ typedef enum
 
 /* device information service characteristics uuids */
 #define DIS_CHAR_SYSTEM_ID_UUID					(0x2A23)
+
 #define DIS_CHAR_MODEL_NUMBER_UUID				(0x2A24)
+
 #define DIS_CHAR_SERIAL_NUMBER_UUID				(0x2A25)
-#define DIS_CHAR_FIRMWARE_REIVSION_UUID			(0x2A26)															
+
+#define DIS_CHAR_FIRMWARE_REIVSION_UUID			(0x2A26)
+
 #define DIS_CHAR_HARDWARE_REVISION_UUID			(0x2A27)
+
 #define DIS_CHAR_SOFTWARE_REVISION_UUID			(0x2A28)
+
 #define DIS_CHAR_MANUFACTURER_NAME_UUID			(0x2A29)
+
 #define DIS_CHAR_IEEE_REG_CERT_DATA_LIST_UUID	(0x2A2A)
+
 /* Current Time char UUID */
 #define CURRENT_TIME_CHAR_UUID					(0x2A2B)
 
@@ -345,7 +357,8 @@ typedef enum
 /** scan refresh characteristic uuid */
 #define SPS_CHAR_SCAN_REFRESH_UUID 				(0x2A31)
 /** scan interval characteristic uuid */
-#define SPS_CHAR_SCAN_INT_VALUE_UUID 			(0x2A4F)														
+#define SPS_CHAR_SCAN_INT_VALUE_UUID 			(0x2A4F)
+
 #define DIS_CHAR_PNP_ID_UUID					(0x2A50)
 
 #define HID_REPORT_REF_DESC						(0x2908)
@@ -365,30 +378,51 @@ typedef enum
 #define HID_UUID_CHAR_BOOT_KEY_OUTPUT_REPORT    (0x2A32)
 
 /** HID Boot Mouse Input Report UUID. */
-#define HID_UUID_CHAR_BOOT_MOUSE_INPUT_REPORT    (0x2A33)
+#define HID_UUID_CHAR_BOOT_MOUSE_INPUT_REPORT	(0x2A33)
 
 /** HID Information UUID. */
-#define HID_UUID_CHAR_HID_INFORMATION		     (0x2A4A)
+#define HID_UUID_CHAR_HID_INFORMATION			(0x2A4A)
 
 /** HID Control Point UUID. */
-#define HID_UUID_CHAR_HID_CONTROL_POINT		     (0x2A4C)
+#define HID_UUID_CHAR_HID_CONTROL_POINT			(0x2A4C)
 
 /** CSC Endpoint Characteristic UUID. */
 #define CSC_ENDPOINT_CHAR_UUID			("\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa1\xbb\x5a\xfd")
 
 /* All GAP Connection Parameter defined */
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
+
 /** minimum connection interval */
+//	<o> GAP Minimum Connection Interval in msec <0-1000:50>
+//	<i> Defines Minimum inteval for GAP Connection.
+//	<i> Default: 20
+//	<id> gap_conn_interval_min
 #define GAP_CONN_INTERVAL_MIN			(20)        //Connection interval min 20ms
+
 /** maximum connection interval */
+//	<o> GAP Maximum Connection Interval in msec <0-1000:50>
+//	<i> Defines Maximum inteval for GAP Connection.
+//	<i> Default: 40
+//	<id> gap_conn_interval_max
 #define GAP_CONN_INTERVAL_MAX			(40)		//Connection interval max 40ms
+
 /** connection slave latency */
+//	<o> GAP Slave Latency <0-4>
+//	<i> Defines Slave Latency for GAP Connection.
+//	<i> Default: 0
+//	<id> gap_conn_slave_latency
 #define GAP_CONN_SLAVE_LATENCY			(0)
+
 /** minimum length of local info parameters when using connection establishment proc */ 
 #define GAP_CE_LEN_MIN					(0)
 /** maximum length of local info parameters when using connection establishment proc */
 #define GAP_CE_LEN_MAX					(0)
+
 /** supervision time-out */
+//	<o> GAT Super Vison Timeout in msec <0-3000:50>
+//	<i> Defines SuperVision Timeout for GAP Connection.
+//	<i> Default: 0x1f4
+//	<id> gap_supervision_timout												
 #define GAP_SUPERVISION_TIMOUT			(0x1f4)		// 500 for supervision time-out
 
 /** number of connections */ 
@@ -398,8 +432,25 @@ typedef enum
 /** gatt discover end handle */
 #define GATT_DISCOVERY_ENDING_HANDLE	(0xFFFF)
 
+/* Max number of scan device */
+//	<o> Maximum Scan Device Buffer <0-30>
+//	<i> Defines maximum number of Scan device can have buffer .
+//	<i> Default: 10
+//	<id> max_scan_device
 #define MAX_SCAN_DEVICE					(10)			  //Max number of scan device
+
+/* Scan interval 30ms in term of 625us */
+//	<o> Scan Interval in units of 625us <1-1000:50>
+//	<i> Defines inteval to Scan device .
+//	<i> Default: 96
+//	<id> gap_scan_interval
 #define SCAN_INTERVAL					(96)              //Scan interval 30ms in term of 625us
+
+/* Scan window 30ms values in term of 625ms */
+//	<o> Scan Window in term of 625us <1-1000:50>
+//	<i> Defines Scan Window .
+//	<i> Default: 96
+//	<id> gap_scan_window
 #define SCAN_WINDOW						(96)              //Scan window 30ms values in term of 625ms
 #define SCAN_TIMEOUT					(0x0000)          //Timeout  Scan time-out, 0x0000 disables time-out
 #define SCAN_TYPE						(AT_BLE_SCAN_ACTIVE)
@@ -407,6 +458,10 @@ typedef enum
 #endif //((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
 
 /** maximum number of devices connected */
+//	<o> Maximum number of device to connect <1-5>
+//	<i> Defines the central to connect maximun number to devices
+//	<i> Default: 1
+//	<id> gap_max_device_connected
 #define MAX_DEVICE_CONNECTED			(1)
 
 
@@ -1015,3 +1070,6 @@ void register_ble_notification_confirmed_cb(ble_notification_confirmed_callback_
 
 void register_ble_indication_confirmed_cb(ble_indication_confirmed_callback_t indic_conf_cb_fn);
 #endif /*__BLE_MANAGER_H__*/
+// </h>
+
+// <<< end of configuration section >>>

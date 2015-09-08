@@ -50,26 +50,40 @@
 * \section preface Preface
 * This is the reference manual for the Time Information Profile
 */
-
-#ifndef __ANP_CLIENT_H__
-#define __ANP_CLIENT_H__
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Alert Notification Center service Configuration
+// =======================
+#ifndef __ANCS_CLIENT_H__
+#define __ANCS_CLIENT_H__
 /***********************************************************************************
  *									Macros			                               *
  **********************************************************************************/
 /**@brief Advertisement Interval*/
+//	<o> Fast Advertisement Interval <100-1000:50>
+//	<i> Defines inteval of Fast advertisement in ms.
+//	<i> Default: 100
+//	<id> ancs_app_anp_fast_adv
 #define APP_ANP_FAST_ADV						(100) //100 ms
 
 /**@brief Advertisement Timeout*/
+//	<o> Advertisement Timeout <1000-10000:50>
+//	<i> Defines inteval at which advertisement timout in ms.
+//	<i> Default: 1000
+//	<id> ancs_app_anp_adv_timeout
 #define APP_ANP_ADV_TIMEOUT						(1000) // 100 Secs
 
 /**@brief Scan Response length*/
+//	<o> Scan Response Buffer <1-20>
+//	<i> Defines size of buffer for scan response.
+//	<i> Default: 10
+//	<id> ancs_scan_resp_len
 #define SCAN_RESP_LEN							(10)
 
 /**@brief ADV type UUID Type & Length*/
 #define AD_TYPE_16BIT_UUID_LEN					(2)
 #define AD_TYPE_32BIT_UUID_LEN					(4)
 #define AD_TYPE_128BIT_UUID_LEN					(16)
-#define ADV_TYPE_LEN							(0x01)
+#define ADV_TYPE_LEN							(0x1)
 
 /**@brief Appearance type & Length */
 #define ANP_ADV_DATA_APPEARANCE_LEN				(2)
@@ -78,7 +92,10 @@
 
 /**@brief Advertisement Name Type Length & data */
 #define ANP_ADV_DATA_NAME_LEN					(6)
-#define ANP_ADV_DATA_NAME_TYPE					(0x09)
+#define ANP_ADV_DATA_NAME_TYPE					(0x9)
+//	<s.9>	Advertising String
+//	<i>	String Descriptor describing in advertising packet.
+//	<id> ancs_anp_adv_data_name_data
 #define ANP_ADV_DATA_NAME_DATA					("AT-ANS")
 
 /**@brief ANCS Service Solicitation Info*/
@@ -115,8 +132,8 @@
 #define CATEGORY_ID_MISSEDCALL					(2)
 
 /**@brief start and end handle */
-#define START_HANDLE							(0x0001)
-#define END_HANDLE								(0xffff)
+#define START_HANDLE							(0x1)
+#define END_HANDLE								(0xFFFF)
 
 #define AT_DISCOVER_SUCCESS						(10)
 
@@ -279,4 +296,7 @@ void anp_client_notification_handler(at_ble_notification_recieved_t *params);
  * \note Called by the ble_manager for enabling the notification in the gatt server
  */
 void anp_client_write_notification_handler(void *param);
-#endif /* __ANP_CLIENT_H__*/
+#endif /* __ANCS_CLIENT_H__*/
+// </h>
+
+// <<< end of configuration section >>>
