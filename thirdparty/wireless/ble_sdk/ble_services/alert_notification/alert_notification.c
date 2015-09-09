@@ -78,7 +78,7 @@ at_ble_status_t anp_alert_write(at_ble_handle_t conn_handle,at_ble_handle_t desc
 			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_data[1],false, true));
 		}
 	}
-	return 0;
+	return (AT_BLE_SUCCESS);
 }
 
 at_ble_status_t anp_alert_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti)
@@ -104,20 +104,16 @@ at_ble_status_t anp_alert_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_
 			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_value[0],false, true));
 		}
 	}
-	return 0;
+	return (AT_BLE_SUCCESS);
 }
 
 at_ble_status_t anp_alert_read(at_ble_handle_t conn_handle,at_ble_handle_t char_handle)
 {
-	if (char_handle == ANP_INVALID_CHAR_HANDLE)
-	{
-		return (AT_BLE_ATT_INVALID_HANDLE);
-	}
-	else
+	if (char_handle != ANP_INVALID_CHAR_HANDLE)
 	{
 		return (at_ble_characteristic_read(conn_handle,char_handle,ANP_READ_OFFSET,ANP_READ_LENGTH));
 	}
-	return AT_BLE_ATT_INVALID_HANDLE;
+	return (AT_BLE_ATT_INVALID_HANDLE);
 }
 
 void anp_alert_read_response (at_ble_characteristic_read_response_t *read_resp, gatt_anp_handler_t *anp_handler)

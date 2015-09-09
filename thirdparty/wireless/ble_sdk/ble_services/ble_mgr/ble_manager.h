@@ -130,7 +130,7 @@
 #endif
 
 /** @brief event timeout */
-#define BLE_EVENT_TIMEOUT			(-1)
+#define BLE_EVENT_TIMEOUT			(0xFFFFFFFF)
 
 /* Dummy BLE handler's for unused functions */
 static inline void ble_dummy_handler(void *param)

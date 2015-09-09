@@ -497,6 +497,7 @@ void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect)
 void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update)
 {
 	DBG_LOG("AT_BLE_CONN_PARAM_UPDATE ");
+	ALL_UNUSED(conn_param_update);  //To avoid compiler warning
 }
 
 void ble_slave_security_handler(at_ble_slave_sec_request_t* slave_sec_req)
@@ -612,6 +613,7 @@ void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 			}			
 		}
 	}
+	ALL_UNUSED(at_ble_pair_req);  //To avoid compiler warning
 }
 
 /** @brief function handles pair key request */

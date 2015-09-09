@@ -178,7 +178,6 @@ int main(void)
 			}
 		}
 	}	
-	return 0;
 }
 
 at_ble_status_t battery_service_advertise(void)
@@ -223,6 +222,7 @@ void ble_paired_app_event(at_ble_handle_t conn_handle)
 {
 	timer_cb_done = false;
 	hw_timer_start(BATTERY_UPDATE_INTERVAL);
+  ALL_UNUSED(conn_handle);
 }
 
 void ble_disconnected_app_event(at_ble_handle_t conn_handle)
@@ -231,6 +231,7 @@ void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 	flag = true;
 	hw_timer_stop();
 	battery_service_advertise();
+  ALL_UNUSED(conn_handle);
 }
 
 void ble_notification_confirmed_app_event(at_ble_cmd_complete_event_t *notification_status)
