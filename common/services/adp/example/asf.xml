@@ -21,16 +21,7 @@
 			<build type="c-source" value="sam0/adp_example_adc.c"/>
 			<build type="c-source" value="sam0/adp_example_tc.c"/>
 			<require idref="common.services.adp.example.common"/>
-			<device-support value="sam0"/>
-		</module>
-
-		<module type="application" id="common.services.adp.example#sam" caption="ADP example application">
-			<info type="description" value="summary">
-				ADP example application
-			</info>
-			<build type="c-source" value="adp_example_adc_sam4s.c"/>
-			<require idref="common.services.adp.example.common"/>
-			<device-support value="sam"/>
+			<device-support value="samd21"/>
 		</module>
 
 	</select-by-device>

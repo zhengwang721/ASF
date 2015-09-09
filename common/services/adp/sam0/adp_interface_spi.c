@@ -95,7 +95,6 @@ bool adp_interface_init(void)
 	enum status_code return_value;
 
 	system_init();
-	ioport_init();
 
 	struct spi_slave_inst_config slave_dev_config;
 
