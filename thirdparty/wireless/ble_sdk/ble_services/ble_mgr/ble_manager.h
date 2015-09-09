@@ -172,8 +172,8 @@ static inline at_ble_status_t BLE_UNUSED2_VAR(void *param1_var, void *param2_var
 #define BLE_BOND_REQ					(true)
 #endif
 
-#ifndef BLE_PERIPHERAL_PAIR_ENABLE
-#define BLE_PERIPHERAL_PAIR_ENABLE		(false)
+#ifndef BLE_PAIR_ENABLE
+#define BLE_PAIR_ENABLE					(false)
 #endif
 
 #ifndef	BLE_AUTHENTICATION_LEVEL

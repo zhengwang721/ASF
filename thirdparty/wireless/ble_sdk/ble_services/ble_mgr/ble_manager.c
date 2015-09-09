@@ -395,16 +395,23 @@ uint8_t scan_info_parse(at_ble_scan_info_t *scan_info_data,
 /** @brief function to send slave security request */
 at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 {
-	DBG_LOG("slave request");
-    if (at_ble_send_slave_sec_request(conn_handle, BLE_MITM_REQ, BLE_BOND_REQ) == AT_BLE_SUCCESS)
-    {
-	    DBG_LOG_DEV("Slave security request successful");
-	    return AT_BLE_SUCCESS;
-    }
-    else
-	{
-	    DBG_LOG("Slave security request failed");
-    }
+	#if BLE_PAIR_ENABLE
+		if (at_ble_send_slave_sec_request(conn_handle, BLE_MITM_REQ, BLE_BOND_REQ) == AT_BLE_SUCCESS)
+		{
+			DBG_LOG_DEV("Slave security request successful");
+			return AT_BLE_SUCCESS;
+		}
+		else
+		{
+			DBG_LOG("Slave security request failed");
+		}
+	#else
+		BLE_ADDITIONAL_PAIR_DONE_HANDLER(NULL);
+		if (ble_paired_cb != NULL)
+		{
+			ble_paired_cb(conn_handle);
+		}
+	#endif
 	return AT_BLE_FAILURE;
 }
 
@@ -431,14 +438,7 @@ void ble_connected_state_handler(at_ble_connected_t *conn_params)
 		}
 		
 #if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)
-	#if BLE_PERIPHERAL_PAIR_ENABLE
-		ble_send_slave_sec_request(conn_params->handle);		
-	#else
-		if (ble_paired_cb != NULL)
-		{
-			ble_paired_cb(conn_params->handle);
-		}
-	#endif
+	ble_send_slave_sec_request(conn_params->handle);
 #endif
 	} 
 	else
