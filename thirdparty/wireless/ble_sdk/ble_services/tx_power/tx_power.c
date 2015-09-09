@@ -58,7 +58,7 @@
 /****************************************************************************************
 *							        Global	                                     		*
 ****************************************************************************************/
-uint8_t tx_power_initial_value = DEFAULT_TX_PWR_VALUE;
+int8_t tx_power_initial_value = DEFAULT_TX_PWR_VALUE;
 
 
 
@@ -89,7 +89,7 @@ void init_tx_power_service(gatt_service_handler_t *tx_power_serv )
 	tx_power_serv->serv_chars.properties = AT_BLE_CHAR_READ ; 
 	
 	/* value */
-	tx_power_serv->serv_chars.init_value = &tx_power_initial_value ; 
+	tx_power_serv->serv_chars.init_value =(uint8_t *) &tx_power_initial_value ; 
 	tx_power_serv->serv_chars.value_init_len = sizeof(int8_t);
 	tx_power_serv->serv_chars.value_max_len = sizeof(int8_t);
 	
@@ -176,7 +176,7 @@ int8_t txps_power_read_response(
 		at_ble_characteristic_read_response_t *char_read_resp,
 		gatt_txps_char_handler_t *txps_handler)
 {
-	int8_t tx_power = TXPS_INVALID_POWER_VALUE;
+	int8_t tx_power = (int8_t)TXPS_INVALID_POWER_VALUE;
 	if(char_read_resp->status != AT_BLE_SUCCESS){
 		return char_read_resp->status;
 	}

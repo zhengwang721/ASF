@@ -205,6 +205,8 @@ void timer_callback_handler(void)
 	/* Free to use for User Application */
 }
 
+/* To keep the app executing */
+bool appp_exec = true;
 
 int main(void)
 {	
@@ -245,7 +247,7 @@ int main(void)
 	ble_device_init(NULL);
 	
 	/* Capturing the events  */
-	while(1)
+	while(appp_exec)
 	{
 		/* BLE Event Task */
 		ble_event_task();
@@ -284,7 +286,7 @@ int main(void)
 			}
 			flag = false;
 		}
-	
 	}
+        ALL_UNUSED(status);
 	return 0;
 }

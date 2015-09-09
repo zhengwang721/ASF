@@ -74,6 +74,7 @@ bool pxp_led_state = true;
 uint8_t timer_interval = INIT_TIMER_INTERVAL;
 volatile bool button_pressed = false;
 
+bool app_exec = true;
 /**
 * \brief Timer callback handler called on timer expiry
 */
@@ -201,7 +202,7 @@ int main(void)
 	register_linkloss_handler(app_linkloss_alert);
 		
 	/* Capturing the events  */ 
-	while(1)
+	while(app_exec)
 	{
 		ble_event_task();
 	}

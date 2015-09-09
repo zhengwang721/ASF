@@ -142,12 +142,12 @@ uint8_t lls_set_alert_value(at_ble_characteristic_changed_t *change_params, gatt
 #define LLS_READ_OFFSET                         (0)
 
 /* Link Loss invalid character handler*/
-#define LLS_INVALID_CHAR_HANDLE         (0)
+#define LLS_INVALID_CHAR_HANDLE                  (0)
 
 /* Link Loss invalid read response value */
-#define LLS_READ_RESP_INVALID         (0xFF)
+#define LLS_READ_RESP_INVALID                    (-1)
 
-#define LLS_ALERT_LEVEL                         LLS_HIGH_ALERT
+#define LLS_ALERT_LEVEL                          LLS_HIGH_ALERT
 
 typedef enum {
   LLS_NO_ALERT,

@@ -57,7 +57,7 @@
 ****************************************************************************************/
 
 /** @brief  DEFAULT_TX_PWR_VALUE the tx power value*/
-#define DEFAULT_TX_PWR_VALUE			(-3)
+#define DEFAULT_TX_PWR_VALUE			(0)
 
 
 /** @brief count of included service in tx power service
@@ -163,3 +163,5 @@ int8_t txps_power_read_response(
 #endif //TXPS_GATT_CLIENT
 
 #endif /* __TX_POWER_H__ */
+ 
+
