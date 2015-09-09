@@ -112,4 +112,6 @@ int8_t tis_rtu_update_read_response(at_ble_characteristic_read_response_t *read_
 
 at_ble_status_t tis_rtu_update_write(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti);
 
+
 #endif /* __REFERENCE_TIME_H__ */
+

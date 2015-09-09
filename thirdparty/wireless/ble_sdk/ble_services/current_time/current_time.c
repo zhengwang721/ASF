@@ -83,7 +83,7 @@ at_ble_status_t tis_current_time_noti(at_ble_handle_t conn_handle,at_ble_handle_
 			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_data[1],false, true));
 		}
 	}
-	return 0;
+	return AT_BLE_SUCCESS;
 }
 
 /**@brief Send the Read request to the current time characteristic

@@ -242,5 +242,5 @@ int main (void)
 
 void app_bonding_cb(bool flag)
 {
-	bonding_flag = flag;
-}			
+	bonding_flag = flag;     
+}	

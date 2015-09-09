@@ -130,7 +130,7 @@
 #endif
 
 /** @brief event timeout */
-#define BLE_EVENT_TIMEOUT			(-1)
+#define BLE_EVENT_TIMEOUT			(0xFFFFFFFF)
 
 /* Dummy BLE handler's for unused functions */
 static inline void ble_dummy_handler(void *param)
@@ -1015,3 +1015,4 @@ void register_ble_notification_confirmed_cb(ble_notification_confirmed_callback_
 
 void register_ble_indication_confirmed_cb(ble_indication_confirmed_callback_t indic_conf_cb_fn);
 #endif /*__BLE_MANAGER_H__*/
+

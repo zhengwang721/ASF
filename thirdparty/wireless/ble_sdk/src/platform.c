@@ -49,6 +49,7 @@
 #include "conf_serialdrv.h"
 #include "serial_drv.h"
 #include "serial_fifo.h"
+#include "ble_utils.h"
 
 uint8_t bus_type = AT_BLE_UART;
 
@@ -186,7 +187,9 @@ int platform_interface_recv(uint8_t if_type, uint8_t* data, uint32_t len)
 	}
 	else
 	{
-		return -1;	
+                ALL_UNUSED(len);
+                ALL_UNUSED(data);      
+            return -1;	
 	}	
 }
 
@@ -417,7 +420,7 @@ void serial_tx_callback(void)
 		{
 			if(ext_wakeup_state > 0)
 			ext_wakeup_state--;
-			if(ext_wakeup_state == 0)			  
+			//if(ext_wakeup_state == 0)			  
 			;//ble_wakeup_pin_set_low();
 		}
 	}	
@@ -451,7 +454,7 @@ void serial_tx_callback(void)
  
  void platform_start_timer(uint32_t timeout)
  {
-	 
+	 ALL_UNUSED(timeout);
  }
  
  void platform_stop_timer(void)

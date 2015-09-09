@@ -104,4 +104,6 @@ at_ble_status_t tis_dst_change_read(at_ble_handle_t conn_handle,
 int8_t tis_dst_change_read_response(at_ble_characteristic_read_response_t *read_resp,
 		gatt_dst_handler_t *dst_handler);
 		
+
 #endif /*__NEXT_DST_H__*/
+
