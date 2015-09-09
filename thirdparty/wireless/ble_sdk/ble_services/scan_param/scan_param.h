@@ -103,3 +103,4 @@ at_ble_status_t sps_primary_service_define(sps_gatt_service_handler_t *sps_servi
 at_ble_status_t	sps_char_changed_event(sps_gatt_service_handler_t *sps_service_handler, at_ble_characteristic_changed_t *char_handle, bool volatile *flag);
 
 #endif /* __SCAN_PARAM_H__ */
+

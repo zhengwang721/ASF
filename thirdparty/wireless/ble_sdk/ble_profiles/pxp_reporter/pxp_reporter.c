@@ -227,7 +227,7 @@ at_ble_status_t pxp_reporter_connected_state_handler(at_ble_connected_t *conn_pa
 	{
 		DBG_LOG("Read of alert value for Immediate alert service failed:reason %x",status);
 	}
-	
+	ALL_UNUSED(conn_params);
 	return AT_BLE_SUCCESS;
 }
 
@@ -249,7 +249,8 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 	{
 		DBG_LOG("Bluetooth Device is in Advertising Mode");
 	}
-	return AT_BLE_SUCCESS;
+	 ALL_UNUSED(disconnect);
+        return AT_BLE_SUCCESS;
 }
 
 
@@ -325,5 +326,5 @@ void pxp_reporter_init(void *param)
 	
 	/* pxp services advertisement */
 	pxp_reporter_adv();	
-	
+        ALL_UNUSED(param);
 }

@@ -204,7 +204,8 @@ at_ble_status_t hr_sensor_disconnect_event_handler(
 {
 	/** Calling app state callback handler */
 	state_cb(HR_APP_DISCONNECT_STATE);
-	return AT_BLE_SUCCESS;
+	ALL_UNUSED(disconnect);
+        return AT_BLE_SUCCESS;
 }
 
 /** @brief hr_sensor_connected_state_handler called by ble manager after a
@@ -335,4 +336,5 @@ void hr_sensor_init(void *param)
 	hr_sensor_service_init();
 	hr_sensor_service_define();
 	DBG_LOG("Press the button to start advertisement");
+        ALL_UNUSED(param);
 }

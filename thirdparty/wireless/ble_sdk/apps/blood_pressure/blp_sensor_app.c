@@ -162,7 +162,7 @@ void app_connected_state(bool connected)
 		 diastolic_val_kpa = DIASTOLIC_MIN_KPA;
 		 map_val_kpa = MAP_MIN_KPA;
 		pulse_rate_val = PULSE_RATE_MIN;
-		units = ~units;
+		units = !units;
 	} 
 }
 
@@ -171,6 +171,7 @@ void app_connected_state(bool connected)
  */
 void update_time_stamp(void)
 {
+  uint16_t year;
 	if (time_stamp[6] == SECOND_MAX)
 	{
 		time_stamp[6] = SECONDS;
@@ -186,7 +187,8 @@ void update_time_stamp(void)
 					if (time_stamp[2] == MONTH_MAX)
 					{
 						time_stamp[2] = MONTH;
-						if (time_stamp[0] == YEAR_MAX)
+                                                memcpy(&year,&time_stamp[0],2);
+						if (year == YEAR_MAX)
 						{
 							year_value = YEAR;
 							 memcpy(&time_stamp[0],&year_value,2);
@@ -735,6 +737,8 @@ void timer_callback_handler(void)
 	update_time_stamp();
 }
 
+/* To keep the app in execution mode */
+bool app_exec = true;
 /**
  * \brief Heart Rate Sensor Application main function
  */
@@ -787,7 +791,7 @@ int main(void)
 	ble_device_init(NULL);
 
 	/* Capturing the events  */
-	while (1) {
+	while (app_exec) {
 		ble_event_task();
 	
 		if (user_request_flag )

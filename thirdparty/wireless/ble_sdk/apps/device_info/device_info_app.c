@@ -84,6 +84,9 @@ void timer_callback_handler(void)
 	//Timer call back
 	timer_cb_done = true;
 }
+ 
+/* To keep the applicaiton in execution continuosly*/
+bool app_exec = true;
 
 /**
 * \Battery Service Application main function
@@ -135,7 +138,7 @@ int main(void)
 	register_ble_disconnected_event_cb(ble_disconnected_app_event);
 	
 	/* Capturing the events  */ 
-	while (1) {
+	while (app_exec) {
 		/* BLE Event Task */
 		ble_event_task();	
 		if (timer_cb_done)
@@ -209,6 +212,7 @@ void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 	timer_cb_done = false;
 	LED_Off(LED0);
 	device_information_advertise();
+        ALL_UNUSED(conn_handle);
 }
 
 void button_cb(void)

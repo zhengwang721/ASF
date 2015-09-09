@@ -189,7 +189,9 @@ int platform_interface_recv(uint8_t if_type, uint8_t* data, uint32_t len)
 	}
 	else
 	{
-		return -1;	
+                ALL_UNUSED(len);
+                ALL_UNUSED(data);      
+            return -1;	
 	}	  
 }
 

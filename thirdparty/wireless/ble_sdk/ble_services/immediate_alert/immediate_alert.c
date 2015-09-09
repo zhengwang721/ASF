@@ -172,7 +172,7 @@ at_ble_status_t ias_alert_level_write(at_ble_handle_t conn_handle,
 	       char_handle,
 	       IAS_WRITE_OFFSET,
 	       IAS_WRITE_LENGTH,
-	       &alert_level,
+	       (uint8_t *)&alert_level,
 	       IAS_NO_SIGNED_WRITE,
 	       IAS_WRITE_WITH_RESPONSE));
 }
