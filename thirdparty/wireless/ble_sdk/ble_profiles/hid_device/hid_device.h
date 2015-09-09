@@ -301,3 +301,4 @@ void hid_prf_boot_mousereport_update(at_ble_handle_t conn_handle, uint8_t serv_i
 void hid_prf_boot_keyboardreport_update(at_ble_handle_t conn_handle, uint8_t serv_inst, uint8_t *bootreport, uint16_t len);
 
 #endif /*__HID_DEVICE_H__*/
+

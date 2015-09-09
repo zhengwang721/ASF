@@ -87,6 +87,7 @@ void csc_prf_buf_init(uint8_t *databuf, uint8_t datalen)
 void csc_prf_init(void *param)
 { 
 	csc_serv_init(app_csc_info.buff_ptr, app_csc_info.buff_len);
+        ALL_UNUSED(param);
 }
 
 /**
@@ -225,7 +226,7 @@ void csc_prf_service_found_handler(at_ble_primary_service_found_t * params)
 	app_csc_info.csc_serv.end_handle);
 	
 	
-	DBG_LOG_DEV("Discover service UUID:\r\n -->0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",
+	DBG_LOG("Discover service UUID:\r\n -->0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",
 	app_csc_info.csc_serv.service_uuid.uuid[0],
 	app_csc_info.csc_serv.service_uuid.uuid[1],
 	app_csc_info.csc_serv.service_uuid.uuid[2],
@@ -255,13 +256,13 @@ void csc_prf_characteristic_found_handler(at_ble_characteristic_found_t *params)
 	memcpy((uint8_t *)&app_csc_info.csc_char, params, sizeof(at_ble_characteristic_found_t));
 	
 	
-	DBG_LOG_DEV("Characteristic Info:\r\n -->ConnHandle: 0x%02x\r\n -->Char handle: 0x%02x\r\n -->Value handle: 0x%02x\r\n -->Properties: 0x%02x",
+	DBG_LOG("Characteristic Info:\r\n -->ConnHandle: 0x%02x\r\n -->Char handle: 0x%02x\r\n -->Value handle: 0x%02x\r\n -->Properties: 0x%02x",
 	app_csc_info.csc_char.conn_handle,
 	app_csc_info.csc_char.char_handle,
 	app_csc_info.csc_char.value_handle,
 	app_csc_info.csc_char.properties);
 	
-	DBG_LOG_DEV("Characteristic UUID:\r\n -->0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",
+	DBG_LOG("Characteristic UUID:\r\n -->0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",
 	app_csc_info.csc_char.char_uuid.uuid[0],
 	app_csc_info.csc_char.char_uuid.uuid[1],
 	app_csc_info.csc_char.char_uuid.uuid[2],
@@ -348,6 +349,7 @@ at_ble_status_t csc_prf_disconnect_event_handler(at_ble_disconnected_t *disconne
 		DBG_LOG("Device Started Advertisement");
 	}
 	app_csc_info.devicedb = false;
+        ALL_UNUSED(disconnect);
 	return AT_BLE_SUCCESS;
 }
 
