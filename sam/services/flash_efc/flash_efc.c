@@ -126,6 +126,12 @@ extern "C" {
 # define GPNVM_NUM_MAX        2
 #endif
 
+#if (SAMG)
+# define GPNVM_READ_NUM_MAX   7
+#else
+# define GPNVM_READ_NUM_MAX   2
+#endif
+
 #if (SAM4C || SAM4CP || SAM4CM)
 #if (SAM4C32 || SAM4CMP32 || SAM4CMS32)
 # define EFC     EFC0
@@ -915,7 +921,7 @@ uint32_t flash_is_gpnvm_set(uint32_t ul_gpnvm)
 {
 	uint32_t ul_gpnvm_bits;
 
-	if (ul_gpnvm >= GPNVM_NUM_MAX) {
+	if (ul_gpnvm >= GPNVM_READ_NUM_MAX) {
 		return FLASH_RC_INVALID;
 	}
 
