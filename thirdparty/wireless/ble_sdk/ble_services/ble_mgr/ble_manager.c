@@ -115,15 +115,15 @@ static void ble_set_address(at_ble_addr_t *addr);
 /** @brief function to get event from stack */
 at_ble_status_t ble_event_task(void)
 {
-	if (platform_ble_event_data() == AT_BLE_SUCCESS) {
-		if (at_ble_event_get(&event, params,
-		BLE_EVENT_TIMEOUT) == AT_BLE_SUCCESS) {
-		//	1000) == AT_BLE_SUCCESS) {
+	if (platform_ble_event_data() == AT_BLE_SUCCESS) 
+	{
+		if (at_ble_event_get(&event, params, BLE_EVENT_TIMEOUT) == AT_BLE_SUCCESS) 
+		{
 			ble_event_manager(event, params);
 			return AT_BLE_SUCCESS;
 		}
 	}
-
+	
 	return AT_BLE_FAILURE;
 }
 
@@ -499,6 +499,12 @@ void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update)
 	DBG_LOG("AT_BLE_CONN_PARAM_UPDATE ");
 }
 
+void ble_conn_param_update_req(at_ble_conn_param_update_request_t * conn_param_req)
+{
+	DBG_LOG("connection parameter update request received");
+	at_ble_conn_update_reply(conn_param_req->handle, true, 1, 120);
+}
+
 void ble_slave_security_handler(at_ble_slave_sec_request_t* slave_sec_req)
 {
 	at_ble_pair_features_t features;
@@ -512,7 +518,7 @@ void ble_slave_security_handler(at_ble_slave_sec_request_t* slave_sec_req)
 	if(!app_device_bond)
 	{
 
-		features.desired_auth =  AT_BLE_MODE1_L2_AUTH_PAIR_ENC;
+		features.desired_auth =  BLE_AUTHENTICATION_LEVEL; 
 		features.bond = slave_sec_req->bond;
 		features.mitm_protection = slave_sec_req->mitm_protection;
 		/* Device capabilities is display only , key will be generated
@@ -814,6 +820,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	 */
 	case AT_BLE_CONN_PARAM_UPDATE_REQUEST:
 	{
+		BLE_CONN_PARAM_UPDATE_REQ_HANDLER((at_ble_conn_param_update_request_t *)event_params);
 		
 	}
 	break;
