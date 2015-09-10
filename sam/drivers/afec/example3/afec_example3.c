@@ -200,12 +200,10 @@ int main(void)
 	/* Enable channel for potentiometer. */
 	afec_channel_enable(AFEC0, AFEC_CHANNEL_POTENTIOMETER);
 
-
 	afec_set_callback(AFEC0, AFEC_INTERRUPT_COMP_ERROR, afec_print_comp_result, 1);
 
 	while (1) {
 		afec_start_software_conversion(AFEC0);
 		delay_ms(1000);
-
 	}
 }

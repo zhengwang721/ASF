@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="AES Example for SAMV71" id="sam.drivers.aes.example.samv71_xplained_ultra">
+	<project caption="AES Example for on SAMV71-Xplained-Ultra" id="sam.drivers.aes.example.samv71_xplained_ultra">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
