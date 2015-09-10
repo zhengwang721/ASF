@@ -251,7 +251,7 @@ int main(void)
 		ble_event_task();
 		if (flag)
 		{
-			delay_ms(100);
+			delay_ms(350);
 			if (press_count == DEVICE_SILENT)
 			{
 				DBG_LOG("Device to silent");

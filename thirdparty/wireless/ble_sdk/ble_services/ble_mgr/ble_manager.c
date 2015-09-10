@@ -1032,7 +1032,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	/** The peer has confirmed that it has received the service changed notification. \n
 	  * Refer to @ref at_ble_service_changed_notification_confirmed_t
 	  */
-	case AT_BLE_SERVICE_CHANGED_NOTIFICATION_CONFIRMED:
+	case AT_BLE_SERVICE_CHANGED_INDICATION_SENT:
 	{
 		
 	}
