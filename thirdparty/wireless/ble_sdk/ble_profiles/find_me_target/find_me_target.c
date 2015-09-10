@@ -184,6 +184,7 @@ at_ble_status_t fmp_target_connected_state_handler(
 		at_ble_connected_t *conn_params)
 {
 	at_ble_status_t status;
+	uint16_t len;
 	
 	///* Upon connection set default value to no alert*/
 	//immediate_alert_cb(IAS_NO_ALERT);
@@ -192,7 +193,7 @@ at_ble_status_t fmp_target_connected_state_handler(
 				= at_ble_characteristic_value_get(ias_handle.
 					serv_chars.char_val_handle,
 					&immediate_alert_value,
-					sizeof(int8_t)))) {
+					&len))) {
 		DBG_LOG(
 				"Read of alert value for Immediate alert service failed:reason %x",
 				status);
