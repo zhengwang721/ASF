@@ -280,7 +280,7 @@ void time_info_service_found_handler(at_ble_primary_service_found_t * primary_se
 			{
 				rtu_handle.start_handle = primary_service_params->start_handle;
 				rtu_handle.end_handle = primary_service_params->end_handle;
-				DBG_LOG_DEV("Reference time update service discovered");
+				DBG_LOG("Reference time update service discovered");
 				//DBG_LOG_DEV("Reference time update service discovered  %04X %04X", rtu_handle.start_handle, rtu_handle.end_handle);
 				//DBG_LOG_DEV("UUID : 0x%02X%02X",primary_service_params->service_uuid.uuid[1],primary_service_params->service_uuid.uuid[0]);
 				rtu_handle.char_discovery = AT_BLE_SUCCESS;
@@ -299,7 +299,7 @@ void time_info_service_found_handler(at_ble_primary_service_found_t * primary_se
 void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_status)
 {
 	bool discover_char_flag = true;
-	if (discover_status->status == AT_BLE_DISCOVER_SUCCESS)
+	if (discover_status->status == AT_BLE_DISCOVER_SUCCESS || discover_status->status == AT_BLE_SUCCESS)
 	{
 		#if defined CURRENT_TIME_SERVICE
 		if ((cts_handle.char_discovery == AT_BLE_SUCCESS) && (discover_char_flag))
@@ -411,7 +411,7 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 		
 		if (discover_char_flag)
 		{
-			DBG_LOG_DEV("GATT characteristic discovery completed");
+			DBG_LOG("GATT characteristic discovery completed");
 			//delay_ms(3000);
 			if(ble_send_slave_sec_request(ble_connected_dev_info[0].handle) == AT_BLE_SUCCESS)
 			{
@@ -442,7 +442,7 @@ void time_info_descriptor_found_handler(at_ble_descriptor_found_t *descriptor_fo
 	 {
 		 cts_handle.curr_desc_handle = descriptor_found->desc_handle;
 		 Desc_found = true;
-		 DBG_LOG_DEV("Current Time Descriptor");
+		 DBG_LOG("Current Time Descriptor");
 		 //DBG_LOG_DEV("Current Time Descriptor %04X",cts_handle.curr_desc_handle);
 		 //DBG_LOG_DEV("Descriptor Info ConnHandle 0x%02x : Descr Handle 0x%02x",descriptor_found->conn_handle,descriptor_found->desc_handle);
 		 //DBG_LOG_DEV("UUID : 0x%02X%02X",descriptor_found->desc_uuid.uuid[1],descriptor_found->desc_uuid.uuid[0]);
@@ -463,7 +463,7 @@ void time_info_characteristic_found_handler(at_ble_characteristic_found_t *chara
 	{
 		current_time_char_found = true;
 		cts_handle.curr_char_handle = characteristic_found->value_handle;
-		DBG_LOG_DEV("current time characteristics");
+		DBG_LOG("current time characteristics");
 		//DBG_LOG_DEV("current time characteristics %04X",cts_handle.curr_char_handle);
 		//DBG_LOG_DEV("Characteristic Info Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
 		//characteristic_found->char_handle,
@@ -477,7 +477,7 @@ void time_info_characteristic_found_handler(at_ble_characteristic_found_t *chara
 	{
 		local_time_char_found = true;
 		cts_handle.lti_char_handle = characteristic_found->value_handle;
-		DBG_LOG_DEV("Local time characteristics");
+		DBG_LOG("Local time characteristics");
 		//DBG_LOG_DEV("Local time characteristics %04X",cts_handle.lti_char_handle);
 		//DBG_LOG_DEV("Characteristic Info Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
 		//characteristic_found->char_handle,
@@ -490,7 +490,7 @@ void time_info_characteristic_found_handler(at_ble_characteristic_found_t *chara
 	{
 		ref_time_char_found = true;
 		cts_handle.rti_char_handle = characteristic_found->value_handle;
-		DBG_LOG_DEV("Reference time characteristics");
+		DBG_LOG("Reference time characteristics");
 		//DBG_LOG_DEV("Reference time characteristics %04X",cts_handle.rti_char_handle);
 		//DBG_LOG_DEV("Characteristic Info Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
 		//characteristic_found->char_handle,
@@ -503,7 +503,7 @@ void time_info_characteristic_found_handler(at_ble_characteristic_found_t *chara
 	{
 		time_with_dst_char_found = true;
 		dst_handle.dst_char_handle = characteristic_found->value_handle;
-		DBG_LOG_DEV("Time with DST characteristics");
+		DBG_LOG("Time with DST characteristics");
 		//DBG_LOG_DEV("Time with DST characteristics %04X",dst_handle.dst_char_handle);
 		//DBG_LOG_DEV("Characteristic Info Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
 		//characteristic_found->char_handle,
@@ -516,7 +516,7 @@ void time_info_characteristic_found_handler(at_ble_characteristic_found_t *chara
 	{
 		time_update_cp_char_found = true;
 		rtu_handle.tp_control_char_handle = characteristic_found->value_handle;
-		DBG_LOG_DEV("Time Update Control Point characteristics");
+		DBG_LOG("Time Update Control Point characteristics");
 		//DBG_LOG_DEV("Time Update Control Point characteristics %04X",rtu_handle.tp_control_char_handle);
 		//DBG_LOG_DEV("Characteristic Info Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
 		//characteristic_found->char_handle,
@@ -529,7 +529,7 @@ void time_info_characteristic_found_handler(at_ble_characteristic_found_t *chara
 	{
 		time_update_state_char_found = true;
 		rtu_handle.tp_state_char_handle = characteristic_found->value_handle;
-		DBG_LOG_DEV("Time Update State characteristics");
+		DBG_LOG("Time Update State characteristics");
 		//DBG_LOG_DEV("Time Update State characteristics %04X",rtu_handle.tp_state_char_handle);
 		//DBG_LOG_DEV("Characteristic Info Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
 		//characteristic_found->char_handle,
