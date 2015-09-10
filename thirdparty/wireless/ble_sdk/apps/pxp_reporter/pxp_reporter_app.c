@@ -191,6 +191,8 @@ int main(void)
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);
 	
+	trace_set_level(TRACE_LVL_ALL);
+	
 	DBG_LOG("Initializing Proximity Reporter Application");
 	
 	/* initialize the ble chip  and Set the device mac address */

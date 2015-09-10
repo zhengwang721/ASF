@@ -139,7 +139,7 @@ at_ble_status_t pxp_service_define (void)
 		DBG_LOG("LLS Service Define Failed");
 	} else
 	{
-		DBG_LOG("lls handle %d",lls_handle.serv_handle);
+		DBG_LOG_DEV("lls handle %d",lls_handle.serv_handle);
 	}
 		
 	#if defined PATHLOSS
@@ -148,7 +148,7 @@ at_ble_status_t pxp_service_define (void)
 		DBG_LOG("IAS Service Define Failed");
 	} else
 	{
-	DBG_LOG("ias handle %d",ias_handle.serv_handle);
+	DBG_LOG_DEV("ias handle %d",ias_handle.serv_handle);
 	}
 	
 	if (!(txps_primary_service_define(&txps_handle) == AT_BLE_SUCCESS))
@@ -156,7 +156,7 @@ at_ble_status_t pxp_service_define (void)
 		DBG_LOG("TXPS Service Define Failed");
 	} else 
 	{
-		DBG_LOG("tx handle %d",txps_handle.serv_handle);
+		DBG_LOG_DEV("tx handle %d",txps_handle.serv_handle);
 	}
 	#endif
 	
@@ -207,27 +207,22 @@ at_ble_status_t pxp_reporter_char_changed_handler(at_ble_characteristic_changed_
 */
 at_ble_status_t pxp_reporter_connected_state_handler(at_ble_connected_t *conn_params)
 {
-
 	at_ble_status_t status;
+	uint16_t len = sizeof(uint8_t);
+
 	hw_timer_stop();
 	LED_Off(LED0);
 	pxp_led_state = 0;
-	//if ((status = at_ble_tx_power_set(conn_params->handle, DEFAULT_TX_PWR_VALUE)) != AT_BLE_SUCCESS) 
-	//{
-		//DBG_LOG("Setting tx power value failed:reason %x",status);
-		//return AT_BLE_FAILURE;
-	//}
 	
-	if ((status = at_ble_characteristic_value_get(lls_handle.serv_chars.char_val_handle,&linkloss_current_alert_level,sizeof(int8_t))))
+	if ((status = at_ble_characteristic_value_get(lls_handle.serv_chars.char_val_handle,&linkloss_current_alert_level,&len)))
 	{
 		DBG_LOG("Read of alert value for link loss service failed:reason %x",status);
 	}
 	
-	if ((status = at_ble_characteristic_value_get(ias_handle.serv_chars.char_val_handle,&pathloss_alert_value,sizeof(int8_t))))
+	if ((status = at_ble_characteristic_value_get(ias_handle.serv_chars.char_val_handle,&pathloss_alert_value,&len)))
 	{
 		DBG_LOG("Read of alert value for Immediate alert service failed:reason %x",status);
 	}
-	
 	return AT_BLE_SUCCESS;
 }
 
@@ -324,6 +319,5 @@ void pxp_reporter_init(void *param)
 	pxp_service_define();	
 	
 	/* pxp services advertisement */
-	pxp_reporter_adv();	
-	
+	pxp_reporter_adv();		
 }
