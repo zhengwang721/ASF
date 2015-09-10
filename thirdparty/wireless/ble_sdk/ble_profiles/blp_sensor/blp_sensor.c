@@ -363,7 +363,7 @@ void blp_sensor_service_init(void)
 {
 	blp_init_service(&blp_service_handler);
 
-	//dis_init_service(&dis_service_handler);
+	dis_init_service(&dis_service_handler);
 }
 
 /** @brief blp_sensor_init initializes and defines the services of the hr profile
