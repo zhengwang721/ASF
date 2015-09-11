@@ -225,7 +225,7 @@ void csc_prf_service_found_handler(at_ble_primary_service_found_t * params)
 	app_csc_info.csc_serv.end_handle);
 	
 	
-	DBG_LOG_DEV("Discover service UUID:\r\n -->0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",
+	DBG_LOG("Discover service UUID:\r\n -->0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",
 	app_csc_info.csc_serv.service_uuid.uuid[0],
 	app_csc_info.csc_serv.service_uuid.uuid[1],
 	app_csc_info.csc_serv.service_uuid.uuid[2],
@@ -241,9 +241,7 @@ void csc_prf_service_found_handler(at_ble_primary_service_found_t * params)
 	app_csc_info.csc_serv.service_uuid.uuid[12],
 	app_csc_info.csc_serv.service_uuid.uuid[13],
 	app_csc_info.csc_serv.service_uuid.uuid[14],
-	app_csc_info.csc_serv.service_uuid.uuid[15]
-	);	
-	
+	app_csc_info.csc_serv.service_uuid.uuid[15]);
 }
 
 
@@ -261,7 +259,7 @@ void csc_prf_characteristic_found_handler(at_ble_characteristic_found_t *params)
 	app_csc_info.csc_char.value_handle,
 	app_csc_info.csc_char.properties);
 	
-	DBG_LOG_DEV("Characteristic UUID:\r\n -->0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",
+	DBG_LOG("Characteristic UUID:\r\n -->0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",
 	app_csc_info.csc_char.char_uuid.uuid[0],
 	app_csc_info.csc_char.char_uuid.uuid[1],
 	app_csc_info.csc_char.char_uuid.uuid[2],
@@ -278,8 +276,7 @@ void csc_prf_characteristic_found_handler(at_ble_characteristic_found_t *params)
 	app_csc_info.csc_char.char_uuid.uuid[13],
 	app_csc_info.csc_char.char_uuid.uuid[14],
 	app_csc_info.csc_char.char_uuid.uuid[15]
-	);	
-	
+	);
 }
 
 

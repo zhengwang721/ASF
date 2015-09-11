@@ -91,9 +91,10 @@ at_ble_status_t csc_serv_init(uint8_t *buf, uint8_t len)
 at_ble_status_t csc_serv_send_data(uint16_t connhandle, uint8_t *databuf, uint8_t datalen)
 {
 	at_ble_status_t status;
-	uint8_t value = 0; 
+	uint8_t value = 0;
+	uint16_t length;
 	
-	status = at_ble_characteristic_value_get(csc_inst.endpoint_chars.client_config_handle, &value, sizeof(uint16_t));
+	status = at_ble_characteristic_value_get(csc_inst.endpoint_chars.client_config_handle, &value, &length);
 	if (status != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("at_ble_characteristic_value_get value get failed");

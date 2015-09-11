@@ -183,7 +183,7 @@ uint8_t anp_alert_read_response (at_ble_characteristic_read_response_t *read_res
 		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
 		DBG_LOG_DEV("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
 		
-		return 1;
+		return SUPPORTED_NEW_ALERT_READ;
 	}
 
 	/* Supported Unread Alert Category */
@@ -244,7 +244,7 @@ uint8_t anp_alert_read_response (at_ble_characteristic_read_response_t *read_res
 
 		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
 		DBG_LOG_DEV("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
-		return 2;
+		return SUPPORTED_UNREAD_ALERT_READ;
 	}
 		
 		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
@@ -256,7 +256,7 @@ uint8_t anp_alert_read_response (at_ble_characteristic_read_response_t *read_res
 		DBG_LOG_DEV("Alert Notification Characteristic read response %02x handler",read_resp->char_handle);
 		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
 		DBG_LOG_DEV("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
-		return 3;
+		return ALERT_CONTRL_POINT_READ;
 	}
 	return 0;
 }
