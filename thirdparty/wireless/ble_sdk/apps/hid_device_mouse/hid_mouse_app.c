@@ -175,7 +175,6 @@ void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_sta
 /* Callback called when user press the button for writing new characteristic value */
 void button_cb(void)
 {
-	button_pressed = true;
 	if(!mouse_status)
 	{
 		mouse_status = 1;
@@ -183,7 +182,7 @@ void button_cb(void)
 	
 	if(!report_ntf_info.ntf_conf)
 	{
-		DBG_LOG("HID device not configured for reports");
+		//DBG_LOG("HID device not configured for reports");
 	}
 }
 

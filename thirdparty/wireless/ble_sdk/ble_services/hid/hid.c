@@ -759,7 +759,8 @@ void hid_boot_mousereport_update(at_ble_handle_t conn_handle, uint8_t serv_inst,
 #ifdef HID_MOUSE_DEVICE	
 	uint8_t value = 0;
 	uint8_t status;
-	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_boot_mouse_in_report->client_config_desc.handle, &value, sizeof(uint16_t));
+	uint16_t length = 2;
+	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_boot_mouse_in_report->client_config_desc.handle, &value, &length);
 	if (status != AT_BLE_SUCCESS)
 	{
 		DBG_LOG_DEV("charactertistic  value get failed");
