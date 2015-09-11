@@ -537,7 +537,7 @@ void board_init(void)
 	MATRIX->CCFG_SMCNFCS = CCFG_SMCNFCS_SDRAMEN;
 #endif
 
- #ifdef CONF_ENABLE_TCM
+#ifdef CONF_ENABLE_TCM
 	TCM_Enable();
 #if defined(__GNUC__)
 	volatile char *dst = &_sitcm;

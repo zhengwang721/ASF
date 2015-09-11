@@ -57,7 +57,7 @@
  *  \section Description
  *
  *  The demonstration program compares the performance between normal 'memcpy'
- * and 'TCM memcpy'.
+ *  and 'TCM memcpy'.
  *
  *  \section Usage
  *
@@ -84,8 +84,8 @@
  *  - board.h
  */
 
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+/**
+ *  Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 
@@ -111,17 +111,20 @@
 
 #define GET_CYCLE_COUNTER(x)                x=DWT->CYCCNT;
 
-
-#if defined ( __ICCARM__ ) /* IAR Ewarm */
+/* IAR Ewarm */
+#if defined ( __ICCARM__ ) 
 #pragma location = ".data_TCM"
-#elif defined (  __GNUC__  ) || defined (__CC_ARM)  /* GCC || MDK */
+ /* GCC || MDK */
+#elif defined (  __GNUC__  ) || defined (__CC_ARM) 
 __attribute__((__section__(".data_TCM")))
 #endif
 uint8_t tcm_destbuff[3*BUFF_SIZE];
 
-#if defined ( __ICCARM__ ) /* IAR Ewarm */
+/* IAR Ewarm */
+#if defined ( __ICCARM__ ) 
 #pragma location = ".data_TCM"
-#elif defined (  __GNUC__  ) || defined (__CC_ARM)  /* GCC || MDK */
+/* GCC || MDK */
+#elif defined (  __GNUC__  ) || defined (__CC_ARM)  
 __attribute__((__section__(".data_TCM")))
 #endif
 uint8_t tcm_srcbuff[BUFF_SIZE];
@@ -149,14 +152,16 @@ static uint32_t cyclecounter;
  *        Local functions
  *----------------------------------------------------------------------------*/
 
-#if defined ( __ICCARM__ ) /* IAR Ewarm */
+/* IAR Ewarm */
+#if defined ( __ICCARM__ )
 #pragma default_function_attributes = @ ".code_TCM"
-#elif defined (  __GNUC__  ) || defined (__CC_ARM)  /* GCC || MDK */
+/* GCC || MDK */
+#elif defined (  __GNUC__  ) || defined (__CC_ARM)  
 __attribute__((__section__(".code_TCM")))
 #endif
 static uint32_t tcm_memcpy(uint8_t *pDest, uint8_t *pSrc, uint16_t len)
 {
-	/* clean destination and source buffer*/
+	/* clean destination and source buffer */
 	memset(tcm_srcbuff, 0, len);
 	__DSB();
 	__ISB();
@@ -164,14 +169,14 @@ static uint32_t tcm_memcpy(uint8_t *pDest, uint8_t *pSrc, uint16_t len)
 	__DSB();
 	__ISB();
 
-	/* copy buffer to TCM source buffer*/
+	/* copy buffer to TCM source buffer */
 	memcpy(pSrc, pBuffer,len);
 	__DSB();
 	__ISB();
 
-	/* Disable and reset DWT cycle counter*/
+	/* Disable and reset DWT cycle counter */
 	RESET_CYCLE_COUNTER();
-	/* Copy from DTCM source buffer to DTCM destination buffer*/
+	/* Copy from DTCM source buffer to DTCM destination buffer */
 	{
 		uint32_t i;
 		uint8_t * pTmpD = pDest;
@@ -203,9 +208,9 @@ static uint32_t normal_memcpy(uint8_t *pDest, uint8_t *pSrc, uint16_t len)
 	__DSB();
 	__ISB();
 
-	/* Disable and reset DWT cycle counter*/
+	/* Disable and reset DWT cycle counter */
 	RESET_CYCLE_COUNTER();
-	/* Copy from DTCM source buffer to DTCM destination buffer*/
+	/* Copy from DTCM source buffer to DTCM destination buffer */
 	{
 		uint32_t i;
 		uint8_t * pTmpD = pDest;
@@ -227,10 +232,12 @@ static uint32_t normal_memcpy(uint8_t *pDest, uint8_t *pSrc, uint16_t len)
 static uint32_t recursive(uint32_t n)
 {
 	volatile uint32_t tmp = n;
-	if(0 == tmp)
+	if(0 == tmp) {
 		return 0;
-	else
+	}
+	else {
 		return n + recursive(tmp - 1);
+	}
 }
 
 static uint32_t stack_test(uint32_t n)
@@ -243,15 +250,16 @@ static uint32_t stack_test(uint32_t n)
 	return cyclecounter;
 }
 
-
-#if defined ( __ICCARM__ ) /* IAR Ewarm */
+/* IAR Ewarm */
+#if defined ( __ICCARM__ )
 #pragma section = "CSTACK"
 #pragma section = "CSTACK_DTCM"
 	#define SRAM_STACK_BASE     (__section_begin("CSTACK"))
 	#define DTCM_STACK_BASE     (__section_begin("CSTACK_DTCM"))
 	#define SRAM_STACK_LIMIT    (__section_end("CSTACK"))
 	#define DTCM_STACK_LIMIT    (__section_end("CSTACK_DTCM"))
-#elif defined (__CC_ARM)  /* MDK */
+/* MDK */
+#elif defined (__CC_ARM)
 	extern uint32_t Image$$ARM_LIB_STACK$$Base;
 	extern uint32_t Image$$ARM_LIB_STACK$$ZI$$Limit;
 	extern uint32_t Image$$DTCM_STACK$$Base;
@@ -260,7 +268,8 @@ static uint32_t stack_test(uint32_t n)
 	#define DTCM_STACK_BASE     (&Image$$DTCM_STACK$$Base)
 	#define SRAM_STACK_LIMIT    (&Image$$ARM_LIB_STACK$$ZI$$Limit)
 	#define DTCM_STACK_LIMIT    (&Image$$DTCM_STACK$$ZI$$Limit)
-#elif defined (  __GNUC__  )  /* GCC */
+/* GCC */
+#elif defined (  __GNUC__  )  
 	extern char _sdtcm_stack, _edtcm_stack, _sstack, _estack;
 	#define SRAM_STACK_BASE     ((void *)(&_sstack))
 	#define DTCM_STACK_BASE     ((void *)(&_sdtcm_stack))
@@ -289,7 +298,7 @@ static void tcm_stackinit(void)
 */
 static void configure_console(void)
 {
-const usart_serial_options_t uart_serial_options = {
+	const usart_serial_options_t uart_serial_options = {
 	.baudrate = CONF_UART_BAUDRATE,
 #ifdef CONF_UART_CHAR_LENGTH
 	.charlength = CONF_UART_CHAR_LENGTH,
@@ -382,6 +391,5 @@ int main( void )
 			(unsigned)(cycles - cyclecounteroffset));
 
 	while (1) {
-
 	}
 }
