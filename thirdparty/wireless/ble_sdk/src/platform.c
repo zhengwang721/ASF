@@ -168,7 +168,6 @@ at_ble_status_t platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t
 		delay_ms(BTLC1000_WAKEUP_DELAY);
 	}
 #endif //ENABLE_POWER_SAVE
-	delay_ms(5);
 	serial_drv_send(data, len);	
 	return STATUS_OK;
 }
@@ -417,8 +416,11 @@ void serial_tx_callback(void)
 		{
 			if(ext_wakeup_state > 0)
 			ext_wakeup_state--;
-			if(ext_wakeup_state == 0)			  
-			;//ble_wakeup_pin_set_low();
+			if(ext_wakeup_state == 0)
+			{
+				ble_wakeup_pin_set_low();
+			}			  
+			
 		}
 	}	
 #endif

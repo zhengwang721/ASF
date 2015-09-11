@@ -227,7 +227,7 @@ void sps_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_sta
 	if(!notification_status->status)
 	{
 		flag = true;
-		DBG_LOG("sending notification to the peer success");
+		DBG_LOG_DEV("sending notification to the peer success");
 	}
 }
 
