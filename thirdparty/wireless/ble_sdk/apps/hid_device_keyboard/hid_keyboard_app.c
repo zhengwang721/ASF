@@ -102,7 +102,7 @@ static uint8_t hid_app_keyb_report_map[] =
    0x05, 0x01,		/* Usage Page (Generic Desktop)      */
    0x09, 0x06,		/* Usage (Keyboard)                  */
    0xA1, 0x01,		/* Collection (Application)          */
-   //0x85, 0x01,		/* REPORT ID (1) - MANDATORY         */ 
+   0x85, 0x01,		/* REPORT ID (1) - MANDATORY         */ 
    0x05, 0x07,		/* Usage Page (Keyboard)             */
    0x19, 224,		/* Usage Minimum (224)               */
    0x29, 231,		/* Usage Maximum (231)               */
@@ -172,17 +172,7 @@ void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_sta
 /* Callback called when user press the button for writing new characteristic value */
 void button_cb(void)
 {
-	if(!button_pressed)
-	{
-		DBG_LOG("Button Pressed for calibration");
-		button_pressed = true;	
-	}
-	else
-	{
-		button_pressed = true;
 		key_status = 1;
-		DBG_LOG("Button Pressed for Sending Report %d", key_status);
-	}
 }
 
 void timer_callback_handler(void)

@@ -500,13 +500,13 @@ uint16_t hid_service_dbreg(uint8_t inst, uint8_t *report_type, uint8_t *report_i
 	uint16_t len = 2;
 	at_ble_status_t status;
 	
-	DBG_LOG_DEV("Number of characteristic %d", HID_CHARACTERISTIC_NUM);
+	//DBG_LOG("Number of characteristic %d", HID_CHARACTERISTIC_NUM);
 	
 	if( at_ble_service_define(&hid_inst[inst].serv) == AT_BLE_SUCCESS)
 	{
 		
-		DBG_LOG_DEV("Define service handle %d", hid_inst[inst].serv.handle);
-		DBG_LOG_DEV("Report Reference descriptor handle %d", hid_serv_inst[inst].hid_dev_report_val_char[0]->additional_desc_list->handle);
+		DBG_LOG("Define service handle %d", hid_inst[inst].serv.handle);
+		DBG_LOG("Report Reference descriptor handle %d", hid_serv_inst[inst].hid_dev_report_val_char[0]->additional_desc_list->handle);
 		//DBG_LOG_DEV("Define charac handle 0 %d", hid_inst[inst].serv_chars[0].char_val.handle);
 		//DBG_LOG_DEV("Define charac handle 1 %d", hid_inst[inst].serv_chars[1].char_val.handle);
 		//DBG_LOG_DEV("Define charac handle 2 %d", hid_inst[inst].serv_chars[2].char_val.handle);
@@ -531,30 +531,30 @@ uint16_t hid_service_dbreg(uint8_t inst, uint8_t *report_type, uint8_t *report_i
 		
 		for(; id<report_num; id++)
 		{
-			DBG_LOG_DEV("Report Reference descriptor ID = %d :: Type = %d", report_id[id], report_type[id]);
+			DBG_LOG("Report Reference descriptor ID = %d :: Type = %d", report_id[id], report_type[id]);
 			descval[0] = report_id[id];
 			descval[1] = report_type[id];
-			DBG_LOG_DEV("Descriptor Value Set Id = %d :: Type = %d", descval[0], descval[1]);
+			DBG_LOG("Descriptor Value Set Id = %d :: Type = %d", descval[0], descval[1]);
 			if((status = at_ble_descriptor_value_set(hid_serv_inst[inst].hid_dev_report_val_char[id]->additional_desc_list->handle, &descval[0], 2)) == AT_BLE_SUCCESS)
 			{
-				DBG_LOG_DEV("Descriptor Value set successfully");
+				DBG_LOG("Descriptor Value set successfully");
 			}
 			else 
 			{
-				DBG_LOG_DEV("descriptor value set failed :%d",status);
+				DBG_LOG("descriptor value set failed :%d",status);
 			}
 			
 			//////////////////////Test For Checking Descriptor Value//////////////////////////////////////////
-			DBG_LOG_DEV("Testing for Descriptor Value");
+			DBG_LOG("Testing for Descriptor Value");
 			if((status = at_ble_descriptor_value_get(hid_serv_inst[inst].hid_dev_report_val_char[id]->additional_desc_list->handle, &descvalget[0], &len)) == AT_BLE_SUCCESS)
 			{
-				DBG_LOG_DEV("Descriptor Value get successfully");
+				DBG_LOG("Descriptor Value get successfully");
 			}
 			else
 			{
-				DBG_LOG_DEV("descriptor value get failed :%d",status);
+				DBG_LOG("descriptor value get failed :%d",status);
 			}
-			DBG_LOG_DEV("Descriptor Value Get Id = %d :: Type = %d", descvalget[0], descvalget[1]);
+			DBG_LOG("Descriptor Value Get Id = %d :: Type = %d", descvalget[0], descvalget[1]);
 			////////////////////////////////////////////////////////////////
 		}
 		
