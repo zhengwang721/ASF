@@ -94,6 +94,7 @@ at_ble_status_t csc_serv_send_data(uint16_t connhandle, uint8_t *databuf, uint8_
 	uint8_t value = 0;
 	uint16_t length;
 	
+	length = sizeof(uint16_t);
 	status = at_ble_characteristic_value_get(csc_inst.endpoint_chars.client_config_handle, &value, &length);
 	if (status != AT_BLE_SUCCESS)
 	{
