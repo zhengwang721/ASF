@@ -336,6 +336,28 @@ static void _setup_memory_region( void )
 }
 #endif
 
+#ifdef CONF_BOARD_ENABLE_TCM_AT_INIT
+#if defined(__GNUC__)
+extern char _itcm_lma, _sitcm, _eitcm;
+#endif
+
+/** \brief  TCM memory enable
+* The function enables TCM memories
+*/
+static inline void tcm_enable(void)
+{
+
+	__DSB();
+	__ISB();
+	
+	SCB->ITCMCR = (SCB_ITCMCR_EN_Msk  | SCB_ITCMCR_RMW_Msk | SCB_ITCMCR_RETEN_Msk);
+	SCB->DTCMCR = ( SCB_DTCMCR_EN_Msk | SCB_DTCMCR_RMW_Msk | SCB_DTCMCR_RETEN_Msk);
+	
+	__DSB();
+	__ISB();
+}
+#endif
+
 void board_init(void)
 {
 #ifndef CONF_BOARD_KEEP_WATCHDOG_AT_INIT
@@ -515,7 +537,20 @@ void board_init(void)
 	MATRIX->CCFG_SMCNFCS = CCFG_SMCNFCS_SDRAMEN;
 #endif
 
+#ifdef CONF_BOARD_ENABLE_TCM_AT_INIT
+	tcm_enable();
+#if defined(__GNUC__)
+	volatile char *dst = &_sitcm;
+	volatile char *src = &_itcm_lma;
+	/* copy code_TCM from flash to ITCM */
+	while(dst < &_eitcm){
+		*dst++ = *src++;
+	}
+#endif
+#endif
+        
 #ifdef CONF_BOARD_CONFIG_MPU_AT_INIT
 	_setup_memory_region();
 #endif
+
 }
