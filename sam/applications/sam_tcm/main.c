@@ -299,15 +299,15 @@ static void tcm_stackinit(void)
 static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
-	.baudrate = CONF_UART_BAUDRATE,
+		.baudrate = CONF_UART_BAUDRATE,
 #ifdef CONF_UART_CHAR_LENGTH
-	.charlength = CONF_UART_CHAR_LENGTH,
+		.charlength = CONF_UART_CHAR_LENGTH,
 #endif
-	.paritytype = CONF_UART_PARITY,
+		.paritytype = CONF_UART_PARITY,
 #ifdef CONF_UART_STOP_BITS
-	.stopbits = CONF_UART_STOP_BITS,
+		.stopbits = CONF_UART_STOP_BITS,
 #endif
-	.paritytype = CONF_UART_PARITY
+		.paritytype = CONF_UART_PARITY
 	};
 
 	/* Configure console UART. */
@@ -338,7 +338,16 @@ int main( void )
 
 
 	RESET_CYCLE_COUNTER();
-	__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
 	cyclecounteroffset = DWT->CYCCNT;
 	__DMB();
 	cyclecounteroffset -=10;
