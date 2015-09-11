@@ -497,6 +497,7 @@ uint16_t hid_service_dbreg(uint8_t inst, uint8_t *report_type, uint8_t *report_i
 	uint8_t id = 0;
 	uint8_t descval[2] = {0, 0};
 	uint8_t descvalget[2] = {0, 0};
+	uint16_t len = 2;
 	at_ble_status_t status;
 	
 	DBG_LOG_DEV("Number of characteristic %d", HID_CHARACTERISTIC_NUM);
@@ -545,7 +546,7 @@ uint16_t hid_service_dbreg(uint8_t inst, uint8_t *report_type, uint8_t *report_i
 			
 			//////////////////////Test For Checking Descriptor Value//////////////////////////////////////////
 			DBG_LOG_DEV("Testing for Descriptor Value");
-			if((status = at_ble_descriptor_value_get(hid_serv_inst[inst].hid_dev_report_val_char[id]->additional_desc_list->handle, &descvalget[0], 2)) == AT_BLE_SUCCESS)
+			if((status = at_ble_descriptor_value_get(hid_serv_inst[inst].hid_dev_report_val_char[id]->additional_desc_list->handle, &descvalget[0], &len)) == AT_BLE_SUCCESS)
 			{
 				DBG_LOG_DEV("Descriptor Value get successfully");
 			}
@@ -654,6 +655,7 @@ uint8_t hid_get_reportid(uint8_t serv, uint16_t handle, uint8_t reportnum)
 	uint8_t status;
 	uint8_t id = 0;
 	uint8_t descval[2] = {0, 0};
+	uint16_t len = 2;	
 	
 	DBG_LOG_DEV("Inside hid_get_reportid : Report Number %d", reportnum);
 	
@@ -663,7 +665,7 @@ uint8_t hid_get_reportid(uint8_t serv, uint16_t handle, uint8_t reportnum)
 		if(handle == hid_serv_inst[serv].hid_dev_report_val_char[id]->client_config_desc.handle)
 		{
 			DBG_LOG_DEV("Inside hid_get_reportid : Report ID Descriptor Handle %d :: id %d :: serv %d", hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, id, serv);
-			status = at_ble_descriptor_value_get(hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, &descval[0], 2);
+			status = at_ble_descriptor_value_get(hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, &descval[0], &len);
 			if (status != AT_BLE_SUCCESS)
 			{
 				DBG_LOG_DEV("decriptor value get failed");
@@ -682,6 +684,7 @@ uint8_t hid_get_reportchar(uint16_t handle, uint8_t serv, uint8_t reportid)
 {
 	uint8_t id = 0;
 	uint8_t descval[2] = {0, 0};
+	uint16_t len = 2;
 	at_ble_status_t status ;
 
 	DBG_LOG_DEV("Inside hid_get_reportchar : Handle %d Service Instance %d Report ID %d", handle, serv, reportid);	
@@ -689,7 +692,7 @@ uint8_t hid_get_reportchar(uint16_t handle, uint8_t serv, uint8_t reportid)
 	for(id = 0; id <= HID_NUM_OF_REPORT; id++)
 	{
 		DBG_LOG_DEV("Inside hid_get_reportchar : Report ID Descriptor Handle %d :: id %d :: serv %d", hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, id, serv);
-		status = at_ble_descriptor_value_get(hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, &descval[0], 2);
+		status = at_ble_descriptor_value_get(hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, &descval[0], &len);
 		if (status != AT_BLE_SUCCESS)
 		{
 			DBG_LOG_DEV("decriptor value get failed");
@@ -713,11 +716,12 @@ void hid_serv_report_update(uint16_t conn_handle, uint8_t serv_inst, uint8_t rep
 	uint8_t value[2] = {0,0};
 	uint8_t id;
 	uint16_t status = 0;
+	uint16_t length = 2;
 	
 	id = hid_get_reportchar(conn_handle, serv_inst, reportid);
 
 	DBG_LOG_DEV("hid_serv_report_update : Report Characteristic ID %d", id);
-	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->client_config_desc.handle, &value[0], sizeof(uint16_t));
+	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->client_config_desc.handle, &value[0], &length);
 	if (status != AT_BLE_SUCCESS)
 	{
 		DBG_LOG_DEV("descriptor value get failed");
@@ -786,7 +790,8 @@ void hid_boot_keyboardreport_update(at_ble_handle_t conn_handle, uint8_t serv_in
 #ifdef HID_KEYBOARD_DEVICE	
 	at_ble_status_t status;
 	uint8_t value = 0;
-	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_boot_keyboard_in_report->client_config_desc.handle, &value, sizeof(uint16_t));
+	uint16_t length = 2;
+	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_boot_keyboard_in_report->client_config_desc.handle, &value, &length);
 	if (status != AT_BLE_SUCCESS)
 	{
 		DBG_LOG_DEV("at_ble_characteristic_value_get value get failed");
