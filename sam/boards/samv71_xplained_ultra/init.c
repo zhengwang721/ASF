@@ -336,7 +336,7 @@ static void _setup_memory_region( void )
 }
 #endif
 
-#ifdef CONF_ENABLE_TCM
+#ifdef CONF_BOARD_ENABLE_TCM_AT_INIT
 #if defined(__GNUC__)
 extern char _itcm_lma, _sitcm, _eitcm;
 #endif
@@ -537,7 +537,7 @@ void board_init(void)
 	MATRIX->CCFG_SMCNFCS = CCFG_SMCNFCS_SDRAMEN;
 #endif
 
-#ifdef CONF_ENABLE_TCM
+#ifdef CONF_BOARD_ENABLE_TCM_AT_INIT
 	TCM_Enable();
 #if defined(__GNUC__)
 	volatile char *dst = &_sitcm;
