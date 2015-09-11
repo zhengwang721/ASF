@@ -344,7 +344,7 @@ extern char _itcm_lma, _sitcm, _eitcm;
 /** \brief  TCM memory enable
 * The function enables TCM memories
 */
-__STATIC_INLINE void TCM_Enable(void)
+static inline void tcm_Enable(void)
 {
 
 	__DSB();
@@ -538,7 +538,7 @@ void board_init(void)
 #endif
 
 #ifdef CONF_BOARD_ENABLE_TCM_AT_INIT
-	TCM_Enable();
+	tcm_Enable();
 #if defined(__GNUC__)
 	volatile char *dst = &_sitcm;
 	volatile char *src = &_itcm_lma;
