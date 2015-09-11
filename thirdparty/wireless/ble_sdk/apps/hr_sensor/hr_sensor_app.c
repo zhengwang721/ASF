@@ -179,12 +179,13 @@ void hr_measurment_send(void)
 		/* Heart Rate Value 8bit*/
 		hr_data[idx++] = (uint8_t)heart_rate_value ;
 		
-
+		
 		if (energy_expended_val == ENERGY_RESET) {
 			hr_data[0] = hr_data[0] | ENERGY_EXPENDED_FIELD_PRESENT;
 			memcpy(&hr_data[idx], &energy_expended_val, 2);
 			idx += 2;
 		}
+		 
 
 		/* RR Interval values(2)*/
 		if (rr_interval_value < (uint16_t)RR_VALUE_MAX) {
@@ -210,12 +211,12 @@ void hr_measurment_send(void)
 			rr_interval_value += 200;
 		}
 	
-		#if defined PTS
+		
 		if (energy_expended_val == ENERGY_RESET) {
 			energy_expended_val += energy_incrementor;
 			DBG_LOG("Energy Expended : 0 KJ");
 		}
-		#endif 
+	 
 	} else {
 		/* flags */
 		hr_data[idx++]
