@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="DAC Sinewave Example on SAMV71" id="sam.drivers.dacc.sinewave_example.samv71q21_samv71_xplained_ultra">
+	<project caption="DAC Sinewave Example on SAMV71-Xplained-Ultra" id="sam.drivers.dacc.sinewave_example.samv71q21_samv71_xplained_ultra">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>

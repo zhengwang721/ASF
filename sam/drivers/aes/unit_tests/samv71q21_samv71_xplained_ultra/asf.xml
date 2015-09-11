@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="AES - Advanced Encryption Standard Module unit tests on SAMV71" id="sam.drivers.aesa.unit_tests.samv71_xplained_ultra" type="unit-test">
+	<project caption="AES - Advanced Encryption Standard Module unit tests on SAMV71-Xplained-Ultra" id="sam.drivers.aesa.unit_tests.samv71_xplained_ultra" type="unit-test">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
