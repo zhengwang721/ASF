@@ -52,7 +52,7 @@
 
 uint8_t bus_type = AT_BLE_UART;
 
-volatile enum tenuTransportState slave_state = PLATFORM_TRANSPORT_SLAVE_DISCONNECTED;
+extern volatile enum tenuTransportState slave_state;
 #define GTL_EIF_CONNECT_REQ	0xA5
 #define GTL_EIF_CONNECT_RESP 0x5A
 #define BTLC1000_STARTUP_DELAY (3500)
@@ -133,7 +133,7 @@ at_ble_status_t platform_init(void* platform_params)
 	
 }
 
-int platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t len)
+at_ble_status_t platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t len)
 {
 	if (if_type != AT_BLE_UART)
 	{
@@ -290,7 +290,7 @@ void platform_event_signal(void)
 }
 
 uint8_t platform_buf[10];
-uint8_t platform_event_wait(uint32_t timeout)
+at_ble_status_t platform_event_wait(uint32_t timeout)
 {
 	uint8_t status = AT_BLE_SUCCESS;
 	//DBG_LOG_BLE("\r\platform_event_wait\n");
@@ -455,6 +455,11 @@ void serial_tx_callback(void)
  }
  
  void platform_stop_timer(void)
+ {
+	 
+ }
+ 
+ void platform_cleanup(void)
  {
 	 
  }

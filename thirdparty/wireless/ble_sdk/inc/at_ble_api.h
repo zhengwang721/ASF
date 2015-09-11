@@ -126,7 +126,7 @@ extern "C" {
 /// Minimal MTU value
 #define AT_MTU_VAL_MIN                  (23)        //(0x17)
 /// Maximal MTU value
-#define AT_MTU_VAL_MAX                  (2048)      //(0x800)
+#define AT_MTU_VAL_MAX                  (512)      //(0x200)
 /// Recommended MTU value
 #define AT_MTU_VAL_RECOMMENDED          (512)       //(0x200)
 /// Minimal Renew duration value (150 seconds); resolution of 10 mSeconds (N*10ms)
@@ -405,10 +405,13 @@ typedef enum
       * Refer to @ref at_ble_characteristic_changed_t
       */
     AT_BLE_CHARACTERISTIC_CHANGED,
-    /** The peer has confirmed that it has received the service changed notification. \n
-      * Refer to @ref at_ble_service_changed_notification_confirmed_t
+    /** The peer has changed a characteristic configuration descriptor value. \n
+      * Refer to @ref at_ble_characteristic_configuration_changed_t
       */
     AT_BLE_CHARACTERISTIC_CONFIGURATION_CHANGED,
+    /** the service changed indication had been sent . \n
+      * Refer to @ref at_ble_cmd_complete_event_t
+      */
     AT_BLE_SERVICE_CHANGED_INDICATION_SENT,
     /** The peer asks for a write Authorization. \n
       * Refer to @ref at_ble_write_authorize_request_t
@@ -1204,9 +1207,9 @@ typedef struct
 typedef struct
 {
     at_ble_addr_t    **ppAddrs;        /**< Pointer to array of device address pointers, pointing to addresses to be used in white-list. NULL if none are given. */
-    uint8_t             addrCount;      /**< Count of device addresses in array, up to @ref AT_BLE_GAP_WHITELIST_ADDR_MAX_COUNT. */
+    uint8_t             addrCount;      /**< Count of device addresses in array. */
     at_ble_gap_irk_t     **ppIrks;         /**< Pointer to array of Identity Resolving Key (IRK) pointers, each pointing to an IRK in the white-list. NULL if none are given. */
-    uint8_t             irkCount;       /**< Count of IRKs in array, up to @ref AT_BLE_GAP_WHITELIST_IRK_MAX_COUNT. */
+    uint8_t             irkCount;       /**< Count of IRKs in array. */
 } at_ble_gap_whitelist_t;
 
 
@@ -2856,7 +2859,7 @@ at_ble_status_t at_ble_tx_power_get(at_ble_tx_power_level_t *power);
 ///@cond IGNORE_DOXYGEN
 AT_BLE_API
 ///@endcond
-at_ble_status_t at_ble_rx_power_get(at_ble_handle_t conn_handle, uint8_t *rx_power);
+at_ble_status_t at_ble_rx_power_get(at_ble_handle_t conn_handle, int8_t *rx_power);
 
 /** @ingroup gatt_client_group
  *@brief Discover all Primary services in a peer device
@@ -3220,7 +3223,7 @@ at_ble_status_t at_ble_characteristic_value_set(at_ble_handle_t handle, uint8_t 
  *
  * @param[in] handle Characteristic value handle
  * @param[out] value read value will be returned here
- * @param[in] len desired read length, in bytes
+ * @param[out] len desired read length, in bytes
  *
  * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
  */
@@ -3246,7 +3249,7 @@ at_ble_status_t at_ble_descriptor_value_set(at_ble_handle_t handle,
 *
 * @param[in] handle Characteristic value handle
 * @param[out] value read value will be returned here
-* @param[in] len actual read length, in bytes
+* @param[out] len actual read length, in bytes
 *
   * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
   */
@@ -3288,13 +3291,13 @@ AT_BLE_API
 at_ble_status_t at_ble_indication_send(at_ble_handle_t conn_handle, at_ble_handle_t attr_handle);
 
 /** @ingroup gatt_server_group
- *@brief Sends a Service changed Notification
+ *@brief Sends a Service changed Indication
  *
- * @param[in] conn_handle handle of the connection to which the notification will be sent
+ * @ref AT_BLE_SERVICE_CHANGED_INDICATION_SENT should be received indicating status of sending the indication
+ *
+ * @param[in] conn_handle handle of the connection to which the indication will be sent
  * @param[in] start_handle start of affected handle range
  * @param[in] end_handle end of affected handle range
- *
- * @warning Not Supported in release version 2.0
  *
  * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
  */
@@ -3596,7 +3599,7 @@ at_ble_status_t at_ble_dtm_reset(void);
 *  @brief       pack and send Direct test mode RX test start command, after calling this API you should wait for
 *  @ref         AT_BLE_LE_TEST_STATUS event
 *
-*  @param[in]   _frequency_index frequency index to do RX test on (from 0 to 39)
+*  @param[in]   frequency_index frequency index to do RX test on (from 0 to 39)
 *
 * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS,
 * Otherwise the function shall return @ref at_ble_status_t
@@ -3608,9 +3611,9 @@ at_ble_status_t at_ble_dtm_rx_test_start(uint8_t frequency_index);
 
 /** @ingroup dtm_group
 *  @brief       Pack and send Direct test mode TX test start command, after calling this API you should wait for @ref AT_BLE_LE_TEST_STATUS event
-*  @param[in]   _frequency_index frequency index to do TX test on (from 0 to 39)
-*  @param[in]   _data_length payload length (from 0 to 36)
-*  @param[in]   _payload packet payload type (from 0 to 7)
+*  @param[in]   frequency_index frequency index to do TX test on (from 0 to 39)
+*  @param[in]   data_length payload length (from 0 to 36)
+*  @param[in]   payload packet payload type (from 0 to 7)
 *
 * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS,
 * Otherwise the function shall return @ref at_ble_status_t

@@ -105,18 +105,16 @@ void button_cb(void)
 void rssi_update(at_ble_handle_t conn_handle)
 {
 	int8_t rssi_power = 0;
-	uint8_t rssi_value;
 	at_ble_status_t status;
 	app_timer_done = false;
 
 	/* Get the Received signal strength intensity of the connect
 	*device/handle*/
-	if ((status = at_ble_rx_power_get(conn_handle,&rssi_value)) != AT_BLE_SUCCESS)
+	if ((status = at_ble_rx_power_get(conn_handle,&rssi_power)) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("at_ble_rx_power_get failed,reason %d",status);
 	}
-	
-	rssi_power = (int8_t)rssi_value;
+
 	DBG_LOG("Rx Power(RSSI):%04d dBm", rssi_power);
 
 	/* if received rssi is above no alert zone and below high alert zone */
