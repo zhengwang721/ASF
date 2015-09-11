@@ -100,11 +100,17 @@
 
 #if defined ANP_CLIENT
 #include "ancs_profile.h"
+#define BLE_MITM_REQ				(false)
+#define BLE_BOND_REQ				(false)
+#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
 #define BLE_DEVICE_NAME				"ATMEL-ANCS"
 #endif /* ANCS_CLIENT */
 
 #if defined TIP_CLIENT
 #include "time_info.h"
+#define BLE_MITM_REQ				(false)
+#define BLE_BOND_REQ				(false)
+#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
 #define BLE_DEVICE_NAME				"ATMEL-TIP"
 #endif /* TIP_CLIENT */
 
@@ -120,11 +126,17 @@
 
 #if defined PAS_CLIENT
 #include "pas_client.h"
+#define BLE_MITM_REQ				(false)
+#define BLE_BOND_REQ				(false)
+#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
 #define BLE_DEVICE_NAME				"ATMEL-PAS"
 #endif /* PAS_CLIENT */
 
 #if defined CSC_DEVICE
 #include "cscp.h"
+#define BLE_MITM_REQ				(false)
+#define BLE_BOND_REQ				(false)
+#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
 #define BLE_DEVICE_NAME				"ATMEL-CSC"
 #endif /* CSC_DEVICE */
 
@@ -526,6 +538,7 @@ typedef enum
 #define BLE_CHARACTERISTIC_CHANGED					fmp_target_char_changed_handler
 #endif	/* FIND_ME */
 
+#define BLE_CONN_PARAM_UPDATE_REQ_HANDLER			ble_conn_param_update_req
 #define BLE_CONN_PARAM_UPDATE_DONE					ble_conn_param_update
 #define	BLE_PAIR_REQUEST							ble_pair_request_handler
 #define BLE_PAIR_KEY_REQUEST						ble_pair_key_request_handler
@@ -778,6 +791,10 @@ typedef enum
 #define BLE_SLAVE_SEC_REQUEST									ble_dummy_handler
 #endif
 
+#ifndef BLE_CONN_PARAM_UPDATE_REQ_HANDLER
+#define BLE_CONN_PARAM_UPDATE_REQ_HANDLER						ble_dummy_handler
+#endif
+
 /****************************************************************************************
 *							        Structures                                     		*
 ****************************************************************************************/
@@ -850,6 +867,15 @@ at_ble_status_t ble_set_device_name(uint8_t *name, uint8_t name_len);
   *
   */
 void ble_conn_param_update(at_ble_conn_param_update_done_t *conn_param_update);
+
+/** @brief function triggered on receiving a connection parameter update request from the peer.
+  *
+  * @param[in] conn_param_req @ref at_ble_conn_param_update_request_t parameters received.
+  *
+  * @return none.
+  *
+  */
+void ble_conn_param_update_req(at_ble_conn_param_update_request_t * conn_param_req);
 
 /** @brief function called when the AT_BLE_PAIR_REQUEST event is received from stack.
   *
