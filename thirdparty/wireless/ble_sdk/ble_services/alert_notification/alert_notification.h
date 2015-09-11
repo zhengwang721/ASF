@@ -65,6 +65,10 @@
 //  <id> anp_read_offset
 #define ANP_READ_OFFSET                     (0)
 
+#define SUPPORTED_NEW_ALERT_READ			(1)
+#define SUPPORTED_UNREAD_ALERT_READ			(2)
+#define ALERT_CONTRL_POINT_READ				(3)
+
 #define ANS_SUP_NEW_READ_LENGTH				(20)
 #define ANS_NEW_ALERT_READ_LENGTH			(20)
 #define ANS_SUP_UNREA_READ_LENGTH			(20)

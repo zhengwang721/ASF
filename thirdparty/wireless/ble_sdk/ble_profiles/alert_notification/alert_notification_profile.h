@@ -109,7 +109,7 @@
 #define CLIENT_CHAR_CONF_DESC_UUID					(0x2902)
 
 #define AT_BLE_DISCOVERY_SUCCESS					(10)
-#define AT_BLE_INSUFF_RESOURCE						AT_BLE_FAILURE
+//#define AT_BLE_INSUFF_RESOURCE						AT_BLE_ATT_INSUFF_RESOURCE
 
 /***********************************************************************************
  *									types			                               *

@@ -182,7 +182,7 @@ void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *params)
 		//
 			//}
 		//}
-		if(discover_status.status == AT_DISCOVER_SUCCESS)
+		if(discover_status.status == AT_DISCOVER_SUCCESS || discover_status.status == AT_BLE_SUCCESS)
 		{
 			if(discover_status.operation == AT_BLE_DISC_BY_UUID_SVC)
 			{	
@@ -201,7 +201,7 @@ void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *params)
 			else if(discover_status.operation == AT_BLE_DISC_DESC_CHAR)
 			{
 				app_anp_info.devicedb = TRUE;
-				if(at_ble_send_slave_sec_request(app_anp_info.conn_params.handle,TRUE,TRUE) != AT_BLE_SUCCESS)
+				if(ble_send_slave_sec_request(app_anp_info.conn_params.handle) != AT_BLE_SUCCESS)
 				{
 					DBG_LOG("Fail to start security procedure");
 				}

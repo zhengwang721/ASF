@@ -150,41 +150,41 @@ int main (void)
 		
 		if (button_pressed)
 		{
-			//delay_ms(200);
+			delay_ms(200);
 			if(current_time_char_found) 
 			{
 				if(tis_current_time_read( ble_connected_dev_info[0].handle, cts_handle.curr_char_handle) == AT_BLE_SUCCESS)
 				{
 					LED_Toggle(LED0);
-					DBG_LOG("CurrentTime info request success");
+					DBG_LOG_DEV("CurrentTime info request success");
 				}
 			}
 			if(local_time_char_found)
 			{
 				if(tis_current_time_read( ble_connected_dev_info[0].handle, cts_handle.lti_char_handle ) == AT_BLE_SUCCESS)
 				{
-					DBG_LOG("Local Time info request success");
+					DBG_LOG_DEV("Local Time info request success");
 				}	
 			}
 			if(ref_time_char_found)
 			{
 				if(tis_current_time_read( ble_connected_dev_info[0].handle, cts_handle.rti_char_handle ) == AT_BLE_SUCCESS)
 				{
-					DBG_LOG("Reference Time info request success");
+					DBG_LOG_DEV("Reference Time info request success");
 				}
 			}
 			if(time_with_dst_char_found)
 			{
 				if(tis_dst_change_read( ble_connected_dev_info[0].handle, dst_handle.dst_char_handle ) == AT_BLE_SUCCESS)
 				{
-					DBG_LOG("Time with DST read request success");
+					DBG_LOG_DEV("Time with DST read request success");
 				}
 			}
 			if(time_update_state_char_found)
 			{
 				if(tis_rtu_update_read( ble_connected_dev_info[0].handle, rtu_handle.tp_state_char_handle, 20 ) == AT_BLE_SUCCESS)
 				{
-					DBG_LOG("Time update state request success");
+					DBG_LOG_DEV("Time update state request success");
 				}
 			}
 			
