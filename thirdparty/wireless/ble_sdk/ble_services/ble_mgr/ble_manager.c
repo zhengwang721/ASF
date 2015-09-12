@@ -496,12 +496,11 @@ void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect)
 /** @brief connection update parameter function */
 void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update)
 {
-	DBG_LOG("AT_BLE_CONN_PARAM_UPDATE ");
+	DBG_LOG_DEV("AT_BLE_CONN_PARAM_UPDATE ");
 }
 
 void ble_conn_param_update_req(at_ble_conn_param_update_request_t * conn_param_req)
 {
-	DBG_LOG("connection parameter update request received");
 	at_ble_conn_update_reply(conn_param_req->handle, true, 1, 120);
 }
 
@@ -553,7 +552,6 @@ void ble_slave_security_handler(at_ble_slave_sec_request_t* slave_sec_req)
 		{
 			features.bond = false;
 			features.mitm_protection = false;
-			DBG_LOG(" != AT_BLE_SUCCESS ");
 			at_ble_authenticate(slave_sec_req->handle, &features, NULL, NULL);
 			
 		}
@@ -825,17 +823,6 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	}
 	break;
 	
-	 /** reported RX power value. \n
-	 *	Refer to at_ble_rx_power_value_t
-	 */
-#if 0	 	 
-	case AT_BLE_RX_POWER_VALUE:
-	{
-		
-	}
-	break;
-#endif	
-	
 	/** Pairing procedure is completed. \n
 	 *	Refer to at_ble_pair_done_t
 	 */
@@ -1055,18 +1042,6 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 		
 	}
 	break;
-	
-	/* L2CAP events */
-	/** An L2CAP packet received from a registered custom CID. \n
-	  * Refer to @ref at_ble_l2cap_rx_t
-	  */
-#if 0	
-	case AT_BLE_L2CAP_RX:
-	{
-		
-	}
-	break;
-#endif	
 	
 	/* HTPT Health Thermometer Profile events */
 	/** Inform APP of database creation status. \n

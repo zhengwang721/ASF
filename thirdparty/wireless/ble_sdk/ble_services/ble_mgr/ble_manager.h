@@ -121,6 +121,9 @@
 
 #if defined ANP_SIG_CLIENT
 #include "alert_notification_profile.h"
+#define BLE_MITM_REQ				(false)
+#define BLE_BOND_REQ				(false)
+#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
 #define BLE_DEVICE_NAME				"ATMEL-ANP"
 #endif /* ANP_SIG_CLIENT */
 

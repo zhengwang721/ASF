@@ -83,7 +83,6 @@ void hid_prf_init(void *param)
 	uint8_t serv_num = 0;
 	uint16_t serv_handle = 0;
 	dis_gatt_service_handler_t device_info_serv;
-	DBG_LOG("Inside hid_prf_init");
 	for(; serv_num<HID_MAX_SERV_INST; serv_num++)
 	{
 		if(hid_prf_dataref[serv_num] != NULL)
@@ -93,10 +92,9 @@ void hid_prf_init(void *param)
 			hid_serv_report_map(serv_num, hid_prf_dataref[serv_num]->report_map_info.report_map, hid_prf_dataref[serv_num]->report_map_info.report_map_len);
 				
 			/* HID services database registration */
-			DBG_LOG("Go for HID Service Registration");
 			serv_handle = hid_service_dbreg(serv_num, (uint8_t *)&hid_prf_dataref[serv_num]->report_type, (uint8_t *)&hid_prf_dataref[serv_num]->report_id, hid_prf_dataref[serv_num]->num_of_report);
 			
-			DBG_LOG("HID Service Handle %d", serv_handle);
+			DBG_LOG_DEV("HID Service Handle %d", serv_handle);
 			if(serv_handle)
 			{
 				hid_prf_dataref[serv_num]->serv_handle_info = serv_handle;

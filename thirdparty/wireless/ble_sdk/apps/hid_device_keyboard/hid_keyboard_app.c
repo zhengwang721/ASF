@@ -67,8 +67,6 @@
 
 /* =========================== GLOBALS ============================================================ */
 
-volatile bool button_pressed = false;
-
 /* Control point notification structure */
 hid_control_mode_ntf_t hid_control_point_value; 
 
@@ -175,11 +173,6 @@ void button_cb(void)
 		key_status = 1;
 }
 
-void timer_callback_handler(void)
-{
- /* Application can use this for application timer events */	
-}
-
 /* Initialize the application information for HID profile*/
 void hid_keyboard_app_init(void)
 {
@@ -228,17 +221,12 @@ int main(void )
 	/* Initialize button*/
 	button_init();
 	
-	/* Initialize HW Timer*/
-	hw_timer_init();
-	hw_timer_register_callback(timer_callback_handler);
-	
 	DBG_LOG("Initializing HID Keyboard Application");
 	
 	/* Initialize the profile based on user input */
 	hid_keyboard_app_init();
 	
 	/* initialize the ble chip  and Set the device mac address */
-	
 	ble_device_init(NULL);
 	
 	/* Register the notification handler */
@@ -251,10 +239,8 @@ int main(void )
 	/* Capturing the events  */
 	while(1)
 	{
-		//DBG_LOG("Wait for Event ....");
 		ble_event_task();
-		//DBG_LOG("Wait Complete for Event ....");
-		
+				
 		/* Check for key status */
 		if(key_status)
 		{
