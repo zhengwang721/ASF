@@ -69,8 +69,6 @@
 
 /* =========================== GLOBALS ============================================================ */
 
-volatile bool button_pressed = false;
-
 /* Control point notification structure */
 hid_control_mode_ntf_t hid_control_point_value; 
 
@@ -179,16 +177,6 @@ void button_cb(void)
 	{
 		mouse_status = 1;
 	}
-	
-	if(!report_ntf_info.ntf_conf)
-	{
-		//DBG_LOG("HID device not configured for reports");
-	}
-}
-
-void timer_callback_handler(void)
-{
-	/* Application can use this for application timer events */
 }
 
 /* Initialize the application information for HID profile*/
@@ -249,10 +237,6 @@ int main(void )
 	
 	/* Initialize button*/
 	button_init();
-	
-	/* Initialize HW Timer*/
-	hw_timer_init();
-	hw_timer_register_callback(timer_callback_handler);
 	
 	DBG_LOG("Initializing HID Mouse Application");
 	
