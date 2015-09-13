@@ -59,8 +59,6 @@ extern volatile enum tenuTransportState slave_state;
 #define BTLC1000_WAKEUP_DELAY (5)
 #define PLATFORM_EVT_WAIT_TIMEOUT (4000)
 
-extern volatile bool button_pressed;
-
 static volatile uint32_t cmd_cmpl_flag = 0;
 static volatile uint32_t event_flag = 0;
 
@@ -292,7 +290,6 @@ uint8_t platform_buf[10];
 at_ble_status_t platform_event_wait(uint32_t timeout)
 {
 	uint8_t status = AT_BLE_SUCCESS;
-	//DBG_LOG_BLE("\r\platform_event_wait\n");
 	if (ble_rx_state == BLE_EOF_STATE)
 	{		
 		platform_interface_callback((uint8_t *)&ble_evt_frame, (ble_evt_frame.header.payload_len + BLE_SERIAL_HEADER_LEN));
@@ -332,7 +329,6 @@ at_ble_status_t platform_ble_event_data(void)
 {
 	uint32_t t_rx_data = 0;
 	static uint16_t received_index = 0;
-	//DBG_LOG_BLE("\r\platform_ble_event_data\n");
 	if (ble_rx_state == BLE_EOF_STATE)
 	{
 		return AT_BLE_SUCCESS;

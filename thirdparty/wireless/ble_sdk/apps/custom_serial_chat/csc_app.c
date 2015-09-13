@@ -69,8 +69,6 @@
 
 /* =========================== GLOBALS ============================================================ */
 
-volatile bool button_pressed = false;
-
 /* Received notification data structure */
 csc_report_ntf_t recv_ntf_info;
 
@@ -85,12 +83,6 @@ void csc_prf_report_ntf_cb(csc_report_ntf_t *report_info)
 {
 	DBG_LOG("\r\n");
 	csc_app_recv_buf(report_info->recv_buff, report_info->recv_buff_len);
-}
-
-/* Callback called when user press the SW0 button */
-void button_cb(void)
-{
-	button_pressed = true;
 }
 
 /* Function used for send data */
@@ -152,9 +144,6 @@ int main(void )
 	
 	/* Initialize serial console */
 	sio2host_init();
-	
-	/* Initialize button*/
-	button_init();
 	
 	DBG_LOG("Initializing Custom Serial Chat Application");
 	

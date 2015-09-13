@@ -179,7 +179,7 @@ void csc_prf_discovery_complete_handler(at_ble_discovery_complete_t *params)
 		{
 			if(discover_status.operation == AT_BLE_DISC_BY_UUID_SVC)
 			{
-				DBG_LOG("Discover Characteristic Info:\r\n -->ConnHandle 0x%02x\r\n -->start handle 0x%02x\r\n -->End handle : 0x%02x",
+				DBG_LOG_DEV("Discover Characteristic Info:\r\n -->ConnHandle 0x%02x\r\n -->start handle 0x%02x\r\n -->End handle : 0x%02x",
 				app_csc_info.csc_serv.conn_handle,
 				app_csc_info.csc_serv.start_handle,
 				app_csc_info.csc_serv.end_handle);
@@ -201,7 +201,7 @@ void csc_prf_discovery_complete_handler(at_ble_discovery_complete_t *params)
 			{
 				app_csc_info.devicedb = true;
 				
-				DBG_LOG("Send Slave Security Request");
+				DBG_LOG_DEV("Send Slave Security Request");
 								
 				if(at_ble_send_slave_sec_request(app_csc_info.conn_params.handle,true,true) != AT_BLE_SUCCESS)
 				{
@@ -217,31 +217,6 @@ void csc_prf_discovery_complete_handler(at_ble_discovery_complete_t *params)
 void csc_prf_service_found_handler(at_ble_primary_service_found_t * params)
 {
 	memcpy((uint8_t *)&app_csc_info.csc_serv, params, sizeof(at_ble_primary_service_found_t));
-	
-	
-	DBG_LOG_DEV("Discover service Info:\r\n -->ConnHandle 0x%02x\r\n -->start handle 0x%02x\r\n -->End handle : 0x%02x",
-	app_csc_info.csc_serv.conn_handle,
-	app_csc_info.csc_serv.start_handle,
-	app_csc_info.csc_serv.end_handle);
-	
-	
-	DBG_LOG("Discover service UUID:\r\n -->0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",
-	app_csc_info.csc_serv.service_uuid.uuid[0],
-	app_csc_info.csc_serv.service_uuid.uuid[1],
-	app_csc_info.csc_serv.service_uuid.uuid[2],
-	app_csc_info.csc_serv.service_uuid.uuid[3],
-	app_csc_info.csc_serv.service_uuid.uuid[4],
-	app_csc_info.csc_serv.service_uuid.uuid[5],
-	app_csc_info.csc_serv.service_uuid.uuid[6],
-	app_csc_info.csc_serv.service_uuid.uuid[7],
-	app_csc_info.csc_serv.service_uuid.uuid[8],
-	app_csc_info.csc_serv.service_uuid.uuid[9],
-	app_csc_info.csc_serv.service_uuid.uuid[10],
-	app_csc_info.csc_serv.service_uuid.uuid[11],
-	app_csc_info.csc_serv.service_uuid.uuid[12],
-	app_csc_info.csc_serv.service_uuid.uuid[13],
-	app_csc_info.csc_serv.service_uuid.uuid[14],
-	app_csc_info.csc_serv.service_uuid.uuid[15]);
 }
 
 
@@ -251,32 +226,6 @@ void csc_prf_service_found_handler(at_ble_primary_service_found_t * params)
 void csc_prf_characteristic_found_handler(at_ble_characteristic_found_t *params)
 {
 	memcpy((uint8_t *)&app_csc_info.csc_char, params, sizeof(at_ble_characteristic_found_t));
-	
-	
-	DBG_LOG_DEV("Characteristic Info:\r\n -->ConnHandle: 0x%02x\r\n -->Char handle: 0x%02x\r\n -->Value handle: 0x%02x\r\n -->Properties: 0x%02x",
-	app_csc_info.csc_char.conn_handle,
-	app_csc_info.csc_char.char_handle,
-	app_csc_info.csc_char.value_handle,
-	app_csc_info.csc_char.properties);
-	
-	DBG_LOG("Characteristic UUID:\r\n -->0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",
-	app_csc_info.csc_char.char_uuid.uuid[0],
-	app_csc_info.csc_char.char_uuid.uuid[1],
-	app_csc_info.csc_char.char_uuid.uuid[2],
-	app_csc_info.csc_char.char_uuid.uuid[3],
-	app_csc_info.csc_char.char_uuid.uuid[4],
-	app_csc_info.csc_char.char_uuid.uuid[5],
-	app_csc_info.csc_char.char_uuid.uuid[6],
-	app_csc_info.csc_char.char_uuid.uuid[7],
-	app_csc_info.csc_char.char_uuid.uuid[8],
-	app_csc_info.csc_char.char_uuid.uuid[9],
-	app_csc_info.csc_char.char_uuid.uuid[10],
-	app_csc_info.csc_char.char_uuid.uuid[11],
-	app_csc_info.csc_char.char_uuid.uuid[12],
-	app_csc_info.csc_char.char_uuid.uuid[13],
-	app_csc_info.csc_char.char_uuid.uuid[14],
-	app_csc_info.csc_char.char_uuid.uuid[15]
-	);
 }
 
 
@@ -286,17 +235,6 @@ void csc_prf_characteristic_found_handler(at_ble_characteristic_found_t *params)
 void csc_prf_descriptor_found_handler(at_ble_descriptor_found_t *params)
 {
 		memcpy((uint8_t *)&app_csc_info.csc_desc, params, sizeof(at_ble_descriptor_found_t));
-					
-		
-		DBG_LOG_DEV("Descriptor Info:\r\n -->ConnHandle: 0x%02x\r\n -->Descriptor handle : 0x%02x",
-					app_csc_info.csc_desc.conn_handle,
-					app_csc_info.csc_desc.desc_handle
-					);
-					
-		DBG_LOG_DEV(" -->UUID: 0x%02x%02x",
-					app_csc_info.csc_desc.desc_uuid.uuid[1],
-					app_csc_info.csc_desc.desc_uuid.uuid[0]);
-		
 }
 
 /**

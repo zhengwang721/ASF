@@ -100,9 +100,6 @@
 
 #if defined ANP_CLIENT
 #include "ancs_profile.h"
-#define BLE_MITM_REQ				(false)
-#define BLE_BOND_REQ				(false)
-#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
 #define BLE_DEVICE_NAME				"ATMEL-ANCS"
 #endif /* ANCS_CLIENT */
 
