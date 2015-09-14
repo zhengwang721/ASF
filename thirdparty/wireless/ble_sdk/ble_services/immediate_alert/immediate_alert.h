@@ -44,6 +44,9 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Immediate Alert Service Configuration
+// =======================
 
 #ifndef __IMMEDIATE_ALERT_H__
 #define __IMMEDIATE_ALERT_H__
@@ -77,6 +80,11 @@ typedef enum immediate_alert_level {
 *							        Function Prototypes	                                *
 ****************************************************************************************/
 
+//  <q> Enable Immediate Alert Service GATT Client Role
+//  <i> Defines to support GATT Client Role
+//  <id> ias_client
+#define IAS_CLIENT 0
+
 #if defined IAS_GATT_CLIENT
 
 /* Maximum character data size to support */
@@ -89,7 +97,7 @@ typedef enum immediate_alert_level {
 #define IAS_WRITE_LENGTH                        (1)
 
 /* Immediate alert write without response */
-#define IAS_WRITE_WITH_RESPONSE					(false)
+#define IAS_WRITE_WITH_RESPONSE					        (false)
 
 /* Perform the signed write  */
 #define IAS_NO_SIGNED_WRITE                     (false)
@@ -122,6 +130,10 @@ at_ble_status_t ias_alert_level_write(at_ble_handle_t conn_handle,
 
 #endif /*__IAS_GATT_CLIENT__*/
 
+//  <q> Enable Immediate Alert Service GATT Server Role
+//  <i> Defines to support GATT Server Role
+//  <id> ias_server
+#define IAS_SERVER 0
 
 #if defined IAS_GATT_SERVER
 
@@ -158,3 +170,6 @@ uint8_t ias_set_alert_value(at_ble_characteristic_changed_t *change_params, gatt
 #endif //IAS_GATT_SERVER
 
 #endif /* __IMMEDIATE_ALERT_H__ */
+// </h>
+
+// <<< end of configuration section >>>

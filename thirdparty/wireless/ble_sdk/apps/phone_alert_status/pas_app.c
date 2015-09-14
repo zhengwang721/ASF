@@ -61,10 +61,7 @@
 #include "pas_client.h"
 #include "pas_app.h"
 
-
-volatile bool button_pressed = false;	/*!< For patch download*/
-
-volatile uint8_t press_count;		/*!< button press count*/
+volatile uint8_t press_count = DEVICE_SILENT;		/*!< button press count*/
 
 volatile bool flag;					/*!< To send values once per button press*/
 
@@ -127,7 +124,7 @@ void app_connected_state(bool connected)
 	if (app_state == false)
 	{
 		DBG_LOG("App disconnected");
-		press_count = 0;
+		press_count = DEVICE_SILENT;
 	}
 }
 
@@ -138,7 +135,7 @@ void app_connected_state(bool connected)
  */
 void app_alert_status_read(uint8_t *data, uint8_t len)
 {
-	DBG_LOG("Alert Status read:");
+	DBG_LOG("\r\nAlert Status read:");
 	DBG_LOG_DEV("Length of the data is %d",len);
 	display_alert_status_info(data);
 }
@@ -150,7 +147,7 @@ void app_alert_status_read(uint8_t *data, uint8_t len)
  */
 void app_ringer_setting_read(uint8_t *data, uint8_t len)
 {
-	DBG_LOG("Alert setting read :");
+	DBG_LOG("\r\nRinger setting read :");
 	DBG_LOG_DEV("Length of the data is %d",len);
 	display_ringer_setting_info(data);
 }
@@ -162,7 +159,7 @@ void app_ringer_setting_read(uint8_t *data, uint8_t len)
  */
 void app_alert_status_notify(uint8_t *data, uint8_t len)
 {
-	DBG_LOG("Notified Alert Status :");
+	DBG_LOG("\r\nNotified Alert Status :");
 	DBG_LOG_DEV("length of the data is %d",len);
 	display_alert_status_info(data);
 }
@@ -184,16 +181,9 @@ void app_ringer_setting_notify(uint8_t *data, uint8_t len)
  */
 void button_cb(void)
 {
-	if (button_pressed == false)
-	{
-		 button_pressed = true;
-		 return;
-	}
 	if (app_state)
 	{
-		DBG_LOG("button Pressed");
-		flag = 1;
-		press_count += 1;
+		flag = true;
 	}
 }
 
@@ -253,16 +243,16 @@ int main(void)
 		ble_event_task();
 		if (flag)
 		{
-			delay_ms(100);
+			delay_ms(350);
 			if (press_count == DEVICE_SILENT)
 			{
-				DBG_LOG("Device to silent");
+				DBG_LOG("\r\nDevice to silent");
 				pas_client_write_ringer_control_point(1);
 			} else if (press_count == DEVICE_MUTE) {
-				DBG_LOG("Device to Mute Once");
+				DBG_LOG("\r\nDevice to Mute Once");
 				pas_client_write_ringer_control_point(2);
 			} else if (press_count == DEVICE_NORMAL) {
-				DBG_LOG("Device to cancel mute");
+				DBG_LOG("\r\nDevice to cancel mute");
 				pas_client_write_ringer_control_point(3);
 			} else if (press_count == READ_REQUEST)
 			{
@@ -275,7 +265,7 @@ int main(void)
 				if ((status = pas_client_read_alert_status_char()) != AT_BLE_SUCCESS)
 				{
 					DBG_LOG("reading alert status invocation failed");
-				}	
+				}
 			}
 			
 			if (press_count == READ_REQUEST)

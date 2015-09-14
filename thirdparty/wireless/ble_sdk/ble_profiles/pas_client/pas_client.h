@@ -50,19 +50,33 @@
 * \section preface Preface
 * This is the reference manual for the Time Information Profile
 */
-
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Phone Alert Status Profile Configuration
+// =======================
 #ifndef __PAS_CLIENT_H__
 #define __PAS_CLIENT_H__
 /***********************************************************************************
  *									Macros			                               *
  **********************************************************************************/
 /**@brief Advertisement Interval*/
+//	<o> Fast Advertisement Interval <100-1000:50>
+//	<i> Defines inteval of Fast advertisement in ms.
+//	<i> Default: 100
+//	<id> pas_fast_adv
 #define APP_PAS_FAST_ADV						(100) //100 ms
 
 /**@brief Advertisement Timeout*/
+//	<o> Advertisement Timeout <1000-10000:50>
+//	<i> Defines inteval at which advertisement timout in ms.
+//	<i> Default: 1000
+//	<id> pas_adv_timeout
 #define APP_PAS_ADV_TIMEOUT						(1000) // 100 Secs
 
 /**@brief Scan Response length*/
+//	<o> Scan Response Buffer <1-20>
+//	<i> Defines size of buffer for scan response.
+//	<i> Default: 10
+//	<id> pas_scan_resp_len
 #define SCAN_RESP_LEN							(10)
 
 /**@brief ADV type UUID Type & Length*/
@@ -82,6 +96,11 @@
 /**@brief Advertisement Name Type Length & data */
 #define PAS_ADV_DATA_NAME_LEN					(9)
 #define PAS_ADV_DATA_NAME_TYPE					(0x09)
+
+
+//	<s.9>	Advertising String
+//	<i>	String Descriptor describing in advertising packet.
+//	<id> pas_adv_data_name_data
 #define PAS_ADV_DATA_NAME_DATA					("ATMEL-PAS")
 
 /**@brief The length of 16bit uuid */
@@ -290,3 +309,6 @@ void pas_client_char_read_response_handler(at_ble_characteristic_read_response_t
 void register_connected_callback(connected_callback_t app_connected_cb);
 
 #endif /* __PAS_CLIENT_H__*/
+// </h>
+
+// <<< end of configuration section >>>

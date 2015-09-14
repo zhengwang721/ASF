@@ -43,12 +43,19 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Tx Power Service Configuration
+// =======================
 
 #ifndef __TX_POWER_H__
 #define __TX_POWER_H__
 
 #include "ble_manager.h"
+
+//  <q> Enable Tx Power Service GATT Server Role
+//  <i> Defines to support GATT Server Role
+//  <id> txps_server
+#define TXPS_SERVER 0
 
  #if defined TXPS_GATT_SERVER
 
@@ -111,6 +118,11 @@ void init_tx_power_service(gatt_service_handler_t *tx_power_serv);
 at_ble_status_t txps_primary_service_define(gatt_service_handler_t *txps_primary_service);
 #endif//TXPS_GATT_SERVER
 
+//  <q> Enable Tx Power Service GATT Client Role
+//  <i> Defines to support GATT Client Role
+//  <id> txps_client
+#define TXPS_CLIENT 0
+
 #if defined TXPS_GATT_CLIENT
 /* Tx Power Maximum Character byte support */
 #define MAX_TX_POWER_CHAR_SIZE                  (1)
@@ -163,5 +175,6 @@ int8_t txps_power_read_response(
 #endif //TXPS_GATT_CLIENT
 
 #endif /* __TX_POWER_H__ */
- 
+// </h>
 
+// <<< end of configuration section >>>

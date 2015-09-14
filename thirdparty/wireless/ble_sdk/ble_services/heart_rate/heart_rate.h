@@ -46,6 +46,9 @@
  * Support</a>
  */
 
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Heart Rate Sensor Service Configuration
+// =======================
 #ifndef __HEART_RATE_H__
 #define __HEART_RATE_H__
 
@@ -186,3 +189,6 @@ uint8_t hr_write_value_handler(hr_gatt_service_handler_t *hr_primary_service,
 		at_ble_characteristic_changed_t *params);
 
 #endif /* __HEART_RATE_H__ */
+// </h>
+
+// <<< end of configuration section >>>

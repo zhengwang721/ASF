@@ -433,7 +433,7 @@ at_ble_discovery_complete_t *discover_status)
 {
 	bool discover_char_flag = true;
 	DBG_LOG_DEV("discover complete operation %d and %d",discover_status->operation,discover_status->status);
-	if (discover_status->status == DISCOVER_SUCCESS) {
+	if ((discover_status->status == DISCOVER_SUCCESS) || (discover_status->status == AT_BLE_SUCCESS)) {
 		#if defined TX_POWER_SERVICE
 		if ((txps_handle.char_discovery == DISCOVER_SUCCESS) && (discover_char_flag))
 		{

@@ -43,7 +43,9 @@
 /*
 * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
 */
-
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Next DST Change Service Configuration
+// =======================
 #ifndef __NEXT_DST_H__
 #define __NEXT_DST_H__
 
@@ -56,9 +58,17 @@
  *									Macros			                               *
  **********************************************************************************/
 /* Link Loss Alert length of data to read */
+//  <o> Characteristics read Lenght <0-100>
+//  <i> Defines number of bytes to characteristics read length .
+//  <i> Default: 8
+//  <id> dst_read_length
 #define DST_READ_LENGTH                         (8)
 
 /* Link Loss read offset length*/
+//  <o> Characteristics read Offset <0-100>
+//  <i> Defines offset value to read characteristics.
+//  <i> Default: 0
+//  <id> dst_read_offset
 #define DST_READ_OFFSET                         (0)
 
 /* Link Loss invalid character handler*/
@@ -104,6 +114,7 @@ at_ble_status_t tis_dst_change_read(at_ble_handle_t conn_handle,
 int8_t tis_dst_change_read_response(at_ble_characteristic_read_response_t *read_resp,
 		gatt_dst_handler_t *dst_handler);
 		
-
 #endif /*__NEXT_DST_H__*/
+// </h>
 
+// <<< end of configuration section >>>

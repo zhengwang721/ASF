@@ -258,6 +258,7 @@ void app_indication_confirmation_handler(at_ble_indication_confirmed_t *params)
 	{
 		DBG_LOG_DEV("App Indication successfully sent over the air");
 		indication_sent = true;
+		user_request_flag = false;
 	} else {
 		DBG_LOG_DEV("Sending Notification over the air failed");
 		indication_sent = false;
@@ -702,7 +703,6 @@ void button_cb(void)
 	/* App connected state*/
 	if (app_state)
 	{
-	
 		if (user_request_flag == false)
 		{
 			if (indication_flag)

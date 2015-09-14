@@ -115,16 +115,13 @@ static void ble_set_address(at_ble_addr_t *addr);
 /** @brief function to get event from stack */
 at_ble_status_t ble_event_task(void)
 {
-	if (platform_ble_event_data() == AT_BLE_SUCCESS) {
-		if (at_ble_event_get(&event, params,
-		BLE_EVENT_TIMEOUT) == AT_BLE_SUCCESS) {
-		//	1000) == AT_BLE_SUCCESS) {
-			ble_event_manager(event, params);
-			return AT_BLE_SUCCESS;
-		}
-	}
-
-	return AT_BLE_FAILURE;
+    if (at_ble_event_get(&event, params, BLE_EVENT_TIMEOUT) == AT_BLE_SUCCESS) 
+    {
+            ble_event_manager(event, params);
+            return AT_BLE_SUCCESS;
+    }
+    
+    return AT_BLE_FAILURE;
 }
 
 /** @brief BLE device initialization */
@@ -395,16 +392,23 @@ uint8_t scan_info_parse(at_ble_scan_info_t *scan_info_data,
 /** @brief function to send slave security request */
 at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 {
-	DBG_LOG("slave request");
-    if (at_ble_send_slave_sec_request(conn_handle, BLE_MITM_REQ, BLE_BOND_REQ) == AT_BLE_SUCCESS)
-    {
-	    DBG_LOG_DEV("Slave security request successful");
-	    return AT_BLE_SUCCESS;
-    }
-    else
-	{
-	    DBG_LOG("Slave security request failed");
-    }
+	#if BLE_PAIR_ENABLE
+		if (at_ble_send_slave_sec_request(conn_handle, BLE_MITM_REQ, BLE_BOND_REQ) == AT_BLE_SUCCESS)
+		{
+			DBG_LOG_DEV("Slave security request successful");
+			return AT_BLE_SUCCESS;
+		}
+		else
+		{
+			DBG_LOG("Slave security request failed");
+		}
+	#else
+		BLE_ADDITIONAL_PAIR_DONE_HANDLER(NULL);
+		if (ble_paired_cb != NULL)
+		{
+			ble_paired_cb(conn_handle);
+		}
+	#endif
 	return AT_BLE_FAILURE;
 }
 
@@ -431,14 +435,7 @@ void ble_connected_state_handler(at_ble_connected_t *conn_params)
 		}
 		
 #if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)
-	#if BLE_PERIPHERAL_PAIR_ENABLE
-		ble_send_slave_sec_request(conn_params->handle);		
-	#else
-		if (ble_paired_cb != NULL)
-		{
-			ble_paired_cb(conn_params->handle);
-		}
-	#endif
+	ble_send_slave_sec_request(conn_params->handle);
 #endif
 	} 
 	else
@@ -496,8 +493,13 @@ void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect)
 /** @brief connection update parameter function */
 void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update)
 {
-	DBG_LOG("AT_BLE_CONN_PARAM_UPDATE ");
+	DBG_LOG_DEV("AT_BLE_CONN_PARAM_UPDATE ");
 	ALL_UNUSED(conn_param_update);  //To avoid compiler warning
+}
+
+void ble_conn_param_update_req(at_ble_conn_param_update_request_t * conn_param_req)
+{
+	at_ble_conn_update_reply(conn_param_req->handle, true, 1, 120);
 }
 
 void ble_slave_security_handler(at_ble_slave_sec_request_t* slave_sec_req)
@@ -513,7 +515,7 @@ void ble_slave_security_handler(at_ble_slave_sec_request_t* slave_sec_req)
 	if(!app_device_bond)
 	{
 
-		features.desired_auth =  AT_BLE_MODE1_L2_AUTH_PAIR_ENC;
+		features.desired_auth =  BLE_AUTHENTICATION_LEVEL; 
 		features.bond = slave_sec_req->bond;
 		features.mitm_protection = slave_sec_req->mitm_protection;
 		/* Device capabilities is display only , key will be generated
@@ -620,40 +622,59 @@ void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 void ble_pair_key_request_handler (at_ble_pair_key_request_t *pair_key)
 {
 	/* Passkey has fixed value in this example MSB */
-	uint8_t passkey[6]={1,2,3,4,5,6};
+	uint8_t passkey[6]={'1','2','3','4','5','6'};
 	uint8_t idx = 0;
+        uint8_t pin;
+        
 	at_ble_pair_key_request_t pair_key_request;
-	
-	
-	memcpy((uint8_t *)&pair_key_request, pair_key, sizeof(at_ble_pair_key_request_t));
+        
+        memcpy((uint8_t *)&pair_key_request, pair_key, sizeof(at_ble_pair_key_request_t));
+        
+        if(pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_ENTRY)
+        {
+          DBG_LOG("Enter the Passkey(6-Digit) in Terminal:");
+            
+          for(idx = 0; idx < 6; )
+          {          
+            pin = getchar();
+            if((pin >= '0') && ( pin <= '9'))
+            {
+              passkey[idx++] = pin;
+              DBG_LOG_CONT("%c", pin);
+            }
+          }
+        }	
 	
 	/* Display passkey */
-	if((pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_DISPLAY) &&
-	   (pair_key_request.type == AT_BLE_PAIR_PASSKEY))
+	if(((pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_DISPLAY) &&
+	   (pair_key_request.type == AT_BLE_PAIR_PASSKEY)) || (pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_ENTRY))
 	{
-		DBG_LOG("Please Enter the following Pass-code(on other Device):");
-		/* Convert passkey to ASCII format */
-		for(idx=0; idx<AT_BLE_PASSKEY_LEN; idx++)
-		{
-			passkey[idx] = (passkey[idx] + '0');
-			DBG_LOG_CONT("%c",passkey[idx]);
-		}		
-		
-		if(!(at_ble_pair_key_reply(pair_key_request.handle, pair_key_request.type, passkey)) == AT_BLE_SUCCESS)
-		{
-			DBG_LOG("Pair-key reply failed");
-		}
+          if(pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_ENTRY)
+          {
+            DBG_LOG("Entered Pass-code:");
+          }
+          else
+          {
+            DBG_LOG("Please Enter the following Pass-code(on other Device):");
+          }
+          
+          /* Convert passkey to ASCII format */
+          for(idx=0; idx<AT_BLE_PASSKEY_LEN; idx++)
+          {
+                  passkey[idx] = (passkey[idx]);
+                  DBG_LOG_CONT("%c",passkey[idx]);
+          }		
+          
+          if(!(at_ble_pair_key_reply(pair_key_request.handle, pair_key_request.type, passkey)) == AT_BLE_SUCCESS)
+          {
+                  DBG_LOG("Pair-key reply failed");
+          }
 	}
 	else 
 	{
 		if(pair_key_request.type == AT_BLE_PAIR_OOB)
 		{
 			DBG_LOG("OOB Feature Not supported");
-		}
-		
-		if (pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_ENTRY)
-		{
-			DBG_LOG("Passkey Entry Not supported");
 		}
 	}	
 }
@@ -816,20 +837,10 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	 */
 	case AT_BLE_CONN_PARAM_UPDATE_REQUEST:
 	{
+		BLE_CONN_PARAM_UPDATE_REQ_HANDLER((at_ble_conn_param_update_request_t *)event_params);
 		
 	}
 	break;
-	
-	 /** reported RX power value. \n
-	 *	Refer to at_ble_rx_power_value_t
-	 */
-#if 0	 	 
-	case AT_BLE_RX_POWER_VALUE:
-	{
-		
-	}
-	break;
-#endif	
 	
 	/** Pairing procedure is completed. \n
 	 *	Refer to at_ble_pair_done_t
@@ -1027,7 +1038,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	/** The peer has confirmed that it has received the service changed notification. \n
 	  * Refer to @ref at_ble_service_changed_notification_confirmed_t
 	  */
-	case AT_BLE_SERVICE_CHANGED_NOTIFICATION_CONFIRMED:
+	case AT_BLE_SERVICE_CHANGED_INDICATION_SENT:
 	{
 		
 	}
@@ -1050,18 +1061,6 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 		
 	}
 	break;
-	
-	/* L2CAP events */
-	/** An L2CAP packet received from a registered custom CID. \n
-	  * Refer to @ref at_ble_l2cap_rx_t
-	  */
-#if 0	
-	case AT_BLE_L2CAP_RX:
-	{
-		
-	}
-	break;
-#endif	
 	
 	/* HTPT Health Thermometer Profile events */
 	/** Inform APP of database creation status. \n

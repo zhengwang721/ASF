@@ -94,6 +94,7 @@ void hid_prf_init(void *param)
 			/* HID services database registration */
 			serv_handle = hid_service_dbreg(serv_num, (uint8_t *)&hid_prf_dataref[serv_num]->report_type, (uint8_t *)&hid_prf_dataref[serv_num]->report_id, hid_prf_dataref[serv_num]->num_of_report);
 			
+			DBG_LOG_DEV("HID Service Handle %d", serv_handle);
 			if(serv_handle)
 			{
 				hid_prf_dataref[serv_num]->serv_handle_info = serv_handle;

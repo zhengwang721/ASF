@@ -46,6 +46,10 @@
  *Support</a>
  */
 
+
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Heart Rate Sensor Configuration
+// =======================
 #ifndef __HR_SENSOR_H__
 #define __HR_SENSOR_H__
 
@@ -55,12 +59,24 @@
 
 
 /** @brief APP_HR_SENSOR_FAST_ADV between 0x0020 and 0x4000 in 0.625 ms units (20ms to 10.24s). */
+//	<o> Fast Advertisement Interval <100-1000:50>
+//	<i> Defines inteval of Fast advertisement in ms.
+//	<i> Default: 100
+//	<id> hr_sensor_fast_adv
 #define HR_SENSOR_FAST_ADV								(100) //100 ms
 
 /** @brief APP_HR_SENSOR_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
+//	<o> Advertisement Timeout <1000-10000:50>
+//	<i> Defines inteval at which advertisement timout in ms.
+//	<i> Default: 1000
+//	<id> hr_sensor_adv_timeout
 #define HR_SENSOR_ADV_TIMEOUT							(1000) // 100 Secs
 
 /** @brief scan_resp_len is the length of the scan response data */
+//	<o> Scan Response Buffer <1-20>
+//	<i> Defines size of buffer for scan response.
+//	<i> Default: 10
+//	<id> hr_sensor_scan_resp_len
 #define SCAN_RESP_LEN									(10)
 	
 /** @brief ADV_DATA_LEN */
@@ -88,6 +104,9 @@
 #define HR_SENSOR_ADV_DATA_NAME_LEN						(9)
 
 /* @brief HR_SENSOR_ADV_DATA_NAME_DATA the actual name of device */
+//	<s.9>	Advertising String
+//	<i>	String Descriptor describing in advertising packet.
+//	<id> hr_sensor_adv_data_name_data
 #define HR_SENSOR_ADV_DATA_NAME_DATA					("ATMEL-HRP")
 
 
@@ -206,3 +225,6 @@ at_ble_status_t hr_sensor_connected_state_handler(
 		at_ble_connected_t *conn_params);
 
 #endif /*__HR_SENSOR_H__ */
+// </h>
+
+// <<< end of configuration section >>>

@@ -125,12 +125,13 @@ void app_state_handler(bool state)
 		notification_flag = false;
 		energy_expended_val = ENERGY_EXP_NORMAL;
 		second_counter = 0;
+		activity = ACTIVITY_NORMAL;
 		heart_rate_value_init();
 		LED_Off(LED0);
-		DBG_LOG_DEV("Press button to advertise");
+		DBG_LOG("Press button to advertise");
 	} else if (app_state == true) {
 		LED_On(LED0);
-		DBG_LOG_DEV(
+		DBG_LOG(
 				"Enable the notification in app to listen heart rate or press the button to disconnect");
 				advertisement_flag = false;
 	}
@@ -179,12 +180,13 @@ void hr_measurment_send(void)
 		/* Heart Rate Value 8bit*/
 		hr_data[idx++] = (uint8_t)heart_rate_value ;
 		
-
+		
 		if (energy_expended_val == ENERGY_RESET) {
 			hr_data[0] = hr_data[0] | ENERGY_EXPENDED_FIELD_PRESENT;
 			memcpy(&hr_data[idx], &energy_expended_val, 2);
 			idx += 2;
 		}
+		 
 
 		/* RR Interval values(2)*/
 		if (rr_interval_value < (uint16_t)RR_VALUE_MAX) {
@@ -210,12 +212,12 @@ void hr_measurment_send(void)
 			rr_interval_value += 200;
 		}
 	
-		#if defined PTS
+		
 		if (energy_expended_val == ENERGY_RESET) {
 			energy_expended_val += energy_incrementor;
 			DBG_LOG("Energy Expended : 0 KJ");
 		}
-		#endif 
+	 
 	} else {
 		/* flags */
 		hr_data[idx++]

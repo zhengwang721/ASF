@@ -71,8 +71,6 @@ bool notification_enable = false;
 
 bool app_state = false;
 
-volatile bool button_pressed = false;
-
 /***********************************************************************************
  *									Implementations                               *
  **********************************************************************************/
@@ -81,11 +79,6 @@ volatile bool button_pressed = false;
  */
 void button_cb(void)
 {
-	if (button_pressed == false)
-	{
-		button_pressed = true;
-		return;
-	}
 	user_request = true;
 }
 
@@ -106,7 +99,7 @@ void app_connected_state(bool connected)
 	app_state = connected;
 	if (connected)
 	{
-			
+		DBG_LOG("App connected");	
 	}		
 }
 

@@ -46,6 +46,10 @@
  * Support</a>
  */
 
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Find Me Target Profile Configuration
+// =======================
+
 #ifndef __FIND_ME_TARGET_H__
 #define __FIND_ME_TARGET_H__
 
@@ -62,15 +66,27 @@
 ****************************************************************************************/
 /** @brief PATHLOSS which defines if the user wants pathloss functionality*/
 
-/** @brief APP_PXP_FAST_ADV between 0x0020 and 0x4000 in 0.625 ms units (20ms to
+/** @brief APP_FMP_FAST_ADV between 0x0020 and 0x4000 in 0.625 ms units (20ms to
  *10.24s). */
+//	<o> Fast Advertisement Interval <100-1000:50>
+//	<i> Defines inteval of Fast advertisement in ms.
+//	<i> Default: 100
+//	<id> fmp_sensor_fast_adv
 #define APP_FMP_FAST_ADV				(100) /* 100 ms */
 
-/** @brief APP_PXP_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in
+/** @brief APP_FMP_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in
  *seconds, 0x0000 disables time-out.*/
+//	<o> Advertisement Timeout <1000-10000:50>
+//	<i> Defines inteval at which advertisement timout in ms.
+//	<i> Default: 1000
+//	<id> fmp_adv_timeout
 #define APP_FMP_ADV_TIMEOUT				(1000) /* 100 Secs */
 
 /** @brief scan_resp_len is the length of the scan response data */
+//	<o> Scan Response Buffer <1-20>
+//	<i> Defines size of buffer for scan response.
+//	<i> Default: 10
+//	<id> fmp_scan_resp_len
 #define SCAN_RESP_LEN					(10)
 
 /** @brief ADV_DATA_LEN */
@@ -85,13 +101,16 @@
 /** @brief IAL_ADV_DATA_UUID_TYPE the total sizeof IAL service uuid*/
 #define IAL_ADV_DATA_UUID_TYPE			(0x03)
 
-/** @brief PXP_ADV_DATA_NAME_LEN the  length of the device name */
+/** @brief FMP_ADV_DATA_NAME_LEN the  length of the device name */
 #define FMP_ADV_DATA_NAME_LEN			(9)
 
-/** @brief PXP_ADV_DATA_NAME_TYPE the gap ad data type */
+/** @brief FMP_ADV_DATA_NAME_TYPE the gap ad data type */
 #define FMP_ADV_DATA_NAME_TYPE			(0x09)
 
-/* @brief PXP_ADV_DATA_NAME_DATA the actual name of device */
+/* @brief FMP_ADV_DATA_NAME_DATA the actual name of device */
+//	<s.9>	Advertising String
+//	<i>	String Descriptor describing in advertising packet.
+//	<id> fmp_sensor_adv_data_name_data
 #define FMP_ADV_DATA_NAME_DATA			("ATMEL-FMP")
 
 /* @brief call back handler type  */
@@ -189,3 +208,6 @@ at_ble_status_t fmp_target_char_changed_handler(
 void register_find_me_handler(find_me_callback_t immediate_alert_fn);
 
 #endif /* __FIND_ME_TARGET_H__ */
+// </h>
+
+// <<< end of configuration section >>>

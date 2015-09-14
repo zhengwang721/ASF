@@ -45,6 +45,11 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
  *Support</a>
  */
+
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> HID Device profile Configuration
+// =======================
+
 #ifndef __HID_DEVICE_H__
 #define __HID_DEVICE_H__
 #include "at_ble_api.h"
@@ -54,59 +59,79 @@
 ****************************************************************************************/
 
 /** @brief Number of Report : Configure by user. */
-#define HID_NUM_OF_REPORT              (1)
+//	<o> HID Number of Reports <1-10>
+//	<i> Defines numbers of Reporter available for HID.
+//	<i> Default: 1
+//	<id> hid_num_of_report
+#define HID_NUM_OF_REPORT				(1)
 
 /** @brief HID Service Instance : Configure by user. */
-#define HID_SERV_INST                  (1) 
+#define HID_SERV_INST 					(1) 
 
 /** @brief HID Max Service Instance. */
-#define HID_MAX_SERV_INST              (2)
+#define HID_MAX_SERV_INST				(2)
 
 /** @brief Number of Report. */
-#define HID_MAX_REPORT_NUM             (10)
+#define HID_MAX_REPORT_NUM				(10)
 
 /** @brief Default number of characteristic. */
-#define HID_DEFAULT_CHARACTERISITC_NUM (4)
+#define HID_DEFAULT_CHARACTERISITC_NUM	(4)
 
 /** @brief Number of characteristic for HID. */
 #if defined HID_MOUSE_DEVICE
 /** @brief Enable by user for mouse application : Configure by user. */
-#define ADV_DATA_APPEARANCE_DATA      (0x03C2)  //Mouse
+#define ADV_DATA_APPEARANCE_DATA		(0x03C2)  //Mouse
 #if defined BOOT_MODE
-#define HID_CHARACTERISTIC_NUM        (HID_DEFAULT_CHARACTERISITC_NUM + 1)
+#define HID_CHARACTERISTIC_NUM			(HID_DEFAULT_CHARACTERISITC_NUM + 1)
 #else
-#define HID_CHARACTERISTIC_NUM        (HID_DEFAULT_CHARACTERISITC_NUM + HID_NUM_OF_REPORT + 1)
+#define HID_CHARACTERISTIC_NUM			(HID_DEFAULT_CHARACTERISITC_NUM + HID_NUM_OF_REPORT + 1)
 #endif
 #endif
 
 #if defined HID_KEYBOARD_DEVICE
 /** @brief Enable by user for keyboard application : Configure by user. */
-#define ADV_DATA_APPEARANCE_DATA 	  (0x03C1)    //Keyboard
+#define ADV_DATA_APPEARANCE_DATA 		(0x03C1)    //Keyboard
 #if defined BOOT_MODE
-#define HID_CHARACTERISTIC_NUM        (HID_DEFAULT_CHARACTERISITC_NUM + 2)
+#define HID_CHARACTERISTIC_NUM			(HID_DEFAULT_CHARACTERISITC_NUM + 2)
 #else
-#define HID_CHARACTERISTIC_NUM        (HID_DEFAULT_CHARACTERISITC_NUM + HID_NUM_OF_REPORT + 2)
+#define HID_CHARACTERISTIC_NUM			(HID_DEFAULT_CHARACTERISITC_NUM + HID_NUM_OF_REPORT + 2)
 #endif
 #endif
 
 /** @brief APP_HID_FAST_ADV between 0x0020 and 0x4000 in 0.625 ms units (20ms to 10.24s). */
+//	<o> Fast Advertisement Interval <100-1000:50>
+//	<i> Defines inteval of Fast advertisement in ms.
+//	<i> Default: 100
+//	<id> hid_fast_adv
 #define APP_HID_FAST_ADV				(100) //100 ms
 
 /** @brief APP_HID_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
+//	<o> Advertisement Timeout <1000-10000:50>
+//	<i> Defines inteval at which advertisement timout in ms.
+//	<i> Default: 1000
+//	<id> hid_adv_timeout
 #define APP_HID_ADV_TIMEOUT				(1000) // 100 Secs
 
 /** @brief scan_resp_len is the length of the scan response data */
+//	<o> Scan Response Buffer <1-20>
+//	<i> Defines size of buffer for scan response.
+//	<i> Default: 10
+//	<id> hid_scan_resp_len
 #define SCAN_RESP_LEN					(10)
 
 /** @brief Advertisement data appearance len */
-#define ADV_DATA_APPEARANCE_LEN			 (2)
+#define ADV_DATA_APPEARANCE_LEN			(2)
 
 /** @brief Advertisement appearance type  */
 #define ADV_DATA_APPEARANCE_TYPE		(0x19)
 
 #define ADV_DATA_NAME_LEN				(9)
 #define ADV_DATA_NAME_TYPE				(0x09)
-#define ADV_DATA_NAME_DATA				"ATMEL-HID"
+
+//	<s.9>	Advertising String
+//	<i>	String Descriptor describing in advertising packet.
+//	<id> hid_sensor_adv_data_name_data
+#define ADV_DATA_NAME_DATA				("ATMEL-HID")
 
 #define ADV_DATA_UUID_LEN				(2)
 
@@ -301,4 +326,6 @@ void hid_prf_boot_mousereport_update(at_ble_handle_t conn_handle, uint8_t serv_i
 void hid_prf_boot_keyboardreport_update(at_ble_handle_t conn_handle, uint8_t serv_inst, uint8_t *bootreport, uint16_t len);
 
 #endif /*__HID_DEVICE_H__*/
+// </h>
 
+// <<< end of configuration section >>>

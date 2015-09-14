@@ -47,6 +47,9 @@
  *Support</a>
  */
 
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> HID Service Configuration
+// =======================
 #ifndef __HID_H__
 #define __HID_H__
 
@@ -272,4 +275,8 @@ void hid_boot_mousereport_update(at_ble_handle_t conn_handle, uint8_t serv_inst,
 void hid_boot_keyboardreport_update(at_ble_handle_t conn_handle, uint8_t serv_inst, uint8_t *bootreport, uint16_t len);
 
 uint8_t hid_get_reportchar(uint16_t handle, uint8_t serv, uint8_t reportid);
+
 #endif /*__HID_H__*/
+// </h>
+
+// <<< end of configuration section >>>

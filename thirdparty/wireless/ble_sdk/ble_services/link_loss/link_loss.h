@@ -43,7 +43,9 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Link Loss Service Configuration
+// =======================
 
 #ifndef __LINK_LOSS_H__
 #define __LINK_LOSS_H__
@@ -51,6 +53,11 @@
 #include "at_ble_api.h"
 #include "ble_utils.h"
 #include "ble_manager.h"
+
+//  <q> Enable Link Loss Service GATT Server Role
+//  <i> Defines to support GATT Server Role
+//  <id> lls_server
+#define LLS_SERVER 0
 
  #if defined LLS_GATT_SERVER
 
@@ -120,7 +127,13 @@ uint8_t lls_set_alert_value(at_ble_characteristic_changed_t *change_params, gatt
 
 #endif //LLS_GATT_SERVER
 
+//  <q> Enable Link Loss Service GATT Client Role
+//  <i> Defines to support GATT Client Role
+//  <id> lls_client
+#define LLS_CLIENT 0
+
 #if defined LLS_GATT_CLIENT
+
 #define MAX_LLS_CHAR_SIZE                       (1)
 
 /* Link Loss write offset value */
@@ -130,7 +143,7 @@ uint8_t lls_set_alert_value(at_ble_characteristic_changed_t *change_params, gatt
 #define LLS_WRITE_LENGTH                        (1)
 
 /* Link Loss write with response */
-#define LLS_WRITE_WITH_RESPONSE         (true)
+#define LLS_WRITE_WITH_RESPONSE                 (true)
 
 /* Link Loss no signed write */
 #define LLS_NO_SIGNED_WRITE                     (false)
@@ -142,12 +155,21 @@ uint8_t lls_set_alert_value(at_ble_characteristic_changed_t *change_params, gatt
 #define LLS_READ_OFFSET                         (0)
 
 /* Link Loss invalid character handler*/
-#define LLS_INVALID_CHAR_HANDLE                  (0)
+#define LLS_INVALID_CHAR_HANDLE                 (0)
 
 /* Link Loss invalid read response value */
-#define LLS_READ_RESP_INVALID                    (-1)
+#define LLS_READ_RESP_INVALID                   (0xFF)
 
-#define LLS_ALERT_LEVEL                          LLS_HIGH_ALERT
+//  <o> Link Loss Alert Value <0=> Low
+//                            <1=> Mild
+//                            <2=> High
+//  <i> Defines default linkloss alert value .
+//  <i> Default: 2
+//  <id> lls_alert_level
+#define LLS_LEVEL                               (2)
+
+
+#define LLS_ALERT_LEVEL                         LLS_HIGH_ALERT
 
 typedef enum {
   LLS_NO_ALERT,
@@ -205,3 +227,6 @@ int8_t lls_alert_read_response(at_ble_characteristic_read_response_t *read_resp,
 #endif //LLS_GATT_CLIENT
 
 #endif /* __LINK_LOSS_H__ */
+// </h>
+
+// <<< end of configuration section >>>

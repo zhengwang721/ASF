@@ -82,7 +82,7 @@ enum interface_type {
 	/// UART Interface is used [Default]
 	AT_BLE_UART = 1,
 	/// SPI interface is used
-	SPI
+	AT_BLE_SPI
 };
 
 /**@struct	platform_config
@@ -132,7 +132,7 @@ at_ble_status_t platform_init(void* platform_params);
   * @param[in] len length of data
   *
   */
-int platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t len);
+at_ble_status_t platform_interface_send(uint8_t if_type, uint8_t *data, uint32_t len);
 
 ///@cond IGNORE_DOXYGEN 
 
@@ -206,7 +206,7 @@ void platform_event_signal(void);
   * @param[in] timeout timeout in ms passed by user
   *
   */
-uint8_t platform_event_wait(uint32_t timeout);
+at_ble_status_t platform_event_wait(uint32_t timeout);
 
 uint8_t platform_sleep(uint32_t sleepms);
 
@@ -226,5 +226,5 @@ void platform_wakeup(void);
 void platform_set_sleep(void);
 void platform_enter_critical_section(void);
 void platform_leave_critical_section(void);
-
+void platform_cleanup(void);
 #endif // __PLATFORM_H__

@@ -47,6 +47,9 @@
  *Support</a>
  */
 
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Custom Serial Chat Service Configuration
+// =======================
 #ifndef __CSCS_H__
 #define __CSCS_H__
 
@@ -89,3 +92,6 @@ at_ble_status_t csc_serv_send_data(uint16_t connhandle, uint8_t *databuf, uint8_
 
 
 #endif /*__CSCS_H__*/
+// </h>
+
+// <<< end of configuration section >>>

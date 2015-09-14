@@ -46,13 +46,28 @@
 #ifndef __ALERT_NOTIFICATION_H__
 #define __ALERT_NOTIFICATION_H__
 
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Alert Notification Service Configuration
+// =======================
 
 #define ANP_INVALID_CHAR_HANDLE				(0)
 
+//  <o> Characteristics read Lenght <0-100>
+//  <i> Defines number of bytes to characteristics read length .
+//  <i> Default: 20
+//  <id> anp_read_length
 #define ANP_READ_LENGTH                     (20)
 
 /* Link Loss read offset length*/
+//  <o> Characteristics read Offset <0-100>
+//  <i> Defines offset value to read characteristics.
+//  <i> Default: 20
+//  <id> anp_read_offset
 #define ANP_READ_OFFSET                     (0)
+
+#define SUPPORTED_NEW_ALERT_READ			(1)
+#define SUPPORTED_UNREAD_ALERT_READ			(2)
+#define ALERT_CONTRL_POINT_READ				(3)
 
 #define ANS_SUP_NEW_READ_LENGTH				(20)
 #define ANS_NEW_ALERT_READ_LENGTH			(20)
@@ -95,7 +110,7 @@ typedef struct gatt_anp_handler
  */
 at_ble_status_t anp_alert_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti);
 
-void anp_alert_read_response (at_ble_characteristic_read_response_t *read_resp, gatt_anp_handler_t *anp_handler);
+uint8_t anp_alert_read_response (at_ble_characteristic_read_response_t *read_resp, gatt_anp_handler_t *anp_handler);
 
 at_ble_status_t anp_alert_read(at_ble_handle_t conn_handle, at_ble_handle_t char_handle);
 
@@ -103,3 +118,6 @@ at_ble_status_t anp_alert_write(at_ble_handle_t conn_handle,at_ble_handle_t desc
 void anp_alert_notify_response (at_ble_notification_recieved_t *notify_resp, gatt_anp_handler_t *anp_handler);
 
 #endif /* __ALERT_NOTIFICATION_H__ */
+// </h>
+
+// <<< end of configuration section >>>

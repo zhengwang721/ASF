@@ -116,7 +116,7 @@ at_ble_status_t anp_alert_read(at_ble_handle_t conn_handle,at_ble_handle_t char_
 	return (AT_BLE_ATT_INVALID_HANDLE);
 }
 
-void anp_alert_read_response (at_ble_characteristic_read_response_t *read_resp, gatt_anp_handler_t *anp_handler)
+uint8_t anp_alert_read_response (at_ble_characteristic_read_response_t *read_resp, gatt_anp_handler_t *anp_handler)
 {
 	/* Supported New Alert Category */
 	if(read_resp->char_handle == anp_handler->supp_new_char_handle)
@@ -178,6 +178,8 @@ void anp_alert_read_response (at_ble_characteristic_read_response_t *read_resp, 
 		
 		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
 		DBG_LOG_DEV("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
+		
+		return SUPPORTED_NEW_ALERT_READ;
 	}
 
 	/* Supported Unread Alert Category */
@@ -238,6 +240,7 @@ void anp_alert_read_response (at_ble_characteristic_read_response_t *read_resp, 
 
 		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
 		DBG_LOG_DEV("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
+		return SUPPORTED_UNREAD_ALERT_READ;
 	}
 		
 		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
@@ -249,7 +252,9 @@ void anp_alert_read_response (at_ble_characteristic_read_response_t *read_resp, 
 		DBG_LOG_DEV("Alert Notification Characteristic read response %02x handler",read_resp->char_handle);
 		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
 		DBG_LOG_DEV("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
+		return ALERT_CONTRL_POINT_READ;
 	}
+	return 0;
 }
 
 
@@ -260,8 +265,6 @@ void anp_alert_notify_response (at_ble_notification_recieved_t *notify_resp, gat
 	
 	if (notify_resp->char_handle == anp_handler->new_alert_char_handle)
 	{
-		if (notify_resp->char_value[1] != 0)
-		{
 			DBG_LOG("New Alert received");
 			DBG_LOG("The no of new alerts are %d",notify_resp->char_value[1]);
 			DBG_LOG("The alert type is :");
@@ -280,11 +283,9 @@ void anp_alert_notify_response (at_ble_notification_recieved_t *notify_resp, gat
 			{
 				DBG_LOG("%s alert",bitmask1[(notify_resp->char_value[0])]);
 			}
-		}	
+			
 	}	else if (notify_resp->char_handle == anp_handler->unread_alert_char_handle) {
 		
-		if (notify_resp->char_value[1] != 0)
-		{
 			DBG_LOG("Unread alert received");
 			DBG_LOG("The no of unread alerts are %d",notify_resp->char_value[1]);
 			DBG_LOG("The alert type is :");
@@ -303,6 +304,6 @@ void anp_alert_notify_response (at_ble_notification_recieved_t *notify_resp, gat
 			{
 				DBG_LOG("%s alert",bitmask1[(notify_resp->char_value[0])]);
 			}
-		}
+		
 	}
 }

@@ -46,6 +46,9 @@
  *Support</a>
  */
 
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Proximity Monitor Profile Configuration
+// =======================
 #ifndef __PXP_MONITOR_H__
 #define __PXP_MONITOR_H__
 
@@ -57,8 +60,20 @@ typedef enum {
 	AD_TYPE_COMPLETE_LOCAL_NAME = 0x09
 } AD_TYPE;
 
+//   <o> Rssi Prameter Update Interval <1-10>
+//   <i> Defines inteval at which rssi value get updated.
+//   <i> Default: 1
 #define PXP_RSSI_UPDATE_INTERVAL        (0x01)
+
+
+//   <o> Low Alert Range Value 
+//   <i> Defines inteval at which Low Alert get triggers.
+//   <i> Default: -70
 #define PXP_LOW_ALERT_RANGE             (-70)
+
+//   <o> High Alert Range Value 
+//   <i> Defines inteval at which High Alert get triggers.
+//   <i> Default: -90
 #define PXP_HIGH_ALERT_RANGE            (-90)
 
 #define PXP_ASCII_TO_DECIMAL_VALUE      ('0')
@@ -188,3 +203,6 @@ at_ble_status_t pxp_monitor_connect_request(at_ble_scan_info_t *scan_buffer,
 		uint8_t index);
 
 #endif /*__PXP_MONITOR_H__*/
+// </h>
+
+// <<< end of configuration section >>>

@@ -45,6 +45,9 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
  * Support</a>
  */
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Blood Pressure Service Configuration
+// =======================
 
 #ifndef __BLOOD_PRESSURE_H__
 #define __BLOOD_PRESSURE_H__
@@ -198,3 +201,6 @@ uint8_t blp_char_change_handler(blp_gatt_service_handler_t *blp_primary_service,
 		at_ble_characteristic_changed_t *params);
 
 #endif /* __BLOOD_PRESSURE_H__ */
+// </h>
+
+// <<< end of configuration section >>>
