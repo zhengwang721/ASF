@@ -79,7 +79,7 @@ uint8_t unread_alert_char_data[ANS_UNREA_ALERT_READ_LENGTH];
 uint8_t alert_np_char_data[ANS_ALERT_NP_READ_LENGTH];
 
 /*Support ANP Service Handle*/
-gatt_anp_handler_t anp_handle = {0,0,0,0,AT_BLE_INVALID_PARAM, NULL, AT_BLE_INVALID_PARAM, NULL, AT_BLE_INVALID_PARAM,\
+gatt_anp_handler_t anp_handle = {0,0,AT_BLE_SUCCESS,AT_BLE_SUCCESS,AT_BLE_INVALID_PARAM, NULL, AT_BLE_INVALID_PARAM, NULL, AT_BLE_INVALID_PARAM,\
 AT_BLE_INVALID_PARAM, NULL, AT_BLE_INVALID_PARAM, NULL,AT_BLE_INVALID_PARAM,AT_BLE_INVALID_PARAM, NULL};
 #endif
 
@@ -192,6 +192,7 @@ at_ble_status_t anp_info_service_discover(at_ble_connected_t *conn_params)
 void anp_client_connected_state_handler(at_ble_connected_t *params)
 {
 	connected_cb(true);
+	ALL_UNUSED(params);  //To avoid compiler warning
 }
 
 /**
@@ -438,6 +439,8 @@ void anp_client_disconnected_event_handler(at_ble_disconnected_t *params)
 	{
 		DBG_LOG("Device in Advertisement mode");
 	}
+
+	ALL_UNUSED(params);  //To avoid compiler warning
 }
 
 

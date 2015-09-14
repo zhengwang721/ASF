@@ -60,7 +60,7 @@
 #include "ble_manager.h"
 #include "scan_parameter_app.h"
 
-
+bool app_exec  = true;
 /* === GLOBALS ============================================================ */
 
 #define SCAN_PRAM_UPDATE_INTERVAL	(5) //5 second
@@ -142,7 +142,7 @@ int main(void)
 	register_ble_notification_confirmed_cb(sps_notification_confirmed_cb);
 	
 	/* Capturing the events  */ 
-	while (1) {
+	while (app_exec) {
 		/* BLE Event Task */
 		ble_event_task();
 		if (timer_cb_done)
@@ -212,6 +212,7 @@ void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 	hw_timer_stop();
 	sps_service_advertise();
 	LED_Off(LED0);
+        ALL_UNUSED(conn_handle);
 }
 
 /**
@@ -235,3 +236,4 @@ void button_cb(void)
 {
 	button_pressed = true;
 }
+

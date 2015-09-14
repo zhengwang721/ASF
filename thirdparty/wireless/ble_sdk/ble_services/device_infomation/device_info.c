@@ -319,5 +319,6 @@ at_ble_status_t dis_info_update(dis_gatt_service_handler_t *dis_serv , dis_info_
 	} else {
 		return AT_BLE_SUCCESS;
 	}
+        ALL_UNUSED(conn_handle);
 	return AT_BLE_FAILURE;
 }

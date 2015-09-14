@@ -221,7 +221,8 @@ bool hid_mouse_move(int8_t pos, uint8_t index_report)
 	app_mouse_report[index_report] = (uint8_t) s16_newpos;
 	return true;
 }
-
+/** To keep the app executing continously*/
+bool app_exec = true;
 int main(void )
 {		
 #if SAMG55
@@ -254,7 +255,7 @@ int main(void )
 	notify_control_point_handler(hid_prf_control_point_ntf_cb);
 	
 	/* Capturing the events  */
-	while(1)
+	while(app_exec)
 	{
 		ble_event_task();
 		

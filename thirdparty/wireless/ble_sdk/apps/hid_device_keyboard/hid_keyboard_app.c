@@ -204,6 +204,8 @@ void hid_keyboard_app_init(void)
 	}
 }
 
+bool app_exec = true;
+
 int main(void )
 {
 	
@@ -237,7 +239,7 @@ int main(void )
 	notify_control_point_handler(hid_prf_control_point_ntf_cb);
 	
 	/* Capturing the events  */
-	while(1)
+	while(app_exec)
 	{
 		ble_event_task();
 				

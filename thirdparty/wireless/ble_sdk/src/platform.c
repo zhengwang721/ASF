@@ -453,7 +453,7 @@ void serial_tx_callback(void)
  
  void platform_start_timer(uint32_t timeout)
  {
-	 
+	 ALL_UNUSED(timeout); //To avoid compiler warning
  }
  
  void platform_stop_timer(void)

@@ -65,7 +65,7 @@ uint8_t scan_length;
 
 /* /user can set the advertisement type, it is set as scannable undirected by
  * default. */
-uint8_t adv_type = ADV_TYPE_NONCONN_UNDIRECTED;
+uint32_t adv_type = ADV_TYPE_NONCONN_UNDIRECTED;
 
 /* /user can set the data type, it is set as part of advertisement data by
  * default. */
@@ -174,7 +174,7 @@ status_t brd_set_data_type(uint8_t type)
 
 void brd_start_broadcast(void)
 {
-	uint8_t status;
+	at_ble_status_t status;
 
 	if (at_ble_adv_data_set(adv_data, adv_length, scan_rsp_data,
 			scan_length) != AT_BLE_SUCCESS) {
@@ -185,7 +185,7 @@ void brd_start_broadcast(void)
 	}
 
 	if ((status
-				= at_ble_adv_start(adv_type,
+				= at_ble_adv_start((at_ble_adv_type_t)adv_type,
 					AT_BLE_ADV_GEN_DISCOVERABLE,
 					NULL, AT_BLE_ADV_FP_ANY,
 					APP_BROADCAST_FAST_ADV,

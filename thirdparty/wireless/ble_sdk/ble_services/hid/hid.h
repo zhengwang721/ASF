@@ -108,7 +108,8 @@ typedef enum
 
 /**@brief HID information flag value
 */
-typedef enum
+/*
+enum
 {
 	/// Device is designed to be capable of providing wake-up signal to a HID host
 	HID_REMOTE_WAKE_UP           = 0x01,
@@ -116,6 +117,7 @@ typedef enum
 	/// Device is normally connectable
 	HIDS_NORMALLY_CONNECTABLE    = 0x02,
 }hid_info_flag;
+*/
 
 
 /**@brief HID control point

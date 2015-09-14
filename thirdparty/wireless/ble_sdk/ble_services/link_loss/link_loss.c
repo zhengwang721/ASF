@@ -182,7 +182,7 @@ at_ble_status_t lls_alert_level_write(at_ble_handle_t conn_handle,
 	       char_handle,
 	       LLS_WRITE_OFFSET,
 	       LLS_WRITE_LENGTH,
-	       &alert_level,
+	       (uint8_t *)&alert_level,
 	       LLS_NO_SIGNED_WRITE,
 	       LLS_WRITE_WITH_RESPONSE));
 }

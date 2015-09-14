@@ -494,6 +494,7 @@ void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect)
 void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update)
 {
 	DBG_LOG_DEV("AT_BLE_CONN_PARAM_UPDATE ");
+	ALL_UNUSED(conn_param_update);  //To avoid compiler warning
 }
 
 void ble_conn_param_update_req(at_ble_conn_param_update_request_t * conn_param_req)
@@ -549,6 +550,7 @@ void ble_slave_security_handler(at_ble_slave_sec_request_t* slave_sec_req)
 		{
 			features.bond = false;
 			features.mitm_protection = false;
+			DBG_LOG(" != AT_BLE_SUCCESS ");
 			at_ble_authenticate(slave_sec_req->handle, &features, NULL, NULL);
 			
 		}
@@ -613,6 +615,7 @@ void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 			}			
 		}
 	}
+	ALL_UNUSED(at_ble_pair_req);  //To avoid compiler warning
 }
 
 /** @brief function handles pair key request */

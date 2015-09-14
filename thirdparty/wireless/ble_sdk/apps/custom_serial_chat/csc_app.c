@@ -130,7 +130,7 @@ void csc_app_recv_buf(uint8_t *recv_data, uint8_t recv_len)
 		DBG_LOG("\r\n");
 	}
 }
-
+bool app_exec = true;
 int main(void )
 {
 
@@ -157,7 +157,7 @@ int main(void )
 	notify_recv_ntf_handler(csc_prf_report_ntf_cb);
 	
 	/* Capturing the events  */
-	while(1)
+	while(app_exec)
 	{
 		ble_event_task();
 		csc_app_send_buf();	

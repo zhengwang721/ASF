@@ -64,7 +64,7 @@
 ****************************************************************************************/
 
 /** @brief  DEFAULT_TX_PWR_VALUE the tx power value*/
-#define DEFAULT_TX_PWR_VALUE			(-3)
+#define DEFAULT_TX_PWR_VALUE			(0)
 
 
 /** @brief count of included service in tx power service
