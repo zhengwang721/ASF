@@ -570,6 +570,8 @@ typedef enum
 #define	BLE_SCAN_DATA_HANDLER						pxp_monitor_scan_data_handler
 #define BLE_CHARACTERISTIC_READ_RESPONSE			pxp_monitor_characteristic_read_response
 #define BLE_CHARACTERISTIC_FOUND_HANDLER			pxp_monitor_characteristic_found_handler
+#define BLE_SLAVE_SEC_REQUEST						ble_slave_security_handler
+#define BLE_PAIR_KEY_REQUEST						ble_pair_key_request_handler
 #endif /* PROXIMITY_MONITOR */
 
 /** @brief initializing function handlers for ANP client*/
