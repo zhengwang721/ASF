@@ -51,12 +51,12 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_events_group SAM Event System (EVENTS) Driver 
+ * \defgroup asfdoc_sam0_events_group SAM Event System (EVENTS) Driver
  *
- * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
- * an interface for the configuration and management of the device's peripheral 
- * event resources and users within the device, including enabling and disabling 
- * of peripheral source selection and synchronization of clock domains between 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides
+ * an interface for the configuration and management of the device's peripheral
+ * event resources and users within the device, including enabling and disabling
+ * of peripheral source selection and synchronization of clock domains between
  * various modules. The following API modes is covered by this manual:
  *  - Polled API
  * \if EVENTS_INTERRUPT_HOOK_MODE
@@ -69,7 +69,7 @@ extern "C" {
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D09/D10/D11
  *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21

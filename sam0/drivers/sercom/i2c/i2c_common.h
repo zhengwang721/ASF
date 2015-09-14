@@ -62,9 +62,9 @@ extern "C" {
  *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C Slave Mode (SERCOM I2C) Driver
  * \endif
  *
- * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
- * an interface for the configuration and management of the device's SERCOM 
- * I<SUP>2</SUP>C module, for the transfer of data via an I<SUP>2</SUP>C bus. 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides
+ * an interface for the configuration and management of the device's SERCOM
+ * I<SUP>2</SUP>C module, for the transfer of data via an I<SUP>2</SUP>C bus.
  * The following driver API modes are covered by this manual:
  *
  * \if I2C_MASTER_MODE
@@ -86,7 +86,7 @@ extern "C" {
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D09/D10/D11
  *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
@@ -396,19 +396,17 @@ extern "C" {
  * \name Driver Feature Definition
  * Define SERCOM I<SUP>2</SUP>C driver features set according to different device family.
  *
- * \note The high speed mode and 10-bit address feature are not
- *       supported by the driver now.
  * @{
  */
 #if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAMDA1) || \
-	(SAML22) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
+	(SAML22) || (SAMC20) || (SAMC21) || (SAMD09) || defined(__DOXYGEN__)
 /** Fast mode plus and high speed support. */
 #  define FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
-/** 10-bit address support. */
+/** 10-bit address support */
 #  define FEATURE_I2C_10_BIT_ADDRESS
-/** SCL stretch mode support. */
+/** SCL stretch mode support */
 #  define FEATURE_I2C_SCL_STRETCH_MODE
-/** SCL extend timeout support. */
+/** SCL extend timeout support */
 #  define FEATURE_I2C_SCL_EXTEND_TIMEOUT
 #  define FEATURE_I2C_DMA_SUPPORT
 #endif
@@ -534,6 +532,41 @@ enum i2c_transfer_direction {
  *
  * \page asfdoc_sam0_sercom_i2c_document_revision_history Document Revision History
  *
+ * \if (I2C_MASTER_MODE || I2C_MASTER_CALLBACK_MODE)
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>42117E</td>
+ *		<td>08/2015</td>
+ *		<td>Added support for SAM L21/L22, SAM DA1 and SAM C21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>42117D</td>
+ *		<td>12/2014</td>
+ *		<td>Added support for 10-bit addressing and high speed in SAM D21.
+ *		    Added support for SAM R21 and SAM D10/D11.</td>
+ *	</tr>
+ *	<tr>
+ *		<td>42117C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAM D21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>42117B</td>
+ *		<td>06/2013</td>
+ *		<td>Corrected documentation typos. Updated I<SUP>2</SUP>C Bus State Diagram.</td>
+ *	</tr>
+ *	<tr>
+ *		<td>42117A</td>
+ *		<td>06/2013</td>
+ *		<td>Initial release</td>
+ *	</tr>
+ * </table>
+ * \else
  * <table>
  *	<tr>
  *		<th>Doc. Rev.</td>
@@ -554,7 +587,7 @@ enum i2c_transfer_direction {
  *	<tr>
  *		<td>42116C</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAM D21 to the application note</td>
+ *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
  *		<td>42116B</td>
@@ -567,6 +600,7 @@ enum i2c_transfer_direction {
  *		<td>Initial release</td>
  *	</tr>
  * </table>
+ *\endif
  */
 
 #endif /* I2C_COMMON_H_INCLUDED */

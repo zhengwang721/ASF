@@ -50,9 +50,9 @@
 /**
  * \defgroup asfdoc_sam0_sercom_spi_group SAM Serial Peripheral Interface (SERCOM SPI) Driver
  *
- * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
- * an interface for the configuration and management of the SERCOM module in 
- * its SPI mode to transfer SPI  data frames. The following driver API modes 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides
+ * an interface for the configuration and management of the SERCOM module in
+ * its SPI mode to transfer SPI  data frames. The following driver API modes
  * are covered by this manual:
  *
  * - Polled APIs
@@ -66,7 +66,7 @@
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D09/D10/D11
  *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
@@ -210,8 +210,8 @@
  *
  * If constant transmission of data is needed in SPI slave mode, the system
  * clock should be faster than SCK.
- * If the receiver is enabled, the received character can be read from the  
- * receive buffer. When SS line is driven high, the slave will not receive any 
+ * If the receiver is enabled, the received character can be read from the
+ * receive buffer. When SS line is driven high, the slave will not receive any
  * additional data.
  *
  * \subsubsection asfdoc_sam0_sercom_spi_slave_mode_addr_recognition Address Recognition
@@ -388,7 +388,7 @@ extern "C" {
  * @{
  */
 #  if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAML21) || (SAMDA1) || \
-		(SAML22) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
+	  (SAML22) || (SAMC20) || (SAMC21) || (SAMD09) || defined(__DOXYGEN__)
 /** SPI slave select low detection. */
 #  define FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 /** Slave select can be controlled by hardware. */
@@ -532,8 +532,8 @@ enum spi_frame_format {
 /**
  * \brief SPI signal MUX settings
  *
- * Set the functionality of the SERCOM pins. As not all combinations can be used 
- * in different modes of operation, proper combinations must be chosen according 
+ * Set the functionality of the SERCOM pins. As not all combinations can be used
+ * in different modes of operation, proper combinations must be chosen according
  * to the rest of the configuration.
  *
  * \note In master operation: DI is MISO, DO is MOSI.
@@ -1463,7 +1463,7 @@ enum status_code spi_select_slave(
   *
   * The following lists the possible internal SERCOM module pad function
   * assignments for the four SERCOM pads in both SPI Master and SPI Slave
-  * modes. They are combinations of DOPO and DIPO in CTRLA. 
+  * modes. They are combinations of DOPO and DIPO in CTRLA.
   * Note that this is in addition to the physical GPIO pin MUX of the device,
   * and can be used in conjunction to optimize the serial data pin-out.
   *

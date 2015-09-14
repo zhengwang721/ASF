@@ -50,9 +50,9 @@
 /**
  * \defgroup asfdoc_sam0_sercom_usart_group SAM Serial USART (SERCOM USART) Driver
  *
- * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides 
- * an interface for the configuration and management of the SERCOM module in 
- * its USART mode to transfer or receive USART data frames. The following driver 
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides
+ * an interface for the configuration and management of the SERCOM module in
+ * its USART mode to transfer or receive USART data frames. The following driver
  * API modes are covered by this manual:
  *
  *  - Polled APIs
@@ -66,6 +66,7 @@
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D09/D10/D11
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM DA1
@@ -99,35 +100,35 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_SYNC_SCHEME_V2</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D09/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_OVER_SAMPLE</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D09/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_HARDWARE_FLOW_CONTROL</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D09/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IRDA</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D09/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_LIN_SLAVE</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D09/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_COLLISION_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D09/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_START_FRAME_DECTION</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D09/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D09/D10/D11/L21/L22/DA1/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_RS485</td>
@@ -279,7 +280,7 @@ extern "C" {
  * Define SERCOM USART features set according to different device family.
  * @{
  */
-#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || \
+#if (SAMD21) || (SAMR21) || (SAMD09) || (SAMD10) || (SAMD11) || (SAML21) || \
 	(SAML22) ||(SAMDA1) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** Usart sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2
@@ -715,7 +716,7 @@ enum rs485_guard_time {
 	RS485_GUARD_TIME_6_BIT,
 	/** The guard time is 7-bit times */
 	RS485_GUARD_TIME_7_BIT,
-};	
+};
 #endif
 
 /**
@@ -825,7 +826,7 @@ struct usart_config {
 	 *
 	 * If current USARTx has several alternative multiplexing I/O pins for PAD0, then
 	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD0
-	 * function. Make sure that no other alternative multiplexing I/O is associated 
+	 * function. Make sure that no other alternative multiplexing I/O is associated
 	 * with the same USARTx PAD0.
 	 */
 	uint32_t pinmux_pad0;
@@ -833,7 +834,7 @@ struct usart_config {
 	 *
 	 * If current USARTx has several alternative multiplexing I/O pins for PAD1, then
 	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD1
-	 * function. Make sure that no other alternative multiplexing I/O is associated 
+	 * function. Make sure that no other alternative multiplexing I/O is associated
 	 * with the same USARTx PAD1.
 	 */
 	uint32_t pinmux_pad1;
@@ -841,7 +842,7 @@ struct usart_config {
 	 *
 	 * If current USARTx has several alternative multiplexing I/O pins for PAD2, then
 	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD2
-	 * function. Make sure that no other alternative multiplexing I/O is associated 
+	 * function. Make sure that no other alternative multiplexing I/O is associated
 	 * with the same USARTx PAD2.
 	 */
 	uint32_t pinmux_pad2;
@@ -849,7 +850,7 @@ struct usart_config {
 	 *
 	 * If current USARTx has several alternative multiplexing I/O pins for PAD3, then
 	 * only one peripheral multiplexing I/O can be enabled for current USARTx PAD3
-	 * function. Make sure that no other alternative multiplexing I/O is associated 
+	 * function. Make sure that no other alternative multiplexing I/O is associated
 	 * with the same USARTx PAD3.
 	 */
 	uint32_t pinmux_pad3;
