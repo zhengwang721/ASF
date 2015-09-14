@@ -415,12 +415,16 @@ void serial_tx_callback(void)
 		if(bus_type == AT_BLE_UART)
 		{
 			if(ext_wakeup_state > 0)
-			ext_wakeup_state--;
+			{
+				ext_wakeup_state--;
+			}
+
+			#ifndef DTM_MODE			
 			if(ext_wakeup_state == 0)
 			{
 				ble_wakeup_pin_set_low();
-			}			  
-			
+			}
+			#endif			
 		}
 	}	
 #endif
@@ -437,7 +441,9 @@ void serial_tx_callback(void)
  void platform_set_sleep(void)
  {
 	 #if defined ENABLE_POWER_SAVE
+ 	#ifndef DTM_MODE
 		ble_wakeup_pin_set_low();
+	#endif
 	 #endif
  }
  

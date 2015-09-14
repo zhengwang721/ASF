@@ -9,7 +9,7 @@
 		<require idref="thirdparty.wireless.ble_sdk.src"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.serial_bridge"/>
-    <require idref="thirdparty.wireless.ble_sdk.utils"/>
+		<build type="define" name="DTM_MODE" value=""/>
 		<device-support-alias value="ble_stack_lib_support"/>
 		
 		<info type="keyword" value="technology">
