@@ -61,11 +61,12 @@
 #include "hid_device.h"
 #ifdef HID_KEYBOARD_DEVICE
 #define BLE_DEVICE_NAME				"ATMEL-HIDK"
-#define BLE_MITM_REQ				(false)
-#define BLE_BOND_REQ				(false)
-#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
-#define BLE_IO_CAPABALITIES			(AT_BLE_IO_CAP_NO_INPUT_NO_OUTPUT)
+#define BLE_MITM_REQ				(true)
+#define BLE_BOND_REQ				(true)
+#define BLE_AUTHENTICATION_LEVEL	        (AT_BLE_MODE1_L2_AUTH_PAIR_ENC)
+#define BLE_IO_CAPABALITIES			(AT_BLE_IO_CAP_KB_ONLY)
 #endif
+
 #ifdef HID_MOUSE_DEVICE
 #define BLE_DEVICE_NAME				"ATMEL-HIDM"
 #define BLE_MITM_REQ				(false)
@@ -107,7 +108,7 @@
 #include "time_info.h"
 #define BLE_MITM_REQ				(false)
 #define BLE_BOND_REQ				(false)
-#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
+#define BLE_AUTHENTICATION_LEVEL	        (AT_BLE_NO_SEC)
 #define BLE_DEVICE_NAME				"ATMEL-TIP"
 #endif /* TIP_CLIENT */
 
@@ -120,7 +121,7 @@
 #include "alert_notification_profile.h"
 #define BLE_MITM_REQ				(false)
 #define BLE_BOND_REQ				(false)
-#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
+#define BLE_AUTHENTICATION_LEVEL	        (AT_BLE_NO_SEC)
 #define BLE_DEVICE_NAME				"ATMEL-ANP"
 #endif /* ANP_SIG_CLIENT */
 
@@ -128,7 +129,7 @@
 #include "pas_client.h"
 #define BLE_MITM_REQ				(false)
 #define BLE_BOND_REQ				(false)
-#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
+#define BLE_AUTHENTICATION_LEVEL	        (AT_BLE_NO_SEC)
 #define BLE_DEVICE_NAME				"ATMEL-PAS"
 #endif /* PAS_CLIENT */
 
@@ -136,7 +137,7 @@
 #include "cscp.h"
 #define BLE_MITM_REQ				(false)
 #define BLE_BOND_REQ				(false)
-#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
+#define BLE_AUTHENTICATION_LEVEL	        (AT_BLE_NO_SEC)
 #define BLE_DEVICE_NAME				"ATMEL-CSC"
 #endif /* CSC_DEVICE */
 
@@ -146,7 +147,7 @@
 #endif
 
 /** @brief event timeout */
-#define BLE_EVENT_TIMEOUT			(-1)
+#define BLE_EVENT_TIMEOUT			(20)
 
 /* Dummy BLE handler's for unused functions */
 static inline void ble_dummy_handler(void *param)
@@ -168,7 +169,7 @@ static inline at_ble_status_t BLE_UNUSED2_VAR(void *param1_var, void *param2_var
 #define LE_LIMITED_DISCOVERABLE_MODE  ((uint8_t) 1 << 0)
 #define LE_GENERAL_DISCOVERABLE_MODE  ((uint8_t) 1 << 1)
 #define BREDR_NOT_SUPPORTED			  ((uint8_t) 1 << 2)
-#define	LE_BREDR_CAPABLE_CONTROLLER   ((uint8_t) 1 << 3)
+#define	LE_BREDR_CAPABLE_CONTROLLER     ((uint8_t) 1 << 3)
 #define LE_BREDR_CAPABLE_HOST		  ((uint8_t) 1 << 4)
 
 /** @brief Length of Adv data types*/
