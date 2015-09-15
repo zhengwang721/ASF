@@ -66,7 +66,7 @@ static ser_fifo_desc_t ble_eusart_tx_fifo;
 static  uint8_t ble_eusart_tx_buf[BLE_MAX_TX_PAYLOAD_SIZE];
 
 static ser_fifo_desc_t ble_eusart_rx_fifo;
-static uint8_t ble_eusart_rx_buf[BLE_MAX_TX_PAYLOAD_SIZE];
+static uint8_t ble_eusart_rx_buf[BLE_MAX_RX_PAYLOAD_SIZE];
 
 extern struct usart_module usart_instance;
 

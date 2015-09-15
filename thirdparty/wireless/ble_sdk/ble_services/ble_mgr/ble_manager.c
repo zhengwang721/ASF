@@ -743,6 +743,11 @@ void ble_encryption_request_handler (at_ble_encryption_request_t *encry_req)
 	{
 		key_found = true;
 	}
+        else
+        {
+          DBG_LOG("Pairing information of peer device is not available."); 
+          DBG_LOG("Please unpair the device from peer device(mobile) settings menu and start pairing again");
+        }
 
 	if(!(at_ble_encryption_request_reply(ble_connected_dev_info->handle,auth_info ,key_found, &app_bond_info) == AT_BLE_SUCCESS))
 	{
