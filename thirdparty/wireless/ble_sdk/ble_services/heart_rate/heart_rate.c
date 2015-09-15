@@ -108,8 +108,8 @@ void hr_init_service(hr_gatt_service_handler_t *heart_rate_serv)
 	heart_rate_serv->serv_chars[0].value_max_len = HR_MM_FLAGS_SIZE +
 			HR_MM_VAL_SIZE + HR_MM_EX_SIZE + HR_MM_RR_SIZE;
 	heart_rate_serv->serv_chars[0].value_permissions
-		= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
-			AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);                                                                                /*
+		= (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+			AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);                                                                                /*
 	                                                                                                                                         *permissions
 	                                                                                                                                         **/
 	/* user defined name */
@@ -155,8 +155,8 @@ void hr_init_service(hr_gatt_service_handler_t *heart_rate_serv)
 
 	/* permissions */
 	heart_rate_serv->serv_chars[1].value_permissions
-		= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
-			AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+		= (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+			AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
 	/* user defined name */
 	heart_rate_serv->serv_chars[1].user_desc = NULL;
 	heart_rate_serv->serv_chars[1].user_desc_len = 0;
@@ -199,8 +199,8 @@ void hr_init_service(hr_gatt_service_handler_t *heart_rate_serv)
 	heart_rate_serv->serv_chars[2].value_max_len = sizeof(uint8_t);
 	/* permissions */
 	heart_rate_serv->serv_chars[2].value_permissions
-		= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
-			AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+		= (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+			AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
 	/* user defined name */
 	heart_rate_serv->serv_chars[2].user_desc = NULL;
 	heart_rate_serv->serv_chars[2].user_desc_len = 0;
