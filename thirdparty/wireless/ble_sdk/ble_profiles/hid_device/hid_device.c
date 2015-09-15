@@ -105,6 +105,10 @@ void hid_prf_init(void *param)
 				hid_prf_dataref[serv_num]->serv_handle_info = 0;
 			}
 		}
+		else 
+		{
+			hid_serv_def_init(serv_num);
+		}
 		
 	}
 	
@@ -126,6 +130,10 @@ uint8_t hid_prf_conf(hid_prf_info_t *ref)
 	{
 		if(ref->hid_serv_instance && (ref->hid_serv_instance <= HID_MAX_SERV_INST))
 		{
+			if(hid_prf_dataref[ref->hid_serv_instance-1] != NULL)
+			{
+				hid_prf_dataref[ref->hid_serv_instance-1] = NULL;
+			}
 			hid_prf_dataref[ref->hid_serv_instance-1] = ref;
 			return HID_PRF_SUCESS;
 		}

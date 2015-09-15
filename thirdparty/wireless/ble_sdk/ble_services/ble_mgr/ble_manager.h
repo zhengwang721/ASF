@@ -61,16 +61,11 @@
 #include "hid_device.h"
 #ifdef HID_KEYBOARD_DEVICE
 #define BLE_DEVICE_NAME				"ATMEL-HIDK"
-#define BLE_MITM_REQ				(true)
-#define BLE_BOND_REQ				(true)
-#define BLE_AUTHENTICATION_LEVEL	        (AT_BLE_MODE1_L2_AUTH_PAIR_ENC)
 #define BLE_IO_CAPABALITIES			(AT_BLE_IO_CAP_KB_ONLY)
 #endif
 
 #ifdef HID_MOUSE_DEVICE
 #define BLE_DEVICE_NAME				"ATMEL-HIDM"
-#define BLE_MITM_REQ				(false)
-#define BLE_BOND_REQ				(false)
 #endif
 #endif /* HID_DEVICE */
 
@@ -106,9 +101,6 @@
 
 #if defined TIP_CLIENT
 #include "time_info.h"
-#define BLE_MITM_REQ				(false)
-#define BLE_BOND_REQ				(false)
-#define BLE_AUTHENTICATION_LEVEL	        (AT_BLE_NO_SEC)
 #define BLE_DEVICE_NAME				"ATMEL-TIP"
 #endif /* TIP_CLIENT */
 
@@ -119,25 +111,16 @@
 
 #if defined ANP_SIG_CLIENT
 #include "alert_notification_profile.h"
-#define BLE_MITM_REQ				(false)
-#define BLE_BOND_REQ				(false)
-#define BLE_AUTHENTICATION_LEVEL	        (AT_BLE_NO_SEC)
 #define BLE_DEVICE_NAME				"ATMEL-ANP"
 #endif /* ANP_SIG_CLIENT */
 
 #if defined PAS_CLIENT
 #include "pas_client.h"
-#define BLE_MITM_REQ				(false)
-#define BLE_BOND_REQ				(false)
-#define BLE_AUTHENTICATION_LEVEL	        (AT_BLE_NO_SEC)
 #define BLE_DEVICE_NAME				"ATMEL-PAS"
 #endif /* PAS_CLIENT */
 
 #if defined CSC_DEVICE
 #include "cscp.h"
-#define BLE_MITM_REQ				(false)
-#define BLE_BOND_REQ				(false)
-#define BLE_AUTHENTICATION_LEVEL	        (AT_BLE_NO_SEC)
 #define BLE_DEVICE_NAME				"ATMEL-CSC"
 #endif /* CSC_DEVICE */
 

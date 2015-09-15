@@ -483,11 +483,11 @@ void register_ble_indication_confirmed_cb(ble_indication_confirmed_callback_t in
 /** @brief function handles disconnection event received from stack */
 void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect)
 {
+	DBG_LOG("Device disconnected Reason:0x%02x Handle=0x%x", disconnect->reason, disconnect->handle);	
 	if (ble_disconnected_cb != NULL)
 	{
 		ble_disconnected_cb(disconnect->handle);
 	}
-	DBG_LOG("Device disconnected Reason:0x%02x Handle=0x%x", disconnect->reason, disconnect->handle);
 }
 
 /** @brief connection update parameter function */

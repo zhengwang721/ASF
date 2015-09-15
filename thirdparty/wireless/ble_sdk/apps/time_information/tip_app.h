@@ -52,5 +52,6 @@
 
 void timer_callback_handler(void);
 void app_bonding_cb(bool flag);
+void app_read_response_cb(at_ble_characteristic_read_response_t *char_read_resp);
 
 #endif /* __TIP_APP_H__ */
