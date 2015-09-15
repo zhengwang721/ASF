@@ -112,6 +112,8 @@ int main(void)
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);
 	
+	DBG_LOG("Initializing Device Information Service Application");
+	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 	
@@ -123,8 +125,6 @@ int main(void)
 	{
 		DBG_LOG("Device Information Service definition failed,reason %x",status);
 	}
-	
-	DBG_LOG("Initializing Device Information Service Application");
 	
 	device_information_advertise();
 	

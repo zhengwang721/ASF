@@ -116,6 +116,8 @@ int main(void)
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);
 	
+	DBG_LOG("Initializing Scan Parameter Application");
+	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 	
@@ -124,8 +126,6 @@ int main(void)
 	
 	/* Define the primary service in the GATT server database */
 	sps_primary_service_define(&sps_service_handler);
-	
-	DBG_LOG("Initializing Scan Parameter Application");
 	
 	sps_service_advertise();
 	
