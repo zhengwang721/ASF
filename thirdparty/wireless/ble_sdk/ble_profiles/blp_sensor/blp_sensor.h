@@ -70,7 +70,7 @@
 //	<i> Defines inteval at which advertisement timout in ms.
 //	<i> Default: 1000
 //	<id> blp_sensor_adv_timeout
-#define BLP_SENSOR_ADV_TIMEOUT							(1000) // 100 Secs
+#define BLP_SENSOR_ADV_TIMEOUT							(0) // 100 Secs
 
 /** @brief scan_resp_len is the length of the scan response data */
 //	<o> Scan Response Buffer <1-20>

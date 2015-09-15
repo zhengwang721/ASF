@@ -129,8 +129,7 @@ void register_blp_indication_handler(
  */	
 void blp_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
 {
-	if (params->status == AT_BLE_SUCCESS)
-	{
+	if (params->status == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("Notification Successfully sent over the air");
 	} else {
 		DBG_LOG_DEV("Sending Notification over the air failed");
@@ -143,8 +142,7 @@ void blp_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
  */	
 void blp_indication_confirmation_handler(at_ble_indication_confirmed_t *params)
 {
-	if (params->status == AT_BLE_SUCCESS)
-	{
+	if (params->status == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("Indication successfully sent over the air");
 	} else {
 		DBG_LOG_DEV("Sending Notification over the air failed");
@@ -262,8 +260,9 @@ at_ble_status_t blp_sensor_disconnect_event_handler(
 		at_ble_disconnected_t *disconnect)
 {
 	blp_sensor_adv();
-	connected_cb(0);
-        ALL_UNUSED(disconnect);
+	connected_cb(false);
+    ALL_UNUSED(disconnect);
+	
 	return AT_BLE_SUCCESS;
 }
 
@@ -277,8 +276,8 @@ at_ble_status_t blp_sensor_connected_state_handler(
 {
 	connected_cb(1);
 	connection_handle = (at_ble_handle_t)conn_params->handle;
-		return AT_BLE_SUCCESS;
-	
+		
+	return AT_BLE_SUCCESS;
 }
 
 
@@ -377,5 +376,5 @@ void blp_sensor_init(void *param)
 	blp_sensor_service_init();
 	blp_sensor_service_define();
 	blp_sensor_adv();
-        ALL_UNUSED(param);
+    ALL_UNUSED(param);
 }

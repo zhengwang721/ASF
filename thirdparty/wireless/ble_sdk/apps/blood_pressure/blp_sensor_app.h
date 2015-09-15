@@ -133,6 +133,19 @@
 #define YEAR_MAX											(9999)
 
 /**
+ * @brief Blood pressure parameters
+ */
+#define SYSTOLIC_MMHG										(0)
+#define DIASTOLIC_MMHG										(1)
+#define MAP_MMHG											(2)
+#define SYSTOLIC_KPA										(3)
+#define DIASTOLIC_KPA										(4)
+#define MAP_KPA												(5)
+#define PULSE_RATE											(6)
+#define INTERIM_SYS_MMHG									(7)
+#define INTERIM_SYS_KPA										(8)
+
+/**
  * \brief Timer callback handler called on timer expiry
  */
 void timer_callback_handler(void);

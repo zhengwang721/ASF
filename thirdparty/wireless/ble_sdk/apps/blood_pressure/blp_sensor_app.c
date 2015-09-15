@@ -86,12 +86,13 @@ bool app_state;
 
 /** flags for reversing the direction of characteristic*
 	 change for indication*/
-bool incrementer_flag[7] = {1,1,1,1,1,1,1};
+int8_t operator[9] = {1,1,1,1,1,1,1,1,1};
 
 /** flags for reversing the direction of characteristic*
 	 change for notification*/
 bool notification_increment_flag[2] = {1,1};
 
+int8_t notification_operator[2] = {1,1};
 /* Blood Pressure Measurement Current*
 * Characteristic values for indication*/
 
@@ -172,32 +173,25 @@ void app_connected_state(bool connected)
 void update_time_stamp(void)
 {
   uint16_t year;
-	if (time_stamp[6] == SECOND_MAX)
-	{
+	if (time_stamp[6] == SECOND_MAX) {
 		time_stamp[6] = SECONDS;
-		if (time_stamp[5] == MINUTE_MAX)
-		{
+		if (time_stamp[5] == MINUTE_MAX) {
 			time_stamp[5] = MINUTES;
-			if (time_stamp[4] == HOUR_MAX)
-			{
+			if (time_stamp[4] == HOUR_MAX) {
 				time_stamp[4] = HOURS;
-				if (time_stamp[3] == DAY_MAX)
-				{
+				if (time_stamp[3] == DAY_MAX) {
 					time_stamp[3] = DAY;
-					if (time_stamp[2] == MONTH_MAX)
-					{
+					if (time_stamp[2] == MONTH_MAX) {
 						time_stamp[2] = MONTH;
-                                                memcpy(&year,&time_stamp[0],2);
-						if (year == YEAR_MAX)
-						{
+                         memcpy(&year,&time_stamp[0],2);
+						if (year == YEAR_MAX) {
 							year_value = YEAR;
 							 memcpy(&time_stamp[0],&year_value,2);
- 						} else
-						 {
+ 						} else {
 							 year_value++;
 							 memcpy(&time_stamp[0],&year_value,2);
 						 }
-					} else{
+					} else {
 						time_stamp[2]++;
 					}
 				} else {
@@ -238,8 +232,7 @@ void time_stamp_init(void)
  */	
 void app_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
 {
-	if (params->status == AT_BLE_SUCCESS)
-	{
+	if (params->status == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("App Notification Successfully sent over the air");
 		notification_sent = true;
 	} else {
@@ -248,23 +241,83 @@ void app_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
 	}
 }
 
+
+
 /** @brief blp_indication_confirmation_handler called by ble manager 
  *	to give the status of notification sent
  *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
  */	
 void app_indication_confirmation_handler(at_ble_indication_confirmed_t *params)
 {
-	if (params->status == AT_BLE_SUCCESS)
-	{
+	if (params->status == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("App Indication successfully sent over the air");
 		indication_sent = true;
 		user_request_flag = false;
+		DBG_LOG("\r\nPress the button to receive the blood pressure parameters");
 	} else {
 		DBG_LOG_DEV("Sending Notification over the air failed");
 		indication_sent = false;
 	}
 }
 
+static void blp_value_update(uint8_t *data, uint8_t idx, uint16_t value, uint8_t value_type)
+{
+	uint8_t min_val = 0, max_val = 0;
+	
+	switch(value_type) {
+	case SYSTOLIC_MMHG:	
+		min_val = SYSTOLIC_MIN_MMHG;
+		max_val = SYSTOLIC_MAX_MMHG;
+	break;
+	
+	case DIASTOLIC_MMHG:
+		min_val = DIASTOLIC_MIN_MMHG;
+		max_val = DIASTOLIC_MAX_MMHG;
+	break;
+	
+	case MAP_MMHG:
+		min_val = MAP_MIN_MMHG;
+		max_val = MAP_MAX_MMHG;
+	break;
+	
+	case PULSE_RATE:
+		min_val = PULSE_RATE_MIN;
+		max_val = PULSE_RATE_MAX;
+	break;
+	
+	case SYSTOLIC_KPA:
+		min_val = SYSTOLIC_MIN_KPA;
+		max_val = SYSTOLIC_MAX_KPA;
+	break;
+	
+	case DIASTOLIC_KPA:
+		min_val = DIASTOLIC_MIN_KPA;
+		max_val = DIASTOLIC_MAX_KPA;
+	break;
+	
+	case MAP_KPA:
+		min_val = MAP_MIN_KPA;
+		max_val = MAP_MAX_KPA;
+	break;
+	
+	case INTERIM_SYS_MMHG:
+		min_val = SYSTOLIC_MIN_MMHG;
+		max_val = SYSTOLIC_MAX_MMHG;
+	break;
+	
+	case INTERIM_SYS_KPA:
+		min_val = SYSTOLIC_MIN_KPA;
+		max_val = SYSTOLIC_MAX_KPA;
+	break;
+	}
+	
+	if (value == max_val) {
+		operator[value_type] = -1;
+	} else if (value == min_val) {
+		operator[value_type] = 1;
+	}
+	memcpy((data + idx),&value,2);
+}
 /** @brief sends the characteristic data for the profile to send indication
  *
  */
@@ -279,8 +332,7 @@ void blp_char_indication(void)
 	/* initializing flags to zero*/
 	blp_data[0] = 0;
 	/** Blood pressure measurement flags */
-	if (units)
-	{
+	if (units) {
 		/** Units in mmhg*/
 			blp_data[idx] |= (0x1)  & ~(BLOOD_PRESSURE_UNITS_FLAG_MASK);
 	} else {
@@ -293,233 +345,54 @@ void blp_char_indication(void)
 	blp_data[idx]	|= BLOOD_PRESSURE_PULSE_FLAG_MASK;
 	blp_data[idx]	|= BLOOD_PRESSURE_USERID_FLAG_MASK;
 	blp_data[idx++] |= BLOOD_PRESSURE_MMT_STATUS_FLAG_MASK;
-
-	/** Appending systolic value */
-	if (units)
-	{
-		/** Appending systolic */
-		if (incrementer_flag[0])
-		{	if (systolic_val_mmhg <= SYSTOLIC_MAX_MMHG )
-			{
-				systolic_val_mmhg++;
-				memcpy(&blp_data[idx],&systolic_val_mmhg,2);
-				idx += 2;	
-				DBG_LOG("%-12s","Systolic");
-				DBG_LOG_CONT("   %d mmhg",systolic_val_mmhg);
-			} 
-			if (systolic_val_mmhg == SYSTOLIC_MAX_MMHG)
-			{
-				incrementer_flag[0] = false;
-			}
-		} else {
-			if (systolic_val_mmhg >= SYSTOLIC_MIN_MMHG)
-			{
-				systolic_val_mmhg--;
-				memcpy(&blp_data[idx],&systolic_val_mmhg,2);
-				idx += 2;
-				DBG_LOG("%-12s","Systolic");
-				DBG_LOG_CONT("   %d mmhg",systolic_val_mmhg);
-			}
-			
-			if (systolic_val_mmhg == SYSTOLIC_MIN_MMHG)
-			{
-				incrementer_flag[0] = true;
-			}
-		}
+	
+	if (units) {
+		systolic_val_mmhg = systolic_val_mmhg + (operator[SYSTOLIC_MMHG]);
+		blp_value_update(blp_data,idx,systolic_val_mmhg,SYSTOLIC_MMHG);
+		idx += 2;
+		DBG_LOG("%-12s","Systolic");
+		DBG_LOG_CONT("   %d mmhg",systolic_val_mmhg);
 		
-		/** Appending diastolic in mmhg */
-		if (incrementer_flag[1])
-		{	if (diastolic_val_mmhg <= DIASTOLIC_MAX_MMHG )
-			{
-				diastolic_val_mmhg++;
-				memcpy(&blp_data[idx],&diastolic_val_mmhg,2);
-				idx += 2;
-				DBG_LOG("%-12s","Diastolic");
-				DBG_LOG_CONT("   %d mmhg",diastolic_val_mmhg);
-			}
-			if (diastolic_val_mmhg == DIASTOLIC_MAX_MMHG)
-			{
-				incrementer_flag[1] = false;
-			}
-		} else {
-			if (diastolic_val_mmhg >= DIASTOLIC_MIN_MMHG)
-			{
-				diastolic_val_mmhg--;
-				memcpy(&blp_data[idx],&diastolic_val_mmhg,2);
-				idx += 2;
-				DBG_LOG("%-12s","Diastolic");
-				DBG_LOG_CONT("   %d mmhg",diastolic_val_mmhg);
-			}
-			
-			if (diastolic_val_mmhg == DIASTOLIC_MIN_MMHG)
-			{
-				incrementer_flag[1] = true;
-			}
-		} 
+		diastolic_val_mmhg = diastolic_val_mmhg + (operator[DIASTOLIC_MMHG]);
+		blp_value_update(blp_data,idx,diastolic_val_mmhg,DIASTOLIC_MMHG);
+		idx += 2;
+		DBG_LOG("%-12s","Diastolic");
+		DBG_LOG_CONT("   %d mmhg",diastolic_val_mmhg);
 		
-		/** Appending map in mmhg */
-		if (incrementer_flag[2])
-		{	if (map_val_mmhg <= MAP_MAX_MMHG )
-			{
-				map_val_mmhg++;
-				memcpy(&blp_data[idx],&map_val_mmhg,2);
-				idx += 2;
-				DBG_LOG("%-12s","Map");
-				DBG_LOG_CONT("   %d mmhg",map_val_mmhg);	
-			}
-			if (map_val_mmhg == MAP_MAX_MMHG)
-			{
-				incrementer_flag[2] = false;
-			}
-			} else {
-			if (map_val_mmhg >= MAP_MIN_MMHG)
-			{
-				map_val_mmhg--;
-				memcpy(&blp_data[idx],&map_val_mmhg,2);
-				idx += 2;
-				DBG_LOG("%-12s","Map");
-				DBG_LOG_CONT("   %d mmhg",map_val_mmhg);		
-			}
-			
-			if (map_val_mmhg == MAP_MIN_MMHG)
-			{
-				incrementer_flag[2] = true;
-			}
-		}
-		
-	} else
-	{
-		/** Appending systolic in kpa*/
-		if (incrementer_flag[3])
-		{	if (systolic_val_kpa <= SYSTOLIC_MAX_KPA )
-			{
-				systolic_val_kpa++;
-				memcpy(&blp_data[idx],&systolic_val_kpa,2);
-				idx += 2;
-				DBG_LOG("%-12s","Systolic");
-				DBG_LOG_CONT("   %02d kpa",systolic_val_kpa);				
-			}
-			if (systolic_val_kpa == SYSTOLIC_MAX_KPA)
-			{
-				incrementer_flag[3] = false;
-			}
-			} else {
-			if (systolic_val_kpa >= SYSTOLIC_MIN_KPA)
-			{
-				systolic_val_kpa--;
-				memcpy(&blp_data[idx],&systolic_val_kpa,2);
-				idx += 2;
-				DBG_LOG("%-12s","Systolic");
-				DBG_LOG_CONT("   %02d kpa",systolic_val_kpa);
-			}
-			
-			if (systolic_val_kpa == SYSTOLIC_MIN_KPA)
-			{
-				incrementer_flag[3] = true;
-			}
-		}
-		
-		/** Appending diastolic in kpa */
-		if (incrementer_flag[4])
-		{	if (diastolic_val_kpa <= DIASTOLIC_MAX_KPA )
-			{
-				diastolic_val_kpa++;
-				memcpy(&blp_data[idx],&diastolic_val_kpa,2);
-				idx += 2;
-				DBG_LOG("%-12s","Diastolic");
-				DBG_LOG_CONT("   %02d kpa",diastolic_val_kpa);
-			}
-			if (diastolic_val_kpa == DIASTOLIC_MAX_KPA)
-			{
-				incrementer_flag[4] = false;
-			}
-			} else {
-			if (DIASTOLIC_MAX_KPA >= DIASTOLIC_MIN_KPA)
-			{
-				diastolic_val_kpa--;
-				memcpy(&blp_data[idx],&diastolic_val_kpa,2);
-				idx += 2;
-				DBG_LOG("%-12s","Diastolic");
-				DBG_LOG_CONT("   %02d kpa",diastolic_val_kpa);
-			}
-			
-			if (diastolic_val_kpa == DIASTOLIC_MIN_KPA)
-			{
-				incrementer_flag[4] = true;
-			}
-		}
-		
-		/** Appending map in kpa */
-		if (incrementer_flag[5])
-		{	if (map_val_kpa <= MAP_MAX_KPA)
-			{
-				map_val_kpa++;
-				memcpy(&blp_data[idx],&map_val_kpa,2);
-				idx += 2;
-			DBG_LOG("%-12s","Map");
-			DBG_LOG_CONT("   %02d kpa",map_val_kpa);	
-			}
-			if (map_val_kpa == MAP_MAX_KPA)
-			{
-				incrementer_flag[5] = false;
-			}
-			} else {
-			if (map_val_kpa >= MAP_MIN_KPA)
-			{
-				map_val_kpa--;
-				memcpy(&blp_data[idx],&map_val_kpa,2);
-				idx += 2;	
-					DBG_LOG("%-12s","Map");
-					DBG_LOG_CONT("   %02d kpa",map_val_kpa);
-			}
-			
-			if (map_val_kpa == MAP_MIN_KPA)
-			{
-				incrementer_flag[5] = true;
-			}
-		}
+		map_val_mmhg = map_val_mmhg + (operator[MAP_MMHG]);
+		blp_value_update(blp_data,idx,map_val_mmhg,MAP_MMHG);
+		idx += 2;
+		DBG_LOG("%-12s","Map");
+		DBG_LOG_CONT("   %d mmhg",map_val_mmhg);
+	} else {
+		systolic_val_kpa = systolic_val_kpa + (operator[SYSTOLIC_KPA]);
+		blp_value_update(blp_data,idx,systolic_val_kpa,SYSTOLIC_KPA);
+		idx += 2;
+		DBG_LOG("%-12s","Systolic");
+		DBG_LOG_CONT("   %02d kpa",systolic_val_kpa);
+		diastolic_val_kpa = diastolic_val_kpa + (operator[DIASTOLIC_KPA]);
+		blp_value_update(blp_data,idx,diastolic_val_kpa,DIASTOLIC_KPA);
+		idx += 2;
+		DBG_LOG("%-12s","Diastolic");
+		DBG_LOG_CONT("   %02d kpa",diastolic_val_kpa);
+		map_val_kpa = map_val_kpa + (operator[MAP_KPA]);
+		blp_value_update(blp_data,idx,map_val_kpa,MAP_KPA);
+		idx += 2;
+		DBG_LOG("%-12s","Diastolic");
+		DBG_LOG_CONT("   %02d kpa",diastolic_val_kpa);	
 	}
 	
-	/** Appending time stamp */	
 	memcpy(&blp_data[idx],time_stamp,sizeof(time_stamp));
 	idx += sizeof(time_stamp);
-		
-	/** Appending pulse rate */
-	if (incrementer_flag[6])
-	{
-		if (pulse_rate_val <= PULSE_RATE_MAX)	
-		{
-			pulse_rate_val++;
-			memcpy(&blp_data[idx],&pulse_rate_val,2);
-			idx += 2;
-		
-			DBG_LOG("%-12s","Pulserate");
-			DBG_LOG_CONT("   %d bpm",pulse_rate_val);
-		} 
-		if (pulse_rate_val == PULSE_RATE_MAX) 
-		{
-			incrementer_flag[6] = false;
-		}
-	} else {
-		if (pulse_rate_val >= PULSE_RATE_MIN)
-		{
-			
-			pulse_rate_val--;
-			memcpy(&blp_data[idx],&pulse_rate_val,2);
-			idx += 2;
-			DBG_LOG("%-12s","Pulserate");
-			DBG_LOG_CONT("   %d bpm",pulse_rate_val);
-			
-		}
-		if (pulse_rate_val == PULSE_RATE_MIN)
-		{
-			incrementer_flag[6] = true;
-		}
-	}
+	pulse_rate_val = pulse_rate_val + (operator[PULSE_RATE]);
+	blp_value_update(blp_data,idx,pulse_rate_val,PULSE_RATE);
+	idx += 2;
+	DBG_LOG("%-12s","Pulserate");
+	DBG_LOG_CONT("   %d bpm",pulse_rate_val);
 	
-	/** Appending User id */	
-	if (units)
-	{
+	
+	/** Appending User id */
+	if (units) {
 		blp_data[idx++] = USERID_1;
 	} else {
 		blp_data[idx++] = USERID_2;
@@ -527,8 +400,10 @@ void blp_char_indication(void)
 	
 	/** Appending Measurement status field */
 	blp_data[idx++] = 0xf;
-	blp_data[idx++] = 0xf;			
+	blp_data[idx++] = 0xf;
+	
 	blp_sensor_send_indication(blp_data,idx);	
+	
 }
 
 /** @brief sends the characteristic data for profile to send notification
@@ -540,88 +415,32 @@ void blp_char_notification(void)
 	uint8_t idx = 0;
 	blp_data[0] = 0;
 	
-	/** Blood pressure measurement flags */
-	if (units)
-	{
+	if (units) {
 		/** Units in mmhg*/
 		blp_data[idx++] |= (0x1)  & ~(BLOOD_PRESSURE_UNITS_FLAG_MASK);
-		blp_data[0] = blp_data[0] & 1;
-		
-		/** Appending systolic in mmhg*/
-		if (notification_increment_flag[0])
-		{	if (interim_systolic_mmhg <= SYSTOLIC_MAX_MMHG )
-			{
-				DBG_LOG("Cuff pressure  %d mmhg",interim_systolic_mmhg);
-				memcpy(&blp_data[idx],&interim_systolic_mmhg,2);
-				idx += 2;
-				interim_systolic_mmhg++;
-			}
-			if (interim_systolic_mmhg == SYSTOLIC_MAX_MMHG)
-			{
-				notification_increment_flag[0] = false;
-			}
-		} else {
-			if (interim_systolic_mmhg >= SYSTOLIC_MIN_MMHG)
-			{
-				DBG_LOG("Cuff pressure  %d mmhg",interim_systolic_mmhg);
-				memcpy(&blp_data[idx],&interim_systolic_mmhg,2);
-				idx += 2;
-				interim_systolic_mmhg--;
-			}
-			
-			if (interim_systolic_mmhg == SYSTOLIC_MIN_MMHG)
-			{
-				notification_increment_flag[0] = true;
-			}
-		}
-			/**Appending the diastolic */
-				blp_data[idx++] = 0;
-				blp_data[idx++] = 0;
-			/**Appending the map */
-				blp_data[idx++] = 0;
-				blp_data[idx++] = 0;
-		} else {
+		blp_data[0] = blp_data[0] & 1;	
+		DBG_LOG("Cuff pressure  %d mmhg",interim_systolic_mmhg);
+		blp_value_update(blp_data,idx,interim_systolic_mmhg,INTERIM_SYS_MMHG);
+		idx += 2;
+		interim_systolic_mmhg = interim_systolic_mmhg + (operator[7]);
+	} else {
 		/** Units in kpa*/
 		blp_data[idx++] |=  (0x1)  | BLOOD_PRESSURE_UNITS_FLAG_MASK;
 		blp_data[0] = blp_data[0] & 1;
-		
-		/** Appending systolic in kpa*/
-		if (notification_increment_flag[1])
-		{	if (interim_systolic_kpa <= SYSTOLIC_MAX_KPA )
-			{
-				DBG_LOG("Cuff pressure  %02d kpa",interim_systolic_kpa);
-				memcpy(&blp_data[idx],&interim_systolic_kpa,2);
-				idx += 2;
-				interim_systolic_kpa++;
-			}
-			if (interim_systolic_kpa == SYSTOLIC_MAX_KPA)
-			{
-				notification_increment_flag[1] = false;
-			}
-		} else {
-			if (interim_systolic_kpa >= SYSTOLIC_MIN_KPA)
-			{
-				DBG_LOG("Cuff pressure  %02d kpa",interim_systolic_kpa);
-				memcpy(&blp_data[idx],&interim_systolic_kpa,2);
-				idx += 2;
-				interim_systolic_kpa--;
-			}
-			
-			if (interim_systolic_kpa == SYSTOLIC_MIN_KPA)
-			{
-				notification_increment_flag[1] = true;
-			}
-		}
-		/** Appending diastolic in kpa*/
-		blp_data[idx++] = 0;
-		blp_data[idx++] = 0;
-		
-		/** Appending map in kpa */
-		blp_data[idx++] = 0;
-		blp_data[idx++] = 0;
-		
-		
+		DBG_LOG("Cuff pressure  %02d kpa",interim_systolic_kpa);
+		blp_value_update(blp_data,idx,interim_systolic_kpa,INTERIM_SYS_KPA);
+		idx += 2;
+		interim_systolic_kpa = interim_systolic_kpa + (operator[8]);
 	}
+	
+	/** Appending diastolic in kpa*/
+	blp_data[idx++] = 0;
+	blp_data[idx++] = 0;
+	
+	/** Appending map in kpa */
+	blp_data[idx++] = 0;
+	blp_data[idx++] = 0;
+	
 	blp_sensor_send_notification(blp_data,idx);
 }
 /** @brief notification handler function called by the profile
@@ -632,10 +451,8 @@ void app_notification_handler(bool enable)
 {
 	notification_flag = enable;
 	
-	if (notification_flag)
-	{
+	if (notification_flag) {
 		DBG_LOG("Notifications enabled by the remote device for interim cuff pressure");
-		
 	} else{
 		DBG_LOG("Disabled notifications by the remote device for interim cuff pressure");
 	}
@@ -651,11 +468,9 @@ void app_indication_handler(bool enable)
 	uint8_t idx = 0;	 
 	indication_flag = enable;
 
-	if (indication_flag)
-	{
+	if (indication_flag) {
 		DBG_LOG("Indications enabled by the remote device for blood pressure\n ");
-		if (units)
-		{
+		if (units) {
 			blp_data[idx++] = 0;
 			DBG_LOG("Systolic       %02d mmhg",systolic_val_mmhg);
 			memcpy(&blp_data[idx],&systolic_val_mmhg,2);
@@ -701,21 +516,16 @@ void button_cb(void)
 	/* for patch download */
 	button_pressed = true;
 	/* App connected state*/
-	if (app_state)
-	{
-		if (user_request_flag == false)
-		{
-			if (indication_flag)
-			{
+	if (app_state) {
+		if (user_request_flag == false) {
+			if (indication_flag) {
 				/** For changing the units for each button press*/
 				units = !units;
 		
 				/** To trigger the blood pressure indication */
 				user_request_flag = true;
-		
 				timer_count = 0;
-				if (notification_flag)
-				{
+				if (notification_flag) {
 					DBG_LOG("\r\nStarted sending Interim Cuff Pressure Values");
 				}	
 			}
@@ -729,8 +539,7 @@ void button_cb(void)
  */
 void timer_callback_handler(void)
 {
-	if (user_request_flag)
-	{
+	if (user_request_flag) {
 		timer_count++;	
 		notify = true;
 	} 
@@ -793,22 +602,24 @@ int main(void)
 	/* Capturing the events  */
 	while (app_exec) {
 		ble_event_task();
-	
-		if (user_request_flag )
-		{
-			if (indication_flag)
-			{
+		
+		/* Checking for button press */
+		if (user_request_flag ) {
+			
+			/* Checking for indications enabled*/
+			if (indication_flag) {
 				
-				if (timer_count < INDICATION_TIMER_VAL )
-				{
+				/*Sending notifications of interim cuff pressure*/
+				if (timer_count < INDICATION_TIMER_VAL ) {
+				
+				/* checking for notification enabled */
+					if (notification_flag) {
 					
-					if (notification_flag)
-					{
-						if (notify)
-						{
-							/* send a notification */
-							if (notification_sent)
-							{
+					/* Sending one notification per second */
+						if (notify) {
+					
+							/* Checking for previous notification sent over the air */
+							if (notification_sent) {
 								blp_char_notification();
 							}
 							notify = 0;
@@ -816,10 +627,11 @@ int main(void)
 					}
 				}
 				
-				if (timer_count == INDICATION_TIMER_VAL)
-				{
-					if (indication_sent)
-					{
+				if (timer_count == INDICATION_TIMER_VAL) {
+					
+					/*Checking for previous indication sent over the  air */
+					if (indication_sent) {
+						
 						/* Send a indication */
 						blp_char_indication();
 						user_request_flag = 0;
