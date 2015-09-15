@@ -43,9 +43,14 @@
 #ifndef CONF_PERF_ANALYZER_H_INCLUDED
 #define CONF_PERF_ANALYZER_H_INCLUDED
 
-#warning \
-	"Using a default value. Edit the default channel value according to the transceiver type."
-#define DEFAULT_CHANNEL         (1)
+#define CHANNEL_INDEX           (0)
+
+#if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
+#define DEFAULT_CHANNEL         (0 + CHANNEL_INDEX)
+#else
+#define DEFAULT_CHANNEL         (11 + CHANNEL_INDEX)
+#endif
+
 
 #define DEFAULT_PAGE            (0)
 
