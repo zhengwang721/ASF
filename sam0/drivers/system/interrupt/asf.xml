@@ -27,8 +27,10 @@
 		<build type="include-path" value="system_interrupt_samd20"/>
 		<build type="include-path" value="system_interrupt_samd21"/>
 		<build type="include-path" value="system_interrupt_samr21"/>
+		<build type="include-path" value="system_interrupt_samd09"/>
 		<build type="include-path" value="system_interrupt_samd10_d11"/>
 		<build type="include-path" value="system_interrupt_saml21"/>
+		<build type="include-path" value="system_interrupt_saml22"/>
 		<build type="include-path" value="system_interrupt_samda"/>
 		<build type="include-path" value="system_interrupt_samc20_c21"/>
 
@@ -38,8 +40,10 @@
 		<build type="header-file" value="system_interrupt_samd20/system_interrupt_features.h"/>
 		<build type="header-file" value="system_interrupt_samd21/system_interrupt_features.h"/>
 		<build type="header-file" value="system_interrupt_samr21/system_interrupt_features.h"/>
+		<build type="header-file" value="system_interrupt_samd09/system_interrupt_features.h"/>
 		<build type="header-file" value="system_interrupt_samd10_d11/system_interrupt_features.h"/>
 		<build type="header-file" value="system_interrupt_saml21/system_interrupt_features.h"/>
+		<build type="header-file" value="system_interrupt_saml22/system_interrupt_features.h"/>
 		<build type="header-file" value="system_interrupt_samda/system_interrupt_features.h"/>
 		<build type="header-file" value="system_interrupt_samc20_c21/system_interrupt_features.h"/>
 
@@ -50,8 +54,10 @@
 		<build type="doxygen-example-path" value="system_interrupt_samd20"/>
 		<build type="doxygen-example-path" value="system_interrupt_samd21"/>
 		<build type="doxygen-example-path" value="system_interrupt_samr21"/>
+		<build type="doxygen-example-path" value="system_interrupt_samd09"/>
 		<build type="doxygen-example-path" value="system_interrupt_samd10_d11"/>
 		<build type="doxygen-example-path" value="system_interrupt_saml21"/>
+		<build type="doxygen-example-path" value="system_interrupt_saml22"/>
 		<build type="doxygen-example-path" value="system_interrupt_samda"/>
 		<build type="doxygen-example-path" value="system_interrupt_samc20_c21"/>
 		<build type="doxygen-quick-start" value="asfdoc_sam0_system_interrupt_exqsg"/>
@@ -179,6 +185,31 @@
 				<require idref="thirdparty.cmsis"/>
 			</module>
 
+			<module type="driver" id="sam0.drivers.system.interrupt#samd09" caption="SYSTEM - Interrupt Driver">
+				<info type="description" value="summary">
+					Driver for the SAM D09 Interrupt System. Provides a unified
+					interface for the configuration and management interrupts within
+					the device, including the enabling, disabling and entering, leaving
+					of critical sections.
+				</info>
+
+				<info type="keyword" value="technology">
+					<keyword value="Interrupt" />
+				</info>
+				<build type="include-path" value="." />
+				<build type="include-path" value="system_interrupt_samd09"/>
+
+				<build type="c-source" value="system_interrupt.c"/>
+
+				<build type="header-file" subtype="api" value="system_interrupt.h"/>
+				<build type="header-file" value="system_interrupt_samd09/system_interrupt_features.h"/>
+
+				<device-support value="samd09"/>
+
+				<require idref="sam0.utils"/>
+				<require idref="thirdparty.cmsis"/>
+			</module>
+
 			<module type="driver" id="sam0.drivers.system.interrupt#samd10" caption="SYSTEM - Interrupt Driver">
 				<info type="description" value="summary">
 					Driver for the SAM D10 Interrupt System. Provides a unified
@@ -252,9 +283,34 @@
 				<require idref="sam0.utils"/>
 				<require idref="thirdparty.cmsis"/>
 			</module>
+			<module type="driver" id="sam0.drivers.system.interrupt#saml22" caption="SYSTEM - Interrupt Driver For SAML22">
+				<info type="description" value="summary">
+					Driver for the SAM L22 Interrupt System. Provides a unified
+					interface for the configuration and management interrupts within
+					the device, including the enabling, disabling and entering, leaving
+					of critical sections.
+				</info>
+
+				<info type="keyword" value="technology">
+					<keyword value="Interrupt" />
+				</info>
+				<build type="include-path" value="." />
+				<build type="include-path" value="system_interrupt_saml22"/>
+
+				<build type="c-source" value="system_interrupt.c"/>
+
+				<build type="header-file" subtype="api" value="system_interrupt.h"/>
+				<build type="header-file" value="system_interrupt_saml22/system_interrupt_features.h"/>
+
+				<device-support value="saml22"/>
+
+				<require idref="sam0.utils"/>
+				<require idref="thirdparty.cmsis"/>
+			</module>
+
 			<module type="driver" id="sam0.drivers.system.interrupt#samdax" caption="SYSTEM - Interrupt Driver">
 				<info type="description" value="summary">
-					Driver for the SAM DAx Interrupt System. Provides a unified
+					Driver for the SAM DA1 Interrupt System. Provides a unified
 					interface for the configuration and management interrupts within
 					the device, including the enabling, disabling and entering, leaving
 					of critical sections.

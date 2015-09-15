@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="USB Device Mass Storage unit tests for SAM L21 Xplained Pro" id="common.services.usb.class.msc.device.unit_tests.saml21_xpro" type="unit-test">
+	<project caption="USB Device Mass Storage unit tests for SAM L21 Xplained Pro" id="common.services.usb.class.msc.device.unit_tests.saml21_xpro">
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_extint.h"/>

@@ -35,6 +35,12 @@
 		<device-support value="saml21"/>
 		<device-support value="samg55"/>
 		<device-support value="samda1"/>
+		<device-support value="saml22"/>
+		<device-support value="samv71"/>
+		<device-support value="samv70"/>
+		<device-support value="sams70"/>
+		<device-support value="same70"/>
+
 	</module>
 
 	<select-by-device id="common.drivers.usb.device" caption="USB Device">
@@ -135,6 +141,7 @@
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
 			<device-support value="samda1"/>
+			<device-support value="saml22"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samd21"/>
 		</module>
 		<module type="driver" id="common.drivers.usb.device#8" caption="USB Device - SAM UHDP implementation">
@@ -146,6 +153,19 @@
 			<require idref="sam.drivers.uhdp.device"/>
 			<device-support value="sam4c32e"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam4c"/>
+		</module>
+		<module type="driver" id="common.drivers.usb.device#9" caption="USB Device - SAM USBHS implementation">
+			<info type="gui-flag" value="hidden"/>
+			<info type="description" value="summary">
+			USB Device driver. Provides functions for configuring and using the USB Device functionality. SAM USBHS implementation of common API.
+			</info>
+			<build type="define" name="UDD_ENABLE" value=""/>
+			<require idref="sam.drivers.usbhs.device"/>
+			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="sams70"/>
+			<device-support value="same70"/>
+			<generator value="doxygen-module" default-mcu="unspecified-samv71"/>
 		</module>
 	</select-by-device>
 
@@ -226,6 +246,19 @@
 			<require idref="sam.drivers.uhp"/>
 			<device-support value="samg55"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samg55"/>
+		</module>
+		<module type="driver" id="common.drivers.usb.host#7" caption="USB host driver - SAM USBHS implementation">
+			<info type="gui-flag" value="hidden"/>
+			<info type="description" value="summary">
+			USB host driver. Provides functions for configuring and using the USB host functionality. SAM USBHS implementation of common API.
+			</info>
+			<build type="define" name="UHD_ENABLE" value=""/>
+			<require idref="sam.drivers.usbhs.host"/>
+			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="sams70"/>
+			<device-support value="same70"/>
+			<generator value="doxygen-module" default-mcu="unspecified-samv71"/>
 		</module>
 	</select-by-device>
 </asf>

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam0.drivers.aes.unit_test" caption="Unit Tests for SAM L21 AES">
+	<module type="application" id="sam0.drivers.aes.unit_test" caption="Unit Tests for SAM L21/L22 AES">
 		<info type="description" value="summary">
 			Unit test for the AES (Advanced Encryption Standard) module.
 		</info>
@@ -10,6 +10,7 @@
 		<build type="include-path" value="."/>
 		<build type="c-source" value="unit_test.c"/>
 		<device-support value="saml21"/>
+		<device-support value="saml22"/>
 		<require idref="sam0.drivers.aes"/>
 		<require idref="sam0.drivers.dma"/>
 		<require idref="common2.services.delay"/>

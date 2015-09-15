@@ -78,6 +78,10 @@
 			<device-support value="sam4l"/>
 			<device-support value="sam4e"/>
 			<device-support value="samg55"/>
+			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="sams70"/>
+			<device-support value="same70"/>
 			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.services.usb.composite.device.example.cdc_msc#3" caption="USB Composite Device Example CDC and MSC">
@@ -105,6 +109,7 @@
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>

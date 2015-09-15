@@ -1,0 +1,28 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.applications.adc_configurations_example" caption="SAM D21 ADC Configurations Example">
+		<info type="description" value="summary">
+		Example application for SAM D21 ADC  configuration example features like Hardware Averaging, Oversampling, Calibration, Temperature sensor.
+		</info>
+
+		<info type="keyword" value="technology">
+			<keyword value="Analog Conversion"/>
+		</info>
+
+		<info type="gui-flag" value="move-to-root"/>
+		<build type="c-source" value="main.c"/>
+		<build type="c-source" value="adc_configure.c"/>
+		<build type="c-source" value="adc_temp.c"/>
+		<build type="header-file" value="adc_temp.h"/>
+		<build type="header-file" value="adc_configure.h"/>	
+		<build type="include-path" value="."/>
+		<require idref="sam0.drivers.adc"/>
+		<require idref="sam0.drivers.port"/>
+		<require idref="sam0.drivers.system"/>
+		<require idref="sam0.drivers.sercom.usart"/>
+		<require idref="sam0.utils"/>
+		<require idref="sam0.utils.stdio"/>
+		<require idref="sam0.utils.stdio.stdio_serial"/>
+		<require idref="common2.services.delay"/>
+		<device-support value="samd21"/>
+	</module>
+</asf>
