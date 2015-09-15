@@ -160,7 +160,7 @@ void hid_prf_boot_ntf_cb(hid_boot_ntf_t *boot_ntf_info_t)
 /* Callback called when host enable/disable the notification for report (Mouse/Keyboard) */
 void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info)
 {
-	DBG_LOG("Report Notification Callback Service Instance %d  Report ID  %d  Notification(Enable/Disable) %d Connection Handle %d", report_info->serv_inst, report_info->report_ID, report_info->ntf_conf, report_info->conn_handle);
+	DBG_LOG_DEV("Report Notification Callback Service Instance %d  Report ID  %d  Notification(Enable/Disable) %d Connection Handle %d", report_info->serv_inst, report_info->report_ID, report_info->ntf_conf, report_info->conn_handle);
     report_ntf_info.serv_inst = report_info->serv_inst;
 	report_ntf_info.report_ID = report_info->report_ID;
 	report_ntf_info.ntf_conf = report_info->ntf_conf;
