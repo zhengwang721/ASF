@@ -98,7 +98,7 @@ void bat_init_service(bat_gatt_service_handler_t *battery_serv, uint8_t *battery
 	battery_serv->serv_chars.client_config_handle = 0;         /*client config handles*/
 	battery_serv->serv_chars.server_config_handle = 0;         /*server config handles*/
 	
-	presentation_format.format = BAT_CHAR_PRESENTATION_FORMAT_VALUE;
+	presentation_format.format = AT_BLE_PRES_FORMAT_UINT8;
 	presentation_format.exponent = BAT_CHAR_PRESENTATION_FORMAT_EXPONENT;
 	presentation_format.unit = (uint8_t) BAT_CHAR_PRESENTATION_FORMAT_UNIT;
 	presentation_format.unit = (uint8_t) (BAT_CHAR_PRESENTATION_FORMAT_UNIT >> 8);
@@ -107,6 +107,7 @@ void bat_init_service(bat_gatt_service_handler_t *battery_serv, uint8_t *battery
 	presentation_format.description = (uint8_t) (BAT_CHAR_PRESENTATION_FORMAT_DESCRIPTOR >> 8);
 	
 	battery_serv->serv_chars.presentation_format = &presentation_format;       /* presentation format */
+	ALL_UNUSED(battery_value);
 }
 
 /**@brief defining a initialized service 

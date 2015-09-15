@@ -62,7 +62,7 @@
 at_ble_generic_att_desc_t report_desc[HID_NUM_OF_REPORT];
 gatt_service_handler_t hid_inst[HID_MAX_SERV_INST];
 hid_serv_t hid_serv_inst[HID_MAX_SERV_INST];   /**< HID service instance. */
-uint8_t ctrl_point[0];
+uint8_t ctrl_point[1];
 
 /**
 * \HID service definition initialization function
@@ -519,7 +519,7 @@ uint16_t hid_service_dbreg(uint8_t inst, uint8_t *report_type, uint8_t *report_i
 	else
 	{
 		DBG_LOG_DEV("service definition failed");
-		return HID_SERV_FAILED;
+		return (uint16_t )HID_SERV_FAILED;
 	}
 }
 
@@ -542,7 +542,7 @@ uint8_t hid_serv_get_instance(uint16_t handle)
 			return id;
 		}
 	}
-	return -1;
+	return  0xff;
 }
 
 /**
@@ -737,6 +737,10 @@ void hid_boot_mousereport_update(at_ble_handle_t conn_handle, uint8_t serv_inst,
 		}
 	}
 #endif	
+        ALL_UNUSED(len);
+        ALL_UNUSED(bootreport);
+        ALL_UNUSED(serv_inst);
+        ALL_UNUSED(conn_handle);
 }
 
 /**
@@ -769,6 +773,10 @@ void hid_boot_keyboardreport_update(at_ble_handle_t conn_handle, uint8_t serv_in
 		}
 	}
 #endif	
+        ALL_UNUSED(len);
+        ALL_UNUSED(bootreport);
+        ALL_UNUSED(serv_inst);
+        ALL_UNUSED(conn_handle);
 }
 
 

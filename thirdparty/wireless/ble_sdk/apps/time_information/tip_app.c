@@ -215,9 +215,8 @@ int main (void)
 
 void app_bonding_cb(bool flag)
 {
-	bonding_flag = flag;
-}
-
+	bonding_flag = flag;     
+}	
 void app_read_response_cb(at_ble_characteristic_read_response_t *char_read_resp)
 {
 	

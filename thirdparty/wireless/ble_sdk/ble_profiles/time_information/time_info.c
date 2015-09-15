@@ -194,6 +194,7 @@ void time_info_init(void *param)
 	#endif
 	
 	time_info_adv();
+        UNUSED(param);
 }
 
 /**
@@ -561,6 +562,7 @@ void time_info_disconnected_event_handler(at_ble_disconnected_t *disconnect)
 	{
 		DBG_LOG("BLE Started Adv");
 	}	
+        UNUSED(disconnect);
 }
 
 /**
@@ -596,6 +598,7 @@ void time_info_pair_done_handler(at_ble_pair_done_t *pair_done_param)
 	{
 		bonding_cb(true);		
 	}
+        UNUSED(pair_done_param);
 }
 
 void time_info_register_read_response_callback(read_response_callback_t read_response_cb)
@@ -612,4 +615,5 @@ void time_info_encryption_status_changed_handler(at_ble_encryption_status_change
 	{
 		bonding_cb(true);
 	}
+        UNUSED(param);
 }

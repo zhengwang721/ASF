@@ -77,7 +77,7 @@ uint16_t energy_incrementor ;	/*!< energy incrementor for various heart rate val
 uint16_t heart_rate_value = HEART_RATE_MIN_NORM; /*!< to count the heart rate value*/
 uint16_t rr_interval_value = RR_VALUE_MIN; /*!< to count the rr interval value*/
 uint8_t activity = 0; /*!< activiy which will determine the */
-uint8_t prev_activity = -1;/*!< previous activity */
+uint8_t prev_activity = 0xff;/*!< previous activity */
 int8_t inc_changer	= 1;/*!< increment operator to change heart rate */
 int8_t time_operator ;/*!< operator to change the seconds */
 uint8_t hr_min_value;/*!<the minimum heart rate value*/
@@ -368,6 +368,8 @@ void timer_callback_handler(void)
 	notification_flag = true;
 }
 
+/* to make app executing continously*/
+bool app_exec = true;
 /**
  * \brief Heart Rate Sensor Application main function
  */
@@ -408,7 +410,7 @@ int main(void)
 	register_hr_state_handler(app_state_handler);
 
 	/* Capturing the events  */
-	while (1) {
+	while (app_exec) {
 		ble_event_task();
 
 		/* Flag to start advertisement */

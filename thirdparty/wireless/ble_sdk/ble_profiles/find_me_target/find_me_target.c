@@ -198,7 +198,7 @@ at_ble_status_t fmp_target_connected_state_handler(
 				"Read of alert value for Immediate alert service failed:reason %x",
 				status);
 	}
-
+        ALL_UNUSED(conn_params);
 	return AT_BLE_SUCCESS;
 }
 
@@ -218,7 +218,7 @@ at_ble_status_t fmp_target_disconnect_event_handler(
 	} else {
 		DBG_LOG("Bluetooth Device is in Advertising Mode");
 	}
-
+        ALL_UNUSED(disconnect);
 	return AT_BLE_SUCCESS;
 }
 
@@ -236,4 +236,5 @@ void fmp_target_init(void *param)
 
 	/* find me services advertisement */
 	fmp_target_adv();
+        ALL_UNUSED(param);
 }

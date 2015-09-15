@@ -91,6 +91,4 @@ int main(void)
 	{
 		ble_event_task();
 	}
-	
-	return 0;
 }

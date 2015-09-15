@@ -87,6 +87,12 @@ void serial_tx_callback(void);
 #define BLE_MAX_RX_PAYLOAD_SIZE 512
 
 /* Set BLE Wakeup pin to be low */
+static inline bool ble_wakeup_pin_level(void)
+{
+	return (ioport_get_pin_level(BTLC1000_WAKEUP_PIN));
+}
+
+/* Set BLE Wakeup pin to be low */
 static inline void ble_wakeup_pin_set_low(void)
 {
 	ioport_set_pin_level(BTLC1000_WAKEUP_PIN,

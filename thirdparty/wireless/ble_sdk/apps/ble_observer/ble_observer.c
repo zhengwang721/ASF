@@ -490,6 +490,7 @@ at_ble_status_t ble_observer_scan_data_handler(at_ble_scan_info_t *scan_info_dat
 {
 	DBG_LOG("Scan Complete. Total No.of device scanned:%d", scan_resp_count);
 	ble_observer_init();
+	ALL_UNUSED(scan_info_data);
 	return AT_BLE_SUCCESS;
 }
 
@@ -524,6 +525,4 @@ int main(void )
 	while (1) {
 		ble_event_task();
 	}
-
-	return 0;
 }
