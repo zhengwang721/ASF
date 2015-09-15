@@ -15,7 +15,6 @@
 		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
 		<require idref="thirdparty.wireless.ble_sdk.ble_services.battery"/>
 		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>
-		<require idref="thirdparty.wireless.ble_sdk.utils"/>
 		<device-support-alias value="ble_stack_lib_support"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>

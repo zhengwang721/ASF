@@ -206,6 +206,7 @@ at_ble_status_t hid_prf_disconnect_event_handler(at_ble_disconnected_t *disconne
 	{
 		DBG_LOG("Device Started Advertisement");
 	}
+        ALL_UNUSED(disconnect);
 	return AT_BLE_SUCCESS;
 }
 

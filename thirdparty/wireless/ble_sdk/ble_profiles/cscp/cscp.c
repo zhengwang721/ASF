@@ -87,6 +87,7 @@ void csc_prf_buf_init(uint8_t *databuf, uint8_t datalen)
 void csc_prf_init(void *param)
 { 
 	csc_serv_init(app_csc_info.buff_ptr, app_csc_info.buff_len);
+        ALL_UNUSED(param);
 }
 
 /**
@@ -283,6 +284,7 @@ at_ble_status_t csc_prf_disconnect_event_handler(at_ble_disconnected_t *disconne
 		DBG_LOG("Device Started Advertisement");
 	}
 	app_csc_info.devicedb = false;
+        ALL_UNUSED(disconnect);
 	return AT_BLE_SUCCESS;
 }
 

@@ -85,7 +85,7 @@ at_ble_status_t tis_rtu_update_write(at_ble_handle_t conn_handle,at_ble_handle_t
 			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 1, &desc_data[0],false, false));
 		}
 	}
-	return 0;
+	return AT_BLE_SUCCESS;
 }
 
 at_ble_status_t tis_rtu_update_read(at_ble_handle_t conn_handle,

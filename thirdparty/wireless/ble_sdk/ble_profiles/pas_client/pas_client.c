@@ -552,6 +552,8 @@ void pas_client_write_notifications(void *param)
 	{
 		DBG_LOG("notification enabling failed");
 	}
+        ALL_UNUSED(status);
+        ALL_UNUSED(param);
 }
 
 /**

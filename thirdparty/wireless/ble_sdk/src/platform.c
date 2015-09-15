@@ -49,6 +49,7 @@
 #include "conf_serialdrv.h"
 #include "serial_drv.h"
 #include "serial_fifo.h"
+#include "ble_utils.h"
 
 uint8_t bus_type = AT_BLE_UART;
 
@@ -135,7 +136,7 @@ at_ble_status_t platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t
 {
 	if (if_type != AT_BLE_UART)
 	{
-		return -1;
+		return AT_BLE_INVALID_PARAM;
 	}
    
 #ifdef BLE_DBG_ENABLE
@@ -167,7 +168,7 @@ at_ble_status_t platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t
 	}
 #endif //ENABLE_POWER_SAVE
 	serial_drv_send(data, len);	
-	return STATUS_OK;
+	return AT_BLE_SUCCESS;
 }
 
 void platform_cmd_cmpl_signal(void)
@@ -177,14 +178,17 @@ void platform_cmd_cmpl_signal(void)
 
 int platform_interface_recv(uint8_t if_type, uint8_t* data, uint32_t len)
 {
-	if (if_type == AT_BLE_UART)
-	{
-		return STATUS_OK;
-	}
-	else
-	{
-		return -1;	
-	}	
+    ALL_UNUSED(data);
+    ALL_UNUSED(len);
+    
+    if (if_type == AT_BLE_UART)
+    {
+            return STATUS_OK;
+    }
+    else
+    {
+            return -1;	
+    }	
 }
 
 int platform_interface_send_sleep(void)
@@ -289,7 +293,7 @@ void platform_event_signal(void)
 uint8_t platform_buf[10];
 at_ble_status_t platform_event_wait(uint32_t timeout)
 {
-	uint8_t status = AT_BLE_SUCCESS;
+	at_ble_status_t status = AT_BLE_SUCCESS;
 	if (ble_rx_state == BLE_EOF_STATE)
 	{		
 		platform_interface_callback((uint8_t *)&ble_evt_frame, (ble_evt_frame.header.payload_len + BLE_SERIAL_HEADER_LEN));
@@ -411,12 +415,16 @@ void serial_tx_callback(void)
 		if(bus_type == AT_BLE_UART)
 		{
 			if(ext_wakeup_state > 0)
-			ext_wakeup_state--;
+			{
+				ext_wakeup_state--;
+			}
+
+			#ifndef DTM_MODE			
 			if(ext_wakeup_state == 0)
 			{
 				ble_wakeup_pin_set_low();
-			}			  
-			
+			}
+			#endif			
 		}
 	}	
 #endif
@@ -433,7 +441,9 @@ void serial_tx_callback(void)
  void platform_set_sleep(void)
  {
 	 #if defined ENABLE_POWER_SAVE
+ 	#ifndef DTM_MODE
 		ble_wakeup_pin_set_low();
+	#endif
 	 #endif
  }
  
@@ -449,7 +459,7 @@ void serial_tx_callback(void)
  
  void platform_start_timer(uint32_t timeout)
  {
-	 
+	 ALL_UNUSED(timeout); //To avoid compiler warning
  }
  
  void platform_stop_timer(void)

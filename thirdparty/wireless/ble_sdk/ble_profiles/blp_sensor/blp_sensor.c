@@ -263,6 +263,7 @@ at_ble_status_t blp_sensor_disconnect_event_handler(
 {
 	blp_sensor_adv();
 	connected_cb(0);
+        ALL_UNUSED(disconnect);
 	return AT_BLE_SUCCESS;
 }
 
@@ -376,4 +377,5 @@ void blp_sensor_init(void *param)
 	blp_sensor_service_init();
 	blp_sensor_service_define();
 	blp_sensor_adv();
+        ALL_UNUSED(param);
 }

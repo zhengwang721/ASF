@@ -303,7 +303,7 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 	{
 		return gap_dev_scan();
 	}
-	
+	ALL_UNUSED(disconnect);
 	return AT_BLE_FAILURE;
 }
 
@@ -375,7 +375,7 @@ at_ble_primary_service_found_t *primary_service_params)
 				DBG_LOG_DEV("%04X %04X",
 				primary_service_params->start_handle,
 				primary_service_params->end_handle);				
-				lls_handle.char_discovery=DISCOVER_SUCCESS;
+				lls_handle.char_discovery=(at_ble_status_t)DISCOVER_SUCCESS;
 			}
 			break;
 
@@ -390,7 +390,7 @@ at_ble_primary_service_found_t *primary_service_params)
 				DBG_LOG_DEV(" %04X %04X ",
 				primary_service_params->start_handle,
 				primary_service_params->end_handle);				
-				ias_handle.char_discovery=DISCOVER_SUCCESS;
+				ias_handle.char_discovery=(at_ble_status_t)DISCOVER_SUCCESS;
 			}
 			break;
 
@@ -405,7 +405,7 @@ at_ble_primary_service_found_t *primary_service_params)
 				DBG_LOG_DEV("%04X %04X",
 				primary_service_params->start_handle,
 				primary_service_params->end_handle);
-				txps_handle.char_discovery=DISCOVER_SUCCESS;
+				txps_handle.char_discovery=(at_ble_status_t)DISCOVER_SUCCESS;
 			}
 			break;
 
