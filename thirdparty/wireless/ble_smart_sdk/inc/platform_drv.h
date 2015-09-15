@@ -44,9 +44,121 @@
 #include <stdbool.h>
 #include <string.h>
 
+
+//chris.choi move gpio.h info to here
+
+#include <stdint.h>
+
+
+/**
+ * \brief SAMB11 available GPIO's.
+ *
+ * List of GPIO's available.
+ */
+enum {
+	LPGPIO_0	= 0,
+	LPGPIO_1,
+	LPGPIO_2,
+	LPGPIO_3,
+	LPGPIO_4,
+	LPGPIO_5,
+	LPGPIO_6,
+	LPGPIO_7,
+	LPGPIO_8,
+	LPGPIO_9,
+	LPGPIO_10,
+	LPGPIO_11,
+	LPGPIO_12,
+	LPGPIO_13,
+	LPGPIO_14,
+	LPGPIO_15,
+	LPGPIO_16,
+	LPGPIO_17,
+	LPGPIO_18,
+	LPGPIO_19,
+	LPGPIO_20,
+#ifdef CHIPVERSION_B0
+	LPGPIO_21,
+	LPGPIO_22,
+	LPGPIO_23,
+	LPGPIO_24,
+#endif
+	LPGPIO_MAX,
+};	
+
+#ifdef CHIPVERSION_B0
+	#define GPIO0_COMBINED_VECTOR_TABLE_INDEX		39
+	#define GPIO1_COMBINED_VECTOR_TABLE_INDEX		40
+	#define GPIO2_COMBINED_VECTOR_TABLE_INDEX		41
+#else
+	#define GPIO0_COMBINED_VECTOR_TABLE_INDEX		23
+	#define GPIO1_COMBINED_VECTOR_TABLE_INDEX		24
+#endif	//CHIPVERSION_B0
+
+// PINMUM VALUES for GPIO
+#define PINMUX_VAL_0			0			// Default GPIO functionality
+#define PINMUX_VAL_1			1			// Megamux
+#define PINMUX_VAL_2			2
+#define PINMUX_VAL_3			3
+#define PINMUX_VAL_4			4
+#define PINMUX_VAL_5			5
+
+typedef union {
+	uint16_t val;
+	struct {
+		uint8_t	muxval:8;
+		uint8_t	pinnum:8;
+	}bit;
+}pinumx;
+
+typedef union {
+	uint16_t port_info;
+	struct {
+		uint16_t gpio_num:8;
+		uint16_t available:1;
+		uint16_t configured:1;
+		uint16_t pack:6;
+	}bit;
+}port;
+extern port port_list[LPGPIO_MAX];
+
+#define PINNUM_OFFSET		8
+
+
+
+//chris.choi move gpio.h info to here
+
+
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/** callback function type for handling BLE FW stack messages */
+typedef void (*platform_interface_callback) (uint8_t *, uint16_t );
+
+/** enumerated status values for this platform driver */
+typedef enum PLATFORM_STATUS
+{
+    /** Platform Initialized and ready */
+    STATUS_SUCCESS = 0x00,
+    /** Platform Initialized and ready */
+    STATUS_ALREADY_INITIALIZED,
+    /** Platform Initialized and ready */
+    STATUS_RECEIVED_PLF_EVENT_MSG,
+    /** Platform Initialized and ready */
+    STATUS_RECEIVED_BLE_MSG,
+		/** Failed to initialize the platform */
+		STATUS_INITIALIZATION_FAILED,
+		/** Failed to initialize the platform */
+		STATUS_NOT_INITIALIZED,
+		/** Timeout failure */
+		STATUS_TIMEOUT,
+		/** Status Failure */
+		STATUS_FAILURE,
+}plf_drv_status;
 	
 /**
 @defgroup platform-drv platform Driver API
@@ -64,9 +176,107 @@ extern "C" {
  * Initializes the common data structures used by other peripheral drivers.
  * \note Call this API before using anyother API from other driver modules.
  *
+ * \return Status of platform driver initialization.
+ * \retval STATUS_SUCCESS								Platform driver initialized.
+ * \retval STATUS_ALREADY_INITIALIZED		Platform driver already initialized.
+ * \retval STATUS_NOT_INITIALIZED				Platform driver not initialized.
  */
-void platform_driver_init(void);
+plf_drv_status platform_driver_init(void);
 
+/**
+ * \brief Platform event wait function.
+ *
+ * Function to wait on a platform event. Platform event may be any peripheral
+ * interrupt event callback message, or timer event callback message or message
+ * from BLE FW stack. This is blocking API which will wait on the application
+ * message queue.
+ *
+ * \note	BLE stack library internally calls this API to wait on any messages
+ * 	from BLE Firmware. Application that uses both BLE library and driver library,
+ * 	can call either the at_ble_event_get API to get either BLE or platform event or
+ * 	call \ref platform_event_get API to get platform event.
+ *
+ * \param[in] timeout		Timeout value, currently not used.
+ *
+ * \return Status of platform event wait function.
+ * \retval STATUS_RECEIVED_BLE_MSG				Recieved a message from BLE FW.
+ * \retval STATUS_RECEIVED_PLF_EVENT_MSG	Recieved a Platform specific message.
+ * \retval STATUS_FAILURE									Failed to receive any valid message.
+ */
+plf_drv_status platform_event_wait(uint32_t timeout);
+
+/**
+ * \brief API to send message to BLE FW stack.
+ *
+ * An API to send KE_MSG to BLE FW stack. Any message format will not
+ * be understandable by the BLE FW stack. Please use BLE library API
+ * to use BLE feature.
+ * \note This API will be called from BLE API library.
+ *
+ * \param[in] data 		Buffer pointer for any event specific data.
+ * \param[in] len 		unsigned short which contains the length of the data buffer.
+ */
+void platform_interface_send(uint8_t* data, uint32_t len);
+
+/**
+ * 	\brief API to wait and receive a platform event.
+ *
+ * 	Function to wait on a platform event. Platform event may be any 
+ *	peripheral interrupt event callback message, or timer event 
+ *	callback message.This is blocking API which will wait until 
+ *	receives any message from the platform.
+ *
+ * 	\note	BLE stack library internally calls this API to wait on 
+ *	any messages from BLE Firmware. Application that uses both BLE 
+ *	library and driver library,can call either the at_ble_event_get
+ *	API to get either BLE or platform event or call this API to 
+ *	recieve a platform event.
+ *
+ * 	\param[in,out] event_type Pointer to uint16_t type.
+ * 	\param[in,out] data  			Pointer to a buffer to receive any event specific data.
+ * 	\param[in,out] data_len 	Pointer to uint16_t type to inform about the size of buffer.
+ *
+ * 	\return Status of platform event get feature.
+ * 	\retval STATUS_RECEIVED_BLE_MSG				Recieved a message from BLE FW.
+ * 	\retval STATUS_RECEIVED_PLF_EVENT_MSG	Recieved a Platform specific message.
+ * 	\retval STATUS_FAILURE									Failed to receive any valid message.
+ *
+ */
+plf_drv_status platform_event_get(uint16_t* event_type, uint8_t* data, uint16_t *data_len);
+
+/**
+ * \brief API to register a callback function for handling BLE messages.
+ *
+ * This API registers a callback function for processing BLE messages that are
+ * received from the BLE FW stack. Once registered any BLE messages received will
+ * be forwarded to this callback function.
+ * \note BLE API library will call this API to register a callback function for
+ * receiving BLE specific messages. Before calling this API make sure you 
+ * initialize the platform layer by calling \ref platform_driver_init API.
+ *
+ * \param[in] cb 	Callback function of type \ref platform_interface_callback.
+ *
+ * \return Status of registering a callback function.
+ * \retval STATUS_SUCCESS						Successfully registered a callback function.
+ * \retval STATUS_NOT_INITIALIZED		Failed to register because platform is not initialized.
+ */
+plf_drv_status platform_register_ble_msg_handler(platform_interface_callback cb);
+
+/**
+ * \brief API to send a message to application layer about any platform event.
+ *
+ * This API sends a message to application regarding any platform event. This API
+ * is used by the callback functions which are being called from an interrupt 
+ * context, to send a message to application thread regarding that callback
+ * event.
+ * \note Event that is received will be of type ((<callback_id << 8) |intr_index).
+ *
+ * \param[in] intr_index 	Interrupt index. This is specific value for each peripheral.
+ * \param[in] callback_id callback_id is a specific callback event type.
+ * \param[in] data 				Buffer pointer for any event specific data.
+ * \param[in] data_len 		unsigned short which contains the length of the data buffer.
+ */
+ void send_plf_int_msg_ind(uint8_t intr_index, uint8_t callback_id, void *data, uint16_t data_len);
 
 /** @} */
 

@@ -1,4 +1,5 @@
 #include "at_ble_api.h"
+#include <asf.h>
 #include <string.h>
 #ifndef NULL
 #define NULL ((void*)0)
@@ -9,7 +10,71 @@ static uint8_t adv_data[31];
 static uint8_t scan_rsp_data[31];	
 
 
-void app_init(void)
+/*
+for uart
+*/
+//! [module_inst]
+struct uart_module uart_instance;
+//! [module_inst]
+
+//! [variable_inst]
+static uint8_t string_input[8];
+volatile static bool read_complete_flag = false;
+volatile static bool write_complete_flag = false;
+//! [variable_inst]
+
+//! [callback_functions]
+static void uart_read_complete_callback(struct uart_module *const module)
+{
+	read_complete_flag = true;
+}
+
+static void uart_write_complete_callback(struct uart_module *const module)
+{
+	write_complete_flag = true;
+}
+//! [callback_functions]
+
+
+
+//! [setup]
+static void configure_uart(void)
+{
+//! [setup_config]
+	struct uart_config config_uart;
+//! [setup_config]
+//! [setup_config_defaults]
+	uart_get_config_defaults(&config_uart);
+//! [setup_config_defaults]
+
+//! [setup_change_config]
+	config_uart.baud_rate = 38400;
+	config_uart.pinmux_pad[0] = EDBG_CDC_SERCOM_PINMUX_PAD0;
+	config_uart.pinmux_pad[1] = EDBG_CDC_SERCOM_PINMUX_PAD1;
+	config_uart.pinmux_pad[2] = EDBG_CDC_SERCOM_PINMUX_PAD2;
+	config_uart.pinmux_pad[3] = EDBG_CDC_SERCOM_PINMUX_PAD3;
+//! [setup_change_config]
+
+//! [setup_set_config]
+	while (uart_init(&uart_instance,
+			EDBG_CDC_MODULE, &config_uart) != STATUS_OK) {
+	}
+//! [setup_set_config]
+}
+//! [setup]
+
+
+/*
+for uart
+*/
+
+
+
+
+
+
+
+void ble_init(void)
 {
 	 uint16_t status = AT_BLE_FAILURE; 
 	 at_ble_addr_t addr = {AT_BLE_ADDRESS_PUBLIC,
@@ -45,18 +110,88 @@ void app_init(void)
 
  }
 		
-int app_entry(void);
+int main(void);
 //main_task_id = 0x63;
 //unsigned int osAppTask_var __attribute__((at(0x100000D0))) = (unsigned int)app_entry;
 //unsigned int main_task_id __attribute__((at(0x100000C8))) = 0x3E;
 
 static uint8_t params[100];
-int app_entry()
+int main()
 {
 	at_ble_events_t event;
 	uint16_t handle;
-	memset(params,0,sizeof(params));
-	app_init();
+
+	memset(params,0,sizeof(params));	
+	
+	//! [module_inst]
+//uart_module uart_instance;
+//! [module_inst]
+
+//! [variable_inst]
+	memset(string_input,0,sizeof(string_input));
+	read_complete_flag = false;
+	write_complete_flag = false;
+
+	// chris choi : case 1, not working
+	//ble_init();
+	
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
+
+	// chris choi : case 4, working
+	//ble_init();
+
+//! [setup_init]
+	configure_uart();
+//! [setup_init]
+
+//! [main]
+//! [main_send_string1]
+	uint8_t string1[] = " Hello Worlda\r\n";
+	uart_write_buffer_wait(&uart_instance, string1, sizeof(string1));
+//! [main_send_string1]
+	
+
+	
+	uint8_t string2[] = " Hello World2\r\n";
+	uart_write_buffer_wait(&uart_instance, string2, sizeof(string2));
+//! [main_send_string1]
+
+	//chris.choi : case 2 working
+	//ble_init();
+
+
+	// chris.choi : case 3 not working
+	{	//case 3
+		//ble_init();
+
+	//! [test_callback_functions]
+	uint8_t string3[] = "input 8\r\n";
+	uart_register_callback(&uart_instance, uart_write_complete_callback,
+		UART_TX_COMPLETE);
+	uart_enable_callback(&uart_instance, UART_TX_COMPLETE);
+	uart_write_buffer_job(&uart_instance, string3, sizeof(string3));
+	while (!write_complete_flag);
+
+	uart_register_callback(&uart_instance, uart_read_complete_callback,
+		UART_RX_COMPLETE);
+	uart_enable_callback(&uart_instance, UART_RX_COMPLETE);
+	uart_read_buffer_job(&uart_instance, string_input, sizeof(string_input));
+	while (!read_complete_flag);
+
+	uint8_t string4[] = "received: ";
+	uart_write_buffer_wait(&uart_instance, string4, sizeof(string4));
+	uart_write_buffer_wait(&uart_instance, string_input, sizeof(string_input));
+	
+	}	// case 3
+
+
+	ble_init();
+
+	uint8_t string5[] = " Hello World3\r\n";
+	uart_write_buffer_wait(&uart_instance, string5, sizeof(string5));
+	
+	
+
 	
 	while(at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS)
 	{
