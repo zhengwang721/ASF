@@ -77,19 +77,20 @@ uint16_t energy_incrementor ;	/*!< energy incrementor for various heart rate val
 uint16_t heart_rate_value = HEART_RATE_MIN_NORM; /*!< to count the heart rate value*/
 uint16_t rr_interval_value = RR_VALUE_MIN; /*!< to count the rr interval value*/
 uint8_t activity = 0; /*!< activiy which will determine the */
-uint8_t prev_activity = 0xff;/*!< previous activity */
+uint8_t prev_activity = DEFAULT_ACTIVITY;/*!< previous activity */
 int8_t inc_changer	= 1;/*!< increment operator to change heart rate */
 int8_t time_operator ;/*!< operator to change the seconds */
 uint8_t hr_min_value;/*!<the minimum heart rate value*/
 uint8_t hr_max_value;/*!<the maximum heart rate value*/
 volatile bool button_pressed = false;/*!<patch download*/
+
 /****************************************************************************************
 *							        Functions											*
 ****************************************************************************************/
 
 /** @brief notification handler function called by the profile
  *	@param[in] notification_enable which will tell the state of the
- *application
+ *  application
  */
 void app_notification_handler(uint8_t notification_enable)
 {
@@ -113,27 +114,84 @@ void app_reset_handler(void)
 	DBG_LOG("Energy Expended is made '0'on user Reset");
 }
 
+/** @brief heart_rate_value_init will initializes the heart rate values
+ *	 for simulation.
+ *	 Based on the time different heart rate values are chosen to indicate
+ *	 different activity.
+ */
+static void heart_rate_value_init(void)
+{
+	activity = second_counter / 40;
+
+	if (activity != prev_activity) {		
+		switch(activity) {
+		case ACTIVITY_NORMAL:
+			hr_min_value = HEART_RATE_MIN_NORM;
+			hr_max_value = HEART_RATE_MAX_NORM;
+			heart_rate_value = hr_min_value;
+			energy_incrementor = ENERGY_EXP_NORMAL;
+			break;
+			
+		case ACTIVITY_WALKING:
+			hr_min_value = HEART_RATE_MIN_WALKING;
+			hr_max_value = HEART_RATE_MAX_WALKING;
+			heart_rate_value = hr_min_value;
+			energy_incrementor = ENERGY_EXP_WALKING;
+			break;
+			
+		case ACTIVITY_BRISK_WALKING:
+			hr_min_value = HEART_RATE_MIN_BRISK_WALK;
+			hr_max_value = HEART_RATE_MAX_BRISK_WALK;
+			heart_rate_value = hr_min_value;
+			energy_incrementor = ENERGY_EXP_BRISK_WALKING;
+			break;
+			
+		case ACTIVITY_RUNNING:
+			hr_min_value = HEART_RATE_MIN_RUNNING;
+			hr_max_value = HEART_RATE_MAX_RUNNING;
+			heart_rate_value = hr_min_value;
+			energy_incrementor = ENERGY_EXP_RUNNING;
+			break;
+			
+		case ACTIVITY_FAST_RUNNING:
+			hr_min_value = HEART_RATE_MIN_FAST_RUNNING;
+			hr_max_value = HEART_RATE_MAX_FAST_RUNNING;
+			heart_rate_value = hr_min_value;
+			energy_incrementor = ENERGY_EXP_FAST_RUNNING;
+			break;
+		}
+		prev_activity = activity;
+	}
+	
+	if (heart_rate_value == hr_max_value) {
+		inc_changer = -1;
+	} else if (heart_rate_value == hr_min_value) {
+		inc_changer = 1;
+	}
+}
+
 /** @brief app_state_handler which will tell the state of the application
  *  @param[in] status of the application
  */
 void app_state_handler(bool state)
 {
 	app_state = state;
+	
 	if (app_state == false) {
-		
 		hw_timer_stop();
 		notification_flag = false;
 		energy_expended_val = ENERGY_EXP_NORMAL;
 		second_counter = 0;
 		activity = ACTIVITY_NORMAL;
+		prev_activity = DEFAULT_ACTIVITY;
 		heart_rate_value_init();
 		LED_Off(LED0);
 		DBG_LOG("Press button to advertise");
 	} else if (app_state == true) {
 		LED_On(LED0);
-		DBG_LOG(
-				"Enable the notification in app to listen heart rate or press the button to disconnect");
-				advertisement_flag = false;
+		DBG_LOG("Enable the notification in app to listen "
+				"heart rate or press the button to disconnect");
+		advertisement_flag = false;
 	}
 }
 
@@ -142,211 +200,92 @@ void app_state_handler(bool state)
  */
 void button_cb(void)
 {
-	 button_pressed = true;
+	button_pressed = true;
+	
 	if (app_state) {
 		DBG_LOG_DEV("Going to disconnect ");
 		disconnect_flag = true;
-	} else {
-		
-		if (advertisement_flag == false)
-		{
-			DBG_LOG_DEV("Going to advertisement");
-			start_advertisement = true;
-			advertisement_flag = true;
-		}
-		
+	} else if (app_state == false && advertisement_flag == false) {
+		/* To check if the device is in advertisement */
+		DBG_LOG_DEV("Going to advertisement");
+		start_advertisement = true;
+		advertisement_flag = true;	
 	}
 }
 
 /** @brief hr_measurment_send sends the notifications after adding the hr values
  *	heart rate values starts @60bpm increments by 1 goes upto 255 bpm and
- *restarts @60
+ *	restarts @60
  *  Energy Expended will be sent on every 10th notification,it starts @ 0 and
- *increments by 20
+ *	increments by 20
  *  rr interval values, two rr interval values will be sent in every
- *notification
+ *	notification
  */
-void hr_measurment_send(void)
+static void hr_measurment_send(void)
 {
 	uint8_t hr_data[HR_CHAR_VALUE_LEN];
 	uint8_t idx = 0;
-
-	if (second_counter % 10) {
-		/* Flags */
-		hr_data[idx++] = (RR_INTERVAL_VALUE_PRESENT);
-		DBG_LOG("Heart Rate: %d bpm", heart_rate_value);
-		
-		heart_rate_value += (inc_changer);
-		/* Heart Rate Value 8bit*/
-		hr_data[idx++] = (uint8_t)heart_rate_value ;
-		
-		
-		if (energy_expended_val == ENERGY_RESET) {
-			hr_data[0] = hr_data[0] | ENERGY_EXPENDED_FIELD_PRESENT;
-			memcpy(&hr_data[idx], &energy_expended_val, 2);
-			idx += 2;
-		}
-		 
-
-		/* RR Interval values(2)*/
-		if (rr_interval_value < (uint16_t)RR_VALUE_MAX) {
-			DBG_LOG_CONT("\tRR Values:(%d,%d)msec",
-					rr_interval_value, rr_interval_value +
-					200);
-			memcpy(&hr_data[idx], &rr_interval_value, 2);
-			idx += 2;
-			rr_interval_value += 200;
-			memcpy(&hr_data[idx], &rr_interval_value, 2);
-			idx += 2;
-			rr_interval_value += 200;
-		} else {
-			DBG_LOG_CONT("\tRR Values:(%d,%d) msec",
-					rr_interval_value, rr_interval_value +
-					200);
-			rr_interval_value = (uint8_t)RR_VALUE_MIN;
-			memcpy(&hr_data[idx], &rr_interval_value, 2);
-			idx += 2;
-			rr_interval_value += 200;
-			memcpy(&hr_data[idx], &rr_interval_value, 2);
-			idx += 2;
-			rr_interval_value += 200;
-		}
 	
-		
-		if (energy_expended_val == ENERGY_RESET) {
-			energy_expended_val += energy_incrementor;
-			DBG_LOG("Energy Expended : 0 KJ");
-		}
-	 
+	if ((energy_expended_val == ENERGY_RESET) || (second_counter % 10 == 0)) {
+		hr_data[idx] = (RR_INTERVAL_VALUE_PRESENT | ENERGY_EXPENDED_FIELD_PRESENT);
 	} else {
-		/* flags */
-		hr_data[idx++]
-			= (RR_INTERVAL_VALUE_PRESENT |
-				ENERGY_EXPENDED_FIELD_PRESENT);
+		hr_data[idx] = RR_INTERVAL_VALUE_PRESENT ;
+	}
+	idx += 1;			
+	DBG_LOG("Heart Rate: %d bpm", heart_rate_value);
+	heart_rate_value += (inc_changer);
 
-		/* Heart Rate Value 8bit*/
-		DBG_LOG("Heart Rate: %d bpm", heart_rate_value);
-		/* Heart Rate Value 8bit*/
-		heart_rate_value += (inc_changer);
-		hr_data[idx++] = (uint8_t)heart_rate_value;
-		
+	/* Heart Rate Value 8bit*/
+	hr_data[idx++] = (uint8_t)heart_rate_value ;
+	if (hr_data[0] & ENERGY_EXPENDED_FIELD_PRESENT) {
 		memcpy(&hr_data[idx], &energy_expended_val, 2);
-		idx += 2;
-		/* RR Interval values(2) */
-		if (rr_interval_value < (uint16_t)RR_VALUE_MAX) {
-			DBG_LOG_CONT("\tRR Values:(%d,%d) msec",
-					rr_interval_value, rr_interval_value +
-					200);
-			memcpy(&hr_data[idx], &rr_interval_value, 2);
-			idx += 2;
-			rr_interval_value += 200;
-			memcpy(&hr_data[idx], &rr_interval_value, 2);
-			idx += 2;
-			rr_interval_value += 200;
-		} else {
-			DBG_LOG_CONT("\tRR Values:(%d,%d) msec",
-					rr_interval_value, rr_interval_value +
-					200);
-			rr_interval_value = (uint8_t)RR_VALUE_MIN;
-			memcpy(&hr_data[idx], &rr_interval_value, 2);
-			idx += 2;
-			rr_interval_value += 200;
-			memcpy(&hr_data[idx], &rr_interval_value, 2);
-			idx += 2;
-			rr_interval_value += 200;
-		}
-
-		DBG_LOG("Energy Expended :%d KJ", energy_expended_val);
+		idx += 2;	
+	}
+	
+	/* Appending RR interval values*/	
+	if (rr_interval_value >= RR_VALUE_MAX) {
+		rr_interval_value = (uint8_t) RR_VALUE_MIN; 
+	}	
+	DBG_LOG_CONT("\tRR Values:(%d,%d)msec",
+				rr_interval_value, rr_interval_value + 200);
+	memcpy(&hr_data[idx], &rr_interval_value, 2);
+	idx += 2;
+	rr_interval_value += 200;
+	memcpy(&hr_data[idx], &rr_interval_value, 2);
+	idx += 2;
+	rr_interval_value += 200;
+	
+	/*printing the user activity,simulation*/
+	switch(activity) {
+	case ACTIVITY_NORMAL:
+		DBG_LOG_CONT(" User Status:Idle");
+		break;
+		
+	case ACTIVITY_WALKING:
+		DBG_LOG_CONT(" User Status:Walking");
+		break;
+		
+	case ACTIVITY_BRISK_WALKING:
+		DBG_LOG_CONT(" User status:Brisk walking");
+		break;
+		
+	case ACTIVITY_RUNNING:
+		DBG_LOG_CONT(" User status:Running");
+		break;
+		
+	case ACTIVITY_FAST_RUNNING:
+		DBG_LOG_CONT(" User Status:Fast Running");
+		break;	
+	}
+	
+	/* Printing the energy*/
+	if ((hr_data[0] & ENERGY_EXPENDED_FIELD_PRESENT)) {
+		DBG_LOG("Energy Expended :%d KJ\n", energy_expended_val);
 		energy_expended_val += energy_incrementor;
 	}
-
-	if (activity == 0) {
-		DBG_LOG_CONT(" User Status:Idle");
-	} else if (activity == 1) {
-		DBG_LOG_CONT(" User Status:Walking");
-	} else if (activity == 2) {
-		DBG_LOG_CONT(" User status:Brisk walking");
-	} else if (activity == 3) {
-		DBG_LOG_CONT(" User status:Running");
-	} else if (activity == 4) {
-		DBG_LOG_CONT(" User Status:Fast Running");
-	}
-
-	if ((second_counter % 10) == 0) {
-		DBG_LOG("\n");
-	}
-
+	
+	/* Sending the data for notifications*/
 	hr_sensor_send_notification(hr_data, idx);
-}
-
-/** @brief heart_rate_value_init will initializes the heart rate values
- *	 for simulation.
- *	 Based on the time different heart rate values are chosen to indicate
- *different activity.
- */
-void heart_rate_value_init(void )
-{
-	activity = second_counter / 40;
-
-	if (activity != prev_activity)
-	{		
-		switch(activity)
-		{
-			case ACTIVITY_NORMAL:
-			{
-				hr_min_value = HEART_RATE_MIN_NORM;
-				hr_max_value = HEART_RATE_MAX_NORM;
-				heart_rate_value = hr_min_value;
-				energy_incrementor = ENERGY_EXP_NORMAL;
-			}
-			break;
-			
-			case ACTIVITY_WALKING:
-			{
-				hr_min_value = HEART_RATE_MIN_WALKING;
-				hr_max_value = HEART_RATE_MAX_WALKING;
-				heart_rate_value = hr_min_value;
-				energy_incrementor = ENERGY_EXP_WALKING;
-			}
-			break;
-			
-			case ACTIVITY_BRISK_WALKING:
-			{
-				hr_min_value = HEART_RATE_MIN_BRISK_WALK;
-				hr_max_value = HEART_RATE_MAX_BRISK_WALK;
-				heart_rate_value = hr_min_value;
-				energy_incrementor = ENERGY_EXP_BRISK_WALKING;
-			}
-			break;
-			
-			case ACTIVITY_RUNNING:
-			{
-				hr_min_value = HEART_RATE_MIN_RUNNING;
-				hr_max_value = HEART_RATE_MAX_RUNNING;
-				heart_rate_value = hr_min_value;
-				energy_incrementor = ENERGY_EXP_RUNNING;
-			}
-			break;
-			
-			case ACTIVITY_FAST_RUNNING:
-			{
-				hr_min_value = HEART_RATE_MIN_FAST_RUNNING;
-				hr_max_value = HEART_RATE_MAX_FAST_RUNNING;
-				heart_rate_value = hr_min_value;
-				energy_incrementor = ENERGY_EXP_FAST_RUNNING;
-			}
-			break;
-		}
-		prev_activity = activity;
-	}
-		if (heart_rate_value == hr_max_value)
-		{
-			inc_changer = -1;
-		} else if (heart_rate_value == hr_min_value)
-		{
-			inc_changer = 1;
-		}
-
 }
 
 /**
@@ -354,21 +293,17 @@ void heart_rate_value_init(void )
  */
 void timer_callback_handler(void)
 {
-	if (second_counter == START_OF_FIRST_ACTIVITY)
-	{
+	if (second_counter == START_OF_FIRST_ACTIVITY) {
 		time_operator = 1;
-	} else if (second_counter == END_OF_LAST_ACTIVITY)
-	{
+	} else if (second_counter == END_OF_LAST_ACTIVITY) {
 		time_operator = -1;
 	}
-	
 	second_counter += (time_operator);
-	
 	heart_rate_value_init();
 	notification_flag = true;
 }
 
-/* to make app executing continously*/
+/* to make app executing continuously*/
 bool app_exec = true;
 /**
  * \brief Heart Rate Sensor Application main function
@@ -433,6 +368,5 @@ int main(void)
 			disconnect_flag = false;
 		}
 	}
-	
 	return 0;
 }
