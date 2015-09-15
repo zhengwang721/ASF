@@ -70,20 +70,13 @@ at_ble_status_t tis_rtu_update_write(at_ble_handle_t conn_handle,at_ble_handle_t
 {
 	uint8_t desc_data[3] = {0x01,0,0};
 	uint8_t control_data = 0x02;
-	if(desc_handle == RTU_INVALID_CHAR_HANDLE)
-	{
+	if(desc_handle == RTU_INVALID_CHAR_HANDLE) {
 		return (AT_BLE_INVALID_STATE);
 	}
-	else
-	{
-		if(noti == true)
-		{
-			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 1, &control_data,false, false));
-		}
-		else if(noti == false)
-		{
-			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 1, &desc_data[0],false, false));
-		}
+	if(noti == true) {
+		return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 1, &control_data,false, false));
+	} else if(noti == false) {
+		return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 1, &desc_data[0],false, false));
 	}
 	return AT_BLE_SUCCESS;
 }
@@ -91,14 +84,10 @@ at_ble_status_t tis_rtu_update_write(at_ble_handle_t conn_handle,at_ble_handle_t
 at_ble_status_t tis_rtu_update_read(at_ble_handle_t conn_handle,
 		at_ble_handle_t char_handle, uint16_t length)
 {
-	if (char_handle == RTU_INVALID_CHAR_HANDLE) 
-	{
-		return (AT_BLE_INVALID_STATE);
-	} 
-	else  
-	{
-		return (at_ble_characteristic_read(conn_handle,char_handle,RTU_READ_OFFSET,length));
+	if (char_handle == RTU_INVALID_CHAR_HANDLE) {
+		return (AT_BLE_INVALID_STATE); 
 	}
+	return (at_ble_characteristic_read(conn_handle,char_handle,RTU_READ_OFFSET,length));
 }
 
 /**@brief Read response handler for read response for time characteristic
@@ -107,27 +96,10 @@ int8_t tis_rtu_update_read_response(at_ble_characteristic_read_response_t *read_
 		gatt_rtu_handler_t *rtu_handler)
 {
 	if(read_resp->status != AT_BLE_SUCCESS)
-	{
 		return read_resp->status;
-	}
-	else 
-	{
-		if (read_resp->char_handle == rtu_handler->tp_control_char_handle) 
-		{
-		
-			DBG_LOG("Inside the Time Update Control Point READ RESPONSE");
-			DBG_LOG("Available data is");
-		
-			for(uint8_t i=0;i<read_resp->char_len;i++)
-			{
-				DBG_LOG_CONT("%02X",read_resp->char_value[i]);
-			}				
-		}
-		else if (read_resp->char_handle == rtu_handler->tp_state_char_handle)
-		{
+	else if (read_resp->char_handle == rtu_handler->tp_state_char_handle) {
 			DBG_LOG("Source = %02d",read_resp->char_value[0]);
 			DBG_LOG("Result = %02d",read_resp->char_value[1]);
-		}
 	}
 	return 0;
 }

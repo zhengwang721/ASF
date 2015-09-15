@@ -117,6 +117,7 @@ int main(void)
 	hw_timer_register_callback(timer_callback_handler);
 	
 	
+	DBG_LOG("Initializing Battery Service Application");
 	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
@@ -129,8 +130,6 @@ int main(void)
 	{
 		DBG_LOG("defining battery service failed %d", status);
 	}
-	
-	DBG_LOG("Initializing Battery Service Application");
 	
 	battery_service_advertise();
 	

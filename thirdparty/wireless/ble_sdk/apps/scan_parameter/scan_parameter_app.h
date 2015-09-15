@@ -79,7 +79,7 @@
 #define SPS_ADV_DATA_NAME_TYPE			(0x09)
 
 /* @brief BAS_ADV_DATA_NAME_DATA the actual name of device */
-#define SPS_ADV_DATA_NAME_DATA			("ATMEL-DEV")
+#define SPS_ADV_DATA_NAME_DATA			("ATMEL-SCP")
 
 void timer_callback_handler(void);
 
