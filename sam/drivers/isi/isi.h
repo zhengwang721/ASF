@@ -162,6 +162,7 @@ struct isi_frame_buffer_descriptors
 
 /**
  * \brief Enable ISI
+ *
  * \param p_isi  Pointer to a ISI instance.
  */
 static inline void isi_enable(Isi *p_isi)
@@ -172,6 +173,7 @@ static inline void isi_enable(Isi *p_isi)
 
 /**
  * \brief Disable ISI
+ *
  * \param p_isi  Pointer to a ISI instance.
  */
 static inline void isi_disable(Isi *p_isi)
@@ -184,6 +186,7 @@ static inline void isi_disable(Isi *p_isi)
 
 /**
  * \brief Reset ISI
+ *
  * \param p_isi  Pointer to a ISI instance.
  */
 static inline void isi_reset(Isi *p_isi)
@@ -192,12 +195,12 @@ static inline void isi_reset(Isi *p_isi)
 	   Finish capturing the current frame and then shut down the module. */
 	p_isi->ISI_CR = ISI_CR_ISI_SRST | ISI_CR_ISI_DIS;
 	/* wait Software reset has completed successfully. */
-//	while((p_isi->ISI_SR & ISI_SR_SRST) != ISI_SR_SRST);
-	while(!(p_isi->ISI_SR & ISI_SR_SRST));
+	while((p_isi->ISI_SR & ISI_SR_SRST) != ISI_SR_SRST);
 }
 
 /**
  * \brief Enable the codec datapath and capture a full resolution frame.
+ *
  * \param p_isi  Pointer to a ISI instance.
  */
 static inline void isi_capture(Isi *p_isi)
@@ -220,6 +223,7 @@ void isi_size_configure(Isi *p_isi, uint32_t image_hsize, uint32_t image_vsize,
 
 /**
  * \brief Enable ISI interrupt
+ *
  * \param p_isi  Pointer to a ISI instance.
  * \param  flag of interrupt to enable
  */
@@ -230,6 +234,7 @@ static inline void isi_enable_interrupt(Isi *p_isi, uint32_t flag)
 
 /**
  * \brief Disable ISI interrupt
+ *
  * \param p_isi  Pointer to a ISI instance.
  * \param  flag of interrupt to disable
  */
@@ -240,6 +245,7 @@ static inline void isi_disable_interrupt(Isi *p_isi, uint32_t flag)
 
 /**
  * \brief Return ISI status register
+ *
  * \param p_isi  Pointer to a ISI instance.
  * \return Status of ISI register
  */
@@ -250,6 +256,7 @@ static inline uint32_t isi_get_status(Isi *p_isi)
 
 /**
  * \brief Enable ISI Dma channel
+ *
  * \param p_isi  Pointer to a ISI instance.
  * \param  channel to be enabled
  */
@@ -260,6 +267,7 @@ static inline void isi_dma_channel_enable(Isi *p_isi, uint32_t channel)
 
 /**
  * \brief Disable ISI Dma channel
+ *
  * \param p_isi  Pointer to a ISI instance.
  * \param  channel to be disabled
  */
