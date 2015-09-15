@@ -90,9 +90,9 @@ at_ble_handle_t connection_handle;
 ****************************************************************************************/
 
 /** @brief register_hr_notification_handler registers the notification handler
- * passed by the application
- *  @param[in] hr_notification_callback_t address of the notification handler
- *function to be called
+ *	passed by the application
+ *  param[in] hr_notification_callback_t address of the notification handler
+ *	function to be called
  */
 void register_hr_notification_handler(
 		hr_notification_callback_t hr_notificaton_handler)
@@ -101,7 +101,7 @@ void register_hr_notification_handler(
 }
 
 /** @brief register_hr_reset_handler registers the reset handler passed by the
- * application
+ *  application
  *  @param[in]	hr_reset_callback_t address of the handler function to be called
  */
 void register_hr_reset_handler(hr_reset_callback_t hr_reset_handler)
@@ -110,9 +110,9 @@ void register_hr_reset_handler(hr_reset_callback_t hr_reset_handler)
 }
 
 /** @brief register_hr_state_handler registers the state handler passed by the
- * application
+ *  application
  *	@param[in] hr_state_callback_t address of the handler function to be
- *called
+ *  called
  */
 void register_hr_state_handler(hr_state_callback_t state_handler)
 {
@@ -122,12 +122,11 @@ void register_hr_state_handler(hr_state_callback_t state_handler)
 /** @brief hr_notification_confirmation_handler called on notification confirmation
  *  event by the ble manager
  *	@param[in] at_ble_status_t AT_BLE_SUCCESS on success AT_BLE_FAILURE on failure
- *called
+ *  called
  */
 void hr_notification_confirmation_handler(at_ble_cmd_complete_event_t * params)
 {
-	if ( params->status == AT_BLE_SUCCESS)
-	{
+	if ( params->status == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("Notification confirmation successful");
 	} else { 
 		DBG_LOG_DEV("Notification confirmation failure");
@@ -142,28 +141,24 @@ void hr_notification_confirmation_handler(at_ble_cmd_complete_event_t * params)
 bool hr_sensor_send_notification(uint8_t *hr_data, uint8_t length)
 {
 	at_ble_status_t status;
+	
 	/** Updating the new characteristic value */
-	if ((status
-				= at_ble_characteristic_value_set(
-					hr_service_handler.serv_chars
-					[0].char_val_handle, hr_data,
-					length)) != AT_BLE_SUCCESS) {
+	if ((status = at_ble_characteristic_value_set(
+							hr_service_handler.serv_chars[0].char_val_handle,
+							hr_data, length)) != AT_BLE_SUCCESS) {
 		DBG_LOG("Write value for notification failed,reason %d",
 				status);
-				return false;
+		return false;
 	}
 
 	/** Sending the notification for the updated characteristic */
-	if (status == AT_BLE_SUCCESS) {
-		if ((status
-					= at_ble_notification_send(
-						connection_handle,
-						hr_service_handler.serv_chars[0]
-						.char_val_handle))) {
-			DBG_LOG("Send notification failed,reason %d", status);
-			return false;
-		}
+	if ((status	= at_ble_notification_send(connection_handle,
+										hr_service_handler.serv_chars[0]
+										.char_val_handle))) {
+		DBG_LOG("Send notification failed,reason %d", status);
+		return false;	
 	}
+	
 	return true;
 }
 
@@ -195,9 +190,9 @@ at_ble_status_t hr_sensor_char_changed_handler(
 }
 
 /** @brief hr_sensor_disconnect_event_handler called by ble manager after
- * disconnection event recieved
+ *  disconnection event recieved
  *	@param[in] at_ble_disconnected_t	which has connection handle and
- *reason for disconnection
+ *  reason for disconnection
  */
 at_ble_status_t hr_sensor_disconnect_event_handler(
 		at_ble_disconnected_t *disconnect)
@@ -205,7 +200,8 @@ at_ble_status_t hr_sensor_disconnect_event_handler(
 	/** Calling app state callback handler */
 	state_cb(HR_APP_DISCONNECT_STATE);
 	ALL_UNUSED(disconnect);
-        return AT_BLE_SUCCESS;
+    
+	return AT_BLE_SUCCESS;
 }
 
 /** @brief hr_sensor_connected_state_handler called by ble manager after a
@@ -214,11 +210,12 @@ at_ble_status_t hr_sensor_disconnect_event_handler(
  *device address
  */
 at_ble_status_t hr_sensor_connected_state_handler(
-		at_ble_connected_t *conn_params)
+							at_ble_connected_t *conn_params)
 {
 	connection_handle = (at_ble_handle_t)conn_params->handle;
 	/** calling app state call back handler */
 	state_cb(HR_APP_CONNECTION_STATE);
+	
 	return AT_BLE_SUCCESS;
 }
 
@@ -337,5 +334,5 @@ void hr_sensor_init(void *param)
 	hr_sensor_service_init();
 	hr_sensor_service_define();
 	DBG_LOG("Press the button to start advertisement");
-        ALL_UNUSED(param);
+    ALL_UNUSED(param);
 }

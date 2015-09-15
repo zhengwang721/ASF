@@ -58,6 +58,7 @@
 #define ACTIVITY_BRISK_WALKING						                         (2)
 #define ACTIVITY_RUNNING						                             (3)
 #define ACTIVITY_FAST_RUNNING				                                 (4)
+#define DEFAULT_ACTIVITY													 (0xFF)
 
 /**@brief Time counter for change of activities by user*/
 #define TIME_NORMAL_LIMIT													(40)
@@ -140,18 +141,6 @@ void app_reset_handler(void);
  *  @param[in] status of the application
  */
 void app_state_handler(bool state);
-
-/** @brief heart_rate_value_init will initializes the heart rate values
- *	 for simulation.
- *	 Based on the time different heart rate values are chosen to indicate
- *different activity.
- */
-void heart_rate_value_init(void );
-
-/** @brief hr_measurment_send sends the notifications after adding the hr values
- *
- */
-void hr_measurment_send(void);
 
 /** @brief blp_notification_confirmation_handler called by ble manager 
  *	to give the status of notification sent
