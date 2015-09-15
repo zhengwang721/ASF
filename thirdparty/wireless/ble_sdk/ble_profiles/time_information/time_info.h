@@ -219,6 +219,8 @@ void time_info_notification_handler(at_ble_notification_recieved_t *char_read_re
 
 typedef void (*bonding_complete_t)(bool flag);
 
+typedef void (* read_response_callback_t) (at_ble_characteristic_read_response_t *char_read_resp);
+void time_info_register_read_response_callback(read_response_callback_t read_response_cb);
 void time_info_encryption_status_changed_handler(at_ble_encryption_status_changed_t *param);
 void time_info_pair_done_handler(at_ble_pair_done_t *pair_done_param);
 void time_info_register_bonding_callback(bonding_complete_t bonding_complete_cb);

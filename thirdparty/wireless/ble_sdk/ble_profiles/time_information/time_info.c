@@ -120,6 +120,8 @@ volatile bool time_update_cp_char_found = false;
 volatile bool time_update_state_char_found = false;
 volatile bool Desc_found = false;
 
+read_response_callback_t read_response_callback = NULL;
+
 /***********************************************************************************
  *									Implementations	                               *
  **********************************************************************************/
@@ -502,6 +504,10 @@ void time_info_characteristic_read_response(at_ble_characteristic_read_response_
 	#if defined REFERENCE_TIME_SERVICE
 		tis_rtu_update_read_response(char_read_resp, &rtu_handle);
 	#endif
+	if(read_response_callback)
+	{
+		read_response_callback(char_read_resp);
+	} 
 }
 
 /**
@@ -589,6 +595,14 @@ void time_info_pair_done_handler(at_ble_pair_done_t *pair_done_param)
 	if(bonding_cb)
 	{
 		bonding_cb(true);		
+	}
+}
+
+void time_info_register_read_response_callback(read_response_callback_t read_response_cb)
+{
+	if(read_response_cb)
+	{
+		read_response_callback = read_response_cb;
 	}
 }
 
