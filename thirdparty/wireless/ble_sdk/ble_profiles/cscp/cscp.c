@@ -75,7 +75,7 @@ recv_ntf_callback_t recv_ntf_cb;
 /**
 * \CSC buffer initialization function
 */
-void csc_prf_buf_init(uint8_t *databuf, uint8_t datalen)
+void csc_prf_buf_init(uint8_t *databuf, uint16_t datalen)
 {
 	app_csc_info.buff_ptr = databuf;
 	app_csc_info.buff_len = datalen;
@@ -87,13 +87,13 @@ void csc_prf_buf_init(uint8_t *databuf, uint8_t datalen)
 void csc_prf_init(void *param)
 { 
 	csc_serv_init(app_csc_info.buff_ptr, app_csc_info.buff_len);
-        ALL_UNUSED(param);
+    ALL_UNUSED(param);
 }
 
 /**
 * \CSC profile send data function
 */
-void csc_prf_send_data(uint8_t *databuf, uint8_t datalen)
+void csc_prf_send_data(uint8_t *databuf, uint16_t datalen)
 {
 	if(datalen <= app_csc_info.buff_len)
 	{

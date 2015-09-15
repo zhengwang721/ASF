@@ -81,14 +81,14 @@ typedef struct csc_serv
   * @param[in] buf		Buffer pointer for data to be send
   * @param[in] len      size of buffer		
   */
-at_ble_status_t csc_serv_init(uint8_t *buf, uint8_t len);
+at_ble_status_t csc_serv_init(uint8_t *buf, uint16_t len);
 
 /** @brief Function used for sending data to remote device
   * 
  * @param[in] buf		Buffer pointer for data to be send
  * @param[in] len       size of buffer
   */
-at_ble_status_t csc_serv_send_data(uint16_t connhandle, uint8_t *databuf, uint8_t datalen);
+at_ble_status_t csc_serv_send_data(uint16_t connhandle, uint8_t *databuf, uint16_t datalen);
 
 
 #endif /*__CSCS_H__*/

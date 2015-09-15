@@ -73,7 +73,7 @@
 csc_report_ntf_t recv_ntf_info;
 
 /* Data length to be send over the air */
-uint8_t send_length = 0;
+uint16_t send_length = 0;
 
 /* Buffer data to be send over the air */
 uint8_t send_data[APP_TX_BUF_SIZE];
@@ -89,7 +89,7 @@ void csc_prf_report_ntf_cb(csc_report_ntf_t *report_info)
 void csc_app_send_buf(void)
 {
 	uint16_t ind = 0;
-	uint8_t len = 0;
+	uint16_t len = 0;
 	uint8_t buff = 0;
 	len = sio2host_rx(&buff, 1);
 	if (len) 
@@ -102,6 +102,11 @@ void csc_app_send_buf(void)
 				if(send_length < APP_TX_BUF_SIZE)
 				{
 					send_data[send_length++] = buff;
+				}
+				else
+				{
+					csc_prf_send_data(&send_data[0], send_length);
+					send_length = 0;
 				}
 			}
 			else // User press enter to send data

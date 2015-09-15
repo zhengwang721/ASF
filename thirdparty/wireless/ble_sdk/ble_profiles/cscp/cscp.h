@@ -144,7 +144,7 @@ typedef struct app_csc_data{
 	/** To check the buffer pointer */
 	uint8_t *buff_ptr;
 	/** To check the buffer length */
-	uint8_t buff_len;
+	uint16_t buff_len;
 	/** To check the service discovery status */
 	uint8_t devicedb;
 	/** To check the type of discovery */
@@ -182,13 +182,13 @@ typedef void (*recv_ntf_callback_t)(csc_report_ntf_t *);
 * @param[in] databuf Initialization data pointer
 * @param[in] datalen Data length
  */
-void csc_prf_buf_init(uint8_t *databuf, uint8_t datalen);
+void csc_prf_buf_init(uint8_t *databuf, uint16_t datalen);
 
 /** @brief CSC profile send data function
 * @param[in] databuf Data buffer send to remote device
 * @param[in] datalen Data length
  */
-void csc_prf_send_data(uint8_t *databuf, uint8_t datalen);
+void csc_prf_send_data(uint8_t *databuf, uint16_t datalen);
 
 /** @brief CSC profile initialization function 
  */

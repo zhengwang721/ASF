@@ -64,7 +64,7 @@ csc_serv_t csc_inst;
 /**
 * \CSC service Configuration function
 */
-at_ble_status_t csc_serv_init(uint8_t *buf, uint8_t len)
+at_ble_status_t csc_serv_init(uint8_t *buf, uint16_t len)
 {
 	/* Configure SPOG Service UUID info*/
 	csc_inst.serv_uuid.type =	 AT_BLE_UUID_128;
@@ -88,7 +88,7 @@ at_ble_status_t csc_serv_init(uint8_t *buf, uint8_t len)
 /**
 * \CSC service send data function
 */
-at_ble_status_t csc_serv_send_data(uint16_t connhandle, uint8_t *databuf, uint8_t datalen)
+at_ble_status_t csc_serv_send_data(uint16_t connhandle, uint8_t *databuf, uint16_t datalen)
 {
 	at_ble_status_t status;
 	uint8_t value = 0;
