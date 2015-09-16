@@ -204,12 +204,9 @@ void hid_keyboard_app_init(void)
 	hid_prf_data.hid_device_info.bcountry_code = 0x00;
 	hid_prf_data.hid_device_info.flags = 0x02; 
 	
-	if(hid_prf_conf(&hid_prf_data)==HID_PRF_SUCESS)
-	{
+	if(hid_prf_conf(&hid_prf_data)==HID_PRF_SUCESS){
 		DBG_LOG("HID Profile Configured");
-	}
-	else
-	{
+	}else{
 		DBG_LOG("HID Profile Configuration Failed");
 	}
 }
@@ -255,16 +252,12 @@ int main(void )
 		ble_event_task();
 				
 		/* Check for key status */
-		if(key_status)
-		{
+		if(key_status){
 			DBG_LOG("Key Pressed...");
 			delay_ms(KEY_PAD_DEBOUNCE_TIME);
-			if((keyb_id == POSITION_ZERO) || (keyb_id == POSITION_SIX))
-			{
+			if((keyb_id == POSITION_ZERO) || (keyb_id == POSITION_SIX)){
 				app_keyb_report[0] = CAPS_ON;
-			}
-			else
-			{
+			}else{
 				app_keyb_report[0] = CAPS_OFF;
 			}
 			
@@ -276,12 +269,9 @@ int main(void )
 			
 			key_status = 0;
 			
-			if(keyb_id == MAX_TEXT_LEN)
-			{
+			if(keyb_id == MAX_TEXT_LEN){
 				keyb_id = 0;
-			}
-			else
-			{
+			}else{
 				++keyb_id;
 			}
 		}

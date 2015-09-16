@@ -178,8 +178,7 @@ void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_sta
 /* Callback called when user press the button for writing new characteristic value */
 void button_cb(void)
 {
-	if(!mouse_status)
-	{
+	if(!mouse_status){
 		mouse_status = 1;
 	}
 }
@@ -191,11 +190,9 @@ void hid_mouse_app_init(void)
 	hid_prf_data.hid_device = HID_MOUSE_MODE; 
 	hid_prf_data.protocol_mode = HID_REPORT_PROTOCOL_MODE; 
 	hid_prf_data.num_of_report = HID_NUM_OF_REPORT;
-	
 	/*Update the report information based on report id, User can allocate maximum HID_MAX_REPORT_NUM number of report*/
 	hid_prf_data.report_id[0] = 1;  
 	hid_prf_data.report_type[0] = INPUT_REPORT;  
-	
 	hid_prf_data.report_val[0] = (uint8_t *)&app_mouse_report[0];	
 	hid_prf_data.report_len[0] = sizeof(app_mouse_report);
 	hid_prf_data.report_map_info.report_map = hid_app_mouse_report_map;
@@ -203,13 +200,9 @@ void hid_mouse_app_init(void)
 	hid_prf_data.hid_device_info.bcd_hid = 0x0111;        
 	hid_prf_data.hid_device_info.bcountry_code = 0x00;
 	hid_prf_data.hid_device_info.flags = 0x02; 
-	
-	if(hid_prf_conf(&hid_prf_data)==HID_PRF_SUCESS)
-	{
+	if(hid_prf_conf(&hid_prf_data)==HID_PRF_SUCESS){
 		DBG_LOG("HID Profile Configured");
-	}
-	else
-	{
+	}else{
 		DBG_LOG("HID Profile Configuration Failed");
 	}
 }
@@ -225,6 +218,7 @@ bool hid_mouse_move(int8_t pos, uint8_t index_report)
 	app_mouse_report[index_report] = (uint8_t) s16_newpos;
 	return true;
 }
+
 /** To keep the app executing continously*/
 bool app_exec = true;
 int main(void )
@@ -264,21 +258,17 @@ int main(void )
 		ble_event_task();
 		
 		/* Check for key status */
-		if(mouse_status && report_ntf_info.ntf_conf)
-		{
+		if(mouse_status && report_ntf_info.ntf_conf){
 			delay_ms(KEY_PAD_DEBOUNCE_TIME);
-			
 			switch(mouse_pos)
 			{
 				case MOUSE_RIGHT_MOVEMENT:
 				{
-					if(hid_mouse_move(MOUSE_MOVEMENT_POS, 1))
-					{
+					if(hid_mouse_move(MOUSE_MOVEMENT_POS, 1)){
 						++cnt;
 						app_mouse_report[2] = 0;
 						DBG_LOG("Mouse Right Movement");
-						if(cnt == MOUSE_CHANGE_DIRECTION)
-						{
+						if(cnt == MOUSE_CHANGE_DIRECTION){
 							mouse_pos = MOUSE_DOWN_MOVEMENT;
 							cnt = 0;
 						}	
@@ -288,13 +278,11 @@ int main(void )
 				
 				case MOUSE_LEFT_MOVEMENT:
 				{
-					if(hid_mouse_move(-MOUSE_MOVEMENT_POS, 1))
-					{
+					if(hid_mouse_move(-MOUSE_MOVEMENT_POS, 1)){
 						++cnt;
 						app_mouse_report[2] = 0;
 						DBG_LOG("Mouse Left  Movement");
-						if(cnt == MOUSE_CHANGE_DIRECTION)
-						{
+						if(cnt == MOUSE_CHANGE_DIRECTION){
 							mouse_pos = MOUSE_UP_MOVEMENT;
 							cnt = 0;
 						}
@@ -304,8 +292,7 @@ int main(void )
 				
 				case MOUSE_UP_MOVEMENT:
 				{
-					if(hid_mouse_move(-MOUSE_MOVEMENT_POS, 2))
-					{
+					if(hid_mouse_move(-MOUSE_MOVEMENT_POS, 2)){
 						++cnt;
 						app_mouse_report[1] = 0;
 						DBG_LOG("Mouse UP    Movement");
@@ -315,19 +302,16 @@ int main(void )
 							cnt = 0;
 						}
 					}
-					
 				}
 				break;
 				
 				case MOUSE_DOWN_MOVEMENT:
 				{
-					if(hid_mouse_move(MOUSE_MOVEMENT_POS, 2))
-					{
+					if(hid_mouse_move(MOUSE_MOVEMENT_POS, 2)){
 						++cnt;
 						app_mouse_report[1] = 0;
 						DBG_LOG("Mouse Down  Movement");
-						if(cnt == MOUSE_CHANGE_DIRECTION)
-						{
+						if(cnt == MOUSE_CHANGE_DIRECTION){
 							mouse_pos = MOUSE_LEFT_MOVEMENT;
 							cnt = 0;
 						}

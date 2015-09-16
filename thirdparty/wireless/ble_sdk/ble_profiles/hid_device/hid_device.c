@@ -85,8 +85,7 @@ void hid_prf_init(void *param)
 	dis_gatt_service_handler_t device_info_serv;
 	for(; serv_num<HID_MAX_SERV_INST; serv_num++)
 	{
-		if(hid_prf_dataref[serv_num] != NULL)
-		{
+		if(hid_prf_dataref[serv_num] != NULL){
 			hid_serv_def_init(serv_num);
 			hid_serv_init(serv_num, hid_prf_dataref[serv_num]->hid_device, &hid_prf_dataref[serv_num]->protocol_mode, hid_prf_dataref[serv_num]->num_of_report, (uint8_t *)&hid_prf_dataref[serv_num]->report_type, &(hid_prf_dataref[serv_num]->report_val[0]), (uint8_t *)&hid_prf_dataref[serv_num]->report_len, &hid_prf_dataref[serv_num]->hid_device_info);
 			hid_serv_report_map(serv_num, hid_prf_dataref[serv_num]->report_map_info.report_map, hid_prf_dataref[serv_num]->report_map_info.report_map_len);
@@ -95,21 +94,14 @@ void hid_prf_init(void *param)
 			serv_handle = hid_service_dbreg(serv_num, (uint8_t *)&hid_prf_dataref[serv_num]->report_type, (uint8_t *)&hid_prf_dataref[serv_num]->report_id, hid_prf_dataref[serv_num]->num_of_report);
 			
 			DBG_LOG_DEV("HID Service Handle %d", serv_handle);
-			if(serv_handle)
-			{
+			if(serv_handle){
 				hid_prf_dataref[serv_num]->serv_handle_info = serv_handle;
-				   
-			}
-			else
-			{
+			}else{
 				hid_prf_dataref[serv_num]->serv_handle_info = 0;
 			}
-		}
-		else 
-		{
+		}else{
 			hid_serv_def_init(serv_num);
 		}
-		
 	}
 	
 	/* Initialize the dis */
@@ -126,27 +118,19 @@ void hid_prf_init(void *param)
 */
 uint8_t hid_prf_conf(hid_prf_info_t *ref)
 {
-	if(ref != NULL)
-	{
-		if(ref->hid_serv_instance && (ref->hid_serv_instance <= HID_MAX_SERV_INST))
-		{
-			if(hid_prf_dataref[ref->hid_serv_instance-1] != NULL)
-			{
+	if(ref != NULL){
+		if(ref->hid_serv_instance && (ref->hid_serv_instance <= HID_MAX_SERV_INST)){
+			if(hid_prf_dataref[ref->hid_serv_instance-1] != NULL){
 				hid_prf_dataref[ref->hid_serv_instance-1] = NULL;
 			}
 			hid_prf_dataref[ref->hid_serv_instance-1] = ref;
 			return HID_PRF_SUCESS;
-		}
-		else
-		{
+		}else{
 			return HID_PRF_INSTANCE_OUT_RANGE;
 		}
-	}
-	else
-	{
+	}else{
 		return HID_PRF_NO_INSTANCE;
 	}
-	
 }
 
 
@@ -158,35 +142,29 @@ void hid_prf_dev_adv(void)
 	uint8_t idx = 0;
 	uint8_t adv_data[ADV_DATA_NAME_LEN + ADV_DATA_APPEARANCE_LEN + ADV_DATA_UUID_LEN + 3*2];
 
-	// Prepare ADV Data
+	/* Prepare ADV Data */
 	adv_data[idx++] = ADV_DATA_APPEARANCE_LEN + ADV_TYPE_LEN;
 	adv_data[idx++] = ADV_DATA_APPEARANCE_TYPE;
 	adv_data[idx++] = (uint8_t) ADV_DATA_APPEARANCE_DATA;
 	adv_data[idx++] = (uint8_t)(ADV_DATA_APPEARANCE_DATA>>8);
-	
 	adv_data[idx++] = ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
 	adv_data[idx++] = ADV_DATA_NAME_TYPE;
 	memcpy(&adv_data[idx], ADV_DATA_NAME_DATA, ADV_DATA_NAME_LEN);
 	idx += ADV_DATA_NAME_LEN;
-	
 	adv_data[idx++] = ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
 	adv_data[idx++] = ADV_DATA_UUID_TYPE;
 	adv_data[idx++] = (uint8_t)HID_SERV_UUID;
 	adv_data[idx++]   = (uint8_t)(HID_SERV_UUID >> 8);
 	
 	/* Adding the advertisement data and scan response data */
-	if(!(at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN) == AT_BLE_SUCCESS) )
-	{
+	if(!(at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN) == AT_BLE_SUCCESS)){
 		DBG_LOG("Failed to set advertisement data");
 	}
 	
 	/* Start of advertisement */
-	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, APP_HID_FAST_ADV, APP_HID_ADV_TIMEOUT, 0) == AT_BLE_SUCCESS)
-	{
+	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, APP_HID_FAST_ADV, APP_HID_ADV_TIMEOUT, 0) == AT_BLE_SUCCESS){
 		DBG_LOG("Device Started Advertisement");
-	}
-	else
-	{
+	}else{
 		DBG_LOG("Device Advertisement Failed");
 	}
 }
@@ -194,19 +172,15 @@ void hid_prf_dev_adv(void)
 /**
 * \HID device disconnected handler function
 */
-
 at_ble_status_t hid_prf_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 {
 	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
-	APP_HID_FAST_ADV, APP_HID_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
-	{
+	APP_HID_FAST_ADV, APP_HID_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS){
 		DBG_LOG("Device Advertisement Failed");
-	}
-	else
-	{
+	}else{
 		DBG_LOG("Device Started Advertisement");
 	}
-        ALL_UNUSED(disconnect);
+    ALL_UNUSED(disconnect);
 	return AT_BLE_SUCCESS;
 }
 
@@ -225,12 +199,9 @@ at_ble_status_t hid_prf_char_changed_handler(at_ble_characteristic_changed_t *ch
 
 	memcpy((uint8_t *)&change_params, change_char, sizeof(at_ble_characteristic_changed_t));
 	serv_inst = hid_serv_get_instance(change_params.char_handle);
-
 	DBG_LOG_DEV("hid_prf_char_changed_handler : Service Instance %d", serv_inst);
-   
 	ntf_op = hid_ntf_instance(serv_inst, change_params.char_handle);
-
-	DBG_LOG_DEV("hid_prf_char_changed_handler : Notification Operation %d", ntf_op);
+    DBG_LOG_DEV("hid_prf_char_changed_handler : Notification Operation %d", ntf_op);
    
 	switch(ntf_op)
 	{
@@ -275,7 +246,6 @@ at_ble_status_t hid_prf_char_changed_handler(at_ble_characteristic_changed_t *ch
 	   }
 	   break;
    }
-	
 	return AT_BLE_SUCCESS;
 }
 
@@ -334,6 +304,3 @@ void hid_prf_boot_keyboardreport_update(at_ble_handle_t conn_handle, uint8_t ser
 {
 	hid_boot_keyboardreport_update(conn_handle, serv_inst, bootreport, len);
 }
-
-
-
