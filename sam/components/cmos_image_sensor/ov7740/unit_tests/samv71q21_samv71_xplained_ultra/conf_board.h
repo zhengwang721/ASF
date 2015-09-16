@@ -53,23 +53,7 @@
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
-/** Don't change WDT mode register in init.c */
-#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-
-/** Push button definition */
-#define PUSHBUTTON_STRING  PUSHBUTTON_1_NAME
-#define PUSHBUTTON_IRQn    PIOA_IRQn
-#define PUSHBUTTON_MASK    PIN_PUSHBUTTON_1_MASK
-#define PUSHBUTTON_PIO     PIN_PUSHBUTTON_1_PIO
-#define PUSHBUTTON_ID      PIN_PUSHBUTTON_1_ID
-#define PUSHBUTTON_TYPE    PIN_PUSHBUTTON_1_TYPE
-#define PUSHBUTTON_ATTR    PIN_PUSHBUTTON_1_ATTR
-
-/** LED definition */
-#define LED_MASK  PIN_LED_0_MASK
-#define LED_PIO   PIN_LED_0_PIO
-#define LED_ID    PIN_LED_0_ID
-#define LED_TYPE  PIN_LED_0_TYPE
-#define LED_ATTR  PIN_LED_0_ATTR
+/** Configure ISI pins */
+#define CONF_BOARD_ISI
 
 #endif /* CONF_BOARD_H_INCLUDED */

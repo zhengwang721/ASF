@@ -52,7 +52,7 @@
  *
  * \section Requirements
  *
- * This package can be used with sam4s_wpir_rd board.
+ * This package can be used with SAM V71 Xplained Ultra board.
  *
  * \section Description
  *
@@ -63,9 +63,9 @@
  * configuration. With this configuration the same picture will be received
  * from sensor. This picture is a reference picture with 8 different color
  * (black, blue, red, purple, green, cyan, yellow, white).
- * Finaly this Unit test configures PIO capture, and capture the reference
+ * Finaly this Unit test configures ISI capture, and capture the reference
  * picture data from image sensor and compare it with the reference value
- * to check if the image sensor and PIO capture are operating fine.
+ * to check if the image sensor and ISI capture are operating fine.
  *
  * \section Usage
  *
@@ -200,31 +200,6 @@ static void init_vsync_interrupts(void)
 /**
  * \brief ISI initialization.
  */
-static void isi_pin_init(void)
-{
-	pio_configure_pin(ISI_D0_PIO, ISI_D0_FLAGS);
-	pio_configure_pin(ISI_D1_PIO, ISI_D1_FLAGS);
-	pio_configure_pin(ISI_D2_PIO, ISI_D2_FLAGS);
-	pio_configure_pin(ISI_D3_PIO, ISI_D3_FLAGS);
-	pio_configure_pin(ISI_D4_PIO, ISI_D4_FLAGS);
-	pio_configure_pin(ISI_D5_PIO, ISI_D5_FLAGS);
-	pio_configure_pin(ISI_D6_PIO, ISI_D6_FLAGS);
-	pio_configure_pin(ISI_D7_PIO, ISI_D7_FLAGS);
-	pio_configure_pin(ISI_D8_PIO, ISI_D8_FLAGS);
-	pio_configure_pin(ISI_D9_PIO, ISI_D9_FLAGS);
-	pio_configure_pin(ISI_D10_PIO, ISI_D10_FLAGS);
-	pio_configure_pin(ISI_D11_PIO, ISI_D11_FLAGS);
-	pio_configure_pin(ISI_HSYNC_PIO, ISI_HSYNC_FLAGS);
-	pio_configure_pin(ISI_VSYNC_PIO, ISI_VSYNC_FLAGS);
-	pio_configure_pin(ISI_PCK_PIO, ISI_PCK_FLAGS);
-	pio_configure_pin(ISI_PCK0_PIO, ISI_PCK0_FLAGS);
-	pio_configure_pin(OV_PWD_GPIO, OV_PWD_FLAGS);
-	pio_configure_pin(OV_RST_GPIO, OV_RST_FLAGS);
-
-	pio_set_pin_low(OV_PWD_GPIO);
-	pio_set_pin_low(OV_RST_GPIO);
-}
-
 static void isi_module_init(void)
 {	
 	/* Enable ISI peripheral clock */
@@ -263,8 +238,8 @@ static uint32_t capture_init(void)
 {
 	twihs_options_t opt;
 
-	/* Init ISI pin */
-	isi_pin_init();
+	/* Turn on OV7740 image sensor using power pin */
+	ov_power(true, OV_PWD_PIO, OV_PWD_MASK);
 
 	/* Init PCK0 at 24 Mhz */
 	PMC->PMC_PCK[0] = (PMC_PCK_PRES(9) | PMC_PCK_CSS_PLLA_CLK);
@@ -286,9 +261,8 @@ static uint32_t capture_init(void)
 	NVIC_SetPriority(TWIHS0_IRQn, 0);
 	NVIC_EnableIRQ(TWIHS0_IRQn);
 
-	pio_set_pin_high(OV_RST_GPIO);
-	
 	/* OV7740 initialization*/
+	ov_reset(OV_RST_PIO, OV_RST_MASK);
 	delay_ms(1000);
 	if (ov_init(OV7740_TWIHS) == 0) {
 		/* OV7740 configuration */
@@ -363,6 +337,7 @@ static void ov7740_test_initialization_run(const struct test_case* const test)
 /**
  * \brief Start capture process.
  *
+ * \param test Current test case.
  */
 static void ov7740_test_capture_process_run(const struct test_case* const test)
 {
@@ -401,7 +376,8 @@ static void ov7740_test_capture_process_run(const struct test_case* const test)
 static void ov7740_test_color_run(const struct test_case* const test)
 {
 	uint32_t ul_error = 0;
-	volatile uint32_t ul_index = 25600UL; /* put the index at the middle of data buffer */
+	/* put the index at the middle of data buffer */
+	volatile uint32_t ul_index = 25600UL;
 
 	/* Check if picture color is similar to reference color. There are 8
 	 * reference colors
@@ -473,14 +449,14 @@ int main(void)
 
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(ov7740_test_array) = {
-          &ov7740_test_initialization,
-          &ov7740_test_capture_process,
-          &ov7740_test_color
-        };
+		&ov7740_test_initialization,
+		&ov7740_test_capture_process,
+		&ov7740_test_color
+	};
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(ov7740_test_suite, ov7740_test_array,
-			  "OV7740 driver test suite");
+			"OV7740 driver test suite");
 
 	/* Run all tests in the test suite */
 	test_suite_run(&ov7740_test_suite);

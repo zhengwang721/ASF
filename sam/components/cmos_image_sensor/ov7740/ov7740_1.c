@@ -261,7 +261,7 @@ void ov_reset(Pio* const p_pio, const uint32_t ul_mask)
 	pio_clear(p_pio, ul_mask);
 	delay_ms( 2 );
 
-	pio_clear(p_pio, ul_mask);
+	pio_set(p_pio, ul_mask);
 	delay_ms( 2 );
 }
 

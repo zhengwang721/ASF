@@ -515,6 +515,27 @@ void board_init(void)
 	MATRIX->CCFG_SMCNFCS = CCFG_SMCNFCS_SDRAMEN;
 #endif
 
+#ifdef CONF_BOARD_ISI
+	pio_configure_pin(ISI_D0_PIO, ISI_D0_FLAGS);
+	pio_configure_pin(ISI_D1_PIO, ISI_D1_FLAGS);
+	pio_configure_pin(ISI_D2_PIO, ISI_D2_FLAGS);
+	pio_configure_pin(ISI_D3_PIO, ISI_D3_FLAGS);
+	pio_configure_pin(ISI_D4_PIO, ISI_D4_FLAGS);
+	pio_configure_pin(ISI_D5_PIO, ISI_D5_FLAGS);
+	pio_configure_pin(ISI_D6_PIO, ISI_D6_FLAGS);
+	pio_configure_pin(ISI_D7_PIO, ISI_D7_FLAGS);
+	pio_configure_pin(ISI_D8_PIO, ISI_D8_FLAGS);
+	pio_configure_pin(ISI_D9_PIO, ISI_D9_FLAGS);
+	pio_configure_pin(ISI_D10_PIO, ISI_D10_FLAGS);
+	pio_configure_pin(ISI_D11_PIO, ISI_D11_FLAGS);
+	pio_configure_pin(ISI_HSYNC_PIO, ISI_HSYNC_FLAGS);
+	pio_configure_pin(ISI_VSYNC_PIO, ISI_VSYNC_FLAGS);
+	pio_configure_pin(ISI_PCK_PIO, ISI_PCK_FLAGS);
+	pio_configure_pin(ISI_PCK0_PIO, ISI_PCK0_FLAGS);
+	pio_configure_pin(OV_PWD_GPIO, OV_PWD_FLAGS);
+	pio_configure_pin(OV_RST_GPIO, OV_RST_FLAGS);
+#endif
+
 #ifdef CONF_BOARD_CONFIG_MPU_AT_INIT
 	_setup_memory_region();
 #endif
