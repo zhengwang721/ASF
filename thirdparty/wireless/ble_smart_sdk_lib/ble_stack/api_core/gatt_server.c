@@ -543,8 +543,7 @@ at_ble_status_t at_ble_service_define(at_ble_uuid_t* uuid, at_ble_handle_t* serv
 	return at_status;
 }
 
-
-at_ble_status_t internal_service_define(at_ble_uuid_t* uuid, at_ble_handle_t* service_handle,
+static at_ble_status_t internal_service_define(at_ble_uuid_t* uuid, at_ble_handle_t* service_handle,
 					at_ble_included_service_t * included_list, uint16_t included_count, at_ble_characteristic_t * charactristic_list, uint16_t char_count,uint8_t Primary)
 {
 	uint16_t total_size = 0;

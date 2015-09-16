@@ -45,16 +45,30 @@
 				<keyword value="Analog Conversion"/>
 			</info>
 
-			<build type="header-file" subtype="api" value="adc_sam_b.h"/>
+			<info type="description" value="pdf">
+				This document describes how to use the Analog-to-Digital
+				Converter on the SAMB, both the ASF driver and the
+				peripheral itself.
+			</info>			
+			
 			<build type="include-path" value="."/>
+			<build type="include-path" value="adc_sam_b"/>
+			<build type="header-file" subtype="api" value="adc_sam_b.h"/>
+			<build type="header-file" value="quick_start_sam_b/qs_adc_basic.h"/>
+			<build type="c-source" value="adc_sam_b/adc_sam_b.c"/>
+			
 			<build type="define" name="ADC_CALLBACK_MODE" value="false"/>
 			<build type="doxygen-entry-point" value="asfdoc_samb_adc_group"/>
+			<build type="doxygen-example-path" value="quick_start_sam_b"/>
+			<build type="doxygen-quick-start" value="asfdoc_samb_adc_exqsg"/>
+			
 			<device-support value="samb"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.gpio"/>
 			<require idref="sam0.drivers.system"/>
-			<require idref="sam0.drivers.adc.samb"/>
+			
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
 		</module>
 	</select-by-config>
 	<select-by-device id="sam0.drivers.adc.polled" caption="ADC - Analog-to-Digital Converter">
@@ -67,6 +81,7 @@
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="samd09"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="samda1"/>
@@ -94,6 +109,7 @@
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="samd09"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="samda1"/>
@@ -111,16 +127,7 @@
 			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
-	<select-by-device id="sam0.drivers.adc.samb" caption="ADC - Analog-to-Digital Converter for SAMB">
-		<module type="meta" id="sam0.drivers.adc.samb#sam_b" caption="ADC - Analog-to-Digital Converter for SAMB">
-			<build type="include-path" value="." />
-			<build type="include-path" value="adc_sam_b"/>
-			<build type="c-source" value="adc_sam_b/adc_sam_b.c"/>
-			<build type="header-file" value="adc_sam_b.h"/>
 
-			<device-support value="samb11"/>
-		</module>
-	</select-by-device>
 	<module type="meta" id="sam0.drivers.adc.appnote_sam_d_r" caption="ADC - Analog-to-Digital Converter">
 		<info type="keyword" value="technology">
 				<keyword value="Analog Conversion"/>
@@ -164,6 +171,7 @@
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="samd09"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="samda1"/>
@@ -223,33 +231,5 @@
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-saml21"/>
 	</module>
-	<module type="meta" id="sam0.drivers.adc.appnote_sam_b" caption="ADC - Analog-to-Digital Converter for SAMB">
-		<info type="keyword" value="technology">
-				<keyword value="Analog Conversion"/>
-			</info>
 
-			<info type="description" value="pdf">
-				This document describes how to use the Analog-to-Digital
-				Converter on the SAMB, both the ASF driver and the
-				peripheral itself.
-			</info>
-
-			<build type="include-path" value="."/>
-			<build type="include-path" value="adc_sam_b"/>
-			<build type="c-source" value="adc_sam_b/adc_sam_b.c"/>
-			<build type="header-file" subtype="api" value="adc_sam_b.h"/>
-			<build type="header-file" value="quick_start_sam_b/qs_adc_basic.h"/>
-
-			<build type="doxygen-example-path" value="quick_start_sam_b"/>
-			<build type="doxygen-entry-point" value="asfdoc_samb_adc_group"/>
-			<build type="doxygen-quick-start" value="asfdoc_samb_adc_exqsg"/>
-
-			<device-support value="samb"/>
-
-			<require idref="sam0.utils"/>
-			<require idref="sam0.drivers.gpio"/>
-			<require idref="sam0.drivers.system"/>
-
-			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
-	</module>
 </asf>

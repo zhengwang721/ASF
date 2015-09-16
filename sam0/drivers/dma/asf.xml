@@ -34,6 +34,7 @@
 
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="samd09"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
@@ -50,13 +51,6 @@
 		<module type="driver" id="sam0.drivers.dma#1" caption="DMAC - Direct Memory Access Controller">
 			<info type="keyword" value="technology">
 				<keyword value="Memory" />
-			</info>
-
-			<info type="appnote" value="ATxxxxx"/>
-			<info type="keyword" value="pdf">
-				<keyword value="DMA" />
-				<keyword value="DMAC"/>
-				<keyword value="Direct Memory Access"/>
 			</info>
 
 			<info type="description" value="pdf">

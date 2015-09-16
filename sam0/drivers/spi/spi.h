@@ -56,7 +56,9 @@
  * are covered by this manual:
  *
  * - Polled APIs
+ * \if SPI_CALLBACK_MODE
  * - Callback APIs
+ * \endif
  *
  * The following peripheral is used by this module:
  * - SPI (Serial Peripheral Interface)
@@ -593,8 +595,10 @@ enum status_code spi_select_slave(
  *
  * - \subpage asfdoc_samb_spi_master_basic_use
  * - \subpage asfdoc_samb_spi_slave_basic_use
+ * \if SPI_CALLBACK_MODE
  * - \subpage asfdoc_samb_spi_master_callback_use
  * - \subpage asfdoc_samb_spi_slave_callback_use
+ * \endif
  */
  
  /**

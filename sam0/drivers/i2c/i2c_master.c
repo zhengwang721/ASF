@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief I2C Master Driver for SAMB11
+ * \brief I2C Master Driver for SAMB
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -93,8 +93,7 @@ static void _i2c_master_set_config(
 	Assert(module);
 	Assert(module->hw);
 	Assert(config);
-	
-	enum status_code status = STATUS_OK;
+
 	I2C *const i2c_module = (module->hw);
 
 	/* Set the pinmux for this i2c module. */

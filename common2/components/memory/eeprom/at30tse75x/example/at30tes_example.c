@@ -86,7 +86,7 @@ static uint8_t rx_buffer[NB_BYTE], tx_buffer[NB_BYTE];
 static void delay(uint32_t count)
 {
 	for (uint32_t i = 0; i < count; i++) {
-		for (uint32_t j = 0; j < 100; j++)
+		for (uint32_t j = 0; j < 1000; j++)
 			asm volatile ("nop");
 	}
 }

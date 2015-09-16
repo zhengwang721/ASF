@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM Direct Memory Access Controller(DMAC) Driver Quick Start
+ * \brief Direct Memory Access Controller(DMAC) Driver Quick Start for SAMB
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -45,7 +45,7 @@
  */
 
 /**
- * \page asfdoc_sam0_dma_basic_use_case Quick Start Guide for Memory to Memory Data Transfer Using DMAC
+ * \page asfdoc_samb_dma_basic_use_case Quick Start Guide for Memory to Memory Data Transfer Using DMAC
  *
  * The supported board list:
  *    - SAMB11 Xplained Pro
@@ -58,12 +58,12 @@
  *  \li No action on input events
  *  \li Output event not enabled
  *
- * \section asfdoc_sam0_dma_basic_use_case_setup Setup
+ * \section asfdoc_samb_dma_basic_use_case_setup Setup
  *
- * \subsection asfdoc_sam0_dma_basic_use_casesetup_prereq Prerequisites
+ * \subsection asfdoc_samb_dma_basic_use_casesetup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_sam0_dma_basic_use_casesetup_code Code
+ * \subsection asfdoc_samb_dma_basic_use_casesetup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_dma_basic.c setup
  *
@@ -71,7 +71,7 @@
  * start of \c main()):
  * \snippet qs_dma_basic.c setup_init
  *
- * \subsection asfdoc_sam0_dma_basic_use_casesetup_flow Workflow
+ * \subsection asfdoc_samb_dma_basic_use_casesetup_flow Workflow
  * -# Create a DMA resource configuration structure, which can be filled out to
  *    adjust the configuration of a single DMA transfer.
  *    \snippet qs_dma_basic.c setup_1
@@ -87,11 +87,6 @@
  * -# Allocate a DMA resource with the configurations.
  *    \snippet qs_dma_basic.c setup_3
  *    \br
-
- * -# Declare a DMA transfer descriptor configuration structure, which can be
- *    filled out to adjust the configuration of a single DMA transfer.
- *    \snippet qs_dma_basic.c setup_4
- *    \br
  *
  * -# Initialize the DMA transfer descriptor configuration struct with the
  * module's  default values.
@@ -105,33 +100,23 @@
  *    source and destination address increment.
  *    The source and destination addresses to be stored into descriptor_config
  *    must correspond to the end of the transfer.
- *
  *    \snippet qs_dma_basic.c setup_6
- *    \br
- *
- * -# Create the DMA transfer descriptor.
- *    \snippet qs_dma_basic.c setup_7
- *    \br
  *
  * -# Add the DMA transfer descriptor to the allocated DMA resource.
  *    \snippet qs_dma_basic.c add_descriptor_to_dma_resource
- *    \br
  *
  * -# Register a callback to indicate transfer status.
  *    \snippet qs_dma_basic.c setup_callback_register
- *    \br
  *
  * -# Set the transfer done flag in the registered callback function.
  *    \snippet qs_dma_basic.c _transfer_done
- *    \br
  *
  * -# Enable the registered callbacks.
  *    \snippet qs_dma_basic.c setup_enable_callback
- *    \br
  *
- * \section asfdoc_sam0_dma_basic_use_case_main Use Case
+ * \section asfdoc_samb_dma_basic_use_case_main Use Case
  *
- * \subsection asfdoc_sam0_dma_basic_use_casecode_code Code
+ * \subsection asfdoc_samb_dma_basic_use_casecode_code Code
  * Add the following code at the start of \c main():
  * \snippet qs_dma_basic.c sample_resource
  * Copy the following code to your user application:
@@ -141,14 +126,8 @@
  * -# Start the DMA transfer job with the allocated DMA resource and
  *    transfer descriptor.
  *    \snippet qs_dma_basic.c main_1
- *
- * -# Set the software trigger for the DMA channel. This can be done before
- *    or after the DMA job is started. Note that all transfers needs a trigger
- *    to start.
- *    \snippet qs_dma_basic.c main_1_1
- *
  * -# Waiting for the setting of the transfer done flag.
  *    \snippet qs_dma_basic.c main_2
-  * -# Compare the value of source and destination.
-  *    \snippet qs_dma_basic.c main_3
+ * -# Compare the value of source and destination.
+ *    \snippet qs_dma_basic.c main_3
  */

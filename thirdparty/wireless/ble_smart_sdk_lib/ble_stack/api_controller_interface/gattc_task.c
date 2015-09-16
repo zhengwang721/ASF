@@ -12,6 +12,28 @@
 #include "gattm_task.h"
 
 
+/* utility functions, might be removed later*/
+/* this function is moved from at_ble_api.h because of warning*/
+static at_ble_uuid_type_t at_ble_uuid_len2type(uint8_t len)
+{
+	switch(len)
+	{
+	case AT_BLE_UUID_16_LEN: 
+		return AT_BLE_UUID_16;
+		
+	case AT_BLE_UUID_32_LEN : 
+		return AT_BLE_UUID_32;
+		
+	default:
+	case AT_BLE_UUID_128_LEN : 
+		return AT_BLE_UUID_128;
+	}
+}
+
+
+
+
+
 void gattc_write_cmd_ind_handler(uint8_t *msg, uint16_t len)
 {
 	INTERFACE_MSG_INIT(GATTC_WRITE_CMD_IND, TASK_GATTM);

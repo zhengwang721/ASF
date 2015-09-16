@@ -10,7 +10,7 @@ uint8_t dbg_le_set_bd_addr_req_handler(uint8_t* addr)
 	uint8_t u8Status;
 #ifndef __WINC3000__
 	uint32_t chip_id = 0;
-	uint32_t gap_dev_addr;
+	uint32_t gap_dev_addr = 0x00;
 #endif
 	do
 	{

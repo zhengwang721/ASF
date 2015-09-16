@@ -985,6 +985,19 @@
 /** @} */
 
 /**
+ * \name SAMD09 series
+ * @{
+ */
+#define SAMD09C ( \
+		SAM_PART_IS_DEFINED(SAMD09C13A) \
+	)
+
+#define SAMD09D ( \
+		SAM_PART_IS_DEFINED(SAMD09D14A) \
+	)
+/** @} */
+
+/**
  * \name SAMD10 series
  * @{
  */
@@ -1510,6 +1523,9 @@
 /** SAMD21 Family */
 #define SAMD21 (SAMD21J || SAMD21G || SAMD21E)
 
+/** SAMD09 Family */
+#define SAMD09 (SAMD09C || SAMD09D)
+
 /** SAMD10 Family */
 #define SAMD10 (SAMD10C || SAMD10DS || SAMD10DM)
 
@@ -1520,7 +1536,7 @@
 #define SAMDA1 (SAMDA1J || SAMDA1G || SAMDA1E)
 
 /** SAMD Family */
-#define SAMD   (SAMD20 || SAMD21 || SAMD10 || SAMD11 || SAMDA1)
+#define SAMD   (SAMD20 || SAMD21 || SAMD09 || SAMD10 || SAMD11 || SAMDA1)
 
 /** SAMR21 Family */
 #define SAMR21 (SAMR21G || SAMR21E)
@@ -1583,7 +1599,7 @@
 
 /** SAM0 product line (cortex-m0+) */
 #define SAM0 (SAMD20 || SAMD21 || SAMR21 || SAMD10 || SAMD11 || SAML21 ||\
-		SAMDA1 || SAMC20 || SAMC21 || SAML22)
+		SAMDA1 || SAMC20 || SAMC21 || SAML22 || SAMD09)
 
 /** @} */
 

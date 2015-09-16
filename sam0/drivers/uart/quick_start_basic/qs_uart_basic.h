@@ -62,68 +62,68 @@
  *
  * \subsection asfdoc_samb_uart_basic_use_case_setup_code Code
  * Add to the main application source file, outside of any functions:
- * \snippet qs_uart_basic_use.c module_inst
- * \snippet qs_uart_basic_use.c variable_inst
+ * \snippet qs_uart_basic.c module_inst
+ * \snippet qs_uart_basic.c variable_inst
  *
  * Copy-paste the following setup code to your user application:
- * \snippet qs_uart_basic_use.c callback_functions
- * \snippet qs_uart_basic_use.c setup
+ * \snippet qs_uart_basic.c callback_functions
+ * \snippet qs_uart_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
- * \snippet qs_uart_basic_use.c setup_init
+ * \snippet qs_uart_basic.c setup_init
  *
  * \subsection asfdoc_samb_uart_basic_use_case_setup_flow Workflow
  * -# Create a module software instance structure for the UART module to store
  *    the UART driver state while it is in use.
- *    \snippet qs_uart_basic_use.c module_inst
+ *    \snippet qs_uart_basic.c module_inst
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
  * -# Create some global variables.
- *    \snippet qs_uart_basic_use.c variable_inst
+ *    \snippet qs_uart_basic.c variable_inst
  *
  * -# Create the callback functions.
- *    \snippet qs_uart_basic_use.c callback_functions
+ *    \snippet qs_uart_basic.c callback_functions
  *
  * -# Configure the UART module.
  *  -# Create a UART module configuration struct, which can be filled out to
  *     adjust the configuration of a physical UART peripheral.
- *     \snippet qs_uart_basic_use.c setup_config
+ *     \snippet qs_uart_basic.c setup_config
  *  -# Initialize the UART configuration struct with the module's default values.
- *     \snippet qs_uart_basic_use.c setup_config_defaults
+ *     \snippet qs_uart_basic.c setup_config_defaults
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
  *  -# Alter the UART settings to configure the physical pinout, baudrate, and
  *     other relevant parameters.
- *     \snippet qs_uart_basic_use.c setup_change_config
+ *     \snippet qs_uart_basic.c setup_change_config
  *  -# Configure the UART module with the desired settings, retrying while the
  *     driver is busy until the configuration is stressfully set.
- *     \snippet qs_uart_basic_use.c setup_set_config
+ *     \snippet qs_uart_basic.c setup_set_config
  *
  * \section asfdoc_samb_uart_basic_use_case_main Use Case
  *
  * \subsection asfdoc_samb_uart_basic_use_case_main_code Code
  * Copy-paste the following code to your user application:
- * \snippet qs_uart_basic_use.c main
+ * \snippet qs_uart_basic.c main
  *
  * \subsection asfdoc_samb_uart_basic_use_case_main_flow Workflow
  * -# Send a string to the UART to show the demo is running, blocking until
  *    all characters have been sent.
- *    \snippet qs_uart_basic_use.c main_send_string1
+ *    \snippet qs_uart_basic.c main_send_string1
  * -# Send the information to the UART and get the user input.
- *    \snippet qs_uart_basic_use.c test_callback_functions
+ *    \snippet qs_uart_basic.c test_callback_functions
  * -# Send a string to the UART to show enter the while loop, blocking until
  *    all characters have been sent.
- *    \snippet qs_uart_basic_use.c main_send_string2
+ *    \snippet qs_uart_basic.c main_send_string2
  * -# Enter an infinite loop to continuously echo received values on the UART.
- *    \snippet qs_uart_basic_use.c main_loop
+ *    \snippet qs_uart_basic.c main_loop
  * -# Perform a blocking read of the UART, storing the received character into
  *    the previously declared temporary variable.
- *    \snippet qs_uart_basic_use.c main_read
+ *    \snippet qs_uart_basic.c main_read
  * -# Echo the received variable back to the UART via a blocking write.
- *    \snippet qs_uart_basic_use.c main_write
+ *    \snippet qs_uart_basic.c main_write
  */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>

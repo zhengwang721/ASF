@@ -55,5 +55,3 @@ void interface_init()
 	memset(buff,0,sizeof(buff));
 	buff_index = 0;
 }
-
-

@@ -98,6 +98,6 @@ do{\
 
 void interface_send(uint8_t* msg, uint16_t u16TxLen);
 
-void interface_init();
+void interface_init(void);
 void rx_callback(uint8_t* data, uint16_t len);
 #endif /* HCI_H_ */

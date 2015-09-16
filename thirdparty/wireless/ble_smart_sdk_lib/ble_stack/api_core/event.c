@@ -87,7 +87,7 @@ static at_ble_status_t event_get(uint16_t* msg_id, uint16_t* src_id, uint8_t** d
 {
 	struct event* event = NULL;
 	at_ble_status_t status= AT_BLE_SUCCESS;
-	plf_drv_status	plf_status;
+	plf_drv_status	plf_status = STATUS_FAILURE;
 	if (timeout != 0xFFFFFFFF) 
 	{
 		//block till an event is posted or timeout

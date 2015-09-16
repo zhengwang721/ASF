@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM B11 I2C Slave Interrupt Driver
+ * \brief I2C Slave Interrupt Driver for SAMB
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *

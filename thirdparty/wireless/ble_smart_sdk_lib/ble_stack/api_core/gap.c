@@ -39,7 +39,9 @@ void prepare_apis(wr_apis* plf_wr_apis)
 	plf_wr_apis->wr_api32 = dbg_wr_mem_req_handler32;
 	plf_wr_apis->wr_api32_reset = dbg_wr_mem_req_handler32_reset;
 }*/
-#if (!__WINC3000__) && (!SAMB11)
+//removed __WINC3000__ because clear warning
+//#if (!__WINC3000__) && (!SAMB11)
+#if (!SAMB11)
 const uint32_t fw_patch[] = {
 0x0EC906C1, 0x40882001, 0x60084901, 0x00004770, 0xE000E100, 
 0x0EC906C1, 0x40882001, 0x60084947, 0x4D474770, 0x4F484E47, 
@@ -771,7 +773,7 @@ at_ble_status_t at_ble_init(void* args)
 {
 	at_ble_status_t  status;
 #ifdef SAMB11
-	plf_drv_status 	 plf_status;
+	plf_drv_status 	 plf_status = STATUS_FAILURE;
 	plf_status = platform_driver_init();
 	if((plf_status != STATUS_SUCCESS) && (plf_status != STATUS_ALREADY_INITIALIZED)) {
 		status = AT_BLE_FAILURE;
@@ -984,7 +986,7 @@ at_ble_status_t at_ble_addr_get(at_ble_addr_t* address)
 {
 	uint8_t addr[AT_BLE_ADDR_LEN+1];
 	uint32_t chip_id = 0;
-	uint32_t gap_dev_addr;
+	uint32_t gap_dev_addr = 0;
 
 	if(address == NULL)
 	{
@@ -1070,7 +1072,7 @@ at_ble_status_t at_ble_adv_start(at_ble_adv_type_t type,at_ble_adv_mode_t mode,
 				at_ble_addr_t* peer_addr,at_ble_filter_type_t filtered, 
 				uint16_t interval, uint16_t timeout, bool disable_randomness)
 {
-	uint8_t u8Status,adv_type,gatt_dev_addr , peer_addr_type = 0;
+	uint8_t u8Status,adv_type,gatt_dev_addr = 0 , peer_addr_type = 0;
 	at_ble_addr_t local_addr;
 	uint8_t scan_rsp_len = device.srLen;
 
@@ -1215,7 +1217,8 @@ at_ble_status_t at_ble_scan_start(uint16_t interval,uint16_t window,uint16_t tim
 	at_ble_scan_type_t type ,at_ble_scan_mode_t mode, bool filter_whitelist, 
 	bool filter_dublicates)
 {
-	uint8_t scan_type,u8Status ,gatt_dev_addr;
+	uint8_t scan_type,u8Status;
+	uint8_t gatt_dev_addr = 0;
 	at_ble_addr_t local_addr;
 	at_ble_status_t status = AT_BLE_SUCCESS;
 
@@ -1309,7 +1312,7 @@ at_ble_status_t at_ble_connect(at_ble_addr_t peers[], uint8_t peer_count,
 
 	at_ble_status_t status = AT_BLE_SUCCESS;
 	at_ble_addr_t local_addr;
-	uint8_t gatt_dev_addr;
+	uint8_t gatt_dev_addr = 0;
 	do
 	{
 		/* check for the range validity of the values */
@@ -1650,7 +1653,7 @@ int8_t at_ble_rx_power_get(at_ble_handle_t conn_handle)
 {
 	at_ble_events_t event;
 	uint8_t params[1];
-	uint16_t rssi;
+	uint16_t rssi = 0;
 
 	gapc_get_info_cmd_handler(conn_handle, GAPC_GET_CON_RSSI);
 

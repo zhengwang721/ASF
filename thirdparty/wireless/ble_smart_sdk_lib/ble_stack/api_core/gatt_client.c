@@ -6,6 +6,25 @@
 #include "device.h"
 
 
+/* utility functions, might be removed later*/
+/* this function is moved from at_ble_api.h because of warning*/
+static uint8_t at_ble_uuid_type2len(at_ble_uuid_type_t type)
+{
+	switch(type)
+	{
+	case AT_BLE_UUID_16 : 
+		return AT_BLE_UUID_16_LEN;
+		
+	case AT_BLE_UUID_32 : 
+		return AT_BLE_UUID_32_LEN;
+		
+	default:
+	case AT_BLE_UUID_128 : 
+		return AT_BLE_UUID_128_LEN;
+	}
+}
+
+/*
 static at_ble_status_t gap_check_device_role(void)
 {
 #if 0
@@ -20,6 +39,7 @@ static at_ble_status_t gap_check_device_role(void)
 #endif
 	return device.role;
 }
+*/
 
 at_ble_status_t at_ble_primary_service_discover_all(at_ble_handle_t conn_handle,
 	at_ble_handle_t start_handle, at_ble_handle_t end_handle)

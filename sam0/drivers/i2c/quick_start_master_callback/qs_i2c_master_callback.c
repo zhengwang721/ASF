@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM B11 I2C Master Quick Start Guide with Callbacks
+ * \brief I2C Master Quick Start Guide with Callbacks for SAMB
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -149,9 +149,9 @@ int main(void)
 	rd_packet.data        = rd_buffer;
 	//! [read_packet]
 
-	//! [write_packet]
+	//! [write_packet_job]
 	i2c_master_write_packet_job(&i2c_master_instance, &wr_packet);
-	//! [write_packet]
+	//! [write_packet_job]
 	
 	//! [while]
 	while (true) {

@@ -6,7 +6,7 @@
 		<build type="include-path" value="."/>
 		
 		<require idref="thirdparty.wireless.ble_smart_sdk_lib.lib"/>
-		<require idref="board.dummy.sam0"/>
+		<!--require idref="board.dummy.sam0"/-->
 		<generator value="iarewarm"/>
 		<generator value="armgcc" />
 		<generator value="as5_arm" />

@@ -17,4 +17,7 @@ uint32_t special_events_handler(uint16_t msg_id, uint16_t src_id, uint8_t* data)
 
 void cmd_cmpl_wait(bool* timeout);
 
+void cmd_cmpl_signal(void);
+
+
 #endif

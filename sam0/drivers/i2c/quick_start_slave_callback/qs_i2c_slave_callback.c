@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM B11 I2C Slave Quick Start Guide with Callbacks
+ * \brief I2C Slave Quick Start Guide with Callbacks for SAMB
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -187,7 +187,7 @@ int main(void)
 	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 
 	//! [run_initialize_i2c]
-	/* Initial the . */
+	/* Initial. */
 	for (int i = 0; i < DATA_LENGTH; i++) {
 		read_buffer[i] = 0;
 		write_buffer[i] = i;
