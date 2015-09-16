@@ -138,19 +138,18 @@ int main(void)
 	{
 		/* BLE Event Task */
 		ble_event_task();
-		if (user_request)
-		{
-			if (notification_enable)
-			{
+		if (user_request) {
+			
+			/* Button debounce delay*/
+			delay_ms(350);
+			if (notification_enable) {
 				anp_client_write_notification_handler();
 				notification_enable = false;
 			} else {
 				anp_client_disable_notification();
 				notification_enable = true;
 			}
-			
 			user_request = false;
 		}
-		
 	}
 }
