@@ -253,10 +253,8 @@ int main(void )
 	notify_control_point_handler(hid_prf_control_point_ntf_cb);
 	
 	/* Capturing the events  */
-	while(app_exec)
-	{
+	while(app_exec){
 		ble_event_task();
-		
 		/* Check for key status */
 		if(mouse_status && report_ntf_info.ntf_conf){
 			delay_ms(KEY_PAD_DEBOUNCE_TIME);

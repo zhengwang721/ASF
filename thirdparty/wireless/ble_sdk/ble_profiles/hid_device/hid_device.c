@@ -83,8 +83,7 @@ void hid_prf_init(void *param)
 	uint8_t serv_num = 0;
 	uint16_t serv_handle = 0;
 	dis_gatt_service_handler_t device_info_serv;
-	for(; serv_num<HID_MAX_SERV_INST; serv_num++)
-	{
+	for(; serv_num<HID_MAX_SERV_INST; serv_num++){
 		if(hid_prf_dataref[serv_num] != NULL){
 			hid_serv_def_init(serv_num);
 			hid_serv_init(serv_num, hid_prf_dataref[serv_num]->hid_device, &hid_prf_dataref[serv_num]->protocol_mode, hid_prf_dataref[serv_num]->num_of_report, (uint8_t *)&hid_prf_dataref[serv_num]->report_type, &(hid_prf_dataref[serv_num]->report_val[0]), (uint8_t *)&hid_prf_dataref[serv_num]->report_len, &hid_prf_dataref[serv_num]->hid_device_info);
