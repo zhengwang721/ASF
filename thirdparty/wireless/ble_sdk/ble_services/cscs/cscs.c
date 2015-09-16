@@ -81,7 +81,6 @@ at_ble_status_t csc_serv_init(uint8_t *buf, uint16_t len)
 	csc_inst.endpoint_chars.value_init_len = len;
 	csc_inst.endpoint_chars.value_max_len = len;
 	csc_inst.endpoint_chars.value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
-	
 	return(at_ble_primary_service_define(&csc_inst.serv_uuid, &csc_inst.serv_handle, NULL, 0, &csc_inst.endpoint_chars, 1));
 }
 
@@ -93,34 +92,24 @@ at_ble_status_t csc_serv_send_data(uint16_t connhandle, uint8_t *databuf, uint16
 	at_ble_status_t status;
 	uint8_t value = 0;
 	uint16_t length;
-	
 	length = sizeof(uint16_t);
 	status = at_ble_characteristic_value_get(csc_inst.endpoint_chars.client_config_handle, &value, &length);
-	if (status != AT_BLE_SUCCESS)
-	{
+	if (status != AT_BLE_SUCCESS){
 		DBG_LOG("at_ble_characteristic_value_get value get failed");
 		return status;
 	}
-	
 	//If Notification Enabled
-	if(value == 1)
-	{
+	if(value == 1){
 		status = at_ble_characteristic_value_set(csc_inst.endpoint_chars.char_val_handle, databuf, datalen);
-		if (status != AT_BLE_SUCCESS)
-		{
+		if (status != AT_BLE_SUCCESS){
 			DBG_LOG("at_ble_characteristic_value_set value set failed");
 			return status;
 		}
-			
 		status = at_ble_notification_send(connhandle, csc_inst.endpoint_chars.char_val_handle);
-		if (status != AT_BLE_SUCCESS)
-		{
+		if (status != AT_BLE_SUCCESS){
 			DBG_LOG("at_ble_notification_send  failed");
 			return status;
 		}
 	}
 	return status;
 }
-
-
-

@@ -57,6 +57,8 @@
 
 #define APP_TX_BUF_SIZE   (150)
 
+#define ENTER_BUTTON_PRESS (13)
+
 /****************************************************************************************
 *							        Enumerations	                                   	*
 ****************************************************************************************/
@@ -64,7 +66,6 @@
 /****************************************************************************************
 *							        Function                                     		*
 ****************************************************************************************/
-
 /** @brief Function display the receive data */
 void csc_app_recv_buf(uint8_t *recv_data, uint8_t recv_len);
 
@@ -76,9 +77,4 @@ void csc_prf_report_ntf_cb(csc_report_ntf_t *report_info);
 
 /** @brief Timer callback handler */
 void timer_callback_handler(void);
-
-
-
-
-
 #endif /*__CSC_APP_H__*/

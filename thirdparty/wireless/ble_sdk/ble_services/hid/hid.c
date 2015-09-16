@@ -74,11 +74,9 @@ void hid_serv_def_init(uint8_t servnum)
 	hid_serv_inst[servnum].hid_dev_serv_uuid = NULL;
 	hid_serv_inst[servnum].hid_dev_proto_mode_char = NULL;
 	hid_serv_inst[servnum].hid_dev_report_map_char = NULL;
-	for(; id<HID_NUM_OF_REPORT; id++)
-	{
+	for(; id<HID_NUM_OF_REPORT; id++){
 		hid_serv_inst[servnum].hid_dev_report_val_char[id] = NULL;
 	}
-	
 #ifdef HID_KEYBOARD_DEVICE	
 	hid_serv_inst[servnum].hid_dev_boot_keyboard_in_report = NULL;
 	hid_serv_inst[servnum].hid_dev_boot_keyboard_out_report= NULL;
@@ -87,7 +85,6 @@ void hid_serv_def_init(uint8_t servnum)
 #ifdef HID_MOUSE_DEVICE
     hid_serv_inst[servnum].hid_dev_boot_mouse_in_report= NULL;
 #endif
-    
     hid_serv_inst[servnum].hid_dev_info= NULL;
     hid_serv_inst[servnum].hid_control_point= NULL;
 }
@@ -98,10 +95,9 @@ void hid_serv_def_init(uint8_t servnum)
 void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t report_num, uint8_t *report_type, uint8_t **report_val, uint8_t *report_len, hid_info_t *info)
 {
 	uint8_t id = 0;
-	
 	/* Configure the HID service type */
 	hid_inst[servinst].serv.type = PRIMARY_SERVICE;
-	
+
 	/* Configure the HID service permission */
 	hid_inst[servinst].serv.perm = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
 	
@@ -196,9 +192,7 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 	hid_serv_inst[servinst].hid_dev_report_map_char = &hid_inst[servinst].serv_chars[1];
 	
 	/*Configure number of HID report*/
-	for(id = 1; id <= report_num; ++id)
-	{
-		
+	for(id = 1; id <= report_num; ++id){
 		/*Configure HID Report Characteristic : Value related info*/
 		hid_inst[servinst].serv_chars[id + 1].char_val.handle = 0;
 		hid_inst[servinst].serv_chars[id + 1].char_val.uuid.type = AT_BLE_UUID_16;
@@ -207,34 +201,26 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 		hid_inst[servinst].serv_chars[id + 1].char_val.init_value = ((report_val[id-1]));
 		hid_inst[servinst].serv_chars[id + 1].char_val.len = report_len[id-1];
 			
-		if(report_type[id-1] == INPUT_REPORT)
-		{
+		if(report_type[id-1] == INPUT_REPORT){
 			hid_inst[servinst].serv_chars[id + 1].char_val.properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_NOTIFY);
 			hid_inst[servinst].serv_chars[id + 1].char_val.permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR);
-			
 			/*Configure HID Report Characteristic : client config descriptor related info */
 			hid_inst[servinst].serv_chars[id + 1].client_config_desc.perm = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
 			hid_inst[servinst].serv_chars[id + 1].client_config_desc.handle = 0;
-		}
-		else if(report_type[id-1] == OUTPUT_REPORT)
-		{
+		}else if(report_type[id-1] == OUTPUT_REPORT){
 			hid_inst[servinst].serv_chars[id + 1].char_val.properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_WRITE_WITHOUT_RESPONSE|AT_BLE_CHAR_WRITE);
 			hid_inst[servinst].serv_chars[id + 1].char_val.permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
-			
 			/*Configure HID Report Characteristic : client config descriptor related info */
 			hid_inst[servinst].serv_chars[id + 1].client_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
 			hid_inst[servinst].serv_chars[id + 1].client_config_desc.handle = 0;
-		}
-		else if(report_type[id-1] == FEATURE_REPORT)
-		{
+		}else if(report_type[id-1] == FEATURE_REPORT){
 			hid_inst[servinst].serv_chars[id + 1].char_val.properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_WRITE);
 			hid_inst[servinst].serv_chars[id + 1].char_val.permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
-  			
 			/*Configure HID Report Characteristic : client config descriptor related info */
 			hid_inst[servinst].serv_chars[id + 1].client_config_desc.perm = AT_BLE_ATTR_NO_PERMISSIONS;
 			hid_inst[servinst].serv_chars[id + 1].client_config_desc.handle = 0; 
 		}
-		  
+ 
 		/*Configure HID Report Characteristic : user descriptor related info */
 		hid_inst[servinst].serv_chars[id + 1].user_desc.user_description = NULL;
 		hid_inst[servinst].serv_chars[id + 1].user_desc.len = 0;
@@ -270,10 +256,8 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 	
 	id++;
 	
-	if(device == HID_MOUSE_MODE)
-	{
+	if(device == HID_MOUSE_MODE){
 #ifdef HID_MOUSE_DEVICE
-
 		/*Configure HID Boot Mouse Input Report Characteristic : Value related info*/
 		hid_inst[servinst].serv_chars[id].char_val.handle = 0;
 		hid_inst[servinst].serv_chars[id].char_val.uuid.type = AT_BLE_UUID_16;
@@ -311,11 +295,8 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 		hid_serv_inst[servinst].hid_dev_boot_mouse_in_report = &hid_inst[servinst].serv_chars[id];
 		id++;
 #endif
-	}
-	else if(device == HID_KEYBOARD_MODE)
-	{
+	}else if(device == HID_KEYBOARD_MODE){
 #ifdef HID_KEYBOARD_DEVICE
-
         /*Configure HID Boot Keyboard Output Report Characteristic : Value related info*/
 		hid_inst[servinst].serv_chars[id].char_val.handle = 0;
 		hid_inst[servinst].serv_chars[id].char_val.uuid.type = AT_BLE_UUID_16;
@@ -497,27 +478,19 @@ uint16_t hid_service_dbreg(uint8_t inst, uint8_t *report_type, uint8_t *report_i
 	uint8_t descval[2] = {0, 0};
 	at_ble_status_t status;
 		
-	if( at_ble_service_define(&hid_inst[inst].serv) == AT_BLE_SUCCESS)
-	{
+	if( at_ble_service_define(&hid_inst[inst].serv) == AT_BLE_SUCCESS){
 		DBG_LOG_DEV("Define service handle %d", hid_inst[inst].serv.handle);
-		for(; id<report_num; id++)
-		{
+		for(; id<report_num; id++){
 			descval[0] = report_id[id];
 			descval[1] = report_type[id];
-			if((status = at_ble_descriptor_value_set(hid_serv_inst[inst].hid_dev_report_val_char[id]->additional_desc_list->handle, &descval[0], 2)) == AT_BLE_SUCCESS)
-			{
+			if((status = at_ble_descriptor_value_set(hid_serv_inst[inst].hid_dev_report_val_char[id]->additional_desc_list->handle, &descval[0], 2)) == AT_BLE_SUCCESS){
 				DBG_LOG_DEV("Descriptor Value set successfully");
-			}
-			else 
-			{
+			}else{
 				DBG_LOG("descriptor value set failed :%d",status);
 			}
 		}
-		
 		return hid_inst[inst].serv.handle;
-	}
-	else
-	{
+	}else{
 		DBG_LOG_DEV("service definition failed");
 		return (uint16_t )HID_SERV_FAILED;
 	}
@@ -528,16 +501,11 @@ uint16_t hid_service_dbreg(uint8_t inst, uint8_t *report_type, uint8_t *report_i
 */
 uint8_t hid_serv_get_instance(uint16_t handle)
 {
-	
 	uint8_t id = 0;
-	
 	DBG_LOG_DEV("hid_serv_get_instance : Search Handle %d", handle);
-	
-	for(; id<HID_MAX_SERV_INST; id++)
-	{
+	for(; id<HID_MAX_SERV_INST; id++){
 		DBG_LOG_DEV("hid_serv_get_instance : Service Handle %d  Characteristic Handle %d", *(hid_serv_inst[id].hid_dev_serv_handle), hid_serv_inst[id].hid_control_point->char_val.handle);
-		if((handle > *(hid_serv_inst[id].hid_dev_serv_handle)) && (handle <= hid_serv_inst[id].hid_control_point->char_val.handle))
-		{
+		if((handle > *(hid_serv_inst[id].hid_dev_serv_handle)) && (handle <= hid_serv_inst[id].hid_control_point->char_val.handle)){
 			DBG_LOG_DEV("hid_serv_get_instance : Service Handle %d", id);
 			return id;
 		}
@@ -551,53 +519,39 @@ uint8_t hid_serv_get_instance(uint16_t handle)
 uint8_t hid_ntf_instance(uint8_t serv_num, uint16_t char_handle)
 {
 	uint8_t id = 0;
-	
 	DBG_LOG_DEV("hid_ntf_instance : Search Handle %d", char_handle);
 	DBG_LOG_DEV("hid_ntf_instance : Protocol Mode Handle %d", hid_serv_inst[serv_num].hid_dev_proto_mode_char->char_val.handle);
-
-	if(hid_serv_inst[serv_num].hid_dev_proto_mode_char->char_val.handle == char_handle)
-	{
+	if(hid_serv_inst[serv_num].hid_dev_proto_mode_char->char_val.handle == char_handle){
 		return PROTOCOL_MODE;
 	}
-		
-	for(; id<HID_NUM_OF_REPORT; id++)
-	{
+
+	for(; id<HID_NUM_OF_REPORT; id++){
 		DBG_LOG_DEV("hid_ntf_instance : Report Handle %d", hid_serv_inst[serv_num].hid_dev_report_val_char[id]->char_val.handle);
-		if(char_handle == hid_serv_inst[serv_num].hid_dev_report_val_char[id]->char_val.handle)
-		{
+		if(char_handle == hid_serv_inst[serv_num].hid_dev_report_val_char[id]->char_val.handle){
 			return CHAR_REPORT;
 		}
-	
 		DBG_LOG_DEV("hid_ntf_instance : Report CCD Handle %d",hid_serv_inst[serv_num].hid_dev_report_val_char[id]->client_config_desc.handle);
-
-		if(char_handle == hid_serv_inst[serv_num].hid_dev_report_val_char[id]->client_config_desc.handle)
-		{
+		if(char_handle == hid_serv_inst[serv_num].hid_dev_report_val_char[id]->client_config_desc.handle){
 		   return CHAR_REPORT_CCD;
 		}
-			
 	}
 		
 #ifdef HID_KEYBOARD_DEVICE
-
 	DBG_LOG_DEV("hid_ntf_instance : Boot Keyboard Handle %d", hid_serv_inst[serv_num].hid_dev_boot_keyboard_in_report->char_val.handle);
-
-	if(hid_serv_inst[serv_num].hid_dev_boot_keyboard_in_report->char_val.handle == char_handle)
-	{
+	if(hid_serv_inst[serv_num].hid_dev_boot_keyboard_in_report->char_val.handle == char_handle){
 		return BOOT_KEY_INPUT_REPORT;
 	}
 #endif
 
 #ifdef HID_MOUSE_DEVICE
 	DBG_LOG_DEV("hid_ntf_instance : Boot Mouse Handle %d", hid_serv_inst[serv_num].hid_dev_boot_mouse_in_report->char_val.handle);
-	if(hid_serv_inst[serv_num].hid_dev_boot_mouse_in_report->char_val.handle == char_handle)
-	{
+	if(hid_serv_inst[serv_num].hid_dev_boot_mouse_in_report->char_val.handle == char_handle){
 		return BOOT_MOUSE_INPUT_REPORT;
 	}
 #endif
 
 	DBG_LOG_DEV("hid_ntf_instance : Control Point Handle %d", hid_serv_inst[serv_num].hid_control_point->char_val.handle);
-	if(hid_serv_inst[serv_num].hid_control_point->char_val.handle == char_handle)
-	{
+	if(hid_serv_inst[serv_num].hid_control_point->char_val.handle == char_handle){
 		return CONTROL_POINT;
 	}
 	return 0;
@@ -614,16 +568,12 @@ uint8_t hid_get_reportid(uint8_t serv, uint16_t handle, uint8_t reportnum)
 	uint16_t len = 2;	
 	
 	DBG_LOG_DEV("hid_get_reportid : Report Number %d", reportnum);
-	
-	for(id = 0; id <= reportnum; id++)
-	{
+	for(id = 0; id <= reportnum; id++){
 		DBG_LOG_DEV("id %d Search Handle %d, CCD Handle %d", id, handle, hid_serv_inst[serv].hid_dev_report_val_char[id]->client_config_desc.handle);
-		if(handle == hid_serv_inst[serv].hid_dev_report_val_char[id]->client_config_desc.handle)
-		{
+		if(handle == hid_serv_inst[serv].hid_dev_report_val_char[id]->client_config_desc.handle){
 			DBG_LOG_DEV("Inside hid_get_reportid : Report ID Descriptor Handle %d :: id %d :: serv %d", hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, id, serv);
 			status = at_ble_descriptor_value_get(hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, &descval[0], &len);
-			if (status != AT_BLE_SUCCESS)
-			{
+			if (status != AT_BLE_SUCCESS){
 				DBG_LOG_DEV("decriptor value get failed");
 			}
 			DBG_LOG_DEV("hid_get_reportid : Report ID %d Type %d", descval[0], descval[1]);
@@ -644,19 +594,14 @@ uint8_t hid_get_reportchar(uint16_t handle, uint8_t serv, uint8_t reportid)
 	at_ble_status_t status ;
 
 	DBG_LOG_DEV("Inside hid_get_reportchar : Handle %d Service Instance %d Report ID %d", handle, serv, reportid);	
-
-	for(id = 0; id <= HID_NUM_OF_REPORT; id++)
-	{
+	for(id = 0; id <= HID_NUM_OF_REPORT; id++){
 		DBG_LOG_DEV("Inside hid_get_reportchar : Report ID Descriptor Handle %d :: id %d :: serv %d", hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, id, serv);
 		status = at_ble_descriptor_value_get(hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, &descval[0], &len);
-		if (status != AT_BLE_SUCCESS)
-		{
+		if (status != AT_BLE_SUCCESS){
 			DBG_LOG_DEV("decriptor value get failed");
 		}
 		DBG_LOG_DEV("Inside hid_get_reportchar : Report Value ID %d Type %d", descval[0], descval[1]);
-		
-		if(descval[0] == reportid)
-		{
+		if(descval[0] == reportid){
 			DBG_LOG_DEV("hid_get_reportchar : Report Characteristic ID %d", id);
 			return id;
 		}
@@ -675,33 +620,24 @@ void hid_serv_report_update(uint16_t conn_handle, uint8_t serv_inst, uint8_t rep
 	uint16_t length = 2;
 	
 	id = hid_get_reportchar(conn_handle, serv_inst, reportid);
-
 	DBG_LOG_DEV("hid_serv_report_update : Report Characteristic ID %d", id);
 	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->client_config_desc.handle, &value[0], &length);
-	if (status != AT_BLE_SUCCESS)
-	{
+	if (status != AT_BLE_SUCCESS){
 		DBG_LOG_DEV("descriptor value get failed");
 	}
 	DBG_LOG_DEV("hid_serv_report_update : Value %d %d", value[0], value[1]);
-
 	//If Notification Enabled
-	if(value[0] == 1)
-	{
+	if(value[0] == 1){
 		DBG_LOG_DEV("Send the report");
-		if((status = at_ble_characteristic_value_set(hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->char_val.handle, report, len))==AT_BLE_SUCCESS)
-		{
+		if((status = at_ble_characteristic_value_set(hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->char_val.handle, report, len))==AT_BLE_SUCCESS){
 			DBG_LOG_DEV("hid_serv_report_update : Notify Value : conn_handle %d", conn_handle);
 			//Need to check for connection handle
 			status = at_ble_notification_send(conn_handle, hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->char_val.handle);	
-			if (status != AT_BLE_SUCCESS)
-			{
+			if (status != AT_BLE_SUCCESS){
 				DBG_LOG_DEV("decriptor value get failed");
 			}
-		}
-		else
-		{
+		}else{
 			DBG_LOG("Fail Reason %d", status);
-
 		}
 	}
 }
@@ -711,36 +647,31 @@ void hid_serv_report_update(uint16_t conn_handle, uint8_t serv_inst, uint8_t rep
 */
 void hid_boot_mousereport_update(at_ble_handle_t conn_handle, uint8_t serv_inst, uint8_t *bootreport, uint16_t len)
 {
-	
 #ifdef HID_MOUSE_DEVICE	
 	uint8_t value = 0;
 	uint8_t status;
 	uint16_t length = 2;
 	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_boot_mouse_in_report->client_config_desc.handle, &value, &length);
-	if (status != AT_BLE_SUCCESS)
-	{
+	if (status != AT_BLE_SUCCESS){
 		DBG_LOG_DEV("charactertistic  value get failed");
 	}
 	//If Notification Enabled
-	if(value == 1)
-	{
+	if(value == 1){
 		status = at_ble_characteristic_value_set(hid_serv_inst[serv_inst].hid_dev_boot_mouse_in_report->char_val.handle, bootreport, len);
-		if (status != AT_BLE_SUCCESS)
-		{
+		if (status != AT_BLE_SUCCESS){
 			DBG_LOG_DEV("decriptor value get failed");
 		}
 		//Need to check for connection handle
 		status = at_ble_notification_send(conn_handle, hid_serv_inst[serv_inst].hid_dev_boot_mouse_in_report->char_val.handle);
-		if (status != AT_BLE_SUCCESS)
-		{
+		if (status != AT_BLE_SUCCESS){
 			DBG_LOG_DEV("decriptor value get failed");
 		}
 	}
 #endif	
-        ALL_UNUSED(len);
-        ALL_UNUSED(bootreport);
-        ALL_UNUSED(serv_inst);
-        ALL_UNUSED(conn_handle);
+	ALL_UNUSED(len);
+    ALL_UNUSED(bootreport);
+    ALL_UNUSED(serv_inst);
+    ALL_UNUSED(conn_handle);
 }
 
 /**
@@ -753,30 +684,26 @@ void hid_boot_keyboardreport_update(at_ble_handle_t conn_handle, uint8_t serv_in
 	uint8_t value = 0;
 	uint16_t length = 2;
 	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_boot_keyboard_in_report->client_config_desc.handle, &value, &length);
-	if (status != AT_BLE_SUCCESS)
-	{
+	if (status != AT_BLE_SUCCESS){
 		DBG_LOG_DEV("at_ble_characteristic_value_get value get failed");
 	}
 	//If Notification Enabled
-	if(value == 1)
-	{
+	if(value == 1){
 		status = at_ble_characteristic_value_set(hid_serv_inst[serv_inst].hid_dev_boot_keyboard_in_report->char_val.handle, bootreport, len);
-		if (status != AT_BLE_SUCCESS)
-		{
+		if (status != AT_BLE_SUCCESS){
 			DBG_LOG_DEV("at_ble_characteristic_value_set value get failed");
 		}
 		//Need to check for connection handle
 		status = at_ble_notification_send(conn_handle, hid_serv_inst[serv_inst].hid_dev_boot_keyboard_in_report->char_val.handle);
-		if (status != AT_BLE_SUCCESS)
-		{
+		if (status != AT_BLE_SUCCESS){
 			DBG_LOG_DEV("at_ble_characteristic_value_set value get failed");
 		}
 	}
 #endif	
-        ALL_UNUSED(len);
-        ALL_UNUSED(bootreport);
-        ALL_UNUSED(serv_inst);
-        ALL_UNUSED(conn_handle);
+    ALL_UNUSED(len);
+    ALL_UNUSED(bootreport);
+    ALL_UNUSED(serv_inst);
+    ALL_UNUSED(conn_handle);
 }
 
 

@@ -92,33 +92,25 @@ void csc_app_send_buf(void)
 	uint16_t len = 0;
 	uint8_t buff = 0;
 	len = sio2host_rx(&buff, 1);
-	if (len) 
-	{
-		for (ind = 0; ind < len; ind++)
-		{
-			if(buff != 13)
-			{
+	if (len){
+		for (ind = 0; ind < len; ind++){
+			if(buff != ENTER_BUTTON_PRESS){
 				sio2host_putchar(buff);  
-				if(send_length < APP_TX_BUF_SIZE)
-				{
+				if(send_length < APP_TX_BUF_SIZE){
 					send_data[send_length++] = buff;
-				}
-				else
-				{
+				}else{
 					csc_prf_send_data(&send_data[0], send_length);
 					send_length = 0;
 				}
+			}else{ // User press enter to send data
+				if(send_length){
+					ind = send_length;
+					send_length = 0;
+					csc_prf_send_data(&send_data[0], ind);
+					DBG_LOG("\r\n");
+				}
 			}
-			else // User press enter to send data
-			{
-				ind = send_length;
-				send_length = 0;
-				csc_prf_send_data(&send_data[0], ind);
-				DBG_LOG("\r\n");
-			}
-		
 		}
-		
 	}
 }
 
@@ -126,19 +118,17 @@ void csc_app_send_buf(void)
 void csc_app_recv_buf(uint8_t *recv_data, uint8_t recv_len)
 {
 	uint16_t ind = 0;
-	if (recv_len)
-	{
-		for (ind = 0; ind < recv_len; ind++)
-		{
+	if (recv_len){
+		for (ind = 0; ind < recv_len; ind++){
 			sio2host_putchar(recv_data[ind]);
 		}
 		DBG_LOG("\r\n");
 	}
 }
+
 bool app_exec = true;
 int main(void )
 {
-
 #if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -162,8 +152,7 @@ int main(void )
 	notify_recv_ntf_handler(csc_prf_report_ntf_cb);
 	
 	/* Capturing the events  */
-	while(app_exec)
-	{
+	while(app_exec){
 		ble_event_task();
 		csc_app_send_buf();	
 	}
