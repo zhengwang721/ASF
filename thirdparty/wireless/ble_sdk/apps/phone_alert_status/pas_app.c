@@ -123,7 +123,6 @@ void app_connected_state(bool connected)
 	app_state = connected;
 	if (app_state == false)
 	{
-		DBG_LOG("App disconnected");
 		press_count = DEVICE_SILENT;
 	}
 }
@@ -256,7 +255,7 @@ int main(void)
 				pas_client_write_ringer_control_point(3);
 			} else if (press_count == READ_REQUEST)
 			{
-				DBG_LOG("reading the alert status and ringer setting");
+				DBG_LOG("\r\nreading the alert status and ringer setting");
 				if ((status = pas_client_read_ringer_setting_char()) != AT_BLE_SUCCESS)
 				{
 					DBG_LOG("reading ringer control point invocation failed");
@@ -277,6 +276,7 @@ int main(void)
 			flag = false;
 		}
 	}
-        ALL_UNUSED(status);
+    ALL_UNUSED(status);
+	
 	return 0;
 }

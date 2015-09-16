@@ -218,7 +218,7 @@ void pas_client_discovery_complete_handler(at_ble_discovery_complete_t *params)
 		at_ble_discovery_complete_t discover_status;
 		memcpy((uint8_t *)&discover_status, params, sizeof(at_ble_discovery_complete_t));
 		
-		DBG_LOG("The discovery complete operation %d status %x",discover_status.operation,discover_status.status);
+		DBG_LOG_DEV("The discovery complete operation %d status %x",discover_status.operation,discover_status.status);
 		
 		if ((discover_status.status == AT_BLE_SUCCESS) || (discover_status.status == AT_BLE_ATT_ATTRIBUTE_NOT_FOUND))
 		{
@@ -291,6 +291,7 @@ void pas_client_service_found_handler(at_ble_primary_service_found_t * primary_s
 		
 			DBG_LOG_DEV("Phone Alert Status Service Discovered  %04X %04X", pas_service_data.pas_service_info.start_handle,
 			 pas_service_data.pas_service_info.end_handle);
+			DBG_LOG("Phone Alert Status Service discovered in the remote device");
 			pas_service_data.pas_service_info.discovery = true;
 		}
 	}
