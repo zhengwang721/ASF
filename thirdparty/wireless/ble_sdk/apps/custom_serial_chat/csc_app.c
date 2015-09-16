@@ -111,10 +111,14 @@ void csc_app_send_buf(void)
 			}
 			else // User press enter to send data
 			{
-				ind = send_length;
-				send_length = 0;
-				csc_prf_send_data(&send_data[0], ind);
-				DBG_LOG("\r\n");
+				if(send_length)
+				{
+					ind = send_length;
+					send_length = 0;
+					csc_prf_send_data(&send_data[0], ind);
+					DBG_LOG("\r\n");
+				}
+				
 			}
 		
 		}
