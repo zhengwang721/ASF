@@ -44,15 +44,9 @@
 #define CONF_PERF_ANALYZER_H_INCLUDED
 
 
-#define DEFAULT_CHANNEL         (1)
+#define DEFAULT_CHANNEL_OFFSET           (1)
 
 #define DEFAULT_PAGE            (0)
-
-#define DEFAULT_PAN_ID          (0xCAFE)
-#define DST_PAN_ID              (DEFAULT_PAN_ID)
-#define SRC_PAN_ID              (DEFAULT_PAN_ID)
-#define DEFAULT_ADDR            (0xFFFF)
-#define DST_SHORT_ADDR          (0xFFFF)
 
 #define ENABLE_ANTENNA_1                          (1)
 #define ENABLE_ANTENNA_2                          (2)

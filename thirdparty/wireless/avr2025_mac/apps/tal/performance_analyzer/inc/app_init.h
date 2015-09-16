@@ -50,9 +50,9 @@
 #ifndef APP_INIT_H
 #define APP_INIT_H
 
-# include "tal.h"
+#include "tal.h"
 #include "string.h"
-# include "app_config.h"
+#include "app_config.h"
 #include "user_interface.h"
 #include "conf_perf_analyzer.h"
 
@@ -76,6 +76,20 @@
 /* === Macros =============================================================== */
 /* Version of the software */
 #define FIRMWARE_VERSION   3.2
+
+
+#if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
+#define DEFAULT_CHANNEL         (DEFAULT_CHANNEL_OFFSET)
+#else
+#define DEFAULT_CHANNEL         (11 + DEFAULT_CHANNEL_OFFSET)
+#endif
+
+#define DEFAULT_PAN_ID          (0xCAFE)
+#define DST_PAN_ID              (DEFAULT_PAN_ID)
+#define SRC_PAN_ID              (DEFAULT_PAN_ID)
+#define DEFAULT_ADDR            (0xFFFF)
+#define DST_SHORT_ADDR          (0xFFFF)
+
 
 /* Frame overhead due to selected address scheme incl. FCS */
 #if (DST_PAN_ID == SRC_PAN_ID)

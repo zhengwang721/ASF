@@ -43,22 +43,9 @@
 #ifndef CONF_PERF_ANALYZER_H_INCLUDED
 #define CONF_PERF_ANALYZER_H_INCLUDED
 
-#define CHANNEL_INDEX           (0)
-
-#if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
-#define DEFAULT_CHANNEL         (0 + CHANNEL_INDEX)
-#else
-#define DEFAULT_CHANNEL         (11 + CHANNEL_INDEX)
-#endif
-
+#define DEFAULT_CHANNEL_OFFSET           (0)
 
 #define DEFAULT_PAGE            (0)
-
-#define DEFAULT_PAN_ID          (0xCAFE)
-#define DST_PAN_ID              (DEFAULT_PAN_ID)
-#define SRC_PAN_ID              (DEFAULT_PAN_ID)
-#define DEFAULT_ADDR            (0xFFFF)
-#define DST_SHORT_ADDR          (0xFFFF)
 
 #define ENABLE_ANTENNA_1                          (1)
 #define ENABLE_ANTENNA_2                          (2)
