@@ -511,7 +511,6 @@ void anp_client_write_notification_handler(void )
 		DBG_LOG_DEV("Successfully sent notification request for unread alert");
 	}
 	
-	delay_ms(50);
 	
 	if(!(anp_alert_noti(ble_connected_dev_info[0].handle,anp_handle.new_alert_desc_handle,true) == AT_BLE_SUCCESS))
 	{
