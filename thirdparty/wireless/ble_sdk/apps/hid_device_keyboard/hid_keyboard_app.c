@@ -139,13 +139,15 @@ void hid_disconnect_cb(at_ble_handle_t handle)
 /* Callback called when host change the control point value */
 void hid_prf_control_point_ntf_cb(hid_control_mode_ntf_t *hid_control_point_value_t)
 {
-	DBG_LOG_DEV("Control Point Notification Callback :: Service Instance %d Control Value %d", hid_control_point_value_t->serv_inst, hid_control_point_value_t->control_value);
+	DBG_LOG_DEV("Control Point Notification Callback :: Service Instance %d Control Value %d", 
+					hid_control_point_value_t->serv_inst, hid_control_point_value_t->control_value);
 }
 
 /* Callback called when host change the protocol mode value */
 void hid_prf_protocol_mode_ntf_cb(hid_proto_mode_ntf_t *protocol_mode)
 {
-	DBG_LOG_DEV("Protocol Mode Notification Callback :: Service Instance %d  New Protocol Mode  %d  Connection Handle %d", protocol_mode->serv_inst, protocol_mode->mode, protocol_mode->conn_handle);
+	DBG_LOG_DEV("Protocol Mode Notification Callback :: Service Instance %d  New Protocol Mode  %d  Connection Handle %d", 
+					protocol_mode->serv_inst, protocol_mode->mode, protocol_mode->conn_handle);
 }
 
 /* Callback called when host enable/disable the notification for boot report (Mouse/Keyboard)
@@ -154,13 +156,15 @@ void hid_prf_protocol_mode_ntf_cb(hid_proto_mode_ntf_t *protocol_mode)
 */
 void hid_prf_boot_ntf_cb(hid_boot_ntf_t *boot_ntf_info_t)
 {
-	DBG_LOG_DEV("Boot Notification Callback :: Service Instance %d  Boot Value  %d  Notification(Enable/Disable) %d", boot_ntf_info_t->serv_inst, boot_ntf_info_t->boot_value, boot_ntf_info_t->ntf_conf);
+	DBG_LOG_DEV("Boot Notification Callback :: Service Instance %d  Boot Value  %d  Notification(Enable/Disable) %d", 
+					boot_ntf_info_t->serv_inst, boot_ntf_info_t->boot_value, boot_ntf_info_t->ntf_conf);
 }
 
 /* Callback called when host enable/disable the notification for report (Mouse/Keyboard) */
 void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info)
 {
-	DBG_LOG_DEV("Report Notification Callback Service Instance %d  Report ID  %d  Notification(Enable/Disable) %d Connection Handle %d", report_info->serv_inst, report_info->report_ID, report_info->ntf_conf, report_info->conn_handle);
+	DBG_LOG_DEV("Report Notification Callback Service Instance %d  Report ID  %d  Notification(Enable/Disable) %d Connection Handle %d", 
+					report_info->serv_inst, report_info->report_ID, report_info->ntf_conf, report_info->conn_handle);
     report_ntf_info.serv_inst = report_info->serv_inst;
 	report_ntf_info.report_ID = report_info->report_ID;
 	report_ntf_info.ntf_conf = report_info->ntf_conf;
@@ -255,13 +259,13 @@ int main(void )
 		{
 			DBG_LOG("Key Pressed...");
 			delay_ms(KEY_PAD_DEBOUNCE_TIME);
-			if((keyb_id == 0) || (keyb_id == 6))
+			if((keyb_id == POSITION_ZERO) || (keyb_id == POSITION_SIX))
 			{
-				app_keyb_report[0] = 0x02;
+				app_keyb_report[0] = CAPS_ON;
 			}
 			else
 			{
-				app_keyb_report[0] = 0x00;
+				app_keyb_report[0] = CAPS_OFF;
 			}
 			
 			app_keyb_report[2] = keyb_disp[keyb_id];
@@ -272,7 +276,7 @@ int main(void )
 			
 			key_status = 0;
 			
-			if(keyb_id == 11)
+			if(keyb_id == MAX_TEXT_LEN)
 			{
 				keyb_id = 0;
 			}
@@ -280,11 +284,8 @@ int main(void )
 			{
 				++keyb_id;
 			}
-			
 		}
-		
 	}
-
 }
 
 

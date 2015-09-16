@@ -73,7 +73,7 @@ control_point_ntf_callback_t control_point_ntf_cb;
 hid_prf_info_t *hid_prf_dataref[HID_MAX_SERV_INST];
 
 /* Scan response data*/
-uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
+uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
 /**
 * \HID device profile initialization function

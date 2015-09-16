@@ -136,13 +136,15 @@ static uint8_t hid_app_mouse_report_map[] =
 /* Callback called when host change the control point value */
 void hid_prf_control_point_ntf_cb(hid_control_mode_ntf_t *hid_control_point_value_t)
 {
-	DBG_LOG_DEV("Control Point Notification Callback :: Service Instance %d Control Value %d", hid_control_point_value_t->serv_inst, hid_control_point_value_t->control_value);
+	DBG_LOG_DEV("Control Point Notification Callback :: Service Instance %d Control Value %d", 
+					hid_control_point_value_t->serv_inst, hid_control_point_value_t->control_value);
 }
 
 /* Callback called when host change the protocol mode value */
 void hid_prf_protocol_mode_ntf_cb(hid_proto_mode_ntf_t *protocol_mode)
 {
-	DBG_LOG_DEV("Protocol Mode Notification Callback :: Service Instance %d  New Protocol Mode  %d  Connection Handle %d", protocol_mode->serv_inst, protocol_mode->mode, protocol_mode->conn_handle);
+	DBG_LOG_DEV("Protocol Mode Notification Callback :: Service Instance %d  New Protocol Mode  %d  Connection Handle %d", 
+					protocol_mode->serv_inst, protocol_mode->mode, protocol_mode->conn_handle);
 }
 
 /* Callback called when host enable/disable the notification for boot report (Mouse/Keyboard)
@@ -151,13 +153,16 @@ void hid_prf_protocol_mode_ntf_cb(hid_proto_mode_ntf_t *protocol_mode)
 */
 void hid_prf_boot_ntf_cb(hid_boot_ntf_t *boot_ntf_info_t)
 {
-	DBG_LOG_DEV("Boot Notification Callback :: Service Instance %d  Boot Value  %d  Notification(Enable/Disable) %d", boot_ntf_info_t->serv_inst, boot_ntf_info_t->boot_value, boot_ntf_info_t->ntf_conf);
+	DBG_LOG_DEV("Boot Notification Callback :: Service Instance %d  Boot Value  %d  Notification(Enable/Disable) %d", 
+					boot_ntf_info_t->serv_inst, boot_ntf_info_t->boot_value, boot_ntf_info_t->ntf_conf);
 }
 
 /* Callback called when host enable/disable the notification for report (Mouse/Keyboard) */
 void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info)
 {
-	DBG_LOG_DEV("Report Notification Callback Service Instance %d  Report ID  %d  Notification(Enable/Disable) %d Connection Handle %d", report_info->serv_inst, report_info->report_ID, report_info->ntf_conf, report_info->conn_handle);
+	DBG_LOG_DEV("Report Notification Callback Service Instance %d  Report ID  %d  Notification(Enable/Disable) %d Connection Handle %d", 
+					report_info->serv_inst, report_info->report_ID, report_info->ntf_conf, report_info->conn_handle);
+					
     report_ntf_info.serv_inst = report_info->serv_inst;
 	report_ntf_info.report_ID = report_info->report_ID;
 	report_ntf_info.ntf_conf = report_info->ntf_conf;
@@ -212,7 +217,6 @@ void hid_mouse_app_init(void)
 bool hid_mouse_move(int8_t pos, uint8_t index_report)
 {
 	int16_t s16_newpos;
-	// Add position in HID mouse report
 	s16_newpos = (int8_t) app_mouse_report[index_report];
 	s16_newpos += pos;
 	if ((-127 > s16_newpos) || (127 < s16_newpos)) {
@@ -273,7 +277,7 @@ int main(void )
 						++cnt;
 						app_mouse_report[2] = 0;
 						DBG_LOG("Mouse Right Movement");
-						if(cnt == 5)
+						if(cnt == MOUSE_CHANGE_DIRECTION)
 						{
 							mouse_pos = MOUSE_DOWN_MOVEMENT;
 							cnt = 0;
@@ -289,7 +293,7 @@ int main(void )
 						++cnt;
 						app_mouse_report[2] = 0;
 						DBG_LOG("Mouse Left  Movement");
-						if(cnt == 5)
+						if(cnt == MOUSE_CHANGE_DIRECTION)
 						{
 							mouse_pos = MOUSE_UP_MOVEMENT;
 							cnt = 0;
@@ -305,7 +309,7 @@ int main(void )
 						++cnt;
 						app_mouse_report[1] = 0;
 						DBG_LOG("Mouse UP    Movement");
-						if(cnt == 5)
+						if(cnt == MOUSE_CHANGE_DIRECTION)
 						{
 							mouse_pos = MOUSE_RIGHT_MOVEMENT;
 							cnt = 0;
@@ -322,7 +326,7 @@ int main(void )
 						++cnt;
 						app_mouse_report[1] = 0;
 						DBG_LOG("Mouse Down  Movement");
-						if(cnt == 5)
+						if(cnt == MOUSE_CHANGE_DIRECTION)
 						{
 							mouse_pos = MOUSE_LEFT_MOVEMENT;
 							cnt = 0;
@@ -334,9 +338,7 @@ int main(void )
 			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, report_ntf_info.report_ID, (uint8_t *)app_mouse_report, sizeof(app_mouse_report));
 			mouse_status = 0;			
     	}
-	
 	}
-
 	return 0;
 }
 
