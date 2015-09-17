@@ -67,7 +67,7 @@
 ****************************************************************************************/
 volatile bool app_state = 0 ; /*!< flag to represent the application state*/
 volatile bool start_advertisement = 0; /*!< flag to start advertisement*/
-bool advertisement_flag = false;/*!< to check if the device is in advertisement*/
+volatile bool advertisement_flag = false;/*!< to check if the device is in advertisement*/
 volatile bool notification_flag = false; /*!< flag to start notification*/
 volatile bool disconnect_flag = false;	/*!< flag for disconnection*/
 volatile bool hr_initializer_flag = 1; /*!< flag for initialization of hr for each category*/
@@ -82,7 +82,6 @@ int8_t inc_changer	= 1;/*!< increment operator to change heart rate */
 int8_t time_operator ;/*!< operator to change the seconds */
 uint8_t hr_min_value;/*!<the minimum heart rate value*/
 uint8_t hr_max_value;/*!<the maximum heart rate value*/
-volatile bool button_pressed = false;/*!<patch download*/
 
 /****************************************************************************************
 *							        Functions											*
@@ -200,8 +199,6 @@ void app_state_handler(bool state)
  */
 void button_cb(void)
 {
-	button_pressed = true;
-	
 	if (app_state) {
 		DBG_LOG_DEV("Going to disconnect ");
 		disconnect_flag = true;

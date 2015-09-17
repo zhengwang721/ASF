@@ -65,36 +65,35 @@
 volatile bool button_pressed = false;
 
 /** flag to check if indication has been sent successfully over the air*/
-bool indication_sent = true;
+volatile bool indication_sent = true;
+
 /** flag to check if notification has been sent successfully over the air*/
-bool notification_sent = true;
+volatile bool notification_sent = true;
+
 /** Flag to change the events from mmgh to kpa and vice versa*/
-bool units = APP_DEFAULT_VAL;
+volatile bool units = APP_DEFAULT_VAL;
+
 /** flag to send notifications */
-bool notification_flag = APP_DEFAULT_VAL;
+ volatile bool notification_flag = APP_DEFAULT_VAL;
+
 /** flag to send indication */
-bool indication_flag = APP_DEFAULT_VAL;
+volatile bool indication_flag = APP_DEFAULT_VAL;
+
 /** Flag to identify user request for indication and notification*/
-bool user_request_flag =  APP_DEFAULT_VAL;
+volatile bool user_request_flag =  APP_DEFAULT_VAL;
+
 /** Counter to maintain interval of indication*/
 volatile uint8_t timer_count = APP_DEFAULT_VAL;
+
 /** flag to send one notification for one second*/
-bool notify = 0;
+volatile bool notify = 0;
 
 /** flag to check the app state*/
-bool app_state;
+volatile bool app_state;
 
 /** flags for reversing the direction of characteristic*
 	 change for indication*/
-int8_t operator[9] = {1,1,1,1,1,1,1,1,1};
-
-/** flags for reversing the direction of characteristic*
-	 change for notification*/
-bool notification_increment_flag[2] = {1,1};
-
-int8_t notification_operator[2] = {1,1};
-/* Blood Pressure Measurement Current*
-* Characteristic values for indication*/
+volatile int8_t operator[9] = {1,1,1,1,1,1,1,1,1};
 
 /** Current systolic value  in mmhg*/
 uint16_t systolic_val_mmhg = SYSTOLIC_MIN_MMHG;
@@ -123,7 +122,7 @@ uint8_t time_stamp[7];
 /** Current year*/
 uint16_t year_value = YEAR;
 
-/* Intermediate Cuff Pressure Values for notificaiton */
+/* Intermediate Cuff Pressure Values for notification */
 uint16_t interim_diastolic_mmhg = DIASTOLIC_MIN_MMHG;
 
 uint16_t interim_diastolic_kpa = DIASTOLIC_MIN_KPA; 
@@ -158,10 +157,10 @@ void app_connected_state(bool connected)
 		interim_map_kpa = MAP_MIN_KPA;
 		systolic_val_mmhg = SYSTOLIC_MIN_MMHG;
 		diastolic_val_mmhg = DIASTOLIC_MIN_MMHG;
-		 map_val_mmhg = MAP_MIN_MMHG;
-		 systolic_val_kpa = SYSTOLIC_MIN_KPA;
-		 diastolic_val_kpa = DIASTOLIC_MIN_KPA;
-		 map_val_kpa = MAP_MIN_KPA;
+		map_val_mmhg = MAP_MIN_MMHG;
+		systolic_val_kpa = SYSTOLIC_MIN_KPA;
+		diastolic_val_kpa = DIASTOLIC_MIN_KPA;
+		map_val_kpa = MAP_MIN_KPA;
 		pulse_rate_val = PULSE_RATE_MIN;
 		units = !units;
 	} 

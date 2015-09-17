@@ -67,9 +67,9 @@ extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
 volatile bool user_request = false;
 
-bool notification_enable = false;
+volatile bool notification_enable = false;
 
-bool app_state = false;
+volatile bool app_state = false;
 
 /***********************************************************************************
  *									Implementations                               *
