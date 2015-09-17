@@ -50,8 +50,9 @@
 /**
  * \defgroup asfdoc_sam0_tsens_group SAM Temperature Sensor (TSENS) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
- * and management of the device's Configurable Custom Logic functionality.
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides
+ * an interface for the configuration and management of the device's
+ * Configurable Custom Logic functionality.
  *
  * The following peripherals are used by this module:
  *  - TSENS (Temperature Sensor)
@@ -190,13 +191,13 @@ extern "C" {
  * @{
  */
 
-/** TSENS result ready. */
+/** TSENS result ready */
 #define TSENS_STATUS_RESULT_READY  (1UL << 0)
-/** TSENS result overwritten before read. */
+/** TSENS result overwritten before read */
 #define TSENS_STATUS_OVERRUN       (1UL << 1)
-/** Window monitor match. */
+/** Window monitor match */
 #define TSENS_STATUS_WINDOW        (1UL << 2)
-/** TSENS result overflows. */
+/** TSENS result overflows */
 #define TSENS_STATUS_OVERFLOW      (1UL << 3)
 
 /** @} */
@@ -397,7 +398,7 @@ static inline void tsens_clear_status(const uint32_t status_flags)
  */
 
 /**
- * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
+ * \brief Determines if the hardware module is currently synchronizing to the bus.
  *
  * Checks to see if the underlying hardware peripheral module(s) are currently
  * synchronizing across multiple clock domains to the hardware bus. This
@@ -589,10 +590,10 @@ enum status_code tsens_read(int32_t *result);
 /**
  * \page asfdoc_sam0_tsens_exqsg Examples for TSENS Driver
  *
- * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_sam0_tsens_group. QSGs are simple examples with
+ * This is a list of the available Quick Start guides (QSG) and example
+ * applications for \ref asfdoc_sam0_tsens_group. A QSG is simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_tsens_basic_use_case
@@ -608,7 +609,7 @@ enum status_code tsens_read(int32_t *result);
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>06/2015</td>
+ *		<td>09/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
