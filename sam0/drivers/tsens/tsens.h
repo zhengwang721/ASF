@@ -608,7 +608,7 @@ enum status_code tsens_read(int32_t *result);
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42542A</td>
  *		<td>09/2015</td>
  *		<td>Initial release</td>
  *	</tr>
