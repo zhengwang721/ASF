@@ -102,6 +102,49 @@ void timer_callback_handler(void)
 }
 
 /**
+ * @brief Callback registered for characteristic read response 
+ * @param[in] char_read_resp @ref at_ble_characteristic_read_response_t
+ * @return None
+ *
+ */
+static void app_read_response_cb(at_ble_characteristic_read_response_t *char_read_resp)
+{
+	if (char_read_resp->char_handle == cts_handle.curr_char_handle) {
+		if (local_time_char_found) {
+			if (tis_current_time_read( ble_connected_dev_info[0].handle,
+			cts_handle.lti_char_handle )
+			== AT_BLE_SUCCESS) {
+				DBG_LOG_DEV("Local Time info request success");
+			}
+		}
+		} else if (char_read_resp->char_handle == cts_handle.lti_char_handle) {
+		if (ref_time_char_found) {
+			if (tis_current_time_read( ble_connected_dev_info[0].handle,
+			cts_handle.rti_char_handle )
+			== AT_BLE_SUCCESS) {
+				DBG_LOG_DEV("Reference Time info request success");
+			}
+		}
+		} else if (char_read_resp->char_handle == cts_handle.rti_char_handle) {
+		if (time_with_dst_char_found) {
+			if (tis_dst_change_read( ble_connected_dev_info[0].handle,
+			dst_handle.dst_char_handle )
+			== AT_BLE_SUCCESS) {
+				DBG_LOG_DEV("Time with DST read request success");
+			}
+		}
+		} else if (char_read_resp->char_handle == dst_handle.dst_char_handle) {
+		if (time_update_state_char_found) {
+			if (tis_rtu_update_read( ble_connected_dev_info[0].handle,
+			rtu_handle.tp_state_char_handle, 20 )
+			== AT_BLE_SUCCESS) {
+				DBG_LOG_DEV("Time update state request success");
+			}
+		}
+	}
+}
+
+/**
  * @brief Main Function for Time Information Callback
  */
 int main (void)
@@ -172,39 +215,3 @@ int main (void)
 	}
 }
 	
-void app_read_response_cb(at_ble_characteristic_read_response_t *char_read_resp)
-{
-	if (char_read_resp->char_handle == cts_handle.curr_char_handle) {
-		if (local_time_char_found) {
-			if (tis_current_time_read( ble_connected_dev_info[0].handle, 
-										cts_handle.lti_char_handle ) 
-										== AT_BLE_SUCCESS) {
-				DBG_LOG_DEV("Local Time info request success");
-			}
-		}
-	} else if (char_read_resp->char_handle == cts_handle.lti_char_handle) {
-		if (ref_time_char_found) {
-			if (tis_current_time_read( ble_connected_dev_info[0].handle, 
-									cts_handle.rti_char_handle ) 
-									== AT_BLE_SUCCESS) {
-				DBG_LOG_DEV("Reference Time info request success");
-			}
-		}
-	} else if (char_read_resp->char_handle == cts_handle.rti_char_handle) {
-		if (time_with_dst_char_found) {
-			if (tis_dst_change_read( ble_connected_dev_info[0].handle, 
-									dst_handle.dst_char_handle ) 
-									== AT_BLE_SUCCESS) {
-				DBG_LOG_DEV("Time with DST read request success");
-			}
-		}
-	} else if (char_read_resp->char_handle == dst_handle.dst_char_handle) {
-		if (time_update_state_char_found) {
-			if (tis_rtu_update_read( ble_connected_dev_info[0].handle, 
-									rtu_handle.tp_state_char_handle, 20 ) 
-									== AT_BLE_SUCCESS) {
-				DBG_LOG_DEV("Time update state request success");
-			}
-		}
-	}
-}			

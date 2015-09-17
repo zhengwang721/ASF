@@ -80,85 +80,7 @@ static void ble_device_broadcaster_ind(void)
 	LED_On(LED0);
 }
 
-status_t brd_adv_init(void)
-{
-	status_t status;
-
-	if ((status
-				= brd_set_advertisement_type(
-					ADV_TYPE_NONCONN_UNDIRECTED)) !=
-			STATUS_SUCCESS) {
-		DBG_LOG("Advertisement type set failed(%d)", status);
-		return STATUS_FAILED;
-	}
-
-	/*set advertisement data type */
-	if ((status = brd_set_data_type(ADVERTISEMENT_DATA)) !=
-			STATUS_SUCCESS) {
-		DBG_LOG("Advertisement data type set failed(%d)", status);
-		return STATUS_FAILED;
-	}
-
-	/* set advertisement data with local name, appearance and complete list
-	 * of service uuid16 */
-	brd_set_advertisement_data(ADV_DATA_TYPE_COMPLETE_LOCAL_NAME,
-			(uint8_t *)BRD_ADV_DATA_NAME_DATA,
-			BRD_ADV_DATA_NAME_LEN);
-	brd_set_advertisement_data(ADV_DATA_TYPE_APPEARANCE,
-			(uint8_t *)BRD_ADV_DATA_APPEARANCE_DATA,
-			BRD_ADV_DATA_APPEARANCE_LEN);
-	brd_set_advertisement_data(ADV_DATA_TYPE_COMPLETE_SERVICE_UUID16,
-			(uint8_t *)BRD_ADV_DATA_UUID_DATA,
-			BRD_ADV_DATA_UUID_LEN);
-
-	return STATUS_SUCCESS;
-}
-
-int main(void)
-{
-	#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-#elif SAM0
-	system_init();
-#endif
-
-	/* Initialize the button */
-	button_init();
-
-	/* Initialize serial console */
-	serial_console_init();
-
-	DBG_LOG("Initializing Broadcaster Application");
-	
-
-
-	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL);
-
-	brd_adv_init();
-
-	/* starting advertisement in broadcast mode */
-	brd_start_broadcast();
-}
-
-status_t brd_set_advertisement_type(uint8_t type)
-{
-	if (type == ADV_TYPE_SCANNABLE_UNDIRECTED) {
-		adv_type = AT_BLE_ADV_TYPE_SCANNABLE_UNDIRECTED;
-		DBG_LOG("Advertisement type set to scannable undirected");
-	} else if (type == ADV_TYPE_NONCONN_UNDIRECTED) {
-		adv_type = AT_BLE_ADV_TYPE_NONCONN_UNDIRECTED;
-		DBG_LOG("Advertisement type set to nonconnectable undirected");
-	} else {
-		return STATUS_INVALID_PARAM;
-	}
-
-	return STATUS_SUCCESS;
-}
-
-status_t brd_set_data_type(uint8_t type)
+static status_t brd_set_data_type(uint8_t type)
 {
 	if (type == ADVERTISEMENT_DATA) {
 		data_type = ADVERTISEMENT_DATA;
@@ -172,7 +94,13 @@ status_t brd_set_data_type(uint8_t type)
 	return STATUS_SUCCESS;
 }
 
-void brd_start_broadcast(void)
+/** @brief Starts advertising
+ *
+ *@param[in] none
+ *@return none
+ *
+ */
+static void brd_start_broadcast(void)
 {
 	at_ble_status_t status;
 
@@ -201,8 +129,17 @@ void brd_start_broadcast(void)
 	}
 }
 
-/* Advertisement data with a complete list of 16-bit service class UUID */
-status_t brd_adv_comp_list_service_uuid16(uint8_t *list_uuid16, uint8_t length)
+/** @brief Set advertisement data with complete list of service uuid of 16bits
+ *
+ * @param[in] list_uuid16 list of service uuid of 16bits
+ * @param[in] length length of the list
+ * @return @ref STATUS_SUCCESS adding the list to advertisement data success
+ * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
+ * enough space to hold the list
+ * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
+ *
+ */
+static status_t brd_adv_comp_list_service_uuid16(uint8_t *list_uuid16, uint8_t length)
 {
 	if (length <= 0 || !list_uuid16) {
 		return STATUS_INVALID_PARAM;
@@ -234,8 +171,19 @@ status_t brd_adv_comp_list_service_uuid16(uint8_t *list_uuid16, uint8_t length)
 	return STATUS_SUCCESS;
 }
 
-/* Advertisement data with a incomplete list of 16-bit service class UUID */
-status_t brd_adv_incomp_list_service_uuid16(uint8_t *list_uuid16,
+/** @brief Set advertisement data with incomplete list of service uuid of 16bits
+ *
+ * @param[in] list_uuid16 list of service uuid of 16bits
+ * @param[in] length length of the list
+ * @return @ref STATUS_SUCCESS adding the list to advertisement data success
+ * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
+ * enough space to hold the list
+ * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
+ * @return @ref STATUS_OPERATION_NOT_SUPPORTED trying to send incomplete list on
+ * scan response data.
+ *
+ */
+static status_t brd_adv_incomp_list_service_uuid16(uint8_t *list_uuid16,
 		uint8_t length)
 {
 	if (length <= 0 || !list_uuid16) {
@@ -259,8 +207,17 @@ status_t brd_adv_incomp_list_service_uuid16(uint8_t *list_uuid16,
 	return STATUS_SUCCESS;
 }
 
-/* Advertisement data with a complete list of 32-bit service class UUID */
-status_t brd_adv_comp_list_service_uuid32(uint8_t *list_uuid32, uint8_t length)
+/** @brief Set advertisement data with complete list of service uuid of 32bits
+ *
+ * @param[in] list_uuid32 list of service uuid of 32bits
+ * @param[in] length length of the list
+ * @return @ref STATUS_SUCCESS adding the list to advertisement data success
+ * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
+ * enough space to hold the list
+ * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
+ *
+ */
+static status_t brd_adv_comp_list_service_uuid32(uint8_t *list_uuid32, uint8_t length)
 {
 	if (length <= 0 || !list_uuid32) {
 		return STATUS_INVALID_PARAM;
@@ -292,8 +249,19 @@ status_t brd_adv_comp_list_service_uuid32(uint8_t *list_uuid32, uint8_t length)
 	return STATUS_SUCCESS;
 }
 
-/* Advertisement data with a Incomplete list of 32-bit service class UUID */
-status_t brd_adv_incomp_list_service_uuid32(uint8_t *list_uuid32,
+/** @brief Set advertisement data with incomplete list of service uuid of 32bits
+ *
+ * @param[in] list_uuid32 list of service uuid of 32bits
+ * @param[in] length length of the list
+ * @return @ref STATUS_SUCCESS adding the list to advertisement data success
+ * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
+ * enough space to hold the list
+ * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
+ * @return @ref STATUS_OPERATION_NOT_SUPPORTED trying to send incomplete list on
+ * scan response data.
+ *
+ */
+static status_t brd_adv_incomp_list_service_uuid32(uint8_t *list_uuid32,
 		uint8_t length)
 {
 	if (length <= 0 || !list_uuid32) {
@@ -317,8 +285,17 @@ status_t brd_adv_incomp_list_service_uuid32(uint8_t *list_uuid32,
 	return STATUS_SUCCESS;
 }
 
-/* Advertisement data with a complete list of 128-bit service class UUID */
-status_t brd_adv_comp_list_service_uuid128(uint8_t *list_uuid128,
+/** @brief Set advertisement data with complete list of service uuid of 128bits
+ *
+ * @param[in] list_uuid128 list of service uuid of 128bits
+ * @param[in] length length of the list
+ * @return @ref STATUS_SUCCESS adding the list to advertisement data success
+ * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
+ * enough space to hold the list
+ * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
+ *
+ */
+static status_t brd_adv_comp_list_service_uuid128(uint8_t *list_uuid128,
 		uint8_t length)
 {
 	if (length <= 0 || !list_uuid128) {
@@ -351,8 +328,19 @@ status_t brd_adv_comp_list_service_uuid128(uint8_t *list_uuid128,
 	return STATUS_SUCCESS;
 }
 
-/* Advertisement data with a Incomplete list of 128-bit service class UUID */
-status_t brd_adv_incomp_list_service_uuid128(uint8_t *list_uuid128,
+/** @brief Set advertisement data with incomplete list of service uuid of 32bits
+ *
+ * @param[in] list_uuid128 list of service uuid of 128bits
+ * @param[in] length length of the list
+ * @return @ref STATUS_SUCCESS adding the list to advertisement data success
+ * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
+ * enough space to hold the list
+ * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
+ * @return @ref STATUS_OPERATION_NOT_SUPPORTED trying to send incomplete list on
+ * scan response data.
+ *
+ */
+static status_t brd_adv_incomp_list_service_uuid128(uint8_t *list_uuid128,
 		uint8_t length)
 {
 	if (length <= 0 || !list_uuid128) {
@@ -376,8 +364,18 @@ status_t brd_adv_incomp_list_service_uuid128(uint8_t *list_uuid128,
 	return STATUS_SUCCESS;
 }
 
-/* Advertisement data with a complete name*/
-status_t brd_adv_comp_local_name(uint8_t *local_name, uint8_t length)
+/** @brief Set advertisement data with complete local name
+ *
+ * @param[in] local_name local name of the device
+ * @param[in] length length of the local name
+ * @return @ref STATUS_SUCCESS adding the complete local name to advertisement
+ * data success
+ * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
+ * enough space to hold the local name
+ * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
+ *
+ */
+static status_t brd_adv_comp_local_name(uint8_t *local_name, uint8_t length)
 {
 	if (length <= 0 || !local_name) {
 		return STATUS_INVALID_PARAM;
@@ -409,8 +407,20 @@ status_t brd_adv_comp_local_name(uint8_t *local_name, uint8_t length)
 	return STATUS_SUCCESS;
 }
 
-/* Advertisement data with a complete name*/
-status_t brd_adv_shortened_local_name(uint8_t *local_name, uint8_t length)
+/** @brief Set advertisement data with shortened local name
+ *
+ * @param[in] local_name local name of the device
+ * @param[in] length length of the local name
+ * @return @ref STATUS_SUCCESS adding the shortened local name to advertisement
+ * data success
+ * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
+ * enough space to hold the local name
+ * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
+ * @return @ref STATUS_OPERATION_NOT_SUPPORTED trying to send shortened local
+ * name.
+ *
+ */
+static status_t brd_adv_shortened_local_name(uint8_t *local_name, uint8_t length)
 {
 	if (length <= 0 || !local_name) {
 		return STATUS_INVALID_PARAM;
@@ -433,8 +443,40 @@ status_t brd_adv_shortened_local_name(uint8_t *local_name, uint8_t length)
 	return STATUS_SUCCESS;
 }
 
-/* Advertisement data with a appearance of data*/
-status_t brd_adv_appearance(uint8_t *appearance, uint8_t length)
+/** @brief Set advertisement type
+ *
+ * @param[in] type type can be ADV_TYPE_SCANNABLE_UNDIRECTED or
+ * ADV_TYPE_NONCONN_UNDIRECTED
+ * @return @ref STATUS_SUCCESS successfully set advertisement type
+ * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
+ *
+ */
+static status_t brd_set_advertisement_type(uint8_t type)
+{
+	if (type == ADV_TYPE_SCANNABLE_UNDIRECTED) {
+		adv_type = AT_BLE_ADV_TYPE_SCANNABLE_UNDIRECTED;
+		DBG_LOG("Advertisement type set to scannable undirected");
+		} else if (type == ADV_TYPE_NONCONN_UNDIRECTED) {
+		adv_type = AT_BLE_ADV_TYPE_NONCONN_UNDIRECTED;
+		DBG_LOG("Advertisement type set to nonconnectable undirected");
+		} else {
+		return STATUS_INVALID_PARAM;
+	}
+
+	return STATUS_SUCCESS;
+}
+/** @brief Set advertisement data with appearance of the device
+ *
+ * @param[in] appearance appearance of the device
+ * @param[in] length length of the local name
+ * @return @ref STATUS_SUCCESS adding the appearance to advertisement data
+ * success
+ * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
+ * enough space to hold the local name
+ * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
+ *
+ */
+static status_t brd_adv_appearance(uint8_t *appearance, uint8_t length)
 {
 	if (length <= 0 || !appearance) {
 		return STATUS_INVALID_PARAM;
@@ -464,8 +506,18 @@ status_t brd_adv_appearance(uint8_t *appearance, uint8_t length)
 	return STATUS_SUCCESS;
 }
 
-/* Advertisement data with a manufacturer data*/
-status_t brd_adv_manufacturer_data(uint8_t *data, uint8_t length)
+/** @brief Set advertisement data with manufacturer data
+ *
+ * @param[in] data manufacturer data of the device
+ * @param[in] length length of the local name
+ * @return @ref STATUS_SUCCESS adding the manufacturer data to advertisement
+ * data success
+ * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
+ * enough space to hold the local name
+ * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
+ *
+ */
+static status_t brd_adv_manufacturer_data(uint8_t *data, uint8_t length)
 {
 	if (length <= 0 || !data) {
 		return STATUS_INVALID_PARAM;
@@ -496,7 +548,21 @@ status_t brd_adv_manufacturer_data(uint8_t *data, uint8_t length)
 	return STATUS_SUCCESS;
 }
 
-status_t brd_set_advertisement_data(adv_data_type_t adv_data_type,
+/** @brief Set advertisement data
+ *
+ * @param[in] adv_data_type type of the advertisement data type
+ * @param[in] adv_usr_data reference to a user data corresponding to the
+ * advertisement data type
+ * @return @ref STATUS_SUCCESS successfully added user data to the advertisement
+ * data
+ * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
+ * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
+ * enough space to hold the user data
+ * @return @ref STATUS_OPERATION_NOT_SUPPORTED trying to add data in unmatched
+ * advertisement type
+ *
+ */
+static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type,
 		uint8_t *adv_usr_data, uint8_t length)
 {
 	status_t status;
@@ -653,7 +719,73 @@ status_t brd_set_advertisement_data(adv_data_type_t adv_data_type,
 	return STATUS_SUCCESS;
 }
 
+/** @brief initialize the broadcaster event
+ * *
+ */
+static status_t brd_adv_init(void)
+{
+	status_t status;
+
+	if ((status
+				= brd_set_advertisement_type(
+					ADV_TYPE_NONCONN_UNDIRECTED)) !=
+			STATUS_SUCCESS) {
+		DBG_LOG("Advertisement type set failed(%d)", status);
+		return STATUS_FAILED;
+	}
+
+	/*set advertisement data type */
+	if ((status = brd_set_data_type(ADVERTISEMENT_DATA)) !=
+			STATUS_SUCCESS) {
+		DBG_LOG("Advertisement data type set failed(%d)", status);
+		return STATUS_FAILED;
+	}
+
+	/* set advertisement data with local name, appearance and complete list
+	 * of service uuid16 */
+	brd_set_advertisement_data(ADV_DATA_TYPE_COMPLETE_LOCAL_NAME,
+			(uint8_t *)BRD_ADV_DATA_NAME_DATA,
+			BRD_ADV_DATA_NAME_LEN);
+	brd_set_advertisement_data(ADV_DATA_TYPE_APPEARANCE,
+			(uint8_t *)BRD_ADV_DATA_APPEARANCE_DATA,
+			BRD_ADV_DATA_APPEARANCE_LEN);
+	brd_set_advertisement_data(ADV_DATA_TYPE_COMPLETE_SERVICE_UUID16,
+			(uint8_t *)BRD_ADV_DATA_UUID_DATA,
+			BRD_ADV_DATA_UUID_LEN);
+
+	return STATUS_SUCCESS;
+}
+
 void button_cb(void)
 {
 	button_pressed = true;
+}
+
+int main(void)
+{
+	#if SAMG55
+	/* Initialize the SAM system. */
+	sysclk_init();
+	board_init();
+	#elif SAM0
+	system_init();
+	#endif
+
+	/* Initialize the button */
+	button_init();
+
+	/* Initialize serial console */
+	serial_console_init();
+
+	DBG_LOG("Initializing Broadcaster Application");
+	
+
+
+	/* initialize the ble chip  and Set the device mac address */
+	ble_device_init(NULL);
+
+	brd_adv_init();
+
+	/* starting advertisement in broadcast mode */
+	brd_start_broadcast();
 }
