@@ -263,6 +263,97 @@ void htpt_set_advertisement_data(void)
 	}							
 }
 
+static void htp_init_defaults(htp_app_t *htp_temp)
+{
+	/* Initialize to default temperature value  and htp parameters*/
+	htp_temp->measurement_interval = 1; 
+	htp_temp->temperature = 3700;
+	htp_temp->temperature_type = HTP_TYPE_ARMPIT;
+	htp_temp->max_meaurement_intv = 30;
+	htp_temp->min_measurement_intv = 1;
+	htp_temp->security_lvl = HTPT_UNAUTH;
+	htp_temp->optional = HTPT_ALL_FEAT_SUP;
+	htp_temp->flags = (at_ble_htpt_temp_flags)(HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE);
+}
+
+
+static void htp_temperature_send(htp_app_t *htp_temp)
+{
+	at_ble_prf_date_time_t timestamp;
+#if SAMD21 || SAML21
+	float temperature;
+	/* Read Temperature Value from IO1 Xplained Pro */
+	temperature = at30tse_read_temperature();	 
+	
+#endif
+
+#if SAMG55
+	double temperature;
+	/* Read Temperature Value from IO1 Xplained Pro */
+	at30tse_read_temperature(&temperature);
+#endif	
+
+	if(button_pressed)
+	{
+		update_temperature_type_location();
+		button_pressed = false;
+	}
+
+	if (htp_temp->flags & HTPT_FLAG_FAHRENHEIT)
+	{
+		temperature = (((temperature * 9.0)/5.0) + 32.0);
+	}
+	
+	timestamp.day = 1;
+	timestamp.hour = 9;
+	timestamp.min = 2;
+	timestamp.month = 8;
+	timestamp.sec = 36;
+	timestamp.year = 15;
+		
+	if(at_ble_htpt_temp_send(convert_ieee754_ieee11073_float((float)temperature),
+	                     &timestamp,
+						 htp_temp->flags,
+						 htp_temp->temperature_type,
+						 STABLE_TEMPERATURE_VAL
+						 ) == AT_BLE_SUCCESS)
+						 {
+							 if (htp_temp->flags & HTPT_FLAG_FAHRENHEIT)
+							 {
+								 DBG_LOG("Temperature: %d Fahrenheit", (uint16_t)temperature);
+							 }
+							 else
+							 {
+								DBG_LOG("Temperature: %d Deg Celsius", (uint16_t)temperature);
+							 }
+							 
+						 }
+}
+
+void button_cb(void)
+{
+	button_pressed = true;
+}
+
+static void update_temperature_type_location(void)
+{
+	htp_data.temperature_type = (at_ble_htpt_temp_type)((htp_data.temperature_type+1) % 9);
+	if ((htp_data.temperature_type == HTP_TYPE_ARMPIT) && (htp_data.flags == (HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE)))
+	{
+		htp_data.flags = (at_ble_htpt_temp_flags)(HTPT_FLAG_FAHRENHEIT | HTPT_FLAG_TYPE);
+	}
+	else if (htp_data.temperature_type == HTP_TYPE_ARMPIT)
+	{
+		htp_data.flags = (at_ble_htpt_temp_flags)(HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE);
+	}
+}
+
+static void timer_callback_handler(void)
+{
+	hw_timer_stop();
+	app_timer_done = true;	
+}
+
 
 int main (void)
 {
@@ -668,96 +759,6 @@ int main (void)
 			break;
 		}
 	}
-}
-
-
-void htp_init_defaults(htp_app_t *htp_temp)
-{
-	/* Initialize to default temperature value  and htp parameters*/
-	htp_temp->measurement_interval = 1; 
-	htp_temp->temperature = 3700;
-	htp_temp->temperature_type = HTP_TYPE_ARMPIT;
-	htp_temp->max_meaurement_intv = 30;
-	htp_temp->min_measurement_intv = 1;
-	htp_temp->security_lvl = HTPT_UNAUTH;
-	htp_temp->optional = HTPT_ALL_FEAT_SUP;
-	htp_temp->flags = (at_ble_htpt_temp_flags)(HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE);
-}
-
-
-void htp_temperature_send(htp_app_t *htp_temp)
-{
-	at_ble_prf_date_time_t timestamp;
-#if SAMD21 || SAML21
-	float temperature;
-	/* Read Temperature Value from IO1 Xplained Pro */
-	temperature = at30tse_read_temperature();	 
 	
-#endif
-
-#if SAMG55
-	double temperature;
-	/* Read Temperature Value from IO1 Xplained Pro */
-	at30tse_read_temperature(&temperature);
-#endif	
-
-	if(button_pressed)
-	{
-		update_temperature_type_location();
-		button_pressed = false;
-	}
-
-	if (htp_temp->flags & HTPT_FLAG_FAHRENHEIT)
-	{
-		temperature = (((temperature * 9.0)/5.0) + 32.0);
-	}
-	
-	timestamp.day = 1;
-	timestamp.hour = 9;
-	timestamp.min = 2;
-	timestamp.month = 8;
-	timestamp.sec = 36;
-	timestamp.year = 15;
-		
-	if(at_ble_htpt_temp_send(convert_ieee754_ieee11073_float((float)temperature),
-	                     &timestamp,
-						 htp_temp->flags,
-						 htp_temp->temperature_type,
-						 STABLE_TEMPERATURE_VAL
-						 ) == AT_BLE_SUCCESS)
-						 {
-							 if (htp_temp->flags & HTPT_FLAG_FAHRENHEIT)
-							 {
-								 DBG_LOG("Temperature: %d Fahrenheit", (uint16_t)temperature);
-							 }
-							 else
-							 {
-								DBG_LOG("Temperature: %d Deg Celsius", (uint16_t)temperature);
-							 }
-							 
-						 }
-}
-
-void button_cb(void)
-{
-	button_pressed = true;
-}
-
-static void update_temperature_type_location(void)
-{
-	htp_data.temperature_type = (at_ble_htpt_temp_type)((htp_data.temperature_type+1) % 9);
-	if ((htp_data.temperature_type == HTP_TYPE_ARMPIT) && (htp_data.flags == (HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE)))
-	{
-		htp_data.flags = (at_ble_htpt_temp_flags)(HTPT_FLAG_FAHRENHEIT | HTPT_FLAG_TYPE);
-	}
-	else if (htp_data.temperature_type == HTP_TYPE_ARMPIT)
-	{
-		htp_data.flags = (at_ble_htpt_temp_flags)(HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE);
-	}
-}
-
-void timer_callback_handler(void)
-{
-	hw_timer_stop();
-	app_timer_done = true;	
+	return true;
 }

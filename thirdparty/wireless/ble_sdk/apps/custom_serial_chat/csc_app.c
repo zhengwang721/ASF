@@ -63,7 +63,6 @@
 #include "cscs.h"
 #include "ble_utils.h"
 #include "console_serial.h"
-#include "timer_hw.h"
 #include "conf_extint.h"
 #include "sio2host.h"  
 
@@ -79,14 +78,14 @@ uint16_t send_length = 0;
 uint8_t send_data[APP_TX_BUF_SIZE];
 
 /* Callback called for new data from remote device */
-void csc_prf_report_ntf_cb(csc_report_ntf_t *report_info)
+static void csc_prf_report_ntf_cb(csc_report_ntf_t *report_info)
 {
 	DBG_LOG("\r\n");
 	csc_app_recv_buf(report_info->recv_buff, report_info->recv_buff_len);
 }
 
 /* Function used for send data */
-void csc_app_send_buf(void)
+static void csc_app_send_buf(void)
 {
 	uint16_t ind = 0;
 	uint16_t len = 0;
@@ -115,7 +114,7 @@ void csc_app_send_buf(void)
 }
 
 /* Function used for receive data */
-void csc_app_recv_buf(uint8_t *recv_data, uint8_t recv_len)
+static void csc_app_recv_buf(uint8_t *recv_data, uint8_t recv_len)
 {
 	uint16_t ind = 0;
 	if (recv_len){

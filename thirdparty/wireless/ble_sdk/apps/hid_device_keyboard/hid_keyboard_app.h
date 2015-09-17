@@ -68,28 +68,4 @@
 /****************************************************************************************
 *							        Function                                     		*
 ****************************************************************************************/
-/** @brief Initialize the hid profile */
-void hid_keyboard_app_init(void);
-
-/** @brief Timer callback handler */
-void timer_callback_handler(void);
-
-/** @brief Boot notification callback */
-void hid_prf_boot_ntf_cb(hid_boot_ntf_t *boot_ntf_info);
-
-/** @brief Control point notification callback */
-void hid_prf_control_point_ntf_cb(hid_control_mode_ntf_t *hid_control_point_value);
-
-/** @brief Protocol mode notification callback */
-void hid_prf_protocol_mode_ntf_cb(hid_proto_mode_ntf_t *protocol_mode);
-
-/** @brief Report notification callback */
-void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info);
-
-/** @brief Notification confirmed callback */
-void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_status);
-
-/** @brief Disconnect callback */
-void hid_disconnect_cb(at_ble_handle_t handle);
-
 #endif /*__HID_DEVICE_APP_H__*/

@@ -50,6 +50,5 @@
 #define __ANP_CLIENT_APP_H__
 
 #define EVENT_MAX_PARAM_LENGTH	(524)
-void app_init(void);
 
 #endif

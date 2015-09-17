@@ -81,7 +81,7 @@ void button_cb(void)
 /**
  * \brief Timer callback handler
  */
-void timer_callback_handler(void)
+static void timer_callback_handler(void)
 {
 	/* Stop the timer */
 	hw_timer_stop();
@@ -97,7 +97,7 @@ void timer_callback_handler(void)
  * service
  *
  */
-void app_immediate_alert(uint8_t alert_val)
+static void app_immediate_alert(uint8_t alert_val)
 {
 	if (alert_val == IAS_HIGH_ALERT) {
 		DBG_LOG("Find Me : High Alert");

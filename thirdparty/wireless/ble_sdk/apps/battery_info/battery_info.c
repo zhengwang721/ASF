@@ -81,13 +81,13 @@ volatile bool button_pressed = false;
 * \Timer callback handler called on timer expiry
 */
 
-void timer_callback_handler(void)
+static void timer_callback_handler(void)
 {
 	//Timer call back
 	timer_cb_done = true;
 }
 
-at_ble_status_t battery_service_advertise(void)
+static at_ble_status_t battery_service_advertise(void)
 {
 	uint8_t idx = 0;
 	uint8_t adv_data [ BAS_ADV_DATA_NAME_LEN + BAS_ADV_DATA_UUID_LEN   + (2*2)];
@@ -125,14 +125,14 @@ at_ble_status_t battery_service_advertise(void)
 	return AT_BLE_FAILURE;
 }
 
-void ble_paired_app_event(at_ble_handle_t conn_handle)
+static void ble_paired_app_event(at_ble_handle_t conn_handle)
 {
 	timer_cb_done = false;
 	hw_timer_start(BATTERY_UPDATE_INTERVAL);
   ALL_UNUSED(conn_handle);
 }
 
-void ble_disconnected_app_event(at_ble_handle_t conn_handle)
+static void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 {
 	timer_cb_done = false;
 	flag = true;
@@ -141,7 +141,7 @@ void ble_disconnected_app_event(at_ble_handle_t conn_handle)
   ALL_UNUSED(conn_handle);
 }
 
-void ble_notification_confirmed_app_event(at_ble_cmd_complete_event_t *notification_status)
+static void ble_notification_confirmed_app_event(at_ble_cmd_complete_event_t *notification_status)
 {
 	if(!notification_status->status)
 	{
@@ -150,7 +150,7 @@ void ble_notification_confirmed_app_event(at_ble_cmd_complete_event_t *notificat
 	}
 }
 
-at_ble_status_t ble_char_changed_app_event(at_ble_characteristic_changed_t *char_handle)
+static at_ble_status_t ble_char_changed_app_event(at_ble_characteristic_changed_t *char_handle)
 {
 	return bat_char_changed_event(&bas_service_handler, char_handle, &flag);
 }
@@ -159,6 +159,7 @@ void button_cb(void)
 {
 	button_pressed = true;
 }
+
 
 /**
 * \Battery Service Application main function

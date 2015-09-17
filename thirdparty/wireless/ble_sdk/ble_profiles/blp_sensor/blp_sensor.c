@@ -170,14 +170,10 @@ void blp_sensor_send_notification(uint8_t *blp_data, uint8_t length)
 	}
 
 	/** Sending the notification for the updated characteristic */
-	if (status == AT_BLE_SUCCESS) {
-		if ((status
-					= at_ble_notification_send(
-						connection_handle,
-						blp_service_handler.serv_chars[1]
-						.char_val_handle))) {
-			DBG_LOG("Send notification failed,reason %x", status);
-		}
+	if ((status	= at_ble_notification_send(connection_handle,
+					blp_service_handler.serv_chars[1]
+					.char_val_handle))) {
+		DBG_LOG("Send notification failed,reason %x", status);
 	}
 }
 
@@ -201,15 +197,12 @@ void blp_sensor_send_indication(uint8_t *blp_data, uint8_t length)
 	}
 
 	/** Sending the indication for the updated characteristic */
-	if (status == AT_BLE_SUCCESS) {
-		if ((status
-					= at_ble_indication_send(
-						connection_handle,
+	if ((status	= at_ble_indication_send(connection_handle,
 						blp_service_handler.serv_chars[0]
 						.char_val_handle))) {
 			DBG_LOG("Send indication failed,reason %x", status);
-		}
 	}
+
 }
 
 
@@ -274,7 +267,7 @@ at_ble_status_t blp_sensor_disconnect_event_handler(
 at_ble_status_t blp_sensor_connected_state_handler(
 		at_ble_connected_t *conn_params)
 {
-	connected_cb(1);
+	connected_cb(true);
 	connection_handle = (at_ble_handle_t)conn_params->handle;
 		
 	return AT_BLE_SUCCESS;

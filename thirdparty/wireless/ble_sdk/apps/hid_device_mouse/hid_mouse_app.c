@@ -63,9 +63,7 @@
 #include "device_info.h"
 #include "ble_utils.h"
 #include "console_serial.h"
-#include "timer_hw.h"
 #include "conf_extint.h"
-
 
 /* =========================== GLOBALS ============================================================ */
 
@@ -134,14 +132,14 @@ static uint8_t hid_app_mouse_report_map[] =
 };
 
 /* Callback called when host change the control point value */
-void hid_prf_control_point_ntf_cb(hid_control_mode_ntf_t *hid_control_point_value_t)
+static void hid_prf_control_point_ntf_cb(hid_control_mode_ntf_t *hid_control_point_value_t)
 {
 	DBG_LOG_DEV("Control Point Notification Callback :: Service Instance %d Control Value %d", 
 					hid_control_point_value_t->serv_inst, hid_control_point_value_t->control_value);
 }
 
 /* Callback called when host change the protocol mode value */
-void hid_prf_protocol_mode_ntf_cb(hid_proto_mode_ntf_t *protocol_mode)
+static void hid_prf_protocol_mode_ntf_cb(hid_proto_mode_ntf_t *protocol_mode)
 {
 	DBG_LOG_DEV("Protocol Mode Notification Callback :: Service Instance %d  New Protocol Mode  %d  Connection Handle %d", 
 					protocol_mode->serv_inst, protocol_mode->mode, protocol_mode->conn_handle);
@@ -151,14 +149,14 @@ void hid_prf_protocol_mode_ntf_cb(hid_proto_mode_ntf_t *protocol_mode)
    Mouse Boot Value 4
    Keyboard Boot Value 6
 */
-void hid_prf_boot_ntf_cb(hid_boot_ntf_t *boot_ntf_info_t)
+static void hid_prf_boot_ntf_cb(hid_boot_ntf_t *boot_ntf_info_t)
 {
 	DBG_LOG_DEV("Boot Notification Callback :: Service Instance %d  Boot Value  %d  Notification(Enable/Disable) %d", 
 					boot_ntf_info_t->serv_inst, boot_ntf_info_t->boot_value, boot_ntf_info_t->ntf_conf);
 }
 
 /* Callback called when host enable/disable the notification for report (Mouse/Keyboard) */
-void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info)
+static void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info)
 {
 	DBG_LOG_DEV("Report Notification Callback Service Instance %d  Report ID  %d  Notification(Enable/Disable) %d Connection Handle %d", 
 					report_info->serv_inst, report_info->report_ID, report_info->ntf_conf, report_info->conn_handle);
@@ -170,7 +168,7 @@ void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info)
 }
 
 /* Callback called when report send over the air */
-void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_status)
+static void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_status)
 {
 	DBG_LOG_DEV("Mouse report send to host status %d", notification_status->status);
 }
@@ -184,7 +182,7 @@ void button_cb(void)
 }
 
 /* Initialize the application information for HID profile*/
-void hid_mouse_app_init(void)
+static void hid_mouse_app_init(void)
 {
 	hid_prf_data.hid_serv_instance = 1;
 	hid_prf_data.hid_device = HID_MOUSE_MODE; 
@@ -207,7 +205,7 @@ void hid_mouse_app_init(void)
 	}
 }
 
-bool hid_mouse_move(int8_t pos, uint8_t index_report)
+static bool hid_mouse_move(int8_t pos, uint8_t index_report)
 {
 	int16_t s16_newpos;
 	s16_newpos = (int8_t) app_mouse_report[index_report];

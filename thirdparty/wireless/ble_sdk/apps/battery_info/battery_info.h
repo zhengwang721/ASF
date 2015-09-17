@@ -80,19 +80,5 @@
 
 /* @brief BAS_ADV_DATA_NAME_DATA the actual name of device */
 #define BAS_ADV_DATA_NAME_DATA			("ATMEL-BAS")
-/** @brief Timer call back handler called on timer expiry
-  *
-  */
-void timer_callback_handler(void);
-
-at_ble_status_t battery_service_advertise(void);
-
-void ble_paired_app_event(at_ble_handle_t conn_handle);
-
-void ble_disconnected_app_event(at_ble_handle_t conn_handle);
-
-void ble_notification_confirmed_app_event(at_ble_cmd_complete_event_t *notification_status);
-
-at_ble_status_t ble_char_changed_app_event(at_ble_characteristic_changed_t *char_handle);
 
 #endif /* __BATTERY_INFO_H__ */

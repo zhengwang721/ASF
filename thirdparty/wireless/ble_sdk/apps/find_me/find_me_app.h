@@ -60,18 +60,4 @@
 #define LED_MILD_INTERVAL			(2)
 #define LED_FAST_INTERVAL			(1)
 
-
-/** @brief Timer call back handler called on timer expiry
-  *
-  */
-void timer_callback_handler(void);
-
-/**
- * @brief Alerting function on immediate alert 
- *
- * @param[in] alert level of alert level characteristic of immediate alert service
- *
- */
-void app_immediate_alert(uint8_t alert_val);
-
 #endif /* __FIND_ME_APP_H__ */

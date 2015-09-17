@@ -82,15 +82,5 @@
 
 /* @brief DIS_ADV_DATA_NAME_DATA the actual name of device */
 #define DIS_ADV_DATA_NAME_DATA			("ATMEL-DIS")
-/** @brief Timer call back handler called on timer expiry
-  *
-  */
-void timer_callback_handler(void);
-
-at_ble_status_t device_information_advertise(void);
-
-void ble_paired_app_event(at_ble_handle_t conn_handle);
-
-void ble_disconnected_app_event(at_ble_handle_t conn_handle);
 
 #endif /* __DEVICE_INFO_APP_H__ */

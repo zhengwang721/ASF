@@ -59,7 +59,6 @@
 #include "ble_manager.h"
 #include "alert_notificaition_app.h"
 #include "alert_notification_profile.h"
-#include "alert_notification.h"
 
 extern gatt_anp_handler_t anp_handle;
 
@@ -85,7 +84,7 @@ void button_cb(void)
 /**
  * @brief Timer Callback
  */
-void timer_callback_handler(void)
+static void timer_callback_handler(void)
 {
 	/* Free to use for User Application */
 }
@@ -94,7 +93,7 @@ void timer_callback_handler(void)
  * @brief app_connected_state profile notifies the application about state
  * @param[in] connected
  */
-void app_connected_state(bool connected)
+static void app_connected_state(bool connected)
 {
 	app_state = connected;
 	if (connected) {

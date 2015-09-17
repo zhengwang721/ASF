@@ -91,7 +91,7 @@ uint8_t hr_max_value;/*!<the maximum heart rate value*/
  *	@param[in] notification_enable which will tell the state of the
  *  application
  */
-void app_notification_handler(uint8_t notification_enable)
+static void app_notification_handler(uint8_t notification_enable)
 {
 	if (notification_enable == true) {
 		DBG_LOG("Notification Enabled");
@@ -107,7 +107,7 @@ void app_notification_handler(uint8_t notification_enable)
  *
  */
 
-void app_reset_handler(void)
+static void app_reset_handler(void)
 {
 	energy_expended_val = 0;
 	DBG_LOG("Energy Expended is made '0'on user Reset");
@@ -172,7 +172,7 @@ static void heart_rate_value_init(void)
 /** @brief app_state_handler which will tell the state of the application
  *  @param[in] status of the application
  */
-void app_state_handler(bool state)
+static void app_state_handler(bool state)
 {
 	app_state = state;
 	
@@ -288,7 +288,7 @@ static void hr_measurment_send(void)
 /**
  * \brief Timer callback handler called on timer expiry
  */
-void timer_callback_handler(void)
+static void timer_callback_handler(void)
 {
 	if (second_counter == START_OF_FIRST_ACTIVITY) {
 		time_operator = 1;
