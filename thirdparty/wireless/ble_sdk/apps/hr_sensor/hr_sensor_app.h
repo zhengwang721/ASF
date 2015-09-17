@@ -119,32 +119,4 @@
 /**@brief RR_INTERVAL_VALUE_PRESENT represents the rr value inclusion*/
 #define RR_INTERVAL_VALUE_PRESENT											(0x1 <<	4)
 
-/** @brief Timer expiry handler function
- *
- */
-void timer_callback_handler(void);
-
-/** @brief notification handler function called by the profile
- *
- *  @param[in] notification_enable passed by the profile for enabling
- *notification
- *
- */
-void app_notification_handler(uint8_t notification_enable);
-
-/** @brief energy expended handler called by profile to reset the energy values
- *
- */
-void app_reset_handler(void);
-
-/** @brief app_state_handler which will tell the state of the application
- *  @param[in] status of the application
- */
-void app_state_handler(bool state);
-
-/** @brief blp_notification_confirmation_handler called by ble manager 
- *	to give the status of notification sent
- *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
- */	
-void app_notification_confirmation_handler(at_ble_cmd_complete_event_t *params);
 #endif /* __HR_SENSOR_APP_H__ */

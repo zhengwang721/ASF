@@ -66,15 +66,5 @@
 /****************************************************************************************
 *							        Function                                     		*
 ****************************************************************************************/
-/** @brief Function display the receive data */
-void csc_app_recv_buf(uint8_t *recv_data, uint8_t recv_len);
 
-/** @brief Function display the send data */
-void csc_app_send_buf(void);
-
-/** @brief Callback called for receive data */
-void csc_prf_report_ntf_cb(csc_report_ntf_t *report_info);
-
-/** @brief Timer callback handler */
-void timer_callback_handler(void);
 #endif /*__CSC_APP_H__*/

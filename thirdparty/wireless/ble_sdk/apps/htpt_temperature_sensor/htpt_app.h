@@ -124,9 +124,4 @@ static inline uint32_t convert_ieee754_ieee11073_float(float f_val)
 	return (ieee11073_float);
 }
 
-void htp_init(void);
-void htp_init_defaults(htp_app_t *htp_temp);
-void htp_temperature_send(htp_app_t *htp_temp);
-void timer_callback_handler(void);
-
 #endif /* __HTPT_APP_H__ */

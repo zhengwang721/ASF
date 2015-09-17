@@ -75,7 +75,7 @@ volatile bool app_state;			/*!< state of the app,true for connected false for di
  * @brief display alert status info notifies the application about state
  * @param[in] data
  */
-void display_alert_status_info(uint8_t *data)
+static void display_alert_status_info(uint8_t *data)
 {
 	if (data[0] & BIT0_MASK)
 	{
@@ -103,7 +103,7 @@ void display_alert_status_info(uint8_t *data)
  * @brief display alert status info notifies the application about state
  * @param[in] data
  */
-void display_ringer_setting_info(uint8_t *data)
+static void display_ringer_setting_info(uint8_t *data)
 {
 	if (data[0] == RINGER_SILENT)
 	{
@@ -118,7 +118,7 @@ void display_ringer_setting_info(uint8_t *data)
  * @brief app_connected_state profile notifies the application about state
  * @param[in] connected
  */
-void app_connected_state(bool connected)
+static void app_connected_state(bool connected)
 {
 	app_state = connected;
 	if (app_state == false)
@@ -132,7 +132,7 @@ void app_connected_state(bool connected)
  * @param[in] data
  * @param[in] len  
  */
-void app_alert_status_read(uint8_t *data, uint8_t len)
+static void app_alert_status_read(uint8_t *data, uint8_t len)
 {
 	DBG_LOG("\r\nAlert Status read:");
 	DBG_LOG_DEV("Length of the data is %d",len);
@@ -144,7 +144,7 @@ void app_alert_status_read(uint8_t *data, uint8_t len)
  * @param[in] data
  * @param[in] len  
  */
-void app_ringer_setting_read(uint8_t *data, uint8_t len)
+static void app_ringer_setting_read(uint8_t *data, uint8_t len)
 {
 	DBG_LOG("\r\nRinger setting read :");
 	DBG_LOG_DEV("Length of the data is %d",len);
@@ -156,7 +156,7 @@ void app_ringer_setting_read(uint8_t *data, uint8_t len)
  * @param[in] data
  * @param[in] len  
  */
-void app_alert_status_notify(uint8_t *data, uint8_t len)
+static void app_alert_status_notify(uint8_t *data, uint8_t len)
 {
 	DBG_LOG("\r\nNotified Alert Status :");
 	DBG_LOG_DEV("length of the data is %d",len);
@@ -168,7 +168,7 @@ void app_alert_status_notify(uint8_t *data, uint8_t len)
  * @param[in] data
  * @param[in] len  
  */
-void app_ringer_setting_notify(uint8_t *data, uint8_t len)
+static void app_ringer_setting_notify(uint8_t *data, uint8_t len)
 {
 	DBG_LOG("\r\nNotified Ringer setting :");
 	DBG_LOG_DEV("length of the data is %d",len);
@@ -189,7 +189,7 @@ void button_cb(void)
 /**
  * @brief Timer Callback
  */
-void timer_callback_handler(void)
+static void timer_callback_handler(void)
 {
 	/* Free to use for User Application */
 }

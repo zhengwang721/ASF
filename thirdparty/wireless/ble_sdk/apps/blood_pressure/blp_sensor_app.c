@@ -142,7 +142,7 @@ uint16_t interim_map_kpa = MAP_MIN_KPA;
  * @brief app_connected_state profile notifies the application about state
  * @param[in] connected
  */
-void app_connected_state(bool connected)
+static void app_connected_state(bool connected)
 {
 	app_state = connected;
 	if (app_state == false)
@@ -169,7 +169,7 @@ void app_connected_state(bool connected)
 /** @brief Updating the time stamp
  *
  */
-void update_time_stamp(void)
+static void update_time_stamp(void)
 {
   uint16_t year;
 	if (time_stamp[6] == SECOND_MAX) {
@@ -211,7 +211,7 @@ void update_time_stamp(void)
 /** @brief initializes the time stamp with default time stamp
  *
  */
-void time_stamp_init(void)
+static void time_stamp_init(void)
 {
 	uint8_t idx = 0;
 	uint16_t year_t = YEAR;
@@ -229,7 +229,7 @@ void time_stamp_init(void)
  *	to give the status of notification sent
  *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
  */	
-void app_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
+static void app_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
 {
 	if (params->status == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("App Notification Successfully sent over the air");
@@ -246,7 +246,7 @@ void app_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
  *	to give the status of notification sent
  *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
  */	
-void app_indication_confirmation_handler(at_ble_indication_confirmed_t *params)
+static void app_indication_confirmation_handler(at_ble_indication_confirmed_t *params)
 {
 	if (params->status == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("App Indication successfully sent over the air");
@@ -320,7 +320,7 @@ static void blp_value_update(uint8_t *data, uint8_t idx, uint16_t value, uint8_t
 /** @brief sends the characteristic data for the profile to send indication
  *
  */
-void blp_char_indication(void)
+static void blp_char_indication(void)
 {
 	uint8_t blp_data[BLP_DATA_LEN];
 	uint8_t idx = 0;
@@ -408,7 +408,7 @@ void blp_char_indication(void)
 /** @brief sends the characteristic data for profile to send notification
  *
  */
-void blp_char_notification(void)
+static void blp_char_notification(void)
 {
 	uint8_t blp_data[BLP_DATA_LEN];	
 	uint8_t idx = 0;
@@ -446,7 +446,7 @@ void blp_char_notification(void)
  *	@param[in] enable will give weather notification has to enabled
  *  or disabled.
  */
-void app_notification_handler(bool enable)
+static void app_notification_handler(bool enable)
 {
 	notification_flag = enable;
 	
@@ -461,7 +461,7 @@ void app_notification_handler(bool enable)
  *	@param[in] enable will give weather indication has to enabled
  *  or disabled.
  */
-void app_indication_handler(bool enable)
+static void app_indication_handler(bool enable)
 {
 	uint8_t blp_data[BLP_DATA_LEN];
 	uint8_t idx = 0;	 
@@ -536,7 +536,7 @@ void button_cb(void)
 /**
  * \brief Timer callback handler called on timer expiry
  */
-void timer_callback_handler(void)
+static void timer_callback_handler(void)
 {
 	if (user_request_flag) {
 		timer_count++;	

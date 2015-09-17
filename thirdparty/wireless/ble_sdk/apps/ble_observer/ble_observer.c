@@ -71,7 +71,7 @@ volatile bool button_pressed = false;
 
 /*Initialization function for Ble Observer */
 
-void ble_observer_init(void)
+static void ble_observer_init(void)
 {
 	at_ble_status_t scan_status;
 

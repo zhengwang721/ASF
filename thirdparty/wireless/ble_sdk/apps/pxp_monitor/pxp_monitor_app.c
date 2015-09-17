@@ -102,7 +102,7 @@ void button_cb(void)
 *
 * @param[in] conn_handle Connection handle of a connected device
 */
-void rssi_update(at_ble_handle_t conn_handle)
+static void rssi_update(at_ble_handle_t conn_handle)
 {
 	int8_t rssi_power = 0;
 	at_ble_status_t status;
@@ -157,7 +157,7 @@ void rssi_update(at_ble_handle_t conn_handle)
 /**@brief Proximity Application initialization
 * start the device scanning process
 */
-void pxp_app_init(void)
+static void pxp_app_init(void)
 {
 	at_ble_status_t scan_status;
 
@@ -170,6 +170,19 @@ void pxp_app_init(void)
 	} else if (scan_status == AT_BLE_FAILURE) {
 		DBG_LOG("Scanning Failed Generic error");
 	}
+}
+
+/* @brief timer call back for rssi update
+* enable the flags to execute the application taskc
+*
+*/
+static void timer_callback_handler(void)
+{
+	/* Stop the timer */
+	hw_timer_stop();
+
+	/* Enable the flag the serve the task */
+	app_timer_done = true;
 }
 
 int main(void)
@@ -230,18 +243,4 @@ int main(void)
 			app_timer_done = false;
 		}
 	}
-}
-
-
-/* @brief timer call back for rssi update
-* enable the flags to execute the application taskc
-*
-*/
-void timer_callback_handler(void)
-{
-	/* Stop the timer */
-	hw_timer_stop();
-
-	/* Enable the flag the serve the task */
-	app_timer_done = true;
 }
