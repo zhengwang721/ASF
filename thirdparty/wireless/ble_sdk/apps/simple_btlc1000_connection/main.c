@@ -151,45 +151,32 @@ static at_ble_characteristic_t chars[] = {
 /* Set BLE Address, If address is NULL then it will use BD public address */
 static void ble_set_address(at_ble_addr_t *addr)
 {
+	at_ble_addr_t address = {AT_BLE_ADDRESS_PUBLIC, {0xAB, 0xCD, 0xEF, 0xAB, 0xCD, 0xEF}};
+	at_ble_addr_t *address_ptr = addr;
+	
 	if (addr == NULL)
 	{
-		at_ble_addr_t address;
-		
 		/* get BD address from BLE device */
 		if(at_ble_addr_get(&address) != AT_BLE_SUCCESS)
 		{
 			DBG_LOG("BD address get failed");
 		}
-				
-		/* set the BD address */
-		if(at_ble_addr_set(&address) != AT_BLE_SUCCESS)
-		{
-			DBG_LOG("BD address set failed");
-		}
-		
-		DBG_LOG("BD Address:0x%02X%02X%02X%02X%02X%02X, Address Type:%d",
-		address.addr[5],
-		address.addr[4],
-		address.addr[3],
-		address.addr[2],
-		address.addr[1],
-		address.addr[0], address.type);
+		address_ptr = &address;
 	}
-	else
+	
+	/* set the BD address */
+	if(at_ble_addr_set(address_ptr) != AT_BLE_SUCCESS)
 	{
-		
-		/* set the given BD address */
-		if(at_ble_addr_set(addr) != AT_BLE_SUCCESS)
-		{
-			DBG_LOG("BD address set failed");
-		}
-		DBG_LOG("BD Address:0x%02X%02X%02X%02X%02X%02X, Address Type:%d",
-		addr->addr[5],
-		addr->addr[4],
-		addr->addr[3],
-		addr->addr[2],
-		addr->addr[1],
-		addr->addr[0], addr->type);
+		DBG_LOG("BD address set failed");
+	}
+	
+	DBG_LOG("BD Address:0x%02X%02X%02X%02X%02X%02X, Address Type:%d",
+	address_ptr->addr[5],
+	address_ptr->addr[4],
+	address_ptr->addr[3],
+	address_ptr->addr[2],
+	address_ptr->addr[1],
+	address_ptr->addr[0], address_ptr->type);
 	}
 }
 

@@ -212,6 +212,8 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 
 			/*Adv type: Complete list of 16 bit service uuids*/
 			case COMPLETE_LIST_16BIT_SERV_UUIDS:
+			/*Adv type: Inomplete list of 16 bit service uuids*/
+			case INCOMPLETE_LIST_16BIT_SERV_UUIDS:
 			{
 				uint16_t uuid_16;
 				uint16_t temp_uuid16;
@@ -219,32 +221,16 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 				uint8_t adv_type_size = adv_element_p->len;
 				/* actual size of the data */
 				adv_type_size -= 1;
+				if (COMPLETE_LIST_16BIT_SERV_UUIDS == adv_element_p->type)
+				{
 				DBG_LOG("%-28s",
 						"Complete_16bit_service_uuids");
-				DBG_LOG_CONT(":  ");
-				while (adv_type_size) {
-					memcpy(&temp_uuid16, adv_element_p->data,
-							AT_BLE_UUID_16_LEN);
-					uuid_16 = ((temp_uuid16 << 8) | (temp_uuid16 >> 8));
-					adv_element_p->data
-						+= AT_BLE_UUID_16_LEN;
-					adv_type_size -= AT_BLE_UUID_16_LEN;
-					DBG_LOG_CONT("0x%02x ", uuid_16);
 				}
-			}
-			break;
-
-			/*Adv type: Inomplete list of 16 bit service uuids*/
-			case INCOMPLETE_LIST_16BIT_SERV_UUIDS:
-			{
-				uint16_t uuid_16;
-				uint16_t temp_uuid16;				
-				/* passing the length of data type */
-				uint8_t adv_type_size = adv_element_p->len;
-				/* actual size of the data */
-				adv_type_size -= 1;
-				DBG_LOG("%-28s",
-						"Incomplete_16bit_serv_uuids");
+				else
+				{
+					DBG_LOG("%-28s",
+							"Incomplete_16bit_serv_uuids");
+				}
 				DBG_LOG_CONT(":  ");
 				while (adv_type_size) {
 					memcpy(&temp_uuid16, adv_element_p->data,

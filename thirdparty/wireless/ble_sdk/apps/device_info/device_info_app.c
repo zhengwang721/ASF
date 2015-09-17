@@ -181,21 +181,24 @@ at_ble_status_t device_information_advertise(void)
 	idx += DIS_ADV_DATA_NAME_LEN;
 	
 	/* Adding the advertisement data and scan response data */
-	if(!(at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN) == AT_BLE_SUCCESS) )
+	if(at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN) == AT_BLE_SUCCESS)
+	{
+		/* Start of advertisement */
+		if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, APP_DIS_FAST_ADV, APP_DIS_ADV_TIMEOUT, 0) == AT_BLE_SUCCESS)
+		{
+			DBG_LOG("BLE Started Adv");
+			return AT_BLE_SUCCESS;
+		}
+		else
+		{
+			DBG_LOG("BLE Adv start Failed");
+		}
+	}
+	else
 	{
 		DBG_LOG("Failed to set adv data");
 	}
 	
-	/* Start of advertisement */
-	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, APP_DIS_FAST_ADV, APP_DIS_ADV_TIMEOUT, 0) == AT_BLE_SUCCESS)
-	{
-		DBG_LOG("BLE Started Adv");
-		return AT_BLE_SUCCESS;
-	}
-	else
-	{
-		DBG_LOG("BLE Adv start Failed");
-	}
 	return AT_BLE_FAILURE;
 }
 
