@@ -57,7 +57,7 @@
 #include "timer_hw.h"
 #include "conf_extint.h"
 #include "ble_manager.h"
-#include "alert_notificaition_app.h"
+#include "alert_notification.h"
 #include "alert_notification_profile.h"
 
 extern gatt_anp_handler_t anp_handle;

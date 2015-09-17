@@ -57,7 +57,6 @@
 #include "ble_manager.h"
 #include "ble_utils.h"
 #include "alert_notification_profile.h"
-#include "alert_notificaition_app.h"
 
 #if defined ANS_CLIENT_SERVICE
 #include "alert_notification.h"
