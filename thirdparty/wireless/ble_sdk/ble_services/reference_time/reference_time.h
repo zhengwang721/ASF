@@ -119,8 +119,15 @@ at_ble_status_t tis_rtu_update_read(at_ble_handle_t conn_handle,
 int8_t tis_rtu_update_read_response(at_ble_characteristic_read_response_t *read_resp,
 		gatt_rtu_handler_t *rtu_handler);
 
-
-at_ble_status_t tis_rtu_update_write(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti);
+/**@brief write Characteristic value giving its handle
+ *
+ * @param[in] conn_handle connection handle
+ * @param[in] char_value_handle characteristic value handle
+ * @param[in] char_value characteristic new value
+ * @return Current time value.
+ * @return LLS_READ_RESP_INVALID if value are other than alert levels
+ */
+at_ble_status_t tis_rtu_update_write(at_ble_handle_t conn_handle, at_ble_handle_t char_value_handle, uint8_t char_value);
 
 #endif /* __REFERENCE_TIME_H__ */
 // </h>
