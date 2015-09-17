@@ -73,7 +73,8 @@ at_ble_status_t tis_dst_change_read(at_ble_handle_t conn_handle,
 	if (char_handle == DST_INVALID_CHAR_HANDLE) {
 		return (AT_BLE_INVALID_STATE);
 	}
-	return (at_ble_characteristic_read(conn_handle,char_handle,DST_READ_OFFSET,DST_READ_LENGTH));
+	return (at_ble_characteristic_read(conn_handle, char_handle, 
+										DST_READ_OFFSET, DST_READ_LENGTH));
 }
 
 /**@brief Read response handler for read response for dst change characteristic
@@ -81,7 +82,7 @@ at_ble_status_t tis_dst_change_read(at_ble_handle_t conn_handle,
 int8_t tis_dst_change_read_response(at_ble_characteristic_read_response_t *read_resp,
 		gatt_dst_handler_t *dst_handler)
 {
-	if(read_resp->status != AT_BLE_SUCCESS) {
+	if (read_resp->status != AT_BLE_SUCCESS) {
 		return read_resp->status;
 	}
 	if (read_resp->char_handle == dst_handler->dst_char_handle) {

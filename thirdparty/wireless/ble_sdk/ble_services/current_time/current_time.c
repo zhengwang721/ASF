@@ -64,19 +64,14 @@
  *									Implementations	                               *
  **********************************************************************************/
 
-at_ble_status_t tis_current_time_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti)
+at_ble_status_t tis_current_time_noti(at_ble_handle_t conn_handle, 
+									at_ble_handle_t desc_handle, uint8_t notify)
 {
-	uint8_t desc_data[3] = {1, 0, 0};
-		
 	if(desc_handle == CTS_INVALID_CHAR_HANDLE) {
 		return (AT_BLE_INVALID_STATE);
 	}
-	if(noti == true) {
-		return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_data[0],false, true));
-	} else if(noti == false) {
-		return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_data[1],false, true));
-	}
-	return AT_BLE_SUCCESS;
+	return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, 
+									   &notify, false, true));
 }
 
 /**@brief Send the Read request to the current time characteristic
@@ -89,7 +84,8 @@ at_ble_status_t tis_current_time_read(at_ble_handle_t conn_handle,
 	if (char_handle == CTS_INVALID_CHAR_HANDLE) {
 		return (AT_BLE_INVALID_STATE);
 	}
-	return (at_ble_characteristic_read(conn_handle,char_handle,CTS_READ_OFFSET,CTS_READ_LENGTH));
+	return (at_ble_characteristic_read(conn_handle,char_handle, CTS_READ_OFFSET,
+									   CTS_READ_LENGTH));
 }
 
 /**@brief Read response handler for read response for time characteristic
@@ -121,13 +117,18 @@ int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *rea
 		);
 		DBG_LOG_CONT("  Fraction:%02d",read_resp->char_value[8]);				
 	} else if (read_resp->char_handle == cts_handler->lti_char_handle) {
-		const char *dst_ptr[] = {"Standard Time", 0, "Haft An Hour Daylight Time", 0,"Daylight Time",0,0,0,"Double Daylight Time" };
+		const char *dst_ptr[] = {"Standard Time", 0, "Haft An Hour Daylight Time", 0,
+								"Daylight Time",0,0,0,"Double Daylight Time" };
 
-		DBG_LOG("Time Zone %02d",(int8_t)read_resp->char_value[0]);
-		DBG_LOG("DST Offset %02d  %s",read_resp->char_value[1],dst_ptr[read_resp->char_value[1]]);
+		DBG_LOG("Time Zone %02d", (int8_t)read_resp->char_value[0]);
+		DBG_LOG("DST Offset %02d  %s", read_resp->char_value[1], 
+				dst_ptr[read_resp->char_value[1]]);
 	} else if (read_resp->char_handle == cts_handler->rti_char_handle) {
-		const char *time_ptr[] = {"Unknown", "Network Time Protocol", "GPS", "Radio Time Signal","Manual", "Atomic Clock", "Cellular Network"};
-		DBG_LOG("Time Source = %d %s",read_resp->char_value[0],time_ptr[read_resp->char_value[0]]);
+		const char *time_ptr[] = {"Unknown", "Network Time Protocol", "GPS", 
+								"Radio Time Signal","Manual", "Atomic Clock", 
+								"Cellular Network"};
+		DBG_LOG("Time Source = %d %s", read_resp->char_value[0], 
+				time_ptr[read_resp->char_value[0]]);
 		DBG_LOG("Accuracy    = %02d",read_resp->char_value[1]);
 		DBG_LOG("Day  Since Update = %02d",read_resp->char_value[2]);
 		DBG_LOG("Hour Since Update = %02d",read_resp->char_value[3]);
