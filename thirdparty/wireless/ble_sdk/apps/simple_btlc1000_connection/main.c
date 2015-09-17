@@ -177,7 +177,6 @@ static void ble_set_address(at_ble_addr_t *addr)
 	address_ptr->addr[2],
 	address_ptr->addr[1],
 	address_ptr->addr[0], address_ptr->type);
-	}
 }
 
 

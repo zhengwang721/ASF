@@ -77,6 +77,18 @@ uint16_t send_length = 0;
 /* Buffer data to be send over the air */
 uint8_t send_data[APP_TX_BUF_SIZE];
 
+/* Function used for receive data */
+static void csc_app_recv_buf(uint8_t *recv_data, uint8_t recv_len)
+{
+	uint16_t ind = 0;
+	if (recv_len){
+		for (ind = 0; ind < recv_len; ind++){
+			sio2host_putchar(recv_data[ind]);
+		}
+		DBG_LOG("\r\n");
+	}
+}
+
 /* Callback called for new data from remote device */
 static void csc_prf_report_ntf_cb(csc_report_ntf_t *report_info)
 {
@@ -110,18 +122,6 @@ static void csc_app_send_buf(void)
 				}
 			}
 		}
-	}
-}
-
-/* Function used for receive data */
-static void csc_app_recv_buf(uint8_t *recv_data, uint8_t recv_len)
-{
-	uint16_t ind = 0;
-	if (recv_len){
-		for (ind = 0; ind < recv_len; ind++){
-			sio2host_putchar(recv_data[ind]);
-		}
-		DBG_LOG("\r\n");
 	}
 }
 
