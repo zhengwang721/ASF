@@ -135,31 +135,33 @@ at_ble_status_t bat_primary_service_define(bat_gatt_service_handler_t *battery_s
  */
 at_ble_status_t bat_update_char_value (bat_gatt_service_handler_t *battery_serv , uint8_t char_data,bool volatile *flag)
 {
+	at_ble_status_t status = AT_BLE_SUCCESS;
 	/* Updating the att data base */
-	if ((at_ble_characteristic_value_set(battery_serv->serv_chars.char_val_handle, &char_data, sizeof(uint8_t))) == AT_BLE_FAILURE){
-		DBG_LOG("updating the characteristic failed");
-		return AT_BLE_FAILURE;
+	if ((status = at_ble_characteristic_value_set(battery_serv->serv_chars.char_val_handle, &char_data, sizeof(uint8_t))) != AT_BLE_SUCCESS){
+		DBG_LOG("updating the characteristic failed%d",status);
+		return status;
 	} else {
 		DBG_LOG_DEV("updating the characteristic value is successful");
 	}
 
 	if(bat_notification_flag){
 		/* sending notification to the peer about change in the battery level */ 
-		if((at_ble_notification_send(ble_connected_dev_info[0].handle, battery_serv->serv_chars.char_val_handle)) == AT_BLE_FAILURE) {
-			DBG_LOG("sending notification failed");
-			return AT_BLE_FAILURE;
+		if((status = at_ble_notification_send(ble_connected_dev_info[0].handle, battery_serv->serv_chars.char_val_handle)) != AT_BLE_SUCCESS) {
+			DBG_LOG("sending notification failed%d",status);
+			return status;
 		}
 		else {
 			DBG_LOG_DEV("sending notification successful");
 			*flag = false;
-			return AT_BLE_SUCCESS;
+			return status;
 		}
 	}
-	return AT_BLE_SUCCESS;
+	return status;
 }
 
 at_ble_status_t bat_char_changed_event(bat_gatt_service_handler_t *battery_serv, at_ble_characteristic_changed_t *char_handle, bool volatile *flag)
 {
+	at_ble_status_t status = AT_BLE_SUCCESS;
 	at_ble_characteristic_changed_t change_params;
 	memcpy((uint8_t *)&change_params, char_handle, sizeof(at_ble_characteristic_changed_t));
 	
@@ -169,14 +171,14 @@ at_ble_status_t bat_char_changed_event(bat_gatt_service_handler_t *battery_serv,
 		{
 			bat_notification_flag = true;
 			/* sending notification to the peer about change in the battery level */
-			if((at_ble_notification_send(ble_connected_dev_info[0].handle, battery_serv->serv_chars.char_val_handle)) == AT_BLE_FAILURE) {
-				DBG_LOG("sending notification failed");
-				return AT_BLE_FAILURE;
+			if((status = at_ble_notification_send(ble_connected_dev_info[0].handle, battery_serv->serv_chars.char_val_handle)) != AT_BLE_SUCCESS) {
+				DBG_LOG("sending notification failed%d",status);
+				return status;
 			}
 			else {
 				DBG_LOG_DEV("sending notification successful");
 				*flag = false;
-				return AT_BLE_SUCCESS;
+				return status;
 			}			
 		}
 		else
@@ -184,5 +186,5 @@ at_ble_status_t bat_char_changed_event(bat_gatt_service_handler_t *battery_serv,
 			bat_notification_flag = false;			
 		}
 	}
-	return AT_BLE_SUCCESS;
+	return status;
 }

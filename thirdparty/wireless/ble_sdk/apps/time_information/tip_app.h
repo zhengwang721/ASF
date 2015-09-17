@@ -49,7 +49,7 @@
 
 #include "at_ble_api.h"
 
-#define ENABLE_PTS					(true)
+#define ENABLE_PTS					(false)
 #define GET_REFERANCE_UPDATE		(0x01)
 #define CANCEL_REFERANCE_UPDATE		(0x02)
 /**
