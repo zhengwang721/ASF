@@ -85,7 +85,7 @@ void htpt_set_advertisement_data(void);
 
 void ble_device_config(at_ble_addr_t *addr);
 
-static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
+static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xFF, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
 at_ble_LTK_t app_bond_info;
 bool app_device_bond = false;
@@ -172,6 +172,7 @@ void ble_device_config(at_ble_addr_t *addr)
 {
 	at_ble_dev_config_t stDevConfig;
 	at_ble_addr_t address = {AT_BLE_ADDRESS_PUBLIC, {0xAB, 0xCD, 0xEF, 0xAB, 0xCD, 0xEF}};
+	at_ble_addr_t *address_ptr = addr;
 	at_ble_status_t enuStatus;
 	
 	
@@ -182,44 +183,25 @@ void ble_device_config(at_ble_addr_t *addr)
 		{
 			DBG_LOG("BD address get failed");
 		}
-		
-		/* Update the Address in scan response data*/
-		memcpy(&scan_rsp_data[4], &address.addr, 6);
-		
-		/* set the BD address */
-		if(at_ble_addr_set(&address) != AT_BLE_SUCCESS)
-		{
-			DBG_LOG("BD address set failed");
-		}
-		
-		DBG_LOG("BD Address:0x%02X%02X%02X%02X%02X%02X, Address Type:%d",
-		address.addr[5],
-		address.addr[4],
-		address.addr[3],
-		address.addr[2],
-		address.addr[1],
-		address.addr[0], address.type);
+		address_ptr = &address;
 	}
-	else
+	
+	/* Update the Address in scan response data*/
+	memcpy(&scan_rsp_data[4], address_ptr->addr, 6);
+	
+	/* set the BD address */
+	if(at_ble_addr_set(address_ptr) != AT_BLE_SUCCESS)
 	{
-		/* Update the Address in scan response data*/
-		memcpy(&scan_rsp_data[4], addr->addr, 6);
-		
-		/* set the given BD address */
-		if(at_ble_addr_set(addr) != AT_BLE_SUCCESS)
-		{
-			DBG_LOG("BD address set failed");
-		}
-		DBG_LOG("BD Address:0x%02X%02X%02X%02X%02X%02X, Address Type:%d",
-		addr->addr[5],
-		addr->addr[4],
-		addr->addr[3],
-		addr->addr[2],
-		addr->addr[1],
-		addr->addr[0], addr->type);
+		DBG_LOG("BD address set failed");
 	}
 	
-	
+	DBG_LOG("BD Address:0x%02X%02X%02X%02X%02X%02X, Address Type:%d",
+	address_ptr->addr[5],
+	address_ptr->addr[4],
+	address_ptr->addr[3],
+	address_ptr->addr[2],
+	address_ptr->addr[1],
+	address_ptr->addr[0], address_ptr->type);
 		
 	//Set device configuration
 	////Device role
@@ -227,7 +209,7 @@ void ble_device_config(at_ble_addr_t *addr)
 	////device renew duration
 	stDevConfig.renew_dur = AT_RENEW_DUR_VAL_MIN;
 	////device address type
-	stDevConfig.address = address;
+	stDevConfig.address = *address_ptr;
 	////Attributes
 	stDevConfig.att_cfg.b2NamePerm = AT_BLE_WRITE_DISABLE;
 	stDevConfig.att_cfg.b2AppearancePerm = AT_BLE_WRITE_DISABLE;
@@ -243,6 +225,8 @@ void ble_device_config(at_ble_addr_t *addr)
 	enuStatus = at_ble_set_dev_config(&stDevConfig);
 	UNUSED(enuStatus);
 }
+
+
 
 void htpt_set_advertisement_data(void)
 {

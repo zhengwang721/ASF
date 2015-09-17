@@ -89,6 +89,87 @@ void timer_callback_handler(void)
 	timer_cb_done = true;
 }
 
+at_ble_status_t sps_service_advertise(void)
+{
+	uint8_t idx = 0;
+	uint8_t adv_data [ SPS_ADV_DATA_NAME_LEN + SPS_ADV_DATA_UUID_LEN   + (2*2)];
+	
+	adv_data[idx++] = SPS_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
+	adv_data[idx++] = SPS_ADV_DATA_UUID_TYPE;
+
+	/* Appending the UUID */
+	adv_data[idx++] = (uint8_t)SPS_SERVICE_UUID;
+	adv_data[idx++] = (uint8_t)(SPS_SERVICE_UUID >> 8);
+	
+	//Appending the complete name to the Ad packet
+	adv_data[idx++] = SPS_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
+	adv_data[idx++] = SPS_ADV_DATA_NAME_TYPE;
+	
+	memcpy(&adv_data[idx], SPS_ADV_DATA_NAME_DATA, SPS_ADV_DATA_NAME_LEN );
+	idx += SPS_ADV_DATA_NAME_LEN;
+	
+	/* Adding the advertisement data and scan response data */
+	if(at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN) == AT_BLE_SUCCESS)
+	{
+		/* Start of advertisement */
+		if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, APP_BAS_FAST_ADV, APP_BAS_ADV_TIMEOUT, 0) == AT_BLE_SUCCESS)
+		{
+			DBG_LOG("BLE Started Adv");
+			return AT_BLE_SUCCESS;
+		}
+		else
+		{
+			DBG_LOG("BLE Adv start Failed");
+		}
+	}
+	else
+	{
+		DBG_LOG("Failed to set adv data");
+	}
+	
+
+	return AT_BLE_FAILURE;
+}
+
+void ble_paired_app_event(at_ble_handle_t conn_handle)
+{
+	timer_cb_done = true;
+	hw_timer_start(SCAN_PRAM_UPDATE_INTERVAL);
+	device_conn_handle=conn_handle;
+	LED_On(LED0);
+}
+
+void ble_disconnected_app_event(at_ble_handle_t conn_handle)
+{
+	timer_cb_done = false;
+	hw_timer_stop();
+	sps_service_advertise();
+	LED_Off(LED0);
+        ALL_UNUSED(conn_handle);
+}
+
+/**
+* \Service Characteristic change handler function
+*/
+at_ble_status_t sps_char_changed_cb(at_ble_characteristic_changed_t *char_handle)
+{
+	return sps_char_changed_event(&sps_service_handler, char_handle, &flag);
+}
+
+void sps_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_status)
+{
+	if(!notification_status->status)
+	{
+		flag = true;
+		DBG_LOG_DEV("sending notification to the peer success");
+	}
+}
+
+void button_cb(void)
+{
+	button_pressed = true;
+}
+
 /**
 * \Scan Parameter Application main function
 */
@@ -160,80 +241,4 @@ int main(void)
 	return 0;
 }
 
-at_ble_status_t sps_service_advertise(void)
-{
-	uint8_t idx = 0;
-	uint8_t adv_data [ SPS_ADV_DATA_NAME_LEN + SPS_ADV_DATA_UUID_LEN   + (2*2)];
-	
-	adv_data[idx++] = SPS_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = SPS_ADV_DATA_UUID_TYPE;
-
-	/* Appending the UUID */
-	adv_data[idx++] = (uint8_t)SPS_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(SPS_SERVICE_UUID >> 8);
-	
-	//Appending the complete name to the Ad packet
-	adv_data[idx++] = SPS_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = SPS_ADV_DATA_NAME_TYPE;
-	
-	memcpy(&adv_data[idx], SPS_ADV_DATA_NAME_DATA, SPS_ADV_DATA_NAME_LEN );
-	idx += SPS_ADV_DATA_NAME_LEN;
-	
-	/* Adding the advertisement data and scan response data */
-	if(!(at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN) == AT_BLE_SUCCESS) )
-	{
-		DBG_LOG("Failed to set adv data");
-	}
-	
-	/* Start of advertisement */
-	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, APP_BAS_FAST_ADV, APP_BAS_ADV_TIMEOUT, 0) == AT_BLE_SUCCESS)
-	{
-		DBG_LOG("BLE Started Adv");
-		return AT_BLE_SUCCESS;
-	}
-	else
-	{
-		DBG_LOG("BLE Adv start Failed");
-	}
-	return AT_BLE_FAILURE;
-}
-
-void ble_paired_app_event(at_ble_handle_t conn_handle)
-{
-	timer_cb_done = true;
-	hw_timer_start(SCAN_PRAM_UPDATE_INTERVAL);
-	device_conn_handle=conn_handle;
-	LED_On(LED0);
-}
-
-void ble_disconnected_app_event(at_ble_handle_t conn_handle)
-{
-	timer_cb_done = false;
-	hw_timer_stop();
-	sps_service_advertise();
-	LED_Off(LED0);
-        ALL_UNUSED(conn_handle);
-}
-
-/**
-* \Service Characteristic change handler function
-*/
-at_ble_status_t sps_char_changed_cb(at_ble_characteristic_changed_t *char_handle)
-{
-	return sps_char_changed_event(&sps_service_handler, char_handle, &flag);
-}
-
-void sps_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_status)
-{
-	if(!notification_status->status)
-	{
-		flag = true;
-		DBG_LOG_DEV("sending notification to the peer success");
-	}
-}
-
-void button_cb(void)
-{
-	button_pressed = true;
-}
 
