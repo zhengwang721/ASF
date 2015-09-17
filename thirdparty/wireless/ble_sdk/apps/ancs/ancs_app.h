@@ -1,7 +1,7 @@
 /**
- * \file
+ * \file Ancs_app.h
  *
- * \brief Proximity Reporter Declarations
+ * \brief ANCS Application Declarations
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *

@@ -71,21 +71,4 @@
   */
 void timer_callback_handler(void);
 
-/**
- * @brief Alerting function on link loss alert 
- *
- * @param[in] alert level of alert level characteristic of linkloss service
- *
- */
-void app_linkloss_alert(uint8_t alert_val);
-
-/**
- * @brief Alerting function on path loss alert 
- *
- * @param[in] alert level of alert level characteristic of pathloss service
- *
- */
-void app_pathloss_alert(uint8_t alert_val);
-
-
 #endif /* __PXP_REPORTER_APP_H__ */

@@ -70,37 +70,45 @@
 /* === GLOBALS ============================================================ */
 /* PXP Application LED State */
 bool pxp_led_state = true;
+
 /** @brief Timer interval for timer used for led blinking */
 uint8_t timer_interval = INIT_TIMER_INTERVAL;
-volatile bool button_pressed = false;
 
+/* To make the app execute*/
 bool app_exec = true;
+
 /**
 * \brief Timer callback handler called on timer expiry
 */
 void timer_callback_handler(void)
 {
-	
 	hw_timer_stop();
-	if (pxp_led_state)
-	{
+	if (pxp_led_state) {
 		pxp_led_state = false;
 		LED_Off(LED0);
 		hw_timer_start(timer_interval);
-	}
-	else {
+	} else {
 		pxp_led_state = true;
 		LED_On(LED0);
 		hw_timer_start(timer_interval);
 	}
-	
 }
 
-void button_cb(void)
+
+/**
+ * @brief function called by the profile to notify the app connected
+ *
+ * @param[in] state true for notification
+ *
+ */
+static void app_connected_state(bool state)
 {
-	button_pressed = true;
+	if (state) {
+		hw_timer_stop();
+		LED_Off(LED0);
+		pxp_led_state = 0;
+	} 
 }
-
 
 /**
  * @brief Alerting function on link loss alert 
@@ -108,27 +116,20 @@ void button_cb(void)
  * @param[in] alert level of alert level characteristic of linkloss service
  *
  */
-void app_pathloss_alert(uint8_t alert_val)
+static void app_pathloss_alert(uint8_t alert_val)
 {
 	
-		if (alert_val == IAS_HIGH_ALERT)
-		{
+		if (alert_val == IAS_HIGH_ALERT) {
 			DBG_LOG("Pathloss : High Alert");
 			timer_interval = PL_INTERVAL_FAST;
 			LED_On(LED0);
 			hw_timer_start(timer_interval);
-		}
-
-		else if (alert_val == IAS_MID_ALERT)
-		{
+		} else if (alert_val == IAS_MID_ALERT) {
 			DBG_LOG("Pathloss : Mild Alert");
 			timer_interval = PL_INTERVAL_MEDIUM;
 			LED_On(LED0);
 			hw_timer_start(timer_interval);
-		}
-
-		else if (alert_val == IAS_NO_ALERT)
-		{
+		} else if (alert_val == IAS_NO_ALERT) {
 			DBG_LOG("Pathloss : No Alert");
 			hw_timer_stop();
 			LED_Off(LED0);
@@ -142,29 +143,24 @@ void app_pathloss_alert(uint8_t alert_val)
  * @param[in] alert level of alert level characteristic of linkloss service
  *
  */
-void app_linkloss_alert(uint8_t alert_val)
+static void app_linkloss_alert(uint8_t alert_val)
 {
-				if (alert_val == LLS_NO_ALERT)
-				{
-					DBG_LOG("Link loss : No Alert  ");
-					hw_timer_stop();
-					LED_Off(LED0);
-					pxp_led_state = 0;
-				}
-				else if (alert_val == LLS_MILD_ALERT)
-				{
-					DBG_LOG("Link loss : Mild Alert  ");
-					timer_interval = LL_INTERVAL_MEDIUM;
-					LED_On(LED0);
-					hw_timer_start(timer_interval);
-				}
-				else if (alert_val == LLS_HIGH_ALERT)
-				{
-					DBG_LOG("Link loss : High Alert ");
-					timer_interval = LL_INTERVAL_FAST;
-					LED_On(LED0);
-					hw_timer_start(timer_interval);
-				}	
+	if (alert_val == LLS_NO_ALERT) {
+		DBG_LOG("Link loss : No Alert  ");
+		hw_timer_stop();
+		LED_Off(LED0);
+		pxp_led_state = 0;
+	} else if (alert_val == LLS_MILD_ALERT) {
+		DBG_LOG("Link loss : Mild Alert  ");
+		timer_interval = LL_INTERVAL_MEDIUM;
+		LED_On(LED0);
+		hw_timer_start(timer_interval);
+	} else if (alert_val == LLS_HIGH_ALERT) {
+		DBG_LOG("Link loss : High Alert ");
+		timer_interval = LL_INTERVAL_FAST;
+		LED_On(LED0);
+		hw_timer_start(timer_interval);
+	}	
 }
 
 /**
@@ -179,9 +175,6 @@ int main(void)
 	#elif SAM0
 	system_init();
 	#endif
-	
-	/* Initialize the button */
-	button_init();
 	
 	/* Initialize serial console */
 	serial_console_init();
@@ -202,6 +195,7 @@ int main(void)
 	
 	register_pathloss_handler(app_pathloss_alert);
 	register_linkloss_handler(app_linkloss_alert);
+	register_state_handler(app_connected_state);
 		
 	/* Capturing the events  */ 
 	while(app_exec)

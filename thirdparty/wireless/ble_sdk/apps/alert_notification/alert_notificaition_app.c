@@ -96,8 +96,7 @@ static void timer_callback_handler(void)
 static void app_connected_state(bool connected)
 {
 	app_state = connected;
-	if (connected)
-	{
+	if (connected) {
 		DBG_LOG("App connected");	
 	}		
 }
@@ -133,8 +132,8 @@ int main(void)
 	ble_device_init(NULL);
 	
 	/* Capturing the events  */
-	while(1)
-	{
+	while(1) {
+
 		/* BLE Event Task */
 		ble_event_task();
 		if (user_request) {
