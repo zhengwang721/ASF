@@ -130,6 +130,9 @@
 /***********************************************************************************
  *									Functions		                               *
  **********************************************************************************/
+typedef void (*bonding_complete_t)(bool flag);
+typedef void (* read_response_callback_t) (at_ble_characteristic_read_response_t *char_read_resp);
+
 /**
  * @brief Initialize the Time information Profile
  * 
@@ -192,7 +195,7 @@ void time_info_service_found_handler(at_ble_primary_service_found_t * primary_se
 void time_info_disconnected_event_handler(at_ble_disconnected_t *disconnect);
 
 /**
- * @brief setting time profile advertisement data and triggering of advertisment
+ * @brief setting time profile advertisement data and triggering of advertisement
  */
 void time_info_adv(void);
 
@@ -216,13 +219,30 @@ void time_info_write_notification_handler(void *param);
  * \note Called by the ble_manager after receiving characteristic found event
  */
 void time_info_notification_handler(at_ble_notification_recieved_t *char_read_resp);
-
-typedef void (*bonding_complete_t)(bool flag);
-
-typedef void (* read_response_callback_t) (at_ble_characteristic_read_response_t *char_read_resp);
+/**
+ * @brief Application registering callback for characteristic read response received 
+ * @param[in] read_response_cb callback of application @ref read_response_callback_t
+ * @return None
+ */
 void time_info_register_read_response_callback(read_response_callback_t read_response_cb);
+/**
+ * @brief Handler for AT_BLE_ENCRYPTION_STATUS_CHANGED event from stack 
+ * @param[in] param @ref at_ble_encryption_status_changed_t
+ * @return None
+ */
 void time_info_encryption_status_changed_handler(at_ble_encryption_status_changed_t *param);
+/**
+ * @brief Handler for AT_BLE_PAIR_DONE event from stack 
+ * @param[in] pair_done_param @ref at_ble_pair_done_t
+ * @return None
+ */
 void time_info_pair_done_handler(at_ble_pair_done_t *pair_done_param);
+/**
+ * @brief Application registering callback for both paired done event 
+ * \and encryption status changed event
+ * @param[in] read_response_cb callback of application @ref read_response_callback_t
+ * @return None
+ */
 void time_info_register_bonding_callback(bonding_complete_t bonding_complete_cb);
 
 #endif /* __TIME_INFO_H__ */

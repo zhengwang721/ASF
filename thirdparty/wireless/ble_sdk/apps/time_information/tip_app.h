@@ -44,14 +44,27 @@
  * Support and FAQ: visit <a href="TPtp://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-
 #ifndef __TIP_APP_H__
 #define __TIP_APP_H__
 
 #include "at_ble_api.h"
 
+#define ENABLE_PTS					(true)
+#define GET_REFERANCE_UPDATE		(0x01)
+#define CANCEL_REFERANCE_UPDATE		(0x02)
+/**
+ * @brief Timer Callback
+ * @param[in] None
+ * @return None
+ *
+ */
 void timer_callback_handler(void);
-void app_bonding_cb(bool flag);
+/**
+ * @brief Callback registered for characteristic read response 
+ * @param[in] char_read_resp @ref at_ble_characteristic_read_response_t
+ * @return None
+ *
+ */
 void app_read_response_cb(at_ble_characteristic_read_response_t *char_read_resp);
 
 #endif /* __TIP_APP_H__ */

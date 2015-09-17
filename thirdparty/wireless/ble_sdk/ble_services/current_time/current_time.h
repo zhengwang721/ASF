@@ -133,12 +133,12 @@ int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *rea
  *
  * @param[in] conn_handle read response data available form
  * @param[in] desc_handle read response data available form
- * @param[in] noti read response data available form
+ * @param[in] notify read response data available form
  *at_ble_characteristic_read_response_t
  * @return Current time value.
  * @return LLS_READ_RESP_INVALID if value are other than alert levels
  */		
-at_ble_status_t tis_current_time_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti);
+at_ble_status_t tis_current_time_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, uint8_t notify);
 
 #endif /*__CURRENT_TIME_H__*/
 // </h>
