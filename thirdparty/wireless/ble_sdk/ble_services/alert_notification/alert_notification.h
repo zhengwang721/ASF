@@ -75,6 +75,15 @@
 #define ANS_UNREA_ALERT_READ_LENGTH			(20)
 #define ANS_ALERT_NP_READ_LENGTH			(20)
 
+#define BIT_MASK0							(1)
+#define BIT_MASK1							(1 << 1)
+#define BIT_MASK2							(1 << 2)
+#define BIT_MASK3							(1 << 3)
+#define BIT_MASK4							(1 << 4)
+#define BIT_MASK5							(1 << 5)
+#define BIT_MASK6							(1 << 6)
+#define BIT_MASK7							(1 << 7)
+
 
 typedef struct gatt_anp_handler
 {

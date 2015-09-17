@@ -52,8 +52,10 @@
 #include "alert_notification.h"
 #include "ble_manager.h"
 
-const char *bitmask0[] = {"Simple Alert","Email","News","Call","Missed Call","Sms/Mms","Voice Mail","Schedule"};
-const char *bitmask1[] = {"High Prioritized Alert","Instant Message","Reserved For feature"};
+const char *bitmask0[] = {"Simple Alert","Email","News","Call","Missed Call","Sms/Mms",
+							"Voice Mail","Schedule"};
+const char *bitmask1[] = {"High Prioritized Alert","Instant Message",
+							"Reserved For feature"};
 
 /***********************************************************************************
  *									Implementation	                               *
@@ -63,21 +65,18 @@ at_ble_status_t anp_alert_write(at_ble_handle_t conn_handle,at_ble_handle_t desc
 {
 	uint8_t desc_data[3] = {0x05, 0xFF, 0};
 	
-	if(desc_handle == ANP_INVALID_CHAR_HANDLE)
-	{
+	if(desc_handle == ANP_INVALID_CHAR_HANDLE) {
 		return (AT_BLE_ATT_INVALID_HANDLE);
 	}
-	else
-	{
-		if(noti == true)
-		{
-			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_data[0],false, true));
-		}
-		else if(noti == false)
-		{
-			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_data[1],false, true));
-		}
+	
+	if(noti == true) {
+		return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, 
+											&desc_data[0],false, true));
+	} else if (noti == false) {
+		return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2,
+												 &desc_data[1],false, true));
 	}
+	
 	return (AT_BLE_SUCCESS);
 }
 
@@ -85,96 +84,86 @@ at_ble_status_t anp_alert_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_
 {
 	uint8_t desc_value[2] ;
 	
-	if(desc_handle == ANP_INVALID_CHAR_HANDLE)
-	{
+	if(desc_handle == ANP_INVALID_CHAR_HANDLE) {
 		return (AT_BLE_ATT_INVALID_HANDLE);
 	}
-	else
-	{
-		if(noti == true)
-		{
-			desc_value[0] = 1;
-			desc_value[1] = 0;
-			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_value[0],false, true));
-		}
-		else if(noti == false)
-		{
-			desc_value[0] = 0;
-			desc_value[1] = 0;
-			return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_value[0],false, true));
-		}
+	
+	if(noti == true) {
+		desc_value[0] = 1;
+		desc_value[1] = 0;
+		
+		return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_value[0],false, true));
+	} else if(noti == false) {
+		desc_value[0] = 0;
+		desc_value[1] = 0;
+		return(at_ble_characteristic_write(conn_handle, desc_handle, 0, 2, &desc_value[0],false, true));
 	}
+	
 	return (AT_BLE_SUCCESS);
 }
 
 at_ble_status_t anp_alert_read(at_ble_handle_t conn_handle,at_ble_handle_t char_handle)
 {
-	if (char_handle != ANP_INVALID_CHAR_HANDLE)
-	{
+	if (char_handle != ANP_INVALID_CHAR_HANDLE) {
 		return (at_ble_characteristic_read(conn_handle,char_handle,ANP_READ_OFFSET,ANP_READ_LENGTH));
 	}
+	
 	return (AT_BLE_ATT_INVALID_HANDLE);
+}
+
+static void anp_alert_category(uint8_t *data)
+{
+	if (data[0] & BIT_MASK0) {
+		DBG_LOG("%s",bitmask0[0]);
+	}
+	
+	if (data[0] & BIT_MASK1) {
+		DBG_LOG("%s",bitmask0[1]);
+	}
+	
+	if (data[0] & BIT_MASK2) {
+		DBG_LOG("%s",bitmask0[2]);
+	}
+	
+	if (data[0] & BIT_MASK3) {
+		DBG_LOG("%s",bitmask0[3]);
+	}
+	
+	if (data[0] & BIT_MASK4) {
+		DBG_LOG("%s",bitmask0[4]);
+	}
+	
+	if (data[0] & BIT_MASK5) {
+		DBG_LOG("%s",bitmask0[5]);
+	}
+	
+	if (data[0] & BIT_MASK6) {
+		DBG_LOG("%s",bitmask0[6]);
+	}
+	
+	if (data[0] & BIT_MASK7) {
+		DBG_LOG("%s",bitmask0[7]);
+	}
+	
+	if (data[1] & BIT_MASK0) {
+		DBG_LOG("%s",bitmask1[0]);
+	}
+	
+	if (data[1] & BIT_MASK1) {
+		DBG_LOG("%s",bitmask1[1]);
+	}
 }
 
 uint8_t anp_alert_read_response (at_ble_characteristic_read_response_t *read_resp, gatt_anp_handler_t *anp_handler)
 {
 	/* Supported New Alert Category */
-	if(read_resp->char_handle == anp_handler->supp_new_char_handle)
-	{
+	if(read_resp->char_handle == anp_handler->supp_new_char_handle) {
 		DBG_LOG_DEV("Support New Alert Characteristic read response %02x handler",read_resp->char_handle);
 		DBG_LOG_DEV("The length is %d",read_resp->char_len);
 		
 		DBG_LOG("Peer device supports the following New Alert categories");
 		
-		if (read_resp->char_value[0] & 1)
-		{
-			DBG_LOG("%s",bitmask0[0]);		
-		}
-		
-		if (read_resp->char_value[0] & (1 << 1))
-		{
-			DBG_LOG("%s",bitmask0[1]);
-		}
-		
-		if (read_resp->char_value[0] & (1 << 2))
-		{
-			DBG_LOG("%s",bitmask0[2]);
-		}
-		
-		if (read_resp->char_value[0] & (1 << 3))
-		{
-			DBG_LOG("%s",bitmask0[3]);
-		}
-		
-		if (read_resp->char_value[0] & (1 << 4))
-		{
-			DBG_LOG("%s",bitmask0[4]);
-		}
-		
-		if (read_resp->char_value[0] & (1 << 5))
-		{
-			DBG_LOG("%s",bitmask0[5]);
-		}
-		
-		if (read_resp->char_value[0] & (1 << 6))
-		{
-			DBG_LOG("%s",bitmask0[6]);
-		}
-		
-		if (read_resp->char_value[0] & (1 << 7))
-		{
-			DBG_LOG("%s",bitmask0[7]);
-		}
-		
-		if (read_resp->char_value[1] & 1)
-		{
-			DBG_LOG("%s",bitmask1[0]);
-		}
-		
-		if (read_resp->char_value[1] & (1 << 1))
-		{
-			DBG_LOG("%s",bitmask1[1]);
-		}
+		anp_alert_category(&read_resp->char_value[0]);
 		
 		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
 		DBG_LOG_DEV("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
@@ -183,127 +172,69 @@ uint8_t anp_alert_read_response (at_ble_characteristic_read_response_t *read_res
 	}
 
 	/* Supported Unread Alert Category */
-	if(read_resp->char_handle == anp_handler->supp_unread_char_handle)
-	{
+	if(read_resp->char_handle == anp_handler->supp_unread_char_handle) {
+		
 		DBG_LOG_DEV("Supported UnAlert Characteristic read response %02x handler",read_resp->char_handle);
 		DBG_LOG_DEV("The length is %d",read_resp->char_len);
-			DBG_LOG("Peer device supports the following Unread Alert categories");
-			if (read_resp->char_value[0] & 1)
-			{
-				DBG_LOG("%s",bitmask0[0]);
-			}
+		DBG_LOG("Peer device supports the following Unread Alert categories");
 			
-			if (read_resp->char_value[0] & (1 << 1))
-			{
-				DBG_LOG("%s",bitmask0[1]);
-			}
-			
-			if (read_resp->char_value[0] & (1 << 2))
-			{
-				DBG_LOG("%s",bitmask0[2]);
-			}
-			
-			if (read_resp->char_value[0] & (1 << 3))
-			{
-				DBG_LOG("%s",bitmask0[3]);
-			}
-			
-			if (read_resp->char_value[0] & (1 << 4))
-			{
-				DBG_LOG("%s",bitmask0[4]);
-			}
-			
-			if (read_resp->char_value[0] & (1 << 5))
-			{
-				DBG_LOG("%s",bitmask0[5]);
-			}
-			
-			if (read_resp->char_value[0] & (1 << 6))
-			{
-				DBG_LOG("%s",bitmask0[6]);
-			}
-			
-			if (read_resp->char_value[0] & (1 << 7))
-			{
-				DBG_LOG("%s",bitmask0[7]);
-			}
-			
-			if (read_resp->char_value[1] & 1)
-			{
-				DBG_LOG("%s",bitmask1[0]);
-			}
-			
-			if (read_resp->char_value[1] & (1 << 1))
-			{
-				DBG_LOG("%s",bitmask1[1]);
-			}
-
+		anp_alert_category(&read_resp->char_value[0]);
+	
 		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
 		DBG_LOG_DEV("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
+	
 		return SUPPORTED_UNREAD_ALERT_READ;
 	}
 		
-		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
-		DBG_LOG_DEV("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
+	DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
+	DBG_LOG_DEV("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
 
 	/* Alert Notification Control Point */
-	if(read_resp->char_handle == anp_handler->alert_np_char_handle)
-	{
-		DBG_LOG_DEV("Alert Notification Characteristic read response %02x handler",read_resp->char_handle);
+	if(read_resp->char_handle == anp_handler->alert_np_char_handle)	{
+		DBG_LOG_DEV("Alert Notification Characteristic read response "
+					"%02x handler",read_resp->char_handle);
 		DBG_LOG_DEV("Category ID bit Mask 0 = %02x",read_resp->char_value[0]);
 		DBG_LOG_DEV("Category ID bit Mask 1 = %02x",read_resp->char_value[1]);
+		
 		return ALERT_CONTRL_POINT_READ;
 	}
 	return 0;
 }
 
+static void anp_alert_type(uint8_t *data)
+{
+	if (data[0] <= 7) {
+		DBG_LOG("%s alert",bitmask0[(data[0])]);
+	}
+	
+	if (data[0] == 8) {
+		DBG_LOG("%s alert",bitmask1[(data[0])]);
+	}
+	
+	if (data[0] == 9) {
+		DBG_LOG("%s alert",bitmask1[(data[0])]);
+	}
+}
 
 
 void anp_alert_notify_response (at_ble_notification_recieved_t *notify_resp, gatt_anp_handler_t *anp_handler)
 {
 	DBG_LOG_DEV("The length of notification received is %d",notify_resp->char_len);
 	
-	if (notify_resp->char_handle == anp_handler->new_alert_char_handle)
-	{
+	if (notify_resp->char_handle == anp_handler->new_alert_char_handle) {
 			DBG_LOG("New Alert received");
 			DBG_LOG("The no of new alerts are %d",notify_resp->char_value[1]);
-			DBG_LOG("The alert type is :");
-			
-			if (notify_resp->char_value[0] <= 7)
-			{
-				DBG_LOG("%s alert",bitmask0[(notify_resp->char_value[0])]);
+			if (notify_resp->char_value[1]) {
+				DBG_LOG("The alert type is :");
+				anp_alert_type(&notify_resp->char_value[0]);
 			}
-			
-			if (notify_resp->char_value[0] == 8)
-			{
-				DBG_LOG("%s alert",bitmask1[(notify_resp->char_value[0])]);
-			}
-			
-			if (notify_resp->char_value[0] == 9)
-			{
-				DBG_LOG("%s alert",bitmask1[(notify_resp->char_value[0])]);
-			}
-			
-	}	else if (notify_resp->char_handle == anp_handler->unread_alert_char_handle) {
+	} else if (notify_resp->char_handle == anp_handler->unread_alert_char_handle) {
 		
 			DBG_LOG("Unread alert received");
 			DBG_LOG("The no of unread alerts are %d",notify_resp->char_value[1]);
-			DBG_LOG("The alert type is :");
-			
-			if (notify_resp->char_value[0] <= 7)
-			{
-				DBG_LOG("%s alert",bitmask0[(notify_resp->char_value[0])]);
-			}
-			
-			if (notify_resp->char_value[0] == 8)
-			{
-				DBG_LOG("%s alert",bitmask1[(notify_resp->char_value[0])]);
-			}
-			
-			if (notify_resp->char_value[0] == 9)
-			{
-				DBG_LOG("%s alert",bitmask1[(notify_resp->char_value[0])]);
-			}
-		
+			if (notify_resp->char_value[1]) {
+				DBG_LOG("The alert type is :");
+				anp_alert_type(&notify_resp->char_value[0]);
+			}	
 	}
 }
