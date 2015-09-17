@@ -93,11 +93,7 @@ uint8 	gu8Crc_off	=			0;
 #define DATA_PKT_SZ_1K			1024
 #define DATA_PKT_SZ_4K			(4 * 1024)
 #define DATA_PKT_SZ_8K			(8 * 1024)
-#ifdef SAMG55
-#define DATA_PKT_SZ				DATA_PKT_SZ_1K
-#else
 #define DATA_PKT_SZ				DATA_PKT_SZ_8K
-#endif
 
 static sint8 nmi_spi_read(uint8* b, uint16 sz)                                 
 {
@@ -316,6 +312,13 @@ static sint8 spi_cmd_rsp(uint8 cmd)
 		}
 	} while((rsp != cmd) && (s8RetryCnt-- >0));
 
+	if(s8RetryCnt <=0)
+	{
+		M2M_ERR("[nmi spi]: Failed cmd response read, bus error...\n");
+		result = N_FAIL;
+		goto _fail_;
+	}
+		
 	/**
 		State response
 	**/
@@ -329,6 +332,12 @@ static sint8 spi_cmd_rsp(uint8 cmd)
 			goto _fail_;
 		}
 	} while((rsp != 0x00) && (s8RetryCnt-- >0));
+	if(s8RetryCnt <=0)
+	{
+		M2M_ERR("[nmi spi]: Failed cmd response read, bus error...\n");
+		result = N_FAIL;
+		goto _fail_;
+	}
 
 _fail_:
 
