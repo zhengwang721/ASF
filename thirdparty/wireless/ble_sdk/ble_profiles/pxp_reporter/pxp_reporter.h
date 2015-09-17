@@ -132,7 +132,7 @@
 /* @brief call back handler type  */
 typedef void (*reporter_callback_t)(uint8_t);
 
-
+typedef void (*reporter_state_callback_t)(bool);
 /****************************************************************************************
 *							        Function Prototypes	                                     							*
 ****************************************************************************************/
@@ -232,6 +232,14 @@ void register_pathloss_handler(reporter_callback_t pathloss_fn);
 *
 */
 void register_linkloss_handler(reporter_callback_t linkloss_fn);
+
+/**
+* @brief function which register the application state call back handler
+*
+* @param[in] call back function of the application for connection state
+*
+*/
+void register_state_handler(reporter_state_callback_t state_fn);
 
 #endif
 // </h>

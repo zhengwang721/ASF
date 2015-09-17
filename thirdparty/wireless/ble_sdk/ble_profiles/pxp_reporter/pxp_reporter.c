@@ -50,7 +50,6 @@
 ****************************************************************************************/
 #include <asf.h>
 #include <string.h>
-#include "timer_hw.h"
 #include "at_ble_api.h"
 #include "ble_manager.h"
 #include "pxp_reporter_app.h"
@@ -77,8 +76,7 @@ gatt_service_handler_t ias_handle;
 #endif // IMMEDIATE_ALER_SERVICE
 
 
-/** @brief led_state  the state of the led*/
-extern uint8_t pxp_led_state;
+
 
 /** @brief Scan response data*/
 uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
@@ -93,6 +91,7 @@ uint8_t linkloss_current_alert_level ;
 /** @brief Callback handlers for linkloss and pathloss */
 reporter_callback_t pathloss_cb;
 reporter_callback_t linkloss_cb;
+reporter_state_callback_t connected_cb;
 
 /****************************************************************************************
 *							        Implementation	                                     							*
@@ -127,6 +126,11 @@ void register_pathloss_handler(reporter_callback_t pathloss_fn)
 void register_linkloss_handler(reporter_callback_t linkloss_fn)
 {
 	linkloss_cb = linkloss_fn;
+}
+
+void register_state_handler(reporter_state_callback_t state_fn)
+{
+	connected_cb = state_fn;
 }
 
 /**
@@ -209,11 +213,9 @@ at_ble_status_t pxp_reporter_connected_state_handler(at_ble_connected_t *conn_pa
 {
 	at_ble_status_t status;
 	uint16_t len = sizeof(uint8_t);
-
-	hw_timer_stop();
-	LED_Off(LED0);
-	pxp_led_state = 0;
 	
+	connected_cb(true);
+
 	if ((status = at_ble_characteristic_value_get(lls_handle.serv_chars.char_val_handle,&linkloss_current_alert_level,&len)))
 	{
 		DBG_LOG("Read of alert value for link loss service failed:reason %x",status);

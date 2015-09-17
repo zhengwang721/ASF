@@ -101,6 +101,20 @@ void button_cb(void)
 	button_pressed = true;
 }
 
+/**
+ * @brief function called by the profile to notify the app connected
+ *
+ * @param[in] state true for notification
+ *
+ */
+static void app_connected_state(bool state)
+{
+	if (state) {
+		hw_timer_stop();
+		LED_Off(LED0);
+		pxp_led_state = 0;
+	} 
+}
 
 /**
  * @brief Alerting function on link loss alert 
@@ -202,6 +216,7 @@ int main(void)
 	
 	register_pathloss_handler(app_pathloss_alert);
 	register_linkloss_handler(app_linkloss_alert);
+	register_state_handler(app_connected_state);
 		
 	/* Capturing the events  */ 
 	while(app_exec)
