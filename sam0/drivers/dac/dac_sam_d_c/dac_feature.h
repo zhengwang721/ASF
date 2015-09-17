@@ -599,17 +599,17 @@ void dac_chan_disable_output_buffer(
  *	<tr>
  *		<td>42110E</td>
  *		<td>09/2015</td>
- *		<td>Add SAMC21 and SAMDA1 support</td>
+ *		<td>Add SAM C21 and SAM DA1 support</td>
  *	</tr>
  *	<tr>
  *		<td>42110D</td>
  *		<td>12/2014</td>
- *		<td>Add SAMD10/D11 support</td>
+ *		<td>Add SAM D10/D11 support</td>
  *	</tr>
  *	<tr>
  *		<td>42110C</td>
  *		<td>01/2014</td>
- *		<td>Add SAMD21 support</td>
+ *		<td>Add SAM D21 support</td>
  *	</tr>
  *	<tr>
  *		<td>42110B</td>
