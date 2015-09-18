@@ -224,21 +224,18 @@ at_ble_status_t blp_sensor_char_changed_handler(
 
 	if ((action_event == BLP_NOTIFICATION_ENABLE) ||
 			(action_event == BLP_NOTIFICATION_DISABLE)) {
-		if (action_event == BLP_NOTIFICATION_ENABLE)
-		{
+		if (action_event == BLP_NOTIFICATION_ENABLE) {
 			notification_cb(true);	
 		} else if (action_event == BLP_NOTIFICATION_DISABLE){
 			notification_cb(false);
 		}
 	} else if ((action_event == BLP_INDICATION_ENABLE) ||
 			(action_event == BLP_INDICATION_DISABLE)) {
-		if (action_event == BLP_INDICATION_ENABLE)
-		{
+		if (action_event == BLP_INDICATION_ENABLE) {
 			indication_cb(true);
 		} else if (action_event == BLP_INDICATION_DISABLE) {
 			indication_cb(false);
 		}
-		
 	}
 
 	return AT_BLE_SUCCESS;

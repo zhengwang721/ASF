@@ -245,3 +245,4 @@ void register_state_handler(reporter_state_callback_t state_fn);
 // </h>
 
 // <<< end of configuration section >>>
+
