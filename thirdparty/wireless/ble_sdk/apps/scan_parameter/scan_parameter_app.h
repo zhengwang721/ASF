@@ -81,6 +81,9 @@
 /* @brief BAS_ADV_DATA_NAME_DATA the actual name of device */
 #define SPS_ADV_DATA_NAME_DATA			("ATMEL-SCP")
 
+/**
+* \Timer callback handler called on timer expiry
+*/
 void timer_callback_handler(void);
 
 #endif /* __SCAN_PARAMETER_APP_H__ */

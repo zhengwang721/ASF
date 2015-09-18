@@ -60,7 +60,6 @@ device_info_char_value_t char_value;
 
 bool volatile dis_notification_flag[DIS_TOTAL_CHARATERISTIC_NUM] = {false};
 
-
 /**@brief Initialize the dis service related information. */
 void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
 {
@@ -81,7 +80,13 @@ void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
 	
 	device_info_serv->serv_chars[0].value_init_len = DIS_CHAR_MANUFACTURER_NAME_INIT_LEN;
 	device_info_serv->serv_chars[0].value_max_len = DIS_CHAR_MANUFACTURER_NAME_MAX_LEN;
-	device_info_serv->serv_chars[0].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#if BLE_PAIR_ENABLE
+	device_info_serv->serv_chars[0].value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);   /* permissions */
+#else
+	device_info_serv->serv_chars[0].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#endif
 	device_info_serv->serv_chars[0].user_desc = NULL;           /* user defined name */
 	device_info_serv->serv_chars[0].user_desc_len = 0;
 	device_info_serv->serv_chars[0].user_desc_max_len = 0;
@@ -106,7 +111,13 @@ void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
 	
 	device_info_serv->serv_chars[1].value_init_len = DIS_CHAR_MODEL_NUMBER_INIT_LEN;
 	device_info_serv->serv_chars[1].value_max_len = DIS_CHAR_MODEL_NUMBER_MAX_LEN;
-	device_info_serv->serv_chars[1].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#if BLE_PAIR_ENABLE
+	device_info_serv->serv_chars[1].value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);   /* permissions */
+#else
+	device_info_serv->serv_chars[1].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#endif
 	device_info_serv->serv_chars[1].user_desc = NULL;           /* user defined name */
 	device_info_serv->serv_chars[1].user_desc_len = 0;
 	device_info_serv->serv_chars[1].user_desc_max_len = 0;
@@ -131,7 +142,13 @@ void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
 	
 	device_info_serv->serv_chars[2].value_init_len = DIS_CHAR_SERIAL_NUMBER_INIT_LEN;
 	device_info_serv->serv_chars[2].value_max_len = DIS_CHAR_SERIAL_NUMBER_MAX_LEN;
-	device_info_serv->serv_chars[2].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#if BLE_PAIR_ENABLE
+	device_info_serv->serv_chars[2].value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);   /* permissions */
+#else
+	device_info_serv->serv_chars[2].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#endif
 	device_info_serv->serv_chars[2].user_desc = NULL;           /* user defined name */
 	device_info_serv->serv_chars[2].user_desc_len = 0;
 	device_info_serv->serv_chars[2].user_desc_max_len = 0;
@@ -156,7 +173,13 @@ void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
 	
 	device_info_serv->serv_chars[3].value_init_len = DIS_CHAR_HARDWARE_REVISION_INIT_LEN;
 	device_info_serv->serv_chars[3].value_max_len = DIS_CHAR_HARDWARE_REVISION_MAX_LEN;
-	device_info_serv->serv_chars[3].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#if BLE_PAIR_ENABLE
+	device_info_serv->serv_chars[3].value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);   /* permissions */
+#else
+	device_info_serv->serv_chars[3].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#endif
 	device_info_serv->serv_chars[3].user_desc = NULL;           /* user defined name */
 	device_info_serv->serv_chars[3].user_desc_len = 0;
 	device_info_serv->serv_chars[3].user_desc_max_len = 0;
@@ -181,7 +204,13 @@ void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
 	
 	device_info_serv->serv_chars[4].value_init_len = DIS_CHAR_FIRMWARE_REIVSION_INIT_LEN;
 	device_info_serv->serv_chars[4].value_max_len = DIS_CHAR_FIRMWARE_REIVSION_MAX_LEN;
-	device_info_serv->serv_chars[4].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#if BLE_PAIR_ENABLE
+	device_info_serv->serv_chars[4].value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);   /* permissions */
+#else
+	device_info_serv->serv_chars[4].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#endif
 	device_info_serv->serv_chars[4].user_desc = NULL;           /* user defined name */
 	device_info_serv->serv_chars[4].user_desc_len = 0;
 	device_info_serv->serv_chars[4].user_desc_max_len = 0;
@@ -205,7 +234,13 @@ void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
 	
 	device_info_serv->serv_chars[5].value_init_len = DIS_CHAR_SOFTWARE_REVISION_INIT_LEN;
 	device_info_serv->serv_chars[5].value_max_len = DIS_CHAR_SOFTWARE_REVISION_MAX_LEN;
-	device_info_serv->serv_chars[5].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#if BLE_PAIR_ENABLE
+	device_info_serv->serv_chars[5].value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);   /* permissions */
+#else
+	device_info_serv->serv_chars[5].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#endif
 	device_info_serv->serv_chars[5].user_desc = NULL;           /* user defined name */
 	device_info_serv->serv_chars[5].user_desc_len = 0;
 	device_info_serv->serv_chars[5].user_desc_max_len = 0;
@@ -230,6 +265,13 @@ void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
 	
 	device_info_serv->serv_chars[6].value_init_len = DIS_CHAR_SYSTEM_ID_INIT_LEN;
 	device_info_serv->serv_chars[6].value_max_len = DIS_CHAR_SYSTEM_ID_MAX_LEN;
+#if BLE_PAIR_ENABLE
+	device_info_serv->serv_chars[6].value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);   /* permissions */
+#else
+	device_info_serv->serv_chars[6].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#endif
 	device_info_serv->serv_chars[6].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
 	device_info_serv->serv_chars[6].user_desc = NULL;           /* user defined name */
 	device_info_serv->serv_chars[6].user_desc_len = 0;
@@ -257,7 +299,13 @@ void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
 	
 	device_info_serv->serv_chars[7].value_init_len = DIS_CHAR_PNP_ID_INIT_LEN;
 	device_info_serv->serv_chars[7].value_max_len = DIS_CHAR_PNP_ID_MAX_LEN;
-	device_info_serv->serv_chars[7].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#if BLE_PAIR_ENABLE
+	device_info_serv->serv_chars[7].value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);   /* permissions */
+#else
+	device_info_serv->serv_chars[7].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#endif
 	device_info_serv->serv_chars[7].user_desc = NULL;           /* user defined name */
 	device_info_serv->serv_chars[7].user_desc_len = 0;
 	device_info_serv->serv_chars[7].user_desc_max_len = 0;
@@ -278,7 +326,13 @@ void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
 	device_info_serv->serv_chars[8].init_value = char_value.ieee_reg_cert_data_list;					/*Initial Value*/
 	device_info_serv->serv_chars[8].value_init_len = DIS_CHAR_IEEE_REG_CERT_DATA_LIST_INIT_LEN;
 	device_info_serv->serv_chars[8].value_max_len = DIS_CHAR_IEEE_REG_CERT_DATA_LIST_MAX_LEN;
-	device_info_serv->serv_chars[8].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#if BLE_PAIR_ENABLE
+	device_info_serv->serv_chars[7].value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);   /* permissions */
+#else
+	device_info_serv->serv_chars[7].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+														AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#endif
 	device_info_serv->serv_chars[8].user_desc = NULL;           /* user defined name */
 	device_info_serv->serv_chars[8].user_desc_len = 0;
 	device_info_serv->serv_chars[8].user_desc_max_len = 0;

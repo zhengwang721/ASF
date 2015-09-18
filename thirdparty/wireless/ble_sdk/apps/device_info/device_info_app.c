@@ -66,14 +66,11 @@
 uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 	
 bool volatile timer_cb_done = false; 
-
 uint8_t fw_version[10];
-
 at_ble_handle_t dis_conn_handle;
-
 dis_gatt_service_handler_t dis_service_handler;
-
-volatile bool button_pressed = false;
+/* To keep the applicaiton in execution continuosly*/
+bool app_exec = true;
 
 /**
 * \Timer callback handler called on timer expiry
@@ -84,7 +81,8 @@ static void timer_callback_handler(void)
 	//Timer call back
 	timer_cb_done = true;
 }
- 
+
+/* Advertisement data set and Advertisement start */
 static at_ble_status_t device_information_advertise(void)
 {
 	uint8_t idx = 0;
@@ -123,6 +121,7 @@ static at_ble_status_t device_information_advertise(void)
 	return AT_BLE_FAILURE;
 }
 
+/* Callback registered for AT_BLE_PAIR_DONE event from stack */
 static void ble_paired_app_event(at_ble_handle_t conn_handle)
 {
 	LED_On(LED0);
@@ -130,6 +129,7 @@ static void ble_paired_app_event(at_ble_handle_t conn_handle)
 	dis_conn_handle = conn_handle;
 }
 
+/* Callback registered for AT_BLE_DISCONNECTED event from stack */
 static void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 {
 	hw_timer_stop();
@@ -141,16 +141,12 @@ static void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 
 void button_cb(void)
 {
-	button_pressed = true;
+	/* For user usage */
 }
  
-/* To keep the applicaiton in execution continuosly*/
-bool app_exec = true;
-
 /**
-* \Battery Service Application main function
+* \Device Information Service Application main function
 */
-
 int main(void)
 {
 	at_ble_status_t status;

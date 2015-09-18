@@ -66,7 +66,6 @@
  * Read value will be reported via @ref AT_BLE_CHARACTERISTIC_READ_RESPONSE
  *event
  */
-
 at_ble_status_t tis_dst_change_read(at_ble_handle_t conn_handle,
 		at_ble_handle_t char_handle)
 {

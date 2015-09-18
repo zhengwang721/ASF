@@ -63,10 +63,6 @@
 #include "ble_utils.h"
 #include "ble_manager.h"
 
-
-
-volatile bool button_pressed = false;
-
 /*Function Definitions */
 
 /*Initialization function for Ble Observer */
@@ -472,17 +468,13 @@ void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data)
 	}
 }
 
+/* Handler for AT_BLE_SCAN_REPORT event from stack */
 at_ble_status_t ble_observer_scan_data_handler(at_ble_scan_info_t *scan_info_data, uint8_t scan_resp_count)
 {
 	DBG_LOG("Scan Complete. Total No.of device scanned:%d", scan_resp_count);
 	ble_observer_init();
 	ALL_UNUSED(scan_info_data);
 	return AT_BLE_SUCCESS;
-}
-
-void button_cb(void)
-{
-	button_pressed = true;
 }
 
 int main(void )
@@ -494,9 +486,6 @@ int main(void )
 	#elif SAM0
 	system_init();
 	#endif
-
-	/* Initialize the button */
-	button_init();
 	
 	/* Initialize serial console */
 	serial_console_init();

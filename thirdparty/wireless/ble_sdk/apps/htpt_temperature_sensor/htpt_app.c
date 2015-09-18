@@ -146,6 +146,7 @@ static void ble_init(void)
 	}
 }
 
+/* Initializing the default values for temperature and htp parameters*/
 static void htp_init_defaults(htp_app_t *htp_temp)
 {
 	/* Initialize to default temperature value  and htp parameters*/
@@ -159,7 +160,7 @@ static void htp_init_defaults(htp_app_t *htp_temp)
 	htp_temp->flags = (at_ble_htpt_temp_flags)(HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE);
 }
 
-
+/* Sending the temperature value after reading it from IO1 Xplained Pro */
 static void htp_temperature_send(htp_app_t *htp_temp)
 {
 	at_ble_prf_date_time_t timestamp;
@@ -213,6 +214,7 @@ static void htp_temperature_send(htp_app_t *htp_temp)
 	}
 }
 
+/* Creating database and advertisement data set and advertisement start */
 static void htp_init(void)
 {
 	/* Initialize the htp_data to default value */
@@ -235,6 +237,7 @@ static void htp_init(void)
 	htpt_set_advertisement_data();
 }
 
+/* Setting the Device address */
 void ble_device_config(at_ble_addr_t *addr)
 {
 	at_ble_dev_config_t stDevConfig;
@@ -293,8 +296,7 @@ void ble_device_config(at_ble_addr_t *addr)
 	UNUSED(enuStatus);
 }
 
-
-
+/* Advertisement data set and advertisement start */
 void htpt_set_advertisement_data(void)
 {
 	uint8_t idx = 0;
@@ -335,6 +337,7 @@ void button_cb(void)
 	button_pressed = true;
 }
 
+/* Updating the location to read the temperature */
 static void update_temperature_type_location(void)
 {
 	htp_data.temperature_type = (at_ble_htpt_temp_type)((htp_data.temperature_type+1) % 9);
@@ -347,7 +350,7 @@ static void update_temperature_type_location(void)
 		htp_data.flags = (at_ble_htpt_temp_flags)(HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE);
 	}
 }
-
+/* Timer callback */
 static void timer_callback_handler(void)
 {
 	hw_timer_stop();

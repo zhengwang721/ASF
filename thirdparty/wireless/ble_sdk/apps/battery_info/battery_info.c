@@ -75,18 +75,17 @@ bat_gatt_service_handler_t bas_service_handler;
 bool volatile timer_cb_done = false;
 bool volatile flag = true;
 bool volatile battery_flag = true;
-volatile bool button_pressed = false;
 
 /**
 * \Timer callback handler called on timer expiry
 */
-
 static void timer_callback_handler(void)
 {
 	//Timer call back
 	timer_cb_done = true;
 }
 
+/* Advertisement data set and Advertisement start */
 static at_ble_status_t battery_service_advertise(void)
 {
 	uint8_t idx = 0;
@@ -125,6 +124,7 @@ static at_ble_status_t battery_service_advertise(void)
 	return AT_BLE_FAILURE;
 }
 
+/* Callback registered for AT_BLE_PAIR_DONE event from stack */
 static void ble_paired_app_event(at_ble_handle_t conn_handle)
 {
 	timer_cb_done = false;
@@ -132,6 +132,7 @@ static void ble_paired_app_event(at_ble_handle_t conn_handle)
   ALL_UNUSED(conn_handle);
 }
 
+/* Callback registered for AT_BLE_DISCONNECTED event from stack */
 static void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 {
 	timer_cb_done = false;
@@ -141,6 +142,7 @@ static void ble_disconnected_app_event(at_ble_handle_t conn_handle)
   ALL_UNUSED(conn_handle);
 }
 
+/* Callback registered for AT_BLE_NOTIFICATION_CONFIRMED event from stack */
 static void ble_notification_confirmed_app_event(at_ble_cmd_complete_event_t *notification_status)
 {
 	if(!notification_status->status)
@@ -150,6 +152,7 @@ static void ble_notification_confirmed_app_event(at_ble_cmd_complete_event_t *no
 	}
 }
 
+/* Callback registered for AT_BLE_CHARACTERISTIC_CHANGED event from stack */
 static at_ble_status_t ble_char_changed_app_event(at_ble_characteristic_changed_t *char_handle)
 {
 	return bat_char_changed_event(&bas_service_handler, char_handle, &flag);
@@ -157,9 +160,8 @@ static at_ble_status_t ble_char_changed_app_event(at_ble_characteristic_changed_
 
 void button_cb(void)
 {
-	button_pressed = true;
+	/* For user usage */
 }
-
 
 /**
 * \Battery Service Application main function
@@ -189,7 +191,6 @@ int main(void)
 	
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);
-	
 	
 	DBG_LOG("Initializing Battery Service Application");
 	

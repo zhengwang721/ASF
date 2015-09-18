@@ -53,12 +53,18 @@
 
 /** @brief Handler for scan info event
   *
-  * @param[out] none
   * @param[in]  scan information data
+  * @return None
   *
   */
 void ble_observer_scan_info_handler(at_ble_scan_info_t *scan_info_data);
 
+/** @brief Handler for AT_BLE_SCAN_REPORT event from stack
+  *
+  * @param[in] scan_info_data scan information data
+  * @param[in] scan_resp_count number of scanned devices
+  * @return Status @refer at_ble_status_t
+  */
 at_ble_status_t ble_observer_scan_data_handler(at_ble_scan_info_t *scan_info_data, uint8_t scan_resp_count);
 
 #endif /*__BLE_OBSERVER_H__*/

@@ -71,8 +71,6 @@ uint32_t adv_type = ADV_TYPE_NONCONN_UNDIRECTED;
  * default. */
 data_type_t data_type = ADVERTISEMENT_DATA;
 
-volatile bool button_pressed = false;
-
 /* BLE device advertisement in broadcast mode indicator */
 static void ble_device_broadcaster_ind(void)
 {
@@ -756,11 +754,6 @@ static status_t brd_adv_init(void)
 	return STATUS_SUCCESS;
 }
 
-void button_cb(void)
-{
-	button_pressed = true;
-}
-
 int main(void)
 {
 	#if SAMG55
@@ -771,16 +764,11 @@ int main(void)
 	system_init();
 	#endif
 
-	/* Initialize the button */
-	button_init();
-
 	/* Initialize serial console */
 	serial_console_init();
 
 	DBG_LOG("Initializing Broadcaster Application");
 	
-
-
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 

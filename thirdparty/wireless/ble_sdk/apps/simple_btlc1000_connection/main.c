@@ -104,9 +104,7 @@ static uint8_t scan_rsp_data[] = {0x11, 0x07, 0x1b, 0xc5, 0xd5, 0xa5, 0x02, 0x00
 	                              0x37, 0xaa, 0xe3, 0x11, 0x2a, 0xdc, 0x00, 0xcd,
                                   0x30, 0x57};
 								  
-uint8_t db_mem[1024] = {0};	
-	
-volatile bool button_pressed = false;							  
+uint8_t db_mem[1024] = {0};							  
 
 /* service UUID definition */
 static at_ble_uuid_t service_uuid = {AT_BLE_UUID_128 ,
@@ -225,6 +223,7 @@ static void ble_init(void)
 	}
 }
 
+/* Define service, advertisement data set and start advertisement */
 static void beacon_init(void)
 {
 	static at_ble_handle_t service;
@@ -270,9 +269,6 @@ int main (void)
 #elif SAM0
 	system_init();
 #endif
-
-	/* Initialize the button */
-	button_init();
 	
 	/* Initialize serial console */
 	serial_console_init();
@@ -350,9 +346,4 @@ int main (void)
 			break;
 		}
 	}
-}
-
-void button_cb(void)
-{
-	button_pressed = true;
 }

@@ -66,10 +66,6 @@ bool volatile bat_notification_flag = false;
 extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
 /**@brief Initialize the service with its included service, characteristics, and descriptors
- *
- * @param[in] battery_serv gatt service information
- *
- * @return none
  */
 void bat_init_service(bat_gatt_service_handler_t *battery_serv, uint8_t *battery_value)
 {
@@ -87,7 +83,13 @@ void bat_init_service(bat_gatt_service_handler_t *battery_serv, uint8_t *battery
 	battery_serv->serv_chars.init_value = &battery_init_value;             /* value */
 	battery_serv->serv_chars.value_init_len = sizeof(uint8_t);
 	battery_serv->serv_chars.value_max_len = sizeof(uint8_t);
-	battery_serv->serv_chars.value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#if BLE_PAIR_ENABLE
+	battery_serv->serv_chars.value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+												 AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);   /* permissions */
+#else
+	battery_serv->serv_chars.value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+												 AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
+#endif
 	battery_serv->serv_chars.user_desc = NULL;           /* user defined name */
 	battery_serv->serv_chars.user_desc_len = 0;
 	battery_serv->serv_chars.user_desc_max_len = 0;
@@ -111,11 +113,6 @@ void bat_init_service(bat_gatt_service_handler_t *battery_serv, uint8_t *battery
 }
 
 /**@brief defining a initialized service 
- *
- * @param[in] battery_service gatt service information
- *
- * @return @ref AT_BLE_SUCCESS operation completed successfully
- * @return @ref AT_BLE_FAILURE Generic error.
  */
 at_ble_status_t bat_primary_service_define(bat_gatt_service_handler_t *battery_service)
 {
@@ -126,12 +123,6 @@ at_ble_status_t bat_primary_service_define(bat_gatt_service_handler_t *battery_s
 }
 
 /**@brief Function used to update characteristic value
- *
- * @param[in] battery_serv gatt service information
- * @param[in] char_len length of the new characteristic value
- * @param[in] char_data new characteristic value information
- * @return @ref AT_BLE_SUCCESS operation completed successfully
- * @return @ref AT_BLE_FAILURE Generic error.
  */
 at_ble_status_t bat_update_char_value (bat_gatt_service_handler_t *battery_serv , uint8_t char_data,bool volatile *flag)
 {
@@ -158,7 +149,8 @@ at_ble_status_t bat_update_char_value (bat_gatt_service_handler_t *battery_serv 
 	}
 	return status;
 }
-
+/**@brief function to check the client characteristic configuration value. 
+ */
 at_ble_status_t bat_char_changed_event(bat_gatt_service_handler_t *battery_serv, at_ble_characteristic_changed_t *char_handle, bool volatile *flag)
 {
 	at_ble_status_t status = AT_BLE_SUCCESS;

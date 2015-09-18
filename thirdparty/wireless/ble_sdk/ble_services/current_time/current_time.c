@@ -64,6 +64,8 @@
  *									Implementations	                               *
  **********************************************************************************/
 
+/**@brief write notification handler for Current Time Service
+ */
 at_ble_status_t tis_current_time_noti(at_ble_handle_t conn_handle, 
 									at_ble_handle_t desc_handle, uint8_t notify)
 {

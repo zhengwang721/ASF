@@ -75,18 +75,16 @@ bool volatile flag = true;
 uint8_t scan_refresh_value = 0;
 at_ble_handle_t device_conn_handle;
 
-volatile bool button_pressed = false; 
-
 /**
 * \Timer callback handler called on timer expiry
 */
-
 void timer_callback_handler(void)
 {
 	//Timer call back
 	timer_cb_done = true;
 }
 
+/* Advertisement data set and Advertisement start */
 static at_ble_status_t sps_service_advertise(void)
 {
 	uint8_t idx = 0;
@@ -125,6 +123,7 @@ static at_ble_status_t sps_service_advertise(void)
 	return AT_BLE_FAILURE;
 }
 
+/* Callback registered for AT_BLE_PAIR_DONE event from stack */
 static void ble_paired_app_event(at_ble_handle_t conn_handle)
 {
 	timer_cb_done = true;
@@ -133,6 +132,7 @@ static void ble_paired_app_event(at_ble_handle_t conn_handle)
 	LED_On(LED0);
 }
 
+/* Callback registered for AT_BLE_DISCONNECTED event from stack */
 static void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 {
 	timer_cb_done = false;
@@ -150,6 +150,7 @@ static at_ble_status_t sps_char_changed_cb(at_ble_characteristic_changed_t *char
 	return sps_char_changed_event(&sps_service_handler, char_handle, &flag);
 }
 
+/* Callback registered for AT_BLE_NOTIFICATION_CONFIRMED event from stack */
 static void sps_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_status)
 {
 	if(!notification_status->status)
@@ -161,7 +162,7 @@ static void sps_notification_confirmed_cb(at_ble_cmd_complete_event_t *notificat
 
 void button_cb(void)
 {
-	button_pressed = true;
+	/* For user usage */
 }
 
 /**

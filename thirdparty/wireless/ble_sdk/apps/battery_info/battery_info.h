@@ -82,3 +82,4 @@
 #define BAS_ADV_DATA_NAME_DATA			("ATMEL-BAS")
 
 #endif /* __BATTERY_INFO_H__ */
+

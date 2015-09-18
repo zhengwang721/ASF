@@ -108,3 +108,4 @@ at_ble_status_t	sps_char_changed_event(sps_gatt_service_handler_t *sps_service_h
 // </h>
 
 // <<< end of configuration section >>>
+

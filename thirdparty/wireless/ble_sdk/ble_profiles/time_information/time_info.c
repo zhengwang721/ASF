@@ -553,11 +553,18 @@ void time_info_write_notification_handler(void *param)
 	UNUSED(param);
 }
 
+/**
+ * @brief Application registering callback for both paired done event 
+ * \and encryption status changed event
+ */
 void time_info_register_bonding_callback(bonding_complete_t bonding_complete_cb)
 {
 	bonding_cb = bonding_complete_cb;
 }
 
+/**
+ * @brief Handler for AT_BLE_PAIR_DONE event from stack
+ */
 void time_info_pair_done_handler(at_ble_pair_done_t *pair_done_param)
 {
 	if (bonding_cb) {
@@ -566,6 +573,9 @@ void time_info_pair_done_handler(at_ble_pair_done_t *pair_done_param)
     UNUSED(pair_done_param);
 }
 
+/**
+ * @brief Application registering callback for characteristic read response received 
+ */
 void time_info_register_read_response_callback(read_response_callback_t read_response_cb)
 {
 	if (read_response_cb) {
@@ -573,6 +583,9 @@ void time_info_register_read_response_callback(read_response_callback_t read_res
 	}
 }
 
+/**
+ * @brief Handler for AT_BLE_ENCRYPTION_STATUS_CHANGED event from stack
+ */ 
 void time_info_encryption_status_changed_handler(at_ble_encryption_status_changed_t *param)
 {
 	if (bonding_cb) {
