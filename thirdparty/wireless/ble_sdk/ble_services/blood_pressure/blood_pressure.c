@@ -49,7 +49,7 @@
 /************************************************************************/
 /*							Includes									*/
 /************************************************************************/
-
+#include "ble_manager.h"
 #include "blood_pressure.h"
 
 /************************************************************************/
@@ -109,11 +109,17 @@ void blp_init_service(blp_gatt_service_handler_t *blood_pressure_serv)
 		BLP_MAX_TIME_STAMP_SIZE + BLP_MAX_PULSE_RATE_SIZE + BLP_MAX_USER_ID_SIZE+
 		BLP_MAX_MM_STATUS_SIZE;
 		
-	blood_pressure_serv->serv_chars[0].value_permissions
-		= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
-			AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);                                                                                /*
-	                                                                                                                                         *permissions
-	                                                                                                                                         **/
+	/* Permissions */
+	#if BLE_PAIR_ENABLE
+			blood_pressure_serv->serv_chars[0].value_permissions
+						= (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+							AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
+	#else
+			blood_pressure_serv->serv_chars[0].value_permissions
+						= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+							AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+	#endif
+
 	/* user defined */
 	blood_pressure_serv->serv_chars[0].user_desc = NULL;
 	blood_pressure_serv->serv_chars[0].user_desc_len = 0;
@@ -157,10 +163,19 @@ void blp_init_service(blp_gatt_service_handler_t *blood_pressure_serv)
 	BLP_MAX_TIME_STAMP_SIZE + BLP_MAX_PULSE_RATE_SIZE + BLP_MAX_USER_ID_SIZE+
 	BLP_MAX_MM_STATUS_SIZE;
 
-	/* permissions */
-	blood_pressure_serv->serv_chars[1].value_permissions
-		= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
-			AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+	#if BLE_PAIR_ENABLE
+		/* permissions */
+		blood_pressure_serv->serv_chars[1].value_permissions
+		= (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+			AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
+	#else 
+		/* permissions */
+		blood_pressure_serv->serv_chars[1].value_permissions
+				= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+					AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+	#endif
+	
+	
 	/* user defined name */
 	blood_pressure_serv->serv_chars[1].user_desc = NULL;
 	blood_pressure_serv->serv_chars[1].user_desc_len = 0;
@@ -201,10 +216,19 @@ void blp_init_service(blp_gatt_service_handler_t *blood_pressure_serv)
 
 	blood_pressure_serv->serv_chars[2].value_init_len = sizeof(uint16_t);
 	blood_pressure_serv->serv_chars[2].value_max_len = sizeof(uint16_t);
-	/* permissions */
-	blood_pressure_serv->serv_chars[2].value_permissions
-		= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
-			AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+	
+	#if BLE_PAIR_ENABLE
+			/* permissions */
+			blood_pressure_serv->serv_chars[2].value_permissions
+						= (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+							AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
+	#else
+			/* permissions */
+			blood_pressure_serv->serv_chars[2].value_permissions
+						= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+							AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+	#endif
+
 	/* user defined name */
 	blood_pressure_serv->serv_chars[2].user_desc = NULL;
 	blood_pressure_serv->serv_chars[2].user_desc_len = 0;
@@ -254,8 +278,7 @@ uint8_t blp_char_change_handler(blp_gatt_service_handler_t *blp_primary_service,
 		at_ble_characteristic_changed_t *params)
 {
 	if (params->char_handle ==
-			blp_primary_service->serv_chars[0].client_config_handle)
-	{
+			blp_primary_service->serv_chars[0].client_config_handle) {
 		//DBG_LOG("Blp char changed handler the value is %d ",params->char_new_value[0]);
 		if (params->char_new_value[0] == BLP_INDICATION) {
 			return BLP_INDICATION_ENABLE;
@@ -265,15 +288,13 @@ uint8_t blp_char_change_handler(blp_gatt_service_handler_t *blp_primary_service,
 	}
 	
 	if (params->char_handle ==
-	blp_primary_service->serv_chars[1].client_config_handle)
-	{
-		if (params->char_new_value[0] == BLP_NOTIFICATION)
-		{
+	blp_primary_service->serv_chars[1].client_config_handle) {
+		if (params->char_new_value[0] == BLP_NOTIFICATION) {
 			return BLP_NOTIFICATION_ENABLE;
-		} else if (params->char_new_value[0] == false)
-		{
+		} else if (params->char_new_value[0] == false) {
 			return BLP_NOTIFICATION_DISABLE;
 		}
 	} 
 	return 0xff;
 }
+

@@ -113,17 +113,33 @@ typedef struct gatt_anp_handler
 
 
 /**
- * @brief Enabling ANCS service 
- * @param[in] Instance of ancs data
+ * @brief invoked by the profile for enabling or disabling notifications
+ * @param[in] at_ble_handle_t connection handle
+ * @param[in] at_ble_handle_t descriptor handle
+ * @param[in] true for enabling notification false for disabling notifications
  * \note Called by the profile
  */
 at_ble_status_t anp_alert_noti(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti);
 
+/**
+ * @brief anp_alert_read_response invoked by the profile once it receives read response
+ * @param[in] at_ble_characteristic_read_response_t consists of characteristic handle value handle
+ * @param[in] gatt_anp_handler_t consists all anp service related handles
+ */
 uint8_t anp_alert_read_response (at_ble_characteristic_read_response_t *read_resp, gatt_anp_handler_t *anp_handler);
 
+/**
+ * @brief anp_alert_read invoked by ble manager
+ * @param[in] at_ble_handle_t consists of connection handle
+ * @param[in] at_ble_handle_t consists of char handle
+ */
 at_ble_status_t anp_alert_read(at_ble_handle_t conn_handle, at_ble_handle_t char_handle);
 
-at_ble_status_t anp_alert_write(at_ble_handle_t conn_handle,at_ble_handle_t desc_handle, bool noti);
+/**
+ * @brief anp_alert_notify_response invoked by the profile after receiving notifications
+ * @param[in] at_ble_notification_recieved_t consists of characteristic handle and new value
+ * @param[in] gatt_anp_handler_t anp service information in peer device
+ */
 void anp_alert_notify_response (at_ble_notification_recieved_t *notify_resp, gatt_anp_handler_t *anp_handler);
 
 #endif /* __ALERT_NOTIFICATION_H__ */

@@ -171,17 +171,15 @@ uint8_t scanned_dev_count)
 		
 		at_ble_uuid_t service_uuid;
 
-		for (index = 0; index < scanned_dev_count; index++) 
-		{			
+		for (index = 0; index < scanned_dev_count; index++) {			
 			/* Display only the connectible devices*/
-			if((scan_buffer[index].type == AT_BLE_ADV_TYPE_DIRECTED) || (scan_buffer[index].type == AT_BLE_ADV_TYPE_UNDIRECTED))
-			{				
+			if((scan_buffer[index].type == AT_BLE_ADV_TYPE_DIRECTED) 
+				|| (scan_buffer[index].type == AT_BLE_ADV_TYPE_UNDIRECTED)) {				
 				scan_device[pxp_scan_device_count++] = index;
 			}
 		}
 		
-		if (pxp_scan_device_count)
-		{		
+		if (pxp_scan_device_count) {		
 			/* Service type to be searched */
 			service_uuid.type = AT_BLE_UUID_16;
 
@@ -189,8 +187,7 @@ uint8_t scanned_dev_count)
 			service_uuid.uuid[1] = (LINK_LOSS_SERVICE_UUID >> 8);
 			service_uuid.uuid[0] = (uint8_t)LINK_LOSS_SERVICE_UUID;
 			
-			for (index = 0; index < pxp_scan_device_count; index++)
-			{
+			for (index = 0; index < pxp_scan_device_count; index++) {
 				DBG_LOG("Info: Device found address [%d]  0x%02X%02X%02X%02X%02X%02X ",
 				index,
 				scan_buffer[scan_device[index]].dev_addr.addr[5],
@@ -202,8 +199,7 @@ uint8_t scanned_dev_count)
 				
 				if (scan_info_parse(&scan_buffer[scan_device[index]], &service_uuid,
 				AD_TYPE_COMPLETE_LIST_UUID) ==
-				AT_BLE_SUCCESS)
-				{
+				AT_BLE_SUCCESS) {
 					/* Device Service UUID  matched */
 					pxp_supp_scan_index[scan_index++] = index;
 					DBG_LOG_CONT("---PXP");
@@ -211,8 +207,7 @@ uint8_t scanned_dev_count)
 			}			
 		}
 
-		if (!scan_index) 
-		{
+		if (!scan_index)  {
 			DBG_LOG("Proximity Profile supported device not found ");
 		}		
 		
@@ -220,31 +215,24 @@ uint8_t scanned_dev_count)
 		at_ble_scan_stop();
 		
 		/*Updating the index pointer to connect */
-		if(pxp_scan_device_count)
-		{  
+		if(pxp_scan_device_count) {  
 			/* Successful device found event*/
 			uint8_t deci_index = pxp_scan_device_count;
 			deci_index+=PXP_ASCII_TO_DECIMAL_VALUE;
-			do
-			{
+			do {
 				DBG_LOG("Select Index number to Connect or [s] to scan");
 				index = getchar();
 				DBG_LOG("%c", index);
 			} while (!(((index < (deci_index)) && (index >='0')) || (index == 's')));	
 			
-			if(index == 's')
-			{
+			if(index == 's') {
 				return gap_dev_scan();
-			}
-			else
-			{
+			} else {
 				index -= PXP_ASCII_TO_DECIMAL_VALUE;
 				return pxp_monitor_connect_request(scan_buffer,	scan_device[index]);
 			}			
 		}			
-	}
-	else
-	{  
+	} else {  
 		/* from no device found event*/
 		do
 		{
@@ -253,8 +241,7 @@ uint8_t scanned_dev_count)
 			DBG_LOG("%c", index);
 		} while (!(index == 's')); 
 		
-		if(index == 's')
-		{
+		if(index == 's') {
 			return gap_dev_scan();
 		}
 	}		
@@ -285,22 +272,17 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 		DBG_LOG("%c", index_value);
 	}	while (!((index_value == 'r') || (index_value == 's')));
 	
-	if(index_value == 'r')
-	{
-		if (gap_dev_connect(&pxp_reporter_address) == AT_BLE_SUCCESS)
-		{
+	if(index_value == 'r') {
+		if (gap_dev_connect(&pxp_reporter_address) == AT_BLE_SUCCESS) {
 			DBG_LOG("PXP Re-Connect request sent");		
 			pxp_connect_request_flag = true;
 			hw_timer_start(PXP_CONNECT_REQ_INTERVAL);
 			return AT_BLE_SUCCESS;
-		}
-		else
-		{
+		} else {
 			DBG_LOG("PXP Re-Connect request send failed");
 		}
 	}
-	else if(index_value == 's')
-	{
+	else if(index_value == 's') {
 		return gap_dev_scan();
 	}
 	ALL_UNUSED(disconnect);
@@ -435,25 +417,19 @@ at_ble_discovery_complete_t *discover_status)
 	DBG_LOG_DEV("discover complete operation %d and %d",discover_status->operation,discover_status->status);
 	if ((discover_status->status == DISCOVER_SUCCESS) || (discover_status->status == AT_BLE_SUCCESS)) {
 		#if defined TX_POWER_SERVICE
-		if ((txps_handle.char_discovery == DISCOVER_SUCCESS) && (discover_char_flag))
-		{
+		if ((txps_handle.char_discovery == DISCOVER_SUCCESS) && (discover_char_flag)) {
 			if (at_ble_characteristic_discover_all(
 			ble_connected_dev_info[0].handle,
 			txps_handle.start_handle,
 			txps_handle.end_handle) ==
-			AT_BLE_SUCCESS)
-			{
+			AT_BLE_SUCCESS) {
 				DBG_LOG_DEV("Tx Characteristic Discovery Started");
-			}
-			else
-			{
+			} else {
 				DBG_LOG("Tx Characteristic Discovery Failed");
 			}
 			txps_handle.char_discovery = AT_BLE_FAILURE;
 			discover_char_flag = false;
-		}
-		else if (txps_handle.char_discovery == AT_BLE_INVALID_PARAM)
-		{
+		} else if (txps_handle.char_discovery == AT_BLE_INVALID_PARAM) {
 			DBG_LOG("Tx Power Service not Found");
 			txps_handle.char_discovery = AT_BLE_INVALID_STATE;
 			discover_char_flag = false;
@@ -472,18 +448,14 @@ at_ble_discovery_complete_t *discover_status)
 			{
 				DBG_LOG_DEV(
 				"Link Loss Characteristic Discovery Started");
-			} 
-			else 
-			{
+			} else {
 				lls_handle.char_discovery = AT_BLE_FAILURE;
 				DBG_LOG(
 				"Link Loss Characteristic Discovery Failed");
 			}
 			lls_handle.char_discovery = AT_BLE_FAILURE;
 			discover_char_flag = false;
-		}
-		else if(lls_handle.char_discovery==AT_BLE_INVALID_PARAM)
-		{
+		} else if(lls_handle.char_discovery==AT_BLE_INVALID_PARAM) {
 			DBG_LOG("Link Loss Service not Available");
 			lls_handle.char_discovery = AT_BLE_INVALID_STATE;
 		}
@@ -492,14 +464,12 @@ at_ble_discovery_complete_t *discover_status)
 
 		#if defined IMMEDIATE_ALERT_SERVICE
 		if ((ias_handle.char_discovery == DISCOVER_SUCCESS) &&
-		(discover_char_flag)) 
-		{
+		(discover_char_flag)) {
 			if (at_ble_characteristic_discover_all(
 			ble_connected_dev_info[0].handle,
 			ias_handle.start_handle,
 			ias_handle.end_handle) ==
-			AT_BLE_SUCCESS) 
-			{
+			AT_BLE_SUCCESS) {
 				DBG_LOG_DEV(
 				"Immediate Characteristic Discovery Started");
 				} else {
@@ -509,24 +479,20 @@ at_ble_discovery_complete_t *discover_status)
 			}
 			ias_handle.char_discovery = AT_BLE_FAILURE;
 			discover_char_flag = false;
-		}
-		else if(ias_handle.char_discovery==AT_BLE_INVALID_PARAM)
-		{
+		} else if(ias_handle.char_discovery==AT_BLE_INVALID_PARAM) {
 			DBG_LOG("Immediate Alert Service not Available");
 			ias_handle.char_discovery = AT_BLE_INVALID_STATE;
 		}
 
 #endif
 		
-		if(lls_handle.char_discovery == AT_BLE_INVALID_STATE)
-		{
+		if(lls_handle.char_discovery == AT_BLE_INVALID_STATE) {
 			DBG_LOG("PROXIMITY PROFILE NOT SUPPORTED");
 			discover_char_flag = false;
 			at_ble_disconnect(ble_connected_dev_info[0].handle, AT_BLE_TERMINATED_BY_USER);
 		}
 		
-		if (discover_char_flag)
-		{
+		if (discover_char_flag) {
 			DBG_LOG_DEV("GATT characteristic discovery completed");
 			#if defined LINK_LOSS_SERVICE
 			/* set link loss profile to high alert upon connection */

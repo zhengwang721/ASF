@@ -62,8 +62,6 @@
 /****************************************************************************************
 *							        Globals												*
 ****************************************************************************************/
-volatile bool button_pressed = false;
-
 /** flag to check if indication has been sent successfully over the air*/
 volatile bool indication_sent = true;
 
@@ -259,6 +257,11 @@ static void app_indication_confirmation_handler(at_ble_indication_confirmed_t *p
 	}
 }
 
+/** @brief blp_value_update which will change the blood pressure measurement operations
+ *  @param[in] data to which the blood pressure parameter value to be appended
+ *  @param[in] idx index where the value has to be updated
+ *  @param[in] value_type which will determine which blood pressure parameter 
+ */
 static void blp_value_update(uint8_t *data, uint8_t idx, uint16_t value, uint8_t value_type)
 {
 	uint8_t min_val = 0, max_val = 0;
@@ -512,8 +515,6 @@ static void app_indication_handler(bool enable)
  */
 void button_cb(void)
 {
-	/* for patch download */
-	button_pressed = true;
 	/* App connected state*/
 	if (app_state) {
 		if (user_request_flag == false) {
