@@ -345,6 +345,11 @@ int main(void)
 	while (app_exec) {
 		ble_event_task();
 
+		if (start_advertisement == true || disconnect_flag == true) {
+			/* button debounce delay*/
+			delay_ms(350);
+		}
+		
 		/* Flag to start advertisement */
 		if (start_advertisement) {
 			hr_sensor_adv();
