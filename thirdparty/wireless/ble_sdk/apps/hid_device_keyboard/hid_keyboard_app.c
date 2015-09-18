@@ -134,6 +134,7 @@ static uint8_t hid_app_keyb_report_map[] =
 static void hid_disconnect_cb(at_ble_handle_t handle)
 {
 	keyb_id = 0;
+        ALL_UNUSED(handle);
 }
 
 /* Callback called when host change the control point value */
