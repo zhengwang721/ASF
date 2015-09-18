@@ -56,21 +56,18 @@
 /****************************************************************************************
 *							        Macros	                                     		*
 ****************************************************************************************/
-
+/** @brief Custom serial chat UUID length */
 #define CSC_UUID_128_LEN				(16)
-
 
 /****************************************************************************************
 *							        Structures                                     		*
 ****************************************************************************************/
-
+/** @brief Custom serial chat service info */
 typedef struct csc_serv
 {
-	at_ble_uuid_t	serv_uuid;  /**< CSC service UUID. */
-	
-	at_ble_handle_t	serv_handle; /**< CSC service Handle. */
-	
-	at_ble_characteristic_t	endpoint_chars;  /**< CSC End Point Characteristic. */
+	at_ble_uuid_t	serv_uuid; 
+	at_ble_handle_t	serv_handle; 
+	at_ble_characteristic_t	endpoint_chars;  
 }csc_serv_t;
 
 /****************************************************************************************

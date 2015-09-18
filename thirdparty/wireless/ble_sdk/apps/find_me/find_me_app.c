@@ -69,13 +69,9 @@ volatile bool app_timer_done = false;
 /** @brief Timer interval variable for applicaition task */
 static uint8_t timer_interval = INIT_TIMER_INTERVAL;
 
-uint8_t db_mem[1024];
-
-volatile bool button_pressed = false;
-
 void button_cb(void)
 {
-	button_pressed = true;
+	/* For user usage*/
 }
 
 /**

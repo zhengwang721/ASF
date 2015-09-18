@@ -52,8 +52,6 @@
  * This is the reference manual for the HID Keyboard Device Profile Application declarations
  */
 /*- Includes -----------------------------------------------------------------------*/
-#define DEBUG_LOG
-
 #include <asf.h>
 #include "platform.h"
 #include "at_ble_api.h"
@@ -205,6 +203,7 @@ static void hid_mouse_app_init(void)
 	}
 }
 
+/* Function used for HID mouse movement*/
 static bool hid_mouse_move(int8_t pos, uint8_t index_report)
 {
 	int16_t s16_newpos;

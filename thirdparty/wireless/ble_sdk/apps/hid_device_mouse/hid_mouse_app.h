@@ -53,11 +53,13 @@
 /****************************************************************************************
 *							        Macros	                                     							*
 ****************************************************************************************/
-/** @brief Mouse movement pixel position */
+/** @brief Mouse movement position */
 #define MOUSE_MOVEMENT_POS 10
 
+/** @brief Keypad debounce time */
 #define KEY_PAD_DEBOUNCE_TIME	(200)
 
+/** @brief Mouse change direction after number of attempt */
 #define MOUSE_CHANGE_DIRECTION	(5)
 
 /****************************************************************************************
@@ -67,14 +69,10 @@
 */
 typedef enum
 {
-	/// Enable boot protocol mode
 	MOUSE_RIGHT_MOVEMENT    = 1,
 	MOUSE_LEFT_MOVEMENT,
 	MOUSE_UP_MOVEMENT,
 	MOUSE_DOWN_MOVEMENT,	
 }mouse_move;
 
-/****************************************************************************************
-*							        Function                                     		*
-****************************************************************************************/
 #endif /*__HID_DEVICE_APP_H__*/

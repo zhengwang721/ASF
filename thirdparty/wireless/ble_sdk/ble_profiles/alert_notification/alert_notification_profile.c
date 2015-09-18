@@ -101,7 +101,7 @@ uint8_t start_notification = 0;
 
 /**
  * @brief register the call back for notification of ringer setting
- * @param[in]
+ * @param[in] app_connected_cb application callback function
  * @return none
  */
 void register_connected_callback(connected_callback_t app_connected_cb)
@@ -111,6 +111,8 @@ void register_connected_callback(connected_callback_t app_connected_cb)
 
 /**
  * @brief invoked by ble manager for initializing the profile
+ * @param[in] void params passed by the blemanager,app may use it or may not
+ * @return none
  */
 void anp_client_init( void *params)
 {
@@ -121,6 +123,8 @@ void anp_client_init( void *params)
 
 /**
  * @brief Initializing and allocation of memory for respective service
+ * @param[in] none
+ * @return none
  */
 void anp_info_init(void)
 {
@@ -134,7 +138,7 @@ void anp_info_init(void)
 }
 
 /**
- * @brief Triggers advertisements
+ * @brief Sets the advertisements and starts the advertisement
  */
 void anp_client_adv(void)
 {
@@ -171,6 +175,8 @@ void anp_client_adv(void)
 
 /**
  * @brief Discovering the services of Alert Notification
+ * @param[in] at_ble_connected_t which consists of connection handle
+ * @return at_ble_status_t which return AT_BLE_SUCCESS on success
  */
 at_ble_status_t anp_info_service_discover(at_ble_connected_t *conn_params)
 {	
@@ -184,8 +190,7 @@ at_ble_status_t anp_info_service_discover(at_ble_connected_t *conn_params)
 											 == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("GATT Discovery request started ");
 		return AT_BLE_SUCCESS;
-	}
-	else {
+	} else {
 		DBG_LOG("GATT Discovery request failed");
 	}	
 	
@@ -203,6 +208,8 @@ void anp_client_connected_state_handler(at_ble_connected_t *params)
 
 /**
  * @brief Discovery Complete handler invoked by ble manager
+ * @param[in] at_ble_discovery_complete_t which consists of discovery status handle and params 
+ * @return none
  */
 void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *discover_status)
 {
@@ -271,6 +278,8 @@ void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *discover
 
 /**
  * @brief Service found handler invoked by ble manager
+ * @param[in] at_ble_primary_service_found_t which consists of starting and ending handle of service
+ * @return none
  */
 void anp_client_service_found_handler(at_ble_primary_service_found_t * primary_service_params)
 {
@@ -299,6 +308,8 @@ void anp_client_service_found_handler(at_ble_primary_service_found_t * primary_s
 
 /**
  * @brief characteristic found handler invoked by ble manager
+ * @param[in] at_ble_characteristic_found_t consists the characteristic handle,value handle
+ * @return none
  */
 void anp_client_characteristic_found_handler(at_ble_characteristic_found_t *characteristic_found)
 {
@@ -408,6 +419,7 @@ void anp_client_characteristic_found_handler(at_ble_characteristic_found_t *char
 
 /**
  * @brief client descriptor found handler invoked by ble manager
+ * @param[in] at_ble_descriptor_found_t consists the descriptor handle
  */
 void anp_client_descriptor_found_handler(at_ble_descriptor_found_t *descriptor_found)
 {
@@ -442,6 +454,8 @@ void anp_client_descriptor_found_handler(at_ble_descriptor_found_t *descriptor_f
 
 /**
  * @brief disconnected event handler invoked by ble manager
+ * @param[in] at_ble_disconnected_t consists connection handle and reason
+ * return none
  */
 void anp_client_disconnected_event_handler(at_ble_disconnected_t *params)
 {
@@ -462,6 +476,8 @@ void anp_client_disconnected_event_handler(at_ble_disconnected_t *params)
 
 /**
  * @brief write response handler invoked by ble manager
+ * @param[in] at_ble_characteristic_write_response_t consists the char
+ * @return none
  */
 void anp_client_write_response_handler(at_ble_characteristic_write_response_t *params)
 {
@@ -477,6 +493,7 @@ void anp_client_write_response_handler(at_ble_characteristic_write_response_t *p
 
 /**
  * @brief invoked by ble manager on receiving notification
+ * @param[in] at_ble_notification_recieved_t consists the char handle
  */
 void anp_client_notification_handler(at_ble_notification_recieved_t *noti_read_resp)
 {
@@ -487,6 +504,7 @@ void anp_client_notification_handler(at_ble_notification_recieved_t *noti_read_r
 
 /**
  * @brief invoked by ble manager for setting the notification 
+ * @param[in] param's passed by the ble manager which may or may not be used
  */
 void anp_client_security_done_handler(void *param)
 {		
@@ -510,6 +528,8 @@ void anp_client_security_done_handler(void *param)
 /**
  * @brief Handler for enabling the notification 
  * \note Called by the ble_manager for enabling the notification in the gatt server
+ * @param[in] none
+ * @return none 
  */
 void anp_client_write_notification_handler(void )
 {
@@ -534,6 +554,8 @@ void anp_client_write_notification_handler(void )
 
 /**
  * @brief invoked by app for disabling the notifications in gatt server
+ * @param[in] none
+ * @return none
  */
 void anp_client_disable_notification(void)
 {	
@@ -550,6 +572,7 @@ void anp_client_disable_notification(void)
 
 /**
  * @brief char changed handler invoked by ble manager
+ * @param[in] at_ble_characteristic_read_response_t consists of characteristic handle value handle
  */
 void anp_client_read_response_handler(at_ble_characteristic_read_response_t *char_read_resp)
 {

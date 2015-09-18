@@ -52,8 +52,6 @@
  * This is the reference manual for the Custom Serial Chat Application declarations
  */
 /*- Includes -----------------------------------------------------------------------*/
-#define DEBUG_LOG
-
 #include <asf.h>
 #include "platform.h"
 #include "at_ble_api.h"

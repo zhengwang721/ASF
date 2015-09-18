@@ -94,7 +94,14 @@ void init_tx_power_service(gatt_service_handler_t *tx_power_serv )
 	tx_power_serv->serv_chars.value_max_len = sizeof(int8_t);
 	
 	/* permissions */
-	tx_power_serv->serv_chars.value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   
+	#if BLE_PAIR_ENABLE
+			tx_power_serv->serv_chars.value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR | 
+															AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
+			
+	#else
+			tx_power_serv->serv_chars.value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+															AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+	#endif
 	
 	/* user defined name */
 	tx_power_serv->serv_chars.user_desc = NULL;           

@@ -158,7 +158,7 @@ uint8_t lls_set_alert_value(at_ble_characteristic_changed_t *change_params, gatt
 #define LLS_INVALID_CHAR_HANDLE                 (0)
 
 /* Link Loss invalid read response value */
-#define LLS_READ_RESP_INVALID                   (0xFF)
+#define LLS_READ_RESP_INVALID                   (-1)
 
 //  <o> Link Loss Alert Value <0=> Low
 //                            <1=> Mild

@@ -66,6 +66,7 @@ pas_service_handler_t pas_service_data;
 
 static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 0x28, 0x75, 0x11, 0x6a, 0x7f, 0x7f};
 
+/* Application call backs */
 read_callback_t alert_status_read_cb;
 read_callback_t ringer_setting_read_cb;
 
@@ -185,8 +186,7 @@ at_ble_status_t pas_client_service_discovery(at_ble_connected_t *conn_params)
 {
 	at_ble_uuid_t pas_uuid;
 
-	if (conn_params->conn_status != AT_BLE_SUCCESS)
-	{
+	if (conn_params->conn_status != AT_BLE_SUCCESS) {
 		return conn_params->conn_status;
 	}
 	
@@ -198,8 +198,10 @@ at_ble_status_t pas_client_service_discovery(at_ble_connected_t *conn_params)
 	
 	pas_service_data.conn_handle = conn_params->handle;
 	
-	if(at_ble_primary_service_discover_by_uuid(conn_params->handle, GATT_DISCOVERY_STARTING_HANDLE, GATT_DISCOVERY_ENDING_HANDLE,&pas_uuid) == AT_BLE_SUCCESS)
-	{
+	if(at_ble_primary_service_discover_by_uuid(conn_params->handle, 
+												GATT_DISCOVERY_STARTING_HANDLE,
+												GATT_DISCOVERY_ENDING_HANDLE,
+												&pas_uuid) == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("GATT Discovery request started ");
 		return AT_BLE_SUCCESS;
 	} else {
@@ -220,16 +222,12 @@ void pas_client_discovery_complete_handler(at_ble_discovery_complete_t *params)
 		
 		DBG_LOG_DEV("The discovery complete operation %d status %x",discover_status.operation,discover_status.status);
 		
-		if ((discover_status.status == AT_BLE_SUCCESS) || (discover_status.status == AT_BLE_ATT_ATTRIBUTE_NOT_FOUND))
-		{
-			if(discover_status.operation == AT_BLE_DISC_BY_UUID_SVC)
-			{
-				if (pas_service_data.pas_service_info.discovery)
-				{
+		if ((discover_status.status == AT_BLE_SUCCESS) || (discover_status.status == AT_BLE_ATT_ATTRIBUTE_NOT_FOUND)) {
+			if(discover_status.operation == AT_BLE_DISC_BY_UUID_SVC) {
+				if (pas_service_data.pas_service_info.discovery) {
 					if((status = at_ble_characteristic_discover_all(pas_service_data.conn_handle,
 					pas_service_data.pas_service_info.start_handle,
-					pas_service_data.pas_service_info.end_handle)) != AT_BLE_SUCCESS)
-					{
+					pas_service_data.pas_service_info.end_handle)) != AT_BLE_SUCCESS) {
 						DBG_LOG("Fail to start characteristic discovery,reason %x",status);
 					}
 					pas_service_data.pas_service_info.discovery = 0;
@@ -237,25 +235,18 @@ void pas_client_discovery_complete_handler(at_ble_discovery_complete_t *params)
 					DBG_LOG("Phone alert status not found initiating disconnection");
 					at_ble_disconnect(pas_service_data.conn_handle,AT_BLE_TERMINATED_BY_USER);
 				}
-			}
-			else if(discover_status.operation == AT_BLE_DISC_ALL_CHAR)
-			{
-				if (pas_service_data.ringer_control_point_char.discovery)
-				{
+			} else if(discover_status.operation == AT_BLE_DISC_ALL_CHAR) {
+				if (pas_service_data.ringer_control_point_char.discovery) {
 					if((status = at_ble_descriptor_discover_all(pas_service_data.conn_handle,
 					pas_service_data.pas_service_info.start_handle,
-					pas_service_data.pas_service_info.end_handle)) != AT_BLE_SUCCESS)
-					{
+					pas_service_data.pas_service_info.end_handle)) != AT_BLE_SUCCESS) {
 						DBG_LOG("Fail to start Descriptor Discovery Failed,reason %x",status);
 					}
 					pas_service_data.ringer_control_point_char.discovery = 0;
 				}
-			}
-			else if(discover_status.operation == AT_BLE_DISC_DESC_CHAR)
-			{
+			} else if(discover_status.operation == AT_BLE_DISC_DESC_CHAR) {
 				DBG_LOG_DEV("Sending slave request");
-				if(ble_send_slave_sec_request(pas_service_data.conn_handle) != AT_BLE_SUCCESS)
-				{
+				if(ble_send_slave_sec_request(pas_service_data.conn_handle) != AT_BLE_SUCCESS) {
 					DBG_LOG_DEV("Pariring disabled");
 				}
 			}	
@@ -278,14 +269,12 @@ void pas_client_service_found_handler(at_ble_primary_service_found_t * primary_s
 	pas_service_uuid = &primary_service_params->service_uuid;
 	memcpy(&uuid,&primary_service_params->service_uuid.uuid,2);
 	DBG_LOG_DEV("service found with uuidtype %d %x",primary_service_params->service_uuid.type,uuid);
-	if	(pas_service_uuid->type == AT_BLE_UUID_16)
-	{
+	if	(pas_service_uuid->type == AT_BLE_UUID_16) {
 		uint16_t service_uuid = (uint16_t)((primary_service_params->service_uuid.uuid[0]) |	\
 		(primary_service_params->service_uuid.uuid[1] << 8));
 		
 		/* for Phone Alert Status Service*/
-		if(service_uuid == PAS_SERVICE_UUID)
-		{
+		if(service_uuid == PAS_SERVICE_UUID) {
 			pas_service_data.pas_service_info.start_handle = primary_service_params->start_handle;
 			pas_service_data.pas_service_info.end_handle   = primary_service_params->end_handle;
 		
@@ -312,8 +301,7 @@ void pas_client_characteristic_found_handler(at_ble_characteristic_found_t *char
 	(characteristic_found->char_uuid.uuid[1] << 8));
 	
 	
-	switch(charac_16_uuid)
-	{
+	switch(charac_16_uuid) {
 		/* Alert status characteristic */
 		case ALERT_STATUS_UUID :
 		{
@@ -379,16 +367,13 @@ void pas_client_characteristic_found_handler(at_ble_characteristic_found_t *char
 void pas_client_descriptor_found_handler(at_ble_descriptor_found_t *params)
 {
 		uint16_t desc_uuid;
-		if (params->desc_uuid.type == AT_BLE_UUID_16)
-		{
+		if (params->desc_uuid.type == AT_BLE_UUID_16) {
 			desc_uuid = (uint16_t)((params->desc_uuid.uuid[0]) | \
 			(params->desc_uuid.uuid[1] << 8));
 			
-			if (desc_uuid == CLIENT_CONF_CHAR_DESCRIPTOR_UUID)
-			{
+			if (desc_uuid == CLIENT_CONF_CHAR_DESCRIPTOR_UUID) {
 				if (params->desc_handle > pas_service_data.alert_status_char.char_handle &&
-					params->desc_handle < pas_service_data.ringer_setting_char.char_handle)
-				{
+					params->desc_handle < pas_service_data.ringer_setting_char.char_handle) {
 					pas_service_data.alert_status_desc.desc_handle = params->desc_handle;
 					pas_service_data.alert_status_desc.discovery = true;		
 					DBG_LOG_DEV("The alert status desc handle is %x",pas_service_data.alert_status_desc.desc_handle);
@@ -415,15 +400,11 @@ void pas_client_disconnected_event_handler(at_ble_disconnected_t *params)
 	connected_cb(0);
 	
 	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
-	APP_PAS_FAST_ADV, APP_PAS_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
-	{
+	APP_PAS_FAST_ADV, APP_PAS_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS) {
 		DBG_LOG("Advertisement start Failed");
-	}
-	else
-	{
+	} else {
 		DBG_LOG("Device in Advertisement mode");
 	}
-			
 }
 
 
@@ -436,8 +417,7 @@ void pas_client_notification_handler(at_ble_notification_recieved_t *params)
 	 at_ble_notification_recieved_t notification;
 	 memcpy((uint8_t *)&notification, params, sizeof(at_ble_notification_recieved_t));
 	 DBG_LOG_DEV("Notification received handle %x  ",notification.char_handle);
-	 if (notification.char_handle == (pas_service_data.alert_status_char.value_handle))
-	 {
+	 if (notification.char_handle == (pas_service_data.alert_status_char.value_handle)) {
 		 //Calling application notification handler for alert status characteristic
 		 alert_status_notification_cb(notification.char_value,notification.char_len);
 		 
@@ -455,10 +435,8 @@ void pas_client_notification_handler(at_ble_notification_recieved_t *params)
 void pas_client_char_write_response_handler(at_ble_characteristic_write_response_t *params)
 {
 	DBG_LOG("Write Response received");
-	if (params -> status == AT_BLE_SUCCESS)
-	{
-		if (params->char_handle == pas_service_data.alert_status_desc.desc_handle)
-		{
+	if (params -> status == AT_BLE_SUCCESS) {
+		if (params->char_handle == pas_service_data.alert_status_desc.desc_handle) {
 			DBG_LOG_DEV("Setting the notification for alert status characteristic is successfully");
 		} else if (params->char_handle == pas_service_data.ringer_setting_desc.desc_handle) {
 			DBG_LOG_DEV("Setting the notification for ringer setting is successful");
@@ -471,11 +449,9 @@ void pas_client_char_write_response_handler(at_ble_characteristic_write_response
 
 void pas_client_char_read_response_handler(at_ble_characteristic_read_response_t *params)
 {
-	if (params ->status == AT_BLE_SUCCESS)
-	{
-	DBG_LOG_DEV("offset is %d",params->char_offset);
-		if (params ->char_handle == pas_service_data.alert_status_char.value_handle)
-		{
+	if (params ->status == AT_BLE_SUCCESS) {
+		DBG_LOG_DEV("offset is %d",params->char_offset);
+		if (params ->char_handle == pas_service_data.alert_status_char.value_handle) {
 			// call application for read alert status char
 			alert_status_read_cb(params->char_value,params->char_len);
 		} else if (params ->char_handle == pas_service_data.ringer_setting_char.value_handle) {
@@ -544,13 +520,11 @@ void pas_client_write_notifications(void *param)
 {
 	at_ble_status_t status;
 	DBG_LOG("Enabling notificaitons");
-	if ((status = pas_client_enable_char_notification(0,1)) != AT_BLE_SUCCESS)
-	{
+	if ((status = pas_client_enable_char_notification(0,1)) != AT_BLE_SUCCESS) {
 		DBG_LOG("notification enabling failed");
 	}
 	
-	if ((status = pas_client_enable_char_notification(1,1)) != AT_BLE_SUCCESS)
-	{
+	if ((status = pas_client_enable_char_notification(1,1)) != AT_BLE_SUCCESS) {
 		DBG_LOG("notification enabling failed");
 	}
         ALL_UNUSED(status);

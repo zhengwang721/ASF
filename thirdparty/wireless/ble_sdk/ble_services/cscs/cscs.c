@@ -80,7 +80,12 @@ at_ble_status_t csc_serv_init(uint8_t *buf, uint16_t len)
 	csc_inst.endpoint_chars.init_value = buf;
 	csc_inst.endpoint_chars.value_init_len = len;
 	csc_inst.endpoint_chars.value_max_len = len;
-	csc_inst.endpoint_chars.value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+	/* Configure the CSC characteristic permission */
+	if(BLE_PAIR_ENABLE){
+		csc_inst.endpoint_chars.value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
+		}else{
+		csc_inst.endpoint_chars.value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+	}
 	return(at_ble_primary_service_define(&csc_inst.serv_uuid, &csc_inst.serv_handle, NULL, 0, &csc_inst.endpoint_chars, 1));
 }
 
@@ -98,7 +103,6 @@ at_ble_status_t csc_serv_send_data(uint16_t connhandle, uint8_t *databuf, uint16
 		DBG_LOG("at_ble_characteristic_value_get value get failed");
 		return status;
 	}
-	//If Notification Enabled
 	if(value == 1){
 		status = at_ble_characteristic_value_set(csc_inst.endpoint_chars.char_val_handle, databuf, datalen);
 		if (status != AT_BLE_SUCCESS){

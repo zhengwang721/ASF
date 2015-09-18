@@ -242,6 +242,7 @@ int main(void)
 		ble_event_task();
 		if (flag)
 		{
+			/* Button debounce delay */
 			delay_ms(350);
 			flag = false;
 			

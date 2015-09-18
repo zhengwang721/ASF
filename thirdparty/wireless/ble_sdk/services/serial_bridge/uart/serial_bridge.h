@@ -40,8 +40,8 @@
  * \asf_license_stop
  */
 
-#ifndef __SERIAL_BRIDGE__
-#define __SERIAL_BRIDGE__
+#ifndef __SERIAL_BRIDGE_H__
+#define __SERIAL_BRIDGE_H__
 
 /**
  * This module performs serial input/output functionalities via UART
@@ -72,4 +72,4 @@ uint8_t serial_bridge_init(void);
 void serial_bridge_task(void);
 
 
-#endif /* __SERIAL_BRIDGE__ */
+#endif /* __SERIAL_BRIDGE_H__ */

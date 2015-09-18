@@ -125,7 +125,10 @@
 /** @brief Advertisement appearance type  */
 #define ADV_DATA_APPEARANCE_TYPE		(0x19)
 
+/** @brief Advertisement data name appearance len */
 #define ADV_DATA_NAME_LEN				(9)
+
+/** @brief Advertisement data name type */
 #define ADV_DATA_NAME_TYPE				(0x09)
 
 //	<s.9>	Advertising String
@@ -133,10 +136,13 @@
 //	<id> hid_sensor_adv_data_name_data
 #define ADV_DATA_NAME_DATA				("ATMEL-HID")
 
+/** @brief Advertisement data UUID length */
 #define ADV_DATA_UUID_LEN				(2)
 
+/** @brief Advertisement type length */
 #define ADV_TYPE_LEN					(0x01)
 
+/** @brief Advertisement UUID type */
 #define ADV_DATA_UUID_TYPE				(0x03)
 
 
@@ -244,9 +250,16 @@ typedef struct
 /****************************************************************************************
 *							        Basic types                                         *
 ****************************************************************************************/
+/**@brief Report notification callback */
 typedef void (*report_ntf_callback_t)(hid_report_ntf_t *);
+
+/**@brief Boot notification callback */
 typedef void (*boot_ntf_callback_t)(hid_boot_ntf_t *);
+
+/**@brief Protocol mode notification callback */
 typedef void (*protocol_mode_ntf_callback_t)(hid_proto_mode_ntf_t *);
+
+/**@brief COntrol point notification callback */
 typedef void (*control_point_ntf_callback_t)(hid_control_mode_ntf_t *);
 
 /****************************************************************************************

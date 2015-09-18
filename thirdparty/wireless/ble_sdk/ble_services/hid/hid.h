@@ -54,14 +54,6 @@
 #define __HID_H__
 
 /****************************************************************************************
-*							        Macros	                                     		*
-****************************************************************************************/
-
-/** HID Report Characteristic UUID. */
-
-
-
-/****************************************************************************************
 *							        Enumerations	                                   	*
 ****************************************************************************************/
 /**@brief Error Code for HID service operation
@@ -104,21 +96,6 @@ typedef enum
 	/// Enable report protocol mode
 	HID_REPORT_PROTOCOL_MODE,
 }hid_proto_mode;
-
-
-/**@brief HID information flag value
-*/
-/*
-enum
-{
-	/// Device is designed to be capable of providing wake-up signal to a HID host
-	HID_REMOTE_WAKE_UP           = 0x01,
-	
-	/// Device is normally connectable
-	HIDS_NORMALLY_CONNECTABLE    = 0x02,
-}hid_info_flag;
-*/
-
 
 /**@brief HID control point
 */
@@ -274,6 +251,12 @@ void hid_boot_mousereport_update(at_ble_handle_t conn_handle, uint8_t serv_inst,
   */
 void hid_boot_keyboardreport_update(at_ble_handle_t conn_handle, uint8_t serv_inst, uint8_t *bootreport, uint16_t len);
 
+/** @brief Function to get report characteristic id.
+  * 
+   * @param[in] handle			Connection handle
+   * @param[in] serv			Service Instance
+   * @param[in] reportid		Report id
+  */
 uint8_t hid_get_reportchar(uint16_t handle, uint8_t serv, uint8_t reportid);
 
 #endif /*__HID_H__*/

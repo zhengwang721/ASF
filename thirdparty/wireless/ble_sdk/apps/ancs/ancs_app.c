@@ -58,11 +58,9 @@
 #include "at_ble_errno.h"
 #include "at_ble_trace.h"
 
-volatile bool button_pressed = false;
-
 void button_cb(void)
 {
-	button_pressed = true;
+	/** For user  */
 }
 
 int main(void)

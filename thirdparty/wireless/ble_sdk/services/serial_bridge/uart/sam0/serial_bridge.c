@@ -1,5 +1,5 @@
 /**
- * \file serial_drv.c
+ * \file serial_bridge.c
  *
  * \brief Handles Serial bridge driver functionalities
  *
@@ -79,7 +79,7 @@ static uint16_t g_txdata;
 static uint16_t rx_edata;
 
 /* === Serial Bridge IMPLEMENTATION ====================================== */
-
+/* initialize the EDBG VCOM UART */
 uint8_t serial_bridge_init(void)
 {
 	struct usart_config config_usart;
@@ -110,6 +110,7 @@ uint8_t serial_bridge_init(void)
 	return STATUS_OK;
 }
 
+/* EDBG UART Rx Callback function */
 static void serial_drv_edbg_read_cb(struct usart_module *const module)
 {
 	 do
@@ -118,6 +119,7 @@ static void serial_drv_edbg_read_cb(struct usart_module *const module)
 	 }while(serial_eread_byte(&rx_edata) == STATUS_BUSY);
 }
 
+/* EDBG UART Tx Callback function */
 static void serial_drv_edbg_write_cb(struct usart_module *const module)
 {
 	uint8_t txdata;
@@ -128,11 +130,13 @@ static void serial_drv_edbg_write_cb(struct usart_module *const module)
 	}
 }
 
+/* EDBG UART Rx Read byte function */
 static uint8_t serial_eread_byte(uint16_t* data)
 {
 	return usart_read_job(&eusart_instance, data);
 }
 
+/* Serial Bridge handler - Handles the two UART Tx and Rx data */
 void serial_bridge_task(void)
 {
 	uint8_t t_rx_data;
