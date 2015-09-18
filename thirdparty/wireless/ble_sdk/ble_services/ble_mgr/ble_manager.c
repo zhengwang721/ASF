@@ -177,6 +177,8 @@ static void ble_init(at_ble_init_config_t * args)
 	if(at_ble_init(args) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("BTLC1000 Initialization failed");
+		DBG_LOG("Please check the power and connection / hardware connector");	
+		while(1);
 	}
 }
 
