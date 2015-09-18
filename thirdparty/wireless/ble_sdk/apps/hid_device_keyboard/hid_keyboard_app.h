@@ -53,16 +53,22 @@
 /****************************************************************************************
 *							        Macros	                                     							*
 ****************************************************************************************/
+/** @brief Key pad debounce time */
 #define KEY_PAD_DEBOUNCE_TIME	(200)
 
+/** @brief Maximum text length */
 #define MAX_TEXT_LEN			(11)
 
+/** @brief Represent zero position */
 #define POSITION_ZERO			(0)
 
+/** @brief Represent six position */
 #define POSITION_SIX			(6)
 
+/** @brief Enable caps */
 #define CAPS_ON					(2)
 
+/** @brief Disable caps */
 #define CAPS_OFF				(0)
 
 /****************************************************************************************
