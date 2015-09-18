@@ -290,6 +290,18 @@ void ble_device_config(at_ble_addr_t *addr)
 	stDevConfig.max_mtu = AT_MTU_VAL_RECOMMENDED;
 	
 	enuStatus = at_ble_set_dev_config(&stDevConfig);
+        if(enuStatus != AT_BLE_SUCCESS)
+        {
+          DBG_LOG("BLE Device Config Failed");
+        }
+        else
+        {
+          if(at_ble_device_name_set("ATMEL-HTP", 9) != AT_BLE_SUCCESS)
+          {
+            DBG_LOG("BLE Device name set failed");
+          }
+        }   
+        
 	UNUSED(enuStatus);
 }
 
@@ -595,7 +607,7 @@ int main (void)
 				in this example) */
 				if(app_device_bond)
 				{
-					DBG_LOG("Bound relation exists with previously peer device. removing bonding information");
+					DBG_LOG("Bonding information exists with peer device...Hence Removing Bonding information");
 					app_device_bond = false;
 				}
 			
@@ -645,8 +657,7 @@ int main (void)
 			case AT_BLE_PAIR_KEY_REQUEST:
 			{
 				/* Passkey has fixed value in this example MSB */
-				uint8_t passkey[6]={0,0,0,0,0,0};
-				uint8_t passkey_ascii[6];
+				uint8_t passkey_ascii[6]={'1','2','3','4','5','6'};
 				uint8_t i = 0;
 	
 				at_ble_pair_key_request_t pair_key_request;
@@ -654,11 +665,6 @@ int main (void)
 				/* Display passkey */
 				if(pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_DISPLAY)
 				{
-					/* Convert passkey to ASCII format */
-					for(i=0; i<AT_BLE_PASSKEY_LEN ; i++)
-					{
-						passkey_ascii[i] = (passkey[i] + 48); 
-					}
 					DBG_LOG("please enter the following code on the other device : ");
 					for(i=0; i<AT_BLE_PASSKEY_LEN ; i++)
 					{
@@ -720,6 +726,11 @@ int main (void)
 				{
 					key_found = true;
 				}
+                                else
+                                {
+                                  DBG_LOG("Pairing information of peer device is not available."); 
+                                  DBG_LOG("Please unpair the device from peer device(mobile) settings menu and start pairing again");
+                                }
 			
 				if(at_ble_encryption_request_reply(handle,
                                                                   auth_info,
@@ -755,7 +766,6 @@ int main (void)
 			break;
 			
 			default:
-			 DBG_LOG("Unknown event received: event=0x%x", event);
 			break;
 		}
 	}
