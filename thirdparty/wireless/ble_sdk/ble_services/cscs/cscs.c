@@ -98,7 +98,6 @@ at_ble_status_t csc_serv_send_data(uint16_t connhandle, uint8_t *databuf, uint16
 		DBG_LOG("at_ble_characteristic_value_get value get failed");
 		return status;
 	}
-	//If Notification Enabled
 	if(value == 1){
 		status = at_ble_characteristic_value_set(csc_inst.endpoint_chars.char_val_handle, databuf, datalen);
 		if (status != AT_BLE_SUCCESS){
