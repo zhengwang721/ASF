@@ -82,6 +82,7 @@ static void ble_critical_alert(void)
 	}
 }
 
+/* Button Callback function */
 void button_cb(void)
 {
 	button_pressed = true;
