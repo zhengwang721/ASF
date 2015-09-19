@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="component" id="thirdparty.wireless.ble_sdk.ble_profiles.ancs" caption="BLE-Alert Notification Profile">
+	<module type="component" id="thirdparty.wireless.ble_sdk.ble_profiles.ancs" caption="BLE-ANCS Profile">
 		<info type="description" value="summary">
 		</info>
 		<build type="include-path"  value="./"/>

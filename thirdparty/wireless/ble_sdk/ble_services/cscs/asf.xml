@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="thirdparty.wireless.ble_sdk.ble_services.cscs" caption="BLE-CSCP Profile">
+	<module type="component" id="thirdparty.wireless.ble_sdk.ble_services.cscs" caption="BLE-CSCS Service">
 		<info type="description" value="summary">
 		</info>
 		<build type="include-path"  value="./"/>

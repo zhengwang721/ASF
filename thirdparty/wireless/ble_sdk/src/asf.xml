@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="thirdparty.wireless.ble_sdk.src" caption="BLE_STACK PLATFOM Interface">
+	<module type="meta" id="thirdparty.wireless.ble_sdk.src" caption="BLE_STACK Platforrm Interface">
 		<info type="description" value="summary">
 		</info>
 		<build type="c-source" value="platform.c"/>
