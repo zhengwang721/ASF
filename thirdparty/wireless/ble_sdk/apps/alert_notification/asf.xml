@@ -6,7 +6,6 @@
 		<build type="include-path" value="."/>
 		<build type="c-source" value="alert_notificaition_app.c"/>
 		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_CENTRAL_AND_PERIPHERAL"/>
-		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
 		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.alert_notification"/>
 		<device-support-alias value="ble_stack_lib_support"/>
 		<info type="gui-flag" value="move-to-root"/>

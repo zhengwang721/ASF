@@ -8,7 +8,6 @@
 		<build type="c-source" value="tip_app.c"/>
 		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_CENTRAL_AND_PERIPHERAL"/>
 		<build type="define" name="TP_ANDROID" value=""/>
-		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
 		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.time_info"/>
 		<device-support-alias value="ble_stack_lib_support"/>
 		<info type="gui-flag" value="move-to-root"/>

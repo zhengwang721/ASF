@@ -7,7 +7,6 @@
 		<build type="header-file" value="simple_broadcaster_app.h"/>
 		<build type="c-source" value="simple_broadcaster_app.c"/>
 		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_BROADCASTER"/>
-		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
 		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>
 		<device-support-alias value="ble_stack_lib_support"/>
 		

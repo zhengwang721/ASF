@@ -7,7 +7,6 @@
 		<build type="header-file" value="ancs_app.h"/>
 		<build type="c-source" value="ancs_app.c"/>
 		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_CENTRAL_AND_PERIPHERAL"/>
-		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
 		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.ancs"/>
 		<device-support-alias value="ble_stack_lib_support"/>
 		<info type="gui-flag" value="move-to-root"/>
