@@ -6,7 +6,9 @@
   		<build type="header-file"   value="blp_sensor.h"/>
   		<build type="c-source"      value="blp_sensor.c"/>
   		<build type="define" name="BLP_SENSOR" value=""/>
-  
+  		<require idref="thirdparty.wireless.ble_sdk.ble_services.device_information"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.blood_pressure"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>  
 
 		<build type="doxygen-entry-point" value="ble_stack_group"/>
 		<device-support-alias value="ble_stack_lib_support"/>

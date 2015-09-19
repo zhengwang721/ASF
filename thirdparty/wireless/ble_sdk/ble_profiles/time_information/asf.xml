@@ -6,6 +6,10 @@
   		<build type="header-file"   value="time_info.h"/>
   		<build type="c-source"      value="time_info.c"/>
   		<build type="define" name="TIP_CLIENT" value=""/>
+  		<require idref="thirdparty.wireless.ble_sdk.ble_services.current_time"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.next_dst"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.reference_time"/>
+		
 		<build type="doxygen-entry-point" value="ble_stack_group"/>
 		<device-support-alias value="ble_stack_lib_support"/>
 		

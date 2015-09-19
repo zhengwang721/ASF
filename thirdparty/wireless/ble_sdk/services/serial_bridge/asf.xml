@@ -14,7 +14,7 @@
 				<require idref="thirdparty.wireless.ble_sdk.services.serial_fifo"/>
 
 				<build type="module-config" subtype="required-header-file" value="conf_serialbridge.h"/>
-				<build type="module-config" subtype="path" value="module_config"/>
+				<build type="module-config" subtype="path" value="uart/sam0/module_config"/>
 
 				<device-support value="samd21"/>
 				<device-support value="saml21"/>
@@ -32,7 +32,7 @@
 				<require idref="common.services.delay"/>
 
 				<build type="module-config" subtype="required-header-file" value="conf_serialbridge.h"/>
-				<build type="module-config" subtype="path" value="module_config"/>
+				<build type="module-config" subtype="path" value="uart/sam/module_config"/>
 				<device-support value="samg55"/>
 			</module>
 		</select-by-device>

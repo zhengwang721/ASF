@@ -7,6 +7,7 @@
   		<build type="c-source"      value="ancs_profile.c"/>
   		<build type="define" name="ANP_CLIENT" value=""/>
   		<build type="define" name="ANP_GATT_CLIENT" value=""/>
+  		<require idref="thirdparty.wireless.ble_sdk.ble_services.ancs"/>
 
 		<build type="doxygen-entry-point" value="ble_stack_group"/>
 		<device-support-alias value="ble_stack_lib_support"/>

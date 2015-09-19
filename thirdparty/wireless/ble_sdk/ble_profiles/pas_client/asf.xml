@@ -6,6 +6,7 @@
   		<build type="header-file"   value="pas_client.h"/>
   		<build type="c-source"      value="pas_client.c"/>
   		<build type="define" name="PAS_CLIENT" value=""/>
+  		<require idref="thirdparty.wireless.ble_sdk.ble_services.phone_alert_status"/>
   		
 
 		<build type="doxygen-entry-point" value="ble_stack_group"/>

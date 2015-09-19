@@ -3,15 +3,16 @@
 		<info type="description" value="summary">
 		</info>
 		<build type="c-source" value="platform.c"/>
-  <require idref="thirdparty.wireless.ble_sdk.services.serial"/>
-  <require idref="thirdparty.wireless.ble_sdk.utils"/>
+  		<require idref="thirdparty.wireless.ble_sdk.services.serial"/>
+  		<require idref="thirdparty.wireless.ble_sdk.utils"/>
+  		
 		<build type="doxygen-entry-point" value="ble_stack_group"/>
 		<device-support-alias value="ble_stack_lib_support"/>		
 	</module>
  
- <device-alias-map name="ble_stack_lib_support">
+ 	<device-alias-map name="ble_stack_lib_support">
  		<device-support value="saml21"/>
 		<device-support value="samd21"/>
-		<device-support value="atsamg55j19"/>
+		<device-support value="samg55"/>
 	</device-alias-map>
 </asf>
