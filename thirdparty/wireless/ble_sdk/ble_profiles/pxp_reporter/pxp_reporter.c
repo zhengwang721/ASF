@@ -52,7 +52,6 @@
 #include <string.h>
 #include "at_ble_api.h"
 #include "ble_manager.h"
-#include "pxp_reporter_app.h"
 #include "pxp_reporter.h"
 #include "immediate_alert.h"
 #include "link_loss.h"

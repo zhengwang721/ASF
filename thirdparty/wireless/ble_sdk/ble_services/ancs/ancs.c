@@ -49,7 +49,6 @@
  **********************************************************************************/
 #include "at_ble_api.h"
 #include "platform.h"
-#include "ancs_profile.h"
 #include "ancs.h"
 
 
