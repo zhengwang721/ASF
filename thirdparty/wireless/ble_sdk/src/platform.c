@@ -75,7 +75,7 @@ volatile bool tx_done = false;				//	TX Transfer complete flag
 volatile uint8_t data_received = 0;			//	RX data received flag
 
 volatile int init_done = false;
-volatile int ext_wakeup_state = 1;
+volatile int ext_wakeup_state = 0;
 
 typedef enum {
 	BLE_IDLE_STATE = 0,
