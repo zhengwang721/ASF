@@ -9,6 +9,7 @@
 		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_PERIPHERAL"/>
 		<build type="define" name="ATT_DB_MEMORY" value=""/>
 		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.pxp_reporter"/>
+		<build type="distribute" subtype="user-file" value="Atmel-42517-ATBTLC1000-BluSDK-Proximity-Reporter-Getting-Started-Guide_USERGUIDE.pdf"/>
 		<device-support-alias value="ble_stack_lib_support"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>

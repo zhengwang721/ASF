@@ -220,6 +220,8 @@ static void ble_init(void)
 	if(at_ble_init(&pf_cfg) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("BTLC1000 Initialization failed");
+		DBG_LOG("Please check the power and connection / hardware connector");
+		while(1);
 	}
 }
 

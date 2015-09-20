@@ -11,6 +11,7 @@
 		<build type="define" name="ATT_DB_MEMORY" value=""/>
 		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.cscp"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/> 
+		<build type="distribute" subtype="user-file" value="Atmel-42540-ATBTLC1000BluSDK-Custom-Serial-Chat-Profile-Getting-Started-Guide_UserGuide.pdf"/>
 		<device-support-alias value="ble_stack_lib_support"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
