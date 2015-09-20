@@ -263,11 +263,11 @@ int main(void )
 			}
 			
 			app_keyb_report[2] = keyb_disp[keyb_id];
-			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, report_ntf_info.report_ID, app_keyb_report, sizeof(app_keyb_report));
-			
+			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, 1, app_keyb_report, sizeof(app_keyb_report));
+			delay_ms(20);
 			app_keyb_report[2] = 0x00;
-			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, report_ntf_info.report_ID, app_keyb_report, sizeof(app_keyb_report));	
-			
+			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, 1, app_keyb_report, sizeof(app_keyb_report));
+				
 			key_status = 0;
 			
 			if(keyb_id == MAX_TEXT_LEN){

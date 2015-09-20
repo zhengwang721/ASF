@@ -253,7 +253,7 @@ int main(void )
 	while(app_exec){
 		ble_event_task();
 		/* Check for key status */
-		if(mouse_status && report_ntf_info.ntf_conf){
+		if(mouse_status){ 
 			delay_ms(KEY_PAD_DEBOUNCE_TIME);
 			switch(mouse_pos)
 			{
@@ -314,7 +314,7 @@ int main(void )
 				}
 				break;
 			}
-			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, report_ntf_info.report_ID, (uint8_t *)app_mouse_report, sizeof(app_mouse_report));
+			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, 1, (uint8_t *)app_mouse_report, sizeof(app_mouse_report));
 			mouse_status = 0;			
     	}
 	}

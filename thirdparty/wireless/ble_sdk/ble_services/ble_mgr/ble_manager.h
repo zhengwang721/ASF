@@ -65,7 +65,11 @@
 #include "hid_device.h"
 #ifdef HID_KEYBOARD_DEVICE
 #define BLE_DEVICE_NAME				"ATMEL-HIDK"
-#define BLE_IO_CAPABALITIES			(AT_BLE_IO_CAP_KB_ONLY)
+#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
+#define BLE_IO_CAPABALITIES			(AT_BLE_IO_CAP_NO_INPUT_NO_OUTPUT)
+#define BLE_MITM_REQ				(false)
+#define BLE_BOND_REQ				(false)
+#define BLE_PAIR_ENABLE				(false)
 #endif
 
 #ifdef HID_MOUSE_DEVICE

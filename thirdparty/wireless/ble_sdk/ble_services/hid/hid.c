@@ -680,31 +680,21 @@ uint8_t hid_get_reportchar(uint16_t handle, uint8_t serv, uint8_t reportid)
 */
 void hid_serv_report_update(uint16_t conn_handle, uint8_t serv_inst, uint8_t reportid, uint8_t *report, uint16_t len)
 {
-	uint8_t value[2] = {0,0};
 	uint8_t id;
 	uint16_t status = 0;
-	uint16_t length = 2;
 	
 	id = hid_get_reportchar(conn_handle, serv_inst, reportid);
-	DBG_LOG_DEV("hid_serv_report_update : Report Characteristic ID %d", id);
-	status = at_ble_characteristic_value_get(hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->client_config_desc.handle, &value[0], &length);
-	if (status != AT_BLE_SUCCESS){
-		DBG_LOG_DEV("descriptor value get failed");
-	}
-	DBG_LOG_DEV("hid_serv_report_update : Value %d %d", value[0], value[1]);
-	//If Notification Enabled
-	if(value[0] == 1){
-		DBG_LOG_DEV("Send the report");
-		if((status = at_ble_characteristic_value_set(hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->char_val.handle, report, len))==AT_BLE_SUCCESS){
-			DBG_LOG_DEV("hid_serv_report_update : Notify Value : conn_handle %d", conn_handle);
-			//Need to check for connection handle
-			status = at_ble_notification_send(conn_handle, hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->char_val.handle);	
-			if (status != AT_BLE_SUCCESS){
-				DBG_LOG_DEV("decriptor value get failed");
-			}
-		}else{
-			DBG_LOG("Fail Reason %d", status);
+	
+	DBG_LOG_DEV("Send the report");
+	if((status = at_ble_characteristic_value_set(hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->char_val.handle, report, len))==AT_BLE_SUCCESS){
+		DBG_LOG_DEV("hid_serv_report_update : Notify Value : conn_handle %d", conn_handle);
+		//Need to check for connection handle
+		status = at_ble_notification_send(conn_handle, hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->char_val.handle);	
+		if (status != AT_BLE_SUCCESS){
+			DBG_LOG_DEV("Fail to send notification Reason %d", status);
 		}
+	}else{
+		DBG_LOG("Fail to set characteristic Value Reason %d", status);
 	}
 }
 
