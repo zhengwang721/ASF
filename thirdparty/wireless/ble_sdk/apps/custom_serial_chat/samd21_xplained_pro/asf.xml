@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="CUSTOM SERIAL CHAT Application - SAM D21 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.custom_serial_chat.samd21_xplained_pro" force-caption="true" force-description="true">
+	<project caption="Custom Serial Chat Application - SAM D21 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.custom_serial_chat.samd21_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
 		Custom Serial Chat Application for BLE stack.
 		</info>	
