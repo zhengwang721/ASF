@@ -93,12 +93,11 @@
 /* ! @{ */
 #if (SAM && !(SAMD || SAMR21 || SAML21))
 
-#if SAMG
+#if SAMG55
 	/* Configuration for console uart IRQ handler */
 	#define USART_HOST_ISR_VECT()      ISR(FLEXCOM7_Handler)
 	/* UART Host IRQ Number */
-	#define USART_HOST_IRQn            FLEXCOM7_IRQn
-	
+	#define USART_HOST_IRQn            FLEXCOM7_IRQn	
 #else
 	/* Configuration for console uart IRQ handler */
 	#define USART_HOST_ISR_VECT()      ISR(USART0_Handler)
