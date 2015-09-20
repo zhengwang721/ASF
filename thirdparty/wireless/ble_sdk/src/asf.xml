@@ -5,8 +5,6 @@
 		<build type="c-source" value="platform.c"/>
   		<require idref="thirdparty.wireless.ble_sdk.services.serial"/>
   		<require idref="thirdparty.wireless.ble_sdk.utils"/>
-
-  		<build type="distribute" subtype="license" value="../../EULA.txt"/>
   		
 		<build type="doxygen-entry-point" value="ble_stack_group"/>
 		<device-support-alias value="ble_stack_lib_support"/>		
