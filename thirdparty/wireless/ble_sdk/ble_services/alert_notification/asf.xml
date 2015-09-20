@@ -4,7 +4,8 @@
 		</info>
 		<build type="include-path"  value="./"/>
   		<build type="header-file"   value="alert_notification.h"/>
-  		<build type="c-source"      value="alert_notification.c"/>
+  		<build type="c-source"      value="alert_notification.c"/>  		
+  		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>
   		<build type="define" name="ANS_CLIENT_SERVICE" value=""/>
 
 		<build type="doxygen-entry-point" value="ble_stack_group"/>

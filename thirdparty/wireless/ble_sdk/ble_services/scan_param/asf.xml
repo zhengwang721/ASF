@@ -5,6 +5,7 @@
 		<build type="include-path"  value="./"/>
   		<build type="header-file"   value="scan_param.h"/>
   		<build type="c-source"      value="scan_param.c"/>
+  		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>
   		<build type="define" name="SCAN_PARAM_SERVICE" value=""/>
 
 		<build type="doxygen-entry-point" value="ble_stack_group"/>

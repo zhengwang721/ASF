@@ -8,15 +8,8 @@
 		<build type="c-source" value="hr_sensor_app.c"/>
 		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_PERIPHERAL"/>
 		<build type="define" name="ATT_DB_MEMORY" value=""/>
-		<require idref="thirdparty.wireless.ble_sdk.lib"/>
-		<require idref="thirdparty.wireless.ble_sdk.inc"/>
-		<require idref="thirdparty.wireless.ble_sdk.src"/>
-		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
-		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
 		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.hr_sensor"/>
-		<require idref="thirdparty.wireless.ble_sdk.ble_services.device_information"/>
-		<require idref="thirdparty.wireless.ble_sdk.ble_services.heart_rate"/>
-		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>
+		<build type="distribute" subtype="user-file" value="Atmel-42541-ATBTLC1000-BluSDK-Heart-Rate-Profile-Getting-Started-Guide_UserGuide.pdf"/>
 		<device-support-alias value="ble_stack_lib_support"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>

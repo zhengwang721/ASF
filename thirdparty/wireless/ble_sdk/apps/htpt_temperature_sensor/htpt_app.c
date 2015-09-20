@@ -62,6 +62,8 @@
 #include "conf_serialdrv.h"
 #include "at_ble_trace.h"
 
+/* BLE Device Name definitions */
+#define BLE_DEVICE_NAME				"ATMEL-HTP"
 
 /* Initialize the BLE */
 static void ble_init(void);
@@ -143,6 +145,8 @@ static void ble_init(void)
 	if(at_ble_init(&pf_cfg) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("BTLC1000 Initialization failed");
+		DBG_LOG("Please check the power and connection / hardware connector");
+		while(1);
 	}
 }
 
@@ -244,6 +248,9 @@ void ble_device_config(at_ble_addr_t *addr)
 	at_ble_addr_t address = {AT_BLE_ADDRESS_PUBLIC, {0xAB, 0xCD, 0xEF, 0xAB, 0xCD, 0xEF}};
 	at_ble_addr_t *address_ptr = addr;
 	at_ble_status_t enuStatus;
+	char *dev_name = NULL;
+
+	dev_name = (char *)BLE_DEVICE_NAME;
 	
 	
 	if (addr == NULL)
@@ -293,17 +300,18 @@ void ble_device_config(at_ble_addr_t *addr)
 	stDevConfig.max_mtu = AT_MTU_VAL_RECOMMENDED;
 	
 	enuStatus = at_ble_set_dev_config(&stDevConfig);
-        if(enuStatus != AT_BLE_SUCCESS)
-        {
-          DBG_LOG("BLE Device Config Failed");
-        }
-        else
-        {
-          if(at_ble_device_name_set("ATMEL-HTP", 9) != AT_BLE_SUCCESS)
-          {
-            DBG_LOG("BLE Device name set failed");
-          }
-        }   
+
+    if(enuStatus != AT_BLE_SUCCESS)
+    {
+      DBG_LOG("BLE Device Config Failed");
+    }
+    else
+    {
+      if(at_ble_device_name_set((uint8_t *)dev_name, strlen(dev_name)) != AT_BLE_SUCCESS)
+      {
+        DBG_LOG("BLE Device name set failed");
+      }
+    }   
         
 	UNUSED(enuStatus);
 }

@@ -9,6 +9,9 @@
   		<build type="define" name="IAS_GATT_SERVER" value=""/>
   		<build type="define" name="TXPS_GATT_SERVER" value=""/>
   		<build type="define" name="LLS_GATT_SERVER" value=""/>
+  		<require idref="thirdparty.wireless.ble_sdk.ble_services.immediate_alert"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.link_loss"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.tx_power"/>
 
 		<build type="doxygen-entry-point" value="ble_stack_group"/>
 		<device-support-alias value="ble_stack_lib_support"/>

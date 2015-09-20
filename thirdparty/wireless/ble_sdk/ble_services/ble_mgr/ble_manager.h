@@ -57,6 +57,10 @@
 #include "at_ble_api.h"
 #include "ble_utils.h"
 
+#ifndef BLE_DEVICE_ROLE
+#define BLE_DEVICE_ROLE BLE_CENTRAL_AND_PERIPHERAL
+#endif
+
 #if defined HID_DEVICE
 #include "hid_device.h"
 #ifdef HID_KEYBOARD_DEVICE
@@ -385,6 +389,11 @@ typedef enum
 /** CSC Endpoint Characteristic UUID. */
 #define CSC_ENDPOINT_CHAR_UUID			("\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa1\xbb\x5a\xfd")
 
+/** gatt discover start handle */
+#define GATT_DISCOVERY_STARTING_HANDLE	(0x0001)
+/** gatt discover end handle */
+#define GATT_DISCOVERY_ENDING_HANDLE	(0xFFFF)
+
 /* All GAP Connection Parameter defined */
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
 
@@ -423,10 +432,6 @@ typedef enum
 
 /** number of connections */ 
 #define GAP_CONNECT_PEER_COUNT			(1)
-/** gatt discover start handle */ 
-#define GATT_DISCOVERY_STARTING_HANDLE	(0x0001)
-/** gatt discover end handle */
-#define GATT_DISCOVERY_ENDING_HANDLE	(0xFFFF)
 
 /* Max number of scan device */
 //	<o> Maximum Scan Device Buffer <0-30>

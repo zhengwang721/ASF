@@ -77,6 +77,10 @@
 /** @brief Default number of characteristic. */
 #define HID_DEFAULT_CHARACTERISITC_NUM	(4)
 
+#ifndef HID_MOUSE_DEVICE
+#define HID_KEYBOARD_DEVICE
+#endif
+
 /** @brief Number of characteristic for HID. */
 #if defined HID_MOUSE_DEVICE
 /** @brief Enable by user for mouse application : Configure by user. */

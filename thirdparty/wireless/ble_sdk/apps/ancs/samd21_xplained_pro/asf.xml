@@ -15,8 +15,6 @@
 		<require idref="board.samd21_xplained_pro"/>
 		<require idref="sam0.drivers.extint"/>
 		<config name="config.sam0.drivers.tc" value="callback"/>  
-
-		<require idref="sam0.drivers.sercom.usart"/>
 		
 		<generator value="iarewarm"/>
 		<generator value="armgcc" />

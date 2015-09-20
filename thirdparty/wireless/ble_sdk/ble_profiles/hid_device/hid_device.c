@@ -54,8 +54,6 @@
 /*- Includes ---------------------------------------------------------------*/
 #include <asf.h>
 
-#include "timer_hw.h"
-#include "conf_extint.h"
 #include "string.h"
 #include "ble_utils.h"
 #include "ble_manager.h"

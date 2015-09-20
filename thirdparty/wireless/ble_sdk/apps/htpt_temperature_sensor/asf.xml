@@ -11,7 +11,8 @@
 		<require idref="thirdparty.wireless.ble_sdk.src"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
-		<!-- <build type="linker-config" subtype="flags" value="-u _printf_float" toolchain="armgcc"/> -->
+		<build type="distribute" subtype="user-file" value="Atmel-42530-ATBTLC1000-BluSDK-Health-Thermometer-Profile-HTP-Getting-Started-Guide_USERGUIDE.pdf"/>
+		
 		<device-support-alias value="ble_stack_lib_support"/>		
 		<info type="keyword" value="technology">
 			<keyword value="Wireless"/>

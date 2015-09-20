@@ -104,16 +104,9 @@
 #define ANP_ADV_DATA_SERVSOLICITATION_128UUID_TYPE (0x15)
 #define ANP_ANCS_SERVICE_UUID                       ("\xD0\x00\x2D\x12\x1E\x4B\x0F\xA4\x99\x4E\xCE\xB5\x31\xF4\x05\x79")
 
-/**@brief ANCS Service Solicitation Info*/
-#define ANCS_SERV_UUID	 "\xD0\x00\x2D\x12\x1E\x4B\x0F\xA4\x99\x4E\xCE\xB5\x31\xF4\x05\x79"
 #define ANCS_CHAR_NOTIFICATION_SOURCE_UUID "\xBD\x1D\xA2\x99\xE6\x25\x58\x8C\xD9\x42\x01\x63\x0D\x12\xBF\x9F"
 #define ANCS_CHAR_CONTROL_POINT "\xD9\xD9\xAA\xFD\xBD\x9B\x21\x98\xA8\x49\xE1\x45\xF3\xD8\xD1\x69"
 #define ANCS_CHAR_DATA_SOURCE "\xFB\x7B\x7C\xCE\x6A\xB3\x44\xBE\xB5\x4B\xD6\x24\xE9\xC6\xEA\x22"
-
-/**@brief UUID Type & Length*/
-#define UUID_16BIT_LEN							(2)
-#define UUID_32BIT_LEN							(4)
-#define UUID_128BIT_LEN							(16)
 
 /**@brief No of Characteristics and No of decriptors */
 #define ANP_MAX_CHARACTERISTIC					(3)
@@ -141,27 +134,6 @@
  *									types			                               *
  **********************************************************************************/
 /* Typedef for alert notification profile */
-typedef struct ancs_prf{
-	
-	/*Instance for ANCS*/
-	at_ble_primary_service_found_t ancs_serv;
-	
-	/*Instance for notification source characteristic*/
-	at_ble_characteristic_found_t notification_source_char;
-	
-	/*Instance for control point characteristic*/
-	at_ble_characteristic_found_t control_point_char;
-	
-	/*Instance for data source characteristic*/
-	at_ble_characteristic_found_t data_source_char;
-	
-	/*Instance for notification source descriptor*/
-	at_ble_descriptor_found_t notification_source_desc;
-	
-	/*Instance for notification source descriptor*/
-	at_ble_descriptor_found_t data_source_desc;
-	
-}ancs_prf_t;
 
 /* Typedef for alert notification profile */
 typedef struct app_anp_data{

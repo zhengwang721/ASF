@@ -14,7 +14,6 @@
 		<build type="header-file" value="conf_timer.h"/>
   
 		<require idref="board.samg55_xplained_pro"/>
-  		<require idref="sam.drivers.pio"/>
 		
 		<generator value="iarewarm"/>
 		<generator value="armgcc" />
