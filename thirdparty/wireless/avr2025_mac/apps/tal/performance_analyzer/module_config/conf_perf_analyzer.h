@@ -43,14 +43,19 @@
 #ifndef CONF_PERF_ANALYZER_H_INCLUDED
 #define CONF_PERF_ANALYZER_H_INCLUDED
 
-#define DEFAULT_CHANNEL_OFFSET           (0)
 
-#define DEFAULT_PAGE            (0)
+/* Application default channel 
+     = DEFAULT_CHANNEL_OFFSET = 1 for Sub-GHz transceivers;
+     = 11 + DEFAULT_CHANNEL_OFFSET = 12 for 2.4 GHz transceivers 
+*/
+#define DEFAULT_CHANNEL_OFFSET           (1)
 
-#define ENABLE_ANTENNA_1                          (1)
-#define ENABLE_ANTENNA_2                          (2)
+#define DEFAULT_PAGE                     (0)
 
-#define ANT_SELECTED					ENABLE_ANTENNA_1
-#define ENABLE_ANTENNA_DIVERSITY	            false
+#define ENABLE_ANTENNA_1                 (1)
+#define ENABLE_ANTENNA_2                 (2)
+
+#define ANT_SELECTED					 ENABLE_ANTENNA_1
+#define ENABLE_ANTENNA_DIVERSITY	     false
 
 #endif /* CONF_PERF_ANALYZER_H_INCLUDED */

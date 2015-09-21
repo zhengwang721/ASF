@@ -43,15 +43,15 @@
 #ifndef CONF_PERF_ANALYZER_H_INCLUDED
 #define CONF_PERF_ANALYZER_H_INCLUDED
 
-
+/* Application default channel = 11 + DEFAULT_CHANNEL_OFFSET = 21 */
 #define DEFAULT_CHANNEL_OFFSET           (10)
 
-#define DEFAULT_PAGE            (0)
+#define DEFAULT_PAGE                     (0)
 
-#define ENABLE_ANTENNA_1                          (1)
-#define ENABLE_ANTENNA_2                          (2)
+#define ENABLE_ANTENNA_1                 (1)
+#define ENABLE_ANTENNA_2                 (2)
 
-#define ANT_SELECTED					ENABLE_ANTENNA_1
-#define ENABLE_ANTENNA_DIVERSITY	            false
+#define ANT_SELECTED					 ENABLE_ANTENNA_1
+#define ENABLE_ANTENNA_DIVERSITY	     false
 
 #endif /* CONF_PERF_ANALYZER_H_INCLUDED */

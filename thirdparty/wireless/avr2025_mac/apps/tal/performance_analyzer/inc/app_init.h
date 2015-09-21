@@ -77,7 +77,6 @@
 /* Version of the software */
 #define FIRMWARE_VERSION   3.2
 
-
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 #define DEFAULT_CHANNEL         (DEFAULT_CHANNEL_OFFSET)
 #else
