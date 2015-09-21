@@ -1,0 +1,22 @@
+<asf xmlversion="1.0">
+	<module type="meta" id="thirdparty.wireless.ble_smart_sdk.profile" caption="BLE_SMART_STACK profile">
+		<info type="description" value="summary">
+		</info>
+
+		<build type="include-path"  value="./"/>
+		<build type="header-file"   value="ancs.h"/>
+		<build type="header-file"   value="ancs_profile.h"/>
+		<build type="header-file"   value="ble_manager.h"/>
+		<build type="header-file"   value="ble_utils.h"/>
+
+		<build type="c-source"   value="ancs.c"/>
+		<build type="c-source"   value="ancs_profile.c"/>
+		<build type="c-source"   value="ble_manager.c"/>
+
+
+		<build type="doxygen-entry-point" value="ble_smart_stack_group"/>
+		<device-support-alias value="ble_smart_stack_lib_support"/>
+		
+	</module>
+ 
+</asf>

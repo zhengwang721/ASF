@@ -1,0 +1,26 @@
+<asf xmlversion="1.0">
+	<project caption="iBeacon APPLICATION - SAMB11" id="thirdparty.wireless.ble_smart_sdk.apps.ancs" force-caption="true" force-description="true">
+		<info type="description" value="summary">
+		ANCS APPLICATION for SAMB11 BLE SMART 
+		</info>	
+		<build type="include-path" value="."/>
+		<build type="c-source" value="ancs_app.c"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.lib"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.inc"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.src"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.profile"/>
+		<require idref="sam0.drivers.uart"/>
+		<!--require idref="thirdparty.wireless.ble_smart_sdk.services"/-->
+		
+
+		<require idref="board.samb11_xplained_pro"/>
+		<build type="header-file" value="conf_board.h"/>
+
+
+		<generator value="iarewarm"/>
+		<generator value="armgcc" />
+		<generator value="as5_arm" />
+		<generator value="doxygen"/>
+		<device-support value="atsamb11g18a"/>
+	</project>
+</asf>
