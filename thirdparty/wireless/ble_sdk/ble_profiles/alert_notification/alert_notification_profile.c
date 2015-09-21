@@ -270,7 +270,7 @@ void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *discover
 					DBG_LOG_DEV("Sending slave security request");
 				}
 				else {
-					DBG_LOG("Security Procedure not successfull");
+					DBG_LOG_DEV("Security Procedure not successfull");
 				}
 			}
 		}
@@ -432,17 +432,17 @@ void anp_client_descriptor_found_handler(at_ble_descriptor_found_t *descriptor_f
 				if ((descriptor_found->desc_handle > anp_handle.new_alert_char_handle ) &&
 					 (descriptor_found->desc_handle < (anp_handle.new_alert_char_handle+2))) {
 					DBG_LOG("Client characteristic configuration descriptor for"
-							"new alert discovered");
+							" new alert discovered");
 					DBG_LOG_DEV("\r\nClient Characteristics Configuration "
 								"Descriptor for new alert found"
-								"handle %x",descriptor_found->desc_handle);
+								" handle %x",descriptor_found->desc_handle);
 					anp_handle.new_alert_desc_handle = descriptor_found->desc_handle;
 				} else if ((descriptor_found->desc_handle > 
 							anp_handle.unread_alert_char_handle) && 
 							(descriptor_found->desc_handle < 
 							(anp_handle.unread_alert_char_handle+2))) {
 					DBG_LOG("Client characteristic configuration descriptor"
-							"for new alert discovered");
+							" for unread alert discovered");
 					DBG_LOG_DEV("\r\nClient Characteristics Configuration "
 								"Descriptor for unread alert status found "
 								"handle %x ",descriptor_found->desc_handle);
