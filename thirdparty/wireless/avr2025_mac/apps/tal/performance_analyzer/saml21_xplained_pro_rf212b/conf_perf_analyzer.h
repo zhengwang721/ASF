@@ -3,7 +3,7 @@
  *
  * \brief Module configuration
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,7 +43,7 @@
 #ifndef CONF_PERF_ANALYZER_H_INCLUDED
 #define CONF_PERF_ANALYZER_H_INCLUDED
 
-/* Application default channel = 0 + DEFAULT_CHANNEL_OFFSET = 1 */
+/* Application default channel = DEFAULT_CHANNEL_OFFSET = 1 */
 #define DEFAULT_CHANNEL_OFFSET           (1)
 
 #define DEFAULT_PAGE                     (0)
