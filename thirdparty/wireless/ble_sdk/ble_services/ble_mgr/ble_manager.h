@@ -120,6 +120,7 @@
 #if defined ANP_SIG_CLIENT
 #include "alert_notification_profile.h"
 #define BLE_DEVICE_NAME				"ATMEL-ANP"
+#define BLE_PAIR_ENABLE					(false)
 #endif /* ANP_SIG_CLIENT */
 
 #if defined PAS_CLIENT
@@ -160,7 +161,7 @@ static inline at_ble_status_t BLE_UNUSED2_VAR(void *param1_var, void *param2_var
 #define LE_LIMITED_DISCOVERABLE_MODE  ((uint8_t) 1 << 0)
 #define LE_GENERAL_DISCOVERABLE_MODE  ((uint8_t) 1 << 1)
 #define BREDR_NOT_SUPPORTED			  ((uint8_t) 1 << 2)
-#define	LE_BREDR_CAPABLE_CONTROLLER     ((uint8_t) 1 << 3)
+#define	LE_BREDR_CAPABLE_CONTROLLER   ((uint8_t) 1 << 3)
 #define LE_BREDR_CAPABLE_HOST		  ((uint8_t) 1 << 4)
 
 /** @brief Length of Adv data types*/
