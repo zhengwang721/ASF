@@ -543,7 +543,7 @@ uint16_t hid_service_dbreg(uint8_t inst, uint8_t *report_type, uint8_t *report_i
 	uint8_t id = 0;
 	uint8_t descval[2] = {0, 0};
 	at_ble_status_t status;
-		
+	delay_ms(1);	
 	if( at_ble_service_define(&hid_inst[inst].serv) == AT_BLE_SUCCESS){
 		DBG_LOG_DEV("Define service handle %d", hid_inst[inst].serv.handle);
 		for(; id<report_num; id++){

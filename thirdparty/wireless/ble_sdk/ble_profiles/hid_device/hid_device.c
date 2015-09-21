@@ -100,7 +100,7 @@ void hid_prf_init(void *param)
 			hid_serv_def_init(serv_num);
 		}
 	}
-	
+	delay_ms(1);
 	/* Initialize the dis */
 	dis_init_service(&device_info_serv);
 	

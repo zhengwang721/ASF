@@ -174,6 +174,8 @@ int main(void)
 	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
+
+	delay_ms(1);
 	
 	/* Initialize the dis */
 	dis_init_service(&dis_service_handler);
