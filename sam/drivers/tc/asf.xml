@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam.drivers.tc" caption="TC - Timer Counter">
 		<info type="description" value="summary">
-			The Timer Counter includes three identical 32-bit Timer Counter channels. Each channel can be independently programmed to perform a wide range of functions including frequency measurement, event counting, interval measurement, pulse generation, delay timing and pulse width modulation.
+			The Timer Counter includes several identical 16-bit or 32-bit Timer Counter channels. Each channel can be independently programmed to perform a wide range of functions including frequency measurement, event counting, interval measurement, pulse generation, delay timing and pulse width modulation.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Timers"/>
@@ -16,7 +16,7 @@
 	<module type="driver" id="sam.drivers.tc.appnote" caption="TC - Timer Counter">
 		<info type="description" value="summary">
 			Driver for the TC (Timer Counter).
-			The Timer Counter includes three identical 32-bit Timer Counter channels.
+			The Timer Counter includes several identical 16-bit or 32-bit Timer Counter channels.
 			Each channel can be independently programmed to perform a wide range of
 			functions including frequency measurement, event counting, interval
 			measurement, pulse generation, delay timing and pulse width modulation.
