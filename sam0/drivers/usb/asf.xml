@@ -173,7 +173,7 @@
 		<device-support value="samr21" />
 		<device-support value="samda1"/>
 		<device-support value="samd11"/>
-		<device-support value="samd21"/>
+		<device-support value="saml21"/>
 		<device-support value="saml22"/>
 
 		<generator value="doxygen-module-v2" default-mcu="unspecified-saml21"/>
