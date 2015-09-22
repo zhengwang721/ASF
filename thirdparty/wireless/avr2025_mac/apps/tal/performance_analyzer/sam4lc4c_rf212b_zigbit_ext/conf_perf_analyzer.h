@@ -43,7 +43,8 @@
 #ifndef CONF_PERF_ANALYZER_H_INCLUDED
 #define CONF_PERF_ANALYZER_H_INCLUDED
 
-/* Application default channel = DEFAULT_CHANNEL_OFFSET = 1 */
+/* Application default channel (DEFAULT_CHANNEL in app_init.h)
+= 0(First Channel in Sub-GHz) + DEFAULT_CHANNEL_OFFSET */
 #define DEFAULT_CHANNEL_OFFSET           (1)
 
 #define DEFAULT_PAGE                     (0)

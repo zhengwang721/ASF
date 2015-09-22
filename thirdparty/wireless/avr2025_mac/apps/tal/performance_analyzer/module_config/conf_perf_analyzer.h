@@ -44,9 +44,9 @@
 #define CONF_PERF_ANALYZER_H_INCLUDED
 
 
-/* Application default channel 
-     = DEFAULT_CHANNEL_OFFSET = 1 for Sub-GHz transceivers;
-     = 11 + DEFAULT_CHANNEL_OFFSET = 12 for 2.4 GHz transceivers 
+/* Application default channel(DEFAULT_CHANNEL in app_init.h) 
+     = 0(First channel in Sub-GHz)+ DEFAULT_CHANNEL_OFFSET;
+     = 11(First channel in 2.4 GHz) + DEFAULT_CHANNEL_OFFSET;
 */
 #define DEFAULT_CHANNEL_OFFSET           (1)
 
