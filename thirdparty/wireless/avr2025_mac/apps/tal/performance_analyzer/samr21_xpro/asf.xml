@@ -14,6 +14,7 @@
 		<build type="header-file" value="conf_hw_timer.h"/>
 		<build type="header-file" value="conf_sio2host.h"/>
 		<build type="header-file" value="conf_trx_access.h"/>
+		<build type="header-file" value="conf_perf_analyzer.h"/>
 
 		<config name="config.sam0.drivers.sercom.spi" value="polled"/>
 		<config name="config.sam0.drivers.sercom.usart" value="callback"/>

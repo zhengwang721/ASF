@@ -13,7 +13,7 @@
 		<build type="header-file" value="conf_hw_timer.h"/>
 		<build type="header-file" value="conf_spi_master.h"/>
 		<build type="header-file" value="conf_trx_access.h"/>
-
+        <build type="header-file" value="conf_perf_analyzer.h"/>
 		<config name="config.spi_master_type" value="standard_spi"/>
 		<config name="config.thirdparty.wireless.addons.sio2host" value="uart"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="at86rf212b"/>

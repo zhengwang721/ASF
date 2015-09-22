@@ -14,7 +14,7 @@
 		<build type="header-file" value="conf_usb.h"/>
 		<build type="header-file" value="conf_sio2host.h"/>
 		<build type="header-file" value="conf_trx_access.h"/>
-
+        <build type="header-file" value="conf_perf_analyzer.h"/>
 		<build type="define"   name="HIGH_DATA_RATE_SUPPORT"              value=""/>
 
 		<config name="config.thirdparty.wireless.addons.sio2host" value="usb"/>

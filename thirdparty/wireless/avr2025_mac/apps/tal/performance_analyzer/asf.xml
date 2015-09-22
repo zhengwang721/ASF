@@ -40,8 +40,13 @@
 		<build type="header-file" value="inc/performance_main.h"/>
 		<build type="header-file" value="inc/user_interface.h"/>
 		<build type="include-path" value="inc/"/>
+		
 		<build type="header-file" value="conf_common_sw_timer.h"/>
 		<build type="include-path" value="."/>
+		
+		
+		<build type="module-config" subtype="required-header-file" value="conf_perf_analyzer.h"/>
+		<build type="module-config" subtype="path" value="module_config"/>
 		
 		<require idref="thirdparty.wireless.avr2025_mac.includes"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.tfa"/>
