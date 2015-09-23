@@ -4,10 +4,21 @@
 		Simple BTLC1000 Connection application for BLE stack
 		</info>
 		<build type="c-source" value="main.c"/>
+		<build type="define" name="ATT_DB_MEMORY" value="1"/>
 		<require idref="thirdparty.wireless.ble_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_sdk.inc"/>
 		<require idref="thirdparty.wireless.ble_sdk.src"/>
+		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
+		<build type="distribute" subtype="user-file" value="Atmel-42527-ATBTLC1000-BluSDK-iBeacon-Getting-Started-Guide_USERGUIDE.pdf"/>
 		<device-support-alias value="ble_stack_lib_support"/>
+				
+		<info type="keyword" value="technology">
+			<keyword value="Wireless"/>
+			<keyword value="Communication"/>
+			<keyword value="BLE"/>
+			<keyword value="Bluetooth"/>
+		</info>
+
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

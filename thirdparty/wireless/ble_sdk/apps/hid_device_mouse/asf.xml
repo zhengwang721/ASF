@@ -1,0 +1,17 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="BLE-HID Mouse Application" id="thirdparty.wireless.ble_sdk.apps.hid_device_mouse">
+		<info type="description" value="summary">
+		BLE-HID Mouse Application for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="hid_mouse_app.h"/>
+		<build type="c-source" value="hid_mouse_app.c"/>
+        <build type="define" name="BLE_DEVICE_ROLE" value="BLE_PERIPHERAL"/>
+        <build type="define" name="HID_MOUSE_DEVICE" value=""/>
+        <build type="define" name="ATT_DB_MEMORY" value=""/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.hid_device"/>
+		<build type="distribute" subtype="user-file" value="Atmel-42524-ATBTLC1000-BluSDK-HID-Mouse-Device-Getting-Started-Guide_USERGUIDE.pdf"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

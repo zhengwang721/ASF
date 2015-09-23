@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="TIME INFORMATION PROFILE" id="thirdparty.wireless.ble_sdk.apps.time_information">
+		<info type="description" value="summary">
+		Time Information App for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="tip_app.h"/>
+		<build type="c-source" value="tip_app.c"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_CENTRAL_AND_PERIPHERAL"/>
+		<build type="define" name="TP_ANDROID" value=""/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.time_info"/>
+		<build type="distribute" subtype="user-file" value="Atmel-42520-ATBTLC1000-BluSDK-Time-Information-Getting-Started-Guide_USERGUIDE.pdf"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

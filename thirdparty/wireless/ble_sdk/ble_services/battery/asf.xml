@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+	<module type="component" id="thirdparty.wireless.ble_sdk.ble_services.battery" caption="BLE-Battery Services">
+		<info type="description" value="summary">
+		</info>
+		<build type="include-path"  value="./"/>
+  		<build type="header-file"   value="battery.h"/>
+  		<build type="c-source"      value="battery.c"/>
+  		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>
+  		<build type="define" name="BATTERY_SERVICE" value=""/>
+
+		<build type="doxygen-entry-point" value="ble_stack_group"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		
+	</module>
+ 
+</asf>

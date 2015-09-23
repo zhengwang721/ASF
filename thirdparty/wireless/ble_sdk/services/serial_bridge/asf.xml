@@ -1,0 +1,39 @@
+<asf xmlversion="1.0">
+		<select-by-device id="thirdparty.wireless.ble_sdk.services.serial_bridge">
+			<module type="meta" id="thirdparty.wireless.ble_sdk.services.serial_bridge#0"     caption="uart">
+				<info type="description" value="summary">
+				UART Driver
+				</info>
+				<build type="c-source"      value="uart/sam0/serial_bridge.c"/>
+				<build type="header-file"   value="uart/serial_bridge.h"/>
+				<build type="include-path"  value="uart/"/>
+
+				<require idref="sam0.drivers.sercom.usart"/>
+				<require idref="sam0.utils"/>
+				<require idref="common2.services.delay"/>
+				<require idref="thirdparty.wireless.ble_sdk.services.serial_fifo"/>
+
+				<build type="module-config" subtype="required-header-file" value="conf_serialbridge.h"/>
+				<build type="module-config" subtype="path" value="uart/sam0/module_config"/>
+
+				<device-support value="samd21"/>
+				<device-support value="saml21"/>
+			</module>
+   <module type="meta" id="thirdparty.wireless.ble_sdk.services.serial_bridge#1"     caption="uart">
+				<info type="description" value="summary">
+				UART Driver
+				</info>
+				<build type="c-source"      value="uart/sam/serial_bridge.c"/>
+				<build type="header-file"   value="uart/serial_bridge.h"/>
+				<build type="include-path"  value="uart/"/>
+				<require idref="thirdparty.wireless.ble_sdk.services.serial_fifo"/>
+
+				<require idref="sam.drivers.usart"/>
+				<require idref="common.services.delay"/>
+
+				<build type="module-config" subtype="required-header-file" value="conf_serialbridge.h"/>
+				<build type="module-config" subtype="path" value="uart/sam/module_config"/>
+				<device-support value="samg55"/>
+			</module>
+		</select-by-device>
+</asf>
