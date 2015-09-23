@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Alert Notification Client Application - SAM L21 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.alert_notification.saml21_xplained_pro_b" force-caption="true" force-description="true">
+	<project caption="Alert Notification Client Application - SAM L21 Xplained Pro SAML21J18B" id="thirdparty.wireless.ble_sdk.apps.alert_notification.saml21_xplained_pro_b" force-caption="true" force-description="true">
 		<info type="description" value="summary">
 		Alert Notification Client Application for BLE stack.
 		</info>	
