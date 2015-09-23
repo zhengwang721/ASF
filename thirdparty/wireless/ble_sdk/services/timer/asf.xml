@@ -13,11 +13,12 @@
 				<build type="include-path"  value="."/>
     
 				<build type="module-config" subtype="required-header-file" value="conf_timer.h"/>
-				<build type="module-config" subtype="path" value="module_config"/> 
+				<build type="module-config" subtype="path" value="sam0/module_config"/> 
 				
 				<require idref="sam0.drivers.tc"/>
   
 				<device-support value="samd21"/>
+				<device-support value="saml21"/>
 			</module>
 			<module type="meta" id="thirdparty.wireless.ble_sdk.services.timer#timer#1"     caption="Timer">
 				<info type="description" value="summary">
@@ -30,7 +31,7 @@
 				<require idref="sam.drivers.tc"/>
     
 				<build type="module-config" subtype="required-header-file" value="conf_timer.h"/>
-				<build type="module-config" subtype="path" value="module_config"/>
+				<build type="module-config" subtype="path" value="sam/module_config"/>
 				<device-support value="samg55"/>
 			</module>
 		</select-by-device>

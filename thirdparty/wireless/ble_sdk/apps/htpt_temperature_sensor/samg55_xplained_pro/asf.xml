@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="HTPT Temperature Sensor application - SAM G55 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.htpt_temperature_sensor.samg55_xplained_pro" force-caption="true" force-description="true">
+	<project caption="HTP - Temperature Sensor Application - SAM G55 Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.htpt_temperature_sensor.samg55_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		HTPT Temperature Sensor application for BLE stack.
+		HTP - Temperature Sensor Application for BLE stack.
 		</info>	
 		<require idref="thirdparty.wireless.ble_sdk.apps.htpt_temperature_sensor"/>
 		<build type="include-path" value="."/>
@@ -12,15 +12,16 @@
 		<build type="header-file" value="conf_extint.h"/>
 		<build type="header-file" value="conf_timer.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
+		<build type="define" name="BOARD_AT30TSE_DEVICE_ADDR" value="0x0"/>
 
-  <require idref="common.components.memory.eeprom.at30tse75x"/>
+ 		<require idref="common.components.memory.eeprom.at30tse75x"/>
 		<require idref="board.samg55_xplained_pro"/>
-  <require idref="sam.drivers.pio"/>
 
 		<generator value="iarewarm"/>
 		<generator value="armgcc" />
 		<generator value="as5_arm" />
-  <config name="config.compiler.armgcc.create_aux" value="no"/>
+		<generator value="doxygen"/>
+  		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
 		<device-support value="atsamg55j19"/>

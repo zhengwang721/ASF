@@ -1,0 +1,26 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="BLE Direct Test Mode[DTM] Application" id="thirdparty.wireless.ble_sdk.apps.ble_dtm">
+		<info type="description" value="summary">
+		BLE Direct Test Mode[DTM] Application
+		</info>
+		<build type="c-source" value="main.c"/>
+		<require idref="thirdparty.wireless.ble_sdk.lib"/>
+		<require idref="thirdparty.wireless.ble_sdk.inc"/>
+		<require idref="thirdparty.wireless.ble_sdk.src"/>
+		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
+		<require idref="thirdparty.wireless.ble_sdk.services.serial_bridge"/>
+		<build type="define" name="DTM_MODE" value=""/>
+		<build type="distribute" subtype="user-file" value="Atmel-42522-ATBTLC1000-BluSDK-Direct-Test-Mode-Getting-Started-Guide_USERGUIDE.pdf"/>
+		<build type="distribute" subtype="user-file" value="Atmel-42536-ATBTLC1000-Wireless-Composer_UserGuide.pdf"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		
+		<info type="keyword" value="technology">
+			<keyword value="Wireless"/>
+			<keyword value="Communication"/>
+			<keyword value="BLE"/>
+			<keyword value="Bluetooth"/>
+		</info>
+
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

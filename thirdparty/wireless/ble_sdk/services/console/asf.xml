@@ -9,7 +9,7 @@
 				<build type="include-path"  value="."/>
 
 				<build type="module-config" subtype="required-header-file" value="conf_console.h"/>
-				<build type="module-config" subtype="path" value="module_config"/> 
+				<build type="module-config" subtype="path" value="sam0/module_config"/>
 
 				<require idref="sam0.drivers.sercom.usart"/>
 				<require idref="sam0.utils"/>
@@ -17,6 +17,7 @@
 				<require idref="sam0.utils.stdio.stdio_serial"/>
 
 				<device-support value="samd21"/>
+				<device-support value="saml21"/>
 			</module>
    <module type="meta" id="thirdparty.wireless.ble_sdk.services.console#1"     caption="console">
 				<info type="description" value="summary">
@@ -29,7 +30,7 @@
 				<require idref="common.utils.stdio.stdio_serial"/>
 
 				<build type="module-config" subtype="required-header-file" value="conf_uart_serial.h"/>
-				<build type="module-config" subtype="path" value="module_config"/>
+				<build type="module-config" subtype="path" value="sam/module_config"/>
 				<device-support value="samg55"/>
 			</module>
 		</select-by-device>

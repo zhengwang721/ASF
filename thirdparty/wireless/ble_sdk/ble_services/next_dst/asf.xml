@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+	<module type="component" id="thirdparty.wireless.ble_sdk.ble_services.next_dst" caption="BLE-Next DST Change Services">
+		<info type="description" value="summary">
+		</info>
+		<build type="include-path"  value="./"/>
+  		<build type="header-file"   value="next_dst.h"/>
+  		<build type="c-source"      value="next_dst.c"/>
+  		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>
+		<build type="define" name="NEXT_DST_SERVICE" value=""/>
+		
+		<build type="doxygen-entry-point" value="ble_stack_group"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		
+	</module>
+ 
+</asf>

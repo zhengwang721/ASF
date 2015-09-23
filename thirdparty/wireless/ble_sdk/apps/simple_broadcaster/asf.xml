@@ -1,0 +1,22 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="SIMPLE BROADCASTER APPLICATION" id="thirdparty.wireless.ble_sdk.apps.simple_broadcaster">
+		<info type="description" value="summary">
+		Simple Broadcaster application for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="simple_broadcaster_app.h"/>
+		<build type="c-source" value="simple_broadcaster_app.c"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_BROADCASTER"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>
+		<build type="distribute" subtype="user-file" value="Atmel-42528-ATBTLC1000-BluSDK-Simple-Broadcaster-Getting-Started-Guide_UserGuide.pdf"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		
+		<info type="keyword" value="technology">
+			<keyword value="Wireless"/>
+			<keyword value="Communication"/>
+			<keyword value="BLE"/>
+			<keyword value="Bluetooth"/>
+		</info>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

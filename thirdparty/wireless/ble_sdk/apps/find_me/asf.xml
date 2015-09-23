@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="FIND ME APPLICATION" id="thirdparty.wireless.ble_sdk.apps.find_me">
+		<info type="description" value="summary">
+		Find Me application for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="find_me_app.h"/>
+		<build type="c-source" value="find_me_app.c"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_PERIPHERAL"/>
+		<build type="define" name="ATT_DB_MEMORY" value=""/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.find_me_target"/>
+		<build type="distribute" subtype="user-file" value="Atmel-42545-ATBTLC1000-BluSDK-Find-Me-Getting-Started-Guide_UserGuide.pdf"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>
