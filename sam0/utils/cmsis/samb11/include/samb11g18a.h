@@ -209,10 +209,11 @@ void TIMER0_Handler      ( void );
  */
 
 #define __CM0_REV               0
-#define __NVIC_PRIO_BITS        2
-#define __Vendor_SysTickConfig  0
 #define __FPU_PRESENT           0
+#define PIO_API                 samb
+#define __Vendor_SysTickConfig  0
 #define LITTLE_ENDIAN           1
+#define __NVIC_PRIO_BITS        2
 /*
  * \brief CMSIS includes
  */

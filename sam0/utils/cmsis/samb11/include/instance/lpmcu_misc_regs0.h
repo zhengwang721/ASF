@@ -69,7 +69,6 @@
 #define REG_LPMCU_MISC_REGS0_RTYPE_PAD_0         (0x4000b054U) /**< \brief (LPMCU_MISC_REGS0) Controls the RTYPE (Pull Level) pad value for LPMCU Pads (0 = Pull Up) */
 #define REG_LPMCU_MISC_REGS0_PINMUX_SEL_3        (0x4000b068U) /**< \brief (LPMCU_MISC_REGS0) Pinmux select for LP_SIP_0, LP_SIP_1, LP_SIP_2, LP_SIP_3, LP_SIP_4 */
 #define REG_LPMCU_MISC_REGS0_ISHAPE_PAD_3        (0x4000b06cU) /**< \brief (LPMCU_MISC_REGS0) Controls the ISHAPE pad value for LPMCU SIP Pads */
-#define REG_LPMCU_MISC_REGS0_PINMUX_SEL_4        (0x4000b080U) /**< \brief (LPMCU_MISC_REGS0) Pinmux select for LP_GPIO_24 */
 #define REG_LPMCU_MISC_REGS0_LPMCU_CONTROL_2     (0x4000b090U) /**< \brief (LPMCU_MISC_REGS0) Misc control for the LPMCU */
 #define REG_LPMCU_MISC_REGS0_SPIFLASH_VDDIO_CTRL (0x4000b0a0U) /**< \brief (LPMCU_MISC_REGS0) Control for VDDIO of SPI FLASH */
 #define REG_LPMCU_MISC_REGS0_SPIFLASH_BYPASS     (0x4000b0a4U) /**< \brief (LPMCU_MISC_REGS0) SPI FLASH Bypass */
@@ -92,7 +91,6 @@
 #define REG_LPMCU_MISC_REGS0_MEGA_MUX_IO_SEL_3   (0x4000b1acU) /**< \brief (LPMCU_MISC_REGS0) Mega Mux Selection (Refer to Mega_Mux_IO Spreadsheet) */
 #define REG_LPMCU_MISC_REGS0_MEGA_MUX_IO_SEL_4   (0x4000b1b0U) /**< \brief (LPMCU_MISC_REGS0) Mega Mux Selection (Refer to Mega_Mux_IO Spreadsheet) */
 #define REG_LPMCU_MISC_REGS0_MEGA_MUX_IO_SEL_5   (0x4000b1b4U) /**< \brief (LPMCU_MISC_REGS0) Mega Mux Selection (Refer to Mega_Mux_IO Spreadsheet) */
-#define REG_LPMCU_MISC_REGS0_MEGA_MUX_IO_SEL_6   (0x4000b1b8U) /**< \brief (LPMCU_MISC_REGS0) Mega Mux Selection (Refer to Mega_Mux_IO Spreadsheet) */
 #define REG_LPMCU_MISC_REGS0_SENS_ADC_CLK_CTRL   (0x4000b1c0U) /**< \brief (LPMCU_MISC_REGS0) Clock control for the Sensor ADC */
 #define REG_LPMCU_MISC_REGS0_SENS_ADC_RAW_STATUS (0x4000b1c4U) /**< \brief (LPMCU_MISC_REGS0) Raw Status from the Sensor ADC */
 #define REG_LPMCU_MISC_REGS0_SENS_ADC_CH0_DATA   (0x4000b1c8U) /**< \brief (LPMCU_MISC_REGS0) Current data of the Sensor ADC for Channel 0 */
@@ -184,7 +182,6 @@
 #define REG_LPMCU_MISC_REGS0_RTYPE_PAD_0         (*(RwReg  *)0x4000b054U) /**< \brief (LPMCU_MISC_REGS0) Controls the RTYPE (Pull Level) pad value for LPMCU Pads (0 = Pull Up) */
 #define REG_LPMCU_MISC_REGS0_PINMUX_SEL_3        (*(RwReg  *)0x4000b068U) /**< \brief (LPMCU_MISC_REGS0) Pinmux select for LP_SIP_0, LP_SIP_1, LP_SIP_2, LP_SIP_3, LP_SIP_4 */
 #define REG_LPMCU_MISC_REGS0_ISHAPE_PAD_3        (*(RwReg  *)0x4000b06cU) /**< \brief (LPMCU_MISC_REGS0) Controls the ISHAPE pad value for LPMCU SIP Pads */
-#define REG_LPMCU_MISC_REGS0_PINMUX_SEL_4        (*(RwReg8 *)0x4000b080U) /**< \brief (LPMCU_MISC_REGS0) Pinmux select for LP_GPIO_24 */
 #define REG_LPMCU_MISC_REGS0_LPMCU_CONTROL_2     (*(RwReg8 *)0x4000b090U) /**< \brief (LPMCU_MISC_REGS0) Misc control for the LPMCU */
 #define REG_LPMCU_MISC_REGS0_SPIFLASH_VDDIO_CTRL (*(RwReg8 *)0x4000b0a0U) /**< \brief (LPMCU_MISC_REGS0) Control for VDDIO of SPI FLASH */
 #define REG_LPMCU_MISC_REGS0_SPIFLASH_BYPASS     (*(RwReg8 *)0x4000b0a4U) /**< \brief (LPMCU_MISC_REGS0) SPI FLASH Bypass */
@@ -207,7 +204,6 @@
 #define REG_LPMCU_MISC_REGS0_MEGA_MUX_IO_SEL_3   (*(RwReg  *)0x4000b1acU) /**< \brief (LPMCU_MISC_REGS0) Mega Mux Selection (Refer to Mega_Mux_IO Spreadsheet) */
 #define REG_LPMCU_MISC_REGS0_MEGA_MUX_IO_SEL_4   (*(RwReg  *)0x4000b1b0U) /**< \brief (LPMCU_MISC_REGS0) Mega Mux Selection (Refer to Mega_Mux_IO Spreadsheet) */
 #define REG_LPMCU_MISC_REGS0_MEGA_MUX_IO_SEL_5   (*(RwReg  *)0x4000b1b4U) /**< \brief (LPMCU_MISC_REGS0) Mega Mux Selection (Refer to Mega_Mux_IO Spreadsheet) */
-#define REG_LPMCU_MISC_REGS0_MEGA_MUX_IO_SEL_6   (*(RwReg8 *)0x4000b1b8U) /**< \brief (LPMCU_MISC_REGS0) Mega Mux Selection (Refer to Mega_Mux_IO Spreadsheet) */
 #define REG_LPMCU_MISC_REGS0_SENS_ADC_CLK_CTRL   (*(RwReg  *)0x4000b1c0U) /**< \brief (LPMCU_MISC_REGS0) Clock control for the Sensor ADC */
 #define REG_LPMCU_MISC_REGS0_SENS_ADC_RAW_STATUS (*(RoReg  *)0x4000b1c4U) /**< \brief (LPMCU_MISC_REGS0) Raw Status from the Sensor ADC */
 #define REG_LPMCU_MISC_REGS0_SENS_ADC_CH0_DATA   (*(RoReg16*)0x4000b1c8U) /**< \brief (LPMCU_MISC_REGS0) Current data of the Sensor ADC for Channel 0 */

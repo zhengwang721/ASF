@@ -84,7 +84,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t VALUE:32;                  /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } TIMER_VALUE_Type;
@@ -93,13 +93,16 @@ typedef union {
 #define TIMER_VALUE_OFFSET                    0x04           /**<  \brief (TIMER_VALUE offset) Current Value */
 #define TIMER_VALUE_RESETVALUE                0x00ul         /**<  \brief (TIMER_VALUE reset_value) Current Value */
 
-#define TIMER_VALUE_MASK                      0x00ul    /**< \brief (TIMER_VALUE) Register MASK */
+#define TIMER_VALUE_VALUE_Pos                 0  /**< \brief (TIMER_VALUE)                                                */
+#define TIMER_VALUE_VALUE_Msk                 (0xFFFFFFFFul << TIMER_VALUE_VALUE_Pos)
+#define TIMER_VALUE_VALUE(value)              (TIMER_VALUE_VALUE_Msk & ((value) << TIMER_VALUE_VALUE_Pos))  
+#define TIMER_VALUE_MASK                      0xFFFFFFFFul    /**< \brief (TIMER_VALUE) Register MASK */
 
 /* -------- TIMER_RELOAD : (TIMER Offset: 0x08) (R/W  32) Reload Value -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t RELOAD:32;                 /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } TIMER_RELOAD_Type;
@@ -108,13 +111,17 @@ typedef union {
 #define TIMER_RELOAD_OFFSET                   0x08           /**<  \brief (TIMER_RELOAD offset) Reload Value */
 #define TIMER_RELOAD_RESETVALUE               0x00ul         /**<  \brief (TIMER_RELOAD reset_value) Reload Value */
 
-#define TIMER_RELOAD_MASK                     0x00ul    /**< \brief (TIMER_RELOAD) Register MASK */
+#define TIMER_RELOAD_RELOAD_Pos               0  /**< \brief (TIMER_RELOAD)                                               */
+#define TIMER_RELOAD_RELOAD_Msk               (0xFFFFFFFFul << TIMER_RELOAD_RELOAD_Pos)
+#define TIMER_RELOAD_RELOAD(value)            (TIMER_RELOAD_RELOAD_Msk & ((value) << TIMER_RELOAD_RELOAD_Pos))  
+#define TIMER_RELOAD_MASK                     0xFFFFFFFFul    /**< \brief (TIMER_RELOAD) Register MASK */
 
 /* -------- TIMER_INTSTATUSCLEAR : (TIMER Offset: 0x0c) (R/W  8) Timer Interrupt, write 1 to clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  INTSTATUSCLEAR:1;          /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } TIMER_INTSTATUSCLEAR_Type;
@@ -123,7 +130,9 @@ typedef union {
 #define TIMER_INTSTATUSCLEAR_OFFSET           0x0C           /**<  \brief (TIMER_INTSTATUSCLEAR offset) Timer Interrupt, write 1 to clear */
 #define TIMER_INTSTATUSCLEAR_RESETVALUE       0x00ul         /**<  \brief (TIMER_INTSTATUSCLEAR reset_value) Timer Interrupt, write 1 to clear */
 
-#define TIMER_INTSTATUSCLEAR_MASK             0x00ul    /**< \brief (TIMER_INTSTATUSCLEAR) Register MASK */
+#define TIMER_INTSTATUSCLEAR_INTSTATUSCLEAR_Pos 0  /**< \brief (TIMER_INTSTATUSCLEAR)                                       */
+#define TIMER_INTSTATUSCLEAR_INTSTATUSCLEAR   (0x1ul << TIMER_INTSTATUSCLEAR_INTSTATUSCLEAR_Pos)  
+#define TIMER_INTSTATUSCLEAR_MASK             0x01ul    /**< \brief (TIMER_INTSTATUSCLEAR) Register MASK */
 
 /* -------- TIMER_PID4 : (TIMER Offset: 0xfd0) (R/  8) Peripheral ID Register 4 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -151,7 +160,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  PID5:8;                    /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } TIMER_PID5_Type;
@@ -160,13 +169,16 @@ typedef union {
 #define TIMER_PID5_OFFSET                     0xFD4          /**<  \brief (TIMER_PID5 offset) Peripheral ID Register 5 */
 #define TIMER_PID5_RESETVALUE                 0x00ul         /**<  \brief (TIMER_PID5 reset_value) Peripheral ID Register 5 */
 
-#define TIMER_PID5_MASK                       0x00ul    /**< \brief (TIMER_PID5) Register MASK */
+#define TIMER_PID5_PID5_Pos                   0  /**< \brief (TIMER_PID5)                                                 */
+#define TIMER_PID5_PID5_Msk                   (0xFFul << TIMER_PID5_PID5_Pos)
+#define TIMER_PID5_PID5(value)                (TIMER_PID5_PID5_Msk & ((value) << TIMER_PID5_PID5_Pos))  
+#define TIMER_PID5_MASK                       0xFFul    /**< \brief (TIMER_PID5) Register MASK */
 
 /* -------- TIMER_PID6 : (TIMER Offset: 0xfd8) (R/  8) Peripheral ID Register 6 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  PID6:8;                    /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } TIMER_PID6_Type;
@@ -175,13 +187,16 @@ typedef union {
 #define TIMER_PID6_OFFSET                     0xFD8          /**<  \brief (TIMER_PID6 offset) Peripheral ID Register 6 */
 #define TIMER_PID6_RESETVALUE                 0x00ul         /**<  \brief (TIMER_PID6 reset_value) Peripheral ID Register 6 */
 
-#define TIMER_PID6_MASK                       0x00ul    /**< \brief (TIMER_PID6) Register MASK */
+#define TIMER_PID6_PID6_Pos                   0  /**< \brief (TIMER_PID6)                                                 */
+#define TIMER_PID6_PID6_Msk                   (0xFFul << TIMER_PID6_PID6_Pos)
+#define TIMER_PID6_PID6(value)                (TIMER_PID6_PID6_Msk & ((value) << TIMER_PID6_PID6_Pos))  
+#define TIMER_PID6_MASK                       0xFFul    /**< \brief (TIMER_PID6) Register MASK */
 
 /* -------- TIMER_PID7 : (TIMER Offset: 0xfdc) (R/  8) Peripheral ID Register 7 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  PID7:8;                    /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } TIMER_PID7_Type;
@@ -190,7 +205,10 @@ typedef union {
 #define TIMER_PID7_OFFSET                     0xFDC          /**<  \brief (TIMER_PID7 offset) Peripheral ID Register 7 */
 #define TIMER_PID7_RESETVALUE                 0x00ul         /**<  \brief (TIMER_PID7 reset_value) Peripheral ID Register 7 */
 
-#define TIMER_PID7_MASK                       0x00ul    /**< \brief (TIMER_PID7) Register MASK */
+#define TIMER_PID7_PID7_Pos                   0  /**< \brief (TIMER_PID7)                                                 */
+#define TIMER_PID7_PID7_Msk                   (0xFFul << TIMER_PID7_PID7_Pos)
+#define TIMER_PID7_PID7(value)                (TIMER_PID7_PID7_Msk & ((value) << TIMER_PID7_PID7_Pos))  
+#define TIMER_PID7_MASK                       0xFFul    /**< \brief (TIMER_PID7) Register MASK */
 
 /* -------- TIMER_PID0 : (TIMER Offset: 0xfe0) (R/  8) Peripheral ID Register 0 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -283,7 +301,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CID0:8;                    /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } TIMER_CID0_Type;
@@ -292,13 +310,16 @@ typedef union {
 #define TIMER_CID0_OFFSET                     0xFF0          /**<  \brief (TIMER_CID0 offset) Component ID Register 0 */
 #define TIMER_CID0_RESETVALUE                 0x0Dul         /**<  \brief (TIMER_CID0 reset_value) Component ID Register 0 */
 
-#define TIMER_CID0_MASK                       0x00ul    /**< \brief (TIMER_CID0) Register MASK */
+#define TIMER_CID0_CID0_Pos                   0  /**< \brief (TIMER_CID0)                                                 */
+#define TIMER_CID0_CID0_Msk                   (0xFFul << TIMER_CID0_CID0_Pos)
+#define TIMER_CID0_CID0(value)                (TIMER_CID0_CID0_Msk & ((value) << TIMER_CID0_CID0_Pos))  
+#define TIMER_CID0_MASK                       0xFFul    /**< \brief (TIMER_CID0) Register MASK */
 
 /* -------- TIMER_CID1 : (TIMER Offset: 0xff4) (R/  8) Component ID Register 1 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CID1:8;                    /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } TIMER_CID1_Type;
@@ -307,13 +328,16 @@ typedef union {
 #define TIMER_CID1_OFFSET                     0xFF4          /**<  \brief (TIMER_CID1 offset) Component ID Register 1 */
 #define TIMER_CID1_RESETVALUE                 0xF0ul         /**<  \brief (TIMER_CID1 reset_value) Component ID Register 1 */
 
-#define TIMER_CID1_MASK                       0x00ul    /**< \brief (TIMER_CID1) Register MASK */
+#define TIMER_CID1_CID1_Pos                   0  /**< \brief (TIMER_CID1)                                                 */
+#define TIMER_CID1_CID1_Msk                   (0xFFul << TIMER_CID1_CID1_Pos)
+#define TIMER_CID1_CID1(value)                (TIMER_CID1_CID1_Msk & ((value) << TIMER_CID1_CID1_Pos))  
+#define TIMER_CID1_MASK                       0xFFul    /**< \brief (TIMER_CID1) Register MASK */
 
 /* -------- TIMER_CID2 : (TIMER Offset: 0xff8) (R/  8) Component ID Register 2 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CID2:8;                    /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } TIMER_CID2_Type;
@@ -322,13 +346,16 @@ typedef union {
 #define TIMER_CID2_OFFSET                     0xFF8          /**<  \brief (TIMER_CID2 offset) Component ID Register 2 */
 #define TIMER_CID2_RESETVALUE                 0x05ul         /**<  \brief (TIMER_CID2 reset_value) Component ID Register 2 */
 
-#define TIMER_CID2_MASK                       0x00ul    /**< \brief (TIMER_CID2) Register MASK */
+#define TIMER_CID2_CID2_Pos                   0  /**< \brief (TIMER_CID2)                                                 */
+#define TIMER_CID2_CID2_Msk                   (0xFFul << TIMER_CID2_CID2_Pos)
+#define TIMER_CID2_CID2(value)                (TIMER_CID2_CID2_Msk & ((value) << TIMER_CID2_CID2_Pos))  
+#define TIMER_CID2_MASK                       0xFFul    /**< \brief (TIMER_CID2) Register MASK */
 
 /* -------- TIMER_CID3 : (TIMER Offset: 0xffc) (R/  8) Component ID Register 3 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CID3:8;                    /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } TIMER_CID3_Type;
@@ -337,7 +364,10 @@ typedef union {
 #define TIMER_CID3_OFFSET                     0xFFC          /**<  \brief (TIMER_CID3 offset) Component ID Register 3 */
 #define TIMER_CID3_RESETVALUE                 0xB1ul         /**<  \brief (TIMER_CID3 reset_value) Component ID Register 3 */
 
-#define TIMER_CID3_MASK                       0x00ul    /**< \brief (TIMER_CID3) Register MASK */
+#define TIMER_CID3_CID3_Pos                   0  /**< \brief (TIMER_CID3)                                                 */
+#define TIMER_CID3_CID3_Msk                   (0xFFul << TIMER_CID3_CID3_Pos)
+#define TIMER_CID3_CID3(value)                (TIMER_CID3_CID3_Msk & ((value) << TIMER_CID3_CID3_Pos))  
+#define TIMER_CID3_MASK                       0xFFul    /**< \brief (TIMER_CID3) Register MASK */
 
 /** \brief TIMER hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

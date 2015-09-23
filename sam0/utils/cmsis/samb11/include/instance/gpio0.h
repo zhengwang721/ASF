@@ -50,8 +50,6 @@
 #define REG_GPIO0_DATAOUT             (0x40010004U) /**< \brief (GPIO0) Data Output Register Value */
 #define REG_GPIO0_OUTENSET            (0x40010010U) /**< \brief (GPIO0) Output Enable Set */
 #define REG_GPIO0_OUTENCLR            (0x40010014U) /**< \brief (GPIO0) Output Enable Clear */
-#define REG_GPIO0_ALTFUNCSET          (0x40010018U) /**< \brief (GPIO0) Alternative Function Set */
-#define REG_GPIO0_ALTFUNCCLR          (0x4001001cU) /**< \brief (GPIO0) Alternative Function Clear */
 #define REG_GPIO0_INTENSET            (0x40010020U) /**< \brief (GPIO0) Interrupt Enable Set */
 #define REG_GPIO0_INTENCLR            (0x40010024U) /**< \brief (GPIO0) Interrupt Enable Clear */
 #define REG_GPIO0_INTTYPESET          (0x40010028U) /**< \brief (GPIO0) Interrupt Type Set */
@@ -76,8 +74,6 @@
 #define REG_GPIO0_DATAOUT             (*(RwReg16*)0x40010004U) /**< \brief (GPIO0) Data Output Register Value */
 #define REG_GPIO0_OUTENSET            (*(RwReg16*)0x40010010U) /**< \brief (GPIO0) Output Enable Set */
 #define REG_GPIO0_OUTENCLR            (*(RwReg16*)0x40010014U) /**< \brief (GPIO0) Output Enable Clear */
-#define REG_GPIO0_ALTFUNCSET          (*(RwReg16*)0x40010018U) /**< \brief (GPIO0) Alternative Function Set */
-#define REG_GPIO0_ALTFUNCCLR          (*(RwReg16*)0x4001001cU) /**< \brief (GPIO0) Alternative Function Clear */
 #define REG_GPIO0_INTENSET            (*(RwReg16*)0x40010020U) /**< \brief (GPIO0) Interrupt Enable Set */
 #define REG_GPIO0_INTENCLR            (*(RwReg16*)0x40010024U) /**< \brief (GPIO0) Interrupt Enable Clear */
 #define REG_GPIO0_INTTYPESET          (*(RwReg16*)0x40010028U) /**< \brief (GPIO0) Interrupt Type Set */
