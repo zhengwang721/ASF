@@ -128,9 +128,8 @@ static void configure_dualtimer_callback(void)
 	dualtimer_register_callback(DUALTIMER_TIMER2, dualtimer_callback2);
 	//! [setup_register_callback]
 
-	/* For A4, timer0 IRQ is 14 */
 	//! [enable_IRQ]
-	NVIC_EnableIRQ(10);
+	NVIC_EnableIRQ(DUALTIMER0_IRQn);
 	//! [enable_IRQ]
 }
 //! [setup]

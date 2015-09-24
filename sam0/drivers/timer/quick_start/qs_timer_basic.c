@@ -96,9 +96,8 @@ static void configure_timer_callback(void)
 	timer_register_callback(timer_callback);
 	//! [setup_register_callback]
 	
-	/* For A4, timer0 IRQ is 9 */
 	//! [enable_IRQ]
-	NVIC_EnableIRQ(9);
+	NVIC_EnableIRQ(TIMER0_IRQn);
 	//! [enable_IRQ]
 }
 //! [setup]

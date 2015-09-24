@@ -200,11 +200,7 @@ void aon_sleep_timer_init(const struct aon_sleep_timer_config *config)
 
 	if (config->mode == AON_SLEEP_TIMER_RELOAD_MODE) {
 		/* Reload counter will start here */
-#ifndef CHIPVERSION_B0
-		(*(volatile uint32_t *)(0x4000D008)) = config->counter;
-#else
 		AON_SLEEP_TIMER0->SINGLE_COUNT_DURATION.reg = config->counter;
-#endif
 		AON_SLEEP_TIMER0->CONTROL.reg = AON_SLEEP_TIMER_CONTROL_RELOAD_ENABLE;
 	} else {
 		/* Single counter will start here */
