@@ -14,7 +14,7 @@
 		<build type="header-file" value="conf_usb.h"/>
 		<build type="header-file" value="conf_sio2host.h"/>
 		<build type="header-file" value="conf_trx_access.h"/>
-
+        <build type="header-file" value="conf_perf_analyzer.h"/>
 		<config name="config.spi_master_type" value="standard_spi"/>
 		<require idref="board.xmega_a3bu_xplained"/>
 		<config name="config.thirdparty.wireless.addons.sio2host" value="usb"/>
