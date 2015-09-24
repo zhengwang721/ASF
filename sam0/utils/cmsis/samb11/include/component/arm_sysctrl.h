@@ -57,7 +57,7 @@
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t ACTLR:32;                  /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } ARM_SYSCTRL_ACTLR_Type;
@@ -66,7 +66,10 @@ typedef union {
 #define ARM_SYSCTRL_ACTLR_OFFSET              0x08           /**<  \brief (ARM_SYSCTRL_ACTLR offset) Auxiliary Control Register (not implemented) */
 #define ARM_SYSCTRL_ACTLR_RESETVALUE          0x00ul         /**<  \brief (ARM_SYSCTRL_ACTLR reset_value) Auxiliary Control Register (not implemented) */
 
-#define ARM_SYSCTRL_ACTLR_MASK                0x00ul    /**< \brief (ARM_SYSCTRL_ACTLR) Register MASK */
+#define ARM_SYSCTRL_ACTLR_ACTLR_Pos           0  /**< \brief (ARM_SYSCTRL_ACTLR)                                          */
+#define ARM_SYSCTRL_ACTLR_ACTLR_Msk           (0xFFFFFFFFul << ARM_SYSCTRL_ACTLR_ACTLR_Pos)
+#define ARM_SYSCTRL_ACTLR_ACTLR(value)        (ARM_SYSCTRL_ACTLR_ACTLR_Msk & ((value) << ARM_SYSCTRL_ACTLR_ACTLR_Pos))  
+#define ARM_SYSCTRL_ACTLR_MASK                0xFFFFFFFFul    /**< \brief (ARM_SYSCTRL_ACTLR) Register MASK */
 
 /* -------- ARM_SYSCTRL_SYST_CSR : (ARM_SYSCTRL Offset: 0x10) (R/W  32) SysTick Control and Status Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -110,7 +113,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t SYST_RVR:24;               /*!< bit:  0..23                                           */
+    uint32_t :8;                        /*!< bit: 24..31  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } ARM_SYSCTRL_SYST_RVR_Type;
@@ -119,13 +123,17 @@ typedef union {
 #define ARM_SYSCTRL_SYST_RVR_OFFSET           0x14           /**<  \brief (ARM_SYSCTRL_SYST_RVR offset) SysTick Reload Value Register */
 #define ARM_SYSCTRL_SYST_RVR_RESETVALUE       0x00ul         /**<  \brief (ARM_SYSCTRL_SYST_RVR reset_value) SysTick Reload Value Register */
 
-#define ARM_SYSCTRL_SYST_RVR_MASK             0x00ul    /**< \brief (ARM_SYSCTRL_SYST_RVR) Register MASK */
+#define ARM_SYSCTRL_SYST_RVR_SYST_RVR_Pos     0  /**< \brief (ARM_SYSCTRL_SYST_RVR)                                       */
+#define ARM_SYSCTRL_SYST_RVR_SYST_RVR_Msk     (0xFFFFFFul << ARM_SYSCTRL_SYST_RVR_SYST_RVR_Pos)
+#define ARM_SYSCTRL_SYST_RVR_SYST_RVR(value)  (ARM_SYSCTRL_SYST_RVR_SYST_RVR_Msk & ((value) << ARM_SYSCTRL_SYST_RVR_SYST_RVR_Pos))  
+#define ARM_SYSCTRL_SYST_RVR_MASK             0xFFFFFFul    /**< \brief (ARM_SYSCTRL_SYST_RVR) Register MASK */
 
 /* -------- ARM_SYSCTRL_SYST_CVR : (ARM_SYSCTRL Offset: 0x18) (R/W  32) SysTick Current Value Register (Any Write Clears to 0) -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t SYST_CVR:24;               /*!< bit:  0..23                                           */
+    uint32_t :8;                        /*!< bit: 24..31  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } ARM_SYSCTRL_SYST_CVR_Type;
@@ -134,7 +142,10 @@ typedef union {
 #define ARM_SYSCTRL_SYST_CVR_OFFSET           0x18           /**<  \brief (ARM_SYSCTRL_SYST_CVR offset) SysTick Current Value Register (Any Write Clears to 0) */
 #define ARM_SYSCTRL_SYST_CVR_RESETVALUE       0x00ul         /**<  \brief (ARM_SYSCTRL_SYST_CVR reset_value) SysTick Current Value Register (Any Write Clears to 0) */
 
-#define ARM_SYSCTRL_SYST_CVR_MASK             0x00ul    /**< \brief (ARM_SYSCTRL_SYST_CVR) Register MASK */
+#define ARM_SYSCTRL_SYST_CVR_SYST_CVR_Pos     0  /**< \brief (ARM_SYSCTRL_SYST_CVR)                                       */
+#define ARM_SYSCTRL_SYST_CVR_SYST_CVR_Msk     (0xFFFFFFul << ARM_SYSCTRL_SYST_CVR_SYST_CVR_Pos)
+#define ARM_SYSCTRL_SYST_CVR_SYST_CVR(value)  (ARM_SYSCTRL_SYST_CVR_SYST_CVR_Msk & ((value) << ARM_SYSCTRL_SYST_CVR_SYST_CVR_Pos))  
+#define ARM_SYSCTRL_SYST_CVR_MASK             0xFFFFFFul    /**< \brief (ARM_SYSCTRL_SYST_CVR) Register MASK */
 
 /* -------- ARM_SYSCTRL_SYST_CALIB : (ARM_SYSCTRL Offset: 0x1c) (R/  32) SysTick Calibration Value Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -509,7 +520,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t CPUID:32;                  /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } ARM_SYSCTRL_CPUID_Type;
@@ -518,7 +529,10 @@ typedef union {
 #define ARM_SYSCTRL_CPUID_OFFSET              0xD00          /**<  \brief (ARM_SYSCTRL_CPUID offset) CPU Identification Register */
 #define ARM_SYSCTRL_CPUID_RESETVALUE          0x410CC200ul   /**<  \brief (ARM_SYSCTRL_CPUID reset_value) CPU Identification Register */
 
-#define ARM_SYSCTRL_CPUID_MASK                0x00ul    /**< \brief (ARM_SYSCTRL_CPUID) Register MASK */
+#define ARM_SYSCTRL_CPUID_CPUID_Pos           0  /**< \brief (ARM_SYSCTRL_CPUID)                                          */
+#define ARM_SYSCTRL_CPUID_CPUID_Msk           (0xFFFFFFFFul << ARM_SYSCTRL_CPUID_CPUID_Pos)
+#define ARM_SYSCTRL_CPUID_CPUID(value)        (ARM_SYSCTRL_CPUID_CPUID_Msk & ((value) << ARM_SYSCTRL_CPUID_CPUID_Pos))  
+#define ARM_SYSCTRL_CPUID_MASK                0xFFFFFFFFul    /**< \brief (ARM_SYSCTRL_CPUID) Register MASK */
 
 /* -------- ARM_SYSCTRL_ICSR : (ARM_SYSCTRL Offset: 0xd04) (R/  32) Interrupt Control State Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -1003,7 +1017,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  SCS_CID0:8;                /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } ARM_SYSCTRL_SCS_CID0_Type;
@@ -1012,13 +1026,16 @@ typedef union {
 #define ARM_SYSCTRL_SCS_CID0_OFFSET           0xFF0          /**<  \brief (ARM_SYSCTRL_SCS_CID0 offset) Component ID Register 0 */
 #define ARM_SYSCTRL_SCS_CID0_RESETVALUE       0x0Dul         /**<  \brief (ARM_SYSCTRL_SCS_CID0 reset_value) Component ID Register 0 */
 
-#define ARM_SYSCTRL_SCS_CID0_MASK             0x00ul    /**< \brief (ARM_SYSCTRL_SCS_CID0) Register MASK */
+#define ARM_SYSCTRL_SCS_CID0_SCS_CID0_Pos     0  /**< \brief (ARM_SYSCTRL_SCS_CID0)                                       */
+#define ARM_SYSCTRL_SCS_CID0_SCS_CID0_Msk     (0xFFul << ARM_SYSCTRL_SCS_CID0_SCS_CID0_Pos)
+#define ARM_SYSCTRL_SCS_CID0_SCS_CID0(value)  (ARM_SYSCTRL_SCS_CID0_SCS_CID0_Msk & ((value) << ARM_SYSCTRL_SCS_CID0_SCS_CID0_Pos))  
+#define ARM_SYSCTRL_SCS_CID0_MASK             0xFFul    /**< \brief (ARM_SYSCTRL_SCS_CID0) Register MASK */
 
 /* -------- ARM_SYSCTRL_SCS_CID1 : (ARM_SYSCTRL Offset: 0xff4) (R/  8) Component ID Register 1 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  SCS_CID1:8;                /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } ARM_SYSCTRL_SCS_CID1_Type;
@@ -1027,13 +1044,16 @@ typedef union {
 #define ARM_SYSCTRL_SCS_CID1_OFFSET           0xFF4          /**<  \brief (ARM_SYSCTRL_SCS_CID1 offset) Component ID Register 1 */
 #define ARM_SYSCTRL_SCS_CID1_RESETVALUE       0xE0ul         /**<  \brief (ARM_SYSCTRL_SCS_CID1 reset_value) Component ID Register 1 */
 
-#define ARM_SYSCTRL_SCS_CID1_MASK             0x00ul    /**< \brief (ARM_SYSCTRL_SCS_CID1) Register MASK */
+#define ARM_SYSCTRL_SCS_CID1_SCS_CID1_Pos     0  /**< \brief (ARM_SYSCTRL_SCS_CID1)                                       */
+#define ARM_SYSCTRL_SCS_CID1_SCS_CID1_Msk     (0xFFul << ARM_SYSCTRL_SCS_CID1_SCS_CID1_Pos)
+#define ARM_SYSCTRL_SCS_CID1_SCS_CID1(value)  (ARM_SYSCTRL_SCS_CID1_SCS_CID1_Msk & ((value) << ARM_SYSCTRL_SCS_CID1_SCS_CID1_Pos))  
+#define ARM_SYSCTRL_SCS_CID1_MASK             0xFFul    /**< \brief (ARM_SYSCTRL_SCS_CID1) Register MASK */
 
 /* -------- ARM_SYSCTRL_SCS_CID2 : (ARM_SYSCTRL Offset: 0xff8) (R/  8) Component ID Register 2 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  SCS_CID2:8;                /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } ARM_SYSCTRL_SCS_CID2_Type;
@@ -1042,13 +1062,16 @@ typedef union {
 #define ARM_SYSCTRL_SCS_CID2_OFFSET           0xFF8          /**<  \brief (ARM_SYSCTRL_SCS_CID2 offset) Component ID Register 2 */
 #define ARM_SYSCTRL_SCS_CID2_RESETVALUE       0x05ul         /**<  \brief (ARM_SYSCTRL_SCS_CID2 reset_value) Component ID Register 2 */
 
-#define ARM_SYSCTRL_SCS_CID2_MASK             0x00ul    /**< \brief (ARM_SYSCTRL_SCS_CID2) Register MASK */
+#define ARM_SYSCTRL_SCS_CID2_SCS_CID2_Pos     0  /**< \brief (ARM_SYSCTRL_SCS_CID2)                                       */
+#define ARM_SYSCTRL_SCS_CID2_SCS_CID2_Msk     (0xFFul << ARM_SYSCTRL_SCS_CID2_SCS_CID2_Pos)
+#define ARM_SYSCTRL_SCS_CID2_SCS_CID2(value)  (ARM_SYSCTRL_SCS_CID2_SCS_CID2_Msk & ((value) << ARM_SYSCTRL_SCS_CID2_SCS_CID2_Pos))  
+#define ARM_SYSCTRL_SCS_CID2_MASK             0xFFul    /**< \brief (ARM_SYSCTRL_SCS_CID2) Register MASK */
 
 /* -------- ARM_SYSCTRL_SCS_CID3 : (ARM_SYSCTRL Offset: 0xffc) (R/  8) Component ID Register 3 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  SCS_CID3:8;                /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } ARM_SYSCTRL_SCS_CID3_Type;
@@ -1057,7 +1080,10 @@ typedef union {
 #define ARM_SYSCTRL_SCS_CID3_OFFSET           0xFFC          /**<  \brief (ARM_SYSCTRL_SCS_CID3 offset) Component ID Register 3 */
 #define ARM_SYSCTRL_SCS_CID3_RESETVALUE       0xB1ul         /**<  \brief (ARM_SYSCTRL_SCS_CID3 reset_value) Component ID Register 3 */
 
-#define ARM_SYSCTRL_SCS_CID3_MASK             0x00ul    /**< \brief (ARM_SYSCTRL_SCS_CID3) Register MASK */
+#define ARM_SYSCTRL_SCS_CID3_SCS_CID3_Pos     0  /**< \brief (ARM_SYSCTRL_SCS_CID3)                                       */
+#define ARM_SYSCTRL_SCS_CID3_SCS_CID3_Msk     (0xFFul << ARM_SYSCTRL_SCS_CID3_SCS_CID3_Pos)
+#define ARM_SYSCTRL_SCS_CID3_SCS_CID3(value)  (ARM_SYSCTRL_SCS_CID3_SCS_CID3_Msk & ((value) << ARM_SYSCTRL_SCS_CID3_SCS_CID3_Pos))  
+#define ARM_SYSCTRL_SCS_CID3_MASK             0xFFul    /**< \brief (ARM_SYSCTRL_SCS_CID3) Register MASK */
 
 /** \brief ARM_SYSCTRL hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

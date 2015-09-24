@@ -57,7 +57,7 @@
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t WDOGLOAD:32;               /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } WDT_WDOGLOAD_Type;
@@ -66,13 +66,16 @@ typedef union {
 #define WDT_WDOGLOAD_OFFSET                   0x00           /**<  \brief (WDT_WDOGLOAD offset) Watchdog Load Register */
 #define WDT_WDOGLOAD_RESETVALUE               0xFFFFFFFFul   /**<  \brief (WDT_WDOGLOAD reset_value) Watchdog Load Register */
 
-#define WDT_WDOGLOAD_MASK                     0x00ul    /**< \brief (WDT_WDOGLOAD) Register MASK */
+#define WDT_WDOGLOAD_WDOGLOAD_Pos             0  /**< \brief (WDT_WDOGLOAD)                                               */
+#define WDT_WDOGLOAD_WDOGLOAD_Msk             (0xFFFFFFFFul << WDT_WDOGLOAD_WDOGLOAD_Pos)
+#define WDT_WDOGLOAD_WDOGLOAD(value)          (WDT_WDOGLOAD_WDOGLOAD_Msk & ((value) << WDT_WDOGLOAD_WDOGLOAD_Pos))  
+#define WDT_WDOGLOAD_MASK                     0xFFFFFFFFul    /**< \brief (WDT_WDOGLOAD) Register MASK */
 
 /* -------- WDT_WDOGVALUE : (WDT Offset: 0x04) (R/  32) Watchdog Value Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t WDOGVALUE:32;              /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } WDT_WDOGVALUE_Type;
@@ -81,7 +84,10 @@ typedef union {
 #define WDT_WDOGVALUE_OFFSET                  0x04           /**<  \brief (WDT_WDOGVALUE offset) Watchdog Value Register */
 #define WDT_WDOGVALUE_RESETVALUE              0xFFFFFFFFul   /**<  \brief (WDT_WDOGVALUE reset_value) Watchdog Value Register */
 
-#define WDT_WDOGVALUE_MASK                    0x00ul    /**< \brief (WDT_WDOGVALUE) Register MASK */
+#define WDT_WDOGVALUE_WDOGVALUE_Pos           0  /**< \brief (WDT_WDOGVALUE)                                              */
+#define WDT_WDOGVALUE_WDOGVALUE_Msk           (0xFFFFFFFFul << WDT_WDOGVALUE_WDOGVALUE_Pos)
+#define WDT_WDOGVALUE_WDOGVALUE(value)        (WDT_WDOGVALUE_WDOGVALUE_Msk & ((value) << WDT_WDOGVALUE_WDOGVALUE_Pos))  
+#define WDT_WDOGVALUE_MASK                    0xFFFFFFFFul    /**< \brief (WDT_WDOGVALUE) Register MASK */
 
 /* -------- WDT_WDOGCONTROL : (WDT Offset: 0x08) (R/W  8) Watchdog Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -108,7 +114,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  WDOGINTCLR:1;              /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } WDT_WDOGINTCLR_Type;
@@ -117,13 +124,16 @@ typedef union {
 #define WDT_WDOGINTCLR_OFFSET                 0x0C           /**<  \brief (WDT_WDOGINTCLR offset) Watchdog Clear Interrupt Register */
 #define WDT_WDOGINTCLR_RESETVALUE             0x00ul         /**<  \brief (WDT_WDOGINTCLR reset_value) Watchdog Clear Interrupt Register */
 
-#define WDT_WDOGINTCLR_MASK                   0x00ul    /**< \brief (WDT_WDOGINTCLR) Register MASK */
+#define WDT_WDOGINTCLR_WDOGINTCLR_Pos         0  /**< \brief (WDT_WDOGINTCLR)                                             */
+#define WDT_WDOGINTCLR_WDOGINTCLR             (0x1ul << WDT_WDOGINTCLR_WDOGINTCLR_Pos)  
+#define WDT_WDOGINTCLR_MASK                   0x01ul    /**< \brief (WDT_WDOGINTCLR) Register MASK */
 
 /* -------- WDT_WDOGRIS : (WDT Offset: 0x10) (R/  8) Watchdog Raw Interrupt Status Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  WDOGRIS:1;                 /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } WDT_WDOGRIS_Type;
@@ -132,13 +142,16 @@ typedef union {
 #define WDT_WDOGRIS_OFFSET                    0x10           /**<  \brief (WDT_WDOGRIS offset) Watchdog Raw Interrupt Status Register */
 #define WDT_WDOGRIS_RESETVALUE                0x00ul         /**<  \brief (WDT_WDOGRIS reset_value) Watchdog Raw Interrupt Status Register */
 
-#define WDT_WDOGRIS_MASK                      0x00ul    /**< \brief (WDT_WDOGRIS) Register MASK */
+#define WDT_WDOGRIS_WDOGRIS_Pos               0  /**< \brief (WDT_WDOGRIS)                                                */
+#define WDT_WDOGRIS_WDOGRIS                   (0x1ul << WDT_WDOGRIS_WDOGRIS_Pos)  
+#define WDT_WDOGRIS_MASK                      0x01ul    /**< \brief (WDT_WDOGRIS) Register MASK */
 
 /* -------- WDT_WDOGMIS : (WDT Offset: 0x14) (R/  8) Watchdog Interrupt Status Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  WDOGMIS:1;                 /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } WDT_WDOGMIS_Type;
@@ -147,7 +160,9 @@ typedef union {
 #define WDT_WDOGMIS_OFFSET                    0x14           /**<  \brief (WDT_WDOGMIS offset) Watchdog Interrupt Status Register */
 #define WDT_WDOGMIS_RESETVALUE                0x00ul         /**<  \brief (WDT_WDOGMIS reset_value) Watchdog Interrupt Status Register */
 
-#define WDT_WDOGMIS_MASK                      0x00ul    /**< \brief (WDT_WDOGMIS) Register MASK */
+#define WDT_WDOGMIS_WDOGMIS_Pos               0  /**< \brief (WDT_WDOGMIS)                                                */
+#define WDT_WDOGMIS_WDOGMIS                   (0x1ul << WDT_WDOGMIS_WDOGMIS_Pos)  
+#define WDT_WDOGMIS_MASK                      0x01ul    /**< \brief (WDT_WDOGMIS) Register MASK */
 
 /* -------- WDT_WDOGLOCK : (WDT Offset: 0xc00) (R/W  32) Watchdog Lock Register (Write 0x1ACCE551 to enable write access to all other registers) -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -235,7 +250,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  WDOGPERIPHID5:8;           /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } WDT_WDOGPERIPHID5_Type;
@@ -244,13 +259,16 @@ typedef union {
 #define WDT_WDOGPERIPHID5_OFFSET              0xFD4          /**<  \brief (WDT_WDOGPERIPHID5 offset) Peripheral ID Register 5 */
 #define WDT_WDOGPERIPHID5_RESETVALUE          0x00ul         /**<  \brief (WDT_WDOGPERIPHID5 reset_value) Peripheral ID Register 5 */
 
-#define WDT_WDOGPERIPHID5_MASK                0x00ul    /**< \brief (WDT_WDOGPERIPHID5) Register MASK */
+#define WDT_WDOGPERIPHID5_WDOGPERIPHID5_Pos   0  /**< \brief (WDT_WDOGPERIPHID5)                                          */
+#define WDT_WDOGPERIPHID5_WDOGPERIPHID5_Msk   (0xFFul << WDT_WDOGPERIPHID5_WDOGPERIPHID5_Pos)
+#define WDT_WDOGPERIPHID5_WDOGPERIPHID5(value) (WDT_WDOGPERIPHID5_WDOGPERIPHID5_Msk & ((value) << WDT_WDOGPERIPHID5_WDOGPERIPHID5_Pos))  
+#define WDT_WDOGPERIPHID5_MASK                0xFFul    /**< \brief (WDT_WDOGPERIPHID5) Register MASK */
 
 /* -------- WDT_WDOGPERIPHID6 : (WDT Offset: 0xfd8) (R/  8) Peripheral ID Register 6 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  WDOGPERIPHID6:8;           /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } WDT_WDOGPERIPHID6_Type;
@@ -259,13 +277,16 @@ typedef union {
 #define WDT_WDOGPERIPHID6_OFFSET              0xFD8          /**<  \brief (WDT_WDOGPERIPHID6 offset) Peripheral ID Register 6 */
 #define WDT_WDOGPERIPHID6_RESETVALUE          0x00ul         /**<  \brief (WDT_WDOGPERIPHID6 reset_value) Peripheral ID Register 6 */
 
-#define WDT_WDOGPERIPHID6_MASK                0x00ul    /**< \brief (WDT_WDOGPERIPHID6) Register MASK */
+#define WDT_WDOGPERIPHID6_WDOGPERIPHID6_Pos   0  /**< \brief (WDT_WDOGPERIPHID6)                                          */
+#define WDT_WDOGPERIPHID6_WDOGPERIPHID6_Msk   (0xFFul << WDT_WDOGPERIPHID6_WDOGPERIPHID6_Pos)
+#define WDT_WDOGPERIPHID6_WDOGPERIPHID6(value) (WDT_WDOGPERIPHID6_WDOGPERIPHID6_Msk & ((value) << WDT_WDOGPERIPHID6_WDOGPERIPHID6_Pos))  
+#define WDT_WDOGPERIPHID6_MASK                0xFFul    /**< \brief (WDT_WDOGPERIPHID6) Register MASK */
 
 /* -------- WDT_WDOGPERIPHID7 : (WDT Offset: 0xfdc) (R/  8) Peripheral ID Register 7 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  WDOGPERIPHID7:8;           /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } WDT_WDOGPERIPHID7_Type;
@@ -274,7 +295,10 @@ typedef union {
 #define WDT_WDOGPERIPHID7_OFFSET              0xFDC          /**<  \brief (WDT_WDOGPERIPHID7 offset) Peripheral ID Register 7 */
 #define WDT_WDOGPERIPHID7_RESETVALUE          0x00ul         /**<  \brief (WDT_WDOGPERIPHID7 reset_value) Peripheral ID Register 7 */
 
-#define WDT_WDOGPERIPHID7_MASK                0x00ul    /**< \brief (WDT_WDOGPERIPHID7) Register MASK */
+#define WDT_WDOGPERIPHID7_WDOGPERIPHID7_Pos   0  /**< \brief (WDT_WDOGPERIPHID7)                                          */
+#define WDT_WDOGPERIPHID7_WDOGPERIPHID7_Msk   (0xFFul << WDT_WDOGPERIPHID7_WDOGPERIPHID7_Pos)
+#define WDT_WDOGPERIPHID7_WDOGPERIPHID7(value) (WDT_WDOGPERIPHID7_WDOGPERIPHID7_Msk & ((value) << WDT_WDOGPERIPHID7_WDOGPERIPHID7_Pos))  
+#define WDT_WDOGPERIPHID7_MASK                0xFFul    /**< \brief (WDT_WDOGPERIPHID7) Register MASK */
 
 /* -------- WDT_WDOGPERIPHID0 : (WDT Offset: 0xfe0) (R/  8) Peripheral ID Register 0 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -367,7 +391,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  WDOGPCELLID0:8;            /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } WDT_WDOGPCELLID0_Type;
@@ -376,13 +400,16 @@ typedef union {
 #define WDT_WDOGPCELLID0_OFFSET               0xFF0          /**<  \brief (WDT_WDOGPCELLID0 offset) Component ID Register 0 */
 #define WDT_WDOGPCELLID0_RESETVALUE           0x0Dul         /**<  \brief (WDT_WDOGPCELLID0 reset_value) Component ID Register 0 */
 
-#define WDT_WDOGPCELLID0_MASK                 0x00ul    /**< \brief (WDT_WDOGPCELLID0) Register MASK */
+#define WDT_WDOGPCELLID0_WDOGPCELLID0_Pos     0  /**< \brief (WDT_WDOGPCELLID0)                                           */
+#define WDT_WDOGPCELLID0_WDOGPCELLID0_Msk     (0xFFul << WDT_WDOGPCELLID0_WDOGPCELLID0_Pos)
+#define WDT_WDOGPCELLID0_WDOGPCELLID0(value)  (WDT_WDOGPCELLID0_WDOGPCELLID0_Msk & ((value) << WDT_WDOGPCELLID0_WDOGPCELLID0_Pos))  
+#define WDT_WDOGPCELLID0_MASK                 0xFFul    /**< \brief (WDT_WDOGPCELLID0) Register MASK */
 
 /* -------- WDT_WDOGPCELLID1 : (WDT Offset: 0xff4) (R/  8) Component ID Register 1 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  WDOGPCELLID1:8;            /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } WDT_WDOGPCELLID1_Type;
@@ -391,13 +418,16 @@ typedef union {
 #define WDT_WDOGPCELLID1_OFFSET               0xFF4          /**<  \brief (WDT_WDOGPCELLID1 offset) Component ID Register 1 */
 #define WDT_WDOGPCELLID1_RESETVALUE           0xF0ul         /**<  \brief (WDT_WDOGPCELLID1 reset_value) Component ID Register 1 */
 
-#define WDT_WDOGPCELLID1_MASK                 0x00ul    /**< \brief (WDT_WDOGPCELLID1) Register MASK */
+#define WDT_WDOGPCELLID1_WDOGPCELLID1_Pos     0  /**< \brief (WDT_WDOGPCELLID1)                                           */
+#define WDT_WDOGPCELLID1_WDOGPCELLID1_Msk     (0xFFul << WDT_WDOGPCELLID1_WDOGPCELLID1_Pos)
+#define WDT_WDOGPCELLID1_WDOGPCELLID1(value)  (WDT_WDOGPCELLID1_WDOGPCELLID1_Msk & ((value) << WDT_WDOGPCELLID1_WDOGPCELLID1_Pos))  
+#define WDT_WDOGPCELLID1_MASK                 0xFFul    /**< \brief (WDT_WDOGPCELLID1) Register MASK */
 
 /* -------- WDT_WDOGPCELLID2 : (WDT Offset: 0xff8) (R/  8) Component ID Register 2 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  WDOGPCELLID2:8;            /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } WDT_WDOGPCELLID2_Type;
@@ -406,13 +436,16 @@ typedef union {
 #define WDT_WDOGPCELLID2_OFFSET               0xFF8          /**<  \brief (WDT_WDOGPCELLID2 offset) Component ID Register 2 */
 #define WDT_WDOGPCELLID2_RESETVALUE           0x05ul         /**<  \brief (WDT_WDOGPCELLID2 reset_value) Component ID Register 2 */
 
-#define WDT_WDOGPCELLID2_MASK                 0x00ul    /**< \brief (WDT_WDOGPCELLID2) Register MASK */
+#define WDT_WDOGPCELLID2_WDOGPCELLID2_Pos     0  /**< \brief (WDT_WDOGPCELLID2)                                           */
+#define WDT_WDOGPCELLID2_WDOGPCELLID2_Msk     (0xFFul << WDT_WDOGPCELLID2_WDOGPCELLID2_Pos)
+#define WDT_WDOGPCELLID2_WDOGPCELLID2(value)  (WDT_WDOGPCELLID2_WDOGPCELLID2_Msk & ((value) << WDT_WDOGPCELLID2_WDOGPCELLID2_Pos))  
+#define WDT_WDOGPCELLID2_MASK                 0xFFul    /**< \brief (WDT_WDOGPCELLID2) Register MASK */
 
 /* -------- WDT_WDOGPCELLID3 : (WDT Offset: 0xffc) (R/  8) Component ID Register 3 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  WDOGPCELLID3:8;            /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } WDT_WDOGPCELLID3_Type;
@@ -421,7 +454,10 @@ typedef union {
 #define WDT_WDOGPCELLID3_OFFSET               0xFFC          /**<  \brief (WDT_WDOGPCELLID3 offset) Component ID Register 3 */
 #define WDT_WDOGPCELLID3_RESETVALUE           0xB1ul         /**<  \brief (WDT_WDOGPCELLID3 reset_value) Component ID Register 3 */
 
-#define WDT_WDOGPCELLID3_MASK                 0x00ul    /**< \brief (WDT_WDOGPCELLID3) Register MASK */
+#define WDT_WDOGPCELLID3_WDOGPCELLID3_Pos     0  /**< \brief (WDT_WDOGPCELLID3)                                           */
+#define WDT_WDOGPCELLID3_WDOGPCELLID3_Msk     (0xFFul << WDT_WDOGPCELLID3_WDOGPCELLID3_Pos)
+#define WDT_WDOGPCELLID3_WDOGPCELLID3(value)  (WDT_WDOGPCELLID3_WDOGPCELLID3_Msk & ((value) << WDT_WDOGPCELLID3_WDOGPCELLID3_Pos))  
+#define WDT_WDOGPCELLID3_MASK                 0xFFul    /**< \brief (WDT_WDOGPCELLID3) Register MASK */
 
 /** \brief WDT hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

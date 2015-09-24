@@ -125,42 +125,6 @@ typedef union {
 #define GPIO_OUTENCLR_VALUE(value)            (GPIO_OUTENCLR_VALUE_Msk & ((value) << GPIO_OUTENCLR_VALUE_Pos))  
 #define GPIO_OUTENCLR_MASK                    0xFFFFul    /**< \brief (GPIO_OUTENCLR) Register MASK */
 
-/* -------- GPIO_ALTFUNCSET : (GPIO Offset: 0x18) (R/W  16) Alternative Function Set -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union { 
-  struct {
-    uint16_t VALUE:16;                  /*!< bit:  0..15  Write 1 to set the ALTFUNC bit           */
-  } bit;                                /*!< Structure used for bit  access                        */
-  uint16_t reg;                         /*!< Type used for register access                         */
-} GPIO_ALTFUNCSET_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define GPIO_ALTFUNCSET_OFFSET                0x18           /**<  \brief (GPIO_ALTFUNCSET offset) Alternative Function Set */
-#define GPIO_ALTFUNCSET_RESETVALUE            0x00ul         /**<  \brief (GPIO_ALTFUNCSET reset_value) Alternative Function Set */
-
-#define GPIO_ALTFUNCSET_VALUE_Pos             0  /**< \brief (GPIO_ALTFUNCSET) Write 1 to set the ALTFUNC bit             */
-#define GPIO_ALTFUNCSET_VALUE_Msk             (0xFFFFul << GPIO_ALTFUNCSET_VALUE_Pos)
-#define GPIO_ALTFUNCSET_VALUE(value)          (GPIO_ALTFUNCSET_VALUE_Msk & ((value) << GPIO_ALTFUNCSET_VALUE_Pos))  
-#define GPIO_ALTFUNCSET_MASK                  0xFFFFul    /**< \brief (GPIO_ALTFUNCSET) Register MASK */
-
-/* -------- GPIO_ALTFUNCCLR : (GPIO Offset: 0x1c) (R/W  16) Alternative Function Clear -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union { 
-  struct {
-    uint16_t VALUE:16;                  /*!< bit:  0..15  Write 1 to clear the ALTFUNC bit         */
-  } bit;                                /*!< Structure used for bit  access                        */
-  uint16_t reg;                         /*!< Type used for register access                         */
-} GPIO_ALTFUNCCLR_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define GPIO_ALTFUNCCLR_OFFSET                0x1C           /**<  \brief (GPIO_ALTFUNCCLR offset) Alternative Function Clear */
-#define GPIO_ALTFUNCCLR_RESETVALUE            0x00ul         /**<  \brief (GPIO_ALTFUNCCLR reset_value) Alternative Function Clear */
-
-#define GPIO_ALTFUNCCLR_VALUE_Pos             0  /**< \brief (GPIO_ALTFUNCCLR) Write 1 to clear the ALTFUNC bit           */
-#define GPIO_ALTFUNCCLR_VALUE_Msk             (0xFFFFul << GPIO_ALTFUNCCLR_VALUE_Pos)
-#define GPIO_ALTFUNCCLR_VALUE(value)          (GPIO_ALTFUNCCLR_VALUE_Msk & ((value) << GPIO_ALTFUNCCLR_VALUE_Pos))  
-#define GPIO_ALTFUNCCLR_MASK                  0xFFFFul    /**< \brief (GPIO_ALTFUNCCLR) Register MASK */
-
 /* -------- GPIO_INTENSET : (GPIO Offset: 0x20) (R/W  16) Interrupt Enable Set -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
@@ -313,7 +277,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  PID5:8;                    /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } GPIO_PID5_Type;
@@ -322,13 +286,16 @@ typedef union {
 #define GPIO_PID5_OFFSET                      0xFD4          /**<  \brief (GPIO_PID5 offset) Peripheral ID Register 5 */
 #define GPIO_PID5_RESETVALUE                  0x00ul         /**<  \brief (GPIO_PID5 reset_value) Peripheral ID Register 5 */
 
-#define GPIO_PID5_MASK                        0x00ul    /**< \brief (GPIO_PID5) Register MASK */
+#define GPIO_PID5_PID5_Pos                    0  /**< \brief (GPIO_PID5)                                                  */
+#define GPIO_PID5_PID5_Msk                    (0xFFul << GPIO_PID5_PID5_Pos)
+#define GPIO_PID5_PID5(value)                 (GPIO_PID5_PID5_Msk & ((value) << GPIO_PID5_PID5_Pos))  
+#define GPIO_PID5_MASK                        0xFFul    /**< \brief (GPIO_PID5) Register MASK */
 
 /* -------- GPIO_PID6 : (GPIO Offset: 0xfd8) (R/  8) Peripheral ID Register 6 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  PID6:8;                    /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } GPIO_PID6_Type;
@@ -337,13 +304,16 @@ typedef union {
 #define GPIO_PID6_OFFSET                      0xFD8          /**<  \brief (GPIO_PID6 offset) Peripheral ID Register 6 */
 #define GPIO_PID6_RESETVALUE                  0x00ul         /**<  \brief (GPIO_PID6 reset_value) Peripheral ID Register 6 */
 
-#define GPIO_PID6_MASK                        0x00ul    /**< \brief (GPIO_PID6) Register MASK */
+#define GPIO_PID6_PID6_Pos                    0  /**< \brief (GPIO_PID6)                                                  */
+#define GPIO_PID6_PID6_Msk                    (0xFFul << GPIO_PID6_PID6_Pos)
+#define GPIO_PID6_PID6(value)                 (GPIO_PID6_PID6_Msk & ((value) << GPIO_PID6_PID6_Pos))  
+#define GPIO_PID6_MASK                        0xFFul    /**< \brief (GPIO_PID6) Register MASK */
 
 /* -------- GPIO_PID7 : (GPIO Offset: 0xfdc) (R/  8) Peripheral ID Register 7 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  PID7:8;                    /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } GPIO_PID7_Type;
@@ -352,7 +322,10 @@ typedef union {
 #define GPIO_PID7_OFFSET                      0xFDC          /**<  \brief (GPIO_PID7 offset) Peripheral ID Register 7 */
 #define GPIO_PID7_RESETVALUE                  0x00ul         /**<  \brief (GPIO_PID7 reset_value) Peripheral ID Register 7 */
 
-#define GPIO_PID7_MASK                        0x00ul    /**< \brief (GPIO_PID7) Register MASK */
+#define GPIO_PID7_PID7_Pos                    0  /**< \brief (GPIO_PID7)                                                  */
+#define GPIO_PID7_PID7_Msk                    (0xFFul << GPIO_PID7_PID7_Pos)
+#define GPIO_PID7_PID7(value)                 (GPIO_PID7_PID7_Msk & ((value) << GPIO_PID7_PID7_Pos))  
+#define GPIO_PID7_MASK                        0xFFul    /**< \brief (GPIO_PID7) Register MASK */
 
 /* -------- GPIO_PID0 : (GPIO Offset: 0xfe0) (R/  8) Peripheral ID Register 0 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -445,7 +418,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CID0:8;                    /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } GPIO_CID0_Type;
@@ -454,13 +427,16 @@ typedef union {
 #define GPIO_CID0_OFFSET                      0xFF0          /**<  \brief (GPIO_CID0 offset) Component ID Register 0 */
 #define GPIO_CID0_RESETVALUE                  0x0Dul         /**<  \brief (GPIO_CID0 reset_value) Component ID Register 0 */
 
-#define GPIO_CID0_MASK                        0x00ul    /**< \brief (GPIO_CID0) Register MASK */
+#define GPIO_CID0_CID0_Pos                    0  /**< \brief (GPIO_CID0)                                                  */
+#define GPIO_CID0_CID0_Msk                    (0xFFul << GPIO_CID0_CID0_Pos)
+#define GPIO_CID0_CID0(value)                 (GPIO_CID0_CID0_Msk & ((value) << GPIO_CID0_CID0_Pos))  
+#define GPIO_CID0_MASK                        0xFFul    /**< \brief (GPIO_CID0) Register MASK */
 
 /* -------- GPIO_CID1 : (GPIO Offset: 0xff4) (R/  8) Component ID Register 1 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CID1:8;                    /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } GPIO_CID1_Type;
@@ -469,13 +445,16 @@ typedef union {
 #define GPIO_CID1_OFFSET                      0xFF4          /**<  \brief (GPIO_CID1 offset) Component ID Register 1 */
 #define GPIO_CID1_RESETVALUE                  0xF0ul         /**<  \brief (GPIO_CID1 reset_value) Component ID Register 1 */
 
-#define GPIO_CID1_MASK                        0x00ul    /**< \brief (GPIO_CID1) Register MASK */
+#define GPIO_CID1_CID1_Pos                    0  /**< \brief (GPIO_CID1)                                                  */
+#define GPIO_CID1_CID1_Msk                    (0xFFul << GPIO_CID1_CID1_Pos)
+#define GPIO_CID1_CID1(value)                 (GPIO_CID1_CID1_Msk & ((value) << GPIO_CID1_CID1_Pos))  
+#define GPIO_CID1_MASK                        0xFFul    /**< \brief (GPIO_CID1) Register MASK */
 
 /* -------- GPIO_CID2 : (GPIO Offset: 0xff8) (R/  8) Component ID Register 2 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CID2:8;                    /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } GPIO_CID2_Type;
@@ -484,13 +463,16 @@ typedef union {
 #define GPIO_CID2_OFFSET                      0xFF8          /**<  \brief (GPIO_CID2 offset) Component ID Register 2 */
 #define GPIO_CID2_RESETVALUE                  0x05ul         /**<  \brief (GPIO_CID2 reset_value) Component ID Register 2 */
 
-#define GPIO_CID2_MASK                        0x00ul    /**< \brief (GPIO_CID2) Register MASK */
+#define GPIO_CID2_CID2_Pos                    0  /**< \brief (GPIO_CID2)                                                  */
+#define GPIO_CID2_CID2_Msk                    (0xFFul << GPIO_CID2_CID2_Pos)
+#define GPIO_CID2_CID2(value)                 (GPIO_CID2_CID2_Msk & ((value) << GPIO_CID2_CID2_Pos))  
+#define GPIO_CID2_MASK                        0xFFul    /**< \brief (GPIO_CID2) Register MASK */
 
 /* -------- GPIO_CID3 : (GPIO Offset: 0xffc) (R/  8) Component ID Register 3 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CID3:8;                    /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } GPIO_CID3_Type;
@@ -499,7 +481,10 @@ typedef union {
 #define GPIO_CID3_OFFSET                      0xFFC          /**<  \brief (GPIO_CID3 offset) Component ID Register 3 */
 #define GPIO_CID3_RESETVALUE                  0xB1ul         /**<  \brief (GPIO_CID3 reset_value) Component ID Register 3 */
 
-#define GPIO_CID3_MASK                        0x00ul    /**< \brief (GPIO_CID3) Register MASK */
+#define GPIO_CID3_CID3_Pos                    0  /**< \brief (GPIO_CID3)                                                  */
+#define GPIO_CID3_CID3_Msk                    (0xFFul << GPIO_CID3_CID3_Pos)
+#define GPIO_CID3_CID3(value)                 (GPIO_CID3_CID3_Msk & ((value) << GPIO_CID3_CID3_Pos))  
+#define GPIO_CID3_MASK                        0xFFul    /**< \brief (GPIO_CID3) Register MASK */
 
 /** \brief GPIO hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -511,47 +496,43 @@ typedef struct {  /* GPIO Controller */
   __IO GPIO_OUTENSET_Type             OUTENSET;       /**< \brief Offset: 0x10 (R/W  16) Output Enable Set */
        RoReg8                         Reserved3[0x2];
   __IO GPIO_OUTENCLR_Type             OUTENCLR;       /**< \brief Offset: 0x14 (R/W  16) Output Enable Clear */
-       RoReg8                         Reserved4[0x2];
-  __IO GPIO_ALTFUNCSET_Type           ALTFUNCSET;     /**< \brief Offset: 0x18 (R/W  16) Alternative Function Set */
-       RoReg8                         Reserved5[0x2];
-  __IO GPIO_ALTFUNCCLR_Type           ALTFUNCCLR;     /**< \brief Offset: 0x1C (R/W  16) Alternative Function Clear */
-       RoReg8                         Reserved6[0x2];
+       RoReg8                         Reserved4[0xA];
   __IO GPIO_INTENSET_Type             INTENSET;       /**< \brief Offset: 0x20 (R/W  16) Interrupt Enable Set */
-       RoReg8                         Reserved7[0x2];
+       RoReg8                         Reserved5[0x2];
   __IO GPIO_INTENCLR_Type             INTENCLR;       /**< \brief Offset: 0x24 (R/W  16) Interrupt Enable Clear */
-       RoReg8                         Reserved8[0x2];
+       RoReg8                         Reserved6[0x2];
   __IO GPIO_INTTYPESET_Type           INTTYPESET;     /**< \brief Offset: 0x28 (R/W  16) Interrupt Type Set */
-       RoReg8                         Reserved9[0x2];
+       RoReg8                         Reserved7[0x2];
   __IO GPIO_INTTYPECLR_Type           INTTYPECLR;     /**< \brief Offset: 0x2C (R/W  16) Interrupt Type Clear */
-       RoReg8                         Reserved10[0x2];
+       RoReg8                         Reserved8[0x2];
   __IO GPIO_INTPOLSET_Type            INTPOLSET;      /**< \brief Offset: 0x30 (R/W  16) Polarity-level, edge IRQ Configuration */
-       RoReg8                         Reserved11[0x2];
+       RoReg8                         Reserved9[0x2];
   __IO GPIO_INTPOLCLR_Type            INTPOLCLR;      /**< \brief Offset: 0x34 (R/W  16) IRQ Configuration Clear */
-       RoReg8                         Reserved12[0x2];
+       RoReg8                         Reserved10[0x2];
   __IO GPIO_INTSTATUSCLEAR_Type       INTSTATUSCLEAR; /**< \brief Offset: 0x38 (R/W  16) Interrupt Status */
-       RoReg8                         Reserved13[0xF96];
+       RoReg8                         Reserved11[0xF96];
   __I  GPIO_PID4_Type                 PID4;           /**< \brief Offset: 0xFD0 (R/    8) Peripheral ID Register 4 */
-       RoReg8                         Reserved14[0x3];
+       RoReg8                         Reserved12[0x3];
   __I  GPIO_PID5_Type                 PID5;           /**< \brief Offset: 0xFD4 (R/    8) Peripheral ID Register 5 */
-       RoReg8                         Reserved15[0x3];
+       RoReg8                         Reserved13[0x3];
   __I  GPIO_PID6_Type                 PID6;           /**< \brief Offset: 0xFD8 (R/    8) Peripheral ID Register 6 */
-       RoReg8                         Reserved16[0x3];
+       RoReg8                         Reserved14[0x3];
   __I  GPIO_PID7_Type                 PID7;           /**< \brief Offset: 0xFDC (R/    8) Peripheral ID Register 7 */
-       RoReg8                         Reserved17[0x3];
+       RoReg8                         Reserved15[0x3];
   __I  GPIO_PID0_Type                 PID0;           /**< \brief Offset: 0xFE0 (R/    8) Peripheral ID Register 0 */
-       RoReg8                         Reserved18[0x3];
+       RoReg8                         Reserved16[0x3];
   __I  GPIO_PID1_Type                 PID1;           /**< \brief Offset: 0xFE4 (R/    8) Peripheral ID Register 1 */
-       RoReg8                         Reserved19[0x3];
+       RoReg8                         Reserved17[0x3];
   __I  GPIO_PID2_Type                 PID2;           /**< \brief Offset: 0xFE8 (R/    8) Peripheral ID Register 2 */
-       RoReg8                         Reserved20[0x3];
+       RoReg8                         Reserved18[0x3];
   __I  GPIO_PID3_Type                 PID3;           /**< \brief Offset: 0xFEC (R/    8) Peripheral ID Register 3 */
-       RoReg8                         Reserved21[0x3];
+       RoReg8                         Reserved19[0x3];
   __I  GPIO_CID0_Type                 CID0;           /**< \brief Offset: 0xFF0 (R/    8) Component ID Register 0 */
-       RoReg8                         Reserved22[0x3];
+       RoReg8                         Reserved20[0x3];
   __I  GPIO_CID1_Type                 CID1;           /**< \brief Offset: 0xFF4 (R/    8) Component ID Register 1 */
-       RoReg8                         Reserved23[0x3];
+       RoReg8                         Reserved21[0x3];
   __I  GPIO_CID2_Type                 CID2;           /**< \brief Offset: 0xFF8 (R/    8) Component ID Register 2 */
-       RoReg8                         Reserved24[0x3];
+       RoReg8                         Reserved22[0x3];
   __I  GPIO_CID3_Type                 CID3;           /**< \brief Offset: 0xFFC (R/    8) Component ID Register 3 */
 } Gpio;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */

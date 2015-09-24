@@ -86,14 +86,14 @@ void system_board_init(void);
 
 /** \name LED0 definitions
  *  @{ */
-#define LED0_PIN                  PIN_LP_GPIO_2
+#define LED0_PIN                  PIN_LP_GPIO_22
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
 /** @} */
 
 /** \name SW0 definitions
  *  @{ */
-#define SW0_PIN                   PIN_LP_GPIO_3
+#define SW0_PIN                   PIN_LP_GPIO_23
 #define SW0_ACTIVE                false
 #define SW0_INACTIVE              !SW0_ACTIVE
 #define SW0_EIC_PIN               

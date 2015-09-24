@@ -163,10 +163,8 @@ enum gpio_pin_pull {
 	GPIO_PIN_PULL_NONE,
 	/** Pin should be pulled up when idle */
 	GPIO_PIN_PULL_UP ,
-#ifdef CHIPVERSION_B0
 	/** Pin should be pulled down when idle */
 	GPIO_PIN_PULL_DOWN,
-#endif
 };
 
 /**

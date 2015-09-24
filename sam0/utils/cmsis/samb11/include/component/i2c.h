@@ -379,7 +379,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  I2C_FLUSH:1;               /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } I2C_I2C_FLUSH_Type;
@@ -388,7 +389,9 @@ typedef union {
 #define I2C_I2C_FLUSH_OFFSET                  0x34           /**<  \brief (I2C_I2C_FLUSH offset) Writing to this address  flushes the contents of both the Tx and Rx FIFOs. The value written has no effect. Flushing the Tx FIFO will abort ongoing transactions when the current byte has been transmitted.  */
 #define I2C_I2C_FLUSH_RESETVALUE              0x00ul         /**<  \brief (I2C_I2C_FLUSH reset_value) Writing to this address  flushes the contents of both the Tx and Rx FIFOs. The value written has no effect. Flushing the Tx FIFO will abort ongoing transactions when the current byte has been transmitted.  */
 
-#define I2C_I2C_FLUSH_MASK                    0x00ul    /**< \brief (I2C_I2C_FLUSH) Register MASK */
+#define I2C_I2C_FLUSH_I2C_FLUSH_Pos           0  /**< \brief (I2C_I2C_FLUSH)                                              */
+#define I2C_I2C_FLUSH_I2C_FLUSH               (0x1ul << I2C_I2C_FLUSH_I2C_FLUSH_Pos)  
+#define I2C_I2C_FLUSH_MASK                    0x01ul    /**< \brief (I2C_I2C_FLUSH) Register MASK */
 
 /** \brief I2C hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
