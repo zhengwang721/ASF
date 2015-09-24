@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="CAN Example for SAMV71-Xplained-Ultra" id="sam.drivers.mcan.quick_start_fd.samv71_xplained_ultra">
+	<project caption="CAN Example on SAMV71-Xplained-Ultra" id="sam.drivers.mcan.quick_start_fd.samv71_xplained_ultra">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>

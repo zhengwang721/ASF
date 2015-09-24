@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="RSTC example for SAMV71 Xplained Ultra" id="sam.drivers.rstc.example1.samv71_xplained_ultra">
+	<project caption="RSTC example on SAMV71-Xplained-Ultra" id="sam.drivers.rstc.example1.samv71_xplained_ultra">
 		<info type="description" value="summary">
 		This example demonstrates how to manage the RSTC inside the microcontroller.
 		</info>
