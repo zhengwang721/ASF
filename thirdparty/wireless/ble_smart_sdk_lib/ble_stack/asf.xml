@@ -3,18 +3,21 @@
 		<info type="description" value="summary">
 		</info>
     <build type="c-source"      value="api_controller_interface/dbg_task.c"/>
-    <build type="c-source"      value="api_controller_interface/error.c"/>
     <build type="c-source"      value="api_controller_interface/gapc_task.c"/>
     <build type="c-source"      value="api_controller_interface/gapm_task.c"/>
     <build type="c-source"      value="api_controller_interface/gattc_task.c"/>
     <build type="c-source"      value="api_controller_interface/gattm_task.c"/>
     <build type="c-source"      value="api_controller_interface/htpt_task.c"/>
+    <build type="c-source"      value="api_controller_interface/dbg_logs.c"/>
 
     <build type="c-source"      value="api_core/event.c"/>
     <build type="c-source"      value="api_core/gap.c"/>
     <build type="c-source"      value="api_core/gatt_client.c"/>
     <build type="c-source"      value="api_core/gatt_server.c"/>
     <build type="c-source"      value="api_core/security.c"/>
+    <build type="c-source"      value="api_core/dtm.c"/>
+    <build type="c-source"      value="api_core/l2cap.c"/>
+    <build type="c-source"      value="api_core/l2cc_task.c"/>
 
     <build type="c-source"      value="profiles/htpt.c"/>  
 
@@ -24,7 +27,6 @@
     <build type="header-file"   value="include/dbg_task.h"/>
     <build type="header-file"   value="include/device.h"/>
     <build type="header-file"   value="include/diss_task.h"/>
-    <build type="header-file"   value="include/error.h"/>
     <build type="header-file"   value="include/event.h"/>
     <build type="header-file"   value="include/gapc_task.h"/>
     <build type="header-file"   value="include/gapm_task.h"/>
@@ -35,6 +37,8 @@
     <build type="header-file"   value="include/ll_if.h"/>
     <build type="header-file"   value="include/profiles.h"/>
     <build type="header-file"   value="include/smpc_task.h"/>
+    <build type="header-file"   value="include/dbg_logs.h"/>
+    <build type="header-file"   value="include/l2cc_task.h"/>
 		
 		<build type="doxygen-entry-point" value="ble_smart_stack_group"/>
 		<device-support-alias value="ble_smart_stack_lib_support"/>

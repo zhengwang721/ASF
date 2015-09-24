@@ -12,8 +12,8 @@
 #include "msg_if.h"
 
 /*SRC: TASK_APP DEST:TASK_DISS*/
-uint8_t diss_create_db_req_handler (uint16_t features);
-uint8_t diss_set_char_val_req_handler (uint8_t char_code, uint8_t val_len, uint8_t *val);
+uint8_t diss_create_db_req_handler(uint16_t features);
+uint8_t diss_set_char_val_req_handler(uint8_t char_code, uint8_t val_len, uint8_t *val);
 void diss_enable_req_hanlder(uint16_t conhdl, uint8_t sec_lvl, uint8_t con_type);
 /*SRC: TASK_DISS DEST:TASK_APP*/
 //DISS_DISABLE_IND
@@ -49,43 +49,43 @@ enum
 struct diss_create_db_req
 {
     ///Database configuration
-	uint16_t features;
+    uint16_t features;
 };
 
 /// Parameters of the @ref DISS_CREATE_DB_CFM message
 struct diss_create_db_cfm
 {
     ///Status
-	uint8_t status;
+    uint8_t status;
 };
 
 /// Parameters of the @ref DISS_SET_CHAR_VAL_REQ message - shall be dynamically allocated
 struct diss_set_char_val_req
 {
     /// Characteristic Code
-	uint8_t char_code;
+    uint8_t char_code;
     /// Value length
-	uint8_t val_len;
+    uint8_t val_len;
     /// Value
-	uint8_t val[1];
+    uint8_t val[1];
 };
 
 /// Parameters of the @ref DISS_ENABLE_REQ message
 struct diss_enable_req
 {
     ///Connection handle
-	uint16_t conhdl;
+    uint16_t conhdl;
     /// security level: b0= nothing, b1=unauthenticated, b2=authenticated, b3=authorized; b1 or b2 and b3 can go together
-	uint8_t sec_lvl;
+    uint8_t sec_lvl;
     ///Type of connection
-	uint8_t con_type;
+    uint8_t con_type;
 };
 
 /// Parameters of the @ref DISS_DISABLE_IND message
 struct diss_disable_ind
 {
     ///Connection handle
-	uint16_t conhdl;
+    uint16_t conhdl;
 };
 
 #endif

@@ -4,7 +4,9 @@
 		</info>
 		<build type="include-path"  value="./"/>
   <build type="header-file"   value="at_ble_api.h"/>
-  <build type="header-file"   value="platform_drv.h"/>
+  <build type="header-file"   value="at_ble_trace.h"/>
+  <build type="header-file"   value="at_ble_errno.h"/>
+  <build type="header-file"   value="platform.h"/>
   <build type="header-file"   value="common.h"/>
   <build type="header-file"   value="event_handler.h"/>
   <build type="header-file"   value="ke_msg.h"/>

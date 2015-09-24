@@ -1,154 +1,86 @@
-
 #include "at_ble_api.h"
-//#include "platform_drv.h"
+#include "platform.h"
 #include "interface.h"
 
 #include "dbg_task.h"
 
-uint8_t dbg_le_set_bd_addr_req_handler(uint8_t* addr)
+at_ble_status_t dbg_le_set_bd_addr_req_handler(uint8_t *addr)
 {
-	uint8_t u8Status;
-#ifndef __WINC3000__
-	uint32_t chip_id = 0;
-	uint32_t gap_dev_addr = 0x00;
-#endif
-	do
-	{
-		INTERFACE_MSG_INIT(DBG_LE_SET_BD_ADDR_REQ, TASK_DBG);
-		INTERFACE_PACK_ARG_BLOCK(addr , AT_BLE_ADDR_LEN);
-		INTERFACE_SEND_WAIT(DBG_LE_SET_BD_ADDR_CMP_EVT, TASK_DBG);
-		INTERFACE_UNPACK_UINT8(&u8Status);
-		INTERFACE_DONE();
-
-		if(u8Status != AT_BLE_SUCCESS)
-			break;
-#ifndef __WINC3000__
-		u8Status = dbg_rd_mem_req_handler(0x4000B000,(uint8_t *)&chip_id,4);
-		if(u8Status != AT_BLE_SUCCESS)
-			break;
-
-		chip_id&=0xFFFFFF;
-		switch(chip_id)
-		{
-			case AT_BLE_CHIP_ID_A0 :
-				gap_dev_addr = 0x10000E26;
-				break;
-			case AT_BLE_CHIP_ID_A2 :
-				gap_dev_addr = 0x10001096;
-				break;
-			case AT_BLE_CHIP_ID_A3 :
-				gap_dev_addr = 0x10001156;
-				break;
-			case AT_BLE_CHIP_ID_A4:
-				gap_dev_addr = 0x1000085A;
-				break;
-		}
-		if(chip_id != 0)
-		{
-			u8Status = dbg_wr_mem_req_handler(gap_dev_addr,addr,AT_BLE_ADDR_LEN);
-		}
-#endif //__WINC3000__
-	}while(0);
-	return u8Status;
+    uint8_t u8Status = 0;
+    uint16_t delay = 0;
+    do
+    {
+        delay++;
+    }
+    while (delay < 0xFFFE);
+    INTERFACE_MSG_INIT(DBG_LE_SET_BD_ADDR_REQ, TASK_DBG);
+    INTERFACE_PACK_ARG_BLOCK(addr , AT_BLE_ADDR_LEN);
+    INTERFACE_SEND_WAIT(DBG_LE_SET_BD_ADDR_CMP_EVT, TASK_DBG);
+    INTERFACE_UNPACK_UINT8(&u8Status);
+    INTERFACE_DONE();
+    return (at_ble_status_t)u8Status;
 }
 
-uint8_t dbg_set_tx_pw_req_handler(uint16_t conn_handle, uint8_t level)
+/**@brief Write data chunk to specific memory address
+  *
+  * @param[in] u32MemAddr Memory address [32Bit Address]
+  * @param[in] pu8Data pointer to data buffer
+  * @param[in] u8Size length of data
+  * @param[in] u8WriteMode either 8Bit\32Bit Modes, selected by 8 or 32
+  * @param[in] bDisWait if true this means function wont be blocking otherwise it will be blocked waiting for data
+  *
+  * @return @ref AT_BLE_SUCCESS operation completed successfully
+  * @return @ref AT_BLE_FAILURE Generic error.
+  */
+uint8_t dbg_wr_mem_req_handler(uint32_t u32MemAddr, uint8_t *pu8Data, uint8_t u8Size, uint8_t u8WriteMode, uint8_t bDisWait)
 {
-	uint8_t u8Status;
+    uint8_t u8Status = 0;
+    INTERFACE_MSG_INIT(DBG_WR_MEM_REQ, TASK_DBG);
+    INTERFACE_PACK_ARG_UINT32(u32MemAddr);
+    INTERFACE_PACK_ARG_UINT8(u8WriteMode);
+    INTERFACE_PACK_ARG_UINT8(u8Size);
+    INTERFACE_PACK_ARG_BLOCK(pu8Data, u8Size);
+    switch (bDisWait)
+    {
+    default:
+    case 0:
+        INTERFACE_SEND_WAIT(DBG_WR_MEM_CMP_EVT, TASK_DBG);
+        INTERFACE_UNPACK_UINT8(&u8Status);
+        break;
+    case 1:
+        INTERFACE_SEND_NO_WAIT();
+        break;
+    }
+    INTERFACE_DONE();
+    return u8Status;
+}
+
+/**@brief Read data chunk from specific memory address
+  *
+  * @param[in] u32MemAddr Memory address [32Bit Address]
+  * @param[in] pu8Data pointer to data buffer
+  * @param[in] u8Size length of data
+  * @param[in] u8ReadMode either 8Bit\32Bit Modes, selected by 8 or 32
+  *
+  * @return @ref AT_BLE_SUCCESS operation completed successfully
+  * @return @ref AT_BLE_FAILURE Generic error.
+  */
+uint8_t dbg_rd_mem_req_handler(uint32_t u32MemAddr, uint8_t *pu8Data, uint8_t u8Size, uint8_t u8ReadMode)
+{
+    uint8_t u8Status = 0;
+    uint8_t u8DataSize = 0;
+		/* Argused*/
+		u8DataSize = u8DataSize;
 	
-	INTERFACE_MSG_INIT(DBG_SET_TX_PW_REQ, TASK_DBG);
-	INTERFACE_PACK_ARG_UINT16(conn_handle);
-	INTERFACE_PACK_ARG_UINT8(level);
-	INTERFACE_SEND_WAIT(DBG_SET_TX_PW_CMP_EVT, TASK_DBG);
-	INTERFACE_UNPACK_UINT8(&u8Status);
-	INTERFACE_DONE();
-
-	return u8Status;
-}
-
-uint8_t dbg_wr_mem_req_handler(uint32_t memAddr,uint8_t* data,uint8_t size)
-{
-	uint8_t u8Status;
-#ifndef SAMB11	
-	INTERFACE_MSG_INIT(DBG_WR_MEM_REQ, TASK_DBG);
-	INTERFACE_PACK_ARG_UINT32(memAddr);
-	INTERFACE_PACK_ARG_UINT8(8);
-	INTERFACE_PACK_ARG_UINT8(size);
-	INTERFACE_PACK_ARG_BLOCK(data,size);
-	INTERFACE_SEND_WAIT(DBG_WR_MEM_CMP_EVT, TASK_DBG);
-	INTERFACE_UNPACK_UINT8(&u8Status);
-	INTERFACE_DONE();
-#else
-	memcpy((void *)memAddr,data,size);
-	u8Status = AT_BLE_SUCCESS;
-#endif	//SAMB11	
-	return u8Status;
-}
-
-void dbg_wr_mem_req_handler32_reset(uint32_t memAddr,uint32_t * data,uint8_t size)
-{	
-	INTERFACE_MSG_INIT(DBG_WR_MEM_REQ, TASK_DBG);
-	INTERFACE_PACK_ARG_UINT32(memAddr);
-	INTERFACE_PACK_ARG_UINT8(32);
-	INTERFACE_PACK_ARG_UINT8(size);
-	INTERFACE_PACK_ARG_BLOCK(data,size);
-	INTERFACE_SEND_NO_WAIT();
-	INTERFACE_DONE();	
-}
-
-uint8_t dbg_wr_mem_req_handler32(uint32_t memAddr,uint32_t* data,uint8_t size)
-{
-	uint8_t u8Status;
-#ifndef SAMB11	
-	INTERFACE_MSG_INIT(DBG_WR_MEM_REQ, TASK_DBG);
-	INTERFACE_PACK_ARG_UINT32(memAddr);
-	INTERFACE_PACK_ARG_UINT8(32);
-	INTERFACE_PACK_ARG_UINT8(size);
-	INTERFACE_PACK_ARG_BLOCK(data,size);
-	INTERFACE_SEND_WAIT(DBG_WR_MEM_CMP_EVT, TASK_DBG);
-	INTERFACE_UNPACK_UINT8(&u8Status);
-	INTERFACE_DONE();
-#else
-	memcpy((void *)memAddr,data,size);
-	u8Status = AT_BLE_SUCCESS;
-#endif	//SAMB11	
-	return u8Status;
-}
-
-uint8_t dbg_rd_mem_req_handler(uint32_t memAddr,uint8_t* data ,uint8_t size)
-{
-	uint8_t u8Status;
-#ifndef SAMB11	
-	INTERFACE_MSG_INIT(DBG_RD_MEM_REQ, TASK_DBG);
-	INTERFACE_PACK_ARG_UINT32(memAddr);
-	INTERFACE_PACK_ARG_UINT8(8);
-	INTERFACE_PACK_ARG_UINT8(size);
-	INTERFACE_SEND_WAIT(DBG_RD_MEM_CMP_EVT, TASK_DBG);
-	INTERFACE_UNPACK_UINT8(&u8Status);
-	INTERFACE_UNPACK_BLOCK(data,size);
-	INTERFACE_DONE();
-#else
-	memcpy(data,(void *)memAddr,size);
-	u8Status = AT_BLE_SUCCESS;
-#endif	
-	return u8Status;
-}
-
-uint8_t dbg_rd_mem_req_handler32(uint32_t memAddr,uint8_t* data ,uint8_t size)
-{
-	uint8_t u8Status;
-#ifndef SAMB11	
-	INTERFACE_MSG_INIT(DBG_RD_MEM_REQ, TASK_DBG);
-	INTERFACE_PACK_ARG_UINT32(memAddr);
-	INTERFACE_PACK_ARG_UINT8(32);
-	INTERFACE_PACK_ARG_UINT8(size);
-	INTERFACE_SEND_WAIT(DBG_RD_MEM_CMP_EVT, TASK_DBG);
-	INTERFACE_UNPACK_UINT8(&u8Status);
-	INTERFACE_UNPACK_BLOCK(data,size);
-	INTERFACE_DONE();
-#else
-	memcpy(data,(void *)memAddr,size);
-	u8Status = AT_BLE_SUCCESS;
-#endif	//SAMB11	
-	return u8Status;
+    INTERFACE_MSG_INIT(DBG_RD_MEM_REQ, TASK_DBG);
+    INTERFACE_PACK_ARG_UINT32(u32MemAddr);
+    INTERFACE_PACK_ARG_UINT8(u8ReadMode);
+    INTERFACE_PACK_ARG_UINT8(u8Size);
+    INTERFACE_SEND_WAIT(DBG_RD_MEM_CMP_EVT, TASK_DBG);
+    INTERFACE_UNPACK_UINT8(&u8Status);
+    INTERFACE_UNPACK_UINT8(&u8DataSize);
+    ASSERT_PRINT_ERR(u8DataSize != u8Size, "Data Size : %d\n", u8DataSize);
+    INTERFACE_UNPACK_BLOCK(pu8Data, u8Size);
+    INTERFACE_DONE();
+    return u8Status;
 }

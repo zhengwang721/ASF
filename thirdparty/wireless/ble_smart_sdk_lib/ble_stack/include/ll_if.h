@@ -26,6 +26,8 @@ enum
     ADV_DISC_UNDIR,
     ///Non-connectable undirected advertising
     ADV_NONCONN_UNDIR,
+    ///Connectable low duty cycle directed advertising
+    ADV_CONN_DIR_LDC,
     ///Enumeration end value for advertising type value check
     ADV_END
 };
@@ -50,21 +52,6 @@ enum
     ADDR_RAND,
     ///Enumeration end value for BD address type value check
     ADDR_END
-};
-
-///Advertising channels enables
-enum
-{
-    ///Byte value for advertising channel map for channel 37 enable
-    ADV_CHNL_37_EN                = 0x01,
-    ///Byte value for advertising channel map for channel 38 enable
-    ADV_CHNL_38_EN,
-    ///Byte value for advertising channel map for channel 39 enable
-    ADV_CHNL_39_EN                = 0x04,
-    ///Byte value for advertising channel map for channel 37, 38 and 39 enable
-    ADV_ALL_CHNLS_EN              = 0x07,
-    ///Enumeration end value for advertising channels enable value check
-    ADV_CHNL_END
 };
 
 
@@ -116,21 +103,21 @@ enum
 struct bd_addr
 {
     ///6-byte array address value
-	uint8_t 	addr[BD_ADDR_LEN];
+    uint8_t     addr[BD_ADDR_LEN];
 };
 
 ///Advertising data structure
 struct adv_data
 {
     ///Maximum length data bytes array
-	uint8_t	data[ADV_DATA_LEN];
+    uint8_t data[ADV_DATA_LEN];
 };
 
 ///Scan response data structure
 struct scan_rsp_data
 {
     ///Maximum length data bytes array
-	uint8_t	data[SCAN_RSP_DATA_LEN];
+    uint8_t data[SCAN_RSP_DATA_LEN];
 };
 
 
@@ -177,11 +164,11 @@ struct llm_le_set_scan_rsp_data_cmd
 struct llm_le_set_scan_param_cmd
 {
     ///Scan type - 0=passive / 1=active
-	uint8_t        scan_type;
+    uint8_t        scan_type;
     ///Scan interval
-	uint16_t       scan_intv;
+    uint16_t       scan_intv;
     ///Scan window size
-	uint16_t       scan_window;
+    uint16_t       scan_window;
     ///Own address type - 0=public, 1=random
     uint8_t        own_addr_type;
     ///Scan filter policy

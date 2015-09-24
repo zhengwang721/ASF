@@ -48,16 +48,12 @@
 
 #include "samb11.h"
 
-#include "platform_drv.h"
+#include "platform.h"
 
 #include "ke_msg.h"
 #include "gpio.h"
 #include "common.h"
 #include "event_handler.h"
-
-
-//chris.choi define
-#define CHIPVERSION_A4 true
 
 /*
 #include "CMSDK_CM0.h"
@@ -71,9 +67,9 @@
 uint8_t (*platform_register_isr)(uint8_t isr_index,void *fp);
 uint8_t (*platform_unregister_isr)(uint8_t isr_index);
 
-#ifdef CHIPVERSION_B0
+//#ifdef CHIPVERSION_B0
 void (*handle_ext_wakeup_isr)(void);
-#endif	//CHIPVERSION_B0
+//#endif	//CHIPVERSION_B0
 
 #ifdef CHIPVERSION_A4
 uint8_t register_isr(uint8_t isr_index,void *fp);
@@ -81,11 +77,12 @@ uint8_t unregister_isr(uint8_t isr_index);
 #endif	//CHIPVERSION_A4
 
 //#define TASK_INTERNAL_APP  62
-#define MAX_BLE_EVT_LEN						128
+#define MAX_BLE_EVT_LEN						512
 #define MAX_PLF_EVT_LEN						128
 
 #define BLE_EVENT_BUFFER_START_INDEX		0
-#define PLF_EVENT_BUFFER_START_INDEX		128
+#define PLF_EVENT_BUFFER_START_INDEX		(BLE_EVENT_BUFFER_START_INDEX + MAX_BLE_EVT_LEN)
+//#define PLF_EVENT_BUFFER_START_INDEX		128
 
 #define MAX_EVT_BUFF_LEN 	(MAX_BLE_EVT_LEN + MAX_PLF_EVT_LEN) 
 #define REG_PL_WR(addr, value)       (*(volatile uint32_t *)(addr)) = (value)
@@ -99,7 +96,9 @@ static void* (*ke_msg_alloc)(ke_msg_id_t const id, ke_task_id_t const dest_id,
 static int (*os_sem_up)(void* pstrSem);
 static int (*NMI_MsgQueueRecv)(void* pHandle,void ** pvRecvBuffer);
 static void (*ke_free)(void* mem_ptr);
-static uint8_t platform_initialized;
+static ke_task_id_t (* gapm_get_task_from_id)(ke_msg_id_t id);
+static ke_task_id_t (* gapm_get_id_from_task)(ke_msg_id_t id);
+volatile uint8_t platform_initialized = 0;
 
 static platform_interface_callback ble_stack_message_handler;
 uint8_t rx_buffer[MAX_EVT_BUFF_LEN];
@@ -128,7 +127,27 @@ port port_list[LPGPIO_MAX];
 #endif	//CHIPVERSION_B0
 
 
+#ifdef CHIPVERSION_B0
+void PORT1_COMB_Handler(void)
+{
+	//if(CMSDK_GPIO1->INTSTATUS & ((1<<15) | (1<<14) | (1<<13))) {
+	if(GPIO1->INTSTATUSCLEAR.reg & ((1<<15) | (1<<14) | (1<<13))) {		
+		
+		handle_ext_wakeup_isr();
+		
+		// clear specific int pin status that caused the Interrupt
+		//CMSDK_GPIO1->INTCLEAR |= CMSDK_GPIO1->INTSTATUS & ((1<<15) | (1<<14) | (1<<13));
+		GPIO1->INTSTATUSCLEAR.reg |= GPIO1->INTSTATUSCLEAR.reg & ((1<<15) | (1<<14) | (1<<13));
+		//NVIC_ClearPendingIRQ(PORT1_COMB_IRQn);
+		NVIC_ClearPendingIRQ(8);
+	}
+	else
+	{
+		gpio1_combined_isr_handler();
+	}
+}
 
+#endif	//CHIPVERSION_B0
 
 
 
@@ -332,20 +351,22 @@ plf_drv_status platform_driver_init()
 		ble_stack_message_handler = NULL;
 		
 #ifdef CHIPVERSION_B0
+		NVIC_DisableIRQ(GPIO0_IRQn);
+		NVIC_DisableIRQ(GPIO1_IRQn);
 		platform_register_isr = (uint8_t (*)(uint8_t ,void *))0x000007d7;
 		platform_unregister_isr = (uint8_t (*)(uint8_t ))0x000007bd;
 		handle_ext_wakeup_isr = (void (*)(void))0x1bc59;
-		platform_unregister_isr(GPIO1_COMBINED_VECTOR_TABLE_INDEX);
-		platform_register_isr(GPIO1_COMBINED_VECTOR_TABLE_INDEX,PORT1_COMB_Handler);
-		
-		//platform_register_isr(GPIO1_COMBINED_VECTOR_TABLE_INDEX,GPIO0_Handler);
-		// chris.choi : from asf but GPIO0_Handler is not in asf so link error
+		gapm_get_task_from_id = (ke_task_id_t (*)(ke_msg_id_t))0x100059b9;
+		gapm_get_id_from_task = (ke_task_id_t (*)(ke_msg_id_t))0x0000d303;
 #else
+		NVIC_DisableIRQ(PORT0_ALL_IRQn);
+		NVIC_DisableIRQ(PORT1_ALL_IRQn);
 		platform_register_isr = register_isr;
 		platform_unregister_isr = unregister_isr;
-		platform_unregister_isr(GPIO1_COMBINED_VECTOR_TABLE_INDEX);
-		platform_register_isr(GPIO1_COMBINED_VECTOR_TABLE_INDEX,gpio1_combined_isr_handler);
+		handle_ext_wakeup_isr = (void (*)(void))0x14085;
 #endif
+		platform_unregister_isr(GPIO1_COMBINED_VECTOR_TABLE_INDEX);
+		platform_register_isr(GPIO1_COMBINED_VECTOR_TABLE_INDEX,PORT1_COMB_Handler);
 		platform_register_isr(GPIO0_COMBINED_VECTOR_TABLE_INDEX,gpio0_combined_isr_handler);
 		
 		// Initializing the FW messaging functions.
@@ -394,6 +415,11 @@ plf_drv_status platform_driver_init()
 		NVIC_EnableIRQ(7);	
 		NVIC_EnableIRQ(8);
 #endif	//CHIPVERSION_B0		
+		
+#ifndef CHIPVERSION_B0		
+		// spi_flash clock fix.
+		spi_flash_clock_init();
+#endif		
 		
 		platform_initialized = 1;
 		status = STATUS_SUCCESS;
@@ -473,6 +499,12 @@ void platform_interface_send(uint8_t* data, uint32_t len)
 	struct ke_msghdr * p_msg_hdr = (struct ke_msghdr *) (data);
 	void* params;
 	
+	#if (CHIPVERSION_B0)
+	ke_task_id_t dest_id;
+	dest_id = p_msg_hdr->dest_id;
+	if(gapm_get_task_from_id != NULL)
+		p_msg_hdr->dest_id = gapm_get_task_from_id(dest_id);
+	#endif	//CHIPVERSION_B0
 	// Allocate the kernel message
 	params = ke_msg_alloc(p_msg_hdr->id, p_msg_hdr->dest_id, p_msg_hdr->src_id, p_msg_hdr->param_len);
 											
@@ -525,7 +557,7 @@ plf_drv_status platform_event_wait(uint32_t timeout)
 	static struct ke_msg* rcv_msg;
 	static struct ke_msghdr	*ke_msg_hdr;
 	plf_drv_status status = STATUS_SUCCESS;
-	
+
 	do {
 		if(NMI_MsgQueueRecv(InternalAppMsgQHandle, (void**)&rcv_msg) == STATUS_SUCCESS)
 		{
@@ -533,7 +565,7 @@ plf_drv_status platform_event_wait(uint32_t timeout)
 			uint16_t src_id = rcv_msg->src_id;
 			uint8_t* data = (uint8_t*)rcv_msg->param;
 			uint16_t len = rcv_msg->param_len;
-			
+
 			if(msg_id == PERIPHERAL_INTERRUPT_EVENT)
 			{
 				if(plf_event_buff_index+len > MAX_EVT_BUFF_LEN)
@@ -543,12 +575,17 @@ plf_drv_status platform_event_wait(uint32_t timeout)
 				plf_event_buff_index += len;
 				status = STATUS_RECEIVED_PLF_EVENT_MSG;
 			}
-			else {
+			else
+			{
 				// BLE stack messages
 				if(ble_stack_message_handler) {
 					ke_msg_hdr = (struct ke_msghdr *)&rx_buffer[BLE_EVENT_BUFFER_START_INDEX];
 					ke_msg_hdr->id = rcv_msg->id;
+#if (CHIPVERSION_A3 || CHIPVERSION_A4)
 					ke_msg_hdr->src_id = rcv_msg->src_id;
+#else
+					ke_msg_hdr->src_id = gapm_get_id_from_task(rcv_msg->src_id);
+#endif	//(CHIPVERSION_A3 || CHIPVERSION_A4)
 					ke_msg_hdr->dest_id = rcv_msg->dest_id;
 					ke_msg_hdr->param_len = rcv_msg->param_len;
 					ke_msg_hdr++;

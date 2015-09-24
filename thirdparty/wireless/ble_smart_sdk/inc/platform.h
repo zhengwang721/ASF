@@ -1,7 +1,7 @@
 /**
  ****************************************************************************************
  *
- * @file platform_drv.h
+ * @file platform.h
  *
  * @brief SAMB11 Platform Drivers Generic API for Applications
  *
@@ -137,7 +137,7 @@ extern "C" {
 #endif
 
 /** callback function type for handling BLE FW stack messages */
-typedef void (*platform_interface_callback) (uint8_t *, uint16_t );
+typedef void (*platform_interface_callback) (uint8_t *, uint32_t );
 
 /** enumerated status values for this platform driver */
 typedef enum PLATFORM_STATUS

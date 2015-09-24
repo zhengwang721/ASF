@@ -12,14 +12,14 @@
 #include "msg_if.h"
 
 uint8_t atts_add_svc_req_handler(uint16_t *start_hdl, uint16_t total_size, uint8_t nb_att_uuid_16,
-		uint8_t nb_att_uuid_32, uint8_t nb_att_uuid_128);
-uint8_t atts_add_attribute_req_handler (uint16_t start_hdl, uint16_t max_data_size, uint16_t perm,
-		uint8_t uuid_len, uint8_t *uuid, uint16_t *handle);
+                                 uint8_t nb_att_uuid_32, uint8_t nb_att_uuid_128);
+uint8_t atts_add_attribute_req_handler(uint16_t start_hdl, uint16_t max_data_size, uint16_t perm,
+                                       uint8_t uuid_len, uint8_t *uuid, uint16_t *handle);
 uint8_t atts_svc_get_permission_req_handler(uint16_t start_hdl, uint8_t *perm);
-uint8_t atts_svc_set_permission_req_handler (uint16_t start_hdl, uint8_t perm);
+uint8_t atts_svc_set_permission_req_handler(uint16_t start_hdl, uint8_t perm);
 uint8_t atts_att_get_permission_req_handler(uint16_t handle, uint16_t *perm);
-uint8_t atts_att_set_permission_req_handler (uint16_t handle, uint16_t perm);
-uint8_t atts_att_get_value_req_handler (uint16_t handle, uint16_t *length, uint8_t *value);
+uint8_t atts_att_set_permission_req_handler(uint16_t handle, uint16_t perm);
+uint8_t atts_att_get_value_req_handler(uint16_t handle, uint16_t *length, uint8_t *value);
 uint8_t atts_att_set_value_req_handler(uint16_t handle, uint16_t length, uint8_t *value);
 uint8_t atts_destroy_db_req_handler(uint16_t gap_hdl, uint16_t gatt_hdl);
 
@@ -37,20 +37,20 @@ struct atts_char_desc
 
 /// Attribute description (used to create database)
 typedef struct
- {
-     /// UUID length
-	uint8_t uuid_len;
-	/// UUID value
-	uint8_t *uuid;
-     /// Attribute permission
-	uint16_t perm;
-     /// Maximum length of the element
-	uint16_t max_length;
-     /// Current length of the element
-	uint16_t length;
-     /// Element value array
-	uint8_t* value;
- }atts_desc;
+{
+    /// UUID length
+    uint8_t uuid_len;
+    /// UUID value
+    uint8_t *uuid;
+    /// Attribute permission
+    uint16_t perm;
+    /// Maximum length of the element
+    uint16_t max_length;
+    /// Current length of the element
+    uint16_t length;
+    /// Element value array
+    uint8_t *value;
+} atts_desc;
 
 
 /// ATTS task states
@@ -136,20 +136,20 @@ enum
 struct atts_hdl_val_ntf_req
 {
     /// connection handle
-	uint16_t conhdl;
+    uint16_t conhdl;
     /// characteristic handle
-	uint16_t charhdl;
+    uint16_t charhdl;
     /// request type - signed or not
-	uint8_t req_type;
+    uint8_t req_type;
 };
 
 /// handle value indication
 struct atts_hdl_val_ind_req
 {
     /// connection handle
-	uint16_t conhdl;
+    uint16_t conhdl;
     /// characteristic handle
-	uint16_t charhdl;
+    uint16_t charhdl;
     /// request type - signed or not
     uint8_t req_type;
 };
@@ -158,11 +158,11 @@ struct atts_hdl_val_ind_req
 struct atts_req_error_ind
 {
     /// attribute handle
-	uint16_t charhdl;
+    uint16_t charhdl;
     /// attribute server opcode
-	uint8_t opcode;
+    uint8_t opcode;
     /// error status
-	uint8_t status;
+    uint8_t status;
 };
 
 
@@ -171,52 +171,52 @@ struct atts_add_svc_req
 {
     /// Set attribute service start handle
     /// (0 = automatically use first available start handle)
-	uint16_t start_hdl;
+    uint16_t start_hdl;
     /// Task identifier that will manage attribute
-	uint16_t task_id;
+    uint16_t task_id;
     /// Total attribute data size
-	uint16_t total_size;
+    uint16_t total_size;
     /// Number of attribute with BT 16 UUID
-	uint8_t nb_att_uuid_16;
+    uint8_t nb_att_uuid_16;
     /// Number of attributes with BT 32bits UUID
-	uint8_t nb_att_uuid_32;
+    uint8_t nb_att_uuid_32;
     /// Number of attributes with 128bits UUID (proprietary only)
-	uint8_t nb_att_uuid_128;
+    uint8_t nb_att_uuid_128;
 };
 
 /// Add service in database response
 struct atts_add_svc_rsp
 {
     /// Start handle of allocated service in attribute database
-	uint16_t start_hdl;
+    uint16_t start_hdl;
     /// Return status of service allocation in attribute database.
-	uint8_t status;
+    uint8_t status;
 };
 
 /// Add attribute in service database request
 struct atts_add_attribute_req
 {
     /// Service start handle
-	uint16_t start_hdl;
+    uint16_t start_hdl;
     /// Attribute max data size
-	uint16_t max_data_size;
+    uint16_t max_data_size;
     /// Attribute permissions
-	uint16_t perm;
+    uint16_t perm;
     /// Size of attributes UUID length:
     /// - 2 = 16 bits UUIDs
     /// - 16 = 128 bits UUIDS
-	uint8_t uuid_len;
+    uint8_t uuid_len;
     /// 2 or 16 bytes array that represents the UUID value
-	uint8_t uuid[ATT_UUID_128_LEN];
+    uint8_t uuid[ATT_UUID_128_LEN];
 };
 
 /// Add attribute in service database response
 struct atts_add_attribute_rsp
 {
     /// Handle of allocated attribute
-	uint16_t handle;
+    uint16_t handle;
     /// Return status of attribute allocation.
-	uint8_t status;
+    uint8_t status;
 };
 
 /* Service management */
@@ -224,36 +224,36 @@ struct atts_add_attribute_rsp
 struct atts_svc_get_permission_req
 {
     /// Service start attribute handle
-	uint16_t start_hdl;
+    uint16_t start_hdl;
 };
 
 /// Get permission settings of service response
 struct atts_svc_get_permission_rsp
 {
     /// Service start attribute handle
-	uint16_t start_hdl;
+    uint16_t start_hdl;
     /// service permission
-	uint8_t perm;
+    uint8_t perm;
     /// Return status
-	uint8_t status;
+    uint8_t status;
 };
 
 /// Set permission settings of service request
 struct atts_svc_set_permission_req
 {
     /// Service start attribute handle
-	uint16_t start_hdl;
+    uint16_t start_hdl;
     /// service permission
-	uint8_t perm;
+    uint8_t perm;
 };
 
 /// Set permission settings of service response
 struct atts_svc_set_permission_rsp
 {
     /// Service start attribute handle
-	uint16_t start_hdl;
+    uint16_t start_hdl;
     /// Return status
-	uint8_t status;
+    uint8_t status;
 };
 
 
@@ -262,114 +262,114 @@ struct atts_svc_set_permission_rsp
 struct atts_att_get_permission_req
 {
     /// Handle of the attribute
-	uint16_t handle;
+    uint16_t handle;
 };
 
 /// Get permission settings of attribute response
 struct atts_att_get_permission_rsp
 {
     /// Handle of the attribute
-	uint16_t handle;
+    uint16_t handle;
     /// Attribute permission
-	uint16_t perm;
+    uint16_t perm;
     /// Return status
-	uint8_t status;
+    uint8_t status;
 };
 
 /// Set permission settings of attribute request
 struct atts_att_set_permission_req
 {
     /// Handle of the attribute
-	uint16_t handle;
+    uint16_t handle;
     /// Attribute permission
-	uint16_t perm;
+    uint16_t perm;
 };
 
 /// Set permission settings of attribute response
 struct atts_att_set_permission_rsp
 {
     /// Handle of the attribute
-	uint16_t handle;
+    uint16_t handle;
     /// Return status
-	uint8_t status;
+    uint8_t status;
 };
 
 /// Get attribute value request
 struct atts_att_get_value_req
 {
     /// Handle of the attribute
-	uint16_t handle;
+    uint16_t handle;
 };
 
 /// Get attribute value response
 struct atts_att_get_value_rsp
 {
     /// Handle of the attribute
-	uint16_t handle;
+    uint16_t handle;
     /// Attribute value length
-	uint16_t length;
+    uint16_t length;
     /// Return status
-	uint8_t status;
+    uint8_t status;
     /// Attribute value
-	uint8_t value[1];
+    uint8_t value[1];
 };
 
 /// Set attribute value request
 struct atts_att_set_value_req
 {
     /// Handle of the attribute
-	uint16_t handle;
+    uint16_t handle;
     /// Attribute value length
-	uint16_t length;
+    uint16_t length;
     /// Attribute value
-	uint8_t value[1];
+    uint8_t value[1];
 };
 
 /// Set attribute value response
 struct atts_att_set_value_rsp
 {
     /// Handle of the attribute
-	uint16_t handle;
+    uint16_t handle;
     /// Return status
-	uint8_t status;
+    uint8_t status;
 };
 
 /// DEBUG ONLY: Destroy Attribute database request
 struct atts_destroy_db_req
 {
     /// New Gap Start Handle
-	uint16_t gap_hdl;
+    uint16_t gap_hdl;
     /// New Gatt Start Handle
-	uint16_t gatt_hdl;
+    uint16_t gatt_hdl;
 };
 
 /// DEBUG ONLY: Destroy Attribute database Response
 struct atts_destroy_db_rsp
 {
     /// Return status
-	uint8_t status;
+    uint8_t status;
 };
 
 /// DEBUG ONLY: Information about attribute service
 struct atts_svc_info
 {
     /// Service start handle
-	uint16_t start_hdl;
+    uint16_t start_hdl;
     /// Service end handle
-	uint16_t end_hdl;
+    uint16_t end_hdl;
     /// Service task_id
-	uint16_t task_id;
+    uint16_t task_id;
     /// Service permission
-	uint8_t perm;
+    uint8_t perm;
 };
 
 /// DEBUG ONLY: Retrieve list of services response
 struct atts_get_svc_list_rsp
 {
     /// Number of services
-	uint8_t nb_svc;
+    uint8_t nb_svc;
     /// Return status
-	uint8_t status;
+    uint8_t status;
     /// Array of information about services
     struct atts_svc_info svc[1];
 };
@@ -378,32 +378,33 @@ struct atts_get_svc_list_rsp
 struct atts_pdu_param
 {
     /// device connection handle
-	uint16_t    conhdl;
+    uint16_t    conhdl;
     /// valid handle for read attribute
-	uint16_t    att_hdl;
+    uint16_t    att_hdl;
     /// attribute opcode
-	uint8_t     opcode;
+    uint8_t     opcode;
     /// characteristic value
-	uint8_t     value[ATTM_MAX_VALUE];
+    uint8_t     value[ATTM_MAX_VALUE];
     /// characteristic value length
-	uint16_t    value_len;
+    uint16_t    value_len;
     /// server MTU
-	uint16_t    server_mtu;
+    uint16_t    server_mtu;
     /// temporary uint16_t
-	uint16_t    tmp16;
+    uint16_t    tmp16;
     /// temporary uint8_t
-	uint8_t     tmp8;
+    uint8_t     tmp8;
     /// error code
-	uint8_t     error_code;
+    uint8_t     error_code;
     /// list of handles
-	uint16_t    handles[ATT_NB_MULT_HDLS];
+    uint16_t    handles[ATT_NB_MULT_HDLS];
     /// signature - 12 bytes
-	uint8_t     signature[ATT_SIGNATURE_LEN];
+    uint8_t     signature[ATT_SIGNATURE_LEN];
 };
 #endif
 
 /// Common 16-bit Universal Unique Identifier
-enum {
+enum
+{
     ATT_INVALID_UUID = 0,
     /*----------------- SERVICES ---------------------*/
     /// Generic Access Profile
@@ -853,16 +854,16 @@ enum {
 #define ATTS_ATT_16(type) {(uint8_t)((type)), (uint8_t)((type) >> 8)}
 
 #define ATTS_ATT_32(type) {(uint8_t)((type)), (uint8_t)((type) >> 8),\
-        						(uint8_t)((type)>>16), (uint8_t)((type) >> 24)}
+        (uint8_t)((type)>>16), (uint8_t)((type) >> 24)}
 
 #define ATTS_CHAR_16(prop, handle, type) {(prop),                                           \
-                                       (uint8_t)((handle)), (uint8_t)((handle) >> 8),  \
-                                       (uint8_t)((type)), (uint8_t)((type) >> 8)}
+        (uint8_t)((handle)), (uint8_t)((handle) >> 8),  \
+        (uint8_t)((type)), (uint8_t)((type) >> 8)}
 
 #define ATTS_CHAR_32(prop, handle, type) {(prop),                                           \
-                                       (uint8_t)((handle)), (uint8_t)((handle) >> 8),  \
-                                       (uint8_t)((type)), (uint8_t)((type) >> 8),\
-                                       (uint8_t)((type)>>16), (uint8_t)((type) >> 24)}
+        (uint8_t)((handle)), (uint8_t)((handle) >> 8),  \
+        (uint8_t)((type)), (uint8_t)((type) >> 8),\
+        (uint8_t)((type)>>16), (uint8_t)((type) >> 24)}
 
 
 /// Length, number, offset defines

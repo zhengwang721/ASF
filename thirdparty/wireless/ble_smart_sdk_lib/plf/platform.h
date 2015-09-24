@@ -1,7 +1,7 @@
 /**
  ****************************************************************************************
  *
- * @file platform_drv.h
+ * @file platform.h
  *
  * @brief SAMB11 Platform Drivers Generic API for Applications
  *
@@ -49,27 +49,27 @@ extern "C" {
 #endif
 
 /** callback function type for handling BLE FW stack messages */
-typedef void (*platform_interface_callback) (uint8_t *, uint16_t );
+typedef void (*platform_interface_callback) (uint8_t *, uint32_t );
 
 /** enumerated status values for this platform driver */
 typedef enum PLATFORM_STATUS
 {
-    /** Platform Initialized and ready */
-    STATUS_SUCCESS = 0x00,
-    /** Platform Initialized and ready */
-    STATUS_ALREADY_INITIALIZED,
-    /** Platform Initialized and ready */
-    STATUS_RECEIVED_PLF_EVENT_MSG,
-    /** Platform Initialized and ready */
-    STATUS_RECEIVED_BLE_MSG,
-		/** Failed to initialize the platform */
-		STATUS_INITIALIZATION_FAILED,
-		/** Failed to initialize the platform */
-		STATUS_NOT_INITIALIZED,
-		/** Timeout failure */
-		STATUS_TIMEOUT,
-		/** Status Failure */
-		STATUS_FAILURE,
+	/** Platform Initialized and ready */
+	STATUS_SUCCESS = 0x00,
+	/** Platform Initialized and ready */
+	STATUS_ALREADY_INITIALIZED,
+	/** Platform Initialized and ready */
+	STATUS_RECEIVED_PLF_EVENT_MSG,
+	/** Platform Initialized and ready */
+	STATUS_RECEIVED_BLE_MSG,
+	/** Failed to initialize the platform */
+	STATUS_INITIALIZATION_FAILED,
+	/** Failed to initialize the platform */
+	STATUS_NOT_INITIALIZED,
+	/** Timeout failure */
+	STATUS_TIMEOUT,
+	/** Status Failure */
+	STATUS_FAILURE,
 }plf_drv_status;
 	
 /**

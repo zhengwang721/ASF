@@ -4,6 +4,8 @@
 		</info>
 		<build type="include-path"  value="./"/>
   		<build type="header-file"   value="at_ble_api.h"/>
+  		<build type="header-file"   value="at_ble_errno.h"/>
+  		<build type="header-file"   value="at_ble_trace.h"/>
 
 		<build type="doxygen-entry-point" value="ble_smart_stack_group"/>
 		<device-support-alias value="ble_smart_stack_lib_support"/>

@@ -23,6 +23,9 @@ volatile static bool read_complete_flag = false;
 volatile static bool write_complete_flag = false;
 //! [variable_inst]
 
+
+at_ble_init_config_t pf_cfg;
+
 //! [callback_functions]
 static void uart_read_complete_callback(struct uart_module *const module)
 {
@@ -95,9 +98,9 @@ void ble_init(void)
 		memset(scan_rsp_data,0,sizeof(scan_rsp_data));
 		memcpy(adv_data,ro_adv_data,sizeof(ro_adv_data));
 		memcpy(scan_rsp_data,ro_scan_rsp_data,sizeof(ro_scan_rsp_data));
-
+		memset(&pf_cfg,0,sizeof(pf_cfg));
 		// init device
-		if((status = at_ble_init(NULL)) == AT_BLE_SUCCESS)
+		if((status = at_ble_init(&pf_cfg)) == AT_BLE_SUCCESS)
 		{
 		    status = AT_BLE_FAILURE;
   			// Set the device address
@@ -105,7 +108,7 @@ void ble_init(void)
 	       // start advertising
 		    adv_data[25] = BEACON_IDENTIFIER;
 		    at_ble_adv_data_set((uint8_t *)adv_data, sizeof(ro_adv_data), (uint8_t *)scan_rsp_data, sizeof(ro_scan_rsp_data));
-		    at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 100, 1000, 0);
+		    at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 0x00A0, 0, 0);
 		}
 
  }
@@ -207,7 +210,7 @@ int main()
 
 			case AT_BLE_DISCONNECTED:
 			{
-				at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED,AT_BLE_ADV_GEN_DISCOVERABLE,NULL, AT_BLE_ADV_FP_ANY, 100, 1000, 0);
+				at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED,AT_BLE_ADV_GEN_DISCOVERABLE,NULL, AT_BLE_ADV_FP_ANY, 0x00A0, 0, 0);
 			}
 			break;
 
@@ -218,5 +221,3 @@ int main()
 	}
 	return 0;
 }	
-
-

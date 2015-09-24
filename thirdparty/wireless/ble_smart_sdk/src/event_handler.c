@@ -12,7 +12,7 @@
 
 //#include "interface.h"
 #include <string.h>
-#include "platform_drv.h"
+#include "platform.h"
 #include "event_handler.h"
 
 #define PLATFORM_EVENT_POOL_DEPTH 10

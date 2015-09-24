@@ -10,20 +10,20 @@
 
 #include "cmn_defs.h"
 #include "ll_if.h"
+#include "gattm_task.h"
 
-
-#define APP_ADV_DEV_NAME	"\x4e\x4d\x49\x2D\x42\x4C\x45"
-#define APP_ADV_DEV_NAME_LEN	(7)
+#define APP_ADV_DEV_NAME    "\x4e\x4d\x49\x2D\x42\x4C\x45"
+#define APP_ADV_DEV_NAME_LEN    (7)
 
 /// Advertising data maximal length
 #define ADV_DATA_MAX_SIZE           (31-3) /*32 including the size in 1st byte*/
 /// Scan Response data maximal length
 #define SCAN_RESP_DATA_MAX_SIZE     (31) /*32 including the size in 1st byte*/
 
-#define AD_TYPE_NAME				(0x09)
+#define AD_TYPE_NAME                (0x09)
 
 /*32 bytes of zeros*/
-#define APP_ZERO_PAD_DATA	"\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0"
+#define APP_ZERO_PAD_DATA   "\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0\x0"
 
 
 /// Minimum to maximum connection interval upon any connection
@@ -53,28 +53,25 @@
 #define GAP_CONN_LATENCY                                    0x0000
 
 
-#define ATTC_1ST_REQ_START_HDL		0x0001
-#define ATTC_1ST_REQ_END_HDL		0xFFFF
+#define ATTC_1ST_REQ_START_HDL      0x0001
+#define ATTC_1ST_REQ_END_HDL        0xFFFF
 
-#define EVENT_TYPE_ADVERTISING		0
-#define EVENT_TYPE_SCAN_RESP		4
-
-#define GAP_TMR_PRIV_ADDR_INT       0xEA60
-
+#define EVENT_TYPE_ADVERTISING      0
+#define EVENT_TYPE_SCAN_RESP        4
 
 typedef struct
 {
-	///Connection Handle
-	uint16_t u16ConHdl;
-	///Slave Connected Flag
-	uint8_t u8Connected;
-	///Address Type
+    ///Connection Handle
+    uint16_t u16ConHdl;
+    ///Slave Connected Flag
+    uint8_t u8Connected;
+    ///Address Type
     uint8_t u8AddrType;
-	///BD_ADDR
-	uint8_t *pu8Addr;
-	///Slave Found Flag
+    ///BD_ADDR
+    uint8_t *pu8Addr;
+    ///Slave Found Flag
     //uint8_t u8Found;
-}peers_info;
+} peers_info;
 
 /// GAP Specific Error
 enum gap_err_code
@@ -118,8 +115,8 @@ enum
 /*Used to accept or reject bond request sent from peer device*/
 enum
 {
-	GAP_BOND_ACCEPT = 0,
-	GAP_BOND_REJECT = 1
+    GAP_BOND_ACCEPT = 0,
+    GAP_BOND_REJECT = 1
 };
 
 ///Filter duplicates
@@ -151,7 +148,7 @@ enum
 {
     /* Default event */
     /// Command Complete event
-    GAPM_CMP_EVT = 0x3400,
+    GAPM_CMP_EVT = ((uint16_t)(TASK_GAPM << 8)),
     /// Event triggered to inform that lower layers are ready
     GAPM_DEVICE_READY_IND,
 
@@ -165,7 +162,7 @@ enum
     /// Set device configuration command
     GAPM_SET_DEV_CONFIG_CMD,
     /// Set device name command
-    GAPM_SET_DEV_NAME_CMD,
+    //GAPM_SET_DEV_NAME_CMD, //Deprycated
     /// Set device channel map
     GAPM_SET_CHANNEL_MAP_CMD,
 
@@ -173,13 +170,18 @@ enum
     /// Get local device info command
     GAPM_GET_DEV_INFO_CMD,
     /// Local device name indication event
-    GAPM_DEV_NAME_IND,
+    //GAPM_DEV_NAME_IND,
     /// Local device appearance indication event
-    GAPM_APPEARANCE_IND,
+    //GAPM_APPEARANCE_IND,
     /// Local device version indication event
     GAPM_DEV_VERSION_IND,//340A
     /// Local device BD Address indication event
     GAPM_DEV_BDADDR_IND,
+
+    /// Advertising channel Tx power level
+    GAPM_DEV_ADV_TX_POWER_IND,
+    /// Indication containing information about memory usage.
+    GAPM_DBG_MEM_INFO_IND,
 
     /* White List */
     /// White List Management Command
@@ -190,6 +192,8 @@ enum
     /* Air Operations */
     /// Set advertising mode Command
     GAPM_START_ADVERTISE_CMD,
+    /// Update Advertising Data Command - On fly update when device is advertising
+    GAPM_UPDATE_ADVERTISE_DATA_CMD,
 
     /// Set Scan mode Command
     GAPM_START_SCAN_CMD,
@@ -205,9 +209,9 @@ enum
 
     /* Privacy update events */
     /// Privacy flag value has been updated
-    GAPM_UPDATED_PRIVACY_IND,
+    //GAPM_UPDATED_PRIVACY_IND,
     /// Reconnection address has been updated
-    GAPM_UPDATED_RECON_ADDR_IND,
+    //GAPM_UPDATED_RECON_ADDR_IND,
 
     /* Security / Encryption Toolbox */
     /// Resolve address command
@@ -227,11 +231,20 @@ enum
 
     /* Debug  */
     /// Indication containing information about memory usage.
-    GAPM_DBG_MEM_INFO_IND,
+    //GAPM_DBG_MEM_INFO_IND,
 
     /* Local device information -cont */
     /// Advertising channel Tx power level
-    GAPM_DEV_ADV_TX_POWER_IND,
+    //GAPM_DEV_ADV_TX_POWER_IND,
+
+    /* Profile Management */
+    /// Create new task for specific profile
+    GAPM_PROFILE_TASK_ADD_CMD,
+    /// Inform that profile task has been added.
+    GAPM_PROFILE_ADDED_IND,
+
+    /// Indicate that a message has been received on an unknown task
+    GAPM_UNKNOWN_TASK_IND,
 
     /* Internal messages for timer events, not part of API*/
     /// Limited discoverable timeout indication
@@ -239,7 +252,9 @@ enum
     /// Scan timeout indication
     GAPM_SCAN_TO_IND,//3420
     /// Address renewal timeout indication
-    GAPM_ADDR_RENEW_TO_IND
+    GAPM_ADDR_RENEW_TO_IND,
+    /// Message received to unknown task received
+    GAPM_UNKNOWN_TASK_MSG
 };
 
 
@@ -264,18 +279,20 @@ enum gapm_operation
     /// Set device configuration
     GAPM_SET_DEV_CONFIG,
     /// Set device name
-    GAPM_SET_DEV_NAME,
+    //GAPM_SET_DEV_NAME,
     /// Set device channel map
     GAPM_SET_CHANNEL_MAP,
 
     /* Retrieve device information                      */
     /* ************************************************ */
     /// Get Local device name
-    GAPM_GET_DEV_NAME,
+    //GAPM_GET_DEV_NAME,
     /// Get Local device version
     GAPM_GET_DEV_VERSION,
     /// Get Local device BD Address
     GAPM_GET_DEV_BDADDR,
+    /// Get device advertising power level
+    GAPM_GET_DEV_ADV_TX_POWER,
 
     /* Operation on White list                          */
     /* ************************************************ */
@@ -296,6 +313,10 @@ enum gapm_operation
     GAPM_ADV_UNDIRECT,
     /// Start directed connectable advertising
     GAPM_ADV_DIRECT,
+    /// Start directed connectable advertising using Low Duty Cycle
+    GAPM_ADV_DIRECT_LDC,
+    /// Update on the fly advertising data
+    GAPM_UPDATE_ADVERTISE_DATA,
 
     /* Scan mode operations                             */
     /* ************************************************ */
@@ -326,6 +347,11 @@ enum gapm_operation
     /// Generate a 8-byte random number
     GAPM_GEN_RAND_NB,
 
+    /* Profile Management                               */
+    /* ************************************************ */
+    /// Create new task for specific profile
+    GAPM_PROFILE_TASK_ADD,
+
     /* DEBUG                                            */
     /* ************************************************ */
     /// Get memory usage
@@ -336,27 +362,33 @@ enum gapm_operation
     /* Retrieve device information - cont               */
     /* ************************************************ */
     /// Get device advertising power level
-    GAPM_GET_DEV_ADV_TX_POWER,
+    //GAPM_GET_DEV_ADV_TX_POWER,
 
     /// Last GAPM operation flag
     GAPM_LAST
 };
 
-/// Own BD address source of the device
-enum gapm_own_addr_src
+/// Device Address type Configuration
+enum gapm_addr_type
 {
-   /// Public Address
-   GAPM_PUBLIC_ADDR,
-   /// Provided random address
-   GAPM_PROVIDED_RND_ADDR,
-   /// Provided static random address
-   GAPM_GEN_STATIC_RND_ADDR,
-   /// Generated resolvable private random address
-   GAPM_GEN_RSLV_ADDR,
-   /// Generated non-resolvable private random address
-   GAPM_GEN_NON_RSLV_ADDR,
-   /// Provided Reconnection address
-   GAPM_PROVIDED_RECON_ADDR
+    /// Device Address is a Public Static address
+    GAPM_CFG_ADDR_PUBLIC,
+    /// Device Address is a Private Static address
+    GAPM_CFG_ADDR_PRIVATE,
+    /// Device Address generated using Privacy feature
+    GAPM_CFG_ADDR_PRIVACY,
+};
+
+
+/// Own BD address source of the device
+enum gapm_own_addr
+{
+    /// Public or Private Static Address according to device address configuration
+    GAPM_STATIC_ADDR,
+    /// Generated resolvable private random address
+    GAPM_GEN_RSLV_ADDR,
+    /// Generated non-resolvable private random address
+    GAPM_GEN_NON_RSLV_ADDR,
 };
 
 
@@ -373,25 +405,6 @@ enum gap_adv_mode
     GAP_BROADCASTER_MODE
 };
 
-/****************** GAP Role **********************/
-enum gap_role
-{
-    /// No role set yet
-    GAP_NO_ROLE    = 0x00,
-
-    /// Observer role
-    GAP_OBSERVER_SCA    = 0x01,
-
-    /// Broadcaster role
-    GAP_BROADCASTER_ADV = 0x02,
-
-    /// Master/Central role
-    GAP_CENTRAL_MST     = (0x04 | GAP_OBSERVER_SCA),
-
-    /// Peripheral/Slave role
-    GAP_PERIPHERAL_SLV  = (0x08 | GAP_BROADCASTER_ADV)
-};
-
 /// Device Attribute write permission requirement
 enum gapm_write_att_perm
 {
@@ -405,44 +418,58 @@ enum gapm_write_att_perm
     GAPM_WRITE_AUTH     = PERM(WR, AUTH)
 };
 
-uint8_t gapm_reset_req_handler (void);
+uint8_t gapm_reset_req_handler(void);
 
-uint8_t gapm_set_dev_name_handler(uint8_t len, uint8_t* name);
+uint8_t gapm_set_dev_name_handler(uint8_t len, uint8_t *name);
 
-uint8_t gapm_set_dev_config_cmd_handler(uint8_t u8Role, uint8_t *pu8Key, uint16_t u16Appearance, uint8_t u8AppWrPerm,
-				uint8_t u8NameWrPerm, uint16_t u16MaxMTU, uint16_t u16ConIntMin, uint16_t u16ConIntMax, uint16_t u16ConLatency, 
-				uint16_t u16SupervTo, uint8_t u8Flags);
+uint8_t gapm_set_dev_config_cmd_handler(uint8_t u8Role, uint16_t u16RenewDur,
+                                        uint8_t *pu8Address, uint8_t *pu8Irkey, uint8_t u8AddrType, uint8_t u8AttCfg,
+                                        uint16_t u16GapHandle, uint16_t u16GattHandle, uint16_t u16MaxMTU);
 
-void gapm_start_adv_cmd_handler (uint8_t u8OpCode, uint8_t u8AddrSrc, uint16_t u16RenewDur, 
-		uint8_t *pu8BdAddr,uint8_t peer_addr_type ,uint8_t *peerBdAddr, uint16_t u16MinIntv, uint16_t u16MaxIntv, uint8_t u8ChnlMap, uint8_t u8Mode ,
-	uint8_t u8AdvFiltPolicy, uint8_t u8AdvDataLen, uint8_t *pu8AdvData, uint8_t u8ScnRespLen, uint8_t *pu8ScnRespData);
+uint8_t gapm_get_dev_config_cmd_handler(at_ble_get_dev_info_op_t, void *);
 
-void gapm_start_scan_cmd_handler (uint8_t u8OpCode, uint8_t u8AddrType, uint16_t u16RenewDur, 
-		uint8_t *pu8BdAddr, uint16_t u16ScanInterval, uint16_t u16ScanWin, uint8_t u8ScanMode, uint8_t u8FiltPolicy,
-		uint8_t u8FilterDuplic);
+at_ble_status_t gapm_cancel_cmd_handler(void);
+
+uint8_t gapm_set_channel_map_cmd_handler(uint8_t *pu8Map);
+
+uint8_t gapm_dev_bdaddr_ind_handler(uint8_t *data, at_ble_addr_t *param);
+
+at_ble_events_t gapm_cmp_evt(uint8_t *data, void *params);
+
+uint8_t get_gap_local_addr_type(void);
+
+uint8_t gapm_start_adv_cmd_handler(uint8_t u8OpCode, uint8_t u8AddrSrc, uint16_t u16RenewDur,
+                                   uint8_t peer_addr_type, uint8_t *pu8BdAddr, uint16_t u16MinIntv,
+                                   uint16_t u16MaxIntv, uint8_t u8ChnlMap, uint8_t u8Mode,
+                                   uint8_t u8AdvFiltPolicy, uint8_t u8AdvDataLen, uint8_t *pu8AdvData,
+                                   uint8_t u8ScnRespLen, uint8_t *pu8ScnRespData,
+                                   uint16_t timeout, bool disable_randomness);
+
+void gapm_adv_report_evt_handler(uint8_t *data,
+                                 at_ble_scan_info_t *param);
+
+void gapm_start_scan_cmd_handler(uint8_t u8OpCode, uint8_t u8AddrType, uint16_t u16RenewDur,
+                                 uint8_t *pu8BdAddr, uint16_t u16ScanInterval, uint16_t u16ScanWin, uint8_t u8ScanMode, uint8_t u8FiltPolicy,
+                                 uint8_t u8FilterDuplic , uint16_t timeout);
 
 void gapm_start_connection_cmd_handler(uint8_t u8OpCode, uint8_t u8AddrType, uint16_t u16RenewDur,
-			uint8_t *pu8BdAddr, uint16_t u16ScanInterval, uint16_t u16ScanWin, uint16_t u16ConIntvMin, 
-			uint16_t u16ConIntvMax, uint16_t u16ConLatency, uint16_t u16SupervTO, uint16_t u16CeMin, 
-			uint16_t u16CeMAx, uint8_t u8NbOfPeers, at_ble_addr_t *peers);
+                                       uint8_t *pu8BdAddr, uint16_t u16ScanInterval, uint16_t u16ScanWin, uint16_t u16ConIntvMin,
+                                       uint16_t u16ConIntvMax, uint16_t u16ConLatency, uint16_t u16SupervTO, uint16_t u16CeMin,
+                                       uint16_t u16CeMAx, uint8_t u8NbOfPeers, at_ble_addr_t *peers);
 
-uint8_t gapm_cancel_cmd_handler (void);
+uint8_t gapm_white_list_mgm_cmd(uint8_t operation, uint8_t addr_type, uint8_t *param);
 
-void gapm_connection_cfm_handler ( uint8_t *pu8PeerBdAddr, uint8_t u8PeerAddrType,uint16_t u16ConIntvMin, 
-			uint16_t u16ConIntvMax, uint16_t u16ConLatency, uint16_t u16SupervTO, uint16_t u16CeMin, 
-			uint16_t u16CeMAx);
+void gapm_resolv_addr_cmd_handler(uint8_t nb_key , uint8_t *rand_addr , uint8_t *irk);
+void gapm_addr_solved_ind_handler(uint8_t *data , at_ble_resolv_rand_addr_status_t *params);
 
-uint8_t  gapm_white_list_mgm_cmd(uint8_t operation, uint8_t addr_type, uint8_t* address);
-
-void gapm_adv_report_evt_handler(uint8_t* data,
-	at_ble_scan_info_t* param);
-
-void gapm_dev_bdaddr_ind_handler(uint8_t* data,at_ble_rand_addr_changed_t* param);
-
-void gapm_resolv_addr_cmd_handler(uint8_t nb_key , uint8_t* rand_addr , uint8_t* irk);
-
-void gapm_addr_solved_ind_handler(uint8_t* data , at_ble_resolv_rand_addr_status_t* params);
-
-at_ble_events_t gapm_cmp_evt(uint8_t* data, void* params);
+at_ble_status_t gapm_profile_task_add_cmd_handler(uint8_t  sec_lvl,
+        uint16_t prf_task_id,
+        uint16_t app_task,
+        uint16_t start_hdl,
+        void *param,
+        uint16_t len,
+        at_ble_handle_t *start_handle
+                                                 );
+at_ble_events_t gapm_profile_added_ind_handler(uint8_t *data, void *params);
 
 #endif /* GAP_TASK_H_ */

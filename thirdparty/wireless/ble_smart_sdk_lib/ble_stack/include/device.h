@@ -1,51 +1,75 @@
 #ifndef __DEVICE_H__
 #define __DEVICE_H__
 
-/// Constant defining the role
-typedef enum
-{
-    ///Master role
-    ROLE_MASTER,
-    ///Slave role
-    ROLE_SLAVE,
-    ///Enumeration end value for role value check
-    ROLE_END
-}at_ble_dev_role;
+#include "gapc_task.h"
 
 struct device_info
 {
-	// local device adv and scan data
+    /*
+     =====================================
+     *Configuration Data to be sent to FW*
+     =====================================
+     */
+    at_ble_dev_config_t config;
+
+    /*
+     ==================
+     *Operations Flags*
+     ==================
+     */
+    bool bAddrWasSet;
+    bool bIrkeyWasSet;
+    bool bDevNameWasSet;
+    bool bGapDevInfo;
+    //bool bAddrAutoGen;
+    bool bDataChanged;
+
+    /*
+     ========================
+     *Local Data to be saved*
+     ========================
+     */
+    uint16_t conn_handle;
+    // local device adv and scan data
     uint8_t ADVData[AT_BLE_ADV_MAX_SIZE];
     uint8_t SrData[AT_BLE_ADV_MAX_SIZE];
     uint8_t advLen;
     uint8_t srLen;
+    at_ble_adv_channel_map_t u8AdvChnlMap;
 
-	// handle when the device is in a slave connection
-	at_ble_handle_t conn_handle;
+    //Connection mode operation
+    at_ble_conn_mode_t conMode;
 
-	// local device bt address
-	bool at_addr_set;
-	at_ble_addr_t at_dev_addr;
-	bool addr_auto_gen;
-	uint8_t privacy_flags;
-	// peer device address
-	at_ble_addr_t peer_addr;
+    uint8_t privacy_flags;
+    // peer device address
+    at_ble_addr_t peer_addr;
 
-	// the role in which the device is running in now
-	at_ble_dev_role role;
+    // device local keys
+    at_ble_LTK_t ltk;
+    at_ble_CSRK_t csrk;
 
-	// device local keys
-	at_ble_LTK_t ltk; 
-	at_ble_CSRK_t csrk; 
-	at_ble_IRK_t irk;
-	uint16_t renew_dur;
-
-	at_ble_spcp_t spcp_param;
-	uint16_t appearance; 
-	uint8_t dev_name_write_perm;
-
+    /* Device Info*/
+    struct device_name dev_name;
+    uint16_t appearance;
+    at_ble_spcp_t spcp_param;
+    uint8_t dev_name_write_perm;
 };
 
+typedef struct
+{
+    uint8_t             role;
+    at_ble_addr_t       peerAddr;
+    at_ble_conn_mode_t  conMode;
+    at_ble_handle_t     conHandle;
+    gap_auth_t          auth;
+    at_ble_LTK_t        ltk;
+    at_ble_CSRK_t       csrk;
+} tstrConnData;
+
+extern uint8_t check_ConnData_idx_role(uint16_t con_idx, uint8_t *pRole);
+extern uint8_t check_ConnData_emptyEntry(void);
+
 extern struct device_info device;
+extern tstrConnData gstrConnData[AT_BLE_MAX_CONCURRENT_CONNS];
 
 #endif

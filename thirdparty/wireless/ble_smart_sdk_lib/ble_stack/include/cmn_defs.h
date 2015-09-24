@@ -7,32 +7,51 @@
 
 #ifndef CMN_DEFS_H_
 #define CMN_DEFS_H_
-
+#include <stdio.h>
+#include "dbg_logs.h"
 /// Builds the task identifier from the type and the index of that task.
 #define KE_BUILD_ID(type, index) ( (uint16_t)(((index) << 8)|(type)) )
 
 /// Retrieves task index number from task id.
-#define KE_IDX_GET(NMI_Uint16) (((NMI_Uint16) >> 8) & 0xFF)
+#define KE_IDX_GET(NMI_Uint16) ((((uint16_t)(NMI_Uint16)) >> 8) & 0x00FF)
 
-#define TASK_EXTERN 		TASK_GTL
-#ifdef CHIPVERSION_B0
-#define	TASK_INTERN		  05
-#else
-#define TASK_INTERN		  62
-#endif	//CHIPVERSION_B0
-#define API_PKT_ID			0x05
-#define HDR_LEN				9
+#define KE_TASK_GET(NMI_Uint16) ((NMI_Uint16) & 0x00FF)
+typedef union union_ptr_tag
+{
+    void     *ptr;
+    uint8_t  *u8ptr;
+    uint16_t *u16ptr;
+    uint32_t *u32ptr;
+    uint32_t  val;
+} UnionPtr;
+extern uint8_t unNull;
+#define UN_NULL(ptr) (ptr != NULL ? ptr : &unNull)
+//#define ALIGN_PTR_WORD_CEIL_BOUNDARY(x)              (x=((ptr_to_uint32)(x+3)&0xFFFFFFFC))
+#define ALIGN_PTR_WORD_FLOOR_BOUNDARY(x)\
+    do{\
+        UnionPtr _x;\
+        _x.ptr = x;\
+        _x.val = ((_x.val + 3) & 0xFFFFFFFC) - 4;\
+        x = _x.ptr;\
+    } while (0)
+#define TASK_EXTERN         TASK_GTL
+#define TASK_INTERN					(0x05)
+#define API_PKT_ID          0x05
+#define HDR_LEN             9
 
-
-#define NMI_CHAR_MAX_LEN		(2)
+#define NMI_CHAR_MAX_LEN        (2)
 
 #define KEY_LEN             0x10
-enum {
-	DISABLE = 0,
-	ENABLE
+
+#define ERROR_REPORT    PRINT_ERR("\n");
+#define NMI_TRUE (1)
+
+
+enum
+{
+    DISABLE = 0,
+    ENABLE
 };
-
-
 
 /// Attribute access types
 enum
@@ -55,7 +74,7 @@ enum
 
 /// Attribute access types mask
 enum
- {
+{
     /// Read Access Mask
     PERM_ACCESS_MASK_RD           = 0x0007,
     /// Write Access Mask
@@ -70,7 +89,7 @@ enum
     PERM_ACCESS_MASK_HIDE         = 0x2000,
     /// Write Signed Enabled attribute Mask
     PERM_ACCESS_MASK_WRITE_SIGNED = 0x4000
- };
+};
 
 /// Service access types
 enum
@@ -85,14 +104,14 @@ enum
 
 /// Service access types mask
 enum
- {
+{
     /// Service Access Mask
     PERM_ACCESS_MASK_SVC       = 0x07,
     /// Check Encryption key size for service Access Mask
     PERM_ACCESS_MASK_SVC_EKS   = 0x08,
     /// Hide/Show service Access Mask
     PERM_ACCESS_MASK_SVC_HIDE  = 0x10
- };
+};
 
 /// Attribute & Service access rights
 enum
@@ -128,91 +147,93 @@ enum
 #define FALSE 0
 
 #define PERM(access, right) \
-    (((PERM_RIGHT_ ## right) << (PERM_ACCESS_ ## access)) & (PERM_ACCESS_MASK_ ## access))
+    (((PERM_RIGHT_ ## right) << (PERM_POS_ ## access)) & (PERM_MASK_ ## access))
 
-/// Tasks types.
-enum
+enum KE_API_ID
 {
-    TASK_NONE = 0xFF,
+    // Link Layer Tasks
+    TASK_LLM          = 0,
+    TASK_LLC          = 1,
+    TASK_LLD          = 2,
+    TASK_DBG          = 3,
 
     // BT Controller Tasks
-    TASK_LM           = 56   ,
-    TASK_LC           = 57   ,
-    TASK_LB           = 58   ,
-    TASK_LD           = 59   ,
+    TASK_LM           = 4,
+    TASK_LC           = 5,
+    TASK_LB           = 6,
+    TASK_LD           = 7,
 
-    // Link Layer Tasks
-    TASK_LLM          = 0   ,
-    TASK_LLC          = 1   ,
-    TASK_LLD          = 2   ,
+    TASK_HCI          = 8,
+    TASK_DISPLAY      = 9,
 
-    TASK_HCI          = 60  ,
-    TASK_HCIH         = 61  ,
+    TASK_L2CC         = 10,
+    TASK_GATTM        = 11,   // Generic Attribute Profile Manager Task
+    TASK_GATTC        = 12,   // Generic Attribute Profile Controller Task
+    TASK_GAPM         = 13,   // Generic Access Profile Manager
+    TASK_GAPC         = 14,   // Generic Access Profile Controller
 
-    TASK_DBG          = 3   ,
+    TASK_APP          = 15,
+    TASK_GTL          = 16,
+    TASK_INTERNAL_APP = 17,
+    TASK_FLASH        = 18,
+    // -----------------------------------------------------------------------------------
+    // --------------------- BLE Profile TASK API Identifiers ----------------------------
+    // -----------------------------------------------------------------------------------
+    TASK_DISS         = 20,   // Device Information Service Server Task
+    TASK_DISC         = 21,   // Device Information Service Client Task
 
-    TASK_L2CM         = 4   ,
-    TASK_L2CC         = 5   ,
-    TASK_SMPM         = 6   ,
-    TASK_SMPC         = 7   ,
-    TASK_ATTM         = 8   ,   // Attribute Protocol Manager Task
-    TASK_ATTC         = 9   ,   // Attribute Protocol Client Task
-    TASK_ATTS         = 10  ,   // Attribute Protocol Server Task
-    TASK_GATTM        = 11  ,   // Generic Attribute Profile Manager Task
-    TASK_GATTC        = 12  ,   // Generic Attribute Profile Controller Task
-    TASK_GAPM         = 13  ,   // Generic Access Profile Manager
-    TASK_GAPC         = 14  ,   // Generic Access Profile Controller
-    TASK_PROXM        = 15  ,   // Proximity Monitor Task
-    TASK_PROXR        = 16  ,   // Proximity Reporter Task
-    TASK_FINDL        = 17  ,   // Find Me Locator Task
-    TASK_FINDT        = 18  ,   // Find Me Target Task
-    TASK_HTPC         = 19  ,   // Health Thermometer Collector Task
-    TASK_HTPT         = 20  ,   // Health Thermometer Sensor Task
-    TASK_ACCEL        = 21  ,   // Accelerometer Sensor Task
-    TASK_BLPS         = 22  ,   // Blood Pressure Sensor Task
-    TASK_BLPC         = 23  ,   // Blood Pressure Collector Task
-    TASK_HRPS         = 24  ,   // Heart Rate Sensor Task
-    TASK_HRPC         = 25  ,   // Heart Rate Collector Task
-    TASK_TIPS         = 26  ,   // Time Server Task
-    TASK_TIPC         = 27  ,   // Time Client Task
-    TASK_DISS         = 28  ,   // Device Information Service Server Task
-    TASK_DISC         = 29  ,   // Device Information Service Client Task
-    TASK_SCPPS        = 30  ,   // Scan Parameter Profile Server Task
-    TASK_SCPPC        = 31  ,   // Scan Parameter Profile Client Task
-    TASK_BASS         = 32  ,   // Battery Service Server Task
-    TASK_BASC         = 33  ,   // Battery Service Client Task
-    TASK_HOGPD        = 34  ,   // HID Device Task
-    TASK_HOGPBH       = 35  ,   // HID Boot Host Task
-    TASK_HOGPRH       = 36  ,   // HID Report Host Task
-    TASK_GLPS         = 37  ,   // Glucose Profile Sensor Task
-    TASK_GLPC         = 38  ,   // Glucose Profile Collector Task
-    TASK_NBPS         = 39  ,   // Nebulizer Profile Server Task
-    TASK_NBPC         = 40  ,   // Nebulizer Profile Client Task
-    TASK_RSCPS        = 41  ,   // Running Speed and Cadence Profile Server Task
-    TASK_RSCPC        = 42  ,   // Running Speed and Cadence Profile Collector Task
-    TASK_CSCPS        = 43  ,   // Cycling Speed and Cadence Profile Server Task
-    TASK_CSCPC        = 44  ,   // Cycling Speed and Cadence Profile Client Task
-    TASK_ANPS         = 45  ,   // Alert Notification Profile Server Task
-    TASK_ANPC         = 46  ,   // Alert Notification Profile Client Task
-    TASK_PASPS        = 47  ,   // Phone Alert Status Profile Server Task
-    TASK_PASPC        = 48  ,   // Phone Alert Status Profile Client Task
+    TASK_PROXM        = 22,   // Proximity Monitor Task
+    TASK_PROXR        = 23,   // Proximity Reporter Task
 
-    TASK_CPPS         = 49  ,   // Cycling Power Profile Server Task
-    TASK_CPPC         = 50  ,   // Cycling Power Profile Client Task
+    TASK_FINDL        = 24,   // Find Me Locator Task
+    TASK_FINDT        = 25,   // Find Me Target Task
 
-    TASK_DISPLAY      = 51  ,
-    TASK_APP          = 52  ,
+    TASK_HTPC         = 26,   // Health Thermometer Collector Task
+    TASK_HTPT         = 27,   // Health Thermometer Sensor Task
 
-    TASK_LANS         = 53  ,   // Location and Navigation Profile Server Task
-    TASK_LANC         = 54  ,   // Location and Navigation Profile Client Task
+    TASK_BLPS         = 28,   // Blood Pressure Sensor Task
+    TASK_BLPC         = 29,   // Blood Pressure Collector Task
+
+    TASK_HRPS         = 30,   // Heart Rate Sensor Task
+    TASK_HRPC         = 31,   // Heart Rate Collector Task
+
+    TASK_TIPS         = 32,   // Time Server Task
+    TASK_TIPC         = 33,   // Time Client Task
+
+    TASK_SCPPS        = 34,   // Scan Parameter Profile Server Task
+    TASK_SCPPC        = 35,   // Scan Parameter Profile Client Task
+
+    TASK_BASS         = 36,   // Battery Service Server Task
+    TASK_BASC         = 37,   // Battery Service Client Task
+
+    TASK_HOGPD        = 38,   // HID Device Task
+    TASK_HOGPBH       = 39,   // HID Boot Host Task
+    TASK_HOGPRH       = 40,   // HID Report Host Task
+
+    TASK_GLPS         = 41,   // Glucose Profile Sensor Task
+    TASK_GLPC         = 42,   // Glucose Profile Collector Task
+
+    TASK_RSCPS        = 43,   // Running Speed and Cadence Profile Server Task
+    TASK_RSCPC        = 44,   // Running Speed and Cadence Profile Collector Task
+
+    TASK_CSCPS        = 45,   // Cycling Speed and Cadence Profile Server Task
+    TASK_CSCPC        = 46,   // Cycling Speed and Cadence Profile Client Task
+
+    TASK_ANPS         = 47,   // Alert Notification Profile Server Task
+    TASK_ANPC         = 48,   // Alert Notification Profile Client Task
+
+    TASK_PASPS        = 49,   // Phone Alert Status Profile Server Task
+    TASK_PASPC        = 50,   // Phone Alert Status Profile Client Task
+
+    TASK_CPPS         = 51,   // Cycling Power Profile Server Task
+    TASK_CPPC         = 52,   // Cycling Power Profile Client Task
+
+    TASK_LANS         = 53,   // Location and Navigation Profile Server Task
+    TASK_LANC         = 54,   // Location and Navigation Profile Client Task
 
 
-
-
-    TASK_GTL          = 63  ,
-    TASK_MAX          = 64
+    TASK_INVALID      = 0xFF, // Invalid Task Identifier
 };
-
 
 ///Advertising filter policy
 enum adv_filter_policy
@@ -270,18 +291,18 @@ struct att_desired_type
 struct att_uuid_type
 {
     /// Size of the UUID
-	uint8_t value_size;
+    uint8_t value_size;
     /// expected response size - read multiple
-	uint8_t expect_resp_size;
+    uint8_t expect_resp_size;
     /// actual UUID
-	uint8_t value[ATT_UUID_128_LEN];
+    uint8_t value[ATT_UUID_128_LEN];
 };
 
 /// Attribute data holder
 struct att_info_data
 {
     /// data length
-	uint16_t len;
+    uint16_t len;
     /// each result length
     uint8_t each_len;
     /// data

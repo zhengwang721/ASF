@@ -50,9 +50,11 @@ struct co_list_hdr{
 struct ke_msg
 {
     struct co_list_hdr hdr;     ///< List header for chaining
-	  uint8_t         hci_type;   ///< Type of HCI data (used by the HCI only)
+#ifdef CHIPVERSION_A4
+	uint8_t         hci_type;   ///< Type of HCI data (used by the HCI only)
     int8_t          hci_off;    ///< Offset of the HCI data in the message (used by the HCI only)
     uint16_t        hci_len;    ///< Length of the HCI traffic (used by the HCI only)
+#endif	//CHIPVERSION_A4
     ke_msg_id_t     id;         ///< Message id.
     ke_task_id_t    dest_id;    ///< Destination kernel identifier.
     ke_task_id_t    src_id;     ///< Source kernel identifier.

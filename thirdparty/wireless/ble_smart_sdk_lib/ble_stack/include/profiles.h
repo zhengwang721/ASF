@@ -13,11 +13,11 @@
 struct prf_server_error_ind
 {
     /// Connection Handle
-	uint16_t conhdl;
+    uint16_t conhdl;
     /// Message ID
-	uint16_t msg_id;
+    uint16_t msg_id;
     /// Status
-	uint8_t status;
+    uint8_t status;
 };
 /// Time profile information
 struct prf_date_time
