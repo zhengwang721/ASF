@@ -189,9 +189,9 @@ static uint32_t _pwm_reg_clock_sel(enum pwm_device_select device_select, enum pw
  *   \li Sample method 0
  *   \li PWM period is 4
  *   \li Duty cycle is 50%
- *   \li No use agcupdate
  *   \li Clock is 26MHz
- *   \li Pinmux pad 0
+ *   \li Output frequency is 25.4KHz
+ *   \li Pinmux pad
  *
  *  \param[out] config  Configuration structure to initialize to default values
  */

@@ -450,89 +450,6 @@ enum system_calibration_status {
 	CALBRATION_DONE,
 };
 
-enum system_rtc_circuit_resistor {
-	/** 20Mohm resistor */
-	RTC_CIRCUIT_RESISTOR_20,
-	/** 30Mohm resistor */
-	RTC_CIRCUIT_RESISTOR_30,
-};
-
-enum system_rtc_circuit_transconductance {
-	/** Transconductance is 75ns */
-	RTC_CIRCUIT_GM_75,
-	/** Transconductance is 85ns */
-	RTC_CIRCUIT_GM_85,
-	/** Transconductance is 96ns */
-	RTC_CIRCUIT_GM_96,
-	/** Transconductance is 106ns */
-	RTC_CIRCUIT_GM_106,
-	/** Transconductance is 116ns */
-	RTC_CIRCUIT_GM_116,
-	/** Transconductance is 127ns */
-	RTC_CIRCUIT_GM_127,
-	/** Transconductance is 137ns */
-	RTC_CIRCUIT_GM_137,
-	/** Transconductance is 147ns */
-	RTC_CIRCUIT_GM_147,
-	/** Transconductance is 158ns */
-	RTC_CIRCUIT_GM_158,
-	/** Transconductance is 168ns */
-	RTC_CIRCUIT_GM_168,
-	/** Transconductance is 178ns */
-	RTC_CIRCUIT_GM_178,
-	/** Transconductance is 189ns */
-	RTC_CIRCUIT_GM_189,
-	/** Transconductance is 199ns */
-	RTC_CIRCUIT_GM_199,
-	/** Transconductance is 209ns */
-	RTC_CIRCUIT_GM_209,
-	/** Transconductance is 220ns */
-	RTC_CIRCUIT_GM_220,
-	/** Transconductance is 230ns */
-	RTC_CIRCUIT_GM_230,
-};
-
-enum system_rtc_circuit_cap {
-	/** 0pF */
-	RTC_CIRCUIT_CAP_0,
-	/** 1pF */
-	RTC_CIRCUIT_CAP_1,
-	/** 2pF */
-	RTC_CIRCUIT_CAP_2,
-	/** 3pF */
-	RTC_CIRCUIT_CAP_3,
-	/** 4pF */
-	RTC_CIRCUIT_CAP_4,
-	/** 5pF */
-	RTC_CIRCUIT_CAP_5,
-	/** 6pF */
-	RTC_CIRCUIT_CAP_6,
-	/** 7pF */
-	RTC_CIRCUIT_CAP_7,
-	/** 8pF */
-	RTC_CIRCUIT_CAP_8,
-	/** 9pF */
-	RTC_CIRCUIT_CAP_9,
-	/** 10pF */
-	RTC_CIRCUIT_CAP_10,
-	/** 11pF */
-	RTC_CIRCUIT_CAP_11,
-	/** 12pF */
-	RTC_CIRCUIT_CAP_12,
-	/** 13pF */
-	RTC_CIRCUIT_CAP_13,
-	/** 14pF */
-	RTC_CIRCUIT_CAP_14,
-	/** 15pF */
-	RTC_CIRCUIT_CAP_15,
-};
-
-struct system_rtc_circuit_config {
-	enum system_rtc_circuit_resistor resistor;
-	enum system_rtc_circuit_transconductance transconductance;
-	enum system_rtc_circuit_cap cap;
-};
-
 struct system_calibration_config {
 	enum system_calibration_clk_num clk_num;
 	enum system_calibration_interrput_control interrupt_control;
@@ -606,14 +523,6 @@ enum status_code system_clock_aon_config( \
 				enum system_clock_aon_resource aon_resource);
 enum status_code system_clock_peripheral_aon_enable(enum system_peripheral_aon peripheral_aon);
 enum status_code system_clock_peripheral_aon_disable(enum system_peripheral_aon peripheral_aon);
-/** @} */
-
-/**
- * \name System RTC crystal circuit configuration
- * @{
- */
-void system_rtc_circuit_get_config_defaults(struct system_rtc_circuit_config *config);
-void system_rtc_circuit_set_config(struct system_rtc_circuit_config *config);
 /** @} */
 
 #ifdef __cplusplus
