@@ -76,7 +76,7 @@ void configure_gpio_pins(void)
 
 int main(void)
 {
-	//system_init();
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 
 	//! [setup_init]
 	configure_gpio_pins();

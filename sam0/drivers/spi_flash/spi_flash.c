@@ -172,10 +172,10 @@ void spi_flash_init(void)
 {
 	/* PINMUX init */
 	LPMCU_MISC_REGS0->PINMUX_SEL_3.reg = \
-							LPMCU_MISC_REGS_PINMUX_SEL_3_LP_SIP_0_SEL_1 | \
-							LPMCU_MISC_REGS_PINMUX_SEL_3_LP_SIP_1_SEL_3 | \
-							LPMCU_MISC_REGS_PINMUX_SEL_3_LP_SIP_2_SEL_2 | \
-							LPMCU_MISC_REGS_PINMUX_SEL_3_LP_SIP_3_SEL_4;
+							LPMCU_MISC_REGS_PINMUX_SEL_3_LP_SIP_0_SEL_MUX1 | \
+							LPMCU_MISC_REGS_PINMUX_SEL_3_LP_SIP_1_SEL_MUX3 | \
+							LPMCU_MISC_REGS_PINMUX_SEL_3_LP_SIP_2_SEL_MUX2 | \
+							LPMCU_MISC_REGS_PINMUX_SEL_3_LP_SIP_3_SEL_MUX4;
 
 	SPI_FLASH0->MODE_CTRL.reg = SPI_FLASH_MODE_CTRL_RESETVALUE;
 	spi_flash_leave_low_power_mode();
@@ -215,7 +215,7 @@ uint32_t spi_flash_read_id(void)
 * \param[in]  flash_addr  Flash memory address to read from
 * \param[in]  size        Data length to be read, must be less than or equal to FLASH_PAGE_SIZE
 */
-void spi_flash_read(void *read_buf, uint32_t flash_addr, uint32_t size)
+void spi_flash_read(uint8_t *read_buf, uint32_t flash_addr, uint32_t size)
 {
 	uint8_t   cmd[8] = {0, };
 	uint32_t  memory_addr;
@@ -322,6 +322,7 @@ int8_t spi_flash_write(void *write_buf, uint32_t flash_addr, uint32_t size)
 static void spi_flash_sector_erase(uint32_t flash_addr)
 {
 	uint8_t cmd[8] = {0,};
+	uint32_t  i=0;
 
 	cmd[0] = SPI_FLASH_CMD_SECTOR_ERASE;
 	cmd[1] = (char)(flash_addr >> 16);
@@ -339,6 +340,10 @@ static void spi_flash_sector_erase(uint32_t flash_addr)
 	SPI_FLASH0->TRANSACTION_CTRL.reg = \
 			SPI_FLASH_TRANSACTION_CTRL_FLASH_TRANS_START | \
 			SPI_FLASH_TRANSACTION_CTRL_CMD_COUNT(0x04);
+
+	for (i = 0; i < 0xFF; i++) {
+		/* Waiting...*/
+	}
 
 	while ((SPI_FLASH0->IRQ_STATUS.bit.FLASH_TRANS_DONE != \
 			SPI_FLASH_IRQ_STATUS_FLASH_TRANS_DONE) && \
