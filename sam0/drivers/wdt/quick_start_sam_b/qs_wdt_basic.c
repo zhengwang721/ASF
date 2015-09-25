@@ -106,7 +106,8 @@ static void configure_wdt_callback(void)
 int main(void)
 {
 	uint32_t current_value;
-	uint16_t i, j;
+	uint16_t i;
+	uint32_t j;
 
 	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 
@@ -114,7 +115,7 @@ int main(void)
 	configure_gpio();
 	for(i = 0; i < 5; i++) {
 		gpio_pin_toggle_output_level(LED_0_PIN);
-		for (j = 0; j < 5000; j++) {
+		for (j = 0; j < 1000000; j++) {
 			/* Delay time */
 		}
 	}
