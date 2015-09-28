@@ -1,8 +1,8 @@
 <asf xmlversion="1.0">
-	<select-by-config id="config.board.same70_xplained_pro.led" name="config.board.same70_xplained_pro.led" caption="SAME70 PRO LED support" default="yes">
-		<module type="meta" id="config.board.same70_xplained_pro.led#no" caption="SAME70 PRO LED support disabled">
+	<select-by-config id="config.board.same70_xplained_pro.led" name="config.board.same70_xplained_pro.led" caption="SAME70 XPRO LED support" default="yes">
+		<module type="meta" id="config.board.same70_xplained_pro.led#no" caption="SAME70 XPRO LED support disabled">
 		</module>
-		<module type="meta" id="config.board.same70_xplained_pro.led#yes" caption="SAME70 PRO LED support enabled">
+		<module type="meta" id="config.board.same70_xplained_pro.led#yes" caption="SAME70 XPRO LED support enabled">
 			<build type="header-file" subtype="api" value="led.h"/>
 			<build type="include-path" value="."/>
 			<require idref="common.services.ioport"/>
@@ -22,7 +22,7 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.same70_xplained_pro" vendor="Atmel" caption="SAME70-PRO">
+	<board id="board.same70_xplained_pro" vendor="Atmel" caption="SAME70-XPRO">
 		<build type="define" name="BOARD" value="SAME70_XPLAINED_PRO"/>
 		<build type="define" name="__SAME70Q21__" value=""/>
 		<build type="header-file" value="same70_xplained_pro.h"/>

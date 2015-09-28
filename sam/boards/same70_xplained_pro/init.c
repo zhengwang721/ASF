@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAME70-PRO board init.
+ * \brief SAME70-XPRO board init.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *

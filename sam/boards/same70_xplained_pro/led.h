@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAME70-PRO LEDs support package.
+ * \brief SAME70-XPRO LEDs support package.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
