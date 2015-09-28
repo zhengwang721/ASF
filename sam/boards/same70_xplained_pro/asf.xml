@@ -1,0 +1,46 @@
+<asf xmlversion="1.0">
+	<select-by-config id="config.board.same70_xplained_pro.led" name="config.board.same70_xplained_pro.led" caption="SAME70 PRO LED support" default="yes">
+		<module type="meta" id="config.board.same70_xplained_pro.led#no" caption="SAME70 PRO LED support disabled">
+		</module>
+		<module type="meta" id="config.board.same70_xplained_pro.led#yes" caption="SAME70 PRO LED support enabled">
+			<build type="header-file" subtype="api" value="led.h"/>
+			<build type="include-path" value="."/>
+			<require idref="common.services.ioport"/>
+			<require idref="common.services.basic.gpio"/>
+		</module>
+	</select-by-config>
+
+	<select-by-config id="config.board.same70_xplained_pro.init" name="config.board.same70_xplained_pro.init" caption="SAME70 initialization support" default="yes">
+		<module type="meta" id="config.board.same70_xplained_pro.init#no" caption="SAME70 initialization support disabled">
+		</module>
+		<module type="meta" id="config.board.same70_xplained_pro.init#yes" caption="SAME70 initialization support enabled">
+			<build type="c-source" value="init.c"/>
+			<require idref="common.services.ioport"/>
+			<require idref="common.services.basic.gpio"/>
+			<require idref="sam.drivers.mpu"/>
+			<require idref="sam.drivers.pio"/>			
+		</module>
+	</select-by-config>
+
+	<board id="board.same70_xplained_pro" vendor="Atmel" caption="SAME70-PRO">
+		<build type="define" name="BOARD" value="SAME70_XPLAINED_PRO"/>
+		<build type="define" name="__SAME70Q21__" value=""/>
+		<build type="header-file" value="same70_xplained_pro.h"/>
+		<build type="include-path" value="."/>
+		<build type="include-path" value=".."/>
+		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
+		<build type="macro-config" subtype="script" value="debug_scripts/gcc/same70_xplained_pro_flash.gdb" toolchain="armgcc"/>
+		<build type="macro-config" subtype="aux-script" value="debug_scripts/gcc/same70_xplained_pro_sram.gdb" toolchain="armgcc"/>
+		<build type="macro-config" subtype="script" value="debug_scripts/iar/same70_xplained_pro_flash.mac" toolchain="iarewarm"/>
+		<build type="macro-config" subtype="aux-script" value="debug_scripts/iar/same70_xplained_pro_sram.mac" toolchain="iarewarm"/>
+		<device-support value="same70"/>
+		<require idref="sam.utils.cmsis.same70.source.template"/>
+		<require idref="common.boards"/>
+		<require idref="config.board.same70_xplained_pro.init"/>
+		<require idref="config.board.same70_xplained_pro.led"/>
+		
+		<!-- Debug drivers default configuration -->
+		<config name="config.compiler.iarewarm.debugger.driver" value="cmsisdap"/>
+	</board>
+</asf>

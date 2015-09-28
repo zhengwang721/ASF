@@ -153,6 +153,7 @@ extern "C" {
 #define AVR_SIMULATOR_UC3          98  //!< Simulator for the AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
 #define DUMMY_BOARD               100  //!< Dummy board to support board-independent applications (e.g. bootloader).
+#define SAME70_XPLAINED_PRO       101  //!< SAME70 Xplained Pro board.
 //! @}
 
 /*! \name Extension Boards
@@ -354,6 +355,8 @@ extern "C" {
 #  include "atmega328p_xplained_mini/atmega328p_xplained_mini.h"
 #elif BOARD == DUMMY_BOARD
 #  include "dummy/dummy_board.h"
+#elif BOARD == SAME70_XPLAINED_PRO
+#  include "same70_xplained_pro/same70_xplained_pro.h"
 #else
 #  error No known Atmel board defined
 #endif
