@@ -147,6 +147,7 @@ extern "C" {
 #define SAMW25_XPLAINED_PRO        79  //!< SAMW25 Xplained Pro board.
 #define SAMC21_XPLAINED_PRO        80  //!< SAM C21 Xplained Pro board.
 #define SAMV71_XPLAINED_ULTRA      81  //!< SAMV71 Xplained Ultra board.
+#define SAME70_XPLAINED_PRO        83  //!< SAME70 Xplained Pro board.
 #define SAML22_XPLAINED_PRO        86  //!< SAM L22 Xplained Pro board.
 #define ATMEGA328P_XPLAINED_MINI   82  //!< ATMEGA328P Xplained MINI board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices.
@@ -354,6 +355,8 @@ extern "C" {
 #  include "atmega328p_xplained_mini/atmega328p_xplained_mini.h"
 #elif BOARD == DUMMY_BOARD
 #  include "dummy/dummy_board.h"
+#elif BOARD == SAME70_XPLAINED_PRO
+#  include "same70_xplained_pro/same70_xplained_pro.h"
 #else
 #  error No known Atmel board defined
 #endif
