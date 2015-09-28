@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMV71-XPLAINED-ULTRA board configuration.
+ * \brief SAME70-XPLAINED-PRO board configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *

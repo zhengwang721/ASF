@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMV71-XPLAINED-ULTRA board configuration.
+ * \brief SAME70-XPRO LEDs support package.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,10 +44,38 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef LED_H_INCLUDED
+#define LED_H_INCLUDED
 
-/* Configure UART pins */
-#define CONF_BOARD_UART_CONSOLE
+#include "compiler.h"
+#include "ioport.h"
 
-#endif /* CONF_BOARD_H_INCLUDED */
+/**
+ * \brief Turns off the specified LEDs.
+ *
+ * \param led LED to turn off (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Off(led)     ioport_set_pin_level(led##_GPIO, led##_INACTIVE_LEVEL)
+
+/**
+ * \brief Turns on the specified LEDs.
+ *
+ * \param led LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_On(led)      ioport_set_pin_level(led##_GPIO, led##_ACTIVE_LEVEL)
+
+/**
+ * \brief Toggles the specified LEDs.
+ *
+ * \param led LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Toggle(led)  ioport_toggle_pin_level(led##_GPIO)
+
+
+#endif  // LED_H_INCLUDED
