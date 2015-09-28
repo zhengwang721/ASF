@@ -44,15 +44,15 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef _SAME70_XLTRA_H_
-#define _SAME70_XLTRA_H_
+#ifndef _SAME70_PRO_H_
+#define _SAME70_PRO_H_
 
 #include "compiler.h"
 #include "system_same70.h"
 
 /*----------------------------------------------------------------------------*/
 /**
- *  \page same70_xplained_ultra_opfreq "SAME70-XLTRA - Operating frequencies"
+ *  \page same70_xplained_pro_opfreq "SAME70-PRO - Operating frequencies"
  *  This page lists several definition related to the board operating frequency
  *
  *  \section Definitions
@@ -74,7 +74,7 @@
 
 /*----------------------------------------------------------------------------*/
 /**
- * \page same70_xplained_ultra_info "SAME70-XLTRA - Board informations"
+ * \page same70_xplained_pro_info "SAME70-PRO - Board informations"
  * This page lists several definition related to the board description.
  *
  * \section Definitions
@@ -82,7 +82,7 @@
  */
 
 /** Name of the board */
-#define BOARD_NAME "SAME70-XLTRA"
+#define BOARD_NAME "SAME70-PRO"
 /** Board definition */
 #define same70pro
 /** Family definition (already defined) */
@@ -609,4 +609,4 @@
 
 
 /*----------------------------------------------------------------------------*/
-#endif   /* _SAME70_XLTRA_H_ */
+#endif   /* _SAME70_PRO_H_ */
