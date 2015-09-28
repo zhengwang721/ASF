@@ -233,22 +233,6 @@ void dma_get_config_defaults(struct dma_resource_config *config)
 }
 
 /**
- * \brief Initial the DMA global variety.
- *
- * Initial the DMA global variety.
- */
-void dma_global_init(void)
-{
-	/* Clear global variety */
-	_dma_inst._dma_init = false;
-	_dma_inst.allocated_channels = 0;
-	_dma_inst.free_channels = CONF_MAX_USED_CHANNEL_NUM;
-	for (int i=0; i<CONF_MAX_USED_CHANNEL_NUM; i++) {
-		_dma_active_resource[i] = NULL;
-	}
-}
-
-/**
  * \brief Configure the DMA resource.
  *
  * \param[in]  dma_resource Pointer to a DMA resource instance
@@ -407,9 +391,6 @@ enum status_code dma_start_transfer_job(struct dma_resource *resource)
 	if (resource->descriptor->buffer_size == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
-
-	/* Enable DMA interrupt */
-	//NVIC_EnableIRQ(6);
 	
 	/* Clear the interrupt flag */
 	regval = get_channel_reg_val(resource->channel_id, (uint32_t)&PROV_DMA_CTRL0->CH0_INT_STATUS_REG.reg);
@@ -453,7 +434,7 @@ static uint8_t get_channel_index(uint8_t channel)
 static void dma_isr_handler( void )
 {
 	uint8_t active_channel;
-	uint8_t channel_index;
+	static uint8_t channel_index; //
 	struct dma_resource *resource;
 	uint8_t isr;
 	uint8_t isr_flag = 0;
@@ -522,10 +503,10 @@ static void dma_isr_handler( void )
 				resource->callback[isr_flag](resource);
 			}
 		}
-		active_channel &= ~(1<<isr_flag);
-	} while (active_channel);
-	/* For A4, DMA IRQ is 6 */
-	NVIC_ClearPendingIRQ(6);
+		isr &= ~(1<<isr_flag);
+	} while (isr);
+
+	NVIC_ClearPendingIRQ(PROV_DMA_CTRL0_IRQn);
 }
 
 /**
@@ -549,7 +530,9 @@ enum status_code dma_allocate(struct dma_resource *resource,
 	if (!_dma_inst._dma_init) {
 		/* Perform a reset before enable DMA controller */
 		system_peripheral_reset(PERIPHERAL_DMA);
-		system_register_isr(RAM_ISR_TABLE_DMA_INDEX, (uint32_t)dma_isr_handler);
+		/* Select Mux 15 as PROV_DMA_CTRL0 interrupt source */
+		LPMCU_MISC_REGS0->IRQ_MUX_IO_SEL_3.bit.MUX_15 = LPMCU_MISC_REGS_IRQ_MUX_IO_SEL_3_MUX_12_16_Val;
+		system_register_isr(31, (uint32_t)dma_isr_handler);
 		
 		_dma_inst._dma_init = true;
 	}

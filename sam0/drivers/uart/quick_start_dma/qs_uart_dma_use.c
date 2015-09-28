@@ -52,34 +52,34 @@ struct uart_module uart_instance;
 
 //! [dma_resource]
 struct dma_resource uart_dma_resource_tx;
+struct dma_resource uart_dma_resource_rx;
 //! [dma_resource]
 
 //! [usart_buffer]
-#define BUFFER_LEN    15
-static uint8_t string[BUFFER_LEN] = "Hello World!\r\n";
+#define BUFFER_LEN    8
+static uint8_t string[BUFFER_LEN];
 //! [usart_buffer]
 
-//! [transf_flag]
-volatile bool transfer_done_flag = false;
-//! [transf_flag]
 
 //! [transfer_descriptor]
 struct dma_descriptor example_descriptor_tx;
+struct dma_descriptor example_descriptor_rx;
 //! [transfer_descriptor]
 
 //! [setup]
 //! [transfer_done_tx]
 static void transfer_done_tx(struct dma_resource* const resource )
 {
-	transfer_done_flag = true;
+	dma_start_transfer_job(&uart_dma_resource_rx);
 }
 //! [transfer_done_tx]
 
-static void delay(void)
+//! [transfer_done_rx]
+static void transfer_done_rx(struct dma_resource* const resource )
 {
-	for (int i = 0; i < 3000000; i++)
-		asm("nop");
+	dma_start_transfer_job(&uart_dma_resource_tx);
 }
+//! [transfer_done_rx]
 
 //! [config_dma_resource_tx]
 static void configure_dma_resource_tx(struct dma_resource *resource)
@@ -95,7 +95,7 @@ static void configure_dma_resource_tx(struct dma_resource *resource)
 //! [setup_tx_3]
 	config.des.periph = UART0TX_DMA_PERIPHERAL;
 	config.des.enable_inc_addr = false;
-	//config.src.periph = UART0TX_DMA_PERIPHERAL;
+	config.src.periph = UART0TX_DMA_PERIPHERAL;
 //! [setup_tx_3]
 
 //! [setup_tx_4]
@@ -120,6 +120,45 @@ static void setup_transfer_descriptor_tx(struct dma_descriptor *descriptor)
 //! [setup_tx_6]
 }
 //! [setup_dma_transfer_tx_descriptor]
+
+//! [config_dma_resource_rx]
+static void configure_dma_resource_rx(struct dma_resource *resource)
+{
+	//! [setup_rx_1]
+	struct dma_resource_config config;
+	//! [setup_rx_1]
+
+	//! [setup_rx_2]
+	dma_get_config_defaults(&config);
+	//! [setup_rx_2]
+
+	//! [setup_rx_3]
+	config.src.periph = UART0RX_DMA_PERIPHERAL;
+	config.src.enable_inc_addr = false;
+	config.src.periph_delay = 1;
+	//! [setup_rx_3]
+
+	//! [setup_rx_4]
+	dma_allocate(resource, &config);
+	//! [setup_rx_4]
+}
+//! [config_dma_resource_rx]
+
+//! [setup_dma_transfer_rx_descriptor]
+static void setup_transfer_descriptor_rx(struct dma_descriptor *descriptor)
+{
+	//! [setup_rx_5]
+	dma_descriptor_get_config_defaults(descriptor);
+	//! [setup_rx_5]
+
+	//! [setup_tx_6]
+	descriptor->buffer_size = BUFFER_LEN;
+	descriptor->read_start_addr =
+			(uint32_t)(&uart_instance.hw->RECEIVE_DATA.reg);
+	descriptor->write_start_addr = (uint32_t)string;
+	//! [setup_tx_6]
+}
+//! [setup_dma_transfer_rx_descriptor]
 
 //! [setup_usart]
 static void configure_usart(void)
@@ -148,6 +187,7 @@ static void configure_usart(void)
 
 //! [enable_interrupt]
 	uart_enable_transmit_dma(&uart_instance);
+	uart_enable_receive_dma(&uart_instance);
 //! [enable_interrupt]
 }
 //! [setup_usart]
@@ -157,14 +197,16 @@ static void configure_dma_callback(void)
 {
 //! [setup_callback_register]
 	dma_register_callback(&uart_dma_resource_tx, transfer_done_tx, DMA_CALLBACK_TRANSFER_DONE);
+	dma_register_callback(&uart_dma_resource_rx, transfer_done_rx, DMA_CALLBACK_TRANSFER_DONE);
 //! [setup_callback_register]
 
 //! [setup_enable_callback]
 	dma_enable_callback(&uart_dma_resource_tx, DMA_CALLBACK_TRANSFER_DONE);
+	dma_enable_callback(&uart_dma_resource_rx, DMA_CALLBACK_TRANSFER_DONE);
 //! [setup_enable_callback]
 
 //! [enable_inic]
-	NVIC_EnableIRQ(6);
+	NVIC_EnableIRQ(PROV_DMA_CTRL0_IRQn);
 //! [enable_inic]
 }
 //! [setup_callback]
@@ -182,42 +224,33 @@ int main(void)
 	configure_usart();
 //! [setup_usart]
 
-//! [dma_global_init]
-	dma_global_init();
-//! [dma_global_init]
-
 //! [setup_dma_resource]
 	configure_dma_resource_tx(&uart_dma_resource_tx);
+	configure_dma_resource_rx(&uart_dma_resource_rx);
 //! [setup_dma_resource]
 
 //! [setup_transfer_descriptor]
 	setup_transfer_descriptor_tx(&example_descriptor_tx);
+	setup_transfer_descriptor_rx(&example_descriptor_rx);
 //! [setup_transfer_descriptor]
 
 //! [add_descriptor_to_resource]
 	dma_add_descriptor(&uart_dma_resource_tx, &example_descriptor_tx);
+	dma_add_descriptor(&uart_dma_resource_rx, &example_descriptor_rx);
 //! [add_descriptor_to_resource]
 
 //! [configure_callback]
 	configure_dma_callback();
 //! [configure_callback]
-	
-	transfer_done_flag = false;
-
 //! [setup_init]
 
 //! [main]
 //! [main_1]
-	dma_start_transfer_job(&uart_dma_resource_tx);
+	dma_start_transfer_job(&uart_dma_resource_rx);
 //! [main_1]
 
 //! [endless_loop]
 	while (true) {
-		if (transfer_done_flag) {
-			transfer_done_flag = false;
-			delay();
-			dma_start_transfer_job(&uart_dma_resource_tx);
-		}
 	}
 //! [endless_loop]
 //! [main]

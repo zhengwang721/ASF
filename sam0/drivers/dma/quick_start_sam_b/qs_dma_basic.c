@@ -117,9 +117,8 @@ static void configure_dma_callback(struct dma_resource *resource)
 	dma_enable_callback(resource, DMA_CALLBACK_TRANSFER_DONE);
 	//! [setup_enable_callback]
 	
-	/* For A4, DMA IRQ is 6 */
 	//! [enable_IRQ]
-	NVIC_EnableIRQ(6);
+	NVIC_EnableIRQ(PROV_DMA_CTRL0_IRQn);
 	//! [enable_IRQ]
 }
 
