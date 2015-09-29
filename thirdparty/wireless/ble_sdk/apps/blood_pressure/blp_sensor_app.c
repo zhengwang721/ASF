@@ -380,8 +380,8 @@ static void blp_char_indication(void)
 		map_val_kpa = map_val_kpa + (operator[MAP_KPA]);
 		blp_value_update(blp_data,idx,map_val_kpa,MAP_KPA);
 		idx += 2;
-		DBG_LOG("%-12s","Diastolic");
-		DBG_LOG_CONT("   %02d kpa",diastolic_val_kpa);	
+		DBG_LOG("%-12s","Map");
+		DBG_LOG_CONT("   %02d kpa",map_val_kpa);	
 	}
 	
 	memcpy(&blp_data[idx],time_stamp,sizeof(time_stamp));

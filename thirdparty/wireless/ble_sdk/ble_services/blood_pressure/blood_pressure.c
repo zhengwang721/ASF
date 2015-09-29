@@ -128,8 +128,14 @@ void blp_init_service(blp_gatt_service_handler_t *blood_pressure_serv)
 	blood_pressure_serv->serv_chars[0].user_desc_permissions
 		= AT_BLE_ATTR_NO_PERMISSIONS;
 	/*client config permissions*/
-	blood_pressure_serv->serv_chars[0].client_config_permissions
-		= AT_BLE_ATTR_NO_PERMISSIONS;
+	#if BLE_PAIR_ENABLE
+			blood_pressure_serv->serv_chars[0].client_config_permissions
+			= AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR;
+	#else 
+			blood_pressure_serv->serv_chars[0].client_config_permissions
+			= AT_BLE_ATTR_NO_PERMISSIONS;
+	#endif 
+
 	/*server config permissions*/
 	blood_pressure_serv->serv_chars[0].server_config_permissions
 		= AT_BLE_ATTR_NO_PERMISSIONS;
@@ -183,9 +189,16 @@ void blp_init_service(blp_gatt_service_handler_t *blood_pressure_serv)
 	/*user description permissions*/
 	blood_pressure_serv->serv_chars[1].user_desc_permissions
 		= AT_BLE_ATTR_NO_PERMISSIONS;
+		
 	/*client config permissions*/
+	#if BLE_PAIR_ENABLE
 	blood_pressure_serv->serv_chars[1].client_config_permissions
-		= AT_BLE_ATTR_NO_PERMISSIONS;
+	= AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR;
+	#else
+	blood_pressure_serv->serv_chars[1].client_config_permissions
+	= AT_BLE_ATTR_NO_PERMISSIONS;
+	#endif
+
 	/*server config permissions*/
 	blood_pressure_serv->serv_chars[1].server_config_permissions
 		= AT_BLE_ATTR_NO_PERMISSIONS;

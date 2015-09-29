@@ -126,9 +126,18 @@ void hr_init_service(hr_gatt_service_handler_t *heart_rate_serv)
 	/*user description permissions*/
 	heart_rate_serv->serv_chars[0].user_desc_permissions
 		= AT_BLE_ATTR_NO_PERMISSIONS;
+	
 	/* client config permissions */
+	#if BLE_PAIR_ENABLE
 	heart_rate_serv->serv_chars[0].client_config_permissions
-						= (AT_BLE_ATTR_NO_PERMISSIONS);	
+							= (AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
+	
+	#else 
+	heart_rate_serv->serv_chars[0].client_config_permissions
+							= (AT_BLE_ATTR_NO_PERMISSIONS);
+	#endif 
+	
+	
 	/*server config permissions*/
 	heart_rate_serv->serv_chars[0].server_config_permissions
 		= AT_BLE_ATTR_NO_PERMISSIONS;
