@@ -69,6 +69,7 @@
  * - sam4e16e_sam4e_ek
  * - sam4c16c_sam4c_ek
  * - sam4cp16b_sam4cp16bmb
+ * - same70q21_same70_xplained_pro
  * - samv71q21_samv71_xplained_ultra
  *
  * \section compinfo Compilation info
