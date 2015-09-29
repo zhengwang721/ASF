@@ -125,12 +125,7 @@
 #define LED0_ACTIVE_LEVEL    (IOPORT_PIN_LEVEL_LOW)
 #define LED0_INACTIVE_LEVEL  (IOPORT_PIN_LEVEL_HIGH)
 
-#define LED1_GPIO            (PIO_PC9_IDX)
-#define LED1_FLAGS           (0)
-#define LED1_ACTIVE_LEVEL    (IOPORT_PIN_LEVEL_LOW)
-#define LED1_INACTIVE_LEVEL  (IOPORT_PIN_LEVEL_HIGH)
-
-#define	LED_COUNT			 (2)
+#define	LED_COUNT			 (1)
 //@}
 
 //! \name SW0 definitions
