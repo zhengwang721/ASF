@@ -120,17 +120,12 @@
 
 //! \name LED definitions
 //@{
-#define LED0_GPIO            (PIO_PA23_IDX)
+#define LED0_GPIO            (PIO_PC8_IDX)
 #define LED0_FLAGS           (0)
 #define LED0_ACTIVE_LEVEL    (IOPORT_PIN_LEVEL_LOW)
 #define LED0_INACTIVE_LEVEL  (IOPORT_PIN_LEVEL_HIGH)
 
-#define LED1_GPIO            (PIO_PC9_IDX)
-#define LED1_FLAGS           (0)
-#define LED1_ACTIVE_LEVEL    (IOPORT_PIN_LEVEL_LOW)
-#define LED1_INACTIVE_LEVEL  (IOPORT_PIN_LEVEL_HIGH)
-
-#define	LED_COUNT			 (2)
+#define	LED_COUNT			 (1)
 //@}
 
 //! \name SW0 definitions
@@ -408,16 +403,14 @@
 
 #define PIN_GMAC_RESET_MASK   PIO_PC10
 #define PIN_GMAC_RESET_PIO    PIOC
-#define PIN_GMAC_INT_MASK     PIO_PA19
+#define PIN_GMAC_INT_MASK     PIO_PA14
 #define PIN_GMAC_INT_PIO      PIOA
-#define PIN_GMAC_SIGDET_MASK  PIO_PA29
-#define PIN_GMAC_SIGDET_PIO   PIOA
-#define PIN_GMAC_PERIPH  PIO_PERIPH_A
-#define PIN_GMAC_PIO     PIOD
-#define PIN_GMAC_MASK   (PIO_PD0A_GTXCK | PIO_PD1A_GTXEN | PIO_PD2A_GTX0 | \
-						 PIO_PD3A_GTX1 | PIO_PD4A_GRXDV | PIO_PD5A_GRX0 |  \
-						 PIO_PD6A_GRX1 | PIO_PD7A_GRXER | PIO_PD8A_GMDC | \
-						 PIO_PD9A_GMDIO)
+#define PIN_GMAC_PERIPH       PIO_PERIPH_A
+#define PIN_GMAC_PIO          PIOD
+#define PIN_GMAC_MASK         (PIO_PD0A_GTXCK | PIO_PD1A_GTXEN | PIO_PD2A_GTX0 | \
+						       PIO_PD3A_GTX1 | PIO_PD4A_GRXDV | PIO_PD5A_GRX0 |  \
+						       PIO_PD6A_GRX1 | PIO_PD7A_GRXER | PIO_PD8A_GMDC | \
+						       PIO_PD9A_GMDIO)
 
 /** Board configuration of the AT24MAC EEPROM */
 #define BOARD_AT24MAC_TWIHS_INSTANCE      TWIHS0
@@ -515,7 +508,7 @@
 #define USB_VBUS_PIN             PIO_PC9_IDX  /* As IO pin input */
 #define USB_VBUS_PIN_IRQn ( PIOC_IRQn)
 #define USB_VBUS_PIO_ID       ID_PIOC
-#define USB_VBUS_PIO_MASK  PIO_PC9 
+#define USB_VBUS_PIO_MASK  PIO_PC9
 //! @}
 
 /*! \name GPIO Connections of ID detecting

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="TWIHS SLAVE Example for SAMV71 Xplained Ultra" id="sam.drivers.twihs.twihs_slave_example.samv71_xplained_ultra">
+	<project caption="TWI EEPROM Example for SAME70 Xplained Pro" id="sam.drivers.twihs.twihs_slave_example.same70_xplained_pro">
 		<info type="description" value="summary">
 		The application demonstrates how to use the SAM TWIHS peripheral in slave mode.
 		</info>
@@ -9,12 +9,12 @@
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="include-path" value="."/>
 		<require idref="sam.drivers.twihs.twihs_slave_example"/>
-		<require idref="board.samv71_xplained_ultra"/>
+		<require idref="board.same70_xplained_pro"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<generator value="doxygen"/>
-		<device-support value="atsamv71q21"/>
+		<device-support value="atsame70q21"/>
 	</project>
 </asf>

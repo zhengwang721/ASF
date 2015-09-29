@@ -208,7 +208,7 @@ int main(void)
 
 	/* Turn off LEDs */
 	LED_Off(LED0);
-	
+
     /* Initialize the console UART */
 	configure_console();
 
@@ -287,7 +287,9 @@ int main(void)
 	}
 	/* Match */
 	puts("Data comparison:\tMatched!\r");
+#if !(SAME70)
 	LED_On(LED0);
+#endif
 	while (1) {
 	}
 }
