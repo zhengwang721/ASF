@@ -69,7 +69,6 @@ void i2c_slave_get_config_defaults(
 	/* Sanity check */
 	Assert(config);
 	
-	config->i2c_core        = I2C_CORE1;
 	config->clock_source    = I2C_CLK_INPUT_3;
 	config->clock_divider   = 0x10;
 	config->pinmux_pad0   = PINMUX_LP_GPIO_8_MUX2_I2C0_SDA;
@@ -133,6 +132,7 @@ static enum status_code _i2c_slave_set_config(
  */
 enum status_code i2c_slave_init(
 		struct i2c_slave_module *const module,
+		I2C *const hw,
 		const struct i2c_slave_config *const config)
 {
 	/* Sanity check */
@@ -140,32 +140,19 @@ enum status_code i2c_slave_init(
 	Assert(module->hw);
 	Assert(config);
 
+	module->hw = hw;
+	
 	/* Sanity check arguments. */
 	if ((module == NULL) || (config == NULL))
 		return STATUS_ERR_INVALID_ARG;
 
-	/* Initialize software module */
-	if (config->i2c_core == I2C_CORE1) {
-		module->hw = (void *)I2C0;
-	}
-#ifdef CHIPVERSION_B0
-	else if (config->i2c_core == I2C_CORE2) {
-		module->hw = (void *)I2C1;
-	}
-#endif  /* CHIPVERSION_B0 */
-	else {
-		return STATUS_ERR_INVALID_ARG;
-	}
-	I2C *const i2c_module = (module->hw);
-	i2c_disable(i2c_module);
-	if (config->i2c_core == I2C_CORE1)
+	i2c_disable(module->hw);
+	
+	if (module->hw == I2C0)
 		system_peripheral_reset(PERIPHERAL_I2C0_CORE);
-#ifdef CHIPVERSION_B0
-	else if (config->i2c_core == I2C_CORE2) {
+	else if (module->hw == I2C1) {
 		system_peripheral_reset(PERIPHERAL_I2C1_CORE);
-	}
-#endif  /* CHIPVERSION_B0 */
-	else {
+	} else {
 		return STATUS_ERR_INVALID_ARG;
 	}
 
@@ -179,8 +166,17 @@ enum status_code i2c_slave_init(
 	module->status              = STATUS_OK;
 
 	_i2c_instances = (void*)module;
-	system_register_isr(RAM_ISR_TABLE_I2CRX0_INDEX, (uint32_t)_i2c_slave_rx_isr_handler);
-	system_register_isr(RAM_ISR_TABLE_I2CTX0_INDEX, (uint32_t)_i2c_slave_tx_isr_handler);
+	if (module->hw == I2C0) {
+		system_register_isr(RAM_ISR_TABLE_I2CRX0_INDEX, (uint32_t)_i2c_slave_rx_isr_handler);
+		system_register_isr(RAM_ISR_TABLE_I2CTX0_INDEX, (uint32_t)_i2c_slave_tx_isr_handler);
+		NVIC_EnableIRQ(I2C0_RX_IRQn);
+		NVIC_EnableIRQ(I2C0_TX_IRQn);
+	} else if (module->hw == I2C1) {
+		system_register_isr(RAM_ISR_TABLE_I2CRX1_INDEX, (uint32_t)_i2c_slave_rx_isr_handler);
+		system_register_isr(RAM_ISR_TABLE_I2CTX1_INDEX, (uint32_t)_i2c_slave_tx_isr_handler);
+		NVIC_EnableIRQ(I2C1_RX_IRQn);
+		NVIC_EnableIRQ(I2C1_TX_IRQn);
+	}
 #endif
 
 	/* Set config and return status. */

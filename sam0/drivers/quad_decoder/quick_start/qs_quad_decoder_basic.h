@@ -72,26 +72,17 @@
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- * -# Change configurations axis x as desired.
- *    \snippet qs_quad_decoder_basic.c set_config1
+ * -# Change configurations pinmux as desired.
+ *    \snippet qs_quad_decoder_basic.c setup_pinmux
  *
- * -# Initialize axis x module.
- *    \snippet qs_quad_decoder_basic.c init_qdec1
+ * -# Initialize axis module.
+ *    \snippet qs_quad_decoder_basic.c init_qdec
  *
- * -# Change configurations axis y as desired.
- *    \snippet qs_quad_decoder_basic.c set_config2
+ * -# Register callback.
+ *    \snippet qs_quad_decoder_basic.c setup_register_callback
  *
- * -# Initialize axis y module.
- *    \snippet qs_quad_decoder_basic.c init_qdec2
- *
- * -# Change configurations axis z as desired.
- *    \snippet qs_quad_decoder_basic.c set_config3
- *
- * -# Initialize axis z module.
- *    \snippet qs_quad_decoder_basic.c init_qdec3
- *
- * -# Enable module.
- *    \snippet qs_quad_decoder_basic.c enable_qdec
+ * -# Enable IRQ.
+ *    \snippet qs_quad_decoder_basic.c enable_IRQ
  *
  * \section asfdoc_samb_quad_decoder_basic_use_case_basic_implement Implementation
  * Add the following to \c main().
@@ -100,14 +91,6 @@
  * \subsection asfdoc_samb_quad_decoder_basic_use_case_basic_workflow Workflow
  * -# Start an infinite loop, to continuously get quad decoder counter.
  *    \snippet qs_quad_decoder_basic.c main_loop
- *
- * -# Get the irq status.
- *    \snippet qs_quad_decoder_basic.c get_irq
- *
- * -# Check to see if irq occurred.
- *    \snippet qs_quad_decoder_basic.c ckeck_status
- * -# Once an irq occurs, clear the irq status.
- *    \snippet qs_quad_decoder_basic.c clear_status
  *
  * -# Get the x,y,z counter
  *    \snippet qs_quad_decoder_basic.c get_counter

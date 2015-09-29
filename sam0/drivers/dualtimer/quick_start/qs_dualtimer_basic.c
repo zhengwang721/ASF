@@ -109,16 +109,6 @@ static void configure_dualtimer(void)
 //! [setup_dualtimer_5]
 	dualtimer_init(&config_dualtimer);
 //! [setup_dualtimer_5]
-
-	if (config_dualtimer.timer1.timer_enable)
-//! [setup_dualtimer_6]
-		dualtimer_enable(DUALTIMER_TIMER1);
-//! [setup_dualtimer_6]
-
-	if (config_dualtimer.timer2.timer_enable)
-//! [setup_dualtimer_7]
-		dualtimer_enable(DUALTIMER_TIMER2);
-//! [setup_dualtimer_7]
 }
 
 static void configure_dualtimer_callback(void)

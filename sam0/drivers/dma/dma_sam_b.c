@@ -531,7 +531,7 @@ enum status_code dma_allocate(struct dma_resource *resource,
 		/* Perform a reset before enable DMA controller */
 		system_peripheral_reset(PERIPHERAL_DMA);
 		/* Select Mux 15 as PROV_DMA_CTRL0 interrupt source */
-		LPMCU_MISC_REGS0->IRQ_MUX_IO_SEL_3.bit.MUX_15 = LPMCU_MISC_REGS_IRQ_MUX_IO_SEL_3_MUX_12_16_Val;
+		LPMCU_MISC_REGS0->IRQ_MUX_IO_SEL_3.bit.MUX_15 = LPMCU_MISC_REGS_IRQ_MUX_IO_SEL_3_MUX_15_16_Val;
 		system_register_isr(31, (uint32_t)dma_isr_handler);
 		
 		_dma_inst._dma_init = true;

@@ -60,20 +60,6 @@ extern "C" {
  * @{
  */
 
-/** \brief I2C Core index
- *
- * Some version of chip has multiple I2C modules.
- */
-enum i2c_core_idx {
-	/** I2C CORE1 */
-	I2C_CORE1 = 1,
-#ifdef CHIPVERSION_B0
-	/** I2C CORE2 */
-	I2C_CORE2,
-#endif      //CHIPVERSION_B0
-	/** I2C CORE MAX */
-	I2C_CORE_MAX,
-};
 
 /**
  * \brief I<SUP>2</SUP>C master packet for read/write
@@ -191,8 +177,6 @@ struct i2c_master_module {
  * \ref i2c_master_get_config_defaults .
  */
 struct i2c_master_config {
-	/** I2C core index */
-	enum i2c_core_idx i2c_core;
 	/** CLOCK INPUT to use as clock source */
 	enum i2c_clock_input clock_source;
 	/** Divide ratio used to generate the sck clock */
@@ -208,6 +192,7 @@ void i2c_master_get_config_defaults(
 
  enum status_code i2c_master_init(
 		struct i2c_master_module *const module,
+		I2C *const hw,
 		const struct i2c_master_config *const config);
 
 void i2c_master_reset(struct i2c_master_module *const module);

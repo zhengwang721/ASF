@@ -51,9 +51,9 @@ static struct i2c_slave_packet packet;
 //! [packet]
 
 //! [packet_data]
-#define DATA_LENGTH 8
+#define DATA_LENGTH 10
 static uint8_t write_buffer[DATA_LENGTH] = {
-		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07
+		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09
 };
 static uint8_t read_buffer [DATA_LENGTH];
 //! [packet_data]
@@ -142,7 +142,7 @@ static void configure_i2c_slave(void)
 	//! [conf_changes]
 	/* Initialize and enable device with config. */
 	//! [init_module]
-	while(i2c_slave_init(&i2c_slave_instance, &config_i2c_slave)
+	while(i2c_slave_init(&i2c_slave_instance, CONF_I2C_MASTER_MODULE, &config_i2c_slave)
 			!= STATUS_OK);
 	//! [init_module]
 	
@@ -176,8 +176,6 @@ static void configure_i2c_slave_callbacks(void)
 	//![reg_en_i2c_callback]
 	//! [interrupt]
 	i2c_slave_rx_interrupt(i2c_slave_instance.hw, true);
-	NVIC_EnableIRQ(13);
-	NVIC_EnableIRQ(14);
 	//! [interrupt]
 }
 //! [setup_i2c_callback]
@@ -187,11 +185,7 @@ int main(void)
 	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 
 	//! [run_initialize_i2c]
-	/* Initial. */
-	for (int i = 0; i < DATA_LENGTH; i++) {
-		read_buffer[i] = 0;
-		write_buffer[i] = i;
-	}
+
 	//! [config]
 	configure_i2c_slave();
 	//! [config]
@@ -199,6 +193,7 @@ int main(void)
 	configure_i2c_slave_callbacks();
 	//! [config_callback]
 	//! [run_initialize_i2c]
+	
 	//! [while]
 	while (true) {
 		/* Infinite loop while waiting for I2C master interaction */

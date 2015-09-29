@@ -149,6 +149,9 @@
 extern "C" {
 #endif
 
+/** Type definition for a DUALTIMER module callback function. */
+typedef void (*quad_decoder_callback_t)(void);
+
 /**
  * \brief QUAD DECODER index number
  *
@@ -181,14 +184,11 @@ enum quad_decoder_clock_input {
 };
 
 /**
- * \brief QUAD DECODER configuration structure.
+ * \brief Quad Decoder private configuration structure.
  *
- * Configuration struct for a QUAD DECODER instance.
- * This structure should be initialized by the
- * \ref quad_decoder_get_config_defaults function
- * before being modified by the user application.
+ * Private configuration struct for Quad Decoder instance.
  */
-struct quad_decoder_config {
+struct quad_decoder_private_config {
 	/** Quad Decoder Source Clock Frequency Select */
 	enum quad_decoder_clock_input clock_sel;
 	/** Upper Threshold of counter for Quad Decoder */
@@ -198,7 +198,21 @@ struct quad_decoder_config {
 	/** Dec_in_a pinmux */
 	/** Dec_in_b pinmux */
 	uint32_t pinmux_pad[2];
+};
 
+/**
+ * \brief QUAD DECODER configuration structure.
+ *
+ * Configuration struct for a QUAD DECODER instance.
+ * This structure should be initialized by the
+ * \ref quad_decoder_get_config_defaults function
+ * before being modified by the user application.
+ */
+struct quad_decoder_config {
+	uint8_t qdec_enalbe;
+	struct quad_decoder_private_config qdec1;
+	struct quad_decoder_private_config qdec2;
+	struct quad_decoder_private_config qdec3;
 };
 
 /**
@@ -207,8 +221,7 @@ struct quad_decoder_config {
  */
 void quad_decoder_get_config_defaults(
 		struct quad_decoder_config *config);
-void quad_decoder_init(enum quad_decoder_axis qdec,
-		const struct quad_decoder_config *config);
+void quad_decoder_init(const struct quad_decoder_config *config);
 /** @} */
 
 /**
@@ -220,19 +233,19 @@ void quad_decoder_disable(enum quad_decoder_axis qdec);
 /** @} */
 
 /**
- * \name Get and Clear status
- * @{
- */
-uint8_t quad_decoder_get_irq_status(void);
-void quad_decoder_clear_irq_status(enum quad_decoder_axis qdec);
-/** @} */
-
-/**
  * \name Get value
  * @{
  */
 int16_t quad_decoder_get_counter(enum quad_decoder_axis qdec);
-void quad_decoder_reset(enum quad_decoder_axis qdec);
+/** @} */
+
+/**
+ * \name Callback register/unregister
+ * @{
+ */
+void quad_decoder_register_callback(enum quad_decoder_axis qdec,
+		quad_decoder_callback_t fun);
+void quad_decoder_unregister_callback(enum quad_decoder_axis qdec);
 /** @} */
 
 /** @}*/

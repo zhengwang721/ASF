@@ -47,4 +47,8 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
+/* master i2c module setting */
+#define CONF_I2C_MASTER_MODULE    I2C0
+
+
 #endif /* CONF_BOARD_H_INCLUDED */
