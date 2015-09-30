@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Configuration for PIO example.
+ * \brief Board configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,23 +44,10 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_PIO_EXAMPLE_H_INCLUDED
-#define CONF_PIO_EXAMPLE_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/** Button name. */
-#define BUTTON_STRING            "SW0"
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-/** Push button pin definition. */
-#define PUSH_BUTTON_PIO          PIOA
-#define PUSH_BUTTON_ID           ID_PIOA
-#define PUSH_BUTTON_PIN_MSK      (1 << 9)
-#define PUSH_BUTTON_ATTR         (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
-
-/** The erase pin mask value in the PIO mode and erase mode. */
-#define PIN_PIO_MODE_MSK         (matrix_get_system_io() | CCFG_SYSIO_SYSIO12)
-#define PIN_ERASE_MODE_MSK       (matrix_get_system_io() & (~CCFG_SYSIO_SYSIO12))
-
-/** Test page start address. */
-#define TEST_PAGE_ADDRESS        (IFLASH_ADDR + IFLASH_SIZE - IFLASH_PAGE_SIZE * 4)
-
-#endif /* CONF_PIO_EXAMPLE_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

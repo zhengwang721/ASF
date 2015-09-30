@@ -53,7 +53,7 @@
 /** Push button pin definition. */
 #define PUSH_BUTTON_PIO          PIOA
 #define PUSH_BUTTON_ID           ID_PIOA
-#define PUSH_BUTTON_PIN_MSK      (1 << 9)
+#define PUSH_BUTTON_PIN_MSK      (1 << 11)
 #define PUSH_BUTTON_ATTR         (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
 
 /** The erase pin mask value in the PIO mode and erase mode. */

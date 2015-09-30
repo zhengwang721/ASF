@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Configuration for PIO example.
+ * \brief USART Serial Configuration
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,23 +44,18 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_PIO_EXAMPLE_H_INCLUDED
-#define CONF_PIO_EXAMPLE_H_INCLUDED
+#ifndef CONF_USART_SERIAL_H_INCLUDED
+#define CONF_USART_SERIAL_H_INCLUDED
 
-/** Button name. */
-#define BUTTON_STRING            "SW0"
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   (115200UL)
+/** Character length setting */
+#define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
+/** Parity setting */
+#define CONF_UART_PARITY     US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
 
-/** Push button pin definition. */
-#define PUSH_BUTTON_PIO          PIOA
-#define PUSH_BUTTON_ID           ID_PIOA
-#define PUSH_BUTTON_PIN_MSK      (1 << 9)
-#define PUSH_BUTTON_ATTR         (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
-
-/** The erase pin mask value in the PIO mode and erase mode. */
-#define PIN_PIO_MODE_MSK         (matrix_get_system_io() | CCFG_SYSIO_SYSIO12)
-#define PIN_ERASE_MODE_MSK       (matrix_get_system_io() & (~CCFG_SYSIO_SYSIO12))
-
-/** Test page start address. */
-#define TEST_PAGE_ADDRESS        (IFLASH_ADDR + IFLASH_SIZE - IFLASH_PAGE_SIZE * 4)
-
-#endif /* CONF_PIO_EXAMPLE_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */
