@@ -51,7 +51,7 @@
  *
  *  \par Requirements
  *
- *  This package can be used with samv71_xplained_ultra boards. Before running, make sure
+ *  This package can be used with same70_xplained_pro/samv71_xplained_Ulta boards. Before running, make sure
  *  to connect two boards with RS485 lines. Match each paired pins of two
  *  boards respectively with A to A, B to B and FGND to FGND.
  *

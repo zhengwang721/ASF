@@ -52,7 +52,7 @@
 			<info type="keyword" value="technology">
 				<keyword value="Communication"/>
 			</info>
-			<build type="c-source" value="usart_synchronous_example_samv71.c"/>
+			<build type="c-source" value="usart_synchronous_example_canopus.c"/>
 			<build type="include-path" value="."/>
 			<device-support value="same70"/>	
 			<device-support value="samv70"/>
