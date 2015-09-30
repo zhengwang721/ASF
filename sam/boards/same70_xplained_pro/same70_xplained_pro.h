@@ -135,7 +135,7 @@
 
 //! \name SW0 definitions
 //@{
-#define SW0_PIN                   (PIO_PA9_IDX)
+#define SW0_PIN                   (PIO_PA11_IDX)
 #define SW0_ACTIVE                (IOPORT_PIN_LEVEL_LOW)
 #define SW0_INACTIVE              (!SW0_ACTIVE)
 #define SW0_SUPC_INPUT            2
@@ -248,13 +248,13 @@
 #define PUSHBUTTON_1_NAME        "SW0"
 #define PUSHBUTTON_1_WKUP_LINE   (2)
 #define PUSHBUTTON_1_WKUP_FSTT   (PMC_FSMR_FSTT2)
-#define GPIO_PUSH_BUTTON_1       (PIO_PA9_IDX)
+#define GPIO_PUSH_BUTTON_1       (PIO_PA11_IDX)
 #define GPIO_PUSH_BUTTON_1_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
 #define GPIO_PUSH_BUTTON_1_SENSE (IOPORT_SENSE_RISING)
 
-#define PIN_PUSHBUTTON_1       {PIO_PA9, PIOA, ID_PIOA, PIO_INPUT, \
+#define PIN_PUSHBUTTON_1       {PIO_PA11, PIOA, ID_PIOA, PIO_INPUT, \
 		PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
-#define PIN_PUSHBUTTON_1_MASK  PIO_PA9
+#define PIN_PUSHBUTTON_1_MASK  PIO_PA11
 #define PIN_PUSHBUTTON_1_PIO   PIOA
 #define PIN_PUSHBUTTON_1_ID    ID_PIOA
 #define PIN_PUSHBUTTON_1_TYPE  PIO_INPUT
@@ -515,7 +515,7 @@
 #define USB_VBUS_PIN             PIO_PC9_IDX  /* As IO pin input */
 #define USB_VBUS_PIN_IRQn ( PIOC_IRQn)
 #define USB_VBUS_PIO_ID       ID_PIOC
-#define USB_VBUS_PIO_MASK  PIO_PC9 
+#define USB_VBUS_PIO_MASK  PIO_PC9
 //! @}
 
 /*! \name GPIO Connections of ID detecting
