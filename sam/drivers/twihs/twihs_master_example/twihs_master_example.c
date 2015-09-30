@@ -208,7 +208,7 @@ int main(void)
 
 	/* Turn off LEDs */
 	LED_Off(LED0);
-	
+
     /* Initialize the console UART */
 	configure_console();
 
