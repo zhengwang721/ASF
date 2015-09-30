@@ -130,7 +130,7 @@
 
 //! \name SW0 definitions
 //@{
-#define SW0_PIN                   (PIO_PA9_IDX)
+#define SW0_PIN                   (PIO_PA11_IDX)
 #define SW0_ACTIVE                (IOPORT_PIN_LEVEL_LOW)
 #define SW0_INACTIVE              (!SW0_ACTIVE)
 #define SW0_SUPC_INPUT            2
@@ -139,31 +139,12 @@
  * Wrapper macros for SW0, to ensure common naming across all Xplained Ultra
  * boards.
  */
-#define PIN_SW0      {PIO_PA9, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
-#define PIN_SW0_MASK PIO_PA9
+#define PIN_SW0      {PIO_PA11, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define PIN_SW0_MASK PIO_PA11
 #define PIN_SW0_PIO  PIOA
 #define PIN_SW0_ID   ID_PIOA
 #define PIN_SW0_TYPE PIO_INPUT
 #define PIN_SW0_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
-//@}
-
-//! \name SW1 definitions
-//@{
-#define SW1_PIN                   (PIO_PB12_IDX)
-#define SW1_ACTIVE                (IOPORT_PIN_LEVEL_LOW)
-#define SW1_INACTIVE              (!SW1_ACTIVE)
-#define SW1_SUPC_INPUT            2
-
-/**
- * Wrapper macros for SW1, to ensure common naming across all Xplained Ultra
- * boards.
- */
-#define PIN_SW1      {PIO_PB12, PIOB, ID_PIOB, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
-#define PIN_SW1_MASK PIO_PB12
-#define PIN_SW1_PIO  PIOB
-#define PIN_SW1_ID   ID_PIOB
-#define PIN_SW1_TYPE PIO_INPUT
-#define PIN_SW1_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
 //@}
 
 /**
@@ -178,8 +159,8 @@
 #define LED_0_ACTIVE              LED0_ACTIVE_LEVEL
 #define LED_0_INACTIVE            LED0_INACTIVE_LEVEL
 
-#define PIN_LED_0       {PIO_PA23, PIOA, ID_PIOA, PIO_OUTPUT_1, PIO_DEFAULT}
-#define PIN_LED_0_MASK  PIO_PA23
+#define PIN_LED_0       {PIO_PC8, PIOA, ID_PIOA, PIO_OUTPUT_1, PIO_DEFAULT}
+#define PIN_LED_0_MASK  PIO_PC8
 #define PIN_LED_0_PIO   PIOA
 #define PIN_LED_0_ID    ID_PIOA
 #define PIN_LED_0_TYPE  PIO_OUTPUT_1
@@ -206,28 +187,9 @@
 #define PIN_TC3_TIOA11_ID	ID_PIOD
 #define PIN_TC3_TIOA11_TYPE	PIO_PERIPH_C
 #define PIN_TC3_TIOA11_ATTR	PIO_DEFAULT
-/**
- * \name LED #1 definitions
- *
- * Wrapper macros for LED1, to ensure common naming across all Xplained Ultra
- * boards.
- */
-//@{
-#define LED_1_NAME                "LED1 (yellow)"
-#define LED_1_PIN                 LED1_GPIO
-#define LED_1_ACTIVE              LED1_ACTIVE_LEVEL
-#define LED_1_INACTIVE            LED1_INACTIVE_LEVEL
-
-#define PIN_LED_1       {PIO_PC9, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
-#define PIN_LED_1_MASK  PIO_PC9
-#define PIN_LED_1_PIO   PIOC
-#define PIN_LED_1_ID    ID_PIOC
-#define PIN_LED_1_TYPE  PIO_OUTPUT_1
-#define PIN_LED_1_ATTR  PIO_DEFAULT
-//@}
 
 //! Number of on-board LEDs
-#define BOARD_NUM_OF_LED 2
+#define BOARD_NUM_OF_LED 1
 
 /**
  * Push button #0 definition. Attributes = pull-up + debounce + interrupt on
@@ -243,47 +205,21 @@
 #define PUSHBUTTON_1_NAME        "SW0"
 #define PUSHBUTTON_1_WKUP_LINE   (2)
 #define PUSHBUTTON_1_WKUP_FSTT   (PMC_FSMR_FSTT2)
-#define GPIO_PUSH_BUTTON_1       (PIO_PA9_IDX)
+#define GPIO_PUSH_BUTTON_1       (PIO_PA11_IDX)
 #define GPIO_PUSH_BUTTON_1_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
 #define GPIO_PUSH_BUTTON_1_SENSE (IOPORT_SENSE_RISING)
 
-#define PIN_PUSHBUTTON_1       {PIO_PA9, PIOA, ID_PIOA, PIO_INPUT, \
-		PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
-#define PIN_PUSHBUTTON_1_MASK  PIO_PA9
+#define PIN_PUSHBUTTON_1       {PIO_PA11, PIOA, ID_PIOA, PIO_INPUT, \
+								PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define PIN_PUSHBUTTON_1_MASK  PIO_PA11
 #define PIN_PUSHBUTTON_1_PIO   PIOA
 #define PIN_PUSHBUTTON_1_ID    ID_PIOA
 #define PIN_PUSHBUTTON_1_TYPE  PIO_INPUT
 #define PIN_PUSHBUTTON_1_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
 #define PIN_PUSHBUTTON_1_IRQn  PIOA_IRQn
 
-/**
- * Push button #1 definition. Attributes = pull-up + debounce + interrupt on
- * rising edge.
- */
-#define BUTTON_1_NAME             "SW1"
-#define BUTTON_1_PIN              SW1_PIN
-#define BUTTON_1_ACTIVE           SW1_ACTIVE
-#define BUTTON_1_INACTIVE         SW1_INACTIVE
-#define BUTTON_1_SUPC_INPUT       SW1_SUPC_INPUT
-
-#define PUSHBUTTON_2_NAME        "SW1"
-#define PUSHBUTTON_2_WKUP_LINE   (2)
-#define PUSHBUTTON_2_WKUP_FSTT   (PMC_FSMR_FSTT2)
-#define GPIO_PUSH_BUTTON_2       (PIO_PB12_IDX)
-#define GPIO_PUSH_BUTTON_2_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
-#define GPIO_PUSH_BUTTON_2_SENSE (IOPORT_SENSE_RISING)
-
-#define PIN_PUSHBUTTON_2       {PIO_PB12, PIOB, ID_PIOB, PIO_INPUT, \
-		PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
-#define PIN_PUSHBUTTON_2_MASK  PIO_PB12
-#define PIN_PUSHBUTTON_2_PIO   PIOB
-#define PIN_PUSHBUTTON_2_ID    ID_PIOB
-#define PIN_PUSHBUTTON_2_TYPE  PIO_INPUT
-#define PIN_PUSHBUTTON_2_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
-#define PIN_PUSHBUTTON_2_IRQn  PIOB_IRQn
-
 /** List of all push button definitions. */
-#define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1,PIN_PUSHBUTTON_2}
+#define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1}
 
 /** PCK0 pin definition (PA6) */
 #define PIN_PCK0         (PIO_PA6_IDX)
