@@ -117,6 +117,12 @@ void net_add_winc_netif(void)
 	net_set_mode(NET_IF_C, NET_MODE_AP | NET_MODE_USE_DHCP_SVR);	
 }
 
+void net_remove_winc_netif(void)
+{
+	netif_remove(&winc_netif_sta);
+	netif_remove(&winc_netif_c_mode);
+}
+
 int net_in_tcpip_task(void)
 {
 	return (net_tcpip_task == xTaskGetCurrentTaskHandle());	
@@ -128,10 +134,16 @@ static void tcpip_init_done(void *arg)
 	xSemaphoreGive(net_start_sem);
 }
 
+	/* ykk */
+#if 0
 static void net_interface_up_imp(void *p)
 {
 	uint32_t net_if = (uint32_t)p;
+#else
+static void net_interface_up_imp(uint32_t net_if)
+{
 
+#endif
 	if (net_if == NET_IF_STA) {
 		/* Bring up interface in lwIP. */
 		netif_set_link_up(&winc_netif_sta);
@@ -172,9 +184,15 @@ static void net_interface_up_imp(void *p)
 	}
 }
 
+	/* ykk */
+#if 0
 static void net_interface_down_imp(void *p)
 {
 	uint32_t net_if = (uint32_t)p;
+#else
+static void net_interface_down_imp(uint32_t net_if)
+{
+#endif
 
 	if (net_if == NET_IF_STA) {
 		netif_set_link_down(&winc_netif_sta);
@@ -204,12 +222,22 @@ static void net_interface_down_imp(void *p)
 
 void net_interface_up(uint32_t net_if)
 {
+	/* ykk */
+#if 0
 	tcpip_callback_with_block((tcpip_callback_fn)net_interface_up_imp, (void *)net_if, 0);
+#else
+	net_interface_up_imp(net_if);
+#endif
 }
 
 void net_interface_down(uint32_t net_if)
 {
+	/* ykk */
+#if 0
 	tcpip_callback_with_block((tcpip_callback_fn)net_interface_down_imp, (void *)net_if, 0);
+#else
+	net_interface_down_imp(net_if);
+#endif
 }
 
 void net_set_mode(uint32_t net_if, uint32_t mode)

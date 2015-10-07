@@ -108,6 +108,9 @@ static void winc_low_level_init(struct netif *netif)
 #define NB_BINS		7
 uint32_t delay_bins[NB_BINS];
 // BUGBUG END temporary debug
+void winc_tx_from_queue(hif_msg_t *msg);
+/* ykk */
+#if 0
 static err_t winc_tx(struct netif *netif, struct pbuf *p)
 {
 	struct pbuf *q = 0;
@@ -162,6 +165,98 @@ static err_t winc_tx(struct netif *netif, struct pbuf *p)
 	LINK_STATS_INC(link.xmit);
 	return ERR_OK;
 }
+#else
+
+extern xQueueHandle xQueue;
+
+static err_t winc_tx(struct netif *netif, struct pbuf *p)
+{
+	struct pbuf *q = 0;
+	hif_msg_t msg;
+	uint8_t *bufptr = tx_buf;
+	if (p->tot_len > WINC_TX_BUF_SIZE) {
+		return ERR_BUF;
+	}
+	if (netif == &winc_netif_sta)
+		msg.id = MSG_TX_STA;
+	else
+		msg.id = MSG_TX_AP;
+	/* ETH_PAD_SIZE is 0 now*/
+	if (p->tot_len == p->len) {
+		msg.pbuf = (void *) p;
+		msg.payload_size = p->len - ETH_PAD_SIZE;
+		msg.payload = (void *) &(p->payload[ETH_PAD_SIZE]);
+	} else {		
+		//osprintf("winc_tx  %d  %d\r\n", p->tot_len ,p->len );
+		for (q = p; q != NULL; q = q->next) {
+			memcpy(bufptr, q->payload, q->len);
+			bufptr += q->len;
+		}
+		msg.pbuf = NULL;
+		msg.payload = &tx_buf[ETH_PAD_SIZE];
+		msg.payload_size = (uint16_t)(bufptr - tx_buf - ETH_PAD_SIZE); 
+	}
+
+	if (msg.pbuf)
+		pbuf_ref(p);
+	/*if (__get_IPSR())
+	{
+		test_isr++;
+		osprintf("is isr ? \r\n");
+	
+	}*/
+	xQueueSend(xQueue, (void *)&msg, portMAX_DELAY); 
+	//winc_tx_from_queue(&msg);
+
+	/*if (p->next) {
+		for (q = p->next; q != NULL; q = q->next) {
+
+			msg.pbuf = (void *)q;
+			msg.payload_size = q->len - ETH_PAD_SIZE;
+			msg.payload = (void *) &(q->payload[ETH_PAD_SIZE]);
+			pbuf_ref(q);
+			xQueueSend(xQueue, (void *)&msg, portMAX_DELAY); 
+
+			
+
+		}
+	}*/
+
+	LINK_STATS_INC(link.xmit);
+	return ERR_OK;
+}
+
+void winc_tx_from_queue(hif_msg_t *msg)
+{
+	int tries;
+	struct pbuf *p = (struct pbuf *)msg->pbuf;
+	uint32_t len = msg->payload_size;
+	void *payload = msg->payload;
+	tries = 0;
+	//osprintf("is isr  %d \r\n", test_isr);
+	for (;;) {
+		sint8 err;
+
+		if (msg->id == MSG_TX_STA) {
+			err = m2m_wifi_send_ethernet_pkt(payload, len);
+		} else {
+			err = m2m_wifi_send_ethernet_pkt_ifc1(payload, len);
+		}
+		if (M2M_SUCCESS == err) {
+			break;
+		} else {
+			if (++tries == 100) {
+				break;
+			}
+			vTaskDelay(1);
+		}
+	}
+	if (p)
+		pbuf_free(p);	
+
+}
+
+#endif
 //------------------------------------------------------------------------------
 void winc_rx_callback(uint8 msg_type, void * msg, void *ctrl_buf);
 void winc_rx_callback(uint8 msg_type, void * msg, void *ctrl_buf)

@@ -69,5 +69,6 @@ void net_interface_up(uint32_t net_if);
 void net_interface_down(uint32_t net_if);
 void net_add_winc_netif(void);
 int net_in_tcpip_task(void);
+void net_remove_winc_netif(void);
 
 #endif /* NET_INIT_H_INCLUDED */

@@ -46,18 +46,39 @@
 
 #include "compiler.h"
 
-typedef void (*tcpip_cb)(void *ctx);
+//typedef void (*tcpip_cb)(void *ctx);
+typedef void (*wifi_task_cb)(void *arg);
 
 struct params_dispatch {
 	uint8_t signal_semaphore;
 	int8_t retval;
+	void * param;
 };
+
+#define MSG_RX 1
+#define MSG_TX_STA 2
+#define MSG_TX_AP 3
+#define MSG_QUIT 4
+#define MSG_CMD 5
+#define MSG_START 6
+
+typedef struct {
+	uint32_t id;
+	void *pbuf;
+	void * payload;
+	uint32_t payload_size;
+	wifi_task_cb	handler;
+	void * priv;
+} hif_msg_t ;
 
 void os_hook_isr(void);
 void os_hook_init(void);
 void os_hook_set_handle(void *task);
-uint8_t os_hook_dispatch_no_wait(tcpip_cb handler, void *p);
-void os_hook_dispatch_wait(tcpip_cb handler, struct params_dispatch *p);
+uint8_t os_hook_dispatch_no_wait(wifi_task_cb handler, void *p);
+void os_hook_dispatch_wait(wifi_task_cb handler, struct params_dispatch *p,void* pv);
 void os_hook_notify(void);
+void os_hook_deinit(void);
+void os_hook_send_start(wifi_task_cb handler, struct params_dispatch *p, void* pv);
+void os_hook_send_stop(wifi_task_cb handler, struct params_dispatch *p, void* pv);
 
 #endif /* OS_HOOK_H_INCLUDED */
