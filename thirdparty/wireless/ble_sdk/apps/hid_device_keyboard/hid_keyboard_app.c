@@ -88,6 +88,9 @@ uint8_t keyb_disp[12] = {0x0B, 0x08, 0x0F, 0x0F, 0x12, 0x2C, 0x04, 0x17, 0x10, 0
 /* Keyboard character to be printed */
 uint8_t keyb_id = 0;
 
+/* Profile connection status */
+uint8_t conn_status = 0;
+
 /* Keyboard report value */
 uint8_t app_keyb_report[8] = {0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00};	
 	
@@ -130,11 +133,21 @@ static uint8_t hid_app_keyb_report_map[] =
    0xC0				/* End Collection                    */
 };
 
+
+/* Callback called during connection */
+static void hid_connect_cb(at_ble_handle_t handle)
+{
+	keyb_id = 0;
+	conn_status = 1;
+	ALL_UNUSED(handle);
+}
+
 /* Callback called during disconnect */
 static void hid_disconnect_cb(at_ble_handle_t handle)
 {
 	keyb_id = 0;
-        ALL_UNUSED(handle);
+	conn_status = 0;
+    ALL_UNUSED(handle);
 }
 
 /* Callback called when host change the control point value */
@@ -242,6 +255,7 @@ int main(void )
 	/* Register the notification handler */
 	register_ble_notification_confirmed_cb(hid_notification_confirmed_cb);
 	register_ble_disconnected_event_cb(hid_disconnect_cb);
+	register_ble_connected_event_cb(hid_connect_cb);
 	notify_report_ntf_handler(hid_prf_report_ntf_cb);
 	notify_boot_ntf_handler(hid_prf_boot_ntf_cb);
 	notify_protocol_mode_handler(hid_prf_protocol_mode_ntf_cb);
@@ -253,7 +267,7 @@ int main(void )
 		ble_event_task();
 				
 		/* Check for key status */
-		if(key_status){
+		if(key_status && conn_status){
 			DBG_LOG("Key Pressed...");
 			delay_ms(KEY_PAD_DEBOUNCE_TIME);
 			if((keyb_id == POSITION_ZERO) || (keyb_id == POSITION_SIX)){
