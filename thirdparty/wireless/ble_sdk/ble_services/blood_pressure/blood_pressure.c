@@ -62,7 +62,7 @@ uint16_t blp_measurement_value = DEFAULT_VALUE;
 uint8_t intermediate_cuff_pressure_value = DEFAULT_VALUE;
 
 /** initial blood pressure feature value */
-uint16_t blood_pressure_feature_value = 0xffff;
+uint16_t blood_pressure_feature_value = 0x001f;
 
 
 
