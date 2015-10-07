@@ -1020,11 +1020,11 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	  * Refer to @ref at_ble_cmd_complete_event_t
 	  */
 	case AT_BLE_INDICATION_CONFIRMED:
-	{
-		BLE_INDICATION_CONFIRMED_HANDLER((at_ble_indication_confirmed_t *) event_params);
+	{	
+		BLE_INDICATION_CONFIRMED_HANDLER((at_ble_cmd_complete_event_t *) event_params);
 		if(ble_indic_conf_cb)
 		{
-			ble_indic_conf_cb((at_ble_indication_confirmed_t *) event_params);
+			ble_indic_conf_cb((at_ble_cmd_complete_event_t *) event_params);
 		}
 	}
 	break;

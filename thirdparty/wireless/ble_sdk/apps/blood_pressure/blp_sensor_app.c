@@ -133,6 +133,7 @@ uint16_t interim_map_mmhg = MAP_MIN_MMHG;
 
 uint16_t interim_map_kpa = MAP_MIN_KPA;
 
+volatile bool notify_flag;
 /****************************************************************************************
 *							        Functions											*
 ****************************************************************************************/
@@ -161,6 +162,13 @@ static void app_connected_state(bool connected)
 		map_val_kpa = MAP_MIN_KPA;
 		pulse_rate_val = PULSE_RATE_MIN;
 		units = !units;
+		indication_sent = true;
+		notification_sent = true;
+		notify = false;
+		timer_count = APP_DEFAULT_VAL;
+		user_request_flag =  APP_DEFAULT_VAL;
+		indication_flag = APP_DEFAULT_VAL;
+		notification_flag = APP_DEFAULT_VAL;	
 	} 
 }
 
@@ -244,7 +252,7 @@ static void app_notification_confirmation_handler(at_ble_cmd_complete_event_t *p
  *	to give the status of notification sent
  *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
  */	
-static void app_indication_confirmation_handler(at_ble_indication_confirmed_t *params)
+static void app_indication_confirmation_handler(at_ble_cmd_complete_event_t *params)
 {
 	if (params->status == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("App Indication successfully sent over the air");
@@ -252,7 +260,7 @@ static void app_indication_confirmation_handler(at_ble_indication_confirmed_t *p
 		user_request_flag = false;
 		DBG_LOG("\r\nPress the button to receive the blood pressure parameters");
 	} else {
-		DBG_LOG_DEV("Sending Notification over the air failed");
+		DBG_LOG_DEV("Sending indication over the air failed reason %x %x",params->status);
 		indication_sent = false;
 	}
 }
@@ -402,7 +410,7 @@ static void blp_char_indication(void)
 	
 	/** Appending Measurement status field */
 	blp_data[idx++] = 0xf;
-	blp_data[idx++] = 0xf;
+	blp_data[idx++] = 0x0;
 	
 	blp_sensor_send_indication(blp_data,idx);	
 	
@@ -434,7 +442,7 @@ static void blp_char_notification(void)
 		idx += 2;
 		interim_systolic_kpa = interim_systolic_kpa + (operator[8]);
 	}
-	
+
 	/** Appending diastolic in kpa*/
 	blp_data[idx++] = 0;
 	blp_data[idx++] = 0;
@@ -500,7 +508,6 @@ static void app_indication_handler(bool enable)
 			DBG_LOG("Pulse rate     %d bpm",pulse_rate_val);
 		memcpy(&blp_data[idx],&pulse_rate_val,2);
 		idx += 2;
-		//DBG_LOG("Flags are %d and length is %d",blp_data[0],idx);
 		
 		/* Sending the default notification for the first time */
 		blp_sensor_send_indication(blp_data,idx);	
@@ -560,7 +567,7 @@ int main(void)
 	#elif SAM0
 	system_init();
 	#endif
-
+        
 	/* Initialize the button */
 	button_init();
 
@@ -608,8 +615,8 @@ int main(void)
 			
 			/* Checking for indications enabled*/
 			if (indication_flag) {
-				
 				/*Sending notifications of interim cuff pressure*/
+				
 				if (timer_count < INDICATION_TIMER_VAL ) {
 				
 				/* checking for notification enabled */
@@ -628,7 +635,6 @@ int main(void)
 				}
 				
 				if (timer_count == INDICATION_TIMER_VAL) {
-					
 					/*Checking for previous indication sent over the  air */
 					if (indication_sent) {
 						
@@ -636,6 +642,9 @@ int main(void)
 						blp_char_indication();
 						user_request_flag = 0;
 						timer_count = 0;
+					} else {
+						DBG_LOG("Previous indication is failed and device is disconnecting");
+						blp_disconnection();
 					}
 				}
 			}	

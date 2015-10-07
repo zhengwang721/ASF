@@ -140,12 +140,12 @@ void blp_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
  *	to give the status of notification sent
  *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
  */	
-void blp_indication_confirmation_handler(at_ble_indication_confirmed_t *params)
+void blp_indication_confirmation_handler(at_ble_cmd_complete_event_t *params)
 {
 	if (params->status == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("Indication successfully sent over the air");
 	} else {
-		DBG_LOG_DEV("Sending Notification over the air failed");
+		DBG_LOG_DEV("Sending indication over the air failed %d",params->status);
 	}
 }
 
@@ -165,8 +165,9 @@ void blp_sensor_send_notification(uint8_t *blp_data, uint8_t length)
 					blp_service_handler.serv_chars
 					[1].char_val_handle, blp_data,
 					length)) != AT_BLE_SUCCESS) {
-		DBG_LOG("Write value for notification failed,reason %x",
+		DBG_LOG("at_ble_characteristic_value_set for notification failed,reason %x",
 				status);
+				return;
 	}
 
 	/** Sending the notification for the updated characteristic */
@@ -192,8 +193,9 @@ void blp_sensor_send_indication(uint8_t *blp_data, uint8_t length)
 					blp_service_handler.serv_chars
 					[0].char_val_handle, blp_data,
 					length)) != AT_BLE_SUCCESS) {
-		DBG_LOG("Write value for indication failed,reason %x",
+		DBG_LOG("at_ble_characteristic_value_set for indication failed,reason %x",
 				status);
+				return;
 	}
 
 	/** Sending the indication for the updated characteristic */
@@ -202,7 +204,6 @@ void blp_sensor_send_indication(uint8_t *blp_data, uint8_t length)
 						.char_val_handle))) {
 			DBG_LOG("Send indication failed,reason %x", status);
 	}
-
 }
 
 
@@ -268,6 +269,17 @@ at_ble_status_t blp_sensor_connected_state_handler(
 	connection_handle = (at_ble_handle_t)conn_params->handle;
 		
 	return AT_BLE_SUCCESS;
+}
+
+/** @brief blp_disconnection called by the application to disconnect
+ *
+ */
+void blp_disconnection(void)
+{
+	at_ble_status_t status;
+	if ((status = at_ble_disconnect(connection_handle,AT_BLE_TERMINATED_BY_USER)) != AT_BLE_SUCCESS) {
+		DBG_LOG("Disconnection not successuful, reason %x",status);
+	}
 }
 
 

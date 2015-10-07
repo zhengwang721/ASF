@@ -216,8 +216,12 @@ void blp_notification_confirmation_handler(at_ble_cmd_complete_event_t *params);
  *	to give the status of notification sent
  *  @param[in] at_ble_indication_confirmed_t address of the cmd completion
  */	
-void blp_indication_confirmation_handler(at_ble_indication_confirmed_t *params);
+void blp_indication_confirmation_handler(at_ble_cmd_complete_event_t *params);
 
+/** @brief blp_disconnection called by the application to disconnect
+ *
+ */
+void blp_disconnection(void);
 
 #endif /*__BLP_SENSOR_H__ */
 // </h>

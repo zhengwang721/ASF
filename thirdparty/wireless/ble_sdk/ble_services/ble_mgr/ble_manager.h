@@ -842,7 +842,7 @@ typedef at_ble_status_t (*ble_characteristic_changed_callback_t)(at_ble_characte
 typedef void (*ble_notification_confirmed_callback_t)(at_ble_cmd_complete_event_t *);
 
 /* Typedef for indication confirmed event callback */
-typedef void (*ble_indication_confirmed_callback_t)(at_ble_indication_confirmed_t *);
+typedef void (*ble_indication_confirmed_callback_t)(at_ble_cmd_complete_event_t *);
 
 /** @brief function to set the device name.
   *
