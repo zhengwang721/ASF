@@ -82,6 +82,7 @@ int8_t inc_changer	= 1;/*!< increment operator to change heart rate */
 int8_t time_operator ;/*!< operator to change the seconds */
 uint8_t hr_min_value;/*!<the minimum heart rate value*/
 uint8_t hr_max_value;/*!<the maximum heart rate value*/
+uint8_t energy_inclusion = 0;/*!<To check for including the energy in hr measurement*/
 
 /****************************************************************************************
 *							        Functions											*
@@ -223,8 +224,13 @@ static void hr_measurment_send(void)
 	uint8_t hr_data[HR_CHAR_VALUE_LEN];
 	uint8_t idx = 0;
 	
-	if ((energy_expended_val == ENERGY_RESET) || (second_counter % 10 == 0)) {
+	if ((energy_expended_val == ENERGY_RESET) || (second_counter % 10 == energy_inclusion)) {
 		hr_data[idx] = (RR_INTERVAL_VALUE_PRESENT | ENERGY_EXPENDED_FIELD_PRESENT);
+		
+		/* To send energy expended after 10 notifications after reset */
+		if (energy_expended_val == ENERGY_RESET) {
+			energy_inclusion = second_counter % 10 ;
+		}
 	} else {
 		hr_data[idx] = RR_INTERVAL_VALUE_PRESENT ;
 	}
