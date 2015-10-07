@@ -43,7 +43,6 @@
  *
  */
 
-#include <asf.h>
 #include "conf_tinyservices.h"
 #include "tinyservices.h"
 #include "wifi_private.h"

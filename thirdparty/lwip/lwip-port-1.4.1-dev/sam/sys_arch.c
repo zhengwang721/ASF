@@ -63,6 +63,14 @@ static struct TimeoutlistPerThread Threads_TimeoutsList[SYS_THREAD_MAX];
 static u16_t NbActiveThreads = 0;
 
 /**
+ * \brief Return systick value.
+ */
+u32_t sys_now(void)
+{
+	return xTaskGetTickCount();
+}
+
+/**
  * \brief Initialize the sys_arch layer.
  */
 void sys_init(void)
