@@ -1375,7 +1375,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	</tr>
  *	<tr>
  *		<td>42551A</td>
- *		<td>09/2015</td>
+ *		<td>10/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
