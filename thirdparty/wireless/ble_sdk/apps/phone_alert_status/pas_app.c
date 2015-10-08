@@ -49,6 +49,7 @@
 ****************************************************************************************/
 #include <asf.h>
 #include "console_serial.h"
+#include "stdio.h"
 #include "at_ble_api.h"
 #include "at_ble_trace.h"
 #include "at_ble_errno.h"
@@ -77,24 +78,21 @@ volatile bool app_state;			/*!< state of the app,true for connected false for di
  */
 static void display_alert_status_info(uint8_t *data)
 {
-	if (data[0] & BIT0_MASK)
-	{
+	if (data[0] & BIT0_MASK) {
 		DBG_LOG("Ringer State Active");
-		} else {
+	} else {
 		DBG_LOG("Ringer State Inactive");
 	}
 	
-	if (data[0] & BIT1_MASK)
-	{
+	if (data[0] & BIT1_MASK) {
 		DBG_LOG("Vibration State Active");
-		} else {
+	} else {
 		DBG_LOG("Vibration State Inactive");
 	}
 	
-	if (data[0] & BIT2_MASK)
-	{
+	if (data[0] & BIT2_MASK) {
 		DBG_LOG("Display State Active");
-		} else {
+	} else {
 		DBG_LOG("Display State Inactive");
 	}
 }
@@ -105,11 +103,9 @@ static void display_alert_status_info(uint8_t *data)
  */
 static void display_ringer_setting_info(uint8_t *data)
 {
-	if (data[0] == RINGER_SILENT)
-	{
+	if (data[0] == RINGER_SILENT) {
 		DBG_LOG_CONT("Ringer Silent");
-	} else if (data[0] == RINGER_NORMAL)
-	{
+	} else if (data[0] == RINGER_NORMAL) {
 		DBG_LOG_CONT("Ringer Normal");
 	}	
 }
@@ -121,8 +117,7 @@ static void display_ringer_setting_info(uint8_t *data)
 static void app_connected_state(bool connected)
 {
 	app_state = connected;
-	if (app_state == false)
-	{
+	if (app_state == false) {
 		press_count = DEVICE_SILENT;
 	}
 }
@@ -180,8 +175,7 @@ static void app_ringer_setting_notify(uint8_t *data, uint8_t len)
  */
 void button_cb(void)
 {
-	if (app_state)
-	{
+	if (app_state && !flag) {
 		flag = true;
 	}
 }
@@ -200,6 +194,9 @@ bool appp_exec = true;
 int main(void)
 {	
 	at_ble_status_t status;
+	#if PTS
+	uint8_t function_selector;
+	#endif
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
@@ -236,38 +233,74 @@ int main(void)
 	ble_device_init(NULL);
 	
 	/* Capturing the events  */
-	while(appp_exec)
-	{
+	while(appp_exec) {
 		/* BLE Event Task */
 		ble_event_task();
-		if (flag)
-		{
-			/* Button debounce delay */
+		if (flag) {
+			/* button debounce delay */
 			delay_ms(350);
 			flag = false;
+			#if PTS
+			DBG_LOG("To choose the functionality enter the index of the functionality displayed");
+			DBG_LOG("\t 1.Set Device to Silent");
+			DBG_LOG("\t 2.Set Device to Mute Once");
+			DBG_LOG("\t 3.Set Device to Cancel Mute");
+			DBG_LOG("\t 4.Read Alert Status");
+			DBG_LOG("\t 5.Read Ringer Setting");
+			function_selector = getchar();
+			function_selector = function_selector - 48;
+			DBG_LOG("The option choosen is %d",function_selector);
+			switch(function_selector) {
 			
-			if (press_count == DEVICE_SILENT)
-			{
-				DBG_LOG("\r\nDevice to silent");
-			} 
-			else if (press_count == DEVICE_MUTE) 
-			{
-				DBG_LOG("\r\nDevice to Mute Once");
-			} 
-			else if (press_count == DEVICE_NORMAL) 
-			{
-				DBG_LOG("\r\nDevice to cancel mute");
-			} 
-			else if (press_count == READ_REQUEST)
-			{
-				DBG_LOG("\r\nreading the alert status and ringer setting");
-				if ((status = pas_client_read_ringer_setting_char()) != AT_BLE_SUCCESS)
-				{
+			case DEVICE_SILENT:
+				pas_client_write_ringer_control_point(DEVICE_SILENT);
+			break;
+			
+			case DEVICE_MUTE:
+				pas_client_write_ringer_control_point(DEVICE_MUTE);	
+			break;
+			
+			case DEVICE_NORMAL:
+				pas_client_write_ringer_control_point(DEVICE_NORMAL);
+			break;
+			
+			case READ_ALERT_STATUS:
+				DBG_LOG("\r\nreading the alert status ");
+				if ((status = pas_client_read_alert_status_char()) != AT_BLE_SUCCESS) {
+					DBG_LOG("reading alert status invocation failed");
+				}
+				
+			break;
+			
+			case READ_RINGER_SETTING:
+				DBG_LOG("\r\nreading the ringer setting ");				
+				if ((status = pas_client_read_ringer_setting_char()) != AT_BLE_SUCCESS) {
 					DBG_LOG("reading ringer control point invocation failed");
 				}
 				
-				if ((status = pas_client_read_alert_status_char()) != AT_BLE_SUCCESS)
-				{
+			break;
+			
+			default:
+				DBG_LOG("Invalid Number pressed %d",function_selector);
+			}
+			
+			#else
+			if (press_count == DEVICE_SILENT) {
+				DBG_LOG("\r\nDevice to silent");
+			} 
+			else if (press_count == DEVICE_MUTE) {
+				DBG_LOG("\r\nDevice to Mute Once");
+			} 
+			else if (press_count == DEVICE_NORMAL) {
+				DBG_LOG("\r\nDevice to cancel mute");
+			} 
+			else if (press_count == READ_REQUEST) {
+				DBG_LOG("\r\nreading the alert status and ringer setting");
+				if ((status = pas_client_read_ringer_setting_char()) != AT_BLE_SUCCESS) {
+					DBG_LOG("reading ringer control point invocation failed");
+				}
+				
+				if ((status = pas_client_read_alert_status_char()) != AT_BLE_SUCCESS) {
 					DBG_LOG("reading alert status invocation failed");
 				}
 
@@ -277,7 +310,8 @@ int main(void)
 
 			pas_client_write_ringer_control_point(press_count);
 			press_count++;
-		}
+			#endif
+		}	
 	}
 
     ALL_UNUSED(status);

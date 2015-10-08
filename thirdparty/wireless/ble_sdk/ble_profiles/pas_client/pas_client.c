@@ -377,11 +377,13 @@ void pas_client_descriptor_found_handler(at_ble_descriptor_found_t *params)
 					pas_service_data.alert_status_desc.desc_handle = params->desc_handle;
 					pas_service_data.alert_status_desc.discovery = true;		
 					DBG_LOG_DEV("The alert status desc handle is %x",pas_service_data.alert_status_desc.desc_handle);
+					DBG_LOG_DEV("The descriptor uuid is %x",desc_uuid);
 				} else if (params->desc_handle > pas_service_data.ringer_setting_char.char_handle &&
 							params->desc_handle < pas_service_data.ringer_control_point_char.char_handle) {
 					pas_service_data.ringer_setting_desc.desc_handle = params->desc_handle;
 					pas_service_data.ringer_setting_desc.discovery = true;
 					DBG_LOG_DEV("The ringer setting desc handle is %x",pas_service_data.ringer_setting_desc.desc_handle);
+					DBG_LOG_DEV("The descriptor uuid is %x",desc_uuid);
 				}
 			}
 		}			
@@ -464,7 +466,7 @@ void pas_client_char_read_response_handler(at_ble_characteristic_read_response_t
 
 /**
  * @brief invoked by ble manager to read the alert status characteristic
- * @return AT_BLE_SUCCESS if success or AT_BLE_FAILURE
+ * @return AT_BLE_SUCCESS for success or refer at_ble_err_status_t
  */
 at_ble_status_t pas_client_read_alert_status_char(void)
 {
@@ -475,7 +477,7 @@ at_ble_status_t pas_client_read_alert_status_char(void)
 
 /**
  * @brief invoked by ble manager to read the write status characteristic
- * @return AT_BLE_SUCCESS if success or AT_BLE_FAILURE
+ * @return AT_BLE_SUCCESS for success or refer at_ble_err_status_t
  */
 at_ble_status_t pas_client_read_ringer_setting_char(void)
 {
@@ -486,8 +488,7 @@ at_ble_status_t pas_client_read_ringer_setting_char(void)
 
 /**
  * @brief invoked by ble manager to read the write ringer control point characteristic
- * @return AT_BLE_SUCCESS if success or AT_BLE_FAILURE
- */
+ * @return AT_BLE_SUCCESS for success or refer at_ble_err_status_t
 at_ble_status_t pas_client_write_ringer_control_point(uint8_t ringer)
 {
 	// invoke service function for write	
@@ -499,7 +500,7 @@ at_ble_status_t pas_client_write_ringer_control_point(uint8_t ringer)
  * @brief invoked by ble manager for setting the notification of characteristics
  * @param[in] char_id represents the characteristic,1 for alert status,0 for ringer setting
  * @param[in] enable weather notifications has to enabled or disabled.1 for enable 0 for disable
- * @return	 AT_BLE_SUCCESS if success or AT_BLE_FAILURE
+ * @return	 AT_BLE_SUCCESS for success or refer at_ble_err_status_t
  */
 at_ble_status_t pas_client_enable_char_notification(bool char_id,bool enable)
 {
