@@ -47,9 +47,9 @@
 #include <asf.h>
 
 //! [packet_data]
-#define DATA_LENGTH 8
+#define DATA_LENGTH 10
 static uint8_t write_buffer[DATA_LENGTH] = {
-		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07
+		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09
 };
 
 static uint8_t read_buffer[DATA_LENGTH];
@@ -75,10 +75,12 @@ static void configure_i2c_slave(void)
 	/* Change address and address_mode. */
 	//! [conf_changes]
 	config_i2c_slave.address = SLAVE_ADDRESS;
+	config_i2c_slave.pinmux_pad0 = PINMUX_LP_GPIO_14_MUX4_I2C1_SDA;
+	config_i2c_slave.pinmux_pad1 = PINMUX_LP_GPIO_15_MUX4_I2C1_SCK;
 	//! [conf_changes]
 	/* Initialize and enable device with config, and enable i2c. */
 	//! [init_module]
-	while(i2c_slave_init(&i2c_slave_instance, &config_i2c_slave)     \
+	while(i2c_slave_init(&i2c_slave_instance, I2C1, &config_i2c_slave)     \
 			!= STATUS_OK);
 	//! [init_module]
 	//! [enable_module]
@@ -105,12 +107,7 @@ int main(void)
 		.data        = write_buffer,
 	};
 	//! [packet]
-	//! [buffer]
-	for (int i = 0; i < DATA_LENGTH; i++) {
-		write_buffer[i] = i;
-		read_buffer[i] = 0;
-	}
-	//! [buffer]
+
 	//! [init]
 	//! [while]
 	while (true) {

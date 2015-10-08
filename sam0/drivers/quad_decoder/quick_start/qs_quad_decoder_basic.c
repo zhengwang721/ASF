@@ -48,6 +48,26 @@
 volatile int16_t	qdec_axis_x,
 					qdec_axis_y,
 					qdec_axis_z;
+volatile bool       qdec_x_overflow,
+					qdec_y_overflow,
+					qdec_z_overflow;
+					
+//! [callback_funcs]
+static void quad_decoder1_callback(void)
+{
+	qdec_x_overflow = true;
+}
+
+static void quad_decoder2_callback(void)
+{
+	qdec_y_overflow = true;
+}
+
+static void quad_decoder3_callback(void)
+{
+	qdec_z_overflow = true;
+}
+//! [callback_funcs]
 
 //! [setup]
 static void configure_quad_decoder(void)
@@ -58,71 +78,52 @@ static void configure_quad_decoder(void)
 //! [get_def]
 	quad_decoder_get_config_defaults(&config_quad_decoder);
 //! [get_def]
-//! [set_config1]
-	config_quad_decoder.pinmux_pad[0] = CONF_QUAD_DECODER_MUX_X_A;
-	config_quad_decoder.pinmux_pad[1] = CONF_QUAD_DECODER_MUX_X_B;
-//! [set_config1]
-//! [init_qdec1]
-	quad_decoder_init(QDEC_AXIS_X, &config_quad_decoder);
-//! [init_qdec1]
+//! [setup_pinmux]
+	config_quad_decoder.qdec1.pinmux_pad[0] = CONF_QUAD_DECODER_MUX_X_A;
+	config_quad_decoder.qdec1.pinmux_pad[1] = CONF_QUAD_DECODER_MUX_X_B;
+	config_quad_decoder.qdec2.pinmux_pad[0] = CONF_QUAD_DECODER_MUX_Y_A;
+	config_quad_decoder.qdec2.pinmux_pad[1] = CONF_QUAD_DECODER_MUX_Y_B;
+	config_quad_decoder.qdec3.pinmux_pad[0] = CONF_QUAD_DECODER_MUX_Z_A;
+	config_quad_decoder.qdec3.pinmux_pad[1] = CONF_QUAD_DECODER_MUX_Z_B;
+//! [setup_pinmux]
+//! [init_qdec]
+	quad_decoder_init(&config_quad_decoder);
+//! [init_qdec]
 
-//! [set_config2]
-	config_quad_decoder.pinmux_pad[0] = CONF_QUAD_DECODER_MUX_Y_A;
-	config_quad_decoder.pinmux_pad[1] = CONF_QUAD_DECODER_MUX_Y_B;
-//! [set_config2]
-//! [init_qdec2]
-	quad_decoder_init(QDEC_AXIS_Y, &config_quad_decoder);
-//! [init_qdec2]
-
-//! [set_config3]
-	config_quad_decoder.pinmux_pad[0] = CONF_QUAD_DECODER_MUX_Z_A;
-	config_quad_decoder.pinmux_pad[1] = CONF_QUAD_DECODER_MUX_Z_B;
-//! [set_config3]
-//! [init_qdec3]
-	quad_decoder_init(QDEC_AXIS_Z, &config_quad_decoder);
-//! [init_qdec3]
-
-//! [enable_qdec]
-	quad_decoder_enable(QDEC_AXIS_X);
-	quad_decoder_enable(QDEC_AXIS_Y);
-	quad_decoder_enable(QDEC_AXIS_Z);
-//! [enable_qdec]
 }
+
+static void configure_quad_decoder_callback(void)
+{
+//! [setup_register_callback]
+	quad_decoder_register_callback(QDEC_AXIS_X, quad_decoder1_callback);
+	quad_decoder_register_callback(QDEC_AXIS_Y, quad_decoder2_callback);
+	quad_decoder_register_callback(QDEC_AXIS_Z, quad_decoder3_callback);
+//! [setup_register_callback]
+//! [enable_IRQ]
+	NVIC_EnableIRQ(25);
+//! [enable_IRQ]
+}
+
 //! [setup]
 
 int main(void)
 {
 //! [add_main]
-	uint8_t status;
-	//system_init();
-
+//! [sys_clock]
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
+//! [sys_clock]
+//! [conf_qdec]
 	configure_quad_decoder();
-
+//! [conf_qdec]
+//! [conf_callback]	
+	configure_quad_decoder_callback();
+//! [conf_callback]
 //! [add_main]
 
 //! [main_imp]
 //! [main_loop]
 	while (true) {
 //! [main_loop]
-
-		/* Check irq status, if trigger irq, clear irq status and
-		 * reset the quad decoder to reset counter */
-//! [get_irq]
-		status = quad_decoder_get_irq_status();
-//! [get_irq]
-//! [ckeck_status]
-		if (status & LPMCU_MISC_REGS_QUAD_DEC_IRQS_QUAD_DEC_1_IRQ) {
-//! [ckeck_status]
-//! [clear_status]
-			quad_decoder_clear_irq_status(QDEC_AXIS_X);
-//! [clear_status]
-		}
-		if (status & LPMCU_MISC_REGS_QUAD_DEC_IRQS_QUAD_DEC_2_IRQ) {
-			quad_decoder_clear_irq_status(QDEC_AXIS_Y);
-		}
-		if (status & LPMCU_MISC_REGS_QUAD_DEC_IRQS_QUAD_DEC_3_IRQ) {
-			quad_decoder_clear_irq_status(QDEC_AXIS_Z);
-		}
 
 //! [get_counter]
 		/* Get x,y,z axis current counter */

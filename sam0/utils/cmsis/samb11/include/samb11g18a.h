@@ -117,8 +117,7 @@ typedef enum IRQn
   GPIO1_IRQn                = 24 , /**< 24  SAMB11G18A GPIO Controller (GPIO1)  */
   GPIO2_IRQn                = 25 , /**< 25  SAMB11G18A GPIO Controller (GPIO2)  */
   TIMER0_IRQn               = 26 , /**< 26  SAMB11G18A ARM General Purpose Timer (TIMER0) */
-
-  PERIPH_COUNT_IRQn        = 27  /**< Number of peripheral IDs */
+  AON_SLEEP_TIMER_IRQn      = 27 , /**< 27  SAMB11G18A ARM Always on Sleep Timer (AON_SLEEP_TIMER) */
 } IRQn_Type;
 
 typedef struct _DeviceVectors

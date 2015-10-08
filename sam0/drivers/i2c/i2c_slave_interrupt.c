@@ -280,7 +280,12 @@ void _i2c_slave_rx_isr_handler(void)
 			module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
 		}
 	}
-	NVIC_ClearPendingIRQ(13);
+	
+	if (module->hw == I2C0) {
+		NVIC_ClearPendingIRQ(I2C0_RX_IRQn);
+	} else if (module->hw == I2C1) {
+		NVIC_ClearPendingIRQ(I2C1_RX_IRQn);
+	}
 }
 
 void _i2c_slave_tx_isr_handler(void)
@@ -316,5 +321,10 @@ void _i2c_slave_tx_isr_handler(void)
 			module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
 		}
 	}
-	NVIC_ClearPendingIRQ(14);
+	
+	if (module->hw == I2C0) {
+		NVIC_ClearPendingIRQ(I2C0_TX_IRQn);
+	} else if (module->hw == I2C1) {
+		NVIC_ClearPendingIRQ(I2C1_TX_IRQn);
+	}
 }
