@@ -54,6 +54,7 @@
  *   \li Duty cycle is 50%
  *   \li No use agcupdate
  *   \li Clock is 26MHz
+ *   \li Output frequency is 25.4KHz
  *   \li Pinmux pad
  *
  * This use case sets up the PWM to configure the PWM output on a physical device

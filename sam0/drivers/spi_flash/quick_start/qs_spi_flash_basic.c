@@ -48,16 +48,35 @@
 //! [buffer]
 #define len_buf    FLASH_PAGE_SIZE
 
-uint8_t read_buf[len_buf];
-uint8_t write_buf[len_buf];
+volatile uint8_t read_buf[len_buf];
+volatile uint8_t write_buf[len_buf];
 //! [buffer]
+
+//! [configure_gpio]
+static void configure_gpio(void)
+{
+	struct gpio_config config_gpio;
+
+	gpio_get_config_defaults(&config_gpio);
+
+	/* Configure LEDs as outputs, turn them off */
+	config_gpio.direction = GPIO_PIN_DIR_OUTPUT;
+	gpio_pin_set_config(LED_0_PIN, &config_gpio);
+	gpio_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+}
+//! [configure_gpio]
 
 int main(void)
 {
 	uint32_t delay = 0;
 	uint32_t i;
-
-	//system_init();
+	
+//! [system_init]
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
+//! [system_init]
+//! [run_config_gpio]
+	configure_gpio();
+//! [run_config_gpio]
 
 //! [setup_init]
 //!   [setup_1]
@@ -75,7 +94,7 @@ int main(void)
 	while(spi_flash_erase((unsigned long)FLASH_NVDS_START_ADDRESS, len_buf)) {
 		gpio_pin_toggle_output_level(LED_0_PIN);
 		/* Add a short delay to see LED toggle */
-		delay = 30000;
+		delay = 300000;
 		while(delay--) {
 		}
 	}
@@ -91,10 +110,9 @@ int main(void)
 	for (i = 0; i < len_buf; i++) {
 		if(read_buf[i] != 0xFF) {
 			while(1) {
-				read_buf[i] = read_buf[i];
 				gpio_pin_toggle_output_level(LED_0_PIN);
 				/* Add a short delay to see LED toggle */
-				delay = 30000;
+				delay = 300000;
 				while(delay--) {
 				}
 			}
@@ -120,7 +138,7 @@ int main(void)
 			while(1) {
 				gpio_pin_toggle_output_level(LED_0_PIN);
 				/* Add a short delay to see LED toggle */
-				delay = 30000;
+				delay = 300000;
 				while(delay--) {
 				}
 			}
@@ -132,7 +150,7 @@ int main(void)
 	while (true) {
 		gpio_pin_toggle_output_level(LED_0_PIN);
 		/* Add a short delay to see LED toggle */
-		delay = 600000;
+		delay = 5000000;
 		while(delay--) {
 		}
 	}

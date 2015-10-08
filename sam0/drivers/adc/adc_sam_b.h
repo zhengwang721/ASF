@@ -155,39 +155,39 @@ extern "C" {
  * Enum for the possible internal reference voltage level for the ADC.
  *
  */
-enum adc_internal_vref {
-	/** Internal reference voltage level: 0.5V */
-	ADC_INTERNAL_VREF_0_5 = 0,
-	/** Internal reference voltage level: 0.6V */
-	ADC_INTERNAL_VREF_0_6,
-	/** Internal reference voltage level: 0.7V */
-	ADC_INTERNAL_VREF_0_7,
-	/** Internal reference voltage level: 0.8V */
-	ADC_INTERNAL_VREF_0_8,
-	/** Internal reference voltage level: 0.9V */
-	ADC_INTERNAL_VREF_0_9,
-	/** Internal reference voltage level: 1.0V */
-	ADC_INTERNAL_VREF_1_0,
-	/** Internal reference voltage level: 1.1V */
-	ADC_INTERNAL_VREF_1_1,
-	/** Internal reference voltage level: 1.2V */
-	ADC_INTERNAL_VREF_1_2,
-	/** Internal reference voltage level: 1.3V */
-	ADC_INTERNAL_VREF_1_3,
-	/** Internal reference voltage level: 1.4V */
-	ADC_INTERNAL_VREF_1_4,
-	/** Internal reference voltage level: 1.5V */
-	ADC_INTERNAL_VREF_1_5,
-	/** Internal reference voltage level: 1.6V */
-	ADC_INTERNAL_VREF_1_6,
-	/** Internal reference voltage level: 1.7V */
-	ADC_INTERNAL_VREF_1_7,
-	/** Internal reference voltage level: 1.8V */
-	ADC_INTERNAL_VREF_1_8,
-	/** Internal reference voltage level: 1.9V */
-	ADC_INTERNAL_VREF_1_9,
-	/** Internal reference voltage level: 2.0V */
-	ADC_INTERNAL_VREF_2_0,
+enum adc_internal_buf {
+	/** Internal buffer voltage level: 0.5V */
+	ADC_INTERNAL_BUF_0_5 = 0,
+	/** Internal buffer voltage level: 0.6V */
+	ADC_INTERNAL_BUF_0_6,
+	/** Internal buffer voltage level: 0.7V */
+	ADC_INTERNAL_BUF_0_7,
+	/** Internal buffer voltage level: 0.8V */
+	ADC_INTERNAL_BUF_0_8,
+	/** Internal buffer voltage level: 0.9V */
+	ADC_INTERNAL_BUF_0_9,
+	/** Internal buffer voltage level: 1.0V */
+	ADC_INTERNAL_BUF_1_0,
+	/** Internal buffer voltage level: 1.1V */
+	ADC_INTERNAL_BUF_1_1,
+	/** Internal buffer voltage level: 1.2V */
+	ADC_INTERNAL_BUF_1_2,
+	/** Internal buffer voltage level: 1.3V */
+	ADC_INTERNAL_BUF_1_3,
+	/** Internal buffer voltage level: 1.4V */
+	ADC_INTERNAL_BUF_1_4,
+	/** Internal buffer voltage level: 1.5V */
+	ADC_INTERNAL_BUF_1_5,
+	/** Internal buffer voltage level: 1.6V */
+	ADC_INTERNAL_BUF_1_6,
+	/** Internal buffer voltage level: 1.7V */
+	ADC_INTERNAL_BUF_1_7,
+	/** Internal buffer voltage level: 1.8V */
+	ADC_INTERNAL_BUF_1_8,
+	/** Internal buffer voltage level: 1.9V */
+	ADC_INTERNAL_BUF_1_9,
+	/** Internal buffer voltage level: 2.0V */
+	ADC_INTERNAL_BUF_2_0,
 };
 
 /**
@@ -203,7 +203,6 @@ enum adc_reference {
 	ADC_REFERENCE_INTERNAL_IR,
 	/**  VBATT/2 reference */
 	ADC_REFERENCE_VBATT_2,
-#ifdef CHIPVERSION_B0
 	/** GPIO_MS1 reference */
 	ADC_REFERENCE_GPIO_MS1,
 	/** GPIO_MS2 reference */
@@ -214,7 +213,6 @@ enum adc_reference {
 	ADC_REFERENCE_GPIO_MS4,
 	/** VBATTERY reference */
 	ADC_REFERENCE_VBATT,
-#endif
 };
 
 /**
@@ -232,7 +230,6 @@ enum adc_input_channel {
 	ADC_INPUT_CH_GPIO_MS3,
 	/** GPIO_MS4 input */
 	ADC_INPUT_CH_GPIO_MS4,
-#ifdef CHIPVERSION_B0
 	/** On chip temperature measurement input */
 	ADC_INPUT_CH_TEMPERATURE,
 	/** VBATT divided by 4 voltage level */
@@ -241,16 +238,6 @@ enum adc_input_channel {
 	ADC_INPUT_CH_LPD0_LDO,
 	/**  ADC reference voltage level */
 	ADC_INPUT_CH_VREF,
-#else
-	/** On chip temperature measurement input */
-	ADC_INPUT_CH_TEMPERATURE,
-	/** Reference buffer voltage */
-	ADC_INPUT_VREF,
-	/** VDD voltage */
-	ADC_INPUT_AVDD,
-	/** Vss voltage */
-	ADC_INPUT_VSS,
-#endif
 };
 
 /**
@@ -320,7 +307,7 @@ struct adc_config {
 	/** Voltage reference */
 	enum adc_reference reference;
 	/** Internal reference voltage level */
-	enum adc_internal_vref internal_vref;
+	enum adc_internal_buf internal_vref;
 	/** Input channel */
 	enum adc_input_channel input_channel;
 	/** Input channel selection */
