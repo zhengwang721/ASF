@@ -488,7 +488,7 @@ at_ble_status_t pas_client_read_ringer_setting_char(void)
 
 /**
  * @brief invoked by ble manager to read the write ringer control point characteristic
- * @return AT_BLE_SUCCESS for success or refer at_ble_err_status_t
+ * @return AT_BLE_SUCCESS for success or refer at_ble_err_status_t*/
 at_ble_status_t pas_client_write_ringer_control_point(uint8_t ringer)
 {
 	// invoke service function for write	
