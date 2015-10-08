@@ -206,6 +206,7 @@ at_ble_status_t hid_prf_char_changed_handler(at_ble_characteristic_changed_t *ch
 	   {
 		   protocol_mode.serv_inst = serv_inst;
 		   protocol_mode.mode = change_params.char_new_value[0];
+		   hid_prf_dataref[serv_inst]->protocol_mode = change_params.char_new_value[0];
 		   protocol_mode.conn_handle = change_params.conn_handle;
 		   mode_ntf_cb(&protocol_mode);
 	   }
