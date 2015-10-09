@@ -630,22 +630,25 @@ void ble_pair_key_request_handler (at_ble_pair_key_request_t *pair_key)
         
 	at_ble_pair_key_request_t pair_key_request;
         
-        memcpy((uint8_t *)&pair_key_request, pair_key, sizeof(at_ble_pair_key_request_t));
-        
-        if(pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_ENTRY)
-        {
-          DBG_LOG("Enter the Passkey(6-Digit) in Terminal:");
-            
-          for(idx = 0; idx < 6; )
-          {          
-            pin = getchar();
-            if((pin >= '0') && ( pin <= '9'))
-            {
-              passkey[idx++] = pin;
-              DBG_LOG_CONT("%c", pin);
-            }
-          }
-        }	
+	memcpy((uint8_t *)&pair_key_request, pair_key, sizeof(at_ble_pair_key_request_t));
+	
+	if (pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_ENTRY) {
+	  DBG_LOG("Enter the Passkey(6-Digit) or q to quit in Terminal:");
+	  for (idx = 0; idx < 6;) {          
+		pin = getchar();
+		if ((pin >= '0') && ( pin <= '9')) {
+		  passkey[idx++] = pin;
+		  DBG_LOG_CONT("%c", pin);
+		} else if (pin == 'q') {
+			DBG_LOG("Disconnecting ...");
+			if (!(at_ble_disconnect(ble_connected_dev_info->handle, 
+							AT_BLE_TERMINATED_BY_USER) == AT_BLE_SUCCESS)) {
+				DBG_LOG("Disconnect Request Failed");
+			}
+			return;
+		}
+	  }
+	}	
 	
 	/* Display passkey */
 	if(((pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_DISPLAY) &&
