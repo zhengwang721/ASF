@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Analog Comparator Controller (ACC) example for SAMV71.
+ * \brief Analog Comparator Controller (ACC) example for SAMV71/SAME70.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
