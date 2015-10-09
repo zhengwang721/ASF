@@ -287,23 +287,54 @@ at_ble_status_t pas_client_write_ringer_control_point(uint8_t ringer);
 at_ble_status_t pas_client_enable_char_notification(bool char_id,bool enable);
 
 /**
+ * @brief starts the service discovery
+ * @return AT_BLE_SUCCESS for success and AT_BLE_FAILURE for failure
+ */
+at_ble_status_t pas_client_start_service_discovery(void);
+
+/**
  * @brief invoked by ble manager for setting the notification 
  */
 void pas_client_write_notifications(void *param);
 
+/**
+ * @brief register the call back for reading alert status
+ * @param[in] read_callback_t type application callback
+ * @return none
+ */
 void register_alert_status_read_callback(read_callback_t app_read_cb);
 
+/**
+ * @brief register the call back for reading ringer setting 
+ * @param[in] read_callback_t type application callback
+ * @return none
+ */
 void register_ringer_setting_read_callback(read_callback_t app_read_cb);
 
+/**
+ * @brief register the call back for notification of alert status  
+ * @param[in] notification_callback_t type application callback
+ * @return none
+ */
 void register_alert_status_notification_callback(notification_callback_t app_notify_cb);
 
+/**
+ * @brief register the call back for notification of ringer setting
+ * @param[in] notification_callback_t type application callback
+ * @return none
+ */
 void register_ringer_setting_notification_callback(notification_callback_t app_notify_cb);
 
+/**
+ * @brief called by the ble manager after receiving the read response event 
+ * @param[in] characteristic read response parameters
+ * @return none
+ */
 void pas_client_char_read_response_handler(at_ble_characteristic_read_response_t *params);
 
 /**
  * @brief register the call back for application state
- * @param[in]
+ * @param[in] connected_callback_t type application callback
  * @return none
  */
 void register_connected_callback(connected_callback_t app_connected_cb);

@@ -61,6 +61,7 @@
 
 #define READ_ALERT_STATUS			(4)
 #define READ_RINGER_SETTING			(5)
+#define DISCOVER_ATTRIBUTES			(6)
 
 
 
