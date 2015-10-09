@@ -94,6 +94,7 @@ extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 connected_callback_t connected_cb;
 
 uint8_t start_notification = 0;
+at_ble_handle_t anp_conn_handle = 0;
 
 /***********************************************************************************
  *									Implementation	                               *
@@ -175,6 +176,24 @@ void anp_client_adv(void)
 
 /**
  * @brief Discovering the services of Alert Notification
+ * @return at_ble_status_t which return AT_BLE_SUCCESS on success
+ */
+at_ble_status_t alert_service_discovery(void)
+{
+	if(at_ble_primary_service_discover_all(anp_conn_handle, 
+											GATT_DISCOVERY_STARTING_HANDLE,
+											GATT_DISCOVERY_ENDING_HANDLE)
+											 == AT_BLE_SUCCESS) {
+		DBG_LOG_DEV("GATT Discovery request started ");
+		return AT_BLE_SUCCESS;
+	} else {
+		DBG_LOG("GATT Discovery request failed");
+		return AT_BLE_FAILURE;
+	}
+}
+
+/**
+ * @brief Discovering the services of Alert Notification
  * @param[in] at_ble_connected_t which consists of connection handle
  * @return at_ble_status_t which return AT_BLE_SUCCESS on success
  */
@@ -183,18 +202,8 @@ at_ble_status_t anp_info_service_discover(at_ble_connected_t *conn_params)
 	if (conn_params->conn_status != AT_BLE_SUCCESS) {
 		return conn_params->conn_status;
 	}
-	
-	if(at_ble_primary_service_discover_all(conn_params->handle, 
-											GATT_DISCOVERY_STARTING_HANDLE,
-											GATT_DISCOVERY_ENDING_HANDLE)
-											 == AT_BLE_SUCCESS) {
-		DBG_LOG_DEV("GATT Discovery request started ");
-		return AT_BLE_SUCCESS;
-	} else {
-		DBG_LOG("GATT Discovery request failed");
-	}	
-	
-	return AT_BLE_FAILURE;
+	anp_conn_handle = conn_params->handle;
+	return alert_service_discovery();
 }
 
 /**
@@ -592,4 +601,13 @@ void anp_client_read_response_handler(at_ble_characteristic_read_response_t *cha
 			anp_client_write_notification_handler();
 		}
 	#endif	
+}
+
+/**
+ * @brief char changed handler invoked by application
+ * @param[in] uint8_t consists of value to be written to alert notification control point
+ */
+at_ble_status_t anp_write_to_ncp(uint8_t *value)
+{
+	return(at_ble_characteristic_write(ble_connected_dev_info[0].handle, anp_handle.alert_np_char_handle, 0, 2, value, false, true));
 }

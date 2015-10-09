@@ -161,6 +161,12 @@ void anp_client_disconnected_event_handler(at_ble_disconnected_t *params);
 void anp_client_service_found_handler(at_ble_primary_service_found_t * params);
 
 /**
+ * @brief Discovering the services of Alert Notification
+ * @return at_ble_status_t which return AT_BLE_SUCCESS on success
+ */
+at_ble_status_t alert_service_discovery(void);
+
+/**
  * @brief Handler for discovery complete event
  * @param[in] discovery complete event which contains result of discovery event
  * \note Called by the ble_manager after receiving discovery complete event
@@ -236,6 +242,12 @@ void anp_client_disable_notification(void);
  * @brief invoked by ble manager for setting the notification 
  */
 void anp_client_security_done_handler(void *param);
+
+/**
+ * @brief char changed handler invoked by application
+ * @param[in] uint8_t array consists of value to be written to alert notification control point
+ */
+at_ble_status_t anp_write_to_ncp(uint8_t *value);
 
 #endif /* __ALERT_NOTIFICATION_PROFILE_H__ */
 // </h>

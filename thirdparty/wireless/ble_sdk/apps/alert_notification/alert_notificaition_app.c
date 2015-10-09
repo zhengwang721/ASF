@@ -69,7 +69,7 @@ volatile bool user_request = false;
 volatile bool notification_enable = false;
 
 volatile bool app_state = false;
-
+#define ENABLE_PTS false
 /***********************************************************************************
  *									Implementations                               *
  **********************************************************************************/
@@ -137,9 +137,36 @@ int main(void)
 		/* BLE Event Task */
 		ble_event_task();
 		if (user_request) {
-			
+	
 			/* Button debounce delay*/
 			delay_ms(350);
+			#if ENABLE_PTS
+			DBG_LOG("Press 1 for service discovery");
+			DBG_LOG("Press 2 for write notification");
+			DBG_LOG("Press 3 for disable notification");
+			DBG_LOG("Press 4 for write to alert notification conrol point");
+			 uint8_t ncp_data[2] = {0};
+			uint8_t option = getchar();
+			DBG_LOG("Received %c",option);
+			switch (option) {
+			case '1' :
+				alert_service_discovery();
+				break;
+			case '2' :
+				anp_client_write_notification_handler();
+				break;
+			case '3' :
+				anp_client_disable_notification();
+				break;
+ 			case '4' :
+				DBG_LOG("Enter the alert catagory[email/news/...]");
+				ncp_data[1] = getchar() - 0x30;
+ 				DBG_LOG("Enter the command ID[0 - 5]");
+				ncp_data[0] = getchar() - 0x30;
+ 				anp_write_to_ncp(ncp_data);
+				break;
+			}
+			#else
 			if (notification_enable) {
 				anp_client_write_notification_handler();
 				notification_enable = false;
@@ -147,6 +174,7 @@ int main(void)
 				anp_client_disable_notification();
 				notification_enable = true;
 			}
+			#endif
 			user_request = false;
 		}
 	}
