@@ -90,7 +90,7 @@ void pas_data_init(void)
 
 /**
  * @brief register the call back for reading alert status
- * @param[in]
+ * @param[in] read_callback_t type application callback
  * @return none
  */
 void register_alert_status_read_callback(read_callback_t app_read_cb)
@@ -100,7 +100,7 @@ void register_alert_status_read_callback(read_callback_t app_read_cb)
 
 /**
  * @brief register the call back for reading ringer setting 
- * @param[in]
+ * @param[in] read_callback_t type application callback
  * @return none
  */
 void register_ringer_setting_read_callback(read_callback_t app_read_cb)
@@ -110,7 +110,7 @@ void register_ringer_setting_read_callback(read_callback_t app_read_cb)
 
 /**
  * @brief register the call back for notification of alert status  
- * @param[in]
+ * @param[in] notification_callback_t type application callback
  * @return none
  */
 void register_alert_status_notification_callback(notification_callback_t app_notify_cb)
@@ -120,7 +120,7 @@ void register_alert_status_notification_callback(notification_callback_t app_not
 
 /**
  * @brief register the call back for notification of ringer setting
- * @param[in]
+ * @param[in] notification_callback_t type application callback
  * @return none
  */
 void register_ringer_setting_notification_callback(notification_callback_t app_notify_cb)
@@ -130,7 +130,7 @@ void register_ringer_setting_notification_callback(notification_callback_t app_n
 
 /**
  * @brief register the call back for notification of ringer setting
- * @param[in]
+ * @param[in] connected_callback_t type application callback
  * @return none
  */
 void register_connected_callback(connected_callback_t app_connected_cb)
@@ -178,36 +178,43 @@ void pas_client_adv(void)
 
 /**
  * @brief starts the service discovery
+ * @return AT_BLE_SUCCESS for success and AT_BLE_FAILURE for failure
+ */
+at_ble_status_t pas_client_start_service_discovery()
+{
+	at_ble_uuid_t pas_uuid;	
+	pas_uuid.type = AT_BLE_UUID_16;
+	pas_uuid.uuid[0] =  (uint8_t) PAS_SERVICE_UUID;
+	pas_uuid.uuid[1] = (uint8_t ) (PAS_SERVICE_UUID >> 8 );
+	
+	if(at_ble_primary_service_discover_by_uuid(pas_service_data.conn_handle,
+												GATT_DISCOVERY_STARTING_HANDLE,
+												GATT_DISCOVERY_ENDING_HANDLE,
+												&pas_uuid) == AT_BLE_SUCCESS) {
+			DBG_LOG_DEV("GATT Discovery request started ");
+			return AT_BLE_SUCCESS;
+	} else {
+			DBG_LOG("GATT Discovery request failed");
+	}
+	return AT_BLE_FAILURE;
+}
+
+/**
+ * @brief to perform the service discovery
  * @param[in] connection parameters 
  * @return AT_BLE_SUCCESS for success and AT_BLE_FAILURE for failure
  * @pre Called after connection by the ble manager
  */
 at_ble_status_t pas_client_service_discovery(at_ble_connected_t *conn_params)
 {
-	at_ble_uuid_t pas_uuid;
-
 	if (conn_params->conn_status != AT_BLE_SUCCESS) {
 		return conn_params->conn_status;
 	}
 	
 	connected_cb(1);
-	
-	pas_uuid.type = AT_BLE_UUID_16;
-	pas_uuid.uuid[0] =  (uint8_t) PAS_SERVICE_UUID;	
-	pas_uuid.uuid[1] = (uint8_t ) (PAS_SERVICE_UUID >> 8 );
-	
 	pas_service_data.conn_handle = conn_params->handle;
 	
-	if(at_ble_primary_service_discover_by_uuid(conn_params->handle, 
-												GATT_DISCOVERY_STARTING_HANDLE,
-												GATT_DISCOVERY_ENDING_HANDLE,
-												&pas_uuid) == AT_BLE_SUCCESS) {
-		DBG_LOG_DEV("GATT Discovery request started ");
-		return AT_BLE_SUCCESS;
-	} else {
-		DBG_LOG("GATT Discovery request failed");
-	}
-	return AT_BLE_FAILURE;
+	return pas_client_start_service_discovery();
 }
 
 /**
@@ -449,6 +456,11 @@ void pas_client_char_write_response_handler(at_ble_characteristic_write_response
 	}
 }
 
+/**
+ * @brief called by the ble manager after receiving the read response event 
+ * @param[in] characteristic read response parameters
+ * @return none
+ */
 void pas_client_char_read_response_handler(at_ble_characteristic_read_response_t *params)
 {
 	if (params ->status == AT_BLE_SUCCESS) {

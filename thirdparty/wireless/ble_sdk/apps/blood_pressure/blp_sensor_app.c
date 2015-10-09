@@ -259,7 +259,7 @@ static void app_indication_confirmation_handler(at_ble_cmd_complete_event_t *par
 		user_request_flag = false;
 		DBG_LOG("\r\nPress the button to receive the blood pressure parameters");
 	} else {
-		DBG_LOG_DEV("Sending indication over the air failed reason %x %x",params->status);
+		DBG_LOG_DEV("Sending indication over the air failed reason %x ",params->status);
 		indication_sent = false;
 	}
 }

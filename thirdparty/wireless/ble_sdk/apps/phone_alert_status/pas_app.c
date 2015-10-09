@@ -247,9 +247,10 @@ int main(void)
 			DBG_LOG("\t 3.Set Device to Cancel Mute");
 			DBG_LOG("\t 4.Read Alert Status");
 			DBG_LOG("\t 5.Read Ringer Setting");
+			DBG_LOG("\t 6.Start Service Discovery");
 			function_selector = getchar();
 			function_selector = function_selector - 48;
-			DBG_LOG("The option choosen is %d",function_selector);
+			DBG_LOG("The option chosen is %d",function_selector);
 			switch(function_selector) {
 			
 			case DEVICE_SILENT:
@@ -265,7 +266,7 @@ int main(void)
 			break;
 			
 			case READ_ALERT_STATUS:
-				DBG_LOG("\r\nreading the alert status ");
+				DBG_LOG("reading the alert status ");
 				if ((status = pas_client_read_alert_status_char()) != AT_BLE_SUCCESS) {
 					DBG_LOG("reading alert status invocation failed");
 				}
@@ -273,11 +274,18 @@ int main(void)
 			break;
 			
 			case READ_RINGER_SETTING:
-				DBG_LOG("\r\nreading the ringer setting ");				
+				DBG_LOG("reading the ringer setting ");				
 				if ((status = pas_client_read_ringer_setting_char()) != AT_BLE_SUCCESS) {
 					DBG_LOG("reading ringer control point invocation failed");
 				}
-				
+			case DISCOVER_ATTRIBUTES:
+				DBG_LOG("Starting Service discovery");
+				status = pas_client_start_service_discovery();
+				if (status == AT_BLE_SUCCESS) {
+					DBG_LOG("Started the service discovery successfully");
+				} else {
+					DBG_LOG("Service discovery failed");
+				}
 			break;
 			
 			default:
