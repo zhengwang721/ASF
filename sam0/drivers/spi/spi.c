@@ -441,9 +441,8 @@ enum status_code spi_init(
 		}
 	}
 
-	/* Set up the input clock & divider for the module */
+	/* Set up the input clock for the module */
 	spi_module->CLOCK_SOURCE_SELECT.reg = config->clock_source;
-	//spi_module->SPI_CLK_DIVIDER.reg = config->clock_divider;
 
 #  if CONF_SPI_MASTER_ENABLE == true
 	if (config->mode == SPI_MODE_MASTER) {
