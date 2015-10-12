@@ -199,6 +199,9 @@ int main(void)
 				/* Wait for write complete */
 			}
 			transrev_complete_spi_master = false;
+			for(uint16_t i = 0; i < 0xFF; i++) {
+				/* Waiting... */
+			}
 			//! [wait]
 			//! [deselect_slave]
 			spi_select_slave(&spi_master_instance, &slave, false);

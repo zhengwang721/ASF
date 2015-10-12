@@ -139,10 +139,8 @@ static enum status_code _spi_set_config(
 	Assert(module);
 	Assert(config);
 
-	SPI_SPI_CONFIGURATION_Type spi_cfg;
 	Spi *const spi_module = (module->hw);
 
-	spi_cfg.reg = 0;
 	module->mode  = config->mode;
 
 #if CONF_SPI_MASTER_ENABLE == true
@@ -153,30 +151,34 @@ static enum status_code _spi_set_config(
 #endif
 
 	/* Set data order */
-	spi_cfg.bit.LSB_FIRST_ENABLE = config->data_order;
+	if (config->data_order == SPI_DATA_ORDER_LSB) {
+		spi_module->SPI_CONFIGURATION.bit.LSB_FIRST_ENABLE = 0x1;
+	} else {
+		spi_module->SPI_CONFIGURATION.bit.LSB_FIRST_ENABLE = 0x0;
+	}
+
 	/* Set clock polarity and clock phase */
 	switch(config->transfer_mode)
 	{
 		case SPI_TRANSFER_MODE_0:
-			spi_cfg.bit.SCK_POLARITY = 0;
-			spi_cfg.bit.SCK_PHASE = 0;
+			spi_module->SPI_CONFIGURATION.bit.SCK_PHASE = 0x0;
+			spi_module->SPI_CONFIGURATION.bit.SCK_POLARITY = 0x0;
 			break;
 		case SPI_TRANSFER_MODE_1:
-			spi_cfg.bit.SCK_POLARITY = 0;
-			spi_cfg.bit.SCK_PHASE = 1;
+			spi_module->SPI_CONFIGURATION.bit.SCK_PHASE = 0x1;
+			spi_module->SPI_CONFIGURATION.bit.SCK_POLARITY = 0x0;
 			break;
 		case SPI_TRANSFER_MODE_2:
-			spi_cfg.bit.SCK_POLARITY = 1;
-			spi_cfg.bit.SCK_PHASE = 0;
+			spi_module->SPI_CONFIGURATION.bit.SCK_PHASE = 0x0;
+			spi_module->SPI_CONFIGURATION.bit.SCK_POLARITY = 0x1;
 			break;
 		case SPI_TRANSFER_MODE_3:
-			spi_cfg.bit.SCK_POLARITY = 1;
-			spi_cfg.bit.SCK_PHASE = 1;
+			spi_module->SPI_CONFIGURATION.bit.SCK_PHASE = 0x1;
+			spi_module->SPI_CONFIGURATION.bit.SCK_POLARITY = 0x1;
 			break;
 		default:
 			break;
 	}
-	spi_module->SPI_CONFIGURATION.reg = spi_cfg.reg;
 
 	return STATUS_OK;
 }
@@ -441,7 +443,7 @@ enum status_code spi_init(
 
 	/* Set up the input clock & divider for the module */
 	spi_module->CLOCK_SOURCE_SELECT.reg = config->clock_source;
-	spi_module->SPI_CLK_DIVIDER.reg = config->clock_divider;
+	//spi_module->SPI_CLK_DIVIDER.reg = config->clock_divider;
 
 #  if CONF_SPI_MASTER_ENABLE == true
 	if (config->mode == SPI_MODE_MASTER) {
