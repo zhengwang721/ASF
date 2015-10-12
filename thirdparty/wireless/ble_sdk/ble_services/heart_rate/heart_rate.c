@@ -67,8 +67,7 @@ uint8_t body_sensor_location_value = CHEST;
 uint8_t hr_control_point_value = 0;
 
 /************************************************************************/
-/*							Implementation
- *                             */
+/*							Implementation								*/
 /************************************************************************/
 
 /**@brief Heart Rate service and characteristic initialization(Called only once
@@ -166,12 +165,10 @@ void hr_init_service(hr_gatt_service_handler_t *heart_rate_serv)
 	
 	#if BLE_PAIR_ENABLE
 		heart_rate_serv->serv_chars[1].value_permissions
-							= (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
-								AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
+							= (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR);
 	#else	
 		heart_rate_serv->serv_chars[1].value_permissions
-							= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
-								AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+							= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR);
 	#endif
 	
 	/* user defined name */
@@ -219,13 +216,11 @@ void hr_init_service(hr_gatt_service_handler_t *heart_rate_serv)
 	
 	#if BLE_PAIR_ENABLE
 		heart_rate_serv->serv_chars[2].value_permissions
-							= (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
-								AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
+							= (AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
 	
 	#else
 		heart_rate_serv->serv_chars[2].value_permissions
-							= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
-								AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+							= (AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
 	
 	#endif
 	
