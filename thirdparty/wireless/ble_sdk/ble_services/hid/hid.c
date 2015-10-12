@@ -634,7 +634,7 @@ uint8_t hid_get_reportid(uint8_t serv, uint16_t handle, uint8_t reportnum)
 	uint16_t len = 2;	
 	
 	DBG_LOG_DEV("HID Service :: hid_get_reportid :: Report Number %d", reportnum);
-	for(id = 0; id <= reportnum; id++){
+	for(id = 0; id < reportnum; id++){
 		DBG_LOG_DEV("HID Service :: hid_get_reportid :: id %d Search Handle %d, CCD Handle %d", id, handle, hid_serv_inst[serv].hid_dev_report_val_char[id]->client_config_desc.handle);
 		if(handle == hid_serv_inst[serv].hid_dev_report_val_char[id]->client_config_desc.handle){
 			DBG_LOG_DEV("HID Service :: hid_get_reportid :: Report ID Descriptor Handle %d :: id %d :: serv %d", hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, id, serv);
@@ -661,7 +661,7 @@ uint8_t hid_get_reportchar(uint16_t handle, uint8_t serv, uint8_t reportid)
 	at_ble_status_t status ;
 
 	DBG_LOG_DEV("HID Service :: hid_get_reportchar :: Handle %d Service Instance %d Report ID %d", handle, serv, reportid);	
-	for(id = 0; id <= HID_NUM_OF_REPORT; id++){
+	for(id = 0; id < HID_NUM_OF_REPORT; id++){
 		DBG_LOG_DEV("HID Service :: hid_get_reportchar :: Report ID Descriptor Handle %d :: id %d :: serv %d", hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, id, serv);
 		status = at_ble_descriptor_value_get(hid_serv_inst[serv].hid_dev_report_val_char[id]->additional_desc_list->handle, &descval[0], &len);
 		if (status != AT_BLE_SUCCESS){
