@@ -1,0 +1,14 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="Alert Notification Client Application" id="thirdparty.wireless.ble_sdk.apps.alert_notification">
+		<info type="description" value="summary">
+		Alert Notification Client Application for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="c-source" value="alert_notificaition_app.c"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_CENTRAL_AND_PERIPHERAL"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.alert_notification"/>
+		<build type="distribute" subtype="user-file" value="Atmel-42548-ATBTLC1000-BluSDK-Alert-Notification-Getting-Started-Guide_UserGuide.pdf"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

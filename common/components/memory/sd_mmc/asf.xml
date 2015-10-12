@@ -77,6 +77,10 @@
 			<device-support value="sam3u"/>
 			<device-support value="sam3x"/>
 			<device-support value="sam4e"/>
+			<device-support value="samv70"/>
+			<device-support value="samv71"/>
+			<device-support value="same70"/>
+			<device-support value="sams70"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
 	</select-by-config>
@@ -96,6 +100,10 @@
 			<device-support value="sam3u"/>
 			<device-support value="sam3x"/>
 			<device-support value="sam4e"/>
+			<device-support value="samv70"/>
+			<device-support value="samv71"/>
+			<device-support value="same70"/>
+			<device-support value="sams70"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
 	</select-by-device>

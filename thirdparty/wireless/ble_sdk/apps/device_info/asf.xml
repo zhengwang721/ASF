@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="Device Information Service Application" id="thirdparty.wireless.ble_sdk.apps.device_info">
+		<info type="description" value="summary">
+		Device Information Service Application for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="device_info_app.h"/>
+		<build type="c-source" value="device_info_app.c"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_PERIPHERAL"/>
+		<build type="define" name="ATT_DB_MEMORY" value=""/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.device_information"/>
+		<build type="distribute" subtype="user-file" value="Atmel-42531-ATBTLC1000-BluSDK-Device-Information-Service-Getting-Started-Guide_UserGuide.pdf"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>
