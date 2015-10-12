@@ -45,8 +45,8 @@
  */
 #include "dualtimer.h"
 
-static dualtimer_callback_t dualtimer_callback_timer1;
-static dualtimer_callback_t dualtimer_callback_timer2;
+static dualtimer_callback_t dualtimer_callback_timer1 = NULL;
+static dualtimer_callback_t dualtimer_callback_timer2 = NULL;
 /**
  * \brief Initializes config with predefined default values.
  *
@@ -242,6 +242,13 @@ void dualtimer_init(const struct dualtimer_config *config)
 	LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_1.reg |=
 			LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_1_DUALTIMER_RSTN;
 
+	/* Common config */
+	if (config->timer1.timer_enable || config->timer2.timer_enable) {
+		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |=
+		LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_DUALTIMER_CLK_EN;
+		LPMCU_MISC_REGS0->LPMCU_CONTROL.bit.DUALTIMER_CLK_SEL = config->clock_source;
+	}
+	
 	/* Timer1 config */
 	if (config->timer1.timer_enable) {
 		if (config->timer1.counter_mode == DUALTIMER_ONE_SHOT_MODE) {
@@ -259,6 +266,7 @@ void dualtimer_init(const struct dualtimer_config *config)
 		DUALTIMER0->TIMER1LOAD.reg = config->timer1.load_value;
 		DUALTIMER0->TIMER1CONTROL.reg = regval;
 		LPMCU_MISC_REGS0->DUALTIMER_CTRL.reg |= LPMCU_MISC_REGS_DUALTIMER_CTRL_CNTR_1_ENABLE;
+		dualtimer_enable(DUALTIMER_TIMER1);
 	}
 
 	/* Timer2 config */
@@ -278,19 +286,10 @@ void dualtimer_init(const struct dualtimer_config *config)
 		DUALTIMER0->TIMER2LOAD.reg = config->timer2.load_value;
 		DUALTIMER0->TIMER2CONTROL.reg = regval;
 		LPMCU_MISC_REGS0->DUALTIMER_CTRL.reg |= LPMCU_MISC_REGS_DUALTIMER_CTRL_CNTR_2_ENABLE;
-	}
-
-	/* Common config */
-	if (config->timer1.timer_enable || config->timer2.timer_enable) {
-		LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg |=
-				LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_DUALTIMER_CLK_EN;
-		LPMCU_MISC_REGS0->LPMCU_CONTROL.bit.DUALTIMER_CLK_SEL = config->clock_source;
+		dualtimer_enable(DUALTIMER_TIMER2);
 	}
 
 	system_register_isr(RAM_ISR_TABLE_DUALTIMER_INDEX, (uint32_t)dualtimer_isr_handler);
-
-	dualtimer_callback_timer1 = NULL;
-	dualtimer_callback_timer2 = NULL;
 }
 
 /**

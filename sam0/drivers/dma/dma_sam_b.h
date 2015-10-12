@@ -268,21 +268,6 @@ extern "C" {
 
 /** DMA peripheral index */
 enum dma_peripheral_index {
-#ifndef CHIPVERSION_B0
-	MEMORY_DMA_PERIPHERAL = 0,
-	UART0RX_DMA_PERIPHERAL,
-	UART0TX_DMA_PERIPHERAL,
-	UART1RX_DMA_PERIPHERAL,
-	UART1TX_DMA_PERIPHERAL,
-	SPI0RX_DMA_PERIPHERAL,
-	SPI0TX_DMA_PERIPHERAL,
-	TIMER0_DMA_PERIPHERAL = 10,
-	DUALTIMER0_DMA_PERIPHERAL,
-	SPI1RX_DMA_PERIPHERAL,
-	SPI1TX_DMA_PERIPHERAL,
-	I2C0RX_DMA_PERIPHERAL,
-	I2C0TX_DMA_PERIPHERAL,
-#else
 	MEMORY_DMA_PERIPHERAL = 0,
 	UART0RX_DMA_PERIPHERAL,
 	UART0TX_DMA_PERIPHERAL,
@@ -298,7 +283,6 @@ enum dma_peripheral_index {
 	I2C1TX_DMA_PERIPHERAL,
 	DUALTIMER0_DMA_PERIPHERAL = 15,
 	TIMER0_DMA_PERIPHERAL,
-#endif
 };
 
 /** DMA channel index */
@@ -564,7 +548,6 @@ static inline void dma_reset_descriptor(struct dma_resource *resource)
 	resource->descriptor = NULL;
 }
 
-void dma_global_init(void);
 void dma_get_config_defaults(struct dma_resource_config *config);
 enum status_code dma_allocate(struct dma_resource *resource,
 		struct dma_resource_config *config);

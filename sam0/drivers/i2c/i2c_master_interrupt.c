@@ -182,7 +182,10 @@ static enum status_code _i2c_master_read_packet(
 	module->buffer_remaining   = packet->data_length;
 	module->transfer_direction = I2C_TRANSFER_READ;
 	module->status             = STATUS_BUSY;
-
+	
+	i2c_wait_for_idle(i2c_module);
+	/* Flush the FIFO */
+	i2c_module->I2C_FLUSH.reg = 1;
 	/* Enable I2C on bus (start condition) */
 	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
 	/* Set address and direction bit. Will send start command on bus */
@@ -443,8 +446,16 @@ void _i2c_master_isr_handler(void)
 		}
 	}
 	if (module->transfer_direction == I2C_TRANSFER_READ) {
-		NVIC_ClearPendingIRQ(13);
+		if (module->hw == I2C0) {
+			NVIC_ClearPendingIRQ(I2C0_RX_IRQn);
+		} else if (module->hw == I2C1) {
+			NVIC_ClearPendingIRQ(I2C1_RX_IRQn);
+		} 
 	} else {
-		NVIC_ClearPendingIRQ(14);
+		if (module->hw == I2C0) {
+			NVIC_ClearPendingIRQ(I2C0_TX_IRQn);
+		} else if (module->hw == I2C1) {
+			NVIC_ClearPendingIRQ(I2C1_TX_IRQn);
+		}
 	}
 }

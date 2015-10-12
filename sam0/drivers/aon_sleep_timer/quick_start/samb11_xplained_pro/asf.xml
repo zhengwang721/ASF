@@ -6,6 +6,7 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_aon_sleep_timer.h"/>
+		<config name="config.build.studio.postbuild" value="&quot;$(DevEnvDir)\Packs\Atmel\SAMB11_DFP\1.0.75\tools\samb_makeimage.bat&quot; &quot;$(DevEnvDir)\Packs\Atmel\SAMB11_DFP\1.0.75\patches&quot; &quot;$(OutputDirectory)\$(OutputFileName).bin&quot;  app_entry"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<device-support value="atsamb11g18a"/>

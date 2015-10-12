@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="Battery Service Application" id="thirdparty.wireless.ble_sdk.apps.battery_info">
+		<info type="description" value="summary">
+		Battery Service Application for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="battery_info.h"/>
+		<build type="c-source" value="battery_info.c"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_PERIPHERAL"/>
+		<build type="define" name="ATT_DB_MEMORY" value=""/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.battery"/>
+		<build type="distribute" subtype="user-file" value="Atmel-42523-ATBTLC1000-BluSDK-Battery-Service-Application-Getting-Started-Guide_UserGuide.pdf"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

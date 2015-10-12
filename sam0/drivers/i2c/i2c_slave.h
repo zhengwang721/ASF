@@ -60,21 +60,6 @@ extern "C" {
  *
  */
 
- /** \brief I2C Core index
- *
- * Some version of chip has multiple I2C modules.
- */
-enum i2c_core_idx {
-	/** I2C CORE1 */
-	I2C_CORE1 = 1,
-#ifdef CHIPVERSION_B0
-	/** I2C CORE2 */
-	I2C_CORE2,
-#endif      //CHIPVERSION_B0
-	/** I2C CORE MAX */
-	I2C_CORE_MAX,
-};
-
 /**
  * \brief I<SUP>2</SUP>C slave packet for read/write
  *
@@ -189,8 +174,6 @@ struct i2c_slave_module {
  * \ref i2c_slave_get_config_defaults.
  */
 struct i2c_slave_config {
-	/** I2C core index */
-	enum i2c_core_idx i2c_core;
 	/** Timeout to wait for master in polled functions */
 	uint16_t buffer_timeout;
 	/** Address or upper limit of address range */
@@ -213,6 +196,7 @@ struct i2c_slave_config {
 void i2c_slave_get_config_defaults(
 		struct i2c_slave_config *const config);
 enum status_code i2c_slave_init(struct i2c_slave_module *const module,
+		I2C *const hw,
 		const struct i2c_slave_config *const config);
 enum status_code i2c_slave_write_packet_wait(
 		struct i2c_slave_module *const module,
