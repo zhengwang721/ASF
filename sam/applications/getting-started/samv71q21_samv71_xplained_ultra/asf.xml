@@ -1,0 +1,20 @@
+<asf xmlversion="1.0">
+	<project caption="Getting Started for SAMV71 Xplained Ultra" id="sam.applications.getting-started.samv71_xplained_ultra">
+		<info type="description" value="summary">
+		This demonstration program makes two LEDs on the board blinking at a fixed rate.
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_uart_serial.h"/>
+		<build type="include-path" value="."/>
+		<require idref="sam.applications.getting-started"/>
+		<require idref="board.samv71_xplained_ultra"/>
+		<require idref="sam.drivers.matrix"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamv71q21"/>
+	</project>
+</asf>

@@ -237,13 +237,15 @@ static void gmac_process_arp_packet(uint8_t *p_uc_data, uint32_t ul_size)
 	p_arp_header_t p_arp = (p_arp_header_t) (p_uc_data + ETH_HEADER_SIZE);
 
 	if (SWAP16(p_arp->ar_op) == ARP_REQUEST) {
-		printf("-- IP  %d.%d.%d.%d\n\r",
+		printf("-- MAC %x:%x:%x:%x:%x:%x\n\r",
 				p_eth->et_dest[0], p_eth->et_dest[1],
-				p_eth->et_dest[2], p_eth->et_dest[3]);
+				p_eth->et_dest[2], p_eth->et_dest[3],
+				p_eth->et_dest[4], p_eth->et_dest[5]);
 
-		printf("-- IP  %d.%d.%d.%d\n\r",
+		printf("-- MAC %x:%x:%x:%x:%x:%x\n\r",
 				p_eth->et_src[0], p_eth->et_src[1],
-				p_eth->et_src[2], p_eth->et_src[3]);
+				p_eth->et_src[2], p_eth->et_src[3],
+				p_eth->et_src[4], p_eth->et_src[5]);
 
 		/* ARP reply operation */
 		p_arp->ar_op = SWAP16(ARP_REPLY);
@@ -261,7 +263,11 @@ static void gmac_process_arp_packet(uint8_t *p_uc_data, uint32_t ul_size)
 			p_arp->ar_tpa[i] = p_arp->ar_spa[i];
 			p_arp->ar_spa[i] = gs_uc_ip_address[i];
 		}
+#if (SAM4E)
 		ul_rc = gmac_dev_write(&gs_gmac_dev, p_uc_data, ul_size, NULL);
+#else
+		ul_rc = gmac_dev_write(&gs_gmac_dev, GMAC_QUE_0, p_uc_data, ul_size, NULL);
+#endif
 		if (ul_rc != GMAC_OK) {
 			printf("E: ARP Send - 0x%x\n\r", ul_rc);
 		}
@@ -289,12 +295,12 @@ static void gmac_process_ip_packet(uint8_t *p_uc_data, uint32_t ul_size)
 	p_icmp_echo_header_t p_icmp_echo =
 			(p_icmp_echo_header_t) ((int8_t *) p_ip_header +
 			ETH_IP_HEADER_SIZE);
-	printf("-- IP  %d.%d.%d.%d\n\r", p_eth->et_dest[0], p_eth->et_dest[1],
-			p_eth->et_dest[2], p_eth->et_dest[3]);
+	printf("-- IP  %d.%d.%d.%d\n\r", p_ip_header->ip_dst[0], p_ip_header->ip_dst[1],
+			p_ip_header->ip_dst[2], p_ip_header->ip_dst[3]);
 
 	printf("-- IP  %d.%d.%d.%d\n\r",
-			p_eth->et_src[0], p_eth->et_src[1], p_eth->et_src[2],
-			p_eth->et_src[3]);
+			p_ip_header->ip_src[0], p_ip_header->ip_src[1], p_ip_header->ip_src[2],
+			p_ip_header->ip_src[3]);
 	switch (p_ip_header->ip_p) {
 	case IP_PROT_ICMP:
 		if (p_icmp_echo->type == ICMP_ECHO_REQUEST) {
@@ -325,8 +331,13 @@ static void gmac_process_ip_packet(uint8_t *p_uc_data, uint32_t ul_size)
 				p_eth->et_src[i] = gs_uc_mac_address[i];
 			}
 			/* Send the echo_reply */
+#if (SAM4E)
 			ul_rc = gmac_dev_write(&gs_gmac_dev, p_uc_data,
 					SWAP16(p_ip_header->ip_len) + 14, NULL);
+#else
+			ul_rc = gmac_dev_write(&gs_gmac_dev, GMAC_QUE_0, p_uc_data,
+					SWAP16(p_ip_header->ip_len) + 14, NULL);
+#endif
 			if (ul_rc != GMAC_OK) {
 				printf("E: ICMP Send - 0x%x\n\r", ul_rc);
 			}
@@ -386,7 +397,13 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+#ifdef CONF_UART_CHAR_LENGTH
+        .charlength = CONF_UART_CHAR_LENGTH,
+#endif
+        .paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+        .stopbits = CONF_UART_STOP_BITS,
+#endif
 	};
 	
 	/* Configure console UART. */
@@ -399,7 +416,11 @@ static void configure_console(void)
  */
 void GMAC_Handler(void)
 {
+#if (SAM4E)
 	gmac_handler(&gs_gmac_dev);
+#else
+	gmac_handler(&gs_gmac_dev, GMAC_QUE_0);
+#endif
 }
 
 /**
@@ -475,8 +496,13 @@ int main(void)
 
 	while (1) {
 		/* Process packets */
+#if (SAM4E)
 		if (GMAC_OK != gmac_dev_read(&gs_gmac_dev, (uint8_t *) gs_uc_eth_buffer,
 						sizeof(gs_uc_eth_buffer), &ul_frm_size)) {
+#else
+		if (GMAC_OK != gmac_dev_read(&gs_gmac_dev, GMAC_QUE_0, (uint8_t *) gs_uc_eth_buffer,
+						sizeof(gs_uc_eth_buffer), &ul_frm_size)) {
+#endif
 			continue;
 		}
 

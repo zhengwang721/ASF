@@ -170,10 +170,13 @@ enum status_code tsens_init(struct tsens_config *config)
  *  \li Free running disabled
  *  \li Run in standby disabled
  *  \li Window monitor disabled
+ *  \li Register GAIN value
+ *  \li Register OFFSET value
  *
- * Register GAIN and OFFSET is loaded from NVM, or can also be fixed.
- * If fix this bitfield, pay attention to the relationship between 
- * GCLK frequency, GAIN and resolution.
+ * \note Register GAIN and OFFSET is loaded from NVM, or can also be fixed.
+ * If fix this bitfield, pay attention to the relationship between GCLK
+ * frequency, GAIN and resolution. See \ref asfdoc_sam0_tsens_module_overview
+ * "here".
  *
  * \param[out] config  Pointer to configuration struct to initialize to
  *                     default values

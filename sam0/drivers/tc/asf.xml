@@ -55,6 +55,7 @@
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="samd09"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="samda1"/>
@@ -65,6 +66,7 @@
 			<build type="c-source" value="tc_sam_l_c/tc.c"/>
 
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 			<device-support value="samc20"/>
 			<device-support value="samc21"/>
 		</module>

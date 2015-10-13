@@ -54,7 +54,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_bod_group SAM Brown Out Detector (BOD) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the device's Brown Out Detector (BOD) modules, to detect
  * and respond to under-voltage events and take an appropriate action.
  *
@@ -62,7 +62,7 @@ extern "C" {
  * - SUPC (Supply Controller)
  *
  * The following devices can use this module:
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_bod_prerequisites
@@ -433,7 +433,7 @@ static inline bool bod33_is_detected(void)
  */
 static inline void bod33_clear_detected(void)
 {
-	SUPC->INTFLAG.bit.BOD33DET = true;
+	SUPC->INTFLAG.reg = SUPC_INTFLAG_BOD33DET;
 	return;
 }
 
@@ -528,7 +528,7 @@ static inline bool bod12_is_detected(void)
  */
 static inline void bod12_clear_detected(void)
 {
-	SUPC->INTFLAG.bit.BOD12DET = true;
+	SUPC->INTFLAG.reg = SUPC_INTFLAG_BOD12DET;
 	return;
 }
 
@@ -614,6 +614,11 @@ static inline void bod12_clear_detected(void)
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>42453B</td>
+ *		<td>08/2015</td>
+ *		<td>Added support for SAM L22</td>
  *	</tr>
  *	<tr>
  *		<td>42453A</td>

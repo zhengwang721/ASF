@@ -1,8 +1,8 @@
 <asf xmlversion="1.0">
 	<select-by-device id="sam0.drivers.system.reset" caption="SYSTEM - Reset Management">
-		<module type="driver" id="sam0.drivers.system.reset#sam_d_r" caption="SYSTEM - Reset Management for SAM D20/D21/R21/D10/D11/DA0/DA1">
+		<module type="driver" id="sam0.drivers.system.reset#sam_d_r" caption="SYSTEM - Reset Management for SAM D20/D21/R21/D09/D10/D11/DA0/DA1">
 			<info type="description" value="summary">
-				Driver for the SAM D20/D21/R21/D10/D11/DA0/DA1 reset management units. Provides a unified
+				Driver for the SAM D20/D21/R21/D09/D10/D11/DAx reset management units. Provides a unified
 				interface for reset configuration and management in the device.
 			</info>
 			<info type="keyword" value="technology">
@@ -18,6 +18,7 @@
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="samd09"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="samda1"/>
@@ -39,6 +40,7 @@
 			<require idref="sam0.utils"/>
 			
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 		</module>
 		<module type="driver" id="sam0.drivers.system.reset#sam_c" caption="SYSTEM - Reset Management for SAM C20/C21">
 			<info type="description" value="summary">

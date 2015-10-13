@@ -50,7 +50,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_clock_group SAM C20/C21 System Clock Management Driver (SYSTEM CLOCK)
  *
- * This driver for Atmel&reg; | SMART SAM C20/C21 devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection and
@@ -259,19 +259,19 @@ extern "C" {
  * clock cycles.
  */
 enum system_xosc32k_startup {
-	/** Wait 2048 clock cycles until the clock source is considered stable. */
+	/** Wait 2048 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC32K_STARTUP_2048,
-	/** Wait 4096 clock cycles until the clock source is considered stable. */
+	/** Wait 4096 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC32K_STARTUP_4096,
-	/** Wait 16384 clock cycles until the clock source is considered stable. */
+	/** Wait 16384 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC32K_STARTUP_16384,
-	/** Wait 32768 clock cycles until the clock source is considered stable. */
+	/** Wait 32768 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC32K_STARTUP_32768,
-	/** Wait 65536 clock cycles until the clock source is considered stable. */
+	/** Wait 65536 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC32K_STARTUP_65536,
-	/** Wait 131072 clock cycles until the clock source is considered stable. */
+	/** Wait 131072 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC32K_STARTUP_131072,
-	/** Wait 262144 clock cycles until the clock source is considered stable. */
+	/** Wait 262144 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC32K_STARTUP_262144,
 };
 
@@ -282,37 +282,37 @@ enum system_xosc32k_startup {
  * cycles.
  */
 enum system_xosc_startup {
-	/** Wait one clock cycles until the clock source is considered stable. */
+	/** Wait one clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC_STARTUP_1,
-	/** Wait two clock cycles until the clock source is considered stable. */
+	/** Wait two clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC_STARTUP_2,
-	/** Wait four clock cycles until the clock source is considered stable. */
+	/** Wait four clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC_STARTUP_4,
-	/** Wait eight clock cycles until the clock source is considered stable. */
+	/** Wait eight clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC_STARTUP_8,
-	/** Wait 16 clock cycles until the clock source is considered stable. */
+	/** Wait 16 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC_STARTUP_16,
-	/** Wait 32 clock cycles until the clock source is considered stable. */
+	/** Wait 32 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC_STARTUP_32,
-	/** Wait 64 clock cycles until the clock source is considered stable. */
+	/** Wait 64 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC_STARTUP_64,
-	/** Wait 128 clock cycles until the clock source is considered stable. */
+	/** Wait 128 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC_STARTUP_128,
-	/** Wait 256 clock cycles until the clock source is considered stable. */
+	/** Wait 256 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC_STARTUP_256,
-	/** Wait 512 clock cycles until the clock source is considered stable. */
+	/** Wait 512 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC_STARTUP_512,
-	/** Wait 1024 clock cycles until the clock source is considered stable. */
+	/** Wait 1024 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC_STARTUP_1024,
-	/** Wait 2048 clock cycles until the clock source is considered stable. */
+	/** Wait 2048 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC_STARTUP_2048,
-	/** Wait 4096 clock cycles until the clock source is considered stable. */
+	/** Wait 4096 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC_STARTUP_4096,
-	/** Wait 8192 clock cycles until the clock source is considered stable. */
+	/** Wait 8192 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC_STARTUP_8192,
-	/** Wait 16384 clock cycles until the clock source is considered stable. */
+	/** Wait 16384 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC_STARTUP_16384,
-	/** Wait 32768 clock cycles until the clock source is considered stable. */
+	/** Wait 32768 clock cycles until the clock source is considered stable */
 	SYSTEM_XOSC_STARTUP_32768,
 };
 
@@ -323,21 +323,21 @@ enum system_xosc_startup {
  * OSC32K clock cycles.
  */
 enum system_osc32k_startup {
-	/** Wait three clock cycles until the clock source is considered stable. */
+	/** Wait three clock cycles until the clock source is considered stable */
 	SYSTEM_OSC32K_STARTUP_3,
-	/** Wait four clock cycles until the clock source is considered stable. */
+	/** Wait four clock cycles until the clock source is considered stable */
 	SYSTEM_OSC32K_STARTUP_4,
-	/** Wait six clock cycles until the clock source is considered stable. */
+	/** Wait six clock cycles until the clock source is considered stable */
 	SYSTEM_OSC32K_STARTUP_6,
-	/** Wait ten clock cycles until the clock source is considered stable. */
+	/** Wait ten clock cycles until the clock source is considered stable */
 	SYSTEM_OSC32K_STARTUP_10,
-	/** Wait 18 clock cycles until the clock source is considered stable. */
+	/** Wait 18 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC32K_STARTUP_18,
 	/** Wait 34 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC32K_STARTUP_34,
-	/** Wait 66 clock cycles until the clock source is considered stable. */
+	/** Wait 66 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC32K_STARTUP_66,
-	/** Wait 130 clock cycles until the clock source is considered stable. */
+	/** Wait 130 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC32K_STARTUP_130,
 };
 
@@ -347,37 +347,37 @@ enum system_osc32k_startup {
  * Available prescalers for the internal 48MHz (nominal) system clock.
  */
 enum system_osc48m_div {
-	/** Divide the 48MHz RC oscillator output by one. */
+	/** Divide the 48MHz RC oscillator output by one */
 	SYSTEM_OSC48M_DIV_1,
-	/** Divide the 48MHz RC oscillator output by two. */
+	/** Divide the 48MHz RC oscillator output by two */
 	SYSTEM_OSC48M_DIV_2,
-	/** Divide the 48MHz RC oscillator output by three. */
+	/** Divide the 48MHz RC oscillator output by three */
 	SYSTEM_OSC48M_DIV_3,
-	/** Divide the 48MHz RC oscillator output by four. */
+	/** Divide the 48MHz RC oscillator output by four */
 	SYSTEM_OSC48M_DIV_4,
-	/** Divide the 48MHz RC oscillator output by five. */
+	/** Divide the 48MHz RC oscillator output by five */
 	SYSTEM_OSC48M_DIV_5,
-	/** Divide the 48MHz RC oscillator output by six. */
+	/** Divide the 48MHz RC oscillator output by six */
 	SYSTEM_OSC48M_DIV_6,
-	/** Divide the 48MHz RC oscillator output by seven. */
+	/** Divide the 48MHz RC oscillator output by seven */
 	SYSTEM_OSC48M_DIV_7,
-	/** Divide the 48MHz RC oscillator output by eight. */
+	/** Divide the 48MHz RC oscillator output by eight */
 	SYSTEM_OSC48M_DIV_8,
-	/** Divide the 48MHz RC oscillator output by nine. */
+	/** Divide the 48MHz RC oscillator output by nine */
 	SYSTEM_OSC48M_DIV_9,
-	/** Divide the 48MHz RC oscillator output by ten. */
+	/** Divide the 48MHz RC oscillator output by ten */
 	SYSTEM_OSC48M_DIV_10,
-	/** Divide the 48MHz RC oscillator output by eleven. */
+	/** Divide the 48MHz RC oscillator output by eleven */
 	SYSTEM_OSC48M_DIV_11,
-	/** Divide the 48MHz RC oscillator output by twelve. */
+	/** Divide the 48MHz RC oscillator output by twelve */
 	SYSTEM_OSC48M_DIV_12,
-	/** Divide the 48MHz RC oscillator output by thirteen. */
+	/** Divide the 48MHz RC oscillator output by thirteen */
 	SYSTEM_OSC48M_DIV_13,
-	/** Divide the 48MHz RC oscillator output by fourteen. */
+	/** Divide the 48MHz RC oscillator output by fourteen */
 	SYSTEM_OSC48M_DIV_14,
-	/** Divide the 48MHz RC oscillator output by fifteen. */
+	/** Divide the 48MHz RC oscillator output by fifteen */
 	SYSTEM_OSC48M_DIV_15,
-	/** Divide the 48MHz RC oscillator output by sixteen. */
+	/** Divide the 48MHz RC oscillator output by sixteen */
 	SYSTEM_OSC48M_DIV_16,
 };
 
@@ -388,21 +388,21 @@ enum system_osc48m_div {
  * clock cycles.
  */
 enum system_osc48m_startup {
-	/** Wait 8 clock cycles until the clock source is considered stable. */
+	/** Wait 8 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC48M_STARTUP_8,
-	/** Wait 16 clock cycles until the clock source is considered stable. */
+	/** Wait 16 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC48M_STARTUP_16,
-	/** Wait 32 clock cycles until the clock source is considered stable. */
+	/** Wait 32 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC48M_STARTUP_32,
-	/** Wait 64 clock cycles until the clock source is considered stable. */
+	/** Wait 64 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC48M_STARTUP_64,
-	/** Wait 128 clock cycles until the clock source is considered stable. */
+	/** Wait 128 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC48M_STARTUP_128,
-	/** Wait 256 clock cycles until the clock source is considered stable. */
+	/** Wait 256 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC48M_STARTUP_256,
-	/** Wait 512 clock cycles until the clock source is considered stable. */
+	/** Wait 512 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC48M_STARTUP_512,
-	/** Wait 1024 clock cycles until the clock source is considered stable. */
+	/** Wait 1024 clock cycles until the clock source is considered stable */
 	SYSTEM_OSC48M_STARTUP_1024,
 };
 
@@ -412,21 +412,21 @@ enum system_osc48m_startup {
  * Available clock failure detector prescaler.
  */
 enum system_clock_xosc_failure_detector_prescaler {
-	/** Divide OSC48M frequency by 1 for clock failure detector clock. */
+	/** Divide OSC48M frequency by 1 for clock failure detector clock */
 	SYSTEM_CLOCK_XOSC_FAILURE_DETECTOR_PRESCALER_1,
-	/** Divide OSC48M frequency by 2 for clock failure detector clock. */
+	/** Divide OSC48M frequency by 2 for clock failure detector clock */
 	SYSTEM_CLOCK_XOSC_FAILURE_DETECTOR_PRESCALER_2,
-	/** Divide OSC48M frequency by 4 for clock failure detector clock. */
+	/** Divide OSC48M frequency by 4 for clock failure detector clock */
 	SYSTEM_CLOCK_XOSC_FAILURE_DETECTOR_PRESCALER_4,
-	/** Divide OSC48M frequency by 8 for clock failure detector clock. */
+	/** Divide OSC48M frequency by 8 for clock failure detector clock */
 	SYSTEM_CLOCK_XOSC_FAILURE_DETECTOR_PRESCALER_8,
-	/** Divide OSC48M frequency by 16 for clock failure detector clock. */
+	/** Divide OSC48M frequency by 16 for clock failure detector clock */
 	SYSTEM_CLOCK_XOSC_FAILURE_DETECTOR_PRESCALER_16,
-	/** Divide OSC48M frequency by 32 for clock failure detector clock. */
+	/** Divide OSC48M frequency by 32 for clock failure detector clock */
 	SYSTEM_CLOCK_XOSC_FAILURE_DETECTOR_PRESCALER_32,
-	/** Divide OSC48M frequency by 64 for clock failure detector clock. */
+	/** Divide OSC48M frequency by 64 for clock failure detector clock */
 	SYSTEM_CLOCK_XOSC_FAILURE_DETECTOR_PRESCALER_64,
-	/** Divide OSC48M frequency by 128 for clock failure detector clock. */
+	/** Divide OSC48M frequency by 128 for clock failure detector clock */
 	SYSTEM_CLOCK_XOSC_FAILURE_DETECTOR_PRESCALER_128,
 };
 
@@ -436,9 +436,9 @@ enum system_clock_xosc_failure_detector_prescaler {
  * Available clock failure detector prescaler.
  */
 enum system_clock_xosc32k_failure_detector_prescaler {
-	/** Divide OSCULP32K frequency by 1 for clock failure detector clock. */
+	/** Divide OSCULP32K frequency by 1 for clock failure detector clock */
 	SYSTEM_CLOCK_XOSC32K_FAILURE_DETECTOR_PRESCALER_1,
-	/** Divide OSCULP32K frequency by 2 for clock failure detector clock. */
+	/** Divide OSCULP32K frequency by 2 for clock failure detector clock */
 	SYSTEM_CLOCK_XOSC32K_FAILURE_DETECTOR_PRESCALER_2,
 };
 
@@ -448,21 +448,21 @@ enum system_clock_xosc32k_failure_detector_prescaler {
  * Available division ratios for the CPU clocks.
  */
 enum system_main_clock_div {
-	/** Divide Main clock by one. */
+	/** Divide Main clock by one */
 	SYSTEM_MAIN_CLOCK_DIV_1,
-	/** Divide Main clock by two. */
+	/** Divide Main clock by two */
 	SYSTEM_MAIN_CLOCK_DIV_2,
-	/** Divide Main clock by four. */
+	/** Divide Main clock by four */
 	SYSTEM_MAIN_CLOCK_DIV_4,
-	/** Divide Main clock by eight. */
+	/** Divide Main clock by eight */
 	SYSTEM_MAIN_CLOCK_DIV_8,
-	/** Divide Main clock by 16. */
+	/** Divide Main clock by 16 */
 	SYSTEM_MAIN_CLOCK_DIV_16,
-	/** Divide Main clock by 32. */
+	/** Divide Main clock by 32 */
 	SYSTEM_MAIN_CLOCK_DIV_32,
-	/** Divide Main clock by 64. */
+	/** Divide Main clock by 64 */
 	SYSTEM_MAIN_CLOCK_DIV_64,
-	/** Divide Main clock by 128. */
+	/** Divide Main clock by 128 */
 	SYSTEM_MAIN_CLOCK_DIV_128,
 };
 
@@ -472,9 +472,9 @@ enum system_main_clock_div {
  * Available external clock source types.
  */
 enum system_clock_external {
-	/** The external clock source is a crystal oscillator. */
+	/** The external clock source is a crystal oscillator */
 	SYSTEM_CLOCK_EXTERNAL_CRYSTAL,
-	/** The connected clock source is an external logic level clock signal. */
+	/** The connected clock source is an external logic level clock signal */
 	SYSTEM_CLOCK_EXTERNAL_CLOCK,
 };
 
@@ -484,21 +484,21 @@ enum system_clock_external {
  * Clock sources available to the GCLK generators
  */
 enum system_clock_source {
-	/** Internal 48MHz RC oscillator. */
+	/** Internal 48MHz RC oscillator */
 	SYSTEM_CLOCK_SOURCE_OSC48M    = GCLK_SOURCE_OSC48M,
-	/** Internal 32KHz RC oscillator. */
+	/** Internal 32KHz RC oscillator */
 	SYSTEM_CLOCK_SOURCE_OSC32K   = GCLK_SOURCE_OSC32K,
-	/** External oscillator. */
+	/** External oscillator */
 	SYSTEM_CLOCK_SOURCE_XOSC     = GCLK_SOURCE_XOSC ,
-	/** External 32KHz oscillator. */
+	/** External 32KHz oscillator */
 	SYSTEM_CLOCK_SOURCE_XOSC32K  = GCLK_SOURCE_XOSC32K,
-	/** Internal Ultra Low Power 32KHz oscillator. */
+	/** Internal Ultra Low Power 32KHz oscillator */
 	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
-	/** Generator input pad. */
+	/** Generator input pad */
 	SYSTEM_CLOCK_SOURCE_GCLKIN     = GCLK_SOURCE_GCLKIN,
-	/** Generic clock generator one output. */
+	/** Generic clock generator one output */
 	SYSTEM_CLOCK_SOURCE_GCLKGEN1   = GCLK_SOURCE_GCLKGEN1,
-	/** Digital Phase Locked Loop (DPLL). */
+	/** Digital Phase Locked Loop (DPLL) */
 	SYSTEM_CLOCK_SOURCE_DPLL     = GCLK_SOURCE_FDPLL,
 };
 
@@ -508,11 +508,11 @@ enum system_clock_source {
  * Available bus clock domains on the APB bus.
  */
 enum system_clock_apb_bus {
-	/** Peripheral bus A on the APB bus. */
+	/** Peripheral bus A on the APB bus */
 	SYSTEM_CLOCK_APB_APBA,
-	/** Peripheral bus B on the APB bus. */
+	/** Peripheral bus B on the APB bus */
 	SYSTEM_CLOCK_APB_APBB,
-	/** Peripheral bus C on the APB bus. */
+	/** Peripheral bus C on the APB bus */
 	SYSTEM_CLOCK_APB_APBC,
 };
 
@@ -522,26 +522,26 @@ enum system_clock_apb_bus {
  * External oscillator clock configuration structure.
  */
 struct system_clock_source_xosc_config {
-	/** External clock type. */
+	/** External clock type */
 	enum system_clock_external external_clock;
-	/** Crystal oscillator start-up time. */
+	/** Crystal oscillator start-up time */
 	enum system_xosc_startup startup_time;
-	/** Enable automatic amplitude gain control. */
+	/** Enable automatic amplitude gain control */
 	bool auto_gain_control;
-	/** External clock/crystal frequency. */
+	/** External clock/crystal frequency */
 	uint32_t frequency;
-	/** Keep the XOSC enabled in standby sleep mode. */
+	/** Keep the XOSC enabled in standby sleep mode */
 	bool run_in_standby;
 	/** Run On Demand. If this is set the XOSC won't run
-	 * until requested by a peripheral. */
+	 * until requested by a peripheral */
 	bool on_demand;
-	/** Clock failure detector prescaler from OSC48M for clock the CFD prescaler. */
+	/** Clock failure detector prescaler from OSC48M for clock the CFD prescaler */
 	enum system_clock_xosc_failure_detector_prescaler clock_failure_detector_prescaler;
-	/** Enable clock failure detector event output. */
+	/** Enable clock failure detector event output */
 	bool enable_clock_failure_detector_event_outut;
-	/** Enable clock failure detector. */
+	/** Enable clock failure detector */
 	bool enable_clock_failure_detector;
-	/** Enable clock switch back. */
+	/** Enable clock switch back */
 	bool enable_clock_switch_back;
 };
 
@@ -551,31 +551,31 @@ struct system_clock_source_xosc_config {
  * External 32KHz oscillator clock configuration structure.
  */
 struct system_clock_source_xosc32k_config {
-	/** External clock type. */
+	/** External clock type */
 	enum system_clock_external external_clock;
-	/** Crystal oscillator start-up time. */
+	/** Crystal oscillator start-up time */
 	enum system_xosc32k_startup startup_time;
-	/** Enable 1KHz output. */
+	/** Enable 1KHz output */
 	bool enable_1khz_output;
-	/** Enable 32KHz output. */
+	/** Enable 32KHz output */
 	bool enable_32khz_output;
-	/** External clock/crystal frequency. */
+	/** External clock/crystal frequency */
 	uint32_t frequency;
-	/** Keep the XOSC32K enabled in standby sleep mode. */
+	/** Keep the XOSC32K enabled in standby sleep mode */
 	bool run_in_standby;
 	/** Run On Demand. If this is set the XOSC32K won't run
-	 * until requested by a peripheral. */
+	 * until requested by a peripheral */
 	bool on_demand;
 	/** Lock configuration after it has been written,
-	 *  a device reset will release the lock. */
+	 *  a device reset will release the lock */
 	bool write_once;
-	/** Clock failure detector prescaler from OSCULP32K. */
+	/** Clock failure detector prescaler from OSCULP32K */
 	enum system_clock_xosc32k_failure_detector_prescaler clock_failure_detector_prescaler;
-	/** Enable clock failure detector event output. */
+	/** Enable clock failure detector event output */
 	bool enable_clock_failure_detector_event_outut;
-	/** Enable clock failure detector. */
+	/** Enable clock failure detector */
 	bool enable_clock_failure_detector;
-	/** Enable clock switch back. */
+	/** Enable clock switch back */
 	bool enable_clock_switch_back;
 };
 
@@ -585,14 +585,14 @@ struct system_clock_source_xosc32k_config {
  * Internal 48MHz (nominal) oscillator configuration structure.
  */
 struct system_clock_source_osc48m_config {
-	/* Internal 48MHz RC oscillator divider. */
+	/** Internal 48MHz RC oscillator divider */
 	enum system_osc48m_div div;
-	/** Keep the OSC48M enabled in standby sleep mode. */
+	/** Keep the OSC48M enabled in standby sleep mode */
 	bool run_in_standby;
 	/** Run On Demand. If this is set the OSC48M won't run
-	 * until requested by a peripheral. */
+	 * until requested by a peripheral */
 	bool on_demand;
-	/** Crystal oscillator start-up time. */
+	/** Crystal oscillator start-up time */
 	enum system_osc48m_startup startup_time;
 };
 
@@ -603,7 +603,7 @@ struct system_clock_source_osc48m_config {
  */
 struct system_clock_source_osculp32k_config {
 	/** Lock configuration after it has been written,
-	 *  a device reset will release the lock. */
+	 *  a device reset will release the lock */
 	bool write_once;
 };
 
@@ -613,19 +613,19 @@ struct system_clock_source_osculp32k_config {
  * Internal 32KHz  oscillator configuration structure.
  */
 struct system_clock_source_osc32k_config {
-	/** Startup time. */
+	/** Startup time */
 	enum system_osc32k_startup startup_time;
-	/** Enable 1KHz output. */
+	/** Enable 1KHz output */
 	bool enable_1khz_output;
-	/** Enable 32KHz output. */
+	/** Enable 32KHz output */
 	bool enable_32khz_output;
-	/** Keep the OSC32K enabled in standby sleep mode. */
+	/** Keep the OSC32K enabled in standby sleep mode */
 	bool run_in_standby;
 	/** Run On Demand. If this is set the OSC32K won't run
-	 * until requested by a peripheral. */
+	 * until requested by a peripheral */
 	bool on_demand;
 	/** Lock configuration after it has been written,
-	 *  a device reset will release the lock. */
+	 *  a device reset will release the lock */
 	bool write_once;
 };
 
@@ -1090,11 +1090,11 @@ static inline enum status_code system_apb_clock_clear_mask(
  * \brief Reference clock source of the DPLL module.
  */
 enum system_clock_source_dpll_reference_clock {
-	/** Select XOSC32K as clock reference. */
+	/** Select XOSC32K as clock reference */
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC32K,
-	/** Select XOSC as clock reference. */
+	/** Select XOSC as clock reference */
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC,
-	/** Select GCLK as clock reference. */
+	/** Select GCLK as clock reference */
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK,
 };
 
@@ -1102,15 +1102,15 @@ enum system_clock_source_dpll_reference_clock {
  * \brief Lock time-out value of the DPLL module.
  */
 enum system_clock_source_dpll_lock_time {
-	/** Set no time-out as default. */
+	/** Set no time-out as default */
 	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT,
-	/** Set time-out if no lock within 8ms. */
+	/** Set time-out if no lock within 8ms */
 	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_8MS = 0x04,
-	/** Set time-out if no lock within 9ms. */
+	/** Set time-out if no lock within 9ms */
 	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_9MS,
-	/** Set time-out if no lock within 10ms. */
+	/** Set time-out if no lock within 10ms */
 	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_10MS,
-	/** Set time-out if no lock within 11ms. */
+	/** Set time-out if no lock within 11ms */
 	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_11MS,
 };
 
@@ -1118,13 +1118,13 @@ enum system_clock_source_dpll_lock_time {
  * \brief Filter type of the DPLL module.
  */
 enum system_clock_source_dpll_filter {
-	/** Default filter mode. */
+	/** Default filter mode */
 	SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT,
-	/** Low bandwidth filter. */
+	/** Low bandwidth filter */
 	SYSTEM_CLOCK_SOURCE_DPLL_FILTER_LOW_BANDWIDTH_FILTER,
-	/** High bandwidth filter. */
+	/** High bandwidth filter */
 	SYSTEM_CLOCK_SOURCE_DPLL_FILTER_HIGH_BANDWIDTH_FILTER,
-	/** High damping filter. */
+	/** High damping filter */
 	SYSTEM_CLOCK_SOURCE_DPLL_FILTER_HIGH_DAMPING_FILTER,
 };
 
@@ -1147,31 +1147,32 @@ enum system_clock_source_dpll_prescaler {
  */
 struct system_clock_source_dpll_config {
 	/** Run On Demand. If this is set the DPLL won't run
-	 * until requested by a peripheral. */
+	 * until requested by a peripheral */
 	bool on_demand;
-	/** Keep the DPLL enabled in standby sleep mode. */
+	/** Keep the DPLL enabled in standby sleep mode */
 	bool run_in_standby;
-	/** Bypass lock signal. */
+	/** Bypass lock signal */
 	bool lock_bypass;
 	/** Wake up fast. If this is set DPLL output clock is enabled after
-	 * the startup time. */
+	 * the startup time */
 	bool wake_up_fast;
-	/** Enable low power mode.  */
+	/** Enable low power mode  */
 	bool low_power_enable;
 
-	/** Output frequency of the clock. */
+	/** Output frequency of the clock */
 	uint32_t output_frequency;
-	/** Reference frequency of the clock. */
+	/** Reference frequency of the clock */
 	uint32_t reference_frequency;
-	/** Devider of reference clock. */
+	/** Devider of reference clock */
 	uint16_t reference_divider;
 
-	/** Filter type of the DPLL module. */
+	/** Filter type of the DPLL module */
 	enum system_clock_source_dpll_filter          filter;
-	/** Lock time-out value of the DPLL module. */
+	/** Lock time-out value of the DPLL module */
 	enum system_clock_source_dpll_lock_time       lock_time;
-	/** Reference clock source of the DPLL module. */
+	/** Reference clock source of the DPLL module */
 	enum system_clock_source_dpll_reference_clock reference_clock;
+	/** DPLL prescaler*/
 	enum system_clock_source_dpll_prescaler  prescaler;
 };
 
@@ -1385,7 +1386,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>11/2014</td>
+ *		<td>06/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_freqm_group SAM Frequency Meter (FREQM) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the device's Frequency Meter functionality.
  *
  * The following driver API modes are covered by this manual:
@@ -59,10 +59,11 @@
  * - Callback APIs
  * \endif
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  *  - FREQM (Frequency Meter)
  *
  * The following devices can use this module:
+ *  - Atmel | SMART SAM L22
  *  - Atmel | SMART SAM C20
  *  - Atmel | SMART SAM C21
  *
@@ -86,15 +87,14 @@
  * known reference clock as soon as the FREQM is enabled. Two generic clocks are
  * used by the FREQM. The frequency of the measured clock is:
  * \f[
- *    f_{CLK_MSR} = \frac{VALUE}{REFNUM} \times f_{CLK_REF}
+ *    f_{CLK\_MSR} = \frac{VALUE}{REFNUM} \times f_{CLK\_REF}
  * \f]
  * Ratio can be measured with 24-bit accuracy.
  *
- * The FREQM has one interrupt source, which generates when a frequency measurement 
+ * The FREQM has one interrupt source, which generates when a frequency measurement
  * is done. It can be used to wake up the device from sleep modes.
  *
  * This driver provides an interface for the FREQM functions on the device.
- *
  *
  * \section asfdoc_sam0_freqm_special_considerations Special Considerations
  *
@@ -138,9 +138,9 @@ typedef void (*freqm_callback_t)(void);
 
 /** Enum for possible callback types for the FREQM module. */
 enum freqm_callback {
-	/** Callback for measurement done. */
+	/** Callback for measurement done */
 	FREQM_CALLBACK_DONE = 0,
-	/** Number of available callbacks. */
+	/** Number of available callbacks */
 #if !defined(__DOXYGEN__)
 	FREQM_CALLBACK_N,
 #endif
@@ -158,12 +158,12 @@ enum freqm_callback {
  */
 struct freqm_module {
 #if !defined(__DOXYGEN__)
-	/** Hardware module pointer of the associated FREQM peripheral. */
+	/** Hardware module pointer of the associated FREQM peripheral */
 	Freqm *hw;
-	/** The frequency of reference clock in Hz.*/
+	/** The frequency of reference clock in Hz*/
 	uint32_t ref_clock_freq;
 #  if FREQM_CALLBACK_MODE == true
-	/** Array of callbacks. */
+	/** Array of callbacks */
 	freqm_callback_t callback[FREQM_CALLBACK_N];
 #  endif
 #endif
@@ -171,11 +171,11 @@ struct freqm_module {
 
 /** Enum for the possible status types for the FREQM module. */
 enum freqm_status {
-	/** FREQM measurement is finish. */
+	/** FREQM measurement is finish */
 	FREQM_STATUS_MEASURE_DONE =  0,
-	/** FREQM measurement is ongoing or not. */
+	/** FREQM measurement is ongoing or not */
 	FREQM_STATUS_MEASURE_BUSY =  1,
-	/** FREQM sticky count value overflow. */
+	/** FREQM sticky count value overflow */
 	FREQM_STATUS_CNT_OVERFLOW =  2,
 };
 
@@ -185,11 +185,11 @@ enum freqm_status {
  *  Configuration structure for a Frequency Meter.
  */
 struct freqm_config {
-	/** GCLK source select for measurement. */
+	/** GCLK source select for measurement */
 	enum gclk_generator msr_clock_source;
-	/** GCLK source select for reference. */
+	/** GCLK source select for reference */
 	enum gclk_generator ref_clock_source;
-	/** Measurement duration in number of reference clock cycles. Range 1~255. */
+	/** Measurement duration in number of reference clock cycles. Range 1~255 */
 	uint16_t ref_clock_circles;
 };
 
@@ -304,6 +304,7 @@ static inline void freqm_disable(
 		/* Wait for all hardware modules to complete synchronization */
 	}
 }
+
 /** @} */
 
 /**
@@ -350,6 +351,7 @@ enum freqm_status freqm_get_result_value(
 #ifdef __cplusplus
 }
 #endif
+/** @} */
 
 
 /**
@@ -418,8 +420,8 @@ enum freqm_status freqm_get_result_value(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
- *		<td>06/2015</td>
+ *		<td>42506A</td>
+ *		<td>08/2015</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>

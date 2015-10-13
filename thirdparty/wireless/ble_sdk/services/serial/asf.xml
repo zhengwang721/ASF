@@ -9,11 +9,15 @@
 				<build type="include-path"  value="uart/"/>
 
 				<require idref="sam0.drivers.sercom.usart"/>
+				<require idref="sam0.utils"/>
+				<require idref="common2.services.delay"/>
+				<require idref="thirdparty.wireless.ble_sdk.services.serial_fifo"/>
 
 				<build type="module-config" subtype="required-header-file" value="conf_serialdrv.h"/>
-				<build type="module-config" subtype="path" value="module_config"/>
+				<build type="module-config" subtype="path" value="uart/sam0/module_config"/>
 
 				<device-support value="samd21"/>
+				<device-support value="saml21"/>
 			</module>
    <module type="meta" id="thirdparty.wireless.ble_sdk.services.serial#1"     caption="uart">
 				<info type="description" value="summary">
@@ -22,11 +26,14 @@
 				<build type="c-source"      value="uart/sam/serial_drv.c"/>
 				<build type="header-file"   value="uart/serial_drv.h"/>
 				<build type="include-path"  value="uart/"/>
+				<require idref="thirdparty.wireless.ble_sdk.services.serial_fifo"/>
 
 				<require idref="sam.drivers.usart"/>
+				<require idref="sam.drivers.pio"/>
+				<require idref="common.services.delay"/>
 
 				<build type="module-config" subtype="required-header-file" value="conf_serialdrv.h"/>
-				<build type="module-config" subtype="path" value="module_config"/>
+				<build type="module-config" subtype="path" value="uart/sam/module_config"/>
 				<device-support value="samg55"/>
 			</module>
 		</select-by-device>

@@ -76,44 +76,48 @@
  * \section asfdoc_sam0_tsens_module_overview Module Overview
  *
  * The Temperature Sensor (TSENS) can be used to accurately measure the operating
- * temperature of the device. The TSENS accurately measures the operating
+ * temperature of the device. TSENS accurately measures the operating
  * temperature of the device by comparing the difference in two temperature
  * dependent frequencies to a known frequency. The frequency of the
  * temperature dependent oscillator (TOSC) is measured twice: first with the
- * min configuration and next with the max configuration. The number of periods
- * of GCLK_TSENS used for the measurement is defined by the GAIN register. The
- * width of the resulting pulse is measured using a counter clocked by
- * GCLK_TSENS in the up direction for the 1st phase and in the down 2nd phase.
- *
- * The resulting signed value is proportional to the temperature and is
- * corrected for offset by the contents of the OFFSET register.
+ * min configuration and next with the max configuration. The resulting signed
+ * value is proportional to the temperature and is corrected for offset by the
+ * contents of the OFFSET register.
  *
  * Accurately measures a temperature:
- *  - &plusmn;1&deg;C over 0&deg; ~ 60&deg;C
- *  - &plusmn;3&deg;C over -40&deg; ~ 85&deg;C
- *  - &plusmn;5&deg;C over -40&deg; ~ 105&deg;C
- * 
- * Register GAIN and OFFSET is loaded from NVM, or can also be fixed by user.
- * If fix this bitfield, the relationship between GCLK frequency, GAIN
+ *  - +/-1°C over 0°C ~ 60°C
+ *  - +/-3°C over -40°C ~ 85°C
+ *  - +/-5°C over -40°C ~ 105°C
+ *
+ * The number of periods of GCLK_TSENS used for the measurement is defined by
+ * the GAIN register. The width of the resulting pulse is measured using a
+ * counter clocked by GCLK_TSENS in the up direction for the 1st phase and in
+ * the down 2nd phase. Register GAIN and OFFSET is loaded from NVM, or can also
+ * be fixed by user.
+ * \f[
+ *    VALUE = OFFSET + (\frac{f_{TOSCMIN} - f_{TOSCMAX}}{f_{GCLK}}) \times GAIN
+ * \f]
+ *
+ * \note If fix this bitfield, the relationship between GCLK frequency, GAIN
  * and resolution as below:
  * <table>
  *  <tr>
- *	  <th>Resolution (#/&deg;C)</th>
+ *	  <th>Resolution (#/°C)</th>
  *	  <th>GAIN@48MHz</th>
  *	  <th>GAIN@40MHz</th>
  *	</tr>
  *	<tr>
- *	  <td>&times;1 (1&deg;)</td>
+ *	  <td>&times;1 (1°C)</td>
  *    <td>960</td>
  *    <td>800</td>
  *  </tr>
  *	<tr>
- *	  <td>&times;10 (0.1&deg;)</td>
+ *	  <td>&times;10 (0.1°C)</td>
  *    <td>9600</td>
  *    <td>8000</td>
  *  </tr>
  *	<tr>
- *	  <td>&times;100 (1&deg;)</td>
+ *	  <td>&times;100 (0.01°C)</td>
  *    <td>96000</td>
  *    <td>80000</td>
  *  </tr>
@@ -170,6 +174,11 @@ extern "C" {
 #include <compiler.h>
 #include <system.h>
 
+/**
+ * The magnitude of the temperature measurement value decreases with increasing
+ * temperature, i.e. it has a negative temperature coefficient.
+ * \ref asfdoc_sam0_tsens_extra_errata "Errata reference: 14476".
+ */
 #define ERRATA_14476       true
 
 /**
@@ -199,19 +208,19 @@ extern "C" {
  *
  */
 enum tsens_window_mode {
-	/** No window mode. */
+	/** No window mode */
 	TSENS_WINDOW_MODE_DISABLE          = TSENS_CTRLC_WINMODE_DISABLE,
-	/** RESULT > WINLT. */
+	/** RESULT > WINLT */
 	TSENS_WINDOW_MODE_ABOVE            = TSENS_CTRLC_WINMODE_ABOVE,
-	/** RESULT < WINUT. */
+	/** RESULT < WINUT */
 	TSENS_WINDOW_MODE_BELOW            = TSENS_CTRLC_WINMODE_BELOW,
-	/** WINLT < RESULT < WINUT. */
+	/** WINLT < RESULT < WINUT */
 	TSENS_WINDOW_MODE_INSIDE           = TSENS_CTRLC_WINMODE_INSIDE,
-	/** !(WINLT < RESULT < WINUT). */
+	/** !(WINLT < RESULT < WINUT) */
 	TSENS_WINDOW_MODE_OUTSIDE          = TSENS_CTRLC_WINMODE_OUTSIDE,
-	/** VALUE > WINUT with hysteresis to WINLT. */
+	/** VALUE > WINUT with hysteresis to WINLT */
 	TSENS_WINDOW_MODE_HYST_ABOVE       = TSENS_CTRLC_WINMODE_HYST_ABOVE,
-	/** VALUE < WINLT with hysteresis to WINUT. */
+	/** VALUE < WINLT with hysteresis to WINUT */
 	TSENS_WINDOW_MODE_HYST_BELOW       = TSENS_CTRLC_WINMODE_HYST_BELOW,
 };
 
@@ -222,9 +231,9 @@ enum tsens_window_mode {
  *
  */
 enum tsens_event_action {
-	/** Event action disabled. */
+	/** Event action disabled */
 	TSENS_EVENT_ACTION_DISABLED         = 0,
-	/** Start conversion. */
+	/** Start conversion */
 	TSENS_EVENT_ACTION_START_CONV       = TSENS_EVCTRL_STARTEI,
 };
 
@@ -234,11 +243,11 @@ enum tsens_event_action {
  * Window monitor configuration structure.
  */
 struct tsens_window_config {
-	/** Selected window mode. */
+	/** Selected window mode */
 	enum tsens_window_mode window_mode;
-	/** Lower window value. */
+	/** Lower window value */
 	int32_t window_lower_value;
-	/** Upper window value. */
+	/** Upper window value */
 	int32_t window_upper_value;
 };
 
@@ -249,7 +258,7 @@ struct tsens_window_config {
  * disable events via \ref tsens_enable_events() and \ref tsens_disable_events().
  */
 struct tsens_events {
-	/** Enable event generation on window monitor. */
+	/** Enable event generation on window monitor */
 	bool generate_event_on_window_monitor;
 };
 
@@ -259,9 +268,9 @@ struct tsens_events {
  * Calibration configuration structure.
  */
 struct tsens_calibration {
-	/** Time amplifier gain. */
+	/** Time amplifier gain */
 	uint32_t gain;
-	/** Offset correction. */
+	/** Offset correction */
 	int32_t offset;
 };
 
@@ -273,17 +282,17 @@ struct tsens_calibration {
  * modified by the user application.
  */
 struct tsens_config {
-	/** GCLK generator used to clock the peripheral. */
+	/** GCLK generator used to clock the peripheral */
 	enum gclk_generator clock_source;
-	/** Enables free running mode if true. */
+	/** Enables free running mode if true */
 	bool free_running;
-	/** Enables TSENS in standby sleep mode if true. */
+	/** Enables TSENS in standby sleep mode if true */
 	bool run_in_standby;
-	/** Window monitor configuration structure. */
+	/** Window monitor configuration structure */
 	struct tsens_window_config window;
-	/** Event action to take on incoming event. */
+	/** Event action to take on incoming event */
 	enum tsens_event_action event_action;
-	/** Calibration value. */
+	/** Calibration value */
 	struct tsens_calibration calibration;
 };
 
@@ -527,7 +536,7 @@ static inline void tsens_start_conversion(void)
 }
 
 enum status_code tsens_read(int32_t *result);
-
+/** @} */
 /** @} */
 
 
@@ -555,7 +564,10 @@ enum status_code tsens_read(int32_t *result);
  *
  *
  * \section asfdoc_sam0_tsens_extra_errata Errata
- * There are no errata related to this driver.
+ * Errata reference: 14476:
+ *
+ * The magnitude of the temperature measurement value decreases with increasing
+ * temperature, i.e. it has a negative temperature coefficient.
  *
  *
  * \section asfdoc_sam0_tsens_extra_history Module History
@@ -601,7 +613,7 @@ enum status_code tsens_read(int32_t *result);
  *	</tr>
  * </table>
  */
- 
+
 #ifdef __cplusplus
 }
 #endif

@@ -39,11 +39,9 @@
  *
  */
 
-
 #include "driver/include/m2m_wifi.h"
-#include "driver/source/nmdrv.h"
-#include "m2m_hif.h"
-#include "nmasic.h"
+#include "driver/source/m2m_hif.h"
+#include "driver/source/nmasic.h"
 
 static volatile uint8 gu8ChNum;
 static volatile uint8 gu8scanInProgress = 0;
@@ -95,6 +93,15 @@ static void m2m_wifi_cb(uint8 u8OpCode, uint16 u16DataSize, uint32 u32Addr)
 				gpfAppWifiCb(M2M_WIFI_RESP_CON_STATE_CHANGED, &strState);
 		}
 	}
+	else if (u8OpCode == M2M_WIFI_RESP_GET_SYS_TIME)
+	{
+		tstrSystemTime strSysTime;
+		if (hif_receive(u32Addr, (uint8*) &strSysTime,sizeof(tstrSystemTime), 0) == M2M_SUCCESS)
+		{
+			if (gpfAppWifiCb)
+				gpfAppWifiCb(M2M_WIFI_RESP_GET_SYS_TIME, &strSysTime);
+		}
+	}
 	else if(u8OpCode == M2M_WIFI_RESP_CONN_INFO)
 	{
 		tstrM2MConnInfo		strConnInfo;
@@ -122,7 +129,7 @@ static void m2m_wifi_cb(uint8 u8OpCode, uint16 u16DataSize, uint32 u32Addr)
 		if (hif_receive(u32Addr, (uint8 *)&strIpConfig, sizeof(tstrM2MIPConfig), 0) == M2M_SUCCESS)
 		{
 			if (gpfAppWifiCb)
-				gpfAppWifiCb(M2M_WIFI_REQ_DHCP_CONF, (uint8 *)&strIpConfig.u32StaticIP);
+				gpfAppWifiCb(M2M_WIFI_REQ_DHCP_CONF, (uint8 *)&strIpConfig);
 		}
 	}
 	else if (u8OpCode == M2M_WIFI_REQ_WPS)
@@ -359,17 +366,58 @@ static sint8 m2m_validate_ap_parameters(CONST tstrM2MAPConfig* pstrM2MAPConfig)
 		s8Ret = M2M_ERR_FAIL;
 		goto ERR1;
 	}
-
+	
 ERR1:
+	return s8Ret;
+}
+
+static sint8 m2m_validate_scan_options(tstrM2MScanOption* ptstrM2MScanOption)
+{
+	sint8 s8Ret = M2M_SUCCESS;
+	/* Check for incoming pointer */
+	if(ptstrM2MScanOption == NULL)
+	{
+		M2M_ERR("INVALID POINTER\n");
+		s8Ret = M2M_ERR_FAIL;
+	}	
+	/* Check for valid No of slots */
+	 if(ptstrM2MScanOption->u8NumOfSlot < 1)
+	{
+		M2M_ERR("INVALID No of scan slots!\n");
+		s8Ret = M2M_ERR_FAIL;
+	}	
+	/* Check for valid time of slots */
+	 if(ptstrM2MScanOption->u8SlotTime < 1)
+	{
+		M2M_ERR("INVALID scan slot time!\n");
+		s8Ret = M2M_ERR_FAIL;
+	}	
+	/* Check for valid No of probe requests per slot */
+	 if((ptstrM2MScanOption->u8ProbesPerSlot < 0)||(ptstrM2MScanOption->u8ProbesPerSlot > M2M_SCAN_DEFAULT_NUM_PROBE))
+	{
+		M2M_ERR("INVALID No of probe requests per scan slot\n");
+		s8Ret = M2M_ERR_FAIL;
+	}	
+	/* Check for valid RSSI threshold */
+	 if((ptstrM2MScanOption->s8RssiThresh  < -99) || (ptstrM2MScanOption->s8RssiThresh >= 0))
+	{
+		M2M_ERR("INVALID RSSI threshold %d \n",ptstrM2MScanOption->s8RssiThresh);
+		s8Ret = M2M_ERR_FAIL;
+	}	
 	return s8Ret;
 }
 
 sint8 m2m_wifi_init(tstrWifiInitParam * param)
 {
 	sint8 ret = M2M_SUCCESS;
-
+	
+	if(param == NULL) {
+		ret = M2M_ERR_FAIL;
+		goto _EXIT0;
+	}
+	
 	gpfAppWifiCb = param->pfAppWifiCb;
-
+		
 #ifdef ETH_MODE
  	gpfAppEthCb  	    = param->strEthInitParam.pfAppEthCb;
 	gau8ethRcvBuf       = param->strEthInitParam.au8ethRcvBuf;
@@ -389,7 +437,7 @@ sint8 m2m_wifi_init(tstrWifiInitParam * param)
 
 	hif_register_cb(M2M_REQ_GRP_WIFI,m2m_wifi_cb);
 
-	return ret;
+	goto _EXIT0;
 
 _EXIT1:
 	nm_drv_deinit(NULL);
@@ -427,11 +475,12 @@ sint8 m2m_wifi_connect_sc(char *pcSsid, uint8 u8SsidLen, uint8 u8SecType, void *
 	sint8				ret = M2M_SUCCESS;
 	tstrM2mWifiConnect	strConnect;
 	tstrM2MWifiSecInfo	*pstrAuthInfo;
+
 	if(u8SecType != M2M_WIFI_SEC_OPEN)
 	{
-		if((pvAuthInfo == NULL)||(m2m_strlen(pvAuthInfo)<=0)||(m2m_strlen(pvAuthInfo)>=M2M_MAX_PSK_LEN))
+		if(pvAuthInfo == NULL)
 		{
-			M2M_ERR("PSK LEN INVALID\n");
+			M2M_ERR("Key is not valid\n");
 			ret = M2M_ERR_FAIL;
 			goto ERR1;
 		}
@@ -489,8 +538,14 @@ sint8 m2m_wifi_connect_sc(char *pcSsid, uint8 u8SsidLen, uint8 u8SecType, void *
 
 	else if(u8SecType == M2M_WIFI_SEC_WPA_PSK)
 	{
-		uint8	u8KeyLen = m2m_strlen((uint8*)pvAuthInfo) + 1;
-		m2m_memcpy(pstrAuthInfo->uniAuth.au8PSK, (uint8*)pvAuthInfo, u8KeyLen);
+		uint16	u16KeyLen = m2m_strlen((uint8*)pvAuthInfo);
+		if((u16KeyLen <= 0)||(u16KeyLen >= M2M_MAX_PSK_LEN))
+		{
+			M2M_ERR("Incorrect PSK key length\n");
+			ret = M2M_ERR_FAIL;
+			goto ERR1;
+		}
+		m2m_memcpy(pstrAuthInfo->uniAuth.au8PSK, (uint8*)pvAuthInfo, u16KeyLen + 1);
 	}
 	else if(u8SecType == M2M_WIFI_SEC_802_1X)
 	{
@@ -578,33 +633,20 @@ sint8 m2m_wifi_set_cust_InfoElement(uint8* pau8M2mCustInfoElement)
 	return hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_CUST_INFO_ELEMENT, (uint8*)pau8M2mCustInfoElement, pau8M2mCustInfoElement[0]+1, NULL, 0, 0);
 }
 
-sint8 m2m_wifi_set_scan_options(uint8 u8NumOfSlot,uint8 u8SlotTime)
+sint8 m2m_wifi_set_scan_options(tstrM2MScanOption* ptstrM2MScanOption)
 {
 	sint8	s8Ret = M2M_ERR_FAIL;
-	tstrM2MScanOption strM2MScan;
-	strM2MScan.u8NumOfSlot = u8NumOfSlot;
-	strM2MScan.u8SlotTime = u8SlotTime;
-
-	if(strM2MScan.u8NumOfSlot < M2M_SCAN_MIN_NUM_SLOTS)
+	if(m2m_validate_scan_options (ptstrM2MScanOption) == M2M_SUCCESS)
 	{
-		strM2MScan.u8NumOfSlot = M2M_SCAN_MIN_NUM_SLOTS;
-	}
-	if(strM2MScan.u8SlotTime < M2M_SCAN_MIN_SLOT_TIME)
-	{
-		strM2MScan.u8SlotTime = M2M_SCAN_MIN_SLOT_TIME;
-	}
-	s8Ret = hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_SET_SCAN_OPTION, (uint8*)&strM2MScan, sizeof(tstrM2MScan),NULL, 0,0);
-	if(s8Ret != M2M_SUCCESS)
-	{
-		M2M_ERR("SCAN Failed Ret = %d\n",s8Ret);
+		s8Ret =  hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_SET_SCAN_OPTION, (uint8*)ptstrM2MScanOption, sizeof(tstrM2MScanOption),NULL, 0,0);
 	}
 	return s8Ret;
 }
-sint8 m2m_wifi_set_scan_region(uint8  ScanRegion)
+sint8 m2m_wifi_set_scan_region(uint16  ScanRegion)
 {
 	sint8	s8Ret = M2M_ERR_FAIL;
 	tstrM2MScanRegion strScanRegion;
-	strScanRegion.u8ScanRegion = ScanRegion;
+	strScanRegion.u16ScanRegion = ScanRegion;
 	s8Ret = hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_SET_SCAN_REGION, (uint8*)&strScanRegion, sizeof(tstrM2MScanRegion),NULL, 0,0);
 	return s8Ret;
 }
@@ -703,7 +745,7 @@ sint8 m2m_wifi_req_server_init(uint8 ch)
 sint8 m2m_wifi_p2p(uint8 u8Channel)
 {
 	sint8 ret = M2M_SUCCESS;
-	if((u8Channel == 1) || (u8Channel == 6) || (u8Channel == 11))
+	if((u8Channel == M2M_WIFI_CH_1) || (u8Channel == M2M_WIFI_CH_6) || (u8Channel == M2M_WIFI_CH_11))
 	{
 		tstrM2MP2PConnect strtmp;
 		strtmp.u8ListenChannel = u8Channel;
@@ -952,7 +994,10 @@ sint8 m2m_wifi_enable_monitoring_mode(tstrM2MWifiMonitorModeCtrl *pstrMtrCtrl, u
 	}
 	return s8Ret;
 }
-
+sint8 m2m_wifi_get_firmware_version(tstrM2mRev *M2mRev)
+{
+    return nm_get_firmware_info(M2mRev);
+}
 sint8 m2m_wifi_disable_monitoring_mode(void)
 {
 	return hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_DISABLE_MONITORING, NULL, 0, NULL, 0,0);
@@ -1021,6 +1066,18 @@ sint8 m2m_wifi_set_sytem_time(uint32 u32UTCSeconds)
 {
 	return hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_SET_SYS_TIME, (uint8*)&u32UTCSeconds, sizeof(tstrSystemTime), NULL, 0, 0);
 }
+/*!
+ * @fn             NMI_API sint8 m2m_wifi_get_sytem_time(void);   
+ * @see            m2m_wifi_enable_sntp
+ 			  		tstrSystemTime   
+ * @note         get the system time from the sntp client
+ *		         using the API \ref m2m_wifi_get_sytem_time.
+ * @return        The function returns @ref M2M_SUCCESS for successful operations and a negative value otherwise.
+ */
+sint8 m2m_wifi_get_sytem_time(void)
+{
+	return hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_GET_SYS_TIME, NULL,0, NULL, 0, 0);
+}
 
 sint8 m2m_wifi_enable_sntp(uint8 bEnable)
 {
@@ -1029,6 +1086,84 @@ sint8 m2m_wifi_enable_sntp(uint8 bEnable)
 	u8Req = bEnable ? M2M_WIFI_REQ_ENABLE_SNTP_CLIENT : M2M_WIFI_REQ_DISABLE_SNTP_CLIENT;
 	return hif_send(M2M_REQ_GRP_WIFI, u8Req, NULL, 0, NULL, 0, 0);
 }
+/*!
+@fn			NMI_API sint8 m2m_wifi_set_power_profile(uint8 u8PwrMode);
+@brief		Change the power profile mode 
+@param [in]	u8PwrMode
+			Change the WINC power profile to different mode 
+			PWR_LOW1/PWR_LOW2/PWR_HIGH/PWR_AUTO (tenuM2mPwrMode)
+@return		The function SHALL return M2M_SUCCESE for success and a negative value otherwise.
+@sa			tenuM2mPwrMode
+@pre		m2m_wifi_init
+@warning	must be called after the initializations and before any connection request and can't be changed in run time, 
+*/
+sint8 m2m_wifi_set_power_profile(uint8 u8PwrMode)
+{
+	sint8 ret = M2M_SUCCESS;
+	tstrM2mPwrMode strM2mPwrMode;
+	strM2mPwrMode.u8PwrMode = u8PwrMode;
+	ret = hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_SET_POWER_PROFILE, (uint8*)&strM2mPwrMode,sizeof(tstrM2mPwrMode), NULL, 0, 0);
+	return ret;
+}
+/*!
+@fn			NMI_API sint8 m2m_wifi_set_tx_power(uint8 u8TxPwrLevel);
+@brief		set the TX power tenuM2mTxPwrLevel
+@param [in]	u8TxPwrLevel
+			change the TX power tenuM2mTxPwrLevel
+@return		The function SHALL return M2M_SUCCESE for success and a negative value otherwise.
+@sa			tenuM2mTxPwrLevel
+@pre		m2m_wifi_init
+@warning	
+*/
+sint8 m2m_wifi_set_tx_power(uint8 u8TxPwrLevel)
+{
+	sint8 ret = M2M_SUCCESS;
+	tstrM2mTxPwrLevel strM2mTxPwrLevel;
+	strM2mTxPwrLevel.u8TxPwrLevel = u8TxPwrLevel;
+	ret = hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_SET_TX_POWER, (uint8*)&strM2mTxPwrLevel,sizeof(tstrM2mTxPwrLevel), NULL, 0, 0);
+	return ret;
+}
+
+/*!
+@fn			NMI_API sint8 m2m_wifi_enable_firmware_logs(uint8 u8Enable);
+@brief		Enable or Disable logs in run time (Disable Firmware logs will 
+			enhance the firmware start-up time and performance)
+@param [in]	u8Enable
+			Set 1 to enable the logs 0 for disable
+@return		The function SHALL return M2M_SUCCESE for success and a negative value otherwise.
+@sa			__DISABLE_FIRMWARE_LOGS__ (build option to disable logs from initializations)
+@pre		m2m_wifi_init
+@warning	
+*/
+sint8 m2m_wifi_enable_firmware_logs(uint8 u8Enable)
+{
+	sint8 ret = M2M_SUCCESS;
+	tstrM2mEnableLogs strM2mEnableLogs;
+	strM2mEnableLogs.u8Enable = u8Enable;
+	ret = hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_SET_ENABLE_LOGS, (uint8*)&strM2mEnableLogs,sizeof(tstrM2mEnableLogs), NULL, 0, 0);
+	return ret;
+}
+
+/*!
+@fn			NMI_API sint8 m2m_wifi_set_battery_voltage(uint16 u16BattVoltx100);
+@brief		Enable or Disable logs in run time (Disable Firmware logs will 
+			enhance the firmware start-up time and performance)
+@param [in]	u16BattVoltx100
+			battery voltage multiplied by 100
+@return		The function SHALL return M2M_SUCCESE for success and a negative value otherwise.
+@sa			__DISABLE_FIRMWARE_LOGS__ (build option to disable logs from initializations)
+@pre		m2m_wifi_init
+@warning	
+*/
+sint8 m2m_wifi_set_battery_voltage(uint16 u16BattVoltx100)
+{
+	sint8 ret = M2M_SUCCESS;
+	tstrM2mBatteryVoltage strM2mBattVol = {0};
+	strM2mBattVol.u16BattVolt = u16BattVoltx100;
+	ret = hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_SET_BATTERY_VOLTAGE, (uint8*)&strM2mBattVol,sizeof(tstrM2mBatteryVoltage), NULL, 0, 0);
+	return ret;
+}
+
 #ifdef ETH_MODE
 /*!
 @fn	\

@@ -39,5 +39,25 @@
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<info type="gui-flag" value="move-to-root"/>
 		</module>
+		<module type="application" id="sam.drivers.acc.example#2" caption="ACC Example">
+			<info type="description" value="summary">
+				This example is aimed to demonstrate the usage of the ACC peripheral.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Analog Conversion"/>
+			</info>
+			<build type="c-source" value="acc_example_samv71.c"/>
+			<device-support value="same70"/>	
+			<device-support value="samv70"/>
+			<device-support value="samv71"/>
+			<device-support value="sams70"/>
+			<require idref="sam.drivers.acc"/>
+			<require idref="sam.drivers.afec"/>
+			<require idref="sam.drivers.dacc"/>
+			<require idref="sam.drivers.pmc"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
+		</module>		
 	</select-by-device>
 </asf>

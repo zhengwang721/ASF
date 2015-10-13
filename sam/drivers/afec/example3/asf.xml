@@ -9,6 +9,10 @@
 		<build type="c-source" value="afec_example3.c"/>
 		<build type="include-path" value="."/>
 		<device-support value="sam4e"/>
+		<device-support value="same70"/>	
+		<device-support value="samv70"/>
+		<device-support value="samv71"/>
+		<device-support value="sams70"/>
 		<require idref="sam.drivers.afec"/>
 		<require idref="sam.drivers.pmc"/>
 		<require idref="common.services.delay"/>

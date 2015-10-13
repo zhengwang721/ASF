@@ -68,16 +68,16 @@ extern "C" {
  *
  */
 enum tsens_callback {
-	/** Callback for result ready. */
+	/** Callback for result ready */
 	TSENS_CALLBACK_RESULT_READY,
-	/** Callback when result overwritten before read. */
+	/** Callback when result overwritten before read */
 	TSENS_CALLBACK_OVERRUN,
-	/** Callback when window is hit. */
+	/** Callback when window is hit */
 	TSENS_CALLBACK_WINDOW,
-	/** Callback when the result overflows. */
+	/** Callback when the result overflows */
 	TSENS_CALLBACK_OVF,
 #  if !defined(__DOXYGEN__)
-	/** Number of available callbacks. */
+	/** Number of available callbacks */
 	TSENS_CALLBACK_NUM,
 #  endif
 };

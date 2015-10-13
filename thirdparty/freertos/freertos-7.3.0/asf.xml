@@ -90,6 +90,10 @@
 			<device-support value="atsam4c16c_1"/>
 			<device-support value="atsam4cp16b_1"/>
 			<device-support value="samg"/>
+			<device-support value="same70"/>
+			<device-support value="sams70"/>
+			<device-support value="samv70"/>
+			<device-support value="samv71"/>
 		</module>
 		<module type="service" id="common.services.os.freertos.v7_3_0#sam_cm0" caption="FreeRTOS mini Real-Time Kernel">
 			<info type="description" value="summary">

@@ -99,7 +99,7 @@ MACROS
 		FIRMWARE VERSION NO INFO
  *======*======*======*======*/
 
-#define M2M_FIRMWARE_VERSION_MAJOR_NO 					(18)
+#define M2M_FIRMWARE_VERSION_MAJOR_NO 					(19)
 /*!< Firmware Major release version number.
 */
 
@@ -116,7 +116,7 @@ MACROS
   SUPPORTED DRIVER VERSION NO INFO
  *======*======*======*======*/
 
-#define M2M_DRIVER_VERSION_MAJOR_NO 					(18)
+#define M2M_DRIVER_VERSION_MAJOR_NO 					(19)
 /*!< Driver Major release version number.
 */
 
@@ -166,7 +166,7 @@ MACROS
 #define M2M_DEVICE_NAME_MAX								48
 /*!< Maximum Size for the device name including the NULL termination.
  */
- 
+
 
 #define M2M_LISTEN_INTERVAL 							1
 /*!< The STA uses the Listen Interval parameter to indicate to the AP how
@@ -176,16 +176,16 @@ MACROS
 
 
 #define M2M_1X_USR_NAME_MAX								21
-/*!< The maximum size of the user name including the NULL termination. 
+/*!< The maximum size of the user name including the NULL termination.
 	It is used for RADIUS authentication in case of connecting the device to
-	an AP secured with WPA-Enterprise. 
+	an AP secured with WPA-Enterprise.
 */
 
 
 #define M2M_1X_PWD_MAX									41
-/*!< The maximum size of the password including the NULL termination. 
+/*!< The maximum size of the password including the NULL termination.
 	It is used for RADIUS authentication in case of connecting the device to
-	an AP secured with WPA-Enterprise. 
+	an AP secured with WPA-Enterprise.
 */
 
 #define M2M_CUST_IE_LEN_MAX								252
@@ -195,9 +195,6 @@ MACROS
 
 #define M2M_CONFIG_CMD_BASE									1
 /*!< The base value of all the host configuration commands opcodes.
-*/
-#define M2M_SERVER_CMD_BASE									20
-/*!< The base value of all the power save mode host commands codes.
 */
 #define M2M_STA_CMD_BASE									40
 /*!< The base value of all the station mode host commands opcodes.
@@ -211,6 +208,9 @@ MACROS
 #define M2M_OTA_CMD_BASE									100
 /*!< The base value of all the OTA mode host commands opcodes.
 */
+#define M2M_SERVER_CMD_BASE									120
+/*!< The base value of all the power save mode host commands codes.
+*/
 
 
 #define WEP_40_KEY_STRING_SIZE 							((uint8)10)
@@ -223,11 +223,14 @@ MACROS
 #define WEP_KEY_MAX_INDEX								((uint8)4)
 /*!< Indicate the max key index value for WEP authentication
 */
-#define M2M_SCAN_MIN_NUM_SLOTS							(2)
-/*!< The min. number of scan slots performed by the WINC board.
+#define M2M_SCAN_DEFAULT_NUM_SLOTS							(2)
+/*!< The default. number of scan slots performed by the WINC board.
 */
-#define M2M_SCAN_MIN_SLOT_TIME							(20)
-/*!< The min. duration in miliseconds of a scan slots performed by the WINC board.
+#define M2M_SCAN_DEFAULT_SLOT_TIME							(20)
+/*!< The default. duration in miliseconds of a scan slots performed by the WINC board.
+*/
+#define M2M_SCAN_DEFAULT_NUM_PROBE							(2)
+/*!< The default. number of scan slots performed by the WINC board.
 */
 #define M2M_SCAN_FAIL 									((uint8)1)
 /*!< Indicate that the WINC board has failed to perform the scan operation.
@@ -271,8 +274,11 @@ MACROS
 	A failure response that indicates that no one of the cached networks 
 	was found in the scan results, as a result to the function call m2m_default_connect.
 */
+#define M2M_DEFAULT_CONN_FAIL							((sint8)-22)
 
-
+/*!<
+	A failure response that indicates that the winc failed to connect to the cached network
+*/
 /*======*======*======*======*
 	MONTIORING MODE DEFINITIONS
  *======*======*======*======*/
@@ -288,11 +294,11 @@ MACROS
 	OTA DEFINITIONS
  *======*======*======*======*/
  
-#define OTA_ROLLB_STATUS_VALID				(0x12526285)
+#define OTA_STATUS_VALID					(0x12526285)
 /*!< 
 	Magic value updated in the Control structure in case of ROLLACK image Valid
 */
-#define OTA_ROLLB_STATUS_INVALID			(0x23987718)
+#define OTA_STATUS_INVALID					(0x23987718)
 /*!< 
 	Magic value updated in the Control structure in case of ROLLACK image InValid
 */
@@ -365,11 +371,109 @@ typedef enum {
 
 /*!
 @enum	\
-	tenuM2mConfigCmd
+	tenuM2mPwrMode
 	
 @brief
-	This enum contains all the host commands used to configure the WINC board.
 	
+*/
+typedef enum {
+	PWR_AUTO = ((uint8) 1),
+	/*!< FW will decide the best power mode to use internally. */
+	PWR_LOW1,
+	/*low power mode #1. RX current 60mA, sensitivity Ok.*/
+	PWR_LOW2,
+	/*low power mode #2, RX current 55mA, sensitivity is less by 3dBm*/
+	PWR_HIGH,
+	/* high power mode: RX current 100mA.*/
+}tenuM2mPwrMode;
+
+/*!
+@struct	\	
+	tstrM2mPwrState
+
+@brief
+	Power Mode
+*/
+typedef struct {
+	uint8	u8PwrMode; 
+	/*!< power Save Mode
+	*/
+	uint8	__PAD24__[3];
+	/*!< Padding bytes for forcing 4-byte alignment
+	*/
+}tstrM2mPwrMode;
+/*!
+@enum	\
+	tenuM2mTxPwrLevel
+	
+@brief
+	
+*/
+typedef enum {
+	TX_PWR_HIGH = ((uint8) 1),
+	/*!< PPA Gain 6dbm	PA Gain 18dbm */
+	TX_PWR_MED,
+	/*!< PPA Gain 6dbm	PA Gain 12dbm */
+	TX_PWR_LOW,
+	/*!< PPA Gain 6dbm	PA Gain 6dbm */
+}tenuM2mTxPwrLevel;
+
+/*!
+@struct	\	
+	tstrM2mTxPwrLevel
+
+@brief
+	Tx power level 
+*/
+typedef struct {
+	uint8	u8TxPwrLevel; 
+	/*!< Tx power level
+	*/
+	uint8	__PAD24__[3];
+	/*!< Padding bytes for forcing 4-byte alignment
+	*/
+}tstrM2mTxPwrLevel;
+
+/*!
+@struct	\	
+	tstrM2mEnableLogs
+
+@brief
+	Enable Firmware logs
+*/
+typedef struct {
+	uint8	u8Enable; 
+	/*!< Enable/Disable firmware logs
+	*/
+	uint8	__PAD24__[3];
+	/*!< Padding bytes for forcing 4-byte alignment
+	*/
+}tstrM2mEnableLogs;
+
+/*!
+@struct	\	
+	tstrM2mBatteryVoltage
+
+@brief
+	Battery Voltage
+*/
+typedef struct {
+	//Note: on SAMD D21 the size of double is 8 Bytes
+	uint16	u16BattVolt; 
+	/*!< Battery Voltage
+	*/
+	uint8	__PAD16__[2];
+	/*!< Padding bytes for forcing 4-byte alignment
+	*/
+}tstrM2mBatteryVoltage;
+
+/*!
+@enum	\
+	tenuM2mConfigCmd
+
+@brief
+	This enum contains all the host commands used to configure the WINC board.
+
 */
 typedef enum {
 	M2M_WIFI_REQ_RESTART = M2M_CONFIG_CMD_BASE,
@@ -426,6 +530,9 @@ typedef enum {
 		do not need it.
 	*/
 	M2M_WIFI_RESP_MEMORY_RECOVER,
+	/*!<
+	 * Reserved for debuging
+	 * */
 	M2M_WIFI_REQ_CUST_INFO_ELEMENT,
 	/*!< Add Custom ELement to Beacon Managament Frame.
 	*/
@@ -444,25 +551,40 @@ typedef enum {
 	M2M_WIFI_REQ_SET_SCAN_OPTION,
 	/*!< Set Scan options "slot time, slot number .. etc" .
 	*/
-	M2M_WIFI_REQ_SET_SCAN_REGION
+	M2M_WIFI_REQ_SET_SCAN_REGION,
 	/*!< Set scan region.
 	*/
+	M2M_WIFI_REQ_SET_POWER_PROFILE,
+	/*!< The API shall set power mode to one of 3 modes
+	*/
+	M2M_WIFI_REQ_SET_TX_POWER,
+	/*!<  API to set TX power. 
+	*/
+	M2M_WIFI_REQ_SET_BATTERY_VOLTAGE,
+	/*!<  API to set Battery Voltage. 
+	*/
+	M2M_WIFI_REQ_SET_ENABLE_LOGS,
+	/*!<  API to set Battery Voltage. 
+	*/
+	M2M_WIFI_REQ_GET_SYS_TIME,
+	/*!<
+		REQ GET time of day from WINC.
+	*/
+	M2M_WIFI_RESP_GET_SYS_TIME,
+	/*!<
+		RESP time of day from host.
+	*/
+	M2M_WIFI_REQ_SEND_ETHERNET_PACKET,
+	/*!< Send Ethernet packet in bypass mode.
+	*/
+	M2M_WIFI_RESP_ETHERNET_RX_PACKET,
+	/*!< Receive Ethernet packet in bypass mode.
+	*/	
+	M2M_WIFI_REQ_SET_MAC_MCAST,
+	/*!< Set the WINC multicast filters.
+	*/
+	M2M_WIFI_MAX_CONFIG_ALL,
 }tenuM2mConfigCmd;
-
-/*!
-@enum	\
-	tenuM2mServerCmd
-	
-@brief
-	This enum contains all the WINC commands while in PS mode.
-	These command are currently not supported.
-*/
-typedef enum {
-	M2M_WIFI_REQ_CLIENT_CTRL = M2M_SERVER_CMD_BASE,
-	M2M_WIFI_RESP_CLIENT_INFO,
-	M2M_WIFI_REQ_SERVER_INIT
-}tenuM2mServerCmd;
-
 
 /*!
 @enum	\
@@ -490,20 +612,8 @@ typedef enum {
 	M2M_WIFI_REQ_SLEEP,
 	/*!< Set PS mode command.
 	*/
-	M2M_WIFI_REQ_SCAN_RESERVED,
-	/*!< Request scan command.
-	*/
 	M2M_WIFI_REQ_WPS_SCAN,
 	/*!< Request WPS scan command.
-	*/
-	M2M_WIFI_RESP_SCAN_DONE_RESERVED,
-	/*!< Scan complete notification response.
-	*/
-	M2M_WIFI_REQ_SCAN_RESULT_RESERVED,
-	/*!< Request Scan results command.
-	*/
-	M2M_WIFI_RESP_SCAN_RESULT_RESERVED,
-	/*!< Request Scan results resopnse.
 	*/
 	M2M_WIFI_REQ_WPS,
 	/*!< Request WPS start command.
@@ -541,31 +651,33 @@ typedef enum {
 	M2M_WIFI_REQ_LSN_INT,
 	/*!< Set WiFi listen interval.
 	*/
-	M2M_WIFI_REQ_SEND_ETHERNET_PACKET,
-	/*!< Send ethernet packet in bypass mode.
-	*/
-	M2M_WIFI_RESP_ETHERNET_RX_PACKET,
-	/*!< Receive ethernet packet in bypass mode.
-	*/
-	M2M_WIFI_REQ_SET_SCAN_OPTION_RESERVED,
-	/*!< Set Scan options "slot time, slot number .. etc" .
-	*/
-	M2M_WIFI_REQ_SET_SCAN_REGION_RESERVED,
-	/*!< Set scan region.
-	*/
 	M2M_WIFI_REQ_DOZE,
 	/*!< Used to force the WINC to sleep in manual PS mode.
 	*/
-	M2M_WIFI_REQ_SET_MAC_MCAST
-	/*!< Set the WINC multicast filters.
-	*/
+	M2M_WIFI_MAX_STA_ALL,
 } tenuM2mStaCmd;
 
+/*!
+@enum	\
+	tenuM2mApCmd
+
+@brief
+	This enum contains all the WINC commands while in AP mode.
+*/
+typedef enum {
+	M2M_WIFI_REQ_ENABLE_AP = M2M_AP_CMD_BASE,
+	/*!< Enable AP mode command.
+	*/
+	M2M_WIFI_REQ_DISABLE_AP,
+	/*!< Disable AP mode command.
+	*/
+	M2M_WIFI_MAX_AP_ALL,
+}tenuM2mApCmd;
 
 /*!
 @enum	\
 	tenuM2mP2pCmd
-	
+
 @brief
 	This enum contains all the WINC commands while in P2P mode.
 */
@@ -580,28 +692,13 @@ typedef enum {
 	M2M_WIFI_REQ_DISABLE_P2P,
 	/*!< Disable P2P mode command.
 	*/
-	M2M_WIFI_REQ_P2P_REPOST
+	M2M_WIFI_REQ_P2P_REPOST,
 	/*!< This command is for internal use by the WINC and 
 		should not be used by the host driver.
 	*/
+	M2M_WIFI_MAX_P2P_ALL,
 }tenuM2mP2pCmd;
 
-
-/*!
-@enum	\
-	tenuM2mApCmd
-	
-@brief
-	This enum contains all the WINC commands while in AP mode.
-*/
-typedef enum {
-	M2M_WIFI_REQ_ENABLE_AP = M2M_AP_CMD_BASE,
-	/*!< Enable AP mode command.
-	*/
-	M2M_WIFI_REQ_DISABLE_AP,
-	/*!< Disable AP mode command.
-	*/
-}tenuM2mApCmd;
 
 /*!
 @enum	\
@@ -619,14 +716,33 @@ typedef enum {
 	M2M_OTA_REQ_ROLLBACK,
 	M2M_OTA_RESP_NOTIF_UPDATE_INFO,
 	M2M_OTA_RESP_UPDATE_STATUS,
-	M2M_OTA_REQ_TEST
+	M2M_OTA_REQ_TEST,
+	M2M_OTA_MAX_ALL,
 }tenuM2mOtaCmd;
 
 
 /*!
 @enum	\
+	tenuM2mServerCmd
+
+@brief
+	This enum contains all the WINC commands while in PS mode.
+	These command are currently not supported.
+*/
+typedef enum {
+	M2M_WIFI_REQ_CLIENT_CTRL = M2M_SERVER_CMD_BASE,
+	M2M_WIFI_RESP_CLIENT_INFO,
+	M2M_WIFI_REQ_SERVER_INIT,
+	M2M_WIFI_MAX_SERVER_ALL
+}tenuM2mServerCmd;
+
+
+
+
+/*!
+@enum	\
 	tenuM2mIpCmd
-	
+
 @brief
 
 */
@@ -641,7 +757,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mConnState
-	
+
 @brief
 	Wi-Fi Connection State.
 */
@@ -660,7 +776,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mSecType
-	
+
 @brief
 	Wi-Fi Supported Security types.
 */
@@ -686,7 +802,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mSecType
-	
+
 @brief
 	Wi-Fi Supported SSID types.
 */
@@ -702,7 +818,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mScanCh
-	
+
 @brief
 	Wi-Fi RF Channels.
 */
@@ -727,20 +843,43 @@ typedef enum {
 /*!
 @enum	\
 	tenuM2mScanRegion
-	
+
 @brief
 	Wi-Fi RF Channels.
 */
 typedef enum {
-	NORTH_AMERICA = ((uint8) 11),
-	ASIA		=       ((uint8) 14)
+
+	REG_CH_1 = ((uint16) 1 << 0),
+	REG_CH_2 = ((uint16) 1 << 1),
+	REG_CH_3 = ((uint16) 1 << 2),
+	REG_CH_4 = ((uint16) 1 << 3),
+	REG_CH_5 = ((uint16) 1 << 4),
+	REG_CH_6 = ((uint16) 1 << 5),
+	REG_CH_7 = ((uint16) 1 << 6),
+	REG_CH_8 = ((uint16) 1 << 7),
+	REG_CH_9 = ((uint16) 1 << 8),
+	REG_CH_10 = ((uint16) 1 << 9),
+	REG_CH_11 = ((uint16) 1 << 10),
+	REG_CH_12 = ((uint16) 1 << 11),
+	REG_CH_13 = ((uint16) 1 << 12),
+	REG_CH_14 = ((uint16) 1 << 13),
+	REG_CH_ALL = ((uint16) 0x3FFF),
+	NORTH_AMERICA = ((uint16) 0x7FF),
+	/** 11 channel
+	*/
+	EUROPE		=   ((uint16) 0x1FFF),
+	/** 13 channel
+	*/
+	ASIA		=   ((uint16) 0x3FFF)
+	/* 14 channel
+	*/
 }tenuM2mScanRegion;
 
 
 /*!
 @enum	\
 	tenuPowerSaveModes
-	
+
 @brief
 	Power Save Modes.
 */
@@ -787,7 +926,7 @@ typedef enum {
 /*!
 @enum	\
 	tenuWPSTrigger
-	
+
 @brief
 	WPS Triggering Methods.
 */
@@ -886,7 +1025,7 @@ typedef struct{
 @struct	\
 	tstrM2mWifiConnect
 
-@brief	
+@brief
 	Wi-Fi Connect Request
 */
 typedef struct{
@@ -995,15 +1134,20 @@ typedef struct{
 */
 typedef struct {
 	uint8   u8NumOfSlot;
-	/*!< The min number of slots is 2 for every channel,
+	/*|< The min number of slots is 2 for every channel,
 	every slot the soc will send Probe Request on air, and wait/listen for PROBE RESP/BEACONS for the u16slotTime
 	*/
 	uint8   u8SlotTime;
-	/*!< the time that the Soc will wait on every channel listening to the frames on air
-		when that time increased number of AP will increased in the scan results
+	/*|< the time that the Soc will wait on every channel listening to the frames on air
+		when that time increaseed number of AP will increased in the scan results
 		min time is 10 ms and the max is 250 ms
 	*/
-	uint8 __PAD16__[2];
+	uint8  u8ProbesPerSlot;
+	/*!< Number of probe requests to be sent per channel scan slot.
+	*/
+	sint8   s8RssiThresh;
+	/*! < The RSSI threshold of the AP which will be connected to directly.
+	*/
 
 }tstrM2MScanOption;
 
@@ -1018,10 +1162,10 @@ typedef struct {
 	tenuM2mScanRegion
 */
 typedef struct {
-	uint8   u8ScanRegion;
+	uint16   u16ScanRegion;
 	/*|< Specifies the number of channels allowed in the region (e.g. North America = 11 ... etc.).
 	*/
-	uint8 __PAD24__[3];
+	uint8 __PAD16__[2];
 
 }tstrM2MScanRegion;
 
@@ -1177,14 +1321,13 @@ typedef struct {
 
 } tstrM2mSlpReqTime;
 
-
 /*!
 @struct	\
 	tstrM2mLsnInt
 
 @brief	Listen interval
 
-	It is the value of the Wi-Fi STA listen interval for power saving. It is given in units of Beacon period.
+	It is the value of the Wi-Fi STA listen interval for power saving. It is given in units of Beacon period. 
 	Periodically after the listen interval fires, the WINC is wakeup and listen to the beacon and check for any buffered frames for it from the AP.
 */
 typedef struct {
@@ -1203,7 +1346,7 @@ typedef struct {
 
 @brief	Wi-Fi Monitor Mode Filter
 
-	This structure sets the filtering criteria for WLAN packets when monitoring mode is enable.
+	This structure sets the filtering criteria for WLAN packets when monitoring mode is enable. 
 	The received packets matching the filtering parameters, are passed directly to the application.
 */
 typedef struct{
@@ -1225,7 +1368,11 @@ typedef struct{
 	uint8	au8BSSID[6];
 	/* ZERO means DO NOT FILTER BSSID.
 	*/
-	uint8	__PAD24__[3];
+	uint8 u8EnRecvHdr;
+	/*
+	 Enable recv the full hder before the payload	
+	*/
+	uint8	__PAD16__[2];
 	/*!< Padding bytes for forcing 4-byte alignment
 	*/
 }tstrM2MWifiMonitorModeCtrl;
@@ -1238,7 +1385,7 @@ typedef struct{
 @brief	Wi-Fi RX Frame Header
 
 	The M2M application has the ability to allow Wi-Fi monitoring mode for receiving all Wi-Fi Raw frames matching a well defined filtering criteria.
-	When a target Wi-Fi packet is received, the header information are extracted and assigned in this structure.
+	When a target Wi-Fi packet is received, the header information are extracted and assigned in this structure. 
 */
 typedef struct{
 	uint8	u8FrameType;
@@ -1260,13 +1407,13 @@ typedef struct{
 	/*!< Encryption type for the rx packet.
 	*/
 	uint8	au8SrcMacAddress[6];
-	/* !< ZERO means DO NOT FILTER Source address.
+	/* ZERO means DO NOT FILTER Source address.
 	*/
 	uint8	au8DstMacAddress[6];
-	/* !< ZERO means DO NOT FILTER Destination address.
+	/* ZERO means DO NOT FILTER Destination address.
 	*/
 	uint8	au8BSSID[6];
-	/* !< ZERO means DO NOT FILTER BSSID.
+	/* ZERO means DO NOT FILTER BSSID.
 	*/
 	uint16	u16DataLength;
 	/*!< Data payload length (Header excluded).
@@ -1421,12 +1568,11 @@ typedef struct {
 	tstrM2mSetMacAddress
 
 @brief
-	Sets the MAC address from application. The WINC load the mac address from the effuse by default to the WINC configuration memory,
+	Sets the MAC address from application. The WINC load the mac address from the effuse by default to the WINC configuration memory, 
 	but that function is used to let the application overwrite the configuration memory with the mac address from the host.
 
 @note
 	It's recommended to call this only once before calling connect request and after the m2m_wifi_init
-
 */
 typedef struct {
 	uint8 	au8Mac[6];
@@ -1436,7 +1582,6 @@ typedef struct {
 	/*!< Padding bytes for forcing 4-byte alignment
 	*/
 }tstrM2mSetMacAddress;
-
 
 
 /*!
@@ -1521,6 +1666,7 @@ typedef struct {
 	uint8			__PAD24__[3];
 }tstrM2MProvisionModeConfig;
 
+
 /*!
 @struct	\
  	tstrM2MProvisionInfo
@@ -1549,6 +1695,7 @@ typedef struct{
 	*/
 }tstrM2MProvisionInfo;
 
+
 /*!
 @struct	\
  	tstrM2MConnInfo
@@ -1564,7 +1711,7 @@ typedef struct{
 	uint8	au8IPAddr[4];
 	/*!< Connection IP address */
 	uint8	au8MACAddress[6];
-	/*!< MAC address of the peer Wi-Fi station */
+	/*!< MAC address of the peer Wi-Fi station */ 
 	sint8	s8RSSI;
 	/*!< Connection RSSI signal */
 	uint8	__PAD24__[3];
@@ -1576,12 +1723,12 @@ typedef struct{
  	tstrOtaInitHdr
 
 @brief
- 	OTA Image Header
+ 	OTA Image Header 
  */
 
 typedef struct{
 	uint32 u32OtaMagicValue;
-	/*!< Magic value kept in the OTA image after the
+	/*!< Magic value kept in the OTA image after the 
 	sha256 Digest buffer to define the Start of OTA Header */
 	uint32 u32OtaPayloadSzie;
 	/*!<
@@ -1589,21 +1736,19 @@ typedef struct{
 	*/
 
 }tstrOtaInitHdr;
-
 /*!
 @struct	\
  	tstrOtaControlSec
 
 @brief
- 	Control section structure is used to define the working image and
+ 	Control section structure is used to define the working image and 
 	the validity of the roll-back image and its offset, also both firmware versions is kept in that structure.
-
  */
 
 typedef struct {
 	uint32 u32OtaMagicValue;
 /*!<
-	Magic value used to ensure the structure is valid or not
+	Magic value used to ensure the structure is valid or not 
 */
 	uint32 u32OtaFormatVersion;
 /*!<
@@ -1611,7 +1756,7 @@ typedef struct {
 */
 	uint32 u32OtaSequenceNumber;
 /*!<
-	Sequence number is used while update the control structure to keep track of how many times that section updated
+	Sequence number is used while update the control structure to keep track of how many times that section updated 
 */
 	uint32 u32OtaLastCheckTime;
 /*!<
@@ -1619,7 +1764,7 @@ typedef struct {
 */
 	uint32 u32OtaCurrentworkingImagOffset;
 /*!<
-	Current working offset in flash
+	Current working offset in flash 
 */
 	uint32 u32OtaCurrentworkingImagFirmwareVer;
 /*!<
@@ -1627,19 +1772,43 @@ typedef struct {
 */
 	uint32 u32OtaRollbackImageOffset;
 /*!<
-	Roll-back image offset in flash
+	Roll-back image offset in flash 
 */
 	uint32 u32OtaRollbackImageValidStatus;
 /*!<
-	roll-back image valid status
+	roll-back image valid status 
 */
 	uint32 u32OtaRollbackImagFirmwareVer;
 /*!<
 	Roll-back image version (ex 18.0.3)
 */
+	uint32 u32OtaCortusAppWorkingOffset;
+/*!<
+	cortus app working offset in flash 
+*/
+	uint32 u32OtaCortusAppWorkingValidSts;
+/*!<
+	Working Cortus app valid status 
+*/
+	uint32 u32OtaCortusAppWorkingVer;
+/*!<
+	Working cortus app version (ex 18.0.3)
+*/
+	uint32 u32OtaCortusAppRollbackOffset;
+/*!<
+	cortus app rollback offset in flash 
+*/
+	uint32 u32OtaCortusAppRollbackValidSts;
+/*!<
+	roll-back cortus app valid status 
+*/
+	uint32 u32OtaCortusAppRollbackVer;
+/*!<
+	Roll-back cortus app version (ex 18.0.3)
+*/
 	uint32 u32OtaControlSecCrc;
 /*!<
-	CRC for the control structure to ensure validity
+	CRC for the control structure to ensure validity 
 */
 } tstrOtaControlSec;
 
@@ -1660,8 +1829,7 @@ typedef enum {
 	OTA_STATUS_INVAILD_RB_IMAGE    = 3,
 	/*!< Invalid rollback image. */
 	OTA_STATUS_INVAILD_FLASH_SIZE    = 4,
-	/*!< Flash size on device is not enough for OTA.
-	*/
+	/*!< Flash size on device is not enough for OTA. */
 	OTA_STATUS_AlREADY_ENABLED    = 5,
 	/*!< An OTA operation is already enabled. */
 	OTA_STATUS_UPDATE_INPROGRESS    = 6,
@@ -1705,18 +1873,17 @@ typedef struct {
 	*/
 	uint8	u8OtaUpdateStatus;
 	/*!<
-	OTA_SUCCESS
-	OTA_ERR_WORKING_IMAGE_LOAD_FAIL
-	OTA_ERR_INVAILD_CONTROL_SEC
-	M2M_ERR_OTA_SWITCH_FAIL
-	M2M_ERR_OTA_START_UPDATE_FAIL
-	M2M_ERR_OTA_ROLLBACK_FAIL
-	M2M_ERR_OTA_INVAILD_FLASH_SIZE
-	M2M_ERR_OTA_INVAILD_ARG
+	OTA_SUCCESS 						
+	OTA_ERR_WORKING_IMAGE_LOAD_FAIL		
+	OTA_ERR_INVAILD_CONTROL_SEC			
+	M2M_ERR_OTA_SWITCH_FAIL     		
+	M2M_ERR_OTA_START_UPDATE_FAIL     	
+	M2M_ERR_OTA_ROLLBACK_FAIL     		
+	M2M_ERR_OTA_INVAILD_FLASH_SIZE     	
+	M2M_ERR_OTA_INVAILD_ARG		     
 	*/
 	uint8 _PAD16_[2];
 }tstrOtaUpdateStatusResp;
-
 
 /*!
 @struct	\
@@ -1751,7 +1918,6 @@ typedef struct {
 	/*!< Padding bytes for forcing 4-byte alignment
 	*/
 } tstrOtaUpdateInfo;
-
 
 /*!
 @struct	\

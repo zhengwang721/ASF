@@ -30,6 +30,10 @@
 			<device-support value="sam4l"/>
 			<device-support value="sam4e"/>
 			<device-support value="samg55"/>
+			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="same70"/>
+			<device-support value="sams70"/>
 			<require idref="common.utils.unit_test"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="common.services.basic.clock"/>
@@ -53,6 +57,7 @@
 			<device-support value="samr21"/>
 			<device-support value="saml21"/>
 			<device-support value="samda1"/>
+			<device-support value="saml22"/>
 			<require idref="common.utils.unit_test"/>
 			<require idref="common.services.basic.sleepmgr"/>
 			<require idref="common.services.usb.class.device"/>

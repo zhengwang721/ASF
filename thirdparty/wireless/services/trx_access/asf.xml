@@ -133,6 +133,7 @@
 		<device-support value="samd20"/>
 		<device-support value="samd21"/>
 		<device-support value="samr21"/>
+		<device-support value="saml21"/>
 	</device-alias-map>
 	<device-alias-map name="trx_access_soc_support">
 		<device-support value="atmega128rfa1"/>

@@ -54,7 +54,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_bod_group SAM Brown Out Detector Driver (BOD)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the device's Brown Out Detector (BOD) modules, to detect
  * and respond to under-voltage events and take an appropriate action.
  *
@@ -120,37 +120,37 @@ extern "C" {
  * speed of a BODVDD to lower the power consumption.
  */
 enum bodvdd_prescale {
-	/** Divide input prescaler clock by 2. */
+	/** Divide input prescaler clock by 2 */
 	BODVDD_PRESCALE_DIV_2       = SUPC_BODVDD_PSEL(0),
-	/** Divide input prescaler clock by 4. */
+	/** Divide input prescaler clock by 4 */
 	BODVDD_PRESCALE_DIV_4       = SUPC_BODVDD_PSEL(1),
-	/** Divide input prescaler clock by 8. */
+	/** Divide input prescaler clock by 8 */
 	BODVDD_PRESCALE_DIV_8       = SUPC_BODVDD_PSEL(2),
-	/** Divide input prescaler clock by 16. */
+	/** Divide input prescaler clock by 16 */
 	BODVDD_PRESCALE_DIV_16      = SUPC_BODVDD_PSEL(3),
-	/** Divide input prescaler clock by 32. */
+	/** Divide input prescaler clock by 32 */
 	BODVDD_PRESCALE_DIV_32      = SUPC_BODVDD_PSEL(4),
-	/** Divide input prescaler clock by 64. */
+	/** Divide input prescaler clock by 64 */
 	BODVDD_PRESCALE_DIV_64      = SUPC_BODVDD_PSEL(5),
-	/** Divide input prescaler clock by 128. */
+	/** Divide input prescaler clock by 128 */
 	BODVDD_PRESCALE_DIV_128     = SUPC_BODVDD_PSEL(6),
-	/** Divide input prescaler clock by 256. */
+	/** Divide input prescaler clock by 256 */
 	BODVDD_PRESCALE_DIV_256     = SUPC_BODVDD_PSEL(7),
-	/** Divide input prescaler clock by 512. */
+	/** Divide input prescaler clock by 512 */
 	BODVDD_PRESCALE_DIV_512     = SUPC_BODVDD_PSEL(8),
-	/** Divide input prescaler clock by 1024. */
+	/** Divide input prescaler clock by 1024 */
 	BODVDD_PRESCALE_DIV_1024    = SUPC_BODVDD_PSEL(9),
-	/** Divide input prescaler clock by 2048. */
+	/** Divide input prescaler clock by 2048 */
 	BODVDD_PRESCALE_DIV_2048    = SUPC_BODVDD_PSEL(10),
-	/** Divide input prescaler clock by 4096. */
+	/** Divide input prescaler clock by 4096 */
 	BODVDD_PRESCALE_DIV_4096    = SUPC_BODVDD_PSEL(11),
-	/** Divide input prescaler clock by 8192. */
+	/** Divide input prescaler clock by 8192 */
 	BODVDD_PRESCALE_DIV_8192    = SUPC_BODVDD_PSEL(12),
-	/** Divide input prescaler clock by 16384. */
+	/** Divide input prescaler clock by 16384 */
 	BODVDD_PRESCALE_DIV_16384   = SUPC_BODVDD_PSEL(13),
-	/** Divide input prescaler clock by 32768. */
+	/** Divide input prescaler clock by 32768 */
 	BODVDD_PRESCALE_DIV_32768   = SUPC_BODVDD_PSEL(14),
-	/** Divide input prescaler clock by 65536. */
+	/** Divide input prescaler clock by 65536 */
 	BODVDD_PRESCALE_DIV_65536   = SUPC_BODVDD_PSEL(15),
 };
 
@@ -160,9 +160,9 @@ enum bodvdd_prescale {
  * List of possible BODVDD module voltage sampling modes in active sleep mode.
  */
 enum bodvdd_mode_in_active {
-	/** BODVDD will sample the supply line continuously. */
+	/** BODVDD will sample the supply line continuously */
 	BODVDD_ACTCFG_CONTINUOUS = 0,
-	/** BODVDD will use the BODVDD sampling clock (1KHz) to sample the supply line. */
+	/** BODVDD will use the BODVDD sampling clock (1KHz) to sample the supply line */
 	BODVDD_ACTCFG_SAMPLED    = SUPC_BODVDD_ACTCFG,
 };
 
@@ -172,9 +172,9 @@ enum bodvdd_mode_in_active {
  * List of possible BODVDD module voltage sampling modes in standby sleep mode.
  */
 enum bodvdd_mode_in_standby {
-	/** BODVDD will sample the supply line continuously. */
+	/** BODVDD will sample the supply line continuously */
 	BODVDD_STDBYCFG_CONTINUOUS = 0,
-	/** BODVDD will use the BODVDD sampling clock (1KHz) to sample the supply line. */
+	/** BODVDD will use the BODVDD sampling clock (1KHz) to sample the supply line */
 	BODVDD_STDBYCFG_SAMPLED    = SUPC_BODVDD_STDBYCFG,
 };
 
@@ -184,32 +184,32 @@ enum bodvdd_mode_in_standby {
  * List of possible BODVDD actions when a BODVDD module detects a brown-out condition.
  */
 enum bodvdd_action {
-	/** A BODVDD detect will do nothing, and the BODVDD state must be polled. */
+	/** A BODVDD detect will do nothing, and the BODVDD state must be polled */
 	BODVDD_ACTION_NONE      = SUPC_BODVDD_ACTION(0),
-	/** A BODVDD detect will reset the device. */
+	/** A BODVDD detect will reset the device */
 	BODVDD_ACTION_RESET     = SUPC_BODVDD_ACTION(1),
-	/** A BODVDD detect will fire an interrupt. */
+	/** A BODVDD detect will fire an interrupt */
 	BODVDD_ACTION_INTERRUPT = SUPC_BODVDD_ACTION(2),
-	/** A BODVDD detect will put the device in backup sleep mode. */
+	/** A BODVDD detect will put the device in backup sleep mode */
 	BODVDD_ACTION_BACKUP    = SUPC_BODVDD_ACTION(3),
 };
 
 /** Configuration structure for a BODVDD module. */
 struct bodvdd_config {
 	/** Input sampler clock prescaler factor, to reduce the 1KHz clock from the
-	 *  ULP32K to lower the sampling rate of the BODVDD. */
+	 *  ULP32K to lower the sampling rate of the BODVDD */
 	enum bodvdd_prescale prescaler;
-	/** BODVDD configuration in active mode. */
+	/** BODVDD configuration in active mode */
 	enum bodvdd_mode_in_active mode_in_active;
-	/** BODVDD configuration in backup sleep mode. */
+	/** BODVDD configuration in backup sleep mode */
 	enum bodvdd_mode_in_standby mode_in_standby;
-	/** Action to perform when a low power detection is made. */
+	/** Action to perform when a low power detection is made */
 	enum bodvdd_action action;
-	/** BODVDD level to trigger at when monitors VDD excpt in backup sleep mode. */
+	/** BODVDD level to trigger at when monitors VDD excpt in backup sleep mode */
 	uint8_t level;
-	/** If \c true, the BODVDD is kept enabled and sampled during standby. */
+	/** If \c true, the BODVDD is kept enabled and sampled during standby */
 	bool run_in_standby;
-	/** If \c true, enables detection hysteresis. */
+	/** If \c true, enables detection hysteresis */
 	bool hysteresis;
 };
 
@@ -334,7 +334,7 @@ static inline void bodvdd_clear_detected(void)
  *  </tr>
  *  <tr>
  *      <td>BOD</td>
- *      <td>Brown out detector</td>
+ *      <td>Brown Out Detector</td>
  *  </tr>
  * </table>
  *
@@ -398,7 +398,7 @@ static inline void bodvdd_clear_detected(void)
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>01/2015</td>
+ *		<td>06/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

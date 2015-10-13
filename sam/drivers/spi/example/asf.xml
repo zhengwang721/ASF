@@ -17,6 +17,14 @@
 			<device-support value="samg51"/>
 			<device-support value="samg53"/>
 			<device-support value="samg54"/>
+			<device-support value="samv71n"/>
+			<device-support value="samv71q"/>
+			<device-support value="samv70n"/>
+			<device-support value="samv70q"/>
+			<device-support value="same70n"/>
+			<device-support value="same70q"/>
+			<device-support value="sams70n"/>
+			<device-support value="sams70q"/>
 			<require idref="sam.drivers.spi"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
