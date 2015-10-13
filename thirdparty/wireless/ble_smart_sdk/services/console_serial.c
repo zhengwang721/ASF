@@ -27,7 +27,7 @@ void serial_console_init(void)
 	//! [setup_config_defaults]
 
 	//! [setup_change_config]
-	config_uart.baud_rate = 38400;
+	config_uart.baud_rate = 115200;
 	config_uart.pinmux_pad[0] = EDBG_CDC_SERCOM_PINMUX_PAD0;
 	config_uart.pinmux_pad[1] = EDBG_CDC_SERCOM_PINMUX_PAD1;
 	config_uart.pinmux_pad[2] = EDBG_CDC_SERCOM_PINMUX_PAD2;
@@ -77,13 +77,11 @@ int printf_b11( const char* format, ... )
 	
 	
 	
-	
-	
 	/*
 	//chris.choi : seems like below codes have no error but if i use below code, then pxp scanning is not working in B0. I don't know why...
 	int size;
+	char temp[256] = "\0";
 	
-	char temp[255] = "\0";
 	va_list arg;
 	va_start(arg,format);
 	
