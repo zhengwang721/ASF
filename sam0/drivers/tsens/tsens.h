@@ -54,7 +54,7 @@
  * an interface for the configuration and management of the device's
  * Configurable Custom Logic functionality.
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  *  - TSENS (Temperature Sensor)
  *
  * The following devices can use this module:
@@ -475,7 +475,7 @@ static inline void tsens_reset(void)
  * \brief Enables an TSENS event output.
  *
  *  Enables one or more input or output events to or from the TSENS module. See
- *  \ref tsens_events "here" for a list of events this module supports.
+ *  \ref tsens_events "tsens_events" for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.
  *
@@ -500,7 +500,7 @@ static inline void tsens_enable_events(struct tsens_events *const events)
  * \brief Disables an TSENS event output.
  *
  *  Disables one or more output events to or from the TSENS module. See
- *  \ref tsens_events "here" for a list of events this module supports.
+ *  \ref tsens_events "tsens_events" for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.
  *
