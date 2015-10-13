@@ -178,7 +178,7 @@ int main(void)
 				} else {
 					ncp_data[0] = (uint8_t) option;
 					DBG_LOG("Command ID is %d",ncp_data[0]);
-				}				 
+				}
  				anp_write_to_ncp(ncp_data);
 				break;
 			}
