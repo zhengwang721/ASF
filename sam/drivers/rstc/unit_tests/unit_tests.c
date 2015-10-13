@@ -163,11 +163,7 @@ static void run_rstc_test(const struct test_case *test)
 			"Test: unexpected reset type, expected SOFTWARE_RESET!");
 		/* Step 2: Watchdog reset test. */
 		gpbr_write(RSTC_GPBR_STEP, RSTC_UT_STEP3);
-#if (SAMV70 || SAMS70)
-		wdt_init(WDT, WDT_MR_WDRSTEN, 0, 0);
-#else
 		wdt_init(WDT, WDT_MR_WDRSTEN | WDT_MR_WDRPROC, 0, 0);
-#endif
 		while (1) {
 		}
 
