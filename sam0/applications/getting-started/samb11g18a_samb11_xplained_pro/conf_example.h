@@ -49,6 +49,6 @@
 /* About 10S */
 #define CONF_TIMER_RELOAD_VALUE	   260000000
 
-#define CONF_DELAY_VALUE	   200
+#define CONF_DELAY_VALUE	   5000
 
 #endif /* CONF_EXAMPLE */
