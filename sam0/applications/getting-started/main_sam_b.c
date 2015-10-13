@@ -138,7 +138,6 @@ static void configure_console(void)
 static void gpio_callback(void)
 {
 	g_b_led0_active = true;
-	//gpio_pin_toggle_output_level(LED_0_PIN);
 }
 
 /** Configures and registers the GPIO callback function with the
@@ -239,7 +238,7 @@ int main(void)
 		while (!g_b_led0_active);
 		/* Toggle LED state if active */
 		gpio_pin_toggle_output_level(LED_0_PIN);
-		//* Wait for some time */
+		/* Wait for some time */
 		delay(CONF_DELAY_VALUE);
 		g_b_led0_active = false;
 	}
