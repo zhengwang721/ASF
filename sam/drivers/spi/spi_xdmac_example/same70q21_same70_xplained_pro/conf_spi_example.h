@@ -43,7 +43,7 @@
 
 /**
  * \defgroup spi_example_pin_defs
- *  - <b> SAMV71-Xplained  --  SAMV71-Xplained </b>
+ *  - <b> SAME70-Xplained  --  SAME70-Xplained </b>
  *  - VCC -- VCC
  *  - NPCS0(PB02, EXT1-PIN6)  -- NPCS0(PB02, EXT1-PIN6)
  *  - MISO(PD20, EXT1-PIN17)  -- MISO(PD20, EXT1-PIN17)
