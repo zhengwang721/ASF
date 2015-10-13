@@ -46,7 +46,7 @@
 			<info type="keyword" value="technology">
 				<keyword value="Analog Conversion"/>
 			</info>
-			<build type="c-source" value="acc_example_samv71.c"/>
+			<build type="c-source" value="acc_example_canopus.c"/>
 			<device-support value="same70"/>	
 			<device-support value="samv70"/>
 			<device-support value="samv71"/>
