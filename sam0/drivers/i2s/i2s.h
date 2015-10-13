@@ -48,10 +48,11 @@
 #define I2S_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_i2s_group SAM Inter-IC Sound Controller Driver (I2S)
+ * \defgroup asfdoc_sam0_i2s_group SAM Inter-IC Sound Controller (I2S) Driver
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
- * and management of the device's Inter-IC Sound Controller functionality.
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides
+ * an interface for the configuration and management of the device's Inter-IC
+ * Sound Controller functionality.
  *
  * The following driver API modes are covered by this manual:
  * - Polled APIs
@@ -59,7 +60,7 @@
  * - Callback APIs
  * \endif
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  *  - I2S (Inter-IC Sound Controller)
  *
  * The following devices can use this module:
@@ -1389,12 +1390,12 @@ enum status_code i2s_serializer_read_buffer_wait(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
- *		<td>04/2015</td>
+ *		<td>42255B</td>
+ *		<td>10/2015</td>
  *		<td>Added support for SAMDA1.</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42255A</td>
  *		<td>01/2014</td>
  *		<td>Initial release</td>
  *	</tr>
