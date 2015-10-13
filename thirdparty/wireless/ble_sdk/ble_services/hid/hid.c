@@ -135,12 +135,8 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 	hid_inst[servinst].serv_chars[0].char_val.len = sizeof(uint8_t);
 	
 	/* Configure the HID characteristic value permission */
-	if(BLE_PAIR_ENABLE){
-		hid_inst[servinst].serv_chars[0].char_val.permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
-		}else{
-		hid_inst[servinst].serv_chars[0].char_val.permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
-	}
-	
+	hid_inst[servinst].serv_chars[0].char_val.permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+
 	/*Configure HID Protocol Mode Characteristic : user descriptor related info */
 	hid_inst[servinst].serv_chars[0].user_desc.user_description = NULL;
 	hid_inst[servinst].serv_chars[0].user_desc.len = 0;
@@ -483,11 +479,7 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 	hid_inst[servinst].serv_chars[id].char_val.properties = AT_BLE_CHAR_WRITE_WITHOUT_RESPONSE;
 	
 	/* Configure the HID characteristic value permission */
-	if(BLE_PAIR_ENABLE){
-		hid_inst[servinst].serv_chars[id].char_val.permissions = AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR;
-		}else{
-		hid_inst[servinst].serv_chars[id].char_val.permissions = AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR;
-	}
+	hid_inst[servinst].serv_chars[id].char_val.permissions = AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR;
 
 	/*Configure HID Control Point Characteristic : user descriptor related info */
 	hid_inst[servinst].serv_chars[id].user_desc.user_description = NULL;
