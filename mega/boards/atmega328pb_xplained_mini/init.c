@@ -1,9 +1,11 @@
 /**
  * \file
  *
- * \brief MEGA LED Example
+ * \brief ATMEGA328PB Xplained mini board init.
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * To use this board, define BOARD=ATMEGA328PB_XPLAINED_MINI.
+ *
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,63 +42,21 @@
  * \asf_license_stop
  *
  */
-
-/**
- * \mainpage MEGA LED Example
- * See \ref appdoc_main "here" for project documentation.
- * \copydetails appdoc_preface
- *
- *
- * \page appdoc_preface Overview
- * This application demonstrates a simple example to turn on and off the board LED.
- */
-
-/**
- * \page appdoc_main MEGA LED Example
- *
- * Overview:
- * - \ref appdoc_mega_led_app_intro
- * - \ref appdoc_mega_led_app_usage
- * - \ref appdoc_mega_led_app_compinfo
- * - \ref appdoc_mega_led_app_contactinfo
- *
- * \section appdoc_mega_led_app_intro Introduction
- * This application demonstrates a simple example turn on and off the board LED.
- *
- * This application has been tested on following boards:
- * - ATmega328p Xplained Mini
- * - ATmega328pb Xplained Mini
- *
- * \section appdoc_mega_led_app_usage Usage
- * The application uses button to control the LED, 
- * once the button is pressed, LED0 will turn on
- * once the button is released, LED0 will turn off
- *
- * \section appdoc_mega_led_app_compinfo Compilation Info
- * This software was written for the GNU GCC and IAR for MEGA.
- * Other compilers may or may not work.
- *
- * \section appdoc_mega_led_app_contactinfo Contact Information
- * For further information, visit
- * <a href="http://www.atmel.com">http://www.atmel.com</a>.
- */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#include <board.h>
+#include <compiler.h>
+#include <conf_board.h>
+#include "gpio.h"
+#include "led.h"
 
-#include <asf.h>
-int main (void)
+void board_init(void)
 {
-	/* set board io port */
-	board_init();
-	bool button_state;
-	while(1){
-		button_state = ioport_get_pin_level(GPIO_PUSH_BUTTON_0);
-		if(button_state){
-			LED_Off(LED0);
-		}else{
-			LED_On(LED0);
-		}
-	}
-	
+	/* On board LED initialization */
+	ioport_configure_pin(LED0, IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);
+		
+	/* On board Switch initialization */
+	ioport_configure_pin(GPIO_PUSH_BUTTON_0,	
+	IOPORT_DIR_INPUT | IOPORT_PULL_UP);
 }
