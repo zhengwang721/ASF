@@ -144,25 +144,41 @@ int main(void)
 			DBG_LOG("Press 1 for service discovery");
 			DBG_LOG("Press 2 for write notification");
 			DBG_LOG("Press 3 for disable notification");
-			DBG_LOG("Press 4 for write to alert notification conrol point");
-			 uint8_t ncp_data[2] = {0};
-			uint8_t option = getchar();
-			DBG_LOG("Received %c",option);
+			DBG_LOG("Press 4 for write to alert notification control point");
+			DBG_LOG("And press Enter");
+			uint8_t ncp_data[2] = {0};
+			int option = 0;
+			scanf("%d", &option);
+			DBG_LOG("Received %d",option);
 			switch (option) {
-			case '1' :
+			case 1 :
 				alert_service_discovery();
 				break;
-			case '2' :
+			case 2 :
 				anp_client_write_notification_handler();
 				break;
-			case '3' :
+			case 3 :
 				anp_client_disable_notification();
 				break;
- 			case '4' :
-				DBG_LOG("Enter the alert catagory[email/news/...]");
-				ncp_data[1] = getchar() - 0x30;
- 				DBG_LOG("Enter the command ID[0 - 5]");
-				ncp_data[0] = getchar() - 0x30;
+ 			case 4 :
+				DBG_LOG("Enter alert catagory[email/news/..] and press Enter");
+				scanf("%d",&option);
+				if (option > 255) {
+					DBG_LOG("Entered a wrong value[0-255]");
+					break;
+				} else {
+					ncp_data[1] = (uint8_t) option;
+					DBG_LOG("Alert catogory is %d",ncp_data[1]);
+				}
+ 				DBG_LOG("Enter the command ID[0 - 5] and press Enter");
+				scanf("%d", &option);
+				if (option > 255) {
+					DBG_LOG("Entered a wrong value[0-255]");
+					break;
+				} else {
+					ncp_data[0] = (uint8_t) option;
+					DBG_LOG("Command ID is %d",ncp_data[0]);
+				}				 
  				anp_write_to_ncp(ncp_data);
 				break;
 			}
