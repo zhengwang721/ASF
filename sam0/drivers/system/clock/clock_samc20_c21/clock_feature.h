@@ -1370,7 +1370,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_system_clock_group. QSGs are simple
  * examples with step-by-step instructions to configure and use this driver in
- * a selection of use cases. Note that QSGs can be compiled as a standalone
+ * a selection of use cases. Note that a QSG can be compiled as a standalone
  * application or be added to the user application.
  *
  *  - \subpage asfdoc_sam0_system_clock_basic_use_case
