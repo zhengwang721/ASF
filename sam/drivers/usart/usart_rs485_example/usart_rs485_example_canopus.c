@@ -325,13 +325,13 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-	#ifdef CONF_UART_CHAR_LENGTH
+#ifdef CONF_UART_CHAR_LENGTH
 		.charlength = CONF_UART_CHAR_LENGTH,
-	#endif
+#endif
 		.paritytype = CONF_UART_PARITY,
-	#ifdef CONF_UART_STOP_BITS
+#ifdef CONF_UART_STOP_BITS
 		.stopbits = CONF_UART_STOP_BITS,
-	#endif
+#endif
 	};
 
 	/* Configure console UART. */
@@ -421,6 +421,7 @@ int main(void)
 
 	/* Send a sync character XON (0x11). */
 	func_transmit(&uc_sync, 1);
+	printf("Send char value = 0x%x\r\n", uc_sync);
 	/* Delay until the line is cleared, an estimated time used. */
 	wait(50);
 
@@ -438,6 +439,7 @@ int main(void)
 	/* If acknowledgement received in a short time. */
 	if (usart_is_rx_ready(BOARD_USART)) {
 		usart_read(BOARD_USART, (uint32_t *)&uc_sync);
+		printf("Transmit : Receive char value = 0x%x\r\n", uc_sync);
 		/* Acknowledgement. */
 		if (uc_sync == ACK_CHAR) {
 			/* Act as transmitter, start transmitting. */
@@ -454,6 +456,7 @@ int main(void)
 
 		/* Sync character is received. */
 		usart_read(BOARD_USART, (uint32_t *)&uc_sync);
+		printf("Receive : Receive char value = 0x%x\r\n", uc_sync);
 		if (uc_sync == SYNC_CHAR) {
 			/* SEND XOff as acknowledgement. */
 			uc_sync = ACK_CHAR;
@@ -462,10 +465,11 @@ int main(void)
 			 * Delay to prevent the character from being discarded by
 			 * transmitter due to responding too soon.
 			 */
-			wait(100);
+			wait(50);
 
 			/* Send a ack character XOff . */
 			func_transmit(&uc_sync, 1);
+			printf("Receive : Send char value = 0x%x\r\n", uc_sync);
 
 			g_state = RECEIVING;
 			puts("-I- Start receiving!\r");
