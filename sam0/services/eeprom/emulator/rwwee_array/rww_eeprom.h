@@ -546,7 +546,7 @@ enum status_code rww_eeprom_emulator_read_buffer(
  *	</tr>
  *	<tr>
  *		<td>42447B</td>
- *		<td>08/2015</td>
+ *		<td>10/2015</td>
  *		<td>Added support for SAM L22, SAM DA1 and SAM C20/C21</td>
  *	</tr>
  *	<tr>
