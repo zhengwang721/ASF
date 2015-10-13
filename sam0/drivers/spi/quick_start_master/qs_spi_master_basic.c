@@ -168,7 +168,7 @@ int main(void)
 			//! [write]
 			//! [delay]
 			for(uint16_t i = 0; i < 0xFF; i++) {
-				/* Waiting... */
+				/* Wait for the last data shift out */
 			}
 			//! [delay]
 			//! [deselect_slave]

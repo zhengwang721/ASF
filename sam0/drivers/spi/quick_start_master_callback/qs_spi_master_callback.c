@@ -200,7 +200,7 @@ int main(void)
 			}
 			transrev_complete_spi_master = false;
 			for(uint16_t i = 0; i < 0xFF; i++) {
-				/* Waiting... */
+				/* Wait for the last data shift out */
 			}
 			//! [wait]
 			//! [deselect_slave]
