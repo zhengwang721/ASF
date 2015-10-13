@@ -166,6 +166,11 @@ int main(void)
 			//! [write]
 			spi_write_buffer_wait(&spi_master_instance, buffer, BUF_LENGTH);
 			//! [write]
+			//! [delay]
+			for(uint16_t i = 0; i < 0xFF; i++) {
+				/* Wait for the last data shift out */
+			}
+			//! [delay]
 			//! [deselect_slave]
 			spi_select_slave(&spi_master_instance, &slave, false);
 			//! [deselect_slave]

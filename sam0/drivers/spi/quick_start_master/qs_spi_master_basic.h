@@ -131,6 +131,8 @@
  *    \snippet qs_spi_master_basic.c select_slave
  * -# Write buffer to SPI slave.
  *    \snippet qs_spi_master_basic.c write
+ * -# Wait for the transfer to be complete.
+ *    \snippet qs_spi_master_basic.c delay
  * -# Deselect slave.
  *    \snippet qs_spi_master_basic.c deselect_slave
  * -# Light up.

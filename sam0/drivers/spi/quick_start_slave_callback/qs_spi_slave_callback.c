@@ -115,9 +115,6 @@ static void configure_spi_slave(void)
 //! [conf_spi_slave_instance]
 //! [transfer_mode]
 	config_spi_slave.transfer_mode = CONF_SPI_TRANSFER_MODE;
-//! [clock_divider]
-	config_spi_slave.clock_divider = 154;
-//! [clock_divider]
 //! [transfer_mode]
 	/* Configure pad 0 */
 //! [sck]
@@ -151,6 +148,7 @@ int main(void)
 //! [main_start]
 	uint8_t result = 0;
 	uint16_t i = 0;
+	uint32_t delay = 0;
 
 	/* Initialize system */
 //! [system_init]
@@ -194,13 +192,13 @@ int main(void)
 		if (result) {
 			gpio_pin_toggle_output_level(LED_0_PIN);
 			/* Add a short delay to see LED toggle */
-			volatile uint32_t delay = 30000;
+			delay = 300000;
 			while(delay--) {
 			}
 		} else {
 			gpio_pin_toggle_output_level(LED_0_PIN);
 			/* Add a short delay to see LED toggle */
-			volatile uint32_t delay = 600000;
+			delay = 3000000;
 			while(delay--) {
 			}
 		}
