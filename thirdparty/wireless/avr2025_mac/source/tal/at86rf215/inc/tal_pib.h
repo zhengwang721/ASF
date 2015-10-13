@@ -75,8 +75,8 @@
 /**
  * Default value of maximum backoff exponent used while performing CSMA
  */
-#define TAL_RF09_MAXBE_DEF                      (0x05)
-#define TAL_RF24_MAXBE_DEF                      (0x05)
+#define TAL_RF09_MAXBE_DEF                      (0x08)
+#define TAL_RF24_MAXBE_DEF                      (0x08)
 
 /**
  * Default value of PIB attribute macMaxFrameRetries
@@ -93,8 +93,8 @@
 /**
  * Default value of minimum backoff exponent used while performing CSMA
  */
-#define TAL_RF09_MINBE_DEF                      (0x03)
-#define TAL_RF24_MINBE_DEF                      (0x03)
+#define TAL_RF09_MINBE_DEF                      (0x05)
+#define TAL_RF24_MINBE_DEF                      (0x05)
 
 /**
  * Default value of the maximum number of frames that are allowed to be
@@ -114,7 +114,6 @@
 #define TAL_SHORT_ADDRESS_DEF                   (0xFFFF)
 
 #ifndef CUSTOM_DEFAULT_TX_PWR
-
 /*
  * Default value of transmit power of transceiver: Use highest tx power
  */
@@ -314,12 +313,8 @@
 /**
  * Default value of LEG OQPSK default frequency F0
  */
-#define TAL_RF09_LEG_OQPSK_FRQ_F0_DEF           (LEG_915_F0 - \
-	(TAL_RF09_LEG_OQPSK_CURRENT_CHANNEL_DEF * \
-	LEG_915_CH_SPAC))
-#define TAL_RF24_LEG_OQPSK_FRQ_F0_DEF           (LEG_2450_F0 - \
-	(TAL_RF24_LEG_OQPSK_CURRENT_CHANNEL_DEF * \
-	LEG_2450_CH_SPAC))
+#define TAL_RF09_LEG_OQPSK_FRQ_F0_DEF           (LEG_915_F0 - (TAL_RF09_LEG_OQPSK_CURRENT_CHANNEL_DEF * LEG_915_CH_SPAC))
+#define TAL_RF24_LEG_OQPSK_FRQ_F0_DEF           (LEG_2450_F0 - (TAL_RF24_LEG_OQPSK_CURRENT_CHANNEL_DEF * LEG_2450_CH_SPAC))
 
 /**
  * Default value of LEG OQPSK default channel spacing
@@ -400,6 +395,7 @@
 #define TAL_RF24_FRAME_VERSIONS     ((1 << FCF1_FV_2003) | (1 << FCF1_FV_2006))
 
 /* === PROTOTYPES ========================================================== */
+
 
 #endif /* TAL_PIB_H */
 

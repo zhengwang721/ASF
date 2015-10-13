@@ -351,8 +351,8 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 						phy_temp->modulation);
 				if (phy_temp->modulation == OFDM) {
 					printf("\r\nOFDM Option = %d",
-							(phy_temp->
-							phy_mode).ofdm.option);
+ 							(phy_temp->
+ 							phy_mode).ofdm.option);
 					if (tal_pib_set(trx, phyOFDMMCS,
 							(pib_value_t *)&((
 								phy_temp->
@@ -360,9 +360,9 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 							mcs_val)) ==
 							MAC_SUCCESS) {
 						printf("\r\nOFDM MCS = %d",
-								(phy_temp
-								->
-								phy_mode).ofdm.mcs_val);
+ 								(phy_temp
+ 								->
+ 								phy_mode).ofdm.mcs_val);
 					} else {
 						printf(
 								"\r\nSetting OFDM MCS failed");
@@ -377,10 +377,10 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 							rate_mode)) ==
 							MAC_SUCCESS) {
 						printf(
-								"\r\nOQPSK Rate mode = %d",
-								(phy_temp
-								->
-								phy_mode).oqpsk.rate_mode);
+						"\r\nOQPSK Rate mode = %d",
+						(phy_temp
+						->
+						phy_mode).oqpsk.rate_mode);
 					} else {
 						printf(
 								"\r\nSetting OQPSK Rate mode failed");
@@ -395,8 +395,8 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 							(phy_temp->
 							phy_mode).fsk.mod_idx);
 					printf("\r\nFsk data rate = %d",
-							(phy_temp->
-							phy_mode).fsk.data_rate);
+					       (phy_temp->
+							phy_mode).fsk.sym_rate);
 					printf("\r\nFsk op mode = %d",
 							(phy_temp->
 							phy_mode).fsk.op_mode);
@@ -407,9 +407,9 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 							fec_enabled)) ==
 							MAC_SUCCESS) {
 						printf("\r\nFSK FEC = %d",
-								(phy_temp
-								->
-								phy_mode).fsk.fec_enabled);
+ 								(phy_temp
+ 								->
+ 								phy_mode).fsk.fec_enabled);
 					} else {
 						printf(
 								"\r\nSetting FSK FEC failed");
@@ -441,7 +441,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 								==
 								MAC_SUCCESS) {
 							printf(
-									"\r\n Legacy mode selected");
+							"\r\n Legacy mode selected");
 						}
 					}
 				}
@@ -522,15 +522,15 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 
 			send_result_rsp(trx);
 			printf("\r\nNumber of received frames = %"
-					PRIu32 "; average LQI = %d, average RSSI = %d dBm",
-					number_rx_frames[trx],
-					(uint8_t)aver_lqi[trx],
-					(int8_t)aver_rssi[trx]);
+ 					PRIu32 "; average LQI = %d, average RSSI = %d dBm",
+ 					number_rx_frames[trx],
+ 					(uint8_t)aver_lqi[trx],
+ 					(int8_t)aver_rssi[trx]);
 #ifdef CRC_SETTING_ON_REMOTE_NODE
 			if (manual_crc[trx]) {
 				printf(
-						"\r\nNumber of received frames with wrong CRC = %" PRIu32,
-						frames_with_wrong_crc[trx]);
+				"\r\nNumber of received frames with wrong CRC = %" PRIu32,
+				frames_with_wrong_crc[trx]);
 			}
 
 #endif /* #ifdef CRC_SETTING_ON_REMOTE_NODE */
@@ -587,7 +587,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 				tal_rxaack_prom_mode_ctrl(trx,
 						AACK_PROM_ENABLE);
 				printf(
-						"\r\n Counting packets with CRC error enabled");
+				"\r\n Counting packets with CRC error enabled");
 
 				manual_crc[trx] = true;
 			} else {
@@ -595,7 +595,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 				tal_rxaack_prom_mode_ctrl(trx,
 						AACK_PROM_DISABLE);
 				printf(
-						"\r\n Counting packets with CRC error disabled");
+				"\r\n Counting packets with CRC error disabled");
 
 				manual_crc[trx] = false;
 			}
@@ -638,6 +638,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 
 	case PEER_INFO_REQ:
 	{
+		printf("\r\nStarting Range Test in PER Mode...");
 		send_peer_info_rsp(trx);
 	}
 	break;
@@ -685,9 +686,9 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 				mac_frame_info->mpdu[lqi_pos]);
 		/* Print the received values to the terminal */
 		printf(
-				"\r\nRange Test Packet Received...\tFrame No : %" PRIu32 "\tLQI : %d\tED : %d",
-				frame_count, mac_frame_info->mpdu[lqi_pos],
-				(int8_t)mac_frame_info->mpdu[ed_pos]);
+		"\r\nRange Test Packet Received...\tFrame No : %" PRIu32 "\tLQI : %d\tED : %d",
+		frame_count, mac_frame_info->mpdu[lqi_pos],
+		(int8_t)mac_frame_info->mpdu[ed_pos]);
 	}
 	break;
 
@@ -698,8 +699,8 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 
 		/* uint8_t phy_frame_len = mac_frame_info->len_no_crc; */
 		printf("\r\nMarker Response Received... LQI : %d\t ED %d \n",
-				mac_frame_info->mpdu[lqi_pos],
-				(int8_t)mac_frame_info->mpdu[ed_pos]);
+ 				mac_frame_info->mpdu[lqi_pos],
+ 				(int8_t)mac_frame_info->mpdu[ed_pos]);
 		/* Timer for LED Blink for Reception of Marker Response*/
 		sw_timer_start(T_APP_TIMER,
 				LED_BLINK_RATE_IN_MICRO_SEC,
@@ -773,7 +774,7 @@ static void set_paramter_on_recptor_node(trx_id_t trx, app_payload_t *msg)
 		/* get the the received tx power as reg value */
 		param_val = (uint8_t)msg->payload.set_parm_req_data.param_value;
 		printf("\r\n Tx Pwr Value  Reg changed to : %d \n\r",
-				param_val);
+								param_val);
 		if (MAC_SUCCESS ==
 				tal_convert_reg_value_to_dBm(param_val,
 				&tx_pwr_dbm)) {
@@ -784,7 +785,7 @@ static void set_paramter_on_recptor_node(trx_id_t trx, app_payload_t *msg)
 	break;
 
 	default:
-		printf(" \r\nUnsupported Parameter");
+		//printf(" \r\nUnsupported Parameter");
 		break;
 	}
 }
@@ -1154,19 +1155,19 @@ static void send_crc_status_rsp(trx_id_t trx)
  *  uint16_t reg;
  *  uint16_t reg_start;
  *  uint16_t reg_end;
- *      printf("***********TRX Register Read/Write/Dump**************");
- *  printf("\r\n R - to Read Reg");
- *  printf("\r\n W - to Write Reg");
- *  printf("\r\n D - to get register Dump");
- *      printf("\r\n Press Enter to Exit From this Menu");
- *  printf("\r\n >");
+ *      //printf("***********TRX Register Read/Write/Dump**************");
+ *  //printf("\r\n R - to Read Reg");
+ *  //printf("\r\n W - to Write Reg");
+ *  //printf("\r\n D - to get register Dump");
+ *      //printf("\r\n Press Enter to Exit From this Menu");
+ *  //printf("\r\n >");
  *
  *  / * Get input from terminal program / user. * /
  *  input = sio2host_getchar();
  *      if(input == '\r')
  *      {
- *              printf("\n");
- *              printf("\n\r Returning Back as Receptor... \n\r");
+ *              //printf("\n");
+ *              //printf("\n\r Returning Back as Receptor... \n\r");
  *              return;
  *      }
  *
@@ -1177,7 +1178,7 @@ static void send_crc_status_rsp(trx_id_t trx)
  *  {
  *      case 'R':
  *          {
- *              printf("\r\n Read Register: 0x");
+ *              //printf("\r\n Read Register: 0x");
  *              if (read_int_value_in_hex(&reg) == false)
  *              {
  *                  return;
@@ -1186,23 +1187,23 @@ static void send_crc_status_rsp(trx_id_t trx)
  *
  *
  *              {
- *                  printf("\r\n Out of Range register value..");
- *                                      printf("\n\r Returning Back as
+ *                  //printf("\r\n Out of Range register value..");
+ *                                      //printf("\n\r Returning Back as
  * Receptor... \n\r");
  *                  return;
  *              }
  *
  *              reg_val = trx_reg_read(reg);
  *
- *              printf("\r\n Value of Reg 0x%x is 0x%x", reg, reg_val);
+ *              //printf("\r\n Value of Reg 0x%x is 0x%x", reg, reg_val);
  *
  *          }
- *                      printf("\n\r Returning Back as Receptor... \n\r");
+ *                      //printf("\n\r Returning Back as Receptor... \n\r");
  *          break;
  *
  *      case 'W':
  *          {
- *              printf("\r\n Write Register: 0x");
+ *              //printf("\r\n Write Register: 0x");
  *              if (read_int_value_in_hex(&reg) == false)
  *
  *              {
@@ -1212,13 +1213,13 @@ static void send_crc_status_rsp(trx_id_t trx)
  *
  *              if (reg > 0X3FFE)
  *              {
- *                  printf("\r\n Out of Range register value..");
- *                                      printf("\n\r Returning Back as
+ *                  //printf("\r\n Out of Range register value..");
+ *                                      //printf("\n\r Returning Back as
  * Receptor... \n\r");
  *                  return;
  *              }
  *
- *              printf("\r\n Write Value: 0x");
+ *              //printf("\r\n Write Value: 0x");
  *              if (read_value_in_hex(&reg_val) == false)
  *              {
  *                  return;
@@ -1226,14 +1227,14 @@ static void send_crc_status_rsp(trx_id_t trx)
  *
  *              trx_reg_write(reg, reg_val);
  *
- *              printf("\r\n Value written in Reg 0x%x is 0x%x", reg, reg_val);
+ *              //printf("\r\n Value written in Reg 0x%x is 0x%x", reg, reg_val);
  *          }
- *                      printf(" Returning Back as Receptor... \n\r");
+ *                      //printf(" Returning Back as Receptor... \n\r");
  *          break;
  *
  *      case 'D':
  *          {
- *              printf("\r\n Start Register: 0x");
+ *              //printf("\r\n Start Register: 0x");
  *              if (read_int_value_in_hex(&reg_start) == false)
  *
  *              {
@@ -1243,13 +1244,13 @@ static void send_crc_status_rsp(trx_id_t trx)
  *              if (reg_start > 0X3FFE)
  *
  *              {
- *                  printf("\r\n Out of Range register value.. ");
- *                                      printf("\n\r Returning Back as
+ *                  //printf("\r\n Out of Range register value.. ");
+ *                                      //printf("\n\r Returning Back as
  * Receptor... \n\r");
  *                  return;
  *              }
  *
- *              printf("\r\n End Register: 0x");
+ *              //printf("\r\n End Register: 0x");
  *              if (read_int_value_in_hex(&reg_end) == false)
  *              {
  *                  return;
@@ -1257,8 +1258,8 @@ static void send_crc_status_rsp(trx_id_t trx)
  *
  *              if (reg_end > 0X3FFE)
  *              {
- *                  printf("\r\n Out of Range register value.. ");
- *                                      printf("\n\r Returning Back as
+ *                  //printf("\r\n Out of Range register value.. ");
+ *                                      //printf("\n\r Returning Back as
  * Receptor... \n\r");
  *                  return;
  *              }
@@ -1266,8 +1267,8 @@ static void send_crc_status_rsp(trx_id_t trx)
  *
  *              if (reg_end < reg_start)
  *              {
- *                  printf("\r\n Registers order incorrect.. ");
- *                                      printf("\n\r Returning Back as
+ *                  //printf("\r\n Registers order incorrect.. ");
+ *                                      //printf("\n\r Returning Back as
  * Receptor... \n\r");
  *                  return;
  *              }
@@ -1282,10 +1283,10 @@ static void send_crc_status_rsp(trx_id_t trx)
  *              for (i = 0 ; i < num_of_reg_to_read ; i++)
  *              {
  *                  reg_val = trx_reg_read(reg + i);
- *                  printf("\r\n Value of Reg 0x%x is 0x%x", (reg + i),
+ *                  //printf("\r\n Value of Reg 0x%x is 0x%x", (reg + i),
  * reg_val);
  *              }
- *                              printf("\n\r Returning Back as Receptor...
+ *                              //printf("\n\r Returning Back as Receptor...
  * \n\r");
  *          }
  *          break;
@@ -1318,8 +1319,8 @@ static void send_crc_status_rsp(trx_id_t trx)
  *      if (((input < '0') || (input > '9')) &&
  *          ((input < 'A') || (input > 'F')))
  *      {
- *          printf("\r\n Wrong value.. ");
- *                      printf("\n\r Returning Back as Receptor... \n\r");
+ *          //printf("\r\n Wrong value.. ");
+ *                      //printf("\n\r Returning Back as Receptor... \n\r");
  *          return(false);
  *      }
  *      else
@@ -1370,8 +1371,8 @@ static void send_crc_status_rsp(trx_id_t trx)
  *      if (((input < '0') || (input > '9')) &&
  *          ((input < 'A') || (input > 'F')) && (input != '\r') )
  *      {
- *          printf("\r\n Wrong value..");
- *                      printf("\n\r Returning Back as Receptor... \n\r");
+ *          //printf("\r\n Wrong value..");
+ *                      //printf("\n\r Returning Back as Receptor... \n\r");
  *          return(false);
  *      }
  *      else
@@ -1379,8 +1380,8 @@ static void send_crc_status_rsp(trx_id_t trx)
  *          / * First key pressed is 'Enter' * /
  *          if ((i == 0) && (input == '\r'))
  *          {
- *              printf("\r\n Wrong value..");
- *                              printf("\n\r Returning Back as Receptor...
+ *              //printf("\r\n Wrong value..");
+ *                              //printf("\n\r Returning Back as Receptor...
  *\n\r");
  *              return(false);
  *          }

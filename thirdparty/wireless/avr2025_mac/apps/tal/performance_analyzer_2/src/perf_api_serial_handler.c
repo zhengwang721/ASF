@@ -2353,7 +2353,7 @@ void usr_get_current_config_confirm(trx_id_t trx, uint8_t status,
 			*msg_buf++
 				= curr_trx_conf_params->sun_phy_page.
 					sun_phy_mode
-					.mr_fsk.data_rate;
+					.mr_fsk.sym_rate;
 			*msg_buf++
 				= curr_trx_conf_params->sun_phy_page.
 					sun_phy_mode

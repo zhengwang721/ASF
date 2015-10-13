@@ -53,6 +53,7 @@
 
 /* === INCLUDES ============================================================ */
 
+#include "tal.h"
 #include "tal_config.h"
 #include "pal.h"
 #include "ieee_154g.h"
@@ -91,9 +92,7 @@ typedef enum trx_id_tag {
 /** Check if certain IRQ is set for provided baseband core */
 #define TAL_BB_IS_IRQ_SET(BB_CORE, IRQ) ((tal_bb_irqs[BB_CORE] & IRQ) ? 1 : 0)
 /** Clear interrupt(s) for provided baseband core, avoid Pa091 */
-#define TAL_BB_IRQ_CLR(BB_CORE,	\
-			IRQ)    tal_bb_irqs[BB_CORE] \
-		&= (uint8_t)(~((uint32_t)IRQ))
+#define TAL_BB_IRQ_CLR(BB_CORE, IRQ)    tal_bb_irqs[BB_CORE] &= (uint8_t)(~((uint32_t)IRQ))
 /** Add interrupt(s) for provided baseband core */
 #define TAL_BB_IRQ_ADD(BB_CORE, IRQ)    tal_bb_irqs[BB_CORE] |= IRQ
 
@@ -102,18 +101,14 @@ typedef enum trx_id_tag {
 /** Check if certain IRQ is set for provided radio core */
 #define TAL_RF_IS_IRQ_SET(RF_CORE, IRQ) ((tal_rf_irqs[RF_CORE] & IRQ) ? 1 : 0)
 /** Clear interrupt(s) for provided radio core,  avoid Pa091 */
-#define TAL_RF_IRQ_CLR(RF_CORE,	\
-			IRQ)    tal_rf_irqs[RF_CORE] \
-		&= (uint8_t)(~((uint32_t)IRQ))
+#define TAL_RF_IRQ_CLR(RF_CORE, IRQ)    tal_rf_irqs[RF_CORE] &= (uint8_t)(~((uint32_t)IRQ))
 /** Add interrupt(s) for provided radio core */
 #define TAL_RF_IRQ_ADD(RF_CORE, IRQ)    tal_rf_irqs[RF_CORE] |= IRQ
 
 /** Register offset between RF09 and TRX24 */
-#define RF_BASE_ADDR_OFFSET             (BASE_ADDR_RF24_RF24 - \
-	BASE_ADDR_RF09_RF09)
+#define RF_BASE_ADDR_OFFSET             (BASE_ADDR_RF24_RF24 - BASE_ADDR_RF09_RF09)
 /** Register offset between the baseband cores */
-#define BB_BASE_ADDR_OFFSET             (BASE_ADDR_BBC1_CORE1 -	\
-	BASE_ADDR_BBC0_CORE0)
+#define BB_BASE_ADDR_OFFSET             (BASE_ADDR_BBC1_CORE1 - BASE_ADDR_BBC0_CORE0)
 /** Register offset between the Tx frame buffers. */
 #define BB_TX_FRM_BUF_OFFSET            (RG_BBC1_FBTXS - RG_BBC0_FBTXS)
 /** Register offset between the Rx frame buffers. */

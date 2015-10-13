@@ -308,8 +308,15 @@ void per_mode_initiator_task(trx_id_t trx)
 
 			node_info[trx].tx_frame_info->mpdu[PL_POS_SEQ_NUM -
 			1]++;
-
-			delay_ms(2);
+			
+			if (tal_pib[trx].phy.modulation == FSK) {
+				// Delay introduced to avoid Packet loss while sending Large packet.
+				delay_ms(2); 
+			}
+            else
+			{
+				delay_ms(1);
+			}
 			if (curr_trx_config_params[trx].csma_enabled) {
 				if (tal_pib[trx].phy.modulation == OFDM) {
 					delay_ms(2);
@@ -1882,8 +1889,8 @@ void perf_set_sun_page(trx_id_t trx, uint8_t *param_val)
 		sun_page[trx].sun_phy_mode.mr_fsk.mod_idx
 			= sun_phy_page_set[trx].phy_mode.fsk.mod_idx
 					=  *temp_param_val++;
-		sun_page[trx].sun_phy_mode.mr_fsk.data_rate
-			= sun_phy_page_set[trx].phy_mode.fsk.data_rate
+		sun_page[trx].sun_phy_mode.mr_fsk.sym_rate
+			= sun_phy_page_set[trx].phy_mode.fsk.sym_rate
 					=  *temp_param_val++;
 		sun_page[trx].sun_phy_mode.mr_fsk.op_mode
 			= sun_phy_page_set[trx].phy_mode.fsk.op_mode
@@ -2229,7 +2236,7 @@ void perf_get_req(trx_id_t trx, uint8_t param_type_data)
 			} else if (phy_param.modulation == FSK) {
 				param_val[3] = phy_param.phy_mode.fsk.mod_type;
 				param_val[4] = phy_param.phy_mode.fsk.mod_idx;
-				param_val[5] = phy_param.phy_mode.fsk.data_rate;
+				param_val[5] = phy_param.phy_mode.fsk.sym_rate;
 				param_val[6] = phy_param.phy_mode.fsk.op_mode;
 				param_val[7] = phy_param.phy_mode.fsk.bt;
 				param_val[8]
@@ -2888,10 +2895,10 @@ void get_current_configuration(trx_id_t trx)
 			phy_to_set.phy_mode.fsk.mod_idx
 				= curr_trx_config_params[trx].
 					sun_phy_page.sun_phy_mode.mr_fsk.mod_idx;
-			phy_to_set.phy_mode.fsk.data_rate
+			phy_to_set.phy_mode.fsk.sym_rate
 				= curr_trx_config_params[trx].
 					sun_phy_page.sun_phy_mode.mr_fsk.
-					data_rate;
+					sym_rate;
 			phy_to_set.phy_mode.fsk.op_mode
 				= curr_trx_config_params[trx].
 					sun_phy_page.sun_phy_mode.mr_fsk.op_mode;

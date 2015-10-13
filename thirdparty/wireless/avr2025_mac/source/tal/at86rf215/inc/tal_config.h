@@ -3,7 +3,7 @@
  *
  * @brief File contains TAL configuration parameters.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * $Id: tal_config.h 37813 2015-09-02 14:18:22Z uwalter $
  *
  * \asf_license_start
  *
@@ -56,8 +56,6 @@
 
 /* === MACROS ============================================================== */
 
-#define TAL_FIRST_TIMER_ID              (0)
-
 /**
  * To configure the clock output configuration to the build,
  * set the following define TRX_CLOCK_OUTPUT_SELECTION to the required value.
@@ -106,14 +104,6 @@
 /* #       define MEASURE_ON_AIR_DURATION */
 #   endif
 
-/**
- * During CSMA backoff periods the receiver can be set to receive mode.
- * This feature can be enabled during compile time by uncomment the define
- * RX_WHILE_BACKOFF.
- */
-#   ifndef RX_WHILE_BACKOFF
-/* #       define RX_WHILE_BACKOFF */
-#   endif
 
 /**
  * For applications such as sniffer or beacon-enabled applications a time stamp
@@ -212,14 +202,6 @@
 #   endif
 
 /**
- * uncomment the following define RF215V1
- * if the RF215 version 1 module is used
- */
-#   ifndef RF215V1
-#      define RF215V1
-#   endif
-
-/**
  * Enable FSK mode switch support
  * To include the mode switch support to the build,
  * uncomment the following define SUPPORT_MODE_SWITCH.
@@ -305,6 +287,13 @@
  */
 #   ifndef TFA_CCA
 #       define TFA_CCA
+#   endif
+
+/**
+ * Use direct modulation for all devices except version 1
+ */
+#   if (!defined RF215v1) && (!defined RF215Mv1)
+#       define DIRECT_MODULATION
 #   endif
 
 #endif /* TAL_SUPPORT_ALL_FEATURES */

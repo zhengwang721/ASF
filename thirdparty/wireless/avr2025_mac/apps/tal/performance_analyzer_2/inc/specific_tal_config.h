@@ -166,11 +166,6 @@
  */
 #define ENABLE_TFA
 
-/**
- * uncomment the following define RF215V1
- * if the RF215 version 1 module is used
- */
-#define RF215V1
 
 /**
  * Enable support of FSK modulation

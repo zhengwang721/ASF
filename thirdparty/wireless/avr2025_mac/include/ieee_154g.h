@@ -253,19 +253,14 @@
 #define phyFSKRawModeRxLength           (0x33)
 
 /**
- * Time of flight
- */
-#define phyTimeOfFlight                 (0x34)
-
-/**
  * High rate mode for legacy O-QPSK
  */
-#define phyHighRateEnabled              (0x35)
+#define phyHighRateEnabled              (0x34)
 
 /**
  * Enable reduce power consumption for FSK and MR-OQPSK
  */
-#define phyRPCEnabled                   (0x36)
+#define phyRPCEnabled                   (0x35)
 
 /**
  * The type of the FCS. A value of zero indicates a 4-octet FCS. A value of
@@ -461,11 +456,12 @@ typedef enum sun_freq_band_tag {
 	WORLD_2450
 } SHORTENUM sun_freq_band_t;
 
-typedef enum ofdm_option_tag {
-	OFDM_OPT_1,
-	OFDM_OPT_2,
-	OFDM_OPT_3,
-	OFDM_OPT_4
+typedef enum ofdm_option_tag
+{
+    OFDM_OPT_1,
+    OFDM_OPT_2,
+    OFDM_OPT_3,
+    OFDM_OPT_4
 } SHORTENUM ofdm_option_t;
 
 typedef enum ofdm_mcs_tag {
@@ -523,14 +519,14 @@ typedef enum mod_idx_tag {
 	MOD_IDX_2_0 = 7
 } SHORTENUM mod_idx_t;
 
-typedef enum fsk_data_rate_tag {
-	FSK_DATA_RATE_50,
-	FSK_DATA_RATE_100,
-	FSK_DATA_RATE_150,
-	FSK_DATA_RATE_200,
-	FSK_DATA_RATE_300,
-	FSK_DATA_RATE_400
-} SHORTENUM fsk_data_rate_t;
+typedef enum fsk_sym_rate_tag {
+	FSK_SYM_RATE_50,
+	FSK_SYM_RATE_100,
+	FSK_SYM_RATE_150,
+	FSK_SYM_RATE_200,
+	FSK_SYM_RATE_300,
+	FSK_SYM_RATE_400
+} SHORTENUM fsk_sym_rate_t;
 
 typedef enum fsk_bt_tag {
 	FSK_BT_0_5,
@@ -560,7 +556,7 @@ typedef struct leg_oqpsk_tag {
 typedef struct fsk_tag {
 	fsk_mod_type_t mod_type;
 	mod_idx_t mod_idx;
-	fsk_data_rate_t data_rate;
+	fsk_sym_rate_t sym_rate;
 	fsk_op_mode_t op_mode;
 	fsk_bt_t bt;
 	bool fec_enabled;
@@ -585,7 +581,7 @@ typedef struct phy_tag {
 } phy_t;
 
 typedef union rate_tag {
-	fsk_data_rate_t fsk_rate;
+	fsk_sym_rate_t fsk_rate;
 	ofdm_mcs_t ofdm_mcs;
 	oqpsk_rate_mode_t oqpsk_rate_mod;
 } rate_t;

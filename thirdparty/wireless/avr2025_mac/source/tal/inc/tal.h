@@ -77,18 +77,27 @@
  */
 
 /* === TYPES =============================================================== */
-/* __PACK__DATA__ */
+// __PACK__DATA__ 
 /* Structure implementing the PIB values stored in TAL */
-typedef struct tal_pib_tag {
-	/**
-	 * 64-bit (IEEE) address of the node.
-	 */
-	uint64_t IeeeAddress;
+typedef struct tal_pib_tag
+{
+    /**
+     * 64-bit (IEEE) address of the node.
+     */
+    uint64_t IeeeAddress;
 
-	/**
-	 * Supported channels
-	 */
-	uint32_t SupportedChannels;
+    /**
+     * Supported channels
+     *
+     * Legacy trx:
+     * Bit mask, whereas each bit position set indicates that the channel,
+     * corresponding to this particular bit position, is actually supported
+     *
+     * Multi-Trx devices:
+     * Min channel: Low word of variable SupportedChannels: (uint16_t)(SupportedChannels)
+     * Max channel: High word of variable SupportedChannels: (uint16_t)(SupportedChannels >> 16)
+     */
+    uint32_t SupportedChannels;
 
 #if defined(BEACON_SUPPORT)
 
@@ -209,7 +218,7 @@ typedef struct tal_pib_tag {
 	bool PromiscuousMode;
 #endif
 #if (TAL_TYPE == AT86RF215)
-#ifdef RX_WHILE_BACKOFF
+
 
 	/**
 	 * Current number of frames received during backoff periods; valid
@@ -223,7 +232,7 @@ typedef struct tal_pib_tag {
 	 * backoff periods for a tx transaction.
 	 */
 	uint8_t MaxNumRxFramesDuringBackoff;
-#endif
+
 
 	/**
 	 * PHY mode
@@ -317,6 +326,13 @@ typedef struct tal_pib_tag {
 	 * This attribute is only valid for the MR-FSK PHY.
 	 */
 	uint16_t FSKPreambleLength;
+	
+	/**
+     * Minimum FSK preamble length used for RPC.
+     * This attribute is only valid for the MR-FSK PHY.
+     */
+    uint16_t FSKPreambleLengthMin;
+
 
 	/**
 	 * Determines which group of SFDs is used.
@@ -634,6 +650,10 @@ typedef struct
 {
 	/** Message type of frame */
 	frame_msgtype_t msg_type;
+#if (TAL_TYPE == AT86RF215)
+    /** Trx id of transceiver handling frame */
+    trx_id_t trx_id;
+#endif
 	/** Pointer to buffer header of frame */
 	buffer_t *buffer_header;
 	/** MSDU handle */
@@ -686,7 +706,7 @@ typedef enum csma_mode_tag {
 	CSMA_UNSLOTTED,
 	CSMA_SLOTTED
 } csma_mode_t;
-/* __PACK__RST_DATA__ */
+ //__PACK__RST_DATA__ 
 /* === EXTERNALS =========================================================== */
 
 #if (defined SW_CONTROLLED_CSMA) && (defined TX_OCTET_COUNTER)
@@ -700,7 +720,6 @@ extern uint32_t tal_tx_octet_cnt;
 #if (TAL_TYPE == AT86RF215)
 #   ifdef AT86RF215M
 #       define NUM_TRX                      1
-#       define ACTIVE_TRX                   RF09
 #   else
 #       define NUM_TRX                      2
 #   endif
@@ -737,8 +756,8 @@ extern tal_pib_t tal_pib;
 #if (TAL_TYPE == AT86RF230A) || (TAL_TYPE == AT86RF230B) || \
 	(TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF232) || \
 	(TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == AT86RF233) || \
-	(TAL_TYPE == ATMEGARFR2) || (TAL_TYPE == AT86RF234) || \
-	(TAL_TYPE == ATMEGARFA2)
+	(TAL_TYPE == ATMEGARFR2) || (TAL_TYPE == AT86RF234)
+	
 /** RF band */
 #define RF_BAND                             BAND_2400
 #elif (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B)

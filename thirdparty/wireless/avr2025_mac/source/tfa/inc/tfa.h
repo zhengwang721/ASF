@@ -349,6 +349,11 @@ void tfa_continuous_tx_stop(void);
 #endif /* #ifdef MULTI_TRX_SUPPORT */
 #endif
 
+#if ((defined SUPPORT_TFA) || (defined TFA_PLL_BIST) || defined(DOXYGEN))
+    void tfa_pll_bist_init(void);
+    void tfa_pll_bist_run(trx_id_t trx_id);
+#endif  /* #if ((defined SUPPORT_TFA) || (defined TFA_PLL_BIST) || defined(DOXYGEN)) */
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

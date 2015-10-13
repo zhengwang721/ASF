@@ -88,6 +88,11 @@ bool frame_buf_filled[NUM_TRX];
 /* === PROTOTYPES ========================================================== */
 
 static void handle_ifs(trx_id_t trx_id);
+#ifdef MEASURE_TIME_OF_FLIGHT
+#   ifdef SUPPORT_LEGACY_OQPSK
+static uint32_t calc_tof(trx_id_t trx_id);
+#   endif  /* SUPPORT_LEGACY_OQPSK */
+#endif  /* #ifdef MEASURE_TIME_OF_FLIGHT */
 
 /* === IMPLEMENTATION ====================================================== */
 
@@ -116,211 +121,229 @@ static void handle_ifs(trx_id_t trx_id);
 retval_t tal_tx_frame(trx_id_t trx_id, frame_info_t *tx_frame,
 		csma_mode_t csma_mode, bool perform_frame_retry)
 {
-	if (tal_state[trx_id] == TAL_SLEEP) {
-		return TAL_TRX_ASLEEP;
-	}
+    Assert((trx_id >= 0) && (trx_id < NUM_TRX));
+//printf(("tal_tx_frame()"));
 
-	if (tal_state[trx_id] != TAL_IDLE) {
-		return TAL_BUSY;
-	}
+    if (tal_state[trx_id] == TAL_SLEEP)
+    {
+        return TAL_TRX_ASLEEP;
+    }
 
-	if ((csma_mode == CSMA_SLOTTED) || (tx_frame == NULL)) {
-		return MAC_INVALID_PARAMETER;
-	}
+    if (tal_state[trx_id] != TAL_IDLE)
+    {
+        return TAL_BUSY;
+    }
 
-	/*
-	 * In case the frame is too large, return immediately indicating
-	 * invalid status.
-	 */
-	if ((tx_frame->len_no_crc + tal_pib[trx_id].FCSLen) >
-			tal_pib[trx_id].MaxPHYPacketSize) {
-		return MAC_INVALID_PARAMETER;
-	}
+    if ((csma_mode == CSMA_SLOTTED) || (tx_frame == NULL))
+    {
+        return MAC_INVALID_PARAMETER;
+    }
 
-	/*
-	 * Store the pointer to the provided frame structure.
-	 * This is needed for the callback function.
-	 */
-	mac_frame_ptr[trx_id] = tx_frame;
+    /*
+     * In case the frame is too large, return immediately indicating
+     * invalid status.
+     */
+    if ((tx_frame->len_no_crc + tal_pib[trx_id].FCSLen) > tal_pib[trx_id].MaxPHYPacketSize)
+    {
+        return MAC_INVALID_PARAMETER;
+    }
 
-	/* Set pointer to actual MPDU to be downloaded to the transceiver. */
-	tal_frame_to_tx[trx_id] = tx_frame->mpdu;
+    /*
+     * Store the pointer to the provided frame structure.
+     * This is needed for the callback function.
+     */
+    mac_frame_ptr[trx_id] = tx_frame;
 
-	if (perform_frame_retry) {
-		number_of_tx_retries[trx_id] = 0;
-	} else {
-		/* No tx retry -> set current retry value to max value .*/
-		number_of_tx_retries[trx_id] = tal_pib[trx_id].MaxFrameRetries;
-	}
+    /* Set pointer to actual MPDU to be downloaded to the transceiver. */
+    tal_frame_to_tx[trx_id] = tx_frame->mpdu;
 
-	tal_state[trx_id] = TAL_TX;
-	frame_buf_filled[trx_id] = false;
-	global_csma_mode[trx_id] = csma_mode;
+    if (perform_frame_retry)
+    {
+        number_of_tx_retries[trx_id] = 0;
+    }
+    else
+    {
+        /* No tx retry -> set current retry value to max value .*/
+        number_of_tx_retries[trx_id] = tal_pib[trx_id].MaxFrameRetries;
+    }
 
-	/* Check if ACK is requested. */
-	if (*mac_frame_ptr[trx_id]->mpdu & FCF_ACK_REQUEST) {
-		ack_requested[trx_id] = true;
-	} else {
-		ack_requested[trx_id] = false;
-	}
+    tal_state[trx_id] = TAL_TX;
+    frame_buf_filled[trx_id] = false;
+    global_csma_mode[trx_id] = csma_mode;
+    tal_pib[trx_id].NumRxFramesDuringBackoff = 0;
 
-#ifdef SUPPORT_MODE_SWITCH
-	if (tal_pib[trx_id].ModeSwitchEnabled) {
-		save_current_phy(trx_id);
-		set_csm(trx_id);
-	}
-
-#endif
-
-	if (csma_mode == CSMA_UNSLOTTED) {
-#ifdef RX_WHILE_BACKOFF
-		tal_pib[trx_id].NumRxFramesDuringBackoff = 0;
-#endif
-		csma_start(trx_id);
-	} else { /* csma_mode == NO_CSMA_NO_IFS or NO_CSMA_WITH_IFS */
-		if (csma_mode == NO_CSMA_WITH_IFS) {
-			handle_ifs(trx_id);
-		}
+    /* Check if ACK is requested. */
+    if (*mac_frame_ptr[trx_id]->mpdu & FCF_ACK_REQUEST)
+    {
+        ack_requested[trx_id] = true;
+    }
+    else
+    {
+        ack_requested[trx_id] = false;
+    }
 
 #ifdef SUPPORT_MODE_SWITCH
-		if (tal_pib[trx_id].ModeSwitchEnabled) {
-			tx_ms_ppdu(trx_id);
-		} else
+    if (tal_pib[trx_id].ModeSwitchEnabled)
+    {
+        save_current_phy(trx_id);
+        set_csm(trx_id);
+    }
 #endif
-		{
-			transmit_frame(trx_id, NO_CCA);
-		}
-	}
+
+    if (csma_mode == CSMA_UNSLOTTED)
+    {
+        csma_start(trx_id);
+    }
+    else // csma_mode == NO_CSMA_NO_IFS or NO_CSMA_WITH_IFS
+    {
+        if (csma_mode == NO_CSMA_WITH_IFS)
+        {
+            handle_ifs(trx_id);
+        }
+#ifdef SUPPORT_MODE_SWITCH
+        if (tal_pib[trx_id].ModeSwitchEnabled)
+        {
+            tx_ms_ppdu(trx_id);
+        }
+        else
+#endif
+        {
+            transmit_frame(trx_id, NO_CCA);
+        }
+    }
 
 	return MAC_SUCCESS;
 }
+
 
 /**
  * @brief Transmits frame
  *
  * @param trx_id Transceiver identifier
- * @param cca If WITH_CCA CCA is enforced, else no CCA is applied before
- *transmission.
+ * @param cca If WITH_CCA CCA is enforced, else no CCA is applied before transmission.
  */
 void transmit_frame(trx_id_t trx_id, cca_use_t cca)
 {
-	uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+    ////debug_text(PSTR("transmit_frame()"));
 
-	/* Configure auto modes */
-	uint8_t amcs = 0;
-	if (cca == WITH_CCA) {
-		amcs |= AMCS_CCATX_MASK;
-	}
+    cancel_any_reception(trx_id);
 
-	if (ack_requested[trx_id]) {
-		/* Enable Tx2RX */
-		amcs |= AMCS_TX2RX_MASK;
-		/* Configure frame filter to receive only ACK frames */
-		trx_reg_write(reg_offset + RG_BBC0_AFFTM, ACK_FRAME_TYPE_ONLY);
-	}
+    CALC_REG_OFFSET(trx_id);
 
-	/* Other auto mode settings can be set to 0 */
-	trx_reg_write(reg_offset + RG_BBC0_AMCS, amcs);
+    /* Configure auto modes */
+    uint8_t amcs = 0;
+    if (cca == WITH_CCA)
+    {
+        amcs |= AMCS_CCATX_MASK;
+    }
+    if (ack_requested[trx_id])
+    {
+        /* Enable Tx2RX */
+        amcs |= AMCS_TX2RX_MASK;
+        /* Configure frame filter to receive only ACK frames */
+        trx_reg_write( GET_REG_ADDR(RG_BBC0_AFFTM), ACK_FRAME_TYPE_ONLY);
+    }
+    /* Other auto mode settings can be set to 0 */
+    trx_reg_write( GET_REG_ADDR(RG_BBC0_AMCS), amcs);
 
-	if (frame_buf_filled[trx_id] == false) {
-		/* fill length field */
-		uint16_t len = mac_frame_ptr[trx_id]->len_no_crc +
-				tal_pib[trx_id].FCSLen;
-		trx_write(reg_offset + RG_BBC0_TXFLL, (uint8_t *)&len, 2);
+    if (frame_buf_filled[trx_id] == false)
+    {
+        //////debug_text(PSTR("Frame buffer not filled"));
+        /* fill length field */
+        uint16_t len = mac_frame_ptr[trx_id]->len_no_crc + tal_pib[trx_id].FCSLen;
+        trx_write( GET_REG_ADDR(RG_BBC0_TXFLL), (uint8_t *)&len, 2);
 
-		/* Store tx frame length to handle IFS next time */
-		last_txframe_length[trx_id] = mac_frame_ptr[trx_id]->len_no_crc;
+        /* Store tx frame length to handle IFS next time */
+        last_txframe_length[trx_id] = mac_frame_ptr[trx_id]->len_no_crc;
 
-		/* Disable automatic FCS appending */
-		trx_bit_write(reg_offset + SR_BBC0_PC_TXAFCS, 0);
-	}
+        /* Disable automatic FCS appending */
+        //////debug_text(PSTR("AFCS = 0"));
+        trx_bit_write( GET_REG_ADDR(SR_BBC0_PC_TXAFCS), 0);
+    }
 
-	if (cca == WITH_CCA) {
-		/* Trigger CCA measurement */
-		/* Disable BB; it will enabled for transmission automatically
-		 *again */
-		trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 0);
+    if (cca == WITH_CCA)
+    {
+        /* Trigger CCA measurement */
+        ////debug_text(PSTR("transmit with CCA"));
 
-		/* Ensure to reach the correct trx state */
-		if (trx_state[trx_id] == RF_TRXOFF) {
-			switch_to_txprep(trx_id);
-		}
+        /* Disable BB; it will enabled for transmission automatically again */
+        trx_bit_write( GET_REG_ADDR(SR_BBC0_PC_BBEN), 0);
+        ////debug_text(PSTR("Switch to Rx"));
+        trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_RX);
+        trx_state[trx_id] = RF_RX;
+        pal_timer_delay(tal_pib[trx_id].agc_settle_dur); // allow filters to settle
 
-		if (trx_state[trx_id] != RF_RX) {
-			switch_to_rx(trx_id);
-			pal_timer_delay(tal_pib[trx_id].agc_settle_dur); /*
-			                                                  * allow
-			                                                  * filters
-			                                                  * to
-			                                                  * settle */
-		}
-
-		/* Disable TRXRDY during CCA */
-		trx_bit_write(reg_offset + SR_RF09_IRQM_TRXRDY, 0);
-
-		/* Start single ED measurement; use reg_write - it's the only
-		 *sub-register */
-		trx_reg_write(reg_offset + RG_RF09_EDC, RF_EDSINGLE);
-		tx_state[trx_id] = TX_CCATX;
-	} else { /* no CCA */
-		if (trx_state[trx_id] != RF_TXPREP) {
-			switch_to_txprep(trx_id);
-		}
-
-		trx_reg_write(reg_offset + RG_RF09_CMD, RF_TX);
-		trx_state[trx_id] = RF_TX;
-		tx_state[trx_id] = TX_TX;
-	}
+        /* Start single ED measurement; use reg_write - it's the only sub-register */
+        ////debug_text(PSTR("Start ED measurement"));
+        trx_reg_write( GET_REG_ADDR(RG_RF09_EDC), RF_EDSINGLE);
+        tx_state[trx_id] = TX_CCATX;
+    }
+    else // no CCA
+    {
+        ////debug_text(PSTR("switch to Tx"));
+        trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TX);
+        trx_state[trx_id] = RF_TX;
+        tx_state[trx_id] = TX_TX;
+    }
 
 #if (defined ENABLE_TSTAMP) || (defined MEASURE_ON_AIR_DURATION)
-	pal_get_current_time(&fs_tstamp[trx_id]);
+    pal_get_current_time(&fs_tstamp[trx_id]);
 #endif
 
-	/* Download frame content during CCA or during preamble transmission */
-	if (frame_buf_filled[trx_id] == false) {
-		/* fill frame buffer; do not provide FCS values */
-		uint16_t tx_frm_buf_offset = BB_TX_FRM_BUF_OFFSET * trx_id;
-		trx_write(tx_frm_buf_offset + RG_BBC0_FBTXS,
-				(uint8_t *)mac_frame_ptr[trx_id]->mpdu,
-				mac_frame_ptr[trx_id]->len_no_crc);
+    /* Download frame content during CCA or during preamble transmission */
+    if (frame_buf_filled[trx_id] == false)
+    {
+        /* fill frame buffer; do not provide FCS values */
+        uint16_t tx_frm_buf_offset = BB_TX_FRM_BUF_OFFSET * trx_id;
+        trx_write( tx_frm_buf_offset + RG_BBC0_FBTXS,
+                      (uint8_t *)mac_frame_ptr[trx_id]->mpdu,
+                      mac_frame_ptr[trx_id]->len_no_crc);
 
-		/* Check if under-run has occurred */
-		bool underrun = trx_bit_read(reg_offset + SR_BBC0_PS_TXUR);
-		if (underrun) {
-			/* Abort ongoing transmission */
-			trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
-			trx_state[trx_id] = RF_TRXOFF;
+        /* Check if under-run has occurred */
+        bool underrun = trx_bit_read( GET_REG_ADDR(SR_BBC0_PS_TXUR));
+        if (underrun)
+        {
+            //printf("\n \r Tx underrun occured");
+            /* Abort ongoing transmission */
+            trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+            trx_state[trx_id] = RF_TRXOFF;
 
-			/* Enable BB again and TXAFCS */
-			uint8_t pc = trx_reg_read(reg_offset + RG_BBC0_PC);
-			pc |= PC_TXAFCS_MASK | PC_BBEN_MASK;
-			trx_reg_write(reg_offset + RG_BBC0_PC, pc);
+            /* Enable BB again and TXAFCS */
+            uint8_t pc = trx_reg_read( GET_REG_ADDR(RG_BBC0_PC));
+            pc |= PC_TXAFCS_MASK | PC_BBEN_MASK;
+            trx_reg_write( GET_REG_ADDR(RG_BBC0_PC), pc);
 
-			TAL_BB_IRQ_CLR(trx_id, BB_IRQ_TXFE);
-			TAL_RF_IRQ_CLR(trx_id,
-					RF_IRQ_TRXERR | RF_IRQ_TRXRDY |
-					RF_IRQ_EDC);
-			tx_done_handling(trx_id, FAILURE);
-		} else {
-			/* Enable automatic FCS appending for remaining frame or
-			 *later ACK transmission */
-			uint16_t reg_pc = reg_offset + RG_BBC0_PC;
-			uint8_t pc = trx_reg_read(reg_pc);
-			pc |= PC_TXAFCS_MASK;
-			trx_reg_write(reg_pc, pc);
-			if (cca == WITH_CCA) {
-				rf_cmd_state_t state = trx_reg_read(
-						reg_offset + RG_RF09_STATE);
-				if (state != RF_RX) {
-					pc |= PC_BBEN_MASK;
-					trx_reg_write(reg_pc, pc);
-				}
-			}
-
-			frame_buf_filled[trx_id] = true;
-		}
-	}
+            TAL_BB_IRQ_CLR(trx_id, BB_IRQ_TXFE);
+            TAL_RF_IRQ_CLR(trx_id, RF_IRQ_TRXERR | RF_IRQ_TRXRDY | RF_IRQ_EDC);
+            tx_done_handling(trx_id, FAILURE);
+			
+        }
+        else
+        {
+            /* Enable automatic FCS appending for remaining frame or later ACK transmission */
+#ifdef RF215v1
+            uint16_t reg_pc = GET_REG_ADDR(RG_BBC0_PC);
+            uint8_t pc = trx_reg_read( reg_pc);
+            pc |= PC_TXAFCS_MASK;
+            trx_reg_write( reg_pc, pc);
+            if (cca == WITH_CCA)
+            {
+                rf_cmd_state_t state = (rf_cmd_state_t)trx_reg_read(
+                                                                        GET_REG_ADDR(RG_RF09_STATE));
+                if (state != RF_RX)
+                {
+                    pc |= PC_BBEN_MASK;
+                    trx_reg_write( reg_pc, pc);
+                }
+            }
+#else
+            trx_bit_write( GET_REG_ADDR(SR_BBC0_PC_TXAFCS), 1);
+#endif
+            frame_buf_filled[trx_id] = true;
+        }
+    }
 }
+
 
 /**
  * @brief Handles interrupts issued due to end of transmission
@@ -329,101 +352,105 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
  */
 void handle_tx_end_irq(trx_id_t trx_id)
 {
-	switch (tx_state[trx_id]) {
-	case TX_CCATX:
-	{
-		/* Check channel */
-		uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-		uint8_t ccaed = trx_bit_read(reg_offset + SR_BBC0_AMCS_CCAED);
-		if (ccaed == BB_CH_CLEAR) {
+   //printf("\n \r handle_tx_end_irq() ");
+   
+    /* ACK transmission completed */
+    if (ack_transmitting[trx_id])
+    {
+        ack_transmission_done(trx_id);
+        return;
+    }
+
+    switch (tx_state[trx_id])
+    {
+        case TX_CCATX:
+            {
+                /* Check channel */
+                CALC_REG_OFFSET(trx_id);
+                uint8_t ccaed = trx_bit_read( GET_REG_ADDR(SR_BBC0_AMCS_CCAED));
+                if (ccaed == BB_CH_CLEAR)
+                {
+                    ////debug_text(PSTR("Channel idle and frame has been sent"));
 #ifdef MEASURE_ON_AIR_DURATION
-			tal_pib[trx_id].OnAirDuration
-				+= pal_sub_time_us(rxe_txe_tstamp[trx_id],
-					fs_tstamp[trx_id]);
-			tal_pib[trx_id].OnAirDuration
-				-= tal_pib[trx_id].CCADuration_us;
-			/* @ToDo: Minus processing delay */
+                    tal_pib[trx_id].OnAirDuration +=
+                        pal_sub_time_us(rxe_txe_tstamp[trx_id], fs_tstamp[trx_id]);
+                    tal_pib[trx_id].OnAirDuration -= tal_pib[trx_id].CCADuration_us;
+                    /* @ToDo: Minus processing delay */
 #endif
-			/* Start ACK wait timer - see below */
-		} else {
-			/* Switch BB on again */
-			trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 1);
-			trx_state[trx_id] = RF_RX;
-			csma_continue(trx_id);
-			return;
-		}
-	}
-	break;
+                    /* Start ACK wait timer - see below */
+                }
+                else // channel busy
+                {
+                    /* Switch BB on again */
+                    trx_bit_write( GET_REG_ADDR(SR_BBC0_PC_BBEN), 1);
+                    switch_to_txprep(trx_id);
 
-	case TX_TX:
+                    ////debug_text(PSTR("Channel busy"));
+                    csma_continue(trx_id);
+                    return;
+                }
+            }
+            break;
+
+        case TX_TX:
 #ifdef MEASURE_ON_AIR_DURATION
-		tal_pib[trx_id].OnAirDuration
-			+= pal_sub_time_us(rxe_txe_tstamp[trx_id],
-				fs_tstamp[trx_id]);
-		/* @ToDo: Minus processing delay */
+            tal_pib[trx_id].OnAirDuration +=
+                pal_sub_time_us(rxe_txe_tstamp[trx_id], fs_tstamp[trx_id]);
+            /* @ToDo: Minus processing delay */
 #endif
-		/* Start ACK wait timer - see below */
-		break;
-
-#ifdef RX_WHILE_BACKOFF
-	case TX_DEFER: /* Fall through */
-#endif
-	case TX_IDLE: /* receive transaction -> ACK transmission */
-		/* ACK transmission completed */
-		ack_transmission_done(trx_id);
-		return;
-
-		break;
+            /* Start ACK wait timer - see below */
+            break;
 
 #ifdef SUPPORT_MODE_SWITCH
-	case TX_MS_PPDU:
-		switch_to_txprep(trx_id);
+        case TX_MS_PPDU:
+            switch_to_txprep(trx_id);
 #ifdef MEASURE_ON_AIR_DURATION
-		tal_pib[trx_id].OnAirDuration
-			+= pal_sub_time_us(rxe_txe_tstamp[trx_id],
-				fs_tstamp[trx_id]);
-		/* @ToDo: Minus processing delay */
+            tal_pib[trx_id].OnAirDuration +=
+                pal_sub_time_us(rxe_txe_tstamp[trx_id], fs_tstamp[trx_id]);
+            /* @ToDo: Minus processing delay */
 #endif
-		prepare_actual_transmission(trx_id);
-		return;
+            prepare_actual_transmission(trx_id);
+            return;
 
-	case TX_MS_NEW_MODE_TRANSMITTING:
-		switch_to_txprep(trx_id);
+        case TX_MS_NEW_MODE_TRANSMITTING:
+            switch_to_txprep(trx_id);
 #ifdef MEASURE_ON_AIR_DURATION
-		tal_pib[trx_id].OnAirDuration
-			+= pal_sub_time_us(rxe_txe_tstamp[trx_id],
-				fs_tstamp[trx_id]);
-		/* @ToDo: Minus processing delay */
+            tal_pib[trx_id].OnAirDuration +=
+                pal_sub_time_us(rxe_txe_tstamp[trx_id], fs_tstamp[trx_id]);
+            /* @ToDo: Minus processing delay */
 #endif
-		set_csm(trx_id);
-		break;
+            set_csm(trx_id);
+            break;
 #endif
 
-	default:
-#if (_DEBUG_ > 0) && (defined SIO_HUB)
-		printf("Unexpected tx_state 0x%02X\n", tx_state[trx_id]);
-#endif
-		break;
-	}
+        default:
+            Assert("Unexpected tx_state" == 0);
+            break;
+    }
 
-	if (ack_requested[trx_id]) {
+    if (ack_requested[trx_id])
+    {
 #ifdef SUPPORT_MODE_SWITCH
-		if (tal_pib[trx_id].ModeSwitchEnabled) {
-			switch_to_rx(trx_id);
-		} else
+        if (tal_pib[trx_id].ModeSwitchEnabled)
+        {
+            switch_to_rx(trx_id);
+        }
+        else
 #endif
-		{
-			/* Trx is switched to RX automatically due to TX2RX
-			 *setting */
-			trx_state[trx_id] = RF_RX;
-		}
-
-		start_ack_wait_timer(trx_id);
-	} else { /* No ACK requested */
-		trx_state[trx_id] = RF_TXPREP;
-		tx_done_handling(trx_id, MAC_SUCCESS);
-	}
+        {
+            /* Trx is switched to RX automatically due to TX2RX setting */
+            trx_state[trx_id] = RF_RX;
+        }
+        start_ack_wait_timer(trx_id);
+    }
+    else // No ACK requested
+    {
+        trx_state[trx_id] = RF_TXPREP;
+        ////debug_text(PSTR("No ACK requested"));
+        tx_done_handling(trx_id, MAC_SUCCESS);
+    }
 }
+
 
 /**
  * @brief Implements the handling of the transmission end.
@@ -436,82 +463,111 @@ void handle_tx_end_irq(trx_id_t trx_id)
  */
 void tx_done_handling(trx_id_t trx_id, retval_t status)
 {
-	if (status == MAC_NO_ACK) {
-		if (number_of_tx_retries[trx_id] <
-				tal_pib[trx_id].MaxFrameRetries) {
-			number_of_tx_retries[trx_id]++;
-			if (global_csma_mode[trx_id] == CSMA_UNSLOTTED) {
-				csma_start(trx_id);
-			} else {
-				if (global_csma_mode[trx_id] ==
-						NO_CSMA_WITH_IFS) {
-					handle_ifs(trx_id);
-				}
+    ////debug_text(PSTR("tx_done_handling()"));
 
+    if (status == MAC_NO_ACK)
+    {
+        if (number_of_tx_retries[trx_id] < tal_pib[trx_id].MaxFrameRetries)
+        {
+            number_of_tx_retries[trx_id]++;
+            if (global_csma_mode[trx_id] == CSMA_UNSLOTTED)
+            {
+                csma_start(trx_id);
+            }
+            else
+            {
+                if (global_csma_mode[trx_id] == NO_CSMA_WITH_IFS)
+                {
+                    handle_ifs(trx_id);
+                }
 #ifdef SUPPORT_MODE_SWITCH
-				if (tal_pib[trx_id].ModeSwitchEnabled) {
-					set_csm(trx_id);
-					tx_ms_ppdu(trx_id);
-				} else
+                if (tal_pib[trx_id].ModeSwitchEnabled)
+                {
+                    set_csm(trx_id);
+                    tx_ms_ppdu(trx_id);
+                }
+                else
 #endif
-				{
-					transmit_frame(trx_id, NO_CCA);
-				}
-			}
-
-			return; /* next tx attempt and no tx done cb */
-		}
-	} else { /* status == CHANNEL_ACCESS_FAILURE or FAILURE */
-		/* do nothing */
-	}
+                {
+                    transmit_frame(trx_id, NO_CCA);
+                }
+            }
+            return; // next tx attempt and no tx done cb
+        }
+    }
+    else    // status == CHANNEL_ACCESS_FAILURE or FAILURE or TAL_FRAME_PENDING
+    {
+        /* do nothing */
+    }
 
 #ifdef SUPPORT_MODE_SWITCH
-	if (tal_pib[trx_id].ModeSwitchEnabled) {
-		restore_previous_phy(trx_id);
-	}
-
+    if (tal_pib[trx_id].ModeSwitchEnabled)
+    {
+        restore_previous_phy(trx_id);
+    }
 #endif
 
 #ifdef ENABLE_TSTAMP
-	mac_frame_ptr[trx_id]->time_stamp = fs_tstamp[trx_id];
+    mac_frame_ptr[trx_id]->time_stamp = fs_tstamp[trx_id];
 #endif
 
-	uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 #ifdef MEASURE_TIME_OF_FLIGHT
-	if (ack_requested[trx_id]) {
-		if (status == MAC_SUCCESS) {
-			trx_read(reg_offset + RG_BBC0_CNT0,
-					(uint8_t *)&tal_pib[trx_id].TimeOfFlight,
-					4);
-		}
-	}
+#   ifdef SUPPORT_LEGACY_OQPSK
+    /* ToF only supported for Legacy-OQPSK */
 
+    /* Initialize ToF value (in case we run in any of the non-if cases). */
+    mac_frame_ptr[trx_id]->TimeOfFlight = INVALID_TOF_VALUE;
+
+    if (ack_requested[trx_id])
+    {
+        if (status == MAC_SUCCESS)
+        {
+            if (tal_pib[trx_id].phy.modulation == LEG_OQPSK)
+            {
+                mac_frame_ptr[trx_id]->TimeOfFlight = calc_tof(trx_id);
+            }
+        }
+    }
+#   else    /* SUPPORT_LEGACY_OQPSK */
+    /* ToF not supported */
+    mac_frame_ptr[trx_id]->TimeOfFlight = INVALID_TOF_VALUE;
+#   endif  /* SUPPORT_LEGACY_OQPSK */
+#endif  /* #ifdef MEASURE_TIME_OF_FLIGHT */
+
+    CALC_REG_OFFSET(trx_id);
+
+    /* Enable AACK again and disable CCA / TX procedure */
+    trx_reg_write( GET_REG_ADDR(RG_BBC0_AMCS), AMCS_AACK_MASK);
+
+    /* Set trx state for leaving TX transaction */
+    if (trx_default_state[trx_id] == RF_RX)
+    {
+        if (trx_state[trx_id] != RF_RX)
+        {
+            switch_to_rx(trx_id);
+        }
+    }
+    else
+    {
+        trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+        trx_state[trx_id] = RF_TRXOFF;
+    }
+
+#if (defined SUPPORT_FSK) || (defined SUPPORT_OQPSK)
+    start_rpc(trx_id);
 #endif
-	/* Enable AACK again and disable CCA / TX procedure */
-	trx_reg_write( reg_offset + RG_BBC0_AMCS, AMCS_AACK_MASK);
 
-#if (defined RF215V1) && ((defined SUPPORT_FSK) || (defined SUPPORT_OQPSK))
-	stop_rpc(trx_id);
-#endif
-
-	/* Set trx state for leaving TX transaction */
-	if (trx_default_state[trx_id] == RF_RX) {
-		switch_to_rx(trx_id);
-	} else {
-		trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
-		trx_state[trx_id] = RF_TRXOFF;
-	}
-
-	tx_state[trx_id] = TX_IDLE;
-	tal_state[trx_id] = TAL_IDLE;
+    tx_state[trx_id] = TX_IDLE;
+    tal_state[trx_id] = TAL_IDLE;
 
 #ifdef ENABLE_RTB
-	rtb_tx_frame_done_cb(trx_id, status, mac_frame_ptr[trx_id]);
+    rtb_tx_frame_done_cb(trx_id, status, mac_frame_ptr[trx_id]);
 #else
-	/* Regular handling without RTB */
-	tal_tx_frame_done_cb(trx_id, status, mac_frame_ptr[trx_id]);
+    /* Regular handling without RTB */
+    tal_tx_frame_done_cb(trx_id, status, mac_frame_ptr[trx_id]);
 #endif
 } /* tx_done_handling() */
+
 
 /**
  * @brief Handles interframe spacing (IFS)
@@ -520,29 +576,119 @@ void tx_done_handling(trx_id_t trx_id, retval_t status)
  */
 static void handle_ifs(trx_id_t trx_id)
 {
-	uint32_t now;
-	uint32_t time_diff;
+    ////debug_text(PSTR("handle_ifs()"));
 
-	pal_get_current_time(&now);
-	time_diff = now - rxe_txe_tstamp[trx_id];
-	if (last_txframe_length[trx_id] > aMaxSIFSFrameSize) {
-		/* Long IFS */
-		uint32_t required_spacing = macMinLIFSPeriod_def *
-				tal_pib[trx_id].SymbolDuration_us;
-		if (time_diff < required_spacing) {
-			uint32_t delay = required_spacing - time_diff;
-			pal_timer_delay(delay);
-		}
-	} else {
-		/* Short IFS */
-		uint32_t required_spacing = macMinSIFSPeriod_def *
-				tal_pib[trx_id].SymbolDuration_us;
-		if (time_diff < required_spacing) {
-			uint32_t delay = required_spacing - time_diff;
-			pal_timer_delay(delay);
-		}
-	}
+    uint32_t now;
+    uint32_t time_diff;
+
+    pal_get_current_time(&now);
+    time_diff = now - rxe_txe_tstamp[trx_id];
+    if (last_txframe_length[trx_id] > aMaxSIFSFrameSize)
+    {
+        /* Long IFS */
+        uint32_t required_spacing = macMinLIFSPeriod_def * tal_pib[trx_id].SymbolDuration_us;
+        if (time_diff < required_spacing)
+        {
+            uint32_t delay = required_spacing - time_diff;
+            ////debug_text_val(PSTR("delay LIFS = "), (uint16_t)delay);
+            pal_timer_delay(delay);
+        }
+    }
+    else
+    {
+        /* Short IFS */
+        uint32_t required_spacing = macMinSIFSPeriod_def * tal_pib[trx_id].SymbolDuration_us;
+        if (time_diff < required_spacing)
+        {
+            uint32_t delay = required_spacing - time_diff;
+            ////debug_text_val(PSTR("delay SIFS = "), (uint16_t)delay);
+            pal_timer_delay(delay);
+        }
+    }
 }
+
+
+/**
+ * @brief Confinues with a deferred transmission
+ *
+ * @param trx_id Transceiver identifier
+ */
+void continue_deferred_transmission(trx_id_t trx_id)
+{
+    Assert((trx_id >= 0) && (trx_id < NUM_TRX));
+
+    if (tal_pib[trx_id].NumRxFramesDuringBackoff > tal_pib[trx_id].MaxNumRxFramesDuringBackoff)
+    {
+        tx_done_handling(trx_id, MAC_CHANNEL_ACCESS_FAILURE);
+    }
+    else
+    {
+        if (global_csma_mode[trx_id] == CSMA_UNSLOTTED)
+        {
+            csma_start(trx_id);
+        }
+        else
+        {
+            transmit_frame(trx_id, NO_CCA);
+        }
+    }
+}
+
+
+#ifdef MEASURE_TIME_OF_FLIGHT
+#   ifdef SUPPORT_LEGACY_OQPSK
+/**
+ * @brief Calculates ToF value.
+ *
+ * @param trx_id Transceiver identifier
+ */
+static uint32_t calc_tof(trx_id_t trx_id)
+{
+    CALC_REG_OFFSET(trx_id);
+
+    uint32_t tof_counter_value;
+    trx_read( GET_REG_ADDR(RG_BBC0_CNT0),
+                 (uint8_t *) & (tof_counter_value), 4);
+
+#       ifdef TIME_OF_FLIGHT_COUNTER_MODE
+    /* Simply return the ToF counter value. */
+    return tof_counter_value;
+
+#       else   /* Regular mode */
+    uint32_t tof_time_ns = tof_counter_value * 1000 / 32;
+    uint32_t frame_duation_ns =
+        (mac_frame_ptr[trx_id]->len_no_crc + tal_pib[trx_id].FCSLen) *
+        1000 * tal_get_symbol_duration_us(trx_id) * 2;
+
+    uint32_t offset_and_frame_ns = frame_duation_ns;
+    if (trx_id == RF09)
+    {
+        offset_and_frame_ns += TOF_PROC_DELAY_OFFSET_SUB_GHZ_NS;
+    }
+    else
+    {
+        offset_and_frame_ns += TOF_PROC_DELAY_OFFSET_2_4_GHZ_NS;
+    }
+
+    /*
+     * Calculate final ToF value in ns.
+     * Note: Final time of flight must not be negative,
+     * which would result in very large unsigned ToF value.
+     */
+    if (tof_time_ns >= offset_and_frame_ns)
+    {
+        tof_time_ns -= offset_and_frame_ns;
+    }
+    else
+    {
+        tof_time_ns = 0;
+    }
+
+    return tof_time_ns;
+#       endif   /* TIME_OF_FLIGHT_COUNTER_MODE */
+}
+#   endif  /* SUPPORT_LEGACY_OQPSK */
+#endif  /* #ifdef MEASURE_TIME_OF_FLIGHT */
 
 #endif /* #ifndef BASIC_MODE */
 
