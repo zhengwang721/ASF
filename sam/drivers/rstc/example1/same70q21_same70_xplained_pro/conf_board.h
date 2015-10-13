@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Unit test configuration.
+ * \brief Board configuration.
  *
- * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,16 +44,12 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_TEST_H
-/** UART Interface */
-#define CONF_TEST_USART            CONSOLE_UART
-/** Baudrate setting */
-#define CONF_TEST_BAUDRATE   (115200UL)
-/** Character length setting */
-#define CONF_TEST_CHAR_LENGTH  US_MR_CHRL_8_BIT
-/** Parity setting */
-#define CONF_TEST_PARITY     US_MR_PAR_NO
-/** Stop bits setting */
-#define CONF_TEST_STOP_BITS    US_MR_NBSTOP_1_BIT
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#endif /* CONF_TEST_H_INCLUDED */
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
+
+/** Don't change WDT mode register in init.c */
+#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+#endif /* CONF_BOARD_H_INCLUDED */
