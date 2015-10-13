@@ -609,7 +609,7 @@ enum status_code tsens_read(int32_t *result);
  *	</tr>
  *	<tr>
  *		<td>42542A</td>
- *		<td>09/2015</td>
+ *		<td>10/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
