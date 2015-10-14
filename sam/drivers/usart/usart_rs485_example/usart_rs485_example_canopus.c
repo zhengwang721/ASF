@@ -421,7 +421,6 @@ int main(void)
 
 	/* Send a sync character XON (0x11). */
 	func_transmit(&uc_sync, 1);
-	printf("Send char value = 0x%x\r\n", uc_sync);
 	/* Delay until the line is cleared, an estimated time used. */
 	wait(50);
 
@@ -439,7 +438,6 @@ int main(void)
 	/* If acknowledgement received in a short time. */
 	if (usart_is_rx_ready(BOARD_USART)) {
 		usart_read(BOARD_USART, (uint32_t *)&uc_sync);
-		printf("Transmit : Receive char value = 0x%x\r\n", uc_sync);
 		/* Acknowledgement. */
 		if (uc_sync == ACK_CHAR) {
 			/* Act as transmitter, start transmitting. */
@@ -456,7 +454,6 @@ int main(void)
 
 		/* Sync character is received. */
 		usart_read(BOARD_USART, (uint32_t *)&uc_sync);
-		printf("Receive : Receive char value = 0x%x\r\n", uc_sync);
 		if (uc_sync == SYNC_CHAR) {
 			/* SEND XOff as acknowledgement. */
 			uc_sync = ACK_CHAR;
@@ -469,7 +466,6 @@ int main(void)
 
 			/* Send a ack character XOff . */
 			func_transmit(&uc_sync, 1);
-			printf("Receive : Send char value = 0x%x\r\n", uc_sync);
 
 			g_state = RECEIVING;
 			puts("-I- Start receiving!\r");
