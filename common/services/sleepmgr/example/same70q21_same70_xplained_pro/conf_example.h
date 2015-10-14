@@ -48,7 +48,7 @@
 
 /* Refer to the example C file for further documentation. */
 
-//! \note This is the SAMV71-Xplained-Ultra's on-board LED.
+//! \note This is the SAME70-Xplained-Pro's on-board LED.
 #define LED_ACTIVITY_STATUS_PIN   LED0_GPIO
 #define LED_STATUS_ON             IOPORT_PIN_LEVEL_LOW
 #define LED_STATUS_OFF            IOPORT_PIN_LEVEL_HIGH
