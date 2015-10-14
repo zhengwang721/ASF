@@ -435,17 +435,17 @@ static inline void bod_clear_detected(
  *	<tr>
  *		<td>42149E</td>
  *		<td>10/2015</td>
- *		<td>Added support for SAMDA1.</td>
+ *		<td>Added support for SAM DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>42149D</td>
  *		<td>12/2014</td>
- *		<td>Added support for SAMR21 and SAMD10/D11.</td>
+ *		<td>Added support for SAM R21 and SAM D10/D11.</td>
  *	</tr>
  *	<tr>
  *		<td>42149C</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAMD21.</td>
+ *		<td>Added support for SAM D21.</td>
  *	</tr>
  *	<tr>
  *		<td>42149B</td>
