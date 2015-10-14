@@ -590,8 +590,8 @@ enum status_code tsens_read(int32_t *result);
 /**
  * \page asfdoc_sam0_tsens_exqsg Examples for TSENS Driver
  *
- * This is a list of the available Quick Start guides (QSG) and example
- * applications for \ref asfdoc_sam0_tsens_group. A QSG is simple examples with
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_sam0_tsens_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
