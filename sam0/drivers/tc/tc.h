@@ -155,8 +155,8 @@
  * In compare mode, the counter value is compared against one or more of the
  * configured channel compare values. When the counter value coincides with a
  * compare value an action can be taken automatically by the module, such as
- * generating an output event or toggling a pin when used for frequency or PWM
- * signal generation.
+ * generating an output event or toggling a pin when used for frequency or
+ * Pulse Width Modulation (PWM) signal generation.
  *
  * \note The connection of events between modules requires the use of the
  *       \ref asfdoc_sam0_events_group "SAM Event System Driver (EVENTS)"
@@ -473,12 +473,12 @@
 #  define FEATURE_TC_STAMP_PW_CAPTURE
 /** Read synchronization of COUNT. */
 #  define FEATURE_TC_READ_SYNC
-/** IO pin edge capture. */
+/** I/O pin edge capture. */
 #  define FEATURE_TC_IO_CAPTURE
 #endif
 
 #if (SAML21XXXB) || defined(__DOXYGEN__)
-/** Generate DMA triggers. */
+/** Generate Direct Memory Access (DMA) triggers. */
 #  define FEATURE_TC_GENERATE_DMA_TRIGGER
 #endif
 /*@}*/
@@ -852,7 +852,7 @@ struct tc_pwm_channel {
 	bool enabled;
 	/** Specifies pin output for each channel */
 	uint32_t pin_out;
-	/** Specifies MUX setting for each output channel pin */
+	/** Specifies Multiplexer (MUX) setting for each output channel pin */
 	uint32_t pin_mux;
 };
 
@@ -1426,7 +1426,7 @@ static inline void tc_sync_read_count(
 
 #ifdef FEATURE_TC_GENERATE_DMA_TRIGGER
 /**
- * \name Generate TC DMA Triggers command
+ * \name Generate TC DMA Triggers Command
  * @{
  */
 
@@ -1691,10 +1691,10 @@ static inline void tc_clear_status(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *    <td>Added support for SAMD21 and do some modifications as below:
+ *    <td>Added support for SAM D21 and do some modifications as below:
  *          \li Clean up in the configuration structure, the counter size
  *              setting specific registers is accessed through the counter_8_bit,
- *              counter_16_bit and counter_32_bit structures
+ *              counter_16_bit, and counter_32_bit structures
  *          \li All event related settings moved into the tc_event structure </td>
  *	</tr>
  *	<tr>
@@ -1735,7 +1735,7 @@ static inline void tc_clear_status(
  *	<tr>
  *		<td>42123E</td>
  *		<td>10/2015</td>
- *		<td>Added support for SAM L21/L22, SAM DA1, and SAMC21</td>
+ *		<td>Added support for SAM L21/L22, SAM DA1, and SAM C21</td>
  *	</tr>
  *	<tr>
  *		<td>42123D</td>
