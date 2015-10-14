@@ -231,9 +231,9 @@
  *
  *
  * \subsection asfdoc_sam0_rtc_count_module_overview_tamper_detect RTC Tamper Detect
- * \section asfdoc_sam0_rtc_count_special_considerations Special Considerations
  * see \ref asfdoc_sam0_rtc_tamper_detect
  *
+ * \section asfdoc_sam0_rtc_count_special_considerations Special Considerations
  *
  * \subsection asfdoc_sam0_rtc_count_special_considerations_clock Clock Setup
  * \subsubsection asfdoc_sam0_rtc_count_clock_samd_r SAM D20/D21/R21/D10/D11/DA1 Clock Setup
@@ -369,21 +369,22 @@ extern "C" {
 
 /**
  * Define port features set according to different device family.
+ *
  * @{
 */
 #if (SAML21) || (SAML22) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** RTC periodic interval interrupt. */
 #  define FEATURE_RTC_PERIODIC_INT
-/** RTC prescaler is off */
+/** RTC prescaler is off. */
 #  define FEATURE_RTC_PRESCALER_OFF
-/** RTC clock selection */
+/** RTC clock selection. */
 #  define FEATURE_RTC_CLOCK_SELECTION
 #  if !(SAMC20) && !(SAMC21)
-/** General purpose registers */
+/** General purpose registers. */
 #  define FEATURE_RTC_GENERAL_PURPOSE_REG
 #  endif
 #else
-/** RTC continuously updated */
+/** RTC continuously updated. */
 #  define FEATURE_RTC_CONTINUOUSLY_UPDATED
 #endif
 
@@ -750,7 +751,7 @@ struct rtc_count_config {
  *  Initializes the configuration structure to default values. This
  *  function should be called at the start of any RTC initialization.
  *
- *  The default configuration is as follows:
+ *  The default configuration is:
  *  - Input clock divided by a factor of 1024
  *  - RTC in 32-bit mode
  *  - Clear on compare match off
@@ -760,7 +761,7 @@ struct rtc_count_config {
  *  - Count read synchronization is enabled for SAM L22
  *
  *  \param[out] config  Configuration structure to be initialized to default
- *                      values.
+ *                      values
  */
 static inline void rtc_count_get_config_defaults(
 		struct rtc_count_config *const config)
@@ -1262,7 +1263,7 @@ uint32_t rtc_tamper_get_stamp (struct rtc_module *const module);
  *	</tr>
  *	<tr>
  *		<td>42111E</td>
- *		<td>08/2015</td>
+ *		<td>10/2015</td>
  *		<td>Added support for SAM L21/L22, SAM C21, and SAM DA1</td>
  *	</tr>
  *	<tr>
