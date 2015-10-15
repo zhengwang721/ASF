@@ -9,7 +9,6 @@
 		<build type="include-path" value="."/>
 		<require idref="board.atmega328pb_xplained_mini"/>
 		<require idref="mega.applications.mega_remorse_example"/>
-		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>
 		<device-support value="atmega328pb"/>
