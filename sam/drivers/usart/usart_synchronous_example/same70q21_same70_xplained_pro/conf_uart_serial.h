@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief USART synchronous example configuration.
+ * \brief USART Serial Configuration
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,31 +40,22 @@
  * \asf_license_stop
  *
  */
-
-/**
- * \defgroup usart_sync_example_pin_defs
- *   - <b> master  --  slave</b>
- *   - TXD(PA22)  --  RXD(PA21)
- *   - RXD(PA21)  --  TXD(PA22)
- *   - SCK(PA23)  --  SCK(PA23)
- *   - GND  --  GND
- */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#ifndef CONF_USART_SERIAL_H_INCLUDED
+#define CONF_USART_SERIAL_H_INCLUDED
 
-#include "conf_board.h"
-#include "conf_clock.h"
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   (115200UL)
+/** Character length setting */
+#define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
+/** Parity setting */
+#define CONF_UART_PARITY     US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
 
-#define BOARD_ID_USART             ID_USART0
-
-#define BOARD_USART                USART0
-
-#define USART_Handler              USART0_Handler
-
-#define USART_IRQn                 USART0_IRQn
-
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

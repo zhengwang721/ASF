@@ -51,7 +51,7 @@
  *
  *  \par Requirements
  *
- *  This package can be used with samv71_xplained_ultra boards. Before running, make sure
+ *  This package can be used with same70_xplained_pro/samv71_xplained_ulta boards. Before running, make sure
  *  to connect two boards with RS485 lines. Match each paired pins of two
  *  boards respectively with A to A, B to B and FGND to FGND.
  *
@@ -325,13 +325,13 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-	#ifdef CONF_UART_CHAR_LENGTH
+#ifdef CONF_UART_CHAR_LENGTH
 		.charlength = CONF_UART_CHAR_LENGTH,
-	#endif
+#endif
 		.paritytype = CONF_UART_PARITY,
-	#ifdef CONF_UART_STOP_BITS
+#ifdef CONF_UART_STOP_BITS
 		.stopbits = CONF_UART_STOP_BITS,
-	#endif
+#endif
 	};
 
 	/* Configure console UART. */
@@ -437,6 +437,7 @@ int main(void)
 
 	/* If acknowledgement received in a short time. */
 	if (usart_is_rx_ready(BOARD_USART)) {
+		wait(50);
 		usart_read(BOARD_USART, (uint32_t *)&uc_sync);
 		/* Acknowledgement. */
 		if (uc_sync == ACK_CHAR) {
@@ -451,7 +452,7 @@ int main(void)
 		puts("-I- Receiving sync character.\r");
 		while (!usart_is_rx_ready(BOARD_USART)) {
 		}
-
+		wait(50);
 		/* Sync character is received. */
 		usart_read(BOARD_USART, (uint32_t *)&uc_sync);
 		if (uc_sync == SYNC_CHAR) {
@@ -462,7 +463,7 @@ int main(void)
 			 * Delay to prevent the character from being discarded by
 			 * transmitter due to responding too soon.
 			 */
-			wait(100);
+			wait(50);
 
 			/* Send a ack character XOff . */
 			func_transmit(&uc_sync, 1);

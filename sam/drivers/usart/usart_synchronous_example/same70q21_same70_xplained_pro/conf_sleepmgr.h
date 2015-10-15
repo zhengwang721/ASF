@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USART synchronous example configuration.
+ * \brief Chip-specific sleep manager configuration
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -40,31 +40,13 @@
  * \asf_license_stop
  *
  */
-
-/**
- * \defgroup usart_sync_example_pin_defs
- *   - <b> master  --  slave</b>
- *   - TXD(PA22)  --  RXD(PA21)
- *   - RXD(PA21)  --  TXD(PA22)
- *   - SCK(PA23)  --  SCK(PA23)
- *   - GND  --  GND
- */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+// Sleep manager options
+#define CONFIG_SLEEPMGR_ENABLE
 
-#include "conf_board.h"
-#include "conf_clock.h"
-
-#define BOARD_ID_USART             ID_USART0
-
-#define BOARD_USART                USART0
-
-#define USART_Handler              USART0_Handler
-
-#define USART_IRQn                 USART0_IRQn
-
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_H */
