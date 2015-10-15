@@ -7,7 +7,7 @@
 		<build type="header-file" value="conf_usart.h"/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="include-path" value="."/>
-		<require idref="board.atmega328pb_xplained_mini"/>
+		<require idref="board.atmega328pb_x_plained_mini"/>
 		<require idref="mega.applications.mega_remorse_example"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>

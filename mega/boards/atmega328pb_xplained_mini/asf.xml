@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<board id="board.atmega328pb_xplained_mini" vendor="Atmel" caption="ATmega328PB Xplained MINI">
+	<board id="board.atmega328pb_x_plained_mini" vendor="Atmel" caption="ATmega328PB Xplained MINI">
 		<build type="define" name="BOARD" value="ATMEGA328PB_XPLAINED_MINI"/>
 		<build type="header-file" value="atmega328pb_xplained_mini.h"/>
 		<build type="header-file" value="led.h"/>
