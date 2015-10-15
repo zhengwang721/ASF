@@ -93,6 +93,7 @@ ble_gap_event_callback_t ble_paired_cb = NULL;
 ble_characteristic_changed_callback_t ble_char_changed_cb = NULL;
 ble_notification_confirmed_callback_t ble_notif_conf_cb = NULL;
 ble_indication_confirmed_callback_t ble_indic_conf_cb = NULL;
+static bool slave_sec_req_send = false;
 
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)|| (BLE_DEVICE_ROLE == BLE_OBSERVER))
 uint8_t scan_response_count = 0;
@@ -395,15 +396,18 @@ uint8_t scan_info_parse(at_ble_scan_info_t *scan_info_data,
 at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 {
 	#if BLE_PAIR_ENABLE
+	if(!slave_sec_req_send) {
 		if (at_ble_send_slave_sec_request(conn_handle, BLE_MITM_REQ, BLE_BOND_REQ) == AT_BLE_SUCCESS)
 		{
 			DBG_LOG_DEV("Slave security request successful");
+			slave_sec_req_send = true;
 			return AT_BLE_SUCCESS;
 		}
 		else
 		{
 			DBG_LOG("Slave security request failed");
 		}
+	}
 	#else
 		BLE_ADDITIONAL_PAIR_DONE_HANDLER(NULL);
 		if (ble_paired_cb != NULL)
@@ -439,6 +443,7 @@ void ble_connected_state_handler(at_ble_connected_t *conn_params)
 #if (BLE_DEVICE_ROLE == BLE_PERIPHERAL)
 	ble_send_slave_sec_request(conn_params->handle);
 #endif
+	slave_sec_req_send = false;
 	} 
 	else
 	{
@@ -752,6 +757,8 @@ void ble_encryption_request_handler (at_ble_encryption_request_t *encry_req)
         {
           DBG_LOG("Pairing information of peer device is not available."); 
           DBG_LOG("Please unpair the device from peer device(mobile) settings menu and start pairing again");
+		  at_ble_disconnect(ble_connected_dev_info->handle, AT_BLE_TERMINATED_BY_USER);
+		  return;			
         }
 
 	if(!(at_ble_encryption_request_reply(ble_connected_dev_info->handle,auth_info ,key_found, &app_bond_info) == AT_BLE_SUCCESS))
