@@ -122,7 +122,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CLOCK_SELECTION</td>
- *    <td>SAM L21/L22</C20/C21</td>
+ *    <td>SAM L21/L22/C20/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_GENERAL_PURPOSE_REG</td>
@@ -291,7 +291,7 @@
  * \enddot
  *
  * \subsubsection asfdoc_sam0_rtc_count_clock_saml SAM L21/C20/C21 Clock Setup
- * The RTC clock can be selected from OSC32K, XOSC32K or OSCULP32K, and a 32KHz
+ * The RTC clock can be selected from OSC32K, XOSC32K, or OSCULP32K, and a 32KHz
  * or 1KHz oscillator clock frequency is required. This clock must be
  * configured and enabled in the 32KHz oscillator controller before using the RTC.
  *
@@ -368,8 +368,9 @@ extern "C" {
 #endif
 
 /**
- * Define port features set according to different device family.
+ * \name Driver Feature Definition
  *
+ * Define port features set according to different device family.
  * @{
 */
 #if (SAML21) || (SAML22) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
@@ -1126,7 +1127,7 @@ static inline void rtc_write_general_purpose_reg(
  * \param[in] module  Pointer to the software instance struct
  * \param[in] index General purpose register index (0..3)
  *
- * \return Value of general purpose register
+ * \return Value of general purpose register.
  */
 static inline uint32_t rtc_read_general_purpose_reg(
 	struct rtc_module *const module,
