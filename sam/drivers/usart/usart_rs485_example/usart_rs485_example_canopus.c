@@ -437,8 +437,8 @@ int main(void)
 
 	/* If acknowledgement received in a short time. */
 	if (usart_is_rx_ready(BOARD_USART)) {
+		wait(50);
 		usart_read(BOARD_USART, (uint32_t *)&uc_sync);
-		printf("Transmit : Receive char value = 0x%x\r\n", uc_sync);
 		/* Acknowledgement. */
 		if (uc_sync == ACK_CHAR) {
 			/* Act as transmitter, start transmitting. */
@@ -452,7 +452,7 @@ int main(void)
 		puts("-I- Receiving sync character.\r");
 		while (!usart_is_rx_ready(BOARD_USART)) {
 		}
-
+		wait(50);
 		/* Sync character is received. */
 		usart_read(BOARD_USART, (uint32_t *)&uc_sync);
 		if (uc_sync == SYNC_CHAR) {
