@@ -1,4 +1,3 @@
-
 #include "at_ble_api.h"
 
 #include "platform.h"
@@ -296,7 +295,7 @@ at_ble_status_t at_ble_encryption_request_reply(at_ble_handle_t conn_handle,
         bool key_found,
         at_ble_LTK_t *key)
 {
-    at_ble_status_t status = AT_BLE_INVALID_PARAM;
+    at_ble_status_t status = AT_BLE_SUCCESS;
     FN_IN();
     do
     {

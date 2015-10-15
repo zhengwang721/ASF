@@ -13,6 +13,11 @@
 // heap for l2cap tx of size 10K
 uint8_t l2cap_avail_buffers = 10;
 
+void init_l2cc_task_module(void)
+{
+	l2cap_avail_buffers = 10;
+}
+
 void l2cc_pdu_send_req_handler(uint16_t conn_handle, uint16_t offset, uint16_t payload_length, uint16_t cid, uint8_t code, uint16_t len, uint8_t *data)
 {
     INTERFACE_MSG_INIT(L2CC_PDU_SEND_REQ,  KE_BUILD_ID(TASK_L2CC, conn_handle));

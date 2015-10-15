@@ -13,6 +13,11 @@
 
 static uint16_t u16GattcSeqNo = 0;
 
+void init_gatt_client_module(void)
+{
+	u16GattcSeqNo = 0;
+}
+
 at_ble_status_t at_ble_primary_service_discover_all(at_ble_handle_t conn_handle,
         at_ble_handle_t start_handle, at_ble_handle_t end_handle)
 {

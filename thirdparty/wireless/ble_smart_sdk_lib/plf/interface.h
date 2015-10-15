@@ -28,8 +28,8 @@ do{\
 	interface_send_msg[1] = (((msg_id)>>8) & 0x00FF );\
 	interface_send_msg[2] = ((dest_id) & 0x00FF );\
 	interface_send_msg[3] = (((dest_id)>>8) & 0x00FF );\
-	interface_send_msg[4] = ((TASK_TYPE) & 0x00FF );\
-	interface_send_msg[5] = (((TASK_TYPE)>>8) & 0x00FF );\
+	interface_send_msg[4] = ((app_task_type) & 0x00FF );\
+	interface_send_msg[5] = (((app_task_type)>>8) & 0x00FF );\
 
 #define INTERFACE_PACK_ARG_UINT8(arg)\
 	interface_send_msg[__idx++] = (arg)

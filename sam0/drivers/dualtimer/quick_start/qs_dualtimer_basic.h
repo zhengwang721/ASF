@@ -98,10 +98,6 @@
  *    \snippet qs_dualtimer_basic.c setup_dualtimer_4
  *   -# Configure the DUALTIMER module with the desired settings.
  *    \snippet qs_dualtimer_basic.c setup_timer_5
- *   -# Set the DUALTIMER module timer1 enable.
- *    \snippet qs_dualtimer_basic.c setup_dualtimer_6
- *   -# Set the DUALTIMER module timer2 enable.
- *    \snippet qs_dualtimer_basic.c setup_dualtimer_7
  *
  * -# Create a new function \c configure_dualtimer_callback(), which will be used to configure
  *    the DUALTIMER callback.

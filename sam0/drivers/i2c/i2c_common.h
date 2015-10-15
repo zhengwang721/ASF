@@ -246,6 +246,7 @@ extern "C" {
  * \li \b BUSY If another master is driving the bus
  *
  * \section asfdoc_samb_i2c_special_considerations Special Considerations
+ * There are no special considerations related to this driver.
  *
  *
  * \section asfdoc_samb_i2c_extra Extra Information
@@ -421,7 +422,7 @@ static inline void i2c_slave_tx_interrupt(I2C *const i2c_module, bool enable)
  * </table>
  *
  * \section asfdoc_samb_i2c_extra_dependencies Dependencies
- * There are no errata related to this driver.
+ * There are no dependencies related to this driver.
  *
  *
  * \section asfdoc_samb_i2c_extra_errata Errata

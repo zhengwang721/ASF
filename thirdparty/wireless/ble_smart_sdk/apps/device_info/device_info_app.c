@@ -50,7 +50,7 @@
 
 
 #include <asf.h>
-#include "conf_extint.h"
+//#include "conf_extint.h"
 #include "console_serial.h"
 #include "at_ble_api.h"
 #include "platform.h"

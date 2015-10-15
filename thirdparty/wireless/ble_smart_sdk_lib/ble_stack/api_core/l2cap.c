@@ -1,4 +1,3 @@
-
 #include "at_ble_api.h"
 
 #include "platform.h"
@@ -16,20 +15,27 @@
 at_ble_status_t at_ble_l2cap_cid_register(at_ble_handle_t conn_handle, uint16_t cid);
 at_ble_status_t at_ble_l2cap_cid_unregister(at_ble_handle_t conn_handle, uint16_t cid);
 at_ble_status_t at_ble_l2cap_tx(at_ble_handle_t conn_handle, uint16_t cid, uint8_t *data, uint16_t len);
-
 at_ble_status_t at_ble_l2cap_cid_register(at_ble_handle_t conn_handle, uint16_t cid)
 {
     return AT_BLE_FAILURE;
+    UNREFERENCED_PARAMETER(conn_handle);
+    UNREFERENCED_PARAMETER(cid);
 }
 
 at_ble_status_t at_ble_l2cap_cid_unregister(at_ble_handle_t conn_handle, uint16_t cid)
 {
     return AT_BLE_FAILURE;
+    UNREFERENCED_PARAMETER(conn_handle);
+    UNREFERENCED_PARAMETER(cid);
 }
 
 at_ble_status_t at_ble_l2cap_tx(at_ble_handle_t conn_handle, uint16_t cid, uint8_t *data, uint16_t len)
 {
     return AT_BLE_FAILURE;
+    UNREFERENCED_PARAMETER(conn_handle);
+    UNREFERENCED_PARAMETER(cid);
+    UNREFERENCED_PARAMETER(data);
+    UNREFERENCED_PARAMETER(len);
 }
 
 at_ble_status_t at_ble_lecb_create(at_ble_handle_t conn_handle, at_ble_lecb_sec_level_t sec_level, uint16_t le_psm, uint16_t cid,
@@ -107,7 +113,7 @@ at_ble_status_t at_ble_lecb_send(at_ble_handle_t conn_handle, uint16_t cid, uint
     }
     //decrement available heap memory , return to user if no available buffers
     l2cap_avail_buffers--;
-    if (l2cap_avail_buffers < 0)
+    if (l2cap_avail_buffers == 0)
     {
         status = AT_BLE_BUSY;
         PRINT_ERR("No available buffers in heap , chip busy. \n");

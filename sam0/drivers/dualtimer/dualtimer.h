@@ -145,7 +145,7 @@
  *
  * \section asfdoc_samb_dualtimer_special_considerations Special Considerations
  *
- * There are no prerequisites for this module.
+ * There are no special considerations for this module.
  *
  * \section asfdoc_samb_dualtimer_extra_info Extra Information
  *

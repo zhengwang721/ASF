@@ -343,7 +343,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  DWT_CID0:8;                /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } ARM_DWT_DWT_CID0_Type;
@@ -352,13 +352,16 @@ typedef union {
 #define ARM_DWT_DWT_CID0_OFFSET               0xFF0          /**<  \brief (ARM_DWT_DWT_CID0 offset) Component ID Register 0 */
 #define ARM_DWT_DWT_CID0_RESETVALUE           0x0Dul         /**<  \brief (ARM_DWT_DWT_CID0 reset_value) Component ID Register 0 */
 
-#define ARM_DWT_DWT_CID0_MASK                 0x00ul    /**< \brief (ARM_DWT_DWT_CID0) Register MASK */
+#define ARM_DWT_DWT_CID0_DWT_CID0_Pos         0  /**< \brief (ARM_DWT_DWT_CID0)                                           */
+#define ARM_DWT_DWT_CID0_DWT_CID0_Msk         (0xFFul << ARM_DWT_DWT_CID0_DWT_CID0_Pos)
+#define ARM_DWT_DWT_CID0_DWT_CID0(value)      (ARM_DWT_DWT_CID0_DWT_CID0_Msk & ((value) << ARM_DWT_DWT_CID0_DWT_CID0_Pos))  
+#define ARM_DWT_DWT_CID0_MASK                 0xFFul    /**< \brief (ARM_DWT_DWT_CID0) Register MASK */
 
 /* -------- ARM_DWT_DWT_CID1 : (ARM_DWT Offset: 0xff4) (R/  8) Component ID Register 1 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  DWT_CID1:8;                /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } ARM_DWT_DWT_CID1_Type;
@@ -367,13 +370,16 @@ typedef union {
 #define ARM_DWT_DWT_CID1_OFFSET               0xFF4          /**<  \brief (ARM_DWT_DWT_CID1 offset) Component ID Register 1 */
 #define ARM_DWT_DWT_CID1_RESETVALUE           0xE0ul         /**<  \brief (ARM_DWT_DWT_CID1 reset_value) Component ID Register 1 */
 
-#define ARM_DWT_DWT_CID1_MASK                 0x00ul    /**< \brief (ARM_DWT_DWT_CID1) Register MASK */
+#define ARM_DWT_DWT_CID1_DWT_CID1_Pos         0  /**< \brief (ARM_DWT_DWT_CID1)                                           */
+#define ARM_DWT_DWT_CID1_DWT_CID1_Msk         (0xFFul << ARM_DWT_DWT_CID1_DWT_CID1_Pos)
+#define ARM_DWT_DWT_CID1_DWT_CID1(value)      (ARM_DWT_DWT_CID1_DWT_CID1_Msk & ((value) << ARM_DWT_DWT_CID1_DWT_CID1_Pos))  
+#define ARM_DWT_DWT_CID1_MASK                 0xFFul    /**< \brief (ARM_DWT_DWT_CID1) Register MASK */
 
 /* -------- ARM_DWT_DWT_CID2 : (ARM_DWT Offset: 0xff8) (R/  8) Component ID Register 2 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  DWT_CID2:8;                /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } ARM_DWT_DWT_CID2_Type;
@@ -382,13 +388,16 @@ typedef union {
 #define ARM_DWT_DWT_CID2_OFFSET               0xFF8          /**<  \brief (ARM_DWT_DWT_CID2 offset) Component ID Register 2 */
 #define ARM_DWT_DWT_CID2_RESETVALUE           0x05ul         /**<  \brief (ARM_DWT_DWT_CID2 reset_value) Component ID Register 2 */
 
-#define ARM_DWT_DWT_CID2_MASK                 0x00ul    /**< \brief (ARM_DWT_DWT_CID2) Register MASK */
+#define ARM_DWT_DWT_CID2_DWT_CID2_Pos         0  /**< \brief (ARM_DWT_DWT_CID2)                                           */
+#define ARM_DWT_DWT_CID2_DWT_CID2_Msk         (0xFFul << ARM_DWT_DWT_CID2_DWT_CID2_Pos)
+#define ARM_DWT_DWT_CID2_DWT_CID2(value)      (ARM_DWT_DWT_CID2_DWT_CID2_Msk & ((value) << ARM_DWT_DWT_CID2_DWT_CID2_Pos))  
+#define ARM_DWT_DWT_CID2_MASK                 0xFFul    /**< \brief (ARM_DWT_DWT_CID2) Register MASK */
 
 /* -------- ARM_DWT_DWT_CID3 : (ARM_DWT Offset: 0xffc) (R/  8) Component ID Register 3 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  DWT_CID3:8;                /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } ARM_DWT_DWT_CID3_Type;
@@ -397,7 +406,10 @@ typedef union {
 #define ARM_DWT_DWT_CID3_OFFSET               0xFFC          /**<  \brief (ARM_DWT_DWT_CID3 offset) Component ID Register 3 */
 #define ARM_DWT_DWT_CID3_RESETVALUE           0xB1ul         /**<  \brief (ARM_DWT_DWT_CID3 reset_value) Component ID Register 3 */
 
-#define ARM_DWT_DWT_CID3_MASK                 0x00ul    /**< \brief (ARM_DWT_DWT_CID3) Register MASK */
+#define ARM_DWT_DWT_CID3_DWT_CID3_Pos         0  /**< \brief (ARM_DWT_DWT_CID3)                                           */
+#define ARM_DWT_DWT_CID3_DWT_CID3_Msk         (0xFFul << ARM_DWT_DWT_CID3_DWT_CID3_Pos)
+#define ARM_DWT_DWT_CID3_DWT_CID3(value)      (ARM_DWT_DWT_CID3_DWT_CID3_Msk & ((value) << ARM_DWT_DWT_CID3_DWT_CID3_Pos))  
+#define ARM_DWT_DWT_CID3_MASK                 0xFFul    /**< \brief (ARM_DWT_DWT_CID3) Register MASK */
 
 /** \brief ARM_DWT hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

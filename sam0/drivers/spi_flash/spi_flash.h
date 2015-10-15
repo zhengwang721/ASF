@@ -109,7 +109,7 @@
  * </table>
  *
  * \section asfdoc_samb_spi_flash_special_considerations Special Considerations
- * There are no prerequisites for this module.
+ * There are no special considerations for this module.
  *
  * \section asfdoc_samb_spi_flash_extra_info Extra Information
  *
@@ -202,7 +202,7 @@ void spi_flash_init(void) ;
  * @{
  */
 uint32_t spi_flash_read_id(void);
-void spi_flash_read(void *read_buf, uint32_t flash_addr, uint32_t size);
+void spi_flash_read(uint8_t *read_buf, uint32_t flash_addr, uint32_t size);
 int8_t spi_flash_write(void *write_buf, uint32_t flash_addr, uint32_t size);
 uint8_t spi_flash_erase(uint32_t start_offset, uint32_t size);
 void spi_flash_enter_low_power_mode(void);

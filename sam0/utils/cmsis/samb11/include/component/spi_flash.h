@@ -138,7 +138,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t CMD_BUFFER0:32;            /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } SPI_FLASH_CMD_BUFFER0_Type;
@@ -147,13 +147,16 @@ typedef union {
 #define SPI_FLASH_CMD_BUFFER0_OFFSET          0x0C           /**<  \brief (SPI_FLASH_CMD_BUFFER0 offset) Command Buffer 0 (Bytes 3 - 0) */
 #define SPI_FLASH_CMD_BUFFER0_RESETVALUE      0x03ul         /**<  \brief (SPI_FLASH_CMD_BUFFER0 reset_value) Command Buffer 0 (Bytes 3 - 0) */
 
-#define SPI_FLASH_CMD_BUFFER0_MASK            0x00ul    /**< \brief (SPI_FLASH_CMD_BUFFER0) Register MASK */
+#define SPI_FLASH_CMD_BUFFER0_CMD_BUFFER0_Pos 0  /**< \brief (SPI_FLASH_CMD_BUFFER0)                                      */
+#define SPI_FLASH_CMD_BUFFER0_CMD_BUFFER0_Msk (0xFFFFFFFFul << SPI_FLASH_CMD_BUFFER0_CMD_BUFFER0_Pos)
+#define SPI_FLASH_CMD_BUFFER0_CMD_BUFFER0(value) (SPI_FLASH_CMD_BUFFER0_CMD_BUFFER0_Msk & ((value) << SPI_FLASH_CMD_BUFFER0_CMD_BUFFER0_Pos))  
+#define SPI_FLASH_CMD_BUFFER0_MASK            0xFFFFFFFFul    /**< \brief (SPI_FLASH_CMD_BUFFER0) Register MASK */
 
 /* -------- SPI_FLASH_CMD_BUFFER1 : (SPI_FLASH Offset: 0x10) (R/W  32) Command Buffer 1 (Bytes 7 - 4) -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t CMD_BUFFER1:32;            /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } SPI_FLASH_CMD_BUFFER1_Type;
@@ -162,13 +165,16 @@ typedef union {
 #define SPI_FLASH_CMD_BUFFER1_OFFSET          0x10           /**<  \brief (SPI_FLASH_CMD_BUFFER1 offset) Command Buffer 1 (Bytes 7 - 4) */
 #define SPI_FLASH_CMD_BUFFER1_RESETVALUE      0x00ul         /**<  \brief (SPI_FLASH_CMD_BUFFER1 reset_value) Command Buffer 1 (Bytes 7 - 4) */
 
-#define SPI_FLASH_CMD_BUFFER1_MASK            0x00ul    /**< \brief (SPI_FLASH_CMD_BUFFER1) Register MASK */
+#define SPI_FLASH_CMD_BUFFER1_CMD_BUFFER1_Pos 0  /**< \brief (SPI_FLASH_CMD_BUFFER1)                                      */
+#define SPI_FLASH_CMD_BUFFER1_CMD_BUFFER1_Msk (0xFFFFFFFFul << SPI_FLASH_CMD_BUFFER1_CMD_BUFFER1_Pos)
+#define SPI_FLASH_CMD_BUFFER1_CMD_BUFFER1(value) (SPI_FLASH_CMD_BUFFER1_CMD_BUFFER1_Msk & ((value) << SPI_FLASH_CMD_BUFFER1_CMD_BUFFER1_Pos))  
+#define SPI_FLASH_CMD_BUFFER1_MASK            0xFFFFFFFFul    /**< \brief (SPI_FLASH_CMD_BUFFER1) Register MASK */
 
 /* -------- SPI_FLASH_DIRECTION : (SPI_FLASH Offset: 0x14) (R/W  8) Read/Write bit for Bytes 7 - 0 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  DIRECTION:8;               /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } SPI_FLASH_DIRECTION_Type;
@@ -177,7 +183,10 @@ typedef union {
 #define SPI_FLASH_DIRECTION_OFFSET            0x14           /**<  \brief (SPI_FLASH_DIRECTION offset) Read/Write bit for Bytes 7 - 0 */
 #define SPI_FLASH_DIRECTION_RESETVALUE        0x0Ful         /**<  \brief (SPI_FLASH_DIRECTION reset_value) Read/Write bit for Bytes 7 - 0 */
 
-#define SPI_FLASH_DIRECTION_MASK              0x00ul    /**< \brief (SPI_FLASH_DIRECTION) Register MASK */
+#define SPI_FLASH_DIRECTION_DIRECTION_Pos     0  /**< \brief (SPI_FLASH_DIRECTION)                                        */
+#define SPI_FLASH_DIRECTION_DIRECTION_Msk     (0xFFul << SPI_FLASH_DIRECTION_DIRECTION_Pos)
+#define SPI_FLASH_DIRECTION_DIRECTION(value)  (SPI_FLASH_DIRECTION_DIRECTION_Msk & ((value) << SPI_FLASH_DIRECTION_DIRECTION_Pos))  
+#define SPI_FLASH_DIRECTION_MASK              0xFFul    /**< \brief (SPI_FLASH_DIRECTION) Register MASK */
 
 /* -------- SPI_FLASH_IRQ_STATUS : (SPI_FLASH Offset: 0x18) (/W  8) IRQ Status (Write 0 to bit to clear, Read clears interupts) -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -204,7 +213,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t DMA_START_ADDRESS:32;      /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } SPI_FLASH_DMA_START_ADDRESS_Type;
@@ -213,7 +222,10 @@ typedef union {
 #define SPI_FLASH_DMA_START_ADDRESS_OFFSET    0x1C           /**<  \brief (SPI_FLASH_DMA_START_ADDRESS offset) DMA Starting Address */
 #define SPI_FLASH_DMA_START_ADDRESS_RESETVALUE 0x00ul         /**<  \brief (SPI_FLASH_DMA_START_ADDRESS reset_value) DMA Starting Address */
 
-#define SPI_FLASH_DMA_START_ADDRESS_MASK      0x00ul    /**< \brief (SPI_FLASH_DMA_START_ADDRESS) Register MASK */
+#define SPI_FLASH_DMA_START_ADDRESS_DMA_START_ADDRESS_Pos 0  /**< \brief (SPI_FLASH_DMA_START_ADDRESS)                                */
+#define SPI_FLASH_DMA_START_ADDRESS_DMA_START_ADDRESS_Msk (0xFFFFFFFFul << SPI_FLASH_DMA_START_ADDRESS_DMA_START_ADDRESS_Pos)
+#define SPI_FLASH_DMA_START_ADDRESS_DMA_START_ADDRESS(value) (SPI_FLASH_DMA_START_ADDRESS_DMA_START_ADDRESS_Msk & ((value) << SPI_FLASH_DMA_START_ADDRESS_DMA_START_ADDRESS_Pos))  
+#define SPI_FLASH_DMA_START_ADDRESS_MASK      0xFFFFFFFFul    /**< \brief (SPI_FLASH_DMA_START_ADDRESS) Register MASK */
 
 /* -------- SPI_FLASH_CONFIG : (SPI_FLASH Offset: 0x20) (R/W  16) SPI Flash Configuration -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

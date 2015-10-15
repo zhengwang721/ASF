@@ -82,14 +82,18 @@
  * \snippet qs_i2c_master_callback.c run_initialize_i2c
  *
  * \subsection asfdoc_samb_i2c_master_callback_use_case_setup_workflow Workflow
- * -# Configure and enable module.
- *    \snippet qs_i2c_master_callback.c config
  *  -# Create and initialize configuration structure.
- *     \snippet qs_i2c_master_callback.c init_conf
+ *     \snippet qs_i2c_master_callback.c setup_1
+ *  -# Change GPIO direction and pull mode settings in the configuration.
+ *     \snippet qs_i2c_master_callback.c setup_2
  *  -# Initialize the module with the set configurations.
- *     \snippet qs_i2c_master_callback.c init_module
+ *     \snippet qs_i2c_master_callback.c setup_3
+ *  -# Create and initialize configuration structure.
+ *     \snippet qs_i2c_master_callback.c setup_4
+ *  -# Initialize the module with the set configurations.
+ *     \snippet qs_i2c_master_callback.c setup_5
  *  -# Enable the module.
- *     \snippet qs_i2c_master_callback.c enable_module
+ *     \snippet qs_i2c_master_callback.c setup_6
  * -# Configure callback functionality.
  *    \snippet qs_i2c_master_callback.c config_callback
  *  -# Register write complete callback.
@@ -118,8 +122,10 @@
  *
  * \subsection asfdoc_samb_i2c_master_callback_use_case_callback_workflow Workflow
  * -# Write complete callback:
+ *  -# Send every other packet in reversed order.
+ *     \snippet qs_i2c_master_callback.c revert_order
  *  -# Write new packet to slave.
- *     \snippet qs_i2c_master_callback.c write_packet_job
+ *     \snippet qs_i2c_master_callback.c write_packet
  *
  */
 /*

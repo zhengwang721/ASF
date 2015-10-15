@@ -1,4 +1,3 @@
-
 #include "at_ble_api.h"
 #include "dbg_logs.h"
 #include "platform.h"
@@ -8,6 +7,7 @@
 #include "gapm_task.h"
 #include "gapc_task.h"
 #include "dbg_task.h"
+#include "l2cc_task.h"
 
 #include "device.h"
 #include "event.h"
@@ -36,34 +36,45 @@
 struct device_info device;
 tstrConnData gstrConnData[AT_BLE_MAX_CONCURRENT_CONNS];
 extern volatile int init_done;
+volatile uint16_t app_task_type;
 
+/* function prototypes  */
+void init_gatt_client_module(void);
+void initi_gatt_server_module(void);
+void init_l2cc_task_module(void);
 
 at_ble_status_t at_ble_init(at_ble_init_config_t *args)
 {
-
 #ifdef SAMB11
 	/* TODO map Driver errors to at_ble_status_t */
 	plf_drv_status platform_status = STATUS_SUCCESS;
 #endif
 	at_ble_status_t  status = AT_BLE_FAILURE;
-//#ifndef SAMB11
 #ifndef PATCH_GUI
 #ifndef USE_RW_FPGA
-	at_ble_events_t event;
-	uint8_t params[8];
+    at_ble_events_t event;
+    uint8_t params[8];
 #endif
 #endif
-//#endif
-
-	FN_IN();
+    uint8_t dev_name[] = {'A', 't', 'm', 'e', 'l', ' ', 'C', 'o', 'r', 'p', '.'};
+    FN_IN();
 
 #ifdef SAMB11
+	app_task_type = TASK_INTERN;
+	/* Initialize any other global variables required here (especially for SAMB11 )*/
+	u32usedBuffers = 0;
+	unNull = 0;
+	l2cap_avail_buffers = 0;
+	init_gattc_task_module();
+	init_gatt_client_module();
+	initi_gatt_server_module();
+	init_l2cc_task_module();
 	do
 	{
 		/* Initialise database (GATT Server)*/
 		if(args && args->memPool.memStartAdd)
 		{
-			if(args->memPool.memSize <= 0)
+			if(args->memPool.memSize == 0)
 			{
 				PRINT_ERR("Invalid Parameters, DB memory size provided is incorrect \r\n");
 				break;
@@ -79,7 +90,7 @@ at_ble_status_t at_ble_init(at_ble_init_config_t *args)
 
 		/* Platform Initialisation */
 		platform_status = platform_driver_init();
-		if (platform_status != STATUS_SUCCESS)
+		if ((platform_status != STATUS_SUCCESS) && ((platform_status != STATUS_ALREADY_INITIALIZED)))
 		{
 			PRINT_ERR("Unable to init platform <%02X>\r\n", platform_status);
 			break;
@@ -96,9 +107,9 @@ at_ble_status_t at_ble_init(at_ble_init_config_t *args)
 		/* initialize interface layer */
 		interface_init();
 		/* initialise event handler */
-		event_init();
+		internal_event_init();
 
-		while (at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS)
+		while (at_ble_event_get(&event, params, ((uint32_t) - 1)) == AT_BLE_SUCCESS)
 		{
 			if (event == AT_BLE_DEVICE_READY)
 			{
@@ -159,14 +170,11 @@ at_ble_status_t at_ble_init(at_ble_init_config_t *args)
 		PRINT_INFO("Device Info Initialisation success \r\n");
 
 		/* Set Device Default Name */
+		status = at_ble_device_name_set(&dev_name[0], sizeof(dev_name));
+		if (AT_BLE_SUCCESS != status)
 		{
-			uint8_t dev_name[] = {'A', 't', 'm', 'e', 'l', ' ', 'C', 'o', 'r', 'p', '.'};
-			status = at_ble_device_name_set(&dev_name[0], sizeof(dev_name));
-			if (AT_BLE_SUCCESS != status)
-			{
-				PRINT_ERR("Unable to set default device name <%02X>\r\n", status);
-				break;
-			}
+			PRINT_ERR("Unable to set default device name <%02X>\r\n", status);
+			break;
 		}
 		PRINT_INFO("Device Name set Success \r\n");
 
@@ -174,6 +182,11 @@ at_ble_status_t at_ble_init(at_ble_init_config_t *args)
 		status = AT_BLE_SUCCESS;
 	}while(0);
 #else
+	app_task_type = TASK_EXTERN;
+    if (args)
+    {
+        db_init(args->memPool.memStartAdd, args->memPool.memSize);
+    }
 	do
 	{
 		/* Platform Initialization */
@@ -189,95 +202,91 @@ at_ble_status_t at_ble_init(at_ble_init_config_t *args)
 		else
 		{
             platform_config tempConfig = {AT_BLE_UART, 0};
-			status = platform_init(&tempConfig);
-			if (status != AT_BLE_SUCCESS)
-			{
-				PRINT_ERR("Unable to init platform <%02X>\r\n", status);
-				break;
-			}
-		}
-		/* initialize event handler before patching, to be able to receive ready message! */
-		event_init();
+            status = platform_init(&tempConfig);
+            if (status != AT_BLE_SUCCESS)
+            {
+                PRINT_ERR("Unable to init platform <%02X>\r\n", status);
+                break;
+            }
+        }
+        /* initialize event handler before patching, to be able to receive ready message! */
+        internal_event_init();
 #ifndef PATCH_GUI
 #ifndef USE_RW_FPGA
-		status = patch_init();
-		if (status != AT_BLE_SUCCESS)
-		{
-			PRINT_ERR("Unable to init patch <%02X>\r\n", status);
-			break;
-		}
-		while (at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS)
-		{
-			if (event == AT_BLE_DEVICE_READY)
-			{
-				break;
-			}
-		}
+        status = patch_init();
+        if (status != AT_BLE_SUCCESS)
+        {
+            PRINT_ERR("Unable to init patch <%02X>\r\n", status);
+            break;
+        }
+        while (at_ble_event_get(&event, params, ((uint32_t) - 1)) == AT_BLE_SUCCESS)
+        {
+            if (event == AT_BLE_DEVICE_READY)
+            {
+                break;
+            }
+        }
         init_done = 1;
 #endif
 #endif
-		status = gapm_reset_req_handler();
-		if (status != AT_BLE_SUCCESS)
-		{
-			PRINT_ERR("Unable to reset <%02X>", status);
-			break;
-		}
-		// init device info
-		if (status == AT_BLE_SUCCESS)
-		{
-			uint8_t loopCntr;
-			uint8_t *ptr = NULL;
-			for (loopCntr = 0; loopCntr < AT_BLE_MAX_CONCURRENT_CONNS; loopCntr++)
-			{
-				gstrConnData[loopCntr].conHandle = 0xFFFF;
-			}
-			device.config.role = AT_BLE_ROLE_ALL;
-			device.config.renew_dur = AT_RENEW_DUR_VAL_MIN;
-			device.config.address.type = AT_BLE_ADDRESS_PUBLIC;
-			ptr = (uint8_t *) & (device.config.irk[0]);
-			for (loopCntr = 0; loopCntr < (AT_BLE_MAX_KEY_LEN * 2); loopCntr += 2)
-			{
-				*(ptr++) = loopCntr | ((loopCntr + 1) << 4);
-			}
-			//0x00 (Default 0x20)
-			device.config.att_cfg.b2NamePerm = AT_BLE_WRITE_DISABLE;
-			device.config.att_cfg.b2AppearancePerm = AT_BLE_WRITE_DISABLE;
-			device.config.att_cfg.b1EnableSpcs = 0;
-			device.config.att_cfg.b1EnableServiceChanged = 0;//(Default 1)
-			device.config.att_cfg.b2Rfu = AT_BLE_WRITE_DISABLE;
-			device.config.gap_start_hdl = AT_BLE_AUTO_ALLOC_HANDLE;
-			device.config.gatt_start_hdl = AT_BLE_AUTO_ALLOC_HANDLE;
-			device.config.max_mtu = AT_MTU_VAL_RECOMMENDED;
-			/*LocaLS*/
-			device.srLen = 0;
-			device.advLen = 0;
-			device.privacy_flags = 0;
-			device.appearance = 0;
-			device.spcp_param.con_intv_max = AT_BLE_SLV_PREF_CON_INTV_MAX;
-			device.spcp_param.con_intv_min = AT_BLE_SLV_PREF_CON_INTV_MIN;
-			device.spcp_param.con_latency = AT_BLE_SLV_PREF_CON_LATENCY;
-			device.spcp_param.superv_to = AT_BLE_SLV_PREF_SUPV_TO;
-			device.dev_name_write_perm = GAPM_WRITE_DISABLE;
-			status = at_ble_set_dev_config((at_ble_dev_config_t *)&device.config);
-			//Advertising channel
-			device.u8AdvChnlMap = AT_BLE_ADV_ALL_CHNLS_EN;
-
-
-
-			/* Set Device Default Name */
-			status = at_ble_device_name_set(&dev_name[0], sizeof(dev_name));
-			if (AT_BLE_SUCCESS != status)
-			{
-				PRINT_ERR("Unable to set default device name <%02X>\r\n", status);
-				break;
-			}
-		}
-	}
-	while (0);
+        status = gapm_reset_req_handler();
+        if (status != AT_BLE_SUCCESS)
+        {
+            PRINT_ERR("Unable to reset <%02X>", status);
+            break;
+        }
+        // init device info
+        if (status == AT_BLE_SUCCESS)
+        {
+            uint8_t loopCntr;
+            uint8_t *ptr = NULL;
+            for (loopCntr = 0; loopCntr < AT_BLE_MAX_CONCURRENT_CONNS; loopCntr++)
+            {
+                gstrConnData[loopCntr].conHandle = 0xFFFF;
+            }
+            device.config.role = AT_BLE_ROLE_ALL;
+            device.config.renew_dur = AT_RENEW_DUR_VAL_MIN;
+            device.config.address.type = AT_BLE_ADDRESS_PUBLIC;
+            ptr = (uint8_t *) & (device.config.irk[0]);
+            for (loopCntr = 0; loopCntr < (AT_BLE_MAX_KEY_LEN * 2); loopCntr += 2)
+            {
+                *(ptr++) = loopCntr | ((loopCntr + 1) << 4);
+            }
+            //0x00 (Default 0x20)
+            device.config.att_cfg.b2NamePerm = AT_BLE_WRITE_DISABLE;
+            device.config.att_cfg.b2AppearancePerm = AT_BLE_WRITE_DISABLE;
+            device.config.att_cfg.b1EnableSpcs = 0;
+            device.config.att_cfg.b1EnableServiceChanged = 0;//(Default 1)
+            device.config.att_cfg.b2Rfu = AT_BLE_WRITE_DISABLE;
+            device.config.gap_start_hdl = AT_BLE_AUTO_ALLOC_HANDLE;
+            device.config.gatt_start_hdl = AT_BLE_AUTO_ALLOC_HANDLE;
+            device.config.max_mtu = AT_MTU_VAL_RECOMMENDED;
+            /*LocaLS*/
+            device.srLen = 0;
+            device.advLen = 0;
+            device.privacy_flags = 0;
+            device.appearance = 0;
+            device.spcp_param.con_intv_max = AT_BLE_SLV_PREF_CON_INTV_MAX;
+            device.spcp_param.con_intv_min = AT_BLE_SLV_PREF_CON_INTV_MIN;
+            device.spcp_param.con_latency = AT_BLE_SLV_PREF_CON_LATENCY;
+            device.spcp_param.superv_to = AT_BLE_SLV_PREF_SUPV_TO;
+            device.dev_name_write_perm = GAPM_WRITE_DISABLE;
+            status = at_ble_set_dev_config((at_ble_dev_config_t *)&device.config);
+            //Advertising channel
+            device.u8AdvChnlMap = AT_BLE_ADV_ALL_CHNLS_EN;
+            /* Set Device Default Name */
+            status = at_ble_device_name_set(&dev_name[0], sizeof(dev_name));
+            if (AT_BLE_SUCCESS != status)
+            {
+                PRINT_ERR("Unable to set default device name <%02X>\r\n", status);
+                break;
+            }
+        }
+    }
+    while (0);
 #endif
-
-	FN_OUT(status);
-	return status;
+    FN_OUT(status);
+    return status;
 }
 
 at_ble_status_t at_ble_set_privacy_key(at_ble_gap_irk_t *irk , uint16_t interval)
@@ -363,28 +372,28 @@ at_ble_status_t at_ble_gap_get_peer_deviceinfo(uint16_t conn_handle, at_ble_gapc
         }
         switch (info->operation)
         {
-    case AT_BLE_GET_PEER_NAME:
+        case AT_BLE_GET_PEER_NAME:
             info->operation =  GAPC_GET_PEER_NAME;
-        break;
-    case AT_BLE_GET_PEER_APPEARANCE:
+            break;
+        case AT_BLE_GET_PEER_APPEARANCE:
             info->operation = GAPC_GET_PEER_APPEARANCE ;
-        break;
-    case AT_BLE_GET_PEER_SLV_PREF_PARAMS:
+            break;
+        case AT_BLE_GET_PEER_SLV_PREF_PARAMS:
             info->operation = GAPC_GET_PEER_SLV_PREF_PARAMS;
-        break;
-    case AT_BLE_GET_CON_CHANNEL_MAP:
+            break;
+        case AT_BLE_GET_CON_CHANNEL_MAP:
             info->operation = GAPC_GET_CON_CHANNEL_MAP;
-        break;
-    default:
-        status = AT_BLE_INVALID_PARAM;
-        PRINT_ERR("Invalid Parameters error");
-        break;
-    }
-    if (AT_BLE_SUCCESS == status)
-    {
+            break;
+        default:
+            status = AT_BLE_INVALID_PARAM;
+            PRINT_ERR("Invalid Parameters error");
+            break;
+        }
+        if (AT_BLE_SUCCESS == status)
+        {
             gapc_get_info_cmd_handler(conn_handle, info->operation, NULL);
             PRINT_INFO("gap_get_deviceinfo command sent, Operation: <%d>, Connection Handle: <%X> ", info->operation, conn_handle);
-    }
+        }
     }
     while (0);
     ASSERT_PRINT_ERR(AT_BLE_SUCCESS != status, "Status : 0x%02X\n", status);
@@ -509,6 +518,11 @@ at_ble_status_t at_ble_set_dev_config(at_ble_dev_config_t *config)
         {
             PRINT_ERR("Unknown device role 0x<%2>\r\n", config->role);
             status = AT_BLE_INVALID_STATE;
+            break;
+        }
+        if (config->max_mtu > AT_MTU_VAL_MAX)
+        {
+            PRINT_ERR("MTU Value exceed maximum allowed value \r\n");
             break;
         }
         att = (config->att_cfg.b2Rfu                 << 6) |
@@ -773,7 +787,7 @@ at_ble_status_t at_ble_scan_stop(void)
     status = gapm_cancel_cmd_handler();
     if (AT_BLE_SUCCESS == status)
     {
-        at_ble_event_flush(GAPM_ADV_REPORT_IND);
+        internal_event_flush(GAPM_ADV_REPORT_IND);
     }
     FN_OUT(status);
     return status;
@@ -872,7 +886,7 @@ at_ble_status_t at_ble_disconnect(at_ble_handle_t handle, at_ble_disconnect_reas
     at_ble_status_t status = AT_BLE_SUCCESS;
     FN_IN();
     status = (at_ble_status_t)gapc_disconnect_cmd_handler(reason, handle);
-    at_ble_conn_flush(handle);
+    internal_conn_flush(handle);
     FN_OUT(status);
     return status;
 }
@@ -1075,10 +1089,10 @@ at_ble_status_t at_ble_rx_power_get(at_ble_handle_t conn_handle, int8_t *rx_powe
             break;
         }
         status = (at_ble_status_t)gapc_get_info_cmd_handler(conn_handle, GAPC_GET_CON_RSSI, (uint8_t *)rx_power);
-        if (*((int8_t *)rx_power) > 127)
+        if (*((uint8_t *)rx_power) > 127)
         {
-            *((int8_t *)rx_power) = (*((int8_t *)rx_power) + 1) & 0xFF;
-    }
+            *((uint8_t *)rx_power) = (*((uint8_t *)rx_power) + 1) & 0xFF;
+        }
     }
     while (0);
     ASSERT_PRINT_ERR(AT_BLE_SUCCESS != status, "Status : 0x%02X\n", status);
@@ -1086,7 +1100,7 @@ at_ble_status_t at_ble_rx_power_get(at_ble_handle_t conn_handle, int8_t *rx_powe
     return status;
 }
 at_ble_status_t at_ble_tx_power_set(at_ble_tx_power_level_t power)
-    {
+{
     at_ble_status_t status = AT_BLE_SUCCESS;
     uint32_t level = (uint32_t) power  & 0x1F;
     FN_IN();
@@ -1094,7 +1108,7 @@ at_ble_status_t at_ble_tx_power_set(at_ble_tx_power_level_t power)
     ASSERT_PRINT_ERR(AT_BLE_SUCCESS != status, "Status : 0x%02X\n", status);
     FN_OUT(status);
     return status;
-    }
+}
 at_ble_status_t at_ble_tx_power_get(at_ble_tx_power_level_t *power)
 {
     at_ble_status_t status = AT_BLE_SUCCESS;

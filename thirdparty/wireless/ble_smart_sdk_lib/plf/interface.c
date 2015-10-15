@@ -24,7 +24,9 @@ void rx_callback(uint8_t* data, uint32_t len)
 	uint16_t src_id = rcv_msg->src_id;
 	uint8_t* param = (uint8_t *)(rcv_msg + 1);
 	uint16_t param_len = rcv_msg->param_len;
-	//uart_printf(UART_HW_MODULE_UART2,"%04x\n\r",msg_id);
+#if (PRINT_KE_MSG)
+	uart_printf(UART_HW_MODULE_UART2,"R:%04x\n\r",msg_id);
+#endif	//KE_MSG_DBG
 	if(param_len==0)
 	{
 		//post the event to api event queue
@@ -32,10 +34,10 @@ void rx_callback(uint8_t* data, uint32_t len)
 		{
 #ifndef NEW_EVT_HANDLER
 			// post it into the event queue
-			event_post(msg_id, src_id, NULL);
+			internal_event_post(msg_id, src_id, NULL);
 #else
 			// post it into the event queue
-			event_post(msg_id, src_id, NULL,0);
+			internal_event_post(msg_id, src_id, NULL,0);
 #endif
 		}
 	}
@@ -49,9 +51,9 @@ void rx_callback(uint8_t* data, uint32_t len)
 		if(!special_events_handler(msg_id, src_id, &event_param_buff[event_param_buff_index]))
 		{
 #ifndef NEW_EVT_HANDLER
-			event_post(msg_id, src_id, &event_param_buff[event_param_buff_index]);
+			internal_event_post(msg_id, src_id, &event_param_buff[event_param_buff_index]);
 #else
-			event_post(msg_id, src_id, &event_param_buff[event_param_buff_index],param_len);
+			internal_event_post(msg_id, src_id, &event_param_buff[event_param_buff_index],param_len);
 #endif
 			event_param_buff_index += param_len;
 		}
@@ -60,6 +62,9 @@ void rx_callback(uint8_t* data, uint32_t len)
 
 at_ble_status_t interface_send(uint8_t* msg, uint16_t u16TxLen)
 {
+#if (PRINT_KE_MSG)
+	uart_printf(UART_HW_MODULE_UART2,"S:%04x\n\r",*((uint16_t *)msg));	
+#endif	//PRINT_KE_MSG
 	platform_interface_send(msg, u16TxLen);
 	return AT_BLE_SUCCESS;
 }
@@ -70,11 +75,14 @@ void interface_init(void)
 	memset(interface_send_msg,0,sizeof(interface_send_msg));
 	memset(event_param_buff,0,sizeof(event_param_buff));
 	event_param_buff_index = 0;
+	dummy_buffer = (uint8_t *) dummy_buffer_buff;
+#if 0
 	/* Just for testing we can remove in the final release */
 	memset(&uart_cfg,0,sizeof(uart_cfg));
-	//uart_get_config_defaults(&uart_cfg);
-	//uart_init(UART_HW_MODULE_UART2,&uart_cfg);
-	//uart_printf(UART_HW_MODULE_UART2,"Interface Initialized\n\r");
+	uart_get_config_defaults(&uart_cfg);
+	uart_init(UART_HW_MODULE_UART2,&uart_cfg);
+	uart_printf(UART_HW_MODULE_UART2,"Interface Initialized\n\r");
+#endif	//0
 }
 
 static volatile uint32_t cmd_cmpl_flag = 0;
@@ -116,4 +124,3 @@ void start_timer(uint32_t timeout)
 void stop_timer()
 {
 }
-

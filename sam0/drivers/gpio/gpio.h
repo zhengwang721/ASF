@@ -109,7 +109,7 @@
  *
  * \section asfdoc_samb_gpio_special_considerations Special Considerations
  *
- * There are no prerequisites for this module.
+ * There are no special considerations for this module.
  *
  * \section asfdoc_samb_gpio_extra_info Extra Information
  *
@@ -163,10 +163,8 @@ enum gpio_pin_pull {
 	GPIO_PIN_PULL_NONE,
 	/** Pin should be pulled up when idle */
 	GPIO_PIN_PULL_UP ,
-#ifdef CHIPVERSION_B0
 	/** Pin should be pulled down when idle */
 	GPIO_PIN_PULL_DOWN,
-#endif
 };
 
 /**

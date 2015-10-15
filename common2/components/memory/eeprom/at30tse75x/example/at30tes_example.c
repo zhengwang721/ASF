@@ -94,7 +94,8 @@ static void delay(uint32_t count)
 int main(void)
 {
 	volatile double temper_value;
-	volatile bool data_check_status1, data_check_status2;
+	volatile bool data_check_status1 = true,
+	              data_check_status2 = true;
 	uint32_t i;
 
 	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
@@ -112,8 +113,6 @@ int main(void)
 		at30tse_eeprom_write(tx_buffer, NB_BYTE, 0, i);
 		delay(100);
 	}
-
-	data_check_status1 = true;
 	
 	/* Read each page in EEPROM and compare them */
 	for (i = 0; i < NB_PAGE; i++) {
@@ -135,8 +134,6 @@ int main(void)
 		at30tse_eeprom_write(tx_buffer, NB_BYTE, 0, i);
 		delay(100);
 	}
-
-	data_check_status2 = true;
 	
 	/* Read each page in EEPROM and compare them */
 	for (i = 0; i < NB_PAGE; i++) {

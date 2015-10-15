@@ -114,7 +114,7 @@ extern "C" {
 ///@cond IGNORE_DOXYGEN
 AT_BLE_API
 ///@endcond
-void trace_register_printFn(void *pf);
+void trace_register_printFn(int (*pf)(const char *_Format, ...));
 
 /** @ingroup dbg_logs_group_functions
  * @brief Used to set level of tracing logs

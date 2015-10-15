@@ -1,4 +1,3 @@
-
 #include "platform.h"
 #include "at_ble_api.h"
 #include "dbg_logs.h"
@@ -22,141 +21,140 @@
 #define HCI_LE_TX_TEST_CMD_OPCODE                   0x201E
 #define HCI_LE_TEST_END_CMD_OPCODE                  0x201F
 
-
-struct event
+typedef struct internal_event_tag
 {
-    struct event *next;
+    struct internal_event_tag *next;
     uint16_t msg_id;
     uint16_t src_id;
 #ifdef NEW_EVT_HANDLER
     uint16_t data_len;
 #endif  //NEW_EVT_HANDLER
     void *data;
-};
+} internal_event_t;
 
-static struct event event_pool[EVENT_POOL_DEPTH];
+static internal_event_t event_pool[EVENT_POOL_DEPTH];
 
-static struct event *event_free_list = NULL;
-static struct event *event_pending_list = NULL;
+static internal_event_t *event_free_list = NULL;
+static internal_event_t *event_pending_list = NULL;
 
 struct str_watched_event watched_event;
 
-static void event_free(struct event *event)
+static void internal_event_free(internal_event_t *ev)
 {
-    event->next = event_free_list;
-    event_free_list = event;
+    ev->next = event_free_list;
+    event_free_list = ev;
 }
 
 #ifndef NEW_EVT_HANDLER
-void event_post(uint16_t msg_id, uint16_t src_id, void *data)
+void internal_event_post(uint16_t msg_id, uint16_t src_id, void *data)
 #else
-void event_post(uint16_t msg_id, uint16_t src_id, void *data, uint16_t data_len)
+void internal_event_post(uint16_t msg_id, uint16_t src_id, void *data, uint16_t data_len)
 #endif  //NEW_EVT_HANDLER
 {
     // get a free event object
-    struct event *evt = event_free_list;
-    if (evt != NULL)
+    internal_event_t *ev = event_free_list;
+    // we had received the event parameter in receive buffer while we have no free event
+    if (ev != NULL)
     {
-        event_free_list = evt->next;
-        evt->next = NULL;
-        evt->data = data;
-        evt->msg_id = msg_id;
-        evt->src_id = src_id;
+        event_free_list = ev->next;
+        ev->next = NULL;
+        ev->data = data;
+        ev->msg_id = msg_id;
+        ev->src_id = src_id;
 #ifdef NEW_EVT_HANDLER
-        evt->data_len = data_len;
+        ev->data_len = data_len;
 #endif  //NEW_EVT_HANDLER
         if (event_pending_list == NULL)
         {
-            event_pending_list = evt;
+            event_pending_list = ev;
         }
         else
         {
-            struct event *cur = event_pending_list;
+            internal_event_t *cur = event_pending_list;
             while (cur->next != NULL)
             {
                 cur = cur->next;
             }
-            cur->next = evt;
+            cur->next = ev;
         }
-        //platform_event_signal();
+		#ifndef SAMB11
+        platform_event_signal();
+		#endif
     }
 }
 
 #ifndef NEW_EVT_HANDLER
-static at_ble_status_t event_get(uint16_t *msg_id, uint16_t *src_id, uint8_t **data, uint32_t timeout)
+static at_ble_status_t internal_event_get(uint16_t *msg_id, uint16_t *src_id, uint8_t **data, uint32_t timeout)
 #else
-static at_ble_status_t event_get(uint16_t *msg_id, uint16_t *src_id, uint8_t **data, uint16_t *data_len, uint32_t timeout)
+static at_ble_status_t internal_event_get(uint16_t *msg_id, uint16_t *src_id, uint8_t **data, uint16_t *data_len, uint32_t timeout)
 #endif  //NEW_EVT_HANDLER
 {
-	struct event *event = NULL;
-	at_ble_status_t status = AT_BLE_SUCCESS;
-
-	/* Check Timeout */
-	if (timeout != 0xFFFFFFFF)
-	{
-#ifdef NEW_EVT_HANDLER
-        start_timer(timeout);
-#endif  //NEW_EVT_HANDLER
-		//block till an event is posted or timeout
-		while (event_pending_list == NULL && status != AT_BLE_TIMEOUT)
-		{
-			status = (at_ble_status_t)platform_event_wait(timeout);
-		}
-	}
-	else // user wants no timeout
-	{
-		// block till an event is posted
-		while (event_pending_list == NULL)
-		{
-			status = (at_ble_status_t)platform_event_wait(timeout);
-		}
-	}
-
-	if (status != AT_BLE_TIMEOUT)
-	{
-		//some event available in the event pending list.
-#ifdef NEW_EVT_HANDLER
-		stop_timer();
-#endif  //NEW_EVT_HANDLER
-
+    internal_event_t *ev = NULL;
+    at_ble_status_t status = AT_BLE_SUCCESS;
+    if (timeout != 0xFFFFFFFF)
+    {
+        //block till an event is posted or timeout
+        while (event_pending_list == NULL && status != AT_BLE_TIMEOUT)
+        {
+					status = (at_ble_status_t)platform_event_wait(timeout);
+        }
+    }
+    else // user wants no timeout
+    {
+        // block till an event is posted
+        while ((event_pending_list == NULL))
+        {
+					status = (at_ble_status_t)platform_event_wait(timeout);
+#ifdef SAMB11
+					if((plf_drv_status)status == STATUS_RECEIVED_PLF_EVENT_MSG)
+						break;
+#endif	//SAMB11
+        }
+    }
+    if (status != AT_BLE_TIMEOUT)
+    {
 #ifndef SAMB11
-		if (bus_type == AT_BLE_SPI)
-		{
-			//make sure there is no any pending platform events.
-			while (check_pending_bus_events())
-			{
-				platform_event_wait(0);
-			}
-		}
+        if (bus_type == AT_BLE_SPI)
+        {
+            //make sure there is no any pending platform events.
+            while (check_pending_bus_events())
+            {
+                platform_event_wait(0);
+            }
+        }
 #else
-		if((plf_drv_status)status == STATUS_RECEIVED_PLF_EVENT_MSG) {
-			*msg_id = 0xFFFE;
-			status = AT_BLE_SUCCESS;
-		}
-		else if((plf_drv_status)status == STATUS_RECEIVED_BLE_MSG) {
-			status = AT_BLE_SUCCESS;
-		}
+				if((plf_drv_status)status == STATUS_RECEIVED_PLF_EVENT_MSG) {
+					*msg_id = 0xFFFE;
+					status = AT_BLE_SUCCESS;
+				}
+				else if((plf_drv_status)status == STATUS_RECEIVED_BLE_MSG) {
+					status = AT_BLE_SUCCESS;
+				}
 #endif
 
-		event = event_pending_list;
-		event_pending_list = event_pending_list->next;
-		*src_id = event->src_id;
-		*msg_id = event->msg_id;
-#ifdef NEW_EVT_HANDLER
-		*data_len = event->data_len;
-#endif  //NEW_EVT_HANDLER
-		*data = event->data;
-		event_free(event);
-	}
-	return status;
+				if((*msg_id != 0xFFFE) && (event_pending_list != NULL)) 
+				{
+					ev = event_pending_list;
+					event_pending_list = event_pending_list->next;
+					*src_id = ev->src_id;
+					*msg_id = ev->msg_id;
+	#ifdef NEW_EVT_HANDLER
+					*data_len = ev->data_len;
+	#endif  //NEW_EVT_HANDLER
+					*data = ev->data;
+					/* source of bug */
+					internal_event_free(ev);
+				}
+    }
+    return status;
 }
 
-void event_init()
+void internal_event_init()
 {
     uint32_t i;
     for (i = 0; i < EVENT_POOL_DEPTH; i++)
     {
-        event_free(&event_pool[i]);
+        internal_event_free(&event_pool[i]);
     }
 		event_pending_list = NULL;
 }
@@ -461,6 +459,7 @@ static at_ble_events_t handle_ble_event(uint16_t msg_id, uint16_t src_id, uint8_
     break;
     }
     return evt_num;
+    UNREFERENCED_PARAMETER(data_len);
 }
 
 uint32_t special_events_handler(uint16_t msg_id, uint16_t src_id, uint8_t *data)
@@ -611,13 +610,23 @@ at_ble_status_t at_ble_event_get(at_ble_events_t *event, void *params,
     uint16_t msg_id, src_id;
     uint8_t *data;
     at_ble_status_t status = AT_BLE_SUCCESS;
+    *event =  AT_BLE_UNDEFINED_EVENT;
+#ifdef NEW_EVT_HANDLER
+    if ((timeout != 0xFFFFFFFF) && (timeout != 0))
+    {
+        start_timer(timeout);
+    }
+#endif
     do
     {
 #ifndef NEW_EVT_HANDLER
-        status = event_get(&msg_id, &src_id, &data, timeout);
+        status = internal_event_get(&msg_id, &src_id, &data, timeout);
 #else
         uint16_t data_len;
-        status = event_get(&msg_id, &src_id, &data, &data_len, timeout);
+				msg_id = 0;
+				src_id = 0;
+				data_len = 0;
+        status = internal_event_get(&msg_id, &src_id, &data, &data_len, timeout);
 #endif  //NEW_EVT_HANDLER
         PRINT_DBG("RW_EVENT : status = 0x%02X, msg_id = 0x%04X, src_id = 0x%04X, data_len = 0x%04X, data = ", status, msg_id, src_id, data_len);
         PRINT_BUS("", data, data_len);
@@ -627,13 +636,16 @@ at_ble_status_t at_ble_event_get(at_ble_events_t *event, void *params,
             if (msg_id == 0xFFFF && src_id == 0xFFFF)
             {
                 *event = AT_BLE_CUSTOM_EVENT;
-                params = data;
+                *((void **)params) = data;
             }
-						else if(msg_id == 0xFFFE) {
-							//platform event.
-							*event = AT_PLATFORM_EVENT;
-							params = NULL;
+			#ifdef SAMB11
+						else if(msg_id == 0xFFFE) 
+						{
+								//platform event.
+								*event = AT_PLATFORM_EVENT;
+								params = NULL;
 						}
+			#endif
             else if ((src_id == AT_BLE_HCI_DTM_EVENT) && (msg_id == AT_BLE_HCI_DTM_EVENT))
             {
                 *event = handle_ble_hci_dtm_event(data, (at_ble_dtm_t *)params);
@@ -648,7 +660,14 @@ at_ble_status_t at_ble_event_get(at_ble_events_t *event, void *params,
             }
         }
     }
-    while (*event == AT_BLE_EVENT_MAX);
+    while ((*event == AT_BLE_EVENT_MAX) && (status == AT_BLE_SUCCESS));
+#ifdef NEW_EVT_HANDLER
+    if ((timeout != 0xFFFFFFFF) && (timeout != 0) && (status != AT_BLE_TIMEOUT))
+    {
+        //some event available in the event pending list.
+        stop_timer();
+    }
+#endif
     return status;
 }
 
@@ -658,18 +677,18 @@ volatile uint8_t gu8UserDefinedEvent = 0;
 at_ble_status_t at_ble_event_user_defined_post(void *params)
 {
 #ifndef NEW_EVT_HANDLER
-    event_post(0xFFFF, 0xFFFF, params);
+    internal_event_post(0xFFFF, 0xFFFF, params);
 #else
-    event_post(0xFFFF, 0xFFFF, params, 0);
+    internal_event_post(0xFFFF, 0xFFFF, params, 0);
 #endif  //NEW_EVT_HANDLER
     gu8UserDefinedEvent = 1;
     return AT_BLE_SUCCESS;
 }
-void at_ble_event_flush(uint16_t msg_id)
+void internal_event_flush(uint16_t msg_id)
 {
-    struct event *prev_event = NULL;
-    struct event *next_event = NULL;
-    struct event *curr_event = event_pending_list;
+    internal_event_t *prev_event = NULL;
+    internal_event_t *next_event = NULL;
+    internal_event_t *curr_event = event_pending_list;
     while (curr_event)
     {
         next_event = curr_event->next;
@@ -695,11 +714,11 @@ void at_ble_event_flush(uint16_t msg_id)
         curr_event = next_event;
     }
 }
-void at_ble_conn_flush(at_ble_handle_t conn_handle)
+void internal_conn_flush(at_ble_handle_t conn_handle)
 {
-    struct event *prev_event = NULL;
-    struct event *next_event = NULL;
-    struct event *curr_event = event_pending_list;
+    internal_event_t *prev_event = NULL;
+    internal_event_t *next_event = NULL;
+    internal_event_t *curr_event = event_pending_list;
     while (curr_event)
     {
         at_ble_handle_t handle = KE_IDX_GET(curr_event->src_id);

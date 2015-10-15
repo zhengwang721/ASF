@@ -10,6 +10,11 @@
 #include "gattm_task.h"
 uint32_t u32usedBuffers = 0;
 
+void init_gattm_task_module(void)
+{
+	u32usedBuffers = 0;
+}
+
 uint8_t gattm_add_svc_req_handler(struct gattm_svc_desc *svc_desc)
 {
     uint8_t u8Status = AT_BLE_SUCCESS;

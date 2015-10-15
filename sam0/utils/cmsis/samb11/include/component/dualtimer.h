@@ -57,7 +57,7 @@
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t TIMER1LOAD:32;             /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMER1LOAD_Type;
@@ -66,13 +66,16 @@ typedef union {
 #define DUALTIMER_TIMER1LOAD_OFFSET           0x00           /**<  \brief (DUALTIMER_TIMER1LOAD offset) Timer 1 Load Register */
 #define DUALTIMER_TIMER1LOAD_RESETVALUE       0x00ul         /**<  \brief (DUALTIMER_TIMER1LOAD reset_value) Timer 1 Load Register */
 
-#define DUALTIMER_TIMER1LOAD_MASK             0x00ul    /**< \brief (DUALTIMER_TIMER1LOAD) Register MASK */
+#define DUALTIMER_TIMER1LOAD_TIMER1LOAD_Pos   0  /**< \brief (DUALTIMER_TIMER1LOAD)                                       */
+#define DUALTIMER_TIMER1LOAD_TIMER1LOAD_Msk   (0xFFFFFFFFul << DUALTIMER_TIMER1LOAD_TIMER1LOAD_Pos)
+#define DUALTIMER_TIMER1LOAD_TIMER1LOAD(value) (DUALTIMER_TIMER1LOAD_TIMER1LOAD_Msk & ((value) << DUALTIMER_TIMER1LOAD_TIMER1LOAD_Pos))  
+#define DUALTIMER_TIMER1LOAD_MASK             0xFFFFFFFFul    /**< \brief (DUALTIMER_TIMER1LOAD) Register MASK */
 
 /* -------- DUALTIMER_TIMER1VALUE : (DUALTIMER Offset: 0x04) (R/  32) Timer 1 Current Value Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t TIMER1VALUE:32;            /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMER1VALUE_Type;
@@ -81,7 +84,10 @@ typedef union {
 #define DUALTIMER_TIMER1VALUE_OFFSET          0x04           /**<  \brief (DUALTIMER_TIMER1VALUE offset) Timer 1 Current Value Register */
 #define DUALTIMER_TIMER1VALUE_RESETVALUE      0xFFFFFFFFul   /**<  \brief (DUALTIMER_TIMER1VALUE reset_value) Timer 1 Current Value Register */
 
-#define DUALTIMER_TIMER1VALUE_MASK            0x00ul    /**< \brief (DUALTIMER_TIMER1VALUE) Register MASK */
+#define DUALTIMER_TIMER1VALUE_TIMER1VALUE_Pos 0  /**< \brief (DUALTIMER_TIMER1VALUE)                                      */
+#define DUALTIMER_TIMER1VALUE_TIMER1VALUE_Msk (0xFFFFFFFFul << DUALTIMER_TIMER1VALUE_TIMER1VALUE_Pos)
+#define DUALTIMER_TIMER1VALUE_TIMER1VALUE(value) (DUALTIMER_TIMER1VALUE_TIMER1VALUE_Msk & ((value) << DUALTIMER_TIMER1VALUE_TIMER1VALUE_Pos))  
+#define DUALTIMER_TIMER1VALUE_MASK            0xFFFFFFFFul    /**< \brief (DUALTIMER_TIMER1VALUE) Register MASK */
 
 /* -------- DUALTIMER_TIMER1CONTROL : (DUALTIMER Offset: 0x08) (R/W  8) Timer 1 Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -146,7 +152,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  TIMER1INTCLR:1;            /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMER1INTCLR_Type;
@@ -155,13 +162,16 @@ typedef union {
 #define DUALTIMER_TIMER1INTCLR_OFFSET         0x0C           /**<  \brief (DUALTIMER_TIMER1INTCLR offset) Timer 1 Interrupt Clear Register */
 #define DUALTIMER_TIMER1INTCLR_RESETVALUE     0x00ul         /**<  \brief (DUALTIMER_TIMER1INTCLR reset_value) Timer 1 Interrupt Clear Register */
 
-#define DUALTIMER_TIMER1INTCLR_MASK           0x00ul    /**< \brief (DUALTIMER_TIMER1INTCLR) Register MASK */
+#define DUALTIMER_TIMER1INTCLR_TIMER1INTCLR_Pos 0  /**< \brief (DUALTIMER_TIMER1INTCLR)                                     */
+#define DUALTIMER_TIMER1INTCLR_TIMER1INTCLR   (0x1ul << DUALTIMER_TIMER1INTCLR_TIMER1INTCLR_Pos)  
+#define DUALTIMER_TIMER1INTCLR_MASK           0x01ul    /**< \brief (DUALTIMER_TIMER1INTCLR) Register MASK */
 
 /* -------- DUALTIMER_TIMER1RIS : (DUALTIMER Offset: 0x10) (R/  8) Timer 1 Raw Interrupt Status Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  TIMER1RIS:1;               /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMER1RIS_Type;
@@ -170,13 +180,16 @@ typedef union {
 #define DUALTIMER_TIMER1RIS_OFFSET            0x10           /**<  \brief (DUALTIMER_TIMER1RIS offset) Timer 1 Raw Interrupt Status Register */
 #define DUALTIMER_TIMER1RIS_RESETVALUE        0x00ul         /**<  \brief (DUALTIMER_TIMER1RIS reset_value) Timer 1 Raw Interrupt Status Register */
 
-#define DUALTIMER_TIMER1RIS_MASK              0x00ul    /**< \brief (DUALTIMER_TIMER1RIS) Register MASK */
+#define DUALTIMER_TIMER1RIS_TIMER1RIS_Pos     0  /**< \brief (DUALTIMER_TIMER1RIS)                                        */
+#define DUALTIMER_TIMER1RIS_TIMER1RIS         (0x1ul << DUALTIMER_TIMER1RIS_TIMER1RIS_Pos)  
+#define DUALTIMER_TIMER1RIS_MASK              0x01ul    /**< \brief (DUALTIMER_TIMER1RIS) Register MASK */
 
 /* -------- DUALTIMER_TIMER1MIS : (DUALTIMER Offset: 0x14) (R/  8) Timer 1 Masked Interrupt Status Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  TIMER1MIS:1;               /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMER1MIS_Type;
@@ -185,13 +198,15 @@ typedef union {
 #define DUALTIMER_TIMER1MIS_OFFSET            0x14           /**<  \brief (DUALTIMER_TIMER1MIS offset) Timer 1 Masked Interrupt Status Register */
 #define DUALTIMER_TIMER1MIS_RESETVALUE        0x00ul         /**<  \brief (DUALTIMER_TIMER1MIS reset_value) Timer 1 Masked Interrupt Status Register */
 
-#define DUALTIMER_TIMER1MIS_MASK              0x00ul    /**< \brief (DUALTIMER_TIMER1MIS) Register MASK */
+#define DUALTIMER_TIMER1MIS_TIMER1MIS_Pos     0  /**< \brief (DUALTIMER_TIMER1MIS)                                        */
+#define DUALTIMER_TIMER1MIS_TIMER1MIS         (0x1ul << DUALTIMER_TIMER1MIS_TIMER1MIS_Pos)  
+#define DUALTIMER_TIMER1MIS_MASK              0x01ul    /**< \brief (DUALTIMER_TIMER1MIS) Register MASK */
 
 /* -------- DUALTIMER_TIMER1BGLOAD : (DUALTIMER Offset: 0x18) (R/W  32) Timer 1 Background Load Register (Reload Value for Period Mode) -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t TIMER1BGLOAD:32;           /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMER1BGLOAD_Type;
@@ -200,13 +215,16 @@ typedef union {
 #define DUALTIMER_TIMER1BGLOAD_OFFSET         0x18           /**<  \brief (DUALTIMER_TIMER1BGLOAD offset) Timer 1 Background Load Register (Reload Value for Period Mode) */
 #define DUALTIMER_TIMER1BGLOAD_RESETVALUE     0x00ul         /**<  \brief (DUALTIMER_TIMER1BGLOAD reset_value) Timer 1 Background Load Register (Reload Value for Period Mode) */
 
-#define DUALTIMER_TIMER1BGLOAD_MASK           0x00ul    /**< \brief (DUALTIMER_TIMER1BGLOAD) Register MASK */
+#define DUALTIMER_TIMER1BGLOAD_TIMER1BGLOAD_Pos 0  /**< \brief (DUALTIMER_TIMER1BGLOAD)                                     */
+#define DUALTIMER_TIMER1BGLOAD_TIMER1BGLOAD_Msk (0xFFFFFFFFul << DUALTIMER_TIMER1BGLOAD_TIMER1BGLOAD_Pos)
+#define DUALTIMER_TIMER1BGLOAD_TIMER1BGLOAD(value) (DUALTIMER_TIMER1BGLOAD_TIMER1BGLOAD_Msk & ((value) << DUALTIMER_TIMER1BGLOAD_TIMER1BGLOAD_Pos))  
+#define DUALTIMER_TIMER1BGLOAD_MASK           0xFFFFFFFFul    /**< \brief (DUALTIMER_TIMER1BGLOAD) Register MASK */
 
 /* -------- DUALTIMER_TIMER2LOAD : (DUALTIMER Offset: 0x20) (R/W  32) Timer 2 Load Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t TIMER2LOAD:32;             /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMER2LOAD_Type;
@@ -215,13 +233,16 @@ typedef union {
 #define DUALTIMER_TIMER2LOAD_OFFSET           0x20           /**<  \brief (DUALTIMER_TIMER2LOAD offset) Timer 2 Load Register */
 #define DUALTIMER_TIMER2LOAD_RESETVALUE       0x00ul         /**<  \brief (DUALTIMER_TIMER2LOAD reset_value) Timer 2 Load Register */
 
-#define DUALTIMER_TIMER2LOAD_MASK             0x00ul    /**< \brief (DUALTIMER_TIMER2LOAD) Register MASK */
+#define DUALTIMER_TIMER2LOAD_TIMER2LOAD_Pos   0  /**< \brief (DUALTIMER_TIMER2LOAD)                                       */
+#define DUALTIMER_TIMER2LOAD_TIMER2LOAD_Msk   (0xFFFFFFFFul << DUALTIMER_TIMER2LOAD_TIMER2LOAD_Pos)
+#define DUALTIMER_TIMER2LOAD_TIMER2LOAD(value) (DUALTIMER_TIMER2LOAD_TIMER2LOAD_Msk & ((value) << DUALTIMER_TIMER2LOAD_TIMER2LOAD_Pos))  
+#define DUALTIMER_TIMER2LOAD_MASK             0xFFFFFFFFul    /**< \brief (DUALTIMER_TIMER2LOAD) Register MASK */
 
 /* -------- DUALTIMER_TIMER2VALUE : (DUALTIMER Offset: 0x24) (R/  32) Timer 2 Current Value Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t TIMER2VALUE:32;            /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMER2VALUE_Type;
@@ -230,7 +251,10 @@ typedef union {
 #define DUALTIMER_TIMER2VALUE_OFFSET          0x24           /**<  \brief (DUALTIMER_TIMER2VALUE offset) Timer 2 Current Value Register */
 #define DUALTIMER_TIMER2VALUE_RESETVALUE      0xFFFFFFFFul   /**<  \brief (DUALTIMER_TIMER2VALUE reset_value) Timer 2 Current Value Register */
 
-#define DUALTIMER_TIMER2VALUE_MASK            0x00ul    /**< \brief (DUALTIMER_TIMER2VALUE) Register MASK */
+#define DUALTIMER_TIMER2VALUE_TIMER2VALUE_Pos 0  /**< \brief (DUALTIMER_TIMER2VALUE)                                      */
+#define DUALTIMER_TIMER2VALUE_TIMER2VALUE_Msk (0xFFFFFFFFul << DUALTIMER_TIMER2VALUE_TIMER2VALUE_Pos)
+#define DUALTIMER_TIMER2VALUE_TIMER2VALUE(value) (DUALTIMER_TIMER2VALUE_TIMER2VALUE_Msk & ((value) << DUALTIMER_TIMER2VALUE_TIMER2VALUE_Pos))  
+#define DUALTIMER_TIMER2VALUE_MASK            0xFFFFFFFFul    /**< \brief (DUALTIMER_TIMER2VALUE) Register MASK */
 
 /* -------- DUALTIMER_TIMER2CONTROL : (DUALTIMER Offset: 0x28) (R/W  8) Timer 2 Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -295,7 +319,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  TIMER2INTCLR:1;            /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMER2INTCLR_Type;
@@ -304,13 +329,16 @@ typedef union {
 #define DUALTIMER_TIMER2INTCLR_OFFSET         0x2C           /**<  \brief (DUALTIMER_TIMER2INTCLR offset) Timer 2 Interrupt Clear Register */
 #define DUALTIMER_TIMER2INTCLR_RESETVALUE     0x00ul         /**<  \brief (DUALTIMER_TIMER2INTCLR reset_value) Timer 2 Interrupt Clear Register */
 
-#define DUALTIMER_TIMER2INTCLR_MASK           0x00ul    /**< \brief (DUALTIMER_TIMER2INTCLR) Register MASK */
+#define DUALTIMER_TIMER2INTCLR_TIMER2INTCLR_Pos 0  /**< \brief (DUALTIMER_TIMER2INTCLR)                                     */
+#define DUALTIMER_TIMER2INTCLR_TIMER2INTCLR   (0x1ul << DUALTIMER_TIMER2INTCLR_TIMER2INTCLR_Pos)  
+#define DUALTIMER_TIMER2INTCLR_MASK           0x01ul    /**< \brief (DUALTIMER_TIMER2INTCLR) Register MASK */
 
 /* -------- DUALTIMER_TIMER2RIS : (DUALTIMER Offset: 0x30) (R/  8) Timer 2 Raw Interrupt Status Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  TIMER2RIS:1;               /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMER2RIS_Type;
@@ -319,13 +347,16 @@ typedef union {
 #define DUALTIMER_TIMER2RIS_OFFSET            0x30           /**<  \brief (DUALTIMER_TIMER2RIS offset) Timer 2 Raw Interrupt Status Register */
 #define DUALTIMER_TIMER2RIS_RESETVALUE        0x00ul         /**<  \brief (DUALTIMER_TIMER2RIS reset_value) Timer 2 Raw Interrupt Status Register */
 
-#define DUALTIMER_TIMER2RIS_MASK              0x00ul    /**< \brief (DUALTIMER_TIMER2RIS) Register MASK */
+#define DUALTIMER_TIMER2RIS_TIMER2RIS_Pos     0  /**< \brief (DUALTIMER_TIMER2RIS)                                        */
+#define DUALTIMER_TIMER2RIS_TIMER2RIS         (0x1ul << DUALTIMER_TIMER2RIS_TIMER2RIS_Pos)  
+#define DUALTIMER_TIMER2RIS_MASK              0x01ul    /**< \brief (DUALTIMER_TIMER2RIS) Register MASK */
 
 /* -------- DUALTIMER_TIMER2MIS : (DUALTIMER Offset: 0x34) (R/  8) Timer 2 Masked Interrupt Status Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  TIMER2MIS:1;               /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMER2MIS_Type;
@@ -334,13 +365,15 @@ typedef union {
 #define DUALTIMER_TIMER2MIS_OFFSET            0x34           /**<  \brief (DUALTIMER_TIMER2MIS offset) Timer 2 Masked Interrupt Status Register */
 #define DUALTIMER_TIMER2MIS_RESETVALUE        0x00ul         /**<  \brief (DUALTIMER_TIMER2MIS reset_value) Timer 2 Masked Interrupt Status Register */
 
-#define DUALTIMER_TIMER2MIS_MASK              0x00ul    /**< \brief (DUALTIMER_TIMER2MIS) Register MASK */
+#define DUALTIMER_TIMER2MIS_TIMER2MIS_Pos     0  /**< \brief (DUALTIMER_TIMER2MIS)                                        */
+#define DUALTIMER_TIMER2MIS_TIMER2MIS         (0x1ul << DUALTIMER_TIMER2MIS_TIMER2MIS_Pos)  
+#define DUALTIMER_TIMER2MIS_MASK              0x01ul    /**< \brief (DUALTIMER_TIMER2MIS) Register MASK */
 
 /* -------- DUALTIMER_TIMER2BGLOAD : (DUALTIMER Offset: 0x38) (R/W  32) Timer 2 Background Load Register (Reload Value for Period Mode) -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t TIMER2BGLOAD:32;           /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMER2BGLOAD_Type;
@@ -349,13 +382,17 @@ typedef union {
 #define DUALTIMER_TIMER2BGLOAD_OFFSET         0x38           /**<  \brief (DUALTIMER_TIMER2BGLOAD offset) Timer 2 Background Load Register (Reload Value for Period Mode) */
 #define DUALTIMER_TIMER2BGLOAD_RESETVALUE     0x00ul         /**<  \brief (DUALTIMER_TIMER2BGLOAD reset_value) Timer 2 Background Load Register (Reload Value for Period Mode) */
 
-#define DUALTIMER_TIMER2BGLOAD_MASK           0x00ul    /**< \brief (DUALTIMER_TIMER2BGLOAD) Register MASK */
+#define DUALTIMER_TIMER2BGLOAD_TIMER2BGLOAD_Pos 0  /**< \brief (DUALTIMER_TIMER2BGLOAD)                                     */
+#define DUALTIMER_TIMER2BGLOAD_TIMER2BGLOAD_Msk (0xFFFFFFFFul << DUALTIMER_TIMER2BGLOAD_TIMER2BGLOAD_Pos)
+#define DUALTIMER_TIMER2BGLOAD_TIMER2BGLOAD(value) (DUALTIMER_TIMER2BGLOAD_TIMER2BGLOAD_Msk & ((value) << DUALTIMER_TIMER2BGLOAD_TIMER2BGLOAD_Pos))  
+#define DUALTIMER_TIMER2BGLOAD_MASK           0xFFFFFFFFul    /**< \brief (DUALTIMER_TIMER2BGLOAD) Register MASK */
 
 /* -------- DUALTIMER_TIMERITCR : (DUALTIMER Offset: 0xf00) (R/W  8) Integration Test Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  TIMERITCR:1;               /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMERITCR_Type;
@@ -364,7 +401,9 @@ typedef union {
 #define DUALTIMER_TIMERITCR_OFFSET            0xF00          /**<  \brief (DUALTIMER_TIMERITCR offset) Integration Test Control Register */
 #define DUALTIMER_TIMERITCR_RESETVALUE        0x00ul         /**<  \brief (DUALTIMER_TIMERITCR reset_value) Integration Test Control Register */
 
-#define DUALTIMER_TIMERITCR_MASK              0x00ul    /**< \brief (DUALTIMER_TIMERITCR) Register MASK */
+#define DUALTIMER_TIMERITCR_TIMERITCR_Pos     0  /**< \brief (DUALTIMER_TIMERITCR)                                        */
+#define DUALTIMER_TIMERITCR_TIMERITCR         (0x1ul << DUALTIMER_TIMERITCR_TIMERITCR_Pos)  
+#define DUALTIMER_TIMERITCR_MASK              0x01ul    /**< \brief (DUALTIMER_TIMERITCR) Register MASK */
 
 /* -------- DUALTIMER_TIMERITOP : (DUALTIMER Offset: 0xf04) (/W  8) Integration Test Output Set Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -413,7 +452,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  TIMERPERIPHID5:8;          /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMERPERIPHID5_Type;
@@ -422,13 +461,16 @@ typedef union {
 #define DUALTIMER_TIMERPERIPHID5_OFFSET       0xFD4          /**<  \brief (DUALTIMER_TIMERPERIPHID5 offset) Peripheral ID Register 5 */
 #define DUALTIMER_TIMERPERIPHID5_RESETVALUE   0x00ul         /**<  \brief (DUALTIMER_TIMERPERIPHID5 reset_value) Peripheral ID Register 5 */
 
-#define DUALTIMER_TIMERPERIPHID5_MASK         0x00ul    /**< \brief (DUALTIMER_TIMERPERIPHID5) Register MASK */
+#define DUALTIMER_TIMERPERIPHID5_TIMERPERIPHID5_Pos 0  /**< \brief (DUALTIMER_TIMERPERIPHID5)                                   */
+#define DUALTIMER_TIMERPERIPHID5_TIMERPERIPHID5_Msk (0xFFul << DUALTIMER_TIMERPERIPHID5_TIMERPERIPHID5_Pos)
+#define DUALTIMER_TIMERPERIPHID5_TIMERPERIPHID5(value) (DUALTIMER_TIMERPERIPHID5_TIMERPERIPHID5_Msk & ((value) << DUALTIMER_TIMERPERIPHID5_TIMERPERIPHID5_Pos))  
+#define DUALTIMER_TIMERPERIPHID5_MASK         0xFFul    /**< \brief (DUALTIMER_TIMERPERIPHID5) Register MASK */
 
 /* -------- DUALTIMER_TIMERPERIPHID6 : (DUALTIMER Offset: 0xfd8) (R/  8) Peripheral ID Register 6 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  TIMERPERIPHID6:8;          /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMERPERIPHID6_Type;
@@ -437,13 +479,16 @@ typedef union {
 #define DUALTIMER_TIMERPERIPHID6_OFFSET       0xFD8          /**<  \brief (DUALTIMER_TIMERPERIPHID6 offset) Peripheral ID Register 6 */
 #define DUALTIMER_TIMERPERIPHID6_RESETVALUE   0x00ul         /**<  \brief (DUALTIMER_TIMERPERIPHID6 reset_value) Peripheral ID Register 6 */
 
-#define DUALTIMER_TIMERPERIPHID6_MASK         0x00ul    /**< \brief (DUALTIMER_TIMERPERIPHID6) Register MASK */
+#define DUALTIMER_TIMERPERIPHID6_TIMERPERIPHID6_Pos 0  /**< \brief (DUALTIMER_TIMERPERIPHID6)                                   */
+#define DUALTIMER_TIMERPERIPHID6_TIMERPERIPHID6_Msk (0xFFul << DUALTIMER_TIMERPERIPHID6_TIMERPERIPHID6_Pos)
+#define DUALTIMER_TIMERPERIPHID6_TIMERPERIPHID6(value) (DUALTIMER_TIMERPERIPHID6_TIMERPERIPHID6_Msk & ((value) << DUALTIMER_TIMERPERIPHID6_TIMERPERIPHID6_Pos))  
+#define DUALTIMER_TIMERPERIPHID6_MASK         0xFFul    /**< \brief (DUALTIMER_TIMERPERIPHID6) Register MASK */
 
 /* -------- DUALTIMER_TIMERPERIPHID7 : (DUALTIMER Offset: 0xfdc) (R/  8) Peripheral ID Register 7 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  TIMERPERIPHID7:8;          /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMERPERIPHID7_Type;
@@ -452,7 +497,10 @@ typedef union {
 #define DUALTIMER_TIMERPERIPHID7_OFFSET       0xFDC          /**<  \brief (DUALTIMER_TIMERPERIPHID7 offset) Peripheral ID Register 7 */
 #define DUALTIMER_TIMERPERIPHID7_RESETVALUE   0x00ul         /**<  \brief (DUALTIMER_TIMERPERIPHID7 reset_value) Peripheral ID Register 7 */
 
-#define DUALTIMER_TIMERPERIPHID7_MASK         0x00ul    /**< \brief (DUALTIMER_TIMERPERIPHID7) Register MASK */
+#define DUALTIMER_TIMERPERIPHID7_TIMERPERIPHID7_Pos 0  /**< \brief (DUALTIMER_TIMERPERIPHID7)                                   */
+#define DUALTIMER_TIMERPERIPHID7_TIMERPERIPHID7_Msk (0xFFul << DUALTIMER_TIMERPERIPHID7_TIMERPERIPHID7_Pos)
+#define DUALTIMER_TIMERPERIPHID7_TIMERPERIPHID7(value) (DUALTIMER_TIMERPERIPHID7_TIMERPERIPHID7_Msk & ((value) << DUALTIMER_TIMERPERIPHID7_TIMERPERIPHID7_Pos))  
+#define DUALTIMER_TIMERPERIPHID7_MASK         0xFFul    /**< \brief (DUALTIMER_TIMERPERIPHID7) Register MASK */
 
 /* -------- DUALTIMER_TIMERPERIPHID0 : (DUALTIMER Offset: 0xfe0) (R/  8) Peripheral ID Register 0 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -545,7 +593,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  TIMERPCELLID0:8;           /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMERPCELLID0_Type;
@@ -554,13 +602,16 @@ typedef union {
 #define DUALTIMER_TIMERPCELLID0_OFFSET        0xFF0          /**<  \brief (DUALTIMER_TIMERPCELLID0 offset) Component ID Register 0 */
 #define DUALTIMER_TIMERPCELLID0_RESETVALUE    0x0Dul         /**<  \brief (DUALTIMER_TIMERPCELLID0 reset_value) Component ID Register 0 */
 
-#define DUALTIMER_TIMERPCELLID0_MASK          0x00ul    /**< \brief (DUALTIMER_TIMERPCELLID0) Register MASK */
+#define DUALTIMER_TIMERPCELLID0_TIMERPCELLID0_Pos 0  /**< \brief (DUALTIMER_TIMERPCELLID0)                                    */
+#define DUALTIMER_TIMERPCELLID0_TIMERPCELLID0_Msk (0xFFul << DUALTIMER_TIMERPCELLID0_TIMERPCELLID0_Pos)
+#define DUALTIMER_TIMERPCELLID0_TIMERPCELLID0(value) (DUALTIMER_TIMERPCELLID0_TIMERPCELLID0_Msk & ((value) << DUALTIMER_TIMERPCELLID0_TIMERPCELLID0_Pos))  
+#define DUALTIMER_TIMERPCELLID0_MASK          0xFFul    /**< \brief (DUALTIMER_TIMERPCELLID0) Register MASK */
 
 /* -------- DUALTIMER_TIMERPCELLID1 : (DUALTIMER Offset: 0xff4) (R/  8) Component ID Register 1 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  TIMERPCELLID1:8;           /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMERPCELLID1_Type;
@@ -569,13 +620,16 @@ typedef union {
 #define DUALTIMER_TIMERPCELLID1_OFFSET        0xFF4          /**<  \brief (DUALTIMER_TIMERPCELLID1 offset) Component ID Register 1 */
 #define DUALTIMER_TIMERPCELLID1_RESETVALUE    0xF0ul         /**<  \brief (DUALTIMER_TIMERPCELLID1 reset_value) Component ID Register 1 */
 
-#define DUALTIMER_TIMERPCELLID1_MASK          0x00ul    /**< \brief (DUALTIMER_TIMERPCELLID1) Register MASK */
+#define DUALTIMER_TIMERPCELLID1_TIMERPCELLID1_Pos 0  /**< \brief (DUALTIMER_TIMERPCELLID1)                                    */
+#define DUALTIMER_TIMERPCELLID1_TIMERPCELLID1_Msk (0xFFul << DUALTIMER_TIMERPCELLID1_TIMERPCELLID1_Pos)
+#define DUALTIMER_TIMERPCELLID1_TIMERPCELLID1(value) (DUALTIMER_TIMERPCELLID1_TIMERPCELLID1_Msk & ((value) << DUALTIMER_TIMERPCELLID1_TIMERPCELLID1_Pos))  
+#define DUALTIMER_TIMERPCELLID1_MASK          0xFFul    /**< \brief (DUALTIMER_TIMERPCELLID1) Register MASK */
 
 /* -------- DUALTIMER_TIMERPCELLID2 : (DUALTIMER Offset: 0xff8) (R/  8) Component ID Register 2 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  TIMERPCELLID2:8;           /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMERPCELLID2_Type;
@@ -584,13 +638,16 @@ typedef union {
 #define DUALTIMER_TIMERPCELLID2_OFFSET        0xFF8          /**<  \brief (DUALTIMER_TIMERPCELLID2 offset) Component ID Register 2 */
 #define DUALTIMER_TIMERPCELLID2_RESETVALUE    0x05ul         /**<  \brief (DUALTIMER_TIMERPCELLID2 reset_value) Component ID Register 2 */
 
-#define DUALTIMER_TIMERPCELLID2_MASK          0x00ul    /**< \brief (DUALTIMER_TIMERPCELLID2) Register MASK */
+#define DUALTIMER_TIMERPCELLID2_TIMERPCELLID2_Pos 0  /**< \brief (DUALTIMER_TIMERPCELLID2)                                    */
+#define DUALTIMER_TIMERPCELLID2_TIMERPCELLID2_Msk (0xFFul << DUALTIMER_TIMERPCELLID2_TIMERPCELLID2_Pos)
+#define DUALTIMER_TIMERPCELLID2_TIMERPCELLID2(value) (DUALTIMER_TIMERPCELLID2_TIMERPCELLID2_Msk & ((value) << DUALTIMER_TIMERPCELLID2_TIMERPCELLID2_Pos))  
+#define DUALTIMER_TIMERPCELLID2_MASK          0xFFul    /**< \brief (DUALTIMER_TIMERPCELLID2) Register MASK */
 
 /* -------- DUALTIMER_TIMERPCELLID3 : (DUALTIMER Offset: 0xffc) (R/  8) Component ID Register 3 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  TIMERPCELLID3:8;           /*!< bit:   0..7                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } DUALTIMER_TIMERPCELLID3_Type;
@@ -599,7 +656,10 @@ typedef union {
 #define DUALTIMER_TIMERPCELLID3_OFFSET        0xFFC          /**<  \brief (DUALTIMER_TIMERPCELLID3 offset) Component ID Register 3 */
 #define DUALTIMER_TIMERPCELLID3_RESETVALUE    0xB1ul         /**<  \brief (DUALTIMER_TIMERPCELLID3 reset_value) Component ID Register 3 */
 
-#define DUALTIMER_TIMERPCELLID3_MASK          0x00ul    /**< \brief (DUALTIMER_TIMERPCELLID3) Register MASK */
+#define DUALTIMER_TIMERPCELLID3_TIMERPCELLID3_Pos 0  /**< \brief (DUALTIMER_TIMERPCELLID3)                                    */
+#define DUALTIMER_TIMERPCELLID3_TIMERPCELLID3_Msk (0xFFul << DUALTIMER_TIMERPCELLID3_TIMERPCELLID3_Pos)
+#define DUALTIMER_TIMERPCELLID3_TIMERPCELLID3(value) (DUALTIMER_TIMERPCELLID3_TIMERPCELLID3_Msk & ((value) << DUALTIMER_TIMERPCELLID3_TIMERPCELLID3_Pos))  
+#define DUALTIMER_TIMERPCELLID3_MASK          0xFFul    /**< \brief (DUALTIMER_TIMERPCELLID3) Register MASK */
 
 /** \brief DUALTIMER hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

@@ -314,7 +314,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CH0_CH_ENABLE_REG:1;       /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } PROV_DMA_CTRL_CH0_CH_ENABLE_REG_Type;
@@ -323,13 +324,16 @@ typedef union {
 #define PROV_DMA_CTRL_CH0_CH_ENABLE_REG_OFFSET 0x40           /**<  \brief (PROV_DMA_CTRL_CH0_CH_ENABLE_REG offset) Channel 0 Channel Enable Register */
 #define PROV_DMA_CTRL_CH0_CH_ENABLE_REG_RESETVALUE 0x01ul         /**<  \brief (PROV_DMA_CTRL_CH0_CH_ENABLE_REG reset_value) Channel 0 Channel Enable Register */
 
-#define PROV_DMA_CTRL_CH0_CH_ENABLE_REG_MASK  0x00ul    /**< \brief (PROV_DMA_CTRL_CH0_CH_ENABLE_REG) Register MASK */
+#define PROV_DMA_CTRL_CH0_CH_ENABLE_REG_CH0_CH_ENABLE_REG_Pos 0  /**< \brief (PROV_DMA_CTRL_CH0_CH_ENABLE_REG)                            */
+#define PROV_DMA_CTRL_CH0_CH_ENABLE_REG_CH0_CH_ENABLE_REG (0x1ul << PROV_DMA_CTRL_CH0_CH_ENABLE_REG_CH0_CH_ENABLE_REG_Pos)  
+#define PROV_DMA_CTRL_CH0_CH_ENABLE_REG_MASK  0x01ul    /**< \brief (PROV_DMA_CTRL_CH0_CH_ENABLE_REG) Register MASK */
 
 /* -------- PROV_DMA_CTRL_CH0_CH_START_REG : (PROV_DMA_CTRL Offset: 0x44) (/W  8) Channel 0 Channel Start Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CH0_CH_START_REG:1;        /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } PROV_DMA_CTRL_CH0_CH_START_REG_Type;
@@ -338,7 +342,9 @@ typedef union {
 #define PROV_DMA_CTRL_CH0_CH_START_REG_OFFSET 0x44           /**<  \brief (PROV_DMA_CTRL_CH0_CH_START_REG offset) Channel 0 Channel Start Register */
 #define PROV_DMA_CTRL_CH0_CH_START_REG_RESETVALUE 0x00ul         /**<  \brief (PROV_DMA_CTRL_CH0_CH_START_REG reset_value) Channel 0 Channel Start Register */
 
-#define PROV_DMA_CTRL_CH0_CH_START_REG_MASK   0x00ul    /**< \brief (PROV_DMA_CTRL_CH0_CH_START_REG) Register MASK */
+#define PROV_DMA_CTRL_CH0_CH_START_REG_CH0_CH_START_REG_Pos 0  /**< \brief (PROV_DMA_CTRL_CH0_CH_START_REG)                             */
+#define PROV_DMA_CTRL_CH0_CH_START_REG_CH0_CH_START_REG (0x1ul << PROV_DMA_CTRL_CH0_CH_START_REG_CH0_CH_START_REG_Pos)  
+#define PROV_DMA_CTRL_CH0_CH_START_REG_MASK   0x01ul    /**< \brief (PROV_DMA_CTRL_CH0_CH_START_REG) Register MASK */
 
 /* -------- PROV_DMA_CTRL_CH0_CH_ACTIVE_REG : (PROV_DMA_CTRL Offset: 0x48) (R/  8) Channel 0 Channel Active Status Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -798,7 +804,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CH1_CH_ENABLE_REG:1;       /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } PROV_DMA_CTRL_CH1_CH_ENABLE_REG_Type;
@@ -807,13 +814,16 @@ typedef union {
 #define PROV_DMA_CTRL_CH1_CH_ENABLE_REG_OFFSET 0x140          /**<  \brief (PROV_DMA_CTRL_CH1_CH_ENABLE_REG offset) Channel 1 Channel Enable Register */
 #define PROV_DMA_CTRL_CH1_CH_ENABLE_REG_RESETVALUE 0x01ul         /**<  \brief (PROV_DMA_CTRL_CH1_CH_ENABLE_REG reset_value) Channel 1 Channel Enable Register */
 
-#define PROV_DMA_CTRL_CH1_CH_ENABLE_REG_MASK  0x00ul    /**< \brief (PROV_DMA_CTRL_CH1_CH_ENABLE_REG) Register MASK */
+#define PROV_DMA_CTRL_CH1_CH_ENABLE_REG_CH1_CH_ENABLE_REG_Pos 0  /**< \brief (PROV_DMA_CTRL_CH1_CH_ENABLE_REG)                            */
+#define PROV_DMA_CTRL_CH1_CH_ENABLE_REG_CH1_CH_ENABLE_REG (0x1ul << PROV_DMA_CTRL_CH1_CH_ENABLE_REG_CH1_CH_ENABLE_REG_Pos)  
+#define PROV_DMA_CTRL_CH1_CH_ENABLE_REG_MASK  0x01ul    /**< \brief (PROV_DMA_CTRL_CH1_CH_ENABLE_REG) Register MASK */
 
 /* -------- PROV_DMA_CTRL_CH1_CH_START_REG : (PROV_DMA_CTRL Offset: 0x144) (/W  8) Channel 1 Channel Start Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CH1_CH_START_REG:1;        /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } PROV_DMA_CTRL_CH1_CH_START_REG_Type;
@@ -822,7 +832,9 @@ typedef union {
 #define PROV_DMA_CTRL_CH1_CH_START_REG_OFFSET 0x144          /**<  \brief (PROV_DMA_CTRL_CH1_CH_START_REG offset) Channel 1 Channel Start Register */
 #define PROV_DMA_CTRL_CH1_CH_START_REG_RESETVALUE 0x00ul         /**<  \brief (PROV_DMA_CTRL_CH1_CH_START_REG reset_value) Channel 1 Channel Start Register */
 
-#define PROV_DMA_CTRL_CH1_CH_START_REG_MASK   0x00ul    /**< \brief (PROV_DMA_CTRL_CH1_CH_START_REG) Register MASK */
+#define PROV_DMA_CTRL_CH1_CH_START_REG_CH1_CH_START_REG_Pos 0  /**< \brief (PROV_DMA_CTRL_CH1_CH_START_REG)                             */
+#define PROV_DMA_CTRL_CH1_CH_START_REG_CH1_CH_START_REG (0x1ul << PROV_DMA_CTRL_CH1_CH_START_REG_CH1_CH_START_REG_Pos)  
+#define PROV_DMA_CTRL_CH1_CH_START_REG_MASK   0x01ul    /**< \brief (PROV_DMA_CTRL_CH1_CH_START_REG) Register MASK */
 
 /* -------- PROV_DMA_CTRL_CH1_CH_ACTIVE_REG : (PROV_DMA_CTRL Offset: 0x148) (R/  8) Channel 1 Channel Active Status Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -1282,7 +1294,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CH2_CH_ENABLE_REG:1;       /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } PROV_DMA_CTRL_CH2_CH_ENABLE_REG_Type;
@@ -1291,13 +1304,16 @@ typedef union {
 #define PROV_DMA_CTRL_CH2_CH_ENABLE_REG_OFFSET 0x240          /**<  \brief (PROV_DMA_CTRL_CH2_CH_ENABLE_REG offset) Channel 2 Channel Enable Register */
 #define PROV_DMA_CTRL_CH2_CH_ENABLE_REG_RESETVALUE 0x01ul         /**<  \brief (PROV_DMA_CTRL_CH2_CH_ENABLE_REG reset_value) Channel 2 Channel Enable Register */
 
-#define PROV_DMA_CTRL_CH2_CH_ENABLE_REG_MASK  0x00ul    /**< \brief (PROV_DMA_CTRL_CH2_CH_ENABLE_REG) Register MASK */
+#define PROV_DMA_CTRL_CH2_CH_ENABLE_REG_CH2_CH_ENABLE_REG_Pos 0  /**< \brief (PROV_DMA_CTRL_CH2_CH_ENABLE_REG)                            */
+#define PROV_DMA_CTRL_CH2_CH_ENABLE_REG_CH2_CH_ENABLE_REG (0x1ul << PROV_DMA_CTRL_CH2_CH_ENABLE_REG_CH2_CH_ENABLE_REG_Pos)  
+#define PROV_DMA_CTRL_CH2_CH_ENABLE_REG_MASK  0x01ul    /**< \brief (PROV_DMA_CTRL_CH2_CH_ENABLE_REG) Register MASK */
 
 /* -------- PROV_DMA_CTRL_CH2_CH_START_REG : (PROV_DMA_CTRL Offset: 0x244) (/W  8) Channel 2 Channel Start Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CH2_CH_START_REG:1;        /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } PROV_DMA_CTRL_CH2_CH_START_REG_Type;
@@ -1306,7 +1322,9 @@ typedef union {
 #define PROV_DMA_CTRL_CH2_CH_START_REG_OFFSET 0x244          /**<  \brief (PROV_DMA_CTRL_CH2_CH_START_REG offset) Channel 2 Channel Start Register */
 #define PROV_DMA_CTRL_CH2_CH_START_REG_RESETVALUE 0x00ul         /**<  \brief (PROV_DMA_CTRL_CH2_CH_START_REG reset_value) Channel 2 Channel Start Register */
 
-#define PROV_DMA_CTRL_CH2_CH_START_REG_MASK   0x00ul    /**< \brief (PROV_DMA_CTRL_CH2_CH_START_REG) Register MASK */
+#define PROV_DMA_CTRL_CH2_CH_START_REG_CH2_CH_START_REG_Pos 0  /**< \brief (PROV_DMA_CTRL_CH2_CH_START_REG)                             */
+#define PROV_DMA_CTRL_CH2_CH_START_REG_CH2_CH_START_REG (0x1ul << PROV_DMA_CTRL_CH2_CH_START_REG_CH2_CH_START_REG_Pos)  
+#define PROV_DMA_CTRL_CH2_CH_START_REG_MASK   0x01ul    /**< \brief (PROV_DMA_CTRL_CH2_CH_START_REG) Register MASK */
 
 /* -------- PROV_DMA_CTRL_CH2_CH_ACTIVE_REG : (PROV_DMA_CTRL Offset: 0x248) (R/  8) Channel 2 Channel Active Status Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -1766,7 +1784,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CH3_CH_ENABLE_REG:1;       /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } PROV_DMA_CTRL_CH3_CH_ENABLE_REG_Type;
@@ -1775,13 +1794,16 @@ typedef union {
 #define PROV_DMA_CTRL_CH3_CH_ENABLE_REG_OFFSET 0x340          /**<  \brief (PROV_DMA_CTRL_CH3_CH_ENABLE_REG offset) Channel 3 Channel Enable Register */
 #define PROV_DMA_CTRL_CH3_CH_ENABLE_REG_RESETVALUE 0x01ul         /**<  \brief (PROV_DMA_CTRL_CH3_CH_ENABLE_REG reset_value) Channel 3 Channel Enable Register */
 
-#define PROV_DMA_CTRL_CH3_CH_ENABLE_REG_MASK  0x00ul    /**< \brief (PROV_DMA_CTRL_CH3_CH_ENABLE_REG) Register MASK */
+#define PROV_DMA_CTRL_CH3_CH_ENABLE_REG_CH3_CH_ENABLE_REG_Pos 0  /**< \brief (PROV_DMA_CTRL_CH3_CH_ENABLE_REG)                            */
+#define PROV_DMA_CTRL_CH3_CH_ENABLE_REG_CH3_CH_ENABLE_REG (0x1ul << PROV_DMA_CTRL_CH3_CH_ENABLE_REG_CH3_CH_ENABLE_REG_Pos)  
+#define PROV_DMA_CTRL_CH3_CH_ENABLE_REG_MASK  0x01ul    /**< \brief (PROV_DMA_CTRL_CH3_CH_ENABLE_REG) Register MASK */
 
 /* -------- PROV_DMA_CTRL_CH3_CH_START_REG : (PROV_DMA_CTRL Offset: 0x344) (/W  8) Channel 3 Channel Start Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CH3_CH_START_REG:1;        /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } PROV_DMA_CTRL_CH3_CH_START_REG_Type;
@@ -1790,7 +1812,9 @@ typedef union {
 #define PROV_DMA_CTRL_CH3_CH_START_REG_OFFSET 0x344          /**<  \brief (PROV_DMA_CTRL_CH3_CH_START_REG offset) Channel 3 Channel Start Register */
 #define PROV_DMA_CTRL_CH3_CH_START_REG_RESETVALUE 0x00ul         /**<  \brief (PROV_DMA_CTRL_CH3_CH_START_REG reset_value) Channel 3 Channel Start Register */
 
-#define PROV_DMA_CTRL_CH3_CH_START_REG_MASK   0x00ul    /**< \brief (PROV_DMA_CTRL_CH3_CH_START_REG) Register MASK */
+#define PROV_DMA_CTRL_CH3_CH_START_REG_CH3_CH_START_REG_Pos 0  /**< \brief (PROV_DMA_CTRL_CH3_CH_START_REG)                             */
+#define PROV_DMA_CTRL_CH3_CH_START_REG_CH3_CH_START_REG (0x1ul << PROV_DMA_CTRL_CH3_CH_START_REG_CH3_CH_START_REG_Pos)  
+#define PROV_DMA_CTRL_CH3_CH_START_REG_MASK   0x01ul    /**< \brief (PROV_DMA_CTRL_CH3_CH_START_REG) Register MASK */
 
 /* -------- PROV_DMA_CTRL_CH3_CH_ACTIVE_REG : (PROV_DMA_CTRL Offset: 0x348) (R/  8) Channel 3 Channel Active Status Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -2027,7 +2051,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CORE_JOINT_MODE:1;         /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } PROV_DMA_CTRL_CORE_JOINT_MODE_Type;
@@ -2036,7 +2061,9 @@ typedef union {
 #define PROV_DMA_CTRL_CORE_JOINT_MODE_OFFSET  0x830          /**<  \brief (PROV_DMA_CTRL_CORE_JOINT_MODE offset) If set, core works in joint mode */
 #define PROV_DMA_CTRL_CORE_JOINT_MODE_RESETVALUE 0x00ul         /**<  \brief (PROV_DMA_CTRL_CORE_JOINT_MODE reset_value) If set, core works in joint mode */
 
-#define PROV_DMA_CTRL_CORE_JOINT_MODE_MASK    0x00ul    /**< \brief (PROV_DMA_CTRL_CORE_JOINT_MODE) Register MASK */
+#define PROV_DMA_CTRL_CORE_JOINT_MODE_CORE_JOINT_MODE_Pos 0  /**< \brief (PROV_DMA_CTRL_CORE_JOINT_MODE)                              */
+#define PROV_DMA_CTRL_CORE_JOINT_MODE_CORE_JOINT_MODE (0x1ul << PROV_DMA_CTRL_CORE_JOINT_MODE_CORE_JOINT_MODE_Pos)  
+#define PROV_DMA_CTRL_CORE_JOINT_MODE_MASK    0x01ul    /**< \brief (PROV_DMA_CTRL_CORE_JOINT_MODE) Register MASK */
 
 /* -------- PROV_DMA_CTRL_CORE_PRIORITY : (PROV_DMA_CTRL Offset: 0x838) (R/W  16) Core Priority Channels -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -2084,7 +2111,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CORE_CLKDIV:4;             /*!< bit:   0..3                                           */
+    uint8_t  :4;                        /*!< bit:   4..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } PROV_DMA_CTRL_CORE_CLKDIV_Type;
@@ -2093,7 +2121,10 @@ typedef union {
 #define PROV_DMA_CTRL_CORE_CLKDIV_OFFSET      0x840          /**<  \brief (PROV_DMA_CTRL_CORE_CLKDIV offset) Ratio between main clock and core clock */
 #define PROV_DMA_CTRL_CORE_CLKDIV_RESETVALUE  0x01ul         /**<  \brief (PROV_DMA_CTRL_CORE_CLKDIV reset_value) Ratio between main clock and core clock */
 
-#define PROV_DMA_CTRL_CORE_CLKDIV_MASK        0x00ul    /**< \brief (PROV_DMA_CTRL_CORE_CLKDIV) Register MASK */
+#define PROV_DMA_CTRL_CORE_CLKDIV_CORE_CLKDIV_Pos 0  /**< \brief (PROV_DMA_CTRL_CORE_CLKDIV)                                  */
+#define PROV_DMA_CTRL_CORE_CLKDIV_CORE_CLKDIV_Msk (0xFul << PROV_DMA_CTRL_CORE_CLKDIV_CORE_CLKDIV_Pos)
+#define PROV_DMA_CTRL_CORE_CLKDIV_CORE_CLKDIV(value) (PROV_DMA_CTRL_CORE_CLKDIV_CORE_CLKDIV_Msk & ((value) << PROV_DMA_CTRL_CORE_CLKDIV_CORE_CLKDIV_Pos))  
+#define PROV_DMA_CTRL_CORE_CLKDIV_MASK        0x0Ful    /**< \brief (PROV_DMA_CTRL_CORE_CLKDIV) Register MASK */
 
 /* -------- PROV_DMA_CTRL_CORE_CH_START : (PROV_DMA_CTRL Offset: 0x848) (/W  8) Channel Start -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -2171,7 +2202,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint8_t  :8;                        /*!< bit:   0..7  Reserved                                 */
+    uint8_t  CORE_IDLE:1;               /*!< bit:      0                                           */
+    uint8_t  :7;                        /*!< bit:   1..7  Reserved                                 */
   } bit;                                /*!< Structure used for bit  access                        */
   uint8_t  reg;                         /*!< Type used for register access                         */
 } PROV_DMA_CTRL_CORE_IDLE_Type;
@@ -2180,7 +2212,9 @@ typedef union {
 #define PROV_DMA_CTRL_CORE_IDLE_OFFSET        0x8D0          /**<  \brief (PROV_DMA_CTRL_CORE_IDLE offset) Indicates all channels have stopped and transactions have completed */
 #define PROV_DMA_CTRL_CORE_IDLE_RESETVALUE    0x00ul         /**<  \brief (PROV_DMA_CTRL_CORE_IDLE reset_value) Indicates all channels have stopped and transactions have completed */
 
-#define PROV_DMA_CTRL_CORE_IDLE_MASK          0x00ul    /**< \brief (PROV_DMA_CTRL_CORE_IDLE) Register MASK */
+#define PROV_DMA_CTRL_CORE_IDLE_CORE_IDLE_Pos 0  /**< \brief (PROV_DMA_CTRL_CORE_IDLE)                                    */
+#define PROV_DMA_CTRL_CORE_IDLE_CORE_IDLE     (0x1ul << PROV_DMA_CTRL_CORE_IDLE_CORE_IDLE_Pos)  
+#define PROV_DMA_CTRL_CORE_IDLE_MASK          0x01ul    /**< \brief (PROV_DMA_CTRL_CORE_IDLE) Register MASK */
 
 /* -------- PROV_DMA_CTRL_USER_DEF_STATUS : (PROV_DMA_CTRL Offset: 0x8e0) (R/  32) User Defined Configurations -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

@@ -131,14 +131,12 @@ enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
 				case GPIO_PIN_PULL_UP:
 					LPMCU_MISC_REGS0->PULL_ENABLE.reg &= ~(1 << gpio_pin);
 					break;
-#ifdef CHIPVERSION_B0
 				case GPIO_PIN_PULL_DOWN:
 					/* Set R-Type */
 					LPMCU_MISC_REGS0->RTYPE_PAD_0.reg |= (1 << gpio_pin);
 					/* Set REN */
 					LPMCU_MISC_REGS0->PULL_ENABLE.reg &= ~(1 << gpio_pin);
 					break;
-#endif //CHIPVERSION_B0
 				default:
 					status = STATUS_ERR_INVALID_ARG;
 					break;

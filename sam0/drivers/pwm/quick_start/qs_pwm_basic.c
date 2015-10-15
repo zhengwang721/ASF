@@ -57,6 +57,7 @@ static void configure_pwm(void)
 //! [setup_2]
 
 //! [setup_3]
+	config_pwm.duty_cycle = 50;
 	config_pwm.pinmux_pad = CONF_PWM_OUT_MUX;
 //! [setup_3]
 

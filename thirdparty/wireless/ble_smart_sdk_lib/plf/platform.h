@@ -51,6 +51,10 @@ extern "C" {
 /** callback function type for handling BLE FW stack messages */
 typedef void (*platform_interface_callback) (uint8_t *, uint32_t );
 
+/** callback function type for handling resume from sleep */
+typedef void (*resume_callback) (void);
+	
+#define APP_PREVENT_SLEEP	(0x8000)
 /** enumerated status values for this platform driver */
 typedef enum PLATFORM_STATUS
 {
@@ -70,6 +74,10 @@ typedef enum PLATFORM_STATUS
 	STATUS_TIMEOUT,
 	/** Status Failure */
 	STATUS_FAILURE,
+	/** Status Busy */
+	STATUS_RESOURCE_BUSY,
+	/** Invalid arugment */
+	STATUS_INVALID_ARGUMENT,
 }plf_drv_status;
 	
 /**
@@ -190,6 +198,43 @@ plf_drv_status platform_register_ble_msg_handler(platform_interface_callback cb)
  */
  void send_plf_int_msg_ind(uint8_t intr_index, uint8_t callback_id, void *data, uint16_t data_len);
 
+/**
+ * \brief API to acquire sleep lock.
+ *
+ * This API acquires the sleep lock which prevent the system from entering into lower power
+ * state (ULP). As long as this lock is held System is prevented from entering to any lower 
+ * power state. 
+ * \note Please use this lock judiciously. You may acquire this lock at app_entry and once 
+ * the application has initialized and running release this lock using \ref release_sleep_lock
+ * api to let the system go to ULP state to save power.
+ *
+ */
+plf_drv_status acquire_sleep_lock(void);
+
+/**
+ * \brief API to release sleep lock.
+ *
+ * This API releases the sleep lock which allows the system to enter into lower power
+ * state (ULP). As long as this lock is held System is prevented from entering to any lower 
+ * power state. 
+ * \note Once this application sleep lock is released, make sure the AON_GPIO_X are held low
+ * in order for system to enter ULP state.
+ *
+ */
+plf_drv_status release_sleep_lock(void);
+
+/**
+ * \brief API to register a callback function when system resumes from sleep(ULP).
+ *
+ * This API registers a callback function that will be called when system exits ULP.
+ * 
+ * \note This callback can be used to reinitialize anything that might have cleared or
+ * turned off when system entered ULP state. 
+ *
+ */
+plf_drv_status register_resume_callback(resume_callback cb);
+
+void init_port_list(void);
 /** @} */
 
 /** @} */

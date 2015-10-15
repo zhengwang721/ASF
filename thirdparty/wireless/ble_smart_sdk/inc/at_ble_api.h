@@ -126,7 +126,7 @@ extern "C" {
 /// Minimal MTU value
 #define AT_MTU_VAL_MIN                  (23)        //(0x17)
 /// Maximal MTU value
-#define AT_MTU_VAL_MAX                  (2048)      //(0x800)
+#define AT_MTU_VAL_MAX                  (512)      //(0x200)
 /// Recommended MTU value
 #define AT_MTU_VAL_RECOMMENDED          (512)       //(0x200)
 /// Minimal Renew duration value (150 seconds); resolution of 10 mSeconds (N*10ms)
@@ -1209,9 +1209,9 @@ typedef struct
 typedef struct
 {
     at_ble_addr_t    **ppAddrs;        /**< Pointer to array of device address pointers, pointing to addresses to be used in white-list. NULL if none are given. */
-    uint8_t             addrCount;      /**< Count of device addresses in array, up to @ref AT_BLE_GAP_WHITELIST_ADDR_MAX_COUNT. */
+    uint8_t             addrCount;      /**< Count of device addresses in array. */
     at_ble_gap_irk_t     **ppIrks;         /**< Pointer to array of Identity Resolving Key (IRK) pointers, each pointing to an IRK in the white-list. NULL if none are given. */
-    uint8_t             irkCount;       /**< Count of IRKs in array, up to @ref AT_BLE_GAP_WHITELIST_IRK_MAX_COUNT. */
+    uint8_t             irkCount;       /**< Count of IRKs in array. */
 } at_ble_gap_whitelist_t;
 
 
@@ -3601,7 +3601,7 @@ at_ble_status_t at_ble_dtm_reset(void);
 *  @brief       pack and send Direct test mode RX test start command, after calling this API you should wait for
 *  @ref         AT_BLE_LE_TEST_STATUS event
 *
-*  @param[in]   _frequency_index frequency index to do RX test on (from 0 to 39)
+*  @param[in]   frequency_index frequency index to do RX test on (from 0 to 39)
 *
 * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS,
 * Otherwise the function shall return @ref at_ble_status_t
@@ -3613,9 +3613,9 @@ at_ble_status_t at_ble_dtm_rx_test_start(uint8_t frequency_index);
 
 /** @ingroup dtm_group
 *  @brief       Pack and send Direct test mode TX test start command, after calling this API you should wait for @ref AT_BLE_LE_TEST_STATUS event
-*  @param[in]   _frequency_index frequency index to do TX test on (from 0 to 39)
-*  @param[in]   _data_length payload length (from 0 to 36)
-*  @param[in]   _payload packet payload type (from 0 to 7)
+*  @param[in]   frequency_index frequency index to do TX test on (from 0 to 39)
+*  @param[in]   data_length payload length (from 0 to 36)
+*  @param[in]   payload packet payload type (from 0 to 7)
 *
 * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS,
 * Otherwise the function shall return @ref at_ble_status_t

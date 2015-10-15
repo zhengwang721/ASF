@@ -28,7 +28,7 @@ extern tpfTrace tpfAtBlePrintInfo;
 extern tpfTrace tpfAtBlePrintErr;
 /// Print info message; ex: PRINT_ERR(MESSAGE) -> (ERR)(FUNCTON_NAME)(LINE_NUMBER)MESSAGE
 #define PRINT_ERR(...)      tpfAtBlePrintErr(HDR_TEXT("E", " : "), __SHORT_FILE__, __LINE__, __FUNCTION__);tpfAtBlePrintErr(__VA_ARGS__)
-#define ASSERT_PRINT_ERR(c,...) do{if(c){PRINT_ERR(__VA_ARGS__);}}while(0)
+#define ASSERT_PRINT_ERR(c,...) do{if(c){PRINT_ERR(__VA_ARGS__);}}while (0)
 #else //AT_BLE_DBG & TRACE_LVL_ERR
 #define PRINT_ERR(...)
 #define ASSERT_PRINT_ERR(c,...) do{}while(0)
@@ -47,13 +47,18 @@ extern tpfTrace tpfAtBlePrintBus;
 /// Print trasfered message on bus; ex: PRINT_BUS("TAG: ", arr, 2) -> TAG: arr[0] arr[1]
 #define PRINT_BUS(TAG,BUFF,LEN)     \
     do{ \
-        uint16_t counter=0; \
+        uint8_t *buff_ptr = (uint8_t *)BUFF; \
+        uint32_t buff_len = LEN; \
+        uint32_t counter=0; \
         tpfAtBlePrintBus(TAG); \
-        for(counter=0; ((counter<LEN) && (0 != (BUFF))); counter++) \
+        if (NULL != buff_ptr) \
         { \
-            tpfAtBlePrintBus("%02X ", ((uint8_t *)BUFF)[counter]); \
+            for (counter=0; counter < buff_len; counter++) \
+            { \
+                tpfAtBlePrintBus("%02X ", buff_ptr[counter]); \
+            } \
         } \
-    }while(0)
+    }while (0)
 
 #else //AT_BLE_DBG & TRACE_LVL_BUS
 #define PRINT_BUS(TAG,BUFF,len)

@@ -519,3 +519,10 @@ void gattc_svc_changed_cfg_ind_parser(uint16_t  src_id,
     INTERFACE_UNPACK_UINT16(&params->cfg);
     INTERFACE_DONE();
 }
+
+void init_gattc_task_module()
+{
+	g_seq_num_tx = 0;
+	g_seq_num_rx = 0;
+	Seq_NUM = 0;
+}

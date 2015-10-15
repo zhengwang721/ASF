@@ -38,7 +38,8 @@ void hw_timer_register_callback(hw_timer_callback_t timer_callback_handler)
 	/* For A4, timer0 IRQ is 9 */
 	//! [enable_IRQ]
 	
-	NVIC_EnableIRQ(9);
+	//NVIC_EnableIRQ(9);
+	NVIC_EnableIRQ(TIMER0_IRQn);
 	//chris.choi : for B0 board, how about TIMER0_IRQn = 26?
 	
 	//! [enable_IRQ

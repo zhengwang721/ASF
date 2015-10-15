@@ -66,77 +66,46 @@
 #define PIN_LP_GPIO_18       18
 #define PIN_LP_GPIO_19       19
 #define PIN_LP_GPIO_20       20
-#ifdef CHIPVERSION_B0
-	#define PIN_LP_GPIO_21   21
-	#define PIN_LP_GPIO_22   22
-	#define PIN_LP_GPIO_23   23
-	#define PIN_LP_GPIO_24   24
-#endif
+#define PIN_LP_GPIO_21       21
+#define PIN_LP_GPIO_22       22
+#define PIN_LP_GPIO_23       23
+#define PIN_LP_GPIO_24       24
 
-#ifdef CHIPVERSION_B0
-	#define MEGAMUX_UART0_RXD            0L
-	#define MEGAMUX_UART0_TXD            1L
-	#define MEGAMUX_UART0_CTS            2L
-	#define MEGAMUX_UART0_RTS            3L
-	#define MEGAMUX_UART1_RXD            4L
-	#define MEGAMUX_UART1_TXD            5L
-	#define MEGAMUX_UART1_CTS            6L
-	#define MEGAMUX_UART1_RTS            7L
-	#define MEGAMUX_I2C0_SDA             8L
-	#define MEGAMUX_I2C0_SCL             9L
-	#define MEGAMUX_I2C1_SDA            10L
-	#define MEGAMUX_I2C1_SCL            11L
-	#define MEGAMUX_PWM_1               12L
-	#define MEGAMUX_PWM_2               13L
-	#define MEGAMUX_PWM_3               14L
-	#define MEGAMUX_PWM_4               15L
-	#define MEGAMUX_LP_CLOCK_OUT        16L
-	#define MEGAMUX_WLAN_TX_ACTIVE      17L
-	#define MEGAMUX_WLAN_RX_ACTIVE      18L
-	#define MEGAMUX_BLE_TX_ACTIVE       19L
-	#define MEGAMUX_BLE_RX_ACTIVE       20L
-	#define MEGAMUX_BLE_IN_PROCESS      21L
-	#define MEGAMUX_BLE_MBSY            22L
-	#define MEGAMUX_BLE_SYNC            23L
-	#define MEGAMUX_BLE_RXNTX           24L
-	#define MEGAMUX_BLE_PTI_0           25L
-	#define MEGAMUX_BLE_PTI_1           26L
-	#define MEGAMUX_BLE_PTI_2           27L
-	#define MEGAMUX_BLE_PTI_3           28L
-	#define MEGAMUX_QUAD_DEC_X_IN_A     29L
-	#define MEGAMUX_QUAD_DEC_X_IN_B     30L
-	#define MEGAMUX_QUAD_DEC_Y_IN_A     31L
-	#define MEGAMUX_QUAD_DEC_Y_IN_B     32L
-	#define MEGAMUX_QUAD_DEC_Z_IN_A     33L
-	#define MEGAMUX_QUAD_DEC_Z_IN_B     34L
-#else
-	#define MEGAMUX_UART1_RXD            0L
-	#define MEGAMUX_UART1_TXD            1L
-	#define MEGAMUX_UART1_CTS            2L
-	#define MEGAMUX_UART1_RTS            3L
-	#define MEGAMUX_UART2_RXD            4L
-	#define MEGAMUX_UART2_TXD            5L
-	#define MEGAMUX_UART2_CTS            6L
-	#define MEGAMUX_UART2_RTS            7L
-	#define MEGAMUX_I2C0_SDA             8L
-	#define MEGAMUX_I2C0_SCL             9L
-	#define MEGAMUX_SPI0_SCK            10L
-	#define MEGAMUX_SPI0_MOSI           11L
-	#define MEGAMUX_SPI0_SSN            12L
-	#define MEGAMUX_SPI0_MISO           13L
-	#define MEGAMUX_SPI1_SCK            14L
-	#define MEGAMUX_SPI1_MOSI           15L
-	#define MEGAMUX_SPI1_SSN            16L
-	#define MEGAMUX_SPI1_MISO           17L
-	#define MEGAMUX_SPI_FLASH_SCK       18L
-	#define MEGAMUX_SPI_FLASH_SSN       19L
-	#define MEGAMUX_SPI_FLASH_TXD       20L
-	#define MEGAMUX_SPI_FLASH_RXD       21L
-	#define MEGAMUX_PWM_1               22L
-	#define MEGAMUX_PWM_2               23L
-	#define MEGAMUX_PWM_3               24L
-	#define MEGAMUX_PWM_4               25L
-#endif
+#define MEGAMUX_UART0_RXD            0L
+#define MEGAMUX_UART0_TXD            1L
+#define MEGAMUX_UART0_CTS            2L
+#define MEGAMUX_UART0_RTS            3L
+#define MEGAMUX_UART1_RXD            4L
+#define MEGAMUX_UART1_TXD            5L
+#define MEGAMUX_UART1_CTS            6L
+#define MEGAMUX_UART1_RTS            7L
+#define MEGAMUX_I2C0_SDA             8L
+#define MEGAMUX_I2C0_SCL             9L
+#define MEGAMUX_I2C1_SDA            10L
+#define MEGAMUX_I2C1_SCL            11L
+#define MEGAMUX_PWM_1               12L
+#define MEGAMUX_PWM_2               13L
+#define MEGAMUX_PWM_3               14L
+#define MEGAMUX_PWM_4               15L
+#define MEGAMUX_LP_CLOCK_OUT        16L
+#define MEGAMUX_WLAN_TX_ACTIVE      17L
+#define MEGAMUX_WLAN_RX_ACTIVE      18L
+#define MEGAMUX_BLE_TX_ACTIVE       19L
+#define MEGAMUX_BLE_RX_ACTIVE       20L
+#define MEGAMUX_BLE_IN_PROCESS      21L
+#define MEGAMUX_BLE_MBSY            22L
+#define MEGAMUX_BLE_SYNC            23L
+#define MEGAMUX_BLE_RXNTX           24L
+#define MEGAMUX_BLE_PTI_0           25L
+#define MEGAMUX_BLE_PTI_1           26L
+#define MEGAMUX_BLE_PTI_2           27L
+#define MEGAMUX_BLE_PTI_3           28L
+#define MEGAMUX_QUAD_DEC_X_IN_A     29L
+#define MEGAMUX_QUAD_DEC_X_IN_B     30L
+#define MEGAMUX_QUAD_DEC_Y_IN_A     31L
+#define MEGAMUX_QUAD_DEC_Y_IN_B     32L
+#define MEGAMUX_QUAD_DEC_Z_IN_A     33L
+#define MEGAMUX_QUAD_DEC_Z_IN_B     34L
 
 /* ========== GPIO definition for SPI0 peripheral ========== */
 #define PIN_LP_GPIO_2_MUX5_SPI0_SCK       2L              /**< \brief SPI0 signal: SCK on LP_GPIO_2 mux 5 */

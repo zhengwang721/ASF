@@ -50,13 +50,15 @@
 #include <asf.h>
 #include "console_serial.h"
 #include "at_ble_api.h"
+#include "at_ble_errno.h"
+#include "at_ble_trace.h"
 #include "platform.h"
 #include "console_serial.h"
 #include "timer_hw.h"
+//#include "conf_extint.h"
 #include "ble_manager.h"
-#include "alert_notificaition_app.h"
-#include "alert_notification_profile.h"
 #include "alert_notification.h"
+#include "alert_notification_profile.h"
 
 extern gatt_anp_handler_t anp_handle;
 
@@ -64,9 +66,9 @@ extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
 volatile bool user_request = false;
 
-bool notification_enable = false;
+volatile bool notification_enable = false;
 
-bool app_state = false;
+volatile bool app_state = false;
 
 /***********************************************************************************
  *									Implementations                               *
@@ -82,7 +84,7 @@ void button_cb(void)
 /**
  * @brief Timer Callback
  */
-void timer_callback_handler(void)
+static void timer_callback_handler(void)
 {
 	/* Free to use for User Application */
 }
@@ -91,27 +93,22 @@ void timer_callback_handler(void)
  * @brief app_connected_state profile notifies the application about state
  * @param[in] connected
  */
-void app_connected_state(bool connected)
+static void app_connected_state(bool connected)
 {
 	app_state = connected;
-	if (connected)
-	{
-			
+	if (connected) {
+		DBG_LOG("App connected");	
 	}		
 }
 
 int main(void)
 {
-	at_ble_addr_t addr = { AT_BLE_ADDRESS_PUBLIC, { 0Xff, 0x1f, 0x2f, 0x3f, 0x4f, 0x5f}};
 	#if SAMG55
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();
 	#elif SAM0
 	system_init();
-	#elif SAMB11
-	/*just dummy function.*/
-	system_board_init();
 	#endif
 	
 	/* Initialize serial console */
@@ -132,28 +129,25 @@ int main(void)
 	DBG_LOG("Alert Notification Profile Application");
 	
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(&addr);
+	ble_device_init(NULL);
 	
 	/* Capturing the events  */
-	while(1)
-	{
+	while(1) {
+
 		/* BLE Event Task */
 		ble_event_task();
-		if (user_request)
-		{
-			if (notification_enable)
-			{
+		if (user_request) {
+			
+			/* Button debounce delay*/
+			//delay_ms(350);
+			if (notification_enable) {
 				anp_client_write_notification_handler();
 				notification_enable = false;
 			} else {
 				anp_client_disable_notification();
 				notification_enable = true;
 			}
-			
 			user_request = false;
 		}
-		
 	}
-	
-	return 0;
 }

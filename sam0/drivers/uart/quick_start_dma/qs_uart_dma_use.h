@@ -54,7 +54,7 @@
  * to the terminal through DMA. In this use case the UART will be configured with the following
  * settings:
  * - Asynchronous mode
- * - 9600 Baudrate
+ * - 38400 Baudrate
  * - 8-bits, No Parity and one Stop Bit
  * - TX and RX enabled and connected to the Xplained Pro Embedded Debugger virtual COM port
  *
@@ -141,23 +141,17 @@
  * -# Allocate a DMA resource with the configurations.
  *    \snippet qs_uart_dma_use.c setup_rx_4
  *
- * -# Create a DMA transfer descriptor configuration structure, which can be
- *    filled out to adjust the configuration of a single DMA transfer.
- *    \snippet qs_uart_dma_use.c setup_rx_5
- *
  * -# Initialize the DMA transfer descriptor configuration struct with the module's
  *    default values.
- *    \snippet qs_uart_dma_use.c setup_rx_6
+ *    \snippet qs_uart_dma_use.c setup_rx_5
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
  * -# Set the specific parameters for a DMA transfer with transfer size, source
  *    address, and destination address.
- *    \snippet qs_uart_dma_use.c setup_rx_7
+ *    \snippet qs_uart_dma_use.c setup_rx_6
  *
- * -# Create the DMA transfer descriptor.
- *    \snippet qs_uart_dma_use.c setup_rx_8
  *
  * -# Create a DMA resource configuration structure for TX, which can be filled
  *    out to adjust the configuration of a single DMA transfer.
@@ -178,23 +172,16 @@
  * -# Allocate a DMA resource with the configurations.
  *    \snippet qs_uart_dma_use.c setup_tx_4
  *
- * -# Create a DMA transfer descriptor configuration structure, which can be
- *    filled out to adjust the configuration of a single DMA transfer.
- *    \snippet qs_uart_dma_use.c setup_tx_5
- *
  * -# Initialize the DMA transfer descriptor configuration struct with the module's
  *    default values.
- *    \snippet qs_uart_dma_use.c setup_tx_6
+ *    \snippet qs_uart_dma_use.c setup_tx_5
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
  * -# Set the specific parameters for a DMA transfer with transfer size, source
  *    address, and destination address.
- *    \snippet qs_uart_dma_use.c setup_tx_7
- *
- * -# Create the DMA transfer descriptor.
- *    \snippet qs_uart_dma_use.c setup_tx_8
+ *    \snippet qs_uart_dma_use.c setup_tx_6
  *
  * \section asfdoc_samb_uart_dma_use_case_main Use Case
  *

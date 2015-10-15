@@ -318,6 +318,6 @@ void gattc_svc_changed_ind_cmd_handler(uint16_t u16ConHdl,
 void gattc_svc_changed_cfg_ind_parser(uint16_t                                       src_id,
                                       uint8_t                                       *data,
                                       at_ble_characteristic_configuration_changed_t *params);
-
+void init_gattc_task_module(void);
 #endif
 

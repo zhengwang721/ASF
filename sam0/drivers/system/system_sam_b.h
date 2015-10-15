@@ -129,43 +129,44 @@ extern "C" {
  *
  */
 enum ram_isr_table_index {
-	RAM_ISR_TABLE_RESET_INDEX            = 1,
-	RAM_ISR_TABLE_NMI_INDEX              = 2,
-	RAM_ISR_TABLE_HARDFAULT_INDEX        = 3,
-	RAM_ISR_TABLE_SVC_INDEX              = 11,
-	RAM_ISR_TABLE_PENDSV_INDEX           = 14,
-	RAM_ISR_TABLE_SYSTICK_INDEX          = 15,
-	RAM_ISR_TABLE_UARTRX0_INDEX          = 16,
-	RAM_ISR_TABLE_UARTTX0_INDEX          = 17,
-	RAM_ISR_TABLE_UARTRX1_INDEX          = 18,
-	RAM_ISR_TABLE_UARTTX1_INDEX          = 19,
-	RAM_ISR_TABLE_SPIRX0_INDEX           = 20,
-	RAM_ISR_TABLE_SPITX0_INDEX           = 21,
-	RAM_ISR_TABLE_DMA_INDEX              = 22,
-	RAM_ISR_TABLE_PORT0_COMB_INDEX       = 23,
-	RAM_ISR_TABLE_PORT1_COMB_INDEX       = 24,
-	RAM_ISR_TABLE_TIMER0_INDEX           = 25,
-	RAM_ISR_TABLE_DUALTIMER_INDEX        = 26,
-	RAM_ISR_TABLE_SPIRX1_INDEX           = 27,
-	RAM_ISR_TABLE_SPITX1_INDEX           = 28,
-	RAM_ISR_TABLE_I2CRX0_INDEX           = 29,
-	RAM_ISR_TABLE_I2CTX0_INDEX           = 30,
-	RAM_ISR_TABLE_PORT0_0_INDEX          = 32,
-	RAM_ISR_TABLE_PORT0_1_INDEX          = 33,
-	RAM_ISR_TABLE_PORT0_2_INDEX          = 34,
-	RAM_ISR_TABLE_PORT0_3_INDEX          = 35,
-	RAM_ISR_TABLE_BLE_LP_RESET_INDEX     = 36,
-	RAM_ISR_TABLE_BLE_CORE_RESET_INDEX   = 37,
-	RAM_ISR_TABLE_CALIBRATION_DONE_INDEX = 38,
-	RAM_ISR_TABLE_SECURITY_INDEX         = 39,
-	RAM_ISR_TABLE_BLE_FE_INDEX           = 40,
-	RAM_ISR_TABLE_SXPLL_NEED_RESET_INDEX = 41,
-	RAM_ISR_TABLE_EXT_COMB_INDEX         = 42,
-	RAM_ISR_TABLE_AON_SLEEP_TIMER_INDEX  = 43,
-	RAM_ISR_TABLE_BLE_OSC_EN_INDEX       = 44,
-	RAM_ISR_TABLE_BLE_WAKEUP_LP_INDEX    = 45,
-	RAM_ISR_TABLE_RXTX_SEQ_SLEEP_INDEX   = 46,
-	RAM_ISR_TABLE_BLE_CORE_INDEX         = 47,
+	RAM_ISR_TABLE_RESET_INDEX              = 1,
+	RAM_ISR_TABLE_NMI_INDEX                = 2,
+	RAM_ISR_TABLE_HARDFAULT_INDEX          = 3,
+	RAM_ISR_TABLE_SVC_INDEX                = 11,
+	RAM_ISR_TABLE_PENDSV_INDEX             = 14,
+	RAM_ISR_TABLE_SYSTICK_INDEX            = 15,
+	RAM_ISR_TABLE_UARTRX0_INDEX            = 16,
+	RAM_ISR_TABLE_UARTTX0_INDEX            = 17,
+	RAM_ISR_TABLE_UARTRX1_INDEX            = 18,
+	RAM_ISR_TABLE_UARTTX1_INDEX            = 19,
+	RAM_ISR_TABLE_SPIRX0_INDEX             = 20,
+	RAM_ISR_TABLE_SPITX0_INDEX             = 21,
+	RAM_ISR_TABLE_SPIRX1_INDEX             = 22,
+	RAM_ISR_TABLE_SPITX1_INDEX             = 23,
+	RAM_ISR_TABLE_I2CRX0_INDEX             = 24,
+	RAM_ISR_TABLE_I2CTX0_INDEX             = 25,
+	RAM_ISR_TABLE_I2CRX1_INDEX             = 26,
+	RAM_ISR_TABLE_I2CTX1_INDEX             = 27,
+	RAM_ISR_TABLE_WDT0_INDEX               = 28,
+	RAM_ISR_TABLE_WDT1_INDEX               = 29,
+	RAM_ISR_TABLE_DUALTIMER_INDEX          = 30,
+	RAM_ISR_TABLE_BLE_PERIPH_REGS_INDEX    = 31,
+	RAM_ISR_TABLE_SECURITY_INDEX           = 32,
+	RAM_ISR_TABLE_EFUSE_OUT_OF_RESET_INDEX = 33,
+	RAM_ISR_TABLE_SPI_FLASH_INDEX          = 34,
+	RAM_ISR_TABLE_LP_CLK_CAL_DONE_INDEX    = 35,	
+	RAM_ISR_TABLE_BROWNOUT_DETECTED_INDEX  = 36,	
+	RAM_ISR_TABLE_BLE_CORE_RESET_INDEX     = 37,
+	RAM_ISR_TABLE_BLE_LP_CORE_RESET_INDEX  = 38,
+	RAM_ISR_TABLE_PORT0_COMB_INDEX         = 39,
+	RAM_ISR_TABLE_PORT1_COMB_INDEX         = 40,
+	RAM_ISR_TABLE_PORT2_COMB_INDEX         = 41,
+	RAM_ISR_TABLE_TIMER0_INDEX             = 42,
+	RAM_ISR_TABLE_AON_SLEEP_TIMER_INDEX    = 43,
+	RAM_ISR_TABLE_BLE_OSC_EN_INDEX         = 44,
+	RAM_ISR_TABLE_BLE_WAKEUP_LP_INDEX      = 45,
+	RAM_ISR_TABLE_RXTX_SEQ_SLEEP_INDEX     = 46,
+	RAM_ISR_TABLE_BLE_CORE_INDEX           = 47,
 };
 
 /**
@@ -450,89 +451,6 @@ enum system_calibration_status {
 	CALBRATION_DONE,
 };
 
-enum system_rtc_circuit_resistor {
-	/** 20Mohm resistor */
-	RTC_CIRCUIT_RESISTOR_20,
-	/** 30Mohm resistor */
-	RTC_CIRCUIT_RESISTOR_30,
-};
-
-enum system_rtc_circuit_transconductance {
-	/** Transconductance is 75ns */
-	RTC_CIRCUIT_GM_75,
-	/** Transconductance is 85ns */
-	RTC_CIRCUIT_GM_85,
-	/** Transconductance is 96ns */
-	RTC_CIRCUIT_GM_96,
-	/** Transconductance is 106ns */
-	RTC_CIRCUIT_GM_106,
-	/** Transconductance is 116ns */
-	RTC_CIRCUIT_GM_116,
-	/** Transconductance is 127ns */
-	RTC_CIRCUIT_GM_127,
-	/** Transconductance is 137ns */
-	RTC_CIRCUIT_GM_137,
-	/** Transconductance is 147ns */
-	RTC_CIRCUIT_GM_147,
-	/** Transconductance is 158ns */
-	RTC_CIRCUIT_GM_158,
-	/** Transconductance is 168ns */
-	RTC_CIRCUIT_GM_168,
-	/** Transconductance is 178ns */
-	RTC_CIRCUIT_GM_178,
-	/** Transconductance is 189ns */
-	RTC_CIRCUIT_GM_189,
-	/** Transconductance is 199ns */
-	RTC_CIRCUIT_GM_199,
-	/** Transconductance is 209ns */
-	RTC_CIRCUIT_GM_209,
-	/** Transconductance is 220ns */
-	RTC_CIRCUIT_GM_220,
-	/** Transconductance is 230ns */
-	RTC_CIRCUIT_GM_230,
-};
-
-enum system_rtc_circuit_cap {
-	/** 0pF */
-	RTC_CIRCUIT_CAP_0,
-	/** 1pF */
-	RTC_CIRCUIT_CAP_1,
-	/** 2pF */
-	RTC_CIRCUIT_CAP_2,
-	/** 3pF */
-	RTC_CIRCUIT_CAP_3,
-	/** 4pF */
-	RTC_CIRCUIT_CAP_4,
-	/** 5pF */
-	RTC_CIRCUIT_CAP_5,
-	/** 6pF */
-	RTC_CIRCUIT_CAP_6,
-	/** 7pF */
-	RTC_CIRCUIT_CAP_7,
-	/** 8pF */
-	RTC_CIRCUIT_CAP_8,
-	/** 9pF */
-	RTC_CIRCUIT_CAP_9,
-	/** 10pF */
-	RTC_CIRCUIT_CAP_10,
-	/** 11pF */
-	RTC_CIRCUIT_CAP_11,
-	/** 12pF */
-	RTC_CIRCUIT_CAP_12,
-	/** 13pF */
-	RTC_CIRCUIT_CAP_13,
-	/** 14pF */
-	RTC_CIRCUIT_CAP_14,
-	/** 15pF */
-	RTC_CIRCUIT_CAP_15,
-};
-
-struct system_rtc_circuit_config {
-	enum system_rtc_circuit_resistor resistor;
-	enum system_rtc_circuit_transconductance transconductance;
-	enum system_rtc_circuit_cap cap;
-};
-
 struct system_calibration_config {
 	enum system_calibration_clk_num clk_num;
 	enum system_calibration_interrput_control interrupt_control;
@@ -606,14 +524,6 @@ enum status_code system_clock_aon_config( \
 				enum system_clock_aon_resource aon_resource);
 enum status_code system_clock_peripheral_aon_enable(enum system_peripheral_aon peripheral_aon);
 enum status_code system_clock_peripheral_aon_disable(enum system_peripheral_aon peripheral_aon);
-/** @} */
-
-/**
- * \name System RTC crystal circuit configuration
- * @{
- */
-void system_rtc_circuit_get_config_defaults(struct system_rtc_circuit_config *config);
-void system_rtc_circuit_set_config(struct system_rtc_circuit_config *config);
 /** @} */
 
 #ifdef __cplusplus

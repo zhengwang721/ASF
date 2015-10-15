@@ -9,6 +9,12 @@
 #define CMN_DEFS_H_
 #include <stdio.h>
 #include "dbg_logs.h"
+
+#ifndef WIN32
+#undef UNREFERENCED_PARAMETER
+#define UNREFERENCED_PARAMETER(a) 
+#endif
+
 /// Builds the task identifier from the type and the index of that task.
 #define KE_BUILD_ID(type, index) ( (uint16_t)(((index) << 8)|(type)) )
 
@@ -46,6 +52,7 @@ extern uint8_t unNull;
 #define ERROR_REPORT    PRINT_ERR("\n");
 #define NMI_TRUE (1)
 
+extern volatile uint16_t app_task_type;		
 
 enum
 {
@@ -231,6 +238,9 @@ enum KE_API_ID
     TASK_LANS         = 53,   // Location and Navigation Profile Server Task
     TASK_LANC         = 54,   // Location and Navigation Profile Client Task
 
+    TASK_ID_DUMMY1 = 55,
+    TASK_ID_DUMMY2 = 56,
+    TASK_ID_DUMMY3 = 57,
 
     TASK_INVALID      = 0xFF, // Invalid Task Identifier
 };

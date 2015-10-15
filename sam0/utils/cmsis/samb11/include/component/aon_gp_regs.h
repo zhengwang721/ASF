@@ -400,18 +400,10 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t CLK_EDGE_SEL:1;            /*!< bit:      0  Select clock edge for Vreg comparator in buck converter */
-    uint32_t VOUT_CTRL_BUCK:4;          /*!< bit:   1..4  Select the output voltage of the buck converter */
-    uint32_t CLK_2_4:1;                 /*!< bit:      5  Comparator clock divider in buck converter */
-    uint32_t VREG_FILT_CTRL:2;          /*!< bit:   6..7  Not Used                                 */
-    uint32_t CLK_DIV:3;                 /*!< bit:  8..10  Programmable divider that sets the on duration of positive charging pulse */
-    uint32_t RESET_FSM:1;               /*!< bit:     11  Force reset of FSM in buck converter     */
-    uint32_t EN_TRISTATE:1;             /*!< bit:     12  Allow tristate_ctrl to control minimum time between pulses of the buck converter */
-    uint32_t TRISTATE_CTRL:3;           /*!< bit: 13..15  Controls the minimum time between pulses in the buck converter */
-    uint32_t OFFSETP_CTRL:4;            /*!< bit: 16..19  Controls a fixed comparator offset in the buck converter for positive pulses */
-    uint32_t OFFSETN_CTRL:4;            /*!< bit: 20..23  Controls a fixed comparator offset in the buck converter for negative pulses */
-    uint32_t P_SW_CTRL:7;               /*!< bit: 24..30  Power switch units for the buck converter */
-    uint32_t CLK_SEL:1;                 /*!< bit:     31  Source clock for the buck converter      */
+    uint32_t REG1:8;                    /*!< bit:   0..7  RF PMU Register 1                        */
+    uint32_t REG2:8;                    /*!< bit:  8..15  RF PMU Register 2                        */
+    uint32_t REG3:8;                    /*!< bit: 16..23  RF PMU Register 3                        */
+    uint32_t REG4:8;                    /*!< bit: 24..31  RF PMU Register 4                        */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } AON_GP_REGS_RF_PMU_REGS_0_Type;
@@ -420,200 +412,18 @@ typedef union {
 #define AON_GP_REGS_RF_PMU_REGS_0_OFFSET      0x400          /**<  \brief (AON_GP_REGS_RF_PMU_REGS_0 offset) RF PMU Registers */
 #define AON_GP_REGS_RF_PMU_REGS_0_RESETVALUE  0xF600409ul    /**<  \brief (AON_GP_REGS_RF_PMU_REGS_0 reset_value) RF PMU Registers */
 
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_EDGE_SEL_Pos 0  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Select clock edge for Vreg comparator in buck converter */
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_EDGE_SEL_Msk (0x1ul << AON_GP_REGS_RF_PMU_REGS_0_CLK_EDGE_SEL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_EDGE_SEL(value) (AON_GP_REGS_RF_PMU_REGS_0_CLK_EDGE_SEL_Msk & ((value) << AON_GP_REGS_RF_PMU_REGS_0_CLK_EDGE_SEL_Pos))  
-  #define AON_GP_REGS_RF_PMU_REGS_0_CLK_EDGE_SEL_0_Val        0X0ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Comparator samples on rising edge of clock  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_CLK_EDGE_SEL_1_Val        0X1ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Comparator samples on falling edge of clock  */
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_EDGE_SEL_0    (AON_GP_REGS_RF_PMU_REGS_0_CLK_EDGE_SEL_0_Val << AON_GP_REGS_RF_PMU_REGS_0_CLK_EDGE_SEL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_EDGE_SEL_1    (AON_GP_REGS_RF_PMU_REGS_0_CLK_EDGE_SEL_1_Val << AON_GP_REGS_RF_PMU_REGS_0_CLK_EDGE_SEL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos 1  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Select the output voltage of the buck converter */
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Msk (0xFul << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK(value) (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Msk & ((value) << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos))  
-  #define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_0_Val        0X0ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.12V  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_1_Val        0X1ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.15V  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_2_Val        0X2ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.17V  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_3_Val        0X3ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.20V  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_4_Val        0X4ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.22V  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_5_Val        0X5ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.25V  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_6_Val        0X6ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.27V  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_7_Val        0X7ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.30V  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_8_Val        0X8ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.32V  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_9_Val        0X9ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.35V  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_10_Val        0XAul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.37V  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_11_Val        0XBul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.40V  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_12_Val        0XCul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.42V  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_13_Val        0XDul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.45V  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_14_Val        0XEul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.47V  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_15_Val        0XFul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.50V  */
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_0    (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_0_Val << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_1    (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_1_Val << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_2    (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_2_Val << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_3    (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_3_Val << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_4    (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_4_Val << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_5    (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_5_Val << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_6    (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_6_Val << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_7    (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_7_Val << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_8    (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_8_Val << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_9    (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_9_Val << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_10    (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_10_Val << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_11    (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_11_Val << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_12    (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_12_Val << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_13    (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_13_Val << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_14    (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_14_Val << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_15    (AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_15_Val << AON_GP_REGS_RF_PMU_REGS_0_VOUT_CTRL_BUCK_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_2_4_Pos 5  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Comparator clock divider in buck converter */
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_2_4_Msk (0x1ul << AON_GP_REGS_RF_PMU_REGS_0_CLK_2_4_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_2_4(value) (AON_GP_REGS_RF_PMU_REGS_0_CLK_2_4_Msk & ((value) << AON_GP_REGS_RF_PMU_REGS_0_CLK_2_4_Pos))  
-  #define AON_GP_REGS_RF_PMU_REGS_0_CLK_2_4_0_Val        0X0ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Divide by 2  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_CLK_2_4_1_Val        0X1ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Divide by 4  */
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_2_4_0    (AON_GP_REGS_RF_PMU_REGS_0_CLK_2_4_0_Val << AON_GP_REGS_RF_PMU_REGS_0_CLK_2_4_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_2_4_1    (AON_GP_REGS_RF_PMU_REGS_0_CLK_2_4_1_Val << AON_GP_REGS_RF_PMU_REGS_0_CLK_2_4_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VREG_FILT_CTRL_Pos 6  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Not Used                         */
-#define AON_GP_REGS_RF_PMU_REGS_0_VREG_FILT_CTRL_Msk (0x3ul << AON_GP_REGS_RF_PMU_REGS_0_VREG_FILT_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_VREG_FILT_CTRL(value) (AON_GP_REGS_RF_PMU_REGS_0_VREG_FILT_CTRL_Msk & ((value) << AON_GP_REGS_RF_PMU_REGS_0_VREG_FILT_CTRL_Pos))  
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_Pos 8  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Programmable divider that sets the on duration of positive charging pulse */
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_Msk (0x7ul << AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV(value) (AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_Msk & ((value) << AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_Pos))  
-  #define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_0_Val        0X0ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Divide by 4  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_1_Val        0X1ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Divide by 6  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_2_Val        0X2ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Divide by 8  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_3_Val        0X3ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Divide by 10  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_4_Val        0X4ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Divide by 12  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_5_Val        0X5ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Divide by 14  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_6_Val        0X6ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Divide by 16  */
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_0    (AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_0_Val << AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_1    (AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_1_Val << AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_2    (AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_2_Val << AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_3    (AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_3_Val << AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_4    (AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_4_Val << AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_5    (AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_5_Val << AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_6    (AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_6_Val << AON_GP_REGS_RF_PMU_REGS_0_CLK_DIV_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_RESET_FSM_Pos 11  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Force reset of FSM in buck converter */
-#define AON_GP_REGS_RF_PMU_REGS_0_RESET_FSM_Msk (0x1ul << AON_GP_REGS_RF_PMU_REGS_0_RESET_FSM_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_RESET_FSM(value) (AON_GP_REGS_RF_PMU_REGS_0_RESET_FSM_Msk & ((value) << AON_GP_REGS_RF_PMU_REGS_0_RESET_FSM_Pos))  
-  #define AON_GP_REGS_RF_PMU_REGS_0_RESET_FSM_0_Val        0X0ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) FSM is not reset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_RESET_FSM_1_Val        0X1ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) FSM is reset  */
-#define AON_GP_REGS_RF_PMU_REGS_0_RESET_FSM_0    (AON_GP_REGS_RF_PMU_REGS_0_RESET_FSM_0_Val << AON_GP_REGS_RF_PMU_REGS_0_RESET_FSM_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_RESET_FSM_1    (AON_GP_REGS_RF_PMU_REGS_0_RESET_FSM_1_Val << AON_GP_REGS_RF_PMU_REGS_0_RESET_FSM_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_EN_TRISTATE_Pos 12  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Allow tristate_ctrl to control minimum time between pulses of the buck converter */
-#define AON_GP_REGS_RF_PMU_REGS_0_EN_TRISTATE_Msk (0x1ul << AON_GP_REGS_RF_PMU_REGS_0_EN_TRISTATE_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_EN_TRISTATE(value) (AON_GP_REGS_RF_PMU_REGS_0_EN_TRISTATE_Msk & ((value) << AON_GP_REGS_RF_PMU_REGS_0_EN_TRISTATE_Pos))  
-  #define AON_GP_REGS_RF_PMU_REGS_0_EN_TRISTATE_0_Val        0X0ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Tristate logic disable  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_EN_TRISTATE_1_Val        0X1ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Tristate logic enabled  */
-#define AON_GP_REGS_RF_PMU_REGS_0_EN_TRISTATE_0    (AON_GP_REGS_RF_PMU_REGS_0_EN_TRISTATE_0_Val << AON_GP_REGS_RF_PMU_REGS_0_EN_TRISTATE_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_EN_TRISTATE_1    (AON_GP_REGS_RF_PMU_REGS_0_EN_TRISTATE_1_Val << AON_GP_REGS_RF_PMU_REGS_0_EN_TRISTATE_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_Pos 13  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Controls the minimum time between pulses in the buck converter */
-#define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_Msk (0x7ul << AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL(value) (AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_Msk & ((value) << AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_Pos))  
-  #define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_0_Val        0X0ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Divide by 4  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_1_Val        0X1ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Divide by 6  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_2_Val        0X2ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Divide by 8  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_3_Val        0X3ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Divide by 10  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_4_Val        0X4ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Divide by 12  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_5_Val        0X5ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Divide by 14  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_6_Val        0X6ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Divide by 16  */
-#define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_0    (AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_0_Val << AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_1    (AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_1_Val << AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_2    (AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_2_Val << AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_3    (AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_3_Val << AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_4    (AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_4_Val << AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_5    (AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_5_Val << AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_6    (AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_6_Val << AON_GP_REGS_RF_PMU_REGS_0_TRISTATE_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos 16  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Controls a fixed comparator offset in the buck converter for positive pulses */
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Msk (0xFul << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL(value) (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Msk & ((value) << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos))  
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_0_Val        0X0ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 0.0mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_1_Val        0X1ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 0.4mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_2_Val        0X2ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 0.8mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_3_Val        0X3ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.2mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_4_Val        0X4ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.6mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_5_Val        0X5ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 2.0mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_6_Val        0X6ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 2.4mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_7_Val        0X7ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 2.8mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_8_Val        0X8ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 3.2mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_9_Val        0X9ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 3.6mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_10_Val        0XAul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 4.0mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_11_Val        0XBul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 4.4mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_12_Val        0XCul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 4.8mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_13_Val        0XDul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 5.2mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_14_Val        0XEul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 5.6mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_15_Val        0XFul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 6.0mV offset  */
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_0    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_0_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_1    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_1_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_2    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_2_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_3    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_3_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_4    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_4_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_5    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_5_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_6    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_6_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_7    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_7_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_8    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_8_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_9    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_9_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_10    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_10_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_11    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_11_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_12    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_12_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_13    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_13_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_14    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_14_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_15    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_15_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETP_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos 20  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Controls a fixed comparator offset in the buck converter for negative pulses */
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Msk (0xFul << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL(value) (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Msk & ((value) << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos))  
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_0_Val        0X0ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 0.0mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_1_Val        0X1ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 0.4mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_2_Val        0X2ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 0.8mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_3_Val        0X3ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.2mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_4_Val        0X4ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1.6mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_5_Val        0X5ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 2.0mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_6_Val        0X6ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 2.4mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_7_Val        0X7ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 2.8mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_8_Val        0X8ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 3.2mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_9_Val        0X9ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 3.6mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_10_Val        0XAul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 4.0mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_11_Val        0XBul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 4.4mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_12_Val        0XCul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 4.8mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_13_Val        0XDul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 5.2mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_14_Val        0XEul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 5.6mV offset  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_15_Val        0XFul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 6.0mV offset  */
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_0    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_0_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_1    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_1_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_2    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_2_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_3    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_3_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_4    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_4_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_5    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_5_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_6    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_6_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_7    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_7_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_8    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_8_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_9    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_9_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_10    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_10_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_11    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_11_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_12    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_12_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_13    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_13_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_14    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_14_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_15    (AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_15_Val << AON_GP_REGS_RF_PMU_REGS_0_OFFSETN_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_Pos 24  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Power switch units for the buck converter */
-#define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_Msk (0x7Ful << AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL(value) (AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_Msk & ((value) << AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_Pos))  
-  #define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_0_Val        0X0ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 0 power switches enabled  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_1_Val        0X1ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 1 power switch enabled  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_3_Val        0X3ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 2 power switches enabled  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_7_Val        0X7ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 3 power switches enabled  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_15_Val        0XFul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 4 power switches enabled  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_31_Val       0X1Ful  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 5 power switches enabled  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_63_Val       0X3Ful  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) 6 power switches enabled  */
-#define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_0    (AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_0_Val << AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_1    (AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_1_Val << AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_3    (AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_3_Val << AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_7    (AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_7_Val << AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_15    (AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_15_Val << AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_31    (AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_31_Val << AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_63    (AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_63_Val << AON_GP_REGS_RF_PMU_REGS_0_P_SW_CTRL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_SEL_Pos 31  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Source clock for the buck converter */
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_SEL_Msk (0x1ul << AON_GP_REGS_RF_PMU_REGS_0_CLK_SEL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_SEL(value) (AON_GP_REGS_RF_PMU_REGS_0_CLK_SEL_Msk & ((value) << AON_GP_REGS_RF_PMU_REGS_0_CLK_SEL_Pos))  
-  #define AON_GP_REGS_RF_PMU_REGS_0_CLK_SEL_0_Val        0X0ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Internal 26MHz clock  */
-  #define AON_GP_REGS_RF_PMU_REGS_0_CLK_SEL_1_Val        0X1ul  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) External 52MHz clock  */
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_SEL_0    (AON_GP_REGS_RF_PMU_REGS_0_CLK_SEL_0_Val << AON_GP_REGS_RF_PMU_REGS_0_CLK_SEL_Pos)
-#define AON_GP_REGS_RF_PMU_REGS_0_CLK_SEL_1    (AON_GP_REGS_RF_PMU_REGS_0_CLK_SEL_1_Val << AON_GP_REGS_RF_PMU_REGS_0_CLK_SEL_Pos)
+#define AON_GP_REGS_RF_PMU_REGS_0_REG1_Pos    0  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) RF PMU Register 1                */
+#define AON_GP_REGS_RF_PMU_REGS_0_REG1_Msk    (0xFFul << AON_GP_REGS_RF_PMU_REGS_0_REG1_Pos)
+#define AON_GP_REGS_RF_PMU_REGS_0_REG1(value) (AON_GP_REGS_RF_PMU_REGS_0_REG1_Msk & ((value) << AON_GP_REGS_RF_PMU_REGS_0_REG1_Pos))  
+#define AON_GP_REGS_RF_PMU_REGS_0_REG2_Pos    8  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) RF PMU Register 2                */
+#define AON_GP_REGS_RF_PMU_REGS_0_REG2_Msk    (0xFFul << AON_GP_REGS_RF_PMU_REGS_0_REG2_Pos)
+#define AON_GP_REGS_RF_PMU_REGS_0_REG2(value) (AON_GP_REGS_RF_PMU_REGS_0_REG2_Msk & ((value) << AON_GP_REGS_RF_PMU_REGS_0_REG2_Pos))  
+#define AON_GP_REGS_RF_PMU_REGS_0_REG3_Pos    16  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) RF PMU Register 3                */
+#define AON_GP_REGS_RF_PMU_REGS_0_REG3_Msk    (0xFFul << AON_GP_REGS_RF_PMU_REGS_0_REG3_Pos)
+#define AON_GP_REGS_RF_PMU_REGS_0_REG3(value) (AON_GP_REGS_RF_PMU_REGS_0_REG3_Msk & ((value) << AON_GP_REGS_RF_PMU_REGS_0_REG3_Pos))  
+#define AON_GP_REGS_RF_PMU_REGS_0_REG4_Pos    24  /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) RF PMU Register 4                */
+#define AON_GP_REGS_RF_PMU_REGS_0_REG4_Msk    (0xFFul << AON_GP_REGS_RF_PMU_REGS_0_REG4_Pos)
+#define AON_GP_REGS_RF_PMU_REGS_0_REG4(value) (AON_GP_REGS_RF_PMU_REGS_0_REG4_Msk & ((value) << AON_GP_REGS_RF_PMU_REGS_0_REG4_Pos))  
 #define AON_GP_REGS_RF_PMU_REGS_0_MASK        0xFFFFFFFFul    /**< \brief (AON_GP_REGS_RF_PMU_REGS_0) Register MASK */
 
 /* -------- AON_GP_REGS_RF_PMU_REGS_1 : (AON_GP_REGS Offset: 0x404) (R/W  32) RF PMU Registers -------- */

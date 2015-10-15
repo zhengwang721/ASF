@@ -189,29 +189,37 @@ extern "C" {
  * \subsection asfdoc_samb_dma_module_overview_dma_transfer_descriptor DMA Transfer Descriptor
  * The transfer descriptor resides in the SRAM and
  * defines these channel properties.
- *   <table border="0" cellborder="1" cellspacing="0" >
- *    <tr>
- *        <th> Field name </th> <th> Field width </th>
- *    </tr>
- *    <tr>
- *     <td > Source Address </td> <td > 32 bits </td>
- *    </tr>
- *    <tr>
- *     <td > Destination Address </td> <td> 32 bits </td>
- *    </tr>
- *    <tr>
- *     <td > Block Transfer Counter </td> <td> 32 bits </td>
- *    </tr>
- *    <tr>
- *     <td > Descriptor Next Address </td> <td> 30 bits </td>
- *    </tr>
- *    <tr>
- *     <td > Block Transfer Interrupt Control </td> <td> 1 bits </td>
- *    </tr>
- *    <tr>
- *     <td > Block Transfer Stop Control </td> <td> 1 bits </td>
- *    </tr>
- *   </table>
+ *
+ * <table>
+ *   <tr>
+ *     <th>Field name</th>
+ *     <th>Field width</th>
+ *   </tr>
+ *   <tr>
+ *     <td>Source Address</td>
+ *     <td>32 bits</td>
+ *   </tr>
+ *   <tr>
+ *     <td>Destination Address</td>
+ *     <td>32 bits</td>
+ *   </tr>
+ *   <tr>
+ *     <td>Block Transfer Counter</td>
+ *     <td>32 bits</td>
+ *   </tr>
+ *   <tr>
+ *     <td>Descriptor Next Address</td>
+ *     <td>30 bits</td>
+ *   </tr>
+ *   <tr>
+ *     <td>Block Transfer Interrupt</td>
+ *     <td>1 bit</td>
+ *   </tr>
+ *   <tr>
+ *     <td>Block Transfer Stop Control</td>
+ *     <td>1 bit</td>
+ *   </tr>
+ * </table>
  *
  * Before starting a transfer, at least one descriptor should be configured.
  * After a successful allocation of a DMA channel, the transfer descriptor can
@@ -260,21 +268,6 @@ extern "C" {
 
 /** DMA peripheral index */
 enum dma_peripheral_index {
-#ifndef CHIPVERSION_B0
-	MEMORY_DMA_PERIPHERAL = 0,
-	UART0RX_DMA_PERIPHERAL,
-	UART0TX_DMA_PERIPHERAL,
-	UART1RX_DMA_PERIPHERAL,
-	UART1TX_DMA_PERIPHERAL,
-	SPI0RX_DMA_PERIPHERAL,
-	SPI0TX_DMA_PERIPHERAL,
-	TIMER0_DMA_PERIPHERAL = 10,
-	DUALTIMER0_DMA_PERIPHERAL,
-	SPI1RX_DMA_PERIPHERAL,
-	SPI1TX_DMA_PERIPHERAL,
-	I2C0RX_DMA_PERIPHERAL,
-	I2C0TX_DMA_PERIPHERAL,
-#else
 	MEMORY_DMA_PERIPHERAL = 0,
 	UART0RX_DMA_PERIPHERAL,
 	UART0TX_DMA_PERIPHERAL,
@@ -290,7 +283,6 @@ enum dma_peripheral_index {
 	I2C1TX_DMA_PERIPHERAL,
 	DUALTIMER0_DMA_PERIPHERAL = 15,
 	TIMER0_DMA_PERIPHERAL,
-#endif
 };
 
 /** DMA channel index */
@@ -556,7 +548,6 @@ static inline void dma_reset_descriptor(struct dma_resource *resource)
 	resource->descriptor = NULL;
 }
 
-void dma_global_init(void);
 void dma_get_config_defaults(struct dma_resource_config *config);
 enum status_code dma_allocate(struct dma_resource *resource,
 		struct dma_resource_config *config);

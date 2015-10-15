@@ -328,8 +328,7 @@ at_ble_events_t gapc_bond_ind(uint16_t src, uint8_t *data, at_ble_pair_done_t *p
         if (NULL != param)  //event will be posted and returned to user
         {
             param->handle = KE_IDX_GET(src);
-						INTERFACE_UNPACK_UINT8(&u8Info);
-            param->status = (at_ble_status_t)u8Info;
+            param->status = INTERFACE_UNPACK_UINT8(&u8Info);
             PRINT_DBG("GAPC_PAIRING_FAILED:\r\n");
             PRINT_INFO("\t>>0x%X\r\n"
                        "\t>>0x%X\r\n", param->handle, param->status);
@@ -341,8 +340,7 @@ at_ble_events_t gapc_bond_ind(uint16_t src, uint8_t *data, at_ble_pair_done_t *p
         if (NULL != param)  //event will be posted and returned to user
         {
             param->handle = KE_IDX_GET(src);
-            INTERFACE_UNPACK_UINT8(&u8Info);
-            param->auth = (at_ble_auth_t)u8Info;
+            param->auth = INTERFACE_UNPACK_UINT8(&u8Info);
             param->status = AT_BLE_SUCCESS;//INTERFACE_UNPACK_UINT8(&u8Info);
             PRINT_DBG("GAPC_PAIRING_SUCCEED:\r\n");
             PRINT_INFO("\t%02x, %02x ", param->handle, param->auth);
@@ -560,7 +558,6 @@ void gapc_encrypt_cfm_handler(uint16_t conn_handle, uint8_t auth , uint8_t key_f
     gapc_connection_cfm_handler(dummy_key, 0, dummy_key, 0, auth, 0, conn_handle);
     INTERFACE_MSG_INIT(GAPC_ENCRYPT_CFM, KE_BUILD_ID(TASK_GAPC, conn_handle));
     INTERFACE_PACK_ARG_UINT8(key_found);
-    INTERFACE_PACK_ARG_UINT8(0); // padding
     INTERFACE_PACK_ARG_BLOCK(key, KEY_LEN);
     //Encrption key size
     INTERFACE_PACK_ARG_UINT8(key_size);
@@ -642,7 +639,7 @@ at_ble_events_t gapc_param_updated_req_ind(uint16_t src_id,
 
 static void gapc_get_dev_info_cfm(uint8_t req, struct device_info *dev_info, at_ble_handle_t handle)
 {
-    INTERFACE_MSG_INIT(GAPC_GET_DEV_INFO_CFM,  KE_BUILD_ID(TASK_GAPC, handle));
+    INTERFACE_MSG_INIT(GAPC_GET_DEV_INFO_CFM,  KE_BUILD_ID(TASK_ID_DUMMY1, handle));
     INTERFACE_PACK_ARG_UINT8(req);
     INTERFACE_PACK_ARG_UINT8(0);
     switch (req)

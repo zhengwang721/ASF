@@ -19,7 +19,6 @@
  *
  */
 
-
 at_ble_status_t htpt_create_db_req_handler(at_ble_htpt_db_config_flag features,
         at_ble_htpt_temp_type  temp_type,
         uint16_t valid_range_min,
@@ -38,7 +37,7 @@ at_ble_status_t htpt_create_db_req_handler(at_ble_htpt_db_config_flag features,
     params.meas_intv = meas_intv;
     status = gapm_profile_task_add_cmd_handler(sec_lvl,
              TASK_HTPT,
-             TASK_GTL,
+             app_task_type,
              0, //need to keep track of start handle ?
              &params,
              sizeof(at_ble_htpt_db_cfg),
@@ -125,6 +124,7 @@ void htpt_enable_rsp_handler(uint16_t src, uint8_t *data, at_ble_htpt_enable_rsp
     INTERFACE_UNPACK_UINT8(&status);
     INTERFACE_DONE();
     params->status = (at_ble_status_t)status;
+    UNREFERENCED_PARAMETER(src);
 }
 void htpt_temp_send_rsp_handler(uint16_t src, uint8_t *data, at_ble_htpt_temp_send_cfm_t *params)
 {
@@ -133,6 +133,7 @@ void htpt_temp_send_rsp_handler(uint16_t src, uint8_t *data, at_ble_htpt_temp_se
     INTERFACE_UNPACK_UINT8(&status);
     INTERFACE_DONE();
     params->status = (at_ble_status_t)status;
+    UNREFERENCED_PARAMETER(src);
 }
 
 void htpt_meas_intv_upd_rsp_handler(uint16_t src, uint8_t *data, at_ble_htpt_meas_intv_upd_rsp_t *params)
@@ -142,6 +143,7 @@ void htpt_meas_intv_upd_rsp_handler(uint16_t src, uint8_t *data, at_ble_htpt_mea
     INTERFACE_UNPACK_UINT8(&status);
     INTERFACE_DONE();
     params->status = (at_ble_status_t)status;
+    UNREFERENCED_PARAMETER(src);
 }
 
 void htpt_meas_intv_chg_req_ind_handler(uint16_t src_id, uint8_t *data, at_ble_htpt_meas_intv_chg_req_t *params)
@@ -151,6 +153,7 @@ void htpt_meas_intv_chg_req_ind_handler(uint16_t src_id, uint8_t *data, at_ble_h
     INTERFACE_UNPACK_UINT16(&dummy_b);
     INTERFACE_UNPACK_UINT16(&params->intv);
     INTERFACE_DONE();
+    UNREFERENCED_PARAMETER(src_id);
 }
 
 void htpt_cfg_indntf_ind_handler(uint16_t src, uint8_t *data, at_ble_htpt_cfg_indntf_ind_t *params)
@@ -159,5 +162,5 @@ void htpt_cfg_indntf_ind_handler(uint16_t src, uint8_t *data, at_ble_htpt_cfg_in
     INTERFACE_UNPACK_UINT8(&params->conhdl);
     INTERFACE_UNPACK_UINT8(&params->ntf_ind_cfg);
     INTERFACE_DONE();
+    UNREFERENCED_PARAMETER(src);
 }
-

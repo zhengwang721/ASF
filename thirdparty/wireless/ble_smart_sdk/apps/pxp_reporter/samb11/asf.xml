@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Proximity Reporter Application - SAM D21 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.pxp_reporter.samb11" force-caption="true" force-description="true">
+	<project caption="Proximity Reporter Application - SAMB11" id="thirdparty.wireless.ble_smart_sdk.apps.pxp_reporter.samb11" force-caption="true" force-description="true">
 		<info type="description" value="summary">
 		Proximity Reporter Application for BLE stack.
 		</info>	

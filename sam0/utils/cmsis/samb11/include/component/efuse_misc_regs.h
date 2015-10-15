@@ -333,7 +333,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_1_PROG_0:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_1_PROG_0_Type;
@@ -342,13 +342,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_1_PROG_0_OFFSET 0x1C           /**<  \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_0 offset) EFUSE_1_0 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_1_PROG_0_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_0 reset_value) EFUSE_1_0 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_1_PROG_0_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_0) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_1_PROG_0_EFUSE_1_PROG_0_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_0)                             */
+#define EFUSE_MISC_REGS_EFUSE_1_PROG_0_EFUSE_1_PROG_0_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_1_PROG_0_EFUSE_1_PROG_0_Pos)
+#define EFUSE_MISC_REGS_EFUSE_1_PROG_0_EFUSE_1_PROG_0(value) (EFUSE_MISC_REGS_EFUSE_1_PROG_0_EFUSE_1_PROG_0_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_1_PROG_0_EFUSE_1_PROG_0_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_1_PROG_0_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_0) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_1_PROG_1 : (EFUSE_MISC_REGS Offset: 0x20) (R/W  32) EFUSE_1_1 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_1_PROG_1:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_1_PROG_1_Type;
@@ -357,13 +360,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_1_PROG_1_OFFSET 0x20           /**<  \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_1 offset) EFUSE_1_1 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_1_PROG_1_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_1 reset_value) EFUSE_1_1 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_1_PROG_1_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_1) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_1_PROG_1_EFUSE_1_PROG_1_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_1)                             */
+#define EFUSE_MISC_REGS_EFUSE_1_PROG_1_EFUSE_1_PROG_1_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_1_PROG_1_EFUSE_1_PROG_1_Pos)
+#define EFUSE_MISC_REGS_EFUSE_1_PROG_1_EFUSE_1_PROG_1(value) (EFUSE_MISC_REGS_EFUSE_1_PROG_1_EFUSE_1_PROG_1_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_1_PROG_1_EFUSE_1_PROG_1_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_1_PROG_1_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_1) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_1_PROG_2 : (EFUSE_MISC_REGS Offset: 0x24) (R/W  32) EFUSE_1_2 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_1_PROG_2:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_1_PROG_2_Type;
@@ -372,13 +378,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_1_PROG_2_OFFSET 0x24           /**<  \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_2 offset) EFUSE_1_2 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_1_PROG_2_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_2 reset_value) EFUSE_1_2 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_1_PROG_2_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_2) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_1_PROG_2_EFUSE_1_PROG_2_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_2)                             */
+#define EFUSE_MISC_REGS_EFUSE_1_PROG_2_EFUSE_1_PROG_2_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_1_PROG_2_EFUSE_1_PROG_2_Pos)
+#define EFUSE_MISC_REGS_EFUSE_1_PROG_2_EFUSE_1_PROG_2(value) (EFUSE_MISC_REGS_EFUSE_1_PROG_2_EFUSE_1_PROG_2_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_1_PROG_2_EFUSE_1_PROG_2_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_1_PROG_2_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_2) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_1_PROG_3 : (EFUSE_MISC_REGS Offset: 0x28) (R/W  32) EFUSE_1_3 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_1_PROG_3:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_1_PROG_3_Type;
@@ -387,13 +396,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_1_PROG_3_OFFSET 0x28           /**<  \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_3 offset) EFUSE_1_3 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_1_PROG_3_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_3 reset_value) EFUSE_1_3 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_1_PROG_3_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_3) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_1_PROG_3_EFUSE_1_PROG_3_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_3)                             */
+#define EFUSE_MISC_REGS_EFUSE_1_PROG_3_EFUSE_1_PROG_3_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_1_PROG_3_EFUSE_1_PROG_3_Pos)
+#define EFUSE_MISC_REGS_EFUSE_1_PROG_3_EFUSE_1_PROG_3(value) (EFUSE_MISC_REGS_EFUSE_1_PROG_3_EFUSE_1_PROG_3_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_1_PROG_3_EFUSE_1_PROG_3_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_1_PROG_3_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_1_PROG_3) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_1_STATUS_0 : (EFUSE_MISC_REGS Offset: 0x2c) (R/  32) EFUSE_1_0 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_1_STATUS_0:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_1_STATUS_0_Type;
@@ -402,13 +414,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_1_STATUS_0_OFFSET 0x2C           /**<  \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_0 offset) EFUSE_1_0 Status */
 #define EFUSE_MISC_REGS_EFUSE_1_STATUS_0_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_0 reset_value) EFUSE_1_0 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_1_STATUS_0_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_0) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_1_STATUS_0_EFUSE_1_STATUS_0_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_0)                           */
+#define EFUSE_MISC_REGS_EFUSE_1_STATUS_0_EFUSE_1_STATUS_0_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_1_STATUS_0_EFUSE_1_STATUS_0_Pos)
+#define EFUSE_MISC_REGS_EFUSE_1_STATUS_0_EFUSE_1_STATUS_0(value) (EFUSE_MISC_REGS_EFUSE_1_STATUS_0_EFUSE_1_STATUS_0_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_1_STATUS_0_EFUSE_1_STATUS_0_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_1_STATUS_0_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_0) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_1_STATUS_1 : (EFUSE_MISC_REGS Offset: 0x30) (R/  32) EFUSE_1_1 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_1_STATUS_1:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_1_STATUS_1_Type;
@@ -417,13 +432,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_1_STATUS_1_OFFSET 0x30           /**<  \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_1 offset) EFUSE_1_1 Status */
 #define EFUSE_MISC_REGS_EFUSE_1_STATUS_1_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_1 reset_value) EFUSE_1_1 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_1_STATUS_1_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_1) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_1_STATUS_1_EFUSE_1_STATUS_1_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_1)                           */
+#define EFUSE_MISC_REGS_EFUSE_1_STATUS_1_EFUSE_1_STATUS_1_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_1_STATUS_1_EFUSE_1_STATUS_1_Pos)
+#define EFUSE_MISC_REGS_EFUSE_1_STATUS_1_EFUSE_1_STATUS_1(value) (EFUSE_MISC_REGS_EFUSE_1_STATUS_1_EFUSE_1_STATUS_1_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_1_STATUS_1_EFUSE_1_STATUS_1_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_1_STATUS_1_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_1) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_1_STATUS_2 : (EFUSE_MISC_REGS Offset: 0x34) (R/  32) EFUSE_1_2 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_1_STATUS_2:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_1_STATUS_2_Type;
@@ -432,13 +450,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_1_STATUS_2_OFFSET 0x34           /**<  \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_2 offset) EFUSE_1_2 Status */
 #define EFUSE_MISC_REGS_EFUSE_1_STATUS_2_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_2 reset_value) EFUSE_1_2 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_1_STATUS_2_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_2) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_1_STATUS_2_EFUSE_1_STATUS_2_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_2)                           */
+#define EFUSE_MISC_REGS_EFUSE_1_STATUS_2_EFUSE_1_STATUS_2_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_1_STATUS_2_EFUSE_1_STATUS_2_Pos)
+#define EFUSE_MISC_REGS_EFUSE_1_STATUS_2_EFUSE_1_STATUS_2(value) (EFUSE_MISC_REGS_EFUSE_1_STATUS_2_EFUSE_1_STATUS_2_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_1_STATUS_2_EFUSE_1_STATUS_2_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_1_STATUS_2_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_2) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_1_STATUS_3 : (EFUSE_MISC_REGS Offset: 0x38) (R/  32) EFUSE_1_3 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_1_STATUS_3:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_1_STATUS_3_Type;
@@ -447,13 +468,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_1_STATUS_3_OFFSET 0x38           /**<  \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_3 offset) EFUSE_1_3 Status */
 #define EFUSE_MISC_REGS_EFUSE_1_STATUS_3_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_3 reset_value) EFUSE_1_3 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_1_STATUS_3_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_3) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_1_STATUS_3_EFUSE_1_STATUS_3_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_3)                           */
+#define EFUSE_MISC_REGS_EFUSE_1_STATUS_3_EFUSE_1_STATUS_3_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_1_STATUS_3_EFUSE_1_STATUS_3_Pos)
+#define EFUSE_MISC_REGS_EFUSE_1_STATUS_3_EFUSE_1_STATUS_3(value) (EFUSE_MISC_REGS_EFUSE_1_STATUS_3_EFUSE_1_STATUS_3_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_1_STATUS_3_EFUSE_1_STATUS_3_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_1_STATUS_3_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_1_STATUS_3) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_2_PROG_0 : (EFUSE_MISC_REGS Offset: 0x3c) (R/W  32) EFUSE_2_0 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_2_PROG_0:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_2_PROG_0_Type;
@@ -462,13 +486,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_2_PROG_0_OFFSET 0x3C           /**<  \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_0 offset) EFUSE_2_0 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_2_PROG_0_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_0 reset_value) EFUSE_2_0 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_2_PROG_0_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_0) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_2_PROG_0_EFUSE_2_PROG_0_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_0)                             */
+#define EFUSE_MISC_REGS_EFUSE_2_PROG_0_EFUSE_2_PROG_0_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_2_PROG_0_EFUSE_2_PROG_0_Pos)
+#define EFUSE_MISC_REGS_EFUSE_2_PROG_0_EFUSE_2_PROG_0(value) (EFUSE_MISC_REGS_EFUSE_2_PROG_0_EFUSE_2_PROG_0_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_2_PROG_0_EFUSE_2_PROG_0_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_2_PROG_0_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_0) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_2_PROG_1 : (EFUSE_MISC_REGS Offset: 0x40) (R/W  32) EFUSE_2_1 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_2_PROG_1:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_2_PROG_1_Type;
@@ -477,13 +504,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_2_PROG_1_OFFSET 0x40           /**<  \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_1 offset) EFUSE_2_1 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_2_PROG_1_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_1 reset_value) EFUSE_2_1 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_2_PROG_1_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_1) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_2_PROG_1_EFUSE_2_PROG_1_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_1)                             */
+#define EFUSE_MISC_REGS_EFUSE_2_PROG_1_EFUSE_2_PROG_1_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_2_PROG_1_EFUSE_2_PROG_1_Pos)
+#define EFUSE_MISC_REGS_EFUSE_2_PROG_1_EFUSE_2_PROG_1(value) (EFUSE_MISC_REGS_EFUSE_2_PROG_1_EFUSE_2_PROG_1_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_2_PROG_1_EFUSE_2_PROG_1_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_2_PROG_1_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_1) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_2_PROG_2 : (EFUSE_MISC_REGS Offset: 0x44) (R/W  32) EFUSE_2_2 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_2_PROG_2:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_2_PROG_2_Type;
@@ -492,13 +522,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_2_PROG_2_OFFSET 0x44           /**<  \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_2 offset) EFUSE_2_2 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_2_PROG_2_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_2 reset_value) EFUSE_2_2 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_2_PROG_2_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_2) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_2_PROG_2_EFUSE_2_PROG_2_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_2)                             */
+#define EFUSE_MISC_REGS_EFUSE_2_PROG_2_EFUSE_2_PROG_2_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_2_PROG_2_EFUSE_2_PROG_2_Pos)
+#define EFUSE_MISC_REGS_EFUSE_2_PROG_2_EFUSE_2_PROG_2(value) (EFUSE_MISC_REGS_EFUSE_2_PROG_2_EFUSE_2_PROG_2_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_2_PROG_2_EFUSE_2_PROG_2_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_2_PROG_2_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_2) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_2_PROG_3 : (EFUSE_MISC_REGS Offset: 0x48) (R/W  32) EFUSE_2_3 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_2_PROG_3:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_2_PROG_3_Type;
@@ -507,13 +540,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_2_PROG_3_OFFSET 0x48           /**<  \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_3 offset) EFUSE_2_3 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_2_PROG_3_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_3 reset_value) EFUSE_2_3 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_2_PROG_3_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_3) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_2_PROG_3_EFUSE_2_PROG_3_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_3)                             */
+#define EFUSE_MISC_REGS_EFUSE_2_PROG_3_EFUSE_2_PROG_3_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_2_PROG_3_EFUSE_2_PROG_3_Pos)
+#define EFUSE_MISC_REGS_EFUSE_2_PROG_3_EFUSE_2_PROG_3(value) (EFUSE_MISC_REGS_EFUSE_2_PROG_3_EFUSE_2_PROG_3_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_2_PROG_3_EFUSE_2_PROG_3_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_2_PROG_3_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_2_PROG_3) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_2_STATUS_0 : (EFUSE_MISC_REGS Offset: 0x4c) (R/  32) EFUSE_2_0 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_2_STATUS_0:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_2_STATUS_0_Type;
@@ -522,13 +558,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_2_STATUS_0_OFFSET 0x4C           /**<  \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_0 offset) EFUSE_2_0 Status */
 #define EFUSE_MISC_REGS_EFUSE_2_STATUS_0_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_0 reset_value) EFUSE_2_0 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_2_STATUS_0_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_0) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_2_STATUS_0_EFUSE_2_STATUS_0_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_0)                           */
+#define EFUSE_MISC_REGS_EFUSE_2_STATUS_0_EFUSE_2_STATUS_0_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_2_STATUS_0_EFUSE_2_STATUS_0_Pos)
+#define EFUSE_MISC_REGS_EFUSE_2_STATUS_0_EFUSE_2_STATUS_0(value) (EFUSE_MISC_REGS_EFUSE_2_STATUS_0_EFUSE_2_STATUS_0_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_2_STATUS_0_EFUSE_2_STATUS_0_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_2_STATUS_0_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_0) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_2_STATUS_1 : (EFUSE_MISC_REGS Offset: 0x50) (R/  32) EFUSE_2_1 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_2_STATUS_1:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_2_STATUS_1_Type;
@@ -537,13 +576,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_2_STATUS_1_OFFSET 0x50           /**<  \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_1 offset) EFUSE_2_1 Status */
 #define EFUSE_MISC_REGS_EFUSE_2_STATUS_1_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_1 reset_value) EFUSE_2_1 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_2_STATUS_1_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_1) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_2_STATUS_1_EFUSE_2_STATUS_1_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_1)                           */
+#define EFUSE_MISC_REGS_EFUSE_2_STATUS_1_EFUSE_2_STATUS_1_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_2_STATUS_1_EFUSE_2_STATUS_1_Pos)
+#define EFUSE_MISC_REGS_EFUSE_2_STATUS_1_EFUSE_2_STATUS_1(value) (EFUSE_MISC_REGS_EFUSE_2_STATUS_1_EFUSE_2_STATUS_1_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_2_STATUS_1_EFUSE_2_STATUS_1_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_2_STATUS_1_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_1) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_2_STATUS_2 : (EFUSE_MISC_REGS Offset: 0x54) (R/  32) EFUSE_2_2 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_2_STATUS_2:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_2_STATUS_2_Type;
@@ -552,13 +594,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_2_STATUS_2_OFFSET 0x54           /**<  \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_2 offset) EFUSE_2_2 Status */
 #define EFUSE_MISC_REGS_EFUSE_2_STATUS_2_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_2 reset_value) EFUSE_2_2 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_2_STATUS_2_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_2) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_2_STATUS_2_EFUSE_2_STATUS_2_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_2)                           */
+#define EFUSE_MISC_REGS_EFUSE_2_STATUS_2_EFUSE_2_STATUS_2_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_2_STATUS_2_EFUSE_2_STATUS_2_Pos)
+#define EFUSE_MISC_REGS_EFUSE_2_STATUS_2_EFUSE_2_STATUS_2(value) (EFUSE_MISC_REGS_EFUSE_2_STATUS_2_EFUSE_2_STATUS_2_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_2_STATUS_2_EFUSE_2_STATUS_2_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_2_STATUS_2_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_2) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_2_STATUS_3 : (EFUSE_MISC_REGS Offset: 0x58) (R/  32) EFUSE_2_3 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_2_STATUS_3:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_2_STATUS_3_Type;
@@ -567,13 +612,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_2_STATUS_3_OFFSET 0x58           /**<  \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_3 offset) EFUSE_2_3 Status */
 #define EFUSE_MISC_REGS_EFUSE_2_STATUS_3_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_3 reset_value) EFUSE_2_3 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_2_STATUS_3_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_3) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_2_STATUS_3_EFUSE_2_STATUS_3_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_3)                           */
+#define EFUSE_MISC_REGS_EFUSE_2_STATUS_3_EFUSE_2_STATUS_3_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_2_STATUS_3_EFUSE_2_STATUS_3_Pos)
+#define EFUSE_MISC_REGS_EFUSE_2_STATUS_3_EFUSE_2_STATUS_3(value) (EFUSE_MISC_REGS_EFUSE_2_STATUS_3_EFUSE_2_STATUS_3_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_2_STATUS_3_EFUSE_2_STATUS_3_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_2_STATUS_3_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_2_STATUS_3) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_3_PROG_0 : (EFUSE_MISC_REGS Offset: 0x5c) (R/W  32) EFUSE_3_0 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_3_PROG_0:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_3_PROG_0_Type;
@@ -582,13 +630,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_3_PROG_0_OFFSET 0x5C           /**<  \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_0 offset) EFUSE_3_0 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_3_PROG_0_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_0 reset_value) EFUSE_3_0 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_3_PROG_0_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_0) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_3_PROG_0_EFUSE_3_PROG_0_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_0)                             */
+#define EFUSE_MISC_REGS_EFUSE_3_PROG_0_EFUSE_3_PROG_0_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_3_PROG_0_EFUSE_3_PROG_0_Pos)
+#define EFUSE_MISC_REGS_EFUSE_3_PROG_0_EFUSE_3_PROG_0(value) (EFUSE_MISC_REGS_EFUSE_3_PROG_0_EFUSE_3_PROG_0_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_3_PROG_0_EFUSE_3_PROG_0_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_3_PROG_0_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_0) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_3_PROG_1 : (EFUSE_MISC_REGS Offset: 0x60) (R/W  32) EFUSE_3_1 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_3_PROG_1:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_3_PROG_1_Type;
@@ -597,13 +648,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_3_PROG_1_OFFSET 0x60           /**<  \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_1 offset) EFUSE_3_1 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_3_PROG_1_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_1 reset_value) EFUSE_3_1 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_3_PROG_1_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_1) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_3_PROG_1_EFUSE_3_PROG_1_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_1)                             */
+#define EFUSE_MISC_REGS_EFUSE_3_PROG_1_EFUSE_3_PROG_1_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_3_PROG_1_EFUSE_3_PROG_1_Pos)
+#define EFUSE_MISC_REGS_EFUSE_3_PROG_1_EFUSE_3_PROG_1(value) (EFUSE_MISC_REGS_EFUSE_3_PROG_1_EFUSE_3_PROG_1_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_3_PROG_1_EFUSE_3_PROG_1_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_3_PROG_1_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_1) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_3_PROG_2 : (EFUSE_MISC_REGS Offset: 0x64) (R/W  32) EFUSE_3_2 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_3_PROG_2:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_3_PROG_2_Type;
@@ -612,13 +666,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_3_PROG_2_OFFSET 0x64           /**<  \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_2 offset) EFUSE_3_2 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_3_PROG_2_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_2 reset_value) EFUSE_3_2 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_3_PROG_2_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_2) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_3_PROG_2_EFUSE_3_PROG_2_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_2)                             */
+#define EFUSE_MISC_REGS_EFUSE_3_PROG_2_EFUSE_3_PROG_2_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_3_PROG_2_EFUSE_3_PROG_2_Pos)
+#define EFUSE_MISC_REGS_EFUSE_3_PROG_2_EFUSE_3_PROG_2(value) (EFUSE_MISC_REGS_EFUSE_3_PROG_2_EFUSE_3_PROG_2_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_3_PROG_2_EFUSE_3_PROG_2_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_3_PROG_2_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_2) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_3_PROG_3 : (EFUSE_MISC_REGS Offset: 0x68) (R/W  32) EFUSE_3_3 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_3_PROG_3:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_3_PROG_3_Type;
@@ -627,13 +684,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_3_PROG_3_OFFSET 0x68           /**<  \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_3 offset) EFUSE_3_3 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_3_PROG_3_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_3 reset_value) EFUSE_3_3 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_3_PROG_3_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_3) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_3_PROG_3_EFUSE_3_PROG_3_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_3)                             */
+#define EFUSE_MISC_REGS_EFUSE_3_PROG_3_EFUSE_3_PROG_3_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_3_PROG_3_EFUSE_3_PROG_3_Pos)
+#define EFUSE_MISC_REGS_EFUSE_3_PROG_3_EFUSE_3_PROG_3(value) (EFUSE_MISC_REGS_EFUSE_3_PROG_3_EFUSE_3_PROG_3_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_3_PROG_3_EFUSE_3_PROG_3_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_3_PROG_3_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_3_PROG_3) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_3_STATUS_0 : (EFUSE_MISC_REGS Offset: 0x6c) (R/  32) EFUSE_3_0 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_3_STATUS_0:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_3_STATUS_0_Type;
@@ -642,13 +702,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_3_STATUS_0_OFFSET 0x6C           /**<  \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_0 offset) EFUSE_3_0 Status */
 #define EFUSE_MISC_REGS_EFUSE_3_STATUS_0_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_0 reset_value) EFUSE_3_0 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_3_STATUS_0_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_0) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_3_STATUS_0_EFUSE_3_STATUS_0_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_0)                           */
+#define EFUSE_MISC_REGS_EFUSE_3_STATUS_0_EFUSE_3_STATUS_0_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_3_STATUS_0_EFUSE_3_STATUS_0_Pos)
+#define EFUSE_MISC_REGS_EFUSE_3_STATUS_0_EFUSE_3_STATUS_0(value) (EFUSE_MISC_REGS_EFUSE_3_STATUS_0_EFUSE_3_STATUS_0_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_3_STATUS_0_EFUSE_3_STATUS_0_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_3_STATUS_0_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_0) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_3_STATUS_1 : (EFUSE_MISC_REGS Offset: 0x70) (R/  32) EFUSE_3_1 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_3_STATUS_1:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_3_STATUS_1_Type;
@@ -657,13 +720,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_3_STATUS_1_OFFSET 0x70           /**<  \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_1 offset) EFUSE_3_1 Status */
 #define EFUSE_MISC_REGS_EFUSE_3_STATUS_1_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_1 reset_value) EFUSE_3_1 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_3_STATUS_1_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_1) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_3_STATUS_1_EFUSE_3_STATUS_1_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_1)                           */
+#define EFUSE_MISC_REGS_EFUSE_3_STATUS_1_EFUSE_3_STATUS_1_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_3_STATUS_1_EFUSE_3_STATUS_1_Pos)
+#define EFUSE_MISC_REGS_EFUSE_3_STATUS_1_EFUSE_3_STATUS_1(value) (EFUSE_MISC_REGS_EFUSE_3_STATUS_1_EFUSE_3_STATUS_1_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_3_STATUS_1_EFUSE_3_STATUS_1_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_3_STATUS_1_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_1) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_3_STATUS_2 : (EFUSE_MISC_REGS Offset: 0x74) (R/  32) EFUSE_3_2 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_3_STATUS_2:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_3_STATUS_2_Type;
@@ -672,13 +738,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_3_STATUS_2_OFFSET 0x74           /**<  \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_2 offset) EFUSE_3_2 Status */
 #define EFUSE_MISC_REGS_EFUSE_3_STATUS_2_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_2 reset_value) EFUSE_3_2 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_3_STATUS_2_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_2) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_3_STATUS_2_EFUSE_3_STATUS_2_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_2)                           */
+#define EFUSE_MISC_REGS_EFUSE_3_STATUS_2_EFUSE_3_STATUS_2_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_3_STATUS_2_EFUSE_3_STATUS_2_Pos)
+#define EFUSE_MISC_REGS_EFUSE_3_STATUS_2_EFUSE_3_STATUS_2(value) (EFUSE_MISC_REGS_EFUSE_3_STATUS_2_EFUSE_3_STATUS_2_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_3_STATUS_2_EFUSE_3_STATUS_2_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_3_STATUS_2_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_2) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_3_STATUS_3 : (EFUSE_MISC_REGS Offset: 0x78) (R/  32) EFUSE_3_3 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_3_STATUS_3:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_3_STATUS_3_Type;
@@ -687,13 +756,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_3_STATUS_3_OFFSET 0x78           /**<  \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_3 offset) EFUSE_3_3 Status */
 #define EFUSE_MISC_REGS_EFUSE_3_STATUS_3_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_3 reset_value) EFUSE_3_3 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_3_STATUS_3_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_3) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_3_STATUS_3_EFUSE_3_STATUS_3_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_3)                           */
+#define EFUSE_MISC_REGS_EFUSE_3_STATUS_3_EFUSE_3_STATUS_3_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_3_STATUS_3_EFUSE_3_STATUS_3_Pos)
+#define EFUSE_MISC_REGS_EFUSE_3_STATUS_3_EFUSE_3_STATUS_3(value) (EFUSE_MISC_REGS_EFUSE_3_STATUS_3_EFUSE_3_STATUS_3_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_3_STATUS_3_EFUSE_3_STATUS_3_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_3_STATUS_3_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_3_STATUS_3) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_4_PROG_0 : (EFUSE_MISC_REGS Offset: 0x7c) (R/W  32) EFUSE_4_0 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_4_PROG_0:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_4_PROG_0_Type;
@@ -702,13 +774,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_4_PROG_0_OFFSET 0x7C           /**<  \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_0 offset) EFUSE_4_0 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_4_PROG_0_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_0 reset_value) EFUSE_4_0 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_4_PROG_0_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_0) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_4_PROG_0_EFUSE_4_PROG_0_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_0)                             */
+#define EFUSE_MISC_REGS_EFUSE_4_PROG_0_EFUSE_4_PROG_0_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_4_PROG_0_EFUSE_4_PROG_0_Pos)
+#define EFUSE_MISC_REGS_EFUSE_4_PROG_0_EFUSE_4_PROG_0(value) (EFUSE_MISC_REGS_EFUSE_4_PROG_0_EFUSE_4_PROG_0_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_4_PROG_0_EFUSE_4_PROG_0_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_4_PROG_0_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_0) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_4_PROG_1 : (EFUSE_MISC_REGS Offset: 0x80) (R/W  32) EFUSE_4_1 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_4_PROG_1:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_4_PROG_1_Type;
@@ -717,13 +792,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_4_PROG_1_OFFSET 0x80           /**<  \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_1 offset) EFUSE_4_1 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_4_PROG_1_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_1 reset_value) EFUSE_4_1 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_4_PROG_1_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_1) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_4_PROG_1_EFUSE_4_PROG_1_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_1)                             */
+#define EFUSE_MISC_REGS_EFUSE_4_PROG_1_EFUSE_4_PROG_1_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_4_PROG_1_EFUSE_4_PROG_1_Pos)
+#define EFUSE_MISC_REGS_EFUSE_4_PROG_1_EFUSE_4_PROG_1(value) (EFUSE_MISC_REGS_EFUSE_4_PROG_1_EFUSE_4_PROG_1_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_4_PROG_1_EFUSE_4_PROG_1_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_4_PROG_1_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_1) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_4_PROG_2 : (EFUSE_MISC_REGS Offset: 0x84) (R/W  32) EFUSE_4_2 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_4_PROG_2:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_4_PROG_2_Type;
@@ -732,13 +810,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_4_PROG_2_OFFSET 0x84           /**<  \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_2 offset) EFUSE_4_2 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_4_PROG_2_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_2 reset_value) EFUSE_4_2 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_4_PROG_2_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_2) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_4_PROG_2_EFUSE_4_PROG_2_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_2)                             */
+#define EFUSE_MISC_REGS_EFUSE_4_PROG_2_EFUSE_4_PROG_2_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_4_PROG_2_EFUSE_4_PROG_2_Pos)
+#define EFUSE_MISC_REGS_EFUSE_4_PROG_2_EFUSE_4_PROG_2(value) (EFUSE_MISC_REGS_EFUSE_4_PROG_2_EFUSE_4_PROG_2_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_4_PROG_2_EFUSE_4_PROG_2_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_4_PROG_2_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_2) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_4_PROG_3 : (EFUSE_MISC_REGS Offset: 0x88) (R/W  32) EFUSE_4_3 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_4_PROG_3:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_4_PROG_3_Type;
@@ -747,13 +828,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_4_PROG_3_OFFSET 0x88           /**<  \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_3 offset) EFUSE_4_3 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_4_PROG_3_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_3 reset_value) EFUSE_4_3 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_4_PROG_3_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_3) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_4_PROG_3_EFUSE_4_PROG_3_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_3)                             */
+#define EFUSE_MISC_REGS_EFUSE_4_PROG_3_EFUSE_4_PROG_3_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_4_PROG_3_EFUSE_4_PROG_3_Pos)
+#define EFUSE_MISC_REGS_EFUSE_4_PROG_3_EFUSE_4_PROG_3(value) (EFUSE_MISC_REGS_EFUSE_4_PROG_3_EFUSE_4_PROG_3_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_4_PROG_3_EFUSE_4_PROG_3_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_4_PROG_3_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_4_PROG_3) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_4_STATUS_0 : (EFUSE_MISC_REGS Offset: 0x8c) (R/  32) EFUSE_4_0 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_4_STATUS_0:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_4_STATUS_0_Type;
@@ -762,13 +846,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_4_STATUS_0_OFFSET 0x8C           /**<  \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_0 offset) EFUSE_4_0 Status */
 #define EFUSE_MISC_REGS_EFUSE_4_STATUS_0_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_0 reset_value) EFUSE_4_0 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_4_STATUS_0_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_0) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_4_STATUS_0_EFUSE_4_STATUS_0_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_0)                           */
+#define EFUSE_MISC_REGS_EFUSE_4_STATUS_0_EFUSE_4_STATUS_0_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_4_STATUS_0_EFUSE_4_STATUS_0_Pos)
+#define EFUSE_MISC_REGS_EFUSE_4_STATUS_0_EFUSE_4_STATUS_0(value) (EFUSE_MISC_REGS_EFUSE_4_STATUS_0_EFUSE_4_STATUS_0_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_4_STATUS_0_EFUSE_4_STATUS_0_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_4_STATUS_0_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_0) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_4_STATUS_1 : (EFUSE_MISC_REGS Offset: 0x90) (R/  32) EFUSE_4_1 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_4_STATUS_1:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_4_STATUS_1_Type;
@@ -777,13 +864,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_4_STATUS_1_OFFSET 0x90           /**<  \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_1 offset) EFUSE_4_1 Status */
 #define EFUSE_MISC_REGS_EFUSE_4_STATUS_1_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_1 reset_value) EFUSE_4_1 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_4_STATUS_1_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_1) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_4_STATUS_1_EFUSE_4_STATUS_1_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_1)                           */
+#define EFUSE_MISC_REGS_EFUSE_4_STATUS_1_EFUSE_4_STATUS_1_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_4_STATUS_1_EFUSE_4_STATUS_1_Pos)
+#define EFUSE_MISC_REGS_EFUSE_4_STATUS_1_EFUSE_4_STATUS_1(value) (EFUSE_MISC_REGS_EFUSE_4_STATUS_1_EFUSE_4_STATUS_1_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_4_STATUS_1_EFUSE_4_STATUS_1_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_4_STATUS_1_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_1) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_4_STATUS_2 : (EFUSE_MISC_REGS Offset: 0x94) (R/  32) EFUSE_4_2 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_4_STATUS_2:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_4_STATUS_2_Type;
@@ -792,13 +882,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_4_STATUS_2_OFFSET 0x94           /**<  \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_2 offset) EFUSE_4_2 Status */
 #define EFUSE_MISC_REGS_EFUSE_4_STATUS_2_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_2 reset_value) EFUSE_4_2 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_4_STATUS_2_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_2) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_4_STATUS_2_EFUSE_4_STATUS_2_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_2)                           */
+#define EFUSE_MISC_REGS_EFUSE_4_STATUS_2_EFUSE_4_STATUS_2_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_4_STATUS_2_EFUSE_4_STATUS_2_Pos)
+#define EFUSE_MISC_REGS_EFUSE_4_STATUS_2_EFUSE_4_STATUS_2(value) (EFUSE_MISC_REGS_EFUSE_4_STATUS_2_EFUSE_4_STATUS_2_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_4_STATUS_2_EFUSE_4_STATUS_2_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_4_STATUS_2_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_2) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_4_STATUS_3 : (EFUSE_MISC_REGS Offset: 0x98) (R/  32) EFUSE_4_3 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_4_STATUS_3:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_4_STATUS_3_Type;
@@ -807,13 +900,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_4_STATUS_3_OFFSET 0x98           /**<  \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_3 offset) EFUSE_4_3 Status */
 #define EFUSE_MISC_REGS_EFUSE_4_STATUS_3_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_3 reset_value) EFUSE_4_3 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_4_STATUS_3_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_3) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_4_STATUS_3_EFUSE_4_STATUS_3_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_3)                           */
+#define EFUSE_MISC_REGS_EFUSE_4_STATUS_3_EFUSE_4_STATUS_3_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_4_STATUS_3_EFUSE_4_STATUS_3_Pos)
+#define EFUSE_MISC_REGS_EFUSE_4_STATUS_3_EFUSE_4_STATUS_3(value) (EFUSE_MISC_REGS_EFUSE_4_STATUS_3_EFUSE_4_STATUS_3_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_4_STATUS_3_EFUSE_4_STATUS_3_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_4_STATUS_3_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_4_STATUS_3) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_5_PROG_0 : (EFUSE_MISC_REGS Offset: 0x9c) (R/W  32) EFUSE_4_0 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_5_PROG_0:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_5_PROG_0_Type;
@@ -822,13 +918,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_5_PROG_0_OFFSET 0x9C           /**<  \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_0 offset) EFUSE_4_0 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_5_PROG_0_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_0 reset_value) EFUSE_4_0 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_5_PROG_0_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_0) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_5_PROG_0_EFUSE_5_PROG_0_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_0)                             */
+#define EFUSE_MISC_REGS_EFUSE_5_PROG_0_EFUSE_5_PROG_0_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_5_PROG_0_EFUSE_5_PROG_0_Pos)
+#define EFUSE_MISC_REGS_EFUSE_5_PROG_0_EFUSE_5_PROG_0(value) (EFUSE_MISC_REGS_EFUSE_5_PROG_0_EFUSE_5_PROG_0_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_5_PROG_0_EFUSE_5_PROG_0_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_5_PROG_0_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_0) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_5_PROG_1 : (EFUSE_MISC_REGS Offset: 0xa0) (R/W  32) EFUSE_5_1 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_5_PROG_1:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_5_PROG_1_Type;
@@ -837,13 +936,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_5_PROG_1_OFFSET 0xA0           /**<  \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_1 offset) EFUSE_5_1 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_5_PROG_1_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_1 reset_value) EFUSE_5_1 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_5_PROG_1_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_1) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_5_PROG_1_EFUSE_5_PROG_1_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_1)                             */
+#define EFUSE_MISC_REGS_EFUSE_5_PROG_1_EFUSE_5_PROG_1_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_5_PROG_1_EFUSE_5_PROG_1_Pos)
+#define EFUSE_MISC_REGS_EFUSE_5_PROG_1_EFUSE_5_PROG_1(value) (EFUSE_MISC_REGS_EFUSE_5_PROG_1_EFUSE_5_PROG_1_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_5_PROG_1_EFUSE_5_PROG_1_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_5_PROG_1_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_1) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_5_PROG_2 : (EFUSE_MISC_REGS Offset: 0xa4) (R/W  32) EFUSE_5_2 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_5_PROG_2:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_5_PROG_2_Type;
@@ -852,13 +954,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_5_PROG_2_OFFSET 0xA4           /**<  \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_2 offset) EFUSE_5_2 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_5_PROG_2_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_2 reset_value) EFUSE_5_2 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_5_PROG_2_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_2) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_5_PROG_2_EFUSE_5_PROG_2_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_2)                             */
+#define EFUSE_MISC_REGS_EFUSE_5_PROG_2_EFUSE_5_PROG_2_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_5_PROG_2_EFUSE_5_PROG_2_Pos)
+#define EFUSE_MISC_REGS_EFUSE_5_PROG_2_EFUSE_5_PROG_2(value) (EFUSE_MISC_REGS_EFUSE_5_PROG_2_EFUSE_5_PROG_2_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_5_PROG_2_EFUSE_5_PROG_2_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_5_PROG_2_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_2) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_5_PROG_3 : (EFUSE_MISC_REGS Offset: 0xa8) (R/W  32) EFUSE_5_3 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_5_PROG_3:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_5_PROG_3_Type;
@@ -867,13 +972,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_5_PROG_3_OFFSET 0xA8           /**<  \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_3 offset) EFUSE_5_3 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_5_PROG_3_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_3 reset_value) EFUSE_5_3 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_5_PROG_3_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_3) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_5_PROG_3_EFUSE_5_PROG_3_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_3)                             */
+#define EFUSE_MISC_REGS_EFUSE_5_PROG_3_EFUSE_5_PROG_3_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_5_PROG_3_EFUSE_5_PROG_3_Pos)
+#define EFUSE_MISC_REGS_EFUSE_5_PROG_3_EFUSE_5_PROG_3(value) (EFUSE_MISC_REGS_EFUSE_5_PROG_3_EFUSE_5_PROG_3_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_5_PROG_3_EFUSE_5_PROG_3_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_5_PROG_3_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_5_PROG_3) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_5_STATUS_0 : (EFUSE_MISC_REGS Offset: 0xac) (R/  32) EFUSE_5_0 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_5_STATUS_0:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_5_STATUS_0_Type;
@@ -882,13 +990,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_5_STATUS_0_OFFSET 0xAC           /**<  \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_0 offset) EFUSE_5_0 Status */
 #define EFUSE_MISC_REGS_EFUSE_5_STATUS_0_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_0 reset_value) EFUSE_5_0 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_5_STATUS_0_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_0) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_5_STATUS_0_EFUSE_5_STATUS_0_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_0)                           */
+#define EFUSE_MISC_REGS_EFUSE_5_STATUS_0_EFUSE_5_STATUS_0_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_5_STATUS_0_EFUSE_5_STATUS_0_Pos)
+#define EFUSE_MISC_REGS_EFUSE_5_STATUS_0_EFUSE_5_STATUS_0(value) (EFUSE_MISC_REGS_EFUSE_5_STATUS_0_EFUSE_5_STATUS_0_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_5_STATUS_0_EFUSE_5_STATUS_0_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_5_STATUS_0_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_0) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_5_STATUS_1 : (EFUSE_MISC_REGS Offset: 0xb0) (R/  32) EFUSE_5_1 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_5_STATUS_1:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_5_STATUS_1_Type;
@@ -897,13 +1008,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_5_STATUS_1_OFFSET 0xB0           /**<  \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_1 offset) EFUSE_5_1 Status */
 #define EFUSE_MISC_REGS_EFUSE_5_STATUS_1_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_1 reset_value) EFUSE_5_1 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_5_STATUS_1_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_1) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_5_STATUS_1_EFUSE_5_STATUS_1_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_1)                           */
+#define EFUSE_MISC_REGS_EFUSE_5_STATUS_1_EFUSE_5_STATUS_1_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_5_STATUS_1_EFUSE_5_STATUS_1_Pos)
+#define EFUSE_MISC_REGS_EFUSE_5_STATUS_1_EFUSE_5_STATUS_1(value) (EFUSE_MISC_REGS_EFUSE_5_STATUS_1_EFUSE_5_STATUS_1_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_5_STATUS_1_EFUSE_5_STATUS_1_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_5_STATUS_1_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_1) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_5_STATUS_2 : (EFUSE_MISC_REGS Offset: 0xb4) (R/  32) EFUSE_5_2 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_5_STATUS_2:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_5_STATUS_2_Type;
@@ -912,13 +1026,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_5_STATUS_2_OFFSET 0xB4           /**<  \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_2 offset) EFUSE_5_2 Status */
 #define EFUSE_MISC_REGS_EFUSE_5_STATUS_2_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_2 reset_value) EFUSE_5_2 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_5_STATUS_2_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_2) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_5_STATUS_2_EFUSE_5_STATUS_2_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_2)                           */
+#define EFUSE_MISC_REGS_EFUSE_5_STATUS_2_EFUSE_5_STATUS_2_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_5_STATUS_2_EFUSE_5_STATUS_2_Pos)
+#define EFUSE_MISC_REGS_EFUSE_5_STATUS_2_EFUSE_5_STATUS_2(value) (EFUSE_MISC_REGS_EFUSE_5_STATUS_2_EFUSE_5_STATUS_2_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_5_STATUS_2_EFUSE_5_STATUS_2_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_5_STATUS_2_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_2) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_5_STATUS_3 : (EFUSE_MISC_REGS Offset: 0xb8) (R/  32) EFUSE_5_3 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_5_STATUS_3:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_5_STATUS_3_Type;
@@ -927,13 +1044,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_5_STATUS_3_OFFSET 0xB8           /**<  \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_3 offset) EFUSE_5_3 Status */
 #define EFUSE_MISC_REGS_EFUSE_5_STATUS_3_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_3 reset_value) EFUSE_5_3 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_5_STATUS_3_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_3) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_5_STATUS_3_EFUSE_5_STATUS_3_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_3)                           */
+#define EFUSE_MISC_REGS_EFUSE_5_STATUS_3_EFUSE_5_STATUS_3_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_5_STATUS_3_EFUSE_5_STATUS_3_Pos)
+#define EFUSE_MISC_REGS_EFUSE_5_STATUS_3_EFUSE_5_STATUS_3(value) (EFUSE_MISC_REGS_EFUSE_5_STATUS_3_EFUSE_5_STATUS_3_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_5_STATUS_3_EFUSE_5_STATUS_3_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_5_STATUS_3_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_5_STATUS_3) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_6_PROG_0 : (EFUSE_MISC_REGS Offset: 0xbc) (R/W  32) EFUSE_6_0 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_6_PROG_0:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_6_PROG_0_Type;
@@ -942,13 +1062,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_6_PROG_0_OFFSET 0xBC           /**<  \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_0 offset) EFUSE_6_0 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_6_PROG_0_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_0 reset_value) EFUSE_6_0 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_6_PROG_0_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_0) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_6_PROG_0_EFUSE_6_PROG_0_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_0)                             */
+#define EFUSE_MISC_REGS_EFUSE_6_PROG_0_EFUSE_6_PROG_0_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_6_PROG_0_EFUSE_6_PROG_0_Pos)
+#define EFUSE_MISC_REGS_EFUSE_6_PROG_0_EFUSE_6_PROG_0(value) (EFUSE_MISC_REGS_EFUSE_6_PROG_0_EFUSE_6_PROG_0_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_6_PROG_0_EFUSE_6_PROG_0_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_6_PROG_0_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_0) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_6_PROG_1 : (EFUSE_MISC_REGS Offset: 0xc0) (R/W  32) EFUSE_6_1 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_6_PROG_1:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_6_PROG_1_Type;
@@ -957,13 +1080,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_6_PROG_1_OFFSET 0xC0           /**<  \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_1 offset) EFUSE_6_1 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_6_PROG_1_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_1 reset_value) EFUSE_6_1 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_6_PROG_1_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_1) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_6_PROG_1_EFUSE_6_PROG_1_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_1)                             */
+#define EFUSE_MISC_REGS_EFUSE_6_PROG_1_EFUSE_6_PROG_1_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_6_PROG_1_EFUSE_6_PROG_1_Pos)
+#define EFUSE_MISC_REGS_EFUSE_6_PROG_1_EFUSE_6_PROG_1(value) (EFUSE_MISC_REGS_EFUSE_6_PROG_1_EFUSE_6_PROG_1_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_6_PROG_1_EFUSE_6_PROG_1_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_6_PROG_1_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_1) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_6_PROG_2 : (EFUSE_MISC_REGS Offset: 0xc4) (R/W  32) EFUSE_6_2 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_6_PROG_2:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_6_PROG_2_Type;
@@ -972,13 +1098,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_6_PROG_2_OFFSET 0xC4           /**<  \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_2 offset) EFUSE_6_2 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_6_PROG_2_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_2 reset_value) EFUSE_6_2 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_6_PROG_2_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_2) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_6_PROG_2_EFUSE_6_PROG_2_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_2)                             */
+#define EFUSE_MISC_REGS_EFUSE_6_PROG_2_EFUSE_6_PROG_2_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_6_PROG_2_EFUSE_6_PROG_2_Pos)
+#define EFUSE_MISC_REGS_EFUSE_6_PROG_2_EFUSE_6_PROG_2(value) (EFUSE_MISC_REGS_EFUSE_6_PROG_2_EFUSE_6_PROG_2_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_6_PROG_2_EFUSE_6_PROG_2_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_6_PROG_2_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_2) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_6_PROG_3 : (EFUSE_MISC_REGS Offset: 0xc8) (R/W  32) EFUSE_6_3 Program Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_6_PROG_3:32;         /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_6_PROG_3_Type;
@@ -987,13 +1116,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_6_PROG_3_OFFSET 0xC8           /**<  \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_3 offset) EFUSE_6_3 Program Register */
 #define EFUSE_MISC_REGS_EFUSE_6_PROG_3_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_3 reset_value) EFUSE_6_3 Program Register */
 
-#define EFUSE_MISC_REGS_EFUSE_6_PROG_3_MASK   0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_3) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_6_PROG_3_EFUSE_6_PROG_3_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_3)                             */
+#define EFUSE_MISC_REGS_EFUSE_6_PROG_3_EFUSE_6_PROG_3_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_6_PROG_3_EFUSE_6_PROG_3_Pos)
+#define EFUSE_MISC_REGS_EFUSE_6_PROG_3_EFUSE_6_PROG_3(value) (EFUSE_MISC_REGS_EFUSE_6_PROG_3_EFUSE_6_PROG_3_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_6_PROG_3_EFUSE_6_PROG_3_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_6_PROG_3_MASK   0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_6_PROG_3) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_6_STATUS_0 : (EFUSE_MISC_REGS Offset: 0xcc) (R/  32) EFUSE_6_0 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_6_STATUS_0:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_6_STATUS_0_Type;
@@ -1002,13 +1134,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_6_STATUS_0_OFFSET 0xCC           /**<  \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_0 offset) EFUSE_6_0 Status */
 #define EFUSE_MISC_REGS_EFUSE_6_STATUS_0_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_0 reset_value) EFUSE_6_0 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_6_STATUS_0_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_0) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_6_STATUS_0_EFUSE_6_STATUS_0_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_0)                           */
+#define EFUSE_MISC_REGS_EFUSE_6_STATUS_0_EFUSE_6_STATUS_0_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_6_STATUS_0_EFUSE_6_STATUS_0_Pos)
+#define EFUSE_MISC_REGS_EFUSE_6_STATUS_0_EFUSE_6_STATUS_0(value) (EFUSE_MISC_REGS_EFUSE_6_STATUS_0_EFUSE_6_STATUS_0_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_6_STATUS_0_EFUSE_6_STATUS_0_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_6_STATUS_0_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_0) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_6_STATUS_1 : (EFUSE_MISC_REGS Offset: 0xd0) (R/  32) EFUSE_6_1 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_6_STATUS_1:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_6_STATUS_1_Type;
@@ -1017,13 +1152,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_6_STATUS_1_OFFSET 0xD0           /**<  \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_1 offset) EFUSE_6_1 Status */
 #define EFUSE_MISC_REGS_EFUSE_6_STATUS_1_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_1 reset_value) EFUSE_6_1 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_6_STATUS_1_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_1) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_6_STATUS_1_EFUSE_6_STATUS_1_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_1)                           */
+#define EFUSE_MISC_REGS_EFUSE_6_STATUS_1_EFUSE_6_STATUS_1_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_6_STATUS_1_EFUSE_6_STATUS_1_Pos)
+#define EFUSE_MISC_REGS_EFUSE_6_STATUS_1_EFUSE_6_STATUS_1(value) (EFUSE_MISC_REGS_EFUSE_6_STATUS_1_EFUSE_6_STATUS_1_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_6_STATUS_1_EFUSE_6_STATUS_1_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_6_STATUS_1_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_1) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_6_STATUS_2 : (EFUSE_MISC_REGS Offset: 0xd4) (R/  32) EFUSE_6_2 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_6_STATUS_2:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_6_STATUS_2_Type;
@@ -1032,13 +1170,16 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_6_STATUS_2_OFFSET 0xD4           /**<  \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_2 offset) EFUSE_6_2 Status */
 #define EFUSE_MISC_REGS_EFUSE_6_STATUS_2_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_2 reset_value) EFUSE_6_2 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_6_STATUS_2_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_2) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_6_STATUS_2_EFUSE_6_STATUS_2_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_2)                           */
+#define EFUSE_MISC_REGS_EFUSE_6_STATUS_2_EFUSE_6_STATUS_2_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_6_STATUS_2_EFUSE_6_STATUS_2_Pos)
+#define EFUSE_MISC_REGS_EFUSE_6_STATUS_2_EFUSE_6_STATUS_2(value) (EFUSE_MISC_REGS_EFUSE_6_STATUS_2_EFUSE_6_STATUS_2_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_6_STATUS_2_EFUSE_6_STATUS_2_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_6_STATUS_2_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_2) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_6_STATUS_3 : (EFUSE_MISC_REGS Offset: 0xd8) (R/  32) EFUSE_6_3 Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t EFUSE_6_STATUS_3:32;       /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } EFUSE_MISC_REGS_EFUSE_6_STATUS_3_Type;
@@ -1047,7 +1188,10 @@ typedef union {
 #define EFUSE_MISC_REGS_EFUSE_6_STATUS_3_OFFSET 0xD8           /**<  \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_3 offset) EFUSE_6_3 Status */
 #define EFUSE_MISC_REGS_EFUSE_6_STATUS_3_RESETVALUE 0x00ul         /**<  \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_3 reset_value) EFUSE_6_3 Status */
 
-#define EFUSE_MISC_REGS_EFUSE_6_STATUS_3_MASK 0x00ul    /**< \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_3) Register MASK */
+#define EFUSE_MISC_REGS_EFUSE_6_STATUS_3_EFUSE_6_STATUS_3_Pos 0  /**< \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_3)                           */
+#define EFUSE_MISC_REGS_EFUSE_6_STATUS_3_EFUSE_6_STATUS_3_Msk (0xFFFFFFFFul << EFUSE_MISC_REGS_EFUSE_6_STATUS_3_EFUSE_6_STATUS_3_Pos)
+#define EFUSE_MISC_REGS_EFUSE_6_STATUS_3_EFUSE_6_STATUS_3(value) (EFUSE_MISC_REGS_EFUSE_6_STATUS_3_EFUSE_6_STATUS_3_Msk & ((value) << EFUSE_MISC_REGS_EFUSE_6_STATUS_3_EFUSE_6_STATUS_3_Pos))  
+#define EFUSE_MISC_REGS_EFUSE_6_STATUS_3_MASK 0xFFFFFFFFul    /**< \brief (EFUSE_MISC_REGS_EFUSE_6_STATUS_3) Register MASK */
 
 /* -------- EFUSE_MISC_REGS_EFUSE_MISC_CTRL : (EFUSE_MISC_REGS Offset: 0xdc) (R/  8) EFUSE 6 Control Register -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

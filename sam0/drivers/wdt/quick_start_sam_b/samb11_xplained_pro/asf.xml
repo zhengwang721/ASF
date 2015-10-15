@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Quick Start for the SAM B11 WDT Driver (Polled)" id="sam0.drivers.wdt.quick_start_sam_b.samb11_xplained_pro">
+	<project caption="Quick Start for the SAM B11 WDT Driver" id="sam0.drivers.wdt.quick_start_sam_b.samb11_xplained_pro">
 		<info type="gui-flag" value="move-to-root"/>
 		<require idref="board.samb11_xplained_pro"/>
 		<require idref="sam0.drivers.wdt.quick_start_sam_b"/>

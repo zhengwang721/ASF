@@ -63,8 +63,13 @@
  * any functions:
  * Read and write buffer to operate spi-flash.
  * \snippet qs_spi_flash_basic.c buffer
+ * A function for configuring the GPIO.
+ * \snippet qs_spi_flash_basic.c configure_gpio
  *
  * Add to user application initialization (typically the start of \c main()):
+ * \snippet qs_spi_flash_basic.c system_init
+ * \snippet qs_spi_flash_basic.c run_config_gpio
+ *
  * \snippet qs_spi_flash_basic.c setup_init
  *
  * \subsection asfdoc_samb_spi_flash_basic_use_case_setup_flow Workflow

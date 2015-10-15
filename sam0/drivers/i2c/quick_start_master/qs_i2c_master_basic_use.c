@@ -79,10 +79,9 @@ void configure_i2c_master(void)
 	struct i2c_master_config config_i2c_master;
 	i2c_master_get_config_defaults(&config_i2c_master);
 	//! [init_conf]
-
 	/* Initialize and enable device with config, and enable i2c. */
 	//! [init_module]
-	i2c_master_init(&i2c_master_instance, &config_i2c_master);
+	i2c_master_init(&i2c_master_instance, CONF_I2C_SLAVE_MODULE, &config_i2c_master);
 	//! [init_module]
 	
 	//! [enable_module]

@@ -12,7 +12,6 @@
 #include "gapc_task.h"
 
 #include "device.h"
-
 // original location : llm.h
 enum
 {
@@ -349,6 +348,7 @@ uint8_t gapm_start_adv_cmd_handler(uint8_t u8OpCode, uint8_t u8AddrSrc, uint16_t
     INTERFACE_SEND_NO_WAIT();
     INTERFACE_DONE();
     return AT_BLE_SUCCESS;
+    UNREFERENCED_PARAMETER(u16RenewDur);
 }
 
 uint8_t get_gap_local_addr_type(void)
@@ -390,6 +390,8 @@ void gapm_start_scan_cmd_handler(uint8_t u8OpCode, uint8_t u8AddrType, uint16_t 
     INTERFACE_PACK_ARG_UINT16(u16Timeout);
     INTERFACE_SEND_NO_WAIT();
     INTERFACE_DONE();
+    UNREFERENCED_PARAMETER(u16RenewDur);
+    UNREFERENCED_PARAMETER(pu8BdAddr);
 }
 
 void gapm_adv_report_evt_handler(uint8_t *data,
@@ -464,6 +466,8 @@ void gapm_start_connection_cmd_handler(uint8_t u8OpCode, uint8_t u8AddrType, uin
         //bSelectiveConnModeRunning = true;
         /*TODO: Selective mode is not handled yet*/
     }
+    UNREFERENCED_PARAMETER(u16RenewDur);
+    UNREFERENCED_PARAMETER(pu8BdAddr);
 }
 
 uint8_t gapm_white_list_mgm_cmd(uint8_t operation, uint8_t addr_type, uint8_t *param)

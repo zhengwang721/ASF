@@ -1,19 +1,12 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="ALERT NOTIFICATION PROFILE CLIENT APPLICATION" id="thirdparty.wireless.ble_smart_sdk.apps.alert_notification">
+	<module type="meta" caption="Alert Notification Client Application" id="thirdparty.wireless.ble_smart_sdk.apps.alert_notification">
 		<info type="description" value="summary">
-		Alert Notification Profile application for BLE stack
+		Alert Notification Client Application for BLE stack
 		</info>
 		<build type="include-path" value="."/>
-		<build type="header-file" value="alert_notificaition_app.h"/>
 		<build type="c-source" value="alert_notificaition_app.c"/>
 		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_CENTRAL_AND_PERIPHERAL"/>
-		<build type="define" name="ATT_DB_MEMORY" value=""/>
-		<build type="define" name="CHIPVERSION_B0" value=""/>
-		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.alert_notification"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_profiles.alert_notification"/>
-		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.ble_manager"/>
-		<require idref="thirdparty.wireless.ble_smart_sdk.services"/>	
-		<require idref="thirdparty.wireless.ble_smart_sdk.utils"/>
 		<device-support-alias value="ble_smart_stack_lib_support"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>

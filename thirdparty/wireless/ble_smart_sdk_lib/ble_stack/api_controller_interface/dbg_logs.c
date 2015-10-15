@@ -6,9 +6,11 @@
  */
 #if USE_TRACE_LOGS_VER  == VER_1_1
 #if (AT_BLE_DBG != TRACE_LVL_DISABLE)
+#define UNREFERENCED_PARAMETER(x) ((void)x)
 static int __printingNullFun(const char *_Format, ...)
 {
     return 0;
+    UNREFERENCED_PARAMETER(_Format);
 }
 
 //Genral pointer to printing function
@@ -47,7 +49,7 @@ tpfTrace pfTrace = '\0';
  ********************* FUNCTIONS ***********************
  *******************************************************
  */
-void trace_register_printFn(void *pf)
+void trace_register_printFn(int (*pf)(const char *_Format, ...))
 {
 #if USE_TRACE_LOGS_VER  == VER_1_1
 #if (AT_BLE_DBG != TRACE_LVL_DISABLE)

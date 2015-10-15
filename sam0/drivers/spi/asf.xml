@@ -1,12 +1,12 @@
 <asf xmlversion="1.0">
-	<select-by-config id="sam0.drivers.spi" name="config.sam0.drivers.spi" caption="SPI - Serial Peripheral Interface" default="callback">
+	<select-by-config id="sam0.drivers.spi" name="config.sam0.drivers.spi" caption="SPI - Serial Peripheral Interface for SAMB" default="callback">
 		<info type="description" value="summary">
 			Driver for the SAM SPI module. Provides a unified interface
 			for the configuration and management of the module
 			in SPI mode.
 		</info>
 
-		<module type="driver" id="sam0.drivers.spi#polled" caption="SPI - Serial Peripheral Interface (Polled APIs)">
+		<module type="driver" id="sam0.drivers.spi#polled" caption="SPI - Serial Peripheral Interface for SAMB">
 			<info type="keyword" value="technology">
 				<keyword value="Communication"/>
 			</info>
@@ -34,7 +34,7 @@
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samb11"/>
 		</module>
-		<module type="driver" id="sam0.drivers.spi#callback" caption="SPI - Serial Peripheral Interface (Callback APIs)">
+		<module type="driver" id="sam0.drivers.spi#callback" caption="SPI - Serial Peripheral Interface for SAMB">
 			<info type="keyword" value="technology">
 				<keyword value="Communication"/>
 			</info>

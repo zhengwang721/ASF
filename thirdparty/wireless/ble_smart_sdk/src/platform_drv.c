@@ -66,7 +66,9 @@
 
 uint8_t (*platform_register_isr)(uint8_t isr_index,void *fp);
 uint8_t (*platform_unregister_isr)(uint8_t isr_index);
-
+void (*apps_resume_cb)(void);
+void (*rwip_prevent_sleep_set)(uint16_t prv_slp_bit);
+void (*rwip_prevent_sleep_clear)(uint16_t prv_slp_bit);
 //#ifdef CHIPVERSION_B0
 void (*handle_ext_wakeup_isr)(void);
 //#endif	//CHIPVERSION_B0
@@ -353,11 +355,15 @@ plf_drv_status platform_driver_init()
 #ifdef CHIPVERSION_B0
 		NVIC_DisableIRQ(GPIO0_IRQn);
 		NVIC_DisableIRQ(GPIO1_IRQn);
+		//NVIC_DisableIRQ(PORT0_COMB_IRQn);
+		//NVIC_DisableIRQ(PORT1_COMB_IRQn);
 		platform_register_isr = (uint8_t (*)(uint8_t ,void *))0x000007d7;
 		platform_unregister_isr = (uint8_t (*)(uint8_t ))0x000007bd;
-		handle_ext_wakeup_isr = (void (*)(void))0x1bc59;
-		gapm_get_task_from_id = (ke_task_id_t (*)(ke_msg_id_t))0x100059b9;
-		gapm_get_id_from_task = (ke_task_id_t (*)(ke_msg_id_t))0x0000d303;
+		handle_ext_wakeup_isr = (void (*)(void))0x1bc51;
+		gapm_get_task_from_id = (ke_task_id_t (*)(ke_msg_id_t))(*((unsigned int *)0x100400bc));
+		gapm_get_id_from_task = (ke_task_id_t (*)(ke_msg_id_t))(*((unsigned int *)0x100400b8));
+		rwip_prevent_sleep_set = (void (*)(uint16_t))0x0001b99f;
+		rwip_prevent_sleep_clear = (void (*)(uint16_t))0x0001b9db;
 #else
 		NVIC_DisableIRQ(PORT0_ALL_IRQn);
 		NVIC_DisableIRQ(PORT1_ALL_IRQn);
@@ -389,14 +395,14 @@ plf_drv_status platform_driver_init()
 		InternalAppMsgQHandle = (void*) 0x10001158;
 		ke_free = (void(*)(void*)) 0x00015e3d;
 #elif CHIPVERSION_B0
-		ke_msg_send 	= (void (*)(void const *))0x0001a01b;
+		ke_msg_send 	= (void (*)(void const *))(*((unsigned int *)0x100400e4));
 		ke_msg_alloc 	= (void* (*)(ke_msg_id_t const id, ke_task_id_t const dest_id,
-										ke_task_id_t const src_id, uint16_t const param_len) ) 0x00019fe9;
-		os_sem_up 		= (int (*)(void*)) 0x0001dbdd;
-		gstrFwSem 		= (void*) 0x100405ec;
-		NMI_MsgQueueRecv = (int(*)(void*, void ** )) 0x0001d5e3;
-		InternalAppMsgQHandle = (void*) 0x10040c20;
-		ke_free = (void(*)(void*)) 0x00019f09;
+										ke_task_id_t const src_id, uint16_t const param_len) )0x00019fe9;
+		os_sem_up 		= (int (*)(void*))0x0001dbdd;
+		gstrFwSem 		= (void*)0x100405ec;
+		NMI_MsgQueueRecv = (int(*)(void*, void ** ))0x0001d5e3;
+		InternalAppMsgQHandle = (void*)0x10040c20;
+		ke_free = (void(*)(void*))0x00019f09;
 #endif
 		memset(rx_buffer,0,sizeof(rx_buffer));
 		plf_event_buff_index = PLF_EVENT_BUFFER_START_INDEX;
@@ -407,6 +413,7 @@ plf_drv_status platform_driver_init()
 		//NVIC_EnableIRQ(PORT1_COMB_IRQn);
 		NVIC_EnableIRQ(GPIO0_IRQn);
 		NVIC_EnableIRQ(GPIO1_IRQn);
+		acquire_sleep_lock();
 #else
 		//chris.choi : check keil driver's CMSDK_CM0.h and asf's samb11g18a.h (it's different so i don't know what should be used.
 		// it's already asked to sanghai china team.
@@ -482,7 +489,9 @@ static void at_ke_msg_send(void const * param_ptr)
 	{
 		/* BLE Core is off, issue a wakeup request*/
 		REG_PL_WR(0x4000B020, 1);
+		#ifndef CHIPVERSION_B0
 		while(REG_PL_RD(0x4000B020));
+		#endif	//CHIPVERSION_B0
 	}
 	else
 	{
@@ -584,6 +593,7 @@ plf_drv_status platform_event_wait(uint32_t timeout)
 #if (CHIPVERSION_A3 || CHIPVERSION_A4)
 					ke_msg_hdr->src_id = rcv_msg->src_id;
 #else
+					//ke_msg_hdr->src_id = rcv_msg->src_id;
 					ke_msg_hdr->src_id = gapm_get_id_from_task(rcv_msg->src_id);
 #endif	//(CHIPVERSION_A3 || CHIPVERSION_A4)
 					ke_msg_hdr->dest_id = rcv_msg->dest_id;
@@ -607,5 +617,33 @@ plf_drv_status platform_event_wait(uint32_t timeout)
 		}
 	}while(0);
 
+	return status;
+}
+
+plf_drv_status acquire_sleep_lock()
+{
+	plf_drv_status status = STATUS_RESOURCE_BUSY;
+	rwip_prevent_sleep_set(APP_PREVENT_SLEEP);
+	return status;
+}
+
+plf_drv_status release_sleep_lock()
+{
+	plf_drv_status status = STATUS_SUCCESS;
+	rwip_prevent_sleep_clear(APP_PREVENT_SLEEP);
+	return status;
+}
+
+plf_drv_status register_resume_callback(resume_callback cb)
+{
+	plf_drv_status status = STATUS_SUCCESS;
+	if(cb == NULL)
+	{
+			status = STATUS_INVALID_ARGUMENT;
+	}
+	else 
+	{
+			apps_resume_cb = cb;
+	}
 	return status;
 }
