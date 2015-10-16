@@ -404,11 +404,11 @@
 
 /*----------------------------------------------------------------------------*/
 /** GMAC HW configurations */
-#define BOARD_GMAC_PHY_ADDR 1
+#define BOARD_GMAC_PHY_ADDR   0
 
 #define PIN_GMAC_RESET_MASK   PIO_PC10
 #define PIN_GMAC_RESET_PIO    PIOC
-#define PIN_GMAC_INT_MASK     PIO_PA19
+#define PIN_GMAC_INT_MASK     PIO_PA14
 #define PIN_GMAC_INT_PIO      PIOA
 #define PIN_GMAC_SIGDET_MASK  PIO_PA29
 #define PIN_GMAC_SIGDET_PIO   PIOA
@@ -515,7 +515,7 @@
 #define USB_VBUS_PIN             PIO_PC9_IDX  /* As IO pin input */
 #define USB_VBUS_PIN_IRQn ( PIOC_IRQn)
 #define USB_VBUS_PIO_ID       ID_PIOC
-#define USB_VBUS_PIO_MASK  PIO_PC9 
+#define USB_VBUS_PIO_MASK  PIO_PC9
 //! @}
 
 /*! \name GPIO Connections of ID detecting

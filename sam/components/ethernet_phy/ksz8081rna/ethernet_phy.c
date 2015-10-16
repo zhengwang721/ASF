@@ -3,7 +3,7 @@
  *
  * \brief API driver for KSZ8081RNA PHY component.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,10 +45,10 @@
  */
 
 #include "ethernet_phy.h"
+#include "pio.h"
 #include "gmac.h"
 #include "conf_eth.h"
 #include "board.h"
-#include "pio.h"
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -98,12 +98,12 @@ static uint8_t ethernet_phy_find_valid(Gmac *p_gmac, uint8_t uc_phy_addr,
 	uint8_t uc_phy_address = uc_phy_addr;
 
 	gmac_enable_management(p_gmac, true);
-
+    uc_rc = uc_phy_address;
 	/* Check the current PHY address */
 	gmac_phy_read(p_gmac, uc_phy_addr, GMII_PHYID1, &ul_value);
 
 	/* Find another one */
-	if (ul_value != GMII_OUI_LSB) {
+	if (ul_value != GMII_OUI_MSB) {
 		uc_rc = 0xFF;
 		for (uc_cnt = uc_start_addr; uc_cnt <= ETH_PHY_MAX_ADDR; uc_cnt++) {
 			uc_phy_address = (uc_phy_address + 1) & 0x1F;
@@ -147,8 +147,8 @@ uint8_t ethernet_phy_init(Gmac *p_gmac, uint8_t uc_phy_addr, uint32_t mck)
 
 	pio_set_output(PIN_GMAC_RESET_PIO, PIN_GMAC_RESET_MASK, 1,  false, true);
 	pio_set_input(PIN_GMAC_INT_PIO, PIN_GMAC_INT_MASK, PIO_PULLUP);
-	//pio_set_input(PIN_GMAC_SIGDET_PIO, PIN_GMAC_SIGDET_MASK, PIO_DEFAULT);
 	pio_set_peripheral(PIN_GMAC_PIO, PIN_GMAC_PERIPH, PIN_GMAC_MASK);
+
 	ethernet_phy_reset(GMAC,uc_phy_addr);
 
 	/* Configure GMAC runtime clock */
@@ -417,7 +417,7 @@ uint8_t ethernet_phy_reset(Gmac *p_gmac, uint8_t uc_phy_addr)
 
 	gmac_enable_management(p_gmac, false);
 
-	if (!ul_timeout) {
+	if (ul_timeout) {
 		uc_rc = GMAC_OK;
 	}
 
