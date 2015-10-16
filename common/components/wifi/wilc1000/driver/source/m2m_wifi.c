@@ -222,7 +222,7 @@ static void m2m_wifi_cb(uint8 u8OpCode, uint16 u16DataSize, uint32 u32Addr)
 	{
 		if(hif_receive(u32Addr, rx_buf ,sizeof(tstrM2mIpRsvdPkt), 0) == M2M_SUCCESS)
 		{
-			tstrM2mIpRsvdPkt *pstrM2MIpRxPkt = (void *)rx_buf;
+			tstrM2mIpRsvdPkt * pstrM2MIpRxPkt = (tstrM2mIpRsvdPkt*)rx_buf;
 			tstrM2mIpCtrlBuf  strM2mIpCtrlBuf;
 			uint16 u16Offset = pstrM2MIpRxPkt->u16PktOffset;
 			#ifdef M2M_WILC1000
@@ -472,6 +472,26 @@ sint8 m2m_wifi_disconnect(void)
 {
 	return hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_DISCONNECT, NULL, 0, NULL, 0,0);
 }
+
+/*!
+@fn			NMI_API sint8 m2m_wifi_set_tx_power(uint8 u8TxPwrLevel);
+@brief		set the TX power tenuM2mTxPwrLevel
+@param [in]	u8TxPwrLevel
+			change the TX power tenuM2mTxPwrLevel
+@return		The function SHALL return M2M_SUCCESE for success and a negative value otherwise.
+@sa			tenuM2mTxPwrLevel
+@pre		m2m_wifi_init
+@warning	
+*/
+sint8 m2m_wifi_set_tx_power(uint8 u8TxPwrLevel)
+{
+	sint8 ret = M2M_SUCCESS;
+	tstrM2mTxPwrLevel strM2mTxPwrLevel;
+	strM2mTxPwrLevel.u8TxPwrLevel = u8TxPwrLevel;
+	ret = hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_SET_TX_POWER, (uint8*)&strM2mTxPwrLevel,sizeof(tstrM2mTxPwrLevel), NULL, 0, 0);
+	return ret;
+}
+
 sint8 m2m_wifi_set_mac_address(uint8 au8MacAddress[6])
 {
 	tstrM2mSetMacAddress strTmp;
@@ -757,6 +777,18 @@ sint8 m2m_wifi_ap_get_assoc_info(void)
 	ret = hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_AP_ASSOC_INFO, NULL, 0, NULL, 0, 0);
 	return ret;
 }
+sint8 m2m_wifi_ap_add_black_list(uint8 bAddNewEntry,uint8* mac_addr)
+{
+	uint8 u8BlackListRequest[7];
+
+	u8BlackListRequest[0] = bAddNewEntry;
+	m2m_memcpy(&u8BlackListRequest[1],mac_addr,6);
+	sint8 ret = M2M_SUCCESS;
+	ret = hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_AP_BLACK_LIST,u8BlackListRequest, sizeof(u8BlackListRequest), NULL, 0, 0);
+	return ret;
+}
+
+
 /*!
 @fn          NMI_API sint8 m2m_wifi_req_curr_rssi(void);
 @brief       Request the current RSSI for the current connected AP, 
@@ -1134,21 +1166,23 @@ sint8 m2m_wifi_download_cert(uint8* pCertData,uint32 u32CertSize)
 			u32ChunkSize = u32CertSize;
 
 		u32TempSize =  (u32OrigCertSize&0xffff)|(u32ChunkSize<<16);
-		m2m_memcpy((uint8*)pChunk,&pCertData[u32OrigCertSize-u32CertSize],u32ChunkSize);
-		hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_CERT_ADD_CHUNK,(uint8*)&u32TempSize,sizeof(u32CertSize),
-				(uint8*)pChunk, u32ChunkSize,sizeof(u32CertSize));
+		m2m_memcpy(pChunk,&pCertData[u32OrigCertSize-u32CertSize],u32ChunkSize);
+		s8Ret = hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_CERT_ADD_CHUNK,(uint8*)&u32TempSize,sizeof(u32CertSize),
+		pChunk, u32ChunkSize,sizeof(u32CertSize));
 		u32CertSize -= u32ChunkSize;
 	}
-	return hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_CERT_DOWNLOAD_DONE,NULL,0,NULL, 0,0);	
+	hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_CERT_DOWNLOAD_DONE,NULL,0,NULL, 0,0);	
 }
 #endif
 #if defined(M2M_WILC1000) && defined(CONCURRENT_INTERFACES)
 sint8 m2m_wifi_set_control_ifc(uint8 u8IfcId)
 {
 	sint8	s8Ret = -1;
+	tstrM2MIfId strIfId;
+	strIfId.u8IfcId=u8IfcId;
 	if(u8IfcId == INTERFACE_1 || u8IfcId == INTERFACE_2)
 	{		
-		s8Ret = hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_SET_IFC_ID, (uint8*)&u8IfcId, sizeof(uint8), NULL, 0, 0);
+		s8Ret = hif_send(M2M_REQ_GRP_WIFI, M2M_WIFI_REQ_SET_IFC_ID, (uint8*)&strIfId, sizeof(tstrM2MIfId), NULL, 0, 0);
 	}
 	return s8Ret;
 }

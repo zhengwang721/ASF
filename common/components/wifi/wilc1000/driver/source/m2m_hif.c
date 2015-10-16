@@ -70,7 +70,12 @@
 #define SLEEP_VALUE				(0x4321)
 #define WAKE_REG				(0x1074)
 
-
+#ifdef CONF_WILC_USE_3000
+#define INTERRUPT_CORTUS_0_3000D0	(0x10a8)
+#define INTERRUPT_CORTUS_1_3000D0	(0x10ac)
+#define INTERRUPT_CORTUS_2_3000D0	(0x10b0)
+#define INTERRUPT_CORTUS_3_3000D0	(0x10b4)
+#endif
 
 static volatile uint8 gu8ChipMode = 0;
 static volatile uint8 gu8ChipSleep = 0;
@@ -100,6 +105,7 @@ static sint8 hif_set_rx_done(void)
 	nm_bsp_interrupt_ctrl(1);
 #endif
 
+#if (defined CONF_WILC_USE_REV_A || defined CONF_WILC_USE_REV_B)
 	ret = nm_read_reg_with_ret(WIFI_HOST_RCV_CTRL_0,&reg);
 	if(ret != M2M_SUCCESS)goto ERR1;
 	//reg &= ~(1<<0);
@@ -108,6 +114,10 @@ static sint8 hif_set_rx_done(void)
 	reg |= (1<<1);		
 	ret = nm_write_reg(WIFI_HOST_RCV_CTRL_0,reg);
 	if(ret != M2M_SUCCESS)goto ERR1;
+#elif defined CONF_WILC_USE_3000
+	ret = nm_write_reg(INTERRUPT_CORTUS_0_3000D0,1);
+	if(ret != M2M_SUCCESS)goto ERR1;
+#endif
 #ifdef NM_LEVEL_INTERRUPT
 	nm_bsp_interrupt_ctrl(1);
 #endif
@@ -212,13 +222,19 @@ sint8 hif_chip_sleep(void)
 			ret = nm_write_reg(WAKE_REG, SLEEP_VALUE);
 			if(ret != M2M_SUCCESS)goto ERR1;
 			/* Clear bit 1 */
-			ret = nm_read_reg_with_ret(0x1, &reg);
+			ret = nm_read_reg_with_ret(WILC_WAKEUP_REG, &reg);
 			if(ret != M2M_SUCCESS)goto ERR1;
-			if(reg&0x2)
+			if(reg&WILC_WAKEUP_BIT)
 			{
-				reg &=~(1 << 1);
-				ret = nm_write_reg(0x1, reg);
+				reg &=~WILC_WAKEUP_BIT;
+				ret = nm_write_reg(WILC_WAKEUP_REG, reg);
+			#if (defined CONF_WILC_USE_REV_A || defined CONF_WILC_USE_REV_B)
+			#ifdef CONF_WIFI_USE_SPI
 				nm_write_reg(0x0b,0);
+			#else
+				nm_write_reg(0xFA,0);
+			#endif
+			#endif
 			}
 		}
 		else
@@ -356,6 +372,10 @@ sint8 hif_send(uint8 u8Gid,uint8 u8Opcode,uint8 *pu8CtrlBuf,uint16 u16CtrlBufSiz
 			reg |= (1 << 1);
 			ret = nm_write_reg(WIFI_HOST_RCV_CTRL_3, reg);
 			if(M2M_SUCCESS != ret) goto ERR1;
+#if defined CONF_WILC_USE_3000
+			ret = nm_write_reg(INTERRUPT_CORTUS_2_3000D0, 1);
+			if(M2M_SUCCESS != ret) goto ERR1;
+#endif
 		}
 		else
 		{
@@ -393,10 +413,10 @@ static sint8 hif_isr(void)
 	if(ret == M2M_SUCCESS)
 	{
 		/*read int status*/
-		ret |= nm_read_reg_with_ret(0x40,&int_stat);
-		int_stat >>= 16;
+		ret |= nm_read_reg_with_ret(WILC_INT_STATUS_REG, &int_stat);
+		int_stat >>= IRG_FLAGS_OFFSET;
 		/*clear the read status*/		
-		ret |= nm_write_reg(0x44,int_stat);
+		ret |= nm_write_reg(WILC_INT_CLEAR_REG,int_stat);
 		if(M2M_SUCCESS == ret)
 		{
 #ifdef INT_BASED_TX
@@ -413,7 +433,7 @@ static sint8 hif_isr(void)
 			{
 				uint16 size;
 				/*read packet size*/
-				ret = nm_read_reg_with_ret(0x1070, &reg);
+				ret = nm_read_reg_with_ret(WIFI_HOST_RCV_CTRL_0, &reg);
 				nm_bsp_interrupt_ctrl(0);				
 				gu8HifSizeDone = 0;
 				size = (uint16)((reg >> 2) & 0xfff);	
@@ -441,8 +461,8 @@ static sint8 hif_isr(void)
 					{
 						if((size - strHif.u16Length) > 4)
 						{
-							M2M_ERR("(hif) Corrupted packet Size = %u <L = %u, G = %u, OP = %02X>\n",
-								size, strHif.u16Length, strHif.u8Gid, strHif.u8Opcode);
+							M2M_ERR("(hif) Corrupted packet Address: %08, xSize = %u <L = %u, G = %u, OP = %02X>\n",
+								address, size, strHif.u16Length, strHif.u8Gid, strHif.u8Opcode);
 							nm_bsp_interrupt_ctrl(1);
 							ret = M2M_ERR_BUS_FAIL;
 							goto ERR1;

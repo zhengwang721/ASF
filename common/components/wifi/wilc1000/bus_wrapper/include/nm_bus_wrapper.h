@@ -53,6 +53,7 @@
 #define  NM_BUS_TYPE_I2C	((uint8)0)
 #define  NM_BUS_TYPE_SPI	((uint8)1)
 #define  NM_BUS_TYPE_UART	((uint8)2)
+#define  NM_BUS_TYPE_SDIO	((uint8)3)
 /**
 	IOCTL commands
 **/
@@ -62,7 +63,10 @@
 												(same start/stop conditions) ==> I2C only. Parameter:tstrNmI2cSpecial */
 #define NM_BUS_IOCTL_RW			((uint8)3)	/*!< Read/Write at the same time ==> SPI only. Parameter:tstrNmSpiRw */
 
-#define NM_BUS_IOCTL_WR_RESTART	((uint8)4)				/*!< Write buffer then made restart condition then read ==> I2C only. parameter:tstrNmI2cSpecial */ 
+#define NM_BUS_IOCTL_WR_RESTART	((uint8)4) 	/*!< Write buffer then made restart condition then read ==> I2C only. parameter:tstrNmI2cSpecial */ 
+#define NM_BUS_IOCTL_CMD_52		((uint8)5)	/*!< Issue SDIO Command 52. parameter:tstrNmSdioCmd52 */ 
+#define NM_BUS_IOCTL_CMD_53		((uint8)6)	/*!< Issue SDIO Command 53. parameter:tstrNmSdioCmd53 */ 
+
 /**
 *	@struct	tstrNmBusCapabilities
 *	@brief	Structure holding bus capabilities information
@@ -112,6 +116,38 @@ typedef struct
 							Can be set to null and in this case data from MISO can be ignored  */
 	uint16	u16Sz;			/*!< Transfere size */	
 } tstrNmSpiRw;
+ 
+#ifdef CONF_WIFI_USE_SDIO
+/**
+*	@struct	tstrNmSpiRw
+*	@brief	Structure holding Cmd 52 parameters
+*	@sa		NM_BUS_IOCTL_CMD_52
+*/ 
+typedef struct {
+	uint32_t read_write:1;	/*!< 0 to read, 1 to write. */
+	uint32_t function:3;	/*!< SDIO function */
+	uint32_t raw:1;
+	uint32_t address:17;
+	uint32_t data:8;
+} tstrNmSdioCmd52;
+
+/**
+*	@struct	tstrNmSpiRw
+*	@brief	Structure holding Cmd 53 parameters
+*	@sa		NM_BUS_IOCTL_CMD_53
+*/ 
+typedef struct {
+	uint32_t read_write:1;	/*!< 0 to read, 1 to write. */
+	uint32_t function:3;	/*!< SDIO function */
+	uint32_t block_mode:1;	/*!< 1 for block mode, 0 for byte mode*/
+	uint32_t increment:1;
+	uint32_t address:17;
+	uint32_t count:9;		/*!< number of bytes or blocks according to block_mode*/
+	uint8_t *buffer;
+	uint32_t block_size;
+} tstrNmSdioCmd53;
+
+#endif /* CONF_WIFI_USE_SDIO */
 
 
 /**

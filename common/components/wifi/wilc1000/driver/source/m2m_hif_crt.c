@@ -52,7 +52,7 @@
 #ifdef CORTUS_APP
 #define APP_MAX_NUM_REQ						30
 #define APP_M2M_IP_PACKET_LIMIT				7
-#define WIFI_PERIPH_BASE					0x30000000
+
 /*!
 @struct
 @brief

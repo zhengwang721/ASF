@@ -45,6 +45,10 @@
 #ifndef _M2M_HIF_
 #define _M2M_HIF_
 
+#if !(defined CONF_WILC_USE_REV_A || defined CONF_WILC_USE_REV_B || defined CONF_WILC_USE_3000)
+#error "Please define eith CONF_WILC_USE_REV_A, CONF_WILC_USE_REV_B or CONF_WILC_USE_3000 before compiling the host driver"
+#endif
+
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 INCLUDES
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/

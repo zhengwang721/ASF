@@ -50,6 +50,8 @@
 
 #ifdef CONF_WIFI_USE_SPI
 #include "driver\source\nmspi.h"
+#elif defined CONF_WIFI_USE_SDIO
+#include "driver\source\nmsdio.h"
 #endif
 
 #define rNMI_GP_REG_1          (0x14a0)
@@ -86,6 +88,9 @@ static void chip_apply_conf(void)
 #endif
 #ifdef __ENABLE_LEGACY_RF_SETTINGS__
 	val32 |= rHAVE_LEGACY_RF_SETTINGS;
+#endif
+#ifdef CONF_WIFI_USE_SDIO_EXT_IRQ
+	val32 |= rHAVE_SDIO_IRQ_GPIO_BIT;
 #endif
 	do  {
 		nm_write_reg(rNMI_GP_REG_1, val32);
@@ -171,6 +176,10 @@ sint8 nm_drv_init(void * arg)
 #endif
 #endif
 
+#ifdef CONF_WIFI_USE_SDIO
+	nm_sdio_init();
+#endif
+
 	M2M_INFO("Chip ID %lx\n", nmi_get_chipid());
 
 	if((nm_read_reg_with_ret(0x1000, &chipid)) != M2M_SUCCESS) {
@@ -187,10 +196,10 @@ sint8 nm_drv_init(void * arg)
 	/**
 	Go...
 	**/
-	ret = chip_reset();
+	/*ret = chip_reset();
 	if (M2M_SUCCESS != ret) {
 		goto ERR2;
-	}
+	}*/
 
 #ifdef CONF_WIFI_USE_SPI
 	/* Must do this after global reset to set SPI data packet size. */
@@ -205,6 +214,9 @@ sint8 nm_drv_init(void * arg)
 		goto ERR2;
 	}
 #endif	
+
+	chip_apply_conf();
+
 	ret = cpu_start();
 	if (M2M_SUCCESS != ret) {
 		goto ERR2;
@@ -219,14 +231,23 @@ sint8 nm_drv_init(void * arg)
 	if (M2M_SUCCESS != ret) {
 		goto ERR2;
 	}
+
+#ifdef CONF_WILC_USE_3000
+	ret = firmware_download_bt();
+	if (M2M_SUCCESS != ret) {
+		goto ERR2;
+	}
+	ret = cpu_start_bt();
+	if (M2M_SUCCESS != ret) {
+		goto ERR2;
+	}
+#endif
 	ret = enable_interrupts();
 	if (M2M_SUCCESS != ret) {
 		M2M_ERR("failed to enable interrupts..\n");
 		goto ERR2;
 	}
-	
-	chip_apply_conf();
-	
+		
 	if(M2M_ERR_FW_VER_MISMATCH == nm_get_firmware_info(&strtmp))
 	{
 		ret = M2M_ERR_FW_VER_MISMATCH;
@@ -235,8 +256,16 @@ sint8 nm_drv_init(void * arg)
 		M2M_INFO("Min driver ver : %u.%u.%u\n", strtmp.u8DriverMajor, strtmp.u8DriverMinor, strtmp.u8DriverPatch);
 		M2M_INFO("Curr driver ver: %u.%u.%u\n", M2M_DRIVER_VERSION_MAJOR_NO, M2M_DRIVER_VERSION_MINOR_NO, M2M_DRIVER_VERSION_PATCH_NO);
 	}
+
+#ifdef CONF_WILC_USE_3000
+	nmi_coex_init();
+	nmi_coex_set_mode(NMI_COEX_MODE_COMBO);
+#endif
 	return ret;
 ERR2:
+#ifdef CONF_WIFI_USE_SDIO
+	nm_sdio_deinit();
+#endif
 	nm_bus_iface_deinit();
 ERR1:	
 	return ret;
@@ -258,6 +287,10 @@ sint8 nm_drv_deinit(void * arg)
 		M2M_ERR("[nmi stop]: chip_deinit fail\n");
 		goto ERR1;
 	}
+
+#ifdef CONF_WIFI_USE_SDIO
+	nm_sdio_init();
+#endif
 
 	ret = nm_bus_iface_deinit();
 	if (M2M_SUCCESS != ret) {

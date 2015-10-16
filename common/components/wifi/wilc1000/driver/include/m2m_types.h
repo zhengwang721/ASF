@@ -76,7 +76,7 @@ MACROS
 */
 
 
-#define M2M_FIRMWARE_VERSION_MINOR_NO					(2)
+#define M2M_FIRMWARE_VERSION_MINOR_NO					(4)
 /*!< Firmware Minor release version number.
 */
 
@@ -97,7 +97,7 @@ MACROS
 /*!< Driver Minor release version number.
 */
 
-#define M2M_DRIVER_VERSION_PATCH_NO						(12)
+#define M2M_DRIVER_VERSION_PATCH_NO						(13)
 /*!< Driver patch release version number.
 */
 
@@ -115,8 +115,9 @@ MACROS
 /*!< The size fo 802 MAC address.
  */
 
-#define M2M_ETHERNET_HDR_OFFSET							34
-/*!< The offset of the Ethernet header within the WLAN Tx Buffer.
+#define M2M_ETHERNET_HDR_OFFSET							34+2
+/*!< The offset of the Ethernet header within the WLAN Tx Buffer. 
+Should be word aligned
  */
 
 
@@ -227,6 +228,13 @@ THIS VALUE CANNOT BE CHANGED
 #define M2M_ASSOC_FAIL 									((uint8)4)
 /*!< Indicate that the WINC board has failed to associate with the AP.
 */
+#define M2M_LINK_LOSS 									((uint8)5)
+/*!< Indicate that the AP/STA is out of range.
+*/
+#define M2M_STATION_IS_LEAVING							((uint8)6)
+/*!< Indicate that the station connected to WILC1000 is leaving
+*/
+
 
 #define M2M_SCAN_ERR_WIFI   	 						((sint8)-2)
 /*!< currently not used.
@@ -398,8 +406,11 @@ typedef enum {
 	M2M_WIFI_REQ_CUST_INFO_ELEMENT,
 	/*!< Add Custom ELement to Beacon Managament Frame.
 	*/
-	M2M_WIFI_RESP_FIRMWARE_STRTED
+	M2M_WIFI_RESP_FIRMWARE_STRTED,
 	/*!< respone message to indicate the firmware succefully started.
+	*/
+	M2M_WIFI_REQ_SET_TX_POWER,
+	/*!<  API to set TX power. 
 	*/
 }tenuM2mConfigCmd;
 
@@ -585,6 +596,9 @@ typedef enum {
 	*/
 	M2M_WIFI_RESP_AP_ASSOC_INFO,
 	/*!< Assoc  information response.
+	*/
+	M2M_WIFI_REQ_AP_BLACK_LIST,
+	/*!< req. to add/remove station to black list.
 	*/
 #endif
 }tenuM2mApCmd;
@@ -854,9 +868,12 @@ typedef struct{
 	uint8				u8IsPMKUsed;
 	/*!< set to true if the PMK is calculated on the host .
 	*/
+	#define __PADDING__		(4 - ((sizeof(tuniM2MWifiAuth) + 2) % 4))
+#else
+	#define __PADDING__		(4 - ((sizeof(tuniM2MWifiAuth) + 1) % 4))
 #endif
 	
-#define __PADDING__		(4 - ((sizeof(tuniM2MWifiAuth) + 1) % 4))
+
 	uint8				__PAD__[__PADDING__];
 	/*!< Padding bytes for forcing 4-byte alignment
 	*/
@@ -1147,8 +1164,10 @@ typedef struct {
 #if defined(M2M_WILC1000)
 	uint8  u8IfcId;
 	uint8  u8MAcAddr[6];
+	uint8	__PAD24__[3];
+#else
+	uint8	__PAD16__[2];
 #endif
-	uint8	__PAD16__[3];
 	/*!< Padding bytes for forcing 4-byte alignment
 	*/
 }tstrM2mWifiStateChanged;
@@ -1328,6 +1347,9 @@ typedef struct{
 	uint8	u8IfcId;
 	/*!< Interface ID to which this frame belongs.
 	*/
+	uint8	__PAD24__[3];
+	/*!< Padding bytes for forcing 4-byte alignment
+	*/
 #endif
 }tstrM2MWifiTxPacketInfo;
 
@@ -1402,7 +1424,11 @@ typedef struct {
 	uint8	au8DHCPServerIP[4];
 	/*!< Ap IP server address
 	*/
+#ifdef M2M_WILC1000
+	uint8	__PAD24__[1];
+#else
 	uint8	__PAD24__[3];
+#endif
 	/*!< Padding bytes for forcing alignment
 	*/
 }tstrM2MAPConfig;
@@ -1535,6 +1561,9 @@ typedef struct{
 	uint16	u16PktOffset;
 	#ifdef M2M_WILC1000
 	uint8	u8IfcId;
+	uint8	__PAD24__[3];
+	/*!< Padding bytes for forcing 4-byte alignment
+	*/
 	#endif
 } tstrM2mIpRsvdPkt;
 
@@ -1863,6 +1892,54 @@ typedef struct{
 	/*!< Padding bytes for forcing 4-byte alignment
 	*/
 }tstrM2MMulticastMac;
+
+/*!
+@struct	\	
+ 	tstrM2MIfId
+ 	
+@brief		
+ 	Set Intrface ID
+ */
+ typedef struct {
+	uint8 u8IfcId;
+	/*!<
+		Interface ID.
+	*/
+	uint8	__PAD24__[3];
+	/*!< Padding bytes for forcing 4-byte alignment
+	*/
+}tstrM2MIfId;
+ /*!
+ @enum	 \
+	 tenuM2mTxPwrLevel
+	 
+ @brief
+	 
+ */
+ typedef enum {
+	 TX_PWR_HIGH = ((uint8) 1),
+	 /*!< PPA Gain 6dbm  PA Gain 18dbm */
+	 TX_PWR_MED,
+	 /*!< PPA Gain 6dbm  PA Gain 12dbm */
+	 TX_PWR_LOW,
+	 /*!< PPA Gain 6dbm  PA Gain 6dbm */
+ }tenuM2mTxPwrLevel;
+ 
+ /*!
+ @struct \	 
+	 tstrM2mTxPwrLevel
+ 
+ @brief
+	 Tx power level 
+ */
+ typedef struct {
+	 uint8	 u8TxPwrLevel; 
+	 /*!< Tx power level
+	 */
+	 uint8	 __PAD24__[3];
+	 /*!< Padding bytes for forcing 4-byte alignment
+	 */
+ }tstrM2mTxPwrLevel;
 
 
  /**@}*/

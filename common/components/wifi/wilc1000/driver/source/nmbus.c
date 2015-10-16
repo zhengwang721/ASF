@@ -46,6 +46,7 @@
 #include "nmbus.h"
 #include "nmi2c.h"
 #include "nmspi.h"
+#include "nmsdio.h"
 #include "nmuart.h"
 
 #define MAX_TRX_CFG_SZ		8
@@ -116,6 +117,8 @@ uint32 nm_read_reg(uint32 u32Addr)
 	return nm_spi_read_reg(u32Addr);
 #elif defined (CONF_WIFI_USE_I2C)
 	return nm_i2c_read_reg(u32Addr);
+#elif defined (CONF_WIFI_USE_SDIO)
+	return nm_sdio_read_reg(u32Addr);
 #else
 #error "Please define bus usage"
 #endif
@@ -142,6 +145,8 @@ sint8 nm_read_reg_with_ret(uint32 u32Addr, uint32* pu32RetVal)
 	return nm_spi_read_reg_with_ret(u32Addr,pu32RetVal);
 #elif defined (CONF_WIFI_USE_I2C)
 	return nm_i2c_read_reg_with_ret(u32Addr,pu32RetVal);
+#elif defined (CONF_WIFI_USE_SDIO)
+	return nm_sdio_read_reg_with_ret(u32Addr,pu32RetVal);
 #else
 #error "Plesae define bus usage"
 #endif
@@ -167,6 +172,8 @@ sint8 nm_write_reg(uint32 u32Addr, uint32 u32Val)
 	return nm_spi_write_reg(u32Addr,u32Val);
 #elif defined (CONF_WIFI_USE_I2C)
 	return nm_i2c_write_reg(u32Addr,u32Val);
+#elif defined (CONF_WIFI_USE_SDIO)
+	return nm_sdio_write_reg(u32Addr,u32Val);
 #else
 #error "Plesae define bus usage"
 #endif
@@ -180,6 +187,8 @@ static sint8 p_nm_read_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 	return nm_spi_read_block(u32Addr,puBuf,u16Sz);
 #elif defined (CONF_WIFI_USE_I2C)
 	return nm_i2c_read_block(u32Addr,puBuf,u16Sz);
+#elif defined (CONF_WIFI_USE_SDIO)
+	return nm_sdio_read_block(u32Addr,puBuf,u16Sz);
 #else
 #error "Plesae define bus usage"
 #endif
@@ -233,6 +242,8 @@ static sint8 p_nm_write_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 	return nm_spi_write_block(u32Addr,puBuf,u16Sz);
 #elif defined (CONF_WIFI_USE_I2C)
 	return nm_i2c_write_block(u32Addr,puBuf,u16Sz);
+#elif defined (CONF_WIFI_USE_SDIO)
+	return nm_sdio_write_block(u32Addr,puBuf,u16Sz);
 #else
 #error "Plesae define bus usage"
 #endif

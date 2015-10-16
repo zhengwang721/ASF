@@ -47,6 +47,9 @@
 #include "common/include/nm_common.h"
 #include "bus_wrapper/include/nm_bus_wrapper.h"
 #include "asf.h"
+#ifdef CONF_WIFI_USE_SDIO
+#include "sdio_sam4s.h"
+#endif
 #include "conf_wifi.h"
 
 #define NM_BUS_MAX_TRX_SZ 4096
@@ -172,6 +175,8 @@ sint8 nm_bus_init(void *pvinit)
 
 	nm_bsp_reset();
 	SPI_DEASSERT_CS();
+#elif defined CONF_WIFI_USE_SDIO
+	result = sam4s_sdio_init();
 #endif
 	return result;
 }
@@ -207,10 +212,23 @@ sint8 nm_bus_ioctl(uint8 u8Cmd, void* pvParameter)
 			s8Ret = nm_i2c_write_special(pstrParam->pu8Buf1, pstrParam->u16Sz1, pstrParam->pu8Buf2, pstrParam->u16Sz2);
 		}
 		break;
-#elif CONF_WIFI_USE_SPI
+#elif defined CONF_WIFI_USE_SPI
 		case NM_BUS_IOCTL_RW: {
 			tstrNmSpiRw *pstrParam = (tstrNmSpiRw *)pvParameter;
 			s8Ret = spi_rw(pstrParam->pu8InBuf, pstrParam->pu8OutBuf, pstrParam->u16Sz);
+		}
+		break;
+#elif defined CONF_WIFI_USE_SDIO
+		case NM_BUS_IOCTL_CMD_52: 
+		{
+			tstrNmSdioCmd52* pstrParam = (tstrNmSdioCmd52 *)pvParameter;
+			s8Ret = nmi_sdio_cmd52(pstrParam);
+		}
+		break;
+		case NM_BUS_IOCTL_CMD_53: 
+		{
+			tstrNmSdioCmd53* pstrParam = (tstrNmSdioCmd53 *)pvParameter;
+			s8Ret = nmi_sdio_cmd53(pstrParam);
 		}
 		break;
 #endif

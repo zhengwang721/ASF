@@ -49,6 +49,9 @@ INCLUDES
 
 #include "common\include\nm_common.h"
 #include "driver\include\m2m_types.h"
+#ifdef CONF_WILC_USE_3000
+#include "driver\include\m2m_coex.h"
+#endif
 
 #ifdef CONF_MGMT
 
@@ -1552,6 +1555,32 @@ NMI_API sint8 m2m_wifi_disable_ap(void);
 @endcode
 */
 NMI_API sint8 m2m_wifi_ap_get_assoc_info(void);
+  /**@}*/
+/** @defgroup WifiDisableApFn m2m_wifi_ap_add_black_list
+ *   @ingroup WLANAPI
+ *    Synchronous wi-fi hotspot add/remove station from the black List.
+ */
+ /**@{*/
+/*!
+@fn	\
+	NMI_API sint8 m2m_wifi_ap_add_black_list(uint8 bAddNewEntry,uint8* mac_addr);
+@param [in]	bAddNewEntry
+				Boolean value if 1 then the given mac address would be added to the black list
+				if zero the given mac address would be removed from the black list
+			mac_addr
+				MAC address of the station to be added/removed from the black list
+				Note to remove all stations from the black list use all FF's in the mac address and set
+				bAddNewEntry to zero
+@warning
+	The firmware will be maintaining a list of 16 MAC addresses , Requests over this number will 
+	be discarded without a notice.
+
+@see
+         m2m_wifi_enable_ap
+@return
+	The function returns @ref M2M_SUCCESS for successful operations and a negative value otherwise.
+*/
+NMI_API sint8 m2m_wifi_ap_add_black_list(uint8 bAddNewEntry,uint8* mac_addr);
  /**@}*/
 /** @defgroup SetStaticIPFn m2m_wifi_set_static_ip
  *   @ingroup WLANAPI
@@ -2759,6 +2788,17 @@ sint8 m2m_wifi_set_control_ifc(uint8 u8IfcId);
 
 sint8 m2m_wifi_send_ethernet_pkt_ifc1(uint8* pu8Packet,uint16 u16PacketSize);
 #endif
+/*!
+@fn			NMI_API sint8 m2m_wifi_set_tx_power(uint8 u8TxPwrLevel);
+@brief		set the TX power tenuM2mTxPwrLevel
+@param [in]	u8TxPwrLevel
+			change the TX power tenuM2mTxPwrLevel
+@return		The function SHALL return M2M_SUCCESE for success and a negative value otherwise.
+@sa			tenuM2mTxPwrLevel
+@pre		m2m_wifi_init
+@warning	
+*/
+NMI_API sint8 m2m_wifi_set_tx_power(uint8 u8TxPwrLevel);
 
 #ifdef __cplusplus
 }
