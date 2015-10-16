@@ -59,31 +59,16 @@
 #define GMII_ANER        0x06   // Auto-negotiation Expansion
 #define GMII_ANNPR       0x07   // Auto-negotiation Next Page
 #define GMII_ANLPNPAR    0x08   // Link Partner Next Page Ability
-#define GMII_MACR        0x0D   // MMD Access Control Register
-#define GMII_MADR        0x0E   // MMD Access Address Data Register
-#define GMII_AFECR1      0x11   // AFE Control 0
-#define GMII_AFECR3      0x14   // AFE Control 3
+#define GMII_DRCR        0x10   // Digital Reserved Control Register
+#define GMII_AFECR1      0x11   // AFE Control 1
 #define GMII_RXERCR      0x15   // RXER Counter
 #define GMII_OMSOR       0x16   // Operation Mode Strap Override
 #define GMII_OMSSR       0x17   // Operation Mode Strap Status
 #define GMII_ECR         0x18   // Expanded Control
 #define GMII_ICSR        0x1B   // Interrupt Control/Status
-#define GMII_FCR         0x1C   // Function Control
 #define GMII_LCSR        0x1D   // LinkMD Control/Status
 #define GMII_PCR1        0x1E   // PHY Control 1
 #define GMII_PCR2        0x1F   // PHY Control 2
-
-/*
-//Extend Registers
-#define GMII_CCR        256  // Common Control Register
-#define GMII_SSR        257  // Strap Status Register
-#define GMII_OMSOR      258  // Operation Mode Strap Override Register
-#define GMII_OMSSR      259  // Operation Mode Strap Status Register
-#define GMII_RCCPSR     260  // RGMII Clock and Control Pad Skew Register
-#define GMII_RRDPSR     261  // RGMII RX Data Pad Skew Register
-#define GMII_ATR        263  // Analog Test Register
-*/
-
 
 // Bit definitions: GMII_BMCR 0x00 Basic Control
 #define GMII_RESET             (1 << 15) // 1= Software Reset; 0=Normal Operation
