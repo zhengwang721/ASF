@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="WINC1500 Chip Info Example for SAME70 XPlained Pro" id="common.components.wifi.winc1500.chip_info_example.same70_xplained_pro">
+	<project caption="WINC1500 Chip Info Example for SAME70 XPlained" id="common.components.wifi.winc1500.chip_info_example.same70_xplained">
 		<!-- Summary Description -->
 		<info type="description" value="summary">
 			This example demonstrates how to retrieve the chip information of the WINC1500 Wi-Fi module.
@@ -18,7 +18,7 @@
 
 		<!-- Required modules -->
 		<require idref="common.components.wifi.winc1500.chip_info_example"/>
-		<require idref="board.same70_xplained_pro"/>
+		<require idref="board.same70_xplained"/>
 
 		<!-- Generators -->
 		<generator value="armgcc"/>

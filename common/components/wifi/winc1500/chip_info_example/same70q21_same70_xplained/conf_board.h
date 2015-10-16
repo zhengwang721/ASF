@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAME70 Xplained Pro board configuration
+ * \brief SAME70 Xplained board configuration
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
