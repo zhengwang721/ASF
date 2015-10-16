@@ -536,6 +536,27 @@
 #define SDRAM_SDA10_FLAGS    PIO_PERIPH_C
 #define SDRAM_D_FLAGS        PIO_PERIPH_A
 
+/** LCD SPI configuration */
+#define BOARD_ILI9488_SPI         SPI0
+#define BOARD_ILI9488_SPI_IRQN    SPI0_IRQn
+#define BOARD_ILI9488_SPI_NPCS    3
+
+/** LCD SPI pins definition */
+#define LCD_SPI_MISO_PIO      PIO_PD20_IDX
+#define LCD_SPI_MISO_FLAGS    (PIO_PERIPH_B | PIO_DEFAULT)
+#define LCD_SPI_MOSI_PIO      PIO_PD21_IDX
+#define	LCD_SPI_MOSI_FLAGS    (PIO_PERIPH_B | PIO_DEFAULT)
+#define LCD_SPI_SPCK_PIO      PIO_PD22_IDX
+#define	LCD_SPI_SPCK_FLAGS    (PIO_PERIPH_B | PIO_DEFAULT)
+#define LCD_SPI_NPCS_PIO      PIO_PD27_IDX
+#define LCD_SPI_NPCS_FLAGS    (PIO_PERIPH_B | PIO_DEFAULT)
+
+#define LCD_SPI_RESET_PIO     PIO_PA24_IDX
+#define LCD_SPI_RESET_FLAGS   (PIO_OUTPUT_1 | PIO_DEFAULT)
+#define LCD_SPI_CDS_PIO       PIO_PA6_IDX
+#define	LCD_SPI_CDS_FLAGS     (PIO_OUTPUT_1 | PIO_DEFAULT)
+#define LCD_SPI_BACKLIGHT_PIO     PIO_PC19_IDX
+#define	LCD_SPI_BACKLIGHT_FLAGS   (PIO_OUTPUT_1 | PIO_DEFAULT)
 
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAME70_XPLD_H_ */

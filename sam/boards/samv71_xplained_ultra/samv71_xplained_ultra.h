@@ -456,6 +456,8 @@
 #define SD_MMC_0_CD_DETECT_VALUE        0
 
 /** EBI pins configuration for LCD */
+/* Chip select number to be set */
+#define BOARD_ILI9488_EBI_NPCS       3
 /** LCD reset pin */
 #define PIN_EBI_RESET_MASK	  PIO_PC13
 #define PIN_EBI_RESET_PIO	  PIOC
