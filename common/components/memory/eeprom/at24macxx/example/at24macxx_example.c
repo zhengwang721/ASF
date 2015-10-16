@@ -379,6 +379,13 @@ int main(void)
 	}
 	/* Match */
 	puts("Page comparison: Matched!\r");
+	/* Turn on LEDs */
+#if (SAME70)
+	ioport_set_pin_level(LED0_GPIO, LED0_ACTIVE_LEVEL);
+#else
+	ioport_set_pin_level(LED0_GPIO, LED0_ACTIVE_LEVEL);
+	ioport_set_pin_level(LED1_GPIO, LED0_ACTIVE_LEVEL);
+#endif
 	while (1) {
 	}
 }
