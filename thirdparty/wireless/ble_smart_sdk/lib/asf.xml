@@ -5,6 +5,8 @@
             </info>
             <build type="library" subtype="user" value="libBle_smart_sdk_lib.a" toolchain="armgcc"/>
             <build type="library" subtype="user" value="libBle_smart_sdk_lib.a" toolchain="iarewarm"/>
-            <device-support value="atsamb11g18a"/>
+	  	<build type="define" name="CHIPVERSION_B0" value=""/>
+		
+	    <device-support value="atsamb11g18a"/>
         </module>
 </asf>
