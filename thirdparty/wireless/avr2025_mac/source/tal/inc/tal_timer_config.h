@@ -205,7 +205,7 @@ extern uint8_t TAL_T_AGC_0;
 extern uint8_t TAL_T_AGC_1;
 
 #endif
-#endif
+
 
 #if (((defined RF215v1) || (defined RF215v2)) && (defined SUPPORT_LEGACY_OQPSK))
 #ifdef ENABLE_FTN_PLL_CALIBRATION
@@ -219,6 +219,7 @@ extern uint8_t TAL_T_AGC_1;
 #else
 #define NUMBER_OF_TAL_TIMERS        (2)
 #endif /* ENABLE_FTN_PLL_CALIBRATION */
+#endif
 #endif
 /* === PROTOTYPES ========================================================== */
 

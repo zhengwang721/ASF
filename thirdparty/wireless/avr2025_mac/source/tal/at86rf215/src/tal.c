@@ -196,7 +196,7 @@ static bool agc_timer_running[NUM_TRX] = {false, false};
 /* === PROTOTYPES ========================================================== */
 
 static void handle_trxerr(trx_id_t trx_id);
-static inline void handle_pending_irq(trx_id_t trx_id);
+
 #if ((defined RF215v1) || (defined RF215v2)) && (defined SUPPORT_LEGACY_OQPSK)
 /* Workaround for errata reference #4908 */
 static void inline start_agc_timer(trx_id_t trx_id);

@@ -227,6 +227,11 @@ static void configure_pibs(void)
 	temp_byte = (uint8_t)DEFAULT_CHANNEL;
 	pib_value.pib_value_8bit = temp_byte;
 	tal_pib_set(phyCurrentChannel, &pib_value);
+	
+	/* Set channel. */
+	temp_byte = (uint8_t)DEFAULT_PAGE;
+	pib_value.pib_value_8bit = temp_byte;
+	tal_pib_set(phyCurrentPage, &pib_value);
 
 	/* Set IEEE address - To make sure that trx registers written properly
 	**/

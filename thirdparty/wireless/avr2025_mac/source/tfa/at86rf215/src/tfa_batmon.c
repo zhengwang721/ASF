@@ -98,9 +98,6 @@ uint16_t tfa_get_batmon_voltage(void)
 
     if ((tal_state[RF09] == TAL_SLEEP) && (tal_state[RF24] == TAL_SLEEP))
     {
-#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
-        //printf(("Both trx are in sleep mode"));
-#endif
         return 0;
     }
 

@@ -77,7 +77,7 @@
  */
 
 /* === TYPES =============================================================== */
-// __PACK__DATA__ 
+ __PACK__DATA__ 
 /* Structure implementing the PIB values stored in TAL */
 typedef struct tal_pib_tag
 {
@@ -706,7 +706,7 @@ typedef enum csma_mode_tag {
 	CSMA_UNSLOTTED,
 	CSMA_SLOTTED
 } csma_mode_t;
- //__PACK__RST_DATA__ 
+ __PACK__RST_DATA__ 
 /* === EXTERNALS =========================================================== */
 
 #if (defined SW_CONTROLLED_CSMA) && (defined TX_OCTET_COUNTER)

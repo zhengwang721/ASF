@@ -308,15 +308,8 @@ void per_mode_initiator_task(trx_id_t trx)
 
 			node_info[trx].tx_frame_info->mpdu[PL_POS_SEQ_NUM -
 			1]++;
-			
-			if (tal_pib[trx].phy.modulation == FSK) {
-				// Delay introduced to avoid Packet loss while sending Large packet.
-				delay_ms(2); 
-			}
-            else
-			{
-				delay_ms(1);
-			}
+
+			delay_ms(2);
 			if (curr_trx_config_params[trx].csma_enabled) {
 				if (tal_pib[trx].phy.modulation == OFDM) {
 					delay_ms(2);
@@ -2842,8 +2835,7 @@ void set_default_configuration(trx_id_t trx)
  * parameters on source and peer node
  */
 void get_current_configuration(trx_id_t trx)
-{
-	
+{	
 	/* Send the confirmation with the status as SUCCESS */
 	usr_get_current_config_confirm(trx, MAC_SUCCESS,
 			&curr_trx_config_params[trx]);
