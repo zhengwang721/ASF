@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="TWIHS SLAVE Example for SAMV71 Xplained Ultra" id="sam.drivers.twihs.twihs_slave_example.samv71_xplained_ultra">
 		<info type="description" value="summary">
-		The application demonstrates how to use use the SAM TWIHS peripheral in slave mode.
+		The application demonstrates how to use the SAM TWIHS peripheral in slave mode.
 		</info>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
