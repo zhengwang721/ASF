@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAME70-XPRO Board Definition.
+ * \brief SAME70-XPLD Board Definition.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,15 +44,15 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef _SAME70_XPRO_H_
-#define _SAME70_XPRO_H_
+#ifndef _SAME70_XPLD_H_
+#define _SAME70_XPLD_H_
 
 #include "compiler.h"
 #include "system_same70.h"
 
 /*----------------------------------------------------------------------------*/
 /**
- *  \page same70_xplained_pro_opfreq "SAME70-XPRO - Operating frequencies"
+ *  \page same70_xplained_pro_opfreq "SAME70-XPLD - Operating frequencies"
  *  This page lists several definition related to the board operating frequency
  *
  *  \section Definitions
@@ -74,7 +74,7 @@
 
 /*----------------------------------------------------------------------------*/
 /**
- * \page same70_xplained_pro_info "SAME70-XPRO - Board informations"
+ * \page same70_xplained_info "SAME70-XPLD - Board informations"
  * This page lists several definition related to the board description.
  *
  * \section Definitions
@@ -136,7 +136,7 @@
 #define SW0_SUPC_INPUT            2
 
 /**
- * Wrapper macros for SW0, to ensure common naming across all Xplained Ultra
+ * Wrapper macros for SW0, to ensure common naming across all Xplained
  * boards.
  */
 #define PIN_SW0      {PIO_PA11, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
@@ -150,7 +150,7 @@
 /**
  * \name LED #0 definitions
  *
- * Wrapper macros for LED0, to ensure common naming across all Xplained Ultra
+ * Wrapper macros for LED0, to ensure common naming across all Xplained
  * boards.
  */
 //@{
@@ -275,7 +275,7 @@
 #define MCAN_MODULE              MCAN1
 /*----------------------------------------------------------------------------*/
 /**
- * \page same70_xpro_CAN "SAME70-XPRO - CAN"
+ * \page same70_xpld_CAN "SAME70-XPLD - CAN"
  * This page lists definitions related to CAN0 and CAN1.
  *
  * CAN
@@ -538,4 +538,4 @@
 
 
 /*----------------------------------------------------------------------------*/
-#endif   /* _SAME70_XPRO_H_ */
+#endif   /* _SAME70_XPLD_H_ */
