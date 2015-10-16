@@ -48,13 +48,13 @@
 #define CONF_TEST_H_INCLUDED
 
 /** USART Interface */
-#define CONF_TEST_USART      CONSOLE_UART
+#define CONF_TEST_USART        CONSOLE_UART
 /** Baudrate setting */
-#define CONF_TEST_BAUDRATE   115200
+#define CONF_TEST_BAUDRATE     115200
 /** Character length setting */
 #define CONF_TEST_CHAR_LENGTH  US_MR_CHRL_8_BIT
 /** Parity setting */
-#define CONF_TEST_PARITY     US_MR_PAR_NO
+#define CONF_TEST_PARITY       US_MR_PAR_NO
 /** Stop bits setting */
 #define CONF_TEST_STOP_BITS    US_MR_NBSTOP_1_BIT
 
