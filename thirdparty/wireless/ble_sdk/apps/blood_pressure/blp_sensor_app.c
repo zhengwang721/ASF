@@ -450,6 +450,15 @@ static void blp_char_notification(void)
 	blp_data[idx++] = 0;
 	blp_data[idx++] = 0;
 	
+	blp_data[0]	|= BLOOD_PRESSURE_USERID_FLAG_MASK;
+	
+	/** Appending User id */
+	if (units) {
+		blp_data[idx++] = USERID_1;
+		} else {
+		blp_data[idx++] = USERID_2;
+	}
+	
 	blp_sensor_send_notification(blp_data,idx);
 }
 /** @brief notification handler function called by the profile
@@ -524,17 +533,17 @@ void button_cb(void)
 	/* App connected state*/
 	if (app_state) {
 		if (user_request_flag == false) {
-			if (indication_flag) {
 				/** For changing the units for each button press*/
-				units = !units;
-		
+				if (indication_flag) {
+					units = !units;
+				}
+				
 				/** To trigger the blood pressure indication */
 				user_request_flag = true;
 				timer_count = 0;
 				if (notification_flag) {
 					DBG_LOG("\r\nStarted sending Interim Cuff Pressure Values");
 				}	
-			}
 		}
 	}
 	
@@ -612,8 +621,6 @@ int main(void)
 		/* Checking for button press */
 		if (user_request_flag ) {
 			
-			/* Checking for indications enabled*/
-			if (indication_flag) {
 				/*Sending notifications of interim cuff pressure*/
 				
 				if (timer_count < INDICATION_TIMER_VAL ) {
@@ -634,19 +641,20 @@ int main(void)
 				}
 				
 				if (timer_count == INDICATION_TIMER_VAL) {
-					/*Checking for previous indication sent over the  air */
-					if (indication_sent) {
+					if (indication_flag) {
+						/*Checking for previous indication sent over the  air */
+						if (indication_sent) {
 						
-						/* Send a indication */
-						blp_char_indication();
-						user_request_flag = 0;
+							/* Send a indication */
+							blp_char_indication();
+						} else {
+							DBG_LOG("Previous indication is failed and device is disconnecting");
+							blp_disconnection();
+						}
+					} 
 						timer_count = 0;
-					} else {
-						DBG_LOG("Previous indication is failed and device is disconnecting");
-						blp_disconnection();
-					}
+						user_request_flag = 0;
 				}
-			}	
 		}
 	}
 	return 0;
