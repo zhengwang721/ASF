@@ -378,8 +378,8 @@
 #define PIN_HSMCI_MCDA3_FLAGS           (IOPORT_MODE_MUX_C)
 
 /** SD/MMC card detect pin definition. */
-#define PIN_HSMCI_CD                    {PIO_PD18, PIOD, ID_PIOD, PIO_INPUT, PIO_PULLUP}
-#define SD_MMC_0_CD_GPIO                (PIO_PD18_IDX)
+#define PIN_HSMCI_CD                    {PIO_PC16, PIOD, ID_PIOD, PIO_INPUT, PIO_PULLUP}
+#define SD_MMC_0_CD_GPIO                (PIO_PC16_IDX)
 #define SD_MMC_0_CD_PIO_ID              ID_PIOD
 #define SD_MMC_0_CD_FLAGS               (IOPORT_MODE_PULLUP)
 #define SD_MMC_0_CD_DETECT_VALUE        0
