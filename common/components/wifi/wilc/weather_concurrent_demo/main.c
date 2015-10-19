@@ -115,7 +115,7 @@
 #define TASK_AP_PRIORITY			(tskIDLE_PRIORITY + 1)
 
 #define STRING_EOL    "\r\n"
-#define STRING_HEADER "-- Weather client example --"STRING_EOL \
+#define STRING_HEADER "-- Weather concurrent demo --"STRING_EOL \
 		"-- "BOARD_NAME " --"STRING_EOL	\
 		"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
 

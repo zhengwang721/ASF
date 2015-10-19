@@ -57,11 +57,9 @@
 			<build type="header-file" value="os/include/m2m_wifi_ex.h"/>
 			<build type="header-file" value="os/include/net_init.h"/>
 			<build type="header-file" value="os/include/os_hook.h"/>
-			<build type="header-file" value="os/include/sm_wifi.h"/>
 			<build type="c-source" value="os/source/m2m_wifi_ex.c"/>
 			<build type="c-source" value="os/source/net_init.c"/>
 			<build type="c-source" value="os/source/os_hook.c"/>
-			<build type="c-source" value="os/source/sm_wifi.c"/>
 
 			<build type="c-source" value="netif/source/wifi_netif.c"/>
 			<build type="header-file" value="netif/include/wifi_netif.h"/>
@@ -136,11 +134,9 @@
 			<build type="header-file" value="os/include/m2m_wifi_ex.h"/>
 			<build type="header-file" value="os/include/net_init.h"/>
 			<build type="header-file" value="os/include/os_hook.h"/>
-			<build type="header-file" value="os/include/sm_wifi.h"/>
 			<build type="c-source" value="os/source/m2m_wifi_ex.c"/>
 			<build type="c-source" value="os/source/net_init.c"/>
 			<build type="c-source" value="os/source/os_hook.c"/>
-			<build type="c-source" value="os/source/sm_wifi.c"/>
 
 			<build type="c-source" value="netif/source/wifi_netif.c"/>
 			<build type="header-file" value="netif/include/wifi_netif.h"/>
@@ -215,11 +211,9 @@
 			<build type="header-file" value="os/include/m2m_wifi_ex.h"/>
 			<build type="header-file" value="os/include/net_init.h"/>
 			<build type="header-file" value="os/include/os_hook.h"/>
-			<build type="header-file" value="os/include/sm_wifi.h"/>
 			<build type="c-source" value="os/source/m2m_wifi_ex.c"/>
 			<build type="c-source" value="os/source/net_init.c"/>
 			<build type="c-source" value="os/source/os_hook.c"/>
-			<build type="c-source" value="os/source/sm_wifi.c"/>
 
 			<build type="c-source" value="netif/source/wifi_netif.c"/>
 			<build type="header-file" value="netif/include/wifi_netif.h"/>
@@ -309,11 +303,9 @@
 			<build type="header-file" value="os/include/m2m_wifi_ex.h"/>
 			<build type="header-file" value="os/include/net_init.h"/>
 			<build type="header-file" value="os/include/os_hook.h"/>
-			<build type="header-file" value="os/include/sm_wifi.h"/>
 			<build type="c-source" value="os/source/m2m_wifi_ex.c"/>
 			<build type="c-source" value="os/source/net_init.c"/>
 			<build type="c-source" value="os/source/os_hook.c"/>
-			<build type="c-source" value="os/source/sm_wifi.c"/>
 
 			<build type="c-source" value="netif/source/wifi_netif.c"/>
 			<build type="header-file" value="netif/include/wifi_netif.h"/>
@@ -392,11 +384,9 @@
 			<build type="header-file" value="os/include/m2m_wifi_ex.h"/>
 			<build type="header-file" value="os/include/net_init.h"/>
 			<build type="header-file" value="os/include/os_hook.h"/>
-			<build type="header-file" value="os/include/sm_wifi.h"/>
 			<build type="c-source" value="os/source/m2m_wifi_ex.c"/>
 			<build type="c-source" value="os/source/net_init.c"/>
 			<build type="c-source" value="os/source/os_hook.c"/>
-			<build type="c-source" value="os/source/sm_wifi.c"/>
 
 			<build type="c-source" value="netif/source/wifi_netif.c"/>
 			<build type="header-file" value="netif/include/wifi_netif.h"/>
@@ -475,11 +465,9 @@
 			<build type="header-file" value="os/include/m2m_wifi_ex.h"/>
 			<build type="header-file" value="os/include/net_init.h"/>
 			<build type="header-file" value="os/include/os_hook.h"/>
-			<build type="header-file" value="os/include/sm_wifi.h"/>
 			<build type="c-source" value="os/source/m2m_wifi_ex.c"/>
 			<build type="c-source" value="os/source/net_init.c"/>
 			<build type="c-source" value="os/source/os_hook.c"/>
-			<build type="c-source" value="os/source/sm_wifi.c"/>
 
 			<build type="c-source" value="netif/source/wifi_netif.c"/>
 			<build type="header-file" value="netif/include/wifi_netif.h"/>
