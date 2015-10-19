@@ -1,14 +1,14 @@
 <asf xmlversion="1.0">
 	<select-by-device id="common.components.wifi.wilc1000" caption="WILC1000 (Wi-Fi) SPI RTOS Host Driver v3.4.0">
 		<info type="description" value="summary">
-			The Atmel SmartConnect WILC1000 is an IEEE 802.11 b/g/n IoT link controller SoC. It is the ideal add-on to existing MCU solutions bringing WiFi through UART or SPI-to-WiFi interface. The WILC1000 connects to any Atmel AVR or SMART MCU with minimal resource requirements.
+			The Atmel SmartConnect WILC1000 is an IEEE 802.11 b/g/n IoT link controller SoC. It is the ideal add-on to existing MCU solutions bringing WiFi through SPI or SDIO interface.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Wireless"/>
 		</info>
 		<module type="service" id="common.components.wifi.wilc1000#0" caption="WILC1000 (Wi-Fi) SPI RTOS Host Driver v3.4.0 - SAM4S implementation">
 			<info type="description" value="summary">
-				The Atmel SmartConnect WILC1000 is an IEEE 802.11 b/g/n IoT link controller SoC. It is the ideal add-on to existing MCU solutions bringing WiFi through UART or SPI-to-WiFi interface. The WILC1000 connects to any Atmel AVR or SMART MCU with minimal resource requirements.
+				The Atmel SmartConnect WILC1000 is an IEEE 802.11 b/g/n IoT link controller SoC. It is the ideal add-on to existing MCU solutions bringing WiFi through SPI or SDIO interface.
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Wireless"/>
@@ -85,7 +85,7 @@
 		</module>
 		<module type="service" id="common.components.wifi.wilc1000#1" caption="WILC1000 (Wi-Fi) SPI RTOS Host Driver v3.4.0 - SAMG53 implementation">
 			<info type="description" value="summary">
-				The Atmel SmartConnect WILC1000 is an IEEE 802.11 b/g/n IoT link controller SoC. It is the ideal add-on to existing MCU solutions bringing WiFi through UART or SPI-to-WiFi interface. The WILC1000 connects to any Atmel AVR or SMART MCU with minimal resource requirements.
+				The Atmel SmartConnect WILC1000 is an IEEE 802.11 b/g/n IoT link controller SoC. It is the ideal add-on to existing MCU solutions bringing WiFi through SPI or SDIO interface.
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Wireless"/>
@@ -162,7 +162,7 @@
 		</module>
 		<module type="service" id="common.components.wifi.wilc1000#2" caption="WILC1000 (Wi-Fi) SPI RTOS Host Driver v3.4.0 - SAMG55 implementation">
 			<info type="description" value="summary">
-				The Atmel SmartConnect WILC1000 is an IEEE 802.11 b/g/n IoT link controller SoC. It is the ideal add-on to existing MCU solutions bringing WiFi through UART or SPI-to-WiFi interface. The WILC1000 connects to any Atmel AVR or SMART MCU with minimal resource requirements.
+				The Atmel SmartConnect WILC1000 is an IEEE 802.11 b/g/n IoT link controller SoC. It is the ideal add-on to existing MCU solutions bringing WiFi through SPI or SDIO interface.
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Wireless"/>
@@ -243,14 +243,14 @@
 
 	<select-by-device id="common.components.wifi.wilc3000" caption="WILC3000 (Wi-Fi) SPI RTOS Host Driver v3.4.0">
 		<info type="description" value="summary">
-			The Atmel SmartConnect WILC3000 is an IEEE 802.11 b/g/n IoT link controller SoC. It is the ideal add-on to existing MCU solutions bringing WiFi through UART or SPI-to-WiFi interface. The WILC3000 connects to any Atmel AVR or SMART MCU with minimal resource requirements.
+			The Atmel SmartConnect WILC3000 is a single chip IEEE 802.11 b/g/n RF/Baseband/MAC link controller and Bluetooth 4.0. It is the ideal add-on to existing MCU solutions bringing WiFi and Bluetooth through SPI or SDIO (WiFi) and UART (Bluetooth) interface.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Wireless"/>
 		</info>
 		<module type="service" id="common.components.wifi.wilc3000#0" caption="WILC3000 (Wi-Fi) SPI RTOS Host Driver v3.4.0 - SAM4S implementation">
 			<info type="description" value="summary">
-				The Atmel SmartConnect WILC3000 is an IEEE 802.11 b/g/n IoT link controller SoC. It is the ideal add-on to existing MCU solutions bringing WiFi through UART or SPI-to-WiFi interface. The WILC3000 connects to any Atmel AVR or SMART MCU with minimal resource requirements.
+				The Atmel SmartConnect WILC3000 is a single chip IEEE 802.11 b/g/n RF/Baseband/MAC link controller and Bluetooth 4.0. It is the ideal add-on to existing MCU solutions bringing WiFi and Bluetooth through SPI or SDIO (WiFi) and UART (Bluetooth) interface. It is the ideal add-on to existing MCU solutions bringing WiFi and Bluetooth through SPI or SDIO (WiFi) and UART (Bluetooth) interface.
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Wireless"/>
@@ -273,7 +273,7 @@
 			<build type="header-file" value="driver/include/ble_firmware_3000.h"/>
 			<build type="header-file" value="driver/include/wifi_firmware_3000.h"/>
 			<build type="c-source" value="driver/source/m2m_coex.c"/>
-			<build type="header-file" value="driver/source/m2m_coex.h"/>
+			<build type="header-file" value="driver/include/m2m_coex.h"/>
 			<build type="c-source" value="driver/source/m2m_hif.c"/>
 			<build type="header-file" value="driver/source/m2m_hif.h"/>
 			<build type="c-source" value="driver/source/m2m_hif_crt.c"/>
@@ -331,7 +331,7 @@
 		</module>
 		<module type="service" id="common.components.wifi.wilc3000#1" caption="WILC3000 (Wi-Fi) SPI RTOS Host Driver v3.4.0 - SAMG53 implementation">
 			<info type="description" value="summary">
-				The Atmel SmartConnect WILC3000 is an IEEE 802.11 b/g/n IoT link controller SoC. It is the ideal add-on to existing MCU solutions bringing WiFi through UART or SPI-to-WiFi interface. The WILC3000 connects to any Atmel AVR or SMART MCU with minimal resource requirements.
+				The Atmel SmartConnect WILC3000 is a single chip IEEE 802.11 b/g/n RF/Baseband/MAC link controller and Bluetooth 4.0.
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Wireless"/>
@@ -354,7 +354,7 @@
 			<build type="header-file" value="driver/include/ble_firmware_3000.h"/>
 			<build type="header-file" value="driver/include/wifi_firmware_3000.h"/>
 			<build type="c-source" value="driver/source/m2m_coex.c"/>
-			<build type="header-file" value="driver/source/m2m_coex.h"/>
+			<build type="header-file" value="driver/include/m2m_coex.h"/>
 			<build type="c-source" value="driver/source/m2m_hif.c"/>
 			<build type="header-file" value="driver/source/m2m_hif.h"/>
 			<build type="c-source" value="driver/source/m2m_hif_crt.c"/>
@@ -412,7 +412,7 @@
 		</module>
 		<module type="service" id="common.components.wifi.wilc3000#2" caption="WILC3000 (Wi-Fi) SPI RTOS Host Driver v3.4.0 - SAMG55 implementation">
 			<info type="description" value="summary">
-				The Atmel SmartConnect WILC3000 is an IEEE 802.11 b/g/n IoT link controller SoC. It is the ideal add-on to existing MCU solutions bringing WiFi through UART or SPI-to-WiFi interface. The WILC3000 connects to any Atmel AVR or SMART MCU with minimal resource requirements.
+				The Atmel SmartConnect WILC3000 is a single chip IEEE 802.11 b/g/n RF/Baseband/MAC link controller and Bluetooth 4.0. It is the ideal add-on to existing MCU solutions bringing WiFi and Bluetooth through SPI or SDIO (WiFi) and UART (Bluetooth) interface. It is the ideal add-on to existing MCU solutions bringing WiFi and Bluetooth through SPI or SDIO (WiFi) and UART (Bluetooth) interface.
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Wireless"/>
@@ -435,7 +435,7 @@
 			<build type="header-file" value="driver/include/ble_firmware_3000.h"/>
 			<build type="header-file" value="driver/include/wifi_firmware_3000.h"/>
 			<build type="c-source" value="driver/source/m2m_coex.c"/>
-			<build type="header-file" value="driver/source/m2m_coex.h"/>
+			<build type="header-file" value="driver/include/m2m_coex.h"/>
 			<build type="c-source" value="driver/source/m2m_hif.c"/>
 			<build type="header-file" value="driver/source/m2m_hif.h"/>
 			<build type="c-source" value="driver/source/m2m_hif_crt.c"/>

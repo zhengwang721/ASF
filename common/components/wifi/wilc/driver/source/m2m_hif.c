@@ -99,7 +99,9 @@ static void isr(void)
 }
 static sint8 hif_set_rx_done(void)
 {
+#if (defined CONF_WILC_USE_1000_REV_A || defined CONF_WILC_USE_1000_REV_B)
 	uint32 reg;
+#endif
 	sint8 ret = M2M_SUCCESS;
 #ifdef NM_EDGE_INTERRUPT
 	nm_bsp_interrupt_ctrl(1);

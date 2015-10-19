@@ -250,7 +250,7 @@ sint8 cpu_start(void) {
 #ifdef CONF_WILC_USE_3000_REV_A
 sint8 cpu_start_bt(void) {
 	uint32 reg;
-	sint8 ret;
+	sint8 ret = M2M_ERR_FAIL;
 
 	nm_write_reg(0x4F000c, 0x10add09e);
 	
@@ -420,8 +420,9 @@ void nmi_update_pll(void)
 }
 void nmi_set_sys_clk_src_to_xo(void) 
 {
-	uint32 val32;
 #if (defined CONF_WILC_USE_1000_REV_A || defined CONF_WILC_USE_1000_REV_B)
+	uint32 val32;
+
 	/* Switch system clock source to XO. This will take effect after nmi_update_pll(). */
 	val32 = nm_read_reg(0x141c);
 	val32 |= (1 << 2);
@@ -623,7 +624,7 @@ sint8 firmware_download(void)
 sint8 firmware_download_bt(void)
 {
 	sint8 ret = M2M_SUCCESS;
-	uint32 u32SecSize, u32SecAddress, reg;
+	uint32 u32SecSize, u32SecAddress;
 	uint8_t* pu8FirmwareBuffer;
 	sint32 BuffIndex = 0, CurrentSecSize = 0;
 	uint8_t u8TransferChunk[32], ChunkSize = 32;
@@ -893,8 +894,7 @@ _EXIT_ERR:
 
 sint8 nmi_coex_init(void)
 {
-	 	uint32_t u32Val,u32NULLDuration=1000, u32PHYMode = 0x10140;
-		uint32_t u32CountToOneUs = 39;
+	 	uint32_t u32Val, u32NULLDuration = 1000;
 
 		/* Configure Coexistance */
 		u32Val = nm_read_reg(rCOE_TOP_CTL);
@@ -1009,13 +1009,13 @@ sint8 nmi_coex_init(void)
 		u32Val = nm_read_reg(rCOEXIST_CTL);
 		u32Val &= ~(NBIT14);
 		u32Val |= (NBIT12|NBIT13|NBIT15);
-		nm_write_reg(rCOEXIST_CTL, u32Val);
+		return nm_write_reg(rCOEXIST_CTL, u32Val);
 }
 
 
 sint8 nmi_coex_set_mode(tenuNmiCoexMode enuCoexMode)
 {
-	sint8 ret;
+	sint8 ret = M2M_ERR_FAIL;
 	uint32 u32Val;
 	
 	M2M_DBG("Coex mode %d\n", enuCoexMode);
