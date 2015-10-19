@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="WILC1000 Get Weather Demo for SAMG53 XPlained Pro" id="common.components.wifi.wilc1000.get_weather_demo.samg53_xplained_pro">
+	<project caption="WILC1000 Weather Concurrent Demo for SAMG53 XPlained Pro" id="common.components.wifi.wilc1000.weather_concurrent_demo.samg53_xplained_pro">
 		<!-- Source -->
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
@@ -15,7 +15,7 @@
 		<device-support value="atsamg53n19"/>
 
 		<!-- Required modules -->
-		<require idref="common.components.wifi.wilc1000.get_weather_demo"/>
+		<require idref="common.components.wifi.wilc1000.weather_concurrent_demo"/>
 		<require idref="board.samg53_xplained_pro"/>
 
 		<!-- Generators -->

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="WILC1000 Get Weather Demo for SAM4S XPlained Pro" id="common.components.wifi.wilc1000.get_weather_demo.sam4s_xplained_pro">
+	<project caption="WILC1000 Weather Concurrent Demo for SAM4S XPlained Pro" id="common.components.wifi.wilc1000.weather_concurrent_demo.sam4s_xplained_pro">
 		<!-- Source -->
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
@@ -15,7 +15,7 @@
 		<device-support value="atsam4sd32c"/>
 
 		<!-- Required modules -->
-		<require idref="common.components.wifi.wilc1000.get_weather_demo"/>
+		<require idref="common.components.wifi.wilc1000.weather_concurrent_demo"/>
 		<require idref="board.sam4s_xplained_pro"/>
 
 		<!-- Generators -->
