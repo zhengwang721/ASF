@@ -7,6 +7,7 @@
 		- Standalone using SAM4E hardware module
 		- FreeRTOS using SAM4E hardware module
 		- Standalone using SAMV71 hardware module
+		- Standalone using SAME70 hardware module
 		- Standalone using Micrel KSZ8851SNL hardware module
 		- FreeRTOS using Micrel KSZ8851SNL hardware module
 		- Any OS using the H&amp;D wireless hardware modules
@@ -153,13 +154,29 @@
 			<build type="header-file" subtype="api" value="sam/include/netif/samv71_gmac.h"/>
 			<build type="include-path" value="sam/include"/>
 			<build type="include-path" value="sam/include/netif"/>
-			<build type="c-source" value="sam/netif/samv71_gmac.c"/>
-			<device-support value="same70"/>	
+			<build type="c-source" value="sam/netif/samv71_gmac.c"/>	
 			<device-support value="samv71"/>
 			<require idref="sam.drivers.tc"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.components.ethernet_phy.ksz8061rnb"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samv71"/>
+		</module>
+		<module type="service" id="thirdparty.lwip-port.141#standalone_same70" caption="Stand-alone port(no OS) of the lwIP v141 stack on SAME70 hardware module.">
+			<info type="description" value="summary">
+			This lwIP port does not use any OS and is dedicated to the SAM hardware module.
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<build type="header-file" subtype="api" value="sam/include/arch/cc.h"/>
+			<build type="header-file" subtype="api" value="sam/include/arch/perf.h"/>
+			<build type="header-file" subtype="api" value="sam/include/netif/same70_gmac.h"/>
+			<build type="include-path" value="sam/include"/>
+			<build type="include-path" value="sam/include/netif"/>
+			<build type="c-source" value="sam/netif/same70_gmac.c"/>
+			<device-support value="same70"/>
+			<require idref="sam.drivers.tc"/>
+			<require idref="sam.drivers.pmc"/>
+			<require idref="sam.components.ethernet_phy.ksz8081rna"/>
+			<generator value="doxygen-module" default-mcu="unspecified-same70"/>
 		</module>
 		<module type="service" id="thirdparty.lwip-port.141#freertos_sam_ksz8851snl" caption="lwIP v141 port to FreeRTOS on SAM with Micrel KSZ8851SNL hardware module.">
 			<info type="description" value="summary">

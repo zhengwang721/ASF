@@ -52,7 +52,7 @@
  *
  *  \section Requirements
  *
- *  This package can be used with SAM3X-EK and SAM4E-EK.
+ *  This package can be used with SAM3X-EK,SAM4E-EK,SAMV71 and SAME70.
  *
  *  \section Description
  *
