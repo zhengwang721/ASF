@@ -123,7 +123,7 @@ volatile bool time_update_state_char_found = false;
 volatile bool Desc_found = false;
 
 read_response_callback_t read_response_callback = NULL;
-
+static at_ble_handle_t time_info_conn_handle = 0;
 /***********************************************************************************
  *									Implementations	                               *
  **********************************************************************************/
@@ -199,6 +199,22 @@ void time_info_init(void *param)
 }
 
 /**
+ * @brief Discovering the services of time server used by applications
+ */
+at_ble_status_t time_info_service_discovery(void)
+{
+	if (at_ble_primary_service_discover_all(time_info_conn_handle, 
+			GATT_DISCOVERY_STARTING_HANDLE, GATT_DISCOVERY_ENDING_HANDLE)
+			== AT_BLE_SUCCESS) {
+		DBG_LOG_DEV("GATT Discovery request started ");
+		return AT_BLE_SUCCESS;
+	} else {
+		DBG_LOG("GATT Discovery request failed");
+		return AT_BLE_FAILURE;
+	}
+}
+
+/**
  * @brief Discovering the services of time server
  */
 at_ble_status_t time_info_service_discover(at_ble_connected_t *conn_params)
@@ -206,15 +222,8 @@ at_ble_status_t time_info_service_discover(at_ble_connected_t *conn_params)
 	if (conn_params->conn_status != AT_BLE_SUCCESS) {
 		return conn_params->conn_status;
 	}
-	if (at_ble_primary_service_discover_all(conn_params->handle, 
-		GATT_DISCOVERY_STARTING_HANDLE, GATT_DISCOVERY_ENDING_HANDLE) 
-		== AT_BLE_SUCCESS) {
-		DBG_LOG_DEV("GATT Discovery request started ");
-		return AT_BLE_SUCCESS;
-	} else {
-		DBG_LOG("GATT Discovery request failed");
-	}	
-	return AT_BLE_FAILURE;
+	time_info_conn_handle = conn_params->handle;
+	return time_info_service_discovery();
 }
 
 /**
@@ -253,7 +262,9 @@ void time_info_service_found_handler(at_ble_primary_service_found_t * primary_se
 			{
 				cts_handle.start_handle = primary_service_params->start_handle;
 				cts_handle.end_handle = primary_service_params->end_handle;
-				DBG_LOG_DEV("current time service discovered");
+				DBG_LOG_PTS("current time service discovered(service uuid: %x) start %x end %x",
+							service_uuid, cts_handle.start_handle,
+							cts_handle.end_handle);
 				cts_handle.char_discovery = AT_BLE_SUCCESS;
 			}
 			break;
@@ -263,7 +274,10 @@ void time_info_service_found_handler(at_ble_primary_service_found_t * primary_se
 			{
 				dst_handle.start_handle = primary_service_params->start_handle;
 				dst_handle.end_handle = primary_service_params->end_handle;
-				DBG_LOG_DEV("Next DST Change Service discovered");
+				DBG_LOG_PTS("Next DST Change Service discovered(service uuid: %x)\
+							start %x end %x",
+							service_uuid, dst_handle.start_handle,
+							dst_handle.end_handle);
 				dst_handle.char_discovery = AT_BLE_SUCCESS;
 			}
 			break;
@@ -273,7 +287,9 @@ void time_info_service_found_handler(at_ble_primary_service_found_t * primary_se
 			{
 				rtu_handle.start_handle = primary_service_params->start_handle;
 				rtu_handle.end_handle = primary_service_params->end_handle;
-				DBG_LOG_DEV("Reference time update service discovered");
+				DBG_LOG_PTS("Reference time update service discovered(service uuid: %x) start %x end %x",
+							service_uuid, rtu_handle.start_handle,
+							rtu_handle.end_handle);
 				rtu_handle.char_discovery = AT_BLE_SUCCESS;
 			}
 			break;
@@ -399,7 +415,8 @@ void time_info_descriptor_found_handler(at_ble_descriptor_found_t *descriptor_fo
 	 if (desc_16_uuid == CTS_CLIENT_CHAR_DESCRIPTOR) {
 		 cts_handle.curr_desc_handle = descriptor_found->desc_handle;
 		 Desc_found = true;
-		 DBG_LOG_DEV("Current Time Descriptor");
+		 DBG_LOG_PTS("Current Time Descriptor uuid : %x handle: %x", desc_16_uuid,
+						cts_handle.curr_desc_handle);
 	 }
 	
 }
@@ -416,38 +433,50 @@ void time_info_characteristic_found_handler(at_ble_characteristic_found_t *chara
 	if (charac_16_uuid == CURRENT_TIME_CHAR_UUID) {
 		current_time_char_found = true;
 		cts_handle.curr_char_handle = characteristic_found->value_handle;
-		DBG_LOG_DEV("current time characteristics");
+		DBG_LOG_PTS("current time characteristics: Attrib handle %x property %x handle: %x uuid : %x",
+					characteristic_found->char_handle, characteristic_found->properties,
+					cts_handle.curr_char_handle, charac_16_uuid);
 		cts_handle.desc_discovery = AT_BLE_SUCCESS;
 	}
 	
 	if (charac_16_uuid == LOCAL_TIME_CHAR_UUID) {
 		local_time_char_found = true;
 		cts_handle.lti_char_handle = characteristic_found->value_handle;
-		DBG_LOG_DEV("Local time characteristics");
+		DBG_LOG_PTS("Local time characteristics: Attrib handle %x property %x handle: %x uuid : %x",
+					characteristic_found->char_handle, characteristic_found->properties,
+					cts_handle.lti_char_handle, charac_16_uuid);
 	}
 	
 	if (charac_16_uuid == REF_TIME_CHAR_UUID) {
 		ref_time_char_found = true;
 		cts_handle.rti_char_handle = characteristic_found->value_handle;
-		DBG_LOG_DEV("Reference time characteristics");
+		DBG_LOG_PTS("Reference time characteristics: Attrib handle %x property %x handle: %x uuid : %x",
+					characteristic_found->char_handle, characteristic_found->properties,
+					cts_handle.rti_char_handle, charac_16_uuid);
 	}
 	
 	if (charac_16_uuid == TIME_WITH_DST_CHAR_UUID) {
 		time_with_dst_char_found = true;
 		dst_handle.dst_char_handle = characteristic_found->value_handle;
-		DBG_LOG_DEV("Time with DST characteristics");
+		DBG_LOG_PTS("Time with DST characteristics: Attrib handle %x property %x handle: %x uuid : %x",
+					characteristic_found->char_handle, characteristic_found->properties,
+					dst_handle.dst_char_handle, charac_16_uuid);
 	}
 
 	if (charac_16_uuid == TIME_UPDATE_CP_CHAR_UUID) {
 		time_update_cp_char_found = true;
 		rtu_handle.tp_control_char_handle = characteristic_found->value_handle;
-		DBG_LOG_DEV("Time Update Control Point characteristics");
+		DBG_LOG_PTS("Time Update Control Point characteristics: Attrib handle %x property %x handle: %x uuid : %x",
+					characteristic_found->char_handle, characteristic_found->properties,
+					rtu_handle.tp_control_char_handle, charac_16_uuid);
 	}
 	
 	if (charac_16_uuid == TIME_UPDATE_STATE_CHAR_UUID) {
 		time_update_state_char_found = true;
 		rtu_handle.tp_state_char_handle = characteristic_found->value_handle;
-		DBG_LOG_DEV("Time Update State characteristics");
+		DBG_LOG_PTS("Time Update State characteristics: Attrib handle %x property %x handle: %x uuid : %x",
+					characteristic_found->char_handle, characteristic_found->properties,
+					rtu_handle.tp_state_char_handle, charac_16_uuid);
 	}
 }
 
@@ -535,23 +564,16 @@ void time_info_disconnected_event_handler(at_ble_disconnected_t *disconnect)
 /**
  * @brief write notification handler invoked by ble manager
  */
-void time_info_write_notification_handler(void *param)
-{
-	/* To enable notification */
-	#if 0
-	if(Desc_found) {
+ void time_info_write_notification_handler(uint16_t value)
+ {
+ 	/* To enable notification */
+ 	if(Desc_found) {
 		if (!(tis_current_time_noti(ble_connected_dev_info[0].handle, 
-			cts_handle.curr_desc_handle,false) == AT_BLE_SUCCESS)) {
-			DBG_LOG("Fail to set Current Time descriptor 0");
-		}
-		if (!(tis_current_time_noti(ble_connected_dev_info[0].handle, 
-			cts_handle.curr_desc_handle,true) == AT_BLE_SUCCESS)) {
-			DBG_LOG("Fail to set Current Time descriptor 1");
-		}
-	}
-	#endif		
-	UNUSED(param);
-}
+ 				cts_handle.curr_desc_handle, (uint8_t *)&value) == AT_BLE_SUCCESS)) {
+ 			DBG_LOG("Fail to set Current Time descriptor 0");
+ 		}
+ 	}
+ }
 
 /**
  * @brief Application registering callback for both paired done event 

@@ -120,7 +120,6 @@
 #if defined ANP_SIG_CLIENT
 #include "alert_notification_profile.h"
 #define BLE_DEVICE_NAME				"ATMEL-ANP"
-#define BLE_PAIR_ENABLE					(false)
 #endif /* ANP_SIG_CLIENT */
 
 #if defined PAS_CLIENT
@@ -591,6 +590,7 @@ typedef enum
 #define BLE_PRIMARY_SERVICE_FOUND_HANDLER						time_info_service_found_handler
 #define BLE_DISCOVERY_COMPLETE_HANDLER							time_info_discovery_complete_handler
 #define BLE_CHARACTERISTIC_READ_RESPONSE						time_info_characteristic_read_response
+#define BLE_DESCRIPTOR_FOUND_HANDLER							time_info_descriptor_found_handler
 #endif /* TIP_CLIENT */
 
 /** @brief initializing function handlers for ANP client*/
