@@ -418,7 +418,10 @@ void blp_sensor_init(void *param)
 	DBG_LOG_DEV("Characteristic 8 - 0x%04x",
 							dis_service_handler.serv_chars[7].char_val_handle - 1);
 	DBG_LOG_DEV("Characteristic 9 - 0x%04x",
-							dis_service_handler.serv_chars[8].char_val_handle - 1);						
+							dis_service_handler.serv_chars[8].char_val_handle - 1);	
+							
+	DBG_LOG_DEV("The default value of blood pressure feature is 0x%02x",
+							*(blp_service_handler.serv_chars[2].init_value));					
 							
 							
 	blp_sensor_adv();
