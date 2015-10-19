@@ -97,8 +97,8 @@ extern "C" {
  * peripherals within the device. The use of events allows for direct actions
  * to be performed in one peripheral in response to a stimulus in another
  * without CPU intervention. This can lower the overall power consumption of the
- * system if the CPU is able to remain in sleep modes for longer periods (SleepWalking), and
- * lowers the latency of the system response.
+ * system if the CPU is able to remain in sleep modes for longer periods
+ * (SleepWalking), and lowers the latency of the system response.
  *
  * The event system is comprised of a number of freely configurable Event
  * resources, plus a number of fixed Event Users. Each Event resource can be
@@ -683,7 +683,7 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset);
  *  </tr>
  *  <tr>
  *      <td>42108G</td>
- *      <td>08/2015</td>
+ *      <td>10/2015</td>
  *      <td>Added support for SAM L22</td>
  *  </tr>
  *  <tr>
