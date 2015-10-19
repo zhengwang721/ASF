@@ -193,7 +193,7 @@ static void Button1_Handler(uint32_t id, uint32_t mask)
 }
 // [main_button1_handler]
 
-#ifndef BOARD_NO_PUSHBUTTON_2
+#ifdef BOARD_NO_PUSHBUTTON_2
 /**
  *  \brief Handler for Button 2 falling edge interrupt.
  *
@@ -229,7 +229,7 @@ static void configure_buttons(void)
 			(IRQn_Type) PIN_PUSHBUTTON_1_ID, IRQ_PRIOR_PIO);
 	pio_enable_interrupt(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_MASK);
 // [main_button1_configure]
-#ifndef BOARD_NO_PUSHBUTTON_2
+#ifdef BOARD_NO_PUSHBUTTON_2
 // [main_button2_configure]
 	/* Configure Pushbutton 2 */
 	pmc_enable_periph_clk(PIN_PUSHBUTTON_2_ID);
@@ -361,7 +361,7 @@ int main(void)
 	board_init();
 //! [main_step_sys_init]
 
-#if (SAMV71 || SAMV70|| SAME70 || SAMS70)
+#if (SAMV71 || SAMV70 || SAMS70)
 	if (GPIO_PUSH_BUTTON_2 == PIO_PB12_IDX) {
 		matrix_set_system_io(matrix_get_system_io() | CCFG_SYSIO_SYSIO12);
 	}
@@ -399,7 +399,7 @@ int main(void)
 	printf("Press %s to Start/Stop the %s blinking.\r\n",
 			PUSHBUTTON_1_NAME, LED_0_NAME);
 
-#ifndef BOARD_NO_PUSHBUTTON_2
+#ifdef BOARD_NO_PUSHBUTTON_2
 	printf("Press %s to Start/Stop the %s blinking.\r\n",
 			PUSHBUTTON_2_NAME, LED_1_NAME);
 #endif
