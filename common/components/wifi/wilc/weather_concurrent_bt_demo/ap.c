@@ -67,7 +67,7 @@
 <head>\
 </head>\
 <BODY onLoad=\"window.setTimeout(&quot;location.href='index.html'&quot;,3000)\" bgcolor=\"#FFFFFF\" text=\"#2477E6\">\
-\r\n - Atmel WILC1000 STA/AP Weather Demo - \
+\r\n - Atmel WILC3000 STA/AP and BT Weather Demo - \
 <p><pre><br>System Information:<br>Page Hits = "
 
 #define webHTML_END \

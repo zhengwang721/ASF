@@ -250,7 +250,7 @@ sint8 cpu_start(void) {
 #ifdef CONF_WILC_USE_3000_REV_A
 sint8 cpu_start_bt(void) {
 	uint32 reg;
-	sint8 ret = M2M_ERR_FAIL;
+	sint8 ret = M2M_SUCCESS;
 
 	nm_write_reg(0x4F000c, 0x10add09e);
 	

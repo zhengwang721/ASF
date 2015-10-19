@@ -281,7 +281,7 @@ void sta_task(void *argument)
 	/* Enable AP mode. */
 	tstrM2MAPConfig cfg;
 	memset(&cfg, 0, sizeof(cfg));
-	strcpy((char *)cfg.au8SSID, "WILC1000");
+	strcpy((char *)cfg.au8SSID, "WILC3000");
 	cfg.u8ListenChannel = M2M_WIFI_CH_11;
 	cfg.u8SecType = M2M_WIFI_SEC_OPEN;
 	os_m2m_wifi_enable_ap(&cfg);

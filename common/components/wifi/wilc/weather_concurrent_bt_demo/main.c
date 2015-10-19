@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief Weather concurrent demo.
+ * \brief Weather concurrent and BT demo.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,24 +44,24 @@
 
 /** \mainpage
  * \section intro Introduction
- * This example demonstrates the use of the WILC1000 with the SAM Xplained Pro
+ * This example demonstrates the use of the WILC3000 with the SAM Xplained Pro
  * board using WiFi concurrent mode STA/AP.
  * STA mode is used to connect to a home router with internet connection to
  * retrieve weather information. 
- * AP mode is used to allow any WiFi capable devices to connect to the WILC1000
+ * AP mode is used to allow any WiFi capable devices to connect to the WILC3000
  * and then access an embedded webserver to read weather information as well as
  * host MCU status (up to 7 connected stations at the same time).<br>
  *
- * To access the HTTP server connect with your laptop to WiFi network "WILC1000", then
+ * To access the HTTP server connect with your laptop to WiFi network "WILC3000", then
  * open a browser at http://192.168.5.1<br>
  *
  * It uses the following hardware:
  * - the SAM Xplained Pro.
- * - the WILC1000 on EXT1 (WINC1500 can be used as well in bypass mode).
+ * - the WILC3000 on EXT1 (WINC3400 can be used as well in bypass mode).
  *
  * \section files Main Files
  * - main.c : Initialize the FreeRTOS scheduler.
- * - sta.c : Enable STA and AP mode for WILC1000. Retrieve weather information via STA mode.
+ * - sta.c : Enable STA and AP mode for WILC3000. Retrieve weather information via STA mode.
  * - ap.c : Enable HTTP server via AP mode.
  *
  * \section usage Usage
@@ -83,7 +83,7 @@
  * -# Start the application.
  * -# In the terminal window, the following text should appear:
  * \code
- *    -- Weather concurrent demo --
+ *    -- Weather concurrent an BT demo --
  *    -- SAMXXX_XPLAINED_PRO --
  *    -- Compiled: Oct 19 2015 14:39:47 --
  *    
@@ -115,7 +115,7 @@
 #define TASK_AP_PRIORITY			(tskIDLE_PRIORITY + 1)
 
 #define STRING_EOL    "\r\n"
-#define STRING_HEADER "-- Weather concurrent demo --"STRING_EOL \
+#define STRING_HEADER "-- Weather concurrent and BT demo --"STRING_EOL \
 		"-- "BOARD_NAME " --"STRING_EOL	\
 		"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
 
