@@ -63,6 +63,7 @@ at_ble_generic_att_desc_t report_desc[HID_NUM_OF_REPORT];
 gatt_service_handler_t hid_inst[HID_MAX_SERV_INST];
 hid_serv_t hid_serv_inst[HID_MAX_SERV_INST];   
 uint8_t ctrl_point[1];
+uint8_t Key_out_report[1];
 
 /**
 * \HID service definition initialization function
@@ -340,8 +341,8 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 		hid_inst[servinst].serv_chars[id].char_val.uuid.type = AT_BLE_UUID_16;
 		hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[0] =(uint8_t) HID_UUID_CHAR_BOOT_KEY_OUTPUT_REPORT;
 		hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_BOOT_KEY_OUTPUT_REPORT >> 8);
-		hid_inst[servinst].serv_chars[id].char_val.init_value = NULL;
-		hid_inst[servinst].serv_chars[id].char_val.len = 0;
+		hid_inst[servinst].serv_chars[id].char_val.init_value = (uint8_t*)&Key_out_report; //NULL;
+		hid_inst[servinst].serv_chars[id].char_val.len = sizeof(uint8_t); //0;
 		hid_inst[servinst].serv_chars[id].char_val.properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_WRITE_WITHOUT_RESPONSE|AT_BLE_CHAR_WRITE);
 		
 		/* Configure the HID characteristic value permission */
@@ -679,16 +680,19 @@ void hid_serv_report_update(uint16_t conn_handle, uint8_t serv_inst, uint8_t rep
 	
 	id = hid_get_reportchar(conn_handle, serv_inst, reportid);
 	
-	DBG_LOG_DEV("HID Service :: hid_serv_report_update :: Send report");
-	if((status = at_ble_characteristic_value_set(hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->char_val.handle, report, len))==AT_BLE_SUCCESS){
-		DBG_LOG_DEV("HID Service :: hid_serv_report_update :: Notify Value conn_handle %d", conn_handle);
-		//Need to check for connection handle
-		status = at_ble_notification_send(conn_handle, hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->char_val.handle);	
-		if (status != AT_BLE_SUCCESS){
-			DBG_LOG_DEV("HID Service :: hid_serv_report_update :: Send notification fail Reason %d", status);
-		}
-	}else{
-		DBG_LOG("HID Service :: hid_serv_report_update :: Send notification pass");
+	if(id != HID_INVALID_INST)
+	{
+		DBG_LOG_DEV("HID Service :: hid_serv_report_update :: Send report");
+		if((status = at_ble_characteristic_value_set(hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->char_val.handle, report, len))==AT_BLE_SUCCESS){
+			DBG_LOG_DEV("HID Service :: hid_serv_report_update :: Notify Value conn_handle %d", conn_handle);
+			//Need to check for connection handle
+			status = at_ble_notification_send(conn_handle, hid_serv_inst[serv_inst].hid_dev_report_val_char[id]->char_val.handle);
+			if (status != AT_BLE_SUCCESS){
+				DBG_LOG_DEV("HID Service :: hid_serv_report_update :: Send notification fail Reason %d", status);
+			}
+			}else{
+			DBG_LOG("HID Service :: hid_serv_report_update :: Characteristic Value Set Failed Reason %d", status);
+		}	
 	}
 }
 
