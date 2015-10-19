@@ -1371,11 +1371,7 @@ void pmc_enable_waitmode(void)
 	/* Flash in wait mode */
 	i = PMC->PMC_FSMR;
 	i &= ~PMC_FSMR_FLPM_Msk;
-#if !(SAME70)
 	i |= ul_flash_in_wait_mode;
-#else
-	i |= PMC_WAIT_MODE_FLASH_IDLE;
-#endif
 	PMC->PMC_FSMR = i;
 
 	/* Set the WAITMODE bit = 1 */
