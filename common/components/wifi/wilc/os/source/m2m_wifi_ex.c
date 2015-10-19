@@ -52,14 +52,6 @@
 static int wifi_netif_init = 0;
 
 extern void winc_fill_callback_info(tstrEthInitParam *info);
-extern uint8_t *winc_get_mac_addr(void);
-extern void winc_set_mac_addr(uint8_t *addr);
-
-sint8 m2m_wifi_set_mac_address_ex(uint8 addr[6])
-{
-	winc_set_mac_addr(addr);
-	return M2M_SUCCESS;
-}
 
 struct init_params {
 	struct params_dispatch dispatch;
@@ -91,27 +83,23 @@ struct uint8_uint8_params {
 };
 #define OS_WIFI_NOTIFY(p) do { \
 								if ((p)->dispatch.signal_semaphore) { \
-									os_hook_notify();} \
-							}while (0)
+								os_hook_notify();} \
+							} while (0)
 
 #define OS_WIFI_DISPATCH_WAIT(fn,p) do { \
-										(p)->dispatch.retval = M2M_ERR_TIME_OUT;\
-										os_hook_dispatch_wait((fn), &((p)->dispatch),(p));\
-									}while(0)
+										(p)->dispatch.retval = M2M_ERR_TIME_OUT; \
+										os_hook_dispatch_wait((fn), &((p)->dispatch),(p)); \
+									} while(0)
 				 					
 static void os_m2m_wifi_init_imp(void *pv)
 {
 	struct init_params *p = (struct init_params *)pv;
-	uint8_t self[] = CONF_WILC_MAC_ADDRESS;
 
 	/* Save tcpip task handle. */
 	os_hook_set_handle(xTaskGetCurrentTaskHandle());
 
 	/* Init low level. */
 	nm_bsp_init();
-
-	/* Set MAC address. */
-	m2m_wifi_set_mac_address_ex(self);
 
 	/* Register lwIP low level driver hook. */
 	winc_fill_callback_info(&p->init->strEthInitParam);
@@ -123,7 +111,6 @@ static void os_m2m_wifi_init_imp(void *pv)
 	//vTaskDelay(6000);
 	//p->dispatch.retval = m2m_wifi_init(p->init);
 	if (M2M_SUCCESS == p->dispatch.retval) {
-		m2m_wifi_set_mac_address(winc_get_mac_addr());
 		net_add_winc_netif();
 		wifi_netif_init = 1;
 	}
@@ -576,7 +563,7 @@ uint8 os_m2m_wifi_get_num_ap_found(void)
 {
 	struct void_params params;
 	params.dispatch.retval = (int8_t)M2M_ERR_TIME_OUT;
-	params.fn = m2m_wifi_get_num_ap_found;
+	params.fn = (func_void)m2m_wifi_get_num_ap_found;
 	OS_WIFI_DISPATCH_WAIT(func_void_imp, &params);
 	return params.dispatch.retval;
 }
@@ -951,7 +938,7 @@ uint8 os_m2m_wifi_get_sleep_mode(void)
 {
 	struct void_params params;
 	params.dispatch.retval = (int8_t)M2M_ERR_TIME_OUT;
-	params.fn = m2m_wifi_get_sleep_mode;
+	params.fn = (func_void)m2m_wifi_get_sleep_mode;
 	OS_WIFI_DISPATCH_WAIT(func_void_imp, &params);
 	return params.dispatch.retval;
 }

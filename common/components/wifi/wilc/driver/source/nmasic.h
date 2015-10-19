@@ -57,7 +57,7 @@
 #define WIFI_PERIPH_BASE							0x00000000
 #define rPA_CONTROL									(WIFI_PERIPH_BASE+0x9804)
 
-#ifdef CONF_WILC_USE_3000
+#ifdef CONF_WILC_USE_3000_REV_A
 #ifdef CONF_WILC_USE_SDIO
 	#define WILC_WAKEUP_REG 			0xf0
 	#define WILC_CLK_STATUS_REG 		0xf0
@@ -77,7 +77,7 @@
 
 #endif /* WILC_SDIO */
 
-#elif (defined CONF_WILC_USE_REV_A || defined CONF_WILC_USE_REV_B)
+#elif (defined CONF_WILC_USE_1000_REV_A || defined CONF_WILC_USE_1000_REV_B)
 #ifdef CONF_WILC_USE_SDIO
 	#define WILC_WAKEUP_REG 			0xf0
 	#define WILC_CLK_STATUS_REG 		0xf1
@@ -88,7 +88,6 @@
 	#define WILC_INT_CLEAR_REG 		0xFE
 #else
 	#define WILC_WAKEUP_REG 			0x1
-	static uint32 WILC_CLK_STATUS_REG = 0xf; /* Assume initially it is B0 chip */
 	#define WILC_WAKEUP_BIT 			NBIT1
 	#define WILC_CLK_STATUS_BIT 		NBIT2
 
@@ -96,7 +95,7 @@
 	#define WILC_INT_CLEAR_REG 		0x44
 
 #endif /* WILC_SDIO */
-#endif /* CONF_WILC_USE_3000*/
+#endif /* CONF_WILC_USE_3000_REV_A*/
 
 
 #define NMI_STATE_REG			(0x108c)
@@ -122,7 +121,7 @@
 #define EFUSED_MAC(value) (value & 0xffff0000)
 
 
-#ifdef CONF_WILC_USE_3000
+#ifdef CONF_WILC_USE_3000_REV_A
 
 /* Coexistence Block */
 #define rCOE_TOP_CTL 								(WIFI_PERIPH_BASE+0x1124)
@@ -253,7 +252,7 @@ sint8 wait_for_bootrom(void);
 
 sint8 firmware_download(void);
 
-#ifdef CONF_WILC_USE_3000
+#ifdef CONF_WILC_USE_3000_REV_A
 sint8 cpu_start_bt(void);
 sint8 firmware_download_bt(void);
 #endif
@@ -277,7 +276,7 @@ sint8 nmi_get_otp_mac_address(uint8 *pu8MacAddr, uint8 * pu8IsValid);
 
 sint8 nmi_get_mac_address(uint8 *pu8MacAddr);
 
-#ifdef CONF_WILC_USE_3000
+#ifdef CONF_WILC_USE_3000_REV_A
 sint8 nmi_coex_init(void);
 
 sint8 nmi_coex_set_mode(tenuNmiCoexMode enuCoexMode);

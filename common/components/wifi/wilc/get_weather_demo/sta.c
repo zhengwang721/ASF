@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief WILC1000 STA Task.
+ * \brief STA Task.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -50,7 +50,6 @@
 #include "lwip/api.h"
 #include "lwip/tcpip.h"
 #include "lwip/dns.h"
-#include "os/include/sm_wifi.h"
 #include "os/include/net_init.h"
 #include "os/include/m2m_wifi_ex.h"
 #include "tinyservices.h"
@@ -140,8 +139,8 @@ static void wifi_cb(uint8 msg_type, void *msg)
 					osprintf("wifi_cb: M2M_WIFI_DISCONNECTED\n");
 					osprintf("wifi_cb: reconnecting...\n");
 					net_interface_down(NET_IF_STA);
-					os_m2m_wifi_connect((char *)CONF_WLAN_SSID, sizeof(CONF_WLAN_SSID),
-							CONF_WLAN_AUTH, (char *)CONF_WLAN_PSK, M2M_WIFI_CH_ALL);
+					os_m2m_wifi_connect((char *)STA_WLAN_SSID, sizeof(STA_WLAN_SSID),
+							STA_WLAN_AUTH, (char *)STA_WLAN_PSK, M2M_WIFI_CH_ALL);
 				}
 			}
 			else {
@@ -282,14 +281,14 @@ void sta_task(void *argument)
 	/* Enable AP mode. */
 	tstrM2MAPConfig cfg;
 	memset(&cfg, 0, sizeof(cfg));
-	strcpy((char *)cfg.au8SSID, "WILC1K");
+	strcpy((char *)cfg.au8SSID, "WILC1000");
 	cfg.u8ListenChannel = M2M_WIFI_CH_11;
 	cfg.u8SecType = M2M_WIFI_SEC_OPEN;
 	os_m2m_wifi_enable_ap(&cfg);
 
 	/* Connect to station. */
-	os_m2m_wifi_connect((char *)CONF_WLAN_SSID, sizeof(CONF_WLAN_SSID),
-			CONF_WLAN_AUTH, (char *)CONF_WLAN_PSK, M2M_WIFI_CH_ALL);
+	os_m2m_wifi_connect((char *)STA_WLAN_SSID, sizeof(STA_WLAN_SSID),
+			STA_WLAN_AUTH, (char *)STA_WLAN_PSK, M2M_WIFI_CH_ALL);
 
 	while (1) {
 		

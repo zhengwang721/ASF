@@ -2,9 +2,9 @@
  *
  * \file
  *
- * \brief WILC1000 app.
+ * \brief STA Task.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,6 +48,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/** Wi-Fi Settings. */
+#define STA_WLAN_SSID                   "DEMO_AP" /* < Destination SSID */
+#define STA_WLAN_AUTH                   M2M_WIFI_SEC_WPA_PSK /* < Security manner */
+#define STA_WLAN_PSK                    "12345678" /* < Password for Destination SSID */
 
 /** Using IP address. */
 #define IPV4_BYTE(val, index)           ((val >> (index * 8)) & 0xFF)

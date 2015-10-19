@@ -156,7 +156,7 @@ static void net_interface_up_imp(uint32_t net_if)
 		} else if (net_mode_sta & NET_MODE_USE_LINK_LOCAL) {
 			autoip_start(&winc_netif_sta);
 			net_state_sta |= NET_S_AUTOIP_RUNNING;
-		} else if (net_mode_sta & NET_MODE_USE_STATIC) {
+		}/* else if (net_mode_sta & NET_MODE_USE_STATIC) {
 			struct ip_addr addr;
 			IP4_ADDR(&addr, CONF_IP_ADDR0, CONF_IP_ADDR1,
 			CONF_IP_ADDR2, CONF_IP_ADDR3);
@@ -168,7 +168,7 @@ static void net_interface_up_imp(uint32_t net_if)
 			CONF_GATEWAY_ADDR2, CONF_GATEWAY_ADDR3);
 			netif_set_gw(&winc_netif_sta, &addr);
 			netif_set_up(&winc_netif_sta);
-		}
+		}*/
 	}
 	else {
 		/* Bring up interface in lwIP. */

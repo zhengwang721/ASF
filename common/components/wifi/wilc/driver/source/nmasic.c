@@ -57,6 +57,12 @@
 #define TIMEOUT				(2000)
 #define M2M_DISABLE_PS        0xD0UL
 
+#if (defined CONF_WILC_USE_1000_REV_A || defined CONF_WILC_USE_1000_REV_B)
+#ifndef CONF_WILC_USE_SDIO
+static uint32 WILC_CLK_STATUS_REG = 0xf; /* Assume initially it is B0 chip */
+#endif
+#endif
+
 /**
 *	@fn		nm_clkless_wake
 *	@brief	Wakeup the chip using clockless registers
@@ -82,7 +88,7 @@ sint8 nm_clkless_wake(void)
 	 */
 	do
 	{
-	#if (defined CONF_WILC_USE_REV_A || defined CONF_WILC_USE_REV_B)
+	#if (defined CONF_WILC_USE_1000_REV_A || defined CONF_WILC_USE_1000_REV_B)
 	#ifdef CONF_WILC_USE_SPI
 		nm_write_reg(0x0b,1);
 	#else
@@ -95,7 +101,7 @@ sint8 nm_clkless_wake(void)
 		// Check the clock status
 		ret = nm_read_reg_with_ret(WILC_CLK_STATUS_REG, &clk_status_reg);
 		if( (ret != M2M_SUCCESS) || ((ret == M2M_SUCCESS) && ((clk_status_reg & WILC_CLK_STATUS_BIT) == 0)) ) {
-		#if ((defined CONF_WILC_SPI) && (defined CONF_WILC_USE_REV_A || defined CONF_WILC_USE_REV_B))
+		#if ((defined CONF_WILC_SPI) && (defined CONF_WILC_USE_1000_REV_A || defined CONF_WILC_USE_1000_REV_B))
 			/* Register 0xf did not exist in A0.
 			 * If register 0xf fails to read or if it reads 0,
 			 * then the chip is A0.
@@ -150,7 +156,7 @@ void chip_idle(void)
 
 void enable_rf_blocks(void)
 {
-#if (defined CONF_WILC_USE_REV_A || defined CONF_WILC_USE_REV_B)
+#if (defined CONF_WILC_USE_1000_REV_A || defined CONF_WILC_USE_1000_REV_B)
 #ifdef CONF_WILC_USE_SPI
 	nm_write_reg(0x6, 0xdb);
 	nm_write_reg(0x7, 0x6);
@@ -241,7 +247,7 @@ sint8 cpu_start(void) {
 	return ret;
 }
 
-#ifdef CONF_WILC_USE_3000
+#ifdef CONF_WILC_USE_3000_REV_A
 sint8 cpu_start_bt(void) {
 	uint32 reg;
 	sint8 ret;
@@ -263,7 +269,7 @@ sint8 cpu_start_bt(void) {
 }
 #endif
 
-#if (defined CONF_WILC_USE_REV_A || defined CONF_WILC_USE_REV_B)
+#if (defined CONF_WILC_USE_1000_REV_A || defined CONF_WILC_USE_1000_REV_B)
 uint32 nmi_get_chipid(void)
 {
 	static uint32 chipid = 0;
@@ -325,7 +331,7 @@ uint32 nmi_get_chipid(void)
 	}
 	return chipid;
 }
-#elif defined CONF_WILC_USE_3000
+#elif defined CONF_WILC_USE_3000_REV_A
 uint32 nmi_get_chipid(void)
 {
 	static uint32 chipid = 0;
@@ -394,7 +400,7 @@ void restore_pmu_settings_after_global_reset(void)
 	* global reset if PMU toggle is done at 
 	* least once since the last hard reset.
 	*/
-#if (defined CONF_WILC_USE_REV_A || defined CONF_WILC_USE_REV_B)
+#if (defined CONF_WILC_USE_1000_REV_A || defined CONF_WILC_USE_1000_REV_B)
 	if(REV(nmi_get_chipid()) >= REV_B0) {
 		nm_write_reg(0x1e48, 0xb78469ce);
 	}
@@ -415,7 +421,7 @@ void nmi_update_pll(void)
 void nmi_set_sys_clk_src_to_xo(void) 
 {
 	uint32 val32;
-#if (defined CONF_WILC_USE_REV_A || defined CONF_WILC_USE_REV_B)
+#if (defined CONF_WILC_USE_1000_REV_A || defined CONF_WILC_USE_1000_REV_B)
 	/* Switch system clock source to XO. This will take effect after nmi_update_pll(). */
 	val32 = nm_read_reg(0x141c);
 	val32 |= (1 << 2);
@@ -565,11 +571,11 @@ void* linux_wlan_malloc(uint32_t sz);
 #include <linux/slab.h> 
 #endif
 
-#ifdef CONF_WILC_USE_REV_A
+#ifdef CONF_WILC_USE_1000_REV_A
 #include "driver/include/wifi_firmware_1000a.h"
-#elif defined CONF_WILC_USE_REV_B
+#elif defined CONF_WILC_USE_1000_REV_B
 #include "driver/include/wifi_firmware_1000b.h"
-#elif defined CONF_WILC_USE_3000
+#elif defined CONF_WILC_USE_3000_REV_A
 #include "driver/include/wifi_firmware_3000.h"
 #include "driver/include/ble_firmware_3000.h"
 #endif
@@ -613,7 +619,7 @@ sint8 firmware_download(void)
 	return ret;
 }
 
-#ifdef CONF_WILC_USE_3000
+#ifdef CONF_WILC_USE_3000_REV_A
 sint8 firmware_download_bt(void)
 {
 	sint8 ret = M2M_SUCCESS;
@@ -883,7 +889,7 @@ _EXIT_ERR:
 	return ret;
 }
 
-#ifdef CONF_WILC_USE_3000
+#ifdef CONF_WILC_USE_3000_REV_A
 
 sint8 nmi_coex_init(void)
 {

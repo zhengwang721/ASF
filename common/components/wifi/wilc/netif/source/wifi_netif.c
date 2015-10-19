@@ -76,9 +76,6 @@ static uint8_t rx_buf[WINC_RX_BUF_SZ];
 static struct pbuf *rx_first;
 static struct pbuf *rx_last;
 
-/** The MAC address used for the device */
-static uint8_t self[6];
-
 /** The netif for the WILC1000 in station mode. */
 struct netif winc_netif_sta;
 
@@ -94,12 +91,15 @@ static uint8_t ipv6_mac_mcast[6] = {
 //------------------------------------------------------------------------------
 static void winc_low_level_init(struct netif *netif)
 {
-	netif->hwaddr_len = sizeof(self);
-	memcpy(netif->hwaddr, self, sizeof(self));
+	static uint8_t mac[6];
+
+	m2m_wifi_get_mac_address(mac);
+	netif->hwaddr_len = sizeof(mac);
+	memcpy(netif->hwaddr, mac, sizeof(mac));
 	netif->mtu = NET_MTU;
 	netif->flags |= NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP
 #if LWIP_IGMP
-					| NETIF_FLAG_IGMP
+			| NETIF_FLAG_IGMP
 #endif // LWIP_IGMP
 	;
 }
@@ -185,7 +185,7 @@ static err_t winc_tx(struct netif *netif, struct pbuf *p)
 	if (p->tot_len == p->len) {
 		msg.pbuf = (void *) p;
 		msg.payload_size = p->len - ETH_PAD_SIZE;
-		msg.payload = (void *) &(p->payload[ETH_PAD_SIZE]);
+		msg.payload = (void *) &(((uint8 *)p->payload)[ETH_PAD_SIZE]);
 	} else {		
 		//osprintf("winc_tx  %d  %d\r\n", p->tot_len ,p->len );
 		for (q = p; q != NULL; q = q->next) {
@@ -385,17 +385,5 @@ void winc_fill_callback_info(tstrEthInitParam *info)
 	info->pfAppEthCb = winc_rx_callback;
 	info->au8ethRcvBuf = rx_buf;
 	info->u16ethRcvBufSize = sizeof(rx_buf);
-}
-//------------------------------------------------------------------------------
-uint8_t *winc_get_mac_addr(void);
-uint8_t *winc_get_mac_addr(void)
-{
-	return self;
-}
-//------------------------------------------------------------------------------
-void winc_set_mac_addr(uint8_t *addr);
-void winc_set_mac_addr(uint8_t *addr)
-{
-	memcpy(self, addr, 6);
 }
 //------------------------------------------------------------------------------

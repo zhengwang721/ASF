@@ -54,7 +54,6 @@ sint8 m2m_wifi_request_callback_ex(m2m_wifi_callback_t callback, void *arg);
 sint8 m2m_wifi_request_dhcp_client_ex(void);
 sint8 m2m_wifi_enable_ap_ex(CONST tstrM2MAPConfig* pstrM2MAPConfig);
 sint8 m2m_wifi_disable_ap_ex(void);
-sint8 m2m_wifi_set_mac_address_ex(uint8 addr[6]);
 
 // Macros to alias all other APIs to the _ex versions.
 #define m2m_wifi_download_mode_ex			m2m_wifi_download_mode

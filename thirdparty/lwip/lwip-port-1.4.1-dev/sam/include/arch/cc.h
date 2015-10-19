@@ -44,7 +44,6 @@
 #ifndef CC_H_INCLUDED
 #define CC_H_INCLUDED
 
-#include "opt.h"
 #include "osprintf.h"
 
 /* Define platform endianness */
@@ -93,6 +92,8 @@ typedef u32_t mem_ptr_t;
 #else
 #error "This compiler does not support."
 #endif
+
+#include "opt.h"
 
 /* define LWIP_COMPAT_MUTEX
     to let sys.h use binary semaphores instead of mutexes - as before in 1.3.2

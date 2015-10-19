@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief WILC1000 AP Task.
+ * \brief AP Task.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -48,9 +48,9 @@
 #include "lwip/tcpip.h"
 #include "osprintf.h"
 #include "ap.h"
+#include "sta.h"
 #include <string.h>
 #include <stdio.h>
-#include "conf_wilc.h"
 
 /** Using broadcast address for simplicity. */
 #define HTTP_PORT						(80)
@@ -124,7 +124,7 @@ static void http_request(struct netconn *conn)
 			strcat(webpage, "<p><pre><br>Task          State  Priority  Stack	#<br>************************************************<br>");
 			vTaskList((signed char *)webpage + strlen((char *)webpage));
 			strcat(webpage, "<p><pre><p><pre><br><br>Weather Bulletin (via AP ");
-			strcat(webpage, CONF_WLAN_SSID);
+			strcat(webpage, STA_WLAN_SSID);
 			strcat(webpage, ")<br>************************************************<br>");
 			strcat(webpage, report);
 

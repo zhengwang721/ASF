@@ -232,7 +232,7 @@ sint8 nm_drv_init(void * arg)
 		goto ERR2;
 	}
 
-#ifdef CONF_WILC_USE_3000
+#ifdef CONF_WILC_USE_3000_REV_A
 	ret = firmware_download_bt();
 	if (M2M_SUCCESS != ret) {
 		goto ERR2;
@@ -257,7 +257,7 @@ sint8 nm_drv_init(void * arg)
 		M2M_INFO("Curr driver ver: %u.%u.%u\n", M2M_DRIVER_VERSION_MAJOR_NO, M2M_DRIVER_VERSION_MINOR_NO, M2M_DRIVER_VERSION_PATCH_NO);
 	}
 
-#ifdef CONF_WILC_USE_3000
+#ifdef CONF_WILC_USE_3000_REV_A
 	nmi_coex_init();
 	nmi_coex_set_mode(NMI_COEX_MODE_COMBO);
 #endif

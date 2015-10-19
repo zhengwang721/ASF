@@ -70,7 +70,7 @@
 #define SLEEP_VALUE				(0x4321)
 #define WAKE_REG				(0x1074)
 
-#ifdef CONF_WILC_USE_3000
+#ifdef CONF_WILC_USE_3000_REV_A
 #define INTERRUPT_CORTUS_0_3000D0	(0x10a8)
 #define INTERRUPT_CORTUS_1_3000D0	(0x10ac)
 #define INTERRUPT_CORTUS_2_3000D0	(0x10b0)
@@ -105,7 +105,7 @@ static sint8 hif_set_rx_done(void)
 	nm_bsp_interrupt_ctrl(1);
 #endif
 
-#if (defined CONF_WILC_USE_REV_A || defined CONF_WILC_USE_REV_B)
+#if (defined CONF_WILC_USE_1000_REV_A || defined CONF_WILC_USE_1000_REV_B)
 	ret = nm_read_reg_with_ret(WIFI_HOST_RCV_CTRL_0,&reg);
 	if(ret != M2M_SUCCESS)goto ERR1;
 	//reg &= ~(1<<0);
@@ -114,7 +114,7 @@ static sint8 hif_set_rx_done(void)
 	reg |= (1<<1);		
 	ret = nm_write_reg(WIFI_HOST_RCV_CTRL_0,reg);
 	if(ret != M2M_SUCCESS)goto ERR1;
-#elif defined CONF_WILC_USE_3000
+#elif defined CONF_WILC_USE_3000_REV_A
 	ret = nm_write_reg(INTERRUPT_CORTUS_0_3000D0,1);
 	if(ret != M2M_SUCCESS)goto ERR1;
 #endif
@@ -228,7 +228,7 @@ sint8 hif_chip_sleep(void)
 			{
 				reg &=~WILC_WAKEUP_BIT;
 				ret = nm_write_reg(WILC_WAKEUP_REG, reg);
-			#if (defined CONF_WILC_USE_REV_A || defined CONF_WILC_USE_REV_B)
+			#if (defined CONF_WILC_USE_1000_REV_A || defined CONF_WILC_USE_1000_REV_B)
 			#ifdef CONF_WILC_USE_SPI
 				nm_write_reg(0x0b,0);
 			#else
@@ -372,7 +372,7 @@ sint8 hif_send(uint8 u8Gid,uint8 u8Opcode,uint8 *pu8CtrlBuf,uint16 u16CtrlBufSiz
 			reg |= (1 << 1);
 			ret = nm_write_reg(WIFI_HOST_RCV_CTRL_3, reg);
 			if(M2M_SUCCESS != ret) goto ERR1;
-#if defined CONF_WILC_USE_3000
+#if defined CONF_WILC_USE_3000_REV_A
 			ret = nm_write_reg(INTERRUPT_CORTUS_2_3000D0, 1);
 			if(M2M_SUCCESS != ret) goto ERR1;
 #endif

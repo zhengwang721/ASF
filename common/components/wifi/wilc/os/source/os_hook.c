@@ -142,7 +142,7 @@ void os_hook_init(void)
 		xSemaphoreTake(notify_sem, portMAX_DELAY);
 		xQueue = xQueueCreate(32, sizeof(hif_msg_t));
 		
-		xTaskCreate(os_hif_task, (const signed char *)"wifi hif", 1024, NULL, (configMAX_PRIORITIES - 1), &hif_task_id);			
+		xTaskCreate(os_hif_task, (const signed char *)"WiFiHIF", 1024, NULL, (configMAX_PRIORITIES - 1), &hif_task_id);			
 		has_init = 1;
 	}
 }

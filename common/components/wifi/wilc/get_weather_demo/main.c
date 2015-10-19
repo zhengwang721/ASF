@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief Main application file.
+ * \brief Weather concurrent demo.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,17 +44,19 @@
 
 /** \mainpage
  * \section intro Introduction
- * This example demonstrates the use of the WILC1000 with the SAM4S Xplained Pro
- * board in concurrent WiFi mode AP/STA.
- * STA mode is used to retrieve weather information from the internet. 
- * AP mode is used to provide access to HTTP server for any connected STA (up to 
- * 7 at the same time).<br>
+ * This example demonstrates the use of the WILC1000 with the SAM Xplained Pro
+ * board using WiFi concurrent mode STA/AP.
+ * STA mode is used to connect to a home router with internet connection to
+ * retrieve weather information. 
+ * AP mode is used to allow any WiFi capable devices to connect to the WILC1000
+ * and then access an embedded webserver to read weather information as well as
+ * host MCU status (up to 7 connected stations at the same time).<br>
  *
- * To access the HTTP server connect with your laptop to WiFi network "WILC1K", then
+ * To access the HTTP server connect with your laptop to WiFi network "WILC1000", then
  * open a browser at http://192.168.5.1<br>
  *
  * It uses the following hardware:
- * - the SAM4S Xplained Pro.
+ * - the SAM Xplained Pro.
  * - the WILC1000 on EXT1 (WINC1500 can be used as well in bypass mode).
  *
  * \section files Main Files
@@ -63,11 +65,11 @@
  * - ap.c : Enable HTTP server via AP mode.
  *
  * \section usage Usage
- * -# Configure below code in the conf_wilc.h for AP to be connected.
+ * -# Configure below defines in sta.h to specify AP to connect to.
  * \code
- *    #define CONF_WLAN_SSID         "DEMO_AP"
- *    #define CONF_WLAN_AUTH         M2M_WIFI_SEC_WPA_PSK
- *    #define CONF_WLAN_PSK          "12345678"
+ *    #define STA_WLAN_SSID         "DEMO_AP"
+ *    #define STA_WLAN_AUTH         M2M_WIFI_SEC_WPA_PSK
+ *    #define STA_WLAN_PSK          "12345678"
  * \endcode
  * -# Build the program and download it into the board.
  * -# On the computer, open and configure a terminal application as the follows.
@@ -81,16 +83,15 @@
  * -# Start the application.
  * -# In the terminal window, the following text should appear:
  * \code
- *    -- WINC1500 AP scan example --
- *    -- SAMD21_XPLAINED_PRO --
- *    -- Compiled: xxx xx xxxx xx:xx:xx --
- *
- *    [1] SSID:DEMO_AP1
- *    [2] SSID:DEMO_AP2
- *    [3] SSID:DEMO_AP
- *    Found DEMO_AP
- *    Wi-Fi connected
- *    Wi-Fi IP is xxx.xxx.xxx.xxx
+ *    -- Weather concurrent demo --
+ *    -- SAMXXX_XPLAINED_PRO --
+ *    -- Compiled: Oct 19 2015 14:39:47 --
+ *    
+ *    wifi_cb: M2M_WIFI_CONNECTED
+ *    wifi_cb: STA M2M_WIFI_REQ_DHCP_CONF
+ *    wifi_cb: STA IPv4 addr: xxx.xxx.xxx.xxx
+ *    wifi_cb: STA IPv6 addr: xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx
+ *    wifi_cb: AP M2M_WIFI_CONNECTED xx-xx-xx-xx-xx-xx
  * \endcode
  *
  * \section compinfo Compilation Information

@@ -55,39 +55,13 @@ extern "C" {
 
 /*
    ---------------------------------
-   --------- WiFi Config  ----------
+   --------- Chip settings ---------
    ---------------------------------
 */
 
-// Select WILC firmware to use.
-#define CONF_WILC_USE_REV_A
-//#define CONF_WILC_USE_REV_B
-
-// SSID and pass-phrase of the network to connect to.
-#define CONF_WLAN_SSID					"ATSC24TIBO"
-#define CONF_WLAN_AUTH					M2M_WIFI_SEC_WPA_PSK
-#define	CONF_WLAN_PSK					"atmel123"
-
-// MAC address of the WINC.
-#define CONF_WILC_MAC_ADDRESS			{0xaa, 0xff, 0xee, 0x00, 0x0f, 0xb8}
-
-// The IP address used if DHCP is not used.
-#define CONF_IP_ADDR0					192
-#define CONF_IP_ADDR1					168
-#define CONF_IP_ADDR2					1
-#define CONF_IP_ADDR3					20
-
-// The gateway address if DHCP is not used.
-#define CONF_GATEWAY_ADDR0				192
-#define CONF_GATEWAY_ADDR1				168
-#define CONF_GATEWAY_ADDR2				1
-#define CONF_GATEWAY_ADDR3				11
-
-// The network mask  if DHCP is not used.
-#define CONF_NET_MASK0					255
-#define CONF_NET_MASK1					255
-#define CONF_NET_MASK2					255
-#define CONF_NET_MASK3					0
+/** Select WILC firmware to use. */
+//#define CONF_WILC_USE_1000_REV_A
+#define CONF_WILC_USE_1000_REV_B
 
 /*
    ---------------------------------
