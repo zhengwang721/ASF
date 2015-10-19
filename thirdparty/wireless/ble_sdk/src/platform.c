@@ -112,7 +112,6 @@ uint8_t rx_buf[256];
 uint16_t rx_buf_idx;
 #endif
 
-static uint32_t timer_done(void);
 void platform_process_rxdata(uint32_t t_rx_data);
 
 at_ble_status_t platform_init(void* platform_params)
@@ -208,7 +207,6 @@ uint32_t ctr48 = 615; // 1ms @ 48 MHz
 
 
 /* Timeout in ms */
-void start_timer(uint32_t timeout);
 void start_timer(uint32_t timeout)
 {
 
@@ -233,7 +231,7 @@ void start_timer(uint32_t timeout)
 }
 
 
-static uint32_t timer_done(void)
+uint32_t timer_done(void)
 {
 	return --ticks; 
 }

@@ -57,7 +57,7 @@
 
 #include <asf.h>
 #include "platform.h"
-
+#include "console_serial.h"
 #include "pxp_monitor_app.h"
 
 #if defined IMMEDIATE_ALERT_SERVICE
@@ -205,6 +205,7 @@ int main(void)
 
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);
+	register_get_char_timeout_func_cb(getchar_timeout);
 
 	/* initialize the BLE chip  and Set the device mac address */
 	ble_device_init(NULL);

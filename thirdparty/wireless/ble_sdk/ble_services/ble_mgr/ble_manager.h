@@ -192,6 +192,7 @@ static inline at_ble_status_t BLE_UNUSED2_VAR(void *param1_var, void *param2_var
 #define BLE_OOB_REQ						(false)
 #endif
 
+#define PIN_TIMEOUT						30*1000
 
 
 /** @brief Gap Advertisement Types */
@@ -844,6 +845,9 @@ typedef void (*ble_notification_confirmed_callback_t)(at_ble_cmd_complete_event_
 /* Typedef for indication confirmed event callback */
 typedef void (*ble_indication_confirmed_callback_t)(at_ble_cmd_complete_event_t *);
 
+/* Typedef for getchar timeout function callback */
+typedef uint8_t (*ble_get_char_timeout_callback_t)(uint32_t);
+
 /** @brief function to set the device name.
   *
   * @param[in] name name of the device.
@@ -1091,6 +1095,8 @@ void register_ble_characteristic_changed_cb(ble_characteristic_changed_callback_
 void register_ble_notification_confirmed_cb(ble_notification_confirmed_callback_t notif_conf_cb_fn);
 
 void register_ble_indication_confirmed_cb(ble_indication_confirmed_callback_t indic_conf_cb_fn);
+
+void register_get_char_timeout_func_cb(ble_get_char_timeout_callback_t get_char_fn);
 #endif /*__BLE_MANAGER_H__*/
 // </h>
 
