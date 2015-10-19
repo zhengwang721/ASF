@@ -335,7 +335,7 @@
 
 /*----------------------------------------------------------------------------*/
 /** GMAC HW configurations */
-#define BOARD_GMAC_PHY_ADDR 1
+#define BOARD_GMAC_PHY_ADDR   0
 
 #define PIN_GMAC_RESET_MASK   PIO_PC10
 #define PIN_GMAC_RESET_PIO    PIOC
