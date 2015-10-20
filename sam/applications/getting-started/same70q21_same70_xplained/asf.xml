@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="Getting Started for SAME70 Xplained" id="sam.applications.getting-started.same70_xplained">
 		<info type="description" value="summary">
-		This demonstration program makes two LEDs on the board blinking at a fixed rate.
+		This demonstration program makes one LED on the board blinking at a fixed rate.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
