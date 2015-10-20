@@ -54,20 +54,54 @@ tstrNmBusCapabilities egstrNmBusCapabilities =
 };
 
 #ifdef CONF_WINC_USE_I2C
-#define SLAVE_ADDRESS 0x60
+#define SLAVE_ADDRESS 0x50
 
 /** Number of times to try to send packet if failed. */
 #define I2C_TIMEOUT 100
 
 static sint8 nm_i2c_write(uint8 *b, uint16 sz)
 {
-	sint8 result = M2M_ERR_BUS_FAIL;
+	sint8 result = M2M_SUCCESS;
+	twihs_packet_t packet_tx;
+
+	/* Configure the data packet to be transmitted */
+	packet_tx.chip        = SLAVE_ADDRESS;
+	packet_tx.addr[0]     = 0;
+	packet_tx.addr[1]     = 0;
+	packet_tx.addr[2]     = 0;
+	packet_tx.addr_length = 0;
+	packet_tx.buffer      = b;
+	packet_tx.length      = sz;
+
+	if (twihs_master_write(CONF_WINC_I2C, &packet_tx) != TWIHS_SUCCESS) {
+		M2M_ERR("-E-\tTWI master write packet failed.\r");
+		while (1) {
+			/* Capture error */
+		}
+	}	
 	return result;
 }
 
 static sint8 nm_i2c_read(uint8 *rb, uint16 sz)
 {
-	sint8 result = M2M_ERR_BUS_FAIL;
+	sint8 result = M2M_SUCCESS;
+	twihs_packet_t packet_rx;
+
+	/* Configure the data packet to be received */
+	packet_rx.chip        = SLAVE_ADDRESS;
+	packet_rx.addr[0]     = 0;
+	packet_rx.addr[1]     = 0;
+	packet_rx.addr[2]     = 0;
+	packet_rx.addr_length = 0;
+	packet_rx.buffer      = rb;
+	packet_rx.length      = sz;
+
+	if (twihs_master_read(CONF_WINC_I2C, &packet_rx) != TWIHS_SUCCESS) {
+		M2M_ERR("-E-\tTWI master read packet failed.\r");
+		while (1) {
+			/* Capture error */
+		}
+	}	
 	return result;
 }
 
@@ -140,6 +174,21 @@ sint8 nm_bus_init(void *pvinit)
 {
 	sint8 result = M2M_SUCCESS;
 #ifdef CONF_WINC_USE_I2C
+	twihs_options_t opt;
+
+	/* Enable the peripheral clock for TWI */
+	pmc_enable_periph_clk(CONF_WINC_I2C_ID);
+
+	/* Configure the options of TWI driver */
+	opt.master_clk = sysclk_get_peripheral_hz();
+	opt.speed      = CONF_WINC_TWIHS_CLOCK;
+
+	if (twihs_master_init(CONF_WINC_I2C, &opt) != TWIHS_SUCCESS) {
+		M2M_ERR("-E-\tTWI master initialization failed.\r");
+		while (1) {
+			/* Capture error */
+		}
+	}
 
 #elif CONF_WINC_USE_SPI
 	/* Configure SPI pins. */
