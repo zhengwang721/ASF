@@ -105,18 +105,16 @@ void sps_init_service(sps_gatt_service_handler_t *sps_serv, uint16_t *scan_inter
 		sps_serv->serv_chars[1].init_value = scan_refresh;             /* value */
 		sps_serv->serv_chars[1].value_init_len = sizeof(uint8_t);
 		sps_serv->serv_chars[1].value_max_len =  sizeof(uint8_t);
-#if BLE_PAIR_ENABLE
-		sps_serv->serv_chars[1].value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
-													AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);   /* permissions */
-#else
-		sps_serv->serv_chars[1].value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
-													AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
-#endif
+		sps_serv->serv_chars[1].value_permissions = AT_BLE_ATTR_NO_PERMISSIONS;   /* permissions */
 		sps_serv->serv_chars[1].user_desc = NULL;           /* user defined name */
 		sps_serv->serv_chars[1].user_desc_len = 0;
 		sps_serv->serv_chars[1].user_desc_max_len = 0;
 		sps_serv->serv_chars[1].user_desc_permissions = AT_BLE_ATTR_NO_PERMISSIONS;             /*user description permissions*/
+#if BLE_PAIR_ENABLE
+		sps_serv->serv_chars[1].client_config_permissions = AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR;         /*client config permissions*/
+#else 
 		sps_serv->serv_chars[1].client_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*client config permissions*/
+#endif
 		sps_serv->serv_chars[1].server_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         /*server config permissions*/
 		sps_serv->serv_chars[1].user_desc_handle = 0;             /*user desc handles*/
 		sps_serv->serv_chars[1].client_config_handle = 0;         /*client config handles*/

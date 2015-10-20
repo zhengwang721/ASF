@@ -127,4 +127,7 @@ typedef enum {
 #define BRD_ADV_DATA_NAME_LEN               (0x0b)
 #define BRD_ADV_DATA_NAME_DATA              "ATMEL-BROADCAST"
 
+#define BRD_ADV_DATA_MANUFACTURER_LEN		(0x08)
+#define BRD_ADV_DATA_MANUFACTURER_DATA		"\x00\x06\xd6\xb2\xf0\x05\xf0\xf8"
+
 #endif /* __SIMPLE_BROADCASTER_APP_H__ */
