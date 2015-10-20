@@ -120,7 +120,6 @@
 #if defined ANP_SIG_CLIENT
 #include "alert_notification_profile.h"
 #define BLE_DEVICE_NAME				"ATMEL-ANP"
-#define BLE_PAIR_ENABLE					(false)
 #endif /* ANP_SIG_CLIENT */
 
 #if defined PAS_CLIENT
@@ -193,6 +192,7 @@ static inline at_ble_status_t BLE_UNUSED2_VAR(void *param1_var, void *param2_var
 #define BLE_OOB_REQ						(false)
 #endif
 
+#define PIN_TIMEOUT						30*1000
 
 
 /** @brief Gap Advertisement Types */
@@ -591,6 +591,7 @@ typedef enum
 #define BLE_PRIMARY_SERVICE_FOUND_HANDLER						time_info_service_found_handler
 #define BLE_DISCOVERY_COMPLETE_HANDLER							time_info_discovery_complete_handler
 #define BLE_CHARACTERISTIC_READ_RESPONSE						time_info_characteristic_read_response
+#define BLE_DESCRIPTOR_FOUND_HANDLER							time_info_descriptor_found_handler
 #endif /* TIP_CLIENT */
 
 /** @brief initializing function handlers for ANP client*/
@@ -844,6 +845,9 @@ typedef void (*ble_notification_confirmed_callback_t)(at_ble_cmd_complete_event_
 /* Typedef for indication confirmed event callback */
 typedef void (*ble_indication_confirmed_callback_t)(at_ble_cmd_complete_event_t *);
 
+/* Typedef for getchar timeout function callback */
+typedef uint8_t (*ble_get_char_timeout_callback_t)(uint32_t);
+
 /** @brief function to set the device name.
   *
   * @param[in] name name of the device.
@@ -1091,6 +1095,8 @@ void register_ble_characteristic_changed_cb(ble_characteristic_changed_callback_
 void register_ble_notification_confirmed_cb(ble_notification_confirmed_callback_t notif_conf_cb_fn);
 
 void register_ble_indication_confirmed_cb(ble_indication_confirmed_callback_t indic_conf_cb_fn);
+
+void register_get_char_timeout_func_cb(ble_get_char_timeout_callback_t get_char_fn);
 #endif /*__BLE_MANAGER_H__*/
 // </h>
 

@@ -81,6 +81,11 @@ void hid_prf_init(void *param)
 	uint8_t serv_num = 0;
 	uint16_t serv_handle = 0;
 	dis_gatt_service_handler_t device_info_serv;
+	
+#ifdef ENABLE_PTS
+	DBG_LOG("Protocol Mode Characteristic Value 0x%02X", hid_prf_dataref[serv_num]->protocol_mode);
+#endif
+	
 	for(; serv_num<HID_MAX_SERV_INST; serv_num++){
 		if(hid_prf_dataref[serv_num] != NULL){
 			hid_serv_def_init(serv_num);

@@ -121,6 +121,11 @@
 #define TP_ADV_DATA_NAME_DATA						("ATMEL-TIP")
 
 #define AT_BLE_DISCOVER_SUCCESS						(10)
+#if ENABLE_PTS
+#define DBG_LOG_PTS					DBG_LOG 
+#else
+#define DBG_LOG_PTS					ALL_UNUSED
+#endif
 
 /***********************************************************************************
  *									Types			                               *
@@ -138,6 +143,11 @@ typedef void (* read_response_callback_t) (at_ble_characteristic_read_response_t
  * 
  */
 void time_info_init(void *param);
+
+/**
+ * @brief Discovering the services of time server used by applications
+ */
+at_ble_status_t time_info_service_discovery(void);
 
 /**
  * @brief Discovering the services of time server
@@ -208,10 +218,9 @@ void time_info_descriptor_found_handler(at_ble_descriptor_found_t *descriptor_fo
 
 /**
  * @brief Handler for write notification found event
- * @param[in] descriptor found event parameter containing details like characteristic handle,uuid
- * \note Called by the ble_manager after receiving characteristic found event
+ * @param[in] value to be set 
  */
-void time_info_write_notification_handler(void *param);
+void time_info_write_notification_handler(uint16_t value);
 
 /**
  * @brief Handler for notification received found event
@@ -225,6 +234,7 @@ void time_info_notification_handler(at_ble_notification_recieved_t *char_read_re
  * @return None
  */
 void time_info_register_read_response_callback(read_response_callback_t read_response_cb);
+
 /**
  * @brief Handler for AT_BLE_ENCRYPTION_STATUS_CHANGED event from stack 
  * @param[in] param @ref at_ble_encryption_status_changed_t
