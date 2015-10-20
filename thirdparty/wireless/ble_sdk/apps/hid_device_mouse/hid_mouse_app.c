@@ -202,6 +202,9 @@ void button_cb(void)
 /* Initialize the application information for HID profile*/
 static void hid_mouse_app_init(void)
 {
+#ifdef ENABLE_PTS
+	uint16_t i=0;
+#endif
 	hid_prf_data.hid_serv_instance = 1;
 	hid_prf_data.hid_device = HID_MOUSE_MODE; 
 	hid_prf_data.protocol_mode = HID_REPORT_PROTOCOL_MODE; 
@@ -216,6 +219,19 @@ static void hid_mouse_app_init(void)
 	hid_prf_data.hid_device_info.bcd_hid = 0x0111;        
 	hid_prf_data.hid_device_info.bcountry_code = 0x00;
 	hid_prf_data.hid_device_info.flags = 0x02; 
+	
+#ifdef ENABLE_PTS
+	DBG_LOG("Report Map Characteristic Value");
+	printf("\r\n");
+	for (i=0; i<sizeof(hid_app_mouse_report_map); i++)
+	{
+		printf(" 0x%02X ", hid_app_mouse_report_map[i]);
+	}
+	printf("\r\n");
+	DBG_LOG("HID Information Characteristic Value");
+	DBG_LOG("bcdHID 0x%02X, bCountryCode 0x%02X Flags 0x%02X", hid_prf_data.hid_device_info.bcd_hid, hid_prf_data.hid_device_info.bcountry_code, hid_prf_data.hid_device_info.flags);
+#endif // _DEBUG
+	
 	if(hid_prf_conf(&hid_prf_data)==HID_PRF_SUCESS){
 		DBG_LOG("HID Profile Configured");
 	}else{

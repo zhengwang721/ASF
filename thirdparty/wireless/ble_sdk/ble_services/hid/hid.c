@@ -63,7 +63,15 @@ at_ble_generic_att_desc_t report_desc[HID_NUM_OF_REPORT];
 gatt_service_handler_t hid_inst[HID_MAX_SERV_INST];
 hid_serv_t hid_serv_inst[HID_MAX_SERV_INST];   
 uint8_t ctrl_point[1];
-uint8_t Key_out_report[1];
+
+#ifdef HID_KEYBOARD_DEVICE	
+uint8_t Keyb_out_report[1];
+uint8_t keyb_in_report[8]; 
+#endif
+
+#ifdef HID_MOUSE_DEVICE
+int8_t mouse_in_report[4];
+#endif
 
 /**
 * \HID service definition initialization function
@@ -213,8 +221,18 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 		hid_inst[servinst].serv_chars[id + 1].char_val.uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_REPORT >> 8);
 		hid_inst[servinst].serv_chars[id + 1].char_val.init_value = ((report_val[id-1]));
 		hid_inst[servinst].serv_chars[id + 1].char_val.len = report_len[id-1];
-			
+
 		if(report_type[id-1] == INPUT_REPORT){
+
+#ifdef ENABLE_PTS
+		uint8_t i=0;
+		DBG_LOG("Input Report Characteristic Value");
+		for (i=0; i<hid_inst[servinst].serv_chars[id + 1].char_val.len; i++)
+		{
+			printf(" 0x%02X ", hid_inst[servinst].serv_chars[id + 1].char_val.init_value[i]);
+		}
+		printf("\r\n");
+#endif // _DEBUG			
 			hid_inst[servinst].serv_chars[id + 1].char_val.properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_NOTIFY);
 			
 			/* Configure the HID characteristic value permission */
@@ -291,13 +309,25 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 	
 	if(device == HID_MOUSE_MODE){
 #ifdef HID_MOUSE_DEVICE
+		
+#ifdef ENABLE_PTS
+	uint8_t i=0;
+	DBG_LOG("Boot Mouse Input Report Characteristic Value");
+		
+	for (i=0; i<sizeof(mouse_in_report); i++)
+	{
+		printf(" 0x%02X ", mouse_in_report[i]);
+	}
+	printf("\r\n");
+#endif // _DEBUG
+		
 		/*Configure HID Boot Mouse Input Report Characteristic : Value related info*/
 		hid_inst[servinst].serv_chars[id].char_val.handle = 0;
 		hid_inst[servinst].serv_chars[id].char_val.uuid.type = AT_BLE_UUID_16;
 		hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[0] =(uint8_t) HID_UUID_CHAR_BOOT_MOUSE_INPUT_REPORT;
 		hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_BOOT_MOUSE_INPUT_REPORT >> 8);
-		hid_inst[servinst].serv_chars[id].char_val.init_value = NULL;
-		hid_inst[servinst].serv_chars[id].char_val.len = 0;
+		hid_inst[servinst].serv_chars[id].char_val.init_value = (uint8_t*)&mouse_in_report;
+		hid_inst[servinst].serv_chars[id].char_val.len = sizeof(mouse_in_report);
 		hid_inst[servinst].serv_chars[id].char_val.properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_NOTIFY);
 		
 		/* Configure the HID characteristic value permission */
@@ -336,13 +366,32 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 #endif
 	}else if(device == HID_KEYBOARD_MODE){
 #ifdef HID_KEYBOARD_DEVICE
+
+#ifdef ENABLE_PTS
+	uint8_t i=0;
+	DBG_LOG("Boot Keyboard Input Report Characteristic Value");
+
+	for (i=0; i<sizeof(keyb_in_report); i++)	
+	{
+		printf(" 0x%02X ", keyb_in_report[i]);
+	}
+	printf("\r\n");
+	
+	DBG_LOG("Boot Keyboard Output Report Characteristic Value");
+
+	for (i=0; i<sizeof(Keyb_out_report); i++)
+	{
+		printf(" 0x%02X ", Keyb_out_report[i]);
+	}
+	printf("\r\n");
+#endif // _DEBUG
         /*Configure HID Boot Keyboard Output Report Characteristic : Value related info*/
 		hid_inst[servinst].serv_chars[id].char_val.handle = 0;
 		hid_inst[servinst].serv_chars[id].char_val.uuid.type = AT_BLE_UUID_16;
 		hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[0] =(uint8_t) HID_UUID_CHAR_BOOT_KEY_OUTPUT_REPORT;
 		hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_BOOT_KEY_OUTPUT_REPORT >> 8);
-		hid_inst[servinst].serv_chars[id].char_val.init_value = (uint8_t*)&Key_out_report; //NULL;
-		hid_inst[servinst].serv_chars[id].char_val.len = sizeof(uint8_t); //0;
+		hid_inst[servinst].serv_chars[id].char_val.init_value = (uint8_t*)&Keyb_out_report; 
+		hid_inst[servinst].serv_chars[id].char_val.len = sizeof(uint8_t); 
 		hid_inst[servinst].serv_chars[id].char_val.properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_WRITE_WITHOUT_RESPONSE|AT_BLE_CHAR_WRITE);
 		
 		/* Configure the HID characteristic value permission */
@@ -385,8 +434,8 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 		 hid_inst[servinst].serv_chars[id].char_val.uuid.type = AT_BLE_UUID_16;
 		 hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[0] =(uint8_t) HID_UUID_CHAR_BOOT_KEY_INPUT_REPORT;
 		 hid_inst[servinst].serv_chars[id].char_val.uuid.uuid[1] = (uint8_t)(HID_UUID_CHAR_BOOT_KEY_INPUT_REPORT >> 8);
-		 hid_inst[servinst].serv_chars[id].char_val.init_value = NULL;
-		 hid_inst[servinst].serv_chars[id].char_val.len = 0;
+		 hid_inst[servinst].serv_chars[id].char_val.init_value = (uint8_t*)&keyb_in_report;
+		 hid_inst[servinst].serv_chars[id].char_val.len = sizeof(keyb_in_report); 
 		 hid_inst[servinst].serv_chars[id].char_val.properties = (AT_BLE_CHAR_READ|AT_BLE_CHAR_NOTIFY);
 		 
 		 /* Configure the HID characteristic value permission */
