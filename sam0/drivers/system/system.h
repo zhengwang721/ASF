@@ -658,7 +658,7 @@ void system_init(void);
  *  </tr>
  *  <tr>
  *      <td>Added new \c system_get_device_id() function to retrieved the device
- *          ID.</td>
+ *          ID</td>
  *  </tr>
  *  <tr>
  *      <td>Initial Release</td>
@@ -691,7 +691,7 @@ void system_init(void);
  * \if DEVICE_SAMD21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>42120E</td>
- *      <td>04/2015</td>
+ *      <td>10/2015</td>
  *      <td>Added support for SAMDAx</td>
  * </tr>
  *  <tr>
