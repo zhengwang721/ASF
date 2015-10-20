@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM L22 Xplained Pro board initialization
+ * \brief SAM L22 Xplained Pro B board initialization
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
