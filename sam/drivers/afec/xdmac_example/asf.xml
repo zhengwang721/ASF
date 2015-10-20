@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.afec.xdmac_example" caption="AFEC Temperature Sensor Example">
+	<module type="application" id="sam.drivers.afec.xdmac_example" caption="AFEC XDMAC Example">
 		<info type="description" value="summary">
 		This example demonstrates how to configure the temperature sensor feature inside the microcontroller.
 		</info>

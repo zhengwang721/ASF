@@ -51,7 +51,7 @@
  *
  * \section Requirements
  *
- * This example can be used on SAM4E-EK boards , SAMV71-Xplained-Ultra.
+ * This example can be used on SAM4E-EK boards, SAMV71-Xplained-Ultra.
  *
  * \section Description
  *
