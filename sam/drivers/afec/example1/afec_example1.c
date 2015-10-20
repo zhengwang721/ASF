@@ -52,7 +52,7 @@
  * \section Requirements
  *
  * This example can be used on SAM4E-EK boards , SAMV71-Xplained-Ultra ,
- * SAME70-Xplained-Pro.
+ * SAME70-Xplained.
  *
  * \section Description
  *
