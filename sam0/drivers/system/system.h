@@ -692,17 +692,17 @@ void system_init(void);
  *  <tr>
  *      <td>42120E</td>
  *      <td>10/2015</td>
- *      <td>Added support for SAMDAx</td>
+ *      <td>Added support for SAM DA1</td>
  * </tr>
  *  <tr>
  *      <td>42120D</td>
  *      <td>12/2014</td>
- *      <td>Added support for SAMR21 and SAMD10/D11</td>
+ *      <td>Added support for SAM R21 and SAM D10/D11</td>
  * </tr>
  * <tr>
  *      <td>42120C</td>
  *      <td>01/2014</td>
- *      <td>Added support for SAMD21</td>
+ *      <td>Added support for SAM D21</td>
  *  </tr>
  *  <tr>
  *      <td>42120B</td>
