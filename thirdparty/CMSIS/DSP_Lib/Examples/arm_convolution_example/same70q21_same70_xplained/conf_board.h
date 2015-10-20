@@ -47,6 +47,6 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-#include "system_samv71.h"
+#include "system_same70.h"
 
 #endif /* CONF_BOARD_H_INCLUDED */
