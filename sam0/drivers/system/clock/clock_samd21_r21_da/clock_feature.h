@@ -1459,23 +1459,23 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	<tr>
  *		<td>42119E</td>
  *		<td>10/2015</td>
- *		<td>Added support for SAMDAx.</td>
+ *		<td>Added support for SAMDAx</td>
  *	</tr>
  *	<tr>
  *		<td>42119D</td>
  *		<td>12/2014</td>
- *		<td>Added support for SAMR21 and SAMD10/D11.</td>
+ *		<td>Added support for SAMR21 and SAMD10/D11</td>
  *	</tr>
  *	<tr>
  *		<td>42119C</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAMD21.</td>
+ *		<td>Added support for SAMD21</td>
  *	</tr>
  *	<tr>
  *		<td>42119B</td>
  *		<td>06/2013</td>
  *		<td>Corrected documentation typos. Fixed missing steps in the Basic
- *          Use Case Quick Start Guide.</td>
+ *          Use Case Quick Start Guide</td>
  *	</tr>
  *	<tr>
  *		<td>42119A</td>
