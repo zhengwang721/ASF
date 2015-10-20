@@ -1,9 +1,7 @@
 /**
  * \file
  *
- * \brief ATMEGA328P Xplained mini board init.
- *
- * To use this board, define BOARD=ATMEGA328P_XPLAINED_MINI.
+ * \brief USART configuration file
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -45,18 +43,17 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include <board.h>
-#include <compiler.h>
-#include <conf_board.h>
-#include "gpio.h"
-#include "led.h"
 
-void board_init(void)
-{
-	/* On board LED initialization */
-	ioport_configure_pin(LED0, IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);
+#ifndef CONF_USART_H
+#define CONF_USART_H
 
-	/* On board Switch initialization */
-	ioport_configure_pin(GPIO_PUSH_BUTTON_0,
-	IOPORT_DIR_INPUT | IOPORT_PULL_UP);
-}
+//! \note Baud rate
+#define CONF_BAUDRATE   9600
+//! \note Character length
+#define CONF_CHARLENGTH USART_CHSIZE_8BIT_gc
+//! \note Parity checking
+#define CONF_PARITY     USART_PMODE_DISABLED_gc
+//! \note Stop bits
+#define CONF_STOPBITS   false
+
+#endif

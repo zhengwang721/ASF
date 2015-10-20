@@ -1,9 +1,12 @@
 /**
  * \file
  *
- * \brief ATMEGA328P Xplained mini board init.
+ * \brief ATMEGA328PB_XPLAINED_MINI board header file.
  *
- * To use this board, define BOARD=ATMEGA328P_XPLAINED_MINI.
+ * This file contains definitions and services related to the features of the
+ * Xplained Mini board.
+ *
+ * To use this board, define BOARD= ATMEGA328PB_XPLAINED_MINI.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -45,18 +48,33 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include <board.h>
-#include <compiler.h>
-#include <conf_board.h>
-#include "gpio.h"
-#include "led.h"
+#ifndef _ATMEGA328PB_XPLAINED_MINI_
+#define _ATMEGA328PB_XPLAINED_MINI_
+#include "compiler.h"
 
-void board_init(void)
-{
-	/* On board LED initialization */
-	ioport_configure_pin(LED0, IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);
+# include "led.h"
 
-	/* On board Switch initialization */
-	ioport_configure_pin(GPIO_PUSH_BUTTON_0,
-	IOPORT_DIR_INPUT | IOPORT_PULL_UP);
-}
+#define MCU_SOC_NAME        "ATMEGA328PB"
+#define BOARD_NAME          "ATMEGA328PB_XPLAINED_MINI"
+
+
+#define LED0_GPIO                       IOPORT_CREATE_PIN(PORTB, 5)
+#define LED0                            LED0_GPIO
+
+//! Number of LEDs.
+#define LED_COUNT                       1
+
+#define GPIO_PUSH_BUTTON_0              IOPORT_CREATE_PIN(PORTB, 7)
+
+//! \name Communication interfaces
+//@{
+#define TWID_SDA                        IOPORT_CREATE_PIN(PORTC, 4)
+#define TWID_SCL                        IOPORT_CREATE_PIN(PORTC, 5)
+#define USART_RX                        IOPORT_CREATE_PIN(PORTD, 0)
+#define USART_TX                        IOPORT_CREATE_PIN(PORTD, 1)
+#define SPI_SS_A                        IOPORT_CREATE_PIN(PORTB, 2)
+#define SPI_MOSI                        IOPORT_CREATE_PIN(PORTB, 3)
+#define SPI_MISO                        IOPORT_CREATE_PIN(PORTB, 4)
+#define SPI_SCK                         IOPORT_CREATE_PIN(PORTB, 5)
+//@}
+#endif  /* _ATMEGA328PB_XPLAINED_MINI_ */

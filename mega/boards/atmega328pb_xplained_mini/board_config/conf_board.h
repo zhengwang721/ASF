@@ -1,11 +1,9 @@
 /**
  * \file
  *
- * \brief ATMEGA328P Xplained mini board init.
+ * \brief ATmega328pb Xplained MINI board configuration template
  *
- * To use this board, define BOARD=ATMEGA328P_XPLAINED_MINI.
- *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,23 +38,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include <board.h>
-#include <compiler.h>
-#include <conf_board.h>
-#include "gpio.h"
-#include "led.h"
 
-void board_init(void)
-{
-	/* On board LED initialization */
-	ioport_configure_pin(LED0, IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-	/* On board Switch initialization */
-	ioport_configure_pin(GPIO_PUSH_BUTTON_0,
-	IOPORT_DIR_INPUT | IOPORT_PULL_UP);
-}
+#endif // CONF_BOARD_H
