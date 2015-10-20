@@ -249,6 +249,7 @@ static void configure_buttons(void)
  *  Interrupt handler for TC0 interrupt. Toggles the state of LED\#2.
  */
 // [main_tc0_handler]
+#ifndef BOARD_NO_LED_1
 void TC0_Handler(void)
 {
 	volatile uint32_t ul_dummy;
@@ -305,6 +306,7 @@ static void configure_tc(void)
 	tc_start(TC0, 0);
 #endif
 }
+#endif
 // [main_tc_configure]
 
 /**
@@ -386,10 +388,12 @@ int main(void)
 	}
 //! [main_step_systick_init]
 
+#ifndef BOARD_NO_LED_1
 	puts("Configure TC.\r");
 //! [main_step_tc_init]
 	configure_tc();
 //! [main_step_tc_init]
+#endif
 
 	puts("Configure buttons with debouncing.\r");
 //! [main_step_btn_init]

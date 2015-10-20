@@ -53,4 +53,7 @@
 /** define BOARD_NO_PUSHBUTTON_2. */
 #define BOARD_NO_PUSHBUTTON_2
 
+/** define BOARD_NO_LED_1. */
+#define BOARD_NO_LED_1
+
 #endif /* CONF_BOARD_H_INCLUDED */
