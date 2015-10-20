@@ -277,7 +277,7 @@ struct system_pinmux_config {
 	/** Logic level pull of the input buffer */
 	enum system_pinmux_pin_pull input_pull;
 
-	/** Enable lowest possible powerstate on the pin.
+	/** Enable lowest possible powerstate on the pin
 	 *
 	 *  \note All other configurations will be ignored, the pin will be disabled.
 	 */
@@ -644,7 +644,7 @@ void system_pinmux_group_set_output_drive(
  *	</tr>
  *	<tr>
  *		<td>42121F</td>
- *		<td>08/2015</td>
+ *		<td>10/2015</td>
  *		<td>Added support for SAM L21/L22, SAM DA1, and SAM C20/C21</td>
  *	</tr>
  *	<tr>
