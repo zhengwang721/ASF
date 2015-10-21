@@ -9,7 +9,7 @@
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="include-path" value="."/>
 		<require idref="sam.drivers.pwm.pwm_led_example"/>
-		<require idref="board.same70_xplained_pro"/>
+		<require idref="board.same70_xplained"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>

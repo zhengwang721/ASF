@@ -6,7 +6,7 @@
 			</info>
 			<build type="c-source" value="is42s16100e_example.c"/>
 			<build type="include-path" value="."/>
-			<device-support value="atsamv71q21"/>
+			<device-support value="samv71"/>
 			<require idref="sam.utils.cmsis.samv71.source.template"/>
 			<require idref="sam.drivers.sdramc"/>
 			<require idref="sam.components.memory.sdram.is42s16100e"/>
@@ -23,7 +23,7 @@
 			</info>
 			<build type="c-source" value="is42s16100e_example.c"/>
 			<build type="include-path" value="."/>
-			<device-support value="atsame70q21"/>
+			<device-support value="same70"/>
 			<require idref="sam.utils.cmsis.same70.source.template"/>
 			<require idref="sam.drivers.sdramc"/>
 			<require idref="sam.components.memory.sdram.is42s16100e"/>
