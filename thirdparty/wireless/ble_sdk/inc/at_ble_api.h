@@ -2339,6 +2339,7 @@ at_ble_status_t at_ble_event_get(at_ble_events_t *event, void *params,
  *        as @ref AT_BLE_CUSTOM_EVENT
  *
  * @param[in] params Parameters sent to the custom event
+ * @param[in] event_params_len length of the params
  *
  * @return @ref AT_BLE_SUCCESS operation completed successfully
  * @return @ref AT_BLE_FAILURE Generic error.
@@ -2346,7 +2347,7 @@ at_ble_status_t at_ble_event_get(at_ble_events_t *event, void *params,
 ///@cond IGNORE_DOXYGEN
 AT_BLE_API
 ///@endcond
-at_ble_status_t at_ble_event_user_defined_post(void *params);
+at_ble_status_t at_ble_event_user_defined_post(void *params, uint16_t event_params_len);
 
 /** @ingroup gap_whitelist_group
  *
