@@ -54,7 +54,7 @@ tstrNmBusCapabilities egstrNmBusCapabilities =
 };
 
 #ifdef CONF_WINC_USE_I2C
-#define SLAVE_ADDRESS 0x50
+#define SLAVE_ADDRESS 0x60
 
 /** Number of times to try to send packet if failed. */
 #define I2C_TIMEOUT 100
@@ -63,6 +63,7 @@ static sint8 nm_i2c_write(uint8 *b, uint16 sz)
 {
 	sint8 result = M2M_SUCCESS;
 	twihs_packet_t packet_tx;
+	uint16_t timeout = 0;
 
 	/* Configure the data packet to be transmitted */
 	packet_tx.chip        = SLAVE_ADDRESS;
@@ -73,10 +74,13 @@ static sint8 nm_i2c_write(uint8 *b, uint16 sz)
 	packet_tx.buffer      = b;
 	packet_tx.length      = sz;
 
-	if (twihs_master_write(CONF_WINC_I2C, &packet_tx) != TWIHS_SUCCESS) {
-		M2M_ERR("-E-\tTWI master write packet failed.\r");
-		while (1) {
+	while (twihs_master_write(CONF_WINC_I2C, &packet_tx) != TWIHS_SUCCESS) {
+		//M2M_ERR("-E-\tTWI master write packet failed.\r");
+		//while (1) {
 			/* Capture error */
+		//}
+		if (timeout++ == I2C_TIMEOUT) {
+			break;
 		}
 	}	
 	return result;
@@ -86,6 +90,7 @@ static sint8 nm_i2c_read(uint8 *rb, uint16 sz)
 {
 	sint8 result = M2M_SUCCESS;
 	twihs_packet_t packet_rx;
+	uint16_t timeout = 0;
 
 	/* Configure the data packet to be received */
 	packet_rx.chip        = SLAVE_ADDRESS;
@@ -96,10 +101,13 @@ static sint8 nm_i2c_read(uint8 *rb, uint16 sz)
 	packet_rx.buffer      = rb;
 	packet_rx.length      = sz;
 
-	if (twihs_master_read(CONF_WINC_I2C, &packet_rx) != TWIHS_SUCCESS) {
-		M2M_ERR("-E-\tTWI master read packet failed.\r");
-		while (1) {
+	while (twihs_master_read(CONF_WINC_I2C, &packet_rx) != TWIHS_SUCCESS) {
+		//M2M_ERR("-E-\tTWI master read packet failed.\r");
+		//while (1) {
 			/* Capture error */
+		//}
+		if (timeout++ == I2C_TIMEOUT) {
+			break;
 		}
 	}	
 	return result;
