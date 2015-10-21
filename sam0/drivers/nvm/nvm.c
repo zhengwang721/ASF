@@ -815,7 +815,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 			((raw_user_row[1] & FUSES_BOD33_HYST_Msk)
 			>> FUSES_BOD33_HYST_Pos);
 
-#elif (SAMD20) || (SAMD21) || (SAMR21)|| (SAMDA1) || (SAMD09)
+#elif (SAMD20) || (SAMD21) || (SAMR21)|| (SAMDA1) || (SAMD09) || (SAMD10)
 	fusebits->bod33_level = (uint8_t)
 			((raw_user_row[0] & FUSES_BOD33USERLEVEL_Msk)
 			>> FUSES_BOD33USERLEVEL_Pos);
