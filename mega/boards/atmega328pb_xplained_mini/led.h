@@ -1,9 +1,7 @@
 /**
  * \file
  *
- * \brief ATMEGA328P Xplained mini board init.
- *
- * To use this board, define BOARD=ATMEGA328P_XPLAINED_MINI.
+ * \brief ATMEGA328PB_XPLAINED_PRO board LEDs support package.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -45,18 +43,35 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include <board.h>
-#include <compiler.h>
-#include <conf_board.h>
+
+#ifndef _LED_H_
+#define _LED_H_
+
 #include "gpio.h"
-#include "led.h"
 
-void board_init(void)
-{
-	/* On board LED initialization */
-	ioport_configure_pin(LED0, IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);
+ 
+/*! \brief Turns off the specified LEDs.
+ *
+ * \param led_gpio LED to turn off (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Off(led_gpio)     gpio_set_pin_low(led_gpio)
 
-	/* On board Switch initialization */
-	ioport_configure_pin(GPIO_PUSH_BUTTON_0,
-	IOPORT_DIR_INPUT | IOPORT_PULL_UP);
-}
+/*! \brief Turns on the specified LEDs.
+ *
+ * \param led_gpio LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_On(led_gpio)      gpio_set_pin_high(led_gpio)
+
+/*! \brief Toggles the specified LEDs.
+ *
+ * \param led_gpio LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Toggle(led_gpio)  gpio_toggle_pin(led_gpio)
+
+#endif /* _LED_H_ */

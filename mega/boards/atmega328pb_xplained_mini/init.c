@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief ATMEGA328P Xplained mini board init.
+ * \brief ATMEGA328PB Xplained mini board init.
  *
- * To use this board, define BOARD=ATMEGA328P_XPLAINED_MINI.
+ * To use this board, define BOARD=ATMEGA328PB_XPLAINED_MINI.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
