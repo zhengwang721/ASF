@@ -147,7 +147,7 @@ extern "C" {
 #define SAMW25_XPLAINED_PRO        79  //!< SAMW25 Xplained Pro board.
 #define SAMC21_XPLAINED_PRO        80  //!< SAM C21 Xplained Pro board.
 #define SAMV71_XPLAINED_ULTRA      81  //!< SAMV71 Xplained Ultra board.
-#define SAME70_XPLAINED            83  //!< SAME70 Xplained board.
+#define SAME70_XPLAINED            85  //!< SAME70 Xplained board.
 #define SAML22_XPLAINED_PRO        86  //!< SAM L22 Xplained Pro board.
 #define ATMEGA328P_XPLAINED_MINI   82  //!< ATMEGA328P Xplained MINI board.
 #define ATMEGA328PB_XPLAINED_MINI  83  //!< ATMEGA328PB Xplained MINI board.
