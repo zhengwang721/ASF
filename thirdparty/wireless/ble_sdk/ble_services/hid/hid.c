@@ -224,7 +224,7 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 
 		if(report_type[id-1] == INPUT_REPORT){
 
-#ifdef ENABLE_PTS
+#if ENABLE_PTS
 		uint8_t i=0;
 		DBG_LOG("Input Report Characteristic Value");
 		for (i=0; i<hid_inst[servinst].serv_chars[id + 1].char_val.len; i++)
@@ -310,7 +310,7 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 	if(device == HID_MOUSE_MODE){
 #ifdef HID_MOUSE_DEVICE
 		
-#ifdef ENABLE_PTS
+#if ENABLE_PTS
 	uint8_t i=0;
 	DBG_LOG("Boot Mouse Input Report Characteristic Value");
 		
@@ -367,7 +367,7 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 	}else if(device == HID_KEYBOARD_MODE){
 #ifdef HID_KEYBOARD_DEVICE
 
-#ifdef ENABLE_PTS
+#if ENABLE_PTS
 	uint8_t i=0;
 	DBG_LOG("Boot Keyboard Input Report Characteristic Value");
 
