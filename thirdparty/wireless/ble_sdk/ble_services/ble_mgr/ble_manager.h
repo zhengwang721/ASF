@@ -120,6 +120,7 @@
 #if defined ANP_SIG_CLIENT
 #include "alert_notification_profile.h"
 #define BLE_DEVICE_NAME				"ATMEL-ANP"
+#define BLE_PAIR_ENABLE				false
 #endif /* ANP_SIG_CLIENT */
 
 #if defined PAS_CLIENT
