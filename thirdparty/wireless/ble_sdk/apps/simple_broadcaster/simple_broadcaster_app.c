@@ -102,7 +102,7 @@ static void brd_start_broadcast(void)
 {
 	at_ble_status_t status;
 	at_ble_adv_mode_t adv_mode;
-	#ifdef  PTS_ENABLE
+	#if  PTS_ENABLE
 		adv_mode = AT_BLE_ADV_BROADCASTER_MODE;
 	#else 
 		adv_mode = AT_BLE_ADV_GEN_DISCOVERABLE;
