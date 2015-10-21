@@ -58,6 +58,10 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+#ifndef USBHS_RAM_ADDR
+#define USBHS_RAM_ADDR        0xA0100000u
+#endif
+
 //! \ingroup udd_group
 //! \defgroup udd_udphs_group USB High-Speed Port for device mode (USBHS)
 //! USBHS low-level driver for USB device mode
@@ -528,7 +532,7 @@ extern "C" {
   //! @warning It is up to the user of this macro to make sure that used HSB
   //! addresses are identical to the DPRAM internal pointer modulo 32 bits.
 #define udd_get_endpoint_fifo_access(ep, scale) \
-		(((volatile TPASTE2(U, scale) (*)[0x8000 / ((scale) / 8)])0xA0100000u)[(ep)])
+		(((volatile TPASTE2(U, scale) (*)[0x8000 / ((scale) / 8)])USBHS_RAM_ADDR)[(ep)])
 
 //! @name USBHS endpoint DMA drivers
 //! These macros manage the common features of the endpoint DMA channels.
