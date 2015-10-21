@@ -267,6 +267,7 @@ int main(void )
 	ble_device_init(NULL);
 	
 	/* Register the notification handler */
+	register_get_char_timeout_func_cb(getchar_timeout);
 	register_ble_notification_confirmed_cb(hid_notification_confirmed_cb);
 	register_ble_disconnected_event_cb(hid_disconnect_cb);
 	register_ble_connected_event_cb(hid_connect_cb);
