@@ -295,7 +295,7 @@ retval_t tal_init(void)
 void trx_config(trx_id_t trx_id)
 {
 
-    CALC_REG_OFFSET(trx_id);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
 #ifdef IQ_RADIO
     /* LVDS interface */
@@ -311,69 +311,69 @@ void trx_config(trx_id_t trx_id)
     trx_bit_write(RF215_RF, SR_RF_IQIFC0_EEC, 1);
     /* Configure BB */
     /* Setup IRQ mask: in chip mode, the baseband controls the RF's AGC */
-    trx_reg_write(RF215_BB, GET_REG_ADDR(RG_BBC0_IRQM),
+    trx_reg_write(RF215_BB, reg_offset + RG_BBC0_IRQM,
                       BB_IRQ_RXFE | BB_IRQ_TXFE | BB_IRQ_RXFS | BB_IRQ_AGCR | BB_IRQ_AGCH);
-    trx_reg_write(RF215_BB, GET_REG_ADDR(RG_RF09_IRQM), RF_IRQ_NO_IRQ);
+    trx_reg_write(RF215_BB, reg_offset + RG_RF09_IRQM, RF_IRQ_NO_IRQ);
     /* Configure RF */
-    trx_reg_write(RF215_RF, GET_REG_ADDR(RG_BBC0_IRQM), BB_IRQ_NO_IRQ);
-    trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_IRQM),
+    trx_reg_write(RF215_RF, reg_offset + RG_BBC0_IRQM, BB_IRQ_NO_IRQ);
+    trx_reg_write(RF215_RF, reg_offset + RG_RF09_IRQM,
                       RF_IRQ_IQIFSF | RF_IRQ_TRXERR | RF_IRQ_EDC | RF_IRQ_BATLOW | RF_IRQ_WAKEUP);
 #else /* transceiver mode */
     /* Configure BB */
     /* Setup IRQ mask */
 #ifdef ENABLE_TSTAMP
-    trx_reg_write( GET_REG_ADDR(RG_BBC0_IRQM),
+    trx_reg_write( reg_offset + RG_BBC0_IRQM,
                       BB_IRQ_RXFE | BB_IRQ_TXFE | BB_IRQ_RXFS);
 #else
-    trx_reg_write( GET_REG_ADDR(RG_BBC0_IRQM),
+    trx_reg_write( reg_offset + RG_BBC0_IRQM,
                       BB_IRQ_RXFE | BB_IRQ_TXFE);
 #endif
     /* Configure RF */
-    trx_reg_write( GET_REG_ADDR(RG_RF09_IRQM), RF_IRQ_BATLOW | RF_IRQ_WAKEUP);
+    trx_reg_write( reg_offset + RG_RF09_IRQM, RF_IRQ_BATLOW | RF_IRQ_WAKEUP);
 #endif /* #ifdef IQ_RADIO */
 
 #if (defined IQ_RADIO)
     /* Set clip detector OFF */
-    uint8_t agcc = trx_reg_read(RF215_RF, GET_REG_ADDR(RG_RF09_AGCC));
+    uint8_t agcc = trx_reg_read(RF215_RF, reg_offset + RG_RF09_AGCC);
     agcc |= 0x80;
-    trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_AGCC), agcc);
+    trx_reg_write(RF215_RF, reg_offset + RG_RF09_AGCC, agcc);
 #endif
 
     /* Enable frame filter */
-    trx_bit_write( GET_REG_ADDR(SR_BBC0_AFC0_AFEN0), 1);
+    trx_bit_write( reg_offset + SR_BBC0_AFC0_AFEN0, 1);
 
 #ifndef BASIC_MODE
 #if (defined MEASURE_TIME_OF_FLIGHT) && (!defined IQ_RADIO)
     /* Enable automatic time of flight measurement */
     /* bit 3 CAPRXS, bit 2 RSTTXS, bit 0 EN */
     uint8_t cnt_cfg = CNTC_EN_MASK | CNTC_RSTTXS_MASK | CNTC_CAPRXS_MASK;
-    trx_reg_write( GET_REG_ADDR(RG_BBC0_CNTC), cnt_cfg);
+    trx_reg_write(reg_offset + RG_BBC0_CNTC, cnt_cfg);
 #endif /* #if (defined MEASURE_TIME_OF_FLIGHT) && (!defined IQ_RADIO) */
 #else // BASIC_MODE
     /* Enable counter for ACK timing: EN | RSTRXS */
     uint8_t cntc = CNTC_EN_MASK | CNTC_RSTRXS_MASK;
-    trx_reg_write( GET_REG_ADDR(RG_BBC0_CNTC), cntc);
+    trx_reg_write(reg_offset + RG_BBC0_CNTC, cntc);
 #endif
 
 #ifndef USE_TXPREP_DURING_BACKOFF
     /* Keep analog voltage regulator on during TRXOFF */
 #ifdef IQ_RADIO
-    trx_bit_write(RF215_RF, GET_REG_ADDR(SR_RF09_AUXS_AVEN), 1);
+    trx_bit_write(RF215_RF, reg_offset + SR_RF09_AUXS_AVEN, 1);
 #else
-    trx_bit_write( GET_REG_ADDR(SR_RF09_AUXS_AVEN), 1);
+    trx_bit_write(reg_offset + SR_RF09_AUXS_AVEN, 1);
 #endif /* #ifdef IQ_RADIO */
 #endif
 
 #ifndef BASIC_MODE
     /* Enable AACK */
-    trx_reg_write( GET_REG_ADDR(RG_BBC0_AMCS), AMCS_AACK_MASK);
+    trx_reg_write(reg_offset + RG_BBC0_AMCS, AMCS_AACK_MASK);
     /* Set data pending for ACK frames to 1 for all address units */
-    trx_reg_write( GET_REG_ADDR(RG_BBC0_AMAACKPD), 0x0F);
+    trx_reg_write(reg_offset + RG_BBC0_AMAACKPD, 0x0F);
 #endif
 
 #ifdef SUPPORT_MODE_SWITCH
     /* Use raw mode for mode switch PPDU in the not-inverted manner */
-    trx_bit_write( GET_REG_ADDR(SR_BBC0_FSKC4_RAWRBIT), 0);
+    trx_bit_write(reg_offset + SR_BBC0_FSKC4_RAWRBIT, 0);
 #endif
 }
 
@@ -575,13 +575,13 @@ retval_t trx_reset(trx_id_t trx_id)
         TAL_RF_IRQ_CLR_ALL(trx_id);
 
         /* Trigger reset of device */
-        CALC_REG_OFFSET(trx_id);
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
         ////debug_text(PSTR("Trigger trx reset"));
 #ifdef IQ_RADIO
-        trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_CMD), RF_RESET);
-        trx_reg_write(RF215_BB, GET_REG_ADDR(RG_RF09_CMD), RF_RESET);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_RESET);
+        trx_reg_write(RF215_BB, reg_offset + RG_RF09_CMD, RF_RESET);
 #else
-        trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_RESET);
+        trx_reg_write( reg_offset + RG_RF09_CMD, RF_RESET);
 #endif
     }
 
@@ -620,11 +620,11 @@ retval_t trx_reset(trx_id_t trx_id)
         {
             for (uint8_t i = (trx_id_t)0; i < NUM_TRX; i++)
             {
-                CALC_REG_OFFSET(i);
-                trx_state[i] = (rf_cmd_state_t)trx_reg_read( GET_REG_ADDR(RG_RF09_STATE));
+                uint16_t reg_offset = RF_BASE_ADDR_OFFSET * i;
+                trx_state[i] = (rf_cmd_state_t)trx_reg_read( reg_offset + RG_RF09_STATE);
 #ifdef IQ_RADIO
                 rf_cmd_state_t bb_state;
-                bb_state = (rf_cmd_state_t)trx_reg_read(RF215_BB, GET_REG_ADDR(RG_RF09_STATE));
+                bb_state = (rf_cmd_state_t)trx_reg_read(RF215_BB, reg_offset + RG_RF09_STATE);
                 if ((trx_state[i] != RF_TRXOFF) || (bb_state != RF_TRXOFF))
 #else
                 if (trx_state[i] != RF_TRXOFF)
@@ -636,11 +636,11 @@ retval_t trx_reset(trx_id_t trx_id)
         }
         else // single trx
         {
-            CALC_REG_OFFSET(trx_id);
-            trx_state[trx_id] = (rf_cmd_state_t)trx_reg_read( GET_REG_ADDR(RG_RF09_STATE));
+            uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+            trx_state[trx_id] = (rf_cmd_state_t)trx_reg_read(  reg_offset + RG_RF09_STATE);
 #ifdef IQ_RADIO
             rf_cmd_state_t bb_state;
-            bb_state = (rf_cmd_state_t)trx_reg_read(RF215_BB, GET_REG_ADDR(RG_RF09_STATE));
+            bb_state = (rf_cmd_state_t)trx_reg_read(RF215_BB, reg_offset + RG_RF09_STATE);
             if ((trx_state[trx_id] != RF_TRXOFF) || (bb_state != RF_TRXOFF))
 #else
             if (trx_state[trx_id] != RF_TRXOFF)

@@ -128,10 +128,10 @@ uint8_t tal_rx_enable(trx_id_t trx_id, uint8_t state)
             * If the rx needs to be switched off,
             * we are not interested in a frame that is currently being received.
             */
-        CALC_REG_OFFSET(trx_id);
-        trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+        trx_reg_write( reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #ifdef IQ_RADIO
-        trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
 #if (defined SUPPORT_FSK) || (defined SUPPORT_OQPSK)
         stop_rpc(trx_id);

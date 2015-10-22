@@ -93,7 +93,7 @@ void handle_rx_end_irq(trx_id_t trx_id)
 {
 
  //printf("\n \r handle_rx_end_irq() ");
-CALC_REG_OFFSET(trx_id);
+uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     //trx_state[trx_id] = RF_TXPREP;
 #if (defined SUPPORT_FSK) || (defined SUPPORT_OQPSK)
     stop_rpc(trx_id);
@@ -105,17 +105,17 @@ CALC_REG_OFFSET(trx_id);
     if (tal_pib[trx_id].phy.modulation == FSK)
     {
         
-        if (trx_bit_read( GET_REG_ADDR(SR_BBC0_FSKPHRRX_FCST)) !=
+        if (trx_bit_read(  reg_offset + SR_BBC0_FSKPHRRX_FCST) !=
             (uint8_t)tal_pib[trx_id].FCSType)
         {
             /* Received FCS value is not equal to the required value -> cancel ACK transmission */
-            if (trx_bit_read( GET_REG_ADDR(SR_BBC0_AMCS_AACKFT)))
+            if (trx_bit_read( reg_offset + SR_BBC0_AMCS_AACKFT))
             {
-                trx_bit_write( GET_REG_ADDR(SR_BBC0_AMCS_AACK), 0);
-                trx_bit_write( GET_REG_ADDR(SR_BBC0_AMCS_AACK), 1);
+                trx_bit_write(reg_offset + SR_BBC0_AMCS_AACK, 0);
+                trx_bit_write(reg_offset + SR_BBC0_AMCS_AACK, 1);
             }
             /* Continue receiving */
-            trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_RX);
+            trx_reg_write( reg_offset + RG_RF09_CMD, RF_RX);
             trx_state[trx_id] = RF_RX;
             start_rpc(trx_id);
             return;
@@ -145,8 +145,8 @@ CALC_REG_OFFSET(trx_id);
         if (tal_pib[trx_id].phy.modulation == FSK)
         {
             ////debug_text(PSTR("Check for mode switch"));
-            CALC_REG_OFFSET(trx_id);
-            if (trx_bit_read( GET_REG_ADDR(SR_BBC0_FSKPHRRX_MS)) == 0x01)
+            uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+            if (trx_bit_read( reg_offset + SR_BBC0_FSKPHRRX_MS) == 0x01)
             {
                 handle_rx_ms_packet(trx_id);
                 return;
@@ -187,7 +187,7 @@ static void handle_incoming_frame(trx_id_t trx_id)
 {
     ////debug_text_val(PSTR("handle_incoming_frame(), trx_id ="), trx_id);
 
-    CALC_REG_OFFSET(trx_id);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 	
 	
 
@@ -204,9 +204,9 @@ static void handle_incoming_frame(trx_id_t trx_id)
                 /* Re-store frame filter to pass "normal" frames */
                 /* Configure frame filter to receive all allowed frame types */
 #ifdef SUPPORT_FRAME_FILTER_CONFIGURATION
-                trx_reg_write( GET_REG_ADDR(RG_BBC0_AFFTM), tal_pib[trx_id].frame_types);
+                trx_reg_write( reg_offset + RG_BBC0_AFFTM, tal_pib[trx_id].frame_types);
 #else
-                trx_reg_write( GET_REG_ADDR(RG_BBC0_AFFTM), DEFAULT_FRAME_TYPES);
+                trx_reg_write( reg_offset + RG_BBC0_AFFTM, DEFAULT_FRAME_TYPES);
 #endif
                 retval_t status;
                 if (rx_frm_info[trx_id]->mpdu[PL_POS_FCF_1] & FCF_FRAME_PENDING)
@@ -236,7 +236,7 @@ static void handle_incoming_frame(trx_id_t trx_id)
 
    //printf("\n \r Frame is not an ACK");
   /* Check if ACK transmission is done by transceiver */
-  ack_transmitting[trx_id] = (bool)trx_bit_read( GET_REG_ADDR(SR_BBC0_AMCS_AACKFT));
+  ack_transmitting[trx_id] = (bool)trx_bit_read( reg_offset + SR_BBC0_AMCS_AACKFT);
   
   //printf("\n \r IS ACK Transmitted: %d",ack_transmitting[trx_id]);
     
@@ -262,9 +262,9 @@ static void handle_incoming_frame(trx_id_t trx_id)
         if (tal_pib[trx_id].RPCEnabled && tal_pib[trx_id].phy.modulation == FSK)
         {
             /* Configure preamble length for transmission */
-            trx_reg_write( GET_REG_ADDR(RG_BBC0_FSKPLL),
+            trx_reg_write( reg_offset + RG_BBC0_FSKPLL,
                               (uint8_t)(tal_pib[trx_id].FSKPreambleLength & 0xFF));
-            trx_bit_write( GET_REG_ADDR(SR_BBC0_FSKC1_FSKPLH),
+            trx_bit_write( reg_offset + SR_BBC0_FSKC1_FSKPLH,
                               (uint8_t)(tal_pib[trx_id].FSKPreambleLength >> 8));
         }
 #endif
@@ -300,9 +300,9 @@ static bool upload_frame(trx_id_t trx_id)
     rx_frm_info[trx_id] = (frame_info_t *)BMM_BUFFER_POINTER(tal_rx_buffer[trx_id]);
 
     /* Get Rx frame length */
-    CALC_REG_OFFSET(trx_id);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     uint16_t phy_frame_len;
-    trx_read( GET_REG_ADDR(RG_BBC0_RXFLL), (uint8_t *)&phy_frame_len, 2);
+    trx_read( ( reg_offset + RG_BBC0_RXFLL), (uint8_t *)&phy_frame_len, 2);
     ////debug_text_val(PSTR("Frm len = "), phy_frame_len);
     rx_frm_info[trx_id]->len_no_crc = phy_frame_len - tal_pib[trx_id].FCSLen;
 
@@ -338,8 +338,8 @@ void complete_rx_transaction(trx_id_t trx_id)
     ////debug_text_val(PSTR("complete_rx_transaction(), trx_id = "), trx_id);
 
     /* Get energy of received frame */
-    CALC_REG_OFFSET(trx_id);
-    uint8_t ed = trx_reg_read( GET_REG_ADDR(RG_RF09_EDV));
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+    uint8_t ed = trx_reg_read( reg_offset + RG_RF09_EDV);
     ////debug_text_val(PSTR("Energy of received frame = "), ed);
     uint16_t ed_pos = rx_frm_info[trx_id]->len_no_crc + 1 + tal_pib[trx_id].FCSLen;
     rx_frm_info[trx_id]->mpdu[ed_pos] = ed; // PSDU, LQI, ED

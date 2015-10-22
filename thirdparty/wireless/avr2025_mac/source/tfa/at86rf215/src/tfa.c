@@ -115,21 +115,21 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
       //printf(("CCA dur"), tal_pib[trx_id].CCADuration_us);
 
         /* Disable BB */
-        CALC_REG_OFFSET(trx_id);
-        trx_bit_write( GET_REG_ADDR(SR_BBC0_PC_BBEN), 0);
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+        trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 0);
 
 #ifndef BASIC_MODE
         /* Enable EDC interrupt */
-        trx_bit_write( GET_REG_ADDR(SR_RF09_IRQM_EDC), 1);
+        trx_bit_write( reg_offset + SR_RF09_IRQM_EDC, 1);
 #endif
         /* Start single ED measurement; use reg_write - it's the only subregister */
         tal_state[trx_id] = TAL_TFA_CCA;
 #ifdef IQ_RADIO
         /* Enable EDC interrupt */
-        trx_bit_write(RF215_RF, GET_REG_ADDR(SR_RF09_IRQM_EDC), 1);
-        trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_EDC), RF_EDSINGLE);
+        trx_bit_write(RF215_RF, reg_offset + SR_RF09_IRQM_EDC, 1);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_EDC, RF_EDSINGLE);
 #else
-        trx_reg_write( GET_REG_ADDR(RG_RF09_EDC), RF_EDSINGLE);
+        trx_reg_write( reg_offset + RG_RF09_EDC, RF_EDSINGLE);
 #endif
 
         /* Wait until measurement is completed */
@@ -138,10 +138,10 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
         //printf(("Measurement completed"));
 #ifndef BASIC_MODE
         /* Disable EDC interrupt again */
-        trx_bit_write( GET_REG_ADDR(SR_RF09_IRQM_EDC), 0);
+        trx_bit_write( reg_offset + SR_RF09_IRQM_EDC, 0);
 #endif
 #ifdef IQ_RADIO
-        trx_bit_write(RF215_RF, GET_REG_ADDR(SR_RF09_IRQM_EDC), 0);
+        trx_bit_write(RF215_RF, reg_offset + SR_RF09_IRQM_EDC, 0);
 #endif
         /* Since it is a blocking function, restore TAL state */
         tal_state[trx_id] = TAL_IDLE;
@@ -149,13 +149,13 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
         switch_to_txprep(trx_id); /* Leave Rx mode */
 
         /* Switch BB on again */
-        trx_bit_write( GET_REG_ADDR(SR_BBC0_PC_BBEN), 1);
+        trx_bit_write( reg_offset + SR_BBC0_PC_BBEN, 1);
 
         /* Capture ED value for current frame / ED scan */
 #ifdef IQ_RADIO
-        tal_current_ed_val[trx_id] = trx_reg_read(RF215_RF, GET_REG_ADDR(RG_RF09_EDV));
+        tal_current_ed_val[trx_id] = trx_reg_read(RF215_RF, reg_offset + RG_RF09_EDV);
 #else
-        tal_current_ed_val[trx_id] = trx_reg_read( GET_REG_ADDR(RG_RF09_EDV));
+        tal_current_ed_val[trx_id] = trx_reg_read( reg_offset + RG_RF09_EDV);
 #endif
         //printf(("tal_current_ed_val = "), (uint8_t)tal_current_ed_val[trx_id]);
         //printf(("tal_pib[trx_id].CCAThreshold = "), (uint8_t)tal_pib[trx_id].CCAThreshold);
@@ -182,9 +182,9 @@ phy_enum_t tfa_cca_perform(trx_id_t trx_id)
         {
             //printf(("Switch back to TRXOFF"));
             /* Switch to TRXOFF */
-            trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+            trx_reg_write( reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #ifdef IQ_RADIO
-            trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+            trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
             trx_state[trx_id] = RF_TRXOFF;
         }
@@ -256,7 +256,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
     /* Set to TxPREP state */
     switch_to_txprep(trx_id);
 
-    CALC_REG_OFFSET(trx_id);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
     if (tx_mode == CW_MODE)
     {
@@ -273,17 +273,17 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
         /* Configure DAC to generate carrier signal */
         uint8_t dac_config[2] = {(0x7E | 0x80), (0x3F | 0x80)};
 #ifdef IQ_RADIO
-        trx_write(RF215_RF, GET_REG_ADDR(RG_RF09_TXDACI), dac_config, 2);
+        trx_write(RF215_RF, reg_offset + RG_RF09_TXDACI, dac_config, 2);
 #else
-        trx_write( GET_REG_ADDR(RG_RF09_TXDACI), dac_config, 2);
+        trx_write( reg_offset + RG_RF09_TXDACI, dac_config, 2);
 #endif
 
         /* Trigger Tx start */
         //printf(("Start transmission"));
 #ifdef IQ_RADIO
-        trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_CMD), RF_TX);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TX);
 #else
-        trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TX);
+        trx_reg_write( reg_offset + RG_RF09_CMD, RF_TX);
 #endif
         trx_state[trx_id] = RF_TX;
     }
@@ -292,7 +292,7 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
         //printf(("PRBS mode"));
 
         /* Enable continuous transmission mode */
-        trx_bit_write( GET_REG_ADDR(SR_BBC0_PC_CTX), 1);
+        trx_bit_write( reg_offset + SR_BBC0_PC_CTX, 1);
 
         /* Fill length field */
 #ifdef SUPPORT_LEGACY_OQPSK
@@ -305,10 +305,10 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
         {
             len = 2047;
         }
-        trx_write( GET_REG_ADDR(RG_BBC0_TXFLL), (uint8_t *)&len, 2);
+        trx_write( reg_offset + RG_BBC0_TXFLL, (uint8_t *)&len, 2);
 
         //printf(("Start transmission"));
-        trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TX);
+        trx_reg_write( reg_offset + RG_RF09_CMD, RF_TX);
         trx_state[trx_id] = RF_TX;
 
         /* Fill frame buffer */
@@ -344,9 +344,9 @@ void tfa_continuous_tx_stop(trx_id_t trx_id)
 {
     //printf(("tfa_continuous_tx_stop()"));
 
-    CALC_REG_OFFSET(trx_id);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     /* Stop continuous transmission */
-    trx_bit_write( GET_REG_ADDR(SR_BBC0_PC_CTX), 0);
+    trx_bit_write( reg_offset + SR_BBC0_PC_CTX, 0);
 #ifdef IQ_RADIO
     /* Allow command via SPI */
     trx_bit_write(RF215_RF, SR_RF_IQIFC0_EEC, 0);
@@ -378,10 +378,10 @@ void tfa_continuous_tx_stop(trx_id_t trx_id)
         //printf(("Switch back to TRXOFF"));
         /* Switch to TRXOFF */
 #ifdef IQ_RADIO
-        trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
-        trx_reg_write(RF215_BB, GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
+        trx_reg_write(RF215_BB, reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #else
-        trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+        trx_reg_write( reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
         trx_state[trx_id] = RF_TRXOFF;
     }

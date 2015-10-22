@@ -396,14 +396,14 @@ void tal_task(void)
 void switch_to_rx(trx_id_t trx_id)
 {
     //printf(("switch_to_rx(), trx_id ="), trx_id);
-    CALC_REG_OFFSET(trx_id);
+   
     /* Check if buffer is available now. */
     if (tal_rx_buffer[trx_id] != NULL)
     {
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
         trx_reg_write(reg_offset + RG_RF09_CMD, RF_RX);
 #ifdef IQ_RADIO
-        trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_CMD), RF_RX);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_RX);
 #endif
         trx_state[trx_id] = RF_RX;
 #if (defined SUPPORT_FSK) || (defined SUPPORT_OQPSK)
@@ -430,7 +430,7 @@ void switch_to_rx(trx_id_t trx_id)
 void switch_to_txprep(trx_id_t trx_id)
 {
 	uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    CALC_REG_OFFSET(trx_id);
+   
 	trx_reg_write(reg_offset + RG_RF09_CMD, RF_TXPREP);
 #ifdef IQ_RADIO
 	pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TXPREP);
@@ -441,9 +441,9 @@ void switch_to_txprep(trx_id_t trx_id)
 #ifdef RF215v1
     /* Workaround for errata reference #4807 */
 #   ifdef IQ_RADIO
-    trx_write(RF215_RF, GET_REG_ADDR(0x125), (uint8_t *)&txc[trx_id][0], 2);
+    trx_write(RF215_RF, reg_offset + 0x125, (uint8_t *)&txc[trx_id][0], 2);
 #   else
-    trx_write( GET_REG_ADDR(0x125), (uint8_t *)&txc[trx_id][0], 2);
+    trx_write( reg_offset + 0x125, (uint8_t *)&txc[trx_id][0], 2);
 #   endif /* #ifdef RF215v1 */
 #endif /* ifdef IQ_RADIO */
 }
@@ -456,7 +456,7 @@ void switch_to_txprep(trx_id_t trx_id)
  */
 void wait_for_txprep(trx_id_t trx_id)
 {
-    CALC_REG_OFFSET(trx_id);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     rf_cmd_state_t state;
 
 #ifdef RF215v1
@@ -468,9 +468,9 @@ void wait_for_txprep(trx_id_t trx_id)
     do
     {
 #ifdef IQ_RADIO
-        state = (rf_cmd_state_t)trx_reg_read(RF215_RF, GET_REG_ADDR(RG_RF09_STATE));
+        state = (rf_cmd_state_t)trx_reg_read(RF215_RF, reg_offset + RG_RF09_STATE);
 #else
-        state = (rf_cmd_state_t)trx_reg_read( GET_REG_ADDR(RG_RF09_STATE));
+        state = (rf_cmd_state_t)trx_reg_read( reg_offset + RG_RF09_STATE);
 #endif
         if (state != RF_TXPREP)
         {
@@ -484,11 +484,11 @@ void wait_for_txprep(trx_id_t trx_id)
             {
                 do
                 {
-                    trx_reg_write( GET_REG_ADDR(RG_RF09_PLL), 9);
+                    trx_reg_write( reg_offset + RG_RF09_PLL, 9);
                     pal_timer_delay(PLL_FRZ_SETTLING_DURATION);
-                    trx_reg_write( GET_REG_ADDR(RG_RF09_PLL), 8);
+                    trx_reg_write( reg_offset + RG_RF09_PLL, 8);
                     pal_timer_delay(PLL_FRZ_SETTLING_DURATION);
-                    state = (rf_cmd_state_t)trx_reg_read( GET_REG_ADDR(RG_RF09_STATE));
+                    state = (rf_cmd_state_t)trx_reg_read( reg_offset + RG_RF09_STATE);
                 }
                 while (state != RF_TXPREP);
             }
@@ -501,9 +501,9 @@ void wait_for_txprep(trx_id_t trx_id)
     do
     {
 #ifdef IQ_RADIO
-        state = (rf_cmd_state_t)trx_reg_read(RF215_RF, GET_REG_ADDR(RG_RF09_STATE));
+        state = (rf_cmd_state_t)trx_reg_read(RF215_RF, reg_offset + RG_RF09_STATE);
 #else
-        state = (rf_cmd_state_t)trx_reg_read( GET_REG_ADDR(RG_RF09_STATE));
+        state = (rf_cmd_state_t)trx_reg_read( reg_offset + RG_RF09_STATE);
 #endif
         if (state != RF_TXPREP)
         {
@@ -532,8 +532,8 @@ static void handle_trxerr(trx_id_t trx_id)
     //printf(("\n\r handle_trxerr()"));
 
     /* Set device to TRXOFF */
-    CALC_REG_OFFSET(trx_id);
-    trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+    trx_reg_write( reg_offset + RG_RF09_CMD, RF_TRXOFF);
     trx_state[trx_id] = RF_TRXOFF;
     tx_state[trx_id] = TX_IDLE;
     stop_tal_timer(trx_id);
@@ -597,21 +597,21 @@ void stop_rpc(trx_id_t trx_id)
         ((tal_pib[trx_id].phy.modulation == OQPSK) ||
          (tal_pib[trx_id].phy.modulation == FSK)))
     {
-        CALC_REG_OFFSET(trx_id);
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
         switch (tal_pib[trx_id].phy.modulation)
         {
 #ifdef SUPPORT_OQPSK
             case OQPSK:
-                trx_bit_write( GET_REG_ADDR(SR_BBC0_OQPSKC2_RPC), 0);
+                trx_bit_write( reg_offset + SR_BBC0_OQPSKC2_RPC, 0);
                 break;
 #endif
 #ifdef SUPPORT_FSK
             case FSK:
-                trx_bit_write( GET_REG_ADDR(SR_BBC0_FSKRPC_EN), 0);
+                trx_bit_write( reg_offset + SR_BBC0_FSKRPC_EN, 0);
                 /* Configure preamble length for transmission */
-                trx_reg_write( GET_REG_ADDR(RG_BBC0_FSKPLL),
+                trx_reg_write( reg_offset + RG_BBC0_FSKPLL,
                                   (uint8_t)(tal_pib[trx_id].FSKPreambleLength & 0xFF));
-                trx_bit_write( GET_REG_ADDR(SR_BBC0_FSKC1_FSKPLH),
+                trx_bit_write( reg_offset + SR_BBC0_FSKC1_FSKPLH,
                                   (uint8_t)(tal_pib[trx_id].FSKPreambleLength >> 8));
                 break;
 #endif
@@ -619,9 +619,9 @@ void stop_rpc(trx_id_t trx_id)
                 break;
         }
 #   ifdef IQ_RADIO
-        trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_PLL), 8);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_PLL, 8);
 #   else
-        trx_reg_write( GET_REG_ADDR(RG_RF09_PLL), 8);
+        trx_reg_write( reg_offset + RG_RF09_PLL, 8);
 #   endif
     }
 }
@@ -649,26 +649,26 @@ void start_rpc(trx_id_t trx_id)
         )
        )
     {
-        CALC_REG_OFFSET(trx_id);
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 #   ifdef IQ_RADIO
-        trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_PLL), 9);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_PLL, 9);
 #   else
-        trx_reg_write( GET_REG_ADDR(RG_RF09_PLL), 9);
+        trx_reg_write( reg_offset + RG_RF09_PLL, 9);
 #   endif
         switch (tal_pib[trx_id].phy.modulation)
         {
 #ifdef SUPPORT_OQPSK
             case OQPSK:
-                trx_bit_write( GET_REG_ADDR(SR_BBC0_OQPSKC2_RPC), 1);
+                trx_bit_write(reg_offset + SR_BBC0_OQPSKC2_RPC, 1);
                 break;
 #endif
 #ifdef SUPPORT_FSK
             case FSK:
-                trx_bit_write( GET_REG_ADDR(SR_BBC0_FSKRPC_EN), 1);
+                trx_bit_write( reg_offset + SR_BBC0_FSKRPC_EN, 1);
                 /* Configure preamble length for reception */
-                trx_reg_write( GET_REG_ADDR(RG_BBC0_FSKPLL),
+                trx_reg_write( reg_offset + RG_BBC0_FSKPLL,
                                   (uint8_t)(tal_pib[trx_id].FSKPreambleLengthMin & 0xFF));
-                trx_bit_write( GET_REG_ADDR(SR_BBC0_FSKC1_FSKPLH),
+                trx_bit_write( reg_offset + SR_BBC0_FSKC1_FSKPLH,
                                   (uint8_t)(tal_pib[trx_id].FSKPreambleLengthMin >> 8));
                 break;
 #endif
@@ -773,9 +773,9 @@ static void inline trigger_agc_workaround(void *cb_timer_element)
 
     agc_timer_running[trx_id] = false;
 
-    CALC_REG_OFFSET(trx_id);
-    trx_bit_write( GET_REG_ADDR(SR_BBC0_PC_BBEN), 0);
-    trx_bit_write( GET_REG_ADDR(SR_BBC0_PC_BBEN), 1);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+    trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 0);
+    trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 1);
 }
 #endif
 

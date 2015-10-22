@@ -106,16 +106,16 @@ retval_t tal_generate_rand_seed(void)
         }
     }
 
-    CALC_REG_OFFSET(trx_id);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
     /* Set widest filter bandwidth and set IF shift */
     uint8_t previous_bwc;
 #ifdef IQ_RADIO
-    previous_bwc = trx_reg_read(RF215_RF, GET_REG_ADDR(RG_RF09_RXBWC));
-    trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_RXBWC), 0x1B);
+    previous_bwc = trx_reg_read(RF215_RF, reg_offset + RG_RF09_RXBWC);
+    trx_reg_write(RF215_RF, reg_offset + RG_RF09_RXBWC, 0x1B);
 #else
-    previous_bwc = trx_reg_read( GET_REG_ADDR(RG_RF09_RXBWC));
-    trx_reg_write( GET_REG_ADDR(RG_RF09_RXBWC), 0x1B);
+    previous_bwc = trx_reg_read( reg_offset + RG_RF09_RXBWC);
+    trx_reg_write( reg_offset + RG_RF09_RXBWC, 0x1B);
 #endif
 
     /* Ensure that transceiver is not in off mode */
@@ -124,7 +124,7 @@ retval_t tal_generate_rand_seed(void)
         previous_trx_state = RF_TRXOFF;
 
         /* Disable BB to avoid receiving any frame */
-        trx_bit_write( GET_REG_ADDR(SR_BBC0_PC_BBEN), 0);
+        trx_bit_write( reg_offset + SR_BBC0_PC_BBEN, 0);
 
         switch_to_txprep(trx_id);
 
@@ -133,9 +133,9 @@ retval_t tal_generate_rand_seed(void)
          * Use direct register access to change to Rx state, since no buffer is
          * required.
          */
-        trx_bit_write( GET_REG_ADDR(SR_RF09_CMD_CMD), RF_RX);
+        trx_bit_write( reg_offset + SR_RF09_CMD_CMD, RF_RX);
 #ifdef IQ_RADIO
-        trx_bit_write(RF215_RF, GET_REG_ADDR(SR_RF09_CMD_CMD), RF_RX);
+        trx_bit_write(RF215_RF, reg_offset + SR_RF09_CMD_CMD, RF_RX);
 #endif
         trx_state[trx_id] = RF_RX;
 
@@ -149,32 +149,32 @@ retval_t tal_generate_rand_seed(void)
     uint16_t seed;
     for (uint8_t i = 0; i < 2; i++)
     {
-        seed = trx_reg_read( GET_REG_ADDR(RG_RF09_RNDV));
-        seed |= (uint16_t)trx_reg_read( GET_REG_ADDR(RG_RF09_RNDV)) << 8;
+        seed = trx_reg_read(reg_offset + RG_RF09_RNDV);
+        seed |= (uint16_t)trx_reg_read(reg_offset + RG_RF09_RNDV) << 8;
     }
 
     /* Restore previous transceiver state */
     if (previous_trx_state == RF_TRXOFF)
     {
 #ifdef IQ_RADIO
-        trx_bit_write(RF215_BB, GET_REG_ADDR(SR_RF09_CMD_CMD), RF_TRXOFF);
-        trx_bit_write(RF215_RF, GET_REG_ADDR(SR_RF09_CMD_CMD), RF_TRXOFF);
+        trx_bit_write(RF215_BB, reg_offset + SR_RF09_CMD_CMD, RF_TRXOFF);
+        trx_bit_write(RF215_RF, reg_offset + SR_RF09_CMD_CMD, RF_TRXOFF);
         trx_state[trx_id] = RF_TRXOFF;
         /* Enable BB again */
-        trx_bit_write(RF215_BB, GET_REG_ADDR(SR_BBC0_PC_BBEN), 1);
+        trx_bit_write(RF215_BB, reg_offset + SR_BBC0_PC_BBEN, 1);
 #else
-        trx_bit_write( GET_REG_ADDR(SR_RF09_CMD_CMD), RF_TRXOFF);
+        trx_bit_write( reg_offset + SR_RF09_CMD_CMD, RF_TRXOFF);
         trx_state[trx_id] = RF_TRXOFF;
         /* Enable BB again */
-        trx_bit_write( GET_REG_ADDR(SR_BBC0_PC_BBEN), 1);
+        trx_bit_write( reg_offset + SR_BBC0_PC_BBEN, 1);
 #endif
     }
 
     /* Restore previous filter bandwidth setting */
 #ifdef IQ_RADIO
-    trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_RXBWC), previous_bwc);
+    trx_reg_write(RF215_RF, reg_offset + RG_RF09_RXBWC, previous_bwc);
 #else
-    trx_reg_write( GET_REG_ADDR(RG_RF09_RXBWC), previous_bwc);
+    trx_reg_write( reg_offset + RG_RF09_RXBWC, previous_bwc);
 #endif
 
     /* Set the seed for the random number generator. */

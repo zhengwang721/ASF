@@ -191,13 +191,13 @@ static void ftn_timer_cb(void *cb_timer_element)
     {
         if (trx_state[trx_id] == RF_RX)
         {
-            CALC_REG_OFFSET(trx_id);
+            uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
             /* Check if current a frame is received */
 #ifdef IQ_RADIO
-            if (trx_bit_read(RF215_RF, GET_REG_ADDR(SR_RF09_AGCC_FRZS)) == 1)
+            if (trx_bit_read(RF215_RF,reg_offset + SR_RF09_AGCC_FRZS) == 1)
 #else
-            if (trx_bit_read( GET_REG_ADDR(SR_RF09_AGCC_FRZS)) == 1)
+            if (trx_bit_read(reg_offset + SR_RF09_AGCC_FRZS) == 1)
 #endif
             {
                 postpone_tuning(trx_id);
@@ -212,7 +212,7 @@ static void ftn_timer_cb(void *cb_timer_element)
 #ifdef RF215_v1
                 calibrate_LO(trx_id);
 #else
-                trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+                trx_reg_write( reg_offset + RG_RF09_CMD, RF_TRXOFF);
                 trx_state[trx_id] = RF_TRXOFF;
 #endif
                 switch_to_rx(trx_id);
@@ -267,7 +267,7 @@ void calibrate_LO(trx_id_t trx_id)
 {
     ////debug_text_val(PSTR("calibrate_LO(), trx_id"), trx_id);
     uint8_t temp[TRIM_LOOPS][2];
-    CALC_REG_OFFSET(trx_id);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     uint16_t avg[2] = {0, 0};
     bool reduced_measurements = true;
     uint8_t *ptr = (uint8_t *)temp;
@@ -275,9 +275,9 @@ void calibrate_LO(trx_id_t trx_id)
     if (trx_state[trx_id] != RF_TRXOFF)
     {
 #ifdef IQ_RADIO
-        trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #else
-        trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+        trx_reg_write( reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
         trx_state[trx_id] = RF_TRXOFF;
     }
@@ -285,21 +285,21 @@ void calibrate_LO(trx_id_t trx_id)
     for (uint8_t i = 0; i < TRIM_LOOPS; i++)
     {
 #ifdef IQ_RADIO
-        trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_CMD), RF_TXPREP);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TXPREP);
 #else
-        trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TXPREP);
+        trx_reg_write( reg_offset + RG_RF09_CMD, RF_TXPREP);
 #endif
         wait_for_txprep(trx_id);
 #ifdef IQ_RADIO
-        trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #else
-        trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+        trx_reg_write( reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
         trx_state[trx_id] = RF_TRXOFF;
 #ifdef IQ_RADIO
-        trx_read(RF215_RF, GET_REG_ADDR(0x125), (uint8_t *)&temp[i][0], 2);
+        trx_read(RF215_RF, reg_offset + 0x125, (uint8_t *)&temp[i][0], 2);
 #else
-        trx_read( GET_REG_ADDR(0x125), (uint8_t *)&temp[i][0], 2);
+        trx_read( reg_offset + 0x125, (uint8_t *)&temp[i][0], 2);
 #endif
 
         /* Check if the short loop measurement is sufficient */

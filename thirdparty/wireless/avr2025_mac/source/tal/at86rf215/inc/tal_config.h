@@ -56,6 +56,7 @@
 
 /* === MACROS ============================================================== */
 
+#define TAL_FIRST_TIMER_ID              (0)
 /**
  * To configure the clock output configuration to the build,
  * set the following define TRX_CLOCK_OUTPUT_SELECTION to the required value.

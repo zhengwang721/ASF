@@ -139,11 +139,11 @@ static uint16_t get_agc_settling_period(uint8_t sr, uint8_t avgs, uint8_t agci);
 retval_t ofdm_rfcfg(ofdm_option_t ofdm_opt, trx_id_t trx_id)
 {
     retval_t status = MAC_SUCCESS;
-    CALC_REG_OFFSET(trx_id);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
     /* gather additional PHY configuration data */
-    uint8_t lfo = bb_bit_read(GET_REG_ADDR(SR_BBC0_OFDMC_LFO));        /* RX Low frequency offset (TCXO) */
-    uint8_t spc = bb_bit_read(GET_REG_ADDR(SR_BBC0_OFDMPHRRX_SPC));    /* RX spurious compensation */
+    uint8_t lfo = bb_bit_read(reg_offset + SR_BBC0_OFDMC_LFO);        /* RX Low frequency offset (TCXO) */
+    uint8_t spc = bb_bit_read(reg_offset + SR_BBC0_OFDMPHRRX_SPC);    /* RX spurious compensation */
 
     uint8_t sr, txrcut, txfc, rxrcut09, rxrcut24, bw09, bw24, ifs09, ifs24, agci, pdt;
 
@@ -173,7 +173,7 @@ retval_t ofdm_rfcfg(ofdm_option_t ofdm_opt, trx_id_t trx_id)
     tx[1] = (txrcut << TXDFE_RCUT_SHIFT) | (sr << TXDFE_SR_SHIFT);
     /* PAC */
     tx[2] = (3 << PAC_PACUR_SHIFT) | (DEFAULT_TX_PWR_REG << PAC_TXPWR_SHIFT);
-    rf_blk_write(GET_REG_ADDR(RG_RF09_TXCUTC), tx, 3);
+    rf_blk_write(reg_offset + RG_RF09_TXCUTC, tx, 3);
 
     /* Rx settings: RXBWC, RXDFE, AGCC, AGCS */
     uint8_t rx[4];
@@ -202,13 +202,13 @@ retval_t ofdm_rfcfg(ofdm_option_t ofdm_opt, trx_id_t trx_id)
     {
         rx[3] = (3 << AGCS_TGT_SHIFT) | (0x17 << AGCS_GCW_SHIFT); /* AGC target: -30 dB */
     }
-    rf_blk_write(GET_REG_ADDR(RG_RF09_RXBWC), rx, 4);
+    rf_blk_write(reg_offset + RG_RF09_RXBWC, rx, 4);
 
     /* PDT threshold */
-    bb_bit_write(GET_REG_ADDR(SR_BBC0_OFDMSW_PDT), pdt);
+    bb_bit_write(reg_offset + SR_BBC0_OFDMSW_PDT, pdt);
 
 #ifdef IQ_RADIO
-    trx_bit_write(RF215_BB, GET_REG_ADDR(SR_RF09_TXCUTC_PARAMP), RF_PARAMP32U);   /* PA rampup time */
+    trx_bit_write(RF215_BB, reg_offset + SR_RF09_TXCUTC_PARAMP, RF_PARAMP32U);   /* PA rampup time */
 #endif /* #ifdef IQ_RADIO */
 
 #ifndef FWNAME
@@ -230,7 +230,7 @@ retval_t ofdm_rfcfg(ofdm_option_t ofdm_opt, trx_id_t trx_id)
 retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
 {
     retval_t status = MAC_SUCCESS;
-    CALC_REG_OFFSET(trx_id);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
     uint8_t paramp, lpfcut, txrcut, sr, rxbw, rxrcut, avgs;
 #if ((!defined RF215v1) && (!defined RF215Mv1)) && (defined DIRECT_MODULATION)
@@ -316,11 +316,11 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
 #endif
     /* PAC */
     tx[2] = (3 << PAC_PACUR_SHIFT) | (DEFAULT_TX_PWR_REG << PAC_TXPWR_SHIFT);
-    rf_blk_write(GET_REG_ADDR(RG_RF09_TXCUTC), tx, 3);
+    rf_blk_write(reg_offset + RG_RF09_TXCUTC, tx, 3);
 
 #if ((!defined RF215v1) && (!defined RF215Mv1)) && (defined DIRECT_MODULATION)
     ////printf(("Direct modulation enabled"));
-    bb_bit_write(GET_REG_ADDR(SR_BBC0_OQPSKC0_DM), dm);
+    bb_bit_write(reg_offset + SR_BBC0_OQPSKC0_DM, dm);
 #endif
 
     /* Rx settings: RXBWC, RXDFE, AGCC, AGCS */
@@ -332,11 +332,11 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
     /* AGCC */
     rx[2] = 0x81 | (0 << AGCC_AGCI_SHIFT) | (avgs << AGCC_AVGS_SHIFT); /* AGC input: after channel filter */
     rx[3] = (3 << AGCS_TGT_SHIFT) | (0x17 << AGCS_GCW_SHIFT); /* AGC target: -30 dB */
-    rf_blk_write(GET_REG_ADDR(RG_RF09_RXBWC), rx, 4);
+    rf_blk_write(reg_offset + RG_RF09_RXBWC, rx, 4);
 
 #ifdef IQ_RADIO
     /* PA ramp time 32 us to BB(!) */
-    trx_bit_write(RF215_BB, GET_REG_ADDR(SR_RF09_TXCUTC_PARAMP), RF_PARAMP32U);
+    trx_bit_write(RF215_BB, reg_offset + SR_RF09_TXCUTC_PARAMP, RF_PARAMP32U);
 #endif /* #ifdef IQ_RADIO */
 
 #ifndef FWNAME
@@ -360,7 +360,7 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
 retval_t fsk_rfcfg(fsk_mod_type_t mod_type, fsk_sym_rate_t srate, mod_idx_t mod_idx, trx_id_t trx_id)
 {
     retval_t status = MAC_SUCCESS;
-    CALC_REG_OFFSET(trx_id);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     uint8_t srate_midx = (srate << 3) + mod_idx;
     uint8_t temp[2];
 
@@ -371,20 +371,20 @@ retval_t fsk_rfcfg(fsk_mod_type_t mod_type, fsk_sym_rate_t srate, mod_idx_t mod_
 #if ((!defined RF215v1) && (!defined RF215Mv1)) && (defined DIRECT_MODULATION)
     temp[1] |= 1 << TXDFE_DM_SHIFT; /* DM */
 #endif
-    rf_blk_write(GET_REG_ADDR(RG_RF09_TXCUTC), temp, 2);
+    rf_blk_write(reg_offset + RG_RF09_TXCUTC, temp, 2);
 #if ((!defined RF215v1) && (!defined RF215Mv1)) && (defined DIRECT_MODULATION)
     uint8_t pe[4];
     pe[0] = (1 << FSKDM_EN_SHIFT) | (1 << FSKDM_PE_SHIFT); /* PE = 1, DM = 1 */
     PGM_READ_BLOCK((uint8_t *)&pe[1], (uint8_t *)&fsk_pe_tbl[3 * (uint8_t)srate], 3);
-    bb_blk_write(GET_REG_ADDR(RG_BBC0_FSKDM), pe, 4);
+    bb_blk_write(reg_offset + RG_BBC0_FSKDM, pe, 4);
 #endif
 
     /* - Transmit Power*/
 #ifdef IQ_RADIO
-    trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_PAC),
+    trx_reg_write(RF215_RF, reg_offset + RG_RF09_PAC,
                       ((3 << PAC_PACUR_SHIFT) | (DEFAULT_TX_PWR_REG << PAC_TXPWR_SHIFT)));
 #else
-    trx_reg_write( GET_REG_ADDR(RG_RF09_PAC),
+    trx_reg_write( reg_offset + RG_RF09_PAC,
                       ((3 << PAC_PACUR_SHIFT) | (DEFAULT_TX_PWR_REG << PAC_TXPWR_SHIFT)));
 #endif
 
@@ -399,12 +399,12 @@ retval_t fsk_rfcfg(fsk_mod_type_t mod_type, fsk_sym_rate_t srate, mod_idx_t mod_
     {
         PGM_READ_BLOCK(temp, (uint8_t *)&fsk_params_tbl[srate_midx][7], 2);
     }
-    rf_blk_write(GET_REG_ADDR(RG_RF09_RXBWC), temp, 2);
+    rf_blk_write(reg_offset + RG_RF09_RXBWC, temp, 2);
 
     /* - AGC input + AGC average period */
     /* - AGC target */
     PGM_READ_BLOCK(temp, (uint8_t *)&fsk_params_tbl[srate_midx][9], 2);
-    rf_blk_write(GET_REG_ADDR(RG_RF09_AGCC), temp, 2);
+    rf_blk_write(reg_offset + RG_RF09_AGCC, temp, 2);
 
 #ifndef FWNAME
     uint8_t agcc = (uint8_t)PGM_READ_BYTE(&fsk_params_tbl[srate_midx][9]);

@@ -166,14 +166,14 @@
 #if ((defined RF215v2) || (defined RF215v3) || (defined RF215Mv2))
 /* Pre-emphasis filter coefficients */
 /* row: FSK data rate, columns: values for registers FSKPE0, FSKPE1, FSKPE2 */
-#define FSK_PE_TABLE                    \
-{                                       \
-    2,     3,  252,     /* 50kHz */     \
-    14,   15,  240,     /* 100kHz */    \
-    60,   63,  192,     /* 150kHz */    \
-    116,  127, 128,     /* 200kHz */    \
-    5,    60,  195,     /* 300kHz */    \	
-    19,   41,  199      /* 400kHz */    \
+#define FSK_PE_TABLE \
+{ \
+	2, 3, 252, /* 50kHz */ \
+	14, 15, 240, /* 100kHz */ \
+	60, 63, 192, /* 150kHz */ \
+	116, 127, 128, /* 200kHz */ \
+	5, 60, 195, /* 300kHz */ \
+	19, 41, 199 /* 400kHz */ \
 }
 #endif
 

@@ -156,7 +156,7 @@ extern volatile rf_irq_t tal_rf_irqs[NUM_TRX];
 
 /** Defines to handle register offset */
 #define CALC_REG_OFFSET(var)                uint16_t offset = RF_BASE_ADDR_OFFSET * var
-#define GET_REG_ADDR(reg)                   offset + reg
+#define GET_REG_ADDR (reg)                   offset + reg
 
 /*
  * Time gap between each poll access in microseconds.

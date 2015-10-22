@@ -113,11 +113,11 @@ uint16_t tfa_get_batmon_voltage(void)
     /* Disable both battery monitor interrupt during measurement */
     for (uint8_t i = 0; i < NUM_TRX; i++)
     {
-        CALC_REG_OFFSET(i);
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * i;
 #ifdef IQ_RADIO
-        trx_bit_write(RF215_RF, GET_REG_ADDR(SR_RF09_IRQM_BATLOW), 0);
+        trx_bit_write(RF215_RF, reg_offset + SR_RF09_IRQM_BATLOW, 0);
 #else
-        trx_bit_write( GET_REG_ADDR(SR_RF09_IRQM_BATLOW), 0);
+        trx_bit_write( reg_offset + SR_RF09_IRQM_BATLOW, 0);
 #endif
     }
 
@@ -217,11 +217,11 @@ uint16_t tfa_get_batmon_voltage(void)
 
     for (uint8_t i = 0; i < NUM_TRX; i++)
     {
-        CALC_REG_OFFSET(i);
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * i;
 #ifdef IQ_RADIO
-        trx_bit_write(RF215_RF, GET_REG_ADDR(SR_RF09_IRQM_BATLOW), 1);
+        trx_bit_write(RF215_RF, reg_offset + SR_RF09_IRQM_BATLOW, 1);
 #else
-        trx_bit_write( GET_REG_ADDR(SR_RF09_IRQM_BATLOW), 1);
+        trx_bit_write( reg_offset + SR_RF09_IRQM_BATLOW, 1);
 #endif
     }
 

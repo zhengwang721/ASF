@@ -102,10 +102,10 @@ retval_t tal_trx_sleep(trx_id_t trx_id)
     }
 
     {
-        CALC_REG_OFFSET(trx_id);
-        trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+        trx_reg_write( reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #ifdef IQ_RADIO
-        trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
     }
     trx_state[trx_id] = RF_TRXOFF;
@@ -117,10 +117,10 @@ retval_t tal_trx_sleep(trx_id_t trx_id)
     {
         for (trx_id_t i = (trx_id_t)0; i < (trx_id_t)NUM_TRX; i++)
         {
-            CALC_REG_OFFSET(i);
-            trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_SLEEP);
+            uint16_t reg_offset = RF_BASE_ADDR_OFFSET * i;
+            trx_reg_write( reg_offset + RG_RF09_CMD, RF_SLEEP);
 #ifdef IQ_RADIO
-            trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_CMD), RF_SLEEP);
+            trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_SLEEP);
 #endif
             TAL_BB_IRQ_CLR_ALL(i);
             TAL_RF_IRQ_CLR_ALL(i);
@@ -198,10 +198,10 @@ retval_t tal_trx_wakeup(trx_id_t trx_id)
     {
         tal_state[trx_id] = TAL_WAKING_UP; /* Intermediate state to handle TRX IRQ */
         /* Write command to wake device up */
-        CALC_REG_OFFSET(trx_id);
-        trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+        trx_reg_write( reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #ifdef IQ_RADIO
-        trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+        trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
         /* Wait for transceiver wakeup */
 		uint32_t start_time;

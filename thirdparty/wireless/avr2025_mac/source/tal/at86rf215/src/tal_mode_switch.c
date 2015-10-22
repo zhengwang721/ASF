@@ -258,8 +258,8 @@ static inline void download_ms_ppdu(trx_id_t trx_id)
 {
     /* fill length field */
     uint16_t len = 2; /* fixed size - no CRC */
-    CALC_REG_OFFSET(trx_id);
-    trx_write( GET_REG_ADDR(RG_BBC0_TXFLL), (uint8_t *)&len, 2);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+    trx_write( reg_offset + RG_BBC0_TXFLL, (uint8_t *)&len, 2);
 
     /* fill frame buffer */
     uint16_t phr = create_mode_switch_phr(trx_id);
@@ -284,8 +284,8 @@ void tx_ms_ppdu(trx_id_t trx_id)
 
     /* Configure auto modes: Disable CCATX, AACK and TX2RX */
     /* Other auto mode settings can be set to 0 */
-    CALC_REG_OFFSET(trx_id);
-    trx_reg_write( GET_REG_ADDR(RG_BBC0_AMCS), 0);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+    trx_reg_write(reg_offset + RG_BBC0_AMCS, 0);
 
     /* Enable raw mode */
     configure_raw_mode(trx_id, true);
@@ -313,7 +313,7 @@ void tx_ms_ppdu(trx_id_t trx_id)
 #endif
 
     //printf(("switch to Tx"));
-    trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TX);
+    trx_reg_write( reg_offset + RG_RF09_CMD, RF_TX);
     trx_state[trx_id] = RF_TX;
 
     tx_state[trx_id] = TX_MS_PPDU;
@@ -445,8 +445,8 @@ static void configure_new_tx_mode(trx_id_t trx_id)
     /* Check if ACK is requested */
     if (*mac_frame_ptr[trx_id]->mpdu & FCF_ACK_REQUEST)
     {
-        CALC_REG_OFFSET(trx_id);
-        trx_bit_write( GET_REG_ADDR(SR_BBC0_AMCS_TX2RX), 1);
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+        trx_bit_write( reg_offset + SR_BBC0_AMCS_TX2RX, 1);
     }
 
     tal_pib[trx_id].phy.modulation = tal_pib[trx_id].ModeSwitchNewMode.modulation;

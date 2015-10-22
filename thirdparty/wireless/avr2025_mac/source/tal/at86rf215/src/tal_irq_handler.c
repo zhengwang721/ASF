@@ -307,10 +307,10 @@ void bb_irq_handler_cb(void)
             {
                 ////debug_text(PSTR("BB IRQ - AGCR"));
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCR)); // avoid Pa091
-                CALC_REG_OFFSET(trx_id);
+                uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
                 /* Release AGC */
                 //////debug_text(PSTR("Release AGC"));
-                trx_bit_write(RF215_RF, GET_REG_ADDR(SR_RF09_AGCC_FRZC), 0);
+                trx_bit_write(RF215_RF, reg_offset + SR_RF09_AGCC_FRZC, 0);
 #ifdef IRQ_DEBUGGING
                 per[trx_id].agcr++;
                 //printf("AGCR %"PRIu32"\n", now);
@@ -320,9 +320,9 @@ void bb_irq_handler_cb(void)
                 if ((irqs & BB_IRQ_RXFE) == 0)
                 {
                     ////debug_text(PSTR("Apply workaround for #4830"));
-                    CALC_REG_OFFSET(trx_id);
-                    trx_bit_write( GET_REG_ADDR(SR_BBC0_AMCS_AACK), 0);
-                    trx_bit_write( GET_REG_ADDR(SR_BBC0_AMCS_AACK), 1);
+                    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+                    trx_bit_write( reg_offset + SR_BBC0_AMCS_AACK, 0);
+                    trx_bit_write( reg_offset + SR_BBC0_AMCS_AACK, 1);
                 }
 #endif
             }
@@ -331,9 +331,9 @@ void bb_irq_handler_cb(void)
                 ////debug_text(PSTR("BB IRQ - AGCH"));
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCH)); // avoid Pa091
                 /* Hold AGC */
-                CALC_REG_OFFSET(trx_id);
+                uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
                 //////debug_text(PSTR("Hold AGC"));
-                trx_bit_write(RF215_RF, GET_REG_ADDR(SR_RF09_AGCC_FRZC), 1);
+                trx_bit_write(RF215_RF, reg_offset + SR_RF09_AGCC_FRZC, 1);
 #ifdef IRQ_DEBUGGING
                 per[trx_id].agch++;
                 //printf("AGCH %"PRIu32"\n", now);
@@ -563,13 +563,13 @@ static void switch_rf_to_txprep(trx_id_t trx_id)
 {
     ////debug_text(PSTR("switch_rf_to_txprep()"));
 
-    CALC_REG_OFFSET(trx_id);
-    trx_reg_write(RF215_RF, GET_REG_ADDR(RG_RF09_CMD), RF_TXPREP);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+    trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TXPREP);
     /* Wait for TXPREP */
     rf_cmd_state_t state;
     do
     {
-        state = (rf_cmd_state_t)trx_reg_read(RF215_RF, GET_REG_ADDR(RG_RF09_STATE));
+        state = (rf_cmd_state_t)trx_reg_read(RF215_RF, reg_offset + RG_RF09_STATE);
         //////debug_text_val(PSTR("state"), state);
     }
     while (state != RF_TXPREP);

@@ -99,10 +99,10 @@ void ack_transmission_done(trx_id_t trx_id)
     if (tal_pib[trx_id].RPCEnabled && tal_pib[trx_id].phy.modulation == FSK)
     {
         /* Configure preamble length for reception */
-        CALC_REG_OFFSET(trx_id);
-        trx_reg_write( GET_REG_ADDR(RG_BBC0_FSKPLL),
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+        trx_reg_write( reg_offset + RG_BBC0_FSKPLL,
                           (uint8_t)(tal_pib[trx_id].FSKPreambleLengthMin & 0xFF));
-        trx_bit_write( GET_REG_ADDR(SR_BBC0_FSKC1_FSKPLH),
+        trx_bit_write( reg_offset + SR_BBC0_FSKC1_FSKPLH,
                           (uint8_t)(tal_pib[trx_id].FSKPreambleLengthMin >> 8));
     }
 #endif
@@ -227,16 +227,16 @@ void start_ack_wait_timer(trx_id_t trx_id)
     if (status != MAC_SUCCESS)
     {
         ////debug_text_val(PSTR("ACK timer could not be started, "), status);
-        CALC_REG_OFFSET(trx_id);
-        trx_reg_write( GET_REG_ADDR(RG_RF09_CMD), RF_TRXOFF);
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+        trx_reg_write( reg_offset + RG_RF09_CMD, RF_TRXOFF);
         trx_state[trx_id] = RF_TRXOFF;
         tx_done_handling(trx_id, status);
     }
     else
     {
         /* Configure frame filter to receive only ACK frames */
-        CALC_REG_OFFSET(trx_id);
-        trx_reg_write( GET_REG_ADDR(RG_BBC0_AFFTM), ACK_FRAME_TYPE_ONLY);
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+        trx_reg_write( reg_offset + RG_BBC0_AFFTM, ACK_FRAME_TYPE_ONLY);
         /* Sync with Trx state; due to Tx2Rx the transceiver is alreadyswitches automatically to Rx */
         trx_state[trx_id] = RF_RX;
     }
@@ -262,11 +262,11 @@ void ack_timout_cb(void *cb_timer_element)
 
     /* Configure frame filter to receive all allowed frame types */
     /* Re-store frame filter to pass "normal" frames */
-    CALC_REG_OFFSET(trx_id);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 #ifdef SUPPORT_FRAME_FILTER_CONFIGURATION
-    trx_reg_write( GET_REG_ADDR(RG_BBC0_AFFTM), tal_pib[trx_id].frame_types);
+    trx_reg_write( reg_offset + RG_BBC0_AFFTM, tal_pib[trx_id].frame_types);
 #else
-    trx_reg_write( GET_REG_ADDR(RG_BBC0_AFFTM), DEFAULT_FRAME_TYPES);
+    trx_reg_write( reg_offset + RG_BBC0_AFFTM, DEFAULT_FRAME_TYPES);
 #endif
 
     tx_done_handling(trx_id, MAC_NO_ACK);
