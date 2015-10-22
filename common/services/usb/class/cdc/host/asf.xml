@@ -25,6 +25,10 @@
 			<device-support value="saml21"/>
 			<device-support value="samg55"/>
 			<device-support value="samda1"/>
+			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="sams70"/>
+			<device-support value="same70"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.cdc.host.composite#disable" caption="USB Host CDC disabled">
@@ -62,6 +66,10 @@
 		<device-support value="saml21"/>
 		<device-support value="samg55"/>
 		<device-support value="samda1"/>
+		<device-support value="samv71"/>
+		<device-support value="samv70"/>
+		<device-support value="sams70"/>
+		<device-support value="same70"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>
 

@@ -146,6 +146,7 @@
 			<build type="module-config" subtype="path" value="saml/module_config"/>
 			<build type="doxygen-entry-point" value="sleepmgr_group"/>
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 			<require idref="sam0.drivers.system"/>
 			<generator value="doxygen-module" default-mcu="unspecified-saml21"/>
 		</module>

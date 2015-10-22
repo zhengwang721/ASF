@@ -10,7 +10,7 @@
 		<build type="header-file" value="conf_sio2host.h"/>
 		<build type="header-file" value="conf_usart_serial.h"/>
 		<build type="header-file" value="conf_hw_timer.h"/>
-
+        <build type="header-file" value="conf_perf_analyzer.h"/>
 		<config name="config.thirdparty.wireless.addons.sio2host" value="uart"/>
 		
 		<require idref="thirdparty.wireless.avr2025_mac.apps.tal.performance_analyzer"/>
