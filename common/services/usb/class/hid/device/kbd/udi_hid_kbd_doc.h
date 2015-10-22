@@ -444,9 +444,14 @@ bool udi_hid_kbd_down(uint8_t key_id);
  *    <th>Comments</td>
  * </tr>
  * <tr>
+ *    <td>42340B</td>
+ *    <td>10/2015</td>
+ *    <td>Fixed typos</td>
+ * </tr>
+ * <tr>
  *    <td>42340A</td>
  *    <td>12/2014</td>
- *    <td>Initial release.</td>
+ *    <td>Initial release</td>
  * </tr>
  * </table>
  */
