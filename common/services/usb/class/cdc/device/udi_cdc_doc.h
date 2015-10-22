@@ -882,7 +882,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  * <tr>
  *    <td>42337B</td>
  *    <td>10/2015</td>
- *    <td>Added support for SAM L22</td>
+ *    <td>Fixed typos</td>
  * </tr>
  * <tr>
  *    <td>42337A</td>
