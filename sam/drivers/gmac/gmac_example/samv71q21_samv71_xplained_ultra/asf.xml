@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="GMAC example for SAMV71 Xplained Ultra" id="sam.drivers.gmac.gmac_example.samv71_xplained_ultra">
+	<project caption="GMAC example on SAMV71-Xplained-Ultra" id="sam.drivers.gmac.gmac_example.samv71_xplained_ultra">
 		<info type="description" value="summary">
 		Ethernet example with ethernet GMAC, process simple ethernet packets.
 		</info>
