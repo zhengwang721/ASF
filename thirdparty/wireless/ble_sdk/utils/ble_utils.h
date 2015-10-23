@@ -66,6 +66,9 @@
 
 #define DBG_LOG		    printf("\r\n");\
 						printf
+
+#define DBG_LOG_ADV	    printf("\r\nBLE-ADV: ");\
+						printf
 						
 #define UNUSED1(x) (void)(x)
 #define UNUSED2(x,y) (void)(x),(void)(y)

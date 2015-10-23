@@ -1137,5 +1137,602 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	}
 }
 
+/* Advertisement Data will be set based on the advertisement configuration */
+at_ble_status_t ble_advertisement_data_set(void)
+{
+	uint8_t adv_buf[AT_BLE_ADV_MAX_SIZE];
+	uint8_t scn_resp[AT_BLE_ADV_MAX_SIZE];
+	adv_element_container_t adv_data_element = {0, NULL};
+	scan_resp_element_t scan_resp_data_element = {0, NULL};
+	adv_data_element.adv_ptr = adv_buf;
+	scan_resp_data_element.scn_ptr = scn_resp;
+	at_ble_status_t status = AT_BLE_SUCCESS;
+	
+	#if BLE_GAP_ADV_SERVICE_16BIT_UUID_ENABLE
+	#if (BLE_GAP_ADV_SERVICE_16BIT_UUID_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH))) {
+		uint8_t length_field_ind;
+		adv_buf[adv_data_element.len] = adv_data_element.len;
+		length_field_ind = adv_data_element.len;
+		adv_data_element.len++;
+		adv_buf[adv_data_element.len++] = COMPLETE_LIST_16BIT_SERV_UUIDS;
+		MREPEAT(SERVICE_UUID16_MAX_NUM, _CONF_SERVICE_16BIT_UUID, &adv_data_element);
+		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+	}
+	#else
+	if(false){}
+	#endif
+	#if BLE_GAP_ADV_SERVICE_16BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH))) {
+		uint8_t length_field_ind;
+		scn_resp[scan_resp_data_element.len] = scan_resp_data_element.len;
+		length_field_ind = scan_resp_data_element.len;
+		scan_resp_data_element.len++;
+		scn_resp[scan_resp_data_element.len++] = COMPLETE_LIST_16BIT_SERV_UUIDS;
+		MREPEAT(SERVICE_UUID16_MAX_NUM, _CONF_SERVICE_16BIT_UUID_SCAN_RSP, &scan_resp_data_element);
+		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add 16-bit UUIDs");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_SERVICE_32BIT_UUID_ENABLE
+	#if (BLE_GAP_ADV_SERVICE_32BIT_UUID_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH))) {
+		uint8_t length_field_ind;
+		adv_buf[adv_data_element.len] = adv_data_element.len;
+		length_field_ind = adv_data_element.len;
+		adv_data_element.len++;
+		adv_buf[adv_data_element.len++] = COMPLETE_LIST_32BIT_SERV_UUIDS;
+		MREPEAT(SERVICE_UUID32_MAX_NUM, _CONF_SERVICE_32BIT_UUID, &adv_data_element)
+		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+	}
+	#else
+	if(false){}
+	#endif
+	#if BLE_GAP_ADV_SERVICE_32BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH))) {
+		uint8_t length_field_ind;
+		scn_resp[scan_resp_data_element.len] = scan_resp_data_element.len;
+		length_field_ind = scan_resp_data_element.len;
+		scan_resp_data_element.len++;
+		scn_resp[scan_resp_data_element.len++] = COMPLETE_LIST_32BIT_SERV_UUIDS;
+		MREPEAT(SERVICE_UUID32_MAX_NUM, _CONF_SERVICE_32BIT_UUID_SCAN_RSP, &adv_data_element)
+		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add List of 32-bit Service Class UUIDs");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_SERVICE_128BIT_UUID_ENABLE
+	#if (BLE_GAP_ADV_SERVICE_128BIT_UUID_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH))) {
+		uint8_t length_field_ind;
+		adv_buf[adv_data_element.len] = adv_data_element.len;
+		length_field_ind = adv_data_element.len;
+		adv_data_element.len++;
+		adv_buf[adv_data_element.len++] = COMPLETE_LIST_128BIT_SERV_UUIDS;
+		MREPEAT(SERVICE_UUID128_MAX_NUM, _CONF_SERVICE_128BIT_UUID, &adv_data_element)
+		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+	}
+	#else
+	if(false){}
+	#endif
+	#if BLE_GAP_ADV_SERVICE_128BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH))) {
+		uint8_t length_field_ind;
+		scn_resp[scan_resp_data_element.len] = scan_resp_data_element.len;
+		length_field_ind = scan_resp_data_element.len;
+		scan_resp_data_element.len++;
+		scn_resp[scan_resp_data_element.len++] = COMPLETE_LIST_128BIT_SERV_UUIDS;
+		MREPEAT(SERVICE_UUID128_MAX_NUM, _CONF_SERVICE_128BIT_UUID_SCAN_RSP, &adv_data_element)
+		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add List of 128-bit Service Class UUIDs");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_SHORTENED_LOCAL_NAME_ENABLE
+	#if (BLE_GAP_ADV_SHORTENED_LOCAL_NAME_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_DATA_SHORTENED_LOCAL_NAME_LEN))) {
+		adv_buf[adv_data_element.len++] = BLE_GAP_ADV_DATA_SHORTENED_LOCAL_NAME_LEN + ADV_TYPE_SIZE;
+		adv_buf[adv_data_element.len++] = SHORTENED_LOCAL_NAME;
+		memcpy(&adv_buf[adv_data_element.len], BLE_GAP_ADV_DATA_SHORTENED_LOCAL_NAME, BLE_GAP_ADV_DATA_SHORTENED_LOCAL_NAME_LEN);
+		adv_data_element.len += BLE_GAP_ADV_DATA_SHORTENED_LOCAL_NAME_LEN;
+	}
+	#else
+	if(false){}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add Shortened Local Name");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if (BLE_GAP_ADV_COMPLETE_LOCAL_NAME_ENABLE && !BLE_GAP_ADV_SHORTENED_LOCAL_NAME_ENABLE)
+	#if (BLE_GAP_ADV_COMPLETE_LOCAL_NAME_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_DATA_COMPLETE_LOCAL_NAME_LENGTH))) {
+		adv_buf[adv_data_element.len++] = BLE_GAP_ADV_DATA_COMPLETE_LOCAL_NAME_LENGTH + ADV_TYPE_SIZE;
+		adv_buf[adv_data_element.len++] = COMPLETE_LOCAL_NAME;
+		memcpy(&adv_buf[adv_data_element.len], BLE_GAP_ADV_DATA_COMPLETE_LOCAL_NAME, BLE_GAP_ADV_DATA_COMPLETE_LOCAL_NAME_LENGTH);
+		adv_data_element.len += BLE_GAP_ADV_DATA_COMPLETE_LOCAL_NAME_LENGTH;
+	}
+	#else
+	if(false){}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add Complete local name");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if ( BLE_GAP_ADV_SHORTENED_LOCAL_NAME_ENABLE && BLE_GAP_ADV_COMPLETE_LOCAL_NAME_ENABLE )
+	#if ((BLE_GAP_ADV_SHORTENED_LOCAL_NAME_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_SHORTENED_LOCAL_NAME_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
+	if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_DATA_COMPLETE_LOCAL_NAME_LENGTH))){
+		scn_resp[scan_resp_data_element.len++] = BLE_GAP_ADV_DATA_COMPLETE_LOCAL_NAME_LENGTH + ADV_TYPE_SIZE;
+		scn_resp[scan_resp_data_element.len++] = COMPLETE_LOCAL_NAME;
+		memcpy(&scn_resp[scan_resp_data_element.len], BLE_GAP_ADV_DATA_COMPLETE_LOCAL_NAME, BLE_GAP_ADV_DATA_COMPLETE_LOCAL_NAME_LENGTH);
+		scan_resp_data_element.len += BLE_GAP_ADV_DATA_COMPLETE_LOCAL_NAME_LENGTH;
+	}
+	#else
+	if(false){}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add Complete local name");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_TX_POWER_ENABLE
+	#if (BLE_GAP_ADV_TX_POWER_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if(adv_data_element.len <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_DATA_TX_POWER_SIZE))) {
+		adv_buf[adv_data_element.len++] = BLE_GAP_ADV_DATA_TX_POWER_SIZE + ADV_TYPE_SIZE;
+		adv_buf[adv_data_element.len++] = TX_POWER_LEVEL;
+		adv_buf[adv_data_element.len++] = BLE_GAP_ADV_DATA_TX_POWER;
+	}
+	#else
+	if(false){}
+	#endif
+	#if ((BLE_GAP_ADV_TX_POWER_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_TX_POWER_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
+	else if(scan_resp_data_element.len <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_DATA_TX_POWER_SIZE))) {
+		scn_resp[scan_resp_data_element.len++] = BLE_GAP_ADV_DATA_TX_POWER_SIZE + ADV_TYPE_SIZE;
+		scn_resp[scan_resp_data_element.len++] = TX_POWER_LEVEL;
+		scn_resp[scan_resp_data_element.len++] = BLE_GAP_ADV_DATA_TX_POWER;
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add Tx Power");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_SLAVE_CONN_INTERVAL_RANGE_ENABLE
+	#if (BLE_GAP_ADV_SLAVE_CONN_INTERVAL_RANGE_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_LENGTH + BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_LENGTH))) {
+		adv_buf[adv_data_element.len++] = BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_LENGTH + BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_LENGTH + ADV_TYPE_SIZE;
+		adv_buf[adv_data_element.len++] = SLAVE_CONNECTION_INTERVAL_RANGE;
+		adv_buf[adv_data_element.len++] = (uint8_t)BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_MIN;
+		adv_buf[adv_data_element.len++] = (uint8_t)(BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_MIN >> 8);
+		adv_buf[adv_data_element.len++] = (uint8_t)BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_MAX;
+		adv_buf[adv_data_element.len++] = (uint8_t)(BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_MAX >> 8);
+	}
+	#else
+	if(false){}
+	#endif
+	#if ((BLE_GAP_ADV_SLAVE_CONN_INTERVAL_RANGE_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_SLAVE_CONN_INTERVAL_RANGE_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_LENGTH + BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_LENGTH))) {
+		scn_resp[scan_resp_data_element.len++] = BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_LENGTH + BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_LENGTH + ADV_TYPE_SIZE;
+		scn_resp[scan_resp_data_element.len++] = SLAVE_CONNECTION_INTERVAL_RANGE;
+		scn_resp[scan_resp_data_element.len++] = (uint8_t)BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_MIN;
+		scn_resp[scan_resp_data_element.len++] = (uint8_t)(BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_MIN >> 8);
+		scn_resp[scan_resp_data_element.len++] = (uint8_t)BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_MAX;
+		scn_resp[scan_resp_data_element.len++] = (uint8_t)(BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_MAX >> 8);
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to Slave connection interval range");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_ENABLE
+	#if (BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH))) {
+		uint8_t length_field_ind;
+		adv_buf[adv_data_element.len] = adv_data_element.len;
+		length_field_ind = adv_data_element.len;
+		adv_data_element.len++;
+		adv_buf[adv_data_element.len++] = LIST_16BIT_SERV_SOLICITATION_UUIDS;
+		MREPEAT(SERVICE_UUID16_MAX_NUM, _CONF_SERVICE_SOLTN_16BIT_UUID, &adv_data_element);
+		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+	}
+	#else
+	if(false){}
+	#endif
+	#if ((BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH))) {
+		uint8_t length_field_ind;
+		scn_resp[scan_resp_data_element.len] = scan_resp_data_element.len;
+		length_field_ind = scan_resp_data_element.len;
+		scan_resp_data_element.len++;
+		scn_resp[scan_resp_data_element.len++] = LIST_16BIT_SERV_SOLICITATION_UUIDS;
+		MREPEAT(SERVICE_UUID16_MAX_NUM, _CONF_SERVICE_SOLTN_16BIT_UUID_SCAN_RSP, &scan_resp_data_element);
+		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add List of 16-bit Service Solicitation UUIDs");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID_ENABLE
+	#if (BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH))) {
+		uint8_t length_field_ind;
+		adv_buf[adv_data_element.len] = adv_data_element.len;
+		length_field_ind = adv_data_element.len;
+		adv_data_element.len++;
+		adv_buf[adv_data_element.len++] = LIST_32BIT_SERV_SOLICITATION_UUIDS;
+		MREPEAT(SERVICE_UUID32_MAX_NUM, _CONF_SERVICE_SOLTN_32BIT_UUID, &adv_data_element)
+		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+	}
+	#else
+	if(false){}
+	#endif
+	#if ((BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH))) {
+		uint8_t length_field_ind;
+		scn_resp[scan_resp_data_element.len] = scan_resp_data_element.len;
+		length_field_ind = scan_resp_data_element.len;
+		scan_resp_data_element.len++;
+		scn_resp[scan_resp_data_element.len++] = LIST_32BIT_SERV_SOLICITATION_UUIDS;
+		MREPEAT(SERVICE_UUID32_MAX_NUM, _CONF_SERVICE_SOLTN_32BIT_UUID_SCAN_RSP, &adv_data_element)
+		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add List of 32-bit Service Solicitation UUIDs");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_ENABLE
+	#if (BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH))) {
+		uint8_t length_field_ind;
+		adv_buf[adv_data_element.len] = adv_data_element.len;
+		length_field_ind = adv_data_element.len;
+		adv_data_element.len++;
+		adv_buf[adv_data_element.len++] = LIST_128BIT_SERV_SOLICITATION_UUIDS;
+		MREPEAT(SERVICE_UUID128_MAX_NUM, _CONF_SERVICE_SOLTN_128BIT_UUID, &adv_data_element)
+		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+	}
+	#else
+	if(false){}
+	#endif
+	#if ((BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH))) {
+		uint8_t length_field_ind;
+		scn_resp[scan_resp_data_element.len] = scan_resp_data_element.len;
+		length_field_ind = scan_resp_data_element.len;
+		scan_resp_data_element.len++;
+		scn_resp[scan_resp_data_element.len++] = LIST_128BIT_SERV_SOLICITATION_UUIDS;
+		MREPEAT(SERVICE_UUID128_MAX_NUM, _CONF_SERVICE_SOLTN_128BIT_UUID_SCAN_RSP, &adv_data_element)
+		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add List of 128-bit Service Solicitation UUIDs");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_SERVICE_DATA_16BIT_UUID_ENABLE
+	#if (BLE_GAP_ADV_SERVICE_DATA_16BIT_UUID_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_16BIT_UUID_LENGTH + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH))) {
+		adv_buf[adv_data_element.len++] = BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_16BIT_UUID_LENGTH + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH + ADV_TYPE_SIZE;
+		adv_buf[adv_data_element.len++] = SERVICE_DATA;
+		adv_buf[adv_data_element.len++] = (uint8_t)BLE_GAP_ADV_DATA_SERVICE_DATA_16BIT_UUID;
+		adv_buf[adv_data_element.len++] = (uint8_t)(BLE_GAP_ADV_DATA_SERVICE_DATA_16BIT_UUID >> 8);
+		memcpy(&adv_buf[adv_data_element.len], BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_16BIT_UUID, BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_16BIT_UUID_LENGTH);
+		adv_data_element.len += BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_16BIT_UUID_LENGTH;
+	}
+	#else
+	if(false){}
+	#endif
+	#if ((BLE_GAP_ADV_SERVICE_DATA_16BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_SERVICE_DATA_16BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_16BIT_UUID_LENGTH + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH))) {
+		scn_resp[scan_resp_data_element.len++] = BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_16BIT_UUID_LENGTH + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH + ADV_TYPE_SIZE;
+		scn_resp[scan_resp_data_element.len++] = SERVICE_DATA;
+		scn_resp[scan_resp_data_element.len++] = (uint8_t)BLE_GAP_ADV_DATA_SERVICE_DATA_16BIT_UUID;
+		scn_resp[scan_resp_data_element.len++] = (uint8_t)(BLE_GAP_ADV_DATA_SERVICE_DATA_16BIT_UUID >> 8);
+		memcpy(&scn_resp[scan_resp_data_element.len], BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_16BIT_UUID, BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_16BIT_UUID_LENGTH);
+		scan_resp_data_element.len += BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_16BIT_UUID_LENGTH;
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add service data of 16bits");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_SERVICE_DATA_32BIT_UUID_ENABLE
+	#if (BLE_GAP_ADV_SERVICE_DATA_32BIT_UUID_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_32BIT_UUID_LENGTH + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH))) {
+		adv_buf[adv_data_element.len++] = BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_32BIT_UUID_LENGTH + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH + ADV_TYPE_SIZE;
+		adv_buf[adv_data_element.len++] = SERVICE_DATA_32BIT;
+		memcpy(&adv_buf[adv_data_element.len], BLE_GAP_ADV_DATA_SERVICE_DATA_32BIT_UUID, BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH);
+		adv_data_element.len += BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH;
+		memcpy(&adv_buf[adv_data_element.len], BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_32BIT_UUID, BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_32BIT_UUID_LENGTH);
+		adv_data_element.len += BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_32BIT_UUID_LENGTH;
+	}
+	#else
+	if(false){}
+	#endif
+	#if ((BLE_GAP_ADV_SERVICE_DATA_32BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_SERVICE_DATA_32BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_32BIT_UUID_LENGTH + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH))) {
+		scn_resp[scan_resp_data_element.len++] = BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_32BIT_UUID_LENGTH + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH + ADV_TYPE_SIZE;
+		scn_resp[scan_resp_data_element.len++] = SERVICE_DATA_32BIT;
+		memcpy(&scn_resp[scan_resp_data_element.len], BLE_GAP_ADV_DATA_SERVICE_DATA_32BIT_UUID, BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH);
+		scan_resp_data_element.len += BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH;
+		memcpy(&scn_resp[scan_resp_data_element.len], BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_32BIT_UUID, BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_32BIT_UUID_LENGTH);
+		scan_resp_data_element.len += BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_32BIT_UUID_LENGTH;
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add service data of 32bits");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_SERVICE_DATA_128BIT_UUID_ENABLE
+	#if (BLE_GAP_ADV_SERVICE_DATA_128BIT_UUID_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_128BIT_UUID_LENGTH + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH))) {
+		adv_buf[adv_data_element.len++] = BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_128BIT_UUID_LENGTH + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH + ADV_TYPE_SIZE;
+		adv_buf[adv_data_element.len++] = SERVICE_DATA_128BIT;
+		memcpy(&adv_buf[adv_data_element.len], BLE_GAP_ADV_DATA_SERVICE_DATA_128BIT_UUID, BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH);
+		adv_data_element.len += BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH;
+		memcpy(&adv_buf[adv_data_element.len], BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_128BIT_UUID, BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_128BIT_UUID_LENGTH);
+		adv_data_element.len += BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_128BIT_UUID_LENGTH;
+	}
+	#else
+	if(false){}
+	#endif
+	#if ((BLE_GAP_ADV_SERVICE_DATA_128BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_SERVICE_DATA_128BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_128BIT_UUID_LENGTH + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH))) {
+		scn_resp[scan_resp_data_element.len++] = BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_128BIT_UUID_LENGTH + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH + ADV_TYPE_SIZE;
+		scn_resp[scan_resp_data_element.len++] = SERVICE_DATA_128BIT;
+		memcpy(&scn_resp[scan_resp_data_element.len], BLE_GAP_ADV_DATA_SERVICE_DATA_128BIT_UUID, BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH);
+		scan_resp_data_element.len += BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH;
+		memcpy(&scn_resp[scan_resp_data_element.len], BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_128BIT_UUID, BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_128BIT_UUID_LENGTH);
+		scan_resp_data_element.len += BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_128BIT_UUID_LENGTH;
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add service data of 128bits");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_PUBLIC_TARGET_ADDR_ENABLE
+	#if (BLE_GAP_ADV_PUBLIC_TARGET_ADDR_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_PUBLIC_TARGET_ADDR_LENGTH))) {
+		uint8_t length_field_ind;
+		adv_buf[adv_data_element.len] = adv_data_element.len;
+		length_field_ind = adv_data_element.len;
+		adv_data_element.len++;
+		adv_buf[adv_data_element.len++] = PUBLIC_TARGET_ADDRESS;
+		MREPEAT(PUBLIC_TARGET_ADDR_MAX_NUM, _CONF_PUBLIC_TARGET_ADDR, &adv_data_element);
+		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+	}
+	#else
+	if(false){}
+	#endif
+	#if ((BLE_GAP_ADV_PUBLIC_TARGET_ADDR_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_PUBLIC_TARGET_ADDR_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_PUBLIC_TARGET_ADDR_LENGTH))) {
+		uint8_t length_field_ind;
+		scn_resp[scan_resp_data_element.len] = scan_resp_data_element.len;
+		length_field_ind = scan_resp_data_element.len;
+		scan_resp_data_element.len++;
+		scn_resp[scan_resp_data_element.len++] = PUBLIC_TARGET_ADDRESS;
+		MREPEAT(PUBLIC_TARGET_ADDR_MAX_NUM, _CONF_PUBLIC_TARGET_ADDR_SCAN_RSP, &scan_resp_data_element);
+		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add Public target addresses");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_RANDOM_TARGET_ADDR_ENABLE
+	#if (BLE_GAP_ADV_RANDOM_TARGET_ADDR_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_RANDOM_TARGET_ADDR_LENGTH))) {
+		uint8_t length_field_ind;
+		adv_buf[adv_data_element.len] = adv_data_element.len;
+		length_field_ind = adv_data_element.len;
+		adv_data_element.len++;
+		adv_buf[adv_data_element.len++] = RANDOM_TARGET_ADDRESS;
+		MREPEAT(PUBLIC_RANDOM_ADDR_MAX_NUM, _CONF_RANDOM_TARGET_ADDR, &adv_data_element);
+		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+	}
+	#else
+	if(false){}
+	#endif
+	#if ((BLE_GAP_ADV_RANDOM_TARGET_ADDR_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_RANDOM_TARGET_ADDR_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_RANDOM_TARGET_ADDR_LENGTH))) {
+		uint8_t length_field_ind;
+		scn_resp[scan_resp_data_element.len] = scan_resp_data_element.len;
+		length_field_ind = scan_resp_data_element.len;
+		scan_resp_data_element.len++;
+		scn_resp[scan_resp_data_element.len++] = RANDOM_TARGET_ADDRESS;
+		MREPEAT(PUBLIC_RANDOM_ADDR_MAX_NUM, _CONF_RANDOM_TARGET_ADDR_SCAN_RSP, &scan_resp_data_element);
+		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add Random target addresses");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_APPEARANCE_ENABLE
+	#if (BLE_GAP_ADV_APPEARANCE_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_DATA_APPEARANCE_SIZE))) {
+		adv_buf[adv_data_element.len++] = BLE_GAP_ADV_DATA_APPEARANCE_SIZE + ADV_TYPE_SIZE;
+		adv_buf[adv_data_element.len++] = APPEARANCE;
+		memcpy(&adv_buf[adv_data_element.len], BLE_GAP_ADV_DATA_APPEARANCE, BLE_GAP_ADV_DATA_APPEARANCE_SIZE);
+		adv_data_element.len += BLE_GAP_ADV_DATA_APPEARANCE_SIZE;
+	}
+	#else
+	if(false){}
+	#endif
+	#if ((BLE_GAP_ADV_APPEARANCE_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_APPEARANCE_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_DATA_APPEARANCE_SIZE))) {
+		scn_resp[scan_resp_data_element.len++] = BLE_GAP_ADV_DATA_APPEARANCE_SIZE + ADV_TYPE_SIZE;
+		scn_resp[scan_resp_data_element.len++] = APPEARANCE;
+		memcpy(&scn_resp[scan_resp_data_element.len], BLE_GAP_ADV_DATA_APPEARANCE, BLE_GAP_ADV_DATA_APPEARANCE_SIZE);
+		scan_resp_data_element.len += BLE_GAP_ADV_DATA_APPEARANCE_SIZE;
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add Appearance");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_ADVERTISING_INTERVAL_ENABLE
+	#if (BLE_GAP_ADV_ADVERTISING_INTERVAL_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_ADVERTISING_INTERVAL_LENGTH))) {
+		adv_buf[adv_data_element.len++] = BLE_GAP_ADV_ADVERTISING_INTERVAL_LENGTH + ADV_TYPE_SIZE;
+		adv_buf[adv_data_element.len++] = ADVERTISING_INTERVAL;
+		adv_buf[adv_data_element.len++] = (uint8_t)BLE_GAP_ADV_DATA_ADVERTISING_INTERVAL;
+		adv_buf[adv_data_element.len++] = (uint8_t)(BLE_GAP_ADV_DATA_ADVERTISING_INTERVAL >> 8);
+	}
+	#else
+	if(false){}
+	#endif
+	#if ((BLE_GAP_ADV_ADVERTISING_INTERVAL_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_ADVERTISING_INTERVAL_SCN_RSP_ENABLE) == SCAN_RESPONSE_ONLY_ENABLE)
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_ADVERTISING_INTERVAL_LENGTH))) {
+		scn_resp[scan_resp_data_element.len++] = BLE_GAP_ADV_ADVERTISING_INTERVAL_LENGTH + ADV_TYPE_SIZE;
+		scn_resp[scan_resp_data_element.len++] = ADVERTISING_INTERVAL;
+		scn_resp[scan_resp_data_element.len++] = (uint8_t)BLE_GAP_ADV_DATA_ADVERTISING_INTERVAL;
+		scn_resp[scan_resp_data_element.len++] = (uint8_t)(BLE_GAP_ADV_DATA_ADVERTISING_INTERVAL >> 8);
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add Advertisement interval");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_LE_BT_DEVICE_ADDR_ENABLE
+	#if (BLE_GAP_ADV_LE_BT_DEVICE_ADDR_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_DATA_LE_BT_DEVICE_ADDR_LENGTH))) {
+		adv_buf[adv_data_element.len++] = BLE_GAP_ADV_DATA_LE_BT_DEVICE_ADDR_LENGTH + ADV_TYPE_SIZE;
+		adv_buf[adv_data_element.len++] = LE_BLUETOOTH_DEVICE_ADDRESS;
+		memcpy(&adv_buf[adv_data_element.len], BLE_GAP_ADV_DATA_LE_BT_DEVICE_ADDR, BLE_GAP_ADV_DATA_LE_BT_DEVICE_ADDR_LENGTH);
+		adv_data_element.len += BLE_GAP_ADV_DATA_LE_BT_DEVICE_ADDR_LENGTH;
+	}
+	#else
+	if(false){}
+	#endif
+	#if ((BLE_GAP_ADV_LE_BT_DEVICE_ADDR_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_LE_BT_DEVICE_ADDR_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_DATA_LE_BT_DEVICE_ADDR_LENGTH))) {
+		scn_resp[scan_resp_data_element.len++] = BLE_GAP_ADV_DATA_LE_BT_DEVICE_ADDR_LENGTH + ADV_TYPE_SIZE;
+		scn_resp[scan_resp_data_element.len++] = LE_BLUETOOTH_DEVICE_ADDRESS;
+		memcpy(&scn_resp[scan_resp_data_element.len], BLE_GAP_ADV_DATA_LE_BT_DEVICE_ADDR, BLE_GAP_ADV_DATA_LE_BT_DEVICE_ADDR_LENGTH);
+		scan_resp_data_element.len += BLE_GAP_ADV_DATA_LE_BT_DEVICE_ADDR_LENGTH;
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add Bluetooth device addresses");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_LE_ROLE_ENABLE
+	#if (BLE_GAP_ADV_LE_ROLE_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_DATA_LE_ROLE_SIZE))) {
+		adv_buf[adv_data_element.len++] = ADV_TYPE_SIZE + BLE_GAP_ADV_DATA_LE_ROLE_SIZE;
+		adv_buf[adv_data_element.len++] = LE_ROLE;
+		adv_buf[adv_data_element.len++] = BLE_GAP_ADV_DATA_LE_ROLE;
+	}
+	#else
+	if(false){}
+	#endif
+	#if ((BLE_GAP_ADV_LE_ROLE_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_LE_ROLE_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_DATA_LE_ROLE_SIZE))) {
+		scn_resp[scan_resp_data_element.len++] = ADV_TYPE_SIZE + BLE_GAP_ADV_DATA_LE_ROLE_SIZE;
+		scn_resp[scan_resp_data_element.len++] = LE_ROLE;
+		scn_resp[scan_resp_data_element.len++] = BLE_GAP_ADV_DATA_LE_ROLE;
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add LE role");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	#if BLE_GAP_ADV_MANUFACTURER_SPECIFIC_DATA_ENABLE
+	#if (BLE_GAP_ADV_MANUFACTURER_SPECIFIC_DATA_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
+	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA_SIZE))) {
+		adv_buf[adv_data_element.len++] = BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA_SIZE + ADV_TYPE_SIZE;
+		adv_buf[adv_data_element.len++] = MANUFACTURER_SPECIFIC_DATA;
+		memcpy(&adv_buf[adv_data_element.len], BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA, BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA_SIZE);
+		adv_data_element.len += BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA_SIZE;
+		DBG_LOG("manufacturer data length :%d",BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA_SIZE);
+	}
+	#else
+	if(false){}
+	#endif
+	#if ((BLE_GAP_ADV_MANUFACTURER_SPECIFIC_DATA_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_MANUFACTURER_SPECIFIC_DATA_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
+	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA_SIZE))) {
+		scn_resp[scan_resp_data_element.len++] = BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA_SIZE + ADV_TYPE_SIZE;
+		scn_resp[scan_resp_data_element.len++] = MANUFACTURER_SPECIFIC_DATA;
+		memcpy(&scn_resp[scan_resp_data_element.len], BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA, BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA_SIZE);
+		scan_resp_data_element.len += BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA_SIZE;
+	}
+	#endif
+	else {
+		DBG_LOG_ADV("Failed to add Manufacturer specific data");
+		return AT_BLE_GAP_INVALID_PARAM;
+	}
+	#endif
+	
+	uint8_t i;
+	DBG_LOG("ADV data: ");
+	for(i=0; i<adv_data_element.len; i++) {
+		DBG_LOG_CONT("%02x",adv_buf[i]);
+	}
+	DBG_LOG("length : %d",adv_data_element.len);
+	
+	DBG_LOG("Scan response data: ");
+	for(i=0; i<scan_resp_data_element.len; i++) {
+		DBG_LOG_CONT("%02x",scn_resp[i]);
+	}
+	DBG_LOG("length : %d",scan_resp_data_element.len);
+	
+	
+	if (at_ble_adv_data_set(adv_buf, adv_data_element.len, scn_resp,
+	scan_resp_data_element.len) != AT_BLE_SUCCESS) {
+		DBG_LOG("BLE Advertisement data set failed");
+		return status;
+		} else {
+		DBG_LOG("BLE Advertisement data set success");
+		return AT_BLE_FAILURE;
+	}
+}
+
 
 
