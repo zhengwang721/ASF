@@ -51,7 +51,7 @@
  *
  *  \par Requirements
  *
- * This example can be used on  SAMV71-Xplained-Ultra boards and requires 2 boards to
+ * This example can be used on  SAMV71-Xplained-Ultra/SAME70-Xplained boards and requires 2 boards to
  * be connected directly through populated USART pins.
  * \copydoc usart_sync_example_pin_defs
  *

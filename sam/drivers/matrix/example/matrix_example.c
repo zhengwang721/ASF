@@ -51,7 +51,7 @@
  *
  * \section Requirements
  *
- * This example can be used on any SAM3/4 boards.
+ * This example can be used on any SAM/SAM3/SAM4 boards.
  *
  * \section Description
  *
