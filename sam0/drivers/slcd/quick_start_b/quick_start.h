@@ -109,12 +109,10 @@
  *    \snippet quick_start.c use_cases_2
  * -# Character map case.
  *    \snippet quick_start.c use_cases_3
- * -# SLCD blinking.
+ * -# Didital map case.
  *    \snippet quick_start.c use_cases_4
- * -# Automated character mapping.
+ * -# SLCD blinking.
  *    \snippet quick_start.c use_cases_5
- * -# Automated bit mapping.
- *    \snippet quick_start.c use_cases_6
  */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
