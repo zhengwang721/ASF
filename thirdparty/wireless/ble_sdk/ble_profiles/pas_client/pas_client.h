@@ -181,8 +181,6 @@ typedef struct pas_service_handler
 
 typedef void (*read_callback_t) (uint8_t *,uint8_t);
 typedef void (*notification_callback_t) (uint8_t *,uint8_t);
-typedef void (*connected_callback_t) (bool);
-
 
 /***********************************************************************************
  *									Function Prototype                             *
@@ -211,54 +209,54 @@ void pas_data_init(void);
 void pas_client_adv(void);
 
 /**
- * @brief starts the service discovery
+ * @brief to perform the service discovery
  * @param[in] connection parameters 
  * @return AT_BLE_SUCCESS for success and AT_BLE_FAILURE for failure
  * @pre Called after connection by the ble manager
  */
-at_ble_status_t pas_client_service_discovery(at_ble_connected_t *conn_params);
+at_ble_status_t pas_client_service_discovery(void *params);
 
 /**
  * @brief Discovery Complete handler invoked by ble manager
  * @param[in] at_ble_discovery_complete_t disconnected handler 
  */
-void pas_client_discovery_complete_handler(at_ble_discovery_complete_t *params);
+at_ble_status_t pas_client_discovery_complete_handler(void *params);
 
 /**
  * @brief Service found handler invoked by ble manager
  * @param[in] at_ble_primary_service_found_t invoked when a primary service is found in peer device
  */
-void pas_client_service_found_handler(at_ble_primary_service_found_t * primary_service_params);
+ at_ble_status_t pas_client_service_found_handler(void * params);
 
 /**
  * @brief characteristic found handler invoked by ble manager
  * @param[in] at_ble_characteristic_found_t when a characteristic is found in peer device
  */
-void pas_client_characteristic_found_handler(at_ble_characteristic_found_t *characteristic_found);
+at_ble_status_t pas_client_characteristic_found_handler(void *params);
 
 /**
  * @brief client descriptor found handler invoked by ble manager
  * @param[in] at_ble_descriptor_found_t invoked when a descriptor is found in peer device
  */
-void pas_client_descriptor_found_handler(at_ble_descriptor_found_t *params);
+at_ble_status_t pas_client_descriptor_found_handler(void *param);
 
 /**
  * @brief disconnected event handler invoked by ble manager
  * @param[in] at_ble_disconnected_t contains the disconnection info
  */
-void pas_client_disconnected_event_handler(at_ble_disconnected_t *params);
+at_ble_status_t pas_client_disconnected_event_handler(void *params);
 
 /**
  * @brief invoked by ble manager on receiving notification
  * @param[in] at_ble_notification_recieved_t notification information containing handle data
  */
-void pas_client_notification_handler(at_ble_notification_recieved_t *params);
+at_ble_status_t pas_client_notification_handler(void *params);
 
 /**
  * @brief invoked by ble manager for setting the write response handler 
  * @param[in] at_ble_characteristic_write_response_t response data contains status and handle
  */
-void pas_client_char_write_response_handler(at_ble_characteristic_write_response_t *params);
+at_ble_status_t pas_client_char_write_response_handler(void *event_params);
 
 /**
  * @brief invoked by ble manager to read the alert status characteristic
@@ -287,15 +285,9 @@ at_ble_status_t pas_client_write_ringer_control_point(uint8_t ringer);
 at_ble_status_t pas_client_enable_char_notification(bool char_id,bool enable);
 
 /**
- * @brief starts the service discovery
- * @return AT_BLE_SUCCESS for success and AT_BLE_FAILURE for failure
- */
-at_ble_status_t pas_client_start_service_discovery(void);
-
-/**
  * @brief invoked by ble manager for setting the notification 
  */
-void pas_client_write_notifications(void *param);
+at_ble_status_t pas_client_write_notifications(void *params);
 
 /**
  * @brief register the call back for reading alert status
@@ -330,15 +322,13 @@ void register_ringer_setting_notification_callback(notification_callback_t app_n
  * @param[in] characteristic read response parameters
  * @return none
  */
-void pas_client_char_read_response_handler(at_ble_characteristic_read_response_t *params);
+at_ble_status_t pas_client_char_read_response_handler(void *event_params);
 
 /**
- * @brief register the call back for application state
- * @param[in] connected_callback_t type application callback
- * @return none
+ * @brief starts the service discovery
+ * @return AT_BLE_SUCCESS for success and AT_BLE_FAILURE for failure
  */
-void register_connected_callback(connected_callback_t app_connected_cb);
-
+at_ble_status_t pas_client_start_service_discovery(void );
 #endif /* __PAS_CLIENT_H__*/
 // </h>
 

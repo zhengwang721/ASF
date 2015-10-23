@@ -64,10 +64,31 @@
 
 volatile uint8_t press_count = DEVICE_SILENT;		/*!< button press count*/
 
-volatile bool flag;					/*!< To send values once per button press*/
+volatile bool flag = false;					/*!< To send values once per button press*/
 
 volatile bool app_state;			/*!< state of the app,true for connected false for disconnected*/
 
+static const ble_event_callback_t app_gap_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	app_connected_event_handler,
+	app_disconnected_event_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
 /***********************************************************************************
  *									Implementations                               *
  **********************************************************************************/
@@ -111,15 +132,28 @@ static void display_ringer_setting_info(uint8_t *data)
 }
 
 /**
- * @brief app_connected_state profile notifies the application about state
+ * @brief app_connected_state blemanager notifies the application about state
+ * @param[in] at_ble_connected_t
+ */
+static at_ble_status_t app_connected_event_handler(void *params)
+{
+	DBG_LOG("App connected");
+	app_state = true;
+	ALL_UNUSED(params);
+	return AT_BLE_SUCCESS;
+}
+
+/**
+ * @brief app_connected_state ble manager notifies the application about state
  * @param[in] connected
  */
-static void app_connected_state(bool connected)
+static at_ble_status_t app_disconnected_event_handler(void *params)
 {
-	app_state = connected;
-	if (app_state == false) {
+	DBG_LOG("App disconnected");
+		app_state = false;
 		press_count = DEVICE_SILENT;
-	}
+		ALL_UNUSED(params);
+		return AT_BLE_SUCCESS;
 }
 
 /**
@@ -175,7 +209,9 @@ static void app_ringer_setting_notify(uint8_t *data, uint8_t len)
  */
 void button_cb(void)
 {
+	
 	if (app_state && !flag) {
+		DBG_LOG("button pressed");
 		flag = true;
 	}
 }
@@ -226,11 +262,18 @@ int main(void)
 	register_alert_status_notification_callback(app_alert_status_notify);
 	
 	register_ringer_setting_notification_callback(app_ringer_setting_notify);
-	
-	register_connected_callback(app_connected_state);
-	
+		
+		
+		
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
+	
+	/* Initializing the profile */
+	pas_client_init(NULL);
+	
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+	BLE_GAP_EVENT_TYPE,
+	app_gap_handle);
 	
 	/* Capturing the events  */
 	while(appp_exec) {

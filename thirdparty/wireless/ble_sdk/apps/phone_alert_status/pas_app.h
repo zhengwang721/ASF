@@ -69,3 +69,13 @@
 /****************************************************************************************
 *							        Function Prototype                                 	*
 ****************************************************************************************/
+/**
+ * @brief app_connected_state ble manager notifies the application about state
+ * @param[in] connected
+ */
+static at_ble_status_t app_disconnected_event_handler(void *params);
+/**
+ * @brief app_connected_state blemanager notifies the application about state
+ * @param[in] at_ble_connected_t
+ */
+static at_ble_status_t app_connected_event_handler(void *params);
