@@ -46,27 +46,26 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "samb11.h"
+
 
 #include "platform.h"
+#include "gpio.h"
 
 #include "ke_msg.h"
-#include "gpio.h"
+
 #include "common.h"
 #include "event_handler.h"
 
-/*
-#include "CMSDK_CM0.h"
+#include "samb11.h"
+#include "gpio_from_sdk.h"
 
-
-#include "uart_hw.h"
-
-*/
-
+extern void gpio0_combined_isr_handler(void);
+extern void PORT1_COMB_Handler(void);
 
 uint8_t (*platform_register_isr)(uint8_t isr_index,void *fp);
 uint8_t (*platform_unregister_isr)(uint8_t isr_index);
-void (*apps_resume_cb)(void);
+uint32_t  *apps_resume_cb;
+uint32_t 	*actualfreq;
 void (*rwip_prevent_sleep_set)(uint16_t prv_slp_bit);
 void (*rwip_prevent_sleep_clear)(uint16_t prv_slp_bit);
 //#ifdef CHIPVERSION_B0
@@ -84,7 +83,6 @@ uint8_t unregister_isr(uint8_t isr_index);
 
 #define BLE_EVENT_BUFFER_START_INDEX		0
 #define PLF_EVENT_BUFFER_START_INDEX		(BLE_EVENT_BUFFER_START_INDEX + MAX_BLE_EVT_LEN)
-//#define PLF_EVENT_BUFFER_START_INDEX		128
 
 #define MAX_EVT_BUFF_LEN 	(MAX_BLE_EVT_LEN + MAX_PLF_EVT_LEN) 
 #define REG_PL_WR(addr, value)       (*(volatile uint32_t *)(addr)) = (value)
@@ -110,245 +108,27 @@ uint16_t plf_event_buff_index;
 
 port port_list[LPGPIO_MAX];
 
-
-
-//************************ start ******************************************//
-//chris.choi : should ask china's driver team that it can be used like this
-// this code is come from keil driver version code
-//************************ start ******************************************//
-#ifdef CHIPVERSION_B0
-	#define UART1_RX_VECTOR_TABLE_INDEX		16
-	#define UART1_TX_VECTOR_TABLE_INDEX		17
-	#define UART2_RX_VECTOR_TABLE_INDEX		18
-	#define UART2_TX_VECTOR_TABLE_INDEX		19
-#else
-	#define UART1_RX_VECTOR_TABLE_INDEX		16
-	#define UART1_TX_VECTOR_TABLE_INDEX		17
-	#define UART2_RX_VECTOR_TABLE_INDEX		18
-	#define UART2_TX_VECTOR_TABLE_INDEX		19
-#endif	//CHIPVERSION_B0
-
-
-#ifdef CHIPVERSION_B0
-void PORT1_COMB_Handler(void)
+void init_port_list(void)
 {
-	//if(CMSDK_GPIO1->INTSTATUS & ((1<<15) | (1<<14) | (1<<13))) {
-	if(GPIO1->INTSTATUSCLEAR.reg & ((1<<15) | (1<<14) | (1<<13))) {		
-		
-		handle_ext_wakeup_isr();
-		
-		// clear specific int pin status that caused the Interrupt
-		//CMSDK_GPIO1->INTCLEAR |= CMSDK_GPIO1->INTSTATUS & ((1<<15) | (1<<14) | (1<<13));
-		GPIO1->INTSTATUSCLEAR.reg |= GPIO1->INTSTATUSCLEAR.reg & ((1<<15) | (1<<14) | (1<<13));
-		//NVIC_ClearPendingIRQ(PORT1_COMB_IRQn);
-		NVIC_ClearPendingIRQ(8);
+	uint8_t i;
+	memset(port_list,0,sizeof(port_list));
+	for(i=0;i<(sizeof(port_list)/sizeof(port_list[0]));i++) {
+		port_list[i].bit.gpio_num = i;
+		port_list[i].bit.available = 1;
+		port_list[i].bit.configured = 0;
 	}
-	else
-	{
-		gpio1_combined_isr_handler();
-	}
+	//Set the GPIO for SWD is not available
+	port_list[0].bit.available = 0;
+	port_list[1].bit.available = 0;
+	//GPIO 14 is used for Coex and controlled by Firmware
+	port_list[14].bit.available = 0;
 }
-
-#endif	//CHIPVERSION_B0
-
-
-
-// chris.choi : jeffy's code 150908, so it's better code i think so use this
-void gpio1_combined_isr_handler(void)
-{
-	uint8_t index = 0;
-	//portint_callback_t callback;
-	uint8_t port = LPGPIO_16;
-	uint32_t intstatus = GPIO1->INTSTATUSCLEAR.reg;//jeffy
-	GPIO1->INTTYPESET.reg |= (1<<15); //jeffy
-	
-	do {
-		#ifdef CHIPVERSION_B0
-		intstatus &= 0x1FF;
-		#else
-		intstatus &= 0x1F;
-		#endif
-		index = 0;
-		if(intstatus != 0) {
-			port = (intstatus & ~(intstatus - 1));
-			while(!(port == 1)) {
-				port = port >> 1;
-				index++;
-			}
-			
-			//chris.choi : i think that port_int_callback is always null but if not, then it makes error because callback is not called
-			//if(port_int_callback[index+LPGPIO_16] != NULL) {
-			//callback = port_int_callback[index+LPGPIO_16];
-			//callback();
-			//}
-			//CMSDK_GPIO1->INTCLEAR = (1 << index);
-			///REG_GPIO1_INTSTATUSCLEAR = (1 << index);
-			GPIO1->INTSTATUSCLEAR.reg = (1 << index);/// jeffy
-		}
-		else {
-			//CMSDK_GPIO1->INTCLEAR = CMSDK_GPIO1->INTSTATUS;
-			GPIO1->INTSTATUSCLEAR.reg |= (1<<15);//jeffy
-			//REG_GPIO1_INTSTATUSCLEAR = REG_GPIO1_INTENSET;
-		}
-		intstatus = GPIO1->INTSTATUSCLEAR.reg;
-		#ifdef CHIPVERSION_B0
-		intstatus &= 0x1FF;
-		#else
-		intstatus &= 0x1F;
-		#endif
-	}while(intstatus != 0);
-	
-	NVIC_ClearPendingIRQ(8);
-}
-
-
-void gpio0_combined_isr_handler(void)
-{
-	uint8_t index = 0;
-	//portint_callback_t callback;
-	uint8_t port = LPGPIO_0;
-	uint32_t intstatus = GPIO0->INTSTATUSCLEAR.reg;//jeffy
-	GPIO0->INTTYPESET.reg |= (1<<15); //jeffy
-	
-	do {
-		#ifdef CHIPVERSION_B0
-		intstatus &= 0x1FF;
-		#else
-		intstatus &= 0x1F;
-		#endif
-		index = 0;
-		if(intstatus != 0) {
-			port = (intstatus & ~(intstatus - 1));
-			while(!(port == 1)) {
-				port = port >> 1;
-				index++;
-			}
-			
-			//chris.choi : i think that port_int_callback is always null but if not, then it makes error because callback is not called
-			//if(port_int_callback[index+LPGPIO_16] != NULL) {
-			//callback = port_int_callback[index+LPGPIO_16];
-			//callback();
-			//}
-			//CMSDK_GPIO1->INTCLEAR = (1 << index);
-			///REG_GPIO1_INTSTATUSCLEAR = (1 << index);
-			GPIO0->INTSTATUSCLEAR.reg = (1 << index);/// jeffy
-		}
-		else {
-			//CMSDK_GPIO1->INTCLEAR = CMSDK_GPIO1->INTSTATUS;
-			GPIO0->INTSTATUSCLEAR.reg |= (1<<15);//jeffy
-			//REG_GPIO1_INTSTATUSCLEAR = REG_GPIO1_INTENSET;
-		}
-		intstatus = GPIO0->INTSTATUSCLEAR.reg;
-		#ifdef CHIPVERSION_B0
-		intstatus &= 0x1FF;
-		#else
-		intstatus &= 0x1F;
-		#endif
-	}while(intstatus != 0);
-	
-	NVIC_ClearPendingIRQ(7);
-}
-
-
-
-
-
-
-
-// chris.choi : it's my code, so i don't want to use it.
-//void gpio1_combined_isr_handler(void)
-//{
-	//uint8_t index = 0;
-	////portint_callback_t callback;
-	//uint8_t port = LPGPIO_16;
-	//uint32_t intstatus = REG_GPIO1_INTENSET;
-	//
-	//do {
-//#ifdef CHIPVERSION_B0
-		//intstatus &= 0x1FF;
-//#else
-		//intstatus &= 0x1F;
-//#endif
-		//index = 0;
-		//if(intstatus != 0) {
-			//port = (intstatus & ~(intstatus - 1));
-			//while(!(port == 1)) {
-				//port = port >> 1;
-				//index++;
-			//}
-			//
-			////chris.choi : i think that port_int_callback is always null but if not, then it makes error because callback is not called
-			////if(port_int_callback[index+LPGPIO_16] != NULL) {
-				////callback = port_int_callback[index+LPGPIO_16];
-				////callback();
-			////}
-			////CMSDK_GPIO1->INTCLEAR = (1 << index);
-			//REG_GPIO1_INTSTATUSCLEAR = (1 << index);
-			//
-		//}
-		//else {
-			////CMSDK_GPIO1->INTCLEAR = CMSDK_GPIO1->INTSTATUS;
-			//REG_GPIO1_INTSTATUSCLEAR = REG_GPIO1_INTENSET;
-		//}
-		//intstatus = REG_GPIO1_INTENSET;
-	//}while(intstatus != 0);
-	//
-//}
-//void gpio0_combined_isr_handler(void)
-//{
-	//uint8_t port = LPGPIO_0;
-	//uint8_t index = 0;
-	////portint_callback_t callback;
-	//uint32_t intstatus = REG_GPIO0_INTENSET;
-	//do {
-		//intstatus &= 0xFFFF;
-		//if(intstatus != 0) {
-			//index = 0;
-			//port = (intstatus & ~(intstatus - 1));
-			//while(!(port == 1)) {
-				//port = port >> 1;
-				//index++;
-			//}
-			////chris.choi : i think that port_int_callback is always null but if not, then it makes error because callback is not called
-			////if(port_int_callback[index] != NULL) {
-				////callback = port_int_callback[index];
-				////callback();
-			////}
-			//REG_GPIO0_INTSTATUSCLEAR = (1 << index);
-		//}
-		//else {
-			//REG_GPIO0_INTSTATUSCLEAR = REG_GPIO0_INTENSET;
-		//}
-		//intstatus = REG_GPIO0_INTENSET;
-	//}while(intstatus != 0);
-//}
-//************************ end ******************************************//
-//chris.choi : should ask china's driver team that it can be used like this
-// this code is come from keil driver version code
-//************************ end ******************************************//
-
-
-
-
-
 
 plf_drv_status platform_driver_init()
 {
-	uint8_t i;
 	plf_drv_status status = STATUS_NOT_INITIALIZED;
 	if((platform_initialized == 0) || (platform_initialized != 1)) {
-		memset(port_list,0,sizeof(port_list));
-		for(i=0;i<(sizeof(port_list)/sizeof(port_list[0]));i++) {
-			port_list[i].bit.gpio_num = i;
-			port_list[i].bit.available = 1;
-			port_list[i].bit.configured = 0;
-		}
-		//Set the GPIO for SWD is not available
-		port_list[0].bit.available = 0;
-		port_list[1].bit.available = 0;
-		//GPIO 14 is used for Coex and controlled by Firmware
-		port_list[14].bit.available = 0;
-		
+		init_port_list();
 		// Initialize the ble stack message handler to NULL
 		ble_stack_message_handler = NULL;
 		
@@ -364,6 +144,8 @@ plf_drv_status platform_driver_init()
 		gapm_get_id_from_task = (ke_task_id_t (*)(ke_msg_id_t))(*((unsigned int *)0x100400b8));
 		rwip_prevent_sleep_set = (void (*)(uint16_t))0x0001b99f;
 		rwip_prevent_sleep_clear = (void (*)(uint16_t))0x0001b9db;
+		apps_resume_cb = (uint32_t *)0x1004003c;
+		actualfreq = (uint32_t *)0x10006bd8;
 #else
 		NVIC_DisableIRQ(PORT0_ALL_IRQn);
 		NVIC_DisableIRQ(PORT1_ALL_IRQn);
@@ -413,7 +195,6 @@ plf_drv_status platform_driver_init()
 		//NVIC_EnableIRQ(PORT1_COMB_IRQn);
 		NVIC_EnableIRQ(GPIO0_IRQn);
 		NVIC_EnableIRQ(GPIO1_IRQn);
-		acquire_sleep_lock();
 #else
 		//chris.choi : check keil driver's CMSDK_CM0.h and asf's samb11g18a.h (it's different so i don't know what should be used.
 		// it's already asked to sanghai china team.
@@ -426,12 +207,13 @@ plf_drv_status platform_driver_init()
 #ifndef CHIPVERSION_B0		
 		// spi_flash clock fix.
 		spi_flash_clock_init();
-#endif		
+#endif
 		
 		platform_initialized = 1;
 		status = STATUS_SUCCESS;
 	}
 	else {
+		platform_initialized = 1;
 		status = STATUS_ALREADY_INITIALIZED;
 	}
 	return status;
@@ -535,8 +317,9 @@ void platform_interface_send(uint8_t* data, uint32_t len)
 void send_plf_int_msg_ind(uint8_t intr_index, uint8_t callback_id, void *data, uint16_t data_len)
 {
 	void* params;
-	
+//#if (CHIPVERSION_A4)	
 	os_sem_up(gstrFwSem);
+//#endif
 	// Allocate the kernel message
 	params = ke_msg_alloc(PERIPHERAL_INTERRUPT_EVENT, TASK_INTERNAL_APP, BUILD_INTR_SRCID(callback_id,intr_index), data_len);
 											
@@ -593,7 +376,6 @@ plf_drv_status platform_event_wait(uint32_t timeout)
 #if (CHIPVERSION_A3 || CHIPVERSION_A4)
 					ke_msg_hdr->src_id = rcv_msg->src_id;
 #else
-					//ke_msg_hdr->src_id = rcv_msg->src_id;
 					ke_msg_hdr->src_id = gapm_get_id_from_task(rcv_msg->src_id);
 #endif	//(CHIPVERSION_A3 || CHIPVERSION_A4)
 					ke_msg_hdr->dest_id = rcv_msg->dest_id;
@@ -643,7 +425,7 @@ plf_drv_status register_resume_callback(resume_callback cb)
 	}
 	else 
 	{
-			apps_resume_cb = cb;
+			*apps_resume_cb = (uint32_t)cb;
 	}
 	return status;
 }

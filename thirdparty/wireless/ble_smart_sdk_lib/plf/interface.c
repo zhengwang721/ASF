@@ -71,7 +71,6 @@ at_ble_status_t interface_send(uint8_t* msg, uint16_t u16TxLen)
 
 void interface_init(void)
 {
-	struct uart_config uart_cfg;
 	memset(interface_send_msg,0,sizeof(interface_send_msg));
 	memset(event_param_buff,0,sizeof(event_param_buff));
 	event_param_buff_index = 0;

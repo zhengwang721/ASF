@@ -64,13 +64,12 @@ uint8_t gattm_add_attribute_req_handler(struct gattm_svc_desc *svc_desc, uint16_
 uint8_t gattm_att_set_value_req_handler(uint16_t handle, uint16_t length, uint8_t *value)
 {
     uint8_t u8Status = AT_BLE_FAILURE;
-    uint16_t u16RcvHandle;
     INTERFACE_MSG_INIT(GATTM_ATT_SET_VALUE_REQ, TASK_GATTM);
     INTERFACE_PACK_ARG_UINT16(handle);
     INTERFACE_PACK_ARG_UINT16(length);
     INTERFACE_PACK_ARG_BLOCK(value, length);
     INTERFACE_SEND_WAIT(GATTM_ATT_SET_VALUE_RSP, TASK_GATTM);
-    INTERFACE_UNPACK_UINT16(&u16RcvHandle);
+    INTERFACE_UNPACK_SKIP(2);
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_DONE();
     return u8Status;

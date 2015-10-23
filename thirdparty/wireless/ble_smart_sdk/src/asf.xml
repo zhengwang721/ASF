@@ -4,6 +4,7 @@
 		</info>
 		<build type="c-source" value="platform_drv.c"/>
 		<build type="c-source" value="event_handler.c"/>
+		<build type="c-source" value="port_from_sdk.c"/>
 		<build type="doxygen-entry-point" value="ble_smart_stack_group"/>
 		<device-support-alias value="ble_smart_stack_lib_support"/>		
 	</module>

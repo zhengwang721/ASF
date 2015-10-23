@@ -28,7 +28,7 @@
 #include <stddef.h>          // standard definition
 #include <stdint.h>          // standard integer
 #include <stdbool.h>         // standard boolean
-#include "at_ble_api.h"
+//#include "at_ble_api.h"
 
 #define KE_MSG_HDR_LENGTH 8
 

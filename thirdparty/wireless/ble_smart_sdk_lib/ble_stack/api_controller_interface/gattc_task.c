@@ -12,7 +12,7 @@
 
 // operation sequence number
 static  uint16_t g_seq_num_tx = 0;
-static  uint16_t g_seq_num_rx = 0;
+
 uint16_t Seq_NUM = 0;
 
 
@@ -374,7 +374,7 @@ at_ble_events_t gattc_complete_evt_handler(uint16_t src, uint8_t *data, void *pa
     INTERFACE_UNPACK_INIT(data);
     INTERFACE_UNPACK_UINT8(&parameters->operation);
     INTERFACE_UNPACK_UINT8(&status);
-    INTERFACE_UNPACK_UINT16(&g_seq_num_rx);
+    INTERFACE_UNPACK_SKIP(2);
     INTERFACE_DONE();
     parameters->status = (at_ble_status_t)status;
     switch (parameters->operation)
@@ -523,6 +523,5 @@ void gattc_svc_changed_cfg_ind_parser(uint16_t  src_id,
 void init_gattc_task_module()
 {
 	g_seq_num_tx = 0;
-	g_seq_num_rx = 0;
 	Seq_NUM = 0;
 }

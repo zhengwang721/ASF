@@ -148,9 +148,8 @@ void htpt_meas_intv_upd_rsp_handler(uint16_t src, uint8_t *data, at_ble_htpt_mea
 
 void htpt_meas_intv_chg_req_ind_handler(uint16_t src_id, uint8_t *data, at_ble_htpt_meas_intv_chg_req_t *params)
 {
-    uint16_t dummy_b;
     INTERFACE_UNPACK_INIT(data);
-    INTERFACE_UNPACK_UINT16(&dummy_b);
+    INTERFACE_UNPACK_SKIP(2);
     INTERFACE_UNPACK_UINT16(&params->intv);
     INTERFACE_DONE();
     UNREFERENCED_PARAMETER(src_id);

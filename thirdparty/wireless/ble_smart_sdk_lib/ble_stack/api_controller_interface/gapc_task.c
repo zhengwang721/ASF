@@ -328,7 +328,7 @@ at_ble_events_t gapc_bond_ind(uint16_t src, uint8_t *data, at_ble_pair_done_t *p
         if (NULL != param)  //event will be posted and returned to user
         {
             param->handle = KE_IDX_GET(src);
-            param->status = INTERFACE_UNPACK_UINT8(&u8Info);
+            param->status = (at_ble_status_t)(INTERFACE_UNPACK_UINT8(&u8Info));
             PRINT_DBG("GAPC_PAIRING_FAILED:\r\n");
             PRINT_INFO("\t>>0x%X\r\n"
                        "\t>>0x%X\r\n", param->handle, param->status);
@@ -340,7 +340,7 @@ at_ble_events_t gapc_bond_ind(uint16_t src, uint8_t *data, at_ble_pair_done_t *p
         if (NULL != param)  //event will be posted and returned to user
         {
             param->handle = KE_IDX_GET(src);
-            param->auth = INTERFACE_UNPACK_UINT8(&u8Info);
+            param->auth = (at_ble_auth_t)(INTERFACE_UNPACK_UINT8(&u8Info));
             param->status = AT_BLE_SUCCESS;//INTERFACE_UNPACK_UINT8(&u8Info);
             PRINT_DBG("GAPC_PAIRING_SUCCEED:\r\n");
             PRINT_INFO("\t%02x, %02x ", param->handle, param->auth);
@@ -794,7 +794,7 @@ at_ble_status_t gapc_lecb_create_handler(at_ble_handle_t conn_handle,
         uint16_t sec_lvl, uint16_t le_psm,
         uint16_t cid, uint16_t initial_credit)
 {
-    uint8_t u8Operation, u8Status;
+    uint8_t u8Status;
     INTERFACE_MSG_INIT(GAPC_LECB_CREATE_CMD, KE_BUILD_ID(TASK_GAPC, conn_handle));
     INTERFACE_PACK_ARG_UINT8(GAPC_LE_CB_CREATE);
     INTERFACE_PACK_ARG_DUMMY(1);
@@ -803,7 +803,7 @@ at_ble_status_t gapc_lecb_create_handler(at_ble_handle_t conn_handle,
     INTERFACE_PACK_ARG_UINT16(cid);
     INTERFACE_PACK_ARG_UINT16(initial_credit);
     INTERFACE_SEND_WAIT(GAPC_CMP_EVT, TASK_GAPC);
-    INTERFACE_UNPACK_UINT8(&u8Operation);
+		INTERFACE_UNPACK_SKIP(1);
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_DONE();
     return (at_ble_status_t)u8Status;
@@ -811,13 +811,13 @@ at_ble_status_t gapc_lecb_create_handler(at_ble_handle_t conn_handle,
 
 at_ble_status_t gapc_lecb_destroy_handler(at_ble_handle_t conn_handle, uint16_t le_psm)
 {
-    uint8_t u8Operation, u8Status;
+    uint8_t u8Status;
     INTERFACE_MSG_INIT(GAPC_LECB_DESTROY_CMD, KE_BUILD_ID(TASK_GAPC, conn_handle));
     INTERFACE_PACK_ARG_UINT8(GAPC_LE_CB_DESTROY);
     INTERFACE_PACK_ARG_DUMMY(1);
     INTERFACE_PACK_ARG_UINT16(le_psm);
     INTERFACE_SEND_WAIT(GAPC_CMP_EVT, TASK_GAPC);
-    INTERFACE_UNPACK_UINT8(&u8Operation);
+    INTERFACE_UNPACK_SKIP(1);
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_DONE();
     return (at_ble_status_t)u8Status;
@@ -864,14 +864,14 @@ void gapc_lecb_disconnect_cmd_handler(at_ble_handle_t conn_handle, uint16_t le_p
 
 at_ble_status_t gapc_lecb_add_cmd_handler(at_ble_handle_t conn_handle, uint16_t le_psm, uint16_t credit)
 {
-    uint8_t u8Operation, u8Status;
+    uint8_t u8Status;
     INTERFACE_MSG_INIT(GAPC_LECB_ADD_CMD, KE_BUILD_ID(TASK_GAPC, conn_handle));
     INTERFACE_PACK_ARG_UINT8(GAPC_LE_CB_ADDITION);
     INTERFACE_PACK_ARG_DUMMY(1);//Instead of packet ID
     INTERFACE_PACK_ARG_UINT16(le_psm);
     INTERFACE_PACK_ARG_UINT16(credit);
     INTERFACE_SEND_WAIT(GAPC_CMP_EVT, TASK_GAPC);
-    INTERFACE_UNPACK_UINT8(&u8Operation);
+    INTERFACE_UNPACK_SKIP(1);
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_DONE();
     return (at_ble_status_t)u8Status;

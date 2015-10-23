@@ -514,8 +514,9 @@ typedef enum
 
     AT_BLE_DEVICE_READY,
 
-		/** A platform event mostly from peripheral is delivered to application system */
+	/** A platform event mostly from peripheral is delivered to application system */
 		AT_PLATFORM_EVENT, 
+	
     AT_BLE_EVENT_MAX
 
 } at_ble_events_t;
@@ -1170,15 +1171,15 @@ typedef struct
 typedef struct
 {
     /// Device Name write permission requirements for peer device. @see at_ble_att_write_perm_t
-    uint8_t b2NamePerm              : 2;
+    uint8_t b2NamePerm;
     /// Device Appearance write permission requirements for peer device. @see at_ble_att_write_perm_t
-    uint8_t b2AppearancePerm        : 2;
+    uint8_t b2AppearancePerm;
     /// Slave Preferred Connection Parameters present in GAP attribute database.
-    uint8_t b1EnableSpcs            : 1;
+    uint8_t b1EnableSpcs;
     /// Service change feature present in GATT attribute database.
-    uint8_t b1EnableServiceChanged  : 1;
+    uint8_t b1EnableServiceChanged;
     /// Unused 2 bits; For Future use
-    uint8_t b2Rfu                   : 2;
+    uint8_t b2Rfu;
 } at_ble_att_cfg_t;
 
 /// Peer device request to modify local device info such as name or appearance
@@ -1701,13 +1702,13 @@ typedef struct
 } at_ble_characteristic_read_response_t;
 typedef struct
 {
-    uint8_t conn_handle;
+    at_ble_handle_t conn_handle;
     at_ble_handle_t char_handle;
 } at_ble_characteristic_read_req_t;
 
 typedef struct
 {
-    uint8_t conn_handle;
+    at_ble_handle_t conn_handle;
     at_ble_handle_t char_handle;
     uint16_t offset;
     uint16_t length;

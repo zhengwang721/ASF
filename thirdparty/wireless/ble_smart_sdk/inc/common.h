@@ -61,7 +61,7 @@ extern uint8_t (*platform_register_isr)(uint8_t isr_index,void *fp);
  *
  */
 extern uint8_t (*platform_unregister_isr)(uint8_t isr_index);
-
+extern uint32_t *actualfreq;
 //#ifdef CHIPVERSION_B0
 extern void (*handle_ext_wakeup_isr)(void);
 void PORT1_COMB_Handler(void);

@@ -150,11 +150,11 @@ uint8_t gapm_get_dev_config_cmd_handler(at_ble_get_dev_info_op_t op, void *arg)
 
 at_ble_status_t gapm_cancel_cmd_handler(void)
 {
-    uint8_t u8Operation, u8Status = 0;
+    uint8_t u8Status = 0;
     INTERFACE_MSG_INIT(GAPM_CANCEL_CMD, TASK_GAPM);
     INTERFACE_PACK_ARG_UINT8(GAPM_CANCEL);
     INTERFACE_SEND_WAIT(GAPM_CMP_EVT, TASK_GAPM);
-    INTERFACE_UNPACK_UINT8(&u8Operation);
+    INTERFACE_UNPACK_SKIP(1);
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_DONE();
     if (u8Status == GAP_ERR_CANCELED)
@@ -472,7 +472,7 @@ void gapm_start_connection_cmd_handler(uint8_t u8OpCode, uint8_t u8AddrType, uin
 
 uint8_t gapm_white_list_mgm_cmd(uint8_t operation, uint8_t addr_type, uint8_t *param)
 {
-    uint8_t u8Operation = 0, u8Status;
+    uint8_t u8Status;
     PRINT_DBG("input operation : %d\n", operation);
     INTERFACE_MSG_INIT(GAPM_WHITE_LIST_MGT_CMD, TASK_GAPM);
     INTERFACE_PACK_ARG_UINT8(operation);
@@ -501,7 +501,7 @@ uint8_t gapm_white_list_mgm_cmd(uint8_t operation, uint8_t addr_type, uint8_t *p
     {
         INTERFACE_SEND_WAIT(GAPM_CMP_EVT, TASK_GAPM);
     }
-    INTERFACE_UNPACK_UINT8(&u8Operation);
+    INTERFACE_UNPACK_SKIP(1);
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_DONE();
     PRINT_DBG("output operation : %d\n", u8Operation);
@@ -538,8 +538,6 @@ at_ble_status_t gapm_profile_task_add_cmd_handler(uint8_t  sec_lvl,
                                                  )
 {
     at_ble_status_t status = AT_BLE_SUCCESS;
-    uint8_t operation;
-    uint16_t ret_prf_task_id, ret_prf_task_nb;
     INTERFACE_MSG_INIT(GAPM_PROFILE_TASK_ADD_CMD, TASK_GAPM);
     INTERFACE_PACK_ARG_UINT8(GAPM_PROFILE_TASK_ADD);
     INTERFACE_PACK_ARG_UINT8(sec_lvl);
@@ -550,13 +548,13 @@ at_ble_status_t gapm_profile_task_add_cmd_handler(uint8_t  sec_lvl,
     INTERFACE_SEND_WAIT_ANY(GAPM_PROFILE_ADDED_IND, GAPM_CMP_EVT, TASK_GAPM);
     if (!INTERFACE_EVENT_FAILURE()) // if succeeded , unpack profile added ind
     {
-        INTERFACE_UNPACK_UINT16(&ret_prf_task_id);
-        INTERFACE_UNPACK_UINT16(&ret_prf_task_nb);
+        INTERFACE_UNPACK_SKIP(2);
+        INTERFACE_UNPACK_SKIP(2);
         INTERFACE_UNPACK_UINT16(ret_start_handle);
         INTERFACE_WAIT_FOR(GAPM_CMP_EVT, TASK_GAPM);// and wait for the success command complete event
     }
     //in case of failure , return failure code to user
-    INTERFACE_UNPACK_UINT8(&operation);
+    INTERFACE_UNPACK_SKIP(1);
     INTERFACE_UNPACK_UINT8(&status);
     INTERFACE_DONE();
     return status;
@@ -565,10 +563,10 @@ at_ble_status_t gapm_profile_task_add_cmd_handler(uint8_t  sec_lvl,
 at_ble_events_t gapm_profile_added_ind_handler(uint8_t *data, void *params)
 {
     at_ble_events_t evt;
-    uint16_t prf_task_id, prf_task_nb, start_hdl;
+    uint16_t prf_task_id, start_hdl;
     INTERFACE_UNPACK_INIT(data);
     INTERFACE_UNPACK_UINT16(&prf_task_id);
-    INTERFACE_UNPACK_UINT16(&prf_task_nb);
+    INTERFACE_UNPACK_SKIP(2);
     INTERFACE_UNPACK_UINT16(&start_hdl);
     INTERFACE_DONE();
     switch (prf_task_id)
