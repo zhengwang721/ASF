@@ -119,4 +119,10 @@
 /**@brief RR_INTERVAL_VALUE_PRESENT represents the rr value inclusion*/
 #define RR_INTERVAL_VALUE_PRESENT											(0x1 <<	4)
 
+/** @brief app_notification_cfm_handler called by ble manager 
+ *	to give the status of notification sent
+ *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
+ */	
+at_ble_status_t app_notification_cfm_handler(void *params);
+
 #endif /* __HR_SENSOR_APP_H__ */

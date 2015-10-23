@@ -193,7 +193,7 @@ typedef at_ble_status_t (*ble_event_callback_t) (void *params);
 /** @brief Gap Advertisement Types */
 typedef enum
 {
-	/// flags 
+	/// flags
 	FLAGS = 0x01,
 	/// incomplete list of 16bits service uuids
 	INCOMPLETE_LIST_16BIT_SERV_UUIDS,
@@ -207,7 +207,7 @@ typedef enum
 	INCOMPLETE_LIST_128BIT_SERV_UUIDS,
 	/// complete list of 128bits of service uuids
 	COMPLETE_LIST_128BIT_SERV_UUIDS,
-	/// shortened local name of the device 
+	/// shortened local name of the device
 	SHORTENED_LOCAL_NAME,
 	/// complete local name of the device
 	COMPLETE_LOCAL_NAME,
@@ -225,7 +225,7 @@ typedef enum
 	SECURITY_MANAGER_OOB_FLAGS,
 	/// slave connection interval range
 	SLAVE_CONNECTION_INTERVAL_RANGE,
-	/// list of 16bits service solicitation uuid 
+	/// list of 16bits service solicitation uuid
 	LIST_16BIT_SERV_SOLICITATION_UUIDS = 0x14,
 	/// list of 128bits service solicitation uuids
 	LIST_128BIT_SERV_SOLICITATION_UUIDS,
@@ -247,6 +247,8 @@ typedef enum
 	SIMPLE_PAIRING_HASHING_C256,
 	/// simple pairing randomizer r256
 	SIMPLE_PAIRING_RANDOMIZER_R256,
+	/// list of 16bits service solicitation uuid
+	LIST_32BIT_SERV_SOLICITATION_UUIDS,
 	/// service data 32bits
 	SERVICE_DATA_32BIT = 0x20,
 	/// service data 128bits
@@ -260,6 +262,7 @@ typedef enum
 	///manufacturer specific data
 	MANUFACTURER_SPECIFIC_DATA = 0xFF
 }gap_ad_type;
+
 
 /** @brief Service UUID's */
 
@@ -452,6 +455,700 @@ typedef enum
 #define MAX_DEVICE_CONNECTED			(1)
 
 #define BLE_EVENT_PARAM_MAX_SIZE		524
+
+
+/***************************Advertisement/Scan Response Information configuration *****/
+
+typedef enum {
+	LE_PERIPHERAL_ROLE_ONLY = 0x00,
+	LE_CENTRAL_ROLE_ONLY = 0x01,
+	LE_PERIPHERAL_ROLE_CONN_CENTRAL = 0x02,
+	LE_CENTRAL_ROLE_CONN_PERIPHERAL = 0x03	
+}le_role_t;
+
+#define SCAN_RESPONSE_ENABLE				0
+#define SCAN_RESPONSE_DISABLE				1
+#define SCAN_RESPONSE_ONLY_ENABLE			2
+
+/** @brief Length of Adv data types*/
+#define APPEARANCE_SIZE						2
+#define TX_POWER_LEVEL_SIZE					1
+#define ADV_INTERVAL_SIZE					2
+#define ADV_TYPE_FLAG_SIZE					3
+#define ADV_TYPE_SIZE						1
+#define ADV_LENGTH_SIZE						1
+#define ADV_ELEMENT_SIZE					2
+
+#ifndef SERVICE_UUID16_MAX_NUM
+#define SERVICE_UUID16_MAX_NUM				11
+#endif
+
+#ifndef PUBLIC_TARGET_ADDR_MAX_NUM
+#define PUBLIC_TARGET_ADDR_MAX_NUM			5
+#endif
+
+#ifndef PUBLIC_RANDOM_ADDR_MAX_NUM
+#define PUBLIC_RANDOM_ADDR_MAX_NUM			5
+#endif
+
+#ifndef SERVICE_UUID32_MAX_NUM
+#define SERVICE_UUID32_MAX_NUM				5
+#endif
+
+#ifndef SERVICE_UUID128_MAX_NUM
+#define SERVICE_UUID128_MAX_NUM				2
+#endif
+
+
+/** UUID Type's and configuration's */
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID_ENABLE			true
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH			2
+#if BLE_GAP_ADV_SERVICE_16BIT_UUID_ENABLE
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID_SCN_RSP_ENABLE	SCAN_RESPONSE_ENABLE
+
+#ifndef IMMEDIATE_ALERT_SERVICE
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID0_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID0_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID0_VAL		IMMEDIATE_ALERT_SERVICE_UUID
+
+#ifndef SCAN_PARAM_SERVICE
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID1_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID1_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID1_VAL		SPS_SERVICE_UUID
+
+#ifndef LINK_LOSS_SERVICE
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID2_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID2_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID2_VAL		LINK_LOSS_SERVICE_UUID
+
+#ifndef TX_POWER_SERVICE
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID3_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID3_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID3_VAL		TX_POWER_SERVICE_UUID
+
+#ifndef CURRENT_TIME_SERVICE
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID4_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID4_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID4_VAL		CURRENT_TIME_SERVICE_UUID
+
+#ifndef REFERENCE_TIME_SERVICE
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID5_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID5_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID5_VAL		REFERENCE_TIME_SERVICE_UUID
+
+#ifndef	NEXT_DST_SERVICE
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID6_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID6_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID6_VAL		NEXT_DST_SERVICE_UUID
+
+#ifndef DEVICE_INFORMATION_SERVICE
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID7_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID7_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID7_VAL		DIS_SERVICE_UUID
+
+#ifndef BATTERY_SERVICE
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID8_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID8_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID8_VAL		BAT_SERVICE_UUID
+
+#ifndef ANS_CLIENT_SERVICE
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID9_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID9_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID9_VAL		ANP_SERVICE_UUID
+
+#ifndef HID_SERVICE
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID10_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID10_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID10_VAL		HID_SERV_UUID
+#endif
+
+
+#define BLE_GAP_ADV_SERVICE_32BIT_UUID_ENABLE			false
+#define BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH			4
+#if BLE_GAP_ADV_SERVICE_32BIT_UUID_ENABLE
+#define BLE_GAP_ADV_SERVICE_32BIT_UUID_SCN_RSP_ENABLE	SCAN_RESPONSE_ENABLE
+
+#define BLE_GAP_ADV_SERVICE_32BIT_UUID0_ENABLE			true
+#define  BLE_GAP_ADV_DATA_SERVICE_32BIT_UUID0_VAL		"\x12\x34\x56\x78"
+
+#define BLE_GAP_ADV_SERVICE_32BIT_UUID1_ENABLE			false
+#define  BLE_GAP_ADV_DATA_SERVICE_32BIT_UUID1_VAL		"\x12\x34\x56\x78"
+
+#define BLE_GAP_ADV_SERVICE_32BIT_UUID2_ENABLE			false
+#define  BLE_GAP_ADV_DATA_SERVICE_32BIT_UUID2_VAL		"\x12\x34\x56\x78"
+
+#define BLE_GAP_ADV_SERVICE_32BIT_UUID3_ENABLE			false
+#define  BLE_GAP_ADV_DATA_SERVICE_32BIT_UUID3_VAL		"\x12\x34\x56\x78"
+
+#define BLE_GAP_ADV_SERVICE_32BIT_UUID4_ENABLE			false
+#define  BLE_GAP_ADV_DATA_SERVICE_32BIT_UUID4_VAL		"\x12\x34\x56\x78"
+#endif
+
+#define BLE_GAP_ADV_SERVICE_128BIT_UUID_ENABLE			false
+#define BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH			16
+#if BLE_GAP_ADV_SERVICE_128BIT_UUID_ENABLE
+#define BLE_GAP_ADV_SERVICE_128BIT_UUID_SCN_RSP_ENABLE	SCAN_RESPONSE_ENABLE
+
+#define BLE_GAP_ADV_SERVICE_128BIT_UUID0_ENABLE			true
+#define  BLE_GAP_ADV_DATA_SERVICE_128BIT_UUID0_VAL		"\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd"
+
+#define BLE_GAP_ADV_SERVICE_128BIT_UUID1_ENABLE			false
+#define  BLE_GAP_ADV_DATA_SERVICE_128BIT_UUID1_VAL		"\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd"
+#endif
+
+/** Short Local Name configuration */
+#define BLE_GAP_ADV_SHORTENED_LOCAL_NAME_ENABLE				false
+#if BLE_GAP_ADV_SHORTENED_LOCAL_NAME_ENABLE
+#define BLE_GAP_ADV_SHORTENED_LOCAL_NAME_SCN_RSP_ENABLE		SCAN_RESPONSE_DISABLE
+#define BLE_GAP_ADV_DATA_SHORTENED_LOCAL_NAME				"ATMEL-BLE"
+#define	 BLE_GAP_ADV_DATA_SHORTENED_LOCAL_NAME_LEN			strlen(BLE_GAP_ADV_DATA_SHORTENED_LOCAL_NAME)
+#endif
+
+/* Complete Local Name Configuration */
+#define BLE_GAP_ADV_COMPLETE_LOCAL_NAME_ENABLE				true
+#if BLE_GAP_ADV_COMPLETE_LOCAL_NAME_ENABLE
+#define BLE_GAP_ADV_COMPLETE_LOCAL_NAME_SCN_RSP_ENABLE		SCAN_RESPONSE_ENABLE
+#define  BLE_GAP_ADV_DATA_COMPLETE_LOCAL_NAME				BLE_DEVICE_NAME
+#define BLE_GAP_ADV_DATA_COMPLETE_LOCAL_NAME_LENGTH			strlen(BLE_GAP_ADV_DATA_COMPLETE_LOCAL_NAME)
+#endif
+
+/* Tx Power Configuration */
+#define BLE_GAP_ADV_TX_POWER_ENABLE							false
+#if BLE_GAP_ADV_TX_POWER_ENABLE
+#define BLE_GAP_ADV_TX_POWER_SCN_RSP_ENABLE					SCAN_RESPONSE_ENABLE
+#define BLE_GAP_ADV_DATA_TX_POWER							AT_BLE_TX_PWR_LVL_NEG_20_DB
+#define	BLE_GAP_ADV_DATA_TX_POWER_SIZE						1
+#endif
+
+/* Connection Interval Range configuration */
+#define BLE_GAP_ADV_SLAVE_CONN_INTERVAL_RANGE_ENABLE			false
+#define BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_LENGTH		2
+#if BLE_GAP_ADV_SLAVE_CONN_INTERVAL_RANGE_ENABLE
+#define BLE_GAP_ADV_SLAVE_CONN_INTERVAL_RANGE_SCN_RSP_ENABLE	SCAN_RESPONSE_ENABLE
+
+#define BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_MIN			0x0006
+#define BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_MAX			0x0C80
+#endif
+
+/* Service Solicitation UUID Configuration */
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_ENABLE				false
+#if BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_ENABLE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_SCN_RSP_ENABLE		SCAN_RESPONSE_ENABLE
+
+#ifndef IMMEDIATE_ALERT_SERVICE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID0_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID0_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID0_VAL			IMMEDIATE_ALERT_SERVICE_UUID
+
+#ifndef SCAN_PARAM_SERVICE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID1_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID1_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID1_VAL			SPS_SERVICE_UUID
+
+#ifndef LINK_LOSS_SERVICE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID2_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID2_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID2_VAL			LINK_LOSS_SERVICE_UUID
+
+#ifndef TX_POWER_SERVICE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID3_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID3_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID3_VAL			TX_POWER_SERVICE_UUID
+
+#ifndef CURRENT_TIME_SERVICE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID4_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID4_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID4_VAL			CURRENT_TIME_SERVICE_UUID
+
+#ifndef REFERENCE_TIME_SERVICE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID5_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID5_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID5_VAL			REFERENCE_TIME_SERVICE_UUID
+
+#ifndef NEXT_DST_SERVICE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID6_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID6_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID6_VAL			NEXT_DST_SERVICE_UUID
+
+#ifndef DEVICE_INFORMATION_SERVICE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID7_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID7_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID7_VAL			DIS_SERVICE_UUID
+
+#ifndef BATTERY_SERVICE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID8_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID8_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID8_VAL			BAT_SERVICE_UUID
+
+#ifndef ANS_CLIENT_SERVICE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID9_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID9_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID9_VAL			ANP_SERVICE_UUID
+
+#ifndef HID_SERVICE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID10_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID10_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID10_VAL		HID_SERV_UUID
+#endif
+
+#define BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID_ENABLE				false
+#if BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID_ENABLE
+#define BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID_SCN_RSP_ENABLE		SCAN_RESPONSE_ENABLE
+
+#define BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID0_ENABLE			true
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_32BIT_UUID0_VAL			"\x12\x34\x56\x78"
+
+#define BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID1_ENABLE			false
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_32BIT_UUID1_VAL			"\x12\x34\x56\x78"
+
+#define BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID2_ENABLE			false
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_32BIT_UUID2_VAL			"\x12\x34\x56\x78"
+
+#define BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID3_ENABLE			false
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_32BIT_UUID3_VAL			"\x12\x34\x56\x78"
+
+#define BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID4_ENABLE			false
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_32BIT_UUID4_VAL			"\x12\x34\x56\x78"
+#endif
+
+#define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_ENABLE			false
+#if BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_ENABLE
+#define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_SCN_RSP_ENABLE	SCAN_RESPONSE_ENABLE
+
+#define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID0_ENABLE			false
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_128BIT_UUID0_VAL		"\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd"
+
+#define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID1_ENABLE			false
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_128BIT_UUID1_VAL		"\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd"
+#endif
+
+/* Service Data Configuration */
+#define BLE_GAP_ADV_SERVICE_DATA_16BIT_UUID_ENABLE					false
+#if BLE_GAP_ADV_SERVICE_DATA_16BIT_UUID_ENABLE
+#define BLE_GAP_ADV_SERVICE_DATA_16BIT_UUID_SCN_RSP_ENABLE			SCAN_RESPONSE_ENABLE
+#define BLE_GAP_ADV_DATA_SERVICE_DATA_16BIT_UUID					TX_POWER_SERVICE_UUID
+#define BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_16BIT_UUID			"\x12"
+#define BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_16BIT_UUID_LENGTH	(sizeof(BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_16BIT_UUID) - 1)
+#endif
+
+#define BLE_GAP_ADV_SERVICE_DATA_32BIT_UUID_ENABLE					false
+#if BLE_GAP_ADV_SERVICE_DATA_32BIT_UUID_ENABLE
+#define BLE_GAP_ADV_SERVICE_DATA_32BIT_UUID_SCN_RSP_ENABLE			SCAN_RESPONSE_ENABLE
+#define BLE_GAP_ADV_DATA_SERVICE_DATA_32BIT_UUID					"\x12\x34\x56\x78"
+#define BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_32BIT_UUID			"\x12\x34"
+#define BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_32BIT_UUID_LENGTH	(sizeof(BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_32BIT_UUID) - 1)
+#endif
+
+#define BLE_GAP_ADV_SERVICE_DATA_128BIT_UUID_ENABLE					false
+#if BLE_GAP_ADV_SERVICE_DATA_128BIT_UUID_ENABLE
+#define BLE_GAP_ADV_SERVICE_DATA_128BIT_UUID_SCN_RSP_ENABLE			SCAN_RESPONSE_ENABLE
+#define BLE_GAP_ADV_DATA_SERVICE_DATA_128BIT_UUID					"\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd"
+#define BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_128BIT_UUID		"\x12\x34"
+#define BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_128BIT_UUID_LENGTH	(sizeof(BLE_GAP_ADV_ADDITIONAL_DATA_SERVICE_DATA_128BIT_UUID) - 1)
+#endif
+
+/* Public Target Address Configuration */
+#define BLE_GAP_ADV_PUBLIC_TARGET_ADDR_ENABLE					false
+#define BLE_GAP_ADV_PUBLIC_TARGET_ADDR_LENGTH					sizeof(at_ble_addr_t)
+#if BLE_GAP_ADV_PUBLIC_TARGET_ADDR_ENABLE
+#define BLE_GAP_ADV_PUBLIC_TARGET_ADDR_SCN_RSP_ENABLE			SCAN_RESPONSE_ENABLE
+
+#define BLE_GAP_ADV_DATA_PUBLIC_TARGET_ADDR0_ENABLE				true
+#define BLE_GAP_ADV_DATA_PUBLIC_TARGET_ADDR0_VAL				"\x00\xAB\xCD\xEF\xAB\xCD\xEA"
+
+#define BLE_GAP_ADV_DATA_PUBLIC_TARGET_ADDR1_ENABLE				false
+#define BLE_GAP_ADV_DATA_PUBLIC_TARGET_ADDR1_VAL				"\x00\xAB\xCD\xEF\xAB\xCD\xEB"
+
+#define BLE_GAP_ADV_DATA_PUBLIC_TARGET_ADDR2_ENABLE				false
+#define BLE_GAP_ADV_DATA_PUBLIC_TARGET_ADDR2_VAL				"\x00\xAB\xCD\xEF\xAB\xCD\xEC"
+
+#define BLE_GAP_ADV_DATA_PUBLIC_TARGET_ADDR3_ENABLE				false
+#define BLE_GAP_ADV_DATA_PUBLIC_TARGET_ADDR3_VAL				"\x00\xAB\xCD\xEF\xAB\xCD\xED"
+
+#define BLE_GAP_ADV_DATA_PUBLIC_TARGET_ADDR4_ENABLE				false
+#define BLE_GAP_ADV_DATA_PUBLIC_TARGET_ADDR4_VAL				"\x00\xAB\xCD\xEF\xAB\xCD\xEE"
+#endif
+
+/* Random Target Address Configuration */
+#define BLE_GAP_ADV_RANDOM_TARGET_ADDR_ENABLE					false
+#define BLE_GAP_ADV_RANDOM_TARGET_ADDR_LENGTH					sizeof(at_ble_addr_t)
+#if BLE_GAP_ADV_RANDOM_TARGET_ADDR_ENABLE
+#define BLE_GAP_ADV_RANDOM_TARGET_ADDR_SCN_RSP_ENABLE			SCAN_RESPONSE_ENABLE
+
+#define BLE_GAP_ADV_DATA_RANDOM_TARGET_ADDR0_ENABLE				true
+#define BLE_GAP_ADV_DATA_RANDOM_TARGET_ADDR0_VAL				"\x00\xAB\xCD\xEF\xAB\xCD\xEA"
+
+#define BLE_GAP_ADV_DATA_RANDOM_TARGET_ADDR1_ENABLE				false
+#define BLE_GAP_ADV_DATA_RANDOM_TARGET_ADDR1_VAL				"\x00\xAB\xCD\xEF\xAB\xCD\xEB"
+
+#define BLE_GAP_ADV_DATA_RANDOM_TARGET_ADDR2_ENABLE				false
+#define BLE_GAP_ADV_DATA_RANDOM_TARGET_ADDR2_VAL				"\x00\xAB\xCD\xEF\xAB\xCD\xEC"
+
+#define BLE_GAP_ADV_DATA_RANDOM_TARGET_ADDR3_ENABLE				false
+#define BLE_GAP_ADV_DATA_RANDOM_TARGET_ADDR3_VAL				"\x00\xAB\xCD\xEF\xAB\xCD\xED"
+
+#define BLE_GAP_ADV_DATA_RANDOM_TARGET_ADDR4_ENABLE				false
+#define BLE_GAP_ADV_DATA_RANDOM_TARGET_ADDR4_VAL				"\x00\xAB\xCD\xEF\xAB\xCD\xEE"
+#endif
+
+/* Appearance configuration */
+#define BLE_GAP_ADV_APPEARANCE_ENABLE								false
+#if BLE_GAP_ADV_APPEARANCE_ENABLE
+#define BLE_GAP_ADV_APPEARANCE_SCN_RSP_ENABLE						SCAN_RESPONSE_ENABLE
+#define BLE_GAP_ADV_DATA_APPEARANCE									"\x80\x00"
+#define BLE_GAP_ADV_DATA_APPEARANCE_SIZE							2
+#endif
+
+/* Advertising Interval Configuration */
+#define BLE_GAP_ADV_ADVERTISING_INTERVAL_ENABLE						false
+#define BLE_GAP_ADV_ADVERTISING_INTERVAL_LENGTH						2
+#if BLE_GAP_ADV_ADVERTISING_INTERVAL_ENABLE
+#define BLE_GAP_ADV_ADVERTISING_INTERVAL_SCN_RSP_ENABLE				SCAN_RESPONSE_ENABLE
+#define BLE_GAP_ADV_DATA_ADVERTISING_INTERVAL						0x64
+#endif
+
+/* ?LE Bluetooth Device Address Configuration */
+#define BLE_GAP_ADV_LE_BT_DEVICE_ADDR_ENABLE						false
+#if BLE_GAP_ADV_LE_BT_DEVICE_ADDR_ENABLE
+#define BLE_GAP_ADV_LE_BT_DEVICE_ADDR_SCN_RSP_ENABLE				SCAN_RESPONSE_ENABLE
+#define BLE_GAP_ADV_DATA_LE_BT_DEVICE_ADDR							"\x00\xAB\xCD\xEF\xAB\xCD\xEF"
+#define BLE_GAP_ADV_DATA_LE_BT_DEVICE_ADDR_LENGTH					sizeof(at_ble_addr_t)
+#endif
+
+/* ?LE Role Configuration */
+#define BLE_GAP_ADV_LE_ROLE_ENABLE									false
+#if BLE_GAP_ADV_LE_ROLE_ENABLE
+#define BLE_GAP_ADV_LE_ROLE_SCN_RSP_ENABLE							SCAN_RESPONSE_ENABLE
+#ifdef BLE_DEVICE_ROLE == BLE_ROLE_PERIPHERAL
+#define BLE_GAP_ADV_DATA_LE_ROLE									LE_PERIPHERAL_ROLE_ONLY
+#elif BLE_DEVICE_ROLE == BLE_ROLE_CENTRAL
+#define BLE_GAP_ADV_DATA_LE_ROLE									LE_CENTRAL_ROLE_ONLY
+#elif BLE_DEVICE_ROLE == BLE_ROLE_ALL
+#define BLE_GAP_ADV_DATA_LE_ROLE									LE_CENTRAL_ROLE_CONN_PERIPHERAL
+//Note: LE Peripheral Preferred connection should be changed manually here
+#endif
+#define BLE_GAP_ADV_DATA_LE_ROLE_SIZE								1
+#endif
+
+/* Manufacturer Specific Data Configuration */
+#define BLE_GAP_ADV_MANUFACTURER_SPECIFIC_DATA_ENABLE				true
+#if	BLE_GAP_ADV_MANUFACTURER_SPECIFIC_DATA_ENABLE
+#define BLE_GAP_ADV_MANUFACTURER_SPECIFIC_DATA_SCN_RSP_ENABLE		SCAN_RESPONSE_ENABLE
+#define BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA					"\x00\x06\xd6\xb2\xf0\x05\xf0\xf8"
+#define BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA_SIZE			(sizeof(BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA) - 1)
+#endif
+
+typedef struct adv_element_container{
+	uint8_t len;
+	uint8_t *adv_ptr;
+}adv_element_container_t;
+
+typedef struct scan_resp_element{
+	uint8_t len;
+	uint8_t *scn_ptr;
+}scan_resp_element_t;
+
+#define  _CONF_SERVICE_16BIT_UUID(n, uuid_ptr) \
+{ \
+	if (BLE_GAP_ADV_SERVICE_16BIT_UUID##n##_ENABLE) \
+	{\
+		adv_element_container_t *adv_ptr;\
+		adv_ptr = (adv_element_container_t *)uuid_ptr;\
+		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE - ADV_TYPE_FLAG_SIZE))\
+		{ \
+			DBG_LOG("Advertisement Data Length too big");\
+			while(1);\
+		} \
+		adv_ptr->adv_ptr[adv_ptr->len++] = (uint8_t) BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID##n##_VAL; \
+		adv_ptr->adv_ptr[adv_ptr->len++] = (uint8_t) ((BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID##n##_VAL) >> 8); \
+	}\
+}
+
+#define  _CONF_SERVICE_16BIT_UUID_SCAN_RSP(n, uuid_ptr) \
+{ \
+	if (BLE_GAP_ADV_SERVICE_16BIT_UUID##n##_ENABLE) \
+	{\
+		adv_element_container_t *adv_ptr;\
+		adv_ptr = (adv_element_container_t *)uuid_ptr;\
+		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE))\
+		{ \
+			DBG_LOG("Advertisement Data Length too big");\
+			while(1);\
+		} \
+		adv_ptr->adv_ptr[adv_ptr->len++] = (uint8_t) BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID##n##_VAL; \
+		adv_ptr->adv_ptr[adv_ptr->len++] = (uint8_t) ((BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID##n##_VAL) >> 8); \
+	}\
+}
+
+#define  _CONF_SERVICE_32BIT_UUID(n, uuid_ptr) \
+{ \
+	if (BLE_GAP_ADV_SERVICE_32BIT_UUID##n##_ENABLE) \
+	{\
+		adv_element_container_t *adv_ptr;\
+		adv_ptr = (adv_element_container_t *)uuid_ptr;\
+		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE - ADV_TYPE_FLAG_SIZE))\
+		{ \
+			DBG_LOG("Advertisement Data Length too big");\
+			while(1);\
+		} \
+		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_SERVICE_32BIT_UUID##n##_VAL, BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH);\
+		adv_ptr->len += BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH; \
+	}\
+}
+
+#define  _CONF_SERVICE_32BIT_UUID_SCAN_RSP(n, uuid_ptr) \
+{ \
+	if (BLE_GAP_ADV_SERVICE_32BIT_UUID##n##_ENABLE) \
+	{\
+		adv_element_container_t *adv_ptr;\
+		adv_ptr = (adv_element_container_t *)uuid_ptr;\
+		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE))\
+		{ \
+			DBG_LOG("Advertisement Data Length too big");\
+			while(1);\
+		} \
+		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_SERVICE_32BIT_UUID##n##_VAL, BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH);\
+		adv_ptr->len += BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH; \
+	}\
+}
+
+#define  _CONF_SERVICE_128BIT_UUID(n, uuid_ptr) \
+{ \
+	if (BLE_GAP_ADV_SERVICE_128BIT_UUID##n##_ENABLE) \
+	{\
+		adv_element_container_t *adv_ptr;\
+		adv_ptr = (adv_element_container_t *)uuid_ptr;\
+		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE - ADV_TYPE_FLAG_SIZE))\
+		{ \
+			DBG_LOG("Advertisement Data Length too big");\
+			while(1);\
+		} \
+		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_SERVICE_128BIT_UUID##n##_VAL , BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH);\
+		adv_ptr->len += BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH; \
+	}\
+}
+
+#define  _CONF_SERVICE_128BIT_UUID_SCAN_RSP(n, uuid_ptr) \
+{ \
+	if (BLE_GAP_ADV_SERVICE_128BIT_UUID##n##_ENABLE) \
+	{\
+		adv_element_container_t *adv_ptr;\
+		adv_ptr = (adv_element_container_t *)uuid_ptr;\
+		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE))\
+		{ \
+			DBG_LOG("Advertisement Data Length too big");\
+			while(1);\
+		} \
+		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_SERVICE_128BIT_UUID##n##_VAL , BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH);\
+		adv_ptr->len += BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH; \
+	}\
+}
+
+#define  _CONF_SERVICE_SOLTN_16BIT_UUID(n, uuid_ptr) \
+{ \
+	if (BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID##n##_ENABLE) \
+	{\
+		adv_element_container_t *adv_ptr;\
+		adv_ptr = (adv_element_container_t *)uuid_ptr;\
+		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE - ADV_TYPE_FLAG_SIZE))\
+		{ \
+			DBG_LOG("Advertisement Data Length too big");\
+			while(1);\
+		} \
+		adv_ptr->adv_ptr[adv_ptr->len++] = (uint8_t) BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID##n##_VAL; \
+		adv_ptr->adv_ptr[adv_ptr->len++] = (uint8_t) ((BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID##n##_VAL) >> 8); \
+	}\
+}
+
+#define  _CONF_SERVICE_SOLTN_16BIT_UUID_SCAN_RSP(n, uuid_ptr) \
+{ \
+	if (BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID##n##_ENABLE) \
+	{\
+		adv_element_container_t *adv_ptr;\
+		adv_ptr = (adv_element_container_t *)uuid_ptr;\
+		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE))\
+		{ \
+			DBG_LOG("Advertisement Data Length too big");\
+			while(1);\
+		} \
+		adv_ptr->adv_ptr[adv_ptr->len++] = (uint8_t) BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID##n##_VAL; \
+		adv_ptr->adv_ptr[adv_ptr->len++] = (uint8_t) ((BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID##n##_VAL) >> 8); \
+	}\
+}
+
+#define  _CONF_SERVICE_SOLTN_32BIT_UUID(n, uuid_ptr) \
+{ \
+	if (BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID##n##_ENABLE) \
+	{\
+		adv_element_container_t *adv_ptr;\
+		adv_ptr = (adv_element_container_t *)uuid_ptr;\
+		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE - ADV_TYPE_FLAG_SIZE))\
+		{ \
+			DBG_LOG("Advertisement Data Length too big");\
+			while(1);\
+		} \
+		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_SERVICE_SOLTN_32BIT_UUID##n##_VAL, BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH);\
+		adv_ptr->len += BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH; \
+	}\
+}
+
+#define  _CONF_SERVICE_SOLTN_32BIT_UUID_SCAN_RSP(n, uuid_ptr) \
+{ \
+	if (BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID##n##_ENABLE) \
+	{\
+		adv_element_container_t *adv_ptr;\
+		adv_ptr = (adv_element_container_t *)uuid_ptr;\
+		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE))\
+		{ \
+			DBG_LOG("Advertisement Data Length too big");\
+			while(1);\
+		} \
+		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_SERVICE_SOLTN_32BIT_UUID##n##_VAL, BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH);\
+		adv_ptr->len += BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH; \
+	}\
+}
+
+#define  _CONF_SERVICE_SOLTN_128BIT_UUID(n, uuid_ptr) \
+{ \
+	if (BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID##n##_ENABLE) \
+	{\
+		adv_element_container_t *adv_ptr;\
+		adv_ptr = (adv_element_container_t *)uuid_ptr;\
+		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE - ADV_TYPE_FLAG_SIZE))\
+		{ \
+			DBG_LOG("Advertisement Data Length too big");\
+			while(1);\
+		} \
+		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_SERVICE_SOLTN_128BIT_UUID##n##_VAL , BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH);\
+		adv_ptr->len += BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH; \
+	}\
+}
+
+#define  _CONF_SERVICE_SOLTN_128BIT_UUID_SCAN_RSP(n, uuid_ptr) \
+{ \
+	if (BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID##n##_ENABLE) \
+	{\
+		adv_element_container_t *adv_ptr;\
+		adv_ptr = (adv_element_container_t *)uuid_ptr;\
+		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE))\
+		{ \
+			DBG_LOG("Advertisement Data Length too big");\
+			while(1);\
+		} \
+		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_SERVICE_SOLTN_128BIT_UUID##n##_VAL , BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH);\
+		adv_ptr->len += BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH; \
+	}\
+}
+
+#define  _CONF_PUBLIC_TARGET_ADDR(n, uuid_ptr) \
+{ \
+	if (BLE_GAP_ADV_DATA_PUBLIC_TARGET_ADDR##n##_ENABLE) \
+	{\
+		adv_element_container_t *adv_ptr;\
+		adv_ptr = (adv_element_container_t *)uuid_ptr;\
+		if((adv_ptr->len + BLE_GAP_ADV_PUBLIC_TARGET_ADDR_LENGTH) >  (AT_BLE_ADV_MAX_SIZE - ADV_TYPE_FLAG_SIZE))\
+		{ \
+			DBG_LOG("Advertisement Data Length too big");\
+			while(1);\
+		} \
+		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_PUBLIC_TARGET_ADDR##n##_VAL, BLE_GAP_ADV_PUBLIC_TARGET_ADDR_LENGTH);\
+		adv_ptr->len += BLE_GAP_ADV_PUBLIC_TARGET_ADDR_LENGTH; \
+	}\
+}
+
+#define  _CONF_PUBLIC_TARGET_ADDR_SCAN_RSP(n, uuid_ptr) \
+{ \
+	if (BLE_GAP_ADV_DATA_PUBLIC_TARGET_ADDR##n##_ENABLE) \
+	{\
+		adv_element_container_t *adv_ptr;\
+		adv_ptr = (adv_element_container_t *)uuid_ptr;\
+		if((adv_ptr->len + BLE_GAP_ADV_PUBLIC_TARGET_ADDR_LENGTH) >  (AT_BLE_ADV_MAX_SIZE))\
+		{ \
+			DBG_LOG("Advertisement Data Length too big");\
+			while(1);\
+		} \
+		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_PUBLIC_TARGET_ADDR##n##_VAL, BLE_GAP_ADV_PUBLIC_TARGET_ADDR_LENGTH);\
+		adv_ptr->len += BLE_GAP_ADV_PUBLIC_TARGET_ADDR_LENGTH; \
+	}\
+}
+
+#define  _CONF_RANDOM_TARGET_ADDR(n, uuid_ptr) \
+{ \
+	if (BLE_GAP_ADV_DATA_RANDOM_TARGET_ADDR##n##_ENABLE) \
+	{\
+		adv_element_container_t *adv_ptr;\
+		adv_ptr = (adv_element_container_t *)uuid_ptr;\
+		if((adv_ptr->len + BLE_GAP_ADV_RANDOM_TARGET_ADDR_LENGTH) >  (AT_BLE_ADV_MAX_SIZE - ADV_TYPE_FLAG_SIZE))\
+		{ \
+			DBG_LOG("Advertisement Data Length too big");\
+			while(1);\
+		} \
+		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_RANDOM_TARGET_ADDR##n##_VAL, BLE_GAP_ADV_RANDOM_TARGET_ADDR_LENGTH);\
+		adv_ptr->len += BLE_GAP_ADV_RANDOM_TARGET_ADDR_LENGTH; \
+	}\
+}
+
+#define  _CONF_RANDOM_TARGET_ADDR_SCAN_RSP(n, uuid_ptr) \
+{ \
+	if (BLE_GAP_ADV_DATA_RANDOM_TARGET_ADDR##n##_ENABLE) \
+	{\
+		adv_element_container_t *adv_ptr;\
+		adv_ptr = (adv_element_container_t *)uuid_ptr;\
+		if((adv_ptr->len + BLE_GAP_ADV_RANDOM_TARGET_ADDR_LENGTH) >  (AT_BLE_ADV_MAX_SIZE))\
+		{ \
+			DBG_LOG("Advertisement Data Length too big");\
+			while(1);\
+		} \
+		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_RANDOM_TARGET_ADDR##n##_VAL, BLE_GAP_ADV_RANDOM_TARGET_ADDR_LENGTH);\
+		adv_ptr->len += BLE_GAP_ADV_RANDOM_TARGET_ADDR_LENGTH; \
+	}\
+}
+
+
 
 /****************************************************************************************
 *							        Structures                                     		*
@@ -700,6 +1397,8 @@ at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle);
   *
   */
 at_ble_status_t ble_connected_state_handler(void *params);
+
+at_ble_status_t ble_advertisement_data_set(void);
 
 at_ble_status_t ble_mtu_changed_indication_handler(void *params);
 

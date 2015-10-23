@@ -71,6 +71,7 @@ volatile bool advertisement_flag = false;/*!< to check if the device is in adver
 volatile bool notification_flag = false; /*!< flag to start notification*/
 volatile bool disconnect_flag = false;	/*!< flag for disconnection*/
 volatile bool hr_initializer_flag = 1; /*!< flag for initialization of hr for each category*/
+volatile bool notification_sent = true;
 uint8_t second_counter = 0;	/*!< second_counter to count the time*/
 uint16_t energy_expended_val = ENERGY_EXP_NORMAL; /*!< to count the energy expended*/
 uint16_t energy_incrementor ;	/*!< energy incrementor for various heart rate values*/
@@ -83,6 +84,19 @@ int8_t time_operator ;/*!< operator to change the seconds */
 uint8_t hr_min_value;/*!<the minimum heart rate value*/
 uint8_t hr_max_value;/*!<the maximum heart rate value*/
 uint8_t energy_inclusion = 0;/*!<To check for including the energy in hr measurement*/
+
+static const ble_event_callback_t app_gatt_server_handle[] = {
+	app_notification_cfm_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
 
 /****************************************************************************************
 *							        Functions											*
@@ -102,6 +116,24 @@ static void app_notification_handler(uint8_t notification_enable)
 		notification_flag = false;
 		DBG_LOG("Notification Disabled");
 	}
+}
+
+/** @brief hr_notification_confirmation_handler called by ble manager 
+ *	to give the status of notification sent
+ *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
+ */	
+at_ble_status_t app_notification_cfm_handler(void *params)
+{
+	at_ble_cmd_complete_event_t event_params;
+	memcpy(&event_params,params,sizeof(at_ble_cmd_complete_event_t));
+	if (event_params.status == AT_BLE_SUCCESS) {
+		DBG_LOG_DEV("App Notification Successfully sent over the air");
+		notification_sent = true;
+	} else {
+		DBG_LOG_DEV("Sending Notification over the air failed");
+		notification_sent = false;
+	}
+	return AT_BLE_SUCCESS;
 }
 
 /** @brief energy expended handler called by profile to reset the energy values
@@ -337,6 +369,9 @@ int main(void)
 
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
+	
+	/* Initialize the profile */
+	hr_sensor_init(NULL);
 
 	/* Registering the app_notification_handler with the profile */
 	register_hr_notification_handler(app_notification_handler);
@@ -346,6 +381,10 @@ int main(void)
 
 	/* Registering the app_state_handler with the profile */
 	register_hr_state_handler(app_state_handler);
+	
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+	BLE_GATT_SERVER_EVENT_TYPE,
+	app_gatt_server_handle);
 
 	/* Capturing the events  */
 	while (app_exec) {
@@ -365,7 +404,12 @@ int main(void)
 		/* Flag to start notification */
 		if (notification_flag) {
 			LED_Toggle(LED0);
-			hr_measurment_send();
+			if (notification_sent) {
+				hr_measurment_send();
+			} else {
+				DBG_LOG("Previous notification not sent");
+			}
+			
 			notification_flag = false;
 		}
 

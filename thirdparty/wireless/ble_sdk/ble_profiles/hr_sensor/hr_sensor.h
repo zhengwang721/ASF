@@ -171,20 +171,19 @@ void hr_sensor_disconnect(void);
  */
 bool hr_sensor_send_notification(uint8_t *hr_data, uint8_t length);
 
-/** @brief hr_notification_confirmation_handler called on notification confirmation
+/** @brief hr_sensor_notification_cfm_handler called on notification confirmation
  *  event by the ble manager
  *	@param[in] at_ble_status_t AT_BLE_SUCCESS on success AT_BLE_FAILURE on failure
- *called
+ *  called
  */
-void hr_notification_confirmation_handler(at_ble_cmd_complete_event_t * params);
+at_ble_status_t hr_sensor_notification_cfm_handler(void * params);
 
 /** @brief register_hr_notification_handler registers the notification handler
  *  passed by the application
  *  @param[in] hr_notification_callback_t address of the notification handler
  *  function to be called
  */
-void register_hr_notification_handler(
-		hr_notification_callback_t hr_notificaton_handler);
+at_ble_status_t hr_notification_confirmation_handler(void * params);
 
 /** @brief register_hr_reset_handler registers the reset handler passed by the
  * application
@@ -206,7 +205,7 @@ void register_hr_state_handler(hr_state_callback_t state_handler);
  *  @return AT_BLE_SUCCESS on success and AT_BLE_FAILURE on failure
  */
 at_ble_status_t hr_sensor_char_changed_handler(
-		at_ble_characteristic_changed_t *char_handle);
+		void *char_params);
 
 /** @brief hr_sensor_disconnect_event_handler called by ble manager after
  *  disconnection event recieved
@@ -214,15 +213,23 @@ at_ble_status_t hr_sensor_char_changed_handler(
  *  reason for disconnection
  */
 at_ble_status_t hr_sensor_disconnect_event_handler(
-		at_ble_disconnected_t *disconnect);
+		void *disconnect);
 
 /** @brief hr_sensor_connected_state_handler called by ble manager after a
- *	change in characteristic
+ * change in characteristic
  *  @param[in] at_ble_connected_t which has connection handle and the peer
- *	device address
+ *device address
  */
 at_ble_status_t hr_sensor_connected_state_handler(
-		at_ble_connected_t *conn_params);
+							void *params);
+							
+							/** @brief register_hr_notification_handler registers the notification handler
+ *	passed by the application
+ *  param[in] hr_notification_callback_t address of the notification handler
+ *	function to be called
+ */
+void register_hr_notification_handler(
+		hr_notification_callback_t hr_notificaton_handler);
 
 #endif /*__HR_SENSOR_H__ */
 // </h>
