@@ -159,8 +159,7 @@ uint8_t lls_set_alert_value(at_ble_characteristic_changed_t *change_params, gatt
 	uint8_t ret_value = INVALID_LLS_PARAM;
 	
 	if (change_params->char_handle == lls_handler->serv_chars.char_val_handle) {
-		if (change_params->char_new_value[0] <= LLS_HIGH_ALERT && 
-						change_params->char_new_value[0] >= LLS_NO_ALERT) {
+		if (change_params->char_new_value[0] <= LLS_HIGH_ALERT) {
 			DBG_LOG("The current alert level for linkloss is %s",
 					lls_gs_str[change_params->char_new_value[0]]);
 			ret_value = change_params->char_new_value[0];
