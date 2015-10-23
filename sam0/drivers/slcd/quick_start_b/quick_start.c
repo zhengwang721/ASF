@@ -110,7 +110,7 @@ int main(void)
 	printf("SLCD example starts\r\n");
 //! [setup_config]
 	slcd_get_config_defaults(&config);
-	config.waveform_mode = SLCD_STANDARD_WAVEFORM_MODE;
+	config.enable_bias_buffer = true;
 	slcd_init(&config);
 	slcd_set_contrast(0xc);
 //! [setup_config]
