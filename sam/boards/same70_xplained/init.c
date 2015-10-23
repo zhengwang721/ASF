@@ -513,6 +513,19 @@ void board_init(void)
 	MATRIX->CCFG_SMCNFCS = CCFG_SMCNFCS_SDRAMEN;
 #endif
 
+#ifdef CONF_BOARD_ILI9488
+	/**LCD pin configure on SPI*/
+	pio_configure_pin(LCD_SPI_MISO_PIO, LCD_SPI_MISO_FLAGS);
+	pio_configure_pin(LCD_SPI_MOSI_PIO, LCD_SPI_MOSI_FLAGS);
+	pio_configure_pin(LCD_SPI_SPCK_PIO, LCD_SPI_SPCK_FLAGS);
+	pio_configure_pin(LCD_SPI_NPCS_PIO, LCD_SPI_NPCS_FLAGS);
+	pio_configure_pin(LCD_SPI_RESET_PIO, LCD_SPI_RESET_FLAGS);
+	pio_configure_pin(LCD_SPI_CDS_PIO, LCD_SPI_CDS_FLAGS);
+	pio_configure_pin(LCD_SPI_BACKLIGHT_PIO, LCD_SPI_BACKLIGHT_FLAGS);
+	pio_set_pin_high(LCD_SPI_BACKLIGHT_PIO);
+
+#endif
+
 #ifdef CONF_BOARD_CONFIG_MPU_AT_INIT
 	_setup_memory_region();
 #endif

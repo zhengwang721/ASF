@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ILI9488 configuration.
+ * \brief Spi Master configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,24 +44,24 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-//! Configuration of the ILI9488 LCD display driver
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
-#ifndef CONF_ILI9488_H_INCLUDED
-#define CONF_ILI9488_H_INCLUDED
+/* Possibility to change low-level configurations here */
 
-#include "board.h"
+//! Default Config Spi Master Delay BCS
+#define CONFIG_SPI_MASTER_DELAY_BCS            0
 
-#define LCD_DATA_CACHE_SIZE ILI9488_LCD_WIDTH
-#define LCD_DATA_COLOR_SIZE 1
+//! Default Config Spi Master Bits per Transfer Definition
+#define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    0
 
-#define COLOR_CONVERT       RGB_24_TO_RGB565
+//! Default Config Spi Master Delay BCT
+#define CONFIG_SPI_MASTER_DELAY_BCT            1
 
-#if !defined(BOARD_ILI9488_ADDR)
+//! Default Config Spi Master Delay BS
+#define CONFIG_SPI_MASTER_DELAY_BS             1
 
-	#warning The ILI9488 EBI configuration does not exist in the board definition file. Using default settings.
+//! Default Config Spi Master Dummy Field
+#define CONFIG_SPI_MASTER_DUMMY                0xFF
 
-	#define BOARD_ILI9488_ADDR     0x63000000 /* The base address, depends on which SMC chip select is used by ILI9488. */
-
-#endif
-
-#endif /* CONF_ILI9488_H_INCLUDED */
+#endif /* CONF_SPI_MASTER_H_INCLUDED */

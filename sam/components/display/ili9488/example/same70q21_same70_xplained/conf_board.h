@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ILI9488 configuration.
+ * \brief Board configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,24 +44,13 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-//! Configuration of the ILI9488 LCD display driver
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifndef CONF_ILI9488_H_INCLUDED
-#define CONF_ILI9488_H_INCLUDED
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-#include "board.h"
+/* Indicates board has an ILI9488 external component to control LCD */
+#define CONF_BOARD_ILI9488
 
-#define LCD_DATA_CACHE_SIZE ILI9488_LCD_WIDTH
-#define LCD_DATA_COLOR_SIZE 1
-
-#define COLOR_CONVERT       RGB_24_TO_RGB565
-
-#if !defined(BOARD_ILI9488_ADDR)
-
-	#warning The ILI9488 EBI configuration does not exist in the board definition file. Using default settings.
-
-	#define BOARD_ILI9488_ADDR     0x63000000 /* The base address, depends on which SMC chip select is used by ILI9488. */
-
-#endif
-
-#endif /* CONF_ILI9488_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
