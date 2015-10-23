@@ -53,6 +53,7 @@
  *
  * This package can be used with the following setup:
  *  - SAMV71 Xplained Ultra kit
+ *  - SAME70 Xplained kit
  *
  * \section files Main files:
  *  - twihs.c SAM Two-Wire Interface driver implementation.
