@@ -90,12 +90,9 @@ uint8_t tal_rx_enable(trx_id_t trx_id, uint8_t state)
     Assert((trx_id >= 0) && (trx_id < NUM_TRX));
 
     uint8_t ret_val;
-
-    //printf(("tal_rx_enable, trx_id ="), trx_id);
-
     if (tal_state[trx_id] == TAL_SLEEP)
     {
-        //printf(("TAL_TRX_ASLEEP"));
+        
         return TAL_TRX_ASLEEP;
     }
 
@@ -105,7 +102,7 @@ uint8_t tal_rx_enable(trx_id_t trx_id, uint8_t state)
      */
     if (tal_state[trx_id] != TAL_IDLE)
     {
-        //printf(("TAL is busy"));
+        
         return TAL_BUSY;
     }
 
@@ -123,7 +120,7 @@ uint8_t tal_rx_enable(trx_id_t trx_id, uint8_t state)
 
     if (state == PHY_TRX_OFF)
     {
-        //printf(("Switch to PHY_TRX_OFF"));
+      
         /*
             * If the rx needs to be switched off,
             * we are not interested in a frame that is currently being received.
@@ -146,7 +143,7 @@ uint8_t tal_rx_enable(trx_id_t trx_id, uint8_t state)
     }
     else
     {
-        //printf(("Switch to PHY_RX_ON"));
+        
         switch_to_txprep(trx_id);
         switch_to_rx(trx_id);
 #if (defined SUPPORT_FSK) || (defined SUPPORT_OQPSK)

@@ -93,9 +93,6 @@ static irq_handler_t irq_hdl_batmon;
 uint16_t tfa_get_batmon_voltage(void)
 {
     uint16_t mv;
-
-    //printf(("tfa_get_batmon_voltage()"));
-
     if ((tal_state[RF09] == TAL_SLEEP) && (tal_state[RF24] == TAL_SLEEP))
     {
         return 0;
@@ -136,8 +133,7 @@ uint16_t tfa_get_batmon_voltage(void)
     if (high_range)
     {
         /* EVDD is above threshold */
-        /* Set to high range */
-        //printf(("high range"));
+        /* Set to high range */     
 #ifdef IQ_RADIO
         trx_bit_write(RF215_RF, SR_RF_BMDVC_BMHR, 1);
 #else
@@ -148,7 +144,6 @@ uint16_t tfa_get_batmon_voltage(void)
     {
         /* EVDD is below threshold */
         /* Keep current range; i.e. low range */
-        //printf(("low range"));
     }
 
     /* Find the voltage factor */
@@ -165,9 +160,8 @@ uint16_t tfa_get_batmon_voltage(void)
         if (trx_bit_read( SR_RF_BMDVC_BMS) == 0)
 #endif
         {
-            vth = i;
-            //printf(("vth = "), vth);
-            break;
+           vth = i;
+           break;
         }
     }
 
@@ -247,12 +241,9 @@ uint16_t tfa_get_batmon_voltage(void)
 retval_t tfa_batmon_irq_init(FUNC_PTR(batmon_irq_cb), uint16_t vth)
 {
     retval_t ret;
-
-    //printf(("tfa_batmon_irq_init()"));
-
     if ((vth < BATMON_MON_VTH_MIN) || (vth > BATMON_MON_VTH_MAX))
     {
-        //printf(("Invalid range"));
+       
         ret = MAC_INVALID_PARAMETER;
     }
     else

@@ -395,8 +395,6 @@ void tal_task(void)
  */
 void switch_to_rx(trx_id_t trx_id)
 {
-    //printf(("switch_to_rx(), trx_id ="), trx_id);
-   
     /* Check if buffer is available now. */
     if (tal_rx_buffer[trx_id] != NULL)
     {
@@ -414,7 +412,6 @@ void switch_to_rx(trx_id_t trx_id)
     {
         switch_to_txprep(trx_id);
         tal_buf_shortage[trx_id] = true;
-        //debug_text_val(PSTR("Warning: buffer shortage !!!!!!!!!"), trx_id);
     }
 }
 
@@ -529,8 +526,7 @@ void wait_for_txprep(trx_id_t trx_id)
  */
 static void handle_trxerr(trx_id_t trx_id)
 {
-    //printf(("\n\r handle_trxerr()"));
-
+    
     /* Set device to TRXOFF */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     trx_reg_write( reg_offset + RG_RF09_CMD, RF_TRXOFF);

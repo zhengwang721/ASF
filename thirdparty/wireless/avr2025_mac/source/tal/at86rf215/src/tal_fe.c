@@ -300,7 +300,7 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
             break;
 
         default:
-            ////printf(("ERROR: MODE_FCHIP  must be in [0..3], is: %d"), chip_rate);
+            //printf(("ERROR: MODE_FCHIP  must be in [0..3], is: %d"), chip_rate);
             return FAILURE;
             break;
     }
@@ -319,7 +319,7 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
     rf_blk_write(reg_offset + RG_RF09_TXCUTC, tx, 3);
 
 #if ((!defined RF215v1) && (!defined RF215Mv1)) && (defined DIRECT_MODULATION)
-    ////printf(("Direct modulation enabled"));
+    //printf(("Direct modulation enabled"));
     bb_bit_write(reg_offset + SR_BBC0_OQPSKC0_DM, dm);
 #endif
 

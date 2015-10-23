@@ -97,8 +97,6 @@ static retval_t conf_fsk(trx_id_t trx_id);
  */
 retval_t conf_trx_modulation(trx_id_t trx_id)
 {
-    //printf(("conf_trx_modulation()"));
-
     retval_t status;
 
     /* Change PHY only in TRXOFF or TXPREP. Since TXPREP is not possible here, check for TRXOFF */

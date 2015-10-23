@@ -79,8 +79,6 @@ retval_t tal_generate_rand_seed(void)
     trx_id_t trx_id;
     rf_cmd_state_t previous_trx_state = RF_NOP;
 
-    //printf(("tal_generate_rand_seed()"));
-
     /* Check for non sleeping device */
     if ((tal_state[RF09] == TAL_SLEEP) && (tal_state[RF24] == TAL_SLEEP))
     {

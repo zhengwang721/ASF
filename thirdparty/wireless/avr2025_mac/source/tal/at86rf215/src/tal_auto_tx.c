@@ -122,7 +122,6 @@ retval_t tal_tx_frame(trx_id_t trx_id, frame_info_t *tx_frame,
 		csma_mode_t csma_mode, bool perform_frame_retry)
 {
     Assert((trx_id >= 0) && (trx_id < NUM_TRX));
-//printf(("tal_tx_frame()"));
 
     if (tal_state[trx_id] == TAL_SLEEP)
     {
@@ -224,8 +223,7 @@ retval_t tal_tx_frame(trx_id_t trx_id, frame_info_t *tx_frame,
  */
 void transmit_frame(trx_id_t trx_id, cca_use_t cca)
 {
-    ////debug_text(PSTR("transmit_frame()"));
-
+ 
     cancel_any_reception(trx_id);
 
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
@@ -248,7 +246,6 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
 
     if (frame_buf_filled[trx_id] == false)
     {
-        //////debug_text(PSTR("Frame buffer not filled"));
         /* fill length field */
         uint16_t len = mac_frame_ptr[trx_id]->len_no_crc + tal_pib[trx_id].FCSLen;
         trx_write(reg_offset + RG_BBC0_TXFLL, (uint8_t *)&len, 2);
@@ -257,30 +254,25 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
         last_txframe_length[trx_id] = mac_frame_ptr[trx_id]->len_no_crc;
 
         /* Disable automatic FCS appending */
-        //////debug_text(PSTR("AFCS = 0"));
         trx_bit_write(reg_offset + SR_BBC0_PC_TXAFCS, 0);
     }
 
     if (cca == WITH_CCA)
     {
         /* Trigger CCA measurement */
-        ////debug_text(PSTR("transmit with CCA"));
-
         /* Disable BB; it will enabled for transmission automatically again */
         trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 0);
-        ////debug_text(PSTR("Switch to Rx"));
         trx_reg_write( reg_offset + RG_RF09_CMD, RF_RX);
         trx_state[trx_id] = RF_RX;
         pal_timer_delay(tal_pib[trx_id].agc_settle_dur); // allow filters to settle
 
         /* Start single ED measurement; use reg_write - it's the only sub-register */
-        ////debug_text(PSTR("Start ED measurement"));
         trx_reg_write( reg_offset + RG_RF09_EDC, RF_EDSINGLE);
         tx_state[trx_id] = TX_CCATX;
     }
     else // no CCA
     {
-        ////debug_text(PSTR("switch to Tx"));
+        /*("switch to Tx")*/
         trx_reg_write( reg_offset + RG_RF09_CMD, RF_TX);
         trx_state[trx_id] = RF_TX;
         tx_state[trx_id] = TX_TX;
@@ -352,8 +344,6 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
  */
 void handle_tx_end_irq(trx_id_t trx_id)
 {
-   //printf("\n \r handle_tx_end_irq() ");
-   
     /* ACK transmission completed */
     if (ack_transmitting[trx_id])
     {
@@ -384,8 +374,6 @@ void handle_tx_end_irq(trx_id_t trx_id)
                     /* Switch BB on again */
                     trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 1);
                     switch_to_txprep(trx_id);
-
-                    ////debug_text(PSTR("Channel busy"));
                     csma_continue(trx_id);
                     return;
                 }
@@ -446,7 +434,6 @@ void handle_tx_end_irq(trx_id_t trx_id)
     else // No ACK requested
     {
         trx_state[trx_id] = RF_TXPREP;
-        ////debug_text(PSTR("No ACK requested"));
         tx_done_handling(trx_id, MAC_SUCCESS);
     }
 }
@@ -463,8 +450,6 @@ void handle_tx_end_irq(trx_id_t trx_id)
  */
 void tx_done_handling(trx_id_t trx_id, retval_t status)
 {
-    ////debug_text(PSTR("tx_done_handling()"));
-
     if (status == MAC_NO_ACK)
     {
         if (number_of_tx_retries[trx_id] < tal_pib[trx_id].MaxFrameRetries)
@@ -576,8 +561,6 @@ void tx_done_handling(trx_id_t trx_id, retval_t status)
  */
 static void handle_ifs(trx_id_t trx_id)
 {
-    ////debug_text(PSTR("handle_ifs()"));
-
     uint32_t now;
     uint32_t time_diff;
 
@@ -590,7 +573,6 @@ static void handle_ifs(trx_id_t trx_id)
         if (time_diff < required_spacing)
         {
             uint32_t delay = required_spacing - time_diff;
-            ////debug_text_val(PSTR("delay LIFS = "), (uint16_t)delay);
             pal_timer_delay(delay);
         }
     }
@@ -601,7 +583,6 @@ static void handle_ifs(trx_id_t trx_id)
         if (time_diff < required_spacing)
         {
             uint32_t delay = required_spacing - time_diff;
-            ////debug_text_val(PSTR("delay SIFS = "), (uint16_t)delay);
             pal_timer_delay(delay);
         }
     }

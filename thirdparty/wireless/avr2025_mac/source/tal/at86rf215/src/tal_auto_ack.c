@@ -143,8 +143,7 @@ void ack_transmission_done(trx_id_t trx_id)
  */
 bool is_frame_an_ack(trx_id_t trx_id)
 {
-    //printf(("\nis_frame_an_ack()"));
-
+   
     bool ret;
 
     /* Check frame length */
@@ -180,8 +179,6 @@ bool is_frame_an_ack(trx_id_t trx_id)
  */
 bool is_ack_valid(trx_id_t trx_id)
 {
-   //printf(("\nis_ack_valid()"));
-
     bool ret;
 
     /* Check sequence number */

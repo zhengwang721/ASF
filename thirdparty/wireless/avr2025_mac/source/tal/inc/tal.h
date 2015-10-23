@@ -1081,27 +1081,6 @@ retval_t tal_pib_get(uint8_t attribute, uint8_t *value);
 retval_t tal_pib_set(uint8_t attribute, pib_value_t *value);
 
 /**
-  * @brief Sets a TAL PIB attribute for all existing trx Ids for this device
-  *
-  * This function is called to set the transceiver information base
-  * attributes for all transceivers on this device. This function simply calls
-  * function tal_pib_set() for all existing trx Ids.
-  *
-  * @param attribute TAL infobase attribute ID
-  * @param value TAL infobase attribute value to be set
-  *
-  * @return
-  *      - @ref MAC_UNSUPPORTED_ATTRIBUTE if the TAL info base attribute is not found
-  *      - @ref TAL_BUSY if the TAL is not in TAL_IDLE state. An exception is
-  *         macBeaconTxTime which can be accepted by TAL even if TAL is not
-  *         in TAL_IDLE state.
-  *      - @ref MAC_SUCCESS if the attempt to set the PIB attribute was successful
-  *      - @ref TAL_TRX_ASLEEP if trx is in SLEEP mode and access to trx is required
-  * @ingroup apiTalApi
-  */
-retval_t tal_pib_set_all(uint8_t attribute, pib_value_t *value);
-
-/**
  * @brief Switches receiver on or off
  *
  * This function switches the receiver on (PHY_RX_ON) or off (PHY_TRX_OFF).

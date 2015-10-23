@@ -125,7 +125,6 @@ uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
     if (upload_frame(trx_id) == false)
     {
-        ////debug_text(PSTR("Upload frame failed"));
         switch_to_rx(trx_id); // buffer shortage will handled by tal_task()
         return;
     }
@@ -141,10 +140,9 @@ uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 #ifdef SUPPORT_MODE_SWITCH
     if (tal_pib[trx_id].ModeSwitchEnabled)
     {
-        ////debug_text_val(PSTR("Mode switch RXFE, tal_state "), tal_state[trx_id]);
+    
         if (tal_pib[trx_id].phy.modulation == FSK)
         {
-            ////debug_text(PSTR("Check for mode switch"));
             uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
             if (trx_bit_read( reg_offset + SR_BBC0_FSKPHRRX_MS) == 0x01)
             {
@@ -155,8 +153,6 @@ uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
         if (tal_state[trx_id] == TAL_NEW_MODE_RECEIVING)
         {
             /* Restore previous PHY, i.e. CSM */
-            
-			//////printf(("Frame in new mode has been received"));
             /* Stop timer waiting for incoming frame at new mode */
             stop_tal_timer(trx_id);
             set_csm(trx_id);
@@ -185,12 +181,8 @@ uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
  */
 static void handle_incoming_frame(trx_id_t trx_id)
 {
-    ////debug_text_val(PSTR("handle_incoming_frame(), trx_id ="), trx_id);
-
+    
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-	
-	
-
     if (is_frame_an_ack(trx_id))
     {
         trx_state[trx_id] = RF_TXPREP;
@@ -199,7 +191,6 @@ static void handle_incoming_frame(trx_id_t trx_id)
             if (is_ack_valid(trx_id))
             {
                 /* Stop ACK timeout timer */
-                ////debug_text(PSTR("Stop ACKWaitDuration timer"));
                 stop_tal_timer(trx_id);
                 /* Re-store frame filter to pass "normal" frames */
                 /* Configure frame filter to receive all allowed frame types */
@@ -234,11 +225,8 @@ static void handle_incoming_frame(trx_id_t trx_id)
         return; /* no further processing of ACK frames */
     }
 
-   //printf("\n \r Frame is not an ACK");
   /* Check if ACK transmission is done by transceiver */
   ack_transmitting[trx_id] = (bool)trx_bit_read( reg_offset + SR_BBC0_AMCS_AACKFT);
-  
-  //printf("\n \r IS ACK Transmitted: %d",ack_transmitting[trx_id]);
     
 #if (defined RF215v1) && (!defined BASIC_MODE)
     /* Workaround for errata reference #4830 */
@@ -249,7 +237,6 @@ static void handle_incoming_frame(trx_id_t trx_id)
         if ((fcf0 & FCF_ACK_REQUEST) == 0x00) 
         {
             /* Unwanted ACK transmission has already by canceled within ISR context */
-           //printf(("\n \r sync ACK transmission"));
             ack_transmitting[trx_id] = false;
         }
     }
@@ -257,7 +244,6 @@ static void handle_incoming_frame(trx_id_t trx_id)
     if (ack_transmitting[trx_id])
     {
         trx_state[trx_id] = RF_TX; // Sync with trx state; automatic state switch
-        ////debug_text(PSTR("ACK transmitting"));
 #ifdef SUPPORT_FSK
         if (tal_pib[trx_id].RPCEnabled && tal_pib[trx_id].phy.modulation == FSK)
         {
@@ -272,7 +258,6 @@ static void handle_incoming_frame(trx_id_t trx_id)
     else
     {
         trx_state[trx_id] = RF_TXPREP;
-        ////debug_text(PSTR("No ACK transmitting"));
         complete_rx_transaction(trx_id);
         switch_to_rx(trx_id);
     }
@@ -289,8 +274,6 @@ static void handle_incoming_frame(trx_id_t trx_id)
  */
 static bool upload_frame(trx_id_t trx_id)
 {
-    ////debug_text_val(PSTR("upload_frame(), trx_id ="), trx_id);
-
     if (tal_rx_buffer[trx_id] == NULL)
     {
         Assert("no tal_rx_buffer available" == 0);
@@ -303,7 +286,6 @@ static bool upload_frame(trx_id_t trx_id)
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     uint16_t phy_frame_len;
     trx_read( ( reg_offset + RG_BBC0_RXFLL), (uint8_t *)&phy_frame_len, 2);
-    ////debug_text_val(PSTR("Frm len = "), phy_frame_len);
     rx_frm_info[trx_id]->len_no_crc = phy_frame_len - tal_pib[trx_id].FCSLen;
 
     /* Update payload pointer to store received frame. */
@@ -335,8 +317,7 @@ static bool upload_frame(trx_id_t trx_id)
  */
 void complete_rx_transaction(trx_id_t trx_id)
 {
-    ////debug_text_val(PSTR("complete_rx_transaction(), trx_id = "), trx_id);
-
+  
     /* Get energy of received frame */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     uint8_t ed = trx_reg_read( reg_offset + RG_RF09_EDV);
@@ -368,8 +349,7 @@ void complete_rx_transaction(trx_id_t trx_id)
  */
 void process_incoming_frame(trx_id_t trx_id, buffer_t *buf_ptr)
 {
-    ////debug_text_val(PSTR("process_incoming_frame(), trx_id = "), trx_id);
-
+   
     frame_info_t *receive_frame = (frame_info_t *)BMM_BUFFER_POINTER(buf_ptr);
     receive_frame->buffer_header = buf_ptr;
 

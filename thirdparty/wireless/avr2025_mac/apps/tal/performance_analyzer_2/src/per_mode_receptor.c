@@ -785,7 +785,7 @@ static void set_paramter_on_recptor_node(trx_id_t trx, app_payload_t *msg)
 	break;
 
 	default:
-		//printf(" \r\nUnsupported Parameter");
+		printf(" \r\nUnsupported Parameter");
 		break;
 	}
 }
@@ -1155,19 +1155,19 @@ static void send_crc_status_rsp(trx_id_t trx)
  *  uint16_t reg;
  *  uint16_t reg_start;
  *  uint16_t reg_end;
- *      //printf("***********TRX Register Read/Write/Dump**************");
- *  //printf("\r\n R - to Read Reg");
- *  //printf("\r\n W - to Write Reg");
- *  //printf("\r\n D - to get register Dump");
- *      //printf("\r\n Press Enter to Exit From this Menu");
- *  //printf("\r\n >");
+ *  printf("***********TRX Register Read/Write/Dump**************");
+ *  printf("\r\n R - to Read Reg");
+ *  printf("\r\n W - to Write Reg");
+ *  printf("\r\n D - to get register Dump");
+ *  printf("\r\n Press Enter to Exit From this Menu");
+ *  printf("\r\n >");
  *
  *  / * Get input from terminal program / user. * /
  *  input = sio2host_getchar();
  *      if(input == '\r')
  *      {
- *              //printf("\n");
- *              //printf("\n\r Returning Back as Receptor... \n\r");
+ *              printf("\n");
+ *              printf("\n\r Returning Back as Receptor... \n\r");
  *              return;
  *      }
  *
@@ -1178,7 +1178,7 @@ static void send_crc_status_rsp(trx_id_t trx)
  *  {
  *      case 'R':
  *          {
- *              //printf("\r\n Read Register: 0x");
+ *              printf("\r\n Read Register: 0x");
  *              if (read_int_value_in_hex(&reg) == false)
  *              {
  *                  return;
@@ -1187,23 +1187,23 @@ static void send_crc_status_rsp(trx_id_t trx)
  *
  *
  *              {
- *                  //printf("\r\n Out of Range register value..");
- *                                      //printf("\n\r Returning Back as
+ *                  printf("\r\n Out of Range register value..");
+ *                  printf("\n\r Returning Back as
  * Receptor... \n\r");
  *                  return;
  *              }
  *
  *              reg_val = trx_reg_read(reg);
  *
- *              //printf("\r\n Value of Reg 0x%x is 0x%x", reg, reg_val);
+ *              printf("\r\n Value of Reg 0x%x is 0x%x", reg, reg_val);
  *
  *          }
- *                      //printf("\n\r Returning Back as Receptor... \n\r");
+ *                      printf("\n\r Returning Back as Receptor... \n\r");
  *          break;
  *
  *      case 'W':
  *          {
- *              //printf("\r\n Write Register: 0x");
+ *              printf("\r\n Write Register: 0x");
  *              if (read_int_value_in_hex(&reg) == false)
  *
  *              {
@@ -1213,13 +1213,13 @@ static void send_crc_status_rsp(trx_id_t trx)
  *
  *              if (reg > 0X3FFE)
  *              {
- *                  //printf("\r\n Out of Range register value..");
- *                                      //printf("\n\r Returning Back as
+ *                  printf("\r\n Out of Range register value..");
+ *                  printf("\n\r Returning Back as
  * Receptor... \n\r");
  *                  return;
  *              }
  *
- *              //printf("\r\n Write Value: 0x");
+ *              printf("\r\n Write Value: 0x");
  *              if (read_value_in_hex(&reg_val) == false)
  *              {
  *                  return;
@@ -1227,14 +1227,14 @@ static void send_crc_status_rsp(trx_id_t trx)
  *
  *              trx_reg_write(reg, reg_val);
  *
- *              //printf("\r\n Value written in Reg 0x%x is 0x%x", reg, reg_val);
+ *              printf("\r\n Value written in Reg 0x%x is 0x%x", reg, reg_val);
  *          }
- *                      //printf(" Returning Back as Receptor... \n\r");
+ *                      printf(" Returning Back as Receptor... \n\r");
  *          break;
  *
  *      case 'D':
  *          {
- *              //printf("\r\n Start Register: 0x");
+ *              printf("\r\n Start Register: 0x");
  *              if (read_int_value_in_hex(&reg_start) == false)
  *
  *              {
@@ -1244,13 +1244,13 @@ static void send_crc_status_rsp(trx_id_t trx)
  *              if (reg_start > 0X3FFE)
  *
  *              {
- *                  //printf("\r\n Out of Range register value.. ");
- *                                      //printf("\n\r Returning Back as
+ *                  printf("\r\n Out of Range register value.. ");
+ *                  printf("\n\r Returning Back as
  * Receptor... \n\r");
  *                  return;
  *              }
  *
- *              //printf("\r\n End Register: 0x");
+ *              printf("\r\n End Register: 0x");
  *              if (read_int_value_in_hex(&reg_end) == false)
  *              {
  *                  return;
@@ -1258,8 +1258,8 @@ static void send_crc_status_rsp(trx_id_t trx)
  *
  *              if (reg_end > 0X3FFE)
  *              {
- *                  //printf("\r\n Out of Range register value.. ");
- *                                      //printf("\n\r Returning Back as
+ *                  printf("\r\n Out of Range register value.. ");
+ *                                      printf("\n\r Returning Back as
  * Receptor... \n\r");
  *                  return;
  *              }
@@ -1267,8 +1267,8 @@ static void send_crc_status_rsp(trx_id_t trx)
  *
  *              if (reg_end < reg_start)
  *              {
- *                  //printf("\r\n Registers order incorrect.. ");
- *                                      //printf("\n\r Returning Back as
+ *                  printf("\r\n Registers order incorrect.. ");
+ *                                      printf("\n\r Returning Back as
  * Receptor... \n\r");
  *                  return;
  *              }
@@ -1283,10 +1283,10 @@ static void send_crc_status_rsp(trx_id_t trx)
  *              for (i = 0 ; i < num_of_reg_to_read ; i++)
  *              {
  *                  reg_val = trx_reg_read(reg + i);
- *                  //printf("\r\n Value of Reg 0x%x is 0x%x", (reg + i),
+ *                  printf("\r\n Value of Reg 0x%x is 0x%x", (reg + i),
  * reg_val);
  *              }
- *                              //printf("\n\r Returning Back as Receptor...
+ *                              printf("\n\r Returning Back as Receptor...
  * \n\r");
  *          }
  *          break;
@@ -1319,8 +1319,8 @@ static void send_crc_status_rsp(trx_id_t trx)
  *      if (((input < '0') || (input > '9')) &&
  *          ((input < 'A') || (input > 'F')))
  *      {
- *          //printf("\r\n Wrong value.. ");
- *                      //printf("\n\r Returning Back as Receptor... \n\r");
+ *          printf("\r\n Wrong value.. ");
+ *                      printf("\n\r Returning Back as Receptor... \n\r");
  *          return(false);
  *      }
  *      else
@@ -1371,8 +1371,8 @@ static void send_crc_status_rsp(trx_id_t trx)
  *      if (((input < '0') || (input > '9')) &&
  *          ((input < 'A') || (input > 'F')) && (input != '\r') )
  *      {
- *          //printf("\r\n Wrong value..");
- *                      //printf("\n\r Returning Back as Receptor... \n\r");
+ *          printf("\r\n Wrong value..");
+ *                      printf("\n\r Returning Back as Receptor... \n\r");
  *          return(false);
  *      }
  *      else
@@ -1380,8 +1380,8 @@ static void send_crc_status_rsp(trx_id_t trx)
  *          / * First key pressed is 'Enter' * /
  *          if ((i == 0) && (input == '\r'))
  *          {
- *              //printf("\r\n Wrong value..");
- *                              //printf("\n\r Returning Back as Receptor...
+ *              printf("\r\n Wrong value..");
+ *                              printf("\n\r Returning Back as Receptor...
  *\n\r");
  *              return(false);
  *          }

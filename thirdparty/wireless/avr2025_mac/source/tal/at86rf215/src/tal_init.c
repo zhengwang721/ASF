@@ -122,8 +122,7 @@ uint8_t TAL_T_AGC_1;
  */
 retval_t tal_init(void)
 {
-    //printf(("tal_init()"));
-
+  
     /* Init the PAL and by this means also the transceiver interface */
     if (pal_init() != MAC_SUCCESS)
     {

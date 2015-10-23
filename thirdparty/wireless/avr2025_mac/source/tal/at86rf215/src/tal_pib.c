@@ -92,8 +92,7 @@ static void wait_for_freq_settling(trx_id_t trx_id);
  */
 void init_tal_pib(trx_id_t trx_id)
 {
-    //printf(("init_tal_pib()"));
-
+    
     tal_pib[trx_id].PANId = TAL_PANID_BC_DEF;
     tal_pib[trx_id].ShortAddress = TAL_SHORT_ADDRESS_DEF;
 
@@ -327,8 +326,7 @@ retval_t config_phy(trx_id_t trx_id)
  */
 void calculate_pib_values(trx_id_t trx_id)
 {
-    //printf(("calculate_pib_values()"));
-
+   
     /* Do not change the following order; some values are used to calculate others. */
     tal_pib[trx_id].SymbolDuration_us = tal_get_symbol_duration_us(trx_id);
 
@@ -383,7 +381,7 @@ void calculate_pib_values(trx_id_t trx_id)
  */
 void write_all_tal_pib_to_trx(trx_id_t trx_id)
 {
-    //printf(("write_all_tal_pib_to_trx trx_id = "), trx_id);
+   
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
     if (tal_pib[trx_id].FCSType != FCS_TYPE_4_OCTETS) // Compared against reset value
@@ -416,7 +414,7 @@ void write_all_tal_pib_to_trx(trx_id_t trx_id)
 #ifdef PROMISCUOUS_MODE
     if (tal_pib[trx_id].PromiscuousMode)
     {
-        //printf(("Promiscuous mode enabled"));
+        
         trx_bit_write( reg_offset + SR_BBC0_AFC0_PM, 1);
         tal_rx_enable(trx_id, PHY_RX_ON);
     }
@@ -587,7 +585,7 @@ static retval_t check_valid_freq_range(trx_id_t trx_id)
  */
 static retval_t apply_channel_settings(trx_id_t trx_id)
 {
-    //printf(("apply_channel_settings(), trx_id ="), trx_id);
+  
     uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     /* Check if spacing and frequency are within the correct range. */
 #ifdef REDUCED_PARAM_CHECK
@@ -712,7 +710,7 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
         if (trx_state[trx_id] == RF_TXPREP)
         {
             wait_for_freq_settling(trx_id);
-            //printf(("RF_IRQ_TRXRDY: channel change completed"));
+          
         }
     }
 
@@ -994,9 +992,6 @@ retval_t tal_pib_get(trx_id_t trx_id, uint8_t attribute, uint8_t *value)
 retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 {
     Assert((trx_id >= 0) && (trx_id < NUM_TRX));
-
-    //printf(("tal_pib_set()"));
-
     retval_t status = MAC_SUCCESS;
 
     /*
@@ -1004,13 +999,13 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
      */
     if (tal_state[trx_id] == TAL_SLEEP)
     {
-        //printf(("TAL_TRX_ASLEEP"));
+        
         return TAL_TRX_ASLEEP;
     }
 
     if (tal_state[trx_id] != TAL_IDLE)
     {
-       //printf(("TAL is busy or asleep, tal_state = "), tal_state[trx_id]);
+       
         return TAL_BUSY;
     }
 
@@ -1019,7 +1014,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
     switch (attribute)
     {
         case phySetting:
-            //printf(("PIB attribute: phySetting"));
+            
             {
                 /* Store previous settings */
                 phy_t previous_phy;
@@ -1282,12 +1277,12 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                 {
                     trx_bit_write( reg_offset + SR_BBC0_AMCS_AACK, 0);
                     tal_rx_enable(trx_id, PHY_RX_ON);
-                    //printf(("Promiscuous mode enabled"));
+                   
                 }
                 else
                 {
                     trx_bit_write( reg_offset + SR_BBC0_AMCS_AACK, 1);
-                    ////debug_text(PSTR("Promiscuous mode disabled"));
+                  
                     if (trx_default_state[trx_id] != RF_RX)
                     {
                         tal_rx_enable(trx_id, PHY_TRX_OFF);

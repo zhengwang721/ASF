@@ -89,8 +89,7 @@ static void trigger_cca_meaurement(trx_id_t trx_id);
  */
 void csma_start(trx_id_t trx_id)
 {
-    //printf(("csma_start()"));
-
+   
     /* Initialize CSMA variables */
     NB[trx_id] = 0;
     BE[trx_id] = tal_pib[trx_id].MinBE;
@@ -124,7 +123,6 @@ void csma_start(trx_id_t trx_id)
  */
 static void start_backoff(trx_id_t trx_id)
 {
-    //printf(("start_backoff()"));
 
     /* Start backoff timer to trigger CCA */
     uint8_t backoff_8;
@@ -160,8 +158,6 @@ static void start_backoff(trx_id_t trx_id)
         else
         {
             /* Switch to TRXOFF during backoff */
-            ////debug_text(PSTR("switch to TRXOFF during backoff"));
-
             tx_state[trx_id] = TX_BACKOFF;
 
             if ((trx_default_state[trx_id] == RF_TRXOFF) ||
@@ -201,12 +197,9 @@ static void cca_start(void *cb_timer_element)
     trx_id_t trx_id = (trx_id_t )cb_timer_element;
     Assert((trx_id >= 0) && (trx_id < NUM_TRX));
 
-    ////debug_text_val(PSTR("cca_start(), trx_id = "), trx_id);
-
     /* ACK transmission is understood as channel busy */
     if (ack_transmitting[trx_id])
     {
-		//printf("\n\r CSMA continued");
         csma_continue(trx_id);
         return;
     }
@@ -218,7 +211,6 @@ static void cca_start(void *cb_timer_element)
         uint8_t agc_freeze = trx_bit_read(  reg_offset + SR_RF09_AGCC_FRZS);
         if (agc_freeze)
         {
-            ////debug_text(PSTR("AGC is freezed"));
             csma_continue(trx_id);
         }
         else
@@ -260,8 +252,7 @@ static void cca_start(void *cb_timer_element)
 static void trigger_cca_meaurement(trx_id_t trx_id)
 {
     /* Trigger CCA measurement */
-    //printf(("trigger_cca_meaurement()"));
-
+    
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
     /* Cancel any ongoing reception and ensure that TXPREP is reached. */
@@ -281,7 +272,6 @@ static void trigger_cca_meaurement(trx_id_t trx_id)
     trx_bit_write( reg_offset + SR_RF09_AGCC_FRZC, 0); // Ensure AGC is not hold
     if (trx_state[trx_id] != RF_RX)
     {
-        //printf(("Switch to Rx"));
         stop_rpc(trx_id);
         trx_reg_write( reg_offset + RG_RF09_CMD, RF_RX);
         pal_timer_delay(tal_pib[trx_id].agc_settle_dur); // allow filters to settle
@@ -304,8 +294,7 @@ static void trigger_cca_meaurement(trx_id_t trx_id)
  */
 void cca_done_handling(trx_id_t trx_id)
 {
-    //printf(("cca_done_handling()"));
-
+    
     switch_to_txprep(trx_id); /* Leave state Rx */
 
     /* Switch BB on again */
@@ -316,13 +305,11 @@ void cca_done_handling(trx_id_t trx_id)
     if (tal_current_ed_val[trx_id] < tal_pib[trx_id].CCAThreshold)
     {
         /* Idle */
-        //printf(("channel idle"));
         tx_ms_ppdu(trx_id);
     }
     else
     {
         /* Busy */
-        //printf(("channel busy"));
         csma_continue(trx_id);
     }
 }
@@ -336,7 +323,6 @@ void cca_done_handling(trx_id_t trx_id)
  */
 void csma_continue(trx_id_t trx_id)
 {
-    //printf(("csma_continue()"));
 
     NB[trx_id]++;
    

@@ -86,18 +86,16 @@ retval_t tal_trx_sleep(trx_id_t trx_id)
 {
     Assert((trx_id >= 0) && (trx_id < NUM_TRX));
 
-    //printf(("tal_trx_sleep()"));
-
-    if (tal_state[trx_id] == TAL_SLEEP)
+   if (tal_state[trx_id] == TAL_SLEEP)
     {
-        //printf(("TAL_TRX_ASLEEP"));
+       
         return TAL_TRX_ASLEEP;
     }
 
     /* Device can be put to sleep only when the TAL is in IDLE state. */
     if (tal_state[trx_id] != TAL_IDLE)
     {
-        //printf(("TAL_BUSY"));
+        
         return TAL_BUSY;
     }
 
@@ -183,12 +181,9 @@ retval_t tal_trx_sleep(trx_id_t trx_id)
 retval_t tal_trx_wakeup(trx_id_t trx_id)
 {
     Assert((trx_id >= 0) && (trx_id < NUM_TRX));
-
-    //printf(("tal_trx_wakeup()"));
-
     if (tal_state[trx_id] != TAL_SLEEP)
     {
-        //printf(("trx already awake"));
+        
         return TAL_TRX_AWAKE;
     }
 
