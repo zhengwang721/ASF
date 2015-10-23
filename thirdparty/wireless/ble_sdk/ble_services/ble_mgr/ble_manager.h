@@ -122,6 +122,18 @@
 #define BLE_DEVICE_NAME				"ATMEL-CSC"
 #endif /* CSC_DEVICE */
 
+#if defined	BATTERY_SERVICE
+#define BLE_DEVICE_NAME				"ATMEL-BAS"
+#endif /*BATTERY_SERVICE*/
+
+#if defined	SCAN_PARAM_SERVICE
+#define BLE_DEVICE_NAME				"ATMEL-SCP"
+#endif	/*SCAN_PARAM_SERVICE*/
+
+#if defined	DEVICE_INFORMATION_SERVICE
+#define BLE_DEVICE_NAME				"ATMEL-DIS"
+#endif	/*SCAN_PARAM_SERVICE*/
+
 /** @brief default device name */
 #ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-BLE"
