@@ -61,6 +61,7 @@
 #include "pio.h"
 #ifdef ILI9488_EBIMODE
 #  include "smc.h"
+#  include "pmc.h"
 #endif
 #ifdef ILI9488_SPIMODE
 #  include "spi_master.h"
@@ -773,7 +774,6 @@ void ili9488_display_off(void)
  */
 void ili9488_set_foreground_color(uint32_t ul_color)
 {
-	uint32_t i;
 #ifdef ILI9488_EBIMODE
 	/* Fill the cache with selected color */
 	for (i = 0; i < LCD_DATA_CACHE_SIZE; ++i) {

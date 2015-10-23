@@ -13,10 +13,7 @@
 			<build type="define" name="ILI9488_EBIMODE" value=""/>
 			<require idref="sam.drivers.smc"/>
 
-			<device-support value="same70"/>
-			<device-support value="samv70"/>
 			<device-support value="samv71"/>
-			<device-support value="sams70"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_ili9488.h"/>
 			<build type="module-config" subtype="path" value="module_config"/>
@@ -31,9 +28,6 @@
 			<require idref="common.services.basic.spi_master"/>
 
 			<device-support value="same70"/>
-			<device-support value="samv70"/>
-			<device-support value="samv71"/>
-			<device-support value="sams70"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_ili9488.h"/>
 			<build type="module-config" subtype="path" value="module_config"/>
