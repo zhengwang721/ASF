@@ -124,6 +124,41 @@ volatile bool Desc_found = false;
 
 read_response_callback_t read_response_callback = NULL;
 
+static const ble_event_callback_t time_info_gatt_client_handle[] = {
+	time_info_service_found_handler,
+	NULL,
+	time_info_characteristic_found_handler,
+	time_info_descriptor_found_handler,
+	time_info_discovery_complete_handler,
+	time_info_characteristic_read_response,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+static const ble_event_callback_t ble_mgr_gap_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	time_info_service_discover,
+	time_info_disconnected_event_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
 /***********************************************************************************
  *									Implementations	                               *
  **********************************************************************************/
@@ -177,7 +212,7 @@ void time_info_adv()
 /**
  * @brief Time Information profile initializations and setting of device in advertising mode
  */
-void time_info_init(void *param)
+void time_info_init(void)
 {
 	#if defined CURRENT_TIME_SERVICE
 	cts_handle.curr_char_data = curr_char_data;
@@ -195,18 +230,26 @@ void time_info_init(void *param)
 	#endif
 	
 	time_info_adv();
-    UNUSED(param);
+	
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+									BLE_GAP_EVENT_TYPE,
+									ble_mgr_gap_handle);
+	
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+									BLE_GATT_CLIENT_EVENT_TYPE,
+									time_info_gatt_client_handle);
 }
 
 /**
  * @brief Discovering the services of time server
  */
-at_ble_status_t time_info_service_discover(at_ble_connected_t *conn_params)
+at_ble_status_t time_info_service_discover(void *param)
 {	
+	at_ble_connected_t *conn_params = (at_ble_connected_t *)param;
 	if (conn_params->conn_status != AT_BLE_SUCCESS) {
 		return conn_params->conn_status;
 	}
-	if (at_ble_primary_service_discover_all(conn_params->handle, 
+	if (at_ble_primary_service_discover_all(conn_params->handle,
 		GATT_DISCOVERY_STARTING_HANDLE, GATT_DISCOVERY_ENDING_HANDLE) 
 		== AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("GATT Discovery request started ");
@@ -239,8 +282,9 @@ at_ble_status_t time_info_connected_state_handler(at_ble_connected_t *conn_param
 /**
  * @brief Service found handler invoked by ble manager
  */
-void time_info_service_found_handler(at_ble_primary_service_found_t * primary_service_params)
+at_ble_status_t time_info_service_found_handler(void *param)
 {
+	at_ble_primary_service_found_t *primary_service_params = (at_ble_primary_service_found_t *)param;
 	at_ble_uuid_t *ctx_service_uuid;
 	ctx_service_uuid = &primary_service_params->service_uuid;
 	if (ctx_service_uuid->type == AT_BLE_UUID_16) {
@@ -282,13 +326,15 @@ void time_info_service_found_handler(at_ble_primary_service_found_t * primary_se
 			break;
 		}
 	}
+	return AT_BLE_SUCCESS;
 }
 
 /**
  * @brief Discovery Complete handler invoked by ble manager
  */
-void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_status)
+at_ble_status_t time_info_discovery_complete_handler(void *param)
 {
+	at_ble_discovery_complete_t *discover_status = (at_ble_discovery_complete_t *)param;
 	bool discover_char_flag = true;
 	if (discover_status->status == AT_BLE_DISCOVER_SUCCESS || 
 		discover_status->status == AT_BLE_SUCCESS) {
@@ -385,13 +431,15 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 	} else {
 		DBG_LOG("discover complete failure %d",discover_status->status);
 	}
+	return AT_BLE_SUCCESS;
 }
 
 /**
  * @brief characteristic found handler invoked by ble manager
  */
-void time_info_descriptor_found_handler(at_ble_descriptor_found_t *descriptor_found)
+at_ble_status_t time_info_descriptor_found_handler(void *param)
 {
+	at_ble_descriptor_found_t *descriptor_found = (at_ble_descriptor_found_t *)param;
 	uint16_t desc_16_uuid ;
 	
 	desc_16_uuid = (uint16_t)((descriptor_found->desc_uuid.uuid[0]) | \
@@ -401,13 +449,14 @@ void time_info_descriptor_found_handler(at_ble_descriptor_found_t *descriptor_fo
 		 Desc_found = true;
 		 DBG_LOG_DEV("Current Time Descriptor");
 	 }
-	
+	return AT_BLE_SUCCESS;
 }
 /**
  * @brief characteristic found handler invoked by ble manager
  */
-void time_info_characteristic_found_handler(at_ble_characteristic_found_t *characteristic_found)
+at_ble_status_t time_info_characteristic_found_handler(void *param)
 {
+	at_ble_characteristic_found_t *characteristic_found = (at_ble_characteristic_found_t *)param;
 	uint16_t charac_16_uuid ;
 	
 	charac_16_uuid = (uint16_t)((characteristic_found->char_uuid.uuid[0]) | \
@@ -449,19 +498,21 @@ void time_info_characteristic_found_handler(at_ble_characteristic_found_t *chara
 		rtu_handle.tp_state_char_handle = characteristic_found->value_handle;
 		DBG_LOG_DEV("Time Update State characteristics");
 	}
+	return AT_BLE_SUCCESS;
 }
 
 /**
  * @brief time read response handler invoked by ble manager
  */
-void time_info_characteristic_read_response(at_ble_characteristic_read_response_t *char_read_resp)
+at_ble_status_t time_info_characteristic_read_response(void *param)
 {
+	at_ble_characteristic_read_response_t *char_read_resp = (at_ble_characteristic_read_response_t *)param;
 	if (char_read_resp->status == AT_BLE_GAP_TIMEOUT) {
 		DBG_LOG("Characteristic read response failed %d(timeout)", 
 				char_read_resp->status);
 		at_ble_disconnect(char_read_resp->conn_handle, 
 						AT_BLE_TERMINATED_BY_USER);
-		return;
+		return AT_BLE_FAILURE;
 	}
 	#if defined CURRENT_TIME_SERVICE
 		tis_current_time_read_response(char_read_resp, &cts_handle);
@@ -477,13 +528,15 @@ void time_info_characteristic_read_response(at_ble_characteristic_read_response_
 	if (read_response_callback) {
 		read_response_callback(char_read_resp);
 	}
+	return AT_BLE_SUCCESS;
 }
 
 /**
  * @brief char notification received handler invoked by ble manager
  */
-void time_info_notification_handler(at_ble_notification_recieved_t *noti_read_resp)
+at_ble_status_t time_info_notification_handler(void *param)
 {
+	at_ble_notification_recieved_t *noti_read_resp = (at_ble_notification_recieved_t *)param;
 	at_ble_characteristic_read_response_t char_read_resp;
 	
 	char_read_resp.char_handle = noti_read_resp->char_handle;
@@ -502,14 +555,16 @@ void time_info_notification_handler(at_ble_notification_recieved_t *noti_read_re
 	#if defined REFERENCE_TIME_SERVICE
 	tis_rtu_update_read_response(&char_read_resp, &rtu_handle);
 	#endif
+	return AT_BLE_SUCCESS;
 }
 
 
 /**
  * @brief disconnected event handler invoked by ble manager
  */
-void time_info_disconnected_event_handler(at_ble_disconnected_t *disconnect)
+at_ble_status_t time_info_disconnected_event_handler(void *param)
 {
+	at_ble_disconnected_t *disconnect = (at_ble_disconnected_t *)param;
 	cts_handle.char_discovery = AT_BLE_INVALID_PARAM;
 	cts_handle.desc_discovery = AT_BLE_INVALID_PARAM;
 	dst_handle.char_discovery = AT_BLE_INVALID_PARAM;
@@ -530,12 +585,13 @@ void time_info_disconnected_event_handler(at_ble_disconnected_t *disconnect)
 		DBG_LOG("BLE Started Adv");
 	}	
         UNUSED(disconnect);
+		return AT_BLE_SUCCESS;
 }
 
 /**
  * @brief write notification handler invoked by ble manager
  */
-void time_info_write_notification_handler(void *param)
+at_ble_status_t time_info_write_notification_handler(void *param)
 {
 	/* To enable notification */
 	#if 0
@@ -551,6 +607,7 @@ void time_info_write_notification_handler(void *param)
 	}
 	#endif		
 	UNUSED(param);
+	return AT_BLE_SUCCESS;
 }
 
 /**
@@ -560,17 +617,6 @@ void time_info_write_notification_handler(void *param)
 void time_info_register_bonding_callback(bonding_complete_t bonding_complete_cb)
 {
 	bonding_cb = bonding_complete_cb;
-}
-
-/**
- * @brief Handler for AT_BLE_PAIR_DONE event from stack
- */
-void time_info_pair_done_handler(at_ble_pair_done_t *pair_done_param)
-{
-	if (bonding_cb) {
-		bonding_cb(true);		
-	}
-    UNUSED(pair_done_param);
 }
 
 /**
@@ -586,10 +632,11 @@ void time_info_register_read_response_callback(read_response_callback_t read_res
 /**
  * @brief Handler for AT_BLE_ENCRYPTION_STATUS_CHANGED event from stack
  */ 
-void time_info_encryption_status_changed_handler(at_ble_encryption_status_changed_t *param)
+at_ble_status_t time_info_pair_done_handler(void *param)
 {
 	if (bonding_cb) {
 		bonding_cb(true);
 	}
     UNUSED(param);
+	return AT_BLE_SUCCESS;
 }
