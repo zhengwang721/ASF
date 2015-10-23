@@ -1215,12 +1215,12 @@ typedef struct adv_element
 /** @brief GATT services handles
 */
 #if defined HID_SERVICE
-typedef struct gatt_service_handler
-{
-	at_ble_service_t		  serv;
-	at_ble_chr_t		      serv_chars[HID_CHARACTERISTIC_NUM];
-	at_ble_generic_att_desc_t serv_desc[HID_NUM_OF_REPORT];   /*Report descriptor*/
-}gatt_service_handler_t;
+// typedef struct gatt_service_handler
+// {
+// 	at_ble_service_t		  serv;
+// 	at_ble_chr_t		      serv_chars[HID_CHARACTERISTIC_NUM];
+// 	at_ble_generic_att_desc_t serv_desc[HID_NUM_OF_REPORT];   /*Report descriptor*/
+// }gatt_service_handler_t;
 #else
 typedef struct gatt_service_handler
 {

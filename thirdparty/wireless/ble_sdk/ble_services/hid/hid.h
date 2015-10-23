@@ -53,9 +53,12 @@
 #ifndef __HID_H__
 #define __HID_H__
 
+#include "hid_device.h"
+
 /****************************************************************************************
 *							        Enumerations	                                   	*
 ****************************************************************************************/
+
 /**@brief Error Code for HID service operation
 */
 typedef enum
