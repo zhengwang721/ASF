@@ -84,6 +84,41 @@ bool notification_confirm = true;
 /** @brief contains the connection handle functions **/
 at_ble_handle_t connection_handle;
 
+static const ble_event_callback_t hr_sensor_gap_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	hr_sensor_connected_state_handler,
+	hr_sensor_disconnect_event_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+static const ble_event_callback_t hr_sensor_gatt_server_handle[] = {
+	hr_sensor_notification_cfm_handler,
+	NULL,
+	hr_sensor_char_changed_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
 /****************************************************************************************
 *							        Implementations
 *                                       *
@@ -124,13 +159,17 @@ void register_hr_state_handler(hr_state_callback_t state_handler)
  *	@param[in] at_ble_status_t AT_BLE_SUCCESS on success AT_BLE_FAILURE on failure
  *  called
  */
-void hr_notification_confirmation_handler(at_ble_cmd_complete_event_t * params)
+at_ble_status_t hr_sensor_notification_cfm_handler(void * params)
 {
-	if ( params->status == AT_BLE_SUCCESS) {
+	at_ble_cmd_complete_event_t param;
+	
+	memcpy(&param,params,sizeof(at_ble_cmd_complete_event_t));
+	if ( param.status == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("Notification confirmation successful");
 	} else { 
 		DBG_LOG_DEV("Notification confirmation failure");
 	}
+	return AT_BLE_SUCCESS;
 }
 
 /** @brief hr_sensor_send_notification adds the new characteristic value and
@@ -163,17 +202,18 @@ bool hr_sensor_send_notification(uint8_t *hr_data, uint8_t length)
 }
 
 /** @brief hr_sensor_char_changed_handler called by the ble manager after a
- * change in the characteristic
+ *  change in the characteristic
  *  @param[in] at_ble_characteristic_changed_t which contains handle of
- *characteristic and new value
+ *  characteristic and new value
+ *  @return AT_BLE_SUCCESS on success and AT_BLE_FAILURE on failure
  */
 at_ble_status_t hr_sensor_char_changed_handler(
-		at_ble_characteristic_changed_t *char_handle)
+		void *params)
 {
 	uint8_t action_event;
 
 	at_ble_characteristic_changed_t change_params;
-	memcpy((uint8_t *)&change_params, char_handle,
+	memcpy((uint8_t *)&change_params, params,
 			sizeof(at_ble_characteristic_changed_t));
 
 	action_event = hr_write_value_handler(&hr_service_handler,
@@ -195,8 +235,9 @@ at_ble_status_t hr_sensor_char_changed_handler(
  *  reason for disconnection
  */
 at_ble_status_t hr_sensor_disconnect_event_handler(
-		at_ble_disconnected_t *disconnect)
+		void *disconnect)
 {
+	
 	/** Calling app state callback handler */
 	state_cb(HR_APP_DISCONNECT_STATE);
 	ALL_UNUSED(disconnect);
@@ -210,9 +251,11 @@ at_ble_status_t hr_sensor_disconnect_event_handler(
  *device address
  */
 at_ble_status_t hr_sensor_connected_state_handler(
-							at_ble_connected_t *conn_params)
+							void *params)
 {
-	connection_handle = (at_ble_handle_t)conn_params->handle;
+	at_ble_connected_t conn_params;
+	memcpy(&conn_params,params,sizeof(at_ble_connected_t));
+	connection_handle = (at_ble_handle_t)conn_params.handle;
 	/** calling app state call back handler */
 	state_cb(HR_APP_CONNECTION_STATE);
 	
@@ -334,6 +377,13 @@ void hr_sensor_init(void *param)
 	hr_sensor_service_init();
 	hr_sensor_service_define();
 	
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+	BLE_GAP_EVENT_TYPE,
+	hr_sensor_gap_handle);
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+	BLE_GATT_SERVER_EVENT_TYPE,
+	hr_sensor_gatt_server_handle);
+	
 	/* Handles received */
 	DBG_LOG_DEV("\n\nThe handle for heart rate service 0x%04x",
 							hr_service_handler.serv_handle);
@@ -374,8 +424,7 @@ void hr_sensor_init(void *param)
 						dis_service_handler.serv_chars[7].char_val_handle - 1);
 	DBG_LOG_DEV("Characteristic 9 - 0x%04x",
 						dis_service_handler.serv_chars[8].char_val_handle - 1);
-
-								
+											
 	DBG_LOG("Press the button to start advertisement");
     ALL_UNUSED(param);
 }
