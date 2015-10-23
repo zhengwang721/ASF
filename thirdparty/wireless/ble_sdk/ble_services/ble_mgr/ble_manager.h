@@ -266,6 +266,9 @@ typedef enum
 
 /** @brief Service UUID's */
 
+/* Blood Pressure Service UUID */
+#define BLOOD_PRESSURE_SERVICE_UUID             (0x1810)
+
 /* Immediate Alert service UUID  */
 #define IMMEDIATE_ALERT_SERVICE_UUID			(0x1802)
 
@@ -292,8 +295,16 @@ typedef enum
 /** Alert notification service uuid */
 #define ANP_SERVICE_UUID						(0x1811)
 
+/**
+ * @brief Heart rate service UUID
+ */
+#define HEART_RATE_SERVICE_UUID                 (0x180D)
+
 /** HID Service UUID. */
 #define HID_SERV_UUID							(0x1812)
+
+/* Phone Alert Service UUID */
+#define PAS_SERVICE_UUID						(0x180E)
 
 /** Scan param service uuid */
 #define SPS_SERVICE_UUID 						(0x1813)
@@ -377,6 +388,7 @@ typedef enum
 
 /** HID Control Point UUID. */
 #define HID_UUID_CHAR_HID_CONTROL_POINT			(0x2A4C)
+
 
 /** CSC Endpoint Characteristic UUID. */
 #define CSC_ENDPOINT_CHAR_UUID			("\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa1\xbb\x5a\xfd")
@@ -480,7 +492,7 @@ typedef enum {
 #define ADV_ELEMENT_SIZE					2
 
 #ifndef SERVICE_UUID16_MAX_NUM
-#define SERVICE_UUID16_MAX_NUM				11
+#define SERVICE_UUID16_MAX_NUM				14
 #endif
 
 #ifndef PUBLIC_TARGET_ADDR_MAX_NUM
@@ -582,8 +594,30 @@ typedef enum {
 #define BLE_GAP_ADV_SERVICE_16BIT_UUID10_ENABLE			true
 #endif
 #define  BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID10_VAL		HID_SERV_UUID
-#endif
 
+#ifndef BLOOD_PRESSURE_SERVICE
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID11_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID11_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID11_VAL		BLOOD_PRESSURE_SERVICE_UUID
+
+#ifndef HEART_RATE_SERVICE
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID12_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID12_ENABLE			true
+#endif
+#define BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID12_VAL		HEART_RATE_SERVICE_UUID
+
+
+#ifndef PAS_CLIENT
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID13_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID13_ENABLE			true
+#endif
+#define BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID13_VAL		PAS_SERVICE_UUID
+
+#endif
 
 #define BLE_GAP_ADV_SERVICE_32BIT_UUID_ENABLE			false
 #define BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH			4

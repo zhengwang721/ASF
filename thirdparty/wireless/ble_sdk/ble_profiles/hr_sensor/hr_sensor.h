@@ -127,9 +127,6 @@ typedef void (*hr_notification_callback_t)(uint8_t);
 /* @brief call back handler type  */
 typedef void (*hr_reset_callback_t)(void);
 
-/* @brief call back handler type  */
-typedef void (*hr_state_callback_t)(bool);
-
 /****************************************************************************************
 *							        Function Prototypes	                                *                                                        *
 ****************************************************************************************/
@@ -190,13 +187,6 @@ at_ble_status_t hr_notification_confirmation_handler(void * params);
  *  @param[in]	hr_reset_callback_t address of the handler function to be called
  */
 void register_hr_reset_handler(hr_reset_callback_t hr_reset_handler);
-
-/** @brief register_hr_state_handler registers the state handler passed by the
- *  application
- *	@param[in] hr_state_callback_t address of the handler function to be
- *  called
- */
-void register_hr_state_handler(hr_state_callback_t state_handler);
 
 /** @brief hr_sensor_char_changed_handler called by the ble manager after a
  *  change in the characteristic

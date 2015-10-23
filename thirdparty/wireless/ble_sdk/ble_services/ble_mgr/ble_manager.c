@@ -1691,7 +1691,6 @@ at_ble_status_t ble_advertisement_data_set(void)
 		adv_buf[adv_data_element.len++] = MANUFACTURER_SPECIFIC_DATA;
 		memcpy(&adv_buf[adv_data_element.len], BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA, BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA_SIZE);
 		adv_data_element.len += BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA_SIZE;
-		DBG_LOG("manufacturer data length :%d",BLE_GAP_ADV_DATA_MANUFACTURER_SPECIFIC_DATA_SIZE);
 	}
 	#else
 	if(false){}
@@ -1710,27 +1709,13 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	
-	uint8_t i;
-	DBG_LOG("ADV data: ");
-	for(i=0; i<adv_data_element.len; i++) {
-		DBG_LOG_CONT("%02x",adv_buf[i]);
-	}
-	DBG_LOG("length : %d",adv_data_element.len);
-	
-	DBG_LOG("Scan response data: ");
-	for(i=0; i<scan_resp_data_element.len; i++) {
-		DBG_LOG_CONT("%02x",scn_resp[i]);
-	}
-	DBG_LOG("length : %d",scan_resp_data_element.len);
-	
-	
 	if (at_ble_adv_data_set(adv_buf, adv_data_element.len, scn_resp,
 	scan_resp_data_element.len) != AT_BLE_SUCCESS) {
 		DBG_LOG("BLE Advertisement data set failed");
 		return status;
 		} else {
-		DBG_LOG("BLE Advertisement data set success");
-		return AT_BLE_FAILURE;
+		DBG_LOG_DEV("BLE Advertisement data set success");
+		return AT_BLE_SUCCESS;
 	}
 }
 

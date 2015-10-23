@@ -78,7 +78,6 @@ hr_gatt_service_handler_t hr_service_handler;
  *functions **/
 hr_notification_callback_t notification_cb;
 hr_reset_callback_t reset_cb;
-hr_state_callback_t state_cb;
 
 bool notification_confirm = true;
 /** @brief contains the connection handle functions **/
@@ -142,16 +141,6 @@ void register_hr_notification_handler(
 void register_hr_reset_handler(hr_reset_callback_t hr_reset_handler)
 {
 	reset_cb = hr_reset_handler;
-}
-
-/** @brief register_hr_state_handler registers the state handler passed by the
- *  application
- *	@param[in] hr_state_callback_t address of the handler function to be
- *  called
- */
-void register_hr_state_handler(hr_state_callback_t state_handler)
-{
-	state_cb = state_handler;
 }
 
 /** @brief hr_notification_confirmation_handler called on notification confirmation
@@ -237,11 +226,7 @@ at_ble_status_t hr_sensor_char_changed_handler(
 at_ble_status_t hr_sensor_disconnect_event_handler(
 		void *disconnect)
 {
-	
-	/** Calling app state callback handler */
-	state_cb(HR_APP_DISCONNECT_STATE);
-	ALL_UNUSED(disconnect);
-    
+	ALL_UNUSED(disconnect);   
 	return AT_BLE_SUCCESS;
 }
 
@@ -256,9 +241,6 @@ at_ble_status_t hr_sensor_connected_state_handler(
 	at_ble_connected_t conn_params;
 	memcpy(&conn_params,params,sizeof(at_ble_connected_t));
 	connection_handle = (at_ble_handle_t)conn_params.handle;
-	/** calling app state call back handler */
-	state_cb(HR_APP_CONNECTION_STATE);
-	
 	return AT_BLE_SUCCESS;
 }
 
@@ -287,37 +269,6 @@ void hr_sensor_disconnect(void)
 void hr_sensor_adv(void)
 {
 	at_ble_status_t status;
-	uint8_t idx = 0;
-	uint8_t adv_data [ HR_SENSOR_ADV_DATA_NAME_LEN +
-	HR_SENSOR_ADV_DATA_UUID_LEN   + (2 * 2)];
-
-	adv_data[idx++] = HR_SENSOR_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = HR_SENSOR_ADV_DATA_COMP_16_UUID_TYPE;
-
-	/* Prepare ADV Data for Heart Rate Service */
-	adv_data[idx++] = (uint8_t)HEART_RATE_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(HEART_RATE_SERVICE_UUID >> 8);
-
-	/* Prepare ADV Data for Device Information Service */
-	adv_data[idx++] = (uint8_t)DEVICE_INFORMATION_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(DEVICE_INFORMATION_SERVICE_UUID >> 8);
-
-	/* Appending the complete name to the Ad packet */
-	adv_data[idx++] = HR_SENSOR_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = HR_SENSOR_ADV_DATA_NAME_TYPE;
-
-	memcpy(&adv_data[idx], HR_SENSOR_ADV_DATA_NAME_DATA,
-			HR_SENSOR_ADV_DATA_NAME_LEN );
-	idx += HR_SENSOR_ADV_DATA_NAME_LEN;
-
-	/* Adding the advertisement data and scan response data */
-	if (!(at_ble_adv_data_set(adv_data, idx, scan_rsp_data,
-			SCAN_RESP_LEN) == AT_BLE_SUCCESS)) {
-		#ifdef DBG_LOG
-		DBG_LOG("Failed to set adv data");
-		#endif
-	}
-
 	/* Start of advertisement */
 	if ((status
 				= at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED,
@@ -374,6 +325,8 @@ void hr_sensor_service_init(void)
  */
 void hr_sensor_init(void *param)
 {
+	at_ble_status_t status;
+
 	hr_sensor_service_init();
 	hr_sensor_service_define();
 	
@@ -383,6 +336,11 @@ void hr_sensor_init(void *param)
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
 	BLE_GATT_SERVER_EVENT_TYPE,
 	hr_sensor_gatt_server_handle);
+
+	status = ble_advertisement_data_set();
+	if (status != AT_BLE_SUCCESS) {
+		DBG_LOG("Advertisement data set failed reason %d",status);
+	}	
 	
 	/* Handles received */
 	DBG_LOG_DEV("\n\nThe handle for heart rate service 0x%04x",

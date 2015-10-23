@@ -125,4 +125,14 @@
  */	
 at_ble_status_t app_notification_cfm_handler(void *params);
 
+/** @brief connected state handler
+ *  @param[in] status of the application
+ */
+static at_ble_status_t app_connected_event_handler(void *params);
+
+/** @brief disconnected state handler
+ *  @param[in] status of the application
+ */
+static at_ble_status_t app_disconnected_event_handler(void *params);
+
 #endif /* __HR_SENSOR_APP_H__ */
