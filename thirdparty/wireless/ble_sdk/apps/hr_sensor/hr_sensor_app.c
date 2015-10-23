@@ -85,6 +85,28 @@ uint8_t hr_min_value;/*!<the minimum heart rate value*/
 uint8_t hr_max_value;/*!<the maximum heart rate value*/
 uint8_t energy_inclusion = 0;/*!<To check for including the energy in hr measurement*/
 
+static const ble_event_callback_t app_gap_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	app_connected_event_handler,
+	app_disconnected_event_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
 static const ble_event_callback_t app_gatt_server_handle[] = {
 	app_notification_cfm_handler,
 	NULL,
@@ -202,29 +224,33 @@ static void heart_rate_value_init(void)
 	}
 }
 
-/** @brief app_state_handler which will tell the state of the application
+/** @brief connected state handler
  *  @param[in] status of the application
  */
-static void app_state_handler(bool state)
+static at_ble_status_t app_connected_event_handler(void *params)
 {
-	app_state = state;
-	
-	if (app_state == false) {
-		hw_timer_stop();
-		notification_flag = false;
-		energy_expended_val = ENERGY_EXP_NORMAL;
-		second_counter = 0;
-		activity = ACTIVITY_NORMAL;
-		prev_activity = DEFAULT_ACTIVITY;
-		heart_rate_value_init();
-		LED_Off(LED0);
-		DBG_LOG("Press button to advertise");
-	} else if (app_state == true) {
-		LED_On(LED0);
-		DBG_LOG("Enable the notification in app to listen "
-				"heart rate or press the button to disconnect");
-		advertisement_flag = false;
-	}
+	app_state = true;
+	LED_On(LED0);
+	DBG_LOG("Enable the notification in app to listen "
+	"heart rate or press the button to disconnect");
+	advertisement_flag = false;
+	return AT_BLE_SUCCESS;
+}
+
+static at_ble_status_t app_disconnected_event_handler(void *params)
+{
+	app_state = false;
+	hw_timer_stop();
+	notification_flag = false;
+	energy_expended_val = ENERGY_EXP_NORMAL;
+	second_counter = 0;
+	activity = ACTIVITY_NORMAL;
+	prev_activity = DEFAULT_ACTIVITY;
+	heart_rate_value_init();
+	LED_Off(LED0);
+	DBG_LOG("Press button to advertise");
+	ALL_UNUSED(params);
+	return AT_BLE_SUCCESS;
 }
 
 /**
@@ -378,9 +404,11 @@ int main(void)
 
 	/* Registering the app_reset_handler with the profile */
 	register_hr_reset_handler(app_reset_handler);
-
-	/* Registering the app_state_handler with the profile */
-	register_hr_state_handler(app_state_handler);
+	
+	/* Registering the call backs for events with the ble manager */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+	BLE_GAP_EVENT_TYPE,
+	app_gap_handle);
 	
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
 	BLE_GATT_SERVER_EVENT_TYPE,
