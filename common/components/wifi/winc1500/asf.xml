@@ -411,7 +411,7 @@
 
 			<generator value="doxygen-module" default-mcu="unspecified-saml21"/>
 		</module>
-		<module type="service" id="common.components.wifi.winc1500#5" caption="WINC1500 (Wi-Fi) Host Driver v19.3.0 - SAMG55 implementation">
+		<module type="service" id="common.components.wifi.winc1500#5" caption="WINC1500 (Wi-Fi) Host Driver v19.3.0 - SAME70 implementation">
 			<info type="description" value="summary">
 				The Atmel SmartConnect WINC1500 is an IEEE 802.11 b/g/n IoT network controller SoC. It offers the ideal add-on to existing MCU solutions, making it easy to bring Wi-Fi and Network capabilities through UART or SPI-to-Wi-Fi interfaces into your designs. The WINC1500 connects to any Atmel AVR or Atmel | SMART MCU, and has minimal resource requirements.
 			</info>

@@ -74,14 +74,14 @@ static sint8 nm_i2c_write(uint8 *b, uint16 sz)
 	packet_tx.buffer      = b;
 	packet_tx.length      = sz;
 
-	while (twihs_master_write(CONF_WINC_I2C, &packet_tx) != TWIHS_SUCCESS) {
-		//M2M_ERR("-E-\tTWI master write packet failed.\r");
-		//while (1) {
+	if (twihs_master_write(CONF_WINC_I2C, &packet_tx) != TWIHS_SUCCESS) {
+		M2M_ERR("-E-\tTWI master write packet failed.\r");
+		while (1) {
 			/* Capture error */
-		//}
-		if (timeout++ == I2C_TIMEOUT) {
-			break;
 		}
+		/*if (timeout++ == I2C_TIMEOUT) {
+			break;
+		}*/
 	}	
 	return result;
 }
@@ -101,14 +101,14 @@ static sint8 nm_i2c_read(uint8 *rb, uint16 sz)
 	packet_rx.buffer      = rb;
 	packet_rx.length      = sz;
 
-	while (twihs_master_read(CONF_WINC_I2C, &packet_rx) != TWIHS_SUCCESS) {
-		//M2M_ERR("-E-\tTWI master read packet failed.\r");
-		//while (1) {
+	if (twihs_master_read(CONF_WINC_I2C, &packet_rx) != TWIHS_SUCCESS) {
+		M2M_ERR("-E-\tTWI master read packet failed.\r");
+		while (1) {
 			/* Capture error */
-		//}
-		if (timeout++ == I2C_TIMEOUT) {
-			break;
 		}
+		/*if (timeout++ == I2C_TIMEOUT) {
+			break;
+		}*/
 	}	
 	return result;
 }
@@ -123,12 +123,6 @@ static sint8 nm_i2c_write_special(uint8 *wb1, uint16 sz1, uint8 *wb2, uint16 sz2
 #endif
 
 #ifdef CONF_WINC_USE_SPI
-/** PIO instance used by CS. */
-Pio *p_pio_cs;
-
-/** Fast CS macro. */
-#define SPI_ASSERT_CS()		do {p_pio_cs->PIO_CODR = 1 << (CONF_WINC_SPI_CS_GPIO & 0x1F);} while(0)
-#define SPI_DEASSERT_CS()	do {p_pio_cs->PIO_SODR = 1 << (CONF_WINC_SPI_CS_GPIO & 0x1F);} while(0)
 
 static sint8 spi_rw(uint8 *pu8Mosi, uint8 *pu8Miso, uint16 u16Sz)
 {
@@ -150,8 +144,6 @@ static sint8 spi_rw(uint8 *pu8Mosi, uint8 *pu8Miso, uint16 u16Sz)
 		return M2M_ERR_BUS_FAIL;
 	}
 
-	//SPI_ASSERT_CS();
-
 	while (u16Sz) {
 		txd_data = *pu8Mosi;
 		spi_write(CONF_WINC_SPI, txd_data, 0, 0);
@@ -166,8 +158,6 @@ static sint8 spi_rw(uint8 *pu8Mosi, uint8 *pu8Miso, uint16 u16Sz)
 		if (!u8SkipMosi)
 			pu8Mosi++;
 	}
-
-	//SPI_DEASSERT_CS();
 
 	return M2M_SUCCESS;
 }
@@ -209,10 +199,6 @@ sint8 nm_bus_init(void *pvinit)
 	ioport_disable_pin(CONF_WINC_SPI_CLK_GPIO);
 	ioport_disable_pin(CONF_WINC_SPI_CS_GPIO);
 
-	/* Get the PIO instance used for CS. */
-	//p_pio_cs = (Pio *)((uint32_t)PIOD + (PIO_DELTA * (CONF_WINC_SPI_CS_GPIO >> 5)));
-	//SPI_DEASSERT_CS();
-
 	spi_enable_clock(CONF_WINC_SPI);
 	spi_disable(CONF_WINC_SPI);
 	spi_reset(CONF_WINC_SPI);
@@ -230,7 +216,6 @@ sint8 nm_bus_init(void *pvinit)
 	spi_enable(CONF_WINC_SPI);
 
 	nm_bsp_reset();
-	//SPI_DEASSERT_CS();
 #endif
 	return result;
 }
