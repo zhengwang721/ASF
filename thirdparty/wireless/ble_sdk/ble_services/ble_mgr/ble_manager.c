@@ -416,6 +416,7 @@ at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 			ble_paired_cb(conn_handle);
 		}
 	#endif
+	ALL_UNUSED(slave_sec_req_send);
 	return AT_BLE_FAILURE;
 }
 
