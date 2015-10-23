@@ -208,6 +208,8 @@ int main(void)
 
 	/* initialize the BLE chip  and Set the device mac address */
 	ble_device_init(NULL);
+	
+	pxp_monitor_init(NULL);
 
 	DBG_LOG("Initializing Proximity Monitor Application");
 

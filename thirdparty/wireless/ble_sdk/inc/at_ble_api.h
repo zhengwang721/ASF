@@ -128,7 +128,7 @@ extern "C" {
 /// Maximal MTU value
 #define AT_MTU_VAL_MAX                  (512)      //(0x200)
 /// Recommended MTU value
-#define AT_MTU_VAL_RECOMMENDED          (512)       //(0x200)
+#define AT_MTU_VAL_RECOMMENDED          (158)       //(0x200)
 /// Minimal Renew duration value (150 seconds); resolution of 10 mSeconds (N*10ms)
 #define AT_RENEW_DUR_VAL_MIN            (0x3A98)    //(15000)
 /// ATT MAximum Attribute Length
@@ -1599,7 +1599,6 @@ typedef struct
     at_ble_status_t status;
     bool bond;
     bool mitm_protection;
-
 } at_ble_slave_sec_request_t;
 
 typedef struct
