@@ -61,6 +61,42 @@
 #include "hid.h"
 #include "device_info.h"
 
+static const ble_event_callback_t hid_gap_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	//pxp_reporter_connected_state_handler,
+	NULL,
+	hid_prf_disconnect_event_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+static const ble_event_callback_t hid_gatt_server_handle[] = {
+	NULL,
+	NULL,
+	hid_prf_char_changed_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
 /* Notification callback function pointer */
 report_ntf_callback_t report_ntf_cb;
 boot_ntf_callback_t boot_ntf_cb;
@@ -106,6 +142,15 @@ void hid_prf_init(void *param)
 	
 	/* Define the primary service in the GATT server database */
 	dis_primary_service_define(&device_info_serv);
+	
+	/* HID Profile Advertisement*/
+	hid_prf_dev_adv();
+	
+	/* Callback registering for BLE-GAP Role */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GAP_EVENT_TYPE, hid_gap_handle);
+	
+	/* Callback registering for BLE-GATT-Server Role */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GATT_SERVER_EVENT_TYPE, hid_gatt_server_handle);
 	
 	UNUSED(param);
 }
@@ -169,7 +214,7 @@ void hid_prf_dev_adv(void)
 /**
 * \HID device disconnected handler function
 */
-at_ble_status_t hid_prf_disconnect_event_handler(at_ble_disconnected_t *disconnect)
+at_ble_status_t hid_prf_disconnect_event_handler(void *params)
 {
 	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
 	APP_HID_FAST_ADV, APP_HID_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS){
@@ -177,15 +222,17 @@ at_ble_status_t hid_prf_disconnect_event_handler(at_ble_disconnected_t *disconne
 	}else{
 		DBG_LOG("Device Started Advertisement");
 	}
-    ALL_UNUSED(disconnect);
+    ALL_UNUSED(&params);
 	return AT_BLE_SUCCESS;
 }
 
 /**
 * \Service characteristic change handler function
 */
-at_ble_status_t hid_prf_char_changed_handler(at_ble_characteristic_changed_t *change_char)
+at_ble_status_t hid_prf_char_changed_handler(void *params)
 {
+	at_ble_characteristic_changed_t *change_char;
+	change_char = (at_ble_characteristic_changed_t *)params;
 	hid_proto_mode_ntf_t protocol_mode;
 	hid_report_ntf_t reportinfo;
 	hid_boot_ntf_t boot_info;
