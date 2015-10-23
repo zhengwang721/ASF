@@ -55,8 +55,6 @@
 #include "timer_hw.h"
 #include "conf_extint.h"
 #include "ble_manager.h"
-#include "at_ble_errno.h"
-#include "at_ble_trace.h"
 #include "immediate_alert.h"
 #include "find_me_app.h"
 #include "find_me_target.h"
