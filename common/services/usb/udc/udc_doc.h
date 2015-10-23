@@ -276,7 +276,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  * - Enable interrupts
  * - Initialize the clock service
  *
- * The usage of \ref sleepmgr_group "sleepmgr" service is optional, but recommended to reduce power
+ * The usage of \ref sleepmgr_group "sleep manager" service is optional, but recommended to reduce power
  * consumption:
  * - Initialize the sleep manager service
  * - Activate sleep mode when the application is in IDLE state
