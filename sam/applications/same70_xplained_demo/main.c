@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief WINC1500 Weather Client Example.
+ * \brief SAME70 Weather Client Demo Example.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *

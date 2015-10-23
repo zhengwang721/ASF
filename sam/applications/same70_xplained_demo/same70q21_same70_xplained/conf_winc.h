@@ -63,7 +63,7 @@ extern "C" {
    ---------- I2C settings ---------
    ---------------------------------
 */
-//#define CONF_WINC_USE_I2C         (1)
+#define CONF_WINC_USE_I2C         (1)
 
 #define CONF_WINC_I2C             TWIHS0
 #define CONF_WINC_I2C_ID          ID_TWIHS0
@@ -76,7 +76,7 @@ extern "C" {
    ---------------------------------
 */
 
-#define CONF_WINC_USE_SPI				(1)
+//#define CONF_WINC_USE_SPI				(1)
 
 /** SPI pin and instance settings. */
 #define CONF_WINC_SPI					SPI0

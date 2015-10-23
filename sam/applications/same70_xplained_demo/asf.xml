@@ -8,6 +8,7 @@
 		<build type="include-path" value="."/>
 		<device-support value="same70"/>
 		<require idref="common.components.wifi.winc1500"/>
+		<require idref="sam.components.display.ili9488"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
 		<info type="gui-flag" value="move-to-root"/>

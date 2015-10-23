@@ -42,10 +42,13 @@
 
 #define CONF_BOARD_UART_CONSOLE
 
-#define CONF_BOARD_SPI
+//#define CONF_BOARD_SPI
 
-#define CONF_BOARD_SPI_NPCS1
+//#define CONF_BOARD_SPI_NPCS1
 
-//#define CONF_BOARD_TWIHS0
+#define CONF_BOARD_TWIHS0
+
+/* Indicates board has an ILI9488 external component to control LCD */
+#define CONF_BOARD_ILI9488
 
 #endif /* CONF_BOARD_H_INCLUDED */
