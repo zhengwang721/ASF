@@ -50,8 +50,6 @@
 *							        Includes	                                     	*
 ****************************************************************************************/
 #include <asf.h>
-
-#include "timer_hw.h"
 #include "ble_manager.h"
 #include "find_me_target.h"
 #include "immediate_alert.h"
@@ -268,12 +266,6 @@ at_ble_status_t fmp_target_disconnect_event_handler(void * params)
  */
 void fmp_target_init(void *param)
 {
-	/* Callback registering for BLE-GAP Role */
-	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GAP_EVENT_TYPE, fmp_gap_handle);
-	
-	/* Callback registering for BLE-GATT-Server Role */
-	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GATT_SERVER_EVENT_TYPE, fmp_gatt_server_handle);
-
 	/* find me services initialization*/
 	fmp_target_service_init();
 
@@ -282,5 +274,12 @@ void fmp_target_init(void *param)
 
 	/* find me services advertisement */
 	fmp_target_adv();
+	
+	/* Callback registering for BLE-GAP Role */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GAP_EVENT_TYPE, fmp_gap_handle);
+	
+	/* Callback registering for BLE-GATT-Server Role */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GATT_SERVER_EVENT_TYPE, fmp_gatt_server_handle);
+	
 	ALL_UNUSED(param);
 }
