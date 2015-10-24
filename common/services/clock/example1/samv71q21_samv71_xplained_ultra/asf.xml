@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Common API for Clocks Control / Example 1 for SAMV71" id="common.services.basic.clock.example1.samv71_xplained_ultra">
+	<project caption="Common API for Clocks Control / Example 1 on SAMV71-Xplained-Ultra" id="common.services.basic.clock.example1.samv71_xplained_ultra">
 		<info type="description" value="summary">
 		Initialize the system clock and blink a LED at a constant 1Hz frequency.
 		</info>
