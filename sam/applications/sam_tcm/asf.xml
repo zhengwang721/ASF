@@ -1,0 +1,21 @@
+<asf xmlversion="1.0">
+	<select-by-device id="sam.applications.sam_tcm" caption="sam tcm Application">
+		<module type="application" id="sam.applications.sam_tcm#0" caption="sam_tcm Application on SAM">
+			<info type="description" value="summary">
+				This demonstration program compares the performance between normal 'memcpy' and 'TCM memcpy'
+			</info>
+			<build type="c-source" value="main.c"/>
+			<build type="include-path" value="."/>
+			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="sams70"/>
+			<device-support value="same70"/>
+			<require idref="sam.drivers.pmc"/>
+			<require idref="sam.drivers.pio"/>
+			<require idref="common.services.ioport"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
+		</module>
+	</select-by-device>
+</asf>
