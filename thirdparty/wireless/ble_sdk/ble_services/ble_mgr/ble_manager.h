@@ -122,6 +122,18 @@
 #define BLE_DEVICE_NAME				"ATMEL-CSC"
 #endif /* CSC_DEVICE */
 
+#if defined	BATTERY_SERVICE
+#define BLE_DEVICE_NAME				"ATMEL-BAS"
+#endif /*BATTERY_SERVICE*/
+
+#if defined	SCAN_PARAM_SERVICE
+#define BLE_DEVICE_NAME				"ATMEL-SCP"
+#endif	/*SCAN_PARAM_SERVICE*/
+
+#if defined	DEVICE_INFORMATION_SERVICE
+#define BLE_DEVICE_NAME				"ATMEL-DIS"
+#endif	/*SCAN_PARAM_SERVICE*/
+
 /** @brief default device name */
 #ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-BLE"
@@ -1203,12 +1215,12 @@ typedef struct adv_element
 /** @brief GATT services handles
 */
 #if defined HID_SERVICE
-typedef struct gatt_service_handler
-{
-	at_ble_service_t		  serv;
-	at_ble_chr_t		      serv_chars[HID_CHARACTERISTIC_NUM];
-	at_ble_generic_att_desc_t serv_desc[HID_NUM_OF_REPORT];   /*Report descriptor*/
-}gatt_service_handler_t;
+// typedef struct gatt_service_handler
+// {
+// 	at_ble_service_t		  serv;
+// 	at_ble_chr_t		      serv_chars[HID_CHARACTERISTIC_NUM];
+// 	at_ble_generic_att_desc_t serv_desc[HID_NUM_OF_REPORT];   /*Report descriptor*/
+// }gatt_service_handler_t;
 #else
 typedef struct gatt_service_handler
 {
