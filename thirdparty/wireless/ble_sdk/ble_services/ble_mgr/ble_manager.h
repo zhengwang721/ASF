@@ -452,9 +452,29 @@ typedef enum
 //	<i> Defines the central to connect maximum number to devices
 //	<i> Default: 1
 //	<id> gap_max_device_connected
-#define MAX_DEVICE_CONNECTED			(1)
+#define BLE_MAX_DEVICE_CONNECTED				(5)
 
-#define BLE_EVENT_PARAM_MAX_SIZE		524
+#define BLE_EVENT_PARAM_MAX_SIZE		        524
+
+typedef enum {
+  BLE_DEVICE_DISCONNECTED,
+  BLE_DEVICE_CONNECTING,
+  BLE_DEVICE_CONNECTED,
+  BLE_DEVICE_PAIRING,
+  BLE_DEVICE_PAIRING_FAILED,
+  BLE_DEVICE_PAIRED,  
+  BLE_DEVICE_ENCRYPTION_STATE,
+  BLE_DEVICE_ENCRYPTION_FAILED,
+  BLE_DEVICE_ENCRYPTION_COMPLETED,
+  BLE_DEVICE_DEFAULT_IDLE
+}ble_device_state_t;
+
+typedef struct ble_connected_dev_info
+{
+	at_ble_connected_t conn_info;
+	at_ble_pair_done_t bond_info;
+	ble_device_state_t conn_state;
+}ble_connected_dev_info_t;
 
 
 /***************************Advertisement/Scan Response Information configuration *****/
