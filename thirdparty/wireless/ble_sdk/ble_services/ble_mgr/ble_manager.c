@@ -1158,6 +1158,9 @@ at_ble_status_t ble_advertisement_data_set(void)
 		adv_buf[adv_data_element.len++] = COMPLETE_LIST_16BIT_SERV_UUIDS;
 		MREPEAT(SERVICE_UUID16_MAX_NUM, _CONF_SERVICE_16BIT_UUID, &adv_data_element);
 		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+		if(!adv_buf[length_field_ind]) {
+			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE; 
+		}
 	}
 	#else
 	if(false){}
@@ -1171,6 +1174,9 @@ at_ble_status_t ble_advertisement_data_set(void)
 		scn_resp[scan_resp_data_element.len++] = COMPLETE_LIST_16BIT_SERV_UUIDS;
 		MREPEAT(SERVICE_UUID16_MAX_NUM, _CONF_SERVICE_16BIT_UUID_SCAN_RSP, &scan_resp_data_element);
 		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+		if(!scn_resp[length_field_ind]) {
+			scan_resp_data_element.len = scan_resp_data_element.len - ADV_ELEMENT_SIZE;
+		}
 	}
 	#endif
 	else {
@@ -1189,6 +1195,9 @@ at_ble_status_t ble_advertisement_data_set(void)
 		adv_buf[adv_data_element.len++] = COMPLETE_LIST_32BIT_SERV_UUIDS;
 		MREPEAT(SERVICE_UUID32_MAX_NUM, _CONF_SERVICE_32BIT_UUID, &adv_data_element)
 		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+		if(!adv_buf[length_field_ind]) {
+			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE;
+		}
 	}
 	#else
 	if(false){}
@@ -1202,6 +1211,9 @@ at_ble_status_t ble_advertisement_data_set(void)
 		scn_resp[scan_resp_data_element.len++] = COMPLETE_LIST_32BIT_SERV_UUIDS;
 		MREPEAT(SERVICE_UUID32_MAX_NUM, _CONF_SERVICE_32BIT_UUID_SCAN_RSP, &adv_data_element)
 		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+		if(!scn_resp[length_field_ind]) {
+			scan_resp_data_element.len = scan_resp_data_element.len - ADV_ELEMENT_SIZE;
+		}
 	}
 	#endif
 	else {
@@ -1220,6 +1232,9 @@ at_ble_status_t ble_advertisement_data_set(void)
 		adv_buf[adv_data_element.len++] = COMPLETE_LIST_128BIT_SERV_UUIDS;
 		MREPEAT(SERVICE_UUID128_MAX_NUM, _CONF_SERVICE_128BIT_UUID, &adv_data_element)
 		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+		if(!adv_buf[length_field_ind]) {
+			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE;
+		}
 	}
 	#else
 	if(false){}
@@ -1233,6 +1248,9 @@ at_ble_status_t ble_advertisement_data_set(void)
 		scn_resp[scan_resp_data_element.len++] = COMPLETE_LIST_128BIT_SERV_UUIDS;
 		MREPEAT(SERVICE_UUID128_MAX_NUM, _CONF_SERVICE_128BIT_UUID_SCAN_RSP, &adv_data_element)
 		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+		if(!scn_resp[length_field_ind]) {
+			scan_resp_data_element.len = scan_resp_data_element.len - ADV_ELEMENT_SIZE;
+		}
 	}
 	#endif
 	else {
@@ -1354,6 +1372,9 @@ at_ble_status_t ble_advertisement_data_set(void)
 		adv_buf[adv_data_element.len++] = LIST_16BIT_SERV_SOLICITATION_UUIDS;
 		MREPEAT(SERVICE_UUID16_MAX_NUM, _CONF_SERVICE_SOLTN_16BIT_UUID, &adv_data_element);
 		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+		if(!adv_buf[length_field_ind]) {
+			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE;
+		}
 	}
 	#else
 	if(false){}
@@ -1367,6 +1388,9 @@ at_ble_status_t ble_advertisement_data_set(void)
 		scn_resp[scan_resp_data_element.len++] = LIST_16BIT_SERV_SOLICITATION_UUIDS;
 		MREPEAT(SERVICE_UUID16_MAX_NUM, _CONF_SERVICE_SOLTN_16BIT_UUID_SCAN_RSP, &scan_resp_data_element);
 		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+		if(!scn_resp[length_field_ind]) {
+			scan_resp_data_element.len = scan_resp_data_element.len - ADV_ELEMENT_SIZE;
+		}
 	}
 	#endif
 	else {
@@ -1385,6 +1409,9 @@ at_ble_status_t ble_advertisement_data_set(void)
 		adv_buf[adv_data_element.len++] = LIST_32BIT_SERV_SOLICITATION_UUIDS;
 		MREPEAT(SERVICE_UUID32_MAX_NUM, _CONF_SERVICE_SOLTN_32BIT_UUID, &adv_data_element)
 		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+		if(!adv_buf[length_field_ind]) {
+			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE;
+		}
 	}
 	#else
 	if(false){}
@@ -1396,8 +1423,11 @@ at_ble_status_t ble_advertisement_data_set(void)
 		length_field_ind = scan_resp_data_element.len;
 		scan_resp_data_element.len++;
 		scn_resp[scan_resp_data_element.len++] = LIST_32BIT_SERV_SOLICITATION_UUIDS;
-		MREPEAT(SERVICE_UUID32_MAX_NUM, _CONF_SERVICE_SOLTN_32BIT_UUID_SCAN_RSP, &adv_data_element)
+		MREPEAT(SERVICE_UUID32_MAX_NUM, _CONF_SERVICE_SOLTN_32BIT_UUID_SCAN_RSP, &scan_resp_data_element)
 		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+		if(!scn_resp[length_field_ind]) {
+			scan_resp_data_element.len = scan_resp_data_element.len - ADV_ELEMENT_SIZE;
+		}
 	}
 	#endif
 	else {
@@ -1416,6 +1446,9 @@ at_ble_status_t ble_advertisement_data_set(void)
 		adv_buf[adv_data_element.len++] = LIST_128BIT_SERV_SOLICITATION_UUIDS;
 		MREPEAT(SERVICE_UUID128_MAX_NUM, _CONF_SERVICE_SOLTN_128BIT_UUID, &adv_data_element)
 		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+		if(!adv_buf[length_field_ind]) {
+			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE;
+		}
 	}
 	#else
 	if(false){}
@@ -1427,8 +1460,11 @@ at_ble_status_t ble_advertisement_data_set(void)
 		length_field_ind = scan_resp_data_element.len;
 		scan_resp_data_element.len++;
 		scn_resp[scan_resp_data_element.len++] = LIST_128BIT_SERV_SOLICITATION_UUIDS;
-		MREPEAT(SERVICE_UUID128_MAX_NUM, _CONF_SERVICE_SOLTN_128BIT_UUID_SCAN_RSP, &adv_data_element)
+		MREPEAT(SERVICE_UUID128_MAX_NUM, _CONF_SERVICE_SOLTN_128BIT_UUID_SCAN_RSP, &scan_resp_data_element)
 		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+		if(!scn_resp[length_field_ind]) {
+			scan_resp_data_element.len = scan_resp_data_element.len - ADV_ELEMENT_SIZE;
+		}
 	}
 	#endif
 	else {
@@ -1534,6 +1570,9 @@ at_ble_status_t ble_advertisement_data_set(void)
 		adv_buf[adv_data_element.len++] = PUBLIC_TARGET_ADDRESS;
 		MREPEAT(PUBLIC_TARGET_ADDR_MAX_NUM, _CONF_PUBLIC_TARGET_ADDR, &adv_data_element);
 		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+		if(!adv_buf[length_field_ind]) {
+			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE;
+		}
 	}
 	#else
 	if(false){}
@@ -1547,6 +1586,9 @@ at_ble_status_t ble_advertisement_data_set(void)
 		scn_resp[scan_resp_data_element.len++] = PUBLIC_TARGET_ADDRESS;
 		MREPEAT(PUBLIC_TARGET_ADDR_MAX_NUM, _CONF_PUBLIC_TARGET_ADDR_SCAN_RSP, &scan_resp_data_element);
 		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+		if(!scn_resp[length_field_ind]) {
+			scan_resp_data_element.len = scan_resp_data_element.len - ADV_ELEMENT_SIZE;
+		}
 	}
 	#endif
 	else {
@@ -1565,6 +1607,9 @@ at_ble_status_t ble_advertisement_data_set(void)
 		adv_buf[adv_data_element.len++] = RANDOM_TARGET_ADDRESS;
 		MREPEAT(PUBLIC_RANDOM_ADDR_MAX_NUM, _CONF_RANDOM_TARGET_ADDR, &adv_data_element);
 		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+		if(!adv_buf[length_field_ind]) {
+			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE;
+		}
 	}
 	#else
 	if(false){}
@@ -1578,6 +1623,9 @@ at_ble_status_t ble_advertisement_data_set(void)
 		scn_resp[scan_resp_data_element.len++] = RANDOM_TARGET_ADDRESS;
 		MREPEAT(PUBLIC_RANDOM_ADDR_MAX_NUM, _CONF_RANDOM_TARGET_ADDR_SCAN_RSP, &scan_resp_data_element);
 		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
+		if(!scn_resp[length_field_ind]) {
+			scan_resp_data_element.len = scan_resp_data_element.len - ADV_ELEMENT_SIZE;
+		}
 	}
 	#endif
 	else {
