@@ -1,13 +1,25 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.applications.user_application.sam0_system" caption="User application template">
-		<device-support value="sam0"/>
-		<build type="c-source" value="main.c"/>
-		<require idref="common.boards"/>
-		<require idref="sam0.drivers.system"/>
-		<info type="description" value="summary">
-			This user application template contains the bare minimum of files needed to
-			start a project which works with the ASF application builder wizard.
-		</info>
-		<info type="gui-flag" value="move-to-root"/>
-	</module>
+	<select-by-device id="common.applications.user_application.sam0_system" caption="User application template">
+		<module type="application" id="common.applications.user_application.sam0_system#sam0" caption="User application template">
+			<device-support value="sam0"/>
+			<build type="c-source" value="main.c"/>
+			<require idref="common.boards"/>
+			<require idref="sam0.drivers.system"/>
+			<info type="description" value="summary">
+				This user application template contains the bare minimum of files needed to
+				start a project which works with the ASF application builder wizard.
+			</info>
+			<info type="gui-flag" value="move-to-root"/>
+		</module>
+		<module type="application" id="common.applications.user_application.sam0_system#samb" caption="User application template">
+			<device-support value="samb"/>
+			<build type="c-source" value="main.c"/>
+			<require idref="common.boards"/>
+			<info type="description" value="summary">
+				This user application template contains the bare minimum of files needed to
+				start a project which works with the ASF application builder wizard.
+			</info>
+			<info type="gui-flag" value="move-to-root"/>
+		</module>
+	</select-by-device>
 </asf>

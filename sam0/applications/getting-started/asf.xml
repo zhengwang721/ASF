@@ -1,20 +1,34 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam0.applications.getting-started" caption="Getting-Started Application">
-		<info type="description" value="summary">
-			The Getting Started example will help new users get familiar with SAM Xplained Pro.
-		</info>
-		<device-support value="sam0"/>
-		<build type="c-source" value="main.c"/>
-		<build type="include-path" value="."/>
-		<require idref="sam0.drivers.port"/>
-		<require idref="sam0.drivers.sercom.usart"/>
-		<require idref="sam0.utils"/>
-		<require idref="sam0.utils.stdio"/>
-		<require idref="sam0.utils.stdio.stdio_serial"/>
-		<require idref="common2.services.delay"/>
-		<require idref="sam0.drivers.extint"/>
-		<require idref="sam0.drivers.system"/>
-		<require idref="sam0.drivers.tc"/>
-		<info type="gui-flag" value="move-to-root"/>
-	</module>
+	<select-by-device id="sam0.applications.getting-started" caption="Getting-Started Application">
+		<module type="application" id="sam0.applications.getting-started#0" caption="Getting-Started Application">
+			<info type="description" value="summary">
+				The Getting Started example will help new users get familiar with SAM Xplained Pro.
+			</info>
+			<device-support value="sam0"/>
+			<build type="c-source" value="main.c"/>
+			<build type="include-path" value="."/>
+			<require idref="sam0.drivers.port"/>
+			<require idref="sam0.drivers.sercom.usart"/>
+			<require idref="sam0.utils"/>
+			<require idref="sam0.utils.stdio"/>
+			<require idref="sam0.utils.stdio.stdio_serial"/>
+			<require idref="common2.services.delay"/>
+			<require idref="sam0.drivers.extint"/>
+			<require idref="sam0.drivers.system"/>
+			<require idref="sam0.drivers.tc"/>
+			<info type="gui-flag" value="move-to-root"/>
+		</module>
+		<module type="application" id="sam0.applications.getting-started#1" caption="Getting-Started Application">
+			<info type="description" value="summary">
+				The Getting Started example will help new users get familiar with SAM Xplained Pro.
+			</info>
+			<device-support value="samb"/>
+			<build type="c-source" value="main_sam_b.c"/>
+			<build type="include-path" value="."/>
+			<require idref="sam0.drivers.gpio"/>
+			<require idref="sam0.drivers.timer"/>
+			<require idref="sam0.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
+		</module>
+	</select-by-device>
 </asf>
