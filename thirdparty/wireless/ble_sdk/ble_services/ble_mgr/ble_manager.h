@@ -64,7 +64,9 @@
 
 #if defined HID_DEVICE
 	#ifdef HID_KEYBOARD_DEVICE
-	#define BLE_DEVICE_NAME				"ATMEL-HIDK"
+	#ifndef BLE_DEVICE_NAME
+		#define BLE_DEVICE_NAME				"ATMEL-HIDK"
+	#endif	/* BLE_DEVICE_NAME */
 	#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
 	#define BLE_IO_CAPABALITIES			(AT_BLE_IO_CAP_NO_INPUT_NO_OUTPUT)
 	#define BLE_MITM_REQ				(false)
@@ -73,92 +75,98 @@
 	#endif
 
 	#ifdef HID_MOUSE_DEVICE
-	#define BLE_DEVICE_NAME				"ATMEL-HIDM"
+	#ifndef BLE_DEVICE_NAME
+		#define BLE_DEVICE_NAME				"ATMEL-HIDM"
+	#endif	/* BLE_DEVICE_NAME */
 	#endif
 #endif /* HID_DEVICE */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined PROXIMITY_REPORTER
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-PXP"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* PROXIMITY_REPORTER */
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined HR_SENSOR
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-HR"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* HR_SENSOR */
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined PROXIMITY_MONITOR
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-MON"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* PROXIMITY_MONITOR */
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined BLP_SENSOR
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-BLP"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* Blood_Pressure_Sensor*/
-#endif /* BLE_DEVICE_ROLE */
 
 #if (BLE_DEVICE_ROLE == BLE_ROLE_OBSERVER)
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-OBS"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* BLE_DEVICE_ROLE == BLE_ROLE_OBSERVER) */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined ANP_CLIENT
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-ANCS"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* ANCS_CLIENT */
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined TIP_CLIENT
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-TIP"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* TIP_CLIENT */
-#endif
 
-#ifndef BLE_DEVICE_ROLE
 #if defined FIND_ME_TARGET
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-FMP"
-#endif /* PROXIMITY_REPORTER */
-#endif /* BLE_DEVICE_ROLE */
+#endif	/* BLE_DEVICE_NAME */
+#endif /* FIND_ME_TARGET */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined ANP_SIG_CLIENT
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-ANP"
+#endif	/* BLE_DEVICE_NAME */
 #define BLE_PAIR_ENABLE					(false)
 #endif /* ANP_SIG_CLIENT */
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined PAS_CLIENT
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-PAS"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* PAS_CLIENT */
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
+
 #if defined CSC_DEVICE
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-CSC"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* CSC_DEVICE */
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined	BATTERY_SERVICE
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-BAS"
+#endif	/* BLE_DEVICE_NAME */
 #endif /*BATTERY_SERVICE*/
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
+
 #if defined	SCAN_PARAM_SERVICE
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-SCP"
+#endif	/* BLE_DEVICE_NAME */
 #endif	/*SCAN_PARAM_SERVICE*/
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined	DEVICE_INFORMATION_SERVICE
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-DIS"
+#endif	/* BLE_DEVICE_NAME */
 #endif	/* DEVICE_INFORMATION_SERVICE */
-#endif /* BLE_DEVICE_ROLE */
 
 /** @brief default device name */
 #ifndef BLE_DEVICE_NAME
@@ -440,14 +448,14 @@ typedef enum
 
 /** minimum connection interval */
 //	<o> GAP Minimum Connection Interval in msec <0-1000:50>
-//	<i> Defines Minimum inteval for GAP Connection.
+//	<i> Defines Minimum interval for GAP Connection.
 //	<i> Default: 20
 //	<id> gap_conn_interval_min
 #define GAP_CONN_INTERVAL_MIN			(20)        //Connection interval min 20ms
 
 /** maximum connection interval */
 //	<o> GAP Maximum Connection Interval in msec <0-1000:50>
-//	<i> Defines Maximum inteval for GAP Connection.
+//	<i> Defines Maximum interval for GAP Connection.
 //	<i> Default: 40
 //	<id> gap_conn_interval_max
 #define GAP_CONN_INTERVAL_MAX			(40)		//Connection interval max 40ms
@@ -1238,16 +1246,9 @@ typedef struct adv_element
 	uint8_t *data;
 }adv_element_t;
 
+
 /** @brief GATT services handles
 */
-#if defined HID_SERVICE
-// typedef struct gatt_service_handler
-// {
-// 	at_ble_service_t		  serv;
-// 	at_ble_chr_t		      serv_chars[HID_CHARACTERISTIC_NUM];
-// 	at_ble_generic_att_desc_t serv_desc[HID_NUM_OF_REPORT];   /*Report descriptor*/
-// }gatt_service_handler_t;
-#else
 typedef struct gatt_service_handler
 {
 	/// service uuid
@@ -1257,7 +1258,7 @@ typedef struct gatt_service_handler
 	/// service characteristic
 	at_ble_characteristic_t	serv_chars;
 }gatt_service_handler_t;
-#endif
+
 
 /****************************************************************************************
 *                                       Functions                                       *
