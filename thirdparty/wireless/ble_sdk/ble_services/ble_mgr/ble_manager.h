@@ -63,76 +63,102 @@
 #endif
 
 #if defined HID_DEVICE
-#ifdef HID_KEYBOARD_DEVICE
-#define BLE_DEVICE_NAME				"ATMEL-HIDK"
-#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
-#define BLE_IO_CAPABALITIES			(AT_BLE_IO_CAP_NO_INPUT_NO_OUTPUT)
-#define BLE_MITM_REQ				(false)
-#define BLE_BOND_REQ				(false)
-#define BLE_PAIR_ENABLE				(false)
-#endif
+	#ifdef HID_KEYBOARD_DEVICE
+	#define BLE_DEVICE_NAME				"ATMEL-HIDK"
+	#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
+	#define BLE_IO_CAPABALITIES			(AT_BLE_IO_CAP_NO_INPUT_NO_OUTPUT)
+	#define BLE_MITM_REQ				(false)
+	#define BLE_BOND_REQ				(false)
+	#define BLE_PAIR_ENABLE				(false)
+	#endif
 
-#ifdef HID_MOUSE_DEVICE
-#define BLE_DEVICE_NAME				"ATMEL-HIDM"
-#endif
+	#ifdef HID_MOUSE_DEVICE
+	#define BLE_DEVICE_NAME				"ATMEL-HIDM"
+	#endif
 #endif /* HID_DEVICE */
 
+#ifndef BLE_DEVICE_ROLE
 #if defined PROXIMITY_REPORTER
 #define BLE_DEVICE_NAME				"ATMEL-PXP"
 #endif /* PROXIMITY_REPORTER */
+#endif /* BLE_DEVICE_ROLE */
 
+#ifndef BLE_DEVICE_ROLE
 #if defined HR_SENSOR
 #define BLE_DEVICE_NAME				"ATMEL-HR"
-#endif
+#endif /* HR_SENSOR */
+#endif /* BLE_DEVICE_ROLE */
 
+#ifndef BLE_DEVICE_ROLE
 #if defined PROXIMITY_MONITOR
 #define BLE_DEVICE_NAME				"ATMEL-MON"
 #endif /* PROXIMITY_MONITOR */
+#endif /* BLE_DEVICE_ROLE */
 
+#ifndef BLE_DEVICE_ROLE
 #if defined BLP_SENSOR
 #define BLE_DEVICE_NAME				"ATMEL-BLP"
 #endif /* Blood_Pressure_Sensor*/
+#endif /* BLE_DEVICE_ROLE */
 
 #if (BLE_DEVICE_ROLE == BLE_ROLE_OBSERVER)
 #define BLE_DEVICE_NAME				"ATMEL-OBS"
 #endif /* BLE_DEVICE_ROLE == BLE_ROLE_OBSERVER) */
 
+#ifndef BLE_DEVICE_ROLE
 #if defined ANP_CLIENT
 #define BLE_DEVICE_NAME				"ATMEL-ANCS"
 #endif /* ANCS_CLIENT */
+#endif /* BLE_DEVICE_ROLE */
 
+#ifndef BLE_DEVICE_ROLE
 #if defined TIP_CLIENT
 #define BLE_DEVICE_NAME				"ATMEL-TIP"
 #endif /* TIP_CLIENT */
+#endif
 
+#ifndef BLE_DEVICE_ROLE
 #if defined FIND_ME_TARGET
 #define BLE_DEVICE_NAME				"ATMEL-FMP"
 #endif /* PROXIMITY_REPORTER */
+#endif /* BLE_DEVICE_ROLE */
 
+#ifndef BLE_DEVICE_ROLE
 #if defined ANP_SIG_CLIENT
 #define BLE_DEVICE_NAME				"ATMEL-ANP"
 #define BLE_PAIR_ENABLE					(false)
 #endif /* ANP_SIG_CLIENT */
+#endif /* BLE_DEVICE_ROLE */
 
+#ifndef BLE_DEVICE_ROLE
 #if defined PAS_CLIENT
 #define BLE_DEVICE_NAME				"ATMEL-PAS"
 #endif /* PAS_CLIENT */
+#endif /* BLE_DEVICE_ROLE */
 
+#ifndef BLE_DEVICE_ROLE
 #if defined CSC_DEVICE
 #define BLE_DEVICE_NAME				"ATMEL-CSC"
 #endif /* CSC_DEVICE */
+#endif /* BLE_DEVICE_ROLE */
 
+#ifndef BLE_DEVICE_ROLE
 #if defined	BATTERY_SERVICE
 #define BLE_DEVICE_NAME				"ATMEL-BAS"
 #endif /*BATTERY_SERVICE*/
+#endif /* BLE_DEVICE_ROLE */
 
+#ifndef BLE_DEVICE_ROLE
 #if defined	SCAN_PARAM_SERVICE
 #define BLE_DEVICE_NAME				"ATMEL-SCP"
 #endif	/*SCAN_PARAM_SERVICE*/
+#endif /* BLE_DEVICE_ROLE */
 
+#ifndef BLE_DEVICE_ROLE
 #if defined	DEVICE_INFORMATION_SERVICE
 #define BLE_DEVICE_NAME				"ATMEL-DIS"
-#endif	/*SCAN_PARAM_SERVICE*/
+#endif	/* DEVICE_INFORMATION_SERVICE */
+#endif /* BLE_DEVICE_ROLE */
 
 /** @brief default device name */
 #ifndef BLE_DEVICE_NAME
