@@ -356,7 +356,10 @@ typedef enum
 #define SPS_SERVICE_UUID 						(0x1813)
 
 /** CSC Service UUID. */
-#define CSC_SERVICE_UUID				("\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd")
+#define CSC_SERVICE_UUID						("\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd")
+
+/** ANCS service UUID. */
+#define ANP_ANCS_SERVICE_UUID					("\xD0\x00\x2D\x12\x1E\x4B\x0F\xA4\x99\x4E\xCE\xB5\x31\xF4\x05\x79")
 
 /* Characteristics UUID's */
 /* Alert Level Characteristic UUID */
@@ -510,9 +513,29 @@ typedef enum
 //	<i> Defines the central to connect maximum number to devices
 //	<i> Default: 1
 //	<id> gap_max_device_connected
-#define MAX_DEVICE_CONNECTED			(1)
+#define BLE_MAX_DEVICE_CONNECTED				(5)
 
-#define BLE_EVENT_PARAM_MAX_SIZE		524
+#define BLE_EVENT_PARAM_MAX_SIZE		        524
+
+typedef enum {
+  BLE_DEVICE_DISCONNECTED,
+  BLE_DEVICE_CONNECTING,
+  BLE_DEVICE_CONNECTED,
+  BLE_DEVICE_PAIRING,
+  BLE_DEVICE_PAIRING_FAILED,
+  BLE_DEVICE_PAIRED,  
+  BLE_DEVICE_ENCRYPTION_STATE,
+  BLE_DEVICE_ENCRYPTION_FAILED,
+  BLE_DEVICE_ENCRYPTION_COMPLETED,
+  BLE_DEVICE_DEFAULT_IDLE
+}ble_device_state_t;
+
+typedef struct ble_connected_dev_info
+{
+	at_ble_connected_t conn_info;
+	at_ble_pair_done_t bond_info;
+	ble_device_state_t conn_state;
+}ble_connected_dev_info_t;
 
 
 /***************************Advertisement/Scan Response Information configuration *****/
@@ -557,9 +580,14 @@ typedef enum {
 #define SERVICE_UUID128_MAX_NUM				2
 #endif
 
+#ifdef TP_ANDROID
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID_ENABLE			true
+#endif
 
 /** UUID Type's and configuration's */
+#ifndef BLE_GAP_ADV_SERVICE_16BIT_UUID_ENABLE
 #define BLE_GAP_ADV_SERVICE_16BIT_UUID_ENABLE			true
+#endif
 #define BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH			2
 #if BLE_GAP_ADV_SERVICE_16BIT_UUID_ENABLE
 #define BLE_GAP_ADV_SERVICE_16BIT_UUID_SCN_RSP_ENABLE	SCAN_RESPONSE_ENABLE
@@ -686,16 +714,24 @@ typedef enum {
 #define  BLE_GAP_ADV_DATA_SERVICE_32BIT_UUID4_VAL		"\x12\x34\x56\x78"
 #endif
 
-#define BLE_GAP_ADV_SERVICE_128BIT_UUID_ENABLE			false
+#define BLE_GAP_ADV_SERVICE_128BIT_UUID_ENABLE			true
 #define BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH			16
 #if BLE_GAP_ADV_SERVICE_128BIT_UUID_ENABLE
 #define BLE_GAP_ADV_SERVICE_128BIT_UUID_SCN_RSP_ENABLE	SCAN_RESPONSE_ENABLE
 
+#ifndef ANCS_CLIENT_SERVICE 
+#define BLE_GAP_ADV_SERVICE_128BIT_UUID0_ENABLE			false
+#else
 #define BLE_GAP_ADV_SERVICE_128BIT_UUID0_ENABLE			true
-#define  BLE_GAP_ADV_DATA_SERVICE_128BIT_UUID0_VAL		"\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd"
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_128BIT_UUID0_VAL		ANP_ANCS_SERVICE_UUID
 
+#ifndef CSC_SERVICE
 #define BLE_GAP_ADV_SERVICE_128BIT_UUID1_ENABLE			false
-#define  BLE_GAP_ADV_DATA_SERVICE_128BIT_UUID1_VAL		"\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd"
+#else
+#define BLE_GAP_ADV_SERVICE_128BIT_UUID1_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_128BIT_UUID1_VAL		CSC_SERVICE_UUID
 #endif
 
 /** Short Local Name configuration */
@@ -732,8 +768,15 @@ typedef enum {
 #define BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_MAX			0x0C80
 #endif
 
+
+#ifndef TP_ANDROID
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_ENABLE				true
+#endif
+
 /* Service Solicitation UUID Configuration */
+#ifndef BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_ENABLE
 #define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_ENABLE				false
+#endif
 #if BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_ENABLE
 #define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_SCN_RSP_ENABLE		SCAN_RESPONSE_ENABLE
 
@@ -813,6 +856,27 @@ typedef enum {
 #define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID10_ENABLE			true
 #endif
 #define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID10_VAL		HID_SERV_UUID
+
+#ifndef BLOOD_PRESSURE_SERVICE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID11_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID11_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID11_VAL		BLOOD_PRESSURE_SERVICE_UUID
+
+#ifndef HEART_RATE_SERVICE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID12_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID12_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID12_VAL		HEART_RATE_SERVICE_UUID
+
+#ifndef PAS_CLIENT
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID13_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID13_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID13_VAL		PAS_SERVICE_UUID
 #endif
 
 #define BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID_ENABLE				false
@@ -835,15 +899,24 @@ typedef enum {
 #define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_32BIT_UUID4_VAL			"\x12\x34\x56\x78"
 #endif
 
-#define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_ENABLE			false
+
+#define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_ENABLE			true
 #if BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_ENABLE
 #define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_SCN_RSP_ENABLE	SCAN_RESPONSE_ENABLE
 
+#ifndef ANCS_CLIENT_SERVICE
 #define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID0_ENABLE			false
-#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_128BIT_UUID0_VAL		"\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd"
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID0_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_128BIT_UUID0_VAL		ANP_ANCS_SERVICE_UUID
 
+#ifndef CSC_SERVICE
 #define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID1_ENABLE			false
-#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_128BIT_UUID1_VAL		"\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd"
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID1_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_128BIT_UUID1_VAL		CSC_SERVICE_UUID
 #endif
 
 /* Service Data Configuration */
