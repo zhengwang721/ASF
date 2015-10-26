@@ -80,25 +80,49 @@ blp_notification_callback_t notification_cb;
 
 blp_indication_callback_t	indication_cb;
 
-connected_callback_t connected_cb;
-
 
 /** @brief contains the connection handle functions **/
 at_ble_handle_t connection_handle;
 
+
+static const ble_event_callback_t blp_sensor_gap_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	blp_sensor_connected_state_handler,
+	blp_sensor_disconnect_event_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+static const ble_event_callback_t blp_sensor_gatt_server_handle[] = {
+	blp_notification_confirmation_handler,
+	blp_indication_confirmation_handler,
+	blp_sensor_char_changed_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
 /****************************************************************************************
 *							        Implementations										*
 ****************************************************************************************/
 
-/**
- * @brief register the call back for notification of ringer setting
- * @param[in]
- * @return none
- */
-void register_connected_callback(connected_callback_t app_connected_cb)
-{
-	connected_cb = app_connected_cb ;
-}
 
 /** @brief register_blp_notification_handler registers the notification handler
  * passed by the application
@@ -126,27 +150,38 @@ void register_blp_indication_handler(
 /** @brief blp_notification_confirmation_handler called by ble manager 
  *	to give the status of notification sent
  *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
+ *  @return AT_BLE_SUCCESS on success
  */	
-void blp_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
+at_ble_status_t blp_notification_confirmation_handler(void *params)
 {
-	if (params->status == AT_BLE_SUCCESS) {
+	at_ble_cmd_complete_event_t event_params;
+	memcpy(&event_params,params,sizeof(at_ble_cmd_complete_event_t));
+	
+	if (event_params.status == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("Notification Successfully sent over the air");
 	} else {
 		DBG_LOG_DEV("Sending Notification over the air failed");
 	}
+	return AT_BLE_SUCCESS;
 }
 
 /** @brief blp_indication_confirmation_handler called by ble manager 
  *	to give the status of notification sent
  *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
+ *  @return AT_BLE_SUCCESS on success
  */	
-void blp_indication_confirmation_handler(at_ble_cmd_complete_event_t *params)
+at_ble_status_t blp_indication_confirmation_handler(void *params)
 {
-	if (params->status == AT_BLE_SUCCESS) {
+	at_ble_cmd_complete_event_t event_params;
+	memcpy(&event_params,params,sizeof(at_ble_cmd_complete_event_t));
+	
+	if (event_params.status == AT_BLE_SUCCESS){
 		DBG_LOG_DEV("Indication successfully sent over the air");
 	} else {
-		DBG_LOG_DEV("Sending indication over the air failed %d",params->status);
+		DBG_LOG_DEV("Sending indication over the air failed %d",event_params.status);
 	}
+	
+	return AT_BLE_SUCCESS;
 }
 
 
@@ -208,12 +243,13 @@ void blp_sensor_send_indication(uint8_t *blp_data, uint8_t length)
 
 
 /** @brief blp_sensor_char_changed_handler called by the ble manager after a
- * change in the characteristic
+ *  change in the characteristic
  *  @param[in] at_ble_characteristic_changed_t which contains handle of
- *characteristic and new value
+ *  characteristic and new value
+ *  @return AT_BLE_SUCCESS
  */
 at_ble_status_t blp_sensor_char_changed_handler(
-		at_ble_characteristic_changed_t *char_handle)
+					void *char_handle)
 {
 	uint8_t action_event;
 	at_ble_characteristic_changed_t change_params;
@@ -248,10 +284,9 @@ at_ble_status_t blp_sensor_char_changed_handler(
  *reason for disconnection
  */
 at_ble_status_t blp_sensor_disconnect_event_handler(
-		at_ble_disconnected_t *disconnect)
+					void *disconnect)
 {
 	blp_sensor_adv();
-	connected_cb(false);
     ALL_UNUSED(disconnect);
 	
 	return AT_BLE_SUCCESS;
@@ -263,10 +298,9 @@ at_ble_status_t blp_sensor_disconnect_event_handler(
  *device address
  */
 at_ble_status_t blp_sensor_connected_state_handler(
-		at_ble_connected_t *conn_params)
+		void *conn_params)
 {
-	connected_cb(true);
-	connection_handle = (at_ble_handle_t)conn_params->handle;
+	connection_handle = (at_ble_handle_t)(((at_ble_connected_t *)conn_params)->handle);
 		
 	return AT_BLE_SUCCESS;
 }
@@ -282,46 +316,13 @@ void blp_disconnection(void)
 	}
 }
 
-
-
-/** @brief blp_sensor_adv adds the advertisement data of the profile and starts
- * advertisement
+/** @brief blp_sensor_adv starts advertisement
  *
  */
 void blp_sensor_adv(void)
 {
 	at_ble_status_t status;
-	uint8_t idx = 0;
-	uint8_t adv_data [ BLP_SENSOR_ADV_DATA_NAME_LEN +
-	BLP_SENSOR_ADV_DATA_UUID_LEN   + (2 * 2)];
-
-	adv_data[idx++] = BLP_SENSOR_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = BLP_SENSOR_ADV_DATA_COMP_16_UUID_TYPE;
-
-	/* Prepare ADV Data for Blood Pressure Service */
-	adv_data[idx++] = (uint8_t)BLOOD_PRESSURE_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(BLOOD_PRESSURE_SERVICE_UUID >> 8);
-
-	/* Prepare ADV Data for Device Information Service */
-	adv_data[idx++] = (uint8_t)DEVICE_INFORMATION_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(DEVICE_INFORMATION_SERVICE_UUID >> 8);
-
-	/* Appending the complete name to the Ad packet */
-	adv_data[idx++] = BLP_SENSOR_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = BLP_SENSOR_ADV_DATA_NAME_TYPE;
-
-	memcpy(&adv_data[idx], BLP_SENSOR_ADV_DATA_NAME_DATA,
-			BLP_SENSOR_ADV_DATA_NAME_LEN );
-	idx += BLP_SENSOR_ADV_DATA_NAME_LEN;
-
-	/* Adding the advertisement data and scan response data */
-	if (!(at_ble_adv_data_set(adv_data, idx, scan_rsp_data,
-			SCAN_RESP_LEN) == AT_BLE_SUCCESS)) {
-		#ifdef DBG_LOG
-		DBG_LOG("Failed to set advertisement data");
-		#endif
-	}
-
+	
 	/* Start of advertisement */
 	if ((status
 				= at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED,
@@ -375,52 +376,65 @@ void blp_sensor_service_init(void)
  */
 void blp_sensor_init(void *param)
 {
+	at_ble_status_t status;
+	
 	blp_sensor_service_init();
 	blp_sensor_service_define();
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+	BLE_GAP_EVENT_TYPE,
+	blp_sensor_gap_handle);
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+	BLE_GATT_SERVER_EVENT_TYPE,
+	blp_sensor_gatt_server_handle);
+							
+	status = ble_advertisement_data_set();
+	
+	if (status != AT_BLE_SUCCESS) {
+		DBG_LOG("Advertisement set failed reason %d",status);
+	}
+				
+	blp_sensor_adv();
 	
 	/* Handles for the Blood pressure service */
 	DBG_LOG_DEV("\n\nThe service handle for blp is 0x%04x",
-							blp_service_handler.serv_handle);
+	blp_service_handler.serv_handle);
 	DBG_LOG_DEV("The characteristic handle for blp measurement is 0x%04x",
-							blp_service_handler.serv_chars[0].char_val_handle - 1);
+	blp_service_handler.serv_chars[0].char_val_handle - 1);
 	DBG_LOG_DEV("The characteristic value handle for blp measurement is 0x%04x",
-							blp_service_handler.serv_chars[0].char_val_handle);
+	blp_service_handler.serv_chars[0].char_val_handle);
 	DBG_LOG_DEV("The characteristic handle for intermediate cuff pressure is "
-					"0x%04x",blp_service_handler.serv_chars[1].char_val_handle - 1);
+	"0x%04x",blp_service_handler.serv_chars[1].char_val_handle - 1);
 	DBG_LOG_DEV("The characteristic value handle for intermediate cuff pressure is "
-							"0x%04x",blp_service_handler.serv_chars[1].char_val_handle);
+	"0x%04x",blp_service_handler.serv_chars[1].char_val_handle);
 	DBG_LOG_DEV("The characteristic handle for blood pressure feature is 0x%04x",
-							blp_service_handler.serv_chars[2].char_val_handle - 1);							
+	blp_service_handler.serv_chars[2].char_val_handle - 1);
 	DBG_LOG_DEV("The characteristic value handle for blood pressure feature is 0x%04x",
-							blp_service_handler.serv_chars[2].char_val_handle);
+	blp_service_handler.serv_chars[2].char_val_handle);
 	DBG_LOG_DEV("The descriptor handle for blp measurement is 0x%04x",
-							blp_service_handler.serv_chars[0].client_config_handle);
+	blp_service_handler.serv_chars[0].client_config_handle);
 	DBG_LOG_DEV("The descriptor handle for intermediate cuff press is 0x%04x",
-							blp_service_handler.serv_chars[1].client_config_handle);
+	blp_service_handler.serv_chars[1].client_config_handle);
 	/* The handles received for Device information */
 	DBG_LOG_DEV("\r\nThe service handle for Device information service is 0x%04x",
-												dis_service_handler.serv_handle);
+	dis_service_handler.serv_handle);
 	DBG_LOG_DEV("The Handles for the characteristics of DIS are given below\n");
 	DBG_LOG_DEV("Characteristic 1 - 0x%04x",
-							dis_service_handler.serv_chars[0].char_val_handle - 1);
+	dis_service_handler.serv_chars[0].char_val_handle - 1);
 	DBG_LOG_DEV("Characteristic 2 - 0x%04x",
-							dis_service_handler.serv_chars[1].char_val_handle - 1);
+	dis_service_handler.serv_chars[1].char_val_handle - 1);
 	DBG_LOG_DEV("Characteristic 3 - 0x%04x",
-							dis_service_handler.serv_chars[2].char_val_handle - 1);
+	dis_service_handler.serv_chars[2].char_val_handle - 1);
 	DBG_LOG_DEV("Characteristic 4 - 0x%04x",
-							dis_service_handler.serv_chars[3].char_val_handle - 1);
+	dis_service_handler.serv_chars[3].char_val_handle - 1);
 	DBG_LOG_DEV("Characteristic 5 - 0x%04x",
-							dis_service_handler.serv_chars[4].char_val_handle - 1);							
+	dis_service_handler.serv_chars[4].char_val_handle - 1);
 	DBG_LOG_DEV("Characteristic 6 - 0x%04x",
-							dis_service_handler.serv_chars[5].char_val_handle - 1);
+	dis_service_handler.serv_chars[5].char_val_handle - 1);
 	DBG_LOG_DEV("Characteristic 7 - 0x%04x",
-							dis_service_handler.serv_chars[6].char_val_handle - 1);
+	dis_service_handler.serv_chars[6].char_val_handle - 1);
 	DBG_LOG_DEV("Characteristic 8 - 0x%04x",
-							dis_service_handler.serv_chars[7].char_val_handle - 1);
+	dis_service_handler.serv_chars[7].char_val_handle - 1);
 	DBG_LOG_DEV("Characteristic 9 - 0x%04x",
-							dis_service_handler.serv_chars[8].char_val_handle - 1);						
-							
-							
-	blp_sensor_adv();
+	dis_service_handler.serv_chars[8].char_val_handle - 1);
     ALL_UNUSED(param);
 }

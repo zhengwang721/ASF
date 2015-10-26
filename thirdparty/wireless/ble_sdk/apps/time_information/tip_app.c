@@ -107,8 +107,9 @@ void timer_callback_handler(void)
  * @return None
  *
  */
-static void app_read_response_cb(at_ble_characteristic_read_response_t *char_read_resp)
+static at_ble_status_t app_read_response_cb(void *param)
 {
+	at_ble_characteristic_read_response_t *char_read_resp = (at_ble_characteristic_read_response_t *)param;
 	if (char_read_resp->char_handle == cts_handle.curr_char_handle) {
 		if (local_time_char_found) {
 			if (tis_current_time_read( ble_connected_dev_info[0].handle,
@@ -142,7 +143,21 @@ static void app_read_response_cb(at_ble_characteristic_read_response_t *char_rea
 			}
 		}
 	}
+	return AT_BLE_SUCCESS;
 }
+
+static const ble_event_callback_t tip_app_gatt_client_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	app_read_response_cb,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
 
 /**
  * @brief Main Function for Time Information Callback
@@ -170,12 +185,17 @@ int main (void)
 	
 	/*Registration of timer callback*/
 	hw_timer_register_callback(timer_callback_handler);
-	time_info_register_read_response_callback(app_read_response_cb);
 	
 	DBG_LOG("Time Profile Application");
 	
 	/* initialize the BLE chip  and Set the device mac address */
 	ble_device_init(NULL);
+	
+	time_info_init();
+	
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+									BLE_GATT_CLIENT_EVENT_TYPE,
+									tip_app_gatt_client_handle);
 	
 	while(1) {
 		ble_event_task();

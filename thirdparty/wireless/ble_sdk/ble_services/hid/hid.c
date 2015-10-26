@@ -58,6 +58,7 @@
 #include "at_ble_api.h"
 #include "ble_manager.h"
 #include "hid.h"
+#include "hid_device.h"
 
 at_ble_generic_att_desc_t report_desc[HID_NUM_OF_REPORT];
 gatt_service_handler_t hid_inst[HID_MAX_SERV_INST];
