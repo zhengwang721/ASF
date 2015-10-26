@@ -2406,12 +2406,7 @@ static void set_phy_frame_length(trx_id_t trx, uint16_t frame_len)
 			                                                       *1=>
 			                                                       *
 			                                                       *cmdID*/
-			                                                       *
-			                                                       *
-			                                                       *
-			                                                       *
-			                                                       *
-			                                                       */*
+			                                                       /*
 			                                                       *FCS
 			                                                       *
 			                                                       *Len
@@ -2431,12 +2426,7 @@ static void set_phy_frame_length(trx_id_t trx, uint16_t frame_len)
 			                                                          *1=>
 			                                                          *
 			                                                          *cmdID*/
-			                                                          *
-			                                                          *
-			                                                          *
-			                                                          *
-			                                                          *
-			                                                          */*
+			                                                          /*
 			                                                          *frame
 			                                                          *
 			                                                          *overhead
