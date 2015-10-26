@@ -58,15 +58,14 @@ extern volatile bool init_done;
 uint32_t att_db_data[BLE_ATT_DB_MEMORY_SIZE/4];
 #endif
 
-/** @brief information of the connected devices */
-at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
-at_ble_LTK_t app_bond_info;
-bool app_device_bond;
-at_ble_auth_t auth_info;
+volatile uint8_t ble_device_count;
+
+ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED];
 
 
-#define	MAX_GAP_EVENT_SUBSCRIBERS	 5
+
+#define	MAX_GAP_EVENT_SUBSCRIBERS    5
 #define MAX_GATT_CLIENT_SUBSCRIBERS  5
 #define MAX_GATT_SERVER_SUBSCRIBERS  5
 #define MAX_L2CAP_EVENT_SUBSCRIBERS  1
@@ -185,6 +184,17 @@ void ble_device_init(at_ble_addr_t *addr)
 	{
 		ble_mgr_custom_event_cb[idx] = NULL;
 	}
+        
+    /* Set the BLE Device connection state */
+    for (idx = 0; idx < BLE_MAX_DEVICE_CONNECTED; idx++)
+    {
+        memset(&ble_dev_info[idx], 0, sizeof(ble_connected_dev_info_t));
+		ble_dev_info[idx].conn_state = BLE_DEVICE_DEFAULT_IDLE;
+		/* Set Invalid to Bonding information */
+		ble_dev_info[idx].bond_info.status = AT_BLE_GAP_INVALID_PARAM;
+    }
+	/* Need to reset the count to 0 for storing it only in SRAM */
+	ble_device_count = 0; 
 	
 	
 #if defined ATT_DB_MEMORY
@@ -274,7 +284,7 @@ static void ble_set_address(at_ble_addr_t *addr)
 	
 	/* Set device configuration */
 	/* Device role */
-	stDevConfig.role = BLE_DEVICE_ROLE;
+	stDevConfig.role = (at_ble_dev_role_t)BLE_DEVICE_ROLE;
 	/* device renew duration */
 	stDevConfig.renew_dur = AT_RENEW_DUR_VAL_MIN;
 	/* device address type */
@@ -573,10 +583,45 @@ at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 at_ble_status_t ble_connected_state_handler(void *params)
 {
 	at_ble_connected_t *conn_params;
+	uint8_t idx;
 	conn_params = (at_ble_connected_t *)params;
-	memcpy(ble_connected_dev_info, (uint8_t *)conn_params, sizeof(at_ble_connected_t));
+	
 	if (conn_params->conn_status == AT_BLE_SUCCESS)
-	{
+	{		
+		if (ble_device_count < BLE_MAX_DEVICE_CONNECTED)
+		{
+			bool conn_exists = false;
+			for (idx = 0; idx < BLE_MAX_DEVICE_CONNECTED; idx++)
+			{
+				if(!memcmp((uint8_t *)&ble_dev_info[idx].conn_info.peer_addr, (uint8_t *)&conn_params->peer_addr, sizeof(at_ble_addr_t)))
+				{
+					ble_dev_info[idx].conn_state = BLE_DEVICE_CONNECTED;
+					conn_exists = true;
+					break;
+				}
+			}
+			
+			if (!conn_exists)
+			{
+				for (idx = 0; idx < BLE_MAX_DEVICE_CONNECTED; idx++)
+				{
+					if(ble_dev_info[idx].conn_state == BLE_DEVICE_DEFAULT_IDLE)
+					{
+						/* @Todo Need to Handle Random Address */
+						memcpy(&ble_dev_info[idx].conn_info, (uint8_t *)conn_params, sizeof(at_ble_connected_t));
+						ble_device_count++;
+						ble_dev_info[idx].conn_state = BLE_DEVICE_CONNECTED;
+						break;
+					}
+				}
+			}		
+		}
+		else
+		{
+			DBG_LOG("Max number of connection reached: %d ===>Disconnecting...", ble_device_count);
+			at_ble_disconnect(conn_params->handle, AT_BLE_TERMINATED_BY_USER);
+		}
+		
 		DBG_LOG("Connected to peer device with address 0x%02x%02x%02x%02x%02x%02x",
 		conn_params->peer_addr.addr[5],
 		conn_params->peer_addr.addr[4],
@@ -602,7 +647,7 @@ at_ble_status_t ble_mtu_changed_indication_handler(void *params)
 {
 	at_ble_mtu_changed_ind_t *mtu_changed_ind;
 	mtu_changed_ind = (at_ble_mtu_changed_ind_t *)params;
-	DBG_LOG("BLE-MTU Changed, Connection Handle: %d, New Value: %d", 
+	DBG_LOG_DEV("BLE-MTU Changed, Connection Handle: %d, New Value: %d", 
 										mtu_changed_ind->conhdl, 
 										mtu_changed_ind->mtu_value);
 	return AT_BLE_SUCCESS;
@@ -615,7 +660,7 @@ at_ble_status_t ble_mtu_changed_cmd_complete_handler(void *params)
 	
 	if (cmd_complete_event->status == AT_BLE_SUCCESS)
 	{
-		DBG_LOG("MTU Changed, Connection Handle:%d, Operation:%d", 
+		DBG_LOG_DEV("MTU Changed, Connection Handle:%d, Operation:%d", 
 		cmd_complete_event->conn_handle, 
 		cmd_complete_event->operation);
 		return AT_BLE_SUCCESS;
@@ -635,7 +680,7 @@ at_ble_status_t ble_characteristic_write_cmd_complete_handler(void *params)
 	cmd_complete_event = (at_ble_cmd_complete_event_t *)params;
 	if (cmd_complete_event->status == AT_BLE_SUCCESS)
 	{
-		DBG_LOG("Char Write Cmd Complete, Connection Handle:%d, Operation:%d",
+		DBG_LOG_DEV("Char Write Cmd Complete, Connection Handle:%d, Operation:%d",
 		cmd_complete_event->conn_handle,
 		cmd_complete_event->operation);
 		return AT_BLE_SUCCESS;
@@ -653,7 +698,31 @@ at_ble_status_t ble_characteristic_write_cmd_complete_handler(void *params)
 at_ble_status_t ble_disconnected_state_handler(void *params)
 {
 	at_ble_disconnected_t *disconnect;
+	uint8_t idx;
 	disconnect = (at_ble_disconnected_t *)params;
+	
+	for (idx = 0; idx < BLE_MAX_DEVICE_CONNECTED; idx++)
+	{
+		if((ble_dev_info[idx].conn_info.handle == disconnect->handle) && (ble_dev_info[idx].conn_state != BLE_DEVICE_DISCONNECTED)
+		&&(ble_dev_info[idx].conn_state != BLE_DEVICE_DEFAULT_IDLE))
+		{
+			if (ble_dev_info[idx].conn_state == BLE_DEVICE_CONNECTED)
+			{
+				/* Device is not paired so remove the device information */
+				ble_dev_info[idx].conn_state = BLE_DEVICE_DEFAULT_IDLE;			
+			}
+			else
+			{
+				ble_dev_info[idx].conn_state = BLE_DEVICE_DISCONNECTED;
+			}
+			if (ble_device_count > 0)
+			{
+				ble_device_count--;
+			}			
+			break;
+		}
+	}
+	
 	DBG_LOG("Device disconnected Reason:0x%02x Handle=0x%x", disconnect->reason, disconnect->handle);
 	return AT_BLE_SUCCESS;
 }
@@ -679,56 +748,74 @@ at_ble_status_t ble_conn_param_update_req(void *params)
 at_ble_status_t ble_slave_security_request_handler(void* params)
 {
 	at_ble_pair_features_t features;
-	uint8_t i = 0;
+	uint8_t i = 0, idx;
 	at_ble_slave_sec_request_t* slave_sec_req;
 	slave_sec_req = (at_ble_slave_sec_request_t*)params;
 	
-	if (app_device_bond)
+	//if (slave_sec_req->status != AT_BLE_SUCCESS)
+	//{
+		//at_ble_disconnect(slave_sec_req->handle, AT_BLE_AUTH_FAILURE);		
+		//return AT_BLE_FAILURE;
+		//@Todo Status is not handled in the Library
+	//}
+	
+	for (idx = 0; idx < BLE_MAX_DEVICE_CONNECTED; idx++)
 	{
-		app_device_bond = false;
+		if((ble_dev_info[idx].conn_info.handle == slave_sec_req->handle) && (ble_dev_info[idx].conn_state == BLE_DEVICE_CONNECTED))
+		{
+			ble_dev_info[idx].conn_state = BLE_DEVICE_ENCRYPTION_STATE;
+			break;
+		}
 	}
 	
-	if(!app_device_bond)
-	{
+	features.desired_auth =  BLE_AUTHENTICATION_LEVEL; 
+	features.bond = slave_sec_req->bond;
+	features.mitm_protection = slave_sec_req->mitm_protection;
+	/* Device capabilities is display only , key will be generated
+	and displayed */
+	features.io_cababilities = AT_BLE_IO_CAP_KB_DISPLAY;
 
-		features.desired_auth =  BLE_AUTHENTICATION_LEVEL; 
-		features.bond = slave_sec_req->bond;
-		features.mitm_protection = slave_sec_req->mitm_protection;
-		/* Device capabilities is display only , key will be generated
-		and displayed */
-		features.io_cababilities = AT_BLE_IO_CAP_KB_DISPLAY;
-
-		features.oob_avaiable = false;
+	features.oob_avaiable = false;
 			
-		/* Distribution of LTK is required */
-		features.initiator_keys =   AT_BLE_KEY_DIST_ENC;
-		features.responder_keys =   AT_BLE_KEY_DIST_ENC;
-		features.max_key_size = 16;
-		features.min_key_size = 16;
-		
+	/* Distribution of LTK is required */
+	features.initiator_keys =   AT_BLE_KEY_DIST_ENC;
+	features.responder_keys =   AT_BLE_KEY_DIST_ENC;
+	features.max_key_size = 16;
+	features.min_key_size = 16;
+	
+	/* Check if fresh pairing requested */
+	if (ble_dev_info[idx].bond_info.status == AT_BLE_GAP_INVALID_PARAM)
+	{
 		/* Generate LTK */
 		for(i=0; i<8; i++)
-		{
-			app_bond_info.key[i] = rand()&0x0f;
-			app_bond_info.nb[i] = rand()&0x0f;
+		{			
+			ble_dev_info[idx].bond_info.peer_ltk.key[i] = rand()&0x0f;
+			ble_dev_info[idx].bond_info.peer_ltk.nb[i] = rand()&0x0f;
 		}
-		
+				
 		for(i=8 ; i<16 ;i++)
 		{
-			app_bond_info.key[i] = rand()&0x0f;
+			ble_dev_info[idx].bond_info.peer_ltk.key[i] = rand()&0x0f;
 		}
 		
-		app_bond_info.ediv = rand()&0xffff;
-		app_bond_info.key_size = 16;
-		/* Send pairing response */
-		DBG_LOG("Sending pairing response");
-		if(at_ble_authenticate(slave_sec_req->handle, &features, &app_bond_info, NULL) != AT_BLE_SUCCESS)
-		{
-			features.bond = false;
-			features.mitm_protection = false;
-			DBG_LOG(" != AT_BLE_SUCCESS ");
-			at_ble_authenticate(slave_sec_req->handle, &features, NULL, NULL);			
-		}
+		ble_dev_info[idx].bond_info.peer_ltk.ediv = rand()&0xffff;
+		ble_dev_info[idx].bond_info.peer_ltk.key_size = 16;
+	}
+	else
+	{
+		/* Bonding information already exists */
+		
+	}
+
+	/* Send pairing response */
+	DBG_LOG("Sending pairing response");
+
+	if(at_ble_authenticate(slave_sec_req->handle, &features, &ble_dev_info[idx].bond_info.peer_ltk, NULL) != AT_BLE_SUCCESS)
+	{
+		features.bond = false;
+		features.mitm_protection = false;
+		DBG_LOG("Slave Security Req - Authentication Failed");
+		return AT_BLE_FAILURE;
 	}
 	return AT_BLE_SUCCESS;
 }
@@ -737,63 +824,77 @@ at_ble_status_t ble_slave_security_request_handler(void* params)
 at_ble_status_t ble_pair_request_handler(void *params)
 {
 	at_ble_pair_features_t features;
-	uint8_t idx = 0;
-	at_ble_pair_request_t *at_ble_pair_req;
-	at_ble_pair_req = (at_ble_pair_request_t *)params;
+	uint8_t i = 0, idx;
+	at_ble_slave_sec_request_t* slave_sec_req;
+	slave_sec_req = (at_ble_slave_sec_request_t*)params;
 	
-	DBG_LOG("Peer device request pairing");
-	
-	/* Check if we are already bonded (Only one bonded connection is supported
-	in this example)*/
-	if(app_device_bond)
+	if (slave_sec_req->status != AT_BLE_SUCCESS)
 	{
-		DBG_LOG("Bonding information exists with peer device...Removing Bonding information");
-		app_device_bond = false;
+		at_ble_disconnect(slave_sec_req->handle, AT_BLE_AUTH_FAILURE);		
+		return AT_BLE_FAILURE;
 	}
 	
-	if(!app_device_bond)
+	for (idx = 0; idx < BLE_MAX_DEVICE_CONNECTED; idx++)
 	{
-		/* Authentication requirement is bond and MITM*/
-		features.desired_auth = BLE_AUTHENTICATION_LEVEL;
-		features.bond = BLE_BOND_REQ;
-		features.mitm_protection = BLE_MITM_REQ;
-		features.io_cababilities = BLE_IO_CAPABALITIES;	
-		features.oob_avaiable = BLE_OOB_REQ;
+		if((ble_dev_info[idx].conn_info.handle == slave_sec_req->handle) && (ble_dev_info[idx].conn_state == BLE_DEVICE_CONNECTED))
+		{
+			ble_dev_info[idx].conn_state = BLE_DEVICE_ENCRYPTION_STATE;
+			break;
+		}
+	}
+	
+	/* Distribution of LTK is required */
+	features.initiator_keys =   AT_BLE_KEY_DIST_ENC;
+	features.responder_keys =   AT_BLE_KEY_DIST_ENC;
+	
+	features.desired_auth =  BLE_AUTHENTICATION_LEVEL; 
+	features.bond = BLE_BOND_REQ;
+	features.mitm_protection = BLE_MITM_REQ;
+	/* Device capabilities is display only , key will be generated
+	and displayed */
+	features.io_cababilities = BLE_IO_CAPABALITIES;
+	features.oob_avaiable = BLE_OOB_REQ;
 			
-		/* Distribution of LTK is required */
-		features.initiator_keys =   AT_BLE_KEY_DIST_ENC;
-		features.responder_keys =   AT_BLE_KEY_DIST_ENC;
-		features.max_key_size = 16;
-		features.min_key_size = 16;
-		
+	/* Distribution of LTK is required */
+	features.initiator_keys =   AT_BLE_KEY_DIST_ENC;
+	features.responder_keys =   AT_BLE_KEY_DIST_ENC;
+	features.max_key_size = 16;
+	features.min_key_size = 16;
+	
+	/* Check if fresh pairing requested */
+	if (ble_dev_info[idx].bond_info.status == AT_BLE_GAP_INVALID_PARAM)
+	{
 		/* Generate LTK */
-		for(idx=0; idx<8; idx++)
+		for(i=0; i<8; i++)
+		{			
+			ble_dev_info[idx].bond_info.peer_ltk.key[i] = rand()&0x0f;
+			ble_dev_info[idx].bond_info.peer_ltk.nb[i] = rand()&0x0f;
+		}
+				
+		for(i=8 ; i<16 ;i++)
 		{
-			app_bond_info.key[idx] = rand()&0x0f;
-			app_bond_info.nb[idx] = rand()&0x0f;
+			ble_dev_info[idx].bond_info.peer_ltk.key[i] = rand()&0x0f;
 		}
 		
-		for(idx=8 ; idx<16 ;idx++)
-		{
-			app_bond_info.key[idx] = rand()&0x0f;
-		}
-		
-		app_bond_info.ediv = rand()&0xffff;
-		app_bond_info.key_size = 16;
-		/* Send pairing response */
-		DBG_LOG("Sending pairing response");
-		if(at_ble_authenticate(ble_connected_dev_info->handle, &features, &app_bond_info, NULL) != AT_BLE_SUCCESS)
-		{
-			features.bond = false;
-			features.mitm_protection = false;
-			DBG_LOG("BLE Authentication Failed..Retrying without mitm without bond");
-			if(!(at_ble_authenticate(ble_connected_dev_info->handle, &features, NULL, NULL) == AT_BLE_SUCCESS))
-			{
-				DBG_LOG("BLE Authentication Retry Failed");
-			}			
-		}
+		ble_dev_info[idx].bond_info.peer_ltk.ediv = rand()&0xffff;
+		ble_dev_info[idx].bond_info.peer_ltk.key_size = 16;
 	}
-	ALL_UNUSED(at_ble_pair_req);  //To avoid compiler warning
+	else
+	{
+		/* Bonding information already exists */
+		
+	}
+
+	/* Send pairing response */
+	DBG_LOG("Sending pairing response");
+
+	if(at_ble_authenticate(slave_sec_req->handle, &features, &ble_dev_info[idx].bond_info.peer_ltk, NULL) != AT_BLE_SUCCESS)
+	{
+		features.bond = false;
+		features.mitm_protection = false;
+		DBG_LOG("Slave Security Req - Authentication Failed");
+		return AT_BLE_FAILURE;
+	}
 	return AT_BLE_SUCCESS;
 }
 
@@ -820,7 +921,7 @@ at_ble_status_t ble_pair_key_request_handler (void *params)
 		  DBG_LOG_CONT("%c", pin);
 		} else if (pin == 'q') {
 			DBG_LOG("Disconnecting ...");
-			if (!(at_ble_disconnect(ble_connected_dev_info->handle, 
+			if (!(at_ble_disconnect(pair_key->handle, 
 							AT_BLE_TERMINATED_BY_USER) == AT_BLE_SUCCESS)) {
 				DBG_LOG("Disconnect Request Failed");
 			}
@@ -849,7 +950,7 @@ at_ble_status_t ble_pair_key_request_handler (void *params)
                   DBG_LOG_CONT("%c",passkey[idx]);
           }		
           
-          if(!(at_ble_pair_key_reply(pair_key_request.handle, pair_key_request.type, passkey)) == AT_BLE_SUCCESS)
+          if(!(at_ble_pair_key_reply(pair_key->handle, pair_key_request.type, passkey)) == AT_BLE_SUCCESS)
           {
                   DBG_LOG("Pair-key reply failed");
           }
@@ -867,24 +968,42 @@ at_ble_status_t ble_pair_key_request_handler (void *params)
 /** @brief function handles pair done event */
 at_ble_status_t ble_pair_done_handler(void *params)
 {
-	at_ble_pair_done_t pair_params;
 	at_ble_pair_done_t *pairing_params;
+	uint8_t idx;
+	bool device_found = false;
 	pairing_params = (at_ble_pair_done_t *)params;
-	memcpy((uint8_t *)&pair_params, pairing_params, sizeof(at_ble_pair_done_t));
 	
-	if(pair_params.status == AT_BLE_SUCCESS)
+	for (idx = 0; idx < BLE_MAX_DEVICE_CONNECTED; idx++)
+	{
+		if((ble_dev_info[idx].conn_info.handle == pairing_params->handle) && (ble_dev_info[idx].conn_state != BLE_DEVICE_DISCONNECTED) &&
+		(ble_dev_info[idx].conn_state != BLE_DEVICE_DEFAULT_IDLE))
+		{
+			device_found = true;
+			break;
+		}
+	}
+	
+	if(pairing_params->status == AT_BLE_SUCCESS)
 	{
 		DBG_LOG("Pairing procedure completed successfully");
-		app_device_bond = true;
-		auth_info = pair_params.auth;
-		ble_connected_dev_info->handle = pair_params.handle;
+		if (device_found)
+		{
+			memcpy((uint8_t *)&ble_dev_info[idx].bond_info, (uint8_t *)pairing_params, sizeof(at_ble_pair_done_t));
+			ble_dev_info->conn_state = BLE_DEVICE_PAIRED;
+		}
+		else
+		{
+			DBG_LOG("BLE Device not found to store the pairing info");
+			return AT_BLE_FAILURE;
+		}		
 	}
 	else
 	{
 		DBG_LOG("Pairing failed...Disconnecting");
-		if(!(at_ble_disconnect(ble_connected_dev_info->handle, AT_BLE_TERMINATED_BY_USER) == AT_BLE_SUCCESS))
+		if(!(at_ble_disconnect(pairing_params->handle, AT_BLE_TERMINATED_BY_USER) == AT_BLE_SUCCESS))
 		{
 			DBG_LOG("Disconnect Request Failed");
+			return AT_BLE_FAILURE;
 		}
 	}
 	return AT_BLE_SUCCESS;
@@ -893,20 +1012,42 @@ at_ble_status_t ble_pair_done_handler(void *params)
 /** @brief function handles encryption status change */
 at_ble_status_t ble_encryption_status_change_handler(void *params)
 {
-	at_ble_encryption_status_changed_t enc_status;
-	at_ble_encryption_status_changed_t *encry_status;
-	encry_status = (at_ble_encryption_status_changed_t *)params;
-	memcpy((uint8_t *)&enc_status, encry_status, sizeof(at_ble_encryption_status_changed_t));
+	at_ble_encryption_status_changed_t *enc_status;
+	uint8_t idx;
+	bool device_found = false;
 	
-	if(enc_status.status == AT_BLE_SUCCESS)
+	enc_status = (at_ble_encryption_status_changed_t *)params;
+	
+	for (idx = 0; idx < BLE_MAX_DEVICE_CONNECTED; idx++)
+	{
+		if((ble_dev_info[idx].conn_info.handle == enc_status->handle) && (ble_dev_info[idx].conn_state != BLE_DEVICE_DISCONNECTED) &&
+		(ble_dev_info[idx].conn_state != BLE_DEVICE_DEFAULT_IDLE))
+		{
+			device_found = true;
+			break;
+		}
+	}
+	
+	if(enc_status->status == AT_BLE_SUCCESS)
 	{
 		DBG_LOG("Encryption completed successfully");
-			
-		ble_connected_dev_info->handle = enc_status.handle;		
+		if (device_found)
+		{
+			ble_dev_info[idx].bond_info.auth = enc_status->authen;
+			ble_dev_info[idx].bond_info.status = enc_status->status;
+		}
+		else
+		{
+			DBG_LOG("BLE Device not found encryption info");
+			return AT_BLE_FAILURE;
+		}
 	}
 	else
 	{
+		ble_dev_info[idx].bond_info.status = enc_status->status;
+		ble_dev_info[idx].conn_state = BLE_DEVICE_ENCRYPTION_FAILED;
 		DBG_LOG("Encryption failed");
+		return AT_BLE_FAILURE;
 	}
 	return AT_BLE_SUCCESS;
 }
@@ -914,31 +1055,44 @@ at_ble_status_t ble_encryption_status_change_handler(void *params)
 /** @brief function handles encryption requests */
 at_ble_status_t ble_encryption_request_handler(void *params)
 {
-	at_ble_encryption_request_t *encry_req;
+	at_ble_encryption_request_t *enc_req;
 	bool key_found = false;
-	encry_req = (at_ble_encryption_request_t *)params;
+	bool device_found = false;
+	uint8_t idx;
+	enc_req = (at_ble_encryption_request_t *)params;
 
-	at_ble_encryption_request_t enc_req;
-	memcpy((uint8_t *)&enc_req, encry_req, sizeof(at_ble_encryption_request_t));
-
-	/* Check if bond information is stored */
-	if((enc_req.ediv == app_bond_info.ediv)
-	&& !memcmp(&enc_req.nb[0],&app_bond_info.nb[0],8))
+	for (idx = 0; idx < BLE_MAX_DEVICE_CONNECTED; idx++)
 	{
-		key_found = true;
+		if((ble_dev_info[idx].conn_info.handle == enc_req->handle) && (ble_dev_info[idx].conn_state != BLE_DEVICE_DISCONNECTED) &&
+		(ble_dev_info[idx].conn_state != BLE_DEVICE_DEFAULT_IDLE))
+		{
+			device_found = true;
+			break;
+		}
 	}
-        else
-        {
-          DBG_LOG("Pairing information of peer device is not available."); 
-          DBG_LOG("Please unpair the device from peer device(mobile) settings menu and start pairing again");
-        }
+	
+	if (device_found)
+	{
+		if((ble_dev_info[idx].bond_info.peer_ltk.ediv == enc_req->ediv)
+		&& !memcmp(&enc_req->nb[0],&ble_dev_info[idx].bond_info.peer_ltk.nb[0],8))
+		{
+			key_found = true;
+		}
+	}
+	
+	
+    if(key_found == false)
+    {
+	    DBG_LOG("Pairing information of peer device is not available.");
+	    DBG_LOG("Please unpair the device from peer device(mobile) settings menu and start pairing again");
+    }
 
-	if(!(at_ble_encryption_request_reply(ble_connected_dev_info->handle,auth_info ,key_found, &app_bond_info) == AT_BLE_SUCCESS))
+	if(!(at_ble_encryption_request_reply(enc_req->handle, ble_dev_info[idx].bond_info.auth, key_found, &ble_dev_info[idx].bond_info.peer_ltk) == AT_BLE_SUCCESS))
 	{
 		DBG_LOG("Encryption Request Reply Failed");
 	}
 	else
-	{
+	{      
 		DBG_LOG_DEV("Encryption Request Reply");
 	}
 	return AT_BLE_SUCCESS;
