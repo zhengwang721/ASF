@@ -199,7 +199,7 @@ extern uint8_t TAL_T_CALIBRATION_0;
 extern uint8_t TAL_T_CALIBRATION_1;
 #endif
 
-#if ((defined RF215v1) || (defined RF215v2)) && (defined SUPPORT_LEGACY_OQPSK)
+#if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
 
 extern uint8_t TAL_T_AGC_0;
 extern uint8_t TAL_T_AGC_1;
@@ -207,7 +207,7 @@ extern uint8_t TAL_T_AGC_1;
 #endif
 
 
-#if (((defined RF215v1) || (defined RF215v2)) && (defined SUPPORT_LEGACY_OQPSK))
+#if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
 #ifdef ENABLE_FTN_PLL_CALIBRATION
 #define NUMBER_OF_TAL_TIMERS        (6)
 #else

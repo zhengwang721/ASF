@@ -100,7 +100,7 @@ uint8_t TAL_T_CALIBRATION_1;
 
 #endif
 
-#if ((defined RF215v1) || (defined RF215v2) && (defined SUPPORT_LEGACY_OQPSK))
+#if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
 
 uint8_t TAL_T_AGC_0;
 uint8_t TAL_T_AGC_1;
@@ -135,24 +135,20 @@ retval_t tal_init(void)
         return FAILURE;
     }
     /* Check if RF215 is connected */
-#if (defined RF215v1) || (defined RF215v2) || (defined RF215v3) || (defined RF215Mv1)
+#if (defined RF215v1) || (defined RF215v3) 
     if ((trx_reg_read( RG_RF_PN) != 0x34) ||
-#elif (defined RF215Mv2)
-    if ((trx_reg_read( RG_RF_PN) != 0x36) ||
 #else
 #   error "No part number defined"
 #endif
-#if (defined RF215v1) || (defined RF215Mv1)
+#if (defined RF215v1)
         (trx_reg_read( RG_RF_VN) != 0x01))
-#elif (defined RF215v2) || (defined RF215Mv2)
-        (trx_reg_read( RG_RF_VN) != 0x02))
 #elif (defined RF215v3)
         (trx_reg_read( RG_RF_VN) != 0x03))
 #else
 #   error "No IC version defined"
 #endif
     {
-        ////debug_text(PSTR("Wrong PN or VN"));
+        /*Wrong PN or VN*/
         return FAILURE;
     }
 
@@ -385,8 +381,7 @@ void trx_config(trx_id_t trx_id)
  */
 static void trx_init(void)
 {
-    ////debug_text(PSTR("trx_init()"));
-
+    
     /*
      * Configure generic trx functionality
      * Configure Trx registers that are reset during DEEP_SLEEP and IC reset
@@ -424,8 +419,6 @@ retval_t tal_reset(trx_id_t trx_id, bool set_default_pib)
 {
     rf_cmd_state_t previous_trx_state[NUM_TRX];
 
-    ////debug_text_val(PSTR("tal_reset(), trx_id ="), trx_id);
-
     /* Clean TAL and removed any pending tasks */
     if (trx_id == RFBOTH)
     {
@@ -446,7 +439,6 @@ retval_t tal_reset(trx_id_t trx_id, bool set_default_pib)
     /* Reset the actual device or part of the device */
     if (trx_reset(trx_id) != MAC_SUCCESS)
     {
-        ////debug_text(PSTR("Reset FAILURE"));
         return FAILURE;
     }
 
@@ -535,8 +527,6 @@ retval_t trx_reset(trx_id_t trx_id)
 {
     retval_t status = MAC_SUCCESS;
 
-    ////debug_text_val(PSTR("trx_reset(), trx_id ="), trx_id);
-
     ENTER_TRX_REGION();
 
     uint32_t start_time;
@@ -575,7 +565,6 @@ retval_t trx_reset(trx_id_t trx_id)
 
         /* Trigger reset of device */
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-        ////debug_text(PSTR("Trigger trx reset"));
 #ifdef IQ_RADIO
         trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_RESET);
         trx_reg_write(RF215_BB, reg_offset + RG_RF09_CMD, RF_RESET);
@@ -605,8 +594,6 @@ retval_t trx_reset(trx_id_t trx_id)
         // @ToDo: Remove magic number
         if (pal_sub_time_us(current_time, start_time) > 1000)
         {
-            ////debug_text_val(PSTR("long start up duration = "),
-                           //(uint16_t)(current_time - start_time));
             status = FAILURE;
             break;
         }
@@ -689,8 +676,7 @@ retval_t trx_reset(trx_id_t trx_id)
  */
 static void cleanup_tal(trx_id_t trx_id)
 {
-    ////debug_text(PSTR("cleanup_tal()"));
-
+    
     /* Clear all running TAL timers (for this trx id). */
     ENTER_CRITICAL_REGION();
 
@@ -747,7 +733,7 @@ static retval_t tal_timer_init(void)
 
 	#endif  /* ENABLE_FTN_PLL_CALIBRATION */
 	
-	#if ((defined RF215v1) || (defined RF215v2) && (defined SUPPORT_LEGACY_OQPSK))
+	#if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
 	if (MAC_SUCCESS != pal_timer_get_id(&TAL_T_AGC_0)) {
 		return FAILURE;
 	}

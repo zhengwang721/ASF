@@ -92,9 +92,8 @@ static bool upload_frame(trx_id_t trx_id);
 void handle_rx_end_irq(trx_id_t trx_id)
 {
 
- //printf("\n \r handle_rx_end_irq() ");
-uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    //trx_state[trx_id] = RF_TXPREP;
+   uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+  
 #if (defined SUPPORT_FSK) || (defined SUPPORT_OQPSK)
     stop_rpc(trx_id);
 #endif
@@ -321,7 +320,6 @@ void complete_rx_transaction(trx_id_t trx_id)
     /* Get energy of received frame */
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     uint8_t ed = trx_reg_read( reg_offset + RG_RF09_EDV);
-    ////debug_text_val(PSTR("Energy of received frame = "), ed);
     uint16_t ed_pos = rx_frm_info[trx_id]->len_no_crc + 1 + tal_pib[trx_id].FCSLen;
     rx_frm_info[trx_id]->mpdu[ed_pos] = ed; // PSDU, LQI, ED
 

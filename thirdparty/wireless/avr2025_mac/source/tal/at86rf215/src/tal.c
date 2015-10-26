@@ -189,7 +189,7 @@ uint32_t rxe_txe_tstamp[NUM_TRX];
  */
 uint8_t txc[NUM_TRX][2];
 
-#if ((defined RF215v1) || (defined RF215v2)) && (defined SUPPORT_LEGACY_OQPSK)
+#if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
 static bool agc_timer_running[NUM_TRX] = {false, false};
 #endif
 
@@ -197,7 +197,7 @@ static bool agc_timer_running[NUM_TRX] = {false, false};
 
 static void handle_trxerr(trx_id_t trx_id);
 
-#if ((defined RF215v1) || (defined RF215v2)) && (defined SUPPORT_LEGACY_OQPSK)
+#if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
 /* Workaround for errata reference #4908 */
 static void inline start_agc_timer(trx_id_t trx_id);
 static void inline stop_agc_timer(trx_id_t trx_id);
@@ -295,7 +295,7 @@ void tal_task(void)
 
 			if (bb_irqs & BB_IRQ_RXFS) {
 				TAL_BB_IRQ_CLR(trx_id, BB_IRQ_RXFS);
-				#if ((defined RF215v1) || (defined RF215v2)) && (defined SUPPORT_LEGACY_OQPSK)
+				#if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
 				/* Workaround for errata reference #4908 */
 				stop_agc_timer(trx_id);
 				#endif
@@ -333,7 +333,7 @@ void tal_task(void)
         }
 		
 
-#if ((defined RF215v1) || (defined RF215v2)) && (defined SUPPORT_LEGACY_OQPSK)
+#if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
         if (bb_irqs & BB_IRQ_AGCH)
         {
 			TAL_BB_IRQ_CLR(trx_id, BB_IRQ_AGCH);
@@ -344,7 +344,7 @@ void tal_task(void)
             }
         }
 #endif
-#if ((defined RF215v1) || (defined RF215v2)) && (defined SUPPORT_LEGACY_OQPSK)
+#if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
         /* Workaround for errata reference #4908 */
         if (bb_irqs & BB_IRQ_AGCR)
         {
@@ -718,7 +718,7 @@ void cancel_any_reception(trx_id_t trx_id)
 }
 
 
-#if ((defined RF215v1) || (defined RF215v2)) && (defined SUPPORT_LEGACY_OQPSK)
+#if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
 /* Workaround for errata reference #4908 */
 static void inline start_agc_timer(trx_id_t trx_id)
 {
@@ -739,7 +739,7 @@ static void inline start_agc_timer(trx_id_t trx_id)
 #endif
 
 
-#if ((defined RF215v1) || (defined RF215v2)) && (defined SUPPORT_LEGACY_OQPSK)
+#if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
 /* Workaround for errata reference #4908 */
 static void inline stop_agc_timer(trx_id_t trx_id)
 {
@@ -760,7 +760,7 @@ static void inline stop_agc_timer(trx_id_t trx_id)
 #endif
 
 
-#if ((defined RF215v1) || (defined RF215v2)) && (defined SUPPORT_LEGACY_OQPSK)
+#if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
 /* Workaround for errata reference #4908 */
 static void inline trigger_agc_workaround(void *cb_timer_element)
 {

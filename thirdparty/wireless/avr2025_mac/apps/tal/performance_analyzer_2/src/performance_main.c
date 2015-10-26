@@ -412,15 +412,15 @@ volatile node_ib_t node_info[NUM_TRX];
  */
 void performance_analyzer_init(void)
 {
-	
-	sio2host_init();
-	sio2ncp_init();
 	/*
 	 * Power ON - so set the board to INIT state. All hardware, PAL, TAL and
 	 * stack level initialization must be done using this function
 	 */
 	set_main_state(RF09, INIT, NULL);
 	set_main_state(RF24, INIT, NULL);
+	
+	sio2host_init();
+	sio2ncp_init();
 
 	/* INIT was a success - so change to WAIT_FOR_EVENT state */
 

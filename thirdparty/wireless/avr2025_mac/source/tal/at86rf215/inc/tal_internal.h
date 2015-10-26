@@ -186,10 +186,10 @@ extern volatile rf_irq_t tal_rf_irqs[NUM_TRX];
  * All other modulation schemes with the corresponding variations
  * need to be calibrated if required.
  */
-#if (defined RF215v1) || (defined RF215Mv1)
+#if (defined RF215v1) 
 #   define TOF_PROC_DELAY_OFFSET_SUB_GHZ_NS     (583230)
 #   define TOF_PROC_DELAY_OFFSET_2_4_GHZ_NS     (573643)
-#elif (defined RF215v2) || (defined RF215v3)
+#elif (defined RF215v3)
 #   define TOF_PROC_DELAY_OFFSET_SUB_GHZ_NS     (583158)
 #   define TOF_PROC_DELAY_OFFSET_2_4_GHZ_NS     (573537)
 #else

@@ -110,7 +110,7 @@ retval_t tal_trx_sleep(trx_id_t trx_id)
     tal_state[trx_id] = TAL_SLEEP;
 
     /* Enter DEEP_SLEEP if both transceiver suppose to enter SLEEP */
-#if (defined RF215v1) || (defined RF215v2)
+#if (defined RF215v1)
     if ((tal_state[RF09] == TAL_SLEEP) && (tal_state[RF24] == TAL_SLEEP))
     {
         for (trx_id_t i = (trx_id_t)0; i < (trx_id_t)NUM_TRX; i++)
@@ -125,26 +125,6 @@ retval_t tal_trx_sleep(trx_id_t trx_id)
             trx_state[i] = RF_SLEEP;
         }
     }
-
-#elif (defined RF215Mv1)
-    trx_reg_write( RG_RF09_CMD, RF_SLEEP);
-    trx_reg_write( RG_RF24_CMD, RF_SLEEP);
-#   ifdef IQ_RADIO
-    trx_reg_write(RF215_RF, RG_RF09_CMD, RF_SLEEP);
-    trx_reg_write(RF215_RF, RG_RF24_CMD, RF_SLEEP);
-#   endif
-    TAL_BB_IRQ_CLR_ALL(trx_id);
-    TAL_RF_IRQ_CLR_ALL(trx_id);
-    trx_state[trx_id] = RF_SLEEP;
-
-#else // RF215Mv2
-    trx_reg_write( RG_RF09_CMD, RF_SLEEP);
-#   ifdef IQ_RADIO
-    trx_reg_write(RF215_RF, RG_RF09_CMD, RF_SLEEP);
-#   endif
-    TAL_BB_IRQ_CLR_ALL(trx_id);
-    TAL_RF_IRQ_CLR_ALL(trx_id);
-    trx_state[trx_id] = RF_SLEEP;
 #endif
 
     /*
@@ -187,7 +167,7 @@ retval_t tal_trx_wakeup(trx_id_t trx_id)
         return TAL_TRX_AWAKE;
     }
 
-#if (defined RF215v1) || (defined RF215v2)
+#if (defined RF215v1)
     if ((tal_state[RF09] == TAL_SLEEP) && (tal_state[RF24] == TAL_SLEEP))
 #endif
     {
@@ -207,15 +187,12 @@ retval_t tal_trx_wakeup(trx_id_t trx_id)
         {
             if (TAL_RF_IS_IRQ_SET(trx_id, RF_IRQ_WAKEUP))
             {
-#if (defined RF215v1) || (defined RF215v2)
+#if (defined RF215v1) 
                 for (trx_id_t i = (trx_id_t)0; i < (trx_id_t)NUM_TRX; i++)
                 {
                     TAL_RF_IRQ_CLR(i, RF_IRQ_WAKEUP);
                     trx_state[i] = RF_TRXOFF;
                 }
-#else // RF215Mv1 || RF215Mv2
-                TAL_RF_IRQ_CLR(trx_id, RF_IRQ_WAKEUP);
-                trx_state[trx_id] = RF_TRXOFF;
 #endif
                 break;
             }
@@ -224,14 +201,11 @@ retval_t tal_trx_wakeup(trx_id_t trx_id)
             // @ToDo: Use no magic number for "1000"
             if (pal_sub_time_us(current_time, start_time) > 1000)
             {
-                //printf(("long start up duration = "),
-                               //(uint16_t)(current_time - start_time));
-                //printf(("Error: Trx did not wake up"));
+               
                 return FAILURE;
             }
         }
-    //printf(("start up duration = "),
-        //  (uint16_t)(current_time - start_time));
+    
 	}
 
     
@@ -253,9 +227,6 @@ retval_t tal_trx_wakeup(trx_id_t trx_id)
     trx_config(trx_id); /* see tal_init.c */
     write_all_tal_pib_to_trx(trx_id); /* see 'tal_pib.c' */
     config_phy(trx_id);
-
-    //printf(("tal_trx_wakeup done"));
-
     return MAC_SUCCESS;
 }
 

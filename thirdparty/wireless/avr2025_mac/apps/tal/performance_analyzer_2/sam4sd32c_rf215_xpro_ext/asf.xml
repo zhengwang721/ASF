@@ -19,7 +19,6 @@
 
 		<config name="config.spi_master_type" value="standard_spi"/>
 		<config name="config.thirdparty.wireless.addons.sio2host" value="usb"/>
-	
 		<require idref="board.sam4s_xplained_pro"/>
 		
 		<generator value="armgcc" />

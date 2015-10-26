@@ -184,9 +184,7 @@ static void ftn_timer_cb(void *cb_timer_element)
     /* Immediately store trx id from callback. */
     trx_id_t trx_id = (trx_id_t)cb_timer_element;
     Assert((trx_id >= 0) && (trx_id < NUM_TRX));
-
-    ////debug_text(PSTR("ftn_timer_cb()"));
-
+    
     if ((tal_state[trx_id] == TAL_IDLE) && (ack_transmitting[trx_id] == false))
     {
         if (trx_state[trx_id] == RF_RX)
@@ -220,7 +218,7 @@ static void ftn_timer_cb(void *cb_timer_element)
         }
         else
         {
-            ////debug_text(PSTR("unexpected Trx state"));
+            unexpected Trx state
         }
 
         start_ftn_timer(trx_id); // Restart timer again
@@ -265,7 +263,6 @@ static void postpone_tuning(trx_id_t trx_id)
  */
 void calibrate_LO(trx_id_t trx_id)
 {
-    ////debug_text_val(PSTR("calibrate_LO(), trx_id"), trx_id);
     uint8_t temp[TRIM_LOOPS][2];
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     uint16_t avg[2] = {0, 0};

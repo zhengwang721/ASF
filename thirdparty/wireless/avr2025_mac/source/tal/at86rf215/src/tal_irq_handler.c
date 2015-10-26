@@ -57,20 +57,12 @@
 #ifdef IQ_RADIO
 #include "pal_internal.h"
 #endif
-#ifdef IRQ_DEBUGGING
-#include "app_common.h"
-#include <inttypes.h>
-#endif
 #include "ieee_const.h"
 /* === TYPES =============================================================== */
 
 /* === MACROS ============================================================== */
 
 /* === EXTERNALS =========================================================== */
-
-#ifdef IRQ_DEBUGGING
-extern per_info_t per[];
-#endif
 
 /* === GLOBALS ============================================================= */
 
@@ -93,13 +85,7 @@ static void switch_rf_to_txprep(trx_id_t trx_id);
  */
 void trx_irq_handler_cb(void)
 {
-    ////debug_text(PSTR("trx_irq_handler_cb()"));
-
-#ifdef IRQ_DEBUGGING
-    uint32_t now;
-    pal_get_current_time(&now);
-#endif
-
+   
     /* Get all IRQS values */
     uint8_t irqs_array[4];
 
@@ -117,72 +103,59 @@ void trx_irq_handler_cb(void)
 
         if (irqs != BB_IRQ_NO_IRQ)
         {
-            ////debug_text_val(PSTR("INFO: ISR for BB "), trx_id);
-            ////debug_text_val(PSTR("INFO: IRQ-flag-vector of RG_BBCx_IRQS ="), irqs);
-
+            
             if (irqs & BB_IRQ_RXEM)
             {
-                ////debug_text(PSTR("IRQ - BB_IRQ_RXEM"));
+                
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXEM)); // avoid Pa091
             }
             if (irqs & BB_IRQ_RXAM)
             {
-                ////debug_text(PSTR("IRQ - BB_IRQ_RXAM"));
+                
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXAM)); // avoid Pa091
             }
             if (irqs & BB_IRQ_AGCR)
             {
-                ////debug_text(PSTR("IRQ - BB_IRQ_AGCR"));
-#if ((defined RF215v1) || (defined RF215v2)) && (defined SUPPORT_LEGACY_OQPSK)
+               
+#if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
                 /* Workaround for errata reference #4908 */
                 /* Keep flag set to trigger workaround; see tal.c */
 #else
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCR)); // avoid Pa091
 #endif
-#ifdef IRQ_DEBUGGING
-                per[trx_id].agcr++;
-                //printf("AGCR %"PRIu32"\n", now);
-#endif
+
             }
             if (irqs & BB_IRQ_AGCH)
             {
-                ////debug_text(PSTR("IRQ - BB_IRQ_AGCH"));
-#if ((defined RF215v1) || (defined RF215v2)) && (defined SUPPORT_LEGACY_OQPSK)
+                
+#if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
                 /* Workaround for errata reference #4908 */
                 /* Keep flag set to trigger workaround; see tal.c */
 #else
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCH)); // avoid Pa091
 #endif
-#ifdef IRQ_DEBUGGING
-                per[trx_id].agch++;
-                //printf("AGCH %"PRIu32"\n", now);
-#endif
+
+                
             }
             if (irqs & BB_IRQ_RXFS)
             {
-                //debug_text(PSTR("IRQ - BB_IRQ_RXFS"));
+                
 #ifdef ENABLE_TSTAMP
                 pal_get_current_time(&fs_tstamp[trx_id]);
 #endif
-#if ((defined RF215v1) || (defined RF215v2)) && (defined SUPPORT_LEGACY_OQPSK)
+#if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
                 /* Workaround for errata reference #4908 */
                 /* Keep flag set to trigger workaround; see tal.c */
 #else
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXFS)); // avoid Pa091
 #endif
-#ifdef IRQ_DEBUGGING
-                per[trx_id].rxfs++;
-                //printf("RXFS %"PRIu32"\n", now);
-#endif
+
             }
             if (irqs & BB_IRQ_RXFE)
             {
-                //debug_text(PSTR("IRQ - BB_IRQ_RXFE"));
+                
                 pal_get_current_time(&rxe_txe_tstamp[trx_id]);
-#ifdef IRQ_DEBUGGING
-                per[trx_id].rxfe++;
-                //printf("RXFE %"PRIu32"\n", now);
-#endif
+
 #if (defined RF215v1) && (!defined BASIC_MODE)
                 /* Workaround for errata reference #4830 */
                 /* Check if ACK transmission is actually requested by the received frame */
@@ -227,12 +200,10 @@ void trx_irq_handler_cb(void)
            
             if (irqs & RF_IRQ_TRXRDY)
             {
-               
                 irqs &= (uint8_t)(~((uint32_t)RF_IRQ_TRXRDY)); // avoid Pa091
             }
             if (irqs & RF_IRQ_TRXERR)
             {
-                printf(("\n \r IRQ - RF_IRQ_TRXERR"));
                 irqs &= (uint8_t)(~((uint32_t)RF_IRQ_TRXERR)); // avoid Pa091
             }
             if (irqs & RF_IRQ_BATLOW)
@@ -260,12 +231,7 @@ void trx_irq_handler_cb(void)
 #ifdef IQ_RADIO
 void bb_irq_handler_cb(void)
 {
-    ////debug_text(PSTR("bb_irq_handler_cb()"));
-#ifdef IRQ_DEBUGGING
-    uint32_t now;
-    pal_get_current_time(&now);
-#endif
-
+    
     /* Get all IRQS values */
     uint8_t irqs_array[4];
 
@@ -284,37 +250,30 @@ void bb_irq_handler_cb(void)
         if (irqs != BB_IRQ_NO_IRQ)
         {
 
-            //printf("BB IRQS 0x%"PRIX8"\n", irqs);
-
             if (irqs & BB_IRQ_RXEM)
             {
                
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXEM)); // avoid Pa091
-                //debug_text(PSTR("No further processing BB_IRQ_RXEM"));
+                
             }
             if (irqs & BB_IRQ_RXAM)
             {
                
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXAM)); // avoid Pa091
-               //debug_text(PSTR("No further processing BB_IRQ_RXAM"));
-            }
+			}
             if (irqs & BB_IRQ_AGCR)
             {
                
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCR)); // avoid Pa091
                 uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-                /* Release AGC */
-                //debug_text(PSTR("Release AGC"));
+                /* Release AGC */    
                 trx_bit_write(RF215_RF, reg_offset + SR_RF09_AGCC_FRZC, 0);
-#ifdef IRQ_DEBUGGING
-                per[trx_id].agcr++;
-                //printf("AGCR %"PRIu32"\n", now);
-#endif
+
 #if (defined RF215v1) && (!defined BASIC_MODE)
                 /* Workaround for errata reference #4830 */
                 if ((irqs & BB_IRQ_RXFE) == 0)
                 {
-                    //debug_text(PSTR("Apply workaround for #4830"));
+                   
                     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
                     trx_bit_write( reg_offset + SR_BBC0_AMCS_AACK, 0);
                     trx_bit_write( reg_offset + SR_BBC0_AMCS_AACK, 1);
@@ -323,43 +282,33 @@ void bb_irq_handler_cb(void)
             }
             if (irqs & BB_IRQ_AGCH)
             {
-                //debug_text(PSTR("BB IRQ - AGCH"));
+                
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCH)); // avoid Pa091
                 /* Hold AGC */
                 uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-                //debug_text(PSTR("Hold AGC"));
+               
                 trx_bit_write(RF215_RF, reg_offset + SR_RF09_AGCC_FRZC, 1);
-#ifdef IRQ_DEBUGGING
-                per[trx_id].agch++;
-                //printf("AGCH %"PRIu32"\n", now);
-#endif
+
             }
             if (irqs & BB_IRQ_RXFS)
             {
-                //debug_text(PSTR("BB IRQ - RXFS"));
+                
 #ifdef ENABLE_TSTAMP
                 pal_get_current_time(&fs_tstamp[trx_id]);
 #endif
                 irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXFS)); // avoid Pa091
-#ifdef IRQ_DEBUGGING
-                per[trx_id].rxfs++;
-                //printf("RXFS %"PRIu32"\n", now);
-#endif
+
             }
             if (irqs & BB_IRQ_RXFE)
             {
-                ////debug_text(PSTR("BB IRQ - RXFE"));
-#ifdef IRQ_DEBUGGING
-                per[trx_id].rxfe++;
-                //printf("RXFE %"PRIu32"\n", now);
-#endif
+               
                 pal_get_current_time(&rxe_txe_tstamp[trx_id]);
                 /* Wait for TXPREP and clear TRXRDY IRQ */
                 switch_rf_to_txprep((trx_id_t)trx_id);
             }
             if (irqs & BB_IRQ_TXFE)
             {
-                //debug_text(PSTR("BB IRQ - TXFE"));
+                
                 /* used for IFS and for MEASURE_ON_AIR_DURATION */
                 pal_get_current_time(&rxe_txe_tstamp[trx_id]);
                 /* BB interrupt handles further processing */
@@ -556,7 +505,4 @@ static void switch_rf_to_txprep(trx_id_t trx_id)
     pal_dev_irq_flag_clr(RF215_RF);
 }
 #endif /* #ifdef IQ_RADIO */
-
-
-
 /* EOF */

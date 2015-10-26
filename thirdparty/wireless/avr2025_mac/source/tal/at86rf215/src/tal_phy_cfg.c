@@ -145,7 +145,7 @@ retval_t conf_trx_modulation(trx_id_t trx_id)
             break;
     }
 
-#if ((defined RF215v1) || (defined RF215v2)) && (defined SUPPORT_LEGACY_OQPSK)
+#if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
     /* Workaround for errata #10 */
     bb_irq_t irqm = (bb_irq_t)trx_reg_read( reg_offset + RG_BBC0_IRQM);
     bb_irq_t previous_irqm = irqm;

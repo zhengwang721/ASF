@@ -718,13 +718,9 @@ extern uint32_t tal_tx_octet_cnt;
 #endif
 
 #if (TAL_TYPE == AT86RF215)
-#   ifdef AT86RF215M
-#       define NUM_TRX                      1
-#   else
-#       define NUM_TRX                      2
-#   endif
+#   define NUM_TRX                      2
 #else
-#   define NUM_TRX                          1
+#   define NUM_TRX                      1
 #endif
 
 #ifdef MULTI_TRX_SUPPORT
@@ -756,7 +752,7 @@ extern tal_pib_t tal_pib;
 #if (TAL_TYPE == AT86RF230A) || (TAL_TYPE == AT86RF230B) || \
 	(TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF232) || \
 	(TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == AT86RF233) || \
-	(TAL_TYPE == ATMEGARFR2) || (TAL_TYPE == AT86RF234)
+	(TAL_TYPE == ATMEGARFR2) 
 	
 /** RF band */
 #define RF_BAND                             BAND_2400

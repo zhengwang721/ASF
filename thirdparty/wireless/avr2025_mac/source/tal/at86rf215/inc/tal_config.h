@@ -3,7 +3,7 @@
  *
  * @brief File contains TAL configuration parameters.
  *
- * $Id: tal_config.h 37813 2015-09-02 14:18:22Z uwalter $
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -293,7 +293,7 @@
 /**
  * Use direct modulation for all devices except version 1
  */
-#   if (!defined RF215v1) && (!defined RF215Mv1)
+#   if (!defined RF215v1)
 #       define DIRECT_MODULATION
 #   endif
 

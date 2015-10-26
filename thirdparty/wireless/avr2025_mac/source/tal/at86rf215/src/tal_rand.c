@@ -82,7 +82,7 @@ retval_t tal_generate_rand_seed(void)
     /* Check for non sleeping device */
     if ((tal_state[RF09] == TAL_SLEEP) && (tal_state[RF24] == TAL_SLEEP))
     {
-        //printf(("no seed generated - TAL_SLEEP"));
+       
         return TAL_TRX_ASLEEP;
     }
 
@@ -99,7 +99,7 @@ retval_t tal_generate_rand_seed(void)
         }
         else
         {
-            //printf(("no seed generated - TAL_BUSY"));
+          
             return TAL_BUSY;
         }
     }
@@ -141,7 +141,7 @@ retval_t tal_generate_rand_seed(void)
     }
     else
     {
-        //printf(("Trx is NOT off"));
+      
     }
 
     uint16_t seed;

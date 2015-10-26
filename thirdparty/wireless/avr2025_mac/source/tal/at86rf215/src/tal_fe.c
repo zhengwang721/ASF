@@ -116,7 +116,7 @@ FLASH_DECLARE(AGC_SETTLE_TABLE_TABLE_DATA_TYPE
 #endif
 #ifdef SUPPORT_FSK
 FLASH_DECLARE(uint8_t fsk_params_tbl[48][11]) = FSK_PARAMS;
-#   if (defined RF215v2) || (defined RF215v3) || (defined RF215Mv2)
+#   if (defined RF215v3)
     FLASH_DECLARE(uint8_t fsk_pe_tbl[3 * 6]) = FSK_PE_TABLE;
 #   endif
 #endif
@@ -159,7 +159,7 @@ retval_t ofdm_rfcfg(ofdm_option_t ofdm_opt, trx_id_t trx_id)
         case OFDM_OPT_4: /*OFDM Option 4: BW nom.: 156 kHz */
             sr=6; txrcut=2; txfc= 3; rxrcut09=1; rxrcut24=1; bw09= 2; bw24= 3; ifs09=1; ifs24=0; agci=0; pdt=3; break;
         default:
-            ////debug_text_val_finish(PSTR("ERROR: OFDM option musst be in [1..4], is:"), ofdm_opt, DEBUG_ERROR);
+          /* ERROR: OFDM option musst be in [1..4]*/
             status = FAILURE;
             return status;
             break;
@@ -233,7 +233,7 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
     uint8_t paramp, lpfcut, txrcut, sr, rxbw, rxrcut, avgs;
-#if ((!defined RF215v1) && (!defined RF215Mv1)) && (defined DIRECT_MODULATION)
+#if ((!defined RF215v1) && (defined DIRECT_MODULATION))
     uint8_t dm;
 #endif
 
@@ -249,7 +249,7 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
             rxbw = RF_BW160KHZ_IF250KHZ; /* analog rx-filter */
             rxrcut = 1; /* DFE cut-off: 0.375 */
             avgs = 2; /* AGC setup: 32 samples */
-#if ((!defined RF215v1) && (!defined RF215Mv1)) && (defined DIRECT_MODULATION)
+#if ((!defined RF215v1) && (defined DIRECT_MODULATION))
             dm = 1; /* Direct modulation */
 #endif
             break;
@@ -264,7 +264,7 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
             rxbw = RF_BW250KHZ_IF250KHZ; /* analog rx-filter */
             rxrcut = 1; /* DFE cut-off: 0.375 */
             avgs = 2; /* AGC setup: 32 samples */
-#if ((!defined RF215v1) && (!defined RF215Mv1)) && (defined DIRECT_MODULATION)
+#if ((!defined RF215v1) && (defined DIRECT_MODULATION))
             dm = 1; /* Direct modulation */
 #endif
             break;
@@ -279,7 +279,7 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
             rxbw = RF_BW1000KHZ_IF1000KHZ; /* analog rx-filter */
             rxrcut = 0; /* DFE cut-off: 0.25 */
             avgs = 0; /* AGC setup: 8 samples */
-#if ((!defined RF215v1) && (!defined RF215Mv1)) && (defined DIRECT_MODULATION)
+#if ((!defined RF215v1) && (defined DIRECT_MODULATION))
             dm = 0; /* Direct modulation */
 #endif
             break;
@@ -294,13 +294,13 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
             rxbw = RF_BW2000KHZ_IF2000KHZ; /* analog rx-filter */
             rxrcut = 2; /* DFE cut-off: 0.5 */
             avgs = 0; /* AGC setup: 8 samples */
-#if ((!defined RF215v1) && (!defined RF215Mv1)) && (defined DIRECT_MODULATION)
+#if ((!defined RF215v1) && (defined DIRECT_MODULATION))
             dm = 0; /* Direct modulation */
 #endif
             break;
 
         default:
-            //printf(("ERROR: MODE_FCHIP  must be in [0..3], is: %d"), chip_rate);
+            /*ERROR: MODE_FCHIP  must be in [0..3]*/
             return FAILURE;
             break;
     }
@@ -311,15 +311,14 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
     tx[0] = (paramp << TXCUTC_PARAMP_SHIFT) | (lpfcut << TXCUTC_LPFCUT_SHIFT);
     /* TXDFE */
     tx[1] = (txrcut << TXDFE_RCUT_SHIFT) | (sr << TXDFE_SR_SHIFT);
-#if ((!defined RF215v1) && (!defined RF215Mv1)) && (defined DIRECT_MODULATION)
+#if ((!defined RF215v1) && (defined DIRECT_MODULATION))
     tx[1] |= dm << TXDFE_DM_SHIFT; /* Direct modulation */
 #endif
     /* PAC */
     tx[2] = (3 << PAC_PACUR_SHIFT) | (DEFAULT_TX_PWR_REG << PAC_TXPWR_SHIFT);
     rf_blk_write(reg_offset + RG_RF09_TXCUTC, tx, 3);
 
-#if ((!defined RF215v1) && (!defined RF215Mv1)) && (defined DIRECT_MODULATION)
-    //printf(("Direct modulation enabled"));
+#if ((!defined RF215v1) && (defined DIRECT_MODULATION))
     bb_bit_write(reg_offset + SR_BBC0_OQPSKC0_DM, dm);
 #endif
 
@@ -368,11 +367,11 @@ retval_t fsk_rfcfg(fsk_mod_type_t mod_type, fsk_sym_rate_t srate, mod_idx_t mod_
     /* - PA ramp time +  TX-SSBF fcut */
     /* - DFE sampling rate reduction + TX-DFE fcut */
     PGM_READ_BLOCK(temp, (uint8_t *)&fsk_params_tbl[srate_midx][0], 2);
-#if ((!defined RF215v1) && (!defined RF215Mv1)) && (defined DIRECT_MODULATION)
+#if ((!defined RF215v1) && (defined DIRECT_MODULATION))
     temp[1] |= 1 << TXDFE_DM_SHIFT; /* DM */
 #endif
     rf_blk_write(reg_offset + RG_RF09_TXCUTC, temp, 2);
-#if ((!defined RF215v1) && (!defined RF215Mv1)) && (defined DIRECT_MODULATION)
+#if ((!defined RF215v1) && (defined DIRECT_MODULATION))
     uint8_t pe[4];
     pe[0] = (1 << FSKDM_EN_SHIFT) | (1 << FSKDM_PE_SHIFT); /* PE = 1, DM = 1 */
     PGM_READ_BLOCK((uint8_t *)&pe[1], (uint8_t *)&fsk_pe_tbl[3 * (uint8_t)srate], 3);

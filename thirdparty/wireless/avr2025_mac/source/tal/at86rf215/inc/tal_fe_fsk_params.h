@@ -163,7 +163,7 @@
 
 #endif /* #ifdef RF215v1 */
 
-#if ((defined RF215v2) || (defined RF215v3) || (defined RF215Mv2))
+#if (defined RF215v3)
 /* Pre-emphasis filter coefficients */
 /* row: FSK data rate, columns: values for registers FSKPE0, FSKPE1, FSKPE2 */
 #define FSK_PE_TABLE \

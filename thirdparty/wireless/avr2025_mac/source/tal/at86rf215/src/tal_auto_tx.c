@@ -295,7 +295,6 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
         bool underrun = trx_bit_read(reg_offset + SR_BBC0_PS_TXUR);
         if (underrun)
         {
-            //printf("\n \r Tx underrun occured");
             /* Abort ongoing transmission */
             trx_reg_write( reg_offset + RG_RF09_CMD, RF_TRXOFF);
             trx_state[trx_id] = RF_TRXOFF;
@@ -360,7 +359,7 @@ void handle_tx_end_irq(trx_id_t trx_id)
                 uint8_t ccaed = trx_bit_read( reg_offset + SR_BBC0_AMCS_CCAED);
                 if (ccaed == BB_CH_CLEAR)
                 {
-                    ////debug_text(PSTR("Channel idle and frame has been sent"));
+                    /* Channel idle and frame has been sent */
 #ifdef MEASURE_ON_AIR_DURATION
                     tal_pib[trx_id].OnAirDuration +=
                         pal_sub_time_us(rxe_txe_tstamp[trx_id], fs_tstamp[trx_id]);

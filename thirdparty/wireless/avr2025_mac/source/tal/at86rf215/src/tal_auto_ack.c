@@ -91,8 +91,6 @@ static void ack_timout_cb(void *cb_timer_element);
  */
 void ack_transmission_done(trx_id_t trx_id)
 {
-    //printf("\nack_transmission_done()");
-
     ack_transmitting[trx_id] = false;
 
 #ifdef SUPPORT_FSK
@@ -153,7 +151,6 @@ bool is_frame_an_ack(trx_id_t trx_id)
         if ((rx_frm_info[trx_id]->mpdu[0] & FCF_FRAMETYPE_ACK) &&
             (((rx_frm_info[trx_id]->mpdu[1] >> FCF1_FV_SHIFT) & 0x03) <= FCF_FRAME_VERSION_2006))
         {
-            //printf(("\nFrame is an ACK"));
             ret = true;
         }
         else
@@ -203,8 +200,6 @@ bool is_ack_valid(trx_id_t trx_id)
 void start_ack_wait_timer(trx_id_t trx_id)
 {
     
-    //printf(("\nwaiting for ACK"));
-
     tx_state[trx_id] = TX_WAITING_FOR_ACK;
     uint8_t timer_id;
     if (trx_id == RF09) {
@@ -223,7 +218,7 @@ void start_ack_wait_timer(trx_id_t trx_id)
 
     if (status != MAC_SUCCESS)
     {
-        ////debug_text_val(PSTR("ACK timer could not be started, "), status);
+        
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
         trx_reg_write( reg_offset + RG_RF09_CMD, RF_TRXOFF);
         trx_state[trx_id] = RF_TRXOFF;
@@ -252,8 +247,6 @@ void ack_timout_cb(void *cb_timer_element)
     /* Immediately store trx id from callback. */
     trx_id_t trx_id = (trx_id_t)cb_timer_element;
     Assert((trx_id >= 0) && (trx_id < NUM_TRX));
-
-    //printf("\nack_timout_cb()");
 
     switch_to_txprep(trx_id);
 
