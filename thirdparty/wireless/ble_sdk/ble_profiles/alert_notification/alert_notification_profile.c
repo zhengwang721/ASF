@@ -96,6 +96,43 @@ connected_callback_t connected_cb;
 uint8_t start_notification = 0;
 at_ble_handle_t anp_conn_handle = 0;
 
+
+static const ble_event_callback_t ancs_gap_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	anp_client_connected_state_handler,
+	anp_client_disconnected_event_handler,
+	NULL,
+	NULL,
+	anp_client_write_notification_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	anp_client_write_notification_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+static const ble_event_callback_t ancs_gatt_client_handle[] = {
+	anp_client_service_found_handler,
+	NULL,
+	anp_client_characteristic_found_handler,
+	anp_client_descriptor_found_handler,
+	anp_client_descriptor_found_handler,
+	NULL,
+	NULL,
+	anp_client_write_response_handler,
+	anp_client_notification_handler,
+	NULL
+};
+
+
 /***********************************************************************************
  *									Implementation	                               *
  **********************************************************************************/
