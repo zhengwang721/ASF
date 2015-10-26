@@ -122,7 +122,7 @@
 /**
  * To include the clock output configuration to the build,
  * uncomment the following define TRX_CLOCK_OUTPUT_SELECTION to the required
- *value.
+ * value.
  * Value - meaning
  * 0       off
  * 1       26 MHz (default/reset)
@@ -165,7 +165,6 @@
  * uncomment the following define ENABLE_TFA.
  */
 #define ENABLE_TFA
-
 
 /**
  * Enable support of FSK modulation

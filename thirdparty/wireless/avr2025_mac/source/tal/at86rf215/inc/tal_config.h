@@ -57,6 +57,7 @@
 /* === MACROS ============================================================== */
 
 #define TAL_FIRST_TIMER_ID              (0)
+
 /**
  * To configure the clock output configuration to the build,
  * set the following define TRX_CLOCK_OUTPUT_SELECTION to the required value.
@@ -104,7 +105,6 @@
 #   ifndef MEASURE_ON_AIR_DURATION
 /* #       define MEASURE_ON_AIR_DURATION */
 #   endif
-
 
 /**
  * For applications such as sniffer or beacon-enabled applications a time stamp

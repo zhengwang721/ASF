@@ -227,7 +227,7 @@ static void configure_pibs(void)
 	temp_byte = (uint8_t)DEFAULT_CHANNEL;
 	pib_value.pib_value_8bit = temp_byte;
 	tal_pib_set(phyCurrentChannel, &pib_value);
-	
+
 	/* Set channel page. */
 	temp_byte = (uint8_t)DEFAULT_PAGE;
 	pib_value.pib_value_8bit = temp_byte;

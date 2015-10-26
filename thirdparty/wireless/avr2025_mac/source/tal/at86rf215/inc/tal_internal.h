@@ -91,24 +91,23 @@ typedef enum tal_state_tag {
 /**
  * Enumeration for tx_state
  */
-typedef enum tx_state_tag
-{
-    TX_IDLE,
-    TX_BACKOFF,
-    TX_CCATX,
-    TX_TX,
-    TX_WAITING_FOR_ACK
-    ,
-    TX_DEFER
+typedef enum tx_state_tag {
+	TX_IDLE,
+	TX_BACKOFF,
+	TX_CCATX,
+	TX_TX,
+	TX_WAITING_FOR_ACK
+	,
+	TX_DEFER
 #if (defined BASIC_MODE) || (defined SUPPORT_MODE_SWITCH)
-    ,
-    TX_CCA
+	,
+	TX_CCA
 #endif
 #ifdef SUPPORT_MODE_SWITCH
-    ,
-    TX_MS_PPDU,
-    TX_WAIT_FOR_NEW_MODE_TRANSMITTING,
-    TX_MS_NEW_MODE_TRANSMITTING
+	,
+	TX_MS_PPDU,
+	TX_WAIT_FOR_NEW_MODE_TRANSMITTING,
+	TX_MS_NEW_MODE_TRANSMITTING
 #endif
 } SHORTENUM tx_state_t;
 
@@ -155,8 +154,9 @@ extern volatile rf_irq_t tal_rf_irqs[NUM_TRX];
 /* === MACROS ============================================================== */
 
 /** Defines to handle register offset */
-#define CALC_REG_OFFSET(var)                uint16_t offset = RF_BASE_ADDR_OFFSET * var
-#define GET_REG_ADDR (reg)                   offset + reg
+#define CALC_REG_OFFSET(var)                uint16_t offset \
+		= RF_BASE_ADDR_OFFSET * var
+#define GET_REG_ADDR (reg)offset + reg
 
 /*
  * Time gap between each poll access in microseconds.
@@ -176,7 +176,7 @@ extern volatile rf_irq_t tal_rf_irqs[NUM_TRX];
 #define DEFAULT_TX_PWR_REG                  20
 
 #define DEFAULT_FRAME_TYPES         ((1 << FCF_FRAMETYPE_BEACON) | \
-                                     (1 << FCF_FRAMETYPE_DATA) | (1 << FCF_FRAMETYPE_MAC_CMD))
+	(1 << FCF_FRAMETYPE_DATA) | (1 << FCF_FRAMETYPE_MAC_CMD))
 #define ACK_FRAME_TYPE_ONLY         (1 << FCF_FRAMETYPE_ACK)
 
 /*
@@ -186,7 +186,7 @@ extern volatile rf_irq_t tal_rf_irqs[NUM_TRX];
  * All other modulation schemes with the corresponding variations
  * need to be calibrated if required.
  */
-#if (defined RF215v1) 
+#if (defined RF215v1)
 #   define TOF_PROC_DELAY_OFFSET_SUB_GHZ_NS     (583230)
 #   define TOF_PROC_DELAY_OFFSET_2_4_GHZ_NS     (573643)
 #elif (defined RF215v3)
@@ -200,7 +200,6 @@ extern volatile rf_irq_t tal_rf_irqs[NUM_TRX];
 
 /* === PROTOTYPES ========================================================== */
 
-
 /*
  * Prototypes from tal.c
  */
@@ -209,9 +208,11 @@ void switch_to_txprep(trx_id_t trx_id);
 void wait_for_txprep(trx_id_t trx_id);
 void stop_tal_timer(trx_id_t trx_id);
 void cancel_any_reception(trx_id_t trx_id);
+
 #if (defined SUPPORT_FSK) || (defined SUPPORT_OQPSK)
 void stop_rpc(trx_id_t trx_id);
 void start_rpc(trx_id_t trx_id);
+
 #endif
 
 /*
@@ -220,9 +221,11 @@ void start_rpc(trx_id_t trx_id);
 #ifdef ENABLE_FTN_PLL_CALIBRATION
 void start_ftn_timer(trx_id_t trx_id);
 void stop_ftn_timer(trx_id_t trx_id);
+
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
 #ifdef RF215v1
 void calibrate_LO(trx_id_t trx_id);
+
 #endif
 
 /*
@@ -237,8 +240,11 @@ void calculate_pib_values(trx_id_t trx_id);
 retval_t config_phy(trx_id_t trx_id);
 void init_tal_pib(trx_id_t trx_id);
 void write_all_tal_pib_to_trx(trx_id_t trx_id);
-#if (defined SUPPORT_FSK) && ((defined SUPPORT_FSK_RAW_MODE) || (defined SUPPORT_MODE_SWITCH))
+
+#if (defined SUPPORT_FSK) && ((defined SUPPORT_FSK_RAW_MODE) ||	\
+	(defined SUPPORT_MODE_SWITCH))
 void configure_raw_mode(trx_id_t trx_id, bool enable);
+
 #endif
 
 /*
@@ -262,8 +268,10 @@ uint8_t phr_duration_sym(trx_id_t trx_id);
 uint16_t calculate_cca_duration_us(trx_id_t trx_id);
 float get_data_rate(trx_id_t trx_id);
 uint8_t shr_duration_sym(trx_id_t trx_id);
+
 #ifdef MEASURE_ON_AIR_DURATION
 uint16_t get_ack_duration_sym(trx_id_t trx_id);
+
 #endif
 retval_t get_supported_channels_tuple(trx_id_t trx_id, uint32_t *value);
 
@@ -271,13 +279,16 @@ retval_t get_supported_channels_tuple(trx_id_t trx_id, uint32_t *value);
  * Prototypes from tal_phy_cfg.c
  */
 retval_t conf_trx_modulation(trx_id_t trx_id);
+
 #ifdef SUPPORT_FSK
 void set_sfd(trx_id_t trx_id);
 void set_fsk_pibs(trx_id_t trx_id);
 retval_t conf_fsk_data_rate(trx_id_t trx_id, fsk_sym_rate_t rate);
 void config_fsk_rpc(trx_id_t trx_id, fsk_sym_rate_t sym_rate);
+
 #ifdef SUPPORT_MODE_SWITCH
 retval_t conf_fsk(trx_id_t trx_id);
+
 #endif
 #endif
 
@@ -285,13 +296,17 @@ retval_t conf_fsk(trx_id_t trx_id);
  * Prototypes from tal_fe.c
  */
 #ifdef SUPPORT_FSK
-retval_t fsk_rfcfg(fsk_mod_type_t mod_type, fsk_sym_rate_t srate, mod_idx_t mod_idx, trx_id_t trx_id);
+retval_t fsk_rfcfg(fsk_mod_type_t mod_type, fsk_sym_rate_t srate,
+		mod_idx_t mod_idx, trx_id_t trx_id);
+
 #endif
 #ifdef SUPPORT_OFDM
 retval_t ofdm_rfcfg(ofdm_option_t ofdm_opt, trx_id_t trx_id);
+
 #endif
 #if (defined SUPPORT_OQPSK) || (defined SUPPORT_LEGACY_OQPSK)
 retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id);
+
 #endif
 
 /*
@@ -305,6 +320,7 @@ void set_csm(trx_id_t trx_id);
 void tx_ms_ppdu(trx_id_t trx_id);
 void handle_rx_ms_packet(trx_id_t trx_id);
 void save_current_phy(trx_id_t trx_id);
+
 #endif /* #ifdef SUPPORT_MODE_SWITCH */
 
 /*
@@ -316,6 +332,7 @@ void upload_frame(trx_id_t trx_id);
 void handle_rx_end_irq(trx_id_t trx_id);
 void process_incoming_frame(trx_id_t trx_id, buffer_t *buf);
 void ack_transmission_done(trx_id_t trx_id);
+
 #endif
 
 /*
@@ -326,6 +343,7 @@ void complete_rx_transaction(trx_id_t trx_id);
 void handle_rx_end_irq(trx_id_t trx_id);
 void process_incoming_frame(trx_id_t trx_id, buffer_t *buf);
 void ack_transmission_done(trx_id_t trx_id);
+
 #endif
 
 /*
@@ -335,6 +353,7 @@ void ack_transmission_done(trx_id_t trx_id);
 void transmit_frame(trx_id_t trx_id);
 void handle_tx_end_irq(trx_id_t trx_id);
 void tx_done_handling(trx_id_t trx_id, retval_t status);
+
 #endif
 
 /*
@@ -345,6 +364,7 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca);
 void handle_tx_end_irq(trx_id_t trx_id);
 void tx_done_handling(trx_id_t trx_id, retval_t status);
 void continue_deferred_transmission(trx_id_t trx_id);
+
 #endif
 
 /*
@@ -354,6 +374,7 @@ void continue_deferred_transmission(trx_id_t trx_id);
 void cca_done_handling(trx_id_t trx_id);
 void csma_start(trx_id_t trx_id);
 void csma_continue(trx_id_t trx_id);
+
 #endif
 
 /*
@@ -363,6 +384,7 @@ void csma_continue(trx_id_t trx_id);
 void cca_done_handling(trx_id_t trx_id);
 void csma_start(trx_id_t trx_id);
 void csma_continue(trx_id_t trx_id);
+
 #endif
 
 /*
@@ -384,18 +406,22 @@ void ack_timout_cb(void *parameter);
 bool is_frame_an_ack(trx_id_t trx_id);
 void start_ack_wait_timer(trx_id_t trx_id);
 bool is_ack_valid(trx_id_t trx_id);
+
 #endif
 
 /*
  * Prototypes from tal_irq_handler.c
  */
 void trx_irq_handler_cb(void);
+
 #ifdef IQ_RADIO
 void rf_irq_handler_cb(void);
 void bb_irq_handler_cb(void);
+
 #endif
 #if (defined ENABLE_TSTAMP) || (defined DOXYGEN)
 void trx_irq_timestamp_handler_cb(void);
+
 #endif  /* #if (defined ENABLE_TSTAMP) || (defined DOXYGEN) */
 
 /*

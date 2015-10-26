@@ -2,7 +2,7 @@
  * @file ieee_154g.h
  *
  * @brief This header holds all IEEE 802.15.4g-2012 constants and attribute
- *identifiers
+ * identifiers
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -456,12 +456,11 @@ typedef enum sun_freq_band_tag {
 	WORLD_2450
 } SHORTENUM sun_freq_band_t;
 
-typedef enum ofdm_option_tag
-{
-    OFDM_OPT_1,
-    OFDM_OPT_2,
-    OFDM_OPT_3,
-    OFDM_OPT_4
+typedef enum ofdm_option_tag {
+	OFDM_OPT_1,
+	OFDM_OPT_2,
+	OFDM_OPT_3,
+	OFDM_OPT_4
 } SHORTENUM ofdm_option_t;
 
 typedef enum ofdm_mcs_tag {

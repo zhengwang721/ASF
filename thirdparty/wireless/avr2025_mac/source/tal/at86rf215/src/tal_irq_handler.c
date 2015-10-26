@@ -70,10 +70,10 @@
 
 #ifdef IQ_RADIO
 static void switch_rf_to_txprep(trx_id_t trx_id);
+
 #endif
 
 /* === IMPLEMENTATION ====================================================== */
-
 
 /**
  * @brief Transceiver interrupt handler
@@ -85,424 +85,403 @@ static void switch_rf_to_txprep(trx_id_t trx_id);
  */
 void trx_irq_handler_cb(void)
 {
-   
-    /* Get all IRQS values */
-    uint8_t irqs_array[4];
+	/* Get all IRQS values */
+	uint8_t irqs_array[4];
 
-    trx_read( RG_RF09_IRQS, irqs_array, 4);
+	trx_read( RG_RF09_IRQS, irqs_array, 4);
 
-    /* Handle BB IRQS */
-    for (trx_id_t trx_id = (trx_id_t)0; trx_id < NUM_TRX; trx_id++)
-    {
-        if (tal_state[trx_id] == TAL_SLEEP)
-        {
-            continue;
-        }
+	/* Handle BB IRQS */
+	for (trx_id_t trx_id = (trx_id_t)0; trx_id < NUM_TRX; trx_id++) {
+		if (tal_state[trx_id] == TAL_SLEEP) {
+			continue;
+		}
 
-        bb_irq_t irqs = (bb_irq_t)irqs_array[trx_id + 2];
+		bb_irq_t irqs = (bb_irq_t)irqs_array[trx_id + 2];
 
-        if (irqs != BB_IRQ_NO_IRQ)
-        {
-            
-            if (irqs & BB_IRQ_RXEM)
-            {
-                
-                irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXEM)); // avoid Pa091
-            }
-            if (irqs & BB_IRQ_RXAM)
-            {
-                
-                irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXAM)); // avoid Pa091
-            }
-            if (irqs & BB_IRQ_AGCR)
-            {
-               
+		if (irqs != BB_IRQ_NO_IRQ) {
+			if (irqs & BB_IRQ_RXEM) {
+				irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXEM)); /*
+				                                              * avoid
+				                                              * Pa091 */
+			}
+
+			if (irqs & BB_IRQ_RXAM) {
+				irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXAM)); /*
+				                                              * avoid
+				                                              * Pa091 */
+			}
+
+			if (irqs & BB_IRQ_AGCR) {
 #if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
-                /* Workaround for errata reference #4908 */
-                /* Keep flag set to trigger workaround; see tal.c */
+				/* Workaround for errata reference #4908 */
+				/* Keep flag set to trigger workaround; see
+				 *tal.c */
 #else
-                irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCR)); // avoid Pa091
+				irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCR)); /*
+				                                              * avoid
+				                                              * Pa091 */
 #endif
+			}
 
-            }
-            if (irqs & BB_IRQ_AGCH)
-            {
-                
+			if (irqs & BB_IRQ_AGCH) {
 #if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
-                /* Workaround for errata reference #4908 */
-                /* Keep flag set to trigger workaround; see tal.c */
+				/* Workaround for errata reference #4908 */
+				/* Keep flag set to trigger workaround; see
+				 *tal.c */
 #else
-                irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCH)); // avoid Pa091
+				irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCH)); /*
+				                                              * avoid
+				                                              * Pa091 */
 #endif
+			}
 
-                
-            }
-            if (irqs & BB_IRQ_RXFS)
-            {
-                
+			if (irqs & BB_IRQ_RXFS) {
 #ifdef ENABLE_TSTAMP
-                pal_get_current_time(&fs_tstamp[trx_id]);
+				pal_get_current_time(&fs_tstamp[trx_id]);
 #endif
 #if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
-                /* Workaround for errata reference #4908 */
-                /* Keep flag set to trigger workaround; see tal.c */
+				/* Workaround for errata reference #4908 */
+				/* Keep flag set to trigger workaround; see
+				 *tal.c */
 #else
-                irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXFS)); // avoid Pa091
+				irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXFS)); /*
+				                                              * avoid
+				                                              * Pa091 */
 #endif
+			}
 
-            }
-            if (irqs & BB_IRQ_RXFE)
-            {
-                
-                pal_get_current_time(&rxe_txe_tstamp[trx_id]);
+			if (irqs & BB_IRQ_RXFE) {
+				pal_get_current_time(&rxe_txe_tstamp[trx_id]);
 
 #if (defined RF215v1) && (!defined BASIC_MODE)
-                /* Workaround for errata reference #4830 */
-                /* Check if ACK transmission is actually requested by the received frame */
-                uint16_t buf_reg_offset = BB_RX_FRM_BUF_OFFSET * trx_id;
-                uint8_t fcf0 = trx_reg_read( buf_reg_offset + RG_BBC0_FBRXS);
-                if ((fcf0 & FCF_ACK_REQUEST) == 0x00)
-                {
-                    /* Ensure ACK is not transmitted */
-                    uint16_t offset = RF_BASE_ADDR_OFFSET * trx_id;
-                    trx_bit_write( offset + SR_BBC0_AMCS_AACK, 0);
-                    trx_bit_write( offset + SR_BBC0_AMCS_AACK, 1);
-                }
+				/* Workaround for errata reference #4830 */
+				/* Check if ACK transmission is actually
+				 *requested by the received frame */
+				uint16_t buf_reg_offset = BB_RX_FRM_BUF_OFFSET *
+						trx_id;
+				uint8_t fcf0 = trx_reg_read(
+						buf_reg_offset + RG_BBC0_FBRXS);
+				if ((fcf0 & FCF_ACK_REQUEST) == 0x00) {
+					/* Ensure ACK is not transmitted */
+					uint16_t offset = RF_BASE_ADDR_OFFSET *
+							trx_id;
+					trx_bit_write(
+							offset + SR_BBC0_AMCS_AACK,
+							0);
+					trx_bit_write(
+							offset + SR_BBC0_AMCS_AACK,
+							1);
+				}
+
 #endif
-            }
-            if (irqs & BB_IRQ_TXFE)
-            {
-                
-                /* used for IFS and for MEASURE_ON_AIR_DURATION */
-                pal_get_current_time(&rxe_txe_tstamp[trx_id]);
-            }
+			}
 
-            /*
-             * Store remaining flags to global TAL variable and
-             * handle them within tal_task()
-             */
-            tal_bb_irqs[trx_id] |= irqs;
-        }
-    }
+			if (irqs & BB_IRQ_TXFE) {
+				/* used for IFS and for MEASURE_ON_AIR_DURATION
+				 **/
+				pal_get_current_time(&rxe_txe_tstamp[trx_id]);
+			}
 
-    /* Handle RF IRQS */
-    for (trx_id_t trx_id = (trx_id_t)0; trx_id < NUM_TRX; trx_id++)
-    {
-        if (tal_state[trx_id] == TAL_SLEEP)
-        {
-            continue;
-        }
+			/*
+			 * Store remaining flags to global TAL variable and
+			 * handle them within tal_task()
+			 */
+			tal_bb_irqs[trx_id] |= irqs;
+		}
+	}
 
-        rf_irq_t irqs = (rf_irq_t)irqs_array[trx_id];
+	/* Handle RF IRQS */
+	for (trx_id_t trx_id = (trx_id_t)0; trx_id < NUM_TRX; trx_id++) {
+		if (tal_state[trx_id] == TAL_SLEEP) {
+			continue;
+		}
 
-        if (irqs != RF_IRQ_NO_IRQ)
-        {
-           
-            if (irqs & RF_IRQ_TRXRDY)
-            {
-                irqs &= (uint8_t)(~((uint32_t)RF_IRQ_TRXRDY)); // avoid Pa091
-            }
-            if (irqs & RF_IRQ_TRXERR)
-            {
-                irqs &= (uint8_t)(~((uint32_t)RF_IRQ_TRXERR)); // avoid Pa091
-            }
-            if (irqs & RF_IRQ_BATLOW)
-            {
-                
-            }
-            if (irqs & RF_IRQ_WAKEUP)
-            {
-               
-            }
-            if (irqs & RF_IRQ_IQIFSF)
-            {
-                
-            }
-            if (irqs & RF_IRQ_EDC)
-            {
-               
-            }
-            tal_rf_irqs[trx_id] |= irqs;
-        }
-    }
-}/* trx_irq_handler_cb() */
+		rf_irq_t irqs = (rf_irq_t)irqs_array[trx_id];
 
+		if (irqs != RF_IRQ_NO_IRQ) {
+			if (irqs & RF_IRQ_TRXRDY) {
+				irqs &= (uint8_t)(~((uint32_t)RF_IRQ_TRXRDY)); /*
+				                                                * avoid
+				                                                * Pa091 */
+			}
+
+			if (irqs & RF_IRQ_TRXERR) {
+				irqs &= (uint8_t)(~((uint32_t)RF_IRQ_TRXERR)); /*
+				                                                * avoid
+				                                                * Pa091 */
+			}
+
+			if (irqs & RF_IRQ_BATLOW) {
+			}
+
+			if (irqs & RF_IRQ_WAKEUP) {
+			}
+
+			if (irqs & RF_IRQ_IQIFSF) {
+			}
+
+			if (irqs & RF_IRQ_EDC) {
+			}
+
+			tal_rf_irqs[trx_id] |= irqs;
+		}
+	}
+} /* trx_irq_handler_cb() */
 
 #ifdef IQ_RADIO
 void bb_irq_handler_cb(void)
 {
-    
-    /* Get all IRQS values */
-    uint8_t irqs_array[4];
+	/* Get all IRQS values */
+	uint8_t irqs_array[4];
 
-    trx_read(RF215_BB, RG_RF09_IRQS, irqs_array, 4);
+	trx_read(RF215_BB, RG_RF09_IRQS, irqs_array, 4);
 
-    /* Handle BB IRQS */
-    for (trx_id_t trx_id = (trx_id_t)0; trx_id < NUM_TRX; trx_id++)
-    {
-        if (tal_state[trx_id] == TAL_SLEEP)
-        {
-            continue;
-        }
+	/* Handle BB IRQS */
+	for (trx_id_t trx_id = (trx_id_t)0; trx_id < NUM_TRX; trx_id++) {
+		if (tal_state[trx_id] == TAL_SLEEP) {
+			continue;
+		}
 
-        uint8_t irqs = irqs_array[trx_id + 2];
+		uint8_t irqs = irqs_array[trx_id + 2];
 
-        if (irqs != BB_IRQ_NO_IRQ)
-        {
-
-            if (irqs & BB_IRQ_RXEM)
-            {
-               
-                irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXEM)); // avoid Pa091
-                
-            }
-            if (irqs & BB_IRQ_RXAM)
-            {
-               
-                irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXAM)); // avoid Pa091
+		if (irqs != BB_IRQ_NO_IRQ) {
+			if (irqs & BB_IRQ_RXEM) {
+				irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXEM)); /*
+				                                              * avoid
+				                                              * Pa091 */
 			}
-            if (irqs & BB_IRQ_AGCR)
-            {
-               
-                irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCR)); // avoid Pa091
-                uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-                /* Release AGC */    
-                trx_bit_write(RF215_RF, reg_offset + SR_RF09_AGCC_FRZC, 0);
+
+			if (irqs & BB_IRQ_RXAM) {
+				irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXAM)); /*
+				                                              * avoid
+				                                              * Pa091 */
+			}
+
+			if (irqs & BB_IRQ_AGCR) {
+				irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCR)); /*
+				                                              * avoid
+				                                              * Pa091 */
+				uint16_t reg_offset = RF_BASE_ADDR_OFFSET *
+						trx_id;
+				/* Release AGC */
+				trx_bit_write(RF215_RF,
+						reg_offset + SR_RF09_AGCC_FRZC,
+						0);
 
 #if (defined RF215v1) && (!defined BASIC_MODE)
-                /* Workaround for errata reference #4830 */
-                if ((irqs & BB_IRQ_RXFE) == 0)
-                {
-                   
-                    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-                    trx_bit_write( reg_offset + SR_BBC0_AMCS_AACK, 0);
-                    trx_bit_write( reg_offset + SR_BBC0_AMCS_AACK, 1);
-                }
-#endif
-            }
-            if (irqs & BB_IRQ_AGCH)
-            {
-                
-                irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCH)); // avoid Pa091
-                /* Hold AGC */
-                uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-               
-                trx_bit_write(RF215_RF, reg_offset + SR_RF09_AGCC_FRZC, 1);
+				/* Workaround for errata reference #4830 */
+				if ((irqs & BB_IRQ_RXFE) == 0) {
+					uint16_t reg_offset
+						= RF_BASE_ADDR_OFFSET *
+							trx_id;
+					trx_bit_write(
+							reg_offset + SR_BBC0_AMCS_AACK,
+							0);
+					trx_bit_write(
+							reg_offset + SR_BBC0_AMCS_AACK,
+							1);
+				}
 
-            }
-            if (irqs & BB_IRQ_RXFS)
-            {
-                
+#endif
+			}
+
+			if (irqs & BB_IRQ_AGCH) {
+				irqs &= (uint8_t)(~((uint32_t)BB_IRQ_AGCH)); /*
+				                                              * avoid
+				                                              * Pa091 */
+				/* Hold AGC */
+				uint16_t reg_offset = RF_BASE_ADDR_OFFSET *
+						trx_id;
+
+				trx_bit_write(RF215_RF,
+						reg_offset + SR_RF09_AGCC_FRZC,
+						1);
+			}
+
+			if (irqs & BB_IRQ_RXFS) {
 #ifdef ENABLE_TSTAMP
-                pal_get_current_time(&fs_tstamp[trx_id]);
+				pal_get_current_time(&fs_tstamp[trx_id]);
 #endif
-                irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXFS)); // avoid Pa091
+				irqs &= (uint8_t)(~((uint32_t)BB_IRQ_RXFS)); /*
+				                                              * avoid
+				                                              * Pa091 */
+			}
 
-            }
-            if (irqs & BB_IRQ_RXFE)
-            {
-               
-                pal_get_current_time(&rxe_txe_tstamp[trx_id]);
-                /* Wait for TXPREP and clear TRXRDY IRQ */
-                switch_rf_to_txprep((trx_id_t)trx_id);
-            }
-            if (irqs & BB_IRQ_TXFE)
-            {
-                
-                /* used for IFS and for MEASURE_ON_AIR_DURATION */
-                pal_get_current_time(&rxe_txe_tstamp[trx_id]);
-                /* BB interrupt handles further processing */
-            }
+			if (irqs & BB_IRQ_RXFE) {
+				pal_get_current_time(&rxe_txe_tstamp[trx_id]);
+				/* Wait for TXPREP and clear TRXRDY IRQ */
+				switch_rf_to_txprep((trx_id_t)trx_id);
+			}
 
-            /*
-             * Store remaining flags to global TAL variable and
-             * handle them within tal_task()
-             */
-            tal_bb_irqs[trx_id] |= irqs;
-        }
-    }
+			if (irqs & BB_IRQ_TXFE) {
+				/* used for IFS and for MEASURE_ON_AIR_DURATION
+				 **/
+				pal_get_current_time(&rxe_txe_tstamp[trx_id]);
+				/* BB interrupt handles further processing */
+			}
 
-    /* Handle RF IRQS */
-    for (trx_id_t trx_id = (trx_id_t)0; trx_id < NUM_TRX; trx_id++)
-    {
-        if (tal_state[trx_id] == TAL_SLEEP)
-        {
-            continue;
-        }
+			/*
+			 * Store remaining flags to global TAL variable and
+			 * handle them within tal_task()
+			 */
+			tal_bb_irqs[trx_id] |= irqs;
+		}
+	}
 
-        uint8_t irqs = irqs_array[trx_id];
+	/* Handle RF IRQS */
+	for (trx_id_t trx_id = (trx_id_t)0; trx_id < NUM_TRX; trx_id++) {
+		if (tal_state[trx_id] == TAL_SLEEP) {
+			continue;
+		}
 
-        if (irqs != RF_IRQ_NO_IRQ)
-        {
+		uint8_t irqs = irqs_array[trx_id];
 
-            if (irqs & RF_IRQ_TRXRDY)
-            {
-               
-                irqs &= (uint8_t)(~((uint32_t)RF_IRQ_TRXRDY)); // avoid Pa091
-            }
-            if (irqs & RF_IRQ_TRXERR)
-            {
-                
-            }
-            if (irqs & RF_IRQ_BATLOW)
-            {
-                
-                irqs &= (uint8_t)(~((uint32_t)RF_IRQ_BATLOW)); // avoid Pa091
-            }
-            if (irqs & RF_IRQ_WAKEUP)
-            {
-                
-                irqs &= (uint8_t)(~((uint32_t)RF_IRQ_WAKEUP)); // avoid Pa091
-            }
-            if (irqs & RF_IRQ_IQIFSF)
-            {
-                
-            }
-            if (irqs & RF_IRQ_EDC)
-            {
-                
-                irqs &= (uint8_t)(~((uint32_t)RF_IRQ_EDC)); // avoid Pa091
-            }
+		if (irqs != RF_IRQ_NO_IRQ) {
+			if (irqs & RF_IRQ_TRXRDY) {
+				irqs &= (uint8_t)(~((uint32_t)RF_IRQ_TRXRDY)); /*
+				                                                * avoid
+				                                                * Pa091 */
+			}
 
-            if (irqs != 0)
-            {
-                
-            }
+			if (irqs & RF_IRQ_TRXERR) {
+			}
 
-            tal_rf_irqs[trx_id] |= irqs;
-        }
-    }
-}/* bb_irq_handler_cb() */
+			if (irqs & RF_IRQ_BATLOW) {
+				irqs &= (uint8_t)(~((uint32_t)RF_IRQ_BATLOW)); /*
+				                                                * avoid
+				                                                * Pa091 */
+			}
+
+			if (irqs & RF_IRQ_WAKEUP) {
+				irqs &= (uint8_t)(~((uint32_t)RF_IRQ_WAKEUP)); /*
+				                                                * avoid
+				                                                * Pa091 */
+			}
+
+			if (irqs & RF_IRQ_IQIFSF) {
+			}
+
+			if (irqs & RF_IRQ_EDC) {
+				irqs &= (uint8_t)(~((uint32_t)RF_IRQ_EDC)); /*
+				                                             * avoid
+				                                             * Pa091 */
+			}
+
+			if (irqs != 0) {
+			}
+
+			tal_rf_irqs[trx_id] |= irqs;
+		}
+	}
+} /* bb_irq_handler_cb() */
+
 #endif
-
 
 #ifdef IQ_RADIO
 void rf_irq_handler_cb(void)
 {
-    
-    /* Get all IRQS values */
-    uint8_t irqs_array[4];
+	/* Get all IRQS values */
+	uint8_t irqs_array[4];
 
-    trx_read(RF215_RF, RG_RF09_IRQS, irqs_array, 4);
+	trx_read(RF215_RF, RG_RF09_IRQS, irqs_array, 4);
 
-    /* Handle BB IRQS */
-    for (trx_id_t trx_id = (trx_id_t)0; trx_id < NUM_TRX; trx_id++)
-    {
-        if (tal_state[trx_id] == TAL_SLEEP)
-        {
-            continue;
-        }
+	/* Handle BB IRQS */
+	for (trx_id_t trx_id = (trx_id_t)0; trx_id < NUM_TRX; trx_id++) {
+		if (tal_state[trx_id] == TAL_SLEEP) {
+			continue;
+		}
 
-        uint8_t irqs = irqs_array[trx_id + 2];
+		uint8_t irqs = irqs_array[trx_id + 2];
 
-        if (irqs != BB_IRQ_NO_IRQ)
-        {
-          
-            if (irqs & BB_IRQ_RXEM)
-            {
-                
-            }
-            if (irqs & BB_IRQ_RXAM)
-            {
-               
-            }
-            if (irqs & BB_IRQ_AGCR)
-            {
-                
-            }
-            if (irqs & BB_IRQ_AGCH)
-            {
-                
-            }
-            if (irqs & BB_IRQ_RXFS)
-            {
-               
-            }
-            if (irqs & BB_IRQ_RXFE)
-            {
-                
-            }
-            if (irqs & BB_IRQ_TXFE)
-            {
-                
-            }
+		if (irqs != BB_IRQ_NO_IRQ) {
+			if (irqs & BB_IRQ_RXEM) {
+			}
 
-            if (irqs != 0)
-            {
-               
-            }
+			if (irqs & BB_IRQ_RXAM) {
+			}
 
-            /*
-             * Store remaining flags to global TAL variable and
-             * handle them within tal_task()
-             */
-            tal_bb_irqs[trx_id] |= irqs;
-        }
-    }
+			if (irqs & BB_IRQ_AGCR) {
+			}
 
-    /* Handle RF IRQS */
-    for (trx_id_t trx_id = (trx_id_t)0; trx_id < NUM_TRX; trx_id++)
-    {
-        if (tal_state[trx_id] == TAL_SLEEP)
-        {
-            continue;
-        }
+			if (irqs & BB_IRQ_AGCH) {
+			}
 
-        uint8_t irqs = irqs_array[trx_id];
+			if (irqs & BB_IRQ_RXFS) {
+			}
 
-        if (irqs != RF_IRQ_NO_IRQ)
-        {
-            
-            if (irqs & RF_IRQ_TRXRDY)
-            {
-                
-                irqs &= (uint8_t)(~((uint32_t)RF_IRQ_TRXRDY)); // avoid Pa091
-            }
-            if (irqs & RF_IRQ_TRXERR)
-            {
-                
-            }
-            if (irqs & RF_IRQ_BATLOW)
-            {
-                
-            }
-            if (irqs & RF_IRQ_WAKEUP)
-            {
-              
-            }
-            if (irqs & RF_IRQ_IQIFSF)
-            {
-             
-            }
-            if (irqs & RF_IRQ_EDC)
-            {
-                
-            }
+			if (irqs & BB_IRQ_RXFE) {
+			}
 
-            tal_rf_irqs[trx_id] |= irqs;
-        }
-    }
-}/* rf_irq_handler_cb() */
+			if (irqs & BB_IRQ_TXFE) {
+			}
+
+			if (irqs != 0) {
+			}
+
+			/*
+			 * Store remaining flags to global TAL variable and
+			 * handle them within tal_task()
+			 */
+			tal_bb_irqs[trx_id] |= irqs;
+		}
+	}
+
+	/* Handle RF IRQS */
+	for (trx_id_t trx_id = (trx_id_t)0; trx_id < NUM_TRX; trx_id++) {
+		if (tal_state[trx_id] == TAL_SLEEP) {
+			continue;
+		}
+
+		uint8_t irqs = irqs_array[trx_id];
+
+		if (irqs != RF_IRQ_NO_IRQ) {
+			if (irqs & RF_IRQ_TRXRDY) {
+				irqs &= (uint8_t)(~((uint32_t)RF_IRQ_TRXRDY)); /*
+				                                                * avoid
+				                                                * Pa091 */
+			}
+
+			if (irqs & RF_IRQ_TRXERR) {
+			}
+
+			if (irqs & RF_IRQ_BATLOW) {
+			}
+
+			if (irqs & RF_IRQ_WAKEUP) {
+			}
+
+			if (irqs & RF_IRQ_IQIFSF) {
+			}
+
+			if (irqs & RF_IRQ_EDC) {
+			}
+
+			tal_rf_irqs[trx_id] |= irqs;
+		}
+	}
+} /* rf_irq_handler_cb() */
+
 #endif /* #ifdef IQ_RADIO */
-
 
 #ifdef IQ_RADIO
 static void switch_rf_to_txprep(trx_id_t trx_id)
 {
-  
-    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TXPREP);
-    /* Wait for TXPREP */
-    rf_cmd_state_t state;
-    do
-    {
-        state = (rf_cmd_state_t)trx_reg_read(RF215_RF, reg_offset + RG_RF09_STATE);
-    }
-    while (state != RF_TXPREP);
-    /* Clear TRXRDY interrupt */
-    uint8_t irqs = trx_reg_read(RF215_RF, trx_id + RG_RF09_IRQS);
-    tal_rf_irqs[trx_id] |= irqs & ((uint8_t)(~((uint32_t)RF_IRQ_TRXRDY))); // avoid Pa091
-    pal_dev_irq_flag_clr(RF215_RF);
+	uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+	trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TXPREP);
+	/* Wait for TXPREP */
+	rf_cmd_state_t state;
+	do {
+		state = (rf_cmd_state_t)trx_reg_read(RF215_RF,
+				reg_offset +
+				RG_RF09_STATE);
+	} while (state != RF_TXPREP);
+	/* Clear TRXRDY interrupt */
+	uint8_t irqs = trx_reg_read(RF215_RF, trx_id + RG_RF09_IRQS);
+	tal_rf_irqs[trx_id] |= irqs & ((uint8_t)(~((uint32_t)RF_IRQ_TRXRDY))); /*
+	                                                                        * avoid
+	                                                                        * Pa091 */
+	pal_dev_irq_flag_clr(RF215_RF);
 }
+
 #endif /* #ifdef IQ_RADIO */
 /* EOF */

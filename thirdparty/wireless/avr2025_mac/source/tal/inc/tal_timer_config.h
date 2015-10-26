@@ -206,7 +206,6 @@ extern uint8_t TAL_T_AGC_1;
 
 #endif
 
-
 #if ((defined RF215v1) && (defined SUPPORT_LEGACY_OQPSK))
 #ifdef ENABLE_FTN_PLL_CALIBRATION
 #define NUMBER_OF_TAL_TIMERS        (6)
