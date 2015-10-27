@@ -837,13 +837,6 @@ at_ble_status_t ble_slave_security_request_handler(void* params)
 	
 	slave_sec_req = (at_ble_slave_sec_request_t*)params;	
 	
-	//if (slave_sec_req->status != AT_BLE_SUCCESS)
-	//{
-		//at_ble_disconnect(slave_sec_req->handle, AT_BLE_AUTH_FAILURE);		
-		//return AT_BLE_FAILURE;
-		//@Todo Status is not handled in the Library
-	//}
-
 	for (idx = 0; idx < BLE_MAX_DEVICE_CONNECTED; idx++)
 	{
 		if((ble_dev_info[idx].conn_info.handle == slave_sec_req->handle) && (ble_dev_info[idx].conn_state != BLE_DEVICE_DISCONNECTED) &&
@@ -883,7 +876,7 @@ at_ble_status_t ble_slave_security_request_handler(void* params)
 	features.mitm_protection = slave_sec_req->mitm_protection;
 	/* Device capabilities is display only , key will be generated
 	and displayed */
-	features.io_cababilities = AT_BLE_IO_CAP_KB_DISPLAY;
+	features.io_cababilities = AT_BLE_IO_CAP_DISPLAY_ONLY;
 
 	features.oob_avaiable = false;
 			
@@ -974,7 +967,7 @@ at_ble_status_t ble_pair_request_handler(void *params)
 		}
 		
 		ble_dev_info[idx].bond_info.peer_ltk.ediv = rand()&0xffff;
-		ble_dev_info[idx].bond_info.peer_ltk.key_size = 16;
+		ble_dev_info[idx].bond_info.peer_ltk.key_size = 16;		
 	}
 	else
 	{
@@ -1079,13 +1072,12 @@ at_ble_status_t ble_pair_done_handler(void *params)
 			break;
 		}
 	}
-	
+		
 	if(pairing_params->status == AT_BLE_SUCCESS)
 	{
 		DBG_LOG("Pairing procedure completed successfully");
 		if (device_found)
 		{
-			memcpy((uint8_t *)&ble_dev_info[idx].bond_info, (uint8_t *)pairing_params, sizeof(at_ble_pair_done_t));
 			ble_dev_info->conn_state = BLE_DEVICE_PAIRED;
 		}
 		else
@@ -1170,8 +1162,7 @@ at_ble_status_t ble_encryption_request_handler(void *params)
 	
 	if (device_found)
 	{
-		if((ble_dev_info[idx].bond_info.peer_ltk.ediv == enc_req->ediv)
-		&& !memcmp(&enc_req->nb[0],&ble_dev_info[idx].bond_info.peer_ltk.nb[0],8))
+		if((ble_dev_info[idx].bond_info.peer_ltk.ediv == enc_req->ediv)	&& !(memcmp(&enc_req->nb[0],&ble_dev_info[idx].bond_info.peer_ltk.nb[0],8)))
 		{
 			key_found = true;
 		}
@@ -1183,7 +1174,7 @@ at_ble_status_t ble_encryption_request_handler(void *params)
 	    DBG_LOG("Pairing information of peer device is not available.");
 	    DBG_LOG("Please unpair the device from peer device(mobile) settings menu and start pairing again");
     }
-
+	
 	if(!(at_ble_encryption_request_reply(enc_req->handle, ble_dev_info[idx].bond_info.auth, key_found, &ble_dev_info[idx].bond_info.peer_ltk) == AT_BLE_SUCCESS))
 	{
 		DBG_LOG("Encryption Request Reply Failed");
