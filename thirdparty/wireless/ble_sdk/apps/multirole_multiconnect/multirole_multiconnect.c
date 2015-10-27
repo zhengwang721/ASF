@@ -106,13 +106,14 @@ pxp_current_alert_t alert_level = PXP_NO_ALERT;
 
 bool volatile button_pressed = false;
 bool volatile timer_cb_done = false;
-bool volatile flag = true;
+bool volatile bat_char_notification_confirmed = false;
 bool volatile battery_flag = true;
 uint8_t battery_level = BATTERY_MIN_LEVEL;
-at_ble_handle_t battery_conn_handle = 0xFF;
+at_ble_handle_t battery_conn_handle = 0xFFFF;
 bool volatile battery_stop_simulation = true;
 
 static at_ble_status_t bas_paired_app_event(void *param);
+static at_ble_status_t bas_encryption_status_changed_app_event(void *param);
 static at_ble_status_t ble_disconnected_app_event(void *param);
 static at_ble_status_t battery_start_advertisement(void);
 static at_ble_status_t battery_set_advertisement_data(void);
@@ -135,7 +136,7 @@ static const ble_event_callback_t battery_app_gap_cb[] = {
 	NULL,
 	NULL,
 	NULL,
-	bas_paired_app_event,
+	bas_encryption_status_changed_app_event,
 	NULL,
 	NULL,
 	NULL,
@@ -259,11 +260,14 @@ static at_ble_status_t bas_paired_app_event(void *param)
 	static bool peripheral_advertising = false;
 	at_ble_pair_done_t *ble_pair_done;
 	ble_pair_done = (at_ble_pair_done_t *)param;
+	if (ble_pair_done->status != AT_BLE_SUCCESS)
+	{
+		return AT_BLE_FAILURE;
+	}
 	if(ble_check_iscentral(ble_pair_done->handle))
 	{
 		if (!peripheral_advertising)
 		{
-			DBG_LOG("Adv called in pairing");
 			battery_start_advertisement();
 			peripheral_advertising = true;
 		}
@@ -272,6 +276,35 @@ static at_ble_status_t bas_paired_app_event(void *param)
 	{
 		battery_conn_handle = ble_pair_done->handle;
 		timer_cb_done = false;
+		bat_char_notification_confirmed = true;
+		hw_timer_start(BATTERY_UPDATE_INTERVAL);
+		battery_stop_simulation = false;
+	}	
+	return AT_BLE_SUCCESS;
+}
+
+static at_ble_status_t bas_encryption_status_changed_app_event(void *param)
+{
+	static bool peripheral_advertising = false;
+	at_ble_encryption_status_changed_t *ble_enc_status;
+	ble_enc_status = (at_ble_encryption_status_changed_t *)param;
+	if (ble_enc_status->status != AT_BLE_SUCCESS)
+	{
+		return AT_BLE_FAILURE;
+	}
+	if(ble_check_iscentral(ble_enc_status->handle))
+	{
+		if (!peripheral_advertising)
+		{
+			battery_start_advertisement();
+			peripheral_advertising = true;
+		}
+	}
+	else
+	{
+		battery_conn_handle = ble_enc_status->handle;
+		timer_cb_done = false;
+		bat_char_notification_confirmed = true;
 		hw_timer_start(BATTERY_UPDATE_INTERVAL);
 		battery_stop_simulation = false;
 	}	
@@ -331,7 +364,7 @@ static at_ble_status_t ble_notification_confirmed_app_event(void *param)
 	at_ble_cmd_complete_event_t *notification_status = (at_ble_cmd_complete_event_t *)param;
 	if(!notification_status->status)
 	{
-		flag = true;
+		bat_char_notification_confirmed = true;
 		DBG_LOG_DEV("sending notification to the peer success");
 	}
 	return AT_BLE_SUCCESS;
@@ -346,7 +379,7 @@ static at_ble_status_t ble_char_changed_app_event(void *param)
 	{
 		return AT_BLE_FAILURE;
 	}	
-	return bat_char_changed_event(battery_conn_handle, &bas_service_handler, char_handle, &flag);
+	return bat_char_changed_event(char_handle->conn_handle, &bas_service_handler, char_handle, &bat_char_notification_confirmed);
 }
 
 static at_ble_status_t battery_simulation_task(void *param)
@@ -359,8 +392,8 @@ static at_ble_status_t battery_simulation_task(void *param)
 	{
 		timer_cb_done = false;
 		/* send the notification and Update the battery level  */
-		if(flag){
-			if(bat_update_char_value(battery_conn_handle, &bas_service_handler, battery_level, &flag) == AT_BLE_SUCCESS)
+		if(bat_char_notification_confirmed){
+			if(bat_update_char_value(battery_conn_handle, &bas_service_handler, battery_level, &bat_char_notification_confirmed) == AT_BLE_SUCCESS)
 			{
 				DBG_LOG("Battery Level:%d%%", battery_level);
 			}

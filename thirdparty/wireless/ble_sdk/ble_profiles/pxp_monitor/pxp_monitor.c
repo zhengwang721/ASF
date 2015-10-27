@@ -306,6 +306,11 @@ at_ble_status_t pxp_disconnect_event_handler(void *params)
 	at_ble_disconnected_t *disconnect;
 	disconnect = (at_ble_disconnected_t *)params;
 	
+	if(!ble_check_disconnected_iscentral(disconnect->handle))
+	{
+		return AT_BLE_FAILURE;
+	}
+	
 	if((ble_check_device_state(disconnect->handle, BLE_DEVICE_DISCONNECTED) == AT_BLE_SUCCESS) ||
 	(ble_check_device_state(disconnect->handle, BLE_DEVICE_DEFAULT_IDLE) == AT_BLE_SUCCESS))
 	{
