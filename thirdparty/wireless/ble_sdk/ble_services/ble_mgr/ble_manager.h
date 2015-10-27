@@ -145,7 +145,7 @@
 
 #if defined CSC_DEVICE
 #ifndef BLE_DEVICE_NAME
-#define BLE_DEVICE_NAME				"ATMEL-CSC"
+#define BLE_DEVICE_NAME				"AT-CSC"
 #endif	/* BLE_DEVICE_NAME */
 #endif /* CSC_DEVICE */
 
