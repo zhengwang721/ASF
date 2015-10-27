@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM L22 Xplained Pro test configuration.
+ * \brief SAM L22 Xplained Pro B test configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
