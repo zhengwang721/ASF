@@ -409,7 +409,7 @@ void TIMER0_Handler      ( void );
 /** \defgroup SAMB11G18A_port PORT Definitions */
 /*@{*/
 
-#include "pio/samb11g18a.h"
+#include "pio/pio_samb11g18a.h"
 /*@}*/
 
 /* ************************************************************************** */

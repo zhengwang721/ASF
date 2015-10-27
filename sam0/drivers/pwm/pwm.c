@@ -203,7 +203,8 @@ void pwm_get_config_defaults(struct pwm_config *const config)
 	config->period = PWM_PERIOD_4;
 	config->duty_cycle = 50;
 	config->clock_select = PWM_CLOCK_SELECT_26_0;
-	config->pinmux_pad = 0;
+	config->pin_number_pad = 0;
+	config->pinmux_sel_pad = 0;
 }
 
 /**
@@ -365,9 +366,9 @@ enum status_code pwm_init(enum pwm_device_select device_select, \
 	struct gpio_config config_gpio;
 	gpio_get_config_defaults(&config_gpio);
 	config_gpio.direction = GPIO_PIN_DIR_OUTPUT;
-	gpio_pin_set_config(config->pinmux_pad >> 16, &config_gpio);
-	gpio_pinmux_cofiguration(config->pinmux_pad >> 16, \
-							(uint16_t)(config->pinmux_pad));
+	gpio_pin_set_config(config->pin_number_pad, &config_gpio);
+	gpio_pinmux_cofiguration(config->pin_number_pad, \
+							(uint16_t)(config->pinmux_sel_pad));
 
 	return STATUS_OK;
 }

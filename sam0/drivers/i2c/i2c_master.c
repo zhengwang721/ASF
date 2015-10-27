@@ -71,8 +71,10 @@ void i2c_master_get_config_defaults(
 	
 	config->clock_source    = I2C_CLK_INPUT_3;
 	config->clock_divider   = 0x10;
-	config->pinmux_pad0     = PINMUX_LP_GPIO_8_MUX2_I2C0_SDA;
-	config->pinmux_pad1     = PINMUX_LP_GPIO_9_MUX2_I2C0_SCK;
+	config->pin_number_pad0 = PIN_LP_GPIO_8;
+	config->pin_number_pad1 = PIN_LP_GPIO_9;
+	config->pinmux_sel_pad0 = MUX_LP_GPIO_8_MUX2_I2C0_SDA;
+	config->pinmux_sel_pad1 = MUX_LP_GPIO_9_MUX2_I2C0_SCL;
 }
 
 #if !defined(__DOXYGEN__)
@@ -95,8 +97,8 @@ static void _i2c_master_set_config(
 	I2C *const i2c_module = (module->hw);
 
 	/* Set the pinmux for this i2c module. */
-	gpio_pinmux_cofiguration(config->pinmux_pad0>>16, (uint16_t)(config->pinmux_pad0 & 0xFFFF));
-	gpio_pinmux_cofiguration(config->pinmux_pad1>>16, (uint16_t)(config->pinmux_pad1 & 0xFFFF));
+	gpio_pinmux_cofiguration(config->pin_number_pad0, (uint16_t)(config->pinmux_sel_pad0));
+	gpio_pinmux_cofiguration(config->pin_number_pad1, (uint16_t)(config->pinmux_sel_pad1));
 	/* Set clock. */
 	i2c_module->CLOCK_SOURCE_SELECT.reg = config->clock_source;
 	i2c_module->I2C_CLK_DIVIDER.reg = I2C_I2C_CLK_DIVIDER_I2C_DIVIDE_RATIO(config->clock_divider);

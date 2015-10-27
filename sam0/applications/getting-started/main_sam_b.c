@@ -124,10 +124,15 @@ static void configure_console(void)
 	uart_get_config_defaults(&config_uart);
 
 	config_uart.baud_rate = CONF_STDIO_BAUDRATE;
-	config_uart.pinmux_pad[0] = CONF_STDIO_PINMUX_PAD0;
-	config_uart.pinmux_pad[1] = CONF_STDIO_PINMUX_PAD1;
-	config_uart.pinmux_pad[2] = CONF_STDIO_PINMUX_PAD2;
-	config_uart.pinmux_pad[3] = CONF_STDIO_PINMUX_PAD3;
+	config_uart.pin_number_pad[0] = CONF_STDIO_PIN_PAD0;
+	config_uart.pin_number_pad[1] = CONF_STDIO_PIN_PAD1;
+	config_uart.pin_number_pad[2] = CONF_STDIO_PIN_PAD2;
+	config_uart.pin_number_pad[3] = CONF_STDIO_PIN_PAD3;
+	
+	config_uart.pinmux_sel_pad[0] = CONF_STDIO_MUX_PAD0;
+	config_uart.pinmux_sel_pad[1] = CONF_STDIO_MUX_PAD1;
+	config_uart.pinmux_sel_pad[2] = CONF_STDIO_MUX_PAD2;
+	config_uart.pinmux_sel_pad[3] = CONF_STDIO_MUX_PAD3;
 
 	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART_MODULE, &config_uart);
 }

@@ -195,9 +195,12 @@ struct quad_decoder_private_config {
 	int16_t threshold_upper;
 	/** Lower Threshold of counter for Quad Decoder */
 	int16_t threshold_lower;
-	/** Dec_in_a pinmux */
-	/** Dec_in_b pinmux */
-	uint32_t pinmux_pad[2];
+	/** Dec_in_a pin number */
+	/** Dec_in_b pin number */
+	uint32_t pin_number_pad[2];
+	/** Dec_in_a pinmux selection */
+	/** Dec_in_b pinmux selection */
+	uint32_t pinmux_sel_pad[2];
 };
 
 /**
