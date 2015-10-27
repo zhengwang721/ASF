@@ -106,7 +106,7 @@ retval_t tal_trx_sleep(trx_id_t trx_id)
 	tal_state[trx_id] = TAL_SLEEP;
 
 	/* Enter DEEP_SLEEP if both transceiver suppose to enter SLEEP */
-#if (defined RF215v1)
+#if ((defined RF215v1) || (defined RF215v3))
 	if ((tal_state[RF09] == TAL_SLEEP) && (tal_state[RF24] == TAL_SLEEP)) {
 		for (trx_id_t i = (trx_id_t)0; i < (trx_id_t)NUM_TRX; i++) {
 			uint16_t reg_offset = RF_BASE_ADDR_OFFSET * i;
@@ -160,7 +160,7 @@ retval_t tal_trx_wakeup(trx_id_t trx_id)
 		return TAL_TRX_AWAKE;
 	}
 
-#if (defined RF215v1)
+#if (defined RF215v1) || (defined RF215v3)
 	if ((tal_state[RF09] == TAL_SLEEP) && (tal_state[RF24] == TAL_SLEEP))
 #endif
 	{
@@ -179,7 +179,7 @@ retval_t tal_trx_wakeup(trx_id_t trx_id)
 		pal_get_current_time(&current_time);
 		while (1) {
 			if (TAL_RF_IS_IRQ_SET(trx_id, RF_IRQ_WAKEUP)) {
-#if (defined RF215v1)
+#if (defined RF215v1) || (defined RF215v3)
 				for (trx_id_t i = (trx_id_t)0;
 						i < (trx_id_t)NUM_TRX; i++) {
 					TAL_RF_IRQ_CLR(i, RF_IRQ_WAKEUP);
