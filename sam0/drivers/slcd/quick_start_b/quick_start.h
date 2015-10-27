@@ -45,17 +45,15 @@
 /** \page asfdoc_sam0_slcd_basic_use_case Quick Start Guide for SLCD
  *
  * The supported board list:
- *    - SAM L22 Xplained Pro
+ *    - SAM L22 Xplained Pro B
  *
- * The SEGMENT LCD1 Xplained Pro extension board must be connected to extension
- * header 5 on the SAM L22 Xplained Pro.
+ * The TSLCD1 Xplained Pro extension board must be connected to extension
+ * header 5 on the SAM L22 Xplained Pro B.
  *
  * This example demonstrates how to use the SLCD driver, it covers the following cases:
  * - Display Memory Mapping(Direct Access and Indirect Access)
  * - Character Mapping
  * - Blinking
- * - Automated Character Mapping
- * - Automated Bit Mapping
  *
  * Upon startup, the program uses the USART driver to display application
  * output message.

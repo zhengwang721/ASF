@@ -33,20 +33,6 @@
 			<require idref="sam0.drivers.system" />
 			<device-support value="saml22"/>
 		</module>
-		<module type="driver" id="sam0.drivers.slcd#polling1" caption="SLCD - Segment Liquid Crystal Display Controller">
-			<info type="keyword" value="technology">
-				<keyword value="Graphics" />
-			</info>
-			<build type="include-path" value="."/>
-			<build type="c-source" value="slcd.c"/>
-			<build type="header-file" subtype="api" value="slcd.h"/>
-			<build type="module-config" subtype="path" value="module_config"/>
-			<build type="module-config" subtype="required-header-file" value="conf_slcd.h"/>
-			<build type="doxygen-entry-point" value="asfdoc_sam0_drivers_slcd_group"/>
-			<require idref="sam0.utils" />
-			<require idref="sam0.drivers.system" />
-			<device-support value="saml22"/>
-		</module>
 	</select-by-config>
 	<module type="meta" id="sam0.drivers.slcd.appnote" caption="SLCD - Segment Liquid Crystal Display Controller">
 			<info type="keyword" value="technology">
