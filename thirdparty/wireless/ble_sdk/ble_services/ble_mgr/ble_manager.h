@@ -64,7 +64,9 @@
 
 #if defined HID_DEVICE
 	#ifdef HID_KEYBOARD_DEVICE
-	#define BLE_DEVICE_NAME				"ATMEL-HIDK"
+	#ifndef BLE_DEVICE_NAME
+		#define BLE_DEVICE_NAME				"ATMEL-HIDK"
+	#endif	/* BLE_DEVICE_NAME */
 	#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
 	#define BLE_IO_CAPABALITIES			(AT_BLE_IO_CAP_NO_INPUT_NO_OUTPUT)
 	#define BLE_MITM_REQ				(false)
@@ -73,92 +75,98 @@
 	#endif
 
 	#ifdef HID_MOUSE_DEVICE
-	#define BLE_DEVICE_NAME				"ATMEL-HIDM"
+	#ifndef BLE_DEVICE_NAME
+		#define BLE_DEVICE_NAME				"ATMEL-HIDM"
+	#endif	/* BLE_DEVICE_NAME */
 	#endif
 #endif /* HID_DEVICE */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined PROXIMITY_REPORTER
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-PXP"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* PROXIMITY_REPORTER */
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined HR_SENSOR
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-HR"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* HR_SENSOR */
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined PROXIMITY_MONITOR
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-MON"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* PROXIMITY_MONITOR */
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined BLP_SENSOR
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-BLP"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* Blood_Pressure_Sensor*/
-#endif /* BLE_DEVICE_ROLE */
 
 #if (BLE_DEVICE_ROLE == BLE_ROLE_OBSERVER)
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-OBS"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* BLE_DEVICE_ROLE == BLE_ROLE_OBSERVER) */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined ANP_CLIENT
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-ANCS"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* ANCS_CLIENT */
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined TIP_CLIENT
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-TIP"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* TIP_CLIENT */
-#endif
 
-#ifndef BLE_DEVICE_ROLE
 #if defined FIND_ME_TARGET
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-FMP"
-#endif /* PROXIMITY_REPORTER */
-#endif /* BLE_DEVICE_ROLE */
+#endif	/* BLE_DEVICE_NAME */
+#endif /* FIND_ME_TARGET */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined ANP_SIG_CLIENT
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-ANP"
+#endif	/* BLE_DEVICE_NAME */
 #define BLE_PAIR_ENABLE					(false)
 #endif /* ANP_SIG_CLIENT */
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined PAS_CLIENT
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-PAS"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* PAS_CLIENT */
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
+
 #if defined CSC_DEVICE
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-CSC"
+#endif	/* BLE_DEVICE_NAME */
 #endif /* CSC_DEVICE */
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined	BATTERY_SERVICE
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-BAS"
+#endif	/* BLE_DEVICE_NAME */
 #endif /*BATTERY_SERVICE*/
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
+
 #if defined	SCAN_PARAM_SERVICE
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-SCP"
+#endif	/* BLE_DEVICE_NAME */
 #endif	/*SCAN_PARAM_SERVICE*/
-#endif /* BLE_DEVICE_ROLE */
 
-#ifndef BLE_DEVICE_ROLE
 #if defined	DEVICE_INFORMATION_SERVICE
+#ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-DIS"
+#endif	/* BLE_DEVICE_NAME */
 #endif	/* DEVICE_INFORMATION_SERVICE */
-#endif /* BLE_DEVICE_ROLE */
 
 /** @brief default device name */
 #ifndef BLE_DEVICE_NAME
@@ -348,7 +356,10 @@ typedef enum
 #define SPS_SERVICE_UUID 						(0x1813)
 
 /** CSC Service UUID. */
-#define CSC_SERVICE_UUID				("\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd")
+#define CSC_SERVICE_UUID						("\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd")
+
+/** ANCS service UUID. */
+#define ANP_ANCS_SERVICE_UUID					("\xD0\x00\x2D\x12\x1E\x4B\x0F\xA4\x99\x4E\xCE\xB5\x31\xF4\x05\x79")
 
 /* Characteristics UUID's */
 /* Alert Level Characteristic UUID */
@@ -440,14 +451,14 @@ typedef enum
 
 /** minimum connection interval */
 //	<o> GAP Minimum Connection Interval in msec <0-1000:50>
-//	<i> Defines Minimum inteval for GAP Connection.
+//	<i> Defines Minimum interval for GAP Connection.
 //	<i> Default: 20
 //	<id> gap_conn_interval_min
 #define GAP_CONN_INTERVAL_MIN			(20)        //Connection interval min 20ms
 
 /** maximum connection interval */
 //	<o> GAP Maximum Connection Interval in msec <0-1000:50>
-//	<i> Defines Maximum inteval for GAP Connection.
+//	<i> Defines Maximum interval for GAP Connection.
 //	<i> Default: 40
 //	<id> gap_conn_interval_max
 #define GAP_CONN_INTERVAL_MAX			(40)		//Connection interval max 40ms
@@ -502,9 +513,29 @@ typedef enum
 //	<i> Defines the central to connect maximum number to devices
 //	<i> Default: 1
 //	<id> gap_max_device_connected
-#define MAX_DEVICE_CONNECTED			(1)
+#define BLE_MAX_DEVICE_CONNECTED				(5)
 
-#define BLE_EVENT_PARAM_MAX_SIZE		524
+#define BLE_EVENT_PARAM_MAX_SIZE		        524
+
+typedef enum {
+  BLE_DEVICE_DISCONNECTED,
+  BLE_DEVICE_CONNECTING,
+  BLE_DEVICE_CONNECTED,
+  BLE_DEVICE_PAIRING,
+  BLE_DEVICE_PAIRING_FAILED,
+  BLE_DEVICE_PAIRED,  
+  BLE_DEVICE_ENCRYPTION_STATE,
+  BLE_DEVICE_ENCRYPTION_FAILED,
+  BLE_DEVICE_ENCRYPTION_COMPLETED,
+  BLE_DEVICE_DEFAULT_IDLE
+}ble_device_state_t;
+
+typedef struct ble_connected_dev_info
+{
+	at_ble_connected_t conn_info;
+	at_ble_pair_done_t bond_info;
+	ble_device_state_t conn_state;
+}ble_connected_dev_info_t;
 
 
 /***************************Advertisement/Scan Response Information configuration *****/
@@ -549,9 +580,14 @@ typedef enum {
 #define SERVICE_UUID128_MAX_NUM				2
 #endif
 
+#ifdef TP_ANDROID
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID_ENABLE			true
+#endif
 
 /** UUID Type's and configuration's */
+#ifndef BLE_GAP_ADV_SERVICE_16BIT_UUID_ENABLE
 #define BLE_GAP_ADV_SERVICE_16BIT_UUID_ENABLE			true
+#endif
 #define BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH			2
 #if BLE_GAP_ADV_SERVICE_16BIT_UUID_ENABLE
 #define BLE_GAP_ADV_SERVICE_16BIT_UUID_SCN_RSP_ENABLE	SCAN_RESPONSE_ENABLE
@@ -678,16 +714,24 @@ typedef enum {
 #define  BLE_GAP_ADV_DATA_SERVICE_32BIT_UUID4_VAL		"\x12\x34\x56\x78"
 #endif
 
-#define BLE_GAP_ADV_SERVICE_128BIT_UUID_ENABLE			false
+#define BLE_GAP_ADV_SERVICE_128BIT_UUID_ENABLE			true
 #define BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH			16
 #if BLE_GAP_ADV_SERVICE_128BIT_UUID_ENABLE
 #define BLE_GAP_ADV_SERVICE_128BIT_UUID_SCN_RSP_ENABLE	SCAN_RESPONSE_ENABLE
 
+#ifndef ANCS_CLIENT_SERVICE 
+#define BLE_GAP_ADV_SERVICE_128BIT_UUID0_ENABLE			false
+#else
 #define BLE_GAP_ADV_SERVICE_128BIT_UUID0_ENABLE			true
-#define  BLE_GAP_ADV_DATA_SERVICE_128BIT_UUID0_VAL		"\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd"
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_128BIT_UUID0_VAL		ANP_ANCS_SERVICE_UUID
 
+#ifndef CSC_SERVICE
 #define BLE_GAP_ADV_SERVICE_128BIT_UUID1_ENABLE			false
-#define  BLE_GAP_ADV_DATA_SERVICE_128BIT_UUID1_VAL		"\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd"
+#else
+#define BLE_GAP_ADV_SERVICE_128BIT_UUID1_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_128BIT_UUID1_VAL		CSC_SERVICE_UUID
 #endif
 
 /** Short Local Name configuration */
@@ -724,8 +768,15 @@ typedef enum {
 #define BLE_GAP_ADV_DATA_SLAVE_CONN_INTERVAL_RANGE_MAX			0x0C80
 #endif
 
+
+#ifndef TP_ANDROID
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_ENABLE				true
+#endif
+
 /* Service Solicitation UUID Configuration */
+#ifndef BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_ENABLE
 #define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_ENABLE				false
+#endif
 #if BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_ENABLE
 #define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_SCN_RSP_ENABLE		SCAN_RESPONSE_ENABLE
 
@@ -805,6 +856,27 @@ typedef enum {
 #define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID10_ENABLE			true
 #endif
 #define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID10_VAL		HID_SERV_UUID
+
+#ifndef BLOOD_PRESSURE_SERVICE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID11_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID11_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID11_VAL		BLOOD_PRESSURE_SERVICE_UUID
+
+#ifndef HEART_RATE_SERVICE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID12_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID12_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID12_VAL		HEART_RATE_SERVICE_UUID
+
+#ifndef PAS_CLIENT
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID13_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID13_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID13_VAL		PAS_SERVICE_UUID
 #endif
 
 #define BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID_ENABLE				false
@@ -827,15 +899,24 @@ typedef enum {
 #define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_32BIT_UUID4_VAL			"\x12\x34\x56\x78"
 #endif
 
-#define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_ENABLE			false
+
+#define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_ENABLE			true
 #if BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_ENABLE
 #define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_SCN_RSP_ENABLE	SCAN_RESPONSE_ENABLE
 
+#ifndef ANCS_CLIENT_SERVICE
 #define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID0_ENABLE			false
-#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_128BIT_UUID0_VAL		"\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd"
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID0_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_128BIT_UUID0_VAL		ANP_ANCS_SERVICE_UUID
 
+#ifndef CSC_SERVICE
 #define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID1_ENABLE			false
-#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_128BIT_UUID1_VAL		"\x1b\xc5\xd5\xa5\x02\x00\xa6\x85\xe5\x11\x35\x39\xa0\xbb\x5a\xfd"
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID1_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_128BIT_UUID1_VAL		CSC_SERVICE_UUID
 #endif
 
 /* Service Data Configuration */
@@ -1238,16 +1319,9 @@ typedef struct adv_element
 	uint8_t *data;
 }adv_element_t;
 
+
 /** @brief GATT services handles
 */
-#if defined HID_SERVICE
-// typedef struct gatt_service_handler
-// {
-// 	at_ble_service_t		  serv;
-// 	at_ble_chr_t		      serv_chars[HID_CHARACTERISTIC_NUM];
-// 	at_ble_generic_att_desc_t serv_desc[HID_NUM_OF_REPORT];   /*Report descriptor*/
-// }gatt_service_handler_t;
-#else
 typedef struct gatt_service_handler
 {
 	/// service uuid
@@ -1257,7 +1331,7 @@ typedef struct gatt_service_handler
 	/// service characteristic
 	at_ble_characteristic_t	serv_chars;
 }gatt_service_handler_t;
-#endif
+
 
 /****************************************************************************************
 *                                       Functions                                       *

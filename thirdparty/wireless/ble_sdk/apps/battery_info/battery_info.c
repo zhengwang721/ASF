@@ -126,6 +126,16 @@ static at_ble_status_t ble_disconnected_app_event(void *param)
 	return AT_BLE_SUCCESS;
 }
 
+static at_ble_status_t ble_connected_app_event(void *param)
+{
+	#if !BLE_PAIR_ENABLE
+		ble_paired_app_event(void *param);
+	#else
+		ALL_UNUSED(param);
+	#endif
+	return AT_BLE_SUCCESS;
+}
+
 /* Callback registered for AT_BLE_NOTIFICATION_CONFIRMED event from stack */
 static at_ble_status_t ble_notification_confirmed_app_event(void *param)
 {
@@ -156,7 +166,7 @@ static const ble_event_callback_t battery_app_gap_cb[] = {
 	NULL,
 	NULL,
 	NULL,
-	NULL,
+	ble_connected_app_event,
 	ble_disconnected_app_event,
 	NULL,
 	NULL,

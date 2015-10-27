@@ -67,7 +67,6 @@ static const ble_event_callback_t hid_gap_handle[] = {
 	NULL,
 	NULL,
 	NULL,
-	//pxp_reporter_connected_state_handler,
 	NULL,
 	hid_prf_disconnect_event_handler,
 	NULL,
@@ -114,11 +113,13 @@ uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0
 */
 void hid_prf_init(void *param)
 {   
-	uint8_t serv_num = 0;
 	uint16_t serv_handle = 0;
 	dis_gatt_service_handler_t device_info_serv;
-	for(; serv_num<HID_MAX_SERV_INST; serv_num++){
-		if(hid_prf_dataref[serv_num] != NULL){
+	
+	for(uint8_t serv_num = 0; serv_num<HID_MAX_SERV_INST; serv_num++)
+	{
+		if(hid_prf_dataref[serv_num] != NULL)
+		{
 			hid_serv_def_init(serv_num);
 			hid_serv_init(serv_num, hid_prf_dataref[serv_num]->hid_device, &hid_prf_dataref[serv_num]->protocol_mode, hid_prf_dataref[serv_num]->num_of_report, (uint8_t *)&hid_prf_dataref[serv_num]->report_type, &(hid_prf_dataref[serv_num]->report_val[0]), (uint8_t *)&hid_prf_dataref[serv_num]->report_len, &hid_prf_dataref[serv_num]->hid_device_info);
 			hid_serv_report_map(serv_num, hid_prf_dataref[serv_num]->report_map_info.report_map, hid_prf_dataref[serv_num]->report_map_info.report_map_len);
@@ -127,16 +128,21 @@ void hid_prf_init(void *param)
 			serv_handle = hid_service_dbreg(serv_num, (uint8_t *)&hid_prf_dataref[serv_num]->report_type, (uint8_t *)&hid_prf_dataref[serv_num]->report_id, hid_prf_dataref[serv_num]->num_of_report);
 			
 			DBG_LOG_DEV("HID Service Handle %d", serv_handle);
-			if(serv_handle){
+			if(serv_handle)
+			{
 				hid_prf_dataref[serv_num]->serv_handle_info = serv_handle;
-			}else{
+			}
+			else
+			{
 				hid_prf_dataref[serv_num]->serv_handle_info = 0;
 			}
-		}else{
+		}
+		else
+		{
 			hid_serv_def_init(serv_num);
 		}
 	}
-	delay_ms(1);
+
 	/* Initialize the dis */
 	dis_init_service(&device_info_serv);
 	
@@ -233,6 +239,7 @@ at_ble_status_t hid_prf_char_changed_handler(void *params)
 {
 	at_ble_characteristic_changed_t *change_char;
 	change_char = (at_ble_characteristic_changed_t *)params;
+
 	hid_proto_mode_ntf_t protocol_mode;
 	hid_report_ntf_t reportinfo;
 	hid_boot_ntf_t boot_info;

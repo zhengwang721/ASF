@@ -83,7 +83,7 @@ extern gatt_txps_char_handler_t txps_handle;
 extern gatt_lls_char_handler_t lls_handle;
 extern gatt_ias_char_handler_t ias_handle;
 
-extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
+extern ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED];;
 extern bool pxp_connect_request_flag;
 
 volatile bool app_timer_done = false;
@@ -238,7 +238,7 @@ int main(void)
 					pxp_app_init();
 				}
 			} else {
-				rssi_update(ble_connected_dev_info[0].handle);
+				rssi_update(ble_dev_info[0].conn_info.handle);
 				hw_timer_start(PXP_RSSI_UPDATE_INTERVAL);
 			}
 

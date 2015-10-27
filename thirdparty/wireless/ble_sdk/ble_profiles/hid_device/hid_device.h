@@ -155,12 +155,12 @@
 /****************************************************************************************
 *							        Enumerations	                                   	*
 ****************************************************************************************/
-typedef struct gatt_service_handler
+typedef struct hid_gatt_serv_handler
 {
 	at_ble_service_t		  serv;
 	at_ble_chr_t		      serv_chars[HID_CHARACTERISTIC_NUM];
 	at_ble_generic_att_desc_t serv_desc[HID_NUM_OF_REPORT];   /*Report descriptor*/
-}gatt_service_handler_t;
+}hid_gatt_serv_handler_t;
 
 /**@brief HID characteristic
 */

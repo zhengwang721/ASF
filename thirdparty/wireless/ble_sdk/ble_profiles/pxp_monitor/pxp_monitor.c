@@ -113,7 +113,6 @@ uint8_t pxp_supp_scan_index[MAX_SCAN_DEVICE];
 uint8_t scan_index = 0;
 
 
-extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 extern volatile uint8_t scan_response_count;
 extern at_ble_scan_info_t scan_info[MAX_SCAN_DEVICE];
 
@@ -473,7 +472,7 @@ at_ble_status_t pxp_monitor_discovery_complete_handler(void *params)
 		#if defined TX_POWER_SERVICE
 		if ((txps_handle.char_discovery == DISCOVER_SUCCESS) && (discover_char_flag)) {
 			if (at_ble_characteristic_discover_all(
-			ble_connected_dev_info[0].handle,
+			discover_status->conn_handle,
 			txps_handle.start_handle,
 			txps_handle.end_handle) ==
 			AT_BLE_SUCCESS) {
@@ -495,7 +494,7 @@ at_ble_status_t pxp_monitor_discovery_complete_handler(void *params)
 		if ((lls_handle.char_discovery == DISCOVER_SUCCESS) &&
 		(discover_char_flag)) {
 			if (at_ble_characteristic_discover_all(
-			ble_connected_dev_info[0].handle,
+			discover_status->conn_handle,
 			lls_handle.start_handle,
 			lls_handle.end_handle) ==
 			AT_BLE_SUCCESS) 
@@ -520,7 +519,7 @@ at_ble_status_t pxp_monitor_discovery_complete_handler(void *params)
 		if ((ias_handle.char_discovery == DISCOVER_SUCCESS) &&
 		(discover_char_flag)) {
 			if (at_ble_characteristic_discover_all(
-			ble_connected_dev_info[0].handle,
+			discover_status->conn_handle,
 			ias_handle.start_handle,
 			ias_handle.end_handle) ==
 			AT_BLE_SUCCESS) {
@@ -543,15 +542,14 @@ at_ble_status_t pxp_monitor_discovery_complete_handler(void *params)
 		if(lls_handle.char_discovery == AT_BLE_INVALID_STATE) {
 			DBG_LOG("PROXIMITY PROFILE NOT SUPPORTED");
 			discover_char_flag = false;
-			at_ble_disconnect(ble_connected_dev_info[0].handle, AT_BLE_TERMINATED_BY_USER);
+			at_ble_disconnect(discover_status->conn_handle, AT_BLE_TERMINATED_BY_USER);
 		}
 		
 		if (discover_char_flag) {
 			DBG_LOG_DEV("GATT characteristic discovery completed");
 			#if defined LINK_LOSS_SERVICE
 			/* set link loss profile to high alert upon connection */
-			if (!(lls_alert_level_write(ble_connected_dev_info[0].
-			handle, lls_handle.char_handle,
+			if (!(lls_alert_level_write(discover_status->conn_handle, lls_handle.char_handle,
 			LLS_ALERT_LEVEL) == AT_BLE_SUCCESS)) {
 				DBG_LOG("Link Loss write characteristics failed");
 			}
@@ -559,7 +557,7 @@ at_ble_status_t pxp_monitor_discovery_complete_handler(void *params)
 			#endif
 
 			#if defined TX_POWER_SERVICE
-			if (!(txps_power_read(ble_connected_dev_info[0].handle,
+			if (!(txps_power_read(discover_status->conn_handle,
 			txps_handle.char_handle) ==
 			AT_BLE_SUCCESS)) {
 				DBG_LOG("Characteristic Read Request failed");
