@@ -10,10 +10,6 @@
 		<require idref="common.services.usb.class.hid.dual.mouse.example"/>
 		<require idref="board.same70_xplained"/>
 		<config name="config.board.same70_xplained.led" value="yes"/>
-		<generator value="iarewarm"/>
-		<generator value="armgcc"/>
-		<generator value="as5_arm"/>
-		<generator value="doxygen"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<device-support value="atsame70q21"/>
 	</project>
