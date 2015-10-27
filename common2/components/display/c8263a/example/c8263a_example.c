@@ -162,7 +162,7 @@ static void c8263a_num_dec_test(void)
 
 static void c8263a_animation_test(void)
 {
-	c8263a_circular_animation_start(8,0x0f);
+	c8263a_circular_animation_start(11,0x0f);
 }
 
 /**

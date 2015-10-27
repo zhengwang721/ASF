@@ -53,7 +53,7 @@
  * \name Circular Animation Shift Direction
  * @{
  */
-#define C8263A_CSR_DIR      SLCD_CIRCULAR_SHIFT_RIGHT
+#define C8263A_CSR_DIR      SLCD_CIRCULAR_SHIFT_LEFT
 /** @} */
 
 
