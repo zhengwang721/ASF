@@ -89,10 +89,6 @@ uint8_t conn_status = 0;
 /* Mouse status */
 uint8_t mouse_status = 0;
 
-/* Mouse Movement*/
-//uint8_t x_move = 0;
-//uint8_t y_move = 0;	
-
 /*Counter*/
 uint8_t cnt = 0;
 
@@ -138,6 +134,11 @@ static void hid_connect_cb(at_ble_handle_t handle)
 {
 	mouse_pos = MOUSE_RIGHT_MOVEMENT;
 	conn_status = 1;
+	cnt = 0;
+	app_mouse_report[0] = 0;
+	app_mouse_report[1] = 0;
+	app_mouse_report[2] = 0;
+	app_mouse_report[3] = 0;
 	ALL_UNUSED(handle);
 }
 
@@ -146,6 +147,11 @@ static void hid_disconnect_cb(at_ble_handle_t handle)
 {
 	mouse_pos = MOUSE_RIGHT_MOVEMENT;
 	conn_status = 0;
+	cnt = 0;
+	app_mouse_report[0] = 0;
+	app_mouse_report[1] = 0;
+	app_mouse_report[2] = 0;
+	app_mouse_report[3] = 0;
 	ALL_UNUSED(handle);
 }
 
