@@ -118,19 +118,23 @@ static void configure_spi_slave(void)
 //! [transfer_mode]
 	/* Configure pad 0 */
 //! [sck]
-	config_spi_slave.pinmux_pad[0] = CONF_SPI_PINMUX_SCK;
+	config_spi_slave.pin_number_pad[0] = CONF_SPI_PIN_SCK;
+	config_spi_slave.pinmux_sel_pad[0] = CONF_SPI_MUX_SCK;
 //! [sck]
-	/* Configure pad 1 */
+/* Configure pad 1 */
 //! [mosi]
-	config_spi_slave.pinmux_pad[1] = CONF_SPI_PINMUX_MOSI;
+	config_spi_slave.pin_number_pad[1] = CONF_SPI_PIN_MOSI;
+	config_spi_slave.pinmux_sel_pad[1] = CONF_SPI_MUX_MOSI;
 //! [mosi]
-	/* Configure pad 2 */
+/* Configure pad 2 */
 //! [ssn]
-	config_spi_slave.pinmux_pad[2] = CONF_SPI_PINMUX_SSN;
+	config_spi_slave.pin_number_pad[2] = CONF_SPI_PIN_SSN;
+	config_spi_slave.pinmux_sel_pad[2] = CONF_SPI_MUX_SSN;
 //! [ssn]
-	/* Configure pad 3 */
+/* Configure pad 3 */
 //! [miso]
-	config_spi_slave.pinmux_pad[3] = CONF_SPI_PINMUX_MISO;
+	config_spi_slave.pin_number_pad[3] = CONF_SPI_PIN_MISO;
+	config_spi_slave.pinmux_sel_pad[3] = CONF_SPI_MUX_MISO;
 //! [miso]
 //! [init]
 	spi_init(&spi_slave_instance, CONF_SPI, &config_spi_slave);

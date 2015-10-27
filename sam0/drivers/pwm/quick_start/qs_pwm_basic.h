@@ -58,7 +58,7 @@
  *   \li Pinmux pad
  *
  * This use case sets up the PWM to configure the PWM output on a physical device
- * pin (LED pin).
+ * pin.
  *
  * \section asfdoc_samb_pwm_basic_use_case_setup Setup
  *

@@ -308,10 +308,15 @@ void spi_get_config_defaults(
 	config->clock_source     = SPI_CLK_INPUT_0;
 	config->clock_divider    = 129;
 
-	config->pinmux_pad[0] = PINMUX_LP_GPIO_10_MUX2_SPI0_SCK;
-	config->pinmux_pad[1] = PINMUX_LP_GPIO_11_MUX2_SPI0_MOSI;
-	config->pinmux_pad[2] = PINMUX_LP_GPIO_12_MUX2_SPI0_SSN;
-	config->pinmux_pad[3] = PINMUX_LP_GPIO_13_MUX2_SPI0_MISO;
+	config->pin_number_pad[0] = PIN_LP_GPIO_10_MUX2_SPI0_SCK;
+	config->pin_number_pad[1] = PIN_LP_GPIO_11_MUX2_SPI0_MOSI;
+	config->pin_number_pad[2] = PIN_LP_GPIO_12_MUX2_SPI0_SSN;
+	config->pin_number_pad[3] = PIN_LP_GPIO_13_MUX2_SPI0_MISO;
+
+	config->pinmux_sel_pad[0] = MUX_LP_GPIO_10_MUX2_SPI0_SCK;
+	config->pinmux_sel_pad[1] = MUX_LP_GPIO_11_MUX2_SPI0_MOSI;
+	config->pinmux_sel_pad[2] = MUX_LP_GPIO_12_MUX2_SPI0_SSN;
+	config->pinmux_sel_pad[3] = MUX_LP_GPIO_13_MUX2_SPI0_MISO;
 };
 
 /**
@@ -429,15 +434,15 @@ enum status_code spi_init(
 
 	/* Set the pinmux for this spi module. */
 	for(idx = 0; idx < 4; idx++) {
-		if (config->pinmux_pad[idx] != PINMUX_UNUSED) {
+		if (config->pin_number_pad[idx] != PINMUX_UNUSED) {
 			if (config->mode == SPI_MODE_MASTER) {
 				config_gpio.direction = GPIO_PIN_DIR_OUTPUT;
 			} else if (config->mode == SPI_MODE_SLAVE) {
 				config_gpio.direction = GPIO_PIN_DIR_INPUT;
 			}
-			gpio_pin_set_config(config->pinmux_pad[idx]>>16, &config_gpio);
-			gpio_pinmux_cofiguration(config->pinmux_pad[idx]>>16, \
-						(uint16_t)(config->pinmux_pad[idx] & 0xFFFF));
+			gpio_pin_set_config(config->pin_number_pad[idx], &config_gpio);
+			gpio_pinmux_cofiguration(config->pin_number_pad[idx], \
+						(uint16_t)(config->pinmux_sel_pad[idx]));
 		}
 	}
 

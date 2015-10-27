@@ -80,10 +80,15 @@ static void configure_uart(void)
 //! [setup_uart_2]
 //! [setup_uart_3]
 	config_uart.baud_rate     = CONF_STDIO_BAUDRATE;
-	config_uart.pinmux_pad[0] = CONF_STDIO_PINMUX_PAD0;
-	config_uart.pinmux_pad[1] = CONF_STDIO_PINMUX_PAD1;
-	config_uart.pinmux_pad[2] = CONF_STDIO_PINMUX_PAD2;
-	config_uart.pinmux_pad[3] = CONF_STDIO_PINMUX_PAD3;
+	config_uart.pin_number_pad[0] = CONF_STDIO_PIN_PAD0;
+	config_uart.pin_number_pad[1] = CONF_STDIO_PIN_PAD1;
+	config_uart.pin_number_pad[2] = CONF_STDIO_PIN_PAD2;
+	config_uart.pin_number_pad[3] = CONF_STDIO_PIN_PAD3;
+	
+	config_uart.pinmux_sel_pad[0] = CONF_STDIO_MUX_PAD0;
+	config_uart.pinmux_sel_pad[1] = CONF_STDIO_MUX_PAD1;
+	config_uart.pinmux_sel_pad[2] = CONF_STDIO_MUX_PAD2;
+	config_uart.pinmux_sel_pad[3] = CONF_STDIO_MUX_PAD3;
 //! [setup_uart_3]
 //! [setup_uart_4]
 	stdio_serial_init(&uart_instance, CONF_STDIO_USART_MODULE, &config_uart);
