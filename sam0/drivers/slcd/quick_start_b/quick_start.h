@@ -88,8 +88,6 @@
  *  -# Configuration slcd struct, which can be filled out to
  *     adjust the configuration of a physical slcd peripheral.
  *     \snippet quick_start.c setup_config
- *  -# Config DMA module for automated character mapping and automated bit mapping.
- *     \snippet quick_start.c slcd_dma_config
  *  -# Enable the slcd module.
  *     \snippet quick_start.c module_enable
  *
