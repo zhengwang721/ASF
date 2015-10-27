@@ -46,12 +46,39 @@
 
 #include <asf.h>
 #include "ui.h"
-#include "ieee11073_skeleton.h"
+
+#define  MOUSE_MOVE_RANGE  3
+
+// Wakeup pin is RIGHT CLICK (fast wakeup 14)
+#define  WAKEUP_PMC_FSTT (PMC_FSMR_FSTT14)
+#define  WAKEUP_PIN      (GPIO_PUSH_BUTTON_1)
+#define  WAKEUP_PIO      (PIN_PUSHBUTTON_1_PIO)
+#define  WAKEUP_PIO_ID   (PIN_PUSHBUTTON_1_ID)
+#define  WAKEUP_PIO_MASK (PIN_PUSHBUTTON_1_MASK)
+#define  WAKEUP_PIO_ATTR (PIN_PUSHBUTTON_1_ATTR)
+
+// Interrupt on "pin change" from RIGHT CLICK to do wakeup on USB
+// Note:
+// This interrupt is enable when the USB host enable remotewakeup feature
+// This interrupt wakeup the CPU if this one is in idle mode
+static void ui_wakeup_handler(uint32_t id, uint32_t mask)
+{
+	if (WAKEUP_PIO_ID == id && WAKEUP_PIO_MASK == mask) {
+		// It is a wakeup then send wakeup USB
+		udc_remotewakeup();
+	}
+}
 
 void ui_init(void)
 {
-	/* Initialize LEDs */
-	LED_Off(LED0);
+	// Enable PIO clock for button inputs
+	pmc_enable_periph_clk(ID_PIOA);
+	// Set handler for wakeup
+	pio_handler_set(WAKEUP_PIO, WAKEUP_PIO_ID, WAKEUP_PIO_MASK, WAKEUP_PIO_ATTR, ui_wakeup_handler);
+	// Enable IRQ for button (PIOB)
+	NVIC_EnableIRQ((IRQn_Type) WAKEUP_PIO_ID);
+	// Initialize LEDs
+	LED_On(LED0);
 }
 
 void ui_powerdown(void)
@@ -59,21 +86,32 @@ void ui_powerdown(void)
 	LED_Off(LED0);
 }
 
+
+void ui_wakeup_enable(void)
+{
+	// Enable interrupt for button pin
+	pio_configure_pin(WAKEUP_PIN, WAKEUP_PIO_ATTR);
+	pio_enable_pin_interrupt(WAKEUP_PIN);
+	// Enable fast wakeup for button pin
+	pmc_set_fast_startup_input(WAKEUP_PMC_FSTT);
+}
+
+void ui_wakeup_disable(void)
+{
+	// Disable interrupt for button pin
+	pio_disable_pin_interrupt(WAKEUP_PIN);
+	// Disable fast wakeup for button pin
+	pmc_clr_fast_startup_input(WAKEUP_PMC_FSTT);
+}
+
 void ui_wakeup(void)
 {
 	LED_On(LED0);
 }
 
-void ui_association(bool state)
-{
-	
-}
-
 void ui_process(uint16_t framenumber)
 {
 	static uint8_t cpt_sof = 0;
-	bool b_btn_state;
-	static bool btn0_last_state = false;
 
 	if ((framenumber % 1000) == 0) {
 		LED_On(LED0);
@@ -81,32 +119,26 @@ void ui_process(uint16_t framenumber)
 	if ((framenumber % 1000) == 500) {
 		LED_Off(LED0);
 	}
-
-	/* Scan process running each 20ms */
+	// Scan process running each 2ms
 	cpt_sof++;
-	if (20 > cpt_sof) {
+	if (cpt_sof < 2) {
 		return;
 	}
-
 	cpt_sof = 0;
 
-	/* Use buttons to send measures */
-	b_btn_state = !ioport_get_pin_level(GPIO_PUSH_BUTTON_1);
-	if (b_btn_state != btn0_last_state) {
-		btn0_last_state = b_btn_state;
-		if (b_btn_state) {
-			ieee11073_skeleton_send_measure_1();
-		}
+	// Uses buttons to move mouse
+	if (gpio_pin_is_low(GPIO_PUSH_BUTTON_1)) {
+		udi_hid_mouse_moveX(-MOUSE_MOVE_RANGE);
 	}
 }
 
 /**
  * \defgroup UI User Interface
  *
- * Human interface on SAMV71-Xplained-Ultra:
- * - Led 0 is on when USB line is in IDLE mode, and off in SUSPEND mode
- * - Led 1 blinks when USB host has checked and enabled PHDC interface
- * - Led 1 is on when PHDC has validated association
- * - Push button 1 (SW0) are used to send a measure
+ * Human interface on SAMV71-Xplained-Ultra :
+ * - Led 0 blinks when USB host has checked and enabled HID mouse interface
+ * - No mouse buttons are linked
+ * - SW0 are used to move mouse left
+ * - SW0 can be used to wakeup USB Host in remote wakeup mode.
  *
  */

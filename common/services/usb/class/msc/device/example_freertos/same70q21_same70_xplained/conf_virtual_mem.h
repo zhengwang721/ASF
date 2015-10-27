@@ -1,7 +1,10 @@
 /**
+ *
  * \file
  *
- * \brief User Interface
+ * \brief Virtual memory configuration file.
+ *
+ * This file contains the possible external configuration of the Virtual Memory.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -44,69 +47,11 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#include <asf.h>
-#include "ui.h"
-#include "ieee11073_skeleton.h"
 
-void ui_init(void)
-{
-	/* Initialize LEDs */
-	LED_Off(LED0);
-}
+#ifndef _CONF_VIRTUAL_MEM_H_
+#define _CONF_VIRTUAL_MEM_H_
 
-void ui_powerdown(void)
-{
-	LED_Off(LED0);
-}
+/** Size of Virtual Memory on internal RAM (unit 512B) */
+#define VMEM_NB_SECTOR 48 /* Internal RAM 24KB (should > 20KB or PC can not format it) */
 
-void ui_wakeup(void)
-{
-	LED_On(LED0);
-}
-
-void ui_association(bool state)
-{
-	
-}
-
-void ui_process(uint16_t framenumber)
-{
-	static uint8_t cpt_sof = 0;
-	bool b_btn_state;
-	static bool btn0_last_state = false;
-
-	if ((framenumber % 1000) == 0) {
-		LED_On(LED0);
-	}
-	if ((framenumber % 1000) == 500) {
-		LED_Off(LED0);
-	}
-
-	/* Scan process running each 20ms */
-	cpt_sof++;
-	if (20 > cpt_sof) {
-		return;
-	}
-
-	cpt_sof = 0;
-
-	/* Use buttons to send measures */
-	b_btn_state = !ioport_get_pin_level(GPIO_PUSH_BUTTON_1);
-	if (b_btn_state != btn0_last_state) {
-		btn0_last_state = b_btn_state;
-		if (b_btn_state) {
-			ieee11073_skeleton_send_measure_1();
-		}
-	}
-}
-
-/**
- * \defgroup UI User Interface
- *
- * Human interface on SAMV71-Xplained-Ultra:
- * - Led 0 is on when USB line is in IDLE mode, and off in SUSPEND mode
- * - Led 1 blinks when USB host has checked and enabled PHDC interface
- * - Led 1 is on when PHDC has validated association
- * - Push button 1 (SW0) are used to send a measure
- *
- */
+#endif /* _CONF_VIRTUAL_MEM_H_ */
