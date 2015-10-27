@@ -1396,10 +1396,10 @@
 #define MEGAMUX_I2C0_SCL                           0x9
 #define MEGAMUX_I2C1_SDA                           0xa
 #define MEGAMUX_I2C1_SCL                           0xb
-#define MEGAMUX_PWM0_OUT                           0xc
-#define MEGAMUX_PWM1_OUT                           0xd
-#define MEGAMUX_PWM2_OUT                           0xe
-#define MEGAMUX_PWM3_OUT                           0xf
+#define MEGAMUX_PWM1_OUT                           0xc
+#define MEGAMUX_PWM2_OUT                           0xd
+#define MEGAMUX_PWM3_OUT                           0xe
+#define MEGAMUX_PWM4_OUT                           0xf
 #define MEGAMUX_32KHZ_CLK                          0x10
 #define MEGAMUX_COEX_WLAN_TX                       0x11
 #define MEGAMUX_COEX_WLAN_RX                       0x12
