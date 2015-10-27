@@ -145,6 +145,9 @@ int main(void )
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 	
+	/* Initializing the profile */
+	csc_prf_init(NULL);
+	
 	/* Register the notification handler */
 	notify_recv_ntf_handler(csc_prf_report_ntf_cb);
 	
