@@ -470,6 +470,11 @@ void serial_tx_callback(void)
  {
 	 
  }
+ 
+ void stop_timer(void)
+ {
+	 ticks = 0;
+ }
 
 
 

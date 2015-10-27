@@ -229,4 +229,5 @@ void platform_leave_critical_section(void);
 void platform_cleanup(void);
 void start_timer(uint32_t timeout);
 uint32_t timer_done(void);
+void stop_timer(void);
 #endif // __PLATFORM_H__
