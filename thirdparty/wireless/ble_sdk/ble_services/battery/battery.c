@@ -58,12 +58,12 @@
 /** Initial value of the battery level characteristic value */
 uint8_t battery_init_value = 10;
 
-/** Presentation format of the batery level */
+/** Presentation format of the battery level */
 at_ble_char_presentation_t presentation_format;
 
 bool volatile bat_notification_flag = false;
 
-extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
+extern ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED];
 
 /**@brief Initialize the service with its included service, characteristics, and descriptors
  */
@@ -137,7 +137,7 @@ at_ble_status_t bat_update_char_value (bat_gatt_service_handler_t *battery_serv 
 
 	if(bat_notification_flag){
 		/* sending notification to the peer about change in the battery level */ 
-		if((status = at_ble_notification_send(ble_connected_dev_info[0].handle, battery_serv->serv_chars.char_val_handle)) != AT_BLE_SUCCESS) {
+		if((status = at_ble_notification_send(ble_dev_info[0].conn_info.handle, battery_serv->serv_chars.char_val_handle)) != AT_BLE_SUCCESS) {
 			DBG_LOG("sending notification failed%d",status);
 			return status;
 		}
@@ -163,7 +163,7 @@ at_ble_status_t bat_char_changed_event(bat_gatt_service_handler_t *battery_serv,
 		{
 			bat_notification_flag = true;
 			/* sending notification to the peer about change in the battery level */
-			if((status = at_ble_notification_send(ble_connected_dev_info[0].handle, battery_serv->serv_chars.char_val_handle)) != AT_BLE_SUCCESS) {
+			if((status = at_ble_notification_send(ble_dev_info[0].conn_info.handle, battery_serv->serv_chars.char_val_handle)) != AT_BLE_SUCCESS) {
 				DBG_LOG("sending notification failed%d",status);
 				return status;
 			}

@@ -54,6 +54,12 @@
 
 extern volatile bool init_done;
 
+#if BLE_DEVICE_ROLE == BLE_ROLE_ALL
+#ifndef ATT_DB_MEMORY
+#define ATT_DB_MEMORY
+#endif
+#endif
+
 #if defined ATT_DB_MEMORY
 uint32_t att_db_data[BLE_ATT_DB_MEMORY_SIZE/4];
 #endif
@@ -63,7 +69,7 @@ volatile uint8_t ble_device_count;
 
 ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED];
 
-
+static at_ble_addr_t ble_peripheral_dev_address;
 
 #define	MAX_GAP_EVENT_SUBSCRIBERS    5
 #define MAX_GATT_CLIENT_SUBSCRIBERS  5
@@ -213,6 +219,7 @@ void ble_device_init(at_ble_addr_t *addr)
 	
 	init_done = true;
 	
+	/* Register it in first index of callback handler */
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, 
 									BLE_GAP_EVENT_TYPE, 
 									ble_mgr_gap_handle);
@@ -421,6 +428,8 @@ at_ble_status_t ble_undefined_event_handler(void *params)
 at_ble_status_t gap_dev_connect(at_ble_addr_t *dev_addr)
 {
 	at_ble_connection_params_t gap_conn_parameter;
+	
+	memcpy((uint8_t *)&ble_peripheral_dev_address, (uint8_t *)dev_addr, sizeof(at_ble_addr_t));
 
 	gap_conn_parameter.con_intv_min = GAP_CONN_INTERVAL_MIN;
 	gap_conn_parameter.con_intv_max = GAP_CONN_INTERVAL_MAX;
@@ -579,6 +588,68 @@ at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 	return AT_BLE_FAILURE;
 }
 
+bool ble_check_ispheripheral(at_ble_handle_t handle)
+{
+	at_ble_dev_role_t dev_role;
+	
+	if(ble_connected_device_role(handle, &dev_role) == AT_BLE_SUCCESS)
+	{
+		if (dev_role == AT_BLE_ROLE_PERIPHERAL)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool ble_check_iscentral(at_ble_handle_t handle)
+{
+	at_ble_dev_role_t dev_role;
+	
+	if(ble_connected_device_role(handle, &dev_role) == AT_BLE_SUCCESS)
+	{
+		if (dev_role == AT_BLE_ROLE_CENTRAL)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+at_ble_status_t ble_connected_device_role(at_ble_handle_t conn_handle, at_ble_dev_role_t *dev_role)
+{
+	uint8_t idx;
+	at_ble_status_t status = AT_BLE_FAILURE;
+	for (idx = 0; idx < BLE_MAX_DEVICE_CONNECTED; idx++)
+	{
+		if((ble_dev_info[idx].conn_state != BLE_DEVICE_DEFAULT_IDLE) && 
+		  (ble_dev_info[idx].conn_state != BLE_DEVICE_DISCONNECTED) &&
+		  (ble_dev_info[idx].conn_info.handle == conn_handle))
+		{
+			*dev_role = ble_dev_info[idx].dev_role;
+			status = AT_BLE_SUCCESS;
+			break;
+		}
+	}
+	return status;
+}
+
+at_ble_status_t ble_check_device_state(at_ble_handle_t conn_handle, ble_device_state_t state)
+{
+	uint8_t idx;
+	at_ble_status_t status = AT_BLE_FAILURE;
+	for (idx = 0; idx < BLE_MAX_DEVICE_CONNECTED; idx++)
+	{
+		if((ble_dev_info[idx].conn_state == state) &&
+		  (ble_dev_info[idx].conn_info.handle == conn_handle))
+		{
+			status = AT_BLE_SUCCESS;
+			break;
+		}
+	}
+	return status;
+}
+
 /** @brief function to handle connected event received from stack */
 at_ble_status_t ble_connected_state_handler(void *params)
 {
@@ -614,7 +685,19 @@ at_ble_status_t ble_connected_state_handler(void *params)
 						break;
 					}
 				}
-			}		
+			}
+			
+			if(!memcmp((uint8_t *)&ble_peripheral_dev_address, (uint8_t *)&conn_params->peer_addr, sizeof(at_ble_addr_t)))
+			{
+				ble_dev_info[idx].dev_role = AT_BLE_ROLE_CENTRAL;
+			}
+			else
+			{
+				ble_dev_info[idx].dev_role = AT_BLE_ROLE_PERIPHERAL;
+			}
+			/* Reset the ble_peripheral_dev_address to identify the initiator */
+			memset((uint8_t *)&ble_peripheral_dev_address, 0, sizeof(at_ble_addr_t));
+					
 		}
 		else
 		{
@@ -750,7 +833,9 @@ at_ble_status_t ble_slave_security_request_handler(void* params)
 	at_ble_pair_features_t features;
 	uint8_t i = 0, idx;
 	at_ble_slave_sec_request_t* slave_sec_req;
-	slave_sec_req = (at_ble_slave_sec_request_t*)params;
+	bool device_found = false;
+	
+	slave_sec_req = (at_ble_slave_sec_request_t*)params;	
 	
 	//if (slave_sec_req->status != AT_BLE_SUCCESS)
 	//{
@@ -758,6 +843,31 @@ at_ble_status_t ble_slave_security_request_handler(void* params)
 		//return AT_BLE_FAILURE;
 		//@Todo Status is not handled in the Library
 	//}
+
+	for (idx = 0; idx < BLE_MAX_DEVICE_CONNECTED; idx++)
+	{
+		if((ble_dev_info[idx].conn_info.handle == slave_sec_req->handle) && (ble_dev_info[idx].conn_state != BLE_DEVICE_DISCONNECTED) &&
+		(ble_dev_info[idx].conn_state != BLE_DEVICE_DEFAULT_IDLE))
+		{
+			device_found = true;
+			break;
+		}
+	}
+	
+	if (device_found)
+	{
+		if(ble_dev_info[idx].bond_info.auth & slave_sec_req->bond)
+		{
+			if(at_ble_encryption_start(slave_sec_req->handle, &ble_dev_info[idx].bond_info.peer_ltk, ble_dev_info[idx].bond_info.auth) == AT_BLE_SUCCESS)
+			{
+				return  AT_BLE_SUCCESS;
+			}
+			else
+			{
+				return AT_BLE_FAILURE;
+			}			
+		}
+	}
 	
 	for (idx = 0; idx < BLE_MAX_DEVICE_CONNECTED; idx++)
 	{
@@ -807,9 +917,6 @@ at_ble_status_t ble_slave_security_request_handler(void* params)
 		
 	}
 
-	/* Send pairing response */
-	DBG_LOG("Sending pairing response");
-
 	if(at_ble_authenticate(slave_sec_req->handle, &features, &ble_dev_info[idx].bond_info.peer_ltk, NULL) != AT_BLE_SUCCESS)
 	{
 		features.bond = false;
@@ -825,27 +932,17 @@ at_ble_status_t ble_pair_request_handler(void *params)
 {
 	at_ble_pair_features_t features;
 	uint8_t i = 0, idx;
-	at_ble_slave_sec_request_t* slave_sec_req;
-	slave_sec_req = (at_ble_slave_sec_request_t*)params;
-	
-	if (slave_sec_req->status != AT_BLE_SUCCESS)
-	{
-		at_ble_disconnect(slave_sec_req->handle, AT_BLE_AUTH_FAILURE);		
-		return AT_BLE_FAILURE;
-	}
+	at_ble_pair_request_t* pair_req;
+	pair_req = (at_ble_pair_request_t*)params;
 	
 	for (idx = 0; idx < BLE_MAX_DEVICE_CONNECTED; idx++)
 	{
-		if((ble_dev_info[idx].conn_info.handle == slave_sec_req->handle) && (ble_dev_info[idx].conn_state == BLE_DEVICE_CONNECTED))
+		if((ble_dev_info[idx].conn_info.handle == pair_req->handle) && (ble_dev_info[idx].conn_state == BLE_DEVICE_CONNECTED))
 		{
 			ble_dev_info[idx].conn_state = BLE_DEVICE_ENCRYPTION_STATE;
 			break;
 		}
 	}
-	
-	/* Distribution of LTK is required */
-	features.initiator_keys =   AT_BLE_KEY_DIST_ENC;
-	features.responder_keys =   AT_BLE_KEY_DIST_ENC;
 	
 	features.desired_auth =  BLE_AUTHENTICATION_LEVEL; 
 	features.bond = BLE_BOND_REQ;
@@ -888,11 +985,11 @@ at_ble_status_t ble_pair_request_handler(void *params)
 	/* Send pairing response */
 	DBG_LOG("Sending pairing response");
 
-	if(at_ble_authenticate(slave_sec_req->handle, &features, &ble_dev_info[idx].bond_info.peer_ltk, NULL) != AT_BLE_SUCCESS)
+	if(at_ble_authenticate(pair_req->handle, &features, &ble_dev_info[idx].bond_info.peer_ltk, NULL) != AT_BLE_SUCCESS)
 	{
 		features.bond = false;
 		features.mitm_protection = false;
-		DBG_LOG("Slave Security Req - Authentication Failed");
+		DBG_LOG("Pair Request - Authentication Failed");
 		return AT_BLE_FAILURE;
 	}
 	return AT_BLE_SUCCESS;
@@ -1100,7 +1197,7 @@ at_ble_status_t ble_encryption_request_handler(void *params)
 
 void ble_event_manager(at_ble_events_t events, void *event_params)
 {
-	DBG_LOG_DEV("BLE-Event:%d", events);
+	DBG_LOG("BLE-Event:%d", events);
 	switch(events)
 	{		
 	 /* GAP events */
