@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Common IOPORT service example 2 for SAMV71 Xplained Ultra" id="common.services.ioport.example2.samv71_xplained_ultra">
+	<project caption="Common IOPORT service example 2 on SAMV71-Xplained-Ultra" id="common.services.ioport.example2.samv71_xplained_ultra">
 		<info type="description" value="summary">
 			Toggles output pin controlling LED0
 		</info>

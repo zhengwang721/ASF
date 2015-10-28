@@ -10,8 +10,7 @@
 		<build type="include-path" value="."/>
 		<device-support value="sam"/>
 		<require idref="sam.drivers.pmc"/>
-		<require idref="sam.drivers.smc"/>
-		<require idref="sam.drivers.pio"/>	
+		<require idref="sam.drivers.pio"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="sam.components.display.ili9488"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
