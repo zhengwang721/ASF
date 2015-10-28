@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project id="common.services.freertos.oled1_tickless_xpro_example.saml22_xplained_pro_b" caption="FreeRTOS tickless demo using OLED1 Xplained Pro, for SAM L22 Xplained Pro">
+	<project id="common.services.freertos.oled1_tickless_xpro_example.saml22_xplained_pro_b" caption="FreeRTOS tickless demo using OLED1 Xplained Pro, for SAM L22 Xplained Pro B">
 		<board-addon vendor="Atmel" caption="OLED1 Xplained Pro" position="EXT3"/>
 		<!-- Display can do double-buffering, so double the LCD height -->
 		<build type="define" name="GFX_MONO_LCD_HEIGHT" value="64"/>

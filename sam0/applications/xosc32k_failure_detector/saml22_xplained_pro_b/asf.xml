@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="CLOCK Failure Detector for the SAM L22 Xplained Pro" id="sam0.applications.clock_fail_detector.saml22_xplained_pro_b">
+	<project caption="CLOCK Failure Detector for the SAM L22 Xplained Pro B" id="sam0.applications.clock_fail_detector.saml22_xplained_pro_b">
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_clocks.h"/>

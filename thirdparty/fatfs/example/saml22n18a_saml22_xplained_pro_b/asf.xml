@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="FatFS example for SAML22 Xplained Pro" id="common.services.fs.fatfs.access_example.saml22_xplained_pro_b">
+	<project caption="FatFS example for SAML22 Xplained Pro B" id="common.services.fs.fatfs.access_example.saml22_xplained_pro_b">
 		<info type="description" value="summary">
-		FatFS example for SAML22 Xplained Pro, the file system will be created on the external SD/MMC if it's connented.
+		FatFS example for SAML22 Xplained Pro B, the file system will be created on the external SD/MMC if it's connented.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_access.h"/>
