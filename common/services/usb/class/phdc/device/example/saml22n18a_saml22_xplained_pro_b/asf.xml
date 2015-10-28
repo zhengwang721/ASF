@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="USB Device PHDC for SAM L22 Xplained Pro" id="common.services.usb.class.phdc.device.example.saml22_xplained_pro_b">
+	<project caption="USB Device PHDC for SAM L22 Xplained Pro B" id="common.services.usb.class.phdc.device.example.saml22_xplained_pro_b">
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
