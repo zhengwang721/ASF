@@ -305,28 +305,38 @@ at_ble_status_t pxp_disconnect_event_handler(void *params)
 	char index_value;	
 	at_ble_disconnected_t *disconnect;
 	disconnect = (at_ble_disconnected_t *)params;
-	hw_timer_stop();
-	do
-	{
-		DBG_LOG("Select [r] to Reconnect or [s] Scan");
-		index_value = getchar();
-		DBG_LOG("%c", index_value);
-	}	while (!((index_value == 'r') || (index_value == 's')));
 	
-	if(index_value == 'r') {
-		if (gap_dev_connect(&pxp_reporter_address) == AT_BLE_SUCCESS) {
-			DBG_LOG("PXP Re-Connect request sent");		
-			pxp_connect_request_flag = true;
-			hw_timer_start(PXP_CONNECT_REQ_INTERVAL);
-			return AT_BLE_SUCCESS;
-		} else {
-			DBG_LOG("PXP Re-Connect request send failed");
+	if(!ble_check_disconnected_iscentral(disconnect->handle))
+	{
+		return AT_BLE_FAILURE;
+	}
+	
+	if((ble_check_device_state(disconnect->handle, BLE_DEVICE_DISCONNECTED) == AT_BLE_SUCCESS) ||
+	(ble_check_device_state(disconnect->handle, BLE_DEVICE_DEFAULT_IDLE) == AT_BLE_SUCCESS))
+	{
+		hw_timer_stop();
+		do
+		{
+			DBG_LOG("Select [r] to Reconnect or [s] Scan");
+			index_value = getchar();
+			DBG_LOG("%c", index_value);
+		}	while (!((index_value == 'r') || (index_value == 's')));
+		
+		if(index_value == 'r') {
+			if (gap_dev_connect(&pxp_reporter_address) == AT_BLE_SUCCESS) {
+				DBG_LOG("PXP Re-Connect request sent");
+				pxp_connect_request_flag = true;
+				hw_timer_start(PXP_CONNECT_REQ_INTERVAL);
+				return AT_BLE_SUCCESS;
+				} else {
+				DBG_LOG("PXP Re-Connect request send failed");
+			}
+		}
+		else if(index_value == 's') {
+			return gap_dev_scan();
 		}
 	}
-	else if(index_value == 's') {
-		return gap_dev_scan();
-	}
-	ALL_UNUSED(disconnect);
+
 	return AT_BLE_FAILURE;
 }
 
@@ -334,7 +344,12 @@ at_ble_status_t pxp_monitor_pair_done_handler(void *params)
 {
 	at_ble_status_t discovery_status = AT_BLE_FAILURE;
 	at_ble_pair_done_t *pair_done_val;
-	pair_done_val = (at_ble_pair_done_t *)params;
+	pair_done_val = (at_ble_pair_done_t *)params;		
+		
+	if(!ble_check_iscentral(pair_done_val->handle))
+	{
+		return AT_BLE_FAILURE;
+	}
 	
 	if (pair_done_val->status == AT_BLE_SUCCESS) {
 		discovery_status = at_ble_primary_service_discover_all(
@@ -347,7 +362,7 @@ at_ble_status_t pxp_monitor_pair_done_handler(void *params)
 			} else {
 			DBG_LOG("GATT Discovery request failed");
 		}
-	}
+	}	
 	return discovery_status;
 }
 
@@ -365,11 +380,16 @@ at_ble_status_t pxp_monitor_pair_done_handler(void *params)
 at_ble_status_t pxp_monitor_connected_state_handler(void *params)
 {
 	at_ble_connected_t *conn_params;
+	conn_params = (at_ble_connected_t *)params;	
+	
+	if(!ble_check_iscentral(conn_params->handle))
+	{
+		return AT_BLE_FAILURE;
+	}
 
-	conn_params = (at_ble_connected_t *)params;
 	hw_timer_stop();
 	pxp_connect_request_flag = false;
-	
+		
 	return conn_params->conn_status;
 }
 
@@ -389,6 +409,12 @@ at_ble_status_t pxp_monitor_service_found_handler(void *params)
 	at_ble_status_t status = AT_BLE_SUCCESS;
 	at_ble_primary_service_found_t *primary_service_params;
 	primary_service_params = (at_ble_primary_service_found_t *)params;
+	
+	if(!ble_check_iscentral(primary_service_params->conn_handle))
+	{
+		return AT_BLE_FAILURE;
+	}
+	
 	pxp_service_uuid = &primary_service_params->service_uuid;
 	if (pxp_service_uuid->type == AT_BLE_UUID_16) {
 		uint16_t service_uuid;
@@ -467,6 +493,12 @@ at_ble_status_t pxp_monitor_discovery_complete_handler(void *params)
 	bool discover_char_flag = true;
 	at_ble_discovery_complete_t *discover_status;
 	discover_status = (at_ble_discovery_complete_t *)params;
+	
+	if(!ble_check_iscentral(discover_status->conn_handle))
+	{
+		return AT_BLE_FAILURE;
+	}
+	
 	DBG_LOG_DEV("discover complete operation %d and %d",discover_status->operation,discover_status->status);
 	if ((discover_status->status == DISCOVER_SUCCESS) || (discover_status->status == AT_BLE_SUCCESS)) {
 		#if defined TX_POWER_SERVICE
@@ -579,6 +611,12 @@ at_ble_status_t pxp_monitor_characteristic_read_response(void *params)
 {
 	at_ble_characteristic_read_response_t *char_read_resp;
 	char_read_resp = (at_ble_characteristic_read_response_t *)params;
+	
+	if(!ble_check_iscentral(char_read_resp->conn_handle))
+	{
+		return AT_BLE_FAILURE;
+	}
+	
 	#if defined TX_POWER_SERVICE
 	txps_power_read_response(char_read_resp, &txps_handle);
 	#endif
@@ -607,6 +645,11 @@ at_ble_status_t pxp_monitor_characteristic_found_handler(void *params)
 	uint16_t charac_16_uuid;
 	at_ble_characteristic_found_t *characteristic_found;
 	characteristic_found = (at_ble_characteristic_found_t *)params;
+	
+	if(!ble_check_iscentral(characteristic_found->conn_handle))
+	{
+		return AT_BLE_FAILURE;
+	}
 
 	charac_16_uuid = (uint16_t)((characteristic_found->char_uuid.uuid[0]) |	\
 	(characteristic_found->char_uuid.uuid[1] << 8));

@@ -101,15 +101,25 @@ extern gatt_ias_char_handler_t ias_handle;
 extern ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED];;
 extern bool pxp_connect_request_flag;
 
-volatile bool app_timer_done = false;
+bool volatile app_timer_done = false;
 pxp_current_alert_t alert_level = PXP_NO_ALERT;
 
-volatile bool button_pressed = false;
+bool volatile button_pressed = false;
+bool volatile timer_cb_done = false;
+bool volatile bat_char_notification_confirmed = false;
+bool volatile battery_flag = true;
+uint8_t battery_level = BATTERY_MIN_LEVEL;
+at_ble_handle_t battery_conn_handle = 0xFFFF;
+bool volatile battery_stop_simulation = true;
 
-static at_ble_status_t ble_connected_app_event(void *param);
+static at_ble_status_t bas_paired_app_event(void *param);
+static at_ble_status_t bas_encryption_status_changed_app_event(void *param);
 static at_ble_status_t ble_disconnected_app_event(void *param);
 static at_ble_status_t battery_start_advertisement(void);
 static at_ble_status_t battery_set_advertisement_data(void);
+static at_ble_status_t ble_char_changed_app_event(void *param);
+static at_ble_status_t ble_notification_confirmed_app_event(void *param);
+static at_ble_status_t battery_simulation_task(void *param);
 
 static const ble_event_callback_t battery_app_gap_cb[] = {
 	NULL,
@@ -117,16 +127,16 @@ static const ble_event_callback_t battery_app_gap_cb[] = {
 	NULL,
 	NULL,
 	NULL,
-	ble_connected_app_event,
+	NULL,
 	ble_disconnected_app_event,
 	NULL,
 	NULL,
+	bas_paired_app_event,
 	NULL,
 	NULL,
 	NULL,
 	NULL,
-	NULL,
-	NULL,
+	bas_encryption_status_changed_app_event,
 	NULL,
 	NULL,
 	NULL,
@@ -134,9 +144,9 @@ static const ble_event_callback_t battery_app_gap_cb[] = {
 };
 
 static const ble_event_callback_t battery_app_gatt_server_cb[] = {
+	ble_notification_confirmed_app_event,
 	NULL,
-	NULL,
-	NULL,
+	ble_char_changed_app_event,
 	NULL,
 	NULL,
 	NULL,
@@ -238,19 +248,80 @@ static void timer_callback_handler(void)
 
 	/* Enable the flag the serve the task */
 	app_timer_done = true;
+	if (!timer_cb_done)
+	{
+		timer_cb_done = true;
+	}
 }
 
 /* Callback registered for AT_BLE_PAIR_DONE event from stack */
-static at_ble_status_t ble_connected_app_event(void *param)
+static at_ble_status_t bas_paired_app_event(void *param)
 {
-	battery_start_advertisement();
-	ALL_UNUSED(param);
+	static bool peripheral_advertising = false;
+	at_ble_pair_done_t *ble_pair_done;
+	ble_pair_done = (at_ble_pair_done_t *)param;
+	if (ble_pair_done->status != AT_BLE_SUCCESS)
+	{
+		return AT_BLE_FAILURE;
+	}
+	if(ble_check_iscentral(ble_pair_done->handle))
+	{
+		if (!peripheral_advertising)
+		{
+			battery_start_advertisement();
+			peripheral_advertising = true;
+		}
+	}
+	else
+	{
+		battery_conn_handle = ble_pair_done->handle;
+		timer_cb_done = false;
+		bat_char_notification_confirmed = true;
+		hw_timer_start(BATTERY_UPDATE_INTERVAL);
+		battery_stop_simulation = false;
+	}	
+	return AT_BLE_SUCCESS;
+}
+
+static at_ble_status_t bas_encryption_status_changed_app_event(void *param)
+{
+	static bool peripheral_advertising = false;
+	at_ble_encryption_status_changed_t *ble_enc_status;
+	ble_enc_status = (at_ble_encryption_status_changed_t *)param;
+	if (ble_enc_status->status != AT_BLE_SUCCESS)
+	{
+		return AT_BLE_FAILURE;
+	}
+	if(ble_check_iscentral(ble_enc_status->handle))
+	{
+		if (!peripheral_advertising)
+		{
+			battery_start_advertisement();
+			peripheral_advertising = true;
+		}
+	}
+	else
+	{
+		battery_conn_handle = ble_enc_status->handle;
+		timer_cb_done = false;
+		bat_char_notification_confirmed = true;
+		hw_timer_start(BATTERY_UPDATE_INTERVAL);
+		battery_stop_simulation = false;
+	}	
 	return AT_BLE_SUCCESS;
 }
 
 /* Callback registered for AT_BLE_DISCONNECTED event from stack */
 static at_ble_status_t ble_disconnected_app_event(void *param)
 {
+	at_ble_disconnected_t *ble_disconnected;
+	ble_disconnected = (at_ble_disconnected_t *)param;
+	DBG_LOG("Disconneted CB Called********");
+	if (ble_disconnected->handle == battery_conn_handle)
+	{
+		battery_stop_simulation = true;
+		battery_start_advertisement();
+	}
 	ALL_UNUSED(param);
 	return AT_BLE_SUCCESS;
 }
@@ -287,9 +358,68 @@ static at_ble_status_t battery_set_advertisement_data(void)
 	return status;
 }
 
+/* Callback registered for AT_BLE_NOTIFICATION_CONFIRMED event from stack */
+static at_ble_status_t ble_notification_confirmed_app_event(void *param)
+{
+	at_ble_cmd_complete_event_t *notification_status = (at_ble_cmd_complete_event_t *)param;
+	if(!notification_status->status)
+	{
+		bat_char_notification_confirmed = true;
+		DBG_LOG_DEV("sending notification to the peer success");
+	}
+	return AT_BLE_SUCCESS;
+}
+
+/* Callback registered for AT_BLE_CHARACTERISTIC_CHANGED event from stack */
+static at_ble_status_t ble_char_changed_app_event(void *param)
+{
+	at_ble_characteristic_changed_t *char_handle;
+	char_handle = (at_ble_characteristic_changed_t *)param;
+	if (char_handle->conn_handle != battery_conn_handle)
+	{
+		return AT_BLE_FAILURE;
+	}	
+	return bat_char_changed_event(char_handle->conn_handle, &bas_service_handler, char_handle, &bat_char_notification_confirmed);
+}
+
+static at_ble_status_t battery_simulation_task(void *param)
+{
+	if(battery_stop_simulation)
+	{
+		return AT_BLE_FAILURE;
+	}
+	if (timer_cb_done)
+	{
+		timer_cb_done = false;
+		/* send the notification and Update the battery level  */
+		if(bat_char_notification_confirmed){
+			if(bat_update_char_value(battery_conn_handle, &bas_service_handler, battery_level, &bat_char_notification_confirmed) == AT_BLE_SUCCESS)
+			{
+				DBG_LOG("Battery Level:%d%%", battery_level);
+			}
+			if(battery_level == BATTERY_MAX_LEVEL)
+			{
+				battery_flag = false;
+			}
+			else if(battery_level == BATTERY_MIN_LEVEL)
+			{
+				battery_flag = true;
+			}
+			if(battery_flag)
+			{
+				battery_level++;
+			}
+			else
+			{
+				battery_level--;
+			}
+		}
+	}
+	return AT_BLE_SUCCESS;
+}
+
 int main(void)
 {	
-	uint8_t battery_level = BATTERY_MIN_LEVEL;
 	uint8_t status;
 	
 	#if SAMG55
@@ -352,6 +482,8 @@ int main(void)
 			button_pressed = false;
 			app_timer_done = false;
 		}
+		
+		battery_simulation_task(NULL);
 
 		/* Application Task */
 		if (app_timer_done) {

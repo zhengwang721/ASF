@@ -93,12 +93,6 @@
 #endif	/* BLE_DEVICE_NAME */
 #endif /* HR_SENSOR */
 
-#if defined PROXIMITY_MONITOR
-#ifndef BLE_DEVICE_NAME
-#define BLE_DEVICE_NAME				"ATMEL-MON"
-#endif	/* BLE_DEVICE_NAME */
-#endif /* PROXIMITY_MONITOR */
-
 #if defined BLP_SENSOR
 #ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-BLP"
@@ -167,6 +161,12 @@
 #define BLE_DEVICE_NAME				"ATMEL-DIS"
 #endif	/* BLE_DEVICE_NAME */
 #endif	/* DEVICE_INFORMATION_SERVICE */
+
+#if defined PROXIMITY_MONITOR
+#ifndef BLE_DEVICE_NAME
+#define BLE_DEVICE_NAME				"ATMEL-MON"
+#endif	/* BLE_DEVICE_NAME */
+#endif /* PROXIMITY_MONITOR */
 
 /** @brief default device name */
 #ifndef BLE_DEVICE_NAME
@@ -533,6 +533,7 @@ typedef enum {
 typedef struct ble_connected_dev_info
 {
 	at_ble_connected_t conn_info;
+	at_ble_dev_role_t dev_role;
 	at_ble_pair_done_t bond_info;
 	ble_device_state_t conn_state;
 }ble_connected_dev_info_t;
@@ -714,7 +715,13 @@ typedef enum {
 #define  BLE_GAP_ADV_DATA_SERVICE_32BIT_UUID4_VAL		"\x12\x34\x56\x78"
 #endif
 
+
+#ifdef CSC_SERVICE
 #define BLE_GAP_ADV_SERVICE_128BIT_UUID_ENABLE			true
+#else
+#define BLE_GAP_ADV_SERVICE_128BIT_UUID_ENABLE			false
+#endif
+
 #define BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH			16
 #if BLE_GAP_ADV_SERVICE_128BIT_UUID_ENABLE
 #define BLE_GAP_ADV_SERVICE_128BIT_UUID_SCN_RSP_ENABLE	SCAN_RESPONSE_ENABLE
@@ -770,7 +777,9 @@ typedef enum {
 
 
 #ifndef TP_ANDROID
+#ifdef CURRENT_TIME_SERVICE
 #define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_ENABLE				true
+#endif
 #endif
 
 /* Service Solicitation UUID Configuration */
@@ -1053,7 +1062,7 @@ typedef struct scan_resp_element{
 		adv_ptr = (adv_element_container_t *)uuid_ptr;\
 		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE - ADV_TYPE_FLAG_SIZE))\
 		{ \
-			DBG_LOG("Advertisement Data Length too big");\
+			DBG_LOG("Adv Data too big");\
 			while(1);\
 		} \
 		adv_ptr->adv_ptr[adv_ptr->len++] = (uint8_t) BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID##n##_VAL; \
@@ -1069,7 +1078,7 @@ typedef struct scan_resp_element{
 		adv_ptr = (adv_element_container_t *)uuid_ptr;\
 		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE))\
 		{ \
-			DBG_LOG("Advertisement Data Length too big");\
+			DBG_LOG("Adv Data too big");\
 			while(1);\
 		} \
 		adv_ptr->adv_ptr[adv_ptr->len++] = (uint8_t) BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID##n##_VAL; \
@@ -1085,7 +1094,7 @@ typedef struct scan_resp_element{
 		adv_ptr = (adv_element_container_t *)uuid_ptr;\
 		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE - ADV_TYPE_FLAG_SIZE))\
 		{ \
-			DBG_LOG("Advertisement Data Length too big");\
+			DBG_LOG("Adv Data too big");\
 			while(1);\
 		} \
 		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_SERVICE_32BIT_UUID##n##_VAL, BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH);\
@@ -1101,7 +1110,7 @@ typedef struct scan_resp_element{
 		adv_ptr = (adv_element_container_t *)uuid_ptr;\
 		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE))\
 		{ \
-			DBG_LOG("Advertisement Data Length too big");\
+			DBG_LOG("Adv Data too big");\
 			while(1);\
 		} \
 		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_SERVICE_32BIT_UUID##n##_VAL, BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH);\
@@ -1117,7 +1126,7 @@ typedef struct scan_resp_element{
 		adv_ptr = (adv_element_container_t *)uuid_ptr;\
 		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE - ADV_TYPE_FLAG_SIZE))\
 		{ \
-			DBG_LOG("Advertisement Data Length too big");\
+			DBG_LOG("Adv Data too big");\
 			while(1);\
 		} \
 		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_SERVICE_128BIT_UUID##n##_VAL , BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH);\
@@ -1133,7 +1142,7 @@ typedef struct scan_resp_element{
 		adv_ptr = (adv_element_container_t *)uuid_ptr;\
 		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE))\
 		{ \
-			DBG_LOG("Advertisement Data Length too big");\
+			DBG_LOG("Adv Data too big");\
 			while(1);\
 		} \
 		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_SERVICE_128BIT_UUID##n##_VAL , BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH);\
@@ -1149,7 +1158,7 @@ typedef struct scan_resp_element{
 		adv_ptr = (adv_element_container_t *)uuid_ptr;\
 		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE - ADV_TYPE_FLAG_SIZE))\
 		{ \
-			DBG_LOG("Advertisement Data Length too big");\
+			DBG_LOG("Adv Data too big");\
 			while(1);\
 		} \
 		adv_ptr->adv_ptr[adv_ptr->len++] = (uint8_t) BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID##n##_VAL; \
@@ -1165,7 +1174,7 @@ typedef struct scan_resp_element{
 		adv_ptr = (adv_element_container_t *)uuid_ptr;\
 		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE))\
 		{ \
-			DBG_LOG("Advertisement Data Length too big");\
+			DBG_LOG("Adv Data too big");\
 			while(1);\
 		} \
 		adv_ptr->adv_ptr[adv_ptr->len++] = (uint8_t) BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID##n##_VAL; \
@@ -1181,7 +1190,7 @@ typedef struct scan_resp_element{
 		adv_ptr = (adv_element_container_t *)uuid_ptr;\
 		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE - ADV_TYPE_FLAG_SIZE))\
 		{ \
-			DBG_LOG("Advertisement Data Length too big");\
+			DBG_LOG("Adv Data too big");\
 			while(1);\
 		} \
 		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_SERVICE_SOLTN_32BIT_UUID##n##_VAL, BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH);\
@@ -1197,7 +1206,7 @@ typedef struct scan_resp_element{
 		adv_ptr = (adv_element_container_t *)uuid_ptr;\
 		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE))\
 		{ \
-			DBG_LOG("Advertisement Data Length too big");\
+			DBG_LOG("Adv Data too big");\
 			while(1);\
 		} \
 		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_SERVICE_SOLTN_32BIT_UUID##n##_VAL, BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH);\
@@ -1213,7 +1222,7 @@ typedef struct scan_resp_element{
 		adv_ptr = (adv_element_container_t *)uuid_ptr;\
 		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE - ADV_TYPE_FLAG_SIZE))\
 		{ \
-			DBG_LOG("Advertisement Data Length too big");\
+			DBG_LOG("Adv Data too big");\
 			while(1);\
 		} \
 		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_SERVICE_SOLTN_128BIT_UUID##n##_VAL , BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH);\
@@ -1229,7 +1238,7 @@ typedef struct scan_resp_element{
 		adv_ptr = (adv_element_container_t *)uuid_ptr;\
 		if((adv_ptr->len + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH) >  (AT_BLE_ADV_MAX_SIZE))\
 		{ \
-			DBG_LOG("Advertisement Data Length too big");\
+			DBG_LOG("Adv Data too big");\
 			while(1);\
 		} \
 		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_SERVICE_SOLTN_128BIT_UUID##n##_VAL , BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH);\
@@ -1245,7 +1254,7 @@ typedef struct scan_resp_element{
 		adv_ptr = (adv_element_container_t *)uuid_ptr;\
 		if((adv_ptr->len + BLE_GAP_ADV_PUBLIC_TARGET_ADDR_LENGTH) >  (AT_BLE_ADV_MAX_SIZE - ADV_TYPE_FLAG_SIZE))\
 		{ \
-			DBG_LOG("Advertisement Data Length too big");\
+			DBG_LOG("Adv Data too big");\
 			while(1);\
 		} \
 		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_PUBLIC_TARGET_ADDR##n##_VAL, BLE_GAP_ADV_PUBLIC_TARGET_ADDR_LENGTH);\
@@ -1261,7 +1270,7 @@ typedef struct scan_resp_element{
 		adv_ptr = (adv_element_container_t *)uuid_ptr;\
 		if((adv_ptr->len + BLE_GAP_ADV_PUBLIC_TARGET_ADDR_LENGTH) >  (AT_BLE_ADV_MAX_SIZE))\
 		{ \
-			DBG_LOG("Advertisement Data Length too big");\
+			DBG_LOG("Adv Data too big");\
 			while(1);\
 		} \
 		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_PUBLIC_TARGET_ADDR##n##_VAL, BLE_GAP_ADV_PUBLIC_TARGET_ADDR_LENGTH);\
@@ -1277,7 +1286,7 @@ typedef struct scan_resp_element{
 		adv_ptr = (adv_element_container_t *)uuid_ptr;\
 		if((adv_ptr->len + BLE_GAP_ADV_RANDOM_TARGET_ADDR_LENGTH) >  (AT_BLE_ADV_MAX_SIZE - ADV_TYPE_FLAG_SIZE))\
 		{ \
-			DBG_LOG("Advertisement Data Length too big");\
+			DBG_LOG("Adv Data too big");\
 			while(1);\
 		} \
 		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_RANDOM_TARGET_ADDR##n##_VAL, BLE_GAP_ADV_RANDOM_TARGET_ADDR_LENGTH);\
@@ -1293,7 +1302,7 @@ typedef struct scan_resp_element{
 		adv_ptr = (adv_element_container_t *)uuid_ptr;\
 		if((adv_ptr->len + BLE_GAP_ADV_RANDOM_TARGET_ADDR_LENGTH) >  (AT_BLE_ADV_MAX_SIZE))\
 		{ \
-			DBG_LOG("Advertisement Data Length too big");\
+			DBG_LOG("Adv Data too big");\
 			while(1);\
 		} \
 		memcpy(&adv_ptr->adv_ptr[adv_ptr->len], BLE_GAP_ADV_DATA_RANDOM_TARGET_ADDR##n##_VAL, BLE_GAP_ADV_RANDOM_TARGET_ADDR_LENGTH);\
@@ -1542,6 +1551,19 @@ at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle);
   * @return none.
   *
   */
+
+bool ble_check_ispheripheral(at_ble_handle_t handle);
+
+bool ble_check_iscentral(at_ble_handle_t handle);
+
+at_ble_status_t ble_connected_device_role(at_ble_handle_t conn_handle, at_ble_dev_role_t *dev_role);
+
+bool ble_check_disconnected_iscentral(at_ble_handle_t handle);
+
+at_ble_status_t ble_disconnected_device_role(at_ble_handle_t conn_handle, at_ble_dev_role_t *dev_role);
+
+at_ble_status_t ble_check_device_state(at_ble_handle_t conn_handle, ble_device_state_t state);
+
 at_ble_status_t ble_connected_state_handler(void *params);
 
 at_ble_status_t ble_advertisement_data_set(void);
