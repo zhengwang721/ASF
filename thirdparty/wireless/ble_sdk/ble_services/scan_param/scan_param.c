@@ -64,7 +64,7 @@
  * @return none
  */
 
-extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
+extern at_ble_connected_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED];
 
 bool volatile sps_notification_flag = false;
 
@@ -150,7 +150,7 @@ at_ble_status_t sps_scan_refresh_char_update(sps_gatt_service_handler_t *sps_ser
 	
 	//sending notification to the peer about change in the scan parameters
 	if(sps_notification_flag){
-		if((at_ble_notification_send(ble_connected_dev_info[0].handle, sps_serv->serv_chars[1].char_val_handle)) == AT_BLE_FAILURE) {
+		if((at_ble_notification_send(ble_dev_info[0].handle, sps_serv->serv_chars[1].char_val_handle)) == AT_BLE_FAILURE) {
 			DBG_LOG("sending notification failed");
 			return AT_BLE_FAILURE;
 		}
@@ -188,7 +188,7 @@ at_ble_status_t	sps_char_changed_event(sps_gatt_service_handler_t *sps_service_h
 		if(change_params.char_new_value[0])
 		{
 			sps_notification_flag = true;
-			if((at_ble_notification_send(ble_connected_dev_info[0].handle, sps_service_handler->serv_chars[1].char_val_handle)) == AT_BLE_FAILURE) {
+			if((at_ble_notification_send(change_params.conn_handle, sps_service_handler->serv_chars[1].char_val_handle)) == AT_BLE_FAILURE) {
 				DBG_LOG("sending notification failed");
 				return AT_BLE_FAILURE;
 			}

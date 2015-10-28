@@ -108,11 +108,9 @@ uint8_t tp_state_char_data[RTU_TP_CP_READ_LENGTH];
 gatt_rtu_handler_t rtu_handle = {0, 0, AT_BLE_INVALID_PARAM, 0, NULL, 0, NULL};
 #endif
 
-/**@breif Scan Response packet*/
-static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xFF, 0x00, 0x06, 0x25, 
-											  0x75, 0x11, 0x6a, 0x7f, 0x7f};
-/**@breif Peer Connected device info*/
-extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
+///**@breif Scan Response packet*/
+//static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xFF, 0x00, 0x06, 0x25, 
+											  //0x75, 0x11, 0x6a, 0x7f, 0x7f};
 
 volatile bool current_time_char_found = false;
 volatile bool local_time_char_found = false;
@@ -167,43 +165,51 @@ static const ble_event_callback_t ble_mgr_gap_handle[] = {
  */
 void time_info_adv()
 {
-	/* memory allocation for advertisement data*/
-	uint8_t idx = 0;
-	uint8_t adv_data[TP_ADV_DATA_NAME_LEN + TP_ADV_DATA_APPEARANCE_LEN + (2*2)];
+	///* memory allocation for advertisement data*/
+	//uint8_t idx = 0;
+	//uint8_t adv_data[TP_ADV_DATA_NAME_LEN + TP_ADV_DATA_APPEARANCE_LEN + (2*2)];
+	//
+	//// Prepare ADV Data
+	//adv_data[idx++] = CT_ADV_DATA_UUID_LEN + NEXT_DST_ADV_DATA_UUID_LEN + 
+					  //REF_TIM_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
+	//adv_data[idx++] = TP_ADV_DATA_UUID_TYPE;
+	//
+//#ifdef CURRENT_TIME_SERVICE
+	///* Appending the UUID */
+	//adv_data[idx++] = (uint8_t)CURRENT_TIME_SERVICE_UUID;
+	//adv_data[idx++] = (uint8_t)(CURRENT_TIME_SERVICE_UUID >> 8);
+//#endif /*CURRENT_TIME_SERVICE*/
+	//
+//#ifdef REFERENCE_TIME_SERVICE
+	//adv_data[idx++] = (uint8_t)REFERENCE_TIME_SERVICE_UUID;
+	//adv_data[idx++] = (uint8_t)(REFERENCE_TIME_SERVICE_UUID >> 8);
+//#endif /*REFERENCE_TIME_SERVICE*/
+//
+//#ifdef NEXT_DST_SERVICE
+	//adv_data[idx++] = (uint8_t)NEXT_DST_SERVICE_UUID;
+	//adv_data[idx++] = (uint8_t)(NEXT_DST_SERVICE_UUID >> 8);
+//#endif /*NEXT_DST_SERVICE*/
+//
+	//adv_data[idx++] = TP_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
+	//adv_data[idx++] = TP_ADV_DATA_NAME_TYPE;
+	//memcpy(&adv_data[idx], TP_ADV_DATA_NAME_DATA, TP_ADV_DATA_NAME_LEN);
+	//idx += TP_ADV_DATA_NAME_LEN;
+	//
+	//
+	//at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN);
 	
-	// Prepare ADV Data
-	adv_data[idx++] = CT_ADV_DATA_UUID_LEN + NEXT_DST_ADV_DATA_UUID_LEN + 
-					  REF_TIM_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = TP_ADV_DATA_UUID_TYPE;
+	at_ble_status_t status;
+	if((status = ble_advertisement_data_set()) != AT_BLE_SUCCESS)
+	{
+		DBG_LOG("advertisement data set failed reason :%d",status);
+		return;
+	}
 	
-#ifdef CURRENT_TIME_SERVICE
-	/* Appending the UUID */
-	adv_data[idx++] = (uint8_t)CURRENT_TIME_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(CURRENT_TIME_SERVICE_UUID >> 8);
-#endif /*CURRENT_TIME_SERVICE*/
-	
-#ifdef REFERENCE_TIME_SERVICE
-	adv_data[idx++] = (uint8_t)REFERENCE_TIME_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(REFERENCE_TIME_SERVICE_UUID >> 8);
-#endif /*REFERENCE_TIME_SERVICE*/
-
-#ifdef NEXT_DST_SERVICE
-	adv_data[idx++] = (uint8_t)NEXT_DST_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(NEXT_DST_SERVICE_UUID >> 8);
-#endif /*NEXT_DST_SERVICE*/
-
-	adv_data[idx++] = TP_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = TP_ADV_DATA_NAME_TYPE;
-	memcpy(&adv_data[idx], TP_ADV_DATA_NAME_DATA, TP_ADV_DATA_NAME_LEN);
-	idx += TP_ADV_DATA_NAME_LEN;
-	
-	
-	at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN);
-	
-	if (at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, 
+	if ((status = at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, 
 						NULL, AT_BLE_ADV_FP_ANY, APP_TP_FAST_ADV, 
-						APP_TP_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS) {
-		DBG_LOG("BLE Adv start Failed");
+						APP_TP_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)) {
+		DBG_LOG("BLE Adv start Failed :%d",status);
+		return;
 	} else {
 		DBG_LOG("Device is in Advertising Mode");
 	}
@@ -342,7 +348,7 @@ at_ble_status_t time_info_discovery_complete_handler(void *param)
 		if ((cts_handle.char_discovery == AT_BLE_SUCCESS) && 
 			(discover_char_flag)) {
 			if (at_ble_characteristic_discover_all(
-			ble_connected_dev_info[0].handle,
+			discover_status->conn_handle,
 			cts_handle.start_handle,
 			cts_handle.end_handle) == AT_BLE_SUCCESS) {
 				discover_char_flag = false;
@@ -359,7 +365,7 @@ at_ble_status_t time_info_discovery_complete_handler(void *param)
 		if ((cts_handle.desc_discovery == AT_BLE_SUCCESS) && 
 			(discover_char_flag)) {
 			if (at_ble_descriptor_discover_all(
-			ble_connected_dev_info[0].handle,
+			discover_status->conn_handle,
 			cts_handle.start_handle,
 			cts_handle.end_handle) == AT_BLE_SUCCESS) {
 				discover_char_flag = false;
@@ -375,7 +381,7 @@ at_ble_status_t time_info_discovery_complete_handler(void *param)
 		if ((dst_handle.char_discovery == AT_BLE_SUCCESS) && 
 			(discover_char_flag)) {
 			if (at_ble_characteristic_discover_all(
-			ble_connected_dev_info[0].handle,
+			discover_status->conn_handle,
 			dst_handle.start_handle,
 			dst_handle.end_handle) == AT_BLE_SUCCESS) {
 				discover_char_flag = false;
@@ -394,7 +400,7 @@ at_ble_status_t time_info_discovery_complete_handler(void *param)
 		if ((rtu_handle.char_discovery == AT_BLE_SUCCESS) && 
 			(discover_char_flag)) {
 			if (at_ble_characteristic_discover_all(
-			ble_connected_dev_info[0].handle,
+			discover_status->conn_handle,
 			rtu_handle.start_handle,
 			rtu_handle.end_handle) == AT_BLE_SUCCESS) {
 				discover_char_flag = false;
@@ -413,7 +419,7 @@ at_ble_status_t time_info_discovery_complete_handler(void *param)
 			(discover_char_flag)) {
 			DBG_LOG("TIME INFOMATION PROFILE NOT SUPPORTED");
 			discover_char_flag = false;
-			if(at_ble_disconnect(ble_connected_dev_info[0].handle, 
+			if(at_ble_disconnect(discover_status->conn_handle, 
 								AT_BLE_TERMINATED_BY_USER) != AT_BLE_SUCCESS) {
 				DBG_LOG("disconnection failed");
 			}
@@ -421,7 +427,7 @@ at_ble_status_t time_info_discovery_complete_handler(void *param)
 		
 		if (discover_char_flag) {
 			DBG_LOG("GATT characteristic discovery completed");
-			if(ble_send_slave_sec_request(ble_connected_dev_info[0].handle) 
+			if(ble_send_slave_sec_request(discover_status->conn_handle) 
 										  == AT_BLE_SUCCESS) {
 				DBG_LOG_DEV("Successfully send Slave Security Request");
 			} else {

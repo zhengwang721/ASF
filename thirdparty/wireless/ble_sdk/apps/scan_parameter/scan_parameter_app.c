@@ -125,6 +125,17 @@ static at_ble_status_t ble_disconnected_app_event(void *param)
 	return AT_BLE_SUCCESS;
 }
 
+/* Callback registered for AT_BLE_CONNECTED event from stack */
+static at_ble_status_t ble_connected_app_event(void *param)
+{
+	#if !BLE_PAIR_ENABLE
+		ble_paired_app_event(param);
+	#else
+		ALL_UNUSED(param);
+	#endif
+	return AT_BLE_SUCCESS;
+}
+
 /**
 * \Service Characteristic change handler function
 */
@@ -157,7 +168,7 @@ static const ble_event_callback_t ble_scan_param_app_gap_cb[] = {
 	NULL,
 	NULL,
 	NULL,
-	NULL,
+	ble_connected_app_event,
 	ble_disconnected_app_event,
 	NULL,
 	NULL,
