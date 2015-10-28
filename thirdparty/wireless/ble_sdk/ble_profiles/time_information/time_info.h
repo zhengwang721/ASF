@@ -121,6 +121,11 @@
 #define TP_ADV_DATA_NAME_DATA						("ATMEL-TIP")
 
 #define AT_BLE_DISCOVER_SUCCESS						(10)
+#if ENABLE_PTS
+#define DBG_LOG_PTS					DBG_LOG 
+#else
+#define DBG_LOG_PTS					ALL_UNUSED
+#endif
 
 /***********************************************************************************
  *									Types			                               *
@@ -138,6 +143,11 @@ typedef void (* read_response_callback_t) (at_ble_characteristic_read_response_t
  * 
  */
 void time_info_init(void);
+
+/**
+ * @brief Discovering the services of time server used by applications
+ */
+at_ble_status_t time_info_service_discovery(void);
 
 /**
  * @brief Discovering the services of time server
@@ -158,7 +168,7 @@ uint8_t scanned_dev_count);
  * @param[in] connected event parameter containing details like handle
  * \note Called by the ble_manager after receiving connection event
  */
-at_ble_status_t time_info_connected_state_handler(at_ble_connected_t *conn_params);
+at_ble_status_t time_info_connected_state_handler(at_ble_connected_t * conn_params);
 
 /**
  * @brief Handler for discovery complete event
@@ -226,6 +236,13 @@ at_ble_status_t time_info_notification_handler(void *param);
  * @return None
  */
 void time_info_register_read_response_callback(read_response_callback_t read_response_cb);
+
+/**
+ * @brief Handler for AT_BLE_ENCRYPTION_STATUS_CHANGED event from stack 
+ * @param[in] param @ref at_ble_encryption_status_changed_t
+ * @return None
+ */
+void time_info_encryption_status_changed_handler(at_ble_encryption_status_changed_t *param);
 /**
  * @brief Handler for AT_BLE_PAIR_DONE event from stack 
  * @param[in] pair_done_param @ref at_ble_pair_done_t
