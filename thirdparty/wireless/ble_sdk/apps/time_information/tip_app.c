@@ -73,7 +73,7 @@
 extern gatt_cts_handler_t cts_handle;
 extern gatt_dst_handler_t dst_handle;
 extern gatt_rtu_handler_t rtu_handle;
-extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
+extern ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED];
 volatile bool button_pressed = false;
 extern volatile bool current_time_char_found;
 extern volatile bool local_time_char_found;
@@ -109,7 +109,8 @@ void timer_callback_handler(void)
  */
 static at_ble_status_t app_read_response_cb(void *param)
 {
-	at_ble_characteristic_read_response_t *char_read_resp = (at_ble_characteristic_read_response_t *)param;
+	at_ble_characteristic_read_response_t *char_read_resp;
+	char_read_resp = (at_ble_characteristic_read_response_t *)param;
 	if (char_read_resp->char_handle == cts_handle.curr_char_handle) {
 		if (local_time_char_found) {
 			if (tis_current_time_read( char_read_resp->conn_handle,
@@ -222,7 +223,7 @@ int main (void)
 			case 2 :
 				DBG_LOG("Enter time update control point value [1 - 2] and press enter");
 				scanf("%d", &option);
-				if (!(tis_rtu_update_write(ble_connected_dev_info[0].handle, 
+				if (!(tis_rtu_update_write(ble_dev_info[0].conn_info.handle, 
 											rtu_handle.tp_control_char_handle,
 											(uint8_t)option) == AT_BLE_SUCCESS)) {
 					DBG_LOG("Fail to write Time Update control point");
@@ -239,7 +240,7 @@ int main (void)
 				break;
 			case 4 :
 				if (current_time_char_found) {
-					if (tis_current_time_read( ble_connected_dev_info[0].handle, 
+					if (tis_current_time_read( ble_dev_info[0].conn_info.handle, 
 											cts_handle.curr_char_handle) 
 											== AT_BLE_SUCCESS) {
 						LED_Toggle(LED0);
@@ -251,7 +252,7 @@ int main (void)
 			}
 			#else /* code for pts */		
 			if (current_time_char_found) {
-				if (tis_current_time_read( ble_connected_dev_info[0].handle, 
+				if (tis_current_time_read( ble_dev_info[0].conn_info.handle, 
 										cts_handle.curr_char_handle) 
 										== AT_BLE_SUCCESS) {
 					LED_Toggle(LED0);

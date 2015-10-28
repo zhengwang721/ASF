@@ -168,7 +168,7 @@ uint8_t scanned_dev_count);
  * @param[in] connected event parameter containing details like handle
  * \note Called by the ble_manager after receiving connection event
  */
-at_ble_status_t time_info_connected_state_handler(at_ble_connected_t * conn_params);
+at_ble_status_t time_info_connected_state_handler(void *param);
 
 /**
  * @brief Handler for discovery complete event
@@ -218,16 +218,14 @@ at_ble_status_t time_info_descriptor_found_handler(void *param);
 
 /**
  * @brief Handler for write notification found event
- * @param[in] descriptor found event parameter containing details like characteristic handle,uuid
- * \note Called by the ble_manager after receiving characteristic found event
+ * @param[in] value to be set 
  */
-at_ble_status_t time_info_write_notification_handler(void *param);
+void time_info_write_notification_handler(uint16_t value);
 
 /**
  * @brief Handler for notification received found event
  * @param[in] descriptor found event parameter containing details like characteristic handle,uuid
  * \note Called by the ble_manager after receiving characteristic found event
- * @return  @ref at_ble_status_t
  */
 at_ble_status_t time_info_notification_handler(void *param);
 /**
