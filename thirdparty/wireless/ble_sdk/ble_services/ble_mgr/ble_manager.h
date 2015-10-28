@@ -582,7 +582,13 @@ typedef enum {
 #endif
 
 #ifdef TP_ANDROID
+#ifdef CURRENT_TIME_SERVICE
 #define BLE_GAP_ADV_SERVICE_16BIT_UUID_ENABLE			true
+#endif
+#else
+#ifdef CURRENT_TIME_SERVICE
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID_ENABLE			false
+#endif
 #endif
 
 /** UUID Type's and configuration's */
