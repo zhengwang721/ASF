@@ -123,7 +123,42 @@ volatile bool time_update_state_char_found = false;
 volatile bool Desc_found = false;
 
 read_response_callback_t read_response_callback = NULL;
-static at_ble_handle_t time_info_conn_handle = 0;
+
+static const ble_event_callback_t time_info_gatt_client_handle[] = {
+	time_info_service_found_handler,
+	NULL,
+	time_info_characteristic_found_handler,
+	time_info_descriptor_found_handler,
+	time_info_discovery_complete_handler,
+	time_info_characteristic_read_response,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+static const ble_event_callback_t ble_mgr_gap_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	time_info_service_discover,
+	time_info_disconnected_event_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
 /***********************************************************************************
  *									Implementations	                               *
  **********************************************************************************/
@@ -201,9 +236,13 @@ void time_info_init(void *param)
 /**
  * @brief Discovering the services of time server used by applications
  */
-at_ble_status_t time_info_service_discovery(void)
+at_ble_status_t time_info_service_discover(void *param)
 {
-	if (at_ble_primary_service_discover_all(time_info_conn_handle, 
+	at_ble_connected_t *conn_params = (at_ble_connected_t *)param;
+	if (conn_params->conn_status != AT_BLE_SUCCESS) {
+		return conn_params->conn_status;
+	}
+	if (at_ble_primary_service_discover_all(conn_params->handle,
 			GATT_DISCOVERY_STARTING_HANDLE, GATT_DISCOVERY_ENDING_HANDLE)
 			== AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("GATT Discovery request started ");
