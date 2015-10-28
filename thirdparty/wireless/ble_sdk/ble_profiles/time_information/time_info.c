@@ -258,11 +258,20 @@ at_ble_status_t time_info_service_discover(void *param)
  */
 at_ble_status_t time_info_service_discover(at_ble_connected_t *conn_params)
 {	
-	if (conn_params->conn_status != AT_BLE_SUCCESS) {
+	at_ble_connected_t *conn_params = (at_ble_connected_t *)param;
+	if (conn_params->conn_status != AT_BLE_SUCCESS) 
+	{
 		return conn_params->conn_status;
 	}
-	time_info_conn_handle = conn_params->handle;
-	return time_info_service_discovery();
+	if (at_ble_primary_service_discover_all(conn_params->handle,
+			GATT_DISCOVERY_STARTING_HANDLE, GATT_DISCOVERY_ENDING_HANDLE)
+			== AT_BLE_SUCCESS) {
+		DBG_LOG_DEV("GATT Discovery request started ");
+		return AT_BLE_SUCCESS;
+	} else {
+		DBG_LOG("GATT Discovery request failed");
+	}	
+		return AT_BLE_FAILURE;
 }
 
 /**
