@@ -61,6 +61,41 @@
 #include "hid.h"
 #include "device_info.h"
 
+static const ble_event_callback_t hid_gap_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	hid_prf_disconnect_event_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+static const ble_event_callback_t hid_gatt_server_handle[] = {
+	NULL,
+	NULL,
+	hid_prf_char_changed_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
 /* Notification callback function pointer */
 report_ntf_callback_t report_ntf_cb;
 boot_ntf_callback_t boot_ntf_cb;
@@ -82,12 +117,13 @@ void hid_prf_init(void *param)
 	uint16_t serv_handle = 0;
 	dis_gatt_service_handler_t device_info_serv;
 	
-#if ENABLE_PTS
-	DBG_LOG("Protocol Mode Characteristic Value 0x%02X", hid_prf_dataref[serv_num]->protocol_mode);
-#endif
-	
-	for(; serv_num<HID_MAX_SERV_INST; serv_num++){
-		if(hid_prf_dataref[serv_num] != NULL){
+	#if ENABLE_PTS
+		DBG_LOG("Protocol Mode Characteristic Value 0x%02X", hid_prf_dataref[serv_num]->protocol_mode);
+	#endif
+	for(uint8_t serv_num = 0; serv_num<HID_MAX_SERV_INST; serv_num++)
+	{
+		if(hid_prf_dataref[serv_num] != NULL)
+		{
 			hid_serv_def_init(serv_num);
 			hid_serv_init(serv_num, hid_prf_dataref[serv_num]->hid_device, &hid_prf_dataref[serv_num]->protocol_mode, hid_prf_dataref[serv_num]->num_of_report, (uint8_t *)&hid_prf_dataref[serv_num]->report_type, &(hid_prf_dataref[serv_num]->report_val[0]), (uint8_t *)&hid_prf_dataref[serv_num]->report_len, &hid_prf_dataref[serv_num]->hid_device_info);
 			hid_serv_report_map(serv_num, hid_prf_dataref[serv_num]->report_map_info.report_map, hid_prf_dataref[serv_num]->report_map_info.report_map_len);
@@ -96,21 +132,35 @@ void hid_prf_init(void *param)
 			serv_handle = hid_service_dbreg(serv_num, (uint8_t *)&hid_prf_dataref[serv_num]->report_type, (uint8_t *)&hid_prf_dataref[serv_num]->report_id, hid_prf_dataref[serv_num]->num_of_report);
 			
 			DBG_LOG_DEV("HID Service Handle %d", serv_handle);
-			if(serv_handle){
+			if(serv_handle)
+			{
 				hid_prf_dataref[serv_num]->serv_handle_info = serv_handle;
-			}else{
+			}
+			else
+			{
 				hid_prf_dataref[serv_num]->serv_handle_info = 0;
 			}
-		}else{
+		}
+		else
+		{
 			hid_serv_def_init(serv_num);
 		}
 	}
-	delay_ms(1);
+	//delay_ms(1);
 	/* Initialize the dis */
 	dis_init_service(&device_info_serv);
 	
 	/* Define the primary service in the GATT server database */
 	dis_primary_service_define(&device_info_serv);
+	
+	/* HID Profile Advertisement*/
+	hid_prf_dev_adv();
+	
+	/* Callback registering for BLE-GAP Role */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GAP_EVENT_TYPE, hid_gap_handle);
+	
+	/* Callback registering for BLE-GATT-Server Role */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GATT_SERVER_EVENT_TYPE, hid_gatt_server_handle);
 	
 	UNUSED(param);
 }
@@ -174,7 +224,7 @@ void hid_prf_dev_adv(void)
 /**
 * \HID device disconnected handler function
 */
-at_ble_status_t hid_prf_disconnect_event_handler(at_ble_disconnected_t *disconnect)
+at_ble_status_t hid_prf_disconnect_event_handler(void *params)
 {
 	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
 	APP_HID_FAST_ADV, APP_HID_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS){
@@ -182,15 +232,18 @@ at_ble_status_t hid_prf_disconnect_event_handler(at_ble_disconnected_t *disconne
 	}else{
 		DBG_LOG("Device Started Advertisement");
 	}
-    ALL_UNUSED(disconnect);
+	ALL_UNUSED(&params);
 	return AT_BLE_SUCCESS;
 }
 
 /**
 * \Service characteristic change handler function
 */
-at_ble_status_t hid_prf_char_changed_handler(at_ble_characteristic_changed_t *change_char)
+at_ble_status_t hid_prf_char_changed_handler(void *params)
 {
+	at_ble_characteristic_changed_t *change_char;
+	change_char = (at_ble_characteristic_changed_t *)params;
+
 	hid_proto_mode_ntf_t protocol_mode;
 	hid_report_ntf_t reportinfo;
 	hid_boot_ntf_t boot_info;
