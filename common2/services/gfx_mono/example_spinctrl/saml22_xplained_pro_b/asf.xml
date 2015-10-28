@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project id="common2.services.gfx_mono.example.spinctrl.saml22_xplained_pro_b" caption="Example for GFX Monochrome Spin Ctrl driver on SAM L22 Xplained Pro">
+	<project id="common2.services.gfx_mono.example.spinctrl.saml22_xplained_pro_b" caption="Example for GFX Monochrome Spin Ctrl driver on SAM L22 Xplained Pro B">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>

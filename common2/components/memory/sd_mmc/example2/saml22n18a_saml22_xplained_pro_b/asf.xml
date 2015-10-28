@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="SD/MMC card example with FatFs for SAML22 Xplained Pro" id="common2.components.memory.sd_mmc.example2.saml22_xplained_pro_b">
+	<project caption="SD/MMC card example with FatFs for SAML22 Xplained Pro B" id="common2.components.memory.sd_mmc.example2.saml22_xplained_pro_b">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_spi.h"/>
 		<build type="header-file" value="conf_sd_mmc.h"/>
