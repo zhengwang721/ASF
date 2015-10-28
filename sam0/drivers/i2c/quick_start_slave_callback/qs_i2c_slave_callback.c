@@ -142,7 +142,7 @@ static void configure_i2c_slave(void)
 	//! [conf_changes]
 	/* Initialize and enable device with config. */
 	//! [init_module]
-	while(i2c_slave_init(&i2c_slave_instance, CONF_I2C_MASTER_MODULE, &config_i2c_slave)
+	while(i2c_slave_init(&i2c_slave_instance, CONF_I2C_SLAVE_MODULE, &config_i2c_slave)
 			!= STATUS_OK);
 	//! [init_module]
 	

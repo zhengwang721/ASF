@@ -243,8 +243,10 @@ struct pwm_config {
 	uint8_t duty_cycle;
 	/** PWM Source Clock Frequency Select */
 	enum pwm_clock_select clock_select;
-	/** PWM PAD pinmux */
-	uint32_t pinmux_pad;
+	/** PWM PAD pin number */
+	uint32_t pin_number_pad;
+	/** PWM PAD pinmux selection */
+	uint32_t pinmux_sel_pad;
 };
 
 /** \name Configuration and initialization
