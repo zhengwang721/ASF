@@ -131,6 +131,9 @@ int main(void)
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 	
+	/* Initializing the anp profile */
+	anp_client_init(NULL);
+	
 	/* Capturing the events  */
 	while(1) {
 

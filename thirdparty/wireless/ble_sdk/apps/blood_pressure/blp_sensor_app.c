@@ -133,6 +133,42 @@ uint16_t interim_map_mmhg = MAP_MIN_MMHG;
 
 uint16_t interim_map_kpa = MAP_MIN_KPA;
 
+
+static const ble_event_callback_t app_gap_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	app_connected_state_handler,
+	app_disconnected_state_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+static const ble_event_callback_t app_gatt_server_handle[] = {
+	app_notification_confirmation_handler,
+	app_indication_confirmation_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
 /****************************************************************************************
 *							        Functions											*
 ****************************************************************************************/
@@ -140,15 +176,20 @@ uint16_t interim_map_kpa = MAP_MIN_KPA;
  * @brief app_connected_state profile notifies the application about state
  * @param[in] connected
  */
-static void app_connected_state(bool connected)
+static at_ble_status_t app_connected_state_handler(void *params)
 {
-	app_state = connected;
-	if (app_state == false)
-	{
-		//Resetting all the simulated values
+	app_state = true;
+	ALL_UNUSED(params);
+	return AT_BLE_SUCCESS;
+}
+
+static at_ble_status_t app_disconnected_state_handler(void *param)
+{
+	app_state = false;
+	//Resetting all the simulated values
 		
 		interim_diastolic_mmhg = DIASTOLIC_MIN_MMHG;
-		interim_diastolic_kpa = DIASTOLIC_MIN_KPA;	
+		interim_diastolic_kpa = DIASTOLIC_MIN_KPA;
 		interim_systolic_mmhg = SYSTOLIC_MIN_MMHG;
 		interim_systolic_kpa = SYSTOLIC_MIN_KPA;
 		interim_map_mmhg = MAP_MIN_MMHG;
@@ -167,8 +208,10 @@ static void app_connected_state(bool connected)
 		timer_count = APP_DEFAULT_VAL;
 		user_request_flag =  APP_DEFAULT_VAL;
 		indication_flag = APP_DEFAULT_VAL;
-		notification_flag = APP_DEFAULT_VAL;	
-	} 
+		notification_flag = APP_DEFAULT_VAL;
+		
+		ALL_UNUSED(param);
+		return AT_BLE_SUCCESS;
 }
 
 /** @brief Updating the time stamp
@@ -230,38 +273,42 @@ static void time_stamp_init(void)
 	time_stamp[idx++] = SECONDS;
 }
 
-/** @brief blp_notification_confirmation_handler called by ble manager 
+/** @brief app_notification_confirmation_handler called by ble manager 
  *	to give the status of notification sent
  *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
  */	
-static void app_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
+static at_ble_status_t app_notification_confirmation_handler(void *params)
 {
-	if (params->status == AT_BLE_SUCCESS) {
+
+	if (((at_ble_cmd_complete_event_t *)params)->status == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("App Notification Successfully sent over the air");
 		notification_sent = true;
 	} else {
 		DBG_LOG_DEV("Sending Notification over the air failed");
 		notification_sent = false;
 	}
+	return AT_BLE_SUCCESS;
 }
 
 
 
-/** @brief blp_indication_confirmation_handler called by ble manager 
+/** @brief app_indication_confirmation_handler called by ble manager 
  *	to give the status of notification sent
  *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
  */	
-static void app_indication_confirmation_handler(at_ble_cmd_complete_event_t *params)
+static at_ble_status_t app_indication_confirmation_handler(void *params)
 {
-	if (params->status == AT_BLE_SUCCESS) {
+	if (((at_ble_cmd_complete_event_t * )params)->status == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("App Indication successfully sent over the air");
 		indication_sent = true;
 		user_request_flag = false;
 		DBG_LOG("\r\nPress the button to receive the blood pressure parameters");
 	} else {
-		DBG_LOG_DEV("Sending indication over the air failed reason %x ",params->status);
+		DBG_LOG_DEV("Sending indication over the air failed reason %x ",
+								((at_ble_cmd_complete_event_t * )params)->status);
 		indication_sent = false;
 	}
+	return AT_BLE_SUCCESS;
 }
 
 /** @brief blp_value_update which will change the blood pressure measurement operations
@@ -602,18 +649,20 @@ int main(void)
 	/* Registering the app_indication_handler with the profile */
 	register_blp_indication_handler(app_indication_handler);
 	
-	/* Register the connected call back with the profile */
-	register_connected_callback(app_connected_state);
-	
-	/* Register the notification confirmed call back with ble manager */
-	register_ble_notification_confirmed_cb(app_notification_confirmation_handler);
-	
-	/* Register the indication confirmed call back with ble manager */
-	register_ble_indication_confirmed_cb(app_indication_confirmation_handler);
-	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 
+	/* Initialize the blood pressure sensor profile */
+	blp_sensor_init(NULL);
+	
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+	BLE_GAP_EVENT_TYPE,
+	app_gap_handle);
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+	BLE_GATT_SERVER_EVENT_TYPE,
+	app_gatt_server_handle);
+	
+	
 	/* Capturing the events  */
 	while (app_exec) {
 		ble_event_task();

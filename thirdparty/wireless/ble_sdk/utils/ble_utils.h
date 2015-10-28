@@ -49,15 +49,25 @@
 
 #include <asf.h>
 
-#define BLE_CENTRAL					(0x01)
-#define BLE_PERIPHERAL				(0x02)
-#define BLE_CENTRAL_AND_PERIPHERAL	(0x03)
-#define BLE_OBSERVER				(0x04)
-#define BLE_BROADCASTER				(0x05)
+    /// Observer role
+#define   BLE_ROLE_OBSERVER   0x01
+    /// Broadcaster role
+#define   BLE_ROLE_BROADCASTER 0x02
+    /// Master/Central role
+#define   BLE_ROLE_CENTRAL     0x05
+    /// Peripheral/Slave role
+#define   BLE_ROLE_PERIPHERAL  0x0A
+    /// Device has all role, both peripheral and central
+#define   BLE_ROLE_ALL         0x0F
+
+
 
 #define DBG_LOG_CONT	printf
 
 #define DBG_LOG		    printf("\r\n");\
+						printf
+
+#define DBG_LOG_ADV	    printf("\r\nBLE-ADV: ");\
 						printf
 						
 #define UNUSED1(x) (void)(x)

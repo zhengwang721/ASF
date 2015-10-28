@@ -58,9 +58,10 @@
 #include "at_ble_api.h"
 #include "ble_manager.h"
 #include "hid.h"
+#include "hid_device.h"
 
 at_ble_generic_att_desc_t report_desc[HID_NUM_OF_REPORT];
-gatt_service_handler_t hid_inst[HID_MAX_SERV_INST];
+hid_gatt_serv_handler_t hid_inst[HID_MAX_SERV_INST];
 hid_serv_t hid_serv_inst[HID_MAX_SERV_INST];   
 uint8_t ctrl_point[1];
 
@@ -108,7 +109,7 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 	hid_inst[servinst].serv.type = PRIMARY_SERVICE;
 
 	/* Configure the HID service permission */
-	if(BLE_PAIR_ENABLE){      
+	if(BLE_PAIR_ENABLE){
 		hid_inst[servinst].serv.perm = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
 	}else{
 		hid_inst[servinst].serv.perm = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
@@ -613,7 +614,8 @@ uint8_t hid_serv_get_instance(uint16_t handle)
 	DBG_LOG_DEV("HID Service :: hid_serv_get_instance :: Get service Instance Handle %d", handle);
 	for(; id<HID_MAX_SERV_INST; id++){
 		DBG_LOG_DEV("HID Service :: hid_serv_get_instance :: Service Handle %d  Characteristic Handle %d", *(hid_serv_inst[id].hid_dev_serv_handle), hid_serv_inst[id].hid_control_point->char_val.handle);
-		if((handle > *(hid_serv_inst[id].hid_dev_serv_handle)) && (handle <= hid_serv_inst[id].hid_control_point->char_val.handle)){
+		if((handle > *(hid_serv_inst[id].hid_dev_serv_handle)) && (handle <= hid_serv_inst[id].hid_control_point->char_val.handle))
+		{
 			DBG_LOG_DEV("HID Service :: hid_serv_get_instance :: Service Instance %d", id);
 			return id;
 		}
