@@ -167,7 +167,7 @@ at_ble_status_t platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t
 	}
 #endif //ENABLE_POWER_SAVE
 	serial_drv_send(data, len);
-	
+
 	return AT_BLE_SUCCESS;
 }
 
