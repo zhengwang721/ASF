@@ -56,7 +56,7 @@ uint8_t bus_type = AT_BLE_UART;
 extern volatile enum tenuTransportState slave_state;
 #define GTL_EIF_CONNECT_REQ	0xA5
 #define GTL_EIF_CONNECT_RESP 0x5A
-#define BTLC1000_STARTUP_DELAY (3500)
+#define BTLC1000_STARTUP_DELAY (2500)
 #define BTLC1000_WAKEUP_DELAY (5)
 #define PLATFORM_EVT_WAIT_TIMEOUT (4000)
 
@@ -71,11 +71,11 @@ extern ser_fifo_desc_t ble_usart_rx_fifo;
 #define BLE_SERIAL_HEADER_LEN (0x09)
 
 /** data transmitted done interrupt event flag */
-volatile bool tx_done = false;				//	TX Transfer complete flag
+volatile uint8_t tx_done = 0;				//	TX Transfer complete flag
 volatile uint8_t data_received = 0;			//	RX data received flag
 
-volatile int init_done = false;
-volatile int ext_wakeup_state = 0;
+volatile int init_done = 0;
+volatile int ext_wakeup_state = 1;
 
 typedef enum {
 	BLE_IDLE_STATE = 0,
@@ -162,12 +162,12 @@ at_ble_status_t platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t
 	 }
 	if ((init_done) && (!ble_wakeup_pin_level()))
 	{
-		ble_wakeup_pin_set_high();
+		platform_wakeup();
 		delay_ms(BTLC1000_WAKEUP_DELAY);
 	}
 #endif //ENABLE_POWER_SAVE
 	tx_done = false;
-	serial_drv_send(data, len);	
+	serial_drv_send(data, len);
 	while(tx_done == false);
 	return AT_BLE_SUCCESS;
 }
@@ -275,6 +275,7 @@ void platform_cmd_cmpl_wait(bool* timeout)
 		DBG_LOG_BLE("\r\nAS\n");
 	#endif
 		cmd_cmpl_flag = 0;
+		stop_timer();
 	}
 	else
 	{
@@ -317,6 +318,7 @@ at_ble_status_t platform_event_wait(uint32_t timeout)
 			#ifdef BLE_DBG_ENABLE
 			DBG_LOG_BLE("\r\nSS\n");
 			#endif
+			stop_timer();
 		}
 		else
 		{
@@ -327,71 +329,6 @@ at_ble_status_t platform_event_wait(uint32_t timeout)
 		}		
 	}
 	return status;
-}
-
-at_ble_status_t platform_ble_event_data(void)
-{
-	uint32_t t_rx_data = 0;
-	static uint16_t received_index = 0;
-	if (ble_rx_state == BLE_EOF_STATE)
-	{
-		return AT_BLE_SUCCESS;
-	}
-	
-	while(ser_fifo_pull_uint8(&ble_usart_rx_fifo, (uint8_t *)&t_rx_data) == SER_FIFO_OK)
-	{
-		if (ble_rx_state == BLE_SOF_STATE)
-		{
-			if (t_rx_data == BLE_SERIAL_START_BYTE)
-			{
-				ble_evt_frame.start_byte = t_rx_data;
-				ble_rx_state = BLE_HEADER_STATE;
-				received_index = 0;
-			}
-		}
-		else if (ble_rx_state == BLE_HEADER_STATE)
-		{
-			uint8_t *header_p = (uint8_t *)&ble_evt_frame.header;
-			if (received_index < BLE_SERIAL_HEADER_LEN - 2)
-			{
-				header_p[received_index++] = t_rx_data;
-			}
-			else
-			{
-				header_p[received_index++] = t_rx_data;
-				if (ble_evt_frame.header.payload_len)
-				{
-					if (ble_evt_frame.header.payload_len < BLE_MAX_TX_PAYLOAD_SIZE)
-					{
-						ble_rx_state = BLE_PAYLOAD_STATE;
-						received_index = 0;
-					}
-					else
-					{
-						/* Received Wrong size of data */
-						ble_rx_state = BLE_SOF_STATE;
-					}
-					
-				}
-				else
-				{				
-					ble_rx_state = BLE_EOF_STATE;
-					return AT_BLE_SUCCESS; 
-				}
-				
-			}			
-		}
-		else if (ble_rx_state == BLE_PAYLOAD_STATE)
-		{
-			ble_evt_frame.payload[received_index++] = t_rx_data;
-			if(received_index == ble_evt_frame.header.payload_len)
-			{			
-				ble_rx_state = BLE_EOF_STATE;
-				return AT_BLE_SUCCESS;
-			}
-		}	
-	}
-	return AT_BLE_FAILURE;
 }
 
 uint8_t platform_sleep(uint32_t sleepms)
@@ -407,7 +344,7 @@ void serial_rx_callback(void)
 
 void serial_tx_callback(void)
 {
-	tx_done = true;
+	tx_done = 1;
 	
 #if defined ENABLE_POWER_SAVE
 	if (init_done)
@@ -418,13 +355,11 @@ void serial_tx_callback(void)
 			{
 				ext_wakeup_state--;
 			}
-
-			#ifndef DTM_MODE			
+		
 			if(ext_wakeup_state == 0)
 			{
-				ble_wakeup_pin_set_low();
-			}
-			#endif			
+				platform_set_sleep();
+			}			
 		}
 	}	
 #endif
@@ -462,19 +397,13 @@ void serial_tx_callback(void)
 	 ALL_UNUSED(timeout); //To avoid compiler warning
  }
  
- void platform_stop_timer(void)
- {
-	 
- }
- 
  void platform_cleanup(void)
  {
 	 
  }
-
+ 
  void stop_timer(void)
  {
 	 ticks = 0;
  }
-
 
