@@ -62,7 +62,7 @@
 
 extern gatt_anp_handler_t anp_handle;
 
-extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
+extern ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED];
 
 volatile bool user_request = false;
 

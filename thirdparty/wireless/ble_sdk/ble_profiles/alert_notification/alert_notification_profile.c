@@ -85,7 +85,7 @@ gatt_anp_handler_t anp_handle = {0,0,AT_BLE_SUCCESS,AT_BLE_SUCCESS,
 								AT_BLE_INVALID_PARAM, NULL};
 #endif
 
-extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
+extern ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED];
 
 connected_callback_t connected_cb;
 
@@ -253,7 +253,7 @@ at_ble_status_t anp_client_discovery_complete_handler(void *params)
 			#if defined ANS_CLIENT_SERVICE
 			if ((anp_handle.char_discovery == AT_BLE_SUCCESS) && (discover_char_flag)) {
 				if (at_ble_characteristic_discover_all(
-				ble_connected_dev_info[0].handle,
+				ble_dev_info[0].conn_info.handle,
 				anp_handle.start_handle,
 				anp_handle.end_handle) == AT_BLE_SUCCESS) {
 					DBG_LOG_DEV("ANP Characteristic Discovery Started");
@@ -272,7 +272,7 @@ at_ble_status_t anp_client_discovery_complete_handler(void *params)
 			
 			if ((anp_handle.desc_discovery == AT_BLE_SUCCESS) && (discover_char_flag)) {
 				if (at_ble_descriptor_discover_all(
-				ble_connected_dev_info[0].handle,
+				ble_dev_info[0].conn_info.handle,
 				anp_handle.start_handle,
 				anp_handle.end_handle) == AT_BLE_SUCCESS) {
 					DBG_LOG_DEV("ANP Descriptors Discovery Started");
@@ -295,13 +295,13 @@ at_ble_status_t anp_client_discovery_complete_handler(void *params)
 					(discover_char_flag)) {
 				DBG_LOG("Alert Notification Profile Not supported");
 				discover_char_flag = false;
-				at_ble_disconnect(ble_connected_dev_info[0].handle, AT_BLE_TERMINATED_BY_USER);
+				at_ble_disconnect(ble_dev_info[0].conn_info.handle, AT_BLE_TERMINATED_BY_USER);
 			}
 			
 			if (discover_char_flag) {
 				DBG_LOG("GATT characteristic discovery completed");
 				#if BLE_PAIR_ENABLE
-				if(ble_send_slave_sec_request(ble_connected_dev_info[0].handle) == AT_BLE_SUCCESS) {
+				if(ble_send_slave_sec_request(ble_dev_info[0].conn_info.handle) == AT_BLE_SUCCESS) {
 					DBG_LOG_DEV("Sending slave security request");
 				}
 				else {
@@ -559,13 +559,13 @@ at_ble_status_t anp_client_security_done_handler(void *param)
 {		
 	start_notification = 0;
 	
-	if(anp_alert_read(ble_connected_dev_info[0].handle,
+	if(anp_alert_read(ble_dev_info[0].conn_info.handle,
 						anp_handle.supp_new_char_handle) == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("Support New Alert info request success");
 		LED_Toggle(LED0);
 	}
 	
-	if(anp_alert_read( ble_connected_dev_info[0].handle, 
+	if(anp_alert_read( ble_dev_info[0].conn_info.handle, 
 					anp_handle.supp_unread_char_handle) == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("Support Unread Alert info request success");
 	}
@@ -586,7 +586,7 @@ void anp_client_write_notification_handler(void )
 	DBG_LOG_DEV("Initiating notifications for new alert and unread alert");
 	/* to enable the new alert and unread alert descriptor*/
 	
-	if(!(anp_alert_noti(ble_connected_dev_info[0].handle,
+	if(!(anp_alert_noti(ble_dev_info[0].conn_info.handle,
 						anp_handle.unread_alert_desc_handle,
 						true) == AT_BLE_SUCCESS)) {
 		DBG_LOG("Fail to set unread alert descriptor 1");
@@ -594,7 +594,7 @@ void anp_client_write_notification_handler(void )
 		DBG_LOG_DEV("Successfully sent notification request for unread alert");
 	}
 	
-	if(!(anp_alert_noti(ble_connected_dev_info[0].handle,
+	if(!(anp_alert_noti(ble_dev_info[0].conn_info.handle,
 						anp_handle.new_alert_desc_handle,true) == AT_BLE_SUCCESS)) {
 		DBG_LOG("Fail to set new alert descriptor 1");
 	} else {
@@ -611,11 +611,11 @@ void anp_client_disable_notification(void)
 {	
 	DBG_LOG_DEV("Disabling notifications for unread alert and new alert");
 	/* to disable the new alert and unread alert descriptor*/
-	if(!(anp_alert_noti(ble_connected_dev_info[0].handle,anp_handle.unread_alert_desc_handle,false) == AT_BLE_SUCCESS)) {
+	if(!(anp_alert_noti(ble_dev_info[0].conn_info.handle,anp_handle.unread_alert_desc_handle,false) == AT_BLE_SUCCESS)) {
 		DBG_LOG("Fail to set unread alert descriptor 0");
 	}
 	
-	if(!(anp_alert_noti(ble_connected_dev_info[0].handle,anp_handle.new_alert_desc_handle,false) == AT_BLE_SUCCESS)) {
+	if(!(anp_alert_noti(ble_dev_info[0].conn_info.handle,anp_handle.new_alert_desc_handle,false) == AT_BLE_SUCCESS)) {
 		DBG_LOG("Fail to set new alert descriptor 0");
 	}
 }
@@ -651,5 +651,6 @@ at_ble_status_t anp_client_read_response_handler(void *params)
  */
 at_ble_status_t anp_write_to_ncp(uint8_t *value)
 {
-	return(at_ble_characteristic_write(ble_connected_dev_info[0].handle, anp_handle.alert_np_char_handle, 0, 2, value, false, true));
+	return(at_ble_characteristic_write(ble_dev_info[0].conn_info.handle, anp_handle.alert_np_char_handle, 0, 2, value, false, true));
+	return AT_BLE_SUCCESS;
 }
