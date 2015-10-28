@@ -113,9 +113,13 @@ uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0
 */
 void hid_prf_init(void *param)
 {   
+	uint8_t serv_num = 0;
 	uint16_t serv_handle = 0;
 	dis_gatt_service_handler_t device_info_serv;
 	
+	#if ENABLE_PTS
+		DBG_LOG("Protocol Mode Characteristic Value 0x%02X", hid_prf_dataref[serv_num]->protocol_mode);
+	#endif
 	for(uint8_t serv_num = 0; serv_num<HID_MAX_SERV_INST; serv_num++)
 	{
 		if(hid_prf_dataref[serv_num] != NULL)
@@ -142,7 +146,7 @@ void hid_prf_init(void *param)
 			hid_serv_def_init(serv_num);
 		}
 	}
-
+	//delay_ms(1);
 	/* Initialize the dis */
 	dis_init_service(&device_info_serv);
 	
@@ -228,7 +232,7 @@ at_ble_status_t hid_prf_disconnect_event_handler(void *params)
 	}else{
 		DBG_LOG("Device Started Advertisement");
 	}
-    ALL_UNUSED(&params);
+	ALL_UNUSED(&params);
 	return AT_BLE_SUCCESS;
 }
 
