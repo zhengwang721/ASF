@@ -747,8 +747,11 @@ at_ble_status_t ble_connected_state_handler(void *params)
 		
 		DBG_LOG("Connection Handle %d", conn_params->handle);
 		
-#if (BLE_DEVICE_ROLE == BLE_ROLE_PERIPHERAL)
-	ble_send_slave_sec_request(conn_params->handle);
+#if ((BLE_DEVICE_ROLE == BLE_ROLE_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_ROLE_ALL))
+        if(ble_dev_info[idx].dev_role == AT_BLE_ROLE_PERIPHERAL)
+        {
+	 		ble_send_slave_sec_request(conn_params->handle);
+        }
 #endif
 	} 
 	else
