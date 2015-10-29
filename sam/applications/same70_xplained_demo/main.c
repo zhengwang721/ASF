@@ -152,6 +152,60 @@ static void configure_console(void)
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
+static void wifi_connect()
+{
+	char wlan_ssid[32];
+	char wlan_pwd[32];
+	uint8_t c;
+	uint8_t i;
+	volatile uint8_t ssid_length = 0;
+	volatile uint8_t pwd_length = 0;
+
+	for(i = 0; i < 32; i++) {
+		wlan_ssid[i] = 0;
+		wlan_pwd[i] = 0;
+	}
+
+	printf("Please input your WLAN SSID Name.\r\n");
+	while (1) {
+		scanf("%c", &c);
+		
+		if (c == ASCII_BS) {
+			printf("%c", ASCII_BS);
+			ssid_length--;
+			wlan_ssid[ssid_length] = 0;
+		} else if(c == ASCII_CR) {
+			wlan_ssid[ssid_length] = 0;
+			printf("\r\n");
+			break;
+		} else {
+			printf("%c", c);
+			wlan_ssid[ssid_length] = c;
+			ssid_length++;
+		}
+	}
+	printf("Please input your WLAN Password.\r\n");
+	while (1) {
+		scanf("%c", &c);
+		
+		if (c == ASCII_BS) {
+			printf("%c", ASCII_BS);
+			ssid_length--;
+			wlan_pwd[pwd_length] = 0;
+		} else if(c == ASCII_CR) {
+			wlan_pwd[pwd_length] = 0;
+			printf("\r\n");
+			break;
+		} else {
+			printf("%c", c);
+			wlan_pwd[pwd_length] = c;
+			pwd_length++;
+		}
+	}
+	printf("Connecting to %s.\r\n", wlan_ssid);
+	/* Connect to defined AP. */
+	m2m_wifi_connect((char *)wlan_ssid, /*sizeof(wlan_ssid)*/ssid_length, MAIN_WLAN_AUTH, (void *)wlan_pwd, M2M_WIFI_CH_ALL);
+}
 /**
  * \brief Callback function of IP address.
  *
@@ -321,6 +375,7 @@ static void wifi_cb(uint8_t u8MsgType, void *pvMsg)
 		} else if (pstrWifiState->u8CurrState == M2M_WIFI_DISCONNECTED) {
 			printf("Wi-Fi disconnected\r\n");
 			gbConnectedWifi = false;
+			wifi_connect();
 		}
 
 		break;
@@ -357,12 +412,6 @@ int main(void)
 	tstrWifiInitParam param;
 	int8_t ret;
 	struct sockaddr_in addr_in;
-	char wlan_ssid[32];
-	char wlan_pwd[32];
-	uint8_t c;
-	uint8_t i;
-	volatile uint8_t ssid_length = 0;
-	volatile uint8_t pwd_length = 0;
 
 	/* Initialize the board. */
 	sysclk_init();
@@ -371,11 +420,6 @@ int main(void)
 	/* Initialize the UART console. */
 	configure_console();
 	printf(STRING_HEADER);
-
-	for(i = 0; i < 32; i++) {
-		wlan_ssid[i] = 0;
-		wlan_pwd[i] = 0;
-	}
 
 	/* Initialize the BSP. */
 	nm_bsp_init();
@@ -396,45 +440,7 @@ int main(void)
 	socketInit();
 	registerSocketCallback(socket_cb, resolve_cb);
 
-	printf("Please input your WLAN SSID Name.\r\n");
-	while (1) {
-		scanf("%c", &c);
-		
-		if (c == ASCII_BS) {
-			printf("%c", ASCII_BS);
-			ssid_length--;
-			wlan_ssid[ssid_length] = 0;
-		} else if(c == ASCII_CR) {
-			wlan_ssid[ssid_length] = 0;
-			printf("\r\n");
-			break;
-		} else {
-			printf("%c", c);
-			wlan_ssid[ssid_length] = c;
-			ssid_length++;
-		}
-	}
-	printf("Please input your WLAN Password.\r\n");
-	while (1) {
-		scanf("%c", &c);
-		
-		if (c == ASCII_BS) {
-			printf("%c", ASCII_BS);
-			ssid_length--;
-			wlan_pwd[pwd_length] = 0;
-		} else if(c == ASCII_CR) {
-			wlan_pwd[pwd_length] = 0;
-			printf("\r\n");
-			break;
-		} else {
-			printf("%c", c);
-			wlan_pwd[pwd_length] = c;
-			pwd_length++;
-		}
-	}
-	printf("Connecting to %s.\r\n", wlan_ssid);
-	/* Connect to defined AP. */
-	m2m_wifi_connect((char *)wlan_ssid, /*sizeof(wlan_ssid)*/ssid_length, MAIN_WLAN_AUTH, (void *)wlan_pwd, M2M_WIFI_CH_ALL);
+	wifi_connect();
 	//m2m_wifi_connect((char *)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID), MAIN_WLAN_AUTH, (void *)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);
 
 	while (1) {
