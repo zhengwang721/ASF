@@ -120,7 +120,7 @@ void hid_prf_init(void *param)
 	#if ENABLE_PTS
 		DBG_LOG("Protocol Mode Characteristic Value 0x%02X", hid_prf_dataref[serv_num]->protocol_mode);
 	#endif
-	for(uint8_t serv_num = 0; serv_num<HID_MAX_SERV_INST; serv_num++)
+	for(serv_num = 0; serv_num<HID_MAX_SERV_INST; serv_num++)
 	{
 		if(hid_prf_dataref[serv_num] != NULL)
 		{
