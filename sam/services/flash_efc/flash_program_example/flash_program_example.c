@@ -76,6 +76,13 @@
  * (such as sector write) to be done when code is running out of Flash.
  * We will use IAP function by default in flash driver.
  *
+ * If the Flash programming examples is that start both Atmel Studio and Segger 
+ * caches flash to speed up debugging. To be able to correctly watch the changes 
+ * in the flash through the Memory view or through Segger J-Mem, caching needs 
+ * to be disabled.This can be done in the Tool tab in the Project Properties 
+ * in Atmel Studio.we need to place a breakpoint in the flash_write function 
+ * then do a Step Out to see the changes. Stopping the program execution 
+ * anywhere just shows 0xFFs.
  * \section Usage
  *
  * -# Build the program and download it into the evaluation board.
