@@ -92,15 +92,15 @@ typedef union {
 #define ARM_SYSCTRL_SYST_CSR_ENABLE_Pos       0  /**< \brief (ARM_SYSCTRL_SYST_CSR) Indicates the enabled status of the SysTick counter */
 #define ARM_SYSCTRL_SYST_CSR_ENABLE_Msk       (0x1ul << ARM_SYSCTRL_SYST_CSR_ENABLE_Pos)
 #define ARM_SYSCTRL_SYST_CSR_ENABLE(value)    (ARM_SYSCTRL_SYST_CSR_ENABLE_Msk & ((value) << ARM_SYSCTRL_SYST_CSR_ENABLE_Pos))  
-  #define ARM_SYSCTRL_SYST_CSR_ENABLE_0_Val        0X0ul  /**< \brief (ARM_SYSCTRL_SYST_CSR) Counter Disabled  */
-  #define ARM_SYSCTRL_SYST_CSR_ENABLE_1_Val        0X1ul  /**< \brief (ARM_SYSCTRL_SYST_CSR) Counter Operating  */
+#define   ARM_SYSCTRL_SYST_CSR_ENABLE_0_Val        0X0ul  /**< \brief (ARM_SYSCTRL_SYST_CSR) Counter Disabled  */
+#define   ARM_SYSCTRL_SYST_CSR_ENABLE_1_Val        0X1ul  /**< \brief (ARM_SYSCTRL_SYST_CSR) Counter Operating  */
 #define ARM_SYSCTRL_SYST_CSR_ENABLE_0         (ARM_SYSCTRL_SYST_CSR_ENABLE_0_Val << ARM_SYSCTRL_SYST_CSR_ENABLE_Pos)
 #define ARM_SYSCTRL_SYST_CSR_ENABLE_1         (ARM_SYSCTRL_SYST_CSR_ENABLE_1_Val << ARM_SYSCTRL_SYST_CSR_ENABLE_Pos)
 #define ARM_SYSCTRL_SYST_CSR_TICKINT_Pos      1  /**< \brief (ARM_SYSCTRL_SYST_CSR) Indicates whether counting to 0 causes the status of the SysTick exception to change to pending */
 #define ARM_SYSCTRL_SYST_CSR_TICKINT_Msk      (0x1ul << ARM_SYSCTRL_SYST_CSR_TICKINT_Pos)
 #define ARM_SYSCTRL_SYST_CSR_TICKINT(value)   (ARM_SYSCTRL_SYST_CSR_TICKINT_Msk & ((value) << ARM_SYSCTRL_SYST_CSR_TICKINT_Pos))  
-  #define ARM_SYSCTRL_SYST_CSR_TICKINT_0_Val        0X0ul  /**< \brief (ARM_SYSCTRL_SYST_CSR) Count to 0 does not affect the SysTick exception status  */
-  #define ARM_SYSCTRL_SYST_CSR_TICKINT_1_Val        0X1ul  /**< \brief (ARM_SYSCTRL_SYST_CSR) Count to 0 changes the SysTick excpetion status to pending  */
+#define   ARM_SYSCTRL_SYST_CSR_TICKINT_0_Val        0X0ul  /**< \brief (ARM_SYSCTRL_SYST_CSR) Count to 0 does not affect the SysTick exception status  */
+#define   ARM_SYSCTRL_SYST_CSR_TICKINT_1_Val        0X1ul  /**< \brief (ARM_SYSCTRL_SYST_CSR) Count to 0 changes the SysTick excpetion status to pending  */
 #define ARM_SYSCTRL_SYST_CSR_TICKINT_0        (ARM_SYSCTRL_SYST_CSR_TICKINT_0_Val << ARM_SYSCTRL_SYST_CSR_TICKINT_Pos)
 #define ARM_SYSCTRL_SYST_CSR_TICKINT_1        (ARM_SYSCTRL_SYST_CSR_TICKINT_1_Val << ARM_SYSCTRL_SYST_CSR_TICKINT_Pos)
 #define ARM_SYSCTRL_SYST_CSR_CLKSOURCE_Pos    2  /**< \brief (ARM_SYSCTRL_SYST_CSR) SysTick uses the processor clock (writes are ignored) */
@@ -816,26 +816,26 @@ typedef union {
 #define ARM_SYSCTRL_DCRSR_REGSEL_Pos          0  /**< \brief (ARM_SYSCTRL_DCRSR) Specifies the ARM core register or special purpose register to transfer */
 #define ARM_SYSCTRL_DCRSR_REGSEL_Msk          (0x1Ful << ARM_SYSCTRL_DCRSR_REGSEL_Pos)
 #define ARM_SYSCTRL_DCRSR_REGSEL(value)       (ARM_SYSCTRL_DCRSR_REGSEL_Msk & ((value) << ARM_SYSCTRL_DCRSR_REGSEL_Pos))  
-  #define ARM_SYSCTRL_DCRSR_REGSEL_0_Val        0X0ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R0  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_1_Val        0X1ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R1  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_2_Val        0X2ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R2  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_3_Val        0X3ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R3  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_4_Val        0X4ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R4  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_5_Val        0X5ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R5  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_6_Val        0X6ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R6  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_7_Val        0X7ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R7  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_8_Val        0X8ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R8  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_9_Val        0X9ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R9  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_10_Val        0XAul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R10  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_11_Val        0XBul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R11  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_12_Val        0XCul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R12  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_13_Val        0XDul  /**< \brief (ARM_SYSCTRL_DCRSR) Current SP  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_14_Val        0XEul  /**< \brief (ARM_SYSCTRL_DCRSR) LR  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_15_Val        0XFul  /**< \brief (ARM_SYSCTRL_DCRSR) DebugReturnAddress  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_16_Val       0X10ul  /**< \brief (ARM_SYSCTRL_DCRSR) xPSR  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_17_Val       0X11ul  /**< \brief (ARM_SYSCTRL_DCRSR) MSP  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_18_Val       0X12ul  /**< \brief (ARM_SYSCTRL_DCRSR) PSP  */
-  #define ARM_SYSCTRL_DCRSR_REGSEL_20_Val       0X14ul  /**< \brief (ARM_SYSCTRL_DCRSR) CONTROL and PRIMASK  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_0_Val        0X0ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R0  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_1_Val        0X1ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R1  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_2_Val        0X2ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R2  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_3_Val        0X3ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R3  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_4_Val        0X4ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R4  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_5_Val        0X5ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R5  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_6_Val        0X6ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R6  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_7_Val        0X7ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R7  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_8_Val        0X8ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R8  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_9_Val        0X9ul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R9  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_10_Val        0XAul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R10  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_11_Val        0XBul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R11  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_12_Val        0XCul  /**< \brief (ARM_SYSCTRL_DCRSR) ARM Core Register R12  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_13_Val        0XDul  /**< \brief (ARM_SYSCTRL_DCRSR) Current SP  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_14_Val        0XEul  /**< \brief (ARM_SYSCTRL_DCRSR) LR  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_15_Val        0XFul  /**< \brief (ARM_SYSCTRL_DCRSR) DebugReturnAddress  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_16_Val       0X10ul  /**< \brief (ARM_SYSCTRL_DCRSR) xPSR  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_17_Val       0X11ul  /**< \brief (ARM_SYSCTRL_DCRSR) MSP  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_18_Val       0X12ul  /**< \brief (ARM_SYSCTRL_DCRSR) PSP  */
+#define   ARM_SYSCTRL_DCRSR_REGSEL_20_Val       0X14ul  /**< \brief (ARM_SYSCTRL_DCRSR) CONTROL and PRIMASK  */
 #define ARM_SYSCTRL_DCRSR_REGSEL_0            (ARM_SYSCTRL_DCRSR_REGSEL_0_Val << ARM_SYSCTRL_DCRSR_REGSEL_Pos)
 #define ARM_SYSCTRL_DCRSR_REGSEL_1            (ARM_SYSCTRL_DCRSR_REGSEL_1_Val << ARM_SYSCTRL_DCRSR_REGSEL_Pos)
 #define ARM_SYSCTRL_DCRSR_REGSEL_2            (ARM_SYSCTRL_DCRSR_REGSEL_2_Val << ARM_SYSCTRL_DCRSR_REGSEL_Pos)

@@ -383,19 +383,19 @@ void TIMER0_Handler      ( void );
 #define SPI_FLASH_INST_NUM     1
 #define SPI_FLASH_INSTS        { SPI_FLASH0 }
 
-#define ARM_SYSCTRL0           ((Arm_Sysctrl *)0xe000e000LUL) /**< \brief (ARM_SYSCTRL0) Base Address */
+#define ARM_SYSCTRL0           ((ArmSysctrl *)0xe000e000LUL)  /**< \brief (ARM_SYSCTRL0) Base Address */
 #define ARM_SYSCTRL_INST_NUM   1
 #define ARM_SYSCTRL_INSTS      { ARM_SYSCTRL0 }
 
-#define ARM_BPU0               ((Arm_Bpu *)0xe0002000LUL)     /**< \brief (ARM_BPU0  ) Base Address */
+#define ARM_BPU0               ((ArmBpu *)0xe0002000LUL)      /**< \brief (ARM_BPU0  ) Base Address */
 #define ARM_BPU_INST_NUM       1
 #define ARM_BPU_INSTS          { ARM_BPU0 }
 
-#define ARM_DWT0               ((Arm_Dwt *)0xe0001000LUL)     /**< \brief (ARM_DWT0  ) Base Address */
+#define ARM_DWT0               ((ArmDwt *)0xe0001000LUL)      /**< \brief (ARM_DWT0  ) Base Address */
 #define ARM_DWT_INST_NUM       1
 #define ARM_DWT_INSTS          { ARM_DWT0 }
 
-#define ARM_ROM0               ((Arm_Rom *)0xe00ff000LUL)     /**< \brief (ARM_ROM0  ) Base Address */
+#define ARM_ROM0               ((ArmRom *)0xe00ff000LUL)      /**< \brief (ARM_ROM0  ) Base Address */
 #define ARM_ROM_INST_NUM       1
 #define ARM_ROM_INSTS          { ARM_ROM0 }
 
