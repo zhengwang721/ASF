@@ -47,10 +47,9 @@
  */
 typedef enum
 {
-    ///Generirc errors
+    ///Generic errors
     ///Success
     AT_BLE_SUCCESS  = 0x00,
-
 
     ///ATT Error Codes
     ///Handle is invalid

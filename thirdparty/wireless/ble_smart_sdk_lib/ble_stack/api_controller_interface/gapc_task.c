@@ -246,7 +246,10 @@ void gapc_con_req_ind(uint8_t *data)
     uint8_t devRole = 0;
     INTERFACE_UNPACK_INIT(data);
     INTERFACE_UNPACK_UINT16(&(device.conn_handle));
-    INTERFACE_UNPACK_SKIP(7); //we are not interested in those params
+	INTERFACE_UNPACK_UINT16(&(device.conn_interval));
+	INTERFACE_UNPACK_UINT16(&(device.conn_latency));
+	INTERFACE_UNPACK_UINT16(&(device.sup_to));
+	INTERFACE_UNPACK_SKIP(1); //we are not interested in those params
     INTERFACE_UNPACK_UINT8(&(device.peer_addr.type));
     INTERFACE_UNPACK_BLOCK(device.peer_addr.addr, AT_BLE_ADDR_LEN);
     INTERFACE_UNPACK_UINT8(&devRole);
@@ -257,6 +260,9 @@ void gapc_con_req_ind(uint8_t *data)
         gstrConnData[index].conHandle = device.conn_handle;
         gstrConnData[index].role = devRole;
         gstrConnData[index].peerAddr.type = device.peer_addr.type;
+		gstrConnData[index].conn_interval = device.conn_interval;
+		gstrConnData[index].conn_latency = device.conn_latency;
+		gstrConnData[index].sup_to = device.sup_to;
         memcpy(&gstrConnData[index].peerAddr.addr[0], &device.peer_addr.addr[0], AT_BLE_ADDR_LEN);
     }
     gapc_connection_cfm_handler(dummy_key, 0, dummy_key, 0, GAP_AUTH_REQ_NO_MITM_NO_BOND,
@@ -803,7 +809,7 @@ at_ble_status_t gapc_lecb_create_handler(at_ble_handle_t conn_handle,
     INTERFACE_PACK_ARG_UINT16(cid);
     INTERFACE_PACK_ARG_UINT16(initial_credit);
     INTERFACE_SEND_WAIT(GAPC_CMP_EVT, TASK_GAPC);
-		INTERFACE_UNPACK_SKIP(1);
+	INTERFACE_UNPACK_SKIP(1);
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_DONE();
     return (at_ble_status_t)u8Status;

@@ -3,8 +3,8 @@
             <info type="description" value="summary">
             BLE SMART SDK library
             </info>
-            <build type="library" subtype="user" value="libBle_smart_sdk_lib.a" toolchain="armgcc"/>
-            <build type="library" subtype="user" value="libBle_smart_sdk_lib.a" toolchain="iarewarm"/>
+            <build type="library" subtype="user" value="libblusdk.a" toolchain="armgcc"/>
+            <build type="library" subtype="user" value="libblusdk.a" toolchain="iarewarm"/>
 	  	<build type="define" name="CHIPVERSION_B0" value=""/>
 		
 	    <device-support value="atsamb11g18a"/>

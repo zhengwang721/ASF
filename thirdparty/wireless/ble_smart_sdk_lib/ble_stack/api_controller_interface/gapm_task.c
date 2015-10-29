@@ -242,6 +242,9 @@ at_ble_events_t gapm_cmp_evt(uint8_t *data, void *params)
                 connected->handle = gstrConnData[index].conHandle;
                 connected->peer_addr.type = gstrConnData[index].peerAddr.type;
                 connected->conn_status = (at_ble_status_t)u8status;
+				connected->conn_params.con_interval = gstrConnData[index].conn_interval;
+				connected->conn_params.con_latency = gstrConnData[index].conn_latency;
+				connected->conn_params.sup_to = gstrConnData[index].sup_to;
                 memcpy(connected->peer_addr.addr, gstrConnData[index].peerAddr.addr, AT_BLE_ADDR_LEN);
                 connected->peer_addr.type = (at_ble_addr_type_t)gapm_get_address_type((uint8_t *)(&(connected->peer_addr.addr)), connected->peer_addr.type);
                 device.conn_handle = 0xFFFF;
@@ -276,6 +279,9 @@ at_ble_events_t gapm_cmp_evt(uint8_t *data, void *params)
             connected->handle = gstrConnData[index].conHandle;
             connected->peer_addr.type = gstrConnData[index].peerAddr.type;
             connected->conn_status = (at_ble_status_t)u8status;
+			connected->conn_params.con_interval = gstrConnData[index].conn_interval;
+			connected->conn_params.con_latency = gstrConnData[index].conn_latency;
+			connected->conn_params.sup_to = gstrConnData[index].sup_to;
             memcpy(connected->peer_addr.addr, gstrConnData[index].peerAddr.addr, AT_BLE_ADDR_LEN);
         }
         connected->peer_addr.type = (at_ble_addr_type_t)gapm_get_address_type((uint8_t *)(&(connected->peer_addr.addr)), connected->peer_addr.type);
@@ -504,7 +510,6 @@ uint8_t gapm_white_list_mgm_cmd(uint8_t operation, uint8_t addr_type, uint8_t *p
     INTERFACE_UNPACK_SKIP(1);
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_DONE();
-    PRINT_DBG("output operation : %d\n", u8Operation);
     return u8Status;
 }
 

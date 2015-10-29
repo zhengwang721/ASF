@@ -9,7 +9,7 @@
 
 #include "gattm_task.h"
 uint32_t u32usedBuffers = 0;
-
+extern uint32_t u32dbMemorySize;
 void init_gattm_task_module(void)
 {
 	u32usedBuffers = 0;
@@ -21,6 +21,7 @@ uint8_t gattm_add_svc_req_handler(struct gattm_svc_desc *svc_desc)
     char NAtts = svc_desc->nb_att;
     int idx = 0;
     INTERFACE_MSG_INIT(GATTM_ADD_SVC_REQ, TASK_GATTM);
+    INTERFACE_SEND_NO_WAIT_PARTIALLY(22 + 20 * NAtts);
     INTERFACE_PACK_ARG_UINT16(svc_desc->start_hdl);
     INTERFACE_PACK_ARG_UINT16(svc_desc->task_id);
     INTERFACE_PACK_ARG_UINT8(svc_desc->perm);
@@ -31,11 +32,12 @@ uint8_t gattm_add_svc_req_handler(struct gattm_svc_desc *svc_desc)
     }
     for (idx = 0; idx < NAtts; idx++)
     {
+        INTERFACE_SEND_NO_WAIT_PARTIALLY(0);
         INTERFACE_PACK_ARG_BLOCK(svc_desc->atts[idx].uuid, ATT_UUID_128_LEN);
         INTERFACE_PACK_ARG_UINT16(svc_desc->atts[idx].perm);
         INTERFACE_PACK_ARG_UINT16(svc_desc->atts[idx].max_len);
     }
-    INTERFACE_SEND_WAIT(GATTM_ADD_SVC_RSP, TASK_GATTM);
+    INTERFACE_SEND_WAIT_PARTIALLY(GATTM_ADD_SVC_RSP, TASK_GATTM);
     INTERFACE_UNPACK_UINT16(&svc_desc->start_hdl);
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_DONE();
@@ -45,10 +47,10 @@ uint8_t gattm_add_svc_req_handler(struct gattm_svc_desc *svc_desc)
 uint8_t gattm_add_attribute_req_handler(struct gattm_svc_desc *svc_desc, uint16_t max_data_size, uint16_t perm,
                                         uint8_t uuid_len, uint8_t *uuid, uint16_t *handle)
 {
-    if (svc_desc->nb_att >= ((INTERFACE_SEND_BUF_MAX - sizeof(struct gattm_svc_desc)) / sizeof(struct gattm_att_desc)))
+    if (svc_desc->nb_att >= ((u32dbMemorySize - sizeof(struct gattm_svc_desc)) / sizeof(struct gattm_att_desc)))
     {
         ERROR_REPORT;
-        return AT_BLE_FAILURE;
+        return AT_BLE_ATT_INSUFF_RESOURCE;
     }
     memset(&svc_desc->atts[svc_desc->nb_att].uuid[0], 0, ATT_UUID_128_LEN);
     memcpy(&svc_desc->atts[svc_desc->nb_att].uuid[0], uuid, uuid_len);

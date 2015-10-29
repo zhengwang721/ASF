@@ -58,6 +58,7 @@ do{\
 	interface_send_msg[INTERFACE_HDR_LENGTH-1] = (((__idx - INTERFACE_HDR_LENGTH)>>8) & 0x00FF);\
 	interface_send(interface_send_msg, __idx)
 
+#define INTERFACE_SEND_NO_WAIT_PARTIALLY(payload_size)
 #define INTERFACE_SEND_WAIT(msg, src)\
 	watched_event.msg_id = msg;\
 	watched_event.src_id = src;\
@@ -69,6 +70,8 @@ do{\
 	if(timeout){return AT_BLE_FAILURE;}\
 	__idx = 0;\
 	__ptr = watched_event.params;
+	
+#define INTERFACE_SEND_WAIT_PARTIALLY(msg, src) INTERFACE_SEND_WAIT(msg, src)
 
 #define INTERFACE_SEND_WAIT_ANY(msg, err_msg, src)\
     watched_event.err_msg_id = err_msg;\

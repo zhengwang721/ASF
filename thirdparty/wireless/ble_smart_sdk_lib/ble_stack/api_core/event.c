@@ -387,8 +387,7 @@ static at_ble_events_t handle_ble_event(uint16_t msg_id, uint16_t src_id, uint8_
     break;
     case GATTC_WRITE_REQ_IND:
     {
-        ((at_ble_characteristic_write_req_t *)params)->conn_handle = KE_IDX_GET(src_id);
-        evt_num = (at_ble_events_t)gatts_handle_write_req(data, params);
+        evt_num = (at_ble_events_t)gatts_handle_write_req(src_id, data, params);
     }
     break;
     case GATTC_ATT_INFO_REQ_IND:

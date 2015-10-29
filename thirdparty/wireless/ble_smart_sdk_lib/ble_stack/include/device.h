@@ -30,6 +30,9 @@ struct device_info
      ========================
      */
     uint16_t conn_handle;
+	uint16_t conn_interval;
+	uint16_t conn_latency;
+	uint16_t sup_to;
     // local device adv and scan data
     uint8_t ADVData[AT_BLE_ADV_MAX_SIZE];
     uint8_t SrData[AT_BLE_ADV_MAX_SIZE];
@@ -61,9 +64,9 @@ typedef struct
     at_ble_addr_t       peerAddr;
     at_ble_conn_mode_t  conMode;
     at_ble_handle_t     conHandle;
-    gap_auth_t          auth;
-    at_ble_LTK_t        ltk;
-    at_ble_CSRK_t       csrk;
+	uint16_t			conn_interval;
+	uint16_t			conn_latency;
+	uint16_t			sup_to;
 } tstrConnData;
 
 extern uint8_t check_ConnData_idx_role(uint16_t con_idx, uint8_t *pRole);

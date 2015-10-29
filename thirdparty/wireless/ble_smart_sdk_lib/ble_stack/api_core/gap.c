@@ -187,20 +187,20 @@ at_ble_status_t at_ble_init(at_ble_init_config_t *args)
     {
         db_init(args->memPool.memStartAdd, args->memPool.memSize);
     }
-	do
-	{
-		/* Platform Initialization */
-		if (args && args->plf_config)
-		{
-			status = platform_init((args->plf_config));
-			if (status != AT_BLE_SUCCESS)
-			{
-				PRINT_ERR("Unable to init platform <%02X>\r\n", status);
-				break;
-			}
-		}
-		else
-		{
+    do
+    {
+        /* Platform Initialization */
+        if (args && args->plf_config)
+        {
+            status = platform_init((args->plf_config));
+            if (status != AT_BLE_SUCCESS)
+            {
+                PRINT_ERR("Unable to init platform <%02X>\r\n", status);
+                break;
+            }
+        }
+        else
+        {
             platform_config tempConfig = {AT_BLE_UART, 0};
             status = platform_init(&tempConfig);
             if (status != AT_BLE_SUCCESS)
@@ -812,7 +812,7 @@ at_ble_status_t at_ble_set_conn_mode(at_ble_conn_mode_t mode)
 
 /*
  * TODO:
- *  1. Check for return valaue if operation mode is not Centeral or All, also with scaning and advertising
+ *  1. Check for return value if operation mode is not Central or All, also with scanning and advertising
  *  2. Make an array of device's connections
  *
  * Read about:

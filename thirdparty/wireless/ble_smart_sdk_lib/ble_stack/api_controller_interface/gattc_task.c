@@ -24,8 +24,9 @@ void gattc_read_req_ind_parser(uint8_t *data, at_ble_characteristic_read_req_t *
     INTERFACE_DONE();
 }
 
-void gattc_write_req_ind_parser(uint8_t *data, at_ble_characteristic_write_req_t *params)
+void gattc_write_req_ind_parser(uint16_t src_id, uint8_t *data, at_ble_characteristic_write_request_t *params)
 {
+    params->conn_handle = KE_IDX_GET(src_id);
     INTERFACE_UNPACK_INIT(data);
     INTERFACE_UNPACK_UINT16(&params->char_handle);
     INTERFACE_UNPACK_UINT16(&params->offset);
@@ -360,6 +361,10 @@ at_ble_events_t gattc_event_ind_and_notification_parser(uint16_t src, uint8_t *d
         params_indicate->char_handle = char_handle;
         INTERFACE_UNPACK_SKIP(1);   // irrelevant byte
         INTERFACE_UNPACK_BLOCK(params_indicate->char_value, (params_indicate->char_len));
+    }
+    else
+    {
+        evt = AT_BLE_UNDEFINED_EVENT;
     }
     INTERFACE_DONE();
     return evt;

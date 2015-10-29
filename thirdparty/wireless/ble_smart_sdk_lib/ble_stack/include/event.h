@@ -1,6 +1,7 @@
 #ifndef __EVENT_H__
 #define __EVENT_H__
-
+#include "stdint.h"
+#include "at_ble_api.h"
 struct str_watched_event
 {
     uint16_t msg_id;

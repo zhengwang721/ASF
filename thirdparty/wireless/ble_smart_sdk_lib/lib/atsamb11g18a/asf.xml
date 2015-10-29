@@ -16,8 +16,8 @@
 	<module type="service" id="thirdparty.wireless.ble_smart_sdk_lib.lib.atsamb11g18a.lib" caption="COMPONENT - BLE LIB">
 		<info type="description" value="summary">
 		</info>
-		<build type="library" subtype="user" value="iar/libble-smart-sdk.r90" toolchain="iarew"/>
-		<build type="library" subtype="user" value="gcc/libble-smart-sdk.a" toolchain="avrgcc"/>
+		<build type="library" subtype="user" value="iar/libblusdksdk.r90" toolchain="iarew"/>
+		<build type="library" subtype="user" value="gcc/libblusdksdk.a" toolchain="avrgcc"/>
 
 		<build type="doxygen-entry-point" value="ble_smart_stack_group"/>
 		

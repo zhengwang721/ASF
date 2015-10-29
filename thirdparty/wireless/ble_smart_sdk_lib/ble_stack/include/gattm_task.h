@@ -169,7 +169,7 @@ enum gattm_msg_id
 /**
  *  15   14   13   12   11   10   9    8    7    6    5    4    3    2    1    0
  * +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
- * |UUID_LEN |EKS | WR | WS | WC | B  |EXT |    N    |    I    |   WP    |    RD   |
+ * |UUID_LEN | WR | WS | WC |EKS | B  |EXT |    N    |    I    |   WP    |    RD   |
  * +----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
  *
  * Bit [0-1]  : Read Permission         (0 = Disable, 1 = Enable, 2 = UNAUTH, 3 = AUTH)
@@ -178,10 +178,10 @@ enum gattm_msg_id
  * Bit [6-7]  : Notification Permission (0 = Disable, 1 = Enable, 2 = UNAUTH, 3 = AUTH)
  * Bit [8]    : Extended properties present (only relevant for a characteristic value)
  * Bit [9]    : Broadcast permission        (only relevant for a characteristic value)
- * Bit [10]   : Write Command accepted
- * Bit [11]   : Write Signed accepted
- * Bit [12]   : Write Request accepted
- * Bit [13]   : Encryption key Size must be 16 bytes
+ * Bit [10]   : Encryption key Size must be 16 bytes
+ * Bit [11]   : Write Command accepted
+ * Bit [12]   : Write Signed accepted
+ * Bit [13]   : Write Request accepted
  * Bit [15-14]: UUID Length             (0 = 16 bits, 1 = 32 bits, 2 = 128 bits, 3 = RFU)
  */
 enum attm_perm_mask
@@ -301,9 +301,21 @@ enum
     GATT_LAST
 };
 
-
-
-
+#define PERM_POS_RD_ENABLE (0x01 << PERM_POS_RD)
+#define PERM_POS_RD_AUTH   (0x03 << PERM_POS_RD)
+#define PERM_POS_WR_ENABLE (0x01 << PERM_POS_WR)
+#define PERM_POS_WR_AUTH   (0x03 << PERM_POS_WR)
+#define PERM_POS_IND_ENABLE (0x01 << PERM_POS_IND)
+#define PERM_POS_IND_AUTH (0x03 << PERM_POS_IND)
+#define PERM_POS_NTF_ENABLE (0x01 << PERM_POS_NTF)
+#define PERM_POS_NTF_AUTH (0x03 << PERM_POS_NTF)
+#define PERM_POS_EXT_ENABLE (0x01 << PERM_POS_EXT)
+#define PERM_POS_BROADCAST_ENABLE (0x01 << PERM_POS_BROADCAST)
+#define PERM_POS_EKS_ENABLE (0x01 << PERM_POS_EKS)
+#define PERM_POS_WRITE_COMMAND_ENABLE (0x01 << PERM_POS_WRITE_COMMAND)
+#define PERM_POS_WRITE_SIGNED_ENABLE (0x01 << PERM_POS_WRITE_SIGNED)
+#define PERM_POS_WRITE_REQ_ENABLE (0x01 << PERM_POS_WRITE_REQ)
+#define PERM_POS_UUID_LEN_SET(x) ((x & 0x03) << PERM_POS_UUID_LEN)
 
 #if 0
 /// reliable structure

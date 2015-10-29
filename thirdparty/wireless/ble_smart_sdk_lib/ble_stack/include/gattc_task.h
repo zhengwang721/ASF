@@ -297,8 +297,8 @@ void gattc_send_evt_cmd_handler(uint8_t u8ReqType, uint16_t u16AttHdl, uint16_t 
 void gattc_read_cfm(uint16_t handle, uint16_t u16ConHdl, uint8_t status, uint16_t length, uint8_t *value);
 void gattc_write_cfm(uint16_t handle, uint16_t u16ConHdl, uint8_t status);
 void gattc_read_req_ind_parser(uint8_t *data, at_ble_characteristic_read_req_t *params);
-void gattc_write_req_ind_parser(uint8_t *data, at_ble_characteristic_write_req_t *params);
-at_ble_events_t gatts_handle_write_req(uint8_t *data, at_ble_characteristic_write_req_t *params);
+void gattc_write_req_ind_parser(uint16_t src_id, uint8_t *data, at_ble_characteristic_write_request_t *params);
+at_ble_events_t gatts_handle_write_req(uint16_t src_id, uint8_t *data, at_ble_characteristic_write_request_t *params);
 at_ble_events_t gatts_handle_att_info_req(uint8_t *data, at_ble_att_info_req_t *params, uint16_t src_id);
 at_ble_events_t gatts_handle_read_req(uint8_t *data, at_ble_characteristic_read_req_t *params);
 void gattc_att_info_cfm(uint16_t handle , uint16_t u16ConHdl, uint16_t length, uint8_t status);
