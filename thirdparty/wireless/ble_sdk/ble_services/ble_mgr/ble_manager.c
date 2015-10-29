@@ -686,8 +686,9 @@ at_ble_status_t ble_check_device_state(at_ble_handle_t conn_handle, ble_device_s
 at_ble_status_t ble_connected_state_handler(void *params)
 {
 	at_ble_connected_t *conn_params;
-	uint8_t idx;
+	uint8_t idx = 0;
 	conn_params = (at_ble_connected_t *)params;
+	bool peripheral_device_added = false;
 	
 	if (conn_params->conn_status == AT_BLE_SUCCESS)
 	{		
@@ -726,6 +727,7 @@ at_ble_status_t ble_connected_state_handler(void *params)
 			else
 			{
 				ble_dev_info[idx].dev_role = AT_BLE_ROLE_PERIPHERAL;
+				peripheral_device_added = true;
 			}
 			/* Reset the ble_peripheral_dev_address to identify the initiator */
 			memset((uint8_t *)&ble_peripheral_dev_address, 0, sizeof(at_ble_addr_t));
@@ -748,7 +750,8 @@ at_ble_status_t ble_connected_state_handler(void *params)
 		DBG_LOG("Connection Handle %d", conn_params->handle);
 		
 #if ((BLE_DEVICE_ROLE == BLE_ROLE_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_ROLE_ALL))
-        if(ble_dev_info[idx].dev_role == AT_BLE_ROLE_PERIPHERAL)
+		
+        if((ble_dev_info[idx].dev_role == AT_BLE_ROLE_PERIPHERAL) && (peripheral_device_added))
         {
 	 		ble_send_slave_sec_request(conn_params->handle);
         }
@@ -1007,10 +1010,10 @@ at_ble_status_t ble_pair_request_handler(void *params)
 		{
 			ble_dev_info[idx].bond_info.peer_ltk.key[i] = rand()&0x0f;
 		}
-		
+		DBG_LOG_DEV("Generated LTK: ");
 		for (i = 0; i < 16; i++)
 		{
-			DBG_LOG("0x%02X ", ble_dev_info[idx].bond_info.peer_ltk.key[i]);
+			DBG_LOG_CONT_DEV("0x%02X ", ble_dev_info[idx].bond_info.peer_ltk.key[i]);
 		}
 		
 		ble_dev_info[idx].bond_info.peer_ltk.ediv = rand()&0xffff;
@@ -1131,9 +1134,23 @@ at_ble_status_t ble_pair_done_handler(void *params)
 			memcpy((uint8_t *)&ble_dev_info[idx].bond_info.peer_irk, (uint8_t *)&pairing_params->peer_irk, sizeof(at_ble_IRK_t));
 			ble_dev_info->conn_state = BLE_DEVICE_PAIRED;
 			
+			DBG_LOG_DEV("LTK: ");
 			for (idx = 0; idx < 16; idx++)
 			{
-				DBG_LOG("0x%02X, ", pairing_params->peer_ltk.key[idx]);
+				DBG_LOG_CONT_DEV("0x%02X, ", pairing_params->peer_ltk.key[idx]);
+				
+			}
+			DBG_LOG_DEV("CSRK: ");
+			for (idx = 0; idx < 16; idx++)
+			{
+				DBG_LOG_CONT_DEV("0x%02X, ", pairing_params->peer_csrk.key[idx]);
+				
+			}
+			DBG_LOG_DEV("IRK:");
+			for (idx = 0; idx < 16; idx++)
+			{
+				DBG_LOG_CONT_DEV("0x%02X, ", pairing_params->peer_irk.key[idx]);
+				
 			}
 		}
 		else
