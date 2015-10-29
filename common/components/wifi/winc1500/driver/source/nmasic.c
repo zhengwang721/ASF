@@ -444,9 +444,9 @@ sint8 wait_for_bootrom(uint8 arg)
 		{
 			nm_bsp_sleep(1);
 			reg = nm_read_reg(BOOTROM_REG);
-		//#if (SAME70 || SAMS70 || SAMV70 || SAMV71)
+		#ifdef CONF_WINC_USE_I2C
 			nm_bsp_sleep(500);
-		//#endif
+		#endif
 			if(++cnt > TIMEOUT)
 			{
 				M2M_DBG("failed to load firmware from flash.\n");

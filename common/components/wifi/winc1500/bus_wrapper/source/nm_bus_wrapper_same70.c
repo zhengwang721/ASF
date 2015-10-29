@@ -75,10 +75,6 @@ static sint8 nm_i2c_write(uint8 *b, uint16 sz)
 	packet_tx.length      = sz;
 
 	while(twihs_master_write(CONF_WINC_I2C, &packet_tx) != TWIHS_SUCCESS) {
-		//M2M_ERR("-E-\tTWI master write packet failed.\r");
-		//while (1) {
-			/* Capture error */
-		//}
 		if (timeout++ == I2C_TIMEOUT) {
 			break;
 		}
@@ -102,10 +98,6 @@ static sint8 nm_i2c_read(uint8 *rb, uint16 sz)
 	packet_rx.length      = sz;
 
 	while (twihs_master_read(CONF_WINC_I2C, &packet_rx) != TWIHS_SUCCESS) {
-		//M2M_ERR("-E-\tTWI master read packet failed.\r");
-		//while (1) {
-			/* Capture error */
-		//}
 		if (timeout++ == I2C_TIMEOUT) {
 			break;
 		}

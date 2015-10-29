@@ -103,6 +103,11 @@
 	"-- "BOARD_NAME " --"STRING_EOL	\
 	"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
 
+/** ASCII char definition for backspace. */
+#define ASCII_BS    0x7F
+/** ASCII char definition for carriage return. */
+#define ASCII_CR    13
+
 /** IP address of host. */
 uint32_t gu32HostIp = 0;
 
@@ -296,20 +301,6 @@ static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
 	}
 }
 
-static void set_dev_name_to_mac(uint8_t *name, uint8_t *mac_addr)
-{
-	/* Name must be in the format WINC1500_00:00 */
-	uint16 len;
-
-	len = m2m_strlen(name);
-	if (len >= 5) {
-		name[len - 1] = MAIN_HEX2ASCII((mac_addr[5] >> 0) & 0x0f);
-		name[len - 2] = MAIN_HEX2ASCII((mac_addr[5] >> 4) & 0x0f);
-		name[len - 4] = MAIN_HEX2ASCII((mac_addr[4] >> 0) & 0x0f);
-		name[len - 5] = MAIN_HEX2ASCII((mac_addr[4] >> 4) & 0x0f);
-	}
-}
-
 /**
  * \brief Callback to get the Wi-Fi status update.
  *
@@ -347,20 +338,6 @@ static void wifi_cb(uint8_t u8MsgType, void *pvMsg)
 		break;
 	}
 
-	case M2M_WIFI_RESP_PROVISION_INFO:
-	{
-		tstrM2MProvisionInfo *pstrProvInfo = (tstrM2MProvisionInfo *)pvMsg;
-		printf("wifi_cb: M2M_WIFI_RESP_PROVISION_INFO.\r\n");
-
-		if (pstrProvInfo->u8Status == M2M_SUCCESS) {
-			m2m_wifi_connect((char *)pstrProvInfo->au8SSID, strlen((char *)pstrProvInfo->au8SSID), pstrProvInfo->u8SecType,
-					pstrProvInfo->au8Password, M2M_WIFI_CH_ALL);
-		} else {
-			printf("wifi_cb: Provision failed.\r\n");
-		}
-	}
-	break;
-
 	default:
 	{
 		break;
@@ -379,9 +356,13 @@ int main(void)
 {
 	tstrWifiInitParam param;
 	int8_t ret;
-	uint8_t mac_addr[6];
-	uint8_t u8IsMacAddrValid;
 	struct sockaddr_in addr_in;
+	char wlan_ssid[32];
+	char wlan_pwd[32];
+	uint8_t c;
+	uint8_t i;
+	volatile uint8_t ssid_length = 0;
+	volatile uint8_t pwd_length = 0;
 
 	/* Initialize the board. */
 	sysclk_init();
@@ -390,6 +371,11 @@ int main(void)
 	/* Initialize the UART console. */
 	configure_console();
 	printf(STRING_HEADER);
+
+	for(i = 0; i < 32; i++) {
+		wlan_ssid[i] = 0;
+		wlan_pwd[i] = 0;
+	}
 
 	/* Initialize the BSP. */
 	nm_bsp_init();
@@ -410,23 +396,46 @@ int main(void)
 	socketInit();
 	registerSocketCallback(socket_cb, resolve_cb);
 
-	m2m_wifi_get_otp_mac_address(mac_addr, &u8IsMacAddrValid);
-	if (!u8IsMacAddrValid) {
-		m2m_wifi_set_mac_address(gau8MacAddr);
+	printf("Please input your WLAN SSID Name.\r\n");
+	while (1) {
+		scanf("%c", &c);
+		
+		if (c == ASCII_BS) {
+			printf("%c", ASCII_BS);
+			ssid_length--;
+			wlan_ssid[ssid_length] = 0;
+		} else if(c == ASCII_CR) {
+			wlan_ssid[ssid_length] = 0;
+			printf("\r\n");
+			break;
+		} else {
+			printf("%c", c);
+			wlan_ssid[ssid_length] = c;
+			ssid_length++;
+		}
 	}
-
-	m2m_wifi_get_mac_address(gau8MacAddr);
-
-	set_dev_name_to_mac((uint8_t *)gacDeviceName, gau8MacAddr);
-	set_dev_name_to_mac((uint8_t *)gstrM2MAPConfig.au8SSID, gau8MacAddr);
-	m2m_wifi_set_device_name((uint8_t *)gacDeviceName, (uint8_t)m2m_strlen((uint8_t *)gacDeviceName));
-	gstrM2MAPConfig.au8DHCPServerIP[0] = 0xC0; /* 192 */
-	gstrM2MAPConfig.au8DHCPServerIP[1] = 0xA8; /* 168 */
-	gstrM2MAPConfig.au8DHCPServerIP[2] = 0x01; /* 1 */
-	gstrM2MAPConfig.au8DHCPServerIP[3] = 0x01; /* 1 */
-
-	m2m_wifi_start_provision_mode((tstrM2MAPConfig *)&gstrM2MAPConfig, (char *)gacHttpProvDomainName, 1);
-	printf("Provision Mode started.\r\nConnect to [%s] via AP[%s] and fill up the page.\r\n", MAIN_HTTP_PROV_SERVER_DOMAIN_NAME, gstrM2MAPConfig.au8SSID);
+	printf("Please input your WLAN Password.\r\n");
+	while (1) {
+		scanf("%c", &c);
+		
+		if (c == ASCII_BS) {
+			printf("%c", ASCII_BS);
+			ssid_length--;
+			wlan_pwd[pwd_length] = 0;
+		} else if(c == ASCII_CR) {
+			wlan_pwd[pwd_length] = 0;
+			printf("\r\n");
+			break;
+		} else {
+			printf("%c", c);
+			wlan_pwd[pwd_length] = c;
+			pwd_length++;
+		}
+	}
+	printf("Connecting to %s.\r\n", wlan_ssid);
+	/* Connect to defined AP. */
+	m2m_wifi_connect((char *)wlan_ssid, /*sizeof(wlan_ssid)*/ssid_length, MAIN_WLAN_AUTH, (void *)wlan_pwd, M2M_WIFI_CH_ALL);
+	//m2m_wifi_connect((char *)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID), MAIN_WLAN_AUTH, (void *)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);
 
 	while (1) {
 		m2m_wifi_handle_events(NULL);
