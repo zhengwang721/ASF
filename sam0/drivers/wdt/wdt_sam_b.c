@@ -130,6 +130,8 @@ enum status_code wdt_set_config(struct wdt_module *const module, Wdt * const hw,
 	
 	LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg &= \
 				~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_WATCHDOG_0_CLK_EN;
+	LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg &= \
+				~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_WATCHDOG_1_CLK_EN;
 
 	/* Unlock register */
 	module->hw->WDOGLOCK.reg = WDT_WRITE_ACCESS_KEY;

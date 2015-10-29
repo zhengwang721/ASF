@@ -47,7 +47,9 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-#define CONF_WDT_MODULE           WDT0
-#define CONF_WDT_LOAD_VALUE       0x1FFFFFFF
+#define CONF_WDT_MODULE           WDT1
+
+/* About 10s */
+#define CONF_WDT_LOAD_VALUE       260000000
 
 #endif /* CONF_BOARD_H_INCLUDED */
