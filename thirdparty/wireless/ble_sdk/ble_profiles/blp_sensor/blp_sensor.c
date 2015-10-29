@@ -286,9 +286,7 @@ at_ble_status_t blp_sensor_char_changed_handler(
 at_ble_status_t blp_sensor_disconnect_event_handler(
 					void *disconnect)
 {
-	blp_sensor_adv();
     ALL_UNUSED(disconnect);
-	
 	return AT_BLE_SUCCESS;
 }
 
@@ -393,8 +391,6 @@ void blp_sensor_init(void *param)
 		DBG_LOG("Advertisement set failed reason %d",status);
 	}
 				
-	blp_sensor_adv();
-	
 	/* Handles for the Blood pressure service */
 	DBG_LOG_DEV("\n\nThe service handle for blp is 0x%04x",
 	blp_service_handler.serv_handle);

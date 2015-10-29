@@ -132,7 +132,7 @@ static at_ble_status_t ble_connected_app_event(void *param)
 	at_ble_connected_t *connected = (at_ble_connected_t *)param;
 	bat_connection_handle = connected->handle;
 	#if !BLE_PAIR_ENABLE
-		ble_paired_app_event(void *param);
+		ble_paired_app_event(param);
 	#else
 		ALL_UNUSED(param);
 	#endif

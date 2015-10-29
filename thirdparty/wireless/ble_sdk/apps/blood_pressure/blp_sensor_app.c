@@ -210,6 +210,8 @@ static at_ble_status_t app_disconnected_state_handler(void *param)
 		indication_flag = APP_DEFAULT_VAL;
 		notification_flag = APP_DEFAULT_VAL;
 		
+		/* Starting advertisement */
+		blp_sensor_adv();
 		ALL_UNUSED(param);
 		return AT_BLE_SUCCESS;
 }
@@ -654,6 +656,9 @@ int main(void)
 
 	/* Initialize the blood pressure sensor profile */
 	blp_sensor_init(NULL);
+	
+	/* Triggering advertisement */
+	blp_sensor_adv();
 	
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
 	BLE_GAP_EVENT_TYPE,
