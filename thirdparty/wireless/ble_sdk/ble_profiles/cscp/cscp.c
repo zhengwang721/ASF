@@ -150,8 +150,6 @@ void csc_prf_init(void *param)
 	if (status != AT_BLE_SUCCESS) {
 		DBG_LOG("Advertisement data set failed reason %d",status);
 	}
-	
-	csc_prf_dev_adv();
     ALL_UNUSED(param);
 }
 
@@ -297,13 +295,6 @@ at_ble_status_t csc_prf_write_notification_handler(void *params)
 
 at_ble_status_t csc_prf_disconnect_event_handler(void *params)
 {
-	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
-	APP_CSC_FAST_ADV, APP_CSC_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS){
-		DBG_LOG("Device Advertisement Failed");
-	}
-	else{
-		DBG_LOG("Device Started Advertisement");
-	}
 	app_csc_info.devicedb = false;
     ALL_UNUSED(params);
 	return AT_BLE_SUCCESS;
