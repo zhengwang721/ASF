@@ -128,10 +128,11 @@ enum status_code wdt_set_config(struct wdt_module *const module, Wdt * const hw,
 		return STATUS_ERR_BAD_DATA;
 	}
 	
-	LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg &= \
-				~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_WATCHDOG_0_CLK_EN;
-	LPMCU_MISC_REGS0->LPMCU_CLOCK_ENABLES_0.reg &= \
-				~LPMCU_MISC_REGS_LPMCU_CLOCK_ENABLES_0_WATCHDOG_1_CLK_EN;
+	if (module->hw == WDT0) {
+		system_clock_peripheral_disable(PERIPHERAL_WDT0);
+	} else if (module->hw ==WDT1) {
+		system_clock_peripheral_disable(PERIPHERAL_WDT1);
+	}
 
 	/* Unlock register */
 	module->hw->WDOGLOCK.reg = WDT_WRITE_ACCESS_KEY;
