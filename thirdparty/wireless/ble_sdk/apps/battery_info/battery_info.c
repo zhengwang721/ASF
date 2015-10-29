@@ -72,6 +72,7 @@ bat_gatt_service_handler_t bas_service_handler;
 bool volatile timer_cb_done = false;
 bool volatile flag = true;
 bool volatile battery_flag = true;
+at_ble_handle_t bat_connection_handle;
 
 /**
 * \Timer callback handler called on timer expiry
@@ -128,6 +129,8 @@ static at_ble_status_t ble_disconnected_app_event(void *param)
 
 static at_ble_status_t ble_connected_app_event(void *param)
 {
+	at_ble_connected_t *connected = (at_ble_connected_t *)param;
+	bat_connection_handle = connected->handle;
 	#if !BLE_PAIR_ENABLE
 		ble_paired_app_event(void *param);
 	#else
@@ -152,7 +155,7 @@ static at_ble_status_t ble_notification_confirmed_app_event(void *param)
 static at_ble_status_t ble_char_changed_app_event(void *param)
 {
 	at_ble_characteristic_changed_t *char_handle = (at_ble_characteristic_changed_t *)param;
-	return bat_char_changed_event(&bas_service_handler, char_handle, &flag);
+	return bat_char_changed_event(char_handle->conn_handle,&bas_service_handler, char_handle, &flag);
 }
 
 void button_cb(void)
@@ -258,7 +261,7 @@ int main(void)
 			timer_cb_done = false;			
 			/* send the notification and Update the battery level  */			
 			if(flag){
-				if(bat_update_char_value(&bas_service_handler, battery_level, &flag) == AT_BLE_SUCCESS)
+				if(bat_update_char_value(bat_connection_handle,&bas_service_handler, battery_level, &flag) == AT_BLE_SUCCESS)
 				{
 					DBG_LOG("Battery Level:%d%%", battery_level);
 				}
