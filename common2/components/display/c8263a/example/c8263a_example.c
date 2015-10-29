@@ -51,18 +51,18 @@
  * This example demonstrates how to use the C8263A LCD Glass driver.
  *
  * The supported board list:
- *    - SAM L22 Xplained Pro
+ *    - SAM L22 Xplained Pro B
  *
  * \section compilinfo Compilation Information
  * This software is written for GNU GCC and IAR Embedded Workbench
  * for Atmel. Other compilers may or may not work.
  *
  * \section deviceinfo Device Information
- * The SEGMENT LCD1 Xplained Pro extension board must be connected to SAM devices.
+ * The TSLCD1 Xplained Pro extension board must be connected to SAM devices.
  *
  * \section configinfo Configuration Information
  * - PC terminal settings:
- *   - 115200 bps,
+ *   - 38400 bps,
  *   - 8 data bits,
  *   - no parity bit,
  *   - 1 stop bit,

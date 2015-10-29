@@ -53,7 +53,7 @@
  * \name Circular Animation Shift Direction
  * @{
  */
-#define C8263A_CSR_DIR      SLCD_CIRCULAR_SHIFT_RIGHT
+#define C8263A_CSR_DIR      SLCD_CIRCULAR_SHIFT_LEFT
 /** @} */
 
 
@@ -81,54 +81,60 @@
 #define CONF_C8263A_CIRCULAR_ANIMATION_TIMER    SLCD_FRAME_COUNTER_0
 
 
-#define C8263A_NB_OF_COM 4
+#define C8263A_NB_OF_COM 8
 #define C8263A_NB_OF_SEG 24
 
-#define C8263A_NUM_SEG_INDEX_S 4
-#define C8263A_NUM_SEG_INDEX_E 20
+#define C8263A_CHAR_SEG_INDEX_S 8
+#define C8263A_CHAR_SEG_INDEX_E 23
+#define C8263A_DIGITAL_SEG_INDEX_S 1
+#define C8263A_DIGITAL_SEG_INDEX_E 7
 
-#define C8263A_CHAR_MAP_NUM_SEG 4
-#define C8263A_DATA_MASK 0xFF4002 
-      
-#define C8263A_HOUR_SEG_S   16 
-#define C8263A_MIN_SEG_S    18
+#define C8263A_CHAR_MAP_NUM_SEG 2
+#define C8263A_CHAR_MASK 0x00ff0003 
+#define C8263A_DIGITAL_MAP_NUM_SEG 1
+#define C8263A_DIGITAL_MASK 0x00ff8000
 
-
-#define C8263A_MAX_CHAR 5
-#define C8263A_MAX_NUM  5
+#define C8263A_MAX_CHAR 8
+#define C8263A_MAX_DIGITAL  5
 
 /**
  * \name LCD component C42364A segment map default definitions
  * @{
  */
 /* Icon with selected segments blinking feature */
-#define C8263A_ICON_USB            1, 1
-#define C8263A_ICON_COLON          3, 1
-#define C8263A_ICON_BAT            0, 0
-#define C8263A_ICON_ATMEL          0, 1
+#define C8263A_ICON_USB            2, 0
+#define C8263A_ICON_COLON          0, 0
+#define C8263A_ICON_BAT            4, 2
+#define C8263A_ICON_ATMEL          1, 0
 /* Icon without selected segments blinking feature */
 #define C8263A_ICON_MINUS          0, 17
-#define C8263A_ICON_MINUS_SEG1     0, 13
-#define C8263A_ICON_MINUS_SEG2     0, 9
-#define C8263A_ICON_DOT_1          0, 5
-#define C8263A_ICON_DOT_2          3, 6
-#define C8263A_ICON_DOT_3          3, 10
-#define C8263A_ICON_DOT_4          3, 14
-#define C8263A_ICON_DOT_5          3, 18
-#define C8263A_ICON_BAT_LEVEL_1    2, 0
-#define C8263A_ICON_BAT_LEVEL_2    3, 0
-#define C8263A_ICON_BAT_LEVEL_3    1, 0
-#define C8263A_ICON_WLESS_LEVEL_0  3, 3
-#define C8263A_ICON_WLESS_LEVEL_1  3, 2
-#define C8263A_ICON_WLESS_LEVEL_2  2, 3
-#define C8263A_ICON_WLESS_LEVEL_3  2, 2
-#define C8263A_ICON_AUDIO_PLAY     2, 1
-#define C8263A_ICON_AM             0, 2
-#define C8263A_ICON_PM             0, 3
-#define C8263A_ICON_DEGREE_C       3, 22
-#define C8263A_ICON_DEGREE_F       0, 21
-#define C8263A_ICON_VOLT           1, 2
-#define C8263A_ICON_MILLI_VOLT     1, 3
+#define C8263A_ICON_MINUS_SEG1     0, 16
+#define C8263A_ICON_MINUS_SEG2     0, 18
+#define C8263A_ICON_DOT_1          7, 1
+#define C8263A_ICON_DOT_2          7, 4
+#define C8263A_ICON_DOT_3          7, 5
+#define C8263A_ICON_DOT_4          7, 6
+#define C8263A_ICON_DOT_5          7, 7
+#define C8263A_ICON_BAT_LEVEL_1    4, 3
+#define C8263A_ICON_BAT_LEVEL_2    5, 2
+#define C8263A_ICON_BAT_LEVEL_3    5, 3
+#define C8263A_ICON_WLESS_LEVEL_0  0, 2
+#define C8263A_ICON_WLESS_LEVEL_1  0, 3
+#define C8263A_ICON_WLESS_LEVEL_2  1, 2
+#define C8263A_ICON_WLESS_LEVEL_3  1, 3
+#define C8263A_ICON_ARROW_UP       3, 0
+#define C8263A_ICON_ARROW_DWON     4, 0
+#define C8263A_ICON_ARROW_LEFT     5, 0
+#define C8263A_ICON_ARROW_RIGHT    6, 0
+#define C8263A_ICON_ARROW_CORNER   7, 0
+#define C8263A_ICON_AM             0, 21
+#define C8263A_ICON_PM             0, 20
+#define C8263A_ICON_DEGREE_C       0, 19
+#define C8263A_ICON_DEGREE_F       0, 22
+#define C8263A_ICON_VOLT           0, 15
+#define C8263A_ICON_CUR            0, 23
+#define C8263A_ICON_MILLI_VOLT     0, 14
+#define C8263A_ICON_MICRO_VOLT     0, 13
 
 /* @} */
 

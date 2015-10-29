@@ -110,7 +110,7 @@ void c8263a_init(void);
  *
  * This function will show text on the alphanumeric field of the LCD glass.
  *
- * \param data Pointer to the input string(max length is 5)
+ * \param data Pointer to the input string(max length is 8)
  */
 void c8263a_show_text(const uint8_t *data);
 
