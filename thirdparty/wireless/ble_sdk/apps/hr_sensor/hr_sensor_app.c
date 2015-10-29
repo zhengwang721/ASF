@@ -398,6 +398,8 @@ int main(void)
 	
 	/* Initialize the profile */
 	hr_sensor_init(NULL);
+	
+	DBG_LOG("Press the button to start advertisement");
 
 	/* Registering the app_notification_handler with the profile */
 	register_hr_notification_handler(app_notification_handler);
