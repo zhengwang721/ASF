@@ -151,7 +151,10 @@ uint16_t serial_drv_send(uint8_t* data, uint16_t len)
   while(ble_usart_tx_cmpl == false);
   for (i =0; i < len; i++)
   {
-	  ser_fifo_push_uint8(&ble_usart_tx_fifo, data[i]);
+	  if(ser_fifo_push_uint8(&ble_usart_tx_fifo, data[i]) == SER_FIFO_ERROR_OVERFLOW)
+	  {
+		  while(1);/* Platform Buffer size is not enough */
+	  }
   }
   
   //Set Tx Data write complete to false

@@ -166,7 +166,9 @@ at_ble_status_t platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t
 		delay_ms(BTLC1000_WAKEUP_DELAY);
 	}
 #endif //ENABLE_POWER_SAVE
+	tx_done = 0;
 	serial_drv_send(data, len);
+	while(tx_done == 0);
 
 	return AT_BLE_SUCCESS;
 }
@@ -236,12 +238,24 @@ uint32_t timer_done(void)
 	return --ticks; 
 }
 
+void platform_enter_critical_section(void)
+{
+	Disable_global_interrupt();
+}
+ 
+void platform_leave_critical_section(void)
+{
+	Enable_global_interrupt();
+}
+
 
 void platform_process_rxdata(uint32_t t_rx_data)
 {
 	if(slave_state == PLATFORM_TRANSPORT_SLAVE_CONNECTED)
 	{
+		platform_enter_critical_section();
 		ser_fifo_push_uint8(&ble_usart_rx_fifo, (uint8_t)t_rx_data);
+		platform_leave_critical_section();
 	}			
 	else if(slave_state == PLATFORM_TRANSPORT_SLAVE_PATCH_DOWNLOAD)
 	{
@@ -262,10 +276,13 @@ void platform_cmd_cmpl_wait(bool* timeout)
 	start_timer(PLATFORM_EVT_WAIT_TIMEOUT);
 	do 
 	{
+		platform_enter_critical_section();
 		if(ser_fifo_pull_uint8(&ble_usart_rx_fifo, (uint8_t *)&t_rx_data) == SER_FIFO_OK)
-		{			
+		{		
+			platform_leave_critical_section();	
 			platform_interface_callback((uint8_t*)&t_rx_data, 1);
 		}
+		platform_leave_critical_section();
 	}while((cmd_cmpl_flag != 1) && (timer_done()>0));
 
 	if (cmd_cmpl_flag == 1)
@@ -290,43 +307,38 @@ void platform_event_signal(void)
 	event_flag = 1;
 }
 
-uint8_t platform_buf[10];
 at_ble_status_t platform_event_wait(uint32_t timeout)
 {
 	at_ble_status_t status = AT_BLE_SUCCESS;
-	if (ble_rx_state == BLE_EOF_STATE)
-	{		
-		platform_interface_callback((uint8_t *)&ble_evt_frame, (ble_evt_frame.header.payload_len + BLE_SERIAL_HEADER_LEN));
-		ble_rx_state = BLE_SOF_STATE;
+	uint8_t platform_buf[1];
+	uint32_t t_rx_data;
+	start_timer(timeout);
+	do
+	{
+		platform_enter_critical_section();
+		if(ser_fifo_pull_uint8(&ble_usart_rx_fifo, (uint8_t *)&t_rx_data) == SER_FIFO_OK)
+		{
+			platform_leave_critical_section();
+			platform_buf[0] = (uint8_t)t_rx_data;
+			platform_interface_callback(platform_buf, 1);
+		}
+		platform_leave_critical_section();
+	}while((event_flag != 1) && (timer_done()>0));
+	if (event_flag == 1)
+	{
+		event_flag = 0;
+		#ifdef BLE_DBG_ENABLE
+		DBG_LOG_BLE("\r\nSS\n");
+		#endif
+		stop_timer();
 	}
 	else
 	{
-		uint32_t t_rx_data;
-	    start_timer(timeout);
-		do
-		{
-			if(ser_fifo_pull_uint8(&ble_usart_rx_fifo, (uint8_t *)&t_rx_data) == SER_FIFO_OK)
-			{
-				 platform_buf[0] = (uint8_t)t_rx_data;
-				platform_interface_callback(platform_buf, 1);				
-			}
-		}while((event_flag != 1) && (timer_done()>0));
-		if (event_flag == 1)
-		{
-			event_flag = 0;
-			#ifdef BLE_DBG_ENABLE
-			DBG_LOG_BLE("\r\nSS\n");
-			#endif
-			stop_timer();
-		}
-		else
-		{
-			status = AT_BLE_TIMEOUT;
-			#ifdef BLE_DBG_ENABLE
-			DBG_LOG_BLE("\r\nSF\n");
-			#endif
-		}		
-	}
+		status = AT_BLE_TIMEOUT;
+		#ifdef BLE_DBG_ENABLE
+		DBG_LOG_BLE("\r\nSF\n");
+		#endif
+	}	
 	return status;
 }
 
@@ -381,17 +393,7 @@ void serial_tx_callback(void)
 	 #endif
  }
  
- void platform_enter_critical_section(void)
- {
-	 Disable_global_interrupt();
- }
- 
- void platform_leave_critical_section(void)
- {
-	 Enable_global_interrupt();
- }
- 
- void platform_start_timer(uint32_t timeout)
+void platform_start_timer(uint32_t timeout)
  {
 	 ALL_UNUSED(timeout); //To avoid compiler warning
  }
