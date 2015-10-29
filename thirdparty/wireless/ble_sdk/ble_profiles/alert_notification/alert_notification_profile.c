@@ -163,7 +163,6 @@ void anp_client_init( void *params)
 	if (status != AT_BLE_SUCCESS) {
 		DBG_LOG("Advertisement data set failed reason %d",status);
 	}
-	anp_client_adv();
 	UNUSED(params);
 }
 
@@ -505,15 +504,6 @@ at_ble_status_t anp_client_descriptor_found_handler(void *params)
 at_ble_status_t anp_client_disconnected_event_handler(void *params)
 {
 	connected_cb(true);
-	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE,
-						NULL, AT_BLE_ADV_FP_ANY,APP_ANP_FAST_ADV,
-						APP_ANP_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS) {
-		DBG_LOG("BLE Adv start Failed");
-	}
-	else {
-		DBG_LOG("Device in Advertisement mode");
-	}
-
 	ALL_UNUSED(params);  //To avoid compiler warning
 	return AT_BLE_SUCCESS;
 }

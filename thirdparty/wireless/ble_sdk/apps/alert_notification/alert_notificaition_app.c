@@ -97,7 +97,10 @@ static void app_connected_state(bool connected)
 {
 	app_state = connected;
 	if (connected) {
-		DBG_LOG("App connected");	
+		DBG_LOG_DEV("App connected");	
+	} else {
+		/* Starting advertisement on disconnection */
+		anp_client_adv();
 	}		
 }
 
@@ -133,6 +136,9 @@ int main(void)
 	
 	/* Initializing the anp profile */
 	anp_client_init(NULL);
+	
+	/* Starting the advertisement */
+	anp_client_adv();
 	
 	/* Capturing the events  */
 	while(1) {
