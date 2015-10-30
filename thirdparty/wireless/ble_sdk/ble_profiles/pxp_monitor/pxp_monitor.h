@@ -60,6 +60,12 @@ typedef enum {
 	AD_TYPE_COMPLETE_LOCAL_NAME = 0x09
 } AD_TYPE;
 
+typedef enum {
+	PXP_DEV_UNCONNECTED,
+	PXP_DEV_CONNECTING,
+	PXP_DEV_CONNECTED
+} PXP_DEV;
+
 //   <o> Rssi Prameter Update Interval <1-10>
 //   <i> Defines inteval at which rssi value get updated.
 //   <i> Default: 1
@@ -81,6 +87,14 @@ typedef enum {
 #define PXP_CONNECT_REQ_INTERVAL        (20)
 
 #define DISCOVER_SUCCESS				(10)
+#if ENABLE_PTS
+#define DBG_LOG_PTS 					DBG_LOG
+#else
+#define DBG_LOG_PTS						ALL_UNUSED
+#endif
+
+typedef void (*hw_timer_start_func_cb_t)(uint32_t);
+typedef void (*hw_timer_stop_func_cb_t)(void);
 
 /* *@brief Initializes Proximity profile
  * handler Pointer reference to respective variables
@@ -202,6 +216,17 @@ at_ble_status_t pxp_monitor_service_found_handler(
 at_ble_status_t pxp_monitor_connect_request(at_ble_scan_info_t *scan_buffer,
 		uint8_t index);
 
+/**@brief Discover all services
+ *
+ * @param[in] connection handle.
+ * @return @ref AT_BLE_SUCCESS operation programmed successfully
+ * @return @ref AT_BLE_INVALID_PARAM incorrect parameter.
+ * @return @ref AT_BLE_FAILURE Generic error.
+ */
+at_ble_status_t pxp_monitor_service_discover(at_ble_handle_t);
+
+void register_hw_timer_start_func_cb(hw_timer_start_func_cb_t timer_start_fn);
+void register_hw_timer_stop_func_cb(hw_timer_stop_func_cb_t timer_stop_fn);
 #endif /*__PXP_MONITOR_H__*/
 // </h>
 

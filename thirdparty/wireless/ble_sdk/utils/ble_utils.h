@@ -103,4 +103,8 @@ static inline uint32_t convert_ieee754_ieee11073_float(float f_val)
 	return (ieee11073_float);
 }
 
+#ifndef COSOLE_SERIAL_H
+extern uint8_t getchar_timeout(uint32_t timeout);
+#endif
+
 #endif /*__BLE_UTILS_H__*/
