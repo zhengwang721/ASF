@@ -140,13 +140,6 @@ void anp_client_init( void *params);
 void anp_client_adv(void);
 
 /**
- * @brief Handler for connection event 
- * @param[in] connected event parameter containing details like handle
- * \note Called by the ble_manager after receiving connection event
- */
-void anp_client_connected_state_handler(at_ble_connected_t *params);
-
-/**
  * @brief Handler for disconnection event
  * @param[in] disconnected event parameter containing details like handle
  * \note Called by the ble_manager after receiving disconnection event
