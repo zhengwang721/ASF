@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief AT30TSE75X Temperature sensor driver configuration file.
+ * \brief SAM SPI configuration
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -40,24 +40,14 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
-#ifndef CONF_AT30TSE75X_H_INCLUDED
-#define CONF_AT30TSE75X_H_INCLUDED
 
-#include <board.h>
 
-#ifdef EXT1_I2C_MODULE
-/* Default Interface configuration for Xplained Pro kit */
-#  define AT30TSE_SERCOM      TWIHS0
-#  define AT30TSE_PINMUX_PAD0 TWIHS0_CLK_GPIO
-#  define AT30TSE_PINMUX_PAD1 TWIHS0_DATA_GPIO   
-#else
-/* Dummy configuration */
-#  define AT30TSE_SERCOM      0
-#  define AT30TSE_PINMUX_PAD0 0
-#  define AT30TSE_PINMUX_PAD1 0
-#endif
+#ifndef CONF_SPI_H_INCLUDED
+#  define CONF_SPI_H_INCLUDED
 
-#endif /* CONF_AT30TSE75X_H_INCLUDED */
+#  define CONF_SPI_MASTER_ENABLE     true
+#  define CONF_SPI_SLAVE_ENABLE      false
+#  define CONF_SPI_TIMEOUT           1000
+
+#endif /* CONF_SPI_H_INCLUDED */
+

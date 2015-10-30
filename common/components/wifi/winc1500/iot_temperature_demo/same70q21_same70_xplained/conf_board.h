@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief AT30TSE75X Temperature sensor driver configuration file.
+ * \brief Board configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -43,21 +43,11 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_AT30TSE75X_H_INCLUDED
-#define CONF_AT30TSE75X_H_INCLUDED
 
-#include <board.h>
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifdef EXT1_I2C_MODULE
-/* Default Interface configuration for Xplained Pro kit */
-#  define AT30TSE_SERCOM      TWIHS0
-#  define AT30TSE_PINMUX_PAD0 TWIHS0_CLK_GPIO
-#  define AT30TSE_PINMUX_PAD1 TWIHS0_DATA_GPIO   
-#else
-/* Dummy configuration */
-#  define AT30TSE_SERCOM      0
-#  define AT30TSE_PINMUX_PAD0 0
-#  define AT30TSE_PINMUX_PAD1 0
-#endif
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-#endif /* CONF_AT30TSE75X_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
