@@ -102,11 +102,8 @@ static void brd_start_broadcast(void)
 {
 	at_ble_status_t status;
 	at_ble_adv_mode_t adv_mode;
-	#if  PTS_ENABLE
-		adv_mode = AT_BLE_ADV_BROADCASTER_MODE;
-	#else 
-		adv_mode = AT_BLE_ADV_GEN_DISCOVERABLE;
-	#endif
+	adv_mode = AT_BLE_ADV_BROADCASTER_MODE;
+
 	if (at_ble_adv_data_set(adv_data, adv_length, scan_rsp_data,
 			scan_length) != AT_BLE_SUCCESS) {
 		DBG_LOG("BLE Broadcast data set failed");

@@ -195,6 +195,7 @@ at_ble_status_t pas_client_start_service_discovery(void )
 	} else {
 			DBG_LOG("GATT Discovery request failed");
 	}
+	
 	return AT_BLE_FAILURE;
 }
 
@@ -253,10 +254,14 @@ at_ble_status_t pas_client_discovery_complete_handler(void *params)
 					pas_service_data.ringer_control_point_char.discovery = 0;
 				}
 			} else if(discover_status.operation == AT_BLE_DISC_DESC_CHAR) {
+				#if BLE_PAIR_ENABLE
 				DBG_LOG_DEV("Sending slave request");
 				if(ble_send_slave_sec_request(pas_service_data.conn_handle) != AT_BLE_SUCCESS) {
-					DBG_LOG_DEV("Pariring disabled");
+					DBG_LOG_DEV("Pairing disabled");
 				}
+				#else
+				pas_client_write_notifications(NULL);
+				#endif
 			}	
 		} else {
 			DBG_LOG("discovery operation not successfull");
@@ -411,13 +416,7 @@ at_ble_status_t pas_client_disconnected_event_handler(void *params)
 {
 	at_ble_disconnected_t disconnect;
 	memcpy((uint8_t *)&disconnect, params, sizeof(at_ble_disconnected_t));
-
-	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
-	APP_PAS_FAST_ADV, APP_PAS_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS) {
-		DBG_LOG("Advertisement start Failed");
-	} else {
-		DBG_LOG("Device in Advertisement mode");
-	}
+	ALL_UNUSED(params);
 	return AT_BLE_SUCCESS;
 }
 
@@ -576,7 +575,5 @@ void pas_client_init( void *params)
 		DBG_LOG("Advertisement data set failed reason %d",status);
 	}
 		
-	pas_client_adv();
-	
 	UNUSED(params);
 }

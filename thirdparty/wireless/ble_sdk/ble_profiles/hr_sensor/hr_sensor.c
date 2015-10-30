@@ -383,6 +383,5 @@ void hr_sensor_init(void *param)
 	DBG_LOG_DEV("Characteristic 9 - 0x%04x",
 						dis_service_handler.serv_chars[8].char_val_handle - 1);
 											
-	DBG_LOG("Press the button to start advertisement");
     ALL_UNUSED(param);
 }

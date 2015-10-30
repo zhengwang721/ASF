@@ -62,7 +62,7 @@
 
 extern gatt_anp_handler_t anp_handle;
 
-extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
+extern ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED];
 
 volatile bool user_request = false;
 
@@ -97,7 +97,10 @@ static void app_connected_state(bool connected)
 {
 	app_state = connected;
 	if (connected) {
-		DBG_LOG("App connected");	
+		DBG_LOG_DEV("App connected");	
+	} else {
+		/* Starting advertisement on disconnection */
+		anp_client_adv();
 	}		
 }
 
@@ -133,6 +136,9 @@ int main(void)
 	
 	/* Initializing the anp profile */
 	anp_client_init(NULL);
+	
+	/* Starting the advertisement */
+	anp_client_adv();
 	
 	/* Capturing the events  */
 	while(1) {

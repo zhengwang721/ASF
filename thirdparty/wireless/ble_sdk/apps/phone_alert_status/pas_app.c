@@ -152,6 +152,7 @@ static at_ble_status_t app_disconnected_event_handler(void *params)
 	DBG_LOG("App disconnected");
 		app_state = false;
 		press_count = DEVICE_SILENT;
+		pas_client_adv();
 		ALL_UNUSED(params);
 		return AT_BLE_SUCCESS;
 }
@@ -270,6 +271,9 @@ int main(void)
 	
 	/* Initializing the profile */
 	pas_client_init(NULL);
+	
+	/* Starting the advertisement */		
+	pas_client_adv();
 	
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
 	BLE_GAP_EVENT_TYPE,

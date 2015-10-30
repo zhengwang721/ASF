@@ -59,6 +59,7 @@
 #include "ble_utils.h"
 #include "blp_sensor_app.h"
 #include "blp_sensor.h"
+#include "profiles.h"
 /****************************************************************************************
 *							        Globals												*
 ****************************************************************************************/
@@ -115,10 +116,7 @@ uint16_t map_val_kpa = MAP_MIN_KPA;
 uint16_t pulse_rate_val = PULSE_RATE_MIN;
 
 /** Current time stamp */
-uint8_t time_stamp[7];
-
-/** Current year*/
-uint16_t year_value = YEAR;
+prf_date_time_t time_stamp;
 
 /* Intermediate Cuff Pressure Values for notification */
 uint16_t interim_diastolic_mmhg = DIASTOLIC_MIN_MMHG;
@@ -210,6 +208,8 @@ static at_ble_status_t app_disconnected_state_handler(void *param)
 		indication_flag = APP_DEFAULT_VAL;
 		notification_flag = APP_DEFAULT_VAL;
 		
+		/* Starting advertisement */
+		blp_sensor_adv();
 		ALL_UNUSED(param);
 		return AT_BLE_SUCCESS;
 }
@@ -219,41 +219,54 @@ static at_ble_status_t app_disconnected_state_handler(void *param)
  */
 static void update_time_stamp(void)
 {
-  uint16_t year;
-	if (time_stamp[6] == SECOND_MAX) {
-		time_stamp[6] = SECONDS;
-		if (time_stamp[5] == MINUTE_MAX) {
-			time_stamp[5] = MINUTES;
-			if (time_stamp[4] == HOUR_MAX) {
-				time_stamp[4] = HOURS;
-				if (time_stamp[3] == DAY_MAX) {
-					time_stamp[3] = DAY;
-					if (time_stamp[2] == MONTH_MAX) {
-						time_stamp[2] = MONTH;
-                         memcpy(&year,&time_stamp[0],2);
-						if (year == YEAR_MAX) {
-							year_value = YEAR;
-							 memcpy(&time_stamp[0],&year_value,2);
- 						} else {
-							 year_value++;
-							 memcpy(&time_stamp[0],&year_value,2);
-						 }
-					} else {
-						time_stamp[2]++;
-					}
-				} else {
-					time_stamp[3]++;
-				}
-			} else{
-				time_stamp[4]++;
-			}
-		} else {
-			time_stamp[5]++;
-		}
-	} else {
-		time_stamp[6]++;
+	if (time_stamp.sec < SECOND_MAX)
+	{
+		time_stamp.sec++;
 	}
-	
+	else
+	{
+		time_stamp.sec = 0;	
+		if (time_stamp.min < MINUTE_MAX)
+		{
+			time_stamp.min++;
+		}
+		else
+		{
+			time_stamp.min = 0;
+			if (time_stamp.hour < HOUR_MAX)
+			{
+				time_stamp.hour++;
+			}
+			else
+			{
+				time_stamp.hour = 0;
+				if (time_stamp.day < DAY_MAX)
+				{
+					time_stamp.day++;
+				}
+				else
+				{
+					time_stamp.day = 1;
+					if (time_stamp.month < MONTH_MAX)
+					{
+						time_stamp.month++;
+					}
+					else
+					{
+						time_stamp.month = 1;
+						if (time_stamp.year < YEAR_MAX)
+						{
+							time_stamp.year++;
+						} 
+						else
+						{
+							time_stamp.year = 2015;
+						}
+					}
+				}
+			}
+		}			
+	}	
 }
 
 /** @brief initializes the time stamp with default time stamp
@@ -261,16 +274,10 @@ static void update_time_stamp(void)
  */
 static void time_stamp_init(void)
 {
-	uint8_t idx = 0;
-	uint16_t year_t = YEAR;
-	memcpy(time_stamp,&year_t,2);
-	idx += 2;
-	
-	time_stamp[idx++] = MONTH;
-	time_stamp[idx++] = DAY;
-	time_stamp[idx++] = HOURS;
-	time_stamp[idx++] = MINUTES;
-	time_stamp[idx++] = SECONDS;
+	memset((uint8_t *)&time_stamp, 0, sizeof(prf_date_time_t));
+	time_stamp.year = 2015;
+	time_stamp.day = 1;
+	time_stamp.month = 1;
 }
 
 /** @brief app_notification_confirmation_handler called by ble manager 
@@ -438,8 +445,8 @@ static void blp_char_indication(void)
 		DBG_LOG_CONT("   %02d kpa",map_val_kpa);	
 	}
 	
-	memcpy(&blp_data[idx],time_stamp,sizeof(time_stamp));
-	idx += sizeof(time_stamp);
+	memcpy(&blp_data[idx], (uint8_t *)&time_stamp, sizeof(prf_date_time_t));
+	idx += sizeof(prf_date_time_t);
 	pulse_rate_val = pulse_rate_val + (operator[PULSE_RATE]);
 	blp_value_update(blp_data,idx,pulse_rate_val,PULSE_RATE);
 	idx += 2;
@@ -654,6 +661,9 @@ int main(void)
 
 	/* Initialize the blood pressure sensor profile */
 	blp_sensor_init(NULL);
+	
+	/* Triggering advertisement */
+	blp_sensor_adv();
 	
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
 	BLE_GAP_EVENT_TYPE,

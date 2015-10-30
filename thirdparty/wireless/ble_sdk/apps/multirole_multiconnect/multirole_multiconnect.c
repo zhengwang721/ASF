@@ -56,7 +56,7 @@
 #include <asf.h>
 #include "platform.h"
 
-#include "pxp_monitor_app.h"
+#include "multirole_multiconnect.h"
 
 #if defined IMMEDIATE_ALERT_SERVICE
 #include "immediate_alert.h"

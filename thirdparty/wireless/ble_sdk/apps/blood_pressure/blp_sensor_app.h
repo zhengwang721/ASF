@@ -114,13 +114,7 @@
 /**
  * @brief Default Time stamp Values
  */
-
-#define YEAR												(2015)
-#define MONTH												(8)
-#define DAY													(15)
-#define HOURS												(0)
-#define MINUTES												(0)
-#define SECONDS												(0)								
+							
 
 /**
  * @brief Max Time stamp Values for time stamp calculation
