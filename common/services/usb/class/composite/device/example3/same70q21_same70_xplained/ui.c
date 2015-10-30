@@ -272,7 +272,7 @@ void ui_kbd_led(uint8_t value)
 /**
  * \defgroup UI User Interface
  *
- * Human interface on SAMV71-Xplained-Ultra:
+ * Human interface on SAME70-Xplained:
  * - Led 0 is on when USB is wakeup
  * - Led 1 blinks when USB host has checked and enabled All interfaces
  * - Led 1 is on during read/write operation

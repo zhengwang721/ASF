@@ -315,7 +315,7 @@ void ui_kbd_led(uint8_t value)
 /**
  * \defgroup UI User Interface
  *
- * Human interface on SAMV71-Xplained-Ultra:
+ * Human interface on SAME70-Xplained:
  * - Led 0 blinks when USB host has checked and enabled All interfaces
  * - Led 1 is on when CDC UART port is open
  * - Led 1 is on during MSC read/write operation

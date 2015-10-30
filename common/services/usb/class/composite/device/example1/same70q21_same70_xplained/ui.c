@@ -158,10 +158,9 @@ void ui_process(uint16_t framenumber)
 /**
  * \defgroup UI User Interface
  *
- * Human interface on SAMV71-Xplained-Ultra:
+ * Human interface on SAME70-Xplained:
  * - Led 0 is on when USB is wakeup
  * - Led 0 blinks when USB host has checked and enabled HID and MSC interface
- * - Led 1 is on during MSC read/write operation
  * - Push button 1 (SW0) are linked to mouse button up.
  * - Only a low level on push button 1 (SW0) will generate a wakeup to USB Host
  *   in remote wakeup mode.

@@ -103,10 +103,8 @@ void ui_process(uint16_t framenumber)
 /**
  * \defgroup UI User Interface
  *
- * Human interface on SAMV71-Xplained-Ultra:
+ * Human interface on SAME70-Xplained:
  * - Led 0 is on when USB line is in IDLE mode, and off in SUSPEND mode
- * - Led 1 blinks when USB host has checked and enabled PHDC interface
- * - Led 1 is on when PHDC has validated association
  * - Push button 1 (SW0) are used to send a measure
  *
  */

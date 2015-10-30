@@ -346,20 +346,15 @@ void ui_device_sof_action(void)
 /**
  * \defgroup UI User Interface
  *
- * Human interface on SAM3X_EK :
+ * Human interface on SAME70-Xplained:
  * - Led 1 is on in host mode (when USB OTG cable is pluged)
  * - device mode:
- *   - Led 1 is on when USB line is in IDLE mode, and off in SUSPEND
- *     mode
  *   - Led 0 blinks when USB Host have checked and enabled HID mouse
  *     interface
  *   - Mouse buttons are not linked.
  *   - The SW0 are used to move mouse on the axis X.
  * - host mode:
- *   - Led 1 is continuously on when a device is connected
  *   - Led 0 blinks when the device is enumerated and USB in idle mode
- *   - Led 1 is on when a HID mouse button is pressed
- *   - Led 1 is on when the mouse move
  * - SW0 allows to enter the device in suspend mode with remote
  *   wakeup feature authorized
  * - Only SW0 can be used to wakeup USB device in suspend mode

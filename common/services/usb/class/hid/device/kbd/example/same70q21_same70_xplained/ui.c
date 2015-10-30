@@ -249,9 +249,8 @@ void ui_kbd_led(uint8_t value)
 /**
  * \defgroup UI User Interface
  *
- * Human interface on SAMV71-Xplained-Ultra :
+ * Human interface on SAME70-Xplained:
  * - Led 0 blinks when USB host has checked and enabled HID Keyboard interface
- * - Led 1 displays caps lock status.
  * - The SW0 opens a notepad application on Windows O.S.
  *   and sends key sequence "Atmel ARM"
  * - SW0 can be used to wakeup USB Host in remote wakeup mode.

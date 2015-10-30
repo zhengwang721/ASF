@@ -116,7 +116,7 @@ void ui_process(uint16_t framenumber)
 /**
  * \defgroup UI User Interface
  *
- * Human interface on SAMV71-Xplained-Ultra:
+ * Human interface on SAME70-Xplained:
  * - SAMV71 USART used UART on EDBG
  * - Led 0 blinks when USB host has checked and enabled CDC interface
  */
