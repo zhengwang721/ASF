@@ -317,9 +317,6 @@ void ui_kbd_led(uint8_t value)
  *
  * Human interface on SAME70-Xplained:
  * - Led 0 blinks when USB host has checked and enabled All interfaces
- * - Led 1 is on when CDC UART port is open
- * - Led 1 is on during MSC read/write operation
- * - Led 1 is on during CDC TX/RX operation
  * - Push button 1 (SW0) is linked to mouse button left
  * - Only push button 1 (SW0) down opens a notepad application on Windows O.S.
  *   and sends key sequence "Atmel ARM"
