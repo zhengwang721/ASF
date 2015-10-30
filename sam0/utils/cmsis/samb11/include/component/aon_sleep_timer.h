@@ -98,7 +98,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t SINGLE_COUNT_DURATION:32;  /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } AON_SLEEP_TIMER_SINGLE_COUNT_DURATION_Type;
@@ -107,13 +107,16 @@ typedef union {
 #define AON_SLEEP_TIMER_SINGLE_COUNT_DURATION_OFFSET 0x04           /**<  \brief (AON_SLEEP_TIMER_SINGLE_COUNT_DURATION offset) Count for the single count AND reload */
 #define AON_SLEEP_TIMER_SINGLE_COUNT_DURATION_RESETVALUE 0x00ul         /**<  \brief (AON_SLEEP_TIMER_SINGLE_COUNT_DURATION reset_value) Count for the single count AND reload */
 
-#define AON_SLEEP_TIMER_SINGLE_COUNT_DURATION_MASK 0x00ul    /**< \brief (AON_SLEEP_TIMER_SINGLE_COUNT_DURATION) Register MASK */
+#define AON_SLEEP_TIMER_SINGLE_COUNT_DURATION_SINGLE_COUNT_DURATION_Pos 0  /**< \brief (AON_SLEEP_TIMER_SINGLE_COUNT_DURATION)                      */
+#define AON_SLEEP_TIMER_SINGLE_COUNT_DURATION_SINGLE_COUNT_DURATION_Msk (0xFFFFFFFFul << AON_SLEEP_TIMER_SINGLE_COUNT_DURATION_SINGLE_COUNT_DURATION_Pos)
+#define AON_SLEEP_TIMER_SINGLE_COUNT_DURATION_SINGLE_COUNT_DURATION(value) (AON_SLEEP_TIMER_SINGLE_COUNT_DURATION_SINGLE_COUNT_DURATION_Msk & ((value) << AON_SLEEP_TIMER_SINGLE_COUNT_DURATION_SINGLE_COUNT_DURATION_Pos))  
+#define AON_SLEEP_TIMER_SINGLE_COUNT_DURATION_MASK 0xFFFFFFFFul    /**< \brief (AON_SLEEP_TIMER_SINGLE_COUNT_DURATION) Register MASK */
 
 /* -------- AON_SLEEP_TIMER_CURRENT_COUNT_VALUE : (AON_SLEEP_TIMER Offset: 0x0c) (R/  32) Current count of the sleep timer -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :32;                       /*!< bit:  0..31  Reserved                                 */
+    uint32_t CURRENT_COUNT_VALUE:32;    /*!< bit:  0..31                                           */
   } bit;                                /*!< Structure used for bit  access                        */
   uint32_t reg;                         /*!< Type used for register access                         */
 } AON_SLEEP_TIMER_CURRENT_COUNT_VALUE_Type;
@@ -122,7 +125,10 @@ typedef union {
 #define AON_SLEEP_TIMER_CURRENT_COUNT_VALUE_OFFSET 0x0C           /**<  \brief (AON_SLEEP_TIMER_CURRENT_COUNT_VALUE offset) Current count of the sleep timer */
 #define AON_SLEEP_TIMER_CURRENT_COUNT_VALUE_RESETVALUE 0x00ul         /**<  \brief (AON_SLEEP_TIMER_CURRENT_COUNT_VALUE reset_value) Current count of the sleep timer */
 
-#define AON_SLEEP_TIMER_CURRENT_COUNT_VALUE_MASK 0x00ul    /**< \brief (AON_SLEEP_TIMER_CURRENT_COUNT_VALUE) Register MASK */
+#define AON_SLEEP_TIMER_CURRENT_COUNT_VALUE_CURRENT_COUNT_VALUE_Pos 0  /**< \brief (AON_SLEEP_TIMER_CURRENT_COUNT_VALUE)                        */
+#define AON_SLEEP_TIMER_CURRENT_COUNT_VALUE_CURRENT_COUNT_VALUE_Msk (0xFFFFFFFFul << AON_SLEEP_TIMER_CURRENT_COUNT_VALUE_CURRENT_COUNT_VALUE_Pos)
+#define AON_SLEEP_TIMER_CURRENT_COUNT_VALUE_CURRENT_COUNT_VALUE(value) (AON_SLEEP_TIMER_CURRENT_COUNT_VALUE_CURRENT_COUNT_VALUE_Msk & ((value) << AON_SLEEP_TIMER_CURRENT_COUNT_VALUE_CURRENT_COUNT_VALUE_Pos))  
+#define AON_SLEEP_TIMER_CURRENT_COUNT_VALUE_MASK 0xFFFFFFFFul    /**< \brief (AON_SLEEP_TIMER_CURRENT_COUNT_VALUE) Register MASK */
 
 /** \brief AON_SLEEP_TIMER hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

@@ -113,6 +113,7 @@ typedef enum IRQn
   WDT1_IRQn                 = 13 , /**< 13  SAMB11G18A Watchdog0 Timer (WDT1)   */
   DUALTIMER0_IRQn           = 14 , /**< 14  SAMB11G18A ARM General Purpose Dual Timer (DUALTIMER0) */
   PROV_DMA_CTRL0_IRQn       = 15 , /**< 15  SAMB11G18A 4 Channel DMA Controller (PROV_DMA_CTRL0) */
+  SPI_FLASH0_IRQn           = 18 , /**< 18  SAMB11G18A SPI Flash Controller (SPI_FLASH0) */
   GPIO0_IRQn                = 23 , /**< 23  SAMB11G18A GPIO Controller (GPIO0)  */
   GPIO1_IRQn                = 24 , /**< 24  SAMB11G18A GPIO Controller (GPIO1)  */
   GPIO2_IRQn                = 25 , /**< 25  SAMB11G18A GPIO Controller (GPIO2)  */
@@ -161,7 +162,7 @@ typedef struct _DeviceVectors
   void* pfnPROV_DMA_CTRL0_Handler;               /* 15  SAMB11G18A 4 Channel DMA Controller (PROV_DMA_CTRL0) */
   void* pfnReserved16;
   void* pfnReserved17;
-  void* pfnReserved18;
+  void* pfnSPI_FLASH0_Handler;                   /* 18  SAMB11G18A SPI Flash Controller (SPI_FLASH0) */
   void* pfnReserved19;
   void* pfnReserved20;
   void* pfnReserved21;
@@ -198,6 +199,7 @@ void WDT0_Handler        ( void );
 void WDT1_Handler        ( void );
 void DUALTIMER0_Handler  ( void );
 void PROV_DMA_CTRL0_Handler( void );
+void SPI_FLASH0_Handler  ( void );
 void GPIO0_Handler       ( void );
 void GPIO1_Handler       ( void );
 void GPIO2_Handler       ( void );
@@ -325,7 +327,7 @@ void TIMER0_Handler      ( void );
 #define DUALTIMER_INST_NUM     1
 #define DUALTIMER_INSTS        { DUALTIMER0 }
 
-#define PROV_DMA_CTRL0         ((ProvDmaCtrl *)0x40002000UL) /**< \brief (PROV_DMA_CTRL0) Base Address */
+#define PROV_DMA_CTRL0         ((ProvDmaCtrl *)0x40002000UL)  /**< \brief (PROV_DMA_CTRL0) Base Address */
 #define PROV_DMA_CTRL_INST_NUM 1
 #define PROV_DMA_CTRL_INSTS    { PROV_DMA_CTRL0 }
 
@@ -365,11 +367,11 @@ void TIMER0_Handler      ( void );
 #define AON_SLEEP_TIMER_INST_NUM 1
 #define AON_SLEEP_TIMER_INSTS  { AON_SLEEP_TIMER0 }
 
-#define AON_PWR_SEQ0           ((AonPwrSeq *)0x4000e000UL)  /**< \brief (AON_PWR_SEQ0) Base Address */
+#define AON_PWR_SEQ0           ((AonPwrSeq *)0x4000e000UL)    /**< \brief (AON_PWR_SEQ0) Base Address */
 #define AON_PWR_SEQ_INST_NUM   1
 #define AON_PWR_SEQ_INSTS      { AON_PWR_SEQ0 }
 
-#define AON_GP_REGS0           ((AonGpRegs *)0x4000f000UL)  /**< \brief (AON_GP_REGS0) Base Address */
+#define AON_GP_REGS0           ((AonGpRegs *)0x4000f000UL)    /**< \brief (AON_GP_REGS0) Base Address */
 #define AON_GP_REGS_INST_NUM   1
 #define AON_GP_REGS_INSTS      { AON_GP_REGS0 }
 
@@ -379,23 +381,23 @@ void TIMER0_Handler      ( void );
 #define GPIO_INST_NUM          3
 #define GPIO_INSTS             { GPIO0, GPIO1, GPIO2 }
 
-#define SPI_FLASH0             ((SpiFlash *)0x40012000UL)    /**< \brief (SPI_FLASH0) Base Address */
+#define SPI_FLASH0             ((SpiFlash *)0x40012000UL)     /**< \brief (SPI_FLASH0) Base Address */
 #define SPI_FLASH_INST_NUM     1
 #define SPI_FLASH_INSTS        { SPI_FLASH0 }
 
-#define ARM_SYSCTRL0           ((Arm_Sysctrl *)0xe000e000LUL) /**< \brief (ARM_SYSCTRL0) Base Address */
+#define ARM_SYSCTRL0           ((ArmSysctrl *)0xe000e000LUL)  /**< \brief (ARM_SYSCTRL0) Base Address */
 #define ARM_SYSCTRL_INST_NUM   1
 #define ARM_SYSCTRL_INSTS      { ARM_SYSCTRL0 }
 
-#define ARM_BPU0               ((Arm_Bpu *)0xe0002000LUL)     /**< \brief (ARM_BPU0  ) Base Address */
+#define ARM_BPU0               ((ArmBpu *)0xe0002000LUL)      /**< \brief (ARM_BPU0  ) Base Address */
 #define ARM_BPU_INST_NUM       1
 #define ARM_BPU_INSTS          { ARM_BPU0 }
 
-#define ARM_DWT0               ((Arm_Dwt *)0xe0001000LUL)     /**< \brief (ARM_DWT0  ) Base Address */
+#define ARM_DWT0               ((ArmDwt *)0xe0001000LUL)      /**< \brief (ARM_DWT0  ) Base Address */
 #define ARM_DWT_INST_NUM       1
 #define ARM_DWT_INSTS          { ARM_DWT0 }
 
-#define ARM_ROM0               ((Arm_Rom *)0xe00ff000LUL)     /**< \brief (ARM_ROM0  ) Base Address */
+#define ARM_ROM0               ((ArmRom *)0xe00ff000LUL)      /**< \brief (ARM_ROM0  ) Base Address */
 #define ARM_ROM_INST_NUM       1
 #define ARM_ROM_INSTS          { ARM_ROM0 }
 
@@ -404,9 +406,9 @@ void TIMER0_Handler      ( void );
 /** @}*/
 
 /* ************************************************************************** */
-/**  PORT DEFINITIONS FOR SAMB11G18A */
+/*   PIO DEFINITIONS FOR SAMB11G18A*/
 /* ************************************************************************** */
-/** \defgroup SAMB11G18A_port PORT Definitions */
+/** \addtogroup SAMB11G18A_pio Peripheral Pio Definitions */
 /*@{*/
 
 #include "pio/pio_samb11g18a.h"

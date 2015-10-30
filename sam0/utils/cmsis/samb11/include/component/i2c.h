@@ -74,8 +74,8 @@ typedef union {
 #define I2C_TRANSMIT_DATA_ADDRESS_FLAG_Pos    8  /**< \brief (I2C_TRANSMIT_DATA) Specifies that tx_data field is used for address and direction. */
 #define I2C_TRANSMIT_DATA_ADDRESS_FLAG_Msk    (0x1ul << I2C_TRANSMIT_DATA_ADDRESS_FLAG_Pos)
 #define I2C_TRANSMIT_DATA_ADDRESS_FLAG(value) (I2C_TRANSMIT_DATA_ADDRESS_FLAG_Msk & ((value) << I2C_TRANSMIT_DATA_ADDRESS_FLAG_Pos))  
-  #define I2C_TRANSMIT_DATA_ADDRESS_FLAG_0_Val        0X0ul  /**< \brief (I2C_TRANSMIT_DATA) tx_data field bits 7:0 are Transmit Data  */
-  #define I2C_TRANSMIT_DATA_ADDRESS_FLAG_1_Val        0X1ul  /**< \brief (I2C_TRANSMIT_DATA) tx_data field bit 0 is direction (0: write to slave, 1: read from slave), and bits 7:1 are the Address to transmit.  */
+#define   I2C_TRANSMIT_DATA_ADDRESS_FLAG_0_Val        0X0ul  /**< \brief (I2C_TRANSMIT_DATA) tx_data field bits 7:0 are Transmit Data  */
+#define   I2C_TRANSMIT_DATA_ADDRESS_FLAG_1_Val        0X1ul  /**< \brief (I2C_TRANSMIT_DATA) tx_data field bit 0 is direction (0: write to slave, 1: read from slave), and bits 7:1 are the Address to transmit.  */
 #define I2C_TRANSMIT_DATA_ADDRESS_FLAG_0      (I2C_TRANSMIT_DATA_ADDRESS_FLAG_0_Val << I2C_TRANSMIT_DATA_ADDRESS_FLAG_Pos)
 #define I2C_TRANSMIT_DATA_ADDRESS_FLAG_1      (I2C_TRANSMIT_DATA_ADDRESS_FLAG_1_Val << I2C_TRANSMIT_DATA_ADDRESS_FLAG_Pos)
 #define I2C_TRANSMIT_DATA_MASK                0x1FFul    /**< \brief (I2C_TRANSMIT_DATA) Register MASK */
@@ -119,8 +119,8 @@ typedef union {
 #define I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_Pos 0  /**< \brief (I2C_TRANSMIT_STATUS) Active High indication when Tx FIFO can still accepts at least one more character. */
 #define I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_Msk (0x1ul << I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_Pos)
 #define I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL(value) (I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_Msk & ((value) << I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_Pos))  
-  #define I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_0_Val        0X0ul  /**< \brief (I2C_TRANSMIT_STATUS) TX FIFO Full  */
-  #define I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_1_Val        0X1ul  /**< \brief (I2C_TRANSMIT_STATUS) TX FIFO not Full  */
+#define   I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_0_Val        0X0ul  /**< \brief (I2C_TRANSMIT_STATUS) TX FIFO Full  */
+#define   I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_1_Val        0X1ul  /**< \brief (I2C_TRANSMIT_STATUS) TX FIFO not Full  */
 #define I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_0    (I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_0_Val << I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_Pos)
 #define I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_1    (I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_1_Val << I2C_TRANSMIT_STATUS_TX_FIFO_NOT_FULL_Pos)
 #define I2C_TRANSMIT_STATUS_TX_FIFO_0P25_EMPTY_Pos 1  /**< \brief (I2C_TRANSMIT_STATUS) Active High indication when Tx FIFO is at least quarter empty. Reset when more.  */
@@ -183,10 +183,10 @@ typedef union {
 #define I2C_CLOCK_SOURCE_SELECT_CLOCK_Pos     0  /**< \brief (I2C_CLOCK_SOURCE_SELECT) Clock Used to Generate Divided Clock */
 #define I2C_CLOCK_SOURCE_SELECT_CLOCK_Msk     (0x3ul << I2C_CLOCK_SOURCE_SELECT_CLOCK_Pos)
 #define I2C_CLOCK_SOURCE_SELECT_CLOCK(value)  (I2C_CLOCK_SOURCE_SELECT_CLOCK_Msk & ((value) << I2C_CLOCK_SOURCE_SELECT_CLOCK_Pos))  
-  #define I2C_CLOCK_SOURCE_SELECT_CLOCK_0_Val        0X0ul  /**< \brief (I2C_CLOCK_SOURCE_SELECT) 26 MHz Clock  */
-  #define I2C_CLOCK_SOURCE_SELECT_CLOCK_1_Val        0X1ul  /**< \brief (I2C_CLOCK_SOURCE_SELECT) 13 MHz Clock  */
-  #define I2C_CLOCK_SOURCE_SELECT_CLOCK_2_Val        0X2ul  /**< \brief (I2C_CLOCK_SOURCE_SELECT) 6.5 MHz Clock  */
-  #define I2C_CLOCK_SOURCE_SELECT_CLOCK_3_Val        0X3ul  /**< \brief (I2C_CLOCK_SOURCE_SELECT) 3.25 MHz Clock  */
+#define   I2C_CLOCK_SOURCE_SELECT_CLOCK_0_Val        0X0ul  /**< \brief (I2C_CLOCK_SOURCE_SELECT) 26 MHz Clock  */
+#define   I2C_CLOCK_SOURCE_SELECT_CLOCK_1_Val        0X1ul  /**< \brief (I2C_CLOCK_SOURCE_SELECT) 13 MHz Clock  */
+#define   I2C_CLOCK_SOURCE_SELECT_CLOCK_2_Val        0X2ul  /**< \brief (I2C_CLOCK_SOURCE_SELECT) 6.5 MHz Clock  */
+#define   I2C_CLOCK_SOURCE_SELECT_CLOCK_3_Val        0X3ul  /**< \brief (I2C_CLOCK_SOURCE_SELECT) 3.25 MHz Clock  */
 #define I2C_CLOCK_SOURCE_SELECT_CLOCK_0       (I2C_CLOCK_SOURCE_SELECT_CLOCK_0_Val << I2C_CLOCK_SOURCE_SELECT_CLOCK_Pos)
 #define I2C_CLOCK_SOURCE_SELECT_CLOCK_1       (I2C_CLOCK_SOURCE_SELECT_CLOCK_1_Val << I2C_CLOCK_SOURCE_SELECT_CLOCK_Pos)
 #define I2C_CLOCK_SOURCE_SELECT_CLOCK_2       (I2C_CLOCK_SOURCE_SELECT_CLOCK_2_Val << I2C_CLOCK_SOURCE_SELECT_CLOCK_Pos)
@@ -246,8 +246,8 @@ typedef union {
 #define I2C_I2C_MASTER_MODE_MASTER_ENABLE_Pos 0  /**< \brief (I2C_I2C_MASTER_MODE) Active High I2C Master Mode Enable     */
 #define I2C_I2C_MASTER_MODE_MASTER_ENABLE_Msk (0x1ul << I2C_I2C_MASTER_MODE_MASTER_ENABLE_Pos)
 #define I2C_I2C_MASTER_MODE_MASTER_ENABLE(value) (I2C_I2C_MASTER_MODE_MASTER_ENABLE_Msk & ((value) << I2C_I2C_MASTER_MODE_MASTER_ENABLE_Pos))  
-  #define I2C_I2C_MASTER_MODE_MASTER_ENABLE_0_Val        0X0ul  /**< \brief (I2C_I2C_MASTER_MODE) I2C Slave  */
-  #define I2C_I2C_MASTER_MODE_MASTER_ENABLE_1_Val        0X1ul  /**< \brief (I2C_I2C_MASTER_MODE) I2C Master  */
+#define   I2C_I2C_MASTER_MODE_MASTER_ENABLE_0_Val        0X0ul  /**< \brief (I2C_I2C_MASTER_MODE) I2C Slave  */
+#define   I2C_I2C_MASTER_MODE_MASTER_ENABLE_1_Val        0X1ul  /**< \brief (I2C_I2C_MASTER_MODE) I2C Master  */
 #define I2C_I2C_MASTER_MODE_MASTER_ENABLE_0    (I2C_I2C_MASTER_MODE_MASTER_ENABLE_0_Val << I2C_I2C_MASTER_MODE_MASTER_ENABLE_Pos)
 #define I2C_I2C_MASTER_MODE_MASTER_ENABLE_1    (I2C_I2C_MASTER_MODE_MASTER_ENABLE_1_Val << I2C_I2C_MASTER_MODE_MASTER_ENABLE_Pos)
 #define I2C_I2C_MASTER_MODE_MASK              0x01ul    /**< \brief (I2C_I2C_MASTER_MODE) Register MASK */
@@ -269,8 +269,8 @@ typedef union {
 #define I2C_I2C_ONBUS_ONBUS_ENABLE_Pos        0  /**< \brief (I2C_I2C_ONBUS) Active High Enable to initiate transactions when in Master Mode. */
 #define I2C_I2C_ONBUS_ONBUS_ENABLE_Msk        (0x1ul << I2C_I2C_ONBUS_ONBUS_ENABLE_Pos)
 #define I2C_I2C_ONBUS_ONBUS_ENABLE(value)     (I2C_I2C_ONBUS_ONBUS_ENABLE_Msk & ((value) << I2C_I2C_ONBUS_ONBUS_ENABLE_Pos))  
-  #define I2C_I2C_ONBUS_ONBUS_ENABLE_0_Val        0X0ul  /**< \brief (I2C_I2C_ONBUS) Master completes current byte and generates stop condition on bus.  */
-  #define I2C_I2C_ONBUS_ONBUS_ENABLE_1_Val        0X1ul  /**< \brief (I2C_I2C_ONBUS) Master tranmits contents of FIFO until empty.  */
+#define   I2C_I2C_ONBUS_ONBUS_ENABLE_0_Val        0X0ul  /**< \brief (I2C_I2C_ONBUS) Master completes current byte and generates stop condition on bus.  */
+#define   I2C_I2C_ONBUS_ONBUS_ENABLE_1_Val        0X1ul  /**< \brief (I2C_I2C_ONBUS) Master tranmits contents of FIFO until empty.  */
 #define I2C_I2C_ONBUS_ONBUS_ENABLE_0          (I2C_I2C_ONBUS_ONBUS_ENABLE_0_Val << I2C_I2C_ONBUS_ONBUS_ENABLE_Pos)
 #define I2C_I2C_ONBUS_ONBUS_ENABLE_1          (I2C_I2C_ONBUS_ONBUS_ENABLE_1_Val << I2C_I2C_ONBUS_ONBUS_ENABLE_Pos)
 #define I2C_I2C_ONBUS_MASK                    0x01ul    /**< \brief (I2C_I2C_ONBUS) Register MASK */
