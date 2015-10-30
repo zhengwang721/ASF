@@ -274,8 +274,6 @@ void ui_kbd_led(uint8_t value)
  *
  * Human interface on SAME70-Xplained:
  * - Led 0 is on when USB is wakeup
- * - Led 1 blinks when USB host has checked and enabled All interfaces
- * - Led 1 is on during read/write operation
  * - Only push button 1 (SW0) down opens a notepad application on Windows O.S.
  *   and sends key sequence "Atmel ARM"
  * - Only a low level on push button 1 (SW0) will generate a wakeup to USB Host
