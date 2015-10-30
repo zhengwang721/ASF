@@ -347,7 +347,6 @@ void ui_device_sof_action(void)
  * \defgroup UI User Interface
  *
  * Human interface on SAME70-Xplained:
- * - Led 1 is on in host mode (when USB OTG cable is pluged)
  * - device mode:
  *   - Led 0 blinks when USB Host have checked and enabled HID mouse
  *     interface
