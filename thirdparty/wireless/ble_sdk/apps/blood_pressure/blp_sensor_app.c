@@ -444,9 +444,19 @@ static void blp_char_indication(void)
 		DBG_LOG("%-12s","Map");
 		DBG_LOG_CONT("   %02d kpa",map_val_kpa);	
 	}
-	
-	memcpy(&blp_data[idx], (uint8_t *)&time_stamp, sizeof(prf_date_time_t));
-	idx += sizeof(prf_date_time_t);
+		memcpy(&blp_data[idx],(uint8_t*)&(time_stamp.year),2);
+		idx += 2;
+		memcpy(&blp_data[idx],(uint8_t*)&(time_stamp.month),1);
+		idx += 1;
+		memcpy(&blp_data[idx],(uint8_t*)&(time_stamp.day),1);
+		idx += 1;
+		memcpy(&blp_data[idx],(uint8_t*)&(time_stamp.hour),1);
+		idx += 1;
+		memcpy(&blp_data[idx],(uint8_t*)&(time_stamp.min),1);
+		idx += 1;
+		memcpy(&blp_data[idx],(uint8_t*)&(time_stamp.sec),1);
+		idx += 1;
+		
 	pulse_rate_val = pulse_rate_val + (operator[PULSE_RATE]);
 	blp_value_update(blp_data,idx,pulse_rate_val,PULSE_RATE);
 	idx += 2;
