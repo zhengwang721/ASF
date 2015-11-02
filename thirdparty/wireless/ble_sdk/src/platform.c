@@ -56,7 +56,7 @@ uint8_t bus_type = AT_BLE_UART;
 extern volatile enum tenuTransportState slave_state;
 #define GTL_EIF_CONNECT_REQ	0xA5
 #define GTL_EIF_CONNECT_RESP 0x5A
-#define BTLC1000_STARTUP_DELAY (2500)
+#define BTLC1000_STARTUP_DELAY (3500)
 #define BTLC1000_WAKEUP_DELAY (5)
 #define PLATFORM_EVT_WAIT_TIMEOUT (4000)
 
@@ -75,7 +75,7 @@ volatile uint8_t tx_done = 0;				//	TX Transfer complete flag
 volatile uint8_t data_received = 0;			//	RX data received flag
 
 volatile int init_done = 0;
-volatile int ext_wakeup_state = 1;
+volatile int ext_wakeup_state = 0;
 
 typedef enum {
 	BLE_IDLE_STATE = 0,
