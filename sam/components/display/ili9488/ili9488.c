@@ -61,6 +61,7 @@
 #include "pio.h"
 #ifdef ILI9488_EBIMODE
 #  include "smc.h"
+#  include "pmc.h"
 #endif
 #ifdef ILI9488_SPIMODE
 #  include "spi_master.h"

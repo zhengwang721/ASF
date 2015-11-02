@@ -57,13 +57,13 @@ tstrNmBusCapabilities egstrNmBusCapabilities =
 #define SLAVE_ADDRESS 0x60
 
 /** Number of times to try to send packet if failed. */
-#define I2C_TIMEOUT 100
+//#define I2C_TIMEOUT 100
 
 static sint8 nm_i2c_write(uint8 *b, uint16 sz)
 {
 	sint8 result = M2M_SUCCESS;
 	twihs_packet_t packet_tx;
-	uint16_t timeout = 0;
+	//uint16_t timeout = 0;
 
 	/* Configure the data packet to be transmitted */
 	packet_tx.chip        = SLAVE_ADDRESS;
@@ -86,7 +86,7 @@ static sint8 nm_i2c_read(uint8 *rb, uint16 sz)
 {
 	sint8 result = M2M_SUCCESS;
 	twihs_packet_t packet_rx;
-	uint16_t timeout = 0;
+	//uint16_t timeout = 0;
 
 	/* Configure the data packet to be received */
 	packet_rx.chip        = SLAVE_ADDRESS;

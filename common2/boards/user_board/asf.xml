@@ -182,4 +182,10 @@
 		<require idref="sam0.utils.linker_scripts"/>
 		<device-support value="samd09d"/>
 	</board>
+
+	<board id="board.user_board.samb11g" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="samb.utils.linker_scripts"/>
+		<device-support value="samb11g"/>
+	</board>
 </asf>

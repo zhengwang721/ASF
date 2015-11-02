@@ -52,7 +52,7 @@
 #include "board.h"
 
 #define LCD_DATA_CACHE_SIZE ILI9488_LCD_WIDTH
-#define LCD_DATA_COLOR_SIZE 1
+#define LCD_DATA_COLOR_UNIT 1
 
 #define COLOR_CONVERT       RGB_24_TO_RGB565
 
