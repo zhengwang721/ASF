@@ -226,16 +226,8 @@ at_ble_status_t anp_info_service_discover(void *params)
 		return conn_params->conn_status;
 	}
 	anp_conn_handle = conn_params->handle;
-	return alert_service_discovery();
-}
-
-/**
- * @brief Connection handler invoked by ble manager
- */
-void anp_client_connected_state_handler(at_ble_connected_t *params)
-{
 	connected_cb(true);
-	ALL_UNUSED(params);  //To avoid compiler warning
+	return alert_service_discovery();
 }
 
 /**
@@ -503,7 +495,7 @@ at_ble_status_t anp_client_descriptor_found_handler(void *params)
  */
 at_ble_status_t anp_client_disconnected_event_handler(void *params)
 {
-	connected_cb(true);
+	connected_cb(false);
 	ALL_UNUSED(params);  //To avoid compiler warning
 	return AT_BLE_SUCCESS;
 }

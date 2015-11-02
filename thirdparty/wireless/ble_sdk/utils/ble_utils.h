@@ -86,8 +86,9 @@
 #define ALL_UNUSED_IMPL(nargs) ALL_UNUSED_IMPL_(nargs)
 #define ALL_UNUSED(...) ALL_UNUSED_IMPL( VA_NUM_ARGS(__VA_ARGS__))(__VA_ARGS__ )
 
-#define DBG_LOG_DEV		ALL_UNUSED
+#define DBG_LOG_DEV			ALL_UNUSED
 
+#define DBG_LOG_CONT_DEV	ALL_UNUSED
 						
 #define IEEE11073_EXPONENT						(0xFF000000)
 
@@ -102,5 +103,9 @@ static inline uint32_t convert_ieee754_ieee11073_float(float f_val)
 	ieee11073_float = IEEE754_TO_IEEE11073_FLOAT(f_val);
 	return (ieee11073_float);
 }
+
+#ifndef COSOLE_SERIAL_H
+extern uint8_t getchar_timeout(uint32_t timeout);
+#endif
 
 #endif /*__BLE_UTILS_H__*/

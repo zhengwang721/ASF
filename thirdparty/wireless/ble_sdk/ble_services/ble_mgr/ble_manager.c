@@ -686,8 +686,9 @@ at_ble_status_t ble_check_device_state(at_ble_handle_t conn_handle, ble_device_s
 at_ble_status_t ble_connected_state_handler(void *params)
 {
 	at_ble_connected_t *conn_params;
-	uint8_t idx;
+	uint8_t idx = 0;
 	conn_params = (at_ble_connected_t *)params;
+	bool peripheral_device_added = false;
 	
 	if (conn_params->conn_status == AT_BLE_SUCCESS)
 	{		
@@ -726,6 +727,7 @@ at_ble_status_t ble_connected_state_handler(void *params)
 			else
 			{
 				ble_dev_info[idx].dev_role = AT_BLE_ROLE_PERIPHERAL;
+				peripheral_device_added = true;
 			}
 			/* Reset the ble_peripheral_dev_address to identify the initiator */
 			memset((uint8_t *)&ble_peripheral_dev_address, 0, sizeof(at_ble_addr_t));
@@ -748,7 +750,8 @@ at_ble_status_t ble_connected_state_handler(void *params)
 		DBG_LOG("Connection Handle %d", conn_params->handle);
 		
 #if ((BLE_DEVICE_ROLE == BLE_ROLE_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_ROLE_ALL))
-        if(ble_dev_info[idx].dev_role == AT_BLE_ROLE_PERIPHERAL)
+		
+        if((ble_dev_info[idx].dev_role == AT_BLE_ROLE_PERIPHERAL) && (peripheral_device_added))
         {
 	 		ble_send_slave_sec_request(conn_params->handle);
         }
@@ -1007,10 +1010,10 @@ at_ble_status_t ble_pair_request_handler(void *params)
 		{
 			ble_dev_info[idx].bond_info.peer_ltk.key[i] = rand()&0x0f;
 		}
-		
+		DBG_LOG_DEV("Generated LTK: ");
 		for (i = 0; i < 16; i++)
 		{
-			DBG_LOG("0x%02X ", ble_dev_info[idx].bond_info.peer_ltk.key[i]);
+			DBG_LOG_CONT_DEV("0x%02X ", ble_dev_info[idx].bond_info.peer_ltk.key[i]);
 		}
 		
 		ble_dev_info[idx].bond_info.peer_ltk.ediv = rand()&0xffff;
@@ -1050,20 +1053,22 @@ at_ble_status_t ble_pair_key_request_handler (void *params)
 	memcpy((uint8_t *)&pair_key_request, pair_key, sizeof(at_ble_pair_key_request_t));
 	
 	if (pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_ENTRY) {
-	  DBG_LOG("Enter the Passkey(6-Digit) or q to quit in Terminal:");
+	  DBG_LOG("Enter the Passkey(6-Digit) in Terminal:");
 	  for (idx = 0; idx < 6;) {          
-		pin = getchar();
-		if ((pin >= '0') && ( pin <= '9')) {
-		  passkey[idx++] = pin;
-		  DBG_LOG_CONT("%c", pin);
-		} else if (pin == 'q') {
+		pin = getchar_timeout(PIN_TIMEOUT);
+		if (!pin) {
+			DBG_LOG("Pin Timeout");
 			DBG_LOG("Disconnecting ...");
-			if (!(at_ble_disconnect(pair_key->handle, 
-							AT_BLE_TERMINATED_BY_USER) == AT_BLE_SUCCESS)) {
+			if (!(at_ble_disconnect(pair_key->handle,
+						AT_BLE_TERMINATED_BY_USER) == AT_BLE_SUCCESS)) {
 				DBG_LOG("Disconnect Request Failed");
 			}
 			return AT_BLE_FAILURE;
 		}
+		if ((pin >= '0') && ( pin <= '9')) {
+		  passkey[idx++] = pin;
+		  DBG_LOG_CONT("%c", pin);
+		} 
 	  }
 	}	
 	
@@ -1131,9 +1136,23 @@ at_ble_status_t ble_pair_done_handler(void *params)
 			memcpy((uint8_t *)&ble_dev_info[idx].bond_info.peer_irk, (uint8_t *)&pairing_params->peer_irk, sizeof(at_ble_IRK_t));
 			ble_dev_info->conn_state = BLE_DEVICE_PAIRED;
 			
+			DBG_LOG_DEV("LTK: ");
 			for (idx = 0; idx < 16; idx++)
 			{
-				DBG_LOG("0x%02X, ", pairing_params->peer_ltk.key[idx]);
+				DBG_LOG_CONT_DEV("0x%02X, ", pairing_params->peer_ltk.key[idx]);
+				
+			}
+			DBG_LOG_DEV("CSRK: ");
+			for (idx = 0; idx < 16; idx++)
+			{
+				DBG_LOG_CONT_DEV("0x%02X, ", pairing_params->peer_csrk.key[idx]);
+				
+			}
+			DBG_LOG_DEV("IRK:");
+			for (idx = 0; idx < 16; idx++)
+			{
+				DBG_LOG_CONT_DEV("0x%02X, ", pairing_params->peer_irk.key[idx]);
+				
 			}
 		}
 		else
@@ -1453,14 +1472,20 @@ at_ble_status_t ble_advertisement_data_set(void)
 	#if (BLE_GAP_ADV_SERVICE_16BIT_UUID_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
 	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH))) {
 		uint8_t length_field_ind;
+		uint8_t adv_element_len;
 		adv_buf[adv_data_element.len] = adv_data_element.len;
 		length_field_ind = adv_data_element.len;
 		adv_data_element.len++;
 		adv_buf[adv_data_element.len++] = COMPLETE_LIST_16BIT_SERV_UUIDS;
 		MREPEAT(SERVICE_UUID16_MAX_NUM, _CONF_SERVICE_16BIT_UUID, &adv_data_element);
-		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
-		if(!adv_buf[length_field_ind]) {
-			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE; 
+		adv_element_len = adv_data_element.len - (length_field_ind + ADV_ELEMENT_SIZE);
+		if(adv_element_len) 
+		{			
+			adv_buf[length_field_ind] = adv_element_len+ADV_TYPE_SIZE;
+		}
+		else
+		{
+			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE; 	
 		}
 	}
 	#else
@@ -1469,13 +1494,19 @@ at_ble_status_t ble_advertisement_data_set(void)
 	#if BLE_GAP_ADV_SERVICE_16BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE
 	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH))) {
 		uint8_t length_field_ind;
+		uint8_t scan_resp_element_len;
 		scn_resp[scan_resp_data_element.len] = scan_resp_data_element.len;
 		length_field_ind = scan_resp_data_element.len;
 		scan_resp_data_element.len++;
 		scn_resp[scan_resp_data_element.len++] = COMPLETE_LIST_16BIT_SERV_UUIDS;
 		MREPEAT(SERVICE_UUID16_MAX_NUM, _CONF_SERVICE_16BIT_UUID_SCAN_RSP, &scan_resp_data_element);
-		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
-		if(!scn_resp[length_field_ind]) {
+		scan_resp_element_len = scan_resp_data_element.len - (length_field_ind + ADV_ELEMENT_SIZE);
+		if(scan_resp_element_len) 
+		{
+			scn_resp[length_field_ind] = scan_resp_element_len + ADV_TYPE_SIZE;
+		} 
+		else
+		{
 			scan_resp_data_element.len = scan_resp_data_element.len - ADV_ELEMENT_SIZE;
 		}
 	}
@@ -1490,13 +1521,19 @@ at_ble_status_t ble_advertisement_data_set(void)
 	#if (BLE_GAP_ADV_SERVICE_32BIT_UUID_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
 	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH))) {
 		uint8_t length_field_ind;
+		uint8_t adv_element_len;
 		adv_buf[adv_data_element.len] = adv_data_element.len;
 		length_field_ind = adv_data_element.len;
 		adv_data_element.len++;
 		adv_buf[adv_data_element.len++] = COMPLETE_LIST_32BIT_SERV_UUIDS;
 		MREPEAT(SERVICE_UUID32_MAX_NUM, _CONF_SERVICE_32BIT_UUID, &adv_data_element)
-		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
-		if(!adv_buf[length_field_ind]) {
+		adv_element_len = adv_data_element.len - (length_field_ind + ADV_ELEMENT_SIZE);
+		if(adv_element_len)
+		{
+			adv_buf[length_field_ind] = adv_element_len+ADV_TYPE_SIZE;
+		}
+		else
+		{
 			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE;
 		}
 	}
@@ -1506,13 +1543,19 @@ at_ble_status_t ble_advertisement_data_set(void)
 	#if BLE_GAP_ADV_SERVICE_32BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE
 	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH))) {
 		uint8_t length_field_ind;
+		uint8_t scan_resp_element_len;
 		scn_resp[scan_resp_data_element.len] = scan_resp_data_element.len;
 		length_field_ind = scan_resp_data_element.len;
 		scan_resp_data_element.len++;
 		scn_resp[scan_resp_data_element.len++] = COMPLETE_LIST_32BIT_SERV_UUIDS;
 		MREPEAT(SERVICE_UUID32_MAX_NUM, _CONF_SERVICE_32BIT_UUID_SCAN_RSP, &adv_data_element)
-		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
-		if(!scn_resp[length_field_ind]) {
+		scan_resp_element_len = scan_resp_data_element.len - (length_field_ind + ADV_ELEMENT_SIZE);
+		if(scan_resp_element_len)
+		{
+			scn_resp[length_field_ind] = scan_resp_element_len + ADV_TYPE_SIZE;
+		}
+		else
+		{
 			scan_resp_data_element.len = scan_resp_data_element.len - ADV_ELEMENT_SIZE;
 		}
 	}
@@ -1527,13 +1570,19 @@ at_ble_status_t ble_advertisement_data_set(void)
 	#if (BLE_GAP_ADV_SERVICE_128BIT_UUID_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
 	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH))) {
 		uint8_t length_field_ind;
+		uint8_t adv_element_len;
 		adv_buf[adv_data_element.len] = adv_data_element.len;
 		length_field_ind = adv_data_element.len;
 		adv_data_element.len++;
 		adv_buf[adv_data_element.len++] = COMPLETE_LIST_128BIT_SERV_UUIDS;
 		MREPEAT(SERVICE_UUID128_MAX_NUM, _CONF_SERVICE_128BIT_UUID, &adv_data_element)
-		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
-		if(!adv_buf[length_field_ind]) {
+		adv_element_len = adv_data_element.len - (length_field_ind + ADV_ELEMENT_SIZE);
+		if(adv_element_len)
+		{
+			adv_buf[length_field_ind] = adv_element_len+ADV_TYPE_SIZE;
+		}
+		else
+		{
 			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE;
 		}
 	}
@@ -1543,13 +1592,19 @@ at_ble_status_t ble_advertisement_data_set(void)
 	#if BLE_GAP_ADV_SERVICE_128BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE
 	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH))) {
 		uint8_t length_field_ind;
+		uint8_t scan_resp_element_len;
 		scn_resp[scan_resp_data_element.len] = scan_resp_data_element.len;
 		length_field_ind = scan_resp_data_element.len;
 		scan_resp_data_element.len++;
 		scn_resp[scan_resp_data_element.len++] = COMPLETE_LIST_128BIT_SERV_UUIDS;
 		MREPEAT(SERVICE_UUID128_MAX_NUM, _CONF_SERVICE_128BIT_UUID_SCAN_RSP, &adv_data_element)
-		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
-		if(!scn_resp[length_field_ind]) {
+		scan_resp_element_len = scan_resp_data_element.len - (length_field_ind + ADV_ELEMENT_SIZE);
+		if(scan_resp_element_len)
+		{
+			scn_resp[length_field_ind] = scan_resp_element_len + ADV_TYPE_SIZE;
+		}
+		else
+		{
 			scan_resp_data_element.len = scan_resp_data_element.len - ADV_ELEMENT_SIZE;
 		}
 	}
@@ -1667,13 +1722,19 @@ at_ble_status_t ble_advertisement_data_set(void)
 	#if (BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
 	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH))) {
 		uint8_t length_field_ind;
+		uint8_t adv_element_len;
 		adv_buf[adv_data_element.len] = adv_data_element.len;
 		length_field_ind = adv_data_element.len;
 		adv_data_element.len++;
 		adv_buf[adv_data_element.len++] = LIST_16BIT_SERV_SOLICITATION_UUIDS;
 		MREPEAT(SERVICE_UUID16_MAX_NUM, _CONF_SERVICE_SOLTN_16BIT_UUID, &adv_data_element);
-		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
-		if(!adv_buf[length_field_ind]) {
+		adv_element_len = adv_data_element.len - (length_field_ind + ADV_ELEMENT_SIZE);
+		if(adv_element_len)
+		{
+			adv_buf[length_field_ind] = adv_element_len+ADV_TYPE_SIZE;
+		}
+		else
+		{
 			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE;
 		}
 	}
@@ -1683,13 +1744,19 @@ at_ble_status_t ble_advertisement_data_set(void)
 	#if ((BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
 	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_16BIT_UUID_LENGTH))) {
 		uint8_t length_field_ind;
+		uint8_t scan_resp_element_len;
 		scn_resp[scan_resp_data_element.len] = scan_resp_data_element.len;
 		length_field_ind = scan_resp_data_element.len;
 		scan_resp_data_element.len++;
 		scn_resp[scan_resp_data_element.len++] = LIST_16BIT_SERV_SOLICITATION_UUIDS;
 		MREPEAT(SERVICE_UUID16_MAX_NUM, _CONF_SERVICE_SOLTN_16BIT_UUID_SCAN_RSP, &scan_resp_data_element);
-		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
-		if(!scn_resp[length_field_ind]) {
+		scan_resp_element_len = scan_resp_data_element.len - (length_field_ind + ADV_ELEMENT_SIZE);
+		if(scan_resp_element_len)
+		{
+			scn_resp[length_field_ind] = scan_resp_element_len + ADV_TYPE_SIZE;
+		}
+		else
+		{
 			scan_resp_data_element.len = scan_resp_data_element.len - ADV_ELEMENT_SIZE;
 		}
 	}
@@ -1704,13 +1771,19 @@ at_ble_status_t ble_advertisement_data_set(void)
 	#if (BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
 	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH))) {
 		uint8_t length_field_ind;
+		uint8_t adv_element_len;
 		adv_buf[adv_data_element.len] = adv_data_element.len;
 		length_field_ind = adv_data_element.len;
 		adv_data_element.len++;
 		adv_buf[adv_data_element.len++] = LIST_32BIT_SERV_SOLICITATION_UUIDS;
 		MREPEAT(SERVICE_UUID32_MAX_NUM, _CONF_SERVICE_SOLTN_32BIT_UUID, &adv_data_element)
-		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
-		if(!adv_buf[length_field_ind]) {
+		adv_element_len = adv_data_element.len - (length_field_ind + ADV_ELEMENT_SIZE);
+		if(adv_element_len)
+		{
+			adv_buf[length_field_ind] = adv_element_len+ADV_TYPE_SIZE;
+		}
+		else
+		{
 			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE;
 		}
 	}
@@ -1720,13 +1793,19 @@ at_ble_status_t ble_advertisement_data_set(void)
 	#if ((BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
 	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_32BIT_UUID_LENGTH))) {
 		uint8_t length_field_ind;
+		uint8_t scan_resp_element_len;
 		scn_resp[scan_resp_data_element.len] = scan_resp_data_element.len;
 		length_field_ind = scan_resp_data_element.len;
 		scan_resp_data_element.len++;
 		scn_resp[scan_resp_data_element.len++] = LIST_32BIT_SERV_SOLICITATION_UUIDS;
 		MREPEAT(SERVICE_UUID32_MAX_NUM, _CONF_SERVICE_SOLTN_32BIT_UUID_SCAN_RSP, &scan_resp_data_element)
-		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
-		if(!scn_resp[length_field_ind]) {
+		scan_resp_element_len = scan_resp_data_element.len - (length_field_ind + ADV_ELEMENT_SIZE);
+		if(scan_resp_element_len)
+		{
+			scn_resp[length_field_ind] = scan_resp_element_len + ADV_TYPE_SIZE;
+		}
+		else
+		{
 			scan_resp_data_element.len = scan_resp_data_element.len - ADV_ELEMENT_SIZE;
 		}
 	}
@@ -1741,13 +1820,19 @@ at_ble_status_t ble_advertisement_data_set(void)
 	#if (BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
 	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH))) {
 		uint8_t length_field_ind;
+		uint8_t adv_element_len;
 		adv_buf[adv_data_element.len] = adv_data_element.len;
 		length_field_ind = adv_data_element.len;
 		adv_data_element.len++;
 		adv_buf[adv_data_element.len++] = LIST_128BIT_SERV_SOLICITATION_UUIDS;
 		MREPEAT(SERVICE_UUID128_MAX_NUM, _CONF_SERVICE_SOLTN_128BIT_UUID, &adv_data_element)
-		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
-		if(!adv_buf[length_field_ind]) {
+		adv_element_len = adv_data_element.len - (length_field_ind + ADV_ELEMENT_SIZE);
+		if(adv_element_len)
+		{
+			adv_buf[length_field_ind] = adv_element_len+ADV_TYPE_SIZE;
+		}
+		else
+		{
 			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE;
 		}
 	}
@@ -1757,13 +1842,19 @@ at_ble_status_t ble_advertisement_data_set(void)
 	#if ((BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_SERVICE_SOLTN_128BIT_UUID_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
 	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_SERVICE_128BIT_UUID_LENGTH))) {
 		uint8_t length_field_ind;
+		uint8_t scan_resp_element_len;
 		scn_resp[scan_resp_data_element.len] = scan_resp_data_element.len;
 		length_field_ind = scan_resp_data_element.len;
 		scan_resp_data_element.len++;
 		scn_resp[scan_resp_data_element.len++] = LIST_128BIT_SERV_SOLICITATION_UUIDS;
 		MREPEAT(SERVICE_UUID128_MAX_NUM, _CONF_SERVICE_SOLTN_128BIT_UUID_SCAN_RSP, &scan_resp_data_element)
-		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
-		if(!scn_resp[length_field_ind]) {
+		scan_resp_element_len = scan_resp_data_element.len - (length_field_ind + ADV_ELEMENT_SIZE);
+		if(scan_resp_element_len)
+		{
+			scn_resp[length_field_ind] = scan_resp_element_len + ADV_TYPE_SIZE;
+		}
+		else
+		{
 			scan_resp_data_element.len = scan_resp_data_element.len - ADV_ELEMENT_SIZE;
 		}
 	}
@@ -1865,13 +1956,19 @@ at_ble_status_t ble_advertisement_data_set(void)
 	#if (BLE_GAP_ADV_PUBLIC_TARGET_ADDR_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
 	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_PUBLIC_TARGET_ADDR_LENGTH))) {
 		uint8_t length_field_ind;
+		uint8_t adv_element_len;
 		adv_buf[adv_data_element.len] = adv_data_element.len;
 		length_field_ind = adv_data_element.len;
 		adv_data_element.len++;
 		adv_buf[adv_data_element.len++] = PUBLIC_TARGET_ADDRESS;
 		MREPEAT(PUBLIC_TARGET_ADDR_MAX_NUM, _CONF_PUBLIC_TARGET_ADDR, &adv_data_element);
-		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
-		if(!adv_buf[length_field_ind]) {
+		adv_element_len = adv_data_element.len - (length_field_ind + ADV_ELEMENT_SIZE);
+		if(adv_element_len)
+		{
+			adv_buf[length_field_ind] = adv_element_len+ADV_TYPE_SIZE;
+		}
+		else
+		{
 			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE;
 		}
 	}
@@ -1881,13 +1978,19 @@ at_ble_status_t ble_advertisement_data_set(void)
 	#if ((BLE_GAP_ADV_PUBLIC_TARGET_ADDR_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_PUBLIC_TARGET_ADDR_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
 	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_PUBLIC_TARGET_ADDR_LENGTH))) {
 		uint8_t length_field_ind;
+		uint8_t scan_resp_element_len;
 		scn_resp[scan_resp_data_element.len] = scan_resp_data_element.len;
 		length_field_ind = scan_resp_data_element.len;
 		scan_resp_data_element.len++;
 		scn_resp[scan_resp_data_element.len++] = PUBLIC_TARGET_ADDRESS;
 		MREPEAT(PUBLIC_TARGET_ADDR_MAX_NUM, _CONF_PUBLIC_TARGET_ADDR_SCAN_RSP, &scan_resp_data_element);
-		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
-		if(!scn_resp[length_field_ind]) {
+		scan_resp_element_len = scan_resp_data_element.len - (length_field_ind + ADV_ELEMENT_SIZE);
+		if(scan_resp_element_len)
+		{
+			scn_resp[length_field_ind] = scan_resp_element_len + ADV_TYPE_SIZE;
+		}
+		else
+		{
 			scan_resp_data_element.len = scan_resp_data_element.len - ADV_ELEMENT_SIZE;
 		}
 	}
@@ -1902,13 +2005,19 @@ at_ble_status_t ble_advertisement_data_set(void)
 	#if (BLE_GAP_ADV_RANDOM_TARGET_ADDR_SCN_RSP_ENABLE != SCAN_RESPONSE_ONLY_ENABLE)
 	if((adv_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_TYPE_FLAG_SIZE + ADV_ELEMENT_SIZE + BLE_GAP_ADV_RANDOM_TARGET_ADDR_LENGTH))) {
 		uint8_t length_field_ind;
+		uint8_t adv_element_len;
 		adv_buf[adv_data_element.len] = adv_data_element.len;
 		length_field_ind = adv_data_element.len;
 		adv_data_element.len++;
 		adv_buf[adv_data_element.len++] = RANDOM_TARGET_ADDRESS;
 		MREPEAT(PUBLIC_RANDOM_ADDR_MAX_NUM, _CONF_RANDOM_TARGET_ADDR, &adv_data_element);
-		adv_buf[length_field_ind] = adv_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
-		if(!adv_buf[length_field_ind]) {
+		adv_element_len = adv_data_element.len - (length_field_ind + ADV_ELEMENT_SIZE);
+		if(adv_element_len)
+		{
+			adv_buf[length_field_ind] = adv_element_len+ADV_TYPE_SIZE;
+		}
+		else
+		{
 			adv_data_element.len = adv_data_element.len - ADV_ELEMENT_SIZE;
 		}
 	}
@@ -1918,13 +2027,19 @@ at_ble_status_t ble_advertisement_data_set(void)
 	#if ((BLE_GAP_ADV_RANDOM_TARGET_ADDR_SCN_RSP_ENABLE == SCAN_RESPONSE_ENABLE) || (BLE_GAP_ADV_RANDOM_TARGET_ADDR_SCN_RSP_ENABLE == SCAN_RESPONSE_ONLY_ENABLE))
 	else if((scan_resp_data_element.len) <= (AT_BLE_ADV_MAX_SIZE - (ADV_ELEMENT_SIZE + BLE_GAP_ADV_RANDOM_TARGET_ADDR_LENGTH))) {
 		uint8_t length_field_ind;
+		uint8_t scan_resp_element_len;
 		scn_resp[scan_resp_data_element.len] = scan_resp_data_element.len;
 		length_field_ind = scan_resp_data_element.len;
 		scan_resp_data_element.len++;
 		scn_resp[scan_resp_data_element.len++] = RANDOM_TARGET_ADDRESS;
 		MREPEAT(PUBLIC_RANDOM_ADDR_MAX_NUM, _CONF_RANDOM_TARGET_ADDR_SCAN_RSP, &scan_resp_data_element);
-		scn_resp[length_field_ind] = scan_resp_data_element.len - (length_field_ind + ADV_TYPE_SIZE);
-		if(!scn_resp[length_field_ind]) {
+		scan_resp_element_len = scan_resp_data_element.len - (length_field_ind + ADV_ELEMENT_SIZE);
+		if(scan_resp_element_len)
+		{
+			scn_resp[length_field_ind] = scan_resp_element_len + ADV_TYPE_SIZE;
+		}
+		else
+		{
 			scan_resp_data_element.len = scan_resp_data_element.len - ADV_ELEMENT_SIZE;
 		}
 	}

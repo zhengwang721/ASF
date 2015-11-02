@@ -65,7 +65,7 @@
 #if defined HID_DEVICE
 	#ifdef HID_KEYBOARD_DEVICE
 	#ifndef BLE_DEVICE_NAME
-		#define BLE_DEVICE_NAME				"ATMEL-HIDK"
+		#define BLE_DEVICE_NAME				"ATMEL-HID"
 	#endif	/* BLE_DEVICE_NAME */
 	#define BLE_AUTHENTICATION_LEVEL	(AT_BLE_NO_SEC)
 	#define BLE_IO_CAPABALITIES			(AT_BLE_IO_CAP_NO_INPUT_NO_OUTPUT)
@@ -76,7 +76,7 @@
 
 	#ifdef HID_MOUSE_DEVICE
 	#ifndef BLE_DEVICE_NAME
-		#define BLE_DEVICE_NAME				"ATMEL-HIDM"
+		#define BLE_DEVICE_NAME				"ATMEL-HID"
 	#endif	/* BLE_DEVICE_NAME */
 	#endif
 #endif /* HID_DEVICE */
@@ -89,7 +89,7 @@
 
 #if defined HR_SENSOR
 #ifndef BLE_DEVICE_NAME
-#define BLE_DEVICE_NAME				"ATMEL-HR"
+#define BLE_DEVICE_NAME				"ATMEL-HRP"
 #endif	/* BLE_DEVICE_NAME */
 #endif /* HR_SENSOR */
 
@@ -125,7 +125,7 @@
 
 #if defined ANP_SIG_CLIENT
 #ifndef BLE_DEVICE_NAME
-#define BLE_DEVICE_NAME				"ATMEL-ANP"
+#define BLE_DEVICE_NAME				"ATMEL-ANS"
 #endif	/* BLE_DEVICE_NAME */
 #define BLE_PAIR_ENABLE					(false)
 #endif /* ANP_SIG_CLIENT */
@@ -194,6 +194,9 @@ typedef at_ble_status_t (*ble_event_callback_t) (void *params);
 
 /** @brief event timeout */
 #define BLE_EVENT_TIMEOUT			(20)
+
+/** @brief pin timeout */
+#define PIN_TIMEOUT					30*1000
 
 /** @brief Observer related declarations */
 #define LE_LIMITED_DISCOVERABLE_MODE  ((uint8_t) 1 << 0)
