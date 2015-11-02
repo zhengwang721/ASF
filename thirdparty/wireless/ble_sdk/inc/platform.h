@@ -221,7 +221,6 @@ at_ble_status_t platform_ble_event_data(void);
  /** @}*/
 
 void platform_start_timer(uint32_t timeout); 
-void platform_stop_timer(void);
 void platform_wakeup(void);
 void platform_set_sleep(void);
 void platform_enter_critical_section(void);

@@ -83,5 +83,5 @@ uint16_t serial_drv_send(uint8_t* data, uint16_t len);
 uint8_t serial_read_data(uint8_t* data, uint16_t max_len);
 
 uint8_t serial_read_byte(uint16_t* data);
-
+void configure_usart_after_patch(void);
 #endif /* SIO2HOST_H */
