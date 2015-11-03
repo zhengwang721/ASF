@@ -145,6 +145,8 @@ at_ble_status_t pxp_monitor_connected_state_handler(void *params);
 
 at_ble_status_t pxp_monitor_pair_done_handler(void *params);
 
+at_ble_status_t pxp_monitor_encryption_change_handler(void *params);
+
 /**@brief Discover all Characteristics supported for Proximity Service of a
  * connected device
  *  and handles discovery complete

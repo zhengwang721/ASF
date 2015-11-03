@@ -72,7 +72,7 @@ static const ble_event_callback_t pxp_gap_handle[] = {
 	NULL,
 	NULL,
 	NULL,
-	NULL,
+	pxp_monitor_encryption_change_handler,
 	NULL,
 	NULL,
 	NULL,
@@ -377,6 +377,23 @@ at_ble_status_t pxp_monitor_pair_done_handler(void *params)
 	
 	if (pair_done_val->status == AT_BLE_SUCCESS) {
 		discovery_status = pxp_monitor_service_discover(pair_done_val->handle);
+	}
+	return discovery_status;
+}
+
+at_ble_status_t pxp_monitor_encryption_change_handler(void *params)
+{
+	at_ble_status_t discovery_status = AT_BLE_FAILURE;
+	at_ble_encryption_status_changed_t *encryption_status;
+	encryption_status = (at_ble_encryption_status_changed_t *)params;
+	
+	if(!ble_check_iscentral(encryption_status->handle))
+	{
+		return AT_BLE_FAILURE;
+	}
+	
+	if (encryption_status->status == AT_BLE_SUCCESS) {
+		discovery_status = pxp_monitor_service_discover(encryption_status->handle);
 	}
 	return discovery_status;
 }
