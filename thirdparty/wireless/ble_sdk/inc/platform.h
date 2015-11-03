@@ -229,4 +229,6 @@ void platform_cleanup(void);
 void start_timer(uint32_t timeout);
 uint32_t timer_done(void);
 void stop_timer(void);
+
+#define UNREFERENCED_PARAMETER(x) ((void)x)
 #endif // __PLATFORM_H__

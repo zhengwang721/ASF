@@ -49,11 +49,11 @@
 #ifndef __PXP_MONITOR_APP_H__
 #define __PXP_MONITOR_APP_H__
 
+#include "console_serial.h"
 #include "ble_manager.h"
 #include "at_ble_api.h"
 #include "pxp_monitor.h"
 #include "immediate_alert.h"
-#include "console_serial.h"
 #include "timer_hw.h"
 #include "conf_extint.h"
 

@@ -55,12 +55,12 @@
 #include <asf.h>
 #include "platform.h"
 #include "at_ble_api.h"
+#include "console_serial.h"
 #include "ble_manager.h"
 #include "hid.h"
 #include "hid_keyboard_app.h"
 #include "device_info.h"
 #include "ble_utils.h"
-#include "console_serial.h"
 #include "timer_hw.h"
 #include "conf_extint.h"
 #include "hid_device.h"
