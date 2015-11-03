@@ -809,7 +809,7 @@ at_ble_status_t ble_characteristic_write_cmd_complete_handler(void *params)
 	}
 	else
 	{
-		DBG_LOG("Char Write Cmd Failed, Connection Handle:%d, Operation:%d",
+		DBG_LOG_DEV("Char Write Cmd Failed, Connection Handle:%d, Operation:%d",
 		cmd_complete_event->conn_handle,
 		cmd_complete_event->operation);
 	}
