@@ -180,7 +180,7 @@ static void dualtimer_callback1(void)
 	puts("Timer1 trigger\r\n");
 }
 
-/** Dual Timer 1 Callback function.
+/** Dual Timer 2 Callback function.
  */
 static void dualtimer_callback2(void)
 {
