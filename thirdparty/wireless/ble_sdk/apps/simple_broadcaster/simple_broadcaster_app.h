@@ -60,8 +60,8 @@
 #include "ble_manager.h"
 #include "ble_utils.h"
 
-/* 100 ms */
-#define APP_BROADCAST_FAST_ADV                  (160)
+/* 1000 ms */
+#define APP_BROADCAST_FAST_ADV                  (1600)
 
 /* 100 Secs */
 #define APP_BROADCAST_ADV_TIMEOUT               (1000)

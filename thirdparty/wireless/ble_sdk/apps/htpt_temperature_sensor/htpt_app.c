@@ -160,7 +160,7 @@ static void htp_init_defaults(htp_app_t *htp_temp)
 	htp_temp->max_meaurement_intv = 30;
 	htp_temp->min_measurement_intv = 1;
 	htp_temp->security_lvl = HTPT_UNAUTH;
-	htp_temp->optional = HTPT_ALL_FEAT_SUP;
+	htp_temp->optional = HTPT_TEMP_TYPE_CHAR_SUP;
 	htp_temp->flags = (at_ble_htpt_temp_flags)(HTPT_FLAG_CELSIUS | HTPT_FLAG_TYPE);
 }
 
