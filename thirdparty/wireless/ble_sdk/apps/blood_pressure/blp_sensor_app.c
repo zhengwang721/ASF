@@ -537,6 +537,7 @@ static void app_notification_handler(bool enable)
 		DBG_LOG("Notifications enabled by the remote device for interim cuff pressure");
 	} else{
 		DBG_LOG("Disabled notifications by the remote device for interim cuff pressure");
+		timer_count = INDICATION_TIMER_VAL;
 	}
 }
 
