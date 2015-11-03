@@ -760,7 +760,8 @@ at_ble_status_t ble_connected_state_handler(void *params)
 	else
 	{
 		DBG_LOG("Device Connection Failed - Status: %d", conn_params->conn_status);
-	}	
+	}
+	ALL_UNUSED(peripheral_device_added);
 	return AT_BLE_SUCCESS;
 }
 
