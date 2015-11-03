@@ -173,12 +173,12 @@ static inline void ble_configure_control_pin(void)
 	port_get_config_defaults(&pin_conf);
 	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
 	pin_conf.input_pull = PORT_PIN_PULL_UP;
-	port_pin_set_config(PIN_PB22, &pin_conf);
-	port_pin_set_output_level(PIN_PB22, true);
+	port_pin_set_config(PIN_PB16, &pin_conf);
+	port_pin_set_output_level(PIN_PB16, true);
 	port_get_config_defaults(&pin_conf);
 	pin_conf.direction  = PORT_PIN_DIR_INPUT;
 	pin_conf.input_pull = PORT_PIN_PULL_UP;
-	port_pin_set_config(PIN_PB23, &pin_conf);
+	port_pin_set_config(PIN_PB17, &pin_conf);
 	#endif
 #endif //UART_FLOW_CONTROL_ENABLED
 	

@@ -116,8 +116,9 @@ void configure_usart_after_patch(void)
 
 	while (usart_init(&usart_instance, CONF_FLCR_BLE_USART_MODULE, &config_usart) != STATUS_OK);
 #elif SAMD21
-	config_usart.baudrate = GCLK_GENERATOR_0;
+
 	config_usart.baudrate = 115200;
+	config_usart.generator_source = GCLK_GENERATOR_0;
     config_usart.mux_setting = USART_RX_1_TX_0_RTS_2_CTS_3;
     config_usart.pinmux_pad0 = PINMUX_PA04D_SERCOM0_PAD0;
     config_usart.pinmux_pad1 = PINMUX_PA05D_SERCOM0_PAD1;
