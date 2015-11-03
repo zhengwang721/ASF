@@ -54,13 +54,12 @@
 /*- Includes -----------------------------------------------------------------------*/
 #include <asf.h>
 #include "platform.h"
+#include "console_serial.h"
 #include "at_ble_api.h"
 #include "ble_manager.h"
 #include "csc_app.h"
 #include "cscp.h"
 #include "cscs.h"
-#include "ble_utils.h"
-#include "console_serial.h"
 #include "conf_extint.h"
 #include "sio2host.h"  
 
