@@ -80,6 +80,10 @@ uint8_t hr_control_point_value = 0;
  */
 void hr_init_service(hr_gatt_service_handler_t *heart_rate_serv)
 {
+	hr_measurement_value = 0;
+	body_sensor_location_value = CHEST;
+	hr_control_point_value = 0;
+	
 	heart_rate_serv->serv_handle = 0;
 	heart_rate_serv->serv_uuid.type = AT_BLE_UUID_16;
 	heart_rate_serv->serv_uuid.uuid[0] = (uint8_t)HEART_RATE_SERVICE_UUID;
@@ -126,9 +130,18 @@ void hr_init_service(hr_gatt_service_handler_t *heart_rate_serv)
 	/*user description permissions*/
 	heart_rate_serv->serv_chars[0].user_desc_permissions
 		= AT_BLE_ATTR_NO_PERMISSIONS;
+	
 	/* client config permissions */
+	#if BLE_PAIR_ENABLE
 	heart_rate_serv->serv_chars[0].client_config_permissions
-						= (AT_BLE_ATTR_NO_PERMISSIONS);	
+							= (AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
+	
+	#else 
+	heart_rate_serv->serv_chars[0].client_config_permissions
+							= (AT_BLE_ATTR_NO_PERMISSIONS);
+	#endif 
+	
+	
 	/*server config permissions*/
 	heart_rate_serv->serv_chars[0].server_config_permissions
 		= AT_BLE_ATTR_NO_PERMISSIONS;

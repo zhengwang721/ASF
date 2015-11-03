@@ -62,8 +62,13 @@ void at30tse_init(void)
 	struct i2c_master_config conf;
 	i2c_master_get_config_defaults(&conf);
 
-	conf.pinmux_pad0 = AT30TSE_PINMUX_PAD0;
-	conf.pinmux_pad1 = AT30TSE_PINMUX_PAD1;
+/*
+	conf.pin_number_pad0 = AT30TSE_PIN_PAD0;
+	conf.pin_number_pad1 = AT30TSE_PIN_PAD1;
+	
+	conf.pinmux_sel_pad0 = AT30TSE_MUX_PAD0;
+	conf.pinmux_sel_pad1 = AT30TSE_MUX_PAD1;
+	*/
 
 	/* Initialize and enable device with config. */
 	i2c_master_init(&dev_inst_at30tse75x, AT30TSE_I2C_MODULE, &conf);

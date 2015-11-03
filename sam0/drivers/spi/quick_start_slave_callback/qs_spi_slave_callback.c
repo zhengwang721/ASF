@@ -115,25 +115,26 @@ static void configure_spi_slave(void)
 //! [conf_spi_slave_instance]
 //! [transfer_mode]
 	config_spi_slave.transfer_mode = CONF_SPI_TRANSFER_MODE;
-//! [clock_divider]
-	config_spi_slave.clock_divider = 154;
-//! [clock_divider]
 //! [transfer_mode]
 	/* Configure pad 0 */
 //! [sck]
-	config_spi_slave.pinmux_pad[0] = CONF_SPI_PINMUX_SCK;
+	config_spi_slave.pin_number_pad[0] = CONF_SPI_PIN_SCK;
+	config_spi_slave.pinmux_sel_pad[0] = CONF_SPI_MUX_SCK;
 //! [sck]
-	/* Configure pad 1 */
+/* Configure pad 1 */
 //! [mosi]
-	config_spi_slave.pinmux_pad[1] = CONF_SPI_PINMUX_MOSI;
+	config_spi_slave.pin_number_pad[1] = CONF_SPI_PIN_MOSI;
+	config_spi_slave.pinmux_sel_pad[1] = CONF_SPI_MUX_MOSI;
 //! [mosi]
-	/* Configure pad 2 */
+/* Configure pad 2 */
 //! [ssn]
-	config_spi_slave.pinmux_pad[2] = CONF_SPI_PINMUX_SSN;
+	config_spi_slave.pin_number_pad[2] = CONF_SPI_PIN_SSN;
+	config_spi_slave.pinmux_sel_pad[2] = CONF_SPI_MUX_SSN;
 //! [ssn]
-	/* Configure pad 3 */
+/* Configure pad 3 */
 //! [miso]
-	config_spi_slave.pinmux_pad[3] = CONF_SPI_PINMUX_MISO;
+	config_spi_slave.pin_number_pad[3] = CONF_SPI_PIN_MISO;
+	config_spi_slave.pinmux_sel_pad[3] = CONF_SPI_MUX_MISO;
 //! [miso]
 //! [init]
 	spi_init(&spi_slave_instance, CONF_SPI, &config_spi_slave);
@@ -151,6 +152,7 @@ int main(void)
 //! [main_start]
 	uint8_t result = 0;
 	uint16_t i = 0;
+	uint32_t delay = 0;
 
 	/* Initialize system */
 //! [system_init]
@@ -194,13 +196,13 @@ int main(void)
 		if (result) {
 			gpio_pin_toggle_output_level(LED_0_PIN);
 			/* Add a short delay to see LED toggle */
-			volatile uint32_t delay = 30000;
+			delay = 300000;
 			while(delay--) {
 			}
 		} else {
 			gpio_pin_toggle_output_level(LED_0_PIN);
 			/* Add a short delay to see LED toggle */
-			volatile uint32_t delay = 600000;
+			delay = 3000000;
 			while(delay--) {
 			}
 		}

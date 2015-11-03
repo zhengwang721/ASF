@@ -60,7 +60,7 @@
 *							        Globals	                                     		*
 ****************************************************************************************/
 
-uint8_t linkloss_initial_value = 0;
+uint8_t linkloss_initial_value;
 
 
 /****************************************************************************************
@@ -74,7 +74,7 @@ uint8_t linkloss_initial_value = 0;
   */
 void init_linkloss_service(gatt_service_handler_t *linkloss_serv)
 {
-	 
+	 linkloss_initial_value = 0;
 	 linkloss_serv->serv_handle = 0;
 	 linkloss_serv->serv_uuid.type = AT_BLE_UUID_16;
 	

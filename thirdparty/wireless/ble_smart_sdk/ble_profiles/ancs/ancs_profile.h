@@ -50,40 +50,26 @@
 * \section preface Preface
 * This is the reference manual for the Time Information Profile
 */
-// <<< Use Configuration Wizard in Context Menu >>>
-// <h> Alert Notification Center service Configuration
-// =======================
-#ifndef __ANCS_CLIENT_H__
-#define __ANCS_CLIENT_H__
+
+#ifndef __ANP_CLIENT_H__
+#define __ANP_CLIENT_H__
 /***********************************************************************************
  *									Macros			                               *
  **********************************************************************************/
 /**@brief Advertisement Interval*/
-//	<o> Fast Advertisement Interval <100-1000:50>
-//	<i> Defines inteval of Fast advertisement in ms.
-//	<i> Default: 100
-//	<id> ancs_app_anp_fast_adv
 #define APP_ANP_FAST_ADV						(100) //100 ms
 
 /**@brief Advertisement Timeout*/
-//	<o> Advertisement Timeout <1000-10000:50>
-//	<i> Defines inteval at which advertisement timout in ms.
-//	<i> Default: 1000
-//	<id> ancs_app_anp_adv_timeout
 #define APP_ANP_ADV_TIMEOUT						(1000) // 100 Secs
 
 /**@brief Scan Response length*/
-//	<o> Scan Response Buffer <1-20>
-//	<i> Defines size of buffer for scan response.
-//	<i> Default: 10
-//	<id> ancs_scan_resp_len
 #define SCAN_RESP_LEN							(10)
 
 /**@brief ADV type UUID Type & Length*/
 #define AD_TYPE_16BIT_UUID_LEN					(2)
 #define AD_TYPE_32BIT_UUID_LEN					(4)
 #define AD_TYPE_128BIT_UUID_LEN					(16)
-#define ADV_TYPE_LEN							(0x1)
+#define ADV_TYPE_LEN							(0x01)
 
 /**@brief Appearance type & Length */
 #define ANP_ADV_DATA_APPEARANCE_LEN				(2)
@@ -92,10 +78,7 @@
 
 /**@brief Advertisement Name Type Length & data */
 #define ANP_ADV_DATA_NAME_LEN					(6)
-#define ANP_ADV_DATA_NAME_TYPE					(0x9)
-//	<s.9>	Advertising String
-//	<i>	String Descriptor describing in advertising packet.
-//	<id> ancs_anp_adv_data_name_data
+#define ANP_ADV_DATA_NAME_TYPE					(0x09)
 #define ANP_ADV_DATA_NAME_DATA					("AT-ANS")
 
 /**@brief ANCS Service Solicitation Info*/
@@ -104,9 +87,16 @@
 #define ANP_ADV_DATA_SERVSOLICITATION_128UUID_TYPE (0x15)
 #define ANP_ANCS_SERVICE_UUID                       ("\xD0\x00\x2D\x12\x1E\x4B\x0F\xA4\x99\x4E\xCE\xB5\x31\xF4\x05\x79")
 
+/**@brief ANCS Service Solicitation Info*/
+#define ANCS_SERV_UUID	 "\xD0\x00\x2D\x12\x1E\x4B\x0F\xA4\x99\x4E\xCE\xB5\x31\xF4\x05\x79"
 #define ANCS_CHAR_NOTIFICATION_SOURCE_UUID "\xBD\x1D\xA2\x99\xE6\x25\x58\x8C\xD9\x42\x01\x63\x0D\x12\xBF\x9F"
 #define ANCS_CHAR_CONTROL_POINT "\xD9\xD9\xAA\xFD\xBD\x9B\x21\x98\xA8\x49\xE1\x45\xF3\xD8\xD1\x69"
 #define ANCS_CHAR_DATA_SOURCE "\xFB\x7B\x7C\xCE\x6A\xB3\x44\xBE\xB5\x4B\xD6\x24\xE9\xC6\xEA\x22"
+
+/**@brief UUID Type & Length*/
+#define UUID_16BIT_LEN							(2)
+#define UUID_32BIT_LEN							(4)
+#define UUID_128BIT_LEN							(16)
 
 /**@brief No of Characteristics and No of decriptors */
 #define ANP_MAX_CHARACTERISTIC					(3)
@@ -125,21 +115,40 @@
 #define CATEGORY_ID_MISSEDCALL					(2)
 
 /**@brief start and end handle */
-#define START_HANDLE							(0x1)
-#define END_HANDLE								(0xFFFF)
-
-#define AT_DISCOVER_SUCCESS						(10)
+#define START_HANDLE							(0x0001)
+#define END_HANDLE								(0xffff)
 
 /***********************************************************************************
  *									types			                               *
  **********************************************************************************/
 /* Typedef for alert notification profile */
+typedef struct ancs_prf{
+	
+	/*Instance for ANCS*/
+	at_ble_primary_service_found_t ancs_serv;
+	
+	/*Instance for notification source characteristic*/
+	at_ble_characteristic_found_t notification_source_char;
+	
+	/*Instance for control point characteristic*/
+	at_ble_characteristic_found_t control_point_char;
+	
+	/*Instance for data source characteristic*/
+	at_ble_characteristic_found_t data_source_char;
+	
+	/*Instance for notification source descriptor*/
+	at_ble_descriptor_found_t notification_source_desc;
+	
+	/*Instance for notification source descriptor*/
+	at_ble_descriptor_found_t data_source_desc;
+	
+}ancs_prf_t;
 
 /* Typedef for alert notification profile */
 typedef struct app_anp_data{
 	/** To check the service discovery status */
 	uint8_t devicedb;
-	///** To check the type of discovery */
+	/** To check the type of discovery */
 	uint8_t discover_role;
 	/** Connection related information*/
 	at_ble_connected_t conn_params;
@@ -268,7 +277,4 @@ void anp_client_notification_handler(at_ble_notification_recieved_t *params);
  * \note Called by the ble_manager for enabling the notification in the gatt server
  */
 void anp_client_write_notification_handler(void *param);
-#endif /* __ANCS_CLIENT_H__*/
-// </h>
-
-// <<< end of configuration section >>>
+#endif /* __ANP_CLIENT_H__*/

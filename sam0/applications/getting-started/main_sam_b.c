@@ -57,7 +57,7 @@
  *
  * \section Description
  *
- * The program demo how LED,button,interrupt and timer work.
+ * The program demo how LED,button,interrupt and dualtimer work.
  * It makes the LED on the board blink at a fixed rate.
  * The blinking can be stopped/started by using the push button.
  *
@@ -124,10 +124,15 @@ static void configure_console(void)
 	uart_get_config_defaults(&config_uart);
 
 	config_uart.baud_rate = CONF_STDIO_BAUDRATE;
-	config_uart.pinmux_pad[0] = CONF_STDIO_PINMUX_PAD0;
-	config_uart.pinmux_pad[1] = CONF_STDIO_PINMUX_PAD1;
-	config_uart.pinmux_pad[2] = CONF_STDIO_PINMUX_PAD2;
-	config_uart.pinmux_pad[3] = CONF_STDIO_PINMUX_PAD3;
+	config_uart.pin_number_pad[0] = CONF_STDIO_PIN_PAD0;
+	config_uart.pin_number_pad[1] = CONF_STDIO_PIN_PAD1;
+	config_uart.pin_number_pad[2] = CONF_STDIO_PIN_PAD2;
+	config_uart.pin_number_pad[3] = CONF_STDIO_PIN_PAD3;
+	
+	config_uart.pinmux_sel_pad[0] = CONF_STDIO_MUX_PAD0;
+	config_uart.pinmux_sel_pad[1] = CONF_STDIO_MUX_PAD1;
+	config_uart.pinmux_sel_pad[2] = CONF_STDIO_MUX_PAD2;
+	config_uart.pinmux_sel_pad[3] = CONF_STDIO_MUX_PAD3;
 
 	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART_MODULE, &config_uart);
 }
@@ -137,7 +142,7 @@ static void configure_console(void)
  */
 static void gpio_callback(void)
 {
-	g_b_led0_active = !g_b_led0_active;
+	g_b_led0_active = true;
 }
 
 /** Configures and registers the GPIO callback function with the
@@ -158,7 +163,7 @@ static void configure_gpio_pins(void)
 	gpio_get_config_defaults(&config_gpio_pin);
 
 	config_gpio_pin.direction  = GPIO_PIN_DIR_INPUT;
-	config_gpio_pin.input_pull = GPIO_PIN_PULL_UP;
+	config_gpio_pin.input_pull = GPIO_PIN_PULL_NONE;
 
 	gpio_pin_set_config(BUTTON_0_PIN, &config_gpio_pin);
 
@@ -168,39 +173,42 @@ static void configure_gpio_pins(void)
 }
 
 
-/** Timer Callback function.
+/** Dual Timer 1 Callback function.
  */
-static void timer_callback(void)
+static void dualtimer_callback1(void)
 {
-	puts("The output is triggered by Timer \r\n");
+	puts("Timer1 trigger\r\n");
+}
+
+/** Dual Timer 1 Callback function.
+ */
+static void dualtimer_callback2(void)
+{
+	puts("Timer2 trigger\r\n");
 }
 
 /** Configures Timer function with the  driver.
  */
-static void configure_timer(void)
+static void configure_dualtimer(void)
 {
-	struct timer_config config_timer;
+	struct dualtimer_config config_dualtimer;
 
-	timer_get_config_defaults(&config_timer);
+	dualtimer_get_config_defaults(&config_dualtimer);
 
-	config_timer.reload_value = CONF_TIMER_RELOAD_VALUE;
+	config_dualtimer.timer1.load_value = CONF_DUALTIMER_TIMER1_LOAD_VALUE;
+	config_dualtimer.timer2.load_value = CONF_DUALTIMER_TIMER2_LOAD_VALUE;
 
-	timer_init(&config_timer);
-
-	timer_enable();
+	dualtimer_init(&config_dualtimer);
 }
 
 /** Registers Timer callback function with the  driver.
  */
-static void configure_timer_callback(void)
+static void configure_dualtimer_callback(void)
 {
-	//! [setup_register_callback]
-	timer_register_callback(timer_callback);
-	//! [setup_register_callback]
+	dualtimer_register_callback(DUALTIMER_TIMER1, dualtimer_callback1);
+	dualtimer_register_callback(DUALTIMER_TIMER2, dualtimer_callback2);
 
-	//! [enable_IRQ]
-	NVIC_EnableIRQ(TIMER0_IRQn);
-	//! [enable_IRQ]
+	NVIC_EnableIRQ(DUALTIMER0_IRQn);
 }
 
 /**
@@ -224,11 +232,11 @@ int main(void)
 	/*Configures GPIO callback */
 	configure_gpio_callback();
 
-	/* Configures Timer driver */
-	configure_timer();
+	/* Configures Dual Timer driver */
+	configure_dualtimer();
 
-	/* Configures Timer callback */
-	configure_timer_callback();
+	/* Configures Dual Timer callback */
+	configure_dualtimer_callback();
 
 	g_b_led0_active = true;
 
@@ -236,14 +244,11 @@ int main(void)
 	while (1) {
 		/* Wait for LED to be active */
 		while (!g_b_led0_active);
-
 		/* Toggle LED state if active */
-		if (g_b_led0_active) {
-			gpio_pin_toggle_output_level(LED_0_PIN);
-		}
-
+		gpio_pin_toggle_output_level(LED_0_PIN);
 		/* Wait for some time */
 		delay(CONF_DELAY_VALUE);
+		g_b_led0_active = false;
 	}
 
 }

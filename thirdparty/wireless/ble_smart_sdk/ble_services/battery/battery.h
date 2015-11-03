@@ -80,6 +80,13 @@ typedef struct bat_gatt_service_handler
 	at_ble_characteristic_t	serv_chars;
 }bat_gatt_service_handler_t;
 
+/**@brief initial variables
+ *
+ * @param none
+ * @return none
+ */
+void bat_init_var(void);
+
 /**@brief Update the battery characteristic value after defining the services using bat_primary_service_define
  *
  * @param[in] battery_serv battery service instance

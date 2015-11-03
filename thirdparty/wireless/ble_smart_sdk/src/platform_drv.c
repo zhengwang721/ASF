@@ -145,7 +145,7 @@ plf_drv_status platform_driver_init()
 		rwip_prevent_sleep_set = (void (*)(uint16_t))0x0001b99f;
 		rwip_prevent_sleep_clear = (void (*)(uint16_t))0x0001b9db;
 		apps_resume_cb = (uint32_t *)0x1004003c;
-		actualfreq = (uint32_t *)0x10006bd8;
+		actualfreq = 0; /* set to NULL for now as clock calibration is disabled for the time being */  /*(uint32_t *)0x10006bd8;*/
 #else
 		NVIC_DisableIRQ(PORT0_ALL_IRQn);
 		NVIC_DisableIRQ(PORT1_ALL_IRQn);

@@ -281,7 +281,6 @@ typedef struct{
 	uint8_t org_unique_id[3];
 }system_id_char_value_t;
 
-COMPILER_PACK_SET(1)
 
 /** @brief pnp characteristic value information */
 typedef struct {
@@ -295,7 +294,6 @@ typedef struct {
 	uint16_t product_version;
 }pnp_id_char_value_t;
 
-COMPILER_PACK_RESET()
 
 /** @brief characteristic value information */
 typedef struct {

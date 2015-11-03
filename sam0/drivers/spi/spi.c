@@ -139,10 +139,8 @@ static enum status_code _spi_set_config(
 	Assert(module);
 	Assert(config);
 
-	SPI_SPI_CONFIGURATION_Type spi_cfg;
 	Spi *const spi_module = (module->hw);
 
-	spi_cfg.reg = 0;
 	module->mode  = config->mode;
 
 #if CONF_SPI_MASTER_ENABLE == true
@@ -153,30 +151,34 @@ static enum status_code _spi_set_config(
 #endif
 
 	/* Set data order */
-	spi_cfg.bit.LSB_FIRST_ENABLE = config->data_order;
+	if (config->data_order == SPI_DATA_ORDER_LSB) {
+		spi_module->SPI_CONFIGURATION.bit.LSB_FIRST_ENABLE = 0x1;
+	} else {
+		spi_module->SPI_CONFIGURATION.bit.LSB_FIRST_ENABLE = 0x0;
+	}
+
 	/* Set clock polarity and clock phase */
 	switch(config->transfer_mode)
 	{
 		case SPI_TRANSFER_MODE_0:
-			spi_cfg.bit.SCK_POLARITY = 0;
-			spi_cfg.bit.SCK_PHASE = 0;
+			spi_module->SPI_CONFIGURATION.bit.SCK_PHASE = 0x0;
+			spi_module->SPI_CONFIGURATION.bit.SCK_POLARITY = 0x0;
 			break;
 		case SPI_TRANSFER_MODE_1:
-			spi_cfg.bit.SCK_POLARITY = 0;
-			spi_cfg.bit.SCK_PHASE = 1;
+			spi_module->SPI_CONFIGURATION.bit.SCK_PHASE = 0x1;
+			spi_module->SPI_CONFIGURATION.bit.SCK_POLARITY = 0x0;
 			break;
 		case SPI_TRANSFER_MODE_2:
-			spi_cfg.bit.SCK_POLARITY = 1;
-			spi_cfg.bit.SCK_PHASE = 0;
+			spi_module->SPI_CONFIGURATION.bit.SCK_PHASE = 0x0;
+			spi_module->SPI_CONFIGURATION.bit.SCK_POLARITY = 0x1;
 			break;
 		case SPI_TRANSFER_MODE_3:
-			spi_cfg.bit.SCK_POLARITY = 1;
-			spi_cfg.bit.SCK_PHASE = 1;
+			spi_module->SPI_CONFIGURATION.bit.SCK_PHASE = 0x1;
+			spi_module->SPI_CONFIGURATION.bit.SCK_POLARITY = 0x1;
 			break;
 		default:
 			break;
 	}
-	spi_module->SPI_CONFIGURATION.reg = spi_cfg.reg;
 
 	return STATUS_OK;
 }
@@ -306,10 +308,15 @@ void spi_get_config_defaults(
 	config->clock_source     = SPI_CLK_INPUT_0;
 	config->clock_divider    = 129;
 
-	config->pinmux_pad[0] = PINMUX_LP_GPIO_10_MUX2_SPI0_SCK;
-	config->pinmux_pad[1] = PINMUX_LP_GPIO_11_MUX2_SPI0_MOSI;
-	config->pinmux_pad[2] = PINMUX_LP_GPIO_12_MUX2_SPI0_SSN;
-	config->pinmux_pad[3] = PINMUX_LP_GPIO_13_MUX2_SPI0_MISO;
+	config->pin_number_pad[0] = PIN_LP_GPIO_10_MUX2_SPI0_SCK;
+	config->pin_number_pad[1] = PIN_LP_GPIO_11_MUX2_SPI0_MOSI;
+	config->pin_number_pad[2] = PIN_LP_GPIO_12_MUX2_SPI0_SSN;
+	config->pin_number_pad[3] = PIN_LP_GPIO_13_MUX2_SPI0_MISO;
+
+	config->pinmux_sel_pad[0] = MUX_LP_GPIO_10_MUX2_SPI0_SCK;
+	config->pinmux_sel_pad[1] = MUX_LP_GPIO_11_MUX2_SPI0_MOSI;
+	config->pinmux_sel_pad[2] = MUX_LP_GPIO_12_MUX2_SPI0_SSN;
+	config->pinmux_sel_pad[3] = MUX_LP_GPIO_13_MUX2_SPI0_MISO;
 };
 
 /**
@@ -427,21 +434,20 @@ enum status_code spi_init(
 
 	/* Set the pinmux for this spi module. */
 	for(idx = 0; idx < 4; idx++) {
-		if (config->pinmux_pad[idx] != PINMUX_UNUSED) {
+		if (config->pin_number_pad[idx] != PINMUX_UNUSED) {
 			if (config->mode == SPI_MODE_MASTER) {
 				config_gpio.direction = GPIO_PIN_DIR_OUTPUT;
 			} else if (config->mode == SPI_MODE_SLAVE) {
 				config_gpio.direction = GPIO_PIN_DIR_INPUT;
 			}
-			gpio_pin_set_config(config->pinmux_pad[idx]>>16, &config_gpio);
-			gpio_pinmux_cofiguration(config->pinmux_pad[idx]>>16, \
-						(uint16_t)(config->pinmux_pad[idx] & 0xFFFF));
+			gpio_pin_set_config(config->pin_number_pad[idx], &config_gpio);
+			gpio_pinmux_cofiguration(config->pin_number_pad[idx], \
+						(uint16_t)(config->pinmux_sel_pad[idx]));
 		}
 	}
 
-	/* Set up the input clock & divider for the module */
+	/* Set up the input clock for the module */
 	spi_module->CLOCK_SOURCE_SELECT.reg = config->clock_source;
-	spi_module->SPI_CLK_DIVIDER.reg = config->clock_divider;
 
 #  if CONF_SPI_MASTER_ENABLE == true
 	if (config->mode == SPI_MODE_MASTER) {

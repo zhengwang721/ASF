@@ -45,17 +45,13 @@
 */
 
 
-#include <asf.h>
 #include <string.h>
+#include <stdlib.h>
 #include "at_ble_api.h"
 #include "ble_manager.h"
 #include "ble_utils.h"
+#include "timer_hw.h"
 #include "platform.h"
-
-#include "console_serial.h"
-
-//extern volatile bool init_done;
-volatile bool init_done;
 
 #if defined LINK_LOSS_SERVICE
 	#include "link_loss.h"
@@ -78,12 +74,9 @@ volatile bool init_done;
 	#include "pxp_monitor.h"
 #endif /* PROXIMITY_MONITOR */
 
-#if defined HID_DEVICE
-	#include "hid_device.h"
-#endif /*HID_DEVICE*/	
-
 #if defined ATT_DB_MEMORY
-uint8_t att_db_data[1000];
+#define ATT_DB_MAX 1024
+uint8_t att_db_data[ATT_DB_MAX];
 #endif
 
 /** @brief information of the connected devices */
@@ -96,6 +89,7 @@ ble_gap_event_callback_t ble_paired_cb = NULL;
 ble_characteristic_changed_callback_t ble_char_changed_cb = NULL;
 ble_notification_confirmed_callback_t ble_notif_conf_cb = NULL;
 ble_indication_confirmed_callback_t ble_indic_conf_cb = NULL;
+ble_user_event_callback_t ble_user_event_cb = NULL;
 
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)|| (BLE_DEVICE_ROLE == BLE_OBSERVER))
 uint8_t scan_response_count = 0;
@@ -115,6 +109,36 @@ static void ble_init(at_ble_init_config_t * args);
 /** @brief Set BLE Address, If address is NULL then it will use BD public address */
 static void ble_set_address(at_ble_addr_t *addr);
 
+static void init_global_var(void)
+{
+	memset(ble_connected_dev_info, 0, sizeof(ble_connected_dev_info));
+	
+#if defined ATT_DB_MEMORY
+	memset(att_db_data, 0, sizeof(uint8_t)*ATT_DB_MAX);;
+#endif
+
+	ble_connected_cb = NULL;
+	ble_disconnected_cb = NULL;
+	ble_paired_cb = NULL;
+	ble_char_changed_cb = NULL;
+	ble_notif_conf_cb = NULL;
+	ble_indic_conf_cb = NULL;
+	ble_user_event_cb = NULL;	
+	
+#if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL)|| (BLE_DEVICE_ROLE == BLE_OBSERVER))
+	scan_response_count = 0;
+	memset(scan_info, 0, sizeof(scan_info));
+#endif
+	
+	memset(&app_bond_info, 0, sizeof(at_ble_LTK_t));
+	app_device_bond = false;
+	auth_info = AT_BLE_AUTH_NO_MITM_NO_BOND;
+
+	event = AT_BLE_UNDEFINED_EVENT;
+	memset(params, 0, BLE_EVENT_PARAM_MAX_SIZE);	
+}
+
+
 /** @brief function to get event from stack */
 at_ble_status_t ble_event_task(void)
 {
@@ -131,31 +155,22 @@ at_ble_status_t ble_event_task(void)
 void ble_device_init(at_ble_addr_t *addr)
 {
 	at_ble_init_config_t pf_cfg;
-	//platform_config busConfig;
-	char *dev_name = NULL;
+	
+	init_global_var();
+	
+	memset(&pf_cfg,0,sizeof(pf_cfg));
 	
 #if defined ATT_DB_MEMORY
-	pf_cfg.memPool.memSize = 1000;
+	pf_cfg.memPool.memSize = ATT_DB_MAX;
 	pf_cfg.memPool.memStartAdd = att_db_data;
-#else
-	pf_cfg.memPool.memSize = 0;
-	pf_cfg.memPool.memStartAdd = NULL;
 #endif
-	/*Bus configuration*/
-	//busConfig.bus_type = AT_BLE_UART;
-	//pf_cfg.plf_config = &busConfig;	
-	
 	ble_init(&pf_cfg);
 	
-	init_done = true;
-	
-	ble_set_address(addr);	
-	
-	dev_name = (char *)BLE_DEVICE_NAME;
-	if (ble_set_device_name((uint8_t *)dev_name, strlen(dev_name)) != AT_BLE_SUCCESS)
+	if (ble_set_device_name((uint8_t *)BLE_DEVICE_NAME, strlen(BLE_DEVICE_NAME)) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("Device name set failed");
 	}
+	ble_set_address(addr);
 		
 	BLE_PROFILE_INIT(NULL);
 }
@@ -174,27 +189,27 @@ at_ble_status_t ble_set_device_name(uint8_t *name, uint8_t name_len)
 static void ble_init(at_ble_init_config_t * args)
 {
 	/* Initialize the platform */
-	DBG_LOG("Initializing BTLC1000");
+	DBG_LOG("Initializing SAMB11");
 	
 	/* Init BLE device */
 	if(at_ble_init(args) != AT_BLE_SUCCESS)
 	{
-		DBG_LOG("BTLC1000 Initialization failed");
+		DBG_LOG("SAMB11 Initialization failed");
 		DBG_LOG("Please check the power and connection / hardware connector");	
 		while(1);
 	}
 }
 
-
 /* Set BLE Address, If address is NULL then it will use BD public address */
 static void ble_set_address(at_ble_addr_t *addr)
 {
-	at_ble_dev_config_t stDevConfig;
-	at_ble_addr_t address = {AT_BLE_ADDRESS_PUBLIC, {0xAB, 0xCD, 0xEF, 0xAB, 0xCD, 0xEF}};
-	at_ble_status_t enuStatus;
+	at_ble_att_cfg_t  dev_att_cfg;
+	memset(&dev_att_cfg, 0, sizeof(at_ble_att_cfg_t));
 	
 	if (addr == NULL)
 	{		
+		at_ble_addr_t address;
+		
 		/* get BD address from BLE device */
 		if(at_ble_addr_get(&address) != AT_BLE_SUCCESS)
 		{
@@ -230,28 +245,13 @@ static void ble_set_address(at_ble_addr_t *addr)
 		addr->addr[1],
 		addr->addr[0], addr->type);
 	}
+	dev_att_cfg.b1EnableServiceChanged = 1;
+	dev_att_cfg.b1EnableSpcs = 1;
+	dev_att_cfg.b2AppearancePerm = 2;
+	dev_att_cfg.b2NamePerm = 2;
+	dev_att_cfg.b2Rfu = 2;
 	
-	//Set device configuration
-	////Device role
-	stDevConfig.role = AT_BLE_ROLE_ALL;
-	////device renew duration
-	stDevConfig.renew_dur = AT_RENEW_DUR_VAL_MIN;
-	////device address type
-	stDevConfig.address = address;
-	////Attributes
-	stDevConfig.att_cfg.b2NamePerm = AT_BLE_WRITE_DISABLE;
-	stDevConfig.att_cfg.b2AppearancePerm = AT_BLE_WRITE_DISABLE;
-	stDevConfig.att_cfg.b1EnableSpcs = 0;
-	stDevConfig.att_cfg.b1EnableServiceChanged = 0;
-	stDevConfig.att_cfg.b2Rfu = AT_BLE_WRITE_DISABLE;
-	////Handles
-	stDevConfig.gap_start_hdl = AT_BLE_AUTO_ALLOC_HANDLE;
-	stDevConfig.gatt_start_hdl = AT_BLE_AUTO_ALLOC_HANDLE;
-	////MTU
-	stDevConfig.max_mtu = AT_MTU_VAL_RECOMMENDED;
-	
-	enuStatus = at_ble_set_dev_config(&stDevConfig);
-	UNUSED(enuStatus);
+	at_ble_set_att_config(&dev_att_cfg);
 }
 
 #if ((BLE_DEVICE_ROLE == BLE_CENTRAL) || (BLE_DEVICE_ROLE == BLE_CENTRAL_AND_PERIPHERAL) || (BLE_DEVICE_ROLE == BLE_OBSERVER))
@@ -446,7 +446,7 @@ void ble_connected_state_handler(at_ble_connected_t *conn_params)
 	else
 	{
 		DBG_LOG("Device Connection Failed");
-	}	
+	}
 }
 
 /** @brief function to register callback to be called when device gets connected */
@@ -485,6 +485,12 @@ void register_ble_indication_confirmed_cb(ble_indication_confirmed_callback_t in
 	ble_indic_conf_cb = indic_conf_cb_fn;
 }
 
+/** @brief function to register callback to be called when AT_BLE_PLATFORM_EVENT event triggered from stack */
+void register_ble_user_event_cb(ble_user_event_callback_t cb_fn)
+{
+	ble_user_event_cb = cb_fn;
+}
+
 /** @brief function handles disconnection event received from stack */
 void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect)
 {
@@ -499,7 +505,7 @@ void ble_disconnected_state_handler(at_ble_disconnected_t *disconnect)
 void ble_conn_param_update(at_ble_conn_param_update_done_t * conn_param_update)
 {
 	DBG_LOG_DEV("AT_BLE_CONN_PARAM_UPDATE ");
-	ALL_UNUSED(conn_param_update);  //To avoid compiler warning
+	//ALL_UNUSED(conn_param_update);  //To avoid compiler warning
 }
 
 void ble_conn_param_update_req(at_ble_conn_param_update_request_t * conn_param_req)
@@ -512,6 +518,7 @@ void ble_slave_security_handler(at_ble_slave_sec_request_t* slave_sec_req)
 	at_ble_pair_features_t features;
 	uint8_t i = 0;
 	
+	memset(&features, 0x00, sizeof(at_ble_pair_features_t));
 	if (app_device_bond)
 	{
 		app_device_bond = false;
@@ -620,7 +627,7 @@ void ble_pair_request_handler(at_ble_pair_request_t *at_ble_pair_req)
 			}			
 		}
 	}
-	ALL_UNUSED(at_ble_pair_req);  //To avoid compiler warning
+	//ALL_UNUSED(at_ble_pair_req);  //To avoid compiler warning
 }
 
 /** @brief function handles pair key request */
@@ -641,8 +648,10 @@ void ble_pair_key_request_handler (at_ble_pair_key_request_t *pair_key)
             
           for(idx = 0; idx < 6; )
           {          
-            pin = getchar_b11();
-            if((pin >= '0') && ( pin <= '9'))
+            //GET_CHAR(&pin);
+			//pin = getchar_b11();
+            pin = getchar();
+			if((pin >= '0') && ( pin <= '9'))
             {
               passkey[idx++] = pin;
               DBG_LOG_CONT("%c", pin);
@@ -748,11 +757,11 @@ void ble_encryption_request_handler (at_ble_encryption_request_t *encry_req)
 	{
 		key_found = true;
 	}
-        else
-        {
-          DBG_LOG("Pairing information of peer device is not available."); 
-          DBG_LOG("Please unpair the device from peer device(mobile) settings menu and start pairing again");
-        }
+	else
+	{
+	  DBG_LOG("Pairing information of peer device is not available."); 
+	  DBG_LOG("Please unpair the device from peer device(mobile) settings menu and start pairing again");
+	}
 
 	if(!(at_ble_encryption_request_reply(ble_connected_dev_info->handle,auth_info ,key_found, &app_bond_info) == AT_BLE_SUCCESS))
 	{
@@ -768,7 +777,7 @@ void ble_encryption_request_handler (at_ble_encryption_request_t *encry_req)
 
 void ble_event_manager(at_ble_events_t events, void *event_params)
 {
-	DBG_LOG_DEV("Event:%d", event);
+	DBG_LOG_DEV("\r\nEvent:%d", event);
 	switch(events)
 	{		
 	 /* GAP events */
@@ -776,6 +785,12 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	case AT_BLE_UNDEFINED_EVENT:
 	{
 		DBG_LOG_DEV("BLE-Manager:Undefined Event=0x%X", events);
+	}
+	break;
+	
+	case AT_BLE_CHARACTERISTIC_CONFIGURATION_CHANGED:
+	{
+		DBG_LOG("AT_BLE_CHARACTERISTIC_CONFIGURATION_CHANGED");
 	}
 	break;
 	
@@ -970,6 +985,18 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	}
 	break;
 	
+	case AT_BLE_CHARACTERISTIC_WRITE_CMD_CMP:
+	{
+		at_ble_cmd_complete_event_t evt;
+		DBG_LOG_DEV("\r\nAT_BLE_CHARACTERISTIC_WRITE_CMD_CMP");
+		memcpy(&evt , params, sizeof(at_ble_cmd_complete_event_t));
+		if( evt.status == AT_BLE_SUCCESS )
+		{
+			DBG_LOG_DEV("\r\nAT_BLE_CHARACTERISTIC_WRITE_COMMAND : SUCCESS");
+		}		
+	}
+	break;
+	
 	/** Characteristic multiple read procedure is done. \n
 	  * Refer to @ref at_ble_characteristic_read_response_t
 	  */
@@ -996,7 +1023,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 		BLE_NOTIFICATION_RECEIVED_HANDLER((at_ble_notification_recieved_t *)event_params);
 	}
 	break;
-		
+	
 	 /** An Indication is received. \n
 	  * Refer to @ref at_ble_indication_recieved_t
 	  */
@@ -1124,6 +1151,22 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	case AT_BLE_HTPT_CFG_INDNTF_IND:
 	{
 		
+	}
+	break;
+
+	case AT_PLATFORM_EVENT:
+	{
+		uint16_t plf_event_type;
+		uint16_t plf_event_data_len;
+		uint8_t	plf_event_data[16];		
+		DBG_LOG_DEV("AT_PLATFORM_EVENT");
+		platform_event_get(&plf_event_type,plf_event_data,&plf_event_data_len);
+		if(plf_event_type == ((TIMER_EXPIRED_CALLBACK_TYPE_DETECT << 8)| USER_TIMER_CALLBACK)) {
+			if( ble_user_event_cb )
+			{
+				ble_user_event_cb();
+			}
+		}
 	}
 	break;
 	

@@ -50,7 +50,6 @@
 *							        Includes	
 *                                       *
 ****************************************************************************************/
-#include <asf.h>
 #include <string.h>
 #include "timer_hw.h"
 #include "at_ble_api.h"
@@ -64,10 +63,6 @@
 *							        Globals		
 *                                       *
 ****************************************************************************************/
-/** @brief Scan response data*/
-uint8_t scan_rsp_data[SCAN_RESP_LEN]
-	= {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
-
 /** @brief device information service handler **/
 dis_gatt_service_handler_t dis_service_handler;
 
@@ -81,7 +76,6 @@ blp_notification_callback_t notification_cb;
 blp_indication_callback_t	indication_cb;
 
 connected_callback_t connected_cb;
-
 
 /** @brief contains the connection handle functions **/
 at_ble_handle_t connection_handle;
@@ -110,7 +104,6 @@ void register_blp_notification_handler(
 {
 	notification_cb = blp_notificaton_handler;
 }
-
 
 /** @brief register_blp_indication_handler registers the indication handler
  * passed by the application
@@ -149,7 +142,6 @@ void blp_indication_confirmation_handler(at_ble_indication_confirmed_t *params)
 	}
 }
 
-
 /** @brief blp_sensor_send_notification adds the new characteristic value and
  * sends the notification
  *  @param[in] blp_data the new hr characteristic value needs to be updated
@@ -157,7 +149,7 @@ void blp_indication_confirmation_handler(at_ble_indication_confirmed_t *params)
  */
 void blp_sensor_send_notification(uint8_t *blp_data, uint8_t length)
 {
-	at_ble_status_t status;
+	at_ble_status_t status = AT_BLE_SUCCESS;
 
 	/** Updating the new characteristic value */
 	if ((status
@@ -184,7 +176,7 @@ void blp_sensor_send_notification(uint8_t *blp_data, uint8_t length)
  */
 void blp_sensor_send_indication(uint8_t *blp_data, uint8_t length)
 {
-	at_ble_status_t status;
+	at_ble_status_t status = AT_BLE_SUCCESS;
 
 	/** Updating the new characteristic value */
 	if ((status
@@ -214,8 +206,8 @@ void blp_sensor_send_indication(uint8_t *blp_data, uint8_t length)
 at_ble_status_t blp_sensor_char_changed_handler(
 		at_ble_characteristic_changed_t *char_handle)
 {
-	uint8_t action_event;
-	at_ble_characteristic_changed_t change_params;
+	uint8_t action_event = 0;
+	at_ble_characteristic_changed_t change_params = {0,};
 	memcpy((uint8_t *)&change_params, char_handle,
 			sizeof(at_ble_characteristic_changed_t));
 
@@ -251,7 +243,7 @@ at_ble_status_t blp_sensor_disconnect_event_handler(
 {
 	blp_sensor_adv();
 	connected_cb(false);
-    ALL_UNUSED(disconnect);
+//    ALL_UNUSED(disconnect);
 	
 	return AT_BLE_SUCCESS;
 }
@@ -270,18 +262,16 @@ at_ble_status_t blp_sensor_connected_state_handler(
 	return AT_BLE_SUCCESS;
 }
 
-
-
 /** @brief blp_sensor_adv adds the advertisement data of the profile and starts
  * advertisement
  *
  */
 void blp_sensor_adv(void)
 {
-	at_ble_status_t status;
+	at_ble_status_t status = AT_BLE_SUCCESS;
 	uint8_t idx = 0;
-	uint8_t adv_data [ BLP_SENSOR_ADV_DATA_NAME_LEN +
-	BLP_SENSOR_ADV_DATA_UUID_LEN   + (2 * 2)];
+	uint8_t adv_data[BLP_SENSOR_ADV_DATA_NAME_LEN + BLP_SENSOR_ADV_DATA_UUID_LEN + (3 * 2)] = {0,};
+	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
 	adv_data[idx++] = BLP_SENSOR_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
 	adv_data[idx++] = BLP_SENSOR_ADV_DATA_COMP_16_UUID_TYPE;
@@ -331,7 +321,7 @@ void blp_sensor_adv(void)
  */
 void blp_sensor_service_define(void)
 {
-	at_ble_status_t status;
+	at_ble_status_t status = AT_BLE_SUCCESS;
 
 	if ((status = blp_primary_service_define(&blp_service_handler)) !=
 			AT_BLE_SUCCESS) {
@@ -363,8 +353,15 @@ void blp_sensor_service_init(void)
  */
 void blp_sensor_init(void *param)
 {
+	memset(&dis_service_handler, 0, sizeof(dis_gatt_service_handler_t));
+	memset(&blp_service_handler, 0, sizeof(blp_gatt_service_handler_t));
+	notification_cb = 0;
+	indication_cb = 0;
+	connected_cb = 0;
+	connection_handle = 0;
+
 	blp_sensor_service_init();
 	blp_sensor_service_define();
 	blp_sensor_adv();
-    ALL_UNUSED(param);
+//    ALL_UNUSED(param);
 }

@@ -204,8 +204,10 @@ struct uart_config{
 	enum uart_parity_selection parity;
 	/** flow control type */
 	bool flow_control;
-	/** UART PAD pinmux */
-	uint32_t pinmux_pad[4];
+	/** UART PAD pin number */
+	uint32_t pin_number_pad[4];
+	/** UART PAD pinmux selection */
+	uint32_t pinmux_sel_pad[4];
 };
 
 /**

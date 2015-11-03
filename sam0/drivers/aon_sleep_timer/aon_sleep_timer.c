@@ -208,7 +208,6 @@ void aon_sleep_timer_init(const struct aon_sleep_timer_config *config)
 		AON_SLEEP_TIMER0->CONTROL.reg = AON_SLEEP_TIMER_CONTROL_SINGLE_COUNT_ENABLE;
 	}
 
-	aon_st_ctrl = AON_SLEEP_TIMER0->CONTROL.reg;
 	if (config->mode == AON_SLEEP_TIMER_SINGLE_MODE) {
 		while ((AON_SLEEP_TIMER0->CONTROL.reg &
 				AON_SLEEP_TIMER_CONTROL_SLP_TIMER_SINGLE_COUNT_ENABLE_DLY_Msk)

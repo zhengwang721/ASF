@@ -54,6 +54,14 @@
 #define __HID_H__
 
 /****************************************************************************************
+*							        Macros	                                     		*
+****************************************************************************************/
+
+/** HID Report Characteristic UUID. */
+
+
+
+/****************************************************************************************
 *							        Enumerations	                                   	*
 ****************************************************************************************/
 /**@brief Error Code for HID service operation
@@ -96,6 +104,19 @@ typedef enum
 	/// Enable report protocol mode
 	HID_REPORT_PROTOCOL_MODE,
 }hid_proto_mode;
+
+
+/**@brief HID information flag value
+*/
+typedef enum
+{
+	/// Device is designed to be capable of providing wake-up signal to a HID host
+	HID_REMOTE_WAKE_UP           = 0x01,
+	
+	/// Device is normally connectable
+	HIDS_NORMALLY_CONNECTABLE    = 0x02,
+}hid_info_flag;
+
 
 /**@brief HID control point
 */
@@ -192,6 +213,8 @@ void hid_serv_report_map(uint8_t servinst, uint8_t *report_info, uint16_t len);
   * @param[in] servinst		HID service instance
   */
 void hid_serv_def_init(uint8_t servnum);
+
+void hid_serv_var_init(void);
 
 /** @brief Register the service into database
   * 

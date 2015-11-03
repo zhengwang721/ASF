@@ -113,19 +113,23 @@ static void configure_spi_master(void)
 //! [clock_divider]
 	/* Configure pad 0 */
 //! [sck]
-	config_spi_master.pinmux_pad[0] = CONF_SPI_PINMUX_SCK;
+	config_spi_master.pin_number_pad[0] = CONF_SPI_PIN_SCK;
+	config_spi_master.pinmux_sel_pad[0] = CONF_SPI_MUX_SCK;
 //! [sck]
 	/* Configure pad 1 */
 //! [mosi]
-	config_spi_master.pinmux_pad[1] = CONF_SPI_PINMUX_MOSI;
+	config_spi_master.pin_number_pad[1] = CONF_SPI_PIN_MOSI;
+	config_spi_master.pinmux_sel_pad[1] = CONF_SPI_MUX_MOSI;
 //! [mosi]
 	/* Configure pad 2 */
 //! [ssn]
-	config_spi_master.pinmux_pad[2] = PINMUX_UNUSED;
+	config_spi_master.pin_number_pad[2] = PINMUX_UNUSED;
+	config_spi_master.pinmux_sel_pad[2] = PINMUX_UNUSED;
 //! [ssn]
 	/* Configure pad 3 */
 //! [miso]
-	config_spi_master.pinmux_pad[3] = CONF_SPI_PINMUX_MISO;
+	config_spi_master.pin_number_pad[3] = CONF_SPI_PIN_MISO;
+	config_spi_master.pinmux_sel_pad[3] = CONF_SPI_MUX_MISO;
 //! [miso]
 //! [init]
 	spi_init(&spi_master_instance, CONF_SPI, &config_spi_master);
@@ -166,6 +170,11 @@ int main(void)
 			//! [write]
 			spi_write_buffer_wait(&spi_master_instance, buffer, BUF_LENGTH);
 			//! [write]
+			//! [delay]
+			for(uint16_t i = 0; i < 0xFF; i++) {
+				/* Wait for the last data shift out */
+			}
+			//! [delay]
 			//! [deselect_slave]
 			spi_select_slave(&spi_master_instance, &slave, false);
 			//! [deselect_slave]

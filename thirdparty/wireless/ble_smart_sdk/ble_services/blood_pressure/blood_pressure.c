@@ -64,8 +64,6 @@ uint8_t intermediate_cuff_pressure_value = DEFAULT_VALUE;
 /** initial blood pressure feature value */
 uint16_t blood_pressure_feature_value = 0xffff;
 
-
-
 /************************************************************************/
 /*							Implementation								*/
 /************************************************************************/
@@ -79,6 +77,10 @@ uint16_t blood_pressure_feature_value = 0xffff;
  */
 void blp_init_service(blp_gatt_service_handler_t *blood_pressure_serv)
 {
+	blp_measurement_value = DEFAULT_VALUE;
+	intermediate_cuff_pressure_value = DEFAULT_VALUE;
+	blood_pressure_feature_value = 0xffff;
+
 	blood_pressure_serv->serv_handle = 0;
 	blood_pressure_serv->serv_uuid.type = AT_BLE_UUID_16;
 	blood_pressure_serv->serv_uuid.uuid[0] = (uint8_t)BLOOD_PRESSURE_SERVICE_UUID;
@@ -128,8 +130,13 @@ void blp_init_service(blp_gatt_service_handler_t *blood_pressure_serv)
 	blood_pressure_serv->serv_chars[0].user_desc_permissions
 		= AT_BLE_ATTR_NO_PERMISSIONS;
 	/*client config permissions*/
+//	#if BLE_PAIR_ENABLE
+//			blood_pressure_serv->serv_chars[0].client_config_permissions
+//			= AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR;
+//	#else 
 	blood_pressure_serv->serv_chars[0].client_config_permissions
 		= AT_BLE_ATTR_NO_PERMISSIONS;
+//	#endif 
 	/*server config permissions*/
 	blood_pressure_serv->serv_chars[0].server_config_permissions
 		= AT_BLE_ATTR_NO_PERMISSIONS;
@@ -184,8 +191,13 @@ void blp_init_service(blp_gatt_service_handler_t *blood_pressure_serv)
 	blood_pressure_serv->serv_chars[1].user_desc_permissions
 		= AT_BLE_ATTR_NO_PERMISSIONS;
 	/*client config permissions*/
+//	#if BLE_PAIR_ENABLE
+//	blood_pressure_serv->serv_chars[1].client_config_permissions
+//	= AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR;
+//	#else
 	blood_pressure_serv->serv_chars[1].client_config_permissions
 		= AT_BLE_ATTR_NO_PERMISSIONS;
+//	#endif
 	/*server config permissions*/
 	blood_pressure_serv->serv_chars[1].server_config_permissions
 		= AT_BLE_ATTR_NO_PERMISSIONS;

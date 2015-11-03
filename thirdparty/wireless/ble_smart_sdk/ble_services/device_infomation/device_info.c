@@ -63,6 +63,10 @@ bool volatile dis_notification_flag[DIS_TOTAL_CHARATERISTIC_NUM] = {false};
 /**@brief Initialize the dis service related information. */
 void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
 {
+	// added by jini
+	memset(dis_notification_flag, 0x00 , sizeof(bool)*DIS_TOTAL_CHARATERISTIC_NUM);
+	memset(&char_value, 0x00 , sizeof(device_info_char_value_t));
+	
 	device_info_serv->serv_handle = 0;
 	device_info_serv->serv_uuid.type = AT_BLE_UUID_16;
 	device_info_serv->serv_uuid.uuid[0] = (uint8_t) DIS_SERVICE_UUID;
@@ -373,6 +377,5 @@ at_ble_status_t dis_info_update(dis_gatt_service_handler_t *dis_serv , dis_info_
 	} else {
 		return AT_BLE_SUCCESS;
 	}
-        ALL_UNUSED(conn_handle);
 	return AT_BLE_FAILURE;
 }

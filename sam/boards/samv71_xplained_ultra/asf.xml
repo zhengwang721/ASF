@@ -6,6 +6,7 @@
 			<build type="header-file" subtype="api" value="led.h"/>
 			<build type="include-path" value="."/>
 			<require idref="common.services.ioport"/>
+			<require idref="common.services.basic.gpio"/>
 		</module>
 	</select-by-config>
 
@@ -15,6 +16,9 @@
 		<module type="meta" id="config.board.samv71_xplained_ultra.init#yes" caption="SAMV71 initialization support enabled">
 			<build type="c-source" value="init.c"/>
 			<require idref="common.services.ioport"/>
+			<require idref="common.services.basic.gpio"/>
+			<require idref="sam.drivers.mpu"/>
+			<require idref="sam.drivers.pio"/>			
 		</module>
 	</select-by-config>
 

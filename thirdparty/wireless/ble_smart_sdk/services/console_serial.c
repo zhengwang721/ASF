@@ -1,5 +1,7 @@
 #include <asf.h>
+#include <conf_uart_serial.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include "console_serial.h"
 
@@ -27,36 +29,35 @@ void serial_console_init(void)
 	//! [setup_config_defaults]
 
 	//! [setup_change_config]
-	config_uart.baud_rate = 38400;
-	config_uart.pinmux_pad[0] = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	config_uart.pinmux_pad[1] = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	config_uart.pinmux_pad[2] = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	config_uart.pinmux_pad[3] = EDBG_CDC_SERCOM_PINMUX_PAD3;
+	//config_uart.baud_rate = 38400;
+	config_uart.baud_rate = 115200;
+	config_uart.pin_number_pad[0] = EDBG_CDC_SERCOM_PIN_PAD0;
+	config_uart.pin_number_pad[1] = EDBG_CDC_SERCOM_PIN_PAD1;
+	config_uart.pin_number_pad[2] = EDBG_CDC_SERCOM_PIN_PAD2;
+	config_uart.pin_number_pad[3] = EDBG_CDC_SERCOM_PIN_PAD3;
+	
+	config_uart.pinmux_sel_pad[0] = EDBG_CDC_SERCOM_MUX_PAD0;
+	config_uart.pinmux_sel_pad[1] = EDBG_CDC_SERCOM_MUX_PAD1;
+	config_uart.pinmux_sel_pad[2] = EDBG_CDC_SERCOM_MUX_PAD2;
+	config_uart.pinmux_sel_pad[3] = EDBG_CDC_SERCOM_MUX_PAD3;
 	//! [setup_change_config]
 
+	stdio_serial_init(&uart_instance, CONF_STDIO_USART_MODULE, &config_uart);
+
 	//! [setup_set_config]
+	/*
 	while (uart_init(&uart_instance,
 	EDBG_CDC_MODULE, &config_uart) != STATUS_OK) {
 	}
+	*/
 	//! [setup_set_config]
 }
 //! [setup]
 
+/*
 int getchar_b11()
 {
-	/*
-	static int count = 0;
-	char a1 = '0';
 
-	count++;
-	if(count == 5)
-	{
-		count = 1;
-	}
-	
-	
-	return a1 + count;
-	*/
 	uint8_t string_input[1];
 	read_complete_flag = false;
 	
@@ -69,17 +70,18 @@ int getchar_b11()
 	return string_input[0];
 	
 }
-
+*/
+/*
 int printf_b11( const char* format, ... )
 {
 	
-	uart_write_buffer_wait(&uart_instance, format, strlen(format));
+	//uart_write_buffer_wait(&uart_instance, format, strlen(format));
 	
 	
 	
 	
 	
-	/*
+	
 	//chris.choi : seems like below codes have no error but if i use below code, then pxp scanning is not working in B0. I don't know why...
 	int size;
 	
@@ -91,8 +93,9 @@ int printf_b11( const char* format, ... )
 	va_end(arg);
 	
 	uart_write_buffer_wait(&uart_instance, temp, size);
-	*/
+	
 	
 }
+*/
 
 

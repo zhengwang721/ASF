@@ -51,7 +51,6 @@
 #ifndef __BLE_MANAGER_H__
 #define __BLE_MANAGER_H__
 
-#include <asf.h>
 #include <string.h>
 #include <stddef.h>
 #include "at_ble_api.h"
@@ -69,9 +68,8 @@
 #define BLE_IO_CAPABALITIES			(AT_BLE_IO_CAP_NO_INPUT_NO_OUTPUT)
 #define BLE_MITM_REQ				(false)
 #define BLE_BOND_REQ				(false)
-#define BLE_PAIR_ENABLE				(false)
+#define BLE_PAIR_ENABLE				(false) 
 #endif
-
 #ifdef HID_MOUSE_DEVICE
 #define BLE_DEVICE_NAME				"ATMEL-HIDM"
 #endif
@@ -98,7 +96,7 @@
 #endif /* Blood_Pressure_Sensor*/
 
 #if (BLE_DEVICE_ROLE == BLE_OBSERVER)
-#include "ble_observer.h"
+#include "obse_app.h"
 #define BLE_DEVICE_NAME				"ATMEL-OBS"
 #endif /* BLE_DEVICE_ROLE == BLE_OBSERVER) */
 
@@ -139,20 +137,20 @@
 #endif
 
 /** @brief event timeout */
-#define BLE_EVENT_TIMEOUT			(20)
+#define BLE_EVENT_TIMEOUT			(0XFFFFFFFF)
 
 /* Dummy BLE handler's for unused functions */
 static inline void ble_dummy_handler(void *param)
 {
-	UNUSED(param);
+	//UNUSED(param);
 	DBG_LOG_DEV("!:(:(");
 }
 
 /* Unused variable - remove compiler warning */
 static inline at_ble_status_t BLE_UNUSED2_VAR(void *param1_var, void *param2_var)
 {
-	UNUSED(param1_var);
-	UNUSED(param2_var);
+	//UNUSED(param1_var);
+	//UNUSED(param2_var);
 	DBG_LOG_DEV("!!:(");
 	return AT_BLE_SUCCESS;
 }
@@ -674,50 +672,6 @@ typedef enum
 #ifndef BLE_ENCRYPTION_STATUS_CHANGED
 #define BLE_ENCRYPTION_STATUS_CHANGED							ble_dummy_handler
 #endif
-													
-#ifndef BLE_CONN_PARAM_UPDATE_DONE
-#define BLE_CONN_PARAM_UPDATE_DONE								ble_dummy_handler
-#endif
-
-#ifndef	BLE_PROFILE_INIT
-#define BLE_PROFILE_INIT										ble_dummy_handler
-#endif
-
-#ifndef BLE_ADDITIONAL_CONNECTED_STATE_HANDLER
-#define BLE_ADDITIONAL_CONNECTED_STATE_HANDLER					ble_dummy_handler
-#endif
-
-#ifndef BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER
-#define BLE_ADDITIONAL_DISCONNECTED_STATE_HANDLER				ble_dummy_handler
-#endif
-
-#ifndef BLE_CHARACTERISTIC_CHANGED
-#define BLE_CHARACTERISTIC_CHANGED								ble_dummy_handler
-#endif
-
-#ifndef BLE_CONN_PARAM_UPDATE_DONE
-#define BLE_CONN_PARAM_UPDATE_DONE								ble_dummy_handler
-#endif
-
-#ifndef BLE_PAIR_REQUEST
-#define	BLE_PAIR_REQUEST										ble_dummy_handler
-#endif
-
-#ifndef BLE_PAIR_KEY_REQUEST
-#define BLE_PAIR_KEY_REQUEST									ble_dummy_handler
-#endif
-
-#ifndef BLE_PAIR_DONE
-#define BLE_PAIR_DONE											ble_dummy_handler
-#endif
-
-#ifndef BLE_ENCRYPTION_REQUEST
-#define BLE_ENCRYPTION_REQUEST									ble_dummy_handler
-#endif
-
-#ifndef BLE_ENCRYPTION_STATUS_CHANGED
-#define BLE_ENCRYPTION_STATUS_CHANGED							ble_dummy_handler
-#endif
 
 #ifndef BLE_SCAN_REPORT_HANDLER
 #define BLE_SCAN_REPORT_HANDLER									ble_dummy_handler
@@ -757,10 +711,6 @@ typedef enum
 
 #ifndef BLE_CHARACTERISTIC_READ_RESPONSE
 #define BLE_CHARACTERISTIC_READ_RESPONSE						ble_dummy_handler
-#endif
-
-#ifndef BLE_DESCRIPTOR_FOUND_HANDLER
-#define BLE_DESCRIPTOR_FOUND_HANDLER							ble_dummy_handler
 #endif
 
 #ifndef BLE_PRIMARY_SERVICE_FOUND_HANDLER
@@ -834,6 +784,8 @@ typedef struct gatt_service_handler
 
 /* Typedef for GAP event callbacks */
 typedef void (*ble_gap_event_callback_t)(at_ble_handle_t);
+
+typedef void (*ble_user_event_callback_t)(void);
 
 /* Typedef for characteristic value changed event callback */
 typedef at_ble_status_t (*ble_characteristic_changed_callback_t)(at_ble_characteristic_changed_t *);
@@ -1091,6 +1043,16 @@ void register_ble_characteristic_changed_cb(ble_characteristic_changed_callback_
 void register_ble_notification_confirmed_cb(ble_notification_confirmed_callback_t notif_conf_cb_fn);
 
 void register_ble_indication_confirmed_cb(ble_indication_confirmed_callback_t indic_conf_cb_fn);
+
+/** @brief Register callback function, to be triggered when user event occur.
+  * 
+  * @param[in]  function called when user event occur.
+  *
+  * @return none.
+  *
+  */
+void register_ble_user_event_cb(ble_user_event_callback_t cb_fn);
+
 #endif /*__BLE_MANAGER_H__*/
 // </h>
 

@@ -59,7 +59,7 @@
 *							        Globals                                     		*
 ****************************************************************************************/
 
-uint8_t immediate_alert_initial_value = 0;
+uint8_t immediate_alert_initial_value;
 
 /****************************************************************************************
 *							        Implementation                                     	*
@@ -70,6 +70,7 @@ uint8_t immediate_alert_initial_value = 0;
   */
 void init_immediate_alert_service(gatt_service_handler_t *immediate_alert_serv ) 
 {
+		immediate_alert_initial_value = 0;
 		immediate_alert_serv->serv_handle = 0;
 		immediate_alert_serv->serv_uuid.type = AT_BLE_UUID_16;
 		

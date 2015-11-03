@@ -1,0 +1,15 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="PHONE ALERT STATUS APPLICATION" id="thirdparty.wireless.ble_sdk.apps.phone_alert_status">
+		<info type="description" value="summary">
+		Phone Alert Status  application for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="pas_app.h"/>
+		<build type="c-source" value="pas_app.c"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_CENTRAL_AND_PERIPHERAL"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_profiles.pas_client"/>
+		<build type="distribute" subtype="user-file" value="Atmel-42547-ATBTLC1000-BluSDK-Phone-Alert-Status-Getting-Started-Guide_UserGuide.pdf"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

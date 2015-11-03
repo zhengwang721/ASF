@@ -50,7 +50,6 @@
 *							        Includes	
 *                                       *
 ****************************************************************************************/
-#include <asf.h>
 #include <string.h>
 #include "timer_hw.h"
 #include "at_ble_api.h"
@@ -64,9 +63,7 @@
 *							        Globals		
 *                                       *
 ****************************************************************************************/
-/** @brief Scan response data*/
-uint8_t scan_rsp_data[SCAN_RESP_LEN]
-	= {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
+
 
 /** @brief device information service handler **/
 dis_gatt_service_handler_t dis_service_handler;
@@ -199,8 +196,6 @@ at_ble_status_t hr_sensor_disconnect_event_handler(
 {
 	/** Calling app state callback handler */
 	state_cb(HR_APP_DISCONNECT_STATE);
-	ALL_UNUSED(disconnect);
-    
 	return AT_BLE_SUCCESS;
 }
 
@@ -245,8 +240,9 @@ void hr_sensor_adv(void)
 {
 	at_ble_status_t status;
 	uint8_t idx = 0;
-	uint8_t adv_data [ HR_SENSOR_ADV_DATA_NAME_LEN +
-	HR_SENSOR_ADV_DATA_UUID_LEN   + (2 * 2)];
+	uint8_t adv_data [ HR_SENSOR_ADV_DATA_NAME_LEN + HR_SENSOR_ADV_DATA_UUID_LEN   + (4 * 2)];
+	
+	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
 	adv_data[idx++] = HR_SENSOR_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
 	adv_data[idx++] = HR_SENSOR_ADV_DATA_COMP_16_UUID_TYPE;
@@ -331,8 +327,15 @@ void hr_sensor_service_init(void)
  */
 void hr_sensor_init(void *param)
 {
+	memset(&dis_service_handler, 0, sizeof(dis_gatt_service_handler_t));
+	memset(&hr_service_handler, 0, sizeof(hr_gatt_service_handler_t));
+	hr_notification_callback_t notification_cb = 0;
+	hr_reset_callback_t reset_cb = 0;
+	hr_state_callback_t state_cb = 0;
+	notification_confirm = true;
+	connection_handle = 0;
+
 	hr_sensor_service_init();
 	hr_sensor_service_define();
 	DBG_LOG("Press the button to start advertisement");
-    ALL_UNUSED(param);
 }

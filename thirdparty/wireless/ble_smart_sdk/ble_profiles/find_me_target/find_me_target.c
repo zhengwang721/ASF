@@ -49,7 +49,6 @@
 /****************************************************************************************
 *							        Includes	                                     	*
 ****************************************************************************************/
-#include <asf.h>
 
 #include "timer_hw.h"
 #include "ble_manager.h"
@@ -65,10 +64,6 @@
 #ifdef IMMEDIATE_ALERT_SERVICE
 gatt_service_handler_t ias_handle;
 #endif
-
-/** @brief Scan response data*/
-uint8_t scan_rsp_data[SCAN_RESP_LEN]
-	= {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
 /** @brief Alert value used for immediate alert service */
 uint8_t immediate_alert_value = INVALID_IAS_PARAM;
@@ -114,9 +109,10 @@ at_ble_status_t fmp_target_service_define(void)
  */
 void fmp_target_adv(void)
 {
+	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
+	
 	uint8_t idx = 0;
-	uint8_t adv_data [ FMP_ADV_DATA_NAME_LEN + IAL_ADV_DATA_UUID_LEN   +
-	(2 * 2)];
+	uint8_t adv_data [ FMP_ADV_DATA_NAME_LEN + IAL_ADV_DATA_UUID_LEN   + (2 * 2)];
 
 	adv_data[idx++] = ADV_TYPE_LEN + IAL_ADV_DATA_UUID_LEN;
 	adv_data[idx++] = IAL_ADV_DATA_UUID_TYPE;
@@ -167,8 +163,7 @@ at_ble_status_t fmp_target_char_changed_handler(
 	memcpy((uint8_t *)&change_params, char_handle,
 			sizeof(at_ble_characteristic_changed_t));
 
-	immediate_alert_value
-		= ias_set_alert_value(&change_params, &ias_handle);
+	immediate_alert_value = ias_set_alert_value(&change_params, &ias_handle);
 
 	if (immediate_alert_value != INVALID_IAS_PARAM) {
 		immediate_alert_cb(immediate_alert_value);
@@ -198,7 +193,7 @@ at_ble_status_t fmp_target_connected_state_handler(
 				"Read of alert value for Immediate alert service failed:reason %x",
 				status);
 	}
-        ALL_UNUSED(conn_params);
+
 	return AT_BLE_SUCCESS;
 }
 
@@ -218,7 +213,7 @@ at_ble_status_t fmp_target_disconnect_event_handler(
 	} else {
 		DBG_LOG("Bluetooth Device is in Advertising Mode");
 	}
-        ALL_UNUSED(disconnect);
+
 	return AT_BLE_SUCCESS;
 }
 
@@ -236,5 +231,4 @@ void fmp_target_init(void *param)
 
 	/* find me services advertisement */
 	fmp_target_adv();
-        ALL_UNUSED(param);
 }

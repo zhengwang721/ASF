@@ -432,8 +432,10 @@ struct spi_config {
 	enum spi_clock_input clock_source;
 	/** clock divider value to use*/
 	uint8_t clock_divider;
-	/** SPI PAD pinmux */
-	uint32_t pinmux_pad[4];
+	/** SPI PAD pin number */
+	uint32_t pin_number_pad[4];
+	/** SPI PAD pinmux selection */
+	uint32_t pinmux_sel_pad[4];
 };
 
 /**

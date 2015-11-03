@@ -57,10 +57,15 @@
 #define BLE_OBSERVER				(0x04)
 #define BLE_BROADCASTER				(0x05)
 
-#define DBG_LOG_CONT	printf_b11
+//#define DBG_LOG_CONT	printf_b11
+//
+//#define DBG_LOG		    printf_b11("\r\n");\
+						//printf_b11
 
-#define DBG_LOG		    printf_b11("\r\n");\
-						printf_b11
+#define DBG_LOG_CONT	printf
+
+#define DBG_LOG		    printf("\r\n");\
+						printf
 						
 #define UNUSED1(x) (void)(x)
 #define UNUSED2(x,y) (void)(x),(void)(y)

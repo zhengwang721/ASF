@@ -58,7 +58,7 @@
 /****************************************************************************************
 *							        Global	                                     		*
 ****************************************************************************************/
-int8_t tx_power_initial_value = DEFAULT_TX_PWR_VALUE;
+uint8_t tx_power_initial_value;
 
 
 
@@ -68,7 +68,7 @@ int8_t tx_power_initial_value = DEFAULT_TX_PWR_VALUE;
 
 void init_tx_power_service(gatt_service_handler_t *tx_power_serv )
 {
-	
+	tx_power_initial_value = DEFAULT_TX_PWR_VALUE;
 	tx_power_serv->serv_handle = 0;
 	tx_power_serv->serv_uuid.type = AT_BLE_UUID_16;
 	
@@ -89,7 +89,7 @@ void init_tx_power_service(gatt_service_handler_t *tx_power_serv )
 	tx_power_serv->serv_chars.properties = AT_BLE_CHAR_READ ; 
 	
 	/* value */
-	tx_power_serv->serv_chars.init_value =(uint8_t *) &tx_power_initial_value ; 
+	tx_power_serv->serv_chars.init_value = &tx_power_initial_value ; 
 	tx_power_serv->serv_chars.value_init_len = sizeof(int8_t);
 	tx_power_serv->serv_chars.value_max_len = sizeof(int8_t);
 	

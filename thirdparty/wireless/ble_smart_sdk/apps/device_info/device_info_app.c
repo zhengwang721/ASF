@@ -61,16 +61,23 @@
 
 #include "ble_manager.h"
 
+
+#define APP_STACK_SIZE	(1024)
+
+volatile unsigned char app_stack_patch[APP_STACK_SIZE];
+
+
 /* === GLOBALS ============================================================ */
-/** @brief Scan response data*/
-uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
-	
-bool volatile timer_cb_done = false; 
+bool volatile timer_cb_done; 
 uint8_t fw_version[10];
 at_ble_handle_t dis_conn_handle;
 dis_gatt_service_handler_t dis_service_handler;
+
 /* To keep the applicaiton in execution continuosly*/
 bool app_exec = true;
+
+static void ble_user_event(void);
+
 
 /**
 * \Timer callback handler called on timer expiry
@@ -80,13 +87,17 @@ static void timer_callback_handler(void)
 {
 	//Timer call back
 	timer_cb_done = true;
+	
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
 }
+
 
 /* Advertisement data set and Advertisement start */
 static at_ble_status_t device_information_advertise(void)
 {
 	uint8_t idx = 0;
 	uint8_t adv_data [ DIS_ADV_DATA_NAME_LEN + DIS_ADV_DATA_UUID_LEN   + (2*2)];
+	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 	
 	adv_data[idx++] = DIS_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
 	adv_data[idx++] = DIS_ADV_DATA_UUID_TYPE;
@@ -136,12 +147,12 @@ static void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 	timer_cb_done = false;
 	LED_Off(LED0);
 	device_information_advertise();
-        ALL_UNUSED(conn_handle);
 }
 
 void button_cb(void)
 {
 	/* For user usage */
+	DBG_LOG("button_cb");
 }
  
 /**
@@ -158,9 +169,12 @@ int main(void)
 	system_init();
 	#endif
 	
-	/* Initialize the button */
-	//button_init();
-	
+	timer_cb_done = false;
+	memset(fw_version, 0x00, 10);
+	memset(&dis_service_handler, 0x00, sizeof(dis_gatt_service_handler_t));
+	 
+	//platform_driver_init();
+
 	/* Initialize serial console */
 	serial_console_init();
 	
@@ -194,10 +208,23 @@ int main(void)
 	/* Register callback for disconnected event */
 	register_ble_disconnected_event_cb(ble_disconnected_app_event);
 	
+	register_ble_user_event_cb(ble_user_event);
+	
 	/* Capturing the events  */ 
 	while (app_exec) {
 		/* BLE Event Task */
-		ble_event_task();	
+		ble_event_task();
+	}	
+	return 0;
+}
+
+
+
+/**
+* callback handler called when AT_BLE_PLATFORM_EVENT is occured.
+*/
+static void ble_user_event(void)
+{
 		if (timer_cb_done)
 		{
 			static uint8_t fw_update;
@@ -212,9 +239,6 @@ int main(void)
 			UPDATE_FIRMWARE_REVISION(&dis_service_handler, &fw_info_data, dis_conn_handle);
 			fw_update++;
 			DBG_LOG("Updating Firmware to ver:%s", fw_version);
+			hw_timer_start(FIRMWARE_UPDATE_INTERVAL);
 		}
-			
-	}	
-	return 0;
 }
-

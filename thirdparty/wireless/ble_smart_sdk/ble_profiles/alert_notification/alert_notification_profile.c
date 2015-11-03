@@ -56,6 +56,7 @@
 #include "at_ble_api.h"
 #include "ble_manager.h"
 #include "ble_utils.h"
+#include "led.h"
 #include "alert_notification_profile.h"
 
 #if defined ANS_CLIENT_SERVICE
@@ -85,10 +86,6 @@ gatt_anp_handler_t anp_handle = {0,0,AT_BLE_SUCCESS,AT_BLE_SUCCESS,
 								AT_BLE_INVALID_PARAM, NULL};
 #endif
 
-static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 
-												0x28,0x75, 0x11, 0x6a, 0x7f,
-												0x7f};
-
 extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
 connected_callback_t connected_cb;
@@ -116,9 +113,42 @@ void register_connected_callback(connected_callback_t app_connected_cb)
  */
 void anp_client_init( void *params)
 {
+#if defined ANS_CLIENT_SERVICE
+	memset(supp_new_char_data, 0, ANS_SUP_NEW_READ_LENGTH);
+	memset(new_alert_char_data, 0, ANS_NEW_ALERT_READ_LENGTH);
+	memset(supp_unread_char_data, 0, ANS_SUP_UNREA_READ_LENGTH);
+	memset(unread_alert_char_data, 0, ANS_UNREA_ALERT_READ_LENGTH);
+	memset(alert_np_char_data, 0, ANS_ALERT_NP_READ_LENGTH);
+
+	memset(&anp_handle , 0, sizeof(gatt_anp_handler_t));
+
+	anp_handle.start_handle = 0;
+	anp_handle.end_handle = 0;
+	anp_handle.char_discovery = AT_BLE_SUCCESS;
+	anp_handle.desc_discovery = AT_BLE_SUCCESS;
+	anp_handle.supp_new_char_handle = AT_BLE_INVALID_PARAM;
+	anp_handle.supp_new_char_data = NULL;
+	anp_handle.new_alert_char_handle = AT_BLE_INVALID_PARAM;
+	anp_handle.new_alert_char_data = NULL;
+	anp_handle.new_alert_desc_handle = AT_BLE_INVALID_PARAM;
+	anp_handle.supp_unread_char_handle = AT_BLE_INVALID_PARAM;
+	anp_handle.supp_unread_char_data = NULL;
+	anp_handle.unread_alert_char_handle = AT_BLE_INVALID_PARAM;
+	anp_handle.unread_alert_char_data = NULL;
+	anp_handle.unread_alert_desc_handle = AT_BLE_INVALID_PARAM;
+	anp_handle.alert_np_char_handle = AT_BLE_INVALID_PARAM;
+	anp_handle.alert_np_data = NULL;
+#endif
+	
+	connected_cb = 0;
+	start_notification = 0;
+
 	anp_info_init();
+
+	anp_alert_init();
+	
 	anp_client_adv();
-	UNUSED(params);
+//	UNUSED(params);
 }
 
 /**
@@ -143,10 +173,11 @@ void anp_info_init(void)
 void anp_client_adv(void)
 {
 	uint8_t idx = 0;
-	uint16_t adv_service_uuid;
+	uint16_t adv_service_uuid = 0;
+	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xFF, 0x00, 0x06, 0x28,0x75, 0x11, 0x6a, 0x7f, 0x7f};
 	
 	adv_service_uuid = ANP_SERVICE_UUID ;
-	uint8_t adv_data[ANP_ADV_DATA_NAME_LEN + ANP_ADV_DATA_UUID_LEN  + 2*2];
+	uint8_t adv_data[ANP_ADV_DATA_NAME_LEN + ANP_ADV_DATA_UUID_LEN  + 2*2] = {0,};
 	
 	// Prepare ADV Data
 	adv_data[idx++] = ANP_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
@@ -203,7 +234,7 @@ at_ble_status_t anp_info_service_discover(at_ble_connected_t *conn_params)
 void anp_client_connected_state_handler(at_ble_connected_t *params)
 {
 	connected_cb(true);
-	ALL_UNUSED(params);  //To avoid compiler warning
+//	ALL_UNUSED(params);  //To avoid compiler warning
 }
 
 /**
@@ -283,7 +314,7 @@ void anp_client_discovery_complete_handler(at_ble_discovery_complete_t *discover
  */
 void anp_client_service_found_handler(at_ble_primary_service_found_t * primary_service_params)
 {
-	at_ble_uuid_t *anp_service_uuid;
+	at_ble_uuid_t *anp_service_uuid = 0;
 	anp_service_uuid = &primary_service_params->service_uuid;
 	
 	if	(anp_service_uuid->type == AT_BLE_UUID_16) {
@@ -313,7 +344,7 @@ void anp_client_service_found_handler(at_ble_primary_service_found_t * primary_s
  */
 void anp_client_characteristic_found_handler(at_ble_characteristic_found_t *characteristic_found)
 {
-	uint16_t charac_16_uuid;
+	uint16_t charac_16_uuid = 0;
 	DBG_LOG_DEV("The characteristic type is %d",characteristic_found->char_uuid.type);
 	
 	charac_16_uuid = (uint16_t)((characteristic_found->char_uuid.uuid[0]) | \
@@ -423,7 +454,7 @@ void anp_client_characteristic_found_handler(at_ble_characteristic_found_t *char
  */
 void anp_client_descriptor_found_handler(at_ble_descriptor_found_t *descriptor_found)
 {
-		uint16_t desc_16_uuid;
+		uint16_t desc_16_uuid = 0;
 		if(descriptor_found->desc_uuid.type == AT_BLE_UUID_16) {
 			desc_16_uuid = (uint16_t)((descriptor_found->desc_uuid.uuid[0]) | \
 			(descriptor_found->desc_uuid.uuid[1] << 8));
@@ -469,7 +500,7 @@ void anp_client_disconnected_event_handler(at_ble_disconnected_t *params)
 		DBG_LOG("Device in Advertisement mode");
 	}
 
-	ALL_UNUSED(params);  //To avoid compiler warning
+//	ALL_UNUSED(params);  //To avoid compiler warning
 }
 
 
@@ -513,7 +544,7 @@ void anp_client_security_done_handler(void *param)
 	if(anp_alert_read(ble_connected_dev_info[0].handle,
 						anp_handle.supp_new_char_handle) == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("Support New Alert info request success");
-		LED_Toggle(LED0);
+		LED_Toggle();
 	}
 	
 	if(anp_alert_read( ble_connected_dev_info[0].handle, 
@@ -522,7 +553,7 @@ void anp_client_security_done_handler(void *param)
 	}
 	
 	DBG_LOG_DEV("Waiting for read response");
-	UNUSED(param);
+//	UNUSED(param);
 }
 
 /**
@@ -576,7 +607,7 @@ void anp_client_disable_notification(void)
  */
 void anp_client_read_response_handler(at_ble_characteristic_read_response_t *char_read_resp)
 {
-	uint8_t read_status;
+	uint8_t read_status = 0;
 	
 	#if defined ANS_CLIENT_SERVICE
 	    read_status = anp_alert_read_response(char_read_resp,&anp_handle);

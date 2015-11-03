@@ -247,6 +247,7 @@ typedef enum
 ///TX Power levels
 typedef enum
 {
+    AT_BLE_TX_PWR_LVL_NEG_55_DB = 0x00,
     AT_BLE_TX_PWR_LVL_NEG_20_DB = 0x01,
     AT_BLE_TX_PWR_LVL_NEG_14_DB = 0x02,
     AT_BLE_TX_PWR_LVL_NEG_11_DB = 0x03,
@@ -414,7 +415,7 @@ typedef enum
       */
     AT_BLE_SERVICE_CHANGED_INDICATION_SENT,
     /** The peer asks for a write Authorization. \n
-      * Refer to @ref at_ble_write_authorize_request_t
+      * Refer to @ref at_ble_characteristic_write_request_t
       */
     AT_BLE_WRITE_AUTHORIZE_REQUEST,
     /**  peer sends an indication of the new MTU. \n
@@ -1531,6 +1532,16 @@ typedef struct
     at_ble_handle_t handle;
     ///connection status, refer to @ref at_ble_status_t
     at_ble_status_t conn_status;
+	///Structure to save slave connection parameters
+	struct  
+	{
+		/// Connection interval
+		uint16_t con_interval;
+		/// Connection latency
+		uint16_t con_latency;
+		/// Link supervision timeout
+		uint16_t sup_to;
+	}conn_params;
 } at_ble_connected_t;
 
 /**@brief Handle and Status of disconnected peer
@@ -1700,37 +1711,48 @@ typedef struct
     /// refer to @ref at_ble_operation
     uint8_t operation;
 } at_ble_characteristic_read_response_t;
+
 typedef struct
 {
     at_ble_handle_t conn_handle;
     at_ble_handle_t char_handle;
 } at_ble_characteristic_read_req_t;
 
+/**@brief Structure received when write to a characteristic is required.
+*/
 typedef struct
 {
+	///Connection handle
     at_ble_handle_t conn_handle;
+	///Characteristic handle
     at_ble_handle_t char_handle;
+	///Data offset
     uint16_t offset;
+	///Data length
     uint16_t length;
+	///Data with maximum length @ref AT_BLE_MAX_ATT_LEN
     uint8_t value[AT_BLE_MAX_ATT_LEN];
-} at_ble_characteristic_write_req_t;
+} at_ble_characteristic_write_request_t;
 
 typedef struct
 {
+	///Characteristic handle
     at_ble_handle_t char_handle;
 } at_ble_att_info_req_t;
 
 typedef struct
 {
+	///Connection handle
     at_ble_handle_t conn_handle;
+	///Characteristic handle
     at_ble_handle_t char_handle;
+	///Status of write operation, refer to @ref at_ble_status_t
     at_ble_status_t status;
-
 } at_ble_characteristic_write_response_t;
-
 
 typedef struct
 {
+	///Connection handle
     at_ble_handle_t conn_handle;
     /// length of packet to send
     uint8_t         char_len;
@@ -1742,21 +1764,24 @@ typedef struct
 
 typedef struct
 {
+	///Connection handle
     at_ble_handle_t conn_handle;
     /// length of packet to send
     uint8_t         char_len;
     /// characteristic handle
     at_ble_handle_t char_handle;
-    /// data value
+    /// data value with maximum length @ref AT_BLE_MAX_ATT_LEN
     uint8_t         char_value[AT_BLE_MAX_ATT_LEN];
 } at_ble_indication_recieved_t;
 
 typedef struct
 {
+	///Connection handle
     at_ble_handle_t conn_handle;
+	///Characteristic handle
     at_ble_handle_t char_handle;
+	///Status of indicating operation, refer to @ref at_ble_status_t
     at_ble_status_t status;
-
 } at_ble_indication_confirmed_t;
 
 typedef struct
@@ -1767,7 +1792,6 @@ typedef struct
     uint16_t char_len;
     uint8_t char_new_value[AT_BLE_MAX_ATT_LEN];
     at_ble_status_t status;
-
 } at_ble_characteristic_changed_t;
 
 typedef struct
@@ -1775,14 +1799,6 @@ typedef struct
     at_ble_handle_t conn_handle;
     uint16_t        cfg;
 } at_ble_characteristic_configuration_changed_t;
-
-typedef struct
-{
-    at_ble_handle_t conn_handle;
-    at_ble_handle_t char_handle;
-    at_ble_status_t status;
-
-} at_ble_write_authorize_request_t;
 
 typedef struct
 {
@@ -2515,7 +2531,7 @@ at_ble_status_t at_ble_adv_stop(void);
  * @param[in] mode     Either General, Limited or Observer only, @ref at_ble_scan_mode_t for more details
  * @param[in] filter_whitelist     If true, get scan results only from white-listed devices added by @ref at_ble_whitelist_add
  *                                 otherwise scan results will be got from any advertising device.
- *                                 This filter should be used with @ref AT_BLE_ADV_GEN_DISCOVERABLE and @ref AT_BLE_ADV_LIM_DISCOVERABLE modes ONLY.
+ *                                 This filter should not be used with @ref AT_BLE_ADV_GEN_DISCOVERABLE and @ref AT_BLE_ADV_LIM_DISCOVERABLE modes ONLY.
  * @param[in] filter_dublicates   If true, scan event will be generated only once per device, if false multiple events will be issued
  *
  * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
@@ -2667,8 +2683,13 @@ at_ble_status_t at_ble_disconnect(at_ble_handle_t handle, at_ble_disconnect_reas
 
 
 /** @ingroup gap_conn_group
- *@brief Update the connection parameters of an ongoing connection
- *
+ *@brief Update the connection parameters of an ongoing connection. \n
+ * Connection parameter update command can be used by both master and slave of the connection. \n
+ * For master of the connection, new connection parameters will be applied immediately.\n
+ * For slave of the connection, a connection update message request will be send to master. Then
+ * master will be able to accept or refuse those parameters within 30 seconds otherwise link is automatically disconnected.
+ * 
+ * @note 
  * This API returns after programming the new values but before they take effect,
  * actual effect of the parameters is marked by the event @ref AT_BLE_CONN_PARAM_UPDATE_DONE
  *
@@ -3329,17 +3350,15 @@ at_ble_status_t at_ble_read_authorize_reply(at_ble_handle_t conn_handle,
 /** @ingroup gatt_server_group
  *@brief Replies to a write authorization request requested by by @ref AT_BLE_WRITE_AUTHORIZE_REQUEST event
  *
- * @param[in] conn_handle handle of the connection
- * @param[in] attr_handle handle of the attribute to write
- * @param[in] grant_authorization if True, Authorization is granted
+ * @param[in] param handle @ref at_ble_characteristic_write_request_t struct
+ * @param[in] status @ref AT_BLE_SUCCESS to grant write, Otherwise @ref at_ble_status_t
  *
  * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
  */
 ///@cond IGNORE_DOXYGEN
 AT_BLE_API
 ///@endcond
-at_ble_status_t at_ble_write_authorize_reply(at_ble_handle_t conn_handle,
-        at_ble_handle_t attr_handle, bool grant_authorization);
+at_ble_status_t at_ble_write_authorize_reply(at_ble_characteristic_write_request_t *param, at_ble_status_t status);
 
 
 /**@ingroup l2cap_group

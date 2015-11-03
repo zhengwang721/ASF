@@ -15,7 +15,12 @@
 
 		<build type="header-file" value="conf_timer.h"/>
 		<build type="header-file" value="conf_at30tse75x.h"/>
+		<build type="header-file" value="conf_dualtimer.h"/>
+		<build type="header-file" value="conf_uart_serial.h"/>
 
+		<require idref="sam0.drivers.dualtimer"/>
+		<require idref="sam0.utils"/>
+		<require idref="sam0.utils.stdio.stdio_serial"/>
 		<!--require idref="common.services.basic.serial"/-->
 		<!--require idref="sam0.utils.stdio.stdio_serial"/-->
 		<require idref="sam0.drivers.uart"/>

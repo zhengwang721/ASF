@@ -5,6 +5,10 @@
 		<build type="include-path"  value="./"/>
   		<build type="header-file"   value="pas_client.h"/>
   		<build type="c-source"      value="pas_client.c"/>
+		
+		<build type="header-file"   value="pas_server.h"/>
+  		<build type="c-source"      value="pas_server.c"/>
+		
   		<build type="define" name="PAS_CLIENT" value=""/>
   		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.phone_alert_status"/>
   		

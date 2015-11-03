@@ -112,6 +112,8 @@ typedef struct gatt_anp_handler
 }gatt_anp_handler_t;
 
 
+void anp_alert_init(void);
+
 /**
  * @brief invoked by the profile for enabling or disabling notifications
  * @param[in] at_ble_handle_t connection handle

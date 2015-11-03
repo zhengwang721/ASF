@@ -52,7 +52,6 @@
  * This is the reference manual for the Custom Serial Chat Profile
  */
 /*- Includes ---------------------------------------------------------------*/
-#include <asf.h>
 
 #include "string.h"
 #include "ble_utils.h"
@@ -60,8 +59,6 @@
 #include "cscp.h"
 #include "cscs.h"
 
-/* Scan response data */
-uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 	
 /*Profile Information*/
 app_csc_data_t app_csc_info;	
@@ -74,6 +71,9 @@ recv_ntf_callback_t recv_ntf_cb;
 */
 void csc_prf_buf_init(uint8_t *databuf, uint16_t datalen)
 {
+	memset(&app_csc_info, 0, sizeof(app_csc_data_t));
+	recv_ntf_cb = 0;
+
 	app_csc_info.buff_ptr = databuf;
 	app_csc_info.buff_len = datalen;
 }
@@ -82,9 +82,9 @@ void csc_prf_buf_init(uint8_t *databuf, uint16_t datalen)
 * \CSC profile initialization function
 */
 void csc_prf_init(void *param)
-{ 
+{
 	csc_serv_init(app_csc_info.buff_ptr, app_csc_info.buff_len);
-    ALL_UNUSED(param);
+    //ALL_UNUSED(param);
 }
 
 /**
@@ -105,7 +105,12 @@ void csc_prf_send_data(uint8_t *databuf, uint16_t datalen)
 void csc_prf_dev_adv(void)
 {
 	uint8_t idx = 0;
-	uint8_t adv_data[ADV_DATA_NAME_LEN  + CSC_UUID_128_LEN + 2*2];
+	uint8_t adv_data[ADV_DATA_NAME_LEN  + CSC_UUID_128_LEN + 2*2] = {0,};
+	/* Scan response data */
+	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
+
+	memset(adv_data, 0, ADV_DATA_NAME_LEN  + CSC_UUID_128_LEN + 2*2);
+
     // Prepare ADV Data
 	adv_data[idx++] = ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
 	adv_data[idx++] = ADV_DATA_NAME_TYPE;
@@ -133,7 +138,7 @@ void csc_prf_dev_adv(void)
  */
 void csc_prf_connected_state_handler(at_ble_connected_t *params)
 {
-	at_ble_status_t status;
+	at_ble_status_t status = AT_BLE_SUCCESS;
 	memcpy((uint8_t *)&app_csc_info.conn_params, params, sizeof(at_ble_connected_t));
 	if(!app_csc_info.devicedb){		
 		app_csc_info.discover_role = DISCOVER_SERVICE;	
@@ -152,31 +157,33 @@ void csc_prf_connected_state_handler(at_ble_connected_t *params)
  */
 void csc_prf_discovery_complete_handler(at_ble_discovery_complete_t *params)
 {
-		at_ble_discovery_complete_t discover_status;
-		memcpy((uint8_t *)&discover_status, params, sizeof(at_ble_discovery_complete_t));
-		if(discover_status.status == AT_DISCOVER_SUCCESS){
-			if(discover_status.operation == AT_BLE_DISC_BY_UUID_SVC){
-				DBG_LOG_DEV("Discover Characteristic Info:\r\n -->ConnHandle 0x%02x\r\n -->start handle 0x%02x\r\n -->End handle : 0x%02x",
-				app_csc_info.csc_serv.conn_handle,
-				app_csc_info.csc_serv.start_handle,
-				app_csc_info.csc_serv.end_handle);				
-				if(at_ble_characteristic_discover_all(app_csc_info.conn_params.handle, app_csc_info.csc_serv.start_handle, app_csc_info.csc_serv.end_handle) != AT_BLE_SUCCESS){
-					DBG_LOG("Fail to start discover characteristic");
-				}
-			}
-			else if(discover_status.operation == AT_BLE_DISC_ALL_CHAR){
-				if(at_ble_descriptor_discover_all(app_csc_info.csc_char.conn_handle,(app_csc_info.csc_char.value_handle+1), (app_csc_info.csc_serv.end_handle)) != AT_BLE_SUCCESS){
-					DBG_LOG("Descriptor Discovery Failed");
-				}
-			}
-			else if(discover_status.operation == AT_BLE_DISC_DESC_CHAR){
-				app_csc_info.devicedb = true;
-				DBG_LOG_DEV("Send Slave Security Request");
-				if(at_ble_send_slave_sec_request(app_csc_info.conn_params.handle,true,true) != AT_BLE_SUCCESS){
-					DBG_LOG("Fail to start security procedure");
-				}
+	at_ble_discovery_complete_t discover_status;
+	memset(&discover_status, 0, sizeof(at_ble_discovery_complete_t));
+
+	memcpy((uint8_t *)&discover_status, params, sizeof(at_ble_discovery_complete_t));
+	if(discover_status.status == AT_DISCOVER_SUCCESS){
+		if(discover_status.operation == AT_BLE_DISC_BY_UUID_SVC){
+			DBG_LOG_DEV("Discover Characteristic Info:\r\n -->ConnHandle 0x%02x\r\n -->start handle 0x%02x\r\n -->End handle : 0x%02x",
+			app_csc_info.csc_serv.conn_handle,
+			app_csc_info.csc_serv.start_handle,
+			app_csc_info.csc_serv.end_handle);				
+			if(at_ble_characteristic_discover_all(app_csc_info.conn_params.handle, app_csc_info.csc_serv.start_handle, app_csc_info.csc_serv.end_handle) != AT_BLE_SUCCESS){
+				DBG_LOG("Fail to start discover characteristic");
 			}
 		}
+		else if(discover_status.operation == AT_BLE_DISC_ALL_CHAR){
+			if(at_ble_descriptor_discover_all(app_csc_info.csc_char.conn_handle,(app_csc_info.csc_char.value_handle+1), (app_csc_info.csc_serv.end_handle)) != AT_BLE_SUCCESS){
+				DBG_LOG("Descriptor Discovery Failed");
+			}
+		}
+		else if(discover_status.operation == AT_BLE_DISC_DESC_CHAR){
+			app_csc_info.devicedb = true;
+			DBG_LOG_DEV("Send Slave Security Request");
+			if(at_ble_send_slave_sec_request(app_csc_info.conn_params.handle,true,true) != AT_BLE_SUCCESS){
+				DBG_LOG("Fail to start security procedure");
+			}
+		}
+	}
 }
 
 /**
@@ -200,7 +207,7 @@ void csc_prf_characteristic_found_handler(at_ble_characteristic_found_t *params)
  */
 void csc_prf_descriptor_found_handler(at_ble_descriptor_found_t *params)
 {
-		memcpy((uint8_t *)&app_csc_info.csc_desc, params, sizeof(at_ble_descriptor_found_t));
+	memcpy((uint8_t *)&app_csc_info.csc_desc, params, sizeof(at_ble_descriptor_found_t));
 }
 
 /**
@@ -208,13 +215,17 @@ void csc_prf_descriptor_found_handler(at_ble_descriptor_found_t *params)
  */
 void csc_prf_notification_handler(at_ble_notification_recieved_t *params)
 {
-	 at_ble_notification_recieved_t notif;
-	 csc_report_ntf_t ntf_info;
-	 memcpy((uint8_t *)&notif, params, sizeof(at_ble_notification_recieved_t));
-	 ntf_info.conn_handle = notif.conn_handle;
-	 ntf_info.recv_buff_len = notif.char_len;
-	 ntf_info.recv_buff = &notif.char_value[0];
-	 recv_ntf_cb(&ntf_info);
+	at_ble_notification_recieved_t notif;
+	csc_report_ntf_t ntf_info;
+
+	memset(&notif, 0, sizeof(at_ble_notification_recieved_t));
+	memset(&ntf_info, 0, sizeof(csc_report_ntf_t));
+	 
+	memcpy((uint8_t *)&notif, params, sizeof(at_ble_notification_recieved_t));
+	ntf_info.conn_handle = notif.conn_handle;
+	ntf_info.recv_buff_len = notif.char_len;
+	ntf_info.recv_buff = &notif.char_value[0];
+	recv_ntf_cb(&ntf_info);
 }
 
 /**
@@ -226,7 +237,7 @@ void csc_prf_write_notification_handler(void *param)
 	if(at_ble_characteristic_write(app_csc_info.csc_desc.conn_handle, app_csc_info.csc_desc.desc_handle, 0, 2, data, false, true) == AT_BLE_FAILURE){
 		DBG_LOG("\r\nFailed to send characteristic Write Request");
 	}
-	UNUSED(param);
+//	UNUSED(param);
 }
 
 /**
@@ -243,7 +254,7 @@ at_ble_status_t csc_prf_disconnect_event_handler(at_ble_disconnected_t *disconne
 		DBG_LOG("Device Started Advertisement");
 	}
 	app_csc_info.devicedb = false;
-    ALL_UNUSED(disconnect);
+    //ALL_UNUSED(disconnect);
 	return AT_BLE_SUCCESS;
 }
 

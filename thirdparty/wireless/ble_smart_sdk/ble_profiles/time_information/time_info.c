@@ -86,8 +86,7 @@ uint8_t lti_char_data[CTS_READ_LENGTH];
 /**@brief CTS Characteristic Value array*/
 uint8_t rti_char_data[CTS_READ_LENGTH];
 /**@brief CTS Service Handle*/
-gatt_cts_handler_t cts_handle = {0, 0, AT_BLE_INVALID_PARAM, AT_BLE_INVALID_PARAM, 
-								0, NULL, 0, 0, NULL, 0, NULL};
+gatt_cts_handler_t cts_handle = {0, 0, AT_BLE_INVALID_PARAM, AT_BLE_INVALID_PARAM, 0, NULL, 0, 0, NULL, 0, NULL};
 #endif
 
 #if defined NEXT_DST_SERVICE
@@ -108,9 +107,6 @@ uint8_t tp_state_char_data[RTU_TP_CP_READ_LENGTH];
 gatt_rtu_handler_t rtu_handle = {0, 0, AT_BLE_INVALID_PARAM, 0, NULL, 0, NULL};
 #endif
 
-/**@breif Scan Response packet*/
-static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xFF, 0x00, 0x06, 0x25, 
-											  0x75, 0x11, 0x6a, 0x7f, 0x7f};
 /**@breif Peer Connected device info*/
 extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 
@@ -134,7 +130,8 @@ void time_info_adv()
 {
 	/* memory allocation for advertisement data*/
 	uint8_t idx = 0;
-	uint8_t adv_data[TP_ADV_DATA_NAME_LEN + TP_ADV_DATA_APPEARANCE_LEN + (2*2)];
+	uint8_t adv_data[TP_ADV_DATA_NAME_LEN + TP_ADV_DATA_APPEARANCE_LEN + (5*2)];
+	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xFF, 0x00, 0x06, 0x25,  0x75, 0x11, 0x6a, 0x7f, 0x7f};
 	
 	// Prepare ADV Data
 	adv_data[idx++] = CT_ADV_DATA_UUID_LEN + NEXT_DST_ADV_DATA_UUID_LEN + 
@@ -195,7 +192,6 @@ void time_info_init(void *param)
 	#endif
 	
 	time_info_adv();
-    UNUSED(param);
 }
 
 /**
@@ -529,7 +525,7 @@ void time_info_disconnected_event_handler(at_ble_disconnected_t *disconnect)
 	} else {
 		DBG_LOG("BLE Started Adv");
 	}	
-        UNUSED(disconnect);
+
 }
 
 /**
@@ -550,7 +546,6 @@ void time_info_write_notification_handler(void *param)
 		}
 	}
 	#endif		
-	UNUSED(param);
 }
 
 /**
@@ -570,7 +565,6 @@ void time_info_pair_done_handler(at_ble_pair_done_t *pair_done_param)
 	if (bonding_cb) {
 		bonding_cb(true);		
 	}
-    UNUSED(pair_done_param);
 }
 
 /**
@@ -591,5 +585,4 @@ void time_info_encryption_status_changed_handler(at_ble_encryption_status_change
 	if (bonding_cb) {
 		bonding_cb(true);
 	}
-    UNUSED(param);
 }

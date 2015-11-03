@@ -72,6 +72,8 @@ bool volatile sps_notification_flag = false;
  */
 void sps_init_service(sps_gatt_service_handler_t *sps_serv, uint16_t *scan_interval_window, uint8_t *scan_refresh)
 {
+		sps_notification_flag = false;
+	
 		sps_serv->serv_handle= 0;
 		sps_serv->serv_uuid.type= AT_BLE_UUID_16;
 		sps_serv->serv_uuid.uuid[0]= (uint8_t)SPS_SERVICE_UUID;
@@ -188,6 +190,8 @@ at_ble_status_t	sps_char_changed_event(sps_gatt_service_handler_t *sps_service_h
 		if(change_params.char_new_value[0])
 		{
 			sps_notification_flag = true;
+			
+#ifndef SAMB11		//stuck when try sending notification in here on SAMB11 
 			if((at_ble_notification_send(ble_connected_dev_info[0].handle, sps_service_handler->serv_chars[1].char_val_handle)) == AT_BLE_FAILURE) {
 				DBG_LOG("sending notification failed");
 				return AT_BLE_FAILURE;
@@ -198,6 +202,8 @@ at_ble_status_t	sps_char_changed_event(sps_gatt_service_handler_t *sps_service_h
 				*flag = false;
 				return AT_BLE_SUCCESS;
 			}
+#endif
+
 		}
 		else
 		{

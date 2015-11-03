@@ -316,10 +316,17 @@ static uint8_t client_conf_define(at_ble_handle_t att_handle, at_ble_attr_permis
     uint8_t temp_buff[2] = {0x00, 0x00};
 	uint8_t status;		
     FN_IN();
+		/* for workaround by kevin
     status = gattm_att_set_value_req_handler(att_handle, 2, temp_buff);
     if(AT_BLE_SUCCESS == status)
     {
 	    status = db_addATT(att_handle, temp_buff, 2, perm);
+	}
+		*/
+		status = db_addATT(att_handle, temp_buff, 2, perm);
+    if(AT_BLE_SUCCESS == status)
+    {
+	    status = gattm_att_set_value_req_handler(att_handle, 2, temp_buff);
 	}
 	FN_OUT(status);
     return status;

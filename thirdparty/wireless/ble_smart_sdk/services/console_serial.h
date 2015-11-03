@@ -5,8 +5,8 @@
 
 void serial_console_init();
 
-int getchar_b11();
+//int getchar_b11();
 
-int printf_b11( const char* format, ... );
+//int printf_b11( const char* format, ... );
 
 #endif /* COSOLE_SERIAL_H */

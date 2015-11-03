@@ -44,6 +44,10 @@
 			<device-support value="samg55"/>
 			<device-support value="samda1"/>
 			<device-support value="saml22"/>
+			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="sams70"/>
+			<device-support value="same70"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.hid.device.mouse.composite#disable" caption="USB Device HID Mouse disabled">
@@ -101,6 +105,10 @@
 		<device-support value="samg55"/>
 		<device-support value="samda1"/>
 		<device-support value="saml22"/>
+		<device-support value="samv71"/>
+		<device-support value="samv70"/>
+		<device-support value="sams70"/>
+		<device-support value="same70"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>
 	<module type="meta" id="common.services.usb.class.hid.device.mouse.appnote" caption="USB Device HID Mouse (Application Note)">

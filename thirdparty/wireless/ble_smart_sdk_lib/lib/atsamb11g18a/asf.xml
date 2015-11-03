@@ -20,7 +20,7 @@
 		<build type="library" subtype="user" value="gcc/libblusdksdk.a" toolchain="avrgcc"/>
 
 		<build type="doxygen-entry-point" value="ble_smart_stack_group"/>
-		
+
 		<generator value="iarewarm"/>
 		<generator value="armgcc" />
 		<generator value="as5_arm" />

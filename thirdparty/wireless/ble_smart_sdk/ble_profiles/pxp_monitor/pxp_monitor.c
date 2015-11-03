@@ -52,11 +52,11 @@
 * This is the reference manual for the Proximity Monitor Profile
 */
 /*- Includes ---------------------------------------------------------------*/
-#include <asf.h>
-#include "platform.h"
+
 #include "console_serial.h"
 #include "timer_hw.h"
 #include "pxp_monitor.h"
+#include <stdio.h>
 
 #if defined TX_POWER_SERVICE
 #include "tx_power.h"
@@ -100,13 +100,46 @@ gatt_ias_char_handler_t ias_handle =
 uint8_t ias_char_data[MAX_IAS_CHAR_SIZE];
 #endif
 
+static void init_global_vars(void)
+{
+	memset(&pxp_reporter_address, 0, sizeof(at_ble_addr_t));
+
+	memset(pxp_supp_scan_index, 0, sizeof(uint8_t) * MAX_SCAN_DEVICE);
+	scan_index = 0;
+
+	pxp_connect_request_flag = false;
+
+#if defined TX_POWER_SERVICE
+	memset(&txps_handle, 0, sizeof(gatt_txps_char_handler_t));
+	txps_handle.char_discovery = AT_BLE_INVALID_PARAM;
+
+	memset(tx_power_char_data, 0, sizeof(uint8_t) * MAX_TX_POWER_CHAR_SIZE);
+#endif
+
+#if defined LINK_LOSS_SERVICE
+	memset(&lls_handle, 0, sizeof(gatt_lls_char_handler_t));
+	lls_handle.char_discovery = AT_BLE_INVALID_PARAM;
+
+	memset(lls_char_data, 0, sizeof(uint8_t) * MAX_LLS_CHAR_SIZE);
+#endif
+
+#if defined IMMEDIATE_ALERT_SERVICE
+	memset(&ias_handle, 0, sizeof(gatt_ias_char_handler_t));
+	ias_handle.char_discovery = AT_BLE_INVALID_PARAM;
+
+	memset(ias_char_data, 0, sizeof(uint8_t) * MAX_IAS_CHAR_SIZE);
+#endif
+}
+
+
 /* *@brief Initializes Proximity profile
 * handler Pointer reference to respective variables
 *
 */
 void pxp_monitor_init(void *param)
 {
-	UNUSED(param);
+	init_global_vars();
+
 	lls_handle.char_data = lls_char_data;
 	ias_handle.char_data = ias_char_data;
 	txps_handle.char_data = tx_power_char_data;	
@@ -220,7 +253,7 @@ uint8_t scanned_dev_count)
 			deci_index+=PXP_ASCII_TO_DECIMAL_VALUE;
 			do {
 				DBG_LOG("Select Index number to Connect or [s] to scan");
-				index = getchar_b11();
+				GET_CHAR(&index);
 				DBG_LOG("%c", index);
 			} while (!(((index < (deci_index)) && (index >='0')) || (index == 's')));	
 			
@@ -236,7 +269,7 @@ uint8_t scanned_dev_count)
 		do
 		{
 			DBG_LOG("Select [s] to scan again");
-			index = getchar_b11();
+			GET_CHAR(&index);
 			DBG_LOG("%c", index);
 		} while (!(index == 's')); 
 		
@@ -267,7 +300,7 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 	do
 	{
 		DBG_LOG("Select [r] to Reconnect or [s] Scan");
-		index_value = getchar_b11();
+		GET_CHAR(&index_value);
 		DBG_LOG("%c", index_value);
 	}	while (!((index_value == 'r') || (index_value == 's')));
 	
@@ -284,7 +317,7 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 	else if(index_value == 's') {
 		return gap_dev_scan();
 	}
-	ALL_UNUSED(disconnect);
+	//ALL_UNUSED(disconnect);
 	return AT_BLE_FAILURE;
 }
 

@@ -60,14 +60,46 @@
 #include "ble_manager.h"
 //#include "conf_extint.h"
 
+/****************************************************************************************
+*							        Macros	                                     		*
+****************************************************************************************/
+/** @brief APP_BAS_FAST_ADV between 0x0020 and 0x4000 in 0.625 ms units (20ms to 10.24s). */
+#define APP_BAS_FAST_ADV				(100) //100 ms
+
+/** @brief APP_BAS_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
+#define APP_BAS_ADV_TIMEOUT				(1000) // 100 Secs
+
+/** @brief scan_resp_len is the length of the scan response data */
+#define SCAN_RESP_LEN					(10)
+
+/** @brief ADV_DATA_LEN */
+#define ADV_DATA_LEN					(18)
+
+/** @brief ADV_TYPE_LEN */
+#define ADV_TYPE_LEN					(0x01)
+
+/** @brief BAS_ADV_DATA_UUID_LEN the size of  BAS service uuid */
+#define BAS_ADV_DATA_UUID_LEN			(2)
+
+/** @brief BAS_ADV_DATA_UUID_TYPE the total sizeof BAS service uuid*/
+#define BAS_ADV_DATA_UUID_TYPE			(0x03)
+
+/** @brief BAS_ADV_DATA_NAME_LEN the  length of the device name */
+#define BAS_ADV_DATA_NAME_LEN			(9)
+
+/** @brief BAS_ADV_DATA_NAME_TYPE the gap ad data type */
+#define BAS_ADV_DATA_NAME_TYPE			(0x09)
+
+/* @brief BAS_ADV_DATA_NAME_DATA the actual name of device */
+#define BAS_ADV_DATA_NAME_DATA			("ATMEL-BAS")
+
 /* === GLOBALS ============================================================ */
 
 #define BATTERY_UPDATE_INTERVAL	(1) //1 second
 #define BATTERY_MAX_LEVEL		(100)
 #define BATTERY_MIN_LEVEL		(0)
 
-/** @brief Scan response data*/
-uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
+volatile unsigned char app_stack_patch[1024];
 	
 uint8_t db_mem[1024] = {0};
 bat_gatt_service_handler_t bas_service_handler;
@@ -81,14 +113,15 @@ bool volatile battery_flag = true;
 */
 static void timer_callback_handler(void)
 {
-	//Timer call back
 	timer_cb_done = true;
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
 }
 
 /* Advertisement data set and Advertisement start */
 static at_ble_status_t battery_service_advertise(void)
 {
 	uint8_t idx = 0;
+	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 	uint8_t adv_data [ BAS_ADV_DATA_NAME_LEN + BAS_ADV_DATA_UUID_LEN   + (2*2)];
 	
 	adv_data[idx++] = BAS_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
@@ -127,19 +160,16 @@ static at_ble_status_t battery_service_advertise(void)
 /* Callback registered for AT_BLE_PAIR_DONE event from stack */
 static void ble_paired_app_event(at_ble_handle_t conn_handle)
 {
-	timer_cb_done = false;
-	hw_timer_start(BATTERY_UPDATE_INTERVAL);
-  ALL_UNUSED(conn_handle);
+	
 }
 
 /* Callback registered for AT_BLE_DISCONNECTED event from stack */
 static void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 {
+	flag = false;
 	timer_cb_done = false;
-	flag = true;
 	hw_timer_stop();
 	battery_service_advertise();
-  ALL_UNUSED(conn_handle);
 }
 
 /* Callback registered for AT_BLE_NOTIFICATION_CONFIRMED event from stack */
@@ -155,7 +185,16 @@ static void ble_notification_confirmed_app_event(at_ble_cmd_complete_event_t *no
 /* Callback registered for AT_BLE_CHARACTERISTIC_CHANGED event from stack */
 static at_ble_status_t ble_char_changed_app_event(at_ble_characteristic_changed_t *char_handle)
 {
-	return bat_char_changed_event(&bas_service_handler, char_handle, &flag);
+	bat_char_changed_event( &bas_service_handler, char_handle,&flag);	
+	
+	if( flag )
+	{
+		hw_timer_start(BATTERY_UPDATE_INTERVAL);
+	}
+	else
+	{
+		hw_timer_stop();
+	}
 }
 
 void button_cb(void)
@@ -180,6 +219,13 @@ int main(void)
 	system_init();
 	#endif
 	
+	memset(db_mem, 0, sizeof(uint8_t)*1024);
+	memset(&bas_service_handler, 0, sizeof(bat_gatt_service_handler_t));
+
+	flag = false;
+	battery_flag = true;
+	timer_cb_done = false;
+	
 	/* Initialize the button */
 	//button_init();
 	
@@ -193,11 +239,12 @@ int main(void)
 	hw_timer_register_callback(timer_callback_handler);
 	
 	DBG_LOG("Initializing Battery Service Application");
-	
+		
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 	
 	/* Initialize the battery service */
+	bat_init_var();
 	bat_init_service(&bas_service_handler, &battery_level);
 	
 	/* Define the primary service in the GATT server database */
@@ -224,11 +271,12 @@ int main(void)
 	while (1) {
 		/* BLE Event Task */
 		ble_event_task();
-		if (timer_cb_done)
+
+		if(timer_cb_done)
 		{
-			timer_cb_done = false;			
 			/* send the notification and Update the battery level  */			
-			if(flag){
+			if(flag)
+			{
 				if(bat_update_char_value(&bas_service_handler, battery_level, &flag) == AT_BLE_SUCCESS)
 				{
 					DBG_LOG("Battery Level:%d%%", battery_level);
@@ -248,7 +296,9 @@ int main(void)
 				else
 				{
 					battery_level--;
-				}
+				}				
+				//hw_timer_start(BATTERY_UPDATE_INTERVAL);
+				timer_cb_done = false;
 			}
 		}
 	}	

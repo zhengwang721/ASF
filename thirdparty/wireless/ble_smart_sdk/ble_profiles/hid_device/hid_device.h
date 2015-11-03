@@ -77,30 +77,24 @@
 /** @brief Default number of characteristic. */
 #define HID_DEFAULT_CHARACTERISITC_NUM	(4)
 
-#ifndef HID_MOUSE_DEVICE
-#ifndef HID_KEYBOARD_DEVICE
-#define HID_KEYBOARD_DEVICE
-#endif
-#endif
-
 /** @brief Number of characteristic for HID. */
 #if defined HID_MOUSE_DEVICE
 /** @brief Enable by user for mouse application : Configure by user. */
-#define ADV_DATA_APPEARANCE_DATA		(0x03C2)  //Mouse
+#define ADV_DATA_APPEARANCE_DATA      (0x03C2)  //Mouse
 #if defined BOOT_MODE
-#define HID_CHARACTERISTIC_NUM			(HID_DEFAULT_CHARACTERISITC_NUM + 1)
+#define HID_CHARACTERISTIC_NUM        (HID_DEFAULT_CHARACTERISITC_NUM + 1)
 #else
-#define HID_CHARACTERISTIC_NUM			(HID_DEFAULT_CHARACTERISITC_NUM + HID_NUM_OF_REPORT + 1)
+#define HID_CHARACTERISTIC_NUM        (HID_DEFAULT_CHARACTERISITC_NUM + HID_NUM_OF_REPORT + 1)
 #endif
 #endif
 
 #if defined HID_KEYBOARD_DEVICE
 /** @brief Enable by user for keyboard application : Configure by user. */
-#define ADV_DATA_APPEARANCE_DATA 		(0x03C1)    //Keyboard
+#define ADV_DATA_APPEARANCE_DATA 	  (0x03C1)    //Keyboard
 #if defined BOOT_MODE
-#define HID_CHARACTERISTIC_NUM			(HID_DEFAULT_CHARACTERISITC_NUM + 2)
+#define HID_CHARACTERISTIC_NUM        (HID_DEFAULT_CHARACTERISITC_NUM + 2)
 #else
-#define HID_CHARACTERISTIC_NUM			(HID_DEFAULT_CHARACTERISITC_NUM + HID_NUM_OF_REPORT + 2)
+#define HID_CHARACTERISTIC_NUM        (HID_DEFAULT_CHARACTERISITC_NUM + HID_NUM_OF_REPORT + 2)
 #endif
 #endif
 
@@ -131,17 +125,17 @@
 /** @brief Advertisement appearance type  */
 #define ADV_DATA_APPEARANCE_TYPE		(0x19)
 
-/** @brief Advertisement data name appearance len */
-#define ADV_DATA_NAME_LEN				(9)
-
 /** @brief Advertisement data name type */
 #define ADV_DATA_NAME_TYPE				(0x09)
+#if defined HID_MOUSE_DEVICE
+#define ADV_DATA_NAME_LEN				(10)
+#define ADV_DATA_NAME_DATA				"ATMEL-HIDM"
+#endif
 
-//	<s.9>	Advertising String
-//	<i>	String Descriptor describing in advertising packet.
-//	<id> hid_sensor_adv_data_name_data
-#define ADV_DATA_NAME_DATA				("ATMEL-HID")
-
+#if defined HID_KEYBOARD_DEVICE
+#define ADV_DATA_NAME_LEN				(10)
+#define ADV_DATA_NAME_DATA				"ATMEL-HIDK"
+#endif
 /** @brief Advertisement data UUID length */
 #define ADV_DATA_UUID_LEN				(2)
 
@@ -280,6 +274,8 @@ typedef void (*control_point_ntf_callback_t)(hid_control_mode_ntf_t *);
   * @return @ref	HID_PRF_NO_INSTANCE ref value is NULL
   */
 uint8_t hid_prf_conf(hid_prf_info_t *ref);
+
+void hid_prf_var_init(void);
 
 /** @brief HID device profile initialization function 
  */

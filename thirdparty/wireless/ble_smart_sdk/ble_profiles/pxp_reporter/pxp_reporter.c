@@ -48,7 +48,6 @@
 /****************************************************************************************
 *							        Includes	                                     	*
 ****************************************************************************************/
-#include <asf.h>
 #include <string.h>
 #include "at_ble_api.h"
 #include "ble_manager.h"
@@ -77,9 +76,6 @@ gatt_service_handler_t ias_handle;
 
 
 
-/** @brief Scan response data*/
-uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
-
 
 /** @brief Alert value used for immediate alert service helps in pathloss */
 uint8_t pathloss_alert_value = INVALID_IAS_PARAM ;
@@ -101,6 +97,9 @@ reporter_state_callback_t connected_cb;
 */
 void pxp_service_init(void)
 {
+	pathloss_alert_value = INVALID_IAS_PARAM ;
+	linkloss_current_alert_level = 0;
+	
 	/** Initializing the mandatory linkloss service of proximity reporter*/
 	init_linkloss_service(&lls_handle);
 	
@@ -224,7 +223,7 @@ at_ble_status_t pxp_reporter_connected_state_handler(at_ble_connected_t *conn_pa
 	{
 		DBG_LOG("Read of alert value for Immediate alert service failed:reason %x",status);
 	}
-	ALL_UNUSED(conn_params);
+	
 	return AT_BLE_SUCCESS;
 }
 
@@ -246,10 +245,8 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 	{
 		DBG_LOG("Bluetooth Device is in Advertising Mode");
 	}
-	 ALL_UNUSED(disconnect);
-        return AT_BLE_SUCCESS;
+	return AT_BLE_SUCCESS;
 }
-
 
 /**
 * \Pxp reporter advertisement initialization and adv start 
@@ -257,7 +254,8 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 void pxp_reporter_adv(void)
 {
 	uint8_t idx = 0;
-	uint8_t adv_data [ PXP_ADV_DATA_NAME_LEN + LL_ADV_DATA_UUID_LEN   + (2*2)];
+	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
+	uint8_t adv_data [ PXP_ADV_DATA_NAME_LEN + LL_ADV_DATA_UUID_LEN   + (4*2)];
 	
 	adv_data[idx++] = LL_ADV_DATA_UUID_LEN + ADV_TYPE_LEN +  TXP_ADV_DATA_UUID_LEN + IAL_ADV_DATA_UUID_LEN ;
 	adv_data[idx++] = LL_ADV_DATA_UUID_TYPE;
@@ -323,5 +321,4 @@ void pxp_reporter_init(void *param)
 	
 	/* pxp services advertisement */
 	pxp_reporter_adv();	
-        ALL_UNUSED(param);
 }
