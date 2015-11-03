@@ -99,7 +99,7 @@ extern gatt_lls_char_handler_t lls_handle;
 extern gatt_ias_char_handler_t ias_handle;
 
 extern ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED];;
-extern bool pxp_connect_request_flag;
+extern uint8_t pxp_connect_request_flag;
 
 bool volatile app_timer_done = false;
 pxp_current_alert_t alert_level = PXP_NO_ALERT;
@@ -440,6 +440,10 @@ int main(void)
 
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);
+	
+	/* Register the callback */
+	register_hw_timer_start_func_cb(hw_timer_start);
+	register_hw_timer_stop_func_cb(hw_timer_stop);
 
 	/* initialize the BLE chip  and Set the device mac address */
 	ble_device_init(NULL);
@@ -487,11 +491,11 @@ int main(void)
 
 		/* Application Task */
 		if (app_timer_done) {
-			if (pxp_connect_request_flag) {
+			if (pxp_connect_request_flag == PXP_DEV_CONNECTING) {
 				at_ble_disconnected_t pxp_connect_request_fail;
 				pxp_connect_request_fail.reason
 					= AT_BLE_TERMINATED_BY_USER;
-				pxp_connect_request_flag = false;
+				pxp_connect_request_flag = PXP_DEV_UNCONNECTED;
 				if (at_ble_connect_cancel() == AT_BLE_SUCCESS) {
 					DBG_LOG("Connection Timeout");
 					pxp_disconnect_event_handler(
@@ -502,7 +506,7 @@ int main(void)
 					ble_device_init(NULL);
 					pxp_app_init();
 				}
-			} else {
+			} else if (pxp_connect_request_flag == PXP_DEV_CONNECTED) {
 				rssi_update(ble_dev_info[0].conn_info.handle);
 				hw_timer_start(PXP_RSSI_UPDATE_INTERVAL);
 			}

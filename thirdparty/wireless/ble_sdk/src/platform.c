@@ -166,9 +166,9 @@ at_ble_status_t platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t
 		delay_ms(BTLC1000_WAKEUP_DELAY);
 	}
 #endif //ENABLE_POWER_SAVE
-	tx_done = 0;
+
 	serial_drv_send(data, len);
-	while(tx_done == 0);
+
 
 	return AT_BLE_SUCCESS;
 }

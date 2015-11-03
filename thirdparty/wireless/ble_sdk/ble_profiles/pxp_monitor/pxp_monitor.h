@@ -87,7 +87,7 @@ typedef enum {
 #define PXP_CONNECT_REQ_INTERVAL        (20)
 
 #define DISCOVER_SUCCESS				(10)
-#if ENABLE_PTS
+#ifdef ENABLE_PTS
 #define DBG_LOG_PTS 					DBG_LOG
 #else
 #define DBG_LOG_PTS						ALL_UNUSED
