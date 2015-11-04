@@ -191,26 +191,10 @@ uint8_t hid_prf_conf(hid_prf_info_t *ref)
 */
 void hid_prf_dev_adv(void)
 {
-	uint8_t idx = 0;
-	uint8_t adv_data[ADV_DATA_NAME_LEN + ADV_DATA_APPEARANCE_LEN + ADV_DATA_UUID_LEN + 3*2];
-
-	/* Prepare ADV Data */
-	adv_data[idx++] = ADV_DATA_APPEARANCE_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = ADV_DATA_APPEARANCE_TYPE;
-	adv_data[idx++] = (uint8_t) ADV_DATA_APPEARANCE_DATA;
-	adv_data[idx++] = (uint8_t)(ADV_DATA_APPEARANCE_DATA>>8);
-	adv_data[idx++] = ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = ADV_DATA_NAME_TYPE;
-	memcpy(&adv_data[idx], ADV_DATA_NAME_DATA, ADV_DATA_NAME_LEN);
-	idx += ADV_DATA_NAME_LEN;
-	adv_data[idx++] = ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = ADV_DATA_UUID_TYPE;
-	adv_data[idx++] = (uint8_t)HID_SERV_UUID;
-	adv_data[idx++]   = (uint8_t)(HID_SERV_UUID >> 8);
-	
-	/* Adding the advertisement data and scan response data */
-	if(!(at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN) == AT_BLE_SUCCESS)){
-		DBG_LOG("Failed to set advertisement data");
+	/*  Set advertisement data from ble_manager*/
+	if(!(ble_advertisement_data_set() == AT_BLE_SUCCESS))
+	{
+		DBG_LOG("Fail to set Advertisement data");
 	}
 	
 	/* Start of advertisement */

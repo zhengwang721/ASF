@@ -297,43 +297,10 @@ at_ble_status_t pxp_reporter_disconnect_event_handler(void *params)
 */
 void pxp_reporter_adv(void)
 {
-	uint8_t idx = 0;
-	uint8_t adv_data [ PXP_ADV_DATA_NAME_LEN + LL_ADV_DATA_UUID_LEN   + (2*2)];
-	
-	adv_data[idx++] = LL_ADV_DATA_UUID_LEN + ADV_TYPE_LEN +  TXP_ADV_DATA_UUID_LEN + IAL_ADV_DATA_UUID_LEN ;
-	adv_data[idx++] = LL_ADV_DATA_UUID_TYPE;
-
-#ifdef LINK_LOSS_SERVICE	
-	/* Appending the UUID */
-	adv_data[idx++] = (uint8_t)LINK_LOSS_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(LINK_LOSS_SERVICE_UUID >> 8);
-#endif	//LINK_LOSS_SERVICE
-
-#ifdef TX_POWER_SERVICE
-	//Prepare ADV Data for TXP Service
-	adv_data[idx++] = (uint8_t)TX_POWER_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(TX_POWER_SERVICE_UUID >> 8);
-#endif // TX_POWER_SERVICE	
-
-#ifdef IMMEDIATE_ALERT_SERVICE
-	//Prepare ADV Data for IAS Service
-	adv_data[idx++] = (uint8_t)IMMEDIATE_ALERT_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(IMMEDIATE_ALERT_SERVICE_UUID >> 8);
-#endif	
-	
-	//Appending the complete name to the Ad packet
-	adv_data[idx++] = PXP_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = PXP_ADV_DATA_NAME_TYPE;
-	
-	memcpy(&adv_data[idx], PXP_ADV_DATA_NAME_DATA, PXP_ADV_DATA_NAME_LEN );
-	idx += PXP_ADV_DATA_NAME_LEN ;
-	
-	/* Adding the advertisement data and scan response data */
-	if(!(at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN) == AT_BLE_SUCCESS) )
+	/* Advertisement data set from ble_manager*/
+	if(!(ble_advertisement_data_set() == AT_BLE_SUCCESS))
 	{
-		#ifdef DBG_LOG
-		DBG_LOG("Failed to set adv data");
-		#endif
+		DBG_LOG("Fail to set Advertisement data");
 	}
 	
 	/* Start of advertisement */
