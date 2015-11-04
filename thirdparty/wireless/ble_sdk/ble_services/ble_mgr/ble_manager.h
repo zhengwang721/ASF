@@ -522,7 +522,6 @@ typedef enum
 
 typedef enum {
   BLE_DEVICE_DISCONNECTED,
-  BLE_DEVICE_CONNECTING,
   BLE_DEVICE_CONNECTED,
   BLE_DEVICE_PAIRING,
   BLE_DEVICE_PAIRING_FAILED,
@@ -1572,6 +1571,8 @@ bool ble_check_disconnected_iscentral(at_ble_handle_t handle);
 at_ble_status_t ble_disconnected_device_role(at_ble_handle_t conn_handle, at_ble_dev_role_t *dev_role);
 
 at_ble_status_t ble_check_device_state(at_ble_handle_t conn_handle, ble_device_state_t state);
+
+at_ble_status_t ble_resolv_rand_addr_handler(void *params);
 
 at_ble_status_t ble_connected_state_handler(void *params);
 
