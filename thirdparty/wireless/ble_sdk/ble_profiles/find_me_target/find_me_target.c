@@ -147,32 +147,10 @@ at_ble_status_t fmp_target_service_define(void)
  */
 void fmp_target_adv(void)
 {
-	uint8_t idx = 0;
-	uint8_t adv_data [ FMP_ADV_DATA_NAME_LEN + IAL_ADV_DATA_UUID_LEN   +
-	(2 * 2)];
-
-	adv_data[idx++] = ADV_TYPE_LEN + IAL_ADV_DATA_UUID_LEN;
-	adv_data[idx++] = IAL_ADV_DATA_UUID_TYPE;
-
-	#ifdef IMMEDIATE_ALERT_SERVICE
-	/* Prepare ADV Data for IAS Service */
-	adv_data[idx++] = (uint8_t)IMMEDIATE_ALERT_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(IMMEDIATE_ALERT_SERVICE_UUID >> 8);
-	#endif
-
-	/* Appending the complete name to the Ad packet */
-	adv_data[idx++] = FMP_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = FMP_ADV_DATA_NAME_TYPE;
-
-	memcpy(&adv_data[idx], FMP_ADV_DATA_NAME_DATA, FMP_ADV_DATA_NAME_LEN );
-	idx += FMP_ADV_DATA_NAME_LEN;
-
-	/* Adding the advertisement data and scan response data */
-	if (!(at_ble_adv_data_set(adv_data, idx, scan_rsp_data,
-			SCAN_RESP_LEN) == AT_BLE_SUCCESS)) {
-		#ifdef DBG_LOG
-		DBG_LOG("Failed to set adv data");
-		#endif
+	/*  Set advertisement data from ble_manager*/
+	if(!(ble_advertisement_data_set() == AT_BLE_SUCCESS))
+	{
+		DBG_LOG("Fail to set Advertisement data");
 	}
 
 	/* Start of advertisement */
