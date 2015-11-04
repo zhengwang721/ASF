@@ -220,7 +220,7 @@ int main(void)
 		/* BLE Event Task */
 		ble_event_task();
 
-		#if ENABLE_PTS
+		#ifdef ENABLE_PTS
 			if (button_pressed) {
 				DBG_LOG("Press 1 for service discovery");
 				DBG_LOG("Press 2 for encryption start");

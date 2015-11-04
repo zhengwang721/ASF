@@ -254,7 +254,7 @@ void button_cb(void)
 /* Initialize the application information for HID profile*/
 static void hid_keyboard_app_init(void)
 {
-#if ENABLE_PTS	
+#ifdef ENABLE_PTS	
 	uint16_t i=0;
 #endif	
 	hid_prf_data.hid_serv_instance = 1;
@@ -274,7 +274,7 @@ static void hid_keyboard_app_init(void)
 	hid_prf_data.hid_device_info.bcountry_code = 0x00;
 	hid_prf_data.hid_device_info.flags = 0x02; 
 	
-#if ENABLE_PTS
+#ifdef ENABLE_PTS
 	DBG_LOG("Report Map Characteristic Value");
 	printf("\r\n");
 	for (i=0; i<sizeof(hid_app_keyb_report_map); i++)

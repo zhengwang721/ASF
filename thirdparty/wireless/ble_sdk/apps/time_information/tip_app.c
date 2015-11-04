@@ -207,7 +207,7 @@ int main (void)
 		if (button_pressed && completed_prev_read) {
 			delay_ms(200);
 				/* code for pts */
-			#if ENABLE_PTS
+			#ifdef ENABLE_PTS
 			DBG_LOG("Press 1 for Service discovery");
 			DBG_LOG("Press 2 for Writing to time update control point");
 			DBG_LOG("Press 3 for Enable/Disable notification");

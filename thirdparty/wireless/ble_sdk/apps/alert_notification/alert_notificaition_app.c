@@ -69,7 +69,7 @@ volatile bool user_request = false;
 volatile bool notification_enable = false;
 
 volatile bool app_state = false;
-#define ENABLE_PTS false
+
 /***********************************************************************************
  *									Implementations                               *
  **********************************************************************************/
@@ -149,7 +149,7 @@ int main(void)
 	
 			/* Button debounce delay*/
 			delay_ms(350);
-			#if ENABLE_PTS
+			#ifdef ENABLE_PTS
 			DBG_LOG("Press 1 for service discovery");
 			DBG_LOG("Press 2 for write notification");
 			DBG_LOG("Press 3 for disable notification");
