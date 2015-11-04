@@ -97,7 +97,7 @@ static void app_connected_state(bool connected)
 {
 	app_state = connected;
 	if (connected) {
-		DBG_LOG_DBG("App connected");	
+		DBG_LOG_DEV("App connected");	
 	} else {
 		/* Starting advertisement on disconnection */
 		anp_client_adv();
