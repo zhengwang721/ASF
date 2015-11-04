@@ -1384,6 +1384,8 @@ at_ble_status_t ble_encryption_request_handler(void *params)
     {
 	    DBG_LOG("Pairing information of peer device is not available.");
 	    DBG_LOG("Please unpair the device from peer device(mobile) settings menu and start pairing again");
+		at_ble_disconnect(ble_dev_info[idx].conn_info.handle, 0x5);
+		return AT_BLE_FAILURE;
     }
 
 	if(!(at_ble_encryption_request_reply(enc_req->handle, ble_dev_info[idx].bond_info.auth, key_found, &ble_dev_info[idx].bond_info.peer_ltk) == AT_BLE_SUCCESS))
