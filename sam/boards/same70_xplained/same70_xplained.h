@@ -558,5 +558,11 @@
 #define LCD_SPI_BACKLIGHT_PIO     PIO_PC19_IDX
 #define	LCD_SPI_BACKLIGHT_FLAGS   (PIO_OUTPUT_1 | PIO_DEFAULT)
 
+
+/** TWI interface for maXTouch XPRO */
+#define MAXTOUCH_XPRO_TWIHS       TWIHS0
+
+#define MAXTOUCH_XPRO_CHG_PIO     PIO_PA2_IDX
+
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAME70_XPLD_H_ */
