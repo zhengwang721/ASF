@@ -49,8 +49,6 @@
 #include <board.h>
 #include "twihs.h"
 
-#define AT30TSE_SERCOM        TWIHS0
-#define AT30TSE_PINMUX_PAD0   TWIHS0_CLK_GPIO
-#define AT30TSE_PINMUX_PAD1   TWIHS0_DATA_GPIO
+#define CONF_WINC_TWIHS        TWIHS0
 
 #endif /* CONF_AT30TSE75X_H_INCLUDED */

@@ -76,7 +76,7 @@ void at30tse_init(void)
 	opt.master_clk = sysclk_get_cpu_hz();
 	opt.speed      = TWIHS_CLK;
 
-	if (twihs_master_init(AT30TSE_SERCOM, &opt) != TWIHS_SUCCESS) {
+	if (twihs_master_init(CONF_WINC_TWIHS, &opt) != TWIHS_SUCCESS) {
 		while (1) {
 			/* Capture error */
 		}

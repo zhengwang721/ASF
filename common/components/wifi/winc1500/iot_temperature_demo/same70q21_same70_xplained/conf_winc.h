@@ -68,7 +68,7 @@ extern "C" {
 #define CONF_WINC_I2C             TWIHS0
 #define CONF_WINC_I2C_ID          ID_TWIHS0
 
-/** SPI clock. */
+/** TWIHS clock. */
 #define CONF_WINC_TWIHS_CLOCK     (100000)
 /*
    ---------------------------------
