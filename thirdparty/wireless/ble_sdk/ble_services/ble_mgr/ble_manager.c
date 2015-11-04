@@ -858,6 +858,7 @@ at_ble_status_t ble_resolv_rand_addr_handler(void *params)
 		ble_send_slave_sec_request(connected_state_info.handle);
 	}
 	#endif
+	ALL_UNUSED(peripheral_device_added);
 
 	return AT_BLE_SUCCESS;
 	

@@ -1006,7 +1006,7 @@ typedef enum {
 #endif
 
 /* Appearance configuration */
-#if HID_DEVICE
+#ifdef HID_DEVICE
 #define BLE_GAP_ADV_APPEARANCE_ENABLE							true
 #else
 #define BLE_GAP_ADV_APPEARANCE_ENABLE							false
