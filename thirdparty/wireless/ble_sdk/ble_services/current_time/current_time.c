@@ -101,7 +101,7 @@ int8_t tis_current_time_read_response(at_ble_characteristic_read_response_t *rea
 		return read_resp->status;
 	}
 	if (read_resp->char_handle == cts_handler->curr_char_handle) {
-		#if ENABLE_PTS || !defined TP_ANDROID
+		#ifdef ENABLE_PTS || !defined TP_ANDROID
 		const char *ptr[] = {"UNKNOWN","MON","TUE","WED","THU","FRI","SAT","SUN"};
 		#else
 		const char *ptr[] = {"SUN","MON","TUE","WED","THU","FRI","SAT","UNKNOWN"};

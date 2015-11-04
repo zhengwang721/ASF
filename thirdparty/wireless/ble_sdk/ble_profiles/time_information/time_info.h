@@ -121,7 +121,7 @@
 #define TP_ADV_DATA_NAME_DATA						("ATMEL-TIP")
 
 #define AT_BLE_DISCOVER_SUCCESS						(10)
-#if ENABLE_PTS
+#ifdef ENABLE_PTS
 #define DBG_LOG_PTS					DBG_LOG 
 #else
 #define DBG_LOG_PTS					ALL_UNUSED
