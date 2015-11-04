@@ -1006,11 +1006,28 @@ typedef enum {
 #endif
 
 /* Appearance configuration */
-#define BLE_GAP_ADV_APPEARANCE_ENABLE								false
+#if HID_DEVICE
+#define BLE_GAP_ADV_APPEARANCE_ENABLE							true
+#else
+#define BLE_GAP_ADV_APPEARANCE_ENABLE							false
+#endif
+
+#ifndef BLE_GAP_ADV_APPEARANCE_ENABLE
+#define BLE_GAP_ADV_APPEARANCE_ENABLE							false
+#endif
 #if BLE_GAP_ADV_APPEARANCE_ENABLE
-#define BLE_GAP_ADV_APPEARANCE_SCN_RSP_ENABLE						SCAN_RESPONSE_ENABLE
-#define BLE_GAP_ADV_DATA_APPEARANCE									"\x80\x00"
-#define BLE_GAP_ADV_DATA_APPEARANCE_SIZE							2
+#define BLE_GAP_ADV_APPEARANCE_SCN_RSP_ENABLE					SCAN_RESPONSE_ENABLE
+#ifdef HID_MOUSE_DEVICE
+#define BLE_GAP_ADV_DATA_APPEARANCE								"\xc2\x03"
+#else
+#ifdef HID_KEYBOARD_DEVICE
+#define BLE_GAP_ADV_DATA_APPEARANCE								"\xc1\x03"
+#endif /*HID_MOUSE_DEVICE*/
+#endif /*HID_KEYBOARD_DEVICE*/
+#ifndef BLE_GAP_ADV_DATA_APPEARANCE
+#define BLE_GAP_ADV_DATA_APPEARANCE								"\x80\x00"
+#endif /*BLE_GAP_ADV_DATA_APPEARANCE*/
+#define BLE_GAP_ADV_DATA_APPEARANCE_SIZE						2
 #endif
 
 /* Advertising Interval Configuration */
