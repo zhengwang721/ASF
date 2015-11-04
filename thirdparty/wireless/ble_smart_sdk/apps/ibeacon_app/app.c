@@ -1,6 +1,7 @@
 #include "at_ble_api.h"
 #include <asf.h>
 #include <string.h>
+#include <conf_uart_serial.h>
 #ifndef NULL
 #define NULL ((void*)0)
 #endif
@@ -43,26 +44,30 @@ static void uart_write_complete_callback(struct uart_module *const module)
 //! [setup]
 static void configure_uart(void)
 {
-//! [setup_config]
+
+	//! [setup_config]
 	struct uart_config config_uart;
-//! [setup_config]
-//! [setup_config_defaults]
+	//! [setup_config]
+	//! [setup_config_defaults]
 	uart_get_config_defaults(&config_uart);
-//! [setup_config_defaults]
+	//! [setup_config_defaults]
 
-//! [setup_change_config]
-	config_uart.baud_rate = 38400;
-	config_uart.pinmux_pad[0] = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	config_uart.pinmux_pad[1] = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	config_uart.pinmux_pad[2] = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	config_uart.pinmux_pad[3] = EDBG_CDC_SERCOM_PINMUX_PAD3;
-//! [setup_change_config]
+	//! [setup_change_config]
+	//config_uart.baud_rate = 38400;
+	config_uart.baud_rate = 115200;
+	config_uart.pin_number_pad[0] = EDBG_CDC_SERCOM_PIN_PAD0;
+	config_uart.pin_number_pad[1] = EDBG_CDC_SERCOM_PIN_PAD1;
+	config_uart.pin_number_pad[2] = EDBG_CDC_SERCOM_PIN_PAD2;
+	config_uart.pin_number_pad[3] = EDBG_CDC_SERCOM_PIN_PAD3;
 
-//! [setup_set_config]
-	while (uart_init(&uart_instance,
-			EDBG_CDC_MODULE, &config_uart) != STATUS_OK) {
-	}
-//! [setup_set_config]
+	config_uart.pinmux_sel_pad[0] = EDBG_CDC_SERCOM_MUX_PAD0;
+	config_uart.pinmux_sel_pad[1] = EDBG_CDC_SERCOM_MUX_PAD1;
+	config_uart.pinmux_sel_pad[2] = EDBG_CDC_SERCOM_MUX_PAD2;
+	config_uart.pinmux_sel_pad[3] = EDBG_CDC_SERCOM_MUX_PAD3;
+	//! [setup_change_config]
+
+	stdio_serial_init(&uart_instance, CONF_STDIO_USART_MODULE, &config_uart);
+
 }
 //! [setup]
 

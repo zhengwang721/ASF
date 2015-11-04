@@ -7,11 +7,13 @@
 
 		<build type="header-file"   value="console_serial.h"/> 
 		<build type="header-file"   value="timer_hw.h"/> 
-		<build type="header-file"   value="other.h"/> 
+		<build type="header-file"   value="led.h"/> 
+		<build type="header-file"   value="button.h"/> 
 
 		<build type="c-source" value="console_serial.c"/>
 		<build type="c-source" value="timer_hw.c"/>
-		<build type="c-source" value="other.c"/>
+		<build type="c-source" value="led.c"/>
+		<build type="c-source" value="button.c"/>
 
 		<build type="header-file" value="conf_timer.h"/>
 		<build type="header-file" value="conf_at30tse75x.h"/>

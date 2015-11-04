@@ -4,7 +4,7 @@
 		Alert Notification Client Application for BLE stack
 		</info>
 		<build type="include-path" value="."/>
-		<build type="c-source" value="alert_notificaition_app.c"/>
+		<build type="c-source" value="anp_app.c"/>
 		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_CENTRAL_AND_PERIPHERAL"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_profiles.alert_notification"/>
 		<device-support-alias value="ble_smart_stack_lib_support"/>

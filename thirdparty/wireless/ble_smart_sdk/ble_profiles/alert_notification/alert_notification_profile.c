@@ -56,7 +56,6 @@
 #include "at_ble_api.h"
 #include "ble_manager.h"
 #include "ble_utils.h"
-#include "led.h"
 #include "alert_notification_profile.h"
 
 #if defined ANS_CLIENT_SERVICE
@@ -544,7 +543,7 @@ void anp_client_security_done_handler(void *param)
 	if(anp_alert_read(ble_connected_dev_info[0].handle,
 						anp_handle.supp_new_char_handle) == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("Support New Alert info request success");
-		LED_Toggle();
+		LED_Toggle(LED0);
 	}
 	
 	if(anp_alert_read( ble_connected_dev_info[0].handle, 

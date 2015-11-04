@@ -47,28 +47,23 @@
 /****************************************************************************************
 *							        Includes	                                     	*
 ****************************************************************************************/
+
+
 #include <asf.h>
 #include "console_serial.h"
 #include "at_ble_api.h"
-#include "at_ble_errno.h"
-#include "at_ble_trace.h"
 #include "platform.h"
-#include "console_serial.h"
 #include "timer_hw.h"
-//#include "conf_extint.h"
+#include "ble_utils.h"
 #include "ble_manager.h"
 #include "alert_notification.h"
 #include "alert_notification_profile.h"
+#include "button.h"
+#include "led.h"
 
-extern gatt_anp_handler_t anp_handle;
+bool user_request = false;
 
-extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
-
-volatile bool user_request = false;
-
-volatile bool notification_enable = false;
-
-volatile bool app_state = false;
+bool notification_enable = false;
 
 /***********************************************************************************
  *									Implementations                               *
@@ -76,9 +71,10 @@ volatile bool app_state = false;
 /**
  * @brief Button Press Callback 
  */
-void button_cb(void)
+static void button_cb(void)
 {
 	user_request = true;
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
 }
 
 /**
@@ -95,7 +91,6 @@ static void timer_callback_handler(void)
  */
 static void app_connected_state(bool connected)
 {
-	app_state = connected;
 	if (connected) {
 		DBG_LOG("App connected");	
 	}		
@@ -111,35 +106,38 @@ int main(void)
 	system_init();
 	#endif
 	
+	user_request = false;
+	notification_enable = false;
+	
 	/* Initialize serial console */
 	serial_console_init();
-	
-	/* Initializing the button */
-	//button_init();
+
+	DBG_LOG("Alert Notification Profile Application");
 	
 	/* Initializing the hardware timer */
 	hw_timer_init();
-	
+
 	/*Registration of timer callback*/
 	hw_timer_register_callback(timer_callback_handler);
 	
+	/* initialize the ble chip  and Set the device mac address */
+	ble_device_init(NULL);
+
+	/* Initializing the button */
+	/* Caution, button_init func has to be called after ble_device_init func */
+	button_init(button_cb);
+
+	led_init();
+
 	/* Register the connected call back with the profile */
 	register_connected_callback(app_connected_state);
 	
-	DBG_LOG("Alert Notification Profile Application");
-	
-	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL);
-	
 	/* Capturing the events  */
 	while(1) {
-
 		/* BLE Event Task */
 		ble_event_task();
+
 		if (user_request) {
-			
-			/* Button debounce delay*/
-			//delay_ms(350);
 			if (notification_enable) {
 				anp_client_write_notification_handler();
 				notification_enable = false;

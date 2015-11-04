@@ -21,12 +21,6 @@ static void dualtimer_callback2(void)
 
 void hw_timer_init(void)
 {
-	//uint8_t string1[] = "HW TIMER INIT\r\n";
-	//uart_write_buffer_wait(&uart_instance, string1, sizeof(string1));
-	
-	puts("HW TIMER INIT\r\n");
-	
-	
 	struct dualtimer_config config_dualtimer;
 	dualtimer_get_config_defaults(&config_dualtimer);
 	
@@ -34,15 +28,10 @@ void hw_timer_init(void)
 	config_dualtimer.timer2.load_value = CONF_DUALTIMER_TIMER2_LOAD;
 	
 	dualtimer_init(&config_dualtimer);
-
 }
-
-
 
 void hw_timer_register_callback(hw_timer_callback_t timer_callback_handler)
 {
-	puts("hw_timer_register_callback\r\n");
-	
 	dualtimer_register_callback(DUALTIMER_TIMER1, timer_callback_handler);
 	dualtimer_register_callback(DUALTIMER_TIMER2, dualtimer_callback2);
 	
@@ -50,9 +39,6 @@ void hw_timer_register_callback(hw_timer_callback_t timer_callback_handler)
 	dualtimer_disable(1);
 	
 	NVIC_EnableIRQ(DUALTIMER0_IRQn);
-	
-
-	
 }
 
 void hw_timer_start(int dealy)
