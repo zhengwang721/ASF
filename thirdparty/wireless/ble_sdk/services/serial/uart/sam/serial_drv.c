@@ -212,5 +212,10 @@ uint8_t serial_read_byte(uint16_t* data)
    }
 }
 
+uint32_t platform_serial_drv_tx_status(void)
+{
+	return((usart_is_tx_empty(BLE_UART) == 1) ? 0 : 1);
+}
+
 
 /* EOF */

@@ -110,6 +110,12 @@ enum tenuTransportState{
 	PLATFORM_TRANSPORT_SLAVE_CONNECTED
 };
 
+enum transfer_mode
+{
+	TX_MODE = 1,
+	RX_MODE
+};
+
  /**@ingroup platform_group_functions
   * @brief implements platform-specific initialization
   *
@@ -229,6 +235,7 @@ void platform_cleanup(void);
 void start_timer(uint32_t timeout);
 uint32_t timer_done(void);
 void stop_timer(void);
-
+void bus_activity_timer_callback(void);
+void check_and_assert_ext_wakeup(uint8_t mode);
 #define UNREFERENCED_PARAMETER(x) ((void)x)
 #endif // __PLATFORM_H__

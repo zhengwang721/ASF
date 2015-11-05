@@ -47,13 +47,14 @@
 #include "conf_timer.h"
 
 /* === TYPES =============================================================== */
-uint32_t timeout_count;
+uint32_t timeout_count, bus_timeout_count;
 hw_timer_callback_t timer_callback;
+hw_timer_callback_t bus_timer_callback;
 /* === MACROS ============================================================== */
 
 void hw_timer_init(void)
 {
-	sysclk_enable_peripheral_clock(ID_TC);
+	sysclk_enable_peripheral_clock(ID_TC0);
 	// Init timer counter  channel.
 	tc_init(TIMER, TIMER_CHANNEL_ID,						
 			TC_CMR_TCCLKS_TIMER_CLOCK4 |
@@ -105,5 +106,51 @@ void hw_timer_stop(void)
 	tc_stop(TIMER, TIMER_CHANNEL_ID);
 }
 
+void platform_configure_timer(hw_timer_callback_t bus_tc_cb_ptr)
+{
+	bus_timer_callback = bus_tc_cb_ptr;
+	sysclk_enable_peripheral_clock(ID_TC1);
+	// Init timer counter  channel.
+	tc_init(TIMER, BUS_TIMER_CHANNEL_ID,
+	TC_CMR_TCCLKS_TIMER_CLOCK4 |
+	TC_CMR_WAVSEL_UP);
+		
+	tc_write_rc(TIMER, BUS_TIMER_CHANNEL_ID, UINT16_MAX);
+	tc_get_status(TIMER, BUS_TIMER_CHANNEL_ID);
+	tc_enable_interrupt(TIMER, BUS_TIMER_CHANNEL_ID, TC_IER_CPCS);
+	NVIC_EnableIRQ(TC1_IRQn);
+}
 
+void TC1_Handler(void)
+{
+	uint32_t ul_status;
+	
+	ul_status = tc_get_status(TIMER, BUS_TIMER_CHANNEL_ID);
+	ul_status &= tc_get_interrupt_mask(TIMER, BUS_TIMER_CHANNEL_ID);
+	
+	/* ovf callback */
+	if (TC_SR_CPCS == (ul_status & TC_SR_CPCS))
+	{
+		bus_timer_callback();
+	}
+}
+
+void Platform_start_bus_timer(uint32_t timeout)
+{
+	bus_timeout_count = (timeout*TIMER_OVF_COUNT_1MSEC);
+	tc_write_rc(TIMER, BUS_TIMER_CHANNEL_ID, bus_timeout_count);
+	tc_start(TIMER, BUS_TIMER_CHANNEL_ID);
+	
+}
+
+void Platform_stop_bus_timer(void)
+{
+	tc_stop(TIMER, BUS_TIMER_CHANNEL_ID);
+}
+
+void platform_reset_bus_timer(void)
+{
+	Platform_stop_bus_timer();
+	Platform_start_bus_timer(5);
+}
 /* EOF */

@@ -246,6 +246,7 @@ static at_ble_status_t app_disconnected_event_handler(void *params)
 	second_counter = 0;
 	activity = ACTIVITY_NORMAL;
 	prev_activity = DEFAULT_ACTIVITY;
+	energy_inclusion = 0;
 	heart_rate_value_init();
 	LED_Off(LED0);
 	DBG_LOG("Press button to advertise");

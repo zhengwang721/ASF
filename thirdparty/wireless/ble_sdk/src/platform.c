@@ -50,6 +50,7 @@
 #include "serial_drv.h"
 #include "serial_fifo.h"
 #include "ble_utils.h"
+#include "timer_hw.h"
 
 uint8_t bus_type = AT_BLE_UART;
 
@@ -114,11 +115,44 @@ uint16_t rx_buf_idx;
 
 void platform_process_rxdata(uint32_t t_rx_data);
 
+void bus_activity_timer_callback(void)
+{
+	if (bus_type == AT_BLE_UART)
+	{
+		if (platform_serial_drv_tx_status() == STATUS_OK)
+		{
+			platform_set_sleep();
+		}
+		else
+		{
+			platform_reset_bus_timer();
+		}
+	}
+}
+void check_and_assert_ext_wakeup(uint8_t mode)
+{
+	if ((init_done))
+	{
+		if (!ble_wakeup_pin_level())
+		{
+			ble_wakeup_pin_set_high();
+			if (mode == TX_MODE)
+			{
+				delay_ms(BTLC1000_WAKEUP_DELAY);
+			}
+			Platform_start_bus_timer(5);
+		}
+		else
+		{
+			platform_reset_bus_timer();
+		}
+	}
+}
 at_ble_status_t platform_init(void* platform_params)
 {	
 	platform_config	*cfg = (platform_config *)platform_params;
 	ble_configure_control_pin();
-	
+	platform_configure_timer(bus_activity_timer_callback);
 	delay_ms(BTLC1000_STARTUP_DELAY);
 	
 	if (cfg->bus_type == AT_BLE_UART)
@@ -154,21 +188,8 @@ at_ble_status_t platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t
 		
 	}
 #endif
-
-#if defined	ENABLE_POWER_SAVE	
-	 if(init_done)
-	 {
-		 ext_wakeup_state++;
-	 }
-	if ((init_done) && (!ble_wakeup_pin_level()))
-	{
-		platform_wakeup();
-		delay_ms(BTLC1000_WAKEUP_DELAY);
-	}
-#endif //ENABLE_POWER_SAVE
-
+	check_and_assert_ext_wakeup(TX_MODE);
 	serial_drv_send(data, len);
-
 
 	return AT_BLE_SUCCESS;
 }
@@ -356,25 +377,6 @@ void serial_rx_callback(void)
 void serial_tx_callback(void)
 {
 	tx_done = 1;
-	
-#if defined ENABLE_POWER_SAVE
-	if (init_done)
-	{		
-		if(bus_type == AT_BLE_UART)
-		{
-			if(ext_wakeup_state > 0)
-			{
-				ext_wakeup_state--;
-			}
-		
-			if(ext_wakeup_state == 0)
-			{
-				platform_set_sleep();
-			}			
-		}
-	}	
-#endif
-
 }
 
  void platform_wakeup(void)
