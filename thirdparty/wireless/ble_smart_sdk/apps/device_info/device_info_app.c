@@ -60,6 +60,8 @@
 #include "ble_utils.h"
 
 #include "ble_manager.h"
+#include "button.h"
+#include "led.h"
 
 
 #define APP_STACK_SIZE	(1024)
@@ -73,7 +75,7 @@ uint8_t fw_version[10];
 at_ble_handle_t dis_conn_handle;
 dis_gatt_service_handler_t dis_service_handler;
 
-/* To keep the applicaiton in execution continuosly*/
+/* To keep the application in execution continuously*/
 bool app_exec = true;
 
 static void ble_user_event(void);
@@ -161,19 +163,13 @@ void button_cb(void)
 int main(void)
 {
 	at_ble_status_t status;
-	#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-	#elif SAM0
-	system_init();
-	#endif
+	app_exec = true;
 	
 	timer_cb_done = false;
 	memset(fw_version, 0x00, 10);
 	memset(&dis_service_handler, 0x00, sizeof(dis_gatt_service_handler_t));
 	 
-	//platform_driver_init();
+	platform_driver_init();
 
 	/* Initialize serial console */
 	serial_console_init();
@@ -188,8 +184,10 @@ int main(void)
 	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
-
-	//delay_ms(1);
+	 
+	 /* initialize the button & LED */
+	button_init(button_cb);
+	led_init();
 	
 	/* Initialize the dis */
 	dis_init_service(&dis_service_handler);
