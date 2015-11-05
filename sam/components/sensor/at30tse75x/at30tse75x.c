@@ -53,15 +53,6 @@ extern "C" {
 
 uint8_t resolution = AT30TSE_CONFIG_RES_9_bit;
 
-/** TWIHS Bus Clock 400kHz */
-#define TWIHS_CLK     400000
-/** TWIHS ID for simulated EEPROM application to use */
-#define BOARD_ID_TWIHS_EEPROM         ID_TWIHS0
-/** TWIHS Base for simulated TWI EEPROM application to use */
-#define BOARD_BASE_TWIHS_EEPROM       TWIHS0
-/** EEPROM Wait Time */
-#define WAIT_TIME   10
-
 /**
  * \brief Configures the TWHIS master to be used with the AT30TSE75X device.
  */
@@ -76,7 +67,7 @@ void at30tse_init(void)
 	opt.master_clk = sysclk_get_cpu_hz();
 	opt.speed      = TWIHS_CLK;
 
-	if (twihs_master_init(CONF_WINC_TWIHS, &opt) != TWIHS_SUCCESS) {
+	if (twihs_master_init(BOARD_BASE_TWIHS_EEPROM, &opt) != TWIHS_SUCCESS) {
 		while (1) {
 			/* Capture error */
 		}
@@ -110,7 +101,7 @@ void at30tse_eeprom_write(uint8_t *data, uint8_t length, uint8_t word_addr, uint
 	/* Configure the data packet to be transmitted */
 	packet_tx.chip        = AT30TSE758_EEPROM_TWI_ADDR;
 	packet_tx.addr[0]     = ((0x30 & page) >> 4);
-	packet_tx.addr[1]     = 0;
+	packet_tx.addr[1]     = buffer[0];
 	packet_tx.addr_length = 2;
 	packet_tx.buffer      = buffer;
 	packet_tx.length      = length+1;
@@ -140,30 +131,15 @@ void at30tse_eeprom_read(uint8_t *data, uint8_t length, uint8_t word_addr, uint8
 	/* 4 lower bits of page addr in EEPROM */
 	buffer[0] |= (0x0F & page) << 4;
 	
-	twihs_packet_t packet_tx, packet_rx;
-
-	/* Configure the data packet to be transmitted */
-	packet_tx.chip        = AT30TSE758_EEPROM_TWI_ADDR;
-	packet_tx.addr[0]     = ((0x30 & page) >> 4);
-	packet_tx.addr[1]     = 0;
-	packet_tx.addr_length = 2;
-	packet_tx.buffer      = buffer;
-	packet_tx.length      = 1;
+	twihs_packet_t packet_rx;
 	
 	/* Configure the data packet to be received */
-	packet_rx.chip        = packet_tx.chip;
-	packet_rx.addr[0]     = packet_tx.addr[0];
-	packet_rx.addr[1]     = packet_tx.addr[1];
-	packet_rx.addr_length = packet_tx.addr_length;
+	packet_rx.chip        = AT30TSE758_EEPROM_TWI_ADDR;
+	packet_rx.addr[0]     = ((0x30 & page) >> 4);
+	packet_rx.addr[1]     = buffer[0];
+	packet_rx.addr_length = 2;
 	packet_rx.buffer      = data;
 	packet_rx.length      = length;
-	
-	/* Send test pattern to EEPROM */
-	if (twihs_master_write(BOARD_BASE_TWIHS_EEPROM, &packet_tx) != TWIHS_SUCCESS) {
-		while (1) {
-			/* Capture error */
-		}
-	}
 	
 	/* Get memory from EEPROM*/
 	if (twihs_master_read(BOARD_BASE_TWIHS_EEPROM, &packet_rx) != TWIHS_SUCCESS) {
@@ -185,10 +161,9 @@ void at30tse_set_register_pointer(uint8_t reg, uint8_t reg_type)
 	twihs_packet_t packet_tx;
 
 	/* Configure the data packet to be transmitted */
-	packet_tx.chip        = AT30TSE758_EEPROM_TWI_ADDR;
-	packet_tx.addr[0]     = 0;
-	packet_tx.addr[1]     = 0;
-	packet_tx.addr_length = 2;
+	packet_tx.chip        = AT30TSE_TEMPERATURE_TWI_ADDR;
+	packet_tx.addr[0]     = buffer;
+	packet_tx.addr_length = 1;
 	packet_tx.buffer      = buffer;
 	packet_tx.length      = 1;
 	
@@ -212,37 +187,24 @@ void at30tse_set_register_pointer(uint8_t reg, uint8_t reg_type)
 uint16_t at30tse_read_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size)
 {
 	uint8_t buffer[2];
-	buffer[0] = reg | reg_type;
-	buffer[1] = 0;
+	uint8_t reg_addr = reg | reg_type;
 
 	twihs_packet_t packet_tx, packet_rx;
-
-	/* Configure the data packet to be transmitted */
-	packet_tx.chip        = AT30TSE758_EEPROM_TWI_ADDR;
-	packet_tx.addr[0]     = 0;
-	packet_rx.addr[1]     = 0;
-	packet_tx.addr_length = 2;
-	packet_tx.buffer      = buffer;
-	packet_tx.length      = 1;
+	
+	/* Configure the data packet to be transfered */
+	//packet_tx.chip        = AT30TSE758_EEPROM_TWI_ADDR;
+	//packet_tx.addr[0]     = reg_addr;
+	//packet_tx.addr_length = 1;
+	//packet_tx.buffer      = buffer;
+	//packet_tx.length      = 0;
 	
 	/* Configure the data packet to be received */
-	packet_rx.chip        = packet_tx.chip;
-	packet_rx.addr[0]     = packet_tx.addr[0];
-	packet_rx.addr[1]     = packet_tx.addr[1];
-	packet_rx.addr_length = packet_tx.addr_length;
+	packet_rx.chip        = AT30TSE_TEMPERATURE_TWI_ADDR;
+	packet_rx.addr[0]     = reg_addr;
+	packet_rx.addr_length = 1;
 	packet_rx.buffer      = buffer;
 	packet_rx.length      = reg_size;
-	
-	/* Send test pattern to EEPROM */
-	if (twihs_master_write(BOARD_BASE_TWIHS_EEPROM, &packet_tx) != TWIHS_SUCCESS) {
-		while (1) {
-			/* Capture error */
-		}
-	}
-	
-	/* Wait at least 10 ms */
-	delay_ms(WAIT_TIME);
-	
+	//twihs_master_write(BOARD_BASE_TWIHS_EEPROM, &packet_tx);
 	/* Get memory from EEPROM*/
 	if (twihs_master_read(BOARD_BASE_TWIHS_EEPROM, &packet_rx) != TWIHS_SUCCESS) {
 		while (1) {
@@ -263,20 +225,19 @@ uint16_t at30tse_read_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size)
  */
 void at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, uint16_t reg_value)
 {
-	uint8_t data[3];
-	data[0] = reg | reg_type;
-	data[1] = 0x00FF & (reg_value >> 8);
-	data[2] = 0x00FF & reg_value;
+	uint8_t data[2];
+	uint8_t reg_addr = reg | reg_type;
+	data[0] = 0x00FF & (reg_value >> 8);
+	data[1] = 0x00FF & reg_value;
 
 	twihs_packet_t packet_tx;
 
 	/* Configure the data packet to be transmitted */
-	packet_tx.chip        = AT30TSE758_EEPROM_TWI_ADDR;
-	packet_tx.addr[0]     = 0;
-	packet_tx.addr[1]     = 0;
-	packet_tx.addr_length = 2;
+	packet_tx.chip        = AT30TSE_TEMPERATURE_TWI_ADDR;
+	packet_tx.addr[0]     = reg_addr;
+	packet_tx.addr_length = 1;
 	packet_tx.buffer      = data;
-	packet_tx.length      = 1 + reg_size;
+	packet_tx.length      = reg_size;
 
 	/* Send test pattern to EEPROM */
 	if (twihs_master_write(BOARD_BASE_TWIHS_EEPROM, &packet_tx) != TWIHS_SUCCESS) {
@@ -293,10 +254,13 @@ void at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, uin
  */
 void at30tse_write_config_register(uint16_t value)
 {
+	uint16_t cur_reg_val = 0;
+	cur_reg_val = at30tse_read_register(AT30TSE_CONFIG_REG, AT30TSE_VOLATILE_REG, 2);	
+	cur_reg_val = ((cur_reg_val & (~(AT30TSE_CONFIG_R0 | AT30TSE_CONFIG_R0))) | value);
 	at30tse_write_register(AT30TSE_CONFIG_REG,
-							AT30TSE_NON_VOLATILE_REG,
-							AT30TSE_CONFIG_REG_SIZE-1,
-							value);
+							AT30TSE_VOLATILE_REG,
+							AT30TSE_CONFIG_REG_SIZE,
+							cur_reg_val);
 
 	resolution = ( value >> AT30TSE_CONFIG_RES_Pos ) & ( AT30TSE_CONFIG_RES_Msk >> AT30TSE_CONFIG_RES_Pos);
 
@@ -311,7 +275,7 @@ double at30tse_read_temperature()
 {
 	/* Read the 16-bit temperature register. */
 	uint16_t data = at30tse_read_register(AT30TSE_TEMPERATURE_REG,
-											AT30TSE_NON_VOLATILE_REG,
+											AT30TSE_VOLATILE_REG,
 											AT30TSE_TEMPERATURE_REG_SIZE);
 
 	double temperature = 0;

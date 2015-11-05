@@ -73,12 +73,12 @@ int main(void)
 //! [read_thigh]
 	volatile uint16_t thigh = 0;
 	thigh = at30tse_read_register(AT30TSE_THIGH_REG,
-			AT30TSE_NON_VOLATILE_REG, AT30TSE_THIGH_REG_SIZE);
+			AT30TSE_VOLATILE_REG, AT30TSE_THIGH_REG_SIZE);
 //! [read_thigh]
 //! [read_tlow]
 	volatile uint16_t tlow = 0;
 	tlow = at30tse_read_register(AT30TSE_TLOW_REG,
-			AT30TSE_NON_VOLATILE_REG, AT30TSE_TLOW_REG_SIZE);
+			AT30TSE_VOLATILE_REG, AT30TSE_TLOW_REG_SIZE);
 //! [read_tlow]
 
 	/* Set 12-bit resolution mode. */

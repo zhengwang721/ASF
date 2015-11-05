@@ -48,16 +48,5 @@
 
 #include <board.h>
 
-#ifdef EXT1_I2C_MODULE
-/* Default Interface configuration for Xplained Pro kit */
-#  define AT30TSE_SERCOM      TWIHS0
-#  define AT30TSE_PINMUX_PAD0 TWIHS0_CLK_GPIO
-#  define AT30TSE_PINMUX_PAD1 TWIHS0_DATA_GPIO   
-#else
-/* Dummy configuration */
-#  define AT30TSE_SERCOM      0
-#  define AT30TSE_PINMUX_PAD0 0
-#  define AT30TSE_PINMUX_PAD1 0
-#endif
 
 #endif /* CONF_AT30TSE75X_H_INCLUDED */
