@@ -7,7 +7,10 @@
 		<build type="header-file" value="simple_broadcaster_app.h"/>
 		<build type="c-source" value="simple_broadcaster_app.c"/>
 		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_BROADCASTER"/>
+				
+		<require idref="thirdparty.wireless.ble_smart_sdk.services"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.ble_manager"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.utils"/>
 		<!--build type="distribute" subtype="user-file" value="Atmel-42528-ATBTLC1000-BluSDK-Simple-Broadcaster-Getting-Started-Guide_UserGuide.pdf"/-->
 		<device-support-alias value="ble_smart_stack_lib_support"/>
 		

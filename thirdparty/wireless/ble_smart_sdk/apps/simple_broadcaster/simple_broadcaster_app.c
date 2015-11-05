@@ -80,12 +80,17 @@ static void ble_device_broadcaster_ind(void)
 
 static status_t brd_set_data_type(uint8_t type)
 {
-	if (type == ADVERTISEMENT_DATA) {
+	if (type == ADVERTISEMENT_DATA) 
+	{
 		data_type = ADVERTISEMENT_DATA;
-	} else if (type == SCAN_RESP_DATA && adv_type ==
-			ADV_TYPE_SCANNABLE_UNDIRECTED) {
+	} 
+	else if (	type == SCAN_RESP_DATA && 
+				adv_type ==	ADV_TYPE_SCANNABLE_UNDIRECTED) 
+	{
 		data_type = SCAN_RESP_DATA;
-	} else {
+	} 
+	else 
+	{
 		return STATUS_INVALID_PARAM;
 	}
 
@@ -102,23 +107,27 @@ static void brd_start_broadcast(void)
 {
 	at_ble_status_t status;
 
-	if (at_ble_adv_data_set(adv_data, adv_length, scan_rsp_data,
-			scan_length) != AT_BLE_SUCCESS) {
+	if (at_ble_adv_data_set(adv_data, adv_length, scan_rsp_data, scan_length) != AT_BLE_SUCCESS) 
+	{
 		DBG_LOG("BLE Broadcast data set failed");
 		return;
-	} else {
+	} 
+	else 
+	{
 		DBG_LOG("BLE Broadcast data set success");
 	}
 
-	if ((status
-				= at_ble_adv_start((at_ble_adv_type_t)adv_type,
+	if ((status	= at_ble_adv_start(adv_type,
 					AT_BLE_ADV_GEN_DISCOVERABLE,
 					NULL, AT_BLE_ADV_FP_ANY,
 					APP_BROADCAST_FAST_ADV,
 					APP_BROADCAST_ADV_TIMEOUT,
-					0)) != AT_BLE_SUCCESS) {
+					0)) != AT_BLE_SUCCESS) 
+	{
 		DBG_LOG("BLE Broadcast start failed(%d)", status);
-	} else {
+	} 
+	else 
+	{
 		DBG_LOG("Started Broadcasting");
 
 		/* Indicate to user that beacon advertisement started in
@@ -139,29 +148,36 @@ static void brd_start_broadcast(void)
  */
 static status_t brd_adv_comp_list_service_uuid16(uint8_t *list_uuid16, uint8_t length)
 {
-	if (length <= 0 || !list_uuid16) {
+	if (length <= 0 || !list_uuid16) 
+	{
 		return STATUS_INVALID_PARAM;
 	}
 
-	if (data_type == ADVERTISEMENT_DATA) {
-		if ((adv_length + length) > (MAX_ADV_LEN - 2)) {
+	if (data_type == ADVERTISEMENT_DATA) 
+	{
+		if ((adv_length + length) > (MAX_ADV_LEN - 2)) 
+		{
 			return STATUS_MAX_LENGTH_REACHED;
-		} else {
+		} 
+		else 
+		{
 			adv_data[adv_length++] = length + ADV_TYPE_LEN;
-			adv_data[adv_length++]
-				= ADV_DATA_TYPE_COMPLETE_SERVICE_UUID16;
+			adv_data[adv_length++] = ADV_DATA_TYPE_COMPLETE_SERVICE_UUID16;
 			memcpy((adv_data + adv_length), list_uuid16, length);
 			adv_length += length;
 		}
-	} else if (data_type == SCAN_RESP_DATA) {
-		if ((scan_length + length) > (MAX_SCAN_LEN - 2)) {
+	} 
+	else if (data_type == SCAN_RESP_DATA) 
+	{
+		if ((scan_length + length) > (MAX_SCAN_LEN - 2)) 
+		{
 			return STATUS_MAX_LENGTH_REACHED;
-		} else {
+		} 
+		else 
+		{
 			scan_rsp_data[scan_length++] = length + ADV_TYPE_LEN;
-			scan_rsp_data[scan_length++]
-				= ADV_DATA_TYPE_COMPLETE_SERVICE_UUID16;
-			memcpy((scan_rsp_data + scan_length), list_uuid16,
-					length);
+			scan_rsp_data[scan_length++] = ADV_DATA_TYPE_COMPLETE_SERVICE_UUID16;
+			memcpy((scan_rsp_data + scan_length), list_uuid16, length);
 			scan_length += length;
 		}
 	}
@@ -181,24 +197,29 @@ static status_t brd_adv_comp_list_service_uuid16(uint8_t *list_uuid16, uint8_t l
  * scan response data.
  *
  */
-static status_t brd_adv_incomp_list_service_uuid16(uint8_t *list_uuid16,
-		uint8_t length)
+static status_t brd_adv_incomp_list_service_uuid16(uint8_t *list_uuid16, uint8_t length)
 {
-	if (length <= 0 || !list_uuid16) {
+	if (length <= 0 || !list_uuid16) 
+	{
 		return STATUS_INVALID_PARAM;
 	}
 
-	if (data_type == ADVERTISEMENT_DATA) {
-		if ((adv_length + length) > (MAX_ADV_LEN - 2)) {
+	if (data_type == ADVERTISEMENT_DATA) 
+	{
+		if ((adv_length + length) > (MAX_ADV_LEN - 2)) 
+		{
 			return STATUS_MAX_LENGTH_REACHED;
-		} else {
+		} 
+		else 
+		{
 			adv_data[adv_length++] = length + ADV_TYPE_LEN;
-			adv_data[adv_length++]
-				= ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID16;
+			adv_data[adv_length++] = ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID16;
 			memcpy((adv_data + adv_length), list_uuid16, length);
 			adv_length += length;
 		}
-	} else if (data_type == SCAN_RESP_DATA) {
+	} 
+	else if (data_type == SCAN_RESP_DATA) 
+	{
 		return STATUS_OPERATION_NOT_SUPPORTED;
 	}
 
@@ -217,29 +238,34 @@ static status_t brd_adv_incomp_list_service_uuid16(uint8_t *list_uuid16,
  */
 static status_t brd_adv_comp_list_service_uuid32(uint8_t *list_uuid32, uint8_t length)
 {
-	if (length <= 0 || !list_uuid32) {
+	if (length <= 0 || !list_uuid32) 
+	{
 		return STATUS_INVALID_PARAM;
 	}
 
-	if (data_type == ADVERTISEMENT_DATA) {
-		if ((adv_length + length) > (MAX_ADV_LEN - 2)) {
+	if (data_type == ADVERTISEMENT_DATA) 
+	{
+		if ((adv_length + length) > (MAX_ADV_LEN - 2)) 
+		{
 			return STATUS_MAX_LENGTH_REACHED;
 		} else {
 			adv_data[adv_length++] = length + ADV_TYPE_LEN;
-			adv_data[adv_length++]
-				= ADV_DATA_TYPE_COMPLETE_SERVICE_UUID32;
+			adv_data[adv_length++] = ADV_DATA_TYPE_COMPLETE_SERVICE_UUID32;
 			memcpy((adv_data + adv_length), list_uuid32, length);
 			adv_length += length;
 		}
-	} else {
-		if ((scan_length + length) > (MAX_SCAN_LEN - 2)) {
+	} 
+	else 
+	{
+		if ((scan_length + length) > (MAX_SCAN_LEN - 2)) 
+		{
 			return STATUS_MAX_LENGTH_REACHED;
-		} else {
+		} 
+		else 
+		{
 			scan_rsp_data[scan_length++] = length + ADV_TYPE_LEN;
-			scan_rsp_data[scan_length++]
-				= ADV_DATA_TYPE_COMPLETE_SERVICE_UUID32;
-			memcpy((scan_rsp_data + scan_length), list_uuid32,
-					length);
+			scan_rsp_data[scan_length++] = ADV_DATA_TYPE_COMPLETE_SERVICE_UUID32;
+			memcpy((scan_rsp_data + scan_length), list_uuid32, length);
 			scan_length += length;
 		}
 	}
@@ -259,24 +285,29 @@ static status_t brd_adv_comp_list_service_uuid32(uint8_t *list_uuid32, uint8_t l
  * scan response data.
  *
  */
-static status_t brd_adv_incomp_list_service_uuid32(uint8_t *list_uuid32,
-		uint8_t length)
+static status_t brd_adv_incomp_list_service_uuid32(uint8_t *list_uuid32, uint8_t length)
 {
-	if (length <= 0 || !list_uuid32) {
+	if (length <= 0 || !list_uuid32) 
+	{
 		return STATUS_INVALID_PARAM;
 	}
 
-	if (data_type == ADVERTISEMENT_DATA) {
-		if ((adv_length + length) > (MAX_ADV_LEN - 2)) {
+	if (data_type == ADVERTISEMENT_DATA) 
+	{
+		if ((adv_length + length) > (MAX_ADV_LEN - 2)) 
+		{
 			return STATUS_MAX_LENGTH_REACHED;
-		} else {
+		} 
+		else 
+		{
 			adv_data[adv_length++] = length + ADV_TYPE_LEN;
-			adv_data[adv_length++]
-				= ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID32;
+			adv_data[adv_length++] = ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID32;
 			memcpy((adv_data + adv_length), list_uuid32, length);
 			adv_length += length;
 		}
-	} else {
+	} 
+	else 
+	{
 		return STATUS_OPERATION_NOT_SUPPORTED;
 	}
 
@@ -293,27 +324,34 @@ static status_t brd_adv_incomp_list_service_uuid32(uint8_t *list_uuid32,
  * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
  *
  */
-static status_t brd_adv_comp_list_service_uuid128(uint8_t *list_uuid128,
-		uint8_t length)
+static status_t brd_adv_comp_list_service_uuid128(uint8_t *list_uuid128, uint8_t length)
 {
-	if (length <= 0 || !list_uuid128) {
+	if (length <= 0 || !list_uuid128) 
+	{
 		return STATUS_INVALID_PARAM;
 	}
 
-	if (data_type == ADVERTISEMENT_DATA) {
-		if ((adv_length + length) > (MAX_ADV_LEN - 2)) {
+	if (data_type == ADVERTISEMENT_DATA) 
+	{
+		if ((adv_length + length) > (MAX_ADV_LEN - 2)) 
+		{
 			return STATUS_MAX_LENGTH_REACHED;
-		} else {
+		} 
+		else 
+		{
 			adv_data[adv_length++] = length + ADV_TYPE_LEN;
-			adv_data[adv_length++]
-				= ADV_DATA_TYPE_COMPLETE_SERVICE_UUID128;
+			adv_data[adv_length++] = ADV_DATA_TYPE_COMPLETE_SERVICE_UUID128;
 			memcpy((adv_data + adv_length), list_uuid128, length);
 			adv_length += length;
 		}
-	} else {
-		if ((scan_length + length) > (MAX_SCAN_LEN - 2)) {
+	} 
+	else 
+	{
+		if ((scan_length + length) > (MAX_SCAN_LEN - 2)) 
+		{
 			return STATUS_MAX_LENGTH_REACHED;
-		} else {
+		} 
+		else {
 			scan_rsp_data[scan_length++] = length + ADV_TYPE_LEN;
 			scan_rsp_data[scan_length++]
 				= ADV_DATA_TYPE_COMPLETE_SERVICE_UUID128;
@@ -338,24 +376,29 @@ static status_t brd_adv_comp_list_service_uuid128(uint8_t *list_uuid128,
  * scan response data.
  *
  */
-static status_t brd_adv_incomp_list_service_uuid128(uint8_t *list_uuid128,
-		uint8_t length)
+static status_t brd_adv_incomp_list_service_uuid128(uint8_t *list_uuid128, uint8_t length)
 {
-	if (length <= 0 || !list_uuid128) {
+	if (length <= 0 || !list_uuid128) 
+	{
 		return STATUS_INVALID_PARAM;
 	}
 
-	if (data_type == ADVERTISEMENT_DATA) {
-		if ((adv_length + length) > (MAX_ADV_LEN - 2)) {
+	if (data_type == ADVERTISEMENT_DATA)
+	{
+		if ((adv_length + length) > (MAX_ADV_LEN - 2)) 
+		{
 			return STATUS_MAX_LENGTH_REACHED;
-		} else {
+		} 
+		else 
+		{
 			adv_data[adv_length++] = length + ADV_TYPE_LEN;
-			adv_data[adv_length++]
-				= ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID128;
+			adv_data[adv_length++] = ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID128;
 			memcpy((adv_data + adv_length), list_uuid128, length);
 			adv_length += length;
 		}
-	} else {
+	} 
+	else 
+	{
 		return STATUS_OPERATION_NOT_SUPPORTED;
 	}
 
@@ -375,29 +418,36 @@ static status_t brd_adv_incomp_list_service_uuid128(uint8_t *list_uuid128,
  */
 static status_t brd_adv_comp_local_name(uint8_t *local_name, uint8_t length)
 {
-	if (length <= 0 || !local_name) {
+	if (length <= 0 || !local_name) 
+	{
 		return STATUS_INVALID_PARAM;
 	}
 
-	if (data_type == ADVERTISEMENT_DATA) {
-		if ((adv_length + length) > (MAX_ADV_LEN - 2)) {
+	if (data_type == ADVERTISEMENT_DATA) 
+	{
+		if ((adv_length + length) > (MAX_ADV_LEN - 2)) 
+		{
 			return STATUS_MAX_LENGTH_REACHED;
-		} else {
+		} 
+		else 
+		{
 			adv_data[adv_length++] = length + ADV_TYPE_LEN;
-			adv_data[adv_length++]
-				= ADV_DATA_TYPE_COMPLETE_LOCAL_NAME;
+			adv_data[adv_length++] = ADV_DATA_TYPE_COMPLETE_LOCAL_NAME;
 			memcpy((adv_data + adv_length), local_name, length);
 			adv_length += length;
 		}
-	} else {
-		if ((scan_length + length) > (MAX_SCAN_LEN - 2)) {
+	} 
+	else 
+	{
+		if ((scan_length + length) > (MAX_SCAN_LEN - 2)) 
+		{
 			return STATUS_MAX_LENGTH_REACHED;
-		} else {
+		} 
+		else 
+		{
 			scan_rsp_data[scan_length++] = length + ADV_TYPE_LEN;
-			scan_rsp_data[scan_length++]
-				= ADV_DATA_TYPE_COMPLETE_LOCAL_NAME;
-			memcpy((scan_rsp_data + scan_length), local_name,
-					length);
+			scan_rsp_data[scan_length++] = ADV_DATA_TYPE_COMPLETE_LOCAL_NAME;
+			memcpy((scan_rsp_data + scan_length), local_name,	length);
 			scan_length += length;
 		}
 	}
@@ -420,21 +470,27 @@ static status_t brd_adv_comp_local_name(uint8_t *local_name, uint8_t length)
  */
 static status_t brd_adv_shortened_local_name(uint8_t *local_name, uint8_t length)
 {
-	if (length <= 0 || !local_name) {
+	if (length <= 0 || !local_name) 
+	{
 		return STATUS_INVALID_PARAM;
 	}
 
-	if (data_type == ADVERTISEMENT_DATA) {
-		if ((adv_length + length) > (MAX_ADV_LEN - 2)) {
+	if (data_type == ADVERTISEMENT_DATA) 
+	{
+		if ((adv_length + length) > (MAX_ADV_LEN - 2)) 
+		{
 			return STATUS_MAX_LENGTH_REACHED;
-		} else {
+		} 
+		else 
+		{
 			adv_data[adv_length++] = length + ADV_TYPE_LEN;
-			adv_data[adv_length++]
-				= ADV_DATA_TYPE_SHORTENED_LOCAL_NAME;
+			adv_data[adv_length++] = ADV_DATA_TYPE_SHORTENED_LOCAL_NAME;
 			memcpy((adv_data + adv_length), local_name, length);
 			adv_length += length;
 		}
-	} else {
+	}
+	else 
+	{
 		return STATUS_OPERATION_NOT_SUPPORTED;
 	}
 
@@ -451,13 +507,18 @@ static status_t brd_adv_shortened_local_name(uint8_t *local_name, uint8_t length
  */
 static status_t brd_set_advertisement_type(uint8_t type)
 {
-	if (type == ADV_TYPE_SCANNABLE_UNDIRECTED) {
+	if (type == ADV_TYPE_SCANNABLE_UNDIRECTED) 
+	{
 		adv_type = AT_BLE_ADV_TYPE_SCANNABLE_UNDIRECTED;
 		DBG_LOG("Advertisement type set to scannable undirected");
-		} else if (type == ADV_TYPE_NONCONN_UNDIRECTED) {
+	} 
+	else if (type == ADV_TYPE_NONCONN_UNDIRECTED) 
+	{
 		adv_type = AT_BLE_ADV_TYPE_NONCONN_UNDIRECTED;
 		DBG_LOG("Advertisement type set to nonconnectable undirected");
-		} else {
+	} 
+	else 
+	{
 		return STATUS_INVALID_PARAM;
 	}
 
@@ -476,27 +537,36 @@ static status_t brd_set_advertisement_type(uint8_t type)
  */
 static status_t brd_adv_appearance(uint8_t *appearance, uint8_t length)
 {
-	if (length <= 0 || !appearance) {
+	if (length <= 0 || !appearance) 
+	{
 		return STATUS_INVALID_PARAM;
 	}
 
-	if (data_type == ADVERTISEMENT_DATA) {
-		if ((adv_length + length) > (MAX_ADV_LEN - 2)) {
+	if (data_type == ADVERTISEMENT_DATA) 
+	{
+		if ((adv_length + length) > (MAX_ADV_LEN - 2)) 
+		{
 			return STATUS_MAX_LENGTH_REACHED;
-		} else {
+		} 
+		else 
+		{
 			adv_data[adv_length++] = length + ADV_TYPE_LEN;
 			adv_data[adv_length++] = ADV_DATA_TYPE_APPEARANCE;
 			memcpy((adv_data + adv_length), appearance, length);
 			adv_length += length;
 		}
-	} else {
-		if ((scan_length + length) > (MAX_SCAN_LEN - 2)) {
+	} 
+	else 
+	{
+		if ((scan_length + length) > (MAX_SCAN_LEN - 2)) 
+		{
 			return STATUS_MAX_LENGTH_REACHED;
-		} else {
+		} 
+		else 
+		{
 			scan_rsp_data[scan_length++] = length + ADV_TYPE_LEN;
 			scan_rsp_data[scan_length++] = ADV_DATA_TYPE_APPEARANCE;
-			memcpy((scan_rsp_data + scan_length), appearance,
-					length);
+			memcpy((scan_rsp_data + scan_length), appearance,	length);
 			scan_length += length;
 		}
 	}
@@ -517,27 +587,35 @@ static status_t brd_adv_appearance(uint8_t *appearance, uint8_t length)
  */
 static status_t brd_adv_manufacturer_data(uint8_t *data, uint8_t length)
 {
-	if (length <= 0 || !data) {
+	if (length <= 0 || !data) 
+	{
 		return STATUS_INVALID_PARAM;
 	}
 
-	if (data_type == ADVERTISEMENT_DATA) {
-		if ((adv_length + length) > (MAX_ADV_LEN - 2)) {
+	if (data_type == ADVERTISEMENT_DATA) 
+	{
+		if ((adv_length + length) > (MAX_ADV_LEN - 2)) 
+		{
 			return STATUS_MAX_LENGTH_REACHED;
-		} else {
+		} 
+		else 
+		{
 			adv_data[adv_length++] = length + ADV_TYPE_LEN;
-			adv_data[adv_length++]
-				= ADV_DATA_TYPE_MANUFACTURER_DATA;
+			adv_data[adv_length++] = ADV_DATA_TYPE_MANUFACTURER_DATA;
 			memcpy((adv_data + adv_length), data, length);
 			adv_length += length;
 		}
-	} else {
-		if ((scan_length + length) > (MAX_SCAN_LEN - 2)) {
+	} 
+	else 
+	{
+		if ((scan_length + length) > (MAX_SCAN_LEN - 2)) 
+		{
 			return STATUS_MAX_LENGTH_REACHED;
-		} else {
+		} 
+		else 
+		{
 			scan_rsp_data[scan_length++] = length + ADV_TYPE_LEN;
-			scan_rsp_data[scan_length++]
-				= ADV_DATA_TYPE_MANUFACTURER_DATA;
+			scan_rsp_data[scan_length++] = ADV_DATA_TYPE_MANUFACTURER_DATA;
 			memcpy((scan_rsp_data + scan_length), data, length);
 			scan_length += length;
 		}
@@ -560,159 +638,140 @@ static status_t brd_adv_manufacturer_data(uint8_t *data, uint8_t length)
  * advertisement type
  *
  */
-static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type,
-		uint8_t *adv_usr_data, uint8_t length)
+static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_t *adv_usr_data, uint8_t length)
 {
 	status_t status;
 
-	switch (adv_data_type) {
-	case ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID16:
+	switch (adv_data_type) 
 	{
-		if ((status
-					= brd_adv_incomp_list_service_uuid16(
-						adv_usr_data,
-						length)) != STATUS_SUCCESS) {
-			DBG_LOG(
-					"adding incomplete list of service uuid16 failed");
-			return status;
+		case ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID16:
+		{
+			if ((status = brd_adv_incomp_list_service_uuid16(adv_usr_data, length)) != STATUS_SUCCESS) 
+			{
+				DBG_LOG( "adding incomplete list of service uuid16 failed");
+				return status;
+			}
+
+			DBG_LOG("incomplete list of service uuid16 set");
 		}
+		break;
 
-		DBG_LOG("incomplete list of service uuid16 set");
-	}
-	break;
+		case ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID32:
+		{
+			if ((status = brd_adv_incomp_list_service_uuid32(adv_usr_data,length)) != STATUS_SUCCESS) 
+			{
+				DBG_LOG("adding incomplete list of service uuid32 failed");
+				return status;
+			}
 
-	case ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID32:
-	{
-		if ((status
-					= brd_adv_incomp_list_service_uuid32(
-						adv_usr_data,
-						length)) != STATUS_SUCCESS) {
-			DBG_LOG(
-					"adding incomplete list of service uuid32 failed");
-			return status;
+			DBG_LOG("incomplete list of service uuid32 set");
 		}
+		break;
 
-		DBG_LOG("incomplete list of service uuid32 set");
-	}
-	break;
+		case ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID128:
+		{
+			if ((status = brd_adv_incomp_list_service_uuid128( adv_usr_data, length)) != STATUS_SUCCESS) 
+			{
+				DBG_LOG(
+						"adding incomplete list of service uuid128 failed");
+				return status;
+			}
 
-	case ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID128:
-	{
-		if ((status
-					= brd_adv_incomp_list_service_uuid128(
-						adv_usr_data,
-						length)) != STATUS_SUCCESS) {
-			DBG_LOG(
-					"adding incomplete list of service uuid128 failed");
-			return status;
+			DBG_LOG("incomplete list of service uuid128 set");
 		}
+		break;
 
-		DBG_LOG("incomplete list of service uuid128 set");
-	}
-	break;
+		case ADV_DATA_TYPE_COMPLETE_SERVICE_UUID16:
+		{
+			if ((status = brd_adv_comp_list_service_uuid16( adv_usr_data, length)) != STATUS_SUCCESS) 
+			{
+				DBG_LOG("adding complete list of service uuid16 failed");
+				return status;
+			}
 
-	case ADV_DATA_TYPE_COMPLETE_SERVICE_UUID16:
-	{
-		if ((status
-					= brd_adv_comp_list_service_uuid16(
-						adv_usr_data,
-						length)) != STATUS_SUCCESS) {
-			DBG_LOG("adding complete list of service uuid16 failed");
-			return status;
+			DBG_LOG("complete list of service uuid16 set");
 		}
+		break;
 
-		DBG_LOG("complete list of service uuid16 set");
-	}
-	break;
+		case ADV_DATA_TYPE_COMPLETE_SERVICE_UUID32:
+		{
+			DBG_LOG("name set");
+			if ((status = brd_adv_comp_list_service_uuid32( adv_usr_data,length)) != STATUS_SUCCESS) 
+			{
+				DBG_LOG("adding complete list of service uuid32 failed");
+				return status;
+			}
 
-	case ADV_DATA_TYPE_COMPLETE_SERVICE_UUID32:
-	{
-		DBG_LOG("name set");
-		if ((status
-					= brd_adv_comp_list_service_uuid32(
-						adv_usr_data,
-						length)) != STATUS_SUCCESS) {
-			DBG_LOG("adding complete list of service uuid32 failed");
-			return status;
+			DBG_LOG("complete list of service uuid32 set");
 		}
+		break;
 
-		DBG_LOG("complete list of service uuid32 set");
-	}
-	break;
+		case ADV_DATA_TYPE_COMPLETE_SERVICE_UUID128:
+		{
+			if ((status = brd_adv_comp_list_service_uuid128(adv_usr_data,length)) != STATUS_SUCCESS)
+			{
+				DBG_LOG("adding complete list of service uuid128 failed");
+				return status;
+			}
 
-	case ADV_DATA_TYPE_COMPLETE_SERVICE_UUID128:
-	{
-		if ((status
-					= brd_adv_comp_list_service_uuid128(
-						adv_usr_data,
-						length)) != STATUS_SUCCESS) {
-			DBG_LOG("adding complete list of service uuid128 failed");
-			return status;
+			DBG_LOG("complete list of service uuid128 set");
 		}
+		break;
 
-		DBG_LOG("complete list of service uuid128 set");
-	}
-	break;
+		case ADV_DATA_TYPE_COMPLETE_LOCAL_NAME:
+		{
+			if ((status = brd_adv_comp_local_name(adv_usr_data, length)) != STATUS_SUCCESS) 
+			{
+				DBG_LOG("adding complete local name failed");
+				return status;
+			}
 
-	case ADV_DATA_TYPE_COMPLETE_LOCAL_NAME:
-	{
-		if ((status
-					= brd_adv_comp_local_name(adv_usr_data,
-						length)) != STATUS_SUCCESS) {
-			DBG_LOG("adding complete local name failed");
-			return status;
+			DBG_LOG("complete name set");
 		}
+		break;
 
-		DBG_LOG("complete name set");
-	}
-	break;
+		case ADV_DATA_TYPE_SHORTENED_LOCAL_NAME:
+		{
+			if ((status = brd_adv_shortened_local_name( adv_usr_data,length)) != STATUS_SUCCESS) 
+			{
+				DBG_LOG("adding shortened complete local name failed");
+				return status;
+			}
 
-	case ADV_DATA_TYPE_SHORTENED_LOCAL_NAME:
-	{
-		if ((status
-					= brd_adv_shortened_local_name(
-						adv_usr_data,
-						length)) != STATUS_SUCCESS) {
-			DBG_LOG("adding shortened complete local name failed");
-			return status;
+			DBG_LOG("shortened name set");
 		}
+		break;
 
-		DBG_LOG("shortened name set");
-	}
-	break;
+		case ADV_DATA_TYPE_MANUFACTURER_DATA:
+		{
+			if ((status = brd_adv_manufacturer_data(adv_usr_data, length)) != STATUS_SUCCESS) 
+			{
+				DBG_LOG("adding manufacturer data failed");
+				return status;
+			}
 
-	case ADV_DATA_TYPE_MANUFACTURER_DATA:
-	{
-		if ((status
-					= brd_adv_manufacturer_data(adv_usr_data,
-						length)) != STATUS_SUCCESS) {
-			DBG_LOG("adding manufacturer data failed");
-			return status;
+			DBG_LOG("manufacturer data set");
 		}
+		break;
 
-		DBG_LOG("manufacturer data set");
-	}
-	break;
+		case ADV_DATA_TYPE_APPEARANCE:
+		{
+			if ((status = brd_adv_appearance(adv_usr_data, length)) != STATUS_SUCCESS) 
+			{
+				DBG_LOG("adding appearance failed");
+				return status;
+			}
 
-	case ADV_DATA_TYPE_APPEARANCE:
-	{
-		if ((status
-					= brd_adv_appearance(adv_usr_data,
-						length)) != STATUS_SUCCESS) {
-			DBG_LOG("adding appearance failed");
-			return status;
+			DBG_LOG("appearance set");
 		}
+		break;
 
-		DBG_LOG("appearance set");
-	}
-	break;
-
-	default:
-	{
-		DBG_LOG("invalid advertisement data type");
-		return STATUS_INVALID_PARAM;
-	}
-	break;
+		default:
+		{
+			DBG_LOG("invalid advertisement data type");
+			return STATUS_INVALID_PARAM;
+		}
+		break;
 	}
 	return STATUS_SUCCESS;
 }
@@ -724,17 +783,17 @@ static status_t brd_adv_init(void)
 {
 	status_t status;
 
-	if ((status
-				= brd_set_advertisement_type(
-					ADV_TYPE_NONCONN_UNDIRECTED)) !=
-			STATUS_SUCCESS) {
+	status = brd_set_advertisement_type(ADV_TYPE_NONCONN_UNDIRECTED);
+	if (status != STATUS_SUCCESS) 
+	{
 		DBG_LOG("Advertisement type set failed(%d)", status);
 		return STATUS_FAILED;
 	}
 
 	/*set advertisement data type */
-	if ((status = brd_set_data_type(ADVERTISEMENT_DATA)) !=
-			STATUS_SUCCESS) {
+	status = brd_set_data_type(ADVERTISEMENT_DATA);
+	if (status != STATUS_SUCCESS) 
+	{
 		DBG_LOG("Advertisement data type set failed(%d)", status);
 		return STATUS_FAILED;
 	}
@@ -771,7 +830,10 @@ int main(void)
 	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
-
+	
+	/* Intialize LED */
+	led_init();
+	
 	brd_adv_init();
 
 	/* starting advertisement in broadcast mode */

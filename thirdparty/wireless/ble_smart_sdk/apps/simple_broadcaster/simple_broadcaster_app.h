@@ -53,6 +53,7 @@
 #include "platform.h"
 #include "at_ble_api.h"
 #include "console_serial.h"
+#include "led.h"
 #include "timer_hw.h"
 #include "ble_manager.h"
 #include "ble_utils.h"
