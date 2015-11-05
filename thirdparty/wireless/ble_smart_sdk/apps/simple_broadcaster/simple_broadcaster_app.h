@@ -52,11 +52,8 @@
 #include <asf.h>
 #include "platform.h"
 #include "at_ble_api.h"
-#include "profiles.h"
 #include "console_serial.h"
 #include "timer_hw.h"
-//#include "conf_extint.h"
-//#include "conf_serialdrv.h"
 #include "ble_manager.h"
 #include "ble_utils.h"
 
