@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Quick Start for the SAM L21 SLCD driver" id="sam0.drivers.slcd.quick_start_b.saml22_xplained_pro">
+	<project caption="Quick Start for the SAM L21 SLCD driver" id="sam0.drivers.slcd.quick_start_b.saml22_xplained_pro_b">
 		<info type="gui-flag" value="move-to-root"/>
 		<require idref="board.saml22_xplained_pro_b"/>
 		<require idref="sam0.drivers.slcd.quick_start_b"/>

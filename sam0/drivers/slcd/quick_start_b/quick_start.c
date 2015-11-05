@@ -150,18 +150,18 @@ int main(void)
 	/* 3. Character map*/
 	slcd_character_map_set(SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_RIGHT, 1);
 	for(uint32_t i = 0; i < 8; i++) {
-		slcd_character_write_data(0, 8 + i*2, character_map[10+i], 0x00ff0003);
+		slcd_character_write_data(0, 8 + i*2, character_map[10+i], 0xffff0003);
 	}
 //! [use_cases_3]
 	
 //! [use_cases_4]
 	/* 4. Digital map*/
 	slcd_character_map_set(SLCD_AUTOMATED_CHAR_START_FROM_BOTTOM_RIGHT, 0);
-	slcd_character_write_data(0, 1, digital_map[0], 0x00ff8000);
-	slcd_character_write_data(0, 4, digital_map[1], 0x00ff8000);
-	slcd_character_write_data(0, 5, digital_map[2], 0x00ff8000);
-	slcd_character_write_data(0, 6, digital_map[3], 0x00ff8000);
-	slcd_character_write_data(0, 7, digital_map[4], 0x00ff8000);
+	slcd_character_write_data(0, 1, digital_map[0], 0xffffff80);
+	slcd_character_write_data(0, 4, digital_map[1], 0xffffff80);
+	slcd_character_write_data(0, 5, digital_map[2], 0xffffff80);
+	slcd_character_write_data(0, 6, digital_map[3], 0xffffff80);
+	slcd_character_write_data(0, 7, digital_map[4], 0xffffff80);
 	delay_s(2);
 //! [use_cases_4]
 
