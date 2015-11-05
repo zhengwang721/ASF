@@ -137,7 +137,6 @@ static void display_ringer_setting_info(uint8_t *data)
  */
 static at_ble_status_t app_connected_event_handler(void *params)
 {
-	DBG_LOG("App connected");
 	app_state = true;
 	ALL_UNUSED(params);
 	return AT_BLE_SUCCESS;
@@ -149,7 +148,6 @@ static at_ble_status_t app_connected_event_handler(void *params)
  */
 static at_ble_status_t app_disconnected_event_handler(void *params)
 {
-	DBG_LOG("App disconnected");
 		app_state = false;
 		press_count = DEVICE_SILENT;
 		pas_client_adv();
@@ -210,9 +208,7 @@ static void app_ringer_setting_notify(uint8_t *data, uint8_t len)
  */
 void button_cb(void)
 {
-	
 	if (app_state && !flag) {
-		DBG_LOG("button pressed");
 		flag = true;
 	}
 }

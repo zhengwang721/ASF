@@ -603,9 +603,13 @@ void button_cb(void)
 					units = !units;
 				}
 				
-				/** To trigger the blood pressure indication */
-				user_request_flag = true;
-				timer_count = 0;
+				if (indication_flag || notification_flag) {
+					
+					/** To trigger the blood pressure indication */
+					user_request_flag = true;
+					timer_count = 0;	
+				}
+				
 				if (notification_flag) {
 					DBG_LOG("\r\nStarted sending Interim Cuff Pressure Values");
 				}	

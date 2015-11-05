@@ -471,7 +471,7 @@ int main(void)
 	
 	pxp_monitor_init(NULL);
 
-	DBG_LOG("Initializing Proximity Monitor Application");
+	DBG_LOG("Initializing Multi Role Application");
 
 	/* Initialize the pxp service */
 	pxp_app_init();
