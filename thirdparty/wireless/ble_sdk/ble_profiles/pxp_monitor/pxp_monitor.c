@@ -136,6 +136,7 @@ uint8_t ias_char_data[MAX_IAS_CHAR_SIZE];
 
 hw_timer_start_func_cb_t hw_timer_start_func_cb = NULL;
 hw_timer_stop_func_cb_t hw_timer_stop_func_cb = NULL;
+peripheral_state_cb_t peripheral_state_callback = NULL;
 
 /* *@brief Initializes Proximity profile
 * handler Pointer reference to respective variables
@@ -289,6 +290,42 @@ at_ble_status_t pxp_monitor_scan_data_handler(void *params)
 	return AT_BLE_FAILURE;
 }
 
+at_ble_status_t pxp_monitor_start_scan(void)
+{
+	if (peripheral_state_callback != NULL)
+	{
+		if (peripheral_state_callback() == PERIPHERAL_ADVERTISING_STATE)
+		{
+			DBG_LOG("Peripheral is already Advertising. Scan not permitted");
+			return AT_BLE_FAILURE;
+		}
+	}
+	
+	char index_value;
+	hw_timer_stop_func_cb();
+	do
+	{
+		DBG_LOG("Select [r] to Reconnect or [s] Scan");
+		index_value = getchar();
+		DBG_LOG("%c", index_value);
+	}	while (!((index_value == 'r') || (index_value == 's')));
+	
+	if(index_value == 'r') {
+		if (gap_dev_connect(&pxp_reporter_address) == AT_BLE_SUCCESS) {
+			DBG_LOG("PXP Re-Connect request sent");
+			pxp_connect_request_flag = PXP_DEV_CONNECTING;
+			hw_timer_start_func_cb(PXP_CONNECT_REQ_INTERVAL);
+			return AT_BLE_SUCCESS;
+			} else {
+			DBG_LOG("PXP Re-Connect request send failed");
+		}
+	}
+	else if(index_value == 's') {
+		return gap_dev_scan();
+	}
+	return AT_BLE_FAILURE;
+}
+
 /**@brief peer device connection terminated
 *
 * handler for disconnect notification
@@ -302,40 +339,33 @@ at_ble_status_t pxp_monitor_scan_data_handler(void *params)
 * @return @ref AT_BLE_FAILURE Reconnection fails.
 */
 at_ble_status_t pxp_disconnect_event_handler(void *params)
-{
-	char index_value;	
+{	
 	at_ble_disconnected_t *disconnect;
 	disconnect = (at_ble_disconnected_t *)params;
+	static ble_peripheral_state_t peripheral_state = PERIPHERAL_IDLE_STATE;
 	
 	if(!ble_check_disconnected_iscentral(disconnect->handle))
 	{
 		return AT_BLE_FAILURE;
 	}
-	
-	if((ble_check_device_state(disconnect->handle, BLE_DEVICE_DISCONNECTED) == AT_BLE_SUCCESS) ||
-	(ble_check_device_state(disconnect->handle, BLE_DEVICE_DEFAULT_IDLE) == AT_BLE_SUCCESS))
+	else if(peripheral_state_callback != NULL)
 	{
-		hw_timer_stop_func_cb();
-		do
+		peripheral_state = peripheral_state_callback();
+	}
+	
+	if(peripheral_state != PERIPHERAL_ADVERTISING_STATE)
+	{
+		if((ble_check_device_state(disconnect->handle, BLE_DEVICE_DISCONNECTED) == AT_BLE_SUCCESS) ||
+		(ble_check_device_state(disconnect->handle, BLE_DEVICE_DEFAULT_IDLE) == AT_BLE_SUCCESS))
 		{
-			DBG_LOG("Select [r] to Reconnect or [s] Scan");
-			index_value = getchar();
-			DBG_LOG("%c", index_value);
-		}	while (!((index_value == 'r') || (index_value == 's')));
-		
-		if(index_value == 'r') {
-			if (gap_dev_connect(&pxp_reporter_address) == AT_BLE_SUCCESS) {
-				DBG_LOG("PXP Re-Connect request sent");
-				pxp_connect_request_flag = PXP_DEV_CONNECTING;
-				hw_timer_start_func_cb(PXP_CONNECT_REQ_INTERVAL);
-				return AT_BLE_SUCCESS;
-				} else {
-				DBG_LOG("PXP Re-Connect request send failed");
-			}
+			return pxp_monitor_start_scan();
+			
 		}
-		else if(index_value == 's') {
-			return gap_dev_scan();
-		}
+	}
+	else
+	{
+		pxp_connect_request_flag = PXP_DEV_UNCONNECTED;
+		DBG_LOG("Peripheral is already Advertising,Scan not permitted");
 	}
 
 	return AT_BLE_FAILURE;
@@ -656,7 +686,7 @@ at_ble_status_t pxp_monitor_characteristic_read_response(void *params)
 	#if defined LINK_LOSS_SERVICE
 	lls_alert_read_response(char_read_resp, &lls_handle);
 	#endif
-	DBG_LOG("Starting timer");
+	DBG_LOG_DEV("Starting timer");
 	hw_timer_start_func_cb(PXP_RSSI_UPDATE_INTERVAL);
 	return AT_BLE_SUCCESS;
 }
@@ -730,3 +760,7 @@ void register_hw_timer_stop_func_cb(hw_timer_stop_func_cb_t timer_stop_fn)
 	hw_timer_stop_func_cb = timer_stop_fn;
 }
 
+void register_peripheral_state_cb(peripheral_state_cb_t peripheral_state_cb)
+{
+	peripheral_state_callback = peripheral_state_cb;
+}

@@ -189,6 +189,14 @@ typedef enum {
 	UNREGISTER_CALL_BACK,
 }ble_mgr_event_cb_t;
 
+typedef enum ble_peripheral_state {
+	PERIPHERAL_IDLE_STATE,
+	PERIPHERAL_ADVERTISING_STATE,
+	PERIPHERAL_CONNECTED_STATE,
+	PERIPHERAL_PAIRED_STATE,
+	PERIPHERAL_ENCRYPTION_STATE,
+	PERIPHERAL_DISCONNECTED_STATE,
+}ble_peripheral_state_t;
 
 typedef at_ble_status_t (*ble_event_callback_t) (void *params);
 
@@ -521,6 +529,7 @@ typedef enum
 #define BLE_EVENT_PARAM_MAX_SIZE		        524
 
 typedef enum {
+  BLE_DEVICE_DEFAULT_IDLE,
   BLE_DEVICE_DISCONNECTED,
   BLE_DEVICE_CONNECTED,
   BLE_DEVICE_PAIRING,
@@ -528,8 +537,7 @@ typedef enum {
   BLE_DEVICE_PAIRED,  
   BLE_DEVICE_ENCRYPTION_STATE,
   BLE_DEVICE_ENCRYPTION_FAILED,
-  BLE_DEVICE_ENCRYPTION_COMPLETED,
-  BLE_DEVICE_DEFAULT_IDLE
+  BLE_DEVICE_ENCRYPTION_COMPLETED  
 }ble_device_state_t;
 
 typedef struct ble_connected_dev_info

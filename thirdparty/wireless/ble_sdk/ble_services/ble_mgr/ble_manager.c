@@ -606,7 +606,7 @@ bool ble_check_ispheripheral(at_ble_handle_t handle)
 
 bool ble_check_iscentral(at_ble_handle_t handle)
 {
-	at_ble_dev_role_t dev_role;
+	at_ble_dev_role_t dev_role = AT_BLE_ROLE_NONE;
 	
 	if(ble_connected_device_role(handle, &dev_role) == AT_BLE_SUCCESS)
 	{
@@ -928,9 +928,8 @@ at_ble_status_t ble_disconnected_state_handler(void *params)
 		((ble_dev_info[idx].conn_state == BLE_DEVICE_PAIRED) || (ble_dev_info[idx].conn_state == BLE_DEVICE_ENCRYPTION_COMPLETED)))
 		{
 			ble_dev_info[idx].conn_state = BLE_DEVICE_DISCONNECTED;
-		}
-		
-		if(ble_dev_info[idx].conn_info.handle == disconnect->handle)
+		}		
+		else if(ble_dev_info[idx].conn_info.handle == disconnect->handle)
 		{
 			switch (ble_dev_info[idx].conn_state)
 			{
@@ -947,9 +946,15 @@ at_ble_status_t ble_disconnected_state_handler(void *params)
 						ble_device_count--;
 					}
 				}
-				default:
-				break;		
+				break;
 				
+				case BLE_DEVICE_DISCONNECTED:
+				break;
+				
+				default:
+				DBG_LOG_DEV("State Not Handled %d", ble_dev_info[idx].conn_state);
+				ble_dev_info[idx].conn_state = BLE_DEVICE_DEFAULT_IDLE;
+				break;				
 			}
 		} 
 	}

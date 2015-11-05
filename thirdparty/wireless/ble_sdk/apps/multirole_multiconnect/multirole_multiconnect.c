@@ -1,7 +1,7 @@
 /**
 * \file
 *
-* \brief Proximity Monitor Profile Application
+* \brief Multi-Role/Multi-Connect Application
 *
 * Copyright (c) 2015 Atmel Corporation. All rights reserved.
 *
@@ -49,7 +49,7 @@
 /**
 * \mainpage
 * \section preface Preface
-* This is the reference manual for the Proximity Monitor Profile Application
+* This is the reference manual for the Multi-Role/Multi-Connect Application
 */
 /*- Includes ---------------------------------------------------------------*/
 
@@ -57,6 +57,13 @@
 #include "platform.h"
 
 #include "multirole_multiconnect.h"
+#include "console_serial.h"
+#include "ble_manager.h"
+#include "at_ble_api.h"
+#include "pxp_monitor.h"
+#include "immediate_alert.h"
+#include "timer_hw.h"
+#include "conf_extint.h"
 
 #if defined IMMEDIATE_ALERT_SERVICE
 #include "immediate_alert.h"
@@ -120,6 +127,13 @@ static at_ble_status_t battery_set_advertisement_data(void);
 static at_ble_status_t ble_char_changed_app_event(void *param);
 static at_ble_status_t ble_notification_confirmed_app_event(void *param);
 static at_ble_status_t battery_simulation_task(void *param);
+static at_ble_status_t ble_connected_app_event(void *param);
+static ble_peripheral_state_t peripheral_state = PERIPHERAL_IDLE_STATE;
+
+static ble_peripheral_state_t peripheral_advertising_cb(void)
+{
+	return peripheral_state;
+}
 
 static const ble_event_callback_t battery_app_gap_cb[] = {
 	NULL,
@@ -127,7 +141,7 @@ static const ble_event_callback_t battery_app_gap_cb[] = {
 	NULL,
 	NULL,
 	NULL,
-	NULL,
+	ble_connected_app_event,
 	ble_disconnected_app_event,
 	NULL,
 	NULL,
@@ -254,10 +268,30 @@ static void timer_callback_handler(void)
 	}
 }
 
+/* Callback registered for AT_BLE_CONNECTED_DONE event from stack */
+static at_ble_status_t ble_connected_app_event(void *param)
+{
+	at_ble_connected_t *connected = (at_ble_connected_t *)param;
+	if (connected->conn_status != AT_BLE_SUCCESS)
+	{
+		return AT_BLE_FAILURE;
+	}
+	if(!ble_check_iscentral(connected->handle))
+	{
+		peripheral_state = PERIPHERAL_CONNECTED_STATE;
+		battery_conn_handle = connected->handle;
+		#if !BLE_PAIR_ENABLE
+		bas_paired_app_event(param);
+		#else
+		ALL_UNUSED(param);
+		#endif
+	}
+	return AT_BLE_SUCCESS;
+}
+
 /* Callback registered for AT_BLE_PAIR_DONE event from stack */
 static at_ble_status_t bas_paired_app_event(void *param)
 {
-	static bool peripheral_advertising = false;
 	at_ble_pair_done_t *ble_pair_done;
 	ble_pair_done = (at_ble_pair_done_t *)param;
 	if (ble_pair_done->status != AT_BLE_SUCCESS)
@@ -266,14 +300,15 @@ static at_ble_status_t bas_paired_app_event(void *param)
 	}
 	if(ble_check_iscentral(ble_pair_done->handle))
 	{
-		if (!peripheral_advertising)
+		if ((peripheral_state == PERIPHERAL_IDLE_STATE) || (peripheral_state == PERIPHERAL_DISCONNECTED_STATE))
 		{
 			battery_start_advertisement();
-			peripheral_advertising = true;
+			peripheral_state = PERIPHERAL_ADVERTISING_STATE;
 		}
 	}
 	else
 	{
+		peripheral_state = PERIPHERAL_PAIRED_STATE;
 		battery_conn_handle = ble_pair_done->handle;
 		timer_cb_done = false;
 		bat_char_notification_confirmed = true;
@@ -285,7 +320,6 @@ static at_ble_status_t bas_paired_app_event(void *param)
 
 static at_ble_status_t bas_encryption_status_changed_app_event(void *param)
 {
-	static bool peripheral_advertising = false;
 	at_ble_encryption_status_changed_t *ble_enc_status;
 	ble_enc_status = (at_ble_encryption_status_changed_t *)param;
 	if (ble_enc_status->status != AT_BLE_SUCCESS)
@@ -294,14 +328,15 @@ static at_ble_status_t bas_encryption_status_changed_app_event(void *param)
 	}
 	if(ble_check_iscentral(ble_enc_status->handle))
 	{
-		if (!peripheral_advertising)
+		if ((peripheral_state == PERIPHERAL_IDLE_STATE) || (peripheral_state == PERIPHERAL_DISCONNECTED_STATE))
 		{
 			battery_start_advertisement();
-			peripheral_advertising = true;
+			peripheral_state = PERIPHERAL_ADVERTISING_STATE;
 		}
 	}
 	else
 	{
+		peripheral_state = PERIPHERAL_ENCRYPTION_STATE;
 		battery_conn_handle = ble_enc_status->handle;
 		timer_cb_done = false;
 		bat_char_notification_confirmed = true;
@@ -316,11 +351,15 @@ static at_ble_status_t ble_disconnected_app_event(void *param)
 {
 	at_ble_disconnected_t *ble_disconnected;
 	ble_disconnected = (at_ble_disconnected_t *)param;
-	DBG_LOG("Disconneted CB Called********");
 	if (ble_disconnected->handle == battery_conn_handle)
 	{
 		battery_stop_simulation = true;
-		battery_start_advertisement();
+		if (peripheral_state != PERIPHERAL_ADVERTISING_STATE)
+		{
+			battery_start_advertisement();
+			peripheral_state = PERIPHERAL_ADVERTISING_STATE;
+		}
+		
 	}
 	ALL_UNUSED(param);
 	return AT_BLE_SUCCESS;
@@ -451,6 +490,8 @@ int main(void)
 	/* Initialize the battery service */
 	bat_init_service(&bas_service_handler, &battery_level);
 	
+	register_peripheral_state_cb(peripheral_advertising_cb);
+	
 	/* Define the primary service in the GATT server database */
 	if((status = bat_primary_service_define(&bas_service_handler))!= AT_BLE_SUCCESS)
 	{
@@ -471,7 +512,7 @@ int main(void)
 	
 	pxp_monitor_init(NULL);
 
-	DBG_LOG("Initializing Multi Role Application");
+	DBG_LOG("Initializing Multi-Role/Multi-Connect Application");
 
 	/* Initialize the pxp service */
 	pxp_app_init();
@@ -482,9 +523,24 @@ int main(void)
 		
 		if (button_pressed)
 		{
-			at_ble_disconnect(ble_dev_info[0].conn_info.handle, AT_BLE_TERMINATED_BY_USER);
+			uint8_t idx;
+			uint8_t connected_to_central = false;
+			for (idx = 0; idx < BLE_MAX_DEVICE_CONNECTED; idx++ )
+			{
+				if(ble_check_iscentral(ble_dev_info[idx].conn_info.handle))
+				{
+					at_ble_disconnect(ble_dev_info[idx].conn_info.handle, AT_BLE_TERMINATED_BY_USER);
+					connected_to_central = true;
+					break;
+				}
+			}
+			if (connected_to_central == false)
+			{
+				at_ble_scan_stop();
+				pxp_monitor_start_scan();
+			}
 			button_pressed = false;
-			app_timer_done = false;
+						
 		}
 		
 		battery_simulation_task(NULL);

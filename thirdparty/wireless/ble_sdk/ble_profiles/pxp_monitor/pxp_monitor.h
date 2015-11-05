@@ -95,6 +95,7 @@ typedef enum {
 
 typedef void (*hw_timer_start_func_cb_t)(uint32_t);
 typedef void (*hw_timer_stop_func_cb_t)(void);
+typedef ble_peripheral_state_t (*peripheral_state_cb_t)(void);
 
 /* *@brief Initializes Proximity profile
  * handler Pointer reference to respective variables
@@ -227,8 +228,10 @@ at_ble_status_t pxp_monitor_connect_request(at_ble_scan_info_t *scan_buffer,
  */
 at_ble_status_t pxp_monitor_service_discover(at_ble_handle_t);
 
+at_ble_status_t pxp_monitor_start_scan(void);
 void register_hw_timer_start_func_cb(hw_timer_start_func_cb_t timer_start_fn);
 void register_hw_timer_stop_func_cb(hw_timer_stop_func_cb_t timer_stop_fn);
+void register_peripheral_state_cb(peripheral_state_cb_t peripheral_state_cb);
 #endif /*__PXP_MONITOR_H__*/
 // </h>
 

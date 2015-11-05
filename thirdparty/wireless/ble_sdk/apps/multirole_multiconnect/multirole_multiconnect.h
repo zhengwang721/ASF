@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Proximity Monitor Profile Application declarations
+ * \brief Multi-Role/Multi-Connect Application declarations
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -46,16 +46,8 @@
  * Support</a>
  */
 
-#ifndef __PXP_MONITOR_APP_H__
-#define __PXP_MONITOR_APP_H__
-
-#include "console_serial.h"
-#include "ble_manager.h"
-#include "at_ble_api.h"
-#include "pxp_monitor.h"
-#include "immediate_alert.h"
-#include "timer_hw.h"
-#include "conf_extint.h"
+#ifndef __MUTLIROLE_MULTICONNECT_H__
+#define __MUTLIROLE_MULTICONNECT_H__
 
 typedef enum pxp_current_alert {
 	PXP_NO_ALERT = 0,
@@ -63,4 +55,5 @@ typedef enum pxp_current_alert {
 	PXP_HIGH_ALERT
 } pxp_current_alert_t;
 
-#endif /*__PXP_MONITOR_H__*/
+
+#endif /*__MUTLIROLE_MULTICONNECT_H__*/
