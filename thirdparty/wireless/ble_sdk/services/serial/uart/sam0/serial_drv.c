@@ -99,13 +99,14 @@ uint8_t configure_serial_drv(void)
 	serial_read_byte(&rx_data);
 	return STATUS_OK;
 }
+
 void configure_usart_after_patch(void)
 {
 	struct usart_config config_usart;
 	usart_disable(&usart_instance);
 	usart_reset(&usart_instance);
 	usart_get_config_defaults(&config_usart);
-#if SAML21
+
 	config_usart.baudrate = CONF_FLCR_BLE_BAUDRATE;
 	config_usart.generator_source = CONF_FLCR_BLE_UART_CLOCK;
 	config_usart.mux_setting = CONF_FLCR_BLE_MUX_SETTING;
@@ -115,17 +116,7 @@ void configure_usart_after_patch(void)
 	config_usart.pinmux_pad3 = CONF_FLCR_BLE_PINMUX_PAD3;
 
 	while (usart_init(&usart_instance, CONF_FLCR_BLE_USART_MODULE, &config_usart) != STATUS_OK);
-#elif SAMD21
 
-	config_usart.baudrate = 115200;
-	config_usart.generator_source = GCLK_GENERATOR_0;
-    config_usart.mux_setting = USART_RX_1_TX_0_RTS_2_CTS_3;
-    config_usart.pinmux_pad0 = PINMUX_PA04D_SERCOM0_PAD0;
-    config_usart.pinmux_pad1 = PINMUX_PA05D_SERCOM0_PAD1;
-    config_usart.pinmux_pad2 = PINMUX_PA06D_SERCOM0_PAD2;
-    config_usart.pinmux_pad3 = PINMUX_PA07D_SERCOM0_PAD3;
-	while (usart_init(&usart_instance, SERCOM0, &config_usart) != STATUS_OK);
-#endif	
 	usart_enable(&usart_instance);
 	
 	
@@ -140,8 +131,8 @@ void configure_usart_after_patch(void)
 	usart_enable_callback(&usart_instance, USART_CALLBACK_BUFFER_RECEIVED);
 	usart_enable_callback(&usart_instance, USART_CALLBACK_BUFFER_TRANSMITTED);
 	serial_read_byte(&rx_data);
-	//return STATUS_OK;
 }
+
 uint16_t serial_drv_send(uint8_t* data, uint16_t len)
 {  
   uint16_t i;

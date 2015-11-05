@@ -44,6 +44,7 @@
 #ifndef CONF_SERIALDRV_H_INCLUDED
 #define CONF_SERIALDRV_H_INCLUDED
 
+#ifdef UART_FLOW_CONTROL_ENABLED
 /* BLE UART Configuration details */
 #define CONF_BLE_USART_MODULE  EXT3_UART_MODULE
 #define CONF_BLE_MUX_SETTING   EXT3_UART_SERCOM_MUX_SETTING
@@ -60,8 +61,6 @@
 #define EXT3_FLCR_UART_SERCOM_PINMUX_PAD1  PINMUX_PB17C_SERCOM5_PAD1
 #define EXT3_FLCR_UART_SERCOM_PINMUX_PAD2  PINMUX_PB22D_SERCOM5_PAD2
 #define EXT3_FLCR_UART_SERCOM_PINMUX_PAD3	PINMUX_PB23D_SERCOM5_PAD3
-//#define EXT3_SPI_SERCOM_DMAC_ID_TX   SERCOM5_DMAC_ID_TX
-//#define EXT3_SPI_SERCOM_DMAC_ID_RX   SERCOM5_DMAC_ID_RX
 
 #define CONF_FLCR_BLE_USART_MODULE  EXT3_FLCR_UART_MODULE
 #define CONF_FLCR_BLE_MUX_SETTING   EXT3_FLCR_UART_SERCOM_MUX_SETTING
@@ -76,6 +75,25 @@
 #define BTLC1000_WAKEUP_PIN			(EXT3_PIN_6)
 /* BTLC1000 Chip Enable Pin */
 #define BTLC1000_CHIP_ENABLE_PIN	(EXT3_PIN_10)
+
+#else
+/* BLE UART Configuration details */
+#define CONF_BLE_USART_MODULE  EXT2_UART_MODULE
+#define CONF_BLE_MUX_SETTING   EXT2_UART_SERCOM_MUX_SETTING
+#define CONF_BLE_PINMUX_PAD0   EXT2_UART_SERCOM_PINMUX_PAD0
+#define CONF_BLE_PINMUX_PAD1   EXT2_UART_SERCOM_PINMUX_PAD1
+#define CONF_BLE_PINMUX_PAD2   EXT2_UART_SERCOM_PINMUX_PAD2
+#define CONF_BLE_PINMUX_PAD3   EXT2_UART_SERCOM_PINMUX_PAD3
+#define CONF_BLE_BAUDRATE      115200
+#define CONF_BLE_UART_CLOCK	   GCLK_GENERATOR_0
+
+/* BTLC1000 Wakeup Pin */
+#define BTLC1000_WAKEUP_PIN			(EXT2_PIN_6)
+/* BTLC1000 Chip Enable Pin */
+#define BTLC1000_CHIP_ENABLE_PIN	(EXT2_PIN_10)
+#endif //UART_FLOW_CONTROL_ENABLED
+
+
 /* BTLC1000 50ms Reset Duration */
 #define BTLC1000_RESET_MS			(50)
 
@@ -92,8 +110,8 @@ void serial_tx_callback(void);
 #define SERIAL_DRV_TX_CB_ENABLE  true
 #define SERIAL_DRV_RX_CB_ENABLE  true
 
-#define BLE_MAX_TX_PAYLOAD_SIZE 512
-#define BLE_MAX_RX_PAYLOAD_SIZE 512
+#define BLE_MAX_TX_PAYLOAD_SIZE 1024
+#define BLE_MAX_RX_PAYLOAD_SIZE 1024
 
 
 /* Set BLE Wakeup pin to be low */
@@ -159,17 +177,6 @@ static inline void ble_configure_control_pin(void)
 	/* set chip enable to high */
 	ble_enable_pin_set_high();
 #ifdef UART_FLOW_CONTROL_ENABLED
-	#if SAMD21
-	port_get_config_defaults(&pin_conf);
-	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
-	pin_conf.input_pull = PORT_PIN_PULL_UP;
-	port_pin_set_config(PIN_PA04, &pin_conf);
-	port_pin_set_output_level(PIN_PA04, true);
-	port_get_config_defaults(&pin_conf);
-	pin_conf.direction  = PORT_PIN_DIR_INPUT;
-	pin_conf.input_pull = PORT_PIN_PULL_UP;
-	port_pin_set_config(PIN_PA05, &pin_conf);
-	#elif SAML21
 	port_get_config_defaults(&pin_conf);
 	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
 	pin_conf.input_pull = PORT_PIN_PULL_UP;
@@ -179,7 +186,6 @@ static inline void ble_configure_control_pin(void)
 	pin_conf.direction  = PORT_PIN_DIR_INPUT;
 	pin_conf.input_pull = PORT_PIN_PULL_UP;
 	port_pin_set_config(PIN_PB17, &pin_conf);
-	#endif
 #endif //UART_FLOW_CONTROL_ENABLED
 	
 }
