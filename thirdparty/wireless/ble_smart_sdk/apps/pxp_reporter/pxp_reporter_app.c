@@ -55,17 +55,14 @@
 #include "platform.h"
 #include "pxp_reporter.h"
 #include "timer_hw.h"
-//#include "conf_extint.h"
 #include "ble_utils.h"
 #include "pxp_reporter_app.h"
 #include "ble_manager.h"
 #include "immediate_alert.h"
 #include "link_loss.h"
 #include "tx_power.h"
-#include "at_ble_errno.h"
-#include "at_ble_trace.h"
-
-
+#include "button.h"
+#include "led.h"
 
 /* === GLOBALS ============================================================ */
 /* PXP Application LED State */
@@ -80,9 +77,10 @@ bool app_exec = true;
 /**
 * \brief Timer callback handler called on timer expiry
 */
-void timer_callback_handler(void)
+static void timer_callback_handler(void)
 {
 	hw_timer_stop();
+	
 	if (pxp_led_state) {
 		pxp_led_state = false;
 		LED_Off(LED0);
@@ -92,6 +90,7 @@ void timer_callback_handler(void)
 		LED_On(LED0);
 		hw_timer_start(timer_interval);
 	}
+
 }
 
 
@@ -104,9 +103,9 @@ void timer_callback_handler(void)
 static void app_connected_state(bool state)
 {
 	if (state) {
-		hw_timer_stop();
 		LED_Off(LED0);
 		pxp_led_state = 0;
+
 	} 
 }
 
@@ -163,6 +162,12 @@ static void app_linkloss_alert(uint8_t alert_val)
 	}	
 }
 
+static void button_cb(void)
+{
+	/* For user usage */
+	DBG_LOG("button_cb");
+}
+
 /**
 * \brief Proximity Reporter Application main function
 */
@@ -176,6 +181,10 @@ int main(void)
 	system_init();
 	#endif
 	
+	app_exec = true;
+	pxp_led_state = true;
+	timer_interval = INIT_TIMER_INTERVAL;
+	
 	/* Initialize serial console */
 	serial_console_init();
 	
@@ -185,12 +194,16 @@ int main(void)
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);
 	
-	trace_set_level(TRACE_LVL_ALL);
-	
 	DBG_LOG("Initializing Proximity Reporter Application");
-	
+
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
+	
+	/* initialize the button & LED */
+	/* Caution, button_init func has to be called after ble_device_init func */
+	button_init(button_cb);
+	led_init();
+	
 	DBG_LOG("Proximity Reporter Initializing Completed");
 	
 	register_pathloss_handler(app_pathloss_alert);

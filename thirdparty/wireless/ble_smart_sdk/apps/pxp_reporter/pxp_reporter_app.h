@@ -69,6 +69,6 @@
 /** @brief Timer call back handler called on timer expiry
   *
   */
-void timer_callback_handler(void);
+static void timer_callback_handler(void);
 
 #endif /* __PXP_REPORTER_APP_H__ */
