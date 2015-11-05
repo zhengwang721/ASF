@@ -42,37 +42,35 @@
  */
 
 /*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- *Support</a>
- */
+* Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+*/
 
 /****************************************************************************************
 *							        Includes	                                     	*
 ****************************************************************************************/
-#include "asf.h"
+
+#include <asf.h>
 #include "console_serial.h"
+#include "at_ble_api.h"
 #include "platform.h"
 #include "timer_hw.h"
-//#include "conf_extint.h"
+#include "ble_utils.h"
 #include "ble_manager.h"
-#include "at_ble_errno.h"
-#include "at_ble_trace.h"
+#include "led.h"
 #include "immediate_alert.h"
 #include "find_me_app.h"
 
 /* === GLOBALS ============================================================ */
 
 /* Timer application task flag */
-
-volatile bool app_timer_done = false;
+bool app_timer_done = false;
 
 /** @brief Timer interval variable for applicaition task */
 static uint8_t timer_interval = INIT_TIMER_INTERVAL;
 
-void button_cb(void)
-{
-	/* For user usage*/
-}
+/***********************************************************************************
+ *									Implementations                               *
+ **********************************************************************************/
 
 /**
  * \brief Timer callback handler
@@ -84,6 +82,8 @@ static void timer_callback_handler(void)
 
 	/* Enable the flag the serve the task */
 	app_timer_done = true;
+
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
 }
 
 /**
@@ -113,6 +113,18 @@ static void app_immediate_alert(uint8_t alert_val)
 }
 
 /**
+ * \brief User callback handler
+ */
+static void user_callback_handler(void)
+{
+	if (app_timer_done) {
+		LED_Toggle(LED0);
+		hw_timer_start(timer_interval);
+		app_timer_done = false;
+	}
+}
+
+/**
  * \brief Find Me Application main function
  */
 int main(void)
@@ -125,35 +137,32 @@ int main(void)
 	system_init();
 	#endif
 	
-	//button_init();
-
+	timer_interval = INIT_TIMER_INTERVAL;
+	
 	/* Initialize serial console */
 	serial_console_init();
+
+	DBG_LOG("Initializing Find Me Application");
+	
+	led_init();
 
 	/* Initialize the hardware timer */
 	hw_timer_init();
 
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);
-
-	DBG_LOG("Initializing Find Me Application");
-
+	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 
 	/* callback registration for immediate alert value*/
 	register_find_me_handler(app_immediate_alert);
 
+	register_ble_user_event_cb(user_callback_handler);
+	
 	/* Capturing the events  */
 	while (1) {
 		/* BLE Event Task */
 		ble_event_task();
-
-		/* Application Task */
-		if (app_timer_done) {
-			LED_Toggle(LED0);
-			hw_timer_start(timer_interval);
-			app_timer_done = false;
-		}
 	}
 }
