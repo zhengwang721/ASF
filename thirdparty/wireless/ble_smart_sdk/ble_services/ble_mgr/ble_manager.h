@@ -96,7 +96,7 @@
 #endif /* Blood_Pressure_Sensor*/
 
 #if (BLE_DEVICE_ROLE == BLE_OBSERVER)
-#include "obse_app.h"
+#include "ble_observer.h"
 #define BLE_DEVICE_NAME				"ATMEL-OBS"
 #endif /* BLE_DEVICE_ROLE == BLE_OBSERVER) */
 
