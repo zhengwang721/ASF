@@ -78,6 +78,8 @@ volatile uint8_t data_received = 0;			//	RX data received flag
 volatile int init_done = 0;
 volatile int ext_wakeup_state = 0;
 
+hw_flow_control ble_hardware_fc = DISABLE_HW_FC_PATCH;
+
 typedef enum {
 	BLE_IDLE_STATE = 0,
 	BLE_SOF_STATE,
@@ -408,5 +410,10 @@ void platform_start_timer(uint32_t timeout)
  void stop_timer(void)
  {
 	 ticks = 0;
+ }
+
+ void platform_configure_hw_fc_uart(void)
+ {
+ 	configure_usart_after_patch();
  }
 

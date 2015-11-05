@@ -85,6 +85,14 @@ enum interface_type {
 	AT_BLE_SPI
 };
 
+
+enum hw_flow_control
+{
+  ENABLE_HW_FC_PATCH = 1,
+  DISABLE_HW_FC_PATCH
+};
+
+
 /**@struct	platform_config
  * @ingroup platform_group_datatypes
  * @brief	This platform structure used to define bus type and 
@@ -237,5 +245,6 @@ uint32_t timer_done(void);
 void stop_timer(void);
 void bus_activity_timer_callback(void);
 void check_and_assert_ext_wakeup(uint8_t mode);
+void platform_configure_hw_fc_uart(void);
 #define UNREFERENCED_PARAMETER(x) ((void)x)
 #endif // __PLATFORM_H__
