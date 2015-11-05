@@ -6,7 +6,7 @@
 		<require idref="thirdparty.wireless.ble_smart_sdk.apps.pxp_monitor"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
-
+		<build type="header-file" value="conf_timer.h"/>
 		<!--require idref="sam0.drivers.uart"/>
 		<require idref="common2.components.memory.eeprom.at30tse75x"/>
 		<require idref="sam0.drivers.timer"/-->

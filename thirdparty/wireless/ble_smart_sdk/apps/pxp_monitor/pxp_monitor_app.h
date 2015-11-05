@@ -55,7 +55,6 @@
 #include "immediate_alert.h"
 #include "console_serial.h"
 #include "timer_hw.h"
-//#include "conf_extint.h"
 
 typedef enum pxp_current_alert {
 	PXP_NO_ALERT = 0,

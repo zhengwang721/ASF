@@ -56,7 +56,10 @@
 #define DEBUG_LOG
 
 #include <asf.h>
+#include "pxp_monitor_app.h"
 #include "platform.h"
+#include "timer.h"
+#include "led.h"
 
 #include "pxp_monitor_app.h"
 
@@ -76,8 +79,11 @@
 #include "pxp_reporter.h"
 #endif
 
-at_ble_addr_t peer_addr
-= {AT_BLE_ADDRESS_PUBLIC, {0x03, 0x18, 0xf0, 0x05, 0xf0, 0xf8}};
+
+#define APP_STACK_SIZE	(1024)
+
+volatile unsigned char app_stack_patch[APP_STACK_SIZE];
+
 
 extern gatt_txps_char_handler_t txps_handle;
 extern gatt_lls_char_handler_t lls_handle;
@@ -86,15 +92,11 @@ extern gatt_ias_char_handler_t ias_handle;
 extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 extern bool pxp_connect_request_flag;
 
-volatile bool app_timer_done = false;
-pxp_current_alert_t alert_level = PXP_NO_ALERT;
+volatile bool app_timer_done;
 
-volatile bool button_pressed = false;
+volatile unsigned char app_stack_patch[1024];
 
-void button_cb(void)
-{
-	button_pressed = true;
-}
+pxp_current_alert_t alert_level;
 
 /**@brief Check for Link Loss and Path Loss alert
 * check for Low Alert value if crossed write Low Alert value to Immediate Alert
@@ -172,6 +174,8 @@ static void pxp_app_init(void)
 	}
 }
 
+
+
 /* @brief timer call back for rssi update
 * enable the flags to execute the application taskc
 *
@@ -183,20 +187,17 @@ static void timer_callback_handler(void)
 
 	/* Enable the flag the serve the task */
 	app_timer_done = true;
+	
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
 }
 
 int main(void)
 {	
-	#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-	#elif SAM0
-	system_init();
-	#endif
-
-	//button_init();
+	app_timer_done = false;
+	alert_level = PXP_NO_ALERT;
 	
+	platform_driver_init();
+
 	/* Initialize serial console */
 	serial_console_init();
 
@@ -204,7 +205,7 @@ int main(void)
 	hw_timer_init();
 
 	/* Register the callback */
-	hw_timer_register_callback(timer_callback_handler);
+	hw_timer_register_callback(timer_callback_handler);	
 
 	/* initialize the BLE chip  and Set the device mac address */
 	ble_device_init(NULL);
