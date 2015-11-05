@@ -57,15 +57,22 @@
 #include "at_ble_api.h"
 #include "tip_app.h"
 #include "time_info.h"
-#include "profiles.h"
 #include "console_serial.h"
 #include "timer_hw.h"
-//#include "conf_extint.h"
+#include "timer.h"
 #include "ble_manager.h"
 #include "ble_utils.h"
 #include "current_time.h"
 #include "next_dst.h"
 #include "reference_time.h"
+#include "led.h"
+#include "button.h"
+
+
+#define APP_STACK_SIZE	(1024)
+
+volatile unsigned char app_stack_patch[APP_STACK_SIZE];
+
 
 /***********************************************************************************
  *									Types			                               *
@@ -90,7 +97,9 @@ extern volatile bool time_update_state_char_found;
  */
 void button_cb(void)
 {
- button_pressed = true;
+	button_pressed = true;
+	
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
 }
 
 /**
@@ -152,18 +161,11 @@ int main (void)
 #if ENABLE_PTS
 	bool event = true;
 #endif
-#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-#elif SAM0
-	system_init();
-#endif
+	
+	platform_driver_init();
+
 	/* Initializing the console  */
 	serial_console_init();
-	
-	/* Initializing the button */
-	//button_init();
 	
 	/* Initializing the hardware timer */
 	hw_timer_init();
@@ -177,10 +179,14 @@ int main (void)
 	/* initialize the BLE chip  and Set the device mac address */
 	ble_device_init(NULL);
 	
+	 /* initialize the button & LED */
+	button_init(button_cb);
+	led_init();
+	
 	while(1) {
 		ble_event_task();
 		if (button_pressed){
-			//delay_ms(200);
+
 			if (current_time_char_found) {
 				if (tis_current_time_read( ble_connected_dev_info[0].handle, 
 										cts_handle.curr_char_handle) 
@@ -214,4 +220,4 @@ int main (void)
 		}
 	}
 }
-	
+
