@@ -603,7 +603,7 @@ void button_cb(void)
 					units = !units;
 				}
 				
-				if (indication_flag && notification_flag) {
+				if (indication_flag || notification_flag) {
 					
 					/** To trigger the blood pressure indication */
 					user_request_flag = true;
