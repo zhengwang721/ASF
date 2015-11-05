@@ -45,7 +45,42 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
+ */
+
+
+/**
+ * \page asfdoc_saml22_tslcd Demo Example
+ *
+ * \section Purpose
+ *
+ * The application demonstrates how to use Touch SLCD.
+ *
+ * \section Requirements
+ *
+ * This package can be used with:
+ * - SAML22 Xplained Pro B board.
+ *
+ * \section Description
+ * There are 5 PTC buttons on the SLCD, when press the button:
+ * - Button up, increase the digital number of selected.
+ * - Button down, decrease the digital number of selected.
+ * - Button left, shift the decimal point to left direction to select a digital number.
+ * - Button right, shift the decimal point to right direction to select a digital number.
+ * - Button enter, blink or not blink icons.
+ *
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC.
+ * Other compilers may or may not work.
+ *
+ * \section contactinfo Contact Information
+ * For further information, visit
+ * <A href="http://www.atmel.com/">Atmel</A>.\n
+ * Support and FAQ: http://www.atmel.com/design-support/
+ *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
  * Include header files for all drivers that have been imported from
