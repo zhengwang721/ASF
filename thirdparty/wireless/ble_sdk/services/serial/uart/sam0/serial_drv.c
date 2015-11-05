@@ -102,6 +102,7 @@ uint8_t configure_serial_drv(void)
 
 void configure_usart_after_patch(void)
 {
+	#ifdef UART_FLOW_CONTROL_ENABLED	
 	struct usart_config config_usart;
 	usart_disable(&usart_instance);
 	usart_reset(&usart_instance);
@@ -131,6 +132,7 @@ void configure_usart_after_patch(void)
 	usart_enable_callback(&usart_instance, USART_CALLBACK_BUFFER_RECEIVED);
 	usart_enable_callback(&usart_instance, USART_CALLBACK_BUFFER_TRANSMITTED);
 	serial_read_byte(&rx_data);
+	#endif
 }
 
 uint16_t serial_drv_send(uint8_t* data, uint16_t len)
