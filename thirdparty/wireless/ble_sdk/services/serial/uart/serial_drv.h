@@ -56,10 +56,6 @@
 /* === PROTOTYPES ============================================================
 **/
 
-#if SAMD21
-#define UART_FLOW_CONTROL_ENABLED
-#endif
-
 /**
  * \brief Initializes the Serial IO Module
  * \return STATUS_OK for successful initialization and FAILURE incase the IO is

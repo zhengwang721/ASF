@@ -12,6 +12,7 @@
 		<build type="header-file" value="conf_timer.h"/>
 		<build type="header-file" value="conf_console.h"/>
 		<build type="header-file" value="conf_sio2host.h"/>
+		<build type="define" name="UART_FLOW_CONTROL_ENABLED" value=""/>
 
 		<require idref="board.samd21_xplained_pro"/>
 		<require idref="sam0.drivers.extint"/>
