@@ -217,5 +217,9 @@ uint32_t platform_serial_drv_tx_status(void)
 	return((usart_is_tx_empty(BLE_UART) == 1) ? 0 : 1);
 }
 
+void configure_usart_after_patch(void)
+{
+	
+}
 
 /* EOF */
