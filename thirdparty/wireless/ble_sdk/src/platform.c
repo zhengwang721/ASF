@@ -80,10 +80,10 @@ volatile int ext_wakeup_state = 0;
 
 #ifdef UART_FLOW_CONTROL_ENABLED
 /* Enable Hardware Flow-control on BTLC1000 */
-hw_flow_control ble_hardware_fc = ENABLE_HW_FC_PATCH;
+enum hw_flow_control ble_hardware_fc = ENABLE_HW_FC_PATCH;
 #else
 /* Disable Hardware Flow-control on BTLC1000 */
-hw_flow_control ble_hardware_fc = DISABLE_HW_FC_PATCH;
+enum hw_flow_control ble_hardware_fc = DISABLE_HW_FC_PATCH;
 #endif
 
 typedef enum {
