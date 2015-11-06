@@ -62,7 +62,7 @@
 #include "ble_utils.h"
 #include "console_serial.h"
 #include "timer_hw.h"
-//#include "conf_extint.h"
+#include "button.h"
 
 
 /* =========================== GLOBALS ============================================================ */
@@ -181,7 +181,8 @@ static void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notificat
 /* Callback called when user press the button for writing new characteristic value */
 void button_cb(void)
 {
-		key_status = 1;
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
+	key_status = 1;
 }
 
 /* Initialize the application information for HID profile*/
@@ -228,9 +229,6 @@ int main(void )
 	/* Initialize serial console */
 	serial_console_init();
 	
-	/* Initialize button*/
-	//button_init();
-	
 	DBG_LOG("Initializing HID Keyboard Application");
 	
 	/* Initialize the profile based on user input */
@@ -238,6 +236,9 @@ int main(void )
 	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
+	
+	/* Initialize button*/
+	button_init(button_cb);	
 	
 	/* Register the notification handler */
 	register_ble_notification_confirmed_cb(hid_notification_confirmed_cb);

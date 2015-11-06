@@ -61,7 +61,8 @@
 #include "device_info.h"
 #include "ble_utils.h"
 #include "console_serial.h"
-//#include "conf_extint.h"
+#include "timer_hw.h"
+#include "button.h"
 
 /* =========================== GLOBALS ============================================================ */
 
@@ -177,6 +178,7 @@ void button_cb(void)
 	if(!mouse_status){
 		mouse_status = 1;
 	}
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
 }
 
 /* Initialize the application information for HID profile*/
@@ -231,9 +233,6 @@ int main(void )
 	/* Initialize serial console */
 	serial_console_init();
 	
-	/* Initialize button*/
-	//button_init();
-	
 	DBG_LOG("Initializing HID Mouse Application");
 	
 	/* Initialize the profile based on user input */
@@ -241,7 +240,10 @@ int main(void )
 	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
-	
+
+	/* Initialize button*/
+	button_init(button_cb);
+		
 	/* Register the notification handler */
 	register_ble_notification_confirmed_cb(hid_notification_confirmed_cb);
 	notify_report_ntf_handler(hid_prf_report_ntf_cb);

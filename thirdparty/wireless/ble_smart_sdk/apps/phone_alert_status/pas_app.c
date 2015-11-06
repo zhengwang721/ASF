@@ -55,11 +55,11 @@
 #include "platform.h"
 #include "console_serial.h"
 #include "timer_hw.h"
-//#include "conf_extint.h"
 #include "ble_manager.h"
 #include "ble_utils.h"
 #include "pas_client.h"
 #include "pas_app.h"
+#include "button.h"
 
 volatile uint8_t press_count = DEVICE_SILENT;		/*!< button press count*/
 
@@ -184,6 +184,7 @@ void button_cb(void)
 	{
 		flag = true;
 	}
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
 }
 
 /**
@@ -211,9 +212,6 @@ int main(void)
 	/* Initialize serial console */
 	serial_console_init();
 	
-	/* Initializing the button */
-	//button_init();
-	
 	/* Initializing the hardware timer */
 	hw_timer_init();
 	
@@ -234,6 +232,9 @@ int main(void)
 	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
+			
+	/* Initializing the button */
+	button_init(button_cb);
 	
 	/* Capturing the events  */
 	while(appp_exec)

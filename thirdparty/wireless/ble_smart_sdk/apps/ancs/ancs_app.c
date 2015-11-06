@@ -49,7 +49,6 @@
 ****************************************************************************************/
 #include <asf.h>
 #include "console_serial.h"
-//#include "conf_extint.h"
 #include "at_ble_api.h"
 #include "platform.h"
 #include "ble_manager.h"
@@ -57,11 +56,6 @@
 #include "ancs_app.h"
 #include "at_ble_errno.h"
 #include "at_ble_trace.h"
-
-void button_cb(void)
-{
-	/** For user  */
-}
 
 int main(void)
 {	
