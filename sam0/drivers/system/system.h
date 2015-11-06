@@ -684,7 +684,7 @@ void system_init(void);
  * \if DEVICE_SAMC21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>42484A</td>
- *      <td>08/2015</td>
+ *      <td>11/2015</td>
  *      <td>Initial document release.</td>
  * </tr>
  * \endif
