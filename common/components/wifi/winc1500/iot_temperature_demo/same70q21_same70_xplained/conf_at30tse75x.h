@@ -49,6 +49,13 @@
 #include <board.h>
 #include "twihs.h"
 
-#define CONF_WINC_TWIHS        TWIHS0
+/** TWIHS Bus Clock 400kHz */
+#define TWIHS_CLK     400000
+/** TWIHS ID for simulated EEPROM application to use */
+#define BOARD_ID_TWIHS_EEPROM         ID_TWIHS0
+/** TWIHS Base for simulated TWI EEPROM application to use */
+#define BOARD_BASE_TWIHS_EEPROM       TWIHS0
+/** EEPROM Wait Time */
+#define WAIT_TIME   10
 
 #endif /* CONF_AT30TSE75X_H_INCLUDED */
