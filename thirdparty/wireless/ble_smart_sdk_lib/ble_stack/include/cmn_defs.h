@@ -41,7 +41,7 @@ extern uint8_t unNull;
         x = _x.ptr;\
     } while (0)
 #define TASK_EXTERN         TASK_GTL
-#define TASK_INTERN					(0x05)
+#define TASK_INTERN			(0x05)
 #define API_PKT_ID          0x05
 #define HDR_LEN             9
 

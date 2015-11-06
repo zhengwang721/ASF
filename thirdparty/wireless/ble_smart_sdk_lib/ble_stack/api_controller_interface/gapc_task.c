@@ -809,7 +809,7 @@ at_ble_status_t gapc_lecb_create_handler(at_ble_handle_t conn_handle,
     INTERFACE_PACK_ARG_UINT16(cid);
     INTERFACE_PACK_ARG_UINT16(initial_credit);
     INTERFACE_SEND_WAIT(GAPC_CMP_EVT, TASK_GAPC);
-	INTERFACE_UNPACK_SKIP(1);
+	INTERFACE_UNPACK_SKIP(1);	//opertation
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_DONE();
     return (at_ble_status_t)u8Status;
@@ -823,7 +823,7 @@ at_ble_status_t gapc_lecb_destroy_handler(at_ble_handle_t conn_handle, uint16_t 
     INTERFACE_PACK_ARG_DUMMY(1);
     INTERFACE_PACK_ARG_UINT16(le_psm);
     INTERFACE_SEND_WAIT(GAPC_CMP_EVT, TASK_GAPC);
-    INTERFACE_UNPACK_SKIP(1);
+    INTERFACE_UNPACK_SKIP(1);	//operation
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_DONE();
     return (at_ble_status_t)u8Status;
@@ -877,7 +877,7 @@ at_ble_status_t gapc_lecb_add_cmd_handler(at_ble_handle_t conn_handle, uint16_t 
     INTERFACE_PACK_ARG_UINT16(le_psm);
     INTERFACE_PACK_ARG_UINT16(credit);
     INTERFACE_SEND_WAIT(GAPC_CMP_EVT, TASK_GAPC);
-    INTERFACE_UNPACK_SKIP(1);
+    INTERFACE_UNPACK_SKIP(1);	//operation
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_DONE();
     return (at_ble_status_t)u8Status;

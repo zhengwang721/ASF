@@ -292,12 +292,8 @@ static uint8_t server_conf_define(at_ble_handle_t att_handle, at_ble_attr_permis
 {
     uint8_t temp_buff[2] = {0x00, 0x00};
 	uint8_t status;
-    FN_IN();
-    status = gattm_att_set_value_req_handler(att_handle, 2, temp_buff);
-    if(AT_BLE_SUCCESS == status)
-	{
-		status = db_addATT(att_handle, temp_buff, 2, perm);
-	}
+	FN_IN();
+	status = db_addATT(att_handle, temp_buff, 2, perm);
 	FN_OUT(status);
     return status;
 }
@@ -313,21 +309,10 @@ static bool is_client_conf_defined(
 
 static uint8_t client_conf_define(at_ble_handle_t att_handle, at_ble_attr_permissions_t perm)
 {
-    uint8_t temp_buff[2] = {0x00, 0x00};
-	uint8_t status;		
-    FN_IN();
-		/* for workaround by kevin
-    status = gattm_att_set_value_req_handler(att_handle, 2, temp_buff);
-    if(AT_BLE_SUCCESS == status)
-    {
-	    status = db_addATT(att_handle, temp_buff, 2, perm);
-	}
-		*/
-		status = db_addATT(att_handle, temp_buff, 2, perm);
-    if(AT_BLE_SUCCESS == status)
-    {
-	    status = gattm_att_set_value_req_handler(att_handle, 2, temp_buff);
-	}
+	uint8_t temp_buff[2] = {0x00, 0x00};
+	uint8_t status;
+	FN_IN();
+	status = db_addATT(att_handle, temp_buff, 2, perm);
 	FN_OUT(status);
     return status;
 }
@@ -407,7 +392,7 @@ static uint16_t char_permissions(at_ble_char_properties_t props,
     // attm_perm_mask Bits 4, 5
     if ((props & AT_BLE_CHAR_INDICATE) == AT_BLE_CHAR_INDICATE)
     {
-        if ((perms & AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR) == AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR)
+        if ((perms & (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR | AT_BLE_ATTR_READABLE_REQ_AUTHN_REQ_AUTHR)) == AT_BLE_ATTR_NO_PERMISSIONS)
         {
             perm |= PERM_POS_IND_ENABLE;
         }
@@ -419,7 +404,7 @@ static uint16_t char_permissions(at_ble_char_properties_t props,
     // attm_perm_mask Bits 6, 7
     if ((props & AT_BLE_CHAR_NOTIFY) == AT_BLE_CHAR_NOTIFY)
     {
-        if ((perms & AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR) == AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR)
+        if ((perms & (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR | AT_BLE_ATTR_READABLE_REQ_AUTHN_REQ_AUTHR)) == AT_BLE_ATTR_NO_PERMISSIONS)
         {
             perm |= PERM_POS_NTF_ENABLE;
         }
@@ -548,17 +533,21 @@ at_ble_status_t at_ble_service_define(at_ble_service_t *svc)
 #define IF_ERR_BRANCH(retStatus,label)	if(AT_BLE_SUCCESS != retStatus) goto label
 
 		do
-        {
-            /* then go through include services */
-            for (i = 0; i < svc->included_count; i++)
-            {
-                /*uuid_size(&included_list[i].uuid) + 4*/
-                status = gattm_add_attribute_req_handler(svc_desc, svc->inc_list[i].service_handle, PERM(RD, ENABLE),
+		{
+			/* then go through include services */
+			if(svc->inc_list)
+			{
+				for (i = 0; i < svc->included_count; i++)
+				{
+					/*uuid_size(&included_list[i].uuid) + 4*/
+					status = gattm_add_attribute_req_handler(svc_desc, svc->inc_list[i].service_handle, PERM(RD, ENABLE),
                          sizeof(include_uuid), (uint8_t *)include_uuid, &temp_handle);
-				IF_ERR_BRANCH(status, __FN_EXIT);
-            }
-            /* Finally the characteristic list */
-            if ((svc->char_list) && (AT_BLE_SUCCESS == status))
+					IF_ERR_BRANCH(status, __FN_EXIT);
+				}
+			}
+			/* Finally the characteristic list */
+			if (svc->char_list)
+			{
                 for (i = 0; i < svc->char_count; i++)
                 {
                     uint32_t j = 0;
@@ -597,7 +586,7 @@ at_ble_status_t at_ble_service_define(at_ble_service_t *svc)
                         status = gattm_add_attribute_req_handler(svc_desc, ((uint16_t)temp_buff[0]) << 8 | temp_buff[1], PERM(RD, ENABLE),
                                                         sizeof(extended_props_uuid), (uint8_t *)extended_props_uuid, &temp_handle);
 						IF_ERR_BRANCH(status, __FN_EXIT);
-                    }
+					}
                     if (svc->char_list[i].user_desc.len)
                     {
                         uint16_t perm = PERM(RD, ENABLE);
@@ -612,25 +601,25 @@ at_ble_status_t at_ble_service_define(at_ble_service_t *svc)
                         status = gattm_add_attribute_req_handler(svc_desc, charactaristic->user_desc.len, RI_FLAG(charactaristic->user_desc.permissions) | perm,
                                                         sizeof(user_desc_uuid), (uint8_t *)user_desc_uuid, &charactaristic->user_desc.handle);
 						IF_ERR_BRANCH(status, __FN_EXIT);
-                    }
+					}
                     if (is_server_conf_defined(svc->char_list[i].char_val.properties))
                     {
-                        status = gattm_add_attribute_req_handler(svc_desc, 2, att_permissions(charactaristic->server_config_desc.perm, 1, 0),
+                        status = gattm_add_attribute_req_handler(svc_desc, 0x8002, att_permissions(charactaristic->server_config_desc.perm, 1, 0),
                                                         sizeof(server_conf_uuid), (uint8_t *)server_conf_uuid, &charactaristic->server_config_desc.handle);
 						IF_ERR_BRANCH(status, __FN_EXIT);						
-                    }
+					}
                     if (is_client_conf_defined(svc->char_list[i].char_val.properties))
                     {
-                        status = gattm_add_attribute_req_handler(svc_desc, 2, att_permissions(charactaristic->client_config_desc.perm, 1, 1),
+                        status = gattm_add_attribute_req_handler(svc_desc, 0x8002, att_permissions(charactaristic->client_config_desc.perm, 1, 1),
                                                         sizeof(client_conf_uuid), (uint8_t *)client_conf_uuid, &charactaristic->client_config_desc.handle);
 						IF_ERR_BRANCH(status, __FN_EXIT);
-                    }
+					}
                     if (svc->char_list[i].presentation_format)
                     {
                         status = gattm_add_attribute_req_handler(svc_desc, 7, PERM(RD, ENABLE),
                                                         sizeof(presentation_format_uuid), (uint8_t *)presentation_format_uuid, &temp_handle);
 						IF_ERR_BRANCH(status, __FN_EXIT);
-                    }
+					}
                     for (j = 0; j < charactaristic->additional_desc_count; j++)
                     {
                         temp_perm = att_permissions(charactaristic->additional_desc_list[j].perm,  0,  0);
@@ -638,8 +627,9 @@ at_ble_status_t at_ble_service_define(at_ble_service_t *svc)
                         status = gattm_add_attribute_req_handler(svc_desc, RI_FLAG(charactaristic->additional_desc_list[j].perm) | charactaristic->additional_desc_list[j].desc_val_length, temp_perm ,
                                                         sizeof(charactaristic->additional_desc_list[j].uuid), charactaristic->additional_desc_list[j].uuid.uuid, &charactaristic->additional_desc_list[j].handle);
 						IF_ERR_BRANCH(status, __FN_EXIT);
-                    }
-                }
+					}
+				}
+			}
             status = gattm_add_svc_req_handler(svc_desc);
             if (status != AT_BLE_SUCCESS)
             {
@@ -697,7 +687,7 @@ at_ble_status_t at_ble_service_define(at_ble_service_t *svc)
                         status = user_description_define(Accumulated_handle, charactaristic->user_desc.permissions,
                                                 charactaristic->user_desc.user_description, charactaristic->user_desc.len);
 						IF_ERR_BRANCH(status, __FN_EXIT);
-                    }
+					}
                     if (is_server_conf_defined(charactaristic->char_val.properties))
                     {
                         Accumulated_handle++;
@@ -752,24 +742,26 @@ static at_ble_status_t internal_at_ble_service_define(at_ble_uuid_t *uuid, at_bl
 
 {
     UnionPtr uptr;
-    int i = 0;
-    uint16_t  start_hdl = 0, Accumulated_handle = 0;
-    uint16_t temp_handle;
-    uint16_t temp_perm;
-    uint8_t status;
-    struct gattm_svc_desc *svc_desc;
-    // use the same buffer to collect with safety offset 10 bytes
-    uptr.u8ptr = (uint8_t *)service_setup_buffer; // (uint8_t *)&interface_send_msg[20/*must be multibles of 2(Largest alignment requirement of any member ) to be sure from Alignment*/];
-    svc_desc = (struct gattm_svc_desc *)uptr.u32ptr;
+    at_ble_status_t status = AT_BLE_INVALID_PARAM;
     FN_IN();
-    svc_desc->start_hdl = 0;
-    svc_desc->task_id = app_task_type;
-    memset(svc_desc->uuid, 0, ATT_UUID_128_LEN);
-    cpy_UUID_IntoBuffer(svc_desc->uuid, uuid);
-    svc_desc->perm = (uint8_t)(0x04 | (uuid->type << 4) | (Primary << 6));
-    svc_desc->nb_att = 0;
-    do
-    {
+    if (NULL != uuid && NULL != service_handle && NULL != charactristic_list && char_count > 0)
+	{
+		int i = 0;
+		uint16_t  start_hdl = 0, Accumulated_handle = 0;
+		uint16_t temp_handle;
+		uint16_t temp_perm;
+		struct gattm_svc_desc *svc_desc;
+		// use the same buffer to collect with safety offset 10 bytes
+    	uptr.u8ptr = (uint8_t *)service_setup_buffer; // (uint8_t *)&interface_send_msg[20/*must be multibles of 2(Largest alignment requirement of any member ) to be sure from Alignment*/];
+		svc_desc = (struct gattm_svc_desc *)uptr.u32ptr;
+		svc_desc->start_hdl = 0;
+    	svc_desc->task_id = app_task_type;
+		memset(svc_desc->uuid, 0, ATT_UUID_128_LEN);
+		cpy_UUID_IntoBuffer(svc_desc->uuid, uuid);
+		svc_desc->perm = (uint8_t)(0x04 | (uuid->type << 4) | (Primary << 6));
+		svc_desc->nb_att = 0;
+		do
+		{
 /* Used to check for returned status from called function
    and return function in case of error.
    Note: "break" is not good solution because there is "for" loops inside main "while" loop, 
@@ -778,164 +770,165 @@ static at_ble_status_t internal_at_ble_service_define(at_ble_uuid_t *uuid, at_bl
  */
 #define IF_ERR_BRANCH(retStatus,label)	if(AT_BLE_SUCCESS != retStatus) goto label
 
-        /* then go through include services */
-        for (i = 0; i < included_count; i++)
-        {
-            /*uuid_size(&included_list[i].uuid) + 4*/
-            status = gattm_add_attribute_req_handler(svc_desc, included_list[i].service_handle, PERM(RD, ENABLE),
+	        /* then go through include services */
+	        for (i = 0; i < included_count; i++)
+	        {
+	            /*uuid_size(&included_list[i].uuid) + 4*/
+	            status = (at_ble_status_t)gattm_add_attribute_req_handler(svc_desc, included_list[i].service_handle, PERM(RD, ENABLE),
                      sizeof(include_uuid), (uint8_t *)include_uuid, &temp_handle);
-			IF_ERR_BRANCH(status, __FN_EXIT);
-        }
-        /* Finally the characteristic list */
-        for (i = 0; i < char_count; i++)
-        {
-            at_ble_characteristic_t *charactaristic = &charactristic_list[i];
-            /* define "char decl" attribute */
-            status = gattm_add_attribute_req_handler(svc_desc, 4 /*No meaning:
-            For Characteristic Declarations this field is not used*/,
-                     PERM(RD, ENABLE),
+				IF_ERR_BRANCH(status, __FN_EXIT);
+	        }
+	        /* Finally the characteristic list */
+	        for (i = 0; i < char_count; i++)
+	        {
+	            at_ble_characteristic_t *charactaristic = &charactristic_list[i];
+	            /* define "char decl" attribute */
+	            status = (at_ble_status_t)gattm_add_attribute_req_handler(svc_desc, 4 /*No meaning:
+	            For Characteristic Declarations this field is not used*/,
+	                     PERM(RD, ENABLE),
                      sizeof(char_uuid), (uint8_t *)char_uuid, &temp_handle);
-            IF_ERR_BRANCH(status, __FN_EXIT);
+	            IF_ERR_BRANCH(status, __FN_EXIT);
 			
-            // get attm_perm_mask
-            temp_perm = char_permissions(charactaristic->properties,
-                                         charactaristic->value_permissions,
-                                         charactaristic->uuid.type);
-            /* define the attribute holding the value */
-            //printf("attm_perm_mask : 0x%04X\r\n", temp_perm);
-            status = gattm_add_attribute_req_handler(svc_desc, RI_FLAG(charactaristic->value_permissions) | charactaristic->value_max_len, temp_perm ,
-                     at_ble_uuid_type2len(charactaristic->uuid.type), charactaristic->uuid.uuid, &charactaristic->char_val_handle);
-            IF_ERR_BRANCH(status, __FN_EXIT);
+	            // get attm_perm_mask
+	            temp_perm = char_permissions(charactaristic->properties,
+	                                         charactaristic->value_permissions,
+	                                         charactaristic->uuid.type);
+	            /* define the attribute holding the value */
+	            status = (at_ble_status_t)gattm_add_attribute_req_handler(svc_desc, RI_FLAG(charactaristic->value_permissions) | charactaristic->value_max_len, temp_perm ,
+	                     at_ble_uuid_type2len(charactaristic->uuid.type), charactaristic->uuid.uuid, &charactaristic->char_val_handle);
+	            IF_ERR_BRANCH(status, __FN_EXIT);
 			
-            /* Finally the descriptors */
-            if (is_extended_properties_defined(charactristic_list[i].properties))
-            {
-                uint8_t temp_buff[2] = {0x00, 0x00};
-                if ((charactaristic->properties & AT_BLE_CHAR_RELIABLE_WRITE) == AT_BLE_CHAR_RELIABLE_WRITE)
-                {
-                    temp_buff[0] |= 0x01;
-                }
-                if ((charactaristic->properties & AT_BLE_CHAR_WRITEABLE_AUX) == AT_BLE_CHAR_WRITEABLE_AUX)
-                {
-                    temp_buff[0] |= 0x02;
-                }
-                status = gattm_add_attribute_req_handler(svc_desc, ((uint16_t)temp_buff[0]) << 8 | temp_buff[1], PERM(RD, ENABLE),
+	            /* Finally the descriptors */
+	            if (is_extended_properties_defined(charactristic_list[i].properties))
+	            {
+	                uint8_t temp_buff[2] = {0x00, 0x00};
+	                if ((charactaristic->properties & AT_BLE_CHAR_RELIABLE_WRITE) == AT_BLE_CHAR_RELIABLE_WRITE)
+	                {
+	                    temp_buff[0] |= 0x01;
+	                }
+	                if ((charactaristic->properties & AT_BLE_CHAR_WRITEABLE_AUX) == AT_BLE_CHAR_WRITEABLE_AUX)
+	                {
+	                    temp_buff[0] |= 0x02;
+	                }
+	                status = (at_ble_status_t)gattm_add_attribute_req_handler(svc_desc, ((uint16_t)temp_buff[0]) << 8 | temp_buff[1], PERM(RD, ENABLE),
                                                 sizeof(extended_props_uuid), (uint8_t *)extended_props_uuid, &temp_handle);
-				IF_ERR_BRANCH(status, __FN_EXIT);
-            }
-            if (charactaristic->user_desc_len)
-            {
-                uint16_t perm = PERM(RD, ENABLE);
-                if ((charactaristic->properties & AT_BLE_CHAR_WRITEABLE_AUX) == AT_BLE_CHAR_WRITEABLE_AUX)
-                {
-                    perm = att_permissions(charactaristic->user_desc_permissions, 1, 1);
-                }
-                else
-                {
-                    perm = att_permissions(charactaristic->user_desc_permissions, 1, 0);
-                }
-                status = gattm_add_attribute_req_handler(svc_desc, charactaristic->user_desc_len, RI_FLAG(charactaristic->user_desc_permissions) | perm,
-                                                sizeof(user_desc_uuid), (uint8_t *)user_desc_uuid, &charactaristic->user_desc_handle);
-				IF_ERR_BRANCH(status, __FN_EXIT);
-            }
-            if (is_server_conf_defined(charactristic_list[i].properties))
-            {
-                status = gattm_add_attribute_req_handler(svc_desc, 2, att_permissions(charactaristic->server_config_permissions, 1, 0),
-                                                sizeof(server_conf_uuid), (uint8_t *)server_conf_uuid, &charactaristic->server_config_handle);
-				IF_ERR_BRANCH(status, __FN_EXIT);
-            }
-            if (is_client_conf_defined(charactristic_list[i].properties))
-            {
-                status = gattm_add_attribute_req_handler(svc_desc, 2, att_permissions(charactaristic->client_config_permissions, 1, 1),
-                                                sizeof(client_conf_uuid), (uint8_t *)client_conf_uuid, &charactaristic->client_config_handle);
-				IF_ERR_BRANCH(status, __FN_EXIT);
-            }
-            if (charactristic_list[i].presentation_format)
-            {
-                status = gattm_add_attribute_req_handler(svc_desc, 7, PERM(RD, ENABLE),
-                                                sizeof(presentation_format_uuid), (uint8_t *)presentation_format_uuid, &temp_handle);
-				IF_ERR_BRANCH(status, __FN_EXIT);
-            }
-        }
-        status = gattm_add_svc_req_handler(svc_desc);
-        IF_ERR_BRANCH(status, __FN_EXIT);
-		
-        *service_handle = svc_desc->start_hdl;
-        start_hdl = svc_desc->start_hdl;
-        Accumulated_handle = start_hdl;
-        /* define "include" attributes */
-        for (i = 0; i < included_count; i++)
-        {
-            Accumulated_handle++;
-        }
-        /* define characteristics */
-        for (i = 0; i < char_count; i++)
-        {
-            at_ble_characteristic_t *charactaristic = &charactristic_list[i];
-            Accumulated_handle++;
-            Accumulated_handle++;
-            charactaristic->char_val_handle = Accumulated_handle;
-            if (charactaristic->value_init_len > 0)
-            {
-#define P_DB(X,Y) (RI_FLAG(X)? Y: NULL)/*Present in DB*/
-                //status = at_ble_characteristic_value_set(charactaristic->char_val_handle,
-                //  charactaristic->init_value,0,charactaristic->value_init_len);
-                if (RI_FLAG(charactaristic->value_permissions))
-                {
-                    status = db_addATT(charactaristic->char_val_handle,
-                              UN_NULL(charactaristic->init_value), charactaristic->value_max_len, charactaristic->value_permissions);
+					IF_ERR_BRANCH(status, __FN_EXIT);
+	            }
+	            if (charactaristic->user_desc_len)
+	            {
+	                uint16_t perm = PERM(RD, ENABLE);
+	                if ((charactaristic->properties & AT_BLE_CHAR_WRITEABLE_AUX) == AT_BLE_CHAR_WRITEABLE_AUX)
+	                {
+	                    perm = att_permissions(charactaristic->user_desc_permissions, 1, 1);
+	                }
+	                else
+	                {
+	                    perm = att_permissions(charactaristic->user_desc_permissions, 1, 0);
+	                }
+	                status = (at_ble_status_t)gattm_add_attribute_req_handler(svc_desc, charactaristic->user_desc_len, RI_FLAG(charactaristic->user_desc_permissions) | perm,
+	                                                sizeof(user_desc_uuid), (uint8_t *)user_desc_uuid, &charactaristic->user_desc_handle);
 					IF_ERR_BRANCH(status, __FN_EXIT);
 				}
-                else
-                {
-                    status = db_addATT(charactaristic->char_val_handle,
-                              NULL, charactaristic->value_max_len, charactaristic->value_permissions);
-                    IF_ERR_BRANCH(status, __FN_EXIT);
+	            if (is_server_conf_defined(charactristic_list[i].properties))
+	            {
+	                status = (at_ble_status_t)gattm_add_attribute_req_handler(svc_desc, 0x8002, att_permissions(charactaristic->server_config_permissions, 1, 0),
+	                                                sizeof(server_conf_uuid), (uint8_t *)server_conf_uuid, &charactaristic->server_config_handle);
+					IF_ERR_BRANCH(status, __FN_EXIT);
+				}
+	            if (is_client_conf_defined(charactristic_list[i].properties))
+	            {
+	                status = (at_ble_status_t)gattm_add_attribute_req_handler(svc_desc, 0x8002, att_permissions(charactaristic->client_config_permissions, 1, 1),
+	                                                sizeof(client_conf_uuid), (uint8_t *)client_conf_uuid, &charactaristic->client_config_handle);
+					IF_ERR_BRANCH(status, __FN_EXIT);
+				}
+	            if (charactristic_list[i].presentation_format)
+	            {
+	                status = (at_ble_status_t)gattm_add_attribute_req_handler(svc_desc, 7, PERM(RD, ENABLE),
+	                                                sizeof(presentation_format_uuid), (uint8_t *)presentation_format_uuid, &temp_handle);
+					IF_ERR_BRANCH(status, __FN_EXIT);
+				}
+	        }
+	        status = (at_ble_status_t)gattm_add_svc_req_handler(svc_desc);
+	        IF_ERR_BRANCH(status, __FN_EXIT);
+		
+	        *service_handle = svc_desc->start_hdl;
+	        start_hdl = svc_desc->start_hdl;
+	        Accumulated_handle = start_hdl;
+	        /* define "include" attributes */
+	        for (i = 0; i < included_count; i++)
+	        {
+	            Accumulated_handle++;
+	        }
+	        /* define characteristics */
+	        for (i = 0; i < char_count; i++)
+	        {
+	            at_ble_characteristic_t *charactaristic = &charactristic_list[i];
+	            Accumulated_handle++;
+	            Accumulated_handle++;
+	            charactaristic->char_val_handle = Accumulated_handle;
+	            if (charactaristic->value_init_len > 0)
+	            {
+	#define P_DB(X,Y) (RI_FLAG(X)? Y: NULL)/*Present in DB*/
+	                //status = at_ble_characteristic_value_set(charactaristic->char_val_handle,
+	                //  charactaristic->init_value,0,charactaristic->value_init_len);
+	                if (RI_FLAG(charactaristic->value_permissions))
+	                {
+	                    status = db_addATT(charactaristic->char_val_handle,
+	                              UN_NULL(charactaristic->init_value), charactaristic->value_max_len, charactaristic->value_permissions);
+						IF_ERR_BRANCH(status, __FN_EXIT);
+					}
+	                else
+	                {
+	                    status = db_addATT(charactaristic->char_val_handle,
+	                              NULL, charactaristic->value_max_len, charactaristic->value_permissions);
+	                    IF_ERR_BRANCH(status, __FN_EXIT);
 
-					status = gattm_att_set_value_req_handler(charactaristic->char_val_handle, charactaristic->value_init_len,
-                                                    charactaristic->init_value);
-                    IF_ERR_BRANCH(status, __FN_EXIT);
-                }
-            }
-            if (is_extended_properties_defined(charactristic_list[i].properties))
-            {
-                Accumulated_handle++;
-            }
-            if (charactaristic->user_desc_len)
-            {
-                Accumulated_handle++;
-                charactaristic->user_desc_handle = Accumulated_handle;
-                status = user_description_define(Accumulated_handle, charactaristic->user_desc_permissions
-                                        , charactaristic->user_desc, charactaristic->user_desc_max_len);
-				IF_ERR_BRANCH(status, __FN_EXIT);
-            }
-            if (is_server_conf_defined(charactaristic->properties))
-            {
-                Accumulated_handle++;
-                charactaristic->server_config_handle = Accumulated_handle;
-                status = server_conf_define(Accumulated_handle, charactaristic->server_config_permissions);
-				IF_ERR_BRANCH(status, __FN_EXIT);
-            }
-            if (is_client_conf_defined(charactaristic->properties))
-            {
-                Accumulated_handle++;
-                charactaristic->client_config_handle = Accumulated_handle;
-                status = client_conf_define(Accumulated_handle, charactaristic->client_config_permissions);
-				IF_ERR_BRANCH(status, __FN_EXIT);
-            }
-            if (charactaristic->presentation_format)
-            {
-                Accumulated_handle++;
-                status = presentation_format_define(Accumulated_handle, charactaristic->presentation_format);
-				IF_ERR_BRANCH(status, __FN_EXIT);
-            }
-        }
-    }
-    while (0);
+						status = (at_ble_status_t)gattm_att_set_value_req_handler(charactaristic->char_val_handle, charactaristic->value_init_len,
+	                                                    charactaristic->init_value);
+	                    IF_ERR_BRANCH(status, __FN_EXIT);
+	                }
+	            }
+	            if (is_extended_properties_defined(charactristic_list[i].properties))
+	            {
+	                Accumulated_handle++;
+	            }
+	            if (charactaristic->user_desc_len)
+	            {
+	                Accumulated_handle++;
+	                charactaristic->user_desc_handle = Accumulated_handle;
+	                status = (at_ble_status_t)user_description_define(Accumulated_handle, charactaristic->user_desc_permissions
+	                                        , charactaristic->user_desc, charactaristic->user_desc_max_len);
+					IF_ERR_BRANCH(status, __FN_EXIT);
+	            }
+	            if (is_server_conf_defined(charactaristic->properties))
+	            {
+	                Accumulated_handle++;
+	                charactaristic->server_config_handle = Accumulated_handle;
+	                status = (at_ble_status_t)server_conf_define(Accumulated_handle, charactaristic->server_config_permissions);
+					IF_ERR_BRANCH(status, __FN_EXIT);
+	            }
+	            if (is_client_conf_defined(charactaristic->properties))
+	            {
+	                Accumulated_handle++;
+	                charactaristic->client_config_handle = Accumulated_handle;
+	                status = (at_ble_status_t)client_conf_define(Accumulated_handle, charactaristic->client_config_permissions);
+					IF_ERR_BRANCH(status, __FN_EXIT);
+	            }
+	            if (charactaristic->presentation_format)
+	            {
+	                Accumulated_handle++;
+	                status = (at_ble_status_t)presentation_format_define(Accumulated_handle, charactaristic->presentation_format);
+					IF_ERR_BRANCH(status, __FN_EXIT);
+	            }
+	        }
+	    }
+	    while (0);
 __FN_EXIT:
     FN_OUT(status);
     //at_status = at_ble_att_error(status);
 #undef CHECK_ERR	/*Defined at top of this function*/
+    }
+    FN_OUT(status);
     return (at_ble_status_t)status;
 }
 

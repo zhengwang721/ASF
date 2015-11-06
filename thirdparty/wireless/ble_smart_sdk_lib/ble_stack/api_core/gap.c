@@ -13,7 +13,7 @@
 #include "event.h"
 #ifndef SAMB11 
 #include "at_ble_patch.h"
-#endif
+#endif	//#ifndef SAMB11
 
 
 // Slave preferred Connection interval Min
@@ -32,6 +32,7 @@
 #define GAP_DEVICE_NAME "ATMEL_BLE"
 
 #define PWR_REG_ADDR        0x4002084C
+#define CHIP_ID_REG_ADDR    0x4000B000
 
 struct device_info device;
 tstrConnData gstrConnData[AT_BLE_MAX_CONCURRENT_CONNS];
@@ -181,7 +182,7 @@ at_ble_status_t at_ble_init(at_ble_init_config_t *args)
 		/* If We made till here then success*/
 		status = AT_BLE_SUCCESS;
 	}while(0);
-#else
+#else //#ifdef SAMB11
 	app_task_type = TASK_EXTERN;
     if (args)
     {
@@ -284,7 +285,7 @@ at_ble_status_t at_ble_init(at_ble_init_config_t *args)
         }
     }
     while (0);
-#endif
+#endif	//#ifdef SAMB11
     FN_OUT(status);
     return status;
 }
@@ -685,6 +686,10 @@ at_ble_status_t at_ble_adv_start(at_ble_adv_type_t type, at_ble_adv_mode_t mode,
             status = AT_BLE_INVALID_PARAM;
             break;
         }
+		if((type == AT_BLE_ADV_TYPE_DIRECTED) && (interval == 0))
+		{
+			interval = AT_BLE_ADV_INTERVAL_MIN;
+		}
         gap_addr_type = get_gap_local_addr_type();
         if ((peer_addr != NULL) &&
                 (peer_addr->type != AT_BLE_ADDRESS_PUBLIC))
@@ -1119,6 +1124,36 @@ at_ble_status_t at_ble_tx_power_get(at_ble_tx_power_level_t *power)
     ASSERT_PRINT_ERR(AT_BLE_SUCCESS != status, "Status : 0x%02X\n", status);
     FN_OUT(status);
     return status;
+}
+at_ble_status_t at_ble_chip_id_get(uint32_t *chip_id)
+{
+	at_ble_status_t status = AT_BLE_SUCCESS;
+	FN_IN();
+	status = dbg_rd_mem_req_handler(CHIP_ID_REG_ADDR, (uint8_t *)chip_id, 1, 32);
+    FN_OUT(status);
+    return status;
+}
+at_ble_status_t read_32_from_BTLC1000(uint32_t address, uint32_t *value)
+{
+	at_ble_status_t status = AT_BLE_SUCCESS;
+	FN_IN();
+	status = dbg_rd_mem_req_handler(address, (uint8_t *)value, 1, 32);
+	FN_OUT(status);
+	return status;
+}
+extern const uint32_t gu32fw_version;
+at_ble_status_t at_ble_firmware_version_get(uint32_t *fw_version)
+{
+	at_ble_status_t status = AT_BLE_SUCCESS;
+	FN_IN();
+#ifndef SAMB11
+	status = dbg_rd_mem_req_handler(gu32fw_version, (uint8_t *)fw_version, 1, 32);
+#else	//SAMB11
+	*fw_version = 0;
+	status = AT_BLE_FAILURE;
+#endif 	//SAMB11
+	FN_OUT(status);
+	return status;
 }
 /* utility functions, might be removed later*/
 uint8_t at_ble_uuid_type2len(at_ble_uuid_type_t type)

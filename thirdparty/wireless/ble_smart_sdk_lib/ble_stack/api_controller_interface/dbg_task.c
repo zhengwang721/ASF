@@ -69,8 +69,9 @@ uint8_t dbg_rd_mem_req_handler(uint32_t u32MemAddr, uint8_t *pu8Data, uint8_t u8
 {
     uint8_t u8Status = 0;
     uint8_t u8DataSize = 0;
-		/* Argused*/
-		u8DataSize = u8DataSize;
+	
+	/* Argused*/
+	u8DataSize = u8DataSize;
 	
     INTERFACE_MSG_INIT(DBG_RD_MEM_REQ, TASK_DBG);
     INTERFACE_PACK_ARG_UINT32(u32MemAddr);
@@ -80,7 +81,14 @@ uint8_t dbg_rd_mem_req_handler(uint32_t u32MemAddr, uint8_t *pu8Data, uint8_t u8
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_UNPACK_UINT8(&u8DataSize);
     ASSERT_PRINT_ERR(u8DataSize != u8Size, "Data Size : %d\n", u8DataSize);
-    INTERFACE_UNPACK_BLOCK(pu8Data, u8Size);
+	if (8 == u8ReadMode)
+	{
+        INTERFACE_UNPACK_BLOCK(pu8Data, u8Size);
+	}
+	else
+	{
+        INTERFACE_UNPACK_BLOCK(pu8Data, u8Size * 4);
+	}
     INTERFACE_DONE();
     return u8Status;
 }

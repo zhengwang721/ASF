@@ -516,7 +516,7 @@ typedef enum
     AT_BLE_DEVICE_READY,
 
 	/** A platform event mostly from peripheral is delivered to application system */
-		AT_PLATFORM_EVENT, 
+	AT_PLATFORM_EVENT, 
 	
     AT_BLE_EVENT_MAX
 
@@ -543,6 +543,7 @@ typedef enum
 typedef enum
 {
     AT_BLE_AUTH_FAILURE = 0x05,
+	AT_BLE_SUPERVISION_TIMEOUT = 0x08,
     AT_BLE_TERMINATED_BY_USER = 0x13,
     AT_BLE_REMOTE_DEV_TERM_LOW_RESOURCES,
     AT_BLE_REMOTE_DEV_POWER_OFF,
@@ -2884,6 +2885,51 @@ at_ble_status_t at_ble_tx_power_get(at_ble_tx_power_level_t *power);
 AT_BLE_API
 ///@endcond
 at_ble_status_t at_ble_rx_power_get(at_ble_handle_t conn_handle, int8_t *rx_power);
+
+/** @ingroup gap_misc_group
+ *@brief Gets BTLC1000 Chip ID
+ *
+ * @param[out] chip_id BTLC1000 chip id
+ *
+ * @warning Not Supported before release version 2.5
+ *
+ * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS,
+ * Otherwise the function shall return @ref at_ble_status_t
+ */
+///@cond IGNORE_DOXYGEN
+AT_BLE_API
+///@endcond
+at_ble_status_t at_ble_chip_id_get(uint32_t *chip_id);
+/** @ingroup gap_misc_group
+ *@brief Raeds 32 bit from BTLC1000
+ *
+ * @param[in] address Address to read from
+ * @param[out] value Value stored in BTLC1000 memory
+ *
+ * @warning Not Supported before release version 2.5
+ *
+ * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS,
+ * Otherwise the function shall return @ref at_ble_status_t
+ */
+///@cond IGNORE_DOXYGEN
+AT_BLE_API
+///@endcond
+at_ble_status_t read_32_from_BTLC1000(uint32_t address, uint32_t *value);
+
+/** @ingroup gap_misc_group
+ *@brief Gets BTLC1000 Firmware version
+ *
+ * @param[out] chip_id BTLC1000 firmware version
+ *
+ * @warning Not Supported before release version 2.5
+ *
+ * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS,
+ * Otherwise the function shall return @ref at_ble_status_t
+ */
+///@cond IGNORE_DOXYGEN
+AT_BLE_API
+///@endcond
+at_ble_status_t at_ble_firmware_version_get(uint32_t *fw_version);
 
 /** @ingroup gatt_client_group
  *@brief Discover all Primary services in a peer device

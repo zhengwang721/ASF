@@ -478,7 +478,7 @@ void gapm_start_connection_cmd_handler(uint8_t u8OpCode, uint8_t u8AddrType, uin
 
 uint8_t gapm_white_list_mgm_cmd(uint8_t operation, uint8_t addr_type, uint8_t *param)
 {
-    uint8_t u8Status;
+    uint8_t u8Operation = 0, u8Status;
     PRINT_DBG("input operation : %d\n", operation);
     INTERFACE_MSG_INIT(GAPM_WHITE_LIST_MGT_CMD, TASK_GAPM);
     INTERFACE_PACK_ARG_UINT8(operation);
@@ -507,9 +507,11 @@ uint8_t gapm_white_list_mgm_cmd(uint8_t operation, uint8_t addr_type, uint8_t *p
     {
         INTERFACE_SEND_WAIT(GAPM_CMP_EVT, TASK_GAPM);
     }
-    INTERFACE_UNPACK_SKIP(1);
+    INTERFACE_UNPACK_UINT8(&u8Operation);
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_DONE();
+	u8Operation = u8Operation; //Disable unused variable warning
+    PRINT_DBG("output operation : %d\n", u8Operation);
     return u8Status;
 }
 

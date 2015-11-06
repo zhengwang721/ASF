@@ -71,7 +71,7 @@ uint8_t gattm_att_set_value_req_handler(uint16_t handle, uint16_t length, uint8_
     INTERFACE_PACK_ARG_UINT16(length);
     INTERFACE_PACK_ARG_BLOCK(value, length);
     INTERFACE_SEND_WAIT(GATTM_ATT_SET_VALUE_RSP, TASK_GATTM);
-    INTERFACE_UNPACK_SKIP(2);
+    INTERFACE_UNPACK_SKIP(2);	//u16RcvHandle
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_DONE();
     return u8Status;

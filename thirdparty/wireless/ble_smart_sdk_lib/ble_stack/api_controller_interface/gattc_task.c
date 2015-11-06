@@ -379,7 +379,7 @@ at_ble_events_t gattc_complete_evt_handler(uint16_t src, uint8_t *data, void *pa
     INTERFACE_UNPACK_INIT(data);
     INTERFACE_UNPACK_UINT8(&parameters->operation);
     INTERFACE_UNPACK_UINT8(&status);
-    INTERFACE_UNPACK_SKIP(2);
+    INTERFACE_UNPACK_SKIP(2);	//g_seq_num_rx
     INTERFACE_DONE();
     parameters->status = (at_ble_status_t)status;
     switch (parameters->operation)

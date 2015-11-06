@@ -77,9 +77,9 @@ void internal_event_post(uint16_t msg_id, uint16_t src_id, void *data, uint16_t 
             }
             cur->next = ev;
         }
-		#ifndef SAMB11
+#ifndef SAMB11
         platform_event_signal();
-		#endif
+#endif
     }
 }
 
@@ -96,19 +96,19 @@ static at_ble_status_t internal_event_get(uint16_t *msg_id, uint16_t *src_id, ui
         //block till an event is posted or timeout
         while (event_pending_list == NULL && status != AT_BLE_TIMEOUT)
         {
-					status = (at_ble_status_t)platform_event_wait(timeout);
+			status = (at_ble_status_t)platform_event_wait(timeout);
         }
     }
     else // user wants no timeout
     {
         // block till an event is posted
-        while ((event_pending_list == NULL))
+        while (event_pending_list == NULL)
         {
-					status = (at_ble_status_t)platform_event_wait(timeout);
+			status = (at_ble_status_t)platform_event_wait(timeout);
 #ifdef SAMB11
-					if((plf_drv_status)status == STATUS_RECEIVED_PLF_EVENT_MSG)
-						break;
-#endif	//SAMB11
+			if((plf_drv_status)status == STATUS_RECEIVED_PLF_EVENT_MSG)
+				break;
+#endif	//#ifdef SAMB11
         }
     }
     if (status != AT_BLE_TIMEOUT)
@@ -122,29 +122,30 @@ static at_ble_status_t internal_event_get(uint16_t *msg_id, uint16_t *src_id, ui
                 platform_event_wait(0);
             }
         }
-#else
-				if((plf_drv_status)status == STATUS_RECEIVED_PLF_EVENT_MSG) {
-					*msg_id = 0xFFFE;
-					status = AT_BLE_SUCCESS;
-				}
-				else if((plf_drv_status)status == STATUS_RECEIVED_BLE_MSG) {
-					status = AT_BLE_SUCCESS;
-				}
+#else	//#ifndef SAMB11
+		if((plf_drv_status)status == STATUS_RECEIVED_PLF_EVENT_MSG) {
+			*msg_id = 0xFFFE;
+			status = AT_BLE_SUCCESS;
+		}
+		else if((plf_drv_status)status == STATUS_RECEIVED_BLE_MSG) {
+			status = AT_BLE_SUCCESS;
+		}
+		if((*msg_id != 0xFFFE) && (event_pending_list != NULL)) 
+		{
+#endif	//#ifndef SAMB11
+			ev = event_pending_list;
+			event_pending_list = event_pending_list->next;
+			*src_id = ev->src_id;
+			*msg_id = ev->msg_id;
+#ifdef NEW_EVT_HANDLER
+			*data_len = ev->data_len;
+#endif  //NEW_EVT_HANDLER
+			*data = ev->data;
+			/* source of bug */
+			internal_event_free(ev);
+#ifdef SAMB11
+		}	//if((*msg_id != 0xFFFE) && (event_pending_list != NULL)) 
 #endif
-
-				if((*msg_id != 0xFFFE) && (event_pending_list != NULL)) 
-				{
-					ev = event_pending_list;
-					event_pending_list = event_pending_list->next;
-					*src_id = ev->src_id;
-					*msg_id = ev->msg_id;
-	#ifdef NEW_EVT_HANDLER
-					*data_len = ev->data_len;
-	#endif  //NEW_EVT_HANDLER
-					*data = ev->data;
-					/* source of bug */
-					internal_event_free(ev);
-				}
     }
     return status;
 }
@@ -156,7 +157,7 @@ void internal_event_init()
     {
         internal_event_free(&event_pool[i]);
     }
-		event_pending_list = NULL;
+	event_pending_list = NULL;
 }
 
 #ifndef NEW_EVT_HANDLER
@@ -536,6 +537,7 @@ uint32_t special_events_handler(uint16_t msg_id, uint16_t src_id, uint8_t *data)
             }
         }
         break;
+		/*
         case GAPC_ENCRYPT_IND:  //neglect this event in case of MASTER
         {
             uint8_t index = check_ConnData_idx_role(KE_IDX_GET(src_id), NULL);
@@ -545,6 +547,7 @@ uint32_t special_events_handler(uint16_t msg_id, uint16_t src_id, uint8_t *data)
             }
         }
         break;
+		*/
         default:
         {
             consumed = 0;
@@ -622,9 +625,9 @@ at_ble_status_t at_ble_event_get(at_ble_events_t *event, void *params,
         status = internal_event_get(&msg_id, &src_id, &data, timeout);
 #else
         uint16_t data_len;
-				msg_id = 0;
-				src_id = 0;
-				data_len = 0;
+		msg_id = 0;
+		src_id = 0;
+		data_len = 0;
         status = internal_event_get(&msg_id, &src_id, &data, &data_len, timeout);
 #endif  //NEW_EVT_HANDLER
         PRINT_DBG("RW_EVENT : status = 0x%02X, msg_id = 0x%04X, src_id = 0x%04X, data_len = 0x%04X, data = ", status, msg_id, src_id, data_len);
@@ -637,14 +640,14 @@ at_ble_status_t at_ble_event_get(at_ble_events_t *event, void *params,
                 *event = AT_BLE_CUSTOM_EVENT;
                 *((void **)params) = data;
             }
-			#ifdef SAMB11
-						else if(msg_id == 0xFFFE) 
-						{
-								//platform event.
-								*event = AT_PLATFORM_EVENT;
-								params = NULL;
-						}
-			#endif
+#ifdef SAMB11
+			else if(msg_id == 0xFFFE) 
+			{
+				//platform event.
+				*event = AT_PLATFORM_EVENT;
+				params = NULL;
+			}
+#endif	//#ifdef SAMB11
             else if ((src_id == AT_BLE_HCI_DTM_EVENT) && (msg_id == AT_BLE_HCI_DTM_EVENT))
             {
                 *event = handle_ble_hci_dtm_event(data, (at_ble_dtm_t *)params);
