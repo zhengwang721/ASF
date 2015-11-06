@@ -56,15 +56,52 @@
 //#include "conf_extint.h"
 #include "scan_param.h"
 #include "ble_manager.h"
-#include "scan_parameter_app.h"
+#include "button.h"
+#include "led.h"
 
 bool app_exec  = true;
-/* === GLOBALS ============================================================ */
+
+/****************************************************************************************
+*							        Macros	                                     		*
+****************************************************************************************/
+/** @brief APP_BAS_FAST_ADV between 0x0020 and 0x4000 in 0.625 ms units (20ms to 10.24s). */
+#define APP_BAS_FAST_ADV				(100) //100 ms
+
+/** @brief APP_BAS_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
+#define APP_BAS_ADV_TIMEOUT				(1000) // 100 Secs
+
+/** @brief scan_resp_len is the length of the scan response data */
+#define SCAN_RESP_LEN					(10)
+
+/** @brief ADV_DATA_LEN */
+#define ADV_DATA_LEN					(18)
+
+/** @brief ADV_TYPE_LEN */
+#define ADV_TYPE_LEN					(0x01)
+
+/** @brief BAS_ADV_DATA_UUID_LEN the size of  BAS service uuid */
+#define SPS_ADV_DATA_UUID_LEN			(2)
+
+/** @brief BAS_ADV_DATA_UUID_TYPE the total sizeof BAS service uuid*/
+#define SPS_ADV_DATA_UUID_TYPE			(0x03)
+
+/** @brief BAS_ADV_DATA_NAME_LEN the  length of the device name */
+#define SPS_ADV_DATA_NAME_LEN			(9)
+
+/** @brief BAS_ADV_DATA_NAME_TYPE the gap ad data type */
+#define SPS_ADV_DATA_NAME_TYPE			(0x09)
+
+/* @brief BAS_ADV_DATA_NAME_DATA the actual name of device */
+#define SPS_ADV_DATA_NAME_DATA			("ATMEL-SCP")
 
 #define SCAN_PRAM_UPDATE_INTERVAL	(5) //5 second
 
+/* === GLOBALS ============================================================ */
+
+volatile unsigned char app_stack_patch[1024];
+
 /** @brief Scan response data*/
-uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
+
 sps_gatt_service_handler_t sps_service_handler;
 uint16_t scan_interval_window[2];
 uint8_t scan_refresh;
@@ -82,12 +119,28 @@ void timer_callback_handler(void)
 {
 	//Timer call back
 	timer_cb_done = true;
+	
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
+}
+
+void init_var()
+{
+	memset(&sps_service_handler, 0, sizeof(sps_gatt_service_handler_t));
+	scan_interval_window[0] = 0x00;
+	scan_interval_window[1] = 0x00;
+	scan_refresh = 0;
+
+	timer_cb_done = false;
+	flag = true;
+	scan_refresh_value = 0;
+	device_conn_handle = 0;
 }
 
 /* Advertisement data set and Advertisement start */
 static at_ble_status_t sps_service_advertise(void)
 {
 	uint8_t idx = 0;
+	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09,0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 	uint8_t adv_data [ SPS_ADV_DATA_NAME_LEN + SPS_ADV_DATA_UUID_LEN   + (2*2)];
 	
 	adv_data[idx++] = SPS_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
@@ -126,7 +179,7 @@ static at_ble_status_t sps_service_advertise(void)
 /* Callback registered for AT_BLE_PAIR_DONE event from stack */
 static void ble_paired_app_event(at_ble_handle_t conn_handle)
 {
-	timer_cb_done = true;
+	timer_cb_done = false;
 	hw_timer_start(SCAN_PRAM_UPDATE_INTERVAL);
 	device_conn_handle=conn_handle;
 	LED_On(LED0);
@@ -139,7 +192,6 @@ static void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 	hw_timer_stop();
 	sps_service_advertise();
 	LED_Off(LED0);
-        ALL_UNUSED(conn_handle);
 }
 
 /**
@@ -160,10 +212,11 @@ static void sps_notification_confirmed_cb(at_ble_cmd_complete_event_t *notificat
 	}
 }
 
-void button_cb(void)
+static void button_cb(void)
 {
-	/* For user usage */
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
 }
+
 
 /**
 * \Scan Parameter Application main function
@@ -179,6 +232,8 @@ int main(void)
 	#elif SAM0
 	system_init();
 	#endif
+	
+	init_var();
 	
 	/* Initialize the button */
 	//button_init();
@@ -197,6 +252,10 @@ int main(void)
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 	
+	 /* initialize the button & LED */
+	button_init(button_cb);
+	led_init();
+
 	/* Initialize the scan parameter service */
 	sps_init_service(&sps_service_handler, scan_interval_window, &scan_refresh);
 	
@@ -218,19 +277,23 @@ int main(void)
 	register_ble_notification_confirmed_cb(sps_notification_confirmed_cb);
 	
 	/* Capturing the events  */ 
-	while (app_exec) {
+	while (app_exec) 
+	{
 		/* BLE Event Task */
 		ble_event_task();
 		if (timer_cb_done)
 		{
 			timer_cb_done = false;
-			LED_Toggle(LED0);
-			/* send the notification and Update the scan parameter */	
+			//LED_Toggle();
+			//DBG_LOG("LED Toggle~~~");
 			
+			// send the notification and Update the scan parameter 	
 			if(sps_scan_refresh_char_update(&sps_service_handler, scan_refresh_value, &flag) == AT_BLE_SUCCESS)
 			{
 				DBG_LOG("Scan Refresh Characteristic Value: %d", scan_refresh_value);
 			}
+			
+			//hw_timer_start(SCAN_PRAM_UPDATE_INTERVAL);
 		}
 	}	
 	return 0;

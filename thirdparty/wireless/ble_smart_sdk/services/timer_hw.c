@@ -43,11 +43,6 @@ void hw_timer_register_callback(hw_timer_callback_t timer_callback_handler)
 
 void hw_timer_start(int dealy)
 {
-	puts("HW TIMER START\r\n");
-	
-	uint8_t string1[] = "HW TIMER START \r\n";
-	uart_write_buffer_wait(&uart_instance, string1, sizeof(string1));
-
 	//timer_set_value(dealy);
 	
 	dualtimer_enable(0);
@@ -56,11 +51,6 @@ void hw_timer_start(int dealy)
 
 void hw_timer_stop()
 {
-	puts("HW TIMER STOP\r\n");
-	
-	uint8_t string1[] = "HW TIMER STOP \r\n";
-	uart_write_buffer_wait(&uart_instance, string1, sizeof(string1));
-	
 	dualtimer_disable(0);
 	//dualtimer_disable(1);
 }

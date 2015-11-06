@@ -61,6 +61,9 @@
 //#include "conf_extint.h"
 //#include "conf_serialdrv.h"
 #include "at_ble_trace.h"
+#include "button.h"
+#include "led.h"
+
 
 /* BLE Device Name definitions */
 #define BLE_DEVICE_NAME				"ATMEL-HTP"
@@ -84,10 +87,11 @@ static void update_temperature_type_location(void);
 
 void htpt_set_advertisement_data(void);
 
-
 void ble_device_config(at_ble_addr_t *addr);
 
-static uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xFF, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
+
+
+static uint8_t scan_rsp_data[SCAN_RESP_LEN];
 
 at_ble_LTK_t app_bond_info;
 bool app_device_bond = false;
@@ -100,25 +104,26 @@ volatile bool button_pressed = false;
 
 at_ble_handle_t htpt_conn_handle;
 
+
 /* BLE connected event indication */
 static void ble_device_connected_ind(void)
 {
 	/* Switch on the application LED */
-	LED_On(LED0);
+	LED_On();
 }
 
 /* BLE disconnected event indication */
 static void ble_device_disconnected_ind(void)
 {
 	/* Switch off the application LED */
-	LED_Off(LED0);
+	LED_Off();
 }
 
 /* BLE data send event confirmation */
 static void ble_data_sent_confim(void)
 {
 	/* Toggle the application LED of each data sent */
-	LED_Toggle(LED0);
+	LED_Toggle();
 }
 
 /* Initialize the BLE */
@@ -130,21 +135,15 @@ static void ble_init(void)
 	/*Memory allocation required by GATT Server DB*/
 	pf_cfg.memPool.memSize = 0;
 	pf_cfg.memPool.memStartAdd = NULL;
-	/*Bus configuration*/
-	//busConfig.bus_type = AT_BLE_UART;
-	//pf_cfg.plf_config = &busConfig;
+	pf_cfg.plf_config = NULL;
 	
 	/* Initialize the platform */
-	DBG_LOG("Initializing BTLC1000");
-	
-	/*Trace Logs*/
-	trace_register_printFn((void *)&printf_b11);
-	trace_set_level(TRACE_LVL_ALL);
+	DBG_LOG("Initializing SAMB11");
 	
 	/* Init BLE device */
 	if(at_ble_init(&pf_cfg) != AT_BLE_SUCCESS)
 	{
-		DBG_LOG("BTLC1000 Initialization failed");
+		DBG_LOG("SAMB11 Initialization failed");
 		DBG_LOG("Please check the power and connection / hardware connector");
 		while(1);
 	}
@@ -355,6 +354,8 @@ void htpt_set_advertisement_data(void)
 void button_cb(void)
 {
 	button_pressed = true;
+	
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
 }
 
 /* Updating the location to read the temperature */
@@ -375,15 +376,22 @@ static void timer_callback_handler(void)
 {
 	hw_timer_stop();
 	app_timer_done = true;	
+	
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
 }
 
 
 int main (void)
 {
+	uint16_t plf_event_type;
+	uint16_t plf_event_data_len;
+	uint8_t	plf_event_data[16];
 	at_ble_events_t event;
 	uint8_t params[512];
 	at_ble_handle_t handle = 0;
 	bool temp_send_notification = false;
+	uint8_t ro_scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xFF, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
+	
 
 #if SAMG55
 	/* Initialize the SAM system. */
@@ -392,6 +400,19 @@ int main (void)
 #elif SAM0
 	system_init();
 #endif
+
+	platform_initialized = 0;
+	
+	memset(&app_bond_info, 0, sizeof(at_ble_LTK_t));
+	memset(&auth_info, 0, sizeof(at_ble_auth_t));
+	memset(&htp_data, 0, sizeof(htp_app_t));
+	
+	app_device_bond = false;
+	app_timer_done = false;
+	button_pressed = false;
+	htpt_conn_handle = NULL;
+	
+	memcpy(scan_rsp_data, ro_scan_rsp_data, sizeof(uint8_t) * SCAN_RESP_LEN);
 	
 	/* Initialize the button */
 	//button_init();
@@ -399,25 +420,34 @@ int main (void)
 	/* Initialize serial console */
 	serial_console_init();
 	
-	DBG_LOG("Initializing HTP Application");
-	
-	/* Initialize the temperature sensor */
-	at30tse_init();
-	
-	/* configure the temperature sensor ADC */
-	at30tse_write_config_register(
-			AT30TSE_CONFIG_RES(AT30TSE_CONFIG_RES_12_bit));	
-	
 	/* Initialize the hardware timer */
 	hw_timer_init();
 	
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);	
 	
+	DBG_LOG("Initializing HTP Application");
+	
+	/* Initialize the temperature sensor */
+	at30tse_init();
+	
+	DBG_LOG("before at30tse_write_config_register");
+	
+	/* configure the temperature sensor ADC */
+	at30tse_write_config_register(AT30TSE_CONFIG_RES(AT30TSE_CONFIG_RES_12_bit));	
+	
+	DBG_LOG("after at30tse_write_config_register");
+	
 	/* initialize the ble chip */
 	ble_init();	
 	
+	DBG_LOG("Initializing HTP Application 3");
+	
 	ble_device_config(NULL);
+	
+	 /* initialize the button & LED */
+	button_init(button_cb);
+	led_init();
 	
 	/* Initialize the htp profile */
 	htp_init();	
@@ -429,6 +459,16 @@ int main (void)
 	{
 		switch(event)
 		{
+			case AT_PLATFORM_EVENT:
+			{
+				platform_event_get(&plf_event_type,plf_event_data,&plf_event_data_len);
+				if(plf_event_type == ((TIMER_EXPIRED_CALLBACK_TYPE_DETECT << 8)| USER_TIMER_CALLBACK)) {
+					if(temp_send_notification)
+						htp_temperature_send(&htp_data);
+				}
+			}
+			break;
+			
 			/* The BLE device - Peripheral connected to master */
 			case AT_BLE_CONNECTED:
 			{				
@@ -536,11 +576,13 @@ int main (void)
 			/** Error indication to APP*/
 			case AT_BLE_HTPT_ERROR_IND:
 			{
-				at_ble_prf_server_error_ind_t prf_htpt_error_ind;
-				memcpy((uint8_t *)&prf_htpt_error_ind, params, sizeof(at_ble_prf_server_error_ind_t));
+				/*
+				prf_server_error_ind_t prf_htpt_error_ind;
+				memcpy((uint8_t *)&prf_htpt_error_ind, params, sizeof(prf_server_error_ind_t));
 				
 				DBG_LOG("HTP Error Indication received, msg_id=0x%x, handle=0x%x, status=0x%x",
 				prf_htpt_error_ind.msg_id, prf_htpt_error_ind.conhdl, prf_htpt_error_ind.status);
+				*/
 			}					
 			break;
 			
@@ -569,12 +611,14 @@ int main (void)
 				
 				/* start the timer for next interval of  temperature send */
 				hw_timer_start(htp_data.measurement_interval);	
+				/*
 				while(app_timer_done == false);	
 				if (temp_send_notification)
 				{
 					htp_temperature_send(&htp_data);
 				}				
 				app_timer_done = false;		
+				*/
 			}
 			break;
 			
@@ -597,11 +641,13 @@ int main (void)
 				{
 					DBG_LOG("Started HTP Temperature Notification");
 					temp_send_notification = true;
-					htp_temperature_send(&htp_data);
+					hw_timer_start(1);	
+					//htp_temperature_send(&htp_data);
 				}
 				else
 				{
 					temp_send_notification = false;
+					hw_timer_stop();
 					DBG_LOG("HTP Temperature Notification Stopped");
 				}				
 			}			

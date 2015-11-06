@@ -152,55 +152,10 @@ int main()
 	configure_uart();
 //! [setup_init]
 
-//! [main]
-//! [main_send_string1]
-	uint8_t string1[] = " Hello Worlda\r\n";
-	uart_write_buffer_wait(&uart_instance, string1, sizeof(string1));
-//! [main_send_string1]
-	
-
-	
-	uint8_t string2[] = " Hello World2\r\n";
-	uart_write_buffer_wait(&uart_instance, string2, sizeof(string2));
-//! [main_send_string1]
-
-	//chris.choi : case 2 working
-	//ble_init();
-
-
-	// chris.choi : case 3 not working
-	{	//case 3
-		//ble_init();
-
-	//! [test_callback_functions]
-	//uint8_t string3[] = "input 8\r\n";
-	//uart_register_callback(&uart_instance, uart_write_complete_callback,
-		//UART_TX_COMPLETE);
-	//uart_enable_callback(&uart_instance, UART_TX_COMPLETE);
-	//uart_write_buffer_job(&uart_instance, string3, sizeof(string3));
-	//while (!write_complete_flag);
-//
-	//uart_register_callback(&uart_instance, uart_read_complete_callback,
-		//UART_RX_COMPLETE);
-	//uart_enable_callback(&uart_instance, UART_RX_COMPLETE);
-	//uart_read_buffer_job(&uart_instance, string_input, sizeof(string_input));
-	//while (!read_complete_flag);
-//
-	//uint8_t string4[] = "received: ";
-	//uart_write_buffer_wait(&uart_instance, string4, sizeof(string4));
-	//uart_write_buffer_wait(&uart_instance, string_input, sizeof(string_input));
-	//
-	}	// case 3
-
+	printf("iBeacon SAMB11 Start\r\n");
 
 	ble_init();
 
-	uint8_t string5[] = " Hello World3\r\n";
-	uart_write_buffer_wait(&uart_instance, string5, sizeof(string5));
-	
-	
-
-	
 	while(at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS)
 	{
 		switch(event)

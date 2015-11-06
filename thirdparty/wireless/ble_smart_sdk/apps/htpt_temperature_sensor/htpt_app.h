@@ -49,11 +49,23 @@
 #define __HTPT_APP_H__
 
 #include "at_ble_api.h"
+#include "uart.h"
+#include "stddef.h"     // standard definition
+#include "stdarg.h"
+#include "stdio.h"
 
-#define DBG_LOG_CONT	 printf_b11
+#define DBG_LOG_CONT	 printf
 
-#define DBG_LOG		     printf_b11("\r\n");\
-						 printf_b11
+#define DBG_LOG		     printf("\r\n");\
+						 printf
+#define DEV_LOG_ENABLE
+
+#ifdef DEV_LOG_ENABLE
+#define DBG_LOG_DEV(...)	printf(__VA_ARGS__);	\
+print_log("\r\n");
+#else
+#define DBG_LOG_DEV		ALL_UNUSED
+#endif
 
 #define APP_HT_FAST_ADV 100 //100 ms
 
