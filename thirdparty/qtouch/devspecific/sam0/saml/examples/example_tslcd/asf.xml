@@ -9,7 +9,6 @@
 		<build type="header-file" value="qtouch/touch.h"/>
 		<build type="header-file" value="qtouch/QDebugSettings.h"/>
 		<build type="include-path" value="qtouch/"/>
-		<build type="include-path" value="."/>
 		<build type="c-source" value="qdebug/BitBangSPI_Master.c"/>
 		<build type="header-file" value="qdebug/BitBangSPI_Master.h"/>
 		<build type="c-source" value="qdebug/QDebug_samd.c"/>
