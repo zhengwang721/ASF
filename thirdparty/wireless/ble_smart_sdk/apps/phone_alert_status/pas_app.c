@@ -215,27 +215,27 @@ int main(void)
 	/* Initializing the hardware timer */
 	hw_timer_init();
 	
-	/*Registration of timer callback*/
-	hw_timer_register_callback(timer_callback_handler);
-	
-	DBG_LOG("Initializing Phone Alert Status Profile Application");
-	
-	register_alert_status_read_callback(app_alert_status_read);
-	
-	register_ringer_setting_read_callback(app_ringer_setting_read);
-	
-	register_alert_status_notification_callback(app_alert_status_notify);
-	
-	register_ringer_setting_notification_callback(app_ringer_setting_notify);
-	
-	register_connected_callback(app_connected_state);
-	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 			
 	/* Initializing the button */
 	button_init(button_cb);
 	
+	/*Registration of timer callback*/
+	hw_timer_register_callback(timer_callback_handler);
+		
+	DBG_LOG("Initializing Phone Alert Status Profile Application");
+		
+	register_alert_status_read_callback(app_alert_status_read);
+		
+	register_ringer_setting_read_callback(app_ringer_setting_read);
+		
+	register_alert_status_notification_callback(app_alert_status_notify);
+		
+	register_ringer_setting_notification_callback(app_ringer_setting_notify);
+		
+	register_connected_callback(app_connected_state);
+		
 	/* Capturing the events  */
 	while(appp_exec)
 	{
