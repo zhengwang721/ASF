@@ -3,7 +3,7 @@
 		<info type="description" value="summary">
 		Startup Template for BLE stack.
 		</info>	
-		<require idref="thirdparty.wireless.ble_sdk.apps.startup_template"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.apps.startup_template"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_timer.h"/>
