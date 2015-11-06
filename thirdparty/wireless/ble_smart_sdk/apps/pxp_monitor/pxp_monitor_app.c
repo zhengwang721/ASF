@@ -214,6 +214,8 @@ int main(void)
 
 	/* Initialize the pxp service */
 	pxp_app_init();
+	
+	acquire_sleep_lock();
 
 	while (1) {
 		/* BLE Event Task */

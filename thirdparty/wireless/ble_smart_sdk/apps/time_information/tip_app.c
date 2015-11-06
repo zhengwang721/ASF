@@ -183,6 +183,8 @@ int main (void)
 	button_init(button_cb);
 	led_init();
 	
+	acquire_sleep_lock();
+	
 	while(1) {
 		ble_event_task();
 		if (button_pressed){

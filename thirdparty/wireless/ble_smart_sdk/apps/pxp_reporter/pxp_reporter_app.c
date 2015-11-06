@@ -64,6 +64,11 @@
 #include "button.h"
 #include "led.h"
 
+
+#define APP_STACK_SIZE	(1024)
+
+volatile unsigned char app_stack_patch[APP_STACK_SIZE];
+
 /* === GLOBALS ============================================================ */
 /* PXP Application LED State */
 bool pxp_led_state = true;
@@ -185,6 +190,8 @@ int main(void)
 	pxp_led_state = true;
 	timer_interval = INIT_TIMER_INTERVAL;
 	
+	platform_driver_init();
+	
 	/* Initialize serial console */
 	serial_console_init();
 	
@@ -203,6 +210,8 @@ int main(void)
 	/* Caution, button_init func has to be called after ble_device_init func */
 	button_init(button_cb);
 	led_init();
+	
+	acquire_sleep_lock();
 	
 	DBG_LOG("Proximity Reporter Initializing Completed");
 	

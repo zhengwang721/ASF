@@ -189,6 +189,8 @@ int main(void)
 	button_init(button_cb);
 	led_init();
 	
+	acquire_sleep_lock();
+	
 	/* Initialize the dis */
 	dis_init_service(&dis_service_handler);
 	
