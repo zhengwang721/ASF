@@ -227,7 +227,7 @@ int main(void )
 #endif
 	
 	/* Initialize serial console */
-	serial_console_init();
+	serial_console_init();	
 	
 	DBG_LOG("Initializing HID Keyboard Application");
 	
@@ -235,7 +235,9 @@ int main(void )
 	hid_keyboard_app_init();
 	
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL);
+	ble_device_init(NULL);	
+	
+	acquire_sleep_lock(); 
 	
 	/* Initialize button*/
 	button_init(button_cb);	

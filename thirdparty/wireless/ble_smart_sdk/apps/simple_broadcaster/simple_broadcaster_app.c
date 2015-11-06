@@ -825,11 +825,13 @@ int main(void)
 
 	/* Initialize serial console */
 	serial_console_init();
-
+	
 	DBG_LOG("Initializing Broadcaster Application");
 	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
+	
+	acquire_sleep_lock(); 
 	
 	/* Intialize LED */
 	led_init();
