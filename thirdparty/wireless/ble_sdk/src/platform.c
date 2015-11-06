@@ -76,7 +76,6 @@ volatile uint8_t tx_done = 0;				//	TX Transfer complete flag
 volatile uint8_t data_received = 0;			//	RX data received flag
 
 volatile int init_done = 0;
-volatile int ext_wakeup_state = 0;
 
 #ifdef UART_FLOW_CONTROL_ENABLED
 /* Enable Hardware Flow-control on BTLC1000 */
