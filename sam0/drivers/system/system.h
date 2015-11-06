@@ -3,7 +3,7 @@
  *
  * \brief SAM System related functionality
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -492,7 +492,7 @@ extern "C" {
  * \section asfdoc_sam0_system_examples Examples
  *
  * For SYSTEM module related examples, refer to the sub-modules listed in
- * the \ref asfdoc_sam0_system_module_overview "system module overview".
+ * the \ref asfdoc_sam0_system_module_overview "Module Overview".
  *
  * For a list of examples related to this driver, see
  * \ref asfdoc_sam0_drivers_power_exqsg.
@@ -569,7 +569,7 @@ void system_init(void);
 * \page asfdoc_sam0_drivers_power_exqsg Examples for Power Driver
  *
  * This is a list of the available Quick Start Guides (QSGs) and example
- * applications. QSGs are simple examples with step-by-step instructions to
+ * applications for \ref asfdoc_sam0_system_group. QSGs are simple examples with step-by-step instructions to
  * configure and use this driver in a selection of
  * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
