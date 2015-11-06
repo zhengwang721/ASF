@@ -4,12 +4,10 @@
 		</info>
 		<build type="header-file" subtype="api" value="include/touch_api_ptc.h"/>
 		<build type="include-path" value="."/>
-		<build type="include-path" value="include/"/>
-		<build type="include-path" value="include/examples/example_tslcd/qtouch"/>
-		<build type="module-config" subtype="required-header-file" value="conf_slcd.h"/>
-		<build type="module-config" subtype="path" value="module_config"/>
+		<build type="include-path" value="include"/>
+		<build type="include-path" value="examples/example_tslcd/qtouch"/>
+		<build type="header-file" value="examples/example_tslcd/qtouch/touch.h"/>
 		<build type="library" subtype="user" value="lib/gcc/libsaml22_qt_gcc.a" toolchain="armgcc"/>
-		<build type="doxygen-entry-point" value="group_thirdparty_qtouch_devspecific_sam0_saml"/>
 		<device-support value="saml22" />
 		<build type="distribute" subtype="license" value="../../../license.txt"/>
 		<info type="keyword" value="technology">
