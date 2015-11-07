@@ -11,7 +11,7 @@
 		<build type="header-file" value="conf_serialbridge.h"/>
 		<build type="header-file" value="conf_console.h"/>
 		<build type="header-file" value="conf_extint.h"/>
-
+		<build type="header-file" value="conf_timer.h"/>
 		<require idref="sam0.drivers.extint"/>
   
 		<require idref="board.saml21_xplained_pro"/>
