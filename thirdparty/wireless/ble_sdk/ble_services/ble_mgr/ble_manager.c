@@ -1048,8 +1048,8 @@ at_ble_status_t ble_slave_security_request_handler(void* params)
 	/* Distribution of LTK is required */
 	if (ble_dev_info[idx].conn_info.peer_addr.type == AT_BLE_ADDRESS_RANDOM_PRIVATE_RESOLVABLE)
 	{
-		features.initiator_keys =   AT_BLE_KEY_DIST_ENC | AT_BLE_KEY_DIST_ID;
-		features.responder_keys =   AT_BLE_KEY_DIST_ENC | AT_BLE_KEY_DIST_ID;
+		features.initiator_keys =   (at_ble_key_dis_t)(AT_BLE_KEY_DIST_ENC | AT_BLE_KEY_DIST_ID);
+		features.responder_keys =   (at_ble_key_dis_t)(AT_BLE_KEY_DIST_ENC | AT_BLE_KEY_DIST_ID);
 	}
 	else
 	{
@@ -1122,8 +1122,8 @@ at_ble_status_t ble_pair_request_handler(void *params)
 	if (ble_dev_info[idx].conn_info.peer_addr.type == AT_BLE_ADDRESS_RANDOM_PRIVATE_RESOLVABLE)
 	{
 		/* Distribution of IRK is required */
-		features.initiator_keys =   AT_BLE_KEY_DIST_ENC | AT_BLE_KEY_DIST_ID;
-		features.responder_keys =   AT_BLE_KEY_DIST_ENC | AT_BLE_KEY_DIST_ID;
+		features.initiator_keys =   (at_ble_key_dis_t)(AT_BLE_KEY_DIST_ENC | AT_BLE_KEY_DIST_ID);
+		features.responder_keys =   (at_ble_key_dis_t)(AT_BLE_KEY_DIST_ENC | AT_BLE_KEY_DIST_ID);
 	}
 	else
 	{
@@ -1390,7 +1390,7 @@ at_ble_status_t ble_encryption_request_handler(void *params)
     {
 	    DBG_LOG("Pairing information of peer device is not available.");
 	    DBG_LOG("Please unpair the device from peer device(mobile) settings menu and start pairing again");
-		at_ble_disconnect(ble_dev_info[idx].conn_info.handle, 0x5);
+		at_ble_disconnect(ble_dev_info[idx].conn_info.handle, AT_BLE_AUTH_FAILURE);
 		return AT_BLE_FAILURE;
     }
 

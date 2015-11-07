@@ -137,10 +137,6 @@ static void ble_init(void)
 	/* Initialize the platform */
 	DBG_LOG("Initializing BTLC1000");
 	
-	/*Trace Logs*/
-	trace_register_printFn((void *)&printf);
-	trace_set_level(TRACE_LVL_ALL);
-	
 	/* Init BLE device */
 	if(at_ble_init(&pf_cfg) != AT_BLE_SUCCESS)
 	{
@@ -427,6 +423,7 @@ int main (void)
 	
 	while(at_ble_event_get(&event, params, 0xFFFFFFFF) == AT_BLE_SUCCESS)
 	{
+		DBG_LOG("The event is %d",event);
 		switch(event)
 		{
 			/* The BLE device - Peripheral connected to master */
