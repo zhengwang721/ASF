@@ -423,6 +423,7 @@ bool ble_mgr_events_callback_handler(ble_mgr_event_cb_t event_cb_type,
 at_ble_status_t ble_undefined_event_handler(void *params)
 {
 	DBG_LOG_DEV("Undefined Event Received");
+    ALL_UNUSED(params);
 	return AT_BLE_SUCCESS;
 }
 
