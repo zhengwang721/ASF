@@ -54,7 +54,8 @@
 #include "at_ble_api.h"
 #include "console_serial.h"
 #include "timer_hw.h"
-//#include "conf_extint.h"
+#include "timer.h"
+#include "button.h"
 #include "ble_manager.h"
 #include "ble_utils.h"
 #include "blp_sensor_app.h"
@@ -562,7 +563,6 @@ static void timer_callback_handler(void)
  */
 int main(void)
 {
-
 	indication_sent = true;
 	notification_sent = true;
 	units = APP_DEFAULT_VAL;
@@ -595,16 +595,7 @@ int main(void)
 	memset(g_blp_data, 0, sizeof(uint8_t)*BLP_DATA_LEN);
 	g_idx = 0;	 
 
-	#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-	#elif SAM0
-	system_init();
-	#endif
-
-	/* Initialize the button */
-	//button_init();
+	platform_driver_init();
 
 	/* Initialize serial console */
 	serial_console_init();
@@ -643,6 +634,8 @@ int main(void)
 
 	/* Initialize the button */
 	button_init(button_cb);
+
+	acquire_sleep_lock();
 
 	/* Capturing the events  */
 	while (app_exec) {
