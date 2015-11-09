@@ -634,6 +634,7 @@ void XDMAC_Handler      ( void );
 #define EBI_CS2_ADDR  (0x62000000u) /**< EBI Chip Select 2 base address */
 #define EBI_CS3_ADDR  (0x63000000u) /**< EBI Chip Select 3 base address */
 #define SDRAM_CS_ADDR (0x70000000u) /**< SDRAM Chip Select base address */
+#define USBHS_RAM     (0xA0100000u) /**< USBHS Chip Select base address */
 
 /* ************************************************************************** */
 /*   MISCELLANEOUS DEFINITIONS FOR SAMS70Q21 */
