@@ -52,21 +52,26 @@
 /*- Includes ---------------------------------------------------------------*/
 
 #include <asf.h>
-#include "profiles.h"
 #include "platform.h"
 #include "at_ble_api.h"
 #include "htpt_app.h"
-#include "console_serial.h"
-#include "timer_hw.h"
-//#include "conf_extint.h"
-//#include "conf_serialdrv.h"
 #include "at_ble_trace.h"
 #include "button.h"
 #include "led.h"
+#include "timer_hw.h"
+#include "console_serial.h"
 
 
 /* BLE Device Name definitions */
 #define BLE_DEVICE_NAME				"ATMEL-HTP"
+
+#define APP_STACK_SIZE	(2048)
+
+volatile unsigned char app_stack_patch[APP_STACK_SIZE];
+
+
+extern int platform_initialized;
+
 
 /* Initialize the BLE */
 static void ble_init(void);
@@ -109,29 +114,27 @@ at_ble_handle_t htpt_conn_handle;
 static void ble_device_connected_ind(void)
 {
 	/* Switch on the application LED */
-	LED_On();
+	LED_On(LED0);
 }
 
 /* BLE disconnected event indication */
 static void ble_device_disconnected_ind(void)
 {
 	/* Switch off the application LED */
-	LED_Off();
+	LED_Off(LED0);
 }
 
 /* BLE data send event confirmation */
 static void ble_data_sent_confim(void)
 {
 	/* Toggle the application LED of each data sent */
-	LED_Toggle();
+	LED_Toggle(LED0);
 }
 
 /* Initialize the BLE */
 static void ble_init(void)
 {	
 	at_ble_init_config_t pf_cfg;
-	//platform_config busConfig;
-	
 	/*Memory allocation required by GATT Server DB*/
 	pf_cfg.memPool.memSize = 0;
 	pf_cfg.memPool.memStartAdd = NULL;
@@ -167,7 +170,7 @@ static void htp_init_defaults(htp_app_t *htp_temp)
 static void htp_temperature_send(htp_app_t *htp_temp)
 {
 	at_ble_prf_date_time_t timestamp;
-	#if SAMD21 || SAML21 || CHIPVERSION_B0
+	#if SAMD21 || SAML21 || SAMB11
 	float temperature;
 	/* Read Temperature Value from IO1 Xplained Pro */
 	temperature = at30tse_read_temperature();
@@ -311,8 +314,6 @@ void ble_device_config(at_ble_addr_t *addr)
         DBG_LOG("BLE Device name set failed");
       }
     }   
-        
-	UNUSED(enuStatus);
 }
 
 /* Advertisement data set and advertisement start */
@@ -353,6 +354,8 @@ void htpt_set_advertisement_data(void)
 
 void button_cb(void)
 {
+	DBG_LOG("button_cb\r\n");
+	
 	button_pressed = true;
 	
 	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
@@ -392,15 +395,6 @@ int main (void)
 	bool temp_send_notification = false;
 	uint8_t ro_scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xFF, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 	
-
-#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-#elif SAM0
-	system_init();
-#endif
-
 	platform_initialized = 0;
 	
 	memset(&app_bond_info, 0, sizeof(at_ble_LTK_t));
@@ -414,9 +408,9 @@ int main (void)
 	
 	memcpy(scan_rsp_data, ro_scan_rsp_data, sizeof(uint8_t) * SCAN_RESP_LEN);
 	
-	/* Initialize the button */
-	//button_init();
 	
+	platform_driver_init();
+
 	/* Initialize serial console */
 	serial_console_init();
 	
@@ -431,12 +425,8 @@ int main (void)
 	/* Initialize the temperature sensor */
 	at30tse_init();
 	
-	DBG_LOG("before at30tse_write_config_register");
-	
 	/* configure the temperature sensor ADC */
 	at30tse_write_config_register(AT30TSE_CONFIG_RES(AT30TSE_CONFIG_RES_12_bit));	
-	
-	DBG_LOG("after at30tse_write_config_register");
 	
 	/* initialize the ble chip */
 	ble_init();	
@@ -448,6 +438,8 @@ int main (void)
 	 /* initialize the button & LED */
 	button_init(button_cb);
 	led_init();
+	
+	acquire_sleep_lock();
 	
 	/* Initialize the htp profile */
 	htp_init();	

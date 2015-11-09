@@ -49,7 +49,6 @@
 #define __HTPT_APP_H__
 
 #include "at_ble_api.h"
-#include "uart.h"
 #include "stddef.h"     // standard definition
 #include "stdarg.h"
 #include "stdio.h"
