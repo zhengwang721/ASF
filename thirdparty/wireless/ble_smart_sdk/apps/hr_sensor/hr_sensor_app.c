@@ -55,16 +55,22 @@
 #include "at_ble_api.h"
 #include "console_serial.h"
 #include "timer_hw.h"
-//#include "conf_extint.h"
+#include "button.h"
+#include "led.h"
 #include "ble_manager.h"
 #include "ble_utils.h"
 #include "hr_sensor_app.h"
 #include "hr_sensor.h"
+#include "timer.h"
 
 /****************************************************************************************
 *							        Globals		
 *                                       *
 ****************************************************************************************/
+
+#define APP_STACK_SIZE	(1024)
+volatile unsigned char app_stack_patch[APP_STACK_SIZE];
+
 volatile bool app_state = 0 ; /*!< flag to represent the application state*/
 volatile bool start_advertisement = 0; /*!< flag to start advertisement*/
 volatile bool advertisement_flag = false;/*!< to check if the device is in advertisement*/
@@ -82,6 +88,12 @@ int8_t inc_changer	= 1;/*!< increment operator to change heart rate */
 int8_t time_operator ;/*!< operator to change the seconds */
 uint8_t hr_min_value;/*!<the minimum heart rate value*/
 uint8_t hr_max_value;/*!<the maximum heart rate value*/
+
+/* to make app executing continuously*/
+bool app_exec = true;
+
+bool isButton = false;
+bool isTimer = false;
 
 /****************************************************************************************
 *							        Functions											*
@@ -208,6 +220,9 @@ void button_cb(void)
 		start_advertisement = true;
 		advertisement_flag = true;	
 	}
+
+	isButton = true;
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
 }
 
 /** @brief hr_measurment_send sends the notifications after adding the hr values
@@ -290,33 +305,46 @@ static void hr_measurment_send(void)
  */
 static void timer_callback_handler(void)
 {
-	if (second_counter == START_OF_FIRST_ACTIVITY) {
-		time_operator = 1;
-	} else if (second_counter == END_OF_LAST_ACTIVITY) {
-		time_operator = -1;
-	}
-	second_counter += (time_operator);
-	heart_rate_value_init();
-	notification_flag = true;
+	hw_timer_stop();
+	
+	isTimer = true;
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
 }
 
-/* to make app executing continuously*/
-bool app_exec = true;
 /**
  * \brief Heart Rate Sensor Application main function
  */
 int main(void)
 {
-	#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-	#elif SAM0
-	system_init();
-	#endif
+	app_state = 0 ; /*!< flag to represent the application state*/
+	start_advertisement = 0; /*!< flag to start advertisement*/
+	advertisement_flag = false;/*!< to check if the device is in advertisement*/
+	notification_flag = false; /*!< flag to start notification*/
+	disconnect_flag = false;	/*!< flag for disconnection*/
+	hr_initializer_flag = 1; /*!< flag for initialization of hr for each category*/
+	second_counter = 0;	/*!< second_counter to count the time*/
+	energy_expended_val = ENERGY_EXP_NORMAL; /*!< to count the energy expended*/
+	energy_incrementor = 0;
+	heart_rate_value = HEART_RATE_MIN_NORM; /*!< to count the heart rate value*/
+	rr_interval_value = RR_VALUE_MIN; /*!< to count the rr interval value*/
+	activity = 0; /*!< activiy which will determine the */
+	prev_activity = DEFAULT_ACTIVITY;/*!< previous activity */
+	inc_changer	= 1;/*!< increment operator to change heart rate */
+	time_operator = 0 ;/*!< operator to change the seconds */
+	hr_min_value = 0;/*!<the minimum heart rate value*/
+	hr_max_value = 0;/*!<the maximum heart rate value*/
+
+	app_exec = true;
+
+	isButton = false;
+	isTimer = false;
+
+	platform_driver_init();
 
 	/* Initialize the button */
-	//button_init();
+	button_init(button_cb);
+
+	led_init();
 
 	/* Initialize serial console */
 	serial_console_init();
@@ -341,33 +369,56 @@ int main(void)
 	/* Registering the app_state_handler with the profile */
 	register_hr_state_handler(app_state_handler);
 
+	acquire_sleep_lock();
+
 	/* Capturing the events  */
 	while (app_exec) {
 		ble_event_task();
 
-		if (start_advertisement == true || disconnect_flag == true) {
-			/* button debounce delay*/
-			//delay_ms(350);
-		}
-		
-		/* Flag to start advertisement */
-		if (start_advertisement) {
-			hr_sensor_adv();
-			start_advertisement = false;
+		if(isButton == true)
+		{
+			isButton = false;
+			
+			if (start_advertisement == true || disconnect_flag == true) {
+				/* button debounce delay*/
+				//delay_ms(350);
+			}
+
+			/* Flag to start advertisement */
+			if (start_advertisement) {
+				hr_sensor_adv();
+				start_advertisement = false;
+			}
+
+			/* Flag to disconnect with the peer device */
+			if (disconnect_flag) {
+				hr_sensor_disconnect();
+				app_state = false;
+				disconnect_flag = false;
+			}
 		}
 
-		/* Flag to start notification */
-		if (notification_flag) {
-			LED_Toggle(LED0);
-			hr_measurment_send();
-			notification_flag = false;
-		}
+		if(isTimer == true)
+		{
+			isTimer = false;
 
-		/* Flag to disconnect with the peer device */
-		if (disconnect_flag) {
-			hr_sensor_disconnect();
-			app_state = false;
-			disconnect_flag = false;
+			if (second_counter == START_OF_FIRST_ACTIVITY) {
+				time_operator = 1;
+			} else if (second_counter == END_OF_LAST_ACTIVITY) {
+				time_operator = -1;
+			}
+			second_counter += (time_operator);
+			heart_rate_value_init();
+			notification_flag = true;
+
+			/* Flag to start notification */
+			if (notification_flag) {
+				LED_Toggle(LED0);
+				hr_measurment_send();
+				notification_flag = false;
+			}
+
+			hw_timer_start(NOTIFICATION_INTERVAL);
 		}
 	}
 	return 0;
