@@ -634,5 +634,4 @@ at_ble_status_t anp_client_read_response_handler(void *params)
 at_ble_status_t anp_write_to_ncp(uint8_t *value)
 {
 	return(at_ble_characteristic_write(ble_dev_info[0].conn_info.handle, anp_handle.alert_np_char_handle, 0, 2, value, false, true));
-	return AT_BLE_SUCCESS;
 }

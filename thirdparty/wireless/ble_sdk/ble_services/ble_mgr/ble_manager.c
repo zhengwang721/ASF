@@ -588,6 +588,7 @@ at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 			DBG_LOG("Slave security request failed");
 		}
 	#endif
+        ALL_UNUSED(conn_handle);
 	return AT_BLE_FAILURE;
 }
 

@@ -234,6 +234,7 @@ static at_ble_status_t app_connected_event_handler(void *params)
 	DBG_LOG("Enable the notification in app to listen "
 	"heart rate or press the button to disconnect");
 	advertisement_flag = false;
+        ALL_UNUSED(params);
 	return AT_BLE_SUCCESS;
 }
 

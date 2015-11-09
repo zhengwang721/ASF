@@ -173,7 +173,7 @@ void time_info_adv()
 	
 	if ((status = at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, 
 						NULL, AT_BLE_ADV_FP_ANY, APP_TP_FAST_ADV, 
-						APP_TP_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)) {
+						APP_TP_ADV_TIMEOUT, 0)) != AT_BLE_SUCCESS) {
 		DBG_LOG("BLE Adv start Failed :%d",status);
 		return;
 	} else {

@@ -286,7 +286,7 @@ at_ble_status_t pxp_monitor_scan_data_handler(void *params)
 			return gap_dev_scan();
 		}
 	}		
-
+        ALL_UNUSED(params);
 	return AT_BLE_FAILURE;
 }
 
