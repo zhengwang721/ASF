@@ -3,11 +3,23 @@
 		<info type="description" value="summary">
 		Alert Notification Client Application for BLE stack
 		</info>
+		
 		<build type="include-path" value="."/>
 		<build type="c-source" value="anp_app.c"/>
 		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_CENTRAL_AND_PERIPHERAL"/>
+		
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_profiles.alert_notification"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.services"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.utils"/>
+		
 		<device-support-alias value="ble_smart_stack_lib_support"/>
+
+		<info type="keyword" value="technology">
+			<keyword value="Wireless"/>
+			<keyword value="Communication"/>
+			<keyword value="BLE"/>
+			<keyword value="Bluetooth"/>
+		</info>		
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

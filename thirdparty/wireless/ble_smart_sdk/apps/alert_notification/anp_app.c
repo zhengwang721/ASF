@@ -111,6 +111,7 @@ int main(void)
 	
 	/* Initialize serial console */
 	serial_console_init();
+	
 
 	DBG_LOG("Alert Notification Profile Application");
 	
@@ -123,6 +124,7 @@ int main(void)
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 
+	acquire_sleep_lock();
 	/* Initializing the button */
 	/* Caution, button_init func has to be called after ble_device_init func */
 	button_init(button_cb);
