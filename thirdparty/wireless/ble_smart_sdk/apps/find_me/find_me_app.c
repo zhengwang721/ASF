@@ -77,7 +77,12 @@ static uint8_t timer_interval = INIT_TIMER_INTERVAL;
  */
 static void timer_callback_handler(void)
 {
-	/* register user event */
+	/* Stop the timer */
+	hw_timer_stop();
+
+	/* Enable the flag the serve the task */
+	app_timer_done = true;
+
 	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
 }
 
@@ -90,20 +95,19 @@ static void timer_callback_handler(void)
  */
 static void app_immediate_alert(uint8_t alert_val)
 {
-	hw_timer_stop();
-	app_timer_done = true;
-	
 	if (alert_val == IAS_HIGH_ALERT) {
 		DBG_LOG("Find Me : High Alert");
+		LED_On(LED0);
 		timer_interval = LED_FAST_INTERVAL;
 		hw_timer_start(timer_interval);
 	} else if (alert_val == IAS_MID_ALERT) {
 		DBG_LOG("Find Me : Mild Alert");
+		LED_On(LED0);
 		timer_interval = LED_MILD_INTERVAL;
 		hw_timer_start(timer_interval);
 	} else if (alert_val == IAS_NO_ALERT) {
 		DBG_LOG("Find Me : No Alert");
-		app_timer_done = false;
+		hw_timer_stop();
 		LED_Off(LED0);
 	}
 }
@@ -115,14 +119,9 @@ static void user_callback_handler(void)
 {
 	if (app_timer_done) {
 		LED_Toggle(LED0);
+		hw_timer_start(timer_interval);
+		app_timer_done = false;
 	}
-}
-
-static void disconnected_cb(void)
-{
-	hw_timer_stop();
-	LED_Off(LED0);
-	app_timer_done = false;
 }
 
 /**
@@ -144,6 +143,9 @@ int main(void)
 	serial_console_init();
 
 	DBG_LOG("Initializing Find Me Application");
+	
+	led_init();
+
 	/* Initialize the hardware timer */
 	hw_timer_init();
 
@@ -152,16 +154,14 @@ int main(void)
 	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
-	
-	acquire_sleep_lock(); 
-	
-	led_init();
+
 	/* callback registration for immediate alert value*/
 	register_find_me_handler(app_immediate_alert);
 
 	register_ble_user_event_cb(user_callback_handler);
 	
-	register_ble_disconnected_event_cb( disconnected_cb);
+	acquire_sleep_lock(); 
+	
 	/* Capturing the events  */
 	while (1) {
 		/* BLE Event Task */
