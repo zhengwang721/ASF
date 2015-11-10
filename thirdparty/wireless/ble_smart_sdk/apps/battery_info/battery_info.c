@@ -314,6 +314,8 @@ int main(void)
 			{
 				hw_timer_stop();
 			}
+
+			isCharChanged = false;
 		}
 	}	
 }
