@@ -42,9 +42,8 @@
  */
 
 /*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- * Support</a>
- */
+* Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+*/
 
 /**
  * \mainpage
@@ -53,25 +52,19 @@
  */
 /*- Includes ---------------------------------------------------------------*/
 #include <asf.h>
-#include "platform.h"
-#include "at_ble_api.h"
-#include "profiles.h"
 #include "console_serial.h"
+#include "at_ble_api.h"
+#include "platform.h"
 #include "timer_hw.h"
-#include "conf_extint.h"
-#include "conf_serialdrv.h"
-#include "ble_manager.h"
 #include "ble_utils.h"
-
-#include "startup_template.h"
+#include "ble_manager.h"
+#include "button.h"
+#include "startup_template_app.h"
 
 /* BLE Advertisement */
 /** @brief scan_resp_len is the length of the scan response data */
 #define SCAN_RESP_LEN						(10)
 
-/** @brief Scan response data*/
-uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, \
-										0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
 /* Advertisement data set and Advertisement start */
 static at_ble_status_t advertisement_template(void)
@@ -83,6 +76,10 @@ static at_ble_status_t advertisement_template(void)
 	maximum length of advertisement data(31 bytes). 2 bytes are 
 	allocated for adv length and adv type for each advertisement data type*/
 	uint8_t adv_data[31];
+
+	/** @brief Scan response data*/
+	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, \
+											0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 	
 	/* Appending the list of 16-bit service UUID to adv data, list is having two services*/
 	adv_data[adv_len++] = ADV_DATA_UUID1_LEN + ADV_DATA_UUID2_LEN + ADV_TYPE_LEN;
@@ -166,11 +163,10 @@ static void timer_callback_fn(void)
 	/* Add timer callback functionality here */
 }
 
-void button_cb(void)
+static void button_cb(void)
 {
 	/* Add button callback functionality here */
 }
-
 
 int main(void)
 {
@@ -184,20 +180,20 @@ int main(void)
 
 	/* Initialize serial console */
 	serial_console_init();
-	
+
 	/* Hardware timer */
 	hw_timer_init();
-	
-	/* button initialization */
-	button_init();
-	
 	hw_timer_register_callback(timer_callback_fn);
-
+	
 	DBG_LOG("Initializing BLE Application");
 	
 	/* initialize the BLE chip  and Set the Device Address */
 	ble_device_init(NULL);
-	
+
+	/* button initialization */
+	/* Caution, button_init func has to be called after ble_device_init func */
+	button_init(button_cb);
+
 	/* Register BLE Event callbacks */
 	
 	/* Register callback for paired event */
@@ -220,6 +216,8 @@ int main(void)
 	/* Start the advertisement */
 	start_advertisement();
 	
+	acquire_sleep_lock();
+	
 	while(true)
 	{
 		/* BLE Event task */
@@ -228,5 +226,6 @@ int main(void)
 		/* Write application task */
 	}
 
+	return 0;
 }
 

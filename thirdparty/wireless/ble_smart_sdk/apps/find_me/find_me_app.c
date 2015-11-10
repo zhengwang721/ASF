@@ -160,6 +160,8 @@ int main(void)
 
 	register_ble_user_event_cb(user_callback_handler);
 	
+	acquire_sleep_lock(); 
+	
 	/* Capturing the events  */
 	while (1) {
 		/* BLE Event Task */
