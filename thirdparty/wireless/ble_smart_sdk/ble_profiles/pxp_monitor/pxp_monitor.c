@@ -253,7 +253,7 @@ uint8_t scanned_dev_count)
 			deci_index+=PXP_ASCII_TO_DECIMAL_VALUE;
 			do {
 				DBG_LOG("Select Index number to Connect or [s] to scan");
-				index = getchar();
+				index = getchar_b11();
 				DBG_LOG("%c", index);
 			} while (!(((index < (deci_index)) && (index >='0')) || (index == 's')));	
 			
@@ -269,7 +269,7 @@ uint8_t scanned_dev_count)
 		do
 		{
 			DBG_LOG("Select [s] to scan again");
-			index = getchar();
+			index = getchar_b11();
 			DBG_LOG("%c", index);
 		} while (!(index == 's')); 
 		
@@ -300,7 +300,7 @@ at_ble_status_t pxp_disconnect_event_handler(at_ble_disconnected_t *disconnect)
 	do
 	{
 		DBG_LOG("Select [r] to Reconnect or [s] Scan");
-		index_value = getchar();
+		index_value = getchar_b11();
 		DBG_LOG("%c", index_value);
 	}	while (!((index_value == 'r') || (index_value == 's')));
 	

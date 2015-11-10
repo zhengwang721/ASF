@@ -649,8 +649,8 @@ void ble_pair_key_request_handler (at_ble_pair_key_request_t *pair_key)
           for(idx = 0; idx < 6; )
           {          
             //GET_CHAR(&pin);
-			//pin = getchar_b11();
-            pin = getchar();
+			pin = getchar_b11();
+            //pin = getchar();
 			if((pin >= '0') && ( pin <= '9'))
             {
               passkey[idx++] = pin;

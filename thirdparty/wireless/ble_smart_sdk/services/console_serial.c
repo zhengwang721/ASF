@@ -54,7 +54,7 @@ void serial_console_init(void)
 }
 //! [setup]
 
-/*
+
 int getchar_b11()
 {
 
@@ -70,7 +70,7 @@ int getchar_b11()
 	return string_input[0];
 	
 }
-*/
+
 /*
 int printf_b11( const char* format, ... )
 {
