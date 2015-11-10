@@ -108,6 +108,9 @@ bool volatile timer_cb_done = false;
 bool volatile flag = true;
 bool volatile battery_flag = true;
 
+bool isCharChanged = false;
+at_ble_characteristic_changed_t bas_char_handle;
+
 /**
 * \Timer callback handler called on timer expiry
 */
@@ -185,16 +188,9 @@ static void ble_notification_confirmed_app_event(at_ble_cmd_complete_event_t *no
 /* Callback registered for AT_BLE_CHARACTERISTIC_CHANGED event from stack */
 static at_ble_status_t ble_char_changed_app_event(at_ble_characteristic_changed_t *char_handle)
 {
-	bat_char_changed_event( &bas_service_handler, char_handle,&flag);	
-	
-	if( flag )
-	{
-		hw_timer_start(BATTERY_UPDATE_INTERVAL);
-	}
-	else
-	{
-		hw_timer_stop();
-	}
+	isCharChanged = true;
+	memcpy(&bas_char_handle, char_handle, sizeof(at_ble_characteristic_changed_t));
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
 }
 
 void button_cb(void)
@@ -221,11 +217,13 @@ int main(void)
 	
 	memset(db_mem, 0, sizeof(uint8_t)*1024);
 	memset(&bas_service_handler, 0, sizeof(bat_gatt_service_handler_t));
+	memset(&bas_char_handle, 0, sizeof(at_ble_characteristic_changed_t));
 
 	flag = false;
 	battery_flag = true;
 	timer_cb_done = false;
-	
+	isCharChanged = false;
+
 	/* Initialize the button */
 	//button_init();
 	
@@ -267,6 +265,8 @@ int main(void)
 	/* Register callback for characteristic changed event */
 	register_ble_characteristic_changed_cb(ble_char_changed_app_event);
 	
+	acquire_sleep_lock();
+	
 	/* Capturing the events  */ 
 	while (1) {
 		/* BLE Event Task */
@@ -299,6 +299,20 @@ int main(void)
 				}				
 				//hw_timer_start(BATTERY_UPDATE_INTERVAL);
 				timer_cb_done = false;
+			}
+		}
+		
+		if(isCharChanged == true)
+		{
+			bat_char_changed_event(&bas_service_handler, &bas_char_handle, &flag);	
+	
+			if( flag )
+			{
+				hw_timer_start(BATTERY_UPDATE_INTERVAL);
+			}
+			else
+			{
+				hw_timer_stop();
 			}
 		}
 	}	
