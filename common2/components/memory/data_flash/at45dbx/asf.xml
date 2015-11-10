@@ -13,6 +13,7 @@
 		<build type="doxygen-entry-point" value="at45dbx_group"/>
 		<require idref="sam0.drivers.sercom.spi"/>
 		<device-support value="samd20"/>
+		<device-support value="atsamr21e18a"/>
 		<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>
