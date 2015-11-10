@@ -38,3 +38,15 @@ with b0 board, generated project will be run with below works.
 "C:\Program Files (x86)\Atmel\Studio\7.0\packs\atmel\SAMB11_DFP\1.0.100\tools\samb_makeimage.bat" "C:\Program Files (x86)\Atmel\Studio\7.0\packs\atmel\SAMB11_DFP\1.0.100\patches\patch.img" "$(OutputDirectory)\$(OutputFileName).bin"  app_entry _sstack _estack _sfixed
 
 "C:\Program Files (x86)\Atmel\Studio\7.0\packs\atmel\SAMB11_DFP\1.0.100\tools\SambFlashTool.exe" write -i "$(OutputDirectory)\$(OutputFileName).img" -n $(avrtoolserialnumber) -c $(avrtoolinterfaceclock) -p $(avrdeviceexpectedsignature)
+
+
+
+
+
+"C:\Program Files (x86)\Atmel\Studio\7.0\packs\atmel\SAMB11_DFP\1.0.107\tools\samb_makeimage.bat" "C:\Program Files (x86)\Atmel\Studio\7.0\packs\atmel\SAMB11_DFP\1.0.107\patches\patch.img" "$(OutputDirectory)\$(OutputFileName).bin"  app_entry _sstack _estack _sfixed
+
+"C:\Program Files (x86)\Atmel\Studio\7.0\packs\atmel\SAMB11_DFP\1.0.107\tools\SambFlashTool.exe" write -i "$(OutputDirectory)\$(OutputFileName).img" -n $(avrtoolserialnumber) -c $(avrtoolinterfaceclock) -p $(avrdeviceexpectedsignature)
+
+
+"$(PROJECT_BLEAPP_ROOT)\tools\samb_makeimage.bat" "$(PROJECT_BLEAPP_ROOT)\patches\patch.img" "$(OutputDirectory)\$(OutputFileName).bin"  app_entry _sstack _estack _sfixed
+"$(PROJECT_BLEAPP_ROOT)\tools\SambFlashTool.exe" write -i "$(OutputDirectory)\$(OutputFileName).img" -n $(avrtoolserialnumber) -c $(avrtoolinterfaceclock) -p $(avrdeviceexpectedsignature)
