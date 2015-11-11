@@ -181,26 +181,26 @@ extern "C" {
  */
 
 /** Convenience definition for GPIO module group A on the device (if
- *  available) */
+ *  available). */
 #if (PORT_GROUPS > 0) || defined(__DOXYGEN__)
 #  define PORTA             PORT->Group[0]
 #endif
 
 #if (PORT_GROUPS > 1) || defined(__DOXYGEN__)
 /** Convenience definition for GPIO module group B on the device (if
- *  available) */
+ *  available). */
 #  define PORTB             PORT->Group[1]
 #endif
 
 #if (PORT_GROUPS > 2) || defined(__DOXYGEN__)
 /** Convenience definition for GPIO module group C on the device (if
- *  available) */
+ *  available). */
 #  define PORTC             PORT->Group[2]
 #endif
 
 #if (PORT_GROUPS > 3) || defined(__DOXYGEN__)
 /** Convenience definition for GPIO module group D on the device (if
- *  available) */
+ *  available). */
 #  define PORTD             PORT->Group[3]
 #endif
 
@@ -735,7 +735,7 @@ static inline enum status_code port_input_event_set_config(
  *		<td>Added input event feature</td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release</td>
+ *		<td>Initial release</td>
  *	</tr>
  * </table>
  */
@@ -761,7 +761,7 @@ static inline enum status_code port_input_event_set_config(
  *	</tr>
  *	<tr>
  *		<td>42113E</td>
- *		<td>10/2015</td>
+ *		<td>11/2015</td>
  *		<td>Added input event feature and support for SAM L21/L22, SAM C21, and SAM DA1</td>
  *	</tr>
  *	<tr>
@@ -782,7 +782,7 @@ static inline enum status_code port_input_event_set_config(
  *	<tr>
  *		<td>42113A</td>
  *		<td>06/2013</td>
- *		<td>Initial release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
