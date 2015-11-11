@@ -85,7 +85,7 @@
  * value is proportional to the temperature and is corrected for offset by the
  * contents of the OFFSET register.
  *
- * Accurately &plusmn; measures a temperature:
+ * Accurately measures a temperature:
  *  - ±1°C over 0°C ~ 60°C
  *  - ±3°C over -40°C ~ 85°C
  *  - ±5°C over -40°C ~ 105°C
