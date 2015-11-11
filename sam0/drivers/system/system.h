@@ -691,7 +691,7 @@ void system_init(void);
  * \if DEVICE_SAMD21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>42120E</td>
- *      <td>10/2015</td>
+ *      <td>11/2015</td>
  *      <td>Added support for SAM DA1</td>
  * </tr>
  *  <tr>
