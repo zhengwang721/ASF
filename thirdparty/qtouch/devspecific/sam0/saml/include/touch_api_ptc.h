@@ -195,7 +195,7 @@ extern "C"
 
 /**
  * \def GET_MUTLCAP_SENSOR_NOISE_STATUS(SENSOR_NUMBER)
- * \brief To get the noise status of a particular sensor - it is noisy or not
+ * \brief To get the noise status of a particular sensor,it is noisy or not
  * \param SENSOR_NUMBER for which the noise status needs to be fetched
  * \return Returns either 0 or 1
  * If the bit value is 0, it is not noisy
@@ -209,7 +209,7 @@ extern "C"
 
 /**
  * \def GET_SELFCAP_SENSOR_NOISE_STATUS(SENSOR_NUMBER)
- * \brief To get the noise status of a particular sensor - it is noisy or not
+ * \brief To get the noise status of a particular sensor,it is noisy or not
  * \param SENSOR_NUMBER for which the noise status needs to be fetched
  * \return Returns either 0 or 1
  * If the bit value is 0, it is not noisy
