@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="PMC clock switching for SAMV71" id="sam.drivers.pmc.pmc_clock_switching_example.samv71_xplained_ultra">
+	<project caption="PMC clock switching on SAMV71-Xplained-Ultra" id="sam.drivers.pmc.pmc_clock_switching_example.samv71_xplained_ultra">
 		<info type="description" value="summary">
 		The Power Management Controller (PMC) optimizes power consumption by controlling all system and user peripheral clocks. The PMC enables/disables the clock inputs to many of the peripherals and the Cortex-M7 Processor.
 		</info>

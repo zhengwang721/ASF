@@ -1,0 +1,11 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="SERIAL FIFO" id="thirdparty.wireless.ble_sdk.services.serial_fifo">
+		<info type="description" value="summary">
+		Serial FIFO Service
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="serial_fifo.h"/>
+		<build type="c-source" value="serial_fifo.c"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+	</module>
+</asf>
