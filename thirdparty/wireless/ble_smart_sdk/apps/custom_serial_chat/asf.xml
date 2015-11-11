@@ -10,7 +10,7 @@
 		<build type="define" name="ATT_DB_MEMORY" value=""/>
 		<build type="define" name="CSC_DEVICE" value=""/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_profiles.cscp"/>
-		<!--build type="distribute" subtype="user-file" value="Atmel-42531-ATBTLC1000-BluSDK-Device-Information-Service-Getting-Started-Guide_UserGuide.pdf"/-->
+		<build type="distribute" subtype="user-file" value="Atmel-42610-ATSAMB11-BluSDK-SMART-Custom-Serial-Chat-Profile-Getting-Started-Guide_UserGuide.pdf"/>
 		<device-support-alias value="ble_smart_stack_lib_support"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>

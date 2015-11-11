@@ -14,6 +14,7 @@
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_profiles.hid_device"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.services"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.utils"/>
+		<build type="distribute" subtype="user-file" value="Atmel-42603-ATSAMB11-BluSDK-SMART-HID-Mouse-Device-Getting-Started-Guide_UserGuide.pdf"/>
 		
 		<device-support-alias value="ble_smart_stack_lib_support"/>		
 		

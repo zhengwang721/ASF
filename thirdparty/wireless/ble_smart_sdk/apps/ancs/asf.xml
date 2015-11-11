@@ -8,7 +8,9 @@
 		<build type="c-source" value="ancs_app.c"/>
 		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_CENTRAL_AND_PERIPHERAL"/>
 		<build type="define" name="ATT_DB_MEMORY" value=""/>
-		
+			
+		<build type="distribute" subtype="user-file" value="Atmel-42595-ATSAMB11-BluSDK-SMART-ANCS-Profile-Getting-Started-Guide_UserGuide.pdf"/>
+	
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_profiles.ancs"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.services"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.utils"/>
