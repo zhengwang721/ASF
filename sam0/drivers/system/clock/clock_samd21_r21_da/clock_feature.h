@@ -1458,7 +1458,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	</tr>
  *	<tr>
  *		<td>42119E</td>
- *		<td>10/2015</td>
+ *		<td>11/2015</td>
  *		<td>Added support for SAM DA1</td>
  *	</tr>
  *	<tr>
