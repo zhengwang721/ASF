@@ -26,21 +26,5 @@
 			<require idref="sam.utils"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
-		<module type="driver" id="sam.drivers.rswdt#sam4l" caption="RSWDT - Reinforced Safety Watchdog Timer">
-			<info type="description" value="summary">
-				The Reinforced Safety Watchdog Timer can be used to prevent system lock-up if the software becomes trapped in a deadlock.
-			</info>
-			<info type="keyword" value="technology">
-				<keyword value="Timers" />
-			</info>
-			<build type="c-source" value="rswdt_sam4l.c"/>
-			<build type="header-file" subtype="api" value="rswdt_sam4l.h"/>
-			<build type="include-path" value="."/>
-			<build type="doxygen-entry-point" value="group_sam_drivers_rswdt_sam4l"/>
-			<device-support value="sam4l"/>
-			<require idref="sam.utils"/>
-			<require idref="common.services.basic.clock"/>
-			<generator value="doxygen-module" default-mcu="unspecified-sam4l"/>
-		</module>
 	</select-by-device>
 </asf>
