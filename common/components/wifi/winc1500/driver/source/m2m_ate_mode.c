@@ -465,7 +465,7 @@ sint8 m2m_ate_get_rx_status(void)
 */
 sint8 m2m_ate_start_rx(tstrM2mAteRx * strM2mAteRxStr)
 {
-	sint8	s8Ret = M2M_SUCCESS;
+	sint8		s8Ret = M2M_SUCCESS;
 	uint32  	val32;
 	if(NULL == strM2mAteRxStr) 
 	{

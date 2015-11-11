@@ -47,6 +47,7 @@
 #define NMI_CHIPID	            (NMI_PERIPH_REG_BASE)
 #define rNMI_GP_REG_0			(0x149c)
 #define rNMI_GP_REG_1			(0x14A0)
+#define rNMI_GP_REG_2			(0xc0008)
 #define rNMI_GLB_RESET			(0x1400)
 #define rNMI_BOOT_RESET_MUX		(0x1118)
 #define NMI_STATE_REG			(0x108c)
@@ -77,7 +78,12 @@
 #define rHAVE_EXT_PA_INV_TX_RX      (NBIT4)
 #define rHAVE_LEGACY_RF_SETTINGS    (NBIT5)
 #define rHAVE_LOGS_DISABLED_BIT		(NBIT6)
+#define rHAVE_ETHERNET_MODE_BIT		(NBIT7)
 
+typedef struct{
+	uint32 u32Mac_efuse_mib;
+	uint32 u32Firmware_Ota_rev;
+}tstrGpRegs;
 
 #ifdef __cplusplus
      extern "C" {
