@@ -48,7 +48,7 @@
 #include "mx25l.h"
 
 #if SAM_PART_IS_DEFINED(SAMR21E18A) || defined(__DOXYGEN__)
-/** \name MX25L4006E Pin Connection in SAMR21E19
+/** \name MX25L2006E Pin Connection in SAMR21B18
  * @{
  */
 #  define MX25L_SPI                SERCOM3
@@ -316,8 +316,7 @@ enum status_code mx25l_read_id(struct mx25l_id *id)
 	status = spi_read_buffer_wait(&_mx25l_spi, rx_buf, 2, 0);
 	if (status != STATUS_OK) {
 		return STATUS_ERR_IO;
-	}
-	id->manufacturer_id = rx_buf[0]; 
+	} 
 	id->device_id = rx_buf[1];
 	_mx25l_chip_deselect();
 
