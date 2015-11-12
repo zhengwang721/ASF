@@ -220,27 +220,32 @@ uint32_t rtt_get_status(Rtt *p_rtt)
 
 /**
  * \brief Configure the RTT to generate an alarm at the given time.
+ * If you want to get 0XFFFFFFFF for the alarm, you need to set the
+ * ul_alarm_time to 0.
  *
  * \param p_rtt Pointer to an RTT instance.
- * \param ul_alarm_time Alarm time.
+ * \param ul_alarm_time Alarm time,Alarm time = ALMV + 1.
  *
  * \retval 0 Configuration is done.
- * \retval 1 Parameter error.
  */
 uint32_t rtt_write_alarm_time(Rtt *p_rtt, uint32_t ul_alarm_time)
 {
 	uint32_t flag;
 
-	if (ul_alarm_time == 0) {
-		return 1;
-	}
-
 	flag = p_rtt->RTT_MR & RTT_MR_ALMIEN;
 
 	rtt_disable_interrupt(RTT, RTT_MR_ALMIEN);
 
-	/* Alarm time = ALMV + 1 */
-	p_rtt->RTT_AR = ul_alarm_time - 1;
+	/**
+	 * Alarm time = ALMV + 1,If the incoming parameter 
+	 * is 0, the ALMV is set to 0XFFFFFFFF.
+	*/
+	if(ul_alarm_time == 0) {
+		p_rtt->RTT_AR = 0XFFFFFFFF;
+	}
+	else {
+		p_rtt->RTT_AR = ul_alarm_time - 1;
+	}
 
 	if (flag) {
 		rtt_enable_interrupt(RTT, RTT_MR_ALMIEN);
