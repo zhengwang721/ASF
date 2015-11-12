@@ -255,6 +255,8 @@ int main(void)
 	 /* initialize the button & LED */
 	button_init(button_cb);
 	led_init();
+	
+	acquire_sleep_lock();
 
 	/* Initialize the scan parameter service */
 	sps_init_service(&sps_service_handler, scan_interval_window, &scan_refresh);
