@@ -83,7 +83,7 @@
 #  define AT45DBX_CS                  0
 #endif
 /*
- * for ATSAMR21G18-MR210UA, AT45DB041E is connected to ATSAMR21G18A on board.
+ * For ATSAMR21G18-MR210UA, AT45DB041E is connected to ATSAMR21G18A on board.
  * pins connections as below:
  * #define AT45DBX_SPI                 SERCOM5
  * #define AT45DBX_SPI_PINMUX_SETTING  SPI_SIGNAL_MUX_SETTING_K
