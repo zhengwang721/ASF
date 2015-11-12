@@ -1,10 +1,9 @@
 /**
- *
  * \file
  *
- * \brief IoT Temperature Sensor Demo.
+ * \brief AT30TSE75X Temperature Sensor Driver Quick Start
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,46 +40,60 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
-#ifndef DEMO_H_INCLUDED
-#define DEMO_H_INCLUDED
+#include <asf.h>
+#include "conf_board.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+//! [temp_res]
+double temp_res;
+//! [temp_res]
 
-#define DEFAULT_SSID						"default"
-#define	DEFAULT_PWD							"default"
-#define DEFAULT_AUTH						M2M_WIFI_SEC_WPA_PSK
-#define DEFAULT_CHANNEL						M2M_WIFI_CH_ALL
+int main(void)
+{
+//! [init]
+	/* Init system. */
+//! [Initialize the SAM system]
+	sysclk_init();
+//! [Initialize the SAM system]
+//! [Initialize the board]
+	board_init();
+//! [Initialize the board]
 
-/** Sensor name. */
-#define DEMO_PRODUCT_NAME					"Temp1"
+	/* Configure device and enable. */
+//! [temp_init]
+	at30tse_init();
+//! [temp_init]
+//! [init]
 
-/* Using broadcast address for simplicity. */
-#define DEMO_SERVER_IP						"255.255.255.255"
-#define DEMO_SERVER_PORT					(6666)
-#define DEMO_REPORT_INTERVAL				(1000)
-#define DEMO_WLAN_AP_IP_ADDRESS				{192,168,1,10}
-#define DEMO_WLAN_AP_DOMAIN_NAME			"atmelconfig.com"
+//! [impl]
+    /* Read thigh and tlow */
+//! [read_thigh]
+	volatile uint16_t thigh = 0;
+	thigh = at30tse_read_register(AT30TSE_THIGH_REG,
+			AT30TSE_VOLATILE_REG, AT30TSE_THIGH_REG_SIZE);
+//! [read_thigh]
+//! [read_tlow]
+	volatile uint16_t tlow = 0;
+	tlow = at30tse_read_register(AT30TSE_TLOW_REG,
+			AT30TSE_VOLATILE_REG, AT30TSE_TLOW_REG_SIZE);
+//! [read_tlow]
 
-#define DEMO_WLAN_AP_NAME					"WINC1500_MyAP"			// Access Point Name.
-#define DEMO_WLAN_AP_CHANNEL				1						// Channel to use.
-#define DEMO_WLAN_AP_WEP_INDEX				0						// Wep key index.
-#define DEMO_WLAN_AP_WEP_SIZE				WEP_40_KEY_STRING_SIZE	// Wep key size.
-#define DEMO_WLAN_AP_WEP_KEY				"1234567890"			// Wep key.
-#define DEMO_WLAN_AP_SECURITY				M2M_WIFI_SEC_OPEN		// Security mode.
-#define DEMO_WLAN_AP_MODE					0						// Visible.
-#if SAME70
-#define CREDENTIAL_ENTRY_BUTTON				PIO_PA11_IDX
-#elif SAMD21
-#define CREDENTIAL_ENTRY_BUTTON				PIN_PA15
-#endif
+	/* Set 12-bit resolution mode. */
+//! [write_conf]
+	at30tse_write_config_register(
+			AT30TSE_CONFIG_RES(AT30TSE_CONFIG_RES_12_bit));
+//! [write_conf]
 
-void demo_start(void);
-
-#ifdef __cplusplus
+//! [read_temp]
+	while (1) {
+		temp_res = at30tse_read_temperature();
+	}
+//! [read_temp]
+//! [impl]
+	UNUSED(tlow);
+	UNUSED(thigh);
 }
-#endif
-
-#endif /* DEMO_H_INCLUDED */
+//! [qs]
