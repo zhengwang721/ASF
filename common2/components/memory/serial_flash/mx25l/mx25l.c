@@ -48,7 +48,7 @@
 #include "mx25l.h"
 
 #if SAM_PART_IS_DEFINED(SAMR21E18A) || defined(__DOXYGEN__)
-/** \name MX25L2006E Pin Connection in SAMR21B18
+/** \name MX25L2006E Pin Connection in ATSAMR21B18-MZ210PA
  * @{
  */
 #  define MX25L_SPI                SERCOM3

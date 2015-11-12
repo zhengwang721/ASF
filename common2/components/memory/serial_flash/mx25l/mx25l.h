@@ -56,8 +56,8 @@
  *
  * SPI polling mode is used in this driver.
  *
- * Devices from the following series can use this module:
- * - Atmel | SMART SAMR21E18A
+ * Boards can use this module:
+ * - ATSAMR21B18-MZ210PA
  *
  * The following peripherals are used by this module:
  * - SERCOM SPI (data transfer)
