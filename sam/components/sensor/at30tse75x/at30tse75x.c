@@ -191,20 +191,13 @@ uint16_t at30tse_read_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size)
 
 	twihs_packet_t packet_tx, packet_rx;
 	
-	/* Configure the data packet to be transfered */
-	//packet_tx.chip        = AT30TSE758_EEPROM_TWI_ADDR;
-	//packet_tx.addr[0]     = reg_addr;
-	//packet_tx.addr_length = 1;
-	//packet_tx.buffer      = buffer;
-	//packet_tx.length      = 0;
-	
 	/* Configure the data packet to be received */
 	packet_rx.chip        = AT30TSE_TEMPERATURE_TWI_ADDR;
 	packet_rx.addr[0]     = reg_addr;
 	packet_rx.addr_length = 1;
 	packet_rx.buffer      = buffer;
 	packet_rx.length      = reg_size;
-	//twihs_master_write(BOARD_BASE_TWIHS_EEPROM, &packet_tx);
+
 	/* Get memory from EEPROM*/
 	if (twihs_master_read(BOARD_BASE_TWIHS_EEPROM, &packet_rx) != TWIHS_SUCCESS) {
 		while (1) {
