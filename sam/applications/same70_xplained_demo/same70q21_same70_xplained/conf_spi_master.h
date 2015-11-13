@@ -1,8 +1,7 @@
 /**
- *
  * \file
  *
- * \brief This module contains NMC1500 BSP APIs declarations.
+ * \brief Spi Master configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -23,6 +22,9 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -38,74 +40,28 @@
  * \asf_license_stop
  *
  */
-/**@defgroup  BSPDefine Defines
- * @ingroup nm_bsp
- * @{
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef _NM_BSP_INTERNAL_H_
-#define _NM_BSP_INTERNAL_H_
 
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
+/* Possibility to change low-level configurations here */
 
-#ifdef WIN32
-#include "nm_bsp_win32.h"
-#endif
+//! Default Config Spi Master Delay BCS
+#define CONFIG_SPI_MASTER_DELAY_BCS            0
 
-#ifdef __K20D50M__
-#include "nm_bsp_k20d50m.h"
-#endif
+//! Default Config Spi Master Bits per Transfer Definition
+#define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    0
 
-#ifdef __MSP430FR5739__
-#include "bsp_msp430fr5739.h"
-#endif
+//! Default Config Spi Master Delay BCT
+#define CONFIG_SPI_MASTER_DELAY_BCT            1
 
-#ifdef _FREESCALE_MCF51CN128_
-#include "bsp/include/nm_bsp_mcf51cn128.h"
-#endif
+//! Default Config Spi Master Delay BS
+#define CONFIG_SPI_MASTER_DELAY_BS             1
 
-#ifdef __MCF964548__
-#include "bsp/include/nm_bsp_mc96f4548.h"
-#endif
+//! Default Config Spi Master Dummy Field
+#define CONFIG_SPI_MASTER_DUMMY                0xFF
 
-#ifdef __APP_APS3_CORTUS__
-#include "nm_bsp_aps3_cortus.h"
-#endif
-
-#if (defined __SAML21J18A__) || (defined __SAML21J18B__)
-#include "bsp/include/nm_bsp_saml21.h"
-#endif
-
-#if (defined __SAMD21J18A__) || (defined __SAMD21G18A__)
-#include "bsp/include/nm_bsp_samd21.h"
-#endif
-
-#if (defined __SAM4S16C__) || (defined __SAM4SD32C__)
-#include "bsp/include/nm_bsp_sam4s.h"
-#endif
-
-#ifdef __SAMG53N19__
-#include "bsp/include/nm_bsp_samg53.h"
-#endif
-
-#ifdef __SAMG55J19__
-#include "bsp/include/nm_bsp_samg55.h"
-#endif
-
-#if (defined __SAME70Q21__) || (defined __SAMV71Q21__)
-#include "bsp/include/nm_bsp_same70.h"
-#endif
-
-#ifdef CORTUS_APP
-#include "crt_iface.h"
-#endif
-
-#ifdef NRF51
-#include "nm_bsp_nrf51822.h"
-#endif
-
-#ifdef _ARDUINO_UNO_
-#include "bsp/include/nm_bsp_arduino_uno.h"
-#endif
-
-
-#endif //_NM_BSP_INTERNAL_H_
+#endif /* CONF_SPI_MASTER_H_INCLUDED */
