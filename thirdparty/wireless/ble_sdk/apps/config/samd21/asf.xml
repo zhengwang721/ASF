@@ -1,0 +1,11 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="SAMD21 Application Configuration" id="thirdparty.wireless.ble_sdk.apps.config.samd21">
+		<info type="description" value="summary">
+		SAMD21 Application Configuration for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="define" name="UART_FLOW_CONTROL_ENABLED" value="true"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

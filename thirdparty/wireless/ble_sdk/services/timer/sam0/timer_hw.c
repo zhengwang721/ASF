@@ -120,7 +120,7 @@ void platform_configure_timer(hw_timer_callback_t bus_tc_cb_ptr)
 	struct tc_config timer_config;
 	bus_timer_callback = bus_tc_cb_ptr;
 	tc_get_config_defaults(&timer_config);
-	timer_config.clock_prescaler		= TC_CLOCK_PRESCALER_DIV2;
+	timer_config.clock_prescaler		= TC_CLOCK_PRESCALER_DIV4;
 	timer_config.count_direction		= TC_COUNT_DIRECTION_UP;
 	timer_config.oneshot				= true;
 	timer_config.counter_size			= TC_COUNTER_SIZE_16BIT;
@@ -130,6 +130,7 @@ void platform_configure_timer(hw_timer_callback_t bus_tc_cb_ptr)
 	bus_activity_timer_frequency = (system_gclk_gen_get_hz(timer_config.clock_source) / prescaler);
 	tc_set_count_value(&bus_tc_instance, 0xFFFFFFFF);
 	tc_enable(&bus_tc_instance);
+	tc_stop_counter(&bus_tc_instance);
 	tc_register_callback(&bus_tc_instance, bus_tc_cc0_cb,
 									TC_CALLBACK_OVERFLOW);
 	tc_enable_callback(&bus_tc_instance, TC_CALLBACK_OVERFLOW);

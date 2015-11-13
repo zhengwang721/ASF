@@ -4,14 +4,14 @@
 		Device Information Service Application for BLE stack.
 		</info>	
 		<require idref="thirdparty.wireless.ble_sdk.apps.device_info"/>
+		<require idref="thirdparty.wireless.ble_sdk.apps.config.samd21"/>
 		<build type="include-path" value="."/>
-		<build type="header-file" value="conf_board.h"/>
-		<build type="header-file" value="conf_clock.h"/>
-  		<build type="header-file" value="conf_sleepmgr.h"/>
-		<build type="header-file" value="conf_serialdrv.h"/>
-		<build type="header-file" value="conf_uart_serial.h"/>
-		<build type="header-file" value="conf_extint.h"/>
-		<build type="header-file" value="conf_timer.h"/>
+		<build type="header-file" value="../../config/samd21/conf_board.h"/>
+		<build type="header-file" value="../../config/samd21/conf_clocks.h"/>
+		<build type="header-file" value="../../config/samd21/conf_extint.h"/>
+		<build type="header-file" value="../../config/samd21/conf_serialdrv.h"/>
+		<build type="header-file" value="../../config/samd21/conf_timer.h"/>
+		<build type="header-file" value="../../config/samd21/conf_console.h"/>
   
 		<require idref="board.samg55_xplained_pro"/>
 		

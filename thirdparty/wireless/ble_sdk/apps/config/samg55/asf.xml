@@ -1,0 +1,11 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="SAMG55 Application Configuration" id="thirdparty.wireless.ble_sdk.apps.config.samg55">
+		<info type="description" value="summary">
+		SAMG55 Application Configuration for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="define" name="UART_FLOW_CONTROL_ENABLED" value="false"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

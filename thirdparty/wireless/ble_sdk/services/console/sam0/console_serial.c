@@ -42,7 +42,7 @@
 
 /* === INCLUDES ============================================================ */
 
-#include "asf.h"
+#include <asf.h>
 #include "console_serial.h"
 #include "conf_console.h"
 #include "usart.h"

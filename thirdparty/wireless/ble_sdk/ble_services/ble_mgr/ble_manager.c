@@ -73,14 +73,6 @@ static at_ble_addr_t ble_peripheral_dev_address;
 
 at_ble_connected_t connected_state_info;
 
-#define	MAX_GAP_EVENT_SUBSCRIBERS    5
-#define MAX_GATT_CLIENT_SUBSCRIBERS  5
-#define MAX_GATT_SERVER_SUBSCRIBERS  5
-#define MAX_L2CAP_EVENT_SUBSCRIBERS  1
-#define MAX_HTPT_EVENT_SUBSCRIBERS   1
-#define MAX_DTM_EVENT_SUBSCRIBERS	 5
-#define MAX_CUSTOM_EVENT_SUBSCRIBERS 1
-
 const ble_event_callback_t *ble_mgr_gap_event_cb[MAX_GAP_EVENT_SUBSCRIBERS];
 const ble_event_callback_t *ble_mgr_gatt_client_event_cb[MAX_GATT_CLIENT_SUBSCRIBERS];
 const ble_event_callback_t *ble_mgr_gatt_server_event_cb[MAX_GATT_SERVER_SUBSCRIBERS];
@@ -230,7 +222,7 @@ void ble_device_init(at_ble_addr_t *addr)
 									ble_mgr_gatt_server_handle);
 									
 	
-	ble_set_address(addr);	
+	ble_set_address(addr);
 	
 	dev_name = (char *)BLE_DEVICE_NAME;
 	if (ble_set_device_name((uint8_t *)dev_name, strlen(dev_name)) != AT_BLE_SUCCESS)

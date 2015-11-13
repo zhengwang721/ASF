@@ -243,8 +243,17 @@ typedef at_ble_status_t (*ble_event_callback_t) (void *params);
 #endif
 
 #ifndef BLE_ATT_DB_MEMORY_SIZE
-#define BLE_ATT_DB_MEMORY_SIZE				(1000)  /* Maximum ATT DB memory in Bytes */
+#define BLE_ATT_DB_MEMORY_SIZE				(1024)  /* Maximum ATT DB memory in Bytes */
 #endif
+
+/* BLE Event array of function pointer maximum size */
+#define	MAX_GAP_EVENT_SUBSCRIBERS    5
+#define MAX_GATT_CLIENT_SUBSCRIBERS  5
+#define MAX_GATT_SERVER_SUBSCRIBERS  5
+#define MAX_L2CAP_EVENT_SUBSCRIBERS  1
+#define MAX_HTPT_EVENT_SUBSCRIBERS   1
+#define MAX_DTM_EVENT_SUBSCRIBERS	 5
+#define MAX_CUSTOM_EVENT_SUBSCRIBERS 1
 
 
 /** @brief Gap Advertisement Types */

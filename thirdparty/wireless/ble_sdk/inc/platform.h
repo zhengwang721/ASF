@@ -85,12 +85,11 @@ enum interface_type {
 	AT_BLE_SPI
 };
 
-
-enum hw_flow_control
+typedef enum hw_flow_control
 {
-  ENABLE_HW_FC_PATCH = 1,
-  DISABLE_HW_FC_PATCH
-};
+	ENABLE_HW_FC_PATCH = 1,
+	DISABLE_HW_FC_PATCH
+}hw_flow_control_t;
 
 
 /**@struct	platform_config
@@ -112,11 +111,11 @@ typedef struct{
 	uint8_t (*wr_api32_reset) (uint32_t memAddr,uint32_t* data,uint8_t size);
 }wr_apis;
 
-enum tenuTransportState{
+typedef enum tenuTransportState{
 	PLATFORM_TRANSPORT_SLAVE_DISCONNECTED=0,
 	PLATFORM_TRANSPORT_SLAVE_PATCH_DOWNLOAD,
 	PLATFORM_TRANSPORT_SLAVE_CONNECTED
-};
+}tenuTransportState_t;
 
 enum transfer_mode
 {

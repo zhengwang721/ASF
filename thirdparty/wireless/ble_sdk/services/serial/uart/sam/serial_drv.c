@@ -54,7 +54,7 @@ ser_fifo_desc_t ble_usart_tx_fifo;
 uint8_t ble_usart_tx_buf[BLE_MAX_TX_PAYLOAD_SIZE];
 
 ser_fifo_desc_t ble_usart_rx_fifo;
-uint8_t ble_usart_rx_buf[BLE_MAX_TX_PAYLOAD_SIZE];
+uint8_t ble_usart_rx_buf[BLE_MAX_RX_PAYLOAD_SIZE];
 
 extern void platform_process_rxdata(uint32_t t_rx_data);
 

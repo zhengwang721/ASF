@@ -54,7 +54,7 @@
 
 uint8_t bus_type = AT_BLE_UART;
 
-extern volatile enum tenuTransportState slave_state;
+extern volatile tenuTransportState_t slave_state;
 #define GTL_EIF_CONNECT_REQ	0xA5
 #define GTL_EIF_CONNECT_RESP 0x5A
 #define BTLC1000_STARTUP_DELAY (3500)
@@ -64,7 +64,6 @@ extern volatile enum tenuTransportState slave_state;
 static volatile uint32_t cmd_cmpl_flag = 0;
 static volatile uint32_t event_flag = 0;
 
-extern ser_fifo_desc_t ble_usart_tx_fifo;
 extern ser_fifo_desc_t ble_usart_rx_fifo;
 
 #define BLE_SERIAL_START_BYTE (0x05)
@@ -77,7 +76,7 @@ volatile uint8_t data_received = 0;			//	RX data received flag
 
 volatile int init_done = 0;
 
-#ifdef UART_FLOW_CONTROL_ENABLED
+#if UART_FLOW_CONTROL_ENABLED == true
 /* Enable Hardware Flow-control on BTLC1000 */
 enum hw_flow_control ble_hardware_fc = ENABLE_HW_FC_PATCH;
 #else
@@ -85,35 +84,8 @@ enum hw_flow_control ble_hardware_fc = ENABLE_HW_FC_PATCH;
 enum hw_flow_control ble_hardware_fc = DISABLE_HW_FC_PATCH;
 #endif
 
-typedef enum {
-	BLE_IDLE_STATE = 0,
-	BLE_SOF_STATE,
-	BLE_HEADER_STATE,
-	BLE_PAYLOAD_STATE,
-	BLE_EOF_STATE
-}ble_serial_state_t;
-
-COMPILER_PACK_SET(1)	
-typedef struct ble_event_header{
-		uint16_t msg_id;
-		uint16_t dest_task_id;
-		uint16_t src_task_id;
-		uint16_t payload_len;
-}ble_event_header_t;
-
-typedef struct ble_event_frame{	
-	uint8_t start_byte;
-	ble_event_header_t header;
-	uint8_t payload[BLE_MAX_RX_PAYLOAD_SIZE];
-}ble_event_frame_t;
-COMPILER_PACK_RESET()
-
-volatile ble_serial_state_t ble_rx_state = BLE_SOF_STATE;
-
-ble_event_frame_t ble_evt_frame;
-
 //#define BLE_DBG_ENABLE
-#define DBG_LOG_BLE		printf
+#define DBG_LOG_BLE		DBG_LOG
 
 #ifdef BLE_DBG_ENABLE
 uint8_t rx_buf[256];
@@ -136,6 +108,7 @@ void bus_activity_timer_callback(void)
 		}
 	}
 }
+
 void check_and_assert_ext_wakeup(uint8_t mode)
 {
 	if ((init_done))
@@ -155,6 +128,7 @@ void check_and_assert_ext_wakeup(uint8_t mode)
 		}
 	}
 }
+
 at_ble_status_t platform_init(void* platform_params)
 {	
 	platform_config	*cfg = (platform_config *)platform_params;
@@ -181,23 +155,24 @@ at_ble_status_t platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t
    
 #ifdef BLE_DBG_ENABLE
 	uint32_t i;
-
+	
 	DBG_LOG_BLE("\r\nRx:%d: ", rx_buf_idx);
 	for (i = 0; i < rx_buf_idx; i++)
 	{
-		DBG_LOG_BLE("0x%X, ", rx_buf[i]);
+		DBG_LOG_CONT("0x%X, ", rx_buf[i]);
 	}
 	rx_buf_idx = 0;
 	DBG_LOG_BLE("\r\nTxLen:%d: ", len);
 	for (i = 0; i < len; i++)
 	{
-		DBG_LOG_BLE("0x%X, ", data[i]);
+		DBG_LOG_CONT("0x%X, ", data[i]);
 		
 	}
 #endif
-	check_and_assert_ext_wakeup(TX_MODE);
-	serial_drv_send(data, len);
 
+	check_and_assert_ext_wakeup(TX_MODE);
+	
+	serial_drv_send(data, len);
 	return AT_BLE_SUCCESS;
 }
 
@@ -378,7 +353,7 @@ uint8_t platform_sleep(uint32_t sleepms)
 
 void serial_rx_callback(void) 
 {
-	
+	check_and_assert_ext_wakeup(RX_MODE);
 }
 
 void serial_tx_callback(void)

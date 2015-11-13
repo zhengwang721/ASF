@@ -373,6 +373,23 @@ static at_ble_status_t battery_start_advertisement(void)
 	/* Start of advertisement */
 	if((status = at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, APP_BAS_FAST_ADV, APP_BAS_ADV_TIMEOUT, 0)) == AT_BLE_SUCCESS)
 	{
+		//Check the address
+		at_ble_addr_t address = {AT_BLE_ADDRESS_PUBLIC, {0xAB, 0xCD, 0xEF, 0xAB, 0xCD, 0xEF}};
+
+			/* get BD address from BLE device */
+			if(at_ble_addr_get(&address) != AT_BLE_SUCCESS)
+			{
+				DBG_LOG("BD address get failed");
+			}
+
+		
+		DBG_LOG("BD Address:0x%02X%02X%02X%02X%02X%02X, Address Type:%d",
+		address.addr[5],
+		address.addr[4],
+		address.addr[3],
+		address.addr[2],
+		address.addr[1],
+		address.addr[0], address.type);
 		DBG_LOG("BLE Started Advertisement");
 		return AT_BLE_SUCCESS;
 	}
