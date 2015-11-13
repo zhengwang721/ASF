@@ -111,7 +111,7 @@ int main(void)
 	/* Write pages in EEPROM */
 	for (i = 0; i < NB_PAGE; i++) {
 		at30tse_eeprom_write(tx_buffer, NB_BYTE, 0, i);
-		delay(100);
+		delay(200);
 	}
 	
 	/* Read each page in EEPROM and compare them */
@@ -132,7 +132,7 @@ int main(void)
 	/* Write pages in EEPROM */
 	for (i = 0; i < NB_PAGE; i++) {
 		at30tse_eeprom_write(tx_buffer, NB_BYTE, 0, i);
-		delay(100);
+		delay(200);
 	}
 	
 	/* Read each page in EEPROM and compare them */

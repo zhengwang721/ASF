@@ -146,11 +146,11 @@ typedef union {
 #define ARM_DWT_DWT_FUNCTION0_FUNCTION_Pos    0  /**< \brief (ARM_DWT_DWT_FUNCTION0) Select action on comparator match    */
 #define ARM_DWT_DWT_FUNCTION0_FUNCTION_Msk    (0xFul << ARM_DWT_DWT_FUNCTION0_FUNCTION_Pos)
 #define ARM_DWT_DWT_FUNCTION0_FUNCTION(value) (ARM_DWT_DWT_FUNCTION0_FUNCTION_Msk & ((value) << ARM_DWT_DWT_FUNCTION0_FUNCTION_Pos))  
-  #define ARM_DWT_DWT_FUNCTION0_FUNCTION_0_Val        0X0ul  /**< \brief (ARM_DWT_DWT_FUNCTION0) Disabled  */
-  #define ARM_DWT_DWT_FUNCTION0_FUNCTION_4_Val        0X4ul  /**< \brief (ARM_DWT_DWT_FUNCTION0) PC Watchpoint Event (Instruction)  */
-  #define ARM_DWT_DWT_FUNCTION0_FUNCTION_5_Val        0X5ul  /**< \brief (ARM_DWT_DWT_FUNCTION0) Watchpoint Event Read Only (Data)  */
-  #define ARM_DWT_DWT_FUNCTION0_FUNCTION_6_Val        0X6ul  /**< \brief (ARM_DWT_DWT_FUNCTION0) Watchpoint Event Write Only (Data)  */
-  #define ARM_DWT_DWT_FUNCTION0_FUNCTION_7_Val        0X7ul  /**< \brief (ARM_DWT_DWT_FUNCTION0) Watchpoing Event Write-Read (Data)  */
+#define   ARM_DWT_DWT_FUNCTION0_FUNCTION_0_Val        0X0ul  /**< \brief (ARM_DWT_DWT_FUNCTION0) Disabled  */
+#define   ARM_DWT_DWT_FUNCTION0_FUNCTION_4_Val        0X4ul  /**< \brief (ARM_DWT_DWT_FUNCTION0) PC Watchpoint Event (Instruction)  */
+#define   ARM_DWT_DWT_FUNCTION0_FUNCTION_5_Val        0X5ul  /**< \brief (ARM_DWT_DWT_FUNCTION0) Watchpoint Event Read Only (Data)  */
+#define   ARM_DWT_DWT_FUNCTION0_FUNCTION_6_Val        0X6ul  /**< \brief (ARM_DWT_DWT_FUNCTION0) Watchpoint Event Write Only (Data)  */
+#define   ARM_DWT_DWT_FUNCTION0_FUNCTION_7_Val        0X7ul  /**< \brief (ARM_DWT_DWT_FUNCTION0) Watchpoing Event Write-Read (Data)  */
 #define ARM_DWT_DWT_FUNCTION0_FUNCTION_0      (ARM_DWT_DWT_FUNCTION0_FUNCTION_0_Val << ARM_DWT_DWT_FUNCTION0_FUNCTION_Pos)
 #define ARM_DWT_DWT_FUNCTION0_FUNCTION_4      (ARM_DWT_DWT_FUNCTION0_FUNCTION_4_Val << ARM_DWT_DWT_FUNCTION0_FUNCTION_Pos)
 #define ARM_DWT_DWT_FUNCTION0_FUNCTION_5      (ARM_DWT_DWT_FUNCTION0_FUNCTION_5_Val << ARM_DWT_DWT_FUNCTION0_FUNCTION_Pos)
@@ -216,11 +216,11 @@ typedef union {
 #define ARM_DWT_DWT_FUNCTION1_FUNCTION_Pos    0  /**< \brief (ARM_DWT_DWT_FUNCTION1) Select action on comparator match    */
 #define ARM_DWT_DWT_FUNCTION1_FUNCTION_Msk    (0xFul << ARM_DWT_DWT_FUNCTION1_FUNCTION_Pos)
 #define ARM_DWT_DWT_FUNCTION1_FUNCTION(value) (ARM_DWT_DWT_FUNCTION1_FUNCTION_Msk & ((value) << ARM_DWT_DWT_FUNCTION1_FUNCTION_Pos))  
-  #define ARM_DWT_DWT_FUNCTION1_FUNCTION_0_Val        0X0ul  /**< \brief (ARM_DWT_DWT_FUNCTION1) Disabled  */
-  #define ARM_DWT_DWT_FUNCTION1_FUNCTION_4_Val        0X4ul  /**< \brief (ARM_DWT_DWT_FUNCTION1) PC Watchpoint Event (Instruction)  */
-  #define ARM_DWT_DWT_FUNCTION1_FUNCTION_5_Val        0X5ul  /**< \brief (ARM_DWT_DWT_FUNCTION1) Watchpoint Event Read Only (Data)  */
-  #define ARM_DWT_DWT_FUNCTION1_FUNCTION_6_Val        0X6ul  /**< \brief (ARM_DWT_DWT_FUNCTION1) Watchpoint Event Write Only (Data)  */
-  #define ARM_DWT_DWT_FUNCTION1_FUNCTION_7_Val        0X7ul  /**< \brief (ARM_DWT_DWT_FUNCTION1) Watchpoing Event Write-Read (Data)  */
+#define   ARM_DWT_DWT_FUNCTION1_FUNCTION_0_Val        0X0ul  /**< \brief (ARM_DWT_DWT_FUNCTION1) Disabled  */
+#define   ARM_DWT_DWT_FUNCTION1_FUNCTION_4_Val        0X4ul  /**< \brief (ARM_DWT_DWT_FUNCTION1) PC Watchpoint Event (Instruction)  */
+#define   ARM_DWT_DWT_FUNCTION1_FUNCTION_5_Val        0X5ul  /**< \brief (ARM_DWT_DWT_FUNCTION1) Watchpoint Event Read Only (Data)  */
+#define   ARM_DWT_DWT_FUNCTION1_FUNCTION_6_Val        0X6ul  /**< \brief (ARM_DWT_DWT_FUNCTION1) Watchpoint Event Write Only (Data)  */
+#define   ARM_DWT_DWT_FUNCTION1_FUNCTION_7_Val        0X7ul  /**< \brief (ARM_DWT_DWT_FUNCTION1) Watchpoing Event Write-Read (Data)  */
 #define ARM_DWT_DWT_FUNCTION1_FUNCTION_0      (ARM_DWT_DWT_FUNCTION1_FUNCTION_0_Val << ARM_DWT_DWT_FUNCTION1_FUNCTION_Pos)
 #define ARM_DWT_DWT_FUNCTION1_FUNCTION_4      (ARM_DWT_DWT_FUNCTION1_FUNCTION_4_Val << ARM_DWT_DWT_FUNCTION1_FUNCTION_Pos)
 #define ARM_DWT_DWT_FUNCTION1_FUNCTION_5      (ARM_DWT_DWT_FUNCTION1_FUNCTION_5_Val << ARM_DWT_DWT_FUNCTION1_FUNCTION_Pos)

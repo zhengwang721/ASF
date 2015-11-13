@@ -118,7 +118,7 @@ static void configure_spi_master(void)
 //! [sck]
 	/* Configure pad 1 */
 //! [mosi]
-	config_spi_master.pin_number_pad[1] = CONF_SPI_MUX_MOSI;
+	config_spi_master.pin_number_pad[1] = CONF_SPI_PIN_MOSI;
 	config_spi_master.pinmux_sel_pad[1] = CONF_SPI_MUX_MOSI;
 //! [mosi]
 	/* Configure pad 2 */

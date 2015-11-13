@@ -119,9 +119,9 @@ enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
 
 		if(config->direction == GPIO_PIN_DIR_INPUT) {
 			if(gpio_pin < 16) {
-				GPIO0->OUTENCLR.reg |= (1 << gpio_pin);
+				GPIO0->OUTENCLR.reg = (1 << gpio_pin);
 			} else {
-				GPIO1->OUTENCLR.reg |= (1 << (gpio_pin % 16));
+				GPIO1->OUTENCLR.reg = (1 << (gpio_pin % 16));
 			}
 			/* pull_enable. */
 			switch(config->input_pull) {
