@@ -4,14 +4,15 @@
 		Device Information Service Application for BLE stack.
 		</info>	
 		<require idref="thirdparty.wireless.ble_sdk.apps.device_info"/>
-		<require idref="thirdparty.wireless.ble_sdk.apps.config.samd21"/>
+		<require idref="thirdparty.wireless.ble_sdk.apps.config.samg55"/>
 		<build type="include-path" value="."/>
-		<build type="header-file" value="../../config/samd21/conf_board.h"/>
-		<build type="header-file" value="../../config/samd21/conf_clocks.h"/>
-		<build type="header-file" value="../../config/samd21/conf_extint.h"/>
-		<build type="header-file" value="../../config/samd21/conf_serialdrv.h"/>
-		<build type="header-file" value="../../config/samd21/conf_timer.h"/>
-		<build type="header-file" value="../../config/samd21/conf_console.h"/>
+		<build type="header-file" value="../../config/samg55/conf_board.h"/>
+		<build type="header-file" value="../../config/samg55/conf_clock.h"/>
+  		<build type="header-file" value="../../config/samg55/conf_sleepmgr.h"/>
+		<build type="header-file" value="../../config/samg55/conf_serialdrv.h"/>
+		<build type="header-file" value="../../config/samg55/conf_uart_serial.h"/>
+		<build type="header-file" value="../../config/samg55/conf_extint.h"/>
+		<build type="header-file" value="../../config/samg55/conf_timer.h"/>
   
 		<require idref="board.samg55_xplained_pro"/>
 		

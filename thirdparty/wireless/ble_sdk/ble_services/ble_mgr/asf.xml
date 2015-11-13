@@ -6,7 +6,7 @@
   		<build type="header-file"   value="ble_manager.h"/>
   		<build type="c-source"      value="ble_manager.c"/>
 
-  		<require idref="thirdparty.wireless.ble_sdk_lib.lib"/>
+  		<require idref="thirdparty.wireless.ble_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_sdk.inc"/>
 		<require idref="thirdparty.wireless.ble_sdk.src"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
