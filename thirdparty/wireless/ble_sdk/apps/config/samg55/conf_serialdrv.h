@@ -48,7 +48,7 @@
 #define BTLC1000_WAKEUP_PIN			(EXT1_PIN_6)
 
 /* BTLC1000 Chip Enable Pin */
-#define BTLC1000_CHIP_ENABLE_PIN	(EXT1_PIN_10)
+#define BTLC1000_CHIP_ENABLE_PIN	(EXT1_PIN_4)
 
 /* BTLC1000 50ms Reset Duration */
 #define BTLC1000_RESET_MS			(50)
