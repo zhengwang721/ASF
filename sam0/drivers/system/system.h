@@ -658,7 +658,7 @@ void system_init(void);
  *  </tr>
  *  <tr>
  *      <td>Added new \c system_get_device_id() function to retrieved the device
- *          ID.</td>
+ *          ID</td>
  *  </tr>
  *  <tr>
  *      <td>Initial Release</td>
@@ -691,18 +691,18 @@ void system_init(void);
  * \if DEVICE_SAMD21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>42120E</td>
- *      <td>04/2015</td>
- *      <td>Added support for SAMDAx</td>
+ *      <td>11/2015</td>
+ *      <td>Added support for SAM DA1</td>
  * </tr>
  *  <tr>
  *      <td>42120D</td>
  *      <td>12/2014</td>
- *      <td>Added support for SAMR21 and SAMD10/D11</td>
+ *      <td>Added support for SAM R21 and SAM D10/D11</td>
  * </tr>
  * <tr>
  *      <td>42120C</td>
  *      <td>01/2014</td>
- *      <td>Added support for SAMD21</td>
+ *      <td>Added support for SAM D21</td>
  *  </tr>
  *  <tr>
  *      <td>42120B</td>
