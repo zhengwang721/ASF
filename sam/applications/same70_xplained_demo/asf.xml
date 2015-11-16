@@ -5,7 +5,6 @@
 		</info>
 		<build type="c-source" value="main.c"/>
 		<build type="c-source" value="main_image.c"/>
-		<build type="c-source" value="main_wifi.c"/>
 		<build type="header-file" value="image.h"/>
 		<build type="header-file" value="main_wifi.h"/>
 		<build type="include-path" value="."/>

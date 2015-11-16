@@ -625,7 +625,7 @@ sint8 hif_receive(uint32 u32Addr, uint8 *pu8Buf, uint16 u16Sz, uint8 isDone)
 	/* Receive the payload */
 	ret = nm_read_block(u32Addr, pu8Buf, u16Sz);
 #ifdef CONF_WINC_USE_I2C
-	nm_bsp_sleep(50);
+	nm_bsp_sleep(100);
 #endif
 	if(ret != M2M_SUCCESS)goto ERR1;
 

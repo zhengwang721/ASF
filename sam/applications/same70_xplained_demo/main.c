@@ -45,10 +45,14 @@
 /** \mainpage
  * \section intro Introduction
  * This example demonstrates the use of the WINC1500 with the SAM Xplained Pro
- * board to retrieve weather information from openweathermap.org server.<br>
+ * board to retrieve weather information from openweathermap.org server.
+ * The related informaiton will be displayed on LCD. It can switch different city
+ * by pushing button.
+ *
  * It uses the following hardware:
  * - the SAM Xplained Pro.
- * - the WINC1500 on EXT1.
+ * - the WINC1500-Xpro on EXT1.
+ * - the ATMXT-Xpro on EXT2.
  *
  * \section files Main Files
  * - main.c : Initialize the WINC1500 and retrieve information.
@@ -66,17 +70,17 @@
  * -# Start the application.
  * -# In the terminal window, the following text should appear:
  * \code
- *    -- WINC1500 weather client example --
+ *    -- SAME70 Weather Client Demo --
  *    -- SAMXXX_XPLAINED_PRO --
  *    -- Compiled: xxx xx xxxx xx:xx:xx --
- *    Provision Mode started.
- *    Connect to [atmelconfig.com] via AP[WINC1500_xx:xx] and fill up the page.
- *    Wi-Fi IP is xxx.xxx.xxx.xxx
- *    wifi_cb: M2M_WIFI_RESP_PROVISION_INFO.
+ *    Connecting to AVRGUEST.
  *    Wi-Fi connected
  *    Wi-Fi IP is xxx.xxx.xxx.xxx
  *    Host IP is 144.76.102.166
  *    Host Name is openweathermap.org
+ *    City: Shanghai
+ *    Temperature: 18.6
+ *    Weather Condition: rain
  *    City: Seoul
  *    Temperature: 20.63
  *    Weather Condition: sky is clear
@@ -187,8 +191,6 @@ void configure_rtt(void);
  */
 static void resolve_cb(uint8_t *hostName, uint32_t hostIp)
 {
-	//int number;
-	//char string[10];
 	gu32HostIp = hostIp;
 	gbHostIpByName = true;
 	printf("Host IP is %d.%d.%d.%d\r\n", (int)IPV4_BYTE(hostIp, 0), (int)IPV4_BYTE(hostIp, 1),
@@ -198,12 +200,8 @@ static void resolve_cb(uint8_t *hostName, uint32_t hostIp)
 	ili9488_draw_filled_rectangle(0, 300, ILI9488_LCD_WIDTH-1, 315);
 	ili9488_set_foreground_color(COLOR_CONVERT(COLOR_BLACK));
 	ili9488_draw_string(10, 300, (uint8_t *)"Push button");
+	configure_rtt();
 	pio_enable_interrupt(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_MASK);
-
-	//number = IPV4_BYTE(hostIp, 0);
-	//sprintf(string, "d%", number);
-	//printf("%s\r\n", string);
-	//ili9488_draw_string(10, 30, string);
 }
 
 /**
@@ -244,7 +242,6 @@ static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
 			tstrSocketRecvMsg *pstrRecv = (tstrSocketRecvMsg *)pvMsg;
 			if (pstrRecv && pstrRecv->s16BufferSize > 0) {
 				strcpy(gcWeatherInfo, (char *)pstrRecv->pu8Buffer);
-				//printf("%s\r\n", gcWeatherInfo);
 				gbFinishedGetWeather = true;
 			} else {
 				printf("socket_cb: recv error!\r\n");
@@ -313,7 +310,7 @@ static void wifi_init(void)
 {
 	tstrWifiInitParam param;
 	int8_t ret;
-	
+
 	/* Initialize the BSP. */
 	nm_bsp_init();
 
@@ -360,7 +357,7 @@ void wifi_connect(void)
 		printf("Please input your WLAN SSID Name.\r\n");
 		while (1) {
 			scanf("%c", &c);
-			
+
 			if (c == ASCII_BS) {
 				printf("%c", ASCII_BS);
 				ssid_length--;
@@ -378,7 +375,7 @@ void wifi_connect(void)
 		printf("Please input your WLAN Password.\r\n");
 		while (1) {
 			scanf("%c", &c);
-			
+
 			if (c == ASCII_BS) {
 				printf("%c", ASCII_BS);
 				pwd_length--;
@@ -404,7 +401,7 @@ void wifi_connect(void)
 		}
 		page_buffer[75] = ssid_length;
 		page_buffer[76] = pwd_length;
-	
+
 		ul_rc = flash_init(FLASH_ACCESS_MODE_128, 6);
 		if (ul_rc != FLASH_RC_OK) {
 			printf("-F- Initialization error %lu\n\r", ul_rc);
@@ -432,7 +429,7 @@ void wifi_connect(void)
 		for(i = 0; i < pwd_length; i++) {
 			wlan_pwd[i] = page_buffer[11 + ssid_length + i] ;
 		}
-	}	
+	}
 
 	printf("Connecting to %s.\r\n", wlan_ssid);
 	m2m_wifi_connect((char *)wlan_ssid, ssid_length, MAIN_WLAN_AUTH, (void *)wlan_pwd, M2M_WIFI_CH_ALL);*/
@@ -447,29 +444,25 @@ static void wifi_handle_events(void)
 
 static void wifi_require_weather(char *city_name)
 {
-	uint32 i;
-	
 	memset(gau8ReceivedBuffer, 0, sizeof(gau8ReceivedBuffer));
 	sprintf((char *)gau8ReceivedBuffer, "%s%s%s%s", MAIN_PREFIX_BUFFER, city_name, MAIN_APP_ID, MAIN_POST_BUFFER);
-	//printf("%s\r\n", gau8ReceivedBuffer);
 	send(tcp_client_socket, gau8ReceivedBuffer, strlen((char *)gau8ReceivedBuffer), 0);
-	//for(i = 0; i < 10000; i++);
+
 	memset(gau8ReceivedBuffer, 0, MAIN_WIFI_M2M_BUFFER_SIZE);
 	recv(tcp_client_socket, &gau8ReceivedBuffer[0], MAIN_WIFI_M2M_BUFFER_SIZE, 0);
-	//for(i = 0; i < 10000; i++);
 }
 
 static uint8_t parse_weather_icon(char* pcWeather)
 {
 	char *pcStartPtr;
 	char *pcEndPtr;
-	
+
 	pcStartPtr = pcWeather;
 	pcEndPtr = strstr(pcStartPtr, "cloud");
 	if(pcEndPtr != NULL) {
 		return 1;
 	}
-	
+
 	pcStartPtr = pcWeather;
 	pcEndPtr = strstr(pcStartPtr, "rain");
 	if(pcEndPtr != NULL) {
@@ -581,7 +574,7 @@ void wifi_recieve_packet(void)
 
 	memset(gau8ReceivedBuffer, 0, sizeof(gau8ReceivedBuffer));
 	recv(tcp_client_socket, &gau8ReceivedBuffer[0], MAIN_WIFI_M2M_BUFFER_SIZE, 0);
-	
+
 }
 /**
  * \brief Configure UART console.
@@ -606,7 +599,7 @@ static void refresh_display()
 
 	ili9488_set_foreground_color(COLOR_CONVERT(0x0078C0));
 	ili9488_draw_filled_rectangle(0, 120, ILI9488_LCD_WIDTH-1, 360-1);
-	
+
 	if(display_is_sha) {
 		ili9488_draw_pixmap(30, 180, 120, 120, gWeatherIcon[ucWeatherNum_sha]);
 		ili9488_draw_pixmap(159, 120, 160, 60, gImage_shanghai);
@@ -620,9 +613,9 @@ static void refresh_display()
 		ili9488_draw_temperature(150, 220, (uint8_t *)Temperature_seoul);
 		ili9488_draw_string(60, 320, (uint8_t *)Weather_seoul);
 	}
-			
+
 	ili9488_set_foreground_color(COLOR_CONVERT(COLOR_BLACK));
-	ili9488_draw_string(10, 10, (uint8_t *)"openweathermap.org");		
+	ili9488_draw_string(10, 10, (uint8_t *)"openweathermap.org");
 }
 
 /**
@@ -636,7 +629,7 @@ static void button_handler(uint32_t id, uint32_t mask)
 			display_is_sha = true;
 			if(is_first_require_sha) {
 				wifi_require_weather("Shanghai");
-				configure_rtt();
+				//configure_rtt();
 				is_first_require_sha = false;
 			} else {
 				refresh_display();
@@ -704,7 +697,7 @@ void configure_rtt(void)
 int main(void)
 {
 	struct sockaddr_in addr_in;
-	
+
 	/* Initialize the board. */
 	sysclk_init();
 	board_init();
@@ -741,14 +734,14 @@ int main(void)
 	wifi_init();
 	//ili9488_set_foreground_color(COLOR_CONVERT(COLOR_BLACK));
 	//ili9488_draw_string(10, 300, (uint8_t *)"Input SSID and Password...");
-	
+
 	wifi_connect();
-	
+
 	ili9488_set_foreground_color(COLOR_CONVERT(COLOR_WHITE));
 	ili9488_draw_filled_rectangle(0, 300, ILI9488_LCD_WIDTH-1, 315);
 	ili9488_set_foreground_color(COLOR_CONVERT(COLOR_BLACK));
 	ili9488_draw_string(10, 300, (uint8_t *)"Connecting......");
-	
+
 	while (1) {
 		wifi_handle_events();
 
@@ -773,22 +766,28 @@ int main(void)
 				gbTcpConnection = true;
 			}
 		}
-			
+
 		if(gbFinishedGetWeather)
 		{
 			wifi_recieve_packet();
 			refresh_display();
 			gbFinishedGetWeather = false;
 		}
-		if(gbRequireWeather) {
-			if(g_ul_sec_ticks == 60) {
-				if(display_is_sha) {
-					wifi_require_weather("Shanghai");
-				} else {
-					wifi_require_weather("seoul");
-				}
-				g_ul_sec_ticks = 0;
+		if(g_ul_sec_ticks == 60) {
+			if(display_is_sha) {
+				wifi_require_weather("Shanghai");
+			} else {
+				wifi_require_weather("seoul");
 			}
+			g_ul_sec_ticks = 0;
+		}
+		if(gbRequireWeather) {
+			if(display_is_sha) {
+				wifi_require_weather("Shanghai");
+			} else {
+				wifi_require_weather("seoul");
+			}
+			gbRequireWeather = false;
 		}
 	}
 	return 0;
