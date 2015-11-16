@@ -220,8 +220,8 @@ uint32_t rtt_get_status(Rtt *p_rtt)
 
 /**
  * \brief Configure the RTT to generate an alarm at the given time.
- * If you want to get 0XFFFFFFFF for the alarm, you need to set the
- * ul_alarm_time to 0.
+ * alarm happens when CRTV value equals ALMV+1, so RTT_AR should be alarmtime - 1.
+ * if you want to get alarm when rtt hit 0 , ALMV should be set to 0xFFFFFFFF.
  *
  * \param p_rtt Pointer to an RTT instance.
  * \param ul_alarm_time Alarm time,Alarm time = ALMV + 1.
@@ -238,10 +238,10 @@ uint32_t rtt_write_alarm_time(Rtt *p_rtt, uint32_t ul_alarm_time)
 
 	/**
 	 * Alarm time = ALMV + 1,If the incoming parameter 
-	 * is 0, the ALMV is set to 0XFFFFFFFF.
+	 * is 0, the ALMV is set to 0xFFFFFFFF.
 	*/
 	if(ul_alarm_time == 0) {
-		p_rtt->RTT_AR = 0XFFFFFFFF;
+		p_rtt->RTT_AR = 0xFFFFFFFF;
 	}
 	else {
 		p_rtt->RTT_AR = ul_alarm_time - 1;
