@@ -165,8 +165,6 @@ uint8_t ucWeatherNum_seoul;
 
 bool city_is_sha = true;
 bool display_is_sha = true;
-bool is_first_require_sha = true;
-bool is_first_require_seoul = true;
 
 char *gWeatherIcon[4] = {
 	gImage_sun,
@@ -196,12 +194,12 @@ static void resolve_cb(uint8_t *hostName, uint32_t hostIp)
 	printf("Host IP is %d.%d.%d.%d\r\n", (int)IPV4_BYTE(hostIp, 0), (int)IPV4_BYTE(hostIp, 1),
 			(int)IPV4_BYTE(hostIp, 2), (int)IPV4_BYTE(hostIp, 3));
 	printf("Host Name is %s\r\n", hostName);
-	ili9488_set_foreground_color(COLOR_CONVERT(COLOR_WHITE));
-	ili9488_draw_filled_rectangle(0, 300, ILI9488_LCD_WIDTH-1, 315);
-	ili9488_set_foreground_color(COLOR_CONVERT(COLOR_BLACK));
-	ili9488_draw_string(10, 300, (uint8_t *)"Push button");
+	//ili9488_set_foreground_color(COLOR_CONVERT(COLOR_WHITE));
+	//ili9488_draw_filled_rectangle(0, 300, ILI9488_LCD_WIDTH-1, 315);
+	//ili9488_set_foreground_color(COLOR_CONVERT(COLOR_BLACK));
+	//ili9488_draw_string(10, 300, (uint8_t *)"Push button");
 	configure_rtt();
-	pio_enable_interrupt(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_MASK);
+	//pio_enable_interrupt(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_MASK);
 }
 
 /**
@@ -225,6 +223,7 @@ static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
 				tstrSocketConnectMsg *pstrConnect = (tstrSocketConnectMsg *)pvMsg;
 				if (pstrConnect && pstrConnect->s8Error >= SOCK_ERR_NO_ERROR) {
 					gbRequireWeather = true;
+					//g_ul_sec_ticks = 58;
 				} else {
 					printf("socket_cb: connect error!\r\n");
 					g_ul_sec_ticks = 0;
@@ -333,27 +332,36 @@ static void wifi_init(void)
 
 void wifi_connect(void)
 {
-	/*char wlan_ssid[32];
+	char wlan_ssid[32];
 	char wlan_pwd[32];
 	uint8_t c;
-	uint8_t i;
+	uint32_t i;
 	volatile uint8_t ssid_length = 0;
 	volatile uint8_t pwd_length = 0;
 	uint8_t page_buffer[IFLASH_PAGE_SIZE];
 	uint32_t page_addr = IFLASH_ADDR + IFLASH_SIZE - IFLASH_PAGE_SIZE;
+	uint8_t *p_page_addr = (uint8_t *)page_addr;
 	uint32_t ul_rc;
 	bool is_need_input = false;
 
+	for(i = 0; i < 32; i++) {
+		wlan_ssid[i] = 0;
+		wlan_pwd[i] = 0;
+	}
+	for(i = 0; i < IFLASH_PAGE_SIZE; i++) {
+		page_buffer[i] = p_page_addr[i];
+	}
 	for(i = 0; i < 11; i++) {
 		if(page_buffer[i] != mark[i]) {
 			is_need_input = true;
 		}
 	}
+	if(!ioport_get_pin_level(GPIO_PUSH_BUTTON_1)) {
+		is_need_input = true;
+	}
 	if(is_need_input) {
-		for(i = 0; i < 32; i++) {
-			wlan_ssid[i] = 0;
-			wlan_pwd[i] = 0;
-		}
+		ili9488_set_foreground_color(COLOR_CONVERT(COLOR_BLACK));
+		ili9488_draw_string(10, 300, (uint8_t *)"Input SSID and Password...");	
 		printf("Please input your WLAN SSID Name.\r\n");
 		while (1) {
 			scanf("%c", &c);
@@ -362,7 +370,7 @@ void wifi_connect(void)
 				printf("%c", ASCII_BS);
 				ssid_length--;
 				wlan_ssid[ssid_length] = 0;
-				} else if(c == ASCII_CR) {
+			} else if(c == ASCII_CR) {
 				wlan_ssid[ssid_length] = 0;
 				printf("\r\n");
 				break;
@@ -380,7 +388,7 @@ void wifi_connect(void)
 				printf("%c", ASCII_BS);
 				pwd_length--;
 				wlan_pwd[pwd_length] = 0;
-				} else if(c == ASCII_CR) {
+			} else if(c == ASCII_CR) {
 				wlan_pwd[pwd_length] = 0;
 				printf("\r\n");
 				break;
@@ -432,9 +440,9 @@ void wifi_connect(void)
 	}
 
 	printf("Connecting to %s.\r\n", wlan_ssid);
-	m2m_wifi_connect((char *)wlan_ssid, ssid_length, MAIN_WLAN_AUTH, (void *)wlan_pwd, M2M_WIFI_CH_ALL);*/
-	printf("Connecting to %s.\r\n", (char *)MAIN_WLAN_SSID);
-	m2m_wifi_connect((char *)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID), MAIN_WLAN_AUTH, (void *)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);
+	m2m_wifi_connect((char *)wlan_ssid, ssid_length, MAIN_WLAN_AUTH, (void *)wlan_pwd, M2M_WIFI_CH_ALL);
+	//printf("Connecting to %s.\r\n", (char *)MAIN_WLAN_SSID);
+	//m2m_wifi_connect((char *)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID), MAIN_WLAN_AUTH, (void *)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);
 }
 
 static void wifi_handle_events(void)
@@ -625,26 +633,7 @@ static void button_handler(uint32_t id, uint32_t mask)
 {
 	/* Set button event flag (g_b_button_event). */
 	if ((PIN_PUSHBUTTON_1_ID == id) && (PIN_PUSHBUTTON_1_MASK == mask)) {
-		if(city_is_sha) {
-			display_is_sha = true;
-			if(is_first_require_sha) {
-				wifi_require_weather("Shanghai");
-				//configure_rtt();
-				is_first_require_sha = false;
-			} else {
-				refresh_display();
-			}
-			city_is_sha = false;
-		} else {
-			display_is_sha = false;
-			if(is_first_require_seoul) {
-				wifi_require_weather("seoul");
-				is_first_require_seoul = false;
-			} else {
-				refresh_display();
-			}
-			city_is_sha = true;
-		}
+
 	}
 }
 
@@ -701,21 +690,25 @@ int main(void)
 	/* Initialize the board. */
 	sysclk_init();
 	board_init();
+	ioport_init();
 
 	/* Initialize the UART console. */
 	configure_console();
 	printf(STRING_HEADER);
 
 	/* Enable the peripheral clock for the push button on board. */
-	pmc_enable_periph_clk(PIN_PUSHBUTTON_1_ID);
+	//pmc_enable_periph_clk(PIN_PUSHBUTTON_1_ID);
 	/* Configure PIOs as input pins. */
-	pio_configure(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_TYPE, PIN_PUSHBUTTON_1_MASK,
-			PIN_PUSHBUTTON_1_ATTR);
+	//pio_configure(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_TYPE, PIN_PUSHBUTTON_1_MASK,
+			//PIN_PUSHBUTTON_1_ATTR);
 	/* Initialize PIO interrupt handler, interrupt on rising edge. */
-	pio_handler_set(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_ID, PIN_PUSHBUTTON_1_MASK,
-			PIN_PUSHBUTTON_1_ATTR, button_handler);
+	//pio_handler_set(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_ID, PIN_PUSHBUTTON_1_MASK,
+			//PIN_PUSHBUTTON_1_ATTR, button_handler);
 	/* Initialize and enable push button (PIO) interrupt. */
-	pio_handler_set_priority(PIN_PUSHBUTTON_1_PIO, PIOA_IRQn, 0);
+	//pio_handler_set_priority(PIN_PUSHBUTTON_1_PIO, PIOA_IRQn, 0);
+		/* Set direction and pullup on the given button IOPORT */
+	ioport_set_pin_dir(GPIO_PUSH_BUTTON_1, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(GPIO_PUSH_BUTTON_1, IOPORT_MODE_PULLUP);
 
 	/* Initialize display parameter */
 	g_ili9488_display_opt.ul_width = ILI9488_LCD_WIDTH;
@@ -732,8 +725,6 @@ int main(void)
 	ili9488_draw_pixmap(80, 200, 156, 76, gImage_atmel_18bit);
 
 	wifi_init();
-	//ili9488_set_foreground_color(COLOR_CONVERT(COLOR_BLACK));
-	//ili9488_draw_string(10, 300, (uint8_t *)"Input SSID and Password...");
 
 	wifi_connect();
 
@@ -773,20 +764,17 @@ int main(void)
 			refresh_display();
 			gbFinishedGetWeather = false;
 		}
-		if(g_ul_sec_ticks == 60) {
-			if(display_is_sha) {
+		if((g_ul_sec_ticks == 60) || (gbRequireWeather == true)) {
+			if(city_is_sha) {
 				wifi_require_weather("Shanghai");
+				city_is_sha = false;
+				display_is_sha = true;
 			} else {
 				wifi_require_weather("seoul");
+				city_is_sha = true;
+				display_is_sha = false;
 			}
 			g_ul_sec_ticks = 0;
-		}
-		if(gbRequireWeather) {
-			if(display_is_sha) {
-				wifi_require_weather("Shanghai");
-			} else {
-				wifi_require_weather("seoul");
-			}
 			gbRequireWeather = false;
 		}
 	}
