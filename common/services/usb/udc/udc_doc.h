@@ -348,6 +348,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  * \code
  udc_start();
  \endcode
+ *
  *   \note In case of USB dual roles (Device and Host) managed through USB OTG connector
  * (USB ID pin), the call of udc_start() must be removed and replaced by uhc_start().
  * Refer to section "Dual roles" for further information in the application note:
