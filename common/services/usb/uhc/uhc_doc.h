@@ -640,11 +640,12 @@ void usb_init(void)
  *
  * \subsection uhc_use_case_3_usage_flow Workflow
  * -# In case of USB dual roles (Device and Host), the USB stack must be enabled
- * by uhc_start() and the udc_start() must not be called.
+ *    by uhc_start() and the udc_start() must not be called.
  * \code
 	//udc_start();
 	uhc_start();
- \endcode
+  \endcode
+ *
  * -# In dual role, to know the current USB mode, the callback to notify the
  * mode changes can be used.
  *   - Ensure that conf_usb_host.h contains the following parameters:
