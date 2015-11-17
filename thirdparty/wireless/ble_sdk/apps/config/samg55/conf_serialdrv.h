@@ -144,28 +144,6 @@ static inline void ble_configure_control_pin(void)
 	
 	/* set chip enable to high */
 	ble_enable_pin_set_high();
-#if UART_FLOW_CONTROL_ENABLED == true
-	#warning "UART Flow-control Not available in SAMG55"
-#else
-	#warning "UART Flow-control Disabled in the Project"
-#endif	
 }
-
-static inline void ble_reset(void)
-{
-	/* BTLC1000 Reset Sequence @Todo */
-	ble_enable_pin_set_high();
-	ble_wakeup_pin_set_high();
-	delay_ms(BTLC1000_RESET_MS);
-	
-	ble_enable_pin_set_low();
-	ble_wakeup_pin_set_low();
-	delay_ms(BTLC1000_RESET_MS);
-	
-	ble_enable_pin_set_high();
-	ble_wakeup_pin_set_high();
-	delay_ms(BTLC1000_RESET_MS);
-}
-
 
 #endif /* CONF_SERIALDRV_H_INCLUDED */

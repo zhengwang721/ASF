@@ -123,6 +123,10 @@ enum transfer_mode
 	RX_MODE
 };
 
+#define BLE_SERIAL_START_BYTE (0x05)
+
+#define BLE_SERIAL_HEADER_LEN (0x09)
+
  /**@ingroup platform_group_functions
   * @brief implements platform-specific initialization
   *
@@ -246,4 +250,5 @@ void bus_activity_timer_callback(void);
 void check_and_assert_ext_wakeup(uint8_t mode);
 void platform_configure_hw_fc_uart(void);
 #define UNREFERENCED_PARAMETER(x) ((void)x)
+void platform_dma_process_rxdata(uint8_t *buf, uint16_t len);
 #endif // __PLATFORM_H__

@@ -66,10 +66,6 @@ static volatile uint32_t event_flag = 0;
 
 extern ser_fifo_desc_t ble_usart_rx_fifo;
 
-#define BLE_SERIAL_START_BYTE (0x05)
-
-#define BLE_SERIAL_HEADER_LEN (0x09)
-
 /** data transmitted done interrupt event flag */
 volatile uint8_t tx_done = 0;				//	TX Transfer complete flag
 volatile uint8_t data_received = 0;			//	RX data received flag
@@ -270,6 +266,31 @@ void platform_process_rxdata(uint32_t t_rx_data)
 		{
 			slave_state = PLATFORM_TRANSPORT_SLAVE_PATCH_DOWNLOAD;
 		}				
+	}
+}
+
+void platform_dma_process_rxdata(uint8_t *buf, uint16_t len)
+{
+	if(slave_state == PLATFORM_TRANSPORT_SLAVE_CONNECTED)
+	{
+		uint16_t idx;
+		for (idx = 0; idx < len; idx++)
+		{
+			platform_enter_critical_section();
+			ser_fifo_push_uint8(&ble_usart_rx_fifo, buf[idx]);
+			platform_leave_critical_section();
+		}
+	}
+	else if(slave_state == PLATFORM_TRANSPORT_SLAVE_PATCH_DOWNLOAD)
+	{
+		fw_patch_download_cb(buf, len);
+	}
+	else if(slave_state == PLATFORM_TRANSPORT_SLAVE_DISCONNECTED)
+	{
+		if(buf[0] == GTL_EIF_CONNECT_RESP)
+		{
+			slave_state = PLATFORM_TRANSPORT_SLAVE_PATCH_DOWNLOAD;
+		}
 	}
 }
 
