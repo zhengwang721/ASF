@@ -115,14 +115,6 @@ void rswdt_init(Rswdt *p_rswdt, uint32_t ul_mode, uint16_t us_counter,
 }
 
 /**
- * \brief Disable the watchdog timer.
- */
-void wdt_disable(Wdt *p_wdt)
-{
-	p_wdt->WDT_MR = WDT_MR_WDDIS;
-}
-
-/**
  * \brief Disable the reinforced safety watchdog timer.
  */
 void rswdt_disable(Rswdt *p_rswdt)

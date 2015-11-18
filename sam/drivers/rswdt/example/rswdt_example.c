@@ -235,9 +235,6 @@ int main(void)
 		puts("-F- Systick configuration error\r");
 	}
 	
-	/* Disable the watchdog */
-	wdt_disable(WDT);
-	
 	/* Get timeout value. */
 	timeout_value = rswdt_get_timeout_value(RSWDT_PERIOD * 1000,
 			BOARD_FREQ_SLCK_XTAL);

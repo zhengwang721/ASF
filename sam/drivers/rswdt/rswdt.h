@@ -62,7 +62,6 @@ extern "C" {
 uint32_t rswdt_get_timeout_value(uint32_t ul_us, uint32_t ul_sclk);
 void rswdt_init(Rswdt *p_rswdt, uint32_t ul_mode, uint16_t us_counter,
 		uint16_t us_delta);
-void wdt_disable(Wdt *p_wdt);
 void rswdt_disable(Rswdt *p_rswdt);
 void rswdt_restart(Rswdt *p_rswdt);
 uint32_t rswdt_get_status(Rswdt *p_rswdt);
