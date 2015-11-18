@@ -61,7 +61,7 @@
 ****************************************************************************************/
 
 uint8_t linkloss_initial_value = 0;
-static const char* lls_gs_str[] = {"NO_ALERT", "MID_ALERT", "HIGH_ALERT"};
+static const char* lls_gs_str[] = {"NO_ALERT", "MILD_ALERT", "HIGH_ALERT"};
 
 /****************************************************************************************
 *							        Implementations	                                    *
@@ -247,9 +247,9 @@ int8_t lls_alert_read_response(at_ble_characteristic_read_response_t *read_resp,
 		}
 		break;
 
-		case LLS_LOW_ALERT:
+		case LLS_MILD_ALERT:
 		{
-			DBG_LOG_CONT(" LOW ALERT ");
+			DBG_LOG_CONT(" MILD ALERT ");
 		}
 		break;
 
