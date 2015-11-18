@@ -291,6 +291,7 @@ uint32_t platform_set_serial_drv_tx_status(void)
 {
 	/* Set Tx Data write complete to false */
 	ble_usart_tx_cmpl = false;
+	return true;
 }
 
 uint32_t platform_serial_drv_tx_status(void)

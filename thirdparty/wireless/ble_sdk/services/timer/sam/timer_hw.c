@@ -132,7 +132,8 @@ void TC1_Handler(void)
 	/* ovf callback */
 	if (TC_SR_CPCS == (ul_status & TC_SR_CPCS))
 	{
-		bus_timer_callback();
+		Platform_stop_bus_timer();
+		bus_timer_callback();		
 	}
 }
 
