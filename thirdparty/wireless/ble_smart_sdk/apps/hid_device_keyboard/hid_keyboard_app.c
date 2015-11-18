@@ -94,6 +94,8 @@ uint8_t app_keyb_report[8] = {0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00};
 /* Keyboard key status */
 volatile uint8_t key_status = 0;	
 
+uint8_t connect_flg = 0;
+
 /* keyboard report */
 static uint8_t hid_app_keyb_report_map[] =
 {
@@ -134,7 +136,13 @@ static uint8_t hid_app_keyb_report_map[] =
 static void hid_disconnect_cb(at_ble_handle_t handle)
 {
 	keyb_id = 0;
-        ALL_UNUSED(handle);
+	connect_flg = 0;
+    ALL_UNUSED(handle);
+}
+
+static void hid_connect_cb()
+{	
+	connect_flg = 1;
 }
 
 /* Callback called when host change the control point value */
@@ -181,8 +189,11 @@ static void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notificat
 /* Callback called when user press the button for writing new characteristic value */
 void button_cb(void)
 {
-	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
-	key_status = 1;
+	if( connect_flg )
+	{
+		send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
+		key_status = 1;	
+	}
 }
 
 /* Initialize the application information for HID profile*/
@@ -237,6 +248,7 @@ int main(void )
 	
 	/* Register the notification handler */
 	register_ble_notification_confirmed_cb(hid_notification_confirmed_cb);
+	register_ble_connected_event_cb(hid_connect_cb);
 	register_ble_disconnected_event_cb(hid_disconnect_cb);
 	notify_report_ntf_handler(hid_prf_report_ntf_cb);
 	notify_boot_ntf_handler(hid_prf_boot_ntf_cb);

@@ -94,6 +94,8 @@ uint8_t y_move = 0;
 /*Counter*/
 uint8_t cnt = 0;
 
+uint8_t connect_flg = 0;
+
 /*Mouse Movement Position*/
 uint8_t mouse_pos = MOUSE_RIGHT_MOVEMENT;
 
@@ -172,13 +174,26 @@ static void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notificat
 	DBG_LOG_DEV("Mouse report send to host status %d", notification_status->status);
 }
 
+static void hid_connect_cb(at_ble_handle_t handle)
+{	
+	connect_flg = 1;
+}
+
+static void hid_disconnect_cb(at_ble_handle_t handle)
+{
+	connect_flg = 0;
+	mouse_status = 0;
+	mouse_pos = MOUSE_RIGHT_MOVEMENT;
+}
+
 /* Callback called when user press the button for writing new characteristic value */
 void button_cb(void)
 {
-	if(!mouse_status){
+	if( connect_flg )
+	{
 		mouse_status = 1;
-	}
-	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
+		send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
+	}	
 }
 
 /* Initialize the application information for HID profile*/
@@ -222,6 +237,8 @@ static bool hid_mouse_move(int8_t pos, uint8_t index_report)
 bool app_exec = true;
 int main(void )
 {		
+	connect_flg = 0;
+	
 	platform_driver_init();
 
 	/* Initialize serial console */
@@ -242,6 +259,8 @@ int main(void )
 		
 	/* Register the notification handler */
 	register_ble_notification_confirmed_cb(hid_notification_confirmed_cb);
+	register_ble_connected_event_cb(hid_connect_cb);
+	register_ble_disconnected_event_cb(hid_disconnect_cb);
 	notify_report_ntf_handler(hid_prf_report_ntf_cb);
 	notify_boot_ntf_handler(hid_prf_boot_ntf_cb);
 	notify_protocol_mode_handler(hid_prf_protocol_mode_ntf_cb);
