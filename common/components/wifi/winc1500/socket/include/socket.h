@@ -46,6 +46,13 @@
 extern "C" {
 #endif
 
+/** \defgroup SocketHeader Socket
+ *          BSD alike socket interface beftween the host layer and the network 
+ *          protocol stacks in the firmware.
+ *          These functions are used by the host application to send or receive
+ *          packets and to do other socket operations.    
+ */
+ 
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 INCLUDES
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
@@ -55,15 +62,20 @@ INCLUDES
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 MACROS
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
-/** @defgroup  SocketDefines Defines
+/**
+ * @defgroup  SocketDefines Defines
  * @ingroup SocketHeader
+ */
+
+/** @defgroup  IPDefines TCP/IP Defines
+ * @ingroup SocketDefines
  * The following list of macros are used to define constants used throughout the socket layer.
  * @{
  */
 #define HOSTNAME_MAX_SIZE									64
 /*!< 
 	Maximum allowed size for a host domain name passed to the function gethostbyname @ref gethostbyname. 
-	command value. Used with the setsocketopt function. 
+	command value. Used with the setsockopt function. 
 
 */
 	
@@ -116,43 +128,51 @@ MACROS
 #define SOL_SOCKET											1
 /*!< 
 	Socket option.
-	Used with the @ref setsocketopt function
+	Used with the @ref setsockopt function
+*/
+
+#define SOL_SSL_SOCKET										2
+/*!< 
+	SSL Socket option level.
+	Used with the @ref setsockopt function
 */
 
 #define	SO_SET_UDP_SEND_CALLBACK							0x00
 /*!<
 	Socket option used by the application to enable/disable
 	the use of UDP send callbacks.
-	Used with the @ref setsocketopt function.
+	Used with the @ref setsockopt function.
 */
 
 #define IP_ADD_MEMBERSHIP									0x01
 /*!<
 	Set Socket Option Add Membership command value.
-	Used with the @ref setsocketopt function.
+	Used with the @ref setsockopt function.
 */
 
 
 #define IP_DROP_MEMBERSHIP									0x02
 /*!<
 	Set Socket Option Drop Membership command value.
-	Used with the @ref setsocketopt function.
+	Used with the @ref setsockopt function.
 */
  //@}
 
 
-/** @defgroup  SSLSocketOptions Defines
- * @ingroup SocketHeader
- * The following list of macros are used to define SSL Socket options.
- * @{
+
+/**
+ * @defgroup  TLSDefines TLS Defines
+ * @ingroup SocketDefines
  */
 
-#define SOL_SSL_SOCKET										2
-/*!< 
-	SSL Socket option level.
-	Used with the @ref setsocketopt function
-*/
 
+
+/** @defgroup  SSLSocketOptions TLS Socket Options
+ * @ingroup TLSDefines
+ * The following list of macros are used to define SSL Socket options.
+ * @{
+ * @sa setsockopt
+ */
 
 #define SO_SSL_BYPASS_X509_VERIF							0x01
 /*!<
@@ -177,7 +197,7 @@ MACROS
 
 #define SO_SSL_ENABLE_SESSION_CACHING						0x03
 /*!<
-	Allow the TLS to cache the session information for fast
+	This option allow the TLS to cache the session information for fast
 	TLS session establishment in future connections using the
 	TLS Protocol session resume features.
 */
@@ -186,11 +206,17 @@ MACROS
 
 
 
-/** @defgroup  SSLCipherSuiteConfiguration Defines
- * @ingroup SocketHeader
+/** @defgroup  SSLCipherSuiteConfiguration TLS Cipher Suite Configurations
+ * @ingroup TLSDefines
  * The following list of macros are used to define SSL Ciphersuite Configuration.
+ * @sa sslSetActiveCipherSuites
  * @{
  */
+
+#define SSL_ENABLE_ALL_SUITES                               0xfffffffful
+/*!<
+	Enable all possible supported cipher suites.
+*/
 
 #define SSL_ENABLE_RSA_SHA_SUITES							0x01
 /*!<
@@ -367,6 +393,10 @@ Socket Errors
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 DATA TYPES
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
+/** @defgroup  SocketEnums Enumeration-Typedef
+ * @ingroup SocketHeader
+ * Specific Enumuration-typdefs used for socket operations
+ * @{ */
 
 /*!
 @typedef	\
@@ -380,10 +410,7 @@ DATA TYPES
 typedef sint8  SOCKET;
 
 
-/** @defgroup  SocketEnums Enumeration-Typedef
- * @ingroup SocketHeader
- * Specific Enumuration-typdefs used for socket operations
- * @{ */
+
 /*!
 @struct	\
 	in_addr
@@ -1714,15 +1741,13 @@ NMI_API uint32 nmi_inet_addr(char *pcIpAddr);
 NMI_API sint8 gethostbyname(uint8 * pcHostName);
 
 
-NMI_API sint8 sslSetSockOpt(SOCKET sock, uint8  u8Opt, const void *pvOptVal, uint16 u16OptLen);
-
 
 /** @} */
 /** @defgroup sslSetActiveCipherSuitesFn sslSetActiveCipherSuites
  *  @ingroup SocketAPI
- *   Override the default Active SSL ciphers in the SSL module with a certain combination selected by the caller on the form of
- *   a bitmap containing the required ciphers to be on.
- *   If there is no need to call this function if the application will not change the default ciphersuites.
+ *   Overrides the default active SSL ciphers in the SSL module with a certain combination of ciphers selected by the caller using
+ *   a bitmap containing the required ciphers list.
+ *   There API is required only if the will not change the default ciphersuites, otherwise, it is not recommended to use.
  */
  /**@{*/
 /*!
@@ -1730,24 +1755,27 @@ NMI_API sint8 sslSetSockOpt(SOCKET sock, uint8  u8Opt, const void *pvOptVal, uin
 	NMI_API sint8 sslSetActiveCipherSuites(uint32 u32SslCsBMP);
 
 @param [in]	u32SslCsBMP
-				Bitmap containing the concatenation of the desired ciphers to be enabled for the SSL module. The 
-				ciphersuites are defined in groups as follows:
-				- SSL_ENABLE_RSA_SHA_SUITES
-				- SSL_ENABLE_RSA_SHA256_SUITES
-				- SSL_ENABLE_DHE_SHA_SUITES
-				- SSL_ENABLE_DHE_SHA256_SUITES
-				- SSL_ENABLE_RSA_GCM_SUITES
-				- SSL_ENABLE_DHE_GCM_SUITES
-				The default supported ciphersuites are the combination of all the above groups. The caller can 
-				override the default with any desired combination.
-				For example, to disable SHA based ciphers the function should be called with this syntax:
-					sslSetActiveCipherSuites(SSL_ENABLE_RSA_SHA256_SUITES | SSL_ENABLE_DHE_SHA256_SUITES |
-							SSL_ENABLE_RSA_GCM_SUITES | SSL_ENABLE_DHE_GCM_SUITES);
-				Passing the u32SslCsBMP as ZERO will not change the current active list.
-
+<p>A non-zero 32-bit integer bitmap containing the bitwise OR of the desired ciphers to be enabled 
+for the SSL module. The ciphersuites are defined in groups as follows:</p>
+<ul>
+	<li>@ref SSL_ENABLE_ALL_SUITES</li>
+	<li>@ref SSL_ENABLE_RSA_SHA_SUITES</li>
+	<li>@ref SSL_ENABLE_RSA_SHA256_SUITES</li>
+	<li>@ref SSL_ENABLE_DHE_SHA_SUITES</li>
+	<li>@ref SSL_ENABLE_DHE_SHA256_SUITES</li>
+	<li>@ref SSL_ENABLE_RSA_GCM_SUITES</li>
+	<li>@ref SSL_ENABLE_DHE_GCM_SUITES</li>
+</ul>
 @return		
-	- [SOCK_ERR_NO_ERROR](@ref SOCK_ERR_NO_ERROR)
-	- [SOCK_ERR_INVALID_ARG](@ref SOCK_ERR_INVALID_ARG)
+	Possible return values are [SOCK_ERR_NO_ERROR](@ref SOCK_ERR_NO_ERROR) if case of success 
+	or [SOCK_ERR_INVALID_ARG](@ref SOCK_ERR_INVALID_ARG) if the map is zero.
+@remarks
+The default supported ciphersuites are the combination of all the above groups. The caller can override the default with any desired combination. 
+For example, to disable SHA based ciphers the function should be called with this syntax:
+\code
+	sslSetActiveCipherSuites(SSL_ENABLE_ALL_SUITES & ~(SSL_ENABLE_RSA_SHA_SUITES|SSL_ENABLE_DHE_SHA_SUITES));
+\endcode
+@note Passing the u32SslCsBMP as zero <strong>will not</strong> change the current active list.
 */
 NMI_API sint8 sslSetActiveCipherSuites(uint32 u32SslCsBMP);
 
@@ -1760,20 +1788,53 @@ NMI_API sint8 sslSetActiveCipherSuites(uint32 u32SslCsBMP);
 *	argument, at the protocol level specified by the level argument, to the value
 *	pointed to by the option_value argument for the socke specified by the socket argument.
 *
-*	Possible Options:
-*	SO_SET_UDP_SEND_CALLBACK: 
-*		Enable/Disable callback messages for sendto().Since UDP is unreliable by default the user maybe interested (or not)
-*		in receiving a message of /ref SOCKET_MSG_SENDTO for each call of sendto().
-*		Enabled if option_value equals /ref BTRUE Disabled otherwise.
-*	IP_ADD_MEMBERSHIP: 
-*		valid for UDP sockets,this option is used to receive frames sent to a multicast group. 
-*		option_value shall be a pointer to Unsigned 32 bit integer containing the Multicast ipv4 address.
-*	IP_DROP_MEMBERSHIP:
-*		valid for UDP sockets,this option is used to Stop receiving frames sent to a multicast group.
-*		option_value shall be a pointer to Unsigned 32 bit integer containing the Multicast ipv4 address.
-*	
-*	Possible values for s32Level: 
-*	This argument is ignored.
+* <p>Possible protcol level values supported are @ref SOL_SOCKET and @ref SOL_SSL_SOCKET. 
+* Possible options when the protocol level is @ref SOL_SOCKET :</p>
+* <table style="width: 100%">
+* 	<tr>
+* 		<td style="height: 22px"><strong>@ref SO_SET_UDP_SEND_CALLBACK</strong></td>
+* 		<td style="height: 22px">Enable/Disable callback messages for sendto(). 
+* 		Since UDP is unreliable by default the user maybe interested (or not) in 
+* 		receiving a message of @ref SOCKET_MSG_SENDTO for each call of sendto(). 
+* 		Enabled if option value equals @ref TRUE, disabled otherwise.</td>
+* 	</tr>
+* 	<tr>
+* 		<td><strong>@ref IP_ADD_MEMBERSHIP</strong></td>
+* 		<td>Valid for UDP sockets. This option is used to receive frames sent to 
+* 		a multicast group. option_value shall be a pointer to Unsigned 32-bit 
+* 		integer containing the multicast IPv4 address. </td>
+* 	</tr>
+* 	<tr>
+* 		<td><strong>@ref IP_DROP_MEMBERSHIP</strong></td>
+* 		<td>Valid for UDP sockets. This option is used to stop receiving frames 
+* 		sent to a multicast group. option_value shall be a pointer to Unsigned 
+* 		32-bit integer containing the multicast IPv4 address.</td>
+* 	</tr>
+* </table>
+* <p>Possible options when the protcol leve&nbsp; is @ref SOL_SSL_SOCKET</p>
+* <table style="width: 100%">
+* 	<tr>
+* 		<td style="height: 22px"><strong>
+* 		@ref SO_SSL_BYPASS_X509_VERIF</strong></td>
+* 		<td style="height: 22px">Allow an opened SSL socket to bypass the X509 
+* 		certificate verification process. It is highly recommended <strong>NOT</strong> to use 
+* 		this socket option in production software applications. The option is 
+* 		supported for debugging and testing purposes. The option value should be 
+* 		casted to int type and it is handled as a boolean flag.</td>
+* 	</tr>
+* 	<tr>
+* 		<td><strong>@ref SO_SSL_SNI</strong></td>
+* 		<td>Set the Server Name Indicator (SNI) for an SSL socket. The SNI is a 
+* 		null terminated string containing the server name assocated with the 
+* 		connection. It must not exceed the size of @ref HOSTNAME_MAX_SIZE.</td>
+* 	</tr>
+* 	<tr>
+* 		<td><strong>@ref SO_SSL_ENABLE_SESSION_CACHING</strong></td>
+* 		<td>This option allow the TLS to cache the session information for fast 
+* 		TLS session establishment in future connections using the TLS Protocol 
+* 		session resume features.</td>
+* 	</tr>
+* </table>
  */
  /**@{*/
 /*!
@@ -1785,22 +1846,20 @@ NMI_API sint8 sslSetActiveCipherSuites(uint32 u32SslCsBMP);
 				Socket handler.
 
 @param [in]	level
-				protocol level. always SOL_SOCKET for now.
+				protocol level. See description above.
 
 @param [in]	option_name
-				option to be set.
+				option to be set. See description above.
 
 @param [in]	option_value
 				pointer to user provided value.
 
 @param [in]	option_len
-				 length of the option value.
-@warning
-		-Note that  sending IGMP packets to Join/Leave multicast  groups is not implemented at the current moment. \n
-		 calling this function will Pass/Filter packets packets sent to Multicast address provided in the option_value
+				 length of the option value in bytes.
 @return		
 	The function shall return \ref SOCK_ERR_NO_ERROR for successful operation 
 	and a negative value (indicating the error) otherwise. 
+@sa SOL_SOCKET, SOL_SSL_SOCKET, 
 */
 NMI_API sint8 setsockopt(SOCKET socket, uint8 u8Level, uint8 option_name,
        const void *option_value, uint16 u16OptionLen);

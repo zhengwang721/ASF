@@ -53,6 +53,7 @@
 #define NMI_STATE_REG			(0x108c)
 #define BOOTROM_REG				(0xc000c)
 #define NMI_REV_REG  			(0x207ac)	/*Also, Used to load ATE firmware from SPI Flash and to ensure that it is running too*/
+#define NMI_REV_REG_ATE			(0x1048) 	/*Revision info register in case of ATE FW*/
 #define M2M_WAIT_FOR_HOST_REG 	(0x207bc)
 #define M2M_FINISH_INIT_STATE 	0x02532636UL
 #define M2M_FINISH_BOOT_ROM   	 0x10add09eUL

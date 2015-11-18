@@ -72,7 +72,10 @@ MACROS
 
 #define SSL_FLAGS_ACTIVE					NBIT0
 #define SSL_FLAGS_BYPASS_X509				NBIT1
+#define SSL_FLAGS_2_RESERVD					NBIT2
+#define SSL_FLAGS_3_RESERVD					NBIT3
 #define SSL_FLAGS_CACHE_SESSION				NBIT4
+#define SSL_FLAGS_NO_TX_COPY				NBIT5
 
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 PRIVATE DATA TYPES
@@ -487,7 +490,7 @@ SOCKET socket(uint16 u16Domain, uint8 u8Type, uint8 u8Flags)
 {
 	SOCKET		sock = -1;
 	uint8		u8Count,u8SocketCount = MAX_SOCKET;
-	tstrSocket	*pstrSock;
+	volatile tstrSocket	*pstrSock;
 	
 	/* The only supported family is the AF_INET for UDP and TCP transport layer protocols. */
 	if(u16Domain == AF_INET)
@@ -508,7 +511,7 @@ SOCKET socket(uint16 u16Domain, uint8 u8Type, uint8 u8Flags)
 
 		for(;u8Count < u8SocketCount; u8Count ++)
 		{
-			pstrSock = (tstrSocket *)&gastrSockets[u8Count];
+			pstrSock = &gastrSockets[u8Count];
 			if(pstrSock->bIsUsed == 0)
 			{
 				m2m_memset((uint8*)pstrSock, 0, sizeof(tstrSocket));
@@ -529,7 +532,7 @@ SOCKET socket(uint16 u16Domain, uint8 u8Type, uint8 u8Flags)
 				{
 					tstrSSLSocketCreateCmd	strSSLCreate;
 					strSSLCreate.sslSock = sock;
-					pstrSock->u8SSLFlags = SSL_FLAGS_ACTIVE;
+					pstrSock->u8SSLFlags = SSL_FLAGS_ACTIVE | SSL_FLAGS_NO_TX_COPY;
 					SOCKET_REQUEST(SOCKET_CMD_SSL_CREATE, (uint8*)&strSSLCreate, sizeof(tstrSSLSocketCreateCmd), 0, 0, 0);
 				}
 				break;
@@ -1065,7 +1068,7 @@ Version
 Date
 		9 September 2014
 *********************************************************************/
-sint8 sslSetSockOpt(SOCKET sock, uint8  u8Opt, const void *pvOptVal, uint16 u16OptLen)
+static sint8 sslSetSockOpt(SOCKET sock, uint8  u8Opt, const void *pvOptVal, uint16 u16OptLen)
 {
 	sint8	s8Ret = SOCK_ERR_INVALID_ARG;
 	if(sock < TCP_SOCK_MAX)

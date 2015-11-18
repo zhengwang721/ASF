@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief WINC Crypto API
+ * \brief WINC Crypto Application Interface.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *

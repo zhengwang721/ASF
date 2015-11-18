@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief NMC1500 IoT Application Interface.
+ * \brief WINC WLAN Application Interface.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -42,6 +42,10 @@
 #ifndef __M2M_WIFI_H__
 #define __M2M_WIFI_H__
 
+/** \defgroup m2m_wifi WLAN
+ *
+ */
+
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 INCLUDES
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
@@ -56,7 +60,7 @@ INCLUDES
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 MACROS
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
-/**@defgroup  WlanEnums Enumeration/Typedef
+/**@defgroup  WlanEnums Enumerations and Typedefs
  * @ingroup m2m_wifi
  * @{*/
 /*!

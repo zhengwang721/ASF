@@ -297,13 +297,11 @@ typedef struct{
 typedef struct{
 	SOCKET		sock;
 	sint8		s8Error;
-	uint16		u16SessionID;
 	uint16		u16AppDataOffset;
 	/*!<
 		In further packet send requests the host interface should put the user application
 		data at this offset in the allocated shared data packet.
 	*/
-	uint16		u16Void;
 }tstrConnectReply;
 
 

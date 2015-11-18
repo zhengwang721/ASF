@@ -42,7 +42,7 @@
 #ifdef PROFILING
 #include "windows.h"
 #endif
-#include "spi_flash.h"
+#include "spi_flash/include/spi_flash.h"
 #define DUMMY_REGISTER	(0x1084)
 
 #define TIMEOUT (-1) /*MS*/
@@ -100,7 +100,7 @@ static sint8 spi_flash_read_status_reg(uint8 * val)
 	while(reg != 1);
 
 	reg = (M2M_SUCCESS == ret)?(nm_read_reg(DUMMY_REGISTER)):(0);
-	*val = reg & 0xff;
+	*val = (uint8)(reg & 0xff);
 	return ret;
 }
 
@@ -454,11 +454,69 @@ static void spi_flash_unlock(void)
 	}
 }
 #endif
+static void spi_flash_enter_low_power_mode(void) {
+	volatile unsigned long tmp;
+	unsigned char* cmd = (unsigned char*) &tmp;
 
+	cmd[0] = 0xb9;
+
+	nm_write_reg(SPI_FLASH_DATA_CNT, 0);
+	nm_write_reg(SPI_FLASH_BUF1, cmd[0]);
+	nm_write_reg(SPI_FLASH_BUF_DIR, 0x1);
+	nm_write_reg(SPI_FLASH_DMA_ADDR, 0);
+	nm_write_reg(SPI_FLASH_CMD_CNT, 1 | (1 << 7));
+	while(nm_read_reg(SPI_FLASH_TR_DONE) != 1);
+}
+
+
+static void spi_flash_leave_low_power_mode(void) {
+	volatile unsigned long tmp;
+	unsigned char* cmd = (unsigned char*) &tmp;
+
+	cmd[0] = 0xab;
+
+	nm_write_reg(SPI_FLASH_DATA_CNT, 0);
+	nm_write_reg(SPI_FLASH_BUF1, cmd[0]);
+	nm_write_reg(SPI_FLASH_BUF_DIR, 0x1);
+	nm_write_reg(SPI_FLASH_DMA_ADDR, 0);
+	nm_write_reg(SPI_FLASH_CMD_CNT,  1 | (1 << 7));
+	while(nm_read_reg(SPI_FLASH_TR_DONE) != 1);
+}
 /*********************************************/
 /* GLOBAL FUNCTIONS							 */
 /*********************************************/
-
+/**
+ *	@fn		spi_flash_enable
+ *	@brief	Enable spi flash operations
+ */
+sint8 spi_flash_enable(uint8 enable)
+{
+	sint8 s8Ret = M2M_SUCCESS;
+	if(REV(nmi_get_chipid()) >= REV_3A0) {		
+		uint32 u32Val;
+		
+		/* Enable pinmux to SPI flash. */
+		s8Ret = nm_read_reg_with_ret(0x1410, &u32Val);
+		if(s8Ret != M2M_SUCCESS) {
+			goto ERR1;
+		}
+		/* GPIO15/16/17/18 */
+		u32Val &= ~((0x7777ul) << 12);
+		u32Val |= ((0x1111ul) << 12);
+		nm_write_reg(0x1410, u32Val);
+		if(enable) {
+			spi_flash_leave_low_power_mode();
+		} else {
+			spi_flash_enter_low_power_mode();
+		}
+		/* Disable pinmux to SPI flash to minimize leakage. */
+		u32Val &= ~((0x7777ul) << 12);
+		u32Val |= ((0x0010ul) << 12);
+		nm_write_reg(0x1410, u32Val);
+	}
+ERR1:
+	return s8Ret;
+}
 /**
 *	@fn			spi_flash_read
 *	@brief		Read from data from SPI flash

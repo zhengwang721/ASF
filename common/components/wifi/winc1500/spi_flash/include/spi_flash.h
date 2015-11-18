@@ -111,8 +111,15 @@
 #include "common/include/nm_common.h"
 #include "bus_wrapper/include/nm_bus_wrapper.h"
 #include "driver/source/nmbus.h"
-#include "spi_flash_map.h"
+#include "driver/source/nmasic.h"
+#include "spi_flash/include/spi_flash_map.h"
 
+/**
+ *	@fn		spi_flash_enable
+ *	@brief	Enable spi flash operations
+ *	@version	1.0
+ */
+sint8 spi_flash_enable(uint8 enable);
 /** \defgroup SPIFLASHAPI Function
  *   @ingroup SPIFLASH
  */

@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief NMC1500 IoT OTA Interface.
+ * \brief WINC OTA Upgrade API Interface.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -49,8 +49,8 @@ INCLUDES
 #include "common/include/nm_common.h"
 #include "driver/include/m2m_types.h"
 #include "driver/source/nmdrv.h"
-/**@defgroup  OTATYPEDEF  WLANTypedef
- * @ingroup WlanEnums
+/**@addtogroup WlanEnums Enumerations and Typedefs
+ * @ingroup m2m_wifi
  */
  /* @{ */
 

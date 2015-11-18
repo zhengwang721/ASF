@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief NMC1500 IoT Application Interface Internal Types.
+ * \brief WINC Application Interface Internal Types.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -95,6 +95,16 @@ MACROS
 	( ((uint32)M2M_MAKE_VERSION((fw_major),  (fw_minor),  (fw_patch)))  << M2M_FW_VERSION_SHIFT) | \
 	( ((uint32)M2M_MAKE_VERSION((drv_major), (drv_minor), (drv_patch))) << M2M_DRV_VERSION_SHIFT))
 
+#define REL_19_4_1_VER			M2M_MAKE_VERSION_INFO(19,4,1,19,3,0)
+#define REL_19_4_0_VER			M2M_MAKE_VERSION_INFO(19,4,0,19,3,0)
+#define REL_19_3_1_VER			M2M_MAKE_VERSION_INFO(19,3,1,19,3,0)
+#define REL_19_3_0_VER			M2M_MAKE_VERSION_INFO(19,3,0,19,3,0)
+#define REL_19_2_2_VER			M2M_MAKE_VERSION_INFO(19,2,2,19,2,0)
+#define REL_19_2_1_VER			M2M_MAKE_VERSION_INFO(19,2,1,19,2,0)
+#define REL_19_2_0_VER			M2M_MAKE_VERSION_INFO(19,2,0,19,2,0)
+#define REL_19_1_0_VER			M2M_MAKE_VERSION_INFO(19,1,0,18,2,0)
+#define REL_19_0_0_VER			M2M_MAKE_VERSION_INFO(19,0,0,18,1,1)
+
 /*======*======*======*======*
 		FIRMWARE VERSION NO INFO
  *======*======*======*======*/
@@ -108,7 +118,7 @@ MACROS
 /*!< Firmware Minor release version number.
 */
 
-#define M2M_FIRMWARE_VERSION_PATCH_NO					(0)
+#define M2M_FIRMWARE_VERSION_PATCH_NO					(3)
 /*!< Firmware patch release version number.
 */
 
@@ -247,27 +257,42 @@ MACROS
 #define M2M_SCAN_DEFAULT_NUM_SLOTS							(2)
 /*!< The default. number of scan slots performed by the WINC board.
 */
-#define M2M_SCAN_DEFAULT_SLOT_TIME							(20)
+#define M2M_SCAN_DEFAULT_SLOT_TIME							(30)
 /*!< The default. duration in miliseconds of a scan slots performed by the WINC board.
 */
 #define M2M_SCAN_DEFAULT_NUM_PROBE							(2)
 /*!< The default. number of scan slots performed by the WINC board.
 */
 
-#define M2M_DEFAULT_CONN_EMPTY_LIST						((sint8)-20)
-/*!<
-	A failure response that indicates an empty network list as 
-	a result to the function call m2m_default_connect.
-*/
-#define M2M_DEFAULT_CONN_SCAN_MISMATCH					((sint8)-21)
-/*!<
+
+/*======*======*======*======*
+	CONNECTION ERROR DEFINITIONS
+ *======*======*======*======*/
+typedef enum { 		
+	M2M_DEFAULT_CONN_INPROGRESS = ((sint8)-23),  		
+	/*!<
+	A failure that indicates that a default connection or forced connection is in progress
+	*/
+	M2M_DEFAULT_CONN_FAIL,				
+	/*!<
+	A failure response that indicates that the winc failed to connect to the cached network
+	*/
+	 M2M_DEFAULT_CONN_SCAN_MISMATCH,	 													
+	/*!<
 	A failure response that indicates that no one of the cached networks 
 	was found in the scan results, as a result to the function call m2m_default_connect.
-*/
-#define M2M_DEFAULT_CONN_FAIL							((sint8)-22)
-/*!<
-	A failure response that indicates that the winc failed to connect to the cached network
-*/
+	*/
+	M2M_DEFAULT_CONN_EMPTY_LIST
+	/*!<
+	A failure response that indicates an empty network list as 
+	a result to the function call m2m_default_connect.
+	*/
+
+}tenuM2mDefaultConnErrcode;
+
+
+
+
 /*======*======*======*======*
 	OTA DEFINITIONS
  *======*======*======*======*/
@@ -283,6 +308,12 @@ MACROS
 #define OTA_MAGIC_VALUE						(0x1ABCDEF9)
 /*!< 
 	Magic value set at the beginning of the OTA image header
+*/
+
+#define OTA_FORMAT_VER_0					(0)	/*Till 19.2.2 format*/
+#define OTA_FORMAT_VER_1					(1) /*starting from 19.3.0 CRC is used and sequence number is used*/
+/*!<
+	Control structure format version
 */
 #define OTA_SHA256_DIGEST_SIZE 				(32)
 /*!< 
@@ -328,7 +359,8 @@ MACROS
 /**@}*/
 
 /**
-* @addtogroup WlanEnums
+* @addtogroup WlanEnums Enumerations and Typedefs
+* @ingroup m2m_wifi
 */
  /**@{*/ 
 
@@ -351,6 +383,9 @@ typedef enum {
 	*/
 	 M2M_ERR_ASSOC_FAIL,
 	/*!< Indicate that the WINC board has failed to associate with the AP.
+	*/
+	 M2M_ERR_CONN_INPROGRESS,
+	 /*!< Indicate that the WINC board has another connection request in progress.
 	*/
 }tenuM2mConnChangedErrcode;
 /*!
@@ -380,11 +415,11 @@ typedef enum {
 	PWR_AUTO = ((uint8) 1),
 	/*!< FW will decide the best power mode to use internally. */
 	PWR_LOW1,
-	/*low power mode #1. RX current 60mA, sensitivity Ok.*/
+	/*low power mode #1*/
 	PWR_LOW2,
-	/*low power mode #2, RX current 55mA, sensitivity is less by 3dBm*/
+	/*low power mode #2*/
 	PWR_HIGH,
-	/* high power mode: RX current 100mA.*/
+	/* high power mode*/
 }tenuM2mPwrMode;
 
 /*!
@@ -993,10 +1028,16 @@ typedef enum {
 	M2M_WIFI_MODE_NORMAL = ((uint8) 1),
 	/*!< Normal Mode means to run customer firmware version.
 	 */
-	M2M_WIFI_MODE_CONFIG,
-	/*!< Config Mode means to run production test firmware version which is known as ATE (Burst) firmware.
+	M2M_WIFI_MODE_ATE_HIGH,
+	/*!< Config Mode in HIGH POWER means to run production test firmware version which is known as ATE (Burst) firmware.
 	 */
-	M2M_WIFI_ETHERNET_MODE,
+	M2M_WIFI_MODE_ATE_LOW,
+	/*!< Config Mode in LOW POWER means to run production test firmware version which is known as ATE (Burst) firmware.
+	 */
+	M2M_WIFI_MODE_ETHERNET,
+	/*!< etherent Mode
+	 */
+	M2M_WIFI_MODE_MAX,
 }tenuM2mWifiMode;
 
 /*!
@@ -1157,9 +1198,6 @@ typedef struct {
 
 @sa
 	tenuM2mSecType
-
-@todo
-	Use different error codes to differentiate error types.
 */
 typedef struct{
 	uint8	u8AuthType;
@@ -1827,6 +1865,7 @@ typedef struct{
 	*/
 
 }tstrOtaInitHdr;
+
 /*!
 @struct	\
  	tstrOtaControlSec
@@ -1843,6 +1882,8 @@ typedef struct {
 */
 	uint32 u32OtaFormatVersion;
 /*!<
+		NA   NA   NA   Flash version   cs struct version
+		00   00   00   00              00 
 	Control structure format version, the value will be incremented in case of structure changed or updated
 */
 	uint32 u32OtaSequenceNumber;

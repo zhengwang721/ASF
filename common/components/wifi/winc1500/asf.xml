@@ -1,12 +1,12 @@
 <asf xmlversion="1.0">
-	<select-by-device id="common.components.wifi.winc1500" caption="WINC1500 (Wi-Fi) Host Driver v19.4.0">
+	<select-by-device id="common.components.wifi.winc1500" caption="WINC1500 (Wi-Fi) Host Driver v19.4.3">
 		<info type="description" value="summary">
 			The Atmel SmartConnect WINC1500 is an IEEE 802.11 b/g/n IoT network controller SoC. It offers the ideal add-on to existing MCU solutions, making it easy to bring Wi-Fi and Network capabilities through UART or SPI-to-Wi-Fi interfaces into your designs. The WINC1500 connects to any Atmel AVR or Atmel | SMART MCU, and has minimal resource requirements.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Wireless"/>
 		</info>
-		<module type="service" id="common.components.wifi.winc1500#0" caption="WINC1500 (Wi-Fi) Host Driver v19.4.0 - SAM4S implementation">
+		<module type="service" id="common.components.wifi.winc1500#0" caption="WINC1500 (Wi-Fi) Host Driver v19.4.3 - SAM4S implementation">
 			<info type="description" value="summary">
 				The Atmel SmartConnect WINC1500 is an IEEE 802.11 b/g/n IoT network controller SoC. It offers the ideal add-on to existing MCU solutions, making it easy to bring Wi-Fi and Network capabilities through UART or SPI-to-Wi-Fi interfaces into your designs. The WINC1500 connects to any Atmel AVR or Atmel | SMART MCU, and has minimal resource requirements.
 			</info>
@@ -58,9 +58,9 @@
 			<build type="c-source" value="socket/source/socket.c"/>
 			<build type="header-file" value="socket/source/socket_internal.h"/>
 
-			<build type="c-source" value="spi_flash/spi_flash.c"/>
-			<build type="header-file" value="spi_flash/spi_flash.h"/>
-			<build type="header-file" value="spi_flash/spi_flash_map.h"/>
+			<build type="header-file" value="spi_flash/include/spi_flash.h"/>
+			<build type="header-file" value="spi_flash/include/spi_flash_map.h"/>
+			<build type="c-source" value="spi_flash/source/spi_flash.c"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
 			<build type="module-config" subtype="path" value="module_config/sam4s"/>
@@ -75,7 +75,7 @@
 			<require idref="common.services.delay"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam4s"/>
 		</module>
-		<module type="service" id="common.components.wifi.winc1500#1" caption="WINC1500 (Wi-Fi) Host Driver v19.4.0 - SAMG53 implementation">
+		<module type="service" id="common.components.wifi.winc1500#1" caption="WINC1500 (Wi-Fi) Host Driver v19.4.3 - SAMG53 implementation">
 			<info type="description" value="summary">
 				The Atmel SmartConnect WINC1500 is an IEEE 802.11 b/g/n IoT network controller SoC. It offers the ideal add-on to existing MCU solutions, making it easy to bring Wi-Fi and Network capabilities through UART or SPI-to-Wi-Fi interfaces into your designs. The WINC1500 connects to any Atmel AVR or Atmel | SMART MCU, and has minimal resource requirements.
 			</info>
@@ -127,9 +127,9 @@
 			<build type="c-source" value="socket/source/socket.c"/>
 			<build type="header-file" value="socket/source/socket_internal.h"/>
 
-			<build type="c-source" value="spi_flash/spi_flash.c"/>
-			<build type="header-file" value="spi_flash/spi_flash.h"/>
-			<build type="header-file" value="spi_flash/spi_flash_map.h"/>
+			<build type="header-file" value="spi_flash/include/spi_flash.h"/>
+			<build type="header-file" value="spi_flash/include/spi_flash_map.h"/>
+			<build type="c-source" value="spi_flash/source/spi_flash.c"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
 			<build type="module-config" subtype="path" value="module_config/samg53"/>
@@ -144,7 +144,7 @@
 			<require idref="common.services.delay"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samg53"/>
 		</module>
-		<module type="service" id="common.components.wifi.winc1500#2" caption="WINC1500 (Wi-Fi) Host Driver v19.4.0 - SAMG55 implementation">
+		<module type="service" id="common.components.wifi.winc1500#2" caption="WINC1500 (Wi-Fi) Host Driver v19.4.3 - SAMG55 implementation">
 			<info type="description" value="summary">
 				The Atmel SmartConnect WINC1500 is an IEEE 802.11 b/g/n IoT network controller SoC. It offers the ideal add-on to existing MCU solutions, making it easy to bring Wi-Fi and Network capabilities through UART or SPI-to-Wi-Fi interfaces into your designs. The WINC1500 connects to any Atmel AVR or Atmel | SMART MCU, and has minimal resource requirements.
 			</info>
@@ -196,9 +196,9 @@
 			<build type="c-source" value="socket/source/socket.c"/>
 			<build type="header-file" value="socket/source/socket_internal.h"/>
 
-			<build type="c-source" value="spi_flash/spi_flash.c"/>
-			<build type="header-file" value="spi_flash/spi_flash.h"/>
-			<build type="header-file" value="spi_flash/spi_flash_map.h"/>
+			<build type="header-file" value="spi_flash/include/spi_flash.h"/>
+			<build type="header-file" value="spi_flash/include/spi_flash_map.h"/>
+			<build type="c-source" value="spi_flash/source/spi_flash.c"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
 			<build type="module-config" subtype="path" value="module_config/samg55"/>
@@ -213,7 +213,7 @@
 			<require idref="common.services.delay"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samg55"/>
 		</module>
-		<module type="service" id="common.components.wifi.winc1500#3" caption="WINC1500 (Wi-Fi) Host Driver v19.4.0 - SAMD21/SAMW25 implementation">
+		<module type="service" id="common.components.wifi.winc1500#3" caption="WINC1500 (Wi-Fi) Host Driver v19.4.3 - SAMD21/SAMW25 implementation">
 			<info type="description" value="summary">
 				The Atmel SmartConnect WINC1500 is an IEEE 802.11 b/g/n IoT network controller SoC. It offers the ideal add-on to existing MCU solutions, making it easy to bring Wi-Fi and Network capabilities through UART or SPI-to-Wi-Fi interfaces into your designs. The WINC1500 connects to any Atmel AVR or Atmel | SMART MCU, and has minimal resource requirements.
 			</info>
@@ -265,9 +265,9 @@
 			<build type="c-source" value="socket/source/socket.c"/>
 			<build type="header-file" value="socket/source/socket_internal.h"/>
 
-			<build type="c-source" value="spi_flash/spi_flash.c"/>
-			<build type="header-file" value="spi_flash/spi_flash.h"/>
-			<build type="header-file" value="spi_flash/spi_flash_map.h"/>
+			<build type="header-file" value="spi_flash/include/spi_flash.h"/>
+			<build type="header-file" value="spi_flash/include/spi_flash_map.h"/>
+			<build type="c-source" value="spi_flash/source/spi_flash.c"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
 			<build type="module-config" subtype="path" value="module_config/samd21"/>
@@ -281,7 +281,7 @@
 			<require idref="sam0.drivers.system"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samd21"/>
 		</module>
-		<module type="service" id="common.components.wifi.winc1500#4" caption="WINC1500 (Wi-Fi) Host Driver v19.4.0 - SAML21 implementation">
+		<module type="service" id="common.components.wifi.winc1500#4" caption="WINC1500 (Wi-Fi) Host Driver v19.4.3 - SAML21 implementation">
 			<info type="description" value="summary">
 				The Atmel SmartConnect WINC1500 is an IEEE 802.11 b/g/n IoT network controller SoC. It offers the ideal add-on to existing MCU solutions, making it easy to bring Wi-Fi and Network capabilities through UART or SPI-to-Wi-Fi interfaces into your designs. The WINC1500 connects to any Atmel AVR or Atmel | SMART MCU, and has minimal resource requirements.
 			</info>
@@ -333,9 +333,9 @@
 			<build type="c-source" value="socket/source/socket.c"/>
 			<build type="header-file" value="socket/source/socket_internal.h"/>
 
-			<build type="c-source" value="spi_flash/spi_flash.c"/>
-			<build type="header-file" value="spi_flash/spi_flash.h"/>
-			<build type="header-file" value="spi_flash/spi_flash_map.h"/>
+			<build type="header-file" value="spi_flash/include/spi_flash.h"/>
+			<build type="header-file" value="spi_flash/include/spi_flash_map.h"/>
+			<build type="c-source" value="spi_flash/source/spi_flash.c"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
 			<build type="module-config" subtype="path" value="module_config/saml21"/>
@@ -349,7 +349,7 @@
 			<require idref="sam0.drivers.system"/>
 			<generator value="doxygen-module" default-mcu="unspecified-saml21"/>
 		</module>
-		<module type="service" id="common.components.wifi.winc1500#5" caption="WINC1500 (Wi-Fi) Host Driver v19.4.0 - SAME70 implementation">
+		<module type="service" id="common.components.wifi.winc1500#5" caption="WINC1500 (Wi-Fi) Host Driver v19.4.3 - SAME70 implementation">
 			<info type="description" value="summary">
 				The Atmel SmartConnect WINC1500 is an IEEE 802.11 b/g/n IoT network controller SoC. It offers the ideal add-on to existing MCU solutions, making it easy to bring Wi-Fi and Network capabilities through UART or SPI-to-Wi-Fi interfaces into your designs. The WINC1500 connects to any Atmel AVR or Atmel | SMART MCU, and has minimal resource requirements.
 			</info>
@@ -401,9 +401,9 @@
 			<build type="c-source" value="socket/source/socket.c"/>
 			<build type="header-file" value="socket/source/socket_internal.h"/>
 
-			<build type="c-source" value="spi_flash/spi_flash.c"/>
-			<build type="header-file" value="spi_flash/spi_flash.h"/>
-			<build type="header-file" value="spi_flash/spi_flash_map.h"/>
+			<build type="header-file" value="spi_flash/include/spi_flash.h"/>
+			<build type="header-file" value="spi_flash/include/spi_flash_map.h"/>
+			<build type="c-source" value="spi_flash/source/spi_flash.c"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
 			<build type="module-config" subtype="path" value="module_config/same70"/>
@@ -470,9 +470,9 @@
 			<build type="c-source" value="socket/source/socket.c"/>
 			<build type="header-file" value="socket/source/socket_internal.h"/>
 
-			<build type="c-source" value="spi_flash/spi_flash.c"/>
-			<build type="header-file" value="spi_flash/spi_flash.h"/>
-			<build type="header-file" value="spi_flash/spi_flash_map.h"/>
+			<build type="header-file" value="spi_flash/include/spi_flash.h"/>
+			<build type="header-file" value="spi_flash/include/spi_flash_map.h"/>
+			<build type="c-source" value="spi_flash/source/spi_flash.c"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
 			<build type="module-config" subtype="path" value="module_config/samr21"/>

@@ -510,6 +510,21 @@ sint8 m2m_wifi_connect_sc(char *pcSsid, uint8 u8SsidLen, uint8 u8SecType, void *
 			ret = M2M_ERR_FAIL;
 			goto ERR1;
 		}
+		if((u8SecType == M2M_WIFI_SEC_WPA_PSK) && (m2m_strlen(pvAuthInfo) == (M2M_MAX_PSK_LEN-1)))
+		{
+			uint8 i = 0;
+			uint8* pu8Psk = (uint8*)pvAuthInfo;
+			while(i < (M2M_MAX_PSK_LEN-1))
+			{
+				if(pu8Psk[i]<'0' || (pu8Psk[i]>'9' && pu8Psk[i] < 'A')|| (pu8Psk[i]>'F' && pu8Psk[i] < 'a') || pu8Psk[i] > 'f')
+				{
+					M2M_ERR("Invalid Key\n");
+					ret = M2M_ERR_FAIL;
+					goto ERR1;
+				}
+				i++;
+			}
+		}
 	}
 	if((u8SsidLen<=0)||(u8SsidLen>=M2M_MAX_SSID_LEN))
 	{

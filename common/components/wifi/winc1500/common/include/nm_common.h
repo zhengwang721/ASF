@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief This module contains common APIs declarations.
+ * \brief WINC Driver Common API Declarations.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
