@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMV71-XPLAINED-ULTRA board configuration.
+ * \brief Board configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -47,9 +47,7 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-#define CONF_BOARD_CONFIG_MPU_AT_INIT
-
-/* Configure UART pins */
+/** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
 /* Indicates board has an ILI9488 external component to control LCD */
