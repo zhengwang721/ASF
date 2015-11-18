@@ -74,7 +74,7 @@ extern "C" {
  * \param sleep_mode Sleep mode to set.
  */
 #endif
-/* SAM3 and SAM4 series */
+/* SAM3,SAM4,SAMG,SAMV,SAME and SAMS series */
 #if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E || SAM4N || SAM4C || \
 		SAM4CM || SAM4CP || SAMG || SAMV71 || SAME70 || SAMS70)
 
