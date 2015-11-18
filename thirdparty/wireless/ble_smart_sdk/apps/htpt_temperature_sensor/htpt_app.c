@@ -435,7 +435,7 @@ int main (void)
 	
 	ble_device_config(NULL);
 	
-	 /* initialize the button & LED */
+	/* initialize the button & LED */
 	button_init(button_cb);
 	led_init();
 	

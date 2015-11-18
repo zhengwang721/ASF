@@ -179,7 +179,7 @@ int main (void)
 	/* initialize the BLE chip  and Set the device mac address */
 	ble_device_init(NULL);
 	
-	 /* initialize the button & LED */
+	/* initialize the button & LED */
 	button_init(button_cb);
 	led_init();
 	

@@ -98,20 +98,13 @@ static void app_connected_state(bool connected)
 
 int main(void)
 {
-	#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-	#elif SAM0
-	system_init();
-	#endif
-	
 	user_request = false;
 	notification_enable = false;
-	
+
+	platform_driver_init();
+
 	/* Initialize serial console */
 	serial_console_init();
-	
 
 	DBG_LOG("Alert Notification Profile Application");
 	
@@ -125,8 +118,8 @@ int main(void)
 	ble_device_init(NULL);
 
 	acquire_sleep_lock();
+
 	/* Initializing the button */
-	/* Caution, button_init func has to be called after ble_device_init func */
 	button_init(button_cb);
 
 	led_init();

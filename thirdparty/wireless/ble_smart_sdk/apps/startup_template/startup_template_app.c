@@ -170,13 +170,7 @@ static void button_cb(void)
 
 int main(void)
 {
-	#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-	#elif SAM0
-	system_init();
-	#endif
+	platform_driver_init();
 
 	/* Initialize serial console */
 	serial_console_init();
@@ -191,7 +185,6 @@ int main(void)
 	ble_device_init(NULL);
 
 	/* button initialization */
-	/* Caution, button_init func has to be called after ble_device_init func */
 	button_init(button_cb);
 
 	/* Register BLE Event callbacks */

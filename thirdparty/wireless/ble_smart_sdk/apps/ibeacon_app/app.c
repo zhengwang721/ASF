@@ -9,51 +9,16 @@
 #define BEACON_IDENTIFIER (0x47)
 static uint8_t adv_data[31];
 static uint8_t scan_rsp_data[31];	
-
-
-/*
-for uart
-*/
-//! [module_inst]
 struct uart_module uart_instance;
-//! [module_inst]
-
-//! [variable_inst]
-static uint8_t string_input[8];
-volatile static bool read_complete_flag = false;
-volatile static bool write_complete_flag = false;
-//! [variable_inst]
-
-
 at_ble_init_config_t pf_cfg;
 
-//! [callback_functions]
-static void uart_read_complete_callback(struct uart_module *const module)
-{
-	read_complete_flag = true;
-}
 
-static void uart_write_complete_callback(struct uart_module *const module)
-{
-	write_complete_flag = true;
-}
-//! [callback_functions]
-
-
-
-//! [setup]
 static void configure_uart(void)
 {
-
-	//! [setup_config]
 	struct uart_config config_uart;
-	//! [setup_config]
-	//! [setup_config_defaults]
-	uart_get_config_defaults(&config_uart);
-	//! [setup_config_defaults]
 
-	//! [setup_change_config]
-	//config_uart.baud_rate = 38400;
+	uart_get_config_defaults(&config_uart);
+
 	config_uart.baud_rate = 115200;
 	config_uart.pin_number_pad[0] = EDBG_CDC_SERCOM_PIN_PAD0;
 	config_uart.pin_number_pad[1] = EDBG_CDC_SERCOM_PIN_PAD1;
@@ -64,23 +29,9 @@ static void configure_uart(void)
 	config_uart.pinmux_sel_pad[1] = EDBG_CDC_SERCOM_MUX_PAD1;
 	config_uart.pinmux_sel_pad[2] = EDBG_CDC_SERCOM_MUX_PAD2;
 	config_uart.pinmux_sel_pad[3] = EDBG_CDC_SERCOM_MUX_PAD3;
-	//! [setup_change_config]
 
 	stdio_serial_init(&uart_instance, CONF_STDIO_USART_MODULE, &config_uart);
-
 }
-//! [setup]
-
-
-/*
-for uart
-*/
-
-
-
-
-
-
 
 void ble_init(void)
 {
@@ -88,41 +39,35 @@ void ble_init(void)
 	 at_ble_addr_t addr = {AT_BLE_ADDRESS_PUBLIC,
 		{0x45, 0x75, 0x11, 0x6a, 0x7f, 0x7f} };
 	 	 
-		const uint8_t ro_adv_data[] = {0x1a, 0xff, 0x4c, 0x00, 0x02, 0x15, 0x21, 0x8A,
-															 0xF6, 0x52, 0x73, 0xE3, 0x40, 0xB3, 0xB4, 0x1C,
-															 0x19, 0x53, 0x24, 0x2C, 0x72, 0xf4, 0x00, 0xbb,
-																0x00, 0x45, 0xc5};
+	const uint8_t ro_adv_data[] = {0x1a, 0xff, 0x4c, 0x00, 0x02, 0x15, 0x21, 0x8A,
+									0xF6, 0x52, 0x73, 0xE3, 0x40, 0xB3, 0xB4, 0x1C,
+									0x19, 0x53, 0x24, 0x2C, 0x72, 0xf4, 0x00, 0xbb,
+									0x00, 0x45, 0xc5};
 
     const uint8_t ro_scan_rsp_data[] = {0x11, 0x07, 0x1b, 0xc5, 0xd5, 0xa5, 0x02, 0x00,
-																		0x37, 0xaa, 0xe3, 0x11, 0x2a, 0xdc, 0x00, 0xcd,
-																		0x30, 0x57};
+										0x37, 0xaa, 0xe3, 0x11, 0x2a, 0xdc, 0x00, 0xcd,
+										0x30, 0x57};
 		
-		addr.addr[0] = BEACON_IDENTIFIER;
+	addr.addr[0] = BEACON_IDENTIFIER;
 		
-		memset(adv_data,0,sizeof(adv_data));
-		memset(scan_rsp_data,0,sizeof(scan_rsp_data));
-		memcpy(adv_data,ro_adv_data,sizeof(ro_adv_data));
-		memcpy(scan_rsp_data,ro_scan_rsp_data,sizeof(ro_scan_rsp_data));
-		memset(&pf_cfg,0,sizeof(pf_cfg));
-		// init device
-		if((status = at_ble_init(&pf_cfg)) == AT_BLE_SUCCESS)
-		{
-		    status = AT_BLE_FAILURE;
-  			// Set the device address
-		    status = at_ble_addr_set(&addr);
-	       // start advertising
-		    adv_data[25] = BEACON_IDENTIFIER;
-		    at_ble_adv_data_set((uint8_t *)adv_data, sizeof(ro_adv_data), (uint8_t *)scan_rsp_data, sizeof(ro_scan_rsp_data));
-		    at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 0x00A0, 0, 0);
-		}
-
+	memset(adv_data,0,sizeof(adv_data));
+	memset(scan_rsp_data,0,sizeof(scan_rsp_data));
+	memcpy(adv_data,ro_adv_data,sizeof(ro_adv_data));
+	memcpy(scan_rsp_data,ro_scan_rsp_data,sizeof(ro_scan_rsp_data));
+	memset(&pf_cfg,0,sizeof(pf_cfg));
+	// init device
+	if((status = at_ble_init(&pf_cfg)) == AT_BLE_SUCCESS)
+	{
+		status = AT_BLE_FAILURE;
+		// Set the device address
+		status = at_ble_addr_set(&addr);
+		// start advertising
+		adv_data[25] = BEACON_IDENTIFIER;
+		at_ble_adv_data_set((uint8_t *)adv_data, sizeof(ro_adv_data), (uint8_t *)scan_rsp_data, sizeof(ro_scan_rsp_data));
+		at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 0x00A0, 0, 0);
+	}
  }
 		
-int main(void);
-//main_task_id = 0x63;
-//unsigned int osAppTask_var __attribute__((at(0x100000D0))) = (unsigned int)app_entry;
-//unsigned int main_task_id __attribute__((at(0x100000C8))) = 0x3E;
-
 static uint8_t params[100];
 int main()
 {
@@ -130,27 +75,12 @@ int main()
 	uint16_t handle;
 
 	memset(params,0,sizeof(params));	
-	
-	//! [module_inst]
-//uart_module uart_instance;
-//! [module_inst]
 
-//! [variable_inst]
-	memset(string_input,0,sizeof(string_input));
-	read_complete_flag = false;
-	write_complete_flag = false;
+	platform_driver_init();
 
-	// chris choi : case 1, not working
-	//ble_init();
-	
 	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 
-	// chris choi : case 4, working
-	//ble_init();
-
-//! [setup_init]
 	configure_uart();
-//! [setup_init]
 
 	printf("iBeacon SAMB11 Start\r\n");
 
@@ -176,7 +106,6 @@ int main()
 
 			default:
 			break;
-
 		}
 	}
 	return 0;

@@ -207,14 +207,6 @@ int main(void)
 	uint8_t battery_level = BATTERY_MIN_LEVEL;	
 	uint8_t status;
 	
-	#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-	#elif SAM0
-	system_init();
-	#endif
-	
 	memset(db_mem, 0, sizeof(uint8_t)*1024);
 	memset(&bas_service_handler, 0, sizeof(bat_gatt_service_handler_t));
 	memset(&bas_char_handle, 0, sizeof(at_ble_characteristic_changed_t));
@@ -223,6 +215,8 @@ int main(void)
 	battery_flag = true;
 	timer_cb_done = false;
 	isCharChanged = false;
+
+	platform_driver_init();
 
 	/* Initialize the button */
 	//button_init();

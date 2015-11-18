@@ -201,13 +201,8 @@ bool appp_exec = true;
 int main(void)
 {	
 	at_ble_status_t status;
-	#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-	#elif SAM0
-	system_init();
-	#endif
+
+	platform_driver_init();
 	
 	/* Initialize serial console */
 	serial_console_init();
@@ -215,7 +210,7 @@ int main(void)
 	/* Initializing the hardware timer */
 	hw_timer_init();
 	
-	/* initialize the ble chip  and Set the device mac address */
+	/* initialize the ble chip and Set the device mac address */
 	ble_device_init(NULL);
 	
 	acquire_sleep_lock(); 

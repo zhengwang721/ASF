@@ -462,13 +462,7 @@ at_ble_status_t ble_observer_scan_data_handler(at_ble_scan_info_t *scan_info_dat
  */
 int main(void )
 {
-	#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-	#elif SAM0
-	system_init();
-	#endif
+	platform_driver_init();
 	
 	/* Initialize serial console */
 	serial_console_init();

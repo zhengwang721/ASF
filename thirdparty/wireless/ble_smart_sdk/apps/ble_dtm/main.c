@@ -119,14 +119,7 @@ static void ble_dtm_init(void)
 /* main entry to the Direct Test mode Application */
 int main (void)
 {	
-
-#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-#elif SAM0
-	system_init();
-#endif	
+	platform_driver_init();
 
 	/* Button Init */
 	button_init();
@@ -138,7 +131,9 @@ int main (void)
 	
 	/* Initialize serial bridge */
 	serial_bridge_init();
-	
+
+	acquire_sleep_lock();
+
 	/* Task hadle in while loop */
 	while(1)
 	{

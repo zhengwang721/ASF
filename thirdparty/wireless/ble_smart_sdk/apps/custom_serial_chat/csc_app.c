@@ -80,7 +80,7 @@ static void csc_app_recv_buf(uint8_t *recv_data, uint8_t recv_len)
 {
 	uint16_t ind = 0;
 
-	DBG_LOG("D21 / csc_app_recv_buf / Called");
+	DBG_LOG("csc_app_recv_buf / Called");
 
 	if (recv_len){
 		for (ind = 0; ind < recv_len; ind++){
@@ -93,7 +93,7 @@ static void csc_app_recv_buf(uint8_t *recv_data, uint8_t recv_len)
 /* Callback called for new data from remote device */
 static void csc_prf_report_ntf_cb(csc_report_ntf_t *report_info)
 {
-	DBG_LOG("D21 / csc_prf_report_ntf_cb / Called");
+	DBG_LOG("csc_prf_report_ntf_cb / Called");
 	
 	DBG_LOG("\r\n");
 	csc_app_recv_buf(report_info->recv_buff, report_info->recv_buff_len);
@@ -109,7 +109,7 @@ static void csc_app_send_buf(void)
 	len = sio2host_rx(&buff, 1);
 	if (len){
 
-		DBG_LOG("D21 / csc_app_send_buf / Called / len %d", len);
+		DBG_LOG("csc_app_send_buf / Called / len %d", len);
 		
 		for (ind = 0; ind < len; ind++){
 			if(buff != ENTER_BUTTON_PRESS){
@@ -135,13 +135,7 @@ static void csc_app_send_buf(void)
 bool app_exec = true;
 int main(void )
 {
-#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-#elif SAM0
-	system_init();
-#endif
+	platform_driver_init();
 	
 	/* Initialize serial console */
 	sio2host_init();
@@ -157,8 +151,8 @@ int main(void )
 	/* Register the notification handler */
 	notify_recv_ntf_handler(csc_prf_report_ntf_cb);
 
-	DBG_LOG("D21 / while / Start");
-	
+	acquire_sleep_lock();
+
 	/* Capturing the events  */
 	while(app_exec){
 		ble_event_task();

@@ -129,16 +129,10 @@ static void user_callback_handler(void)
  */
 int main(void)
 {
-	#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-	#elif SAM0
-	system_init();
-	#endif
-	
 	timer_interval = INIT_TIMER_INTERVAL;
-	
+
+	platform_driver_init();
+
 	/* Initialize serial console */
 	serial_console_init();
 

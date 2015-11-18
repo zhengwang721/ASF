@@ -224,19 +224,9 @@ static void button_cb(void)
 
 int main(void)
 {
-	
-	#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-	#elif SAM0
-	system_init();
-	#endif
+	platform_driver_init();
 	
 	init_var();
-	
-	/* Initialize the button */
-	//button_init();
 	
 	/* Initialize serial console */
 	serial_console_init();
@@ -252,7 +242,7 @@ int main(void)
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 	
-	 /* initialize the button & LED */
+	/* initialize the button & LED */
 	button_init(button_cb);
 	led_init();
 	

@@ -178,14 +178,6 @@ static void button_cb(void)
 */
 int main(void)
 {
-	#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-	#elif SAM0
-	system_init();
-	#endif
-	
 	app_exec = true;
 	pxp_led_state = true;
 	timer_interval = INIT_TIMER_INTERVAL;
@@ -207,7 +199,6 @@ int main(void)
 	ble_device_init(NULL);
 	
 	/* initialize the button & LED */
-	/* Caution, button_init func has to be called after ble_device_init func */
 	button_init(button_cb);
 	led_init();
 	

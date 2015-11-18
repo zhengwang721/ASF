@@ -815,13 +815,7 @@ static status_t brd_adv_init(void)
 
 int main(void)
 {
-	#if SAMG55
-	/* Initialize the SAM system. */
-	sysclk_init();
-	board_init();
-	#elif SAM0
-	system_init();
-	#endif
+	platform_driver_init();
 
 	/* Initialize serial console */
 	serial_console_init();
