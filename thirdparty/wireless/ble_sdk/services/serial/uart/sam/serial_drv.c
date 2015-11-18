@@ -86,12 +86,9 @@ pdc_packet_t ble_usart_rx_pkt;
 uint8_t pdc_rx_buffer[BLE_MAX_RX_PAYLOAD_SIZE];
 //uint8_t pdc_rx_next_buffer[BLE_MAX_RX_PAYLOAD_SIZE]; //Improved with Next Buffer chain
 
-void ble_pdc_send_data(uint8_t *buf, uint16_t len);
-static uint8_t configure_primary_uart(void);
-
 extern volatile enum tenuTransportState slave_state;
 
-void ble_pdc_send_data(uint8_t *buf, uint16_t len)
+static inline void ble_pdc_send_data(uint8_t *buf, uint16_t len)
 {	
 	/* Initialize the Tx buffers for data transfer */
 	ble_usart_tx_pkt.ul_addr = (uint32_t)buf;
@@ -103,7 +100,7 @@ void ble_pdc_send_data(uint8_t *buf, uint16_t len)
 	usart_enable_interrupt(BLE_UART, US_IER_TXBUFE);
 }
 
-static uint8_t configure_primary_uart(void)
+static inline uint8_t configure_primary_uart(void)
 { 
   	/* Usart async mode 8 bits transfer test */
   	sam_usart_opt_t usart_settings = {
@@ -116,10 +113,9 @@ static uint8_t configure_primary_uart(void)
 	  	.irda_filter  = 0
   	};
   	
+	/* Configure the UART Tx and Rx Pin Modes */
   	ioport_set_pin_peripheral_mode(USART0_RXD_GPIO, USART0_RXD_FLAGS);
   	ioport_set_pin_peripheral_mode(USART0_TXD_GPIO, USART0_TXD_FLAGS);
-  	ioport_set_pin_peripheral_mode(USART0_CTS_GPIO, USART0_CTS_FLAGS);
-  	ioport_set_pin_peripheral_mode(USART0_RTS_GPIO, USART0_RTS_FLAGS);
   	
   	/* Clock Configuration for UART */
   	sysclk_enable_peripheral_clock(BLE_UART_ID);
@@ -135,12 +131,17 @@ static uint8_t configure_primary_uart(void)
   	/* Enable the receiver and transmitter. */
   	usart_enable_tx(BLE_UART);
   	usart_enable_rx(BLE_UART);
+	  
+	usart_set_rx_timeout(BLE_UART, RX_TIMEOUT_VALUE);
+	usart_start_rx_timeout(BLE_UART);
+	
+	usart_set_sleepwalking(BLE_UART, 0x04, true, false, 0x5A);
   	
   	ble_usart_pdc = usart_get_pdc_base(BLE_UART);
   	
   	/* Initialize the Rx buffers for data receive */
   	ble_usart_rx_pkt.ul_addr = (uint32_t)pdc_rx_buffer;
-  	ble_usart_rx_pkt.ul_size = 1; //Initial BLE Frame size- Sync Packet size
+  	ble_usart_rx_pkt.ul_size = BLE_MAX_RX_PAYLOAD_SIZE;
   	
   	/* Configure the PDC for data receive */
   	pdc_rx_init(ble_usart_pdc, &ble_usart_rx_pkt, NULL);
@@ -148,7 +149,7 @@ static uint8_t configure_primary_uart(void)
   	pdc_enable_transfer(ble_usart_pdc, PERIPH_PTCR_RXTEN | PERIPH_PTSR_TXTEN);
   	
   	/* Enable UART IRQ */
-  	usart_enable_interrupt(BLE_UART, US_IER_RXBUFF | US_IER_OVRE);
+  	usart_enable_interrupt(BLE_UART, US_IER_RXBUFF | US_IER_OVRE | US_IER_TIMEOUT | US_IER_CMP);
   	
   	ser_fifo_init(&ble_usart_rx_fifo, ble_usart_rx_buf, BLE_MAX_RX_PAYLOAD_SIZE);
 
@@ -177,61 +178,75 @@ void configure_usart_after_patch(void)
 		.irda_filter  = 0
 	};
 	
+	/* Configure the UART RTS and CTS Pin Modes */
+	ioport_set_pin_peripheral_mode(USART0_CTS_GPIO, USART0_CTS_FLAGS);
+  	ioport_set_pin_peripheral_mode(USART0_RTS_GPIO, USART0_RTS_FLAGS);
+	  
 	/* Configure USART with Flow Control */
 	usart_init_hw_handshaking(BLE_UART, &usart_settings,
 	sysclk_get_peripheral_hz());
 }
 
-static void pdc_update_rx_transfer(void)
+static inline void pdc_update_rx_transfer(void)
 {
-	if (slave_state == PLATFORM_TRANSPORT_SLAVE_CONNECTED)
-	{
-		static bool received_header = true; //Set it true for expecting first header
-		if (received_header)
-		{
-			uint16_t len;
-			uint8_t *buf_ptr;
-			buf_ptr = (uint8_t *)ble_usart_rx_pkt.ul_addr;
-			len = (buf_ptr[7] | (buf_ptr[8] << 8));
-			if (len)
-			{
-				ble_usart_rx_pkt.ul_size = len;
-				received_header = false;
-			}
-			else
-			{
-				/* No Payload. Ready for next header transfer */
-				ble_usart_rx_pkt.ul_size = BLE_SERIAL_HEADER_LEN;
-			}			 
-		}
-		else
-		{
-			/* Received Payload, Subsequent Frame will start with header */
-			ble_usart_rx_pkt.ul_size = BLE_SERIAL_HEADER_LEN;
-			received_header = true;			
-		}
-	}
-	else
-	{
-		/* Non-Standard Header transfer */
-		ble_usart_rx_pkt.ul_size = 1;
-	}
-	
+	/* Initialize the Rx buffers for data receive */
+  	ble_usart_rx_pkt.ul_addr = (uint32_t)pdc_rx_buffer;
+  	ble_usart_rx_pkt.ul_size = BLE_MAX_RX_PAYLOAD_SIZE;
+	  
 	/* Configure the PDC for data receive */
 	pdc_rx_init(ble_usart_pdc, &ble_usart_rx_pkt, NULL);
 }
 
+static inline uint32_t usart_is_rx_timeout(Usart *p_usart)
+{
+	return (p_usart->US_CSR & US_CSR_TIMEOUT) > 0;
+}
+
+static inline uint32_t usart_is_rx_buffer_overrun(Usart *p_usart)
+{
+	return (p_usart->US_CSR & US_CSR_OVRE) > 0;
+}
+
+static inline uint32_t usart_is_rx_compare(Usart *p_usart)
+{
+	return (p_usart->US_CSR & US_CSR_CMP) > 0;
+}
+
+
 static inline void ble_pdc_uart_handler(void)
 {
-	if((BLE_UART->US_CSR & US_IER_OVRE) == 0)
+	if(!usart_is_rx_buffer_overrun(BLE_UART))
 	{
-		if (usart_is_rx_buf_full(BLE_UART))
+		uint32_t timeout = usart_is_rx_timeout(BLE_UART);
+		if (usart_is_rx_buf_full(BLE_UART) || timeout)
 		{
+			uint16_t rx_count;
 			/* Disable the Receive Transfer before read */
 			pdc_disable_transfer(ble_usart_pdc, PERIPH_PTCR_RXTDIS);
-			platform_dma_process_rxdata((uint8_t *)ble_usart_rx_pkt.ul_addr, ble_usart_rx_pkt.ul_size);
+			rx_count = (ble_usart_rx_pkt.ul_size - pdc_read_rx_counter(ble_usart_pdc));
+			if(rx_count)
+			{
+				platform_dma_process_rxdata((uint8_t *)ble_usart_rx_pkt.ul_addr, rx_count);
+				#if SERIAL_DRV_RX_CB_ENABLE
+					SERIAL_DRV_RX_CB();
+				#endif
+			}			
 			pdc_update_rx_transfer();
 			pdc_enable_transfer(ble_usart_pdc, PERIPH_PTCR_RXTEN);
+			
+			if (timeout)
+			{
+				/* Clear the Rx Frame Timeout Interrupt */
+				usart_start_rx_timeout(BLE_UART);
+			}						
+		}
+		
+		if(usart_is_rx_compare(BLE_UART))
+		{
+			usart_reset_status(BLE_UART);
+			#if SERIAL_DRV_RX_CB_ENABLE
+				SERIAL_DRV_RX_CB();
+			#endif
 		}
 		
 		if ((usart_is_tx_buf_empty(BLE_UART))  && (!ble_usart_tx_cmpl))
@@ -252,15 +267,10 @@ void BLE_UART_Handler(void)
 }
 
 static inline void ble_pdc_serial_drv_send(uint8_t *data, uint16_t len)
-{
-	while(ble_usart_tx_cmpl == false);
-	
-	//Set Tx Data write complete to false
-	ble_usart_tx_cmpl = false;
-	
+{	
 	ble_pdc_send_data(data, len);
 	
-	//Wait for Tx Data write complete
+	/* Wait for Tx Data write complete */
 	while(ble_usart_tx_cmpl == false);
 	
 	if(ble_usart_tx_cmpl)
@@ -277,9 +287,15 @@ uint16_t serial_drv_send(uint8_t* data, uint16_t len)
 	return STATUS_OK;
 }
 
+uint32_t platform_set_serial_drv_tx_status(void)
+{
+	/* Set Tx Data write complete to false */
+	ble_usart_tx_cmpl = false;
+}
+
 uint32_t platform_serial_drv_tx_status(void)
 {
-	return((usart_is_tx_empty(BLE_UART) == 1) ? 0 : 1);
+	return((ble_usart_tx_cmpl == true) ? 0 : 1);
 }
 
 /* EOF */

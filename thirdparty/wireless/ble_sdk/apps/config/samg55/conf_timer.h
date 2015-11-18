@@ -43,14 +43,16 @@
 #ifndef CONF_TIMER_H_INCLUDED
 #define CONF_TIMER_H_INCLUDED
 
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     0
+#define BLE_APP_TIMER							(TC0)
+#define BLE_APP_TIMER_CHANNEL_ID				0
 
-#define DEF_1MHZ			(1000000)
-#define DEF_120MHz			(120000000)
-#define TIMER_OVF_COUNT_1SEC	(DEF_120MHz/(128*65535))
+#define DEF_1MHZ								(1000000)
+#define DEF_120MHz								(120000000)
+#define TIMER_OVF_COUNT_1SEC					(DEF_120MHz/(128*65535))
 
-#define BUS_TIMER_CHANNEL_ID     1
-#define TIMER_OVF_COUNT_1MSEC	(DEF_120MHz/(128*937))
+#define BUS_TIMER								(TC0)
+#define BUS_TIMER_ID							(ID_TC1)
+#define BUS_TIMER_CHANNEL_ID					1
+#define TIMER_OVF_COUNT_1MSEC					(DEF_120MHz/(128*937))
 
 #endif

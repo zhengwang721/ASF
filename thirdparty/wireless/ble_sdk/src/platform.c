@@ -72,9 +72,15 @@ volatile uint8_t data_received = 0;			//	RX data received flag
 
 volatile int init_done = 0;
 
+volatile bool btlc1000_sleep_state = true;
+
 #if UART_FLOW_CONTROL_ENABLED == true
 /* Enable Hardware Flow-control on BTLC1000 */
 enum hw_flow_control ble_hardware_fc = ENABLE_HW_FC_PATCH;
+#if SAMG55
+#warning "EXT1 PIN6 is configured as BTLC1000 Wakeup Pin. \
+Inorder to Use USART0 Hardware Flowcontrol, Move the BTLC1000 Wakeup Pin to one of the available GPIO Pin"
+#endif
 #else
 /* Disable Hardware Flow-control on BTLC1000 */
 enum hw_flow_control ble_hardware_fc = DISABLE_HW_FC_PATCH;
@@ -102,16 +108,18 @@ void bus_activity_timer_callback(void)
 		{
 			platform_reset_bus_timer();
 		}
+		btlc1000_sleep_state = false;
 	}
 }
 
 void check_and_assert_ext_wakeup(uint8_t mode)
 {
-	if ((init_done))
+	if (init_done)
 	{
 		if (!ble_wakeup_pin_level())
 		{
-			ble_wakeup_pin_set_high();
+			platform_wakeup();
+			btlc1000_sleep_state = true;
 			if (mode == TX_MODE)
 			{
 				delay_ms(BTLC1000_WAKEUP_DELAY);
@@ -120,6 +128,11 @@ void check_and_assert_ext_wakeup(uint8_t mode)
 		}
 		else
 		{
+			if ((mode == TX_MODE) && (btlc1000_sleep_state))
+			{
+				delay_ms(BTLC1000_WAKEUP_DELAY);
+			}
+						
 			platform_reset_bus_timer();
 		}
 	}
@@ -128,13 +141,17 @@ void check_and_assert_ext_wakeup(uint8_t mode)
 at_ble_status_t platform_init(void* platform_params)
 {	
 	platform_config	*cfg = (platform_config *)platform_params;
-	ble_configure_control_pin();
-	platform_configure_timer(bus_activity_timer_callback);
-	delay_ms(BTLC1000_STARTUP_DELAY);
 	
 	if (cfg->bus_type == AT_BLE_UART)
 	{
 		configure_serial_drv();
+		
+		ble_configure_control_pin();
+		
+		platform_configure_timer(bus_activity_timer_callback);
+		
+		delay_ms(BTLC1000_STARTUP_DELAY);
+		
 		bus_type = AT_BLE_UART;
 		return AT_BLE_SUCCESS;
 	}
@@ -165,9 +182,11 @@ at_ble_status_t platform_interface_send(uint8_t if_type, uint8_t* data, uint32_t
 		
 	}
 #endif
-
+	platform_enter_critical_section();
+	platform_set_serial_drv_tx_status();
+	platform_leave_critical_section();
 	check_and_assert_ext_wakeup(TX_MODE);
-	
+
 	serial_drv_send(data, len);
 	return AT_BLE_SUCCESS;
 }
@@ -384,9 +403,7 @@ void serial_tx_callback(void)
 
  void platform_wakeup(void)
  {
-	#if defined ENABLE_POWER_SAVE
 	 ble_wakeup_pin_set_high();
-   #endif
  }
  
  void platform_set_sleep(void)

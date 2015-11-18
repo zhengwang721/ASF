@@ -66,6 +66,9 @@
 /* Configuration for console uart IRQ handler */
 #define BLE_UART_Handler    FLEXCOM0_Handler
 
+/* This value used to get Rx Timeout at end of Rx frame @115200 3.5Character Timeout used */
+#define RX_TIMEOUT_VALUE	35
+
 /** Baudrate setting */
 #define CONF_UART_BAUDRATE   (115200UL)
 /** Character length setting */
@@ -129,11 +132,15 @@ static inline void ble_configure_control_pin(void)
 	/* Configure control pins as output */
 	ioport_init();
 	
+	ioport_reset_pin_mode(BTLC1000_WAKEUP_PIN);
+	ioport_enable_pin(BTLC1000_WAKEUP_PIN);
 	ioport_set_pin_dir(BTLC1000_WAKEUP_PIN, IOPORT_DIR_OUTPUT);
 	
 	/* set wakeup pin to low */
 	ble_wakeup_pin_set_high();
-	
+
+	ioport_reset_pin_mode(BTLC1000_CHIP_ENABLE_PIN);
+	ioport_enable_pin(BTLC1000_CHIP_ENABLE_PIN);
 	ioport_set_pin_dir(BTLC1000_CHIP_ENABLE_PIN, IOPORT_DIR_OUTPUT);
 	
 	/* set chip enable to low */
