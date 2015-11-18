@@ -198,6 +198,11 @@ static void serial_drv_write_cb(struct usart_module *const usart_module)
 	}		
 }
 
+uint32_t platform_set_serial_drv_tx_status(void)
+{
+	return true;
+}
+
 uint32_t platform_serial_drv_tx_status(void)
 {
 	return(usart_get_job_status(&usart_instance, USART_TRANSCEIVER_TX));
