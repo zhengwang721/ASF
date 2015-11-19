@@ -44,7 +44,6 @@
 #ifndef CONF_SERIALDRV_H_INCLUDED
 #define CONF_SERIALDRV_H_INCLUDED
 
-#if UART_FLOW_CONTROL_ENABLED == true
 /* BLE UART Configuration details */
 #define CONF_BLE_USART_MODULE		EXT1_UART_MODULE
 #define CONF_BLE_MUX_SETTING		EXT1_UART_SERCOM_MUX_SETTING
@@ -71,27 +70,6 @@
 
 #define BLE_UART_RTS_PIN			(EXT1_PIN_16)
 #define BLE_UART_CTS_PIN			(EXT1_PIN_18)
-
-
-
-#else
-/* BLE UART Configuration details */
-/* BLE UART Configuration details */
-#define CONF_BLE_USART_MODULE		EXT1_UART_MODULE
-#define CONF_BLE_MUX_SETTING		EXT1_UART_SERCOM_MUX_SETTING
-#define CONF_BLE_PINMUX_PAD0		EXT1_UART_SERCOM_PINMUX_PAD0
-#define CONF_BLE_PINMUX_PAD1		EXT1_UART_SERCOM_PINMUX_PAD1
-#define CONF_BLE_PINMUX_PAD2		EXT1_UART_SERCOM_PINMUX_PAD2
-#define CONF_BLE_PINMUX_PAD3		EXT1_UART_SERCOM_PINMUX_PAD3
-#define CONF_BLE_BAUDRATE			115200
-#define CONF_BLE_UART_CLOCK			GCLK_GENERATOR_0
-
-/* BTLC1000 Wakeup Pin */
-#define BTLC1000_WAKEUP_PIN			(EXT1_PIN_6)
-/* BTLC1000 Chip Enable Pin */
-#define BTLC1000_CHIP_ENABLE_PIN	(EXT1_PIN_4)
-#endif //UART_FLOW_CONTROL_ENABLED
-
 
 /* BTLC1000 50ms Reset Duration */
 #define BTLC1000_RESET_MS			(50)
@@ -174,7 +152,7 @@ static inline void ble_configure_control_pin(void)
 	
 	/* set chip enable to high */
 	ble_enable_pin_set_high();
-#if UART_FLOW_CONTROL_ENABLED == true
+#if (UART_FLOWCONTROL_6WIRE_MODE == true) || (UART_FLOWCONTROL_4WIRE_MODE == true)
 	port_get_config_defaults(&pin_conf);
 	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
 	pin_conf.input_pull = PORT_PIN_PULL_UP;

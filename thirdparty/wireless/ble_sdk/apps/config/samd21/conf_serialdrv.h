@@ -71,6 +71,7 @@
 #define BLE_UART_RTS_PIN			(EXT1_PIN_16)
 #define BLE_UART_CTS_PIN			(EXT1_PIN_18)
 
+
 /* BTLC1000 50ms Reset Duration */
 #define BTLC1000_RESET_MS			(50)
 
@@ -153,7 +154,7 @@ static inline void ble_configure_control_pin(void)
 	
 	/* set chip enable to high */
 	ble_enable_pin_set_high();
-#if UART_FLOW_CONTROL_ENABLED == true
+#if (UART_FLOWCONTROL_6WIRE_MODE == true) || (UART_FLOWCONTROL_4WIRE_MODE == true)
 	port_get_config_defaults(&pin_conf);
 	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
 	pin_conf.input_pull = PORT_PIN_PULL_UP;
@@ -162,7 +163,7 @@ static inline void ble_configure_control_pin(void)
 	port_get_config_defaults(&pin_conf);
 	pin_conf.direction  = PORT_PIN_DIR_INPUT;
 	pin_conf.input_pull = PORT_PIN_PULL_UP;
-	port_pin_set_config(BLE_UART_CTS_PIN, &pin_conf);
+	port_pin_set_config(BLE_UART_CTS_PIN, &pin_conf);	
 #else
 	#warning "UART Flow-control Disabled in the Project"
 #endif

@@ -44,12 +44,18 @@
 #ifndef CONF_SERIALDRV_H_INCLUDED
 #define CONF_SERIALDRV_H_INCLUDED
 
-#if UART_FLOWCONTROL_4WIRE_MODE == true
+#if ((UART_FLOWCONTROL_4WIRE_MODE == true) || (UART_FLOWCONTROL_6WIRE_MODE == true))
 /* BTLC1000 Wakeup Pin */
 #define BTLC1000_WAKEUP_PIN			(EXT1_PIN_4)
 
 /* BTLC1000 Chip Enable Pin */
 #define BTLC1000_CHIP_ENABLE_PIN	(EXT1_PIN_10)
+
+#if SAMG55
+#warning "EXT1 PIN6 is configured as BTLC1000 Wakeup Pin. \
+Inorder to Use USART0 Hardware Flowcontrol, BTLC1000 Wakeup \
+Pin moved to EXT1 PIN 4 and BTLC1000 Chip Enable Pin moved to ETX1 PIN10"
+#endif
 #else
 /* BTLC1000 Wakeup Pin */
 #define BTLC1000_WAKEUP_PIN			(EXT1_PIN_6)
@@ -73,6 +79,14 @@
 #define BLE_UART_IRQn		FLEXCOM0_IRQn
 /* Configuration for console uart IRQ handler */
 #define BLE_UART_Handler    FLEXCOM0_Handler
+
+/** UART Flow Control Interface */
+#define BLE_PATCH_UART            USART5
+#define BLE_PATCH_UART_ID	      ID_FLEXCOM5
+#define BLE_PATCH_USART_FLEXCOM   FLEXCOM5
+#define BLE_PATCH_UART_IRQn       FLEXCOM5_IRQn
+/* Configuration for console uart IRQ handler */
+#define BLE_PATCH_UART_Handler    FLEXCOM5_Handler
 
 /* This value used to get Rx Timeout at end of Rx frame @115200 3.5Character Timeout used */
 #define RX_TIMEOUT_VALUE	35

@@ -44,11 +44,25 @@
 #ifndef CONF_SERIALDRV_H_INCLUDED
 #define CONF_SERIALDRV_H_INCLUDED
 
+#if ((UART_FLOWCONTROL_4WIRE_MODE == true) || (UART_FLOWCONTROL_6WIRE_MODE == true))
+/* BTLC1000 Wakeup Pin */
+#define BTLC1000_WAKEUP_PIN			(EXT1_PIN_4)
+
+/* BTLC1000 Chip Enable Pin */
+#define BTLC1000_CHIP_ENABLE_PIN	(EXT1_PIN_10)
+
+#if SAMG55
+#warning "EXT1 PIN6 is configured as BTLC1000 Wakeup Pin. \
+Inorder to Use USART0 Hardware Flowcontrol, BTLC1000 Wakeup \
+Pin moved to EXT1 PIN 4 and BTLC1000 Chip Enable Pin moved to ETX1 PIN10"
+#endif
+#else
 /* BTLC1000 Wakeup Pin */
 #define BTLC1000_WAKEUP_PIN			(EXT1_PIN_6)
 
 /* BTLC1000 Chip Enable Pin */
-#define BTLC1000_CHIP_ENABLE_PIN	(EXT1_PIN_10)
+#define BTLC1000_CHIP_ENABLE_PIN	(EXT1_PIN_4)
+#endif
 
 /* BTLC1000 50ms Reset Duration */
 #define BTLC1000_RESET_MS			(50)
@@ -65,6 +79,17 @@
 #define BLE_UART_IRQn		FLEXCOM0_IRQn
 /* Configuration for console uart IRQ handler */
 #define BLE_UART_Handler    FLEXCOM0_Handler
+
+/** UART Flow Control Interface */
+#define BLE_PATCH_UART            USART5
+#define BLE_PATCH_UART_ID	      ID_FLEXCOM5
+#define BLE_PATCH_USART_FLEXCOM   FLEXCOM5
+#define BLE_PATCH_UART_IRQn       FLEXCOM5_IRQn
+/* Configuration for console uart IRQ handler */
+#define BLE_PATCH_UART_Handler    FLEXCOM5_Handler
+
+/* This value used to get Rx Timeout at end of Rx frame @115200 3.5Character Timeout used */
+#define RX_TIMEOUT_VALUE	35
 
 /** Baudrate setting */
 #define CONF_UART_BAUDRATE   (115200UL)
@@ -83,8 +108,8 @@ void serial_tx_callback(void);
 #define SERIAL_DRV_TX_CB_ENABLE  true
 #define SERIAL_DRV_RX_CB_ENABLE  true
 
-#define BLE_MAX_TX_PAYLOAD_SIZE 512
-#define BLE_MAX_RX_PAYLOAD_SIZE 512
+#define BLE_MAX_RX_PAYLOAD_SIZE 1024
+#define BLE_MAX_TX_PAYLOAD_SIZE 1024
 
 /* Set BLE Wakeup pin to be low */
 static inline bool ble_wakeup_pin_level(void)
@@ -129,11 +154,15 @@ static inline void ble_configure_control_pin(void)
 	/* Configure control pins as output */
 	ioport_init();
 	
+	ioport_reset_pin_mode(BTLC1000_WAKEUP_PIN);
+	ioport_enable_pin(BTLC1000_WAKEUP_PIN);
 	ioport_set_pin_dir(BTLC1000_WAKEUP_PIN, IOPORT_DIR_OUTPUT);
 	
 	/* set wakeup pin to low */
 	ble_wakeup_pin_set_high();
-	
+
+	ioport_reset_pin_mode(BTLC1000_CHIP_ENABLE_PIN);
+	ioport_enable_pin(BTLC1000_CHIP_ENABLE_PIN);
 	ioport_set_pin_dir(BTLC1000_CHIP_ENABLE_PIN, IOPORT_DIR_OUTPUT);
 	
 	/* set chip enable to low */
@@ -143,24 +172,7 @@ static inline void ble_configure_control_pin(void)
 	delay_ms(BTLC1000_RESET_MS);
 	
 	/* set chip enable to high */
-	ble_enable_pin_set_high();	
-}
-
-static inline void ble_reset(void)
-{
-	/* BTLC1000 Reset Sequence @Todo */
 	ble_enable_pin_set_high();
-	ble_wakeup_pin_set_high();
-	delay_ms(BTLC1000_RESET_MS);
-	
-	ble_enable_pin_set_low();
-	ble_wakeup_pin_set_low();
-	delay_ms(BTLC1000_RESET_MS);
-	
-	ble_enable_pin_set_high();
-	ble_wakeup_pin_set_high();
-	delay_ms(BTLC1000_RESET_MS);
 }
-
 
 #endif /* CONF_SERIALDRV_H_INCLUDED */

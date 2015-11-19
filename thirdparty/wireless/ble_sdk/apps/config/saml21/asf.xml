@@ -4,7 +4,8 @@
 		SAML21 Application Configuration for BLE stack
 		</info>
 		<build type="include-path" value="."/>
-		<build type="define" name="UART_FLOW_CONTROL_ENABLED" value="true"/>
+		<build type="define" name="UART_FLOWCONTROL_4WIRE_MODE" value="false"/>
+		<build type="define" name="UART_FLOWCONTROL_6WIRE_MODE" value="true"/>
 		<device-support-alias value="ble_stack_lib_support"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>

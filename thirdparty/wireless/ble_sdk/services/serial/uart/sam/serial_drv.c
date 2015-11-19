@@ -55,6 +55,10 @@ volatile bool ble_usart_tx_cmpl = true;
 ser_fifo_desc_t ble_usart_rx_fifo;
 uint8_t ble_usart_rx_buf[BLE_MAX_RX_PAYLOAD_SIZE];
 
+static volatile uint16_t ble_txbyte_count = 0;
+static volatile uint8_t *ble_txbuf_ptr = NULL;
+uint16_t g_txdata;
+
 extern void platform_pdc_process_rxdata(uint8_t *buf, uint16_t len);
 extern void platform_process_rxdata(uint32_t t_rx_data);
 
@@ -85,6 +89,7 @@ pdc_packet_t ble_usart_tx_pkt;
 pdc_packet_t ble_usart_rx_pkt;
 uint8_t pdc_rx_buffer[BLE_MAX_RX_PAYLOAD_SIZE];
 //uint8_t pdc_rx_next_buffer[BLE_MAX_RX_PAYLOAD_SIZE]; //Improved with Next Buffer chain
+volatile bool pdc_uart_enabled = false;
 
 extern volatile enum tenuTransportState slave_state;
 
@@ -168,12 +173,59 @@ static inline uint8_t configure_primary_uart(void)
   	/* Enable UART interrupt */
   	NVIC_EnableIRQ(BLE_UART_IRQn);
 	  
+	pdc_uart_enabled = true;
+	  
 	return STATUS_OK;
+}
+
+static inline uint8_t configure_patch_usart(void)
+{
+	 /* Usart async mode 8 bits transfer test */
+	 sam_usart_opt_t usart_settings = {
+		 .baudrate     = CONF_UART_BAUDRATE,
+		 .char_length  = US_MR_CHRL_8_BIT,
+		 .parity_type  = US_MR_PAR_NO,
+		 .stop_bits    = US_MR_NBSTOP_1_BIT,
+		 .channel_mode = US_MR_CHMODE_NORMAL,
+		 /* This field is only used in IrDA mode. */
+		 .irda_filter  = 0
+	 };
+	 
+	 ioport_set_pin_peripheral_mode(EXT1_PIN_15, IOPORT_MODE_MUX_B);
+	 ioport_set_pin_peripheral_mode(EXT1_PIN_16, IOPORT_MODE_MUX_B);
+	 ioport_set_pin_peripheral_mode(EXT1_PIN_17, IOPORT_MODE_MUX_B);
+	 ioport_set_pin_peripheral_mode(EXT1_PIN_18, IOPORT_MODE_MUX_B);
+
+	 /* Enable the peripheral and set USART mode. */
+	 flexcom_enable(BLE_PATCH_USART_FLEXCOM);
+	 flexcom_set_opmode(BLE_PATCH_USART_FLEXCOM, FLEXCOM_USART);
+
+	 /* Configure USART */
+	 usart_init_rs232(BLE_PATCH_UART, &usart_settings,
+	 sysclk_get_peripheral_hz());
+	 
+	 /* Enable the receiver and transmitter. */
+	 usart_enable_tx(BLE_PATCH_UART);
+	 usart_enable_rx(BLE_PATCH_UART);
+
+	 /* Enable UART IRQ */
+	 usart_enable_interrupt(BLE_PATCH_UART, US_IER_RXRDY);
+	 
+	 ser_fifo_init(&ble_usart_rx_fifo, ble_usart_rx_buf, BLE_MAX_RX_PAYLOAD_SIZE);
+
+	 /* Enable UART interrupt */
+	 NVIC_EnableIRQ(BLE_PATCH_UART_IRQn);
+
+	 return STATUS_OK;
 }
 
 uint8_t configure_serial_drv(void)
 {
+#if UART_FLOWCONTROL_6WIRE_MODE == true
+	configure_patch_usart();
+#else
 	configure_primary_uart();
+#endif
 	return STATUS_OK;
 }
 
@@ -189,6 +241,10 @@ void configure_usart_after_patch(void)
 		/* This field is only used in IrDA mode. */
 		.irda_filter  = 0
 	};
+	
+#if UART_FLOWCONTROL_6WIRE_MODE == true
+	configure_primary_uart();
+#endif
 	
 	/* Configure the UART RTS and CTS Pin Modes */
 	ioport_set_pin_peripheral_mode(USART0_CTS_GPIO, USART0_CTS_FLAGS);
@@ -273,6 +329,37 @@ static inline void ble_pdc_uart_handler(void)
 	}	
 }
 
+void BLE_PATCH_UART_Handler(void)
+{
+	if (usart_is_rx_ready(BLE_PATCH_UART))
+	{
+		uint32_t rx_data = 0;
+		if (usart_read(BLE_PATCH_UART, &rx_data) == 0)
+		{
+			platform_process_rxdata(rx_data);
+		}
+	}
+	
+	if ((usart_is_tx_empty(BLE_PATCH_UART))  && (!ble_usart_tx_cmpl))
+	{
+		/* USART Tx callback */
+		if(ble_txbyte_count)
+		{
+			g_txdata = *ble_txbuf_ptr;
+			usart_putchar(BLE_PATCH_UART, g_txdata);
+			if(--ble_txbyte_count)
+			{
+				++ble_txbuf_ptr;
+			}
+		}
+		else
+		{
+			usart_disable_interrupt(BLE_PATCH_UART, US_IER_TXEMPTY);
+			ble_usart_tx_cmpl  = true;
+		}
+	}
+}
+
 void BLE_UART_Handler(void)
 {
 	ble_pdc_uart_handler();
@@ -293,9 +380,46 @@ static inline void ble_pdc_serial_drv_send(uint8_t *data, uint16_t len)
 	}
 }
 
+static inline void ble_patch_serial_drv_send(uint8_t *data, uint16_t len)
+{
+  platform_enter_critical_section();
+  ble_txbuf_ptr = data;
+  ble_txbyte_count = len;
+  platform_leave_critical_section();
+  
+  if(ble_txbyte_count)
+  {
+	  g_txdata = *ble_txbuf_ptr;
+	  usart_putchar(BLE_PATCH_UART, g_txdata);
+	  //Enable the USART Empty Interrupt
+	  usart_enable_interrupt(BLE_PATCH_UART, US_IER_TXEMPTY);
+	  if(--ble_txbyte_count)
+	  {
+		  ++ble_txbuf_ptr;
+	  }
+	  /* Wait for ongoing transmission complete */
+	  while(ble_usart_tx_cmpl == true);
+	  
+	  if(ble_usart_tx_cmpl)
+	  {
+		  #if SERIAL_DRV_TX_CB_ENABLE
+		  SERIAL_DRV_TX_CB();
+		  #endif
+	  }
+  }  
+}
+
 uint16_t serial_drv_send(uint8_t* data, uint16_t len)
 {
-	ble_pdc_serial_drv_send(data, len);
+	if (pdc_uart_enabled)
+	{
+		ble_pdc_serial_drv_send(data, len);
+	} 
+	else
+	{
+		ble_patch_serial_drv_send(data, len);
+	}
+	
 	return STATUS_OK;
 }
 

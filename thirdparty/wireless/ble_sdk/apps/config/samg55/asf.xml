@@ -4,9 +4,8 @@
 		SAMG55 Application Configuration for BLE stack
 		</info>
 		<build type="include-path" value="."/>
-		<build type="define" name="UART_FLOW_CONTROL_ENABLED" value="false"/>
 		<build type="define" name="UART_FLOWCONTROL_4WIRE_MODE" value="true"/>
-		<require idref="sam.drivers.pdc"/>
+		<build type="define" name="UART_FLOWCONTROL_6WIRE_MODE" value="false"/>
 		<device-support-alias value="ble_stack_lib_support"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>

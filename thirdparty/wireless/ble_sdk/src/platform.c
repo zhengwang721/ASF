@@ -76,17 +76,18 @@ volatile int init_done = 0;
 volatile bool btlc1000_sleep_state = true;
 #endif
 
-#if UART_FLOW_CONTROL_ENABLED == true
+#if UART_FLOWCONTROL_6WIRE_MODE == true
 /* Enable Hardware Flow-control on BTLC1000 */
 enum hw_flow_control ble_hardware_fc = ENABLE_HW_FC_PATCH;
-#if SAMG55
-#warning "EXT1 PIN6 is configured as BTLC1000 Wakeup Pin. \
-Inorder to Use USART0 Hardware Flowcontrol, Move the BTLC1000 Wakeup Pin to one of the available GPIO Pin"
-#endif
 #else
 /* Disable Hardware Flow-control on BTLC1000 */
 enum hw_flow_control ble_hardware_fc = DISABLE_HW_FC_PATCH;
 #endif
+
+#if ((UART_FLOWCONTROL_4WIRE_MODE == true) && (UART_FLOWCONTROL_6WIRE_MODE == true))
+#error "Invalid UART Flow Control mode Configuration. Choose only one mode"
+#endif
+
 
 //#define BLE_DBG_ENABLE
 #define DBG_LOG_BLE		DBG_LOG
@@ -152,9 +153,10 @@ at_ble_status_t platform_init(void* platform_params)
 	
 	if (cfg->bus_type == AT_BLE_UART)
 	{
-		configure_serial_drv();
 		
 		ble_configure_control_pin();
+		
+		configure_serial_drv();
 		
 		platform_configure_timer(bus_activity_timer_callback);
 		
