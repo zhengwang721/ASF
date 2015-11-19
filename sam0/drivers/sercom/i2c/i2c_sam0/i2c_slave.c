@@ -297,7 +297,6 @@ static enum status_code _i2c_slave_wait_for_bus(
 	while ((!(i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DRDY)) &&
 			(!(i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_PREC)) &&
 			(!(i2c_module->INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH))) {
-
 		/* Check timeout condition */
 		if (++timeout_counter >= module->buffer_timeout) {
 			return STATUS_ERR_TIMEOUT;
