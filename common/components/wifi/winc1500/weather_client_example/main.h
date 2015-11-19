@@ -58,16 +58,16 @@ extern "C" {
 
 /** Send buffer of TCP socket. */
 #define MAIN_PREFIX_BUFFER              "GET /data/2.5/weather?q="
-#define MAIN_POST_BUFFER                "&mode=xml&units=metric HTTP/1.1\r\nHost: api.openweathermap.org\r\nAccept: */*\r\n\r\n"
+#define MAIN_POST_BUFFER                "&appid=c592e14137c3471fa9627b44f6649db4&mode=xml&units=metric HTTP/1.1\r\nHost: api.openweathermap.org\r\nAccept: */*\r\n\r\n"
 
 /** Weather information provider server. */
-#define MAIN_WEATHER_SERVER_NAME        "openweathermap.org"
+#define MAIN_WEATHER_SERVER_NAME        "api.openweathermap.org"
 
 /** Input City Name. */
-#define MAIN_CITY_NAME                  "seoul&appid=ebea1368f9a2bdd172f7115ff8d0371d"
+#define MAIN_CITY_NAME                  "paris"
 
 /** Receive buffer size. */
-#define MAIN_WIFI_M2M_BUFFER_SIZE       1024
+#define MAIN_WIFI_M2M_BUFFER_SIZE       1400
 
 #define MAIN_M2M_AP_SEC                  M2M_WIFI_SEC_OPEN
 #define MAIN_M2M_AP_WEP_KEY              "1234567890"
