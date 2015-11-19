@@ -358,8 +358,10 @@ at_ble_status_t pxp_disconnect_event_handler(void *params)
 		if((ble_check_device_state(disconnect->handle, BLE_DEVICE_DISCONNECTED) == AT_BLE_SUCCESS) ||
 		(ble_check_device_state(disconnect->handle, BLE_DEVICE_DEFAULT_IDLE) == AT_BLE_SUCCESS))
 		{
-			return pxp_monitor_start_scan();
-			
+			if (disconnect->reason == AT_BLE_LL_COMMAND_DISALLOWED) {
+				return AT_BLE_SUCCESS;
+			} else
+				pxp_monitor_start_scan();
 		}
 	}
 	else
