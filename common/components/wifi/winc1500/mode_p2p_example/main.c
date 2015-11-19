@@ -201,7 +201,7 @@ int main(void)
 	}
 
 	/* Bring up P2P mode with channel number. */
-	ret = m2m_wifi_p2p(MAIN_WLAN_CHANNEL);
+	ret = m2m_wifi_p2p(M2M_WIFI_CH_6);
 	if (M2M_SUCCESS != ret) {
 		printf("main: m2m_wifi_p2p call error!\r\n");
 		while (1) {
@@ -209,6 +209,7 @@ int main(void)
 	}
 
 	printf("P2P mode started. You can connect to %s.\r\n", (char *)MAIN_WLAN_DEVICE_NAME);
+
 	while (1) {
 		/* Handle pending events from network controller. */
 		while (m2m_wifi_handle_events(NULL) != M2M_SUCCESS) {
