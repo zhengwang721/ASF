@@ -151,7 +151,7 @@ static enum status_code _i2c_master_set_config(
 	}
 
 	/* Check and set SCL clock stretch mode. */
-	if (config->scl_stretch_only_after_ack_bit) {
+	if (config->scl_stretch_only_after_ack_bit || (config->transfer_speed == I2C_MASTER_SPEED_HIGH_SPEED)) {
 		tmp_ctrla |= SERCOM_I2CM_CTRLA_SCLSM;
 	}
 
@@ -230,7 +230,7 @@ static enum status_code _i2c_master_set_config(
 enum status_code i2c_master_init(
 		struct i2c_master_module *const module,
 		Sercom *const hw,
-		struct i2c_master_config *const config)
+		const struct i2c_master_config *const config)
 {
 	/* Sanity check arguments. */
 	Assert(module);
@@ -315,11 +315,13 @@ enum status_code i2c_master_init(
 
 	/* Set sercom module to operate in I2C master mode. */
 	i2c_module->CTRLA.reg = SERCOM_I2CM_CTRLA_MODE(0x5);
-
-	/* high-speed mode scl_stretch_only_after_ack_bit must be set to true. */
-	if (config->transfer_speed == I2C_MASTER_SPEED_HIGH_SPEED)
-	{
-		config->scl_stretch_only_after_ack_bit = true;
+		
+	/** 
+	 * I2C master to be configured in High-speed mode(CTRLA.SPEED=0x2) 
+	 * and the SCL clock stretch mode (CTRLA.SCLSM) bit set to '1'.
+	 */
+	if (config->transfer_speed == 0x2) {
+		i2c_module->CTRLA.bit.SCLSM = 1;
 	}
 
 	/* Set config and return status. */

@@ -146,7 +146,7 @@ static enum status_code _i2c_slave_set_config(
 enum status_code i2c_slave_init(
 		struct i2c_slave_module *const module,
 		Sercom *const hw,
-		struct i2c_slave_config *const config)
+		const struct i2c_slave_config *const config)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -226,12 +226,6 @@ enum status_code i2c_slave_init(
 
 	/* Set SERCOM module to operate in I2C slave mode */
 	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(0x4);
-	
-	/* high-speed mode scl_stretch_only_after_ack_bit must be set to true. */
-	if (config->transfer_speed == I2C_SLAVE_SPEED_HIGH_SPEED)
-	{
-		config->scl_stretch_only_after_ack_bit = true;
-	}
 	
 	/* Set config and return status */
 	return _i2c_slave_set_config(module, config);

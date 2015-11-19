@@ -467,7 +467,7 @@ static inline void i2c_master_get_config_defaults(
 enum status_code i2c_master_init(
 		struct i2c_master_module *const module,
 		Sercom *const hw,
-		struct i2c_master_config *const config);
+		const struct i2c_master_config *const config);
 
 /**
  * \brief Enables the I<SUP>2</SUP>C module
