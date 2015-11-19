@@ -5,6 +5,7 @@
 		</info>	
 		<require idref="thirdparty.wireless.ble_sdk.apps.custom_serial_chat"/>
 		<require idref="thirdparty.wireless.ble_sdk.apps.config.samg55"/>
+		<build type="include-path" value="../../config/samg55/"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="../../config/samg55/conf_board.h"/>
 		<build type="header-file" value="../../config/samg55/conf_clock.h"/>
