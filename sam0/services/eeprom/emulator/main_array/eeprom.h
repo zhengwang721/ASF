@@ -47,7 +47,7 @@
 #define EEPROM_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_eeprom_group SAM EEPROM Emulator Service (EEPROM)
+ * \defgroup asfdoc_sam0_eeprom_group SAM EEPROM Emulator (EEPROM) Service
  *
  * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an emulated EEPROM memory space in
  * the device's FLASH memory, for the storage and retrieval of user-application

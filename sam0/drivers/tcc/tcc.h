@@ -48,7 +48,7 @@
 #define TCC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_tcc_group SAM Timer Counter for Control Applications Driver (TCC)
+ * \defgroup asfdoc_sam0_tcc_group SAM Timer Counter for Control Applications (TCC) Driver
  *
  * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the TCC module within the device, for waveform
