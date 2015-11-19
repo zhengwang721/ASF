@@ -116,6 +116,12 @@ static inline uint8_t configure_primary_uart(void)
 	/* Configure the UART Tx and Rx Pin Modes */
   	ioport_set_pin_peripheral_mode(USART0_RXD_GPIO, USART0_RXD_FLAGS);
   	ioport_set_pin_peripheral_mode(USART0_TXD_GPIO, USART0_TXD_FLAGS);
+
+#if  UART_FLOWCONTROL_4WIRE_MODE == true
+	/* Configure the UART RTS and CTS Pin Modes */
+	ioport_set_pin_peripheral_mode(USART0_CTS_GPIO, USART0_CTS_FLAGS);
+	ioport_set_pin_peripheral_mode(USART0_RTS_GPIO, USART0_RTS_FLAGS);
+#endif
   	
   	/* Clock Configuration for UART */
   	sysclk_enable_peripheral_clock(BLE_UART_ID);
@@ -124,9 +130,15 @@ static inline uint8_t configure_primary_uart(void)
   	flexcom_enable(BLE_USART_FLEXCOM);
   	flexcom_set_opmode(BLE_USART_FLEXCOM, FLEXCOM_USART);
 
+#if  UART_FLOWCONTROL_4WIRE_MODE == true
+	/* Configure USART with Flow Control */
+	usart_init_hw_handshaking(BLE_UART, &usart_settings,
+	sysclk_get_peripheral_hz());
+#else
   	/* Configure USART */
   	usart_init_rs232(BLE_UART, &usart_settings,
   	sysclk_get_peripheral_hz());
+#endif
   	
   	/* Enable the receiver and transmitter. */
   	usart_enable_tx(BLE_UART);

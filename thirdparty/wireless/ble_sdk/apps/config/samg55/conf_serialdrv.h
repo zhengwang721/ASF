@@ -44,11 +44,19 @@
 #ifndef CONF_SERIALDRV_H_INCLUDED
 #define CONF_SERIALDRV_H_INCLUDED
 
+#if UART_FLOWCONTROL_4WIRE_MODE == true
+/* BTLC1000 Wakeup Pin */
+#define BTLC1000_WAKEUP_PIN			(EXT1_PIN_4)
+
+/* BTLC1000 Chip Enable Pin */
+#define BTLC1000_CHIP_ENABLE_PIN	(EXT1_PIN_10)
+#else
 /* BTLC1000 Wakeup Pin */
 #define BTLC1000_WAKEUP_PIN			(EXT1_PIN_6)
 
 /* BTLC1000 Chip Enable Pin */
 #define BTLC1000_CHIP_ENABLE_PIN	(EXT1_PIN_4)
+#endif
 
 /* BTLC1000 50ms Reset Duration */
 #define BTLC1000_RESET_MS			(50)
