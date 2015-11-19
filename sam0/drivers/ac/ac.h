@@ -1395,8 +1395,8 @@ static inline void ac_win_clear_status(
  *    </tr>
  *    <tr>
  *      <td>42106E</td>
- *      <td>10/2015</td>
- *      <td>Added support for SAM L21, SAM C20/C21, and SAM DAx</td>
+ *      <td>12/2015</td>
+ *      <td>Added support for SAM L21, SAM C20/C21, and SAM DA1</td>
  *    </tr>
  *    <tr>
  *      <td>42106D</td>

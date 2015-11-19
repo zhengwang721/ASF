@@ -541,8 +541,8 @@ enum i2c_transfer_direction {
  *	</tr>
  *	<tr>
  *		<td>42117E</td>
- *		<td>08/2015</td>
- *		<td>Added support for SAM L21/L22, SAM DA1 and SAM C21</td>
+ *		<td>12/2015</td>
+ *		<td>Added support for SAM L21/L22, SAM DA1, and SAM C21</td>
  *	</tr>
  *	<tr>
  *		<td>42117D</td>
@@ -575,8 +575,8 @@ enum i2c_transfer_direction {
  *	</tr>
  *	<tr>
  *		<td>42116E</td>
- *		<td>10/2015</td>
- *		<td>Added support for SAM L21/L22, SAM DA1 and SAM C21</td>
+ *		<td>12/2015</td>
+ *		<td>Added support for SAM L21/L22, SAM DA1, and SAM C21</td>
  *	</tr>
  *	<tr>
  *		<td>42116D</td>

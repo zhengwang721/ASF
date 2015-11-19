@@ -617,7 +617,7 @@ static inline void bod12_clear_detected(void)
  *	</tr>
  *	<tr>
  *		<td>42453B</td>
- *		<td>10/2015</td>
+ *		<td>12/2015</td>
  *		<td>Added support for SAM L22</td>
  *	</tr>
  *	<tr>

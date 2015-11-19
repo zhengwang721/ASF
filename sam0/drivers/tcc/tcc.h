@@ -2460,22 +2460,22 @@ enum status_code tcc_set_double_buffer_compare_values(
  *
  * <table>
  *  <tr>
- *      <th>Doc. Rev.</td>
- *      <th>Date</td>
- *      <th>Comments</td>
+ *      <th>Doc. Rev.</th>
+ *      <th>Date</th>
+ *      <th>Comments</th>
  *  </tr>
  *  <tr>
  *      <td>42256C</td>
- *      <td>10/2015</td>
- *      <td>Added support for SAM L21/L22, SAM DA1 and SAM C20/C21</td>
+ *      <td>12/2015</td>
+ *      <td>Added support for SAM L21/L22, SAM DA1, and SAM C20/C21</td>
  *  </tr>
  *  <tr>
  *      <td>42256B</td>
  *      <td>12/2014</td>
- *      <td>Added fault handling functionality;
- *          Added double buffering functionality with use case;
- *          Added timer use case;
- *          Added SAM R21/D10/D11 support</td>
+ *      <td>Added fault handling functionality.
+ *          Added double buffering functionality with use case.
+ *          Added timer use case.
+ *          Added SAM R21/D10/D11 support.</td>
  *  </tr>
  *  <tr>
  *      <td>42256A</td>

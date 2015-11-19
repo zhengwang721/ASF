@@ -684,14 +684,14 @@ void system_init(void);
  * \if DEVICE_SAMC21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>42484A</td>
- *      <td>08/2015</td>
+ *      <td>12/2015</td>
  *      <td>Initial document release.</td>
  * </tr>
  * \endif
  * \if DEVICE_SAMD21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>42120E</td>
- *      <td>11/2015</td>
+ *      <td>12/2015</td>
  *      <td>Added support for SAM DA1</td>
  * </tr>
  *  <tr>

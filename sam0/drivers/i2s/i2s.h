@@ -1392,8 +1392,8 @@ enum status_code i2s_serializer_read_buffer_wait(
  *	</tr>
  *	<tr>
  *		<td>42255B</td>
- *		<td>10/2015</td>
- *		<td>Added support for SAM DA1.</td>
+ *		<td>12/2015</td>
+ *		<td>Added support for SAM DA1</td>
  *	</tr>
  *	<tr>
  *		<td>42255A</td>

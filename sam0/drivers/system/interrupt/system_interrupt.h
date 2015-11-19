@@ -396,7 +396,7 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *	</tr>
  *	<tr>
  *		<td>42122E</td>
- *		<td>10/2015</td>
+ *		<td>12/2015</td>
  *		<td>Added support for SAM L21/L22, SAM DA1, and SAM C20/C21</td>
  *	</tr>
  *	<tr>

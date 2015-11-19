@@ -473,13 +473,13 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
  *
  * <table>
  * <tr>
- *    <th>Doc. Rev.</td>
- *    <th>Date</td>
- *    <th>Comments</td>
+ *    <th>Doc. Rev.</th>
+ *    <th>Date</th>
+ *    <th>Comments</th>
  * </tr>
  * <tr>
  *    <td>42344B</td>
- *    <td>10/2015</td>
+ *    <td>12/2015</td>
  *    <td>Fixed typos</td>
  * </tr>
  * <tr>
