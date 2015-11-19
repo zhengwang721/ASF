@@ -245,6 +245,7 @@ int main(void)
 {
 	tstrWifiInitParam param;
 	int8_t ret;
+	char devName[] = "WINC1500_WPS";
 
 	/* Initialize the board. */
 	system_init();
@@ -266,6 +267,9 @@ int main(void)
 		while (1) {
 		}
 	}
+
+	/* Device name must be set before enabling WPS mode. */
+	m2m_wifi_set_device_name((uint8 *)devName, strlen(devName));
 
 	if (!MAIN_WPS_PUSH_BUTTON_FEATURE) {
 		/* case 2 WPS PIN method */
