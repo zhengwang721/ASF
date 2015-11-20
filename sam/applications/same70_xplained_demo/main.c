@@ -627,17 +627,6 @@ static void refresh_display()
 }
 
 /**
- *  \brief Handler for Button 1 rising edge interrupt.
- */
-static void button_handler(uint32_t id, uint32_t mask)
-{
-	/* Set button event flag (g_b_button_event). */
-	if ((PIN_PUSHBUTTON_1_ID == id) && (PIN_PUSHBUTTON_1_MASK == mask)) {
-
-	}
-}
-
-/**
  * \brief Interrupt handler for the RTT.
  *
  * Display the current time on the terminal.
@@ -696,17 +685,7 @@ int main(void)
 	configure_console();
 	printf(STRING_HEADER);
 
-	/* Enable the peripheral clock for the push button on board. */
-	//pmc_enable_periph_clk(PIN_PUSHBUTTON_1_ID);
-	/* Configure PIOs as input pins. */
-	//pio_configure(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_TYPE, PIN_PUSHBUTTON_1_MASK,
-			//PIN_PUSHBUTTON_1_ATTR);
-	/* Initialize PIO interrupt handler, interrupt on rising edge. */
-	//pio_handler_set(PIN_PUSHBUTTON_1_PIO, PIN_PUSHBUTTON_1_ID, PIN_PUSHBUTTON_1_MASK,
-			//PIN_PUSHBUTTON_1_ATTR, button_handler);
-	/* Initialize and enable push button (PIO) interrupt. */
-	//pio_handler_set_priority(PIN_PUSHBUTTON_1_PIO, PIOA_IRQn, 0);
-		/* Set direction and pullup on the given button IOPORT */
+	/* Set direction and pullup on the given button IOPORT */
 	ioport_set_pin_dir(GPIO_PUSH_BUTTON_1, IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(GPIO_PUSH_BUTTON_1, IOPORT_MODE_PULLUP);
 
