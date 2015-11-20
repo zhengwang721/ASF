@@ -62,7 +62,7 @@
 //	<i> Defines inteval of Fast advertisement in ms.
 //	<i> Default: 100
 //	<id> csc_fast_adv
-#define APP_CSC_FAST_ADV				(100) //100 ms
+#define APP_CSC_FAST_ADV				(1600) //1000 ms
 
 /** @brief APP_SPOG_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
 //	<o> Advertisement Timeout <1000-10000:50>

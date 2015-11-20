@@ -52,7 +52,7 @@
 *							        Macros	                                     		*
 ****************************************************************************************/
 /** @brief APP_BAS_FAST_ADV between 0x0020 and 0x4000 in 0.625 ms units (20ms to 10.24s). */
-#define APP_BAS_FAST_ADV				(100) //100 ms
+#define APP_BAS_FAST_ADV				(1600) //1000 ms
 
 /** @brief APP_BAS_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
 #define APP_BAS_ADV_TIMEOUT				(1000) // 100 Secs

@@ -63,7 +63,7 @@
 //  <i> Defines inteval of Fast advertisement in ms.
 //  <i> Default: 100
 //  <id> tip_fast_adv
-#define APP_TP_FAST_ADV								(100)		//100 ms
+#define APP_TP_FAST_ADV								(1600)		//1000 ms
 
 /**@brief Advertisement Timeout*/
 //  <o> Advertisement Timeout <1000-10000:50>
