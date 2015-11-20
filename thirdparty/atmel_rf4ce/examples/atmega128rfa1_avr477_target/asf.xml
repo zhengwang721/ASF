@@ -48,6 +48,10 @@
 		<build type="header-file" value="conf_board.h"/>
 		<build type="include-path" value="."/>
 		<build type="linker-config" subtype="flags" value="--section-start=.bootloader=0x1f000"/>
+		<build type="linker-config" subtype="flags" value="--defsym=__eerd_byte_m128rfa1=eeprom_read_byte"/>
+		<build type="linker-config" subtype="flags" value="--defsym=__eewr_byte_m128rfa1=eeprom_write_byte"/>
+		<build type="linker-config" subtype="flags" value="-u,eeprom_read_byte"/>
+		<build type="linker-config" subtype="flags" value="-u,eeprom_write_byte"/>
 		<config name="config.compiler.avrgcc.optimization" value="size"/>
 		<build type="build-config" subtype="c-compiler-flags" value="-fshort-enums" toolchain="avrgcc"/>
 		<build type="build-config" subtype="assembler-flags" value="-fshort-enums" toolchain="avrgcc"/>
