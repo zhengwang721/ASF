@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief BNO055 extension board example for SAME70.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -40,20 +40,26 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef __BNO055_PORTING_I2C_H__
+#define __BNO055_PORTING_I2C_H__
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+#include "asf.h"
+#include "conf_board.h"
+#include "conf_bno055.h"
+#include "bno055.h"
 
-/** Enable TWIHS port. */
-#define CONF_BOARD_TWIHS0
-#define BNO055_IIC_INSRANCE   TWIHS0
-#define BOARD_ID_TWIHS_EEPROM ID_TWIHS0
-#define TWIHS_CLK             400000
+#ifdef	BNO055_API
 
-#endif /* CONF_BOARD_H_INCLUDED */
+/************** I2C buffer length******/
+#define	I2C_BUFFER_LEN       8
+#define I2C0                 5
+
+s8 I2C_routine(struct bno055_t *stru_bno055);
+s8 BNO055_I2C_bus_init(void);
+s8 BNO055_I2C_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt);
+s8 BNO055_I2C_bus_read(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt);
+void BNO055_delay_msek(u32 msek);
+#endif
+
+#endif  /* __BNO055_PORTING_I2C_H__ */

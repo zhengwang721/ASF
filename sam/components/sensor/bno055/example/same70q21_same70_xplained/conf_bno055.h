@@ -72,6 +72,8 @@
 //#define MMA7341L_USE_ADC10
 
 #define BNO055_API
-#define TWIHS_CLK   400000
+#define BNO055_I2C_SLAVE_ADDRESS  BNO055_I2C_ADDR2
+
+#define __DEBUG__
 
 #endif /* CONF_MMA7341L_H_INCLUDED */

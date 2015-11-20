@@ -41,10 +41,6 @@
  *
  */
 
-
-/*! \file bno055.h
-    \brief BNO055 Sensor Driver Support Header File */
-
 #ifndef __BNO055_H__
 #define __BNO055_H__
 /****************************************************************/
@@ -718,7 +714,7 @@ s16 sic_8;/**< soft iron calibration matrix 8 data */
 /**\name	CONSTANT DEFINITIONS                   */
 /***************************************************/
 #define         BNO055_ZERO_U8X           ((u8)0)
-#define         BNO055_ONE_U8X            ((u8)1)
+#define         BNO055_ONE_U8X           ((u8)1)
 #define         BNO055_TWO_U8X			  ((u8)2)
 #define         BNO055_FOUR_U8X           ((u8)4)
 #define         BNO055_FIVE_U8X           ((u8)5)
@@ -731,68 +727,68 @@ s16 sic_8;/**< soft iron calibration matrix 8 data */
 #define			BNO055_EIGHTEEN_U8X       ((u8)18)
 
 
-#define         BNO055_SHIFT_8_POSITION	  ((u8)8)
+#define         BNO055_SHIFT_8_POSITION	   ((u8)8)
 
 
 /*  BNO055 API error codes */
-#define E_NULL_PTR                        ((s8)-127)
-#define E_BNO055_OUT_OF_RANGE             ((s8)-2)
-#define	SUCCESS						      ((u8)0)
-#define	ERROR						      ((s8)-1)
+#define E_NULL_PTR                  ((s8)-127)
+#define E_BNO055_OUT_OF_RANGE       ((s8)-2)
+#define	SUCCESS						((u8)0)
+#define	ERROR						((s8)-1)
 
 /* Selection for bit enable and disable */
-#define ENABLED		            0x01
-#define DISABLED	            0x00
+#define ENABLED		0x01
+#define DISABLED	0x00
 
 /* Page ID */
-#define PAGE_ZERO		        0X00
-#define PAGE_ONE		        0X01
+#define PAGE_ZERO		0X00
+#define PAGE_ONE		0X01
 
 /* Enable the temperature source */
-#define	ACCEL_TEMP_EN	        0x00
-#define	GYRO_TEMP_EN	        0x01
-#define	MCU_TEMP_EN		        0x03
+#define	ACCEL_TEMP_EN	0x00
+#define	GYRO_TEMP_EN	0x01
+#define	MCU_TEMP_EN		0x03
 
 /*Accel unit*/
-#define ACCEL_UNIT_MSQ	        0x00
-#define ACCEL_UNIT_MG	        0x01
+#define ACCEL_UNIT_MSQ	0x00
+#define ACCEL_UNIT_MG	0x01
 
 /*Gyro unit*/
-#define GYRO_UNIT_DPS	        0x00
-#define GYRO_UNIT_RPS	        0x01
+#define GYRO_UNIT_DPS	0x00
+#define GYRO_UNIT_RPS	0x01
 
 /* Euler unit*/
-#define EULER_UNIT_DEG	        0x00
-#define EULER_UNIT_RAD	        0x01
+#define EULER_UNIT_DEG	0x00
+#define EULER_UNIT_RAD	0x01
 
 /*Temperature unit*/
 #define TEMP_UNIT_CELSIUS		0x00
 #define TEMP_UNIT_FAHRENHEIT	0x01
 
 /*Accel division factor*/
-#define	ACCEL_DIV_MSQ	        100.0
-#define	ACCEL_DIV_MG	        1
+#define	ACCEL_DIV_MSQ	100.0
+#define	ACCEL_DIV_MG	1
 
 /*Mag division factor*/
-#define MAG_DIV_UT	            16.0
+#define MAG_DIV_UT	16.0
 
 /*Gyro division factor*/
-#define GYRO_DIV_DPS		    16.0
-#define GYRO_DIV_RPS		    900.0
+#define GYRO_DIV_DPS		16.0
+#define GYRO_DIV_RPS		900.0
 
 /*Euler division factor*/
-#define EULER_DIV_DEG		    16.0
-#define EULER_DIV_RAD		    900.0
+#define EULER_DIV_DEG		16.0
+#define EULER_DIV_RAD		900.0
 
 /*Linear accel division factor*/
 #define	LINEAR_ACCEL_DIV_MSQ	100.0
 
 /*Gravity accel division factor*/
-#define	GRAVITY_DIV_MSQ	        100.0
+#define	GRAVITY_DIV_MSQ	100.0
 
 /* Temperature division factor*/
-#define TEMP_DIV_FAHRENHEIT	    0.5
-#define TEMP_DIV_CELSIUS	    1
+#define TEMP_DIV_FAHRENHEIT	0.5
+#define TEMP_DIV_CELSIUS	1
 
 #define	BNO055_SIX_HUNDRES_U8X	600
 
@@ -814,27 +810,27 @@ s16 sic_8;/**< soft iron calibration matrix 8 data */
 #define OPERATION_MODE_NDOF				0X0C
 
 /* Power mode*/
-#define POWER_MODE_NORMAL	           0X00
-#define POWER_MODE_LOWPOWER	           0X01
-#define POWER_MODE_SUSPEND	           0X02
+#define POWER_MODE_NORMAL				0X00
+#define POWER_MODE_LOWPOWER				0X01
+#define POWER_MODE_SUSPEND				0X02
 
 /* PAGE-1 definitions*/
 /* Accel Range */
 
-#define ACCEL_RANGE_2G		           0X00
-#define ACCEL_RANGE_4G		           0X01
-#define ACCEL_RANGE_8G		           0X02
-#define ACCEL_RANGE_16G		           0X03
+#define ACCEL_RANGE_2G					0X00
+#define ACCEL_RANGE_4G					0X01
+#define ACCEL_RANGE_8G					0X02
+#define ACCEL_RANGE_16G					0X03
 
 /* Accel Bandwidth*/
-#define ACCEL_BW_7_81HZ		           0x00
-#define ACCEL_BW_15_63HZ	           0x01
-#define ACCEL_BW_31_25HZ	           0x02
-#define ACCEL_BW_62_5HZ		           0X03
-#define ACCEL_BW_125HZ		           0X04
-#define ACCEL_BW_250HZ		           0X05
-#define ACCEL_BW_500HZ		           0X06
-#define ACCEL_BW_1000HZ		           0X07
+#define ACCEL_BW_7_81HZ		           	0x00
+#define ACCEL_BW_15_63HZ	           	0x01
+#define ACCEL_BW_31_25HZ	           	0x02
+#define ACCEL_BW_62_5HZ		           	0X03
+#define ACCEL_BW_125HZ		           	0X04
+#define ACCEL_BW_250HZ		           	0X05
+#define ACCEL_BW_500HZ		           	0X06
+#define ACCEL_BW_1000HZ		           	0X07
 
 /* Accel Power mode*/
 #define ACCEL_NORMAL			       0X00
