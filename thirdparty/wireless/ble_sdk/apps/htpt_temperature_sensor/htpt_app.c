@@ -423,7 +423,6 @@ int main (void)
 	
 	while(at_ble_event_get(&event, params, 0xFFFFFFFF) == AT_BLE_SUCCESS)
 	{
-		DBG_LOG("The event is %d",event);
 		switch(event)
 		{
 			/* The BLE device - Peripheral connected to master */
