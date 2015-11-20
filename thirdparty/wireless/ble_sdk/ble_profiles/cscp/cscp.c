@@ -225,8 +225,9 @@ at_ble_status_t csc_prf_discovery_complete_handler(void *params)
 			else if(discover_status.operation == AT_BLE_DISC_DESC_CHAR){
 				app_csc_info.devicedb = true;
 				DBG_LOG_DEV("Send Slave Security Request");
-				if(at_ble_send_slave_sec_request(app_csc_info.conn_params.handle,true,true) != AT_BLE_SUCCESS){
-					DBG_LOG("Fail to start security procedure");
+				
+				if (ble_send_slave_sec_request(app_csc_info.conn_params.handle) != AT_BLE_SUCCESS) {
+					DBG_LOG_DEV("Fail to start security procedure");
 				}
 			}
 		}
@@ -282,6 +283,7 @@ at_ble_status_t csc_prf_notification_handler(void *params)
 at_ble_status_t csc_prf_write_notification_handler(void *params)
 {
 	uint8_t data[2] = {1, 0};
+	DBG_LOG("\r\n");
 	if(at_ble_characteristic_write(app_csc_info.csc_desc.conn_handle, app_csc_info.csc_desc.desc_handle, 0, 2, data, false, true) == AT_BLE_FAILURE){
 		DBG_LOG("\r\nFailed to send characteristic Write Request");
 	}
