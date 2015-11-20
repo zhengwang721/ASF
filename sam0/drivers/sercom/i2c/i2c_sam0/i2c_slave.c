@@ -106,6 +106,11 @@ static enum status_code _i2c_slave_set_config(
 		tmp_ctrla = 0;
 	}
 
+	/* Check and set SCL clock stretch mode. */
+	if (config->scl_stretch_only_after_ack_bit || (config->transfer_speed == I2C_SLAVE_SPEED_HIGH_SPEED)) {
+		tmp_ctrla |= SERCOM_I2CM_CTRLA_SCLSM;
+	}
+	
 	tmp_ctrla |= ((uint32_t)config->sda_hold_time |
 			config->transfer_speed |
 			(config->scl_low_timeout << SERCOM_I2CS_CTRLA_LOWTOUTEN_Pos) |
@@ -227,6 +232,14 @@ enum status_code i2c_slave_init(
 	/* Set SERCOM module to operate in I2C slave mode */
 	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(0x4);
 
+	/** 
+	 * I2C slave to be configured in High-speed mode(CTRLA.SPEED=0x2) 
+	 * and the SCL clock stretch mode (CTRLA.SCLSM) bit set to '1'.
+	 */
+	if (config->transfer_speed == 0x2) {
+		i2c_hw->CTRLA.bit.SCLSM = 1;
+	}
+	
 	/* Set config and return status */
 	return _i2c_slave_set_config(module, config);
 }
