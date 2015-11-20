@@ -6,6 +6,7 @@
 		<require idref="thirdparty.wireless.ble_sdk.apps.htpt_temperature_sensor"/>
 		<require idref="thirdparty.wireless.ble_sdk.apps.config.samd21"/>
 		<build type="include-path" value="../../config/samd21/"/>
+		<build type="include-path" value="."/>
 		<build type="header-file" value="../../config/samd21/conf_board.h"/>
 		<build type="header-file" value="../../config/samd21/conf_clocks.h"/>
 		<build type="header-file" value="../../config/samd21/conf_extint.h"/>
