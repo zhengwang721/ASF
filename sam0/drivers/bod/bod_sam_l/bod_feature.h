@@ -553,7 +553,7 @@ static inline void bod12_clear_detected(void)
  *  </tr>
  *  <tr>
  *      <td>BOD</td>
- *      <td>Brown out detector</td>
+ *      <td>Brown Out Detector</td>
  *  </tr>
  * </table>
  *
@@ -617,7 +617,7 @@ static inline void bod12_clear_detected(void)
  *	</tr>
  *	<tr>
  *		<td>42453B</td>
- *		<td>08/2015</td>
+ *		<td>10/2015</td>
  *		<td>Added support for SAM L22</td>
  *	</tr>
  *	<tr>
