@@ -62,7 +62,7 @@
  *
  * -# Configure HTTP URL macro in the main.h file.
  * \code
- *    #define MAIN_HTTP_FILE_URL                   "http://www.atmel.com/Images/asf-releasenotes-3.22.0.pdf"
+ *    #define MAIN_HTTP_FILE_URL                   "http://www.atmel.com/Images/45093A-SmartConnectWINC1500_E_US_101014_web.pdf"
  * \endcode
  *
  * -# Build the program and download it into the board.
@@ -77,12 +77,12 @@
  *
  * -# Start the application.
  * -# In the terminal window, the following text should appear:<br>
- *    (This example may not work as it requires internet connectivity)
+ *
  * \code
  *    -- HTTP file download example --
  *    -- SAMXXX_XPLAINED_PRO --
  *    -- Compiled: xxx xx xxxx xx:xx:xx --
- *    This example may not work as it requires internet connectivity.
+ *    This example requires the AP to have internet access.
  *    init_storage: Please plug an SD/MMC card in slot.
  *    init_storage: Mount SD card...
  *    init_storage: SD card Mount OK.
@@ -93,12 +93,12 @@
  *    resolve_cb: Host Name:www.atmel.com, ip:125.56.214.83
  *    Http client socket connected
  *    Request completed
- *    Received response 200 data size 92267
- *    store_file_packet: Creating to file :0:asf-releasenotes-3.22.0.pdf
- *    store_file_packet: received[xxx], file size[92267]
+ *    Received response 200 data size 1147097
+ *    store_file_packet: Creating to file :0:45093A-SmartConnectWINC1500_E_US_101014_web.pdf
+ *    store_file_packet: received[xxx], file size[1147097]
  *    ...
- *    store_file_packet: received[92267], file size[92267]
- *    store_file_packet: Download completed. location:[0:asf-releasenotes-3.22.0.pdf]
+ *    store_file_packet: received[1147097], file size[1147097]
+ *    store_file_packet: Download completed. location:[0:45093A-SmartConnectWINC1500_E_US_101014_web.pdf]
  *    main: Exit program. Please unplug the card.
  * \endcode
  *
@@ -142,23 +142,6 @@ struct sw_timer_module swt_module_inst;
 
 /** Instance of HTTP client module. */
 struct http_client_module http_client_module_inst;
-
-/**
- * \brief Configure UART console.
- */
-static void configure_console(void)
-{
-	const usart_serial_options_t uart_serial_options = {
-		.baudrate =		CONF_UART_BAUDRATE,
-		.charlength =	CONF_UART_CHAR_LENGTH,
-		.paritytype =	CONF_UART_PARITY,
-		.stopbits =		CONF_UART_STOP_BITS,
-	};
-
-	/* Configure UART console. */
-	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
-	stdio_serial_init(CONF_UART, &uart_serial_options);
-}
 
 /**
  * \brief Initialize to download processing state.
@@ -596,6 +579,22 @@ static void init_storage(void)
 }
 
 /**
+ * \brief Configure UART console.
+ */
+static void configure_console(void)
+{
+	const usart_serial_options_t uart_serial_options = {
+		.baudrate =		CONF_UART_BAUDRATE,
+		.charlength =	CONF_UART_CHAR_LENGTH,
+		.paritytype =	CONF_UART_PARITY,
+		.stopbits =		CONF_UART_STOP_BITS,
+	};
+
+	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
+	stdio_serial_init(CONF_UART, &uart_serial_options);
+}
+
+/**
  * \brief Configure Timer module.
  */
 static void configure_timer(void)
@@ -650,7 +649,7 @@ int main(void)
 	/* Initialize the UART console. */
 	configure_console();
 	printf(STRING_HEADER);
-	printf("This example may not work as it requires internet connectivity.\r\n");
+	printf("This example requires the AP to have internet access.\r\n");
 
 	/* Initialize the Timer. */
 	configure_timer();

@@ -62,7 +62,7 @@
  *
  * -# Configure HTTP URL macro in the main.h file.
  * \code
- *    #define MAIN_HTTP_FILE_URL                   "http://www.atmel.com/Images/asf-releasenotes-3.22.0.pdf"
+ *    #define MAIN_HTTP_FILE_URL                   "http://www.atmel.com/Images/45093A-SmartConnectWINC1500_E_US_101014_web.pdf"
  * \endcode
  *
  * -# Build the program and download it into the board.
@@ -77,12 +77,12 @@
  *
  * -# Start the application.
  * -# In the terminal window, the following text should appear:<br>
- *    (This example may not work as it requires internet connectivity)
+ *
  * \code
  *    -- HTTP file download example --
  *    -- SAMXXX_XPLAINED_PRO --
  *    -- Compiled: xxx xx xxxx xx:xx:xx --
- *    This example may not work as it requires internet connectivity.
+ *    This example requires the AP to have internet access.
  *    init_storage: Please plug an SD/MMC card in slot.
  *    init_storage: Mount SD card...
  *    init_storage: SD card Mount OK.
@@ -93,12 +93,12 @@
  *    resolve_cb: Host Name:www.atmel.com, ip:125.56.214.83
  *    Http client socket connected
  *    Request completed
- *    Received response 200 data size 92267
- *    store_file_packet: Creating to file :0:asf-releasenotes-3.22.0.pdf
- *    store_file_packet: received[xxx], file size[92267]
+ *    Received response 200 data size 1147097
+ *    store_file_packet: Creating to file :0:45093A-SmartConnectWINC1500_E_US_101014_web.pdf
+ *    store_file_packet: received[xxx], file size[1147097]
  *    ...
- *    store_file_packet: received[92267], file size[92267]
- *    store_file_packet: Download completed. location:[0:asf-releasenotes-3.22.0.pdf]
+ *    store_file_packet: received[1147097], file size[1147097]
+ *    store_file_packet: Download completed. location:[0:45093A-SmartConnectWINC1500_E_US_101014_web.pdf]
  *    main: Exit program. Please unplug the card.
  * \endcode
  *
@@ -362,6 +362,7 @@ static void store_file_packet(char *data, uint32_t length)
 		if (received_file_size >= http_file_size) {
 			f_close(&file_object);
 			printf("store_file_packet: Download completed. location:[%s]\r\n", save_file_name);
+			port_pin_set_output_level(LED_0_PIN, false);
 			add_state(COMPLETED);
 			return;
 		}
@@ -531,8 +532,6 @@ static void wifi_cb(uint8_t u8MsgType, void *pvMsg)
 	case M2M_WIFI_REQ_DHCP_CONF:
 	{
 		uint8_t *pu8IPAddress = (uint8_t *)pvMsg;
-		/* Turn LED0 on to declare that IP address received. */
-		port_pin_set_output_level(LED_0_PIN, false);
 		printf("Wi-Fi IP is %u.%u.%u.%u\r\n", pu8IPAddress[0], pu8IPAddress[1], pu8IPAddress[2], pu8IPAddress[3]);
 		add_state(WIFI_CONNECTED);
 		start_download();
@@ -655,7 +654,7 @@ int main(void)
 	/* Initialize the UART console. */
 	configure_console();
 	printf(STRING_HEADER);
-	printf("This example may not work as it requires internet connectivity.\r\n");
+	printf("This example requires the AP to have internet access.\r\n");
 
 	/* Initialize the Timer. */
 	configure_timer();
