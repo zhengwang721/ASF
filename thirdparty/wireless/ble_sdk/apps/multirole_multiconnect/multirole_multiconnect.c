@@ -576,9 +576,7 @@ int main(void)
 							&pxp_connect_request_fail);
 				} else {
 					DBG_LOG(
-							"Unable to connect with device. Reseting the device");
-					ble_device_init(NULL);
-					pxp_app_init();
+							"Unable to connect with device");
 				}
 			} else if (pxp_connect_request_flag == PXP_DEV_CONNECTED) {
 				rssi_update(ble_dev_info[0].conn_info.handle);

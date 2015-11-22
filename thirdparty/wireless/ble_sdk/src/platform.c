@@ -72,10 +72,6 @@ volatile uint8_t data_received = 0;			//	RX data received flag
 
 volatile int init_done = 0;
 
-#if SAMG55
-volatile bool btlc1000_sleep_state = true;
-#endif
-
 #if UART_FLOWCONTROL_6WIRE_MODE == true
 /* Enable Hardware Flow-control on BTLC1000 */
 enum hw_flow_control ble_hardware_fc = ENABLE_HW_FC_PATCH;
@@ -111,9 +107,6 @@ void bus_activity_timer_callback(void)
 		{
 			platform_reset_bus_timer();
 		}
-		#if SAMG55
-		btlc1000_sleep_state = false;
-		#endif
 	}
 }
 
@@ -124,9 +117,6 @@ void check_and_assert_ext_wakeup(uint8_t mode)
 		if (!ble_wakeup_pin_level())
 		{
 			platform_wakeup();
-			#if SAMG55
-			btlc1000_sleep_state = true;
-			#endif
 			if (mode == TX_MODE)
 			{
 				delay_ms(BTLC1000_WAKEUP_DELAY);
@@ -134,14 +124,7 @@ void check_and_assert_ext_wakeup(uint8_t mode)
 			Platform_start_bus_timer(5);
 		}
 		else
-		{
-			#if SAMG55
-			if ((mode == TX_MODE) && (btlc1000_sleep_state))
-			{
-				delay_ms(BTLC1000_WAKEUP_DELAY);
-			}
-			#endif
-						
+		{						
 			platform_reset_bus_timer();
 		}
 	}

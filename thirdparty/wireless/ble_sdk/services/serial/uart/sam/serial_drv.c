@@ -259,6 +259,8 @@ static inline void pdc_update_rx_transfer(void)
 {
 	/* Initialize the Rx buffers for data receive */
   	ble_usart_rx_pkt.ul_addr = (uint32_t)pdc_rx_buffer;
+	pdc_enable_transfer(ble_usart_pdc, PERIPH_PTCR_RXTEN);
+	
   	ble_usart_rx_pkt.ul_size = BLE_MAX_RX_PAYLOAD_SIZE;
 	  
 	/* Configure the PDC for data receive */
@@ -280,6 +282,12 @@ static inline uint32_t usart_is_rx_compare(Usart *p_usart)
 	return (p_usart->US_CSR & US_CSR_CMP) > 0;
 }
 
+static inline uint32_t usart_clear_tx_empty(Usart *p_usart)
+{
+	return (p_usart->US_TNCR  = 0);
+}
+
+
 
 static inline void ble_pdc_uart_handler(void)
 {
@@ -300,7 +308,6 @@ static inline void ble_pdc_uart_handler(void)
 				#endif
 			}			
 			pdc_update_rx_transfer();
-			pdc_enable_transfer(ble_usart_pdc, PERIPH_PTCR_RXTEN);
 			
 			if (timeout)
 			{
@@ -317,9 +324,10 @@ static inline void ble_pdc_uart_handler(void)
 			#endif
 		}
 		
-		if ((usart_is_tx_buf_empty(BLE_UART))  && (!ble_usart_tx_cmpl))
+		if (usart_is_tx_buf_empty(BLE_UART))
 		{
 			usart_disable_interrupt(BLE_UART, US_IER_TXBUFE);
+			usart_clear_tx_empty(BLE_UART);
 			ble_usart_tx_cmpl  = true;
 		}
 	}
