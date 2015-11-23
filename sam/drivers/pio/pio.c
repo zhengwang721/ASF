@@ -1018,7 +1018,7 @@ uint32_t pio_get_pin_group_id(uint32_t ul_pin)
 			} else {
 			ul_id = ID_PIOD;
 		}
-		} else {
+	} else {
 		ul_id = ID_PIOA + (ul_pin >> 5);
 	}
 #else
