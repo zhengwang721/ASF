@@ -49,7 +49,9 @@
 #include "conf_board.h"
 #include "ioport.h"
 #include "pio.h"
+#ifdef CONF_BOARD_CONFIG_MPU_AT_INIT
 #include "mpu.h"
+#endif
 
 /**
  * \brief Set peripheral mode for IOPORT pins.
@@ -91,7 +93,7 @@
 	} while (0)
 
 
-
+#ifdef CONF_BOARD_CONFIG_MPU_AT_INIT
 /**
  *	Default memory map
  *	Address range        Memory region      Memory type   Shareability  Cache policy
@@ -331,6 +333,7 @@ static void _setup_memory_region( void )
 	__DSB();
 	__ISB();
 }
+#endif
 
 #ifdef CONF_BOARD_ENABLE_TCM_AT_INIT
 #if defined(__GNUC__)
@@ -376,17 +379,23 @@ void board_init(void)
 	WDT->WDT_MR = WDT_MR_WDDIS;
 #endif
 
+#ifdef CONF_BOARD_CONFIG_MPU_AT_INIT
 	_setup_memory_region();
+#endif
 
+#ifdef CONF_BOARD_ENABLE_CACHE_AT_INIT
 	/* Enabling the Cache */
 	SCB_EnableICache(); 
 	SCB_EnableDCache();
+#endif
 
+#ifdef CONF_BOARD_ENABLE_FPU_AT_INIT
 #if defined(__GNUC__)
 	/* Enabling the FPU */
 	SCB->CPACR |= 0x00F00000;
 	__DSB();
 	__ISB();
+#endif
 #endif
 
 #ifdef CONF_BOARD_ENABLE_TCM_AT_INIT
