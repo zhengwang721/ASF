@@ -8,6 +8,7 @@
 		</info>
 		<build type="c-source" value="gcc/syscalls.c" toolchain="armgcc"/>
 		<device-support value="sam0"/>
+		<device-support value="samb"/>
 		<info type="gui-flag" value="hidden"/>
 	</module>
 </asf>

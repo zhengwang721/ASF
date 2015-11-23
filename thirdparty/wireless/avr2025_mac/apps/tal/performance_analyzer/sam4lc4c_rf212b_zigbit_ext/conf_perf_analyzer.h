@@ -44,7 +44,7 @@
 #define CONF_PERF_ANALYZER_H_INCLUDED
 
 /* Application default channel (DEFAULT_CHANNEL in app_init.h)
-= 0(First Channel in Sub-GHz) + DEFAULT_CHANNEL_OFFSET */
+ * = 0(First Channel in Sub-GHz) + DEFAULT_CHANNEL_OFFSET */
 #define DEFAULT_CHANNEL_OFFSET           (1)
 
 #define DEFAULT_PAGE                     (0)
@@ -52,7 +52,7 @@
 #define ENABLE_ANTENNA_1                 (1)
 #define ENABLE_ANTENNA_2                 (2)
 
-#define ANT_SELECTED					 ENABLE_ANTENNA_1
-#define ENABLE_ANTENNA_DIVERSITY	     false
+#define ANT_SELECTED                                     ENABLE_ANTENNA_1
+#define ENABLE_ANTENNA_DIVERSITY             false
 
 #endif /* CONF_PERF_ANALYZER_H_INCLUDED */

@@ -469,9 +469,14 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  *    <th>Comments</td>
  * </tr>
  * <tr>
+ *    <td>42339B</td>
+ *    <td>10/2015</td>
+ *    <td>Fixed typos</td>
+ * </tr>
+ * <tr>
  *    <td>42339A</td>
  *    <td>12/2014</td>
- *    <td>Initial release.</td>
+ *    <td>Initial release</td>
  * </tr>
  * </table>
  */

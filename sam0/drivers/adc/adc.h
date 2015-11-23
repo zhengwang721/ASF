@@ -1064,7 +1064,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<td>Added support for SAM R21</td>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21 and new DMA quick start guide</td>
+ *		<td>Added support for SAM D21 and new DMA quick start guide</td>
  *	</tr>
  *	<tr>
  *		<td>Added ADC calibration constant loading from the device signature
@@ -1103,7 +1103,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * \if DEVICE_SAML21_SUPPORT
   *	<tr>
  *		<td>42451B</td>
- *		<td>08/2015</td>
+ *		<td>10/2015</td>
  *		<td>Added support for SAM L22</td>
  *	</tr>
  *  <tr>

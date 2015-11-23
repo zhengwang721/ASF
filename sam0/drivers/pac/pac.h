@@ -981,8 +981,8 @@ static inline void system_pac_disable_event(void)
  *	</tr>
  *	<tr>
  *		<td>42107E</td>
- *		<td>10/2015</td>
- *		<td>Added support for SAM R21, SAM D10/D11, SAM L21/L22, SAM C21 and SAM DA1</td>
+ *		<td>11/2015</td>
+ *		<td>Added support for SAM R21, SAM D10/D11, SAM L21/L22, SAM C21, and SAM DA1</td>
  *	</tr>
  *	<tr>
  *		<td>42107D</td>
