@@ -1114,7 +1114,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * \else
  *	<tr>
  *		<td>42109E</td>
- *		<td>10/2015</td>
+ *		<td>11/2015</td>
  *		<td>Added support for SAM DAx.</td>
  *	</tr>
  *	<tr>

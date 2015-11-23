@@ -494,7 +494,7 @@ struct adc_config {
 	enum adc_resolution resolution;
 	/** Gain factor */
 	enum adc_gain_factor gain_factor;
-	/** Positive Multiplexer(MUX) input */
+	/** Positive Multiplexer (MUX) input */
 	enum adc_positive_input positive_input;
 	/** Negative MUX input. For singled-ended conversion mode, the negative
 	 * input must be connected to ground. This ground could be the internal
