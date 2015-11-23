@@ -101,10 +101,12 @@ uint32_t systick_count = 0;
 /**\name Function Prototype Declaration                                 */
 /************************************************************************/
 void extint_configure(void);
-void extint_configure_callbacks(void);
+//void extint_configure_callbacks(void);
 void extint_detection_callback(void);
 void (*extint_handler_function_ptr)(void);
 void extint_initialize(void (*extint_handler_function)(void));
+static void bno055_interrupt_handler_no_motion(void);
+static void bno055_interrupt_handler_any_motion(void);
 
 
 
@@ -143,6 +145,7 @@ static void bno055_interrupt_handler(void)
 
 void extint_configure(void)
 {
+#if 0
 	struct extint_chan_conf config_extint_chan;
 	extint_chan_get_config_defaults(&config_extint_chan);
 	
@@ -152,18 +155,17 @@ void extint_configure(void)
 	config_extint_chan.detection_criteria = EXTINT_DETECT_RISING;
 	
 	extint_chan_set_config(EXT1_IRQ_INPUT, &config_extint_chan);
-	
-	pio_set_
-	pio_enable_pin_interrupt(PIO_PD28_IDX);
-	ioport_set_pin_dir(PIO_PD28_IDX, IOPORT_DIR_INPUT);
+#endif
 }
 
+#if 0
 void extint_configure_callbacks(void)
 {
 	extint_register_callback(extint_detection_callback, EXT1_IRQ_INPUT, EXTINT_CALLBACK_TYPE_DETECT);
 	extint_callback_detect_flag = false;
 	extint_chan_enable_callback(EXT1_IRQ_INPUT, EXTINT_CALLBACK_TYPE_DETECT);
 }
+#endif
 
 void extint_detection_callback(void)
 {
@@ -174,21 +176,34 @@ void extint_detection_callback(void)
 void extint_initialize(void (*extint_handler_function)(void))
 {
 	extint_handler_function_ptr = extint_handler_function;
-	extint_configure();
-	extint_configure_callbacks();
+	
+	/* Enable the peripheral clock for the BNO055 extension board interrupt pin. */
+	pmc_enable_periph_clk(PIN_BNO055_EXT_INIERRUPT_ID);
+	/* Configure PIOs as input pins. */
+	pio_configure(PIN_BNO055_EXT_INIERRUPT_PIO, PIN_BNO055_EXT_INIERRUPT_TYPE, 
+					PIN_BNO055_EXT_INIERRUPT_MASK, PIN_BNO055_EXT_INIERRUPT_ATTR);
+	/* Initialize PIO interrupt handler, interrupt on rising edge. */
+	pio_handler_set(PIN_BNO055_EXT_INIERRUPT_PIO, PIN_BNO055_EXT_INIERRUPT_ID, PIN_BNO055_EXT_INIERRUPT_MASK,
+					PIN_BNO055_EXT_INIERRUPT_ATTR, bno055_interrupt_handler);
+	/* Initialize and enable push button (PIO) interrupt. */
+	pio_handler_set_priority(PIN_BNO055_EXT_INIERRUPT_PIO, PIOD_IRQn, 0);
 }
 
 static void bno055_gpio_config(void)
 {
-	ioport_set_pin_dir(PIO_PB3_IDX, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_dir(PIO_PB2_IDX, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_dir(PIO_PC17_IDX, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_dir(PIO_PD25_IDX, IOPORT_DIR_OUTPUT);
+	//ioport_set_pin_dir(PIO_PB3_IDX, IOPORT_DIR_OUTPUT);
+	//ioport_set_pin_dir(PIO_PB2_IDX, IOPORT_DIR_OUTPUT);
+	//ioport_set_pin_dir(PIO_PC17_IDX, IOPORT_DIR_OUTPUT);
+	//ioport_set_pin_dir(PIO_PD25_IDX, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_mode(PIO_PB3_IDX, IOPORT_DIR_OUTPUT | IOPORT_MODE_PULLUP | IOPORT_MODE_MUX_MASK);
+	ioport_set_pin_mode(PIO_PB2_IDX, IOPORT_DIR_OUTPUT | IOPORT_MODE_PULLUP | IOPORT_MODE_MUX_MASK);
+	ioport_set_pin_mode(PIO_PC17_IDX, IOPORT_DIR_OUTPUT | IOPORT_MODE_PULLUP | IOPORT_MODE_MUX_MASK);
+	ioport_set_pin_mode(PIO_PD25_IDX, IOPORT_DIR_OUTPUT | IOPORT_MODE_PULLUP | IOPORT_MODE_MUX_MASK);
 	
-	ioport_set_pin_level(PIO_PB3_IDX, true);
-	ioport_set_pin_level(PIO_PB2_IDX, true);
-	ioport_set_pin_level(PIO_PC17_IDX, true);
-	ioport_set_pin_level(PIO_PD25_IDX, true);
+	//pio_configure(PIO_PB3_IDX, PIO_OUTPUT_0, PIO_PD28, PIO_PULLUP);
+	//pio_configure(PIO_PB2_IDX, PIO_OUTPUT_0, PIO_PB2, PIO_PULLUP);
+	//pio_configure(PIO_PC17_IDX, PIO_OUTPUT_0, PIO_PC17, PIO_PULLUP);
+	//pio_configure(PIO_PD25_IDX, PIO_OUTPUT_0, PIO_PD25, PIO_PULLUP);
 }
 
 /**
@@ -291,13 +306,6 @@ static void sensors_data_print(void)
 * This function is called when a no-motion interrupt is triggered
 * by the accelerometer in BNO055,	turns the LED color to green,
 * stops data stream and sends a message to the terminal window.
-*
-* @param[in]	NULL
-*
-* @param[out]	NULL
-*
-* @return		NULL
-*
 */
 static void bno055_interrupt_handler_no_motion(void)
 {
