@@ -565,8 +565,9 @@ void system_init(void);
  */
 
 /**
-
-* \page asfdoc_sam0_drivers_power_exqsg Examples for SYSTEM Driver
+ *
+ * \if DEVICE_SAML21_SYSTEM_SUPPORT
+ * \page asfdoc_sam0_drivers_power_exqsg Examples for SYSTEM Driver
  *
  * This is a list of the available Quick Start Guides (QSGs) and example
  * applications for \ref asfdoc_sam0_system_group. QSGs are simple examples with step-by-step instructions to
@@ -574,7 +575,6 @@ void system_init(void);
  * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
- * \if DEVICE_SAML21_SYSTEM_SUPPORT
  *  - \subpage asfdoc_sam0_power_basic_use_case
  * \endif
  *
