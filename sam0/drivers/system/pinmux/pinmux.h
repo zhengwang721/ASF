@@ -65,9 +65,6 @@
  *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
  *
- * Physically, the modules are interconnected within the device as shown in the
- * following diagram:
- *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_system_pinmux_prerequisites
  *  - \ref asfdoc_sam0_system_pinmux_module_overview
@@ -644,7 +641,7 @@ void system_pinmux_group_set_output_drive(
  *	</tr>
  *	<tr>
  *		<td>42121F</td>
- *		<td>10/2015</td>
+ *		<td>11/2015</td>
  *		<td>Added support for SAM L21/L22, SAM DA1, and SAM C20/C21</td>
  *	</tr>
  *	<tr>
