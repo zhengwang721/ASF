@@ -311,9 +311,14 @@ extern void uhi_hid_mouse_uninstall(uhc_device_t* dev);
  *    <th>Comments</td>
  * </tr>
  * <tr>
+ *    <td>42342B</td>
+ *    <td>10/2015</td>
+ *    <td>Fixed typos</td>
+ * </tr>
+ * <tr>
  *    <td>42342A</td>
  *    <td>12/2014</td>
- *    <td>Initial release.</td>
+ *    <td>Initial release</td>
  * </tr>
  * </table>
  */

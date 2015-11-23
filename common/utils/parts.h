@@ -455,7 +455,8 @@
 		AVR8_PART_IS_DEFINED(ATmega168A)  || \
 		AVR8_PART_IS_DEFINED(ATmega168PA) || \
 		AVR8_PART_IS_DEFINED(ATmega328)   || \
-		AVR8_PART_IS_DEFINED(ATmega328P) \
+		AVR8_PART_IS_DEFINED(ATmega328P)  || \
+		AVR8_PART_IS_DEFINED(ATmega328PB) \
 		)
 
 /** ATmegaxx8A/P/PA group */
@@ -972,6 +973,15 @@
 		SAM_PART_IS_DEFINED(SAMR21E17A) || \
 		SAM_PART_IS_DEFINED(SAMR21E18A) || \
 		SAM_PART_IS_DEFINED(SAMR21E19A) \
+	)
+/** @} */
+
+/**
+ * \name SAMB11 series
+ * @{
+ */
+#define SAMB11G ( \
+		SAM_PART_IS_DEFINED(SAMB11G18A) \
 	)
 /** @} */
 
@@ -1534,6 +1544,9 @@
 /** SAMR21 Family */
 #define SAMR21 (SAMR21G || SAMR21E)
 
+/** SAMB11 Family */
+#define SAMB11 (SAMB11G)
+
 /** SAML21 Family */
 #define SAML21 (SAML21J || SAML21G || SAML21E)
 
@@ -1571,6 +1584,9 @@
 
 /** SAMG Family */
 #define SAMG (SAMG51 || SAMG53 || SAMG54 || SAMG55)
+
+/** SAMB Family */
+#define SAMB (SAMB11)
 
 /** SAMV71 Family */
 #define SAMV71 (SAMV71J || SAMV71N || SAMV71Q)

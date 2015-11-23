@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Flash Read Unique Id Example for SAMV71" id="sam.services.flash.read.unique.id_example.samv71_xplained_ultra">
+	<project caption="Flash Read Unique Id Example on SAMV71-Xplained-Ultra" id="sam.services.flash.read.unique.id_example.samv71_xplained_ultra">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>

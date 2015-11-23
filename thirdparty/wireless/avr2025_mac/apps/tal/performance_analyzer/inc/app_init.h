@@ -89,7 +89,6 @@
 #define DEFAULT_ADDR            (0xFFFF)
 #define DST_SHORT_ADDR          (0xFFFF)
 
-
 /* Frame overhead due to selected address scheme incl. FCS */
 #if (DST_PAN_ID == SRC_PAN_ID)
 #define FRAME_OVERHEAD          (11)

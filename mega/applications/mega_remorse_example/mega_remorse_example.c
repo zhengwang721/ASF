@@ -1,7 +1,7 @@
 /**
  * \file remorse.c
  *
- * \brief Morse Code Encoder/Decorder board support package
+ * \brief Morse Code Encoder/Decorder example
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -64,6 +64,7 @@
  *
  * This application has been tested on following boards:
  * - ATmega328p Xplained Mini
+ * - ATmega328pb Xplained Mini
  *
  * \section appdoc_mega_remorse_app_usage Usage
  * The application uses usart to receive input and output remorse result, 

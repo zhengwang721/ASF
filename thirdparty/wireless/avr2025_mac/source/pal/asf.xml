@@ -11,7 +11,7 @@
 
 			<require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
 			<require idref="thirdparty.wireless.avr2025_mac.source.pal.inc"/>
-			<require idref="thirdparty.wireless.common_services.trx_access"/>
+			<require idref="thirdparty.wireless.services.trx_access"/>
 			<device-support-alias value="avr2025_mac_pal_spi_common_support"/>
 		</module>
 
@@ -43,7 +43,7 @@
 
 			<require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
 			<require idref="thirdparty.wireless.avr2025_mac.source.pal.inc"/>
-			<require idref="thirdparty.wireless.common_services.trx_access"/>
+			<require idref="thirdparty.wireless.services.trx_access"/>
 			<device-support-alias value="avr2025_mac_pal_spi_sam0_support"/>
 		</module>
 	</select-by-device>
@@ -69,7 +69,7 @@
 
 			<require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
 			<require idref="thirdparty.wireless.avr2025_mac.source.pal.inc"/>
-			<require idref="thirdparty.wireless.common_services.trx_access.rf215"/>
+			<require idref="thirdparty.wireless.services.trx_access.rf215"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
     </module>
