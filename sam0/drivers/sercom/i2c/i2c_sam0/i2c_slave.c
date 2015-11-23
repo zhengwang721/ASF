@@ -114,7 +114,6 @@ static enum status_code _i2c_slave_set_config(
 	tmp_ctrla |= ((uint32_t)config->sda_hold_time |
 			config->transfer_speed |
 			(config->scl_low_timeout << SERCOM_I2CS_CTRLA_LOWTOUTEN_Pos) |
-			(config->scl_stretch_only_after_ack_bit << SERCOM_I2CS_CTRLA_SCLSM_Pos) |
 			(config->slave_scl_low_extend_timeout << SERCOM_I2CS_CTRLA_SEXTTOEN_Pos));
 
 	i2c_hw->CTRLA.reg |= tmp_ctrla;
