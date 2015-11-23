@@ -49,9 +49,7 @@
 #include "conf_board.h"
 #include "ioport.h"
 #include "pio.h"
-#ifdef CONF_BOARD_CONFIG_MPU_AT_INIT
 #include "mpu.h"
-#endif
 
 /**
  * \brief Set peripheral mode for IOPORT pins.
@@ -107,7 +105,6 @@
  *	0xE0000000- 0xFFFFFFFF System           -                  -
  */
 
-#ifdef CONF_BOARD_CONFIG_MPU_AT_INIT
 /**
  * \brief Set up a memory region.
  */
@@ -334,7 +331,6 @@ static void _setup_memory_region( void )
 	__DSB();
 	__ISB();
 }
-#endif
 
 #ifdef CONF_BOARD_ENABLE_TCM_AT_INIT
 #if defined(__GNUC__)
@@ -356,7 +352,7 @@ static inline void tcm_enable(void)
 	__DSB();
 	__ISB();
 }
-
+#else
 /** \brief  TCM memory Disable
 
 	The function enables TCM memories
