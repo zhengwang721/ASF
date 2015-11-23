@@ -145,6 +145,7 @@ static void bno055_interrupt_handler(void)
 
 void extint_configure(void)
 {
+/** dsgfsgdfhgd */
 #if 0
 	struct extint_chan_conf config_extint_chan;
 	extint_chan_get_config_defaults(&config_extint_chan);
