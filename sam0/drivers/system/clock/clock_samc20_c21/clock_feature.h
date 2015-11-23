@@ -48,7 +48,7 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_system_clock_group SAM C System (SYSTEM) Driver
+ * \defgroup asfdoc_sam0_system_clock_group SAM C20/C21 System Clock Management Driver (SYSTEM CLOCK)
  *
  * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
@@ -1365,12 +1365,12 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  */
 
 /**
- * \page asfdoc_sam0_system_clock_exqsg Examples for SYSTEM Driver
+ * \page asfdoc_sam0_system_clock_exqsg Examples for System Clock Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_system_clock_group. QSGs are simple
  * examples with step-by-step instructions to configure and use this driver in
- * a selection of use cases. Note that a QSG can be compiled as a standalone
+ * a selection of use cases. Note that QSGs can be compiled as a standalone
  * application or be added to the user application.
  *
  *  - \subpage asfdoc_sam0_system_clock_basic_use_case
@@ -1385,8 +1385,8 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>42484A</td>
- *		<td>10/2015</td>
+ *		<td>A</td>
+ *		<td>06/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
