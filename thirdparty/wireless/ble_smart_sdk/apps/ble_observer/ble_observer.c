@@ -472,7 +472,8 @@ int main(void )
 	
 	/* observer init */
 	ble_observer_init();
-	
+	acquire_sleep_lock();
+
 	/* Receiving events */
 	while(1) 
 	{

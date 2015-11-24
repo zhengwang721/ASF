@@ -71,7 +71,8 @@ int main(void)
 	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
-	
+	acquire_sleep_lock();
+
 	/* Capturing the events  */
 	while(1)
 	{

@@ -85,6 +85,7 @@ int main()
 	printf("iBeacon SAMB11 Start\r\n");
 
 	ble_init();
+	acquire_sleep_lock();
 
 	while(at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS)
 	{
