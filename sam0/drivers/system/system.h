@@ -492,10 +492,12 @@ extern "C" {
  * \section asfdoc_sam0_system_examples Examples
  *
  * For SYSTEM module related examples, refer to the sub-modules listed in
- * the \ref asfdoc_sam0_system_module_overview "system module overview".
+ * the \ref asfdoc_sam0_system_module_overview "Module Overview".
  *
+ * \if DEVICE_SAML21_SYSTEM_SUPPORT
  * For a list of examples related to this driver, see
  * \ref asfdoc_sam0_drivers_power_exqsg.
+ * \endif
  *
  *
  * \section asfdoc_sam0_system_api_overview API Overview
@@ -565,16 +567,16 @@ void system_init(void);
  */
 
 /**
-
-* \page asfdoc_sam0_drivers_power_exqsg Examples for Power Driver
+ *
+ * \if DEVICE_SAML21_SYSTEM_SUPPORT
+ * \page asfdoc_sam0_drivers_power_exqsg Examples for SYSTEM Driver
  *
  * This is a list of the available Quick Start Guides (QSGs) and example
- * applications. QSGs are simple examples with step-by-step instructions to
+ * applications for \ref asfdoc_sam0_system_group. QSGs are simple examples with step-by-step instructions to
  * configure and use this driver in a selection of
  * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
- * \if DEVICE_SAML21_SYSTEM_SUPPORT
  *  - \subpage asfdoc_sam0_power_basic_use_case
  * \endif
  *
@@ -684,7 +686,7 @@ void system_init(void);
  * \if DEVICE_SAMC21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>42484A</td>
- *      <td>08/2015</td>
+ *      <td>11/2015</td>
  *      <td>Initial document release.</td>
  * </tr>
  * \endif
