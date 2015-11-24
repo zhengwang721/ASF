@@ -1,7 +1,7 @@
 /**
 * \file
 *
-* \brief Proximity Monitor Profile Application declarations
+* \brief BLE Utils declarations
 *
 * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
 *

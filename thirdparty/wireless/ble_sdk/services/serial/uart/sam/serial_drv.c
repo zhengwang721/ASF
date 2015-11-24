@@ -93,7 +93,9 @@ volatile bool pdc_uart_enabled = false;
 
 extern volatile enum tenuTransportState slave_state;
 
-static inline void ble_pdc_send_data(uint8_t *buf, uint16_t len)
+void ble_pdc_send_data(uint8_t *buf, uint16_t len);
+
+void ble_pdc_send_data(uint8_t *buf, uint16_t len)
 {	
 	/* Initialize the Tx buffers for data transfer */
 	ble_usart_tx_pkt.ul_addr = (uint32_t)buf;
