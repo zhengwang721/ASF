@@ -935,7 +935,7 @@ static inline bool slcd_get_vlcd_ready_status(void)
  *
  * <table>
  *	<tr>
- *		<th>Doc. rev.<th>
+ *		<th>Doc. rev.</th>
  *		<th>Date</th>
  *		<th>Comments</th>
  *	</tr>
