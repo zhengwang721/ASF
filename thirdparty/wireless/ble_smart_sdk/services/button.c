@@ -14,7 +14,7 @@ void button_init(button_callback_t callback)
 
 	gpio_init();
 
-	gpio_register_callback(BUTTON_0_PIN, callback, GPIO_CALLBACK_FALLING);
+	gpio_register_callback(BUTTON_0_PIN, callback, GPIO_CALLBACK_RISING);
 
 	gpio_enable_callback(BUTTON_0_PIN);
 }
