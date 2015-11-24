@@ -243,7 +243,7 @@ typedef at_ble_status_t (*ble_event_callback_t) (void *params);
 #endif
 
 #ifndef BLE_ATT_DB_MEMORY_SIZE
-#define BLE_ATT_DB_MEMORY_SIZE				(1024)  /* Maximum ATT DB memory in Bytes */
+#define BLE_ATT_DB_MEMORY_SIZE				(1250)  /* Maximum ATT DB memory in Bytes */
 #endif
 
 /* BLE Event array of function pointer maximum size */
