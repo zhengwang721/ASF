@@ -2,6 +2,7 @@
 #include <asf.h>
 #include <string.h>
 #include <conf_uart_serial.h>
+#include "platform.h"
 #ifndef NULL
 #define NULL ((void*)0)
 #endif
