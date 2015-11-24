@@ -1316,9 +1316,6 @@ void ili9488_set_orientation(uint8_t flags)
 	/* Flip X/Y and reverse X orientation and set BGR mode*/
 	ili9488_color_t madctl = 0x68;
 
-	/* Pretend the display is in landscape mode by default to match other display drivers */
-	//flags ^= ILI9488_SWITCH_XY | ILI9488_FLIP_X;
-
 	if (flags & ILI9488_FLIP_X) {
 		madctl &= ~(1 << 6);
 	}

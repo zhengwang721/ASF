@@ -1,5 +1,5 @@
 /**
- * \file Atmel Logo image for the ILI9341 display controller
+ * \file Atmel Logo image for the ILI488 display controller
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *

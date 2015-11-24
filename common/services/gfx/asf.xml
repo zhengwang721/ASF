@@ -105,6 +105,8 @@
 			<device-support value="uc3"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4s"/>
+			<device-support value="samv71"/>
+			<device-support value="same70"/>
 			<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 		</module>
 		<module type="service" id="common.services.gfx.display#hx8347a_et024006dhu_ebi" caption="GFX - ET024006DHU LCD panel (EBI)">
@@ -161,7 +163,7 @@
 		<module type="service" id="common.services.gfx.display#ili9488" caption="GFX - ILI9488 LCD panel">
 			<info type="gui-flag" value="hidden"/>
 			<info type="description" value="summary">
-			Graphic library configured for the LCD panel using the ILI93xx display controller. Used on the SAM4S-EK and SAM4S-EK2.
+			Graphic library configured for the LCD panel using the ILI9488 display controller. Used on the SAMV71-XPRO and SAME70-Xplained.
 			</info>
 			<build type="define" name="CONF_GFX_ILI9488" value="1"/>
 			<build type="header-file" value="gfx_ili9488_90_00028_a0.h"/>
