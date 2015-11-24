@@ -73,7 +73,9 @@ static void ble_observer_init(void)
 	
 	if(at_ble_scan_stop() != AT_BLE_SUCCESS)
 	{
-		DBG_LOG("Stop scan failed");
+		/* If scan not started stop scan failed message will be displayed on terminal */
+		/* If the scan already started then stop scan will return AT_BLE_SUCCESS */
+		DBG_LOG_DEV("Stop scan failed");
 	}
 
 	/* Initialize the scanning procedure */
