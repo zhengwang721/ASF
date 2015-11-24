@@ -816,6 +816,7 @@ static status_t brd_adv_init(void)
 int main(void)
 {
 	platform_driver_init();
+	acquire_sleep_lock(); 
 
 	/* Initialize serial console */
 	serial_console_init();
@@ -824,8 +825,6 @@ int main(void)
 	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
-	
-	acquire_sleep_lock(); 
 	
 	/* Intialize LED */
 	led_init();

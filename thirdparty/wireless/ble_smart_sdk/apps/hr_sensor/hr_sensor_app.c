@@ -340,6 +340,7 @@ int main(void)
 	isTimer = false;
 
 	platform_driver_init();
+	acquire_sleep_lock();
 
 	/* Initialize the button */
 	button_init(button_cb);
@@ -368,8 +369,6 @@ int main(void)
 
 	/* Registering the app_state_handler with the profile */
 	register_hr_state_handler(app_state_handler);
-
-	acquire_sleep_lock();
 
 	/* Capturing the events  */
 	while (app_exec) {

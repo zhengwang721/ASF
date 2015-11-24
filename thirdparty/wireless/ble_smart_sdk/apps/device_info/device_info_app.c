@@ -170,6 +170,7 @@ int main(void)
 	memset(&dis_service_handler, 0x00, sizeof(dis_gatt_service_handler_t));
 	 
 	platform_driver_init();
+	acquire_sleep_lock();
 
 	/* Initialize serial console */
 	serial_console_init();
@@ -188,8 +189,6 @@ int main(void)
 	/* initialize the button & LED */
 	button_init(button_cb);
 	led_init();
-	
-	acquire_sleep_lock();
 	
 	/* Initialize the dis */
 	dis_init_service(&dis_service_handler);

@@ -229,6 +229,7 @@ bool app_exec = true;
 int main(void )
 {
 	platform_driver_init();
+	acquire_sleep_lock(); 
 
 	/* Initialize serial console */
 	serial_console_init();	
@@ -240,8 +241,6 @@ int main(void )
 	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);	
-	
-	acquire_sleep_lock(); 
 	
 	/* Initialize button*/
 	button_init(button_cb);	

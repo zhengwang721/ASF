@@ -136,6 +136,7 @@ bool app_exec = true;
 int main(void )
 {
 	platform_driver_init();
+	acquire_sleep_lock();
 	
 	/* Initialize serial console */
 	sio2host_init();
@@ -150,8 +151,6 @@ int main(void )
 	
 	/* Register the notification handler */
 	notify_recv_ntf_handler(csc_prf_report_ntf_cb);
-
-	acquire_sleep_lock();
 
 	/* Capturing the events  */
 	while(app_exec){

@@ -77,6 +77,7 @@ int main()
 	memset(params,0,sizeof(params));	
 
 	platform_driver_init();
+	acquire_sleep_lock();
 
 	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 
@@ -85,7 +86,6 @@ int main()
 	printf("iBeacon SAMB11 Start\r\n");
 
 	ble_init();
-	acquire_sleep_lock();
 
 	while(at_ble_event_get(&event, params, -1) == AT_BLE_SUCCESS)
 	{

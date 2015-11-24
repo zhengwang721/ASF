@@ -171,6 +171,7 @@ static void button_cb(void)
 int main(void)
 {
 	platform_driver_init();
+	acquire_sleep_lock();
 
 	/* Initialize serial console */
 	serial_console_init();
@@ -208,8 +209,6 @@ int main(void)
 	
 	/* Start the advertisement */
 	start_advertisement();
-	
-	acquire_sleep_lock();
 	
 	while(true)
 	{

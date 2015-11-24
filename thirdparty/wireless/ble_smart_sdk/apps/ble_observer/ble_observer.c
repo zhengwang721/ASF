@@ -463,6 +463,7 @@ at_ble_status_t ble_observer_scan_data_handler(at_ble_scan_info_t *scan_info_dat
 int main(void )
 {
 	platform_driver_init();
+	acquire_sleep_lock();
 	
 	/* Initialize serial console */
 	serial_console_init();
@@ -472,7 +473,6 @@ int main(void )
 	
 	/* observer init */
 	ble_observer_init();
-	acquire_sleep_lock();
 
 	/* Receiving events */
 	while(1) 

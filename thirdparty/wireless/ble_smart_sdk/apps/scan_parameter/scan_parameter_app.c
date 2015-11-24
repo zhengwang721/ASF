@@ -224,9 +224,10 @@ static void button_cb(void)
 
 int main(void)
 {
-	platform_driver_init();
-	
 	init_var();
+
+	platform_driver_init();
+	acquire_sleep_lock();
 	
 	/* Initialize serial console */
 	serial_console_init();
@@ -246,8 +247,6 @@ int main(void)
 	button_init(button_cb);
 	led_init();
 	
-	acquire_sleep_lock();
-
 	/* Initialize the scan parameter service */
 	sps_init_service(&sps_service_handler, scan_interval_window, &scan_refresh);
 	

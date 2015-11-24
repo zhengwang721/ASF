@@ -217,6 +217,7 @@ int main(void)
 	isCharChanged = false;
 
 	platform_driver_init();
+	acquire_sleep_lock();
 
 	/* Initialize the button */
 	//button_init();
@@ -258,8 +259,6 @@ int main(void)
 	
 	/* Register callback for characteristic changed event */
 	register_ble_characteristic_changed_cb(ble_char_changed_app_event);
-	
-	acquire_sleep_lock();
 	
 	/* Capturing the events  */ 
 	while (1) {

@@ -596,6 +596,7 @@ int main(void)
 	g_idx = 0;	 
 
 	platform_driver_init();
+	acquire_sleep_lock();
 
 	/* Initialize serial console */
 	serial_console_init();
@@ -634,8 +635,6 @@ int main(void)
 
 	/* Initialize the button */
 	button_init(button_cb);
-
-	acquire_sleep_lock();
 
 	/* Capturing the events  */
 	while (app_exec) {

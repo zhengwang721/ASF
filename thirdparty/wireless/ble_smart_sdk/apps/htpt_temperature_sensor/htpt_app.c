@@ -408,8 +408,8 @@ int main (void)
 	
 	memcpy(scan_rsp_data, ro_scan_rsp_data, sizeof(uint8_t) * SCAN_RESP_LEN);
 	
-	
 	platform_driver_init();
+	acquire_sleep_lock();
 
 	/* Initialize serial console */
 	serial_console_init();
@@ -438,8 +438,6 @@ int main (void)
 	/* initialize the button & LED */
 	button_init(button_cb);
 	led_init();
-	
-	acquire_sleep_lock();
 	
 	/* Initialize the htp profile */
 	htp_init();	

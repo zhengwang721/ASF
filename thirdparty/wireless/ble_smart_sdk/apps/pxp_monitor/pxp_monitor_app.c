@@ -197,6 +197,7 @@ int main(void)
 	alert_level = PXP_NO_ALERT;
 	
 	platform_driver_init();
+	acquire_sleep_lock();
 
 	/* Initialize serial console */
 	serial_console_init();
@@ -215,8 +216,6 @@ int main(void)
 	/* Initialize the pxp service */
 	pxp_app_init();
 	
-	acquire_sleep_lock();
-
 	while (1) {
 		/* BLE Event Task */
 		ble_event_task();

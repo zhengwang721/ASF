@@ -132,6 +132,7 @@ int main(void)
 	timer_interval = INIT_TIMER_INTERVAL;
 
 	platform_driver_init();
+	acquire_sleep_lock(); 
 
 	/* Initialize serial console */
 	serial_console_init();
@@ -153,8 +154,6 @@ int main(void)
 	register_find_me_handler(app_immediate_alert);
 
 	register_ble_user_event_cb(user_callback_handler);
-	
-	acquire_sleep_lock(); 
 	
 	/* Capturing the events  */
 	while (1) {

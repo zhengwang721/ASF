@@ -163,6 +163,7 @@ int main (void)
 #endif
 	
 	platform_driver_init();
+	acquire_sleep_lock();
 
 	/* Initializing the console  */
 	serial_console_init();
@@ -182,8 +183,6 @@ int main (void)
 	/* initialize the button & LED */
 	button_init(button_cb);
 	led_init();
-	
-	acquire_sleep_lock();
 	
 	while(1) {
 		ble_event_task();

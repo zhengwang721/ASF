@@ -183,6 +183,7 @@ int main(void)
 	timer_interval = INIT_TIMER_INTERVAL;
 	
 	platform_driver_init();
+	acquire_sleep_lock();
 	
 	/* Initialize serial console */
 	serial_console_init();
@@ -201,8 +202,6 @@ int main(void)
 	/* initialize the button & LED */
 	button_init(button_cb);
 	led_init();
-	
-	acquire_sleep_lock();
 	
 	DBG_LOG("Proximity Reporter Initializing Completed");
 	
