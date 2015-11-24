@@ -54,15 +54,15 @@
  *
  * \section usage Usage
  * -# To connect to the internet Access Point using hardcoded credentials
- * -# DEMO_ENABLE_WEB_PROVISIONING macro must be commented in main.h, then
+ * -# MAIN_ENABLE_WEB_PROVISIONING macro must be commented in main.h, then
  * -# set the following macro:
  * \code
- *    #define DEMO_WLAN_SSID     "SSID"
- *    #define DEMO_WLAN_AUTH     M2M_WIFI_SEC_WPA_PSK
- *    #define DEMO_WLAN_PSK      "PASSWORD"
+ *    #define MAIN_WLAN_SSID     "SSID"
+ *    #define MAIN_WLAN_AUTH     M2M_WIFI_SEC_WPA_PSK
+ *    #define MAIN_WLAN_PSK      "PASSWORD"
  * \endcode
  *
- * -# Alternatively keep DEMO_ENABLE_WEB_PROVISIONING macro to enable the
+ * -# Alternatively keep MAIN_ENABLE_WEB_PROVISIONING macro to enable the
  * -# Wi-Fi web provisioning and follow instruction displayed on UART.
  *
  * -# Build the program and download it into the board.
@@ -126,7 +126,7 @@ typedef enum wifi_status {
 } wifi_status_t;
 
 /** WiFi status variable. */
-wifi_status_t gWifiState = WifiStateInit;
+volatile wifi_status_t gWifiState = WifiStateInit;
 
 /** SysTick counter to avoid busy wait delay. */
 volatile uint32_t gu32MsTicks = 0;
@@ -135,29 +135,10 @@ volatile uint32_t gu32MsTicks = 0;
 static uint32_t gu32publishDelay = 0;
 static uint32_t gu32subscribeDelay = 0;
 
-/* AP provisioning mode configuration. */
-static tstrM2MAPConfig gstrM2MAPConfig = {
-	DEMO_WLAN_AP_NAME,      /* Access Point Name. */
-	DEMO_WLAN_AP_CHANNEL,   /* Channel to use. */
-	DEMO_WLAN_AP_WEP_INDEX, /* Wep key index. */
-	DEMO_WLAN_AP_WEP_SIZE,  /* Wep key size. */
-	DEMO_WLAN_AP_WEP_KEY,   /* Wep key. */
-	DEMO_WLAN_AP_SECURITY,  /* Security mode. */
-	DEMO_WLAN_AP_MODE,      /* SSID visible. */
-	DEMO_WLAN_AP_IP_ADDRESS /* DHCP server IP */
-};
-
-static const char gchHttpProvDomainName[] = DEMO_WLAN_AP_DOMAIN_NAME;
-static char gs8DeviceName[] = DEMO_WLAN_AP_NAME;
-
-static char gSSID[64] = { 0 };
-static int gSecType = M2M_WIFI_SEC_WPA_PSK;
-static char gPSK[64] = { 0 };
-
 /** PubNub global variables. */
-static const char PubNubPublishKey[] = DEMO_PUBNUB_PUBLISH_KEY;
-static const char PubNubSubscribeKey[] = DEMO_PUBNUB_SUBSCRIBE_KEY;
-static char PubNubChannel[] = DEMO_PUBNUB_CHANNEL;
+static const char PubNubPublishKey[] = MAIN_PUBNUB_PUBLISH_KEY;
+static const char PubNubSubscribeKey[] = MAIN_PUBNUB_SUBSCRIBE_KEY;
+static char PubNubChannel[] = MAIN_PUBNUB_CHANNEL;
 static pubnub_t *pPubNubCfg;
 
 /** UART module for debug. */
@@ -238,7 +219,8 @@ static void m2m_wifi_state(uint8_t u8MsgType, void *pvMsg)
 			printf("m2m_wifi_state: M2M_WIFI_RESP_CON_STATE_CHANGED: DISCONNECTED\r\n");
 			if (WifiStateConnected == gWifiState) {
 				gWifiState = WifiStateDisConnected;
-				m2m_wifi_connect(gSSID, strlen(gSSID), gSecType, (char *)gPSK, M2M_WIFI_CH_ALL);
+				m2m_wifi_connect((char *)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID),
+						MAIN_WLAN_AUTH, (char *)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);
 			}
 		}
 
@@ -250,28 +232,7 @@ static void m2m_wifi_state(uint8_t u8MsgType, void *pvMsg)
 		uint8_t *pu8IPAddress = (uint8_t *)pvMsg;
 		printf("m2m_wifi_state: M2M_WIFI_REQ_DHCP_CONF: IP is %u.%u.%u.%u\r\n",
 				pu8IPAddress[0], pu8IPAddress[1], pu8IPAddress[2], pu8IPAddress[3]);
-		if (gWifiState == WifiStateConnecting) {
-			gWifiState = WifiStateConnected;
-		}
-
-		break;
-	}
-
-	case M2M_WIFI_RESP_PROVISION_INFO:
-	{
-		tstrM2MProvisionInfo *pstrProvInfo = (tstrM2MProvisionInfo *)pvMsg;
-		printf("m2m_wifi_state: M2M_WIFI_RESP_PROVISION_INFO.\r\n\r\n");
-		if (pstrProvInfo->u8Status == M2M_SUCCESS) {
-			memcpy(gSSID, pstrProvInfo->au8SSID, strlen((char *)(pstrProvInfo->au8SSID)));
-			gSecType = pstrProvInfo->u8SecType;
-			memcpy(gPSK, pstrProvInfo->au8Password, strlen((char *)(pstrProvInfo->au8Password)));
-			printf("m2m_wifi_state: Wi-Fi connecting to AP using provided credentials:\r\n");
-			printf("m2m_wifi_state:  - SSID: %s, SecType: %d, Key: %s\r\n\r\n", gSSID, gSecType, gPSK);
-			gWifiState = WifiStateConnecting;
-			m2m_wifi_connect( gSSID, strlen(gSSID), gSecType, gPSK, M2M_WIFI_CH_ALL);
-		} else {
-			printf("m2m_wifi_state: provision failed!\r\n");
-		}
+		gWifiState = WifiStateConnected;
 
 		break;
 	}
@@ -422,10 +383,7 @@ int main(void)
 		}
 	}
 	m2m_wifi_get_mac_address(mac_addr);
-	set_dev_name_to_mac((uint8 *)gs8DeviceName, mac_addr);
-	set_dev_name_to_mac((uint8 *)gstrM2MAPConfig.au8SSID, mac_addr);
 	set_dev_name_to_mac((uint8 *)PubNubChannel, mac_addr);
-	m2m_wifi_set_device_name((uint8 *)gs8DeviceName, (uint8)m2m_strlen((uint8 *)gs8DeviceName));
 	printf("\r\n");
 
 	/* Initialize PubNub API. */
@@ -435,33 +393,22 @@ int main(void)
 	pPubNubCfg = pubnub_get_ctx(0);
 	pubnub_init(pPubNubCfg, PubNubPublishKey, PubNubSubscribeKey);
 
-#ifdef DEMO_ENABLE_WEB_PROVISIONING
-	/* Start web provisioning. */
-	m2m_wifi_start_provision_mode((tstrM2MAPConfig *)&gstrM2MAPConfig, (char *)gchHttpProvDomainName, 1);
-	printf("main: Wi-Fi provisioning mode started:\r\n");
-	printf("main:  - Connect your laptop/phone to Wi-Fi Access Point \"%s\".\r\n", gstrM2MAPConfig.au8SSID);
-	printf("main:  - Open a browser to \"%s\" and enter credentials.\r\n\r\n", DEMO_WLAN_AP_DOMAIN_NAME);
-	gWifiState = WifiStateWaitingProv;
-#else
 	/* Connect to AP using Wi-Fi settings from main.h. */
-	printf("main: Wi-Fi connecting to AP using hardcoded credentials:\r\n");
-	memcpy(gSSID, DEMO_WLAN_SSID, strlen(DEMO_WLAN_SSID));
-	gSecType = M2M_WIFI_SEC_WPA_PSK;
-	memcpy(gPSK, DEMO_WLAN_PSK, strlen(DEMO_WLAN_PSK));
-	gWifiState = WifiStateConnecting;
-	printf("main:  - SSID: %s, SecType: %d, Key: %s\r\n\r\n", gSSID, gSecType, gPSK);
-	m2m_wifi_connect(gSSID, strlen(gSSID), gSecType, gPSK, M2M_WIFI_CH_ALL);
-#endif
+	printf("main: Wi-Fi connecting to AP using hardcoded credentials...\r\n");
+	m2m_wifi_connect((char *)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID),
+			MAIN_WLAN_AUTH, (char *)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);
 
 	while (1) {
 		m2m_wifi_handle_events(NULL);
 
+		/* Device is connected to AP. */
 		if (gWifiState == WifiStateConnected) {
+			/* PubNub: read event from the cloud. */
 			if (pPubNubCfg->state == PS_IDLE) {
 				/* Subscribe at the beginning and re-subscribe after every publish. */
 				if ((pPubNubCfg->trans == PBTT_NONE) ||
 				    (pPubNubCfg->trans == PBTT_PUBLISH && pPubNubCfg->last_result == PNR_OK)) {
-					printf("main: subscribe event, PNR_OK \r\n");
+					printf("main: subscribe event, PNR_OK\r\n");
 					pubnub_subscribe(pPubNubCfg, PubNubChannel);				
 				}
 
@@ -473,10 +420,7 @@ int main(void)
 						break;
 					}
 
-					if (0 == (strncmp(&msg[2], "temperature", strlen("temperature")))) {
-						/* Self message or message received from neighbor. */
-						printf("main: received temperature message: %s\r\n", msg);
-					} else if (0 == (strncmp(&msg[2], "led", strlen("led")))) {
+					if (0 == (strncmp(&msg[2], "led", strlen("led")))) {
 						/* LED control message. */
 						printf("main: received LED control message: %s\r\n", msg);
 						if (0 == (strncmp(&msg[8], "on", strlen("on")))) {
@@ -491,7 +435,7 @@ int main(void)
 				}
 
 				/* Subscribe to receive pending messages. */
-				if (gu32MsTicks - gu32subscribeDelay > DEMO_PUBNUB_SUBSCRIBE_INTERVAL) {
+				if (gu32MsTicks - gu32subscribeDelay > MAIN_PUBNUB_SUBSCRIBE_INTERVAL) {
 					gu32subscribeDelay = gu32MsTicks;
 					printf("main: subscribe event, interval.\r\n");
 					pubnub_subscribe(pPubNubCfg, PubNubChannel);
@@ -499,13 +443,13 @@ int main(void)
 			}
 
 			/* Publish the temperature measurements periodically. */
-			if (gu32MsTicks - gu32publishDelay > DEMO_PUBNUB_PUBLISH_INTERVAL) {
+			if (gu32MsTicks - gu32publishDelay > MAIN_PUBNUB_PUBLISH_INTERVAL) {
 				gu32publishDelay = gu32MsTicks;
 				adc_start_conversion(&adc_instance);
 				temperature = at30tse_read_temperature();
 				adc_read(&adc_instance, &light);
 				sprintf(buf, "{\"device\":\"%s\", \"temperature\":\"%d.%d\", \"light\":\"%d\", \"led\":\"%s\"}",
-						gs8DeviceName,
+						PubNubChannel,
 						(int)temperature, (int)((int)(temperature * 100) % 100),
 						(((4096 - light) * 100) / 4096),
 						port_pin_get_output_level(LED0_PIN) ? "0" : "1");

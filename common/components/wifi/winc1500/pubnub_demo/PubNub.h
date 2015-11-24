@@ -57,6 +57,8 @@
 #define PUBNUB_ORIGIN                   "pubsub.pubnub.com"
 #define PUBNUB_ORIGIN_PORT              (80)
 
+#define PUBNUB_REQUEST                  "GET %s HTTP/1.1\r\nHost: %s\r\nUser-Agent: PubNub-WINC1500\r\nConnection: Keep-Alive\r\n\r\n"
+
 #define PUBNUB_BUF_MAXLEN               (256)
 #define PUBNUB_REPLY_MAXLEN             (512)
 
