@@ -70,6 +70,11 @@ extern uint8_t scan_response_count;
 static void ble_observer_init(void)
 {
 	at_ble_status_t scan_status;
+	
+	if(at_ble_scan_stop() != AT_BLE_SUCCESS)
+	{
+		DBG_LOG("Stop scan failed");
+	}
 
 	/* Initialize the scanning procedure */
 	scan_status = gap_dev_scan();
