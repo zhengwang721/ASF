@@ -237,7 +237,6 @@ static void bno055_interrupt_handler_no_motion(void)
 	const uint8_t str_sleeping_message[] = "\r\nShake me to wake me!\r\n\r\n";
 	
 	ioport_set_pin_level(RGB_LED_G,  RGB_LED_G_ON);
-	//RGB_LED_B_R_UPDATE(RBG_LED_B_OFF, RBG_LED_R_OFF);
 	printf("%s", str_sleeping_message);
 }
 
@@ -253,7 +252,6 @@ static void bno055_interrupt_handler_any_motion(void)
 	const uint8_t str_wakingup_message[] = "\r\nWell done!\r\n\r\n";
 	
 	printf("%s", str_wakingup_message);
-	//RGB_LED_B_R_UPDATE(RGB_LED_B_VALUE, RGB_LED_R_VALUE);
 	ioport_set_pin_level(RGB_LED_G,  RGB_LED_G_OFF);
 }
 
