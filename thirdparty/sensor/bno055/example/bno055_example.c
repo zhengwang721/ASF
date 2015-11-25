@@ -74,6 +74,17 @@
 	-- BNO055 Example xxx --
 	-- xxxxxx-xx
 	-- Compiled: xxx xx xxxx xx:xx:xx --
+ *
+ * Cailbration
+ * Compass, M4G & NDOF_FMC_OFF:
+ * Make some random movements (for example: writing the number ¡®8¡¯ on air) 
+ * until the CALIB_STAT register indicates fully calibrated.
+ * 
+ * It takes more calibration movements to get the magnetometer calibrated than in the NDOF mode.
+ * Step 1:The same random movements have to be made to calibrate the sensor as in the FMC_OFF mode, 
+ * but here it takes relatively less calibration movements (and slightly higher current consumption) 
+ * to get the magnetometer calibrated.
+ * Step 2:The register CALIB_STAT can be read to see the calibration status of the magnetometer.
 \endcode
  */
 
