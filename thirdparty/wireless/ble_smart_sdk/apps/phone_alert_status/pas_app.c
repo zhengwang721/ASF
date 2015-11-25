@@ -183,8 +183,8 @@ void button_cb(void)
 	if (app_state)
 	{
 		flag = true;
-	}
-	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
+		send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
+	}	
 }
 
 /**
@@ -201,9 +201,9 @@ bool appp_exec = true;
 int main(void)
 {	
 	at_ble_status_t status;
+	app_state = false;
 
 	platform_driver_init();
-	acquire_sleep_lock(); 
 	
 	/* Initialize serial console */
 	serial_console_init();
@@ -214,6 +214,8 @@ int main(void)
 	/* initialize the ble chip and Set the device mac address */
 	ble_device_init(NULL);
 	
+	acquire_sleep_lock(); 
+			
 	/* Initializing the button */
 	button_init(button_cb);
 	
