@@ -91,7 +91,7 @@
 #include "bsp/include/nm_bsp_samg55.h"
 #endif
 
-#ifdef __SAME70Q21__
+#if (defined __SAME70Q21__) || (defined __SAMV71Q21__)
 #include "bsp/include/nm_bsp_same70.h"
 #endif
 

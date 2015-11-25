@@ -1,8 +1,7 @@
 /**
- *
  * \file
  *
- * \brief IoT Temperature Sensor Demo.
+ * \brief MAIN configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -42,45 +41,44 @@
  *
  */
 
-#ifndef DEMO_H_INCLUDED
-#define DEMO_H_INCLUDED
+#ifndef MAIN_H_INCLUDED
+#define MAIN_H_INCLUDED
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define DEFAULT_SSID						"default"
-#define	DEFAULT_PWD							"default"
-#define DEFAULT_AUTH						M2M_WIFI_SEC_WPA_PSK
-#define DEFAULT_CHANNEL						M2M_WIFI_CH_ALL
+#include "driver/include/m2m_wifi.h"
 
-/** Sensor name. */
-#define DEMO_PRODUCT_NAME					"Temp1"
+/** Using broadcast address for simplicity. */
+#define MAIN_SERVER_PORT                (80)
 
-/* Using broadcast address for simplicity. */
-#define DEMO_SERVER_IP						"255.255.255.255"
-#define DEMO_SERVER_PORT					(6666)
-#define DEMO_REPORT_INTERVAL				(1000)
-#define DEMO_WLAN_AP_IP_ADDRESS				{192,168,1,10}
-#define DEMO_WLAN_AP_DOMAIN_NAME			"atmelconfig.com"
+/** Using IP address. */
+#define IPV4_BYTE(val, index)           ((val >> (index * 8)) & 0xFF)
 
-#define DEMO_WLAN_AP_NAME					"WINC1500_MyAP"			// Access Point Name.
-#define DEMO_WLAN_AP_CHANNEL				1						// Channel to use.
-#define DEMO_WLAN_AP_WEP_INDEX				0						// Wep key index.
-#define DEMO_WLAN_AP_WEP_SIZE				WEP_40_KEY_STRING_SIZE	// Wep key size.
-#define DEMO_WLAN_AP_WEP_KEY				"1234567890"			// Wep key.
-#define DEMO_WLAN_AP_SECURITY				M2M_WIFI_SEC_OPEN		// Security mode.
-#define DEMO_WLAN_AP_MODE					0						// Visible.
-#if SAME70
-#define CREDENTIAL_ENTRY_BUTTON				PIO_PA11_IDX
-#elif SAMD21
-#define CREDENTIAL_ENTRY_BUTTON				PIN_PA15
-#endif
+/** Send buffer of TCP socket. */
+#define MAIN_PREFIX_BUFFER              "GET /data/2.5/weather?q="
+//#define MAIN_PREFIX_BUFFER              "GET /data/2.5/forecast/city?id="
+#define MAIN_POST_BUFFER                "&mode=xml&units=metric HTTP/1.1\r\nHost: api.openweathermap.org\r\nAccept: */*\r\n\r\n"
 
-void demo_start(void);
+/** Wi-Fi Settings */
+#define MAIN_WLAN_SSID        "AVRGUEST" /* < Destination SSID */
+#define MAIN_WLAN_AUTH        M2M_WIFI_SEC_WPA_PSK /* < Security manner */
+#define MAIN_WLAN_PSK         "MicroController" /* < Password for Destination SSID */
+
+/** Weather information provider server. */
+#define MAIN_WEATHER_SERVER_NAME        "api.openweathermap.org"
+
+/** Input City Name. */
+#define MAIN_CITY_NAME                  "Shanghai"
+#define MAIN_APP_ID                     "&appid=ebea1368f9a2bdd172f7115ff8d0371d"
+//#define MAIN_APP_ID                     "&appid=2de143494c0b295cca9337e1e96b00e0"
+
+/** Receive buffer size. */
+#define MAIN_WIFI_M2M_BUFFER_SIZE       1024
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* DEMO_H_INCLUDED */
+#endif /* MAIN_H_INCLUDED */

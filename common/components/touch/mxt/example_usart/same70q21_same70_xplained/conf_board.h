@@ -1,8 +1,7 @@
 /**
- *
  * \file
  *
- * \brief IoT Temperature Sensor Demo.
+ * \brief SAME70 Xplained board configuration
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -23,9 +22,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -39,48 +35,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
 
-#ifndef DEMO_H_INCLUDED
-#define DEMO_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define CONF_BOARD_UART_CONSOLE
 
-#define DEFAULT_SSID						"default"
-#define	DEFAULT_PWD							"default"
-#define DEFAULT_AUTH						M2M_WIFI_SEC_WPA_PSK
-#define DEFAULT_CHANNEL						M2M_WIFI_CH_ALL
+#define CONF_BOARD_MAXTOUCH_XPRO
+#define CONF_BOARD_TWIHS0
 
-/** Sensor name. */
-#define DEMO_PRODUCT_NAME					"Temp1"
-
-/* Using broadcast address for simplicity. */
-#define DEMO_SERVER_IP						"255.255.255.255"
-#define DEMO_SERVER_PORT					(6666)
-#define DEMO_REPORT_INTERVAL				(1000)
-#define DEMO_WLAN_AP_IP_ADDRESS				{192,168,1,10}
-#define DEMO_WLAN_AP_DOMAIN_NAME			"atmelconfig.com"
-
-#define DEMO_WLAN_AP_NAME					"WINC1500_MyAP"			// Access Point Name.
-#define DEMO_WLAN_AP_CHANNEL				1						// Channel to use.
-#define DEMO_WLAN_AP_WEP_INDEX				0						// Wep key index.
-#define DEMO_WLAN_AP_WEP_SIZE				WEP_40_KEY_STRING_SIZE	// Wep key size.
-#define DEMO_WLAN_AP_WEP_KEY				"1234567890"			// Wep key.
-#define DEMO_WLAN_AP_SECURITY				M2M_WIFI_SEC_OPEN		// Security mode.
-#define DEMO_WLAN_AP_MODE					0						// Visible.
-#if SAME70
-#define CREDENTIAL_ENTRY_BUTTON				PIO_PA11_IDX
-#elif SAMD21
-#define CREDENTIAL_ENTRY_BUTTON				PIN_PA15
-#endif
-
-void demo_start(void);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* DEMO_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
