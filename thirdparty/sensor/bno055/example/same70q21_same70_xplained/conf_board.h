@@ -49,6 +49,7 @@
 
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
+#define CONF_BOARD_ENABLE_FPU
 
 /** Enable TWIHS port. */
 #define CONF_BOARD_TWIHS0
