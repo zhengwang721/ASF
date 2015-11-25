@@ -41,10 +41,46 @@
  *
  */
 
+/**
+ * \mainpage BNO055 nine Axis sensor Example
+ *
+ * \section Purpose
+ *
+ * This example demonstrates how to configure BNO055 nine Axis sensor
+ * and check the values of nine axes by it.
+ *
+ * \section Requirements
+ *
+ * This package can be used with SAME70 evaluation kits.
+ *
+ * \section Description
+ *
+ * This example first set BNO055 working mode and enable interrupt, then initialize it,
+ * and last get the sensor values of nine axes if the sensor position is changed.
+ *
+ * \section Usage
+ *
+ * -# Build the program and download it into the evaluation board.
+ * -# On the computer, open and configure a terminal application
+ *     (e.g., HyperTerminal on Microsoft Windows) with these settings:
+ *    - 115200 bauds
+ *    - 8 bits of data
+ *    - No parity
+ *    - 1 stop bit
+ *    - No flow control
+ *  -# In the terminal window, the
+ *     following text should appear (values depend on the board and the chip used):
+ *     \code
+	-- BNO055 Example xxx --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+\endcode
+ */
+
 #include "asf.h"
 #include "conf_board.h"
 #include "conf_bno055.h"
-#include "bno055_porting_i2c.h"
+#include "bno055_porting.h"
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -55,7 +91,7 @@ extern "C" {
 /// @endcond
 
 #define STRING_EOL    "\r"
-#define STRING_HEADER "-- MMA7341L  Example --\r\n" \
+#define STRING_HEADER "-- BNO055  Example --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
@@ -65,9 +101,9 @@ extern "C" {
 #define SLEEP_STATE_AWAKE		UINT8_C(0)
 
 /* name RGB LED Macros */
-#define RGB_LED_R				PIO_PB2_IDX
-#define RGB_LED_G				PIO_PA0_IDX
-#define RGB_LED_B				PIO_PC30_IDX
+#define RGB_LED_R				PIO_PC30_IDX
+#define RGB_LED_G				PIO_PB2_IDX
+#define RGB_LED_B				PIO_PA0_IDX
 #define RGB_LED_G_ON			false
 #define RGB_LED_G_OFF			true
 #define RGB_LED_B_VALUE			(0xFFFF - ((bno055_euler_data.h) * 0xFFFF / 5759))
@@ -75,175 +111,34 @@ extern "C" {
 #define RGB_LED_R_VALUE			(0xFFFF - ((bno055_euler_data.p) * 0xFFFF / 5759))
 #define RBG_LED_R_OFF			UINT16_C(0xFFFF)
 
-/*----------------------------------------------------------------------------*
- *  struct bno055_t parameters can be accessed by using BNO055
- *	BNO055_t having the following parameters
- *	Bus write function pointer: BNO055_WR_FUNC_PTR
- *	Bus read function pointer: BNO055_RD_FUNC_PTR
- *	Burst read function pointer: BNO055_BRD_FUNC_PTR
- *	Delay function pointer: delay_msec
- *	I2C address: dev_addr
- *	Chip id of the sensor: chip_id
-*---------------------------------------------------------------------------*/
-struct bno055_t bno055;
-
-/*! holds BNO055 Euler data which consists of three Euler angles (Heading, Roll and Pitch) */
-struct bno055_euler_t			bno055_euler_data;
 /*! Holds sleep state of the system */
 uint8_t sleep_state;
 
 /*! the flag is set by the external interrupt callback function */
-volatile bool extint_callback_detect_flag;
-volatile bool read_sensor_data = false;
+bool read_sensor_data = false;
+bool sensor_data_changed = false;
 uint32_t systick_count = 0;
 
 /************************************************************************/
 /**\name Function Prototype Declaration                                 */
 /************************************************************************/
-void extint_configure(void);
-//void extint_configure_callbacks(void);
-void extint_detection_callback(void);
-void (*extint_handler_function_ptr)(void);
-void extint_initialize(void (*extint_handler_function)(void));
+
+static void sensor_init(void);
+static void sensors_data_print(void);
 static void bno055_interrupt_handler_no_motion(void);
 static void bno055_interrupt_handler_any_motion(void);
+static void bno055_interrupt_handler(void);
 
 
-
-static void bno055_interrupt_handler(void)
-{
-	uint8_t accel_no_motion_status = 0;
-	uint8_t accel_any_motion_status = 0;
-	uint8_t gyro_any_motion_status = 0;
-	
-	bno055_get_intr_stat_accel_no_motion(&accel_no_motion_status);
-	bno055_get_intr_stat_accel_any_motion(&accel_any_motion_status);
-	bno055_get_intr_stat_gyro_any_motion(&gyro_any_motion_status);
-	
-	switch (sleep_state)
-	{
-		case SLEEP_STATE_AWAKE:
-		if (accel_no_motion_status)
-		{
-			sleep_state = SLEEP_STATE_SLEEP;
-			bno055_interrupt_handler_no_motion();
-		}
-		break;
-		case SLEEP_STATE_SLEEP:
-		if (accel_any_motion_status || gyro_any_motion_status)
-		{
-			sleep_state = SLEEP_STATE_AWAKE;
-			bno055_interrupt_handler_any_motion();
-		}
-		break;
-		default:
-		break;
-	}
-	
-	bno055_set_intr_rst(ENABLED);
-}
-
-void extint_configure(void)
-{
-/** dsgfsgdfhgd */
-#if 0
-	struct extint_chan_conf config_extint_chan;
-	extint_chan_get_config_defaults(&config_extint_chan);
-	
-	config_extint_chan.gpio_pin = EXT1_IRQ_PIN;
-	config_extint_chan.gpio_pin_mux = EXT1_IRQ_PINMUX;
-	config_extint_chan.gpio_pin_pull = EXTINT_PULL_DOWN;
-	config_extint_chan.detection_criteria = EXTINT_DETECT_RISING;
-	
-	extint_chan_set_config(EXT1_IRQ_INPUT, &config_extint_chan);
-#endif
-}
-
-#if 0
-void extint_configure_callbacks(void)
-{
-	extint_register_callback(extint_detection_callback, EXT1_IRQ_INPUT, EXTINT_CALLBACK_TYPE_DETECT);
-	extint_callback_detect_flag = false;
-	extint_chan_enable_callback(EXT1_IRQ_INPUT, EXTINT_CALLBACK_TYPE_DETECT);
-}
-#endif
-
-void extint_detection_callback(void)
-{
-	extint_callback_detect_flag = true;
-	extint_handler_function_ptr();
-}
-
-void extint_initialize(void (*extint_handler_function)(void))
-{
-	extint_handler_function_ptr = extint_handler_function;
-	
-	/* Enable the peripheral clock for the BNO055 extension board interrupt pin. */
-	pmc_enable_periph_clk(PIN_BNO055_EXT_INIERRUPT_ID);
-	/* Configure PIOs as input pins. */
-	pio_configure(PIN_BNO055_EXT_INIERRUPT_PIO, PIN_BNO055_EXT_INIERRUPT_TYPE, 
-					PIN_BNO055_EXT_INIERRUPT_MASK, PIN_BNO055_EXT_INIERRUPT_ATTR);
-	/* Initialize PIO interrupt handler, interrupt on rising edge. */
-	pio_handler_set(PIN_BNO055_EXT_INIERRUPT_PIO, PIN_BNO055_EXT_INIERRUPT_ID, PIN_BNO055_EXT_INIERRUPT_MASK,
-					PIN_BNO055_EXT_INIERRUPT_ATTR, bno055_interrupt_handler);
-	/* Initialize and enable push button (PIO) interrupt. */
-	pio_handler_set_priority(PIN_BNO055_EXT_INIERRUPT_PIO, PIOD_IRQn, 0);
-}
-
-static void bno055_gpio_config(void)
-{
-	//ioport_set_pin_dir(PIO_PB3_IDX, IOPORT_DIR_OUTPUT);
-	//ioport_set_pin_dir(PIO_PB2_IDX, IOPORT_DIR_OUTPUT);
-	//ioport_set_pin_dir(PIO_PC17_IDX, IOPORT_DIR_OUTPUT);
-	//ioport_set_pin_dir(PIO_PD25_IDX, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_mode(PIO_PB3_IDX, IOPORT_DIR_OUTPUT | IOPORT_MODE_PULLUP | IOPORT_MODE_MUX_MASK);
-	ioport_set_pin_mode(PIO_PB2_IDX, IOPORT_DIR_OUTPUT | IOPORT_MODE_PULLUP | IOPORT_MODE_MUX_MASK);
-	ioport_set_pin_mode(PIO_PC17_IDX, IOPORT_DIR_OUTPUT | IOPORT_MODE_PULLUP | IOPORT_MODE_MUX_MASK);
-	ioport_set_pin_mode(PIO_PD25_IDX, IOPORT_DIR_OUTPUT | IOPORT_MODE_PULLUP | IOPORT_MODE_MUX_MASK);
-	
-	//pio_configure(PIO_PB3_IDX, PIO_OUTPUT_0, PIO_PD28, PIO_PULLUP);
-	//pio_configure(PIO_PB2_IDX, PIO_OUTPUT_0, PIO_PB2, PIO_PULLUP);
-	//pio_configure(PIO_PC17_IDX, PIO_OUTPUT_0, PIO_PC17, PIO_PULLUP);
-	//pio_configure(PIO_PD25_IDX, PIO_OUTPUT_0, PIO_PD25, PIO_PULLUP);
-}
-
-/**
- *  \brief Handler for System Tick interrupt.
- */
-void SysTick_Handler(void)
-{
-	systick_count ++;
-	if(systick_count == 500) {
-		read_sensor_data = true;
-		systick_count = 0;
-	}
-}
-
-/**
- *  \brief Configure UART console.
- */
-static void configure_console(void)
-{
-	const usart_serial_options_t uart_serial_options = {
-		.baudrate = CONF_UART_BAUDRATE,
-#ifdef CONF_UART_CHAR_LENGTH
-		.charlength = CONF_UART_CHAR_LENGTH,
-#endif
-		.paritytype = CONF_UART_PARITY,
-#ifdef CONF_UART_STOP_BITS
-		.stopbits = CONF_UART_STOP_BITS,
-#endif
-	};
-
-	/* Configure console UART. */
-	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
-	stdio_serial_init(CONF_UART, &uart_serial_options);
-}
-
+/* 
+* This function calls initialization function of BNO055, sets sensor power mode
+* to LOWPOWER, sets sensor operation mode to NDOF and enables the required
+* interrupts (Accelerometer Any Motion, Accelerometer No Motion, Gyroscope Any Motion).
+*
+*/
 static void sensor_init(void)
 {
-	I2C_routine(&bno055);
-	bno055_init(&bno055);
+	bno055_initialize();
 	bno055_set_power_mode(POWER_MODE_LOWPOWER);
 	bno055_set_intr_rst(ENABLED);
 	
@@ -285,20 +180,38 @@ static void sensor_init(void)
 * @return		NULL
 *
 */
-static void sensors_data_print(void)
+static void sensors_data_print (void)
 {
-	uint8_t uart_tx_buf[49] = {0};
-	uint8_t accel_calib = 0;
-	uint8_t gyro_calib = 0;
-	uint8_t mag_calib = 0;
-	
+	struct bno055_euler_t		   bno055_euler_data;
+	struct bno055_linear_accel_t   bno055_linear_accel_data;
+	struct bno055_gravity_t        bno055_gravity_data;
+	struct bno055_accel_t          bno055_accel_data;
+	struct bno055_gyro_t           bno055_gyro_data;
+	struct bno055_mag_t            bno055_mag_data;
+
 	bno055_read_euler_hrp(&bno055_euler_data);
-	bno055_get_accel_calib_stat(&accel_calib);
-	bno055_get_gyro_calib_stat(&gyro_calib);
-	bno055_get_mag_calib_stat(&mag_calib);
+	printf("Euler angles\t\t");
+	printf("H= %4d\t\tR= %4d\t\tP= %4d\r\n", bno055_euler_data.h, bno055_euler_data.p, bno055_euler_data.r);
 	
-	printf("H: %4d\tR: %4d\tP: %4d\tCalib: %d%d%d\r\n", (bno055_euler_data.h)/16, 
-			(bno055_euler_data.r)/16, (bno055_euler_data.p)/16, accel_calib, gyro_calib, mag_calib);
+	bno055_read_linear_accel_xyz(&bno055_linear_accel_data);
+	printf("Linear acceleration\t");
+	printf("X= %4d\t\tY= %4d\t\tZ= %4d\r\n", bno055_linear_accel_data.x, bno055_linear_accel_data.y, bno055_linear_accel_data.z);
+	
+	bno055_read_gravity_xyz(&bno055_gravity_data);
+	printf("Gravity\t\t\t");
+	printf("X= %4d\t\tY= %4d\t\tZ= %4d\r\n", bno055_gravity_data.x, bno055_gravity_data.y, bno055_gravity_data.z);
+	
+	bno055_read_accel_xyz(&bno055_accel_data);
+	printf("Acceleration\t\t");
+	printf("X= %4d\t\tY= %4d\t\tZ= %4d\r\n", bno055_accel_data.x, bno055_accel_data.y, bno055_accel_data.z);
+	
+	bno055_read_gyro_xyz(&bno055_gyro_data);
+	printf("Gyro\t\t\t");
+	printf("X= %4d\t\tY= %4d\t\tZ= %4d\r\n", bno055_gyro_data.x, bno055_gyro_data.y, bno055_gyro_data.z);
+	
+	bno055_read_mag_xyz(&bno055_mag_data);
+	printf("Mag\t\t\t");
+	printf("X= %4d\t\tY= %4d\t\tZ= %4d\r\n", bno055_mag_data.x, bno055_mag_data.y, bno055_mag_data.z);
 }
 
 /*!
@@ -333,6 +246,100 @@ static void bno055_interrupt_handler_any_motion(void)
 	ioport_set_pin_level(RGB_LED_G,  RGB_LED_G_OFF);
 }
 
+/*!
+* @brief	Sensor general interrupt handler, calls specific handlers.
+*
+* This function is called when an external interrupt is triggered by the sensor,
+* checks interrupt registers of BNO055 to determine the source and type of interrupt
+* and calls the specific interrupt handler accordingly.
+*
+* @param[in]	NULL
+*
+* @param[out]	NULL
+*
+* @return		NULL
+*
+*/
+static void bno055_interrupt_handler(void)
+{
+	uint8_t accel_no_motion_status = 0;
+	uint8_t accel_any_motion_status = 0;
+	uint8_t gyro_any_motion_status = 0;
+	
+	bno055_get_intr_stat_accel_no_motion(&accel_no_motion_status);
+	bno055_get_intr_stat_accel_any_motion(&accel_any_motion_status);
+	bno055_get_intr_stat_gyro_any_motion(&gyro_any_motion_status);
+	
+	switch (sleep_state)
+	{
+		case SLEEP_STATE_AWAKE:
+		if (accel_no_motion_status)
+		{
+			sleep_state = SLEEP_STATE_SLEEP;
+			bno055_interrupt_handler_no_motion();
+			sensor_data_changed = false;
+		}
+		break;
+		case SLEEP_STATE_SLEEP:
+		if (accel_any_motion_status || gyro_any_motion_status)
+		{
+			sleep_state = SLEEP_STATE_AWAKE;
+			bno055_interrupt_handler_any_motion();
+			sensor_data_changed = true;
+		}
+		break;
+		default:
+		break;
+	}
+	
+	bno055_set_intr_rst(ENABLED);
+}
+
+/**
+ *  \brief Handler for System Tick interrupt.
+ */
+void SysTick_Handler(void)
+{
+	systick_count ++;
+	if(systick_count == 500) {
+		read_sensor_data = true;
+		systick_count = 0;
+	}
+}
+
+/**
+ *  \brief Configure UART console.
+ */
+static void configure_console(void)
+{
+	const usart_serial_options_t uart_serial_options = {
+		.baudrate = CONF_UART_BAUDRATE,
+#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
+	};
+
+	/* Configure console UART. */
+	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
+	stdio_serial_init(CONF_UART, &uart_serial_options);
+}
+
+/************************************************************************/
+/* Main Function Definition                                             */
+/************************************************************************/
+/*!
+* @brief	Initializes the whole system and runs the desired application
+*
+* This is the main function of the project. It calls initialization functions
+* of the main board and the sensor. It initializes the host microcontroller unit
+* and all its required modules such as clock sources, I2C, TC, USART, PINMUX
+* and interrupt controllers. It also initializes the global variables.
+*/
+
 int main(void)
 {
 	/* Initialize the system */
@@ -341,28 +348,37 @@ int main(void)
 
 	/* Initialize the console uart */
 	configure_console();
-	
-	/* Systick configuration. */
-	puts("Configure systick to get 1ms tick period.\r");
-	if (SysTick_Config(sysclk_get_cpu_hz() / 1000)) {
-		puts("-F- Systick configuration error\r");
-	}
 
 	puts(STRING_HEADER);
 	
+	/* Systick configuration. */
+	if (SysTick_Config(sysclk_get_cpu_hz() / 1000)) {
+		puts("-F- Systick configuration error\r");
+	}
+	
+	bno055_i2c_bus_init();
+	/* (BNO055_RESET, BNO055_BOOT_LOAD, BNO055_I2C_ADDR, RGB_LEG_Green) */
 	bno055_gpio_config();
-	BNO055_I2C_bus_init();
 	
 	/* (BNO055 external interrupt) */
 	extint_initialize(&bno055_interrupt_handler);
-	cpu_irq_enable();
 	
+	/* Initialize BNO055 smart sensor */
 	sensor_init();
 	
-	while (1) {
-		if(read_sensor_data) {
-			read_sensor_data = false;
+	/* Assigns initial values to the global variable sleep_state */
+	sleep_state = SLEEP_STATE_AWAKE;
+	
+	/* RGB LED Green = OFF */
+	ioport_set_pin_level(RGB_LED_G,  RGB_LED_G_OFF);
+	
+	/* Infinite loop */
+	while (true) {
+		if(read_sensor_data & sensor_data_changed) {
+			/* Read Euler angles from BNO055 and send it via USART */
 			sensors_data_print();
+			/* Reset the timer's interrupt flag */
+			read_sensor_data = false;
 		}
 		
 		/* Check sensor reset button (SW0 button on the main board) */

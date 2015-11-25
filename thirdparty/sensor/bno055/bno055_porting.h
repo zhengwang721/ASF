@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief MMA7341L configuration.
+ * \brief BNO055 extension board example for SAME70.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,39 +41,33 @@
  *
  */
 
-/* Configuration of the mma7341 accelerometer driver */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
+#ifndef __BNO055_PORTING_I2C_H__
+#define __BNO055_PORTING_I2C_H__
 
-#ifndef CONF_MMA7341L_H_INCLUDED
-#define CONF_MMA7341L_H_INCLUDED
+#include "asf.h"
+#include "conf_board.h"
+#include "conf_bno055.h"
+#include "bno055.h"
 
-// Definition of MMA7341L x,y,z axis channel number
-#define MMA7341L_ADC_CHANNEL_X    2
-#define MMA7341L_ADC_CHANNEL_Y    6
-#define MMA7341L_ADC_CHANNEL_Z    7
+#ifdef	BNO055_API
 
-// MMA7341L mode set pin definitions
-#define PIN_MMA7341L_MODE         PIO_PC13_IDX
-#define PIN_MMA7341L_MODE_FLAG    (PIO_OUTPUT_1 | PIO_DEFAULT)
+/* I2C buffer length */
+#define	I2C_BUFFER_LEN       8
 
-// MMA7341L X,Y,Z axis pin definitions
-#define PIN_MMA7341L_X_AXIS       PIO_PB3_IDX
-#define PIN_MMA7341L_X_AXIS_FLAG  (PIO_INPUT | PIO_DEFAULT)
-#define PIN_MMA7341L_Y_AXIS       PIO_PC17_IDX
-#define PIN_MMA7341L_Y_AXIS_FLAG  (PIO_INPUT | PIO_DEFAULT)
-#define PIN_MMA7341L_Z_AXIS       PIO_PC18_IDX
-#define PIN_MMA7341L_Z_AXIS_FLAG  (PIO_INPUT | PIO_DEFAULT)
+/*! instantiates a BNO055 software instance structure which retains
+* chip ID, internal sensors IDs, I2C address and pointers
+* to required functions (bus read/write and delay functions) */
+struct bno055_t bno055;
 
-#define MMA7341L_ADC_CLK   100000
+void bno055_initialize(void);
+s8 bno055_i2c_bus_init(void);
+s8 bno055_i2c_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt);
+s8 bno055_i2c_bus_read(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt);
+void bno055_delay_msek(u32 msek);
+void bno055_reset(void);
+void extint_initialize(void (*extint_handler_function)(void));
+void bno055_gpio_config(void);
 
-#define MMA7341L_USE_ADC12
-//#define MMA7341L_USE_ADC10
+#endif
 
-#define BNO055_API
-#define BNO055_I2C_SLAVE_ADDRESS  BNO055_I2C_ADDR2
-
-#define __DEBUG__
-
-#endif /* CONF_MMA7341L_H_INCLUDED */
+#endif  /* __BNO055_PORTING_I2C_H__ */

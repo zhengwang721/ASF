@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief MMA7341L configuration.
+ * \brief BNO055 configuration.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,29 +46,25 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_MMA7341L_H_INCLUDED
-#define CONF_MMA7341L_H_INCLUDED
+#ifndef CONF_BNO055_H_INCLUDED
+#define CONF_BNO055_H_INCLUDED
 
-// Definition of MMA7341L x,y,z axis channel number
-#define MMA7341L_ADC_CHANNEL_X    2
-#define MMA7341L_ADC_CHANNEL_Y    6
-#define MMA7341L_ADC_CHANNEL_Z    7
 
-// MMA7341L mode set pin definitions
-#define PIN_MMA7341L_MODE         PIO_PC13_IDX
-#define PIN_MMA7341L_MODE_FLAG    (PIO_OUTPUT_1 | PIO_DEFAULT)
+#define BNO055_API
+#define BNO055_I2C_SLAVE_ADDRESS  BNO055_I2C_ADDR2
 
-// MMA7341L X,Y,Z axis pin definitions
-#define PIN_MMA7341L_X_AXIS       PIO_PB3_IDX
-#define PIN_MMA7341L_X_AXIS_FLAG  (PIO_INPUT | PIO_DEFAULT)
-#define PIN_MMA7341L_Y_AXIS       PIO_PC17_IDX
-#define PIN_MMA7341L_Y_AXIS_FLAG  (PIO_INPUT | PIO_DEFAULT)
-#define PIN_MMA7341L_Z_AXIS       PIO_PC18_IDX
-#define PIN_MMA7341L_Z_AXIS_FLAG  (PIO_INPUT | PIO_DEFAULT)
+/* Slave address select pin */
+#define BNO055_PIN_SLAVE_ADDR_SELECT  PIO_PB3_IDX
+/* RGB leds */
+#define BNO055_PIN_RGB_LED            PIO_PB2_IDX
+/* Boot */
+#define BNO055_PIN_BOOT               PIO_PC17_IDX
+/* Reset */
+#define BNO055_PIN_RESET              PIO_PD25_IDX
 
-#define MMA7341L_ADC_CLK   100000
+/* determines the active state of BNO055 reset */
+#define BNO055_RESET_ACTIVE				false
+/* the delay required to wait for BNO055 chip to reset */
+#define BNO055_RESET_DELAY_MS			UINT32_C(650)
 
-#define MMA7341L_USE_ADC12
-//#define MMA7341L_USE_ADC10
-
-#endif /* CONF_MMA7341L_H_INCLUDED */
+#endif /* CONF_BNO055_H_INCLUDED */

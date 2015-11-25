@@ -41,35 +41,32 @@
  *
  */
 
-#include "bno055_porting_i2c.h"
+#include "bno055_porting.h"
 
 #ifdef	BNO055_API
 
-/*--------------------------------------------------------------------------*
-*	The following function is used to map the I2C bus read, write, delay and
-*	device address with global structure bno055_t
-*-------------------------------------------------------------------------*/
-/*-------------------------------------------------------------------------*
- *  By using bno055 the following structure parameter can be accessed
- *	Bus write function pointer: BNO055_WR_FUNC_PTR
- *	Bus read function pointer: BNO055_RD_FUNC_PTR
- *	Delay function pointer: delay_msec
- *	I2C address: dev_addr
- *--------------------------------------------------------------------------*/
- s8 I2C_routine(struct bno055_t *stru_bno055) {
-
-	stru_bno055->bus_write = BNO055_I2C_bus_write;
-	stru_bno055->bus_read = BNO055_I2C_bus_read;
-	stru_bno055->delay_msec = BNO055_delay_msek;
-	stru_bno055->dev_addr = BNO055_I2C_SLAVE_ADDRESS;
-
-	return BNO055_ZERO_U8X;
+void bno055_initialize(void)
+{
+	bno055.bus_write = bno055_i2c_bus_write;
+	bno055.bus_read = bno055_i2c_bus_read;
+	bno055.delay_msec = bno055_delay_msek;
+	bno055.dev_addr = BNO055_I2C_SLAVE_ADDRESS;
+	
+#if BNO055_I2C_SLAVE_ADDRESS == BNO055_I2C_ADDR1
+	ioport_set_pin_level(BNO055_PIN_SLAVE_ADDR_SELECT, false);
+#else
+	ioport_set_pin_level(BNO055_PIN_SLAVE_ADDR_SELECT, true);
+#endif
+	
+	ioport_set_pin_level(BNO055_PIN_BOOT,  true);
+	bno055_reset();
+	bno055_init(&bno055);
 }
 
 /*	
  *  \Brief: The function is used as I2C bus init
  */
-s8 BNO055_I2C_bus_init(void)
+s8 bno055_i2c_bus_init(void)
 {
 	twihs_options_t bno055_option;
 	pmc_enable_periph_clk(BOARD_ID_TWIHS_EEPROM);
@@ -88,38 +85,16 @@ s8 BNO055_I2C_bus_init(void)
  *		will be used for write the value into the register
  *	\param cnt : The no of byte of data to be write
  */
-s8 BNO055_I2C_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
+s8 bno055_i2c_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
 {
 	s32 iError = BNO055_ZERO_U8X;
-	u8 array[I2C_BUFFER_LEN];
-	u8 stringpos = BNO055_ZERO_U8X;
-	array[BNO055_ZERO_U8X] = reg_addr;
-	for (stringpos = BNO055_ZERO_U8X; stringpos < cnt; stringpos++) {
-		array[stringpos + BNO055_ONE_U8X] = *(reg_data + stringpos);
-	}
-	/*
-	* Please take the below function as your reference for
-	* write the data using I2C communication
-	* "IERROR = I2C_WRITE_STRING(DEV_ADDR, ARRAY, CNT+1)"
-	* add your I2C write function here
-	* iError is an return value of I2C read function
-	* Please select your valid return value
-	* In the driver SUCCESS defined as 0
-    * and FAILURE defined as -1
-	* Note :
-	* This is a full duplex operation,
-	* The first read data is discarded, for that extra write operation
-	* have to be initiated. For that cnt+1 operation done in the I2C write string function
-	* For more information please refer data sheet SPI communication:
-	*/
-	
+
 	twihs_packet_t p_packet;
 	p_packet.chip = dev_addr;
-	p_packet.addr[0] = reg_addr >> 8;
-	p_packet.addr[1] = reg_addr;
-	p_packet.addr_length = 2;
+	p_packet.addr[0] = reg_addr;
+	p_packet.addr_length = 1;
 	p_packet.buffer = reg_data;
-	p_packet.length = cnt+1;
+	p_packet.length = cnt;
 	
 	iError = twihs_master_write(BNO055_IIC_INSRANCE, &p_packet);
 
@@ -133,44 +108,64 @@ s8 BNO055_I2C_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
  *	\param reg_data : This data read from the sensor, which is hold in an array
  *	\param cnt : The no of byte of data to be read
  */
-s8 BNO055_I2C_bus_read(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
+s8 bno055_i2c_bus_read(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
 {
 	s32 iError = BNO055_ZERO_U8X;
-	u8 array[I2C_BUFFER_LEN] = {BNO055_ZERO_U8X};
-	u8 stringpos = BNO055_ZERO_U8X;
-	array[BNO055_ZERO_U8X] = reg_addr;
-	/* Please take the below function as your reference
-	 * for read the data using I2C communication
-	 * add your I2C read function here.
-	 * "IERROR = I2C_WRITE_READ_STRING(DEV_ADDR, ARRAY, ARRAY, 1, CNT)"
-	 * iError is an return value of I2C write function
-	 * Please select your valid return value
-     * In the driver SUCCESS defined as 0
-     * and FAILURE defined as -1
-	 */
 	
 	twihs_packet_t p_packet;
 	p_packet.chip = dev_addr;
-	p_packet.addr[0] = reg_addr >> 8;
-	p_packet.addr[1] = reg_addr;
-	p_packet.addr_length = 2;
+	p_packet.addr[0] = reg_addr;
+	p_packet.addr_length = 1;
 	p_packet.buffer = reg_data;
 	p_packet.length = cnt;
 	
 	iError = twihs_master_read(BNO055_IIC_INSRANCE, &p_packet);
-	
-	for (stringpos = BNO055_ZERO_U8X; stringpos < cnt; stringpos++) {
-		*(reg_data + stringpos) = array[stringpos];
-	}
+
 	return (s8)iError;
 }
 /*	Brief : The delay routine
  *	\param : delay in ms
 */
-void BNO055_delay_msek(u32 msek)
+void bno055_delay_msek(u32 msek)
 {
 	/*Here you can write your own delay routine*/
 	delay_ms(msek);
 }
+
+void bno055_reset(void)
+{
+	ioport_set_pin_level(BNO055_PIN_RESET,  BNO055_RESET_ACTIVE);
+	delay_ms(BNO055_RESET_DELAY_MS);
+	ioport_set_pin_level(BNO055_PIN_RESET, !BNO055_RESET_ACTIVE);
+	delay_ms(BNO055_RESET_DELAY_MS);
+}
+
+void extint_initialize(void (*extint_handler_function)(void))
+{
+	/* Enable the peripheral clock for the BNO055 extension board interrupt pin. */
+	pmc_enable_periph_clk(PIN_BNO055_EXT_INIERRUPT_ID);
+	/* Configure PIOs as input pins. */
+	pio_configure(PIN_BNO055_EXT_INIERRUPT_PIO, PIN_BNO055_EXT_INIERRUPT_TYPE,
+	PIN_BNO055_EXT_INIERRUPT_MASK, PIN_BNO055_EXT_INIERRUPT_ATTR);
+	/* Initialize PIO interrupt handler, interrupt on rising edge. */
+	pio_handler_set(PIN_BNO055_EXT_INIERRUPT_PIO, PIN_BNO055_EXT_INIERRUPT_ID, PIN_BNO055_EXT_INIERRUPT_MASK,
+	PIN_BNO055_EXT_INIERRUPT_ATTR, extint_handler_function);
+	/* Initialize and enable push button (PIO) interrupt. */
+	pio_handler_set_priority(PIN_BNO055_EXT_INIERRUPT_PIO, PIOD_IRQn, 0);
+	pio_enable_interrupt(PIN_BNO055_EXT_INIERRUPT_PIO, PIN_BNO055_EXT_INIERRUPT_MASK);
+}
+
+void bno055_gpio_config(void)
+{
+	/* Slave address */
+	ioport_set_pin_dir(BNO055_PIN_SLAVE_ADDR_SELECT, IOPORT_DIR_OUTPUT);
+	/* RGB leds */
+	ioport_set_pin_dir(BNO055_PIN_RGB_LED, IOPORT_DIR_OUTPUT);
+	/* Boot */
+	ioport_set_pin_dir(BNO055_PIN_BOOT, IOPORT_DIR_OUTPUT);
+	/* Reset */
+	ioport_set_pin_dir(BNO055_PIN_RESET, IOPORT_DIR_OUTPUT);
+}
+
 #endif
 

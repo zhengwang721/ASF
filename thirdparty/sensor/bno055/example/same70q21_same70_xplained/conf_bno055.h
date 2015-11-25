@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief BNO055 extension board example for SAME70.
+ * \brief BNO055 configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -41,25 +41,30 @@
  *
  */
 
-#ifndef __BNO055_PORTING_I2C_H__
-#define __BNO055_PORTING_I2C_H__
+/* Configuration of the mma7341 accelerometer driver */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
-#include "asf.h"
-#include "conf_board.h"
-#include "conf_bno055.h"
-#include "bno055.h"
+#ifndef CONF_BNO055_H_INCLUDED
+#define CONF_BNO055_H_INCLUDED
 
-#ifdef	BNO055_API
 
-/************** I2C buffer length******/
-#define	I2C_BUFFER_LEN       8
-#define I2C0                 5
+#define BNO055_API
+#define BNO055_I2C_SLAVE_ADDRESS  BNO055_I2C_ADDR2
 
-s8 I2C_routine(struct bno055_t *stru_bno055);
-s8 BNO055_I2C_bus_init(void);
-s8 BNO055_I2C_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt);
-s8 BNO055_I2C_bus_read(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt);
-void BNO055_delay_msek(u32 msek);
-#endif
+/* Slave address select pin */
+#define BNO055_PIN_SLAVE_ADDR_SELECT  PIO_PB3_IDX
+/* RGB leds */
+#define BNO055_PIN_RGB_LED            PIO_PB2_IDX
+/* Boot */
+#define BNO055_PIN_BOOT               PIO_PC17_IDX
+/* Reset */
+#define BNO055_PIN_RESET              PIO_PD25_IDX
 
-#endif  /* __BNO055_PORTING_I2C_H__ */
+/* determines the active state of BNO055 reset */
+#define BNO055_RESET_ACTIVE				false
+/* the delay required to wait for BNO055 chip to reset */
+#define BNO055_RESET_DELAY_MS			UINT32_C(650)
+
+#endif /* CONF_BNO055_H_INCLUDED */
