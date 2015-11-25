@@ -174,11 +174,13 @@ static void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notificat
 	DBG_LOG_DEV("Mouse report send to host status %d", notification_status->status);
 }
 
+/* Callback called when host connected*/
 static void hid_connect_cb(at_ble_handle_t handle)
 {	
 	connect_flg = 1;
 }
 
+/* Callback called when host disconnected*/
 static void hid_disconnect_cb(at_ble_handle_t handle)
 {
 	connect_flg = 0;
@@ -269,7 +271,8 @@ int main(void )
 	while(app_exec){
 		ble_event_task();
 		/* Check for key status */
-		if(mouse_status){ 
+		if(mouse_status)
+		{ 
 			//delay_ms(KEY_PAD_DEBOUNCE_TIME);
 			switch(mouse_pos)
 			{
