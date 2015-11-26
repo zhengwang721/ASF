@@ -197,7 +197,7 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
 	extern Ctrl_status usb_2_memory(U8 lun, U32 addr, U16 nb_sector);
  \endcode
  *
- * Then the ctrl_access dispatch the read/write operation to different LUNs.
+ * Then the ctrl_access dispatch the read/write operation to different Logic Unit Numbers (LUNs).
  *
  * The memory access in ctrl_access is configured through conf_access.h.
  * E.g., to use LUN0 to access virtual memory disk, the configuration should
@@ -554,9 +554,14 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  *    <th>Comments</td>
  * </tr>
  * <tr>
+ *    <td>42343B</td>
+ *    <td>10/2015</td>
+ *    <td>Fixed typos</td>
+ * </tr>
+ * <tr>
  *    <td>42343A</td>
  *    <td>12/2014</td>
- *    <td>Initial release.</td>
+ *    <td>Initial release</td>
  * </tr>
  * </table>
  */

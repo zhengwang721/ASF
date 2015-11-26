@@ -280,10 +280,15 @@ void uart_get_config_defaults(
 	config->stop_bits = UART_1_STOP_BIT;
 	config->parity = UART_NO_PARITY;
 	config->flow_control = false;
-	config->pinmux_pad[0] = PINMUX_LP_GPIO_2_MUX2_UART0_RXD;
-	config->pinmux_pad[1] = PINMUX_LP_GPIO_3_MUX2_UART0_TXD;
-	config->pinmux_pad[2] = PINMUX_LP_GPIO_4_MUX2_UART0_CTS;
-	config->pinmux_pad[3] = PINMUX_LP_GPIO_5_MUX2_UART0_RTS;
+	config->pin_number_pad[0] = PIN_LP_GPIO_2_MUX2_UART0_RXD;
+	config->pin_number_pad[1] = PIN_LP_GPIO_3_MUX2_UART0_TXD;
+	config->pin_number_pad[2] = PIN_LP_GPIO_4_MUX2_UART0_CTS;
+	config->pin_number_pad[3] = PIN_LP_GPIO_5_MUX2_UART0_RTS;
+	
+	config->pinmux_sel_pad[0] = MUX_LP_GPIO_2_MUX2_UART0_RXD;
+	config->pinmux_sel_pad[1] = MUX_LP_GPIO_3_MUX2_UART0_TXD;
+	config->pinmux_sel_pad[2] = MUX_LP_GPIO_4_MUX2_UART0_CTS;
+	config->pinmux_sel_pad[3] = MUX_LP_GPIO_5_MUX2_UART0_RTS;
 }
 
 /**
@@ -343,8 +348,8 @@ enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 		index = 2;
 	}
 	for(i = 0; i < index; i++) {
-		gpio_pinmux_cofiguration(config->pinmux_pad[i] >> 16, \
-								(uint16_t)(config->pinmux_pad[i] & 0xFFFF));
+		gpio_pinmux_cofiguration(config->pin_number_pad[i], \
+								(uint16_t)(config->pinmux_sel_pad[i]));
 	}
 
 	/* empty UART FIFO */

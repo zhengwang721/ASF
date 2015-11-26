@@ -181,10 +181,14 @@ struct i2c_master_config {
 	enum i2c_clock_input clock_source;
 	/** Divide ratio used to generate the sck clock */
 	uint16_t clock_divider;
-	/** PAD0 (SDA) pinmux */
-	uint32_t pinmux_pad0;
-	/** PAD1 (SCL) pinmux */
-	uint32_t pinmux_pad1;
+	/** PAD0 (SDA) pin number */
+	uint32_t pin_number_pad0;
+	/** PAD0 (SDA) pinmux selection */
+	uint32_t pinmux_sel_pad0;
+	/** PAD1 (SCL) pin numer */
+	uint32_t pin_number_pad1;
+	/** PAD1 (SCL) pinmux selection */
+	uint32_t pinmux_sel_pad1;
 };
 
 void i2c_master_get_config_defaults(

@@ -102,7 +102,7 @@
  * \subsection asfdoc_sam0_sercom_spi_module_features Driver Feature Macro Definition
  * <table>
  *  <tr>
- *    <th>Driver Feature Macro</th>
+ *    <th>Driver feature macro</th>
  *    <th>Supported devices</th>
  *  </tr>
  *  <tr>
@@ -1772,7 +1772,7 @@ enum status_code spi_select_slave(
   *	</tr>
   *	<tr>
   *		<td>42115E</td>
-  *		<td>08/2015</td>
+  *		<td>10/2015</td>
   *		<td>Add SAM L21/L22, SAM DA1 and SAM C21 support</td>
   *	</tr>
   *	<tr>
