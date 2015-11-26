@@ -13,8 +13,6 @@
 		<require idref="common.services.basic.clock"/>
 		<require idref="sam.drivers.pmc"/>
 		<require idref="sam.drivers.twihs"/>
-		<require idref="sam.drivers.pwm"/>
-		<require idref="common.services.basic.clock"/>
 		<build type="module-config" subtype="required-header-file" value="conf_bno055.h"/>
 		<build type="module-config" subtype="path" value="module_config"/>
 		<device-support value="same70"/>

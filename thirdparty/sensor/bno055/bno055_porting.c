@@ -45,6 +45,11 @@
 
 #ifdef	BNO055_API
 
+/*! instantiates a BNO055 software instance structure which retains
+* chip ID, internal sensors IDs, I2C address and pointers
+* to required functions (bus read/write and delay functions) */
+struct bno055_t bno055;
+
 void bno055_initialize(void)
 {
 	bno055.bus_write = bno055_i2c_bus_write;
@@ -66,7 +71,7 @@ void bno055_initialize(void)
 /*	
  *  \Brief: The function is used as I2C bus init
  */
-s8 bno055_i2c_bus_init(void)
+void bno055_i2c_bus_init(void)
 {
 	twihs_options_t bno055_option;
 	pmc_enable_periph_clk(BOARD_ID_TWIHS_EEPROM);
@@ -140,7 +145,7 @@ void bno055_reset(void)
 	delay_ms(BNO055_RESET_DELAY_MS);
 }
 
-void extint_initialize(void (*extint_handler_function)(void))
+void extint_initialize(void (*handler_function)(void))
 {
 	/* Enable the peripheral clock for the BNO055 extension board interrupt pin. */
 	pmc_enable_periph_clk(PIN_BNO055_EXT_INIERRUPT_ID);
@@ -149,7 +154,7 @@ void extint_initialize(void (*extint_handler_function)(void))
 	PIN_BNO055_EXT_INIERRUPT_MASK, PIN_BNO055_EXT_INIERRUPT_ATTR);
 	/* Initialize PIO interrupt handler, interrupt on rising edge. */
 	pio_handler_set(PIN_BNO055_EXT_INIERRUPT_PIO, PIN_BNO055_EXT_INIERRUPT_ID, PIN_BNO055_EXT_INIERRUPT_MASK,
-	PIN_BNO055_EXT_INIERRUPT_ATTR, extint_handler_function);
+	PIN_BNO055_EXT_INIERRUPT_ATTR, (void (*) (uint32_t, uint32_t))handler_function);
 	/* Initialize and enable push button (PIO) interrupt. */
 	pio_handler_set_priority(PIN_BNO055_EXT_INIERRUPT_PIO, PIOD_IRQn, 0);
 	pio_enable_interrupt(PIN_BNO055_EXT_INIERRUPT_PIO, PIN_BNO055_EXT_INIERRUPT_MASK);

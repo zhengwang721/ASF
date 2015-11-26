@@ -54,18 +54,15 @@
 /* I2C buffer length */
 #define	I2C_BUFFER_LEN       8
 
-/*! instantiates a BNO055 software instance structure which retains
-* chip ID, internal sensors IDs, I2C address and pointers
-* to required functions (bus read/write and delay functions) */
-struct bno055_t bno055;
+extern struct bno055_t bno055;
 
 void bno055_initialize(void);
-s8 bno055_i2c_bus_init(void);
+void bno055_i2c_bus_init(void);
 s8 bno055_i2c_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt);
 s8 bno055_i2c_bus_read(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt);
 void bno055_delay_msek(u32 msek);
 void bno055_reset(void);
-void extint_initialize(void (*extint_handler_function)(void));
+void extint_initialize(void (*handler_function)(void));
 void bno055_gpio_config(void);
 
 #endif

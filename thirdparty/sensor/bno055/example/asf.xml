@@ -7,12 +7,8 @@
 			<build type="c-source" value="bno055_example.c"/>
 			<device-support value="same70"/>
 			<require idref="sam.utils.syscalls"/>
-			<require idref="common.services.basic.clock"/>
-			<require idref="common.services.basic.gpio"/>
 			<require idref="thirdparty.sensor.bno055"/>
 			<require idref="sam.drivers.uart"/>
-			<require idref="sam.drivers.pmc"/>
-			<require idref="sam.drivers.twihs"/>
 			<require idref="common.services.delay"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<info type="gui-flag" value="move-to-root"/>
