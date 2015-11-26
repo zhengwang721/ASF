@@ -1266,8 +1266,6 @@ at_ble_status_t ble_pair_done_handler(void *params)
 			ble_dev_info[idx].bond_info.status = pairing_params->status;
 			memcpy((uint8_t *)&ble_dev_info[idx].bond_info.peer_csrk, (uint8_t *)&pairing_params->peer_csrk, sizeof(at_ble_CSRK_t));
 			memcpy((uint8_t *)&ble_dev_info[idx].bond_info.peer_irk, (uint8_t *)&pairing_params->peer_irk, sizeof(at_ble_IRK_t));
-			memcpy((uint8_t *)&ble_dev_info[idx].bond_info.peer_ltk, (uint8_t *)&pairing_params->peer_ltk, sizeof(at_ble_LTK_t));
-
 			ble_dev_info->conn_state = BLE_DEVICE_PAIRED;
 			
 			DBG_LOG_DEV("LTK: ");
