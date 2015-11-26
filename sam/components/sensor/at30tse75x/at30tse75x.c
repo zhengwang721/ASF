@@ -157,14 +157,14 @@ void at30tse_eeprom_read(uint8_t *data, uint8_t length, uint8_t word_addr, uint8
  */
 void at30tse_set_register_pointer(uint8_t reg, uint8_t reg_type)
 {
-	uint8_t buffer[] = {reg | reg_type};
+	uint8_t reg_addr = {reg | reg_type};
 	twihs_packet_t packet_tx;
 
 	/* Configure the data packet to be transmitted */
 	packet_tx.chip        = AT30TSE_TEMPERATURE_TWI_ADDR;
-	packet_tx.addr[0]     = buffer;
+	packet_tx.addr[0]     = reg_addr;
 	packet_tx.addr_length = 1;
-	packet_tx.buffer      = buffer;
+	packet_tx.buffer      = &reg_addr;
 	packet_tx.length      = 1;
 	
 	/* Send test pattern to EEPROM */
@@ -189,7 +189,7 @@ uint16_t at30tse_read_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size)
 	uint8_t buffer[2];
 	uint8_t reg_addr = reg | reg_type;
 
-	twihs_packet_t packet_tx, packet_rx;
+	twihs_packet_t packet_rx;
 	
 	/* Configure the data packet to be received */
 	packet_rx.chip        = AT30TSE_TEMPERATURE_TWI_ADDR;
