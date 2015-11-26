@@ -564,5 +564,15 @@
 
 #define MAXTOUCH_XPRO_CHG_PIO     PIO_PA2_IDX
 
+/** BNO055 external interrupt pin definition */
+#define PIN_BNO055_EXT_INIERRUPT       {PIO_PD28, PIOD, ID_PIOD, PIO_INPUT, \
+										PIO_DEFAULT | PIO_IT_RISE_EDGE}
+#define PIN_BNO055_EXT_INIERRUPT_MASK  PIO_PD28
+#define PIN_BNO055_EXT_INIERRUPT_PIO   PIOD
+#define PIN_BNO055_EXT_INIERRUPT_ID    ID_PIOD
+#define PIN_BNO055_EXT_INIERRUPT_TYPE  PIO_INPUT
+#define PIN_BNO055_EXT_INIERRUPT_ATTR  (PIO_DEFAULT | PIO_IT_RISE_EDGE)
+#define PIN_BNO055_EXT_INIERRUPT_IRQn  PIOD_IRQn
+
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAME70_XPLD_H_ */
