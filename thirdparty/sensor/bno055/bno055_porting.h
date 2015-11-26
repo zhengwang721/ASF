@@ -48,8 +48,7 @@
 #include "conf_board.h"
 #include "conf_bno055.h"
 #include "bno055.h"
-
-#ifdef	BNO055_API
+#include "stdint.h"
 
 /* I2C buffer length */
 #define	I2C_BUFFER_LEN       8
@@ -58,13 +57,11 @@ extern struct bno055_t bno055;
 
 void bno055_initialize(void);
 void bno055_i2c_bus_init(void);
-s8 bno055_i2c_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt);
-s8 bno055_i2c_bus_read(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt);
-void bno055_delay_msek(u32 msek);
+int8_t bno055_i2c_bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt);
+int8_t bno055_i2c_bus_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt);
+void bno055_delay_msek(uint32_t msek);
 void bno055_reset(void);
 void extint_initialize(void (*handler_function)(void));
 void bno055_gpio_config(void);
-
-#endif
 
 #endif  /* __BNO055_PORTING_I2C_H__ */

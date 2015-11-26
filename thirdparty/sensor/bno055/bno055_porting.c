@@ -43,9 +43,7 @@
 
 #include "bno055_porting.h"
 
-#ifdef	BNO055_API
-
-/*! instantiates a BNO055 software instance structure which retains
+/* Instantiates a BNO055 software instance structure which retains
 * chip ID, internal sensors IDs, I2C address and pointers
 * to required functions (bus read/write and delay functions) */
 struct bno055_t bno055;
@@ -63,7 +61,7 @@ void bno055_initialize(void)
 	ioport_set_pin_level(BNO055_PIN_SLAVE_ADDR_SELECT, true);
 #endif
 	
-	ioport_set_pin_level(BNO055_PIN_BOOT,  true);
+	ioport_set_pin_level(BNO055_PIN_BOOT, true);
 	bno055_reset();
 	bno055_init(&bno055);
 }
@@ -90,9 +88,9 @@ void bno055_i2c_bus_init(void)
  *		will be used for write the value into the register
  *	\param cnt : The no of byte of data to be write
  */
-s8 bno055_i2c_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
+int8_t bno055_i2c_bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt)
 {
-	s32 iError = BNO055_ZERO_U8X;
+	int32_t ierror = BNO055_ZERO_U8X;
 
 	twihs_packet_t p_packet;
 	p_packet.chip = dev_addr;
@@ -101,9 +99,9 @@ s8 bno055_i2c_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
 	p_packet.buffer = reg_data;
 	p_packet.length = cnt;
 	
-	iError = twihs_master_write(BNO055_IIC_INSRANCE, &p_packet);
+	ierror = twihs_master_write(BNO055_IIC_INSRANCE, &p_packet);
 
-	return (s8)iError;
+	return (int8_t)ierror;
 }
 
  /*	\Brief: The function is used as I2C bus read
@@ -113,9 +111,9 @@ s8 bno055_i2c_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
  *	\param reg_data : This data read from the sensor, which is hold in an array
  *	\param cnt : The no of byte of data to be read
  */
-s8 bno055_i2c_bus_read(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
+int8_t bno055_i2c_bus_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt)
 {
-	s32 iError = BNO055_ZERO_U8X;
+	int32_t ierror = BNO055_ZERO_U8X;
 	
 	twihs_packet_t p_packet;
 	p_packet.chip = dev_addr;
@@ -124,14 +122,14 @@ s8 bno055_i2c_bus_read(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
 	p_packet.buffer = reg_data;
 	p_packet.length = cnt;
 	
-	iError = twihs_master_read(BNO055_IIC_INSRANCE, &p_packet);
+	ierror = twihs_master_read(BNO055_IIC_INSRANCE, &p_packet);
 
-	return (s8)iError;
+	return (int8_t)ierror;
 }
 /*	Brief : The delay routine
  *	\param : delay in ms
 */
-void bno055_delay_msek(u32 msek)
+void bno055_delay_msek(uint32_t msek)
 {
 	/*Here you can write your own delay routine*/
 	delay_ms(msek);
@@ -165,12 +163,9 @@ void bno055_gpio_config(void)
 	/* Slave address */
 	ioport_set_pin_dir(BNO055_PIN_SLAVE_ADDR_SELECT, IOPORT_DIR_OUTPUT);
 	/* RGB leds */
-	ioport_set_pin_dir(BNO055_PIN_RGB_LED, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_dir(RGB_LED_G, IOPORT_DIR_OUTPUT);
 	/* Boot */
 	ioport_set_pin_dir(BNO055_PIN_BOOT, IOPORT_DIR_OUTPUT);
 	/* Reset */
 	ioport_set_pin_dir(BNO055_PIN_RESET, IOPORT_DIR_OUTPUT);
 }
-
-#endif
-

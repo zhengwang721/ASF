@@ -77,7 +77,7 @@
  *
  * Cailbration
  * Compass, M4G & NDOF_FMC_OFF:
- * Make some random movements (for example: writing the number ¡®8¡¯ on air) 
+ * Make some random movements (for example: writing the number "8" on air) 
  * until the CALIB_STAT register indicates fully calibrated.
  * 
  * It takes more calibration movements to get the magnetometer calibrated than in the NDOF mode.
@@ -105,22 +105,6 @@ extern "C" {
 #define STRING_HEADER "-- BNO055  Example --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
-
-
-/* Sleep State Macros */
-#define SLEEP_STATE_SLEEP		UINT8_C(1)
-#define SLEEP_STATE_AWAKE		UINT8_C(0)
-
-/* name RGB LED Macros */
-#define RGB_LED_R				PIO_PC30_IDX
-#define RGB_LED_G				PIO_PB2_IDX
-#define RGB_LED_B				PIO_PA0_IDX
-#define RGB_LED_G_ON			false
-#define RGB_LED_G_OFF			true
-#define RGB_LED_B_VALUE			(0xFFFF - ((bno055_euler_data.h) * 0xFFFF / 5759))
-#define RBG_LED_B_OFF			UINT16_C(0xFFFF)
-#define RGB_LED_R_VALUE			(0xFFFF - ((bno055_euler_data.p) * 0xFFFF / 5759))
-#define RBG_LED_R_OFF			UINT16_C(0xFFFF)
 
 /*! Holds sleep state of the system */
 uint8_t sleep_state;
@@ -279,25 +263,22 @@ static void bno055_interrupt_handler(void)
 	bno055_get_intr_stat_accel_any_motion(&accel_any_motion_status);
 	bno055_get_intr_stat_gyro_any_motion(&gyro_any_motion_status);
 	
-	switch (sleep_state)
-	{
-		case SLEEP_STATE_AWAKE:
-		if (accel_no_motion_status)
-		{
+	switch (sleep_state) {
+	case SLEEP_STATE_AWAKE:
+		if (accel_no_motion_status) {
 			sleep_state = SLEEP_STATE_SLEEP;
 			bno055_interrupt_handler_no_motion();
 			sensor_data_changed = false;
 		}
 		break;
-		case SLEEP_STATE_SLEEP:
-		if (accel_any_motion_status || gyro_any_motion_status)
-		{
+	case SLEEP_STATE_SLEEP:
+		if (accel_any_motion_status || gyro_any_motion_status) {
 			sleep_state = SLEEP_STATE_AWAKE;
 			bno055_interrupt_handler_any_motion();
 			sensor_data_changed = true;
 		}
 		break;
-		default:
+	default:
 		break;
 	}
 	
