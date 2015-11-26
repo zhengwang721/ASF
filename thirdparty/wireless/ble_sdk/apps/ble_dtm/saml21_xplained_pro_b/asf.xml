@@ -4,14 +4,16 @@
 		BLE Direct Test Mode[DTM] Application
 		</info>	
 		<require idref="thirdparty.wireless.ble_sdk.apps.ble_dtm"/>
-		<build type="include-path" value="."/>
-		<build type="header-file" value="conf_board.h"/>
-		<build type="header-file" value="conf_clocks.h"/>
-		<build type="header-file" value="conf_serialdrv.h"/>
-		<build type="header-file" value="conf_serialbridge.h"/>
-		<build type="header-file" value="conf_console.h"/>
-		<build type="header-file" value="conf_extint.h"/>
+		<require idref="thirdparty.wireless.ble_sdk.apps.config.saml21"/>
 
+		<build type="include-path" value="../../config/saml21/"/>
+		<build type="header-file" value="../../config/saml21/conf_board.h"/>
+		<build type="header-file" value="../../config/saml21/conf_clocks.h"/>
+		<build type="header-file" value="../../config/saml21/conf_serialdrv.h"/>
+		<build type="header-file" value="../../config/saml21/conf_serialbridge.h"/>
+		<build type="header-file" value="../../config/saml21/conf_console.h"/>
+		<build type="header-file" value="../../config/saml21/conf_extint.h"/>
+		<build type="header-file" value="../../config/saml21/conf_timer.h"/>
 		<require idref="sam0.drivers.extint"/>
   
 		<require idref="board.saml21_xplained_pro_b"/>
