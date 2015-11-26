@@ -41,7 +41,7 @@
  *
  */
 
-#include "bno055_porting.h"
+#include "bno055_port.h"
 
 /* Instantiates a BNO055 software instance structure which retains
 * chip ID, internal sensors IDs, I2C address and pointers

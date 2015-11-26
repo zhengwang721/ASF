@@ -91,7 +91,7 @@
 #include "asf.h"
 #include "conf_board.h"
 #include "conf_bno055.h"
-#include "bno055_porting.h"
+#include "bno055_port.h"
 
 /// @cond 0
 /**INDENT-OFF**/

@@ -4,9 +4,9 @@
 		Low-level driver for the BNO055 Accelerometer.
 		</info>
 		<build type="c-source" value="bno055.c"/>
-		<build type="c-source" value="bno055_porting.c"/>
+		<build type="c-source" value="bno055_port.c"/>
 		<build type="header-file" subtype="api" value="bno055.h"/>
-		<build type="header-file" subtype="api" value="bno055_porting.h"/>
+		<build type="header-file" subtype="api" value="bno055_port.h"/>
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="bno055_sensor_group"/>
 		<require idref="common.services.basic.gpio"/>
