@@ -535,9 +535,9 @@ enum i2c_transfer_direction {
  * \if (I2C_MASTER_MODE || I2C_MASTER_CALLBACK_MODE)
  * <table>
  *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
+ *		<th>Doc. Rev.</th>
+ *		<th>Date</th>
+ *		<th>Comments</th>
  *	</tr>
  *	<tr>
  *		<td>42117E</td>
@@ -569,9 +569,9 @@ enum i2c_transfer_direction {
  * \else
  * <table>
  *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
+ *		<th>Doc. Rev.</th>
+ *		<th>Date</th>
+ *		<th>Comments</th>
  *	</tr>
  *	<tr>
  *		<td>42116E</td>

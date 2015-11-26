@@ -908,9 +908,9 @@ static inline enum nvm_error nvm_get_error(void)
  *
  * <table>
  *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
+ *		<th>Doc. Rev.</th>
+ *		<th>Date</th>
+ *		<th>Comments</th>
  *	</tr>
  *	<tr>
  *		<td>42114E</td>

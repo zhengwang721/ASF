@@ -390,9 +390,9 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *
  * <table>
  *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
+ *		<th>Doc. Rev.</th>
+ *		<th>Date</th>
+ *		<th>Comments</th>
  *	</tr>
  *	<tr>
  *		<td>42122E</td>

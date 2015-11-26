@@ -1096,9 +1096,9 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *
  * <table>
  *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
+ *		<th>Doc. Rev.</th>
+ *		<th>Date</th>
+ *		<th>Comments</th>
  *	</tr>
  * \if DEVICE_SAML21_SUPPORT
   *	<tr>
