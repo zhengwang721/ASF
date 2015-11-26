@@ -389,15 +389,6 @@ void board_init(void)
 	SCB_EnableDCache();
 #endif
 
-#ifdef CONF_BOARD_ENABLE_FPU_AT_INIT
-#if defined(__GNUC__)
-	/* Enabling the FPU */
-	SCB->CPACR |= 0x00F00000;
-	__DSB();
-	__ISB();
-#endif
-#endif
-
 #ifdef CONF_BOARD_ENABLE_TCM_AT_INIT
 	/* TCM Configuration */
 	EFC->EEFC_FCR = (EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FCMD_CGPB 
