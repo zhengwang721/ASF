@@ -222,7 +222,7 @@ uint32_t system_clock_source_get_hz(
 			return 0;
 		}
 
-		return _system_clock_inst.dpll.frequency;
+		return _system_clock_inst.dpll.frequency >>OSCCTRL->DPLLPRESC.bit.PRESC;
 
 	default:
 		return 0;
