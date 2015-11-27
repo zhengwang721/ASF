@@ -6,7 +6,7 @@
  * This file contains definitions and services related to the features of the
  * Xplained Mini board.
  *
- * To use this board, define BOARD= ATMEGA328PB_XPLAINED_MINI.
+ * To use this board, define BOARD= ATMEGA168PB_XPLAINED_MINI.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
