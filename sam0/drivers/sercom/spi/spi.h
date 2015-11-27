@@ -1766,14 +1766,14 @@ enum status_code spi_select_slave(
   *
   * <table>
   *	<tr>
-  *		<th>Doc. Rev.</td>
-  *		<th>Date</td>
-  *		<th>Comments</td>
+  *		<th>Doc. Rev.</th>
+  *		<th>Date</th>
+  *		<th>Comments</th>
   *	</tr>
   *	<tr>
   *		<td>42115E</td>
-  *		<td>10/2015</td>
-  *		<td>Add SAM L21/L22, SAM DA1 and SAM C21 support</td>
+  *		<td>12/2015</td>
+  *		<td>Add SAM L21/L22, SAM DA1, and SAM C21 support</td>
   *	</tr>
   *	<tr>
   *		<td>42115D</td>
