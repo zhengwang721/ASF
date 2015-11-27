@@ -574,5 +574,13 @@
 #define PIN_BNO055_EXT_INIERRUPT_ATTR  (PIO_DEFAULT | PIO_IT_RISE_EDGE)
 #define PIN_BNO055_EXT_INIERRUPT_IRQn  PIOD_IRQn
 
+#define BOARD_BNO055_TWIHS              TWIHS0
+#define BOARD_BNO055_ID_TWIHS        ID_TWIHS0
+
+/** TWIHS ID for simulated EEPROM application to use */
+#define BOARD_AT30TSE_ID_TWIHS         ID_TWIHS0
+/** TWIHS Base for simulated TWI EEPROM application to use */
+#define BOARD_AT30TSE_TWIHS       TWIHS0
+
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAME70_XPLD_H_ */

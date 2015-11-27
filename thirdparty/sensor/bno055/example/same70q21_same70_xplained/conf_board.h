@@ -49,12 +49,8 @@
 
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
-#define CONF_BOARD_ENABLE_FPU
 
 /** Enable TWIHS port. */
 #define CONF_BOARD_TWIHS0
-#define BNO055_IIC_INSRANCE   TWIHS0
-#define BOARD_ID_TWIHS_EEPROM ID_TWIHS0
-#define TWIHS_CLK             400000
 
 #endif /* CONF_BOARD_H_INCLUDED */

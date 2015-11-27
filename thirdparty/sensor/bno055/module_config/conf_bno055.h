@@ -59,8 +59,8 @@
 #define BNO055_PIN_RESET              PIO_PD25_IDX
 
 /* Sleep State Macros */
-#define SLEEP_STATE_SLEEP		UINT8_C(1)
-#define SLEEP_STATE_AWAKE		UINT8_C(0)
+#define SLEEP_STATE_SLEEP    UINT8_C(1)
+#define SLEEP_STATE_AWAKE    UINT8_C(0)
 
 /* name RGB LED Macros */
 #define RGB_LED_R				PIO_PC30_IDX
@@ -74,8 +74,10 @@
 #define RBG_LED_R_OFF			UINT16_C(0xFFFF)
 
 /* determines the active state of BNO055 reset */
-#define BNO055_RESET_ACTIVE				false
+#define BNO055_RESET_ACTIVE       false
 /* the delay required to wait for BNO055 chip to reset */
-#define BNO055_RESET_DELAY_MS			UINT32_C(650)
+#define BNO055_RESET_DELAY_MS     UINT32_C(650)
+
+#define BNO055_TWIHS_CLK          400000
 
 #endif /* CONF_BNO055_H_INCLUDED */

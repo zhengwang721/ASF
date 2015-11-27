@@ -61,13 +61,13 @@ void at30tse_init(void)
 	twihs_options_t opt;
 
 	/* Enable the peripheral clock for TWIHS */
-	pmc_enable_periph_clk(BOARD_ID_TWIHS_EEPROM);
+	pmc_enable_periph_clk(BOARD_AT30TSE_ID_TWIHS);
 
 	/* Configure the options of TWI driver */
 	opt.master_clk = sysclk_get_cpu_hz();
 	opt.speed      = TWIHS_CLK;
 
-	if (twihs_master_init(BOARD_BASE_TWIHS_EEPROM, &opt) != TWIHS_SUCCESS) {
+	if (twihs_master_init(BOARD_AT30TSE_TWIHS, &opt) != TWIHS_SUCCESS) {
 		while (1) {
 			/* Capture error */
 		}
@@ -107,7 +107,7 @@ void at30tse_eeprom_write(uint8_t *data, uint8_t length, uint8_t word_addr, uint
 	packet_tx.length      = length+1;
 	
 	/* Send test pattern to EEPROM */
-	if (twihs_master_write(BOARD_BASE_TWIHS_EEPROM, &packet_tx) != TWIHS_SUCCESS) {
+	if (twihs_master_write(BOARD_AT30TSE_TWIHS, &packet_tx) != TWIHS_SUCCESS) {
 		while (1) {
 			/* Capture error */
 		}
@@ -142,7 +142,7 @@ void at30tse_eeprom_read(uint8_t *data, uint8_t length, uint8_t word_addr, uint8
 	packet_rx.length      = length;
 	
 	/* Get memory from EEPROM*/
-	if (twihs_master_read(BOARD_BASE_TWIHS_EEPROM, &packet_rx) != TWIHS_SUCCESS) {
+	if (twihs_master_read(BOARD_AT30TSE_TWIHS, &packet_rx) != TWIHS_SUCCESS) {
 		while (1) {
 			/* Capture error */
 		}
@@ -168,7 +168,7 @@ void at30tse_set_register_pointer(uint8_t reg, uint8_t reg_type)
 	packet_tx.length      = 1;
 	
 	/* Send test pattern to EEPROM */
-	if (twihs_master_write(BOARD_BASE_TWIHS_EEPROM, &packet_tx) != TWIHS_SUCCESS) {
+	if (twihs_master_write(BOARD_AT30TSE_TWIHS, &packet_tx) != TWIHS_SUCCESS) {
 		while (1) {
 			/* Capture error */
 		}
@@ -199,7 +199,7 @@ uint16_t at30tse_read_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size)
 	packet_rx.length      = reg_size;
 
 	/* Get memory from EEPROM*/
-	if (twihs_master_read(BOARD_BASE_TWIHS_EEPROM, &packet_rx) != TWIHS_SUCCESS) {
+	if (twihs_master_read(BOARD_AT30TSE_TWIHS, &packet_rx) != TWIHS_SUCCESS) {
 		while (1) {
 			/* Capture error */
 		}
@@ -233,7 +233,7 @@ void at30tse_write_register(uint8_t reg, uint8_t reg_type, uint8_t reg_size, uin
 	packet_tx.length      = reg_size;
 
 	/* Send test pattern to EEPROM */
-	if (twihs_master_write(BOARD_BASE_TWIHS_EEPROM, &packet_tx) != TWIHS_SUCCESS) {
+	if (twihs_master_write(BOARD_AT30TSE_TWIHS, &packet_tx) != TWIHS_SUCCESS) {
 		while (1) {
 			/* Capture error */
 		}

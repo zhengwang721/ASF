@@ -72,12 +72,12 @@ void bno055_initialize(void)
 void bno055_i2c_bus_init(void)
 {
 	twihs_options_t bno055_option;
-	pmc_enable_periph_clk(BOARD_ID_TWIHS_EEPROM);
+	pmc_enable_periph_clk(BOARD_BNO055_ID_TWIHS);
 
 	/* Configure the options of TWI driver */
 	bno055_option.master_clk = sysclk_get_cpu_hz();
-	bno055_option.speed      = TWIHS_CLK;
-	twihs_master_init(BNO055_IIC_INSRANCE, &bno055_option);
+	bno055_option.speed      = BNO055_TWIHS_CLK;
+	twihs_master_init(BOARD_BNO055_TWIHS, &bno055_option);
 }
 
 /*	\Brief: The function is used as I2C bus write
@@ -99,7 +99,7 @@ int8_t bno055_i2c_bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_dat
 	p_packet.buffer = reg_data;
 	p_packet.length = cnt;
 	
-	ierror = twihs_master_write(BNO055_IIC_INSRANCE, &p_packet);
+	ierror = twihs_master_write(BOARD_BNO055_TWIHS, &p_packet);
 
 	return (int8_t)ierror;
 }
@@ -122,7 +122,7 @@ int8_t bno055_i2c_bus_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data
 	p_packet.buffer = reg_data;
 	p_packet.length = cnt;
 	
-	ierror = twihs_master_read(BNO055_IIC_INSRANCE, &p_packet);
+	ierror = twihs_master_read(BOARD_BNO055_TWIHS, &p_packet);
 
 	return (int8_t)ierror;
 }
