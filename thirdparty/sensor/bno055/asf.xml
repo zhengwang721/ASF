@@ -11,6 +11,7 @@
 		<build type="doxygen-entry-point" value="bno055_sensor_group"/>
 		<require idref="common.services.basic.gpio"/>
 		<require idref="common.services.basic.clock"/>
+		<require idref="common.services.delay"/>
 		<require idref="sam.drivers.pmc"/>
 		<require idref="sam.drivers.twihs"/>
 		<build type="module-config" subtype="required-header-file" value="conf_bno055.h"/>
