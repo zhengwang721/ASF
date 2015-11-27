@@ -1059,17 +1059,17 @@ at_ble_status_t ble_slave_security_request_handler(void* params)
 		/* Generate LTK */
 		for(i=0; i<8; i++)
 		{			
-			ble_dev_info[idx].bond_info.peer_ltk.key[i] = rand()&0x0f;
-			ble_dev_info[idx].bond_info.peer_ltk.nb[i] = rand()&0x0f;
+			ble_dev_info[idx].host_ltk.key[i] = rand()&0x0f;
+			ble_dev_info[idx].host_ltk.nb[i] = rand()&0x0f;
 		}
 				
 		for(i=8 ; i<16 ;i++)
 		{
-			ble_dev_info[idx].bond_info.peer_ltk.key[i] = rand()&0x0f;
+			ble_dev_info[idx].host_ltk.key[i] = rand()&0x0f;
 		}
 		
-		ble_dev_info[idx].bond_info.peer_ltk.ediv = rand()&0xffff;
-		ble_dev_info[idx].bond_info.peer_ltk.key_size = 16;
+		ble_dev_info[idx].host_ltk.ediv = rand()&0xffff;
+		ble_dev_info[idx].host_ltk.key_size = 16;
 	}
 	else
 	{
@@ -1077,7 +1077,7 @@ at_ble_status_t ble_slave_security_request_handler(void* params)
 		
 	}
 
-	if(at_ble_authenticate(slave_sec_req->handle, &features, &ble_dev_info[idx].bond_info.peer_ltk, NULL) != AT_BLE_SUCCESS)
+	if(at_ble_authenticate(slave_sec_req->handle, &features, &ble_dev_info[idx].host_ltk, NULL) != AT_BLE_SUCCESS)
 	{
 		features.bond = false;
 		features.mitm_protection = false;
@@ -1134,22 +1134,22 @@ at_ble_status_t ble_pair_request_handler(void *params)
 		/* Generate LTK */
 		for(i=0; i<8; i++)
 		{						
-			ble_dev_info[idx].bond_info.peer_ltk.key[i] = rand()&0x0f;
-			ble_dev_info[idx].bond_info.peer_ltk.nb[i] = rand()&0x0f;
+			ble_dev_info[idx].host_ltk.key[i] = rand()&0x0f;
+			ble_dev_info[idx].host_ltk.nb[i] = rand()&0x0f;
 		}
 				
 		for(i=8 ; i<16 ;i++)
 		{
-			ble_dev_info[idx].bond_info.peer_ltk.key[i] = rand()&0x0f;
+			ble_dev_info[idx].host_ltk.key[i] = rand()&0x0f;
 		}
 		DBG_LOG_DEV("Generated LTK: ");
 		for (i = 0; i < 16; i++)
 		{
-			DBG_LOG_CONT_DEV("0x%02X ", ble_dev_info[idx].bond_info.peer_ltk.key[i]);
+			DBG_LOG_CONT_DEV("0x%02X ", ble_dev_info[idx].host_ltk.key[i]);
 		}
 		
-		ble_dev_info[idx].bond_info.peer_ltk.ediv = rand()&0xffff;
-		ble_dev_info[idx].bond_info.peer_ltk.key_size = 16;
+		ble_dev_info[idx].host_ltk.ediv = rand()&0xffff;
+		ble_dev_info[idx].host_ltk.key_size = 16;
 	}
 	else
 	{
@@ -1160,7 +1160,7 @@ at_ble_status_t ble_pair_request_handler(void *params)
 	/* Send pairing response */
 	DBG_LOG("Sending pairing response");
 
-	if(at_ble_authenticate(pair_req->handle, &features, &ble_dev_info[idx].bond_info.peer_ltk, NULL) != AT_BLE_SUCCESS)
+	if(at_ble_authenticate(pair_req->handle, &features, &ble_dev_info[idx].host_ltk, NULL) != AT_BLE_SUCCESS)
 	{
 		features.bond = false;
 		features.mitm_protection = false;
@@ -1372,8 +1372,11 @@ at_ble_status_t ble_encryption_request_handler(void *params)
 	
 	if (device_found)
 	{
-		if((ble_dev_info[idx].bond_info.peer_ltk.ediv == enc_req->ediv)
-		&& !memcmp(&enc_req->nb[0],&ble_dev_info[idx].bond_info.peer_ltk.nb[0],8))
+		DBG_LOG_DEV("host device ediv %x",ble_dev_info[idx].host_ltk.ediv);
+		DBG_LOG_DEV("peer device ediv %x",ble_dev_info[idx].bond_info.peer_ltk.ediv);
+		DBG_LOG_DEV("enc_req ediv %x", enc_req->ediv);
+		if((ble_dev_info[idx].host_ltk.ediv == enc_req->ediv)
+		&& !memcmp(&enc_req->nb[0],&ble_dev_info[idx].host_ltk.nb[0],8))
 		{
 			key_found = true;
 			DBG_LOG_DEV("ENC-Req: Key Found");
@@ -1389,7 +1392,7 @@ at_ble_status_t ble_encryption_request_handler(void *params)
 		return AT_BLE_FAILURE;
     }
 
-	if(!(at_ble_encryption_request_reply(enc_req->handle, ble_dev_info[idx].bond_info.auth, key_found, &ble_dev_info[idx].bond_info.peer_ltk) == AT_BLE_SUCCESS))
+	if(!(at_ble_encryption_request_reply(enc_req->handle, ble_dev_info[idx].bond_info.auth, key_found, &ble_dev_info[idx].host_ltk) == AT_BLE_SUCCESS))
 	{
 		DBG_LOG("Encryption Request Reply Failed");
 	}

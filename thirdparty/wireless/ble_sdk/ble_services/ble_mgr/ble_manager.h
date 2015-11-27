@@ -127,7 +127,7 @@
 #ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-ANS"
 #endif	/* BLE_DEVICE_NAME */
-#define BLE_PAIR_ENABLE					(false)
+//#define BLE_PAIR_ENABLE					(false)
 #endif /* ANP_SIG_CLIENT */
 
 #if defined PAS_CLIENT
@@ -555,6 +555,7 @@ typedef struct ble_connected_dev_info
 	at_ble_dev_role_t dev_role;
 	at_ble_pair_done_t bond_info;
 	ble_device_state_t conn_state;
+	at_ble_LTK_t host_ltk;
 }ble_connected_dev_info_t;
 
 
