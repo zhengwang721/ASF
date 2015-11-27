@@ -1773,7 +1773,7 @@ enum status_code spi_select_slave(
   *	<tr>
   *		<td>42115E</td>
   *		<td>12/2015</td>
-  *		<td>Add SAM L21/L22, SAM DA1, and SAM C21 support</td>
+  *		<td>Add SAM L21/L22, SAM DA1, SAM D09, and SAM C21 support</td>
   *	</tr>
   *	<tr>
   *		<td>42115D</td>

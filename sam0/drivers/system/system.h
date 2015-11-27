@@ -694,7 +694,7 @@ void system_init(void);
  *  <tr>
  *      <td>42120E</td>
  *      <td>12/2015</td>
- *      <td>Added support for SAM DA1</td>
+ *      <td>Added support for SAM DA1 and SAM D09</td>
  * </tr>
  *  <tr>
  *      <td>42120D</td>
